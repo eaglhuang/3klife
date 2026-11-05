@@ -4,13 +4,18 @@
  *
  * 花 1 張查券（求籤令）看透一對夫妻：精確多樣性 D、共同祖先、可純化因子、雙親血脈疲勞。
  * 同一對只收一次，結果每次依目前資料重算。
- * 暫定（可逆）：只做 Layer 3 的第二項；50 細箱與隱藏金因子未做，健康底子 m1、m2 尚無資料。
+ * 另花 2 券查隱藏血脈（PROG-2-1833）：雙親還看不到或未覺醒的家傳金因子，以及這對所生子嗣會帶的隔代種子。
+ * 暫定（可逆）：50 細箱未做，健康底子 m1、m2 尚無資料；隔代種子看的是子嗣，雙親自己的種子只在他們培育時有用。
  *
  * Unity 對照：像花一次性道具解鎖某組配對的詳細資料，解鎖清單存進存檔。
  */
+import type { AncestralPeak, GeneralGeneConfig } from '../models/GeneralUnit';
+import { CUSTOM_GOLD_ID_PREFIX } from './CustomGoldFactor';
+import { factorMaskView } from './FactorMask';
 import type { KinPurificationTarget } from './KinPurification';
 
 export const PEDIGREE_PROBE_COST = 1;
+export const HIDDEN_LINEAGE_COST = 2;
 /** 雙重表親可達十幾位，全列會把後面的可純化因子擠掉 */
 const MAX_LISTED_ANCESTORS = 6;
 
@@ -31,6 +36,27 @@ export function pedigreeProbeLine(report: PedigreeProbeReport): string {
     const ancestors = names.length === 0 ? '無' : names.slice(0, MAX_LISTED_ANCESTORS).join('、') + (names.length > MAX_LISTED_ANCESTORS ? ` 等 ${names.length} 位` : '');
     const targets = report.targets.map((target) => `${target.gene.displayName ?? target.gene.id}（${target.ancestorName}）`).join('、') || '無';
     return `譜牒密考：多樣性 ${report.diversity.toFixed(2)}｜共祖 ${ancestors}｜可純化 ${targets}｜血脈疲勞 父 ${report.fatherFatigue}／母 ${report.motherFatigue}`;
+}
+
+export interface HiddenLineageReport {
+    fatherGolds: GeneralGeneConfig[];
+    motherGolds: GeneralGeneConfig[];
+    /** 這對所生子嗣出生時會帶的隔代種子 */
+    childSeeds: AncestralPeak[];
+}
+
+/** 家傳金因子裡，玩家等級還看不到、或還沒覺醒的 */
+export function hiddenGoldsOf(genes: readonly GeneralGeneConfig[] | undefined, playerLevel: number): GeneralGeneConfig[] {
+    return (genes ?? []).filter((gene) => {
+        if (!(gene.id ?? '').startsWith(CUSTOM_GOLD_ID_PREFIX) && gene.type !== 'gold') return false;
+        return !factorMaskView(gene, playerLevel).revealed || gene.isLocked === true;
+    });
+}
+
+export function hiddenLineageLine(report: HiddenLineageReport): string {
+    const golds = (genes: GeneralGeneConfig[]): string => genes.map((gene) => gene.displayName ?? gene.id).join('、') || '無';
+    const seeds = report.childSeeds.map((seed) => `${seed.gene.displayName ?? seed.gene.id} ${seed.gene.level ?? 0}★（${seed.ancestorName}）`).join('、') || '無';
+    return `隱藏血脈：金因子 父 ${golds(report.fatherGolds)}／母 ${golds(report.motherGolds)}｜子嗣隔代種子 ${seeds}`;
 }
 
 /** 舊檔沒有此欄位；非字串略過 */

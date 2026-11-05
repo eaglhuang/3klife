@@ -1363,15 +1363,55 @@
             ]
           },
           {
+            "type": "button",
+            "name": "BtnProbeHidden",
+            "id": "btnProbeHidden",
+            "widget": {
+              "bottom": 70,
+              "left": 52
+            },
+            "width": 200,
+            "height": 44,
+            "skinSlot": "bonding.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnProbeHiddenLabel",
+                "id": "probeHiddenLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "隱藏血脈",
+                "styleSlot": "bonding.label.button"
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "HiddenLineageLine",
+            "id": "hiddenLineageLine",
+            "widget": {
+              "bottom": 68,
+              "right": 50
+            },
+            "width": 316,
+            "height": 50,
+            "text": "",
+            "styleSlot": "bonding.label.log"
+          },
+          {
             "type": "label",
             "name": "PedigreeProbeLine",
             "id": "pedigreeProbeLine",
             "widget": {
-              "bottom": 8,
+              "bottom": 6,
               "left": 252
             },
             "width": 520,
-            "height": 56,
+            "height": 46,
             "text": "",
             "styleSlot": "bonding.label.log"
           },

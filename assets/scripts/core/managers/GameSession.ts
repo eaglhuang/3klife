@@ -209,7 +209,7 @@ import { clanMembersOf, clanStatsOf, clanTierOf, normalizeClanTier, type ClanTie
 import { buildSuitorGeneral, normalizeMarriageProposal, rollMarriageProposal, type MarriageProposal } from '../systems/MarriageProposal';
 import { emptyFamilySynergyLedger, finalizeAdultChildren, fullSynergyAlliesOf, normalizeFamilySynergy, type FamilySynergyLedger } from '../systems/FamilySynergy';
 import { forgeCustomGold, mergeCustomFactors, normalizeCustomFactors } from '../systems/CustomGoldFactor';
-import { normalizePedigreeProbes, PEDIGREE_PROBE_COST, pedigreeProbeKey } from '../systems/PedigreeProbe';
+import { HIDDEN_LINEAGE_COST, normalizePedigreeProbes, PEDIGREE_PROBE_COST, pedigreeProbeKey } from '../systems/PedigreeProbe';
 import { yuedanBannerLines } from '../systems/YuedanReview';
 import { clanHallNameOf, normalizeClanHall } from '../systems/ClanHall';
 import { CLAN_TRADITION_MIN_TIER, clanTraditionOf, normalizeClanTradition, type ClanTradition } from '../systems/ClanTradition';
@@ -660,6 +660,7 @@ export class GameSession {
     private _marriageProposal: MarriageProposal | null = null;
     private _familySynergy: FamilySynergyLedger = emptyFamilySynergyLedger();
     private _pedigreeProbes: string[] = [];
+    private _hiddenLineageProbes: string[] = [];
     private _clanTradition: ClanTradition | null = null;
     private _clanHall: string | null = null;
     /** 已通關的關卡 id（連環破，PROG-2-0215） */
@@ -1848,6 +1849,7 @@ export class GameSession {
         this._marriageProposal = null;
         this._familySynergy = emptyFamilySynergyLedger();
         this._pedigreeProbes = [];
+        this._hiddenLineageProbes = [];
         this._clanTradition = null;
         this._clanHall = null;
         this._setCustomFactors([]);
@@ -3568,10 +3570,28 @@ export class GameSession {
     /** 譜牒密考：同一對只收一次；不是占卜，不累計占卜次數。求籤令不足時回傳 false */
     public async probePedigree(fatherId: string, motherId: string): Promise<boolean> {
         if (this.isPedigreeProbed(fatherId, motherId)) return true;
-        const inventory = consumeItem(this._inventory, ITEM_ORACLE_TOKEN, PEDIGREE_PROBE_COST);
+        return this._payOracleProbe(PEDIGREE_PROBE_COST, () => {
+            this._pedigreeProbes = [...this._pedigreeProbes, pedigreeProbeKey(fatherId, motherId)];
+        });
+    }
+
+    public isHiddenLineageProbed(fatherId: string, motherId: string): boolean {
+        return this._hiddenLineageProbes.indexOf(pedigreeProbeKey(fatherId, motherId)) >= 0;
+    }
+
+    /** 隱藏血脈：與譜牒密考各自收費；同一對只收一次。求籤令不足時回傳 false（PROG-2-1833） */
+    public async probeHiddenLineage(fatherId: string, motherId: string): Promise<boolean> {
+        if (this.isHiddenLineageProbed(fatherId, motherId)) return true;
+        return this._payOracleProbe(HIDDEN_LINEAGE_COST, () => {
+            this._hiddenLineageProbes = [...this._hiddenLineageProbes, pedigreeProbeKey(fatherId, motherId)];
+        });
+    }
+
+    private async _payOracleProbe(cost: number, record: () => void): Promise<boolean> {
+        const inventory = consumeItem(this._inventory, ITEM_ORACLE_TOKEN, cost);
         if (!inventory) return false;
         this._inventory = inventory;
-        this._pedigreeProbes = [...this._pedigreeProbes, pedigreeProbeKey(fatherId, motherId)];
+        record();
         if (this._autoSave && this._save) {
             await this.save();
         }
@@ -4498,6 +4518,7 @@ export class GameSession {
             marriageProposal: this._marriageProposal ?? undefined,
             familySynergy: this._familySynergy.finalizedIds.length > 0 ? this._familySynergy : undefined,
             pedigreeProbes: this._pedigreeProbes.length > 0 ? [...this._pedigreeProbes] : undefined,
+            hiddenLineageProbes: this._hiddenLineageProbes.length > 0 ? [...this._hiddenLineageProbes] : undefined,
             clanTradition: this._clanTradition ?? undefined,
             clanHall: this._clanHall ?? undefined,
             customFactors: this._customFactors.map((def) => ({ ...def })),
@@ -4670,6 +4691,7 @@ export class GameSession {
         this._marriageProposal = normalizeMarriageProposal(snapshot.marriageProposal);
         this._familySynergy = normalizeFamilySynergy(snapshot.familySynergy);
         this._pedigreeProbes = normalizePedigreeProbes(snapshot.pedigreeProbes);
+        this._hiddenLineageProbes = normalizePedigreeProbes(snapshot.hiddenLineageProbes);
         this._clanTradition = normalizeClanTradition(snapshot.clanTradition);
         this._clanHall = normalizeClanHall(snapshot.clanHall);
         this._setCustomFactors(normalizeCustomFactors(snapshot.customFactors));

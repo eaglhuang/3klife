@@ -99,6 +99,7 @@ export const SYNC_PATCH_ROOT_KEYS: readonly string[] = [
     'marriageProposal',
     'familySynergy',
     'pedigreeProbes',
+    'hiddenLineageProbes',
     'customFactors',
     'travelCountdown',
     'countdown',

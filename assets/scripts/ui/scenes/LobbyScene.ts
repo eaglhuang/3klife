@@ -1302,6 +1302,8 @@ export class LobbyScene extends Component {
             oracleTokens: () => services().session.itemCount(ITEM_ORACLE_TOKEN),
             isPedigreeProbed: (fatherId, motherId) => services().session.isPedigreeProbed(fatherId, motherId),
             probePedigree: (fatherId, motherId) => services().session.probePedigree(fatherId, motherId),
+            isHiddenLineageProbed: (fatherId, motherId) => services().session.isHiddenLineageProbed(fatherId, motherId),
+            probeHiddenLineage: (fatherId, motherId) => services().session.probeHiddenLineage(fatherId, motherId),
             tagName: (tag) => services().session.factorDictionary?.get(tag)?.displayName,
             recordBreeding: (record) => services().session.recordBreedingBirth(record),
             sageRemarks: (fatherId, motherId) => {
@@ -1324,6 +1326,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnNextMother', handler: () => { bonding.cycleMother(1); this._refreshBondingSetup(); toastPregnantMother(bonding); } },
             { buttonId: 'btnConfirmBond', handler: () => { void this._onClickConfirmBond(); } },
             { buttonId: 'btnProbePedigree', handler: () => { void bonding.probePedigree().then(() => this._refreshBondingSetup()); } },
+            { buttonId: 'btnProbeHidden', handler: () => { void bonding.probeHiddenLineage().then(() => this._refreshBondingSetup()); } },
             {
                 buttonId: 'btnOpenOracle',
                 handler: () => {
