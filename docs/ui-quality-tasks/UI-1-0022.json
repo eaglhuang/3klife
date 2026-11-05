@@ -8,7 +8,7 @@
       "title": "重繪甘寧名將立繪與專屬錦帆鈴刀",
       "owner": "codex-gpt-6.1-sol",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "art",
       "phase": "M6",
       "created": "2026-11-05",
@@ -39,7 +39,7 @@
         "甘寧配色與專屬錦帆武器紀錄",
         "任務卡、manifest及Cocos驗證紀錄"
       ],
-      "notes": "2026-11-05 | 狀態: in-progress | 驗證: 舊任務備註顯示125/250px檢視仍偏年輕清秀，需改成熟稜角臉與日曬膚色；吳紅配色已核對 | 變更: 接手甘寧名將畫風修正與錦帆鈴刀專屬代表物 | 阻塞: 無",
+      "notes": "2026-11-05 | 狀態: done | 驗證: 512x768透明立繪、兩種256x256頭像；reviewed crop verify 1/1；Cocos三資產 imported=true/invalid=false、Library/source hash相符；GeneralPortraitComposite標準路徑可載入；compute-gate quick 3/3、import-boundary 1/1 | 變更: 甘寧改為二次元幻想手繪，日曬窄長稜角臉、暗朱紅／炭黑／舊銅色，專屬錦帆鳴鈴水軍短刀 | 阻塞: 無；提交推送於本回合收尾",
       "brief": {
         "style": "classic",
         "label": "",
@@ -55,9 +55,20 @@
         "execution_steps": []
       },
       "harness_evidence": {
-        "artifact_paths": [],
-        "validation_evidence": [],
-        "handoff_diff_status": "",
+        "artifact_paths": [
+          "assets/resources/sprites/generals/gan_ning_portrait.png",
+          "assets/resources/sprites/generals/avatars/gan_ning_avatar.png",
+          "assets/resources/sprites/ui_avatars/cropped/gan_ning_avatar.png",
+          "assets/resources/data/general-avatar-crops.json",
+          "docs/art/character-palette-ledger-shards/palette-principles.md"
+        ],
+        "validation_evidence": [
+          "512x768 transparent portrait and two 256x256 avatars; source and Cocos Library hashes match",
+          "Reviewed crop verification passed 1/1 with --preserve-crop; Cocos assets imported=true and invalid=false",
+          "GeneralPortraitComposite uses GeneralArtPaths portrait path with Texture2D fallback",
+          "compute-gate quick passed 3/3; import-boundary passed 1/1"
+        ],
+        "handoff_diff_status": "正式資源、裁切索引及Cocos匯入驗收全部通過",
         "trace_artifacts": [],
         "metrics_summary": []
       }
