@@ -278,6 +278,8 @@ export interface PlayerSaveSnapshot {
     pedigreeProbes?: string[];
     /** 已查隱藏血脈的配對（PROG-2-1833）；舊存檔沒有此欄位 */
     hiddenLineageProbes?: string[];
+    /** 已單維細查的人與維度（PROG-2-1834）；舊存檔沒有此欄位 */
+    statProbes?: string[];
     /** 郡望家風（G4 §F-1）；舊存檔沒有此欄位 */
     clanTradition?: ClanTradition;
     /** 郡望堂號（PROG-2-1804） */
@@ -599,6 +601,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.familySynergy !== undefined ? { familySynergy: normalizeFamilySynergy(snapshot.familySynergy) } : {}),
         ...(snapshot.pedigreeProbes !== undefined ? { pedigreeProbes: normalizePedigreeProbes(snapshot.pedigreeProbes) } : {}),
         ...(snapshot.hiddenLineageProbes !== undefined ? { hiddenLineageProbes: normalizePedigreeProbes(snapshot.hiddenLineageProbes) } : {}),
+        ...(snapshot.statProbes !== undefined ? { statProbes: normalizePedigreeProbes(snapshot.statProbes) } : {}),
         ...(normalizeMarriageProposal(snapshot.marriageProposal) ? { marriageProposal: normalizeMarriageProposal(snapshot.marriageProposal) as MarriageProposal } : {}),
         ...(normalizeClanTradition(snapshot.clanTradition) ? { clanTradition: normalizeClanTradition(snapshot.clanTradition) as ClanTradition } : {}),
         ...(normalizeClanHall(snapshot.clanHall) ? { clanHall: normalizeClanHall(snapshot.clanHall) as string } : {}),

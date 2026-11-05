@@ -16,7 +16,7 @@
  */
 import { bloodFatigueForecast } from '../../core/systems/BloodFatigue';
 import { DIVERSITY_HINT } from '../../core/systems/DiversityFactor';
-import { HIDDEN_LINEAGE_COST, hiddenLineageLine, PEDIGREE_PROBE_COST, pedigreeProbeLine } from '../../core/systems/PedigreeProbe';
+import { HIDDEN_LINEAGE_COST, hiddenLineageLine, PEDIGREE_PROBE_COST, pedigreeProbeLine, STAT_PROBE_COST, statProbeLine } from '../../core/systems/PedigreeProbe';
 import { getSage } from '../../core/systems/SageDivination';
 import { OMEN_LABEL, pickOmen, type OmenKind, type SageRemark } from '../../core/systems/SageRemarks';
 import { buildBreedingBirthRecord, type BreedingBirthRecord } from '../../core/systems/BreedingBirthRecord';
@@ -25,7 +25,7 @@ import { buildBreedingPreviewLines } from './BreedingPreviewPresenter';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { factorMaskLabels } from '../../core/systems/FactorMask';
 import { factorStageText } from '../../core/systems/FactorVisibility';
-import { matchRumorLine, sameSurnameNote, matchesRumorRoute, nextRumorRoute, RumorRoute, rumorRouteFiltered, rumorRouteName } from '../../core/systems/MatchRumor';
+import { matchRumorLine, sameSurnameNote, matchesRumorRoute, nextRumorRoute, RUMOR_STAT_KEYS, RumorRoute, rumorRouteFiltered, rumorRouteName, type RumorStatKey, type RumorStats } from '../../core/systems/MatchRumor';
 import { yuedanFiltered, yuedanList, yuedanRevealLine } from '../../core/systems/YuedanReview';
 import { centuryAllianceTag, synergyWindowLine, type FamilySynergyLedger } from '../../core/systems/FamilySynergy';
 import { compactCeremonyLine, kinWarningLine } from '../../core/systems/BondingStoryLines';
@@ -120,6 +120,8 @@ export interface BondingSetupDeps {
     probePedigree?: (fatherId: string, motherId: string) => Promise<boolean>;
     isHiddenLineageProbed?: (fatherId: string, motherId: string) => boolean;
     probeHiddenLineage?: (fatherId: string, motherId: string) => Promise<boolean>;
+    isStatProbed?: (generalId: string, stat: RumorStatKey) => boolean;
+    probeStat?: (generalId: string, stat: RumorStatKey) => Promise<boolean>;
     /** 開畫面前的準備（載入血統圖、補回已出生子嗣）；失敗只提示，不擋畫面 */
     prepare?: () => Promise<unknown>;
     /** 結緣後存檔；失敗只回報，不回滾 */
@@ -159,6 +161,7 @@ export class BondingSetupController {
     private _yuedanOnly = false;
     /** 鄉評路線篩選（G4 §F-2 Layer 1）；只影響清單，不寫存檔 */
     private _route: RumorRoute = null;
+    private _probeStat: RumorStatKey = RUMOR_STAT_KEYS[0];
     /** 主門風承襲槽選了什麼（合譜或家傳）；受孕成功後清掉，不寫存檔 */
     private _slotPick: { kind: HeritageSlotKind; id: string } | null = null;
 
@@ -252,6 +255,10 @@ export class BondingSetupController {
     }
 
     /** 不用 → 合譜各因子 → 家傳各因子 → 不用；同一胎只能選一項 */
+    cycleProbeStat(): void {
+        this._probeStat = RUMOR_STAT_KEYS[(RUMOR_STAT_KEYS.indexOf(this._probeStat) + 1) % RUMOR_STAT_KEYS.length];
+    }
+
     cycleCompact(): void {
         const options = this._slotOptions();
         const current = this._selectedSlot();
@@ -451,6 +458,21 @@ export class BondingSetupController {
         texts.probeHiddenLabel = lineageProbed ? '已查隱藏血脈' : `隱藏血脈（${HIDDEN_LINEAGE_COST} 券）`;
         texts.hiddenLineageLine = lineageReport ? hiddenLineageLine(lineageReport) : '';
         enabled.btnProbeHidden = !lineageProbed && !!this._deps.probeHiddenLineage && tokens >= HIDDEN_LINEAGE_COST;
+        const stat = this._probeStat;
+        const fatherStatProbed = this._deps.isStatProbed?.(father.id, stat) ?? false;
+        const motherStatProbed = this._deps.isStatProbed?.(mother.id, stat) ?? false;
+        const statLabel = (probed: boolean): string => (probed ? '已細查' : `細查（${STAT_PROBE_COST} 券）`);
+        texts.cycleProbeStatLabel = `細查維度：${rumorRouteName(stat)}`;
+        texts.probeFatherStatLabel = statLabel(fatherStatProbed);
+        texts.probeMotherStatLabel = statLabel(motherStatProbed);
+        texts.statProbeLine = statProbeLine(
+            stat,
+            { name: father.name, stats: father as RumorStats, probed: fatherStatProbed },
+            { name: mother.name, stats: mother as RumorStats, probed: motherStatProbed },
+        );
+        const canProbeStat = !!this._deps.probeStat && tokens >= STAT_PROBE_COST;
+        enabled.btnProbeFatherStat = !fatherStatProbed && canProbeStat;
+        enabled.btnProbeMotherStat = !motherStatProbed && canProbeStat;
         texts.costLabel = this._t('ui.breed.confirm', father.name, String(FATHER_VIGOR_COST), mother.name, String(MOTHER_VIGOR_COST));
         texts.eligibilityLabel = eligibility.ok
             ? `${father.name} 與 ${mother.name} 良緣天成，可以結緣`
@@ -495,6 +517,12 @@ export class BondingSetupController {
         const pair = this._currentPair();
         if (!pair || !this._deps.probePedigree) return false;
         return this._deps.probePedigree(pair.father.id, pair.mother.id);
+    }
+
+    async probeStat(side: 'father' | 'mother'): Promise<boolean> {
+        const pair = this._currentPair();
+        if (!pair || !this._deps.probeStat) return false;
+        return this._deps.probeStat(pair[side].id, this._probeStat);
     }
 
     async probeHiddenLineage(): Promise<boolean> {

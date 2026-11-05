@@ -1336,84 +1336,190 @@
             "styleSlot": "bonding.label.log"
           },
           {
-            "type": "button",
-            "name": "BtnProbePedigree",
-            "id": "btnProbePedigree",
+            "type": "container",
+            "name": "ProbeControls",
             "widget": {
-              "bottom": 12,
-              "left": 40
+              "top": 0,
+              "bottom": 0,
+              "left": 0,
+              "right": 0
             },
-            "width": 200,
-            "height": 48,
-            "skinSlot": "bonding.button.bg",
             "children": [
               {
-                "type": "label",
-                "name": "BtnProbePedigreeLabel",
-                "id": "probePedigreeLabel",
+                "type": "button",
+                "name": "BtnProbePedigree",
+                "id": "btnProbePedigree",
                 "widget": {
-                  "vCenter": true,
-                  "left": 0,
-                  "right": 0
+                  "bottom": 12,
+                  "left": 40
                 },
-                "height": 40,
-                "text": "譜牒密考",
-                "styleSlot": "bonding.label.button"
-              }
-            ]
-          },
-          {
-            "type": "button",
-            "name": "BtnProbeHidden",
-            "id": "btnProbeHidden",
-            "widget": {
-              "bottom": 70,
-              "left": 52
-            },
-            "width": 200,
-            "height": 44,
-            "skinSlot": "bonding.button.bg",
-            "children": [
+                "width": 200,
+                "height": 48,
+                "skinSlot": "bonding.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnProbePedigreeLabel",
+                    "id": "probePedigreeLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "譜牒密考",
+                    "styleSlot": "bonding.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnCycleProbeStat",
+                "id": "btnCycleProbeStat",
+                "widget": {
+                  "bottom": 489,
+                  "left": 910
+                },
+                "width": 240,
+                "height": 36,
+                "skinSlot": "bonding.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnCycleProbeStatLabel",
+                    "id": "cycleProbeStatLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 32,
+                    "text": "細查維度",
+                    "styleSlot": "bonding.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnProbeFatherStat",
+                "id": "btnProbeFatherStat",
+                "widget": {
+                  "bottom": 606,
+                  "left": 280
+                },
+                "width": 170,
+                "height": 44,
+                "skinSlot": "bonding.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnProbeFatherStatLabel",
+                    "id": "probeFatherStatLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "細查",
+                    "styleSlot": "bonding.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnProbeMotherStat",
+                "id": "btnProbeMotherStat",
+                "widget": {
+                  "bottom": 606,
+                  "left": 876
+                },
+                "width": 170,
+                "height": 44,
+                "skinSlot": "bonding.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnProbeMotherStatLabel",
+                    "id": "probeMotherStatLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "細查",
+                    "styleSlot": "bonding.label.button"
+                  }
+                ]
+              },
               {
                 "type": "label",
-                "name": "BtnProbeHiddenLabel",
-                "id": "probeHiddenLabel",
+                "name": "StatProbeLine",
+                "id": "statProbeLine",
                 "widget": {
-                  "vCenter": true,
-                  "left": 0,
-                  "right": 0
+                  "bottom": 475,
+                  "left": 440
                 },
-                "height": 40,
-                "text": "隱藏血脈",
-                "styleSlot": "bonding.label.button"
+                "width": 460,
+                "height": 42,
+                "text": "",
+                "styleSlot": "bonding.label.log"
+              },
+              {
+                "type": "button",
+                "name": "BtnProbeHidden",
+                "id": "btnProbeHidden",
+                "widget": {
+                  "bottom": 70,
+                  "left": 52
+                },
+                "width": 200,
+                "height": 44,
+                "skinSlot": "bonding.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnProbeHiddenLabel",
+                    "id": "probeHiddenLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "隱藏血脈",
+                    "styleSlot": "bonding.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "HiddenLineageLine",
+                "id": "hiddenLineageLine",
+                "widget": {
+                  "bottom": 68,
+                  "right": 50
+                },
+                "width": 316,
+                "height": 50,
+                "text": "",
+                "styleSlot": "bonding.label.log"
+              },
+              {
+                "type": "label",
+                "name": "PedigreeProbeLine",
+                "id": "pedigreeProbeLine",
+                "widget": {
+                  "bottom": 6,
+                  "left": 252
+                },
+                "width": 520,
+                "height": 46,
+                "text": "",
+                "styleSlot": "bonding.label.log"
               }
             ]
-          },
-          {
-            "type": "label",
-            "name": "HiddenLineageLine",
-            "id": "hiddenLineageLine",
-            "widget": {
-              "bottom": 68,
-              "right": 50
-            },
-            "width": 316,
-            "height": 50,
-            "text": "",
-            "styleSlot": "bonding.label.log"
-          },
-          {
-            "type": "label",
-            "name": "PedigreeProbeLine",
-            "id": "pedigreeProbeLine",
-            "widget": {
-              "bottom": 6,
-              "left": 252
-            },
-            "width": 520,
-            "height": 46,
-            "text": "",
-            "styleSlot": "bonding.label.log"
           },
           {
             "type": "label",
