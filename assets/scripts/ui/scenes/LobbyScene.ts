@@ -195,6 +195,7 @@ import type { TabKey } from '../components/character-ds3/GeneralDetailChromePres
 import { ensureDs3SideAction, ensureDs3SideLabel, setDs3SideActionEnabled } from '../components/character-ds3/Ds3SideActions';
 import { DS3_BLOODLINE_TREE_NODE_NAME, ensureDs3BloodlineTree } from '../components/character-ds3/Ds3BloodlineTree';
 import { BLOODLINE_TREE_OPEN_LINE } from '../../core/systems/BloodlineTreeSlots';
+import { delegateSchedule } from '../../core/systems/AutoNurture';
 
 const { ccclass } = _decorator;
 
@@ -988,7 +989,7 @@ export class LobbyScene extends Component {
                 }
             },
             spendLifespan: (generalId, command) => services().session.spendLifespan(generalId, command),
-            autoNurture: (childId) => services().session.runAutoNurture(childId),
+            autoNurture: (childId, policy) => services().session.runAutoNurture(childId, delegateSchedule(policy)),
             performLegendaryMentoring: (generalId, childId, exclusiveSkillId) => services().session.performLegendaryMentoringFor(generalId, childId, exclusiveSkillId),
             showToast: (message) => { services().event.emit('SHOW_TOAST', { message, duration: 2 }); },
             tacticName: (id) => tacticNames.get(id) ?? inspiredTacticName(id),
@@ -1021,6 +1022,7 @@ export class LobbyScene extends Component {
                 handler: () => { flow.cycleDeckSlot(i); this._refreshNurtureFlow(); },
             })),
             { buttonId: 'btnAutoNurture', handler: act(() => flow.autoNurture()) },
+            { buttonId: 'btnDelegatePolicy', handler: () => { flow.cycleDelegatePolicy(); this._refreshNurtureFlow(); } },
             { buttonId: 'btnMentorDetail', handler: () => {
                 const detail = flow.mentorDetail();
                 if (detail) { this.openMentorCardDetail(detail.card, detail.title); }
