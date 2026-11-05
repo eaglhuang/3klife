@@ -8,6 +8,8 @@
  * Unity 對照：像在技能執行前後呼叫一個 EventDispatcher，回傳要 Spawn 的 Prefab 清單，
  * 實際 Instantiate 與動畫交給 View。
  */
+import { RULED_EXTRA_TALLIES, TIGER_TALLY_SPEC_TACTICS, type TigerTallySpecTactic } from '../../core/config/TigerTallySpecTactics';
+import type { TacticFlashTiming, TacticFlashView } from '../../shared/interfaces/IBattleUIComponents';
 
 export const FLASH_QUALITIES: readonly string[] = Object.freeze(['SSR', 'UR']);
 export const TACTIC_FX_ROOT = 'assets/fx/tactics/';
@@ -92,4 +94,30 @@ export function lootFloatingTexts(events: readonly LootEvent[]): LootFloatingTex
         }
     }
     return texts;
+}
+
+/** 英靈閃現時序（PROG-2-1861；秒，暫定）：總長約 1.3 秒，不擋操作 */
+export const TACTIC_FLASH_TIMING: TacticFlashTiming = { slideIn: 0.2, hold: 0.8, fadeOut: 0.3 };
+
+const QUALITY_RANK: Readonly<Record<string, number>> = { R: 1, SR: 2, SSR: 3, UR: 4 };
+
+/** 戰法 id 對到虎符表（含裁定追加的虎符）；同一招有多張虎符時取品質最高的那張 */
+export function tallyTacticOf(battleSkillId: string): TigerTallySpecTactic | null {
+    let best: TigerTallySpecTactic | null = null;
+    for (const row of [...TIGER_TALLY_SPEC_TACTICS, ...RULED_EXTRA_TALLIES]) {
+        if (row.battleSkillId !== battleSkillId) continue;
+        if (!best || (QUALITY_RANK[row.quality] ?? 0) > (QUALITY_RANK[best.quality] ?? 0)) best = row;
+    }
+    return best;
+}
+
+/**
+ * 戰法施放時的英靈閃現（戰法系統 §H-2，PROG-2-1861）：只有虎符表品質為 SSR／UR 的戰法才閃現；
+ * 顯示施放方主將的半身立繪與虎符名。查不到品質的戰法（種子戰法、奧義等）不閃現。
+ */
+export function tacticFlashOf(battleSkillId: string, side: TacticFlashView['side']): TacticFlashView | null {
+    const row = tallyTacticOf(battleSkillId);
+    if (!row) return null;
+    const flash = tacticVfxHooks({ tacticId: row.tacticId, quality: row.quality }).some((hook) => hook.kind === 'flash');
+    return flash ? { side, quality: row.quality, caption: row.tallyName } : null;
 }

@@ -16,6 +16,8 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { _decorator, Button, Color, Label, Node, Sprite, UITransform, Vec3 } from 'cc';
 import { portraitPathOf } from '../../core/systems/GeneralArtPaths';
 import { loadGeneralAvatar } from '../core/GeneralAvatarLoader';
+import { playTacticFlash, TACTIC_FLASH_NODE } from '../core/TacticFlashOverlay';
+import type { TacticFlashTiming, TacticFlashView } from '../../shared/interfaces/IBattleUIComponents';
 import { EVENT_NAMES, Faction, GAME_CONFIG } from '../../core/config/Constants';
 import { buildBattleSkillEffectMessage, buildBattleSkillUsedMessage } from '../../shared/BattleSkillPresentation';
 import { services } from '../../core/managers/ServiceLoader';
@@ -209,6 +211,18 @@ export class BattleHUDComposite extends CompositePanel {
     public setEnemyName(name: string): void {
         if (!this._buildCompleted) { this._pendingEnemyName = name; return; }
         if (this._enemyNameLabel) this._enemyNameLabel.string = name;
+    }
+
+    /** SSR／UR 戰法的半身英靈閃現（PROG-2-1861）：用施放方主將立繪；掛在 HUD 的父節點最上層，避免被卡欄蓋住；連續施放時新的取代舊的 */
+    public async playTacticFlash(view: TacticFlashView, timing: TacticFlashTiming): Promise<void> {
+        const generalId = view.side === 'player' ? this._pendingPlayerGeneralId : this._pendingEnemyGeneralId;
+        const portrait = generalId
+            ? await services().resource.loadSpriteFrame(this._buildPortraitPath(generalId)).catch(() => null)
+            : null;
+        if (!this.node.isValid) return;
+        const host = this.node.parent?.isValid ? this.node.parent : this.node;
+        host.getChildByName(TACTIC_FLASH_NODE)?.destroy();
+        await playTacticFlash(host, portrait, view, timing);
     }
 
     public setPlayerGeneralId(generalId: string): void {

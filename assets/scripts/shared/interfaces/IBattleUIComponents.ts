@@ -25,6 +25,8 @@ export interface IBattleHUDLike {
     clearPersistentStatus(): void;
     clearSceneGambitBadge(): void;
     showSceneGambitBadge(text: string): void;
+    /** SSR／UR 戰法的半身英靈閃現（戰法系統 §H-2，PROG-2-1861）；舊 HUD 不實作 */
+    playTacticFlash?(view: TacticFlashView, timing: TacticFlashTiming): Promise<void>;
 }
 
 export interface IStrategistHudLike {
@@ -102,6 +104,20 @@ export interface IBattleScenePanelLike {
     appendLog(text: string): void;
     actionCommandComposite?: any;
     actionCommandPanel?: any;
+}
+
+/** 戰法閃現要顯示的內容：哪一方施放、品質、虎符名 */
+export interface TacticFlashView {
+    readonly side: 'player' | 'enemy';
+    readonly quality: string;
+    readonly caption: string;
+}
+
+/** 戰法閃現時序（秒）：滑入、停留、淡出 */
+export interface TacticFlashTiming {
+    readonly slideIn: number;
+    readonly hold: number;
+    readonly fadeOut: number;
 }
 
 /** 戰場覺醒定格演出時序（秒） */

@@ -48,7 +48,7 @@ import { BattleController } from '../controllers/BattleController';
 import type { BattleResult } from '../BattleTypes';
 import { BattleSpecialActionTracker, specialActionDisplayName, toUnitHitObservation, type UnitDamagedPayload } from '../../core/systems/BattleSpecialActions';
 import { strategistHudViewOf } from '../shared/StrategistHudView';
-import { salvageLootTexts } from '../shared/TacticVfxHooks';
+import { salvageLootTexts, tacticFlashOf, TACTIC_FLASH_TIMING } from '../shared/TacticVfxHooks';
 import type { StageSalvageGainedEvent } from '../shared/StageSalvage';
 import { salvageGainItems } from '../../core/systems/StrategistHud';
 import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, IDeployRuntimeLike, IBattleScenePanelLike, IStrategistHudLike } from '../../shared/interfaces/IBattleUIComponents';
@@ -675,6 +675,10 @@ export class BattleUIBridge {
 
     const effectKey = resolveBattleGeneralSkillEffectKey(data.sourceType);
     playBattleFlowEffectAtBoardCenter(services().effect, this.ctx.boardRenderer, effectKey, 1.35);
+
+    // SSR／UR 戰法：施放方主將半身立繪閃現（戰法系統 §H-2，PROG-2-1861）
+    const flash = tacticFlashOf(skillId, data.faction === Faction.Player ? 'player' : 'enemy');
+    if (flash) void this.ctx.hud?.playTacticFlash?.(flash, TACTIC_FLASH_TIMING);
   }
 
   /** 自身爆發開始／結束寫進戰報（SYS-SKILL-ULT-0001）；爆發 icon 待美術 */
