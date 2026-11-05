@@ -186,3 +186,9 @@
 | doc_spec_0300 | REPORT.md (prior-birth-coverage) | docs/遊戲規格文件/系統規格書/血統與家系-R5/nation_fall_save_v1/provenance/prior-birth-coverage/REPORT.md | 原出生→20季增齡→5歲開獎宿命→育成入場（BN01-BN04）有界驗證報告 |
 | doc_index_1052 | README.md (handoff_2983a19f_v1) | docs/遊戲規格文件/系統規格書/血統與家系-R5/handoff_2983a19f_v1/README.md | 最新版血統與出生驗證交接包索引（Commit 2983a19f） |
 | doc_spec_0301 | REPORT.md (handoff_2983a19f_v1) | docs/遊戲規格文件/系統規格書/血統與家系-R5/handoff_2983a19f_v1/REPORT.md | 3KLife 最新版血統與出生驗證報告（含純化改星違規反例） |
+| doc_spec_0302 | ACAD_CORE_學府培育總控與防SL確定性引擎規格書.md | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_CORE_學府培育總控與防SL確定性引擎規格書.md | 學府培育總控與防 SL 確定性引擎功能規格書（36回合、三態代管、PRNG種子鏈、WAL原子落盤） |
+| doc_spec_0303 | ACAD_01_潁川書院_名士清談與策論牌組規格書.md | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_01_潁川書院_名士清談與策論牌組規格書.md | 潁川書院：名士清談與策論牌組功能規格書（天地人三才牌型、清談大會大彩圈） |
+| doc_spec_0304 | ACAD_02_幽州演武_沙盤巡哨與煞氣突破規格書.md | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_02_幽州演武_沙盤巡哨與煞氣突破規格書.md | 幽州演武：沙盤巡哨與煞氣突破功能規格書（邊塞巡哨、煞氣突破Surge、負傷代價） |
+| doc_spec_0305 | ACAD_03_江東督府_水文天時與陣型火攻規格書.md | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_03_江東督府_水文天時與陣型火攻規格書.md | 江東督府：水文天時與陣型火攻功能規格書（水文氣候預報、陣型天候匹配、風火連鎖） |
+| doc_spec_0306 | ACAD_04_洛陽太學_五經注疏與九品官聲規格書.md | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_04_洛陽太學_五經注疏與九品官聲規格書.md | 洛陽太學：五經注疏與九品官聲功能規格書（五經注疏、拜謁公卿、九品官聲、世家遺物） |
+| doc_spec_0307 | ACAD_05_隆中草廬_奇門生剋與機巧工造規格書.md | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_05_隆中草廬_奇門生剋與機巧工造規格書.md | 隆中草廬：奇門生剋與機巧工造功能規格書（八門羅盤生剋、木牛流馬連弩組裝、神工天成） |

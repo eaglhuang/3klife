@@ -460,5 +460,11 @@
     "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/handoff_2983a19f_v1/README.md",
     "title": "3KLife 最新版血統與出生驗證交接包 (v1, Fixed `2983a19f`)",
     "category": "index"
+  },
+  {
+    "id": "doc_index_1053",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/README.md",
+    "title": "天下名門學府賽季劇本功能規格總目錄",
+    "category": "index"
   }
 ]
