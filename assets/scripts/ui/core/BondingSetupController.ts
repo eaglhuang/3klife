@@ -29,7 +29,7 @@ import { synergyWindowLine, type FamilySynergyLedger } from '../../core/systems/
 import { compactCostFor, compactFamilyOf, heritageFactorsOf, sharedFactorsOf } from '../../core/systems/FamilyCompact';
 import { epContribLine } from '../../core/systems/EpLegacyBonus';
 import { bondingSeatText } from '../../core/systems/BloodlineTreeSlots';
-import { lineageSynergyHint, lineageSynergyLine, sharedBlueGenesOf } from '../../core/systems/LineageSynergy';
+import { blueFactorCapLine, blueFactorCaps, lineageSynergyHint, lineageSynergyLine, sharedBlueGenesOf } from '../../core/systems/LineageSynergy';
 import { kinPurificationHint, kinPurificationLine } from '../../core/systems/KinPurification';
 import type { GeneralGeneConfig } from '../../core/models/GeneralUnit';
 import type { FactorDictionary } from '../../core/systems/FactorInheritance';
@@ -421,7 +421,14 @@ export class BondingSetupController {
                 : '血緣：3 代內無共同祖先';
         const fatigueForecast = bloodFatigueForecast((father as BreedingGeneral).bloodFatigue, (mother as BreedingGeneral).bloodFatigue, eligibility.inbred);
         if (fatigueForecast) texts.inbreedingLabel += `｜${fatigueForecast}`;
-        const kinHint = kinPurificationHint((this._deps.breeding.kinPurificationTargets?.(father.id, mother.id) ?? []).filter((target) => (target.gene.discoveryLevel ?? 1) <= level));
+        const kinTargets = (this._deps.breeding.kinPurificationTargets?.(father.id, mother.id) ?? []).filter((target) => (target.gene.discoveryLevel ?? 1) <= level);
+        const kinHint = kinPurificationHint(kinTargets);
+        texts.factorCapLabel = blueFactorCapLine(blueFactorCaps(father, mother, {
+            dictionary: this._deps.factorDictionary?.(),
+            synergyAllowed: !isSameBloodline(father, mother),
+            purifyIds: kinTargets.map((target) => target.gene.id ?? ''),
+            isVisible: (gene) => (gene.discoveryLevel ?? 1) <= level,
+        }));
         if (kinHint) texts.inbreedingLabel += `｜${kinHint}`;
         const surnameNote = sameSurnameNote(father.name, mother.name);
         if (surnameNote) texts.inbreedingLabel += `｜${surnameNote}`;

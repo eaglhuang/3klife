@@ -693,6 +693,19 @@
                 ]
               },
               {
+                "type": "label",
+                "name": "FactorCapLabel",
+                "id": "factorCapLabel",
+                "widget": {
+                  "top": 744,
+                  "left": 16
+                },
+                "width": 740,
+                "height": 36,
+                "text": "",
+                "styleSlot": "bonding.label.meta"
+              },
+              {
                 "type": "panel",
                 "name": "FatherTree",
                 "width": 330,
