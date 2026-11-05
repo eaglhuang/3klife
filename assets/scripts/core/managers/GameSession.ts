@@ -214,6 +214,7 @@ import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePri
 import { createFemaleSource, normalizeFemaleSource, normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
 import { normalizeGachaPityBook, type GachaPityBook } from '../systems/GachaDraw';
 import { drawFemalePool, isFemalePoolRefreshDue, type PoolCandidate } from '../systems/FemalePoolRefresh';
+import { resolvePrisonerGift, type PrisonerGiftResult } from '../systems/PrisonerGift';
 import { isRescueRefreshDue, rollDungeonRescue, type RescueOutcome, buildRescuedGeneral, RESCUE_QUALITY, rescueRefreshRemainingMs } from '../systems/DungeonRescue';
 import { giftToFemale, normalizeFemaleSystemState, type FemaleSystemState } from '../systems/FemaleSystemState';
 import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral, UNVEILING_AGE, GENERAL_STATUS_UNVEILED } from '../systems/Unveiling';
@@ -1799,6 +1800,28 @@ export class GameSession {
      * 加入麾下 → 寫進名冊；招募扣城市兵源（黃金由呼叫端依 goldSpent 從錢包扣）；關押進監獄；放走加名聲。
      * 勸降失敗俘虜仍留在待處置清單（不能再勸降，可改關押或放走）；資源不足時什麼都不扣。
      */
+    /**
+     * 對待處置的女俘虜送禮（PROG-2-1789）：好感與勸降成功率都寫回；非女俘虜或勸降已失敗回傳 null。
+     * 黃金由呼叫端從錢包扣（與 resolvePrisoner 相同）。
+     */
+    public async giftPrisoner(targetUid: string, gold: number): Promise<PrisonerGiftResult | null> {
+        const pending = this._prison.pending.find((p) => p.record.targetUid === targetUid);
+        if (!pending || pending.target.gender !== '女' || pending.record.decision !== null) return null;
+        const affection = this.femaleSystemState.giftAffection[targetUid] ?? 0;
+        const result = resolvePrisonerGift(pending.record.options.persuadeRate, affection, gold);
+        if (!result.ok) return result;
+        this.giftFemale(targetUid, result.affectionGained);
+        const record = { ...pending.record, options: { ...pending.record.options, persuadeRate: result.persuadeRate } };
+        this._prison = {
+            ...this._prison,
+            pending: this._prison.pending.map((p) => (p === pending ? { ...p, record } : p)),
+        };
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return result;
+    }
+
     public async resolvePrisoner(targetUid: string, decision: PowDecision, options: { gold?: number } = {}): Promise<PowResolution | null> {
         const pending = this._prison.pending.find((p) => p.record.targetUid === targetUid);
         if (!pending) return null;
@@ -1854,7 +1877,8 @@ export class GameSession {
             // 女俘虜歸入名冊時記下 CAPTIVE 來源（FEM-05 / FEM-01）
             const captiveSource = captiveFemaleSourceOf({ ...pending.target }, this._clock.state.totalSeasonsElapsed);
             if (captiveSource) {
-                this._femaleSources = { ...this._femaleSources, [pending.target.id]: createFemaleSource('CAPTIVE', captiveSource.Quality_Grade, captiveSource.Acquired_Season) };
+                const giftAffinity = this.femaleSystemState.giftAffection[pending.target.id] ?? 0;
+                this._femaleSources = { ...this._femaleSources, [pending.target.id]: { ...createFemaleSource('CAPTIVE', captiveSource.Quality_Grade, captiveSource.Acquired_Season), Gift_Affinity: giftAffinity } };
             }
             // addGenerals 廣播 RosterChanged；監獄狀態另外存檔
             await this.addGenerals([{ ...pending.target }]);

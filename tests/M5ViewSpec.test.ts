@@ -106,6 +106,7 @@ export function createM5ViewSpecSuite(): TestSuite {
             session: {
                 get prison() { return prison; },
                 get military() { return { ...STARTER_MILITARY }; },
+                giftPrisoner: async () => null,
                 async resolvePrisoner(uid: string, decision: PowDecision) {
                     calls.push(decision);
                     const pending = prison.pending.find((p) => p.record.targetUid === uid)!;

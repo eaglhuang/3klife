@@ -243,7 +243,7 @@
                 "widget": {
                   "top": 92,
                   "left": 282,
-                  "right": 8
+                  "right": 288
                 },
                 "height": 64,
                 "skinSlot": "pow.button.bg",
@@ -259,6 +259,33 @@
                     },
                     "height": 40,
                     "text": "勸降",
+                    "styleSlot": "pow.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnGift",
+                "id": "btnGift",
+                "widget": {
+                  "top": 92,
+                  "right": 8
+                },
+                "width": 268,
+                "height": 64,
+                "skinSlot": "pow.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnGiftLabel",
+                    "id": "giftLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "送禮",
                     "styleSlot": "pow.label.button"
                   }
                 ]
