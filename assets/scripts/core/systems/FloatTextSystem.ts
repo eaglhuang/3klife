@@ -13,7 +13,8 @@ export type FloatTextType =
     | 'dmg_miss'    // 閃避/Miss（灰）
     | 'heal'        // 治療量（綠）
     | 'status'      // 狀態效果（中毒/暈眩/Buff，水藍）
-    | 'hint';       // 場景提示 / Debug 用（半透明白）
+    | 'hint'        // 場景提示 / Debug 用（半透明白）
+    | 'loot';       // 掠奪資源（金色，戰法系統 §H-3）
 
 interface FloatConfig {
     color: Color;
@@ -36,6 +37,7 @@ const FLOAT_CONFIGS: Record<FloatTextType, FloatConfig> = {
     dmg_miss:   { color: new Color(160, 160, 160, 255), fontSize: 34, isBold: false, durationMs: 800,  risePixels: 70,  scalePop: 1.0, maxConcurrent: 8,  randomOffsetX: 30 },
     heal:       { color: new Color(150, 255, 140, 255), fontSize: 40, isBold: false, durationMs: 1000, risePixels: 85,  scalePop: 1.1, maxConcurrent: 10, randomOffsetX: 30 },
     status:     { color: new Color(100, 220, 255, 255), fontSize: 30, isBold: false, durationMs: 1200, risePixels: 80,  scalePop: 1.0, maxConcurrent: 10, randomOffsetX: 20 },
+    loot:       { color: new Color(255, 215, 0,   255), fontSize: 32, isBold: true,  durationMs: 1400, risePixels: 100, scalePop: 1.2, maxConcurrent: 10, randomOffsetX: 12 },
     hint:       { color: new Color(255, 255, 200, 150), fontSize: 22, isBold: false, durationMs: 2000, risePixels: 40,  scalePop: 1.0, maxConcurrent: 6,  randomOffsetX: 0  },
 };
 

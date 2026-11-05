@@ -113,6 +113,9 @@ interface TileBuffView {
   label: Label;
 }
 
+/** 掠奪飄字每行間隔（秒） */
+const LOOT_TEXT_STAGGER_SEC = 0.5;
+
 @ccclass("UnitRenderer")
 export class UnitRenderer extends Component {
   @property({ tooltip: "cube 單位高度" })
@@ -820,6 +823,15 @@ export class UnitRenderer extends Component {
       const pos = this.boardRenderer?.getCellWorldPosition(lane, depth, 0.12);
       if (!pos) return;
       this.projectWorldPoint(pos, view.node);
+    });
+  }
+
+  /** 掠奪金色飄字（戰法系統 §H-3，PROG-2-1852）：多行依序飄出，避免疊在一起 */
+  public playLootTexts(lane: number, depth: number, texts: readonly string[]): void {
+    const worldPos = this.getUnitWorldPosition(lane, depth);
+    if (!worldPos) return;
+    texts.forEach((text, index) => {
+      this.scheduleOnce(() => this.spawnFloatText(text, 'loot', worldPos), index * LOOT_TEXT_STAGGER_SEC);
     });
   }
 

@@ -35,6 +35,17 @@ export function luckSalvageMultiplierOf(luk: number | null | undefined): number 
     return 1 + clamped * LUCK_SALVAGE_BONUS_PER_POINT;
 }
 
+/** 落石擊破或火燒掠奪的來源（PROG-2-1852） */
+export type SalvageLootSource = 'rock-slide' | 'fire-raid';
+
+/** EVENT_NAMES.StageSalvageGained 的內容：哪一格、哪種來源、這次入帳多少 */
+export interface StageSalvageGainedEvent {
+    lane: number;
+    depth: number;
+    source: SalvageLootSource;
+    gain: Partial<SalvageTotals>;
+}
+
 /** 掉落依倍率放大（無條件捨去）；倍率 1 原樣回傳 */
 export function scaleSalvageGain(gain: Partial<SalvageTotals>, multiplier: number): Partial<SalvageTotals> {
     if (multiplier === 1) return gain;

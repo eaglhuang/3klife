@@ -68,6 +68,18 @@ export interface LootFloatingText {
     color: string;
 }
 
+/**
+ * 落石擊破與火燒掠奪的飄字（PROG-2-1852）：落石算擊破、火燒格算佔領，兩者都是掠奪型。
+ */
+export function salvageLootTexts(source: 'rock-slide' | 'fire-raid', resources: readonly { name: string; amount: number }[]): LootFloatingText[] {
+    return lootFloatingTexts([{
+        tacticId: source,
+        lootTrigger: true,
+        outcome: source === 'rock-slide' ? 'destroyed' : 'captured',
+        resources,
+    }]);
+}
+
 /** 掠奪飄字：只有掠奪型戰法且結果為擊破或佔領時才產生；每項資源一行。 */
 export function lootFloatingTexts(events: readonly LootEvent[]): LootFloatingText[] {
     const texts: LootFloatingText[] = [];
