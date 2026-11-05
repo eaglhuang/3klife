@@ -14,6 +14,7 @@ import { buildBattleRecordPanel } from '../../core/systems/BattleRecordStats';
 import { quarterlyBattleReport, retireReviewCareerLine, retireReviewScriptLine, vitalityPercentOf } from '../../core/systems/RetireReviewCopy';
 import { routeRetirement } from '../../core/systems/RetirementRouting';
 import { JobWiringGeneral, resolvePrimaryClass } from '../../core/systems/JobChangeWiring';
+import { RETIRE_TUTOR_HIGH_EP } from './RetirementFlowController';
 
 export interface RetireReviewView {
     /** 退役回顧：生涯戰績一行（UI_RETIRE_REVIEW） */
@@ -58,11 +59,9 @@ export const RETIRE_REVIEW_TEXT_FALLBACK_ZH_TW: Readonly<Record<string, string>>
     'ui.retire_review.career': '生涯戰績：{0}勝 {1}敗 斬{2}人',
     'ui.retire_review.script': '回首征途：勝{0}場，斬敵{1}人，承傷{2}——英雄無悔。',
     'ui.retire_review.report': '戰損報告：精力 {0}%',
-    'ui.retire_review.quarterly': '本季戰報：{0} 精力剩 {1}%，{2}',
-    'ui.retire_review.bond_ok': '可進行結緣。',
-    'ui.retire_review.bond_no': '不建議進行結緣。',
+    'ui.retire_review.farewell': '「老驥伏櫪，志在千里」',
+    'ui.retire_review.farewell_tutor': '「老臣筋骨已衰，難復提刀躍馬；\n願入宗學為太傅，將一生沙場戰陣（EP {0}）傾囊傳予小孫！」',
     'ui.retire_review.grant_scroll': '獲得竹簡 ×1',
-    'ui.retire_review.grant_weapon': '獲得虎符 ×1',
 };
 
 /** 文案查詢：key 與可選的 {0}、{1} 占位參數；語系表沒有該 key 時回傳 key 本身 */
@@ -86,14 +85,13 @@ export function withRetireReviewFallback(lookup: RetireReviewTextLookup): Retire
     };
 }
 
-/** 退役獎勵一行對應的文案 key；武職得虎符，文職與雙職能得竹簡（規則同 GameSession.retireGeneral） */
+/** 退役獎勵一行對應的文案 key；文職與雙職能得竹簡，武職沒有獎勵，虎符只在死亡結算發（規則同 GameSession.retireGeneral） */
 const RETIRE_GRANT_KEY_BY_REASON: Readonly<Record<string, string>> = {
-    WARRIOR: 'ui.retire_review.grant_weapon',
     SCHOLAR: 'ui.retire_review.grant_scroll',
     DUAL_CLASS: 'ui.retire_review.grant_scroll',
 };
 
-/** 退役獎勵一行（PROG-2-0739）：依退役路線給虎符或竹簡；UNKNOWN_CLASS 不給，回傳空字串 */
+/** 退役獎勵一行（PROG-2-0739）：文職與雙職能給竹簡；武職與 UNKNOWN_CLASS 不給，回傳空字串 */
 export function retireGrantText(general: GeneralConfig | undefined | null, lookup: RetireReviewTextLookup = fallbackRetireReviewText): string {
     const g = (general ?? {}) as GeneralConfig & JobWiringGeneral;
     const route = routeRetirement({ primaryClass: resolvePrimaryClass(g), subClass: g.subClass });
@@ -112,15 +110,17 @@ export function buildRetireReviewTexts(
     const g = (general ?? {}) as ReviewCarrier;
     const [wins, losses, kills, , guardian] = buildBattleRecordPanel(g.battleRecord ?? null).rows.map(row => String(row.value));
     const pct = vitalityPercentOf(g.vitality ?? 0, g.maxVitality ?? g.vitality ?? 0);
-    const report = quarterlyBattleReport(g.name ?? '', pct);
-    const bondText = lookup(report.bondRecommended ? 'ui.retire_review.bond_ok' : 'ui.retire_review.bond_no');
+    // 血統傳承 G2 §G：高 EP 老臣說太傅句；已退役的人不能結緣，不沿用季度戰報的結緣建議
+    const farewell = g.ep !== undefined && g.ep >= RETIRE_TUTOR_HIGH_EP
+        ? lookup('ui.retire_review.farewell_tutor', String(g.ep))
+        : lookup('ui.retire_review.farewell');
     return {
         retireTitle: lookup('ui.retire_review.title'),
         retireName: g.name ?? '',
         retireCareer: lookup('ui.retire_review.career', wins, losses, kills),
         retireScript: lookup('ui.retire_review.script', wins, kills, guardian),
         retireReport: lookup('ui.retire_review.report', String(pct)),
-        retireQuarterly: lookup('ui.retire_review.quarterly', g.name ?? '', String(pct), bondText),
+        retireFarewell: farewell,
         retireGrant: retireGrantText(general, lookup),
         closeRetireLabel: lookup('ui.retire_review.close'),
     };

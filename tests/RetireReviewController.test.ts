@@ -6,6 +6,7 @@
  */
 import { assert, TestSuite } from './TestRunner';
 import { buildRetireReviewTexts, buildRetireReviewView, retireGrantText, withRetireReviewFallback } from '../assets/scripts/ui/core/RetireReviewController';
+import { retireFarewellLine } from '../assets/scripts/ui/core/RetirementFlowController';
 import { quarterlyBattleReport, retireReviewCareerLine, retireReviewScriptLine } from '../assets/scripts/core/systems/RetireReviewCopy';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 
@@ -45,7 +46,7 @@ export function createRetireReviewControllerSuite(): TestSuite {
         assert.equals(retireReviewCareerLine(record), texts.retireCareer);
         assert.equals(retireReviewScriptLine(record), texts.retireScript);
         assert.equals(report.reportLine, texts.retireReport);
-        assert.equals(report.scriptLine, texts.retireQuarterly);
+        assert.equals('「老驥伏櫪，志在千里」', texts.retireFarewell);
     });
 
     suite.test('語系查詢拿到占位參數：數值以參數傳入，不在元件內拼字', () => {
@@ -54,7 +55,7 @@ export function createRetireReviewControllerSuite(): TestSuite {
         const texts = buildRetireReviewTexts(g, lookup);
         assert.equals('ui.retire_review.career|5,3,2', texts.retireCareer);
         assert.equals('ui.retire_review.script|5,2,7', texts.retireScript);
-        assert.equals('ui.retire_review.quarterly|趙雲,40,ui.retire_review.bond_no|', texts.retireQuarterly);
+        assert.equals('ui.retire_review.farewell|', texts.retireFarewell);
     });
 
     suite.test('withRetireReviewFallback：語系表回傳 key 本身時改用 zh-TW 預設並帶入參數', () => {
@@ -77,10 +78,16 @@ export function createRetireReviewControllerSuite(): TestSuite {
         assert.equals('獲得竹簡 ×1', buildRetireReviewTexts(scholar).retireGrant);
     });
 
-    suite.test('武職退役顯示虎符獎勵一行（PM 2026-10-20 照規格發虎符）', () => {
+    suite.test('武職退役沒有獎勵句：虎符只在死亡結算發（兵種虎符系統，PROG-2-1020）', () => {
         const warrior = general({ primaryClass: 'Warrior', subClass: null });
-        assert.equals('獲得虎符 ×1', retireGrantText(warrior));
-        assert.equals('獲得虎符 ×1', buildRetireReviewTexts(warrior).retireGrant);
+        assert.equals('', retireGrantText(warrior));
+        assert.equals('', buildRetireReviewTexts(warrior).retireGrant);
+    });
+
+    suite.test('高 EP 老臣的回顧句與退役列的太傅句一致；已退役不再顯示結緣建議（PROG-2-1798）', () => {
+        const texts = buildRetireReviewTexts(general({ ep: 82, vitality: 100, maxVitality: 100 }));
+        assert.equals(retireFarewellLine(82), texts.retireFarewell.replace('\n', ''));
+        assert.isFalse(Object.values(texts).some((text) => text.includes('結緣')));
     });
 
     suite.test('雙職能退役顯示竹簡；無法判定職能的舊存檔不給獎勵', () => {

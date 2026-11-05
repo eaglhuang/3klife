@@ -109,8 +109,8 @@
           },
           {
             "type": "label",
-            "name": "RetireQuarterly",
-            "id": "retireQuarterly",
+            "name": "RetireFarewell",
+            "id": "retireFarewell",
             "widget": {
               "top": 380,
               "left": 40,

@@ -1,4 +1,4 @@
-// @spec-source → 武將壽命系統.md (doc_spec_0018)；PROG-2-1429 依建檔紀錄補標出處；武將系統.md (doc_spec_0016) §G 職能分流對話與退役語錄（PROG-2-1738）
+// @spec-source → 武將壽命系統.md (doc_spec_0018)；PROG-2-1429 依建檔紀錄補標出處；武將系統.md (doc_spec_0016) §G 職能分流對話與退役語錄（PROG-2-1738）；血統傳承G2 §G、§H 榮退太傅文案（PROG-2-1798）
 import { gearInheritLine, retireGearReturnLine } from '../../core/systems/BackpackScripts';
 import { isFemale } from '../../core/systems/BreedingSystem';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
@@ -9,6 +9,15 @@ import { GENERAL_STATUS_UNVEILED, UNVEILING_AGE } from '../../core/systems/Unvei
 export const RETIRE_ROLE_SPLIT_LINE = '將軍願橫刀立馬，還是傳道受業？';
 /** 武將系統 §G 退役：名將退休語錄 */
 export const RETIRE_FAREWELL_QUOTE = '「老驥伏櫪，志在千里」';
+/** 血統傳承 G2 §H UI_G2_RETIRE_TUTOR：轉任太傅說明 */
+export const RETIRE_TUTOR_LINE = '轉任宗學太傅：卸下軍政職務，轉化為家族專屬開蒙名師（保留所有高階戰法與生平印記教案）。';
+/** 老臣句的「高 EP」門檻；規格書只寫高 EP 沒給數值，暫定 */
+export const RETIRE_TUTOR_HIGH_EP = 70;
+/** 血統傳承 G2 §G 老將榮退太傅：高 EP 老臣的退休語錄，其他武將用 RETIRE_FAREWELL_QUOTE */
+export function retireFarewellLine(ep: number | undefined): string {
+    if (ep === undefined || ep < RETIRE_TUTOR_HIGH_EP) return RETIRE_FAREWELL_QUOTE;
+    return `「老臣筋骨已衰，難復提刀躍馬；願入宗學為太傅，將一生沙場戰陣（EP ${ep}）傾囊傳予小孫！」`;
+}
 
 type RetirementGeneral = GeneralConfig & { isMentorCard?: boolean; fatherId?: string; motherId?: string };
 export interface RetirementFlowDeps {
@@ -121,7 +130,7 @@ export class RetirementFlowController {
         }
         if (this._confirmId !== target.id) {
             this._confirmId = target.id;
-            this._notice = `${RETIRE_ROLE_SPLIT_LINE}${target.name} 將轉為教官，不能再出戰或結緣。再按一次確認退役。`;
+            this._notice = `${RETIRE_ROLE_SPLIT_LINE}${RETIRE_TUTOR_LINE}${target.name} 將不能再出戰或結緣，再按一次確認退役。`;
             return 'confirmation-required';
         }
         this._busy = true;
@@ -134,7 +143,7 @@ export class RetirementFlowController {
         try {
             if (child || heir) await this._deps.retireGeneral(target.id, options);
             else await this._deps.retireGeneral(target.id);
-            this._notice = `${target.name} 已退役，教官卡已保存。${RETIRE_FAREWELL_QUOTE}${gearLine}`;
+            this._notice = `${target.name} 已退役，教官卡已保存。${retireFarewellLine(target.ep)}${gearLine}`;
             return 'retired';
         } catch (error) {
             this._notice = error instanceof Error ? error.message : '退役失敗，請稍後重試';
