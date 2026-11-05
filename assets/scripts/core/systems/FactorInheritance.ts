@@ -129,7 +129,7 @@ export function buildFactorDictionary(raw: { data?: FactorDefinition[] } | Facto
 
 export function normalizeFactorColor(value: string | undefined | null): FactorColor | null {
     if (!value) return null;
-    return COLOR_ALIASES[value.trim().toLowerCase()] ?? COLOR_ALIASES[value.trim()] ?? null;
+    return COLOR_ALIASES[value.trim().toLowerCase()] ?? COLOR_ALIASES[value.trim()] ?? LEGACY_TYPE_COLOR[value.trim()] ?? null;
 }
 
 /**
@@ -145,7 +145,7 @@ export function resolveFactorColor(factorId: string, dictionary?: FactorDictiona
         if (color) return color;
     }
     const type = gene?.type;
-    if (type) return LEGACY_TYPE_COLOR[type] ?? normalizeFactorColor(type);
+    if (type) return normalizeFactorColor(type);
     return null;
 }
 
