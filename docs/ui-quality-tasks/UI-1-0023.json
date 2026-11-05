@@ -18,13 +18,13 @@
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
-      "description": "重繪凌統名將立繪，採趙雲、關羽、張飛原始正式圖的高完成度二次元幻想手繪；保留青年窄橢圓臉、圓亮眼、細直眉、尖下巴與無鬚特徵，使用灰朱紅、石板灰與暖白個人配色；以紅繩三節鎖棍作獨有武器輪廓，服裝與衣帶收束，更新正式立繪、頭像及Cocos資源。",
+      "description": "重繪凌統名將立繪，延續趙雲、關羽、張飛等早期名將的高完成度遊戲插畫，同時採用微動漫五官與半寫實服裝材質光影的平衡畫風；保留青年窄橢圓臉、圓亮眼、細直眉、尖下巴與無鬚特徵，使用灰朱紅、石板灰與暖白個人配色；以紅繩三節鎖棍作獨有武器輪廓，服裝與衣帶收束，更新正式立繪、頭像及Cocos資源。",
       "related": [
         "UI-2-0119"
       ],
       "depends": [],
       "acceptance": [
-        "高完成度二次元幻想手繪，避免寫實3D",
+        "名將級高完成度遊戲插畫；五官帶微動漫感，服裝與金屬採半寫實體積光影，不做純寫實臉或平塗卡通",
         "青年窄橢圓臉、圓亮眼、細直眉、尖下巴、無鬚，與吳將其他四人明確區分",
         "灰朱紅為基底，石板灰和暖白為第二色，延續既定色票",
         "紅繩三節鎖棍為凌統專屬武器，三段棍身與短連節Q版仍易辨，且不與刀、槍、虎頭雙鉤重複",
@@ -39,7 +39,7 @@
         "凌統色票與專屬三節鎖棍紀錄",
         "任務卡、manifest及Cocos驗證紀錄"
       ],
-      "notes": "2026-11-05 | 狀態: in-progress | 驗證: 正式立繪512x768透明；兩種256x256頭像及reviewed crop verify通過；Cocos三項資產imported=true、invalid=false；compute-gate quick 3/3、import-boundary 1/1通過 | 變更: 以二次元青年窄臉、側束深棕髮、灰朱紅／石板灰／暖白及紅繩三節鎖棍替換通用長槍立繪，已同步主遊戲正式資源 | 阻塞: ATM taskflow close 缺可寫 profile；尚未提交／push",
+      "notes": "2026-11-06 | 依最新風格重繪：微動漫青年窄臉、半寫實服裝光影；側束深棕髮、灰朱紅／石板灰／暖白，紅繩三節鎖棍。保留三段棍與雙短紅繩鉸節，Q版可甩擊、折節、回握。512×768透明立繪覆蓋；reviewed crop (179,0)+182×182、兩路256×256頭像重生；Cocos AssetDB三項imported=true、invalid=false。",
       "brief": {
         "style": "classic",
         "label": "",
@@ -63,9 +63,10 @@
           "docs/art/character-palette-ledger-shards/palette-principles.md"
         ],
         "validation_evidence": [
-          "generate-general-avatars.js ling-tong --cropped-only --preserve-crop: 1 成功、0 失敗",
-          "generate-general-avatars.js ling-tong --verify --preserve-crop: reviewed crop通過",
-          "Cocos Refresh Assets與三項資產重匯入成功；imported=true、invalid=false",
+          "generate-general-avatars.js ling-tong --verify: reviewed crop (179,0)+182×182通過；1成功、0失敗",
+          "generate-general-avatars.js ling-tong: 兩路256×256頭像重生，1成功、0失敗",
+          "Cocos AssetDB refresh成功；立繪與兩路頭像3/3 imported=true、invalid=false",
+          "Encoding touched檢查任務卡、manifest、配色台帳與裁切JSON通過",
           "正式立繪512x768透明；兩種頭像256x256"
         ],
         "handoff_diff_status": "角色正式立繪、頭像、裁切索引、配色台帳與任務卡已更新",
@@ -73,7 +74,7 @@
         "metrics_summary": [
           "palette=灰朱紅/石板灰/暖白",
           "weapon=紅繩三節鎖棍",
-          "avatar_crop=reviewed(153,0)+205x205"
+          "avatar_crop=reviewed(179,0)+182x182"
         ]
       }
     }

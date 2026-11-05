@@ -1,0 +1,34 @@
+{
+  "schemaId": "atm.liveIndexReconciliation.v1",
+  "headAdvanced": true,
+  "reconciledPaths": [
+    ".atm/catalog/registry/actors.json",
+    ".atm/history/evidence/UI-1-0023.bundle-manifest.json",
+    ".atm/history/evidence/UI-1-0023.json",
+    ".atm/history/task-events/UI-1-0023/2026-11-05T13-49-52-932Z-create-53b1770e1e2a.json",
+    ".atm/history/task-events/UI-1-0023/2026-11-05T13-50-51-347Z-reserve-5c0f57ee2815.json",
+    ".atm/history/task-events/UI-1-0023/2026-11-05T13-50-51-353Z-promote-4163800c94bb.json",
+    ".atm/history/task-events/UI-1-0023/2026-11-05T13-50-51-850Z-claim-2a370693fdd5.json",
+    ".atm/history/task-events/UI-1-0023/2026-11-05T13-51-06-822Z-scope-amendment-67fcac1e7765.json",
+    ".atm/history/tasks/UI-1-0023.json",
+    "assets/resources/data/general-avatar-crops.json",
+    "assets/resources/sprites/generals/avatars/ling_tong_avatar.png",
+    "assets/resources/sprites/generals/ling_tong_portrait.png",
+    "assets/resources/sprites/ui_avatars/cropped/ling_tong_avatar.png",
+    "docs/agent-briefs/tasks/UI/UI-1-0023.md",
+    "docs/art/character-palette-ledger-shards/palette-principles.md",
+    "docs/ui-quality-tasks/UI-1-0023.json",
+    "docs/ui-quality-todo.json"
+  ],
+  "retainedPaths": [
+    {
+      "path": ".atm/history/evidence/git-head.jsonl",
+      "reason": "worktree-diverged",
+      "firstUnreconciledCommit": "d43bbfec19ebcafdb8ce6b5a353b998bf07aa72b"
+    }
+  ],
+  "clean": false,
+  "failure": null,
+  "taskId": "UI-1-0023",
+  "createdAt": "2026-11-05T14:01:51.912Z"
+}

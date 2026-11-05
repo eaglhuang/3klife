@@ -6,25 +6,35 @@
   "owner": "codex-gpt-6.1-sol",
   "dependencies": [],
   "acceptance": [],
-  "deliverables": [],
+  "deliverables": [
+    "assets/resources/data/general-avatar-crops.json",
+    "assets/resources/sprites/generals/avatars/ling_tong_avatar.png",
+    "assets/resources/sprites/generals/ling_tong_portrait.png",
+    "assets/resources/sprites/ui_avatars/cropped/ling_tong_avatar.png",
+    "docs/agent-briefs/tasks_index.md",
+    "docs/agent-briefs/tasks/UI/UI-1-0023.md",
+    "docs/art/character-palette-ledger-shards/palette-principles.md",
+    "docs/ui-quality-tasks/UI-1-0023.json",
+    "docs/ui-quality-todo.json"
+  ],
   "tags": [],
   "createdAt": "2026-11-05T13:49:52.932Z",
   "createdByActor": "codex-gpt-6.1-sol",
-  "lastTransitionId": "2026-11-05T13-51-06-822Z-scope-amendment-67fcac1e7765",
-  "lastTransitionAt": "2026-11-05T13:51:06.822Z",
+  "lastTransitionId": "2026-11-05T16-52-11-349Z-metadata-repair-e54b1fcb21d5",
+  "lastTransitionAt": "2026-11-05T16:52:11.349Z",
   "ledgerContractVersion": "task-ledger/v1",
-  "reservedAt": "2026-11-05T13:50:51.347Z",
-  "promotedAt": "2026-11-05T13:50:51.353Z",
+  "reservedAt": "2026-11-05T16:33:52.288Z",
+  "promotedAt": "2026-11-05T16:33:52.295Z",
   "claim": {
     "actorId": "codex-gpt-6.1-sol",
-    "leaseId": "lease-4f79febde8a3",
-    "claimedAt": "2026-11-05T13:50:51.358Z",
-    "heartbeatAt": "2026-11-05T13:50:51.358Z",
+    "leaseId": "lease-16b1cedb4fc8",
+    "claimedAt": "2026-11-05T16:33:52.305Z",
+    "heartbeatAt": "2026-11-05T16:33:52.305Z",
     "ttlSeconds": 1800,
     "files": [
+      ".atm/history/tasks/UI-1-0023.json",
       ".atm/history/evidence/UI-1-0023.*",
       ".atm/history/task-events/UI-1-0023/**",
-      ".atm/history/tasks/UI-1-0023.json",
       "assets/resources/data/general-avatar-crops.json",
       "assets/resources/sprites/generals/avatars/ling_tong_avatar.png",
       "assets/resources/sprites/generals/ling_tong_portrait.png",
@@ -38,10 +48,10 @@
     "state": "active",
     "intent": "write",
     "laneSession": {
-      "laneSessionId": "lane-20261105135051-codex-gpt-6.1-sol-9dd2f24618",
+      "laneSessionId": "lane-20261105163352-codex-gpt-6.1-sol-f7ebea9f26",
       "status": "active",
       "source": "minted",
-      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261105135051-codex-gpt-6.1-sol-9dd2f24618\""
+      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261105163352-codex-gpt-6.1-sol-f7ebea9f26\""
     }
   },
   "startedAt": "2026-11-05T13:50:51.358Z",
@@ -49,20 +59,20 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-719172e01d001ec8",
-    "ticketDigest": "sha256:719172e01d001ec8a1b9ffff3b9b202bf196f9bb7bd1f01b200071fd91f686e8",
+    "ticketId": "wat-327ecfd36f75c9bf",
+    "ticketDigest": "sha256:327ecfd36f75c9bf1312a61666ad432c3cbc4320e1bfa614467426a7094b763f",
     "taskId": "UI-1-0023",
     "origin": "claim",
     "actorId": "codex-gpt-6.1-sol",
-    "laneSessionId": "lane-20261105135051-codex-gpt-6.1-sol-9dd2f24618",
-    "claimGeneration": "lease-4f79febde8a3",
-    "issuedAt": "2026-11-05T13:51:06.735Z",
-    "expiresAt": "2026-11-05T14:21:06.735Z",
+    "laneSessionId": "lane-20261105163352-codex-gpt-6.1-sol-f7ebea9f26",
+    "claimGeneration": "lease-16b1cedb4fc8",
+    "issuedAt": "2026-11-05T16:33:52.305Z",
+    "expiresAt": "2026-11-05T17:03:52.305Z",
     "scopeDigest": "sha256:838116f18d99cecdee510cd59b24c408bd23a0e7652f986c5b63724b651c618f",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-11-05T13:51:06.735Z"
+      "selectedAt": "2026-11-05T16:33:52.305Z"
     },
     "grants": [
       {
@@ -120,7 +130,7 @@
     "resolvedRecoveryMode": "disabled",
     "policyDigest": "sha256:0dfda5eb6854c584791820720e4004b612d5ed31b9bfabd1654a9a85257c47bb"
   },
-  "startedBySessionId": "session-20261105135051-codex-gpt-6.1-sol-UI-1-0023-80d56c14a4",
+  "startedBySessionId": "session-20261105163352-codex-gpt-6.1-sol-UI-1-0023-0e002e69aa",
   "taskDirectionLock": {
     "schemaId": "atm.taskDirectionLock.v1",
     "specVersion": "0.1.0",
@@ -146,16 +156,16 @@
     "planningReadOnlyPaths": [],
     "planningMirrorPaths": [],
     "allowPlanningMirror": false,
-    "promptHash": "4fade735eddad85013cd7169d01ce24c5b679a5d51faf864895c1fb30ae767ad",
+    "promptHash": "4668aa8bb2b037b2ae2dfb791d031abbbf78ed3cc9fa32ccc906d87fc5c4a117",
     "actorId": "codex-gpt-6.1-sol",
-    "sessionId": null,
+    "sessionId": "session-20261105163352-codex-gpt-6.1-sol-UI-1-0023-0e002e69aa",
     "laneSession": {
-      "laneSessionId": "lane-20261105135051-codex-gpt-6.1-sol-9dd2f24618",
+      "laneSessionId": "lane-20261105163352-codex-gpt-6.1-sol-f7ebea9f26",
       "status": "active",
       "source": "minted",
-      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261105135051-codex-gpt-6.1-sol-9dd2f24618\""
+      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261105163352-codex-gpt-6.1-sol-f7ebea9f26\""
     },
-    "createdAt": "2026-11-05T13:50:51.858Z",
+    "createdAt": "2026-11-05T16:33:53.474Z",
     "status": "active"
   },
   "scopePaths": [
