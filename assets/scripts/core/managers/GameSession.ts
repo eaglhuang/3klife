@@ -214,7 +214,7 @@ import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePri
 import { createFemaleSource, normalizeFemaleSource, normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
 import { normalizeGachaPityBook, type GachaPityBook } from '../systems/GachaDraw';
 import { drawFemalePool, isFemalePoolRefreshDue, type PoolCandidate } from '../systems/FemalePoolRefresh';
-import { isRescueRefreshDue, rollDungeonRescue, type RescueOutcome } from '../systems/DungeonRescue';
+import { isRescueRefreshDue, rollDungeonRescue, type RescueOutcome, buildRescuedGeneral, RESCUE_QUALITY, rescueRefreshRemainingMs } from '../systems/DungeonRescue';
 import { giftToFemale, normalizeFemaleSystemState, type FemaleSystemState } from '../systems/FemaleSystemState';
 import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral, UNVEILING_AGE, GENERAL_STATUS_UNVEILED } from '../systems/Unveiling';
 import { injectCatalystFactor, markCatalystUsed, type CatalystGeneral } from '../systems/GeneCatalyst';
@@ -292,6 +292,10 @@ export const WAREHOUSE_EXPANSION_ITEM = 'warehouse.expansion';
 export interface RivalSeasonEventsPayload {
     events: Array<{ nationId: string; kind: string; playerWon: boolean }>;
 }
+
+export type DungeonRescueResult =
+    | { ok: true; outcome: RescueOutcome; general: GeneralConfig; source: FemaleSource }
+    | { ok: false; remainingMs: number };
 
 /** 等待選路線的女兒：女兒清單沒存名字，名字取自名冊 */
 export interface DaughterAwaitingRoute {
@@ -1086,6 +1090,24 @@ export class GameSession {
         if (last !== null && !isRescueRefreshDue(last, nowMs)) return null;
         this._femaleSystem = { ...this._femaleSystem, rescueRefreshedAtMs: nowMs };
         return rollDungeonRescue(random);
+    }
+
+    /**
+     * 民間尋訪（PROG-2-1788）：到期才擲結果，救回的女將入名冊並記 DUNGEON 來源；
+     * 還沒刷新時回傳剩餘時間，不改任何狀態。
+     */
+    public async performDungeonRescue(nowMs: number): Promise<DungeonRescueResult> {
+        const last = this._femaleSystem.rescueRefreshedAtMs;
+        const outcome = this.rollDungeonRescueIfDue(nowMs, this._random);
+        if (!outcome) return { ok: false, remainingMs: rescueRefreshRemainingMs(last as number, nowMs) };
+        const general = buildRescuedGeneral(outcome, `rescue-${nowMs}`, this._random);
+        const source = createFemaleSource('DUNGEON', RESCUE_QUALITY[outcome], this._clock.state.totalSeasonsElapsed);
+        this._femaleSources = { ...this._femaleSources, [general.id]: source };
+        this.enrollGenerals([general]);
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return { ok: true, outcome, general, source };
     }
 
     public get gachaPityBook(): Readonly<GachaPityBook> {

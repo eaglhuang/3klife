@@ -96,7 +96,8 @@ import type { DiscoveryGain } from '../../core/systems/DiscoveryProgress';
 import { discoveryPhaseUnlockLines } from '../../core/systems/DiscoveryProgress';
 import { factorAwakeningLines, type FactorAwakenedEvent } from '../../core/systems/FactorAwakening';
 import { rebirthVoiceLines } from '../../core/systems/Rebirth';
-import { gachaFemaleLines } from '../../core/systems/FemaleSourcePresenter';
+import { femaleSourcePresentationOf, gachaFemaleLines } from '../../core/systems/FemaleSourcePresenter';
+import { rescueRefreshLine, rescueResultLines } from '../../core/systems/DungeonRescue';
 import { daughterComingOfAgeToast, type DaughterRoute } from '../../core/systems/DaughterComingOfAge';
 import { DaughterRoutePopupController } from '../core/DaughterRoutePopupController';
 import { ultimateUnlockLines } from '../../core/systems/UltimateScriptLines';
@@ -2560,12 +2561,29 @@ export class LobbyScene extends Component {
         };
         this._recruitHost = await this._mountPreviewScreenHost('RecruitHallHost', 'recruit-hall-screen', [
             { buttonId: 'btnClose', handler: () => { if (this._recruitHost) this._recruitHost.node.active = false; } },
+            { buttonId: 'btnRescue', handler: () => { void this._onClickDungeonRescue(); } },
             ...rowButtons,
             recruitButton,
             { buttonId: 'btnPrev', handler: () => { recruit.prev(); this._refreshRecruitHall(); } },
             { buttonId: 'btnNext', handler: () => { recruit.next(); this._refreshRecruitHall(); } },
         ]);
         this._recruitHost.node.active = false;
+    }
+
+    /** 民間尋訪（可結緣女性來源系統 §E #4，PROG-2-1788）：入口放招賢館，每 8 小時一次 */
+    private async _onClickDungeonRescue(): Promise<void> {
+        try {
+            const result = await services().session.performDungeonRescue(Date.now());
+            const lines = result.ok
+                ? rescueResultLines(result.outcome, result.general.name, femaleSourcePresentationOf(result.source)?.qualityTag ?? '')
+                : [rescueRefreshLine(result.remainingMs)];
+            for (const message of lines) {
+                services().event.emit('SHOW_TOAST', { message, duration: 3 });
+            }
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 民間尋訪失敗', error);
+            services().event.emit('SHOW_TOAST', { message: error instanceof Error ? error.message : '民間尋訪失敗', duration: 2.5 });
+        }
     }
 
     private async _mountLobbyHall(): Promise<void> {
