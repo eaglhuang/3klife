@@ -14,6 +14,7 @@
  * Unity 對照：MVP 的 Presenter。按鈕 onClick 只呼叫 SelectFather / SelectMother / Confirm，
  * 畫面層拿 GetView() 的 ViewModel 一次刷新 Text 與 Button.interactable。
  */
+import { bloodFatigueForecast } from '../../core/systems/BloodFatigue';
 import { getSage } from '../../core/systems/SageDivination';
 import { OMEN_LABEL, pickOmen, type OmenKind, type SageRemark } from '../../core/systems/SageRemarks';
 import { buildBreedingBirthRecord, type BreedingBirthRecord } from '../../core/systems/BreedingBirthRecord';
@@ -308,6 +309,8 @@ export class BondingSetupController {
             : inbred
                 ? `${BLOCK_REASON_TEXT.inbreeding}子嗣精力上限 ×${INBREEDING_VITALITY_MULTIPLIER}`
                 : '血緣：3 代內無共同祖先';
+        const fatigueForecast = bloodFatigueForecast((father as BreedingGeneral).bloodFatigue, (mother as BreedingGeneral).bloodFatigue, eligibility.inbred);
+        if (fatigueForecast) texts.inbreedingLabel += `｜${fatigueForecast}`;
         enabled.btnConfirmBond = eligibility.ok;
 
         return { fatherId: father.id, motherId: mother.id, mode, sageIds: sage.ids, texts, actives, enabled };

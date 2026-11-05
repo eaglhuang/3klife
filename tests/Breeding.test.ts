@@ -347,7 +347,7 @@ export function createBreedingSuite(): TestSuite {
             father: makeGeneral('f', '男', { bloodlineId: 'BL_X' }),
             mother: makeGeneral('m', '女', { bloodlineId: 'BL_X' }),
             pedigree: new BloodlineGraph(),
-            random: () => 0,
+            random: () => 0.3,
             childId: 'baby',
         });
         assert.equals(70, result.child!.maxVitality);

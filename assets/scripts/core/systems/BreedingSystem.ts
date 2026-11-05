@@ -17,6 +17,7 @@
 import type { GeneralConfig, GeneralGeneConfig, GeneralStatsConfig } from '../models/GeneralUnit';
 import { toCanonicalRole, type CanonicalRole } from '../models/GeneralRole';
 import type { PersonRecord } from '../models/PersonRegistry';
+import { birthFrailRisk, BLOOD_FATIGUE_SCAN_GENERATIONS, childBloodFatigue, FRAIL_BIRTH_FLAG, FRAIL_VITALITY_MULTIPLIER, normalizeBloodFatigue, type BloodFatigueOutcome } from './BloodFatigue';
 import type { RelationEventHit } from './RelationEvents';
 import { createEmptyPedigree, Pedigree, PEDIGREE_SLOTS, PedigreeSlot, pedigreeSlotGeneration } from '../services/BloodlineGraph';
 import {
@@ -93,6 +94,8 @@ export type BreedingGeneral = GeneralConfig & {
     birthSeason?: number;
     /** 負面特質出現率加成（近親子嗣 +0.5，其餘 0） */
     negativeTraitRateBonus?: number;
+    /** 血脈疲勞 h（G3 §F-1）；缺欄位視為 0 */
+    bloodFatigue?: number;
 };
 
 export type BreedingBlockReason =
@@ -181,6 +184,8 @@ export interface BreedingEligibility {
     reasons: BreedingBlockReason[];
     /** 共同祖先距離（null = 3 代內沒有） */
     commonAncestorDistance: number | null;
+    /** 是否算近婚（血脈疲勞用）：同血脈，或 28 祖位內有共祖 */
+    inbred: boolean;
 }
 
 export function checkBreedingEligibility(
@@ -209,7 +214,7 @@ export function checkBreedingEligibility(
         : null;
     if (distance !== null && distance <= INBREEDING_BLOCK_GENERATIONS) reasons.push('inbreeding');
 
-    return { ok: reasons.length === 0, reasons, commonAncestorDistance: distance };
+    return { ok: reasons.length === 0, reasons, commonAncestorDistance: distance, inbred: isInbredPair(father, mother, pedigree) };
 }
 
 // ── 受孕率 ─────────────────────────────────────────────────────────────────
@@ -425,6 +430,13 @@ export function isSameBloodline(father: GeneralConfig, mother: GeneralConfig): b
     return !!father.bloodlineId && father.bloodlineId === mother.bloodlineId;
 }
 
+/** 近婚 I（G3 §F-1）：同血脈，或 28 祖位內有共祖；其餘算完整外婚 O */
+export function isInbredPair(father: GeneralConfig, mother: GeneralConfig, pedigree?: Pick<PedigreeSource, 'commonAncestorDistance'>): boolean {
+    if (isSameBloodline(father, mother)) return true;
+    if (!pedigree || father.id === mother.id) return false;
+    return pedigree.commonAncestorDistance(father.id, mother.id, BLOOD_FATIGUE_SCAN_GENERATIONS) !== null;
+}
+
 /** Base_Stat = (父 + 母) / 2 × (EP / 100) */
 export function childBaseStat(fatherStat: number, motherStat: number, ep: number): number {
     return Math.max(1, Math.round(((fatherStat + motherStat) / 2) * (ep / 100)));
@@ -573,6 +585,8 @@ export interface BreedingResult {
     factors?: InheritedFactor[];
     /** 運氣特殊門檻旗標（LUK-06）：依父母平均 LUK 判定，只在受孕成功時有值；效果本身另卡套用 */
     luckEffects?: LuckThresholdEffects;
+    /** 血脈疲勞結果；只有 conceived 才有 */
+    bloodFatigue?: BloodFatigueOutcome;
 }
 
 /** 預覽 EP（結緣介面用），不消耗亂數也不改任何資料 */
@@ -698,8 +712,23 @@ function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMo
         dictionary: request.dictionary,
         birthSeason: request.birthSeason,
     });
+    // 血脈疲勞放在最後擲，不打亂既有亂數序列
+    const fatigueInbred = isInbredPair(request.father, request.mother, request.pedigree);
+    const fatherFatigue = normalizeBloodFatigue(request.father.bloodFatigue);
+    const motherFatigue = normalizeBloodFatigue(request.mother.bloodFatigue);
+    const childFatigue = childBloodFatigue(fatherFatigue, motherFatigue, fatigueInbred);
+    const frail = request.random() < birthFrailRisk(childFatigue, fatigueInbred);
+    child.bloodFatigue = childFatigue;
+    if (frail) {
+        const frailVitality = Math.round((child.maxVitality ?? 0) * FRAIL_VITALITY_MULTIPLIER);
+        child.maxVitality = frailVitality;
+        child.vitality = frailVitality;
+        child.hiddenFlags = [...(child.hiddenFlags ?? []), FRAIL_BIRTH_FLAG];
+    }
+    const bloodFatigue: BloodFatigueOutcome = { before: Math.max(fatherFatigue, motherFatigue), after: childFatigue, inbred: fatigueInbred, frail };
 
     return {
+        bloodFatigue,
         outcome: 'conceived', reasons: [], conceptionRate: rate, father, mother, child, childPedigree: pedigree, ep, factors: childFactors,
         luckEffects,
     };
