@@ -371,6 +371,7 @@
   "ui.fate.script.retire_weapon": "{0} 卸下兵刃，化作虎符，战技永传。",
   "ui.fate.script.retire_scroll": "{0} 放下竹简，智慧化为墨香，传承后世。",
   "ui.fate.reveal": "天命分流：{0}",
+  "ui.fate.role_select": "此子年满五岁，请选择其天命：",
   "ui.fate.accept": "顺应天命（成长率正常）",
   "ui.fate.defy": "逆天而行（成长率 -20%，有机率大器晚成）",
   "ui.fate.job_change": "消耗转职令 ×1，追加副职能：{0}",

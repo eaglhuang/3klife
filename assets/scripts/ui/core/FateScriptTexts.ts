@@ -15,6 +15,8 @@ export const FATE_TEXT_FALLBACK_ZH_TW: Readonly<Record<string, string>> = {
     'ui.fate.script.retire_weapon': '{0} 卸下兵刃，化作虎符，戰技永傳。',
     'ui.fate.script.retire_scroll': '{0} 放下竹簡，智慧化為墨香，傳承後世。',
     'ui.fate.reveal': '天命分流：{0}',
+    /** 武將系統 §H UI_ROLE_SELECT（5 歲分流，PROG-2-1855） */
+    'ui.fate.role_select': '此子年滿五歲，請選擇其天命：',
     'ui.fate.accept': '順應天命（成長率正常）',
     'ui.fate.defy': '逆天而行（成長率 -20%，有機率大器晚成）',
     'ui.fate.job_change': '消耗轉職令 ×1，追加副職能：{0}',

@@ -371,6 +371,7 @@
   "ui.fate.script.retire_weapon": "{0}は刃を置き、虎符となった。その戦技は永く伝わる。",
   "ui.fate.script.retire_scroll": "{0}は竹簡を置いた。その知恵は墨香となって後世に伝わる。",
   "ui.fate.reveal": "天命の分岐：{0}",
+  "ui.fate.role_select": "この子は五歳を迎えた。天命を選べ：",
   "ui.fate.accept": "天命に順う（成長率は通常）",
   "ui.fate.defy": "天に逆らう（成長率 -20%、大器晩成の見込みあり）",
   "ui.fate.job_change": "転職令 ×1 を消費し、副職能を追加：{0}",
