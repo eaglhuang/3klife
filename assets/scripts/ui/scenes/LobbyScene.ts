@@ -126,7 +126,8 @@ import { estimateSortiePower } from '../../core/systems/SortiePrediction';
 import type { LobbyHub } from '../../core/systems/LobbyHubSchema';
 import { HALL_EMPTY_THEME_CATALOG, resolveHallTheme, type HallThemeFrame } from '../../core/systems/LobbyThemeResolver';
 import type { HallBoardKey } from '../../core/systems/HallMissionBoard';
-import { MercenaryPanelController, MERC_PANEL_MAX_ROWS } from '../core/MercenaryPanelController';
+import { MercenaryPanelController, MERC_PANEL_MAX_ROWS, fallenOwnerLabel } from '../core/MercenaryPanelController';
+import { rivalRulerIds } from '../../core/systems/FallenOfficerMarket';
 import { GovernorHallController, GovernorTerritoryInfo } from '../core/GovernorHallController';
 import { BAG_CATEGORY_TABS, BAG_ROW_SLOTS, ItemBagController } from '../core/ItemBagController';
 import { planTerritoryUpgrade } from '../../core/systems/TerritoryUpgrade';
@@ -644,7 +645,7 @@ export class LobbyScene extends Component {
                 difficultyTable,
                 playerOwnedIds: new Set(session.roster.map((g) => g.templateId ?? g.id)),
             });
-            session.setRivalOfficerContext(setup.rosters, setup.context);
+            session.setRivalOfficerContext(setup.rosters, setup.context, rivalRulerIds(rosters));
         } catch (error) {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 他國名冊載入失敗，軍力改以兵力計:', error);
         }
@@ -1851,8 +1852,8 @@ export class LobbyScene extends Component {
             info: (state) => {
                 const general = this._generals.find(g => g.id === state.generalId);
                 return {
-                    // 原主尚無正式來源（暫定）；稀有度與實際結義扣點同源（rarityOfTemplate，PROG-2-1153）
-                    originalOwnerName: '原主未定',
+                    // 滅亡國殘部顯示舊國（PROG-2-1848），其餘原主尚無正式來源（暫定）；稀有度與實際結義扣點同源（rarityOfTemplate，PROG-2-1153）
+                    originalOwnerName: fallenOwnerLabel(services().session.fallenOfficerNationName(state.generalId)),
                     generalName: general?.name ?? state.generalId ?? '未知武將',
                     rarity: (general ? rarityOfTemplate(general) : undefined) ?? 'R',
                 };
@@ -1867,10 +1868,7 @@ export class LobbyScene extends Component {
             },
             trialTickets: () => services().session.itemCount(ITEM_TRIAL_TICKET),
             hire: async () => {
-                const session = services().session;
-                const taken = new Set([...session.roster.map(g => g.id), ...session.mercenaries.mercenaries.map(m => m.generalId)]);
-                const pool = session.availablePoolGeneralIds(this._heroPoolIds.filter(id => !taken.has(id)));
-                return this._hireMercenaryFrom(pool);
+                return this._hireMercenaryFrom(services().session.trialHirePoolIds(this._heroPoolIds));
             },
             femalePool: () => {
                 const { ids, remainingMs } = services().session.femalePoolStatus(this._generals, Date.now());
