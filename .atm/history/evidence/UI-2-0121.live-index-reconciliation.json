@@ -1,0 +1,30 @@
+{
+  "schemaId": "atm.liveIndexReconciliation.v1",
+  "headAdvanced": true,
+  "reconciledPaths": [
+    ".atm/catalog/registry/actors.json",
+    ".atm/history/task-events/UI-2-0121/2026-11-05T14-30-28-536Z-create-13e200f58640.json",
+    ".atm/history/task-events/UI-2-0121/2026-11-05T14-30-42-040Z-reserve-478df01a29f5.json",
+    ".atm/history/task-events/UI-2-0121/2026-11-05T14-30-42-044Z-promote-886b7b109f37.json",
+    ".atm/history/task-events/UI-2-0121/2026-11-05T14-30-42-462Z-claim-9ddb966bb7ed.json",
+    ".atm/history/task-events/UI-2-0121/2026-11-05T14-32-09-502Z-scope-amendment-48040340371c.json",
+    ".atm/history/task-events/UI-2-0121/2026-11-05T14-48-56-405Z-scope-amendment-588df7ee1c57.json",
+    ".atm/history/tasks/UI-2-0121.json",
+    "assets/resources/data/general-avatar-crops.json",
+    "assets/resources/sprites/generals/wei_yan_portrait.png",
+    "assets/resources/sprites/ui_avatars/cropped/wei_yan_avatar.png",
+    "docs/agent-briefs/tasks/UI/UI-2-0121.md",
+    "docs/ui-quality-tasks/UI-2-0121.json"
+  ],
+  "retainedPaths": [
+    {
+      "path": ".atm/history/evidence/git-head.jsonl",
+      "reason": "worktree-diverged",
+      "firstUnreconciledCommit": "13e2d8a57c20c38a962f0acb57d526b6813d2bee"
+    }
+  ],
+  "clean": false,
+  "failure": null,
+  "taskId": "UI-2-0121",
+  "createdAt": "2026-11-05T14:52:27.044Z"
+}
