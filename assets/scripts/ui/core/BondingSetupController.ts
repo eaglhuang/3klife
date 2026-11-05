@@ -28,6 +28,7 @@ import { yuedanFiltered, yuedanList, yuedanRevealLine } from '../../core/systems
 import { synergyWindowLine, type FamilySynergyLedger } from '../../core/systems/FamilySynergy';
 import { compactCostFor, compactFamilyOf, heritageFactorsOf, sharedFactorsOf } from '../../core/systems/FamilyCompact';
 import { epContribLine } from '../../core/systems/EpLegacyBonus';
+import { bondingSeatText } from '../../core/systems/BloodlineTreeSlots';
 import { lineageSynergyHint, lineageSynergyLine, sharedBlueGenesOf } from '../../core/systems/LineageSynergy';
 import { kinPurificationHint, kinPurificationLine } from '../../core/systems/KinPurification';
 import type { GeneralGeneConfig } from '../../core/models/GeneralUnit';
@@ -110,7 +111,7 @@ export interface BondingSetupDeps {
     sageRemarks?: (fatherId: string, motherId: string) => SageRemark[];
     /** 求籤令數量（ORAC-05）；未提供時顯示 ×0 */
     oracleTokens?: () => number;
-    breeding: Pick<BreedingService, 'checkEligibility' | 'previewEp' | 'breed'> & Partial<Pick<BreedingService, 'kinPurificationTargets'>>;
+    breeding: Pick<BreedingService, 'checkEligibility' | 'previewEp' | 'breed'> & Partial<Pick<BreedingService, 'ancestorSeats' | 'kinPurificationTargets'>>;
     /** 開畫面前的準備（載入血統圖、補回已出生子嗣）；失敗只提示，不擋畫面 */
     prepare?: () => Promise<unknown>;
     /** 結緣後存檔；失敗只回報，不回滾 */
@@ -156,6 +157,14 @@ export class BondingSetupController {
     }
 
     /** 名士批語：最多三列，各列一位名士；未解鎖足夠名士時只回提示句 */
+    /** G2 §E #1：雙親各 14 席的格位文字 */
+    private _seatTexts(prefix: string, generalId: string): Record<string, string> {
+        const seats = this._deps.breeding.ancestorSeats?.(generalId) ?? [];
+        const texts: Record<string, string> = {};
+        seats.forEach((person, i) => { texts[`${prefix}${i}`] = bondingSeatText(i, person); });
+        return texts;
+    }
+
     private _sageRemarks(fatherId: string, motherId: string): { ids: string[]; lines: string[]; hint: string } {
         if (!this._deps.sageRemarks) return { ids: [], lines: [], hint: '' };
         const remarks = this._deps.sageRemarks(fatherId, motherId).slice(0, SAGE_LINE_COUNT);
@@ -381,6 +390,8 @@ export class BondingSetupController {
         texts.modeChip = mode === 'Peace_Lineage'
             ? '模式：和平血統線（保種）· 退役年齡仍可親傳，轉為教官後即失去資格'
             : '模式：一般結緣 · 雙方仍具親傳資格';
+
+        Object.assign(texts, this._seatTexts('fatherTree', father.id), this._seatTexts('motherTree', mother.id));
 
         const eligibility = this._deps.breeding.checkEligibility(father.id, mother.id);
         const ep = this._deps.breeding.previewEp(father.id, mother.id);

@@ -13,7 +13,7 @@
  */
 import type { GeneralConfig } from '../models/GeneralUnit';
 import type { RosterStore } from '../managers/GameSession';
-import { BloodlineGraph } from './BloodlineGraph';
+import { BloodlineGraph, PEDIGREE_SLOTS } from './BloodlineGraph';
 import { normalizeRosterRoles } from '../systems/RosterRoleLoad';
 import {
     AffinityResolver,
@@ -126,6 +126,16 @@ export class BreedingService {
             added++;
         }
         return added;
+    }
+
+    /** 某人的 14 席祖位，順序同 PEDIGREE_SLOTS；沒有資料的席位是 null */
+    ancestorSeats(generalId: string): Array<{ name: string; ep: number } | null> {
+        const pedigree = this._graph.getPedigree(generalId);
+        return PEDIGREE_SLOTS.map((slot) => {
+            const uid = pedigree[slot];
+            const person = uid ? this._graph.getPerson(uid) : null;
+            return person ? { name: person.name, ep: person.ep_base } : null;
+        });
     }
 
     checkEligibility(fatherId: string, motherId: string): BreedingEligibility {

@@ -51,6 +51,16 @@ export function ancestorCardText(name: string, ep: number, mainFactorName?: stri
     return [name, `EP ${Math.round(ep)}`, mainFactorName].filter((line) => !!line).join('\n');
 }
 
+/** 結緣畫面的小格位：父母一行姓名加 EP，祖輩兩行，曾祖只放得下姓名 */
+export function bondingSeatText(seatIndex: number, person: { name: string; ep: number } | null): string {
+    const { gen3, gen2 } = BLOODLINE_TREE_SLOT_COUNTS;
+    const isGreatGrandparent = seatIndex >= gen3 + gen2;
+    if (!person) return isGreatGrandparent ? '佚名' : '先祖佚名';
+    // 虛擬祖先的名字是「郡望 稱呼」，小格只放得下稱呼
+    if (isGreatGrandparent) return person.name.split(' ').pop() ?? person.name;
+    return seatIndex < gen3 ? `${person.name} EP ${Math.round(person.ep)}` : `${person.name}\nEP ${Math.round(person.ep)}`;
+}
+
 function fill(ancestors: ReadonlyArray<string | null>, count: number, nameOf: (uid: string) => string | undefined): BloodlineTreeSlot[] {
     return Array.from({ length: count }, (_, i) => {
         const uid = ancestors[i] ?? null;

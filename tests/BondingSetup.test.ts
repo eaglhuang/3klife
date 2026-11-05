@@ -232,6 +232,9 @@ export function createBondingSetupSuite(): TestSuite {
         assert.isFalse(view.enabled.btnConfirmBond);
         assert.isTrue(view.texts.inbreedingLabel.startsWith('近親警告：1 代內'));
         assert.isTrue(view.texts.eligibilityLabel.includes('禮法森嚴'));
+        assert.isTrue(view.texts.fatherTree0.includes('EP'), '父方的父親顯示 EP');
+        assert.isTrue(view.texts.motherTree1.includes('EP'), '母方的母親顯示 EP');
+        assert.isTrue(!!view.texts.motherTree13, '14 席都有字，不留空');
 
         const result = await rig.flow.confirm();
         assert.equals('blocked', result.outcome);
