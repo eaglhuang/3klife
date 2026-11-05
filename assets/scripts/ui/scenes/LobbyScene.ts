@@ -77,6 +77,7 @@ import { BREEDING_MIN_AGE } from '../../core/systems/BreedingSystem';
 import { RECRUIT_ROWS_PER_PAGE, RecruitHallController } from '../core/RecruitHallController';
 import { loadGeneralAvatar, loadGeneralPortrait } from '../core/GeneralAvatarLoader';
 import { overflowToastText } from '../../core/systems/MentorOverflow';
+import { AGING_CIVIL_LINE } from '../../core/systems/PeakCurve';
 import { RIVAL_NATION_SLOTS, RivalDiplomacyController } from '../core/RivalDiplomacyController';
 import { WarehousePanelController } from '../core/WarehousePanelController';
 import { DISPATCH_MAX_ROWS, JournalHubController } from '../core/JournalHubController';
@@ -1097,6 +1098,13 @@ export class LobbyScene extends Component {
                 const grownGeneral = services().session.roster.find((g) => g.id === grown.generalId);
                 const name = grownGeneral ? formatGeneralDisplayName(grownGeneral.name, grownGeneral.title) : grown.generalId;
                 this._showLifeScriptToast(grown.stage, name);
+            }),
+            // 老而彌堅（G2 §H UI_G2_AGING_CIVIL，PROG-2-1822）：培育武將剛過巔峰窗
+            event.on(GAME_SESSION_EVENTS.GeneralPassedPeak, (payload?: unknown) => {
+                const passed = payload as AgingEvent | undefined;
+                const general = services().session.roster.find((g) => g.id === passed?.generalId);
+                if (!general) return;
+                services().event.emit('SHOW_TOAST', { message: `${formatGeneralDisplayName(general.name, general.title)}：${AGING_CIVIL_LINE}`, duration: 4 });
             }),
             // 退役劇本句（LIFE-13，PROG-2-0800）：玩家確認退役後顯示
             event.on(GAME_SESSION_EVENTS.GeneralRetired, (payload?: unknown) => {

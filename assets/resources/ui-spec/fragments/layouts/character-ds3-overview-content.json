@@ -358,7 +358,7 @@
                     {
                       "type": "label",
                       "name": "OverviewAge",
-                      "width": 53,
+                      "width": 137,
                       "height": 30,
                       "text": "34 歲",
                       "styleSlot": "auto.character-ds3-tab-overview.overviewage"

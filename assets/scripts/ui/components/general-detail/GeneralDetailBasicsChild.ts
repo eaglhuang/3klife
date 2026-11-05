@@ -17,6 +17,7 @@ import type { UISkinResolver } from '../../core/UISkinResolver';
 import type { UITemplateBinder } from '../../core/UITemplateBinder';
 import type { GeneralConfig } from '../../../core/models/GeneralUnit';
 import { agePhaseLabel } from '../../../core/models/GeneralGrowth';
+import { peakCurveLabel, type PeakCurveSubject } from '../../../core/systems/PeakCurve';
 import { formatGeneralDisplayName } from '../../../core/models/GeneralTitle';
 import { mask, formatFaction, formatRole, formatStatus } from './GeneralDetailFormatters';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
@@ -87,7 +88,8 @@ export class GeneralDetailBasicsChild extends ChildPanelBase {
         const life = cfg.age !== undefined ? describeLifespan(cfg) : null;
         const phase = agePhaseLabel(cfg.age);
         const ageText = life ? life.ageText : this.t('ui.general.basics.unlocked');
-        this._set(this._lAge, phase && life ? `${ageText}　${phase}` : ageText);
+        const curve = peakCurveLabel(cfg as unknown as PeakCurveSubject);
+        this._set(this._lAge, phase && life ? `${ageText}　${phase}${curve ? `　${curve}` : ''}` : ageText);
         this._set(this._lRole, formatRole(cfg.role));
         this._set(this._lStatus, formatStatus(cfg.status));
         const lifecycle = cfg.age !== undefined ? describeLifecycle(cfg) : null;

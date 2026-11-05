@@ -330,6 +330,8 @@ export const GAME_SESSION_EVENTS = {
     GeneralDied: 'game-session-general-died',
     /** payload: AgingEvent（type = entered-growth-stage，stage 為 grow-up / prime / elder） */
     GeneralGrowthStage: 'game-session-general-growth-stage',
+    /** payload: AgingEvent（type = passed-peak）；培育武將剛過巔峰窗（PROG-2-1822） */
+    GeneralPassedPeak: 'game-session-general-passed-peak',
     /** payload: EraResetEvent（每 60 月一次；目前只發訊號，領土/外交/AI 重置待世界沙盤接入，TIME-10） */
     EraReset: 'game-session-era-reset',
     /** payload: { nationId: string }（他國新成為霸主，G-1 稱霸提示，PROG-2-1710） */
@@ -380,10 +382,11 @@ export const GAME_SESSION_EVENTS = {
     DiscoveryLevelChanged: 'game-session-discovery-level-changed',
 } as const;
 
-/** 季度增齡事件的廣播頻道：死亡、成長階段、退役候選三種 */
+/** 季度增齡事件的廣播頻道：死亡、成長階段、過峰、退役候選四種 */
 function agingEventChannel(event: AgingEvent): string {
     if (event.type === 'died') return GAME_SESSION_EVENTS.GeneralDied;
     if (event.type === 'entered-growth-stage') return GAME_SESSION_EVENTS.GeneralGrowthStage;
+    if (event.type === 'passed-peak') return GAME_SESSION_EVENTS.GeneralPassedPeak;
     return GAME_SESSION_EVENTS.GeneralReachedRetirementAge;
 }
 
