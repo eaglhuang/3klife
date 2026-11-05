@@ -80,9 +80,9 @@ export interface StatProbeSide {
     probed: boolean;
 }
 
-export function statProbeLine(stat: RumorStatKey, father: StatProbeSide, mother: StatProbeSide): string {
-    const part = (side: StatProbeSide): string => `${side.name} ${side.probed ? statBoxLabel(side.stats[stat] ?? 0) : '未查'}`;
-    return `${rumorRouteName(stat)}細箱：${part(father)}｜${part(mother)}`;
+export function statProbeLine(stat: RumorStatKey, ...sides: readonly StatProbeSide[]): string {
+    const parts = sides.map((side) => `${side.name} ${side.probed ? statBoxLabel(side.stats[stat] ?? 0) : '未查'}`);
+    return `${rumorRouteName(stat)}細箱：${parts.join('｜')}`;
 }
 
 /** 舊檔沒有此欄位；非字串略過 */

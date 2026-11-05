@@ -25,7 +25,7 @@ import { buildBreedingPreviewLines } from './BreedingPreviewPresenter';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { factorMaskLabels } from '../../core/systems/FactorMask';
 import { factorStageText } from '../../core/systems/FactorVisibility';
-import { matchRumorLine, sameSurnameNote, matchesRumorRoute, nextRumorRoute, RUMOR_STAT_KEYS, RumorRoute, rumorRouteFiltered, rumorRouteName, type RumorStatKey, type RumorStats } from '../../core/systems/MatchRumor';
+import { matchRumorLine, sameSurnameNote, matchesRumorRoute, nextRumorRoute, nextRumorStat, RUMOR_STAT_KEYS, RumorRoute, rumorRouteFiltered, rumorRouteName, type RumorStatKey, type RumorStats } from '../../core/systems/MatchRumor';
 import { yuedanFiltered, yuedanList, yuedanRevealLine } from '../../core/systems/YuedanReview';
 import { centuryAllianceTag, synergyWindowLine, type FamilySynergyLedger } from '../../core/systems/FamilySynergy';
 import { compactCeremonyLine, kinWarningLine } from '../../core/systems/BondingStoryLines';
@@ -256,7 +256,7 @@ export class BondingSetupController {
 
     /** 不用 → 合譜各因子 → 家傳各因子 → 不用；同一胎只能選一項 */
     cycleProbeStat(): void {
-        this._probeStat = RUMOR_STAT_KEYS[(RUMOR_STAT_KEYS.indexOf(this._probeStat) + 1) % RUMOR_STAT_KEYS.length];
+        this._probeStat = nextRumorStat(this._probeStat);
     }
 
     cycleCompact(): void {

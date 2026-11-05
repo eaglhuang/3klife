@@ -39,7 +39,7 @@
           "vCenter": true
         },
         "width": 820,
-        "height": 560,
+        "height": 620,
         "skinSlot": "mp.card.bg",
         "children": [
           {
@@ -147,10 +147,77 @@
               },
               {
                 "type": "button",
+                "name": "BtnCycleMpStat",
+                "id": "btnCycleMpStat",
+                "widget": {
+                  "top": 212,
+                  "left": 0
+                },
+                "width": 220,
+                "height": 44,
+                "skinSlot": "mp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnCycleMpStatLabel",
+                    "id": "cycleMpStatLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "細查維度",
+                    "styleSlot": "mp.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnProbeMpStat",
+                "id": "btnProbeMpStat",
+                "widget": {
+                  "top": 212,
+                  "left": 230
+                },
+                "width": 150,
+                "height": 44,
+                "skinSlot": "mp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnProbeMpStatLabel",
+                    "id": "probeMpStatLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "細查",
+                    "styleSlot": "mp.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "MpStatLine",
+                "id": "mpStatLine",
+                "widget": {
+                  "top": 222,
+                  "left": 392,
+                  "right": 0
+                },
+                "height": 44,
+                "text": "",
+                "styleSlot": "mp.label.stats"
+              },
+              {
+                "type": "button",
                 "name": "BtnAcceptMp",
                 "id": "btnAcceptMp",
                 "widget": {
-                  "top": 222,
+                  "top": 268,
                   "left": 0,
                   "right": 0
                 },
@@ -177,7 +244,7 @@
                 "name": "BtnDeclineMp",
                 "id": "btnDeclineMp",
                 "widget": {
-                  "top": 310,
+                  "top": 350,
                   "left": 0,
                   "right": 0
                 },
@@ -206,7 +273,7 @@
             "name": "MpNotice",
             "id": "mpNotice",
             "widget": {
-              "top": 488,
+              "top": 548,
               "left": 32,
               "right": 32
             },

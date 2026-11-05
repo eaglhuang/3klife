@@ -7,7 +7,10 @@
  *
  * Unity 對照：MVP 的 Presenter。按鈕 onClick 只呼叫 Respond，畫面層拿 GetView() 一次刷新。
  */
+import { ITEM_ORACLE_TOKEN } from '../../core/systems/ItemDef';
+import { RUMOR_STAT_KEYS, rumorRouteName, nextRumorStat, type RumorStatKey } from '../../core/systems/MatchRumor';
 import { marriageAcceptLabel, marriageGiftLine, marriageProposalLine, marriageSuitorLine, type MarriageProposal } from '../../core/systems/MarriageProposal';
+import { STAT_PROBE_COST, statProbeLine } from '../../core/systems/PedigreeProbe';
 
 export interface MarriageProposalPopupView {
     texts: Record<string, string>;
@@ -19,12 +22,16 @@ export interface MarriageProposalPopupDeps {
     session: {
         readonly marriageProposal: MarriageProposal | null;
         respondMarriageProposal(accept: boolean, grantGold: (amount: number) => void): Promise<{ ok: boolean }>;
+        itemCount(itemId: string): number;
+        isStatProbed(generalId: string, stat: RumorStatKey): boolean;
+        probeStat(generalId: string, stat: RumorStatKey): Promise<boolean>;
     };
     grantGold: (amount: number) => void;
 }
 
 export class MarriageProposalPopupController {
     private _notice = '';
+    private _probeStat: RumorStatKey = RUMOR_STAT_KEYS[0];
 
     constructor(private readonly _deps: MarriageProposalPopupDeps) {}
 
@@ -48,8 +55,22 @@ export class MarriageProposalPopupController {
         return result.ok;
     }
 
-    getView(): MarriageProposalPopupView {
+    cycleProbeStat(): void {
+        this._probeStat = nextRumorStat(this._probeStat);
+    }
+
+    /** 對象的武將 id 就是提親 id，應允後在結緣畫面不必重查（PROG-2-1835） */
+    async probeSuitorStat(): Promise<boolean> {
         const proposal = this._deps.session.marriageProposal;
+        return proposal ? this._deps.session.probeStat(proposal.id, this._probeStat) : false;
+    }
+
+    getView(): MarriageProposalPopupView {
+        const { session } = this._deps;
+        const proposal = session.marriageProposal;
+        const stat = this._probeStat;
+        const tokens = session.itemCount(ITEM_ORACLE_TOKEN);
+        const probed = proposal !== null && session.isStatProbed(proposal.id, stat);
         return {
             texts: {
                 mpTitle: '名門求親',
@@ -61,9 +82,18 @@ export class MarriageProposalPopupController {
                 mpNotice: this._notice,
                 acceptMpLabel: proposal ? marriageAcceptLabel(proposal) : '應允',
                 declineMpLabel: '婉拒',
+                cycleMpStatLabel: `細查維度：${rumorRouteName(stat)}`,
+                probeMpStatLabel: probed ? '已細查' : `細查（${STAT_PROBE_COST} 券）`,
+                mpStatLine: proposal ? `${statProbeLine(stat, { name: proposal.suitor.name, stats: proposal.suitor, probed })}｜求籤令 ×${tokens}` : '',
             },
             actives: { mpPanel: proposal !== null, mpEmptyHint: proposal === null && this._notice === '' },
-            enabled: { btnCloseMp: true, btnAcceptMp: proposal !== null, btnDeclineMp: proposal !== null },
+            enabled: {
+                btnCloseMp: true,
+                btnAcceptMp: proposal !== null,
+                btnDeclineMp: proposal !== null,
+                btnCycleMpStat: proposal !== null,
+                btnProbeMpStat: proposal !== null && !probed && tokens >= STAT_PROBE_COST,
+            },
         };
     }
 }
