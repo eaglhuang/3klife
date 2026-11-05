@@ -13,6 +13,7 @@
 import type { BondRarity } from '../../core/systems/MercenaryBondPermanent';
 import { MercenaryState } from '../../core/systems/MercenaryBond';
 import { buildMercenaryPanelView, MercenaryPanelView } from '../../core/systems/MercenaryPanelView';
+import { femalePoolHireLabel } from '../../core/systems/FemalePoolRefresh';
 import { buildMercenaryNameplateRows, MERC_PANEL_MAX_ROWS } from './MercenaryNameplateRows';
 
 export { MERC_PANEL_MAX_ROWS };
@@ -40,6 +41,10 @@ export interface MercenaryPanelDeps {
     trialTickets?: () => number;
     /** 用 1 張試用券招募試用傭兵：成功回傳武將名，失敗回傳 null */
     hire?: () => Promise<string | null>;
+    /** 傭兵女將池本批人數與刷新倒數；未提供時不顯示女將招募（PROG-2-1790） */
+    femalePool?: () => { count: number; remainingMs: number };
+    /** 用 1 張試用券從女將池招募：成功回傳武將名，失敗回傳 null */
+    hireFemale?: () => Promise<string | null>;
 }
 
 export class MercenaryPanelController {
@@ -97,14 +102,23 @@ export class MercenaryPanelController {
     }
 
     /** 試用招募：成功後選中新傭兵並提示；無券或無可招武將時只設提示 */
-    public async hireTrial(): Promise<boolean> {
-        if (!this._deps.hire || (this._deps.trialTickets?.() ?? 0) <= 0) {
+    public hireTrial(): Promise<boolean> {
+        return this._hireWith(this._deps.hire, '目前沒有可試用的武將');
+    }
+
+    /** 從女將池招募；規則與試用招募相同 */
+    public hireFemale(): Promise<boolean> {
+        return this._hireWith(this._deps.hireFemale, '本批女將已招完');
+    }
+
+    private async _hireWith(hire: (() => Promise<string | null>) | undefined, emptyNotice: string): Promise<boolean> {
+        if (!hire || (this._deps.trialTickets?.() ?? 0) <= 0) {
             this._notice = '試用券不足';
             return false;
         }
-        const name = await this._deps.hire();
+        const name = await hire();
         if (!name) {
-            this._notice = '目前沒有可試用的武將';
+            this._notice = emptyNotice;
             return false;
         }
         const rows = this.rows();
@@ -136,6 +150,7 @@ export class MercenaryPanelController {
         const rows = this.rows();
         const selected = this.selected();
         const view = this.view();
+        const femalePool = this._deps.femalePool?.();
         const texts: Record<string, string> = {
             mercPanelTitle: '傭兵・結義',
             mercEmptyLabel: rows.length === 0 ? '目前沒有傭兵' : '',
@@ -148,6 +163,7 @@ export class MercenaryPanelController {
             btnMercBondLabel: view ? `結義（${view.bondPointCost} 點）` : '結義',
             btnCloseLabel: '關閉',
             btnMercHireLabel: `試用招募（試用券 ${this._deps.trialTickets?.() ?? 0}）`,
+            btnMercHireFemaleLabel: femalePool ? femalePoolHireLabel(femalePool.count, femalePool.remainingMs) : '',
         };
         const actives: Record<string, boolean> = {
             mercEmptyLabel: rows.length === 0,
@@ -156,11 +172,13 @@ export class MercenaryPanelController {
             mercFarewell: view?.farewellText != null,
             mercNotice: texts.mercNotice !== '',
             btnMercHire: this._deps.hire !== undefined,
+            btnMercHireFemale: femalePool !== undefined,
         };
         const enabled: Record<string, boolean> = {
             btnClose: true,
             btnMercBond: view?.bondEnabled ?? false,
             btnMercHire: (this._deps.trialTickets?.() ?? 0) > 0 && rows.length < MERC_PANEL_MAX_ROWS,
+            btnMercHireFemale: (femalePool?.count ?? 0) > 0 && (this._deps.trialTickets?.() ?? 0) > 0 && rows.length < MERC_PANEL_MAX_ROWS,
         };
         const nameplates = buildMercenaryNameplateRows(rows, this._deps.info);
         for (let i = 0; i < MERC_PANEL_MAX_ROWS; i++) {

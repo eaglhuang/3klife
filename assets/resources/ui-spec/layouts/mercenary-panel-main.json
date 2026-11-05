@@ -632,6 +632,33 @@
                 "styleSlot": "mp.label.button"
               }
             ]
+          },
+          {
+            "type": "button",
+            "name": "BtnMercHireFemale",
+            "id": "btnMercHireFemale",
+            "widget": {
+              "top": 832,
+              "left": 32
+            },
+            "width": 560,
+            "height": 56,
+            "skinSlot": "mp.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnMercHireFemaleLabel",
+                "id": "btnMercHireFemaleLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "",
+                "styleSlot": "mp.label.button"
+              }
+            ]
           }
         ]
       }

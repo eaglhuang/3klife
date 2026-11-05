@@ -26,6 +26,20 @@ export function isFemalePoolRefreshDue(lastRefreshMs: number, nowMs: number): bo
     return nowMs - lastRefreshMs >= FEMALE_POOL_REFRESH_HOURS * MS_PER_HOUR;
 }
 
+/** 距離下次刷新還有多久（毫秒），已到期回傳 0 */
+export function femalePoolRemainingMs(lastRefreshMs: number, nowMs: number): number {
+    if (isFemalePoolRefreshDue(lastRefreshMs, nowMs)) return 0;
+    return nextFemalePoolRefreshMs(lastRefreshMs) - nowMs;
+}
+
+/** 招募按鈕文字：本批還能招幾位、多久後換下一批 */
+export function femalePoolHireLabel(count: number, remainingMs: number): string {
+    const minutes = Math.ceil(remainingMs / (60 * 1000));
+    const hours = Math.floor(minutes / 60);
+    const time = hours > 0 ? `${hours} 小時 ${minutes % 60} 分` : `${minutes} 分`;
+    return `招募女將（本批 ${count} 位，${time}後刷新）`;
+}
+
 /** 下一次刷新的時間點 */
 export function nextFemalePoolRefreshMs(lastRefreshMs: number): number {
     return lastRefreshMs + FEMALE_POOL_REFRESH_HOURS * MS_PER_HOUR;

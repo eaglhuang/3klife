@@ -68,7 +68,7 @@ import type { MentorCard } from '../models/MentorCard';
 import { normalizeDeck, toggleDeckCard, DeckToggleOutcome } from '../services/PlayerDeckRules';
 import { SeededRandom, LEGACY_RANDOM_SEED } from '../systems/SeededRandom';
 import { createEmptyMercenaryBundle, normalizeMercenaryBundle, serializeMercenaryBundle, type MercenarySaveBundle } from '../systems/MercenarySaveModel';
-import { bondMercenaryToRoster, statsOfTemplate, type RosterBondResult } from '../systems/MercenaryRoster';
+import { bondMercenaryToRoster, rarityOfTemplate, statsOfTemplate, type RosterBondResult } from '../systems/MercenaryRoster';
 import { useTrialTicket, type TrialTicketRejectReason, type TrialTicketResult } from '../systems/MercenaryTrialTicket';
 import { createUpkeepState } from '../systems/MercenaryUpkeep';
 import { advanceTrialDay } from '../systems/MercenaryTrialDay';
@@ -213,7 +213,7 @@ import { awakenHiddenFactors } from '../systems/HiddenFactorAwakening';
 import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonCapacityOf, prisonYieldOneSeason, resolvePowDecision, rollFutureReturns, rollPrisonTreasureDonors, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
 import { createFemaleSource, normalizeFemaleSource, normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
 import { normalizeGachaPityBook, type GachaPityBook } from '../systems/GachaDraw';
-import { drawFemalePool, isFemalePoolRefreshDue, type PoolCandidate } from '../systems/FemalePoolRefresh';
+import { drawFemalePool, femalePoolRemainingMs, isFemalePoolRefreshDue, type PoolCandidate } from '../systems/FemalePoolRefresh';
 import { resolvePrisonerGift, type PrisonerGiftResult } from '../systems/PrisonerGift';
 import { isRescueRefreshDue, rollDungeonRescue, type RescueOutcome, buildRescuedGeneral, RESCUE_QUALITY, rescueRefreshRemainingMs } from '../systems/DungeonRescue';
 import { giftToFemale, normalizeFemaleSystemState, type FemaleSystemState } from '../systems/FemaleSystemState';
@@ -932,6 +932,11 @@ export class GameSession {
             day: this.mercenaryDay,
         };
         this._bondPoints -= result.pointsSpent;
+        if (template.gender === '女' && !this._roster.getAll().some((g) => g.id === template.id)) {
+            // §F 傭兵結義的女將品質為 SR~N，稀有度更高的模板也不超過 SR
+            const quality = rarityOfTemplate(template) === 'R' ? 'R' : 'SR';
+            this._femaleSources = { ...this._femaleSources, [template.id]: createFemaleSource('MERCENARY', quality, this._clock.state.totalSeasonsElapsed) };
+        }
         const { added } = await this.addGenerals([result.general]);
         if (added.length > 0) await this.recordMercenaryOath(result.general.id);
         return { ...result, rosterAdded: added.length > 0 };
@@ -1081,8 +1086,28 @@ export class GameSession {
     public refreshFemalePoolIfDue(candidates: readonly PoolCandidate[], nowMs: number, random: () => number, size = 4): string[] | null {
         const last = this._femaleSystem.poolRefreshedAtMs;
         if (last !== null && !isFemalePoolRefreshDue(last, nowMs)) return null;
-        this._femaleSystem = { ...this._femaleSystem, poolRefreshedAtMs: nowMs };
-        return drawFemalePool(candidates, size, random);
+        const poolIds = drawFemalePool(candidates, size, random);
+        this._femaleSystem = { ...this._femaleSystem, poolRefreshedAtMs: nowMs, poolIds };
+        return poolIds;
+    }
+
+    /**
+     * 傭兵女將池（PROG-2-1790）：到期就重抽一批，回傳本批還能招的人與刷新倒數。
+     * 只收 §F 的 SR~N；已在名冊、已是傭兵或還在冷卻的武將不列入。武將資料還沒載入時不刷新，避免空池鎖 8 小時。
+     */
+    public femalePoolStatus(generals: readonly GeneralConfig[], nowMs: number): { ids: string[]; remainingMs: number } {
+        const taken = new Set([...this._roster.getAll().map((g) => g.id), ...this._mercenaries.mercenaries.map((m) => m.generalId)]);
+        const open = (ids: readonly string[]): string[] => this.availablePoolGeneralIds(ids.filter((id) => !taken.has(id)));
+        if (generals.length > 0) {
+            const eligible = generals.filter((g) => {
+                const rarity = rarityOfTemplate(g);
+                return rarity === 'R' || rarity === 'SR';
+            });
+            const openIds = new Set(open(eligible.map((g) => g.id)));
+            this.refreshFemalePoolIfDue(eligible.filter((g) => openIds.has(g.id)), nowMs, this._random);
+        }
+        const last = this._femaleSystem.poolRefreshedAtMs;
+        return { ids: open(this._femaleSystem.poolIds), remainingMs: last === null ? 0 : femalePoolRemainingMs(last, nowMs) };
     }
 
     /** 地下城救美：未到 8 小時回傳 null；到期則記下時間戳並擲出結果 */
