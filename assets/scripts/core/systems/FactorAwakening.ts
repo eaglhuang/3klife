@@ -17,7 +17,7 @@
  * 只回傳「解鎖結果與新資料」，由 GameManager 負責存檔與廣播事件。
  */
 import type { GeneralConfig, GeneralGeneConfig } from '../models/GeneralUnit';
-import { FACTOR_DISCOVERY_LEVEL, FactorColor, normalizeFactorColor } from './FactorInheritance';
+import { FACTOR_DISCOVERY_LEVEL, FactorColor, normalizeFactorColor, resolveFactorColor } from './FactorInheritance';
 import { isFactorLevelUnlocked } from './FactorVisibility';
 
 export type AwakeningTrigger = 'nurture-peek' | 'battle' | 'mentor' | 'sage';
@@ -52,6 +52,19 @@ export interface FactorAwakenedEvent {
     level: number;
     trigger: AwakeningTrigger;
     displayName: string;
+}
+
+/**
+ * 覺醒提示（因子爆發系統 §G，PROG-2-1783）。
+ * 暫定：綠因子折扣對所有綠色戰法生效（PM 2026-10-14），所以 {SkillName} 寫「綠色戰法」；
+ * 規格的「百毒不侵」只是某一個白因子的效果，通用句不說。
+ */
+export function factorAwakeningLines(event: Pick<FactorAwakenedEvent, 'displayName' | 'level' | 'color'>): string[] {
+    const lines = [`【覺醒因子：${event.displayName}★${event.level}】`];
+    if (event.color === 'green') lines.push('祖傳戰法種子萌發！習得 綠色戰法 所需 TP 減半！');
+    if (event.color === 'purple') lines.push('天命之力覺醒！未來爆發力將不可限量！');
+    if (event.color === 'white') lines.push(`隱藏天賦顯現：${event.displayName}。`);
+    return lines;
 }
 
 export type AwakeningResult =
@@ -90,7 +103,8 @@ export function awakenFactor(
         event: {
             generalId: general.id,
             factorId,
-            color,
+            // 舊資料的 gene.type 是中文分類（戰法、特質…），提示要認得出顏色
+            color: resolveFactorColor(factorId, undefined, gene),
             level: gene.level ?? 1,
             trigger,
             displayName: gene.displayName ?? factorId,
