@@ -106,6 +106,8 @@ export interface TrainingMentor {
     familyName?: string;
     /** 聯姻名門出身（G3 §F-2 世交太傅）；其他教官沒有此欄位 */
     familyUid?: string;
+    /** 教官本人與其父母（G3 §F-3 母門擇承認母親與舅氏）；只有教官卡帶入的才有 */
+    lineage?: { generalId: string; parentUids: string[] };
     /** 突破星等 0~5 */
     stars?: number;
     /** Mentor_TP：屬性獲得率與 TP 的加成（百分比，20 = +20%） */
@@ -712,6 +714,7 @@ export function mentorFromCard(
     const { familyUid } = snapshot as { familyUid?: string };
     return {
         ...(familyUid ? { familyUid } : {}),
+        lineage: { generalId: card.sourceGeneralId, parentUids: [...(card.parentUids ?? [])] },
         id: card.uid,
         name: card.name,
         tpBonus: Math.round(card.ep_snapshot / MENTOR_CARD_EP_PER_TP_POINT) + perks.tpBonusAdd,

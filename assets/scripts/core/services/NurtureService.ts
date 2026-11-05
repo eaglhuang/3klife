@@ -57,6 +57,7 @@ import { commitReportCard, emptyReportCardBook, keepReportCard, ReportCardBook }
 import { mentorBoundaryViolations, MentorBoundaryViolation } from '../systems/MentorBoundary';
 import { familyStudyBlock, familyStudyCandidates, type FamilyStudyBlock, type FamilyStudyCandidate } from '../systems/FamilyStudy';
 import { applyStudyCandidate, atavismCandidates, mergeStudyCandidates, studyRoundCost } from '../systems/Atavism';
+import { maternalCandidates } from '../systems/MaternalStudy';
 
 /** 每季入學令數量；規格只說「每季限 N 張」，暫定 2 */
 export const DEFAULT_ADMISSIONS_PER_SEASON = 2;
@@ -321,14 +322,19 @@ export class NurtureService {
     familyStudyStatus(childId: string): { blocked: FamilyStudyBlock | null; candidates: FamilyStudyCandidate[] } {
         const session = this._requireSession(childId);
         const child = this._roster.getAll().find((g) => g.id === childId);
-        const candidates = mergeStudyCandidates(
-            familyStudyCandidates(child?.genes, this._options.factorDictionary),
-            atavismCandidates(session.round, NURTURE_TOTAL_ROUNDS, child?.genes, child?.atavismSeeds),
-        );
-        return { blocked: familyStudyBlock(session, NURTURE_TOTAL_ROUNDS, !!child?.familyStudyUsed, candidates.length), candidates };
+        const used = !!child?.familyStudyUsed;
+        const maternal = maternalCandidates(session.round, !!child?.maternalStudyUsed, child?.genes, child?.maternalLine, session.mentors[0]?.lineage);
+        const candidates = [
+            ...(used ? [] : mergeStudyCandidates(
+                familyStudyCandidates(child?.genes, this._options.factorDictionary),
+                atavismCandidates(session.round, NURTURE_TOTAL_ROUNDS, child?.genes, child?.atavismSeeds),
+            )),
+            ...maternal,
+        ];
+        return { blocked: familyStudyBlock(session, NURTURE_TOTAL_ROUNDS, used && maternal.length === 0, candidates.length), candidates };
     }
 
-    /** 家學研習或隔代復興：寫入因子、記已用、走回合。已用記在武將身上，重修也不能再來一次 */
+    /** 家學研習、隔代復興或母門擇承：寫入因子、記已用、走回合。已用記在武將身上，重修也不能再來一次 */
     familyStudy(childId: string, geneId: string): FamilyStudyCandidate {
         const { blocked, candidates } = this.familyStudyStatus(childId);
         if (blocked) throw new NurtureError(`${childId} 不能家學研習：${blocked}`);
@@ -336,8 +342,8 @@ export class NurtureService {
         if (!candidate) throw new NurtureError(`${childId} 的因子 ${geneId} 不能補救`);
         this._roster.replaceAll(this._roster.getAll().map((g) => (g.id !== childId ? g : {
             ...g,
-            familyStudyUsed: true,
-            genes: applyStudyCandidate(g.genes, candidate, g.atavismSeeds),
+            ...(candidate.maternalFrom ? { maternalStudyUsed: true } : { familyStudyUsed: true }),
+            genes: applyStudyCandidate(g.genes, candidate, candidate.maternalFrom ? g.maternalLine?.factors : g.atavismSeeds),
         })));
         this._replace(spendRoundsWithoutTraining(this._requireSession(childId), studyRoundCost(candidate), this._rng()));
         return candidate;

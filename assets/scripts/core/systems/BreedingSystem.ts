@@ -16,7 +16,7 @@
  */
 import { applyCompactLock, applyHeritageLock } from './FamilyCompact';
 import { atavismSeedsOf, peakFactorsOf } from './Atavism';
-import type { GeneralConfig, GeneralGeneConfig, GeneralStatsConfig } from '../models/GeneralUnit';
+import type { AncestralPeak, GeneralConfig, GeneralGeneConfig, GeneralStatsConfig } from '../models/GeneralUnit';
 import { toCanonicalRole, type CanonicalRole } from '../models/GeneralRole';
 import type { PersonRecord } from '../models/PersonRegistry';
 import { birthFrailRisk, BLOOD_FATIGUE_SCAN_GENERATIONS, childBloodFatigue, FRAIL_BIRTH_FLAG, FRAIL_VITALITY_MULTIPLIER, normalizeBloodFatigue, type BloodFatigueOutcome } from './BloodFatigue';
@@ -665,6 +665,7 @@ export function breed(request: BreedingRequest): BreedingResult {
 }
 
 const GRANDPARENT_SLOTS: readonly PedigreeSlot[] = ['FF', 'FM', 'MF', 'MM'];
+const MATERNAL_ANCESTOR_SLOTS: readonly PedigreeSlot[] = ['MF', 'MM', 'MFF', 'MFM', 'MMF', 'MMM'];
 
 /** 隔代復興的資料在出生時定值，只在有內容時才寫，不動沒有高星祖先的子嗣 */
 function stampAncestralPeaks(child: BreedingGeneral, request: BreedingRequest, pedigree: Pedigree, profiles: Map<string, AncestorProfile>): void {
@@ -678,6 +679,14 @@ function stampAncestralPeaks(child: BreedingGeneral, request: BreedingRequest, p
     });
     const seeds = atavismSeedsOf([...grandPeaks, ...(father.peakFactors ?? []), ...(mother.peakFactors ?? [])], father.genes, mother.genes);
     if (seeds.length > 0) child.atavismSeeds = seeds;
+    const peaksAt = (slot: PedigreeSlot): AncestralPeak[] => {
+        const uid = pedigree[slot];
+        return uid ? peakFactorsOf(profiles.get(uid)?.genes, nameOf(uid)) : [];
+    };
+    const maternal = atavismSeedsOf([...peakFactorsOf(mother.genes, mother.name), ...MATERNAL_ANCESTOR_SLOTS.flatMap(peaksAt), ...(mother.peakFactors ?? [])], undefined, undefined);
+    if (maternal.length > 0) {
+        child.maternalLine = { motherId: mother.id, motherParentIds: [mother.fatherId, mother.motherId].filter((uid): uid is string => !!uid), factors: maternal };
+    }
 }
 
 function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMode'> {

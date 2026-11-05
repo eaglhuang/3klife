@@ -105,12 +105,13 @@ export function createAtavismSuite(): TestSuite {
     });
 
     suite.test('服務：斷代因子補回 2★、走 3 回合、與家學研習共用名額', () => {
-        const { roster, nurture } = rig([blue('甲', 1)], [peak('祖傳', 3)], 24);
+        const { roster, nurture } = rig([blue('甲', 1)], [{ gene: { ...blue('祖傳', 3), isLocked: false }, ancestorName: '老太公' }], 24);
         assert.equals('甲,祖傳', nurture.familyStudyStatus('kid').candidates.map((c) => c.geneId).join(','));
         const done = nurture.familyStudy('kid', '祖傳');
         assert.equals('老太公', done.ancestorName!);
         const gene = roster.getAll()[0].genes!.find((g) => g.id === '祖傳')!;
         assert.equals(2, gene.level!);
+        assert.isTrue(gene.isLocked === true);
         assert.equals(27, nurture.getSession('kid')!.round);
         assert.equals('used', nurture.familyStudyStatus('kid').blocked!);
     });
