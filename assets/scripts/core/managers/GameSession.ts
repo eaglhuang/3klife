@@ -204,6 +204,7 @@ import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMili
 import { buildEraResetEvent } from '../systems/EraReset';
 import { buildQuarterlyBattleReportRows, type QuarterlyBattleReportRow } from '../systems/RetireReviewCopy';
 import { withLifeImprints } from '../systems/LifeImprint';
+import { clanMembersOf, clanStatsOf, clanTierOf, normalizeClanTier, type ClanTier } from '../systems/ClanTier';
 import { seasonModifiersOf } from '../systems/SeasonModifiers';
 import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, getTacticTpCost, TALLY_SHORTAGE_FOOD_THRESHOLD, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
 import { EMPTY_PERFORMANCE, type BattlePerformance, type BattleRecordLike } from '../systems/BattleRecordStats';
@@ -333,6 +334,8 @@ export const GAME_SESSION_EVENTS = {
     GeneralRetired: 'game-session-general-retired',
     /** payload: { generalId, name, imprints }（退役或去世凝練生平印記，PROG-2-1794） */
     LifeImprinted: 'game-session-life-imprinted',
+    /** payload: ClanTierUpPayload（門第升格；季度檢定時發出） */
+    ClanTierUp: 'game-session-clan-tier-up',
     /** payload: { childId, injectedFactorId, consumed }（退役時因子媒介注入，PROG-2-0865） */
     GeneCatalystInjected: 'game-session-gene-catalyst-injected',
     /** payload: SpiritCard（每位死亡武將一張） */
@@ -529,6 +532,11 @@ const TALLY_LOYALTY_INITIAL = 50;
 export type HireTrialResult = Omit<TrialTicketResult, 'reason'> & { reason?: TrialTicketRejectReason | 'uid-taken' };
 
 /** 退役或去世凝練生平印記（PROG-2-1794） */
+export interface ClanTierUpPayload {
+    oldTier: ClanTier;
+    newTier: ClanTier;
+}
+
 export interface LifeImprintedPayload {
     generalId: string;
     name: string;
@@ -619,6 +627,8 @@ export class GameSession {
     private _borrowLedger: BorrowLedger = { records: [] };
     /** 戰魂碎片帳本（以亡者 uid 為鍵）；超齡死亡時產生，寄宿後消耗（SAME-08，PROG-2-1056） */
     private _soulFragments: SoulFragmentLedger = emptySoulFragmentLedger();
+    /** 門第階級，只升不降（G4 §F-1） */
+    private _clanTier: ClanTier = 0;
     /** 已通關的關卡 id（連環破，PROG-2-0215） */
     private _clearedStageIds: string[] = [];
     /** 收藏武將 id（HALL-07 收藏權重，PROG-2-0453） */
@@ -1687,6 +1697,10 @@ export class GameSession {
         return this._factorDictionary;
     }
 
+    public get clanTier(): ClanTier {
+        return this._clanTier;
+    }
+
     public setFactorDictionary(dictionary: FactorDictionary | undefined): void {
         this._factorDictionary = dictionary;
     }
@@ -1759,6 +1773,7 @@ export class GameSession {
         this._hallAssignLog = [];
         // 上一局的進度不能帶進新局（PROG-2-0660）
         this._soulFragments = emptySoulFragmentLedger();
+        this._clanTier = 0;
         this._pendingLifespanEvents = [];
         this._bondPoints = 0;
         this._borrowLedger = { records: [] };
@@ -3646,6 +3661,7 @@ export class GameSession {
         if (this._autoGovernance) this._fillAutoGovernance();
         if (this._magistrateUid && !roster.some((general) => general.id === this._magistrateUid && general.status !== 'dead')) this._magistrateUid = null;
         this._recordSoulFragmentsFor(beforeRoster, agingEvents);
+        const clanTierUp = await this._refreshClanTier();
         const beforeTokens = this._inventory;
         const tokens = grantSeasonalOracleTokens(this._inventory);
         this._inventory = tokens.inventory;
@@ -3704,6 +3720,7 @@ export class GameSession {
         }
 
         this._emit(GAME_SESSION_EVENTS.SeasonAdvanced, payload);
+        if (clanTierUp) this._emit(GAME_SESSION_EVENTS.ClanTierUp, clanTierUp);
         const eraReset = buildEraResetEvent(advance.current.totalSeasonsElapsed);
         if (eraReset) {
             // 天下大亂：官職階位、經驗與解鎖歷史保留（OFC-09，F-3）
@@ -3819,6 +3836,17 @@ export class GameSession {
             return result.general;
         });
         return { roster: next, imprinted };
+    }
+
+    /** 門第檢定：只升不降；回傳要發的升格事件，由呼叫端存檔後再發 */
+    private async _refreshClanTier(): Promise<ClanTierUpPayload | null> {
+        const cards = await this._lifecycle?.getArchiver?.()?.getAllSpiritCards() ?? [];
+        const members = clanMembersOf(this._roster.getAll(), cards, this._factorDictionary);
+        const reached = clanTierOf(clanStatsOf(members));
+        if (reached <= this._clanTier) return null;
+        const payload: ClanTierUpPayload = { oldTier: this._clanTier, newTier: reached };
+        this._clanTier = reached;
+        return payload;
     }
 
     private _emitLifeImprints(imprinted: readonly LifeImprintedPayload[]): void {
@@ -4338,6 +4366,7 @@ export class GameSession {
             bondPoints: this._bondPoints,
             friendBorrowLedger: { records: [...this._borrowLedger.records] },
             soulFragments: { ...this._soulFragments },
+            clanTier: this._clanTier,
             femaleSystem: this.femaleSystemState,
             ...(this._travel ? { travelCountdown: { ...this._travel } } : {}),
             sortiePresets: { ...this._sortiePresets },
@@ -4503,6 +4532,7 @@ export class GameSession {
         this._bondPoints = normalizeBondPoints(snapshot.bondPoints);
         this._borrowLedger = normalizeBorrowLedger(snapshot.friendBorrowLedger);
         this._soulFragments = normalizeSoulFragmentLedger(snapshot.soulFragments);
+        this._clanTier = normalizeClanTier(snapshot.clanTier);
         this._deck = [...snapshot.deck];
         this._leadGeneralId = snapshot.leadGeneralId ?? null;
         this._sortieSupport = { strategistUid: null, deputyUid: null };
