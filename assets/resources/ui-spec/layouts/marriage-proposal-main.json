@@ -1,0 +1,221 @@
+{
+  "id": "marriage-proposal-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "MarriageProposalRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "MarriageProposalBackdrop",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "skinSlot": "mp.backdrop.bg"
+      },
+      {
+        "type": "panel",
+        "name": "MarriageProposalCard",
+        "id": "mpCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 820,
+        "height": 560,
+        "skinSlot": "mp.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "MpTitle",
+            "id": "mpTitle",
+            "widget": {
+              "top": 22,
+              "left": 32
+            },
+            "height": 40,
+            "text": "名門求親",
+            "styleSlot": "mp.label.title",
+            "width": 300
+          },
+          {
+            "type": "button",
+            "name": "BtnCloseMp",
+            "id": "btnCloseMp",
+            "widget": {
+              "top": 16,
+              "right": 24
+            },
+            "height": 48,
+            "skinSlot": "mp.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnCloseMpLabel",
+                "id": "closeMpLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "稍後",
+                "styleSlot": "mp.label.button"
+              }
+            ],
+            "width": 110
+          },
+          {
+            "type": "label",
+            "name": "MpEmptyHint",
+            "id": "mpEmptyHint",
+            "widget": {
+              "top": 160,
+              "left": 60,
+              "right": 60
+            },
+            "height": 120,
+            "text": "",
+            "styleSlot": "mp.label.body"
+          },
+          {
+            "type": "container",
+            "name": "MpPanel",
+            "id": "mpPanel",
+            "widget": {
+              "top": 84,
+              "left": 32,
+              "right": 32,
+              "bottom": 80
+            },
+            "children": [
+              {
+                "type": "label",
+                "name": "MpLine",
+                "id": "mpLine",
+                "widget": {
+                  "top": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 72,
+                "text": "",
+                "styleSlot": "mp.label.body"
+              },
+              {
+                "type": "label",
+                "name": "MpSuitor",
+                "id": "mpSuitor",
+                "widget": {
+                  "top": 84,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 72,
+                "text": "",
+                "styleSlot": "mp.label.body"
+              },
+              {
+                "type": "label",
+                "name": "MpGift",
+                "id": "mpGift",
+                "widget": {
+                  "top": 168,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 36,
+                "text": "",
+                "styleSlot": "mp.label.stats"
+              },
+              {
+                "type": "button",
+                "name": "BtnAcceptMp",
+                "id": "btnAcceptMp",
+                "widget": {
+                  "top": 222,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 72,
+                "skinSlot": "mp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnAcceptMpLabel",
+                    "id": "acceptMpLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "應允",
+                    "styleSlot": "mp.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnDeclineMp",
+                "id": "btnDeclineMp",
+                "widget": {
+                  "top": 310,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 72,
+                "skinSlot": "mp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnDeclineMpLabel",
+                    "id": "declineMpLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "婉拒",
+                    "styleSlot": "mp.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "MpNotice",
+            "id": "mpNotice",
+            "widget": {
+              "top": 488,
+              "left": 32,
+              "right": 32
+            },
+            "height": 60,
+            "text": "",
+            "styleSlot": "mp.label.body"
+          }
+        ]
+      }
+    ]
+  }
+}

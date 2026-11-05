@@ -205,6 +205,7 @@ import { buildEraResetEvent } from '../systems/EraReset';
 import { buildQuarterlyBattleReportRows, type QuarterlyBattleReportRow } from '../systems/RetireReviewCopy';
 import { withLifeImprints } from '../systems/LifeImprint';
 import { clanMembersOf, clanStatsOf, clanTierOf, normalizeClanTier, type ClanTier } from '../systems/ClanTier';
+import { buildSuitorGeneral, normalizeMarriageProposal, rollMarriageProposal, type MarriageProposal } from '../systems/MarriageProposal';
 import { forgeCustomGold, mergeCustomFactors, normalizeCustomFactors } from '../systems/CustomGoldFactor';
 import { yuedanBannerLines } from '../systems/YuedanReview';
 import { clanHallNameOf, normalizeClanHall } from '../systems/ClanHall';
@@ -320,6 +321,7 @@ export const GAME_SESSION_EVENTS = {
     YearEnded: 'game-session-year-ended',
     /** payload: DaughterAwaitingRoute[]（年末剛滿 14 歲、還活著的女兒，PROG-2-1787） */
     DaughterComingOfAge: 'game-session-daughter-coming-of-age',
+    MarriageProposal: 'game-session-marriage-proposal',
     /** payload: AgingEvent（type = reached-retirement-age） */
     GeneralReachedRetirementAge: 'game-session-general-retirement-age',
     /** payload: AgingEvent（type = died） */
@@ -647,6 +649,7 @@ export class GameSession {
     private _soulFragments: SoulFragmentLedger = emptySoulFragmentLedger();
     /** 門第階級，只升不降（G4 §F-1） */
     private _clanTier: ClanTier = 0;
+    private _marriageProposal: MarriageProposal | null = null;
     private _clanTradition: ClanTradition | null = null;
     private _clanHall: string | null = null;
     /** 已通關的關卡 id（連環破，PROG-2-0215） */
@@ -1717,6 +1720,25 @@ export class GameSession {
         return this._factorDictionary;
     }
 
+    /** 待回覆的名門提親（G4 §E #4，PROG-2-1811） */
+    public get marriageProposal(): MarriageProposal | null {
+        return this._marriageProposal;
+    }
+
+    /** 回覆提親：應允時對象進名冊、聘禮走 grantGold；婉拒只清掉提親。成功時存檔（若有開啟） */
+    public async respondMarriageProposal(accept: boolean, grantGold: (amount: number) => void): Promise<{ ok: boolean; general?: GeneralConfig }> {
+        const proposal = this._marriageProposal;
+        if (!proposal) return { ok: false };
+        this._marriageProposal = null;
+        const general = accept ? buildSuitorGeneral(proposal) : undefined;
+        if (general) {
+            this.enrollGenerals([general]);
+            grantGold(proposal.giftGold);
+        }
+        if (this._autoSave && this._save) await this.save();
+        return { ok: true, general };
+    }
+
     public get clanTier(): ClanTier {
         return this._clanTier;
     }
@@ -1808,6 +1830,7 @@ export class GameSession {
         // 上一局的進度不能帶進新局（PROG-2-0660）
         this._soulFragments = emptySoulFragmentLedger();
         this._clanTier = 0;
+        this._marriageProposal = null;
         this._clanTradition = null;
         this._clanHall = null;
         this._setCustomFactors([]);
@@ -3752,6 +3775,10 @@ export class GameSession {
         this._governanceEvent = rollGovernanceEvent(governanceSeason, governanceRandom);
         const eventNotice = this.governanceEventNotice;
         const yuedanLines = advance.yearEnded ? yuedanBannerLines(this._roster.getAll()) : [];
+        // 新提親取代去年沒回覆的；同樣不消耗主亂數
+        if (advance.yearEnded) {
+            this._marriageProposal = rollMarriageProposal(this._roster.getAll(), this._clanTier, `suitor-${governanceSeason}`, remarkRandomOf(`marriage|${governanceSeason}|${this._seeded.snapshot().state}`));
+        }
         const payload: SeasonAdvancedPayload = { ...(yuedanLines.length > 0 ? { yuedanLines } : {}), ...(this._tallyFoodDiscountArmed ? { foodLowLine: FOOD_LOW_LINE } : {}), ...(treasures.length > 0 ? { prisonTreasureLines: treasures.map((entry) => prisonTreasureLine(entry.targetName, ITEM_DISPLAY_NAMES[ITEM_TREASURE])) } : {}), ...(governanceReport ? { governanceReport } : {}), ...(eventNotice ? { governanceEventLine: eventNotice } : {}), advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids } : {}), ...(mercenaryDay.dayThreeUids.length > 0 ? { mercenaryDayThree: mercenaryDay.dayThreeUids } : {}), ...(mercenaryDay.trustUids.length > 0 ? { mercenaryTrust: mercenaryDay.trustUids } : {}) };
         if (this._autoSave && this._save) {
             await this.save();
@@ -3780,6 +3807,9 @@ export class GameSession {
         }
         if (comingOfAge.length > 0) {
             this._emit(GAME_SESSION_EVENTS.DaughterComingOfAge, comingOfAge);
+        }
+        if (advance.yearEnded && this._marriageProposal) {
+            this._emit(GAME_SESSION_EVENTS.MarriageProposal, this._marriageProposal);
         }
         return payload;
     }
@@ -4428,6 +4458,7 @@ export class GameSession {
             friendBorrowLedger: { records: [...this._borrowLedger.records] },
             soulFragments: { ...this._soulFragments },
             clanTier: this._clanTier,
+            marriageProposal: this._marriageProposal ?? undefined,
             clanTradition: this._clanTradition ?? undefined,
             clanHall: this._clanHall ?? undefined,
             customFactors: this._customFactors.map((def) => ({ ...def })),
@@ -4597,6 +4628,7 @@ export class GameSession {
         this._borrowLedger = normalizeBorrowLedger(snapshot.friendBorrowLedger);
         this._soulFragments = normalizeSoulFragmentLedger(snapshot.soulFragments);
         this._clanTier = normalizeClanTier(snapshot.clanTier);
+        this._marriageProposal = normalizeMarriageProposal(snapshot.marriageProposal);
         this._clanTradition = normalizeClanTradition(snapshot.clanTradition);
         this._clanHall = normalizeClanHall(snapshot.clanHall);
         this._setCustomFactors(normalizeCustomFactors(snapshot.customFactors));

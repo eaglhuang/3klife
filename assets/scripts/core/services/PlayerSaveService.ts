@@ -1,3 +1,4 @@
+import { normalizeMarriageProposal, type MarriageProposal } from '../systems/MarriageProposal';
 import { isSandtableTerritory } from '../systems/SandtableTerritories';
 import type { BreedingBirthRecord } from '../systems/BreedingBirthRecord';
 import { normalizeBreedingBirthRecords } from '../systems/BreedingBirthRecordSave';
@@ -267,6 +268,8 @@ export interface PlayerSaveSnapshot {
     soulFragments?: SoulFragmentLedger;
     /** 門第階級；後加的選填欄位，舊檔讀回為布衣寒門（PROG-2-1795） */
     clanTier?: ClanTier;
+    /** 名門提親（G4 §E #4，PROG-2-1811）；舊存檔沒有此欄位 */
+    marriageProposal?: MarriageProposal;
     /** 郡望家風（G4 §F-1）；舊存檔沒有此欄位 */
     clanTradition?: ClanTradition;
     /** 郡望堂號（PROG-2-1804） */
@@ -585,6 +588,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.friendBorrowLedger !== undefined ? { friendBorrowLedger: normalizeBorrowLedger(snapshot.friendBorrowLedger) } : {}),
         ...(snapshot.soulFragments !== undefined ? { soulFragments: normalizeSoulFragmentLedger(snapshot.soulFragments) } : {}),
         ...(snapshot.clanTier !== undefined ? { clanTier: normalizeClanTier(snapshot.clanTier) } : {}),
+        ...(normalizeMarriageProposal(snapshot.marriageProposal) ? { marriageProposal: normalizeMarriageProposal(snapshot.marriageProposal) as MarriageProposal } : {}),
         ...(normalizeClanTradition(snapshot.clanTradition) ? { clanTradition: normalizeClanTradition(snapshot.clanTradition) as ClanTradition } : {}),
         ...(normalizeClanHall(snapshot.clanHall) ? { clanHall: normalizeClanHall(snapshot.clanHall) as string } : {}),
         ...(snapshot.customFactors !== undefined ? { customFactors: normalizeCustomFactors(snapshot.customFactors) } : {}),
