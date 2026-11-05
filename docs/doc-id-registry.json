@@ -31,13 +31,13 @@
       "name": "registry-spec",
       "title": "遊戲規格類（spec）",
       "path": "docs/doc-id-registry-shards/registry-spec.json",
-      "count": 295
+      "count": 298
     },
     {
       "name": "registry-index",
       "title": "索引類（index）",
       "path": "docs/doc-id-registry-shards/registry-index.json",
-      "count": 75
+      "count": 76
     },
     {
       "name": "registry-task",

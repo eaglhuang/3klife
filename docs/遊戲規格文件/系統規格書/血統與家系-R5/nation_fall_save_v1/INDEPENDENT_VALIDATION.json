@@ -1,0 +1,61 @@
+{
+  "gameplay_groups": 2,
+  "source_files": 211,
+  "loaded_full_modules": 153,
+  "ast_source_files": 3,
+  "negative_controls": 6,
+  "negative_controls_are_not_gameplay_cases": true,
+  "catalog_fixture_combat_values_verified": true,
+  "distinct_campaign_saves_and_fall_state_independently_checked": true,
+  "controls": [
+    {
+      "control": "independent_source_proof_and_exact_replay",
+      "exit_code": 0,
+      "stdout": "PASS NF01\nPASS NF02\n{\"verified\": true, \"head\": \"106f053db7b7d7af8d800722158c4a35bb65d3aa\", \"sources\": 211, \"cases\": 2, \"external_byte_identical_replay\": true, \"source_proof\": \"eff complete Git tree + f4 seven-path bridge + four linear commits/27-path complete compare + PR merged + bounded HEAD observation\"}\n",
+      "stderr": "",
+      "expected_rejection": false
+    },
+    {
+      "control": "campaign_consumer_source_tamper_rejected",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "VERIFY FAILED: sources/assets/scripts/ui/core/RivalDiplomacyController.ts\n",
+      "expected_rejection": true
+    },
+    {
+      "control": "extra_file_rejected",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "VERIFY FAILED: \n",
+      "expected_rejection": true
+    },
+    {
+      "control": "resealed_campaign_source_rejected_by_fixed_version_proof",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "VERIFY FAILED: assets/scripts/ui/core/RivalDiplomacyController.ts\n",
+      "expected_rejection": true
+    },
+    {
+      "control": "existing_output_rejected",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "file:///tmp/nation-fall-review-7armk02m/package/probes/runtime.mjs:3\nif(!process.argv[2])throw Error('Required: new external output directory');const requested=path.resolve(process.argv[2]);for(let q=requested;;q=path.dirname(q)){try{if(fs.lstatSync(q).isSymbolicLink())throw Error('Symlink output path rejected');}catch(e){if(e.code!=='ENOENT')throw e;}if(path.dirname(q)===q)break;}export const OUT=path.join(fs.realpathSync(path.dirname(requested)),path.basename(requested));const REAL_ROOT=fs.realpathSync(ROOT);if(OUT===REAL_ROOT||OUT.startsWith(REAL_ROOT+path.sep))throw Error('Output must be external to package');let occupied=false;try{fs.lstatSync(OUT);occupied=true;}catch(e){if(e.code!=='ENOENT')throw e;}if(occupied)throw Error('Output already exists');fs.mkdirSync(OUT,{recursive:true});\n                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ^\n\nError: Output already exists\n    at file:///tmp/nation-fall-review-7armk02m/package/probes/runtime.mjs:3:666\n    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)\n    at async node:internal/modules/esm/loader:647:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)\n\nNode.js v24.22.1\n",
+      "expected_rejection": true
+    },
+    {
+      "control": "package_output_rejected",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "file:///tmp/nation-fall-review-7armk02m/package/probes/runtime.mjs:3\nif(!process.argv[2])throw Error('Required: new external output directory');const requested=path.resolve(process.argv[2]);for(let q=requested;;q=path.dirname(q)){try{if(fs.lstatSync(q).isSymbolicLink())throw Error('Symlink output path rejected');}catch(e){if(e.code!=='ENOENT')throw e;}if(path.dirname(q)===q)break;}export const OUT=path.join(fs.realpathSync(path.dirname(requested)),path.basename(requested));const REAL_ROOT=fs.realpathSync(ROOT);if(OUT===REAL_ROOT||OUT.startsWith(REAL_ROOT+path.sep))throw Error('Output must be external to package');let occupied=false;try{fs.lstatSync(OUT);occupied=true;}catch(e){if(e.code!=='ENOENT')throw e;}if(occupied)throw Error('Output already exists');fs.mkdirSync(OUT,{recursive:true});\n                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ^\n\nError: Output must be external to package\n    at file:///tmp/nation-fall-review-7armk02m/package/probes/runtime.mjs:3:509\n    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)\n    at async node:internal/modules/esm/loader:647:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)\n\nNode.js v24.22.1\n",
+      "expected_rejection": true
+    },
+    {
+      "control": "symlink_output_ancestor_rejected",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "file:///tmp/nation-fall-review-7armk02m/package/probes/runtime.mjs:3\nif(!process.argv[2])throw Error('Required: new external output directory');const requested=path.resolve(process.argv[2]);for(let q=requested;;q=path.dirname(q)){try{if(fs.lstatSync(q).isSymbolicLink())throw Error('Symlink output path rejected');}catch(e){if(e.code!=='ENOENT')throw e;}if(path.dirname(q)===q)break;}export const OUT=path.join(fs.realpathSync(path.dirname(requested)),path.basename(requested));const REAL_ROOT=fs.realpathSync(ROOT);if(OUT===REAL_ROOT||OUT.startsWith(REAL_ROOT+path.sep))throw Error('Output must be external to package');let occupied=false;try{fs.lstatSync(OUT);occupied=true;}catch(e){if(e.code!=='ENOENT')throw e;}if(occupied)throw Error('Output already exists');fs.mkdirSync(OUT,{recursive:true});\n                                                                                                                                                                                                               ^\n\nError: Symlink output path rejected\n    at file:///tmp/nation-fall-review-7armk02m/package/probes/runtime.mjs:3:208\n    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)\n    at async node:internal/modules/esm/loader:647:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)\n\nNode.js v24.22.1\n",
+      "expected_rejection": true
+    }
+  ]
+}

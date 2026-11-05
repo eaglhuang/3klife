@@ -180,3 +180,7 @@
 | doc_spec_0296 | 名冊與重複流轉報告.md | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/roster-identity/名冊與重複流轉報告.md | G02/G14武將名冊與重複流轉44案有界驗證報告 |
 | doc_index_1039 | README.md (vitality) | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/vitality/README.md | G07精力疲勞恢復與加速卡有界驗證包索引 |
 | doc_spec_0297 | REPORT.md (vitality) | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/vitality/REPORT.md | G07精力疲勞恢復與加速卡40案有界驗證報告 |
+| doc_index_1040 | README.md (nation_fall_save_v1) | docs/遊戲規格文件/系統規格書/血統與家系-R5/nation_fall_save_v1/README.md | 原生出征→零領地→滅亡→保存讀回與出生20季覆蓋驗證包索引 |
+| doc_spec_0298 | REPORT.md (nation_fall_save_v1) | docs/遊戲規格文件/系統規格書/血統與家系-R5/nation_fall_save_v1/REPORT.md | 原生出征→零領地→滅亡→保存讀回（NF01/NF02）有界驗證報告 |
+| doc_spec_0299 | INDEPENDENT_REVIEW.md (nation_fall_save_v1) | docs/遊戲規格文件/系統規格書/血統與家系-R5/nation_fall_save_v1/INDEPENDENT_REVIEW.md | 出征滅亡保存鏈獨立複核與6組負向控制驗證報告 |
+| doc_spec_0300 | REPORT.md (prior-birth-coverage) | docs/遊戲規格文件/系統規格書/血統與家系-R5/nation_fall_save_v1/provenance/prior-birth-coverage/REPORT.md | 原出生→20季增齡→5歲開獎宿命→育成入場（BN01-BN04）有界驗證報告 |

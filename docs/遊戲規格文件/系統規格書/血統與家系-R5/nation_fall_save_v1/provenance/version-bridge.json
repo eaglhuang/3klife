@@ -1,0 +1,47 @@
+{
+  "observed_utc": [
+    "2026-11-04T22:00:57.510Z",
+    "2026-11-04T22:00:59.185Z"
+  ],
+  "base": "f4eca8189223b1cd7e4f4457019ddac73c46a9be",
+  "head": "106f053db7b7d7af8d800722158c4a35bb65d3aa",
+  "commits": [
+    {
+      "sha": "5fee8261860e5b5af2f0c8072f07325ab2d9b5ff",
+      "parents": [
+        "f4eca8189223b1cd7e4f4457019ddac73c46a9be"
+      ],
+      "message": "feat(rival): 他國求盟與商隊提議，可接受或拒絕（PROG-2-1770） (#1676)\n\nCo-authored-by: claude-code-opus-5-5 <codex-gpt-6.1-sol@atm.local>\nCo-authored-by: Claude Opus 5.5 <noreply@anthropic.com>"
+    },
+    {
+      "sha": "e24d6e9683b36e6e3508467f21d02b8bab6ca22b",
+      "parents": [
+        "5fee8261860e5b5af2f0c8072f07325ab2d9b5ff"
+      ],
+      "message": "feat(merc): 傭兵第三日、結義與離隊劇本句（PROG-2-1771） (#1677)\n\nCo-authored-by: claude-code-opus-5-5 <codex-gpt-6.1-sol@atm.local>\nCo-authored-by: Claude Opus 5.5 <noreply@anthropic.com>"
+    },
+    {
+      "sha": "46d266e9084a1b5dd63582b322c9597001096f08",
+      "parents": [
+        "e24d6e9683b36e6e3508467f21d02b8bab6ca22b"
+      ],
+      "message": "feat(battle): 兵種剋制戰鬥句（PROG-2-1772） (#1678)\n\nCo-authored-by: claude-code-opus-5-5 <codex-gpt-6.1-sol@atm.local>\nCo-authored-by: Claude Opus 5.5 <noreply@anthropic.com>"
+    },
+    {
+      "sha": "106f053db7b7d7af8d800722158c4a35bb65d3aa",
+      "parents": [
+        "46d266e9084a1b5dd63582b322c9597001096f08"
+      ],
+      "message": "feat(governance): 治理事件與季度治理報告（PROG-2-1773） (#1679)\n\nCo-authored-by: claude-code-opus-5-5 <codex-gpt-6.1-sol@atm.local>\nCo-authored-by: Claude Opus 5.5 <noreply@anthropic.com>"
+    }
+  ],
+  "changed_paths": 27,
+  "pagination": {
+    "per_page": 100,
+    "page1_commits": 4,
+    "total_commits": 4,
+    "page2_commits": 0,
+    "files_limit_not_hit": true
+  },
+  "linear_parent_chain_validated": true
+}

@@ -12,11 +12,11 @@
 | 畫面UI類 | `doc_ui` | 51 |
 | 美術非UI類 | `doc_art` | 3 |
 | 數值類 | `doc_data` | 2 |
-| 遊戲規格類 | `doc_spec` | 295 |
-| 索引類 | `doc_index` | 75 |
+| 遊戲規格類 | `doc_spec` | 298 |
+| 索引類 | `doc_index` | 76 |
 | 任務卡類 | `doc_task` | 1964 |
 | AI Agent 專用 | `doc_ai` | 43 |
 | Agent Skill 專用 | `doc_agentskill` | 102 |
 | Server 文件類 | `doc_server_<subtype>` | 3 |
 | 其它類 | `doc_other` | 1970 |
-| **合計** | — | **4531** |
+| **合計** | — | **4535** |

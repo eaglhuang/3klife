@@ -1,0 +1,156 @@
+[
+  {
+    "url": "https://github.com/eaglhuang/3klife/blob/106f053db7b7d7af8d800722158c4a35bb65d3aa/server/schema/sync06-patch-whitelist.ts",
+    "expected_git_blob": "57a49e33989458e00e6db09f49c63c8125beb7c8",
+    "actual_git_blob": "57a49e33989458e00e6db09f49c63c8125beb7c8",
+    "matches": true,
+    "bytes": 4434
+  },
+  {
+    "url": "https://github.com/eaglhuang/3klife/blob/106f053db7b7d7af8d800722158c4a35bb65d3aa/assets/scripts/core/systems/GovernanceEvents.ts",
+    "expected_git_blob": "409b82a940ac8dcf1c442c0c69e8810c41f6427a",
+    "actual_git_blob": "409b82a940ac8dcf1c442c0c69e8810c41f6427a",
+    "matches": true,
+    "bytes": 3581
+  },
+  {
+    "url": "https://github.com/eaglhuang/3klife/blob/106f053db7b7d7af8d800722158c4a35bb65d3aa/assets/scripts/core/systems/RivalTrade.ts",
+    "expected_git_blob": "84fd5f636ff1e857cbbfb230fc38f174c6e85e88",
+    "actual_git_blob": "84fd5f636ff1e857cbbfb230fc38f174c6e85e88",
+    "matches": true,
+    "bytes": 4288
+  },
+  {
+    "url": "https://github.com/eaglhuang/3klife/blob/106f053db7b7d7af8d800722158c4a35bb65d3aa/assets/scripts/core/systems/RivalProposals.ts",
+    "expected_git_blob": "95fadeea79662e14daeee1db29f6ce2a881ddc6a",
+    "actual_git_blob": "95fadeea79662e14daeee1db29f6ce2a881ddc6a",
+    "matches": true,
+    "bytes": 4416
+  },
+  {
+    "url": "https://github.com/eaglhuang/3klife/blob/106f053db7b7d7af8d800722158c4a35bb65d3aa/assets/scripts/core/systems/DomesticPresenter.ts",
+    "expected_git_blob": "b24dec981ffbcc30d8072568e0a892da660e46cf",
+    "actual_git_blob": "b24dec981ffbcc30d8072568e0a892da660e46cf",
+    "matches": true,
+    "bytes": 2501
+  },
+  {
+    "url": "https://github.com/eaglhuang/3klife/blob/106f053db7b7d7af8d800722158c4a35bb65d3aa/assets/scripts/core/services/PlayerSaveService.ts",
+    "expected_git_blob": "22c4effff1e62e7ddc617fdc25539781c2969a26",
+    "actual_git_blob": "22c4effff1e62e7ddc617fdc25539781c2969a26",
+    "matches": true,
+    "bytes": 49940
+  },
+  {
+    "url": "https://github.com/eaglhuang/3klife/blob/106f053db7b7d7af8d800722158c4a35bb65d3aa/assets/scripts/core/systems/RivalAiDiplomacy.ts",
+    "expected_git_blob": "8b79e122b34d771201a4af5fcc388147510642b9",
+    "actual_git_blob": "8b79e122b34d771201a4af5fcc388147510642b9",
+    "matches": true,
+    "bytes": 4863
+  },
+  {
+    "url": "https://github.com/eaglhuang/3klife/blob/106f053db7b7d7af8d800722158c4a35bb65d3aa/assets/scripts/ui/core/DomesticPanelController.ts",
+    "expected_git_blob": "834bd342fb5eb634670e544044d5d5f659c42d78",
+    "actual_git_blob": "834bd342fb5eb634670e544044d5d5f659c42d78",
+    "matches": true,
+    "bytes": 11789
+  },
+  {
+    "url": "https://github.com/eaglhuang/3klife/blob/106f053db7b7d7af8d800722158c4a35bb65d3aa/assets/scripts/battle/runtime/BattleCombatResolver.ts",
+    "expected_git_blob": "b5ebdebcb912c5baa561eb4dbc679f24d7f2ea4d",
+    "actual_git_blob": "b5ebdebcb912c5baa561eb4dbc679f24d7f2ea4d",
+    "matches": true,
+    "bytes": 44354
+  },
+  {
+    "url": "https://github.com/eaglhuang/3klife/blob/106f053db7b7d7af8d800722158c4a35bb65d3aa/tests/RivalProposals.test.ts",
+    "expected_git_blob": "fc49b3d3a2863e70a3bb484729c7c075df9bfeeb",
+    "actual_git_blob": "fc49b3d3a2863e70a3bb484729c7c075df9bfeeb",
+    "matches": true,
+    "bytes": 8555
+  },
+  {
+    "url": "https://github.com/eaglhuang/3klife/blob/106f053db7b7d7af8d800722158c4a35bb65d3aa/assets/scripts/core/systems/RivalPlayerEvents.ts",
+    "expected_git_blob": "4d7a1e30c6d82acf99c2d28e8d89992afba6e613",
+    "actual_git_blob": "4d7a1e30c6d82acf99c2d28e8d89992afba6e613",
+    "matches": true,
+    "bytes": 4930
+  },
+  {
+    "url": "https://github.com/eaglhuang/3klife/blob/106f053db7b7d7af8d800722158c4a35bb65d3aa/assets/scripts/core/systems/TroopCounterScripts.ts",
+    "expected_git_blob": "2675af4ea8bd65b49b22828c5824f3d4b46b4a09",
+    "actual_git_blob": "2675af4ea8bd65b49b22828c5824f3d4b46b4a09",
+    "matches": true,
+    "bytes": 1719
+  },
+  {
+    "url": "https://github.com/eaglhuang/3klife/blob/106f053db7b7d7af8d800722158c4a35bb65d3aa/assets/scripts/core/managers/GameSession.ts",
+    "expected_git_blob": "d7e12723ded4b74081be96ecd0720c52b23c7aa1",
+    "actual_git_blob": "d7e12723ded4b74081be96ecd0720c52b23c7aa1",
+    "matches": true,
+    "bytes": 246660
+  },
+  {
+    "url": "https://github.com/eaglhuang/3klife/blob/106f053db7b7d7af8d800722158c4a35bb65d3aa/assets/scripts/ui/scenes/LobbyScene.ts",
+    "expected_git_blob": "0bea6feaa485ac31f7ccf95378b1a754ab9b3d40",
+    "actual_git_blob": "0bea6feaa485ac31f7ccf95378b1a754ab9b3d40",
+    "matches": true,
+    "bytes": 280476
+  },
+  {
+    "url": "https://github.com/eaglhuang/3klife/blob/106f053db7b7d7af8d800722158c4a35bb65d3aa/assets/scripts/core/systems/RivalNations.ts",
+    "expected_git_blob": "6af20a29455b2bf7977df7671364e8b96ea8104d",
+    "actual_git_blob": "6af20a29455b2bf7977df7671364e8b96ea8104d",
+    "matches": true,
+    "bytes": 25742
+  },
+  {
+    "url": "https://github.com/eaglhuang/3klife/blob/106f053db7b7d7af8d800722158c4a35bb65d3aa/assets/scripts/core/services/LocalGachaService.ts",
+    "expected_git_blob": "8eb814a352ed43b2aa37773434187b395cbb5739",
+    "actual_git_blob": "8eb814a352ed43b2aa37773434187b395cbb5739",
+    "matches": true,
+    "bytes": 26953
+  },
+  {
+    "url": "https://github.com/eaglhuang/3klife/blob/106f053db7b7d7af8d800722158c4a35bb65d3aa/assets/scripts/core/systems/DomesticTasks.ts",
+    "expected_git_blob": "ee29968c71d1f4b3e3b8c956caa1748a08c60f81",
+    "actual_git_blob": "ee29968c71d1f4b3e3b8c956caa1748a08c60f81",
+    "matches": true,
+    "bytes": 6818
+  },
+  {
+    "url": "https://github.com/eaglhuang/3klife/blob/106f053db7b7d7af8d800722158c4a35bb65d3aa/assets/scripts/battle/views/BattleUIBridge.ts",
+    "expected_git_blob": "724abf9e3294adac0e88e63ddd565dd3925ba949",
+    "actual_git_blob": "724abf9e3294adac0e88e63ddd565dd3925ba949",
+    "matches": true,
+    "bytes": 52714
+  },
+  {
+    "url": "https://github.com/eaglhuang/3klife/blob/106f053db7b7d7af8d800722158c4a35bb65d3aa/assets/scripts/core/systems/MercenaryScripts.ts",
+    "expected_git_blob": "18f0d984ab58ee10c77b245d0a0f7695222b5208",
+    "actual_git_blob": "18f0d984ab58ee10c77b245d0a0f7695222b5208",
+    "matches": true,
+    "bytes": 1260
+  },
+  {
+    "url": "https://github.com/eaglhuang/3klife/blob/106f053db7b7d7af8d800722158c4a35bb65d3aa/assets/scripts/ui/core/RivalDiplomacyController.ts",
+    "expected_git_blob": "46dc5e089f17116070f63b34b032c11a0e02e499",
+    "actual_git_blob": "46dc5e089f17116070f63b34b032c11a0e02e499",
+    "matches": true,
+    "bytes": 6159
+  },
+  {
+    "url": "https://github.com/eaglhuang/3klife/blob/106f053db7b7d7af8d800722158c4a35bb65d3aa/assets/scripts/core/config/Constants.ts",
+    "expected_git_blob": "58a7029bbf486b954bbbe450b79ce10729321ac3",
+    "actual_git_blob": "58a7029bbf486b954bbbe450b79ce10729321ac3",
+    "matches": true,
+    "bytes": 6570
+  },
+  {
+    "url": "https://github.com/eaglhuang/3klife/blob/106f053db7b7d7af8d800722158c4a35bb65d3aa/assets/scripts/ui/core/MercenaryPanelController.ts",
+    "expected_git_blob": "4534604e107bdedaa104b4903004c4f9ac5f823d",
+    "actual_git_blob": "4534604e107bdedaa104b4903004c4f9ac5f823d",
+    "matches": true,
+    "bytes": 7500
+  }
+]

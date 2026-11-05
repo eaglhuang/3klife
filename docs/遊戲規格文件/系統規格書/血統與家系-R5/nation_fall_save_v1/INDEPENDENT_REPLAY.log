@@ -1,0 +1,3 @@
+PASS NF01
+PASS NF02
+{"verified": true, "head": "106f053db7b7d7af8d800722158c4a35bb65d3aa", "sources": 211, "cases": 2, "external_byte_identical_replay": true, "source_proof": "eff complete Git tree + f4 seven-path bridge + four linear commits/27-path complete compare + PR merged + bounded HEAD observation"}

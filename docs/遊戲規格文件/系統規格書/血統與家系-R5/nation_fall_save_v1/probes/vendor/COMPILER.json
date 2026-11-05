@@ -1,0 +1,13 @@
+{
+  "name": "typescript",
+  "version": "5.9.3",
+  "sha256": "3ae902c92cc44dace175c0e69e13a4b0899f6983c6121d76b9ab8dd5795e7675",
+  "origin": "Reused byte-verified TypeScript 5.9.3 compiler and license from prior evidence package; no new installation",
+  "license": "Apache-2.0; see TYPESCRIPT_LICENSE.txt",
+  "purpose": "In-memory TS transpilation; exact original class and method AST extraction with node-bound metadata. No product source edits.",
+  "package_repository": "https://github.com/microsoft/TypeScript.git",
+  "recorded_package_lock_resolved": "https://registry.npmjs.org/typescript/-/typescript-5.9.3.tgz",
+  "recorded_package_lock_integrity": "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==",
+  "verified": "This task verifies runtime ts.version=5.9.3 and SHA-256 of copied compiler bytes against the prior finalized evidence package.",
+  "not_verified": "Registry tarball was not re-downloaded and its integrity was not independently revalidated in this task"
+}

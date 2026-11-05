@@ -1,0 +1,6828 @@
+{
+  "shard": "part-01",
+  "id": "NF01",
+  "status": "PASS",
+  "setupSeasons0To11Summary": [
+    {
+      "season": 1,
+      "lvbuTerritories": 1,
+      "lvbuFallen": false,
+      "lvbuAtWar": false,
+      "playerFood": 2153,
+      "playerTroops": 1757,
+      "playerGold": 100,
+      "notices": [],
+      "logsCount": 0
+    },
+    {
+      "season": 2,
+      "lvbuTerritories": 1,
+      "lvbuFallen": false,
+      "lvbuAtWar": false,
+      "playerFood": 2303,
+      "playerTroops": 2507,
+      "playerGold": 100,
+      "notices": [],
+      "logsCount": 0
+    },
+    {
+      "season": 3,
+      "lvbuTerritories": 1,
+      "lvbuFallen": false,
+      "lvbuAtWar": false,
+      "playerFood": 2528,
+      "playerTroops": 3000,
+      "playerGold": 100,
+      "notices": [],
+      "logsCount": 0
+    },
+    {
+      "season": 4,
+      "lvbuTerritories": 1,
+      "lvbuFallen": false,
+      "lvbuAtWar": false,
+      "playerFood": 2678,
+      "playerTroops": 3000,
+      "playerGold": 100,
+      "notices": [],
+      "logsCount": 0
+    },
+    {
+      "season": 5,
+      "lvbuTerritories": 1,
+      "lvbuFallen": false,
+      "lvbuAtWar": false,
+      "playerFood": 2828,
+      "playerTroops": 3000,
+      "playerGold": 100,
+      "notices": [],
+      "logsCount": 0
+    },
+    {
+      "season": 6,
+      "lvbuTerritories": 1,
+      "lvbuFallen": false,
+      "lvbuAtWar": false,
+      "playerFood": 2681,
+      "playerTroops": 2850,
+      "playerGold": 100,
+      "notices": [],
+      "logsCount": 0
+    },
+    {
+      "season": 7,
+      "lvbuTerritories": 1,
+      "lvbuFallen": false,
+      "lvbuAtWar": false,
+      "playerFood": 2906,
+      "playerTroops": 3000,
+      "playerGold": 100,
+      "notices": [],
+      "logsCount": 0
+    },
+    {
+      "season": 8,
+      "lvbuTerritories": 1,
+      "lvbuFallen": false,
+      "lvbuAtWar": false,
+      "playerFood": 3056,
+      "playerTroops": 3000,
+      "playerGold": 100,
+      "notices": [],
+      "logsCount": 0
+    },
+    {
+      "season": 9,
+      "lvbuTerritories": 1,
+      "lvbuFallen": false,
+      "lvbuAtWar": false,
+      "playerFood": 3206,
+      "playerTroops": 3000,
+      "playerGold": 100,
+      "notices": [],
+      "logsCount": 0
+    },
+    {
+      "season": 10,
+      "lvbuTerritories": 1,
+      "lvbuFallen": false,
+      "lvbuAtWar": false,
+      "playerFood": 3356,
+      "playerTroops": 3000,
+      "playerGold": 100,
+      "notices": [],
+      "logsCount": 0
+    },
+    {
+      "season": 11,
+      "lvbuTerritories": 1,
+      "lvbuFallen": false,
+      "lvbuAtWar": false,
+      "playerFood": 3581,
+      "playerTroops": 3000,
+      "playerGold": 100,
+      "notices": [],
+      "logsCount": 0
+    }
+  ],
+  "campaignAtSeason11": {
+    "before": {
+      "season": 11,
+      "military": {
+        "cityTroops": 3000,
+        "cityTroopsCap": 3000,
+        "recruitRegen": 750,
+        "food": 3581,
+        "foodCap": 10000
+      },
+      "wallet": {
+        "gems": 0,
+        "gold": 100,
+        "tickets": 0,
+        "bronze": 0,
+        "oracle": 0,
+        "mentorTickets": 0,
+        "scorePoints": 0
+      },
+      "gold": 100,
+      "nation": {
+        "id": "lvbu",
+        "troops": 9684,
+        "territories": 1,
+        "relation": -68,
+        "allied": false,
+        "atWar": false,
+        "resources": {
+          "food": 2720,
+          "gold": 0,
+          "fame": 0,
+          "intel": 0
+        },
+        "governedSeasons": 11,
+        "recruits": {
+          "S": 0,
+          "A": 2,
+          "B": 3,
+          "C": 0
+        },
+        "roster": [
+          {
+            "id": "lvbu-10",
+            "quality": "A",
+            "recruitedSeason": 10
+          }
+        ],
+        "bonds": [
+          {
+            "first": "lvbu-2",
+            "second": "lvbu-4",
+            "season": 8
+          },
+          {
+            "first": "lvbu-6",
+            "second": "lvbu-8",
+            "season": 9
+          }
+        ]
+      },
+      "notices": [],
+      "battles": [],
+      "logs": [],
+      "roster": [
+        {
+          "id": "cao-cao",
+          "name": "曹操",
+          "alias": [],
+          "faction": "wei",
+          "templateId": "GEN_WEI_CAO_CAO",
+          "title": "【魏武】",
+          "gender": "男",
+          "age": 22.75,
+          "hp": 1696,
+          "currentHp": 1696,
+          "maxSp": 100,
+          "initialSp": 40,
+          "currentSp": 40,
+          "vitality": 100,
+          "maxVitality": 100,
+          "role": "Combat",
+          "status": "Active",
+          "attackBonus": 0.08,
+          "str": 82,
+          "int": 94,
+          "lea": 92,
+          "pol": 96,
+          "cha": 90,
+          "luk": 86,
+          "stats": {
+            "str": 82,
+            "int": 94,
+            "lea": 92,
+            "pol": 96,
+            "cha": 90,
+            "luk": 86
+          },
+          "skillId": "cao-cao-tactics",
+          "battlePrimarySkillId": "cao-cao-tactics",
+          "preferredTerrain": "plain",
+          "terrainDefenseBonus": 0.15,
+          "source": "劇情敵對勢力",
+          "notes": "偏全局掌控與節奏操作的敵方統帥型武將。",
+          "devNote": "由 master pipeline 自動同步生成。",
+          "hiddenFlags": [
+            "內政事件權重",
+            "政治分支覺醒條件"
+          ],
+          "ep": 92,
+          "epRating": "S+",
+          "rarityTier": "legendary",
+          "characterCategory": "titled",
+          "bloodlineId": "BL_WEI_BAQUAN",
+          "parentsSummary": "父：曹嵩 / 母：丁氏（部分資料保密處理）",
+          "ancestorsSummary": "祖譜完整度高，政治系與統率系因子明顯。",
+          "awakeningTitle": "挾天子令諸侯",
+          "genes": [
+            {
+              "id": "gene_strategy",
+              "displayName": "權謀",
+              "type": "謀略",
+              "level": 4,
+              "description": "提升指揮型戰法與全軍節奏控制。"
+            },
+            {
+              "id": "gene_command",
+              "displayName": "號令",
+              "type": "統率",
+              "level": 3,
+              "description": "提升多路戰場協同能力。"
+            },
+            {
+              "id": "gene_politics",
+              "displayName": "治世",
+              "type": "內政",
+              "level": 3,
+              "description": "影響招募、事件與資源收益。"
+            },
+            {
+              "id": "gene_hidden_05",
+              "displayName": "霸道因子",
+              "isLocked": true,
+              "discoveryLevel": 22
+            }
+          ],
+          "historicalAnecdote": "曹操（155年—220年3月15日），字孟德，小字阿瞞，沛國譙縣（今安徽亳州）人。東漢末年丞相、軍事家、政治家、文學家和詩人，東漢末年主要群雄之一，職位為丞相，為漢末實際上的最高掌權者，亦是三國時代曹魏奠基者。父親曹嵩。其子曹丕建立曹魏，追尊其廟號為太祖，追諡武皇帝。\n",
+          "bloodlineRumor": "譙縣老人說，曹氏祖祠地底埋著一枚黑羽虎符；每逢兵荒，祠中銅燈便會自行偏向北方。曹操少年偷看過一次，從此連風聲都像軍令。",
+          "crestHint": "魏武霸道，天下一局待最後棋",
+          "crestState": "rumored",
+          "storyStripCells": [
+            {
+              "slot": "origin",
+              "text": "橋畔機鋒識人"
+            },
+            {
+              "slot": "faction",
+              "text": "奉天子號諸侯"
+            },
+            {
+              "slot": "role",
+              "text": "詭道裁局定勢"
+            },
+            {
+              "slot": "awakening",
+              "text": "官渡借火翻盤"
+            },
+            {
+              "slot": "bloodline",
+              "text": "銅雀夜夢聽潮"
+            },
+            {
+              "slot": "future",
+              "text": "墳前誰解孟德"
+            }
+          ],
+          "coreTags": [],
+          "generatorProfile": {},
+          "bloodlineProfile": {},
+          "learnedTactics": [
+            "兵不厭詐",
+            "號令調度",
+            "疑兵惑陣"
+          ],
+          "inspiredTactics": [
+            "挾令四方",
+            "魏武軍律"
+          ],
+          "lockedTactics": [
+            "🔒 霸道終局技"
+          ],
+          "tacticSlots": [
+            {
+              "slotId": "slot-1",
+              "tacticId": "tactic-fire-scheme",
+              "source": "inborn"
+            },
+            {
+              "slotId": "slot-2",
+              "tacticId": "tactic-morale-rally",
+              "source": "inborn"
+            }
+          ],
+          "ultimateSlots": [
+            {
+              "slot": 1,
+              "ultimateId": "ult-cao-cao-1",
+              "unlockReincarnation": 1,
+              "vitalityCostPct": 0.05,
+              "isExclusive": true
+            },
+            {
+              "slot": 2,
+              "ultimateId": "ult-cao-cao-2",
+              "unlockReincarnation": 2,
+              "vitalityCostPct": 0.06,
+              "isExclusive": true
+            },
+            {
+              "slot": 3,
+              "ultimateId": "ult-cao-cao-3",
+              "unlockReincarnation": 3,
+              "vitalityCostPct": 0.07,
+              "isExclusive": true
+            },
+            {
+              "slot": 4,
+              "ultimateId": "ult-cao-cao-4",
+              "unlockReincarnation": 4,
+              "vitalityCostPct": 0.08,
+              "isExclusive": true
+            },
+            {
+              "slot": 5,
+              "ultimateId": "ult-cao-cao-5",
+              "unlockReincarnation": 5,
+              "vitalityCostPct": 0.1,
+              "isExclusive": true
+            }
+          ],
+          "troopAptitude": {
+            "CAVALRY": "A",
+            "INFANTRY": "B",
+            "ARCHER": "B",
+            "SIEGE": "B"
+          },
+          "terrainAptitude": {
+            "PLAIN": "A",
+            "MOUNTAIN": "B",
+            "WATER": "B",
+            "FOREST": "B",
+            "DESERT": "C"
+          },
+          "weatherAptitude": {
+            "FOG": "A",
+            "RAINY": "A",
+            "SUNNY": "B",
+            "WINDY": "B",
+            "NIGHT": "B",
+            "THUNDER": "C"
+          },
+          "ancestor_chain": [
+            "VIRT_CAO_CAO_01",
+            "VIRT_CAO_CAO_02",
+            "VIRT_CAO_CAO_03",
+            "VIRT_CAO_CAO_04",
+            "VIRT_CAO_CAO_05",
+            "VIRT_CAO_CAO_06",
+            "VIRT_CAO_CAO_07",
+            "VIRT_CAO_CAO_08",
+            "VIRT_CAO_CAO_09",
+            "VIRT_CAO_CAO_10",
+            "VIRT_CAO_CAO_11",
+            "VIRT_CAO_CAO_12",
+            "VIRT_CAO_CAO_13",
+            "VIRT_CAO_CAO_14"
+          ],
+          "originRegion": "沛郡",
+          "coreFactorTag": "military-commander",
+          "element": "metal",
+          "initialRole": "commander",
+          "introLine": "治世之能臣，亂世之梟雄。",
+          "portraitKey": "portraits/generals/cao-cao",
+          "battleVoiceKey": "audio/voice/generals/cao-cao/battle",
+          "isHistorical": true,
+          "maxLifespan": 100
+        },
+        {
+          "id": "guan-yu",
+          "name": "關羽",
+          "alias": [],
+          "faction": "shu",
+          "templateId": "GEN_SHU_GUAN_YU",
+          "title": "【美髯公】",
+          "gender": "男",
+          "age": 22.75,
+          "hp": 1702,
+          "currentHp": 1702,
+          "maxSp": 100,
+          "initialSp": 40,
+          "currentSp": 40,
+          "vitality": 100,
+          "maxVitality": 100,
+          "role": "Combat",
+          "status": "Active",
+          "attackBonus": 0.15,
+          "str": 97,
+          "int": 76,
+          "lea": 92,
+          "pol": 68,
+          "cha": 91,
+          "luk": 82,
+          "stats": {
+            "str": 97,
+            "int": 76,
+            "lea": 92,
+            "pol": 68,
+            "cha": 91,
+            "luk": 82
+          },
+          "skillId": "guan-yu-slash",
+          "battlePrimarySkillId": "guan-yu-slash",
+          "preferredTerrain": "plain",
+          "terrainDefenseBonus": 0.1,
+          "source": "初期主力",
+          "notes": "高統率的斬將型核心，兼具名望與前線壓制。",
+          "devNote": "由 master pipeline 自動同步生成。",
+          "hiddenFlags": [
+            "第 4 代後祖譜校驗",
+            "覺醒稱號需求"
+          ],
+          "ep": 87,
+          "epRating": "S",
+          "rarityTier": "legendary",
+          "characterCategory": "famed",
+          "bloodlineId": "BL_SHU_LONG",
+          "parentsSummary": "父：關毅 / 母：劉氏（部分史料模糊）",
+          "ancestorsSummary": "祖譜完整度 68%，第 4 代後以推測資料補全。",
+          "awakeningTitle": "青龍武聖",
+          "genes": [
+            {
+              "id": "gene_halberd",
+              "displayName": "刀鋒傳承",
+              "type": "武裝",
+              "level": 3,
+              "description": "強化單點斬殺與穿甲表現。"
+            },
+            {
+              "id": "gene_discipline",
+              "displayName": "軍紀",
+              "type": "統率",
+              "level": 3,
+              "description": "強化部曲士氣穩定。"
+            },
+            {
+              "id": "gene_honor",
+              "displayName": "義勇",
+              "type": "人格",
+              "level": 2,
+              "description": "提升單挑與名望事件加成。"
+            },
+            {
+              "id": "gene_hidden_03",
+              "displayName": "義絕覺醒因子",
+              "isLocked": true,
+              "discoveryLevel": 24
+            }
+          ],
+          "historicalAnecdote": "關羽（160年—220年1月或2月），字雲長，本字長生，司隸河東解縣人（今山西運城），東漢末年將領，劉備的重要親信，被稱為“万人敵”。200年，曹操擊敗劉備後，關羽一度歸降曹操，并在官渡之戰中斬殺顏良，因功封為漢壽亭侯。不久，脫离曹操再次投奔劉備。赤壁之戰後，關羽參与圍攻南郡曹仁，并長期為劉備鎮守荊州。劉備占領益州後，關羽被任命總督荊州，拜前將軍，假節鉞。\n219年，關羽進攻樊城，借漢水暴漲水淹七",
+          "bloodlineRumor": "解縣老人常說，關家舊刀鞘冬晨總先結霜，再慢慢滲成一道細紅線，像有人用指節描過刀背。關羽從不解釋，只在上馬前默默把鞘口按緊。",
+          "crestHint": "青龍義絕，一騎絕塵千秋義",
+          "crestState": "revealed",
+          "storyStripCells": [
+            {
+              "slot": "origin",
+              "text": "解縣冷月磨刀"
+            },
+            {
+              "slot": "faction",
+              "text": "桃園酒尚未冷"
+            },
+            {
+              "slot": "role",
+              "text": "青龍一線斷城"
+            },
+            {
+              "slot": "awakening",
+              "text": "樊城漢水成壁"
+            },
+            {
+              "slot": "bloodline",
+              "text": "義氣入骨成紋"
+            },
+            {
+              "slot": "future",
+              "text": "麥城夜馬無聲"
+            }
+          ],
+          "coreTags": [],
+          "generatorProfile": {},
+          "bloodlineProfile": {},
+          "learnedTactics": [
+            "月牙刀斬",
+            "長驅破軍",
+            "武聖威壓"
+          ],
+          "inspiredTactics": [
+            "春秋刀勢"
+          ],
+          "lockedTactics": [
+            "🔒 義絕",
+            "🔒 千里單騎"
+          ],
+          "tacticSlots": [
+            {
+              "slotId": "slot-1",
+              "tacticId": "tactic-morale-rally",
+              "source": "inborn"
+            },
+            {
+              "slotId": "slot-2",
+              "tacticId": "tactic-cavalry-shock",
+              "source": "inborn"
+            }
+          ],
+          "ultimateSlots": [
+            {
+              "slot": 1,
+              "ultimateId": "ult-guan-yu-1",
+              "unlockReincarnation": 1,
+              "vitalityCostPct": 0.05,
+              "isExclusive": true
+            },
+            {
+              "slot": 2,
+              "ultimateId": "ult-guan-yu-2",
+              "unlockReincarnation": 2,
+              "vitalityCostPct": 0.06,
+              "isExclusive": true
+            },
+            {
+              "slot": 3,
+              "ultimateId": "ult-guan-yu-3",
+              "unlockReincarnation": 3,
+              "vitalityCostPct": 0.07,
+              "isExclusive": true
+            },
+            {
+              "slot": 4,
+              "ultimateId": "ult-guan-yu-4",
+              "unlockReincarnation": 4,
+              "vitalityCostPct": 0.08,
+              "isExclusive": true
+            },
+            {
+              "slot": 5,
+              "ultimateId": "ult-guan-yu-5",
+              "unlockReincarnation": 5,
+              "vitalityCostPct": 0.1,
+              "isExclusive": true
+            }
+          ],
+          "troopAptitude": {
+            "CAVALRY": "A",
+            "INFANTRY": "B",
+            "ARCHER": "C",
+            "SIEGE": "D"
+          },
+          "terrainAptitude": {
+            "MOUNTAIN": "A",
+            "PLAIN": "B",
+            "WATER": "C",
+            "FOREST": "B",
+            "DESERT": "C"
+          },
+          "weatherAptitude": {
+            "SUNNY": "A",
+            "RAINY": "B",
+            "FOG": "B",
+            "WINDY": "B",
+            "NIGHT": "A",
+            "THUNDER": "C"
+          },
+          "ancestor_chain": [
+            "VIRT_GUAN_YU_01",
+            "VIRT_GUAN_YU_02",
+            "VIRT_GUAN_YU_03",
+            "VIRT_GUAN_YU_04",
+            "VIRT_GUAN_YU_05",
+            "VIRT_GUAN_YU_06",
+            "VIRT_GUAN_YU_07",
+            "VIRT_GUAN_YU_08",
+            "VIRT_GUAN_YU_09",
+            "VIRT_GUAN_YU_10",
+            "VIRT_GUAN_YU_11",
+            "VIRT_GUAN_YU_12",
+            "VIRT_GUAN_YU_13",
+            "VIRT_GUAN_YU_14"
+          ],
+          "originRegion": "河東",
+          "coreFactorTag": "valor",
+          "element": "fire",
+          "initialRole": "vanguard",
+          "introLine": "忠義千秋，萬世仰德。",
+          "portraitKey": "portraits/generals/guan-yu",
+          "battleVoiceKey": "audio/voice/generals/guan-yu/battle",
+          "isHistorical": true,
+          "maxLifespan": 100
+        },
+        {
+          "id": "zhao-yun",
+          "name": "趙雲",
+          "alias": [],
+          "faction": "shu",
+          "templateId": "GEN_SHU_ZHAO_YUN",
+          "title": "【常山趙子】",
+          "gender": "男",
+          "age": 22.75,
+          "hp": 1704,
+          "currentHp": 1704,
+          "maxSp": 100,
+          "initialSp": 40,
+          "currentSp": 40,
+          "vitality": 100,
+          "maxVitality": 100,
+          "role": "Combat",
+          "status": "Active",
+          "attackBonus": 0.12,
+          "str": 96,
+          "int": 82,
+          "lea": 93,
+          "pol": 74,
+          "cha": 94,
+          "luk": 89,
+          "stats": {
+            "str": 96,
+            "int": 82,
+            "lea": 93,
+            "pol": 74,
+            "cha": 94,
+            "luk": 89
+          },
+          "skillId": "zhao-yun-pierce",
+          "battlePrimarySkillId": "zhao-yun-pierce",
+          "preferredTerrain": "plain",
+          "terrainDefenseBonus": 0.08,
+          "source": "初始加入",
+          "notes": "全能型前鋒，擁有極高的穩定性與絕境反擊能力。",
+          "devNote": "由 master pipeline 自動同步生成。",
+          "hiddenFlags": [
+            "常山系譜核心",
+            "龍魂覺醒條件"
+          ],
+          "ep": 89,
+          "epRating": "S",
+          "rarityTier": "legendary",
+          "characterCategory": "famed",
+          "bloodlineId": "BL_SHU_ZHAO",
+          "parentsSummary": "父：🔒 未公開 / 母：🔒 未公開",
+          "ancestorsSummary": "常山趙氏後裔，系譜記錄完整度 90%。",
+          "awakeningTitle": "一身是膽",
+          "genes": [
+            {
+              "id": "gene_courage",
+              "displayName": "膽量",
+              "type": "戰鬥",
+              "level": 4,
+              "description": "無視統率差值帶來的士氣壓制。"
+            },
+            {
+              "id": "gene_dash",
+              "displayName": "龍膽突破",
+              "type": "兵種",
+              "level": 3,
+              "description": "提升騎兵穿透力與追擊機率。"
+            },
+            {
+              "id": "gene_guard",
+              "displayName": "護主",
+              "type": "特質",
+              "level": 2,
+              "description": "當主帥體力低於 30% 時，提升 50% 防禦力。"
+            }
+          ],
+          "historicalAnecdote": "趙雲（153年？—229年），字子龍，是漢末三國時期的蜀漢武將，生於常山真定（今河北省正定縣），身高八尺（約185公分），姿顏雄偉。最初效忠公孫瓚，官渡之戰後效忠劉備、劉禪。歷任牙門將軍，偏將軍、領桂陽太守，翊軍將軍，領中護軍、征南將軍，封永昌亭侯，鎮東將軍。箕谷失利後貶為鎮軍將軍。後追諡曰順平侯，是為永昌亭順平侯。\n",
+          "bloodlineRumor": "常山獵戶說，趙家舊槍在月下不映人影，只映遠路。趙雲年少夜練時常見槍鋒替自己先走一步，像有位沉默祖先替他把險處都試過一次。",
+          "crestHint": "常山白龍，一身是膽護主到底",
+          "crestState": "revealed",
+          "storyStripCells": [
+            {
+              "slot": "origin",
+              "text": "常山白馬出塵"
+            },
+            {
+              "slot": "faction",
+              "text": "轉身護主歸心"
+            },
+            {
+              "slot": "role",
+              "text": "七進七出如雪"
+            },
+            {
+              "slot": "awakening",
+              "text": "漢水回槍定軍"
+            },
+            {
+              "slot": "bloodline",
+              "text": "銀甲映出古紋"
+            },
+            {
+              "slot": "future",
+              "text": "老將猶能照夜"
+            }
+          ],
+          "coreTags": [],
+          "generatorProfile": {},
+          "bloodlineProfile": {},
+          "learnedTactics": [
+            "龍膽旋風",
+            "孤軍救主",
+            "百鳥朝鳳"
+          ],
+          "inspiredTactics": [
+            "七進七出"
+          ],
+          "lockedTactics": [
+            "🔒 龍魂覺醒"
+          ],
+          "tacticSlots": [
+            {
+              "slotId": "slot-1",
+              "tacticId": "tactic-cavalry-shock",
+              "source": "inborn"
+            },
+            {
+              "slotId": "slot-2",
+              "tacticId": "tactic-morale-rally",
+              "source": "inborn"
+            }
+          ],
+          "ultimateSlots": [
+            {
+              "slot": 1,
+              "ultimateId": "ult-zhao-yun-1",
+              "unlockReincarnation": 1,
+              "vitalityCostPct": 0.05,
+              "isExclusive": true
+            },
+            {
+              "slot": 2,
+              "ultimateId": "ult-zhao-yun-2",
+              "unlockReincarnation": 2,
+              "vitalityCostPct": 0.06,
+              "isExclusive": true
+            },
+            {
+              "slot": 3,
+              "ultimateId": "ult-zhao-yun-3",
+              "unlockReincarnation": 3,
+              "vitalityCostPct": 0.07,
+              "isExclusive": true
+            },
+            {
+              "slot": 4,
+              "ultimateId": "ult-zhao-yun-4",
+              "unlockReincarnation": 4,
+              "vitalityCostPct": 0.08,
+              "isExclusive": true
+            },
+            {
+              "slot": 5,
+              "ultimateId": "ult-zhao-yun-5",
+              "unlockReincarnation": 5,
+              "vitalityCostPct": 0.1,
+              "isExclusive": true
+            }
+          ],
+          "troopAptitude": {
+            "CAVALRY": "S",
+            "INFANTRY": "B",
+            "ARCHER": "B",
+            "SIEGE": "C"
+          },
+          "terrainAptitude": {
+            "MOUNTAIN": "A",
+            "PLAIN": "B",
+            "WATER": "C",
+            "FOREST": "B",
+            "DESERT": "B"
+          },
+          "weatherAptitude": {
+            "FOG": "A",
+            "NIGHT": "A",
+            "RAINY": "B",
+            "SUNNY": "B",
+            "WINDY": "B",
+            "THUNDER": "B"
+          },
+          "ancestor_chain": [
+            "VIRT_ZHAO_YUN_01",
+            "VIRT_ZHAO_YUN_02",
+            "VIRT_ZHAO_YUN_03",
+            "VIRT_ZHAO_YUN_04",
+            "VIRT_ZHAO_YUN_05",
+            "VIRT_ZHAO_YUN_06",
+            "VIRT_ZHAO_YUN_07",
+            "VIRT_ZHAO_YUN_08",
+            "VIRT_ZHAO_YUN_09",
+            "VIRT_ZHAO_YUN_10",
+            "VIRT_ZHAO_YUN_11",
+            "VIRT_ZHAO_YUN_12",
+            "VIRT_ZHAO_YUN_13",
+            "VIRT_ZHAO_YUN_14"
+          ],
+          "isHistorical": true,
+          "maxLifespan": 100
+        }
+      ]
+    },
+    "after": {
+      "season": 11,
+      "military": {
+        "cityTroops": 3000,
+        "cityTroopsCap": 3000,
+        "recruitRegen": 750,
+        "food": 3581,
+        "foodCap": 10000
+      },
+      "wallet": {
+        "gems": 0,
+        "gold": 891,
+        "tickets": 0,
+        "bronze": 0,
+        "oracle": 0,
+        "mentorTickets": 0,
+        "scorePoints": 0
+      },
+      "gold": 891,
+      "nation": {
+        "id": "lvbu",
+        "troops": 6779,
+        "territories": 0,
+        "relation": -100,
+        "allied": false,
+        "atWar": true,
+        "resources": {
+          "food": 2720,
+          "gold": 0,
+          "fame": 0,
+          "intel": 0
+        },
+        "governedSeasons": 11,
+        "recruits": {
+          "S": 0,
+          "A": 2,
+          "B": 3,
+          "C": 0
+        },
+        "roster": [
+          {
+            "id": "lvbu-10",
+            "quality": "A",
+            "recruitedSeason": 10
+          }
+        ],
+        "bonds": [
+          {
+            "first": "lvbu-2",
+            "second": "lvbu-4",
+            "season": 8
+          },
+          {
+            "first": "lvbu-6",
+            "second": "lvbu-8",
+            "season": 9
+          }
+        ]
+      },
+      "notices": [],
+      "battles": [
+        {
+          "snapshotId": "OBS_0001",
+          "battleType": "AUTO_RESOLVE",
+          "seed": "3-4-Clvbu",
+          "lineupDigest": "735af725",
+          "tileStateDigest": "4581baca",
+          "tacticDigest": "741638a5",
+          "resultDigest": "WIN_MAJOR",
+          "syncHashLink": "78c5e210"
+        }
+      ],
+      "logs": [],
+      "roster": [
+        {
+          "id": "cao-cao",
+          "name": "曹操",
+          "alias": [],
+          "faction": "wei",
+          "templateId": "GEN_WEI_CAO_CAO",
+          "title": "【魏武】",
+          "gender": "男",
+          "age": 22.75,
+          "hp": 1696,
+          "currentHp": 1696,
+          "maxSp": 100,
+          "initialSp": 40,
+          "currentSp": 40,
+          "vitality": 100,
+          "maxVitality": 100,
+          "role": "Combat",
+          "status": "Active",
+          "attackBonus": 0.08,
+          "str": 82,
+          "int": 94,
+          "lea": 92,
+          "pol": 96,
+          "cha": 90,
+          "luk": 86,
+          "stats": {
+            "str": 82,
+            "int": 94,
+            "lea": 92,
+            "pol": 96,
+            "cha": 90,
+            "luk": 86
+          },
+          "skillId": "cao-cao-tactics",
+          "battlePrimarySkillId": "cao-cao-tactics",
+          "preferredTerrain": "plain",
+          "terrainDefenseBonus": 0.15,
+          "source": "劇情敵對勢力",
+          "notes": "偏全局掌控與節奏操作的敵方統帥型武將。",
+          "devNote": "由 master pipeline 自動同步生成。",
+          "hiddenFlags": [
+            "內政事件權重",
+            "政治分支覺醒條件"
+          ],
+          "ep": 92,
+          "epRating": "S+",
+          "rarityTier": "legendary",
+          "characterCategory": "titled",
+          "bloodlineId": "BL_WEI_BAQUAN",
+          "parentsSummary": "父：曹嵩 / 母：丁氏（部分資料保密處理）",
+          "ancestorsSummary": "祖譜完整度高，政治系與統率系因子明顯。",
+          "awakeningTitle": "挾天子令諸侯",
+          "genes": [
+            {
+              "id": "gene_strategy",
+              "displayName": "權謀",
+              "type": "謀略",
+              "level": 4,
+              "description": "提升指揮型戰法與全軍節奏控制。"
+            },
+            {
+              "id": "gene_command",
+              "displayName": "號令",
+              "type": "統率",
+              "level": 3,
+              "description": "提升多路戰場協同能力。"
+            },
+            {
+              "id": "gene_politics",
+              "displayName": "治世",
+              "type": "內政",
+              "level": 3,
+              "description": "影響招募、事件與資源收益。"
+            },
+            {
+              "id": "gene_hidden_05",
+              "displayName": "霸道因子",
+              "isLocked": true,
+              "discoveryLevel": 22
+            }
+          ],
+          "historicalAnecdote": "曹操（155年—220年3月15日），字孟德，小字阿瞞，沛國譙縣（今安徽亳州）人。東漢末年丞相、軍事家、政治家、文學家和詩人，東漢末年主要群雄之一，職位為丞相，為漢末實際上的最高掌權者，亦是三國時代曹魏奠基者。父親曹嵩。其子曹丕建立曹魏，追尊其廟號為太祖，追諡武皇帝。\n",
+          "bloodlineRumor": "譙縣老人說，曹氏祖祠地底埋著一枚黑羽虎符；每逢兵荒，祠中銅燈便會自行偏向北方。曹操少年偷看過一次，從此連風聲都像軍令。",
+          "crestHint": "魏武霸道，天下一局待最後棋",
+          "crestState": "rumored",
+          "storyStripCells": [
+            {
+              "slot": "origin",
+              "text": "橋畔機鋒識人"
+            },
+            {
+              "slot": "faction",
+              "text": "奉天子號諸侯"
+            },
+            {
+              "slot": "role",
+              "text": "詭道裁局定勢"
+            },
+            {
+              "slot": "awakening",
+              "text": "官渡借火翻盤"
+            },
+            {
+              "slot": "bloodline",
+              "text": "銅雀夜夢聽潮"
+            },
+            {
+              "slot": "future",
+              "text": "墳前誰解孟德"
+            }
+          ],
+          "coreTags": [],
+          "generatorProfile": {},
+          "bloodlineProfile": {},
+          "learnedTactics": [
+            "兵不厭詐",
+            "號令調度",
+            "疑兵惑陣"
+          ],
+          "inspiredTactics": [
+            "挾令四方",
+            "魏武軍律"
+          ],
+          "lockedTactics": [
+            "🔒 霸道終局技"
+          ],
+          "tacticSlots": [
+            {
+              "slotId": "slot-1",
+              "tacticId": "tactic-fire-scheme",
+              "source": "inborn"
+            },
+            {
+              "slotId": "slot-2",
+              "tacticId": "tactic-morale-rally",
+              "source": "inborn"
+            }
+          ],
+          "ultimateSlots": [
+            {
+              "slot": 1,
+              "ultimateId": "ult-cao-cao-1",
+              "unlockReincarnation": 1,
+              "vitalityCostPct": 0.05,
+              "isExclusive": true
+            },
+            {
+              "slot": 2,
+              "ultimateId": "ult-cao-cao-2",
+              "unlockReincarnation": 2,
+              "vitalityCostPct": 0.06,
+              "isExclusive": true
+            },
+            {
+              "slot": 3,
+              "ultimateId": "ult-cao-cao-3",
+              "unlockReincarnation": 3,
+              "vitalityCostPct": 0.07,
+              "isExclusive": true
+            },
+            {
+              "slot": 4,
+              "ultimateId": "ult-cao-cao-4",
+              "unlockReincarnation": 4,
+              "vitalityCostPct": 0.08,
+              "isExclusive": true
+            },
+            {
+              "slot": 5,
+              "ultimateId": "ult-cao-cao-5",
+              "unlockReincarnation": 5,
+              "vitalityCostPct": 0.1,
+              "isExclusive": true
+            }
+          ],
+          "troopAptitude": {
+            "CAVALRY": "A",
+            "INFANTRY": "B",
+            "ARCHER": "B",
+            "SIEGE": "B"
+          },
+          "terrainAptitude": {
+            "PLAIN": "A",
+            "MOUNTAIN": "B",
+            "WATER": "B",
+            "FOREST": "B",
+            "DESERT": "C"
+          },
+          "weatherAptitude": {
+            "FOG": "A",
+            "RAINY": "A",
+            "SUNNY": "B",
+            "WINDY": "B",
+            "NIGHT": "B",
+            "THUNDER": "C"
+          },
+          "ancestor_chain": [
+            "VIRT_CAO_CAO_01",
+            "VIRT_CAO_CAO_02",
+            "VIRT_CAO_CAO_03",
+            "VIRT_CAO_CAO_04",
+            "VIRT_CAO_CAO_05",
+            "VIRT_CAO_CAO_06",
+            "VIRT_CAO_CAO_07",
+            "VIRT_CAO_CAO_08",
+            "VIRT_CAO_CAO_09",
+            "VIRT_CAO_CAO_10",
+            "VIRT_CAO_CAO_11",
+            "VIRT_CAO_CAO_12",
+            "VIRT_CAO_CAO_13",
+            "VIRT_CAO_CAO_14"
+          ],
+          "originRegion": "沛郡",
+          "coreFactorTag": "military-commander",
+          "element": "metal",
+          "initialRole": "commander",
+          "introLine": "治世之能臣，亂世之梟雄。",
+          "portraitKey": "portraits/generals/cao-cao",
+          "battleVoiceKey": "audio/voice/generals/cao-cao/battle",
+          "isHistorical": true,
+          "maxLifespan": 100
+        },
+        {
+          "id": "guan-yu",
+          "name": "關羽",
+          "alias": [],
+          "faction": "shu",
+          "templateId": "GEN_SHU_GUAN_YU",
+          "title": "【美髯公】",
+          "gender": "男",
+          "age": 22.75,
+          "hp": 1702,
+          "currentHp": 1702,
+          "maxSp": 100,
+          "initialSp": 40,
+          "currentSp": 40,
+          "vitality": 100,
+          "maxVitality": 100,
+          "role": "Combat",
+          "status": "Active",
+          "attackBonus": 0.15,
+          "str": 97,
+          "int": 76,
+          "lea": 92,
+          "pol": 68,
+          "cha": 91,
+          "luk": 82,
+          "stats": {
+            "str": 97,
+            "int": 76,
+            "lea": 92,
+            "pol": 68,
+            "cha": 91,
+            "luk": 82
+          },
+          "skillId": "guan-yu-slash",
+          "battlePrimarySkillId": "guan-yu-slash",
+          "preferredTerrain": "plain",
+          "terrainDefenseBonus": 0.1,
+          "source": "初期主力",
+          "notes": "高統率的斬將型核心，兼具名望與前線壓制。",
+          "devNote": "由 master pipeline 自動同步生成。",
+          "hiddenFlags": [
+            "第 4 代後祖譜校驗",
+            "覺醒稱號需求"
+          ],
+          "ep": 87,
+          "epRating": "S",
+          "rarityTier": "legendary",
+          "characterCategory": "famed",
+          "bloodlineId": "BL_SHU_LONG",
+          "parentsSummary": "父：關毅 / 母：劉氏（部分史料模糊）",
+          "ancestorsSummary": "祖譜完整度 68%，第 4 代後以推測資料補全。",
+          "awakeningTitle": "青龍武聖",
+          "genes": [
+            {
+              "id": "gene_halberd",
+              "displayName": "刀鋒傳承",
+              "type": "武裝",
+              "level": 3,
+              "description": "強化單點斬殺與穿甲表現。"
+            },
+            {
+              "id": "gene_discipline",
+              "displayName": "軍紀",
+              "type": "統率",
+              "level": 3,
+              "description": "強化部曲士氣穩定。"
+            },
+            {
+              "id": "gene_honor",
+              "displayName": "義勇",
+              "type": "人格",
+              "level": 2,
+              "description": "提升單挑與名望事件加成。"
+            },
+            {
+              "id": "gene_hidden_03",
+              "displayName": "義絕覺醒因子",
+              "isLocked": true,
+              "discoveryLevel": 24
+            }
+          ],
+          "historicalAnecdote": "關羽（160年—220年1月或2月），字雲長，本字長生，司隸河東解縣人（今山西運城），東漢末年將領，劉備的重要親信，被稱為“万人敵”。200年，曹操擊敗劉備後，關羽一度歸降曹操，并在官渡之戰中斬殺顏良，因功封為漢壽亭侯。不久，脫离曹操再次投奔劉備。赤壁之戰後，關羽參与圍攻南郡曹仁，并長期為劉備鎮守荊州。劉備占領益州後，關羽被任命總督荊州，拜前將軍，假節鉞。\n219年，關羽進攻樊城，借漢水暴漲水淹七",
+          "bloodlineRumor": "解縣老人常說，關家舊刀鞘冬晨總先結霜，再慢慢滲成一道細紅線，像有人用指節描過刀背。關羽從不解釋，只在上馬前默默把鞘口按緊。",
+          "crestHint": "青龍義絕，一騎絕塵千秋義",
+          "crestState": "revealed",
+          "storyStripCells": [
+            {
+              "slot": "origin",
+              "text": "解縣冷月磨刀"
+            },
+            {
+              "slot": "faction",
+              "text": "桃園酒尚未冷"
+            },
+            {
+              "slot": "role",
+              "text": "青龍一線斷城"
+            },
+            {
+              "slot": "awakening",
+              "text": "樊城漢水成壁"
+            },
+            {
+              "slot": "bloodline",
+              "text": "義氣入骨成紋"
+            },
+            {
+              "slot": "future",
+              "text": "麥城夜馬無聲"
+            }
+          ],
+          "coreTags": [],
+          "generatorProfile": {},
+          "bloodlineProfile": {},
+          "learnedTactics": [
+            "月牙刀斬",
+            "長驅破軍",
+            "武聖威壓"
+          ],
+          "inspiredTactics": [
+            "春秋刀勢"
+          ],
+          "lockedTactics": [
+            "🔒 義絕",
+            "🔒 千里單騎"
+          ],
+          "tacticSlots": [
+            {
+              "slotId": "slot-1",
+              "tacticId": "tactic-morale-rally",
+              "source": "inborn"
+            },
+            {
+              "slotId": "slot-2",
+              "tacticId": "tactic-cavalry-shock",
+              "source": "inborn"
+            }
+          ],
+          "ultimateSlots": [
+            {
+              "slot": 1,
+              "ultimateId": "ult-guan-yu-1",
+              "unlockReincarnation": 1,
+              "vitalityCostPct": 0.05,
+              "isExclusive": true
+            },
+            {
+              "slot": 2,
+              "ultimateId": "ult-guan-yu-2",
+              "unlockReincarnation": 2,
+              "vitalityCostPct": 0.06,
+              "isExclusive": true
+            },
+            {
+              "slot": 3,
+              "ultimateId": "ult-guan-yu-3",
+              "unlockReincarnation": 3,
+              "vitalityCostPct": 0.07,
+              "isExclusive": true
+            },
+            {
+              "slot": 4,
+              "ultimateId": "ult-guan-yu-4",
+              "unlockReincarnation": 4,
+              "vitalityCostPct": 0.08,
+              "isExclusive": true
+            },
+            {
+              "slot": 5,
+              "ultimateId": "ult-guan-yu-5",
+              "unlockReincarnation": 5,
+              "vitalityCostPct": 0.1,
+              "isExclusive": true
+            }
+          ],
+          "troopAptitude": {
+            "CAVALRY": "A",
+            "INFANTRY": "B",
+            "ARCHER": "C",
+            "SIEGE": "D"
+          },
+          "terrainAptitude": {
+            "MOUNTAIN": "A",
+            "PLAIN": "B",
+            "WATER": "C",
+            "FOREST": "B",
+            "DESERT": "C"
+          },
+          "weatherAptitude": {
+            "SUNNY": "A",
+            "RAINY": "B",
+            "FOG": "B",
+            "WINDY": "B",
+            "NIGHT": "A",
+            "THUNDER": "C"
+          },
+          "ancestor_chain": [
+            "VIRT_GUAN_YU_01",
+            "VIRT_GUAN_YU_02",
+            "VIRT_GUAN_YU_03",
+            "VIRT_GUAN_YU_04",
+            "VIRT_GUAN_YU_05",
+            "VIRT_GUAN_YU_06",
+            "VIRT_GUAN_YU_07",
+            "VIRT_GUAN_YU_08",
+            "VIRT_GUAN_YU_09",
+            "VIRT_GUAN_YU_10",
+            "VIRT_GUAN_YU_11",
+            "VIRT_GUAN_YU_12",
+            "VIRT_GUAN_YU_13",
+            "VIRT_GUAN_YU_14"
+          ],
+          "originRegion": "河東",
+          "coreFactorTag": "valor",
+          "element": "fire",
+          "initialRole": "vanguard",
+          "introLine": "忠義千秋，萬世仰德。",
+          "portraitKey": "portraits/generals/guan-yu",
+          "battleVoiceKey": "audio/voice/generals/guan-yu/battle",
+          "isHistorical": true,
+          "maxLifespan": 100
+        },
+        {
+          "id": "zhao-yun",
+          "name": "趙雲",
+          "alias": [],
+          "faction": "shu",
+          "templateId": "GEN_SHU_ZHAO_YUN",
+          "title": "【常山趙子】",
+          "gender": "男",
+          "age": 22.75,
+          "hp": 1704,
+          "currentHp": 1704,
+          "maxSp": 100,
+          "initialSp": 40,
+          "currentSp": 40,
+          "vitality": 100,
+          "maxVitality": 100,
+          "role": "Combat",
+          "status": "Active",
+          "attackBonus": 0.12,
+          "str": 96,
+          "int": 82,
+          "lea": 93,
+          "pol": 74,
+          "cha": 94,
+          "luk": 89,
+          "stats": {
+            "str": 96,
+            "int": 82,
+            "lea": 93,
+            "pol": 74,
+            "cha": 94,
+            "luk": 89
+          },
+          "skillId": "zhao-yun-pierce",
+          "battlePrimarySkillId": "zhao-yun-pierce",
+          "preferredTerrain": "plain",
+          "terrainDefenseBonus": 0.08,
+          "source": "初始加入",
+          "notes": "全能型前鋒，擁有極高的穩定性與絕境反擊能力。",
+          "devNote": "由 master pipeline 自動同步生成。",
+          "hiddenFlags": [
+            "常山系譜核心",
+            "龍魂覺醒條件"
+          ],
+          "ep": 89,
+          "epRating": "S",
+          "rarityTier": "legendary",
+          "characterCategory": "famed",
+          "bloodlineId": "BL_SHU_ZHAO",
+          "parentsSummary": "父：🔒 未公開 / 母：🔒 未公開",
+          "ancestorsSummary": "常山趙氏後裔，系譜記錄完整度 90%。",
+          "awakeningTitle": "一身是膽",
+          "genes": [
+            {
+              "id": "gene_courage",
+              "displayName": "膽量",
+              "type": "戰鬥",
+              "level": 4,
+              "description": "無視統率差值帶來的士氣壓制。"
+            },
+            {
+              "id": "gene_dash",
+              "displayName": "龍膽突破",
+              "type": "兵種",
+              "level": 3,
+              "description": "提升騎兵穿透力與追擊機率。"
+            },
+            {
+              "id": "gene_guard",
+              "displayName": "護主",
+              "type": "特質",
+              "level": 2,
+              "description": "當主帥體力低於 30% 時，提升 50% 防禦力。"
+            }
+          ],
+          "historicalAnecdote": "趙雲（153年？—229年），字子龍，是漢末三國時期的蜀漢武將，生於常山真定（今河北省正定縣），身高八尺（約185公分），姿顏雄偉。最初效忠公孫瓚，官渡之戰後效忠劉備、劉禪。歷任牙門將軍，偏將軍、領桂陽太守，翊軍將軍，領中護軍、征南將軍，封永昌亭侯，鎮東將軍。箕谷失利後貶為鎮軍將軍。後追諡曰順平侯，是為永昌亭順平侯。\n",
+          "bloodlineRumor": "常山獵戶說，趙家舊槍在月下不映人影，只映遠路。趙雲年少夜練時常見槍鋒替自己先走一步，像有位沉默祖先替他把險處都試過一次。",
+          "crestHint": "常山白龍，一身是膽護主到底",
+          "crestState": "revealed",
+          "storyStripCells": [
+            {
+              "slot": "origin",
+              "text": "常山白馬出塵"
+            },
+            {
+              "slot": "faction",
+              "text": "轉身護主歸心"
+            },
+            {
+              "slot": "role",
+              "text": "七進七出如雪"
+            },
+            {
+              "slot": "awakening",
+              "text": "漢水回槍定軍"
+            },
+            {
+              "slot": "bloodline",
+              "text": "銀甲映出古紋"
+            },
+            {
+              "slot": "future",
+              "text": "老將猶能照夜"
+            }
+          ],
+          "coreTags": [],
+          "generatorProfile": {},
+          "bloodlineProfile": {},
+          "learnedTactics": [
+            "龍膽旋風",
+            "孤軍救主",
+            "百鳥朝鳳"
+          ],
+          "inspiredTactics": [
+            "七進七出"
+          ],
+          "lockedTactics": [
+            "🔒 龍魂覺醒"
+          ],
+          "tacticSlots": [
+            {
+              "slotId": "slot-1",
+              "tacticId": "tactic-cavalry-shock",
+              "source": "inborn"
+            },
+            {
+              "slotId": "slot-2",
+              "tacticId": "tactic-morale-rally",
+              "source": "inborn"
+            }
+          ],
+          "ultimateSlots": [
+            {
+              "slot": 1,
+              "ultimateId": "ult-zhao-yun-1",
+              "unlockReincarnation": 1,
+              "vitalityCostPct": 0.05,
+              "isExclusive": true
+            },
+            {
+              "slot": 2,
+              "ultimateId": "ult-zhao-yun-2",
+              "unlockReincarnation": 2,
+              "vitalityCostPct": 0.06,
+              "isExclusive": true
+            },
+            {
+              "slot": 3,
+              "ultimateId": "ult-zhao-yun-3",
+              "unlockReincarnation": 3,
+              "vitalityCostPct": 0.07,
+              "isExclusive": true
+            },
+            {
+              "slot": 4,
+              "ultimateId": "ult-zhao-yun-4",
+              "unlockReincarnation": 4,
+              "vitalityCostPct": 0.08,
+              "isExclusive": true
+            },
+            {
+              "slot": 5,
+              "ultimateId": "ult-zhao-yun-5",
+              "unlockReincarnation": 5,
+              "vitalityCostPct": 0.1,
+              "isExclusive": true
+            }
+          ],
+          "troopAptitude": {
+            "CAVALRY": "S",
+            "INFANTRY": "B",
+            "ARCHER": "B",
+            "SIEGE": "C"
+          },
+          "terrainAptitude": {
+            "MOUNTAIN": "A",
+            "PLAIN": "B",
+            "WATER": "C",
+            "FOREST": "B",
+            "DESERT": "B"
+          },
+          "weatherAptitude": {
+            "FOG": "A",
+            "NIGHT": "A",
+            "RAINY": "B",
+            "SUNNY": "B",
+            "WINDY": "B",
+            "THUNDER": "B"
+          },
+          "ancestor_chain": [
+            "VIRT_ZHAO_YUN_01",
+            "VIRT_ZHAO_YUN_02",
+            "VIRT_ZHAO_YUN_03",
+            "VIRT_ZHAO_YUN_04",
+            "VIRT_ZHAO_YUN_05",
+            "VIRT_ZHAO_YUN_06",
+            "VIRT_ZHAO_YUN_07",
+            "VIRT_ZHAO_YUN_08",
+            "VIRT_ZHAO_YUN_09",
+            "VIRT_ZHAO_YUN_10",
+            "VIRT_ZHAO_YUN_11",
+            "VIRT_ZHAO_YUN_12",
+            "VIRT_ZHAO_YUN_13",
+            "VIRT_ZHAO_YUN_14"
+          ],
+          "isHistorical": true,
+          "maxLifespan": 100
+        }
+      ]
+    },
+    "restored": {
+      "season": 11,
+      "military": {
+        "cityTroopsCap": 3000,
+        "cityTroops": 3000,
+        "recruitRegen": 750,
+        "foodCap": 10000,
+        "food": 3581
+      },
+      "wallet": {
+        "gems": 0,
+        "gold": 891,
+        "tickets": 0,
+        "bronze": 0,
+        "oracle": 0,
+        "mentorTickets": 0,
+        "scorePoints": 0
+      },
+      "gold": 891,
+      "nation": {
+        "id": "lvbu",
+        "troops": 6779,
+        "territories": 0,
+        "relation": -100,
+        "allied": false,
+        "atWar": true,
+        "resources": {
+          "food": 2720,
+          "gold": 0,
+          "fame": 0,
+          "intel": 0
+        },
+        "governedSeasons": 11,
+        "recruits": {
+          "S": 0,
+          "A": 2,
+          "B": 3,
+          "C": 0
+        },
+        "roster": [
+          {
+            "id": "lvbu-10",
+            "quality": "A",
+            "recruitedSeason": 10
+          }
+        ],
+        "bonds": [
+          {
+            "first": "lvbu-2",
+            "second": "lvbu-4",
+            "season": 8
+          },
+          {
+            "first": "lvbu-6",
+            "second": "lvbu-8",
+            "season": 9
+          }
+        ]
+      },
+      "notices": [],
+      "battles": [
+        {
+          "snapshotId": "OBS_0001",
+          "battleType": "AUTO_RESOLVE",
+          "seed": "3-4-Clvbu",
+          "lineupDigest": "735af725",
+          "tileStateDigest": "4581baca",
+          "tacticDigest": "741638a5",
+          "resultDigest": "WIN_MAJOR",
+          "syncHashLink": "78c5e210"
+        }
+      ],
+      "logs": [],
+      "roster": [
+        {
+          "id": "cao-cao",
+          "name": "曹操",
+          "alias": [],
+          "faction": "wei",
+          "templateId": "GEN_WEI_CAO_CAO",
+          "title": "【魏武】",
+          "gender": "男",
+          "age": 22.75,
+          "hp": 1696,
+          "currentHp": 1696,
+          "maxSp": 100,
+          "initialSp": 40,
+          "currentSp": 40,
+          "vitality": 100,
+          "maxVitality": 100,
+          "role": "Combat",
+          "status": "Active",
+          "attackBonus": 0.08,
+          "str": 82,
+          "int": 94,
+          "lea": 92,
+          "pol": 96,
+          "cha": 90,
+          "luk": 86,
+          "stats": {
+            "str": 82,
+            "int": 94,
+            "lea": 92,
+            "pol": 96,
+            "cha": 90,
+            "luk": 86
+          },
+          "skillId": "cao-cao-tactics",
+          "battlePrimarySkillId": "cao-cao-tactics",
+          "preferredTerrain": "plain",
+          "terrainDefenseBonus": 0.15,
+          "source": "劇情敵對勢力",
+          "notes": "偏全局掌控與節奏操作的敵方統帥型武將。",
+          "devNote": "由 master pipeline 自動同步生成。",
+          "hiddenFlags": [
+            "內政事件權重",
+            "政治分支覺醒條件"
+          ],
+          "ep": 92,
+          "epRating": "S+",
+          "rarityTier": "legendary",
+          "characterCategory": "titled",
+          "bloodlineId": "BL_WEI_BAQUAN",
+          "parentsSummary": "父：曹嵩 / 母：丁氏（部分資料保密處理）",
+          "ancestorsSummary": "祖譜完整度高，政治系與統率系因子明顯。",
+          "awakeningTitle": "挾天子令諸侯",
+          "genes": [
+            {
+              "id": "gene_strategy",
+              "displayName": "權謀",
+              "type": "謀略",
+              "level": 4,
+              "description": "提升指揮型戰法與全軍節奏控制。"
+            },
+            {
+              "id": "gene_command",
+              "displayName": "號令",
+              "type": "統率",
+              "level": 3,
+              "description": "提升多路戰場協同能力。"
+            },
+            {
+              "id": "gene_politics",
+              "displayName": "治世",
+              "type": "內政",
+              "level": 3,
+              "description": "影響招募、事件與資源收益。"
+            },
+            {
+              "id": "gene_hidden_05",
+              "displayName": "霸道因子",
+              "isLocked": true,
+              "discoveryLevel": 22
+            }
+          ],
+          "historicalAnecdote": "曹操（155年—220年3月15日），字孟德，小字阿瞞，沛國譙縣（今安徽亳州）人。東漢末年丞相、軍事家、政治家、文學家和詩人，東漢末年主要群雄之一，職位為丞相，為漢末實際上的最高掌權者，亦是三國時代曹魏奠基者。父親曹嵩。其子曹丕建立曹魏，追尊其廟號為太祖，追諡武皇帝。\n",
+          "bloodlineRumor": "譙縣老人說，曹氏祖祠地底埋著一枚黑羽虎符；每逢兵荒，祠中銅燈便會自行偏向北方。曹操少年偷看過一次，從此連風聲都像軍令。",
+          "crestHint": "魏武霸道，天下一局待最後棋",
+          "crestState": "rumored",
+          "storyStripCells": [
+            {
+              "slot": "origin",
+              "text": "橋畔機鋒識人"
+            },
+            {
+              "slot": "faction",
+              "text": "奉天子號諸侯"
+            },
+            {
+              "slot": "role",
+              "text": "詭道裁局定勢"
+            },
+            {
+              "slot": "awakening",
+              "text": "官渡借火翻盤"
+            },
+            {
+              "slot": "bloodline",
+              "text": "銅雀夜夢聽潮"
+            },
+            {
+              "slot": "future",
+              "text": "墳前誰解孟德"
+            }
+          ],
+          "coreTags": [],
+          "generatorProfile": {},
+          "bloodlineProfile": {},
+          "learnedTactics": [
+            "兵不厭詐",
+            "號令調度",
+            "疑兵惑陣"
+          ],
+          "inspiredTactics": [
+            "挾令四方",
+            "魏武軍律"
+          ],
+          "lockedTactics": [
+            "🔒 霸道終局技"
+          ],
+          "tacticSlots": [
+            {
+              "slotId": "slot-1",
+              "tacticId": "tactic-fire-scheme",
+              "source": "inborn"
+            },
+            {
+              "slotId": "slot-2",
+              "tacticId": "tactic-morale-rally",
+              "source": "inborn"
+            }
+          ],
+          "ultimateSlots": [
+            {
+              "slot": 1,
+              "ultimateId": "ult-cao-cao-1",
+              "unlockReincarnation": 1,
+              "vitalityCostPct": 0.05,
+              "isExclusive": true
+            },
+            {
+              "slot": 2,
+              "ultimateId": "ult-cao-cao-2",
+              "unlockReincarnation": 2,
+              "vitalityCostPct": 0.06,
+              "isExclusive": true
+            },
+            {
+              "slot": 3,
+              "ultimateId": "ult-cao-cao-3",
+              "unlockReincarnation": 3,
+              "vitalityCostPct": 0.07,
+              "isExclusive": true
+            },
+            {
+              "slot": 4,
+              "ultimateId": "ult-cao-cao-4",
+              "unlockReincarnation": 4,
+              "vitalityCostPct": 0.08,
+              "isExclusive": true
+            },
+            {
+              "slot": 5,
+              "ultimateId": "ult-cao-cao-5",
+              "unlockReincarnation": 5,
+              "vitalityCostPct": 0.1,
+              "isExclusive": true
+            }
+          ],
+          "troopAptitude": {
+            "CAVALRY": "A",
+            "INFANTRY": "B",
+            "ARCHER": "B",
+            "SIEGE": "B"
+          },
+          "terrainAptitude": {
+            "PLAIN": "A",
+            "MOUNTAIN": "B",
+            "WATER": "B",
+            "FOREST": "B",
+            "DESERT": "C"
+          },
+          "weatherAptitude": {
+            "FOG": "A",
+            "RAINY": "A",
+            "SUNNY": "B",
+            "WINDY": "B",
+            "NIGHT": "B",
+            "THUNDER": "C"
+          },
+          "ancestor_chain": [
+            "VIRT_CAO_CAO_01",
+            "VIRT_CAO_CAO_02",
+            "VIRT_CAO_CAO_03",
+            "VIRT_CAO_CAO_04",
+            "VIRT_CAO_CAO_05",
+            "VIRT_CAO_CAO_06",
+            "VIRT_CAO_CAO_07",
+            "VIRT_CAO_CAO_08",
+            "VIRT_CAO_CAO_09",
+            "VIRT_CAO_CAO_10",
+            "VIRT_CAO_CAO_11",
+            "VIRT_CAO_CAO_12",
+            "VIRT_CAO_CAO_13",
+            "VIRT_CAO_CAO_14"
+          ],
+          "originRegion": "沛郡",
+          "coreFactorTag": "military-commander",
+          "element": "metal",
+          "initialRole": "commander",
+          "introLine": "治世之能臣，亂世之梟雄。",
+          "portraitKey": "portraits/generals/cao-cao",
+          "battleVoiceKey": "audio/voice/generals/cao-cao/battle",
+          "isHistorical": true,
+          "maxLifespan": 100
+        },
+        {
+          "id": "guan-yu",
+          "name": "關羽",
+          "alias": [],
+          "faction": "shu",
+          "templateId": "GEN_SHU_GUAN_YU",
+          "title": "【美髯公】",
+          "gender": "男",
+          "age": 22.75,
+          "hp": 1702,
+          "currentHp": 1702,
+          "maxSp": 100,
+          "initialSp": 40,
+          "currentSp": 40,
+          "vitality": 100,
+          "maxVitality": 100,
+          "role": "Combat",
+          "status": "Active",
+          "attackBonus": 0.15,
+          "str": 97,
+          "int": 76,
+          "lea": 92,
+          "pol": 68,
+          "cha": 91,
+          "luk": 82,
+          "stats": {
+            "str": 97,
+            "int": 76,
+            "lea": 92,
+            "pol": 68,
+            "cha": 91,
+            "luk": 82
+          },
+          "skillId": "guan-yu-slash",
+          "battlePrimarySkillId": "guan-yu-slash",
+          "preferredTerrain": "plain",
+          "terrainDefenseBonus": 0.1,
+          "source": "初期主力",
+          "notes": "高統率的斬將型核心，兼具名望與前線壓制。",
+          "devNote": "由 master pipeline 自動同步生成。",
+          "hiddenFlags": [
+            "第 4 代後祖譜校驗",
+            "覺醒稱號需求"
+          ],
+          "ep": 87,
+          "epRating": "S",
+          "rarityTier": "legendary",
+          "characterCategory": "famed",
+          "bloodlineId": "BL_SHU_LONG",
+          "parentsSummary": "父：關毅 / 母：劉氏（部分史料模糊）",
+          "ancestorsSummary": "祖譜完整度 68%，第 4 代後以推測資料補全。",
+          "awakeningTitle": "青龍武聖",
+          "genes": [
+            {
+              "id": "gene_halberd",
+              "displayName": "刀鋒傳承",
+              "type": "武裝",
+              "level": 3,
+              "description": "強化單點斬殺與穿甲表現。"
+            },
+            {
+              "id": "gene_discipline",
+              "displayName": "軍紀",
+              "type": "統率",
+              "level": 3,
+              "description": "強化部曲士氣穩定。"
+            },
+            {
+              "id": "gene_honor",
+              "displayName": "義勇",
+              "type": "人格",
+              "level": 2,
+              "description": "提升單挑與名望事件加成。"
+            },
+            {
+              "id": "gene_hidden_03",
+              "displayName": "義絕覺醒因子",
+              "isLocked": true,
+              "discoveryLevel": 24
+            }
+          ],
+          "historicalAnecdote": "關羽（160年—220年1月或2月），字雲長，本字長生，司隸河東解縣人（今山西運城），東漢末年將領，劉備的重要親信，被稱為“万人敵”。200年，曹操擊敗劉備後，關羽一度歸降曹操，并在官渡之戰中斬殺顏良，因功封為漢壽亭侯。不久，脫离曹操再次投奔劉備。赤壁之戰後，關羽參与圍攻南郡曹仁，并長期為劉備鎮守荊州。劉備占領益州後，關羽被任命總督荊州，拜前將軍，假節鉞。\n219年，關羽進攻樊城，借漢水暴漲水淹七",
+          "bloodlineRumor": "解縣老人常說，關家舊刀鞘冬晨總先結霜，再慢慢滲成一道細紅線，像有人用指節描過刀背。關羽從不解釋，只在上馬前默默把鞘口按緊。",
+          "crestHint": "青龍義絕，一騎絕塵千秋義",
+          "crestState": "revealed",
+          "storyStripCells": [
+            {
+              "slot": "origin",
+              "text": "解縣冷月磨刀"
+            },
+            {
+              "slot": "faction",
+              "text": "桃園酒尚未冷"
+            },
+            {
+              "slot": "role",
+              "text": "青龍一線斷城"
+            },
+            {
+              "slot": "awakening",
+              "text": "樊城漢水成壁"
+            },
+            {
+              "slot": "bloodline",
+              "text": "義氣入骨成紋"
+            },
+            {
+              "slot": "future",
+              "text": "麥城夜馬無聲"
+            }
+          ],
+          "coreTags": [],
+          "generatorProfile": {},
+          "bloodlineProfile": {},
+          "learnedTactics": [
+            "月牙刀斬",
+            "長驅破軍",
+            "武聖威壓"
+          ],
+          "inspiredTactics": [
+            "春秋刀勢"
+          ],
+          "lockedTactics": [
+            "🔒 義絕",
+            "🔒 千里單騎"
+          ],
+          "tacticSlots": [
+            {
+              "slotId": "slot-1",
+              "tacticId": "tactic-morale-rally",
+              "source": "inborn"
+            },
+            {
+              "slotId": "slot-2",
+              "tacticId": "tactic-cavalry-shock",
+              "source": "inborn"
+            }
+          ],
+          "ultimateSlots": [
+            {
+              "slot": 1,
+              "ultimateId": "ult-guan-yu-1",
+              "unlockReincarnation": 1,
+              "vitalityCostPct": 0.05,
+              "isExclusive": true
+            },
+            {
+              "slot": 2,
+              "ultimateId": "ult-guan-yu-2",
+              "unlockReincarnation": 2,
+              "vitalityCostPct": 0.06,
+              "isExclusive": true
+            },
+            {
+              "slot": 3,
+              "ultimateId": "ult-guan-yu-3",
+              "unlockReincarnation": 3,
+              "vitalityCostPct": 0.07,
+              "isExclusive": true
+            },
+            {
+              "slot": 4,
+              "ultimateId": "ult-guan-yu-4",
+              "unlockReincarnation": 4,
+              "vitalityCostPct": 0.08,
+              "isExclusive": true
+            },
+            {
+              "slot": 5,
+              "ultimateId": "ult-guan-yu-5",
+              "unlockReincarnation": 5,
+              "vitalityCostPct": 0.1,
+              "isExclusive": true
+            }
+          ],
+          "troopAptitude": {
+            "CAVALRY": "A",
+            "INFANTRY": "B",
+            "ARCHER": "C",
+            "SIEGE": "D"
+          },
+          "terrainAptitude": {
+            "MOUNTAIN": "A",
+            "PLAIN": "B",
+            "WATER": "C",
+            "FOREST": "B",
+            "DESERT": "C"
+          },
+          "weatherAptitude": {
+            "SUNNY": "A",
+            "RAINY": "B",
+            "FOG": "B",
+            "WINDY": "B",
+            "NIGHT": "A",
+            "THUNDER": "C"
+          },
+          "ancestor_chain": [
+            "VIRT_GUAN_YU_01",
+            "VIRT_GUAN_YU_02",
+            "VIRT_GUAN_YU_03",
+            "VIRT_GUAN_YU_04",
+            "VIRT_GUAN_YU_05",
+            "VIRT_GUAN_YU_06",
+            "VIRT_GUAN_YU_07",
+            "VIRT_GUAN_YU_08",
+            "VIRT_GUAN_YU_09",
+            "VIRT_GUAN_YU_10",
+            "VIRT_GUAN_YU_11",
+            "VIRT_GUAN_YU_12",
+            "VIRT_GUAN_YU_13",
+            "VIRT_GUAN_YU_14"
+          ],
+          "originRegion": "河東",
+          "coreFactorTag": "valor",
+          "element": "fire",
+          "initialRole": "vanguard",
+          "introLine": "忠義千秋，萬世仰德。",
+          "portraitKey": "portraits/generals/guan-yu",
+          "battleVoiceKey": "audio/voice/generals/guan-yu/battle",
+          "isHistorical": true,
+          "maxLifespan": 100
+        },
+        {
+          "id": "zhao-yun",
+          "name": "趙雲",
+          "alias": [],
+          "faction": "shu",
+          "templateId": "GEN_SHU_ZHAO_YUN",
+          "title": "【常山趙子】",
+          "gender": "男",
+          "age": 22.75,
+          "hp": 1704,
+          "currentHp": 1704,
+          "maxSp": 100,
+          "initialSp": 40,
+          "currentSp": 40,
+          "vitality": 100,
+          "maxVitality": 100,
+          "role": "Combat",
+          "status": "Active",
+          "attackBonus": 0.12,
+          "str": 96,
+          "int": 82,
+          "lea": 93,
+          "pol": 74,
+          "cha": 94,
+          "luk": 89,
+          "stats": {
+            "str": 96,
+            "int": 82,
+            "lea": 93,
+            "pol": 74,
+            "cha": 94,
+            "luk": 89
+          },
+          "skillId": "zhao-yun-pierce",
+          "battlePrimarySkillId": "zhao-yun-pierce",
+          "preferredTerrain": "plain",
+          "terrainDefenseBonus": 0.08,
+          "source": "初始加入",
+          "notes": "全能型前鋒，擁有極高的穩定性與絕境反擊能力。",
+          "devNote": "由 master pipeline 自動同步生成。",
+          "hiddenFlags": [
+            "常山系譜核心",
+            "龍魂覺醒條件"
+          ],
+          "ep": 89,
+          "epRating": "S",
+          "rarityTier": "legendary",
+          "characterCategory": "famed",
+          "bloodlineId": "BL_SHU_ZHAO",
+          "parentsSummary": "父：🔒 未公開 / 母：🔒 未公開",
+          "ancestorsSummary": "常山趙氏後裔，系譜記錄完整度 90%。",
+          "awakeningTitle": "一身是膽",
+          "genes": [
+            {
+              "id": "gene_courage",
+              "displayName": "膽量",
+              "type": "戰鬥",
+              "level": 4,
+              "description": "無視統率差值帶來的士氣壓制。"
+            },
+            {
+              "id": "gene_dash",
+              "displayName": "龍膽突破",
+              "type": "兵種",
+              "level": 3,
+              "description": "提升騎兵穿透力與追擊機率。"
+            },
+            {
+              "id": "gene_guard",
+              "displayName": "護主",
+              "type": "特質",
+              "level": 2,
+              "description": "當主帥體力低於 30% 時，提升 50% 防禦力。"
+            }
+          ],
+          "historicalAnecdote": "趙雲（153年？—229年），字子龍，是漢末三國時期的蜀漢武將，生於常山真定（今河北省正定縣），身高八尺（約185公分），姿顏雄偉。最初效忠公孫瓚，官渡之戰後效忠劉備、劉禪。歷任牙門將軍，偏將軍、領桂陽太守，翊軍將軍，領中護軍、征南將軍，封永昌亭侯，鎮東將軍。箕谷失利後貶為鎮軍將軍。後追諡曰順平侯，是為永昌亭順平侯。\n",
+          "bloodlineRumor": "常山獵戶說，趙家舊槍在月下不映人影，只映遠路。趙雲年少夜練時常見槍鋒替自己先走一步，像有位沉默祖先替他把險處都試過一次。",
+          "crestHint": "常山白龍，一身是膽護主到底",
+          "crestState": "revealed",
+          "storyStripCells": [
+            {
+              "slot": "origin",
+              "text": "常山白馬出塵"
+            },
+            {
+              "slot": "faction",
+              "text": "轉身護主歸心"
+            },
+            {
+              "slot": "role",
+              "text": "七進七出如雪"
+            },
+            {
+              "slot": "awakening",
+              "text": "漢水回槍定軍"
+            },
+            {
+              "slot": "bloodline",
+              "text": "銀甲映出古紋"
+            },
+            {
+              "slot": "future",
+              "text": "老將猶能照夜"
+            }
+          ],
+          "coreTags": [],
+          "generatorProfile": {},
+          "bloodlineProfile": {},
+          "learnedTactics": [
+            "龍膽旋風",
+            "孤軍救主",
+            "百鳥朝鳳"
+          ],
+          "inspiredTactics": [
+            "七進七出"
+          ],
+          "lockedTactics": [
+            "🔒 龍魂覺醒"
+          ],
+          "tacticSlots": [
+            {
+              "slotId": "slot-1",
+              "tacticId": "tactic-cavalry-shock",
+              "source": "inborn"
+            },
+            {
+              "slotId": "slot-2",
+              "tacticId": "tactic-morale-rally",
+              "source": "inborn"
+            }
+          ],
+          "ultimateSlots": [
+            {
+              "slot": 1,
+              "ultimateId": "ult-zhao-yun-1",
+              "unlockReincarnation": 1,
+              "vitalityCostPct": 0.05,
+              "isExclusive": true
+            },
+            {
+              "slot": 2,
+              "ultimateId": "ult-zhao-yun-2",
+              "unlockReincarnation": 2,
+              "vitalityCostPct": 0.06,
+              "isExclusive": true
+            },
+            {
+              "slot": 3,
+              "ultimateId": "ult-zhao-yun-3",
+              "unlockReincarnation": 3,
+              "vitalityCostPct": 0.07,
+              "isExclusive": true
+            },
+            {
+              "slot": 4,
+              "ultimateId": "ult-zhao-yun-4",
+              "unlockReincarnation": 4,
+              "vitalityCostPct": 0.08,
+              "isExclusive": true
+            },
+            {
+              "slot": 5,
+              "ultimateId": "ult-zhao-yun-5",
+              "unlockReincarnation": 5,
+              "vitalityCostPct": 0.1,
+              "isExclusive": true
+            }
+          ],
+          "troopAptitude": {
+            "CAVALRY": "S",
+            "INFANTRY": "B",
+            "ARCHER": "B",
+            "SIEGE": "C"
+          },
+          "terrainAptitude": {
+            "MOUNTAIN": "A",
+            "PLAIN": "B",
+            "WATER": "C",
+            "FOREST": "B",
+            "DESERT": "B"
+          },
+          "weatherAptitude": {
+            "FOG": "A",
+            "NIGHT": "A",
+            "RAINY": "B",
+            "SUNNY": "B",
+            "WINDY": "B",
+            "THUNDER": "B"
+          },
+          "ancestor_chain": [
+            "VIRT_ZHAO_YUN_01",
+            "VIRT_ZHAO_YUN_02",
+            "VIRT_ZHAO_YUN_03",
+            "VIRT_ZHAO_YUN_04",
+            "VIRT_ZHAO_YUN_05",
+            "VIRT_ZHAO_YUN_06",
+            "VIRT_ZHAO_YUN_07",
+            "VIRT_ZHAO_YUN_08",
+            "VIRT_ZHAO_YUN_09",
+            "VIRT_ZHAO_YUN_10",
+            "VIRT_ZHAO_YUN_11",
+            "VIRT_ZHAO_YUN_12",
+            "VIRT_ZHAO_YUN_13",
+            "VIRT_ZHAO_YUN_14"
+          ],
+          "isHistorical": true,
+          "maxLifespan": 100
+        }
+      ]
+    },
+    "events": [
+      {
+        "instance": 1,
+        "tag": "Lobby",
+        "event": "refresh",
+        "season": 11,
+        "proposal": null
+      },
+      {
+        "instance": 1,
+        "tag": "Controller",
+        "name": "campaign",
+        "event": "enter",
+        "season": 11,
+        "proposal": null
+      },
+      {
+        "instance": 1,
+        "tag": "Wallet",
+        "name": "grantCurrency",
+        "event": "enter",
+        "season": 11,
+        "proposal": null
+      },
+      {
+        "instance": 1,
+        "tag": "GameSession",
+        "name": "save",
+        "event": "enter",
+        "season": 11,
+        "proposal": null
+      },
+      {
+        "instance": 1,
+        "tag": "GameSession",
+        "name": "recordRivalCampaign",
+        "event": "enter",
+        "season": 11,
+        "proposal": null
+      },
+      {
+        "instance": 1,
+        "tag": "GameSession",
+        "name": "setRivals",
+        "event": "enter",
+        "season": 11,
+        "proposal": null
+      },
+      {
+        "instance": 1,
+        "tag": "GameSession",
+        "name": "save",
+        "event": "enter",
+        "season": 11,
+        "proposal": null
+      },
+      {
+        "instance": 1,
+        "tag": "EventSystem",
+        "name": "game-session-saved",
+        "event": "emit",
+        "season": 11,
+        "proposal": null
+      },
+      {
+        "instance": 1,
+        "tag": "EventSystem",
+        "name": "game-session-saved",
+        "event": "emit",
+        "season": 11,
+        "proposal": null
+      },
+      {
+        "instance": 1,
+        "tag": "GameSession",
+        "name": "save",
+        "event": "resolve",
+        "season": 11,
+        "proposal": null
+      },
+      {
+        "instance": 1,
+        "tag": "GameSession",
+        "name": "save",
+        "event": "resolve",
+        "season": 11,
+        "proposal": null
+      },
+      {
+        "instance": 1,
+        "tag": "GameSession",
+        "name": "setRivals",
+        "event": "resolve",
+        "season": 11,
+        "proposal": null
+      },
+      {
+        "instance": 1,
+        "tag": "Controller",
+        "name": "campaign",
+        "event": "resolve",
+        "season": 11,
+        "proposal": null
+      },
+      {
+        "instance": 1,
+        "tag": "Lobby",
+        "event": "refresh",
+        "season": 11,
+        "proposal": null
+      }
+    ],
+    "dualSaveWritesComparison": [
+      {
+        "kind": "attempt",
+        "key": "player.save.bak",
+        "ordinal": null,
+        "gold": 100,
+        "lvbuTerritories": 1,
+        "lvbuAtWar": false,
+        "offlineBattleSnapshotsCount": 0
+      },
+      {
+        "kind": "attempt",
+        "key": "player.save.bak",
+        "ordinal": null,
+        "gold": 100,
+        "lvbuTerritories": 1,
+        "lvbuAtWar": false,
+        "offlineBattleSnapshotsCount": 0
+      },
+      {
+        "kind": "commit",
+        "key": "player.save.bak",
+        "ordinal": null,
+        "gold": 100,
+        "lvbuTerritories": 1,
+        "lvbuAtWar": false,
+        "offlineBattleSnapshotsCount": 0
+      },
+      {
+        "kind": "commit",
+        "key": "player.save.bak",
+        "ordinal": null,
+        "gold": 100,
+        "lvbuTerritories": 1,
+        "lvbuAtWar": false,
+        "offlineBattleSnapshotsCount": 0
+      },
+      {
+        "kind": "attempt",
+        "key": "player.save",
+        "ordinal": 14,
+        "gold": 891,
+        "lvbuTerritories": 1,
+        "lvbuAtWar": false,
+        "offlineBattleSnapshotsCount": 0
+      },
+      {
+        "kind": "attempt",
+        "key": "player.save",
+        "ordinal": 15,
+        "gold": 891,
+        "lvbuTerritories": 0,
+        "lvbuAtWar": true,
+        "offlineBattleSnapshotsCount": 1
+      },
+      {
+        "kind": "commit",
+        "key": "player.save",
+        "ordinal": 14,
+        "gold": 891,
+        "lvbuTerritories": 1,
+        "lvbuAtWar": false,
+        "offlineBattleSnapshotsCount": 0
+      },
+      {
+        "kind": "commit",
+        "key": "player.save",
+        "ordinal": 15,
+        "gold": 891,
+        "lvbuTerritories": 0,
+        "lvbuAtWar": true,
+        "offlineBattleSnapshotsCount": 1
+      }
+    ]
+  },
+  "season12NormalFallAndRaid": {
+    "before": {
+      "season": 11,
+      "military": {
+        "cityTroops": 3000,
+        "cityTroopsCap": 3000,
+        "recruitRegen": 750,
+        "food": 3581,
+        "foodCap": 10000
+      },
+      "wallet": {
+        "gems": 0,
+        "gold": 891,
+        "tickets": 0,
+        "bronze": 0,
+        "oracle": 0,
+        "mentorTickets": 0,
+        "scorePoints": 0
+      },
+      "gold": 891,
+      "nation": {
+        "id": "lvbu",
+        "troops": 6779,
+        "territories": 0,
+        "relation": -100,
+        "allied": false,
+        "atWar": true,
+        "resources": {
+          "food": 2720,
+          "gold": 0,
+          "fame": 0,
+          "intel": 0
+        },
+        "governedSeasons": 11,
+        "recruits": {
+          "S": 0,
+          "A": 2,
+          "B": 3,
+          "C": 0
+        },
+        "roster": [
+          {
+            "id": "lvbu-10",
+            "quality": "A",
+            "recruitedSeason": 10
+          }
+        ],
+        "bonds": [
+          {
+            "first": "lvbu-2",
+            "second": "lvbu-4",
+            "season": 8
+          },
+          {
+            "first": "lvbu-6",
+            "second": "lvbu-8",
+            "season": 9
+          }
+        ]
+      },
+      "notices": [],
+      "battles": [
+        {
+          "snapshotId": "OBS_0001",
+          "battleType": "AUTO_RESOLVE",
+          "seed": "3-4-Clvbu",
+          "lineupDigest": "735af725",
+          "tileStateDigest": "4581baca",
+          "tacticDigest": "741638a5",
+          "resultDigest": "WIN_MAJOR",
+          "syncHashLink": "78c5e210"
+        }
+      ],
+      "logs": [],
+      "roster": [
+        {
+          "id": "cao-cao",
+          "name": "曹操",
+          "alias": [],
+          "faction": "wei",
+          "templateId": "GEN_WEI_CAO_CAO",
+          "title": "【魏武】",
+          "gender": "男",
+          "age": 22.75,
+          "hp": 1696,
+          "currentHp": 1696,
+          "maxSp": 100,
+          "initialSp": 40,
+          "currentSp": 40,
+          "vitality": 100,
+          "maxVitality": 100,
+          "role": "Combat",
+          "status": "Active",
+          "attackBonus": 0.08,
+          "str": 82,
+          "int": 94,
+          "lea": 92,
+          "pol": 96,
+          "cha": 90,
+          "luk": 86,
+          "stats": {
+            "str": 82,
+            "int": 94,
+            "lea": 92,
+            "pol": 96,
+            "cha": 90,
+            "luk": 86
+          },
+          "skillId": "cao-cao-tactics",
+          "battlePrimarySkillId": "cao-cao-tactics",
+          "preferredTerrain": "plain",
+          "terrainDefenseBonus": 0.15,
+          "source": "劇情敵對勢力",
+          "notes": "偏全局掌控與節奏操作的敵方統帥型武將。",
+          "devNote": "由 master pipeline 自動同步生成。",
+          "hiddenFlags": [
+            "內政事件權重",
+            "政治分支覺醒條件"
+          ],
+          "ep": 92,
+          "epRating": "S+",
+          "rarityTier": "legendary",
+          "characterCategory": "titled",
+          "bloodlineId": "BL_WEI_BAQUAN",
+          "parentsSummary": "父：曹嵩 / 母：丁氏（部分資料保密處理）",
+          "ancestorsSummary": "祖譜完整度高，政治系與統率系因子明顯。",
+          "awakeningTitle": "挾天子令諸侯",
+          "genes": [
+            {
+              "id": "gene_strategy",
+              "displayName": "權謀",
+              "type": "謀略",
+              "level": 4,
+              "description": "提升指揮型戰法與全軍節奏控制。"
+            },
+            {
+              "id": "gene_command",
+              "displayName": "號令",
+              "type": "統率",
+              "level": 3,
+              "description": "提升多路戰場協同能力。"
+            },
+            {
+              "id": "gene_politics",
+              "displayName": "治世",
+              "type": "內政",
+              "level": 3,
+              "description": "影響招募、事件與資源收益。"
+            },
+            {
+              "id": "gene_hidden_05",
+              "displayName": "霸道因子",
+              "isLocked": true,
+              "discoveryLevel": 22
+            }
+          ],
+          "historicalAnecdote": "曹操（155年—220年3月15日），字孟德，小字阿瞞，沛國譙縣（今安徽亳州）人。東漢末年丞相、軍事家、政治家、文學家和詩人，東漢末年主要群雄之一，職位為丞相，為漢末實際上的最高掌權者，亦是三國時代曹魏奠基者。父親曹嵩。其子曹丕建立曹魏，追尊其廟號為太祖，追諡武皇帝。\n",
+          "bloodlineRumor": "譙縣老人說，曹氏祖祠地底埋著一枚黑羽虎符；每逢兵荒，祠中銅燈便會自行偏向北方。曹操少年偷看過一次，從此連風聲都像軍令。",
+          "crestHint": "魏武霸道，天下一局待最後棋",
+          "crestState": "rumored",
+          "storyStripCells": [
+            {
+              "slot": "origin",
+              "text": "橋畔機鋒識人"
+            },
+            {
+              "slot": "faction",
+              "text": "奉天子號諸侯"
+            },
+            {
+              "slot": "role",
+              "text": "詭道裁局定勢"
+            },
+            {
+              "slot": "awakening",
+              "text": "官渡借火翻盤"
+            },
+            {
+              "slot": "bloodline",
+              "text": "銅雀夜夢聽潮"
+            },
+            {
+              "slot": "future",
+              "text": "墳前誰解孟德"
+            }
+          ],
+          "coreTags": [],
+          "generatorProfile": {},
+          "bloodlineProfile": {},
+          "learnedTactics": [
+            "兵不厭詐",
+            "號令調度",
+            "疑兵惑陣"
+          ],
+          "inspiredTactics": [
+            "挾令四方",
+            "魏武軍律"
+          ],
+          "lockedTactics": [
+            "🔒 霸道終局技"
+          ],
+          "tacticSlots": [
+            {
+              "slotId": "slot-1",
+              "tacticId": "tactic-fire-scheme",
+              "source": "inborn"
+            },
+            {
+              "slotId": "slot-2",
+              "tacticId": "tactic-morale-rally",
+              "source": "inborn"
+            }
+          ],
+          "ultimateSlots": [
+            {
+              "slot": 1,
+              "ultimateId": "ult-cao-cao-1",
+              "unlockReincarnation": 1,
+              "vitalityCostPct": 0.05,
+              "isExclusive": true
+            },
+            {
+              "slot": 2,
+              "ultimateId": "ult-cao-cao-2",
+              "unlockReincarnation": 2,
+              "vitalityCostPct": 0.06,
+              "isExclusive": true
+            },
+            {
+              "slot": 3,
+              "ultimateId": "ult-cao-cao-3",
+              "unlockReincarnation": 3,
+              "vitalityCostPct": 0.07,
+              "isExclusive": true
+            },
+            {
+              "slot": 4,
+              "ultimateId": "ult-cao-cao-4",
+              "unlockReincarnation": 4,
+              "vitalityCostPct": 0.08,
+              "isExclusive": true
+            },
+            {
+              "slot": 5,
+              "ultimateId": "ult-cao-cao-5",
+              "unlockReincarnation": 5,
+              "vitalityCostPct": 0.1,
+              "isExclusive": true
+            }
+          ],
+          "troopAptitude": {
+            "CAVALRY": "A",
+            "INFANTRY": "B",
+            "ARCHER": "B",
+            "SIEGE": "B"
+          },
+          "terrainAptitude": {
+            "PLAIN": "A",
+            "MOUNTAIN": "B",
+            "WATER": "B",
+            "FOREST": "B",
+            "DESERT": "C"
+          },
+          "weatherAptitude": {
+            "FOG": "A",
+            "RAINY": "A",
+            "SUNNY": "B",
+            "WINDY": "B",
+            "NIGHT": "B",
+            "THUNDER": "C"
+          },
+          "ancestor_chain": [
+            "VIRT_CAO_CAO_01",
+            "VIRT_CAO_CAO_02",
+            "VIRT_CAO_CAO_03",
+            "VIRT_CAO_CAO_04",
+            "VIRT_CAO_CAO_05",
+            "VIRT_CAO_CAO_06",
+            "VIRT_CAO_CAO_07",
+            "VIRT_CAO_CAO_08",
+            "VIRT_CAO_CAO_09",
+            "VIRT_CAO_CAO_10",
+            "VIRT_CAO_CAO_11",
+            "VIRT_CAO_CAO_12",
+            "VIRT_CAO_CAO_13",
+            "VIRT_CAO_CAO_14"
+          ],
+          "originRegion": "沛郡",
+          "coreFactorTag": "military-commander",
+          "element": "metal",
+          "initialRole": "commander",
+          "introLine": "治世之能臣，亂世之梟雄。",
+          "portraitKey": "portraits/generals/cao-cao",
+          "battleVoiceKey": "audio/voice/generals/cao-cao/battle",
+          "isHistorical": true,
+          "maxLifespan": 100
+        },
+        {
+          "id": "guan-yu",
+          "name": "關羽",
+          "alias": [],
+          "faction": "shu",
+          "templateId": "GEN_SHU_GUAN_YU",
+          "title": "【美髯公】",
+          "gender": "男",
+          "age": 22.75,
+          "hp": 1702,
+          "currentHp": 1702,
+          "maxSp": 100,
+          "initialSp": 40,
+          "currentSp": 40,
+          "vitality": 100,
+          "maxVitality": 100,
+          "role": "Combat",
+          "status": "Active",
+          "attackBonus": 0.15,
+          "str": 97,
+          "int": 76,
+          "lea": 92,
+          "pol": 68,
+          "cha": 91,
+          "luk": 82,
+          "stats": {
+            "str": 97,
+            "int": 76,
+            "lea": 92,
+            "pol": 68,
+            "cha": 91,
+            "luk": 82
+          },
+          "skillId": "guan-yu-slash",
+          "battlePrimarySkillId": "guan-yu-slash",
+          "preferredTerrain": "plain",
+          "terrainDefenseBonus": 0.1,
+          "source": "初期主力",
+          "notes": "高統率的斬將型核心，兼具名望與前線壓制。",
+          "devNote": "由 master pipeline 自動同步生成。",
+          "hiddenFlags": [
+            "第 4 代後祖譜校驗",
+            "覺醒稱號需求"
+          ],
+          "ep": 87,
+          "epRating": "S",
+          "rarityTier": "legendary",
+          "characterCategory": "famed",
+          "bloodlineId": "BL_SHU_LONG",
+          "parentsSummary": "父：關毅 / 母：劉氏（部分史料模糊）",
+          "ancestorsSummary": "祖譜完整度 68%，第 4 代後以推測資料補全。",
+          "awakeningTitle": "青龍武聖",
+          "genes": [
+            {
+              "id": "gene_halberd",
+              "displayName": "刀鋒傳承",
+              "type": "武裝",
+              "level": 3,
+              "description": "強化單點斬殺與穿甲表現。"
+            },
+            {
+              "id": "gene_discipline",
+              "displayName": "軍紀",
+              "type": "統率",
+              "level": 3,
+              "description": "強化部曲士氣穩定。"
+            },
+            {
+              "id": "gene_honor",
+              "displayName": "義勇",
+              "type": "人格",
+              "level": 2,
+              "description": "提升單挑與名望事件加成。"
+            },
+            {
+              "id": "gene_hidden_03",
+              "displayName": "義絕覺醒因子",
+              "isLocked": true,
+              "discoveryLevel": 24
+            }
+          ],
+          "historicalAnecdote": "關羽（160年—220年1月或2月），字雲長，本字長生，司隸河東解縣人（今山西運城），東漢末年將領，劉備的重要親信，被稱為“万人敵”。200年，曹操擊敗劉備後，關羽一度歸降曹操，并在官渡之戰中斬殺顏良，因功封為漢壽亭侯。不久，脫离曹操再次投奔劉備。赤壁之戰後，關羽參与圍攻南郡曹仁，并長期為劉備鎮守荊州。劉備占領益州後，關羽被任命總督荊州，拜前將軍，假節鉞。\n219年，關羽進攻樊城，借漢水暴漲水淹七",
+          "bloodlineRumor": "解縣老人常說，關家舊刀鞘冬晨總先結霜，再慢慢滲成一道細紅線，像有人用指節描過刀背。關羽從不解釋，只在上馬前默默把鞘口按緊。",
+          "crestHint": "青龍義絕，一騎絕塵千秋義",
+          "crestState": "revealed",
+          "storyStripCells": [
+            {
+              "slot": "origin",
+              "text": "解縣冷月磨刀"
+            },
+            {
+              "slot": "faction",
+              "text": "桃園酒尚未冷"
+            },
+            {
+              "slot": "role",
+              "text": "青龍一線斷城"
+            },
+            {
+              "slot": "awakening",
+              "text": "樊城漢水成壁"
+            },
+            {
+              "slot": "bloodline",
+              "text": "義氣入骨成紋"
+            },
+            {
+              "slot": "future",
+              "text": "麥城夜馬無聲"
+            }
+          ],
+          "coreTags": [],
+          "generatorProfile": {},
+          "bloodlineProfile": {},
+          "learnedTactics": [
+            "月牙刀斬",
+            "長驅破軍",
+            "武聖威壓"
+          ],
+          "inspiredTactics": [
+            "春秋刀勢"
+          ],
+          "lockedTactics": [
+            "🔒 義絕",
+            "🔒 千里單騎"
+          ],
+          "tacticSlots": [
+            {
+              "slotId": "slot-1",
+              "tacticId": "tactic-morale-rally",
+              "source": "inborn"
+            },
+            {
+              "slotId": "slot-2",
+              "tacticId": "tactic-cavalry-shock",
+              "source": "inborn"
+            }
+          ],
+          "ultimateSlots": [
+            {
+              "slot": 1,
+              "ultimateId": "ult-guan-yu-1",
+              "unlockReincarnation": 1,
+              "vitalityCostPct": 0.05,
+              "isExclusive": true
+            },
+            {
+              "slot": 2,
+              "ultimateId": "ult-guan-yu-2",
+              "unlockReincarnation": 2,
+              "vitalityCostPct": 0.06,
+              "isExclusive": true
+            },
+            {
+              "slot": 3,
+              "ultimateId": "ult-guan-yu-3",
+              "unlockReincarnation": 3,
+              "vitalityCostPct": 0.07,
+              "isExclusive": true
+            },
+            {
+              "slot": 4,
+              "ultimateId": "ult-guan-yu-4",
+              "unlockReincarnation": 4,
+              "vitalityCostPct": 0.08,
+              "isExclusive": true
+            },
+            {
+              "slot": 5,
+              "ultimateId": "ult-guan-yu-5",
+              "unlockReincarnation": 5,
+              "vitalityCostPct": 0.1,
+              "isExclusive": true
+            }
+          ],
+          "troopAptitude": {
+            "CAVALRY": "A",
+            "INFANTRY": "B",
+            "ARCHER": "C",
+            "SIEGE": "D"
+          },
+          "terrainAptitude": {
+            "MOUNTAIN": "A",
+            "PLAIN": "B",
+            "WATER": "C",
+            "FOREST": "B",
+            "DESERT": "C"
+          },
+          "weatherAptitude": {
+            "SUNNY": "A",
+            "RAINY": "B",
+            "FOG": "B",
+            "WINDY": "B",
+            "NIGHT": "A",
+            "THUNDER": "C"
+          },
+          "ancestor_chain": [
+            "VIRT_GUAN_YU_01",
+            "VIRT_GUAN_YU_02",
+            "VIRT_GUAN_YU_03",
+            "VIRT_GUAN_YU_04",
+            "VIRT_GUAN_YU_05",
+            "VIRT_GUAN_YU_06",
+            "VIRT_GUAN_YU_07",
+            "VIRT_GUAN_YU_08",
+            "VIRT_GUAN_YU_09",
+            "VIRT_GUAN_YU_10",
+            "VIRT_GUAN_YU_11",
+            "VIRT_GUAN_YU_12",
+            "VIRT_GUAN_YU_13",
+            "VIRT_GUAN_YU_14"
+          ],
+          "originRegion": "河東",
+          "coreFactorTag": "valor",
+          "element": "fire",
+          "initialRole": "vanguard",
+          "introLine": "忠義千秋，萬世仰德。",
+          "portraitKey": "portraits/generals/guan-yu",
+          "battleVoiceKey": "audio/voice/generals/guan-yu/battle",
+          "isHistorical": true,
+          "maxLifespan": 100
+        },
+        {
+          "id": "zhao-yun",
+          "name": "趙雲",
+          "alias": [],
+          "faction": "shu",
+          "templateId": "GEN_SHU_ZHAO_YUN",
+          "title": "【常山趙子】",
+          "gender": "男",
+          "age": 22.75,
+          "hp": 1704,
+          "currentHp": 1704,
+          "maxSp": 100,
+          "initialSp": 40,
+          "currentSp": 40,
+          "vitality": 100,
+          "maxVitality": 100,
+          "role": "Combat",
+          "status": "Active",
+          "attackBonus": 0.12,
+          "str": 96,
+          "int": 82,
+          "lea": 93,
+          "pol": 74,
+          "cha": 94,
+          "luk": 89,
+          "stats": {
+            "str": 96,
+            "int": 82,
+            "lea": 93,
+            "pol": 74,
+            "cha": 94,
+            "luk": 89
+          },
+          "skillId": "zhao-yun-pierce",
+          "battlePrimarySkillId": "zhao-yun-pierce",
+          "preferredTerrain": "plain",
+          "terrainDefenseBonus": 0.08,
+          "source": "初始加入",
+          "notes": "全能型前鋒，擁有極高的穩定性與絕境反擊能力。",
+          "devNote": "由 master pipeline 自動同步生成。",
+          "hiddenFlags": [
+            "常山系譜核心",
+            "龍魂覺醒條件"
+          ],
+          "ep": 89,
+          "epRating": "S",
+          "rarityTier": "legendary",
+          "characterCategory": "famed",
+          "bloodlineId": "BL_SHU_ZHAO",
+          "parentsSummary": "父：🔒 未公開 / 母：🔒 未公開",
+          "ancestorsSummary": "常山趙氏後裔，系譜記錄完整度 90%。",
+          "awakeningTitle": "一身是膽",
+          "genes": [
+            {
+              "id": "gene_courage",
+              "displayName": "膽量",
+              "type": "戰鬥",
+              "level": 4,
+              "description": "無視統率差值帶來的士氣壓制。"
+            },
+            {
+              "id": "gene_dash",
+              "displayName": "龍膽突破",
+              "type": "兵種",
+              "level": 3,
+              "description": "提升騎兵穿透力與追擊機率。"
+            },
+            {
+              "id": "gene_guard",
+              "displayName": "護主",
+              "type": "特質",
+              "level": 2,
+              "description": "當主帥體力低於 30% 時，提升 50% 防禦力。"
+            }
+          ],
+          "historicalAnecdote": "趙雲（153年？—229年），字子龍，是漢末三國時期的蜀漢武將，生於常山真定（今河北省正定縣），身高八尺（約185公分），姿顏雄偉。最初效忠公孫瓚，官渡之戰後效忠劉備、劉禪。歷任牙門將軍，偏將軍、領桂陽太守，翊軍將軍，領中護軍、征南將軍，封永昌亭侯，鎮東將軍。箕谷失利後貶為鎮軍將軍。後追諡曰順平侯，是為永昌亭順平侯。\n",
+          "bloodlineRumor": "常山獵戶說，趙家舊槍在月下不映人影，只映遠路。趙雲年少夜練時常見槍鋒替自己先走一步，像有位沉默祖先替他把險處都試過一次。",
+          "crestHint": "常山白龍，一身是膽護主到底",
+          "crestState": "revealed",
+          "storyStripCells": [
+            {
+              "slot": "origin",
+              "text": "常山白馬出塵"
+            },
+            {
+              "slot": "faction",
+              "text": "轉身護主歸心"
+            },
+            {
+              "slot": "role",
+              "text": "七進七出如雪"
+            },
+            {
+              "slot": "awakening",
+              "text": "漢水回槍定軍"
+            },
+            {
+              "slot": "bloodline",
+              "text": "銀甲映出古紋"
+            },
+            {
+              "slot": "future",
+              "text": "老將猶能照夜"
+            }
+          ],
+          "coreTags": [],
+          "generatorProfile": {},
+          "bloodlineProfile": {},
+          "learnedTactics": [
+            "龍膽旋風",
+            "孤軍救主",
+            "百鳥朝鳳"
+          ],
+          "inspiredTactics": [
+            "七進七出"
+          ],
+          "lockedTactics": [
+            "🔒 龍魂覺醒"
+          ],
+          "tacticSlots": [
+            {
+              "slotId": "slot-1",
+              "tacticId": "tactic-cavalry-shock",
+              "source": "inborn"
+            },
+            {
+              "slotId": "slot-2",
+              "tacticId": "tactic-morale-rally",
+              "source": "inborn"
+            }
+          ],
+          "ultimateSlots": [
+            {
+              "slot": 1,
+              "ultimateId": "ult-zhao-yun-1",
+              "unlockReincarnation": 1,
+              "vitalityCostPct": 0.05,
+              "isExclusive": true
+            },
+            {
+              "slot": 2,
+              "ultimateId": "ult-zhao-yun-2",
+              "unlockReincarnation": 2,
+              "vitalityCostPct": 0.06,
+              "isExclusive": true
+            },
+            {
+              "slot": 3,
+              "ultimateId": "ult-zhao-yun-3",
+              "unlockReincarnation": 3,
+              "vitalityCostPct": 0.07,
+              "isExclusive": true
+            },
+            {
+              "slot": 4,
+              "ultimateId": "ult-zhao-yun-4",
+              "unlockReincarnation": 4,
+              "vitalityCostPct": 0.08,
+              "isExclusive": true
+            },
+            {
+              "slot": 5,
+              "ultimateId": "ult-zhao-yun-5",
+              "unlockReincarnation": 5,
+              "vitalityCostPct": 0.1,
+              "isExclusive": true
+            }
+          ],
+          "troopAptitude": {
+            "CAVALRY": "S",
+            "INFANTRY": "B",
+            "ARCHER": "B",
+            "SIEGE": "C"
+          },
+          "terrainAptitude": {
+            "MOUNTAIN": "A",
+            "PLAIN": "B",
+            "WATER": "C",
+            "FOREST": "B",
+            "DESERT": "B"
+          },
+          "weatherAptitude": {
+            "FOG": "A",
+            "NIGHT": "A",
+            "RAINY": "B",
+            "SUNNY": "B",
+            "WINDY": "B",
+            "THUNDER": "B"
+          },
+          "ancestor_chain": [
+            "VIRT_ZHAO_YUN_01",
+            "VIRT_ZHAO_YUN_02",
+            "VIRT_ZHAO_YUN_03",
+            "VIRT_ZHAO_YUN_04",
+            "VIRT_ZHAO_YUN_05",
+            "VIRT_ZHAO_YUN_06",
+            "VIRT_ZHAO_YUN_07",
+            "VIRT_ZHAO_YUN_08",
+            "VIRT_ZHAO_YUN_09",
+            "VIRT_ZHAO_YUN_10",
+            "VIRT_ZHAO_YUN_11",
+            "VIRT_ZHAO_YUN_12",
+            "VIRT_ZHAO_YUN_13",
+            "VIRT_ZHAO_YUN_14"
+          ],
+          "isHistorical": true,
+          "maxLifespan": 100
+        }
+      ]
+    },
+    "live": {
+      "season": 12,
+      "military": {
+        "cityTroops": 2850,
+        "cityTroopsCap": 3000,
+        "recruitRegen": 750,
+        "food": 3358,
+        "foodCap": 10000
+      },
+      "wallet": {
+        "gems": 0,
+        "gold": 891,
+        "tickets": 0,
+        "bronze": 0,
+        "oracle": 0,
+        "mentorTickets": 0,
+        "scorePoints": 0
+      },
+      "gold": 891,
+      "nation": {
+        "id": "lvbu",
+        "troops": 7318,
+        "territories": 0,
+        "relation": -100,
+        "allied": false,
+        "atWar": false,
+        "resources": {
+          "food": 2940,
+          "gold": 0,
+          "fame": 0,
+          "intel": 0
+        },
+        "governedSeasons": 12,
+        "recruits": {
+          "S": 0,
+          "A": 2,
+          "B": 3,
+          "C": 1
+        },
+        "roster": [],
+        "bonds": [
+          {
+            "first": "lvbu-2",
+            "second": "lvbu-4",
+            "season": 8
+          },
+          {
+            "first": "lvbu-6",
+            "second": "lvbu-8",
+            "season": 9
+          },
+          {
+            "first": "lvbu-10",
+            "second": "lvbu-12",
+            "season": 12
+          }
+        ],
+        "fallen": true
+      },
+      "notices": [],
+      "battles": [
+        {
+          "snapshotId": "OBS_0001",
+          "battleType": "AUTO_RESOLVE",
+          "seed": "3-4-Clvbu",
+          "lineupDigest": "735af725",
+          "tileStateDigest": "4581baca",
+          "tacticDigest": "741638a5",
+          "resultDigest": "WIN_MAJOR",
+          "syncHashLink": "78c5e210"
+        }
+      ],
+      "logs": [],
+      "roster": [
+        {
+          "id": "cao-cao",
+          "name": "曹操",
+          "alias": [],
+          "faction": "wei",
+          "templateId": "GEN_WEI_CAO_CAO",
+          "title": "【魏武】",
+          "gender": "男",
+          "age": 23,
+          "hp": 1696,
+          "currentHp": 1696,
+          "maxSp": 100,
+          "initialSp": 40,
+          "currentSp": 40,
+          "vitality": 100,
+          "maxVitality": 100,
+          "role": "Combat",
+          "status": "Active",
+          "attackBonus": 0.08,
+          "str": 82,
+          "int": 94,
+          "lea": 92,
+          "pol": 96,
+          "cha": 90,
+          "luk": 86,
+          "stats": {
+            "str": 82,
+            "int": 94,
+            "lea": 92,
+            "pol": 96,
+            "cha": 90,
+            "luk": 86
+          },
+          "skillId": "cao-cao-tactics",
+          "battlePrimarySkillId": "cao-cao-tactics",
+          "preferredTerrain": "plain",
+          "terrainDefenseBonus": 0.15,
+          "source": "劇情敵對勢力",
+          "notes": "偏全局掌控與節奏操作的敵方統帥型武將。",
+          "devNote": "由 master pipeline 自動同步生成。",
+          "hiddenFlags": [
+            "內政事件權重",
+            "政治分支覺醒條件"
+          ],
+          "ep": 92,
+          "epRating": "S+",
+          "rarityTier": "legendary",
+          "characterCategory": "titled",
+          "bloodlineId": "BL_WEI_BAQUAN",
+          "parentsSummary": "父：曹嵩 / 母：丁氏（部分資料保密處理）",
+          "ancestorsSummary": "祖譜完整度高，政治系與統率系因子明顯。",
+          "awakeningTitle": "挾天子令諸侯",
+          "genes": [
+            {
+              "id": "gene_strategy",
+              "displayName": "權謀",
+              "type": "謀略",
+              "level": 4,
+              "description": "提升指揮型戰法與全軍節奏控制。"
+            },
+            {
+              "id": "gene_command",
+              "displayName": "號令",
+              "type": "統率",
+              "level": 3,
+              "description": "提升多路戰場協同能力。"
+            },
+            {
+              "id": "gene_politics",
+              "displayName": "治世",
+              "type": "內政",
+              "level": 3,
+              "description": "影響招募、事件與資源收益。"
+            },
+            {
+              "id": "gene_hidden_05",
+              "displayName": "霸道因子",
+              "isLocked": true,
+              "discoveryLevel": 22
+            }
+          ],
+          "historicalAnecdote": "曹操（155年—220年3月15日），字孟德，小字阿瞞，沛國譙縣（今安徽亳州）人。東漢末年丞相、軍事家、政治家、文學家和詩人，東漢末年主要群雄之一，職位為丞相，為漢末實際上的最高掌權者，亦是三國時代曹魏奠基者。父親曹嵩。其子曹丕建立曹魏，追尊其廟號為太祖，追諡武皇帝。\n",
+          "bloodlineRumor": "譙縣老人說，曹氏祖祠地底埋著一枚黑羽虎符；每逢兵荒，祠中銅燈便會自行偏向北方。曹操少年偷看過一次，從此連風聲都像軍令。",
+          "crestHint": "魏武霸道，天下一局待最後棋",
+          "crestState": "rumored",
+          "storyStripCells": [
+            {
+              "slot": "origin",
+              "text": "橋畔機鋒識人"
+            },
+            {
+              "slot": "faction",
+              "text": "奉天子號諸侯"
+            },
+            {
+              "slot": "role",
+              "text": "詭道裁局定勢"
+            },
+            {
+              "slot": "awakening",
+              "text": "官渡借火翻盤"
+            },
+            {
+              "slot": "bloodline",
+              "text": "銅雀夜夢聽潮"
+            },
+            {
+              "slot": "future",
+              "text": "墳前誰解孟德"
+            }
+          ],
+          "coreTags": [],
+          "generatorProfile": {},
+          "bloodlineProfile": {},
+          "learnedTactics": [
+            "兵不厭詐",
+            "號令調度",
+            "疑兵惑陣"
+          ],
+          "inspiredTactics": [
+            "挾令四方",
+            "魏武軍律"
+          ],
+          "lockedTactics": [
+            "🔒 霸道終局技"
+          ],
+          "tacticSlots": [
+            {
+              "slotId": "slot-1",
+              "tacticId": "tactic-fire-scheme",
+              "source": "inborn"
+            },
+            {
+              "slotId": "slot-2",
+              "tacticId": "tactic-morale-rally",
+              "source": "inborn"
+            }
+          ],
+          "ultimateSlots": [
+            {
+              "slot": 1,
+              "ultimateId": "ult-cao-cao-1",
+              "unlockReincarnation": 1,
+              "vitalityCostPct": 0.05,
+              "isExclusive": true
+            },
+            {
+              "slot": 2,
+              "ultimateId": "ult-cao-cao-2",
+              "unlockReincarnation": 2,
+              "vitalityCostPct": 0.06,
+              "isExclusive": true
+            },
+            {
+              "slot": 3,
+              "ultimateId": "ult-cao-cao-3",
+              "unlockReincarnation": 3,
+              "vitalityCostPct": 0.07,
+              "isExclusive": true
+            },
+            {
+              "slot": 4,
+              "ultimateId": "ult-cao-cao-4",
+              "unlockReincarnation": 4,
+              "vitalityCostPct": 0.08,
+              "isExclusive": true
+            },
+            {
+              "slot": 5,
+              "ultimateId": "ult-cao-cao-5",
+              "unlockReincarnation": 5,
+              "vitalityCostPct": 0.1,
+              "isExclusive": true
+            }
+          ],
+          "troopAptitude": {
+            "CAVALRY": "A",
+            "INFANTRY": "B",
+            "ARCHER": "B",
+            "SIEGE": "B"
+          },
+          "terrainAptitude": {
+            "PLAIN": "A",
+            "MOUNTAIN": "B",
+            "WATER": "B",
+            "FOREST": "B",
+            "DESERT": "C"
+          },
+          "weatherAptitude": {
+            "FOG": "A",
+            "RAINY": "A",
+            "SUNNY": "B",
+            "WINDY": "B",
+            "NIGHT": "B",
+            "THUNDER": "C"
+          },
+          "ancestor_chain": [
+            "VIRT_CAO_CAO_01",
+            "VIRT_CAO_CAO_02",
+            "VIRT_CAO_CAO_03",
+            "VIRT_CAO_CAO_04",
+            "VIRT_CAO_CAO_05",
+            "VIRT_CAO_CAO_06",
+            "VIRT_CAO_CAO_07",
+            "VIRT_CAO_CAO_08",
+            "VIRT_CAO_CAO_09",
+            "VIRT_CAO_CAO_10",
+            "VIRT_CAO_CAO_11",
+            "VIRT_CAO_CAO_12",
+            "VIRT_CAO_CAO_13",
+            "VIRT_CAO_CAO_14"
+          ],
+          "originRegion": "沛郡",
+          "coreFactorTag": "military-commander",
+          "element": "metal",
+          "initialRole": "commander",
+          "introLine": "治世之能臣，亂世之梟雄。",
+          "portraitKey": "portraits/generals/cao-cao",
+          "battleVoiceKey": "audio/voice/generals/cao-cao/battle",
+          "isHistorical": true,
+          "maxLifespan": 100
+        },
+        {
+          "id": "guan-yu",
+          "name": "關羽",
+          "alias": [],
+          "faction": "shu",
+          "templateId": "GEN_SHU_GUAN_YU",
+          "title": "【美髯公】",
+          "gender": "男",
+          "age": 23,
+          "hp": 1702,
+          "currentHp": 1702,
+          "maxSp": 100,
+          "initialSp": 40,
+          "currentSp": 40,
+          "vitality": 100,
+          "maxVitality": 100,
+          "role": "Combat",
+          "status": "Active",
+          "attackBonus": 0.15,
+          "str": 97,
+          "int": 76,
+          "lea": 92,
+          "pol": 68,
+          "cha": 91,
+          "luk": 82,
+          "stats": {
+            "str": 97,
+            "int": 76,
+            "lea": 92,
+            "pol": 68,
+            "cha": 91,
+            "luk": 82
+          },
+          "skillId": "guan-yu-slash",
+          "battlePrimarySkillId": "guan-yu-slash",
+          "preferredTerrain": "plain",
+          "terrainDefenseBonus": 0.1,
+          "source": "初期主力",
+          "notes": "高統率的斬將型核心，兼具名望與前線壓制。",
+          "devNote": "由 master pipeline 自動同步生成。",
+          "hiddenFlags": [
+            "第 4 代後祖譜校驗",
+            "覺醒稱號需求"
+          ],
+          "ep": 87,
+          "epRating": "S",
+          "rarityTier": "legendary",
+          "characterCategory": "famed",
+          "bloodlineId": "BL_SHU_LONG",
+          "parentsSummary": "父：關毅 / 母：劉氏（部分史料模糊）",
+          "ancestorsSummary": "祖譜完整度 68%，第 4 代後以推測資料補全。",
+          "awakeningTitle": "青龍武聖",
+          "genes": [
+            {
+              "id": "gene_halberd",
+              "displayName": "刀鋒傳承",
+              "type": "武裝",
+              "level": 3,
+              "description": "強化單點斬殺與穿甲表現。"
+            },
+            {
+              "id": "gene_discipline",
+              "displayName": "軍紀",
+              "type": "統率",
+              "level": 3,
+              "description": "強化部曲士氣穩定。"
+            },
+            {
+              "id": "gene_honor",
+              "displayName": "義勇",
+              "type": "人格",
+              "level": 2,
+              "description": "提升單挑與名望事件加成。"
+            },
+            {
+              "id": "gene_hidden_03",
+              "displayName": "義絕覺醒因子",
+              "isLocked": true,
+              "discoveryLevel": 24
+            }
+          ],
+          "historicalAnecdote": "關羽（160年—220年1月或2月），字雲長，本字長生，司隸河東解縣人（今山西運城），東漢末年將領，劉備的重要親信，被稱為“万人敵”。200年，曹操擊敗劉備後，關羽一度歸降曹操，并在官渡之戰中斬殺顏良，因功封為漢壽亭侯。不久，脫离曹操再次投奔劉備。赤壁之戰後，關羽參与圍攻南郡曹仁，并長期為劉備鎮守荊州。劉備占領益州後，關羽被任命總督荊州，拜前將軍，假節鉞。\n219年，關羽進攻樊城，借漢水暴漲水淹七",
+          "bloodlineRumor": "解縣老人常說，關家舊刀鞘冬晨總先結霜，再慢慢滲成一道細紅線，像有人用指節描過刀背。關羽從不解釋，只在上馬前默默把鞘口按緊。",
+          "crestHint": "青龍義絕，一騎絕塵千秋義",
+          "crestState": "revealed",
+          "storyStripCells": [
+            {
+              "slot": "origin",
+              "text": "解縣冷月磨刀"
+            },
+            {
+              "slot": "faction",
+              "text": "桃園酒尚未冷"
+            },
+            {
+              "slot": "role",
+              "text": "青龍一線斷城"
+            },
+            {
+              "slot": "awakening",
+              "text": "樊城漢水成壁"
+            },
+            {
+              "slot": "bloodline",
+              "text": "義氣入骨成紋"
+            },
+            {
+              "slot": "future",
+              "text": "麥城夜馬無聲"
+            }
+          ],
+          "coreTags": [],
+          "generatorProfile": {},
+          "bloodlineProfile": {},
+          "learnedTactics": [
+            "月牙刀斬",
+            "長驅破軍",
+            "武聖威壓"
+          ],
+          "inspiredTactics": [
+            "春秋刀勢"
+          ],
+          "lockedTactics": [
+            "🔒 義絕",
+            "🔒 千里單騎"
+          ],
+          "tacticSlots": [
+            {
+              "slotId": "slot-1",
+              "tacticId": "tactic-morale-rally",
+              "source": "inborn"
+            },
+            {
+              "slotId": "slot-2",
+              "tacticId": "tactic-cavalry-shock",
+              "source": "inborn"
+            }
+          ],
+          "ultimateSlots": [
+            {
+              "slot": 1,
+              "ultimateId": "ult-guan-yu-1",
+              "unlockReincarnation": 1,
+              "vitalityCostPct": 0.05,
+              "isExclusive": true
+            },
+            {
+              "slot": 2,
+              "ultimateId": "ult-guan-yu-2",
+              "unlockReincarnation": 2,
+              "vitalityCostPct": 0.06,
+              "isExclusive": true
+            },
+            {
+              "slot": 3,
+              "ultimateId": "ult-guan-yu-3",
+              "unlockReincarnation": 3,
+              "vitalityCostPct": 0.07,
+              "isExclusive": true
+            },
+            {
+              "slot": 4,
+              "ultimateId": "ult-guan-yu-4",
+              "unlockReincarnation": 4,
+              "vitalityCostPct": 0.08,
+              "isExclusive": true
+            },
+            {
+              "slot": 5,
+              "ultimateId": "ult-guan-yu-5",
+              "unlockReincarnation": 5,
+              "vitalityCostPct": 0.1,
+              "isExclusive": true
+            }
+          ],
+          "troopAptitude": {
+            "CAVALRY": "A",
+            "INFANTRY": "B",
+            "ARCHER": "C",
+            "SIEGE": "D"
+          },
+          "terrainAptitude": {
+            "MOUNTAIN": "A",
+            "PLAIN": "B",
+            "WATER": "C",
+            "FOREST": "B",
+            "DESERT": "C"
+          },
+          "weatherAptitude": {
+            "SUNNY": "A",
+            "RAINY": "B",
+            "FOG": "B",
+            "WINDY": "B",
+            "NIGHT": "A",
+            "THUNDER": "C"
+          },
+          "ancestor_chain": [
+            "VIRT_GUAN_YU_01",
+            "VIRT_GUAN_YU_02",
+            "VIRT_GUAN_YU_03",
+            "VIRT_GUAN_YU_04",
+            "VIRT_GUAN_YU_05",
+            "VIRT_GUAN_YU_06",
+            "VIRT_GUAN_YU_07",
+            "VIRT_GUAN_YU_08",
+            "VIRT_GUAN_YU_09",
+            "VIRT_GUAN_YU_10",
+            "VIRT_GUAN_YU_11",
+            "VIRT_GUAN_YU_12",
+            "VIRT_GUAN_YU_13",
+            "VIRT_GUAN_YU_14"
+          ],
+          "originRegion": "河東",
+          "coreFactorTag": "valor",
+          "element": "fire",
+          "initialRole": "vanguard",
+          "introLine": "忠義千秋，萬世仰德。",
+          "portraitKey": "portraits/generals/guan-yu",
+          "battleVoiceKey": "audio/voice/generals/guan-yu/battle",
+          "isHistorical": true,
+          "maxLifespan": 100
+        },
+        {
+          "id": "zhao-yun",
+          "name": "趙雲",
+          "alias": [],
+          "faction": "shu",
+          "templateId": "GEN_SHU_ZHAO_YUN",
+          "title": "【常山趙子】",
+          "gender": "男",
+          "age": 23,
+          "hp": 1704,
+          "currentHp": 1704,
+          "maxSp": 100,
+          "initialSp": 40,
+          "currentSp": 40,
+          "vitality": 100,
+          "maxVitality": 100,
+          "role": "Combat",
+          "status": "Active",
+          "attackBonus": 0.12,
+          "str": 96,
+          "int": 82,
+          "lea": 93,
+          "pol": 74,
+          "cha": 94,
+          "luk": 89,
+          "stats": {
+            "str": 96,
+            "int": 82,
+            "lea": 93,
+            "pol": 74,
+            "cha": 94,
+            "luk": 89
+          },
+          "skillId": "zhao-yun-pierce",
+          "battlePrimarySkillId": "zhao-yun-pierce",
+          "preferredTerrain": "plain",
+          "terrainDefenseBonus": 0.08,
+          "source": "初始加入",
+          "notes": "全能型前鋒，擁有極高的穩定性與絕境反擊能力。",
+          "devNote": "由 master pipeline 自動同步生成。",
+          "hiddenFlags": [
+            "常山系譜核心",
+            "龍魂覺醒條件"
+          ],
+          "ep": 89,
+          "epRating": "S",
+          "rarityTier": "legendary",
+          "characterCategory": "famed",
+          "bloodlineId": "BL_SHU_ZHAO",
+          "parentsSummary": "父：🔒 未公開 / 母：🔒 未公開",
+          "ancestorsSummary": "常山趙氏後裔，系譜記錄完整度 90%。",
+          "awakeningTitle": "一身是膽",
+          "genes": [
+            {
+              "id": "gene_courage",
+              "displayName": "膽量",
+              "type": "戰鬥",
+              "level": 4,
+              "description": "無視統率差值帶來的士氣壓制。"
+            },
+            {
+              "id": "gene_dash",
+              "displayName": "龍膽突破",
+              "type": "兵種",
+              "level": 3,
+              "description": "提升騎兵穿透力與追擊機率。"
+            },
+            {
+              "id": "gene_guard",
+              "displayName": "護主",
+              "type": "特質",
+              "level": 2,
+              "description": "當主帥體力低於 30% 時，提升 50% 防禦力。"
+            }
+          ],
+          "historicalAnecdote": "趙雲（153年？—229年），字子龍，是漢末三國時期的蜀漢武將，生於常山真定（今河北省正定縣），身高八尺（約185公分），姿顏雄偉。最初效忠公孫瓚，官渡之戰後效忠劉備、劉禪。歷任牙門將軍，偏將軍、領桂陽太守，翊軍將軍，領中護軍、征南將軍，封永昌亭侯，鎮東將軍。箕谷失利後貶為鎮軍將軍。後追諡曰順平侯，是為永昌亭順平侯。\n",
+          "bloodlineRumor": "常山獵戶說，趙家舊槍在月下不映人影，只映遠路。趙雲年少夜練時常見槍鋒替自己先走一步，像有位沉默祖先替他把險處都試過一次。",
+          "crestHint": "常山白龍，一身是膽護主到底",
+          "crestState": "revealed",
+          "storyStripCells": [
+            {
+              "slot": "origin",
+              "text": "常山白馬出塵"
+            },
+            {
+              "slot": "faction",
+              "text": "轉身護主歸心"
+            },
+            {
+              "slot": "role",
+              "text": "七進七出如雪"
+            },
+            {
+              "slot": "awakening",
+              "text": "漢水回槍定軍"
+            },
+            {
+              "slot": "bloodline",
+              "text": "銀甲映出古紋"
+            },
+            {
+              "slot": "future",
+              "text": "老將猶能照夜"
+            }
+          ],
+          "coreTags": [],
+          "generatorProfile": {},
+          "bloodlineProfile": {},
+          "learnedTactics": [
+            "龍膽旋風",
+            "孤軍救主",
+            "百鳥朝鳳"
+          ],
+          "inspiredTactics": [
+            "七進七出"
+          ],
+          "lockedTactics": [
+            "🔒 龍魂覺醒"
+          ],
+          "tacticSlots": [
+            {
+              "slotId": "slot-1",
+              "tacticId": "tactic-cavalry-shock",
+              "source": "inborn"
+            },
+            {
+              "slotId": "slot-2",
+              "tacticId": "tactic-morale-rally",
+              "source": "inborn"
+            }
+          ],
+          "ultimateSlots": [
+            {
+              "slot": 1,
+              "ultimateId": "ult-zhao-yun-1",
+              "unlockReincarnation": 1,
+              "vitalityCostPct": 0.05,
+              "isExclusive": true
+            },
+            {
+              "slot": 2,
+              "ultimateId": "ult-zhao-yun-2",
+              "unlockReincarnation": 2,
+              "vitalityCostPct": 0.06,
+              "isExclusive": true
+            },
+            {
+              "slot": 3,
+              "ultimateId": "ult-zhao-yun-3",
+              "unlockReincarnation": 3,
+              "vitalityCostPct": 0.07,
+              "isExclusive": true
+            },
+            {
+              "slot": 4,
+              "ultimateId": "ult-zhao-yun-4",
+              "unlockReincarnation": 4,
+              "vitalityCostPct": 0.08,
+              "isExclusive": true
+            },
+            {
+              "slot": 5,
+              "ultimateId": "ult-zhao-yun-5",
+              "unlockReincarnation": 5,
+              "vitalityCostPct": 0.1,
+              "isExclusive": true
+            }
+          ],
+          "troopAptitude": {
+            "CAVALRY": "S",
+            "INFANTRY": "B",
+            "ARCHER": "B",
+            "SIEGE": "C"
+          },
+          "terrainAptitude": {
+            "MOUNTAIN": "A",
+            "PLAIN": "B",
+            "WATER": "C",
+            "FOREST": "B",
+            "DESERT": "B"
+          },
+          "weatherAptitude": {
+            "FOG": "A",
+            "NIGHT": "A",
+            "RAINY": "B",
+            "SUNNY": "B",
+            "WINDY": "B",
+            "THUNDER": "B"
+          },
+          "ancestor_chain": [
+            "VIRT_ZHAO_YUN_01",
+            "VIRT_ZHAO_YUN_02",
+            "VIRT_ZHAO_YUN_03",
+            "VIRT_ZHAO_YUN_04",
+            "VIRT_ZHAO_YUN_05",
+            "VIRT_ZHAO_YUN_06",
+            "VIRT_ZHAO_YUN_07",
+            "VIRT_ZHAO_YUN_08",
+            "VIRT_ZHAO_YUN_09",
+            "VIRT_ZHAO_YUN_10",
+            "VIRT_ZHAO_YUN_11",
+            "VIRT_ZHAO_YUN_12",
+            "VIRT_ZHAO_YUN_13",
+            "VIRT_ZHAO_YUN_14"
+          ],
+          "isHistorical": true,
+          "maxLifespan": 100
+        }
+      ]
+    },
+    "resolutions": [
+      {
+        "instance": 1,
+        "season": 12,
+        "player": {
+          "troops": 3000,
+          "food": 3731
+        },
+        "before": {
+          "nations": [
+            {
+              "id": "wei",
+              "troops": 18016,
+              "territories": 5,
+              "relation": -66,
+              "allied": false,
+              "atWar": false,
+              "resources": {
+                "food": 2676,
+                "gold": 0,
+                "fame": 0,
+                "intel": 0
+              },
+              "governedSeasons": 12,
+              "recruits": {
+                "S": 0,
+                "A": 0,
+                "B": 5,
+                "C": 1
+              },
+              "roster": [],
+              "bonds": [
+                {
+                  "first": "wei-4",
+                  "second": "wei-6",
+                  "season": 9
+                },
+                {
+                  "first": "wei-8",
+                  "second": "wei-10",
+                  "season": 10
+                },
+                {
+                  "first": "wei-12",
+                  "second": "wei-2",
+                  "season": 12
+                }
+              ]
+            },
+            {
+              "id": "shu",
+              "troops": 6341,
+              "territories": 3,
+              "relation": -66,
+              "allied": false,
+              "atWar": false,
+              "resources": {
+                "food": 2940,
+                "gold": 0,
+                "fame": 2000,
+                "intel": 0
+              },
+              "governedSeasons": 12,
+              "recruits": {
+                "S": 0,
+                "A": 0,
+                "B": 6,
+                "C": 0
+              },
+              "roster": [],
+              "bonds": [
+                {
+                  "first": "shu-2",
+                  "second": "shu-4",
+                  "season": 8
+                },
+                {
+                  "first": "shu-6",
+                  "second": "shu-8",
+                  "season": 9
+                },
+                {
+                  "first": "shu-10",
+                  "second": "shu-12",
+                  "season": 12
+                }
+              ]
+            },
+            {
+              "id": "wu",
+              "troops": 12818,
+              "territories": 4,
+              "relation": -66,
+              "allied": false,
+              "atWar": false,
+              "resources": {
+                "food": 300,
+                "gold": 2760,
+                "fame": 0,
+                "intel": 0
+              },
+              "governedSeasons": 12,
+              "recruits": {
+                "S": 0,
+                "A": 0,
+                "B": 5,
+                "C": 1
+              },
+              "roster": [
+                {
+                  "id": "wu-2",
+                  "quality": "C",
+                  "recruitedSeason": 2
+                },
+                {
+                  "id": "wu-4",
+                  "quality": "B",
+                  "recruitedSeason": 4
+                },
+                {
+                  "id": "wu-6",
+                  "quality": "B",
+                  "recruitedSeason": 6
+                },
+                {
+                  "id": "wu-8",
+                  "quality": "B",
+                  "recruitedSeason": 8
+                },
+                {
+                  "id": "wu-10",
+                  "quality": "B",
+                  "recruitedSeason": 10
+                },
+                {
+                  "id": "wu-12",
+                  "quality": "B",
+                  "recruitedSeason": 12
+                }
+              ],
+              "bonds": []
+            },
+            {
+              "id": "lvbu",
+              "troops": 7318,
+              "territories": 0,
+              "relation": -100,
+              "allied": false,
+              "atWar": true,
+              "resources": {
+                "food": 2940,
+                "gold": 0,
+                "fame": 0,
+                "intel": 0
+              },
+              "governedSeasons": 12,
+              "recruits": {
+                "S": 0,
+                "A": 2,
+                "B": 3,
+                "C": 1
+              },
+              "roster": [],
+              "bonds": [
+                {
+                  "first": "lvbu-2",
+                  "second": "lvbu-4",
+                  "season": 8
+                },
+                {
+                  "first": "lvbu-6",
+                  "second": "lvbu-8",
+                  "season": 9
+                },
+                {
+                  "first": "lvbu-10",
+                  "second": "lvbu-12",
+                  "season": 12
+                }
+              ]
+            },
+            {
+              "id": "yuan",
+              "troops": 15814,
+              "territories": 4,
+              "relation": -66,
+              "allied": false,
+              "atWar": false,
+              "resources": {
+                "food": 2940,
+                "gold": 0,
+                "fame": 0,
+                "intel": 0
+              },
+              "governedSeasons": 12,
+              "recruits": {
+                "S": 0,
+                "A": 0,
+                "B": 5,
+                "C": 1
+              },
+              "roster": [],
+              "bonds": [
+                {
+                  "first": "yuan-4",
+                  "second": "yuan-6",
+                  "season": 8
+                },
+                {
+                  "first": "yuan-8",
+                  "second": "yuan-2",
+                  "season": 9
+                },
+                {
+                  "first": "yuan-10",
+                  "second": "yuan-12",
+                  "season": 12
+                }
+              ]
+            },
+            {
+              "id": "liuzhang",
+              "troops": 3805,
+              "territories": 2,
+              "relation": -66,
+              "allied": false,
+              "atWar": false,
+              "resources": {
+                "food": 3204,
+                "gold": 2760,
+                "fame": 0,
+                "intel": 0
+              },
+              "governedSeasons": 12,
+              "recruits": {
+                "S": 0,
+                "A": 2,
+                "B": 3,
+                "C": 1
+              },
+              "roster": [],
+              "bonds": [
+                {
+                  "first": "liuzhang-2",
+                  "second": "liuzhang-4",
+                  "season": 8
+                },
+                {
+                  "first": "liuzhang-6",
+                  "second": "liuzhang-8",
+                  "season": 9
+                },
+                {
+                  "first": "liuzhang-10",
+                  "second": "liuzhang-12",
+                  "season": 12
+                }
+              ]
+            },
+            {
+              "id": "mateng",
+              "troops": 8543,
+              "territories": 2,
+              "relation": -66,
+              "allied": false,
+              "atWar": false,
+              "resources": {
+                "food": 2940,
+                "gold": 0,
+                "fame": 0,
+                "intel": 0
+              },
+              "governedSeasons": 12,
+              "recruits": {
+                "S": 0,
+                "A": 1,
+                "B": 4,
+                "C": 1
+              },
+              "roster": [],
+              "bonds": [
+                {
+                  "first": "mateng-8",
+                  "second": "mateng-2",
+                  "season": 8
+                },
+                {
+                  "first": "mateng-4",
+                  "second": "mateng-6",
+                  "season": 9
+                },
+                {
+                  "first": "mateng-10",
+                  "second": "mateng-12",
+                  "season": 12
+                }
+              ]
+            },
+            {
+              "id": "nanman",
+              "troops": 7828,
+              "territories": 2,
+              "relation": -66,
+              "allied": false,
+              "atWar": false,
+              "resources": {
+                "food": 2940,
+                "gold": 0,
+                "fame": 0,
+                "intel": 0
+              },
+              "governedSeasons": 12,
+              "recruits": {
+                "S": 0,
+                "A": 1,
+                "B": 3,
+                "C": 2
+              },
+              "roster": [],
+              "bonds": [
+                {
+                  "first": "nanman-4",
+                  "second": "nanman-6",
+                  "season": 8
+                },
+                {
+                  "first": "nanman-2",
+                  "second": "nanman-8",
+                  "season": 9
+                },
+                {
+                  "first": "nanman-10",
+                  "second": "nanman-12",
+                  "season": 12
+                }
+              ]
+            }
+          ]
+        },
+        "result": {
+          "world": {
+            "nations": [
+              {
+                "id": "wei",
+                "troops": 18016,
+                "territories": 5,
+                "relation": -66,
+                "allied": false,
+                "atWar": false,
+                "resources": {
+                  "food": 2676,
+                  "gold": 0,
+                  "fame": 0,
+                  "intel": 0
+                },
+                "governedSeasons": 12,
+                "recruits": {
+                  "S": 0,
+                  "A": 0,
+                  "B": 5,
+                  "C": 1
+                },
+                "roster": [],
+                "bonds": [
+                  {
+                    "first": "wei-4",
+                    "second": "wei-6",
+                    "season": 9
+                  },
+                  {
+                    "first": "wei-8",
+                    "second": "wei-10",
+                    "season": 10
+                  },
+                  {
+                    "first": "wei-12",
+                    "second": "wei-2",
+                    "season": 12
+                  }
+                ]
+              },
+              {
+                "id": "shu",
+                "troops": 6341,
+                "territories": 3,
+                "relation": -66,
+                "allied": false,
+                "atWar": false,
+                "resources": {
+                  "food": 2940,
+                  "gold": 0,
+                  "fame": 2000,
+                  "intel": 0
+                },
+                "governedSeasons": 12,
+                "recruits": {
+                  "S": 0,
+                  "A": 0,
+                  "B": 6,
+                  "C": 0
+                },
+                "roster": [],
+                "bonds": [
+                  {
+                    "first": "shu-2",
+                    "second": "shu-4",
+                    "season": 8
+                  },
+                  {
+                    "first": "shu-6",
+                    "second": "shu-8",
+                    "season": 9
+                  },
+                  {
+                    "first": "shu-10",
+                    "second": "shu-12",
+                    "season": 12
+                  }
+                ]
+              },
+              {
+                "id": "wu",
+                "troops": 12818,
+                "territories": 4,
+                "relation": -66,
+                "allied": false,
+                "atWar": false,
+                "resources": {
+                  "food": 300,
+                  "gold": 2760,
+                  "fame": 0,
+                  "intel": 0
+                },
+                "governedSeasons": 12,
+                "recruits": {
+                  "S": 0,
+                  "A": 0,
+                  "B": 5,
+                  "C": 1
+                },
+                "roster": [
+                  {
+                    "id": "wu-2",
+                    "quality": "C",
+                    "recruitedSeason": 2
+                  },
+                  {
+                    "id": "wu-4",
+                    "quality": "B",
+                    "recruitedSeason": 4
+                  },
+                  {
+                    "id": "wu-6",
+                    "quality": "B",
+                    "recruitedSeason": 6
+                  },
+                  {
+                    "id": "wu-8",
+                    "quality": "B",
+                    "recruitedSeason": 8
+                  },
+                  {
+                    "id": "wu-10",
+                    "quality": "B",
+                    "recruitedSeason": 10
+                  },
+                  {
+                    "id": "wu-12",
+                    "quality": "B",
+                    "recruitedSeason": 12
+                  }
+                ],
+                "bonds": []
+              },
+              {
+                "id": "lvbu",
+                "troops": 7318,
+                "territories": 0,
+                "relation": -100,
+                "allied": false,
+                "atWar": false,
+                "resources": {
+                  "food": 2940,
+                  "gold": 0,
+                  "fame": 0,
+                  "intel": 0
+                },
+                "governedSeasons": 12,
+                "recruits": {
+                  "S": 0,
+                  "A": 2,
+                  "B": 3,
+                  "C": 1
+                },
+                "roster": [],
+                "bonds": [
+                  {
+                    "first": "lvbu-2",
+                    "second": "lvbu-4",
+                    "season": 8
+                  },
+                  {
+                    "first": "lvbu-6",
+                    "second": "lvbu-8",
+                    "season": 9
+                  },
+                  {
+                    "first": "lvbu-10",
+                    "second": "lvbu-12",
+                    "season": 12
+                  }
+                ],
+                "fallen": true
+              },
+              {
+                "id": "yuan",
+                "troops": 15814,
+                "territories": 4,
+                "relation": -66,
+                "allied": false,
+                "atWar": false,
+                "resources": {
+                  "food": 2940,
+                  "gold": 0,
+                  "fame": 0,
+                  "intel": 0
+                },
+                "governedSeasons": 12,
+                "recruits": {
+                  "S": 0,
+                  "A": 0,
+                  "B": 5,
+                  "C": 1
+                },
+                "roster": [],
+                "bonds": [
+                  {
+                    "first": "yuan-4",
+                    "second": "yuan-6",
+                    "season": 8
+                  },
+                  {
+                    "first": "yuan-8",
+                    "second": "yuan-2",
+                    "season": 9
+                  },
+                  {
+                    "first": "yuan-10",
+                    "second": "yuan-12",
+                    "season": 12
+                  }
+                ]
+              },
+              {
+                "id": "liuzhang",
+                "troops": 3805,
+                "territories": 2,
+                "relation": -66,
+                "allied": false,
+                "atWar": false,
+                "resources": {
+                  "food": 3204,
+                  "gold": 2760,
+                  "fame": 0,
+                  "intel": 0
+                },
+                "governedSeasons": 12,
+                "recruits": {
+                  "S": 0,
+                  "A": 2,
+                  "B": 3,
+                  "C": 1
+                },
+                "roster": [],
+                "bonds": [
+                  {
+                    "first": "liuzhang-2",
+                    "second": "liuzhang-4",
+                    "season": 8
+                  },
+                  {
+                    "first": "liuzhang-6",
+                    "second": "liuzhang-8",
+                    "season": 9
+                  },
+                  {
+                    "first": "liuzhang-10",
+                    "second": "liuzhang-12",
+                    "season": 12
+                  }
+                ]
+              },
+              {
+                "id": "mateng",
+                "troops": 8543,
+                "territories": 2,
+                "relation": -66,
+                "allied": false,
+                "atWar": false,
+                "resources": {
+                  "food": 2940,
+                  "gold": 0,
+                  "fame": 0,
+                  "intel": 0
+                },
+                "governedSeasons": 12,
+                "recruits": {
+                  "S": 0,
+                  "A": 1,
+                  "B": 4,
+                  "C": 1
+                },
+                "roster": [],
+                "bonds": [
+                  {
+                    "first": "mateng-8",
+                    "second": "mateng-2",
+                    "season": 8
+                  },
+                  {
+                    "first": "mateng-4",
+                    "second": "mateng-6",
+                    "season": 9
+                  },
+                  {
+                    "first": "mateng-10",
+                    "second": "mateng-12",
+                    "season": 12
+                  }
+                ]
+              },
+              {
+                "id": "nanman",
+                "troops": 7828,
+                "territories": 2,
+                "relation": -66,
+                "allied": false,
+                "atWar": false,
+                "resources": {
+                  "food": 2940,
+                  "gold": 0,
+                  "fame": 0,
+                  "intel": 0
+                },
+                "governedSeasons": 12,
+                "recruits": {
+                  "S": 0,
+                  "A": 1,
+                  "B": 3,
+                  "C": 2
+                },
+                "roster": [],
+                "bonds": [
+                  {
+                    "first": "nanman-4",
+                    "second": "nanman-6",
+                    "season": 8
+                  },
+                  {
+                    "first": "nanman-2",
+                    "second": "nanman-8",
+                    "season": 9
+                  },
+                  {
+                    "first": "nanman-10",
+                    "second": "nanman-12",
+                    "season": 12
+                  }
+                ]
+              }
+            ]
+          },
+          "foodLost": 373,
+          "troopsLost": 150,
+          "notices": [
+            "呂布軍 已覆滅。呂布 下落不明... 殘餘武將流入各地傭兵市場。",
+            "南蠻蠻族再次入侵邊境！失去 373 糧草與 150 兵力！"
+          ]
+        }
+      }
+    ],
+    "logs": [],
+    "dispatch": [
+      {
+        "name": "game-session-saved",
+        "payload": {
+          "schemaVersion": 1,
+          "saveVersion": "1.0.0",
+          "randomState": {
+            "algorithm": "mulberry32-v1",
+            "state": 137
+          },
+          "savedAt": "2026-11-04T00:00:00.000Z",
+          "gameTime": {
+            "currentYear": 4,
+            "currentSeason": 1,
+            "totalSeasonsElapsed": 12,
+            "currentMode": "Governance"
+          },
+          "roster": [
+            {
+              "id": "cao-cao",
+              "name": "曹操",
+              "alias": [],
+              "faction": "wei",
+              "templateId": "GEN_WEI_CAO_CAO",
+              "title": "【魏武】",
+              "gender": "男",
+              "age": 23,
+              "hp": 1696,
+              "currentHp": 1696,
+              "maxSp": 100,
+              "initialSp": 40,
+              "currentSp": 40,
+              "vitality": 100,
+              "maxVitality": 100,
+              "role": "Combat",
+              "status": "Active",
+              "attackBonus": 0.08,
+              "str": 82,
+              "int": 94,
+              "lea": 92,
+              "pol": 96,
+              "cha": 90,
+              "luk": 86,
+              "stats": {
+                "str": 82,
+                "int": 94,
+                "lea": 92,
+                "pol": 96,
+                "cha": 90,
+                "luk": 86
+              },
+              "skillId": "cao-cao-tactics",
+              "battlePrimarySkillId": "cao-cao-tactics",
+              "preferredTerrain": "plain",
+              "terrainDefenseBonus": 0.15,
+              "source": "劇情敵對勢力",
+              "notes": "偏全局掌控與節奏操作的敵方統帥型武將。",
+              "devNote": "由 master pipeline 自動同步生成。",
+              "hiddenFlags": [
+                "內政事件權重",
+                "政治分支覺醒條件"
+              ],
+              "ep": 92,
+              "epRating": "S+",
+              "rarityTier": "legendary",
+              "characterCategory": "titled",
+              "bloodlineId": "BL_WEI_BAQUAN",
+              "parentsSummary": "父：曹嵩 / 母：丁氏（部分資料保密處理）",
+              "ancestorsSummary": "祖譜完整度高，政治系與統率系因子明顯。",
+              "awakeningTitle": "挾天子令諸侯",
+              "genes": [
+                {
+                  "id": "gene_strategy",
+                  "displayName": "權謀",
+                  "type": "謀略",
+                  "level": 4,
+                  "description": "提升指揮型戰法與全軍節奏控制。"
+                },
+                {
+                  "id": "gene_command",
+                  "displayName": "號令",
+                  "type": "統率",
+                  "level": 3,
+                  "description": "提升多路戰場協同能力。"
+                },
+                {
+                  "id": "gene_politics",
+                  "displayName": "治世",
+                  "type": "內政",
+                  "level": 3,
+                  "description": "影響招募、事件與資源收益。"
+                },
+                {
+                  "id": "gene_hidden_05",
+                  "displayName": "霸道因子",
+                  "isLocked": true,
+                  "discoveryLevel": 22
+                }
+              ],
+              "historicalAnecdote": "曹操（155年—220年3月15日），字孟德，小字阿瞞，沛國譙縣（今安徽亳州）人。東漢末年丞相、軍事家、政治家、文學家和詩人，東漢末年主要群雄之一，職位為丞相，為漢末實際上的最高掌權者，亦是三國時代曹魏奠基者。父親曹嵩。其子曹丕建立曹魏，追尊其廟號為太祖，追諡武皇帝。\n",
+              "bloodlineRumor": "譙縣老人說，曹氏祖祠地底埋著一枚黑羽虎符；每逢兵荒，祠中銅燈便會自行偏向北方。曹操少年偷看過一次，從此連風聲都像軍令。",
+              "crestHint": "魏武霸道，天下一局待最後棋",
+              "crestState": "rumored",
+              "storyStripCells": [
+                {
+                  "slot": "origin",
+                  "text": "橋畔機鋒識人"
+                },
+                {
+                  "slot": "faction",
+                  "text": "奉天子號諸侯"
+                },
+                {
+                  "slot": "role",
+                  "text": "詭道裁局定勢"
+                },
+                {
+                  "slot": "awakening",
+                  "text": "官渡借火翻盤"
+                },
+                {
+                  "slot": "bloodline",
+                  "text": "銅雀夜夢聽潮"
+                },
+                {
+                  "slot": "future",
+                  "text": "墳前誰解孟德"
+                }
+              ],
+              "coreTags": [],
+              "generatorProfile": {},
+              "bloodlineProfile": {},
+              "learnedTactics": [
+                "兵不厭詐",
+                "號令調度",
+                "疑兵惑陣"
+              ],
+              "inspiredTactics": [
+                "挾令四方",
+                "魏武軍律"
+              ],
+              "lockedTactics": [
+                "🔒 霸道終局技"
+              ],
+              "tacticSlots": [
+                {
+                  "slotId": "slot-1",
+                  "tacticId": "tactic-fire-scheme",
+                  "source": "inborn"
+                },
+                {
+                  "slotId": "slot-2",
+                  "tacticId": "tactic-morale-rally",
+                  "source": "inborn"
+                }
+              ],
+              "ultimateSlots": [
+                {
+                  "slot": 1,
+                  "ultimateId": "ult-cao-cao-1",
+                  "unlockReincarnation": 1,
+                  "vitalityCostPct": 0.05,
+                  "isExclusive": true
+                },
+                {
+                  "slot": 2,
+                  "ultimateId": "ult-cao-cao-2",
+                  "unlockReincarnation": 2,
+                  "vitalityCostPct": 0.06,
+                  "isExclusive": true
+                },
+                {
+                  "slot": 3,
+                  "ultimateId": "ult-cao-cao-3",
+                  "unlockReincarnation": 3,
+                  "vitalityCostPct": 0.07,
+                  "isExclusive": true
+                },
+                {
+                  "slot": 4,
+                  "ultimateId": "ult-cao-cao-4",
+                  "unlockReincarnation": 4,
+                  "vitalityCostPct": 0.08,
+                  "isExclusive": true
+                },
+                {
+                  "slot": 5,
+                  "ultimateId": "ult-cao-cao-5",
+                  "unlockReincarnation": 5,
+                  "vitalityCostPct": 0.1,
+                  "isExclusive": true
+                }
+              ],
+              "troopAptitude": {
+                "CAVALRY": "A",
+                "INFANTRY": "B",
+                "ARCHER": "B",
+                "SIEGE": "B"
+              },
+              "terrainAptitude": {
+                "PLAIN": "A",
+                "MOUNTAIN": "B",
+                "WATER": "B",
+                "FOREST": "B",
+                "DESERT": "C"
+              },
+              "weatherAptitude": {
+                "FOG": "A",
+                "RAINY": "A",
+                "SUNNY": "B",
+                "WINDY": "B",
+                "NIGHT": "B",
+                "THUNDER": "C"
+              },
+              "ancestor_chain": [
+                "VIRT_CAO_CAO_01",
+                "VIRT_CAO_CAO_02",
+                "VIRT_CAO_CAO_03",
+                "VIRT_CAO_CAO_04",
+                "VIRT_CAO_CAO_05",
+                "VIRT_CAO_CAO_06",
+                "VIRT_CAO_CAO_07",
+                "VIRT_CAO_CAO_08",
+                "VIRT_CAO_CAO_09",
+                "VIRT_CAO_CAO_10",
+                "VIRT_CAO_CAO_11",
+                "VIRT_CAO_CAO_12",
+                "VIRT_CAO_CAO_13",
+                "VIRT_CAO_CAO_14"
+              ],
+              "originRegion": "沛郡",
+              "coreFactorTag": "military-commander",
+              "element": "metal",
+              "initialRole": "commander",
+              "introLine": "治世之能臣，亂世之梟雄。",
+              "portraitKey": "portraits/generals/cao-cao",
+              "battleVoiceKey": "audio/voice/generals/cao-cao/battle",
+              "isHistorical": true,
+              "maxLifespan": 100
+            },
+            {
+              "id": "guan-yu",
+              "name": "關羽",
+              "alias": [],
+              "faction": "shu",
+              "templateId": "GEN_SHU_GUAN_YU",
+              "title": "【美髯公】",
+              "gender": "男",
+              "age": 23,
+              "hp": 1702,
+              "currentHp": 1702,
+              "maxSp": 100,
+              "initialSp": 40,
+              "currentSp": 40,
+              "vitality": 100,
+              "maxVitality": 100,
+              "role": "Combat",
+              "status": "Active",
+              "attackBonus": 0.15,
+              "str": 97,
+              "int": 76,
+              "lea": 92,
+              "pol": 68,
+              "cha": 91,
+              "luk": 82,
+              "stats": {
+                "str": 97,
+                "int": 76,
+                "lea": 92,
+                "pol": 68,
+                "cha": 91,
+                "luk": 82
+              },
+              "skillId": "guan-yu-slash",
+              "battlePrimarySkillId": "guan-yu-slash",
+              "preferredTerrain": "plain",
+              "terrainDefenseBonus": 0.1,
+              "source": "初期主力",
+              "notes": "高統率的斬將型核心，兼具名望與前線壓制。",
+              "devNote": "由 master pipeline 自動同步生成。",
+              "hiddenFlags": [
+                "第 4 代後祖譜校驗",
+                "覺醒稱號需求"
+              ],
+              "ep": 87,
+              "epRating": "S",
+              "rarityTier": "legendary",
+              "characterCategory": "famed",
+              "bloodlineId": "BL_SHU_LONG",
+              "parentsSummary": "父：關毅 / 母：劉氏（部分史料模糊）",
+              "ancestorsSummary": "祖譜完整度 68%，第 4 代後以推測資料補全。",
+              "awakeningTitle": "青龍武聖",
+              "genes": [
+                {
+                  "id": "gene_halberd",
+                  "displayName": "刀鋒傳承",
+                  "type": "武裝",
+                  "level": 3,
+                  "description": "強化單點斬殺與穿甲表現。"
+                },
+                {
+                  "id": "gene_discipline",
+                  "displayName": "軍紀",
+                  "type": "統率",
+                  "level": 3,
+                  "description": "強化部曲士氣穩定。"
+                },
+                {
+                  "id": "gene_honor",
+                  "displayName": "義勇",
+                  "type": "人格",
+                  "level": 2,
+                  "description": "提升單挑與名望事件加成。"
+                },
+                {
+                  "id": "gene_hidden_03",
+                  "displayName": "義絕覺醒因子",
+                  "isLocked": true,
+                  "discoveryLevel": 24
+                }
+              ],
+              "historicalAnecdote": "關羽（160年—220年1月或2月），字雲長，本字長生，司隸河東解縣人（今山西運城），東漢末年將領，劉備的重要親信，被稱為“万人敵”。200年，曹操擊敗劉備後，關羽一度歸降曹操，并在官渡之戰中斬殺顏良，因功封為漢壽亭侯。不久，脫离曹操再次投奔劉備。赤壁之戰後，關羽參与圍攻南郡曹仁，并長期為劉備鎮守荊州。劉備占領益州後，關羽被任命總督荊州，拜前將軍，假節鉞。\n219年，關羽進攻樊城，借漢水暴漲水淹七",
+              "bloodlineRumor": "解縣老人常說，關家舊刀鞘冬晨總先結霜，再慢慢滲成一道細紅線，像有人用指節描過刀背。關羽從不解釋，只在上馬前默默把鞘口按緊。",
+              "crestHint": "青龍義絕，一騎絕塵千秋義",
+              "crestState": "revealed",
+              "storyStripCells": [
+                {
+                  "slot": "origin",
+                  "text": "解縣冷月磨刀"
+                },
+                {
+                  "slot": "faction",
+                  "text": "桃園酒尚未冷"
+                },
+                {
+                  "slot": "role",
+                  "text": "青龍一線斷城"
+                },
+                {
+                  "slot": "awakening",
+                  "text": "樊城漢水成壁"
+                },
+                {
+                  "slot": "bloodline",
+                  "text": "義氣入骨成紋"
+                },
+                {
+                  "slot": "future",
+                  "text": "麥城夜馬無聲"
+                }
+              ],
+              "coreTags": [],
+              "generatorProfile": {},
+              "bloodlineProfile": {},
+              "learnedTactics": [
+                "月牙刀斬",
+                "長驅破軍",
+                "武聖威壓"
+              ],
+              "inspiredTactics": [
+                "春秋刀勢"
+              ],
+              "lockedTactics": [
+                "🔒 義絕",
+                "🔒 千里單騎"
+              ],
+              "tacticSlots": [
+                {
+                  "slotId": "slot-1",
+                  "tacticId": "tactic-morale-rally",
+                  "source": "inborn"
+                },
+                {
+                  "slotId": "slot-2",
+                  "tacticId": "tactic-cavalry-shock",
+                  "source": "inborn"
+                }
+              ],
+              "ultimateSlots": [
+                {
+                  "slot": 1,
+                  "ultimateId": "ult-guan-yu-1",
+                  "unlockReincarnation": 1,
+                  "vitalityCostPct": 0.05,
+                  "isExclusive": true
+                },
+                {
+                  "slot": 2,
+                  "ultimateId": "ult-guan-yu-2",
+                  "unlockReincarnation": 2,
+                  "vitalityCostPct": 0.06,
+                  "isExclusive": true
+                },
+                {
+                  "slot": 3,
+                  "ultimateId": "ult-guan-yu-3",
+                  "unlockReincarnation": 3,
+                  "vitalityCostPct": 0.07,
+                  "isExclusive": true
+                },
+                {
+                  "slot": 4,
+                  "ultimateId": "ult-guan-yu-4",
+                  "unlockReincarnation": 4,
+                  "vitalityCostPct": 0.08,
+                  "isExclusive": true
+                },
+                {
+                  "slot": 5,
+                  "ultimateId": "ult-guan-yu-5",
+                  "unlockReincarnation": 5,
+                  "vitalityCostPct": 0.1,
+                  "isExclusive": true
+                }
+              ],
+              "troopAptitude": {
+                "CAVALRY": "A",
+                "INFANTRY": "B",
+                "ARCHER": "C",
+                "SIEGE": "D"
+              },
+              "terrainAptitude": {
+                "MOUNTAIN": "A",
+                "PLAIN": "B",
+                "WATER": "C",
+                "FOREST": "B",
+                "DESERT": "C"
+              },
+              "weatherAptitude": {
+                "SUNNY": "A",
+                "RAINY": "B",
+                "FOG": "B",
+                "WINDY": "B",
+                "NIGHT": "A",
+                "THUNDER": "C"
+              },
+              "ancestor_chain": [
+                "VIRT_GUAN_YU_01",
+                "VIRT_GUAN_YU_02",
+                "VIRT_GUAN_YU_03",
+                "VIRT_GUAN_YU_04",
+                "VIRT_GUAN_YU_05",
+                "VIRT_GUAN_YU_06",
+                "VIRT_GUAN_YU_07",
+                "VIRT_GUAN_YU_08",
+                "VIRT_GUAN_YU_09",
+                "VIRT_GUAN_YU_10",
+                "VIRT_GUAN_YU_11",
+                "VIRT_GUAN_YU_12",
+                "VIRT_GUAN_YU_13",
+                "VIRT_GUAN_YU_14"
+              ],
+              "originRegion": "河東",
+              "coreFactorTag": "valor",
+              "element": "fire",
+              "initialRole": "vanguard",
+              "introLine": "忠義千秋，萬世仰德。",
+              "portraitKey": "portraits/generals/guan-yu",
+              "battleVoiceKey": "audio/voice/generals/guan-yu/battle",
+              "isHistorical": true,
+              "maxLifespan": 100
+            },
+            {
+              "id": "zhao-yun",
+              "name": "趙雲",
+              "alias": [],
+              "faction": "shu",
+              "templateId": "GEN_SHU_ZHAO_YUN",
+              "title": "【常山趙子】",
+              "gender": "男",
+              "age": 23,
+              "hp": 1704,
+              "currentHp": 1704,
+              "maxSp": 100,
+              "initialSp": 40,
+              "currentSp": 40,
+              "vitality": 100,
+              "maxVitality": 100,
+              "role": "Combat",
+              "status": "Active",
+              "attackBonus": 0.12,
+              "str": 96,
+              "int": 82,
+              "lea": 93,
+              "pol": 74,
+              "cha": 94,
+              "luk": 89,
+              "stats": {
+                "str": 96,
+                "int": 82,
+                "lea": 93,
+                "pol": 74,
+                "cha": 94,
+                "luk": 89
+              },
+              "skillId": "zhao-yun-pierce",
+              "battlePrimarySkillId": "zhao-yun-pierce",
+              "preferredTerrain": "plain",
+              "terrainDefenseBonus": 0.08,
+              "source": "初始加入",
+              "notes": "全能型前鋒，擁有極高的穩定性與絕境反擊能力。",
+              "devNote": "由 master pipeline 自動同步生成。",
+              "hiddenFlags": [
+                "常山系譜核心",
+                "龍魂覺醒條件"
+              ],
+              "ep": 89,
+              "epRating": "S",
+              "rarityTier": "legendary",
+              "characterCategory": "famed",
+              "bloodlineId": "BL_SHU_ZHAO",
+              "parentsSummary": "父：🔒 未公開 / 母：🔒 未公開",
+              "ancestorsSummary": "常山趙氏後裔，系譜記錄完整度 90%。",
+              "awakeningTitle": "一身是膽",
+              "genes": [
+                {
+                  "id": "gene_courage",
+                  "displayName": "膽量",
+                  "type": "戰鬥",
+                  "level": 4,
+                  "description": "無視統率差值帶來的士氣壓制。"
+                },
+                {
+                  "id": "gene_dash",
+                  "displayName": "龍膽突破",
+                  "type": "兵種",
+                  "level": 3,
+                  "description": "提升騎兵穿透力與追擊機率。"
+                },
+                {
+                  "id": "gene_guard",
+                  "displayName": "護主",
+                  "type": "特質",
+                  "level": 2,
+                  "description": "當主帥體力低於 30% 時，提升 50% 防禦力。"
+                }
+              ],
+              "historicalAnecdote": "趙雲（153年？—229年），字子龍，是漢末三國時期的蜀漢武將，生於常山真定（今河北省正定縣），身高八尺（約185公分），姿顏雄偉。最初效忠公孫瓚，官渡之戰後效忠劉備、劉禪。歷任牙門將軍，偏將軍、領桂陽太守，翊軍將軍，領中護軍、征南將軍，封永昌亭侯，鎮東將軍。箕谷失利後貶為鎮軍將軍。後追諡曰順平侯，是為永昌亭順平侯。\n",
+              "bloodlineRumor": "常山獵戶說，趙家舊槍在月下不映人影，只映遠路。趙雲年少夜練時常見槍鋒替自己先走一步，像有位沉默祖先替他把險處都試過一次。",
+              "crestHint": "常山白龍，一身是膽護主到底",
+              "crestState": "revealed",
+              "storyStripCells": [
+                {
+                  "slot": "origin",
+                  "text": "常山白馬出塵"
+                },
+                {
+                  "slot": "faction",
+                  "text": "轉身護主歸心"
+                },
+                {
+                  "slot": "role",
+                  "text": "七進七出如雪"
+                },
+                {
+                  "slot": "awakening",
+                  "text": "漢水回槍定軍"
+                },
+                {
+                  "slot": "bloodline",
+                  "text": "銀甲映出古紋"
+                },
+                {
+                  "slot": "future",
+                  "text": "老將猶能照夜"
+                }
+              ],
+              "coreTags": [],
+              "generatorProfile": {},
+              "bloodlineProfile": {},
+              "learnedTactics": [
+                "龍膽旋風",
+                "孤軍救主",
+                "百鳥朝鳳"
+              ],
+              "inspiredTactics": [
+                "七進七出"
+              ],
+              "lockedTactics": [
+                "🔒 龍魂覺醒"
+              ],
+              "tacticSlots": [
+                {
+                  "slotId": "slot-1",
+                  "tacticId": "tactic-cavalry-shock",
+                  "source": "inborn"
+                },
+                {
+                  "slotId": "slot-2",
+                  "tacticId": "tactic-morale-rally",
+                  "source": "inborn"
+                }
+              ],
+              "ultimateSlots": [
+                {
+                  "slot": 1,
+                  "ultimateId": "ult-zhao-yun-1",
+                  "unlockReincarnation": 1,
+                  "vitalityCostPct": 0.05,
+                  "isExclusive": true
+                },
+                {
+                  "slot": 2,
+                  "ultimateId": "ult-zhao-yun-2",
+                  "unlockReincarnation": 2,
+                  "vitalityCostPct": 0.06,
+                  "isExclusive": true
+                },
+                {
+                  "slot": 3,
+                  "ultimateId": "ult-zhao-yun-3",
+                  "unlockReincarnation": 3,
+                  "vitalityCostPct": 0.07,
+                  "isExclusive": true
+                },
+                {
+                  "slot": 4,
+                  "ultimateId": "ult-zhao-yun-4",
+                  "unlockReincarnation": 4,
+                  "vitalityCostPct": 0.08,
+                  "isExclusive": true
+                },
+                {
+                  "slot": 5,
+                  "ultimateId": "ult-zhao-yun-5",
+                  "unlockReincarnation": 5,
+                  "vitalityCostPct": 0.1,
+                  "isExclusive": true
+                }
+              ],
+              "troopAptitude": {
+                "CAVALRY": "S",
+                "INFANTRY": "B",
+                "ARCHER": "B",
+                "SIEGE": "C"
+              },
+              "terrainAptitude": {
+                "MOUNTAIN": "A",
+                "PLAIN": "B",
+                "WATER": "C",
+                "FOREST": "B",
+                "DESERT": "B"
+              },
+              "weatherAptitude": {
+                "FOG": "A",
+                "NIGHT": "A",
+                "RAINY": "B",
+                "SUNNY": "B",
+                "WINDY": "B",
+                "THUNDER": "B"
+              },
+              "ancestor_chain": [
+                "VIRT_ZHAO_YUN_01",
+                "VIRT_ZHAO_YUN_02",
+                "VIRT_ZHAO_YUN_03",
+                "VIRT_ZHAO_YUN_04",
+                "VIRT_ZHAO_YUN_05",
+                "VIRT_ZHAO_YUN_06",
+                "VIRT_ZHAO_YUN_07",
+                "VIRT_ZHAO_YUN_08",
+                "VIRT_ZHAO_YUN_09",
+                "VIRT_ZHAO_YUN_10",
+                "VIRT_ZHAO_YUN_11",
+                "VIRT_ZHAO_YUN_12",
+                "VIRT_ZHAO_YUN_13",
+                "VIRT_ZHAO_YUN_14"
+              ],
+              "isHistorical": true,
+              "maxLifespan": 100
+            }
+          ],
+          "deck": [],
+          "discoveryLevel": 1,
+          "discoveryExp": 0,
+          "inventory": {
+            "ITEM_ORACLE": 5,
+            "ITEM_TRIAL_TICKET": 2
+          },
+          "oracleCount": 0,
+          "clearedStageIds": [],
+          "tallyLoyalty": {},
+          "tallyHoldings": {},
+          "tallyCards": {},
+          "femaleSources": {},
+          "mercenaries": {
+            "mercenaries": [],
+            "upkeep": [],
+            "cooldowns": [],
+            "day": 12
+          },
+          "gachaWallet": {
+            "gems": 0,
+            "gold": 891,
+            "tickets": 0,
+            "bronze": 0,
+            "oracle": 0,
+            "mentorTickets": 0,
+            "scorePoints": 0
+          },
+          "journalEntries": [
+            {
+              "entryId": "SEASON-0",
+              "timestamp": "0001-01-01T00:00:00",
+              "category": "SYSTEM",
+              "relatedGeneralUids": [
+                "cao-cao",
+                "guan-yu",
+                "zhao-yun"
+              ],
+              "priority": 50,
+              "summary": "第 1 年 1 季結算。",
+              "visibility": "VISIBLE"
+            },
+            {
+              "entryId": "SEASON-1",
+              "timestamp": "0001-02-01T00:00:00",
+              "category": "SYSTEM",
+              "relatedGeneralUids": [
+                "cao-cao",
+                "guan-yu",
+                "zhao-yun"
+              ],
+              "priority": 50,
+              "summary": "第 1 年 2 季結算。",
+              "visibility": "VISIBLE"
+            },
+            {
+              "entryId": "SEASON-2",
+              "timestamp": "0001-03-01T00:00:00",
+              "category": "SYSTEM",
+              "relatedGeneralUids": [
+                "cao-cao",
+                "guan-yu",
+                "zhao-yun"
+              ],
+              "priority": 50,
+              "summary": "第 1 年 3 季結算。",
+              "visibility": "VISIBLE"
+            },
+            {
+              "entryId": "SEASON-3",
+              "timestamp": "0001-04-01T00:00:00",
+              "category": "SYSTEM",
+              "relatedGeneralUids": [
+                "cao-cao",
+                "guan-yu",
+                "zhao-yun"
+              ],
+              "priority": 50,
+              "summary": "第 1 年 4 季結算。",
+              "visibility": "VISIBLE"
+            },
+            {
+              "entryId": "SEASON-4",
+              "timestamp": "0002-01-01T00:00:00",
+              "category": "SYSTEM",
+              "relatedGeneralUids": [
+                "cao-cao",
+                "guan-yu",
+                "zhao-yun"
+              ],
+              "priority": 50,
+              "summary": "第 2 年 1 季結算。",
+              "visibility": "VISIBLE"
+            },
+            {
+              "entryId": "SEASON-5",
+              "timestamp": "0002-02-01T00:00:00",
+              "category": "SYSTEM",
+              "relatedGeneralUids": [
+                "cao-cao",
+                "guan-yu",
+                "zhao-yun"
+              ],
+              "priority": 50,
+              "summary": "第 2 年 2 季結算。",
+              "visibility": "VISIBLE"
+            },
+            {
+              "entryId": "SEASON-6",
+              "timestamp": "0002-03-01T00:00:00",
+              "category": "SYSTEM",
+              "relatedGeneralUids": [
+                "cao-cao",
+                "guan-yu",
+                "zhao-yun"
+              ],
+              "priority": 50,
+              "summary": "第 2 年 3 季結算。",
+              "visibility": "VISIBLE"
+            },
+            {
+              "entryId": "SEASON-7",
+              "timestamp": "0002-04-01T00:00:00",
+              "category": "SYSTEM",
+              "relatedGeneralUids": [
+                "cao-cao",
+                "guan-yu",
+                "zhao-yun"
+              ],
+              "priority": 50,
+              "summary": "第 2 年 4 季結算。",
+              "visibility": "VISIBLE"
+            },
+            {
+              "entryId": "SEASON-8",
+              "timestamp": "0003-01-01T00:00:00",
+              "category": "SYSTEM",
+              "relatedGeneralUids": [
+                "cao-cao",
+                "guan-yu",
+                "zhao-yun"
+              ],
+              "priority": 50,
+              "summary": "第 3 年 1 季結算。",
+              "visibility": "VISIBLE"
+            },
+            {
+              "entryId": "SEASON-9",
+              "timestamp": "0003-02-01T00:00:00",
+              "category": "SYSTEM",
+              "relatedGeneralUids": [
+                "cao-cao",
+                "guan-yu",
+                "zhao-yun"
+              ],
+              "priority": 50,
+              "summary": "第 3 年 2 季結算。",
+              "visibility": "VISIBLE"
+            },
+            {
+              "entryId": "SEASON-10",
+              "timestamp": "0003-03-01T00:00:00",
+              "category": "SYSTEM",
+              "relatedGeneralUids": [
+                "cao-cao",
+                "guan-yu",
+                "zhao-yun"
+              ],
+              "priority": 50,
+              "summary": "第 3 年 3 季結算。",
+              "visibility": "VISIBLE"
+            },
+            {
+              "entryId": "OFFLINE_BATTLE-12",
+              "timestamp": "0003-04-01T00:00:00",
+              "category": "BATTLE",
+              "relatedGeneralUids": [],
+              "priority": 70,
+              "summary": "我軍出征呂布軍告捷。",
+              "snapshotRef": "OBS_0001",
+              "visibility": "VISIBLE"
+            },
+            {
+              "entryId": "SEASON-11",
+              "timestamp": "0003-04-01T00:00:00",
+              "category": "SYSTEM",
+              "relatedGeneralUids": [
+                "cao-cao",
+                "guan-yu",
+                "zhao-yun"
+              ],
+              "priority": 50,
+              "summary": "第 3 年 4 季結算。",
+              "visibility": "VISIBLE"
+            }
+          ],
+          "offlineBattleSnapshots": [
+            {
+              "snapshotId": "OBS_0001",
+              "battleType": "AUTO_RESOLVE",
+              "seed": "3-4-Clvbu",
+              "lineupDigest": "735af725",
+              "tileStateDigest": "4581baca",
+              "tacticDigest": "741638a5",
+              "resultDigest": "WIN_MAJOR",
+              "syncHashLink": "78c5e210"
+            }
+          ],
+          "itemAcquisitionLog": [
+            {
+              "itemId": "ITEM_ORACLE",
+              "amount": 1,
+              "source": "EVENT"
+            },
+            {
+              "itemId": "ITEM_ORACLE",
+              "amount": 1,
+              "source": "EVENT"
+            }
+          ],
+          "npcPlayerId": "npc-3t",
+          "npcMemory": {
+            "Player_ID": "npc-3t",
+            "SQLite_Vec_DB_Path": "save/npc_memory.db",
+            "Brain_Service_Profile": "offline-template",
+            "Persona_Card_Version": "npc-persona-v1",
+            "Recall_Context": [],
+            "Template_Slot_Values": {}
+          },
+          "military": {
+            "cityTroops": 2850,
+            "cityTroopsCap": 3000,
+            "recruitRegen": 750,
+            "food": 3358,
+            "foodCap": 10000
+          },
+          "yearAgingEvents": [],
+          "resources": {
+            "fame": 0,
+            "scorePoints": 0,
+            "autoNurtureTickets": 0,
+            "mainlineNurtureClearedOnce": false,
+            "firstBattleCleared": false,
+            "openingRedFaceShown": false
+          },
+          "domestic": {
+            "lastSeason": null,
+            "lastTask": null
+          },
+          "rivals": {
+            "nations": [
+              {
+                "id": "wei",
+                "troops": 18016,
+                "territories": 5,
+                "relation": -66,
+                "allied": false,
+                "atWar": false,
+                "resources": {
+                  "food": 2676,
+                  "gold": 0,
+                  "fame": 0,
+                  "intel": 0
+                },
+                "governedSeasons": 12,
+                "recruits": {
+                  "S": 0,
+                  "A": 0,
+                  "B": 5,
+                  "C": 1
+                },
+                "roster": [],
+                "bonds": [
+                  {
+                    "first": "wei-4",
+                    "second": "wei-6",
+                    "season": 9
+                  },
+                  {
+                    "first": "wei-8",
+                    "second": "wei-10",
+                    "season": 10
+                  },
+                  {
+                    "first": "wei-12",
+                    "second": "wei-2",
+                    "season": 12
+                  }
+                ]
+              },
+              {
+                "id": "shu",
+                "troops": 6341,
+                "territories": 3,
+                "relation": -66,
+                "allied": false,
+                "atWar": false,
+                "resources": {
+                  "food": 2940,
+                  "gold": 0,
+                  "fame": 2000,
+                  "intel": 0
+                },
+                "governedSeasons": 12,
+                "recruits": {
+                  "S": 0,
+                  "A": 0,
+                  "B": 6,
+                  "C": 0
+                },
+                "roster": [],
+                "bonds": [
+                  {
+                    "first": "shu-2",
+                    "second": "shu-4",
+                    "season": 8
+                  },
+                  {
+                    "first": "shu-6",
+                    "second": "shu-8",
+                    "season": 9
+                  },
+                  {
+                    "first": "shu-10",
+                    "second": "shu-12",
+                    "season": 12
+                  }
+                ]
+              },
+              {
+                "id": "wu",
+                "troops": 12818,
+                "territories": 4,
+                "relation": -66,
+                "allied": false,
+                "atWar": false,
+                "resources": {
+                  "food": 300,
+                  "gold": 2760,
+                  "fame": 0,
+                  "intel": 0
+                },
+                "governedSeasons": 12,
+                "recruits": {
+                  "S": 0,
+                  "A": 0,
+                  "B": 5,
+                  "C": 1
+                },
+                "roster": [
+                  {
+                    "id": "wu-2",
+                    "quality": "C",
+                    "recruitedSeason": 2
+                  },
+                  {
+                    "id": "wu-4",
+                    "quality": "B",
+                    "recruitedSeason": 4
+                  },
+                  {
+                    "id": "wu-6",
+                    "quality": "B",
+                    "recruitedSeason": 6
+                  },
+                  {
+                    "id": "wu-8",
+                    "quality": "B",
+                    "recruitedSeason": 8
+                  },
+                  {
+                    "id": "wu-10",
+                    "quality": "B",
+                    "recruitedSeason": 10
+                  },
+                  {
+                    "id": "wu-12",
+                    "quality": "B",
+                    "recruitedSeason": 12
+                  }
+                ],
+                "bonds": []
+              },
+              {
+                "id": "lvbu",
+                "troops": 7318,
+                "territories": 0,
+                "relation": -100,
+                "allied": false,
+                "atWar": false,
+                "resources": {
+                  "food": 2940,
+                  "gold": 0,
+                  "fame": 0,
+                  "intel": 0
+                },
+                "governedSeasons": 12,
+                "recruits": {
+                  "S": 0,
+                  "A": 2,
+                  "B": 3,
+                  "C": 1
+                },
+                "roster": [],
+                "bonds": [
+                  {
+                    "first": "lvbu-2",
+                    "second": "lvbu-4",
+                    "season": 8
+                  },
+                  {
+                    "first": "lvbu-6",
+                    "second": "lvbu-8",
+                    "season": 9
+                  },
+                  {
+                    "first": "lvbu-10",
+                    "second": "lvbu-12",
+                    "season": 12
+                  }
+                ],
+                "fallen": true
+              },
+              {
+                "id": "yuan",
+                "troops": 15814,
+                "territories": 4,
+                "relation": -66,
+                "allied": false,
+                "atWar": false,
+                "resources": {
+                  "food": 2940,
+                  "gold": 0,
+                  "fame": 0,
+                  "intel": 0
+                },
+                "governedSeasons": 12,
+                "recruits": {
+                  "S": 0,
+                  "A": 0,
+                  "B": 5,
+                  "C": 1
+                },
+                "roster": [],
+                "bonds": [
+                  {
+                    "first": "yuan-4",
+                    "second": "yuan-6",
+                    "season": 8
+                  },
+                  {
+                    "first": "yuan-8",
+                    "second": "yuan-2",
+                    "season": 9
+                  },
+                  {
+                    "first": "yuan-10",
+                    "second": "yuan-12",
+                    "season": 12
+                  }
+                ]
+              },
+              {
+                "id": "liuzhang",
+                "troops": 3805,
+                "territories": 2,
+                "relation": -66,
+                "allied": false,
+                "atWar": false,
+                "resources": {
+                  "food": 3204,
+                  "gold": 2760,
+                  "fame": 0,
+                  "intel": 0
+                },
+                "governedSeasons": 12,
+                "recruits": {
+                  "S": 0,
+                  "A": 2,
+                  "B": 3,
+                  "C": 1
+                },
+                "roster": [],
+                "bonds": [
+                  {
+                    "first": "liuzhang-2",
+                    "second": "liuzhang-4",
+                    "season": 8
+                  },
+                  {
+                    "first": "liuzhang-6",
+                    "second": "liuzhang-8",
+                    "season": 9
+                  },
+                  {
+                    "first": "liuzhang-10",
+                    "second": "liuzhang-12",
+                    "season": 12
+                  }
+                ]
+              },
+              {
+                "id": "mateng",
+                "troops": 8543,
+                "territories": 2,
+                "relation": -66,
+                "allied": false,
+                "atWar": false,
+                "resources": {
+                  "food": 2940,
+                  "gold": 0,
+                  "fame": 0,
+                  "intel": 0
+                },
+                "governedSeasons": 12,
+                "recruits": {
+                  "S": 0,
+                  "A": 1,
+                  "B": 4,
+                  "C": 1
+                },
+                "roster": [],
+                "bonds": [
+                  {
+                    "first": "mateng-8",
+                    "second": "mateng-2",
+                    "season": 8
+                  },
+                  {
+                    "first": "mateng-4",
+                    "second": "mateng-6",
+                    "season": 9
+                  },
+                  {
+                    "first": "mateng-10",
+                    "second": "mateng-12",
+                    "season": 12
+                  }
+                ]
+              },
+              {
+                "id": "nanman",
+                "troops": 7828,
+                "territories": 2,
+                "relation": -66,
+                "allied": false,
+                "atWar": false,
+                "resources": {
+                  "food": 2940,
+                  "gold": 0,
+                  "fame": 0,
+                  "intel": 0
+                },
+                "governedSeasons": 12,
+                "recruits": {
+                  "S": 0,
+                  "A": 1,
+                  "B": 3,
+                  "C": 2
+                },
+                "roster": [],
+                "bonds": [
+                  {
+                    "first": "nanman-4",
+                    "second": "nanman-6",
+                    "season": 8
+                  },
+                  {
+                    "first": "nanman-2",
+                    "second": "nanman-8",
+                    "season": 9
+                  },
+                  {
+                    "first": "nanman-10",
+                    "second": "nanman-12",
+                    "season": 12
+                  }
+                ]
+              }
+            ]
+          },
+          "prison": {
+            "pending": [],
+            "prisoners": [],
+            "slots": 3,
+            "fame": 0,
+            "intel": 0,
+            "released": []
+          },
+          "onboarding": {
+            "nextIndex": 0
+          },
+          "openingLetter": {
+            "seen": false
+          },
+          "bondPoints": 0,
+          "friendBorrowLedger": {
+            "records": []
+          },
+          "soulFragments": {},
+          "femaleSystem": {
+            "poolRefreshedAtMs": null,
+            "rescueRefreshedAtMs": null,
+            "giftAffection": {},
+            "daughters": []
+          },
+          "sortiePresets": {}
+        }
+      },
+      {
+        "name": "game-session-season-advanced",
+        "payload": {
+          "governanceReport": "本季治理成果：糧草 +150",
+          "advance": {
+            "previous": {
+              "currentYear": 3,
+              "currentSeason": 4,
+              "totalSeasonsElapsed": 11,
+              "currentMode": "Nurture"
+            },
+            "current": {
+              "currentYear": 4,
+              "currentSeason": 1,
+              "totalSeasonsElapsed": 12,
+              "currentMode": "Governance"
+            },
+            "yearEnded": true
+          },
+          "agingEvents": [],
+          "unveilings": [],
+          "oracleTokensGranted": 0,
+          "yearReport": {
+            "year": 3,
+            "seasons": 4,
+            "deaths": 0,
+            "retirementCandidates": 0
+          },
+          "quarterlyReports": [
+            {
+              "generalId": "cao-cao",
+              "reportLine": "戰損報告：精力 100%",
+              "scriptLine": "本季戰報：曹操 精力剩 100%，可進行結緣。",
+              "bondRecommended": true
+            },
+            {
+              "generalId": "guan-yu",
+              "reportLine": "戰損報告：精力 100%",
+              "scriptLine": "本季戰報：關羽 精力剩 100%，可進行結緣。",
+              "bondRecommended": true
+            },
+            {
+              "generalId": "zhao-yun",
+              "reportLine": "戰損報告：精力 100%",
+              "scriptLine": "本季戰報：趙雲 精力剩 100%，可進行結緣。",
+              "bondRecommended": true
+            }
+          ]
+        }
+      },
+      {
+        "name": "SHOW_TOAST",
+        "payload": {
+          "message": "呂布軍 已覆滅。呂布 下落不明... 殘餘武將流入各地傭兵市場。",
+          "duration": 3
+        }
+      },
+      {
+        "name": "SHOW_TOAST",
+        "payload": {
+          "message": "南蠻蠻族再次入侵邊境！失去 373 糧草與 150 兵力！",
+          "duration": 3
+        }
+      },
+      {
+        "name": "SHOW_TOAST",
+        "payload": {
+          "message": "第 4 年 1 季　春——萬物復甦",
+          "duration": 3
+        }
+      },
+      {
+        "name": "SHOW_TOAST",
+        "payload": {
+          "message": "本季治理成果：糧草 +150",
+          "duration": 3
+        }
+      },
+      {
+        "name": "game-session-year-ended",
+        "payload": {
+          "year": 3,
+          "seasons": 4,
+          "deaths": 0,
+          "retirementCandidates": 0
+        }
+      },
+      {
+        "name": "SHOW_TOAST",
+        "payload": {
+          "message": "進入第 4 年 1 季",
+          "duration": 2
+        }
+      }
+    ],
+    "panels": [
+      [
+        "SeasonReport",
+        {
+          "seasonLabel": "第 4 年 1 季",
+          "reports": [
+            {
+              "generalId": "cao-cao",
+              "reportLine": "戰損報告：精力 100%",
+              "scriptLine": "本季戰報：曹操 精力剩 100%，可進行結緣。",
+              "bondRecommended": true
+            },
+            {
+              "generalId": "guan-yu",
+              "reportLine": "戰損報告：精力 100%",
+              "scriptLine": "本季戰報：關羽 精力剩 100%，可進行結緣。",
+              "bondRecommended": true
+            },
+            {
+              "generalId": "zhao-yun",
+              "reportLine": "戰損報告：精力 100%",
+              "scriptLine": "本季戰報：趙雲 精力剩 100%，可進行結緣。",
+              "bondRecommended": true
+            }
+          ]
+        }
+      ]
+    ],
+    "primarySeason": 12,
+    "primaryLvbu": {
+      "id": "lvbu",
+      "troops": 7318,
+      "territories": 0,
+      "relation": -100,
+      "allied": false,
+      "atWar": false,
+      "resources": {
+        "food": 2940,
+        "gold": 0,
+        "fame": 0,
+        "intel": 0
+      },
+      "governedSeasons": 12,
+      "recruits": {
+        "S": 0,
+        "A": 2,
+        "B": 3,
+        "C": 1
+      },
+      "roster": [],
+      "bonds": [
+        {
+          "first": "lvbu-2",
+          "second": "lvbu-4",
+          "season": 8
+        },
+        {
+          "first": "lvbu-6",
+          "second": "lvbu-8",
+          "season": 9
+        },
+        {
+          "first": "lvbu-10",
+          "second": "lvbu-12",
+          "season": 12
+        }
+      ],
+      "fallen": true
+    },
+    "backupSeason": 11,
+    "writesSummary": [
+      {
+        "kind": "attempt",
+        "key": "player.save.bak",
+        "ordinal": null,
+        "season": 11
+      },
+      {
+        "kind": "commit",
+        "key": "player.save.bak",
+        "ordinal": null,
+        "season": 11
+      },
+      {
+        "kind": "attempt",
+        "key": "player.save",
+        "ordinal": 16,
+        "season": 12
+      },
+      {
+        "kind": "commit",
+        "key": "player.save",
+        "ordinal": 16,
+        "season": 12
+      }
+    ]
+  },
+  "season12FreshLoadRestored": {
+    "season": 12,
+    "military": {
+      "cityTroopsCap": 3000,
+      "cityTroops": 2850,
+      "recruitRegen": 750,
+      "foodCap": 10000,
+      "food": 3358
+    },
+    "wallet": {
+      "gems": 0,
+      "gold": 891,
+      "tickets": 0,
+      "bronze": 0,
+      "oracle": 0,
+      "mentorTickets": 0,
+      "scorePoints": 0
+    },
+    "gold": 891,
+    "nation": {
+      "id": "lvbu",
+      "troops": 7318,
+      "territories": 0,
+      "relation": -100,
+      "allied": false,
+      "atWar": false,
+      "resources": {
+        "food": 2940,
+        "gold": 0,
+        "fame": 0,
+        "intel": 0
+      },
+      "governedSeasons": 12,
+      "recruits": {
+        "S": 0,
+        "A": 2,
+        "B": 3,
+        "C": 1
+      },
+      "roster": [],
+      "bonds": [
+        {
+          "first": "lvbu-2",
+          "second": "lvbu-4",
+          "season": 8
+        },
+        {
+          "first": "lvbu-6",
+          "second": "lvbu-8",
+          "season": 9
+        },
+        {
+          "first": "lvbu-10",
+          "second": "lvbu-12",
+          "season": 12
+        }
+      ],
+      "fallen": true
+    },
+    "notices": [],
+    "battles": [
+      {
+        "snapshotId": "OBS_0001",
+        "battleType": "AUTO_RESOLVE",
+        "seed": "3-4-Clvbu",
+        "lineupDigest": "735af725",
+        "tileStateDigest": "4581baca",
+        "tacticDigest": "741638a5",
+        "resultDigest": "WIN_MAJOR",
+        "syncHashLink": "78c5e210"
+      }
+    ],
+    "logs": [],
+    "roster": [
+      {
+        "id": "cao-cao",
+        "name": "曹操",
+        "alias": [],
+        "faction": "wei",
+        "templateId": "GEN_WEI_CAO_CAO",
+        "title": "【魏武】",
+        "gender": "男",
+        "age": 23,
+        "hp": 1696,
+        "currentHp": 1696,
+        "maxSp": 100,
+        "initialSp": 40,
+        "currentSp": 40,
+        "vitality": 100,
+        "maxVitality": 100,
+        "role": "Combat",
+        "status": "Active",
+        "attackBonus": 0.08,
+        "str": 82,
+        "int": 94,
+        "lea": 92,
+        "pol": 96,
+        "cha": 90,
+        "luk": 86,
+        "stats": {
+          "str": 82,
+          "int": 94,
+          "lea": 92,
+          "pol": 96,
+          "cha": 90,
+          "luk": 86
+        },
+        "skillId": "cao-cao-tactics",
+        "battlePrimarySkillId": "cao-cao-tactics",
+        "preferredTerrain": "plain",
+        "terrainDefenseBonus": 0.15,
+        "source": "劇情敵對勢力",
+        "notes": "偏全局掌控與節奏操作的敵方統帥型武將。",
+        "devNote": "由 master pipeline 自動同步生成。",
+        "hiddenFlags": [
+          "內政事件權重",
+          "政治分支覺醒條件"
+        ],
+        "ep": 92,
+        "epRating": "S+",
+        "rarityTier": "legendary",
+        "characterCategory": "titled",
+        "bloodlineId": "BL_WEI_BAQUAN",
+        "parentsSummary": "父：曹嵩 / 母：丁氏（部分資料保密處理）",
+        "ancestorsSummary": "祖譜完整度高，政治系與統率系因子明顯。",
+        "awakeningTitle": "挾天子令諸侯",
+        "genes": [
+          {
+            "id": "gene_strategy",
+            "displayName": "權謀",
+            "type": "謀略",
+            "level": 4,
+            "description": "提升指揮型戰法與全軍節奏控制。"
+          },
+          {
+            "id": "gene_command",
+            "displayName": "號令",
+            "type": "統率",
+            "level": 3,
+            "description": "提升多路戰場協同能力。"
+          },
+          {
+            "id": "gene_politics",
+            "displayName": "治世",
+            "type": "內政",
+            "level": 3,
+            "description": "影響招募、事件與資源收益。"
+          },
+          {
+            "id": "gene_hidden_05",
+            "displayName": "霸道因子",
+            "isLocked": true,
+            "discoveryLevel": 22
+          }
+        ],
+        "historicalAnecdote": "曹操（155年—220年3月15日），字孟德，小字阿瞞，沛國譙縣（今安徽亳州）人。東漢末年丞相、軍事家、政治家、文學家和詩人，東漢末年主要群雄之一，職位為丞相，為漢末實際上的最高掌權者，亦是三國時代曹魏奠基者。父親曹嵩。其子曹丕建立曹魏，追尊其廟號為太祖，追諡武皇帝。\n",
+        "bloodlineRumor": "譙縣老人說，曹氏祖祠地底埋著一枚黑羽虎符；每逢兵荒，祠中銅燈便會自行偏向北方。曹操少年偷看過一次，從此連風聲都像軍令。",
+        "crestHint": "魏武霸道，天下一局待最後棋",
+        "crestState": "rumored",
+        "storyStripCells": [
+          {
+            "slot": "origin",
+            "text": "橋畔機鋒識人"
+          },
+          {
+            "slot": "faction",
+            "text": "奉天子號諸侯"
+          },
+          {
+            "slot": "role",
+            "text": "詭道裁局定勢"
+          },
+          {
+            "slot": "awakening",
+            "text": "官渡借火翻盤"
+          },
+          {
+            "slot": "bloodline",
+            "text": "銅雀夜夢聽潮"
+          },
+          {
+            "slot": "future",
+            "text": "墳前誰解孟德"
+          }
+        ],
+        "coreTags": [],
+        "generatorProfile": {},
+        "bloodlineProfile": {},
+        "learnedTactics": [
+          "兵不厭詐",
+          "號令調度",
+          "疑兵惑陣"
+        ],
+        "inspiredTactics": [
+          "挾令四方",
+          "魏武軍律"
+        ],
+        "lockedTactics": [
+          "🔒 霸道終局技"
+        ],
+        "tacticSlots": [
+          {
+            "slotId": "slot-1",
+            "tacticId": "tactic-fire-scheme",
+            "source": "inborn"
+          },
+          {
+            "slotId": "slot-2",
+            "tacticId": "tactic-morale-rally",
+            "source": "inborn"
+          }
+        ],
+        "ultimateSlots": [
+          {
+            "slot": 1,
+            "ultimateId": "ult-cao-cao-1",
+            "unlockReincarnation": 1,
+            "vitalityCostPct": 0.05,
+            "isExclusive": true
+          },
+          {
+            "slot": 2,
+            "ultimateId": "ult-cao-cao-2",
+            "unlockReincarnation": 2,
+            "vitalityCostPct": 0.06,
+            "isExclusive": true
+          },
+          {
+            "slot": 3,
+            "ultimateId": "ult-cao-cao-3",
+            "unlockReincarnation": 3,
+            "vitalityCostPct": 0.07,
+            "isExclusive": true
+          },
+          {
+            "slot": 4,
+            "ultimateId": "ult-cao-cao-4",
+            "unlockReincarnation": 4,
+            "vitalityCostPct": 0.08,
+            "isExclusive": true
+          },
+          {
+            "slot": 5,
+            "ultimateId": "ult-cao-cao-5",
+            "unlockReincarnation": 5,
+            "vitalityCostPct": 0.1,
+            "isExclusive": true
+          }
+        ],
+        "troopAptitude": {
+          "CAVALRY": "A",
+          "INFANTRY": "B",
+          "ARCHER": "B",
+          "SIEGE": "B"
+        },
+        "terrainAptitude": {
+          "PLAIN": "A",
+          "MOUNTAIN": "B",
+          "WATER": "B",
+          "FOREST": "B",
+          "DESERT": "C"
+        },
+        "weatherAptitude": {
+          "FOG": "A",
+          "RAINY": "A",
+          "SUNNY": "B",
+          "WINDY": "B",
+          "NIGHT": "B",
+          "THUNDER": "C"
+        },
+        "ancestor_chain": [
+          "VIRT_CAO_CAO_01",
+          "VIRT_CAO_CAO_02",
+          "VIRT_CAO_CAO_03",
+          "VIRT_CAO_CAO_04",
+          "VIRT_CAO_CAO_05",
+          "VIRT_CAO_CAO_06",
+          "VIRT_CAO_CAO_07",
+          "VIRT_CAO_CAO_08",
+          "VIRT_CAO_CAO_09",
+          "VIRT_CAO_CAO_10",
+          "VIRT_CAO_CAO_11",
+          "VIRT_CAO_CAO_12",
+          "VIRT_CAO_CAO_13",
+          "VIRT_CAO_CAO_14"
+        ],
+        "originRegion": "沛郡",
+        "coreFactorTag": "military-commander",
+        "element": "metal",
+        "initialRole": "commander",
+        "introLine": "治世之能臣，亂世之梟雄。",
+        "portraitKey": "portraits/generals/cao-cao",
+        "battleVoiceKey": "audio/voice/generals/cao-cao/battle",
+        "isHistorical": true,
+        "maxLifespan": 100
+      },
+      {
+        "id": "guan-yu",
+        "name": "關羽",
+        "alias": [],
+        "faction": "shu",
+        "templateId": "GEN_SHU_GUAN_YU",
+        "title": "【美髯公】",
+        "gender": "男",
+        "age": 23,
+        "hp": 1702,
+        "currentHp": 1702,
+        "maxSp": 100,
+        "initialSp": 40,
+        "currentSp": 40,
+        "vitality": 100,
+        "maxVitality": 100,
+        "role": "Combat",
+        "status": "Active",
+        "attackBonus": 0.15,
+        "str": 97,
+        "int": 76,
+        "lea": 92,
+        "pol": 68,
+        "cha": 91,
+        "luk": 82,
+        "stats": {
+          "str": 97,
+          "int": 76,
+          "lea": 92,
+          "pol": 68,
+          "cha": 91,
+          "luk": 82
+        },
+        "skillId": "guan-yu-slash",
+        "battlePrimarySkillId": "guan-yu-slash",
+        "preferredTerrain": "plain",
+        "terrainDefenseBonus": 0.1,
+        "source": "初期主力",
+        "notes": "高統率的斬將型核心，兼具名望與前線壓制。",
+        "devNote": "由 master pipeline 自動同步生成。",
+        "hiddenFlags": [
+          "第 4 代後祖譜校驗",
+          "覺醒稱號需求"
+        ],
+        "ep": 87,
+        "epRating": "S",
+        "rarityTier": "legendary",
+        "characterCategory": "famed",
+        "bloodlineId": "BL_SHU_LONG",
+        "parentsSummary": "父：關毅 / 母：劉氏（部分史料模糊）",
+        "ancestorsSummary": "祖譜完整度 68%，第 4 代後以推測資料補全。",
+        "awakeningTitle": "青龍武聖",
+        "genes": [
+          {
+            "id": "gene_halberd",
+            "displayName": "刀鋒傳承",
+            "type": "武裝",
+            "level": 3,
+            "description": "強化單點斬殺與穿甲表現。"
+          },
+          {
+            "id": "gene_discipline",
+            "displayName": "軍紀",
+            "type": "統率",
+            "level": 3,
+            "description": "強化部曲士氣穩定。"
+          },
+          {
+            "id": "gene_honor",
+            "displayName": "義勇",
+            "type": "人格",
+            "level": 2,
+            "description": "提升單挑與名望事件加成。"
+          },
+          {
+            "id": "gene_hidden_03",
+            "displayName": "義絕覺醒因子",
+            "isLocked": true,
+            "discoveryLevel": 24
+          }
+        ],
+        "historicalAnecdote": "關羽（160年—220年1月或2月），字雲長，本字長生，司隸河東解縣人（今山西運城），東漢末年將領，劉備的重要親信，被稱為“万人敵”。200年，曹操擊敗劉備後，關羽一度歸降曹操，并在官渡之戰中斬殺顏良，因功封為漢壽亭侯。不久，脫离曹操再次投奔劉備。赤壁之戰後，關羽參与圍攻南郡曹仁，并長期為劉備鎮守荊州。劉備占領益州後，關羽被任命總督荊州，拜前將軍，假節鉞。\n219年，關羽進攻樊城，借漢水暴漲水淹七",
+        "bloodlineRumor": "解縣老人常說，關家舊刀鞘冬晨總先結霜，再慢慢滲成一道細紅線，像有人用指節描過刀背。關羽從不解釋，只在上馬前默默把鞘口按緊。",
+        "crestHint": "青龍義絕，一騎絕塵千秋義",
+        "crestState": "revealed",
+        "storyStripCells": [
+          {
+            "slot": "origin",
+            "text": "解縣冷月磨刀"
+          },
+          {
+            "slot": "faction",
+            "text": "桃園酒尚未冷"
+          },
+          {
+            "slot": "role",
+            "text": "青龍一線斷城"
+          },
+          {
+            "slot": "awakening",
+            "text": "樊城漢水成壁"
+          },
+          {
+            "slot": "bloodline",
+            "text": "義氣入骨成紋"
+          },
+          {
+            "slot": "future",
+            "text": "麥城夜馬無聲"
+          }
+        ],
+        "coreTags": [],
+        "generatorProfile": {},
+        "bloodlineProfile": {},
+        "learnedTactics": [
+          "月牙刀斬",
+          "長驅破軍",
+          "武聖威壓"
+        ],
+        "inspiredTactics": [
+          "春秋刀勢"
+        ],
+        "lockedTactics": [
+          "🔒 義絕",
+          "🔒 千里單騎"
+        ],
+        "tacticSlots": [
+          {
+            "slotId": "slot-1",
+            "tacticId": "tactic-morale-rally",
+            "source": "inborn"
+          },
+          {
+            "slotId": "slot-2",
+            "tacticId": "tactic-cavalry-shock",
+            "source": "inborn"
+          }
+        ],
+        "ultimateSlots": [
+          {
+            "slot": 1,
+            "ultimateId": "ult-guan-yu-1",
+            "unlockReincarnation": 1,
+            "vitalityCostPct": 0.05,
+            "isExclusive": true
+          },
+          {
+            "slot": 2,
+            "ultimateId": "ult-guan-yu-2",
+            "unlockReincarnation": 2,
+            "vitalityCostPct": 0.06,
+            "isExclusive": true
+          },
+          {
+            "slot": 3,
+            "ultimateId": "ult-guan-yu-3",
+            "unlockReincarnation": 3,
+            "vitalityCostPct": 0.07,
+            "isExclusive": true
+          },
+          {
+            "slot": 4,
+            "ultimateId": "ult-guan-yu-4",
+            "unlockReincarnation": 4,
+            "vitalityCostPct": 0.08,
+            "isExclusive": true
+          },
+          {
+            "slot": 5,
+            "ultimateId": "ult-guan-yu-5",
+            "unlockReincarnation": 5,
+            "vitalityCostPct": 0.1,
+            "isExclusive": true
+          }
+        ],
+        "troopAptitude": {
+          "CAVALRY": "A",
+          "INFANTRY": "B",
+          "ARCHER": "C",
+          "SIEGE": "D"
+        },
+        "terrainAptitude": {
+          "MOUNTAIN": "A",
+          "PLAIN": "B",
+          "WATER": "C",
+          "FOREST": "B",
+          "DESERT": "C"
+        },
+        "weatherAptitude": {
+          "SUNNY": "A",
+          "RAINY": "B",
+          "FOG": "B",
+          "WINDY": "B",
+          "NIGHT": "A",
+          "THUNDER": "C"
+        },
+        "ancestor_chain": [
+          "VIRT_GUAN_YU_01",
+          "VIRT_GUAN_YU_02",
+          "VIRT_GUAN_YU_03",
+          "VIRT_GUAN_YU_04",
+          "VIRT_GUAN_YU_05",
+          "VIRT_GUAN_YU_06",
+          "VIRT_GUAN_YU_07",
+          "VIRT_GUAN_YU_08",
+          "VIRT_GUAN_YU_09",
+          "VIRT_GUAN_YU_10",
+          "VIRT_GUAN_YU_11",
+          "VIRT_GUAN_YU_12",
+          "VIRT_GUAN_YU_13",
+          "VIRT_GUAN_YU_14"
+        ],
+        "originRegion": "河東",
+        "coreFactorTag": "valor",
+        "element": "fire",
+        "initialRole": "vanguard",
+        "introLine": "忠義千秋，萬世仰德。",
+        "portraitKey": "portraits/generals/guan-yu",
+        "battleVoiceKey": "audio/voice/generals/guan-yu/battle",
+        "isHistorical": true,
+        "maxLifespan": 100
+      },
+      {
+        "id": "zhao-yun",
+        "name": "趙雲",
+        "alias": [],
+        "faction": "shu",
+        "templateId": "GEN_SHU_ZHAO_YUN",
+        "title": "【常山趙子】",
+        "gender": "男",
+        "age": 23,
+        "hp": 1704,
+        "currentHp": 1704,
+        "maxSp": 100,
+        "initialSp": 40,
+        "currentSp": 40,
+        "vitality": 100,
+        "maxVitality": 100,
+        "role": "Combat",
+        "status": "Active",
+        "attackBonus": 0.12,
+        "str": 96,
+        "int": 82,
+        "lea": 93,
+        "pol": 74,
+        "cha": 94,
+        "luk": 89,
+        "stats": {
+          "str": 96,
+          "int": 82,
+          "lea": 93,
+          "pol": 74,
+          "cha": 94,
+          "luk": 89
+        },
+        "skillId": "zhao-yun-pierce",
+        "battlePrimarySkillId": "zhao-yun-pierce",
+        "preferredTerrain": "plain",
+        "terrainDefenseBonus": 0.08,
+        "source": "初始加入",
+        "notes": "全能型前鋒，擁有極高的穩定性與絕境反擊能力。",
+        "devNote": "由 master pipeline 自動同步生成。",
+        "hiddenFlags": [
+          "常山系譜核心",
+          "龍魂覺醒條件"
+        ],
+        "ep": 89,
+        "epRating": "S",
+        "rarityTier": "legendary",
+        "characterCategory": "famed",
+        "bloodlineId": "BL_SHU_ZHAO",
+        "parentsSummary": "父：🔒 未公開 / 母：🔒 未公開",
+        "ancestorsSummary": "常山趙氏後裔，系譜記錄完整度 90%。",
+        "awakeningTitle": "一身是膽",
+        "genes": [
+          {
+            "id": "gene_courage",
+            "displayName": "膽量",
+            "type": "戰鬥",
+            "level": 4,
+            "description": "無視統率差值帶來的士氣壓制。"
+          },
+          {
+            "id": "gene_dash",
+            "displayName": "龍膽突破",
+            "type": "兵種",
+            "level": 3,
+            "description": "提升騎兵穿透力與追擊機率。"
+          },
+          {
+            "id": "gene_guard",
+            "displayName": "護主",
+            "type": "特質",
+            "level": 2,
+            "description": "當主帥體力低於 30% 時，提升 50% 防禦力。"
+          }
+        ],
+        "historicalAnecdote": "趙雲（153年？—229年），字子龍，是漢末三國時期的蜀漢武將，生於常山真定（今河北省正定縣），身高八尺（約185公分），姿顏雄偉。最初效忠公孫瓚，官渡之戰後效忠劉備、劉禪。歷任牙門將軍，偏將軍、領桂陽太守，翊軍將軍，領中護軍、征南將軍，封永昌亭侯，鎮東將軍。箕谷失利後貶為鎮軍將軍。後追諡曰順平侯，是為永昌亭順平侯。\n",
+        "bloodlineRumor": "常山獵戶說，趙家舊槍在月下不映人影，只映遠路。趙雲年少夜練時常見槍鋒替自己先走一步，像有位沉默祖先替他把險處都試過一次。",
+        "crestHint": "常山白龍，一身是膽護主到底",
+        "crestState": "revealed",
+        "storyStripCells": [
+          {
+            "slot": "origin",
+            "text": "常山白馬出塵"
+          },
+          {
+            "slot": "faction",
+            "text": "轉身護主歸心"
+          },
+          {
+            "slot": "role",
+            "text": "七進七出如雪"
+          },
+          {
+            "slot": "awakening",
+            "text": "漢水回槍定軍"
+          },
+          {
+            "slot": "bloodline",
+            "text": "銀甲映出古紋"
+          },
+          {
+            "slot": "future",
+            "text": "老將猶能照夜"
+          }
+        ],
+        "coreTags": [],
+        "generatorProfile": {},
+        "bloodlineProfile": {},
+        "learnedTactics": [
+          "龍膽旋風",
+          "孤軍救主",
+          "百鳥朝鳳"
+        ],
+        "inspiredTactics": [
+          "七進七出"
+        ],
+        "lockedTactics": [
+          "🔒 龍魂覺醒"
+        ],
+        "tacticSlots": [
+          {
+            "slotId": "slot-1",
+            "tacticId": "tactic-cavalry-shock",
+            "source": "inborn"
+          },
+          {
+            "slotId": "slot-2",
+            "tacticId": "tactic-morale-rally",
+            "source": "inborn"
+          }
+        ],
+        "ultimateSlots": [
+          {
+            "slot": 1,
+            "ultimateId": "ult-zhao-yun-1",
+            "unlockReincarnation": 1,
+            "vitalityCostPct": 0.05,
+            "isExclusive": true
+          },
+          {
+            "slot": 2,
+            "ultimateId": "ult-zhao-yun-2",
+            "unlockReincarnation": 2,
+            "vitalityCostPct": 0.06,
+            "isExclusive": true
+          },
+          {
+            "slot": 3,
+            "ultimateId": "ult-zhao-yun-3",
+            "unlockReincarnation": 3,
+            "vitalityCostPct": 0.07,
+            "isExclusive": true
+          },
+          {
+            "slot": 4,
+            "ultimateId": "ult-zhao-yun-4",
+            "unlockReincarnation": 4,
+            "vitalityCostPct": 0.08,
+            "isExclusive": true
+          },
+          {
+            "slot": 5,
+            "ultimateId": "ult-zhao-yun-5",
+            "unlockReincarnation": 5,
+            "vitalityCostPct": 0.1,
+            "isExclusive": true
+          }
+        ],
+        "troopAptitude": {
+          "CAVALRY": "S",
+          "INFANTRY": "B",
+          "ARCHER": "B",
+          "SIEGE": "C"
+        },
+        "terrainAptitude": {
+          "MOUNTAIN": "A",
+          "PLAIN": "B",
+          "WATER": "C",
+          "FOREST": "B",
+          "DESERT": "B"
+        },
+        "weatherAptitude": {
+          "FOG": "A",
+          "NIGHT": "A",
+          "RAINY": "B",
+          "SUNNY": "B",
+          "WINDY": "B",
+          "THUNDER": "B"
+        },
+        "ancestor_chain": [
+          "VIRT_ZHAO_YUN_01",
+          "VIRT_ZHAO_YUN_02",
+          "VIRT_ZHAO_YUN_03",
+          "VIRT_ZHAO_YUN_04",
+          "VIRT_ZHAO_YUN_05",
+          "VIRT_ZHAO_YUN_06",
+          "VIRT_ZHAO_YUN_07",
+          "VIRT_ZHAO_YUN_08",
+          "VIRT_ZHAO_YUN_09",
+          "VIRT_ZHAO_YUN_10",
+          "VIRT_ZHAO_YUN_11",
+          "VIRT_ZHAO_YUN_12",
+          "VIRT_ZHAO_YUN_13",
+          "VIRT_ZHAO_YUN_14"
+        ],
+        "isHistorical": true,
+        "maxLifespan": 100
+      }
+    ]
+  }
+}

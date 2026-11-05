@@ -1,0 +1,52 @@
+{
+  "sharded": true,
+  "original_file": "results/results.json",
+  "original_sha256": "205ef4d08c546e180823426466d877a9677b368773f383f536fb042db39f0110",
+  "original_bytes": 14189368,
+  "cases": [
+    {
+      "id": "NF01",
+      "status": "PASS",
+      "shard": "results/results-shards/part-01.json"
+    },
+    {
+      "id": "NF02",
+      "status": "PASS",
+      "shard": "results/results-shards/part-02.json"
+    }
+  ],
+  "summary": {
+    "head": "106f053db7b7d7af8d800722158c4a35bb65d3aa",
+    "campaignDualSaves": {
+      "primarySave1": {
+        "gold": 891,
+        "lvbuTerritories": 1,
+        "battleSnapshots": 0
+      },
+      "primarySave2": {
+        "gold": 891,
+        "lvbuTerritories": 0,
+        "lvbuTroops": 6779,
+        "lvbuAtWar": true,
+        "battleSnapshots": 1
+      }
+    },
+    "season12FallAndRaid": {
+      "lvbuTroopsBeforeFallResolver": 7318,
+      "lvbuFallen": true,
+      "lvbuAtWar": false,
+      "playerFoodBeforeRaid": 3731,
+      "playerFoodLost": 373,
+      "playerFoodAfterRaid": 3358,
+      "playerTroopsBeforeRaid": 3000,
+      "playerTroopsLost": 150,
+      "playerTroopsAfterRaid": 2850
+    },
+    "nf02BeforeWriteFault": {
+      "liveSeasonAfterFailedSave": 12,
+      "storedPrimarySeasonAfterFailedSave": 11,
+      "branchAFreshLoadReplaysSeason12": true,
+      "branchBLiveInstanceAdvancesToSeason13WithDelayedNotices": true
+    }
+  }
+}

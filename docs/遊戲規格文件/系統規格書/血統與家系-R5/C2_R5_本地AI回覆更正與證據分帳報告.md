@@ -191,6 +191,32 @@ node --experimental-transform-types --loader ./ts-resolver.mjs --test gameplay-p
 ### 5.4 14 條優先跨系統待驗邊界（全部 `NOT_RUN`）
 詳見 [`all_gameplay_inventory_v1/跨系統待驗邊界.md`](file:///c:/Users/User/3KLife/docs/%E9%81%8A%E6%88%B2%E8%A6%8F%E6%A0%BC%E6%96%87%E4%BB%B6/%E7%B3%BB%E7%B5%B1%E8%A6%8F%E6%A0%BC%E6%9B%B8/%E8%A1%80%E7%B5%B1%E8%88%87%E5%AE%B6%E7%B3%BB-R5/all_gameplay_inventory_v1/%E8%B7%A8%E7%B3%BB%E7%B5%B1%E5%BE%85%E9%A9%97%E9%82%8A%E7%95%8C.md) (`doc_spec_0292`)，涵蓋：① 抽卡交易重進、② 出生跨資產原子性、③ 角色占用競爭、④ 戰場效果到勝敗、⑤ 戰果只結算一次、⑥ 俘虜回歸、⑦ 季末跨時鐘順序、⑧ 傭兵轉永久、⑨ 退役/死亡與傳承競爭、⑩ 物品與資源上限、⑪ 派遣→官職→權限→領地、⑫ 結局/世界更替與家族延續、⑬ 手動/自動路徑等價、⑭ 公開資訊防劇透界線。
 
+### 5.5 原生出征 → 零領地 → 滅亡 → 保存／讀回與前序出生 20 季覆蓋鏈（`nation_fall_save_v1`）
+針對固定快照 `106f053db7b7d7af8d800722158c4a35bb65d3aa`（由 `eff5c260` 完整 15,580 檔 Git tree → `f4eca818` 7 路徑 bridge / PR #1675 → 4 個線性提交 PR #1676~#1679、27 個變更路徑演進）之《**原生出征 → 零領地 → 滅亡 → 保存／讀回**》（[`nation_fall_save_v1/REPORT.md`](file:///c:/Users/User/3KLife/docs/%E9%81%8A%E6%88%B2%E8%A6%8F%E6%A0%BC%E6%96%87%E4%BB%B6/%E7%B3%BB%E7%B5%B1%E8%A6%8F%E6%A0%BC%E6%9B%B8/%E8%A1%80%E7%B5%B1%E8%88%87%E5%AE%B6%E7%B3%BB-R5/nation_fall_save_v1/REPORT.md) `doc_spec_0298`、[`INDEPENDENT_REVIEW.md`](file:///c:/Users/User/3KLife/docs/%E9%81%8A%E6%88%B2%E8%A6%8F%E6%A0%BC%E6%96%87%E4%BB%B6/%E7%B3%BB%E7%B5%B1%E8%A6%8F%E6%A0%BC%E6%9B%B8/%E8%A1%80%E7%B5%B1%E8%88%87%E5%AE%B6%E7%B3%BB-R5/nation_fall_save_v1/INDEPENDENT_REVIEW.md) `doc_spec_0299`）及內附前序出生覆蓋報告《**原出生 → 原 20 季增齡 → 開獎／宿命 → 育成入場**》（[`provenance/prior-birth-coverage/REPORT.md`](file:///c:/Users/User/3KLife/docs/%E9%81%8A%E6%88%B2%E8%A6%8F%E6%A0%BC%E6%96%87%E4%BB%B6/%E7%B3%BB%E7%B5%B1%E8%A6%8F%E6%A0%BC%E6%9B%B8/%E8%A1%80%E7%B5%B1%E8%88%87%E5%AE%B6%E7%B3%BB-R5/nation_fall_save_v1/provenance/prior-birth-coverage/REPORT.md) `doc_spec_0300`），經本地 Node.js 實跑核驗 279 檔 SHA-256 封條、211 檔原碼、12 段 AST UTF-16LE 切片與外部重播（`NF01 PASS`、`NF02 PASS`），特將新增之跨系統實證觀察與邊界納入正式分帳 [S19]：
+
+1. **明確初始名冊下的原生出征至零領地消費鏈（`NF01`，補足舊 `G23` 替身限制之有界實證）**：
+   - 使用原始 `generals.json` catalog 之曹操、關羽、趙雲（僅設 `age=20, maxLifespan=100, vitality=100, maxVitality=100` 避免無關壽命死亡，戰鬥數值未改），經原生 `enrollGenerals` 入冊並以原生 `rivalBattleSquad` 選出陣容。
+   - 自然推進 `0 → 11` 季後，呂布勢力（`lvbu`）為 `1` 地、`9684` 兵；呼叫原生 `LobbyScene._mountRivalDiplomacy` 註冊的選國與 `btnCampaign` handler，一次戰勝使呂布 `1 → 0` 地、`9684 → 6779` 兵、`atWar: false → true`（此時 `fallen` 尚未標示），`LocalGachaService` 金幣 `100 → 891`，並新增 1 筆 `AUTO_RESOLVE` 離線戰鬥快照。
+2. **單次出征（Campaign）觸發兩次非原子、不同 Payload 的保存（Dual Campaign Saves）**：
+   - 原生呼叫序列為：`grantCurrency` → 觸發 `wallet` 寫回與**第一次 `save` 啟動** → `recordRivalCampaign` → `setRivals` 與**第二次 `save` 啟動**。
+   - **第一次主存（Primary Save #1）**：金幣已更新為 `891`，但**呂布仍為 `1` 塊領地、且沒有戰鬥快照（`offlineBattleSnapshots: []`）**。
+   - **第二次主存（Primary Save #2）**：金幣 `891`、**呂布 `0` 地且 `6779` 兵、`atWar: true`、含 `1` 筆戰鬥快照與新日誌**。
+   - **邊界與風險**：本輪僅在 `MemoryStorageAdapter` 下觀察到兩次 `backup` 與兩次 `primary` 依序 commit，未注入 Campaign 中途故障，故**不可據此宣稱並行 I/O 或崩潰下具備交易原子性**（若在兩次保存間中斷，將產生「金幣已入帳但敵國領地未扣減」之不一致狀態）。
+3. **第 12 季自然滅亡結算、未接線之傭兵轉移訊息與並行南蠻襲擊（`NF01`）**：
+   - 自然推進至第 12 季時，**原生他國成長（`_tickRivals`）仍先於滅亡判定執行**，使已 `0` 地的呂布兵力先由 `6779` 增至 `7318`，隨後 `RivalPlayerEvents.resolveRivalPlayerEvents` 才將零地勢力標為 `fallen: true`、`atWar: true → false`（`allied` 原本即為 `false`，故本輪未驗證解除同盟 `true → false`）。
+   - **重要原碼邊界**：第 12 季僅為觀測點，實作以零領地判定滅亡（原碼註解明示此條件為**暫定**）；且滅亡通知雖寫「`殘餘武將流入各地傭兵市場`」，**原碼註解明示該項傭兵市場轉移尚未接線（Not wired）**，本輪未發生真實傭兵轉移。
+   - 同季並行觸發原生南蠻襲擊：先恢復／成長至糧 `3731`、兵 `3000`，再扣 10% 糧（`373`）與 5% 兵（`150`），留下糧 `3358`、兵 `2850`。第 12 季保存成功後才發出 `SeasonAdvanced`；依 `LobbyScene` 註冊順序，`OfficerHud` 季節通知 listener 先於 `RivalDiplomacy` listener 消費滅亡與南蠻通知並發送 `SHOW_TOAST`，Fresh Load 讀回狀態完全吻合且通知佇列為空。
+4. **第 12 季主存寫入前拒絕（Before-Write Fault）之雙分支續行差異（`NF02`，深化 `X01` 儲存邊界）**：
+   - 當第 12 季主存 `set` 前拒絕時：**記憶體 Live 狀態**已進入第 12 季（呂布 `fallen: true`、糧 `3358`、兵 `2850`，兩則通知滯留於 `live._rivalNotices`），不發出 `SeasonAdvanced`，並發出 `SHOW_TOAST("推進季度失敗")`；而 **Primary 與 Backup 存檔**仍停留在第 11 季出征完成狀態（呂布 `0` 地但未 `fallen`、`atWar: true`、糧 `3581`、兵 `3000`）。
+   - **分支 A（Fresh Load 從第 11 季存檔重開續行）**：還原第 11 季狀態，再次推進第 12 季會**重新產生滅亡與南蠻襲擊**並正常發送通知、完成存讀。
+   - **分支 B（原 Live 實例不重開、直接再按推進至第 13 季）**：**不會回滾或重試第 12 季**，直接推進至第 13 季（無新滅亡／襲擊，兵補回 `3000`、糧 `3508`），而**原滯留的兩則第 12 季通知會在第 13 季保存成功後延遲送出**。證明儲存失敗時**非交易回滾，亦非原季重試**。
+5. **同盟與背叛之原碼規則死鎖（WARLORD / RAIDER Alliance Deadlock）**：
+   - 原碼 `proposeAlliance` 拒絕 `WARLORD` 與 `RAIDER` 結盟，但玩家盟友背叛事件卻**只由 `WARLORD` 觸發**；在不人工偽造 `allied: true` 的前提下，自然結盟流程無法觸發背叛。
+6. **前序出生 20 季覆蓋（`BN01–BN04`）與 Fresh Load 未掛 `factorDictionary` 之開獎推薦退化（`BN04`）**：
+   - 前序出生批次（固定於 `f4eca818`）已實際呼叫 `RivalPlayerEvents.resolveRivalPlayerEvents` **22 次**（`BN01: 20, BN03: 1, BN04: 1`），證明該模組並非從未執行。
+   - `BN01–BN03` 驗證曹操＋甄姬經原生 `confirm → breed` 產出之 `age=0` 子嗣，經 20 季完整 `advanceSeason` 成長至 `age=5` 開獎（`Unveiled`、六維 `EXACT`、依實際 `discoveryLevel <= 1` 解鎖基因而非單看顏色）、`fate-pending` 拒絕控制、選宿命與入學令 `2 → 1` 完整鏈。
+   - **`BN04` 重大跨系統邊界**：同一份第 19 季（`4.75` 歲）存檔，在有呼叫 `session.setFactorDictionary` 的 `BN01` 中，第 20 季開獎走 `factors`（`martial=8, civil=4`）推薦 **`Warrior`**；但在 Fresh Load 後未人工呼叫 `setFactorDictionary` 的 `BN04` 中（因 `GameSession.load` 與 `ServiceLoader` 的 `postLoadHook` 未自動載入字典，須等 `loadFactorDictionary` / `prepareBreeding` 才設置），`session.factorDictionary` 為 `undefined`，導致第 20 季開獎**靜默退化走六維 `stats` fallback（`STR+LEA=99` vs `INT+POL=166`），推薦路線翻轉為 `Scholar` 並寫入存檔**。
+
 ---
 
 ## 六、尚缺證據與待採內容清單
@@ -230,3 +256,4 @@ node --experimental-transform-types --loader ./ts-resolver.mjs --test gameplay-p
 - **[S16]** `docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/來源缺口與待決分帳.md` (`doc_spec_0227`)
 - **[S17]** `docs/遊戲規格文件/系統規格書/血統與家系-R5/all_gameplay_inventory_v1/全玩法覆蓋清單.md` (`doc_spec_0291`) 與 `跨系統待驗邊界.md` (`doc_spec_0292`)
 - **[S18]** `docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/總覽與驗收界線.md` (`doc_spec_0293`) 及四子包報告（`doc_spec_0294` ~ `doc_spec_0297`）
+- **[S19]** `docs/遊戲規格文件/系統規格書/血統與家系-R5/nation_fall_save_v1/REPORT.md` (`doc_spec_0298`)、`INDEPENDENT_REVIEW.md` (`doc_spec_0299`) 及 `provenance/prior-birth-coverage/REPORT.md` (`doc_spec_0300`)

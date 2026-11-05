@@ -16,6 +16,9 @@
 | `doc_spec_0295` | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/rival-governance/他國治理外交與盛衰報告.md | G23 他國治理外交與盛衰 |
 | `doc_spec_0296` | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/roster-identity/名冊與重複流轉報告.md | 名冊與重複流轉報告 |
 | `doc_spec_0297` | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/vitality/REPORT.md | G07 精力、疲勞、恢復與加速卡：有界玩法驗證 |
+| `doc_spec_0298` | docs/遊戲規格文件/系統規格書/血統與家系-R5/nation_fall_save_v1/REPORT.md | 原生出征 → 零領地 → 滅亡 → 保存／讀回 |
+| `doc_spec_0299` | docs/遊戲規格文件/系統規格書/血統與家系-R5/nation_fall_save_v1/INDEPENDENT_REVIEW.md | Independent review |
+| `doc_spec_0300` | docs/遊戲規格文件/系統規格書/血統與家系-R5/nation_fall_save_v1/provenance/prior-birth-coverage/REPORT.md | 原出生 → 原20季增齡 → 開獎／宿命 → 育成入場 |
 
 ## 索引類 (`doc_index`)
 
@@ -85,7 +88,7 @@
 | `doc_index_1037` | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/rival-governance/README.md | G23 他國治理、外交與盛衰：有界驗證包 |
 | `doc_index_1038` | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/roster-identity/README.md | G02 武將名冊與同名版本 / G14 重複名將轉生與分流 |
 | `doc_index_1039` | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/vitality/README.md | G07 有界玩法證據包 |
-| `doc_index_1040` | docs/cross-ref/code/ui-spec-json.md | 代碼索引分片：UI Spec JSON 畫面表 |
+| `doc_index_1040` | docs/遊戲規格文件/系統規格書/血統與家系-R5/nation_fall_save_v1/README.md | Nation Fall & Save Chain Verification Package (v1, Fixed `106f053d`) |
 | `doc_index_1041` | docs/cross-ref/code/ui.md | 代碼索引分片：UI |
 | `doc_index_1042` | docs/cross-ref/progress/d1a-rejudge.md | 進度索引分片：D-1a 邏輯欄重判紀錄 |
 | `doc_index_1043` | docs/cross-ref/progress/d2-d3-pending-ui.md | 進度索引分片：D-2 待建 UI Spec／D-3 待定 Contract |
@@ -96,3 +99,4 @@
 | `doc_index_1048` | docs/cross-ref/code/core-systems-1.md | 代碼索引分片：Core Systems（上半，依檔名排序） |
 | `doc_index_1049` | docs/cross-ref/code/core-systems-2.md | 代碼索引分片：Core Systems（下半） |
 | `doc_index_1050` | docs/cross-ref/code/tools.md | 代碼索引分片：工具、建置與 Agent Skills |
+| `doc_index_1051` | docs/cross-ref/code/ui-spec-json.md | 代碼索引分片：UI Spec JSON 畫面表 |

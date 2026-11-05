@@ -1,0 +1,1482 @@
+{
+  "head": "106f053db7b7d7af8d800722158c4a35bb65d3aa",
+  "sources": [
+    {
+      "path": "assets/resources/data/generals.json",
+      "git_blob_sha1": "7a2742cc4740bb8dea4e3d4d30b20812ac414622",
+      "sha256": "b57cb2ef5a00ead05525fe0bf6d07fc1484acbc5c307a5ac81fea2d629b0ff10",
+      "bytes": 882180,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/resources/data/historical-relations.json",
+      "git_blob_sha1": "04f2165d705fe5eea64c612a6ae9da3239030b9d",
+      "sha256": "c696a3c3130a3342b65de2bcdc1c6385df9b92e1a8d6a2cbd2faed2901dd38ad",
+      "bytes": 1713,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/resources/data/master/gene-dictionary.json",
+      "git_blob_sha1": "c73fd6cf62ca28fb4095c6fe08d5730757fddd74",
+      "sha256": "0005d7eac180a7ff05e5e61ffa48d6614d19e329b6fae86a2cd119aece687d00",
+      "bytes": 7293,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/resources/data/person-registry.json",
+      "git_blob_sha1": "988202e5fb86beeca29c2dd923e906de6ab09fdf",
+      "sha256": "e3ed53e4ff502285adb9d974a4a4b5b536da941ff3818880a5840c4a20dfa44f",
+      "bytes": 1420567,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/battle/runtime/BattleCombatResolver.ts",
+      "git_blob_sha1": "b5ebdebcb912c5baa561eb4dbc679f24d7f2ea4d",
+      "sha256": "c5ed54cb15c152173595f7e7fd48cd17390560c2157e05018d9c2022af2dde8d",
+      "bytes": 44354,
+      "origin": "106f fetched exact blob"
+    },
+    {
+      "path": "assets/scripts/battle/views/BattleUIBridge.ts",
+      "git_blob_sha1": "724abf9e3294adac0e88e63ddd565dd3925ba949",
+      "sha256": "0c308c4adddc6bb3d646d45ee4182d52c6d9e2c5fb6dce650107f7b7026495af",
+      "bytes": 52714,
+      "origin": "106f fetched exact blob"
+    },
+    {
+      "path": "assets/scripts/core/config/Constants.ts",
+      "git_blob_sha1": "58a7029bbf486b954bbbe450b79ce10729321ac3",
+      "sha256": "2e1b325f24566c64eb79073c029b72c503952ae380b2dd679e2464a7d4aec5c4",
+      "bytes": 6570,
+      "origin": "106f fetched exact blob"
+    },
+    {
+      "path": "assets/scripts/core/config/UIConfig.ts",
+      "git_blob_sha1": "a758c0c5ac31e1a89adb1661a7357e2557d585dd",
+      "sha256": "33d12e8ce1eebc52e5913d98e74c0f5c3f9dce96d8fe9f99cc97172fa53c3af5",
+      "bytes": 11347,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "git_blob_sha1": "d7e12723ded4b74081be96ecd0720c52b23c7aa1",
+      "sha256": "c1e06b2400120bf1067bd4bf50edbf09821de5285a3ceea6c2f567e6ae8c2a4b",
+      "bytes": 246660,
+      "origin": "106f fetched exact blob"
+    },
+    {
+      "path": "assets/scripts/core/managers/ServiceLoader.ts",
+      "git_blob_sha1": "c3450cfea3a18365b6aeb360ed13fcce5f9d68fb",
+      "sha256": "4de214cee4d17dfd074d4048e635044b8b4b4d916fdd2e1e0854d5a1f0d4a527",
+      "bytes": 17698,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/models/BreedingRecordSchema.ts",
+      "git_blob_sha1": "ebd01b94eec1a3572a4b9e089cb7ac11ec647135",
+      "sha256": "db68e03ccbe250ebf9653ef50397ae9a4dc309c56f4bd88263520ab9ad61dfd8",
+      "bytes": 8154,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/models/GeneralRole.ts",
+      "git_blob_sha1": "00315ba7218134c5aff00a819a1a4afe1ce7565d",
+      "sha256": "a77b5a4de48ca0663602e8b78ab60fd074c4ed393e64b3a35857fe9189be5bbf",
+      "bytes": 2246,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/models/MentorCard.ts",
+      "git_blob_sha1": "3ccae5be62e1b5191662405b07357f711b5facbc",
+      "sha256": "2205927a4d797350fa2ee2282b554a9fd1159721c31f33ebdb4c700fc85ec7d0",
+      "bytes": 2554,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/models/MentorSupportSchema.ts",
+      "git_blob_sha1": "e4df00adb23c78d8f09ec33d5b202242831e6327",
+      "sha256": "c0c835f0ebe6d3f8a79b4e5db789946631754b6dbe40a1660dd7685ba0a976fe",
+      "bytes": 13118,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/models/SoulTransfer.ts",
+      "git_blob_sha1": "2c3f7e1a5675f75977213faf1cf26ccb116605fe",
+      "sha256": "31065c0d8cf612e14c8f77d7514228da48f3d9b04ade9c4c7ce2f7aea6f49c6f",
+      "bytes": 2311,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/services/ActionLogStore.ts",
+      "git_blob_sha1": "e23760bdde6d337f2b4fd50b39a03d88b00975cc",
+      "sha256": "ff9b2f89688a1e0337f6d1f936b0d548786693f6046aed0a6e38f887960d4448",
+      "bytes": 5822,
+      "origin": "eff5c260 baseline"
+    },
+    {
+      "path": "assets/scripts/core/services/BloodlineGraph.ts",
+      "git_blob_sha1": "2bc4543253cd3375796550a165ae32cfc24959b8",
+      "sha256": "98283cd17ae090312e1ea0d60b271115f4d706167604b59c4076fff77b9b2e86",
+      "bytes": 11621,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/services/BreedingService.ts",
+      "git_blob_sha1": "ba6dc82536a0ce3d200ef5a4c64f894b77d74583",
+      "sha256": "765579a4c3351fe13b46d807e87071ae551c0da0ac41c5cda1c4f0ecf1d4f975",
+      "bytes": 11296,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/services/GachaWalletRules.ts",
+      "git_blob_sha1": "8d61127e8e302fb652c8d7ebd4daef17b1ada59e",
+      "sha256": "249b8bb319683618bb0c7c0b476b466338c1b44c0aef8f2d6fc779fcbcc5bd0b",
+      "bytes": 2464,
+      "origin": "eff5c260 baseline"
+    },
+    {
+      "path": "assets/scripts/core/services/LocalGachaService.ts",
+      "git_blob_sha1": "8eb814a352ed43b2aa37773434187b395cbb5739",
+      "sha256": "c8c9d3b6b26fe44cf4472dea6c2ae38d2a166d7e0fdeb9baa2acfef0d9394e00",
+      "bytes": 26953,
+      "origin": "106f fetched exact blob"
+    },
+    {
+      "path": "assets/scripts/core/services/NurtureService.ts",
+      "git_blob_sha1": "a6695c49bcc106d0fb67ff708ce688623a1ffae2",
+      "sha256": "d610ff60f05c6e3a0d0bb6db82703f2c09d7b72f91536eec03c69e3f8dcd25d3",
+      "bytes": 24594,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/services/PlayerDeckRules.ts",
+      "git_blob_sha1": "6f9e26510bae25bd9fce4220c016e4cfefc049b4",
+      "sha256": "683f585f5cd74df29692b7939d2fd57bc916cc1f5ac7af51a9dfc03437e753f0",
+      "bytes": 2560,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/services/PlayerSaveService.ts",
+      "git_blob_sha1": "22c4effff1e62e7ddc617fdc25539781c2969a26",
+      "sha256": "18c539ffe4189fb0cd2881be2a9e9538e13813441c588580f1d50cd2af06fca3",
+      "bytes": 49940,
+      "origin": "106f fetched exact blob"
+    },
+    {
+      "path": "assets/scripts/core/services/PlayerSaveTableRows.ts",
+      "git_blob_sha1": "79ca39b93a1bd0d60f8e8d246f6640832fa6c491",
+      "sha256": "f45df2c1b71b1e7bdf4c468266436e94f130ad39946668b440d3c14f3ab2d0e0",
+      "bytes": 8428,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/services/UnveilingService.ts",
+      "git_blob_sha1": "8cdb6a0a4c0e2f3350b370c929a23db46f7c2e4a",
+      "sha256": "99fe75f5f861ab0c1aa98f0063f6e72b9195f6121300965f03888ce8a245855d",
+      "bytes": 1597,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/storage/DataStorageAdapter.ts",
+      "git_blob_sha1": "8fc783f7bf90be61060bedd46cc6dee910803d17",
+      "sha256": "cfc6863518fa5ee1752c001127bd54d4adccdea1271ae03077540978d5e758c8",
+      "bytes": 2507,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/storage/IndexedDbAdapter.ts",
+      "git_blob_sha1": "5ea3ed36ab236faf8eac6ced2fdb359ae4273c13",
+      "sha256": "1e24c9841207a94c547f5e190249f0a0effd7c0532bc4a6323c61e7fe159d742",
+      "bytes": 5790,
+      "origin": "eff5c260 baseline"
+    },
+    {
+      "path": "assets/scripts/core/storage/MemoryStorageAdapter.ts",
+      "git_blob_sha1": "6a5295f4a2187968341b7a3b034fc6ccfee07589",
+      "sha256": "521f0171541fc5519d823aff639c9a97a7a92bcc5e552cc364dfd1a01b072079",
+      "bytes": 1780,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/storage/PlayerSaveMigrations.ts",
+      "git_blob_sha1": "369692693eb165a53b78315d5f509a5097746ffe",
+      "sha256": "b551f70d0c8615448159f3c5cd5fb7a13fdeb5f1ac0ab3f70cce3182be1b38bb",
+      "bytes": 1541,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/storage/SaveVersion.ts",
+      "git_blob_sha1": "99e240e1dc296695c8e1a69845fa95a94c1ac1f3",
+      "sha256": "40fb397dddc2844ecaa2f8f211279609f9d6afedeea6fb2ae381e9d26ba4d379",
+      "bytes": 5911,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/AccelerateCard.ts",
+      "git_blob_sha1": "b228e1651aaf140935778e6175b29f2f0e489529",
+      "sha256": "2a398f64b9ba3096af2358d9cc613dcced60925bc9bf4e204afd04bba3449b17",
+      "bytes": 1961,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/AiAdaptiveDifficulty.ts",
+      "git_blob_sha1": "dd01f3259d208eecc7b48d66bb990da17a96f588",
+      "sha256": "bb960f973325538fa2c5e1ade06e1581cecdef08137f70e4328207c493d55f36",
+      "bytes": 3390,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/AiPowerEvaluation.ts",
+      "git_blob_sha1": "f6d00edce3881f5ad9c5e507a9dd9b9f6ab4450e",
+      "sha256": "e8ae0dda5c62802d053bbab10e947af3873a0fa33ff8be31b766ef9a4526ebb9",
+      "bytes": 5368,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/AiStatScaling.ts",
+      "git_blob_sha1": "2ff25ef0ab2a5963a41c82517b4b5e1d7127e17e",
+      "sha256": "04938ee787795b5a0ec8a33cb405eca549646a846c84c299407159202baf27b6",
+      "bytes": 5176,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/ArenaScore.ts",
+      "git_blob_sha1": "a20a49140cf43b9e893056d1127d2fd449fff560",
+      "sha256": "947ffd091d7f10fd4ad1c1927750c703ab4a453c2f4bc602ab011beab303b8fe",
+      "bytes": 2742,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/AwakeningTitle.ts",
+      "git_blob_sha1": "ccff0550a19649a264104a86cb561f2c78ac1a20",
+      "sha256": "f555454bf3cac14ab5598499430c819f71c7883d877c63d0a05346fbd58e3399",
+      "bytes": 3665,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/BattlePowerRating.ts",
+      "git_blob_sha1": "9062e8f8eb80574a2d91c4775025b12ac74d0710",
+      "sha256": "2ebd0467d6309448d30cec731b1a7d4b41b7f25a39a4aac7de150265bde0102b",
+      "bytes": 6504,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/BattleRecordStats.ts",
+      "git_blob_sha1": "4530d09f31bfb23ee772baf95d8e32992b7d133f",
+      "sha256": "9c50380b3b7de52dd26fdf893bc51b6a60917c5b396e70c4e456f6a7132a6d21",
+      "bytes": 11749,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/BattleRoster.ts",
+      "git_blob_sha1": "f25e2698a08bb226ed2f9b0fbb40b01a832148d0",
+      "sha256": "736af78c3655f47c322192d3ac0e867169cf57e0e78dc947ca5d6665320580ee",
+      "bytes": 17969,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/BattleSeasonStats.ts",
+      "git_blob_sha1": "e6eb8e65ec93a7ec3e28a68ac68aa9e7b502ecf9",
+      "sha256": "8c013b0051098242651b46eeadc1aa559ce307c498ef6ad043239a4289fe9716",
+      "bytes": 4446,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/BloodlineGuarantee.ts",
+      "git_blob_sha1": "a8c61b080d6865a37a7cf04715ba884fa0ad0615",
+      "sha256": "2bb1d6ef8184317769ac33a756824a95daf9b1a78e01efb961f81ebb946e7335",
+      "bytes": 2681,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/BlueFactorInheritance.ts",
+      "git_blob_sha1": "f78e4d71a6c658cf8efddc194bf66ce68523d6cb",
+      "sha256": "057d8ae8049840339373069b8e95ec5f0150a7389c39845bd27c4157a04d5dba",
+      "bytes": 1097,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/BreedingBirthRecord.ts",
+      "git_blob_sha1": "3c78189d38764aef5ad172dffa58ded28d5cd997",
+      "sha256": "848c7bb54becc026ea37adfc02c68945a557d410192ccbe0d321b7fba0c45dcd",
+      "bytes": 2373,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/BreedingBirthRecordSave.ts",
+      "git_blob_sha1": "563bd183665ab196eb227e6b33b58ed8e48c6da1",
+      "sha256": "db7c14f02d2040fa54c16f058e5e1bac3f3ed2bbbcb3a8309a565addfc5e7937",
+      "bytes": 1966,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/BreedingSystem.ts",
+      "git_blob_sha1": "aa00f689366a4ea67c68535b92431fc2c3322b61",
+      "sha256": "bf8939ffe07609fecaca3a270c5f36cf92b75fd2da7989b6217239d69afd3c0d",
+      "bytes": 34900,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/ChildFactorExpectation.ts",
+      "git_blob_sha1": "34ed918da9eaf6da3fde3527342478c09e8791b7",
+      "sha256": "65fb892b8dc96c925f781cc9a8f2b92d23ce377ffb1496fc437c6bfe986da57a",
+      "bytes": 4637,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/ChildUltimateAwaken.ts",
+      "git_blob_sha1": "12038832c4bdad264a593d6e3e7b468d1613a9b8",
+      "sha256": "6d62bbc8f26b6b252ceb0e37b77c7d5f052206e11e33a7a231e17bb60a31452b",
+      "bytes": 3782,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/CountdownManager.ts",
+      "git_blob_sha1": "f0bdc3eecbdc0ae6ae67f13a6f069854eda0c2b5",
+      "sha256": "09534d5c7a7c446c9dfca9148df53aa07e880140d3a8a56c4465bf264f6075db",
+      "bytes": 4326,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/DailyFreeEnroll.ts",
+      "git_blob_sha1": "114b1b8d643593325626c4297d234b8c716b8ead",
+      "sha256": "1d672e48c7940a264ef8eda62a93f5905f0124045fb5065cb3afa04c30a9d019",
+      "bytes": 1822,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/DailyNewsEngine.ts",
+      "git_blob_sha1": "17c56624a4137499aec66327419c775f786655f3",
+      "sha256": "1e5bb47305f4780393b56e2d6e2cef08149bc1d1854500dd8477a7179c200299",
+      "bytes": 17010,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/DestinyShop.ts",
+      "git_blob_sha1": "c536a946214cbeaf80c02759f36841131e29d6f8",
+      "sha256": "0881e52bd4c01fbaaf6324d1af8bea103178dca702c01bc05a70a82271514b57",
+      "bytes": 2555,
+      "origin": "eff5c260 baseline"
+    },
+    {
+      "path": "assets/scripts/core/systems/DiscoveryProgress.ts",
+      "git_blob_sha1": "c74309fded1c9ef2d819439c520f2278339cea08",
+      "sha256": "b3c5152bafed712f1f8cfac51f579bca42e71919fb254ad863fb7eb1ad4e7ac3",
+      "bytes": 3348,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/DispatchJobs.ts",
+      "git_blob_sha1": "c159c9167339d51650b0024725d1b8b0c54fab39",
+      "sha256": "504105995915ff90b299536b74d01b138eadc33171ffbf7e7b468848ecd0878d",
+      "bytes": 7914,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/DispatchQuality.ts",
+      "git_blob_sha1": "42454709705831dc1836bf9ee547c86494426ee0",
+      "sha256": "2de842a8b19461a542ea1fa2f996290178a02c850cae20d7a4a027915922bc3d",
+      "bytes": 5134,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/DomesticPresenter.ts",
+      "git_blob_sha1": "b24dec981ffbcc30d8072568e0a892da660e46cf",
+      "sha256": "3370b49bb8081137884bb5a060f1d56dcbf01265468e4b78ceb4923609949c58",
+      "bytes": 2501,
+      "origin": "106f fetched exact blob"
+    },
+    {
+      "path": "assets/scripts/core/systems/DomesticTasks.ts",
+      "git_blob_sha1": "ee29968c71d1f4b3e3b8c956caa1748a08c60f81",
+      "sha256": "ca931aac204737195bc81b363ff84f8b05c18cf66dccbd9d484bb87d0b23be05",
+      "bytes": 6818,
+      "origin": "106f fetched exact blob"
+    },
+    {
+      "path": "assets/scripts/core/systems/EraReset.ts",
+      "git_blob_sha1": "52660bf15e13d6344dee1217fab51bf53befb553",
+      "sha256": "6a866493805001ae430a0f445984fc059d2b41fee4fb9cc0e1a0f336017788ea",
+      "bytes": 2168,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/EventSystem.ts",
+      "sha256": "129d5e63ebf5335854313e2d181b8be4746a313acb1fda2eac1e79408b92ba78",
+      "git_blob_sha1": "71d33782c5ed3cc7ede77304d9cb6ee91dc0f558",
+      "bytes": 2621,
+      "origin": "eff complete tree + unchanged f4 and 106f bridges"
+    },
+    {
+      "path": "assets/scripts/core/systems/FactorAwakening.ts",
+      "git_blob_sha1": "9d64ea1648d43b1f1e0a0c7e2e4e4505b5797e94",
+      "sha256": "bb859e22a22bcec525113eb3d02463c91ad9b26593d8f296d7ce1ae358040b8e",
+      "bytes": 10482,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/FactorInheritance.ts",
+      "git_blob_sha1": "cfe18160bc8fbe9a9c7272ee7c2c7918e212c7ec",
+      "sha256": "dc1c80f9cfbeed3d5c04c47444edd0949189eadc158c9a110d8c44b9aefa6859",
+      "bytes": 10225,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/FactorMask.ts",
+      "git_blob_sha1": "d50856ee7edb761ba461f33cf2847378dc315de4",
+      "sha256": "24061cf255bdf9840123eaabd03d6dfb13236f5534e56b22bafff7e883d7f3d6",
+      "bytes": 2848,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/FactorTacticLinkage.ts",
+      "git_blob_sha1": "5e1491c4ff87406c2419eb81feaafcd1d8e36052",
+      "sha256": "7a30d109474d45b5e27076a36d516b4ba34a9e189a9f1d5b5a083a511c04a40a",
+      "bytes": 5074,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/FactorVisibility.ts",
+      "git_blob_sha1": "cc59e67d1c632b61c58446e03fdf4873ce10e205",
+      "sha256": "7703e49564bcabfd4ab481cb54d9c9704e9957c13149930a4d163e01579fb0f5",
+      "bytes": 4601,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/FarewellLetterInbox.ts",
+      "git_blob_sha1": "6ea349fc1169ba1e602ae5fc2c45d3482fcb2fa7",
+      "sha256": "fdfa12c74b9308b1a278536ce6f29254773d2c6bb450859fce5f61a924232f9d",
+      "bytes": 2896,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/FateBlessing.ts",
+      "git_blob_sha1": "17a1a7892024a7ef3be102e8a5e4f4b1d369acba",
+      "sha256": "42bbbb32370f928f79f0af61574a8d199e983b331b2dd90a86a9d296010d3cd2",
+      "bytes": 2170,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/FemaleSource.ts",
+      "git_blob_sha1": "83c1eb66a2bc935cddc011a81ed2e704b1219f2f",
+      "sha256": "d523e789fcbacb0f4bb3b4e30fb3b6917c460d5f96c6265b80d0797da659cbaf",
+      "bytes": 4695,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/FemaleSystemState.ts",
+      "git_blob_sha1": "aee331f39dc89bde1df3f1b4eb8fefc9d1f17a56",
+      "sha256": "d23a8df5d4c2a61bdac1899d0b9d2007fff4c29eede3c4ae1dbfa6556201cffd",
+      "bytes": 4015,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/FertilityBoost.ts",
+      "git_blob_sha1": "8e13beeab7e79a68b251ce22a3c04adee1c64e98",
+      "sha256": "3925012ccd46d2013e075486055f15b0c291ece126dc0c154937bd4d291a7603",
+      "bytes": 1162,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/FriendBorrow.ts",
+      "git_blob_sha1": "87a1195ef433f83f169f4a171b242547f9a3757e",
+      "sha256": "b59492519be8f89baf0e1dabbbc1c98e80f0243f4d122b6c64970d714c6b1207",
+      "bytes": 5823,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/GachaCurrency.ts",
+      "git_blob_sha1": "6fed78e8686b19651a347bb375939070d98be13e",
+      "sha256": "4ea74cf692490af25a4d77996bd07d356ae570cfbe9776f99f612cc28cae57f2",
+      "bytes": 4783,
+      "origin": "eff5c260 baseline"
+    },
+    {
+      "path": "assets/scripts/core/systems/GachaDraw.ts",
+      "git_blob_sha1": "51b0ae93242adacd1bbb40e2bb5757b7da7d0406",
+      "sha256": "02af0a0e7aed2a8a9f76c40b8da8ce39cd4040e15ca8fda30b97f4214b00ea73",
+      "bytes": 7552,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/GachaSyncRecord.ts",
+      "git_blob_sha1": "f7d785bd874d3aca233d8b138078415e7aeb9ce6",
+      "sha256": "2bbdf465d3222d4c1918617901c8ae00536963a8fab55600475042d25748af3e",
+      "bytes": 4100,
+      "origin": "eff5c260 baseline"
+    },
+    {
+      "path": "assets/scripts/core/systems/GameClock.ts",
+      "git_blob_sha1": "f7bd2a1ad9807828f77eb15f3a67cfa772176fee",
+      "sha256": "ad2236e7065e7bee8df6b4bf93bcda0360f928018f4cd7eeded0bd50b401c89d",
+      "bytes": 4898,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/GeneralAging.ts",
+      "git_blob_sha1": "8ebde70fa84edad28485ad6334328141f227fd4f",
+      "sha256": "871d651615843602e24a653d1f6b1fba2a6f520c6f0841fbc0655a4ffa258785",
+      "bytes": 5147,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/GeneralStage.ts",
+      "git_blob_sha1": "157e87440d77bc74d2d4077372f77c1b6c8d8088",
+      "sha256": "da118c2056986f8a32549f94ede046ae45de52cd690972405bd2f1cc63edb362",
+      "bytes": 3397,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/GiftAffection.ts",
+      "git_blob_sha1": "7b86632fbced41486cbe94956440aeec96d3d4fb",
+      "sha256": "348c7222dbc686127ac236026cea4c7877219958219687c709cc5ff382574071",
+      "bytes": 1591,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/GovernanceEvents.ts",
+      "git_blob_sha1": "409b82a940ac8dcf1c442c0c69e8810c41f6427a",
+      "sha256": "88b94b659f605872ca6f7008e635d7e50a6b2442baaa42ded68e184565832f2f",
+      "bytes": 3581,
+      "origin": "106f fetched exact blob"
+    },
+    {
+      "path": "assets/scripts/core/systems/HallAutoAssign.ts",
+      "git_blob_sha1": "d705eba8aa3af47d2145cc17d10fa7e5be50a337",
+      "sha256": "79a70802055ce302efcee5be96a8d348a247cebf1876fe1982afb8ef72e4453b",
+      "bytes": 6827,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/HallCharacterPresenter.ts",
+      "git_blob_sha1": "f9c947f7f0b287955f53cc36a038a80b476cebf5",
+      "sha256": "45fdb46b9feefc3b2249c4129877c05342baff9bd5367ac4b1ff3c8e198e5e77",
+      "bytes": 2525,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/HallCharacterRoll.ts",
+      "git_blob_sha1": "47ac0676728da2fbb7fb2de30d9cf08aeab12835",
+      "sha256": "30efe49b8eeb18d13fec1100ef5b9928a4c56088c4898dc7f211c71decea12c3",
+      "bytes": 3020,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/HallMissionBoard.ts",
+      "git_blob_sha1": "128b3cda4d90339ee4793b4650ce0fe3cb289832",
+      "sha256": "2c164ac88c6e3b48dba7991017983bc8727a0071e5bc077bdf45df5b1468310e",
+      "bytes": 4250,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/HallMissionDispatch.ts",
+      "git_blob_sha1": "487cdde7c27b2f60d01731f92148c44ba188c9e6",
+      "sha256": "69d770f62860ba6a6526224fc16c322e193afafb23749d2bde1b8643d63ee756",
+      "bytes": 3187,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/HallTaskIntel.ts",
+      "git_blob_sha1": "ae7e85ead98d8c4738d692a03ce8cfeec809f951",
+      "sha256": "a9fb4b94ccd2a9c431cf5b03b3aa71860be1a2f4d50305d687accca920effd15",
+      "bytes": 1857,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/HistoricalPairs.ts",
+      "git_blob_sha1": "8516a542e4d6107ad78be2fd93cfeaf9edfd8035",
+      "sha256": "b6820e859b217392218f259773bd0002ca2e305904f886ee8b00fcb466c7e689",
+      "bytes": 4275,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/HybridSkill.ts",
+      "git_blob_sha1": "6e92c63127cbf81b74303e834803210a2c2fa95f",
+      "sha256": "ea384b9e692d0b4133f837d4ff40d9a3528dfd422198dd588a7d89fec52f66b8",
+      "bytes": 3659,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/InspiredTacticMap.ts",
+      "git_blob_sha1": "abb68960160fb005aa7172b84f8ec3a084717c6f",
+      "sha256": "f100b62cf15e2eac35bb4fcde1a58121e6d317bc8f151ea4bc301a1b5ea4f439",
+      "bytes": 2932,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/InventoryRecordBridge.ts",
+      "git_blob_sha1": "726ece2cc7cfdcf5d01c5628802e2319b027411d",
+      "sha256": "62381bc33f96c8b5c683f8defe885bcf2c548eff237b0b6b6c7e31b6dc2890ef",
+      "bytes": 4396,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/ItemAcquisitionLog.ts",
+      "git_blob_sha1": "54c93c55459a2f3e4d3c4eb85cc0e86cdab834a7",
+      "sha256": "7364b1ea53d3dca603623674acadd67eda21bc852a90851391275a533227ec58",
+      "bytes": 3771,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/ItemDef.ts",
+      "git_blob_sha1": "3d31e987c22668c647fab1ba3b4082abb0a26bc9",
+      "sha256": "ae1272e0c299b8661c8f91612db8a331f018bf69e8c004746beb8e69c44da825",
+      "bytes": 7017,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/ItemEffectDispatcher.ts",
+      "git_blob_sha1": "29825210ba6c545e48ced0759b079dadd11f570d",
+      "sha256": "92b8739d2c3ae6c462ba97eb501aa5047a30cc5ba409ce39554f456b6b629dc8",
+      "bytes": 2261,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/JournalEvents.ts",
+      "git_blob_sha1": "9a037cb2b40217c952af8b3fcf250adabad53e88",
+      "sha256": "fed987ca71b0b879bf2ad4c25138725b2d357f1b5a40643ba1d1975519a1eec8",
+      "bytes": 2684,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/JournalLog.ts",
+      "git_blob_sha1": "e941100546c42ab3a55b256a2dd99bf984d266a2",
+      "sha256": "885cb0ad3d49869d8121de8a91b46fc301acdc018b5c30f94c622a959014f4dc",
+      "bytes": 7762,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/JournalReaction.ts",
+      "git_blob_sha1": "6c181c5dbd360977734d254564e9b3b1edfe2e03",
+      "sha256": "f5e5ae86f8c9d66a2172a183fc288913e711d7d0a3bc9ffef158ccff02579299",
+      "bytes": 3845,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/KinDynamicRelations.ts",
+      "git_blob_sha1": "25c53102c84a6cdbb9aa46398d9973001601ddc9",
+      "sha256": "5eca690b89e248037d3d93fc386272ebe79dac11de39e560a5b83a72d1274109",
+      "bytes": 7439,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/KinRelation.ts",
+      "git_blob_sha1": "4c3d1ebb4a618d7db89482d9d0ae5f347ca55b69",
+      "sha256": "d9bd986b9dd4bb0f9c7b7ccc3f67958452cf570b5f8e89044d2ac03c46570f6c",
+      "bytes": 7191,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/LateBloomClue.ts",
+      "git_blob_sha1": "e36d0d1ac0ae48b110a2aee53de7209e203f0b81",
+      "sha256": "da55769b3a3bbf3e49c8139735391229ee98e33ea5750106b4fbdb45a9c8e1d3",
+      "bytes": 1175,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/LegacyAchievement.ts",
+      "git_blob_sha1": "51b22018cffa0d12673ad631f82d48b826b39bea",
+      "sha256": "f5fa05f459a8eefca52ec6f4c21850d02b496fa133ba9db7082a1e55bed608bf",
+      "bytes": 3478,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/LifespanCost.ts",
+      "git_blob_sha1": "e4df6fa724746bd29a3a9fafd00ca436008e1c95",
+      "sha256": "86c310da923012cc7421decbb84a83af8defbe2debdc95ff02c4e9fd4eb05614",
+      "bytes": 2812,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/LifespanSave.ts",
+      "git_blob_sha1": "431370f48456655e7927d189a10211123d3c73a3",
+      "sha256": "c369d5c1af3cffe46cb4045fdbfec597c552ceaeba855c86f5065ab5e2af58b7",
+      "bytes": 5961,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/LifespanWiring.ts",
+      "git_blob_sha1": "a5daab19489531df166772eec5a8a0c786b915e7",
+      "sha256": "e238b1967e06c51357f2ac1b7d512ce667ee58fa9b1ebe49b2857e41ebe5c6c6",
+      "bytes": 5695,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/LimitedPoolSchedule.ts",
+      "git_blob_sha1": "d85d1e78f5555dd84fea6c1a47a331ea2b9fd5d3",
+      "sha256": "303891e5e8817c2c28f67a84c74695a914ea597df037c82b14662b18e659159e",
+      "bytes": 3969,
+      "origin": "eff5c260 baseline"
+    },
+    {
+      "path": "assets/scripts/core/systems/LoginStreak.ts",
+      "git_blob_sha1": "13ab418ecc0f06d7ec6ed46e5fe19516e55c1843",
+      "sha256": "fd539f9ea03b55ed095725bf41ec9a154d72a92d007bcc1ad64b3963cc21d88d",
+      "bytes": 2048,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/LuckBloodlineMutation.ts",
+      "git_blob_sha1": "913f67c756f0f9099c5d60c57b89d106903afe44",
+      "sha256": "f04d6d452c7316be7a212bff66619b4a9817e29d7c40230965548869eb8b6b1e",
+      "bytes": 1905,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/LuckEventRate.ts",
+      "git_blob_sha1": "3a7e6b43946b9970c241afbb543a0354c2bf5dc4",
+      "sha256": "a2ec460fcb9e7fff2cbffa58cfa099043772f891ee343820170cbcfa6a0791d7",
+      "bytes": 1022,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/LuckFateInheritance.ts",
+      "git_blob_sha1": "0578c2030ab2e6e53fc989708cf3d5de2d631f75",
+      "sha256": "8023b94c362f8ac1f9bf6dc7eca1aae38d7656df4444b559c2df9ccf73b7f664",
+      "bytes": 3190,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/LuckTacticCopy.ts",
+      "git_blob_sha1": "fd8465844e2933c8f9c8f601bdb28ab7eef79efa",
+      "sha256": "dbc4d6b2dad832afd400c9f6a083d864dabcbf2bd682ddd411c9a648c03415fc",
+      "bytes": 3249,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/LuckThresholds.ts",
+      "git_blob_sha1": "b6d38e2974931c45d83fac3d692df9e767097768",
+      "sha256": "6278e0e879311f7bce7968685c9a79cef8398f0581bcefd08b5851a611c377f5",
+      "bytes": 2739,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/MentorBoundary.ts",
+      "git_blob_sha1": "fe58d3fe25d1329af057743b80437037f2f7fe60",
+      "sha256": "7fed628a403608e45fb371572890b43389e0354add400f16b7ad1ee1bb5744ac",
+      "bytes": 970,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/MentorBreakthrough.ts",
+      "git_blob_sha1": "3588f123a03f83ae2315228bec03aee5e6a4be98",
+      "sha256": "015afd5614589cb7f9ce69fa93189eddbcaec67f5bc82c126669fb5d116befb3",
+      "bytes": 5790,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/MentorCardTabs.ts",
+      "git_blob_sha1": "4ad671e637086e605ee58f9a34010d1c20cb950c",
+      "sha256": "5642e5fdb3f52ebb9eb47df8f2fadbbb3b79377e2e3b0c981eee007803147b91",
+      "bytes": 6163,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/MentorDeck.ts",
+      "git_blob_sha1": "8d62c8075894e84dab7261a76e3d79675cc9533c",
+      "sha256": "0366c5cd9c7d2dea50eabd240efaf59d97c3a79cfcd0353acaf9d2a208cf403b",
+      "bytes": 3072,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/MentorInspiration.ts",
+      "git_blob_sha1": "f4a7241fe5f662ac82dfbe251624bf39243468a5",
+      "sha256": "44347f574365c2c14e0594869edbcd4ce54b2606ef375ab58734ebb6d12d5948",
+      "bytes": 5673,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/MentorOverflow.ts",
+      "git_blob_sha1": "d609fe8c2be82697b041693d9a9001dadef5ceb6",
+      "sha256": "5212efb286412f30dc91409f0f12a4e6ac8cde642512a29407ccbc14f132abc3",
+      "bytes": 1907,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/MentorSources.ts",
+      "git_blob_sha1": "72093122ddd2080bb6184da782c10221f3678cd9",
+      "sha256": "d039004114525d3a4c208efcfadca3b5ca0f761a13ed64cce3bf34c94d11caff",
+      "bytes": 1880,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/MentorSupportCatalog.ts",
+      "git_blob_sha1": "b31ff1b9e8ce52b13b5e7f58d2e48afecfd57aea",
+      "sha256": "b6d8991c9edd80b5d34454cfcf3fcbeed6e579f6133d93fd59df703dc23f4965",
+      "bytes": 6809,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/MentorSynergy.ts",
+      "git_blob_sha1": "ce0324f9f34381240a535ac616440a161c82bf97",
+      "sha256": "51adf2e17b159fae9cdf799b9ace8d080e9565863484563825e2662e9132f519",
+      "bytes": 4616,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/MercenaryAffection.ts",
+      "git_blob_sha1": "89c56b15d39b234953f66afa8facfd83426019a5",
+      "sha256": "78c7bdaac2701db60fea34f797ff315b63f2d973bad4f6b4e22e5f6fd277f7a4",
+      "bytes": 1538,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/MercenaryBond.ts",
+      "git_blob_sha1": "40e55fd66abafee2171fc9054b20cead2b3b3986",
+      "sha256": "e5ed8156ea5ace7326ca0cb4a320b11d5f341ae60a2d679060d341aec41a6987",
+      "bytes": 3652,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/MercenaryIllustration.ts",
+      "git_blob_sha1": "2c950311d1a2fcabb5b4ab7aabe501d74509ad42",
+      "sha256": "8422387d50c3f4b619e4657693d86e180664698d5c6b5e0bc0e091fc4648358c",
+      "bytes": 2752,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/MercenarySaveModel.ts",
+      "git_blob_sha1": "25bbc20669d59795c5c05a9b621a2f5382f7bf6a",
+      "sha256": "a1f4a29ff04514e02e98c02316ef58c2a5c92beeff20334433f1ea152445f708",
+      "bytes": 5309,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/MercenaryScripts.ts",
+      "git_blob_sha1": "18f0d984ab58ee10c77b245d0a0f7695222b5208",
+      "sha256": "1b2d6913d57a7337b1fba5baa21ab5e07413ecd8c6a6e20b1f9a3a654183a767",
+      "bytes": 1260,
+      "origin": "106f fetched exact blob"
+    },
+    {
+      "path": "assets/scripts/core/systems/MilitaryReserve.ts",
+      "git_blob_sha1": "9ed74119dbc96652fbefd81c053e4e2136fccea3",
+      "sha256": "c6680ffab69127605f01563235fa7bdf336c175d9562a382615bf70295679384",
+      "bytes": 3702,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/MonthlyCard.ts",
+      "git_blob_sha1": "8aeb6f0b475fa2ebb39459da92f0e2d5bf0552f3",
+      "sha256": "7a461be07bc582d13e3ce3a52eaed0f233ab7113e4782a8f7087bb94b8ca99f7",
+      "bytes": 3349,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/MonthlyScenarioCup.ts",
+      "git_blob_sha1": "13d2910bcf14e934d0de61001dbdaab8a642bd9f",
+      "sha256": "5424aa15ff703c24908dc4bef3cd5676e2dfb12b2dbc055fe46f763bf9d290f4",
+      "bytes": 11694,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/MorningReport.ts",
+      "git_blob_sha1": "113dfb85d1811cddda62be821e684678560d05f0",
+      "sha256": "9da2d69b2fd6685fe178c0c1053658f8d7643cf7c9224f32b83da03de5bebd7e",
+      "bytes": 5207,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/NetworkService.ts",
+      "git_blob_sha1": "743bb3e834808b4b9807c5812bea07b0bb408112",
+      "sha256": "01db021e31d519bc3933f8a8b62b510935a106a1f624643fcbf6e9a526771f21",
+      "bytes": 2046,
+      "origin": "eff5c260 baseline"
+    },
+    {
+      "path": "assets/scripts/core/systems/NpcMemoryReadModel.ts",
+      "git_blob_sha1": "d98921afc2cd97b91e395098407574d606bb8527",
+      "sha256": "ff772302cfb4f7bfbd799a8af6ba47e8783d1f27fea2f94700b3d66d1e96150e",
+      "bytes": 5935,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/NpcUtilityAI.ts",
+      "git_blob_sha1": "0c9c9c871fe05d68a8bd7bab97884d122b2a7ccc",
+      "sha256": "77e375696e55e9397fcfe7521b7f335c2f2df4c2d443e9d6188a8d4b95c7ad75",
+      "bytes": 3725,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/NurtureEvents.ts",
+      "git_blob_sha1": "3547897d4d7a8916132f2bcbc461625cd2ff302f",
+      "sha256": "00066ab4f350085b184d538185459ffdba2cf58bf6ad54eb4d69c737d48ec0a4",
+      "bytes": 2000,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/NurtureRecordRow.ts",
+      "git_blob_sha1": "c9b5b7568e707e4621c53efd0f0dc7c6696cef11",
+      "sha256": "1728af4f6625c8b13bdd353a350d308a4dc1d87e829bdedd49577f1250525eb6",
+      "bytes": 4047,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/NurtureSystem.ts",
+      "git_blob_sha1": "745a0235ba075a604fa26df135f6d76c51bdadae",
+      "sha256": "edc60414565c656f690a528f169f3bded1efdecd66753cbb506c7cd3bc2cd2f6",
+      "bytes": 33667,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/OfficerSnapshot.ts",
+      "git_blob_sha1": "b9b4bd9f029964fc9ba08aceb2a003fd51d5439f",
+      "sha256": "55315361d27360ee6f7206f00ab14b7e36c1820d8ee1c5ceacc89ae0481de2d3",
+      "bytes": 4669,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/OfficerState.ts",
+      "git_blob_sha1": "529c56200d9b4a889c0d871d1f9e488d8b642ecd",
+      "sha256": "105aa014f0093d1121377c1e3ee27d6095956292b0ebfc9c856215b1c67aa253",
+      "bytes": 6222,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/OfflineBattleSnapshot.ts",
+      "git_blob_sha1": "1f3a3b7ed1bd1bd2ecae48ab0cc66962d3956d8e",
+      "sha256": "772190a6668d8859f4a6c3dfff5f50ca2cbee5e5b5bd4b0d58a0dcfe47d81748",
+      "bytes": 9353,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/OfflineInteractionEvents.ts",
+      "git_blob_sha1": "0d61a7416866eb832cb51836d1a268f5f8fca9f9",
+      "sha256": "90cbf48fa1a5947d89689101ef95c778d6e7d92b4214eda0079b6a11e940cd4c",
+      "bytes": 6037,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/OfflineInteractionTrigger.ts",
+      "git_blob_sha1": "faa8bf5e785a53a2766e677e0795793380302a72",
+      "sha256": "927c5a71c37af0b531f8bce4aa9e33c9aad5daacf957922376cec0a81ff579d5",
+      "bytes": 2141,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/OnboardingTutorial.ts",
+      "git_blob_sha1": "a8f954e57ad3a8aa38f752f92002616987980d30",
+      "sha256": "d5a12e38b4061415994a4b53614ad5ae6600b917acff136ec70e4a5a0201283b",
+      "bytes": 3705,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/OpeningLetter.ts",
+      "git_blob_sha1": "236b566ed92a9cfb3af81dc5087144619e91430a",
+      "sha256": "510b90a4b44239fecf38db59670a6f9ddafcf652616a3c60ea81728d16a6c937",
+      "bytes": 1924,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/OpeningProgress.ts",
+      "git_blob_sha1": "e76094db4c7922e548c06dea676f9f331c808918",
+      "sha256": "b8bc8cf593b5cad45c903eecad1da6c678f8dfd5a10c0f6ba61e547152e6fd5f",
+      "bytes": 1004,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/OverflowBond.ts",
+      "git_blob_sha1": "4b17ee0ef2e01dac22a90c3898a7d39e62c1018a",
+      "sha256": "0b6c5f3b17c7af491e6d977375bc467c8f75ef7dacd88733d40634c8fe0675c3",
+      "bytes": 2678,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/PlayerInventory.ts",
+      "git_blob_sha1": "4262f657d6d22e3dfe276b2b6a1f07039eb5644b",
+      "sha256": "706b9fbdf275eccf6987a143e4cbcc1b731b4fabe2a688ca4740d3dc47f880f2",
+      "bytes": 4464,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/PrisonerOfWar.ts",
+      "git_blob_sha1": "8d91b4d69d3ad6125e02436531df4debf66dcf29",
+      "sha256": "c709cd877ded262e5410599c3d64e550addfb7a5dd49787dba87397dfa8d40e4",
+      "bytes": 18094,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/RelationEvents.ts",
+      "git_blob_sha1": "b8b63c2a7e00d3421a9121409d4b4abfecd4fda3",
+      "sha256": "f0796627cfcc3b5b7c139a717e6933d2420030755d4080e9d223d6431397b592",
+      "bytes": 6366,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/ReportCardBook.ts",
+      "git_blob_sha1": "260dc43f28174d1f3795b5a9b9d9e7f86c3b1a3e",
+      "sha256": "5623709c468683cc0fe2cc2fc7b8c132ea14709864b63d52c0f38740c445007a",
+      "bytes": 2176,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/ResourceCap.ts",
+      "git_blob_sha1": "55f46bdcbd5aa4aa85496f3786450f6622e34578",
+      "sha256": "15fef7647c885d342956c88734f5adc5ac5fafc26e5aa1d0b93564a242a6f5b5",
+      "bytes": 1544,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/RetireReviewCopy.ts",
+      "git_blob_sha1": "cc22ff645c1d57f9a9bdf96105a70ef93993c4b1",
+      "sha256": "fe7fbc215803ab232f22f85593d1880d5ff6ea1f5b4146904d4288b028cd3582",
+      "bytes": 4527,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalAiDiplomacy.ts",
+      "git_blob_sha1": "8b79e122b34d771201a4af5fcc388147510642b9",
+      "sha256": "f19e882b24d74f529dc744dc388b18993052a1879491b662ba3aa3668aac15a8",
+      "bytes": 4863,
+      "origin": "106f fetched exact blob"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalBonding.ts",
+      "git_blob_sha1": "40383d49e9dd37e2fd9a6f04f7438edbad374cd6",
+      "sha256": "4d530a0918f4530789cf9512fe4f335ad66b06f8c5c33685a117744168e08fba",
+      "bytes": 2522,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalExpansion.ts",
+      "git_blob_sha1": "ef230cd37e3304b13aa1a16c913b08f085bb3739",
+      "sha256": "19e15b0d2dc793b2e12141df15fd6aea439b9b5e4c1a3f70a6f38125446ca38e",
+      "bytes": 5203,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalGovernance.ts",
+      "git_blob_sha1": "84acfa03761f5eefc0d4efa2c023d0af244cddbf",
+      "sha256": "cb37834bc5a49c4f1146b826d53e6ae8ed1f170a06e3e19840b442999227fd2b",
+      "bytes": 6574,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalHegemony.ts",
+      "git_blob_sha1": "8094c3662cb86fdd6a471db16bbe1414e3275362",
+      "sha256": "be812b2f5f84d701f0e49c7b24d07cf7c136a2cf62217631fb47d2165f997c6d",
+      "bytes": 3701,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalMilitaryIndex.ts",
+      "git_blob_sha1": "4b9e08973d1c96b6a057f40d8ac5ac9b82ca6138",
+      "sha256": "bee235655781086d931be9602a37c29ff1c202b695f8f05329744ae0add0abff",
+      "bytes": 2325,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalNations.ts",
+      "git_blob_sha1": "6af20a29455b2bf7977df7671364e8b96ea8104d",
+      "sha256": "a1764e0710af5f00961ab0c43733522987a5d65c1e66a3c5ede482ebc5dc8e8a",
+      "bytes": 25742,
+      "origin": "106f fetched exact blob"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalOfficerSeason.ts",
+      "git_blob_sha1": "013fb601a09d2f710b8a15e30a7271696391cefc",
+      "sha256": "6f9900ba3f672baea324d0623b9ffd743c1fa278e243e9fde93ce7fcb75fe96f",
+      "bytes": 8236,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalPlayerEvents.ts",
+      "git_blob_sha1": "4d7a1e30c6d82acf99c2d28e8d89992afba6e613",
+      "sha256": "1ca7c4af2157934057aed6651e4e51e613fda4fcbe33e2ead2b2cd5ebbe4c9ce",
+      "bytes": 4930,
+      "origin": "106f fetched exact blob"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalProposals.ts",
+      "git_blob_sha1": "95fadeea79662e14daeee1db29f6ce2a881ddc6a",
+      "sha256": "3306eaa6894d3972bf61d9547862a6fc04e8354b5e208ea27f1d34977fb06d3b",
+      "bytes": 4416,
+      "origin": "106f fetched exact blob"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalRiseFall.ts",
+      "git_blob_sha1": "283992ee0b40a1f7b3250cb292251ef18857cc73",
+      "sha256": "a3446772b80e37e50a7ff1c505ce6b7c4c340f92c73f708e93ccd08488ce86e6",
+      "bytes": 4071,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalRulerLines.ts",
+      "git_blob_sha1": "4e9a137fd13dbac5652374dd9dfcca5ccbb3e8f6",
+      "sha256": "d33b1cb4cc586fd08cd934e204c29312e88648cc793a9c0b84bf929f343ba8bb",
+      "bytes": 3701,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalTrade.ts",
+      "git_blob_sha1": "84fd5f636ff1e857cbbfb230fc38f174c6e85e88",
+      "sha256": "c874685c13a96123cec5fb2b2a8a631e7a688f109694948f71b582a706b97b2a",
+      "bytes": 4288,
+      "origin": "106f fetched exact blob"
+    },
+    {
+      "path": "assets/scripts/core/systems/RosterRoleLoad.ts",
+      "git_blob_sha1": "c10f561e3d4e2cd42fdd21c3a6613ddce13e9534",
+      "sha256": "88b47defa271fa2f1006092442fa365daf4eac90cda35b0de4dac51928883aa2",
+      "bytes": 1044,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/SageDivination.ts",
+      "git_blob_sha1": "4d04ae10dffa286a941af9b506d5018ebafd0dc0",
+      "sha256": "8ab8cbbe03069d36629a611162f026c74e32459cc24ff72ee7c6a5570a1b1029",
+      "bytes": 10211,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/SageRemarks.ts",
+      "git_blob_sha1": "35ebe9feed77f1448c760e5fd39b7196c7e72670",
+      "sha256": "10c967c19cb82600b87511f065207a661f4d86fb0311735ab074f98e94b47b72",
+      "bytes": 4105,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/SandtableProgress.ts",
+      "git_blob_sha1": "92ca6cf4d3666f925f93ccde1be7101d77ee90ba",
+      "sha256": "0984141d6e127ba4b3d976f85143a2abbc8d9298e7562db5be4387017a5fa20b",
+      "bytes": 3398,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/SandtableTerritories.ts",
+      "git_blob_sha1": "8fae819c9aabce2115e6a959b7a65b1f86f15084",
+      "sha256": "1ac73dea4ed5806fe0d8125d49320dcf792b4f1b65bff48c4df3bac4e18d2860",
+      "bytes": 3864,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/SeasonModifiers.ts",
+      "git_blob_sha1": "a36230f51be08a0fc2f63e7d985f79a0f979e4da",
+      "sha256": "4cad112187ed930adb09b5cddbd06ed0e96f9c4c3d2384d124594a64889954ee",
+      "bytes": 4127,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/SeededRandom.ts",
+      "git_blob_sha1": "954af8dada81f4d66b61a74bc76f07ee4e3e1666",
+      "sha256": "2c1289a0b00ad305d731d48d0fbf8886dcf1adbd17e092c19335cf333837c6ae",
+      "bytes": 1523,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/SevenDayJourney.ts",
+      "git_blob_sha1": "b85c63e37651333f3a33cb4e61befddfc291daaf",
+      "sha256": "6c22fbea16714ed33ba5a2aa7dbd53d249740de617dcbac636022fdc4cee2f6e",
+      "bytes": 5816,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/SortieDeploy.ts",
+      "git_blob_sha1": "4a3997749f7c9d973b805808490238825531e223",
+      "sha256": "b4db8112b531c741531fddf576d086d912321c634b34d0166fb9e89bea4cf660",
+      "bytes": 35568,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/SoulFragmentLedger.ts",
+      "git_blob_sha1": "aa1c690f0b82769d0f0e15d53f1f221873a427e6",
+      "sha256": "a52d3823fd288e25cc7b2e1b51d2b6cc2b0e25081ab077077a79a1cce1f8a827",
+      "bytes": 3262,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/StatRevelation.ts",
+      "git_blob_sha1": "26ca86e50acdf57529ff2c68f5b4746bf9a9ac7d",
+      "sha256": "b93bd45dcac20970ff1d14a6d9c6c02f9d8c9e0def77f187dcefc76eaf1f9b6e",
+      "bytes": 2538,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/SyncHash.ts",
+      "git_blob_sha1": "dde3d3cb01946980e71b5cb9aecc5c4eeaf235dc",
+      "sha256": "250be41b793ed3aec4b1c7e90eee2c659ab673c6936921c6fedb24dafe1786c4",
+      "bytes": 7525,
+      "origin": "eff5c260 baseline"
+    },
+    {
+      "path": "assets/scripts/core/systems/SyncManager.ts",
+      "git_blob_sha1": "a1069429c1b4522940438230644adaff74323bb8",
+      "sha256": "88bf7d3d082aa6ca493d33a9abd091b134d9cad54eddcdbb8469026f464ec9f3",
+      "bytes": 27954,
+      "origin": "eff5c260 baseline"
+    },
+    {
+      "path": "assets/scripts/core/systems/TacticLearning.ts",
+      "git_blob_sha1": "718489685d2d5ce46380d8c12111853298033991",
+      "sha256": "bc2b85196fcf592ac0d5d5533746722cc9377ab9f28309f98d704dc0ddf794ac",
+      "bytes": 3633,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/TacticLoadout.ts",
+      "git_blob_sha1": "43f560da63fbbe4098f7d668d0c56360ecde3b99",
+      "sha256": "89f35038ab15fd4913be1f37cfdaa6383cc5ee27b0aa88305a071bb38c4e294a",
+      "bytes": 1139,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/TallyDeathSettlement.ts",
+      "git_blob_sha1": "a17bf3f6233974ce2dce77b99875a841115ef488",
+      "sha256": "4c110b520f98b11a209f2e8fd61407fdeb0fdc80a7a2960f9fefad87ab1ba211",
+      "bytes": 4122,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/TeachingSpiritTalisman.ts",
+      "git_blob_sha1": "ed53b875fe47f7f5e5cd7a62ed21b3b18cc38a43",
+      "sha256": "683516e98b12794a9ceddfc2f9f77a3397875ea74d44afd7daa76dc3bc5002cb",
+      "bytes": 2533,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/TerritoryUpgrade.ts",
+      "git_blob_sha1": "9b45f2b1beaafe417eb2f917845d6ee10616c71a",
+      "sha256": "2ff37837390104c8379c46f8289640e887284c0ecc3689bbc231f87498ad4a40",
+      "bytes": 2747,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/TigerTally.ts",
+      "git_blob_sha1": "9cc0c40a77f192f8bd2ea4d948002510e0acb608",
+      "sha256": "99b5561a9af51ce67c4dac22df5c0e89ec21a1497adebaae32d79625a34d6568",
+      "bytes": 6421,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/TigerTallyHoldings.ts",
+      "git_blob_sha1": "1e1aefa122c284cc8c18b202bb627e131d2fb5ca",
+      "sha256": "b4dc1f96f82fbf5c07ed391d3c621b74ad52dfde28229aa5da0177892d34caa1",
+      "bytes": 4963,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/TigerTallyLoyalty.ts",
+      "git_blob_sha1": "e75b1c198d1d845359e8bd18d9e223954c777abb",
+      "sha256": "d8a0eaf2e79ad3e8afdb117d6d6748f3fa3d694a04f40a646fd4a1eb61cf88a8",
+      "bytes": 6917,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/TigerTallyStar.ts",
+      "git_blob_sha1": "a104e151075f342632a1b97c2d954128505b5771",
+      "sha256": "a232559811da234e1e54ff5d484a4e5dc321e9c6448e4d4a6a29391834f79693",
+      "bytes": 4471,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/TournamentLocal.ts",
+      "git_blob_sha1": "9076fbba72bbfc58b5c21381674a1acde3b779ec",
+      "sha256": "d260f6e5b630fcd369af89379601d8de902b3bfbb75d6e76d09d1c1bf85cf370",
+      "bytes": 21096,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/TournamentSeason.ts",
+      "git_blob_sha1": "7b4a2b6bac4ea000338836b05333a2c860d9ce06",
+      "sha256": "07fee4ae46ff5a005a5f6dfe0718f27486f6c235273bff5c7127c46b7dba5bed",
+      "bytes": 2616,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/TrainingGainFormula.ts",
+      "git_blob_sha1": "85711e3762421be0739368aa52ad9149c3b42957",
+      "sha256": "5884fc4ca5f01a0aef46b6f529887496fa84a1c93c879a97bc789e2cf1748521",
+      "bytes": 3391,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/TravelCountdown.ts",
+      "git_blob_sha1": "abd1e47d19dae7e831005aa43b32e112f56596a4",
+      "sha256": "7f20dc277cebf2969aff942878c3cea2bc4fb51a81d17047dac2ee22945f2b40",
+      "bytes": 2647,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/TroopCounterScripts.ts",
+      "git_blob_sha1": "2675af4ea8bd65b49b22828c5824f3d4b46b4a09",
+      "sha256": "b238d0817ef177270f2a9a1999c2e8f8893dc6ab440592aada96fc6252f49488",
+      "bytes": 1719,
+      "origin": "106f fetched exact blob"
+    },
+    {
+      "path": "assets/scripts/core/systems/Unveiling.ts",
+      "git_blob_sha1": "5dfb209b6703a0d1043aa13d7e3816276fc66220",
+      "sha256": "d42cbcc152560f32763e2e49cf6d2198cb3160ed54ba74b79ea144ecce08dfef",
+      "bytes": 10906,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/VirtualAncestorGenerator.ts",
+      "git_blob_sha1": "3037a7a0e176c176a9d03f4561404d102c6503d0",
+      "sha256": "52988e2f1c5caff05f5e07d9855b0962ce472f8e4ca6fd924516eb048ab937e7",
+      "bytes": 21182,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/VitalityBattleGate.ts",
+      "git_blob_sha1": "8ae3597f17ff9f94c2758aa781aa4b55b2083f9c",
+      "sha256": "7c6043978188ba537150c3615f4b23d94554e3bb2963e79ccf105c8101dd5920",
+      "bytes": 2872,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/VitalityCap.ts",
+      "git_blob_sha1": "dd4d372c0c85b3b6b90edae7688a1ebc48c1cde5",
+      "sha256": "cc2b849f352cc1770864290597ff18b43be70fceb0d20d60683bb8f145171d01",
+      "bytes": 1265,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/WildGene.ts",
+      "git_blob_sha1": "2b762602661c90b744e8e923c641c6f759bc34c7",
+      "sha256": "e7cb237fe5dc143cf847f3e1df51a8f967f059931544a4847086032b21ecc553",
+      "bytes": 2284,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/WishPool.ts",
+      "git_blob_sha1": "9c43ce4405d83372dd626b8addb53f1fcbd4c8eb",
+      "sha256": "0219c66dc7a668aa2e11cab04ee10728acdf026bb8be25bba222b9a9ce591093",
+      "bytes": 8799,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/systems/YearReport.ts",
+      "git_blob_sha1": "fdd4208e1d50cf4ab3979b36f49fc726e35e24a8",
+      "sha256": "1aeb2363c12fd7c113c98448033025a73a6111886ca81aed42781b7cecd1bd1a",
+      "bytes": 4602,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/core/utils/UCUFLogger.ts",
+      "git_blob_sha1": "0881f01dbb0631ec1e2f6aeeb80b9576dc58404f",
+      "sha256": "e55de0c2ca135696d2a21172d5da960bc5f266b2e2e11e7d3b92a0cb4d0b2f51",
+      "bytes": 5203,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/shared/CommonEnums.ts",
+      "git_blob_sha1": "090bc87b7e738513cadbeace408c5cd86b397b15",
+      "sha256": "7c39a1a416f80f31197146edd0026f92c128c154819fc90c6339105c0bfd7766",
+      "bytes": 2942,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/ui/components/NurtureSessionMapper.ts",
+      "git_blob_sha1": "941d5d83c48a5d20ddf1331a9d9664349445dd50",
+      "sha256": "9041f97fd16bb46f7ea63b774fa5056b7ab63ece6516c222c0b078dbb57a5cf1",
+      "bytes": 13961,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/ui/core/BondingSetupController.ts",
+      "git_blob_sha1": "5be68d626774c1af8ab6a36e6e6d8606354d7a3b",
+      "sha256": "d338afe4fbc2bff17f6709aeb1df54a93a1cf41c4b1d6ae5a4e34465f1c40fdd",
+      "bytes": 20711,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/ui/core/BreedingPreviewPresenter.ts",
+      "git_blob_sha1": "3a8e1860716f99d177fa43935b1621e043e8979e",
+      "sha256": "b1f5b237cdcf59b3c2b32e0f63da75ec16b9710dd9efe7eea13361793bfa58da",
+      "bytes": 1686,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/ui/core/BreedingTexts.ts",
+      "git_blob_sha1": "57b485a1592c700c42ac8cc1a4382d421a097cc9",
+      "sha256": "ea7a5f627b885e4d49f168bb2bab909351da8c6d2a614a8eff6e76873c93eed7",
+      "bytes": 2248,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/ui/core/DomesticPanelController.ts",
+      "git_blob_sha1": "834bd342fb5eb634670e544044d5d5f659c42d78",
+      "sha256": "db7ef91b4c8ae5fd7601d9381048ddc49972b759590a904fe43a495e838e7eaa",
+      "bytes": 11789,
+      "origin": "106f fetched exact blob"
+    },
+    {
+      "path": "assets/scripts/ui/core/FateScriptTexts.ts",
+      "git_blob_sha1": "ec34360d596ffd35f7d90b2850439895426c89c8",
+      "sha256": "29f156a3adea6bf50281c4ac51f4bdace46b0cc8ad2544baf6922daf3e6c70be",
+      "bytes": 2710,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/ui/core/GeneralLifecyclePresenter.ts",
+      "git_blob_sha1": "560a5dde60408122348a6417ed3c119da0660c22",
+      "sha256": "a0954c87be3fdbd3a3da04e7927f118fb6c6605e67e81a0cb446aff2de8057ef",
+      "bytes": 2721,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/ui/core/MercenaryPanelController.ts",
+      "git_blob_sha1": "4534604e107bdedaa104b4903004c4f9ac5f823d",
+      "sha256": "bf17d8b82cd2e76b3e9a5cae687b300786e78ccde64deb12d84e295b6395231e",
+      "bytes": 7500,
+      "origin": "106f fetched exact blob"
+    },
+    {
+      "path": "assets/scripts/ui/core/NurtureFlowController.ts",
+      "git_blob_sha1": "c3bc341233c51d8fee82cfd8c1ed21a09fb2b2f9",
+      "sha256": "a7b1e7334603200fbb9e270911fd9683655520cf36dba751cc397fa67793babd",
+      "bytes": 48861,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/ui/core/RelationTexts.ts",
+      "git_blob_sha1": "f9991b09a17d789011bf817920c796873356196c",
+      "sha256": "094fa12ccc93f1db595f571e6265a66982c2323ee97db6a9d89df372d9f7daa0",
+      "bytes": 4030,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/ui/core/RivalDiplomacyController.ts",
+      "git_blob_sha1": "46dc5e089f17116070f63b34b032c11a0e02e499",
+      "sha256": "f3300ddb4828199afba08cdb2b90a1835e8fbc49ccb3eed5982d696077b8290a",
+      "bytes": 6159,
+      "origin": "106f fetched exact blob"
+    },
+    {
+      "path": "assets/scripts/ui/core/SeasonTexts.ts",
+      "git_blob_sha1": "745ac46217cef340336c251ad317f8929e91812a",
+      "sha256": "e8cda2b5b95b7dea094442621ca3960838adbc8c70a3f1041cc9d02306997170",
+      "bytes": 4239,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/ui/core/VitalityScriptTexts.ts",
+      "git_blob_sha1": "237765cfcda0bbc8c9e3d73dc514329c4aebdbcb",
+      "sha256": "597945ae4dacdb4f72821f342374ab7c4555f3ddf4a7aac370295cbe7b98ec21",
+      "bytes": 2028,
+      "origin": "f4 proven closure"
+    },
+    {
+      "path": "assets/scripts/ui/scenes/LobbyScene.ts",
+      "git_blob_sha1": "0bea6feaa485ac31f7ccf95378b1a754ab9b3d40",
+      "sha256": "acec51c0d8da6c752827faf2e8cbf973fadf20da072b49820158701a816ba8b7",
+      "bytes": 280476,
+      "origin": "106f fetched exact blob"
+    },
+    {
+      "path": "server/schema/sync06-patch-whitelist.ts",
+      "git_blob_sha1": "57a49e33989458e00e6db09f49c63c8125beb7c8",
+      "sha256": "8b18224779e5bbab5edc5ffead94e76c3080b107f85a2f82546860d8a436e552",
+      "bytes": 4434,
+      "origin": "106f fetched exact blob"
+    },
+    {
+      "path": "tests/RivalProposals.test.ts",
+      "git_blob_sha1": "fc49b3d3a2863e70a3bb484729c7c075df9bfeeb",
+      "sha256": "bf7ddff27a56b98b7de0c6490594d3473cf7af10cb9686d03edecfc9bdd334b6",
+      "bytes": 8555,
+      "origin": "106f fetched exact blob"
+    }
+  ]
+}

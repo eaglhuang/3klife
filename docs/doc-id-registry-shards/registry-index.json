@@ -385,8 +385,8 @@
   },
   {
     "id": "doc_index_1040",
-    "path": "docs/cross-ref/code/ui-spec-json.md",
-    "title": "代碼索引分片：UI Spec JSON 畫面表",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/nation_fall_save_v1/README.md",
+    "title": "Nation Fall & Save Chain Verification Package (v1, Fixed `106f053d`)",
     "category": "index"
   },
   {
@@ -447,6 +447,12 @@
     "id": "doc_index_1050",
     "path": "docs/cross-ref/code/tools.md",
     "title": "代碼索引分片：工具、建置與 Agent Skills",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1051",
+    "path": "docs/cross-ref/code/ui-spec-json.md",
+    "title": "代碼索引分片：UI Spec JSON 畫面表",
     "category": "index"
   }
 ]

@@ -1768,5 +1768,23 @@
     "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/vitality/REPORT.md",
     "title": "G07 精力、疲勞、恢復與加速卡：有界玩法驗證",
     "category": "spec"
+  },
+  {
+    "id": "doc_spec_0298",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/nation_fall_save_v1/REPORT.md",
+    "title": "原生出征 → 零領地 → 滅亡 → 保存／讀回",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0299",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/nation_fall_save_v1/INDEPENDENT_REVIEW.md",
+    "title": "Independent review",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0300",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/nation_fall_save_v1/provenance/prior-birth-coverage/REPORT.md",
+    "title": "原出生 → 原20季增齡 → 開獎／宿命 → 育成入場",
+    "category": "spec"
   }
 ]
