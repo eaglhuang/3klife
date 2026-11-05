@@ -14,6 +14,7 @@
  * Unity 對照：像 BreedingRules 這種純 C# static class，輸入兩份 GeneralData 與 System.Random，
  * 回傳新的 GeneralData；寫回名冊與存檔交給上層 Service（BreedingService）。
  */
+import { applyCompactLock } from './FamilyCompact';
 import type { GeneralConfig, GeneralGeneConfig, GeneralStatsConfig } from '../models/GeneralUnit';
 import { toCanonicalRole, type CanonicalRole } from '../models/GeneralRole';
 import type { PersonRecord } from '../models/PersonRegistry';
@@ -543,6 +544,8 @@ export type BreedingMode = 'Standard' | 'Peace_Lineage';
 
 export interface BreedingRequest {
     father: BreedingGeneral;
+    /** 世交合譜鎖定的因子（G3 §F-3 途徑②）；受孕成功時必傳 */
+    lockedFactorId?: string;
     /** 選填；舊呼叫端不傳時視為 Standard */
     mode?: BreedingMode;
     mother: BreedingGeneral;
@@ -569,6 +572,8 @@ export interface BreedingRequest {
 export type BreedingOutcome = 'blocked' | 'failed' | 'conceived';
 
 export interface BreedingResult {
+    /** 世交合譜真的保住了本來會被擠掉的因子（PROG-2-1813） */
+    compactRescued?: boolean;
     outcome: BreedingOutcome;
     /** 本次結緣新觸發的治理關係事件（KIN-08，例如宿敵配種）；blocked 時不產生 */
     relationEvents?: RelationEventHit[];
@@ -698,9 +703,12 @@ function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMo
     const bloodlineFactors = luckEffects.bloodlineMutation
         ? applyBloodlineMutation(tacticFactors, request.random, request.dictionary)
         : tacticFactors;
-    const childFactors = luckEffects.fateInheritance
+    const fatedFactors = luckEffects.fateInheritance
         ? applyFateInheritance(bloodlineFactors, sources, { random: request.random, dictionary: request.dictionary, enabledColors: request.enabledColors })
         : bloodlineFactors;
+    const childFactors = request.lockedFactorId
+        ? applyCompactLock(fatedFactors, request.lockedFactorId, request.father, request.mother, { dictionary: request.dictionary, enabledColors: request.enabledColors, maxFactors: request.maxFactors ?? DEFAULT_MAX_INHERITED_FACTORS })
+        : fatedFactors;
     const child = createChild({
         id: request.childId,
         father: request.father,
@@ -729,6 +737,7 @@ function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMo
 
     return {
         bloodFatigue,
+        compactRescued: childFactors !== fatedFactors,
         outcome: 'conceived', reasons: [], conceptionRate: rate, father, mother, child, childPedigree: pedigree, ep, factors: childFactors,
         luckEffects,
     };

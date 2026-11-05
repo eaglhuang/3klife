@@ -26,6 +26,8 @@ import { factorStageText } from '../../core/systems/FactorVisibility';
 import { matchRumorLine, sameSurnameNote, matchesRumorRoute, nextRumorRoute, RumorRoute, rumorRouteFiltered, rumorRouteName } from '../../core/systems/MatchRumor';
 import { yuedanFiltered, yuedanList, yuedanRevealLine } from '../../core/systems/YuedanReview';
 import { synergyWindowLine, type FamilySynergyLedger } from '../../core/systems/FamilySynergy';
+import { compactCostFor, compactFamilyOf, sharedFactorsOf } from '../../core/systems/FamilyCompact';
+import type { GeneralGeneConfig } from '../../core/models/GeneralUnit';
 import type { FactorDictionary } from '../../core/systems/FactorInheritance';
 import type { BreedingService } from '../../core/services/BreedingService';
 import { type BreedTextLookup, fallbackBreedText } from './BreedingTexts';
@@ -119,6 +121,9 @@ export interface BondingSetupDeps {
     recordBreeding?: (record: BreedingBirthRecord) => void;
     /** 世交相性 K 的滑動窗（G3 §F-2）；未提供時不顯示 */
     familySynergy?: () => FamilySynergyLedger;
+    /** 世交合譜收的黃金（G3 §F-3）；未提供時不能合譜 */
+    gold?: () => number;
+    spendGold?: (amount: number) => boolean;
     /** 共鳴標籤 id 換顯示名稱；正式環境查因子字典，未提供時顯示原值 */
     tagName?: (tag: string) => string | null | undefined;
     /** 結緣畫面文案查詢（ui.breed.*）；正式環境接 i18n.t，未提供時用 zh-TW 預設文案 */
@@ -133,6 +138,8 @@ export class BondingSetupController {
     private _yuedanOnly = false;
     /** 鄉評路線篩選（G4 §F-2 Layer 1）；只影響清單，不寫存檔 */
     private _route: RumorRoute = null;
+    /** 世交合譜要鎖的因子；受孕成功後清掉，不寫存檔 */
+    private _compactFactorId: string | null = null;
 
     constructor(private readonly _deps: BondingSetupDeps) {}
 
@@ -215,6 +222,15 @@ export class BondingSetupController {
         this._notice = missing.length > 0 ? `沒有${rumorRouteName(route)}路線的${missing.join('、')}人選，這邊不篩路線。` : '';
     }
 
+    /** 不用 → 共有因子一 → 共有因子二 → 不用 */
+    cycleCompact(): void {
+        const ids = this._compactOptions().map((gene) => gene.id);
+        const current = this._selectedCompact()?.id;
+        const next = current ? ids.indexOf(current) + 1 : 0;
+        this._compactFactorId = ids[next] ?? null;
+        this._notice = '';
+    }
+
     cycleFather(step = 1): void {
         this._fatherId = cycle(this.fathers(), this.fatherId, step);
         this._notice = '';
@@ -242,7 +258,10 @@ export class BondingSetupController {
         const motherId = this.motherId;
         if (!fatherId || !motherId) throw new Error('[BondingSetup] 請先選好父方與母方');
 
-        const result = this._deps.breeding.breed(fatherId, motherId);
+        const compact = this._selectedCompact();
+        const cost = compact ? this._compactCost() : 0;
+        const canPay = !!compact && (this._deps.gold?.() ?? 0) >= cost;
+        const result = this._deps.breeding.breed(fatherId, motherId, undefined, canPay ? compact?.id : undefined);
         if (result.outcome === 'blocked') {
             this._notice = `無法結緣：${result.reasons.map((r) => BLOCK_REASON_TEXT[r]).join('、')}`;
             return result;
@@ -262,6 +281,14 @@ export class BondingSetupController {
             // 驗證通過才記錄；驗證失敗不影響結緣結果（BRD-12 暫定）
             const built = buildBreedingBirthRecord(result, omen);
             if (built?.record) this._deps.recordBreeding?.(built.record);
+            if (compact && !canPay) {
+                this._notice += '　黃金不足，這胎未行世交合譜。';
+            } else if (compact && result.compactRescued && this._deps.spendGold?.(cost)) {
+                this._notice += `　世交合譜：保住了 ${compact.displayName ?? compact.id}，耗黃金 ${cost}。`;
+            } else if (compact) {
+                this._notice += `　世交合譜：${compact.displayName ?? compact.id} 本就傳下，未耗黃金。`;
+            }
+            this._compactFactorId = null;
         }
         // 父母壽命耗盡時提示，與培育回合的「壽命耗盡，武將已故」一致（QA 回報，PROG-2-0224）
         const deceased = [
@@ -293,6 +320,7 @@ export class BondingSetupController {
             bondTitle: '結緣配置',
             yuedanFilterLabel: this._yuedanOnly ? '顯示全部' : '只看月旦評',
             rumorRouteLabel: `路線：${rumorRouteName(this._route)}`,
+            compactLabel: `合譜：${this._selectedCompact()?.displayName ?? this._selectedCompact()?.id ?? '不用'}`,
             bondNotice: this._notice,
             bondEmptyHint: `名冊中需要至少一位滿 ${BREEDING_MIN_AGE} 歲的男性與女性武將才能結緣。可先到轉蛋招募，或推進季度讓子嗣長大。`,
             fatherPager: pagerText(fathers, father),
@@ -307,6 +335,7 @@ export class BondingSetupController {
             btnCloseBond: true,
             btnYuedanFilter: this._yuedanIds().length > 0,
             btnRumorRoute: this._parents().length > 0,
+            btnCompact: this._compactOptions().length > 0,
             btnPrevFather: fathers.length > 1,
             btnNextFather: fathers.length > 1,
             btnPrevMother: mothers.length > 1,
@@ -361,12 +390,42 @@ export class BondingSetupController {
         if (fatigueForecast) texts.inbreedingLabel += `｜${fatigueForecast}`;
         const surnameNote = sameSurnameNote(father.name, mother.name);
         if (surnameNote) texts.inbreedingLabel += `｜${surnameNote}`;
+        const compact = this._selectedCompact();
+        if (compact) {
+            const cost = this._compactCost();
+            texts.inbreedingLabel += `｜世交合譜：鎖定 ${compact.displayName ?? compact.id}，被擠掉時才耗黃金 ${cost}${(this._deps.gold?.() ?? 0) < cost ? '（不足）' : ''}`;
+        }
         enabled.btnConfirmBond = eligibility.ok;
 
         return { fatherId: father.id, motherId: mother.id, mode, sageIds: sage.ids, texts, actives, enabled };
     }
 
     // ── 內部 ───────────────────────────────────────────────────────────────
+
+    private _currentPair(): { father: BreedingGeneral; mother: BreedingGeneral } | null {
+        const father = this.fathers().find((g) => g.id === this.fatherId);
+        const mother = this.mothers().find((g) => g.id === this.motherId);
+        return father && mother ? { father, mother } : null;
+    }
+
+    /** 雙親之一來自聯姻名門才能合譜；看不到的因子不列出 */
+    private _compactOptions(): GeneralGeneConfig[] {
+        const pair = this._currentPair();
+        if (!pair || !this._deps.spendGold || !compactFamilyOf(pair.father, pair.mother)) return [];
+        const level = this._deps.playerDiscoveryLevel?.() ?? 1;
+        return sharedFactorsOf(pair.father, pair.mother).filter((gene) => (gene.discoveryLevel ?? 1) <= level);
+    }
+
+    /** 換配對後原本選的因子可能不再共有，這裡一併視為沒選 */
+    private _selectedCompact(): GeneralGeneConfig | null {
+        return this._compactOptions().find((gene) => gene.id === this._compactFactorId) ?? null;
+    }
+
+    private _compactCost(): number {
+        const pair = this._currentPair();
+        const family = pair ? compactFamilyOf(pair.father, pair.mother) : null;
+        return family ? compactCostFor(family, this._deps.familySynergy?.()) : 0;
+    }
 
     private _yuedanIds(): string[] {
         return yuedanList(this._deps.roster.getAll() as BreedingGeneral[]).map((g) => g.id);
