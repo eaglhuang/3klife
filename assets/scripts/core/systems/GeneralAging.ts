@@ -12,6 +12,7 @@
  * 只回傳「發生了什麼事」，不直接操作 UI 或 GameObject。
  */
 import type { GeneralConfig } from '../models/GeneralUnit';
+import { crossedPeakEnd, type PeakCurveSubject } from './PeakCurve';
 
 export const AGE_PER_SEASON = 0.25;
 export const BASE_LIFESPAN = 65;
@@ -30,7 +31,7 @@ export type AgingGeneral = GeneralConfig & {
     redGeneLevel?: number;
 };
 
-export type AgingEventType = 'reached-retirement-age' | 'died' | 'entered-growth-stage';
+export type AgingEventType = 'reached-retirement-age' | 'died' | 'entered-growth-stage' | 'passed-peak';
 
 /** 成長階段（LIFE-13 劇本句，PROG-2-0800）：起點年齡含本身；對應 LifeScriptCopy 的 grow-up / prime / elder */
 export type LifeGrowthStage = 'grow-up' | 'prime' | 'elder';
@@ -115,6 +116,10 @@ export function ageGeneralsOneSeason(
 
         for (const stage of growthStagesCrossed(previousAge, general.age)) {
             events.push({ type: 'entered-growth-stage', generalId: general.id, age: general.age, stage });
+        }
+
+        if (crossedPeakEnd(general as unknown as PeakCurveSubject, previousAge, general.age)) {
+            events.push({ type: 'passed-peak', generalId: general.id, age: general.age });
         }
 
         const chance = deathChancePerSeason(general.age, general.maxLifespan);

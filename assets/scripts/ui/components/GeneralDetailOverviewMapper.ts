@@ -1,3 +1,4 @@
+import { peakCurveName, type PeakCurveSubject } from '../../core/systems/PeakCurve';
 import type {
     GeneralConfig,
     GeneralDetailCrestState,
@@ -28,6 +29,12 @@ import { buildHeirloomCardView, type HeirloomCardView } from '../../core/systems
 import type { PlayerInventory } from '../../core/systems/PlayerInventory';
 import { resolveRarityTier } from '../../core/utils/RarityResolver';
 import { resolveCommercialBand } from '../../core/utils/CommercialRarityBand';
+
+/** 年齡加上器局巔峰曲線（培育武將才有，PROG-2-1822）；格子窄，只放曲線名 */
+function ageWithPeakCurve(config: { age?: number }): string {
+    const curve = peakCurveName(config as unknown as PeakCurveSubject);
+    return `${Math.floor(config.age as number)} 歲${curve ? `・${curve}` : ''}`;
+}
 
 export interface GeneralDetailOverviewData {
     header: {
@@ -274,7 +281,7 @@ export function buildGeneralDetailIdentity(config: GeneralConfig, fame: number |
         role: known(formatRole(config.role)),
         status: known(formatStatus(config.status)),
         gender: config.gender ? GENDER_DISPLAY[config.gender.toLowerCase()] ?? config.gender : IDENTITY_EMPTY,
-        age: typeof config.age === 'number' ? `${config.age} 歲` : IDENTITY_EMPTY,
+        age: typeof config.age === 'number' ? ageWithPeakCurve(config) : IDENTITY_EMPTY,
         lifespan: IDENTITY_EMPTY,
         vitality,
         fameValue: fame === null ? IDENTITY_EMPTY : fame.toLocaleString('en-US'),
