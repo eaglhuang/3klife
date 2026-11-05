@@ -15,6 +15,7 @@
  * 畫面層拿 GetView() 的 ViewModel 一次刷新 Text 與 Button.interactable。
  */
 import { bloodFatigueForecast } from '../../core/systems/BloodFatigue';
+import { diversityLine } from '../../core/systems/DiversityFactor';
 import { getSage } from '../../core/systems/SageDivination';
 import { OMEN_LABEL, pickOmen, type OmenKind, type SageRemark } from '../../core/systems/SageRemarks';
 import { buildBreedingBirthRecord, type BreedingBirthRecord } from '../../core/systems/BreedingBirthRecord';
@@ -112,7 +113,7 @@ export interface BondingSetupDeps {
     sageRemarks?: (fatherId: string, motherId: string) => SageRemark[];
     /** 求籤令數量（ORAC-05）；未提供時顯示 ×0 */
     oracleTokens?: () => number;
-    breeding: Pick<BreedingService, 'checkEligibility' | 'previewEp' | 'breed'> & Partial<Pick<BreedingService, 'ancestorSeats' | 'kinPurificationTargets'>>;
+    breeding: Pick<BreedingService, 'checkEligibility' | 'previewEp' | 'breed'> & Partial<Pick<BreedingService, 'ancestorSeats' | 'diversityOf' | 'kinPurificationTargets'>>;
     /** 開畫面前的準備（載入血統圖、補回已出生子嗣）；失敗只提示，不擋畫面 */
     prepare?: () => Promise<unknown>;
     /** 結緣後存檔；失敗只回報，不回滾 */
@@ -444,6 +445,8 @@ export class BondingSetupController {
                 : '血緣：3 代內無共同祖先';
         const fatigueForecast = bloodFatigueForecast((father as BreedingGeneral).bloodFatigue, (mother as BreedingGeneral).bloodFatigue, eligibility.inbred);
         if (fatigueForecast) texts.inbreedingLabel += `｜${fatigueForecast}`;
+        const diversity = this._deps.breeding.diversityOf?.(father.id, mother.id) ?? 1;
+        if (diversity < 1) texts.inbreedingLabel += `｜${diversityLine(diversity)}`;
         const kinTargets = (this._deps.breeding.kinPurificationTargets?.(father.id, mother.id) ?? []).filter((target) => (target.gene.discoveryLevel ?? 1) <= level);
         const kinHint = kinPurificationHint(kinTargets);
         // 通知欄與上限列在同一位置，有通知時先讓位

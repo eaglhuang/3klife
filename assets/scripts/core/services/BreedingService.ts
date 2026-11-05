@@ -14,6 +14,7 @@
 import type { GeneralConfig } from '../models/GeneralUnit';
 import type { RosterStore } from '../managers/GameSession';
 import { BloodlineGraph, PEDIGREE_SLOTS } from './BloodlineGraph';
+import { diversityOfPair } from '../systems/DiversityFactor';
 import { normalizeRosterRoles } from '../systems/RosterRoleLoad';
 import {
     AffinityResolver,
@@ -139,6 +140,10 @@ export class BreedingService {
             const current = this._roster.getAll().find((general) => general.id === uid)?.ep;
             return { name: person.name, ep: current ?? person.ep_base };
         });
+    }
+
+    diversityOf(fatherId: string, motherId: string): number {
+        return diversityOfPair(fatherId, motherId, this._graph);
     }
 
     checkEligibility(fatherId: string, motherId: string): BreedingEligibility {

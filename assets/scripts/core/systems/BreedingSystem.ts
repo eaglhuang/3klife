@@ -15,6 +15,7 @@
  * 回傳新的 GeneralData；寫回名冊與存檔交給上層 Service（BreedingService）。
  */
 import { clanMarriageBlock } from './ClanMarriageRule';
+import { diversityOfPair } from './DiversityFactor';
 import { applyEpBonus, parentLegacyEp, rollEpBonus } from './EpLegacyBonus';
 import { applyCompactLock, applyHeritageLock } from './FamilyCompact';
 import { applyLineageSynergy } from './LineageSynergy';
@@ -428,6 +429,8 @@ export function buildFactorSources(pedigree: Pedigree, profiles: Map<string, Anc
 // ── 子嗣 ───────────────────────────────────────────────────────────────────
 
 export interface CreateChildInput {
+    /** 多樣性 D（G3 §J），折減生平功業的五維加成；未提供視為 1 */
+    diversity?: number;
     id: string;
     father: BreedingGeneral;
     mother: BreedingGeneral;
@@ -523,7 +526,7 @@ export function createChild(input: CreateChildInput): BreedingGeneral {
     const legacyEp = parentLegacyEp(father.ep ?? EP_BASE, mother.ep ?? EP_BASE);
     for (const key of STAT_KEYS) {
         const base = childBaseStat(statOf(father, key), statOf(mother, key), ep.ep);
-        stats[key] = key === 'luk' ? base : applyEpBonus(base, rollEpBonus(legacyEp, input.random));
+        stats[key] = key === 'luk' ? base : applyEpBonus(base, Math.round(rollEpBonus(legacyEp, input.random) * (input.diversity ?? 1)));
     }
     const genes = toGeneConfigs(input.factors, input.dictionary);
     // LUK 上限依子嗣自身的紫因子計算（LUK-03，PROG-2-1166）
@@ -788,6 +791,7 @@ function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMo
         mother: request.mother,
         ep,
         factors: childFactors,
+        diversity: diversityOfPair(request.father.id, request.mother.id, request.pedigree),
         pedigree,
         random: request.random,
         dictionary: request.dictionary,
