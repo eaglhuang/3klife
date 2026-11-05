@@ -59,7 +59,10 @@
           "assets/resources/sprites/ui_avatars/cropped/da_qiao_avatar.png",
           "assets/resources/sprites/generals/lu_bu_portrait.png",
           "assets/resources/sprites/generals/avatars/lu_bu_avatar.png",
-          "assets/resources/sprites/ui_avatars/cropped/lu_bu_avatar.png"
+          "assets/resources/sprites/ui_avatars/cropped/lu_bu_avatar.png",
+          "assets/resources/sprites/generals/wei_yan_portrait.png",
+          "assets/resources/sprites/generals/avatars/wei_yan_avatar.png",
+          "assets/resources/sprites/ui_avatars/cropped/wei_yan_avatar.png"
         ],
         "validation_evidence": [
           "xin-xian-ying portrait: 512x768 RGBA, transparent corners; 125/250px composition and star-ring blade silhouette reviewed",
@@ -72,7 +75,11 @@
           "lu-bu portrait: 512x768 RGBA with transparent corners; 125/250px purple-black armor, anime-sharp face and complete Fangtian Huaji reviewed",
           "lu-bu avatar crop updated to (185,0)+220x220; 125px confirms purple plume, face and shoulders without halberd",
           "node tools_node/generate-general-avatars.js lu-bu --verify: 1 success, 0 failures; cropped-only generation succeeded",
-          "Cocos AssetDB lu-bu portrait and both avatar assets: imported=true, invalid=false; SHA-256 matches worktree outputs"
+          "Cocos AssetDB lu-bu portrait and both avatar assets: imported=true, invalid=false; SHA-256 matches worktree outputs",
+          "wei-yan portrait: 512x768 RGBA with transparent corners; 125/250px anime-sharp face, Shu green armor, and complete hooked glaive reviewed",
+          "wei-yan avatar crop updated to (190,0)+220x220; 125px confirms green plume, bronze crest, face and shoulders without weapon; verify passed",
+          "Cocos AssetDB wei-yan portrait and both avatar assets: imported=true, invalid=false; SHA-256 matches worktree outputs",
+          "capture-ui-screens recognized GeneralDetail targets but could not capture because puppeteer-core is not installed; post-update runtime screenshot remains unverified"
         ],
         "handoff_diff_status": "",
         "trace_artifacts": [],
