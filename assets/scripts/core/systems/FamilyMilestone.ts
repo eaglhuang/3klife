@@ -41,6 +41,11 @@ export function ancestorSeatVisible(stage: MilestoneStage, seatIndex: number): b
     return stage >= 2 || seatIndex < G1_VISIBLE_SEATS;
 }
 
+/** 專家全開視圖（§E #15）只改顯示；功能解鎖與升階演出仍看實際階段 */
+export function displayMilestoneStage(stage: MilestoneStage, expertView: boolean): MilestoneStage {
+    return expertView ? 4 : stage;
+}
+
 /** 族譜視圖：G1 只有父母一代（generation 1），G2 起展開三代 14 人 */
 export function treeGenerationVisible(stage: MilestoneStage, generation: 1 | 2 | 3): boolean {
     return stage >= 2 || generation === 1;

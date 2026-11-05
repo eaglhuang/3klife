@@ -24,6 +24,7 @@ export interface MarriageProposalPopupDeps {
         readonly marriageProposal: MarriageProposal | null;
         /** 家族階段（總綱 M_stage）；沒有提供時視為全開 */
         readonly milestoneStage?: MilestoneStage;
+        readonly displayStage?: MilestoneStage;
         respondMarriageProposal(accept: boolean, grantGold: (amount: number) => void): Promise<{ ok: boolean }>;
         itemCount(itemId: string): number;
         isStatProbed(generalId: string, stat: RumorStatKey): boolean;
@@ -65,19 +66,18 @@ export class MarriageProposalPopupController {
     /** 對象的武將 id 就是提親 id，應允後在結緣畫面不必重查（PROG-2-1835） */
     async probeSuitorStat(): Promise<boolean> {
         const proposal = this._deps.session.marriageProposal;
-        if (!proposal || !factorDetailVisible(this._stage())) return false;
+        if (!proposal || !factorDetailVisible(this._unlockStage())) return false;
         return this._deps.session.probeStat(proposal.id, this._probeStat);
     }
 
-    private _stage(): MilestoneStage {
+    private _unlockStage(): MilestoneStage {
         return this._deps.session.milestoneStage ?? 4;
     }
 
     getView(): MarriageProposalPopupView {
         const { session } = this._deps;
-        const stage = this._stage();
-        const probeVisible = factorDetailVisible(stage);
-        const showAlliance = kinshipScanVisible(stage);
+        const probeVisible = factorDetailVisible(this._unlockStage());
+        const showAlliance = kinshipScanVisible(this._deps.session.displayStage ?? this._unlockStage());
         const proposal = session.marriageProposal;
         const stat = this._probeStat;
         const tokens = session.itemCount(ITEM_ORACLE_TOKEN);

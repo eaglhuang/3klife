@@ -95,6 +95,7 @@ export const SYNC_PATCH_ROOT_KEYS: readonly string[] = [
     'soulFragments',
     'clanTier',
     'milestoneStage',
+    'expertView',
     'clanTradition',
     'clanHall',
     'marriageProposal',

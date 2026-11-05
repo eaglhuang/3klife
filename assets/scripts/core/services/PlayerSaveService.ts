@@ -273,6 +273,8 @@ export interface PlayerSaveSnapshot {
     clanTier?: ClanTier;
     /** 家族揭露階段；舊存檔讀回為 1，下個季度由家族統計補回（PROG-2-1838） */
     milestoneStage?: MilestoneStage;
+    /** 專家全開視圖（PROG-2-1846）；舊存檔視為關閉 */
+    expertView?: boolean;
     /** 名門提親（G4 §E #4，PROG-2-1811）；舊存檔沒有此欄位 */
     marriageProposal?: MarriageProposal;
     /** 世交相性 K（G3 §F-2，PROG-2-1812）；舊存檔沒有此欄位 */
@@ -602,6 +604,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.soulFragments !== undefined ? { soulFragments: normalizeSoulFragmentLedger(snapshot.soulFragments) } : {}),
         ...(snapshot.clanTier !== undefined ? { clanTier: normalizeClanTier(snapshot.clanTier) } : {}),
         ...(snapshot.milestoneStage !== undefined ? { milestoneStage: normalizeMilestoneStage(snapshot.milestoneStage) } : {}),
+        ...(snapshot.expertView === true ? { expertView: true } : {}),
         ...(snapshot.familySynergy !== undefined ? { familySynergy: normalizeFamilySynergy(snapshot.familySynergy) } : {}),
         ...(snapshot.pedigreeProbes !== undefined ? { pedigreeProbes: normalizePedigreeProbes(snapshot.pedigreeProbes) } : {}),
         ...(snapshot.hiddenLineageProbes !== undefined ? { hiddenLineageProbes: normalizePedigreeProbes(snapshot.hiddenLineageProbes) } : {}),

@@ -211,7 +211,10 @@ const FACTOR_HEX_POSITION = { x: 90, y: -260 };
 
 /** 圖鑑入口的暫定位置（PROVISIONAL：畫面沒有預留節點，程式掛在 CharacterDs3Host 下，待 Codex 實機微調） */
 const GALLERY_ENTRY_NODE_NAME = 'GeneralVersionGalleryEntry';
-const CHARACTER_DS3_SIDE_ACTION_INDEX = { journal: 0, soulInject: 1, gallery: 2, totalTp: 3 };
+const CHARACTER_DS3_SIDE_ACTION_INDEX = { journal: 0, soulInject: 1, gallery: 2, totalTp: 3, expertView: 4 };
+const EXPERT_VIEW_NODE_NAME = 'btnExpertView';
+const EXPERT_VIEW_ON_LINE = '專家視圖已開啟：直接顯示完整族譜與數值，功能解鎖不變。';
+const EXPERT_VIEW_OFF_LINE = '專家視圖已關閉：依家族階段逐步揭露。';
 const TOTAL_TP_NODE_NAME = 'totalTpLabel';
 
 type GeneralDetailRuntimeTab = 'Overview' | 'Stats' | 'Tactics' | 'Bloodline' | 'Equip' | 'Aptitude';
@@ -1300,7 +1303,8 @@ export class LobbyScene extends Component {
             factorDictionary: () => services().session.factorDictionary,
             announce: (message) => services().event.emit('SHOW_TOAST', { message, duration: 4 }),
             noteKinPair: (fatherName, motherName, ancestorName) => services().session.noteKinPair(fatherName, motherName, ancestorName),
-            milestoneStage: () => services().session.milestoneStage,
+            milestoneStage: () => services().session.displayStage,
+            unlockStage: () => services().session.milestoneStage,
             familySynergy: () => services().session.familySynergy,
             gold: () => this._localGachaService.getCurrencyAmount('gold'),
             spendGold: (amount) => this._localGachaService.spendCurrency('gold', amount),
@@ -4345,11 +4349,12 @@ export class LobbyScene extends Component {
         const hostNode = this._characterDs3Surface()?.node;
         const general = this._characterDs3General;
         if (!hostNode || !general) return;
-        const stage = services().session.milestoneStage;
+        const stage = services().session.displayStage;
         const panel = ensureDs3BloodlineTree(hostNode, general.name, clanTitleText(CLAN_TIER_NAMES[services().session.clanTier], services().session.clanTradition, services().session.clanHall), stage);
         panel.onCardPeek = (view) => this._showToast(`${view.title}：${view.tendency}`);
         panel.node.active = true;
-        for (const name of [FACTOR_HEX_NODE_NAME, 'btnGeneralJournal', 'btnSoulInject', GALLERY_ENTRY_NODE_NAME, TOTAL_TP_NODE_NAME]) {
+        this._refreshCharacterDs3ExpertView(hostNode);
+        for (const name of [FACTOR_HEX_NODE_NAME, 'btnGeneralJournal', 'btnSoulInject', GALLERY_ENTRY_NODE_NAME, TOTAL_TP_NODE_NAME, EXPERT_VIEW_NODE_NAME]) {
             hostNode.getChildByName(name)?.setSiblingIndex(hostNode.children.length - 1);
         }
         void panel.loadForGeneral(general.id);
@@ -4357,6 +4362,20 @@ export class LobbyScene extends Component {
             this._bloodlineTreeLineShown = true;
             services().event.emit('SHOW_TOAST', { message: BLOODLINE_TREE_OPEN_LINE, duration: 4 });
         }
+    }
+
+    private _refreshCharacterDs3ExpertView(hostNode: Node): void {
+        const isNew = !hostNode.getChildByName(EXPERT_VIEW_NODE_NAME);
+        const button = ensureDs3SideAction(hostNode, EXPERT_VIEW_NODE_NAME, '', CHARACTER_DS3_SIDE_ACTION_INDEX.expertView);
+        if (isNew) button.node.on(Button.EventType.CLICK, () => { void this._toggleExpertView(); }, this);
+        button.node.getChildByName('Label')!.getComponent(Label)!.string = services().session.expertView ? '專家：開' : '專家：關';
+    }
+
+    private async _toggleExpertView(): Promise<void> {
+        const session = services().session;
+        await session.setExpertView(!session.expertView);
+        this._showToast(session.expertView ? EXPERT_VIEW_ON_LINE : EXPERT_VIEW_OFF_LINE);
+        await this._detailPanel?.refreshDs3CurrentTab();
     }
 
     private _showToast(message: string): void {
@@ -4373,6 +4392,8 @@ export class LobbyScene extends Component {
         if (onBloodline) this._refreshCharacterDs3BloodlineTree();
         const factorHex = hostNode?.getChildByName(FACTOR_HEX_NODE_NAME);
         if (factorHex) factorHex.active = onBloodline;
+        const expertButton = hostNode?.getChildByName(EXPERT_VIEW_NODE_NAME);
+        if (expertButton) expertButton.active = onBloodline;
         const binder = this._characterDs3Host?.binder;
         if (!binder) {
             return;
