@@ -126,7 +126,7 @@ export function createBondingSetupSuite(): TestSuite {
         assert.equals('Standard', view.mode);
         assert.isTrue(view.texts.epEstimate.startsWith('預估爆發力：'));
         assert.isTrue(view.texts.epDetail.includes('基礎 50'));
-        assert.isTrue(/^受孕率 \d+%$/.test(view.texts.conceptionLabel));
+        assert.isTrue(/^受孕率 \d+%｜雙親生平功業（父 EP \d+ \/ 母 EP \d+）/.test(view.texts.conceptionLabel));
         assert.equals('消耗 liu 精力 50 與 sun 精力 100，確認結緣？', view.texts.costLabel);
         assert.isTrue(view.texts.eligibilityLabel.includes('良緣天成'));
         assert.isTrue(view.texts.fatherInfo.includes('精力 100 / 100'));
