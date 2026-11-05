@@ -163,6 +163,7 @@ import type { SpiritCard } from '../../core/models/SpiritCard';
 import { lifeImprintLine } from '../../core/systems/LifeImprint';
 import { CLAN_HIGH_GATE_LINE, CLAN_TIER_NAMES, clanTierUpLine } from '../../core/systems/ClanTier';
 import { customGoldBornLine } from '../../core/systems/CustomGoldFactor';
+import { CLAN_TRADITION_MIN_TIER as CLAN_TRADITION_TOAST_TIER, clanTitleText, clanTraditionLine } from '../../core/systems/ClanTradition';
 import { lifeScriptCopy, type LifeScriptEvent } from '../../core/systems/LifeScriptCopy';
 import { getTallyCardSummaries } from '../../core/config/TallyCardCatalog';
 import { DeckSelectController } from '../core/DeckSelectController';
@@ -1104,6 +1105,8 @@ export class LobbyScene extends Component {
             event.on(GAME_SESSION_EVENTS.ClanTierUp, (payload?: unknown) => {
                 const { oldTier, newTier } = payload as ClanTierUpPayload;
                 event.emit('SHOW_TOAST', { message: clanTierUpLine(oldTier, newTier), duration: 3 });
+                const tradition = services().session.clanTradition;
+                if (newTier === CLAN_TRADITION_TOAST_TIER && tradition) event.emit('SHOW_TOAST', { message: clanTraditionLine(tradition), duration: 3 });
                 if (newTier === 3) event.emit('SHOW_TOAST', { message: CLAN_HIGH_GATE_LINE, duration: 4 });
             }),
         );
@@ -4236,7 +4239,7 @@ export class LobbyScene extends Component {
         const hostNode = this._characterDs3Surface()?.node;
         const general = this._characterDs3General;
         if (!hostNode || !general) return;
-        const panel = ensureDs3BloodlineTree(hostNode, general.name, CLAN_TIER_NAMES[services().session.clanTier]);
+        const panel = ensureDs3BloodlineTree(hostNode, general.name, clanTitleText(CLAN_TIER_NAMES[services().session.clanTier], services().session.clanTradition));
         panel.onCardPeek = (view) => this._showToast(`${view.title}：${view.tendency}`);
         panel.node.active = true;
         for (const name of [FACTOR_HEX_NODE_NAME, 'btnGeneralJournal', 'btnSoulInject', GALLERY_ENTRY_NODE_NAME, TOTAL_TP_NODE_NAME]) {

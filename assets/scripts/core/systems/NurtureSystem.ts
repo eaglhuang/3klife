@@ -14,6 +14,7 @@
  * Unity 對照：像一個 StateMachineBehaviour，每回合是一個 state；
  * 教官就是掛在 Session 上的 buff Component，每回合重新決定「站在哪一格」。
  */
+import { CLAN_TRADITION_TRAINING_BONUS } from './ClanTradition';
 import type { GeneralConfig, GeneralDualLayerStatConfig, GeneralGeneConfig, GeneralStatsConfig } from '../models/GeneralUnit';
 import type { MentorCard } from '../models/MentorCard';
 import { evaluateAwakeningTitle } from './AwakeningTitle';
@@ -165,6 +166,8 @@ export interface NurtureSession {
     mentors: TrainingMentor[];
     /** 父母的戰法來源（混種戰法用）；沒有則不擲 */
     hybridSources?: { father?: HybridSkillSource; mother?: HybridSkillSource };
+    /** 郡望家風對應的維度（G4 §F-1）；該維度修業效率提高。舊存檔沒有此欄位 */
+    clanTraditionKind?: TrainingKind;
     /** 混種戰法觸發的回合；尚未觸發為 undefined */
     hybridRound?: number;
     /** 累積好感次數（舊存檔可能沒有此欄位，視為 0） */
@@ -271,6 +274,8 @@ export interface CreateNurtureSessionInput {
     random: RandomSource;
     /** 父母的戰法來源（領域）；沒有或缺一方時不會擲混種戰法 */
     hybridSources?: { father?: HybridSkillSource; mother?: HybridSkillSource };
+    /** 家族的郡望家風維度；沒有家風或子嗣不是族人時不提供 */
+    clanTraditionKind?: TrainingKind;
     /** 用來判定基因顏色（紅色因子）；沒提供時只認 gene.type 的舊資料色名 */
     factorDictionary?: FactorDictionary;
 }
@@ -318,6 +323,7 @@ export function createNurtureSession(input: CreateNurtureSessionInput): NurtureS
         growthModifier: effectiveGrowthModifier(input.child),
         mentors,
         hybridSources: input.hybridSources ? { ...input.hybridSources } : undefined,
+        clanTraditionKind: input.clanTraditionKind,
         mentorSlots: rollMentorSlots(mentors, input.random),
         negativeFactors: [],
         negativeTraitRateBonus: Math.max(0, (input.child as { negativeTraitRateBonus?: number }).negativeTraitRateBonus ?? 0),
@@ -343,7 +349,7 @@ export interface GainBreakdown {
 
 /** 純公式：給定本回合基礎值與教官站位，算屬性獲得量（不擲骰） */
 export function computeStatGain(
-    session: Pick<NurtureSession, 'mentors' | 'mentorSlots' | 'growthModifier'>,
+    session: Pick<NurtureSession, 'mentors' | 'mentorSlots' | 'growthModifier' | 'clanTraditionKind'>,
     kind: TrainingKind,
     base: number,
 ): GainBreakdown {
@@ -359,7 +365,7 @@ export function computeStatGain(
         generalGrowth: session.growthModifier - 1,
         baseMorale: 0,
         moraleBoosts: [],
-        trainingBoosts: [synergyBonus],
+        trainingBoosts: [synergyBonus, session.clanTraditionKind === kind ? CLAN_TRADITION_TRAINING_BONUS : 0],
         friendshipBursts: burst ? [MENTOR_BURST_MULTIPLIER - 1] : [],
         extraCrowd: 0,
     });
