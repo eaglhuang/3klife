@@ -26,10 +26,12 @@ import {
     GraduationResult,
     TrainingMentor,
     NURTURE_MENTOR_SLOTS,
+    NURTURE_TOTAL_ROUNDS,
     NurtureAction,
     NurtureError,
     NurtureRoundLog,
     NurtureSession,
+    spendRoundsWithoutTraining,
     TRAINING_KINDS,
     TrainingKind,
 } from '../systems/NurtureSystem';
@@ -53,6 +55,7 @@ import { hybridSourcesFromParents } from '../systems/HybridSkill';
 import { revealStat, RevealedStat, RevelationLevel } from '../systems/StatRevelation';
 import { commitReportCard, emptyReportCardBook, keepReportCard, ReportCardBook } from '../systems/ReportCardBook';
 import { mentorBoundaryViolations, MentorBoundaryViolation } from '../systems/MentorBoundary';
+import { FAMILY_STUDY_ROUND_COST, familyStudyBlock, familyStudyCandidates, type FamilyStudyBlock, type FamilyStudyCandidate } from '../systems/FamilyStudy';
 
 /** 每季入學令數量；規格只說「每季限 N 張」，暫定 2 */
 export const DEFAULT_ADMISSIONS_PER_SEASON = 2;
@@ -305,6 +308,29 @@ export class NurtureService {
         const childUltimates = this._rollChildUltimate(childId, result.log);
         if (childUltimates.length > 0) result.childUltimates = childUltimates;
         return result;
+    }
+
+    /** 家學研習目前能不能做、能補哪些因子（G2 §E #4） */
+    familyStudyStatus(childId: string): { blocked: FamilyStudyBlock | null; candidates: FamilyStudyCandidate[] } {
+        const session = this._requireSession(childId);
+        const child = this._roster.getAll().find((g) => g.id === childId);
+        const candidates = familyStudyCandidates(child?.genes, this._options.factorDictionary);
+        return { blocked: familyStudyBlock(session, NURTURE_TOTAL_ROUNDS, !!child?.familyStudyUsed, candidates.length), candidates };
+    }
+
+    /** 家學研習：因子補 1 星、記已用、走 2 回合。已用記在武將身上，重修也不能再來一次 */
+    familyStudy(childId: string, geneId: string): FamilyStudyCandidate {
+        const { blocked, candidates } = this.familyStudyStatus(childId);
+        if (blocked) throw new NurtureError(`${childId} 不能家學研習：${blocked}`);
+        const candidate = candidates.find((c) => c.geneId === geneId);
+        if (!candidate) throw new NurtureError(`${childId} 的因子 ${geneId} 不能補救`);
+        this._roster.replaceAll(this._roster.getAll().map((g) => (g.id !== childId ? g : {
+            ...g,
+            familyStudyUsed: true,
+            genes: (g.genes ?? []).map((gene) => (gene.id === geneId ? { ...gene, level: candidate.starAfter } : gene)),
+        })));
+        this._replace(spendRoundsWithoutTraining(this._requireSession(childId), FAMILY_STUDY_ROUND_COST, this._rng()));
+        return candidate;
     }
 
     /** 畢業結算：實力層寫回名冊、會話移除（教官同時解鎖） */

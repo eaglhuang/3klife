@@ -1093,6 +1093,60 @@
                   },
                   {
                     "type": "button",
+                    "name": "BtnFamilyStudy",
+                    "id": "btnFamilyStudy",
+                    "widget": {
+                      "top": 322,
+                      "left": 27
+                    },
+                    "width": 296,
+                    "height": 48,
+                    "skinSlot": "nurture.button.rest.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnFamilyStudyLabel",
+                        "id": "familyStudyLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 44,
+                        "text": "家學研習",
+                        "styleSlot": "nurture.label.button"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnNextStudyFactor",
+                    "id": "btnNextStudyFactor",
+                    "widget": {
+                      "top": 322,
+                      "left": 331
+                    },
+                    "width": 56,
+                    "height": 48,
+                    "skinSlot": "nurture.button.rest.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnNextStudyFactorLabel",
+                        "id": "nextStudyFactorLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 44,
+                        "text": "＞",
+                        "styleSlot": "nurture.label.button"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
                     "name": "BtnUsePill",
                     "id": "btnUsePill",
                     "widget": {

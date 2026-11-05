@@ -516,6 +516,38 @@ export function executeRound(
     return { session, log };
 }
 
+/** 不做訓練地度過數回合（家學研習）：不扣精力、不加屬性，回合照走，走到最後一回合即完成 */
+export function spendRoundsWithoutTraining(source: NurtureSession, count: number, random: RandomSource): NurtureSession {
+    if (source.status !== 'active') throw new NurtureError(`培育會話 ${source.sessionId} 已結束（${source.status}）`);
+    const session: NurtureSession = { ...source, log: [...source.log] };
+    for (let i = 1; i <= count; i++) {
+        const round = source.round + i;
+        session.log.push({
+            round,
+            phase: phaseOfRound(round),
+            action: 'rest',
+            success: true,
+            vigorBefore: source.vigor,
+            vigorAfter: source.vigor,
+            failureRate: 0,
+            statGained: 0,
+            tpGained: 0,
+            mentorsOnSlot: [],
+            burst: false,
+            injured: false,
+            skipped: true,
+        });
+    }
+    session.round = source.round + count;
+    if (session.round >= NURTURE_TOTAL_ROUNDS) {
+        session.status = 'completed';
+        session.mentorSlots = {};
+    } else {
+        session.mentorSlots = rollMentorSlots(session.mentors, random);
+    }
+    return session;
+}
+
 // ── 畢業 ───────────────────────────────────────────────────────────────────
 
 /** 五維和（0~100 尺度）：每項實力層 ÷2、上限 100 */
