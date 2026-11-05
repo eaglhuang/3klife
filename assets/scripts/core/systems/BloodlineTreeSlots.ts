@@ -30,6 +30,14 @@ export const UNKNOWN_ANCESTOR_CARD_TEXT = '先祖佚名\n（世界基底池）';
 /** G2 §G 展開三代十四席族譜 */
 export const BLOODLINE_TREE_OPEN_LINE = '宗祠長老捧出竹簡：「參天之木，必有其根；懷山之水，必有其源。主公請看，此乃我族三代十四席之血脈淵源！」';
 
+/** G2 §B-2：每席公開傳遞權重；比例與 FactorInheritance.FACTOR_POOL_RATE 相同 */
+export const PEDIGREE_SEAT_WEIGHTS = { parent: 0.28, grandparent: 0.14, greatGrandparent: 0.07 } as const;
+
+/** 族譜列標籤：世代、人數、每席權重 */
+export function pedigreeRowLabel(generation: string, seats: number, weight: number): string {
+    return `${generation}\n(${seats}人)\n每席 ${weight.toFixed(2)}`;
+}
+
 /** 祖先卡文字：姓名、EP、主因子；沒有主因子就不佔一行 */
 export function ancestorCardText(name: string, ep: number, mainFactorName?: string | null): string {
     return [name, `EP ${Math.round(ep)}`, mainFactorName].filter((line) => !!line).join('\n');
