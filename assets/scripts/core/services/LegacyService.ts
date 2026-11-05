@@ -41,6 +41,7 @@ import { BranchCompactor } from './BranchCompactor';
 import { BreedingQuotaEnforcer } from './BreedingQuotaEnforcer';
 import { DataGrowthMonitor } from './DataGrowthMonitor';
 import { DataLifecycleScheduler, SeasonEndResult, YearEndResult } from './DataLifecycleScheduler';
+import { LogCategory, UCUFLogger } from '../utils/UCUFLogger';
 import { GeneralArchiver } from './GeneralArchiver';
 import { PendingDeleteStore } from './PendingDeleteStore';
 import { SeasonalRollup } from './SeasonalRollup';
@@ -58,6 +59,8 @@ export interface LifecycleSettlement {
     seasonEnd: SeasonEndResult | null;
     /** 只有跨年那一季才有 */
     yearEnd: YearEndResult | null;
+    /** 遠祖冷壓縮（G4 §I）：這次年底壓掉的人；沒跨年或失敗時沒有 */
+    compactedAncestorUids?: string[];
 }
 
 export interface RetireResult {
@@ -204,7 +207,18 @@ export class LegacyService implements SeasonLifecycle {
 
         const seasonEnd = await this._scheduler.onSeasonEnd(season, year);
         const yearEnd = advance.yearEnded ? await this._scheduler.onYearEnd(year) : null;
-        return { roster: nextRoster, settlement: { spiritCards, archivedSnapshots, seasonEnd, yearEnd } };
+        const compactedAncestorUids = advance.yearEnded ? await this._compactFarAncestors(nextRoster) : undefined;
+        return { roster: nextRoster, settlement: { spiritCards, archivedSnapshots, seasonEnd, yearEnd, compactedAncestorUids } };
+    }
+
+    /** 壓縮失敗不能卡住換季，下個年底會再試 */
+    private async _compactFarAncestors(roster: GeneralConfig[]): Promise<string[] | undefined> {
+        try {
+            return (await this._archiver.compactFarAncestors(roster as LegacyGeneral[])).compactedUids;
+        } catch (e) {
+            UCUFLogger.error(LogCategory.DATA, '[LegacyService] compactFarAncestors failed:', e);
+            return undefined;
+        }
     }
 
     public getArchiver(): GeneralArchiver {

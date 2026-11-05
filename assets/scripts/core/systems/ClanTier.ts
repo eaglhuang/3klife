@@ -10,6 +10,7 @@
  */
 import type { GeneralConfig } from '../models/GeneralUnit';
 import type { SpiritCard } from '../models/SpiritCard';
+import type { CompactAncestorRecord } from './CompactAncestor';
 import { resolveFactorColor, type FactorDictionary } from './FactorInheritance';
 
 export type ClanTier = 0 | 1 | 2 | 3;
@@ -40,6 +41,8 @@ export interface ClanStats {
 
 type LineageGeneral = GeneralConfig & { fatherId?: string; motherId?: string };
 
+const COMPACT_DEFAULT_AGE = 18;
+
 export function clanMemberOfGeneral(general: GeneralConfig, dictionary?: FactorDictionary): ClanMember {
     const lineage = general as LineageGeneral;
     return {
@@ -63,14 +66,37 @@ export function clanMemberOfCard(card: SpiritCard): ClanMember {
     };
 }
 
+/** 遠祖摘要沒有死亡年齡時當作成年：有子孫才會被壓縮 */
+export function clanMemberOfCompact(record: CompactAncestorRecord): ClanMember {
+    const lifespan = record.birthYear !== undefined && record.deathYear !== undefined ? record.deathYear - record.birthYear : COMPACT_DEFAULT_AGE;
+    return {
+        id: record.uid,
+        parentIds: record.parentUids.filter((id) => !!id),
+        ep: record.ep,
+        age: lifespan,
+        blueStarFactors: [],
+    };
+}
+
 /** 名冊優先；已歸檔又還在名冊的人只算一次 */
-export function clanMembersOf(roster: readonly GeneralConfig[], cards: readonly SpiritCard[], dictionary?: FactorDictionary): ClanMember[] {
+export function clanMembersOf(
+    roster: readonly GeneralConfig[],
+    cards: readonly SpiritCard[],
+    dictionary?: FactorDictionary,
+    compact: readonly CompactAncestorRecord[] = [],
+): ClanMember[] {
     const members = roster.map((general) => clanMemberOfGeneral(general, dictionary));
     const seen = new Set(members.map((member) => member.id));
     for (const card of cards) {
         if (!seen.has(card.uid)) {
             seen.add(card.uid);
             members.push(clanMemberOfCard(card));
+        }
+    }
+    for (const record of compact) {
+        if (!seen.has(record.uid)) {
+            seen.add(record.uid);
+            members.push(clanMemberOfCompact(record));
         }
     }
     return members;
