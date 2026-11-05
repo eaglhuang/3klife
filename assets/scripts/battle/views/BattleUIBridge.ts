@@ -26,6 +26,9 @@ import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import type { TeachingSpiritInput } from '../../core/systems/TeachingSpiritTalisman';
 import { Color, Component, EventKeyboard, EventMouse, EventTouch, Input, KeyCode, Node, input } from 'cc';
 import { EVENT_NAMES, Faction, SP_PER_KILL, TroopType, TurnPhase } from '../../core/config/Constants';
+import { battleAptitudeProfileOf, terrainGradeOf } from '../../core/systems/BattleAptitude';
+import { TerrainFeedbackTracker } from '../../core/systems/TerrainAptitudeFeedback';
+import { TERRAIN_LABEL } from '../../ui/core/EnvScoutPresenter';
 import { applyOpeningWinGuarantee, autoResolveOutcome } from '../runtime/BattleAutoResolve';
 import { FIELD_AUTO_BATTLE_JOURNAL } from '../../core/systems/OfflineBattleSnapshot';
 import { services } from '../../core/managers/ServiceLoader';
@@ -150,6 +153,7 @@ export class BattleUIBridge {
   private readonly specialActions = new BattleSpecialActionTracker();
   /** 我方主將帶隊的單場表現（擊殺 / 傷害 / 承傷 / 治療），戰後寫進戰績（PROG-2-0072） */
   private readonly performance = new BattlePerformanceTracker(Faction.Player);
+  private readonly terrainFeedback = new TerrainFeedbackTracker();
   private onBoardPlacement: ((screenX: number, screenY: number) => void) | null = null;
 
   constructor(
@@ -548,8 +552,21 @@ export class BattleUIBridge {
         this.appendLog(`${side}${unit.name} 前進到 L${data.lane + 1} D${data.depth}`);
         c.unitRenderer?.animateMove(unit, data.fromLane, data.fromDepth, data.forcedMoveReason);
       }
+      if (unit.faction === Faction.Player) this._showTerrainFeedback(unit.id, data);
     }
     this.refreshBattleViews();
+  }
+
+  /** 我方部隊踏上主將適性 S、A 或 D 的地形時飄字（戰場適性 §E-10，PROG-2-1850） */
+  private _showTerrainFeedback(unitId: string, data: { lane: number; depth: number; fromLane: number; fromDepth: number }): void {
+    const c = this.ctx;
+    const state = c.ctrl?.state;
+    const from = state?.getCell(data.fromLane, data.fromDepth)?.terrain;
+    const to = state?.getCell(data.lane, data.depth)?.terrain;
+    if (!state || !from || !to) return;
+    const grade = terrainGradeOf(battleAptitudeProfileOf(state.getGeneral(Faction.Player)), to);
+    const text = this.terrainFeedback.onMoved(unitId, from, to, grade, TERRAIN_LABEL[to]);
+    if (text) c.unitRenderer?.playBuffConsumeValue(data.lane, data.depth, text);
   }
 
   private _onUnitDied(data: { unitId: string; lane: number; depth: number; faction: Faction; type: TroopType }): void {
