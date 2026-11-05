@@ -117,7 +117,7 @@ export interface BondingSetupDeps {
     sageRemarks?: (fatherId: string, motherId: string) => SageRemark[];
     /** 求籤令數量（ORAC-05）；未提供時顯示 ×0 */
     oracleTokens?: () => number;
-    breeding: Pick<BreedingService, 'checkEligibility' | 'previewEp' | 'breed'> & Partial<Pick<BreedingService, 'ancestorSeats' | 'commonAncestorSeats' | 'diversityOf' | 'kinPurificationTargets' | 'pedigreeProbe' | 'hiddenLineage'>>;
+    breeding: Pick<BreedingService, 'checkEligibility' | 'previewEp' | 'breed'> & Partial<Pick<BreedingService, 'ancestorSeats' | 'commonAncestorSeats' | 'cousinAncestorName' | 'diversityOf' | 'kinPurificationTargets' | 'pedigreeProbe' | 'hiddenLineage'>>;
     /** 譜牒密考（G4 §F-2 Layer 3）；未提供時不能密考 */
     isPedigreeProbed?: (fatherId: string, motherId: string) => boolean;
     probePedigree?: (fatherId: string, motherId: string) => Promise<boolean>;
@@ -140,6 +140,8 @@ export interface BondingSetupDeps {
     /** 結緣成功時記下本機子嗣紀錄（BRD-12）；正式環境接 GameSession.recordBreedingBirth，不送 server */
     recordBreeding?: (record: BreedingBirthRecord) => void;
     /** 劇本演出句（G2／G3 §G）；通知欄只有一行，正式環境接 toast，未提供時不演出 */
+    /** G3-M1：選中表親時通知家族升階 */
+    noteKinPair?: (fatherName: string, motherName: string, ancestorName: string) => void;
     announce?: (line: string) => void;
     /** 世交相性 K 的滑動窗（G3 §F-2）；未提供時不顯示 */
     familySynergy?: () => FamilySynergyLedger;
@@ -279,6 +281,8 @@ export class BondingSetupController {
         if (key === this._warnedPair) return;
         this._warnedPair = key;
         if (!pair) return;
+        const cousinAncestor = this._deps.breeding.cousinAncestorName?.(pair.father.id, pair.mother.id);
+        if (cousinAncestor) this._deps.noteKinPair?.(pair.father.name, pair.mother.name, cousinAncestor);
         const level = this._deps.playerDiscoveryLevel?.() ?? 1;
         const target = (this._deps.breeding.kinPurificationTargets?.(pair.father.id, pair.mother.id) ?? []).find((item) => (item.gene.discoveryLevel ?? 1) <= level);
         if (target) this._deps.announce?.(kinWarningLine(pair.father.name, pair.mother.name, target.ancestorName));
