@@ -1,0 +1,17 @@
+{
+  "id": "daughter-route-screen",
+  "version": 1,
+  "uiId": "DaughterRoutePopup",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "daughter-route-main",
+  "skin": "daughter-route-screen.skin",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}

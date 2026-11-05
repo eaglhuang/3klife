@@ -48,7 +48,7 @@ import { canStartAutoNurture, consumeAutoNurtureTicket, isAutoNurtureUnlocked, r
 import { inspiredTacticIds, type NurtureAction, type NurtureRoundLog } from '../systems/NurtureSystem';
 import { learnTpCost } from '../systems/FactorTacticLinkage';
 import type { GeneralConfig } from '../models/GeneralUnit';
-import { advanceDaughtersOneYear, assignDaughterRoute, type AssignDaughterResult, type DaughterRecord, type DaughterRoute } from '../systems/DaughterComingOfAge';
+import { advanceDaughtersOneYear, assignDaughterRoute, daughtersAwaitingRoute, type AssignDaughterResult, type DaughterRecord, type DaughterRoute } from '../systems/DaughterComingOfAge';
 import { formatSeasonLabel, GameClock, GameTimeState, SeasonAdvanceResult, SEASONS_PER_YEAR } from '../systems/GameClock';
 import { buildYearReport, normalizeYearAgingEvents, YearReport } from '../systems/YearReport';
 import { backfillTallyTroopTypes, mainTroopTypeOf } from '../systems/TigerTally';
@@ -293,6 +293,12 @@ export interface RivalSeasonEventsPayload {
     events: Array<{ nationId: string; kind: string; playerWon: boolean }>;
 }
 
+/** 等待選路線的女兒：女兒清單沒存名字，名字取自名冊 */
+export interface DaughterAwaitingRoute {
+    id: string;
+    name: string;
+}
+
 export const GAME_SESSION_EVENTS = {
     /** payload: SeasonAdvancedPayload */
     SeasonAdvanced: 'game-session-season-advanced',
@@ -300,6 +306,8 @@ export const GAME_SESSION_EVENTS = {
     OfficerPromoted: 'game-session-officer-promoted',
     /** payload: YearReport（第 4 季結束時發出；養成線 FEM-06 等年度掛點接在這裡） */
     YearEnded: 'game-session-year-ended',
+    /** payload: DaughterAwaitingRoute[]（年末剛滿 14 歲、還活著的女兒，PROG-2-1787） */
+    DaughterComingOfAge: 'game-session-daughter-coming-of-age',
     /** payload: AgingEvent（type = reached-retirement-age） */
     GeneralReachedRetirementAge: 'game-session-general-retirement-age',
     /** payload: AgingEvent（type = died） */
@@ -982,13 +990,33 @@ export class GameSession {
 
     /** 新增一位子嗣女兒；id 重複回傳 false、不改狀態。 */
     public async addDaughter(record: DaughterRecord): Promise<boolean> {
-        const current = this.femaleSystemState;
-        if (current.daughters.some((d) => d.id === record.id)) return false;
-        this._femaleSystem = { ...current, daughters: [...current.daughters, { ...record }] };
+        if (!this._appendDaughter(record)) return false;
         if (this._autoSave && this._save) {
             await this.save();
         }
         return true;
+    }
+
+    private _appendDaughter(record: DaughterRecord): boolean {
+        const current = this.femaleSystemState;
+        if (current.daughters.some((d) => d.id === record.id)) return false;
+        this._femaleSystem = { ...current, daughters: [...current.daughters, { ...record }] };
+        return true;
+    }
+
+    /** 已滿 14 歲、尚未選路線、還活著的女兒（PROG-2-1787）；名字取自名冊 */
+    public get daughtersAwaitingChoice(): DaughterAwaitingRoute[] {
+        return this._liveDaughters(daughtersAwaitingRoute(this.daughters));
+    }
+
+    private _liveDaughters(records: readonly DaughterRecord[]): DaughterAwaitingRoute[] {
+        const roster = this._roster.getAll();
+        const result: DaughterAwaitingRoute[] = [];
+        for (const record of records) {
+            const general = roster.find((g) => g.id === record.id);
+            if (general && !isGeneralDead(general)) result.push({ id: record.id, name: general.name });
+        }
+        return result;
     }
 
     /** 女兒滿 14 歲後選路線；成功才寫回並存檔，失敗回傳原因且不改狀態。 */
@@ -1002,6 +1030,11 @@ export class GameSession {
             ...current,
             daughters: current.daughters.map((d) => (d.id === daughterId ? result.daughter : d)),
         };
+        // 暫定：選路線才定職能，同步到名冊武將；後宮女官職能待裁決，維持出生時的職能（PROG-2-1787）
+        const role = result.daughter.role;
+        if (role) {
+            this._roster.replaceAll(this._roster.getAll().map((g) => (g.id === daughterId ? { ...g, role } : g)));
+        }
         if (this._autoSave && this._save) {
             await this.save();
         }
@@ -1010,16 +1043,21 @@ export class GameSession {
 
     /**
      * 年度掛點（FEM-06）：女兒每年長一歲，回傳本年剛滿 14 歲的女兒（給 UI 排分流提示）。
-     * 年末事件（YearEnded）接上後由它呼叫；本函式只改女兒年齡，不發事件。
+     * 季度推進的年末結算走 _tickDaughtersOneYear；本函式只改女兒年齡，不發事件。
      */
     public async onYearAdvanced(): Promise<DaughterRecord[]> {
-        const current = this.femaleSystemState;
-        const { daughters, newlyOfAge } = advanceDaughtersOneYear(current.daughters);
-        if (daughters.length === 0) return newlyOfAge;
-        this._femaleSystem = { ...current, daughters };
-        if (this._autoSave && this._save) {
+        const hadDaughters = this.femaleSystemState.daughters.length > 0;
+        const newlyOfAge = this._tickDaughtersOneYear();
+        if (hadDaughters && this._autoSave && this._save) {
             await this.save();
         }
+        return newlyOfAge;
+    }
+
+    private _tickDaughtersOneYear(): DaughterRecord[] {
+        const current = this.femaleSystemState;
+        const { daughters, newlyOfAge } = advanceDaughtersOneYear(current.daughters);
+        if (daughters.length > 0) this._femaleSystem = { ...current, daughters };
         return newlyOfAge;
     }
 
@@ -3433,7 +3471,10 @@ export class GameSession {
             this.dynamicRelations.record('parentage', fatherUid, childUid, season),
             this.dynamicRelations.record('parentage', motherUid, childUid, season),
         ];
-        if (results.some((r) => r.ok && r.created) && this._autoSave && this._save) {
+        // 生下女兒時登記，年末才會長大並走及笄分流（PROG-2-1787）；子嗣出生時已在名冊
+        const child = this._roster.getAll().find((g) => g.id === childUid);
+        const daughterAdded = child?.gender === '女' && this._appendDaughter({ id: childUid, age: child.age ?? 0, role: null });
+        if ((daughterAdded || results.some((r) => r.ok && r.created)) && this._autoSave && this._save) {
             await this.save();
         }
         return results;
@@ -3555,6 +3596,7 @@ export class GameSession {
             yearReport = buildYearReport(advance.previous.currentYear, this._yearAgingEvents);
             this._yearAgingEvents = [];
         }
+        const comingOfAge = advance.yearEnded ? this._liveDaughters(this._tickDaughtersOneYear()) : [];
         this.applyPendingTerritoryUpgrade();
         const quarterlyReports = buildQuarterlyBattleReportRows(this._roster.getAll());
         this.recordSeasonJournal(advance.previous, quarterlyReports);
@@ -3591,6 +3633,9 @@ export class GameSession {
         }
         if (yearReport) {
             this._emit(GAME_SESSION_EVENTS.YearEnded, yearReport);
+        }
+        if (comingOfAge.length > 0) {
+            this._emit(GAME_SESSION_EVENTS.DaughterComingOfAge, comingOfAge);
         }
         return payload;
     }
