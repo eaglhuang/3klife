@@ -157,6 +157,8 @@ export interface NurtureSession {
     startSeason: number;
     /** 已完成的回合數 0~36 */
     round: number;
+    /** 這次培育已辦過的開蒙禮、加冠禮（PROG-2-1821） */
+    ritesDone?: Array<'enrollment' | 'capping'>;
     vigor: number;
     /** 鏡像快照：進入培育時的資質層，之後不再改變 */
     talent: Record<TrainingKind, number>;

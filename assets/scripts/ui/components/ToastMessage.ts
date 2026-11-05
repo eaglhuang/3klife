@@ -118,6 +118,8 @@ export class ToastMessage extends UIPreviewBuilder {
     }
 
     this.node.active = true;
+    // 之後才掛上的全螢幕面板會排在容器上面，顯示時移回最上層
+    if (this.node.parent) this.node.setSiblingIndex(this.node.parent.children.length - 1);
 
     const rootNode = this.node.getChildByName('ToastRoot');
     if (!rootNode) return;

@@ -45,11 +45,11 @@ export interface AptitudeView {
     tallyLine: string;
 }
 
-const GRADES: readonly AptitudeGrade[] = ['S', 'A', 'B', 'C', 'D'];
+export const APTITUDE_GRADES: readonly AptitudeGrade[] = ['S', 'A', 'B', 'C', 'D'];
 
 /** 等級字串轉成合法等級；非 S～D 回傳 null */
 export function aptitudeGradeOf(raw: unknown): AptitudeGrade | null {
-    return typeof raw === 'string' && (GRADES as readonly string[]).includes(raw) ? raw as AptitudeGrade : null;
+    return typeof raw === 'string' && (APTITUDE_GRADES as readonly string[]).includes(raw) ? raw as AptitudeGrade : null;
 }
 
 /** 等級的效率文字，例如 S → ×1.20；沒有等級為「—」 */
