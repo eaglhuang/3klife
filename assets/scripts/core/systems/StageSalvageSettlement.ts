@@ -7,7 +7,7 @@
  * - 石材／木材／情報／武器材料／教官經驗 → 背包同名材料 1:1（教官經驗存為「教官心得」）
  * 戰敗不入帳（掠奪成果帶不回來）；平手照常入帳。
  */
-import type { SalvageTotals } from './StrategistHud';
+import { salvageGainItems, type SalvageTotals } from './StrategistHud';
 import { addItem, PlayerInventory } from './PlayerInventory';
 import { ITEM_INSTRUCTOR_EXP, ITEM_INTEL, ITEM_STONE, ITEM_WEAPON_MATERIAL, ITEM_WOOD } from './ItemDef';
 
@@ -41,4 +41,21 @@ export function settleStageSalvage(
         if (amount > 0) next = addItem(next, SALVAGE_ITEM_IDS[key], amount);
     }
     return { food: Math.max(food, nextFood), inventory: next, foodGained: Math.max(0, nextFood - food) };
+}
+
+/** 戰敗時有回收物的提示（PROG-2-1857） */
+export const SALVAGE_LOST_LINE = '戰敗，關卡回收物未能帶回';
+
+/**
+ * 戰後結算視窗的關卡回收摘要（PROG-2-1857）。
+ * 勝或平：列出帶回的資源，有補給時補一行換算說明；戰敗：有回收物才提示帶不回；沒有回收物不列。
+ */
+export function salvageSummaryLines(salvage: Readonly<SalvageTotals> | undefined, won: boolean): string[] {
+    if (!salvage) return [];
+    const items = salvageGainItems(salvage);
+    if (items.length === 0) return [];
+    if (!won) return [SALVAGE_LOST_LINE];
+    const lines = [`關卡回收：${items.map((item) => `${item.name} ${item.amount}`).join('、')}`];
+    if (salvage.supply > 0) lines.push('補給已轉為糧草入庫（糧倉滿則截斷）');
+    return lines;
 }
