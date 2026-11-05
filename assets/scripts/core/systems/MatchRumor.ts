@@ -18,6 +18,10 @@ const RUMOR_STATS: ReadonlyArray<readonly [RumorStatKey, string]> = Object.freez
 
 export const RUMOR_STAT_KEYS: readonly RumorStatKey[] = Object.freeze(RUMOR_STATS.map(([key]) => key));
 
+export function nextRumorStat(stat: RumorStatKey): RumorStatKey {
+    return RUMOR_STAT_KEYS[(RUMOR_STAT_KEYS.indexOf(stat) + 1) % RUMOR_STAT_KEYS.length];
+}
+
 const TOTAL_TIERS: ReadonlyArray<readonly [number, string]> = Object.freeze([
     [440, '天縱奇才'], [390, '國士之風'], [330, '一時俊彥'], [250, '良家子弟'],
 ]);

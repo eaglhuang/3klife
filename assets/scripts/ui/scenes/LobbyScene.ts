@@ -3216,6 +3216,8 @@ export class LobbyScene extends Component {
             { buttonId: 'btnCloseMp', handler: () => { if (this._marriageProposalHost) this._marriageProposalHost.node.active = false; } },
             { buttonId: 'btnAcceptMp', handler: () => { respond(true); } },
             { buttonId: 'btnDeclineMp', handler: () => { respond(false); } },
+            { buttonId: 'btnCycleMpStat', handler: () => { controller.cycleProbeStat(); this._refreshMarriageProposalPopup(); } },
+            { buttonId: 'btnProbeMpStat', handler: () => { void controller.probeSuitorStat().then(() => this._refreshMarriageProposalPopup()); } },
         ]);
         this._sessionEventUnsubscribers.push(
             services().event.on(GAME_SESSION_EVENTS.MarriageProposal, () => { this._openMarriageProposalPopupIfPending(); }),
