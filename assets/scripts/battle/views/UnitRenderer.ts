@@ -917,7 +917,14 @@ export class UnitRenderer extends Component {
   }
 
   private updateSingleGeneralView(faction: Faction, general: GeneralUnit | null): void {
-    if (!general || general.currentHp <= 0 || this.hasGeneralAvatarOnBoard(faction)) {
+    const avatarOnBoard = this.hasGeneralAvatarOnBoard(faction);
+    if (general && general.currentHp <= 0 && !avatarOnBoard && this.spineGenerals.playDeath(faction)) {
+      // Spine 武將留在場上演倒地，只收掉標籤
+      const fallen = this.generalViews.get(faction);
+      if (fallen) fallen.labelOpacity.opacity = 0;
+      return;
+    }
+    if (!general || general.currentHp <= 0 || avatarOnBoard) {
       this.removeGeneralView(faction);
       return;
     }
@@ -971,6 +978,11 @@ export class UnitRenderer extends Component {
   /** 武將出招：Spine 武將播一次長槍突刺 */
   public playGeneralAttackPose(faction: Faction): void {
     this.spineGenerals.playAttack(faction);
+  }
+
+  /** 武將中招（閃避不呼叫）：Spine 武將播一次受擊後退 */
+  public playGeneralKnockback(faction: Faction): void {
+    this.spineGenerals.playHit(faction);
   }
 
   private createGeneralView(faction: Faction): GeneralView {
