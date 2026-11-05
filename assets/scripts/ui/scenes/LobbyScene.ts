@@ -96,6 +96,7 @@ import type { DiscoveryGain } from '../../core/systems/DiscoveryProgress';
 import { discoveryPhaseUnlockLines } from '../../core/systems/DiscoveryProgress';
 import { rebirthVoiceLines } from '../../core/systems/Rebirth';
 import { ultimateUnlockLines } from '../../core/systems/UltimateScriptLines';
+import { rebirthBreakthroughLine } from '../../core/systems/NumericalScriptLines';
 import { HallBoardPanelController, HALL_BOARD_MAX_ROWS } from '../core/HallBoardPanelController';
 import { HALL_BOARD_TYPE_LABEL, hallAssignNoticeOf, hallMissionDialogStateOf } from '../core/HallMissionDialogState';
 import { hallPlayerOf, officerPromotionScriptLines, OFFICER_ERA_KEPT_LINE } from '../../core/systems/OfficerSnapshot';
@@ -3578,6 +3579,9 @@ export class LobbyScene extends Component {
             for (const message of rebirthVoiceLines(rebirths, nameOf)) {
                 services().event.emit('SHOW_TOAST', { message, duration: 3 });
             }
+            // 數值系統 §G-1 轉生突破（PROG-2-1782）
+            const breakthrough = rebirthBreakthroughLine(rebirths);
+            if (breakthrough) services().event.emit('SHOW_TOAST', { message: breakthrough, duration: 3 });
             // 奧義系統 §G 奧義解鎖（PROG-2-1780）；奧義母表平常只在結緣前載入
             if (rebirths.length > 0) {
                 await services().loadUltimateDefinitions();
