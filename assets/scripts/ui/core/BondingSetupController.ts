@@ -28,6 +28,7 @@ import { yuedanFiltered, yuedanList, yuedanRevealLine } from '../../core/systems
 import { synergyWindowLine, type FamilySynergyLedger } from '../../core/systems/FamilySynergy';
 import { compactCostFor, compactFamilyOf, heritageFactorsOf, sharedFactorsOf } from '../../core/systems/FamilyCompact';
 import { lineageSynergyHint, lineageSynergyLine, sharedBlueGenesOf } from '../../core/systems/LineageSynergy';
+import { kinPurificationHint, kinPurificationLine } from '../../core/systems/KinPurification';
 import type { GeneralGeneConfig } from '../../core/models/GeneralUnit';
 import type { FactorDictionary } from '../../core/systems/FactorInheritance';
 import type { BreedingService } from '../../core/services/BreedingService';
@@ -105,7 +106,7 @@ export interface BondingSetupDeps {
     sageRemarks?: (fatherId: string, motherId: string) => SageRemark[];
     /** 求籤令數量（ORAC-05）；未提供時顯示 ×0 */
     oracleTokens?: () => number;
-    breeding: Pick<BreedingService, 'checkEligibility' | 'previewEp' | 'breed'>;
+    breeding: Pick<BreedingService, 'checkEligibility' | 'previewEp' | 'breed'> & Partial<Pick<BreedingService, 'kinPurificationTargets'>>;
     /** 開畫面前的準備（載入血統圖、補回已出生子嗣）；失敗只提示，不擋畫面 */
     prepare?: () => Promise<unknown>;
     /** 結緣後存檔；失敗只回報，不回滾 */
@@ -301,6 +302,7 @@ export class BondingSetupController {
             // 字典沒收錄的因子，子嗣身上的名稱只有 id，所以取父親的
             const synergyGene = result.father.genes?.find((gene) => gene.id === result.lineageSynergyFactorId);
             if (synergyGene) this._notice += `　${lineageSynergyLine(synergyGene.displayName ?? synergyGene.id ?? '')}`;
+            if (result.kinPurification) this._notice += `　${kinPurificationLine(result.kinPurification)}`;
             this._slotPick = null;
         }
         // 父母壽命耗盡時提示，與培育回合的「壽命耗盡，武將已故」一致（QA 回報，PROG-2-0224）
@@ -403,6 +405,8 @@ export class BondingSetupController {
                 : '血緣：3 代內無共同祖先';
         const fatigueForecast = bloodFatigueForecast((father as BreedingGeneral).bloodFatigue, (mother as BreedingGeneral).bloodFatigue, eligibility.inbred);
         if (fatigueForecast) texts.inbreedingLabel += `｜${fatigueForecast}`;
+        const kinHint = kinPurificationHint((this._deps.breeding.kinPurificationTargets?.(father.id, mother.id) ?? []).filter((target) => (target.gene.discoveryLevel ?? 1) <= level));
+        if (kinHint) texts.inbreedingLabel += `｜${kinHint}`;
         const surnameNote = sameSurnameNote(father.name, mother.name);
         if (surnameNote) texts.inbreedingLabel += `｜${surnameNote}`;
         const compact = this._selectedCompact();

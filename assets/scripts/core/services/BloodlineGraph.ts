@@ -184,6 +184,19 @@ export class BloodlineGraph {
     return best;
   }
 
+  /** 兩人在 maxGeneration 代內的共同祖先，由近到遠；不含兩人自己 */
+  commonAncestors(uidA: string, uidB: string, maxGeneration = 3): string[] {
+    if (uidA === uidB) return [];
+    const depthA = this._ancestorDepths(uidA, maxGeneration);
+    const depthB = this._ancestorDepths(uidB, maxGeneration);
+    const found: Array<{ uid: string; distance: number }> = [];
+    depthA.forEach((distA, uid) => {
+      const distB = depthB.get(uid);
+      if (distB !== undefined && distA > 0 && distB > 0) found.push({ uid, distance: Math.max(distA, distB) });
+    });
+    return found.sort((a, b) => a.distance - b.distance).map((item) => item.uid);
+  }
+
   /**
    * 計算武將的血統 EP（根據 PersonRegistry 的 ep_base 遞迴加權）。
    * 公式：本人 ep_base + Σ(祖先 ep_base * 0.5^世代)
