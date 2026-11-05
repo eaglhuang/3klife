@@ -18,6 +18,7 @@ import type { GeneralConfig, GeneralGeneConfig, GeneralStatsConfig, GeneralTacti
 import { CHILD_STATUS_MYSTERY } from './BreedingSystem';
 import { GENERAL_STATUS_DEAD } from './GeneralAging';
 import { baseVitalityMaxOf } from './VitalityCap';
+import { peakStatMultiplier, type PeakCurveSubject } from './PeakCurve';
 import type { NurtureRating } from './NurtureSystem';
 import { EMPTY_PERFORMANCE, guardianPowerOf, newlyReachedMilestones, type BattlePerformance } from './BattleRecordStats';
 import { isTrialMercenary } from './PrisonerOfWar';
@@ -146,10 +147,14 @@ export function listDeployable(roster: readonly GeneralConfig[], options: Deploy
 
 const BATTLE_STAT_KEYS = ['str', 'int', 'lea', 'pol', 'cha'] as const;
 
-function battleStat(general: BattleRosterGeneral, key: (typeof BATTLE_STAT_KEYS)[number]): number {
+function battleStat(
+    general: BattleRosterGeneral,
+    key: (typeof BATTLE_STAT_KEYS)[number],
+    multiplier: number = peakStatMultiplier(general as unknown as PeakCurveSubject, key),
+): number {
     const prowess = general.prowess?.[key];
     if (typeof prowess === 'number') {
-        return Math.round(prowess / PROWESS_PER_BATTLE_STAT);
+        return Math.round((prowess / PROWESS_PER_BATTLE_STAT) * multiplier);
     }
     // 沒有實力層（抽卡來的成年武將）直接用卡面數值
     const direct = general[key] ?? general.stats?.[key as keyof GeneralStatsConfig];
@@ -158,7 +163,8 @@ function battleStat(general: BattleRosterGeneral, key: (typeof BATTLE_STAT_KEYS)
 
 /** 戰場智力（與 buildBattleConfig 一致）：有實力層時取實力層，否則取卡面數值。戰法槽位與學戰法都用此值。 */
 export function battleIntelligenceOf(general: GeneralConfig): number {
-    return battleStat(general as BattleRosterGeneral, 'int');
+    // 戰法槽位不吃巔峰曲線，免得變老後已學的戰法被擠掉
+    return battleStat(general as BattleRosterGeneral, 'int', 1);
 }
 
 function unlockedFactors(general: BattleRosterGeneral): GeneralGeneConfig[] {
