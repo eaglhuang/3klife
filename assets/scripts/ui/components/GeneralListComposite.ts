@@ -639,6 +639,8 @@ export class GeneralListComposite extends CompositePanel {
                 this._retirementFlow.cancel(); this._refreshRetirementToolbar();
             });
             const notice = this._addToolbarLabel(toolbar, 'RetirementNotice', 940, 44, 0, 0, '', 17, HorizontalTextAlignment.LEFT);
+            // 行高固定 22 才放得下兩行；沿用框高當行高時，長句會被 SHRINK 縮到看不清
+            notice.lineHeight = 22;
             // 底部列放在淺色羊皮紙上，字一律用深墨色（白字會看不見）
             for (const child of controls.children) {
                 const label = child.getComponent(Label);
