@@ -49,11 +49,22 @@
         "execution_steps": []
       },
       "harness_evidence": {
-        "artifact_paths": [],
-        "validation_evidence": [],
+        "artifact_paths": [
+          "assets/resources/sprites/generals/xin_xian_ying_portrait.png",
+          "assets/resources/sprites/generals/avatars/xin_xian_ying_avatar.png",
+          "assets/resources/sprites/ui_avatars/cropped/xin_xian_ying_avatar.png",
+          "assets/resources/data/general-avatar-crops.json"
+        ],
+        "validation_evidence": [
+          "xin-xian-ying portrait: 512x768 RGBA, transparent corners; 125/250px composition and star-ring blade silhouette reviewed",
+          "node tools_node/generate-general-avatars.js xin-xian-ying --verify: 1 success, 0 failures",
+          "node tools_node/generate-general-avatars.js xin-xian-ying: 1 generated, 0 failures"
+        ],
         "handoff_diff_status": "",
         "trace_artifacts": [],
-        "metrics_summary": []
+        "metrics_summary": [
+          "Xin Xianying weapon revised from observatory-like star globe to one-hand short-handle ring blade with a hinged single bronze ring, jade crescent blade and jade core; animations: sweep, flip guard, thrust star flash"
+        ]
       }
     }
   ]
