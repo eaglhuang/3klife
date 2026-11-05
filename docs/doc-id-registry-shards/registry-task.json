@@ -8654,7 +8654,7 @@
   {
     "id": "doc_task_1453",
     "path": "docs/agent-briefs/tasks/UI/UI-2-0263.md",
-    "title": "[UI-2-0263] 甄姬名姝立繪、專屬玉笛與頭像重繪",
+    "title": "[UI-2-0263] 甄姬名姝立繪、專屬玉簫與頭像重繪",
     "category": "task"
   },
   {
@@ -8667,6 +8667,12 @@
     "id": "doc_task_1455",
     "path": "docs/agent-briefs/tasks/UI/UI-1-0020.md",
     "title": "[UI-1-0020] 重繪蔡文姬七弦古琴演奏立繪與正式頭像",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_1456",
+    "path": "docs/agent-briefs/tasks/UI/UI-1-0021.md",
+    "title": "[UI-1-0021] 重繪孫策名將立繪與專屬霸王虎頭雙鉤",
     "category": "task"
   }
 ]

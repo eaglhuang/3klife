@@ -1,0 +1,77 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_1456",
+      "id": "UI-1-0021",
+      "title": "重繪孫策名將立繪與專屬霸王虎頭雙鉤",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-11-05",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-11-05T20:57:07+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "重繪孫策名將立繪，對齊趙雲、關羽、張飛原始正式圖的高完成度二次元幻想手繪風；保留柔赤吳色與方下頜、寬額、濃直眉、明亮銳眼；改用辨識鮮明的霸王虎頭雙鉤作專屬武器，衣甲收束不留長飄帶，正式更新立繪與頭像並驗證 Cocos。",
+      "related": [
+        "UI-2-0119"
+      ],
+      "depends": [],
+      "acceptance": [
+        "風格是精緻二次元幻想手繪，避免寫實3D",
+        "臉型五官符合孫策既定寬額方下頜設計，且能與周瑜、甘寧、凌統、徐盛區分",
+        "柔赤為主色，鐵灰與炭黑為副色，保留既定色票",
+        "霸王虎頭雙鉤外形專屬且縮成Q版仍清楚，與其他武將武器不重複",
+        "衣裝收束簡潔，無長飄帶；全身、雙手、武器與鞋履完整",
+        "正式立繪512x768透明，兩種256x256頭像，reviewed crop驗證通過",
+        "Cocos資源匯入有效並驗證角色列表/介紹可讀"
+      ],
+      "deliverables": [
+        "孫策512x768正式立繪",
+        "孫策兩種256x256正式頭像",
+        "reviewed crop索引",
+        "孫策色票與專屬武器識別紀錄",
+        "任務卡、manifest及Cocos驗證紀錄"
+      ],
+      "notes": "2026-11-05 | 狀態: done | 驗證: 512x768真透明立繪、兩種256x256頭像；reviewed crop verify 1/1；Cocos三資產 imported/valid、Library/source雜湊相符；GeneralPortraitComposite標準路徑已確認；compute-gate quick 3/3、import-boundary 1/1 | 變更: 孫策改為高完成度二次元幻想手繪，柔赤／鐵灰／炭黑，持霸王虎頭雙鉤；與吳將五人任務的既定臉型與衣裝差異一致 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "assets/resources/sprites/generals/sun_ce_portrait.png",
+          "assets/resources/sprites/generals/avatars/sun_ce_avatar.png",
+          "assets/resources/sprites/ui_avatars/cropped/sun_ce_avatar.png",
+          "assets/resources/data/general-avatar-crops.json",
+          "docs/art/character-palette-ledger-shards/palette-principles.md"
+        ],
+        "validation_evidence": [
+          "512x768 transparent portrait and two 256x256 avatars; source and Cocos Library hashes match",
+          "Reviewed crop verification passed 1/1 with --preserve-crop; Cocos assets imported=true and invalid=false",
+          "GeneralPortraitComposite loads the canonical GeneralArtPaths portrait path with Texture2D fallback",
+          "compute-gate quick passed 3/3; import-boundary passed 1/1"
+        ],
+        "handoff_diff_status": "正式資源、裁切索引及Cocos匯入驗收完成；進入提交與隊長交接",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}
