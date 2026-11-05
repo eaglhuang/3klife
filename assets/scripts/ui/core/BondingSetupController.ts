@@ -25,6 +25,7 @@ import { factorMaskLabels } from '../../core/systems/FactorMask';
 import { factorStageText } from '../../core/systems/FactorVisibility';
 import { matchRumorLine, sameSurnameNote, matchesRumorRoute, nextRumorRoute, RumorRoute, rumorRouteFiltered, rumorRouteName } from '../../core/systems/MatchRumor';
 import { yuedanFiltered, yuedanList, yuedanRevealLine } from '../../core/systems/YuedanReview';
+import { synergyWindowLine, type FamilySynergyLedger } from '../../core/systems/FamilySynergy';
 import type { FactorDictionary } from '../../core/systems/FactorInheritance';
 import type { BreedingService } from '../../core/services/BreedingService';
 import { type BreedTextLookup, fallbackBreedText } from './BreedingTexts';
@@ -116,6 +117,8 @@ export interface BondingSetupDeps {
     omenSeed?: () => number;
     /** 結緣成功時記下本機子嗣紀錄（BRD-12）；正式環境接 GameSession.recordBreedingBirth，不送 server */
     recordBreeding?: (record: BreedingBirthRecord) => void;
+    /** 世交相性 K 的滑動窗（G3 §F-2）；未提供時不顯示 */
+    familySynergy?: () => FamilySynergyLedger;
     /** 共鳴標籤 id 換顯示名稱；正式環境查因子字典，未提供時顯示原值 */
     tagName?: (tag: string) => string | null | undefined;
     /** 結緣畫面文案查詢（ui.breed.*）；正式環境接 i18n.t，未提供時用 zh-TW 預設文案 */
@@ -337,6 +340,9 @@ export class BondingSetupController {
         const preview = buildBreedingPreviewLines(ep, this._deps.tagName);
         texts.epDetail = ['基礎 50', preview.breakdownLine, preview.tagLine].join(' · ');
         texts.conceptionLabel = `受孕率 ${Math.round(conceptionRate(father, mother) * 100)}%`;
+        const ledger = this._deps.familySynergy?.();
+        const synergyLine = ledger ? synergyWindowLine(father as { familyUid?: string }, mother as { familyUid?: string }, ledger) : null;
+        if (synergyLine) texts.conceptionLabel += `｜${synergyLine}`;
         const sage = this._sageRemarks(father.id, mother.id);
         texts.sageRemarkLines = sage.hint;
         sage.lines.forEach((line, i) => { texts[`sageLine${i}`] = line; actives[`sageRow${i}`] = true; });

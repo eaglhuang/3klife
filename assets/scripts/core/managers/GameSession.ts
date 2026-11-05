@@ -206,6 +206,7 @@ import { buildQuarterlyBattleReportRows, type QuarterlyBattleReportRow } from '.
 import { withLifeImprints } from '../systems/LifeImprint';
 import { clanMembersOf, clanStatsOf, clanTierOf, normalizeClanTier, type ClanTier } from '../systems/ClanTier';
 import { buildSuitorGeneral, normalizeMarriageProposal, rollMarriageProposal, type MarriageProposal } from '../systems/MarriageProposal';
+import { emptyFamilySynergyLedger, finalizeAdultChildren, fullSynergyAlliesOf, normalizeFamilySynergy, type FamilySynergyLedger } from '../systems/FamilySynergy';
 import { forgeCustomGold, mergeCustomFactors, normalizeCustomFactors } from '../systems/CustomGoldFactor';
 import { yuedanBannerLines } from '../systems/YuedanReview';
 import { clanHallNameOf, normalizeClanHall } from '../systems/ClanHall';
@@ -650,6 +651,7 @@ export class GameSession {
     /** 門第階級，只升不降（G4 §F-1） */
     private _clanTier: ClanTier = 0;
     private _marriageProposal: MarriageProposal | null = null;
+    private _familySynergy: FamilySynergyLedger = emptyFamilySynergyLedger();
     private _clanTradition: ClanTradition | null = null;
     private _clanHall: string | null = null;
     /** 已通關的關卡 id（連環破，PROG-2-0215） */
@@ -1720,6 +1722,11 @@ export class GameSession {
         return this._factorDictionary;
     }
 
+    /** 世交相性 K 的滑動窗（G3 §F-2，PROG-2-1812） */
+    public get familySynergy(): FamilySynergyLedger {
+        return this._familySynergy;
+    }
+
     /** 待回覆的名門提親（G4 §E #4，PROG-2-1811） */
     public get marriageProposal(): MarriageProposal | null {
         return this._marriageProposal;
@@ -1831,6 +1838,7 @@ export class GameSession {
         this._soulFragments = emptySoulFragmentLedger();
         this._clanTier = 0;
         this._marriageProposal = null;
+        this._familySynergy = emptyFamilySynergyLedger();
         this._clanTradition = null;
         this._clanHall = null;
         this._setCustomFactors([]);
@@ -3777,6 +3785,7 @@ export class GameSession {
         const yuedanLines = advance.yearEnded ? yuedanBannerLines(this._roster.getAll()) : [];
         // 新提親取代去年沒回覆的；同樣不消耗主亂數
         if (advance.yearEnded) {
+            this._familySynergy = finalizeAdultChildren(this._familySynergy, this._roster.getAll());
             this._marriageProposal = rollMarriageProposal(this._roster.getAll(), this._clanTier, `suitor-${governanceSeason}`, remarkRandomOf(`marriage|${governanceSeason}|${this._seeded.snapshot().state}`));
         }
         const payload: SeasonAdvancedPayload = { ...(yuedanLines.length > 0 ? { yuedanLines } : {}), ...(this._tallyFoodDiscountArmed ? { foodLowLine: FOOD_LOW_LINE } : {}), ...(treasures.length > 0 ? { prisonTreasureLines: treasures.map((entry) => prisonTreasureLine(entry.targetName, ITEM_DISPLAY_NAMES[ITEM_TREASURE])) } : {}), ...(governanceReport ? { governanceReport } : {}), ...(eventNotice ? { governanceEventLine: eventNotice } : {}), advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids } : {}), ...(mercenaryDay.dayThreeUids.length > 0 ? { mercenaryDayThree: mercenaryDay.dayThreeUids } : {}), ...(mercenaryDay.trustUids.length > 0 ? { mercenaryTrust: mercenaryDay.trustUids } : {}) };
@@ -3926,7 +3935,7 @@ export class GameSession {
         const cards = await archiver?.getAllSpiritCards() ?? [];
         const compact = await archiver?.getCompactAncestors?.() ?? [];
         const members = clanMembersOf(this._roster.getAll(), cards, this._factorDictionary, compact);
-        const reached = clanTierOf(clanStatsOf(members));
+        const reached = clanTierOf({ ...clanStatsOf(members), fullSynergyAllies: fullSynergyAlliesOf(this._familySynergy) });
         const payload: ClanTierUpPayload | null = reached > this._clanTier ? { oldTier: this._clanTier, newTier: reached } : null;
         if (payload) this._clanTier = reached;
         // 家風只定一次；舊存檔已是郡望世家時也在這裡補上
@@ -4459,6 +4468,7 @@ export class GameSession {
             soulFragments: { ...this._soulFragments },
             clanTier: this._clanTier,
             marriageProposal: this._marriageProposal ?? undefined,
+            familySynergy: this._familySynergy.finalizedIds.length > 0 ? this._familySynergy : undefined,
             clanTradition: this._clanTradition ?? undefined,
             clanHall: this._clanHall ?? undefined,
             customFactors: this._customFactors.map((def) => ({ ...def })),
@@ -4629,6 +4639,7 @@ export class GameSession {
         this._soulFragments = normalizeSoulFragmentLedger(snapshot.soulFragments);
         this._clanTier = normalizeClanTier(snapshot.clanTier);
         this._marriageProposal = normalizeMarriageProposal(snapshot.marriageProposal);
+        this._familySynergy = normalizeFamilySynergy(snapshot.familySynergy);
         this._clanTradition = normalizeClanTradition(snapshot.clanTradition);
         this._clanHall = normalizeClanHall(snapshot.clanHall);
         this._setCustomFactors(normalizeCustomFactors(snapshot.customFactors));

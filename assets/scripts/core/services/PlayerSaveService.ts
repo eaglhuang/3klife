@@ -1,4 +1,5 @@
 import { normalizeMarriageProposal, type MarriageProposal } from '../systems/MarriageProposal';
+import { normalizeFamilySynergy, type FamilySynergyLedger } from '../systems/FamilySynergy';
 import { isSandtableTerritory } from '../systems/SandtableTerritories';
 import type { BreedingBirthRecord } from '../systems/BreedingBirthRecord';
 import { normalizeBreedingBirthRecords } from '../systems/BreedingBirthRecordSave';
@@ -270,6 +271,8 @@ export interface PlayerSaveSnapshot {
     clanTier?: ClanTier;
     /** 名門提親（G4 §E #4，PROG-2-1811）；舊存檔沒有此欄位 */
     marriageProposal?: MarriageProposal;
+    /** 世交相性 K（G3 §F-2，PROG-2-1812）；舊存檔沒有此欄位 */
+    familySynergy?: FamilySynergyLedger;
     /** 郡望家風（G4 §F-1）；舊存檔沒有此欄位 */
     clanTradition?: ClanTradition;
     /** 郡望堂號（PROG-2-1804） */
@@ -588,6 +591,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.friendBorrowLedger !== undefined ? { friendBorrowLedger: normalizeBorrowLedger(snapshot.friendBorrowLedger) } : {}),
         ...(snapshot.soulFragments !== undefined ? { soulFragments: normalizeSoulFragmentLedger(snapshot.soulFragments) } : {}),
         ...(snapshot.clanTier !== undefined ? { clanTier: normalizeClanTier(snapshot.clanTier) } : {}),
+        ...(snapshot.familySynergy !== undefined ? { familySynergy: normalizeFamilySynergy(snapshot.familySynergy) } : {}),
         ...(normalizeMarriageProposal(snapshot.marriageProposal) ? { marriageProposal: normalizeMarriageProposal(snapshot.marriageProposal) as MarriageProposal } : {}),
         ...(normalizeClanTradition(snapshot.clanTradition) ? { clanTradition: normalizeClanTradition(snapshot.clanTradition) as ClanTradition } : {}),
         ...(normalizeClanHall(snapshot.clanHall) ? { clanHall: normalizeClanHall(snapshot.clanHall) as string } : {}),

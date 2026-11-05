@@ -104,6 +104,7 @@ export function buildSuitorGeneral(proposal: MarriageProposal): GeneralConfig {
     return {
         id: proposal.id,
         name,
+        familyUid: proposal.family,
         faction: 'player',
         gender,
         age,
