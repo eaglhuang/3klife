@@ -966,6 +966,7 @@ export class LobbyScene extends Component {
             roster: { getAll: () => services().session.roster },
             unveiling: services().unveiling,
             nurture: services().nurture,
+            familyStudy: services().nurture,
             loadMentorCards: async () => attachSupportToCards((await services().legacy?.getMentorCards()) ?? [], await this._loadSupportCatalog()),
             text: breedText(),
             persist: async () => {
@@ -1017,6 +1018,8 @@ export class LobbyScene extends Component {
             { buttonId: 'btnStartBorrow', handler: () => { this._onClickStartBorrow(); } },
             { buttonId: 'btnRest', handler: act(() => flow.train('rest')) },
             { buttonId: 'btnUsePill', handler: () => { void this._usePillOnNurtureChild(flow); } },
+            { buttonId: 'btnFamilyStudy', handler: act(() => flow.familyStudy()) },
+            { buttonId: 'btnNextStudyFactor', handler: () => { flow.cycleStudyFactor(); this._refreshNurtureFlow(); } },
             { buttonId: 'btnPrevTactic', handler: () => { flow.cycleTactic(-1); this._refreshNurtureFlow(); } },
             { buttonId: 'btnNextTactic', handler: () => { flow.cycleTactic(1); this._refreshNurtureFlow(); } },
             { buttonId: 'btnLearnTactic', handler: act(() => flow.learnSelectedTactic()) },

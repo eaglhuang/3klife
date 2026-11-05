@@ -14,6 +14,7 @@
  * Unity 對照：像 MVP 裡的 Presenter。View（UCUF 組出來的節點）只負責顯示，
  * Presenter 讀 Model（名冊 / NurtureService）後吐出 ViewModel，按鈕 onClick 只轉呼叫 Presenter 的方法。
  */
+import { FAMILY_STUDY_BLOCK_TEXT, FAMILY_STUDY_ROUND_COST, familyStudyHint, familyStudyLine } from '../../core/systems/FamilyStudy';
 import { lateBloomClueText } from '../../core/systems/LateBloomClue';
 import { childUltimateAwakenLine } from '../../core/systems/UltimateScriptLines';
 import { VITALITY_SCRIPT_KEYS, vitalityScriptText } from './VitalityScriptTexts';
@@ -203,6 +204,8 @@ export interface NurtureFlowDeps {
     commitFriendBorrow?: (friendId: string, sessionId: string) => Promise<{ ok: boolean; message?: string }>;
     /** 結業兌換戰法：正式環境接 GameSession.learnTactic；清單為本場靈感觸發的戰法（PROG-2-1134） */
     learnTactic?: (childId: string, tacticId: string) => Promise<TacticLearnCheck>;
+    /** 家學研習（G2 §E #4）；正式環境接 NurtureService，未提供時按鈕不可用 */
+    familyStudy?: Pick<NurtureService, 'familyStudyStatus' | 'familyStudy'>;
     /** 名將傳道（MENT-15）；正式環境接 GameSession.performLegendaryMentoringFor，未提供時入口不可用 */
     performLegendaryMentoring?: (
         generalId: string,
@@ -244,6 +247,8 @@ export function exclusiveSkillOf(general: Pick<GeneralConfig, 'ultimateSlots'> |
 }
 
 export class NurtureFlowController {
+    /** 家學研習目前指到第幾個候選因子 */
+    private _studyIndex = 0;
     private _selectedId: string | null = null;
     private _report: GraduationReport | null = null;
     private _notice = '';
@@ -425,6 +430,49 @@ export class NurtureFlowController {
         return log;
     }
 
+    /** 家學研習換下一個因子，提示列顯示這次會補什麼 */
+    cycleStudyFactor(): void {
+        const child = this._requireSelected();
+        const candidates = this._deps.familyStudy?.familyStudyStatus(child.id).candidates ?? [];
+        if (candidates.length === 0) return;
+        this._studyIndex = (this._studyIndex + 1) % candidates.length;
+        this._notice = familyStudyHint(candidates[this._studyIndex]);
+    }
+
+    async familyStudy(): Promise<void> {
+        const child = this._requireSelected();
+        const study = this._deps.familyStudy;
+        if (!study) return;
+        const candidates = study.familyStudyStatus(child.id).candidates;
+        const done = study.familyStudy(child.id, candidates[this._studyIndex % candidates.length].geneId);
+        this._studyIndex = 0;
+        this._notice = familyStudyLine(done);
+        for (let i = 0; i < FAMILY_STUDY_ROUND_COST; i++) {
+            if (this._deps.spendLifespan?.(child.id, 'nurture')?.events.some((event) => event.type === 'died')) {
+                this._notice += '　壽命耗盡，武將已故';
+                break;
+            }
+        }
+        await this._persist();
+    }
+
+    private _applyStudyButton(child: UnveilingGeneral, texts: Record<string, string>, enabled: Record<string, boolean>): void {
+        const study = this._deps.familyStudy;
+        if (!study) {
+            texts.familyStudyLabel = '家學研習';
+            return;
+        }
+        const { blocked, candidates } = study.familyStudyStatus(child.id);
+        if (blocked) {
+            texts.familyStudyLabel = `家學研習：${FAMILY_STUDY_BLOCK_TEXT[blocked]}`;
+            return;
+        }
+        const current = candidates[this._studyIndex % candidates.length];
+        texts.familyStudyLabel = `家學研習：${current.displayName} ${current.starBefore}→${current.starAfter}★`;
+        enabled.btnFamilyStudy = true;
+        enabled.btnNextStudyFactor = candidates.length > 1;
+    }
+
     /** 戰法列左右切換 */
     cycleTactic(step: number): void {
         const ids = this._tacticIds();
@@ -574,6 +622,8 @@ export class NurtureFlowController {
         enabled.btnMentorDetail = false;
         enabled.btnLegendaryCard = false;
         enabled.btnLegendaryMentor = false;
+        enabled.btnFamilyStudy = false;
+        enabled.btnNextStudyFactor = false;
         enabled.btnStartBorrow = false;
         actives.tacticBlock = false;
         enabled.btnPrevTactic = false;
@@ -657,6 +707,7 @@ export class NurtureFlowController {
         enabled.btnLegendaryMentor = !!this._deps.performLegendaryMentoring && !!legendary && session.status === 'active';
         texts.legendaryMentorLabel = '傳道';
         texts.autoNurtureLabel = '自動培育整季';
+        this._applyStudyButton(child, texts, enabled);
         return { mode: 'train', childId: child.id, texts, actives, enabled };
     }
 

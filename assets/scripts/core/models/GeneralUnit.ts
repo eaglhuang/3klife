@@ -268,6 +268,8 @@ export type CharacterCategory =
   | 'titled';
 
 export interface GeneralConfig {
+  /** 已用過家學研習（G2 Study_Used_Flag，每胎限 1 次，PROG-2-1793） */
+  familyStudyUsed?: boolean;
   /** 運氣可見欄位（Is_Visible，運氣系統 §I）；缺值視為隱藏，見 isLukVisible */
   lukVisible?: boolean;
   id: string;
