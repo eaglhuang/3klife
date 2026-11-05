@@ -37,7 +37,7 @@ import { SeasonReportComposite, type SeasonReportOpenPayload } from '../componen
 import { SandtableTerritoryComposite, type SandtableTerritoryOpenPayload } from '../components/SandtableTerritoryComposite';
 import { LocalGachaService, type LocalGachaResultEntry } from '../../core/services/LocalGachaService';
 import { PlayerRosterService } from '../../core/services/PlayerRosterService';
-import { GAME_SESSION_EVENTS, type AddGeneralsResult, type ClanTierUpPayload, type CustomGoldFactorBornPayload, type LifeImprintedPayload, type RivalSeasonEventsPayload } from '../../core/managers/GameSession';
+import { GAME_SESSION_EVENTS, type AddGeneralsResult, type ClanTierUpPayload, type MilestoneUpPayload, type CustomGoldFactorBornPayload, type LifeImprintedPayload, type RivalSeasonEventsPayload } from '../../core/managers/GameSession';
 import { buildSageRemarks, remarkRandomOf } from '../../core/systems/SageRemarks';
 import { SAGES } from '../../core/systems/SageDivination';
 import { seasonDisplayText, seasonStartText } from '../core/SeasonTexts';
@@ -1122,6 +1122,9 @@ export class LobbyScene extends Component {
                 const { name, ep, factorName } = payload as CustomGoldFactorBornPayload;
                 event.emit('SHOW_TOAST', { message: customGoldBornLine(name, ep, factorName), duration: 4 });
             }),
+            event.on(GAME_SESSION_EVENTS.MilestoneUp, (payload?: unknown) => {
+                (payload as MilestoneUpPayload).lines.forEach((message) => event.emit('SHOW_TOAST', { message, duration: 4 }));
+            }),
             event.on(GAME_SESSION_EVENTS.ClanTierUp, (payload?: unknown) => {
                 const { oldTier, newTier } = payload as ClanTierUpPayload;
                 event.emit('SHOW_TOAST', { message: clanTierUpLine(oldTier, newTier), duration: 3 });
@@ -1295,6 +1298,7 @@ export class LobbyScene extends Component {
             playerDiscoveryLevel: () => services().session.discoveryLevel,
             factorDictionary: () => services().session.factorDictionary,
             announce: (message) => services().event.emit('SHOW_TOAST', { message, duration: 4 }),
+            noteKinPair: (fatherName, motherName, ancestorName) => services().session.noteKinPair(fatherName, motherName, ancestorName),
             familySynergy: () => services().session.familySynergy,
             gold: () => this._localGachaService.getCurrencyAmount('gold'),
             spendGold: (amount) => this._localGachaService.spendCurrency('gold', amount),

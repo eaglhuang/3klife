@@ -206,6 +206,7 @@ import { buildEraResetEvent } from '../systems/EraReset';
 import { buildQuarterlyBattleReportRows, type QuarterlyBattleReportRow } from '../systems/RetireReviewCopy';
 import { withLifeImprints } from '../systems/LifeImprint';
 import { clanMembersOf, clanStatsOf, clanTierOf, normalizeClanTier, type ClanTier } from '../systems/ClanTier';
+import { kinMilestoneLine, kinMilestoneStage, milestoneStageOfClan, milestoneUnlockLines, normalizeMilestoneStage, type MilestoneStage } from '../systems/FamilyMilestone';
 import { buildSuitorGeneral, normalizeMarriageProposal, rollMarriageProposal, type MarriageProposal } from '../systems/MarriageProposal';
 import { emptyFamilySynergyLedger, finalizeAdultChildren, fullSynergyAlliesOf, normalizeFamilySynergy, type FamilySynergyLedger } from '../systems/FamilySynergy';
 import { forgeCustomGold, mergeCustomFactors, normalizeCustomFactors } from '../systems/CustomGoldFactor';
@@ -348,6 +349,8 @@ export const GAME_SESSION_EVENTS = {
     LifeImprinted: 'game-session-life-imprinted',
     /** payload: ClanTierUpPayload（門第升格；季度檢定時發出） */
     ClanTierUp: 'game-session-clan-tier-up',
+    /** payload: MilestoneUpPayload（家族揭露階段上升） */
+    MilestoneUp: 'game-session-milestone-up',
     /** payload: CustomGoldFactorBornPayload（退役時凝練宗脈家傳金因子） */
     CustomGoldFactorBorn: 'game-session-custom-gold-factor-born',
     /** payload: { childId, injectedFactorId, consumed }（退役時因子媒介注入，PROG-2-0865） */
@@ -551,6 +554,12 @@ const TALLY_LOYALTY_INITIAL = 50;
 export type HireTrialResult = Omit<TrialTicketResult, 'reason'> & { reason?: TrialTicketRejectReason | 'uid-taken' };
 
 /** 退役或去世凝練生平印記（PROG-2-1794） */
+export interface MilestoneUpPayload {
+    oldStage: MilestoneStage;
+    newStage: MilestoneStage;
+    lines: string[];
+}
+
 export interface ClanTierUpPayload {
     oldTier: ClanTier;
     newTier: ClanTier;
@@ -658,6 +667,7 @@ export class GameSession {
     private _soulFragments: SoulFragmentLedger = emptySoulFragmentLedger();
     /** 門第階級，只升不降（G4 §F-1） */
     private _clanTier: ClanTier = 0;
+    private _milestoneStage: MilestoneStage = 1;
     private _marriageProposal: MarriageProposal | null = null;
     private _familySynergy: FamilySynergyLedger = emptyFamilySynergyLedger();
     private _pedigreeProbes: string[] = [];
@@ -1761,6 +1771,24 @@ export class GameSession {
         return this._clanTier;
     }
 
+    /** 家族揭露階段 M_stage；只升不降 */
+    public get milestoneStage(): MilestoneStage {
+        return this._milestoneStage;
+    }
+
+    /** G3-M1：玩家選中有共祖的表親；已到 G3 以上時不再出句 */
+    public noteKinPair(fatherName: string, motherName: string, ancestorName: string): void {
+        this._raiseMilestone(kinMilestoneStage(), kinMilestoneLine(fatherName, motherName, ancestorName));
+    }
+
+    private _raiseMilestone(reached: MilestoneStage, kinLine = ''): void {
+        if (reached <= this._milestoneStage) return;
+        const oldStage = this._milestoneStage;
+        this._milestoneStage = reached;
+        const payload: MilestoneUpPayload = { oldStage, newStage: reached, lines: milestoneUnlockLines(oldStage, reached, kinLine) };
+        this._emit(GAME_SESSION_EVENTS.MilestoneUp, payload);
+    }
+
     public get clanHall(): string | null {
         return this._clanHall;
     }
@@ -1848,6 +1876,7 @@ export class GameSession {
         // 上一局的進度不能帶進新局（PROG-2-0660）
         this._soulFragments = emptySoulFragmentLedger();
         this._clanTier = 0;
+        this._milestoneStage = 1;
         this._marriageProposal = null;
         this._familySynergy = emptyFamilySynergyLedger();
         this._pedigreeProbes = [];
@@ -3997,7 +4026,9 @@ export class GameSession {
         const cards = await archiver?.getAllSpiritCards() ?? [];
         const compact = await archiver?.getCompactAncestors?.() ?? [];
         const members = clanMembersOf(this._roster.getAll(), cards, this._factorDictionary, compact);
-        const reached = clanTierOf({ ...clanStatsOf(members), fullSynergyAllies: fullSynergyAlliesOf(this._familySynergy) });
+        const stats = clanStatsOf(members);
+        this._raiseMilestone(milestoneStageOfClan(stats));
+        const reached = clanTierOf({ ...stats, fullSynergyAllies: fullSynergyAlliesOf(this._familySynergy) });
         const payload: ClanTierUpPayload | null = reached > this._clanTier ? { oldTier: this._clanTier, newTier: reached } : null;
         if (payload) this._clanTier = reached;
         // 家風只定一次；舊存檔已是郡望世家時也在這裡補上
@@ -4530,6 +4561,7 @@ export class GameSession {
             friendBorrowLedger: { records: [...this._borrowLedger.records] },
             soulFragments: { ...this._soulFragments },
             clanTier: this._clanTier,
+            milestoneStage: this._milestoneStage,
             marriageProposal: this._marriageProposal ?? undefined,
             familySynergy: this._familySynergy.finalizedIds.length > 0 ? this._familySynergy : undefined,
             pedigreeProbes: this._pedigreeProbes.length > 0 ? [...this._pedigreeProbes] : undefined,
@@ -4704,6 +4736,7 @@ export class GameSession {
         this._borrowLedger = normalizeBorrowLedger(snapshot.friendBorrowLedger);
         this._soulFragments = normalizeSoulFragmentLedger(snapshot.soulFragments);
         this._clanTier = normalizeClanTier(snapshot.clanTier);
+        this._milestoneStage = normalizeMilestoneStage(snapshot.milestoneStage);
         this._marriageProposal = normalizeMarriageProposal(snapshot.marriageProposal);
         this._familySynergy = normalizeFamilySynergy(snapshot.familySynergy);
         this._pedigreeProbes = normalizePedigreeProbes(snapshot.pedigreeProbes);

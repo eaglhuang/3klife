@@ -44,6 +44,7 @@ import { relationEventsForBreeding, RelationEventLedger } from '../systems/Relat
 
 /** 雙親各上溯 3 代，合計 28 祖位 */
 const PROBE_ANCESTOR_GENERATIONS = 3;
+const COUSIN_MIN_DISTANCE = 2;
 
 export interface BreedingServiceOptions {
     random?: RandomSource;
@@ -145,6 +146,19 @@ export class BreedingService {
             const current = this._roster.getAll().find((general) => general.id === uid)?.ep;
             return { name: person.name, ep: current ?? person.ep_base };
         });
+    }
+
+    /** 表親才有名字：兄妹（距離 1）與直系沒有可標的共祖，回 null */
+    cousinAncestorName(fatherId: string, motherId: string): string | null {
+        const distance = this._graph.commonAncestorDistance(fatherId, motherId, PROBE_ANCESTOR_GENERATIONS);
+        if (distance === null || distance < COUSIN_MIN_DISTANCE) return null;
+        const isAncestorOf = (uid: string, descendant: string) => {
+            const pedigree = this._graph.getPedigree(descendant);
+            return PEDIGREE_SLOTS.some((slot) => pedigree[slot] === uid);
+        };
+        if (isAncestorOf(fatherId, motherId) || isAncestorOf(motherId, fatherId)) return null;
+        const uid = this._graph.commonAncestors(fatherId, motherId, PROBE_ANCESTOR_GENERATIONS)[0];
+        return uid ? this._graph.getPerson(uid)?.name ?? '佚名' : null;
     }
 
     /** 某人的 14 席中，哪幾席也出現在對方的 14 席裡；順序同 ancestorSeats */
