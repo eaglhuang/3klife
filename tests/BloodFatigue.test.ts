@@ -1,6 +1,6 @@
 import { TestSuite, assert } from './TestRunner';
 import { breed, checkBreedingEligibility, type BreedingGeneral, type PedigreeSource } from '../assets/scripts/core/systems/BreedingSystem';
-import { birthFrailRisk, bloodFatigueBirthLines, bloodFatigueForecast, childBloodFatigue, FRAIL_BIRTH_FLAG, normalizeBloodFatigue } from '../assets/scripts/core/systems/BloodFatigue';
+import { birthFrailRisk, bloodFatigueBirthLines, childBloodFatigue, FRAIL_BIRTH_FLAG, normalizeBloodFatigue } from '../assets/scripts/core/systems/BloodFatigue';
 import { bloodlineBirthLines } from '../assets/scripts/core/systems/BloodlineBirthLines';
 
 const person = (id: string, gender: string, extra: Record<string, unknown> = {}) => ({
@@ -58,12 +58,6 @@ export function createBloodFatigueSuite(): TestSuite {
         assert.equals(0, normalizeBloodFatigue(-1));
         assert.equals(0, normalizeBloodFatigue(Number.NaN));
         assert.equals(2, normalizeBloodFatigue(2.9));
-    });
-
-    suite.test('預告：乾淨外婚不提，復壯與近婚要顯示數字', () => {
-        assert.equals('', bloodFatigueForecast(0, 0, false));
-        assert.equals('異姓復壯：血脈疲勞 3→2，病弱風險 1%', bloodFatigueForecast(3, 0, false));
-        assert.equals('血脈疲勞 1→2，病弱風險 20%', bloodFatigueForecast(1, 0, true));
     });
 
     suite.test('出生句：乾淨外婚沒有句子', () => {

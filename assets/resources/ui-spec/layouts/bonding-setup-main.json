@@ -626,6 +626,19 @@
                   },
                   {
                     "type": "label",
+                    "name": "KinshipLampLine",
+                    "id": "kinshipLampLine",
+                    "widget": {
+                      "top": 168,
+                      "left": 24,
+                      "right": 24
+                    },
+                    "height": 24,
+                    "text": "",
+                    "styleSlot": "bonding.label.meta"
+                  },
+                  {
+                    "type": "label",
                     "name": "InbreedingLabel",
                     "id": "inbreedingLabel",
                     "widget": {

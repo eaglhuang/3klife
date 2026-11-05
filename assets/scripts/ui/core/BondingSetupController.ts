@@ -14,7 +14,7 @@
  * Unity 對照：MVP 的 Presenter。按鈕 onClick 只呼叫 SelectFather / SelectMother / Confirm，
  * 畫面層拿 GetView() 的 ViewModel 一次刷新 Text 與 Button.interactable。
  */
-import { bloodFatigueForecast } from '../../core/systems/BloodFatigue';
+import { kinshipLampLine } from '../../core/systems/BloodFatigue';
 import { DIVERSITY_HINT } from '../../core/systems/DiversityFactor';
 import { HIDDEN_LINEAGE_COST, hiddenLineageLine, PEDIGREE_PROBE_COST, pedigreeProbeLine, STAT_PROBE_COST, statProbeLine } from '../../core/systems/PedigreeProbe';
 import { getSage } from '../../core/systems/SageDivination';
@@ -483,8 +483,7 @@ export class BondingSetupController {
             : inbred
                 ? `${BLOCK_REASON_TEXT.inbreeding}子嗣精力上限 ×${INBREEDING_VITALITY_MULTIPLIER}`
                 : '血緣：3 代內無共同祖先';
-        const fatigueForecast = bloodFatigueForecast((father as BreedingGeneral).bloodFatigue, (mother as BreedingGeneral).bloodFatigue, eligibility.inbred);
-        if (fatigueForecast) texts.inbreedingLabel += `｜${fatigueForecast}`;
+        texts.kinshipLampLine = kinshipLampLine((father as BreedingGeneral).bloodFatigue, (mother as BreedingGeneral).bloodFatigue, eligibility.inbred);
         const diversity = this._deps.breeding.diversityOf?.(father.id, mother.id) ?? 1;
         if (diversity < 1) texts.inbreedingLabel += `｜${DIVERSITY_HINT}`;
         const allianceTag = ledger ? centuryAllianceTag(father as { familyUid?: string }, mother as { familyUid?: string }, ledger) : null;
