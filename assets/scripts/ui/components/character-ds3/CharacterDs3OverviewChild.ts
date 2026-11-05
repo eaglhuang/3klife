@@ -1,9 +1,10 @@
 // @spec-source → 武將人物介面規格書.md (doc_ui_0012)；PROG-2-1429 依建檔紀錄補標出處
 import { Color, Label, Sprite, UITransform } from 'cc';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
-import { ds3SetActive } from './Ds3NodeLookup';
+import { ds3Label, ds3SetActive } from './Ds3NodeLookup';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import type { GeneralDetailOverviewContentState } from '../GeneralDetailOverviewMapper';
+import { TALLY_SUMMARY_CARD_TITLE, tallySummaryCardLines } from '../../../core/systems/GeneralTallySummary';
 
 const DS3_RARITY_PILL_BG: Record<GeneralDetailOverviewContentState['rarityTier'], [number, number, number]> = {
     common: [76, 175, 80],
@@ -43,7 +44,8 @@ const V3_COMMAND_LABELS: Partial<Record<GeneralDetailOverviewContentState['comma
 /** 統領軍勢五列的值節點，依 commandPanelRows 的 key 對應（PROG-2-1213 / TSK-06） */
 const COMMAND_VALUE_NODE_PREFIX = 'CharacterDs3TabOverview_cmd_value_';
 
-const OVERVIEW_BIO_HEIGHT = 164;
+/** 人物小傳顯示高度；PROG-2-1858 加虎符戰記次卡後由 164 縮為 128，整欄才不超出畫面 */
+const OVERVIEW_BIO_HEIGHT = 128;
 
 export class CharacterDs3OverviewChild extends ChildPanelBase {
     override dataSource = 'overview';
@@ -75,6 +77,7 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
         ds3SetActive(this.binder, this.hostNode, 'OverviewStoryExpand', false);
         this._applyRarityPill(state.rarityTier);
         this._applyCommandPanel(state);
+        this._applyTallySummary(state);
 
         UCUFLogger.info(LogCategory.LIFECYCLE, '[CharacterDs3OverviewChild] onDataUpdate applied', {
             name: state.headerName,
@@ -130,6 +133,19 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
         label.overflow = Label.Overflow.CLAMP;
         label.verticalAlign = Label.VerticalAlign.TOP;
         transform.setContentSize(transform.width, OVERVIEW_BIO_HEIGHT);
+    }
+
+    /** 虎符戰記次卡（general-tally-summary，PROG-2-1858）；沒有摘要資料時整卡隱藏 */
+    private _applyTallySummary(state: GeneralDetailOverviewContentState): void {
+        ds3SetActive(this.binder, this.hostNode, 'OverviewTallySummary', !!state.tallySummary);
+        if (!state.tallySummary) return;
+        const [line0, line1] = tallySummaryCardLines(state.tallySummary);
+        // 次卡節點不在綁定表內，依節點名稱找（同兵頁虎符卡）
+        const texts: [string, string][] = [['OverviewTallyTitle', TALLY_SUMMARY_CARD_TITLE], ['OverviewTallyLine0', line0], ['OverviewTallyLine1', line1]];
+        for (const [name, text] of texts) {
+            const label = ds3Label(this.binder, this.hostNode, name);
+            if (label) label.string = text;
+        }
     }
 
     private _setLabelText(nodeName: string, text: string): void {

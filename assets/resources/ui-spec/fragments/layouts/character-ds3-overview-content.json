@@ -840,9 +840,63 @@
             },
             {
               "type": "panel",
+              "name": "OverviewTallySummary",
+              "width": 520,
+              "height": 52,
+              "layout": {
+                "type": "horizontal",
+                "alignItems": "center",
+                "paddingTop": 9,
+                "paddingRight": 16,
+                "paddingBottom": 9,
+                "paddingLeft": 16,
+                "spacingX": 14
+              },
+              "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_45",
+              "children": [
+                {
+                  "type": "label",
+                  "name": "OverviewTallyTitle",
+                  "width": 72,
+                  "height": 19,
+                  "text": "虎符戰記",
+                  "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_46"
+                },
+                {
+                  "type": "container",
+                  "name": "OverviewTallyLines",
+                  "width": 400,
+                  "height": 34,
+                  "layout": {
+                    "type": "vertical",
+                    "alignItems": "start"
+                  },
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "OverviewTallyLine0",
+                      "width": 400,
+                      "height": 17,
+                      "text": "",
+                      "styleSlot": "auto.character-ds3-tab-overview.overviewfamenext"
+                    },
+                    {
+                      "type": "label",
+                      "name": "OverviewTallyLine1",
+                      "width": 400,
+                      "height": 17,
+                      "text": "",
+                      "styleSlot": "auto.character-ds3-tab-overview.overviewfamenext"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "panel",
               "name": "CharacterDs3TabOverview_div_45",
               "width": 520,
-              "height": 225,
+              "height": 189,
               "layout": {
                 "type": "vertical",
                 "alignItems": "start",
@@ -866,7 +920,7 @@
                   "type": "label",
                   "name": "OverviewBio",
                   "width": 478,
-                  "height": 164,
+                  "height": 128,
                   "text": "張飛，字翼德，幽州涿郡人。少年以屠豬賣酒為業，後於桃園與劉備、關羽義結金蘭，誓同生死。性烈如火，勇猛無雙——長坂橋前單槍匹馬，一聲怒吼令曹軍百萬退散；義釋嚴顏一事，足見其粗中有細，智勇兼備。然酒後失德，醉鞭督卒，終命喪部將之手，令千古扼腕。其一生豪烈，血脈中燕地武人的剛猛之氣，至今仍在後裔身上延燃。",
                   "styleSlot": "auto.character-ds3-tab-overview.overviewbio"
                 }
