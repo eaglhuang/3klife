@@ -3138,6 +3138,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnPrevPow', handler: () => { prisoner.cycle(-1); this._refreshPrisonerPopup(); } },
             { buttonId: 'btnNextPow', handler: () => { prisoner.cycle(1); this._refreshPrisonerPopup(); } },
             { buttonId: 'btnPersuade', handler: () => { decide('persuade'); } },
+            { buttonId: 'btnGift', handler: () => { void this._onClickPrisonerGift(); } },
             { buttonId: 'btnRecruit', handler: () => { decide('recruit'); } },
             { buttonId: 'btnImprison', handler: () => { decide('imprison'); } },
             { buttonId: 'btnRelease', handler: () => { decide('release'); } },
@@ -3256,6 +3257,17 @@ export class LobbyScene extends Component {
         // 俘虜敵將立繪：沿用六框的臉部對齊，框高 512
         if (view.targetUid) {
             this._applyFramePortraits(binder, 'prisoner', [view.targetUid], () => ['powPortraitMask', 'powPortrait'], { ...PORTRAIT_FRAME_SPEC, frameHeight: 512 });
+        }
+    }
+
+    private async _onClickPrisonerGift(): Promise<void> {
+        try {
+            await this._prisoner?.gift();
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 送禮失敗', error);
+            services().event.emit('SHOW_TOAST', { message: error instanceof Error ? error.message : '送禮失敗', duration: 2.5 });
+        } finally {
+            this._refreshPrisonerPopup();
         }
     }
 

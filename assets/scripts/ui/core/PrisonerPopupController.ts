@@ -14,9 +14,11 @@
  * Unity 對照：MVP 的 Presenter。按鈕 onClick 只呼叫 Cycle / Decide，畫面層拿 GetView() 一次刷新。
  */
 import { captiveFemaleLine } from '../../core/systems/FemaleSourcePresenter';
+import { prisonerGiftFailLine, prisonerGiftLine, PRISONER_GIFT_GOLD, type PrisonerGiftResult } from '../../core/systems/PrisonerGift';
 import type { MilitaryReserve } from '../../core/systems/MilitaryReserve';
 import {
     powOptionLabels,
+    POW_FAIL_TEXT,
     powResultLine,
     prisonCapacityOf,
     type PendingPrisoner,
@@ -39,6 +41,7 @@ export interface PrisonerPopupDeps {
         /** 主城等級，決定監獄容量（ECO-14）；未提供時視為第 1 級 */
         readonly territoryLevel?: number;
         resolvePrisoner(targetUid: string, decision: PowDecision, options?: { gold?: number }): Promise<PowResolution | null>;
+        giftPrisoner(targetUid: string, gold: number): Promise<PrisonerGiftResult | null>;
     };
     wallet: {
         gold(): number;
@@ -91,6 +94,21 @@ export class PrisonerPopupController {
         return resolution;
     }
 
+    /** 對女俘虜送禮（PROG-2-1789）：黃金由這裡從錢包扣 */
+    async gift(): Promise<PrisonerGiftResult | null> {
+        const current = this._resolve();
+        if (!current) return null;
+        const result = await this._deps.session.giftPrisoner(current.record.targetUid, this._deps.wallet.gold());
+        if (!result) return null;
+        if (result.ok) {
+            this._deps.wallet.spendGold(result.goldSpent);
+            this._notice = prisonerGiftLine(current.record.targetName, result.affectionGained);
+        } else {
+            this._notice = result.reason === 'GOLD_SHORT' ? POW_FAIL_TEXT.GOLD_SHORT : prisonerGiftFailLine(current.record.targetName);
+        }
+        return result;
+    }
+
     getView(): PrisonerPopupView {
         const list = this.pending();
         const current = this._resolve();
@@ -110,10 +128,12 @@ export class PrisonerPopupController {
             recruitLabel: '招募',
             imprisonLabel: '無期徒刑',
             releaseLabel: '放走',
+            giftLabel: `送禮（${PRISONER_GIFT_GOLD} 金）`,
         };
         const actives: Record<string, boolean> = {
             powPanel: current !== null,
             powEmptyHint: current === null,
+            btnGift: false,
         };
         const enabled: Record<string, boolean> = {
             btnClosePow: true,
@@ -123,6 +143,7 @@ export class PrisonerPopupController {
             btnRecruit: false,
             btnImprison: false,
             btnRelease: false,
+            btnGift: false,
         };
         if (!current) {
             return { targetUid: null, texts, actives, enabled };
@@ -144,6 +165,9 @@ export class PrisonerPopupController {
         enabled.btnRecruit = open && gold >= record.options.recruitCost.gold && military.cityTroops >= record.options.recruitCost.troops;
         enabled.btnImprison = open && prison.prisoners.length < slots;
         enabled.btnRelease = open;
+        // 只有女俘虜有禮可送；勸降失敗後翻臉，不能再送
+        actives.btnGift = (current.target as { gender?: string }).gender === '女';
+        enabled.btnGift = actives.btnGift && record.decision === null && gold >= PRISONER_GIFT_GOLD;
         return { targetUid: record.targetUid, texts, actives, enabled };
     }
 
