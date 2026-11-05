@@ -14,6 +14,7 @@
  * Unity 對照：像 BreedingRules 這種純 C# static class，輸入兩份 GeneralData 與 System.Random，
  * 回傳新的 GeneralData；寫回名冊與存檔交給上層 Service（BreedingService）。
  */
+import { clanMarriageBlock } from './ClanMarriageRule';
 import { applyCompactLock, applyHeritageLock } from './FamilyCompact';
 import { applyLineageSynergy } from './LineageSynergy';
 import { applyKinPurification, kinPurificationTargetsOf, type KinPurificationOutcome, type KinPurificationTarget } from './KinPurification';
@@ -117,6 +118,7 @@ export type BreedingBlockReason =
     | 'father-breeding-cap'
     | 'mother-breeding-cap'
     | 'mother-pregnant'
+    | 'same-clan'
     | 'inbreeding';
 
 /** 祖譜查詢介面；正式環境為 BloodlineGraph */
@@ -196,7 +198,7 @@ export interface BreedingEligibility {
 export function checkBreedingEligibility(
     father: BreedingGeneral,
     mother: BreedingGeneral,
-    pedigree?: Pick<PedigreeSource, 'commonAncestorDistance'>,
+    pedigree?: Pick<PedigreeSource, 'commonAncestorDistance'> & Partial<Pick<PedigreeSource, 'getPedigree'>>,
 ): BreedingEligibility {
     const reasons: BreedingBlockReason[] = [];
     if (father.id === mother.id) reasons.push('same-general');
@@ -217,7 +219,13 @@ export function checkBreedingEligibility(
     const distance = pedigree && father.id !== mother.id
         ? pedigree.commonAncestorDistance(father.id, mother.id, INBREEDING_BLOCK_GENERATIONS)
         : null;
-    if (distance !== null && distance <= INBREEDING_BLOCK_GENERATIONS) reasons.push('inbreeding');
+    if (pedigree?.getPedigree) {
+        // G3 §E #1：同父系擋下，外戚表親放行；血脈疲勞與純化另外算
+        const block = father.id !== mother.id ? clanMarriageBlock(father.id, mother.id, pedigree as { getPedigree: PedigreeSource['getPedigree'] }) : null;
+        if (block) reasons.push(block);
+    } else if (distance !== null && distance <= INBREEDING_BLOCK_GENERATIONS) {
+        reasons.push('inbreeding');
+    }
 
     return { ok: reasons.length === 0, reasons, commonAncestorDistance: distance, inbred: isInbredPair(father, mother, pedigree) };
 }

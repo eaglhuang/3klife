@@ -293,12 +293,13 @@ export function createBreedingSuite(): TestSuite {
         }
     });
 
-    suite.test('資格：3 代內有共同祖先（兄妹、堂表、父女）禁止結緣', () => {
+    suite.test('資格：同父系（兄妹、父女）擋下，姑表放行並記下共祖距離', () => {
         const graph = smallFamily();
-        const blocked = checkBreedingEligibility(makeGeneral('kid1', '男'), makeGeneral('cousin', '女'), graph);
-        assert.isTrue(blocked.reasons.includes('inbreeding'));
-        assert.equals(2, blocked.commonAncestorDistance);
-        assert.isTrue(checkBreedingEligibility(makeGeneral('dad', '男'), makeGeneral('kid2', '女'), graph).reasons.includes('inbreeding'));
+        const cousin = checkBreedingEligibility(makeGeneral('kid1', '男'), makeGeneral('cousin', '女'), graph);
+        assert.isTrue(cousin.ok);
+        assert.equals(2, cousin.commonAncestorDistance);
+        assert.isTrue(checkBreedingEligibility(makeGeneral('kid1', '男'), makeGeneral('kid2', '女'), graph).reasons.includes('same-clan'));
+        assert.isTrue(checkBreedingEligibility(makeGeneral('dad', '男'), makeGeneral('kid2', '女'), graph).reasons.includes('same-clan'));
         assert.isTrue(checkBreedingEligibility(makeGeneral('kid1', '男'), makeGeneral('stranger', '女'), graph).ok);
     });
 
@@ -307,7 +308,7 @@ export function createBreedingSuite(): TestSuite {
     suite.test('結緣被擋下時不扣精力', () => {
         const graph = smallFamily();
         const father = makeGeneral('kid1', '男');
-        const result = breed({ father, mother: makeGeneral('cousin', '女'), pedigree: graph, random: () => 0, childId: 'x' });
+        const result = breed({ father, mother: makeGeneral('kid2', '女'), pedigree: graph, random: () => 0, childId: 'x' });
         assert.equals('blocked', result.outcome);
         assert.equals(100, result.father.vitality);
     });
@@ -473,9 +474,9 @@ export function createBreedingSuite(): TestSuite {
         assert.equals(3, restored.syncGraphFromRoster());
         assert.equals('guan-yu', reloaded.getPedigree(grandchild.id).FF);
 
-        // 祖孫（關羽 × 孫女）在 3 代內 → 擋下
+        // 祖孫（關羽 × 孫女）同父系 → 擋下
         store.replaceAll((store.getAll() as BreedingGeneral[]).map((g) => (g.id === grandchild.id ? { ...g, age: 20, gender: '女' } : g)));
-        assert.isTrue(restored.checkEligibility('guan-yu', grandchild.id).reasons.includes('inbreeding'));
+        assert.isTrue(restored.checkEligibility('guan-yu', grandchild.id).reasons.includes('same-clan'));
     });
 
     suite.test('resolveAncestorProfile：名冊 genes 與 registry gene_refs 合併', () => {

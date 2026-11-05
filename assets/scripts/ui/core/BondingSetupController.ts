@@ -69,6 +69,8 @@ export const BLOCK_REASON_TEXT: Record<BreedingBlockReason, string> = {
     'mother-breeding-cap': '母方已達一生親傳上限',
     'mother-pregnant': '母方待產中',
     inbreeding: '同源血脈過於濃厚，後裔恐有天殤之虞！',
+    // G3 §H UI_G3_SAME_SURNAME_BLOCK
+    'same-clan': '禮法森嚴：同宗同姓直系與堂親禁止聯姻。唯外戚表親（姑表、姨表、隔代外姻）可進行聯姻並觸發【血脈純化】。',
 };
 
 /** Breeding_Mode：退役年齡後仍為活體武將的結緣視為和平血統線（只做摘要，不另開系統） */
