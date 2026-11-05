@@ -111,6 +111,33 @@
           },
           {
             "type": "button",
+            "name": "BtnPotential",
+            "id": "btnPotential",
+            "widget": {
+              "top": 16,
+              "right": 686
+            },
+            "width": 170,
+            "height": 48,
+            "skinSlot": "bonding.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnPotentialLabel",
+                "id": "potentialLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "潛力條",
+                "styleSlot": "bonding.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
             "name": "BtnCompact",
             "id": "btnCompact",
             "widget": {
@@ -577,6 +604,7 @@
               {
                 "type": "panel",
                 "name": "EstimateBox",
+                "id": "estimateBox",
                 "widget": {
                   "top": 262,
                   "left": 8,
@@ -702,6 +730,796 @@
                     "height": 48,
                     "text": "確認結緣",
                     "styleSlot": "bonding.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "PotentialPanel",
+                "id": "potentialPanel",
+                "widget": {
+                  "top": 262,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 196,
+                "skinSlot": "bonding.slot.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "FatherPotentialHead",
+                    "id": "fatherPotentialHead",
+                    "widget": {
+                      "top": 8,
+                      "left": 24
+                    },
+                    "width": 530,
+                    "height": 26,
+                    "text": "",
+                    "styleSlot": "bonding.label.meta"
+                  },
+                  {
+                    "type": "container",
+                    "name": "FatherPotentialRow0",
+                    "widget": {
+                      "top": 38,
+                      "left": 24
+                    },
+                    "width": 530,
+                    "height": 26,
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "FatherPotentialName0",
+                        "id": "fatherPotentialName0",
+                        "widget": {
+                          "top": 0,
+                          "left": 0
+                        },
+                        "width": 60,
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "bonding.label.meta"
+                      },
+                      {
+                        "type": "panel",
+                        "name": "FatherPotentialTrack0",
+                        "widget": {
+                          "top": 6,
+                          "left": 64
+                        },
+                        "width": 200,
+                        "height": 14,
+                        "skinSlot": "bonding.potential.track",
+                        "children": [
+                          {
+                            "type": "panel",
+                            "name": "FatherPotentialP0",
+                            "id": "fatherPotentialP0",
+                            "widget": {
+                              "top": 0,
+                              "left": 0
+                            },
+                            "width": 200,
+                            "height": 14,
+                            "skinSlot": "bonding.potential.cap"
+                          },
+                          {
+                            "type": "panel",
+                            "name": "FatherPotentialA0",
+                            "id": "fatherPotentialA0",
+                            "widget": {
+                              "top": 0,
+                              "left": 0
+                            },
+                            "width": 200,
+                            "height": 14,
+                            "skinSlot": "bonding.potential.awakened"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "label",
+                        "name": "FatherPotentialValue0",
+                        "id": "fatherPotentialValue0",
+                        "widget": {
+                          "top": 0,
+                          "left": 274
+                        },
+                        "width": 256,
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "bonding.label.meta"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "container",
+                    "name": "FatherPotentialRow1",
+                    "widget": {
+                      "top": 68,
+                      "left": 24
+                    },
+                    "width": 530,
+                    "height": 26,
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "FatherPotentialName1",
+                        "id": "fatherPotentialName1",
+                        "widget": {
+                          "top": 0,
+                          "left": 0
+                        },
+                        "width": 60,
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "bonding.label.meta"
+                      },
+                      {
+                        "type": "panel",
+                        "name": "FatherPotentialTrack1",
+                        "widget": {
+                          "top": 6,
+                          "left": 64
+                        },
+                        "width": 200,
+                        "height": 14,
+                        "skinSlot": "bonding.potential.track",
+                        "children": [
+                          {
+                            "type": "panel",
+                            "name": "FatherPotentialP1",
+                            "id": "fatherPotentialP1",
+                            "widget": {
+                              "top": 0,
+                              "left": 0
+                            },
+                            "width": 200,
+                            "height": 14,
+                            "skinSlot": "bonding.potential.cap"
+                          },
+                          {
+                            "type": "panel",
+                            "name": "FatherPotentialA1",
+                            "id": "fatherPotentialA1",
+                            "widget": {
+                              "top": 0,
+                              "left": 0
+                            },
+                            "width": 200,
+                            "height": 14,
+                            "skinSlot": "bonding.potential.awakened"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "label",
+                        "name": "FatherPotentialValue1",
+                        "id": "fatherPotentialValue1",
+                        "widget": {
+                          "top": 0,
+                          "left": 274
+                        },
+                        "width": 256,
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "bonding.label.meta"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "container",
+                    "name": "FatherPotentialRow2",
+                    "widget": {
+                      "top": 98,
+                      "left": 24
+                    },
+                    "width": 530,
+                    "height": 26,
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "FatherPotentialName2",
+                        "id": "fatherPotentialName2",
+                        "widget": {
+                          "top": 0,
+                          "left": 0
+                        },
+                        "width": 60,
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "bonding.label.meta"
+                      },
+                      {
+                        "type": "panel",
+                        "name": "FatherPotentialTrack2",
+                        "widget": {
+                          "top": 6,
+                          "left": 64
+                        },
+                        "width": 200,
+                        "height": 14,
+                        "skinSlot": "bonding.potential.track",
+                        "children": [
+                          {
+                            "type": "panel",
+                            "name": "FatherPotentialP2",
+                            "id": "fatherPotentialP2",
+                            "widget": {
+                              "top": 0,
+                              "left": 0
+                            },
+                            "width": 200,
+                            "height": 14,
+                            "skinSlot": "bonding.potential.cap"
+                          },
+                          {
+                            "type": "panel",
+                            "name": "FatherPotentialA2",
+                            "id": "fatherPotentialA2",
+                            "widget": {
+                              "top": 0,
+                              "left": 0
+                            },
+                            "width": 200,
+                            "height": 14,
+                            "skinSlot": "bonding.potential.awakened"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "label",
+                        "name": "FatherPotentialValue2",
+                        "id": "fatherPotentialValue2",
+                        "widget": {
+                          "top": 0,
+                          "left": 274
+                        },
+                        "width": 256,
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "bonding.label.meta"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "container",
+                    "name": "FatherPotentialRow3",
+                    "widget": {
+                      "top": 128,
+                      "left": 24
+                    },
+                    "width": 530,
+                    "height": 26,
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "FatherPotentialName3",
+                        "id": "fatherPotentialName3",
+                        "widget": {
+                          "top": 0,
+                          "left": 0
+                        },
+                        "width": 60,
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "bonding.label.meta"
+                      },
+                      {
+                        "type": "panel",
+                        "name": "FatherPotentialTrack3",
+                        "widget": {
+                          "top": 6,
+                          "left": 64
+                        },
+                        "width": 200,
+                        "height": 14,
+                        "skinSlot": "bonding.potential.track",
+                        "children": [
+                          {
+                            "type": "panel",
+                            "name": "FatherPotentialP3",
+                            "id": "fatherPotentialP3",
+                            "widget": {
+                              "top": 0,
+                              "left": 0
+                            },
+                            "width": 200,
+                            "height": 14,
+                            "skinSlot": "bonding.potential.cap"
+                          },
+                          {
+                            "type": "panel",
+                            "name": "FatherPotentialA3",
+                            "id": "fatherPotentialA3",
+                            "widget": {
+                              "top": 0,
+                              "left": 0
+                            },
+                            "width": 200,
+                            "height": 14,
+                            "skinSlot": "bonding.potential.awakened"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "label",
+                        "name": "FatherPotentialValue3",
+                        "id": "fatherPotentialValue3",
+                        "widget": {
+                          "top": 0,
+                          "left": 274
+                        },
+                        "width": 256,
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "bonding.label.meta"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "container",
+                    "name": "FatherPotentialRow4",
+                    "widget": {
+                      "top": 158,
+                      "left": 24
+                    },
+                    "width": 530,
+                    "height": 26,
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "FatherPotentialName4",
+                        "id": "fatherPotentialName4",
+                        "widget": {
+                          "top": 0,
+                          "left": 0
+                        },
+                        "width": 60,
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "bonding.label.meta"
+                      },
+                      {
+                        "type": "panel",
+                        "name": "FatherPotentialTrack4",
+                        "widget": {
+                          "top": 6,
+                          "left": 64
+                        },
+                        "width": 200,
+                        "height": 14,
+                        "skinSlot": "bonding.potential.track",
+                        "children": [
+                          {
+                            "type": "panel",
+                            "name": "FatherPotentialP4",
+                            "id": "fatherPotentialP4",
+                            "widget": {
+                              "top": 0,
+                              "left": 0
+                            },
+                            "width": 200,
+                            "height": 14,
+                            "skinSlot": "bonding.potential.cap"
+                          },
+                          {
+                            "type": "panel",
+                            "name": "FatherPotentialA4",
+                            "id": "fatherPotentialA4",
+                            "widget": {
+                              "top": 0,
+                              "left": 0
+                            },
+                            "width": 200,
+                            "height": 14,
+                            "skinSlot": "bonding.potential.awakened"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "label",
+                        "name": "FatherPotentialValue4",
+                        "id": "fatherPotentialValue4",
+                        "widget": {
+                          "top": 0,
+                          "left": 274
+                        },
+                        "width": 256,
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "bonding.label.meta"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "label",
+                    "name": "MotherPotentialHead",
+                    "id": "motherPotentialHead",
+                    "widget": {
+                      "top": 8,
+                      "left": 580
+                    },
+                    "width": 530,
+                    "height": 26,
+                    "text": "",
+                    "styleSlot": "bonding.label.meta"
+                  },
+                  {
+                    "type": "container",
+                    "name": "MotherPotentialRow0",
+                    "widget": {
+                      "top": 38,
+                      "left": 580
+                    },
+                    "width": 530,
+                    "height": 26,
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "MotherPotentialName0",
+                        "id": "motherPotentialName0",
+                        "widget": {
+                          "top": 0,
+                          "left": 0
+                        },
+                        "width": 60,
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "bonding.label.meta"
+                      },
+                      {
+                        "type": "panel",
+                        "name": "MotherPotentialTrack0",
+                        "widget": {
+                          "top": 6,
+                          "left": 64
+                        },
+                        "width": 200,
+                        "height": 14,
+                        "skinSlot": "bonding.potential.track",
+                        "children": [
+                          {
+                            "type": "panel",
+                            "name": "MotherPotentialP0",
+                            "id": "motherPotentialP0",
+                            "widget": {
+                              "top": 0,
+                              "left": 0
+                            },
+                            "width": 200,
+                            "height": 14,
+                            "skinSlot": "bonding.potential.cap"
+                          },
+                          {
+                            "type": "panel",
+                            "name": "MotherPotentialA0",
+                            "id": "motherPotentialA0",
+                            "widget": {
+                              "top": 0,
+                              "left": 0
+                            },
+                            "width": 200,
+                            "height": 14,
+                            "skinSlot": "bonding.potential.awakened"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "label",
+                        "name": "MotherPotentialValue0",
+                        "id": "motherPotentialValue0",
+                        "widget": {
+                          "top": 0,
+                          "left": 274
+                        },
+                        "width": 256,
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "bonding.label.meta"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "container",
+                    "name": "MotherPotentialRow1",
+                    "widget": {
+                      "top": 68,
+                      "left": 580
+                    },
+                    "width": 530,
+                    "height": 26,
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "MotherPotentialName1",
+                        "id": "motherPotentialName1",
+                        "widget": {
+                          "top": 0,
+                          "left": 0
+                        },
+                        "width": 60,
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "bonding.label.meta"
+                      },
+                      {
+                        "type": "panel",
+                        "name": "MotherPotentialTrack1",
+                        "widget": {
+                          "top": 6,
+                          "left": 64
+                        },
+                        "width": 200,
+                        "height": 14,
+                        "skinSlot": "bonding.potential.track",
+                        "children": [
+                          {
+                            "type": "panel",
+                            "name": "MotherPotentialP1",
+                            "id": "motherPotentialP1",
+                            "widget": {
+                              "top": 0,
+                              "left": 0
+                            },
+                            "width": 200,
+                            "height": 14,
+                            "skinSlot": "bonding.potential.cap"
+                          },
+                          {
+                            "type": "panel",
+                            "name": "MotherPotentialA1",
+                            "id": "motherPotentialA1",
+                            "widget": {
+                              "top": 0,
+                              "left": 0
+                            },
+                            "width": 200,
+                            "height": 14,
+                            "skinSlot": "bonding.potential.awakened"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "label",
+                        "name": "MotherPotentialValue1",
+                        "id": "motherPotentialValue1",
+                        "widget": {
+                          "top": 0,
+                          "left": 274
+                        },
+                        "width": 256,
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "bonding.label.meta"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "container",
+                    "name": "MotherPotentialRow2",
+                    "widget": {
+                      "top": 98,
+                      "left": 580
+                    },
+                    "width": 530,
+                    "height": 26,
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "MotherPotentialName2",
+                        "id": "motherPotentialName2",
+                        "widget": {
+                          "top": 0,
+                          "left": 0
+                        },
+                        "width": 60,
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "bonding.label.meta"
+                      },
+                      {
+                        "type": "panel",
+                        "name": "MotherPotentialTrack2",
+                        "widget": {
+                          "top": 6,
+                          "left": 64
+                        },
+                        "width": 200,
+                        "height": 14,
+                        "skinSlot": "bonding.potential.track",
+                        "children": [
+                          {
+                            "type": "panel",
+                            "name": "MotherPotentialP2",
+                            "id": "motherPotentialP2",
+                            "widget": {
+                              "top": 0,
+                              "left": 0
+                            },
+                            "width": 200,
+                            "height": 14,
+                            "skinSlot": "bonding.potential.cap"
+                          },
+                          {
+                            "type": "panel",
+                            "name": "MotherPotentialA2",
+                            "id": "motherPotentialA2",
+                            "widget": {
+                              "top": 0,
+                              "left": 0
+                            },
+                            "width": 200,
+                            "height": 14,
+                            "skinSlot": "bonding.potential.awakened"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "label",
+                        "name": "MotherPotentialValue2",
+                        "id": "motherPotentialValue2",
+                        "widget": {
+                          "top": 0,
+                          "left": 274
+                        },
+                        "width": 256,
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "bonding.label.meta"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "container",
+                    "name": "MotherPotentialRow3",
+                    "widget": {
+                      "top": 128,
+                      "left": 580
+                    },
+                    "width": 530,
+                    "height": 26,
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "MotherPotentialName3",
+                        "id": "motherPotentialName3",
+                        "widget": {
+                          "top": 0,
+                          "left": 0
+                        },
+                        "width": 60,
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "bonding.label.meta"
+                      },
+                      {
+                        "type": "panel",
+                        "name": "MotherPotentialTrack3",
+                        "widget": {
+                          "top": 6,
+                          "left": 64
+                        },
+                        "width": 200,
+                        "height": 14,
+                        "skinSlot": "bonding.potential.track",
+                        "children": [
+                          {
+                            "type": "panel",
+                            "name": "MotherPotentialP3",
+                            "id": "motherPotentialP3",
+                            "widget": {
+                              "top": 0,
+                              "left": 0
+                            },
+                            "width": 200,
+                            "height": 14,
+                            "skinSlot": "bonding.potential.cap"
+                          },
+                          {
+                            "type": "panel",
+                            "name": "MotherPotentialA3",
+                            "id": "motherPotentialA3",
+                            "widget": {
+                              "top": 0,
+                              "left": 0
+                            },
+                            "width": 200,
+                            "height": 14,
+                            "skinSlot": "bonding.potential.awakened"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "label",
+                        "name": "MotherPotentialValue3",
+                        "id": "motherPotentialValue3",
+                        "widget": {
+                          "top": 0,
+                          "left": 274
+                        },
+                        "width": 256,
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "bonding.label.meta"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "container",
+                    "name": "MotherPotentialRow4",
+                    "widget": {
+                      "top": 158,
+                      "left": 580
+                    },
+                    "width": 530,
+                    "height": 26,
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "MotherPotentialName4",
+                        "id": "motherPotentialName4",
+                        "widget": {
+                          "top": 0,
+                          "left": 0
+                        },
+                        "width": 60,
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "bonding.label.meta"
+                      },
+                      {
+                        "type": "panel",
+                        "name": "MotherPotentialTrack4",
+                        "widget": {
+                          "top": 6,
+                          "left": 64
+                        },
+                        "width": 200,
+                        "height": 14,
+                        "skinSlot": "bonding.potential.track",
+                        "children": [
+                          {
+                            "type": "panel",
+                            "name": "MotherPotentialP4",
+                            "id": "motherPotentialP4",
+                            "widget": {
+                              "top": 0,
+                              "left": 0
+                            },
+                            "width": 200,
+                            "height": 14,
+                            "skinSlot": "bonding.potential.cap"
+                          },
+                          {
+                            "type": "panel",
+                            "name": "MotherPotentialA4",
+                            "id": "motherPotentialA4",
+                            "widget": {
+                              "top": 0,
+                              "left": 0
+                            },
+                            "width": 200,
+                            "height": 14,
+                            "skinSlot": "bonding.potential.awakened"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "label",
+                        "name": "MotherPotentialValue4",
+                        "id": "motherPotentialValue4",
+                        "widget": {
+                          "top": 0,
+                          "left": 274
+                        },
+                        "width": 256,
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "bonding.label.meta"
+                      }
+                    ]
                   }
                 ]
               },

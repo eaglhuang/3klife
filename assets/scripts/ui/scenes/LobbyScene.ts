@@ -1327,6 +1327,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnYuedanFilter', handler: () => { bonding.toggleYuedanFilter(); this._refreshBondingSetup(); } },
             { buttonId: 'btnRumorRoute', handler: () => { bonding.cycleRumorRoute(); this._refreshBondingSetup(); } },
             { buttonId: 'btnCompact', handler: () => { bonding.cycleCompact(); this._refreshBondingSetup(); } },
+            { buttonId: 'btnPotential', handler: () => { bonding.togglePotential(); this._refreshBondingSetup(); } },
             { buttonId: 'btnPrevFather', handler: () => { bonding.cycleFather(-1); this._refreshBondingSetup(); } },
             { buttonId: 'btnNextFather', handler: () => { bonding.cycleFather(1); this._refreshBondingSetup(); } },
             { buttonId: 'btnPrevMother', handler: () => { bonding.cycleMother(-1); this._refreshBondingSetup(); toastPregnantMother(bonding); } },

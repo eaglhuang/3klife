@@ -20,6 +20,18 @@
       "borderColor": "#E0392B",
       "borderWidth": 3
     },
+    "bonding.potential.track": {
+      "kind": "color-rect",
+      "color": "#3A3A3A"
+    },
+    "bonding.potential.cap": {
+      "kind": "color-rect",
+      "color": "#7A6636"
+    },
+    "bonding.potential.awakened": {
+      "kind": "color-rect",
+      "color": "#F0CF75"
+    },
     "bonding.slot.bg": {
       "kind": "color-rect",
       "color": "backgroundMid",
