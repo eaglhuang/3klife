@@ -211,7 +211,7 @@ export class BattleUIBridge {
       svc.event.on(EVENT_NAMES.TileBuffConsumed,        this._onTileBuffConsumed.bind(this)),
       svc.event.on(EVENT_NAMES.BattleEnded,             this._onBattleEnded.bind(this)),
       svc.event.on(EVENT_NAMES.TallyDeployed,           this._onTallyDeployed.bind(this)),
-      svc.event.on(EVENT_NAMES.UltimateScriptLine,      (line: string) => { this.appendLog(line); }),
+      svc.event.on(EVENT_NAMES.BattleSkillNotice,       (line: string) => { this.appendLog(line); }),
       svc.event.on(EVENT_NAMES.TroopCounterLine,        (line: string) => { this.appendLog(line); }),
       svc.event.on(EVENT_NAMES.AutoBattleToggled,       this._onAutoBattleToggled.bind(this)),
       svc.event.on(EVENT_NAMES.DelegateToggled,         this._onDelegateToggled.bind(this)),
