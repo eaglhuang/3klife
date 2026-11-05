@@ -18,7 +18,8 @@ export interface BreedingPreviewLines {
     tagLine: string;
 }
 
-export function buildBreedingPreviewLines(ep: EpBreakdown): BreedingPreviewLines {
+/** tagName：把標籤 id 換成顯示名稱；查不到就顯示原值（標籤也可能本來就是中文） */
+export function buildBreedingPreviewLines(ep: EpBreakdown, tagName?: (tag: string) => string | null | undefined): BreedingPreviewLines {
     const breakdownParts = [
         `共鳴 ${signed(ep.resonance)}`,
         `異脈 ${signed(ep.outcross)}`,
@@ -30,7 +31,7 @@ export function buildBreedingPreviewLines(ep: EpBreakdown): BreedingPreviewLines
     return {
         epLine: `預計爆發力 EP ${ep.ep} · ${ep.rating}`,
         breakdownLine: breakdownParts.join('　'),
-        tagLine: ep.topTag ? `最多共鳴標籤：${ep.topTag} ×${ep.topTagCount}` : '無共鳴標籤',
+        tagLine: ep.topTag ? `最多共鳴標籤：${tagName?.(ep.topTag) ?? ep.topTag} ×${ep.topTagCount}` : '無共鳴標籤',
     };
 }
 
