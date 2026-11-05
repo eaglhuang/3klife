@@ -278,7 +278,7 @@ import { TRADE_RESOURCE_NAMES, tradeWithRival as tradeWithRivalPure, type TradeR
 import { newAiHegemonOf } from '../systems/RivalHegemony';
 import type { RivalNationRoster } from '../systems/RivalOfficers';
 import type { RivalPowerContext } from '../systems/RivalOfficerSeason';
-import { advanceRivalSeason, applyEraShift, attachRivalOfficers, autoResolveBattle, createRivalWorld, generalPower, nationDef, normalizeRivalWorld, type AutoBattleResult, type BattleGeneral, type RivalWorld } from '../systems/RivalNations';
+import { advanceRivalSeason, applyEraShift, attachRivalOfficers, autoResolveBattle, createRivalWorld, dropOwnedRivalOfficers, generalPower, nationDef, normalizeRivalWorld, type AutoBattleResult, type BattleGeneral, type RivalWorld } from '../systems/RivalNations';
 import {
     defaultKeepTerritories,
     normalizeGovernanceAssignments,
@@ -2181,7 +2181,21 @@ export class GameSession {
         return notices;
     }
 
+    /** 玩家永久擁有的武將 id：名冊（含模板 id）與已結義傭兵；試用傭兵可能離隊，不算（PROG-2-1849） */
+    private _permanentlyOwnedGeneralIds(): Set<string> {
+        const owned = new Set<string>();
+        for (const general of this._roster.getAll()) {
+            owned.add(general.id);
+            if (general.templateId) owned.add(general.templateId);
+        }
+        for (const merc of this._mercenaries.mercenaries) {
+            if (merc.status === 'Bonded' && merc.generalId) owned.add(merc.generalId);
+        }
+        return owned;
+    }
+
     private _tickRivals(): AutoBattleResult[] {
+        this._rivals = dropOwnedRivalOfficers(this._rivals, this._permanentlyOwnedGeneralIds());
         // 玩家金幣不在 GameSession 內（錢包由呼叫端持有），RAI-05 暫傳 0（暫定）
         const holdersOf = (w: typeof this._rivals) => [...w.nations.map((n) => ({ id: n.id, territories: n.territories })), { id: 'player', territories: this._territories.length }];
         const beforeHolders = holdersOf(this._rivals);
