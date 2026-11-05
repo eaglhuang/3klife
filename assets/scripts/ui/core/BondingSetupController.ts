@@ -26,7 +26,7 @@ import { factorStageText } from '../../core/systems/FactorVisibility';
 import { matchRumorLine, sameSurnameNote, matchesRumorRoute, nextRumorRoute, RumorRoute, rumorRouteFiltered, rumorRouteName } from '../../core/systems/MatchRumor';
 import { yuedanFiltered, yuedanList, yuedanRevealLine } from '../../core/systems/YuedanReview';
 import { synergyWindowLine, type FamilySynergyLedger } from '../../core/systems/FamilySynergy';
-import { compactCostFor, compactFamilyOf, sharedFactorsOf } from '../../core/systems/FamilyCompact';
+import { compactCostFor, compactFamilyOf, heritageFactorsOf, sharedFactorsOf } from '../../core/systems/FamilyCompact';
 import type { GeneralGeneConfig } from '../../core/models/GeneralUnit';
 import type { FactorDictionary } from '../../core/systems/FactorInheritance';
 import type { BreedingService } from '../../core/services/BreedingService';
@@ -130,6 +130,8 @@ export interface BondingSetupDeps {
     text?: BreedTextLookup;
 }
 
+type HeritageSlotKind = 'compact' | 'heritage';
+
 export class BondingSetupController {
     private _fatherId: string | null = null;
     private _motherId: string | null = null;
@@ -138,8 +140,8 @@ export class BondingSetupController {
     private _yuedanOnly = false;
     /** 鄉評路線篩選（G4 §F-2 Layer 1）；只影響清單，不寫存檔 */
     private _route: RumorRoute = null;
-    /** 世交合譜要鎖的因子；受孕成功後清掉，不寫存檔 */
-    private _compactFactorId: string | null = null;
+    /** 主門風承襲槽選了什麼（合譜或家傳）；受孕成功後清掉，不寫存檔 */
+    private _slotPick: { kind: HeritageSlotKind; id: string } | null = null;
 
     constructor(private readonly _deps: BondingSetupDeps) {}
 
@@ -222,12 +224,13 @@ export class BondingSetupController {
         this._notice = missing.length > 0 ? `沒有${rumorRouteName(route)}路線的${missing.join('、')}人選，這邊不篩路線。` : '';
     }
 
-    /** 不用 → 共有因子一 → 共有因子二 → 不用 */
+    /** 不用 → 合譜各因子 → 家傳各因子 → 不用；同一胎只能選一項 */
     cycleCompact(): void {
-        const ids = this._compactOptions().map((gene) => gene.id);
-        const current = this._selectedCompact()?.id;
-        const next = current ? ids.indexOf(current) + 1 : 0;
-        this._compactFactorId = ids[next] ?? null;
+        const options = this._slotOptions();
+        const current = this._selectedSlot();
+        const next = current ? options.findIndex((option) => option.kind === current.kind && option.gene.id === current.gene.id) + 1 : 0;
+        const picked = options[next];
+        this._slotPick = picked ? { kind: picked.kind, id: picked.gene.id ?? '' } : null;
         this._notice = '';
     }
 
@@ -261,7 +264,8 @@ export class BondingSetupController {
         const compact = this._selectedCompact();
         const cost = compact ? this._compactCost() : 0;
         const canPay = !!compact && (this._deps.gold?.() ?? 0) >= cost;
-        const result = this._deps.breeding.breed(fatherId, motherId, undefined, canPay ? compact?.id : undefined);
+        const heritage = this._selectedHeritage();
+        const result = this._deps.breeding.breed(fatherId, motherId, undefined, canPay ? compact?.id : undefined, heritage?.id);
         if (result.outcome === 'blocked') {
             this._notice = `無法結緣：${result.reasons.map((r) => BLOCK_REASON_TEXT[r]).join('、')}`;
             return result;
@@ -288,7 +292,12 @@ export class BondingSetupController {
             } else if (compact) {
                 this._notice += `　世交合譜：${compact.displayName ?? compact.id} 本就傳下，未耗黃金。`;
             }
-            this._compactFactorId = null;
+            if (heritage) {
+                this._notice += result.heritageRescued
+                    ? `　父系家傳：保住了 ${heritage.displayName ?? heritage.id}。`
+                    : `　父系家傳：${heritage.displayName ?? heritage.id} 本就傳下。`;
+            }
+            this._slotPick = null;
         }
         // 父母壽命耗盡時提示，與培育回合的「壽命耗盡，武將已故」一致（QA 回報，PROG-2-0224）
         const deceased = [
@@ -320,7 +329,7 @@ export class BondingSetupController {
             bondTitle: '結緣配置',
             yuedanFilterLabel: this._yuedanOnly ? '顯示全部' : '只看月旦評',
             rumorRouteLabel: `路線：${rumorRouteName(this._route)}`,
-            compactLabel: `合譜：${this._selectedCompact()?.displayName ?? this._selectedCompact()?.id ?? '不用'}`,
+            compactLabel: this._slotLabel(),
             bondNotice: this._notice,
             bondEmptyHint: `名冊中需要至少一位滿 ${BREEDING_MIN_AGE} 歲的男性與女性武將才能結緣。可先到轉蛋招募，或推進季度讓子嗣長大。`,
             fatherPager: pagerText(fathers, father),
@@ -335,7 +344,7 @@ export class BondingSetupController {
             btnCloseBond: true,
             btnYuedanFilter: this._yuedanIds().length > 0,
             btnRumorRoute: this._parents().length > 0,
-            btnCompact: this._compactOptions().length > 0,
+            btnCompact: this._slotOptions().length > 0,
             btnPrevFather: fathers.length > 1,
             btnNextFather: fathers.length > 1,
             btnPrevMother: mothers.length > 1,
@@ -395,6 +404,8 @@ export class BondingSetupController {
             const cost = this._compactCost();
             texts.inbreedingLabel += `｜世交合譜：鎖定 ${compact.displayName ?? compact.id}，被擠掉時才耗黃金 ${cost}${(this._deps.gold?.() ?? 0) < cost ? '（不足）' : ''}`;
         }
+        const heritage = this._selectedHeritage();
+        if (heritage) texts.inbreedingLabel += `｜父系家傳：保 ${heritage.displayName ?? heritage.id} 傳給子嗣，不另收費`;
         enabled.btnConfirmBond = eligibility.ok;
 
         return { fatherId: father.id, motherId: mother.id, mode, sageIds: sage.ids, texts, actives, enabled };
@@ -416,9 +427,42 @@ export class BondingSetupController {
         return sharedFactorsOf(pair.father, pair.mother).filter((gene) => (gene.discoveryLevel ?? 1) <= level);
     }
 
-    /** 換配對後原本選的因子可能不再共有，這裡一併視為沒選 */
+    /** 父親的核心因子；看不到的不列出 */
+    private _heritageOptions(): GeneralGeneConfig[] {
+        const pair = this._currentPair();
+        if (!pair) return [];
+        const level = this._deps.playerDiscoveryLevel?.() ?? 1;
+        return heritageFactorsOf(pair.father, this._deps.factorDictionary?.()).filter((gene) => (gene.discoveryLevel ?? 1) <= level);
+    }
+
+    private _slotOptions(): { kind: HeritageSlotKind; gene: GeneralGeneConfig }[] {
+        return [
+            ...this._compactOptions().map((gene) => ({ kind: 'compact' as const, gene })),
+            ...this._heritageOptions().map((gene) => ({ kind: 'heritage' as const, gene })),
+        ];
+    }
+
+    /** 換配對後原本選的因子可能已不可選，這裡一併視為沒選 */
+    private _selectedSlot(): { kind: HeritageSlotKind; gene: GeneralGeneConfig } | null {
+        const pick = this._slotPick;
+        if (!pick) return null;
+        return this._slotOptions().find((option) => option.kind === pick.kind && option.gene.id === pick.id) ?? null;
+    }
+
     private _selectedCompact(): GeneralGeneConfig | null {
-        return this._compactOptions().find((gene) => gene.id === this._compactFactorId) ?? null;
+        const slot = this._selectedSlot();
+        return slot?.kind === 'compact' ? slot.gene : null;
+    }
+
+    private _selectedHeritage(): GeneralGeneConfig | null {
+        const slot = this._selectedSlot();
+        return slot?.kind === 'heritage' ? slot.gene : null;
+    }
+
+    private _slotLabel(): string {
+        const slot = this._selectedSlot();
+        if (!slot) return '門風：不用';
+        return `${slot.kind === 'compact' ? '合譜' : '家傳'}：${slot.gene.displayName ?? slot.gene.id}`;
     }
 
     private _compactCost(): number {
