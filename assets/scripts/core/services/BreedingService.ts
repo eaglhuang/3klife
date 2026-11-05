@@ -15,6 +15,7 @@ import type { GeneralConfig } from '../models/GeneralUnit';
 import type { RosterStore } from '../managers/GameSession';
 import { BloodlineGraph, PEDIGREE_SLOTS } from './BloodlineGraph';
 import { diversityOfPair } from '../systems/DiversityFactor';
+import type { PedigreeProbeReport } from '../systems/PedigreeProbe';
 import { normalizeRosterRoles } from '../systems/RosterRoleLoad';
 import {
     AffinityResolver,
@@ -39,6 +40,9 @@ import { affinityResolverOf, conceptionModBetween, type HistoricalPairTable } fr
 import { generateVirtualAncestry, toRegistryEntries } from '../systems/VirtualAncestorGenerator';
 import type { RandomSource } from '../systems/GeneralAging';
 import { relationEventsForBreeding, RelationEventLedger } from '../systems/RelationEvents';
+
+/** 雙親各上溯 3 代，合計 28 祖位 */
+const PROBE_ANCESTOR_GENERATIONS = 3;
 
 export interface BreedingServiceOptions {
     random?: RandomSource;
@@ -144,6 +148,20 @@ export class BreedingService {
 
     diversityOf(fatherId: string, motherId: string): number {
         return diversityOfPair(fatherId, motherId, this._graph);
+    }
+
+    /** 譜牒密考的內容；可純化因子不受玩家發現等級過濾（PROG-2-1832） */
+    pedigreeProbe(fatherId: string, motherId: string): PedigreeProbeReport {
+        const { father, mother } = this._findPair(fatherId, motherId);
+        const ancestorNames = this._graph.commonAncestors(fatherId, motherId, PROBE_ANCESTOR_GENERATIONS)
+            .map((uid) => this._graph.getPerson(uid)?.name ?? '佚名');
+        return {
+            diversity: this.diversityOf(fatherId, motherId),
+            ancestorNames,
+            targets: this.kinPurificationTargets(fatherId, motherId),
+            fatherFatigue: father.bloodFatigue ?? 0,
+            motherFatigue: mother.bloodFatigue ?? 0,
+        };
     }
 
     checkEligibility(fatherId: string, motherId: string): BreedingEligibility {

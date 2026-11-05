@@ -36,6 +36,5 @@ export function diversityOfPair(fatherId: string, motherId: string, source: { ge
     return diversityFactor(source.getPedigree(fatherId), source.getPedigree(motherId));
 }
 
-export function diversityLine(diversity: number): string {
-    return `多樣性 ${diversity.toFixed(2)}，功業加成折減`;
-}
+/** 免費提示不給精確值，精確值要譜牒密考（G3 §C） */
+export const DIVERSITY_HINT = '多樣性受損，功業加成折減';
