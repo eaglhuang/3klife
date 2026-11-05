@@ -22,6 +22,7 @@
  * Unity 對照：像一個 DontDestroyOnLoad 的 GameManager 持有 TimeManager 與 SaveSystem，
  * 每季呼叫一次 AdvanceSeason()，再用 C# event 通知 UI 更新「第 N 年 M 季」。
  */
+import type { NurtureRiteResult } from '../systems/EnrollmentRites';
 import { resolveRivalPlayerEvents } from '../systems/RivalPlayerEvents';
 import { respondToRivalProposal, type ProposalResponse } from '../systems/RivalProposals';
 import { resolveTallyName, troopNameOf } from '../systems/TallySlotView';
@@ -434,6 +435,8 @@ export interface SeasonAdvancedPayload {
 export interface NurtureStatePort {
     getState(): NurtureState;
     restoreState(state: NurtureState | null | undefined): void;
+    /** 補上到期的開蒙禮、加冠禮；太傅代管也要演（G1 §E） */
+    performDueRites?(childId: string, random?: RandomSource): NurtureRiteResult[];
 }
 
 /** 戰後結算結果：名冊結算 + 覺醒經驗 + 本場覺醒的因子 */
@@ -4366,7 +4369,7 @@ export class GameSession {
         childId: string,
         manualSchedule?: readonly NurtureAction[],
         random: RandomSource = () => this._random(),
-    ): Promise<{ ok: true; logs: NurtureRoundLog[] } | { ok: false; blocked: AutoNurtureBlockReason | 'NOT_NURTURING' | 'SESSION_ENDED' }> {
+    ): Promise<{ ok: true; logs: NurtureRoundLog[]; rites: NurtureRiteResult[] } | { ok: false; blocked: AutoNurtureBlockReason | 'NOT_NURTURING' | 'SESSION_ENDED' }> {
         const gate = canStartAutoNurture(isAutoNurtureUnlocked(this._mainlineNurtureClearedOnce), this._autoNurtureTickets);
         if (!gate.ok) return { ok: false, blocked: gate.blocked! };
         const state = this._nurture?.getState();
@@ -4383,10 +4386,11 @@ export class GameSession {
             ...state,
             sessions: state.sessions.map((s) => (s.childId === childId ? run.session : s)),
         });
+        const rites = this._nurture!.performDueRites?.(childId, random) ?? [];
         if (this._autoSave && this._save) {
             await this.save();
         }
-        return { ok: true, logs: run.logs };
+        return { ok: true, logs: run.logs, rites };
     }
 
     /** 入帳自動培育券（只收正整數，自動存檔） */

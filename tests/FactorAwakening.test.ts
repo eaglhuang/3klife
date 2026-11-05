@@ -281,6 +281,9 @@ export function createFactorAwakeningSuite(): TestSuite {
                 onGraduated: () => { graduated++; },
             });
             service.start('kid', [{ id: 'm', name: '教官', tpBonus: 20, specialty: 'str', burstRate: 1, stars: 1 }]);
+            // 這裡只驗回合覺醒，開蒙禮喚醒另見 EnrollmentRites
+            const state = service.getState();
+            service.restoreState({ ...state, sessions: state.sessions.map((s) => ({ ...s, ritesDone: ['enrollment', 'capping'] })) });
             return { store, service };
         };
 

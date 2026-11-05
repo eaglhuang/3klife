@@ -14,6 +14,7 @@
  * Unity 對照：像 NurtureManager（單例 service），UI 只呼叫 Start / Train / Graduate，
  * 並從 session 讀取目前回合、精力與教官站位來更新畫面。
  */
+import { performNurtureRite, ritesDue, type NurtureRiteResult } from '../systems/EnrollmentRites';
 import type { MentorCard } from '../models/MentorCard';
 import type { RosterStore } from '../managers/GameSession';
 import { GameTimeMode } from '../systems/GameClock';
@@ -152,6 +153,8 @@ export interface NurtureTrainResult {
     peekHint?: string;
     /** 本回合覺醒的家傳奧義；沒有則省略（PROG-2-1780） */
     childUltimates?: NurtureChildUltimate[];
+    /** 本回合辦的開蒙禮、加冠禮；沒有則省略（PROG-2-1821） */
+    rites?: NurtureRiteResult[];
     /** 本回合新觸發的戰法靈感；沒有則省略 */
     inspirations?: NurtureInspiration[];
     /** 教學邊界違規（MENT-11）：教官加成回寫了子嗣因子；正常情況省略 */
@@ -315,7 +318,37 @@ export class NurtureService {
         }
         const childUltimates = this._rollChildUltimate(childId, result.log);
         if (childUltimates.length > 0) result.childUltimates = childUltimates;
+        const rites = this.performDueRites(childId);
+        if (rites.length > 0) {
+            result.rites = rites;
+            result.session = this._requireSession(childId);
+        }
         return result;
+    }
+
+    /** 補上到期的開蒙禮、加冠禮（G1 §E #3、#5）；親手培育與太傅代管共用，亂數接在回合之後 */
+    performDueRites(childId: string, random: () => number = this._rng()): NurtureRiteResult[] {
+        const hooks = this._options.awakening;
+        const session = this._requireSession(childId);
+        const due = ritesDue(session.ritesDone ?? [], session.round);
+        const rites: NurtureRiteResult[] = [];
+        for (const kind of due) {
+            const child = this._find(childId);
+            if (!child) break;
+            const roster = this._roster.getAll();
+            const rite = performNurtureRite(child, kind, {
+                lookup: (id) => roster.find((g) => g.id === id),
+                discoveryLevel: hooks?.discoveryLevel() ?? 0,
+                random,
+            });
+            this._roster.replaceAll(roster.map((g) => (g.id === childId ? rite.general : g)));
+            if (rite.awakening) hooks?.onAwakened?.(rite.awakening);
+            rites.push(rite);
+        }
+        if (rites.length > 0) {
+            this._replace({ ...session, ritesDone: [...(session.ritesDone ?? []), ...rites.map((rite) => rite.kind)] });
+        }
+        return rites;
     }
 
     /** 家學研習目前能不能做、能補哪些因子（G2 §E #4）；隔代復興共用名額，一起列出（G3 §F-3 途徑④） */
