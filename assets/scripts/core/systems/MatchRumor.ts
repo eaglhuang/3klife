@@ -16,6 +16,8 @@ const RUMOR_STATS: ReadonlyArray<readonly [RumorStatKey, string]> = Object.freez
     ['str', '武骨'], ['int', '才思'], ['lea', '統御'], ['pol', '治才'], ['cha', '風儀'],
 ]);
 
+export const RUMOR_STAT_KEYS: readonly RumorStatKey[] = Object.freeze(RUMOR_STATS.map(([key]) => key));
+
 const TOTAL_TIERS: ReadonlyArray<readonly [number, string]> = Object.freeze([
     [440, '天縱奇才'], [390, '國士之風'], [330, '一時俊彥'], [250, '良家子弟'],
 ]);

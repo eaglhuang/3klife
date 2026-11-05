@@ -1304,6 +1304,8 @@ export class LobbyScene extends Component {
             probePedigree: (fatherId, motherId) => services().session.probePedigree(fatherId, motherId),
             isHiddenLineageProbed: (fatherId, motherId) => services().session.isHiddenLineageProbed(fatherId, motherId),
             probeHiddenLineage: (fatherId, motherId) => services().session.probeHiddenLineage(fatherId, motherId),
+            isStatProbed: (generalId, stat) => services().session.isStatProbed(generalId, stat),
+            probeStat: (generalId, stat) => services().session.probeStat(generalId, stat),
             tagName: (tag) => services().session.factorDictionary?.get(tag)?.displayName,
             recordBreeding: (record) => services().session.recordBreedingBirth(record),
             sageRemarks: (fatherId, motherId) => {
@@ -1327,6 +1329,9 @@ export class LobbyScene extends Component {
             { buttonId: 'btnConfirmBond', handler: () => { void this._onClickConfirmBond(); } },
             { buttonId: 'btnProbePedigree', handler: () => { void bonding.probePedigree().then(() => this._refreshBondingSetup()); } },
             { buttonId: 'btnProbeHidden', handler: () => { void bonding.probeHiddenLineage().then(() => this._refreshBondingSetup()); } },
+            { buttonId: 'btnCycleProbeStat', handler: () => { bonding.cycleProbeStat(); this._refreshBondingSetup(); } },
+            { buttonId: 'btnProbeFatherStat', handler: () => { void bonding.probeStat('father').then(() => this._refreshBondingSetup()); } },
+            { buttonId: 'btnProbeMotherStat', handler: () => { void bonding.probeStat('mother').then(() => this._refreshBondingSetup()); } },
             {
                 buttonId: 'btnOpenOracle',
                 handler: () => {
