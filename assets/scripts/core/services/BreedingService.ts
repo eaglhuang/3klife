@@ -15,7 +15,7 @@ import type { GeneralConfig } from '../models/GeneralUnit';
 import type { RosterStore } from '../managers/GameSession';
 import { BloodlineGraph, PEDIGREE_SLOTS } from './BloodlineGraph';
 import { diversityOfPair } from '../systems/DiversityFactor';
-import type { PedigreeProbeReport } from '../systems/PedigreeProbe';
+import { hiddenGoldsOf, type HiddenLineageReport, type PedigreeProbeReport } from '../systems/PedigreeProbe';
 import { normalizeRosterRoles } from '../systems/RosterRoleLoad';
 import {
     AffinityResolver,
@@ -28,6 +28,7 @@ import {
     checkBreedingEligibility,
     EpBreakdown,
     FactorPoolEntry,
+    previewAtavismSeeds,
     previewBreedingEp,
     expectedFactorPool,
     toPersonRecord,
@@ -161,6 +162,16 @@ export class BreedingService {
             targets: this.kinPurificationTargets(fatherId, motherId),
             fatherFatigue: father.bloodFatigue ?? 0,
             motherFatigue: mother.bloodFatigue ?? 0,
+        };
+    }
+
+    /** 隱藏血脈的內容（PROG-2-1833）；金因子依玩家發現等級判斷是否還藏著 */
+    hiddenLineage(fatherId: string, motherId: string, playerLevel: number): HiddenLineageReport {
+        const { father, mother } = this._findPair(fatherId, motherId);
+        return {
+            fatherGolds: hiddenGoldsOf(father.genes, playerLevel),
+            motherGolds: hiddenGoldsOf(mother.genes, playerLevel),
+            childSeeds: previewAtavismSeeds({ father, mother, pedigree: this._graph, rosterLookup: this._rosterLookup() }),
         };
     }
 

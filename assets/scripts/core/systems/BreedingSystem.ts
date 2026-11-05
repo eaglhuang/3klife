@@ -697,25 +697,37 @@ export function breed(request: BreedingRequest): BreedingResult {
     return { ...runBreeding(request), breedingMode: request.mode ?? 'Standard' };
 }
 
+type AncestorRequest = Pick<BreedingRequest, 'father' | 'mother' | 'pedigree' | 'rosterLookup'>;
+
 const GRANDPARENT_SLOTS: readonly PedigreeSlot[] = ['FF', 'FM', 'MF', 'MM'];
 const MATERNAL_ANCESTOR_SLOTS: readonly PedigreeSlot[] = ['MF', 'MM', 'MFF', 'MFM', 'MMF', 'MMM'];
+
+function ancestralPeaksAt(slot: PedigreeSlot, request: AncestorRequest, pedigree: Pedigree, profiles: Map<string, AncestorProfile>): AncestralPeak[] {
+    const uid = pedigree[slot];
+    if (!uid) return [];
+    return peakFactorsOf(profiles.get(uid)?.genes, request.rosterLookup?.(uid)?.name ?? request.pedigree.getPerson(uid)?.name ?? uid);
+}
+
+function childAtavismSeeds(request: AncestorRequest, pedigree: Pedigree, profiles: Map<string, AncestorProfile>): AncestralPeak[] {
+    const { father, mother } = request;
+    const grandPeaks = GRANDPARENT_SLOTS.flatMap((slot) => ancestralPeaksAt(slot, request, pedigree, profiles));
+    return atavismSeedsOf([...grandPeaks, ...(father.peakFactors ?? []), ...(mother.peakFactors ?? [])], father.genes, mother.genes);
+}
+
+/** 這對所生子嗣出生時會帶的隔代種子（不改資料、不擲骰，PROG-2-1833） */
+export function previewAtavismSeeds(request: AncestorRequest): AncestralPeak[] {
+    const pedigree = buildChildPedigree(request.father.id, request.mother.id, request.pedigree);
+    return childAtavismSeeds(request, pedigree, collectProfiles(pedigree, request));
+}
 
 /** 隔代復興的資料在出生時定值，只在有內容時才寫，不動沒有高星祖先的子嗣 */
 function stampAncestralPeaks(child: BreedingGeneral, request: BreedingRequest, pedigree: Pedigree, profiles: Map<string, AncestorProfile>): void {
     const { father, mother } = request;
     const peaks = [...peakFactorsOf(father.genes, father.name), ...peakFactorsOf(mother.genes, mother.name)];
     if (peaks.length > 0) child.peakFactors = peaks;
-    const nameOf = (uid: string): string => request.rosterLookup?.(uid)?.name ?? request.pedigree.getPerson(uid)?.name ?? uid;
-    const grandPeaks = GRANDPARENT_SLOTS.flatMap((slot) => {
-        const uid = pedigree[slot];
-        return uid ? peakFactorsOf(profiles.get(uid)?.genes, nameOf(uid)) : [];
-    });
-    const seeds = atavismSeedsOf([...grandPeaks, ...(father.peakFactors ?? []), ...(mother.peakFactors ?? [])], father.genes, mother.genes);
+    const seeds = childAtavismSeeds(request, pedigree, profiles);
     if (seeds.length > 0) child.atavismSeeds = seeds;
-    const peaksAt = (slot: PedigreeSlot): AncestralPeak[] => {
-        const uid = pedigree[slot];
-        return uid ? peakFactorsOf(profiles.get(uid)?.genes, nameOf(uid)) : [];
-    };
+    const peaksAt = (slot: PedigreeSlot): AncestralPeak[] => ancestralPeaksAt(slot, request, pedigree, profiles);
     const maternal = atavismSeedsOf([...peakFactorsOf(mother.genes, mother.name), ...MATERNAL_ANCESTOR_SLOTS.flatMap(peaksAt), ...(mother.peakFactors ?? [])], undefined, undefined);
     if (maternal.length > 0) {
         child.maternalLine = { motherId: mother.id, motherParentIds: [mother.fatherId, mother.motherId].filter((uid): uid is string => !!uid), factors: maternal };

@@ -16,7 +16,7 @@
  */
 import { bloodFatigueForecast } from '../../core/systems/BloodFatigue';
 import { DIVERSITY_HINT } from '../../core/systems/DiversityFactor';
-import { PEDIGREE_PROBE_COST, pedigreeProbeLine } from '../../core/systems/PedigreeProbe';
+import { HIDDEN_LINEAGE_COST, hiddenLineageLine, PEDIGREE_PROBE_COST, pedigreeProbeLine } from '../../core/systems/PedigreeProbe';
 import { getSage } from '../../core/systems/SageDivination';
 import { OMEN_LABEL, pickOmen, type OmenKind, type SageRemark } from '../../core/systems/SageRemarks';
 import { buildBreedingBirthRecord, type BreedingBirthRecord } from '../../core/systems/BreedingBirthRecord';
@@ -114,10 +114,12 @@ export interface BondingSetupDeps {
     sageRemarks?: (fatherId: string, motherId: string) => SageRemark[];
     /** 求籤令數量（ORAC-05）；未提供時顯示 ×0 */
     oracleTokens?: () => number;
-    breeding: Pick<BreedingService, 'checkEligibility' | 'previewEp' | 'breed'> & Partial<Pick<BreedingService, 'ancestorSeats' | 'diversityOf' | 'kinPurificationTargets' | 'pedigreeProbe'>>;
+    breeding: Pick<BreedingService, 'checkEligibility' | 'previewEp' | 'breed'> & Partial<Pick<BreedingService, 'ancestorSeats' | 'diversityOf' | 'kinPurificationTargets' | 'pedigreeProbe' | 'hiddenLineage'>>;
     /** 譜牒密考（G4 §F-2 Layer 3）；未提供時不能密考 */
     isPedigreeProbed?: (fatherId: string, motherId: string) => boolean;
     probePedigree?: (fatherId: string, motherId: string) => Promise<boolean>;
+    isHiddenLineageProbed?: (fatherId: string, motherId: string) => boolean;
+    probeHiddenLineage?: (fatherId: string, motherId: string) => Promise<boolean>;
     /** 開畫面前的準備（載入血統圖、補回已出生子嗣）；失敗只提示，不擋畫面 */
     prepare?: () => Promise<unknown>;
     /** 結緣後存檔；失敗只回報，不回滾 */
@@ -444,6 +446,11 @@ export class BondingSetupController {
         texts.probePedigreeLabel = probed ? '已密考' : `譜牒密考（${PEDIGREE_PROBE_COST} 券）`;
         texts.pedigreeProbeLine = probeReport ? pedigreeProbeLine(probeReport) : '';
         enabled.btnProbePedigree = !probed && !!this._deps.probePedigree && tokens >= PEDIGREE_PROBE_COST;
+        const lineageProbed = this._deps.isHiddenLineageProbed?.(father.id, mother.id) ?? false;
+        const lineageReport = lineageProbed ? this._deps.breeding.hiddenLineage?.(father.id, mother.id, this._deps.playerDiscoveryLevel?.() ?? 1) : null;
+        texts.probeHiddenLabel = lineageProbed ? '已查隱藏血脈' : `隱藏血脈（${HIDDEN_LINEAGE_COST} 券）`;
+        texts.hiddenLineageLine = lineageReport ? hiddenLineageLine(lineageReport) : '';
+        enabled.btnProbeHidden = !lineageProbed && !!this._deps.probeHiddenLineage && tokens >= HIDDEN_LINEAGE_COST;
         texts.costLabel = this._t('ui.breed.confirm', father.name, String(FATHER_VIGOR_COST), mother.name, String(MOTHER_VIGOR_COST));
         texts.eligibilityLabel = eligibility.ok
             ? `${father.name} 與 ${mother.name} 良緣天成，可以結緣`
@@ -488,6 +495,12 @@ export class BondingSetupController {
         const pair = this._currentPair();
         if (!pair || !this._deps.probePedigree) return false;
         return this._deps.probePedigree(pair.father.id, pair.mother.id);
+    }
+
+    async probeHiddenLineage(): Promise<boolean> {
+        const pair = this._currentPair();
+        if (!pair || !this._deps.probeHiddenLineage) return false;
+        return this._deps.probeHiddenLineage(pair.father.id, pair.mother.id);
     }
 
     // ── 內部 ───────────────────────────────────────────────────────────────
