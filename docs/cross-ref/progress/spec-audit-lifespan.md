@@ -5,7 +5,7 @@
 
 ## 結論
 
-E／F／K／L／M 段所有邏輯條目都有程式與測試，**沒有邏輯缺口**。D-1「接線 🟡」只剩畫面類：L 段「頭像旁精力常駐提示（火苗／能量環）」未做；武將詳情已有壽命與精力條。
+E／F／K／L／M 段所有邏輯條目都有程式與測試，**沒有邏輯缺口**。D-1「接線 🟡」畫面類：~~L 段「頭像旁精力常駐提示（火苗／能量環）」未做~~ PROG-2-1853 已補（戰場武將名牌左側能量環，暫定）；武將詳情已有壽命與精力條。
 
 ## 逐條對照
 
@@ -26,4 +26,4 @@ E／F／K／L／M 段所有邏輯條目都有程式與測試，**沒有邏輯缺
 | K 一生結緣上限 | 3~5 次 | `BreedingQuotaEnforcer`（breedingCap ≤ 5） | BreedingQuota 相關 | ✅ |
 | K 精力不足受孕率 | <30% ×0.1 | `BreedingSystem` Vitality_Factor（>50% 1.0／30~50% 0.5／<30% 0.1） | Breeding 相關 | ✅ |
 | L 戰場精力軟懲罰 | >50% 全開、10~50% 禁終極、<10% 禁主動且撤退風險升 | `VitalityBattleGate.vitalityBandOf`／`canPerformAction`／`spendUltimateVitality`、`RetreatRisk.retreatRiskOf` | VitalityBattleGate、RetreatRisk | ✅ |
-| L UI 精力常駐提示 | 頭像旁火苗／能量環 | 戰場 HUD 有精力條（`VitalityBarView`）；頭像旁常駐圖示未做 | — | 🟡 |
+| L UI 精力常駐提示 | 頭像旁火苗／能量環 | 戰場 HUD 有精力條（`VitalityBarView`）；PROG-2-1853 戰場武將名牌左側能量環（`vitalityRingView`，紫／琥珀／灰＋百分比） | tests/VitalityRing.test.ts | ✅ |
