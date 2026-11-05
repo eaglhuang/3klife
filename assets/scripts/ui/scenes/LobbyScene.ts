@@ -101,6 +101,7 @@ import { femaleSourcePresentationOf, gachaFemaleLines } from '../../core/systems
 import { rescueRefreshLine, rescueResultLines } from '../../core/systems/DungeonRescue';
 import { daughterComingOfAgeToast, type DaughterRoute } from '../../core/systems/DaughterComingOfAge';
 import { DaughterRoutePopupController } from '../core/DaughterRoutePopupController';
+import { MarriageProposalPopupController } from '../core/MarriageProposalPopupController';
 import { ultimateUnlockLines } from '../../core/systems/UltimateScriptLines';
 import { rebirthBreakthroughLine } from '../../core/systems/NumericalScriptLines';
 import { HallBoardPanelController, HALL_BOARD_MAX_ROWS } from '../core/HallBoardPanelController';
@@ -390,6 +391,8 @@ export class LobbyScene extends Component {
     private _prisonerHost: UIScreenPreviewHost | null = null;
     private _daughterRouteHost: UIScreenPreviewHost | null = null;
     private _daughterRoute: DaughterRoutePopupController | null = null;
+    private _marriageProposalHost: UIScreenPreviewHost | null = null;
+    private _marriageProposal: MarriageProposalPopupController | null = null;
     private _yearReport: YearReportController<UIScreenPreviewHost> | null = null;
     private _prisoner: PrisonerPopupController | null = null;
     private _destinyShopHost: UIScreenPreviewHost | null = null;
@@ -549,6 +552,7 @@ export class LobbyScene extends Component {
         await this._mountSpiritCodex();
         await this._mountUltimateCodex();
         await this._mountDaughterRoutePopup();
+        await this._mountMarriageProposalPopup();
         await this._mountPrisonerPopup();
         await this._mountDestinyShop();
         await this._mountYearReport();
@@ -566,6 +570,7 @@ export class LobbyScene extends Component {
         // 首勝紅顏展示開著時先不彈俘虜窗，等紅顏關閉再彈（PROG-2-1129）
         if (!this._redFaceHost?.node.active) {
             this._openDaughterRoutePopupIfPending();
+            this._openMarriageProposalPopupIfPending();
             this._openPrisonerPopupIfPending();
         }
         this._bindSaveRecoveryToast();
@@ -2101,6 +2106,7 @@ export class LobbyScene extends Component {
             this._redFaceHost.node.active = false;
         }
         this._openDaughterRoutePopupIfPending();
+        this._openMarriageProposalPopupIfPending();
         this._openPrisonerPopupIfPending();
     }
 
@@ -3166,6 +3172,57 @@ export class LobbyScene extends Component {
             services().event.emit('SHOW_TOAST', { message: error instanceof Error ? error.message : '女兒擇路失敗', duration: 2.5 });
         } finally {
             this._refreshDaughterRoutePopup();
+        }
+    }
+
+    /** 名門求親（血統傳承 G4 §E #4，PROG-2-1811）：年末有提親時彈出，「稍後」則下次進大廳再問 */
+    private async _mountMarriageProposalPopup(): Promise<void> {
+        const gacha = this._localGachaService;
+        const controller = new MarriageProposalPopupController({
+            session: services().session,
+            grantGold: (amount) => { gacha.grantCurrency('gold', amount); },
+        });
+        this._marriageProposal = controller;
+        const respond = (accept: boolean): void => { void this._onClickMarriageProposal(accept); };
+        this._marriageProposalHost = await this._mountPreviewScreenHost('MarriageProposalHost', 'marriage-proposal-screen', [
+            { buttonId: 'btnCloseMp', handler: () => { if (this._marriageProposalHost) this._marriageProposalHost.node.active = false; } },
+            { buttonId: 'btnAcceptMp', handler: () => { respond(true); } },
+            { buttonId: 'btnDeclineMp', handler: () => { respond(false); } },
+        ]);
+        this._sessionEventUnsubscribers.push(
+            services().event.on(GAME_SESSION_EVENTS.MarriageProposal, () => { this._openMarriageProposalPopupIfPending(); }),
+        );
+    }
+
+    private _openMarriageProposalPopupIfPending(): void {
+        const host = this._marriageProposalHost;
+        if (!host || !this._marriageProposal?.hasPending()) {
+            return;
+        }
+        this._marriageProposal.open();
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshMarriageProposalPopup();
+    }
+
+    private _refreshMarriageProposalPopup(): void {
+        const binder = this._marriageProposalHost?.binder;
+        if (binder && this._marriageProposal) {
+            applyFlowView(binder, this._marriageProposal.getView());
+        }
+    }
+
+    private async _onClickMarriageProposal(accept: boolean): Promise<void> {
+        if (!this._marriageProposal) {
+            return;
+        }
+        try {
+            await this._marriageProposal.respond(accept);
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 回覆提親失敗', error);
+            services().event.emit('SHOW_TOAST', { message: error instanceof Error ? error.message : '回覆提親失敗', duration: 2.5 });
+        } finally {
+            this._refreshMarriageProposalPopup();
         }
     }
 
