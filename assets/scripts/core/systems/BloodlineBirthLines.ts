@@ -10,7 +10,8 @@
  *
  * Unity 對照：像一個把結算結果轉成顯示字串的靜態 Formatter。
  */
-import { bloodFatigueBirthLines, type BloodFatigueOutcome } from './BloodFatigue';
+import { bloodFatigueBirthLines, normalizeBloodFatigue, type BloodFatigueOutcome } from './BloodFatigue';
+import { outcrossMedicLine, synergyWeddingLine } from './BondingStoryLines';
 import { highEpLine } from './NumericalScriptLines';
 import type { InheritedFactor } from './FactorInheritance';
 
@@ -38,8 +39,23 @@ function farthestAncestor(factors: readonly InheritedFactor[], nameOf: (uid: str
     return null;
 }
 
+interface BirthParent {
+    name: string;
+    bloodFatigue?: number;
+    genes?: ReadonlyArray<{ id?: string; displayName?: string }>;
+}
+
+/** G3 §G 醫官句；外婚且親代有微躁才提，先天不足時不說胎象康健 */
+function medicLine(outcome: BloodFatigueOutcome | undefined, father: BirthParent | undefined, mother: BirthParent | undefined): string | null {
+    if (!outcome || outcome.inbred || outcome.before === 0 || outcome.frail || !father || !mother) return null;
+    const fatherCarries = normalizeBloodFatigue(father.bloodFatigue) > 0;
+    const motherCarries = normalizeBloodFatigue(mother.bloodFatigue) > 0;
+    if (fatherCarries && motherCarries) return outcrossMedicLine('雙親', null);
+    return fatherCarries ? outcrossMedicLine(father.name, mother.name) : outcrossMedicLine(mother.name, father.name);
+}
+
 export function bloodlineBirthLines(
-    result: { ep?: { resonance: number; ep?: number }; factors?: readonly InheritedFactor[]; child?: { name: string }; bloodFatigue?: BloodFatigueOutcome },
+    result: { ep?: { resonance: number; ep?: number }; factors?: readonly InheritedFactor[]; child?: { name: string }; bloodFatigue?: BloodFatigueOutcome; father?: BirthParent; mother?: BirthParent; lineageSynergyFactorId?: string },
     nameOf: (uid: string) => string | null,
 ): string[] {
     const factors = result.factors ?? [];
@@ -54,6 +70,10 @@ export function bloodlineBirthLines(
     if (factors.some((factor) => factor.wildGene)) lines.push(WILD_GENE_LINE);
     const highEp = highEpLine(result.ep?.ep);
     if (highEp) lines.push(highEp);
+    const synergyGene = result.father?.genes?.find((gene) => gene.id === result.lineageSynergyFactorId);
+    if (result.lineageSynergyFactorId && synergyGene) lines.push(synergyWeddingLine(synergyGene.displayName ?? result.lineageSynergyFactorId));
+    const medic = medicLine(result.bloodFatigue, result.father, result.mother);
+    if (medic) lines.push(medic);
     if (result.bloodFatigue) lines.push(...bloodFatigueBirthLines(result.bloodFatigue));
     return lines;
 }

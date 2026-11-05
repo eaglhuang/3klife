@@ -1293,6 +1293,7 @@ export class LobbyScene extends Component {
             spendLifespan: (generalId, command) => services().session.spendLifespan(generalId, command),
             playerDiscoveryLevel: () => services().session.discoveryLevel,
             factorDictionary: () => services().session.factorDictionary,
+            announce: (message) => services().event.emit('SHOW_TOAST', { message, duration: 4 }),
             familySynergy: () => services().session.familySynergy,
             gold: () => this._localGachaService.getCurrencyAmount('gold'),
             spendGold: (amount) => this._localGachaService.spendCurrency('gold', amount),
@@ -3017,6 +3018,7 @@ export class LobbyScene extends Component {
         if (!binder || !this._bonding) {
             return;
         }
+        if (this._bondingHost?.node.active) this._bonding.announcePairWarning();
         const view = this._bonding.getView();
         applyFlowView(binder, view);
         this._syncTreePanel(this._fatherTree, view.fatherId);

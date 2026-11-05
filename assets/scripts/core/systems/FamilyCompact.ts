@@ -35,6 +35,11 @@ export function compactCost(k: number): number {
     return Math.round(COMPACT_BASE_GOLD * (1 - COMPACT_MAX_DISCOUNT * Math.min(1, Math.max(0, k))));
 }
 
+/** G3 §G 大禮句的「K 滿額」 */
+export function compactSynergyFull(family: string, ledger: FamilySynergyLedger | undefined): boolean {
+    return synergyKOf(ledger?.pairs[familyPairKey(PLAYER_FAMILY_UID, family)]) >= 1;
+}
+
 export function compactCostFor(family: string, ledger: FamilySynergyLedger | undefined): number {
     return compactCost(synergyKOf(ledger?.pairs[familyPairKey(PLAYER_FAMILY_UID, family)]));
 }
