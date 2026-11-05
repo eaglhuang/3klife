@@ -80,7 +80,7 @@ import { overflowToastText } from '../../core/systems/MentorOverflow';
 import { AGING_CIVIL_LINE } from '../../core/systems/PeakCurve';
 import { RIVAL_NATION_SLOTS, RivalDiplomacyController } from '../core/RivalDiplomacyController';
 import { WarehousePanelController } from '../core/WarehousePanelController';
-import { DISPATCH_MAX_ROWS, JournalHubController } from '../core/JournalHubController';
+import { DISPATCH_MAX_ROWS, JournalHubController, OFFLINE_INTERACTION_MAX_LINES } from '../core/JournalHubController';
 import { journalSummaryText, type JournalTextLookup } from '../core/JournalTexts';
 import { GeneralJournalController } from '../core/GeneralJournalController';
 import { BattleReviewController } from '../core/BattleReviewController';
@@ -1525,6 +1525,8 @@ export class LobbyScene extends Component {
             dispatchRows: () => services().session.dispatchBoardRows(Date.now(), { preview: true, generalId: this._journalHub?.pickedGeneralId() }),
             dispatchGenerals: () => services().session.dispatchIdleGenerals(Date.now()),
             lookup: lookupJournal,
+            offlineInteractionLines: () => services().session.queryJournal({ category: 'INTERACTION' })
+                .slice(0, OFFLINE_INTERACTION_MAX_LINES).map((entry) => journalSummaryText(lookupJournal, entry)),
         });
         this._journalHubHost = await this._mountPreviewScreenHost('JournalHubHost', 'journal-hub-screen', [
             { buttonId: 'btnClose', handler: () => { if (this._journalHubHost) this._journalHubHost.node.active = false; } },
