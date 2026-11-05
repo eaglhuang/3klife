@@ -15,6 +15,7 @@
  * 回傳新的 GeneralData；寫回名冊與存檔交給上層 Service（BreedingService）。
  */
 import { applyCompactLock } from './FamilyCompact';
+import { atavismSeedsOf, peakFactorsOf } from './Atavism';
 import type { GeneralConfig, GeneralGeneConfig, GeneralStatsConfig } from '../models/GeneralUnit';
 import { toCanonicalRole, type CanonicalRole } from '../models/GeneralRole';
 import type { PersonRecord } from '../models/PersonRegistry';
@@ -659,6 +660,22 @@ export function breed(request: BreedingRequest): BreedingResult {
     return { ...runBreeding(request), breedingMode: request.mode ?? 'Standard' };
 }
 
+const GRANDPARENT_SLOTS: readonly PedigreeSlot[] = ['FF', 'FM', 'MF', 'MM'];
+
+/** 隔代復興的資料在出生時定值，只在有內容時才寫，不動沒有高星祖先的子嗣 */
+function stampAncestralPeaks(child: BreedingGeneral, request: BreedingRequest, pedigree: Pedigree, profiles: Map<string, AncestorProfile>): void {
+    const { father, mother } = request;
+    const peaks = [...peakFactorsOf(father.genes, father.name), ...peakFactorsOf(mother.genes, mother.name)];
+    if (peaks.length > 0) child.peakFactors = peaks;
+    const nameOf = (uid: string): string => request.rosterLookup?.(uid)?.name ?? request.pedigree.getPerson(uid)?.name ?? uid;
+    const grandPeaks = GRANDPARENT_SLOTS.flatMap((slot) => {
+        const uid = pedigree[slot];
+        return uid ? peakFactorsOf(profiles.get(uid)?.genes, nameOf(uid)) : [];
+    });
+    const seeds = atavismSeedsOf([...grandPeaks, ...(father.peakFactors ?? []), ...(mother.peakFactors ?? [])], father.genes, mother.genes);
+    if (seeds.length > 0) child.atavismSeeds = seeds;
+}
+
 function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMode'> {
     const eligibility = checkBreedingEligibility(request.father, request.mother, request.pedigree);
     const conceptionMod = (request.motherConceptionMod ?? 1) * (request.historicalConceptionMod ?? 1) * (request.seasonConceptionMod ?? 1) * (request.itemConceptionMod ?? 1);
@@ -720,6 +737,7 @@ function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMo
         dictionary: request.dictionary,
         birthSeason: request.birthSeason,
     });
+    stampAncestralPeaks(child, request, pedigree, profiles);
     // 血脈疲勞放在最後擲，不打亂既有亂數序列
     const fatigueInbred = isInbredPair(request.father, request.mother, request.pedigree);
     const fatherFatigue = normalizeBloodFatigue(request.father.bloodFatigue);

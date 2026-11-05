@@ -55,7 +55,8 @@ import { hybridSourcesFromParents } from '../systems/HybridSkill';
 import { revealStat, RevealedStat, RevelationLevel } from '../systems/StatRevelation';
 import { commitReportCard, emptyReportCardBook, keepReportCard, ReportCardBook } from '../systems/ReportCardBook';
 import { mentorBoundaryViolations, MentorBoundaryViolation } from '../systems/MentorBoundary';
-import { FAMILY_STUDY_ROUND_COST, familyStudyBlock, familyStudyCandidates, type FamilyStudyBlock, type FamilyStudyCandidate } from '../systems/FamilyStudy';
+import { familyStudyBlock, familyStudyCandidates, type FamilyStudyBlock, type FamilyStudyCandidate } from '../systems/FamilyStudy';
+import { applyStudyCandidate, atavismCandidates, mergeStudyCandidates, studyRoundCost } from '../systems/Atavism';
 
 /** 每季入學令數量；規格只說「每季限 N 張」，暫定 2 */
 export const DEFAULT_ADMISSIONS_PER_SEASON = 2;
@@ -316,15 +317,18 @@ export class NurtureService {
         return result;
     }
 
-    /** 家學研習目前能不能做、能補哪些因子（G2 §E #4） */
+    /** 家學研習目前能不能做、能補哪些因子（G2 §E #4）；隔代復興共用名額，一起列出（G3 §F-3 途徑④） */
     familyStudyStatus(childId: string): { blocked: FamilyStudyBlock | null; candidates: FamilyStudyCandidate[] } {
         const session = this._requireSession(childId);
         const child = this._roster.getAll().find((g) => g.id === childId);
-        const candidates = familyStudyCandidates(child?.genes, this._options.factorDictionary);
+        const candidates = mergeStudyCandidates(
+            familyStudyCandidates(child?.genes, this._options.factorDictionary),
+            atavismCandidates(session.round, NURTURE_TOTAL_ROUNDS, child?.genes, child?.atavismSeeds),
+        );
         return { blocked: familyStudyBlock(session, NURTURE_TOTAL_ROUNDS, !!child?.familyStudyUsed, candidates.length), candidates };
     }
 
-    /** 家學研習：因子補 1 星、記已用、走 2 回合。已用記在武將身上，重修也不能再來一次 */
+    /** 家學研習或隔代復興：寫入因子、記已用、走回合。已用記在武將身上，重修也不能再來一次 */
     familyStudy(childId: string, geneId: string): FamilyStudyCandidate {
         const { blocked, candidates } = this.familyStudyStatus(childId);
         if (blocked) throw new NurtureError(`${childId} 不能家學研習：${blocked}`);
@@ -333,9 +337,9 @@ export class NurtureService {
         this._roster.replaceAll(this._roster.getAll().map((g) => (g.id !== childId ? g : {
             ...g,
             familyStudyUsed: true,
-            genes: (g.genes ?? []).map((gene) => (gene.id === geneId ? { ...gene, level: candidate.starAfter } : gene)),
+            genes: applyStudyCandidate(g.genes, candidate, g.atavismSeeds),
         })));
-        this._replace(spendRoundsWithoutTraining(this._requireSession(childId), FAMILY_STUDY_ROUND_COST, this._rng()));
+        this._replace(spendRoundsWithoutTraining(this._requireSession(childId), studyRoundCost(candidate), this._rng()));
         return candidate;
     }
 

@@ -27,6 +27,8 @@ export interface FamilyStudyCandidate {
     displayName: string;
     starBefore: number;
     starAfter: number;
+    /** 隔代復興才有：重現的是哪位祖先的因子（PROG-2-1815） */
+    ancestorName?: string;
 }
 
 export function familyStudyCandidates(genes: readonly GeneralGeneConfig[] | undefined, dictionary?: FactorDictionary): FamilyStudyCandidate[] {
