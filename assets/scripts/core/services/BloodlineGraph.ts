@@ -268,8 +268,8 @@ export class BloodlineGraph {
   registerChild(child: PersonRecord, fatherUid: string, motherUid: string): void {
     this._persons.set(child.uid, child);
     if ((this._parentLinks.get(child.uid) ?? []).length > 0) return;
-    this._addLink({ child_uid: child.uid, parent_uid: fatherUid, relation: 'F', generation: 1 });
-    this._addLink({ child_uid: child.uid, parent_uid: motherUid, relation: 'M', generation: 1 });
+    if (fatherUid) this._addLink({ child_uid: child.uid, parent_uid: fatherUid, relation: 'F', generation: 1 });
+    if (motherUid) this._addLink({ child_uid: child.uid, parent_uid: motherUid, relation: 'M', generation: 1 });
   }
 
   /**

@@ -25,7 +25,17 @@ export interface BloodlineTreeSlots {
 
 const EMPTY_LABEL = '—';
 
-function fill(ancestors: readonly string[], count: number, nameOf: (uid: string) => string | undefined): BloodlineTreeSlot[] {
+/** G2 §E #1：缺的祖位不留空 */
+export const UNKNOWN_ANCESTOR_CARD_TEXT = '先祖佚名\n（世界基底池）';
+/** G2 §G 展開三代十四席族譜 */
+export const BLOODLINE_TREE_OPEN_LINE = '宗祠長老捧出竹簡：「參天之木，必有其根；懷山之水，必有其源。主公請看，此乃我族三代十四席之血脈淵源！」';
+
+/** 祖先卡文字：姓名、EP、主因子；沒有主因子就不佔一行 */
+export function ancestorCardText(name: string, ep: number, mainFactorName?: string | null): string {
+    return [name, `EP ${Math.round(ep)}`, mainFactorName].filter((line) => !!line).join('\n');
+}
+
+function fill(ancestors: ReadonlyArray<string | null>, count: number, nameOf: (uid: string) => string | undefined): BloodlineTreeSlot[] {
     return Array.from({ length: count }, (_, i) => {
         const uid = ancestors[i] ?? null;
         return { uid, label: uid === null ? EMPTY_LABEL : nameOf(uid) ?? uid };
@@ -33,11 +43,11 @@ function fill(ancestors: readonly string[], count: number, nameOf: (uid: string)
 }
 
 /**
- * 把祖先 uid 鏈排進三排格位；ancestors 不改。
+ * 把祖先 uid 鏈排進三排格位；ancestors 不改。null 代表這個位置沒有人，後面的人不會往前擠。
  * 超過 14 位的部分直接忽略（血統樹只畫到第 3 代）。
  */
 export function buildBloodlineTreeSlots(
-    ancestors: readonly string[],
+    ancestors: ReadonlyArray<string | null>,
     nameOf: (uid: string) => string | undefined = () => undefined,
 ): BloodlineTreeSlots {
     const { gen3, gen2, gen1 } = BLOODLINE_TREE_SLOT_COUNTS;

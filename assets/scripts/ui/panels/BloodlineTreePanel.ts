@@ -1,9 +1,9 @@
 // @spec-source → DC-3-0004 | 資料中心架構規格書.md §2.3
 import { _decorator, Button, Component, Label, Node } from 'cc';
-import { BloodlineGraph, type Pedigree, type PedigreeSlot } from '../../core/services/BloodlineGraph';
+import { BloodlineGraph, PEDIGREE_SLOTS, type Pedigree, type PedigreeSlot } from '../../core/services/BloodlineGraph';
 import { resolveFactorColor, type FactorColor } from '../../core/systems/FactorInheritance';
 import { services } from '../../core/managers/ServiceLoader';
-import { buildBloodlineTreeSlots, BloodlineTreeSlot } from '../../core/systems/BloodlineTreeSlots';
+import { ancestorCardText, buildBloodlineTreeSlots, BloodlineTreeSlot, UNKNOWN_ANCESTOR_CARD_TEXT } from '../../core/systems/BloodlineTreeSlots';
 import { treeCardNodeName } from '../../core/systems/BloodlineTreeBinding';
 import { buildNodeCards } from '../../core/systems/BloodlineNodeCards';
 import { redrawBloodlineTreeConnections } from '../components/BloodlineTreeLines';
@@ -69,7 +69,7 @@ export class BloodlineTreePanel extends Component {
     /**
      * 根據武將 uid 載入並渲染 3 代祖先樹。
      *
-     * 呼叫 BloodlineGraph.getAncestorChain() 取得祖先 uid 陣列（BFS 廣度優先），
+     * 呼叫 BloodlineGraph.getPedigree() 取得 14 個位置的祖先 uid（缺人或近親都不會錯位，和連線取色同一份），
      * 再以 getPerson() 從 PersonRegistry 查表取得各祖先顯示資料。
      * 不再直接讀取 Ancestors_JSON 嵌套結構。
      */
@@ -78,14 +78,21 @@ export class BloodlineTreePanel extends Component {
         if (!graph.isLoaded) {
             await graph.loadRegistry();
         }
+        // loadRegistry 會清空血統圖，名冊裡的親子要在這之後補回來
+        services().breeding.syncGraphFromRoster();
+        // 主因子名稱與連線顏色都要查字典；字典也是用到才載入
+        if (!services().session.factorDictionary) {
+            await services().loadFactorDictionary();
+        }
 
-        // getAncestorChain BFS 排列：index 0-1 = 父母、2-5 = 祖父母、6-13 = 曾祖父母
-        const slots = buildBloodlineTreeSlots(graph.getAncestorChain(uid, 3));
+        // PEDIGREE_SLOTS 排列：index 0-1 = 父母、2-5 = 祖父母、6-13 = 曾祖父母
+        const pedigree = graph.getPedigree(uid);
+        const slots = buildBloodlineTreeSlots(PEDIGREE_SLOTS.map((slot) => pedigree[slot]));
 
         this._fillContainer(this.gen3Container, 3, slots.gen3, graph);
         this._fillContainer(this.gen2Container, 2, slots.gen2, graph);
         this._fillContainer(this.gen1Container, 1, slots.gen1, graph);
-        this._pedigree = graph.getPedigree(uid);
+        this._pedigree = pedigree;
         this._applyViewMode();
         this._redrawLines();
     }
@@ -152,7 +159,7 @@ export class BloodlineTreePanel extends Component {
             if (!txtNode) continue;
             const label = txtNode.getComponent(Label);
             if (!label) continue;
-            label.string = person ? this._formatAncestorLabel(person) : '—';
+            label.string = person ? this._formatAncestorLabel(person) : UNKNOWN_ANCESTOR_CARD_TEXT;
         }
     }
 
@@ -171,10 +178,26 @@ export class BloodlineTreePanel extends Component {
         this.onCardPeek(ancestorPeekView(source, person ? isAncestorRevealed(person) : false, color));
     }
 
-    private _formatAncestorLabel(person: { name: string; faction: string; gene_refs: string[]; is_virtual: boolean }): string {
-        const factionLine = person.is_virtual ? '虛擬祖先' : this._formatFaction(person.faction);
-        const geneCount = Array.isArray(person.gene_refs) ? person.gene_refs.length : 0;
-        return `${person.name}\n${factionLine}\n因子 ${geneCount}`;
+    private _formatAncestorLabel(person: { uid: string; name: string; gene_refs: string[]; ep_base: number }): string {
+        return ancestorCardText(person.name, this._currentEp(person), this._mainFactorName(person.gene_refs?.[0]));
+    }
+
+    /** 登記血統時的 EP 只是出生值；還在名冊的人用目前的 EP */
+    private _currentEp(person: { uid: string; ep_base: number }): number {
+        try {
+            return services().session.roster.find((general) => general.id === person.uid)?.ep ?? person.ep_base;
+        } catch {
+            return person.ep_base;
+        }
+    }
+
+    private _mainFactorName(factorId: string | undefined): string | null {
+        if (!factorId) return null;
+        try {
+            return services().session.factorDictionary?.get(factorId)?.displayName ?? null;
+        } catch {
+            return null;
+        }
     }
 
     private _formatFaction(faction: string): string {
