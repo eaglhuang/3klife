@@ -421,7 +421,7 @@
                             "id": "motherAvatar",
                             "width": 104,
                             "height": 104,
-                            "skinSlot": "bonding.avatar"
+                            "skinSlot": "bonding.avatar.mother"
                           }
                         ]
                       }
