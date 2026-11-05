@@ -192,6 +192,7 @@ import { dailySubsidyText, economySubsidyBannerText } from '../core/DailySubsidy
 import type { TabKey } from '../components/character-ds3/GeneralDetailChromePresenter';
 import { ensureDs3SideAction, ensureDs3SideLabel, setDs3SideActionEnabled } from '../components/character-ds3/Ds3SideActions';
 import { DS3_BLOODLINE_TREE_NODE_NAME, ensureDs3BloodlineTree } from '../components/character-ds3/Ds3BloodlineTree';
+import { BLOODLINE_TREE_OPEN_LINE } from '../../core/systems/BloodlineTreeSlots';
 
 const { ccclass } = _decorator;
 
@@ -305,6 +306,8 @@ export class LobbyScene extends Component {
     /** 趕路倒數（時間單位為毫秒）；目前尚無趕路來源接入，為 null 時圖示隱藏（PROG-2-0469） */
     private _nurtureFlowHost: UIScreenPreviewHost | null = null;
     private _nurtureFlow: NurtureFlowController | null = null;
+    /** G2 §G 長老句只在這次進大廳第一次打開族譜時顯示 */
+    private _bloodlineTreeLineShown = false;
     /** 教官卡詳情（MENT-13）：頁籤與目前卡的狀態 */
     private _mentorCardHost: UIScreenPreviewHost | null = null;
     private readonly _mentorCardDetail = new MentorCardDetailController();
@@ -4246,6 +4249,10 @@ export class LobbyScene extends Component {
             hostNode.getChildByName(name)?.setSiblingIndex(hostNode.children.length - 1);
         }
         void panel.loadForGeneral(general.id);
+        if (!this._bloodlineTreeLineShown) {
+            this._bloodlineTreeLineShown = true;
+            services().event.emit('SHOW_TOAST', { message: BLOODLINE_TREE_OPEN_LINE, duration: 4 });
+        }
     }
 
     private _showToast(message: string): void {

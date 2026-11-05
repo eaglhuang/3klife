@@ -117,10 +117,10 @@ export class BreedingService {
         this.ensureFounderAncestry();
         let added = 0;
         for (const general of this._roster.getAll() as BreedingGeneral[]) {
-            if (!general.fatherId || !general.motherId) continue;
+            if (!general.fatherId && !general.motherId) continue;
             const parents = this._graph.getParents(general.id);
-            if (parents.father && parents.mother) continue;
-            this._graph.registerChild(toPersonRecord(general), general.fatherId, general.motherId);
+            if (parents.father || parents.mother) continue;
+            this._graph.registerChild(toPersonRecord(general), general.fatherId ?? '', general.motherId ?? '');
             added++;
         }
         return added;
