@@ -39,7 +39,7 @@
         "凌統色票與專屬三節鎖棍紀錄",
         "任務卡、manifest及Cocos驗證紀錄"
       ],
-      "notes": "2026-11-05 | 狀態: in-progress | 驗證: 依吳將五人辨識度既有記錄與凌統色票／臉型方向建立工作範圍 | 變更: 接手凌統名將立繪與紅繩三節鎖棍專屬武器 | 阻塞: 無",
+      "notes": "2026-11-05 | 狀態: in-progress | 驗證: 正式立繪512x768透明；兩種256x256頭像及reviewed crop verify通過；Cocos三項資產imported=true、invalid=false；compute-gate quick 3/3、import-boundary 1/1通過 | 變更: 以二次元青年窄臉、側束深棕髮、灰朱紅／石板灰／暖白及紅繩三節鎖棍替換通用長槍立繪，已同步主遊戲正式資源 | 阻塞: ATM taskflow close 缺可寫 profile；尚未提交／push",
       "brief": {
         "style": "classic",
         "label": "",
@@ -55,11 +55,26 @@
         "execution_steps": []
       },
       "harness_evidence": {
-        "artifact_paths": [],
-        "validation_evidence": [],
-        "handoff_diff_status": "",
+        "artifact_paths": [
+          "assets/resources/sprites/generals/ling_tong_portrait.png",
+          "assets/resources/sprites/generals/avatars/ling_tong_avatar.png",
+          "assets/resources/sprites/ui_avatars/cropped/ling_tong_avatar.png",
+          "assets/resources/data/general-avatar-crops.json",
+          "docs/art/character-palette-ledger-shards/palette-principles.md"
+        ],
+        "validation_evidence": [
+          "generate-general-avatars.js ling-tong --cropped-only --preserve-crop: 1 成功、0 失敗",
+          "generate-general-avatars.js ling-tong --verify --preserve-crop: reviewed crop通過",
+          "Cocos Refresh Assets與三項資產重匯入成功；imported=true、invalid=false",
+          "正式立繪512x768透明；兩種頭像256x256"
+        ],
+        "handoff_diff_status": "角色正式立繪、頭像、裁切索引、配色台帳與任務卡已更新",
         "trace_artifacts": [],
-        "metrics_summary": []
+        "metrics_summary": [
+          "palette=灰朱紅/石板灰/暖白",
+          "weapon=紅繩三節鎖棍",
+          "avatar_crop=reviewed(153,0)+205x205"
+        ]
       }
     }
   ]

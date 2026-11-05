@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-05T13-51-06-822Z-scope-amendment-67fcac1e7765",
+  "taskId": "UI-1-0023",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-1-0023.json",
+  "taskSha256": "sha256:b5ad2530b07299ab5ac6cd2e206ba0cf5527aa3fdf694d2abca9728b4ae0f3af",
+  "createdAt": "2026-11-05T13:51:06.822Z",
+  "command": "node atm.mjs tasks scope add --task UI-1-0023 --actor codex-gpt-6.1-sol --add \"assets/resources/sprites/generals/ling_tong_portrait.png,assets/resources/sprites/generals/avatars/ling_tong_avatar.png,assets/resources/sprites/ui_avatars/cropped/ling_tong_avatar.png,assets/resources/data/general-avatar-crops.json,docs/art/character-palette-ledger-shards/palette-principles.md,docs/agent-briefs/tasks/UI/UI-1-0023.md,docs/ui-quality-tasks/UI-1-0023.json,docs/ui-quality-todo.json,docs/agent-briefs/tasks_index.md\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
