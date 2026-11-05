@@ -231,7 +231,7 @@ export function createBondingSetupSuite(): TestSuite {
         const view = rig.flow.getView();
         assert.isFalse(view.enabled.btnConfirmBond);
         assert.isTrue(view.texts.inbreedingLabel.startsWith('近親警告：1 代內'));
-        assert.isTrue(view.texts.eligibilityLabel.includes('同源血脈過於濃厚'));
+        assert.isTrue(view.texts.eligibilityLabel.includes('禮法森嚴'));
 
         const result = await rig.flow.confirm();
         assert.equals('blocked', result.outcome);
