@@ -97,6 +97,8 @@ import { discoveryPhaseUnlockLines } from '../../core/systems/DiscoveryProgress'
 import { factorAwakeningLines, type FactorAwakenedEvent } from '../../core/systems/FactorAwakening';
 import { rebirthVoiceLines } from '../../core/systems/Rebirth';
 import { gachaFemaleLines } from '../../core/systems/FemaleSourcePresenter';
+import { daughterComingOfAgeToast, type DaughterRoute } from '../../core/systems/DaughterComingOfAge';
+import { DaughterRoutePopupController } from '../core/DaughterRoutePopupController';
 import { ultimateUnlockLines } from '../../core/systems/UltimateScriptLines';
 import { rebirthBreakthroughLine } from '../../core/systems/NumericalScriptLines';
 import { HallBoardPanelController, HALL_BOARD_MAX_ROWS } from '../core/HallBoardPanelController';
@@ -376,6 +378,8 @@ export class LobbyScene extends Component {
     private _spiritCardDetailHost: UIScreenPreviewHost | null = null;
     private _oracle: SageOracleController | null = null;
     private _prisonerHost: UIScreenPreviewHost | null = null;
+    private _daughterRouteHost: UIScreenPreviewHost | null = null;
+    private _daughterRoute: DaughterRoutePopupController | null = null;
     private _yearReport: YearReportController<UIScreenPreviewHost> | null = null;
     private _prisoner: PrisonerPopupController | null = null;
     private _destinyShopHost: UIScreenPreviewHost | null = null;
@@ -534,6 +538,7 @@ export class LobbyScene extends Component {
         await this._mountRetireReview();
         await this._mountSpiritCodex();
         await this._mountUltimateCodex();
+        await this._mountDaughterRoutePopup();
         await this._mountPrisonerPopup();
         await this._mountDestinyShop();
         await this._mountYearReport();
@@ -549,7 +554,10 @@ export class LobbyScene extends Component {
         this._registerUIControllers();
         await services().ui.open(UIID.LobbyMain);
         // 首勝紅顏展示開著時先不彈俘虜窗，等紅顏關閉再彈（PROG-2-1129）
-        if (!this._redFaceHost?.node.active) this._openPrisonerPopupIfPending();
+        if (!this._redFaceHost?.node.active) {
+            this._openDaughterRoutePopupIfPending();
+            this._openPrisonerPopupIfPending();
+        }
         this._bindSaveRecoveryToast();
         void this._applyGachaMentorJournal();
 
@@ -2045,6 +2053,7 @@ export class LobbyScene extends Component {
         if (this._redFaceHost) {
             this._redFaceHost.node.active = false;
         }
+        this._openDaughterRoutePopupIfPending();
         this._openPrisonerPopupIfPending();
     }
 
@@ -3039,6 +3048,61 @@ export class LobbyScene extends Component {
      * 俘虜四選一彈窗（PROG-2-0082）：戰勝帶回的俘虜在回到大廳時跳出處置；「稍後」關掉，下次進大廳再問。
      * 選項能否按、扣黃金都在 PrisonerPopupController（純邏輯），這裡只綁按鈕、套 view。
      */
+    /** 女兒及笄選路線（可結緣女性來源系統 §E #5，PROG-2-1787）：年末剛滿 14 歲時彈出，「稍後」則下次進大廳再問 */
+    private async _mountDaughterRoutePopup(): Promise<void> {
+        const controller = new DaughterRoutePopupController({ session: services().session });
+        this._daughterRoute = controller;
+        const choose = (route: DaughterRoute): void => { void this._onClickDaughterRoute(route); };
+        this._daughterRouteHost = await this._mountPreviewScreenHost('DaughterRouteHost', 'daughter-route-screen', [
+            { buttonId: 'btnCloseDr', handler: () => { if (this._daughterRouteHost) this._daughterRouteHost.node.active = false; } },
+            { buttonId: 'btnPrevDr', handler: () => { controller.cycle(-1); this._refreshDaughterRoutePopup(); } },
+            { buttonId: 'btnNextDr', handler: () => { controller.cycle(1); this._refreshDaughterRoutePopup(); } },
+            { buttonId: 'btnFrontline', handler: () => { choose('frontline'); } },
+            { buttonId: 'btnPalace', handler: () => { choose('palace'); } },
+            { buttonId: 'btnInstructor', handler: () => { choose('instructor'); } },
+        ]);
+        this._sessionEventUnsubscribers.push(
+            services().event.on(GAME_SESSION_EVENTS.DaughterComingOfAge, (payload?: unknown) => {
+                for (const daughter of (payload as DaughterAwaitingRoute[] | undefined) ?? []) {
+                    services().event.emit('SHOW_TOAST', { message: daughterComingOfAgeToast(daughter.name), duration: 3 });
+                }
+                this._openDaughterRoutePopupIfPending();
+            }),
+        );
+    }
+
+    private _openDaughterRoutePopupIfPending(): void {
+        const host = this._daughterRouteHost;
+        if (!host || !this._daughterRoute?.hasPending()) {
+            return;
+        }
+        this._daughterRoute.open();
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshDaughterRoutePopup();
+    }
+
+    private _refreshDaughterRoutePopup(): void {
+        const binder = this._daughterRouteHost?.binder;
+        if (binder && this._daughterRoute) {
+            applyFlowView(binder, this._daughterRoute.getView());
+        }
+    }
+
+    private async _onClickDaughterRoute(route: DaughterRoute): Promise<void> {
+        if (!this._daughterRoute) {
+            return;
+        }
+        try {
+            await this._daughterRoute.choose(route);
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 女兒擇路失敗', error);
+            services().event.emit('SHOW_TOAST', { message: error instanceof Error ? error.message : '女兒擇路失敗', duration: 2.5 });
+        } finally {
+            this._refreshDaughterRoutePopup();
+        }
+    }
+
     private async _mountPrisonerPopup(): Promise<void> {
         const gacha = this._localGachaService;
         const prisoner = new PrisonerPopupController({

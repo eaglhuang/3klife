@@ -69,3 +69,13 @@ export function advanceDaughtersOneYear(list: readonly DaughterRecord[]): { daug
     });
     return { daughters, newlyOfAge };
 }
+
+/** 可結緣女性來源系統 §G 及笄劇本（PROG-2-1787） */
+export function daughterComingOfAgeLine(name: string): string {
+    return `${name} 今日及笄，主公請為她選擇前路。`;
+}
+
+/** 可結緣女性來源系統 §H UI_DAUGHTER_COMING（PROG-2-1787） */
+export function daughterComingOfAgeToast(name: string): string {
+    return `${name} 今日及笄，請為她擇路`;
+}

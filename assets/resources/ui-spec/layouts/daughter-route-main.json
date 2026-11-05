@@ -1,0 +1,289 @@
+{
+  "id": "daughter-route-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "DaughterRouteRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "DaughterRouteBackdrop",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "skinSlot": "dr.backdrop.bg"
+      },
+      {
+        "type": "panel",
+        "name": "DaughterRouteCard",
+        "id": "drCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 820,
+        "height": 560,
+        "skinSlot": "dr.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "DrTitle",
+            "id": "drTitle",
+            "widget": {
+              "top": 22,
+              "left": 32
+            },
+            "height": 40,
+            "text": "女兒及笄",
+            "styleSlot": "dr.label.title",
+            "width": 300
+          },
+          {
+            "type": "label",
+            "name": "DrPager",
+            "id": "drPager",
+            "widget": {
+              "top": 26,
+              "right": 150
+            },
+            "height": 32,
+            "text": "0 / 0",
+            "styleSlot": "dr.label.stats",
+            "width": 160
+          },
+          {
+            "type": "button",
+            "name": "BtnCloseDr",
+            "id": "btnCloseDr",
+            "widget": {
+              "top": 16,
+              "right": 24
+            },
+            "height": 48,
+            "skinSlot": "dr.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnCloseDrLabel",
+                "id": "closeDrLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "稍後",
+                "styleSlot": "dr.label.button"
+              }
+            ],
+            "width": 110
+          },
+          {
+            "type": "label",
+            "name": "DrEmptyHint",
+            "id": "drEmptyHint",
+            "widget": {
+              "top": 160,
+              "left": 60,
+              "right": 60
+            },
+            "height": 120,
+            "text": "",
+            "styleSlot": "dr.label.body"
+          },
+          {
+            "type": "container",
+            "name": "DrPanel",
+            "id": "drPanel",
+            "widget": {
+              "top": 84,
+              "left": 32,
+              "right": 32,
+              "bottom": 120
+            },
+            "children": [
+              {
+                "type": "label",
+                "name": "DrLine",
+                "id": "drLine",
+                "widget": {
+                  "top": 0,
+                  "left": 0,
+                  "right": 200
+                },
+                "height": 40,
+                "text": "",
+                "styleSlot": "dr.label.body"
+              },
+              {
+                "type": "button",
+                "name": "BtnPrevDr",
+                "id": "btnPrevDr",
+                "widget": {
+                  "top": 0,
+                  "right": 100
+                },
+                "height": 40,
+                "skinSlot": "dr.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnPrevDrLabel",
+                    "id": "prevDrLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "上一位",
+                    "styleSlot": "dr.label.button"
+                  }
+                ],
+                "width": 88
+              },
+              {
+                "type": "button",
+                "name": "BtnNextDr",
+                "id": "btnNextDr",
+                "widget": {
+                  "top": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "skinSlot": "dr.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnNextDrLabel",
+                    "id": "nextDrLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "下一位",
+                    "styleSlot": "dr.label.button"
+                  }
+                ],
+                "width": 88
+              },
+              {
+                "type": "button",
+                "name": "BtnFrontline",
+                "id": "btnFrontline",
+                "widget": {
+                  "top": 88,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 72,
+                "skinSlot": "dr.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnFrontlineLabel",
+                    "id": "frontlineLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "前線武將",
+                    "styleSlot": "dr.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnPalace",
+                "id": "btnPalace",
+                "widget": {
+                  "top": 176,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 72,
+                "skinSlot": "dr.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnPalaceLabel",
+                    "id": "palaceLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "後宮女官",
+                    "styleSlot": "dr.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnInstructor",
+                "id": "btnInstructor",
+                "widget": {
+                  "top": 264,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 72,
+                "skinSlot": "dr.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnInstructorLabel",
+                    "id": "instructorLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "教官儲備",
+                    "styleSlot": "dr.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "DrNotice",
+            "id": "drNotice",
+            "widget": {
+              "top": 444,
+              "left": 32,
+              "right": 32
+            },
+            "height": 60,
+            "text": "",
+            "styleSlot": "dr.label.body"
+          }
+        ]
+      }
+    ]
+  }
+}
