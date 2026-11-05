@@ -137,6 +137,12 @@
       "path": "sprites/ui_avatars/unknown_avatar_m",
       "expectedWidth": 256,
       "expectedHeight": 256
+    },
+    "bonding.avatar.mother": {
+      "kind": "sprite-frame",
+      "path": "sprites/ui_avatars/unknown_avatar_f",
+      "expectedWidth": 256,
+      "expectedHeight": 256
     }
   }
 }
