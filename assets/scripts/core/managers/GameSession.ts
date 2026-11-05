@@ -117,6 +117,7 @@ import {
 import { playMonthlyScenario, type MonthlyScenarioHistoryEntry, type MonthlyScenarioPlayResult } from '../systems/MonthlyScenarioCup';
 import { DISPATCH_JOB_CATALOG, dispatchBoardRows, findDispatchJob, type DispatchCatalogRow, type DispatchPreview } from '../systems/DispatchCatalog';
 import { buildMercenaryPoolRows, filterPoolGeneralIds, type MercenaryPoolRow } from '../systems/MercenaryPoolPresenter';
+import { fallenOfficerOrigins } from '../systems/FallenOfficerMarket';
 import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
 import { FRESH_OPENING_LETTER, markOpeningLetterSeen, normalizeOpeningLetterState, OpeningLetterState } from '../systems/OpeningLetter';
 import { remarkRandomOf } from '../systems/SageRemarks';
@@ -766,6 +767,7 @@ export class GameSession {
     private _rivals: RivalWorld = createRivalWorld();
     /** 他國逐將名冊與重算情境（E-9，PROG-2-1714）；未設定時他國照舊以兵力計軍力 */
     private _rivalOfficers: { rosters: Readonly<Record<string, RivalNationRoster>>; context: RivalPowerContext } | null = null;
+    private _rivalRulerIds: Readonly<Record<string, string>> = {};
     /** 季末糧不足標記（TRP-12）；只給下一場出征用，不進存檔 */
     private _tallyFoodDiscountArmed = false;
     /** 傭兵存檔包（試用、薪水、冷卻）；隨存檔保存（MERC-01 接線） */
@@ -960,6 +962,24 @@ export class GameSession {
     /** 傭兵池可出現的武將：過濾掉 30 天冷卻中的武將 id，保留原順序。 */
     public availablePoolGeneralIds(generalIds: readonly string[]): string[] {
         return filterPoolGeneralIds(generalIds, this.mercenaryDay, this._mercenaries.cooldowns);
+    }
+
+    /** 試用招募池：名將池加滅亡國殘餘武將，扣掉已擁有、已是傭兵與冷卻中的武將（PROG-2-1848） */
+    public trialHirePoolIds(heroPoolIds: readonly string[]): string[] {
+        const taken = new Set<string>(this._mercenaries.mercenaries.map((m) => m.generalId).filter((id): id is string => !!id));
+        for (const general of this._roster.getAll()) {
+            taken.add(general.id);
+            if (general.templateId) taken.add(general.templateId);
+        }
+        const pool = new Set<string>(heroPoolIds);
+        fallenOfficerOrigins(this._rivals.nations, this._rivalRulerIds).forEach((_nationId, generalId) => pool.add(generalId));
+        return this.availablePoolGeneralIds(Array.from(pool).filter((id) => !taken.has(id)));
+    }
+
+    /** 武將目前屬於哪個滅亡國的殘部；不是殘部回傳 null（PROG-2-1848） */
+    public fallenOfficerNationName(generalId: string | undefined): string | null {
+        const nationId = generalId ? fallenOfficerOrigins(this._rivals.nations, this._rivalRulerIds).get(generalId) : undefined;
+        return nationId ? nationDef(nationId)?.name ?? nationId : null;
     }
 
     /** 傭兵列表的顯示列（倒數、結義進度、按鈕可否）；由目前存檔包推導，不改狀態。 */
@@ -2086,8 +2106,13 @@ export class GameSession {
      * 設定他國逐將名冊與重算情境（E-9，PROG-2-1714）：尚未有名冊的勢力立即掛上，
      * 之後每季推進會逐將重算軍力。讀檔與新遊戲也會補掛。
      */
-    public setRivalOfficerContext(rosters: Readonly<Record<string, RivalNationRoster>>, context: RivalPowerContext): void {
+    public setRivalOfficerContext(
+        rosters: Readonly<Record<string, RivalNationRoster>>,
+        context: RivalPowerContext,
+        rulerIds: Readonly<Record<string, string>> = {},
+    ): void {
         this._rivalOfficers = { rosters, context };
+        this._rivalRulerIds = rulerIds;
         this._rivals = this._withRivalOfficers(this._rivals);
     }
 

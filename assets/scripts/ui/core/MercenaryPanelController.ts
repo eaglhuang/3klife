@@ -24,6 +24,11 @@ export interface MercenaryPanelFlowView {
     enabled: Record<string, boolean>;
 }
 
+/** 原主欄：滅亡國殘部顯示舊國，其餘沿用暫定字（PROG-2-1848） */
+export function fallenOwnerLabel(nationName: string | null): string {
+    return nationName ? `${nationName}舊部` : '原主未定';
+}
+
 /** 呼叫端提供的武將顯示資料；原主與稀有度尚無正式來源時由呼叫端給預設值。 */
 export interface MercenaryDisplayInfo {
     originalOwnerName: string;
