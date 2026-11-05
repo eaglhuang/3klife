@@ -56,7 +56,10 @@
           "assets/resources/data/general-avatar-crops.json",
           "assets/resources/sprites/generals/da_qiao_portrait.png",
           "assets/resources/sprites/generals/avatars/da_qiao_avatar.png",
-          "assets/resources/sprites/ui_avatars/cropped/da_qiao_avatar.png"
+          "assets/resources/sprites/ui_avatars/cropped/da_qiao_avatar.png",
+          "assets/resources/sprites/generals/lu_bu_portrait.png",
+          "assets/resources/sprites/generals/avatars/lu_bu_avatar.png",
+          "assets/resources/sprites/ui_avatars/cropped/lu_bu_avatar.png"
         ],
         "validation_evidence": [
           "xin-xian-ying portrait: 512x768 RGBA, transparent corners; 125/250px composition and star-ring blade silhouette reviewed",
@@ -65,7 +68,11 @@
           "da-qiao portrait: 512x768 RGBA, transparent corners; 125/250px hybrid anime/semi-real rendering, dual peach-bell scepters and full-body silhouette reviewed",
           "da-qiao avatar crop tuned to (156,0)+190x190; 125px view confirms full peach comb, face and shoulders with no weapon in frame",
           "node tools_node/generate-general-avatars.js da-qiao --verify: 1 success, 0 failures; cropped-only generation succeeded",
-          "Cocos AssetDB da-qiao portrait and both avatar assets: imported=true, invalid=false; SHA-256 matches worktree outputs"
+          "Cocos AssetDB da-qiao portrait and both avatar assets: imported=true, invalid=false; SHA-256 matches worktree outputs",
+          "lu-bu portrait: 512x768 RGBA with transparent corners; 125/250px purple-black armor, anime-sharp face and complete Fangtian Huaji reviewed",
+          "lu-bu avatar crop updated to (185,0)+220x220; 125px confirms purple plume, face and shoulders without halberd",
+          "node tools_node/generate-general-avatars.js lu-bu --verify: 1 success, 0 failures; cropped-only generation succeeded",
+          "Cocos AssetDB lu-bu portrait and both avatar assets: imported=true, invalid=false; SHA-256 matches worktree outputs"
         ],
         "handoff_diff_status": "",
         "trace_artifacts": [],
