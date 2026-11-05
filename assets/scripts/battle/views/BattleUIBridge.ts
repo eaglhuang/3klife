@@ -597,6 +597,8 @@ export class BattleUIBridge {
     this.appendLog(`${target} ${critLabel}受到攻擊，剩餘 HP ${Math.max(0, data.hp)}`);
     this._enqueueCombatVisual(`general-damage:${data.faction}`, async () => {
       UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] general-damage start faction=${data.faction}`);
+      // 血量歸零由 UnitRenderer 改播陣亡
+      if (data.hp > 0) c.unitRenderer?.playGeneralKnockback(data.faction);
       const attackerUnit = data.attackerId ? c.ctrl?.state.units.get(data.attackerId) ?? null : null;
       const attackPromise = data.attackerId
         ? (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] attacker-lunge-general attacker=${data.attackerId} targetFaction=${data.faction}`), c.unitRenderer?.playAttackGeneralAnimationAsync(data.attackerId, data.faction) ?? Promise.resolve())

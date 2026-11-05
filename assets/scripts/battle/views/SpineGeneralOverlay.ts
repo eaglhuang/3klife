@@ -6,7 +6,8 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
  * 戰場武將 Spine 2D 疊層（spine-trial 共用骨架產出的 Spine 4.2 角色）。
  *
  * 武將 3D 模型照舊在世界座標，這裡在 UI 層掛一個 sp.Skeleton，位置由 UnitRenderer 每次投影傳入；
- * 平時循環 idle，武將出招時播一次 spear_thrust 再回 idle。
+ * 平時循環 idle，武將出招時播一次 spear_thrust、中招時播一次 hit_knockback，都再回 idle；
+ * 陣亡播 death_fall 並停在倒地姿勢。
  * Unity 對照：像在 Canvas 上掛一個 SkeletonGraphic 跟著角色的螢幕座標走。
  */
 interface SpineGeneralEntry {
@@ -24,11 +25,14 @@ const SPINE_GENERAL_BY_FACTION: Record<string, SpineGeneralEntry> = {
 
 const IDLE = 'idle';
 const ATTACK = 'spear_thrust';
+const HIT = 'hit_knockback';
+const DEATH = 'death_fall';
 const MIRROR_SKIN = 'hand_mirror';
 
 export class SpineGeneralOverlay {
   private readonly nodes = new Map<string, Node>();
   private readonly loading = new Set<string>();
+  private readonly dead = new Set<string>();
 
   constructor(private readonly getParent: () => Node | null, private readonly layer: () => number) {}
 
@@ -36,6 +40,7 @@ export class SpineGeneralOverlay {
   public sync(faction: Faction, uiX: number, uiY: number): boolean {
     const node = this.nodes.get(faction);
     if (node?.isValid) {
+      if (this.dead.delete(faction)) node.getComponent(sp.Skeleton)?.setAnimation(0, IDLE, true); // 新戰局復活
       node.setPosition(uiX, uiY, 0);
       return true;
     }
@@ -47,13 +52,39 @@ export class SpineGeneralOverlay {
     const node = this.nodes.get(faction);
     if (node?.isValid) node.destroy();
     this.nodes.delete(faction);
+    this.dead.delete(faction);
   }
 
   public playAttack(faction: Faction): void {
+    this.playOnce(faction, ATTACK);
+  }
+
+  /** 中招：被打退再踏回原位 */
+  public playHit(faction: Faction): void {
+    this.playOnce(faction, HIT);
+  }
+
+  /** 陣亡：倒地後停住；回傳是否有 Spine 武將可演（false 時呼叫端照舊移除） */
+  public playDeath(faction: Faction): boolean {
     const skel = this.nodes.get(faction)?.getComponent(sp.Skeleton);
-    if (!skel) return;
-    skel.setAnimation(0, ATTACK, false);
+    if (!skel) return false;
+    if (this.dead.has(faction)) return true;
+    if (!this.hasAnimation(skel, DEATH)) return false;
+    this.dead.add(faction);
+    skel.setAnimation(0, DEATH, false);
+    return true;
+  }
+
+  private playOnce(faction: Faction, anim: string): void {
+    const skel = this.nodes.get(faction)?.getComponent(sp.Skeleton);
+    if (!skel || this.dead.has(faction) || !this.hasAnimation(skel, anim)) return;
+    skel.setAnimation(0, anim, false);
     skel.addAnimation(0, IDLE, true, 0);
+  }
+
+  /** 美術只留本機，舊版骨架可能還沒有新動作；缺動作時略過而不報錯 */
+  private hasAnimation(skel: sp.Skeleton, anim: string): boolean {
+    return !!skel.skeletonData?.getRuntimeData()?.findAnimation(anim);
   }
 
   private async load(faction: Faction, x: number, y: number): Promise<void> {
