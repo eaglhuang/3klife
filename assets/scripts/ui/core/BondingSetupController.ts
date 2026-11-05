@@ -112,6 +112,8 @@ export interface BondingSetupDeps {
     omenSeed?: () => number;
     /** 結緣成功時記下本機子嗣紀錄（BRD-12）；正式環境接 GameSession.recordBreedingBirth，不送 server */
     recordBreeding?: (record: BreedingBirthRecord) => void;
+    /** 共鳴標籤 id 換顯示名稱；正式環境查因子字典，未提供時顯示原值 */
+    tagName?: (tag: string) => string | null | undefined;
     /** 結緣畫面文案查詢（ui.breed.*）；正式環境接 i18n.t，未提供時用 zh-TW 預設文案 */
     text?: BreedTextLookup;
 }
@@ -220,7 +222,7 @@ export class BondingSetupController {
             this._notice = this._t('ui.breed.child_born', result.father.name, result.mother.name, gender)
                 + `子嗣名為「${child.name}」。`
                 + this._t('ui.breed.preg_status', result.mother.name, String(PREGNANCY_LOCK_SEASONS))
-                + `天象異變：${OMEN_LABEL[omen]}。`;
+                + `。天象異變：${OMEN_LABEL[omen]}。`;
             // 驗證通過才記錄；驗證失敗不影響結緣結果（BRD-12 暫定）
             const built = buildBreedingBirthRecord(result, omen);
             if (built?.record) this._deps.recordBreeding?.(built.record);
@@ -292,7 +294,7 @@ export class BondingSetupController {
         const eligibility = this._deps.breeding.checkEligibility(father.id, mother.id);
         const ep = this._deps.breeding.previewEp(father.id, mother.id);
         texts.epEstimate = this._t('ui.breed.ep_display', String(ep.ep), ep.rating);
-        const preview = buildBreedingPreviewLines(ep);
+        const preview = buildBreedingPreviewLines(ep, this._deps.tagName);
         texts.epDetail = ['基礎 50', preview.breakdownLine, preview.tagLine].join(' · ');
         texts.conceptionLabel = `受孕率 ${Math.round(conceptionRate(father, mother) * 100)}%`;
         const sage = this._sageRemarks(father.id, mother.id);

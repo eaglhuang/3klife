@@ -1264,6 +1264,7 @@ export class LobbyScene extends Component {
             playerDiscoveryLevel: () => services().session.discoveryLevel,
             omenSeed: () => services().session.omenSeed(),
             oracleTokens: () => services().session.oracleCount,
+            tagName: (tag) => services().session.factorDictionary?.get(tag)?.displayName,
             recordBreeding: (record) => services().session.recordBreedingBirth(record),
             sageRemarks: (fatherId, motherId) => {
                 const pool = services().breeding.previewFactorPool(fatherId, motherId);
