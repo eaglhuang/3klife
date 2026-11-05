@@ -46,7 +46,8 @@ import {
 import { INSPIRE_BURST_RATE_BONUS, InspireContext, rollInspireRound } from '../systems/MentorInspiration';
 import { isBloodlineGuaranteedRound, isBloodlineMatch } from '../systems/BloodlineGuarantee';
 import { GENERAL_STATUS_DEAD } from '../systems/GeneralAging';
-import { FactorAwakenedEvent, rollNurtureAwakening } from '../systems/FactorAwakening';
+import { FactorAwakenedEvent, nurturePeekChance, rollNurtureAwakening } from '../systems/FactorAwakening';
+import { mentorPeekLine, previewLockedFactorDirections } from '../systems/SageFactorPreview';
 import type { FactorDictionary, InheritedFactor } from '../systems/FactorInheritance';
 import { hybridSourcesFromParents } from '../systems/HybridSkill';
 import { revealStat, RevealedStat, RevelationLevel } from '../systems/StatRevelation';
@@ -138,6 +139,8 @@ export interface NurtureTrainResult {
     log: NurtureRoundLog;
     /** 本回合覺醒的因子；沒有則省略 */
     awakening?: FactorAwakenedEvent;
+    /** 教官窺探句；沒有則省略（PROG-2-1785） */
+    peekHint?: string;
     /** 本回合覺醒的家傳奧義；沒有則省略（PROG-2-1780） */
     childUltimates?: NurtureChildUltimate[];
     /** 本回合新觸發的戰法靈感；沒有則省略 */
@@ -295,6 +298,10 @@ export class NurtureService {
         this._replace(result.session);
         const awakening = this._rollAwakening(childId, result.session, result.log);
         if (awakening) result.awakening = awakening;
+        else {
+            const peekHint = this._rollMentorPeek(childId, result.session, result.log);
+            if (peekHint) result.peekHint = peekHint;
+        }
         const childUltimates = this._rollChildUltimate(childId, result.log);
         if (childUltimates.length > 0) result.childUltimates = childUltimates;
         return result;
@@ -433,6 +440,21 @@ export class NurtureService {
         this._roster.replaceAll(next);
         hooks.onAwakened?.(result.event);
         return result.event;
+    }
+
+    /**
+     * 教官窺探（因子解鎖系統 §G，PROG-2-1785）。
+     * 暫定：機率沿用窺探率；這回合已覺醒就不說；方向取探索等級還沒到的第一個；教官取星等最高的。
+     */
+    private _rollMentorPeek(childId: string, session: NurtureSession, log: NurtureRoundLog): string | undefined {
+        const hooks = this._options.awakening;
+        if (!hooks || log.action === 'rest' || session.mentors.length === 0) return undefined;
+        const child = this._roster.getAll().find((g) => g.id === childId);
+        const directions = previewLockedFactorDirections(child, hooks.discoveryLevel());
+        if (directions.length === 0) return undefined;
+        const mentor = session.mentors.reduce((best, m) => ((m.stars ?? 0) > (best.stars ?? 0) ? m : best));
+        if (!(this._rng()() < nurturePeekChance(mentor.stars ?? 0))) return undefined;
+        return mentorPeekLine(mentor.name ?? mentor.id, directions[0]);
     }
 
     private _rng(): RandomSource {

@@ -33,3 +33,17 @@ export function previewLockedFactorDirections(general: GeneralConfig | undefined
     }
     return out;
 }
+
+/** 教官窺探的方向用語（因子解鎖系統 §G，PROG-2-1785）；規格只給句型，用語暫定 */
+const FACTOR_HINT_LABEL: Record<FactorColor, string> = {
+    blue: '未顯的才能',
+    pink: '未顯的適性',
+    green: '祖傳的戰法種子',
+    white: '隱藏的天賦',
+    red: '過人的體魄',
+    purple: '天命之力',
+};
+
+export function mentorPeekLine(mentorName: string, direction: FactorColor): string {
+    return `教官 ${mentorName}：此子似乎還藏有${FACTOR_HINT_LABEL[direction]}…`;
+}
