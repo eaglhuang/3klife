@@ -3881,8 +3881,10 @@ export class GameSession {
 
     /** 門第檢定：只升不降；回傳要發的升格事件，由呼叫端存檔後再發 */
     private async _refreshClanTier(): Promise<ClanTierUpPayload | null> {
-        const cards = await this._lifecycle?.getArchiver?.()?.getAllSpiritCards() ?? [];
-        const members = clanMembersOf(this._roster.getAll(), cards, this._factorDictionary);
+        const archiver = this._lifecycle?.getArchiver?.();
+        const cards = await archiver?.getAllSpiritCards() ?? [];
+        const compact = await archiver?.getCompactAncestors?.() ?? [];
+        const members = clanMembersOf(this._roster.getAll(), cards, this._factorDictionary, compact);
         const reached = clanTierOf(clanStatsOf(members));
         const payload: ClanTierUpPayload | null = reached > this._clanTier ? { oldTier: this._clanTier, newTier: reached } : null;
         if (payload) this._clanTier = reached;

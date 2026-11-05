@@ -25,6 +25,7 @@ import {
 } from '../models/GeneralLifecycle';
 import { PendingDeleteStore } from './PendingDeleteStore';
 import { buildSpiritArchiveSnapshot, SpiritSnapshotSource } from '../systems/SpiritArchiveSnapshot';
+import { CompactAncestorRecord, CompactBody, compactAncestorOf, compactFootprint, farAncestorUids, isCardCompactable, LivingLineage } from '../systems/CompactAncestor';
 
 // 簡化的武將資料介面（避免循環依賴）
 interface GeneralUnitMinimal {
@@ -44,6 +45,7 @@ interface GeneralUnitMinimal {
 
 const STORE_SPIRIT_CARDS = 'spirit_cards';
 const STORE_ARCHIVE_L5 = 'generals_archive_l5';
+const STORE_COMPACT_ANCESTORS = 'compact_ancestors';
 const STORE_ACTIVE_IDS = 'generals_active_ids';
 
 export class GeneralArchiver {
@@ -195,6 +197,33 @@ export class GeneralArchiver {
     /**
      * 取得所有 SpiritCard。
      */
+    public async getCompactAncestors(): Promise<CompactAncestorRecord[]> {
+        return (await this.adapter.get<CompactAncestorRecord[]>(STORE_COMPACT_ANCESTORS)) ?? [];
+    }
+
+    /**
+     * 遠祖冷壓縮（G4 §I）：滑出所有活人 4 代窗外的祖先，從英靈快照與 L5 移成摘要。
+     * 先寫摘要再刪舊資料，中途失敗最多多一份，不會掉人。
+     */
+    public async compactFarAncestors(living: readonly LivingLineage[]): Promise<{ compactedUids: string[]; count: number; bytes: number }> {
+        const cards = await this.getAllSpiritCards();
+        const records = await this.getCompactAncestors();
+        const far = new Set(farAncestorUids(living, cards, records));
+        const targets = cards.filter((card) => far.has(card.uid) && isCardCompactable(card));
+        if (targets.length === 0) return { compactedUids: [], ...compactFootprint(records) };
+
+        const archive = (await this.adapter.get<Record<string, unknown>[]>(STORE_ARCHIVE_L5)) ?? [];
+        const compactedUids = targets.map((card) => card.uid);
+        const merged = [
+            ...records.filter((record) => compactedUids.indexOf(record.uid) < 0),
+            ...targets.map((card) => compactAncestorOf(card, archive.find((body) => body['id'] === card.uid) as CompactBody | undefined)),
+        ];
+        await this.adapter.set(STORE_COMPACT_ANCESTORS, merged);
+        await this.adapter.set(STORE_SPIRIT_CARDS, cards.filter((card) => compactedUids.indexOf(card.uid) < 0));
+        await this.adapter.set(STORE_ARCHIVE_L5, archive.filter((body) => compactedUids.indexOf(body['id'] as string) < 0));
+        return { compactedUids, ...compactFootprint(merged) };
+    }
+
     public async getAllSpiritCards(): Promise<SpiritCard[]> {
         return (await this.adapter.get<SpiritCard[]>(STORE_SPIRIT_CARDS)) ?? [];
     }
