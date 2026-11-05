@@ -1,0 +1,66 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_1458",
+      "id": "UI-1-0023",
+      "title": "重繪凌統名將立繪與專屬三節鎖棍頭像",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-11-05",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-11-05T21:24:35+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "重繪凌統名將立繪，採趙雲、關羽、張飛原始正式圖的高完成度二次元幻想手繪；保留青年窄橢圓臉、圓亮眼、細直眉、尖下巴與無鬚特徵，使用灰朱紅、石板灰與暖白個人配色；以紅繩三節鎖棍作獨有武器輪廓，服裝與衣帶收束，更新正式立繪、頭像及Cocos資源。",
+      "related": [
+        "UI-2-0119"
+      ],
+      "depends": [],
+      "acceptance": [
+        "高完成度二次元幻想手繪，避免寫實3D",
+        "青年窄橢圓臉、圓亮眼、細直眉、尖下巴、無鬚，與吳將其他四人明確區分",
+        "灰朱紅為基底，石板灰和暖白為第二色，延續既定色票",
+        "紅繩三節鎖棍為凌統專屬武器，三段棍身與短連節Q版仍易辨，且不與刀、槍、虎頭雙鉤重複",
+        "衣帶收束，無長飄帶；手指、武器、雙靴完整",
+        "正式立繪512x768透明，兩種256x256頭像，reviewed crop驗證通過",
+        "Cocos正式資產匯入有效並使用角色標準路徑"
+      ],
+      "deliverables": [
+        "凌統512x768正式立繪",
+        "凌統兩種256x256正式頭像",
+        "reviewed crop索引",
+        "凌統色票與專屬三節鎖棍紀錄",
+        "任務卡、manifest及Cocos驗證紀錄"
+      ],
+      "notes": "2026-11-05 | 狀態: in-progress | 驗證: 依吳將五人辨識度既有記錄與凌統色票／臉型方向建立工作範圍 | 變更: 接手凌統名將立繪與紅繩三節鎖棍專屬武器 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}
