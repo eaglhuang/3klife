@@ -9,7 +9,9 @@
  */
 
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
-import { Node, Camera } from 'cc';
+import { Node, Camera, UITransform, Widget } from 'cc';
+import { StrategistHudComposite } from '../../ui/components/StrategistHudComposite';
+import type { IStrategistHudLike } from '../../shared/interfaces/IBattleUIComponents';
 import { BoardRenderer } from './BoardRenderer';
 import { UnitRenderer } from './UnitRenderer';
 import { GAME_CONFIG } from '../../core/config/Constants';
@@ -117,6 +119,27 @@ export function ensureBattleLogPanel(
     throw new Error('[BattleScene] ensureBattleLogPanel: Canvas/BattleLogPanel 缺少 IBattleLogLike；不允許執行期自動補件');
   }
 
+  return panel;
+}
+
+/**
+ * 建立戰場的智謀條與軍師摘要條（PROG-2-1851）。
+ * 排在 HUD 之後、其他面板之前，結算等彈窗仍蓋在它上面。
+ */
+export function ensureStrategistHud(canvas: Node | null, hudNode: Node | null): IStrategistHudLike | null {
+  if (!canvas) return null;
+  const node = canvas.getChildByName('StrategistHud') ?? new Node('StrategistHud');
+  node.layer = canvas.layer;
+  if (!node.parent) node.parent = canvas;
+  const canvasSize = canvas.getComponent(UITransform);
+  const size = node.getComponent(UITransform) ?? node.addComponent(UITransform);
+  if (canvasSize) size.setContentSize(canvasSize.contentSize);
+  const widget = node.getComponent(Widget) ?? node.addComponent(Widget);
+  widget.isAlignTop = widget.isAlignBottom = widget.isAlignLeft = widget.isAlignRight = true;
+  widget.top = widget.bottom = widget.left = widget.right = 0;
+  if (hudNode?.parent === canvas) node.setSiblingIndex(hudNode.getSiblingIndex() + 1);
+  const panel = node.getComponent(StrategistHudComposite) ?? node.addComponent(StrategistHudComposite);
+  void panel.ensureMounted();
   return panel;
 }
 

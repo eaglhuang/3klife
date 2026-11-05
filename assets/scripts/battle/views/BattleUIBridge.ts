@@ -14,7 +14,6 @@ import { tallyLegendDeployLine } from '../../core/systems/TallyScripts';
 import { DELEGATE_OFF_LINE, DELEGATE_UNAVAILABLE_LINE, delegateOnLine, FOOD_EMPTY_LINE } from '../../core/systems/SortieDeployScripts';
 import { wisdomMeterText, WISDOM_SURGE_LOG } from '../shared/WisdomMeter';
 import { strategistHudInputOf } from '../shared/StrategistHudSource';
-import { strategistHudLogLine } from '../../core/systems/StrategistHud';
 import { selfBurstNoticeText, type SelfBurstChangedEvent } from '../shared/SelfBurstWindow';
 import { teamAuraNoticeText, type TeamAuraChangedEvent } from '../shared/TeamAura';
 import { teamRecoverNoticeText, type TeamRecoveredEvent } from '../shared/TeamRecover';
@@ -47,7 +46,8 @@ import { GeneralUnit } from '../../core/models/GeneralUnit';
 import { BattleController } from '../controllers/BattleController';
 import type { BattleResult } from '../BattleTypes';
 import { BattleSpecialActionTracker, specialActionDisplayName, toUnitHitObservation, type UnitDamagedPayload } from '../../core/systems/BattleSpecialActions';
-import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, IDeployRuntimeLike, IBattleScenePanelLike } from '../../shared/interfaces/IBattleUIComponents';
+import { strategistHudViewOf } from '../shared/StrategistHudView';
+import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, IDeployRuntimeLike, IBattleScenePanelLike, IStrategistHudLike } from '../../shared/interfaces/IBattleUIComponents';
 
 import { BATTLE_TURN_FLOW_TIMING, BATTLE_VISUAL_TIMING } from './BattlePresentationTiming';
 import { buildBattleSkillUsedMessage } from '../../shared/BattleSkillPresentation';
@@ -91,6 +91,7 @@ export interface BattleSceneContext {
   hud:               IBattleHUDLike | null;
   deployRuntime:     IDeployRuntimeLike | null;
   battleLogPanel:    IBattleLogLike | null;
+  strategistHud:     IStrategistHudLike | null;
   battleScenePanel:  IBattleScenePanelLike | null;
   boardRenderer:     BoardRenderer | null;
   unitRenderer:      UnitRenderer | null;
@@ -127,7 +128,7 @@ export interface BattleSceneContext {
 export function createBattleSceneContext(): BattleSceneContext {
   return {
     hud: null, deployRuntime: null, battleLogPanel: null,
-    battleScenePanel: null, boardRenderer: null, unitRenderer: null,
+    battleScenePanel: null, strategistHud: null, boardRenderer: null, unitRenderer: null,
     resultPopup: null, duelChallengePanel: null,
     ctrl: null, pg: null, eg: null, encounterId: null, teachingSpirit: null,
     isAdvancingTurn: false, isDuelPanelActive: false,
@@ -355,6 +356,17 @@ export class BattleUIBridge {
     if (!result || this._loadoutCheckedFor !== encounterId) return;
     this._loadoutGaps = result.gaps;
     this.appendLog(loadoutCheckLogLine(result));
+    this.syncStrategistHud();
+  }
+
+  /** 把智謀能量與軍師摘要推到戰場面板（PROG-2-1851），回傳摘要文字 */
+  public syncStrategistHud(): string {
+    const c = this.ctx;
+    const state = c.ctrl?.state;
+    if (!state) return '';
+    const view = strategistHudViewOf(strategistHudInputOf(state, this._loadoutGaps, services().session.intel), state.wisdomMeter);
+    c.strategistHud?.setView(view);
+    return view.summaryText;
   }
 
   private _onTurnPhaseChanged(snap: { turn: number; playerFood: number; phase?: TurnPhase }): void {
@@ -371,14 +383,15 @@ export class BattleUIBridge {
     if (state && state.wisdomTriggerCount > this._wisdomTriggersLogged) {
       this._wisdomTriggersLogged = state.wisdomTriggerCount;
       this.appendLog(WISDOM_SURGE_LOG);
+      c.strategistHud?.playSurge();
     }
     if (c.encounterId && c.pg && this._loadoutCheckedFor !== c.encounterId) {
       this._loadoutCheckedFor = c.encounterId;
       this._loadoutGaps = [];
       void this._runLoadoutCheck(c.encounterId, c.pg.tacticSlots.map(slot => slot.tacticId));
     }
-    // 軍師 HUD 摘要（關卡設計 §D-4，PROG-2-1744）：先寫進戰場日誌，內容與上回合相同時略過
-    const strategistLine = state ? strategistHudLogLine(strategistHudInputOf(state, this._loadoutGaps, services().session.intel)) : '';
+    // 軍師 HUD 摘要（關卡設計 §D-4，PROG-2-1744）：寫進戰場日誌，內容與上回合相同時略過；畫面同步見 syncStrategistHud
+    const strategistLine = this.syncStrategistHud();
     if (strategistLine && strategistLine !== this._lastStrategistLine) this.appendLog(strategistLine);
     this._lastStrategistLine = strategistLine;
     // 若仍在回合推進或單挑面板開啟中，暫時不要顯示我方回合提示或切回 deployHint

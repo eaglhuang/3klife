@@ -1,0 +1,102 @@
+{
+  "id": "strategist-hud-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "StrategistHudRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "SummaryBand",
+        "id": "summaryBand",
+        "widget": {
+          "top": 145,
+          "hCenter": 0
+        },
+        "width": 900,
+        "height": 34,
+        "skinSlot": "strategist.band.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "SummaryText",
+            "id": "summaryText",
+            "widget": {
+              "top": 2,
+              "bottom": 2,
+              "left": 12,
+              "right": 12
+            },
+            "text": "",
+            "styleSlot": "strategist.label.summary"
+          }
+        ]
+      },
+      {
+        "type": "container",
+        "name": "WisdomColumn",
+        "widget": {
+          "top": 165,
+          "left": 318
+        },
+        "width": 90,
+        "height": 372,
+        "children": [
+          {
+            "type": "panel",
+            "name": "WisdomTrack",
+            "id": "wisdomTrack",
+            "widget": {
+              "top": 30,
+              "hCenter": 0
+            },
+            "width": 18,
+            "height": 342,
+            "skinSlot": "strategist.wisdom.track",
+            "children": [
+              {
+                "type": "panel",
+                "name": "WisdomFill",
+                "id": "wisdomFill",
+                "widget": {
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 0,
+                "skinSlot": "strategist.wisdom.fill"
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "WisdomText",
+            "id": "wisdomText",
+            "widget": {
+              "top": 0,
+              "hCenter": 0
+            },
+            "width": 90,
+            "height": 24,
+            "text": "",
+            "styleSlot": "strategist.label.wisdom"
+          }
+        ]
+      }
+    ]
+  }
+}

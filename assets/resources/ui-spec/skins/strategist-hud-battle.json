@@ -1,0 +1,13 @@
+{
+  "id": "strategist-hud-battle",
+  "version": 1,
+  "bundle": "battle_ui",
+  "atlasPolicy": "battle_ui",
+  "slots": {
+    "strategist.band.bg": { "kind": "color", "color": "surfaceInkBlue", "alpha": 190 },
+    "strategist.wisdom.track": { "kind": "color", "color": "backgroundNavyAlt", "alpha": 200 },
+    "strategist.wisdom.fill": { "kind": "color", "color": "accentGoldCta", "alpha": 255 },
+    "strategist.label.summary": { "kind": "label-style", "font": "fonts/newsreader/newsreader", "fontSize": 18, "lineHeight": 24, "color": "textPrimary", "overflow": "SHRINK", "horizontalAlign": "CENTER", "verticalAlign": "CENTER" },
+    "strategist.label.wisdom": { "kind": "label-style", "font": "fonts/newsreader/newsreader", "fontSize": 15, "lineHeight": 20, "color": "textAccent", "isBold": true, "overflow": "SHRINK", "horizontalAlign": "CENTER", "verticalAlign": "CENTER" }
+  }
+}

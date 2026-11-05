@@ -1,0 +1,13 @@
+{
+  "id": "strategist-hud-screen",
+  "version": 1,
+  "uiId": "StrategistHud",
+  "layer": "Game",
+  "bundle": "battle_ui",
+  "layout": "strategist-hud-main",
+  "skin": "strategist-hud-battle",
+  "validation": {
+    "devices": ["phone-16-9", "phone-19_5-9"],
+    "allowMissingSkin": true
+  }
+}

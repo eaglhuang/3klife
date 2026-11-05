@@ -33,7 +33,7 @@ import { TurnFlowManager } from './TurnFlowManager';
 import { setupCameraForBoard, initSceneBackground, addBackgroundSwitchUI, resolveSceneBackgroundId } from './BattleSceneSetup';
 import { resolveAiDifficulty } from '../../core/systems/AiSpCharge';
 import { openingAiLogLinesOf } from '../../core/systems/AiEntranceLines';
-import { ensureDeployPanelRuntime, ensureHUD, ensureBattleLogPanel, ensureBattleScenePanel, ensureBoardRenderer, ensureUnitRenderer } from './BattleUIInitializer';
+import { ensureDeployPanelRuntime, ensureHUD, ensureBattleLogPanel, ensureStrategistHud, ensureBattleScenePanel, ensureBoardRenderer, ensureUnitRenderer } from './BattleUIInitializer';
 
 const { ccclass, property } = _decorator;
 
@@ -290,6 +290,7 @@ export class BattleScene extends Component {
       this.sceneContext.deployRuntime = this._deployPanelRuntime;
       this.sceneContext.battleLogPanel = this.battleLogPanel;
       this.sceneContext.battleScenePanel = this.battleScenePanel;
+      this.sceneContext.strategistHud = ensureStrategistHud(canvas, (this.hud as any)?.node ?? null);
       this.sceneContext.boardRenderer = this.boardRenderer;
       this.sceneContext.unitRenderer = this.unitRenderer;
       this.sceneContext.resultPopup = this.resultPopup;
@@ -310,6 +311,7 @@ export class BattleScene extends Component {
       });
       this.sceneContext.skillTargetingFlow = this.skillTargetingFlow;
       this.battleUIBridge = new BattleUIBridge(this.sceneContext, this);
+      this.battleUIBridge.syncStrategistHud();
       this.turnFlowManager = new TurnFlowManager(this.sceneContext, this, this.battleUIBridge);
       this.sceneFlow = new BattleSceneFlow({
         getCtrl: () => this.ctrl,
