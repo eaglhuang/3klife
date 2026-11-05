@@ -169,7 +169,7 @@ import type { NurtureAwakeningHooks } from '../services/NurtureService';
 import { buildStarterRoster, STARTER_CORE_GENERAL_ID, StarterRosterOptions } from '../services/StarterRosterService';
 import { resolveFactorColor } from '../systems/FactorInheritance';
 import { insertSpiritCard, replaceSpiritCard, setPrimarySpiritCard, unequipSpiritCard, type SpiritSlotFlowResult } from '../systems/SpiritSlotFlow';
-import type { FactorColor, FactorDictionary } from '../systems/FactorInheritance';
+import type { FactorColor, FactorDefinition, FactorDictionary } from '../systems/FactorInheritance';
 import { visibleFactorColors as factorColorsVisibleAtLevel } from '../systems/FactorMask';
 import { specialActionFactorTags } from '../systems/BattleSpecialActions';
 import { applyDuplicatePull, RebirthPullResult } from '../systems/Rebirth';
@@ -205,6 +205,7 @@ import { buildEraResetEvent } from '../systems/EraReset';
 import { buildQuarterlyBattleReportRows, type QuarterlyBattleReportRow } from '../systems/RetireReviewCopy';
 import { withLifeImprints } from '../systems/LifeImprint';
 import { clanMembersOf, clanStatsOf, clanTierOf, normalizeClanTier, type ClanTier } from '../systems/ClanTier';
+import { forgeCustomGold, mergeCustomFactors, normalizeCustomFactors } from '../systems/CustomGoldFactor';
 import { seasonModifiersOf } from '../systems/SeasonModifiers';
 import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, getTacticTpCost, TALLY_SHORTAGE_FOOD_THRESHOLD, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
 import { EMPTY_PERFORMANCE, type BattlePerformance, type BattleRecordLike } from '../systems/BattleRecordStats';
@@ -336,6 +337,8 @@ export const GAME_SESSION_EVENTS = {
     LifeImprinted: 'game-session-life-imprinted',
     /** payload: ClanTierUpPayload（門第升格；季度檢定時發出） */
     ClanTierUp: 'game-session-clan-tier-up',
+    /** payload: CustomGoldFactorBornPayload（退役時凝練宗脈家傳金因子） */
+    CustomGoldFactorBorn: 'game-session-custom-gold-factor-born',
     /** payload: { childId, injectedFactorId, consumed }（退役時因子媒介注入，PROG-2-0865） */
     GeneCatalystInjected: 'game-session-gene-catalyst-injected',
     /** payload: SpiritCard（每位死亡武將一張） */
@@ -537,6 +540,13 @@ export interface ClanTierUpPayload {
     newTier: ClanTier;
 }
 
+export interface CustomGoldFactorBornPayload {
+    generalId: string;
+    name: string;
+    ep: number;
+    factorName: string;
+}
+
 export interface LifeImprintedPayload {
     generalId: string;
     name: string;
@@ -602,6 +612,9 @@ export class GameSession {
     private _autoSave = true;
     private _nurture: NurtureStatePort | null = null;
     private _factorDictionary: FactorDictionary | undefined;
+    private _baseFactorDictionary: FactorDictionary | undefined;
+    /** 玩家自創的因子定義（G4 §E #2）；隨存檔保存，併進 _factorDictionary */
+    private _customFactors: FactorDefinition[] = [];
     private _deck: string[] = [];
     private _leadGeneralId: string | null = null;
     /** 出征支援（參謀官 / 後勤官）；暫定只存在本次遊玩，不寫存檔 */
@@ -1702,7 +1715,13 @@ export class GameSession {
     }
 
     public setFactorDictionary(dictionary: FactorDictionary | undefined): void {
-        this._factorDictionary = dictionary;
+        this._baseFactorDictionary = dictionary;
+        this._factorDictionary = mergeCustomFactors(dictionary, this._customFactors);
+    }
+
+    private _setCustomFactors(custom: FactorDefinition[]): void {
+        this._customFactors = custom;
+        this._factorDictionary = mergeCustomFactors(this._baseFactorDictionary, custom);
     }
 
         /** 開新局：時鐘與卡組歸零，名冊不動（由開場流程決定初始武將） */
@@ -1774,6 +1793,7 @@ export class GameSession {
         // 上一局的進度不能帶進新局（PROG-2-0660）
         this._soulFragments = emptySoulFragmentLedger();
         this._clanTier = 0;
+        this._setCustomFactors([]);
         this._pendingLifespanEvents = [];
         this._bondPoints = 0;
         this._borrowLedger = { records: [] };
@@ -3789,7 +3809,8 @@ export class GameSession {
         const retiredSubjects = this._journalSubjects([generalId]);
         // 生平印記要在產生教官卡前寫入，卡片的因子才帶得到（G2 §E #7）
         const retireImprints = this._imprintLives(this._roster.getAll(), [generalId]);
-        const result = await this._lifecycle.retireGeneral(retireImprints.roster, generalId, this._clock.state);
+        const forged = this._forgeCustomGold(retireImprints.roster, generalId);
+        const result = await this._lifecycle.retireGeneral(forged.roster, generalId, this._clock.state);
         let roster = result.roster;
         let injection: { childId: string; injectedFactorId: string | null; consumed: boolean } | null = null;
         if (childId !== undefined) {
@@ -3822,8 +3843,21 @@ export class GameSession {
         this._recordEventJournal('GENERAL_RETIRE', retiredSubjects);
         this._emit(GAME_SESSION_EVENTS.GeneralRetired, result.card);
         this._emitLifeImprints(retireImprints.imprinted);
+        if (forged.born) this._emit(GAME_SESSION_EVENTS.CustomGoldFactorBorn, forged.born);
         if (injection) this._emit(GAME_SESSION_EVENTS.GeneCatalystInjected, injection);
         return result.card;
+    }
+
+    /** 退役時凝練宗脈家傳金因子（G4 §E #2）：要在產生教官卡前寫入，卡片的因子才帶得到 */
+    private _forgeCustomGold(roster: GeneralConfig[], generalId: string): { roster: GeneralConfig[]; born: CustomGoldFactorBornPayload | null } {
+        const target = roster.find((general) => general.id === generalId);
+        const forged = target ? forgeCustomGold(target, this._factorDictionary, this._clanTier) : null;
+        if (!target || !forged) return { roster, born: null };
+        this._setCustomFactors([...this._customFactors, forged.definition]);
+        return {
+            roster: roster.map((general) => (general.id === generalId ? forged.general : general)),
+            born: { generalId, name: target.name, ep: target.ep ?? 0, factorName: forged.definition.displayName ?? forged.definition.id },
+        };
     }
 
     /** 蓋棺論定：把生平印記寫進這些武將，回傳新名冊與要發的事件內容（G2 §E #7） */
@@ -4367,6 +4401,7 @@ export class GameSession {
             friendBorrowLedger: { records: [...this._borrowLedger.records] },
             soulFragments: { ...this._soulFragments },
             clanTier: this._clanTier,
+            customFactors: this._customFactors.map((def) => ({ ...def })),
             femaleSystem: this.femaleSystemState,
             ...(this._travel ? { travelCountdown: { ...this._travel } } : {}),
             sortiePresets: { ...this._sortiePresets },
@@ -4533,6 +4568,7 @@ export class GameSession {
         this._borrowLedger = normalizeBorrowLedger(snapshot.friendBorrowLedger);
         this._soulFragments = normalizeSoulFragmentLedger(snapshot.soulFragments);
         this._clanTier = normalizeClanTier(snapshot.clanTier);
+        this._setCustomFactors(normalizeCustomFactors(snapshot.customFactors));
         this._deck = [...snapshot.deck];
         this._leadGeneralId = snapshot.leadGeneralId ?? null;
         this._sortieSupport = { strategistUid: null, deputyUid: null };

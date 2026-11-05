@@ -19,6 +19,8 @@ import { normalizeRivalWorld, type RivalWorld } from '../systems/RivalNations';
 import { normalizeInventory, PlayerInventory } from '../systems/PlayerInventory';
 import { normalizeBondPoints } from '../systems/OverflowBond';
 import { normalizeClanTier, type ClanTier } from '../systems/ClanTier';
+import { normalizeCustomFactors } from '../systems/CustomGoldFactor';
+import type { FactorDefinition } from '../systems/FactorInheritance';
 import { normalizeOnboardingState, OnboardingState } from '../systems/OnboardingTutorial';
 import { normalizeOpeningLetterState, OpeningLetterState } from '../systems/OpeningLetter';
 import { normalizeMilitaryReserve, MilitaryReserve } from '../systems/MilitaryReserve';
@@ -263,6 +265,8 @@ export interface PlayerSaveSnapshot {
     soulFragments?: SoulFragmentLedger;
     /** 門第階級；後加的選填欄位，舊檔讀回為布衣寒門（PROG-2-1795） */
     clanTier?: ClanTier;
+    /** 玩家自創的因子定義（G4 §E #2）；舊存檔沒有此欄位 */
+    customFactors?: FactorDefinition[];
     /** 趕路（回合制）；後加的選填欄位，舊檔讀回為沒有趕路（PROG-2-0475） */
     travelCountdown?: TravelCountdown;
     /** 新手開場趕路倒數（OPEN-11）：絕對時間戳，離線時間自動計入；只在趕路中寫入，舊檔沒有時為 null */
@@ -575,6 +579,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.friendBorrowLedger !== undefined ? { friendBorrowLedger: normalizeBorrowLedger(snapshot.friendBorrowLedger) } : {}),
         ...(snapshot.soulFragments !== undefined ? { soulFragments: normalizeSoulFragmentLedger(snapshot.soulFragments) } : {}),
         ...(snapshot.clanTier !== undefined ? { clanTier: normalizeClanTier(snapshot.clanTier) } : {}),
+        ...(snapshot.customFactors !== undefined ? { customFactors: normalizeCustomFactors(snapshot.customFactors) } : {}),
         ...(normalizeTravelCountdown(snapshot.travelCountdown) ? { travelCountdown: normalizeTravelCountdown(snapshot.travelCountdown)! } : {}),
         ...(normalizeCountdownState(snapshot.countdown) ? { countdown: normalizeCountdownState(snapshot.countdown)! } : {}),
         ...(snapshot.gachaPity !== undefined ? { gachaPity: normalizeGachaPityBook(snapshot.gachaPity) } : {}),

@@ -279,6 +279,7 @@
   "ui.retire_review.script": "Looking back: {0} wins, {1} enemies slain, {2} guardian power. No regrets.",
   "ui.retire_review.report": "Battle damage: vitality {0}%",
   "ui.retire_review.farewell": "\"The old steed in its stall still dreams of a thousand li.\"",
+  "ui.retire_review.farewell_gold": "\"All I gained in a lifetime of war and rule (EP {0}) I now distill into our clan's legacy: [{1}]! Let every descendant guard it well!\"",
   "ui.retire_review.farewell_tutor": "\"These old bones can no longer ride to war. Let me teach at the clan school and pass a lifetime of battle (EP {0}) on to my grandchildren!\"",
   "ui.retire_review.grant_scroll": "Got Bamboo Slip ×1",
   "ui.year_report.title": "Year {0} Annual Summary",
