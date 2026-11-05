@@ -1,9 +1,10 @@
 // @spec-source → DC-3-0004 | 資料中心架構規格書.md §2.3
-import { _decorator, Button, Component, Label, Node } from 'cc';
+import { _decorator, Button, Component, Label, Node, Sprite } from 'cc';
 import { BloodlineGraph, PEDIGREE_SLOTS, type Pedigree, type PedigreeSlot } from '../../core/services/BloodlineGraph';
 import { resolveFactorColor, type FactorColor } from '../../core/systems/FactorInheritance';
 import { services } from '../../core/managers/ServiceLoader';
-import { ancestorCardText, buildBloodlineTreeSlots, BloodlineTreeSlot, UNKNOWN_ANCESTOR_CARD_TEXT } from '../../core/systems/BloodlineTreeSlots';
+import { ancestorAvatarId, ancestorCardText, buildBloodlineTreeSlots, BloodlineTreeSlot, TREE_CARD_AVATAR, UNKNOWN_ANCESTOR_CARD_TEXT } from '../../core/systems/BloodlineTreeSlots';
+import { loadGeneralAvatar } from '../core/GeneralAvatarLoader';
 import { treeCardNodeName } from '../../core/systems/BloodlineTreeBinding';
 import { buildNodeCards } from '../../core/systems/BloodlineNodeCards';
 import { redrawBloodlineTreeConnections } from '../components/BloodlineTreeLines';
@@ -49,6 +50,8 @@ export class BloodlineTreePanel extends Component {
     onCardPeek: ((view: AncestorPeekView) => void) | null = null;
     /** 簡化／專家顯示模式；切換按鈕尚未上版面前維持 expert（PROG-2-1731） */
     private _viewMode: BloodlineTreeViewMode = 'expert';
+    /** 頭像是非同步載入；切換武將後，上一位還沒載完的頭像不能蓋上來 */
+    private _avatarSeq = 0;
 
     get viewMode(): BloodlineTreeViewMode {
         return this._viewMode;
@@ -87,6 +90,7 @@ export class BloodlineTreePanel extends Component {
 
         // PEDIGREE_SLOTS 排列：index 0-1 = 父母、2-5 = 祖父母、6-13 = 曾祖父母
         const pedigree = graph.getPedigree(uid);
+        this._avatarSeq++;
         const slots = buildBloodlineTreeSlots(PEDIGREE_SLOTS.map((slot) => pedigree[slot]));
 
         this._fillContainer(this.gen3Container, 3, slots.gen3, graph);
@@ -99,6 +103,7 @@ export class BloodlineTreePanel extends Component {
 
     /** 清除所有祖先樹標籤（切換武將時呼叫） */
     clear(): void {
+        this._avatarSeq++;
         const slots = buildBloodlineTreeSlots([]);
         this._fillContainer(this.gen3Container, 3, slots.gen3, BloodlineGraph.getInstance());
         this._fillContainer(this.gen2Container, 2, slots.gen2, BloodlineGraph.getInstance());
@@ -154,13 +159,32 @@ export class BloodlineTreePanel extends Component {
             const uid = slots[i].uid;
             const person = uid ? graph.getPerson(uid) : null;
             const cardNode = container.getChildByPath(treeCardNodeName(row, i));
-            if (cardNode) this._bindPeek(cardNode, person, this._colorOfPerson(person));
+            if (cardNode) {
+                this._bindPeek(cardNode, person, this._colorOfPerson(person));
+                this._bindAvatar(cardNode, person);
+            }
             const txtNode = container.getChildByPath(`${treeCardNodeName(row, i)}/Txt`);
             if (!txtNode) continue;
             const label = txtNode.getComponent(Label);
             if (!label) continue;
             label.string = person ? this._formatAncestorLabel(person) : UNKNOWN_ANCESTOR_CARD_TEXT;
         }
+    }
+
+    /** 版面沒有 Avatar 節點的卡片（結緣畫面的舊版樹）不處理 */
+    private _bindAvatar(cardNode: Node, person: { uid: string; is_virtual?: boolean } | null): void {
+        const holder = cardNode.getChildByName(TREE_CARD_AVATAR.nodeName);
+        if (!holder) return;
+        const id = ancestorAvatarId(person);
+        holder.active = !!id;
+        cardNode.getChildByName('Txt')?.setPosition(0, id ? TREE_CARD_AVATAR.textOffsetY : 0, 0);
+        const sprite = holder.getComponentInChildren(Sprite);
+        if (!id || !sprite) return;
+        sprite.spriteFrame = null;
+        const seq = this._avatarSeq;
+        void loadGeneralAvatar(id).then((frame) => {
+            if (frame && seq === this._avatarSeq && sprite.isValid) sprite.spriteFrame = frame;
+        });
     }
 
     /** 點擊卡片發出 peek；removeAll 避免重新填充時疊加多個回呼 */

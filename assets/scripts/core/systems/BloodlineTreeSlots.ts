@@ -38,6 +38,14 @@ export function pedigreeRowLabel(generation: string, seats: number, weight: numb
     return `${generation}\n(${seats}人)\n每席 ${weight.toFixed(2)}`;
 }
 
+/** G2 §E #1 祖先卡頭像的排版：頭像在上、文字下移；沒有頭像時文字置中 */
+export const TREE_CARD_AVATAR = { nodeName: 'Avatar', size: 32, y: 30, textOffsetY: -16 } as const;
+
+/** 哪個 id 要載頭像：虛擬祖先與佚名祖位沒有畫像，回傳 null */
+export function ancestorAvatarId(person: { uid: string; is_virtual?: boolean } | null | undefined): string | null {
+    return person && !person.is_virtual ? person.uid : null;
+}
+
 /** 祖先卡文字：姓名、EP、主因子；沒有主因子就不佔一行 */
 export function ancestorCardText(name: string, ep: number, mainFactorName?: string | null): string {
     return [name, `EP ${Math.round(ep)}`, mainFactorName].filter((line) => !!line).join('\n');
