@@ -73,6 +73,16 @@
       "isBold": true,
       "overflow": "SHRINK"
     },
+    "bonding.label.seat": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 16,
+      "lineHeight": 20,
+      "color": "secondaryLight",
+      "overflow": "SHRINK",
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
     "bonding.label.meta": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
