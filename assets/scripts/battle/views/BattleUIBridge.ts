@@ -802,7 +802,7 @@ export class BattleUIBridge {
     void services().session.recordBattle([pgId], result, { specialActions, sortie, performance: { [pgId]: performance }, stageId, deployedTallyIds, vitalityAfterBattle, hpRatioAfterBattle, stageSalvage: this.ctx.ctrl?.state.stageSalvage, teachingSpirit: this.ctx.teachingSpirit }).then((settlement) => {
       const entry = settlement.entries[0];
       if (entry) {
-        this.appendLog(`${this.ctx.pg?.name ?? pgId} 精力 ${entry.vitalityBefore}→${entry.vitalityAfter}，功勳 +${entry.meritGained}`);
+        this.appendLog(`${this.ctx.pg?.name ?? pgId} 精力 ${entry.vitalityBefore}→${entry.vitalityAfter}，功勳 +${entry.meritGained}${entry.epGained > 0 ? `，EP +${entry.epGained}` : ''}`);
         const milestoneLines = entry.newMilestones.flatMap((milestone) =>
           milestoneAnnouncementLines(milestone, this.ctx.pg?.name ?? pgId, key => services().i18n.t(key)));
         for (const line of milestoneLines) this.appendLog(line);

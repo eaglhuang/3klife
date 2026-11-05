@@ -23,6 +23,7 @@ import type { NurtureRating } from './NurtureSystem';
 import { EMPTY_PERFORMANCE, guardianPowerOf, newlyReachedMilestones, type BattlePerformance } from './BattleRecordStats';
 import { isTrialMercenary } from './PrisonerOfWar';
 import { accumulateSeasonBattle, rolloverSeason, type SeasonStats } from './BattleSeasonStats';
+import { careerEpGain, withCareerEp } from './CareerEp';
 
 // ── 常數（規格有的標出處；沒有的標「暫定」）────────────────────────────────
 
@@ -249,6 +250,10 @@ export interface BattleSettlementEntry {
     performance?: BattlePerformance;
     /** 本場新達成的里程碑 id */
     newMilestones: string[];
+    /** 本場實得 EP（達上限或沒有 EP 資料時為 0） */
+    epGained: number;
+    /** 結算後的 EP；沒有 EP 資料時為 undefined */
+    epAfter?: number;
 }
 
 export interface BattleSettlement {
@@ -310,9 +315,10 @@ export function settleBattle(roster: readonly GeneralConfig[], request: SettleBa
         }
         const newMilestones = newlyReachedMilestones(record);
         record.milestones = [...(record.milestones ?? []), ...newMilestones];
-        entries.push({ generalId: g.id, outcome, vitalityBefore: before, vitalityAfter: after, meritGained: merit, record, performance, newMilestones });
+        const career = withCareerEp(g, careerEpGain(outcome, newMilestones.length));
+        entries.push({ generalId: g.id, outcome, vitalityBefore: before, vitalityAfter: after, meritGained: merit, record, performance, newMilestones, epGained: career.gained, epAfter: career.general.ep });
         const updated: BattleRosterGeneral = {
-            ...g,
+            ...career.general,
             vitality: after,
             maxVitality: maxVitalityOf(g),
             battleRecord: record,

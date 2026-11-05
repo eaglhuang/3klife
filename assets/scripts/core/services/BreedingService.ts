@@ -134,7 +134,10 @@ export class BreedingService {
         return PEDIGREE_SLOTS.map((slot) => {
             const uid = pedigree[slot];
             const person = uid ? this._graph.getPerson(uid) : null;
-            return person ? { name: person.name, ep: person.ep_base } : null;
+            if (!person) return null;
+            // 登記血統時的 EP 只是出生值；還在名冊的人用目前的 EP
+            const current = this._roster.getAll().find((general) => general.id === uid)?.ep;
+            return { name: person.name, ep: current ?? person.ep_base };
         });
     }
 
