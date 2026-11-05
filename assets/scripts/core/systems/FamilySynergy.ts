@@ -7,6 +7,7 @@
  * 暫定（可逆）：規格沒定「成材」的門檻，這裡用地方豪族同一條 EP 60。
  * 暫定（可逆）：規格公式印的分母 0.30 與它自己的例子不合（4/4、5/6、6/8 都寫滿額，而 0.30 下 5/6 只有 83%、6/8 只有 67%），
  * 這裡用 0.20，規格列出的例子全部成立。
+ * 暫定（可逆）：§I 的「提親禮金折扣」目前沒有玩家出錢提親的流程，名門上門時改為加厚聘禮；累計 8 名成材才稱百年世交。
  *
  * Unity 對照：像存在 ScriptableObject 的環形緩衝區，用一個 byte 當位元遮罩。
  */
@@ -23,6 +24,9 @@ const QUALITY_SPAN = 0.2;
 const WINDOW_MASK = (1 << SYNERGY_WINDOW) - 1;
 /** 世交太傅伴讀的修業效率上限（§F-2 作用面限制） */
 export const SYNERGY_TUTOR_MAX_BONUS = 0.15;
+export const CENTURY_ALLIANCE_QUALIFIED = 8;
+const ALLIANCE_GIFT_PER_QUALIFIED = 0.05;
+const ALLIANCE_GIFT_MAX_RATE = 0.5;
 
 export interface FamilyPairRecord {
     /** Recent_8_Bitmap：最低位是最新一名，1 為成材 */
@@ -91,6 +95,27 @@ export function finalizeAdultChildren(ledger: FamilySynergyLedger, roster: reado
 /** 滿額相性的世家數，給 G4 高門檢定 */
 export function fullSynergyAlliesOf(ledger: FamilySynergyLedger): number {
     return Object.keys(ledger.pairs).filter((key) => synergyKOf(ledger.pairs[key]) >= 1).length;
+}
+
+/** 兩家累計成材人數；不影響 K */
+export function lifetimeQualifiedOf(family: string, ledger: FamilySynergyLedger | undefined): number {
+    return ledger?.pairs[familyPairKey(PLAYER_FAMILY_UID, family)]?.lifetimeQualified ?? 0;
+}
+
+export function allianceGiftBonus(baseGold: number, lifetimeQualified: number): number {
+    return Math.round(baseGold * Math.min(ALLIANCE_GIFT_MAX_RATE, ALLIANCE_GIFT_PER_QUALIFIED * lifetimeQualified));
+}
+
+export function isCenturyAlliance(lifetimeQualified: number): boolean {
+    return lifetimeQualified >= CENTURY_ALLIANCE_QUALIFIED;
+}
+
+/** 結緣畫面用的短稱號；未達門檻時回傳 null */
+export function centuryAllianceTag(father: { familyUid?: string }, mother: { familyUid?: string }, ledger: FamilySynergyLedger): string | null {
+    const family = father.familyUid ?? mother.familyUid;
+    if (!family) return null;
+    const total = lifetimeQualifiedOf(family, ledger);
+    return isCenturyAlliance(total) ? `百年世交：累計成材 ${total} 名` : null;
 }
 
 /** UI_G3_SYNERGY_K_WINDOW；雙親都不是聯姻名門時回傳 null。合譜與太傅還沒做，先不寫規格句尾的括號 */

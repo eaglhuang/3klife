@@ -26,7 +26,7 @@ import { factorMaskLabels } from '../../core/systems/FactorMask';
 import { factorStageText } from '../../core/systems/FactorVisibility';
 import { matchRumorLine, sameSurnameNote, matchesRumorRoute, nextRumorRoute, RumorRoute, rumorRouteFiltered, rumorRouteName } from '../../core/systems/MatchRumor';
 import { yuedanFiltered, yuedanList, yuedanRevealLine } from '../../core/systems/YuedanReview';
-import { synergyWindowLine, type FamilySynergyLedger } from '../../core/systems/FamilySynergy';
+import { centuryAllianceTag, synergyWindowLine, type FamilySynergyLedger } from '../../core/systems/FamilySynergy';
 import { compactCeremonyLine, kinWarningLine } from '../../core/systems/BondingStoryLines';
 import { compactCostFor, compactFamilyOf, compactSynergyFull, heritageFactorsOf, sharedFactorsOf } from '../../core/systems/FamilyCompact';
 import { epContribLine } from '../../core/systems/EpLegacyBonus';
@@ -447,6 +447,8 @@ export class BondingSetupController {
         if (fatigueForecast) texts.inbreedingLabel += `｜${fatigueForecast}`;
         const diversity = this._deps.breeding.diversityOf?.(father.id, mother.id) ?? 1;
         if (diversity < 1) texts.inbreedingLabel += `｜${diversityLine(diversity)}`;
+        const allianceTag = ledger ? centuryAllianceTag(father as { familyUid?: string }, mother as { familyUid?: string }, ledger) : null;
+        if (allianceTag) texts.inbreedingLabel += `｜${allianceTag}`;
         const kinTargets = (this._deps.breeding.kinPurificationTargets?.(father.id, mother.id) ?? []).filter((target) => (target.gene.discoveryLevel ?? 1) <= level);
         const kinHint = kinPurificationHint(kinTargets);
         // 通知欄與上限列在同一位置，有通知時先讓位

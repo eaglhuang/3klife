@@ -7,7 +7,7 @@
  *
  * Unity 對照：MVP 的 Presenter。按鈕 onClick 只呼叫 Respond，畫面層拿 GetView() 一次刷新。
  */
-import { marriageAcceptLabel, marriageProposalLine, marriageSuitorLine, type MarriageProposal } from '../../core/systems/MarriageProposal';
+import { marriageAcceptLabel, marriageGiftLine, marriageProposalLine, marriageSuitorLine, type MarriageProposal } from '../../core/systems/MarriageProposal';
 
 export interface MarriageProposalPopupView {
     texts: Record<string, string>;
@@ -57,7 +57,7 @@ export class MarriageProposalPopupController {
                 mpEmptyHint: '目前沒有上門提親的名門。',
                 mpLine: proposal ? marriageProposalLine(proposal) : '',
                 mpSuitor: proposal ? marriageSuitorLine(proposal) : '',
-                mpGift: proposal ? `聘禮：黃金 ${proposal.giftGold}` : '',
+                mpGift: proposal ? marriageGiftLine(proposal) : '',
                 mpNotice: this._notice,
                 acceptMpLabel: proposal ? marriageAcceptLabel(proposal) : '應允',
                 declineMpLabel: '婉拒',

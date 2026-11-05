@@ -11,6 +11,7 @@
 import type { GeneralConfig, GeneralGeneConfig } from '../models/GeneralUnit';
 import { BREEDING_MIN_AGE, epRatingLabel, isFemale, type BreedingGeneral } from './BreedingSystem';
 import type { ClanTier } from './ClanTier';
+import { allianceGiftBonus, isCenturyAlliance, lifetimeQualifiedOf, type FamilySynergyLedger } from './FamilySynergy';
 import { matchRumorLine, sameSurnameNote } from './MatchRumor';
 import { isYuedanCandidate } from './YuedanReview';
 
@@ -67,6 +68,10 @@ export interface MarriageProposal {
     suitor: MarriageSuitor;
     /** 對象帶進門的家學因子，與提親子弟相同，世交合譜才有得鎖（PROG-2-1813） */
     heirloom?: GeneralGeneConfig;
+    /** 世交加禮，已含在 giftGold 內（PROG-2-1830） */
+    allianceBonusGold?: number;
+    /** 擲出時已是百年世交 */
+    centuryAlliance?: boolean;
 }
 
 /** 提親子弟的最高星因子；金因子是自家宗脈，不算。星數最多 2★ */
@@ -84,7 +89,7 @@ export function marriageTargetOf(roster: readonly GeneralConfig[]): GeneralConfi
 }
 
 /** 門第不足或族中沒有適齡子嗣時回傳 null */
-export function rollMarriageProposal(roster: readonly GeneralConfig[], tier: ClanTier, id: string, random: () => number): MarriageProposal | null {
+export function rollMarriageProposal(roster: readonly GeneralConfig[], tier: ClanTier, id: string, random: () => number, ledger?: FamilySynergyLedger): MarriageProposal | null {
     if (tier < MARRIAGE_MARKET_MIN_TIER) return null;
     const target = marriageTargetOf(roster);
     if (!target) return null;
@@ -95,13 +100,18 @@ export function rollMarriageProposal(roster: readonly GeneralConfig[], tier: Cla
     const [commandery, surname] = pick(PROPOSAL_FAMILIES);
     const gender: '男' | '女' = isFemale(target) ? '男' : '女';
     const heirloom = heirloomOf(target);
+    const family = `${commandery}${surname}`;
+    const lifetime = lifetimeQualifiedOf(family, ledger);
+    const allianceBonusGold = allianceGiftBonus(profile.giftGold, lifetime);
     return {
         ...(heirloom ? { heirloom } : {}),
+        ...(allianceBonusGold > 0 ? { allianceBonusGold } : {}),
+        ...(isCenturyAlliance(lifetime) ? { centuryAlliance: true } : {}),
         id,
         targetId: target.id,
         targetName: target.name,
-        family: `${commandery}${surname}`,
-        giftGold: profile.giftGold,
+        family,
+        giftGold: profile.giftGold + allianceBonusGold,
         suitor: {
             name: `${surname}${pick(GIVEN_NAMES[gender])}`,
             gender,
@@ -139,7 +149,11 @@ export function buildSuitorGeneral(proposal: MarriageProposal): GeneralConfig {
 }
 
 export function marriageProposalLine(proposal: MarriageProposal): string {
-    return `${proposal.family}氏遣媒人攜重禮上門，願以${proposal.suitor.name}與${proposal.targetName}結親。`;
+    return `${proposal.centuryAlliance ? '百年世交' : ''}${proposal.family}氏遣媒人攜重禮上門，願以${proposal.suitor.name}與${proposal.targetName}結親。`;
+}
+
+export function marriageGiftLine(proposal: MarriageProposal): string {
+    return `聘禮：黃金 ${proposal.giftGold}${proposal.allianceBonusGold ? `（世交加禮 +${proposal.allianceBonusGold}）` : ''}`;
 }
 
 /** 只用鄉評公開的資訊（G4 §F-2 Layer 1） */
@@ -166,5 +180,9 @@ export function normalizeMarriageProposal(raw: unknown): MarriageProposal | null
     const numbers = [suitor.age, suitor.str, suitor.int, suitor.lea, suitor.pol, suitor.cha, suitor.luk, suitor.ep];
     if (!numbers.every(isStat)) return null;
     const heirloom = value.heirloom && typeof value.heirloom.id === 'string' ? { heirloom: { ...value.heirloom } } : {};
-    return { ...heirloom, id: value.id, targetId: value.targetId, targetName: value.targetName, family: value.family, giftGold: value.giftGold, suitor: { ...suitor } };
+    const alliance = {
+        ...(isStat(value.allianceBonusGold) ? { allianceBonusGold: value.allianceBonusGold } : {}),
+        ...(value.centuryAlliance === true ? { centuryAlliance: true } : {}),
+    };
+    return { ...heirloom, ...alliance, id: value.id, targetId: value.targetId, targetName: value.targetName, family: value.family, giftGold: value.giftGold, suitor: { ...suitor } };
 }
