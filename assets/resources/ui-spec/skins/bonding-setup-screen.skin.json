@@ -14,6 +14,12 @@
       "color": "backgroundDeep",
       "alpha": 246
     },
+    "bonding.seat.commonFrame": {
+      "kind": "color-rect",
+      "color": "#C8321E00",
+      "borderColor": "#E0392B",
+      "borderWidth": 3
+    },
     "bonding.slot.bg": {
       "kind": "color-rect",
       "color": "backgroundMid",

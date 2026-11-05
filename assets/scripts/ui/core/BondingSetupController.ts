@@ -15,6 +15,7 @@
  * 畫面層拿 GetView() 的 ViewModel 一次刷新 Text 與 Button.interactable。
  */
 import { kinshipLampLine } from '../../core/systems/BloodFatigue';
+import { PEDIGREE_SLOTS } from '../../core/services/BloodlineGraph';
 import { DIVERSITY_HINT } from '../../core/systems/DiversityFactor';
 import { HIDDEN_LINEAGE_COST, hiddenLineageLine, PEDIGREE_PROBE_COST, pedigreeProbeLine, STAT_PROBE_COST, statProbeLine } from '../../core/systems/PedigreeProbe';
 import { getSage } from '../../core/systems/SageDivination';
@@ -94,6 +95,8 @@ export function oracleTokenText(count: number): string {
     return `求籤令 ×${safe}`;
 }
 
+const ANCESTOR_SEAT_COUNT = PEDIGREE_SLOTS.length;
+
 export interface BondingView {
     fatherId: string | null;
     motherId: string | null;
@@ -114,7 +117,7 @@ export interface BondingSetupDeps {
     sageRemarks?: (fatherId: string, motherId: string) => SageRemark[];
     /** 求籤令數量（ORAC-05）；未提供時顯示 ×0 */
     oracleTokens?: () => number;
-    breeding: Pick<BreedingService, 'checkEligibility' | 'previewEp' | 'breed'> & Partial<Pick<BreedingService, 'ancestorSeats' | 'diversityOf' | 'kinPurificationTargets' | 'pedigreeProbe' | 'hiddenLineage'>>;
+    breeding: Pick<BreedingService, 'checkEligibility' | 'previewEp' | 'breed'> & Partial<Pick<BreedingService, 'ancestorSeats' | 'commonAncestorSeats' | 'diversityOf' | 'kinPurificationTargets' | 'pedigreeProbe' | 'hiddenLineage'>>;
     /** 譜牒密考（G4 §F-2 Layer 3）；未提供時不能密考 */
     isPedigreeProbed?: (fatherId: string, motherId: string) => boolean;
     probePedigree?: (fatherId: string, motherId: string) => Promise<boolean>;
@@ -396,6 +399,10 @@ export class BondingSetupController {
             bondEmptyHint: false,
         };
         for (let i = 0; i < SAGE_LINE_COUNT; i++) actives[`sageRow${i}`] = false;
+        for (let i = 0; i < ANCESTOR_SEAT_COUNT; i++) {
+            actives[`fatherTreeFrame${i}`] = false;
+            actives[`motherTreeFrame${i}`] = false;
+        }
         const enabled: Record<string, boolean> = {
             btnCloseBond: true,
             btnYuedanFilter: this._yuedanIds().length > 0,
@@ -430,6 +437,8 @@ export class BondingSetupController {
             : '模式：一般結緣 · 雙方仍具親傳資格';
 
         Object.assign(texts, this._seatTexts('fatherTree', father.id), this._seatTexts('motherTree', mother.id));
+        this._deps.breeding.commonAncestorSeats?.(father.id, mother.id).forEach((shared, i) => { actives[`fatherTreeFrame${i}`] = shared; });
+        this._deps.breeding.commonAncestorSeats?.(mother.id, father.id).forEach((shared, i) => { actives[`motherTreeFrame${i}`] = shared; });
 
         const eligibility = this._deps.breeding.checkEligibility(father.id, mother.id);
         const ep = this._deps.breeding.previewEp(father.id, mother.id);
