@@ -190,7 +190,7 @@ import { DEFAULT_POOL_ID as GACHA_GENERAL_POOL_ID, GachaFlowCoordinator, GACHA_S
 import { buildGachaPoolGuideLines } from '../core/GachaPoolGuidePresenter';
 import { bindGachaActions, GACHA_ACTION_NODES } from '../core/GachaActionBindings';
 import { formatGeneralDisplayName } from '../../core/models/GeneralTitle';
-import { treeGenerationVisible } from '../../core/systems/FamilyMilestone';
+import { clanPerkVisible, treeGenerationVisible } from '../../core/systems/FamilyMilestone';
 import { attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearButton, ensureGlobalDevOverlay, refreshCurrencyDisplay } from '../dev/GachaDevOverlay';
 import { DailyReportController } from '../core/DailyReportController';
 import { dailySubsidyText, economySubsidyBannerText } from '../core/DailySubsidyNotice';
@@ -4350,7 +4350,7 @@ export class LobbyScene extends Component {
         const general = this._characterDs3General;
         if (!hostNode || !general) return;
         const stage = services().session.displayStage;
-        const panel = ensureDs3BloodlineTree(hostNode, general.name, clanTitleText(CLAN_TIER_NAMES[services().session.clanTier], services().session.clanTradition, services().session.clanHall), stage);
+        const panel = ensureDs3BloodlineTree(hostNode, general.name, clanTitleText(CLAN_TIER_NAMES[services().session.clanTier], services().session.clanTradition, services().session.clanHall, clanPerkVisible(stage)), stage);
         panel.onCardPeek = (view) => this._showToast(`${view.title}：${view.tendency}`);
         panel.node.active = true;
         this._refreshCharacterDs3ExpertView(hostNode);
