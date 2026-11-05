@@ -24,6 +24,8 @@ import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { factorMaskLabels } from '../../core/systems/FactorMask';
 import { factorStageText } from '../../core/systems/FactorVisibility';
 import { matchRumorLine } from '../../core/systems/MatchRumor';
+import { yuedanList, yuedanRevealLine } from '../../core/systems/YuedanReview';
+import type { FactorDictionary } from '../../core/systems/FactorInheritance';
 import type { BreedingService } from '../../core/services/BreedingService';
 import { type BreedTextLookup, fallbackBreedText } from './BreedingTexts';
 import { relationLoreText, withRelationFallback } from './RelationTexts';
@@ -108,6 +110,8 @@ export interface BondingSetupDeps {
     spendLifespan?: (generalId: string, command: 'breeding') => { events: readonly { type: string }[] } | null;
     /** 玩家發現等級，決定父母因子是否顯示名稱；未提供時視為 1（只看得到藍粉） */
     playerDiscoveryLevel?: () => number;
+    /** 月旦評揭露因子名稱用；正式環境接 GameSession.factorDictionary */
+    factorDictionary?: () => FactorDictionary | undefined;
     /** 天象異變的存檔亂數種子（PROG-2-0823）；未提供時視為 0 */
     omenSeed?: () => number;
     /** 結緣成功時記下本機子嗣紀錄（BRD-12）；正式環境接 GameSession.recordBreedingBirth，不送 server */
@@ -276,15 +280,18 @@ export class BondingSetupController {
 
         const level = this._deps.playerDiscoveryLevel?.() ?? 1;
         texts.factorStage = factorStageText(level);
+        const dictionary = this._deps.factorDictionary?.();
+        const yuedanIds = yuedanList(this._deps.roster.getAll() as BreedingGeneral[]).map((g) => g.id);
+        const yuedan = (general: BreedingGeneral): string | null => (yuedanIds.indexOf(general.id) >= 0 ? yuedanRevealLine(general, dictionary) : null);
 
         if (!father || !mother) {
             actives.bondEmptyHint = true;
-            Object.assign(texts, parentTexts('father', father, level), parentTexts('mother', mother, level));
+            Object.assign(texts, parentTexts('father', father, level, yuedan), parentTexts('mother', mother, level, yuedan));
             return { fatherId: father?.id ?? null, motherId: mother?.id ?? null, mode: null, sageIds: [], texts, actives, enabled };
         }
 
         actives.bondPanel = true;
-        Object.assign(texts, parentTexts('father', father, level), parentTexts('mother', mother, level));
+        Object.assign(texts, parentTexts('father', father, level, yuedan), parentTexts('mother', mother, level, yuedan));
 
         const mode: BondingMode = (father.age ?? 0) >= RETIREMENT_AGE || (mother.age ?? 0) >= RETIREMENT_AGE ? 'Peace_Lineage' : 'Standard';
         texts.modeChip = mode === 'Peace_Lineage'
@@ -396,7 +403,7 @@ function factorLine(general: BreedingGeneral, playerLevel: number): string {
     return labels.length > 0 ? `因子：${labels.join(' · ')}` : '因子：無';
 }
 
-function parentTexts(side: 'father' | 'mother', general: BreedingGeneral | null, playerLevel: number): Record<string, string> {
+function parentTexts(side: 'father' | 'mother', general: BreedingGeneral | null, playerLevel: number, yuedan: (general: BreedingGeneral) => string | null): Record<string, string> {
     if (!general) {
         return {
             [`${side}Name`]: side === 'father' ? '父方：無人可選' : '母方：無人可選',
@@ -416,7 +423,7 @@ function parentTexts(side: 'father' | 'mother', general: BreedingGeneral | null,
         [`${side}Name`]: `${side === 'father' ? '父方' : '母方'}：${general.name}`,
         [`${side}Info`]: parts.join(' · '),
         [`${side}Factors`]: factorLine(general, playerLevel),
-        [`${side}Rumor`]: matchRumorLine({
+        [`${side}Rumor`]: yuedan(general) ?? matchRumorLine({
             str: statOf(general, 'str'),
             int: statOf(general, 'int'),
             lea: statOf(general, 'lea'),
