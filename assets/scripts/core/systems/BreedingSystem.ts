@@ -15,6 +15,7 @@
  * 回傳新的 GeneralData；寫回名冊與存檔交給上層 Service（BreedingService）。
  */
 import { clanMarriageBlock } from './ClanMarriageRule';
+import { applyEpBonus, parentLegacyEp, rollEpBonus } from './EpLegacyBonus';
 import { applyCompactLock, applyHeritageLock } from './FamilyCompact';
 import { applyLineageSynergy } from './LineageSynergy';
 import { applyKinPurification, kinPurificationTargetsOf, type KinPurificationOutcome, type KinPurificationTarget } from './KinPurification';
@@ -519,8 +520,10 @@ export function createChild(input: CreateChildInput): BreedingGeneral {
     const { father, mother, ep } = input;
     const gender = input.random() < 0.5 ? '男' : '女';
     const stats: GeneralStatsConfig = {};
+    const legacyEp = parentLegacyEp(father.ep ?? EP_BASE, mother.ep ?? EP_BASE);
     for (const key of STAT_KEYS) {
-        stats[key] = childBaseStat(statOf(father, key), statOf(mother, key), ep.ep);
+        const base = childBaseStat(statOf(father, key), statOf(mother, key), ep.ep);
+        stats[key] = key === 'luk' ? base : applyEpBonus(base, rollEpBonus(legacyEp, input.random));
     }
     const genes = toGeneConfigs(input.factors, input.dictionary);
     // LUK 上限依子嗣自身的紫因子計算（LUK-03，PROG-2-1166）

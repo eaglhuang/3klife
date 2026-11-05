@@ -27,6 +27,7 @@ import { matchRumorLine, sameSurnameNote, matchesRumorRoute, nextRumorRoute, Rum
 import { yuedanFiltered, yuedanList, yuedanRevealLine } from '../../core/systems/YuedanReview';
 import { synergyWindowLine, type FamilySynergyLedger } from '../../core/systems/FamilySynergy';
 import { compactCostFor, compactFamilyOf, heritageFactorsOf, sharedFactorsOf } from '../../core/systems/FamilyCompact';
+import { epContribLine } from '../../core/systems/EpLegacyBonus';
 import { lineageSynergyHint, lineageSynergyLine, sharedBlueGenesOf } from '../../core/systems/LineageSynergy';
 import { kinPurificationHint, kinPurificationLine } from '../../core/systems/KinPurification';
 import type { GeneralGeneConfig } from '../../core/models/GeneralUnit';
@@ -50,6 +51,7 @@ import {
     MOTHER_VIGOR_COST,
     PREGNANCY_LOCK_SEASONS,
     statOf,
+    EP_BASE,
 } from '../../core/systems/BreedingSystem';
 import { GENERAL_STATUS_DEAD, RETIREMENT_AGE } from '../../core/systems/GeneralAging';
 
@@ -391,6 +393,7 @@ export class BondingSetupController {
         const ledger = this._deps.familySynergy?.();
         const synergyLine = ledger ? synergyWindowLine(father as { familyUid?: string }, mother as { familyUid?: string }, ledger) : null;
         if (synergyLine) texts.conceptionLabel += `｜${synergyLine}`;
+        texts.conceptionLabel += `｜${epContribLine(father.ep ?? EP_BASE, mother.ep ?? EP_BASE)}`;
         const sage = this._sageRemarks(father.id, mother.id);
         texts.sageRemarkLines = sage.hint;
         sage.lines.forEach((line, i) => { texts[`sageLine${i}`] = line; actives[`sageRow${i}`] = true; });

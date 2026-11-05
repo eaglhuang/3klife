@@ -322,6 +322,17 @@ export function createBreedingSuite(): TestSuite {
         assert.equals(undefined, result.mother.pregnancySeasonsLeft);
     });
 
+    suite.test('雙親功業高：子嗣五維吃到 EP 加成，運氣不加（PROG-2-1824）', () => {
+        const father = makeGeneral('f', '男', { str: 90, luk: 0, ep: 95 });
+        const mother = makeGeneral('m', '女', { str: 70, luk: 0, ep: 95 });
+        let draws = 0;
+        const result = breed({ father, mother, pedigree: new BloodlineGraph(), random: () => (draws++ === 0 ? 0 : 0.99), childId: 'baby', dictionary });
+        assert.equals('conceived', result.outcome);
+        const child = result.child!;
+        assert.equals(childBaseStat(90, 70, child.ep!) + 15, child.str);
+        assert.equals(childBaseStat(0, 0, child.ep!), child.luk);
+    });
+
     suite.test('受孕成功：0 歲子嗣、五維 = 父母平均 × EP/100、母方待產 4 季', () => {
         // LUK 0：天命波動為 0（PROG-2-0511），本測試只驗證 EP 基礎分與子嗣欄位
         const father = makeGeneral('f', '男', { str: 90, luk: 0, genes: [{ id: 'gene_command', level: 3 }] });
