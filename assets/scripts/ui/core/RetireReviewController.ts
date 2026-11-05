@@ -15,6 +15,7 @@ import { quarterlyBattleReport, retireReviewCareerLine, retireReviewScriptLine, 
 import { routeRetirement } from '../../core/systems/RetirementRouting';
 import { JobWiringGeneral, resolvePrimaryClass } from '../../core/systems/JobChangeWiring';
 import { RETIRE_TUTOR_HIGH_EP } from './RetirementFlowController';
+import { customGoldGeneOf } from '../../core/systems/CustomGoldFactor';
 
 export interface RetireReviewView {
     /** 退役回顧：生涯戰績一行（UI_RETIRE_REVIEW） */
@@ -60,6 +61,7 @@ export const RETIRE_REVIEW_TEXT_FALLBACK_ZH_TW: Readonly<Record<string, string>>
     'ui.retire_review.script': '回首征途：勝{0}場，斬敵{1}人，承傷{2}——英雄無悔。',
     'ui.retire_review.report': '戰損報告：精力 {0}%',
     'ui.retire_review.farewell': '「老驥伏櫪，志在千里」',
+    'ui.retire_review.farewell_gold': '「老夫畢生征戰治國之所得（EP {0}），今盡數凝練為我族傳世絕學——【{1}】！\n凡我後世子孫，當謹守勿失！」',
     'ui.retire_review.farewell_tutor': '「老臣筋骨已衰，難復提刀躍馬；\n願入宗學為太傅，將一生沙場戰陣（EP {0}）傾囊傳予小孫！」',
     'ui.retire_review.grant_scroll': '獲得竹簡 ×1',
 };
@@ -111,9 +113,12 @@ export function buildRetireReviewTexts(
     const [wins, losses, kills, , guardian] = buildBattleRecordPanel(g.battleRecord ?? null).rows.map(row => String(row.value));
     const pct = vitalityPercentOf(g.vitality ?? 0, g.maxVitality ?? g.vitality ?? 0);
     // 血統傳承 G2 §G：高 EP 老臣說太傅句；已退役的人不能結緣，不沿用季度戰報的結緣建議
-    const farewell = g.ep !== undefined && g.ep >= RETIRE_TUTOR_HIGH_EP
-        ? lookup('ui.retire_review.farewell_tutor', String(g.ep))
-        : lookup('ui.retire_review.farewell');
+    const gold = customGoldGeneOf(g);
+    const farewell = gold
+        ? lookup('ui.retire_review.farewell_gold', String(g.ep ?? 0), gold.displayName ?? '')
+        : g.ep !== undefined && g.ep >= RETIRE_TUTOR_HIGH_EP
+            ? lookup('ui.retire_review.farewell_tutor', String(g.ep))
+            : lookup('ui.retire_review.farewell');
     return {
         retireTitle: lookup('ui.retire_review.title'),
         retireName: g.name ?? '',

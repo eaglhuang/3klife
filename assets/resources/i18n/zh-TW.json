@@ -292,6 +292,7 @@
   "ui.retire_review.script": "回首征途：勝{0}場，斬敵{1}人，承傷{2}——英雄無悔。",
   "ui.retire_review.report": "戰損報告：精力 {0}%",
   "ui.retire_review.farewell": "「老驥伏櫪，志在千里」",
+  "ui.retire_review.farewell_gold": "「老夫畢生征戰治國之所得（EP {0}），今盡數凝練為我族傳世絕學——【{1}】！\n凡我後世子孫，當謹守勿失！」",
   "ui.retire_review.farewell_tutor": "「老臣筋骨已衰，難復提刀躍馬；\n願入宗學為太傅，將一生沙場戰陣（EP {0}）傾囊傳予小孫！」",
   "ui.retire_review.grant_scroll": "獲得竹簡 ×1",
   "ui.year_report.title": "{0} 年度總結",

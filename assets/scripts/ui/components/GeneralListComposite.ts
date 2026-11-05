@@ -702,7 +702,8 @@ export class GeneralListComposite extends CompositePanel {
             this._allGenerals = this._allGenerals.map(g => owned.get(g.id) ?? g);
             await this._repopulate();
             if (retiring) {
-                const payload: RetireReviewOpenPayload = { general: retiring };
+                // 退役當下才凝練的因子只在退役後的名冊上，回顧要用它才看得到
+                const payload: RetireReviewOpenPayload = { general: owned.get(retiring.id) ?? retiring };
                 services().event.emit(RETIRE_REVIEW_OPEN_EVENT, payload);
             }
         }

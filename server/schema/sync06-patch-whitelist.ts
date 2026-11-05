@@ -94,6 +94,7 @@ export const SYNC_PATCH_ROOT_KEYS: readonly string[] = [
     'friendBorrowLedger',
     'soulFragments',
     'clanTier',
+    'customFactors',
     'travelCountdown',
     'countdown',
     'sortiePresets',

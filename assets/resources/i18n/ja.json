@@ -279,6 +279,7 @@
   "ui.retire_review.script": "回想の旅路：{0}勝、敵{1}人を斬り、守護力{2}。悔いなし。",
   "ui.retire_review.report": "戦損報告：精力 {0}%",
   "ui.retire_review.farewell": "「老驥櫪に伏すも、志は千里に在り」",
+  "ui.retire_review.farewell_gold": "「老いの身が生涯の征戦と治国で得たもの（EP {0}）を、今ここに我が一族の秘伝【{1}】として凝らす！後の子孫よ、謹んで守り伝えよ！」",
   "ui.retire_review.farewell_tutor": "「老臣の筋骨は衰え、再び刀を取り馬を駆けることは叶いませぬ。宗学の太傅となり、生涯の戦陣（EP {0}）を孫に余さず伝えましょう！」",
   "ui.retire_review.grant_scroll": "竹簡 ×1 を獲得",
   "ui.year_report.title": "{0}年度総括",

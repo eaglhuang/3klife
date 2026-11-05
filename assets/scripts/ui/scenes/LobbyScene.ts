@@ -37,7 +37,7 @@ import { SeasonReportComposite, type SeasonReportOpenPayload } from '../componen
 import { SandtableTerritoryComposite, type SandtableTerritoryOpenPayload } from '../components/SandtableTerritoryComposite';
 import { LocalGachaService, type LocalGachaResultEntry } from '../../core/services/LocalGachaService';
 import { PlayerRosterService } from '../../core/services/PlayerRosterService';
-import { GAME_SESSION_EVENTS, type AddGeneralsResult, type ClanTierUpPayload, type LifeImprintedPayload, type RivalSeasonEventsPayload } from '../../core/managers/GameSession';
+import { GAME_SESSION_EVENTS, type AddGeneralsResult, type ClanTierUpPayload, type CustomGoldFactorBornPayload, type LifeImprintedPayload, type RivalSeasonEventsPayload } from '../../core/managers/GameSession';
 import { buildSageRemarks, remarkRandomOf } from '../../core/systems/SageRemarks';
 import { SAGES } from '../../core/systems/SageDivination';
 import { seasonDisplayText, seasonStartText } from '../core/SeasonTexts';
@@ -162,6 +162,7 @@ import { SPIRIT_TALLY_DETAIL_SCREEN_ID, spiritTallyDetailOfSpirit } from '../cor
 import type { SpiritCard } from '../../core/models/SpiritCard';
 import { lifeImprintLine } from '../../core/systems/LifeImprint';
 import { CLAN_HIGH_GATE_LINE, CLAN_TIER_NAMES, clanTierUpLine } from '../../core/systems/ClanTier';
+import { customGoldBornLine } from '../../core/systems/CustomGoldFactor';
 import { lifeScriptCopy, type LifeScriptEvent } from '../../core/systems/LifeScriptCopy';
 import { getTallyCardSummaries } from '../../core/config/TallyCardCatalog';
 import { DeckSelectController } from '../core/DeckSelectController';
@@ -1095,6 +1096,10 @@ export class LobbyScene extends Component {
             event.on(GAME_SESSION_EVENTS.LifeImprinted, (payload?: unknown) => {
                 const imprinted = payload as LifeImprintedPayload;
                 event.emit('SHOW_TOAST', { message: lifeImprintLine(imprinted.name, imprinted.imprints), duration: 3 });
+            }),
+            event.on(GAME_SESSION_EVENTS.CustomGoldFactorBorn, (payload?: unknown) => {
+                const { name, ep, factorName } = payload as CustomGoldFactorBornPayload;
+                event.emit('SHOW_TOAST', { message: customGoldBornLine(name, ep, factorName), duration: 4 });
             }),
             event.on(GAME_SESSION_EVENTS.ClanTierUp, (payload?: unknown) => {
                 const { oldTier, newTier } = payload as ClanTierUpPayload;
