@@ -46,6 +46,11 @@ export function displayMilestoneStage(stage: MilestoneStage, expertView: boolean
     return expertView ? 4 : stage;
 }
 
+/** 家風效果與門第聘禮加成從 G4 開始顯示 */
+export function clanPerkVisible(stage: MilestoneStage): boolean {
+    return stage >= 4;
+}
+
 /** 族譜視圖：G1 只有父母一代（generation 1），G2 起展開三代 14 人 */
 export function treeGenerationVisible(stage: MilestoneStage, generation: 1 | 2 | 3): boolean {
     return stage >= 2 || generation === 1;

@@ -153,8 +153,12 @@ export function marriageProposalLine(proposal: MarriageProposal, showAlliance = 
     return `${showAlliance && proposal.centuryAlliance ? '百年世交' : ''}${proposal.family}氏遣媒人攜重禮上門，願以${proposal.suitor.name}與${proposal.targetName}結親。`;
 }
 
-export function marriageGiftLine(proposal: MarriageProposal, showAlliance = true): string {
-    return `聘禮：黃金 ${proposal.giftGold}${showAlliance && proposal.allianceBonusGold ? `（世交加禮 +${proposal.allianceBonusGold}）` : ''}`;
+export function marriageGiftLine(proposal: MarriageProposal, showAlliance = true, showClanBonus = false): string {
+    const alliance = proposal.allianceBonusGold ?? 0;
+    const clanBonus = proposal.giftGold - alliance - PROFILE_BY_TIER[2].giftGold;
+    const allianceNote = showAlliance && alliance ? `（世交加禮 +${alliance}）` : '';
+    const clanNote = showClanBonus && clanBonus > 0 ? `（高門加成 +${clanBonus}）` : '';
+    return `聘禮：黃金 ${proposal.giftGold}${allianceNote}${clanNote}`;
 }
 
 /** 只用鄉評公開的資訊（G4 §F-2 Layer 1） */

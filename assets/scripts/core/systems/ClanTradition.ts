@@ -85,7 +85,9 @@ export function clanTraditionLine(tradition: ClanTradition): string {
 }
 
 /** 血統樹標題用：門第名，有堂號、家風再加上去 */
-export function clanTitleText(tierName: string, tradition: ClanTradition | null, hall: string | null = null): string {
+export function clanTitleText(tierName: string, tradition: ClanTradition | null, hall: string | null = null, showEffect = false): string {
     const title = hall ? `${tierName}・${hall}` : tierName;
-    return tradition ? `${title}｜家風：${tradition.displayName}` : title;
+    if (!tradition) return title;
+    const effect = showEffect ? `（${clanTraditionEffectText(tradition.kind)}）` : '';
+    return `${title}｜家風：${tradition.displayName}${effect}`;
 }

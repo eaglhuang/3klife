@@ -19,7 +19,7 @@ export const DS3_BLOODLINE_TREE_NODE_NAME = 'Ds3BloodlineTree';
 const REGION = { x: -365, width: 1190, height: 1080 };
 const LABEL_COLUMN_X = -405;
 const CARDS_CENTER_X = 115;
-const TITLE = { text: '家族血統樹', y: 480, width: 640, height: 40, fontSize: 26, color: '#FFE088' };
+const TITLE = { text: '家族血統樹', y: 480, width: 920, height: 40, fontSize: 26, color: '#FFE088' };
 
 const ROWS = [
     { row: 1, container: 'Gen1Container', count: 8, step: 115, y: 380, width: 108, height: 96, zh: '曾祖父母', weight: PEDIGREE_SEAT_WEIGHTS.greatGrandparent, color: '#8C8575' },
@@ -117,7 +117,7 @@ function buildTree(host: Node): Node {
     background.rect(-REGION.width / 2, -REGION.height / 2, REGION.width, REGION.height);
     background.fill();
 
-    addLabel(root, 'TreeTitle', TITLE.text, CARDS_CENTER_X, TITLE.y, TITLE.width, TITLE.height, TITLE.fontSize, new Color().fromHEX(TITLE.color));
+    addLabel(root, 'TreeTitle', TITLE.text, CARDS_CENTER_X, TITLE.y, TITLE.width, TITLE.height, TITLE.fontSize, new Color().fromHEX(TITLE.color)).overflow = Label.Overflow.SHRINK;
     addNode(root, 'LineGraphics', 0, 0, REGION.width, REGION.height);
     ROWS.forEach((config) => buildGenerationRow(root, config));
 

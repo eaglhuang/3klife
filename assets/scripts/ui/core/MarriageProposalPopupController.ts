@@ -7,7 +7,7 @@
  *
  * Unity 對照：MVP 的 Presenter。按鈕 onClick 只呼叫 Respond，畫面層拿 GetView() 一次刷新。
  */
-import { factorDetailVisible, kinshipScanVisible, type MilestoneStage } from '../../core/systems/FamilyMilestone';
+import { clanPerkVisible, factorDetailVisible, kinshipScanVisible, type MilestoneStage } from '../../core/systems/FamilyMilestone';
 import { ITEM_ORACLE_TOKEN } from '../../core/systems/ItemDef';
 import { RUMOR_STAT_KEYS, rumorRouteName, nextRumorStat, type RumorStatKey } from '../../core/systems/MatchRumor';
 import { marriageAcceptLabel, marriageGiftLine, marriageProposalLine, marriageSuitorLine, type MarriageProposal } from '../../core/systems/MarriageProposal';
@@ -77,7 +77,8 @@ export class MarriageProposalPopupController {
     getView(): MarriageProposalPopupView {
         const { session } = this._deps;
         const probeVisible = factorDetailVisible(this._unlockStage());
-        const showAlliance = kinshipScanVisible(this._deps.session.displayStage ?? this._unlockStage());
+        const displayStage = this._deps.session.displayStage ?? this._unlockStage();
+        const showAlliance = kinshipScanVisible(displayStage);
         const proposal = session.marriageProposal;
         const stat = this._probeStat;
         const tokens = session.itemCount(ITEM_ORACLE_TOKEN);
@@ -89,7 +90,7 @@ export class MarriageProposalPopupController {
                 mpEmptyHint: '目前沒有上門提親的名門。',
                 mpLine: proposal ? marriageProposalLine(proposal, showAlliance) : '',
                 mpSuitor: proposal ? marriageSuitorLine(proposal) : '',
-                mpGift: proposal ? marriageGiftLine(proposal, showAlliance) : '',
+                mpGift: proposal ? marriageGiftLine(proposal, showAlliance, clanPerkVisible(displayStage)) : '',
                 mpNotice: this._notice,
                 acceptMpLabel: proposal ? marriageAcceptLabel(proposal) : '應允',
                 declineMpLabel: '婉拒',
