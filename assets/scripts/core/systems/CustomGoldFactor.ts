@@ -17,7 +17,7 @@ export const CUSTOM_GOLD_MIN_EP = 85;
 export const CUSTOM_GOLD_MIN_BLUE_STAR = 4;
 /** §F-1：天下高門才解鎖 */
 export const CUSTOM_GOLD_CLAN_TIER: ClanTier = 3;
-const CUSTOM_GOLD_ID_PREFIX = 'gold_clan_';
+export const CUSTOM_GOLD_ID_PREFIX = 'gold_clan_';
 
 export function customGoldGeneOf(general: GeneralConfig | null | undefined): GeneralGeneConfig | null {
     return (general?.genes ?? []).find((gene) => (gene.id ?? '').startsWith(CUSTOM_GOLD_ID_PREFIX)) ?? null;

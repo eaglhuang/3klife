@@ -93,7 +93,7 @@ export function createFamilyCompactSuite(): TestSuite {
         assert.isTrue((result.child?.genes ?? []).some((g) => g.id === 'factor-brave' && g.level === 2));
         assert.equals(1000, locked.wallet.gold);
         assert.isTrue(locked.flow.getView().texts.bondNotice.indexOf('世交合譜：保住了 勇烈，耗黃金 1000') >= 0);
-        assert.equals('合譜：不用', locked.flow.getView().texts.compactLabel);
+        assert.equals('門風：不用', locked.flow.getView().texts.compactLabel);
     });
 
     suite.test('本來就傳得下去時不收費', async () => {
@@ -131,13 +131,13 @@ export function createFamilyCompactSuite(): TestSuite {
         assert.isTrue(flow.getView().texts.bondNotice.indexOf('黃金不足') >= 0);
     });
 
-    suite.test('雙親都不是名門或沒有共有因子時不可按', () => {
+    suite.test('雙親都不是名門或沒有共有因子時不能合譜，只剩家傳', () => {
         const noFamily = rig([lord(), person('bride', '女', [gene('factor-brave', 2, '勇烈')])], conceiveOnly(), 2000);
-        assert.isFalse(noFamily.flow.getView().enabled.btnCompact);
         noFamily.flow.cycleCompact();
-        assert.equals('合譜：不用', noFamily.flow.getView().texts.compactLabel);
+        assert.equals('家傳：勇烈', noFamily.flow.getView().texts.compactLabel);
         const noShared = rig([lord(), person('bride', '女', [], { familyUid: WANG })], conceiveOnly(), 2000);
-        assert.isFalse(noShared.flow.getView().enabled.btnCompact);
+        noShared.flow.cycleCompact();
+        assert.equals('家傳：勇烈', noShared.flow.getView().texts.compactLabel);
     });
 
     suite.test('循環回到不用，換配對後選擇失效', () => {
@@ -146,10 +146,14 @@ export function createFamilyCompactSuite(): TestSuite {
         flow.cycleCompact();
         assert.equals('合譜：勇烈', flow.getView().texts.compactLabel);
         flow.selectMother('plain');
-        assert.equals('合譜：不用', flow.getView().texts.compactLabel);
+        assert.equals('門風：不用', flow.getView().texts.compactLabel);
         flow.selectMother('bride');
         flow.cycleCompact();
-        assert.equals('合譜：不用', flow.getView().texts.compactLabel);
+        assert.equals('家傳：勇烈', flow.getView().texts.compactLabel);
+        flow.cycleCompact();
+        assert.equals('家傳：其他', flow.getView().texts.compactLabel);
+        flow.cycleCompact();
+        assert.equals('門風：不用', flow.getView().texts.compactLabel);
     });
 
     suite.test('名門對象帶子弟的最高星因子進門，最多 2★，金因子不算', () => {

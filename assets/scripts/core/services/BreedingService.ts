@@ -164,7 +164,7 @@ export class BreedingService {
     }
 
     /** 執行結緣；精力無論成敗都會扣，受孕成功時子嗣加入名冊 */
-    breed(fatherId: string, motherId: string, mode?: BreedingMode, lockedFactorId?: string): BreedingResult {
+    breed(fatherId: string, motherId: string, mode?: BreedingMode, lockedFactorId?: string, heritageFactorId?: string): BreedingResult {
         const roster = this._roster.getAll() as BreedingGeneral[];
         const { father, mother } = this._findPair(fatherId, motherId, roster);
         const ids = new Set(roster.map((g) => g.id));
@@ -176,6 +176,7 @@ export class BreedingService {
             mother,
             mode,
             lockedFactorId,
+            heritageFactorId,
             pedigree: this._graph,
             random: this._options.random ?? Math.random,
             childId,
