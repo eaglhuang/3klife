@@ -10,8 +10,8 @@
   "tags": [],
   "createdAt": "2026-11-05T14:30:28.536Z",
   "createdByActor": "codex-gpt-6.1-sol",
-  "lastTransitionId": "2026-11-05T17-48-00-833Z-renew-e91267e41cc4",
-  "lastTransitionAt": "2026-11-05T17:48:00.833Z",
+  "lastTransitionId": "2026-11-05T18-10-40-564Z-scope-amendment-5de39153b9a9",
+  "lastTransitionAt": "2026-11-05T18:10:40.564Z",
   "ledgerContractVersion": "task-ledger/v1",
   "reservedAt": "2026-11-05T17:15:58.821Z",
   "promotedAt": "2026-11-05T17:15:58.826Z",
@@ -22,9 +22,9 @@
     "heartbeatAt": "2026-11-05T17:48:00.591Z",
     "ttlSeconds": 1800,
     "files": [
-      ".atm/history/tasks/UI-2-0121.json",
       ".atm/history/evidence/UI-2-0121.*",
       ".atm/history/task-events/UI-2-0121/**",
+      ".atm/history/tasks/UI-2-0121.json",
       "artifacts/ui-generated/da-qiao/da_qiao_portrait_candidate_1.png",
       "artifacts/ui-generated/lu-bu/lu_bu_portrait_candidate_1.png",
       "artifacts/ui-generated/wei-yan/wei_yan_portrait_candidate_3.png",
@@ -38,6 +38,7 @@
       "assets/resources/sprites/generals/avatars/wei_yan_avatar.png",
       "assets/resources/sprites/generals/avatars/xin_xian_ying_avatar.png",
       "assets/resources/sprites/generals/avatars/xin_xian_ying_avatar.png.meta",
+      "assets/resources/sprites/generals/avatars/zhang_chun_hua_avatar.png",
       "assets/resources/sprites/generals/da_qiao_portrait.png",
       "assets/resources/sprites/generals/da_qiao_portrait.png.meta",
       "assets/resources/sprites/generals/lu_bu_portrait.png",
@@ -75,20 +76,20 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-99a9d34411b0ad7f",
-    "ticketDigest": "sha256:99a9d34411b0ad7f568cf86ebd4d49451d344e26ac97cb35fb2c0b6b9647bf10",
+    "ticketId": "wat-cbed4356366a1ccb",
+    "ticketDigest": "sha256:cbed4356366a1ccb666ea360100aaa78bbd161de2b856c3523c5d7e0d7415032",
     "taskId": "UI-2-0121",
     "origin": "claim",
     "actorId": "codex-gpt-6.1-sol",
     "laneSessionId": "lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d",
     "claimGeneration": "lease-f957fb02b01d",
-    "issuedAt": "2026-11-05T17:48:00.591Z",
-    "expiresAt": "2026-11-05T18:18:00.591Z",
-    "scopeDigest": "sha256:41a086e3bab6fab3aff5b151163b8842e76e81e80998388ec4e1305861fde241",
+    "issuedAt": "2026-11-05T18:10:40.452Z",
+    "expiresAt": "2026-11-05T18:40:40.452Z",
+    "scopeDigest": "sha256:4b9827369483f9bb0f25808c40e29ebcc7368c8bead00bf2ad0ff0fa9b5b0b04",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-11-05T17:48:00.591Z"
+      "selectedAt": "2026-11-05T18:10:40.452Z"
     },
     "grants": [
       {
@@ -110,6 +111,7 @@
           "assets/resources/sprites/generals/avatars/wei_yan_avatar.png",
           "assets/resources/sprites/generals/avatars/xin_xian_ying_avatar.png",
           "assets/resources/sprites/generals/avatars/xin_xian_ying_avatar.png.meta",
+          "assets/resources/sprites/generals/avatars/zhang_chun_hua_avatar.png",
           "assets/resources/sprites/generals/da_qiao_portrait.png",
           "assets/resources/sprites/generals/da_qiao_portrait.png.meta",
           "assets/resources/sprites/generals/lu_bu_portrait.png",
@@ -134,7 +136,7 @@
           "docs/ui-quality-tasks/UI-2-0121.json",
           "docs/ui-quality-todo.json"
         ],
-        "digest": "sha256:a39ae2430d9fc68c50fbae9c35dfbc3dacd64b396372725fdf00d0d6248e6905"
+        "digest": "sha256:c6bd31147de86af823f29196d17d0698d08592c3d25b20501af9c3e96ed38ad7"
       },
       {
         "kind": "lifecycle-operation",
@@ -199,6 +201,7 @@
       "assets/resources/sprites/generals/avatars/wei_yan_avatar.png",
       "assets/resources/sprites/generals/avatars/xin_xian_ying_avatar.png",
       "assets/resources/sprites/generals/avatars/xin_xian_ying_avatar.png.meta",
+      "assets/resources/sprites/generals/avatars/zhang_chun_hua_avatar.png",
       "assets/resources/sprites/generals/da_qiao_portrait.png",
       "assets/resources/sprites/generals/da_qiao_portrait.png.meta",
       "assets/resources/sprites/generals/lu_bu_portrait.png",
@@ -223,19 +226,51 @@
       "docs/ui-quality-tasks/UI-2-0121.json",
       "docs/ui-quality-todo.json"
     ],
-    "planningReadOnlyPaths": [],
+    "planningReadOnlyPaths": [
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/artifacts/ui-generated/da-qiao/da_qiao_portrait_candidate_1.png",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/artifacts/ui-generated/lu-bu/lu_bu_portrait_candidate_1.png",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/artifacts/ui-generated/wei-yan/wei_yan_portrait_candidate_3.png",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/artifacts/ui-generated/xin-xian-ying/xin_xian_ying_portrait_candidate_1.png",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/artifacts/ui-generated/zhang-chun-hua/zhang_chun_hua_portrait_candidate_1.png",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/data/general-avatar-crops.json",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/avatars/da_qiao_avatar.png",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/avatars/da_qiao_avatar.png.meta",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/avatars/lu_bu_avatar.png",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/avatars/lu_bu_avatar.png.meta",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/avatars/wei_yan_avatar.png",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/avatars/xin_xian_ying_avatar.png",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/avatars/xin_xian_ying_avatar.png.meta",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/da_qiao_portrait.png",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/da_qiao_portrait.png.meta",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/lu_bu_portrait.png",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/lu_bu_portrait.png.meta",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/wei_yan_portrait.png",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/wei_yan_portrait.png.meta",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/xin_xian_ying_portrait.png",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/xin_xian_ying_portrait.png.meta",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/zhang_chun_hua_portrait.png",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/zhang_chun_hua_portrait.png.meta",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/ui_avatars/cropped/da_qiao_avatar.png",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/ui_avatars/cropped/da_qiao_avatar.png.meta",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/ui_avatars/cropped/lu_bu_avatar.png",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/ui_avatars/cropped/lu_bu_avatar.png.meta",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/ui_avatars/cropped/wei_yan_avatar.png",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/ui_avatars/cropped/xin_xian_ying_avatar.png",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/ui_avatars/cropped/xin_xian_ying_avatar.png.meta",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/ui_avatars/cropped/zhang_chun_hua_avatar.png"
+    ],
     "planningMirrorPaths": [],
     "allowPlanningMirror": false,
     "promptHash": "65fce537d48bfc6dc452abe74ceb5dd3fd54531ba5a44fe692f4b3a3d67bcf7d",
     "actorId": "codex-gpt-6.1-sol",
-    "sessionId": "session-20261105171558-codex-gpt-6.1-sol-UI-2-0121-3220962ee1",
+    "sessionId": null,
     "laneSession": {
       "laneSessionId": "lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d",
-      "status": "active",
+      "status": "adopted",
       "source": "minted",
       "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d\""
     },
-    "createdAt": "2026-11-05T17:15:59.584Z",
+    "createdAt": "2026-11-05T17:48:00.852Z",
     "status": "active"
   },
   "scopePaths": [
@@ -277,6 +312,7 @@
     "assets/resources/sprites/ui_avatars/cropped/da_qiao_avatar.png",
     "assets/resources/sprites/ui_avatars/cropped/da_qiao_avatar.png.meta",
     "assets/resources/sprites/ui_avatars/cropped/lu_bu_avatar.png",
-    "assets/resources/sprites/ui_avatars/cropped/lu_bu_avatar.png.meta"
+    "assets/resources/sprites/ui_avatars/cropped/lu_bu_avatar.png.meta",
+    "assets/resources/sprites/generals/avatars/zhang_chun_hua_avatar.png"
   ]
 }
