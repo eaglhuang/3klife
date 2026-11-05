@@ -10,6 +10,7 @@
 import { BlockInputEvents, Color, Graphics, Label, Node, UITransform, Mask, Sprite } from 'cc';
 import { treeCardNodeName } from '../../../core/systems/BloodlineTreeBinding';
 import { PEDIGREE_SEAT_WEIGHTS, pedigreeRowLabel, TREE_CARD_AVATAR } from '../../../core/systems/BloodlineTreeSlots';
+import { treeGenerationVisible, type MilestoneStage } from '../../../core/systems/FamilyMilestone';
 import { BloodlineTreePanel } from '../../panels/BloodlineTreePanel';
 
 export const DS3_BLOODLINE_TREE_NODE_NAME = 'Ds3BloodlineTree';
@@ -131,11 +132,17 @@ function buildTree(host: Node): Node {
 }
 
 /** 取得（或建立）血統樹面板，並填入本代姓名與家族門第 */
-export function ensureDs3BloodlineTree(host: Node, subjectName: string, clanTierName: string): BloodlineTreePanel {
+export function ensureDs3BloodlineTree(host: Node, subjectName: string, clanTierName: string, stage: MilestoneStage = 4): BloodlineTreePanel {
     const root = host.getChildByName(DS3_BLOODLINE_TREE_NODE_NAME) ?? buildTree(host);
     const subjectLabel = root.getChildByName('TargetPortrait')?.getChildByName('Txt')?.getComponent(Label);
     if (subjectLabel) subjectLabel.string = subjectName;
     const titleLabel = root.getChildByName('TreeTitle')?.getComponent(Label);
     if (titleLabel) titleLabel.string = `${TITLE.text}｜門第：${clanTierName}`;
-    return root.getComponent(BloodlineTreePanel) as BloodlineTreePanel;
+    ROWS.forEach((config) => {
+        const label = root.getChildByName(`GenLabel_${config.row}`);
+        if (label) label.active = treeGenerationVisible(stage, (4 - config.row) as 1 | 2 | 3);
+    });
+    const panel = root.getComponent(BloodlineTreePanel) as BloodlineTreePanel;
+    panel.setMilestoneStage(stage);
+    return panel;
 }

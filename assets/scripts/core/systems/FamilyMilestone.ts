@@ -41,6 +41,11 @@ export function ancestorSeatVisible(stage: MilestoneStage, seatIndex: number): b
     return stage >= 2 || seatIndex < G1_VISIBLE_SEATS;
 }
 
+/** 族譜視圖：G1 只有父母一代（generation 1），G2 起展開三代 14 人 */
+export function treeGenerationVisible(stage: MilestoneStage, generation: 1 | 2 | 3): boolean {
+    return stage >= 2 || generation === 1;
+}
+
 /** 因子星級、顯性與連攜上限、50 箱密查都從 G2 開始 */
 export function factorDetailVisible(stage: MilestoneStage): boolean {
     return stage >= 2;
