@@ -404,13 +404,14 @@ export class NurtureFlowController {
 
     async train(action: NurtureAction): Promise<NurtureRoundLog> {
         const child = this._requireSelected();
-        const { log, awakening, inspirations, session, childUltimates } = this._deps.nurture.train(child.id, action);
+        const { log, awakening, inspirations, session, childUltimates, peekHint } = this._deps.nurture.train(child.id, action);
         // 因子解鎖系統 §H UI_AWAKENING：「【覺醒】{GeneName}！」
         const lookup = this._deps.text ?? fallbackBreedText;
         this._notice = awakening ? `${describeRound(log, lookup)}　【覺醒】${awakening.displayName}！` : describeRound(log, lookup);
         // 教官系統 §E：靈感與羈絆觸發要讓玩家看得到（PROG-2-1096）
         const mentorNotes = describeMentorTriggers(log.synergyId, inspirations, session?.mentors ?? [], this._deps.tacticName);
         if (mentorNotes) this._notice += `　${mentorNotes}`;
+        if (peekHint) this._notice += `　${peekHint}`;
         // 奧義系統 §G 子嗣覺醒（PROG-2-1780）；一回合覺醒多個也只說一句
         if (childUltimates?.length) this._notice += `　${childUltimateAwakenLine(child.name, childUltimates[0].fromFather)}`;
         if (log.vigorAfter === 0) {
