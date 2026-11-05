@@ -13,6 +13,7 @@
  *
  * Unity 對照：MVP 的 Presenter。按鈕 onClick 只呼叫 Cycle / Decide，畫面層拿 GetView() 一次刷新。
  */
+import { captiveFemaleLine } from '../../core/systems/FemaleSourcePresenter';
 import type { MilitaryReserve } from '../../core/systems/MilitaryReserve';
 import {
     powOptionLabels,
@@ -131,6 +132,8 @@ export class PrisonerPopupController {
         const labels = powOptionLabels(record);
         const persuadeFailed = record.decision === 'persuade';
         texts.powTarget = `敵將：${record.targetName}（${RARITY_TEXT[record.rarity] ?? record.rarity}）`;
+        // 處置結果優先；還沒處置時才說女俘虜的台詞（PROG-2-1786）
+        if (!this._notice) texts.powNotice = captiveFemaleLine({ ...(current.target as { gender?: string }), name: record.targetName });
         texts.persuadeLabel = persuadeFailed ? '勸降（已失敗，寧死不屈）' : labels.persuade;
         texts.recruitLabel = labels.recruit;
         texts.imprisonLabel = prison.prisoners.length >= slots ? '無期徒刑（監獄已滿）' : labels.imprison;

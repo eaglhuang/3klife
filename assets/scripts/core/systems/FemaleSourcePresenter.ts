@@ -38,3 +38,19 @@ export function femaleSourcePresentationOf(source: FemaleSource | null | undefin
         giftAffinity: source.Gift_Affinity,
     };
 }
+
+/** 轉蛋一批最多幾句女將登場句（暫定，與轉生語音相同），避免十連時 toast 排太久 */
+const MAX_GACHA_FEMALE_LINES = 3;
+
+/** 可結緣女性來源系統 §G 轉蛋抽到女將（PROG-2-1786）；只算新入名冊的 */
+export function gachaFemaleLines(added: ReadonlyArray<{ name: string; gender?: string }>): string[] {
+    return added
+        .filter((general) => general.gender === '女')
+        .slice(0, MAX_GACHA_FEMALE_LINES)
+        .map((general) => `${general.name} 應召而來——傾國之姿，誰人不動心？`);
+}
+
+/** 可結緣女性來源系統 §G 戰俘女將勸降（PROG-2-1786）；不是女俘虜回傳空字串 */
+export function captiveFemaleLine(target: { name?: string; gender?: string }): string {
+    return target.gender === '女' ? `${target.name} 冷眼相視：『你想用我的血脈延續你的野心？』` : '';
+}
