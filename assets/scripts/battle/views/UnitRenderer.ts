@@ -45,6 +45,7 @@ import { BATTLE_VISUAL_TIMING } from "./BattlePresentationTiming";
 import { BuffGainEffectPool } from "./effects/BuffGainEffectPool";
 import { services } from "../../core/managers/ServiceLoader";
 import { FloatTextType } from "../../core/systems/FloatTextSystem";
+import { vitalityRingView, type VitalityRingView } from "../../core/systems/VitalityBarView";
 import {
   DEFAULT_ENEMY_HERO_ASSET_ID,
   DEFAULT_PLAYER_HERO_ASSET_ID,
@@ -94,6 +95,9 @@ interface GeneralView {
   typeLabel: Label;
   hpLabel: Label;
   labelOpacity: UIOpacity;
+  /** 名牌左側精力能量環（PROG-2-1853） */
+  vitalityRing: Graphics;
+  vitalityText: Label;
   faction: Faction;
   usingHeroModel: boolean;
   heroLoading: boolean;
@@ -115,6 +119,9 @@ interface TileBuffView {
 
 /** 掠奪飄字每行間隔（秒） */
 const LOOT_TEXT_STAGGER_SEC = 0.5;
+
+/** 名牌旁精力能量環半徑（PROG-2-1853） */
+const VITALITY_RING_RADIUS = 24;
 
 @ccclass("UnitRenderer")
 export class UnitRenderer extends Component {
@@ -977,6 +984,7 @@ export class UnitRenderer extends Component {
     view.attackLabel.string = `+${Math.round(general.attackBonus * 100)}%`;
     view.typeLabel.string = "將";
     view.hpLabel.string = `${Math.max(0, general.currentHp)}`;
+    this.drawVitalityRing(view, vitalityRingView(general.vitality, general.maxVitality));
     view.labelOpacity.opacity = 255;
     this.projectWorldLabel(view.worldNode, view.labelNode, this.labelHeight + 0.28);
 
@@ -1037,6 +1045,7 @@ export class UnitRenderer extends Component {
     badge.typeLabel.color = faction === Faction.Enemy
       ? new Color(255, 130, 130, 255)
       : new Color(160, 200, 255, 255);
+    const ring = this.buildVitalityRing(labelNode, 186);
 
     const modelRoot = new Node("ModelRoot");
     modelRoot.layer = Layers.Enum.DEFAULT;
@@ -1052,6 +1061,8 @@ export class UnitRenderer extends Component {
       typeLabel: badge.typeLabel,
       hpLabel: badge.hpLabel,
       labelOpacity: badge.opacity,
+      vitalityRing: ring.graphics,
+      vitalityText: ring.label,
       faction,
       usingHeroModel: false,
       heroLoading: false,
@@ -1276,6 +1287,50 @@ export class UnitRenderer extends Component {
     // formationRoot 不再負責旋轉，各 soldier 以 0° local rotation 繼承 worldNode 方向
     this.alignNodeToFactionFacing(view.worldNode, unit.faction);
     this.projectWorldLabel(view.worldNode, view.labelNode, this.labelHeight);
+  }
+
+  /** 名牌左側精力能量環（武將壽命系統 §UI，PROG-2-1853）：底環＋精力弧＋百分比 */
+  private buildVitalityRing(labelNode: Node, badgeWidth: number): { graphics: Graphics; label: Label } {
+    const ringNode = new Node("VitalityRing");
+    ringNode.layer = labelNode.layer;
+    labelNode.addChild(ringNode);
+    ringNode.setPosition(-(badgeWidth / 2 + 5 + VITALITY_RING_RADIUS + 8), 0, 0);
+    ringNode.addComponent(UITransform).setContentSize(VITALITY_RING_RADIUS * 2 + 12, VITALITY_RING_RADIUS * 2 + 12);
+    const graphics = ringNode.addComponent(Graphics);
+
+    const textNode = new Node("VitalityText");
+    textNode.layer = labelNode.layer;
+    ringNode.addChild(textNode);
+    textNode.addComponent(UITransform).setContentSize(VITALITY_RING_RADIUS * 2 - 6, 24);
+    const label = textNode.addComponent(Label);
+    label.fontSize = 17;
+    label.lineHeight = 20;
+    label.isBold = true;
+    label.horizontalAlign = Label.HorizontalAlign.CENTER;
+    label.verticalAlign = Label.VerticalAlign.CENTER;
+    label.overflow = Label.Overflow.SHRINK;
+    return { graphics, label };
+  }
+
+  private drawVitalityRing(view: GeneralView, ring: VitalityRingView): void {
+    const g = view.vitalityRing;
+    const [r, gr, b] = ring.color;
+    g.clear();
+    g.fillColor = new Color(0, 0, 0, 150);
+    g.circle(0, 0, VITALITY_RING_RADIUS + 5);
+    g.fill();
+    g.lineWidth = 6;
+    g.strokeColor = new Color(70, 70, 70, 220);
+    g.circle(0, 0, VITALITY_RING_RADIUS);
+    g.stroke();
+    if (ring.ratio > 0) {
+      g.strokeColor = new Color(r, gr, b, 255);
+      const start = Math.PI / 2;
+      g.arc(0, 0, VITALITY_RING_RADIUS, start, start - ring.ratio * Math.PI * 2, false);
+      g.stroke();
+    }
+    view.vitalityText.string = ring.text;
+    view.vitalityText.color = ring.band === "exhausted" ? new Color(170, 170, 170, 255) : new Color(r, gr, b, 255);
   }
 
   private buildBadge(rootNode: Node, width: number, height: number, troopType: TroopType | null = null): BadgeView {
