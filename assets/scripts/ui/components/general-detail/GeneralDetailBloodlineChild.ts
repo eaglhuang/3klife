@@ -134,7 +134,7 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
 
         const maskState = this._maskPresenter.update(cfg.id, cfg.genes ?? [], currentDiscoveryLevel());
         this._justRevealed = maskState.justRevealed;
-        const showStars = factorDetailVisible(services().session.milestoneStage);
+        const showStars = factorDetailVisible(services().session.displayStage);
         for (let i = 0; i < 5; i++) {
             this._set(this._lGenes[i], formatGene(i + 1, cfg.genes?.[i], currentDiscoveryLevel(), showStars));
         }

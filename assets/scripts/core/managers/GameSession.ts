@@ -206,7 +206,7 @@ import { buildEraResetEvent } from '../systems/EraReset';
 import { buildQuarterlyBattleReportRows, type QuarterlyBattleReportRow } from '../systems/RetireReviewCopy';
 import { withLifeImprints } from '../systems/LifeImprint';
 import { clanMembersOf, clanStatsOf, clanTierOf, normalizeClanTier, type ClanTier } from '../systems/ClanTier';
-import { kinMilestoneLine, kinMilestoneStage, milestoneStageOfClan, milestoneUnlockLines, normalizeMilestoneStage, type MilestoneStage } from '../systems/FamilyMilestone';
+import { displayMilestoneStage, kinMilestoneLine, kinMilestoneStage, milestoneStageOfClan, milestoneUnlockLines, normalizeMilestoneStage, type MilestoneStage } from '../systems/FamilyMilestone';
 import { buildSuitorGeneral, normalizeMarriageProposal, rollMarriageProposal, type MarriageProposal } from '../systems/MarriageProposal';
 import { emptyFamilySynergyLedger, finalizeAdultChildren, fullSynergyAlliesOf, normalizeFamilySynergy, type FamilySynergyLedger } from '../systems/FamilySynergy';
 import { forgeCustomGold, mergeCustomFactors, normalizeCustomFactors } from '../systems/CustomGoldFactor';
@@ -668,6 +668,7 @@ export class GameSession {
     /** 門第階級，只升不降（G4 §F-1） */
     private _clanTier: ClanTier = 0;
     private _milestoneStage: MilestoneStage = 1;
+    private _expertView = false;
     private _marriageProposal: MarriageProposal | null = null;
     private _familySynergy: FamilySynergyLedger = emptyFamilySynergyLedger();
     private _pedigreeProbes: string[] = [];
@@ -1776,6 +1777,20 @@ export class GameSession {
         return this._milestoneStage;
     }
 
+    /** 畫面揭露看這個；功能解鎖看 milestoneStage */
+    public get displayStage(): MilestoneStage {
+        return displayMilestoneStage(this._milestoneStage, this._expertView);
+    }
+
+    public get expertView(): boolean {
+        return this._expertView;
+    }
+
+    public async setExpertView(enabled: boolean): Promise<void> {
+        this._expertView = enabled;
+        await this.save();
+    }
+
     /** G3-M1：玩家選中有共祖的表親；已到 G3 以上時不再出句 */
     public noteKinPair(fatherName: string, motherName: string, ancestorName: string): void {
         this._raiseMilestone(kinMilestoneStage(), kinMilestoneLine(fatherName, motherName, ancestorName));
@@ -1877,6 +1892,7 @@ export class GameSession {
         this._soulFragments = emptySoulFragmentLedger();
         this._clanTier = 0;
         this._milestoneStage = 1;
+        this._expertView = false;
         this._marriageProposal = null;
         this._familySynergy = emptyFamilySynergyLedger();
         this._pedigreeProbes = [];
@@ -4562,6 +4578,7 @@ export class GameSession {
             soulFragments: { ...this._soulFragments },
             clanTier: this._clanTier,
             milestoneStage: this._milestoneStage,
+            expertView: this._expertView || undefined,
             marriageProposal: this._marriageProposal ?? undefined,
             familySynergy: this._familySynergy.finalizedIds.length > 0 ? this._familySynergy : undefined,
             pedigreeProbes: this._pedigreeProbes.length > 0 ? [...this._pedigreeProbes] : undefined,
@@ -4737,6 +4754,7 @@ export class GameSession {
         this._soulFragments = normalizeSoulFragmentLedger(snapshot.soulFragments);
         this._clanTier = normalizeClanTier(snapshot.clanTier);
         this._milestoneStage = normalizeMilestoneStage(snapshot.milestoneStage);
+        this._expertView = snapshot.expertView === true;
         this._marriageProposal = normalizeMarriageProposal(snapshot.marriageProposal);
         this._familySynergy = normalizeFamilySynergy(snapshot.familySynergy);
         this._pedigreeProbes = normalizePedigreeProbes(snapshot.pedigreeProbes);

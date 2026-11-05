@@ -148,6 +148,8 @@ export interface BondingSetupDeps {
     noteKinPair?: (fatherName: string, motherName: string, ancestorName: string) => void;
     /** 家族揭露階段；未提供時全部顯示 */
     milestoneStage?: () => MilestoneStage;
+    /** 功能解鎖用的實際階段；沒給時與顯示階段相同 */
+    unlockStage?: () => MilestoneStage;
     announce?: (line: string) => void;
     /** 世交相性 K 的滑動窗（G3 §F-2）；未提供時不顯示 */
     familySynergy?: () => FamilySynergyLedger;
@@ -191,6 +193,10 @@ export class BondingSetupController {
 
     private _stage(): MilestoneStage {
         return this._deps.milestoneStage?.() ?? 4;
+    }
+
+    private _unlockStage(): MilestoneStage {
+        return this._deps.unlockStage?.() ?? this._stage();
     }
 
     /** G2 §E #1：雙親各 14 席的格位文字 */
@@ -424,11 +430,11 @@ export class BondingSetupController {
             estimateBox: !this._potentialOpen || !factorDetailVisible(stage),
             statProbeLine: !this._potentialOpen || !factorDetailVisible(stage),
             btnPotential: factorDetailVisible(stage),
-            btnCompact: kinshipScanVisible(stage),
+            btnCompact: kinshipScanVisible(this._unlockStage()),
             btnYuedanFilter: factorDetailVisible(stage),
-            btnCycleProbeStat: factorDetailVisible(stage) && !this._potentialOpen,
-            btnProbeFatherStat: factorDetailVisible(stage),
-            btnProbeMotherStat: factorDetailVisible(stage),
+            btnCycleProbeStat: factorDetailVisible(this._unlockStage()) && !this._potentialOpen,
+            btnProbeFatherStat: factorDetailVisible(this._unlockStage()),
+            btnProbeMotherStat: factorDetailVisible(this._unlockStage()),
         };
         for (let i = 0; i < SAGE_LINE_COUNT; i++) actives[`sageRow${i}`] = false;
         for (let i = 0; i < ANCESTOR_SEAT_COUNT; i++) {

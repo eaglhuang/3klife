@@ -260,6 +260,12 @@ export class GeneralDetailComposite extends CompositePanel {
         this._syncDs3TabVisualState();
     }
 
+    /** 內容以外的設定改變時，重畫目前的 DS3 分頁 */
+    public refreshDs3CurrentTab(): Promise<void> {
+        for (const [, panel] of this.childPanels) panel._lastData = null;
+        return this._switchToDs3Tab(this._activeTab, null);
+    }
+
     private async _switchToDs3Tab(tab: TabKey, overview: UnifiedOverviewContentState | null): Promise<void> {
         this._activeTab = tab;
         this._bindDs3TabChild(tab);

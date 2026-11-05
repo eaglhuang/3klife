@@ -110,7 +110,7 @@ export class CharacterDs3BloodlineChild extends ChildPanelBase {
         if (!data || typeof data !== 'object') {
             return;
         }
-        const view = buildDs3BloodlineView(data as GeneralConfig, services().session.milestoneStage);
+        const view = buildDs3BloodlineView(data as GeneralConfig, services().session.displayStage);
 
         BLOODLINE_DEMO_NODES.forEach((name) => this._setActive(name, false));
         this._setText('BloodlineFamily', view.bloodlineName);
