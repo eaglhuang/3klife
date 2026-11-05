@@ -32,6 +32,8 @@ const UNLOCK_LINE: Partial<Record<MilestoneStage, string>> = {
 export const MILESTONE_G1_HINT = '【初創家業】目前僅顯示鄉評風聞與基礎開蒙，待子嗣成材修纂族譜後將解鎖深層血脈資訊。';
 /** M_stage 表：G2 近婚只給這句文字警告 */
 export const KIN_TEXT_WARNING = '親緣過近，恐損氣血';
+/** M_stage 表：G1 隱藏星數，開蒙、加冠時才演出 */
+export const G1_FACTOR_TEXT = '因子：開蒙、加冠時揭曉';
 /** G1 只看得到父母兩席 */
 const G1_VISIBLE_SEATS = 2;
 
@@ -39,7 +41,12 @@ export function ancestorSeatVisible(stage: MilestoneStage, seatIndex: number): b
     return stage >= 2 || seatIndex < G1_VISIBLE_SEATS;
 }
 
-/** 28 祖位共祖紅框與血脈燈號都從 G3 開始 */
+/** 因子星級、顯性與連攜上限、50 箱密查都從 G2 開始 */
+export function factorDetailVisible(stage: MilestoneStage): boolean {
+    return stage >= 2;
+}
+
+/** 28 祖位共祖紅框、血脈燈號、純化與世交合譜都從 G3 開始 */
 export function kinshipScanVisible(stage: MilestoneStage): boolean {
     return stage >= KIN_STAGE;
 }

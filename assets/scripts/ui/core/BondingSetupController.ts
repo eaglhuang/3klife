@@ -15,7 +15,7 @@
  * 畫面層拿 GetView() 的 ViewModel 一次刷新 Text 與 Button.interactable。
  */
 import { kinshipLampLine, outcrossRecoveryLine } from '../../core/systems/BloodFatigue';
-import { ancestorSeatVisible, diversityVisible, KIN_TEXT_WARNING, kinshipScanVisible, MILESTONE_G1_HINT, type MilestoneStage } from '../../core/systems/FamilyMilestone';
+import { ancestorSeatVisible, diversityVisible, factorDetailVisible, G1_FACTOR_TEXT, KIN_TEXT_WARNING, kinshipScanVisible, MILESTONE_G1_HINT, type MilestoneStage } from '../../core/systems/FamilyMilestone';
 import { PEDIGREE_SLOTS } from '../../core/services/BloodlineGraph';
 import { DIVERSITY_HINT } from '../../core/systems/DiversityFactor';
 import { HIDDEN_LINEAGE_COST, hiddenLineageLine, PEDIGREE_PROBE_COST, pedigreeProbeLine, STAT_PROBE_COST, statProbeLine } from '../../core/systems/PedigreeProbe';
@@ -25,7 +25,7 @@ import { buildBreedingBirthRecord, type BreedingBirthRecord } from '../../core/s
 import type { FactorColor } from '../../core/systems/FactorInheritance';
 import { buildBreedingPreviewLines } from './BreedingPreviewPresenter';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
-import { factorMaskLabels } from '../../core/systems/FactorMask';
+import { factorMaskView } from '../../core/systems/FactorMask';
 import { factorStageText } from '../../core/systems/FactorVisibility';
 import { matchRumorLine, sameSurnameNote, matchesRumorRoute, nextRumorRoute, nextRumorStat, RUMOR_STAT_KEYS, RumorRoute, rumorRouteFiltered, rumorRouteName, type RumorStatKey, type RumorStats } from '../../core/systems/MatchRumor';
 import { yuedanFiltered, yuedanList, yuedanRevealLine } from '../../core/systems/YuedanReview';
@@ -406,9 +406,15 @@ export class BondingSetupController {
             fatherPager: pagerText(fathers, father),
             motherPager: pagerText(mothers, mother),
         };
+        const stage = this._stage();
         const actives: Record<string, boolean> = {
             bondPanel: false,
             bondEmptyHint: false,
+            btnCompact: kinshipScanVisible(stage),
+            btnYuedanFilter: factorDetailVisible(stage),
+            btnCycleProbeStat: factorDetailVisible(stage),
+            btnProbeFatherStat: factorDetailVisible(stage),
+            btnProbeMotherStat: factorDetailVisible(stage),
         };
         for (let i = 0; i < SAGE_LINE_COUNT; i++) actives[`sageRow${i}`] = false;
         for (let i = 0; i < ANCESTOR_SEAT_COUNT; i++) {
@@ -429,19 +435,19 @@ export class BondingSetupController {
         };
 
         const level = this._deps.playerDiscoveryLevel?.() ?? 1;
-        texts.factorStage = factorStageText(level);
+        texts.factorStage = factorDetailVisible(stage) ? factorStageText(level) : '';
         const dictionary = this._deps.factorDictionary?.();
         const yuedanIds = this._yuedanIds();
-        const yuedan = (general: BreedingGeneral): string | null => (yuedanIds.indexOf(general.id) >= 0 ? yuedanRevealLine(general, dictionary) : null);
+        const yuedan = (general: BreedingGeneral): string | null => (factorDetailVisible(stage) && yuedanIds.indexOf(general.id) >= 0 ? yuedanRevealLine(general, dictionary) : null);
 
         if (!father || !mother) {
             actives.bondEmptyHint = true;
-            Object.assign(texts, parentTexts('father', father, level, yuedan), parentTexts('mother', mother, level, yuedan));
+            Object.assign(texts, parentTexts('father', father, level, stage, yuedan), parentTexts('mother', mother, level, stage, yuedan));
             return { fatherId: father?.id ?? null, motherId: mother?.id ?? null, mode: null, sageIds: [], texts, actives, enabled };
         }
 
         actives.bondPanel = true;
-        Object.assign(texts, parentTexts('father', father, level, yuedan), parentTexts('mother', mother, level, yuedan));
+        Object.assign(texts, parentTexts('father', father, level, stage, yuedan), parentTexts('mother', mother, level, stage, yuedan));
 
         const mode: BondingMode = (father.age ?? 0) >= RETIREMENT_AGE || (mother.age ?? 0) >= RETIREMENT_AGE ? 'Peace_Lineage' : 'Standard';
         texts.modeChip = mode === 'Peace_Lineage'
@@ -449,7 +455,6 @@ export class BondingSetupController {
             : '模式：一般結緣 · 雙方仍具親傳資格';
 
         Object.assign(texts, this._seatTexts('fatherTree', father.id), this._seatTexts('motherTree', mother.id));
-        const stage = this._stage();
         if (kinshipScanVisible(stage)) {
             this._deps.breeding.commonAncestorSeats?.(father.id, mother.id).forEach((shared, i) => { actives[`fatherTreeFrame${i}`] = shared; });
             this._deps.breeding.commonAncestorSeats?.(mother.id, father.id).forEach((shared, i) => { actives[`motherTreeFrame${i}`] = shared; });
@@ -460,11 +465,11 @@ export class BondingSetupController {
         texts.epEstimate = this._t('ui.breed.ep_display', String(ep.ep), ep.rating);
         const preview = buildBreedingPreviewLines(ep, this._deps.tagName);
         // 只揭露玩家已看得到的因子，同血脈走近親純化不算連攜
-        const synergyHint = isSameBloodline(father, mother) ? null : lineageSynergyHint(sharedBlueGenesOf(father, mother, this._deps.factorDictionary?.()).filter((gene) => (gene.discoveryLevel ?? 1) <= level));
+        const synergyHint = isSameBloodline(father, mother) || !factorDetailVisible(stage) ? null : lineageSynergyHint(sharedBlueGenesOf(father, mother, this._deps.factorDictionary?.()).filter((gene) => (gene.discoveryLevel ?? 1) <= level));
         texts.epDetail = ['基礎 50', preview.breakdownLine, preview.tagLine, ...(synergyHint ? [synergyHint] : [])].join(' · ');
         texts.conceptionLabel = `受孕率 ${Math.round(conceptionRate(father, mother) * 100)}%`;
         const ledger = this._deps.familySynergy?.();
-        const synergyLine = ledger ? synergyWindowLine(father as { familyUid?: string }, mother as { familyUid?: string }, ledger) : null;
+        const synergyLine = ledger && kinshipScanVisible(stage) ? synergyWindowLine(father as { familyUid?: string }, mother as { familyUid?: string }, ledger) : null;
         if (synergyLine) texts.conceptionLabel += `｜${synergyLine}`;
         texts.conceptionLabel += `｜${epContribLine(father.ep ?? EP_BASE, mother.ep ?? EP_BASE)}`;
         const sage = this._sageRemarks(father.id, mother.id);
@@ -489,7 +494,7 @@ export class BondingSetupController {
         texts.cycleProbeStatLabel = `細查維度：${rumorRouteName(stat)}`;
         texts.probeFatherStatLabel = statLabel(fatherStatProbed);
         texts.probeMotherStatLabel = statLabel(motherStatProbed);
-        texts.statProbeLine = statProbeLine(
+        texts.statProbeLine = !factorDetailVisible(stage) ? '' : statProbeLine(
             stat,
             { name: father.name, stats: father as RumorStats, probed: fatherStatProbed },
             { name: mother.name, stats: mother as RumorStats, probed: motherStatProbed },
@@ -516,12 +521,12 @@ export class BondingSetupController {
         if (recovery) texts.kinshipLampLine += `｜${recovery}`;
         const diversity = this._deps.breeding.diversityOf?.(father.id, mother.id) ?? 1;
         if (diversity < 1 && diversityVisible(stage)) texts.inbreedingLabel += `｜${DIVERSITY_HINT}`;
-        const allianceTag = ledger ? centuryAllianceTag(father as { familyUid?: string }, mother as { familyUid?: string }, ledger) : null;
+        const allianceTag = ledger && kinshipScanVisible(stage) ? centuryAllianceTag(father as { familyUid?: string }, mother as { familyUid?: string }, ledger) : null;
         if (allianceTag) texts.inbreedingLabel += `｜${allianceTag}`;
-        const kinTargets = (this._deps.breeding.kinPurificationTargets?.(father.id, mother.id) ?? []).filter((target) => (target.gene.discoveryLevel ?? 1) <= level);
+        const kinTargets = !kinshipScanVisible(stage) ? [] : (this._deps.breeding.kinPurificationTargets?.(father.id, mother.id) ?? []).filter((target) => (target.gene.discoveryLevel ?? 1) <= level);
         const kinHint = kinPurificationHint(kinTargets);
         // 通知欄與上限列在同一位置，有通知時先讓位
-        texts.factorCapLabel = this._notice ? '' : blueFactorCapLine(blueFactorCaps(father, mother, {
+        texts.factorCapLabel = this._notice || !factorDetailVisible(stage) ? '' : blueFactorCapLine(blueFactorCaps(father, mother, {
             dictionary: this._deps.factorDictionary?.(),
             synergyAllowed: !isSameBloodline(father, mother),
             purifyIds: kinTargets.map((target) => target.gene.id ?? ''),
@@ -705,12 +710,16 @@ function pagerText(list: BreedingGeneral[], selected: BreedingGeneral | null): s
 }
 
 /** 父母因子的遮罩文字；沒有因子時顯示「無因子」 */
-function factorLine(general: BreedingGeneral, playerLevel: number): string {
-    const labels = factorMaskLabels(general.genes ?? [], playerLevel);
+function factorLine(general: BreedingGeneral, playerLevel: number, stage: MilestoneStage): string {
+    if (!factorDetailVisible(stage)) return G1_FACTOR_TEXT;
+    const labels = (general.genes ?? []).map((gene) => {
+        const view = factorMaskView(gene, playerLevel);
+        return view.revealed ? `${view.label} ${gene.level ?? 1}★` : view.label;
+    });
     return labels.length > 0 ? `因子：${labels.join(' · ')}` : '因子：無';
 }
 
-function parentTexts(side: 'father' | 'mother', general: BreedingGeneral | null, playerLevel: number, yuedan: (general: BreedingGeneral) => string | null): Record<string, string> {
+function parentTexts(side: 'father' | 'mother', general: BreedingGeneral | null, playerLevel: number, stage: MilestoneStage, yuedan: (general: BreedingGeneral) => string | null): Record<string, string> {
     if (!general) {
         return {
             [`${side}Name`]: side === 'father' ? '父方：無人可選' : '母方：無人可選',
@@ -729,7 +738,7 @@ function parentTexts(side: 'father' | 'mother', general: BreedingGeneral | null,
     return {
         [`${side}Name`]: `${side === 'father' ? '父方' : '母方'}：${general.name}`,
         [`${side}Info`]: parts.join(' · '),
-        [`${side}Factors`]: factorLine(general, playerLevel),
+        [`${side}Factors`]: factorLine(general, playerLevel, stage),
         [`${side}Rumor`]: yuedan(general) ?? matchRumorLine({
             str: statOf(general, 'str'),
             int: statOf(general, 'int'),
