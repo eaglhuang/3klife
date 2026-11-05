@@ -1,7 +1,7 @@
 import { TestSuite, assert } from './TestRunner';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 import { buildFactorDictionary } from '../assets/scripts/core/systems/FactorInheritance';
-import { isYuedanCandidate, yuedanBannerLines, yuedanFactors, yuedanHealthTier, yuedanList, yuedanRevealLine } from '../assets/scripts/core/systems/YuedanReview';
+import { isYuedanCandidate, yuedanBannerLines, yuedanFactors, yuedanFiltered, yuedanHealthTier, yuedanList, yuedanRevealLine } from '../assets/scripts/core/systems/YuedanReview';
 
 const general = (id: string, ep: number, extra: Record<string, unknown> = {}): GeneralConfig => ({ id, name: id, age: 25, ep, ...extra } as unknown as GeneralConfig);
 const dictionary = buildFactorDictionary([
@@ -48,7 +48,14 @@ export function createYuedanReviewSuite(): TestSuite {
         assert.lengthEquals(2, lines);
         assert.isTrue(lines[0].indexOf('g9【才思絕倫】、g8【才思絕倫】') >= 0);
         assert.isTrue(lines[1].indexOf('當代 2 位') >= 0);
+        assert.isTrue(lines[1].indexOf('可於說親名冊中直接篩選') >= 0);
         assert.lengthEquals(0, yuedanBannerLines([general('kid', 90, { age: 10 })]));
+    });
+
+    suite.test('篩選只留榜上的人；榜上沒人時保留原清單', () => {
+        const list = [general('a', 50), general('b', 60)];
+        assert.equals('b', yuedanFiltered(list, ['b', 'other']).map((g) => g.id).join());
+        assert.equals('a,b', yuedanFiltered(list, ['other']).map((g) => g.id).join());
     });
 
     return suite;

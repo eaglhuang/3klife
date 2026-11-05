@@ -84,6 +84,33 @@
           },
           {
             "type": "button",
+            "name": "BtnYuedanFilter",
+            "id": "btnYuedanFilter",
+            "widget": {
+              "top": 16,
+              "right": 146
+            },
+            "width": 170,
+            "height": 48,
+            "skinSlot": "bonding.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnYuedanFilterLabel",
+                "id": "yuedanFilterLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "只看月旦評",
+                "styleSlot": "bonding.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
             "name": "BtnOpenOracle",
             "id": "btnOpenOracle",
             "widget": {

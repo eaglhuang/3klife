@@ -24,7 +24,7 @@ import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { factorMaskLabels } from '../../core/systems/FactorMask';
 import { factorStageText } from '../../core/systems/FactorVisibility';
 import { matchRumorLine } from '../../core/systems/MatchRumor';
-import { yuedanList, yuedanRevealLine } from '../../core/systems/YuedanReview';
+import { yuedanFiltered, yuedanList, yuedanRevealLine } from '../../core/systems/YuedanReview';
 import type { FactorDictionary } from '../../core/systems/FactorInheritance';
 import type { BreedingService } from '../../core/services/BreedingService';
 import { type BreedTextLookup, fallbackBreedText } from './BreedingTexts';
@@ -126,6 +126,8 @@ export class BondingSetupController {
     private _fatherId: string | null = null;
     private _motherId: string | null = null;
     private _notice = '';
+    /** 只看月旦評榜上人物（G4 §H）；只影響清單，不寫存檔 */
+    private _yuedanOnly = false;
 
     constructor(private readonly _deps: BondingSetupDeps) {}
 
@@ -149,7 +151,7 @@ export class BondingSetupController {
 
     /** 可放進父方欄位的武將；精力不足等暫時狀態仍列出，由資格檢查說明原因 */
     fathers(): BreedingGeneral[] {
-        return this._parents().filter((g) => isMale(g));
+        return this._applyYuedanFilter(this._parents().filter((g) => isMale(g)));
     }
 
     /** 結緣畫面：目前選中的母方待產中時回傳劇本句（PROG-2-0732，ui.vit.script.pregnancy_lock）；否則 null */
@@ -160,7 +162,7 @@ export class BondingSetupController {
     }
 
     mothers(): BreedingGeneral[] {
-        return this._parents().filter((g) => isFemale(g));
+        return this._applyYuedanFilter(this._parents().filter((g) => isFemale(g)));
     }
 
     get fatherId(): string | null {
@@ -181,6 +183,18 @@ export class BondingSetupController {
     selectMother(id: string): void {
         this._motherId = id;
         this._notice = '';
+    }
+
+    /** 切換只看月旦評；目前選的人不在清單裡時，getView 會改挑清單內的預設配對 */
+    toggleYuedanFilter(): void {
+        this._yuedanOnly = !this._yuedanOnly;
+        const listed = this._yuedanIds();
+        const parents = this._parents();
+        const missing = [
+            parents.some((g) => isMale(g) && listed.indexOf(g.id) >= 0) ? '' : '父方',
+            parents.some((g) => isFemale(g) && listed.indexOf(g.id) >= 0) ? '' : '母方',
+        ].filter((side) => !!side);
+        this._notice = this._yuedanOnly && missing.length > 0 ? `月旦評榜上沒有${missing.join('、')}人選，這邊仍顯示全部。` : '';
     }
 
     cycleFather(step = 1): void {
@@ -259,6 +273,7 @@ export class BondingSetupController {
 
         const texts: Record<string, string> = {
             bondTitle: '結緣配置',
+            yuedanFilterLabel: this._yuedanOnly ? '顯示全部' : '只看月旦評',
             bondNotice: this._notice,
             bondEmptyHint: `名冊中需要至少一位滿 ${BREEDING_MIN_AGE} 歲的男性與女性武將才能結緣。可先到轉蛋招募，或推進季度讓子嗣長大。`,
             fatherPager: pagerText(fathers, father),
@@ -271,6 +286,7 @@ export class BondingSetupController {
         for (let i = 0; i < SAGE_LINE_COUNT; i++) actives[`sageRow${i}`] = false;
         const enabled: Record<string, boolean> = {
             btnCloseBond: true,
+            btnYuedanFilter: this._yuedanIds().length > 0,
             btnPrevFather: fathers.length > 1,
             btnNextFather: fathers.length > 1,
             btnPrevMother: mothers.length > 1,
@@ -281,7 +297,7 @@ export class BondingSetupController {
         const level = this._deps.playerDiscoveryLevel?.() ?? 1;
         texts.factorStage = factorStageText(level);
         const dictionary = this._deps.factorDictionary?.();
-        const yuedanIds = yuedanList(this._deps.roster.getAll() as BreedingGeneral[]).map((g) => g.id);
+        const yuedanIds = this._yuedanIds();
         const yuedan = (general: BreedingGeneral): string | null => (yuedanIds.indexOf(general.id) >= 0 ? yuedanRevealLine(general, dictionary) : null);
 
         if (!father || !mother) {
@@ -326,6 +342,14 @@ export class BondingSetupController {
     }
 
     // ── 內部 ───────────────────────────────────────────────────────────────
+
+    private _yuedanIds(): string[] {
+        return yuedanList(this._deps.roster.getAll() as BreedingGeneral[]).map((g) => g.id);
+    }
+
+    private _applyYuedanFilter(candidates: BreedingGeneral[]): BreedingGeneral[] {
+        return this._yuedanOnly ? yuedanFiltered(candidates, this._yuedanIds()) : candidates;
+    }
 
     private _parents(): BreedingGeneral[] {
         return (this._deps.roster.getAll() as BreedingGeneral[]).filter((g) =>
