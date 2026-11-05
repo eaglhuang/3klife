@@ -27,6 +27,7 @@ import { matchRumorLine, sameSurnameNote, matchesRumorRoute, nextRumorRoute, Rum
 import { yuedanFiltered, yuedanList, yuedanRevealLine } from '../../core/systems/YuedanReview';
 import { synergyWindowLine, type FamilySynergyLedger } from '../../core/systems/FamilySynergy';
 import { compactCostFor, compactFamilyOf, heritageFactorsOf, sharedFactorsOf } from '../../core/systems/FamilyCompact';
+import { lineageSynergyHint, lineageSynergyLine, sharedBlueGenesOf } from '../../core/systems/LineageSynergy';
 import type { GeneralGeneConfig } from '../../core/models/GeneralUnit';
 import type { FactorDictionary } from '../../core/systems/FactorInheritance';
 import type { BreedingService } from '../../core/services/BreedingService';
@@ -297,6 +298,9 @@ export class BondingSetupController {
                     ? `　父系家傳：保住了 ${heritage.displayName ?? heritage.id}。`
                     : `　父系家傳：${heritage.displayName ?? heritage.id} 本就傳下。`;
             }
+            // 字典沒收錄的因子，子嗣身上的名稱只有 id，所以取父親的
+            const synergyGene = result.father.genes?.find((gene) => gene.id === result.lineageSynergyFactorId);
+            if (synergyGene) this._notice += `　${lineageSynergyLine(synergyGene.displayName ?? synergyGene.id ?? '')}`;
             this._slotPick = null;
         }
         // 父母壽命耗盡時提示，與培育回合的「壽命耗盡，武將已故」一致（QA 回報，PROG-2-0224）
@@ -376,7 +380,9 @@ export class BondingSetupController {
         const ep = this._deps.breeding.previewEp(father.id, mother.id);
         texts.epEstimate = this._t('ui.breed.ep_display', String(ep.ep), ep.rating);
         const preview = buildBreedingPreviewLines(ep, this._deps.tagName);
-        texts.epDetail = ['基礎 50', preview.breakdownLine, preview.tagLine].join(' · ');
+        // 只揭露玩家已看得到的因子，同血脈走近親純化不算連攜
+        const synergyHint = isSameBloodline(father, mother) ? null : lineageSynergyHint(sharedBlueGenesOf(father, mother, this._deps.factorDictionary?.()).filter((gene) => (gene.discoveryLevel ?? 1) <= level));
+        texts.epDetail = ['基礎 50', preview.breakdownLine, preview.tagLine, ...(synergyHint ? [synergyHint] : [])].join(' · ');
         texts.conceptionLabel = `受孕率 ${Math.round(conceptionRate(father, mother) * 100)}%`;
         const ledger = this._deps.familySynergy?.();
         const synergyLine = ledger ? synergyWindowLine(father as { familyUid?: string }, mother as { familyUid?: string }, ledger) : null;
