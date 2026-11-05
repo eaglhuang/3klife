@@ -15,6 +15,7 @@
  * Presenter 讀 Model（名冊 / NurtureService）後吐出 ViewModel，按鈕 onClick 只轉呼叫 Presenter 的方法。
  */
 import { lateBloomClueText } from '../../core/systems/LateBloomClue';
+import { childUltimateAwakenLine } from '../../core/systems/UltimateScriptLines';
 import { VITALITY_SCRIPT_KEYS, vitalityScriptText } from './VitalityScriptTexts';
 import { fateOmenKeyOf, fateText } from './FateScriptTexts';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
@@ -403,13 +404,15 @@ export class NurtureFlowController {
 
     async train(action: NurtureAction): Promise<NurtureRoundLog> {
         const child = this._requireSelected();
-        const { log, awakening, inspirations, session } = this._deps.nurture.train(child.id, action);
+        const { log, awakening, inspirations, session, childUltimates } = this._deps.nurture.train(child.id, action);
         // 因子解鎖系統 §H UI_AWAKENING：「【覺醒】{GeneName}！」
         const lookup = this._deps.text ?? fallbackBreedText;
         this._notice = awakening ? `${describeRound(log, lookup)}　【覺醒】${awakening.displayName}！` : describeRound(log, lookup);
         // 教官系統 §E：靈感與羈絆觸發要讓玩家看得到（PROG-2-1096）
         const mentorNotes = describeMentorTriggers(log.synergyId, inspirations, session?.mentors ?? [], this._deps.tacticName);
         if (mentorNotes) this._notice += `　${mentorNotes}`;
+        // 奧義系統 §G 子嗣覺醒（PROG-2-1780）；一回合覺醒多個也只說一句
+        if (childUltimates?.length) this._notice += `　${childUltimateAwakenLine(child.name, childUltimates[0].fromFather)}`;
         if (log.vigorAfter === 0) {
             this._deps.showToast?.(vitalityScriptText(this._t.bind(this), VITALITY_SCRIPT_KEYS.exhausted, child.name));
         }

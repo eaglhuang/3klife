@@ -79,9 +79,9 @@ export function findUltimateFamily(ultimateId: string): UltimateEffectFamily | n
 }
 
 /** 奧義的槽位與主屬性（奧義攻擊基準用，PROG-2-0927）；查不到時回傳 undefined */
-export function findUltimateDamageDef(ultimateId: string): { slot?: number; scalingStat?: string | null } | undefined {
+export function findUltimateDamageDef(ultimateId: string): { slot?: number; scalingStat?: string | null; name?: string } | undefined {
   const def = ultimateDefinitionMap.get(ultimateId);
-  return def ? { slot: def.slot, scalingStat: def.scalingStat } : undefined;
+  return def ? { slot: def.slot, scalingStat: def.scalingStat, name: def.name } : undefined;
 }
 
 /** 奧義 base_power 表（NumericalConfig.Ult_Base_Power）；尚未載入時回傳 undefined（PROG-2-0927） */

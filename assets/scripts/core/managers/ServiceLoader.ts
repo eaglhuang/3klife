@@ -86,6 +86,8 @@ export class ServiceLoader {
     });
     /** loadUltimateDefinitions() 載入後的奧義母表（只留 id 與繼承基因）；子嗣奧義覺醒用 */
     private ultimateDefinitions: ChildUltimateDefinition[] = [];
+    /** 奧義 id → 顯示名（PROG-2-1780）；loadUltimateDefinitions() 載入，含沒有繼承基因的奧義 */
+    private ultimateNames = new Map<string, string>();
     /** loadFactorDictionary() 載入後的因子字典；結緣產生子嗣時用來補因子名稱與顏色 */
     private factorDictionary: FactorDictionary | undefined;
     /** loadHistoricalPairs() 載入後的史實配對表（KIN-02）；結緣契合與宿敵受孕率讀它 */
@@ -246,9 +248,16 @@ export class ServiceLoader {
     }
 
     /** 載入奧義母表的 id 與 inheritanceGeneId；失敗時子嗣奧義覺醒不擲骰，其餘培育不受影響。 */
+    public ultimateNameOf(ultimateId: string): string | undefined {
+        return this.ultimateNames.get(ultimateId);
+    }
+
     public async loadUltimateDefinitions(): Promise<void> {
         try {
-            const raw = await this.resource.loadJson<{ data?: Array<{ id?: unknown; inheritanceGeneId?: unknown }> }>('data/master/ultimate-definitions');
+            const raw = await this.resource.loadJson<{ data?: Array<{ id?: unknown; name?: unknown; inheritanceGeneId?: unknown }> }>('data/master/ultimate-definitions');
+            this.ultimateNames = new Map((raw?.data ?? [])
+                .filter((d) => typeof d.id === 'string' && typeof d.name === 'string')
+                .map((d) => [d.id as string, d.name as string]));
             this.ultimateDefinitions = (raw?.data ?? [])
                 .filter((d): d is { id: string; inheritanceGeneId: string } => typeof d.id === 'string' && typeof d.inheritanceGeneId === 'string')
                 .map((d) => ({ ultimateId: d.id, inheritanceGeneId: d.inheritanceGeneId }));

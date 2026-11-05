@@ -95,6 +95,7 @@ import { bloodlineBirthLines } from '../../core/systems/BloodlineBirthLines';
 import type { DiscoveryGain } from '../../core/systems/DiscoveryProgress';
 import { discoveryPhaseUnlockLines } from '../../core/systems/DiscoveryProgress';
 import { rebirthVoiceLines } from '../../core/systems/Rebirth';
+import { ultimateUnlockLines } from '../../core/systems/UltimateScriptLines';
 import { HallBoardPanelController, HALL_BOARD_MAX_ROWS } from '../core/HallBoardPanelController';
 import { HALL_BOARD_TYPE_LABEL, hallAssignNoticeOf, hallMissionDialogStateOf } from '../core/HallMissionDialogState';
 import { hallPlayerOf, officerPromotionScriptLines, OFFICER_ERA_KEPT_LINE } from '../../core/systems/OfficerSnapshot';
@@ -3576,6 +3577,14 @@ export class LobbyScene extends Component {
             const nameOf = (id: string) => duplicates.find((general) => general.id === id)?.name;
             for (const message of rebirthVoiceLines(rebirths, nameOf)) {
                 services().event.emit('SHOW_TOAST', { message, duration: 3 });
+            }
+            // 奧義系統 §G 奧義解鎖（PROG-2-1780）；奧義母表平常只在結緣前載入
+            if (rebirths.length > 0) {
+                await services().loadUltimateDefinitions();
+                const generalOf = (id: string) => duplicates.find((general) => general.id === id);
+                for (const message of ultimateUnlockLines(rebirths, generalOf, (id) => services().ultimateNameOf(id))) {
+                    services().event.emit('SHOW_TOAST', { message, duration: 3 });
+                }
             }
         } catch (error) {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 抽卡結果寫入名冊 / 存檔失敗', error);
