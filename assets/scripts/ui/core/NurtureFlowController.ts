@@ -884,7 +884,8 @@ function buildSessionTexts(session: NurtureSession, notice: string, t: BreedText
             ? `教官：${session.mentors.map((m) => m.name).join('、')}`
             : '教官：無',
         nurtureFactors: session.negativeFactors.length > 0 ? `負面因子：${session.negativeFactors.join('、')}` : '負面因子：無',
-        nurtureLog: notice || lateBloomClueText(session.vigor, VIGOR_MAX) || (last ? describeRound(last, t) : '選擇本回合的訓練，或休息回復精力'),
+        // 紀錄列只有一行高，換行會讓字被縮小
+        nurtureLog: notice.replace(/\n/g, '　') || lateBloomClueText(session.vigor, VIGOR_MAX) || (last ? describeRound(last, t) : '選擇本回合的訓練，或休息回復精力'),
     };
 }
 
