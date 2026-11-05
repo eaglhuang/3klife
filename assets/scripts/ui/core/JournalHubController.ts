@@ -14,6 +14,8 @@
 import { journalText, type JournalTextLookup } from './JournalTexts';
 
 export const MORNING_MAX_LINES = 3;
+/** 離線互動區最多列幾則（新的在上，PROG-2-1856） */
+export const OFFLINE_INTERACTION_MAX_LINES = 2;
 export const DISPATCH_MAX_ROWS = 4;
 
 export interface DispatchBoardRow {
@@ -37,6 +39,8 @@ export interface JournalHubDeps {
     dispatchGenerals?: () => readonly { id: string; name: string }[];
     /** 畫面文字查表（JRN-07）；未提供時用 zh-TW 預設 */
     lookup?: JournalTextLookup;
+    /** 離線互動日誌文字，新的在前（JRN-04 INTERACTION 類，PROG-2-1856）；未提供或空時整區隱藏 */
+    offlineInteractionLines?: () => readonly string[];
 }
 
 export const DISPATCH_AUTO_PICK_LABEL = '自動挑選';
@@ -66,6 +70,11 @@ export class JournalHubController {
     /** 晨報行（最多 MORNING_MAX_LINES）。 */
     public morningLines(): string[] {
         return this._deps.morningLines().slice(0, MORNING_MAX_LINES);
+    }
+
+    /** 離線互動行（最多 OFFLINE_INTERACTION_MAX_LINES，新的在上） */
+    public offlineInteractionLines(): string[] {
+        return (this._deps.offlineInteractionLines?.() ?? []).slice(0, OFFLINE_INTERACTION_MAX_LINES);
     }
 
     /** 派遣板列（最多 DISPATCH_MAX_ROWS）。 */
@@ -98,6 +107,13 @@ export class JournalHubController {
             actives[`dispatchRow${i}`] = row !== undefined;
             texts[`dispatchRow${i}Name`] = row?.title ?? '';
             texts[`dispatchRow${i}Score`] = row?.scoreText ?? '';
+        }
+        const interactions = this.offlineInteractionLines();
+        texts.offlineInteractionTitle = journalText(this._deps.lookup, 'UI_OFFLINE_INTERACTION_TITLE');
+        actives.offlineInteractionTitle = interactions.length > 0;
+        for (let i = 0; i < OFFLINE_INTERACTION_MAX_LINES; i++) {
+            actives[`offlineInteractionLine${i}`] = interactions[i] !== undefined;
+            texts[`offlineInteractionLine${i}`] = interactions[i] ?? '';
         }
         const picked = this._generals().find((g) => g.id === this._pickedId);
         texts.dispatchPickerLabel = `派遣武將：${picked?.name ?? DISPATCH_AUTO_PICK_LABEL}`;

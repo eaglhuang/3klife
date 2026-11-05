@@ -80,6 +80,33 @@
           },
           {
             "type": "label",
+            "name": "OfflineInteractionTitle",
+            "id": "offlineInteractionTitle",
+            "width": 944,
+            "height": 48,
+            "text": "",
+            "styleSlot": "jh.label.title"
+          },
+          {
+            "type": "label",
+            "name": "OfflineInteractionLine0",
+            "id": "offlineInteractionLine0",
+            "width": 944,
+            "height": 40,
+            "text": "",
+            "styleSlot": "jh.label.body"
+          },
+          {
+            "type": "label",
+            "name": "OfflineInteractionLine1",
+            "id": "offlineInteractionLine1",
+            "width": 944,
+            "height": 40,
+            "text": "",
+            "styleSlot": "jh.label.body"
+          },
+          {
+            "type": "label",
             "name": "DispatchTitle",
             "id": "dispatchTitle",
             "width": 944,
