@@ -9,6 +9,7 @@
  */
 import { BlockInputEvents, Color, Graphics, Label, Node, UITransform } from 'cc';
 import { treeCardNodeName } from '../../../core/systems/BloodlineTreeBinding';
+import { PEDIGREE_SEAT_WEIGHTS, pedigreeRowLabel } from '../../../core/systems/BloodlineTreeSlots';
 import { BloodlineTreePanel } from '../../panels/BloodlineTreePanel';
 
 export const DS3_BLOODLINE_TREE_NODE_NAME = 'Ds3BloodlineTree';
@@ -20,9 +21,9 @@ const CARDS_CENTER_X = 115;
 const TITLE = { text: '家族血統樹', y: 480, width: 640, height: 40, fontSize: 26, color: '#FFE088' };
 
 const ROWS = [
-    { row: 1, container: 'Gen1Container', count: 8, step: 115, y: 380, width: 108, height: 96, zh: '曾祖父母', sub: '(8人)', color: '#8C8575' },
-    { row: 2, container: 'Gen2Container', count: 4, step: 230, y: 210, width: 170, height: 96, zh: '祖父母', sub: '(4人)', color: '#B0A880' },
-    { row: 3, container: 'Gen3Container', count: 2, step: 460, y: 40, width: 210, height: 96, zh: '父母', sub: '(2人)', color: '#C8B87A' },
+    { row: 1, container: 'Gen1Container', count: 8, step: 115, y: 380, width: 108, height: 96, zh: '曾祖父母', weight: PEDIGREE_SEAT_WEIGHTS.greatGrandparent, color: '#8C8575' },
+    { row: 2, container: 'Gen2Container', count: 4, step: 230, y: 210, width: 170, height: 96, zh: '祖父母', weight: PEDIGREE_SEAT_WEIGHTS.grandparent, color: '#B0A880' },
+    { row: 3, container: 'Gen3Container', count: 2, step: 460, y: 40, width: 210, height: 96, zh: '父母', weight: PEDIGREE_SEAT_WEIGHTS.parent, color: '#C8B87A' },
 ] as const;
 const SUBJECT = { y: -150, width: 240, height: 120, sub: '(1人)', zh: '本代', color: '#FFE088' };
 const LEGEND = {
@@ -79,7 +80,7 @@ function fillRoundRect(node: Node, width: number, height: number, fill: Color, b
 }
 
 function buildGenerationRow(root: Node, config: (typeof ROWS)[number]): void {
-    addLabel(root, `GenLabel_${config.row}`, `${config.zh}\n${config.sub}`, LABEL_COLUMN_X, config.y, 90, 60, 15, new Color().fromHEX(config.color));
+    addLabel(root, `GenLabel_${config.row}`, pedigreeRowLabel(config.zh, config.count, config.weight), LABEL_COLUMN_X, config.y, 90, 60, 15, new Color().fromHEX(config.color));
     const container = addNode(root, config.container, CARDS_CENTER_X, config.y, config.step * config.count, config.height);
     for (let i = 0; i < config.count; i++) {
         const x = (i - (config.count - 1) / 2) * config.step;
