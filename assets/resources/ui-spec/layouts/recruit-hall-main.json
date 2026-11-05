@@ -101,6 +101,33 @@
           },
           {
             "type": "button",
+            "name": "BtnRescue",
+            "id": "btnRescue",
+            "widget": {
+              "top": 24,
+              "right": 245
+            },
+            "width": 200,
+            "height": 56,
+            "skinSlot": "recruit.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnRescueLabel",
+                "id": "btnRescueLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 36,
+                "text": "民間尋訪",
+                "styleSlot": "recruit.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
             "name": "BtnFrame0",
             "id": "btnFrame0",
             "widget": {
