@@ -96,6 +96,7 @@ import type { DiscoveryGain } from '../../core/systems/DiscoveryProgress';
 import { discoveryPhaseUnlockLines } from '../../core/systems/DiscoveryProgress';
 import { factorAwakeningLines, type FactorAwakenedEvent } from '../../core/systems/FactorAwakening';
 import { rebirthVoiceLines } from '../../core/systems/Rebirth';
+import { gachaFemaleLines } from '../../core/systems/FemaleSourcePresenter';
 import { ultimateUnlockLines } from '../../core/systems/UltimateScriptLines';
 import { rebirthBreakthroughLine } from '../../core/systems/NumericalScriptLines';
 import { HallBoardPanelController, HALL_BOARD_MAX_ROWS } from '../core/HallBoardPanelController';
@@ -3584,6 +3585,10 @@ export class LobbyScene extends Component {
             }
             const nameOf = (id: string) => duplicates.find((general) => general.id === id)?.name;
             for (const message of rebirthVoiceLines(rebirths, nameOf)) {
+                services().event.emit('SHOW_TOAST', { message, duration: 3 });
+            }
+            // 可結緣女性來源系統 §G 轉蛋抽到女將（PROG-2-1786）
+            for (const message of gachaFemaleLines(added)) {
                 services().event.emit('SHOW_TOAST', { message, duration: 3 });
             }
             // 數值系統 §G-1 轉生突破（PROG-2-1782）
