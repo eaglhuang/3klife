@@ -1,4 +1,5 @@
 // @spec-source → WBS v3 BAG-02（主城倉庫：50 格、擴容 +20、上限 200）；BAG-09（倉庫 UI 與字串）；PROG-2-0477
+// @spec-source → 武將背包（倉庫）系統.md §鎖定保護（逐件選取鎖定／解鎖，PROG-2-1854）
 /**
  * WarehousePanelController — 倉庫面板的畫面流程（純邏輯，不依賴 cc）。
  *
@@ -40,9 +41,14 @@ export interface WarehousePanelDeps {
     expand: () => boolean;
     /** 倉庫裡的物件列（不含已裝在武將身上的）；不給時清單顯示空倉提示（PROG-2-1721） */
     storedRecords?: () => readonly InventoryRecord[];
+    /** 鎖定或解鎖一件（GameSession.setInventoryLocked）；回傳是否找到該列；不給時鎖定鈕停用（PROG-2-1854） */
+    setLocked?: (inventoryId: string, locked: boolean) => boolean;
 }
 
-/** 清單最多列出幾件，其餘以「…另有 N 件」帶過 */
+/** 選取列的標記（加在列尾，PROG-2-1854） */
+export const WAREHOUSE_SELECTED_MARK = '　◀';
+
+/** 清單一頁最多列出幾件，前後以「…前有／另有 N 件」帶過 */
 export const WAREHOUSE_LIST_MAX_LINES = 8;
 
 const FULL_NOTICE = warehouseFullLine();
@@ -50,6 +56,8 @@ const FULL_NOTICE = warehouseFullLine();
 export class WarehousePanelController {
     private _notice: string | null = null;
     private _sortKey: WarehouseSortKey = 'quality';
+    /** 選取的那一件（Inventory_ID）；換排序時保留 */
+    private _selectedId: string | null = null;
 
     constructor(private readonly _deps: WarehousePanelDeps) {}
 
@@ -90,13 +98,56 @@ export class WarehousePanelController {
         return this._sortKey;
     }
 
-    /** 依目前排序方式組出清單文字 */
+    private _sorted(): readonly InventoryRecord[] {
+        return sortWarehouseRecords(this._deps.storedRecords?.() ?? [], this._sortKey);
+    }
+
+    /** 選取列在排序後清單的位置；沒選或那件已不在倉庫時回到第一件 */
+    private _selectedIndex(sorted: readonly InventoryRecord[]): number {
+        const index = sorted.findIndex((record) => record.Inventory_ID === this._selectedId);
+        return index >= 0 ? index : 0;
+    }
+
+    /** 目前選取的那一件；倉庫空時為 null */
+    public selectedRecord(): InventoryRecord | null {
+        const sorted = this._sorted();
+        return sorted[this._selectedIndex(sorted)] ?? null;
+    }
+
+    /** 上一件／下一件（頭尾循環）：step = -1 或 +1 */
+    public moveSelection(step: number): InventoryRecord | null {
+        const sorted = this._sorted();
+        if (sorted.length === 0) return null;
+        const next = (this._selectedIndex(sorted) + step + sorted.length) % sorted.length;
+        this._selectedId = sorted[next].Inventory_ID;
+        return sorted[next];
+    }
+
+    /** 鎖定或解鎖選取的那一件；結果寫在提示列 */
+    public toggleLockSelected(): boolean {
+        const record = this.selectedRecord();
+        if (!record || !this._deps.setLocked) {
+            this._notice = '倉庫目前沒有物品';
+            return false;
+        }
+        const locked = !!record.isLocked;
+        const name = warehouseRecordLine({ ...record, isLocked: false });
+        const ok = this._deps.setLocked(record.Inventory_ID, !locked);
+        this._selectedId = record.Inventory_ID;
+        this._notice = ok ? `${locked ? '已解鎖' : '已鎖定'} ${name}` : '找不到這件物品';
+        return ok;
+    }
+
+    /** 依目前排序方式組出清單文字：顯示選取列所在的那一頁，選取列尾加標記 */
     public listText(): string {
-        const records = this._deps.storedRecords?.() ?? [];
-        if (records.length === 0) return '倉庫目前沒有物品';
-        const sorted = sortWarehouseRecords(records, this._sortKey);
-        const lines = sorted.slice(0, WAREHOUSE_LIST_MAX_LINES).map(warehouseRecordLine);
-        const rest = sorted.length - lines.length;
+        const sorted = this._sorted();
+        if (sorted.length === 0) return '倉庫目前沒有物品';
+        const selected = this._selectedIndex(sorted);
+        const start = Math.floor(selected / WAREHOUSE_LIST_MAX_LINES) * WAREHOUSE_LIST_MAX_LINES;
+        const page = sorted.slice(start, start + WAREHOUSE_LIST_MAX_LINES);
+        const lines = page.map((record, i) => warehouseRecordLine(record) + (start + i === selected ? WAREHOUSE_SELECTED_MARK : ''));
+        if (start > 0) lines.unshift(`…前有 ${start} 件`);
+        const rest = sorted.length - start - page.length;
         if (rest > 0) lines.push(`…另有 ${rest} 件`);
         return lines.join('\n');
     }
@@ -115,9 +166,20 @@ export class WarehousePanelController {
             warehouseList: this.listText(),
             btnWarehouseExpandLabel: expandable ? `擴容 +${WAREHOUSE_EXPAND_STEP} 格` : '已達上限',
             btnCloseLabel: '關閉',
+            btnWarehousePrevLabel: '上一件',
+            btnWarehouseNextLabel: '下一件',
+            btnWarehouseLockLabel: this.selectedRecord()?.isLocked ? '解鎖' : '鎖定',
         };
         const actives: Record<string, boolean> = { warehouseNotice: notice !== '' };
-        const enabled: Record<string, boolean> = { btnClose: true, btnWarehouseExpand: expandable, btnWarehouseSort: true };
+        const count = this._sorted().length;
+        const enabled: Record<string, boolean> = {
+            btnClose: true,
+            btnWarehouseExpand: expandable,
+            btnWarehouseSort: true,
+            btnWarehousePrev: count > 1,
+            btnWarehouseNext: count > 1,
+            btnWarehouseLock: count > 0 && !!this._deps.setLocked,
+        };
         return { texts, actives, enabled };
     }
 }

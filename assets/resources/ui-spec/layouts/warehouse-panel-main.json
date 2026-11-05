@@ -61,21 +61,91 @@
             "styleSlot": "wp.label.body"
           },
           {
-            "type": "button",
-            "name": "BtnWarehouseSort",
-            "id": "btnWarehouseSort",
-            "width": 320,
+            "type": "container",
+            "name": "WarehouseActionRow",
+            "id": "warehouseActionRow",
+            "width": 944,
             "height": 64,
-            "skinSlot": "wp.button.bg",
+            "layout": {
+              "type": "horizontal",
+              "spacing": 16
+            },
             "children": [
               {
-                "type": "label",
-                "name": "BtnWarehouseSortLabel",
-                "id": "btnWarehouseSortLabel",
+                "type": "button",
+                "name": "BtnWarehouseSort",
+                "id": "btnWarehouseSort",
                 "width": 320,
-                "height": 40,
-                "text": "",
-                "styleSlot": "wp.label.body"
+                "height": 64,
+                "skinSlot": "wp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnWarehouseSortLabel",
+                    "id": "btnWarehouseSortLabel",
+                    "width": 320,
+                    "height": 40,
+                    "text": "",
+                    "styleSlot": "wp.label.body"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnWarehousePrev",
+                "id": "btnWarehousePrev",
+                "width": 180,
+                "height": 64,
+                "skinSlot": "wp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnWarehousePrevLabel",
+                    "id": "btnWarehousePrevLabel",
+                    "width": 180,
+                    "height": 40,
+                    "text": "上一件",
+                    "styleSlot": "wp.label.body"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnWarehouseNext",
+                "id": "btnWarehouseNext",
+                "width": 180,
+                "height": 64,
+                "skinSlot": "wp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnWarehouseNextLabel",
+                    "id": "btnWarehouseNextLabel",
+                    "width": 180,
+                    "height": 40,
+                    "text": "下一件",
+                    "styleSlot": "wp.label.body"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnWarehouseLock",
+                "id": "btnWarehouseLock",
+                "width": 200,
+                "height": 64,
+                "skinSlot": "wp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnWarehouseLockLabel",
+                    "id": "btnWarehouseLockLabel",
+                    "width": 200,
+                    "height": 40,
+                    "text": "鎖定",
+                    "styleSlot": "wp.label.body"
+                  }
+                ]
               }
             ]
           },
