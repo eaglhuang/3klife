@@ -267,9 +267,19 @@ export type CharacterCategory =
   | 'mythical'
   | 'titled';
 
+/** 祖輩曾達到的高星因子（G3 §F-3 途徑④，PROG-2-1815） */
+export interface AncestralPeak {
+  gene: GeneralGeneConfig;
+  ancestorName: string;
+}
+
 export interface GeneralConfig {
-  /** 已用過家學研習（G2 Study_Used_Flag，每胎限 1 次，PROG-2-1793） */
+  /** 已用過家學研習或隔代復興（G2 Study_Used_Flag，兩者共用，每胎限 1 次，PROG-2-1793） */
   familyStudyUsed?: boolean;
+  /** 出生時記下的雙親 3★ 以上因子，供下一代判斷隔代復興；祖先冷存檔後查不到星數 */
+  peakFactors?: AncestralPeak[];
+  /** 隔代復興種子：祖輩 3★ 以上而雙親斷代或不足 1★ 的因子 */
+  atavismSeeds?: AncestralPeak[];
   /** 運氣可見欄位（Is_Visible，運氣系統 §I）；缺值視為隱藏，見 isLukVisible */
   lukVisible?: boolean;
   id: string;

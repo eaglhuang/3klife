@@ -16,7 +16,8 @@
  */
 import { clanTraditionEffectText } from '../../core/systems/ClanTradition';
 import { synergyTutorLine } from '../../core/systems/FamilySynergy';
-import { FAMILY_STUDY_BLOCK_TEXT, FAMILY_STUDY_ROUND_COST, familyStudyHint, familyStudyLine } from '../../core/systems/FamilyStudy';
+import { FAMILY_STUDY_BLOCK_TEXT } from '../../core/systems/FamilyStudy';
+import { studyHintOf, studyLabelOf, studyLineOf, studyRoundCost } from '../../core/systems/Atavism';
 import { lateBloomClueText } from '../../core/systems/LateBloomClue';
 import { childUltimateAwakenLine } from '../../core/systems/UltimateScriptLines';
 import { VITALITY_SCRIPT_KEYS, vitalityScriptText } from './VitalityScriptTexts';
@@ -440,7 +441,7 @@ export class NurtureFlowController {
         const candidates = this._deps.familyStudy?.familyStudyStatus(child.id).candidates ?? [];
         if (candidates.length === 0) return;
         this._studyIndex = (this._studyIndex + 1) % candidates.length;
-        this._notice = familyStudyHint(candidates[this._studyIndex]);
+        this._notice = studyHintOf(candidates[this._studyIndex]);
     }
 
     async familyStudy(): Promise<void> {
@@ -450,8 +451,8 @@ export class NurtureFlowController {
         const candidates = study.familyStudyStatus(child.id).candidates;
         const done = study.familyStudy(child.id, candidates[this._studyIndex % candidates.length].geneId);
         this._studyIndex = 0;
-        this._notice = familyStudyLine(done);
-        for (let i = 0; i < FAMILY_STUDY_ROUND_COST; i++) {
+        this._notice = studyLineOf(done);
+        for (let i = 0; i < studyRoundCost(done); i++) {
             if (this._deps.spendLifespan?.(child.id, 'nurture')?.events.some((event) => event.type === 'died')) {
                 this._notice += '　壽命耗盡，武將已故';
                 break;
@@ -472,7 +473,7 @@ export class NurtureFlowController {
             return;
         }
         const current = candidates[this._studyIndex % candidates.length];
-        texts.familyStudyLabel = `家學研習：${current.displayName} ${current.starBefore}→${current.starAfter}★`;
+        texts.familyStudyLabel = studyLabelOf(current);
         enabled.btnFamilyStudy = true;
         enabled.btnNextStudyFactor = candidates.length > 1;
     }
