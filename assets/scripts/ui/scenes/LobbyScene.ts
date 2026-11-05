@@ -1273,6 +1273,7 @@ export class LobbyScene extends Component {
             },
             spendLifespan: (generalId, command) => services().session.spendLifespan(generalId, command),
             playerDiscoveryLevel: () => services().session.discoveryLevel,
+            factorDictionary: () => services().session.factorDictionary,
             omenSeed: () => services().session.omenSeed(),
             oracleTokens: () => services().session.oracleCount,
             tagName: (tag) => services().session.factorDictionary?.get(tag)?.displayName,
@@ -2854,6 +2855,8 @@ export class LobbyScene extends Component {
                 // 季度治理報告與治理事件（領地治理 §G，PROG-2-1773）
                 if (payload?.governanceReport) services().event.emit('SHOW_TOAST', { message: payload.governanceReport, duration: 3 });
                 if (payload?.governanceEventLine) services().event.emit('SHOW_TOAST', { message: payload.governanceEventLine, duration: 3 });
+                // 年度月旦評放榜（血統傳承 G4 §G，PROG-2-1803）
+                for (const message of payload?.yuedanLines ?? []) services().event.emit('SHOW_TOAST', { message, duration: 4 });
                 // 糧草告急（經濟 §G）、囚犯交出傳家寶（道具 §G，PROG-2-1774）
                 if (payload?.foodLowLine) services().event.emit('SHOW_TOAST', { message: payload.foodLowLine, duration: 3 });
                 for (const line of payload?.prisonTreasureLines ?? []) services().event.emit('SHOW_TOAST', { message: line, duration: 3 });

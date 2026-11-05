@@ -206,6 +206,7 @@ import { buildQuarterlyBattleReportRows, type QuarterlyBattleReportRow } from '.
 import { withLifeImprints } from '../systems/LifeImprint';
 import { clanMembersOf, clanStatsOf, clanTierOf, normalizeClanTier, type ClanTier } from '../systems/ClanTier';
 import { forgeCustomGold, mergeCustomFactors, normalizeCustomFactors } from '../systems/CustomGoldFactor';
+import { yuedanBannerLines } from '../systems/YuedanReview';
 import { CLAN_TRADITION_MIN_TIER, clanTraditionOf, normalizeClanTradition, type ClanTradition } from '../systems/ClanTradition';
 import { seasonModifiersOf } from '../systems/SeasonModifiers';
 import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, getTacticTpCost, TALLY_SHORTAGE_FOOD_THRESHOLD, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
@@ -402,6 +403,8 @@ export interface SeasonAdvancedPayload {
     foodLowLine?: string;
     /** 本季交出傳家寶物的俘虜提示（道具系統 §G，PROG-2-1774） */
     prisonTreasureLines?: string[];
+    /** 年度月旦評放榜句（血統傳承 G4 §G，PROG-2-1803）；只有跨年進春季、榜上有人時才有 */
+    yuedanLines?: string[];
     agingEvents: AgingEvent[];
     /** 本季新開獎的子嗣 */
     unveilings: UnveilingEvent[];
@@ -3741,7 +3744,8 @@ export class GameSession {
         const governanceRandom = this._governanceEventRandom ?? remarkRandomOf(`governance|${governanceSeason}|${this._seeded.snapshot().state}`);
         this._governanceEvent = rollGovernanceEvent(governanceSeason, governanceRandom);
         const eventNotice = this.governanceEventNotice;
-        const payload: SeasonAdvancedPayload = { ...(this._tallyFoodDiscountArmed ? { foodLowLine: FOOD_LOW_LINE } : {}), ...(treasures.length > 0 ? { prisonTreasureLines: treasures.map((entry) => prisonTreasureLine(entry.targetName, ITEM_DISPLAY_NAMES[ITEM_TREASURE])) } : {}), ...(governanceReport ? { governanceReport } : {}), ...(eventNotice ? { governanceEventLine: eventNotice } : {}), advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids } : {}), ...(mercenaryDay.dayThreeUids.length > 0 ? { mercenaryDayThree: mercenaryDay.dayThreeUids } : {}), ...(mercenaryDay.trustUids.length > 0 ? { mercenaryTrust: mercenaryDay.trustUids } : {}) };
+        const yuedanLines = advance.yearEnded ? yuedanBannerLines(this._roster.getAll()) : [];
+        const payload: SeasonAdvancedPayload = { ...(yuedanLines.length > 0 ? { yuedanLines } : {}), ...(this._tallyFoodDiscountArmed ? { foodLowLine: FOOD_LOW_LINE } : {}), ...(treasures.length > 0 ? { prisonTreasureLines: treasures.map((entry) => prisonTreasureLine(entry.targetName, ITEM_DISPLAY_NAMES[ITEM_TREASURE])) } : {}), ...(governanceReport ? { governanceReport } : {}), ...(eventNotice ? { governanceEventLine: eventNotice } : {}), advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids } : {}), ...(mercenaryDay.dayThreeUids.length > 0 ? { mercenaryDayThree: mercenaryDay.dayThreeUids } : {}), ...(mercenaryDay.trustUids.length > 0 ? { mercenaryTrust: mercenaryDay.trustUids } : {}) };
         if (this._autoSave && this._save) {
             await this.save();
         }
