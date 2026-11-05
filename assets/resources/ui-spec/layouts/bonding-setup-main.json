@@ -711,9 +711,9 @@
                 "id": "factorCapLabel",
                 "widget": {
                   "top": 744,
-                  "left": 16
+                  "left": 232
                 },
-                "width": 740,
+                "width": 524,
                 "height": 36,
                 "text": "",
                 "styleSlot": "bonding.label.meta"
