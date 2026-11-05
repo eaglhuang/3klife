@@ -95,6 +95,7 @@ import { bloodlineBirthLines } from '../../core/systems/BloodlineBirthLines';
 import type { DiscoveryGain } from '../../core/systems/DiscoveryProgress';
 import { discoveryPhaseUnlockLines } from '../../core/systems/DiscoveryProgress';
 import { factorAwakeningLines, type FactorAwakenedEvent } from '../../core/systems/FactorAwakening';
+import { famousClanLines } from '../../core/systems/FamousClan';
 import { rebirthVoiceLines } from '../../core/systems/Rebirth';
 import { femaleSourcePresentationOf, gachaFemaleLines } from '../../core/systems/FemaleSourcePresenter';
 import { rescueRefreshLine, rescueResultLines } from '../../core/systems/DungeonRescue';
@@ -3694,6 +3695,10 @@ export class LobbyScene extends Component {
             }
             // 可結緣女性來源系統 §G 轉蛋抽到女將（PROG-2-1786）
             for (const message of gachaFemaleLines(added)) {
+                services().event.emit('SHOW_TOAST', { message, duration: 3 });
+            }
+            // 血統理論系統 §G 史實名門（PROG-2-1791）
+            for (const message of famousClanLines(added)) {
                 services().event.emit('SHOW_TOAST', { message, duration: 3 });
             }
             // 數值系統 §G-1 轉生突破（PROG-2-1782）

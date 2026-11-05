@@ -213,6 +213,7 @@ import { awakenHiddenFactors } from '../systems/HiddenFactorAwakening';
 import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonCapacityOf, prisonYieldOneSeason, resolvePowDecision, rollFutureReturns, rollPrisonTreasureDonors, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
 import { createFemaleSource, normalizeFemaleSource, normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
 import { normalizeGachaPityBook, type GachaPityBook } from '../systems/GachaDraw';
+import { withFamousClanBonus } from '../systems/FamousClan';
 import { drawFemalePool, femalePoolRemainingMs, isFemalePoolRefreshDue, type PoolCandidate } from '../systems/FemalePoolRefresh';
 import { resolvePrisonerGift, type PrisonerGiftResult } from '../systems/PrisonerGift';
 import { isRescueRefreshDue, rollDungeonRescue, type RescueOutcome, buildRescuedGeneral, RESCUE_QUALITY, rescueRefreshRemainingMs } from '../systems/DungeonRescue';
@@ -3918,7 +3919,8 @@ export class GameSession {
                 continue;
             }
             owned.add(general.id);
-            added.push(options.rebirthOnDuplicate ? this._withPulledTactics({ ...general }) : { ...general });
+            const enrolled = withFamousClanBonus(general);
+            added.push(options.rebirthOnDuplicate ? this._withPulledTactics({ ...enrolled }) : { ...enrolled });
         }
 
         if (options.rebirthOnDuplicate && duplicates.length > 0) {
