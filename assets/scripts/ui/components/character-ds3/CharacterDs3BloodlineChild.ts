@@ -9,6 +9,8 @@ import { ds3Label, ds3Node, ds3Reflow, ds3SetActive } from './Ds3NodeLookup';
 import { BEAST_ARCHETYPE_LABELS, beastForGeneral } from '../../../core/systems/BloodlineBeast';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import type { GeneralConfig } from '../../../core/models/GeneralUnit';
+import { services } from '../../../core/managers/ServiceLoader';
+import { factorDetailVisible, type MilestoneStage } from '../../../core/systems/FamilyMilestone';
 import { epRatingLabel } from '../../../core/systems/BreedingSystem';
 import { buildGeneralDetailOverview } from '../GeneralDetailOverviewMapper';
 
@@ -57,8 +59,9 @@ function clampPercent(value: number): number {
     return Math.max(0, Math.min(100, Number.isFinite(value) ? value : 0));
 }
 
-/** 把武將血脈資料轉成命分頁檢視；因子列數受片段槽位上限限制。 */
-export function buildDs3BloodlineView(cfg: GeneralConfig): Ds3BloodlineView {
+/** 把武將血脈資料轉成命分頁檢視；因子列數受片段槽位上限限制。G1 不顯示星數（總綱 M_stage 表）。 */
+export function buildDs3BloodlineView(cfg: GeneralConfig, stage: MilestoneStage = 4): Ds3BloodlineView {
+    const showStars = factorDetailVisible(stage);
     const ep = Number.isFinite(cfg.ep) ? Number(cfg.ep) : 0;
     const cards = buildGeneralDetailOverview(cfg).cards;
     const genes = (Array.isArray(cfg.genes) ? cfg.genes : []) as GeneLike[];
@@ -66,10 +69,10 @@ export function buildDs3BloodlineView(cfg: GeneralConfig): Ds3BloodlineView {
         const name = g.displayName ?? '';
         if (g.isLocked) {
             const lv = g.discoveryLevel;
-            return { icon: LOCKED_ICON, name, tag: '★?🔒', desc: lv ? `等級 ${lv} 時發現` : '待覺醒' };
+            return { icon: LOCKED_ICON, name, tag: showStars ? '★?🔒' : '🔒', desc: lv ? `等級 ${lv} 時發現` : '待覺醒' };
         }
         const type = g.type ?? '';
-        return { icon: FACTOR_ICON[type] ?? LOCKED_ICON, name, tag: `${type}★${g.level ?? 0}`, desc: g.description ?? '' };
+        return { icon: FACTOR_ICON[type] ?? LOCKED_ICON, name, tag: showStars ? `${type}★${g.level ?? 0}` : type, desc: g.description ?? '' };
     });
     const beast = beastForGeneral(cfg.id);
     const parents = (cfg.parentsSummary ?? '').split('/').map((part) => part.trim()).filter((part) => part.length > 0);
@@ -107,7 +110,7 @@ export class CharacterDs3BloodlineChild extends ChildPanelBase {
         if (!data || typeof data !== 'object') {
             return;
         }
-        const view = buildDs3BloodlineView(data as GeneralConfig);
+        const view = buildDs3BloodlineView(data as GeneralConfig, services().session.milestoneStage);
 
         BLOODLINE_DEMO_NODES.forEach((name) => this._setActive(name, false));
         this._setText('BloodlineFamily', view.bloodlineName);

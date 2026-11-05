@@ -113,13 +113,14 @@ export function buildRoleSummary(str?: number, int?: number, lea?: number): stri
 
 /**
  * 因子槽文字。傳入玩家發現等級時走 FactorMask：看不到的因子顯示「??? (Lv N 解鎖)」，
- * 未傳等級時維持舊行為（直接顯示名稱）。
+ * 未傳等級時維持舊行為（直接顯示名稱）。showStars：看得到的因子補上星數（總綱 M_stage 表 G2 起）。
  */
-export function formatGene(slotIndex: number, gene?: GeneralGeneConfig, playerLevel?: number): string {
+export function formatGene(slotIndex: number, gene?: GeneralGeneConfig, playerLevel?: number, showStars = false): string {
     if (!gene) return `因子槽 ${slotIndex}：🔒 未知因子`;
     if (playerLevel !== undefined) {
         const view = factorMaskView(gene, playerLevel);
-        return `因子槽 ${slotIndex}：${view.active ? '' : '🔒 '}${view.label}`;
+        const stars = showStars && view.revealed && gene.level !== undefined ? ` ★${gene.level}` : '';
+        return `因子槽 ${slotIndex}：${view.active ? '' : '🔒 '}${view.label}${stars}`;
     }
     if (gene.isLocked) {
         const dl = gene.discoveryLevel !== undefined ? `（發現等級 ${gene.discoveryLevel}）` : '';

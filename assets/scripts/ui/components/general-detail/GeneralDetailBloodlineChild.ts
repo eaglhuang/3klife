@@ -22,6 +22,7 @@ import type { AncestorPeekView } from '../../../core/systems/AncestorTreeLayout'
 import { BloodlineTreePanel } from '../../panels/BloodlineTreePanel';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import { services } from '../../../core/managers/ServiceLoader';
+import { factorDetailVisible } from '../../../core/systems/FamilyMilestone';
 import { spiritSlotActions, type SpiritSlotAction } from '../../../core/systems/BloodlineRightPanelLayout';
 import { spiritSlotViewOf } from '../../../core/systems/SpiritSlotState';
 import { spiritPickerPage, spiritPickerRows, SPIRIT_PICKER_PAGE_SIZE, type SpiritPickerRow } from '../../../core/systems/SpiritSlotFlow';
@@ -133,8 +134,9 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
 
         const maskState = this._maskPresenter.update(cfg.id, cfg.genes ?? [], currentDiscoveryLevel());
         this._justRevealed = maskState.justRevealed;
+        const showStars = factorDetailVisible(services().session.milestoneStage);
         for (let i = 0; i < 5; i++) {
-            this._set(this._lGenes[i], formatGene(i + 1, cfg.genes?.[i], currentDiscoveryLevel()));
+            this._set(this._lGenes[i], formatGene(i + 1, cfg.genes?.[i], currentDiscoveryLevel(), showStars));
         }
 
         this._set(this._lAwakening, `${this.t('ui.general.bloodline.awakening')}${mask(cfg.awakeningTitle, this.t('ui.general.bloodline.awakening_locked'))}`);
