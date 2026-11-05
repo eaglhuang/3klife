@@ -37,7 +37,7 @@ import { SeasonReportComposite, type SeasonReportOpenPayload } from '../componen
 import { SandtableTerritoryComposite, type SandtableTerritoryOpenPayload } from '../components/SandtableTerritoryComposite';
 import { LocalGachaService, type LocalGachaResultEntry } from '../../core/services/LocalGachaService';
 import { PlayerRosterService } from '../../core/services/PlayerRosterService';
-import { GAME_SESSION_EVENTS, type AddGeneralsResult, type LifeImprintedPayload, type RivalSeasonEventsPayload } from '../../core/managers/GameSession';
+import { GAME_SESSION_EVENTS, type AddGeneralsResult, type ClanTierUpPayload, type LifeImprintedPayload, type RivalSeasonEventsPayload } from '../../core/managers/GameSession';
 import { buildSageRemarks, remarkRandomOf } from '../../core/systems/SageRemarks';
 import { SAGES } from '../../core/systems/SageDivination';
 import { seasonDisplayText, seasonStartText } from '../core/SeasonTexts';
@@ -161,6 +161,7 @@ import { withSpiritCardDetailFallback } from '../core/SpiritCardDetailTexts';
 import { SPIRIT_TALLY_DETAIL_SCREEN_ID, spiritTallyDetailOfSpirit } from '../core/SpiritTallyDetailView';
 import type { SpiritCard } from '../../core/models/SpiritCard';
 import { lifeImprintLine } from '../../core/systems/LifeImprint';
+import { CLAN_HIGH_GATE_LINE, CLAN_TIER_NAMES, clanTierUpLine } from '../../core/systems/ClanTier';
 import { lifeScriptCopy, type LifeScriptEvent } from '../../core/systems/LifeScriptCopy';
 import { getTallyCardSummaries } from '../../core/config/TallyCardCatalog';
 import { DeckSelectController } from '../core/DeckSelectController';
@@ -1094,6 +1095,11 @@ export class LobbyScene extends Component {
             event.on(GAME_SESSION_EVENTS.LifeImprinted, (payload?: unknown) => {
                 const imprinted = payload as LifeImprintedPayload;
                 event.emit('SHOW_TOAST', { message: lifeImprintLine(imprinted.name, imprinted.imprints), duration: 3 });
+            }),
+            event.on(GAME_SESSION_EVENTS.ClanTierUp, (payload?: unknown) => {
+                const { oldTier, newTier } = payload as ClanTierUpPayload;
+                event.emit('SHOW_TOAST', { message: clanTierUpLine(oldTier, newTier), duration: 3 });
+                if (newTier === 3) event.emit('SHOW_TOAST', { message: CLAN_HIGH_GATE_LINE, duration: 4 });
             }),
         );
     }
@@ -4224,7 +4230,7 @@ export class LobbyScene extends Component {
         const hostNode = this._characterDs3Surface()?.node;
         const general = this._characterDs3General;
         if (!hostNode || !general) return;
-        const panel = ensureDs3BloodlineTree(hostNode, general.name);
+        const panel = ensureDs3BloodlineTree(hostNode, general.name, CLAN_TIER_NAMES[services().session.clanTier]);
         panel.onCardPeek = (view) => this._showToast(`${view.title}：${view.tendency}`);
         panel.node.active = true;
         for (const name of [FACTOR_HEX_NODE_NAME, 'btnGeneralJournal', 'btnSoulInject', GALLERY_ENTRY_NODE_NAME, TOTAL_TP_NODE_NAME]) {

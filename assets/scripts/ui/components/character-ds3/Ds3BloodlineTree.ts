@@ -17,7 +17,7 @@ export const DS3_BLOODLINE_TREE_NODE_NAME = 'Ds3BloodlineTree';
 const REGION = { x: -365, width: 1190, height: 1080 };
 const LABEL_COLUMN_X = -405;
 const CARDS_CENTER_X = 115;
-const TITLE = { text: '家族血統樹', y: 480, width: 400, height: 40, fontSize: 26, color: '#FFE088' };
+const TITLE = { text: '家族血統樹', y: 480, width: 640, height: 40, fontSize: 26, color: '#FFE088' };
 
 const ROWS = [
     { row: 1, container: 'Gen1Container', count: 8, step: 115, y: 380, width: 108, height: 96, zh: '曾祖父母', sub: '(8人)', color: '#8C8575' },
@@ -118,10 +118,12 @@ function buildTree(host: Node): Node {
     return root;
 }
 
-/** 取得（或建立）血統樹面板，並填入本代姓名 */
-export function ensureDs3BloodlineTree(host: Node, subjectName: string): BloodlineTreePanel {
+/** 取得（或建立）血統樹面板，並填入本代姓名與家族門第 */
+export function ensureDs3BloodlineTree(host: Node, subjectName: string, clanTierName: string): BloodlineTreePanel {
     const root = host.getChildByName(DS3_BLOODLINE_TREE_NODE_NAME) ?? buildTree(host);
     const subjectLabel = root.getChildByName('TargetPortrait')?.getChildByName('Txt')?.getComponent(Label);
     if (subjectLabel) subjectLabel.string = subjectName;
+    const titleLabel = root.getChildByName('TreeTitle')?.getComponent(Label);
+    if (titleLabel) titleLabel.string = `${TITLE.text}｜門第：${clanTierName}`;
     return root.getComponent(BloodlineTreePanel) as BloodlineTreePanel;
 }
