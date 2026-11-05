@@ -1,50 +1,42 @@
 {
-  "ver": "1.0.8",
+  "ver": "1.0.27",
   "importer": "image",
   "imported": true,
-  "uuid": "c7c8e3d2-d1a2-487e-b2e6-42ea2842ddf3",
-  "displayName": "",
-  "id": "",
-  "name": "xin_xian_ying_portrait",
-  "userData": {
-    "type": "sprite-frame"
-  },
-  "readonly": false,
+  "uuid": "ccb83dc7-2aa8-42cc-9b05-c0cbed638af8",
+  "files": [
+    ".json",
+    ".png"
+  ],
   "subMetas": {
-    "f9941": {
-      "ver": "2.0.3",
-      "importer": "sprite-frame",
-      "imported": true,
-      "uuid": "8c1eb814-fe80-4753-882f-b67355d841f2",
-      "displayName": "",
-      "id": "f9941",
-      "name": "spriteFrame",
+    "6c48a": {
+      "importer": "texture",
+      "uuid": "ccb83dc7-2aa8-42cc-9b05-c0cbed638af8@6c48a",
+      "displayName": "xin_xian_ying_portrait",
+      "id": "6c48a",
+      "name": "texture",
       "userData": {
-        "pixelsPerUnit": 100,
-        "extrude": 1,
-        "meshType": 0,
-        "pivot": {
-          "x": 0.5,
-          "y": 0.5
-        },
-        "offset": {
-          "x": 0,
-          "y": 0
-        },
-        "originalSize": {
-          "width": 512,
-          "height": 768
-        },
-        "trimSize": {
-          "width": 512,
-          "height": 768
-        },
-        "trimOffset": {
-          "x": 0,
-          "y": 0
-        }
+        "wrapModeS": "repeat",
+        "wrapModeT": "repeat",
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0,
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "ccb83dc7-2aa8-42cc-9b05-c0cbed638af8",
+        "visible": false
       },
-      "readonly": false
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
     }
+  },
+  "userData": {
+    "type": "texture",
+    "fixAlphaTransparencyArtifacts": false,
+    "hasAlpha": true,
+    "redirect": "ccb83dc7-2aa8-42cc-9b05-c0cbed638af8@6c48a"
   }
 }

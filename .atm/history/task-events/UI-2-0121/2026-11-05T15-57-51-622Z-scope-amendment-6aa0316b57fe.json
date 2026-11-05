@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-05T15-57-51-622Z-scope-amendment-6aa0316b57fe",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:264361f70fdac97441df4d4e8bffe8abcce8df17f5e15cedf140d936a3431927",
+  "createdAt": "2026-11-05T15:57:51.622Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-sol --add \"assets/resources/sprites/generals/avatars/xin_xian_ying_avatar.png,assets/resources/sprites/generals/avatars/xin_xian_ying_avatar.png.meta\" --reason \"Synchronize the regenerated Xin Xianying portrait avatar to the primary general avatar path.\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "Synchronize the regenerated Xin Xianying portrait avatar to the primary general avatar path."
+  }
+}

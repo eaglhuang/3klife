@@ -2,7 +2,7 @@
   "ver": "1.0.27",
   "importer": "image",
   "imported": true,
-  "uuid": "f9f60f0b-b554-4ef9-b6d9-369bc78affe1",
+  "uuid": "3d60fa0e-fa33-4dfe-a0e3-4be97f07184c",
   "files": [
     ".json",
     ".png"
@@ -10,7 +10,7 @@
   "subMetas": {
     "6c48a": {
       "importer": "texture",
-      "uuid": "f9f60f0b-b554-4ef9-b6d9-369bc78affe1@6c48a",
+      "uuid": "3d60fa0e-fa33-4dfe-a0e3-4be97f07184c@6c48a",
       "displayName": "xin_xian_ying_avatar",
       "id": "6c48a",
       "name": "texture",
@@ -22,7 +22,7 @@
         "mipfilter": "none",
         "anisotropy": 0,
         "isUuid": true,
-        "imageUuidOrDatabaseUri": "f9f60f0b-b554-4ef9-b6d9-369bc78affe1",
+        "imageUuidOrDatabaseUri": "3d60fa0e-fa33-4dfe-a0e3-4be97f07184c",
         "visible": false
       },
       "ver": "1.0.22",
@@ -37,6 +37,6 @@
     "type": "texture",
     "fixAlphaTransparencyArtifacts": false,
     "hasAlpha": true,
-    "redirect": "f9f60f0b-b554-4ef9-b6d9-369bc78affe1@6c48a"
+    "redirect": "3d60fa0e-fa33-4dfe-a0e3-4be97f07184c@6c48a"
   }
 }
