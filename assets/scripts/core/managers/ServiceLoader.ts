@@ -1,4 +1,5 @@
 // @spec-source → 見 docs/cross-reference-index.md
+import { synergyTutorBonusOf } from '../systems/FamilySynergy';
 import { Node, sys } from "cc";
 import { AudioSystem } from "../systems/AudioSystem";
 import { BuffSystem } from "../systems/BuffSystem";
@@ -84,6 +85,7 @@ export class ServiceLoader {
         // 子嗣奧義覺醒（ULT-15）：奧義母表在 prepareBreeding() 載入
         childUltimate: { definitions: () => this.ultimateDefinitions },
         clanTraditionKind: () => this.session.clanTradition?.kind,
+        synergyTutorBonus: (mentors) => synergyTutorBonusOf(mentors, this.session.familySynergy),
     });
     /** loadUltimateDefinitions() 載入後的奧義母表（只留 id 與繼承基因）；子嗣奧義覺醒用 */
     private ultimateDefinitions: ChildUltimateDefinition[] = [];

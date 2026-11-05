@@ -21,6 +21,8 @@ const FULL_CONFIDENCE_SAMPLES = 4;
 const QUALITY_FLOOR = 0.5;
 const QUALITY_SPAN = 0.2;
 const WINDOW_MASK = (1 << SYNERGY_WINDOW) - 1;
+/** 世交太傅伴讀的修業效率上限（§F-2 作用面限制） */
+export const SYNERGY_TUTOR_MAX_BONUS = 0.15;
 
 export interface FamilyPairRecord {
     /** Recent_8_Bitmap：最低位是最新一名，1 為成材 */
@@ -99,6 +101,16 @@ export function synergyWindowLine(father: { familyUid?: string }, mother: { fami
     const n = record?.recentCount ?? 0;
     const g = record ? qualifiedInWindow(record) : 0;
     return `世交門風契合度 K：近 ${n} 名結算子嗣中有 ${g} 名成材｜契合加成：${Math.round(synergyKOf(record) * 100)}%`;
+}
+
+/** 入學教官中名門出身者的最高 K 換算成修業效率加成；沒有名門教官時為 0 */
+export function synergyTutorBonusOf(mentors: readonly { familyUid?: string }[], ledger: FamilySynergyLedger): number {
+    const best = mentors.reduce((max, mentor) => (mentor.familyUid ? Math.max(max, synergyKOf(ledger.pairs[familyPairKey(PLAYER_FAMILY_UID, mentor.familyUid)])) : max), 0);
+    return best * SYNERGY_TUTOR_MAX_BONUS;
+}
+
+export function synergyTutorLine(bonus: number): string {
+    return `世交太傅伴讀：修業效率 +${Math.round(bonus * 100)}%`;
 }
 
 const isCount = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value) && value >= 0;

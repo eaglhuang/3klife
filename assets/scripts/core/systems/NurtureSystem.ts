@@ -104,6 +104,8 @@ export interface TrainingMentor {
     name: string;
     /** 教官家族名，之後做世家保底時比對子嗣姓氏 */
     familyName?: string;
+    /** 聯姻名門出身（G3 §F-2 世交太傅）；其他教官沒有此欄位 */
+    familyUid?: string;
     /** 突破星等 0~5 */
     stars?: number;
     /** Mentor_TP：屬性獲得率與 TP 的加成（百分比，20 = +20%） */
@@ -168,6 +170,8 @@ export interface NurtureSession {
     hybridSources?: { father?: HybridSkillSource; mother?: HybridSkillSource };
     /** 郡望家風對應的維度（G4 §F-1）；該維度修業效率提高。舊存檔沒有此欄位 */
     clanTraditionKind?: TrainingKind;
+    /** 世交太傅伴讀的修業效率加成（G3 §F-2），入學時定值。舊存檔沒有此欄位 */
+    synergyTutorBonus?: number;
     /** 混種戰法觸發的回合；尚未觸發為 undefined */
     hybridRound?: number;
     /** 累積好感次數（舊存檔可能沒有此欄位，視為 0） */
@@ -276,6 +280,7 @@ export interface CreateNurtureSessionInput {
     hybridSources?: { father?: HybridSkillSource; mother?: HybridSkillSource };
     /** 家族的郡望家風維度；沒有家風或子嗣不是族人時不提供 */
     clanTraditionKind?: TrainingKind;
+    synergyTutorBonus?: number;
     /** 用來判定基因顏色（紅色因子）；沒提供時只認 gene.type 的舊資料色名 */
     factorDictionary?: FactorDictionary;
 }
@@ -324,6 +329,7 @@ export function createNurtureSession(input: CreateNurtureSessionInput): NurtureS
         mentors,
         hybridSources: input.hybridSources ? { ...input.hybridSources } : undefined,
         clanTraditionKind: input.clanTraditionKind,
+        synergyTutorBonus: input.synergyTutorBonus,
         mentorSlots: rollMentorSlots(mentors, input.random),
         negativeFactors: [],
         negativeTraitRateBonus: Math.max(0, (input.child as { negativeTraitRateBonus?: number }).negativeTraitRateBonus ?? 0),
@@ -349,7 +355,7 @@ export interface GainBreakdown {
 
 /** 純公式：給定本回合基礎值與教官站位，算屬性獲得量（不擲骰） */
 export function computeStatGain(
-    session: Pick<NurtureSession, 'mentors' | 'mentorSlots' | 'growthModifier' | 'clanTraditionKind'>,
+    session: Pick<NurtureSession, 'mentors' | 'mentorSlots' | 'growthModifier' | 'clanTraditionKind' | 'synergyTutorBonus'>,
     kind: TrainingKind,
     base: number,
 ): GainBreakdown {
@@ -365,7 +371,7 @@ export function computeStatGain(
         generalGrowth: session.growthModifier - 1,
         baseMorale: 0,
         moraleBoosts: [],
-        trainingBoosts: [synergyBonus, session.clanTraditionKind === kind ? CLAN_TRADITION_TRAINING_BONUS : 0],
+        trainingBoosts: [synergyBonus, session.clanTraditionKind === kind ? CLAN_TRADITION_TRAINING_BONUS : 0, session.synergyTutorBonus ?? 0],
         friendshipBursts: burst ? [MENTOR_BURST_MULTIPLIER - 1] : [],
         extraCrowd: 0,
     });
@@ -703,7 +709,9 @@ export function mentorFromCard(
     const stars = overrides.stars ?? card.stars ?? 0;
     // 突破「其他加成」：初期情誼、擅長科目屬性倍率、TP 加成依星等累計（PROG-2-1164）
     const perks = mentorStarPerks(stars);
+    const { familyUid } = snapshot as { familyUid?: string };
     return {
+        ...(familyUid ? { familyUid } : {}),
         id: card.uid,
         name: card.name,
         tpBonus: Math.round(card.ep_snapshot / MENTOR_CARD_EP_PER_TP_POINT) + perks.tpBonusAdd,

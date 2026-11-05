@@ -15,6 +15,7 @@
  * Presenter 讀 Model（名冊 / NurtureService）後吐出 ViewModel，按鈕 onClick 只轉呼叫 Presenter 的方法。
  */
 import { clanTraditionEffectText } from '../../core/systems/ClanTradition';
+import { synergyTutorLine } from '../../core/systems/FamilySynergy';
 import { FAMILY_STUDY_BLOCK_TEXT, FAMILY_STUDY_ROUND_COST, familyStudyHint, familyStudyLine } from '../../core/systems/FamilyStudy';
 import { lateBloomClueText } from '../../core/systems/LateBloomClue';
 import { childUltimateAwakenLine } from '../../core/systems/UltimateScriptLines';
@@ -364,6 +365,7 @@ export class NurtureFlowController {
         this._borrowed = null;
         this._notice = `入學完成，${cards.length} 位教官任教`;
         if (session.clanTraditionKind) this._notice += `\n郡望家風：${clanTraditionEffectText(session.clanTraditionKind)}`;
+        if (session.synergyTutorBonus) this._notice += `\n${synergyTutorLine(session.synergyTutorBonus)}`;
         if (borrowed && this._deps.commitFriendBorrow) {
             const result = await this._deps.commitFriendBorrow(borrowed.friendId, session.sessionId);
             if (!result.ok) this._notice += `（借用紀錄未寫入：${result.message ?? '借用失敗'}）`;
