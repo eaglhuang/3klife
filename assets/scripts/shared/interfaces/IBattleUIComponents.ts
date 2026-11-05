@@ -1,4 +1,5 @@
 // @spec-source → 主戰場UI規格書.md (doc_ui_0001)；PROG-2-1429 依建檔紀錄補標出處
+import type { StrategistHudView } from '../../battle/shared/StrategistHudView';
 import { Color, Node } from 'cc';
 
 /**
@@ -24,6 +25,13 @@ export interface IBattleHUDLike {
     clearPersistentStatus(): void;
     clearSceneGambitBadge(): void;
     showSceneGambitBadge(text: string): void;
+}
+
+export interface IStrategistHudLike {
+    node: Node;
+    ensureMounted(): Promise<void>;
+    setView(view: StrategistHudView): void;
+    playSurge(): void;
 }
 
 export interface IBattleLogLike {

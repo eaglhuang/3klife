@@ -44,5 +44,10 @@ export function wisdomMeterText(meter: number): string {
     return `智謀 ${Math.floor(Math.max(0, Math.min(WISDOM_METER_MAX, meter)))}/${WISDOM_METER_MAX}`;
 }
 
+/** 垂直能量條的填充比例 0~1（PROG-2-1851） */
+export function wisdomFillRatio(meter: number): number {
+    return Math.max(0, Math.min(WISDOM_METER_MAX, meter)) / WISDOM_METER_MAX;
+}
+
 /** 智謀觸發時的戰鬥紀錄文字 */
 export const WISDOM_SURGE_LOG = `智謀滿格：我方全軍鼓舞，士氣 +${WISDOM_SURGE_MORALE}`;
