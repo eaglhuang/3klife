@@ -176,5 +176,7 @@ export function clanTierUpLine(oldTier: ClanTier, newTier: ClanTier): string {
     return `門閥升格！家族已由【${CLAN_TIER_NAMES[oldTier]}】晉升為【${CLAN_TIER_NAMES[newTier]}】！`;
 }
 
-/** §G 晉升天下高門；{ClanTitle} 堂號目前沒有資料，先省略 */
-export const CLAN_HIGH_GATE_LINE = '自太祖創業以來，我族歷四世而不衰，文武名臣輩出。今天下士林共尊我族為【天下高門】，名垂竹帛！';
+/** §G 晉升天下高門；堂號還沒定時省略 {ClanTitle} */
+export function clanHighGateLine(hall: string | null): string {
+    return `自太祖創業以來，我族歷四世而不衰，文武名臣輩出。今天下士林共尊我族為【天下高門${hall ? `・${hall}` : ''}】，名垂竹帛！`;
+}

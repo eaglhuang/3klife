@@ -207,6 +207,7 @@ import { withLifeImprints } from '../systems/LifeImprint';
 import { clanMembersOf, clanStatsOf, clanTierOf, normalizeClanTier, type ClanTier } from '../systems/ClanTier';
 import { forgeCustomGold, mergeCustomFactors, normalizeCustomFactors } from '../systems/CustomGoldFactor';
 import { yuedanBannerLines } from '../systems/YuedanReview';
+import { clanHallNameOf, normalizeClanHall } from '../systems/ClanHall';
 import { CLAN_TRADITION_MIN_TIER, clanTraditionOf, normalizeClanTradition, type ClanTradition } from '../systems/ClanTradition';
 import { seasonModifiersOf } from '../systems/SeasonModifiers';
 import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, getTacticTpCost, TALLY_SHORTAGE_FOOD_THRESHOLD, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
@@ -647,6 +648,7 @@ export class GameSession {
     /** 門第階級，只升不降（G4 §F-1） */
     private _clanTier: ClanTier = 0;
     private _clanTradition: ClanTradition | null = null;
+    private _clanHall: string | null = null;
     /** 已通關的關卡 id（連環破，PROG-2-0215） */
     private _clearedStageIds: string[] = [];
     /** 收藏武將 id（HALL-07 收藏權重，PROG-2-0453） */
@@ -1719,6 +1721,10 @@ export class GameSession {
         return this._clanTier;
     }
 
+    public get clanHall(): string | null {
+        return this._clanHall;
+    }
+
     public get clanTradition(): ClanTradition | null {
         return this._clanTradition;
     }
@@ -1803,6 +1809,7 @@ export class GameSession {
         this._soulFragments = emptySoulFragmentLedger();
         this._clanTier = 0;
         this._clanTradition = null;
+        this._clanHall = null;
         this._setCustomFactors([]);
         this._pendingLifespanEvents = [];
         this._bondPoints = 0;
@@ -3896,6 +3903,10 @@ export class GameSession {
         if (this._clanTier >= CLAN_TRADITION_MIN_TIER && !this._clanTradition) {
             this._clanTradition = clanTraditionOf(this._roster.getAll(), this._factorDictionary);
         }
+        // 堂號與家風同一階確立，也只定一次
+        if (this._clanTier >= CLAN_TRADITION_MIN_TIER && !this._clanHall) {
+            this._clanHall = clanHallNameOf(this._roster.getAll());
+        }
         return payload;
     }
 
@@ -4418,6 +4429,7 @@ export class GameSession {
             soulFragments: { ...this._soulFragments },
             clanTier: this._clanTier,
             clanTradition: this._clanTradition ?? undefined,
+            clanHall: this._clanHall ?? undefined,
             customFactors: this._customFactors.map((def) => ({ ...def })),
             femaleSystem: this.femaleSystemState,
             ...(this._travel ? { travelCountdown: { ...this._travel } } : {}),
@@ -4586,6 +4598,7 @@ export class GameSession {
         this._soulFragments = normalizeSoulFragmentLedger(snapshot.soulFragments);
         this._clanTier = normalizeClanTier(snapshot.clanTier);
         this._clanTradition = normalizeClanTradition(snapshot.clanTradition);
+        this._clanHall = normalizeClanHall(snapshot.clanHall);
         this._setCustomFactors(normalizeCustomFactors(snapshot.customFactors));
         this._deck = [...snapshot.deck];
         this._leadGeneralId = snapshot.leadGeneralId ?? null;

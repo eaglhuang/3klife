@@ -95,6 +95,7 @@ export const SYNC_PATCH_ROOT_KEYS: readonly string[] = [
     'soulFragments',
     'clanTier',
     'clanTradition',
+    'clanHall',
     'customFactors',
     'travelCountdown',
     'countdown',
