@@ -132,6 +132,7 @@ export const EVENT_NAMES = {
   UltimateSkillSelected: "ultimate-skill-selected",
   // 戰鬥控制列
   TallyDeployed:        "tally-deployed",        // payload: string (虎符模板 id)
+  UltimateScriptLine:   "ultimate-script-line",  // payload: string (奧義系統 §G 施放與精力句，PROG-2-1780)
   TroopCounterLine:     "troop-counter-line",    // payload: string (剋制戰鬥句，PROG-2-1772)
   AutoBattleToggled:    "auto-battle-toggled",   // payload: boolean (isEnabled)
   DelegateToggled:      "delegate-toggled",      // payload: boolean (要求開或關)

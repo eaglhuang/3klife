@@ -59,6 +59,22 @@ export function createChildUltimateWiringSuite(): TestSuite {
         assert.equals('dad', inherited[0].sourceParentUid);
     });
 
+    suite.test('覺醒那回合的結果帶家傳奧義與來源（PROG-2-1780）', () => {
+        const store = new InMemoryRosterStore([father(), greenChild()] as never);
+        const svc = new NurtureService(store as never, {
+            random: () => 0,
+            currentSeason: () => 0,
+            admissionsPerSeason: 5,
+            childUltimate: { definitions: () => DEFINITIONS },
+        });
+        svc.start('kid', []);
+        const results = Array.from({ length: NURTURE_TOTAL_ROUNDS }, () => svc.train('kid', 'str'));
+        const awakened = results.filter((result) => result.childUltimates);
+        assert.lengthEquals(1, awakened);
+        assert.equals('ult-a', awakened[0].childUltimates?.[0].ultimateId ?? '');
+        assert.isTrue(awakened[0].childUltimates?.[0].fromFather ?? false);
+    });
+
     suite.test('覺醒的繼承奧義經 JSON 存檔往返後保留（名冊以 JSON 寫入）', () => {
         const kid = runTraining([father(), greenChild()], { childUltimate: true });
         const restored = JSON.parse(JSON.stringify(kid)) as Record<string, unknown>;

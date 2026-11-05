@@ -9,7 +9,8 @@
 import { assert, TestSuite } from './TestRunner';
 import { BattleState } from '../assets/scripts/battle/models/BattleState';
 import { BattleSkillDispatcher } from '../assets/scripts/battle/runtime/BattleSkillDispatcher';
-import { Faction } from '../assets/scripts/core/config/Constants';
+import { EVENT_NAMES, Faction } from '../assets/scripts/core/config/Constants';
+import { services } from '../assets/scripts/core/managers/ServiceLoader';
 import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
 import { SkillSourceType } from '../assets/scripts/shared/SkillRuntimeContract';
 
@@ -51,7 +52,44 @@ export function createBattleVitalityGateSuite(): TestSuite {
         } as never);
         assert.equals(false, result.applied);
         assert.equals('vitality-restricted', result.blockedReason ?? '');
-        assert.equals('精力低迷，無法發動終極戰法', result.battleLogLines[0] ?? '');
+        assert.equals('測試武將 精力不足，無法發動奧義！', result.battleLogLines[0] ?? '');
+    });
+
+    suite.test('玩家被擋下時精力句會進戰報事件（PROG-2-1780）', () => {
+        const { dispatcher } = setupCaster(30, 100);
+        const lines: string[] = [];
+        const off = services().event.on(EVENT_NAMES.UltimateScriptLine, (line: string) => { lines.push(line); });
+        dispatcher.executeBattleSkillRequest({
+            sourceType: SkillSourceType.Ultimate,
+            ownerUid: 'player-unit',
+            battleSkillId: 'zhou-yu-inferno',
+            targetMode: 'tile',
+            timing: 'active-cast',
+        } as never);
+        off?.();
+        assert.equals('測試武將 精力不足，無法發動奧義！', lines.join('|'));
+    });
+
+    suite.test('施放成功：究極奧義句進戰報事件，也排在日誌最前面（PROG-2-1780）', () => {
+        const { dispatcher } = setupCaster(100, 100);
+        const internals = dispatcher as unknown as { context: Record<string, unknown>; skillExecutor: unknown };
+        internals.context.getUltimateDamageDef = () => ({ slot: 5, name: '天下無雙' });
+        internals.skillExecutor = {
+            execute: (request: { battleSkillId: string }) => ({ requestId: 'spy', battleSkillId: request.battleSkillId, applied: true, deltas: [], battleLogLines: ['傷害結算'] }),
+        };
+        const lines: string[] = [];
+        const off = services().event.on(EVENT_NAMES.UltimateScriptLine, (line: string) => { lines.push(line); });
+        const result = dispatcher.executeBattleSkillRequest({
+            sourceType: SkillSourceType.Ultimate,
+            ownerUid: 'player-unit',
+            ultimateId: 'ult-qa-5',
+            battleSkillId: 'zhou-yu-inferno',
+            targetMode: 'tile',
+            timing: 'active-cast',
+        } as never);
+        off?.();
+        assert.equals('這是測試武將的全力一擊——【天下無雙】！！', lines.join('|'));
+        assert.equals('這是測試武將的全力一擊——【天下無雙】！！|傷害結算', result.battleLogLines.join('|'));
     });
 
     suite.test('耗盡段：奧義同樣被擋下', () => {

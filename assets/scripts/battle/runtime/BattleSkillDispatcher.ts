@@ -34,6 +34,7 @@ import { resolveTeamRecover } from '../shared/TeamRecover';
 import { MORALE_DURATION_TURNS } from '../shared/Morale';
 import { dispelPick, dispelShieldPct, enemyMassDebuffParamsOf, massDebuffStatusesFor, massDebuffTargets, startEnemyMassDebuff } from '../shared/EnemyMassDebuff';
 import { ultimateAttackOf } from '../../core/systems/UltimateDamage';
+import { ultimateCastLine, ultimateVitalityLowLine } from '../../core/systems/UltimateScriptLines';
 import { sceneFireDamageTakenOf } from '../shared/BattleTacticBehavior';
 import { COMBO_ULTIMATE_MULTIPLIER, findComboUltimate } from '../shared/ComboUltimate';
 import { ANCESTRAL_SPIRIT_LOG, ancestralSpiritAttackOf, isOutnumbered } from '../shared/AncestralSpirit';
@@ -60,7 +61,7 @@ export interface BattleSkillDispatcherContext {
   /** 撤退失敗、本回合鎖定行動的單位（PROG-2-0441）；未提供時視為沒有鎖定 */
   isUnitActionBlocked?(unitId: string): boolean;
   /** 奧義的槽位與主屬性（PROG-2-0927）；查不到時不套用奧義攻擊基準 */
-  getUltimateDamageDef?(ultimateId: string): { slot?: number; scalingStat?: string | null } | undefined;
+  getUltimateDamageDef?(ultimateId: string): { slot?: number; scalingStat?: string | null; name?: string } | undefined;
   /** 奧義 base_power 表（NumericalConfig.Ult_Base_Power）；未載入時不套用（PROG-2-0927） */
   getUltBasePowerTable?(): Readonly<Record<string, number>> | undefined;
   /** 部隊的來源武將模板 id（虎符 sourceTemplateId）；組合奧義判定搭檔用（PROG-2-1588） */
@@ -320,6 +321,10 @@ export class BattleSkillDispatcher {
     // 精力軟懲罰（LIFE-10，PROG-2-0426）：依施放者武將的精力區間擋下奧義或種子戰法，不扣資源
     const vitalityCheck = this.checkVitalityGate(request);
     if (!vitalityCheck.allowed) {
+      // 只有玩家要看原因；AI 被擋下時會改選別招，不寫戰報
+      if (request.sourceType === SkillSourceType.Ultimate && this.resolveCasterGeneral(request)?.faction === Faction.Player) {
+        services().event.emit(EVENT_NAMES.UltimateScriptLine, vitalityCheck.reason);
+      }
       return {
         requestId: `${request.ownerUid}:${request.battleSkillId}`,
         battleSkillId: request.battleSkillId,
@@ -341,7 +346,7 @@ export class BattleSkillDispatcher {
     if (result.applied && request.sourceType === SkillSourceType.Ultimate) {
       this.spendUltimateCost(request);
       if (usedKey) this.usedUltimates.add(usedKey);
-      return this.tryAncestralSpirit(ultimateRequest, result);
+      return this.tryAncestralSpirit(ultimateRequest, this.withUltimateCastLine(request, result));
     }
     return result;
   }
@@ -360,6 +365,17 @@ export class BattleSkillDispatcher {
     const ultLevel = caster.ultimateSlots.find((slot) => slot.ultimateId === request.ultimateId)?.ultLevel;
     const attack = ultimateAttackOf(def.slot, table, def.scalingStat, { str: caster.str, int: caster.int }, ultLevel);
     return attack === null ? request : { ...request, ultimateAttack: attack };
+  }
+
+  /** 奧義系統 §G 施放句（PROG-2-1780）：放在日誌最前面，接著才是傷害結算 */
+  private withUltimateCastLine(request: BattleSkillRequest, result: SkillExecutionResult): SkillExecutionResult {
+    const caster = this.resolveCasterGeneral(request);
+    if (!request.ultimateId || !caster) return result;
+    const def = this.context.getUltimateDamageDef?.(request.ultimateId);
+    const line = ultimateCastLine({ ultimateId: request.ultimateId, slot: def?.slot, generalName: caster.name, ultimateName: def?.name });
+    if (!line) return result;
+    services().event.emit(EVENT_NAMES.UltimateScriptLine, line);
+    return { ...result, battleLogLines: [line, ...result.battleLogLines] };
   }
 
   /** 組合奧義（PROG-2-1588 暫定）：施放者是主將，且己方存活部隊的來源武將是組合搭檔 */
@@ -441,7 +457,7 @@ export class BattleSkillDispatcher {
     if (canPerformAction(band, action)) return { allowed: true, reason: '' };
     return {
       allowed: false,
-      reason: action === 'ultimate-tactic' ? '精力低迷，無法發動終極戰法' : '精力耗盡，無法發動戰法',
+      reason: action === 'ultimate-tactic' ? ultimateVitalityLowLine(general.name) : '精力耗盡，無法發動戰法',
     };
   }
 
