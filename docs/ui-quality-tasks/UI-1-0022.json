@@ -1,0 +1,66 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_1457",
+      "id": "UI-1-0022",
+      "title": "重繪甘寧名將立繪與專屬錦帆鈴刀",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-11-05",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-11-05T21:10:06+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "重繪甘寧名將立繪，採趙雲、關羽、張飛原始正式圖的高完成度二次元幻想手繪；依既有記錄加強日曬深膚、窄長稜角臉、突出顴骨、深眼窩、銳利目光與成熟短鬚；維持吳紅基底，衣裝與飄帶收束，為甘寧打造錦帆銅鈴與水軍短刀的專屬識別物，更新正式立繪、頭像及 Cocos 資源。",
+      "related": [
+        "UI-2-0119"
+      ],
+      "depends": [],
+      "acceptance": [
+        "高完成度二次元幻想手繪，避免寫實3D",
+        "臉部呈日曬深膚、窄長稜角臉、突出顴骨、深眼窩、成熟短鬚，與孫策、凌統、徐盛、周瑜明確不同",
+        "吳國低飽和紅為基底，配炭黑、舊銅等個人副色",
+        "錦帆銅鈴與水軍短刀組合是甘寧專屬代表物，Q版仍清晰且不與虎頭雙鉤等武器重複",
+        "服裝收束無長飄帶；雙手、武器與鞋履完整",
+        "正式立繪512x768透明，兩種256x256頭像，reviewed crop驗證通過",
+        "Cocos正式資產匯入有效，角色立繪與頭像採用標準資源路徑"
+      ],
+      "deliverables": [
+        "甘寧512x768正式立繪",
+        "甘寧兩種256x256正式頭像",
+        "reviewed crop索引",
+        "甘寧配色與專屬錦帆武器紀錄",
+        "任務卡、manifest及Cocos驗證紀錄"
+      ],
+      "notes": "2026-11-05 | 狀態: in-progress | 驗證: 舊任務備註顯示125/250px檢視仍偏年輕清秀，需改成熟稜角臉與日曬膚色；吳紅配色已核對 | 變更: 接手甘寧名將畫風修正與錦帆鈴刀專屬代表物 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}
