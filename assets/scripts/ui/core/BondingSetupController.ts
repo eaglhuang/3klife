@@ -14,7 +14,8 @@
  * Unity 對照：MVP 的 Presenter。按鈕 onClick 只呼叫 SelectFather / SelectMother / Confirm，
  * 畫面層拿 GetView() 的 ViewModel 一次刷新 Text 與 Button.interactable。
  */
-import { kinshipLampLine } from '../../core/systems/BloodFatigue';
+import { kinshipLampLine, outcrossRecoveryLine } from '../../core/systems/BloodFatigue';
+import { ancestorSeatVisible, diversityVisible, KIN_TEXT_WARNING, kinshipScanVisible, MILESTONE_G1_HINT, type MilestoneStage } from '../../core/systems/FamilyMilestone';
 import { PEDIGREE_SLOTS } from '../../core/services/BloodlineGraph';
 import { DIVERSITY_HINT } from '../../core/systems/DiversityFactor';
 import { HIDDEN_LINEAGE_COST, hiddenLineageLine, PEDIGREE_PROBE_COST, pedigreeProbeLine, STAT_PROBE_COST, statProbeLine } from '../../core/systems/PedigreeProbe';
@@ -142,6 +143,8 @@ export interface BondingSetupDeps {
     /** 劇本演出句（G2／G3 §G）；通知欄只有一行，正式環境接 toast，未提供時不演出 */
     /** G3-M1：選中表親時通知家族升階 */
     noteKinPair?: (fatherName: string, motherName: string, ancestorName: string) => void;
+    /** 家族揭露階段；未提供時全部顯示 */
+    milestoneStage?: () => MilestoneStage;
     announce?: (line: string) => void;
     /** 世交相性 K 的滑動窗（G3 §F-2）；未提供時不顯示 */
     familySynergy?: () => FamilySynergyLedger;
@@ -177,11 +180,16 @@ export class BondingSetupController {
     }
 
     /** 名士批語：最多三列，各列一位名士；未解鎖足夠名士時只回提示句 */
+    private _stage(): MilestoneStage {
+        return this._deps.milestoneStage?.() ?? 4;
+    }
+
     /** G2 §E #1：雙親各 14 席的格位文字 */
     private _seatTexts(prefix: string, generalId: string): Record<string, string> {
         const seats = this._deps.breeding.ancestorSeats?.(generalId) ?? [];
         const texts: Record<string, string> = {};
-        seats.forEach((person, i) => { texts[`${prefix}${i}`] = bondingSeatText(i, person); });
+        const stage = this._stage();
+        seats.forEach((person, i) => { texts[`${prefix}${i}`] = ancestorSeatVisible(stage, i) ? bondingSeatText(i, person) : ''; });
         return texts;
     }
 
@@ -441,8 +449,11 @@ export class BondingSetupController {
             : '模式：一般結緣 · 雙方仍具親傳資格';
 
         Object.assign(texts, this._seatTexts('fatherTree', father.id), this._seatTexts('motherTree', mother.id));
-        this._deps.breeding.commonAncestorSeats?.(father.id, mother.id).forEach((shared, i) => { actives[`fatherTreeFrame${i}`] = shared; });
-        this._deps.breeding.commonAncestorSeats?.(mother.id, father.id).forEach((shared, i) => { actives[`motherTreeFrame${i}`] = shared; });
+        const stage = this._stage();
+        if (kinshipScanVisible(stage)) {
+            this._deps.breeding.commonAncestorSeats?.(father.id, mother.id).forEach((shared, i) => { actives[`fatherTreeFrame${i}`] = shared; });
+            this._deps.breeding.commonAncestorSeats?.(mother.id, father.id).forEach((shared, i) => { actives[`motherTreeFrame${i}`] = shared; });
+        }
 
         const eligibility = this._deps.breeding.checkEligibility(father.id, mother.id);
         const ep = this._deps.breeding.previewEp(father.id, mother.id);
@@ -496,9 +507,15 @@ export class BondingSetupController {
             : inbred
                 ? `${BLOCK_REASON_TEXT.inbreeding}子嗣精力上限 ×${INBREEDING_VITALITY_MULTIPLIER}`
                 : '血緣：3 代內無共同祖先';
-        texts.kinshipLampLine = kinshipLampLine((father as BreedingGeneral).bloodFatigue, (mother as BreedingGeneral).bloodFatigue, eligibility.inbred);
+        const fatherH = (father as BreedingGeneral).bloodFatigue;
+        const motherH = (mother as BreedingGeneral).bloodFatigue;
+        if (stage === 1) texts.inbreedingLabel = '';
+        else if (stage === 2) texts.inbreedingLabel = eligibility.commonAncestorDistance !== null || inbred ? KIN_TEXT_WARNING : '血緣：3 代內無共同祖先';
+        texts.kinshipLampLine = stage === 1 ? MILESTONE_G1_HINT : kinshipScanVisible(stage) ? kinshipLampLine(fatherH, motherH, eligibility.inbred) : '';
+        const recovery = diversityVisible(stage) ? outcrossRecoveryLine(fatherH, motherH) : '';
+        if (recovery) texts.kinshipLampLine += `｜${recovery}`;
         const diversity = this._deps.breeding.diversityOf?.(father.id, mother.id) ?? 1;
-        if (diversity < 1) texts.inbreedingLabel += `｜${DIVERSITY_HINT}`;
+        if (diversity < 1 && diversityVisible(stage)) texts.inbreedingLabel += `｜${DIVERSITY_HINT}`;
         const allianceTag = ledger ? centuryAllianceTag(father as { familyUid?: string }, mother as { familyUid?: string }, ledger) : null;
         if (allianceTag) texts.inbreedingLabel += `｜${allianceTag}`;
         const kinTargets = (this._deps.breeding.kinPurificationTargets?.(father.id, mother.id) ?? []).filter((target) => (target.gene.discoveryLevel ?? 1) <= level);
@@ -520,6 +537,8 @@ export class BondingSetupController {
         }
         const heritage = this._selectedHeritage();
         if (heritage) texts.inbreedingLabel += `｜父系家傳：保 ${heritage.displayName ?? heritage.id} 傳給子嗣，不另收費`;
+        // G1 血緣行開頭是空的，後面接上的句子不留分隔號
+        texts.inbreedingLabel = texts.inbreedingLabel.replace(/^｜/, '');
         enabled.btnConfirmBond = eligibility.ok;
 
         return { fatherId: father.id, motherId: mother.id, mode, sageIds: sage.ids, texts, actives, enabled };

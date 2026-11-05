@@ -28,6 +28,27 @@ const UNLOCK_LINE: Partial<Record<MilestoneStage, string>> = {
     4: '👑 恭喜開宗立派！已解鎖【天下郡望】與【宗脈專屬家傳】系統！',
 };
 
+/** §H UI_MILESTONE_G1_HINT */
+export const MILESTONE_G1_HINT = '【初創家業】目前僅顯示鄉評風聞與基礎開蒙，待子嗣成材修纂族譜後將解鎖深層血脈資訊。';
+/** M_stage 表：G2 近婚只給這句文字警告 */
+export const KIN_TEXT_WARNING = '親緣過近，恐損氣血';
+/** G1 只看得到父母兩席 */
+const G1_VISIBLE_SEATS = 2;
+
+export function ancestorSeatVisible(stage: MilestoneStage, seatIndex: number): boolean {
+    return stage >= 2 || seatIndex < G1_VISIBLE_SEATS;
+}
+
+/** 28 祖位共祖紅框與血脈燈號都從 G3 開始 */
+export function kinshipScanVisible(stage: MilestoneStage): boolean {
+    return stage >= KIN_STAGE;
+}
+
+/** 多樣性折減與外婚復壯世代數從 G4 開始 */
+export function diversityVisible(stage: MilestoneStage): boolean {
+    return stage >= 4;
+}
+
 export function normalizeMilestoneStage(value: unknown): MilestoneStage {
     return value === 2 || value === 3 || value === 4 ? value : 1;
 }
