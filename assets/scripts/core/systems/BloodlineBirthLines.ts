@@ -10,6 +10,7 @@
  *
  * Unity 對照：像一個把結算結果轉成顯示字串的靜態 Formatter。
  */
+import { highEpLine } from './NumericalScriptLines';
 import type { InheritedFactor } from './FactorInheritance';
 
 export const BLOODLINE_RESONANCE_LINE = '雙方祖先血脈相通，血脈共鳴已達極致！';
@@ -37,7 +38,7 @@ function farthestAncestor(factors: readonly InheritedFactor[], nameOf: (uid: str
 }
 
 export function bloodlineBirthLines(
-    result: { ep?: { resonance: number }; factors?: readonly InheritedFactor[]; child?: { name: string } },
+    result: { ep?: { resonance: number; ep?: number }; factors?: readonly InheritedFactor[]; child?: { name: string } },
     nameOf: (uid: string) => string | null,
 ): string[] {
     const factors = result.factors ?? [];
@@ -50,5 +51,7 @@ export function bloodlineBirthLines(
     }
     if ((result.ep?.resonance ?? 0) > 0) lines.push(BLOODLINE_RESONANCE_LINE);
     if (factors.some((factor) => factor.wildGene)) lines.push(WILD_GENE_LINE);
+    const highEp = highEpLine(result.ep?.ep);
+    if (highEp) lines.push(highEp);
     return lines;
 }

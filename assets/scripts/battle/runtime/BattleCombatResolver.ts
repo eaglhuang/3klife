@@ -1,6 +1,7 @@
 // @spec-source → 戰場部署系統.md (doc_spec_0040)、demo_技術架構.md (doc_tech_0015)、戰場適性系統.md (doc_spec_0041)；PROG-2-1429 依建檔紀錄補標出處
 import { TroopCounterAnnouncer } from '../../core/systems/TroopCounterScripts';
 import { calmAdjustedAura, calmReductionOf, furyModifiersOf } from '../../core/systems/WhiteFactorTraits';
+import { critLine, SP_FULL_LINE } from '../../core/systems/NumericalScriptLines';
 import { EVENT_NAMES, Faction, GAME_CONFIG, SP_PER_KILL, StatusEffect, TerrainType, WEAK_ATTACK_MULTIPLIER, Weather } from '../../core/config/Constants';
 import { aiSpGainPerKill } from '../../core/systems/AiSpCharge';
 import { comboChanceOfPair } from '../../core/systems/ComboAttackKin';
@@ -336,8 +337,10 @@ export class BattleCombatResolver {
     // 暴擊（SCN-06）：基礎 5% + 場景加成，暴擊時傷害 ×1.5；擲骰走戰場亂數源
     const critRate = critRateOf((tacticBehavior.getCritBonus?.(attacker, this.context.state) ?? 0) + selfBurstCritBonus(attackerBurst)
       + massDebuffCritDelta(this.context.state.getMassDebuff(attacker.faction)));
+    let isCrit = false;
     if (rollCrit(critRate, this.hitRandom)) {
       damage = critDamageOf(damage);
+      isCrit = true;
     }
     // 全隊增益條件型增傷（郭嘉十勝定論，SYS-SKILL-ULT-0002）：目標身上有負面狀態才生效
     const defenderDebuffed = TEAM_AURA_DEBUFF_EFFECTS.some((effect) => svc.buff.hasBuff(defender.id, effect));
@@ -346,6 +349,9 @@ export class BattleCombatResolver {
     damage = Math.floor(damage * massDebuffDamageTakenMultiplier(this.context.state.getMassDebuff(defender.faction)));
     // 全隊增益減傷（SYS-SKILL-ULT-0002）：護盾尚未接，先只套減傷
     damage = Math.max(1, applyTeamAuraToDamage(this.context.state.getTeamAura(defender.faction), damage, 0).hpDamage);
+    // 數值系統 §G-1 暴擊句（PROG-2-1782）：傷害用最終結算值
+    const critGeneral = isCrit ? this.context.state.getGeneral(attacker.faction) : null;
+    if (critGeneral) svc.event.emit(EVENT_NAMES.BattleSkillNotice, critLine(critGeneral.name, damage));
 
     this.applyUnitDamage(defender, damage, attacker.faction, {
       attackerId: attacker.id,
@@ -681,7 +687,12 @@ export class BattleCombatResolver {
     if (killer) {
       const general = this.context.state.getGeneral(killer.faction);
       if (general) {
+        const wasFull = general.currentSp >= general.maxSp;
         general.addSp(killer.faction === Faction.Enemy ? aiSpGainPerKill(this.context.state.aiSpGainModifier) : SP_PER_KILL);
+        // 數值系統 §G-1 SP 蓄滿（PROG-2-1782）：只有玩家能發動，跨過滿格時說一次
+        if (killer.faction === Faction.Player && !wasFull && general.currentSp >= general.maxSp) {
+          svc.event.emit(EVENT_NAMES.BattleSkillNotice, SP_FULL_LINE);
+        }
         svc.event.emit(EVENT_NAMES.GeneralSpChanged, {
           faction: killer.faction,
           sp: general.currentSp,
