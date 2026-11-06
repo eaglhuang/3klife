@@ -10,8 +10,8 @@
   "tags": [],
   "createdAt": "2026-11-05T14:30:28.536Z",
   "createdByActor": "codex-gpt-6.1-sol",
-  "lastTransitionId": "2026-11-06T07-47-10-057Z-scope-amendment-7f1904fd4e8a",
-  "lastTransitionAt": "2026-11-06T07:47:10.057Z",
+  "lastTransitionId": "2026-11-06T13-22-16-688Z-renew-98ef64119951",
+  "lastTransitionAt": "2026-11-06T13:22:16.688Z",
   "ledgerContractVersion": "task-ledger/v1",
   "reservedAt": "2026-11-05T17:15:58.821Z",
   "promotedAt": "2026-11-05T17:15:58.826Z",
@@ -19,7 +19,7 @@
     "actorId": "codex-gpt-6.1-sol",
     "leaseId": "lease-f957fb02b01d",
     "claimedAt": "2026-11-05T17:15:58.833Z",
-    "heartbeatAt": "2026-11-06T07:41:50.201Z",
+    "heartbeatAt": "2026-11-06T13:22:16.513Z",
     "ttlSeconds": 1800,
     "files": [
       ".atm/history/evidence/UI-2-0121.*",
@@ -115,6 +115,8 @@
       "assets/resources/sprites/generals/avatars/fan_shi_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/gan_shi_avatar.png",
       "assets/resources/sprites/generals/avatars/gan_shi_avatar.png.meta",
+      "assets/resources/sprites/generals/avatars/gongsun_zan_avatar.png",
+      "assets/resources/sprites/generals/avatars/gongsun_zan_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/guan_yin_ping_avatar.png",
       "assets/resources/sprites/generals/avatars/guo_nu_wang_avatar.png",
       "assets/resources/sprites/generals/avatars/guo_nu_wang_avatar.png.meta",
@@ -237,6 +239,8 @@
       "assets/resources/sprites/ui_avatars/cropped/fan_shi_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/gan_shi_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/gan_shi_avatar.png.meta",
+      "assets/resources/sprites/ui_avatars/cropped/gongsun_zan_avatar.png",
+      "assets/resources/sprites/ui_avatars/cropped/gongsun_zan_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/guan_yin_ping_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/guo_nu_wang_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/guo_nu_wang_avatar.png.meta",
@@ -298,27 +302,26 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-cb3b6ce098f4271a",
-    "ticketDigest": "sha256:cb3b6ce098f4271aec134b763c092ea9e4c7c39cba6d98017b6b222abd5c88ae",
+    "ticketId": "wat-e8e26438ece77a78",
+    "ticketDigest": "sha256:e8e26438ece77a782801c8ea4fa094d4cbdca7ebf071bdfd1045d053de438a63",
     "taskId": "UI-2-0121",
     "origin": "claim",
     "actorId": "codex-gpt-6.1-sol",
     "laneSessionId": "lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d",
     "claimGeneration": "lease-f957fb02b01d",
-    "issuedAt": "2026-11-06T07:47:09.695Z",
-    "expiresAt": "2026-11-06T08:17:09.695Z",
-    "scopeDigest": "sha256:ab88f2a8cc30c84f1526c1fb56457b6556f0ae6bf2574d76c3b37b208e581b3e",
+    "issuedAt": "2026-11-06T13:22:16.513Z",
+    "expiresAt": "2026-11-06T13:52:16.513Z",
+    "scopeDigest": "sha256:1abb6b28528329fb92d6d4e8553ac00fe8575b66cba788fb0c9c7fab5ff403c7",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-11-06T07:47:09.695Z"
+      "selectedAt": "2026-11-06T13:22:16.513Z"
     },
     "grants": [
       {
         "kind": "file-write",
         "values": [
           ".atm/history/evidence/UI-2-0121.*",
-          ".atm/history/evidence/git-head.jsonl",
           ".atm/history/task-events/UI-2-0121/**",
           ".atm/history/tasks/UI-2-0121.json",
           "artifacts/general-avatar-review/**",
@@ -411,6 +414,8 @@
           "assets/resources/sprites/generals/avatars/fan_shi_avatar.png.meta",
           "assets/resources/sprites/generals/avatars/gan_shi_avatar.png",
           "assets/resources/sprites/generals/avatars/gan_shi_avatar.png.meta",
+          "assets/resources/sprites/generals/avatars/gongsun_zan_avatar.png",
+          "assets/resources/sprites/generals/avatars/gongsun_zan_avatar.png.meta",
           "assets/resources/sprites/generals/avatars/guan_yin_ping_avatar.png",
           "assets/resources/sprites/generals/avatars/guo_nu_wang_avatar.png",
           "assets/resources/sprites/generals/avatars/guo_nu_wang_avatar.png.meta",
@@ -533,6 +538,8 @@
           "assets/resources/sprites/ui_avatars/cropped/fan_shi_avatar.png.meta",
           "assets/resources/sprites/ui_avatars/cropped/gan_shi_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/gan_shi_avatar.png.meta",
+          "assets/resources/sprites/ui_avatars/cropped/gongsun_zan_avatar.png",
+          "assets/resources/sprites/ui_avatars/cropped/gongsun_zan_avatar.png.meta",
           "assets/resources/sprites/ui_avatars/cropped/guan_yin_ping_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/guo_nu_wang_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/guo_nu_wang_avatar.png.meta",
@@ -581,7 +588,7 @@
           "docs/ui-quality-tasks/UI-2-0121.json",
           "docs/ui-quality-todo.json"
         ],
-        "digest": "sha256:89796d2ad79e9d834cbd1b73aa0f9d8878ed31668cfe9e3527cd2de97c40a12f"
+        "digest": "sha256:871c5b1e4d571587c4763c7e0ed0d39abef2a6153615655bdc9bddfa62f13d62"
       },
       {
         "kind": "lifecycle-operation",
@@ -723,6 +730,8 @@
       "assets/resources/sprites/generals/avatars/fan_shi_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/gan_shi_avatar.png",
       "assets/resources/sprites/generals/avatars/gan_shi_avatar.png.meta",
+      "assets/resources/sprites/generals/avatars/gongsun_zan_avatar.png",
+      "assets/resources/sprites/generals/avatars/gongsun_zan_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/guan_yin_ping_avatar.png",
       "assets/resources/sprites/generals/avatars/guo_nu_wang_avatar.png",
       "assets/resources/sprites/generals/avatars/guo_nu_wang_avatar.png.meta",
@@ -845,6 +854,8 @@
       "assets/resources/sprites/ui_avatars/cropped/fan_shi_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/gan_shi_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/gan_shi_avatar.png.meta",
+      "assets/resources/sprites/ui_avatars/cropped/gongsun_zan_avatar.png",
+      "assets/resources/sprites/ui_avatars/cropped/gongsun_zan_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/guan_yin_ping_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/guo_nu_wang_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/guo_nu_wang_avatar.png.meta",
@@ -1422,6 +1433,10 @@
     "assets/resources/sprites/ui_avatars/cropped/jin_huan_san_jie_avatar.png.meta",
     "assets/resources/sprites/generals/avatars/li_dian_avatar.png",
     "assets/resources/sprites/generals/li_dian_portrait.png",
-    "assets/resources/sprites/ui_avatars/cropped/li_dian_avatar.png"
+    "assets/resources/sprites/ui_avatars/cropped/li_dian_avatar.png",
+    "assets/resources/sprites/generals/avatars/gongsun_zan_avatar.png",
+    "assets/resources/sprites/generals/avatars/gongsun_zan_avatar.png.meta",
+    "assets/resources/sprites/ui_avatars/cropped/gongsun_zan_avatar.png",
+    "assets/resources/sprites/ui_avatars/cropped/gongsun_zan_avatar.png.meta"
   ]
 }

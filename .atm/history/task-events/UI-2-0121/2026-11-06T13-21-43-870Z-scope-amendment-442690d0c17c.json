@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-06T13-21-43-870Z-scope-amendment-442690d0c17c",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:e980833b5f095f4ec0b742bd65898ed1c2e940d97fab929430944752030bb96e",
+  "createdAt": "2026-11-06T13:21:43.870Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-sol --add \"assets/resources/data/general-avatar-crops.json,assets/resources/sprites/generals/avatars/gongsun_zan_avatar.png,assets/resources/sprites/generals/avatars/gongsun_zan_avatar.png.meta,assets/resources/sprites/ui_avatars/cropped/gongsun_zan_avatar.png,assets/resources/sprites/ui_avatars/cropped/gongsun_zan_avatar.png.meta,docs/agent-briefs/tasks/UI/UI-2-0121.md\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
