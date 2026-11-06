@@ -180,6 +180,11 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
     this.dragDropCallback = cb;
   }
 
+  /** @deprecated v3-4 改用 updateFood（PROG-2-1896）；留給尚未改名的 BattleScene 呼叫 */
+  public updateDp(food: number): void {
+    this.updateFood(food);
+  }
+
   public updateFood(food: number): void {
     this.currentFood = food;
     this.refreshButtonStates();

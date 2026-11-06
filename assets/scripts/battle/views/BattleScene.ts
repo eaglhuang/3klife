@@ -363,8 +363,8 @@ export class BattleScene extends Component {
       UCUFLogger.info(LogCategory.BATTLE, `[BattleScene] deployRuntime 已連結: ${!!this._deployPanelRuntime}`);
 
       const snap = services().battle.getSnapshot();
-      // 初始化糧草顯示（確保 deploy runtime 顯示正確的初始糧草）
-      this._deployPanelRuntime?.updateFood(snap.playerFood);
+      // 初始化 DP 顯示（確保 deploy runtime 顯示正確的初始 DP）
+      this._deployPanelRuntime?.updateDp(snap.playerFood);
       this.hud?.setPlayerGeneralId(pgId);
       this.hud?.setEnemyGeneralId(egId);
       this.hud?.setPlayerName(pg.name);

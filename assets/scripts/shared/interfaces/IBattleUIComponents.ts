@@ -86,6 +86,8 @@ export interface IDeployRuntimeLike {
     readonly node: any;
     setController(ctrl: IDeployController): void;
     updateFood(food: number): void;
+    /** @deprecated v3-4 改用 updateFood（PROG-2-1896）；BattleScene.ts 由 BAT-1-0001 持鎖，待解鎖後改呼叫端再移除 */
+    updateDp(food: number): void;
     selectLane(lane: number): void;
     deploySelected(): void;
     showToast(message: string, duration?: number, options?: { color?: Color; key?: string }): void;
