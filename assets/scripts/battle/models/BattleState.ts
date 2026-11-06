@@ -153,6 +153,8 @@ export class BattleState {
   public wisdomMeter = 0;
   /** 智謀能量本場觸發次數 */
   public wisdomTriggerCount = 0;
+  /** Boss 親衛隊本場是否已召喚（關卡設計系統 Boss AI，PROG-2-1862） */
+  public bossGuardSummoned = false;
 
   constructor() {
     for (let lane = 0; lane < GAME_CONFIG.GRID_LANES; lane++) {
@@ -201,6 +203,7 @@ export class BattleState {
     this.peakTroopCount = 0;
     this.wisdomMeter = 0;
     this.wisdomTriggerCount = 0;
+    this.bossGuardSummoned = false;
     this.battleEndAnnounced = false;
     this.stageSalvage = { stone: 0, wood: 0, supply: 0, intel: 0, weaponMaterial: 0, instructorExp: 0 };
     this.plunderedTiles = new Set<string>();
