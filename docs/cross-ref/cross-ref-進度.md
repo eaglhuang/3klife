@@ -55,7 +55,7 @@
 | **場景搭建指南.md (doc_tech_0007)** | SceneAutoBuilder.ts | ✅ | ✅ | ❌ | ❌ | ⬜ |
 | **demo_playbook.md (doc_spec_0161)** | BattleScene.ts | ✅ | ✅ | ❌ | ❌ | ⬜ |
 | **demo_技術架構.md (doc_tech_0015)** | ServiceLoader.ts, PoolSystem.ts, ResourceManager.ts, EffectSystem.ts, AudioSystem.ts | ✅ | ✅ | ✅ | ✅ | ⬜ |
-| **keep.md (doc_index_0011) §7** | MaterialUtils.ts, MaterialSystem.ts | ✅ | ✅ | ✅ | ❌ | ⬜ |
+| **keep.md (doc_index_0011) §7** | MaterialUtils.ts, MaterialSystem.ts（補 MaterialSystem 測試；修 captureOutfit 預設值共用陣列、bindUnit 失敗留下空紀錄，PROG-2-1883） | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | 俘虜處理系統.md (doc_spec_0021) | PrisonerOfWar.ts, PrisonerPopupController.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 傭兵系統（試用）.md (doc_spec_0029) | MercenaryIllustration.ts, MercenaryPanelView.ts, MercenaryNameplateRows.ts, MercenaryPanelController.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 可結緣女性來源系統.md (doc_spec_0003) | DaughterComingOfAge.ts, FemaleSource.ts, FemaleSourcePresenter.ts, BreedingPreviewPresenter.ts | ✅ | ✅ | ✅ | ✅ | ⬜ |

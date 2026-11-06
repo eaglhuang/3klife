@@ -49,6 +49,19 @@ export const DEFAULT_OUTFIT: OutfitConfig = {
     emissionIntensity:0,
 };
 
+/** 深複製服裝設定（各顏色陣列各自獨立） */
+function cloneOutfit(o: OutfitConfig): OutfitConfig {
+    return {
+        primaryColor:     [...o.primaryColor],
+        secondaryColor:   [...o.secondaryColor],
+        gradientTop:      [...o.gradientTop],
+        gradientBottom:   [...o.gradientBottom],
+        gradientRange:    [...o.gradientRange],
+        emissionColor:    [...o.emissionColor],
+        emissionIntensity:o.emissionIntensity,
+    };
+}
+
 interface ShaderEntry {
     id:       string;
     /** resources/ 相對路徑，指向 .mtl 材質檔（不含副檔名） */
@@ -243,7 +256,8 @@ export class MaterialSystem {
      * @returns          此 unit 的獨立 Material 實例
      */
     bindUnit(unitId: string, shaderKey: string, mr: MeshRenderer): Material | null {
-        const existing = this.getInstanceMap(unitId).get(shaderKey);
+        // 先查不建表：Shader 未載入而失敗時不留下空的單位紀錄（PROG-2-1883）
+        const existing = this.getInstance(unitId, shaderKey);
         if (existing) return existing;
 
         const entry = this.registry.get(shaderKey);
@@ -313,7 +327,8 @@ export class MaterialSystem {
      */
     captureOutfit(unitId: string, shaderKey: string): OutfitConfig {
         const mat = this.getInstance(unitId, shaderKey);
-        if (!mat) return { ...DEFAULT_OUTFIT };
+        // 逐欄複製陣列，避免呼叫端修改回傳值時連帶改到 DEFAULT_OUTFIT（PROG-2-1883）
+        if (!mat) return cloneOutfit(DEFAULT_OUTFIT);
 
         const toTuple = (v: Vec4 | null): [number, number, number, number] =>
             v ? [v.x, v.y, v.z, v.w] : [1, 1, 1, 1];
