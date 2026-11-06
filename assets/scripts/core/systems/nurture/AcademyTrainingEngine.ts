@@ -179,7 +179,7 @@ function applyAction(state: AcademyStateSnapshot, action: AcademyActionPayload, 
         if (!action.targetStat) throw new AcademyActionError('TRAIN 必須指定 targetStat');
         resonance = applyTrain(state, action.targetStat, rng, gimmick);
     } else {
-        state.energy = clampEnergy(state.energy + ACADEMY_TUNING.restEnergyGain);
+        state.energy = clampEnergy(state.energy + ACADEMY_TUNING.restEnergyGain, state.energyMax);
     }
     gimmick?.onTurnEnd(state, rng);
     endTurn(state, resonance, rng, gimmick);
@@ -196,7 +196,7 @@ function applyTrain(state: AcademyStateSnapshot, target: AcademyStatKey, rng: ID
     const gain = Math.floor(((ACADEMY_TUNING.trainBaseGain + variance) * efficiency * bias * bonusPct * policy * legacy) / 10000000000);
     addAcademyStatCapped(state.stats, target, gain);
     const policyEnergy = state.midtermPolicy === 'BALANCE' ? ACADEMY_TUNING.midtermBalanceExtraEnergy : 0;
-    state.energy = clampEnergy(state.energy - ACADEMY_TUNING.trainEnergyCost - result.extraEnergyCost - policyEnergy);
+    state.energy = clampEnergy(state.energy - ACADEMY_TUNING.trainEnergyCost - result.extraEnergyCost - policyEnergy, state.energyMax);
     return state.resonanceLockTurns === 0 && bonusPct >= ACADEMY_TUNING.resonanceThresholdPct;
 }
 
@@ -221,7 +221,7 @@ function extremeStat(stats: AcademyStats, sign: 1 | -1): AcademyStatKey {
 
 function endTurn(state: AcademyStateSnapshot, resonance: boolean, rng: IDeterministicRng, gimmick?: IAcademyGimmickHandler): void {
     if (state.midtermPolicy === 'NOURISH') {
-        state.energy = clampEnergy(state.energy + ACADEMY_TUNING.midtermNourishEnergyPerTurn);
+        state.energy = clampEnergy(state.energy + ACADEMY_TUNING.midtermNourishEnergyPerTurn, state.energyMax);
     }
     if (state.resonanceLockTurns > 0) state.resonanceLockTurns -= 1;
     if (resonance) {
@@ -309,6 +309,6 @@ function autoResolveChoice(state: AcademyStateSnapshot): AcademyActionPayload {
     return { actionType: 'RESOLVE_INTERRUPT', selectedOptionId: state.interruptOptions[0] };
 }
 
-function clampEnergy(value: number): number {
-    return Math.max(0, Math.min(ACADEMY_ENERGY_MAX, Math.floor(value)));
+function clampEnergy(value: number, max: number = ACADEMY_ENERGY_MAX): number {
+    return Math.max(0, Math.min(max, Math.floor(value)));
 }
