@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-05T19-18-08-236Z-scope-amendment-0082eb2b225b",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:a108ab861bab33f5373a7905becdbd08163946a6fad5341923ded1f78e6255c9",
+  "createdAt": "2026-11-05T19:18:08.236Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-sol --add \"artifacts/ui-generated/bian_fu_ren_portrait_prompt_v1.txt,artifacts/ui-generated/bian_fu_ren_portrait_candidate_1.png,assets/resources/sprites/generals/bian_fu_ren_portrait.png,assets/resources/sprites/generals/bian_fu_ren_portrait.png.meta,assets/resources/sprites/generals/avatars/bian_fu_ren_avatar.png,assets/resources/sprites/generals/avatars/bian_fu_ren_avatar.png.meta,assets/resources/sprites/ui_avatars/cropped/bian_fu_ren_avatar.png,assets/resources/sprites/ui_avatars/cropped/bian_fu_ren_avatar.png.meta,assets/resources/data/general-avatar-crops.json,docs/art/character-palette-ledger-shards/palette-generals.md,docs/art/character-palette-ledger-shards/palette-principles.md,docs/agent-briefs/tasks/UI/UI-2-0121.md,docs/ui-quality-tasks/UI-2-0121.json,docs/ui-quality-todo.json\" --class asset-generation --phase during-implementation --reason \"Add the next missing famed Wei general portrait, paired avatar assets, palette identity record and task evidence\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "asset-generation",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "Add the next missing famed Wei general portrait, paired avatar assets, palette identity record and task evidence"
+  }
+}

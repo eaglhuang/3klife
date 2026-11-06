@@ -1,6 +1,6 @@
 ---
 title: UI Quality Tasks Index
-generated: 2026-11-05
+generated: 2026-11-06
 manifest: ../ui-quality-todo.json
 ---
 

@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-06T00-48-43-388Z-scope-amendment-47eea8d15e01",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:fd8396e14cfe5a64067fcb352926898c708d8a702796bc0116faa5cb380ed138",
+  "createdAt": "2026-11-06T00:48:43.388Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-sol --add \"artifacts/ui-generated/jin-huan-san-jie/jin_huan_san_jie_portrait_prompt_v1.txt,artifacts/ui-generated/jin-huan-san-jie/jin_huan_san_jie_candidate_1.png,assets/resources/sprites/generals/jin_huan_san_jie_portrait.png,assets/resources/sprites/generals/jin_huan_san_jie_portrait.png.meta,assets/resources/data/general-avatar-crops.json,assets/resources/sprites/generals/avatars/jin_huan_san_jie_avatar.png,assets/resources/sprites/generals/avatars/jin_huan_san_jie_avatar.png.meta,assets/resources/sprites/ui_avatars/cropped/jin_huan_san_jie_avatar.png,assets/resources/sprites/ui_avatars/cropped/jin_huan_san_jie_avatar.png.meta,docs/agent-briefs/tasks/UI/UI-2-0121.md,docs/art/character-palette-ledger-shards/palette-generals.md\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}

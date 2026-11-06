@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-05T22-49-47-042Z-scope-amendment-cf2c2fb29286",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:d51b241888d6ac4d670caa5d180d5257f7bc08a77c676c2b73c5db63d4bf913b",
+  "createdAt": "2026-11-05T22:49:47.042Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-sol --add \"artifacts/ui-generated/xu-shi/xu_shi_candidate_1.png,artifacts/ui-generated/xu-shi/xu_shi_portrait_prompt_v1.txt,assets/resources/sprites/generals/xu_shi_portrait.png,assets/resources/sprites/generals/xu_shi_portrait.png.meta,assets/resources/sprites/generals/avatars/xu_shi_avatar.png,assets/resources/sprites/generals/avatars/xu_shi_avatar.png.meta,assets/resources/sprites/ui_avatars/cropped/xu_shi_avatar.png,assets/resources/sprites/ui_avatars/cropped/xu_shi_avatar.png.meta\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}

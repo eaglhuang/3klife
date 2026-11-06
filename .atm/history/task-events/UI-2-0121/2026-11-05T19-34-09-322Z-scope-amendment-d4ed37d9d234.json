@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-05T19-34-09-322Z-scope-amendment-d4ed37d9d234",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:191a1710c5b0b7c0937a8bb6bc4f52031958c6ebc8e36de778d0f399b44c126e",
+  "createdAt": "2026-11-05T19:34:09.322Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-sol --add \"artifacts/ui-generated/wu_guo_tai_portrait_prompt_v3.txt,artifacts/ui-generated/wu_guo_tai_portrait_candidate_3.png\" --class asset-generation --phase during-implementation --reason \"Second Wu Guotai edit retained a baked checkerboard; remove only the background while preserving the completed hair ornament and full figure\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "asset-generation",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "Second Wu Guotai edit retained a baked checkerboard; remove only the background while preserving the completed hair ornament and full figure"
+  }
+}

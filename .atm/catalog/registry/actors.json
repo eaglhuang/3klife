@@ -1,7 +1,7 @@
 {
   "schemaId": "atm.actorRegistry",
   "specVersion": "0.1.0",
-  "generatedAt": "2026-11-05T17:25:42.951Z",
+  "generatedAt": "2026-11-06T00:56:39.727Z",
   "actors": [
     {
       "actorId": "claude-code-haiku-5-5",
@@ -68,6 +68,16 @@
       "gitEmail": "codex-codex-gpt-5.4-mini@atm.local",
       "createdAt": "2026-09-05T15:28:02.361Z",
       "updatedAt": "2026-09-05T15:28:23.607Z"
+    },
+    {
+      "actorId": "codex-codex-gpt-6.1-sol",
+      "actorKind": "ai-agent",
+      "displayName": "codex-codex-gpt-6.1-sol",
+      "editor": "codex",
+      "gitName": "codex-codex-gpt-6.1-sol",
+      "gitEmail": "codex-codex-gpt-6.1-sol@atm.local",
+      "createdAt": "2026-11-05T20:38:19.101Z",
+      "updatedAt": "2026-11-05T20:38:19.101Z"
     },
     {
       "actorId": "codex-gpt-5",
@@ -157,7 +167,7 @@
       "gitName": "codex-gpt-6.1-sol",
       "gitEmail": "codex-gpt-6.1-sol@atm.local",
       "createdAt": "2026-10-29T23:29:27.303Z",
-      "updatedAt": "2026-11-05T17:25:42.950Z"
+      "updatedAt": "2026-11-06T00:56:39.726Z"
     },
     {
       "actorId": "cursor-gpt-5.2",

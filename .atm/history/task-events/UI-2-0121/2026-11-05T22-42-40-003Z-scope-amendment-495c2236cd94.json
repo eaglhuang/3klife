@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-05T22-42-40-003Z-scope-amendment-495c2236cd94",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:6c6ff91f50d682fce0f06e6ff2ac4848ae67a1695ee0609e1cf2897078bcc3dc",
+  "createdAt": "2026-11-05T22:42:40.003Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-sol --add \"artifacts/ui-generated/cao-xian/cao_xian_candidate_1.png,artifacts/ui-generated/cao-xian/cao_xian_portrait_prompt_v1.txt,assets/resources/sprites/generals/cao_xian_portrait.png,assets/resources/sprites/generals/cao_xian_portrait.png.meta,assets/resources/sprites/generals/avatars/cao_xian_avatar.png,assets/resources/sprites/generals/avatars/cao_xian_avatar.png.meta,assets/resources/sprites/ui_avatars/cropped/cao_xian_avatar.png,assets/resources/sprites/ui_avatars/cropped/cao_xian_avatar.png.meta\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}

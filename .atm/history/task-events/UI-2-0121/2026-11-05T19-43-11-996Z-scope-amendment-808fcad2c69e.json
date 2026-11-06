@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-05T19-43-11-996Z-scope-amendment-808fcad2c69e",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:249fe94adb187866cfae01c6be499c01f8444a3c3f6af80ba086123876e1379d",
+  "createdAt": "2026-11-05T19:43:11.996Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-sol --add \"artifacts/ui-generated/guo_nu_wang_portrait_prompt_v2.txt,artifacts/ui-generated/guo_nu_wang_portrait_candidate_2.png\" --class asset-generation --phase during-implementation --reason \"First Guo Nuwang candidate clips the comb crown and shoe edges; reframe with safe transparent margins and complete ornaments/feet\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "asset-generation",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "First Guo Nuwang candidate clips the comb crown and shoe edges; reframe with safe transparent margins and complete ornaments/feet"
+  }
+}

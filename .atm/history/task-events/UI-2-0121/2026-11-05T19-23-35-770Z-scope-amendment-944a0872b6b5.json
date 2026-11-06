@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-05T19-23-35-770Z-scope-amendment-944a0872b6b5",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:911378f52641d94780b6dc7bcb0d7af09d7e34d614f2a5494eea98d65ece9ae5",
+  "createdAt": "2026-11-05T19:23:35.770Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-sol --add artifacts/ui-generated/bian_fu_ren_portrait_candidate_3.png --class asset-generation --phase during-implementation --reason \"Restore transparent alpha on the approved face edit using the preserved original silhouette matte, keeping a separate candidate artifact\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "asset-generation",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "Restore transparent alpha on the approved face edit using the preserved original silhouette matte, keeping a separate candidate artifact"
+  }
+}

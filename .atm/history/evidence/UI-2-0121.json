@@ -1,0 +1,249 @@
+{
+  "taskId": "UI-2-0121",
+  "updatedAt": "2026-11-05T18:55:13.419Z",
+  "evidence": [
+    {
+      "evidenceKind": "validation",
+      "evidenceType": "test",
+      "summary": "Auto-run: node tools_node/generate-general-avatars.js guan-yin-ping --verify",
+      "artifactPaths": [],
+      "evidenceFreshness": "fresh",
+      "producedBy": "codex-gpt-6.1-sol",
+      "sessionId": "session-20261105171558-codex-gpt-6.1-sol-UI-2-0121-3220962ee1",
+      "createdAt": "2026-11-05T18:29:02.821Z",
+      "details": {
+        "actorId": "codex-gpt-6.1-sol",
+        "sessionId": "session-20261105171558-codex-gpt-6.1-sol-UI-2-0121-3220962ee1",
+        "kind": "test",
+        "freshness": "fresh",
+        "commandRuns": [
+          {
+            "command": "node tools_node/generate-general-avatars.js guan-yin-ping --verify",
+            "exitCode": 1,
+            "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderrSha256": "sha256:648aabee988173e26f03921a40d81b9d02ff4b1fb0548261bcef38da97b64abf",
+            "startedAt": "2026-11-05T18:29:02.485Z",
+            "finishedAt": "2026-11-05T18:29:02.821Z",
+            "durationMs": 336,
+            "cached": false,
+            "cwd": ".",
+            "runnerKind": "dev-source",
+            "sourceCommit": "15bfb8cb730e94ea27d6b0fb0f7e810c7d8935a8",
+            "cacheKey": "sha256:0cb67c21d630609d3c78ff250dbe35ca9be6eddd09bf869415343f079aea1018",
+            "generatedAt": "2026-11-05T18:29:02.821Z",
+            "canonicalObservation": {
+              "schemaId": "atm.telemetryObservation.v1",
+              "specVersion": "0.1.0",
+              "migration": {
+                "strategy": "none",
+                "fromVersion": null,
+                "notes": "Canonical telemetry observation contract."
+              },
+              "observationId": "sha256:0cb67c21d630609d3c78ff250dbe35ca9be6eddd09bf869415343f079aea1018",
+              "producerId": "evidence.command-runs",
+              "producerVersion": "0.1.0",
+              "observationKind": "command-run",
+              "status": "canonical",
+              "source": "evidence-command-run-normalizer",
+              "sourceAvailability": "available",
+              "storagePolicy": "tracked-compact-digest",
+              "generatedAt": "2026-11-05T18:29:02.821Z",
+              "observedAt": "2026-11-05T18:29:02.821Z",
+              "startedAt": "2026-11-05T18:29:02.485Z",
+              "finishedAt": "2026-11-05T18:29:02.821Z",
+              "durationMs": 336,
+              "laneSessionId": null,
+              "taskId": "UI-2-0121",
+              "batchId": null,
+              "waveId": null,
+              "inputDigest": "sha256:963f8cee1ce03c4cc0634c4547c706e16a6fcdcafa0220dd9f5b8595dcfe57bd",
+              "outputDigest": "sha256:43605621c017e656de61d72557c6bbc4384a134183a3b8c6674cc4e1d644c268",
+              "cache": {
+                "key": "sha256:0cb67c21d630609d3c78ff250dbe35ca9be6eddd09bf869415343f079aea1018",
+                "hit": false
+              },
+              "extensions": {
+                "command": "node tools_node/generate-general-avatars.js guan-yin-ping --verify",
+                "cwd": ".",
+                "exitCode": 1,
+                "validators": [],
+                "runnerKind": "dev-source",
+                "sourceCommit": "15bfb8cb730e94ea27d6b0fb0f7e810c7d8935a8",
+                "runnerVersion": null
+              }
+            }
+          }
+        ],
+        "commandRunCache": {
+          "schemaId": "atm.commandRunCache.v1",
+          "cacheKey": "sha256:635bfa86fc8e6ecba3e8c80ea728f4abde826042ecfab61ff1a76549ddd85e30",
+          "reusedRunCount": 0,
+          "runCount": 1,
+          "sourcePath": null
+        }
+      }
+    },
+    {
+      "evidenceKind": "validation",
+      "evidenceType": "test",
+      "summary": "Auto-run: node tools_node/generate-general-avatars.js --verify",
+      "artifactPaths": [],
+      "evidenceFreshness": "fresh",
+      "producedBy": "codex-gpt-6.1-sol",
+      "sessionId": "session-20261105171558-codex-gpt-6.1-sol-UI-2-0121-3220962ee1",
+      "createdAt": "2026-11-05T18:43:17.596Z",
+      "details": {
+        "actorId": "codex-gpt-6.1-sol",
+        "sessionId": "session-20261105171558-codex-gpt-6.1-sol-UI-2-0121-3220962ee1",
+        "kind": "test",
+        "freshness": "fresh",
+        "commandRuns": [
+          {
+            "command": "node tools_node/generate-general-avatars.js --verify",
+            "exitCode": 1,
+            "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderrSha256": "sha256:648aabee988173e26f03921a40d81b9d02ff4b1fb0548261bcef38da97b64abf",
+            "startedAt": "2026-11-05T18:43:17.292Z",
+            "finishedAt": "2026-11-05T18:43:17.595Z",
+            "durationMs": 303,
+            "cached": false,
+            "cwd": ".",
+            "runnerKind": "dev-source",
+            "sourceCommit": "15bfb8cb730e94ea27d6b0fb0f7e810c7d8935a8",
+            "cacheKey": "sha256:e04cd08a5191b61772529d8822c1ea9a9ed9dc8ee9ee79a2c28e6f8174858695",
+            "generatedAt": "2026-11-05T18:43:17.595Z",
+            "canonicalObservation": {
+              "schemaId": "atm.telemetryObservation.v1",
+              "specVersion": "0.1.0",
+              "migration": {
+                "strategy": "none",
+                "fromVersion": null,
+                "notes": "Canonical telemetry observation contract."
+              },
+              "observationId": "sha256:e04cd08a5191b61772529d8822c1ea9a9ed9dc8ee9ee79a2c28e6f8174858695",
+              "producerId": "evidence.command-runs",
+              "producerVersion": "0.1.0",
+              "observationKind": "command-run",
+              "status": "canonical",
+              "source": "evidence-command-run-normalizer",
+              "sourceAvailability": "available",
+              "storagePolicy": "tracked-compact-digest",
+              "generatedAt": "2026-11-05T18:43:17.595Z",
+              "observedAt": "2026-11-05T18:43:17.595Z",
+              "startedAt": "2026-11-05T18:43:17.292Z",
+              "finishedAt": "2026-11-05T18:43:17.595Z",
+              "durationMs": 303,
+              "laneSessionId": null,
+              "taskId": "UI-2-0121",
+              "batchId": null,
+              "waveId": null,
+              "inputDigest": "sha256:701b74bd127874bfe9d2310068b1a37b5be9b5860f614329d3a605c3b80c184e",
+              "outputDigest": "sha256:43605621c017e656de61d72557c6bbc4384a134183a3b8c6674cc4e1d644c268",
+              "cache": {
+                "key": "sha256:e04cd08a5191b61772529d8822c1ea9a9ed9dc8ee9ee79a2c28e6f8174858695",
+                "hit": false
+              },
+              "extensions": {
+                "command": "node tools_node/generate-general-avatars.js --verify",
+                "cwd": ".",
+                "exitCode": 1,
+                "validators": [],
+                "runnerKind": "dev-source",
+                "sourceCommit": "15bfb8cb730e94ea27d6b0fb0f7e810c7d8935a8",
+                "runnerVersion": null
+              }
+            }
+          }
+        ],
+        "commandRunCache": {
+          "schemaId": "atm.commandRunCache.v1",
+          "cacheKey": "sha256:ec50992e65d136f40049db94b6504946032aed3a294de04f1ff95a02f1b840d8",
+          "reusedRunCount": 0,
+          "runCount": 1,
+          "sourcePath": null
+        }
+      }
+    },
+    {
+      "evidenceKind": "validation",
+      "evidenceType": "test",
+      "summary": "Auto-run: node tools_node/generate-general-avatars.js --verify",
+      "artifactPaths": [],
+      "evidenceFreshness": "fresh",
+      "producedBy": "codex-gpt-6.1-sol",
+      "sessionId": "session-20261105171558-codex-gpt-6.1-sol-UI-2-0121-3220962ee1",
+      "createdAt": "2026-11-05T18:55:13.419Z",
+      "details": {
+        "actorId": "codex-gpt-6.1-sol",
+        "sessionId": "session-20261105171558-codex-gpt-6.1-sol-UI-2-0121-3220962ee1",
+        "kind": "test",
+        "freshness": "fresh",
+        "commandRuns": [
+          {
+            "command": "node tools_node/generate-general-avatars.js --verify",
+            "exitCode": 1,
+            "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderrSha256": "sha256:648aabee988173e26f03921a40d81b9d02ff4b1fb0548261bcef38da97b64abf",
+            "startedAt": "2026-11-05T18:55:12.802Z",
+            "finishedAt": "2026-11-05T18:55:13.418Z",
+            "durationMs": 616,
+            "cached": false,
+            "cwd": ".",
+            "runnerKind": "dev-source",
+            "sourceCommit": "15bfb8cb730e94ea27d6b0fb0f7e810c7d8935a8",
+            "cacheKey": "sha256:e04cd08a5191b61772529d8822c1ea9a9ed9dc8ee9ee79a2c28e6f8174858695",
+            "generatedAt": "2026-11-05T18:55:13.418Z",
+            "canonicalObservation": {
+              "schemaId": "atm.telemetryObservation.v1",
+              "specVersion": "0.1.0",
+              "migration": {
+                "strategy": "none",
+                "fromVersion": null,
+                "notes": "Canonical telemetry observation contract."
+              },
+              "observationId": "sha256:e04cd08a5191b61772529d8822c1ea9a9ed9dc8ee9ee79a2c28e6f8174858695",
+              "producerId": "evidence.command-runs",
+              "producerVersion": "0.1.0",
+              "observationKind": "command-run",
+              "status": "canonical",
+              "source": "evidence-command-run-normalizer",
+              "sourceAvailability": "available",
+              "storagePolicy": "tracked-compact-digest",
+              "generatedAt": "2026-11-05T18:55:13.418Z",
+              "observedAt": "2026-11-05T18:55:13.418Z",
+              "startedAt": "2026-11-05T18:55:12.802Z",
+              "finishedAt": "2026-11-05T18:55:13.418Z",
+              "durationMs": 616,
+              "laneSessionId": null,
+              "taskId": "UI-2-0121",
+              "batchId": null,
+              "waveId": null,
+              "inputDigest": "sha256:701b74bd127874bfe9d2310068b1a37b5be9b5860f614329d3a605c3b80c184e",
+              "outputDigest": "sha256:43605621c017e656de61d72557c6bbc4384a134183a3b8c6674cc4e1d644c268",
+              "cache": {
+                "key": "sha256:e04cd08a5191b61772529d8822c1ea9a9ed9dc8ee9ee79a2c28e6f8174858695",
+                "hit": false
+              },
+              "extensions": {
+                "command": "node tools_node/generate-general-avatars.js --verify",
+                "cwd": ".",
+                "exitCode": 1,
+                "validators": [],
+                "runnerKind": "dev-source",
+                "sourceCommit": "15bfb8cb730e94ea27d6b0fb0f7e810c7d8935a8",
+                "runnerVersion": null
+              }
+            }
+          }
+        ],
+        "commandRunCache": {
+          "schemaId": "atm.commandRunCache.v1",
+          "cacheKey": "sha256:ec50992e65d136f40049db94b6504946032aed3a294de04f1ff95a02f1b840d8",
+          "reusedRunCount": 0,
+          "runCount": 1,
+          "sourcePath": null
+        }
+      }
+    }
+  ]
+}

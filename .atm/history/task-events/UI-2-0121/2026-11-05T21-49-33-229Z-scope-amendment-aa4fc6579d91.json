@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-05T21-49-33-229Z-scope-amendment-aa4fc6579d91",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:ab84202e69203ca96ec124df64332e6dc8c0e491f3c1b61611efaca7345de8a0",
+  "createdAt": "2026-11-05T21:49:33.229Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-sol --add \"artifacts/ui-generated/xin-xian-ying/xin_xian_ying_weapon_candidate_2.png,artifacts/ui-generated/xin-xian-ying/xin_xian_ying_weapon_prompt_v1.txt\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}

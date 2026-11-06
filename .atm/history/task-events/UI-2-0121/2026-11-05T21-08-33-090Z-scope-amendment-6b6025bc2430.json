@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-05T21-08-33-090Z-scope-amendment-6b6025bc2430",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:678f4dc37be2ef2863fdee9280577d7695d180955befb89e6e5d4e3aa26b29df",
+  "createdAt": "2026-11-05T21:08:33.090Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-sol --add \"artifacts/ui-generated/ma-yun-lu/ma_yun_lu_candidate_1.png,artifacts/ui-generated/ma-yun-lu/ma_yun_lu_portrait_prompt_v1.txt,assets/resources/sprites/generals/ma_yun_lu_portrait.png,assets/resources/sprites/generals/ma_yun_lu_portrait.png.meta,assets/resources/sprites/generals/avatars/ma_yun_lu_avatar.png,assets/resources/sprites/generals/avatars/ma_yun_lu_avatar.png.meta,assets/resources/sprites/ui_avatars/cropped/ma_yun_lu_avatar.png,assets/resources/sprites/ui_avatars/cropped/ma_yun_lu_avatar.png.meta\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}

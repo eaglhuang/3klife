@@ -1,0 +1,10 @@
+{
+  "schemaId": "atm.evidenceBundleManifest.v1",
+  "taskId": "UI-2-0121",
+  "updatedAt": "2026-11-05T18:55:13.419Z",
+  "updatedBy": "codex-gpt-6.1-sol",
+  "freshValidationPasses": [],
+  "staleValidationPasses": [],
+  "commandRuns": [],
+  "artifactPaths": []
+}

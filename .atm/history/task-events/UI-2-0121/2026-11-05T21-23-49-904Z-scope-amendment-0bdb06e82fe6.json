@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-05T21-23-49-904Z-scope-amendment-0bdb06e82fe6",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:3fce1140633d7301dc01ebcba454b94ead95c1a6b24785756522d434c7092176",
+  "createdAt": "2026-11-05T21:23:49.904Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-sol --add \"artifacts/ui-generated/xiahou-shi/xiahou_shi_candidate_1.png,artifacts/ui-generated/xiahou-shi/xiahou_shi_portrait_prompt_v1.txt,assets/resources/sprites/generals/xiahou_shi_portrait.png,assets/resources/sprites/generals/xiahou_shi_portrait.png.meta,assets/resources/sprites/generals/avatars/xiahou_shi_avatar.png,assets/resources/sprites/generals/avatars/xiahou_shi_avatar.png.meta,assets/resources/sprites/ui_avatars/cropped/xiahou_shi_avatar.png,assets/resources/sprites/ui_avatars/cropped/xiahou_shi_avatar.png.meta\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-05T19-32-33-892Z-scope-amendment-cf2e1b2676d9",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:b365a5cea27d1faa53c0d58eb406424baa9ec204f833ce6dc69562128a257f4d",
+  "createdAt": "2026-11-05T19:32:33.892Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-sol --add \"artifacts/ui-generated/wu_guo_tai_portrait_prompt_v2.txt,artifacts/ui-generated/wu_guo_tai_portrait_candidate_2.png\" --class asset-generation --phase during-implementation --reason \"First Wu Guotai candidate clips the top hair ornament; extend the bun and twin-tiger comb into safe transparent headroom while preserving the approved styling\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "asset-generation",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "First Wu Guotai candidate clips the top hair ornament; extend the bun and twin-tiger comb into safe transparent headroom while preserving the approved styling"
+  }
+}

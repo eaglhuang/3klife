@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-05T19-54-39-687Z-scope-amendment-848355f81c93",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:41b0fed2c1a5a6cb6130ab6863d1d59a01077f3118de8288bb8a01191df1391e",
+  "createdAt": "2026-11-05T19:54:39.687Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-sol --add \"artifacts/ui-generated/gan_shi_portrait_prompt_v1.txt,artifacts/ui-generated/gan_shi_portrait_candidate_1.png,assets/resources/sprites/generals/gan_shi_portrait.png,assets/resources/sprites/generals/gan_shi_portrait.png.meta,assets/resources/sprites/generals/avatars/gan_shi_avatar.png,assets/resources/sprites/generals/avatars/gan_shi_avatar.png.meta,assets/resources/sprites/ui_avatars/cropped/gan_shi_avatar.png,assets/resources/sprites/ui_avatars/cropped/gan_shi_avatar.png.meta,assets/resources/data/general-avatar-crops.json,docs/art/character-palette-ledger-shards/palette-generals.md,docs/art/character-palette-ledger-shards/palette-principles.md,docs/agent-briefs/tasks/UI/UI-2-0121.md,docs/ui-quality-tasks/UI-2-0121.json,docs/ui-quality-todo.json\" --class asset-generation --phase during-implementation --reason \"Add missing famed Shu noblewoman portrait with unique green palette, guard jade disc, and full avatar integration\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "asset-generation",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "Add missing famed Shu noblewoman portrait with unique green palette, guard jade disc, and full avatar integration"
+  }
+}

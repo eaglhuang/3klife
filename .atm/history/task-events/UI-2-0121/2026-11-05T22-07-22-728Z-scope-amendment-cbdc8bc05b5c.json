@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-05T22-07-22-728Z-scope-amendment-cbdc8bc05b5c",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:67b5701404e6b8d0fdf88db779a6b3ef2e608818f1eeeda25ec9c9cdaac06181",
+  "createdAt": "2026-11-05T22:07:22.728Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-sol --add \"artifacts/ui-generated/cai-shi/cai_shi_portrait_prompt_v1.txt,artifacts/ui-generated/cai-shi/cai_shi_candidate_1.png,assets/resources/sprites/generals/cai_shi_portrait.png,assets/resources/sprites/generals/cai_shi_portrait.png.meta,assets/resources/sprites/generals/avatars/cai_shi_avatar.png,assets/resources/sprites/generals/avatars/cai_shi_avatar.png.meta,assets/resources/sprites/ui_avatars/cropped/cai_shi_avatar.png,assets/resources/sprites/ui_avatars/cropped/cai_shi_avatar.png.meta\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
