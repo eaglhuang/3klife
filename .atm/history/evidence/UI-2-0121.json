@@ -1,6 +1,6 @@
 {
   "taskId": "UI-2-0121",
-  "updatedAt": "2026-11-06T17:36:00.314Z",
+  "updatedAt": "2026-11-06T22:49:15.389Z",
   "evidence": [
     {
       "evidenceKind": "validation",
@@ -1535,6 +1535,249 @@
         "commandRunCache": {
           "schemaId": "atm.commandRunCache.v1",
           "cacheKey": "sha256:104e5c9a7094427b0aaefa7dce4396e8b893edf6f750e375c9a0c9ab80fa7192",
+          "reusedRunCount": 0,
+          "runCount": 1,
+          "sourcePath": null
+        }
+      }
+    },
+    {
+      "evidenceKind": "validation",
+      "evidenceType": "test",
+      "summary": "Auto-run: node tools_node/generate-general-avatars.js xiao-qiao --verify",
+      "artifactPaths": [],
+      "evidenceFreshness": "fresh",
+      "producedBy": "codex-gpt-6.1-terra",
+      "sessionId": "session-20261105171558-codex-gpt-6.1-sol-UI-2-0121-3220962ee1",
+      "createdAt": "2026-11-06T22:35:07.254Z",
+      "details": {
+        "actorId": "codex-gpt-6.1-terra",
+        "sessionId": "session-20261105171558-codex-gpt-6.1-sol-UI-2-0121-3220962ee1",
+        "kind": "test",
+        "freshness": "fresh",
+        "commandRuns": [
+          {
+            "command": "node tools_node/generate-general-avatars.js xiao-qiao --verify",
+            "exitCode": 0,
+            "stdoutSha256": "sha256:6990ae27a974146ebd1cbbb62bbdf2a46d341dbcf155ef4d5943f2bb2e48bf4a",
+            "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "startedAt": "2026-11-06T22:35:06.709Z",
+            "finishedAt": "2026-11-06T22:35:07.252Z",
+            "durationMs": 543,
+            "cached": false,
+            "cwd": ".",
+            "runnerKind": "dev-source",
+            "sourceCommit": "aa88c1308292ee28a85bf1bc092b0348b473d0ac",
+            "cacheKey": "sha256:e94c1bc16ee373511186077a9f6aec2f4d9cfdeb46e562bab07efcf4662c6457",
+            "generatedAt": "2026-11-06T22:35:07.252Z",
+            "canonicalObservation": {
+              "schemaId": "atm.telemetryObservation.v1",
+              "specVersion": "0.1.0",
+              "migration": {
+                "strategy": "none",
+                "fromVersion": null,
+                "notes": "Canonical telemetry observation contract."
+              },
+              "observationId": "sha256:e94c1bc16ee373511186077a9f6aec2f4d9cfdeb46e562bab07efcf4662c6457",
+              "producerId": "evidence.command-runs",
+              "producerVersion": "0.1.0",
+              "observationKind": "command-run",
+              "status": "canonical",
+              "source": "evidence-command-run-normalizer",
+              "sourceAvailability": "available",
+              "storagePolicy": "tracked-compact-digest",
+              "generatedAt": "2026-11-06T22:35:07.252Z",
+              "observedAt": "2026-11-06T22:35:07.252Z",
+              "startedAt": "2026-11-06T22:35:06.709Z",
+              "finishedAt": "2026-11-06T22:35:07.252Z",
+              "durationMs": 543,
+              "laneSessionId": null,
+              "taskId": "UI-2-0121",
+              "batchId": null,
+              "waveId": null,
+              "inputDigest": "sha256:7ec87d111cf338184ab943b5774911c5ea83d235fe82c9fe0113db43e336ca44",
+              "outputDigest": "sha256:45d03ba127f3bed1d734552889724de33b73f16aff89259d41b3ffbfb46ddcfe",
+              "cache": {
+                "key": "sha256:e94c1bc16ee373511186077a9f6aec2f4d9cfdeb46e562bab07efcf4662c6457",
+                "hit": false
+              },
+              "extensions": {
+                "command": "node tools_node/generate-general-avatars.js xiao-qiao --verify",
+                "cwd": ".",
+                "exitCode": 0,
+                "validators": [],
+                "runnerKind": "dev-source",
+                "sourceCommit": "aa88c1308292ee28a85bf1bc092b0348b473d0ac",
+                "runnerVersion": null
+              }
+            }
+          }
+        ],
+        "commandRunCache": {
+          "schemaId": "atm.commandRunCache.v1",
+          "cacheKey": "sha256:e121f9ac676c98857628d2c10a3a5d2920e0ce689716bc8d18a85630c2544e43",
+          "reusedRunCount": 0,
+          "runCount": 1,
+          "sourcePath": null
+        }
+      }
+    },
+    {
+      "evidenceKind": "validation",
+      "evidenceType": "test",
+      "summary": "Auto-run: node tools_node/generate-general-avatars.js xiao-qiao --verify",
+      "artifactPaths": [],
+      "evidenceFreshness": "fresh",
+      "producedBy": "codex-gpt-6.1-terra",
+      "sessionId": "session-20261105171558-codex-gpt-6.1-sol-UI-2-0121-3220962ee1",
+      "createdAt": "2026-11-06T22:38:50.574Z",
+      "details": {
+        "actorId": "codex-gpt-6.1-terra",
+        "sessionId": "session-20261105171558-codex-gpt-6.1-sol-UI-2-0121-3220962ee1",
+        "kind": "test",
+        "freshness": "fresh",
+        "commandRuns": [
+          {
+            "command": "node tools_node/generate-general-avatars.js xiao-qiao --verify",
+            "exitCode": 0,
+            "stdoutSha256": "sha256:6990ae27a974146ebd1cbbb62bbdf2a46d341dbcf155ef4d5943f2bb2e48bf4a",
+            "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "startedAt": "2026-11-06T22:38:50.098Z",
+            "finishedAt": "2026-11-06T22:38:50.573Z",
+            "durationMs": 475,
+            "cached": false,
+            "cwd": ".",
+            "runnerKind": "dev-source",
+            "sourceCommit": "aa88c1308292ee28a85bf1bc092b0348b473d0ac",
+            "cacheKey": "sha256:e94c1bc16ee373511186077a9f6aec2f4d9cfdeb46e562bab07efcf4662c6457",
+            "generatedAt": "2026-11-06T22:38:50.573Z",
+            "canonicalObservation": {
+              "schemaId": "atm.telemetryObservation.v1",
+              "specVersion": "0.1.0",
+              "migration": {
+                "strategy": "none",
+                "fromVersion": null,
+                "notes": "Canonical telemetry observation contract."
+              },
+              "observationId": "sha256:e94c1bc16ee373511186077a9f6aec2f4d9cfdeb46e562bab07efcf4662c6457",
+              "producerId": "evidence.command-runs",
+              "producerVersion": "0.1.0",
+              "observationKind": "command-run",
+              "status": "canonical",
+              "source": "evidence-command-run-normalizer",
+              "sourceAvailability": "available",
+              "storagePolicy": "tracked-compact-digest",
+              "generatedAt": "2026-11-06T22:38:50.573Z",
+              "observedAt": "2026-11-06T22:38:50.573Z",
+              "startedAt": "2026-11-06T22:38:50.098Z",
+              "finishedAt": "2026-11-06T22:38:50.573Z",
+              "durationMs": 475,
+              "laneSessionId": null,
+              "taskId": "UI-2-0121",
+              "batchId": null,
+              "waveId": null,
+              "inputDigest": "sha256:7ec87d111cf338184ab943b5774911c5ea83d235fe82c9fe0113db43e336ca44",
+              "outputDigest": "sha256:45d03ba127f3bed1d734552889724de33b73f16aff89259d41b3ffbfb46ddcfe",
+              "cache": {
+                "key": "sha256:e94c1bc16ee373511186077a9f6aec2f4d9cfdeb46e562bab07efcf4662c6457",
+                "hit": false
+              },
+              "extensions": {
+                "command": "node tools_node/generate-general-avatars.js xiao-qiao --verify",
+                "cwd": ".",
+                "exitCode": 0,
+                "validators": [],
+                "runnerKind": "dev-source",
+                "sourceCommit": "aa88c1308292ee28a85bf1bc092b0348b473d0ac",
+                "runnerVersion": null
+              }
+            }
+          }
+        ],
+        "commandRunCache": {
+          "schemaId": "atm.commandRunCache.v1",
+          "cacheKey": "sha256:e121f9ac676c98857628d2c10a3a5d2920e0ce689716bc8d18a85630c2544e43",
+          "reusedRunCount": 0,
+          "runCount": 1,
+          "sourcePath": null
+        }
+      }
+    },
+    {
+      "evidenceKind": "validation",
+      "evidenceType": "test",
+      "summary": "Auto-run: node tools_node/generate-general-avatars.js --verify",
+      "artifactPaths": [],
+      "evidenceFreshness": "fresh",
+      "producedBy": "codex-gpt-6.1-terra",
+      "sessionId": "session-20261105171558-codex-gpt-6.1-sol-UI-2-0121-3220962ee1",
+      "createdAt": "2026-11-06T22:49:15.389Z",
+      "details": {
+        "actorId": "codex-gpt-6.1-terra",
+        "sessionId": "session-20261105171558-codex-gpt-6.1-sol-UI-2-0121-3220962ee1",
+        "kind": "test",
+        "freshness": "fresh",
+        "commandRuns": [
+          {
+            "command": "node tools_node/generate-general-avatars.js --verify",
+            "exitCode": 0,
+            "stdoutSha256": "sha256:a3d7250473aba70c2a0a6c8056c6002dc2823f5c4a2a9c657f8f0b2efcfbcdb7",
+            "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "startedAt": "2026-11-06T22:49:09.374Z",
+            "finishedAt": "2026-11-06T22:49:15.388Z",
+            "durationMs": 6014,
+            "cached": false,
+            "cwd": ".",
+            "runnerKind": "dev-source",
+            "sourceCommit": "aa88c1308292ee28a85bf1bc092b0348b473d0ac",
+            "cacheKey": "sha256:7a9b13b4877525ce422f8164aba214413a5e704183c00303c0f595f4a4f5f792",
+            "generatedAt": "2026-11-06T22:49:15.388Z",
+            "canonicalObservation": {
+              "schemaId": "atm.telemetryObservation.v1",
+              "specVersion": "0.1.0",
+              "migration": {
+                "strategy": "none",
+                "fromVersion": null,
+                "notes": "Canonical telemetry observation contract."
+              },
+              "observationId": "sha256:7a9b13b4877525ce422f8164aba214413a5e704183c00303c0f595f4a4f5f792",
+              "producerId": "evidence.command-runs",
+              "producerVersion": "0.1.0",
+              "observationKind": "command-run",
+              "status": "canonical",
+              "source": "evidence-command-run-normalizer",
+              "sourceAvailability": "available",
+              "storagePolicy": "tracked-compact-digest",
+              "generatedAt": "2026-11-06T22:49:15.388Z",
+              "observedAt": "2026-11-06T22:49:15.388Z",
+              "startedAt": "2026-11-06T22:49:09.374Z",
+              "finishedAt": "2026-11-06T22:49:15.388Z",
+              "durationMs": 6014,
+              "laneSessionId": null,
+              "taskId": "UI-2-0121",
+              "batchId": null,
+              "waveId": null,
+              "inputDigest": "sha256:cbcce0d34a931f35009351b6318db7f31f04575726f62d319fb0c3450c0e0fc4",
+              "outputDigest": "sha256:c31980a7bda04b929c20433d0b1545c60898aed95ed2f873d98656c8b81dbfe7",
+              "cache": {
+                "key": "sha256:7a9b13b4877525ce422f8164aba214413a5e704183c00303c0f595f4a4f5f792",
+                "hit": false
+              },
+              "extensions": {
+                "command": "node tools_node/generate-general-avatars.js --verify",
+                "cwd": ".",
+                "exitCode": 0,
+                "validators": [],
+                "runnerKind": "dev-source",
+                "sourceCommit": "aa88c1308292ee28a85bf1bc092b0348b473d0ac",
+                "runnerVersion": null
+              }
+            }
+          }
+        ],
+        "commandRunCache": {
+          "schemaId": "atm.commandRunCache.v1",
+          "cacheKey": "sha256:7fd328d1e8894b1857e1a4b38a9d154aa9db7747ed01167e138a38da7a73dfc5",
           "reusedRunCount": 0,
           "runCount": 1,
           "sourcePath": null

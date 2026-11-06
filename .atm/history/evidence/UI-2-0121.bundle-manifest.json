@@ -1,7 +1,7 @@
 {
   "schemaId": "atm.evidenceBundleManifest.v1",
   "taskId": "UI-2-0121",
-  "updatedAt": "2026-11-06T17:36:00.314Z",
+  "updatedAt": "2026-11-06T22:49:15.389Z",
   "updatedBy": "codex-gpt-6.1-terra",
   "freshValidationPasses": [],
   "staleValidationPasses": [],
@@ -228,6 +228,48 @@
       "durationMs": 420,
       "runnerKind": "dev-source",
       "sourceCommit": "c664bf8f0bb8f7e08010743a2fe19396b3158f9b",
+      "cached": false
+    },
+    {
+      "command": "node tools_node/generate-general-avatars.js xiao-qiao --verify",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:6990ae27a974146ebd1cbbb62bbdf2a46d341dbcf155ef4d5943f2bb2e48bf4a",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [],
+      "generatedAt": "2026-11-06T22:35:07.252Z",
+      "startedAt": "2026-11-06T22:35:06.709Z",
+      "finishedAt": "2026-11-06T22:35:07.252Z",
+      "durationMs": 543,
+      "runnerKind": "dev-source",
+      "sourceCommit": "aa88c1308292ee28a85bf1bc092b0348b473d0ac",
+      "cached": false
+    },
+    {
+      "command": "node tools_node/generate-general-avatars.js xiao-qiao --verify",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:6990ae27a974146ebd1cbbb62bbdf2a46d341dbcf155ef4d5943f2bb2e48bf4a",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [],
+      "generatedAt": "2026-11-06T22:38:50.573Z",
+      "startedAt": "2026-11-06T22:38:50.098Z",
+      "finishedAt": "2026-11-06T22:38:50.573Z",
+      "durationMs": 475,
+      "runnerKind": "dev-source",
+      "sourceCommit": "aa88c1308292ee28a85bf1bc092b0348b473d0ac",
+      "cached": false
+    },
+    {
+      "command": "node tools_node/generate-general-avatars.js --verify",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:a3d7250473aba70c2a0a6c8056c6002dc2823f5c4a2a9c657f8f0b2efcfbcdb7",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [],
+      "generatedAt": "2026-11-06T22:49:15.388Z",
+      "startedAt": "2026-11-06T22:49:09.374Z",
+      "finishedAt": "2026-11-06T22:49:15.388Z",
+      "durationMs": 6014,
+      "runnerKind": "dev-source",
+      "sourceCommit": "aa88c1308292ee28a85bf1bc092b0348b473d0ac",
       "cached": false
     }
   ],
