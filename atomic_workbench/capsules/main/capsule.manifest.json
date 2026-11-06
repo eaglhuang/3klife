@@ -60,7 +60,6 @@
     "runtime:assets/scripts/ui/components/GeneralDetailComposite.ts#L87",
     "runtime:assets/scripts/ui/components/GeneralDetailComposite.ts#L112",
     "runtime:assets/scripts/ui/components/GeneralDetailComposite.ts#L169",
-    "runtime:assets/scripts/ui/components/GeneralListPanel.ts#L215",
     "runtime:assets/scripts/ui/components/GeneralPortraitPanel.ts#L49",
     "runtime:assets/scripts/ui/components/GeneralQuickViewPanel.ts#L20",
     "runtime:assets/scripts/ui/components/ResultPopup.ts#L8",
@@ -71,10 +70,10 @@
     "runtime:assets/scripts/ui/core/UIPreviewLayoutBuilder.ts#L156"
   ],
   "usageRefStats": {
-    "totalRefs": 24,
-    "distinctFiles": 15,
+    "totalRefs": 23,
+    "distinctFiles": 14,
     "distinctKinds": 1,
-    "externalRefs": 24,
+    "externalRefs": 23,
     "kinds": [
       "runtime"
     ]
