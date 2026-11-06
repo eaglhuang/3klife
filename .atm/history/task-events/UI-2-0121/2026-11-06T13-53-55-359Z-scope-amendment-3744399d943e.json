@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-06T13-53-55-359Z-scope-amendment-3744399d943e",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:29a329818970172ab23e58542231bee39e0822c4255c9f461dcd6bfd834aaecd",
+  "createdAt": "2026-11-06T13:53:55.359Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-sol --add \"assets/resources/sprites/generals/avatars/huang_yue_ying_avatar.png,assets/resources/sprites/generals/avatars/huang_yueying_avatar.png,assets/resources/sprites/generals/avatars/ju_shou_avatar.png,assets/resources/sprites/generals/avatars/ke_bi_neng_avatar.png,assets/resources/sprites/generals/avatars/kong_rong_avatar.png,assets/resources/sprites/generals/avatars/le_jin_avatar.png,assets/resources/sprites/generals/chen_dao_portrait.png,assets/resources/sprites/generals/ju_shou_portrait.png,assets/resources/sprites/generals/ke_bi_neng_portrait.png,assets/resources/sprites/generals/kong_rong_portrait.png,assets/resources/sprites/generals/le_jin_portrait.png,assets/resources/sprites/ui_avatars/cropped/chen_dao_avatar.png,assets/resources/sprites/ui_avatars/cropped/diao_chan_avatar.png,assets/resources/sprites/ui_avatars/cropped/huang_yue_ying_avatar.png,assets/resources/sprites/ui_avatars/cropped/huang_yueying_avatar.png,assets/resources/sprites/ui_avatars/cropped/ju_shou_avatar.png,assets/resources/sprites/ui_avatars/cropped/ke_bi_neng_avatar.png,assets/resources/sprites/ui_avatars/cropped/kong_rong_avatar.png,assets/resources/sprites/ui_avatars/cropped/le_jin_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
