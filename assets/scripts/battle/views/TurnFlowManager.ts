@@ -68,6 +68,8 @@ export class TurnFlowManager {
       }
 
       c.boardRenderer?.setDeployHintFaction(Faction.Enemy);
+      // 敵方回合開始用橫幅提示（使用者 2026-11-06 裁決，PROG-2-1888）
+      this.bridge.playTurnBanner(Faction.Enemy);
       this.bridge.showEnemyThinkingPanel();
       this.scene.scheduleOnce(() => {
         this.bridge.hideEnemyThinkingPanel();

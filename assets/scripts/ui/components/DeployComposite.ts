@@ -22,6 +22,7 @@ import {
   UIOpacity,
   UITransform,
   Vec3,
+  Widget,
 } from 'cc';
 import { GAME_CONFIG, TROOP_DEPLOY_COST, TroopType } from '../../core/config/Constants';
 import { deploySuggestionCopy, nextRedirectStep, type RedirectPrompt } from '../../core/systems/SortieDeploy';
@@ -35,6 +36,7 @@ import type { ToastOptions } from './ToastMessage';
 import { emitDeployDragDebug, shouldLogDeployDragMove } from './DeployDragDebug';
 import { tallyDeployRefOf, type TallyDeployRef } from '../../core/config/TallyCardCatalog';
 import { UCUFLogger, LogLevel } from '../../core/utils/UCUFLogger';
+import { TurnBannerComposite } from './TurnBannerComposite';
 
 const { ccclass } = _decorator;
 
@@ -68,6 +70,7 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
   private costLabel: Label | null = null;
   private hintLabel: Label | null = null;
   private toast: ToastMessageLike | null = null;
+  private turnBanner: TurnBannerComposite | null = null;
 
   private _dragState: DeployDragState = DeployDragState.Idle;
   private ghostNode: Node | null = null;
@@ -124,6 +127,24 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
 
   public showToast(message: string, duration = 1.2, options?: ToastOptions): void {
     void this.toast?.show(message, duration, options);
+  }
+
+  /** 回合開始橫幅：掛在部署面板的父節點（戰場 UI 根）上，橫貫整個畫面（PROG-2-1888） */
+  public showTurnBanner(text: string, color: Color, durationSec: number): void {
+    if (!this.turnBanner || !this.turnBanner.isValid) {
+      const host = this.node.parent ?? this.node;
+      const bannerNode = host.getChildByName('TurnBanner') ?? new Node('TurnBanner');
+      bannerNode.layer = this.node.layer;
+      if (!bannerNode.parent) bannerNode.parent = host;
+      const ut = bannerNode.getComponent(UITransform) ?? bannerNode.addComponent(UITransform);
+      ut.setContentSize(1920, 1080);
+      const widget = bannerNode.getComponent(Widget) ?? bannerNode.addComponent(Widget);
+      widget.isAlignTop = widget.isAlignBottom = widget.isAlignLeft = widget.isAlignRight = true;
+      widget.top = widget.bottom = widget.left = widget.right = 0;
+      this.turnBanner = bannerNode.getComponent(TurnBannerComposite) ?? bannerNode.addComponent(TurnBannerComposite);
+    }
+    this.turnBanner.node.setSiblingIndex(this.turnBanner.node.parent!.children.length - 1);
+    void this.turnBanner.show(text, color, durationSec);
   }
 
   public async mount(): Promise<void> {

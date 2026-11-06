@@ -26,8 +26,10 @@ export const BATTLE_TURN_FLOW_TIMING = {
   advanceSafetyUnlockSec: 20,
   /** 回合開始 Banner 的去抖毫秒，避免短時間重複跳出。 */
   turnBannerDebounceMs: 2500,
-  /** 回合開始 Banner 的 Toast 顯示秒數。 */
+  /** 回合開始 Banner 的 Toast 顯示秒數（舊版部署面板沒有橫幅時的退路）。 */
   turnBannerToastSec: 1.0,
+  /** 回合開始橫幅的顯示秒數（含淡入淡出）。 */
+  turnBannerSec: 1.4,
   /** 玩家部署完成提示的顯示秒數。 */
   deployCompletedToastSec: 1.8,
   /** 敵軍思考提示的顯示秒數。 */
