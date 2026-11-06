@@ -90,7 +90,8 @@
           { "type": "label", "name": "GQSkillsTitle", "width": "100%", "height": 18, "text": "戰法:", "styleSlot": "quickview.label.section" },
           { "type": "label", "name": "GQSkill1", "id": "gqSkill1", "width": "100%", "height": 20, "styleSlot": "quickview.label.skill" },
           { "type": "label", "name": "GQSkill2", "id": "gqSkill2", "width": "100%", "height": 20, "styleSlot": "quickview.label.skill" },
-          { "type": "label", "name": "GQSkill3", "id": "gqSkill3", "width": "100%", "height": 20, "styleSlot": "quickview.label.skill" }
+          { "type": "label", "name": "GQSkill3", "id": "gqSkill3", "width": "100%", "height": 20, "styleSlot": "quickview.label.skill" },
+          { "type": "label", "name": "GQBuff", "id": "gqBuff", "width": "100%", "height": 22, "styleSlot": "quickview.label.skill", "_doc": "當前 Buff（主戰場UI規格書 §4.3，PROG-2-1872）" }
         ]
       },
       {
