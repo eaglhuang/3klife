@@ -25,6 +25,7 @@ import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { SolidBackground } from './SolidBackground';
 import { isVitalityBarGrayed, vitalityBarRatio } from '../../core/systems/VitalityBarView';
+import { FORTRESS_MAX_HP, fortressBarRatio } from '../../core/systems/FortressBarView';
 
 const { ccclass } = _decorator;
 
@@ -32,6 +33,8 @@ const { ccclass } = _decorator;
 const VITALITY_BAR_HEIGHT = 6;
 const VITALITY_BAR_GAP = 4;
 const VITALITY_FILL_COLOR = new Color(240, 200, 60, 255);
+/** 我軍陣地血條為藍色（doc_ui_0001 §2.1）；敵軍維持紅色 */
+const PLAYER_FORTRESS_FILL_COLOR = new Color(70, 150, 255, 255);
 const VITALITY_TRACK_COLOR = new Color(0, 0, 0, 160);
 /** 體力歸零時底板變灰，表示已無法發動大招 */
 const VITALITY_TRACK_GRAYED_COLOR = new Color(90, 90, 90, 200);
@@ -75,6 +78,9 @@ export class BattleHUDComposite extends CompositePanel {
     private _enemyFortressFill:   Node   | null = null;
     private _playerFortressTotalW = 691;
     private _enemyFortressTotalW  = 691;
+    // 頂部長條顯示城寨（陣地）血量，頭像旁標籤顯示主將血量（doc_ui_0001 §2.1，PROG-2-1889）
+    private _playerFortressHp = FORTRESS_MAX_HP;
+    private _enemyFortressHp  = FORTRESS_MAX_HP;
     private _playerPortraitNode:  Node | null = null;
     private _enemyPortraitNode:   Node | null = null;
     // 體力條（FORM-11）：玩家血條下方的細條，執行期建立；值先存起來，建好後再套用
@@ -141,13 +147,15 @@ export class BattleHUDComposite extends CompositePanel {
      * Unity 對照：Awake() — 取得物件引用並初始化非標準元件。
      */
     protected override onBuildComplete(rootNode: Node): void {
-        this._playerFortressFill = this._ensureBarFill(rootNode, 'PlayerFortressBar', Color.GREEN);
+        this._playerFortressFill = this._ensureBarFill(rootNode, 'PlayerFortressBar', PLAYER_FORTRESS_FILL_COLOR);
         this._enemyFortressFill  = this._ensureBarFill(rootNode, 'EnemyFortressBar',  Color.RED);
 
         const playerBarTf = rootNode.getChildByPath('PlayerFortressBar')?.getComponent(UITransform);
         const enemyBarTf  = rootNode.getChildByPath('EnemyFortressBar')?.getComponent(UITransform);
         if (playerBarTf) this._playerFortressTotalW = playerBarTf.contentSize.width;
         if (enemyBarTf)  this._enemyFortressTotalW  = enemyBarTf.contentSize.width;
+        this._renderFortress(Faction.Player);
+        this._renderFortress(Faction.Enemy);
 
         this._ensureVitalityBar(rootNode);
         this._renderPlayerVitality();
@@ -187,6 +195,9 @@ export class BattleHUDComposite extends CompositePanel {
         }
         this._playerGeneralMaxHp = playerMaxHp;
         this._enemyGeneralMaxHp  = enemyMaxHp;
+        // refresh 只在開場與重新開始時呼叫，此時城寨血量一律回滿（與 BattleState 重設同步）
+        this.setFortressHp(Faction.Player, FORTRESS_MAX_HP);
+        this.setFortressHp(Faction.Enemy,  FORTRESS_MAX_HP);
         this._setTurn(turn);
         this._setFood(food, maxFood);
         this._setGeneralHealth(Faction.Player, playerHp);
@@ -195,6 +206,13 @@ export class BattleHUDComposite extends CompositePanel {
 
     public setFood(food: number, maxFood: number): void {
         this._setFood(food, maxFood);
+    }
+
+    /** 更新頂部城寨血條；畫面未建好前只暫存數值（PROG-2-1889） */
+    public setFortressHp(faction: Faction, hp: number): void {
+        if (faction === Faction.Player) this._playerFortressHp = hp;
+        else                            this._enemyFortressHp  = hp;
+        this._renderFortress(faction);
     }
 
     public setPlayerName(name: string): void {
@@ -350,6 +368,7 @@ export class BattleHUDComposite extends CompositePanel {
             ev.on(EVENT_NAMES.GeneralDamagedVisualCommitted, (d) => this._onGeneralDamaged(d as { faction: Faction; hp: number; maxHp: number })),
             ev.on(EVENT_NAMES.GeneralSkillUsed,  (d) => this._onGeneralSkillUsed(d as { faction: Faction; skillId?: string; skillName?: string; sourceType?: any })),
             ev.on(EVENT_NAMES.GeneralSkillEffect,(d) => this._onSkillEffect(d as { faction: Faction; skillId: string })),
+            ev.on(EVENT_NAMES.FortressDamaged,   (d) => this._onFortressDamaged(d as { faction: Faction; hp: number })),
         );
     }
 
@@ -416,6 +435,11 @@ export class BattleHUDComposite extends CompositePanel {
         if (d.faction === Faction.Player) this._playerGeneralMaxHp = d.maxHp;
         else                              this._enemyGeneralMaxHp  = d.maxHp;
         this._setGeneralHealth(d.faction, d.hp);
+    }
+
+    private _onFortressDamaged(d: { faction: Faction; hp: number }): void {
+        if (!d) return;
+        this.setFortressHp(d.faction, d.hp);
     }
 
     private _onGeneralSkillUsed(d: { faction: Faction; skillId?: string; skillName?: string; sourceType?: any }): void {
@@ -509,16 +533,18 @@ export class BattleHUDComposite extends CompositePanel {
         if (this._foodLabel) this._foodLabel.string = `🌾 糧草 ${food} / ${maxFood}`;
     }
 
+    /** 頭像旁標籤顯示主將血量；頂部長條改由城寨血量驅動（_renderFortress） */
     private _setGeneralHealth(faction: Faction, hp: number): void {
         const max   = faction === Faction.Player ? this._playerGeneralMaxHp : this._enemyGeneralMaxHp;
-        const ratio = max > 0 ? hp / max : 0;
+        const label = faction === Faction.Player ? this._playerFortressLabel : this._enemyFortressLabel;
+        if (label) label.string = `${hp} / ${max}`;
+    }
 
+    private _renderFortress(faction: Faction): void {
         if (faction === Faction.Player) {
-            this._setBarFillRatio(this._playerFortressFill, this._playerFortressTotalW, ratio);
-            if (this._playerFortressLabel) this._playerFortressLabel.string = `${hp} / ${max}`;
+            this._setBarFillRatio(this._playerFortressFill, this._playerFortressTotalW, fortressBarRatio(this._playerFortressHp));
         } else {
-            this._setBarFillRatio(this._enemyFortressFill, this._enemyFortressTotalW, ratio);
-            if (this._enemyFortressLabel) this._enemyFortressLabel.string = `${hp} / ${max}`;
+            this._setBarFillRatio(this._enemyFortressFill, this._enemyFortressTotalW, fortressBarRatio(this._enemyFortressHp));
         }
     }
 
