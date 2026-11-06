@@ -129,6 +129,8 @@
 | MercenaryNameplateRows.ts | doc_spec_0029 | 概: 傭兵名牌列的純資料（不依賴 cc）。 |
 | MercenaryPanelController.ts | doc_spec_0029 | 概: 傭兵面板的畫面流程（純邏輯，不依賴 cc）。 |
 | NurtureFlowViewApplier.ts | doc_ui_0031 | 概: 把 NurtureFlowController / BondingSetupController 吐出的 view 套到 UCUF 組出來… |
+| AcademyGraduationController.ts | doc_spec_0308 | 概: 學府結業結算彈窗；呼叫 graduateFromAcademy 並顯示評級／新戰法／新特質（PROG-2-1956） |
+| AcademyGraduationView.ts | doc_spec_0308 | 概: 學府結業結算的畫面文字（純邏輯，不依賴 cc） |
 | NurtureGraduationView.ts | doc_spec_0026 | 概: 畢業紀錄檢視的列（純邏輯，不依賴 cc） |
 | OfficerPermissionText.ts | doc_spec_0014 | 概: 官職頁的已解鎖權限文字（純邏輯，不依賴 cc） |
 | OnboardingFlowController.ts | doc_spec_0031, doc_spec_0045 | 概: 新手 3 段式引導的顯示與觸發（純邏輯，不依賴 cc） |

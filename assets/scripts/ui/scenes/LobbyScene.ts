@@ -116,6 +116,9 @@ import { pageSliceOf } from '../core/FixedSlotPager';
 import { MentorHoldingsController } from '../core/MentorHoldingsController';
 import { MentorBorrowController } from '../core/MentorBorrowController';
 import { GraduationRecordController } from '../core/GraduationRecordController';
+import { AcademyGraduationController } from '../core/AcademyGraduationController';
+import type { AcademyGraduationResult } from '../../core/systems/nurture/AcademyGraduation';
+import type { AcademyStateSnapshot } from '../../core/systems/nurture/AcademyTypes';
 import { mentorBorrowRows, type MentorBorrowRow } from '../core/MentorBorrowView';
 import { OfficerPanelsController } from '../core/OfficerPanelsController';
 import { BLOODLINE_VIGNETTE_CELL_COUNT, bloodlineVignetteOpenLabel, bloodlineVignetteViewOf } from '../core/BloodlineVignetteText';
@@ -312,6 +315,9 @@ export class LobbyScene extends Component {
     /** officer-tiers.json 驗證通過的階位列（官職進度開窗用）；未載入時開窗用內建備援 */
     private _officerTierRows: OfficerTierRow[] | null = null;
     private _graduation: GraduationRecordController<UIScreenPreviewHost> | null = null;
+    /** 學府結業結算彈窗（PROG-2-1956） */
+    private _academyGraduation: AcademyGraduationController<UIScreenPreviewHost> | null = null;
+    private _academyTacticNames: ReadonlyMap<string, string> | null = null;
     private _mentorBorrow: MentorBorrowController<UIScreenPreviewHost> | null = null;
     /** 「我的教官卡」列表（PROG-2-1097）：重用 mentor-borrow-screen 版面 */
     private _mentorHoldings: MentorHoldingsController<UIScreenPreviewHost> | null = null;
@@ -525,6 +531,7 @@ export class LobbyScene extends Component {
         await this._mountOfficerHud();
         await this._mountNurtureFlow();
         await this._mountGraduationRecord();
+        await this._mountAcademyGraduation();
         await this._mountMentorBorrow();
         await this._mountMentorHoldings();
         await this._mountMentorCardDetail();
@@ -752,6 +759,38 @@ export class LobbyScene extends Component {
 
     private _setGraduationOpen(open: boolean): void {
         this._graduation?.setOpen(open);
+    }
+
+    /** 學府結業結算彈窗（PROG-2-1956）：結業時呼叫 GameSession.graduateFromAcademy，顯示評級、新戰法、新特質 */
+    private async _mountAcademyGraduation(): Promise<void> {
+        this._academyGraduation = new AcademyGraduationController<UIScreenPreviewHost>({
+            mountHost: (bindings) => this._mountPreviewScreenHost('AcademyGraduationHost', 'academy-graduation-result-screen', bindings),
+            graduate: (generalId, snapshot) => services().session.graduateFromAcademy(generalId, snapshot),
+            view: () => ({
+                lookup: (key: string): string => services().i18n.t(key),
+                tacticName: (id) => this._academyTacticNames?.get(id) ?? inspiredTacticName(id),
+            }),
+            toast: (message) => { services().event.emit('SHOW_TOAST', { message, duration: 2.5 }); },
+        });
+        await this._academyGraduation.mount();
+    }
+
+    /**
+     * 學府結業入口（PROG-2-1956）：寫回武將並彈出結算；結業失敗回傳 null。
+     * 學府修業畫面在快照 graduated 時呼叫本方法。
+     */
+    public async showAcademyGraduation(generalId: string, snapshot: Readonly<AcademyStateSnapshot>): Promise<AcademyGraduationResult | null> {
+        if (!this._academyTacticNames) {
+            const names = new Map<string, string>();
+            try {
+                const library = await services().resource.loadJson<{ data?: { id: string; displayName?: string }[] }>('data/master/tactic-library', { tags: ['LobbyScene'] });
+                for (const t of library?.data ?? []) if (t.displayName) names.set(t.id, t.displayName);
+            } catch (error) {
+                UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 戰法庫載入失敗，結業結算改顯示戰法 id', error);
+            }
+            this._academyTacticNames = names;
+        }
+        return (await this._academyGraduation?.show(generalId, snapshot)) ?? null;
     }
 
     /** 借將畫面（PROG-2-0726，PM 裁定採 A）：從養成流程的借將按鈕打開，固定 5 列加分頁；選列後呼叫 borrowFriendMentor */
