@@ -55,3 +55,17 @@
 | 轉蛋 Banner 主視覺 | `pending: gacha-banner-hero-art-policy` | ⬜ 美術政策待定 | `GachaMain` BannerStage 人物主視覺 / pool-specific key visual | 轉蛋系統.md (doc_spec_0042)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
 
 ---
+
+### D-4. 2026-11-06 UI 待決互動裁定定案紀錄
+
+| 項目 | 裁定決策內容 | 影響畫面 / 元件 | 狀態 |
+|---|---|---|:---:|
+| **奧義選擇彈窗動效** | 定案採納「由下滑入 24px（Slide-up 24px + Fade-in 0.18s）」 | 戰鬥奧義選擇面板 | ✅ 已定案 |
+| **兵籍卡尺寸與手勢** | 長按時長定為 0.5 秒（500ms），卡片高度定為 219px（防文字貼邊） | 兵籍卡列表、部署隊伍列 | ✅ 已定案 |
+| **血統樹預設顯示模式**| 預設改為「簡化模式（Compact Mode）」；舊版武將詳情頁同步補上切換按鈕 | `BloodlineTreePanel`、`character-ds3-main` | ✅ 已定案 |
+| **HUD 網路狀態指示器**| 掛在 HUD 右上角，採「安靜模式」（正常隱藏/淡綠，弱網/離線警示） | Top HUD 狀態列 | ✅ 已定案 |
+| **戰場部署半透明預覽** | 拖曳或選格時顯示 50% 半透明模型預覽，合法格帶綠圈、非法格帶紅叉 | 棋盤部署格與 Ghost Preview | ✅ 已定案 |
+| **GeneralListPanel.ts**| 確認廢棄，已全面收斂至 CompositePanel 新架構，可安全刪除 | `GeneralListPanel.ts` | ✅ 准予刪除 |
+
+
+---
