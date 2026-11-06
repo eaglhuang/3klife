@@ -59,6 +59,10 @@ export class ActionCommandComposite extends CompositePanel {
     private _tacticEnabled = true;
     private _tacticClickable = true;
     private _tacticsButton: Button | null = null;
+    private _duelButtonNode: Node | null = null;
+    private _duelLocked = false;
+    /** 單挑鈕原始文字（不含 🔒），第一次套鎖時記下 */
+    private _duelLabelText: string | null = null;
     private _tacticsEnabledColor: Color | null = null;
     private _maxSp = 100;
     private _currentSp = 0;
@@ -126,6 +130,25 @@ export class ActionCommandComposite extends CompositePanel {
         }
     }
 
+    /**
+     * 單挑鈕條件不足時灰度 + 🔒（主戰場UI規格補充_v3 小按鈕 3，PROG-2-1873）。
+     * 保留點擊，讓按下後的原因 Toast（前排有小兵、已上場…）照常出現。
+     */
+    public setDuelLocked(locked: boolean): void {
+        this._duelLocked = locked;
+        this._applyDuelLock();
+    }
+
+    private _applyDuelLock(): void {
+        const btn = this._duelButtonNode;
+        if (!btn) return;
+        for (const sprite of btn.getComponentsInChildren(Sprite)) sprite.grayscale = this._duelLocked;
+        const label = btn.getChildByName('DuelLabel')?.getComponent(Label) ?? null;
+        if (!label) return;
+        if (this._duelLabelText === null) this._duelLabelText = label.string.replace(/^🔒\s*/, '');
+        label.string = this._duelLocked ? `🔒 ${this._duelLabelText}` : this._duelLabelText;
+    }
+
     public waitUntilReady(timeoutMs = 5000): Promise<boolean> {
         if (this._isMounted) {
             return Promise.resolve(true);
@@ -175,6 +198,8 @@ export class ActionCommandComposite extends CompositePanel {
         if (this._tacticsButton) this._tacticsButton.interactable = this._tacticClickable;
         binder.getNode('TacticsBtn')?.on(Button.EventType.CLICK, this._onTacticsClick, this);
         binder.getNode('DuelBtn')?.on(Button.EventType.CLICK, this._onDuelClick, this);
+        this._duelButtonNode = binder.getNode('DuelBtn');
+        this._applyDuelLock();
 
         UCUFLogger.info(LogCategory.UI, 
             `[ActionCommandComposite] 綁定完成 — ring:${!!this._spRingSprite}` +

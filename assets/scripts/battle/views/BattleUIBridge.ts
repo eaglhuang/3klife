@@ -288,6 +288,7 @@ export class BattleUIBridge {
         { ...tacticPoints, enabled: availability?.enabled ?? tacticPoints.enabled },
         availability?.reason ?? null,
       );
+      c.battleScenePanel?.setDuelLocked?.(c.ctrl.generalDuelBlockReason() !== null);
     }
     // 棋盤格狀態與兵種渲染（對應原 BattleScene.refreshBattleViews）
     c.boardRenderer?.renderState(state);

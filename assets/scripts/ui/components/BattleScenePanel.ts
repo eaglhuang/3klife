@@ -244,6 +244,11 @@ export class BattleScenePanel extends Component {
         }
     }
 
+    /** 單挑鈕鎖定（PROG-2-1873）：轉給操作區 */
+    public setDuelLocked(locked: boolean): void {
+        this.actionCommandComposite?.setDuelLocked(locked);
+    }
+
     // ── 私有事件處理 ─────────────────────────────────────────
 
     /** 卡片選中：顯示兵種詳情面板 */
