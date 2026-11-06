@@ -17,6 +17,8 @@ import { crossedPeakEnd, type PeakCurveSubject } from './PeakCurve';
 export const AGE_PER_SEASON = 0.25;
 export const BASE_LIFESPAN = 65;
 export const RETIREMENT_AGE = 65;
+/** 榮譽退役許可年齡（花甲，doc_spec_0310；PROG-2-1910）：年滿即可主動退役，65 仍是天年與老化事件門檻 */
+export const RETIRE_MIN_AGE = 60;
 export const LIFESPAN_VARIANCE_MIN = -5;
 export const LIFESPAN_VARIANCE_MAX = 10;
 export const MAX_DEATH_CHANCE_PER_SEASON = 0.8;
