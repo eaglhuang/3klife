@@ -10,6 +10,7 @@
  */
 import { RULED_EXTRA_TALLIES, TIGER_TALLY_SPEC_TACTICS, type TigerTallySpecTactic } from '../../core/config/TigerTallySpecTactics';
 import type { TacticFlashTiming, TacticFlashView } from '../../shared/interfaces/IBattleUIComponents';
+import type { SalvageLootSource } from './StageSalvage';
 
 export const FLASH_QUALITIES: readonly string[] = Object.freeze(['SSR', 'UR']);
 export const TACTIC_FX_ROOT = 'assets/fx/tactics/';
@@ -71,9 +72,9 @@ export interface LootFloatingText {
 }
 
 /**
- * 落石擊破與火燒掠奪的飄字（PROG-2-1852）：落石算擊破、火燒格算佔領，兩者都是掠奪型。
+ * 落石擊破、火燒掠奪與佔領水門的飄字（PROG-2-1852、PROG-2-1863）：落石算擊破，火燒格與水門算佔領，都是掠奪型。
  */
-export function salvageLootTexts(source: 'rock-slide' | 'fire-raid', resources: readonly { name: string; amount: number }[]): LootFloatingText[] {
+export function salvageLootTexts(source: SalvageLootSource, resources: readonly { name: string; amount: number }[]): LootFloatingText[] {
     return lootFloatingTexts([{
         tacticId: source,
         lootTrigger: true,

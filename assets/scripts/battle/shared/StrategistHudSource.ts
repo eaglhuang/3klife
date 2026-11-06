@@ -11,7 +11,7 @@
  */
 import type { BattleState } from '../models/BattleState';
 import type { InteractiveObjectKind, InteractiveObjectView, StrategistHudInput } from '../../core/systems/StrategistHud';
-import { FIRE_RAID_TILE_NOTE, ROCK_SLIDE_TILE_NOTE } from './StageSalvage';
+import { FIRE_RAID_TILE_NOTE, FLOODGATE_TILE_NOTE, ROCK_SLIDE_TILE_NOTE } from './StageSalvage';
 import { AMBUSH_TRAP_TILE_NOTE } from './BattleTacticBehavior';
 import { BattleTactic } from '../../core/config/Constants';
 import { battleTacticLabel } from '../../shared/BattleEntryParams';
@@ -20,6 +20,7 @@ import { sceneGambitGateOf } from './SceneGambitTrigger';
 /** 格子備註 → 互動物件類別 */
 const OBJECT_KIND_BY_NOTE: Readonly<Record<string, InteractiveObjectKind>> = {
   [ROCK_SLIDE_TILE_NOTE]: 'Rockfall_Node',
+  [FLOODGATE_TILE_NOTE]: 'Floodgate',
   'scene-gambit:camp': 'Camp_Target',
   [AMBUSH_TRAP_TILE_NOTE]: 'Trap_Cluster',
 };
@@ -38,6 +39,8 @@ export function strategistHudInputOf(state: BattleState, missingCounters: readon
   }
   // 已擊破的落石格已從場上移除，依累計數補列「已回收」（PROG-2-1745）
   for (let i = 0; i < (state.recoveredRockSlides ?? 0); i++) interactiveObjects.push({ kind: 'Rockfall_Node', state: 'recovered' });
+  // 已佔領的水門已從場上移除，依累計數補列「已回收」（PROG-2-1863）
+  for (let i = 0; i < (state.capturedFloodgates ?? 0); i++) interactiveObjects.push({ kind: 'Floodgate', state: 'recovered' });
   // 已被敵軍踩中的陷阱已從場上移除，依累計數補列「已觸發」（PROG-2-1750）
   for (let i = 0; i < (state.triggeredAmbushTraps ?? 0); i++) interactiveObjects.push({ kind: 'Trap_Cluster', state: 'triggered' });
   const gate = sceneGambitGateOf(state.battleTactic);
