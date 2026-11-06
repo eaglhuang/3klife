@@ -1505,6 +1505,16 @@ export class BattleController {
   }
 
   /**
+   * 單挑鈕是否該鎖定（主戰場UI規格補充_v3 單挑鈕「條件不足時灰度 + 🔒」，PROG-2-1873）。
+   * 不改狀態；可出陣回 null，否則回 startGeneralDuel 會給的原因。
+   */
+  public generalDuelBlockReason(): string | null {
+    if (this.flowStateMachine.isFinished()) return 'battle-ended';
+    if (!this.canRequestGeneralDuel()) return 'battle-locked';
+    return this.duelFlow.generalDuelBlockReason();
+  }
+
+  /**
    * 玩家武將放置到指定格子（點擊棋盤後調用）。
    * @returns 成功回傳武將化身的 TroopUnit，失敗回傳 null
    */

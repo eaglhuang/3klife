@@ -94,14 +94,24 @@ export class BattleGeneralDuelFlow {
    * @returns "ok" | "already-deployed" | "front-blocked" | "general-dead"
    */
   public startGeneralDuel(): string {
-    const pg = this.context.state.playerGeneral;
-    if (!pg || pg.isDead()) return "general-dead";
-    if (this.playerGeneralUnitId) return "already-deployed";
-    if (this.isWaitingDuelPlacement) return "ok";
-    if (!this.canPlayerGeneralDuel()) return "front-blocked";
+    const blocked = this.generalDuelBlockReason();
+    if (blocked) return blocked;
 
     this.isWaitingDuelPlacement = true;
     return "ok";
+  }
+
+  /**
+   * 不改狀態的出陣檢查（單挑鈕鎖定用，PROG-2-1873）：可出陣（含正在等選格）回 null，
+   * 否則回與 startGeneralDuel 相同的原因字串。
+   */
+  public generalDuelBlockReason(): string | null {
+    const pg = this.context.state.playerGeneral;
+    if (!pg || pg.isDead()) return "general-dead";
+    if (this.playerGeneralUnitId) return "already-deployed";
+    if (this.isWaitingDuelPlacement) return null;
+    if (!this.canPlayerGeneralDuel()) return "front-blocked";
+    return null;
   }
 
   /**
