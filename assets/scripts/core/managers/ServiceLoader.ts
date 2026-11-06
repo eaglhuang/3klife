@@ -105,6 +105,7 @@ export class ServiceLoader {
         getHistoricalPairs: () => this.historicalPairs,
         itemConceptionMod: () => fertilityConceptionMod(this.session.itemCount(ITEM_FERTILITY_ARMED) > 0),
         onBreedPerformed: () => this.session.clearFertilityArm(),
+        clanPrestigeTier: () => this.session.clanPrestigeTier,
         relationLedger: this.session.relationEvents,
     });
     /** 退役教官卡 / 英靈卡來源；init() 之後才有（共用存檔後端）。培育畫面用它挑教官 */

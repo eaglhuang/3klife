@@ -41,6 +41,7 @@ import { affinityResolverOf, conceptionModBetween, type HistoricalPairTable } fr
 import { generateVirtualAncestry, toRegistryEntries } from '../systems/VirtualAncestorGenerator';
 import type { RandomSource } from '../systems/GeneralAging';
 import { relationEventsForBreeding, RelationEventLedger } from '../systems/RelationEvents';
+import { applyChildBirthBenefit } from '../systems/MvpLoopController';
 
 /** 雙親各上溯 3 代，合計 28 祖位 */
 const PROBE_ANCESTOR_GENERATIONS = 3;
@@ -66,6 +67,8 @@ export interface BreedingServiceOptions {
     seasonConceptionMod?: () => number;
     /** 道具受孕率倍率（安胎藥 ×1.5，ITM-04b）；不傳或回傳非正數視為 1 */
     itemConceptionMod?: () => number;
+    /** 祠堂聲望等級 1~5（doc_spec_0310 §3，PROG-2-1913）；子嗣出生時套用該階福祉。不傳視為 Lv.1 無加成 */
+    clanPrestigeTier?: () => number;
     /** 結緣實際執行（非 blocked）後呼叫，用於清除一次性的道具效果（安胎藥 armed，PROG-2-1038） */
     onBreedPerformed?: () => void;
     /** 子嗣 id 產生器；預設 child-{父}-{母}-{序號} */
@@ -283,6 +286,8 @@ export class BreedingService {
 
         const next = roster.map((g) => (g.id === father.id ? result.father : g.id === mother.id ? result.mother : g));
         if (result.child) {
+            const tier = this._options.clanPrestigeTier?.() ?? 1;
+            if (tier > 1) result.child = applyChildBirthBenefit(result.child, tier) as typeof result.child;
             next.push(normalizeRosterRoles([result.child])[0]);
             this._graph.registerChild(toPersonRecord(result.child), father.id, mother.id);
         }
