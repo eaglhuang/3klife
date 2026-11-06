@@ -281,7 +281,24 @@ export interface MaternalLine {
   factors: AncestralPeak[];
 }
 
+/** 四型性格（武將人物介面規格補遺 §1、§5；HUM-01，PROG-2-1931）：義氣 Loyal／豪爽 Brave／睿智 Wise／貪玩 Playful */
+export type GeneralPersonalityType = 'Loyal' | 'Brave' | 'Wise' | 'Playful';
+export type GeneralSourceType = 'Gacha' | 'Capture' | 'Mercenary';
+export interface GeneralPersonality { type: GeneralPersonalityType; description?: string; }
+/** 忠誠度 0~100；轉蛋來源鎖定 100（規則見 core/systems/GeneralLoyalty.ts） */
+export interface GeneralLoyalty { value: number; isLocked: boolean; sourceType: GeneralSourceType; }
+export interface GeneralRecentLog { timestamp: string; narrative: string; impact?: string; }
+export interface GeneralSuitability { taskId: string; taskName: string; reason: string; }
+
 export interface GeneralConfig {
+  /** 性格（HUM-01）；缺值代表尚未設定 */
+  personality?: GeneralPersonality;
+  /** 忠誠度狀態（HUM-01；規格欄位名為 loyalty，但既有俘虜流程 loyalty 是數字，暫改名避開）；缺值時依來源補預設 */
+  loyaltyState?: GeneralLoyalty;
+  /** 最近一則人性化日誌（HUM-01，晨報實例化） */
+  recentLog?: GeneralRecentLog;
+  /** 目前最適合的任務（HUM-01，自薦推薦） */
+  currentSuitability?: GeneralSuitability;
   /** 已用過家學研習或隔代復興（G2 Study_Used_Flag，兩者共用，每胎限 1 次，PROG-2-1793） */
   familyStudyUsed?: boolean;
   /** 已用過母門擇承（每胎限 1 次，與家學研習名額分開） */
