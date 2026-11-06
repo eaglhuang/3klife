@@ -14,7 +14,7 @@ import { generalQuickViewTexts, QUICK_VIEW_SKILL_ROWS } from '../assets/scripts/
 const LAYOUT = path.resolve(__dirname, '../assets/resources/ui-spec/layouts/general-quickview-main.json');
 const SCREEN = path.resolve(__dirname, '../assets/resources/ui-spec/screens/general-quickview-screen.json');
 
-type LayoutNode = { id?: string; children?: LayoutNode[] };
+type LayoutNode = { id?: string; type?: string; children?: LayoutNode[] };
 
 function layoutIds(): Set<string> {
     const ids = new Set<string>();
@@ -70,6 +70,18 @@ export function createGeneralQuickViewSuite(): TestSuite {
         const screen = JSON.parse(fs.readFileSync(SCREEN, 'utf8'));
         assert.equals('general-quickview-screen', screen.id);
         assert.equals('general-quickview-main', screen.layout);
+    });
+
+    suite.test('頭像欄是版面上的圖片節點，可依武將 id 換圖（PROG-2-1865）', () => {
+        const types = new Map<string, string>();
+        const walk = (node: LayoutNode) => {
+            if (node.id && node.type) types.set(node.id, node.type);
+            for (const child of node.children ?? []) walk(child);
+        };
+        walk(JSON.parse(fs.readFileSync(LAYOUT, 'utf8')).root);
+        assert.equals('image', types.get('gqPortrait'));
+        const withId = generalQuickViewTexts({ ...PLAYER, generalId: 'guan-yu' });
+        assert.isTrue(!('gqPortrait' in withId), '頭像不走文字欄位');
     });
 
     return suite;

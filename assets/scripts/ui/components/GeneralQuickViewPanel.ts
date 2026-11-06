@@ -52,6 +52,8 @@ export interface GeneralQuickViewData {
     skills?: string[];
     /** true = 敵方武將（HP/攻/防遮蔽顯示為 ???） */
     isEnemy?: boolean;
+    /** 武將 id，用來載入小窗左上的頭像（PROG-2-1865）；沒給就保留版面預設圖 */
+    generalId?: string;
 }
 
 @ccclass('GeneralQuickViewPanel')

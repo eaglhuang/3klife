@@ -948,7 +948,7 @@ export class BattleUIBridge {
     const unit = req.side === 'player' ? this.ctx.pg : this.ctx.eg;
     if (!unit) { UCUFLogger.warn(LogCategory.LIFECYCLE, '[BattleUIBridge] _onRequestGeneralQuickView: 武將資料尚未備妥'); return; }
     const data = {
-      name: unit.name, title: req.isEnemy ? '敵方主將' : '我方主將',
+      name: unit.name, title: req.isEnemy ? '敵方主將' : '我方主將', generalId: unit.id,
       faction: req.isEnemy ? '敵方' : '玩家',
       hp: unit.currentHp, maxHp: unit.maxHp,
       atk: Math.round(unit.str * 10), def: Math.round(unit.lea * 10), spd: unit.luk, int: unit.int,
