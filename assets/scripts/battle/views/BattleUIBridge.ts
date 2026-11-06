@@ -12,6 +12,7 @@
 
 import { tallyLegendDeployLine } from '../../core/systems/TallyScripts';
 import { aptitudeToastPayload } from '../../core/systems/AptitudeDialogue';
+import { setBattleTimeScale } from './BattleTimeScale';
 import { salvageSummaryLines } from '../../core/systems/StageSalvageSettlement';
 import { DELEGATE_OFF_LINE, DELEGATE_UNAVAILABLE_LINE, delegateOnLine, FOOD_EMPTY_LINE } from '../../core/systems/SortieDeployScripts';
 import { wisdomMeterText, WISDOM_SURGE_LOG } from '../shared/WisdomMeter';
@@ -228,6 +229,8 @@ export class BattleUIBridge {
       svc.event.on(EVENT_NAMES.TroopCounterLine,        (line: string) => { this.appendLog(line); }),
       svc.event.on(EVENT_NAMES.AptitudeDialogue,        this._onAptitudeDialogue.bind(this)),
       svc.event.on(EVENT_NAMES.ShowToast,               this._onShowToast.bind(this)),
+      // 控制列 x2（PROG-2-1867）：整個戰場畫面加速，離開戰場時在 unsubscribeEvents 還原
+      svc.event.on(EVENT_NAMES.BattleSpeedToggled,      (speed: number) => setBattleTimeScale(speed)),
       svc.event.on(EVENT_NAMES.AutoBattleToggled,       this._onAutoBattleToggled.bind(this)),
       svc.event.on(EVENT_NAMES.DelegateToggled,         this._onDelegateToggled.bind(this)),
       svc.event.on(EVENT_NAMES.RequestGeneralQuickView, this._onRequestGeneralQuickView.bind(this)),
@@ -253,6 +256,7 @@ export class BattleUIBridge {
   }
 
   public unsubscribeEvents(): void {
+    setBattleTimeScale(1);
     this.unsubs.forEach(fn => fn());
     this.unsubs.length = 0;
     this.onBoardPlacement = null;
