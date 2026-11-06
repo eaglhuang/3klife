@@ -40,7 +40,7 @@ export class EnemyAI {
   public tallyTroopTypes: readonly TroopType[] = [];
 
   /**
-   * 根據當前棋盤狀態與可用 DP 決定本回合部署。
+   * 根據當前棋盤狀態與可用糧草決定本回合部署。
    * deployCount：本回合部署數上限，由呼叫端依 getAIDeployCount（F-2）算出。
    * 策略：以計數器兵種對抗玩家最多的兵種；無對手時隨機。
    */

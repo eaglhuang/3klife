@@ -3,7 +3,7 @@
  * DeployComposite — 玩家部署操作面板（CompositePanel 版）
  *
  * 以 `deploy-panel-screen` 三層 spec 為底，保留 DeployPanel 對 BattleScene 的公開 API：
- *   - setController / registerDragDropCallback / updateDp / updateSkillStatus
+ *   - setController / registerDragDropCallback / updateFood / updateSkillStatus
  *   - selectLane / deploySelected / showToast / dragging
  *
  * Unity 對照：等同 MonoBehaviour 完整搬進 CompositePanel 容器，spec 已覆蓋全部 UI 節點。
@@ -65,7 +65,7 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
   private selectedLane = 0;
   /** 改派二次確認：上一次被擋的目標（DEP-10 A 案） */
   private redirectPrompt: RedirectPrompt | null = null;
-  private currentDp = GAME_CONFIG.INITIAL_FOOD;
+  private currentFood = GAME_CONFIG.INITIAL_FOOD;
 
   private infoRow: Node | null = null;
   private costLabel: Label | null = null;
@@ -100,8 +100,13 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
     this.dragHoverCallback = cb;
   }
 
-  public updateDp(dp: number): void {
-    this.currentDp = dp;
+  /** @deprecated v3-4 改用 updateFood（PROG-2-1896）；留給尚未改名的 BattleScene 呼叫 */
+  public updateDp(food: number): void {
+    this.updateFood(food);
+  }
+
+  public updateFood(food: number): void {
+    this.currentFood = food;
     this.updateSelectionLabels();
   }
 
@@ -440,6 +445,6 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
     if (reason === 'troops-short') return '⚠ 軍勢不足，無法部署';
     if (reason === 'field-limit') return '⚠ 場上部隊已滿，請先等待退場或撤回部隊';
     if (reason === 'order-refused') return '⚠ 主將忠誠不足，本回合拒絕執行命令';
-    return foodShortMessage(this.currentDp);
+    return foodShortMessage(this.currentFood);
   }
 }

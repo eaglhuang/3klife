@@ -24,6 +24,7 @@ import { services } from '../../core/managers/ServiceLoader';
 import { UIPreviewBuilder } from '../core/UIPreviewBuilder';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { SolidBackground } from './SolidBackground';
+import { foodLabelText } from '../../core/systems/FoodLabelText';
 
 const { ccclass } = _decorator;
 
@@ -432,7 +433,7 @@ export class BattleHUD extends UIPreviewBuilder {
     }
 
     private _setFood(food: number, maxFood: number): void {
-        if (this._foodLabel) this._foodLabel.string = `🌾 糧草 ${food} / ${maxFood}`;
+        if (this._foodLabel) this._foodLabel.string = foodLabelText(food, maxFood);
     }
 
     private _setGeneralHealth(faction: Faction, hp: number): void {

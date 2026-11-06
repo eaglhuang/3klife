@@ -388,7 +388,7 @@ export class BattleUIBridge {
 
   private _onTurnPhaseChanged(snap: { turn: number; playerFood: number; phase?: TurnPhase }): void {
     const c = this.ctx;
-    c.deployRuntime?.updateDp(snap.playerFood);
+    c.deployRuntime?.updateFood(snap.playerFood);
     // 軍師智謀能量（PROG-2-1577）：回合紀錄附上能量，觸發次數增加時另列一行
     const state = c.ctrl?.state;
     const wisdom = state ? `，${wisdomMeterText(state.wisdomMeter)}` : '';
@@ -423,7 +423,7 @@ export class BattleUIBridge {
     const c = this.ctx;
     const snap = services().battle.getSnapshot();
     c.hud?.setFood(snap.playerFood, services().battle.getMaxFood());
-    c.deployRuntime?.updateDp(snap.playerFood);
+    c.deployRuntime?.updateFood(snap.playerFood);
     const side = data.faction === Faction.Player ? '我方' : '敵方';
     const unitName = data.unitName?.trim() || this.toTroopName(data.type);
     this.appendLog(`${side}部署 ${unitName}（路線 ${data.lane + 1}）`);

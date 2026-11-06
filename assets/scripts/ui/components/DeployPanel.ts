@@ -137,8 +137,8 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
   private selectedLane: number = 0;
   /** 改派二次確認：上一次被擋的目標（DEP-10 A 案） */
   private redirectPrompt: RedirectPrompt | null = null;
-  /** [P2-N6] 當前糧草（原 currentDp，與 TurnSnapshot.playerFood 同步） */
-  private currentDp = GAME_CONFIG.INITIAL_FOOD;
+  /** [P2-N6] 當前糧草（與 TurnSnapshot.playerFood 同步；v3-4 起不再用 dp 命名，PROG-2-1896） */
+  private currentFood = GAME_CONFIG.INITIAL_FOOD;
 
   // ─── 隨機兵種槽位 ─────────────────────────────────────────────────────────
   /** 目前 4 個槽位各自對應的兵種（每次成功部署後重新抽） */
@@ -180,8 +180,13 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
     this.dragDropCallback = cb;
   }
 
-  public updateDp(dp: number): void {
-    this.currentDp = dp;
+  /** @deprecated v3-4 改用 updateFood（PROG-2-1896）；留給尚未改名的 BattleScene 呼叫 */
+  public updateDp(food: number): void {
+    this.updateFood(food);
+  }
+
+  public updateFood(food: number): void {
+    this.currentFood = food;
     this.refreshButtonStates();
   }
 
@@ -365,9 +370,9 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
           });
           return;
         }
-        if (this.currentDp < TROOP_DEPLOY_COST[type]) {
-          emitDeployDragDebug("DeployPanel", "event-card-drag-blocked-dp", {
-            currentDp: this.currentDp,
+        if (this.currentFood < TROOP_DEPLOY_COST[type]) {
+          emitDeployDragDebug("DeployPanel", "event-card-drag-blocked-food", {
+            currentFood: this.currentFood,
             required: TROOP_DEPLOY_COST[type],
             type,
           });
@@ -467,8 +472,8 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
         });
       }
 
-      // 根據當前 DP 啟用/禁用按鈕
-      btn.interactable = this.currentDp >= TROOP_DEPLOY_COST[type];
+      // 根據當前糧草啟用/禁用按鈕
+      btn.interactable = this.currentFood >= TROOP_DEPLOY_COST[type];
     }
   }
 
@@ -499,7 +504,7 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
       btn.node.on(Node.EventType.TOUCH_START, (ev: EventTouch) => {
         const type = this.deploySlots[idx];
         if (!type) return;
-        if (this.currentDp < TROOP_DEPLOY_COST[type]) {
+        if (this.currentFood < TROOP_DEPLOY_COST[type]) {
           this.showToast("糧草不足，無法拖曳部署");
           return;
         }
@@ -733,7 +738,7 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
     for (let i = 0; i < this.slotButtons.length; i++) {
       const btn = this.slotButtons[i];
       if (!btn) continue;
-      btn.interactable = this.currentDp >= TROOP_DEPLOY_COST[this.deploySlots[i]];
+      btn.interactable = this.currentFood >= TROOP_DEPLOY_COST[this.deploySlots[i]];
     }
   }
 
