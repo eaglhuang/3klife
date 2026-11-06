@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-06T16-14-44-065Z-scope-amendment-262eca82652b",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:07fe2b8c064121ce93fcccd6ce44d5ea1e48694271dbfbaa57985cd46bd53a7d",
+  "createdAt": "2026-11-06T16:14:44.065Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/ling_tong_portrait.png,assets/resources/sprites/generals/avatars/ling_tong_avatar.png,assets/resources/sprites/ui_avatars/cropped/ling_tong_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
