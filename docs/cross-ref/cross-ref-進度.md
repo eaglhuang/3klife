@@ -70,7 +70,7 @@
 | 正式版劇本文案.md (doc_spec_0004) | FunLineLibrary.ts, OpeningLetter.ts, RedFaceCopy.ts, UIOpeningLetterPanel.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
 | 武將壽命系統.md (doc_spec_0018) | GeneralAging.ts、GeneralGrowth.ts、LifeScriptCopy.ts、LongevityPill.ts、LegacyArena.ts、LegacyService.ts（§E 8 項逐項核對已實作，PROG-2-1719） | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | 武將戰績系統.md (doc_spec_0019) | BattleLeaderboardView.ts, BattleRecordStats.ts, BattleSnapshot.ts, HiddenFactorAwakening.ts, MilestoneRewards.ts, RetireReviewCopy.ts, SeasonReportPanel.ts, HiddenFactorText.ts, RetireReviewController.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
-| 武將背包（倉庫）系統.md (doc_spec_0017) | EquipmentBonus.ts, GeneralBackpack.ts, GeneralEquipTransfer.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
+| 武將背包（倉庫）系統.md (doc_spec_0017) | GeneralBackpack.ts、GeneralBackpackView.ts（E-1／E-4 欄位與解鎖）、WarehouseCapacity.ts（E-2／E-5 50 格、+20、上限 200）、GearEquipFlow.ts、GearSlotPickController.ts（E-3 裝備／卸下；E-8 退役回倉與傳子嗣走 GameSession，GeneralEquipTransfer 已於 PROG-2-1361 退役）、WarehouseSort.ts、WarehousePanelController.ts（E-6 篩選排序）、GearLockDecompose.ts（E-9 鎖定／分解）、TreasureCodex.ts、ItemBagController.ts（E-10 寶物圖鑑）、EquipmentBonus.ts（E-7 品質加成純邏輯；裝備品項尚無品質與加成資料，未合入戰場數值）（§E 逐項核對，PROG-2-1884） | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
 | 留存系統.md (doc_spec_0025) | FarewellLetterInbox.ts, LoginStreak.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 結緣系統（配種）.md (doc_spec_0028) | BondingSetupController.ts（三欄重排、父母頭像，PROG-2-1130／1131） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 經濟系統.md (doc_spec_0032) | AccelerateCard.ts, DomesticTasks.ts, ItemShopPricing.ts, MilitaryReserve.ts, ResourceCap.ts, VitalityPill.ts, VitalityPillController.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
