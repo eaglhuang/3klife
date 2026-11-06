@@ -89,6 +89,16 @@ export interface AcademyStateSnapshot {
     /** 惡意中斷懲罰：剩餘幾回合不得觸發彩圈／專屬連鎖 */
     resonanceLockTurns: number;
     graduated: boolean;
+    /** 先祖傳奇教官的傳承支援（PROG-2-1908）；舊快照沒有此欄位 */
+    legacySupport?: AcademyLegacySupport;
+}
+
+/** 先祖教官傳承支援：訓練加成與弱冠禮特質種子（doc_spec_0310 §2.1） */
+export interface AcademyLegacySupport {
+    /** 各屬性訓練加成（%） */
+    statBonusPct: Partial<Record<AcademyStatKey, number>>;
+    /** 門風特質種子：弱冠禮時各自擲機率列入候選 */
+    traitSeeds: string[];
 }
 
 export type AcademyActionType = 'TRAIN' | 'REST' | 'GIMMICK_INTERACT' | 'RESOLVE_INTERRUPT';

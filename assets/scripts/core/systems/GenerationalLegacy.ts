@@ -6,6 +6,8 @@
  *   「傳奇教官」培育效果：固有靈感戰法、門風特質種子、五維支援加成、先祖起始羈絆。
  * - 雙柱血脈共鳴：父系、母系主因子組合命中表格，雙親親密度與天命 EP 達標時解鎖複合雙奧義。
  *
+ * - 入學時以 attachLegacySupport 把先祖加成與特質種子掛到學府快照，總控訓練與弱冠禮會讀取（PROG-2-1908）。
+ *
  * 門閥聲望／家族階層與現有 ClanTier 四階制不同，退役年齡也與壽命系統（65）不同，本卡不碰，待裁決。
  *
  * Unity 對照：像一個 Factory 從存檔快照組出 ScriptableObject 傳承卡，外加一張配方表查詢。
@@ -13,6 +15,7 @@
 import type { GeneralConfig } from '../models/GeneralUnit';
 import type { MentorCard } from '../models/MentorCard';
 import { EssayCardCategory, type YingchuanMentorDef } from './nurture/YingchuanAcademy';
+import type { AcademyStateSnapshot } from './nurture/AcademyTypes';
 
 export type LegacyStatKey = 'str' | 'int' | 'lea' | 'pol' | 'cha';
 const LEGACY_STATS: readonly LegacyStatKey[] = ['str', 'int', 'lea', 'pol', 'cha'];
@@ -138,4 +141,20 @@ export function resolveDualPillarResonance(input: Readonly<DualPillarInput>): Du
     return DUAL_PILLAR_RECIPES.find((r) =>
         (r.factors[0] === input.paternalFactor && r.factors[1] === input.maternalFactor)
         || (r.factors[1] === input.paternalFactor && r.factors[0] === input.maternalFactor)) ?? null;
+}
+
+/** 入學第 1 回合行動前掛上先祖傳承支援；同屬性取最高加成，特質種子去重。輸入快照不會被改動 */
+export function attachLegacySupport(state: AcademyStateSnapshot, mentors: readonly ILegendaryMentorCard[]): AcademyStateSnapshot {
+    if (state.currentTurn !== 1 || state.stepIndex !== 0) throw new Error('先祖傳承只能在入學第 1 回合行動前掛上');
+    const statBonusPct: Partial<Record<LegacyStatKey, number>> = {};
+    const traitSeeds: string[] = [];
+    for (const m of mentors) {
+        for (const key of Object.keys(m.statBonusPct) as LegacyStatKey[]) {
+            statBonusPct[key] = Math.max(statBonusPct[key] ?? 0, m.statBonusPct[key] ?? 0);
+        }
+        if (m.inherentTraitId && traitSeeds.indexOf(m.inherentTraitId) < 0) traitSeeds.push(m.inherentTraitId);
+    }
+    const next = JSON.parse(JSON.stringify(state)) as AcademyStateSnapshot;
+    next.legacySupport = { statBonusPct, traitSeeds };
+    return next;
 }
