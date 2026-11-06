@@ -1,0 +1,169 @@
+{
+  "id": "clan-shrine-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "ClanShrineRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "ClanShrineCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 720,
+        "height": 560,
+        "skinSlot": "clan.shrine.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "ClanShrineTitleLabel",
+            "id": "shrineTitle",
+            "widget": {
+              "top": 20,
+              "left": 24,
+              "right": 24
+            },
+            "height": 40,
+            "text": "祠堂",
+            "styleSlot": "clan.shrine.label.title"
+          },
+          {
+            "type": "label",
+            "name": "ClanShrineTierLabel",
+            "id": "shrineTier",
+            "widget": {
+              "top": 76,
+              "left": 24,
+              "right": 24
+            },
+            "height": 64,
+            "text": "",
+            "styleSlot": "clan.shrine.label.tier"
+          },
+          {
+            "type": "label",
+            "name": "ClanShrinePrestigeLabel",
+            "id": "shrinePrestige",
+            "widget": {
+              "top": 148,
+              "left": 24,
+              "right": 24
+            },
+            "height": 32,
+            "text": "",
+            "styleSlot": "clan.shrine.label.body"
+          },
+          {
+            "type": "label",
+            "name": "ClanShrineProgressLabel",
+            "id": "shrineProgress",
+            "widget": {
+              "top": 184,
+              "left": 24,
+              "right": 24
+            },
+            "height": 32,
+            "text": "",
+            "styleSlot": "clan.shrine.label.body"
+          },
+          {
+            "type": "panel",
+            "name": "ClanShrineBenefitsBox",
+            "widget": {
+              "top": 232,
+              "left": 24,
+              "right": 24
+            },
+            "height": 150,
+            "skinSlot": "clan.shrine.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "ClanShrineBenefitsLabel",
+                "id": "shrineBenefits",
+                "widget": {
+                  "top": 8,
+                  "left": 12,
+                  "right": 12
+                },
+                "height": 134,
+                "text": "",
+                "styleSlot": "clan.shrine.label.body"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "ClanShrineClaimButton",
+            "id": "btnClaimShrine",
+            "widget": {
+              "bottom": 84,
+              "left": 24,
+              "right": 24
+            },
+            "height": 44,
+            "skinSlot": "clan.shrine.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "ClanShrineClaimButtonLabel",
+                "id": "shrineClaimLabel",
+                "widget": {
+                  "top": 8,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "領取供奉",
+                "styleSlot": "clan.shrine.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "ClanShrineCloseButton",
+            "id": "btnCloseShrine",
+            "widget": {
+              "bottom": 24,
+              "left": 24,
+              "right": 24
+            },
+            "height": 44,
+            "skinSlot": "clan.shrine.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "ClanShrineCloseButtonLabel",
+                "id": "shrineCloseLabel",
+                "widget": {
+                  "top": 8,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "關閉",
+                "styleSlot": "clan.shrine.label.button"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

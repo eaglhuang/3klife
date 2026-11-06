@@ -37,7 +37,7 @@ import { SeasonReportComposite, type SeasonReportOpenPayload } from '../componen
 import { SandtableTerritoryComposite, type SandtableTerritoryOpenPayload } from '../components/SandtableTerritoryComposite';
 import { LocalGachaService, type LocalGachaResultEntry } from '../../core/services/LocalGachaService';
 import { PlayerRosterService } from '../../core/services/PlayerRosterService';
-import { GAME_SESSION_EVENTS, type AddGeneralsResult, type ClanTierUpPayload, type MilestoneUpPayload, type CustomGoldFactorBornPayload, type LifeImprintedPayload, type RivalSeasonEventsPayload } from '../../core/managers/GameSession';
+import { GAME_SESSION_EVENTS, GameSession, type AddGeneralsResult, type ClanPrestigeChangedPayload, type ClanTierUpPayload, type MilestoneUpPayload, type CustomGoldFactorBornPayload, type LifeImprintedPayload, type RivalSeasonEventsPayload } from '../../core/managers/GameSession';
 import { buildSageRemarks, remarkRandomOf } from '../../core/systems/SageRemarks';
 import { SAGES } from '../../core/systems/SageDivination';
 import { seasonDisplayText, seasonStartText } from '../core/SeasonTexts';
@@ -117,6 +117,7 @@ import { MentorHoldingsController } from '../core/MentorHoldingsController';
 import { MentorBorrowController } from '../core/MentorBorrowController';
 import { GraduationRecordController } from '../core/GraduationRecordController';
 import { AcademyGraduationController } from '../core/AcademyGraduationController';
+import { ClanShrineController } from '../core/ClanShrineController';
 import type { AcademyGraduationResult } from '../../core/systems/nurture/AcademyGraduation';
 import type { AcademyStateSnapshot } from '../../core/systems/nurture/AcademyTypes';
 import { mentorBorrowRows, type MentorBorrowRow } from '../core/MentorBorrowView';
@@ -318,6 +319,8 @@ export class LobbyScene extends Component {
     /** 學府結業結算彈窗（PROG-2-1956） */
     private _academyGraduation: AcademyGraduationController<UIScreenPreviewHost> | null = null;
     private _academyTacticNames: ReadonlyMap<string, string> | null = null;
+    /** 祠堂聲望畫面（PROG-2-1958） */
+    private _clanShrine: ClanShrineController<UIScreenPreviewHost> | null = null;
     private _mentorBorrow: MentorBorrowController<UIScreenPreviewHost> | null = null;
     /** 「我的教官卡」列表（PROG-2-1097）：重用 mentor-borrow-screen 版面 */
     private _mentorHoldings: MentorHoldingsController<UIScreenPreviewHost> | null = null;
@@ -532,6 +535,7 @@ export class LobbyScene extends Component {
         await this._mountNurtureFlow();
         await this._mountGraduationRecord();
         await this._mountAcademyGraduation();
+        await this._mountClanShrine();
         await this._mountMentorBorrow();
         await this._mountMentorHoldings();
         await this._mountMentorCardDetail();
@@ -761,6 +765,34 @@ export class LobbyScene extends Component {
         this._graduation?.setOpen(open);
     }
 
+    /** 祠堂聲望畫面（PROG-2-1958）：聲望值、階層稱號、福祉與每日供奉；升階時提示 */
+    private async _mountClanShrine(): Promise<void> {
+        const shrine = new ClanShrineController<UIScreenPreviewHost>({
+            mountHost: (bindings) => this._mountPreviewScreenHost('ClanShrineHost', 'clan-shrine-screen', bindings),
+            apply: (host, view) => { if (host.binder) applyFlowView(host.binder, view); },
+            prestige: () => services().session.clanPrestige,
+            tier: () => services().session.clanPrestigeTier,
+            canClaim: (epochMs) => services().session.canClaimShrineOffering(epochMs),
+            claim: (epochMs) => services().session.claimShrineOffering(epochMs),
+            offeringPills: GameSession.SHRINE_OFFERING_PILLS,
+            now: () => Date.now(),
+            toast: (message) => { services().event.emit('SHOW_TOAST', { message, duration: 2.5 }); },
+        });
+        await shrine.mount();
+        this._clanShrine = shrine;
+        this._sessionEventUnsubscribers.push(
+            services().event.on(GAME_SESSION_EVENTS.ClanPrestigeChanged, (payload: ClanPrestigeChangedPayload) => { shrine.onPrestigeChanged(payload); }),
+            services().event.on(GAME_SESSION_EVENTS.Loaded, () => { shrine.refresh(); }),
+        );
+    }
+
+    private _openClanShrine(): void {
+        const shrine = this._clanShrine;
+        if (!shrine?.host) return;
+        shrine.setOpen(true);
+        this._bringNodeToFront(shrine.host.node);
+    }
+
     /** 學府結業結算彈窗（PROG-2-1956）：結業時呼叫 GameSession.graduateFromAcademy，顯示評級、新戰法、新特質 */
     private async _mountAcademyGraduation(): Promise<void> {
         this._academyGraduation = new AcademyGraduationController<UIScreenPreviewHost>({
@@ -945,6 +977,7 @@ export class LobbyScene extends Component {
             sandtable: () => this._onClickOpenSandtable(),
             nurture: () => this._openNurtureFlow(),
             supportCard: () => this.onClickSupportCard(),
+            shrine: () => this._openClanShrine(),
             gacha: () => this.onClickGachaMain(),
             shop: () => this.onClickShopMain(),
             warehouse: () => this._openWarehouse(),

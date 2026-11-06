@@ -131,6 +131,8 @@
 | NurtureFlowViewApplier.ts | doc_ui_0031 | 概: 把 NurtureFlowController / BondingSetupController 吐出的 view 套到 UCUF 組出來… |
 | AcademyGraduationController.ts | doc_spec_0308 | 概: 學府結業結算彈窗；呼叫 graduateFromAcademy 並顯示評級／新戰法／新特質（PROG-2-1956） |
 | AcademyGraduationView.ts | doc_spec_0308 | 概: 學府結業結算的畫面文字（純邏輯，不依賴 cc） |
+| ClanShrineController.ts | doc_spec_0310 | 概: 祠堂聲望畫面；開窗刷新、領每日供奉、升階提示（PROG-2-1958） |
+| ClanShrineView.ts | doc_spec_0310 | 概: 祠堂聲望畫面檢視模型（聲望、階層、福祉、供奉鈕狀態；純邏輯） |
 | NurtureGraduationView.ts | doc_spec_0026 | 概: 畢業紀錄檢視的列（純邏輯，不依賴 cc） |
 | OfficerPermissionText.ts | doc_spec_0014 | 概: 官職頁的已解鎖權限文字（純邏輯，不依賴 cc） |
 | OnboardingFlowController.ts | doc_spec_0031, doc_spec_0045 | 概: 新手 3 段式引導的顯示與觸發（純邏輯，不依賴 cc） |
