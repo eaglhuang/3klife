@@ -120,6 +120,7 @@ import { mentorBorrowRows, type MentorBorrowRow } from '../core/MentorBorrowView
 import { OfficerPanelsController } from '../core/OfficerPanelsController';
 import { BLOODLINE_VIGNETTE_CELL_COUNT, bloodlineVignetteOpenLabel, bloodlineVignetteViewOf } from '../core/BloodlineVignetteText';
 import { installOfficerTierTable, type OfficerTierRow } from '../../core/systems/OfficerTierTable';
+import { installSageProgressTable } from '../../core/systems/SageFavor';
 import { installSandtableTerritories } from '../../core/systems/SandtableTerritories';
 import { OFFICER_PROMOTION_FREEZE_TIMING, officerPromotionFreezeTitles, officerPromotionNoticeOf, officerPromotionRewardTotal } from '../../core/systems/HallMissionSettlement';
 import { playTitleFreeze } from '../core/TitleFreezeOverlay';
@@ -1825,6 +1826,7 @@ export class LobbyScene extends Component {
     private async _mountHallBoard(): Promise<void> {
         await this._loadOfficerTiers();
         await this._loadSandtableTerritories();
+        await this._loadSageProgress();
         const hub = await this._loadLobbyHub();
         if (!hub) {
             return;
@@ -2404,6 +2406,24 @@ export class LobbyScene extends Component {
                     this._officerTierRows = result.rows;
                 } else {
                     UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 官職階位資料驗證失敗，沿用內建門檻', (result as { ok: false; issues: string[] }).issues);
+                }
+                resolve();
+            });
+        });
+    }
+
+    /** 名士好感與劇情解鎖資料檔（PROG-2-1951）：驗證通過才覆寫；失敗沿用內建暫定值並記 log。 */
+    private _loadSageProgress(): Promise<void> {
+        return new Promise((resolve) => {
+            resources.load<JsonAsset>('data/sage-progress', JsonAsset, (err, asset) => {
+                if (err || !asset) {
+                    UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 名士好感資料載入失敗，沿用內建暫定值', err);
+                    resolve();
+                    return;
+                }
+                const result = installSageProgressTable(asset.json);
+                if (!result.ok) {
+                    UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 名士好感資料驗證失敗，沿用內建暫定值', (result as { ok: false; issues: string[] }).issues);
                 }
                 resolve();
             });

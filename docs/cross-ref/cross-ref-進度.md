@@ -61,7 +61,7 @@
 | 傭兵系統（試用）.md (doc_spec_0029) | MercenaryIllustration.ts, MercenaryPanelView.ts, MercenaryNameplateRows.ts, MercenaryPanelController.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 可結緣女性來源系統.md (doc_spec_0003) | DaughterComingOfAge.ts, FemaleSource.ts, FemaleSourcePresenter.ts, BreedingPreviewPresenter.ts | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | 同名武將系統.md (doc_spec_0005) | SoulTransfer.ts, BloodlineInfusion.ts, BloodlineMerge.ts, ReviveRetrain.ts, SortieDeploy.ts, SoulFragmentLedger.ts, SoulInjectCandidates.ts | ✅ | ✅ | 🟡 | ✅ | ⬜ |
-| 名士預言系統.md (doc_spec_0006) | BondingSetupController.ts（名士批語 3 列，PROG-2-1131）；§E 逐項：名士資料表 SAGES／sages.json〔一致性測試 SageTableConsistency，PROG-2-1887〕、占卜介面 SageOracleController、偏見演算與準確率 SageDivination、矛盾預言提示 ORACLE_CONFLICT_TEXT、占卜次數解鎖、結緣介面嵌入皆已接；K 節祖輩顯靈在 BloodlineBirthLines。未做：E-4「名士等級提高準確率」與 E-6「劇情進度解鎖」規格未給等級或劇情條件 | ✅ | 🟡 | ✅ | ✅ | ⬜ |
+| 名士預言系統.md (doc_spec_0006) | BondingSetupController.ts（名士批語 3 列，PROG-2-1131）；§E 逐項：名士資料表 SAGES／sages.json〔一致性測試 SageTableConsistency，PROG-2-1887〕、占卜介面 SageOracleController、偏見演算與準確率 SageDivination、矛盾預言提示 ORACLE_CONFLICT_TEXT、占卜次數解鎖、結緣介面嵌入皆已接；K 節祖輩顯靈在 BloodlineBirthLines。E-4／E-6 暫定值（11/06 裁決 #10，PROG-2-1951）：SageFavor.ts 好感 Lv1～5 門檻 100/250/500/850/1300、每級準確率 +1%（上限 95%）、龐統官階 3／左慈第 5 年劇情解鎖，sage-progress.json 可覆寫。未做：好感經驗來源與存檔、準確率加成尚未接入占卜 | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 名詞定義文件.md (doc_spec_0008) | 尚無實作 | ✅ | ✅ | — | — | ⬜ |
 | 因子解鎖系統.md (doc_spec_0009) | AwakeningReveal.ts（戰後覺醒結算揭示，PROG-2-1133；畫面定格動畫已補（PROG-2-1702）） | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | 培育系統.md (doc_spec_0026) | NurtureSystem.ts、TacticLearning.ts、NurtureFlowController.ts（戰法列，PROG-2-1132／1134）；InspiredTacticMap.ts（靈感戰法對應戰法庫，PROG-2-1135） | ✅ | 🟡 | ✅ | ✅ | ⬜ |

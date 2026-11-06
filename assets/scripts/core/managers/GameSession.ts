@@ -183,7 +183,7 @@ import { normalizeBondPoints, overflowBondPoints, overflowRarityOf } from '../sy
 import { borrowCandidateOf, type NpcFriendMentor } from '../systems/NpcFriendMentor';
 import { canBorrow, createBorrow, normalizeBorrowLedger, type BorrowBlockReason, type BorrowLedger, type BorrowRequest } from '../systems/FriendBorrow';
 import { emptySoulFragmentLedger, injectFromLedger, normalizeSoulFragmentLedger, recordDeathFragment, type SoulFragmentLedger } from '../systems/SoulFragmentLedger';
-import { divineFactor, getSage, isSageUnlocked, predictOffspring, ProphecyKeywordSource, ProphecyResult, SageDivinationResult } from '../systems/SageDivination';
+import { divineFactor, getSage, predictOffspring, ProphecyKeywordSource, ProphecyResult, SageDivinationResult } from '../systems/SageDivination';
 import type { FactorPoolEntry } from '../systems/BreedingSystem';
 import { planBloodlineMergeForGenerals, type BloodlineMergeRejectReason } from '../systems/BloodlineMerge';
 import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_ADMISSION_TOKEN, ITEM_BAMBOO_SLIP, ITEM_FERTILITY_ARMED, ITEM_JOB_CHANGE_ORDER, ITEM_LEGENDARY_MENTORING_TICKET, ITEM_MERGE_TOKEN, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, ITEM_TREASURE, ITEM_WISH_SPEED_CARD, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
@@ -191,6 +191,7 @@ import { useItem as useItemFlow, type ItemUseResult } from '../systems/ItemUseFl
 import { equipGear as equipGearFlow, unequipGear as unequipGearFlow, transferGearToHeir, type GearEquipResult } from '../systems/GearEquipFlow';
 import { decomposeGearRecord, setRecordLocked, type GearDecomposeResult } from '../systems/GearLockDecompose';
 import { gearDefinitionOf } from '../systems/GearDefinitions';
+import { isSageAvailable } from '../systems/SageFavor';
 import type { EquipSlot } from '../systems/GeneralBackpack';
 import { checkLegendaryMentoring, LegendaryMentoringBlock, performLegendaryMentoring } from '../systems/LegendaryMentoring';
 import type { BreedingBirthRecord } from '../systems/BreedingBirthRecord';
@@ -1683,8 +1684,9 @@ export class GameSession {
         return enabledCampaignStages()[0];
     }
 
+    /** 名士是否可用：累計占卜次數或劇情錨點（官階／遊戲年份）任一達成（PROG-2-1951） */
     public isSageUnlocked(sageId: string): boolean {
-        return isSageUnlocked(sageId, this._oracleCount);
+        return isSageAvailable(sageId, { divinationCount: this._oracleCount, officerTier: this._officerState.currentTier, year: this._clock.state.currentYear });
     }
 
     public itemCount(itemId: string): number {
