@@ -1,79 +1,77 @@
-// @spec-source → 見 docs/cross-reference-index.md (UCUF Wave 2)
+// @spec-source → 主戰場UI規格補充_v3.md (doc_ui_0003) §v3-5 主將屬性戰法快覽小窗；PROG-2-1864
 /**
- * GeneralQuickViewComposite — 武將快速檢視卡片（Composite 版）
- * Wave 2 migration from GeneralQuickViewPanel - compact general info popup
+ * GeneralQuickViewComposite — 戰場的主將屬性戰法快覽小窗
+ *
+ * 畫面規格：ui-spec/screens/general-quickview-screen.json。
+ * 點 HUD 頭像 → BattleUIBridge 組好資料廣播 ShowGeneralQuickView → 這裡填字並顯示；
+ * 點 × 或小窗外的底板關閉。小窗關閉時根節點不顯示，不擋戰場點擊。
+ *
+ * Unity 對照：常駐在 Canvas 最上層的 Popup，收到事件才 SetActive(true)。
  */
-import { _decorator, Node, tween, UIOpacity } from 'cc';
+import { _decorator, Button } from 'cc';
 import { CompositePanel } from '../core/CompositePanel';
-import { UITemplateBinder } from '../core/UITemplateBinder';
-import { isLukVisible } from '../../core/systems/LuckVisibility';
-import type { GeneralConfig } from '../../core/models/GeneralUnit';
+import type { UITemplateBinder } from '../core/UITemplateBinder';
+import { services } from '../../core/managers/ServiceLoader';
+import { EVENT_NAMES } from '../../core/config/Constants';
+import type { GeneralQuickViewData } from './GeneralQuickViewPanel';
+import { generalQuickViewTexts } from './GeneralQuickViewTexts';
 
 const { ccclass } = _decorator;
 
+const SCREEN_ID = 'general-quickview-screen';
+const ROOT_ID = 'quickViewRoot';
+
 @ccclass('GeneralQuickViewComposite')
 export class GeneralQuickViewComposite extends CompositePanel {
-    private _binder: UITemplateBinder | null = null;
-    private _isMounted = false;
-    private _visible = false;
+    private _templateBinder: UITemplateBinder | null = null;
+    private _data: GeneralQuickViewData | null = null;
+    private _mounting = false;
+    private readonly _unsubs: Array<() => void> = [];
 
-    protected onDestroy(): void {
-        this.unmount();
-        this._isMounted = false;
+    public async ensureMounted(): Promise<void> {
+        if (this._mounting) return;
+        this._mounting = true;
+        this._unsubs.push(services().event.on(EVENT_NAMES.ShowGeneralQuickView, (data) => this.show(data as GeneralQuickViewData)));
+        await this.mount(SCREEN_ID);
     }
 
-    public async show(general: GeneralConfig, position?: { x: number; y: number }): Promise<void> {
-        if (!this._isMounted) {
-            await this.mount('general-quick-view-screen');
-            this._isMounted = true;
-        }
-
-        this._populateFromGeneral(general);
-        if (position) {
-            this.node.setPosition(position.x, position.y, 0);
-        }
-
-        this.node.active = true;
-        this._visible = true;
-        const opacity = this.node.getComponent(UIOpacity) ?? this.node.addComponent(UIOpacity);
-        opacity.opacity = 0;
-        tween(opacity).to(0.2, { opacity: 255 }).start();
+    /** 填入資料並顯示；畫面還沒建好時先記著，建好後補上 */
+    public show(data: GeneralQuickViewData): void {
+        this._data = data;
+        this._apply();
     }
 
     public hide(): void {
-        if (!this._visible) return;
-        this._visible = false;
-        const opacity = this.node.getComponent(UIOpacity);
-        if (opacity) {
-            tween(opacity).to(0.15, { opacity: 0 }).call(() => {
-                this.node.active = false;
-            }).start();
-        } else {
-            this.node.active = false;
-        }
+        this._data = null;
+        this._apply();
+    }
+
+    public get isVisible(): boolean { return this._data !== null && this._templateBinder !== null; }
+
+    protected onDestroy(): void {
+        this._unsubs.forEach((off) => off());
+        this._unsubs.length = 0;
+        this.unmount();
     }
 
     protected override _onAfterBuildReady(binder: UITemplateBinder): void {
-        this._binder = binder;
-        this.node.on(Node.EventType.TOUCH_END, this.hide, this);
+        this._templateBinder = binder;
+        binder.getNode('gqCloseBtn')?.on(Button.EventType.CLICK, this.hide, this);
+        binder.getNode('bgOverlay')?.on(Button.EventType.CLICK, this.hide, this);
+        this._apply();
     }
 
-    private _populateFromGeneral(general: GeneralConfig): void {
-        if (!this._binder) return;
-
-        this._binder.setTexts({
-            NameText: general.name ?? '—',
-            TitleText: general.title ?? '',
-            FactionText: general.faction ?? '—',
-            TemplateText: general.templateId ?? '—',
-            StrText: String(general.str ?? 0),
-            IntText: String(general.int ?? 0),
-            LeaText: String(general.lea ?? 0),
-            PolText: String(general.pol ?? 0),
-            ChaText: String(general.cha ?? 0),
-            LukText: isLukVisible({ isVisible: general.lukVisible }) ? String(general.luk ?? 0) : '???',
-        });
+    private _apply(): void {
+        const binder = this._templateBinder;
+        if (!binder) return;
+        if (!this._data) {
+            binder.setActives({ [ROOT_ID]: false });
+            return;
+        }
+        binder.setTexts(generalQuickViewTexts(this._data));
+        binder.setActives({ [ROOT_ID]: true });
+        // 之後才建的面板會蓋在上面，顯示時把自己移到 Canvas 最上層
+        const parent = this.node.parent;
+        if (parent) this.node.setSiblingIndex(parent.children.length - 1);
     }
-
-    public get isVisible(): boolean { return this._visible; }
 }
