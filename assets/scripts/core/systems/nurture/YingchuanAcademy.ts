@@ -70,6 +70,8 @@ export interface YingchuanMentorDef {
     name: string;
     category: EssayCardCategory;
     signatureTactic: string;
+    /** 入學時的起始羈絆（先祖血親教官 50，見 GenerationalLegacy）；未給為 0 */
+    initialBond?: number;
 }
 
 export interface YingchuanMentorSlot extends YingchuanMentorDef {
@@ -299,7 +301,7 @@ export function assignYingchuanMentors(state: AcademyStateSnapshot, mentors: rea
     if (mentors.length > YINGCHUAN_MENTOR_SLOTS) throw new Error(`教官至多 ${YINGCHUAN_MENTOR_SLOTS} 位`);
     if (new Set(mentors.map((m) => m.generalId)).size !== mentors.length) throw new Error('教官不可重複');
     const next = JSON.parse(JSON.stringify(state)) as AcademyStateSnapshot;
-    yingchuanStateOf(next).mentors = mentors.map((m) => ({ ...m, bond: 0, epiphanyDone: false }));
+    yingchuanStateOf(next).mentors = mentors.map((m) => ({ ...m, bond: Math.min(YINGCHUAN_BOND_MAX, Math.max(0, m.initialBond ?? 0)), epiphanyDone: false }));
     return next;
 }
 
