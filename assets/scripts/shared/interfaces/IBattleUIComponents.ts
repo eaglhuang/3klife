@@ -91,6 +91,8 @@ export interface IDeployRuntimeLike {
     showToast(message: string, duration?: number, options?: { color?: Color; key?: string }): void;
     setTroopSlotButtonsVisible(visible: boolean): void;
     registerDragDropCallback(callback: (x: number, y: number) => void): void;
+    /** 拖曳中回報手指螢幕座標；結束拖曳時回報 null（PROG-2-1880） */
+    registerDragHoverCallback?(callback: (point: { x: number; y: number } | null) => void): void;
     updateSkillStatus(available: boolean): void;
 }
 

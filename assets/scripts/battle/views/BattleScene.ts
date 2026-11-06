@@ -359,6 +359,7 @@ export class BattleScene extends Component {
 
       this._deployPanelRuntime?.setController(this.ctrl);
       this._deployPanelRuntime?.registerDragDropCallback((screenX, screenY) => this.turnFlowManager?.doDeployRaycast(screenX, screenY));
+      this._deployPanelRuntime?.registerDragHoverCallback?.((point) => this.boardRenderer?.setDeployHoverCell(point ? this._raycastBoardCell(point.x, point.y) : null));
       UCUFLogger.info(LogCategory.BATTLE, `[BattleScene] deployRuntime 已連結: ${!!this._deployPanelRuntime}`);
 
       const snap = services().battle.getSnapshot();
