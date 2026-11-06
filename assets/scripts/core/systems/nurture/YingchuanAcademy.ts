@@ -295,10 +295,11 @@ function triggerEpiphanies(state: AcademyStateSnapshot, g: YingchuanGimmickState
     }
 }
 
-/** 入學時指派教官（第 1 回合、尚未行動前），至多 3 位、不可重複 */
+/** 入學時指派教官（第 1 回合、尚未行動前），至多 3 位（祠堂 Lv.4 起依快照 mentorSlots）、不可重複 */
 export function assignYingchuanMentors(state: AcademyStateSnapshot, mentors: readonly YingchuanMentorDef[]): AcademyStateSnapshot {
     if (state.currentTurn !== 1 || state.stepIndex !== 0) throw new Error('教官只能在入學第 1 回合行動前指派');
-    if (mentors.length > YINGCHUAN_MENTOR_SLOTS) throw new Error(`教官至多 ${YINGCHUAN_MENTOR_SLOTS} 位`);
+    const slots = state.mentorSlots ?? YINGCHUAN_MENTOR_SLOTS;
+    if (mentors.length > slots) throw new Error(`教官至多 ${slots} 位`);
     if (new Set(mentors.map((m) => m.generalId)).size !== mentors.length) throw new Error('教官不可重複');
     const next = JSON.parse(JSON.stringify(state)) as AcademyStateSnapshot;
     yingchuanStateOf(next).mentors = mentors.map((m) => ({ ...m, bond: Math.min(YINGCHUAN_BOND_MAX, Math.max(0, m.initialBond ?? 0)), epiphanyDone: false }));

@@ -10,6 +10,7 @@
  */
 import type { GeneralConfig } from '../models/GeneralUnit';
 import { calculatePrestigeGain, clanPrestigeTierOf, type PrestigeCareer } from './GenerationalLegacy';
+import { ACADEMY_ENERGY_MAX, type AcademyStateSnapshot } from './nurture/AcademyTypes';
 
 export enum MvpPhase {
     LOBBY_SETUP = 'LOBBY_SETUP',
@@ -122,4 +123,23 @@ export function completeLegacyHandoff(state: Readonly<MvpLoopState>, career: Rea
         state: { ...state, phase: MvpPhase.BONDING, generation: state.generation + 1, clanPrestige, trail: [...state.trail, MvpPhase.BONDING] },
         prestigeGain, tier, tierUp: tier > before, benefit: clanPrestigeBenefitOf(tier),
     };
+}
+
+/** 祠堂 Lv.4 起學府多一個教官插槽（以潁川預設 3 為基準） */
+export const CLAN_PRESTIGE_BASE_MENTOR_SLOTS = 3;
+
+/**
+ * 入學時套用祠堂福祉到學府快照（PROG-2-1914）：精力上限 110（並補滿）、第 4 教官插槽。
+ * 只能在入學第 1 回合行動前、指派教官前呼叫；不改輸入。
+ */
+export function applyClanPrestigeToAcademy(state: Readonly<AcademyStateSnapshot>, tier: number): AcademyStateSnapshot {
+    if (state.currentTurn !== 1 || state.stepIndex !== 0) throw new MvpLoopError('祠堂福祉只能在入學第 1 回合行動前套用');
+    const b = clanPrestigeBenefitOf(tier);
+    const next = JSON.parse(JSON.stringify(state)) as AcademyStateSnapshot;
+    if (b.academyVitalityMax !== null && b.academyVitalityMax > (next.energyMax ?? ACADEMY_ENERGY_MAX)) {
+        next.energyMax = b.academyVitalityMax;
+        next.energy = b.academyVitalityMax;
+    }
+    if (b.extraMentorSlot) next.mentorSlots = CLAN_PRESTIGE_BASE_MENTOR_SLOTS + 1;
+    return next;
 }

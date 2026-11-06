@@ -72,6 +72,10 @@ export interface AcademyStateSnapshot {
     academyId: AcademyId;
     currentTurn: number;
     energy: number;
+    /** 精力上限；缺值為 ACADEMY_ENERGY_MAX。祠堂 Lv.3 起 110（PROG-2-1914） */
+    energyMax?: number;
+    /** 教官插槽數；缺值為各學府預設。祠堂 Lv.4 起 +1（PROG-2-1914） */
+    mentorSlots?: number;
     controlMode: AcademyControlMode;
     prngSeedHex: string;
     stepIndex: number;
