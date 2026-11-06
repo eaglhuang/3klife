@@ -8,7 +8,7 @@ import { resolveBattleSceneMode, type BattleSceneMode } from './BattleSceneMode'
 import { floodDepthBonus } from '../../core/systems/WeatherTacticRestriction';
 import { tileStateRuleOf } from './TileStateRules';
 import { fateBlessingLevel, fateSuccessChance, rollEventSuccess, ROCK_SLIDE_BASE_SUCCESS, type FateHeldGene } from '../../core/systems/FateBlessing';
-import { ROCK_SLIDE_TILE_NOTE } from './StageSalvage';
+import { FLOODGATE_TILE_NOTE, ROCK_SLIDE_TILE_NOTE } from './StageSalvage';
 import { allocateSceneTiles, SCENE_TILE_PRESETS } from './SceneTilePresets';
 
 /**
@@ -160,6 +160,15 @@ export function refreshFloodAttackTerrain(state: BattleState): void {
       notes: 'scene-gambit:flood-attack',
     });
   });
+  placeFloodgate(state, ordered.slice(counts.forceMove + counts.hazard));
+}
+
+/** 水門（PROG-2-1863 暫定）：放在淺灘最上游（我方較易抵達）、最靠中路的一格；本場佔領過就不再放 */
+function placeFloodgate(state: BattleState, shallow: ReadonlyArray<{ lane: number; depth: number }>): void {
+  if (state.capturedFloodgates > 0 || shallow.length === 0) return;
+  const center = (GAME_CONFIG.GRID_LANES - 1) / 2;
+  const [gate] = [...shallow].sort((a, b) => a.depth - b.depth || Math.abs(a.lane - center) - Math.abs(b.lane - center) || a.lane - b.lane);
+  state.setTileEffect({ id: `floodgate-${gate.lane}-${gate.depth}`, lane: gate.lane, depth: gate.depth, state: 'scene-floodgate', notes: FLOODGATE_TILE_NOTE });
 }
 
 function applySiegeMoat(state: BattleState): void {

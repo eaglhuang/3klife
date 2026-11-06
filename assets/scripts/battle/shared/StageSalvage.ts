@@ -25,6 +25,16 @@ export const ROCK_BREAK_ARMOR_MATERIAL = 5;
 /** 規格「武將經驗 +50」：結算尚無武將經驗欄位，暫記入教官經驗 */
 export const ROCK_BREAK_GENERAL_EXP = 50;
 export const ROCK_SLIDE_TILE_NOTE = 'scene-gambit:rock-slide';
+/**
+ * 水門（關卡設計系統 G-2「水門控制權戰後結算為水路情報與補給回收」、§I Floodgate，PROG-2-1863 暫定）：
+ * 水攻場景在淺灘放一格水門，我方部隊站上即佔領，記入情報與補給；數值規格未定，暫定情報 5、補給 150。
+ */
+export const FLOODGATE_TILE_NOTE = 'scene-gambit:floodgate';
+export const FLOODGATE_CAPTURE_INTEL = 5;
+export const FLOODGATE_CAPTURE_SUPPLY = 150;
+export function floodgateCaptureGain(): Partial<SalvageTotals> {
+    return { intel: FLOODGATE_CAPTURE_INTEL, supply: FLOODGATE_CAPTURE_SUPPLY };
+}
 
 /** 運勢掠奪加成（戰場部署系統「高運勢角色更適合承接掠奪、寶物與事件型戰利品掉落」，PROG-2-1606 暫定）：每點 +0.2%，運勢上限 100 → +20% */
 export const LUCK_SALVAGE_BONUS_PER_POINT = 0.002;
@@ -35,8 +45,8 @@ export function luckSalvageMultiplierOf(luk: number | null | undefined): number 
     return 1 + clamped * LUCK_SALVAGE_BONUS_PER_POINT;
 }
 
-/** 落石擊破或火燒掠奪的來源（PROG-2-1852） */
-export type SalvageLootSource = 'rock-slide' | 'fire-raid';
+/** 落石擊破、火燒掠奪或佔領水門的來源（PROG-2-1852、PROG-2-1863） */
+export type SalvageLootSource = 'rock-slide' | 'fire-raid' | 'floodgate';
 
 /** EVENT_NAMES.StageSalvageGained 的內容：哪一格、哪種來源、這次入帳多少 */
 export interface StageSalvageGainedEvent {

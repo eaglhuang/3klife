@@ -14,7 +14,7 @@ import { tileStateRuleOf } from '../../shared/TileStateRules';
 import { AMBUSH_TRAP_ROOT_TURNS, AMBUSH_TRAP_TILE_NOTE, sceneFireDamageTakenOf } from '../../shared/BattleTacticBehavior';
 import { applyTallyDefection, applyTallyTeamMoraleAura } from '../../shared/TallyPassive';
 import type { StageSalvageGainedEvent } from '../../shared/StageSalvage';
-import { addStageSalvage, FIRE_RAID_TILE_NOTE, hazardDamageTakenOf, luckSalvageMultiplierOf, ROCK_SLIDE_TILE_NOTE, rollFirePlunderGain, rollRockBreakGain, scaleSalvageGain } from '../../shared/StageSalvage';
+import { addStageSalvage, FIRE_RAID_TILE_NOTE, FLOODGATE_TILE_NOTE, floodgateCaptureGain, hazardDamageTakenOf, luckSalvageMultiplierOf, ROCK_SLIDE_TILE_NOTE, rollFirePlunderGain, rollRockBreakGain, scaleSalvageGain } from '../../shared/StageSalvage';
 
 export interface BattleTileEffectPhaseContext {
   readonly state: BattleState;
@@ -102,6 +102,7 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
 
   plunderFireRaidTiles(context, svc);
   breakRockSlideTiles(context, svc);
+  captureFloodgates(context, svc);
 
   for (const [, unit] of context.state.units) {
     if (unit.faction !== context.actingFaction) {
@@ -212,6 +213,18 @@ function breakRockSlideTiles(context: BattleTileEffectPhaseContext, svc: ReturnT
       context.state.recoveredRockSlides += 1;
       gainSalvage(context, svc, { lane: unit.lane, depth, source: 'rock-slide', gain: scaleSalvageGain(rollRockBreakGain(random), playerLuckMultiplier(context)) });
     }
+  }
+}
+
+/** 水門佔領（PROG-2-1863 暫定）：我方回合，我方部隊站在水門格上即佔領，移除水門並入帳情報與補給 */
+function captureFloodgates(context: BattleTileEffectPhaseContext, svc: ReturnType<typeof services>): void {
+  if (context.actingFaction !== Faction.Player) return;
+  for (const [, unit] of context.state.units) {
+    if (unit.faction !== Faction.Player || unit.isDead()) continue;
+    if (context.state.getTileEffect(unit.lane, unit.depth)?.notes !== FLOODGATE_TILE_NOTE) continue;
+    context.state.removeTileEffect(unit.lane, unit.depth);
+    context.state.capturedFloodgates += 1;
+    gainSalvage(context, svc, { lane: unit.lane, depth: unit.depth, source: 'floodgate', gain: scaleSalvageGain(floodgateCaptureGain(), playerLuckMultiplier(context)) });
   }
 }
 
