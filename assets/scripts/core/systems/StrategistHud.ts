@@ -43,6 +43,8 @@ export interface StrategistHudInput {
     missingCounters: readonly string[];
     /** 本場正在執行的場景戰法與執行者（主戰場UI §6.3，PROG-2-1758）；一般戰鬥不傳 */
     executing?: StrategistExecution;
+    /** 環境加成百分點摘要（主戰場UI §6.3，PROG-2-1893），如「雨天 -10%、山地 +20%」；全為 0 時不傳 */
+    environmentBonus?: string;
 }
 
 /** 參謀常駐行的資料：執行者姓名、智力、場景戰法名稱 */
@@ -114,6 +116,7 @@ export function strategistHudLogLine(input: StrategistHudInput): string {
     const summary = buildStrategistHudSummary(input);
     const parts: string[] = [];
     if (summary.executingTactic) parts.push(summary.executingTactic);
+    if (input.environmentBonus) parts.push(`環境 ${input.environmentBonus}`);
     if (input.hazardsThisTurn.length > 0) parts.push(`危害 ${summary.themeHazard}`);
     if (input.interactiveObjects.length > 0) parts.push(summary.interactiveObjectStatus.split('\n').join('；'));
     if ((Object.keys(SALVAGE_LABEL) as (keyof SalvageTotals)[]).some((key) => input.salvage[key] > 0)) parts.push(`回收 ${summary.stageSalvageSummary}`);

@@ -8,17 +8,11 @@
  * Unity 對照：Presenter 把 Model 轉成 Label 的字串，View 只負責 SetText。
  */
 import { TerrainType } from '../../shared/CommonEnums';
-import { WEATHER_LABEL } from '../../shared/BattleEntryParams';
+import { TERRAIN_LABEL, WEATHER_LABEL } from '../../shared/BattleEntryParams';
 import type { BattlefieldRecon } from '../../core/systems/BattlefieldRecon';
 
-export const TERRAIN_LABEL: Readonly<Record<TerrainType, string>> = {
-    [TerrainType.Plain]: '平原',
-    [TerrainType.River]: '水域',
-    [TerrainType.Mountain]: '山地',
-    [TerrainType.Fortress]: '關隘',
-    [TerrainType.Desert]: '沙漠',
-    [TerrainType.Forest]: '林地',
-};
+/** 地形中文名已搬到 shared/BattleEntryParams（PROG-2-1893），這裡轉出以免改動既有引用 */
+export { TERRAIN_LABEL };
 
 export interface EnvScoutLines {
     terrainLine: string;
