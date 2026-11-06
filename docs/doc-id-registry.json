@@ -37,13 +37,13 @@
       "name": "registry-index",
       "title": "索引類（index）",
       "path": "docs/doc-id-registry-shards/registry-index.json",
-      "count": 78
+      "count": 79
     },
     {
       "name": "registry-task",
       "title": "任務卡類（task）",
       "path": "docs/doc-id-registry-shards/registry-task.json",
-      "count": 1964
+      "count": 2108
     },
     {
       "name": "registry-ai",

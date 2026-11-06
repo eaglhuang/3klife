@@ -1,10 +1,10 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-11-04
-> 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 9/9 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
+> 生成日期: 2026-11-06
+> 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 9/10 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
-## 任務卡類 (`doc_task`) — Part 7/7
+## 任務卡類 (`doc_task`) — Part 7/8
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
@@ -250,3 +250,48 @@
 | `doc_task_1971` | docs/agent-briefs/tasks/UI/UI-2-0159.md | UI-2-0159 主大廳背景沿用幕府大廳季節背景 |
 | `doc_task_1972` | docs/agent-briefs/tasks/UI/UI-2-0160.md | UI-2-0160 開場名將登場卡補立繪 |
 | `doc_task_1973` | docs/agent-briefs/tasks/UI/UI-2-0161.md | UI-2-0161 人物頁總覽補齊外觀 |
+| `doc_task_1974` | docs/agent-briefs/tasks/PROG/PROG-2-1764.md | PROG-2-1764 武將背包劇本句接進裝備與退役流程（武將背包系統 §G） |
+| `doc_task_1975` | docs/agent-briefs/tasks/PROG/PROG-2-1765.md | PROG-2-1765 戰績里程碑劇本句接進戰鬥日誌與結算（武將戰績系統 §G） |
+| `doc_task_1976` | docs/agent-briefs/tasks/PROG/PROG-2-1766.md | PROG-2-1766 戰場委任 AI 開關與部署劇本句（戰場部署系統 §G/§H） |
+| `doc_task_1977` | docs/agent-briefs/tasks/PROG/PROG-2-1767.md | PROG-2-1767 修開場日誌被清空：AI 風格句與難度提示看不到 |
+| `doc_task_1978` | docs/agent-briefs/tasks/PROG/PROG-2-1768.md | PROG-2-1768 虎符產出、升星與傳奇部隊劇本句（兵種（虎符）系統 §G） |
+| `doc_task_1979` | docs/agent-briefs/tasks/PROG/PROG-2-1769.md | PROG-2-1769 他國背叛、南蠻掠奪與國家滅亡事件（治理模式他國AI系統 §G） |
+| `doc_task_1980` | docs/agent-briefs/tasks/PROG/PROG-2-1770.md | PROG-2-1770 他國主動求盟與商隊提議，玩家可接受或拒絕（治理模式他國AI系統 §G） |
+| `doc_task_1981` | docs/agent-briefs/tasks/PROG/PROG-2-1771.md | PROG-2-1771 傭兵第三日、結義與離隊劇本句（傭兵系統 §G） |
+| `doc_task_1982` | docs/agent-briefs/tasks/PROG/PROG-2-1772.md | PROG-2-1772 兵種剋制戰鬥句（兵種（虎符）系統 §G） |
+| `doc_task_1983` | docs/agent-briefs/tasks/PROG/PROG-2-1773.md | PROG-2-1773 治理事件與季度治理報告（領地治理系統 §G） |
+| `doc_task_1984` | docs/agent-briefs/tasks/PROG/PROG-2-1774.md | PROG-2-1774 糧草告急、安胎藥與囚犯傳家寶提示句（經濟系統 §G、道具系統 §G） |
+| `doc_task_1985` | docs/agent-briefs/tasks/PROG/PROG-2-1775.md | PROG-2-1775 結緣出生的血統提示句（血統理論系統 §G、§H） |
+| `doc_task_1986` | docs/agent-briefs/tasks/PROG/PROG-2-1776.md | PROG-2-1776 轉蛋轉生語音句（轉蛋系統 §G） |
+| `doc_task_1987` | docs/agent-briefs/tasks/PROG/PROG-2-1777.md | PROG-2-1777 傭兵插畫第 4 階段信任句（留存系統 §G） |
+| `doc_task_1988` | docs/agent-briefs/tasks/PROG/PROG-2-1778.md | PROG-2-1778 世代傳承句（留存系統 §G） |
+| `doc_task_1989` | docs/agent-briefs/tasks/PROG/PROG-2-1779.md | PROG-2-1779 因子階段解鎖提示與官職劇本句（因子解鎖系統 §H、官職系統 §G） |
+| `doc_task_1990` | docs/agent-briefs/tasks/PROG/PROG-2-1780.md | PROG-2-1780 奧義劇本句（奧義系統 §G） |
+| `doc_task_1991` | docs/agent-briefs/tasks/PROG/PROG-2-1781.md | PROG-2-1781 戰法與奧義的戰鬥訊息進戰報 |
+| `doc_task_1992` | docs/agent-briefs/tasks/PROG/PROG-2-1782.md | PROG-2-1782 數值表現文案（數值系統 §G-1） |
+| `doc_task_1993` | docs/agent-briefs/tasks/PROG/PROG-2-1783.md | PROG-2-1783 因子覺醒文案（因子爆發系統 §G） |
+| `doc_task_1994` | docs/agent-briefs/tasks/PROG/PROG-2-1784.md | PROG-2-1784 舊資料中文類型的因子顏色納入階段與覺醒規則 |
+| `doc_task_1995` | docs/agent-briefs/tasks/PROG/PROG-2-1785.md | PROG-2-1785 教官窺探句（因子解鎖系統 §G） |
+| `doc_task_1996` | docs/agent-briefs/tasks/PROG/PROG-2-1786.md | PROG-2-1786 轉蛋女將與女俘虜文案（可結緣女性來源系統 §G） |
+| `doc_task_1997` | docs/agent-briefs/tasks/PROG/PROG-2-1787.md | PROG-2-1787 子嗣女兒及笄分流接線（可結緣女性來源系統 §E #5、§G、§H） |
+| `doc_task_1998` | docs/agent-briefs/tasks/PROG/PROG-2-1788.md | PROG-2-1788 民間尋訪入口（可結緣女性來源系統 §E #4、§F、§G、§H） |
+| `doc_task_1999` | docs/agent-briefs/tasks/PROG/PROG-2-1789.md | PROG-2-1789 女俘虜送禮好感（可結緣女性來源系統 §E #7、§G、§H） |
+| `doc_task_2000` | docs/agent-briefs/tasks/PROG/PROG-2-1790.md | PROG-2-1790 傭兵女將池 8 小時刷新與結義來源（可結緣女性來源系統 §E #2、§F、§H） |
+| `doc_task_2001` | docs/agent-briefs/tasks/PROG/PROG-2-1791.md | PROG-2-1791 史實名門加成（血統理論系統 §E #7、§G） |
+| `doc_task_2002` | docs/agent-briefs/tasks/PROG/PROG-2-1792.md | PROG-2-1792 G1 說親風聞評語（血統傳承 G1 規格書 §E #1、§F-2、§H） |
+| `doc_task_2003` | docs/agent-briefs/tasks/PROG/PROG-2-1793.md | PROG-2-1793 家學研習（血統傳承 G2 規格書 §E #4、§F-3、§G、§H） |
+| `doc_task_2004` | docs/agent-briefs/tasks/PROG/PROG-2-1794.md | PROG-2-1794 蓋棺論定與生平印記（血統傳承 G2 規格書 §E #7） |
+| `doc_task_2005` | docs/agent-briefs/tasks/PROG/PROG-2-1795.md | PROG-2-1795 門閥四階升格（血統傳承 G4 規格書 §E #1、§F-1） |
+| `doc_task_2006` | docs/agent-briefs/tasks/PROG/PROG-2-1796.md | PROG-2-1796 血脈疲勞與外婚復壯（血統傳承 G3 規格書 §E #3、§F-1） |
+| `doc_task_2007` | docs/agent-briefs/tasks/PROG/PROG-2-1797.md | PROG-2-1797 結緣畫面結果句壓到按鈕、共鳴標籤顯示英文 id |
+| `doc_task_2008` | docs/agent-briefs/tasks/PROG/PROG-2-1798.md | PROG-2-1798 退役流程接上榮退太傅文案 |
+| `doc_task_2009` | docs/agent-briefs/tasks/PROG/PROG-2-1799.md | PROG-2-1799 自創宗脈家傳金因子 |
+| `doc_task_2010` | docs/agent-briefs/tasks/PROG/PROG-2-1800.md | PROG-2-1800 郡望家風：族人修業效率 +10% |
+| `doc_task_2011` | docs/agent-briefs/tasks/PROG/PROG-2-1801.md | PROG-2-1801 遠祖冷壓縮：滑出 4 代窗外的祖先轉成摘要 |
+| `doc_task_2012` | docs/agent-briefs/tasks/PROG/PROG-2-1802.md | PROG-2-1802 14 席族譜：祖先照位置排，卡片顯示 EP 與主因子 |
+| `doc_task_2013` | docs/agent-briefs/tasks/PROG/PROG-2-1803.md | PROG-2-1803 年度月旦評：每年春季放榜，揭露榜上人物的顯性因子 |
+| `doc_task_2014` | docs/agent-briefs/tasks/PROG/PROG-2-1804.md | PROG-2-1804 郡望堂號：升到郡望世家時由開基祖定出堂號 |
+| `doc_task_2015` | docs/agent-briefs/tasks/PROG/PROG-2-1805.md | PROG-2-1805 族譜公開傳遞權重：三排標籤顯示每席 0.28／0.14／0.07 |
+| `doc_task_2016` | docs/agent-briefs/tasks/PROG/PROG-2-1806.md | PROG-2-1806 族譜祖先卡頭像：真實祖先顯示圓形頭像 |
+| `doc_task_2017` | docs/agent-briefs/tasks/PROG/PROG-2-1807.md | PROG-2-1807 未知頭像性別：後代也要用對的男女剪影 |
+| `doc_task_2018` | docs/agent-briefs/tasks/PROG/PROG-2-1808.md | PROG-2-1808 月旦評說親篩選：結緣畫面可只看榜上人物 |

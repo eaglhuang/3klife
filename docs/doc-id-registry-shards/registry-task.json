@@ -11782,5 +11782,869 @@
     "path": "docs/agent-briefs/tasks/UI/UI-2-0161.md",
     "title": "UI-2-0161 人物頁總覽補齊外觀",
     "category": "task"
+  },
+  {
+    "id": "doc_task_1974",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1764.md",
+    "title": "PROG-2-1764 武將背包劇本句接進裝備與退役流程（武將背包系統 §G）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_1975",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1765.md",
+    "title": "PROG-2-1765 戰績里程碑劇本句接進戰鬥日誌與結算（武將戰績系統 §G）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_1976",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1766.md",
+    "title": "PROG-2-1766 戰場委任 AI 開關與部署劇本句（戰場部署系統 §G/§H）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_1977",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1767.md",
+    "title": "PROG-2-1767 修開場日誌被清空：AI 風格句與難度提示看不到",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_1978",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1768.md",
+    "title": "PROG-2-1768 虎符產出、升星與傳奇部隊劇本句（兵種（虎符）系統 §G）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_1979",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1769.md",
+    "title": "PROG-2-1769 他國背叛、南蠻掠奪與國家滅亡事件（治理模式他國AI系統 §G）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_1980",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1770.md",
+    "title": "PROG-2-1770 他國主動求盟與商隊提議，玩家可接受或拒絕（治理模式他國AI系統 §G）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_1981",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1771.md",
+    "title": "PROG-2-1771 傭兵第三日、結義與離隊劇本句（傭兵系統 §G）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_1982",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1772.md",
+    "title": "PROG-2-1772 兵種剋制戰鬥句（兵種（虎符）系統 §G）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_1983",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1773.md",
+    "title": "PROG-2-1773 治理事件與季度治理報告（領地治理系統 §G）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_1984",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1774.md",
+    "title": "PROG-2-1774 糧草告急、安胎藥與囚犯傳家寶提示句（經濟系統 §G、道具系統 §G）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_1985",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1775.md",
+    "title": "PROG-2-1775 結緣出生的血統提示句（血統理論系統 §G、§H）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_1986",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1776.md",
+    "title": "PROG-2-1776 轉蛋轉生語音句（轉蛋系統 §G）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_1987",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1777.md",
+    "title": "PROG-2-1777 傭兵插畫第 4 階段信任句（留存系統 §G）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_1988",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1778.md",
+    "title": "PROG-2-1778 世代傳承句（留存系統 §G）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_1989",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1779.md",
+    "title": "PROG-2-1779 因子階段解鎖提示與官職劇本句（因子解鎖系統 §H、官職系統 §G）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_1990",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1780.md",
+    "title": "PROG-2-1780 奧義劇本句（奧義系統 §G）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_1991",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1781.md",
+    "title": "PROG-2-1781 戰法與奧義的戰鬥訊息進戰報",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_1992",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1782.md",
+    "title": "PROG-2-1782 數值表現文案（數值系統 §G-1）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_1993",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1783.md",
+    "title": "PROG-2-1783 因子覺醒文案（因子爆發系統 §G）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_1994",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1784.md",
+    "title": "PROG-2-1784 舊資料中文類型的因子顏色納入階段與覺醒規則",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_1995",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1785.md",
+    "title": "PROG-2-1785 教官窺探句（因子解鎖系統 §G）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_1996",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1786.md",
+    "title": "PROG-2-1786 轉蛋女將與女俘虜文案（可結緣女性來源系統 §G）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_1997",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1787.md",
+    "title": "PROG-2-1787 子嗣女兒及笄分流接線（可結緣女性來源系統 §E #5、§G、§H）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_1998",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1788.md",
+    "title": "PROG-2-1788 民間尋訪入口（可結緣女性來源系統 §E #4、§F、§G、§H）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_1999",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1789.md",
+    "title": "PROG-2-1789 女俘虜送禮好感（可結緣女性來源系統 §E #7、§G、§H）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2000",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1790.md",
+    "title": "PROG-2-1790 傭兵女將池 8 小時刷新與結義來源（可結緣女性來源系統 §E #2、§F、§H）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2001",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1791.md",
+    "title": "PROG-2-1791 史實名門加成（血統理論系統 §E #7、§G）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2002",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1792.md",
+    "title": "PROG-2-1792 G1 說親風聞評語（血統傳承 G1 規格書 §E #1、§F-2、§H）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2003",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1793.md",
+    "title": "PROG-2-1793 家學研習（血統傳承 G2 規格書 §E #4、§F-3、§G、§H）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2004",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1794.md",
+    "title": "PROG-2-1794 蓋棺論定與生平印記（血統傳承 G2 規格書 §E #7）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2005",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1795.md",
+    "title": "PROG-2-1795 門閥四階升格（血統傳承 G4 規格書 §E #1、§F-1）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2006",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1796.md",
+    "title": "PROG-2-1796 血脈疲勞與外婚復壯（血統傳承 G3 規格書 §E #3、§F-1）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2007",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1797.md",
+    "title": "PROG-2-1797 結緣畫面結果句壓到按鈕、共鳴標籤顯示英文 id",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2008",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1798.md",
+    "title": "PROG-2-1798 退役流程接上榮退太傅文案",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2009",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1799.md",
+    "title": "PROG-2-1799 自創宗脈家傳金因子",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2010",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1800.md",
+    "title": "PROG-2-1800 郡望家風：族人修業效率 +10%",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2011",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1801.md",
+    "title": "PROG-2-1801 遠祖冷壓縮：滑出 4 代窗外的祖先轉成摘要",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2012",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1802.md",
+    "title": "PROG-2-1802 14 席族譜：祖先照位置排，卡片顯示 EP 與主因子",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2013",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1803.md",
+    "title": "PROG-2-1803 年度月旦評：每年春季放榜，揭露榜上人物的顯性因子",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2014",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1804.md",
+    "title": "PROG-2-1804 郡望堂號：升到郡望世家時由開基祖定出堂號",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2015",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1805.md",
+    "title": "PROG-2-1805 族譜公開傳遞權重：三排標籤顯示每席 0.28／0.14／0.07",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2016",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1806.md",
+    "title": "PROG-2-1806 族譜祖先卡頭像：真實祖先顯示圓形頭像",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2017",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1807.md",
+    "title": "PROG-2-1807 未知頭像性別：後代也要用對的男女剪影",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2018",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1808.md",
+    "title": "PROG-2-1808 月旦評說親篩選：結緣畫面可只看榜上人物",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2019",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1809.md",
+    "title": "PROG-2-1809 鄉評公開同宗同姓：結緣畫面標出父母同姓",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2020",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1810.md",
+    "title": "PROG-2-1810 鄉評一鍵篩路線：結緣畫面依公開傾向篩人選",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2021",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1811.md",
+    "title": "PROG-2-1811 天下求親：門閥升到郡望後，名門每年上門提親",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2022",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1812.md",
+    "title": "PROG-2-1812 世交相性 K：與聯姻名門的最近 8 名子嗣滑動窗",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2023",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1813.md",
+    "title": "PROG-2-1813 世交合譜：結緣時鎖定雙親共有因子，K 折抵成本",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2024",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1814.md",
+    "title": "PROG-2-1814 世交太傅伴讀：名門出身的教官依 K 提高修業效率",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2025",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1815.md",
+    "title": "PROG-2-1815 隔代復興：跨過平庸父母，重現祖輩高星因子並保底 2 星",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2026",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1816.md",
+    "title": "PROG-2-1816 父系家傳：成婚時免費保住父親 1 項核心因子，與世交合譜共用一槽",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2027",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1817.md",
+    "title": "PROG-2-1817 母門擇承：母親或舅氏任主太傅時，開蒙首 3 回合承襲母系因子",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2028",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1818.md",
+    "title": "PROG-2-1818 門風連攜：雙親同持藍因子時，外婚子嗣該項有機會升到 4★",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2029",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1819.md",
+    "title": "PROG-2-1819 外戚血脈純化：命中外戚共祖時，該祖先的藍因子有機會升到 5★",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2030",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1820.md",
+    "title": "PROG-2-1820 太傅代管方針：自動培育可選尚武、經世、奇謀、均衡",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2031",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1821.md",
+    "title": "PROG-2-1821 開蒙禮與加冠禮：培育中兩次先祖遺風覺醒與適性突破",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2032",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1822.md",
+    "title": "PROG-2-1822 器局巔峰曲線：早慧、中堅、晚成與文武年齡分流",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2033",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1823.md",
+    "title": "PROG-2-1823 同姓不婚：同父系擋下，外戚表親放行",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2034",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1824.md",
+    "title": "PROG-2-1824 生平功業五錨點插值：雙親 EP 平滑加成子嗣先天五維",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2035",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1825.md",
+    "title": "PROG-2-1825 結緣畫面填上雙親各 14 席族譜",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2036",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1826.md",
+    "title": "PROG-2-1826 結緣畫面顯示藍因子星數與當胎上限",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2037",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1827.md",
+    "title": "PROG-2-1827 戰功累積 EP，勝仗與里程碑提高武將 Career_EP",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2038",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1828.md",
+    "title": "PROG-2-1828 結緣四句劇本：譜牒官預警、世交合譜大禮、合巹、醫官復壯",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2039",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1829.md",
+    "title": "PROG-2-1829 多樣性 D，雙親祖位重疊越多子嗣五維遺澤越低",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2040",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1830.md",
+    "title": "PROG-2-1830 百年世交，兩家累計成材多的名門上門時聘禮加厚並掛稱號",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2041",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1831.md",
+    "title": "PROG-2-1831 結緣畫面母方預設用女版問號剪影",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2042",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1832.md",
+    "title": "PROG-2-1832 譜牒密考，花 1 張求籤令看透這對夫妻的多樣性、共祖與可純化因子",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2043",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1833.md",
+    "title": "PROG-2-1833 隱藏血脈，花 2 張求籤令查出夫妻暗藏的家傳金因子與子嗣的隔代種子",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2044",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1834.md",
+    "title": "PROG-2-1834 單維細查，花 1 張求籤令查出指定人選某一維落在哪個細箱",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2045",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1835.md",
+    "title": "PROG-2-1835 提親前細查，名門求親彈窗可花求籤令查對象單維細箱",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2046",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1836.md",
+    "title": "PROG-2-1836 血脈清濁燈號，結緣畫面顯示清朗到枯竭與當胎、殘留風險",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2047",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1837.md",
+    "title": "PROG-2-1837 共祖紅框，結緣畫面族譜標出雙親共有的祖位",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2048",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1838.md",
+    "title": "PROG-2-1838 家族揭露階段，依里程碑升到 G2、G3、G4 並提示解鎖",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2049",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1839.md",
+    "title": "PROG-2-1839 結緣畫面依家族階段顯示族譜與近親風險",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2050",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1840.md",
+    "title": "PROG-2-1840 結緣畫面依家族階段顯示因子、世交與單維細查",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2051",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1841.md",
+    "title": "PROG-2-1841 結緣畫面的五維潛力條，依家族階段顯示 P、A 與歷代均值",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2052",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1842.md",
+    "title": "PROG-2-1842 提親彈窗依家族階段顯示細查與世交字樣",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2053",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1843.md",
+    "title": "PROG-2-1843 人物頁血脈分頁依家族階段顯示因子星數",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2054",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1844.md",
+    "title": "PROG-2-1844 人物頁族譜依家族階段展開",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2055",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1845.md",
+    "title": "PROG-2-1845 人物頁族譜在 G3 起以紅框標出外戚同源",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2056",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1846.md",
+    "title": "PROG-2-1846 專家全開視圖開關",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2057",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1847.md",
+    "title": "PROG-2-1847 G4 顯示家風效果與高門聘禮加成",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2058",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1848.md",
+    "title": "PROG-2-1848 滅亡國武將流入傭兵市場",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2059",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1849.md",
+    "title": "PROG-2-1849 玩家永久擁有的武將從他國名冊移除",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2060",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1850.md",
+    "title": "PROG-2-1850 部隊踏上擅長或極差的地形時飄字提示",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2061",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1851.md",
+    "title": "PROG-2-1851 戰場顯示智謀能量條與軍師摘要",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2062",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1852.md",
+    "title": "PROG-2-1852 落石擊破與火燒掠奪拿到資源時飄金色字",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2063",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1853.md",
+    "title": "PROG-2-1853 戰場武將名牌旁加精力能量環",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2064",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1854.md",
+    "title": "PROG-2-1854 主城倉庫清單可逐件選取並鎖定或解鎖",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2065",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1855.md",
+    "title": "PROG-2-1855 五歲宿命畫面加上「此子年滿五歲，請選擇其天命：」提示",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2066",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1856.md",
+    "title": "PROG-2-1856 晨報派遣板加「離線互動」區，列出最近兩則武將互動",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2067",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1857.md",
+    "title": "PROG-2-1857 戰後結算視窗加「關卡回收」摘要",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2068",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1858.md",
+    "title": "PROG-2-1858 人物頁總覽加「虎符戰記」次卡",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2069",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1859.md",
+    "title": "PROG-2-1859 官職晉升時在大廳播「晉升 官名」大字演出",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2070",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1860.md",
+    "title": "PROG-2-1860 核實日誌開場句實機顯示並更新兩處過時缺口紀錄",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2071",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1861.md",
+    "title": "PROG-2-1861 SSR／UR 虎符戰法施放時播半身英靈閃現",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2072",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1862.md",
+    "title": "PROG-2-1862 Boss 親衛隊召喚接進戰場敵方部署階段",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2073",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1863.md",
+    "title": "PROG-2-1863 水攻場景水門佔領回收",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2074",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1864.md",
+    "title": "PROG-2-1864 戰場主將快覽小窗接線",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2075",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1865.md",
+    "title": "PROG-2-1865 主將快覽小窗載入武將頭像",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2076",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1866.md",
+    "title": "PROG-2-1866 戰場適性台詞與 Toast 事件接上畫面",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2077",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1867.md",
+    "title": "PROG-2-1867 戰場控制列 x2 加速鈕生效",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2078",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1868.md",
+    "title": "PROG-2-1868 工兵攻城使堡壘受損時寫進戰報",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2079",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1869.md",
+    "title": "PROG-2-1869 單位中 Buff／Debuff 時頭頂飄狀態名",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2080",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1870.md",
+    "title": "PROG-2-1870 單位頭頂數值帶出 Buff 增減量",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2081",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1871.md",
+    "title": "PROG-2-1871 結算面板一律顯示本場擊殺與回合數",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2082",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1872.md",
+    "title": "PROG-2-1872 主將快覽小窗補「當前 Buff」列",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2083",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1873.md",
+    "title": "PROG-2-1873 單挑鈕條件不足時灰度加鎖頭",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2084",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1874.md",
+    "title": "PROG-2-1874 單位頭頂血條（受傷才顯示、我藍敵紅）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2085",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1875.md",
+    "title": "PROG-2-1875 小兵被暴擊時飄字用暴擊樣式",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2086",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1876.md",
+    "title": "PROG-2-1876 部署列不可部署格覆蓋紅色",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2087",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1877.md",
+    "title": "PROG-2-1877 結算面板依勝敗切換外觀",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2088",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1878.md",
+    "title": "PROG-2-1878 結算窗顯示時置頂",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2089",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1879.md",
+    "title": "PROG-2-1879 結算窗全螢幕深色遮罩生效",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2090",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1880.md",
+    "title": "PROG-2-1880 拖曳部署時懸停格綠色高亮",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2091",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1881.md",
+    "title": "PROG-2-1881 網路狀態指示器狀態錯亂修正與測試",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2092",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1882.md",
+    "title": "PROG-2-1882 武將列表排序缺值錯亂修正與測試",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2093",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1883.md",
+    "title": "PROG-2-1883 材質系統測試與預設服裝共用陣列修正",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2094",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1884.md",
+    "title": "PROG-2-1884 武將背包規格 §E 逐項核對與進度表更新",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2095",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1885.md",
+    "title": "PROG-2-1885 白馬虎符卡面與被動不一致修正、戰法系統 G 節核對",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2096",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1886.md",
+    "title": "PROG-2-1886 俘虜、留存、戰法場景規格逐項核對與進度表更新",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2097",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1887.md",
+    "title": "PROG-2-1887 名士常數與名士表一致性測試、名士預言規格逐項核對",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2098",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1888.md",
+    "title": "PROG-2-1888 戰場回合開始改用橫幅，敵方回合補上提示",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2099",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1889.md",
+    "title": "PROG-2-1889 戰場頂部陣地長條改顯示城寨血量",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2100",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1890.md",
+    "title": "PROG-2-1890 戰場設定面板（音樂、音效、撤退、繼續戰鬥）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2101",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1891.md",
+    "title": "PROG-2-1891 戰場敵方回合「敵軍行動中…」提示",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2102",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1892.md",
+    "title": "PROG-2-1892 戰場奧義大圓 SP 環色與滿格呼吸脈衝",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2103",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1893.md",
+    "title": "PROG-2-1893 戰場軍師摘要加環境加成百分點",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2104",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1894.md",
+    "title": "PROG-2-1894 Toast 停留 2 秒後上浮消失",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2105",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1895.md",
+    "title": "PROG-2-1895 奧義選擇小窗滑入動畫與呼吸週期 1.5 秒",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2106",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1896.md",
+    "title": "PROG-2-1896 糧草標籤千分位與 DP 命名殘留清理",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2107",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1897.md",
+    "title": "PROG-2-1897 血統樹簡化／專家切換按鈕上版面",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2108",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1898.md",
+    "title": "PROG-2-1898 武將名聲累積與將階晉升",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2109",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1899.md",
+    "title": "PROG-2-1899 血統樹預設簡化並在武將詳情血脈頁加切換鈕",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2110",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0163.md",
+    "title": "UI-2-0163 人物頁改用 character_v3 轉換版",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2111",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0164.md",
+    "title": "UI-2-0164 字型檔名改為全域唯一",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2112",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0165.md",
+    "title": "UI-2-0165 人物頁屬性分頁接真實武將資料",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2113",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0166.md",
+    "title": "UI-2-0166 人物頁命／技／寶／兵分頁接真實武將資料",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2114",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0167.md",
+    "title": "UI-2-0167 人物頁總覽收尾與入口接回",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2115",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0168.md",
+    "title": "UI-2-0168 人物頁命分頁左區血統樹",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2116",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0169.md",
+    "title": "UI-2-0169 修人物頁改版造成的單元測試回歸與總 TP 消失",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2117",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0170.md",
+    "title": "UI-2-0170 人物頁兵分頁虎符槽接真實資料與裝備操作",
+    "category": "task"
   }
 ]

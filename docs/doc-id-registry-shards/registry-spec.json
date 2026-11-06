@@ -1796,37 +1796,37 @@
   {
     "id": "doc_spec_0302",
     "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_CORE_學府培育總控與防SL確定性引擎規格書.md",
-    "title": "學府培育總控與防 SL 確定性引擎功能規格書",
+    "title": "學府培育總控與防 SL 確定性引擎功能規格書 (Academy Core & Anti-SL Engine)",
     "category": "spec"
   },
   {
     "id": "doc_spec_0303",
     "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_01_潁川書院_名士清談與策論牌組規格書.md",
-    "title": "潁川書院：名士清談與策論牌組功能規格書",
+    "title": "潁川書院：名士清談與策論牌組功能規格書 (Yingchuan Academy: Debate & Essay Deck)",
     "category": "spec"
   },
   {
     "id": "doc_spec_0304",
     "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_02_幽州演武_沙盤巡哨與煞氣突破規格書.md",
-    "title": "幽州演武：沙盤巡哨與煞氣突破功能規格書",
+    "title": "幽州演武：沙盤巡哨與煞氣突破功能規格書 (Youzhou Academy: Recon & Malice Surge)",
     "category": "spec"
   },
   {
     "id": "doc_spec_0305",
     "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_03_江東督府_水文天時與陣型火攻規格書.md",
-    "title": "江東督府：水文天時與陣型火攻功能規格書",
+    "title": "江東督府：水文天時與陣型火攻功能規格書 (Jiangdong Naval Academy: Hydrology & Tactics)",
     "category": "spec"
   },
   {
     "id": "doc_spec_0306",
     "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_04_洛陽太學_五經注疏與九品官聲規格書.md",
-    "title": "洛陽太學：五經注疏與九品官聲功能規格書",
+    "title": "洛陽太學：五經注疏與九品官聲功能規格書 (Luoyang Imperial Academy: Classics & Rank)",
     "category": "spec"
   },
   {
     "id": "doc_spec_0307",
     "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_05_隆中草廬_奇門生剋與機巧工造規格書.md",
-    "title": "隆中草廬：奇門生剋與機巧工造功能規格書",
+    "title": "隆中草廬：奇門生剋與機巧工造功能規格書 (Longzhong Academy: Eight Gates & Crafting)",
     "category": "spec"
   }
 ]

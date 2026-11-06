@@ -464,7 +464,13 @@
   {
     "id": "doc_index_1053",
     "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/README.md",
-    "title": "天下名門學府賽季劇本功能規格總目錄",
+    "title": "天下名門學府賽季劇本功能規格總目錄 (Academies Scenario System Index)",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1054",
+    "path": "docs/cross-ref/wbs-progress-inventory-matrix.md",
+    "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9)",
     "category": "index"
   }
 ]

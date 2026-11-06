@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — 其它類
 
-> 生成日期: 2026-11-04
+> 生成日期: 2026-11-06
 > 這是 `doc-id-registry.md` 的「其它類」分片索引。
 > 本分片已再切成 7 個 part；每份不超過 300 行。
 

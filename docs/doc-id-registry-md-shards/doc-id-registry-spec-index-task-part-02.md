@@ -1,7 +1,7 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-11-04
-> 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 2/9 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
+> 生成日期: 2026-11-06
+> 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 2/10 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
 ## 遊戲規格類 (`doc_spec`) — Part 2/2
@@ -20,12 +20,12 @@
 | `doc_spec_0299` | docs/遊戲規格文件/系統規格書/血統與家系-R5/nation_fall_save_v1/INDEPENDENT_REVIEW.md | Independent review |
 | `doc_spec_0300` | docs/遊戲規格文件/系統規格書/血統與家系-R5/nation_fall_save_v1/provenance/prior-birth-coverage/REPORT.md | 原出生 → 原20季增齡 → 開獎／宿命 → 育成入場 |
 | `doc_spec_0301` | docs/遊戲規格文件/系統規格書/血統與家系-R5/handoff_2983a19f_v1/REPORT.md | 3KLife 最新版血統與出生驗證 |
-| `doc_spec_0302` | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_CORE_學府培育總控與防SL確定性引擎規格書.md | 學府培育總控與防 SL 確定性引擎功能規格書 |
-| `doc_spec_0303` | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_01_潁川書院_名士清談與策論牌組規格書.md | 潁川書院：名士清談與策論牌組功能規格書 |
-| `doc_spec_0304` | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_02_幽州演武_沙盤巡哨與煞氣突破規格書.md | 幽州演武：沙盤巡哨與煞氣突破功能規格書 |
-| `doc_spec_0305` | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_03_江東督府_水文天時與陣型火攻規格書.md | 江東督府：水文天時與陣型火攻功能規格書 |
-| `doc_spec_0306` | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_04_洛陽太學_五經注疏與九品官聲規格書.md | 洛陽太學：五經注疏與九品官聲功能規格書 |
-| `doc_spec_0307` | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_05_隆中草廬_奇門生剋與機巧工造規格書.md | 隆中草廬：奇門生剋與機巧工造功能規格書 |
+| `doc_spec_0302` | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_CORE_學府培育總控與防SL確定性引擎規格書.md | 學府培育總控與防 SL 確定性引擎功能規格書 (Academy Core & Anti-SL Engine) |
+| `doc_spec_0303` | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_01_潁川書院_名士清談與策論牌組規格書.md | 潁川書院：名士清談與策論牌組功能規格書 (Yingchuan Academy: Debate & Essay Deck) |
+| `doc_spec_0304` | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_02_幽州演武_沙盤巡哨與煞氣突破規格書.md | 幽州演武：沙盤巡哨與煞氣突破功能規格書 (Youzhou Academy: Recon & Malice Surge) |
+| `doc_spec_0305` | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_03_江東督府_水文天時與陣型火攻規格書.md | 江東督府：水文天時與陣型火攻功能規格書 (Jiangdong Naval Academy: Hydrology & Tactics) |
+| `doc_spec_0306` | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_04_洛陽太學_五經注疏與九品官聲規格書.md | 洛陽太學：五經注疏與九品官聲功能規格書 (Luoyang Imperial Academy: Classics & Rank) |
+| `doc_spec_0307` | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_05_隆中草廬_奇門生剋與機巧工造規格書.md | 隆中草廬：奇門生剋與機巧工造功能規格書 (Longzhong Academy: Eight Gates & Crafting) |
 
 ## 索引類 (`doc_index`)
 
@@ -107,5 +107,6 @@
 | `doc_index_1049` | docs/cross-ref/code/core-systems-2.md | 代碼索引分片：Core Systems（下半） |
 | `doc_index_1050` | docs/cross-ref/code/tools.md | 代碼索引分片：工具、建置與 Agent Skills |
 | `doc_index_1051` | docs/cross-ref/code/ui-spec-json.md | 代碼索引分片：UI Spec JSON 畫面表 |
-| `doc_index_1052` | docs/遊戲規格文件/系統規格書/血統與家系-R5/handoff_2983a19f_v1/README.md | 3KLife 最新版血統與出生驗證交接包 (v1, Fixed 2983a19f) |
-| `doc_index_1053` | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/README.md | 天下名門學府賽季劇本功能規格總目錄 |
+| `doc_index_1052` | docs/遊戲規格文件/系統規格書/血統與家系-R5/handoff_2983a19f_v1/README.md | 3KLife 最新版血統與出生驗證交接包 (v1, Fixed `2983a19f`) |
+| `doc_index_1053` | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/README.md | 天下名門學府賽季劇本功能規格總目錄 (Academies Scenario System Index) |
+| `doc_index_1054` | docs/cross-ref/wbs-progress-inventory-matrix.md | 3KLife WBS 全量功能進度盤點矩陣 (v16.9) |

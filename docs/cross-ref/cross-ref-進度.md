@@ -8,6 +8,7 @@
 > Agent 請優先讀壓縮版分片（doc_id 索引），只在需要確認進度時才讀本檔。
 > 名稱查詢：`node tools_node/resolve-doc-id.js <doc_id>`
 > 自動更新：`node tools_node/rebuild-crossref.js --rebuild-progress`
+> 全量 WBS 矩陣：見 [wbs-progress-inventory-matrix.md (doc_index_1054)](file:///c:/Users/User/3KLife/docs/cross-ref/wbs-progress-inventory-matrix.md)（涵蓋 783 項工作包、工時、驗收條件與多版本核對歷程）
 
 ## D. 實作進度（規格書 × 代碼 × 測試）
 

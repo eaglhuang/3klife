@@ -1,10 +1,10 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-11-04
-> 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 5/9 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
+> 生成日期: 2026-11-06
+> 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 5/10 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
-## 任務卡類 (`doc_task`) — Part 3/7
+## 任務卡類 (`doc_task`) — Part 3/8
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|

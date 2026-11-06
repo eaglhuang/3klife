@@ -11,6 +11,7 @@
 | 代碼索引（Sec B） | `docs/cross-ref/cross-ref-code.md` | 27 行 / ~2 KB |
 | UI 規格索引（Sec C） | `docs/cross-ref/cross-ref-ui-spec.md` | 59 行 / ~6 KB |
 | 實作進度（Sec D） | `docs/cross-ref/cross-ref-進度.md` | 170 行 / ~15 KB |
+| 全量 WBS 矩陣（Sec D-WBS） | `docs/cross-ref/wbs-progress-inventory-matrix.md` | 930 行 / ~256 KB |
 
 ## 使用說明
 
