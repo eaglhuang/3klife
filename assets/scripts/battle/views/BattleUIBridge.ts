@@ -453,7 +453,7 @@ export class BattleUIBridge {
     unitId: string; damage: number; hp: number;
     attackerId: string | null; attackerLane: number | null; attackerDepth: number | null;
     defenderLane: number | null; defenderDepth: number | null; attackerFaction: Faction | null;
-    damageSource?: string;
+    damageSource?: string; isCrit?: boolean;
   }): void {
     const c = this.ctx;
     this._observeSpecialActionHit(data);
@@ -466,7 +466,8 @@ export class BattleUIBridge {
         : data.damageSource
           ? `（${data.damageSource}）`
           : '';
-      this.appendLog(`${side}${unit.name} 受到 ${data.damage} 傷害${suffix}，剩餘 HP ${Math.max(0, data.hp)}`);
+      const critLabel = data.isCrit ? '《暴擊》' : '';
+      this.appendLog(`${side}${unit.name} ${critLabel}受到 ${data.damage} 傷害${suffix}，剩餘 HP ${Math.max(0, data.hp)}`);
       this._enqueueCombatVisual(`unit-damage:${data.unitId}`, async () => {
         UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] unit-damage start unit=${data.unitId}`);
         const isRiverBoundaryDamage = typeof data.damageSource === 'string' && data.damageSource.startsWith('river-current:');
@@ -479,7 +480,7 @@ export class BattleUIBridge {
           ? (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] boundary-spin unit=${data.unitId}`), c.unitRenderer?.playBoundaryDamageSpinAsync(data.unitId) ?? Promise.resolve())
           : (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] defender-hit unit=${data.unitId}`), c.unitRenderer?.playHitAnimationAsync(data.unitId, data.attackerId) ?? Promise.resolve());
 
-        const valuePromise = (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] damage-float unit=${data.unitId} hp=${data.hp}`), c.unitRenderer?.playValueChangeAsync(unit, data.damage, 'damage') ?? Promise.resolve());
+        const valuePromise = (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] damage-float unit=${data.unitId} hp=${data.hp}`), c.unitRenderer?.playValueChangeAsync(unit, data.damage, 'damage', data.isCrit ?? false) ?? Promise.resolve());
 
         const hitLane = data.defenderLane ?? unit.lane;
         const hitDepth = data.defenderDepth ?? unit.depth;

@@ -45,6 +45,7 @@ import { BATTLE_VISUAL_TIMING } from "./BattlePresentationTiming";
 import { BuffGainEffectPool } from "./effects/BuffGainEffectPool";
 import { statBonusTone, statWithBonusText, type StatBonusTone } from "../shared/StatBonusText";
 import { unitHpBarState, type UnitHpBarState } from "../shared/UnitHpBar";
+import { unitValueFloatType } from "../shared/DamageFloatType";
 import { services } from "../../core/managers/ServiceLoader";
 import { FloatTextType } from "../../core/systems/FloatTextSystem";
 import { vitalityRingView, type VitalityRingView } from "../../core/systems/VitalityBarView";
@@ -635,7 +636,7 @@ export class UnitRenderer extends Component {
     await this.waitSeconds(BATTLE_VISUAL_TIMING.generalValueAwaitSec);
   }
 
-  public playValueChange(unit: TroopUnit | null, value: number, kind: "damage" | "heal"): void {
+  public playValueChange(unit: TroopUnit | null, value: number, kind: "damage" | "heal", isCrit = false): void {
     if (!unit || !this.uiRoot || !this.worldCamera || !this.canvasNode) return;
 
     let worldPos = this.getUnitWorldPosition(unit.lane, unit.depth);
@@ -657,7 +658,8 @@ export class UnitRenderer extends Component {
     // 延遲傷害數字跳出，配合攻擊方抵達的時刻。
     setTimeout(() => {
       const sign = kind === "heal" ? "+" : "-";
-      const dmgType: FloatTextType = kind === "heal" ? 'heal' : (unit.faction === Faction.Player ? 'dmg_player' : 'dmg_enemy');
+      // 主戰場UI規格書 §3.2：暴擊用橘金放大字（PROG-2-1875）
+      const dmgType: FloatTextType = unitValueFloatType(kind, unit.faction === Faction.Player, isCrit);
       this.spawnFloatText(`${sign}${value}`, dmgType, worldPos!);
 
       const currentView = this.unitViews.get(unit.id);
@@ -685,8 +687,8 @@ export class UnitRenderer extends Component {
     }, BATTLE_VISUAL_TIMING.valuePopupDelayMs);
   }
 
-  public async playValueChangeAsync(unit: TroopUnit | null, value: number, kind: "damage" | "heal"): Promise<void> {
-    this.playValueChange(unit, value, kind);
+  public async playValueChangeAsync(unit: TroopUnit | null, value: number, kind: "damage" | "heal", isCrit = false): Promise<void> {
+    this.playValueChange(unit, value, kind, isCrit);
     await this.waitSeconds(BATTLE_VISUAL_TIMING.unitValueAwaitSec);
   }
 

@@ -359,6 +359,7 @@ export class BattleCombatResolver {
       attackerDepth: attacker.depth,
       damageSource: damageAdjustment.damageSource,
       allowDamageLink: true,
+      isCrit,
     });
     this.resolveTallySplash(attacker, defender, damage, svc);
     this.resolveTallyIgnite(attacker, defender);
@@ -579,6 +580,8 @@ export class BattleCombatResolver {
       allowDamageLink: boolean;
       /** 已被代為承傷轉移過，不再轉移（PROG-2-1530） */
       skipGuard?: boolean;
+      /** 本擊為暴擊：只帶給直接受擊者的 UnitDamaged，連鎖分攤不算（PROG-2-1875） */
+      isCrit?: boolean;
     },
   ): void {
     const svc = services();
@@ -603,6 +606,7 @@ export class BattleCombatResolver {
       defenderDepth: unit.depth,
       attackerFaction,
       damageSource: options.damageSource,
+      isCrit: options.isCrit ?? false,
     });
 
     if (!options.allowDamageLink) {
