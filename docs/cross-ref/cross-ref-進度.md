@@ -56,7 +56,7 @@
 | **demo_playbook.md (doc_spec_0161)** | BattleScene.ts | ✅ | ✅ | ❌ | ❌ | ⬜ |
 | **demo_技術架構.md (doc_tech_0015)** | ServiceLoader.ts, PoolSystem.ts, ResourceManager.ts, EffectSystem.ts, AudioSystem.ts | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | **keep.md (doc_index_0011) §7** | MaterialUtils.ts, MaterialSystem.ts（補 MaterialSystem 測試；修 captureOutfit 預設值共用陣列、bindUnit 失敗留下空紀錄，PROG-2-1883） | ✅ | ✅ | ✅ | ✅ | ⬜ |
-| 俘虜處理系統.md (doc_spec_0021) | PrisonerOfWar.ts, PrisonerPopupController.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
+| 俘虜處理系統.md (doc_spec_0021) | PrisonerOfWar.ts, PrisonerPopupController.ts（§E 七項：POW 標記、四選一、勸降判定、招募消耗、監獄每季情報／資源、放走名聲與 5% 回投、監獄格數皆已實作並接 GameSession；K 節延伸分支「結義金蘭卡勸降加成、放走觸發傳道／頓悟、60 歲以上轉教官卡」規格未給數值未做，PROG-2-1886） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 傭兵系統（試用）.md (doc_spec_0029) | MercenaryIllustration.ts, MercenaryPanelView.ts, MercenaryNameplateRows.ts, MercenaryPanelController.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 可結緣女性來源系統.md (doc_spec_0003) | DaughterComingOfAge.ts, FemaleSource.ts, FemaleSourcePresenter.ts, BreedingPreviewPresenter.ts | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | 同名武將系統.md (doc_spec_0005) | SoulTransfer.ts, BloodlineInfusion.ts, BloodlineMerge.ts, ReviveRetrain.ts, SortieDeploy.ts, SoulFragmentLedger.ts, SoulInjectCandidates.ts | ✅ | ✅ | 🟡 | ✅ | ⬜ |
@@ -71,7 +71,7 @@
 | 武將壽命系統.md (doc_spec_0018) | GeneralAging.ts、GeneralGrowth.ts、LifeScriptCopy.ts、LongevityPill.ts、LegacyArena.ts、LegacyService.ts（§E 8 項逐項核對已實作，PROG-2-1719） | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | 武將戰績系統.md (doc_spec_0019) | BattleLeaderboardView.ts, BattleRecordStats.ts, BattleSnapshot.ts, HiddenFactorAwakening.ts, MilestoneRewards.ts, RetireReviewCopy.ts, SeasonReportPanel.ts, HiddenFactorText.ts, RetireReviewController.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 武將背包（倉庫）系統.md (doc_spec_0017) | GeneralBackpack.ts、GeneralBackpackView.ts（E-1／E-4 欄位與解鎖）、WarehouseCapacity.ts（E-2／E-5 50 格、+20、上限 200）、GearEquipFlow.ts、GearSlotPickController.ts（E-3 裝備／卸下；E-8 退役回倉與傳子嗣走 GameSession，GeneralEquipTransfer 已於 PROG-2-1361 退役）、WarehouseSort.ts、WarehousePanelController.ts（E-6 篩選排序）、GearLockDecompose.ts（E-9 鎖定／分解）、TreasureCodex.ts、ItemBagController.ts（E-10 寶物圖鑑）、EquipmentBonus.ts（E-7 品質加成純邏輯；裝備品項尚無品質與加成資料，未合入戰場數值）（§E 逐項核對，PROG-2-1884） | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
-| 留存系統.md (doc_spec_0025) | FarewellLetterInbox.ts, LoginStreak.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
+| 留存系統.md (doc_spec_0025) | FarewellLetterInbox.ts, LoginStreak.ts（§E 逐項：傭兵五階段插畫 MercenaryIllustration、名牌 MercenaryNameplateRows、告別信、退役轉教官卡、世代成就 LegacyAchievement、簽到 LoginStreak／SevenDayJourney、三國日報與插槽式敘事 DailyNewsEngine 皆已接；E-7 薪資／懲罰規格只有一句描述、無規則與數值未做，PROG-2-1886） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 結緣系統（配種）.md (doc_spec_0028) | BondingSetupController.ts（三欄重排、父母頭像，PROG-2-1130／1131） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 經濟系統.md (doc_spec_0032) | AccelerateCard.ts, DomesticTasks.ts, ItemShopPricing.ts, MilitaryReserve.ts, ResourceCap.ts, VitalityPill.ts, VitalityPillController.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 血統理論系統.md (doc_spec_0011) | BloodlineGraph.ts, AwakeningTitle.ts, BloodlineBeast.ts, BreedingSystem.ts, FactorInheritance.ts, GeneCatalyst.ts, HybridSkill.ts, VirtualAncestorGenerator.ts, WildGene.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
@@ -82,7 +82,7 @@
 | 運氣系統.md (doc_spec_0035) | FateBlessing.ts, LuckVisibility.ts（E-1 前期隱藏、E-4 Lv46 解鎖）, BreedingSystem.ts（E-2 天命波動）, LuckThresholds.ts（E-3 紫因子 LUK 上限）, LuckEventRate.ts（E-5 事件率，PROG-2-1349）, FactorAwakening.ts（E-6 覺醒速度） | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | 道具系統（付費免費道具）.md (doc_spec_0036) | FertilityBoost.ts, ItemBagView.ts, ItemEffectDispatcher.ts, ItemRefreshEffect.ts, PlayerInventory.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 領地治理系統.md (doc_spec_0037) | ChildMagistrate.ts, ChildOfficialPosts.ts, DomesticAutoGovernance.ts, DomesticTasks.ts, GovernanceAssignment.ts, GovernorHallView.ts, HereditaryKeep.ts, LifespanSave.ts, TerritoryUpgrade.ts, GovernorHallController.ts（§E 10 項逐項核對，PROG-2-1732） | ✅ | ✅ | 🟡 | ✅ | ⬜ |
-| **戰法場景規格書.md (doc_spec_0039)** | ActionSystem.ts, BattleTileEffectPhase.ts（森林埋伏陷阱只抓敵軍、踩中定身 1 回合後移除，PROG-2-1750）, SceneGambitTrigger.ts（B-3 六場景 INT／情報門檻表與查表判定，PROG-2-1749；尚無大廳軍事任務觸發入口）, SceneGambitAdapter.ts, TileStateRules.ts, StealthTile.ts, BattleTacticBehavior.ts, WisdomMeter.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
+| **戰法場景規格書.md (doc_spec_0039)** | ActionSystem.ts, BattleTileEffectPhase.ts（森林埋伏陷阱只抓敵軍、踩中定身 1 回合後移除，PROG-2-1750）, SceneGambitTrigger.ts（B-3 六場景 INT／情報門檻表與查表判定，PROG-2-1749；大廳軍事任務板 HallMissionBoard 與情報值 GameSession.intel〔監獄產出〕已存在，但軍事任務走派遣結算、資料沒有場景戰法欄位，尚未連到下一場戰鬥，待裁定，PROG-2-1886）, SceneGambitAdapter.ts, TileStateRules.ts, StealthTile.ts, BattleTacticBehavior.ts, WisdomMeter.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 熱更新與版本控制規格書.md (doc_tech_0012) | SaveVersion.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 
 #### D-1a. 邏輯欄重判紀錄 → 已拆至 [progress/d1a-rejudge.md](progress/d1a-rejudge.md)（PROG-2-1614）
