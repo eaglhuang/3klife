@@ -256,3 +256,4 @@
 | `doc_other_2695` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-07.md | Doc ID Registry Markdown Index — Spec / Index / Task |
 | `doc_other_2696` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-08.md | Doc ID Registry Markdown Index — Spec / Index / Task |
 | `doc_other_2697` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-09.md | Doc ID Registry Markdown Index — Spec / Index / Task |
+| `doc_other_2698` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-10.md | Doc ID Registry Markdown Index — Spec / Index / Task |

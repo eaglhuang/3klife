@@ -12646,5 +12646,11 @@
     "path": "docs/agent-briefs/tasks/UI/UI-2-0170.md",
     "title": "UI-2-0170 人物頁兵分頁虎符槽接真實資料與裝備操作",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2118",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1900.md",
+    "title": "PROG-2-1900 Agent1/2/3 舊卡清理（第一批 14 張）",
+    "category": "task"
   }
 ]

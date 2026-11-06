@@ -12,4 +12,4 @@
 | 4 | docs/doc-id-registry-md-shards/doc-id-registry-other-part-04.md | 298 |
 | 5 | docs/doc-id-registry-md-shards/doc-id-registry-other-part-05.md | 298 |
 | 6 | docs/doc-id-registry-md-shards/doc-id-registry-other-part-06.md | 298 |
-| 7 | docs/doc-id-registry-md-shards/doc-id-registry-other-part-07.md | 259 |
+| 7 | docs/doc-id-registry-md-shards/doc-id-registry-other-part-07.md | 260 |

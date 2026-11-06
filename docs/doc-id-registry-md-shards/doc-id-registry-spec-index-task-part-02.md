@@ -26,6 +26,7 @@
 | `doc_spec_0305` | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_03_江東督府_水文天時與陣型火攻規格書.md | 江東督府：水文天時與陣型火攻功能規格書 (Jiangdong Naval Academy: Hydrology & Tactics) |
 | `doc_spec_0306` | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_04_洛陽太學_五經注疏與九品官聲規格書.md | 洛陽太學：五經注疏與九品官聲功能規格書 (Luoyang Imperial Academy: Classics & Rank) |
 | `doc_spec_0307` | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_05_隆中草廬_奇門生剋與機巧工造規格書.md | 隆中草廬：奇門生剋與機巧工造功能規格書 (Longzhong Academy: Eight Gates & Crafting) |
+| `doc_spec_0308` | docs/遊戲規格文件/系統規格書/MVP核心循環貫通與遊玩動線功能規格書.md | MVP 核心循環貫通與遊玩動線功能規格書 (Playable Core Loop Vertical Slice) |
 
 ## 索引類 (`doc_index`)
 

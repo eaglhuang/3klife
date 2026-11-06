@@ -107,3 +107,4 @@
 | `doc_task_2115` | docs/agent-briefs/tasks/UI/UI-2-0168.md | UI-2-0168 人物頁命分頁左區血統樹 |
 | `doc_task_2116` | docs/agent-briefs/tasks/UI/UI-2-0169.md | UI-2-0169 修人物頁改版造成的單元測試回歸與總 TP 消失 |
 | `doc_task_2117` | docs/agent-briefs/tasks/UI/UI-2-0170.md | UI-2-0170 人物頁兵分頁虎符槽接真實資料與裝備操作 |
+| `doc_task_2118` | docs/agent-briefs/tasks/PROG/PROG-2-1900.md | PROG-2-1900 Agent1/2/3 舊卡清理（第一批 14 張） |

@@ -1828,5 +1828,11 @@
     "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_05_隆中草廬_奇門生剋與機巧工造規格書.md",
     "title": "隆中草廬：奇門生剋與機巧工造功能規格書 (Longzhong Academy: Eight Gates & Crafting)",
     "category": "spec"
+  },
+  {
+    "id": "doc_spec_0308",
+    "path": "docs/遊戲規格文件/系統規格書/MVP核心循環貫通與遊玩動線功能規格書.md",
+    "title": "MVP 核心循環貫通與遊玩動線功能規格書 (Playable Core Loop Vertical Slice)",
+    "category": "spec"
   }
 ]
