@@ -11,6 +11,7 @@
 import type { GeneralConfig } from '../models/GeneralUnit';
 import { calculatePrestigeGain, clanPrestigeTierOf, type PrestigeCareer } from './GenerationalLegacy';
 import { ACADEMY_ENERGY_MAX, type AcademyStateSnapshot } from './nurture/AcademyTypes';
+import { resolveFactorColor, toGeneConfigs, type FactorDictionary } from './FactorInheritance';
 
 export enum MvpPhase {
     LOBBY_SETUP = 'LOBBY_SETUP',
@@ -142,4 +143,21 @@ export function applyClanPrestigeToAcademy(state: Readonly<AcademyStateSnapshot>
     }
     if (b.extraMentorSlot) next.mentorSlots = CLAN_PRESTIGE_BASE_MENTOR_SLOTS + 1;
     return next;
+}
+
+/** 紫色因子保底給的星級（PM 暫定 1 星） */
+export const CLAN_PRESTIGE_PURPLE_FACTOR_LEVEL = 1;
+
+/**
+ * 祠堂 Lv.4 起子嗣 100% 帶 1 個紫色稀有因子（doc_spec_0310 §3，PROG-2-1916）。
+ * 已有紫色因子就不動；否則從字典非隱藏的紫色因子中依亂數挑一個附上。字典沒有紫色因子時原樣回傳。不改輸入。
+ */
+export function ensurePurpleFactor(child: Readonly<GeneralConfig>, dictionary: FactorDictionary | undefined, random: () => number): GeneralConfig {
+    const genes = child.genes ?? [];
+    if (genes.some((g) => g.id && resolveFactorColor(g.id, dictionary, g) === 'purple')) return { ...child } as GeneralConfig;
+    const pool = dictionary ? Array.from(dictionary.values()).filter((d) => !d.isHidden && resolveFactorColor(d.id, dictionary) === 'purple').map((d) => d.id).sort() : [];
+    if (pool.length === 0) return { ...child } as GeneralConfig;
+    const id = pool[Math.min(pool.length - 1, Math.floor(random() * pool.length))];
+    const [gene] = toGeneConfigs([{ id, color: 'purple', level: CLAN_PRESTIGE_PURPLE_FACTOR_LEVEL, generation: 1, sourceUids: ['clan-shrine'] }], dictionary);
+    return { ...child, genes: [...genes, gene] } as GeneralConfig;
 }

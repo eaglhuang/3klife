@@ -41,7 +41,7 @@ import { affinityResolverOf, conceptionModBetween, type HistoricalPairTable } fr
 import { generateVirtualAncestry, toRegistryEntries } from '../systems/VirtualAncestorGenerator';
 import type { RandomSource } from '../systems/GeneralAging';
 import { relationEventsForBreeding, RelationEventLedger } from '../systems/RelationEvents';
-import { applyChildBirthBenefit } from '../systems/MvpLoopController';
+import { applyChildBirthBenefit, clanPrestigeBenefitOf, ensurePurpleFactor } from '../systems/MvpLoopController';
 
 /** 雙親各上溯 3 代，合計 28 祖位 */
 const PROBE_ANCESTOR_GENERATIONS = 3;
@@ -288,6 +288,10 @@ export class BreedingService {
         if (result.child) {
             const tier = this._options.clanPrestigeTier?.() ?? 1;
             if (tier > 1) result.child = applyChildBirthBenefit(result.child, tier) as typeof result.child;
+            if (clanPrestigeBenefitOf(tier).guaranteedPurpleFactor) {
+                const dictionary = this._options.getDictionary?.() ?? this._options.dictionary;
+                result.child = ensurePurpleFactor(result.child, dictionary, this._options.random ?? Math.random) as typeof result.child;
+            }
             next.push(normalizeRosterRoles([result.child])[0]);
             this._graph.registerChild(toPersonRecord(result.child), father.id, mother.id);
         }
