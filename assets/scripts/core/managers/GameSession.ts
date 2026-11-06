@@ -85,7 +85,7 @@ import { settleTrialRollover, type DepartureEvent } from '../systems/MercenaryDe
 import { appendFarewellLetter, createFarewellLetter, FarewellLetter, markFarewellLetterRead } from '../systems/FarewellLetterInbox';
 import { EMPTY_LOGIN_STREAK, LoginStreakState, loginDayOf, recordLogin } from '../systems/LoginStreak';
 import { dailySubsidyOf, type SubsidyResourceKey } from '../systems/DailySubsidy';
-import { activateMonthlyCard, claimMonthlyCardDaily, isMonthlyCardExpiring, monthlyCardDaysLeft, normalizeMonthlyCard, type MonthlyCardState } from '../systems/MonthlyCard';
+import { activateMonthlyCard, claimMonthlyCardDaily, isMonthlyCardExpiring, monthlyCardDaysLeft, monthlyCardVitalityMultiplier, normalizeMonthlyCard, type MonthlyCardState } from '../systems/MonthlyCard';
 import {
     appendPlayerLog, EMPTY_DAILY_NEWS, markDailyNewsRead, normalizeDailyNewsState, normalizePlayerLogs, refreshDailyNews, revengeRecoverAmount,
     type DailyNewsState, type PlayerLogEntry, type PlayerLogType,
@@ -3914,7 +3914,8 @@ export class GameSession {
         return governanceReportLine(gains);
     }
 
-    public async advanceSeason(): Promise<SeasonAdvancedPayload> {
+    /** epochMs 用來判斷月卡是否有效（月卡期間精力回復 ×1.2，VIT-08）；預設現在時間 */
+    public async advanceSeason(epochMs: number = Date.now()): Promise<SeasonAdvancedPayload> {
         const advance = this._clock.advanceSeason();
         this._tickTravel();
         // 動態關係每季衰退（KIN-10）：親密度歸 0 只是加成歸零，關係保留
@@ -3930,7 +3931,8 @@ export class GameSession {
             season: advance.current.totalSeasonsElapsed,
             dictionary: this._factorDictionary,
         });
-        const recovered = recoverVitalityOneSeason(unveil.roster, advance.current.totalSeasonsElapsed - 1);
+        const recovered = recoverVitalityOneSeason(unveil.roster, advance.current.totalSeasonsElapsed - 1,
+            monthlyCardVitalityMultiplier(this._monthlyCard, epochMs));
         let roster: GeneralConfig[] = advanceBreedingSeason(holdPregnancyVigor(unveil.roster, recovered)).generals;
         let lifecycle: LifecycleSettlement | undefined;
         // 生平印記要在季結歸檔前寫入，歸檔快照才帶得到（G2 §E #7）
