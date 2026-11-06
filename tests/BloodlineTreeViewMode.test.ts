@@ -7,6 +7,8 @@ import { assert, TestSuite } from './TestRunner';
 import {
     BLOODLINE_TREE_SPEC_DEFAULT_MODE,
     BLOODLINE_TREE_TOGGLE_LABEL,
+    bloodlineTreeRowVisible,
+    bloodlineTreeToggleAvailable,
     isPedigreeSlotVisible,
     toggleBloodlineTreeMode,
     visiblePedigreeSlots,
@@ -34,6 +36,19 @@ export function createBloodlineTreeViewModeSuite(): TestSuite {
         assert.equals('simple', toggleBloodlineTreeMode('expert'));
         assert.equals('展開全圖', BLOODLINE_TREE_TOGGLE_LABEL.simple);
         assert.equals('收合', BLOODLINE_TREE_TOGGLE_LABEL.expert);
+    });
+
+    suite.test('顯示列＝模式 × 家族階段（PROG-2-1897）', () => {
+        assert.equals(false, bloodlineTreeRowVisible(3, 'simple', 4));
+        assert.equals(true, bloodlineTreeRowVisible(3, 'expert', 4));
+        assert.equals(false, bloodlineTreeRowVisible(2, 'expert', 1));
+        assert.equals(true, bloodlineTreeRowVisible(1, 'simple', 1));
+    });
+
+    suite.test('切換鈕只在曾祖父母已開放的階段出現（PROG-2-1897）', () => {
+        assert.equals(false, bloodlineTreeToggleAvailable(1));
+        assert.equals(true, bloodlineTreeToggleAvailable(2));
+        assert.equals(true, bloodlineTreeToggleAvailable(4));
     });
 
     return suite;
