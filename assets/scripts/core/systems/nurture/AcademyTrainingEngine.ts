@@ -5,7 +5,8 @@
  * - resolveAcademyAction(快照, 動作) → 新快照；輸入快照不會被改動，同一輸入永遠得到同一輸出。
  * - 所有隨機都從快照內的種子鏈取樣，結果寫回 prngSeedHex / stepIndex。
  * - 打斷點：第 12、24 回合開始前（期中考評、弱冠禮）、彩圈倍率 ≥180% 的重大共鳴、第 36 回合後結業。
- *   打斷未處理前只接受 RESOLVE_INTERRUPT；AUTO 模式由引擎代選。
+ *   打斷未處理前只接受 RESOLVE_INTERRUPT；學府 Gimmick 可另以 blockingInteraction 擋住訓練（PROG-2-1903）。
+ *   AUTO 模式兩者都由引擎代選。
  * - 訓練基礎值、精力消耗等規格未給數字，先放在 ACADEMY_TUNING（暫定，PROG-2-1902）。
  *
  * Unity 對照：像一個純 C# 的 StateMachine.Step(state, input)，MonoBehaviour 只負責顯示。
@@ -136,8 +137,14 @@ export function resolveAcademyAction(
     const rng = new AcademyRng(state.prngSeedHex, state.stepIndex);
     applyAction(state, action, rng, gimmick);
     if (state.controlMode === AcademyControlMode.AUTO) {
-        while (state.pendingInterrupt && !state.graduated) {
-            applyAction(state, autoResolveChoice(state), rng, gimmick);
+        for (let guard = 0; guard < 16 && !state.graduated; guard++) {
+            if (state.pendingInterrupt) {
+                applyAction(state, autoResolveChoice(state), rng, gimmick);
+            } else if (gimmick?.blockingInteraction?.(state) && gimmick.autoInteraction) {
+                applyAction(state, { actionType: 'GIMMICK_INTERACT', selectedOptionId: gimmick.autoInteraction(state) }, rng, gimmick);
+            } else {
+                break;
+            }
         }
     }
     state.prngSeedHex = rng.seedHex;
@@ -158,6 +165,10 @@ function applyAction(state: AcademyStateSnapshot, action: AcademyActionPayload, 
         if (!gimmick?.onInteract) throw new AcademyActionError('此學府沒有專屬互動');
         gimmick.onInteract(state, action.selectedOptionId, rng);
         return;
+    }
+    const blocking = gimmick?.blockingInteraction?.(state);
+    if (blocking) {
+        throw new AcademyActionError(`須先完成學府專屬互動 ${blocking}`);
     }
     gimmick?.onTurnStart(state, rng);
     let resonance = false;
@@ -260,6 +271,7 @@ function resolveInterrupt(state: AcademyStateSnapshot, optionId: string | undefi
         if (state.learnedTactics.length < ACADEMY_TACTIC_SLOTS) state.learnedTactics.push(optionId);
         state.chronicles.push({ turn: state.currentTurn, title: '弱冠加冠禮', description: `領悟 ${optionId}`, highlightScore: 2 });
     } else if (kind === 'GRADUATION') {
+        gimmick?.onGraduate?.(state);
         state.graduated = true;
         state.chronicles.push({ turn: state.currentTurn, title: '大考結業', description: '修業圓滿', highlightScore: 2 });
     }
