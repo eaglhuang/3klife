@@ -37,6 +37,7 @@ import { emitDeployDragDebug, shouldLogDeployDragMove } from './DeployDragDebug'
 import { tallyDeployRefOf, type TallyDeployRef } from '../../core/config/TallyCardCatalog';
 import { UCUFLogger, LogLevel } from '../../core/utils/UCUFLogger';
 import { TurnBannerComposite } from './TurnBannerComposite';
+import { EnemyThinkingComposite } from './EnemyThinkingComposite';
 
 const { ccclass } = _decorator;
 
@@ -71,6 +72,7 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
   private hintLabel: Label | null = null;
   private toast: ToastMessageLike | null = null;
   private turnBanner: TurnBannerComposite | null = null;
+  private enemyThinking: EnemyThinkingComposite | null = null;
 
   private _dragState: DeployDragState = DeployDragState.Idle;
   private ghostNode: Node | null = null;
@@ -132,19 +134,35 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
   /** 回合開始橫幅：掛在部署面板的父節點（戰場 UI 根）上，橫貫整個畫面（PROG-2-1888） */
   public showTurnBanner(text: string, color: Color, durationSec: number): void {
     if (!this.turnBanner || !this.turnBanner.isValid) {
-      const host = this.node.parent ?? this.node;
-      const bannerNode = host.getChildByName('TurnBanner') ?? new Node('TurnBanner');
-      bannerNode.layer = this.node.layer;
-      if (!bannerNode.parent) bannerNode.parent = host;
-      const ut = bannerNode.getComponent(UITransform) ?? bannerNode.addComponent(UITransform);
-      ut.setContentSize(1920, 1080);
-      const widget = bannerNode.getComponent(Widget) ?? bannerNode.addComponent(Widget);
-      widget.isAlignTop = widget.isAlignBottom = widget.isAlignLeft = widget.isAlignRight = true;
-      widget.top = widget.bottom = widget.left = widget.right = 0;
+      const bannerNode = this.ensureFullScreenOverlayNode('TurnBanner');
       this.turnBanner = bannerNode.getComponent(TurnBannerComposite) ?? bannerNode.addComponent(TurnBannerComposite);
     }
     this.turnBanner.node.setSiblingIndex(this.turnBanner.node.parent!.children.length - 1);
     void this.turnBanner.show(text, color, durationSec);
+  }
+
+  /** 敵方回合「敵軍行動中…」細帶：與回合橫幅同樣掛在戰場 UI 根上（PROG-2-1891） */
+  public setEnemyThinkingVisible(visible: boolean): void {
+    if (!this.enemyThinking || !this.enemyThinking.isValid) {
+      if (!visible) return;
+      const thinkingNode = this.ensureFullScreenOverlayNode('EnemyThinking');
+      this.enemyThinking = thinkingNode.getComponent(EnemyThinkingComposite) ?? thinkingNode.addComponent(EnemyThinkingComposite);
+    }
+    void this.enemyThinking.setVisible(visible);
+  }
+
+  /** 在部署面板的父節點（戰場 UI 根）上取得或建立一個全畫面疊加層節點 */
+  private ensureFullScreenOverlayNode(name: string): Node {
+    const host = this.node.parent ?? this.node;
+    const overlayNode = host.getChildByName(name) ?? new Node(name);
+    overlayNode.layer = this.node.layer;
+    if (!overlayNode.parent) overlayNode.parent = host;
+    const ut = overlayNode.getComponent(UITransform) ?? overlayNode.addComponent(UITransform);
+    ut.setContentSize(1920, 1080);
+    const widget = overlayNode.getComponent(Widget) ?? overlayNode.addComponent(Widget);
+    widget.isAlignTop = widget.isAlignBottom = widget.isAlignLeft = widget.isAlignRight = true;
+    widget.top = widget.bottom = widget.left = widget.right = 0;
+    return overlayNode;
   }
 
   public async mount(): Promise<void> {

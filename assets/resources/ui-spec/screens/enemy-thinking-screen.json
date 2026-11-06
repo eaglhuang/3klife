@@ -1,0 +1,9 @@
+{
+  "id": "enemy-thinking-screen",
+  "version": 1,
+  "uiId": "EnemyThinking",
+  "layer": "System",
+  "bundle": "battle_ui",
+  "layout": "enemy-thinking-main",
+  "skin": "enemy-thinking-default"
+}

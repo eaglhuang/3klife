@@ -314,14 +314,13 @@ export class BattleUIBridge {
     this.ctx.battleLogPanel?.append(text);
   }
 
+  /** 敵方回合「敵軍行動中…」提示（doc_ui_0001 §4.5，PROG-2-1891）：從敵方回合開始顯示到我方回合開始 */
   public showEnemyThinkingPanel(): void {
-    const acPanel = (this.ctx.battleScenePanel?.actionCommandComposite ?? this.ctx.battleScenePanel?.actionCommandPanel) as any;
-    acPanel?.showEnemyThinking?.();
+    this.ctx.deployRuntime?.setEnemyThinkingVisible?.(true);
   }
 
   public hideEnemyThinkingPanel(): void {
-    const acPanel = (this.ctx.battleScenePanel?.actionCommandComposite ?? this.ctx.battleScenePanel?.actionCommandPanel) as any;
-    acPanel?.hideEnemyThinking?.();
+    this.ctx.deployRuntime?.setEnemyThinkingVisible?.(false);
   }
 
   private _scheduleBattleAudio(cue: BattleAudioCue, delaySec = 0): Promise<void> {
@@ -813,6 +812,7 @@ export class BattleUIBridge {
       playBattleFlowEffectAtBoardCenter(services().effect, c.boardRenderer, effectKey, data.result === 'draw' ? 1.6 : 1.8);
     }
     this.appendLog(`戰鬥結束：${data.result}`);
+    this.hideEnemyThinkingPanel();
     const details = this._settleRosterBattle(data.result as BattleResult);
     c.resultPopup?.showResult(data.result as any, details.length > 0 ? details.join('\n') : undefined, c.pg?.id);
     c.boardRenderer?.clearDeployHint();
