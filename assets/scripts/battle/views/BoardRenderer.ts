@@ -5,7 +5,7 @@ import { BattleTactic, Faction, GAME_CONFIG } from '../../core/config/Constants'
 import { BattleState } from '../models/BattleState';
 
 import { FLOOD_ATTACK_PUSH_DEPTH_DELTA, FLOOD_ATTACK_PUSH_LANE_DELTA } from '../shared/BattleTacticBehavior';
-import { deployCellHint } from "../shared/DeployCellHint";
+import { deployCellHint, deployCellStyle } from "../shared/DeployCellHint";
 import { resolveBattleSceneDisplayRule, type BattleSceneBaseStyle } from '../shared/BattleSceneMode';
 const { ccclass, property } = _decorator;
 
@@ -97,6 +97,9 @@ export class BoardRenderer extends Component {
     private enemyDeployHintBorderMidMaterial: Material | null = null;
     private enemyDeployHintBorderInnerMaterial: Material | null = null;
     private skillPreviewFillMaterial: Material | null = null;
+    private deployHoverFillMaterial: Material | null = null;
+    /** 拖曳部署時手指所在格（`lane,depth`），PROG-2-1880 */
+    private deployHoverKey: string | null = null;
     private readonly skillPreviewKeys = new Set<string>();
     private sceneEffectFireFillMaterial: Material | null = null;
     private sceneEffectWaterFillMaterial: Material | null = null;
@@ -755,6 +758,13 @@ export class BoardRenderer extends Component {
         this.enemyDeployHintBorderMidMaterial = this.enemyDeployHintFillMaterial;
         this.enemyDeployHintBorderInnerMaterial = this.enemyDeployHintFillMaterial;
 
+        this.deployHoverFillMaterial = this.createCellMaterial(
+            new Color(140, 246, 170, 64),
+            new Color(190, 255, 205, 235),
+            new Color(232, 255, 238, 170),
+            new Vec4(0.11, 0.18, 0.22, 0.7)
+        );
+
         this.skillPreviewFillMaterial = this.createCellMaterial(
             new Color(245, 212, 98, 36),
             new Color(255, 225, 135, 140),
@@ -863,6 +873,16 @@ export class BoardRenderer extends Component {
 
     public clearDeployHint(): void {
         this.deployHintFaction = null;
+        if (this.lastRenderedState) {
+            this.renderState(this.lastRenderedState);
+        }
+    }
+
+    /** 拖曳部署懸停格；傳 null 清除。只在格子變動時重繪 */
+    public setDeployHoverCell(cell: { lane: number; depth: number } | null): void {
+        const key = cell ? `${cell.lane},${cell.depth}` : null;
+        if (key === this.deployHoverKey) return;
+        this.deployHoverKey = key;
         if (this.lastRenderedState) {
             this.renderState(this.lastRenderedState);
         }
@@ -1268,7 +1288,10 @@ export class BoardRenderer extends Component {
 
                 const cellNode = this.cellNodes.get(`${lane},${deployDepth}`);
                 if (!cellNode) continue;
-                this.applyCellOverlayStyle(cellNode, hint === 'open' ? this.playerDeployHintFillMaterial : this.enemyDeployHintFillMaterial);
+                const style = deployCellStyle(hint, this.deployHoverKey === `${lane},${deployDepth}`);
+                this.applyCellOverlayStyle(cellNode, style === 'selected'
+                    ? this.deployHoverFillMaterial
+                    : style === 'open' ? this.playerDeployHintFillMaterial : this.enemyDeployHintFillMaterial);
             }
         }
 

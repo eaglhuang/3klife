@@ -72,6 +72,8 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
   private _dragState: DeployDragState = DeployDragState.Idle;
   private ghostNode: Node | null = null;
   private dragDropCallback: ((screenX: number, screenY: number) => void) | null = null;
+  /** 拖曳中回報懸停位置，讓棋盤高亮手指所在格（主戰場UI規格書 §3.3，PROG-2-1880） */
+  private dragHoverCallback: ((point: { x: number; y: number } | null) => void) | null = null;
   private _cardSelectedUnsub: (() => void) | null = null;
   private _cardDragUnsub: (() => void) | null = null;
   private _lastDragMoveLogAt = 0;
@@ -87,6 +89,10 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
 
   public registerDragDropCallback(cb: (screenX: number, screenY: number) => void): void {
     this.dragDropCallback = cb;
+  }
+
+  public registerDragHoverCallback(cb: (point: { x: number; y: number } | null) => void): void {
+    this.dragHoverCallback = cb;
   }
 
   public updateDp(dp: number): void {
@@ -268,11 +274,14 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
     this._dragState = DeployDragState.Idle;
     this.ghostNode?.destroy();
     this.ghostNode = null;
+    this.dragHoverCallback?.(null);
   }
 
   private onGlobalTouchMove(ev: EventTouch): void {
     if (this._dragState === DeployDragState.Dragging) {
       this.moveGhostToTouch(ev);
+      const hover = ev.getLocation();
+      this.dragHoverCallback?.({ x: hover.x, y: hover.y });
       if (UCUFLogger.getLevel() <= LogLevel.DEBUG) {
         const now = Date.now();
         if (shouldLogDeployDragMove(now, this._lastDragMoveLogAt, 120)) {

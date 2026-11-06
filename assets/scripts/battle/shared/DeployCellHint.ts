@@ -23,3 +23,8 @@ export function deployCellHint(source: DeployCellSource, lane: number, depth = 0
     if (cell.occupantId) return 'blocked';
     return tileStateRuleOf(source.getTileEffect(lane, depth)).blocksOnEnter ? 'blocked' : 'open';
 }
+
+/** 拖曳部署時懸停的可部署格改用選中高亮；不可部署格懸停仍維持紅色（§3.3「選中」，PROG-2-1880） */
+export function deployCellStyle(hint: DeployCellHint, hovered: boolean): DeployCellHint | 'selected' {
+    return hint === 'open' && hovered ? 'selected' : hint;
+}
