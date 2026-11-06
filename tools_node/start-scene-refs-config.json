@@ -1,0 +1,14 @@
+{
+  "$comment": "HOT-09 啟動場景靜態參照審計：forbidden 為資產路徑子字串（以 / 分隔），命中即失敗（PROG-2-1924）",
+  "builderFiles": ["profiles/v2/packages/builder.json", "profiles/v2/packages/web-desktop.json"],
+  "$fallbackNote": "profiles/ 未進版控（CI、工作樹沒有），讀不到 startScene 時用這個",
+  "fallbackStartScene": "assets/scenes/LoginScene.scene",
+  "extraScenes": [],
+  "forbidden": [
+    "assets/scenes/BattleScene.scene",
+    "/sprites/battle/",
+    "/battle_assets/",
+    "/spine/",
+    "/vfx/"
+  ]
+}
