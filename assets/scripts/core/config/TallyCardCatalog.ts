@@ -235,11 +235,11 @@ export function buildTallyCardCatalog(): Map<string, TallyCardData> {
       traits: ['騎射', '機動'],
       traitDetails: [
         { label: '騎射', detail: '騎兵的機動配上弓兵的射程，可在遠處持續施壓。' },
-        { label: '機動', detail: '保留騎兵的移動力，調度快。' },
+        { label: '機動', detail: '騎兵移動力再 +1，調度快。' },
       ],
       abilities: ['騎射合一'],
       abilityDetails: [
-        { name: '騎射合一', detail: '騎兵移動不變，攻擊射程提高為弓兵射程（2 格）。戰鬥開始前即生效。' },
+        { name: '騎射合一', detail: '騎兵移動 +1，攻擊射程提高為弓兵射程（2 格）。戰鬥開始前即生效。' },
       ],
       source: {
         faction: '群雄',
