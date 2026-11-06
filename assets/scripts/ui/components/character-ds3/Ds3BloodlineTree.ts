@@ -7,10 +7,11 @@
  *
  * Unity 對照：像一支 runtime 組 UI 的 Builder，節點命名照 BloodlineTreePanel 要求的 Prefab 結構。
  */
-import { BlockInputEvents, Color, Graphics, Label, Node, UITransform, Mask, Sprite } from 'cc';
+import { BlockInputEvents, Button, Color, Graphics, Label, Node, UITransform, Mask, Sprite } from 'cc';
 import { treeCardNodeName } from '../../../core/systems/BloodlineTreeBinding';
 import { PEDIGREE_SEAT_WEIGHTS, pedigreeRowLabel, TREE_CARD_AVATAR, TREE_CARD_KIN_FRAME } from '../../../core/systems/BloodlineTreeSlots';
-import { treeGenerationVisible, type MilestoneStage } from '../../../core/systems/FamilyMilestone';
+import { type MilestoneStage } from '../../../core/systems/FamilyMilestone';
+import { BLOODLINE_TREE_TOGGLE_LABEL, bloodlineTreeRowVisible, bloodlineTreeToggleAvailable } from '../../../core/systems/BloodlineTreeViewMode';
 import { BloodlineTreePanel } from '../../panels/BloodlineTreePanel';
 
 export const DS3_BLOODLINE_TREE_NODE_NAME = 'Ds3BloodlineTree';
@@ -20,6 +21,8 @@ const REGION = { x: -365, width: 1190, height: 1080 };
 const LABEL_COLUMN_X = -405;
 const CARDS_CENTER_X = 115;
 const TITLE = { text: '家族血統樹', y: 480, width: 920, height: 40, fontSize: 26, color: '#FFE088' };
+/** 簡化／專家切換鈕：標題列右端，曾祖父母列上方（血統理論 §E-6，PROG-2-1897） */
+const TOGGLE = { nodeName: 'ViewModeToggle', x: 500, y: 480, width: 120, height: 36, fontSize: 16, color: '#FFE088' };
 
 const ROWS = [
     { row: 1, container: 'Gen1Container', count: 8, step: 115, y: 380, width: 108, height: 96, zh: '曾祖父母', weight: PEDIGREE_SEAT_WEIGHTS.greatGrandparent, color: '#8C8575' },
@@ -109,6 +112,27 @@ function buildGenerationRow(root: Node, config: (typeof ROWS)[number]): void {
     }
 }
 
+function addViewModeToggle(root: Node): Node {
+    const toggle = addNode(root, TOGGLE.nodeName, TOGGLE.x, TOGGLE.y, TOGGLE.width, TOGGLE.height);
+    fillRoundRect(toggle, TOGGLE.width, TOGGLE.height, CARD_FILL, SUBJECT_BORDER);
+    addLabel(toggle, 'Txt', '', 0, 0, TOGGLE.width - 8, TOGGLE.height - 4, TOGGLE.fontSize, new Color().fromHEX(TOGGLE.color));
+    toggle.addComponent(Button);
+    return toggle;
+}
+
+/** 世代標題跟著卡片列顯示；切換鈕文字跟著模式換 */
+function refreshViewMode(root: Node, panel: BloodlineTreePanel): void {
+    ROWS.forEach((config) => {
+        const label = root.getChildByName(`GenLabel_${config.row}`);
+        if (label) label.active = bloodlineTreeRowVisible((4 - config.row) as 1 | 2 | 3, panel.viewMode, panel.milestoneStage);
+    });
+    const toggle = root.getChildByName(TOGGLE.nodeName);
+    if (!toggle) return;
+    toggle.active = bloodlineTreeToggleAvailable(panel.milestoneStage);
+    const label = toggle.getChildByName('Txt')?.getComponent(Label);
+    if (label) label.string = BLOODLINE_TREE_TOGGLE_LABEL[panel.viewMode];
+}
+
 function buildTree(host: Node): Node {
     const root = addNode(host, DS3_BLOODLINE_TREE_NODE_NAME, REGION.x, 0, REGION.width, REGION.height);
     root.addComponent(BlockInputEvents);
@@ -131,10 +155,15 @@ function buildTree(host: Node): Node {
         addLabel(root, `Legend_${i}`, `● ${item.text}`, x, LEGEND.y, LEGEND.step, 24, 14, new Color().fromHEX(item.color));
     });
 
+    const toggle = addViewModeToggle(root);
     const panel = root.addComponent(BloodlineTreePanel);
     panel.gen1Container = root.getChildByName('Gen1Container');
     panel.gen2Container = root.getChildByName('Gen2Container');
     panel.gen3Container = root.getChildByName('Gen3Container');
+    toggle.on(Button.EventType.CLICK, () => {
+        panel.toggleViewMode();
+        refreshViewMode(root, panel);
+    });
     return root;
 }
 
@@ -145,11 +174,8 @@ export function ensureDs3BloodlineTree(host: Node, subjectName: string, clanTier
     if (subjectLabel) subjectLabel.string = subjectName;
     const titleLabel = root.getChildByName('TreeTitle')?.getComponent(Label);
     if (titleLabel) titleLabel.string = `${TITLE.text}｜門第：${clanTierName}`;
-    ROWS.forEach((config) => {
-        const label = root.getChildByName(`GenLabel_${config.row}`);
-        if (label) label.active = treeGenerationVisible(stage, (4 - config.row) as 1 | 2 | 3);
-    });
     const panel = root.getComponent(BloodlineTreePanel) as BloodlineTreePanel;
     panel.setMilestoneStage(stage);
+    refreshViewMode(root, panel);
     return panel;
 }

@@ -9,8 +9,8 @@ import { treeCardNodeName } from '../../core/systems/BloodlineTreeBinding';
 import { buildNodeCards } from '../../core/systems/BloodlineNodeCards';
 import { redrawBloodlineTreeConnections } from '../components/BloodlineTreeLines';
 import { ancestorPeekView, isAncestorRevealed, type AncestorPeekView } from '../../core/systems/AncestorTreeLayout';
-import { kinshipScanVisible, treeGenerationVisible, type MilestoneStage } from '../../core/systems/FamilyMilestone';
-import { isGenerationVisible, toggleBloodlineTreeMode, type BloodlineTreeViewMode } from '../../core/systems/BloodlineTreeViewMode';
+import { kinshipScanVisible, type MilestoneStage } from '../../core/systems/FamilyMilestone';
+import { bloodlineTreeRowVisible, toggleBloodlineTreeMode, type BloodlineTreeViewMode } from '../../core/systems/BloodlineTreeViewMode';
 
 const { ccclass, property } = _decorator;
 
@@ -49,7 +49,7 @@ export class BloodlineTreePanel extends Component {
     private _pedigree: Pedigree | null = null;
     /** 點擊祖先卡時的 peek 回呼；由命頁 ChildPanel 設定（PROG-2-1278） */
     onCardPeek: ((view: AncestorPeekView) => void) | null = null;
-    /** 簡化／專家顯示模式；切換按鈕尚未上版面前維持 expert（PROG-2-1731） */
+    /** 簡化／專家顯示模式；預設 expert，人物頁命分頁右上角可切換（PROG-2-1731、PROG-2-1897） */
     private _viewMode: BloodlineTreeViewMode = 'expert';
     private _stage: MilestoneStage = 4;
     private _kinUids: ReadonlySet<string> = new Set<string>();
@@ -58,6 +58,10 @@ export class BloodlineTreePanel extends Component {
 
     get viewMode(): BloodlineTreeViewMode {
         return this._viewMode;
+    }
+
+    get milestoneStage(): MilestoneStage {
+        return this._stage;
     }
 
     /** 切換簡化（父母＋祖父母）／專家（14 人）顯示，並重畫連線 */
@@ -132,7 +136,7 @@ export class BloodlineTreePanel extends Component {
     }
 
     private _generationVisible(generation: 1 | 2 | 3): boolean {
-        return isGenerationVisible(generation, this._viewMode) && treeGenerationVisible(this._stage, generation);
+        return bloodlineTreeRowVisible(generation, this._viewMode, this._stage);
     }
 
     /**
