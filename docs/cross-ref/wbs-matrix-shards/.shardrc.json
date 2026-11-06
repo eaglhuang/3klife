@@ -1,0 +1,189 @@
+{
+  "version": 1,
+  "source": "../wbs-progress-inventory-matrix.md",
+  "indexTitle": "3KLife WBS 全量功能進度盤點矩陣 (v16.9)",
+  "indexPath": "docs/cross-ref/wbs-progress-inventory-matrix.md",
+  "type": "markdown-h2",
+  "preambleShard": "wbs-00-overview",
+  "defaultShard": "wbs-00-overview",
+  "_thresholdKB": 10,
+  "_thresholdLines": 300,
+  "_comment": "PROG-2-1959：doc_index_1054 拆分。§3.1～3.7 升為 h2，每個模組再依 ≤10 KB／≤300 行切段（表頭每段重複）。",
+  "shards": [
+    {
+      "name": "wbs-00-overview",
+      "title": "總覽（儀表板、優先缺口）",
+      "pattern": "^§[12]."
+    },
+    {
+      "name": "wbs-31-battle-core-p1",
+      "title": "3.1 戰鬥核心（1/7）",
+      "pattern": "^3.1 .*第 1/7 段$"
+    },
+    {
+      "name": "wbs-31-battle-core-p2",
+      "title": "3.1 戰鬥核心（2/7）",
+      "pattern": "^3.1 .*第 2/7 段$"
+    },
+    {
+      "name": "wbs-31-battle-core-p3",
+      "title": "3.1 戰鬥核心（3/7）",
+      "pattern": "^3.1 .*第 3/7 段$"
+    },
+    {
+      "name": "wbs-31-battle-core-p4",
+      "title": "3.1 戰鬥核心（4/7）",
+      "pattern": "^3.1 .*第 4/7 段$"
+    },
+    {
+      "name": "wbs-31-battle-core-p5",
+      "title": "3.1 戰鬥核心（5/7）",
+      "pattern": "^3.1 .*第 5/7 段$"
+    },
+    {
+      "name": "wbs-31-battle-core-p6",
+      "title": "3.1 戰鬥核心（6/7）",
+      "pattern": "^3.1 .*第 6/7 段$"
+    },
+    {
+      "name": "wbs-31-battle-core-p7",
+      "title": "3.1 戰鬥核心（7/7）",
+      "pattern": "^3.1 .*第 7/7 段$"
+    },
+    {
+      "name": "wbs-32-economy-gear-quests-p1",
+      "title": "3.2 經濟裝備任務（1/3）",
+      "pattern": "^3.2 .*第 1/3 段$"
+    },
+    {
+      "name": "wbs-32-economy-gear-quests-p2",
+      "title": "3.2 經濟裝備任務（2/3）",
+      "pattern": "^3.2 .*第 2/3 段$"
+    },
+    {
+      "name": "wbs-32-economy-gear-quests-p3",
+      "title": "3.2 經濟裝備任務（3/3）",
+      "pattern": "^3.2 .*第 3/3 段$"
+    },
+    {
+      "name": "wbs-33-lobby-onboarding-journey-p1",
+      "title": "3.3 大廳開場生涯（1/4）",
+      "pattern": "^3.3 .*第 1/4 段$"
+    },
+    {
+      "name": "wbs-33-lobby-onboarding-journey-p2",
+      "title": "3.3 大廳開場生涯（2/4）",
+      "pattern": "^3.3 .*第 2/4 段$"
+    },
+    {
+      "name": "wbs-33-lobby-onboarding-journey-p3",
+      "title": "3.3 大廳開場生涯（3/4）",
+      "pattern": "^3.3 .*第 3/4 段$"
+    },
+    {
+      "name": "wbs-33-lobby-onboarding-journey-p4",
+      "title": "3.3 大廳開場生涯（4/4）",
+      "pattern": "^3.3 .*第 4/4 段$"
+    },
+    {
+      "name": "wbs-34-nation-officer-politics-p1",
+      "title": "3.4 國家官職天下（1/4）",
+      "pattern": "^3.4 .*第 1/4 段$"
+    },
+    {
+      "name": "wbs-34-nation-officer-politics-p2",
+      "title": "3.4 國家官職天下（2/4）",
+      "pattern": "^3.4 .*第 2/4 段$"
+    },
+    {
+      "name": "wbs-34-nation-officer-politics-p3",
+      "title": "3.4 國家官職天下（3/4）",
+      "pattern": "^3.4 .*第 3/4 段$"
+    },
+    {
+      "name": "wbs-34-nation-officer-politics-p4",
+      "title": "3.4 國家官職天下（4/4）",
+      "pattern": "^3.4 .*第 4/4 段$"
+    },
+    {
+      "name": "wbs-35-bloodline-family-nurture-p1",
+      "title": "3.5 血統家族培育（1/9）",
+      "pattern": "^3.5 .*第 1/9 段$"
+    },
+    {
+      "name": "wbs-35-bloodline-family-nurture-p2",
+      "title": "3.5 血統家族培育（2/9）",
+      "pattern": "^3.5 .*第 2/9 段$"
+    },
+    {
+      "name": "wbs-35-bloodline-family-nurture-p3",
+      "title": "3.5 血統家族培育（3/9）",
+      "pattern": "^3.5 .*第 3/9 段$"
+    },
+    {
+      "name": "wbs-35-bloodline-family-nurture-p4",
+      "title": "3.5 血統家族培育（4/9）",
+      "pattern": "^3.5 .*第 4/9 段$"
+    },
+    {
+      "name": "wbs-35-bloodline-family-nurture-p5",
+      "title": "3.5 血統家族培育（5/9）",
+      "pattern": "^3.5 .*第 5/9 段$"
+    },
+    {
+      "name": "wbs-35-bloodline-family-nurture-p6",
+      "title": "3.5 血統家族培育（6/9）",
+      "pattern": "^3.5 .*第 6/9 段$"
+    },
+    {
+      "name": "wbs-35-bloodline-family-nurture-p7",
+      "title": "3.5 血統家族培育（7/9）",
+      "pattern": "^3.5 .*第 7/9 段$"
+    },
+    {
+      "name": "wbs-35-bloodline-family-nurture-p8",
+      "title": "3.5 血統家族培育（8/9）",
+      "pattern": "^3.5 .*第 8/9 段$"
+    },
+    {
+      "name": "wbs-35-bloodline-family-nurture-p9",
+      "title": "3.5 血統家族培育（9/9）",
+      "pattern": "^3.5 .*第 9/9 段$"
+    },
+    {
+      "name": "wbs-36-formula-architecture-backend-p1",
+      "title": "3.6 數值架構底層（1/4）",
+      "pattern": "^3.6 .*第 1/4 段$"
+    },
+    {
+      "name": "wbs-36-formula-architecture-backend-p2",
+      "title": "3.6 數值架構底層（2/4）",
+      "pattern": "^3.6 .*第 2/4 段$"
+    },
+    {
+      "name": "wbs-36-formula-architecture-backend-p3",
+      "title": "3.6 數值架構底層（3/4）",
+      "pattern": "^3.6 .*第 3/4 段$"
+    },
+    {
+      "name": "wbs-36-formula-architecture-backend-p4",
+      "title": "3.6 數值架構底層（4/4）",
+      "pattern": "^3.6 .*第 4/4 段$"
+    },
+    {
+      "name": "wbs-37-ui-art-pipeline-p1",
+      "title": "3.7 UI 介面視覺（1/3）",
+      "pattern": "^3.7 .*第 1/3 段$"
+    },
+    {
+      "name": "wbs-37-ui-art-pipeline-p2",
+      "title": "3.7 UI 介面視覺（2/3）",
+      "pattern": "^3.7 .*第 2/3 段$"
+    },
+    {
+      "name": "wbs-37-ui-art-pipeline-p3",
+      "title": "3.7 UI 介面視覺（3/3）",
+      "pattern": "^3.7 .*第 3/3 段$"
+    }
+  ]
+}
