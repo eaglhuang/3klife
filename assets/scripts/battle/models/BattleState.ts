@@ -13,6 +13,7 @@ import type { EnemyMassDebuff } from "../shared/EnemyMassDebuff";
 import type { UnitDot } from "../shared/UnitDot";
 import type { WeatherScheduleEntry } from "../../core/systems/WeatherSchedule";
 import type { SalvageTotals } from "../../core/systems/StrategistHud";
+import { FORTRESS_MAX_HP } from "../../core/systems/FortressBarView";
 
 export interface GridCell {
   lane: number;
@@ -100,8 +101,8 @@ export class BattleState {
 
   public playerGeneral: GeneralUnit | null = null;
   public enemyGeneral: GeneralUnit | null = null;
-  public playerFortressHp = 500;
-  public enemyFortressHp = 500;
+  public playerFortressHp = FORTRESS_MAX_HP;
+  public enemyFortressHp = FORTRESS_MAX_HP;
   /** 水攻淹沒前各格的原地形（key = "lane,depth"），重算範圍時用來還原（PROG-2-0407） */
   public readonly floodOriginalTerrain = new Map<string, TerrainType>();
   /** 營曜天氣（影響戰場修正預留欄位） */
@@ -193,8 +194,8 @@ export class BattleState {
 
     this.playerGeneral = playerGeneral;
     this.enemyGeneral  = enemyGeneral;
-    this.playerFortressHp = 500;
-    this.enemyFortressHp  = 500;
+    this.playerFortressHp = FORTRESS_MAX_HP;
+    this.enemyFortressHp  = FORTRESS_MAX_HP;
     this.weather     = weather     ?? Weather.Clear;
     this.weatherSchedule = [];
     this.battleTactic = battleTactic ?? BattleTactic.Normal;
