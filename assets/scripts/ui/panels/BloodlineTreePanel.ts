@@ -49,7 +49,7 @@ export class BloodlineTreePanel extends Component {
     private _pedigree: Pedigree | null = null;
     /** 點擊祖先卡時的 peek 回呼；由命頁 ChildPanel 設定（PROG-2-1278） */
     onCardPeek: ((view: AncestorPeekView) => void) | null = null;
-    /** 簡化／專家顯示模式；預設 expert，人物頁命分頁右上角可切換（PROG-2-1731、PROG-2-1897） */
+    /** 簡化／專家顯示模式；面板本身預設 expert，掛上切換鈕時改為簡化（PROG-2-1731、PROG-2-1899） */
     private _viewMode: BloodlineTreeViewMode = 'expert';
     private _stage: MilestoneStage = 4;
     private _kinUids: ReadonlySet<string> = new Set<string>();

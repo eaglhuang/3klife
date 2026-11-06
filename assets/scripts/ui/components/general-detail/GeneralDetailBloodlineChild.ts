@@ -9,7 +9,7 @@
  * AncestorTree 的動態渲染委託給已存在的 BloodlineTreePanel；
  * 此 ChildPanel 負責附掛元件並轉送 generalId。
  */
-import { Button, Color, Label, UITransform } from 'cc';
+import { Button, Color, Label, UITransform, Widget } from 'cc';
 import type { Node } from 'cc';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
 import type { UISkinResolver } from '../../core/UISkinResolver';
@@ -20,6 +20,7 @@ import { hiddenFactorLine } from '../../core/HiddenFactorText';
 import { FactorMaskPresenter } from '../../../core/systems/FactorMaskState';
 import type { AncestorPeekView } from '../../../core/systems/AncestorTreeLayout';
 import { BloodlineTreePanel } from '../../panels/BloodlineTreePanel';
+import { ensureBloodlineViewToggle } from '../BloodlineTreeViewToggle';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import { services } from '../../../core/managers/ServiceLoader';
 import { factorDetailVisible } from '../../../core/systems/FamilyMilestone';
@@ -110,6 +111,15 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
         panel.gen2Container = treeRoot.getChildByPath('Gen2Container');
         panel.gen3Container = treeRoot.getChildByPath('Gen3Container');
         this._treePanel = panel;
+
+        // 簡化／專家切換鈕（11/06 裁決 #3，PROG-2-1899）：掛在左區右上角，不進 AncestorTree 的自動排版
+        const toggle = ensureBloodlineViewToggle(this._requireNode(h, 'BloodlineStage/BloodlineLeftField'), panel, 0, 0);
+        const toggleWidget = toggle.getComponent(Widget) ?? toggle.addComponent(Widget);
+        toggleWidget.isAlignTop = true;
+        toggleWidget.isAlignRight = true;
+        toggleWidget.top = 8;
+        toggleWidget.right = 16;
+        toggleWidget.updateAlignment();
 
         // 祖先 peek（PROG-2-1278）：點擊卡片在樹旁顯示小面板
         this._peekNode = this._requireNode(h, 'BloodlineStage/BloodlineLeftField/AncestorTree/AncestorPeek');
