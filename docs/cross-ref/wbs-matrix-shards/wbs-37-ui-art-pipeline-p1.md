@@ -33,5 +33,5 @@
 | **HUM-01** | M9 | GeneralUnit 擴充 personality/loyalty/recentLog/currentSuitability 資料模型 | data | 2 | ⚪ 未開始 | - | 四個選填欄位進型別與 generals schema 並向下相容 | grep personality\|loyalty 於 assets/scripts/core/models/GeneralUnit.ts 無結果 |  |
 | **HUM-02** | M10 | 性格圖騰四型 icon family 與 Header 徽章（義綠/豪紅/睿藍/貪紫） | ui | 3 | ⚪ 未開始 | HUM-01 | Header 緊鄰職能標籤顯示對應顏色圓徽與提示文案 | 無 |  |
 | **HUM-03** | M9 | 性格驅動離線行為規則（尋訪/喝酒/內政/遊歷） | logic | 4 | ⚪ 未開始 | HUM-01 | 四性格依規格觸發對應晨報行為，有單元測試 | 無 |  |
-| **HUM-04** | M9 | 忠誠度條 UI 與來源鎖定（轉蛋 100 鎖） | ui | 3 | ⚪ 未開始 | HUM-01 | 非轉蛋武將顯示 0~100 條，<60 橙、<30 紅，轉蛋顯示鎖定 100 | 無 |  |
-| **HUM-05** | M9 | 忠誠度系統邏輯與沒收虎符 -30 提示 | logic | 3 | ⚪ 未開始 | HUM-04 | 沒收虎符彈提示並扣 30，低忠誠觸發下野/被勸降 | 無 |  |
+| **HUM-04** | M9 | 忠誠度條 UI 與來源鎖定（轉蛋 100 鎖） | ui | 3 | 🟢 已接線 | HUM-01 | 非轉蛋武將顯示 0~100 條，<60 橙、<30 紅，轉蛋顯示鎖定 100 | LoyaltyGauge 被 CharacterDs3StatsChild 匯入；#1350、轉蛋鎖 100 接線 #1352 | [v17.2 更正 2026-11-07] 未開始→已接線 |
+| **HUM-05** | M9 | 忠誠度系統邏輯與沒收虎符 -30 提示 | logic | 3 | 🟢 已接線 | HUM-04 | 沒收虎符彈提示並扣 30，低忠誠觸發下野/被勸降 | TigerTallyLoyalty 沒收降忠 30 點，CharacterDs3AptitudeChild 沒收按鈕；#1363 | [v17.2 更正 2026-11-07] 未開始→已接線 |

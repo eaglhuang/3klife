@@ -8,29 +8,29 @@
 
 | ID | 里程碑 | 工作包 | 類型 | 工時 | 狀態 | 依賴 | 驗收條件 | 現況證據 | 最新核對(v16.9) |
 |---|:---:|---|:---:|:---:|:---:|---|---|---|---|
-| **OFC-01** | M9 | 官職階位表與解鎖表資料化（5 階、EXP 門檻、Unlocked_Features） | data | 1 | ✅ 已驗收 | - | officer-tiers.json 含 5 階與門檻 100/260/520/920，schema 驗證通過 | [v13 核對 2026-10-20] 官職階位資料檔 officer-tiers.json（6a939033，#602）與遊戲端載入驗證後套用（b84910f2，#609）；OfficerTierTable 由 LobbyScene 呼叫，測試存在 |  |
-| **OFC-02** | M9 | 官職經驗計算 calcOfficerExpGain（難度×領域×成敗） | logic | 1 | ✅ 已驗收 | OFC-01 | 單元測試覆蓋 5 難度、MILITARY 1.1、失敗 0.4，floor 結果符合 F-1 | [v14 核對 2026-10-21] 官職經驗計算 calcOfficerExpGain（9bf23ef8，PROG-2-0825，#594）；GameSession 呼叫，OfficerState.test.ts 與 OfficerHallYearsE2E.test.ts 存在 |  |
-| **OFC-03** | M9 | OfficerState 服務：加經驗、晉升判定、解鎖歷史寫入 | logic | 2 | ✅ 已驗收 | OFC-01, OFC-02 | 跨門檻加經驗後 Current_Tier/Unlock_History 正確，連升多階測試通過 | [v13 核對 2026-10-20] 官職狀態存檔與 GameSession 接線（ae26e394，PROG-2-0826，#601）；OfficerState 由 GameSession、PlayerSaveService 呼叫，測試存在 |  |
-| **OFC-04** | M9 | 權限快照 API（供大廳/治理/沙盤/他國AI唯讀） | logic | 1.5 | ✅ 已驗收 | OFC-03 | 各系統僅經快照取權限，無直接改 OfficerState 的呼叫（lint/測試） | [v13 核對 2026-10-20] 官職權限快照 API（01b1f68d，PROG-2-0828，#606）；OfficerPermissions 由 GameSession 呼叫，測試存在 |  |
-| **OFC-05** | M9 | 雙牆任務解鎖：依官職決定可見難度與欄位數 | ui | 2.5 | 🟢 已接線 | OFC-04 | 大廳任務牆在 TIER_1/2/3 顯示的難度與欄位數與表一致 | [v13 核對 2026-10-20] 任務牆難度可見性依 F-2 修正（451aced2，PROG-2-0835，#632）；HallMissionBoard 與 HallBoardPanelController 接線。雙牆依官職解鎖的完整規則未核對 |  |
-| **OFC-06** | M9 | 世界沙盤階段解鎖（S1/S2/S3）與標記數量 | ui | 2 | 🟢 已接線 | OFC-04 | 晉升 TIER_3/4/5 後沙盤對應階段開啟 | [v16 核對 2026-10-21] 世界沙盤標記數量上限接上 GameSession 與存檔（975274b6，PROG-2-0958，#729）；SandtableMarkers 由 GameSession 呼叫，SandtableMarkers.test.ts 存在；沙盤 S1/S2/S3 解鎖與標記 UI 未核對 |  |
-| **OFC-07** | M9 | 聯盟/外交權限（聯盟文書、反霸權高階會盟門檻） | logic | 1.5 | 🟢 已接線 | OFC-04 | TIER_4 以下無法開啟聯盟文書、TIER_5 才能參與高階會盟 | [v13 核對 2026-10-20] 聯盟文書與反霸權會盟權限旗標（7dab134b，PROG-2-0837，#636）；OfficerPermissions 有旗標，但聯盟與外交功能本體未做 |  |
+| **OFC-01** | M9 | 官職階位表與解鎖表資料化（5 階、EXP 門檻、Unlocked_Features） | data | 1 | ✅ 已驗收 | - | officer-tiers.json 含 5 階與門檻 100/260/520/920，schema 驗證通過 | [v13 核對 2026-10-20] 官職階位資料檔 officer-tiers.json（6a939033，#602）與遊戲端載入驗證後套用（b84910f2，#609） |  |
+| **OFC-02** | M9 | 官職經驗計算 calcOfficerExpGain（難度×領域×成敗） | logic | 1 | ✅ 已驗收 | OFC-01 | 單元測試覆蓋 5 難度、MILITARY 1.1、失敗 0.4，floor 結果符合 F-1 | [v14 核對 2026-10-21] 官職經驗計算 calcOfficerExpGain（9bf23ef8，PROG-2-0825，#594）；GameSession 呼叫 |  |
+| **OFC-03** | M9 | OfficerState 服務：加經驗、晉升判定、解鎖歷史寫入 | logic | 2 | ✅ 已驗收 | OFC-01, OFC-02 | 跨門檻加經驗後 Current_Tier/Unlock_History 正確，連升多階測試通過 | [v13 核對 2026-10-20] 官職狀態存檔與 GameSession 接線（ae26e394，PROG-2-0826，#601） |  |
+| **OFC-04** | M9 | 權限快照 API（供大廳/治理/沙盤/他國AI唯讀） | logic | 1.5 | ✅ 已驗收 | OFC-03 | 各系統僅經快照取權限，無直接改 OfficerState 的呼叫（lint/測試） | [v13 核對 2026-10-20] 官職權限快照 API（01b1f68d，PROG-2-0828，#606）；OfficerPermissions 由 GameSession 呼叫 |  |
+| **OFC-05** | M9 | 雙牆任務解鎖：依官職決定可見難度與欄位數 | ui | 2.5 | 🟢 已接線 | OFC-04 | 大廳任務牆在 TIER_1/2/3 顯示的難度與欄位數與表一致 | [v13 核對 2026-10-20] 任務牆難度可見性依 F-2 修正（451aced2，PROG-2-0835，#632） |  |
+| **OFC-06** | M9 | 世界沙盤階段解鎖（S1/S2/S3）與標記數量 | ui | 2 | 🟢 已接線 | OFC-04 | 晉升 TIER_3/4/5 後沙盤對應階段開啟 | [v16 核對 2026-10-21] 世界沙盤標記數量上限接上 GameSession 與存檔（975274b6，PROG-2-0958，#729） |  |
+| **OFC-07** | M9 | 聯盟/外交權限（聯盟文書、反霸權高階會盟門檻） | logic | 1.5 | 🟢 已接線 | OFC-04 | TIER_4 以下無法開啟聯盟文書、TIER_5 才能參與高階會盟 | [v13 核對 2026-10-20] 聯盟文書與反霸權會盟權限旗標（7dab134b，PROG-2-0837，#636）；OfficerPermissions 有旗標 |  |
 | **OFC-08** | M9 | 晉升提示 UI、官印動畫、一次性獎勵與字串/劇本 | ui | 2.5 | 🟢 已接線 | OFC-03 | 晉升時顯示 UI_OFFICER_PROMOTE/UNLOCK 並發獎一次，不重複領 | [v13 核對 2026-10-20] 大廳掛載官職區塊（17e12b21，#614）與顯示資料（009e1462，#612）；晉升提示（c12fcc90）；UI 實機未核對 |  |
-| **OFC-09** | M9 | 天下大亂保留規則 applyEraShiftToOfficerState | logic | 0.5 | ✅ 已驗收 | OFC-03 | EraShift 後 Tier/Exp/Unlock_History 不變，測試通過 | [v16 核對 2026-10-21] 時代更迭保留官職：applyEraShiftToOfficerState 由 GameSession 呼叫（0961，PROG-2-0961，#754）；OfficerState.test.ts 存在 |  |
-| **OFC-10** | M11 | 本機存檔 schema 與 Server 表（officer_tier/exp/unlock_history_json）同步 | server | 2 | 🟡 純邏輯 | OFC-03 | 存檔往返一致，server 表可 upsert 並與 client 衝突時有規則 | [v14 核對 2026-10-21] 官職狀態 Server 列定義與驗證（260be15f，PROG-2-0808，#643），server/schema/005_officer_state.sql；僅定義，未部署，無執行期呼叫端 |  |
+| **OFC-09** | M9 | 天下大亂保留規則 applyEraShiftToOfficerState | logic | 0.5 | ✅ 已驗收 | OFC-03 | EraShift 後 Tier/Exp/Unlock_History 不變，測試通過 | [v16 核對 2026-10-21] 時代更迭保留官職：applyEraShiftToOfficerState 由 GameSession 呼叫 |  |
+| **OFC-10** | M11 | 本機存檔 schema 與 Server 表（officer_tier/exp/unlock_history_json）同步 | server | 2 | 🟡 純邏輯 | OFC-03 | 存檔往返一致，server 表可 upsert 並與 client 衝突時有規則 | [v14 核對 2026-10-21] 官職狀態 Server 列定義與驗證（260be15f，PROG-2-0808，#643） |  |
 | **OFC-11** | M5 | 將階/名聲/帶兵上限（General_Rank/Fame/Command_Capacity）與官職 UI 文案分離 | logic | 3 | 🟢 已接線 | OFC-04 | 出征軍勢上限讀 Command_Capacity，官職條與將階條 UI 不混用同一 EXP | [v4 核對 2026-10-13] 將階與名聲欄位落地並接上帶兵上限（PROG-2-0231） |  |
 | **OFC-12** | M8 | 商業加速（月卡官職經驗加成、高階試用 buff、刷新券、外交加速包） | logic | 2 | ⚪ 未開始 | OFC-03 | 試用 buff 到期後不改正式階位；加成倍率可配置 | [v16.4 封鎖 blocked 2026-10-27] 商業化（月卡官職經驗加成、高階試用 buff 等）待使用者裁決 ；無 |  |
-| **RAI-01** | M9 | AI 國家定義資料（8 勢力 Profile、初始領地/資源、台詞）AINationDef | data | 2 | ⚪ 未開始 | - | ai-nations.json 含 8 勢力且通過 schema 驗證，欄位與 I 節一致 | 無 |  |
-| **RAI-02** | M9 | Nation Profile 模板與 Efficiency/Willingness 表資料化 | data | 1 | ⚪ 未開始 | RAI-01 | 8 種 Profile 的內政偏好、效率修正、出征意願可由資料載入 | 無 |  |
-| **RAI-03** | M9 | AI 季度內政結算 AI_GovernanceTick（分配、產出、效率修正、資源上限） | logic | 3 | 🟢 已接線 | RAI-02, GOV-02 | 固定種子下 8 國 N 季結算結果穩定，產出公式與玩家共用 | 無 | 純邏輯→已接線；RivalGovernance 經 RivalNations 呼叫，RivalNations 有 src 呼叫端（#1329） |
-| **RAI-04** | M9 | 邦交值系統（-100~100 分段、事件增減、季度衰退、初始宿敵/盟友） | logic | 3 | ⚪ 未開始 | RAI-01 | 邦交變動事件與衰退測試覆蓋全部表列事件，邊界不溢出 | 無 |  |
-| **RAI-05** | M9 | 擴張決策與目標效用函數（F-2）+出征資源門檻 | logic | 3 | 🟡 純邏輯 | RAI-03, RAI-04 | 給定固定亂數時效用分數與 ATTACK/HOLD 決定符合手算 | 無 | 未開始→純邏輯；#1311 RivalExpansion 無 src 呼叫端，僅測試 |
-| **RAI-06** | M9 | AI 外交決策（主動結盟、貿易、背叛、合縱連橫） | logic | 3 | 🟡 純邏輯 | RAI-04 | WARLORD 背叛與 DIPLOMAT 結盟機率測試通過，蜀不主動背叛 | 無 | 未開始→純邏輯；#1318 RivalAiDiplomacy 無 src 呼叫端，僅測試 |
+| **RAI-01** | M9 | AI 國家定義資料（8 勢力 Profile、初始領地/資源、台詞）AINationDef | data | 2 | 🟢 已接線 | - | ai-nations.json 含 8 勢力且通過 schema 驗證，欄位與 I 節一致 | core/systems/RivalNations.ts 8 勢力清單與初始領地資源、RivalRulerLines 台詞 | [v17.2 更正 2026-11-07] 未開始→已接線 |
+| **RAI-02** | M9 | Nation Profile 模板與 Efficiency/Willingness 表資料化 | data | 1 | 🟢 已接線 | RAI-01 | 8 種 Profile 的內政偏好、效率修正、出征意願可由資料載入 | core/systems/RivalGovernance.ts 性格效率表（MILITARIST／DIPLOMAT／PASSIVE）資料化 | [v17.2 更正 2026-11-07] 未開始→已接線 |
+| **RAI-03** | M9 | AI 季度內政結算 AI_GovernanceTick（分配、產出、效率修正、資源上限） | logic | 3 | 🟢 已接線 | RAI-02, GOV-02 | 固定種子下 8 國 N 季結算結果穩定，產出公式與玩家共用 | 無 | 純邏輯→已接線；RivalGovernance 經 RivalNations 呼叫 |
+| **RAI-04** | M9 | 邦交值系統（-100~100 分段、事件增減、季度衰退、初始宿敵/盟友） | logic | 3 | 🟢 已接線 | RAI-01 | 邦交變動事件與衰退測試覆蓋全部表列事件，邊界不溢出 | core/systems/RivalAiDiplomacy.ts 邦交值事件增減（-100~100）、史實宿敵／盟友初始值 | [v17.2 更正 2026-11-07] 未開始→已接線 |
+| **RAI-05** | M9 | 擴張決策與目標效用函數（F-2）+出征資源門檻 | logic | 3 | 🟢 已接線 | RAI-03, RAI-04 | 給定固定亂數時效用分數與 ATTACK/HOLD 決定符合手算 | core/systems/RivalExpansion.ts 擴張效用函數與資源門檻，RivalNations 季度行動接線 | [v17.2 更正 2026-11-07] 純邏輯→已接線 |
+| **RAI-06** | M9 | AI 外交決策（主動結盟、貿易、背叛、合縱連橫） | logic | 3 | 🟢 已接線 | RAI-04 | WARLORD 背叛與 DIPLOMAT 結盟機率測試通過，蜀不主動背叛 | core/systems/RivalAiDiplomacy.ts 主動結盟、金多換糧、背叛弱盟友、合縱連橫 | [v17.2 更正 2026-11-07] 純邏輯→已接線 |
 | **RAI-07** | M9 | AI 貿易系統（4 種比率、結盟優惠 20%、每季 2 次冷卻、玩家手動確認） | logic | 2 | 🟢 已接線 | RAI-04 | 比率/條件/冷卻測試通過，玩家貿易需確認 UI | 無 | 未開始→已接線；RivalTrade 接 GameSession（既有呼叫端） |
-| **RAI-08** | M9 | AI 武將經營（招募品質、結緣、退役轉教官、死亡產英靈/虎符、傭兵市場 30%） | logic | 4 | 🟡 純邏輯 | RAI-03 | 每 2 季新武將品質分布符合 fame 門檻；死亡事件產出英靈與虎符 | 無 | 未開始→純邏輯；#1319 RivalGeneralUpkeep 無 src 呼叫端，僅測試 |
-| **RAI-09** | M9 | AI 俘虜處理（招降/4 季釋放） | logic | 1 | 🟡 純邏輯 | RAI-08, POW-03 | loyalty<30 招降機率與 4 季釋放規則測試通過 | 無 | 未開始→純邏輯；#1319 俘虜部分併入 RivalGeneralUpkeep，無 src 呼叫端 |
-| **RAI-10** | M9 | 霸權反制與橡皮筋同盟（30%/40% 閾值、玩家強制入盟、邦交衰減加速） | logic | 3 | 🟡 純邏輯 | RAI-04 | 領土佔比超 30% 時他國及非霸主玩家 isPartOfCoalition=true，decayRate=4 | 無 | 未開始→純邏輯；#1302 RivalHegemony 無 src 呼叫端，僅測試 |
-| **RAI-11** | M9 | 勢力興衰評估（power 五級）與 HEGEMONY/COLLAPSING 效果 | logic | 2 | 🟡 純邏輯 | RAI-03 | 每 4 季評估一次並套用敵對 +10/季、叛逃 +20%、入侵 +50% | 無 | 未開始→純邏輯；#1302 RivalHegemony 無 src 呼叫端，僅測試 |
-| **RAI-12** | M9 | 天下大亂/時代更迭觸發與地圖重組（保留養成資產與官職） | logic | 3 | 🟡 純邏輯 | RAI-11, OFC-09 | domainRatio≥0.9 或玩家崩潰 3 季觸發，重組後 AI 重置而玩家資產不變 | 無 | 未開始→純邏輯；#1317 RivalRiseFall 無 src 呼叫端，僅測試 |
-| **RAI-13** | M9 | 玩家與 AI 互動介面（貿易/結盟/宣戰/送禮/偵查/勸降/索俘） | ui | 5 | ⚪ 未開始 | RAI-04, RAI-07, OFC-04 | UI 各互動依條件啟用，結果更新邦交值 | 無 |  |
-| **RAI-14** | M11 | AI 國家 Server 持久化（nation_state、relation、external_power 表） | server | 3 | ⚪ 未開始 | RAI-03, RAI-04 | 存檔讀寫往返不遺失，欄位符合 I 節 Server 表 | 無 |  |
+| **RAI-08** | M9 | AI 武將經營（招募品質、結緣、退役轉教官、死亡產英靈/虎符、傭兵市場 30%） | logic | 4 | 🟡 純邏輯 | RAI-03 | 每 2 季新武將品質分布符合 fame 門檻；死亡事件產出英靈與虎符 | core/systems/RivalBonding.ts、RivalGeneralUpkeep.ts | [v17.2 更正 2026-11-07] 維持 純邏輯；退役轉教官、死亡產英靈／虎符、傭兵市場 30% 未做 |
+| **RAI-09** | M9 | AI 俘虜處理（招降/4 季釋放） | logic | 1 | 🟡 純邏輯 | RAI-08, POW-03 | loyalty<30 招降機率與 4 季釋放規則測試通過 | core/systems/RivalGeneralUpkeep.ts 俘虜每季處理（忠誠<30 招降 50%，超過 4 季釋放） | [v17.2 更正 2026-11-07] 維持 純邏輯；尚無其他模組引用，未接進季度結算 |
+| **RAI-10** | M9 | 霸權反制與橡皮筋同盟（30%/40% 閾值、玩家強制入盟、邦交衰減加速） | logic | 3 | 🟢 已接線 | RAI-04 | 領土佔比超 30% 時他國及非霸主玩家 isPartOfCoalition=true，decayRate=4 | core/systems/RivalHegemony.ts 30% 霸權、40% 叛亂壓力、反霸權同盟邦交衰減加速 | [v17.2 更正 2026-11-07] 純邏輯→已接線 |
+| **RAI-11** | M9 | 勢力興衰評估（power 五級）與 HEGEMONY/COLLAPSING 效果 | logic | 2 | 🟢 已接線 | RAI-03 | 每 4 季評估一次並套用敵對 +10/季、叛逃 +20%、入侵 +50% | core/systems/RivalRiseFall.ts 國力五級與 HEGEMONY／COLLAPSING 效果 | [v17.2 更正 2026-11-07] 純邏輯→已接線 |
+| **RAI-12** | M9 | 天下大亂/時代更迭觸發與地圖重組（保留養成資產與官職） | logic | 3 | 🟢 已接線 | RAI-11, OFC-09 | domainRatio≥0.9 或玩家崩潰 3 季觸發，重組後 AI 重置而玩家資產不變 | core/systems/RivalRiseFall.ts 時代更迭觸發、core/systems/EraReset.ts 地圖重組 | [v17.2 更正 2026-11-07] 純邏輯→已接線 |
+| **RAI-13** | M9 | 玩家與 AI 互動介面（貿易/結盟/宣戰/送禮/偵查/勸降/索俘） | ui | 5 | 🟢 已接線 | RAI-04, RAI-07, OFC-04 | UI 各互動依條件啟用，結果更新邦交值 | ui/core/RivalDiplomacyController.ts 送禮／結盟／宣戰／出征 | [v17.2 更正 2026-11-07] 未開始→已接線；偵查、勸降、索俘介面未做 |
+| **RAI-14** | M11 | AI 國家 Server 持久化（nation_state、relation、external_power 表） | server | 3 | ⚪ 未開始 | RAI-03, RAI-04 | 存檔讀寫往返不遺失，欄位符合 I 節 Server 表 | 無 | [v17.2 更正 2026-11-07] 依賴伺服器／外部：Server 持久化表未做 |

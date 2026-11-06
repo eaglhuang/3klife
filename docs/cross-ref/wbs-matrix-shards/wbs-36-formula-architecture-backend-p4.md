@@ -15,11 +15,11 @@
 | **BRAIN-13** | M11 | Cocos 互動記憶 adapter（M6）與事件回寫 | logic | 2 | 🟡 純邏輯 | BRAIN-11, BRAIN-12 | 對話完成後事件經 NpcMemoryAdapter 回寫 interaction-events | assets/scripts/core/dialogue/NpcMemoryAdapter.ts（58行），未見測試與全域事件系統接線 |  |
 | **BRAIN-14** | M11 | SQLite-vec 離線降級、dialogue/stream、vLLM（後續階段，J/L-9） | server | 5 | ⚪ 未開始 | BRAIN-10 | 離線時可用 SQLite-vec 檢索；SSE 串流可用 | 規格標示第二階段；無實作 |  |
 | **NPC-01** | M10 | Persona Card 資料 schema 與核心武將資料（I-1） | data | 3 | 🟡 純邏輯 | - | 核心武將 persona card 含 Core_Traits/Voice_Style/Relationship_Anchors/Safe_Fallback_Line/Golden_Lines 並過 schema 驗證 | [v7 核對 2026-10-14] NpcPersonaCard 資料結構與結構驗證（c34bd866，PROG-2-0461）與測試；無 src 呼叫端 |  |
-| **NPC-02** | M10 | Context Option 情境鍵清單（長坂橋、桃園結義等） | data | 1 | ⚪ 未開始 | NPC-01 | 每位核心武將至少 3 個 contextKey 可由本地資料取得 | 無本地情境資料（僅透過中台 API 取得） |  |
+| **NPC-02** | M10 | Context Option 情境鍵清單（長坂橋、桃園結義等） | data | 1 | 🟡 純邏輯 | NPC-01 | 每位核心武將至少 3 個 contextKey 可由本地資料取得 | 核心武將情境鍵清單；PROG-2-1016（#810） | [v17.2 更正 2026-11-07] 未開始→純邏輯；中台 API 尚未接 |
 | **NPC-03** | M6 | Offline Template Engine（STATIC_TEMPLATE slot filling） | logic | 3 | 🟡 純邏輯 | NPC-01 | 無中台時依模板與 slot 輸出 20~60 字台詞 | [v7 核對 2026-10-14] OfflineTemplateEngine 離線模板台詞引擎（28a43022，PROG-2-0462）與測試；PR #300 已併入；無 src 呼叫端 |  |
-| **NPC-04** | M9 | Journal Reaction 日誌/晨報/派遣反應 | logic | 3 | ⚪ 未開始 | NPC-03 | 晨報與派遣結果可生成一句個性化反應 | grep Journal 在 assets 無結果（武將日誌系統亦未實作） |  |
+| **NPC-04** | M9 | Journal Reaction 日誌/晨報/派遣反應 | logic | 3 | 🟡 純邏輯 | NPC-03 | 晨報與派遣結果可生成一句個性化反應 | JournalReaction 日誌與派遣一句反應；PROG-2-1013（#799） | [v17.2 更正 2026-11-07] 未開始→純邏輯 |
 | **NPC-05** | M9 | Utility AI 行為選擇與主動互動限流（F-1） | logic | 2 | 🟢 已接線 | NPC-01 | scoreNpcAction 五因子相乘，同登入窗只 1 則高權重互動 | 無實作 | 未開始→已接線；#1379 NpcUtilityAI 接 OfflineInteractionEvents |
-| **NPC-06** | M10 | Personality Drift Guard（F-3） | logic | 2 | ⚪ 未開始 | NPC-01 | canAcceptGeneratedLine 檢查字數/現代語/未支持史實/toneTags，失敗回退 FALLBACK_LINE | 無實作 |  |
+| **NPC-06** | M10 | Personality Drift Guard（F-3） | logic | 2 | 🟡 純邏輯 | NPC-01 | canAcceptGeneratedLine 檢查字數/現代語/未支持史實/toneTags，失敗回退 FALLBACK_LINE | PersonalityDriftGuard；PROG-2-1018（#815） | [v17.2 更正 2026-11-07] 未開始→純邏輯 |
 | **NPC-07** | M10 | Golden Line Set 與驗收樣本 | content | 2 | 🟡 純邏輯 | NPC-01 | 核心武將錨點台詞不可被覆蓋，附驗收樣本 | [v16.4 核對 2026-10-27] 今日合併 PR 已接上 src 呼叫端（純邏輯）；待 QA／實機驗收 |  |
 | **NPC-08** | M11 | RAG Dialogue Hook 與 Unknown Event Capture（E-5/E-6） | logic | 3 | 🟡 純邏輯 | BRAIN-12, NPC-03 | 未命中情境寫入 Pending_Unknown_Events，連網時送中台 | [v16.4 核對 2026-10-27] 今日合併 PR 已接上 src 呼叫端（純邏輯）；待 QA／實機驗收 |  |
 | **NPC-09** | M1 | NPC_Memory 本地 read model 與 UI 字串（H/I-2） | data | 2 | 🟢 已接線 | NPC-01 | Data.NPC_Memory 存讀檔，UI_NPC_* 字串入 i18n | i18n 無 UI_NPC_*；存檔無 NPC_Memory | 未開始→已接線；#1438 NpcMemoryReadModel 接 GameSession/PlayerSaveService |
