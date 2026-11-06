@@ -5,7 +5,7 @@
 
 ## 結論
 
-E 段 7 項邏輯皆有程式；本次補上 E-2「戰功」經驗來源。仍缺：E-2「治理」「聯盟參與」兩種來源（規格無數值）；將階 General_Rank 的晉升門檻與名聲來源已於 2026-11-06 定案（門檻 0~1500，來源四途，見 §K），待代碼實作；~~晉升動畫（畫面）~~ PROG-2-1859 已補。
+E 段 7 項邏輯皆有程式；本次補上 E-2「戰功」經驗來源。仍缺：E-2「治理」「聯盟參與」兩種來源（規格無數值）；~~將階 General_Rank 的晉升途徑~~ 門檻與名聲來源已於 2026-11-06 定案（§K），PROG-2-1898 已實作（GeneralRankProgress：出征勝 +15／敗 +5、軍事任務完成 +10／菁英 +15／高難 +25；斬將、討伐、單挑、宿命戰來源待戰場回報資料）；~~晉升動畫（畫面）~~ PROG-2-1859 已補。
 
 | 規格條目 | 規格要點 | 程式（符號） | 測試 | 判定 |
 |---|---|---|---|:-:|
@@ -18,4 +18,4 @@ E 段 7 項邏輯皆有程式；本次補上 E-2「戰功」經驗來源。仍�
 | E-5 聯盟／外交權限 | 州牧聯盟文書、霸府重臣反霸權會盟 | `OfficerUnlocks.allianceDocs`／`antiHegemonySummit`、`OfficerPermissionText` | OfficerPermissionText | ✅ |
 | E-6 晉升提示與獎勵 | 升官動畫、文本、一次性獎勵 | `OfficerPromoted` 事件、`HallMissionSettlement`（晉升獎勵 PROG-2-1197） | OfficerPromotionE2E | ✅ ~~動畫未做~~ PROG-2-1859 已補（大廳暗幕＋「晉升 {官名}」大字定格，每階一次） |
 | E-7／F-3 天下大亂保留 | 官職與解鎖歷史不倒退 | `applyEraShiftToOfficerState` | OfficerHallYearsE2E | ✅ |
-| 覆寫裁定 將階／名聲 | General_Rank／General_Fame 提高帶兵上限 | `GeneralUnit.generalRank／generalFame`、`computeCommandCapacity` | — | ✅ 規格定案（門檻 0~1500，來源四途，見 §K） |
+| 覆寫裁定 將階／名聲 | General_Rank／General_Fame 提高帶兵上限 | `GeneralUnit.generalRank／generalFame`、`computeCommandCapacity`、`GeneralRankProgress`（PROG-2-1898） | GeneralRankProgress | ✅ 規格定案（§K）並已實作；斬將／討伐／單挑／宿命戰來源待接 |

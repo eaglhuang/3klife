@@ -40,6 +40,7 @@ import { EMPTY_AI_ADAPTIVE_STREAK, nextAiAdaptiveStreak, normalizeAiAdaptiveStre
 import { effectiveSandtableStage, normalizeUnlockHistory, recordSandtableUnlock, sandtableShortCodeOf, sandtableStageIdOf, type SandtableStageId } from '../systems/SandtableProgress';
 import { isSandtableTerritory } from '../systems/SandtableTerritories';
 import { hallMissionToOfficerTask, type HallMissionOutcome } from '../systems/HallMissionSettlement';
+import { battleFameGain, gainGeneralFame, generalRankTitle, hallMissionFameGain } from '../systems/GeneralRankProgress';
 import { resolveHallDispatch, type HallDispatchResult } from '../systems/HallMissionDispatch';
 import type { HallBoardKey, HallGateTask, HallPlayerState } from '../systems/HallMissionBoard';
 import { battleIntelligenceOf, outcomeOf } from '../systems/BattleRoster';
@@ -323,6 +324,8 @@ export const GAME_SESSION_EVENTS = {
     SeasonAdvanced: 'game-session-season-advanced',
     /** payload: { tiers: number[] }（大廳任務結算後官職晉升，OFC-08 提示用） */
     OfficerPromoted: 'game-session-officer-promoted',
+    /** payload: GeneralRankPromotedPayload（武將名聲達門檻升將階，PROG-2-1898） */
+    GeneralRankPromoted: 'game-session-general-rank-promoted',
     /** payload: YearReport（第 4 季結束時發出；養成線 FEM-06 等年度掛點接在這裡） */
     YearEnded: 'game-session-year-ended',
     /** payload: DaughterAwaitingRoute[]（年末剛滿 14 歲、還活著的女兒，PROG-2-1787） */
@@ -478,6 +481,13 @@ export interface RecordBattleOptions {
     stageSalvage?: Readonly<SalvageTotals>;
     /** 英靈夢回教學戰的傳說英靈；勝利時產出初始虎符（OPEN-13），沒有時不做任何事 */
     teachingSpirit?: TeachingSpiritInput | null;
+}
+
+export interface GeneralRankPromotedPayload {
+    generalId: string;
+    /** 新將階 1~5；一次跨多階時每一階各發一次 */
+    rank: number;
+    title: string;
 }
 
 export interface AddGeneralsResult {
@@ -3203,6 +3213,7 @@ export class GameSession {
         const assigned = await this.assignHallTask(task.Task_ID, generalId);
         if (!assigned) return { ok: false, reason: 'NO_GENERAL' };
         this.settleHallMission(result.outcome);
+        this._awardGeneralFame(generalId, hallMissionFameGain(result.outcome));
         this._recordEventJournal(result.outcome.success ? 'DISPATCH_SUCCESS' : 'DISPATCH_FAIL', this._journalSubjects([generalId]));
         // 任務結束：同一任務若有未結算的委任紀錄，一併結清（PROG-2-1008）
         await this.settleHallAssign(task.Task_ID, result.outcome.success ? 'success' : 'failure', new Date().toISOString());
@@ -4170,6 +4181,7 @@ export class GameSession {
             this._recordEventJournal(entry.success ? 'DISPATCH_SUCCESS' : 'DISPATCH_FAIL', this._journalSubjects([entry.generalId]));
             if (entry.difficulty === undefined || entry.board === undefined) continue;
             this.settleHallMission({ difficulty: entry.difficulty, board: entry.board, success: entry.success });
+            this._awardGeneralFame(entry.generalId, hallMissionFameGain({ difficulty: entry.difficulty, success: entry.success }));
         }
     }
 
@@ -4417,6 +4429,17 @@ export class GameSession {
         if (hpRatios) {
             roster = roster.map((g) => (g.id in hpRatios ? applyWarInjury(g, hpRatios[g.id]) : g));
         }
+        // 武將名聲與將階（官職系統覆寫裁定，PROG-2-1898 暫定）：出陣武將勝 +15、敗 +5，達門檻自動升階
+        const rankPromotions: GeneralRankPromotedPayload[] = [];
+        const fameGain = battleFameGain(result);
+        if (fameGain > 0) {
+            roster = roster.map((g) => {
+                if (!settlement.entries.some((e) => e.generalId === g.id)) return g;
+                const gained = gainGeneralFame(g, fameGain);
+                gained.promotedRanks.forEach((rank) => rankPromotions.push({ generalId: g.id, rank, title: generalRankTitle(rank) }));
+                return gained.general;
+            });
+        }
         for (const entry of settlement.entries) {
             const index = roster.findIndex((g) => g.id === entry.generalId);
             const actions = options.specialActions?.[entry.generalId] ?? [];
@@ -4446,7 +4469,21 @@ export class GameSession {
         for (const event of awakenings) {
             this._emit(GAME_SESSION_EVENTS.FactorAwakened, event);
         }
+        rankPromotions.forEach((payload) => this._emit(GAME_SESSION_EVENTS.GeneralRankPromoted, payload));
         return record;
+    }
+
+    /** 名聲入帳並依門檻升將階（PROG-2-1898）；不在名冊或沒有名聲時不動。存檔由呼叫端負責。 */
+    private _awardGeneralFame(generalId: string, gain: number): void {
+        if (gain <= 0) return;
+        const all = this._roster.getAll();
+        const general = all.find((g) => g.id === generalId);
+        if (!general) return;
+        const gained = gainGeneralFame(general, gain);
+        this._roster.replaceAll(all.map((g) => (g.id === generalId ? gained.general : g)));
+        for (const rank of gained.promotedRanks) {
+            this._emit(GAME_SESSION_EVENTS.GeneralRankPromoted, { generalId, rank, title: generalRankTitle(rank) });
+        }
     }
 
     /**
