@@ -9,7 +9,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { TestSuite, assert } from './TestRunner';
-import { generalQuickViewTexts, QUICK_VIEW_SKILL_ROWS } from '../assets/scripts/ui/components/GeneralQuickViewTexts';
+import { generalQuickViewTexts, quickViewBuffText, QUICK_VIEW_SKILL_ROWS } from '../assets/scripts/ui/components/GeneralQuickViewTexts';
 
 const LAYOUT = path.resolve(__dirname, '../assets/resources/ui-spec/layouts/general-quickview-main.json');
 const SCREEN = path.resolve(__dirname, '../assets/resources/ui-spec/screens/general-quickview-screen.json');
@@ -82,6 +82,14 @@ export function createGeneralQuickViewSuite(): TestSuite {
         assert.equals('image', types.get('gqPortrait'));
         const withId = generalQuickViewTexts({ ...PLAYER, generalId: 'guan-yu' });
         assert.isTrue(!('gqPortrait' in withId), '頭像不走文字欄位');
+    });
+
+    suite.test('當前 Buff 列（PROG-2-1872）：有狀態列出，沒有顯示「無」；敵方也照列', () => {
+        assert.equals('✨ Buff：疾行(2)、暈眩(1)', quickViewBuffText(['疾行(2)', '暈眩(1)']));
+        assert.equals('✨ Buff：無', quickViewBuffText([]));
+        assert.equals('✨ Buff：無', quickViewBuffText(undefined));
+        const enemy = generalQuickViewTexts({ name: '呂布', title: '敵方主將', faction: '敵方', hp: 1, maxHp: 1, atk: 1, def: 1, isEnemy: true, buffs: ['虛弱(2)'] });
+        assert.equals('✨ Buff：虛弱(2)', enemy.gqBuff);
     });
 
     return suite;

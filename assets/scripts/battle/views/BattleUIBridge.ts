@@ -997,8 +997,21 @@ export class BattleUIBridge {
       hp: unit.currentHp, maxHp: unit.maxHp,
       atk: Math.round(unit.str * 10), def: Math.round(unit.lea * 10), spd: unit.luk, int: unit.int,
       skills: quickViewSkillLines(unit.skillId ? [unit.skillId] : [], req.isEnemy, this._revealedEnemySkills), isEnemy: req.isEnemy,
+      buffs: this._generalBuffLabels(req.side),
     };
     services().event.emit(EVENT_NAMES.ShowGeneralQuickView, data);
+  }
+
+  /** 主將在棋盤上的化身單位（player-general-*／enemy-general-*）身上的狀態，例「疾行(2)」（PROG-2-1872） */
+  private _generalBuffLabels(side: 'player' | 'enemy'): string[] {
+    const state = this.ctx.ctrl?.state;
+    if (!state) return [];
+    const avatar = Array.from(state.units.values()).find((u) => u.id.startsWith(`${side}-general-`) && !u.isDead());
+    if (!avatar) return [];
+    return services().buff.getBuffs(avatar.id)
+      .map((b) => ({ label: statusEffectFloatText(b.effect), turns: b.remainingTurns }))
+      .filter((b) => b.label.length > 0)
+      .map((b) => `${b.label}(${b.turns})`);
   }
 
   // ── 戰鬥動畫佇列（委託給 TurnFlowManager 共享 ctx）────────────────────────

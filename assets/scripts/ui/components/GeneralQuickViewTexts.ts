@@ -14,6 +14,12 @@ export const QUICK_VIEW_SKILL_ROWS = 3;
 const ENEMY_MASK = '???';
 const EMPTY_SKILL = '——';
 
+/** 快覽最後一列「當前 Buff」（主戰場UI規格書 §4.3，PROG-2-1872）；狀態在戰場上看得到，敵方也照列 */
+export function quickViewBuffText(buffs: readonly string[] | undefined): string {
+    const shown = (buffs ?? []).filter((b) => b.length > 0);
+    return `✨ Buff：${shown.length > 0 ? shown.join('、') : '無'}`;
+}
+
 export function generalQuickViewTexts(data: GeneralQuickViewData): Record<string, string> {
     const mask = data.isEnemy ? ENEMY_MASK : null;
     const texts: Record<string, string> = {
@@ -28,5 +34,6 @@ export function generalQuickViewTexts(data: GeneralQuickViewData): Record<string
     };
     const skills = data.skills ?? [];
     for (let i = 0; i < QUICK_VIEW_SKILL_ROWS; i++) texts[`gqSkill${i + 1}`] = skills[i] ?? EMPTY_SKILL;
+    texts.gqBuff = quickViewBuffText(data.buffs);
     return texts;
 }

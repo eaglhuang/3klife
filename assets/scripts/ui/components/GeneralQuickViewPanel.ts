@@ -54,6 +54,8 @@ export interface GeneralQuickViewData {
     isEnemy?: boolean;
     /** 武將 id，用來載入小窗左上的頭像（PROG-2-1865）；沒給就保留版面預設圖 */
     generalId?: string;
+    /** 當前 Buff／Debuff 顯示名（含剩餘回合），空陣列顯示「無」（PROG-2-1872） */
+    buffs?: string[];
 }
 
 @ccclass('GeneralQuickViewPanel')
