@@ -3,7 +3,7 @@
  * ResultPopupComposite — 戰鬥結果彈窗（Composite 版）
  * Wave 2 migration from ResultPopup - shows victory/defeat/stalemate results
  */
-import { _decorator, Button, Color, Mask, Node, Sprite, Tween, tween, UIOpacity, Vec3 } from 'cc';
+import { _decorator, Button, Color, Mask, Node, Sprite, Tween, tween, UIOpacity, Vec3, Widget } from 'cc';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { loadGeneralAvatar } from '../core/GeneralAvatarLoader';
@@ -11,6 +11,7 @@ import { playTitleFreeze } from '../core/TitleFreezeOverlay';
 import type { AwakeningFreezeTiming } from '../../shared/interfaces/IBattleUIComponents';
 import { resultPopupTone } from '../../shared/ResultPopupTone';
 import { bringNodeToFront } from '../core/NodeBringToFront';
+import { stretchWidgetToParent } from '../core/WidgetStretch';
 
 const { ccclass } = _decorator;
 
@@ -47,6 +48,8 @@ export class ResultPopupComposite extends CompositePanel {
         this._applyResultTone(result.resultType);
         // 地格標籤層、戰鬥紀錄等面板在場景載入後才加進 Canvas，會排在結算窗之上（PROG-2-1878）
         bringNodeToFront(this.node);
+        // 場景裡的 Popup host 只設置中、固定 100×100，全螢幕深色遮罩跟著縮小看不到（規格書 §4.2，PROG-2-1879）
+        stretchWidgetToParent(this.node.getComponent(Widget) ?? this.node.addComponent(Widget));
 
         this.node.active = true;
         this._visible = true;
