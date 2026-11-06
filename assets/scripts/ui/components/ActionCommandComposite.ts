@@ -20,7 +20,8 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
  *
  * Unity 對照：UltimateButtonController + ActionBtnGroup，但透過 CompositePanel 統一管理
  */
-import { _decorator, Button, Color, Label, Node, Sprite, UITransform } from 'cc';
+import { _decorator, Button, Color, Label, Node, Sprite, Tween, tween, UITransform, Vec3 } from 'cc';
+import { ULTIMATE_READY_PULSE, ultimateRingState } from '../../core/systems/UltimateRingView';
 import { EVENT_NAMES, Faction } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
 import { CompositePanel } from '../core/CompositePanel';
@@ -66,6 +67,8 @@ export class ActionCommandComposite extends CompositePanel {
     private _tacticsEnabledColor: Color | null = null;
     private _maxSp = 100;
     private _currentSp = 0;
+    /** SP 滿時奧義大圓的呼吸脈衝（doc_ui_0001 §2.4，PROG-2-1892） */
+    private _readyPulse: Tween<Node> | null = null;
     private _isMounted = false;
 
     private readonly _readyWaiters: Array<(ready: boolean) => void> = [];
@@ -79,6 +82,7 @@ export class ActionCommandComposite extends CompositePanel {
     }
 
     protected onDestroy(): void {
+        this._setReadyPulse(false);
         this.unmount();
         this._unsubs.forEach(fn => fn());
         this._unsubs.length = 0;
@@ -237,14 +241,16 @@ export class ActionCommandComposite extends CompositePanel {
         this._currentSp = data.sp;
         this._maxSp     = data.maxSp > 0 ? data.maxSp : 100;
 
-        const ratio   = Math.min(1, this._currentSp / this._maxSp);
-        const pct     = Math.round(ratio * 100);
-        const isReady = pct >= 100;
+        const ring    = ultimateRingState(this._currentSp, this._maxSp);
+        const pct     = ring.pct;
+        const isReady = ring.ready;
 
-        // 更新 SP 填充環（Sprite Filled radial）
+        // 更新 SP 填充環（Sprite Filled radial）；滿格亮色＋呼吸脈衝，未滿暗色（§2.4）
         if (this._spRingSprite) {
-            this._spRingSprite.fillRange = ratio;
+            this._spRingSprite.fillRange = ring.ratio;
+            this._spRingSprite.color = new Color(ring.color[0], ring.color[1], ring.color[2], 255);
         }
+        this._setReadyPulse(isReady);
 
         // 更新奧義標籤（SP滿→發動，SP未滿→奧義）
         if (this._ultLabel) {
@@ -256,6 +262,25 @@ export class ActionCommandComposite extends CompositePanel {
             this._spPctLabel.node.active = !isReady;
             if (!isReady) this._spPctLabel.string = `SP ${pct}%`;
         }
+    }
+
+    private _setReadyPulse(on: boolean): void {
+        const btn = this._ultimateBtnNode;
+        if (on) {
+            if (this._readyPulse || !btn) return;
+            const { scaleMax, halfPeriodSec } = ULTIMATE_READY_PULSE;
+            btn.setScale(1, 1, 1);
+            this._readyPulse = tween(btn)
+                .to(halfPeriodSec, { scale: new Vec3(scaleMax, scaleMax, 1) })
+                .to(halfPeriodSec, { scale: new Vec3(1, 1, 1) })
+                .union()
+                .repeatForever()
+                .start();
+            return;
+        }
+        this._readyPulse?.stop();
+        this._readyPulse = null;
+        if (btn && btn.isValid) btn.setScale(1, 1, 1);
     }
 
     // ── 按鈕事件 ─────────────────────────────────────────────
