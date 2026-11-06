@@ -1,0 +1,10 @@
+{
+  "version": "1.0.0",
+  "description": "名士好感等級與劇情解鎖錨點（暫定，11/06 裁決 #10，PROG-2-1951）。favorLevelExp 為升到 Lv1～Lv5 的累積好感經驗；storyUnlocks 以官階（officer-tier，1～5）或遊戲年份（year，從 1 起算）為錨點，與累計占卜次數任一達成即解鎖；設為 null 可移除某名士的劇情錨點。",
+  "favorLevelExp": [100, 250, 500, 850, 1300],
+  "favorAccuracy": { "perLevel": 0.01, "cap": 0.95 },
+  "storyUnlocks": {
+    "pang-tong": { "type": "officer-tier", "minTier": 3 },
+    "zuo-ci": { "type": "year", "minYear": 5 }
+  }
+}
