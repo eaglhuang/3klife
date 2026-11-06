@@ -86,13 +86,13 @@ export function createLegacySuite(): TestSuite {
         }
     });
 
-    suite.test('退役：未滿 65 歲、已故、已退役、不在名冊都拒絕', async () => {
+    suite.test('退役：未滿 60 歲、已故、已退役、不在名冊都拒絕', async () => {
         const { session } = createSession(new MemoryStorageAdapter(), [
-            makeGeneral('young', '男', 64.5),
+            makeGeneral('young', '男', 59.5),
             makeGeneral('gone', '男', 70, { status: 'dead' }),
             makeGeneral('old', '男', 65),
         ]);
-        await assertRejects(() => session.retireGeneral('young'), '未滿 65 歲不可退役');
+        await assertRejects(() => session.retireGeneral('young'), '未滿 60 歲不可退役');
         await assertRejects(() => session.retireGeneral('gone'), '已故不可退役');
         await assertRejects(() => session.retireGeneral('nobody'), '不在名冊不可退役');
         await session.retireGeneral('old');

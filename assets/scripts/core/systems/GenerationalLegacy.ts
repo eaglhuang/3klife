@@ -158,3 +158,38 @@ export function attachLegacySupport(state: AcademyStateSnapshot, mentors: readon
     next.legacySupport = { statBonusPct, traitSeeds };
     return next;
 }
+
+/**
+ * 祠堂軍功聲望（doc_spec_0310 §3；PROG-2-1910）。
+ * 與 ClanTier（血統譜牒 0~3 階）雙軌並存，互不覆蓋：這裡只看歷代武將一生的功業。
+ */
+export const CLAN_PRESTIGE_GAIN = { perFinalRank: 500, perKill: 50, perWin: 100 } as const;
+/** Lv.1 鄉野寒門 → Lv.5 百年門閥 的累積聲望門檻 */
+export const CLAN_PRESTIGE_THRESHOLDS: readonly number[] = [0, 1500, 4500, 10000, 25000];
+export const CLAN_PRESTIGE_TIER_NAMES: readonly string[] = ['鄉野寒門', '鄉梓郡望', '州郡望族', '名門世家', '百年門閥'];
+
+export interface PrestigeCareer {
+    finalRank: number;
+    totalKills: number;
+    totalWins: number;
+}
+
+function nonNegInt(v: number): number {
+    return Number.isFinite(v) && v > 0 ? Math.floor(v) : 0;
+}
+
+/** 一位武將退役時帶回祠堂的聲望 */
+export function calculatePrestigeGain(career: Readonly<PrestigeCareer>): number {
+    return nonNegInt(career.finalRank) * CLAN_PRESTIGE_GAIN.perFinalRank
+        + nonNegInt(career.totalKills) * CLAN_PRESTIGE_GAIN.perKill
+        + nonNegInt(career.totalWins) * CLAN_PRESTIGE_GAIN.perWin;
+}
+
+/** 累積聲望對應的祠堂等級 1~5 */
+export function clanPrestigeTierOf(prestige: number): number {
+    let tier = 1;
+    for (let i = 0; i < CLAN_PRESTIGE_THRESHOLDS.length; i++) {
+        if (prestige >= CLAN_PRESTIGE_THRESHOLDS[i]) tier = i + 1;
+    }
+    return tier;
+}

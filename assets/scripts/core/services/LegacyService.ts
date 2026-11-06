@@ -35,6 +35,7 @@ import {
     AgingGeneral,
     GENERAL_STATUS_DEAD,
     RETIREMENT_AGE,
+    RETIRE_MIN_AGE,
 } from '../systems/GeneralAging';
 import type { BreedingGeneral } from '../systems/BreedingSystem';
 import { BranchCompactor } from './BranchCompactor';
@@ -138,15 +139,15 @@ export class LegacyService implements SeasonLifecycle {
         );
     }
 
-    /** 玩家決定讓 65 歲以上的武將退役，轉成教官傳承資料；武將留在名冊（仍會老、會死） */
+    /** 玩家決定讓 60 歲以上的武將榮譽退役，轉成教官傳承資料；武將留在名冊（仍會老、會死） */
     public async retireGeneral(roster: GeneralConfig[], generalId: string, time: GameTimeState): Promise<RetireResult> {
         await this._ensureReady();
         const target = roster.find((g) => g.id === generalId) as LegacyGeneral | undefined;
         if (!target) throw new LegacyError(`名冊中找不到 ${generalId}`);
         if (!isAlive(target)) throw new LegacyError(`${target.name} 已故，不能退役`);
         if (target.isMentorCard) throw new LegacyError(`${target.name} 已經退役`);
-        if ((target.age ?? 0) < RETIREMENT_AGE) {
-            throw new LegacyError(`${target.name} 尚未滿 ${RETIREMENT_AGE} 歲（目前 ${target.age ?? 0}），不能退役`);
+        if ((target.age ?? 0) < RETIRE_MIN_AGE) {
+            throw new LegacyError(`${target.name} 尚未滿 ${RETIRE_MIN_AGE} 歲（目前 ${target.age ?? 0}），不能退役`);
         }
 
         const retired: LegacyGeneral = { ...target, isMentorCard: true, retiredSeason: time.totalSeasonsElapsed };
