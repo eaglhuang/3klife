@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-06T16-41-38-066Z-scope-amendment-fbc7b7bbaf9e",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:a9c5e21e1f6df62211ad6cf0ba40d147796acee1b11cd16759991e074bb4fc2b",
+  "createdAt": "2026-11-06T16:41:38.066Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"artifacts/general-avatar-review/page-999.json,artifacts/general-avatar-review/page-999.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
