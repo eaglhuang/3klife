@@ -13,6 +13,7 @@
 import { tallyLegendDeployLine } from '../../core/systems/TallyScripts';
 import { aptitudeToastPayload } from '../../core/systems/AptitudeDialogue';
 import { setBattleTimeScale } from './BattleTimeScale';
+import { statusEffectFloatText } from '../shared/StatusEffectLabel';
 import { salvageSummaryLines } from '../../core/systems/StageSalvageSettlement';
 import { DELEGATE_OFF_LINE, DELEGATE_UNAVAILABLE_LINE, delegateOnLine, FOOD_EMPTY_LINE } from '../../core/systems/SortieDeployScripts';
 import { wisdomMeterText, WISDOM_SURGE_LOG } from '../shared/WisdomMeter';
@@ -231,6 +232,8 @@ export class BattleUIBridge {
       svc.event.on(EVENT_NAMES.ShowToast,               this._onShowToast.bind(this)),
       // 工兵攻城（PROG-2-1868）：堡壘血量原本只在除錯面板看得到，受損時寫進戰報
       svc.event.on(EVENT_NAMES.FortressDamaged,         this._onFortressDamaged.bind(this)),
+      // Buff/Debuff 飄字（主戰場UI規格書 §3.2，PROG-2-1869）
+      svc.event.on(EVENT_NAMES.BuffApplied,             this._onBuffApplied.bind(this)),
       // 控制列 x2（PROG-2-1867）：整個戰場畫面加速，離開戰場時在 unsubscribeEvents 還原
       svc.event.on(EVENT_NAMES.BattleSpeedToggled,      (speed: number) => setBattleTimeScale(speed)),
       svc.event.on(EVENT_NAMES.AutoBattleToggled,       this._onAutoBattleToggled.bind(this)),
@@ -966,6 +969,13 @@ export class BattleUIBridge {
   }
 
   /** 其他元件要求的短提示（如大招充能未滿，PROG-2-1866）：交給同一套 Toast 佇列 */
+  private _onBuffApplied(data: { unitId: string; effect: string; turns: number }): void {
+    const unit = data ? this.ctx.ctrl?.state.units.get(data.unitId) : undefined;
+    if (!unit || unit.isDead()) return;
+    const text = statusEffectFloatText(data.effect);
+    if (text) this.ctx.unitRenderer?.playBuffConsumeValue(unit.lane, unit.depth, text);
+  }
+
   private _onFortressDamaged(data: { faction: Faction; hp: number }): void {
     if (!data) return;
     this.appendLog(fortressDamagedLogLine(data.faction, data.hp));
