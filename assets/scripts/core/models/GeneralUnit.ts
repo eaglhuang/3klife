@@ -379,6 +379,8 @@ export interface GeneralConfig {
   genes?: GeneralGeneConfig[];
 
   learnedTactics?: string[];
+  /** 學府結業等途徑習得的特質 id（PROG-2-1909） */
+  learnedTraits?: string[];
   inspiredTactics?: string[];
   lockedTactics?: string[];
   tacticSlots?: GeneralTacticSlotConfig[];
