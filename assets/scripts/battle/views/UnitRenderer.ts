@@ -44,6 +44,7 @@ import { SpineGeneralOverlay } from "./SpineGeneralOverlay";
 import { BATTLE_VISUAL_TIMING } from "./BattlePresentationTiming";
 import { BuffGainEffectPool } from "./effects/BuffGainEffectPool";
 import { statBonusTone, statWithBonusText, type StatBonusTone } from "../shared/StatBonusText";
+import { unitHpBarState, type UnitHpBarState } from "../shared/UnitHpBar";
 import { services } from "../../core/managers/ServiceLoader";
 import { FloatTextType } from "../../core/systems/FloatTextSystem";
 import { vitalityRingView, type VitalityRingView } from "../../core/systems/VitalityBarView";
@@ -76,6 +77,8 @@ interface UnitView {
   hpLabel: Label;
   labelOpacity: UIOpacity;
   bottomNameLabel: Label | null;
+  /** 頭頂血條（主戰場UI規格書 §3.1，PROG-2-1874） */
+  hpBar: Graphics;
   troopType: TroopType;
   usingTroopFormation: boolean;
 }
@@ -120,6 +123,14 @@ interface TileBuffView {
 
 /** 掠奪飄字每行間隔（秒） */
 const LOOT_TEXT_STAGGER_SEC = 0.5;
+
+/** 頭頂血條尺寸（名牌座標，名牌本身縮 0.7；PROG-2-1874） */
+const HP_BAR_WIDTH = 150;
+const HP_BAR_HEIGHT = 8;
+const HP_BAR_COLOR = {
+  player: new Color(70, 150, 255, 255),
+  enemy: new Color(230, 70, 60, 255),
+} as const;
 
 /** 名牌旁精力能量環半徑（PROG-2-1853） */
 const VITALITY_RING_RADIUS = 24;
@@ -1210,6 +1221,7 @@ export class UnitRenderer extends Component {
     labelNode.layer = this.canvasNode?.layer ?? Layers.Enum.UI_2D;
     this.uiRoot?.addChild(labelNode);
     const badge = this.buildBadge(labelNode, 170, 34, unit.type);
+    const hpBar = this.buildHpBar(labelNode, 34 + 5);
 
     // 敵軍單位：HUD 上方標籤顯示紅色，不需修改 badge.hpLabel（已是豉紅）
     if (unit.faction === Faction.Enemy) {
@@ -1233,6 +1245,7 @@ export class UnitRenderer extends Component {
       hpLabel: badge.hpLabel,
       labelOpacity: badge.opacity,
       bottomNameLabel: badge.bottomNameLabel,
+      hpBar,
       troopType: unit.type,
       usingTroopFormation: false,
     };
@@ -1280,6 +1293,7 @@ export class UnitRenderer extends Component {
     view.hpLabel.color = this.statToneColor(statBonusTone(hpBonus));
     view.troopType = unit.type;
     view.labelOpacity.opacity = 255;
+    this.drawHpBar(view.hpBar, unitHpBarState(unit.currentHp, unit.getEffectiveMaxHp(), unit.faction === Faction.Player));
 
     // 更新下排兵種名稱（小兵顯示完整對應名稱，將軍化身則顯示「將」）
     if (view.bottomNameLabel) {
@@ -1292,6 +1306,32 @@ export class UnitRenderer extends Component {
     // formationRoot 不再負責旋轉，各 soldier 以 0° local rotation 繼承 worldNode 方向
     this.alignNodeToFactionFacing(view.worldNode, unit.faction);
     this.projectWorldLabel(view.worldNode, view.labelNode, this.labelHeight);
+  }
+
+  /** 頭頂血條節點：放在名牌上緣之上（主戰場UI規格書 §3.1，PROG-2-1874） */
+  private buildHpBar(labelNode: Node, badgeHalfHeight: number): Graphics {
+    const barNode = new Node("HpBar");
+    barNode.layer = labelNode.layer;
+    labelNode.addChild(barNode);
+    barNode.addComponent(UITransform).setContentSize(HP_BAR_WIDTH, HP_BAR_HEIGHT);
+    barNode.setPosition(0, badgeHalfHeight + 4 + HP_BAR_HEIGHT / 2, 0);
+    barNode.active = false;
+    return barNode.addComponent(Graphics);
+  }
+
+  /** 受傷才顯示；我方藍、敵方紅 */
+  private drawHpBar(g: Graphics, state: UnitHpBarState): void {
+    g.node.active = state.visible;
+    if (!state.visible) return;
+    const x = -HP_BAR_WIDTH / 2;
+    const y = -HP_BAR_HEIGHT / 2;
+    g.clear();
+    g.fillColor = new Color(0, 0, 0, 180);
+    g.roundRect(x - 2, y - 2, HP_BAR_WIDTH + 4, HP_BAR_HEIGHT + 4, 3);
+    g.fill();
+    g.fillColor = HP_BAR_COLOR[state.tone];
+    g.rect(x, y, HP_BAR_WIDTH * state.ratio, HP_BAR_HEIGHT);
+    g.fill();
   }
 
   /** 名牌左側精力能量環（武將壽命系統 §UI，PROG-2-1853）：底環＋精力弧＋百分比 */
