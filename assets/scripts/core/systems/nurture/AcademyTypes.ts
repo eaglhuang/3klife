@@ -127,6 +127,12 @@ export interface IAcademyGimmickHandler {
     comingOfAgeOptions?(state: AcademyStateSnapshot, rng: IDeterministicRng): string[];
     /** 專屬互動（GIMMICK_INTERACT，不消耗回合；未提供則不接受此動作） */
     onInteract?(state: AcademyStateSnapshot, optionId: string | undefined, rng: IDeterministicRng): void;
+    /** 回傳非 null 時，玩家必須先完成該專屬互動才能訓練或休息（如潁川清談大會） */
+    blockingInteraction?(state: AcademyStateSnapshot): string | null;
+    /** AUTO 模式代選的專屬互動 optionId */
+    autoInteraction?(state: AcademyStateSnapshot): string;
+    /** 結業確認時發放學府專屬戰法／特質 */
+    onGraduate?(state: AcademyStateSnapshot): void;
 }
 
 export function academyPhaseOf(turn: number): AcademyPhase {
