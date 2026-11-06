@@ -1,6 +1,6 @@
 {
   "taskId": "UI-2-0121",
-  "updatedAt": "2026-11-06T23:16:39.036Z",
+  "updatedAt": "2026-11-06T23:20:58.553Z",
   "evidence": [
     {
       "evidenceKind": "validation",
@@ -2102,6 +2102,87 @@
         "commandRunCache": {
           "schemaId": "atm.commandRunCache.v1",
           "cacheKey": "sha256:7449c110368a21c736247ec7d2039a090ad496f7b9972e11dd4215988841ddae",
+          "reusedRunCount": 0,
+          "runCount": 1,
+          "sourcePath": null
+        }
+      }
+    },
+    {
+      "evidenceKind": "validation",
+      "evidenceType": "test",
+      "summary": "Auto-run: python -X utf8 C:/Users/User/.codex/skills/.system/skill-creator/scripts/quick_validate.py .github/skills/general-portrait-style",
+      "artifactPaths": [],
+      "evidenceFreshness": "fresh",
+      "producedBy": "codex-gpt-6.1-terra",
+      "sessionId": "session-20261105171558-codex-gpt-6.1-sol-UI-2-0121-3220962ee1",
+      "createdAt": "2026-11-06T23:20:58.553Z",
+      "details": {
+        "actorId": "codex-gpt-6.1-terra",
+        "sessionId": "session-20261105171558-codex-gpt-6.1-sol-UI-2-0121-3220962ee1",
+        "kind": "test",
+        "freshness": "fresh",
+        "commandRuns": [
+          {
+            "command": "python -X utf8 C:/Users/User/.codex/skills/.system/skill-creator/scripts/quick_validate.py .github/skills/general-portrait-style",
+            "exitCode": 0,
+            "stdoutSha256": "sha256:6cf9e7f0d34ccd36dbd28f270cd28dd04277b2e1516bd4333ce7bb501d7b18d4",
+            "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "startedAt": "2026-11-06T23:20:57.784Z",
+            "finishedAt": "2026-11-06T23:20:58.552Z",
+            "durationMs": 768,
+            "cached": false,
+            "cwd": ".",
+            "runnerKind": "dev-source",
+            "sourceCommit": "a98c1dc453de390757cfc2089ed20650d7981c01",
+            "cacheKey": "sha256:283570d1d6219ce064086f6327424b09de5da1e57f613060f440b86c74163ed7",
+            "generatedAt": "2026-11-06T23:20:58.552Z",
+            "canonicalObservation": {
+              "schemaId": "atm.telemetryObservation.v1",
+              "specVersion": "0.1.0",
+              "migration": {
+                "strategy": "none",
+                "fromVersion": null,
+                "notes": "Canonical telemetry observation contract."
+              },
+              "observationId": "sha256:283570d1d6219ce064086f6327424b09de5da1e57f613060f440b86c74163ed7",
+              "producerId": "evidence.command-runs",
+              "producerVersion": "0.1.0",
+              "observationKind": "command-run",
+              "status": "canonical",
+              "source": "evidence-command-run-normalizer",
+              "sourceAvailability": "available",
+              "storagePolicy": "tracked-compact-digest",
+              "generatedAt": "2026-11-06T23:20:58.552Z",
+              "observedAt": "2026-11-06T23:20:58.552Z",
+              "startedAt": "2026-11-06T23:20:57.784Z",
+              "finishedAt": "2026-11-06T23:20:58.552Z",
+              "durationMs": 768,
+              "laneSessionId": null,
+              "taskId": "UI-2-0121",
+              "batchId": null,
+              "waveId": null,
+              "inputDigest": "sha256:f855a58c5b6b343904cba8d167b5613a25c3efe7cc1d9f2c63efb51d6282394d",
+              "outputDigest": "sha256:b83a5d84b204bb3178033067cb4148e2995c66472fefae80888620e4d7c00a02",
+              "cache": {
+                "key": "sha256:283570d1d6219ce064086f6327424b09de5da1e57f613060f440b86c74163ed7",
+                "hit": false
+              },
+              "extensions": {
+                "command": "python -X utf8 C:/Users/User/.codex/skills/.system/skill-creator/scripts/quick_validate.py .github/skills/general-portrait-style",
+                "cwd": ".",
+                "exitCode": 0,
+                "validators": [],
+                "runnerKind": "dev-source",
+                "sourceCommit": "a98c1dc453de390757cfc2089ed20650d7981c01",
+                "runnerVersion": null
+              }
+            }
+          }
+        ],
+        "commandRunCache": {
+          "schemaId": "atm.commandRunCache.v1",
+          "cacheKey": "sha256:aa32f19e3e6e8312434bd32adec25b1a733b5c4ee05fe79fe1389515dc3c9623",
           "reusedRunCount": 0,
           "runCount": 1,
           "sourcePath": null
