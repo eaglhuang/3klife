@@ -27,7 +27,7 @@ import { discoveryPhaseUnlockLines } from '../../core/systems/DiscoveryProgress'
 import { factorAwakeningLines } from '../../core/systems/FactorAwakening';
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import type { TeachingSpiritInput } from '../../core/systems/TeachingSpiritTalisman';
-import { Color, Component, EventKeyboard, EventMouse, EventTouch, Input, KeyCode, Node, input } from 'cc';
+import { Component, EventKeyboard, EventMouse, EventTouch, Input, KeyCode, Node, input } from 'cc';
 import { EVENT_NAMES, Faction, SP_PER_KILL, TroopType, TurnPhase } from '../../core/config/Constants';
 import { battleAptitudeProfileOf, terrainGradeOf } from '../../core/systems/BattleAptitude';
 import { TerrainFeedbackTracker } from '../../core/systems/TerrainAptitudeFeedback';
@@ -48,6 +48,7 @@ import { buildTacticAvailability } from '../../ui/core/TacticAvailabilityPresent
 import { resolveBattleSkillProfile } from '../skills/BattleSkillProfiles';
 import { GeneralUnit } from '../../core/models/GeneralUnit';
 import { BattleController } from '../controllers/BattleController';
+import { playTurnBannerOn } from './TurnBannerPresenter';
 import type { BattleResult } from '../BattleTypes';
 import { BattleSpecialActionTracker, specialActionDisplayName, toUnitHitObservation, type UnitDamagedPayload } from '../../core/systems/BattleSpecialActions';
 import { strategistHudViewOf } from '../shared/StrategistHudView';
@@ -301,16 +302,7 @@ export class BattleUIBridge {
   }
 
   public playTurnBanner(faction: Faction): void {
-    // 全域去抖：避免短時間內被多個元件重複呼叫而導致重複提示
-    const now = Date.now();
-    const last = (globalThis as any).__lastTurnBannerTime ?? 0;
-    if (now - last < BATTLE_TURN_FLOW_TIMING.turnBannerDebounceMs) return;
-    (globalThis as any).__lastTurnBannerTime = now;
-
-    const message = faction === Faction.Player ? '我方回合開始' : '敵方回合開始';
-    const color   = faction === Faction.Player
-      ? new Color(90, 190, 255, 255) : new Color(255, 110, 110, 255);
-    this.ctx.deployRuntime?.showToast(message, BATTLE_TURN_FLOW_TIMING.turnBannerToastSec, { color });
+    playTurnBannerOn(this.ctx.deployRuntime, faction);
   }
 
   public appendLog(text: string): void {

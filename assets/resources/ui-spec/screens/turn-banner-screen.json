@@ -1,0 +1,9 @@
+{
+  "id": "turn-banner-screen",
+  "version": 1,
+  "uiId": "TurnBanner",
+  "layer": "System",
+  "bundle": "common_ui",
+  "layout": "turn-banner-main",
+  "skin": "turn-banner-default"
+}

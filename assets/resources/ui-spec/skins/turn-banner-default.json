@@ -1,0 +1,23 @@
+{
+  "id": "turn-banner-default",
+  "version": 1,
+  "bundle": "common_ui",
+  "atlasPolicy": "common",
+  "slots": {
+    "turnBanner.bg": {
+      "kind": "color-rect",
+      "color": "#000000B3"
+    },
+    "turnBanner.label": {
+      "kind": "label-style",
+      "fontSize": 56,
+      "isBold": true,
+      "color": "textPrimary",
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
+      "overflow": "SHRINK",
+      "outlineColor": "outlineHeavy",
+      "outlineWidth": 3
+    }
+  }
+}

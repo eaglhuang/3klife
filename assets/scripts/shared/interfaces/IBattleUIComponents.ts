@@ -89,6 +89,8 @@ export interface IDeployRuntimeLike {
     selectLane(lane: number): void;
     deploySelected(): void;
     showToast(message: string, duration?: number, options?: { color?: Color; key?: string }): void;
+    /** 回合開始橫幅；舊版 DeployPanel 沒有時呼叫端退回 showToast（PROG-2-1888） */
+    showTurnBanner?(text: string, color: Color, durationSec: number): void;
     setTroopSlotButtonsVisible(visible: boolean): void;
     registerDragDropCallback(callback: (x: number, y: number) => void): void;
     /** 拖曳中回報手指螢幕座標；結束拖曳時回報 null（PROG-2-1880） */

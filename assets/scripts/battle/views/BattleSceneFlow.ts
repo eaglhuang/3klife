@@ -1,6 +1,6 @@
 // @spec-source → 主戰場UI規格書.md (doc_ui_0001)、戰場部署系統.md (doc_spec_0040)；PROG-2-1429 依建檔紀錄補標出處
 import { IBattleHUDLike, IBattleLogLike, IDeployRuntimeLike } from '../../shared/interfaces/IBattleUIComponents';
-import { Color } from 'cc';
+import { playTurnBannerOn } from './TurnBannerPresenter';
 import { Faction } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
 import type { BattleController } from '../controllers/BattleController';
@@ -136,20 +136,7 @@ export class BattleSceneFlow {
   }
 
   public playTurnBanner(faction: Faction): void {
-    // 全域去抖：避免短時間內被多個元件重複呼叫而導致重複提示
-    const now = Date.now();
-    const last = (globalThis as any).__lastTurnBannerTime ?? 0;
-    if (now - last < BATTLE_TURN_FLOW_TIMING.turnBannerDebounceMs) return;
-    (globalThis as any).__lastTurnBannerTime = now;
-
-    const message = faction === Faction.Player ? '我方回合開始' : '敵方回合開始';
-    const color = faction === Faction.Player
-      ? new Color(90, 190, 255, 255)
-      : new Color(255, 110, 110, 255);
-
-    this.ctx.getDeployRuntime()?.showToast(message, BATTLE_TURN_FLOW_TIMING.turnBannerToastSec, {
-      color,
-    });
+    playTurnBannerOn(this.ctx.getDeployRuntime(), faction);
   }
 
   public finalizeAdvance(): void {
