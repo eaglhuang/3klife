@@ -68,6 +68,7 @@ class DummyNode {
     }
   }
 }
+DummyNode.EventType = { NODE_DESTROYED: 'node-destroyed', SIZE_CHANGED: 'size-changed' };
 
 class DummyAudioSource extends DummyComponent {
   constructor() {

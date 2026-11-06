@@ -3,6 +3,7 @@ import { _decorator, Component, Node, Sprite, Color, tween, UIOpacity, Tween, Ve
 import { services } from '../../core/managers/ServiceLoader';
 import { EVENT_NETWORK_OFFLINE, EVENT_NETWORK_ONLINE } from '../../core/systems/NetworkService';
 import { EVENT_SYNCING, EVENT_SYNC_COMPLETE, EVENT_OFFLINE_REMINDER } from '../../core/systems/SyncManager';
+import { networkIndicatorView, NetworkIndicatorEvent } from '../core/NetworkIndicatorState';
 
 const { ccclass, requireComponent } = _decorator;
 
@@ -10,19 +11,22 @@ const { ccclass, requireComponent } = _decorator;
  * 網路狀態指示器 (視覺化元件)
  * 掛載於包含 UI_2D 的節點，自帶 Sprite 用於顯示斷線或同步狀態。
  * 支援漸入漸隱效果與轉圈圈動畫，不打斷玩家在單機模式下的沉浸感。
+ * 各事件的外觀見 NetworkIndicatorState（PROG-2-1881）。
  */
 @ccclass('NetworkStatusIndicator')
-@requireComponent(Sprite)
-@requireComponent(UIOpacity)
+// 兩個需求必須寫成陣列；分開寫兩個 @requireComponent 後者會蓋掉前者，UIOpacity 不會自動補上（PROG-2-1881）
+@requireComponent([Sprite, UIOpacity])
 export class NetworkStatusIndicator extends Component {
     private sprite: Sprite | null = null;
     private uiOpacity: UIOpacity | null = null;
     private spinTween: Tween<Node> | null = null;
+    /** 固定參照，才能在新事件進來時取消上一次排定的自動淡出 */
+    private readonly autoHide = (): void => this.hideIcon();
 
     protected onLoad(): void {
         this.sprite = this.getComponent(Sprite);
         this.uiOpacity = this.getComponent(UIOpacity);
-        
+
         // 預設為全透明隱藏狀態，平時不干擾畫面
         if (this.uiOpacity) this.uiOpacity.opacity = 0;
     }
@@ -43,63 +47,70 @@ export class NetworkStatusIndicator extends Component {
     }
 
     private onOffline(): void {
-        this.stopSpin();
-        if (this.sprite) {
-            this.sprite.color = new Color(255, 50, 50, 255); // 斷線顯示警示紅
-        }
-        this.showIcon();
+        this.apply('offline');
     }
 
     private onOnline(): void {
-        if (this.sprite) {
-             this.sprite.color = new Color(50, 255, 50, 255); // 連線恢復顯示通行綠
-        }
-        // 若有待傳資料，SyncManager 會馬上派發 SYNCING 事件蓋過去，避免 UI 閃閃爍爍
-        // 若無待傳資料，1秒後自動淡出隱藏
-        this.scheduleOnce(() => this.hideIcon(), 1.0);
+        this.apply('online');
     }
 
     private onSyncing(): void {
-        if (this.sprite) {
-            this.sprite.color = new Color(255, 200, 50, 255); // 同步中轉為上傳黃
-        }
-        this.showIcon();
-        this.startSpin();
+        this.apply('syncing');
     }
 
     private onSyncComplete(): void {
-        this.stopSpin();
-        if (this.sprite) {
-            this.sprite.color = new Color(50, 255, 50, 255); // 完成後亮綠燈
-        }
-        this.scheduleOnce(() => this.hideIcon(), 1.0);
+        this.apply('sync-complete');
     }
 
     private onOfflineReminder(payload: { message: string }): void {
         // 當收到週期性提醒時，閃爍一下圖示並發送 Toast
-        this.showIcon();
+        this.apply('reminder');
+        services().event.emit('SHOW_TOAST', { message: payload.message, duration: 3.0 });
+    }
+
+    /**
+     * 套用事件外觀。任何新事件都先取消上一次排定的自動淡出：
+     * 例如恢復連線後 1 秒內開始同步或再次斷線，不可把黃燈／紅燈收掉。
+     */
+    private apply(event: NetworkIndicatorEvent): void {
+        const view = networkIndicatorView(event);
+        this.unschedule(this.autoHide);
+        if (view.color && this.sprite) {
+            const [r, g, b] = view.color;
+            this.sprite.color = new Color(r, g, b, 255);
+        }
+        if (view.spin === true) this.startSpin();
+        else if (view.spin === false) this.stopSpin();
+        if (view.visible === true) this.showIcon();
+        if (view.pulse) this.pulse();
+        if (view.hideAfterSec !== null) this.scheduleOnce(this.autoHide, view.hideAfterSec);
+    }
+
+    /* 以下為動畫效果副程式 */
+
+    private pulse(): void {
         tween(this.node)
             .to(0.1, { scale: new Vec3(1.2, 1.2, 1.2) })
             .to(0.1, { scale: new Vec3(1, 1, 1) })
             .to(0.1, { scale: new Vec3(1.2, 1.2, 1.2) })
             .to(0.1, { scale: new Vec3(1, 1, 1) })
             .start();
-        
-        services().event.emit('SHOW_TOAST', { message: payload.message, duration: 3.0 });
     }
 
-    /* 以下為動畫效果副程式 */
+    /** 先停掉進行中的淡入／淡出，避免中途來的新狀態被忽略、圖示卡在半透明 */
+    private fadeTo(opacity: number, duration: number): void {
+        if (!this.uiOpacity) return;
+        Tween.stopAllByTarget(this.uiOpacity);
+        if (this.uiOpacity.opacity === opacity) return;
+        tween(this.uiOpacity).to(duration, { opacity }).start();
+    }
 
     private showIcon(): void {
-        if (this.uiOpacity && this.uiOpacity.opacity === 0) {
-            tween(this.uiOpacity).to(0.3, { opacity: 255 }).start();
-        }
+        this.fadeTo(255, 0.3);
     }
 
     private hideIcon(): void {
-        if (this.uiOpacity && this.uiOpacity.opacity === 255) {
-            tween(this.uiOpacity).to(0.5, { opacity: 0 }).start();
-        }
+        this.fadeTo(0, 0.5);
     }
 
     private startSpin(): void {
