@@ -29,5 +29,5 @@
 | **GEN-11** | M3 | 六色屬性成長曲線（年齡-屬性衰減、巔峰期加成） | logic | 2 | ✅ 已驗收 | LIFE-02 | 依年齡階段修正屬性，與 LIFE-02 係數一致 | [v6 核對 2026-10-14] 六色屬性依年齡階段修正（0dac2cd8）；武將年齡接入戰力與詳情（4ef0915f）；GeneralGrowth 2 處呼叫端 |  |
 | **GEN-12** | M2 | 近親警告與 Inbreeding 判定（同源血脈警示） | logic | 1 | 🟢 已接線 | GEN-03 | 3 代內共同祖先禁止結緣，同 Bloodline_ID 子嗣 Vitality_Max×0.7，UI 警告可顯示 | [v5 核對 2026-10-14] 同源血脈警告接上結緣血緣列（01578ada，PROG-2-0317）；判定與 UI 文字已接，測試見 BondingSetup.test.ts |  |
 | **GEN-13** | M9 | 演武筆記（升級/千人斬產出戰法筆記交教官） | logic | 2 | 🟢 已接線 | GEN-06 | 達成條件產出筆記物件並可交給教官轉化 | [v11 核對 2026-10-20] 戰後里程碑發戰法筆記（50fcd7c0、931ddc6e，PROG-2-0816/0817）；MilestoneRewards 與 PlayerInventory 接 GameSession，BattleNoteGrant 測試存在。升級來源未核對 |  |
-| **GEN-14** | M10 | 武將劇本台詞（5 歲開獎天象、退役語錄、英靈告別、大器晚成批語、職能分流選擇） | content | 2 | ⚪ 未開始 | - | 台詞 Key 進 i18n 並於對應事件顯示 | 無 |  |
+| **GEN-14** | M10 | 武將劇本台詞（5 歲開獎天象、退役語錄、英靈告別、大器晚成批語、職能分流選擇） | content | 2 | 🟡 純邏輯 | - | 台詞 Key 進 i18n 並於對應事件顯示 | FarewellLetterInbox、LateBloomClue、Unveiling 部分台詞 | [v17.2 更正 2026-11-07] 未開始→純邏輯；英靈告別台詞規格無原文 |
 | **KIN-01** | M2 | 關係類型與 Schema 定義（史實 5 種+動態 4 種） | data | 1 | ✅ 已驗收 | - | HistoricalRelation/DynamicRelation 型別與 JSON schema 完成 | [v7 核對 2026-10-14] KinRelation 關係 Schema（58403015）與測試，5 處呼叫端 |  |

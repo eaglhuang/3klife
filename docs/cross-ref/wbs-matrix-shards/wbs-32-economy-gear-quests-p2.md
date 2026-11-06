@@ -9,8 +9,8 @@
 | ID | 里程碑 | 工作包 | 類型 | 工時 | 狀態 | 依賴 | 驗收條件 | 現況證據 | 最新核對(v16.9) |
 |---|:---:|---|:---:|:---:|:---:|---|---|---|---|
 | **EQP-01** | M8 | Inventory Service 統一資料層（Item_Type/Display_Bucket/Slot_Type） | data | 3 | 🟢 已接線 | - | 單一服務可表達道具/裝備/虎符/英靈卡四類投影 | 無 InventoryService；SpiritCard.ts 僅為歸檔快照 | 未開始→已接線；InventoryProjection／BagDomain／InventoryRecordBridge 有 src 呼叫端（GameSession、PlayerSaveService） |
-| **EQP-02** | M8 | 物件分類與來源追蹤欄位（含死亡結算、退役回收、俘虜） | logic | 2 | ⚪ 未開始 | EQP-01 | 所有入庫記錄 source，退役與俘虜共用欄位 | 無 |  |
-| **EQP-03** | M8 | 武將六槽裝備與數值累加 final_stat=base+Σbonus | logic | 3 | ⚪ 未開始 | EQP-01 | 裝備後面板與戰場數值含加成，單元測試通過 | GeneralUnit.ts 無 equipment 欄位 |  |
+| **EQP-02** | M8 | 物件分類與來源追蹤欄位（含死亡結算、退役回收、俘虜） | logic | 2 | 🟡 純邏輯 | EQP-01 | 所有入庫記錄 source，退役與俘虜共用欄位 | core/systems/BagDomain.ts、InventoryProjection.ts 物件分類與顯示分桶 | [v17.2 更正 2026-11-07] 未開始→純邏輯；死亡結算／退役回收／俘虜來源追蹤欄位未逐項核 |
+| **EQP-03** | M8 | 武將六槽裝備與數值累加 final_stat=base+Σbonus | logic | 3 | 🟢 已接線 | EQP-01 | 裝備後面板與戰場數值含加成，單元測試通過 | GeneralBackpack 六槽、GearDefinitions 24 件暫定品項（PROG-2-1950）、EquipmentBonus 加成；ui CharacterDs3EquipChild | [v17.2 更正 2026-11-07] 未開始→已接線 |
 | **EQP-04** | M8 | 虎符唯一性、轉交與拔除降忠誠 | logic | 3 | 🟢 已接線 | EQP-01 | 同虎符只由一人持有，拔除降忠誠 | assets/scripts/shared/TallyCardContract.ts 與 TigerTally*Composite.ts 僅為顯示契約，無持有/忠誠邏輯 | 僅資料→已接線；協調線回報：TigerTallyHoldings 接 GameSession；有測試 |
 | **EQP-05** | M7 | 虎符升星（1~3戰鬥經驗）與突破（4~5虎符精華） | logic | 3 | 🟢 已接線 | EQP-04 | 星級與材料消耗規則測試通過 | 無 | 未開始→已接線；v16.9 協調線回報：TigerTallyStar／TigerTallyBreakthrough 由 GameSession 呼叫（已核對 master） |
 | **EQP-06** | M9 | 英靈卡命槽單插與替換提示 | logic | 2 | 🟢 已接線 | EQP-01 | 每將僅1張，替換需確認並解除原被動 | CharacterDs3BloodlineChild.ts 內 TODO(B-stage4) spiritCardSlots 未映射 | 未開始→已接線；SpiritSlotFlow 接 GeneralDetailBloodlineChild；替換確認與被動解除未逐項核對 |
@@ -27,7 +27,7 @@
 | **TSK-05** | M10 | 兵頁虎符槽/兵種·地形·天氣適性/戰鬥定位 | ui | 3 | 🟢 已接線 | TSK-02 | TallySlotCard 與五段 layout 完成 | GeneralDetailAptitudeChild.ts 存在但無 TallySlotCard；contracts 無 aptitude schema | 未開始→已接線；#1312 AptitudeView 接 CharacterDs3AptitudeChild |
 | **TSK-06** | M10 | 將頁 名聲/官職/統領軍勢 區塊 | ui | 2 | 🟢 已接線 | ECO-02 | 顯示帶兵上限、城市兵源、預估出征軍勢 | [v16.4 第三批核對 2026-10-27] master #1102–#1143 已接上（已接線）；待 QA／實機驗收 |  |
 | **TSK-07** | M10 | general-detail-equip / aptitude content schema 與 Mapper | tool | 3 | 🟢 已接線 | TSK-04, TSK-05 | schema 通過 validate-ui-specs --strict，Mapper 組裝三/五段資料 | contracts 僅 general-detail-content/overview schema；無 EquipMapper/AptitudeMapper | 未開始→已接線；#1334 EquipPageSegments 接 GeneralDetailOverviewMapper |
-| **TSK-08** | M10 | GearModules/AptitudeModules fragment 與 BindPathPolicy | ui | 2 | ⚪ 未開始 | TSK-07 | layout JSON 與 runtime bind path 一致 | 僅有 GeneralDetailOverviewBindPathPolicy.ts，無 Equip 版 |  |
+| **TSK-08** | M10 | GearModules/AptitudeModules fragment 與 BindPathPolicy | ui | 2 | 🟢 已接線 | TSK-07 | layout JSON 與 runtime bind path 一致 | EquipBindPathPolicy 被 CharacterDs3EquipChild 匯入；PROG-2-1394（#1339） | [v17.2 更正 2026-11-07] 未開始→已接線 |
 | **TSK-09** | M9 | Data Read Model：Spirit_Card_Collection/Spirit_Family_State/Inventory_Service Display_Bucket | data | 3 | ⚪ 未開始 | EQP-01 | 欄位補齊並可算 SELF/FAMILY/ECHO | 無 |  |
 | **TSK-10** | M10 | Profile_Presentation 與 Bloodline_Ultimate read model | data | 2 | 🟢 已接線 | TSK-09 | Default_Tab/StoryDock 狀態/五階奧義可讀 | 無 | 未開始→已接線；#1287（c1693f52）GeneralReadModel 補 Bloodline_Ultimate 子欄位；GDART-08 未改 |
 | **TSK-11** | M5 | 戰場與治理新增軍勢欄位及人口貢獻 UI | ui | 3 | 🟡 純邏輯 | ECO-02 | 顯示 City_Troops_Current/Cap、Sortie_Troop_Pool 與 Returned_Troops | [v6 核對 2026-10-14] 城市兵源與出征軍勢面板 Presenter（50dc5f1a）純邏輯；畫面接線未核對 |  |

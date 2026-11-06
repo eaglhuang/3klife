@@ -25,9 +25,9 @@
 | **MERC-05** | M6 | 退場流程（到期未結義離隊、告別信）與 30 天冷卻 | logic | 2 | ✅ 已驗收 | MERC-03 | 到期傭兵離隊並出現告別信；同武將 30 天內不再出現於傭兵選單 | [v5 核對 2026-10-14] MercenaryDeparture.ts 退場與 30 天冷卻以武將為單位（a5074a16，PROG-2-0315）；5 處呼叫端，tests/MercenaryDeparture.test.ts 通過 |  |
 | **MERC-06** | M5 | 傭兵上場限制（可出戰、數值不計入永久紀錄、不被俘虜） | logic | 2 | 🟢 已接線 | MERC-02, REC-02 | 傭兵出戰不寫入永久戰績，戰場上不可被俘虜 | [v4 核對 2026-10-13] 試用傭兵出戰不寫入永久紀錄（PROG-2-0217）；接戰場結算 |  |
 | **MERC-07** | M6 | 傭兵介面（倒數、結義進度、名牌、確認視窗、告別 UI） | ui | 4 | 🟢 已接線 | MERC-03 | 傭兵畫面顯示 UI_MERC_* 字串並可執行結義/退場 | [v8 核對 2026-10-15] 傭兵池列表（91fce092）、名牌入口（9b5d511e）與 MercenaryPanelController 2 處呼叫端；倒數與告別 UI 未逐項核對 |  |
-| **MERC-08** | M10 | 五階段插畫進度系統（見面/交手/認同/信任/結義） | content | 3 | ⚪ 未開始 | MERC-03 | Illustration_Stage 1~5 依好感度解鎖並顯示對應插圖/文案（D3/D4 純敘事） | 無 |  |
+| **MERC-08** | M10 | 五階段插畫進度系統（見面/交手/認同/信任/結義） | content | 3 | 🟢 已接線 | MERC-03 | Illustration_Stage 1~5 依好感度解鎖並顯示對應插圖/文案（D3/D4 純敘事） | MercenaryIllustration 被 MercenaryBattleRecord、PanelView、SaveModel、TrialDay 匯入 | [v17.2 更正 2026-11-07] 未開始→已接線 |
 | **MERC-09** | M8 | 二轉機制（結義後再抽同名卡自動二轉）與重複卡分流整合 | logic | 2 | ⚪ 未開始 | MERC-04, SAME-06 | 已永久的傭兵武將再次抽到時觸發二轉並提升屬性上限 | 無 |  |
 | **MERC-10** | M4 | 退役轉教官（Age≥65→教官卡，Mentor_TP_Base=Total_TP×0.3） | logic | 2 | 🟢 已接線 | LIFE-07 | 退役後產生教官卡且 TP 基底=Total_TP×0.3 | [master fb02ff9 重估] LegacyService.ts + MentorCard.ts（PROG-2-0031） |  |
-| **MERC-11** | M11 | 傭兵名牌與演武筆記回傳原主（社交） | server | 3 | ⚪ 未開始 | MERC-01 | 傭兵顯示原主名並將戰鬥記錄回傳原主（需伺服器） | 無 |  |
+| **MERC-11** | M11 | 傭兵名牌與演武筆記回傳原主（社交） | server | 3 | ⚪ 未開始 | MERC-01 | 傭兵顯示原主名並將戰鬥記錄回傳原主（需伺服器） | 無 | [v17.2 更正 2026-11-07] 依賴伺服器／外部：原主為另一位玩家，需伺服器多人同步 |
 | **MERC-12** | M6 | 傭兵凍結（結義後保留數值快照） | logic | 1 | 🟢 已接線 | MERC-04 | 結義後保留當前 Stats_Snapshot 為永久武將初始值 | [v5 核對 2026-10-14] MercenaryBondPermanent 數值快照複製接進結義流程（5c48e5d5，PROG-2-0308） |  |
 | **FBR-12** | M6 | 因子揭露順序改照因子爆發系統 §K（FACTOR_DISCOVERY_LEVEL 綠 20→1、紅 45→20，代表色改白） | logic | 1 | 🟢 已接線 | - | 揭露門檻依 §K 推導，DiscoveryThresholds/FactorAwakening 讀同一門檻 | PROG-2-1465（#1276，ed52892e）；工時為估計值 | 新增列（協調線指示）；來源卡 PROG-2-1465；已接線 |

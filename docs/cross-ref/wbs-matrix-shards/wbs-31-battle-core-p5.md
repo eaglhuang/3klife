@@ -17,7 +17,7 @@
 | **DEP-09** | M7 | 參謀官計謀點上限/開局補點、後勤官軍糧上限/開局補給公式 | logic | 2 | 🟢 已接線 | DEP-08 | 依 INT/POL、LEA/POL 算出 bonus 並受 30/15/0.18 上限約束 | [v3 核對 2026-10-13] SortieDeploy.getStrategistBonus/getDeputyFoodBonus 接 GameSession.ts:497-498；BattleController spendTactic 計謀點（PROG-2-0084/0085） |  |
 | **DEP-10** | M7 | 改派建議 Deploy_Suggestion（推薦低耗部隊，玩家確認） | ui | 2 | 🟢 已接線 | DEP-03 | 不可部署時顯示『可改派』且需二次確認 | [v15 核對 2026-10-21] 改派建議 suggestLowCostDeploy 由 BattleController 呼叫（4c93cdca，#693；cc 文案 #696、二次確認 #707）；SortieDeploySuggestion.test.ts 存在。UI 實機未核對 |  |
 | **DEP-11** | M7 | 委任 AI Auto-Battle：INT→LOW/MEDIUM/HIGH/EXPERT 部署品質與保留策略 | logic | 5 | 🟢 已接線 | DEP-06, DEP-09 | 四級 AI 行為差異（保留糧草比例、保留特殊兵/器械槽）有測試 | [v16 核對 2026-10-21] 委任 AI 四級部署策略（be073c7e，#711）與 delegatePickDeploy 入口（23b9ae30，#719）已接上 BattleController（5e125de3，#731），委任開關接上玩家部署（270d0245，#740）；DelegateAi.test.ts 存在。委任實機與 INT 分級未核對 |  |
-| **DEP-12** | M7 | 場景 preset 對部署權重影響與 Q64 虎符 Set 羈絆 | logic | 3 | ⚪ 未開始 | SCN-02, DEP-11 | 攻城戰保留器械槽；集齊五虎將符觸發同場加成 | 無 |  |
+| **DEP-12** | M7 | 場景 preset 對部署權重影響與 Q64 虎符 Set 羈絆 | logic | 3 | 🟡 純邏輯 | SCN-02, DEP-11 | 攻城戰保留器械槽；集齊五虎將符觸發同場加成 | PROG-2-1605 場景 Preset 偏好已接敵方 AI 出兵 | [v17.2 更正 2026-11-07] 未開始→純邏輯；Q64 虎符 Set 羈絆未做 |
 | **DEP-13** | M11 | Server/Client 部署紀錄 schema（Sortie_Loadout/Battle_Deploy_State/battle 表） | server | 2 | 🟡 純邏輯 | DEP-05 | 戰鬥結算寫入 battle 記錄含 food_spent/troops_lost 等欄位 | [v16.4 核對 2026-10-27] 今日合併 PR 已接上 src 呼叫端（純邏輯）；待 QA／實機驗收 |  |
 | **DEP-14** | M8 | 編制預設/推薦 sortie loadout 儲存 | ui | 2 | ✅ 已驗收 | DEP-08 | 可儲存/套用編制預設並推薦 | [v11 核對 2026-10-20] 出征編制預設與推薦（02e0b494，PROG-2-0782）；SortieLoadoutPreset 由 SortieSetupController 呼叫，測試存在 |  |
 | **APT-01** | M5 | 適性資料模型 GeneralAptitude（兵種4/地形5/天氣6，S~D）與 GeneralUnit 載入 | data | 2 | 🟢 已接線 | - | GeneralUnit 暴露 troop/terrain/weather aptitude，資料檔含全武將 | [v3 核對 2026-10-13] GeneralUnit.ts troopAptitude/terrainAptitude 欄位 → BattleAptitude.resolveAptitude 讀取 |  |
@@ -29,5 +29,5 @@
 | **APT-07** | M7 | 天氣對戰法強約束：火計雨/霧/雷禁用變灰+Toast、大風×2、水攻雨天擴大 | ui | 3 | 🟢 已接線 | APT-06, TAC-14 | 雨天火計按鈕灰化且點擊彈 Toast『當前天氣不符合施放限制』 | [v7 核對 2026-10-14] WeatherTacticRestriction 接戰鬥與施放流程（e9c2d140，PROG-2-0406），5 處呼叫端；灰化與 Toast 畫面未核對 |  |
 | **APT-08** | M7 | 天氣對命中/射程影響（雨-20%、霧-30%、風射程-2、夜-25%） | logic | 2 | 🟢 已接線 | APT-06, APT-03 | 遠程命中與射程隨天氣修正，測試覆蓋 | [v3 核對 2026-10-13] BattleAptitude.hitRateOf + accuracyDelta 含天氣；基礎命中 100%、下限 50%（PROG-2-0080）；雨/霧/風射程數值未逐項核對 |  |
 | **APT-09** | M2 | 粉色因子→兵種/地形適性映射（含14人血統≥5人升一級） | logic | 3 | 🟢 已接線 | APT-01 | 因子等級轉適性等級單元測試，並解決兩套對照表矛盾 | [v7 核對 2026-10-14] 粉色地形因子覆寫戰場地形適性（dbd9d844，PROG-2-0412）；14 人血統≥5 人升一級未核對 |  |
-| **APT-10** | M2 | 白色因子→天氣抗性/免疫 | logic | 2 | ⚪ 未開始 | APT-09 | 白色因子提供特定天氣免疫或加成 | [v16.4 封鎖 blocked 2026-10-27] 白因子（KIN-05）待使用者裁決，APT-10 擱置 ；無 |  |
+| **APT-10** | M2 | 白色因子→天氣抗性/免疫 | logic | 2 | 🟢 已接線 | APT-09 | 白色因子提供特定天氣免疫或加成 | battle/runtime/BattleCombatResolver.ts 套用 WhiteFactorTraits 天氣抗性（d1a-rejudge 戰場適性 E 項） | [v17.2 更正 2026-11-07] 未開始→已接線；KIN-05 白因子引入仍待裁決 |
 | **APT-11** | M5 | 適性面板 UI（武將詳情適性分頁） | ui | 2 | 🟢 已接線 | APT-01 | 詳情頁顯示三維適性星級與偏好地形 | [v3 核對 2026-10-13] GeneralDetailAptitudeChild（武將詳情適性分頁）；兵頁適性（GDUI-12） |  |

@@ -8,18 +8,18 @@
 
 | ID | 里程碑 | 工作包 | 類型 | 工時 | 狀態 | 依賴 | 驗收條件 | 現況證據 | 最新核對(v16.9) |
 |---|:---:|---|:---:|:---:|:---:|---|---|---|---|
-| **BAG-04** | M8 | 裝備效果計算合入戰場數值與品質加成範圍 | logic | 2 | ⚪ 未開始 | BAG-01 | SSR+50~100等範圍由品質決定並合入面板 | 無 |  |
+| **BAG-04** | M8 | 裝備效果計算合入戰場數值與品質加成範圍 | logic | 2 | 🟢 已接線 | BAG-01 | SSR+50~100等範圍由品質決定並合入面板 | EquipmentBonus 品質加成範圍；PROG-2-1011（#793）；SortieDeploy 納入 equipmentBonus | [v17.2 更正 2026-11-07] 未開始→已接線；進階欄（名馬／古書／秘寶）尚未合入面板 |
 | **BAG-05** | M8 | 倉庫篩選排序（品質/類型/時間） | logic | 1 | 🟢 已接線 | BAG-02 | 排序結果穩定 | [v16.8 核對 2026-10-28] master #1219–#1251 已接上（已接線）；待 QA／實機驗收 |  |
 | **BAG-06** | M4 | 退役裝備自動回倉 | logic | 1.5 | 🟢 已接線 | BAG-03 | 退役觸發後裝備回倉，滿倉有提示 | [v16.7 更正 2026-10-28] 武將退役或老死後裝備回倉（PR #1065，PROG-2-0681）；GameSession 內有 equippedBy 清除路徑 |  |
 | **BAG-07** | M8 | 物品鎖定與分解回收材料 | logic | 2 | 🟢 已接線 | BAG-03 | 鎖定品不可售/解，分解給材料 | 無 | 未開始→已接線；#1321 GearLockDecompose 接 GameSession；InventoryProjection 修改 |
 | **BAG-08** | M8 | 寶物圖鑑 | content | 2 | 🟢 已接線 | BAG-02 | 取得過的寶物被記錄並顯示 | 無 | 未開始→已接線；#1324 TreasureCodex 接 ItemBagController／LobbyScene |
-| **BAG-09** | M6 | 倉庫/背包 UI 與字串（UI_WAREHOUSE 等） | ui | 3 | 🟡 純邏輯 | BAG-02, BAG-03 | 顯示容量、擴容按鈕、滿倉提示 | [v8 核對 2026-10-15] 倉庫面板控制器（69b267cb）；WarehousePanelController 尚未掛載到場景 |  |
+| **BAG-09** | M6 | 倉庫/背包 UI 與字串（UI_WAREHOUSE 等） | ui | 3 | 🟢 已接線 | BAG-02, BAG-03 | 顯示容量、擴容按鈕、滿倉提示 | WarehousePanelController 已被 LobbyScene 匯入 | [v17.2 更正 2026-11-07] 純邏輯→已接線；原註記「尚未掛載」已過時 |
 | **BAG-10** | M8 | 虎符/英靈卡不入普通格（Display_Bucket 分域） | logic | 1.5 | 🟢 已接線 | BAG-02 | 英靈卡不占倉庫格數，虎符不可丟棄販賣 | [v16.5 第四批核對 2026-10-27] master #1144–#1199 已接上（已接線）；待 QA／實機驗收 |  |
-| **BAG-11** | M11 | 伺服器裝備記錄表（equip_id/slot_type） | server | 2 | ⚪ 未開始 | BAG-03 | 表欄位與 schema 對齊並可同步 | server/src 僅 index.ts |  |
+| **BAG-11** | M11 | 伺服器裝備記錄表（equip_id/slot_type） | server | 2 | 🟡 純邏輯 | BAG-03 | 表欄位與 schema 對齊並可同步 | server/schema/bag11-equip-row.ts、010_gear_equip_records.sql；PROG-2-1395（#1340） | [v17.2 更正 2026-11-07] 未開始→純邏輯；僅表定義與列驗證 |
 | **SPI-01** | M4 | 死亡結算產英靈卡+虎符卡（僅史實名將/女性名將，退役不產） | logic | 3 | ✅ 已驗收 | - | 名將死亡產生兩卡，非名將與退役不產 | [master fb02ff9 重估] tests/SpiritRelic.test.ts（run-cli 通過） |  |
-| **SPI-02** | M9 | 唯一性與覆蓋：FinalStat=max、LineageScore累加、階位不倒退 | logic | 2 | ⚪ 未開始 | SPI-01 | 同模板再死亡覆蓋而非新增，單元測試通過 | 無 |  |
+| **SPI-02** | M9 | 唯一性與覆蓋：FinalStat=max、LineageScore累加、階位不倒退 | logic | 2 | 🟡 純邏輯 | SPI-01 | 同模板再死亡覆蓋而非新增，單元測試通過 | core/systems/SpiritCardMerge.ts（FinalStat=max、階位不倒退）；PROG-2-1922（#1838） | [v17.2 更正 2026-11-07] 未開始→純邏輯；死亡發卡尚未接線 |
 | **SPI-03** | M9 | 英勇事蹟/屬性/技能快照（Spirit_Archive_Snapshot） | data | 3 | ✅ 已驗收 | SPI-01 | 死亡時存下完整快照並可查詢 | [v5 核對 2026-10-14] 英靈死亡快照含英勇事蹟、最終屬性與技能（d4fe9144，PROG-2-0313）；SpiritArchiveSnapshot 2 處呼叫端，tests/SpiritRelic.test.ts 通過 |  |
-| **SPI-04** | M9 | 命槽單插、雙卡同裝（1英靈+1虎符） | logic | 2 | ⚪ 未開始 | SPI-01 | 重複插入被拒，兩卡可同裝 | 無 |  |
+| **SPI-04** | M9 | 命槽單插、雙卡同裝（1英靈+1虎符） | logic | 2 | 🟢 已接線 | SPI-01 | 重複插入被拒，兩卡可同裝 | core/systems/SpiritSlotFlow.ts 被 GameSession、GeneralDetailBloodlineChild 匯入；PROG-2-1280（#1166） | [v17.2 更正 2026-11-07] 未開始→已接線 |
 | **SPI-05** | M9 | 光效三階 SELF/FAMILY/ECHO 與家族封頂 | logic | 3 | ⚪ 未開始 | SPI-04 | 依裝配者計算共鳴階並封頂 | 無 |  |
 | **SPI-06** | M9 | 主卡/副卡模型與 CardGrowth=min(cap,pool)、溢出轉 Family_Fame/Depth | logic | 3 | ⚪ 未開始 | SPI-02 | 設為主卡後供養只灌主卡，戰鬥中鎖定 | 無 |  |
 | **SPI-07** | M9 | 家族積分 HeadScore+MeritScore 與四階世家等級 | logic | 4 | ⚪ 未開始 | SPI-06 | 權重100/80/120%與階位解鎖測試通過 | 無 |  |

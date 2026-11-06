@@ -20,7 +20,7 @@
 | **BRD-10** | M4 | 和平血統線 Breeding_Mode 與退役保種邊界 | logic | 2 | 🟢 已接線 | BRD-01 | 退役未卡片化武將可用 Peace_Lineage 結緣，卡片化後被拒 | [v4 核對 2026-10-13] Breeding_Mode 標記（PROG-2-0225）接 BondingSetupController / BreedingService；退役保種邊界未核對 |  |
 | **BRD-11** | M2 | 一生生育上限（3~5 次）與傳宗秘藥 +1 | logic | 1 | ✅ 已驗收 | BRD-01 | 各精力區間上限 3/4/5，秘藥最多 +1 | /tmp/integ/assets/scripts/core/systems/BreedingSystem.ts lifetimeBreedingCap；/tmp/integ/tests/Breeding.test.ts 『一生生育上限』 |  |
 | **BRD-12** | M11 | Breeding_Session/Child/Server 結緣表 Schema 與存檔 | server | 3 | ✅ 已驗收 | BRD-04 | 子嗣與結緣紀錄可序列化存取；Server 表 Child_UID/Breeding_Mode/EP_Actual/Birth_Season/Unveil_Season | [v13 核對 2026-10-20] 結緣成功時寫入本機子嗣紀錄（67c1a9fe，PROG-2-0872，#618）；BreedingBirthRecord 由 GameSession、BondingSetupController 呼叫，測試存在 |  |
-| **BRD-13** | M8 | 結緣商業道具（補元散、安胎藥/送子符、求籤令、成長環境） | logic | 3 | ⚪ 未開始 | BRD-03 | 道具可修改精力/受孕率並消耗 | 無 |  |
+| **BRD-13** | M8 | 結緣商業道具（補元散、安胎藥/送子符、求籤令、成長環境） | logic | 3 | ⚪ 未開始 | BRD-03 | 道具可修改精力/受孕率並消耗 | 無 | [v17.2 更正 2026-11-07] 待裁決：成長環境道具來源與微調幅度規格未定義 |
 | **BRD-14** | M10 | 結緣字串（UI_BREED_CONFIRM 等 6 組）與劇本文案 | content | 1 | 🟢 已接線 | - | 字串進入 i18n 並於 UI 顯示 | [v7 核對 2026-10-14] 結緣字串 6 組進 zh-TW i18n（ef6a9e4f，PROG-2-0525）；結緣畫面改接 t()（ff79149d，PROG-2-0526）；劇本文案未核對 |  |
 | **BLT-01** | M2 | Ancestors_JSON 14 人矩陣資料結構（共享字典引用） | data | 3 | 🟢 已接線 | - | 矩陣含 Gen1(2)/Gen2(4)/Gen3(8) 位置並指向字典 ID | [master fb02ff9 重估] BloodlineGraph.ts（PROG-2-0026）+ 血統樹 UI |  |
 | **BLT-02** | M2 | 虛擬祖先生成器（Tag Mapping＋世代權重＋V_PID 命名） | logic | 4 | ✅ 已驗收 | BLT-01 | 初代名將可依權重表補齊 14 人且 ID 符合 V_PID_{ID}_{Pos} | [v3 核對 2026-10-13] VirtualAncestorGenerator.ts generateVirtualAncestry 已接 BreedingService/BloodlineGraph（PROG-2-0067）；tests/VirtualAncestor.test.ts 通過 |  |
