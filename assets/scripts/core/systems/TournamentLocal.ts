@@ -183,6 +183,9 @@ export interface TournamentState {
     championships: number;
     /** 月度場景賽歷史（不計入主賽積分；同月只留最高分，PROG-2-1754） */
     monthlyHistory?: MonthlyScenarioHistoryEntry[];
+    /** BOSS 挑戰券持有數與最後一次每日贈送的絕對日序（ECO-12，PROG-2-1918）；舊檔缺值視為 0／未送 */
+    bossTickets?: number;
+    bossTicketDay?: number;
 }
 
 export interface TournamentEntrant {
@@ -417,5 +420,34 @@ export function normalizeTournamentState(raw: unknown): TournamentState | null {
         bracketRound: isNum(s.bracketRound) ? Math.min(TOURNAMENT_FINAL_ROUND, Math.max(0, Math.floor(s.bracketRound))) : 0,
         championships: isNum(s.championships) ? Math.max(0, Math.floor(s.championships)) : 0,
         ...(Array.isArray(s.monthlyHistory) ? { monthlyHistory: normalizeMonthlyScenarioHistory(s.monthlyHistory) } : {}),
+        ...(isNum(s.bossTickets) && s.bossTickets > 0 ? { bossTickets: Math.floor(s.bossTickets) } : {}),
+        ...(isNum(s.bossTicketDay) ? { bossTicketDay: Math.floor(s.bossTicketDay) } : {}),
     };
+}
+
+/** 每日贈送 BOSS 挑戰券後的持有上限（PM 暫定 3；商城加購不受此限） */
+export const BOSS_TICKET_MAX_HOLD = 3;
+
+/**
+ * BOSS 挑戰券每日送 1 張（名將挑戰賽系統 §BOSS 挑戰券，PROG-2-1918）：
+ * 以絕對日序（epoch 日）判斷同日只送一次；已達持有上限就只記日不加券。不改輸入。
+ */
+export function grantDailyBossTicket(state: Readonly<TournamentState>, nowMs: number): TournamentState {
+    const day = Math.floor(nowMs / TOURNAMENT_DAY_MS);
+    if (state.bossTicketDay === day) return state as TournamentState;
+    const held = state.bossTickets ?? 0;
+    return { ...state, bossTickets: held < BOSS_TICKET_MAX_HOLD ? held + 1 : held, bossTicketDay: day };
+}
+
+/** 商城加購或獎勵發券；數量非正整數時原樣回傳 */
+export function addBossTickets(state: Readonly<TournamentState>, count: number): TournamentState {
+    if (!Number.isInteger(count) || count <= 0) return state as TournamentState;
+    return { ...state, bossTickets: (state.bossTickets ?? 0) + count };
+}
+
+/** 挑戰 BOSS 前扣 1 張券；沒券回 ok=false 且狀態不變 */
+export function spendBossTicket(state: Readonly<TournamentState>): { ok: boolean; state: TournamentState } {
+    const held = state.bossTickets ?? 0;
+    if (held <= 0) return { ok: false, state: state as TournamentState };
+    return { ok: true, state: { ...state, bossTickets: held - 1 } };
 }
