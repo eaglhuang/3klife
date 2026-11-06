@@ -71,6 +71,7 @@ export const SYNC_PATCH_ROOT_KEYS: readonly string[] = [
     'enrollGrantDay',
     'itemAcquisitionLog',
     'aiAdaptiveStreak',
+    'clanPrestige',
     'gachaMentorJournal',
     'hallAssignLog',
     'tallyLoyalty',
