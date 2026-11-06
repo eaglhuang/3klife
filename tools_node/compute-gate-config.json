@@ -246,6 +246,17 @@
       "priority": 14,
       "failAction": "block",
       "description": "透過本地 atm-cli 跑 hash-lock / registry 核心一致性驗證"
+    },
+    {
+      "id": "start-scene-refs",
+      "label": "啟動場景靜態參照審計",
+      "cmd": "node",
+      "args": [
+        "tools_node/check-start-scene-refs.js"
+      ],
+      "priority": 15,
+      "failAction": "block",
+      "description": "HOT-09：啟動場景不得靜態參照戰鬥等後期資源（禁止清單見 start-scene-refs-config.json）"
     }
   ],
   "profiles": {
@@ -270,7 +281,8 @@
         "import-boundary",
         "dead-code",
         "test-tsc",
-        "story-layers"
+        "story-layers",
+        "start-scene-refs"
       ]
     },
     "atm": {
