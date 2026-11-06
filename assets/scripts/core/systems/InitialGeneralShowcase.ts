@@ -5,7 +5,7 @@
  * - 順序依規格清單：張飛、魏延、夏侯惇、張郃、孫策、甘寧。
  * - 每位名將有一句登場台詞，台詞原文來自規格 §5.2（趣味版，同正式版劇本文案 §7 備選庫）；
  *   另附正式版劇本文案 §3「名將登場正式版」的正式台詞（formalLine，PROG-2-1732）。
- * - 暫定：畫面預設沿用趣味版（SHOWCASE_LINE_STYLE_DEFAULT），改用正式版待裁定。
+ * - 畫面預設改用正式版（SHOWCASE_LINE_STYLE_DEFAULT，2026-11-06 使用者裁決 #4，PROG-2-1901）；趣味版保留作備選。
  * - generalId 對應 generals.json；測試會檢查 id 與名稱是否對得上。
  *
  * Unity 對照：像一份 Showcase 的 ScriptableObject 清單，畫面只依序取出一筆來播放。
@@ -31,8 +31,8 @@ export interface InitialShowcaseEntry {
 /** 登場台詞風格：fun = 趣味版（§5.2／§7）、formal = 正式版（§3） */
 export type ShowcaseLineStyle = 'fun' | 'formal';
 
-/** 暫定：沿用目前畫面的趣味版；正式上線改用哪一版待裁定 */
-export const SHOWCASE_LINE_STYLE_DEFAULT: ShowcaseLineStyle = 'fun';
+/** 預設用正式版（2026-11-06 裁決 #4）；趣味版仍可指定 'fun' 取用 */
+export const SHOWCASE_LINE_STYLE_DEFAULT: ShowcaseLineStyle = 'formal';
 
 /** 依風格取登場台詞 */
 export function showcaseLineOf(entry: InitialShowcaseEntry, style: ShowcaseLineStyle = SHOWCASE_LINE_STYLE_DEFAULT): string {

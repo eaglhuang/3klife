@@ -42,7 +42,7 @@ export function createInitialShowcaseControllerSuite(): TestSuite {
         const first = INITIAL_SHOWCASE_ENTRIES[0];
         assert.equals(first.name, view.texts.showcaseName);
         assert.equals(first.title, view.texts.showcaseTitle);
-        assert.equals(`「${first.line}」`, view.texts.showcaseLine);
+        assert.equals(`「${first.formalLine}」`, view.texts.showcaseLine);
         assert.equals(first.factorTags.join('・'), view.texts.showcaseFactors);
         assert.equals(`1 / ${INITIAL_SHOWCASE_ENTRIES.length}`, view.texts.showcaseStep);
         assert.equals('下一位', view.texts.btnShowcaseNextLabel);

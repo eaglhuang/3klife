@@ -70,11 +70,17 @@ export function createInitialGeneralShowcaseSuite(): TestSuite {
         assert.equals('主公，這一回，我不會再讓你孤身向前。', initialShowcaseOf('zhang-fei')!.formalLine);
     });
 
-    suite.test('依風格取台詞：預設沿用趣味版，formal 取正式版', () => {
+    suite.test('依風格取台詞：預設用正式版（裁決 #4），fun 取趣味版', () => {
         const ganNing = initialShowcaseOf('gan-ning')!;
-        assert.equals('fun', SHOWCASE_LINE_STYLE_DEFAULT);
-        assert.equals(ganNing.line, showcaseLineOf(ganNing));
-        assert.equals('你聽見鈴聲了嗎？那是我回來替你開路的聲音。', showcaseLineOf(ganNing, 'formal'));
+        assert.equals('formal', SHOWCASE_LINE_STYLE_DEFAULT);
+        assert.equals('你聽見鈴聲了嗎？那是我回來替你開路的聲音。', showcaseLineOf(ganNing));
+        assert.equals(ganNing.line, showcaseLineOf(ganNing, 'fun'));
+    });
+
+    suite.test('正式版台詞長度不超過畫面上限', () => {
+        for (const entry of INITIAL_SHOWCASE_ENTRIES) {
+            assert.isTrue(entry.formalLine.length <= LINE_MAX_CHARS, `${entry.name} 正式版台詞過長`);
+        }
     });
 
     return suite;
