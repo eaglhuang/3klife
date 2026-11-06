@@ -18,6 +18,7 @@
 | character-ds3-main | character-ds3-main.json | character-ds3-main.skin.json | character-ds3-main.json | resources | ui/components/GeneralDetailComposite.ts<br>ui/core/UIVariantRouter.ts<br>ui/scenes/LoadingScene.ts 等 4 檔 |
 | character-ds3 | character-ds3.json | character-ds3.skin.json | character-ds3.json | resources | （程式未引用） |
 | daily-report-screen | daily-report-main.json | daily-report-screen.skin.json | daily-report-screen.json | lobby_ui | ui/scenes/LobbyScene.ts |
+| clan-shrine-screen | clan-shrine-main.json | clan-shrine-default.json | clan-shrine-screen.json | lobby_ui | ui/scenes/LobbyScene.ts |
 | deploy-panel-screen | deploy-panel-main.json | deploy-panel-default.json | deploy-panel-screen.json | battle_ui | ui/components/DeployComposite.ts |
 | destiny-opening-screen | destiny-opening-main.json | destiny-opening-screen.skin.json | destiny-opening-screen.json | lobby_ui | ui/core/LobbyOpeningPanels.ts<br>ui/scenes/LobbyScene.ts |
 | destiny-shop-screen | destiny-shop-main.json | destiny-shop-screen.skin.json | destiny-shop-screen.json | lobby_ui | ui/scenes/LobbyScene.ts |

@@ -1,0 +1,58 @@
+{
+  "id": "clan-shrine-default",
+  "version": 1,
+  "bundle": "lobby_ui",
+  "atlasPolicy": "lobby_ui",
+  "slots": {
+    "clan.shrine.card.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 232
+    },
+    "clan.shrine.row.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 180
+    },
+    "clan.shrine.button.bg": {
+      "kind": "color-rect",
+      "color": "primary",
+      "alpha": 140
+    },
+    "clan.shrine.label.title": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 28,
+      "lineHeight": 34,
+      "color": "secondaryLight",
+      "overflow": "CLAMP",
+      "isBold": true
+    },
+    "clan.shrine.label.body": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "color": "secondaryLight",
+      "overflow": "CLAMP"
+    },
+    "clan.shrine.label.button": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 20,
+      "lineHeight": 24,
+      "color": "secondaryLight",
+      "overflow": "CLAMP",
+      "isBold": true
+    },
+    "clan.shrine.label.tier": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 56,
+      "lineHeight": 64,
+      "color": "secondaryLight",
+      "overflow": "CLAMP",
+      "isBold": true
+    }
+  }
+}
