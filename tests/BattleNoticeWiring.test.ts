@@ -6,7 +6,8 @@
  *
  * Unity 對照：EditMode 測試對 EventBus 發事件，檢查 View 介面被呼叫。
  */
-import { BattleUIBridge, createBattleSceneContext } from '../assets/scripts/battle/views/BattleUIBridge';
+import { BattleUIBridge, createBattleSceneContext, fortressDamagedLogLine } from '../assets/scripts/battle/views/BattleUIBridge';
+import { Faction } from '../assets/scripts/core/config/Constants';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
 import { EVENT_NAMES } from '../assets/scripts/core/config/Constants';
 import { APTITUDE_TOAST_DURATION_S, APTITUDE_TOAST_KEY } from '../assets/scripts/core/systems/AptitudeDialogue';
@@ -55,6 +56,16 @@ export function createBattleNoticeWiringSuite(): TestSuite {
         bridge.unsubscribeEvents();
         services().event.emit(EVENT_NAMES.AptitudeDialogue, { turn: 1, line: '月黑風高' });
         assert.equals(0, toasts.length);
+    });
+
+    suite.test('堡壘受損（PROG-2-1868）：寫進戰報，分敵我；血量不顯示負數', () => {
+        const { bridge, logs } = wiredBridge();
+        services().event.emit(EVENT_NAMES.FortressDamaged, { faction: Faction.Enemy, hp: 70 });
+        services().event.emit(EVENT_NAMES.FortressDamaged, { faction: Faction.Player, hp: -5 });
+        bridge.unsubscribeEvents();
+        assert.isTrue(logs.includes('工兵攻城：敵方堡壘受損，剩餘 70'));
+        assert.isTrue(logs.includes('我方堡壘遭敵軍工兵攻擊，剩餘 0'));
+        assert.equals(fortressDamagedLogLine(Faction.Enemy, 12.4), '工兵攻城：敵方堡壘受損，剩餘 12');
     });
 
     return suite;

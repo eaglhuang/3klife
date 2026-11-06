@@ -229,6 +229,8 @@ export class BattleUIBridge {
       svc.event.on(EVENT_NAMES.TroopCounterLine,        (line: string) => { this.appendLog(line); }),
       svc.event.on(EVENT_NAMES.AptitudeDialogue,        this._onAptitudeDialogue.bind(this)),
       svc.event.on(EVENT_NAMES.ShowToast,               this._onShowToast.bind(this)),
+      // 工兵攻城（PROG-2-1868）：堡壘血量原本只在除錯面板看得到，受損時寫進戰報
+      svc.event.on(EVENT_NAMES.FortressDamaged,         this._onFortressDamaged.bind(this)),
       // 控制列 x2（PROG-2-1867）：整個戰場畫面加速，離開戰場時在 unsubscribeEvents 還原
       svc.event.on(EVENT_NAMES.BattleSpeedToggled,      (speed: number) => setBattleTimeScale(speed)),
       svc.event.on(EVENT_NAMES.AutoBattleToggled,       this._onAutoBattleToggled.bind(this)),
@@ -964,6 +966,11 @@ export class BattleUIBridge {
   }
 
   /** 其他元件要求的短提示（如大招充能未滿，PROG-2-1866）：交給同一套 Toast 佇列 */
+  private _onFortressDamaged(data: { faction: Faction; hp: number }): void {
+    if (!data) return;
+    this.appendLog(fortressDamagedLogLine(data.faction, data.hp));
+  }
+
   private _onShowToast(data: { text: string; duration?: number }): void {
     if (!data?.text) return;
     this.ctx.deployRuntime?.showToast(data.text, data.duration);
@@ -1032,4 +1039,12 @@ export class BattleUIBridge {
     if (type === TroopType.Medic)    return '醫護兵';
     return '水軍';
   }
+}
+
+/** 堡壘受損戰報（PROG-2-1868）：faction 是被攻擊的一方；血量不低於 0 */
+export function fortressDamagedLogLine(faction: Faction, hp: number): string {
+  const remain = Math.max(0, Math.round(hp));
+  return faction === Faction.Enemy
+    ? `工兵攻城：敵方堡壘受損，剩餘 ${remain}`
+    : `我方堡壘遭敵軍工兵攻擊，剩餘 ${remain}`;
 }
