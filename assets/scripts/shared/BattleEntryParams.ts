@@ -2,7 +2,7 @@
 // [統一戰場入口] 定義從任何路徑進入 BattleScene 時的參數介面。
 // Unity 對照：BattleEntryData / BattleSessionConfig
 
-import { Weather, BattleTactic, TerrainGrid } from './CommonEnums';
+import { Weather, BattleTactic, TerrainGrid, TerrainType } from './CommonEnums';
 
 /** 天氣排程單一條目（結構與 core/systems/WeatherSchedule 的 WeatherScheduleEntry 相同，shared 不引用 core） */
 export interface WeatherScheduleEntry {
@@ -105,6 +105,15 @@ export const DEFAULT_BATTLE_ENTRY_PARAMS: IBattleEntryParams = {
 };
 
 // ─── 中文映射表（用於 log 輸出）─────────────────────────────────────────────
+
+export const TERRAIN_LABEL: Readonly<Record<TerrainType, string>> = {
+  [TerrainType.Plain]: '平原',
+  [TerrainType.River]: '水域',
+  [TerrainType.Mountain]: '山地',
+  [TerrainType.Fortress]: '關隘',
+  [TerrainType.Desert]: '沙漠',
+  [TerrainType.Forest]: '林地',
+};
 
 export const WEATHER_LABEL: Record<Weather, string> = {
   [Weather.Clear]: '晴天',

@@ -14,7 +14,9 @@ import type { InteractiveObjectKind, InteractiveObjectView, StrategistHudInput }
 import { FIRE_RAID_TILE_NOTE, FLOODGATE_TILE_NOTE, ROCK_SLIDE_TILE_NOTE } from './StageSalvage';
 import { AMBUSH_TRAP_TILE_NOTE } from './BattleTacticBehavior';
 import { BattleTactic } from '../../core/config/Constants';
-import { battleTacticLabel } from '../../shared/BattleEntryParams';
+import { battleTacticLabel, TERRAIN_LABEL, WEATHER_LABEL } from '../../shared/BattleEntryParams';
+import { battleAptitudeProfileOf, terrainGradeOf, weatherGradeOf } from '../../core/systems/BattleAptitude';
+import { environmentBonusText, type EnvironmentFactor } from '../../core/systems/EnvironmentBonus';
 import { sceneGambitGateOf } from './SceneGambitTrigger';
 
 /** 格子備註 → 互動物件類別 */
@@ -47,7 +49,9 @@ export function strategistHudInputOf(state: BattleState, missingCounters: readon
   const intel = gate && gate.intelThreshold > 0 && playerIntel !== undefined && Number.isFinite(playerIntel)
     ? { current: Math.max(0, Math.floor(playerIntel)), required: gate.intelThreshold }
     : undefined;
+  const environmentBonus = environmentBonusOf(state);
   return {
+    ...(environmentBonus ? { environmentBonus } : {}),
     hazardsThisTurn: Array.from(hazards),
     interactiveObjects,
     salvage: { ...state.stageSalvage },
@@ -56,4 +60,13 @@ export function strategistHudInputOf(state: BattleState, missingCounters: readon
       ? { name: state.playerGeneral.name, int: state.playerGeneral.int, tactic: battleTacticLabel(state.battleTactic), ...(intel ? { intel } : {}) }
       : undefined,
   };
+}
+
+/** 我方主將對本場天氣與場上各地形的適性加成（主戰場UI §6.3，PROG-2-1893）；地形依棋盤出現順序 */
+function environmentBonusOf(state: BattleState): string {
+  const profile = battleAptitudeProfileOf(state.playerGeneral);
+  if (!profile) return '';
+  const factors: EnvironmentFactor[] = [{ label: WEATHER_LABEL[state.weather] ?? String(state.weather), grade: weatherGradeOf(profile, state.weather) }];
+  for (const cell of state.cells) factors.push({ label: TERRAIN_LABEL[cell.terrain] ?? String(cell.terrain), grade: terrainGradeOf(profile, cell.terrain) });
+  return environmentBonusText(factors);
 }
