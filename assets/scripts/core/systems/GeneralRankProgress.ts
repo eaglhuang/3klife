@@ -25,11 +25,12 @@ export const GENERAL_FAME_AWARD = {
     bossOrInvasionWin: 40,
     duelWin: 15,
     hallMissionNormal: 10,
+    hallMissionElite: 15,
     hallMissionHard: 25,
     destinyBattleWin: 50,
 } as const;
 
-/** 算「高難／地獄」的大廳任務難度 */
+/** 算「高難／地獄」的大廳任務難度（ELITE 另成一檔，11/06 裁決） */
 const HARD_HALL_DIFFICULTIES: ReadonlySet<string> = new Set(['ADVANCED', 'HELL']);
 
 export interface GeneralFameHolder {
@@ -86,8 +87,9 @@ export function battleFameGain(result: string): number {
     return 0;
 }
 
-/** 大廳軍事任務的名聲：只有完成才給，高難／地獄 25、其餘 10 */
+/** 大廳軍事任務的名聲：只有完成才給，高難／地獄 25、菁英 15、其餘 10 */
 export function hallMissionFameGain(outcome: { difficulty: string; success: boolean }): number {
     if (!outcome.success) return 0;
-    return HARD_HALL_DIFFICULTIES.has(outcome.difficulty) ? GENERAL_FAME_AWARD.hallMissionHard : GENERAL_FAME_AWARD.hallMissionNormal;
+    if (HARD_HALL_DIFFICULTIES.has(outcome.difficulty)) return GENERAL_FAME_AWARD.hallMissionHard;
+    return outcome.difficulty === 'ELITE' ? GENERAL_FAME_AWARD.hallMissionElite : GENERAL_FAME_AWARD.hallMissionNormal;
 }

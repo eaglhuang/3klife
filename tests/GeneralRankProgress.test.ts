@@ -51,8 +51,9 @@ export function createGeneralRankProgressSuite(): TestSuite {
         assert.equals(0, battleFameGain('draw'));
     });
 
-    suite.test('軍事任務：完成才給，高難／地獄 25、其餘 10', () => {
+    suite.test('軍事任務：完成才給，高難／地獄 25、菁英 15、其餘 10', () => {
         assert.equals(10, hallMissionFameGain({ difficulty: 'NORMAL', success: true }));
+        assert.equals(15, hallMissionFameGain({ difficulty: 'ELITE', success: true }));
         assert.equals(25, hallMissionFameGain({ difficulty: 'HELL', success: true }));
         assert.equals(0, hallMissionFameGain({ difficulty: 'HELL', success: false }));
     });
