@@ -1,5 +1,6 @@
 // @spec-source → 見 docs/cross-reference-index.md
-import { _decorator, Color, Label, Node, Tween, tween, UITransform, UIOpacity, Widget } from "cc";
+import { _decorator, Color, Label, Node, Tween, tween, UITransform, UIOpacity, Vec3, Widget } from "cc";
+import { TOAST_FADE_SEC, TOAST_RISE_PX, toastHoldSec } from '../../core/systems/ToastMotion';
 import { services } from "../../core/managers/ServiceLoader";
 import { UIPreviewBuilder } from "../core/UIPreviewBuilder";
 import { SolidBackground } from './SolidBackground';
@@ -18,7 +19,7 @@ export interface ToastOptions {
 
 interface QueuedToast {
   message: string;
-  duration: number;
+  duration?: number;
   options?: ToastOptions;
 }
 
@@ -27,6 +28,9 @@ export class ToastMessage extends UIPreviewBuilder {
   
   private get _specLoader() { return services().specLoader; }
   private hideTween: Tween<UIOpacity> | null = null;
+  /** 上浮消失的位移 tween 與 ToastRoot 原位（主戰場UI §4.1，PROG-2-1894） */
+  private riseTween: Tween<Node> | null = null;
+  private _rootBasePos: Vec3 | null = null;
   private _isBuilt = false;
   private _blockingOverlay: Node | null = null;
   private _activeToastKey: string | null = null;
@@ -74,6 +78,7 @@ export class ToastMessage extends UIPreviewBuilder {
     if (key && this._activeToastKey && key !== this._activeToastKey) return;
     if (this._blockingOverlay) this._blockingOverlay.active = false;
     if (this.hideTween) { this.hideTween.stop(); this.hideTween = null; }
+    this._stopRise();
     this._queue.clear();
     this._activeToastKey = null;
     this.node.active = false;
@@ -88,7 +93,7 @@ export class ToastMessage extends UIPreviewBuilder {
     services().event.onBind('HIDE_TOAST', (payload?: { key?: string }) => this.hide(payload?.key), this);
   }
 
-  public async show(message: string, duration = 1.2, options?: ToastOptions): Promise<void> {
+  public async show(message: string, duration?: number, options?: ToastOptions): Promise<void> {
     // blocking 模式：顯示全螢幕擋板 + 置中文字，跳過一般 toast 流程
     if (options?.blocking) {
       this._activeToastKey = options.key ?? null;
@@ -143,9 +148,20 @@ export class ToastMessage extends UIPreviewBuilder {
       this.hideTween = null;
     }
 
+    // 停留後同時淡出並上浮（§4.1）；每次顯示先回到原位
+    this._stopRise();
+    if (!this._rootBasePos) this._rootBasePos = rootNode.position.clone();
+    rootNode.setPosition(this._rootBasePos);
+    const hold = toastHoldSec(duration);
+    const base = this._rootBasePos;
+    this.riseTween = tween(rootNode)
+      .delay(hold)
+      .to(TOAST_FADE_SEC, { position: new Vec3(base.x, base.y + TOAST_RISE_PX, base.z) })
+      .start();
+
     this.hideTween = tween(opacity)
-      .delay(Math.max(0.2, duration))
-      .to(0.3, { opacity: 0 })
+      .delay(hold)
+      .to(TOAST_FADE_SEC, { opacity: 0 })
       .call(() => {
         const next = this._queue.next(Date.now() / 1000);
         if (next) {
@@ -156,5 +172,12 @@ export class ToastMessage extends UIPreviewBuilder {
         this.node.active = false;
       })
       .start();
+  }
+
+  private _stopRise(): void {
+    this.riseTween?.stop();
+    this.riseTween = null;
+    const root = this._rootBasePos ? this.node.getChildByName('ToastRoot') : null;
+    if (root && this._rootBasePos) root.setPosition(this._rootBasePos);
   }
 }
