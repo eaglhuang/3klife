@@ -67,3 +67,11 @@ export function normalizeMonthlyCard(raw: unknown): MonthlyCardState | null {
     const last = typeof r.lastClaimDay === 'string' && DAY_PATTERN.test(r.lastClaimDay) ? r.lastClaimDay : null;
     return { expiresDay: r.expiresDay, lastClaimDay: last };
 }
+
+/** 月卡有效期間每季精力回復倍率（VIT-08：月卡精力 +20%） */
+export const MONTHLY_CARD_VITALITY_RECOVERY_MULTIPLIER = 1.2;
+
+/** 依月卡狀態回傳精力回復倍率：有效中 1.2，否則 1 */
+export function monthlyCardVitalityMultiplier(state: MonthlyCardState | null, epochMs: number): number {
+    return monthlyCardDaysLeft(state, epochMs) > 0 ? MONTHLY_CARD_VITALITY_RECOVERY_MULTIPLIER : 1;
+}

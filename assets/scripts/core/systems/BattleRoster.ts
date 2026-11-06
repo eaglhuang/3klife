@@ -334,8 +334,9 @@ export function settleBattle(roster: readonly GeneralConfig[], request: SettleBa
 /**
  * 每季自然回補：本季出過戰的 +10%、其餘（待命）+30%（皆為精力上限的比例），不超過上限。
  * 死亡武將不回補。endedSeason 是「剛結束的那一季」的累計序號（與 recordBattle 記下的季度同一把尺）。
+ * multiplier 乘在回補量上（月卡 ×1.2，VIT-08）；預設 1。
  */
-export function recoverVitalityOneSeason(roster: readonly GeneralConfig[], endedSeason: number): GeneralConfig[] {
+export function recoverVitalityOneSeason(roster: readonly GeneralConfig[], endedSeason: number, multiplier = 1): GeneralConfig[] {
     return roster.map((general) => {
         const g = general as BattleRosterGeneral;
         if (g.status === GENERAL_STATUS_DEAD) return { ...g };
@@ -344,6 +345,6 @@ export function recoverVitalityOneSeason(roster: readonly GeneralConfig[], ended
         if (current >= max) return { ...g };
         const deployed = g.lastDeployedSeason !== undefined && g.lastDeployedSeason >= endedSeason;
         const rate = deployed ? VITALITY_RECOVER_DEPLOYED : VITALITY_RECOVER_STANDBY;
-        return { ...g, vitality: Math.min(max, Math.round(current + max * rate)), maxVitality: max };
+        return { ...g, vitality: Math.min(max, Math.round(current + max * rate * multiplier)), maxVitality: max };
     });
 }
