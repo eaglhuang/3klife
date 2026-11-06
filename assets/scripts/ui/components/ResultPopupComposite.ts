@@ -3,12 +3,13 @@
  * ResultPopupComposite — 戰鬥結果彈窗（Composite 版）
  * Wave 2 migration from ResultPopup - shows victory/defeat/stalemate results
  */
-import { _decorator, Button, Mask, Node, Sprite, tween, UIOpacity } from 'cc';
+import { _decorator, Button, Color, Mask, Node, Sprite, Tween, tween, UIOpacity, Vec3 } from 'cc';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { loadGeneralAvatar } from '../core/GeneralAvatarLoader';
 import { playTitleFreeze } from '../core/TitleFreezeOverlay';
 import type { AwakeningFreezeTiming } from '../../shared/interfaces/IBattleUIComponents';
+import { resultPopupTone } from '../../shared/ResultPopupTone';
 
 const { ccclass } = _decorator;
 
@@ -42,6 +43,7 @@ export class ResultPopupComposite extends CompositePanel {
             TitleLabel: result.title,
             DescLabel: result.description,
         });
+        this._applyResultTone(result.resultType);
 
         this.node.active = true;
         this._visible = true;
@@ -102,6 +104,28 @@ export class ResultPopupComposite extends CompositePanel {
         for (const title of titles) {
             if (!this._visible || !this.node.isValid) return;
             await playTitleFreeze(this.node, title, timing, 'AwakeningFreeze');
+        }
+    }
+
+    /**
+     * 依勝敗切外觀（主戰場UI規格書 §4.2，PROG-2-1877）：勝利朱紅標題彈入、失敗整張卡轉灰。
+     * 結算窗會重複使用，每次都要重設上一場的狀態。
+     */
+    private _applyResultTone(resultType: BattleResult['resultType']): void {
+        const tone = resultPopupTone(resultType);
+        const card = this._binder?.getNode('Card');
+        if (card) {
+            for (const sprite of card.getComponentsInChildren(Sprite)) sprite.grayscale = tone.grayscale;
+        }
+        const title = this._binder?.getLabel('TitleLabel');
+        if (!title) return;
+        const [r, g, b] = tone.titleColor;
+        title.color = new Color(r, g, b, 255);
+        Tween.stopAllByTarget(title.node);
+        title.node.setScale(1, 1, 1);
+        if (tone.celebrate) {
+            title.node.setScale(1.35, 1.35, 1);
+            tween(title.node).to(0.35, { scale: new Vec3(1, 1, 1) }, { easing: 'backOut' }).start();
         }
     }
 
