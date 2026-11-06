@@ -18,7 +18,8 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
  *
  * Unity 對照：BattleRightPanel，含 BattleLog + 控制列
  */
-import { _decorator, Button, Label, Node, ScrollView, tween, UIOpacity, UITransform } from "cc";
+import { _decorator, Button, Label, Node, ScrollView, tween, UIOpacity, UITransform, Widget } from "cc";
+import { BattleSettingsComposite } from './BattleSettingsComposite';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { EVENT_NAMES } from '../../core/config/Constants';
@@ -51,6 +52,7 @@ export class BattleLogComposite extends CompositePanel {
     // 控制列狀態
     private _isAuto   = false;  // 自動戰鬥開關
     private _speed    = 1;      // 遊戲速度（1 | 2）
+    private _settings: BattleSettingsComposite | null = null;
     // 控制列節點引用（供視覺反饋使用）
     private _btnAuto:    Node | null = null;
     private _btnSpeed:   Node | null = null;
@@ -216,8 +218,25 @@ export class BattleLogComposite extends CompositePanel {
     }
 
     private _onSettingClick(): void {
+        void this._ensureSettings().show();
         services().event.emit(EVENT_NAMES.ShowSettingsRequested);
         UCUFLogger.info(LogCategory.UI, '[BattleLogComposite] ShowSettings requested');
+    }
+
+    /** 設定面板掛在戰報面板的父節點（戰場 UI 根）上，蓋住整個畫面（PROG-2-1890） */
+    private _ensureSettings(): BattleSettingsComposite {
+        if (this._settings && this._settings.isValid) return this._settings;
+        const host = this.node.parent ?? this.node;
+        const panelNode = host.getChildByName('BattleSettings') ?? new Node('BattleSettings');
+        panelNode.layer = this.node.layer;
+        if (!panelNode.parent) panelNode.parent = host;
+        const ut = panelNode.getComponent(UITransform) ?? panelNode.addComponent(UITransform);
+        ut.setContentSize(1920, 1080);
+        const widget = panelNode.getComponent(Widget) ?? panelNode.addComponent(Widget);
+        widget.isAlignTop = widget.isAlignBottom = widget.isAlignLeft = widget.isAlignRight = true;
+        widget.top = widget.bottom = widget.left = widget.right = 0;
+        this._settings = panelNode.getComponent(BattleSettingsComposite) ?? panelNode.addComponent(BattleSettingsComposite);
+        return this._settings;
     }
 
     private _onCollapseClick(): void {

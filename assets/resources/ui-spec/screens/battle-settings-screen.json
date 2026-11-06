@@ -1,0 +1,9 @@
+{
+  "id": "battle-settings-screen",
+  "version": 1,
+  "uiId": "BattleSettings",
+  "layer": "Popup",
+  "bundle": "battle_ui",
+  "layout": "battle-settings-main",
+  "skin": "battle-settings-default"
+}

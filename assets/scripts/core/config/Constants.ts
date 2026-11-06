@@ -140,6 +140,8 @@ export const EVENT_NAMES = {
   DelegateToggled:      "delegate-toggled",      // payload: boolean (要求開或關)
   BattleSpeedToggled:   "battle-speed-toggled",  // payload: number  (1 | 2)
   ShowSettingsRequested:"show-settings-requested",
+  /** 設定面板確認撤退：戰場橋接層判定我方戰敗（PROG-2-1890） */
+  RetreatRequested:     "retreat-requested",
   /** 彈出系統通知 (Toast)：{ text: string } */
   ShowToast:            "show-toast",
 };

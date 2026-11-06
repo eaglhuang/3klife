@@ -1,0 +1,47 @@
+{
+  "id": "battle-settings-main",
+  "version": 1,
+  "canvas": { "fitWidth": true, "fitHeight": true, "safeArea": true, "designWidth": 1920, "designHeight": 1080 },
+  "root": {
+    "type": "panel",
+    "name": "BattleSettingsRoot",
+    "width": 1920,
+    "height": 1080,
+    "widget": { "top": 0, "bottom": 0, "left": 0, "right": 0 },
+    "skinSlot": "settings.mask",
+    "children": [
+      {
+        "type": "panel",
+        "name": "Card",
+        "width": 480,
+        "height": 380,
+        "widget": { "center": true },
+        "skinSlot": "settings.card.bg",
+        "children": [
+          {
+            "type": "panel",
+            "name": "Header",
+            "widget": { "top": 0, "left": 0, "right": 0 },
+            "height": 52,
+            "skinSlot": "settings.header.bg",
+            "children": [
+              { "type": "label", "name": "TitleLabel", "text": "設定", "widget": { "left": 16, "right": 16 }, "height": 40, "styleSlot": "settings.label.title" }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "Body",
+            "widget": { "top": 52, "bottom": 0, "left": 0, "right": 0 },
+            "layout": { "type": "vertical", "spacing": 14, "paddingTop": 20, "paddingBottom": 20, "paddingLeft": 60, "paddingRight": 60 },
+            "children": [
+              { "type": "button", "name": "BtnBgm", "width": 360, "height": 52, "skinSlot": "settings.btn.toggle", "children": [ { "type": "label", "name": "Label", "text": "音樂：開", "styleSlot": "settings.label.btn" } ] },
+              { "type": "button", "name": "BtnSfx", "width": 360, "height": 52, "skinSlot": "settings.btn.toggle", "children": [ { "type": "label", "name": "Label", "text": "音效：開", "styleSlot": "settings.label.btn" } ] },
+              { "type": "button", "name": "BtnRetreat", "width": 360, "height": 52, "skinSlot": "settings.btn.danger", "children": [ { "type": "label", "name": "Label", "text": "撤退（判定戰敗）", "styleSlot": "settings.label.btn" } ] },
+              { "type": "button", "name": "BtnResume", "width": 360, "height": 52, "skinSlot": "settings.btn.primary", "children": [ { "type": "label", "name": "Label", "text": "繼續戰鬥", "styleSlot": "settings.label.btn" } ] }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "id": "battle-settings-default",
+  "version": 1,
+  "bundle": "battle_ui",
+  "atlasPolicy": "battle_ui",
+  "slots": {
+    "settings.mask": {
+      "kind": "color",
+      "color": "colorBlack",
+      "alpha": 150
+    },
+    "settings.card.bg": {
+      "kind": "color",
+      "color": "background",
+      "alpha": 240,
+      "spriteType": "sliced",
+      "border": [8, 8, 8, 8]
+    },
+    "settings.header.bg": {
+      "kind": "color",
+      "color": "surface",
+      "alpha": 255
+    },
+    "settings.btn.toggle": {
+      "kind": "button-skin",
+      "normal": "sprites/ui_families/common/paper_utility/btn_primary_normal",
+      "pressed": "sprites/ui_families/common/paper_utility/btn_primary_pressed",
+      "disabled": "sprites/ui_families/common/paper_utility/btn_primary_disabled",
+      "spriteType": "sliced",
+      "border": [20, 20, 20, 20],
+      "allowAutoAtlas": true
+    },
+    "settings.btn.danger": {
+      "kind": "button-skin",
+      "normal": "sprites/ui_families/common/paper_utility/btn_primary_normal",
+      "pressed": "sprites/ui_families/common/paper_utility/btn_primary_pressed",
+      "disabled": "sprites/ui_families/common/paper_utility/btn_primary_disabled",
+      "spriteType": "sliced",
+      "border": [20, 20, 20, 20],
+      "allowAutoAtlas": true
+    },
+    "settings.btn.primary": {
+      "kind": "button-skin",
+      "normal": "sprites/ui_families/common/equipment/btn_primary_normal",
+      "pressed": "sprites/ui_families/common/equipment/btn_primary_pressed",
+      "disabled": "sprites/ui_families/common/equipment/btn_primary_disabled",
+      "spriteType": "sliced",
+      "border": [20, 20, 20, 20],
+      "allowAutoAtlas": true
+    },
+    "settings.label.title": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/newsreader",
+      "fontSize": 24,
+      "lineHeight": 30,
+      "color": "secondaryLight",
+      "isBold": true,
+      "overflow": "CLAMP",
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "settings.label.btn": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 20,
+      "lineHeight": 24,
+      "color": "background",
+      "isBold": true,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
+      "overflow": "SHRINK"
+    }
+  }
+}

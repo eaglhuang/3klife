@@ -238,6 +238,7 @@ export class BattleUIBridge {
       // 控制列 x2（PROG-2-1867）：整個戰場畫面加速，離開戰場時在 unsubscribeEvents 還原
       svc.event.on(EVENT_NAMES.BattleSpeedToggled,      (speed: number) => setBattleTimeScale(speed)),
       svc.event.on(EVENT_NAMES.AutoBattleToggled,       this._onAutoBattleToggled.bind(this)),
+      svc.event.on(EVENT_NAMES.RetreatRequested,        this._onRetreatRequested.bind(this)),
       svc.event.on(EVENT_NAMES.DelegateToggled,         this._onDelegateToggled.bind(this)),
       svc.event.on(EVENT_NAMES.RequestGeneralQuickView, this._onRequestGeneralQuickView.bind(this)),
       svc.event.on(EVENT_NAMES.UltimateSkillSelected,   this._onUltimateSkillSelected.bind(this)),
@@ -770,6 +771,15 @@ export class BattleUIBridge {
     this._recordAutoBattleSnapshot(outcome.result, outcome.playerPower, outcome.enemyPower);
     state.battleEndAnnounced = true;
     services().event.emit(EVENT_NAMES.BattleEnded, { result: outcome.result });
+  }
+
+  /** 設定面板確認撤退（PROG-2-1890）：判定我方戰敗，走既有 BattleEnded → 結算彈窗流程 */
+  private _onRetreatRequested(): void {
+    const state = this.ctx.ctrl?.state;
+    if (!state || state.battleEndAnnounced) return;
+    this.appendLog('我方撤退，本場判定戰敗');
+    state.battleEndAnnounced = true;
+    services().event.emit(EVENT_NAMES.BattleEnded, { result: 'enemy-win' });
   }
 
   /** 自動鈕結算留 AUTO_RESOLVE 快照與日誌（doc_spec_0015 §F-4，PROG-2-1185）；在 BattleEnded 前寫入，由戰後存檔一併帶走 */
