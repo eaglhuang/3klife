@@ -1,0 +1,7 @@
+Use case: precise-object-edit
+Asset type: transparent full-body character portrait for a Cocos Creator strategy game
+Input image: Bian Furen candidate 1; preserve it as the source for all body, hair, clothing, booklet, pose, proportions, colors, transparency, and framing
+Primary request: Edit only Bian Furen's face to the approved style balance: clearly illustrated, subtly anime-inspired eyes and facial planes with refined painterly contours, while retaining an adult dignified appearance. Make the almond eyes modestly larger and more luminous with crisp controlled highlights, define the upper eyelid cleanly, simplify the nose bridge and cheek shading, and make the jaw/cheek contours look intentionally drawn rather than photographic. Keep her expression calm, intelligent, and matriarchal.
+Style/medium: polished high-end fantasy game illustration; face reads as premium anime-inspired 2D character art; clothing remains semi-realistic with dimensional brocade and metallic rendering
+Constraints: change only the face area; retain exact low double-coil bun, phoenix comb, dark-blue hairpins, earrings, robe, body shape, both hands, phoenix edict booklet, lighting, palette, transparent background, and complete full-body crop; no other edits
+Avoid: photorealistic face, childish or extreme anime proportions, face replacement that changes identity, hair or ornament changes, modified booklet or hands, extra fingers, halos, text, watermark, background, crop changes

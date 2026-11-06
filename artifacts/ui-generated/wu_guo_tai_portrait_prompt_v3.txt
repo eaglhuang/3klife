@@ -1,0 +1,8 @@
+Use case: background-extraction
+Asset type: transparent full-body character sprite
+Input image: Wu Guotai candidate 2; preserve the complete character pixels, hairstyle, twin-tiger comb, face, pose, clothing, tiger tally, lighting, colors, proportions and framing
+Primary request: Remove only the checkerboard background. It is a flat checkerboard pattern that was accidentally baked into the image; make every background cell fully transparent, including all spaces around and between the figure. Preserve fine hair, comb and shoe edges without a dark or pale halo.
+Style/medium: keep the existing polished illustrated fantasy game portrait unchanged
+Composition/framing: retain exact complete 2:3 full figure, with the newly complete twin-tiger comb and headroom and both shoes visible
+Constraints: true alpha transparency; do not redraw, repaint, relight, crop, resize, or modify any character pixel
+Avoid: leaving any checkerboard squares, adding a new background, changing the face or body, deleting the hair ornament, edge halos, text, watermark

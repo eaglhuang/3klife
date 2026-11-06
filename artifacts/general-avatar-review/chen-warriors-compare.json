@@ -1,0 +1,17 @@
+{
+  "positions": [
+    {
+      "position": 1,
+      "id": "chen-dao"
+    },
+    {
+      "position": 2,
+      "id": "chen-wu"
+    },
+    {
+      "position": 3,
+      "id": "cheng-yu"
+    }
+  ],
+  "cellPx": 112
+}

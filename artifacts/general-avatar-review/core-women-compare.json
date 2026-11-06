@@ -1,0 +1,22 @@
+{
+  "positions": [
+    {
+      "position": 1,
+      "id": "da-qiao"
+    },
+    {
+      "position": 2,
+      "id": "cai-wenji"
+    },
+    {
+      "position": 3,
+      "id": "huang-yue-ying"
+    },
+    {
+      "position": 4,
+      "id": "xin-xian-ying"
+    }
+  ],
+  "layout": "2x2",
+  "cellPx": 112
+}

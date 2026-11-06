@@ -1,0 +1,10 @@
+Use case: precise-object-edit
+Asset type: transparent full-body character sprite
+Input image: Guo Nuwang candidate 1; preserve the current character design, face, hair style, robe, colors and jade seal
+Primary request: Repair the clipped framing. Reconstruct the complete top of the geometric jade crown comb and the complete soles/heels of both shoes, then uniformly scale/reposition the full figure so it occupies about 88% of canvas height, leaving at least 5% clear transparent margin above the comb and below the shoes. Keep the face, pose, hands, square jade phoenix seal, robe and decorations as close to the source as possible.
+Style/medium: polished illustrated fantasy game art, subtle anime-inspired mature face and semi-realistic clothing materials
+Composition/framing: same centered 2:3 full-body portrait; show the complete comb, full skirt, both complete shoes and visible transparent margins at top and bottom
+Lighting/mood: preserve cool silver-blue lighting and composed imperial mood
+Color palette: retain midnight Wei indigo, cold silver, pale celadon-silver and small muted plum
+Constraints: true transparent alpha background; do not introduce a backdrop or checkerboard; keep all garment details and the distinctive one-side spiral knot
+Avoid: cropped head ornaments, cropped footwear, cropping, zooming in, new phoenix crown, new props, face redesign, costume redesign, text, watermark, opaque background

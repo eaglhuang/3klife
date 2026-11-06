@@ -1,0 +1,10 @@
+Use case: precise-object-edit
+Asset type: transparent full-body portrait for a Cocos Creator strategy game
+Input image: Wu Guotai candidate 1; preserve it as the source
+Primary request: Repair only the top hair silhouette and its twin-tiger bronze comb, which are clipped by the canvas edge. Reconstruct the full crown, bun and complete comb, then give them clear transparent breathing room above: the highest ornament must sit at least 6% of canvas height below the top edge. Keep the woman beautiful and mature, with the same illustrated face, exact face identity, pose, hands, tiger tally, clothing, palette, proportions, legs, shoes and lower framing.
+Style/medium: existing subtly anime-inspired fantasy game face with semi-realistic dimensional clothing and bronze material shading
+Composition/framing: same centered 2:3 full-body portrait; preserve both feet and all other framing; extend or reposition only the upper hair/ornament region to create visible headroom
+Lighting/mood: preserve existing warm light and dignified matriarchal mood
+Color palette: preserve the Wu crimson red, deep jade teal, charcoal, aged bronze and ivory palette
+Constraints: keep the image background genuinely transparent, not black; no body or garment changes; no new objects; the entire bun and both ends of the twin-tiger hair comb must be visible with margin
+Avoid: clipping, cropped hairpins, new crown design, face changes, outfit changes, prop changes, background fill, text, watermark, extra fingers
