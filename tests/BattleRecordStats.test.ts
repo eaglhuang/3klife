@@ -51,6 +51,10 @@ export function createBattleRecordStatsSuite(): TestSuite {
         assert.equals(1, s.kills);
         assert.equals(20, s.healingDone);
         assert.equals('本場戰績：斬敵 1｜傷害 70｜守護 40', formatPerformance(s));
+        // 結算附回合數（PROG-2-1871）；0、負數、NaN 不附
+        assert.equals('本場戰績：斬敵 1｜傷害 70｜守護 40｜回合 7', formatPerformance(s, 7));
+        assert.equals('本場戰績：斬敵 1｜傷害 70｜守護 40', formatPerformance(s, 0));
+        assert.equals('本場戰績：斬敵 1｜傷害 70｜守護 40', formatPerformance(s, Number.NaN));
         t.reset();
         assert.equals(0, t.snapshot().damageDealt);
     });
