@@ -14,7 +14,6 @@
 | GeneralDetailComposite.ts | doc_spec_0016, doc_ui_0012, doc_ui_0046                                    | 概: `GeneralDetail` 的 canonical runtime controller；負責 Overview child 與多 tab child 的 show/hide、切頁與資料下發，作為目前正式母路由 |
 | GeneralDetailOverviewMapper.ts | TBD_DOC_IDS（scan-required） | 概: `GeneralConfig` 對應 Overview child 的 header / summary / bloodline / crest / story content contract；供 `GeneralDetailComposite -> GeneralDetailOverviewChild` 資料下發使用 |
 | GeneralDetailOverviewChild.ts | doc_ui_0012, doc_ui_0046 | 概: `GeneralDetail` 的 Overview child panel；負責 schema preload、content bind、覺醒條與 rarity visuals 套用，作為 unified screen 的首頁子面板 |
-| GeneralListPanel.ts       | doc_spec_0016, doc_ui_0012                                             | 概: 武將列表 ✅ UIPreviewBuilder 已遷移 |
 | GeneralPortraitPanel.ts   | doc_spec_0016                                                                    | 概: 武將立繪面板 ✅ UIPreviewBuilder 已遷移 |
 | ResultPopup.ts            | doc_spec_0040                                                                | 概: 戰鬥結算面板 ✅ UIPreviewBuilder 已遷移 |
 | ToastMessage.ts           | doc_ui_0027                                                                   | 概: 通知 Toast ✅ UIPreviewBuilder 已遷移 |

@@ -65,7 +65,7 @@
 | **血統樹預設顯示模式**| 預設改為「簡化模式（Compact Mode）」；舊版武將詳情頁同步補上切換按鈕 | `BloodlineTreePanel`、`character-ds3-main` | ✅ 已定案 |
 | **HUD 網路狀態指示器**| 掛在 HUD 右上角，採「安靜模式」（正常隱藏/淡綠，弱網/離線警示） | Top HUD 狀態列 | ✅ 已定案 |
 | **戰場部署半透明預覽** | 拖曳或選格時顯示 50% 半透明模型預覽，合法格帶綠圈、非法格帶紅叉 | 棋盤部署格與 Ghost Preview | ✅ 已定案 |
-| **GeneralListPanel.ts**| 確認廢棄，已全面收斂至 CompositePanel 新架構，可安全刪除 | `GeneralListPanel.ts` | ✅ 准予刪除 |
+| **GeneralListPanel.ts**| 確認廢棄，已全面收斂至 CompositePanel 新架構，可安全刪除 | `GeneralListPanel.ts` | ✅ 已刪除（PROG-2-1952） |
 
 
 ---
