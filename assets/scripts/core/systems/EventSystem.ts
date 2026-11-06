@@ -70,10 +70,12 @@ export class EventSystem {
     handler: EventHandler<T>,
     target: Component
   ): void {
-    this.on(eventName, handler);
+    // 以 target 為 this 呼叫，傳入未綁定的成員方法（this.onXxx）也能用（PROG-2-1881）
+    const bound: EventHandler<T> = (payload) => handler.call(target, payload);
+    this.on(eventName, bound);
     // 監聽 Cocos 節點的 NODE_DESTROYED 系統事件，確保元件銷毀後自動清理
     target.node.once(Node.EventType.NODE_DESTROYED, () => {
-      this.off(eventName, handler);
+      this.off(eventName, bound);
     });
   }
 

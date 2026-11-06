@@ -11,6 +11,7 @@
  *       無法在純 Node.js 環境下驗證；此處僅測試純邏輯部分。
  */
 
+import type { Component } from 'cc';
 import { EventSystem } from '../assets/scripts/core/systems/EventSystem';
 import { TestSuite, assert } from './TestRunner';
 
@@ -123,6 +124,36 @@ export function createEventSystemSuite(): TestSuite {
         sys.emit('e', null);
         sys.emit('f', null);
         assert.equals(0, count);
+    });
+
+    // ── onBind（PROG-2-1881）────────────────────────────────
+
+    function makeTarget(): { target: Component; destroy: () => void; hits: number[] } {
+        let onDestroyed: (() => void) | null = null;
+        const target = {
+            hits: [] as number[],
+            node: { once: (_event: string, cb: () => void) => { onDestroyed = cb; } },
+            record(this: { hits: number[] }, payload: number) { this.hits.push(payload); },
+        };
+        return { target: target as unknown as Component, destroy: () => onDestroyed?.(), hits: target.hits };
+    }
+
+    suite.test('onBind：未綁定的成員方法以 target 為 this 呼叫', () => {
+        const bus = new EventSystem();
+        const t = makeTarget();
+        bus.onBind('ev', (t.target as unknown as { record: (p: number) => void }).record, t.target);
+        bus.emit('ev', 7);
+        assert.equals(1, t.hits.length);
+        assert.equals(7, t.hits[0]);
+    });
+
+    suite.test('onBind：節點銷毀後自動解除監聽', () => {
+        const bus = new EventSystem();
+        const t = makeTarget();
+        bus.onBind('ev', (t.target as unknown as { record: (p: number) => void }).record, t.target);
+        t.destroy();
+        bus.emit('ev', 1);
+        assert.equals(0, t.hits.length);
     });
 
     return suite;
