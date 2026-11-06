@@ -1,0 +1,24 @@
+{
+  "id": "enemy-thinking-main",
+  "version": 1,
+  "canvas": { "fitWidth": true, "fitHeight": true, "safeArea": true, "designWidth": 1920, "designHeight": 1080 },
+  "root": {
+    "type": "panel",
+    "name": "EnemyThinkingRoot",
+    "width": 560,
+    "height": 52,
+    "widget": { "top": 252, "hCenter": 0 },
+    "skinSlot": "enemyThinking.bg",
+    "children": [
+      {
+        "type": "label",
+        "name": "ThinkingText",
+        "text": "敵軍行動中...",
+        "width": 520,
+        "height": 44,
+        "widget": { "hCenter": 0, "vCenter": 0 },
+        "styleSlot": "enemyThinking.label"
+      }
+    ]
+  }
+}

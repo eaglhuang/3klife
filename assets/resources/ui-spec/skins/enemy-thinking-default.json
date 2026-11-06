@@ -1,0 +1,23 @@
+{
+  "id": "enemy-thinking-default",
+  "version": 1,
+  "bundle": "battle_ui",
+  "atlasPolicy": "battle_ui",
+  "slots": {
+    "enemyThinking.bg": {
+      "kind": "color-rect",
+      "color": "#3A0A0ACC"
+    },
+    "enemyThinking.label": {
+      "kind": "label-style",
+      "fontSize": 30,
+      "isBold": true,
+      "color": "#FF8A8A",
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
+      "overflow": "SHRINK",
+      "outlineColor": "outlineHeavy",
+      "outlineWidth": 2
+    }
+  }
+}

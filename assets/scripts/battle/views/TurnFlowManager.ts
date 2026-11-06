@@ -72,7 +72,7 @@ export class TurnFlowManager {
       this.bridge.playTurnBanner(Faction.Enemy);
       this.bridge.showEnemyThinkingPanel();
       this.scene.scheduleOnce(() => {
-        this.bridge.hideEnemyThinkingPanel();
+        // 「敵軍行動中…」一路顯示到我方回合開始，涵蓋敵軍動作演出（PROG-2-1891）
         c.ctrl?.resolveEnemyTurn();
           this.scene.scheduleOnce(() => this.pollCombatDrain(0, () => {
             c.ctrl?.finalizeEnemyTurn();
@@ -86,6 +86,7 @@ export class TurnFlowManager {
     const c = this.ctx;
     if (!c.isAdvancingTurn) return;
     c.isAdvancingTurn = false;
+    this.bridge.hideEnemyThinkingPanel();
     this.bridge.playTurnBanner(Faction.Player);
     c.boardRenderer?.setDeployHintFaction(Faction.Player);
   }
@@ -291,6 +292,7 @@ export class TurnFlowManager {
     this._showDuelResultToast(duelResult, accepted, Faction.Enemy);
     c.isDuelPanelActive = false;
     c.isAdvancingTurn = false;
+    this.bridge.hideEnemyThinkingPanel();
     this.bridge.playTurnBanner(Faction.Player);
     c.boardRenderer?.setDeployHintFaction(Faction.Player);
     this.bridge.refreshBattleViews();
