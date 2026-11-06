@@ -60,6 +60,8 @@ export const ITEM_TALLY_ESSENCE = 'ITEM_TALLY_ESSENCE';
 export const ITEM_LONGEVITY_PILL = 'ITEM_LONGEVITY_PILL';
 /** 加速卡（許願池每張縮短 2h；PROG-2-1198，PM 暫定 id）。來源（月卡、精元購買）不在本卡。 */
 export const ITEM_WISH_SPEED_CARD = 'ITEM_WISH_SPEED_CARD';
+/** 天命重置卷（運氣系統商業鉤 LUK-07；PROG-2-1923，暫定 id）：重擲結緣天命波動。 */
+export const ITEM_FATE_RESET_SCROLL = 'ITEM_FATE_RESET_SCROLL';
 /** 無期徒刑囚犯交出的傳家寶物（俘虜處理 K 節；可裝備或販賣，EQP-09） */
 export const ITEM_TREASURE = 'ITEM_TREASURE';
 /** 戰場撿拾（Stage_Salvage）戰後入帳的材料（PROG-2-1571，暫定 id） */
@@ -88,6 +90,7 @@ export const ITEM_DEFS: readonly ItemDef[] = [
     { id: ITEM_TALLY_ESSENCE, name: '虎符精華', category: '材料', rarity: 1 },
     { id: ITEM_LONGEVITY_PILL, name: '延壽丹', category: '消耗品', rarity: 1 },
     { id: ITEM_WISH_SPEED_CARD, name: '加速卡', category: '消耗品', rarity: 1 },
+    { id: ITEM_FATE_RESET_SCROLL, name: '天命重置卷', category: '消耗品', rarity: 1 },
     { id: ITEM_TREASURE, name: '傳家寶物', category: '寶物', rarity: 1 },
     { id: ITEM_STONE, name: '石材', category: '材料', rarity: 1 },
     { id: ITEM_WOOD, name: '木材', category: '材料', rarity: 1 },
