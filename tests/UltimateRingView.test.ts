@@ -7,7 +7,7 @@
  */
 import { assert, TestSuite } from './TestRunner';
 import {
-    ULTIMATE_RING_CHARGING_COLOR, ULTIMATE_RING_READY_COLOR, ultimateRingState,
+    ULTIMATE_POPUP_OPEN, ULTIMATE_READY_PULSE, ULTIMATE_RING_CHARGING_COLOR, ULTIMATE_RING_READY_COLOR, ultimateRingState,
 } from '../assets/scripts/core/systems/UltimateRingView';
 
 export function createUltimateRingViewSuite(): TestSuite {
@@ -33,6 +33,12 @@ export function createUltimateRingViewSuite(): TestSuite {
         assert.equals(50, ultimateRingState(50, 0).pct);
         assert.equals(0, ultimateRingState(NaN, 100).pct);
         assert.equals(0, ultimateRingState(-20, 100).ratio);
+    });
+
+    suite.test('呼吸一次 1.5 秒；選擇小窗 0.2 秒由下向上滑入（補充 v3 Zone 7）', () => {
+        assert.equals(1.5, ULTIMATE_READY_PULSE.halfPeriodSec * 2);
+        assert.equals(0.2, ULTIMATE_POPUP_OPEN.durationSec);
+        assert.isTrue(ULTIMATE_POPUP_OPEN.slidePx > 0);
     });
 
     return suite;

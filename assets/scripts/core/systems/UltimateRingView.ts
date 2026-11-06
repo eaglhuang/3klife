@@ -16,8 +16,11 @@ export type Rgb = readonly [number, number, number];
 export const ULTIMATE_RING_READY_COLOR: Rgb = [0x7e, 0xc8, 0xf7];
 export const ULTIMATE_RING_CHARGING_COLOR: Rgb = [0x3a, 0x8f, 0xd9];
 
-/** SP 滿時大圓的呼吸脈衝：放大倍率與單程秒數 */
-export const ULTIMATE_READY_PULSE = { scaleMax: 1.06, halfPeriodSec: 0.6 } as const;
+/** SP 滿時大圓的呼吸脈衝：放大倍率與單程秒數（補充 v3 Zone 7：一次呼吸 1.5 秒，PROG-2-1895） */
+export const ULTIMATE_READY_PULSE = { scaleMax: 1.06, halfPeriodSec: 0.75 } as const;
+
+/** 奧義選擇小窗開啟：由下向上滑入 slidePx 並淡入，共 durationSec 秒（補充 v3 Zone 7，PROG-2-1895） */
+export const ULTIMATE_POPUP_OPEN = { durationSec: 0.2, slidePx: 24 } as const;
 
 export interface UltimateRingState {
     /** 0~1 的填充比例 */

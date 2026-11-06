@@ -1,4 +1,5 @@
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
+import { ULTIMATE_POPUP_OPEN } from '../../core/systems/UltimateRingView';
 // @spec-source → 見 docs/cross-reference-index.md
 /**
  * @deprecated
@@ -13,7 +14,7 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
  *
  * Template：dialog-select
  */
-import { _decorator, Button, Color, Label, Layout, Node, tween, UIOpacity, UITransform, Vec3, ScrollView } from 'cc';
+import { _decorator, Button, Color, Label, Layout, Node, Tween, tween, UIOpacity, UITransform, Vec3, ScrollView } from 'cc';
 import { EVENT_NAMES } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
 import { UIPreviewBuilder } from '../core/UIPreviewBuilder';
@@ -47,6 +48,8 @@ export class UltimateSelectPopup extends UIPreviewBuilder {
     private _skillItems: UltimateSkillItem[] = [];
     private _rootNode: Node | null = null;
     private _dialogCard: Node | null = null;
+    /** 小窗卡片定位後的位置（滑入終點），連點時用來復位 */
+    private _cardRestPos: Vec3 | null = null;
     private _scrollPanel: Node | null = null;
     private _scrollView: ScrollView | null = null;
     private _anchorNode: Node | null = null;
@@ -142,8 +145,21 @@ export class UltimateSelectPopup extends UIPreviewBuilder {
         this.node.active = true;
         const opacity = this.node.getComponent(UIOpacity) ?? this.node.addComponent(UIOpacity);
         opacity.opacity = 0;
+        // 由下向上滑入＋淡入（補充 v3 Zone 7，PROG-2-1895）；連點時先停掉上一段滑動並回到定位
+        const { durationSec, slidePx } = ULTIMATE_POPUP_OPEN;
+        const card = this._dialogCard;
+        if (card) {
+            Tween.stopAllByTarget(card);
+            if (this._cardRestPos) card.setPosition(this._cardRestPos);
+        }
         this._positionAboveAnchor();
-        tween(opacity).to(0.12, { opacity: 255 }).start();
+        if (card) {
+            const target = card.position.clone();
+            this._cardRestPos = target;
+            card.setPosition(target.x, target.y - slidePx, target.z);
+            tween(card).to(durationSec, { position: target }, { easing: 'quadOut' }).start();
+        }
+        tween(opacity).to(durationSec, { opacity: 255 }).start();
     }
 
     hide(): void {
