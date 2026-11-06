@@ -27,6 +27,8 @@
 | `doc_spec_0306` | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_04_洛陽太學_五經注疏與九品官聲規格書.md | 洛陽太學：五經注疏與九品官聲功能規格書 (Luoyang Imperial Academy: Classics & Rank) |
 | `doc_spec_0307` | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_05_隆中草廬_奇門生剋與機巧工造規格書.md | 隆中草廬：奇門生剋與機巧工造功能規格書 (Longzhong Academy: Eight Gates & Crafting) |
 | `doc_spec_0308` | docs/遊戲規格文件/系統規格書/MVP核心循環貫通與遊玩動線功能規格書.md | MVP 核心循環貫通與遊玩動線功能規格書 (Playable Core Loop Vertical Slice) |
+| `doc_spec_0309` | docs/遊戲規格文件/系統規格書/戰場策略相剋與即時將階晉升功能規格書.md | 戰場策略相剋與即時將階晉升功能規格書 (Battle Dynamic Counters & In-Combat Ascension) |
+| `doc_spec_0310` | docs/遊戲規格文件/系統規格書/世代功業傳承與退役教官轉化功能規格書.md | 世代功業傳承與退役教官轉化功能規格書 (Generational Legacy & Mentor Transformation) |
 
 ## 索引類 (`doc_index`)
 

@@ -12652,5 +12652,17 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-1900.md",
     "title": "PROG-2-1900 Agent1/2/3 舊卡清理（第一批 14 張）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2119",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1901.md",
+    "title": "PROG-2-1901 開場名將展示預設改用正式版台詞",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2120",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1902.md",
+    "title": "PROG-2-1902 學府培育總控與防 SL 確定性引擎",
+    "category": "task"
   }
 ]

@@ -1834,5 +1834,17 @@
     "path": "docs/遊戲規格文件/系統規格書/MVP核心循環貫通與遊玩動線功能規格書.md",
     "title": "MVP 核心循環貫通與遊玩動線功能規格書 (Playable Core Loop Vertical Slice)",
     "category": "spec"
+  },
+  {
+    "id": "doc_spec_0309",
+    "path": "docs/遊戲規格文件/系統規格書/戰場策略相剋與即時將階晉升功能規格書.md",
+    "title": "戰場策略相剋與即時將階晉升功能規格書 (Battle Dynamic Counters & In-Combat Ascension)",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0310",
+    "path": "docs/遊戲規格文件/系統規格書/世代功業傳承與退役教官轉化功能規格書.md",
+    "title": "世代功業傳承與退役教官轉化功能規格書 (Generational Legacy & Mentor Transformation)",
+    "category": "spec"
   }
 ]

@@ -108,3 +108,5 @@
 | `doc_task_2116` | docs/agent-briefs/tasks/UI/UI-2-0169.md | UI-2-0169 修人物頁改版造成的單元測試回歸與總 TP 消失 |
 | `doc_task_2117` | docs/agent-briefs/tasks/UI/UI-2-0170.md | UI-2-0170 人物頁兵分頁虎符槽接真實資料與裝備操作 |
 | `doc_task_2118` | docs/agent-briefs/tasks/PROG/PROG-2-1900.md | PROG-2-1900 Agent1/2/3 舊卡清理（第一批 14 張） |
+| `doc_task_2119` | docs/agent-briefs/tasks/PROG/PROG-2-1901.md | PROG-2-1901 開場名將展示預設改用正式版台詞 |
+| `doc_task_2120` | docs/agent-briefs/tasks/PROG/PROG-2-1902.md | PROG-2-1902 學府培育總控與防 SL 確定性引擎 |
