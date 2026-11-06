@@ -1,6 +1,7 @@
 import { UCUFLogger, LogCategory } from '../utils/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 import { AudioClip, AudioSource, Node, tween } from "cc";
+import { AUDIO_PREFS_KEY, parseAudioPrefs, type AudioPrefs } from "./BattleSettingsView";
 
 /**
  * 音效系統
@@ -28,6 +29,8 @@ export class AudioSystem {
     private bgmVolume: number = 0.5;
     private sfxSource: AudioSource | null = null;
     private loopSource: AudioSource | null = null;
+    /** 玩家在設定面板關掉的音樂／音效（存 localStorage，PROG-2-1890） */
+    private prefs: AudioPrefs = parseAudioPrefs(null);
 
     /** 防重複播放時間戳記（key=音效名稱, value=上次播放 ms） */
     private lastPlayTime = new Map<string, number>();
@@ -64,6 +67,48 @@ export class AudioSystem {
         this.loopSource = hostNode.addComponent(AudioSource);
         this.loopSource.loop = true;
         this.loopSource.volume = 0.8;
+
+        this.prefs = parseAudioPrefs(this._readPrefs());
+    }
+
+    // ─────────────────────────────────────────
+    //  玩家音訊偏好（設定面板開關）
+    // ─────────────────────────────────────────
+
+    public isBgmMuted(): boolean { return this.prefs.bgmMuted; }
+    public isSfxMuted(): boolean { return this.prefs.sfxMuted; }
+
+    public setBgmMuted(muted: boolean): void {
+        this.prefs.bgmMuted = muted;
+        const src = this.activeBgm === 'A' ? this.bgmSource : this.bgmSourceB;
+        if (src) src.volume = this._bgmTargetVolume();
+        this._writePrefs();
+    }
+
+    public setSfxMuted(muted: boolean): void {
+        this.prefs.sfxMuted = muted;
+        if (muted) this.loopSource?.stop();
+        this._writePrefs();
+    }
+
+    private _bgmTargetVolume(): number {
+        return this.prefs.bgmMuted ? 0 : this.bgmVolume;
+    }
+
+    private _readPrefs(): string | null {
+        try {
+            return (globalThis as any)?.localStorage?.getItem(AUDIO_PREFS_KEY) ?? null;
+        } catch {
+            return null;
+        }
+    }
+
+    private _writePrefs(): void {
+        try {
+            (globalThis as any)?.localStorage?.setItem(AUDIO_PREFS_KEY, JSON.stringify(this.prefs));
+        } catch {
+            // 私密模式或無 localStorage：只在本次執行有效
+        }
     }
 
     // ─────────────────────────────────────────
@@ -105,7 +150,7 @@ export class AudioSystem {
         this.bgmSourceB?.stop();
         this.activeBgm = 'A';
         this.bgmSource.clip = clip;
-        this.bgmSource.volume = volume;
+        this.bgmSource.volume = this._bgmTargetVolume();
         this.bgmSource.play();
     }
 
@@ -124,7 +169,7 @@ export class AudioSystem {
     public setBgmVolume(v: number): void {
         this.bgmVolume = v;
         const src = this.activeBgm === 'A' ? this.bgmSource : this.bgmSourceB;
-        if (src) src.volume = v;
+        if (src) src.volume = this._bgmTargetVolume();
     }
 
     /**
@@ -157,7 +202,7 @@ to.clip = clip;
         to.play();
 
         tween(from).to(duration, { volume: 0 }).call(() => from.stop()).start();
-        tween(to).to(duration, { volume: this.bgmVolume }).start();
+        tween(to).to(duration, { volume: this._bgmTargetVolume() }).start();
 
         this.activeBgm = this.activeBgm === 'A' ? 'B' : 'A';
     }
@@ -175,7 +220,7 @@ to.clip = clip;
      * @param volume 音量 0~1，預設 1.0
      */
     public playSfx(name: string, volume = 1.0): void {
-        if (!this.sfxSource) return;
+        if (!this.sfxSource || this.prefs.sfxMuted) return;
 
         // 防重複播放（會在連擊時造成音爆）
         const now = Date.now();
@@ -200,7 +245,7 @@ to.clip = clip;
      * @param cooldownMs 防重複的冷卻時間（ms），預設 300ms
      */
     public playSfxWithCooldown(name: string, volume = 1.0, cooldownMs = 300): void {
-        if (!this.sfxSource) return;
+        if (!this.sfxSource || this.prefs.sfxMuted) return;
         const now = Date.now();
         const last = this.lastPlayTime.get(name) ?? 0;
         if (now - last < cooldownMs) return;
@@ -236,7 +281,7 @@ to.clip = clip;
     // ─────────────────────────────────────────
 
     public playLoopSfx(name: string, volume = 0.8): void {
-        if (!this.loopSource) return;
+        if (!this.loopSource || this.prefs.sfxMuted) return;
         const clip = this.clipCache.get(name);
         if (!clip) {
             UCUFLogger.warn(LogCategory.DATA, `[AudioSystem] Loop clip 不存在: ${name}`);
