@@ -26,6 +26,7 @@ import { UITemplateBinder } from '../core/UITemplateBinder';
 import { SolidBackground } from './SolidBackground';
 import { isVitalityBarGrayed, vitalityBarRatio } from '../../core/systems/VitalityBarView';
 import { FORTRESS_MAX_HP, fortressBarRatio } from '../../core/systems/FortressBarView';
+import { foodLabelText } from '../../core/systems/FoodLabelText';
 
 const { ccclass } = _decorator;
 
@@ -530,7 +531,7 @@ export class BattleHUDComposite extends CompositePanel {
     }
 
     private _setFood(food: number, maxFood: number): void {
-        if (this._foodLabel) this._foodLabel.string = `🌾 糧草 ${food} / ${maxFood}`;
+        if (this._foodLabel) this._foodLabel.string = foodLabelText(food, maxFood);
     }
 
     /** 頭像旁標籤顯示主將血量；頂部長條改由城寨血量驅動（_renderFortress） */

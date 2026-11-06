@@ -98,7 +98,7 @@ export class BattleSceneFlow {
     const deployRuntime = this.ctx.getDeployRuntime();
     if (deployRuntime) {
       deployRuntime.node.active = true;
-      deployRuntime.updateDp(services().battle.getSnapshot().playerFood);
+      deployRuntime.updateFood(services().battle.getSnapshot().playerFood);
     }
 
     const snap = services().battle.getSnapshot();

@@ -85,7 +85,7 @@ export interface IDeployController {
 export interface IDeployRuntimeLike {
     readonly node: any;
     setController(ctrl: IDeployController): void;
-    updateDp(dp: number): void;
+    updateFood(food: number): void;
     selectLane(lane: number): void;
     deploySelected(): void;
     showToast(message: string, duration?: number, options?: { color?: Color; key?: string }): void;
