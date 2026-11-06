@@ -127,7 +127,8 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
     this.onDeployClick();
   }
 
-  public showToast(message: string, duration = 1.2, options?: ToastOptions): void {
+  /** 未指定時長時由 ToastMessage 停留 2 秒（主戰場UI §4.1，PROG-2-1894） */
+  public showToast(message: string, duration?: number, options?: ToastOptions): void {
     void this.toast?.show(message, duration, options);
   }
 
