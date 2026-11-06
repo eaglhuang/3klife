@@ -227,6 +227,8 @@ export interface PlayerSaveSnapshot {
     aiAdaptiveStreak?: AiAdaptiveStreak;
     /** 祠堂軍功聲望（PROG-2-1912）；後加的選填欄位，舊檔缺值視為 0；版號不升 */
     clanPrestige?: number;
+    /** 祠堂每日供奉最後領取日（PROG-2-1915）；選填，舊檔缺值視為未領 */
+    shrineOfferingDay?: string;
     /** 抽卡待補教官卡日誌（PROG-2-1004）：與扣款、入冊同批存檔，教官卡寫入後移除；舊檔沒有時讀回空陣列 */
     gachaMentorJournal?: GachaMentorJournalEntry[];
     /** 大廳任務 AI 委任紀錄（HALL-05，PROG-2-1006）：只增不改（結算除外）；舊檔沒有時讀回空陣列 */
@@ -659,6 +661,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(normalizeEnrollGrantDay(snapshot.enrollGrantDay) !== null ? { enrollGrantDay: normalizeEnrollGrantDay(snapshot.enrollGrantDay)! } : {}),
         ...(snapshot.aiAdaptiveStreak !== undefined ? { aiAdaptiveStreak: normalizeAiAdaptiveStreak(snapshot.aiAdaptiveStreak) } : {}),
         ...(normalizeClanPrestige(snapshot.clanPrestige) > 0 ? { clanPrestige: normalizeClanPrestige(snapshot.clanPrestige) } : {}),
+        ...(normalizeShrineOfferingDay(snapshot.shrineOfferingDay) !== null ? { shrineOfferingDay: normalizeShrineOfferingDay(snapshot.shrineOfferingDay)! } : {}),
         ...(snapshot.gachaMentorJournal !== undefined ? { gachaMentorJournal: normalizeGachaMentorJournal(snapshot.gachaMentorJournal) } : {}),
         ...(snapshot.hallAssignLog !== undefined ? { hallAssignLog: normalizeHallAssignLog(snapshot.hallAssignLog) } : {}),
         ...(snapshot.inventoryRecords !== undefined ? { inventoryRecords: normalizeInventoryRecords(snapshot.inventoryRecords) } : {}),
@@ -813,4 +816,9 @@ export class PlayerSaveService {
 /** 祠堂聲望讀檔正規化：非數字或負數視為 0、取整數 */
 export function normalizeClanPrestige(value: unknown): number {
     return typeof value === 'number' && Number.isFinite(value) && value > 0 ? Math.floor(value) : 0;
+}
+
+/** 祠堂供奉日讀檔正規化：只接受 YYYY-MM-DD，其餘視為未領 */
+export function normalizeShrineOfferingDay(value: unknown): string | null {
+    return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : null;
 }
