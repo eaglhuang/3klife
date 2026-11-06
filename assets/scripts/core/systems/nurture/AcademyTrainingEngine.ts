@@ -20,6 +20,7 @@ import {
     ACADEMY_STAT_KEYS,
     ACADEMY_STAT_TOTAL_CAP,
     ACADEMY_TACTIC_SLOTS,
+    ACADEMY_TRAIT_SLOTS,
     ACADEMY_TOTAL_TURNS,
     AcademyActionPayload,
     AcademyControlMode,
@@ -50,6 +51,8 @@ export const ACADEMY_TUNING = {
     abuseFloorGain: 5,
     abuseEnergyPenalty: 20,
     abuseResonanceLockTurns: 2,
+    /** 先祖門風特質列入弱冠禮候選的機率（doc_spec_0310 §2.1） */
+    legacyTraitSeedPct: 60,
 } as const;
 
 export const ACADEMY_MIDTERM_POLICIES: readonly AcademyMidtermPolicy[] = ['STRENGTH', 'BALANCE', 'NOURISH'];
@@ -189,7 +192,8 @@ function applyTrain(state: AcademyStateSnapshot, target: AcademyStatKey, rng: ID
     const efficiency = ACADEMY_CONTROL_EFFICIENCY_PCT[state.controlMode];
     const bias = 100 + (ACADEMY_STAT_BIAS_PCT[state.academyId][target] ?? 0);
     const policy = midtermPolicyPct(state, target);
-    const gain = Math.floor(((ACADEMY_TUNING.trainBaseGain + variance) * efficiency * bias * bonusPct * policy) / 100000000);
+    const legacy = 100 + (state.legacySupport?.statBonusPct[target] ?? 0);
+    const gain = Math.floor(((ACADEMY_TUNING.trainBaseGain + variance) * efficiency * bias * bonusPct * policy * legacy) / 10000000000);
     addAcademyStatCapped(state.stats, target, gain);
     const policyEnergy = state.midtermPolicy === 'BALANCE' ? ACADEMY_TUNING.midtermBalanceExtraEnergy : 0;
     state.energy = clampEnergy(state.energy - ACADEMY_TUNING.trainEnergyCost - result.extraEnergyCost - policyEnergy);
@@ -245,12 +249,26 @@ function setScheduledInterrupt(state: AcademyStateSnapshot, rng: IDeterministicR
     }
 }
 
+function isLegacyTraitSeed(state: AcademyStateSnapshot, optionId: string): boolean {
+    return (state.legacySupport?.traitSeeds ?? []).indexOf(optionId) >= 0;
+}
+
+/** 先祖門風特質：未學過的種子各擲一次，中選者排到最前面，候選總數不變 */
+function withLegacyTraitSeeds(state: AcademyStateSnapshot, options: string[], rng: IDeterministicRng): string[] {
+    const seeds = (state.legacySupport?.traitSeeds ?? [])
+        .filter((seed) => state.learnedTraits.indexOf(seed) < 0 && options.indexOf(seed) < 0)
+        .filter((seed) => rng.chance(ACADEMY_TUNING.legacyTraitSeedPct, 100, `legacy-trait-${seed}`));
+    if (seeds.length === 0) return options;
+    return [...seeds, ...options].slice(0, Math.max(options.length, seeds.length));
+}
+
 function setInterrupt(state: AcademyStateSnapshot, kind: AcademyInterruptKind, rng: IDeterministicRng, gimmick?: IAcademyGimmickHandler): void {
     state.pendingInterrupt = kind;
     if (kind === 'MIDTERM') {
         state.interruptOptions = [...ACADEMY_MIDTERM_POLICIES];
     } else if (kind === 'COMING_OF_AGE') {
-        state.interruptOptions = gimmick?.comingOfAgeOptions ? gimmick.comingOfAgeOptions(state, rng) : [...ACADEMY_GENERIC_RITE_OPTIONS];
+        const options = gimmick?.comingOfAgeOptions ? gimmick.comingOfAgeOptions(state, rng) : [...ACADEMY_GENERIC_RITE_OPTIONS];
+        state.interruptOptions = withLegacyTraitSeeds(state, options, rng);
     } else if (kind === 'RESONANCE') {
         state.interruptOptions = [ACADEMY_RESONANCE_WITNESS];
     } else {
@@ -267,6 +285,9 @@ function resolveInterrupt(state: AcademyStateSnapshot, optionId: string | undefi
     if (kind === 'MIDTERM') {
         state.midtermPolicy = optionId as AcademyMidtermPolicy;
         state.chronicles.push({ turn: state.currentTurn, title: '期中考評', description: `選定方針 ${optionId}`, highlightScore: 1 });
+    } else if (kind === 'COMING_OF_AGE' && isLegacyTraitSeed(state, optionId)) {
+        if (state.learnedTraits.length < ACADEMY_TRAIT_SLOTS && state.learnedTraits.indexOf(optionId) < 0) state.learnedTraits.push(optionId);
+        state.chronicles.push({ turn: state.currentTurn, title: '弱冠加冠禮', description: `承襲先祖門風 ${optionId}`, highlightScore: 2 });
     } else if (kind === 'COMING_OF_AGE') {
         if (state.learnedTactics.length < ACADEMY_TACTIC_SLOTS) state.learnedTactics.push(optionId);
         state.chronicles.push({ turn: state.currentTurn, title: '弱冠加冠禮', description: `領悟 ${optionId}`, highlightScore: 2 });
