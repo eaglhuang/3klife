@@ -225,6 +225,8 @@ export interface PlayerSaveSnapshot {
     itemAcquisitionLog?: ItemAcquisitionRecord[];
     /** 玩家連勝／連敗計數（AIS-11 E-8）；後加的選填欄位，舊檔缺值視為 0；版號不升 */
     aiAdaptiveStreak?: AiAdaptiveStreak;
+    /** 祠堂軍功聲望（PROG-2-1912）；後加的選填欄位，舊檔缺值視為 0；版號不升 */
+    clanPrestige?: number;
     /** 抽卡待補教官卡日誌（PROG-2-1004）：與扣款、入冊同批存檔，教官卡寫入後移除；舊檔沒有時讀回空陣列 */
     gachaMentorJournal?: GachaMentorJournalEntry[];
     /** 大廳任務 AI 委任紀錄（HALL-05，PROG-2-1006）：只增不改（結算除外）；舊檔沒有時讀回空陣列 */
@@ -656,6 +658,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.itemAcquisitionLog !== undefined ? { itemAcquisitionLog: normalizeAcquisitionLog(snapshot.itemAcquisitionLog) } : {}),
         ...(normalizeEnrollGrantDay(snapshot.enrollGrantDay) !== null ? { enrollGrantDay: normalizeEnrollGrantDay(snapshot.enrollGrantDay)! } : {}),
         ...(snapshot.aiAdaptiveStreak !== undefined ? { aiAdaptiveStreak: normalizeAiAdaptiveStreak(snapshot.aiAdaptiveStreak) } : {}),
+        ...(normalizeClanPrestige(snapshot.clanPrestige) > 0 ? { clanPrestige: normalizeClanPrestige(snapshot.clanPrestige) } : {}),
         ...(snapshot.gachaMentorJournal !== undefined ? { gachaMentorJournal: normalizeGachaMentorJournal(snapshot.gachaMentorJournal) } : {}),
         ...(snapshot.hallAssignLog !== undefined ? { hallAssignLog: normalizeHallAssignLog(snapshot.hallAssignLog) } : {}),
         ...(snapshot.inventoryRecords !== undefined ? { inventoryRecords: normalizeInventoryRecords(snapshot.inventoryRecords) } : {}),
@@ -805,4 +808,9 @@ export class PlayerSaveService {
         }
         return this._ready;
     }
+}
+
+/** 祠堂聲望讀檔正規化：非數字或負數視為 0、取整數 */
+export function normalizeClanPrestige(value: unknown): number {
+    return typeof value === 'number' && Number.isFinite(value) && value > 0 ? Math.floor(value) : 0;
 }
