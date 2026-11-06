@@ -43,6 +43,7 @@ import { BoardRenderer } from "./BoardRenderer";
 import { SpineGeneralOverlay } from "./SpineGeneralOverlay";
 import { BATTLE_VISUAL_TIMING } from "./BattlePresentationTiming";
 import { BuffGainEffectPool } from "./effects/BuffGainEffectPool";
+import { statBonusTone, statWithBonusText, type StatBonusTone } from "../shared/StatBonusText";
 import { services } from "../../core/managers/ServiceLoader";
 import { FloatTextType } from "../../core/systems/FloatTextSystem";
 import { vitalityRingView, type VitalityRingView } from "../../core/systems/VitalityBarView";
@@ -833,6 +834,18 @@ export class UnitRenderer extends Component {
     });
   }
 
+  /** 數值帶增減量時字串變長，單行縮字塞進徽章（PROG-2-1870） */
+  private shrinkToFit(label: Label): void {
+    label.enableWrapText = false;
+    label.overflow = Label.Overflow.SHRINK;
+  }
+
+  private statToneColor(tone: StatBonusTone): Color {
+    if (tone === "up") return new Color(110, 255, 120, 255);
+    if (tone === "down") return new Color(255, 120, 110, 255);
+    return new Color(245, 245, 245, 255);
+  }
+
   /** 掠奪金色飄字（戰法系統 §H-3，PROG-2-1852）：多行依序飄出，避免疊在一起 */
   public playLootTexts(lane: number, depth: number, texts: readonly string[]): void {
     const worldPos = this.getUnitWorldPosition(lane, depth);
@@ -1258,21 +1271,13 @@ export class UnitRenderer extends Component {
 
     const attackBonus = unit.getEffectiveAttack() - unit.attack;
     const hpBonus = unit.getEffectiveMaxHp() - unit.maxHp;
-    if (this.isGeneralAvatarUnit(unit)) {
-      view.attackLabel.string = `攻 ${unit.getEffectiveAttack()}`;
-      view.typeLabel.string = "將";
-      view.hpLabel.string = `命 ${Math.max(0, unit.currentHp)}`;
-    } else {
-      view.attackLabel.string = `${unit.getEffectiveAttack()}`;
-      view.typeLabel.string = this.toTroopShortName(unit.type);
-      view.hpLabel.string = `${Math.max(0, unit.currentHp)}`;
-    }
-    view.attackLabel.color = attackBonus === 0
-      ? new Color(245, 245, 245, 255)
-      : new Color(110, 255, 120, 255);
-    view.hpLabel.color = hpBonus === 0
-      ? new Color(245, 245, 245, 255)
-      : new Color(110, 255, 120, 255);
+    // 主戰場UI規格書 §3.1：Buff 帶來的數值變化顯示成「35 (+10)」（PROG-2-1870）
+    const isGeneral = this.isGeneralAvatarUnit(unit);
+    view.attackLabel.string = statWithBonusText(unit.getEffectiveAttack(), attackBonus, isGeneral ? "攻 " : "");
+    view.typeLabel.string = isGeneral ? "將" : this.toTroopShortName(unit.type);
+    view.hpLabel.string = statWithBonusText(Math.max(0, unit.currentHp), hpBonus, isGeneral ? "命 " : "");
+    view.attackLabel.color = this.statToneColor(statBonusTone(attackBonus));
+    view.hpLabel.color = this.statToneColor(statBonusTone(hpBonus));
     view.troopType = unit.type;
     view.labelOpacity.opacity = 255;
 
@@ -1375,6 +1380,7 @@ export class UnitRenderer extends Component {
     );
     // 將上排三塊徽章上移
     attackLabel.node.parent!.setPosition(-offset, segmentHeight / 2 + 2, 0);
+    this.shrinkToFit(attackLabel);
 
     const typeLabel = this.createBadgeSegment(
       rootNode,
@@ -1421,6 +1427,7 @@ export class UnitRenderer extends Component {
       22,
     );
     hpLabel.node.parent!.setPosition(offset, segmentHeight / 2 + 2, 0);
+    this.shrinkToFit(hpLabel);
 
     // 下排：完整兵種名稱（由 updateUnitView 動態更新）
     const nameLabelNode = new Node("NameLabel");
