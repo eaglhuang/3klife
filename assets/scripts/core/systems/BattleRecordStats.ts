@@ -86,8 +86,10 @@ export class BattlePerformanceTracker {
 }
 
 /** 結算面板的本場戰績一行 */
-export function formatPerformance(performance: BattlePerformance): string {
-    return `本場戰績：斬敵 ${performance.kills}｜傷害 ${performance.damageDealt}｜守護 ${guardianPowerOf(performance)}`;
+/** turns 有給（正整數）時附上本場回合數（主戰場UI規格書 §4.2 結算「擊殺數、回合數」，PROG-2-1871） */
+export function formatPerformance(performance: BattlePerformance, turns?: number): string {
+    const base = `本場戰績：斬敵 ${performance.kills}｜傷害 ${performance.damageDealt}｜守護 ${guardianPowerOf(performance)}`;
+    return turns !== undefined && Number.isFinite(turns) && turns > 0 ? `${base}｜回合 ${Math.floor(turns)}` : base;
 }
 
 // ── 公式 ───────────────────────────────────────────────────────────────────
