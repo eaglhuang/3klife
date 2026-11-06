@@ -4,7 +4,8 @@
  *
  * 暫定（11/06 裁決）：
  * - 好感等級 1～5，累積好感經驗達 [100, 250, 500, 850, 1300] 分別升到 Lv1～Lv5；未滿 100 為 Lv0（尚未結識）。
- * - 每級準確率 +1%，加總後不超過 95%（規格只寫「名士等級提高準確率」，幅度為暫定）。
+ * - 每級準確率 +1%，加總後不超過 95%：暫定（自訂），不在 11/06 裁決內，規格只寫「名士等級提高準確率」，幅度待使用者確認。
+ * - 劇情錨點（龐統官階 3、左慈第 5 年）同為暫定（自訂），裁決只說「改以官階或年份為錨點」。
  * - 劇情解鎖以玩家官階（OfficerState.currentTier 1～5）或遊戲年份（GameClock.currentYear，從 1 起算）為錨點；
  *   名士只要「累計占卜次數」或「劇情錨點」任一達成即解鎖。
  * - 內建值只是備援；遊戲啟動時由 installSageProgressTable 依 sage-progress.json 覆寫。
@@ -18,12 +19,12 @@ export const SAGE_FAVOR_LEVEL_MAX = 5;
 /** 升到 Lv1～Lv5 需要的累積好感經驗（索引 0 = Lv1） */
 export const SAGE_FAVOR_LEVEL_EXP: number[] = [100, 250, 500, 850, 1300];
 
-/** 好感每級增加的準確率與上限 */
+/** 好感每級增加的準確率與上限（暫定（自訂），非 11/06 裁決數值） */
 export const SAGE_FAVOR_ACCURACY = { perLevel: 0.01, cap: 0.95 };
 
 export type SageStoryUnlock = { type: 'officer-tier'; minTier: number } | { type: 'year'; minYear: number };
 
-/** 劇情解鎖錨點；沒列的名士只能靠占卜次數（或一開始就可用） */
+/** 劇情解鎖錨點（暫定（自訂））；沒列的名士只能靠占卜次數（或一開始就可用） */
 export const SAGE_STORY_UNLOCKS: Partial<Record<SageId, SageStoryUnlock>> = {
     'pang-tong': { type: 'officer-tier', minTier: 3 },
     'zuo-ci': { type: 'year', minYear: 5 },
