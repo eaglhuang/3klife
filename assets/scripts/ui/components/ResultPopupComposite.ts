@@ -10,6 +10,7 @@ import { loadGeneralAvatar } from '../core/GeneralAvatarLoader';
 import { playTitleFreeze } from '../core/TitleFreezeOverlay';
 import type { AwakeningFreezeTiming } from '../../shared/interfaces/IBattleUIComponents';
 import { resultPopupTone } from '../../shared/ResultPopupTone';
+import { bringNodeToFront } from '../core/NodeBringToFront';
 
 const { ccclass } = _decorator;
 
@@ -44,6 +45,8 @@ export class ResultPopupComposite extends CompositePanel {
             DescLabel: result.description,
         });
         this._applyResultTone(result.resultType);
+        // 地格標籤層、戰鬥紀錄等面板在場景載入後才加進 Canvas，會排在結算窗之上（PROG-2-1878）
+        bringNodeToFront(this.node);
 
         this.node.active = true;
         this._visible = true;
