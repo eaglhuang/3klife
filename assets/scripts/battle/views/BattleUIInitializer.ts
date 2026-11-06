@@ -127,7 +127,33 @@ export function ensureBattleLogPanel(
  */
 export function ensureStrategistHud(canvas: Node | null, hudNode: Node | null): IStrategistHudLike | null {
   if (!canvas) return null;
-  const node = canvas.getChildByName('StrategistHud') ?? new Node('StrategistHud');
+  const node = ensureFullCanvasChild(canvas, 'StrategistHud');
+  if (hudNode?.parent === canvas) node.setSiblingIndex(hudNode.getSiblingIndex() + 1);
+  // 依元件名稱掛載（battle 不直接引用 ui 層），類別由 ui/components/StrategistHudComposite 註冊
+  const panel = (node.getComponent('StrategistHudComposite') ?? node.addComponent('StrategistHudComposite')) as unknown as IStrategistHudLike | null;
+  if (!panel) return null;
+  void panel.ensureMounted();
+  return panel;
+}
+
+/**
+ * 建立主將屬性戰法快覽小窗（主戰場UI規格補充 v3-5，PROG-2-1864）。
+ * 放在 Canvas 最上層；平常不顯示，點 HUD 頭像時由 ShowGeneralQuickView 事件叫出。
+ */
+export function ensureGeneralQuickView(canvas: Node | null): Node | null {
+  if (!canvas) return null;
+  const node = ensureFullCanvasChild(canvas, 'GeneralQuickView');
+  node.setSiblingIndex(canvas.children.length - 1);
+  // 依元件名稱掛載（battle 不直接引用 ui 層），類別由 ui/components/GeneralQuickViewComposite 註冊
+  const panel = (node.getComponent('GeneralQuickViewComposite') ?? node.addComponent('GeneralQuickViewComposite')) as unknown as { ensureMounted(): Promise<void> } | null;
+  if (!panel) return null;
+  void panel.ensureMounted();
+  return node;
+}
+
+/** 在 Canvas 下找或建一個撐滿 Canvas 的節點 */
+function ensureFullCanvasChild(canvas: Node, name: string): Node {
+  const node = canvas.getChildByName(name) ?? new Node(name);
   node.layer = canvas.layer;
   if (!node.parent) node.parent = canvas;
   const canvasSize = canvas.getComponent(UITransform);
@@ -136,12 +162,7 @@ export function ensureStrategistHud(canvas: Node | null, hudNode: Node | null): 
   const widget = node.getComponent(Widget) ?? node.addComponent(Widget);
   widget.isAlignTop = widget.isAlignBottom = widget.isAlignLeft = widget.isAlignRight = true;
   widget.top = widget.bottom = widget.left = widget.right = 0;
-  if (hudNode?.parent === canvas) node.setSiblingIndex(hudNode.getSiblingIndex() + 1);
-  // 依元件名稱掛載（battle 不直接引用 ui 層），類別由 ui/components/StrategistHudComposite 註冊
-  const panel = (node.getComponent('StrategistHudComposite') ?? node.addComponent('StrategistHudComposite')) as unknown as IStrategistHudLike | null;
-  if (!panel) return null;
-  void panel.ensureMounted();
-  return panel;
+  return node;
 }
 
 /**

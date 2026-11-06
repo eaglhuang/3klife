@@ -33,7 +33,7 @@ import { TurnFlowManager } from './TurnFlowManager';
 import { setupCameraForBoard, initSceneBackground, addBackgroundSwitchUI, resolveSceneBackgroundId } from './BattleSceneSetup';
 import { resolveAiDifficulty } from '../../core/systems/AiSpCharge';
 import { openingAiLogLinesOf } from '../../core/systems/AiEntranceLines';
-import { ensureDeployPanelRuntime, ensureHUD, ensureBattleLogPanel, ensureStrategistHud, ensureBattleScenePanel, ensureBoardRenderer, ensureUnitRenderer } from './BattleUIInitializer';
+import { ensureDeployPanelRuntime, ensureHUD, ensureBattleLogPanel, ensureStrategistHud, ensureGeneralQuickView, ensureBattleScenePanel, ensureBoardRenderer, ensureUnitRenderer } from './BattleUIInitializer';
 
 const { ccclass, property } = _decorator;
 
@@ -291,6 +291,8 @@ export class BattleScene extends Component {
       this.sceneContext.battleLogPanel = this.battleLogPanel;
       this.sceneContext.battleScenePanel = this.battleScenePanel;
       this.sceneContext.strategistHud = ensureStrategistHud(canvas, (this.hud as any)?.node ?? null);
+      // 點 HUD 頭像叫出的主將快覽小窗（PROG-2-1864）
+      ensureGeneralQuickView(canvas);
       this.sceneContext.boardRenderer = this.boardRenderer;
       this.sceneContext.unitRenderer = this.unitRenderer;
       this.sceneContext.resultPopup = this.resultPopup;
