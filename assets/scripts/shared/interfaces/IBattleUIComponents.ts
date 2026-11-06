@@ -88,7 +88,7 @@ export interface IDeployRuntimeLike {
     updateDp(dp: number): void;
     selectLane(lane: number): void;
     deploySelected(): void;
-    showToast(message: string, duration?: number, options?: { color?: Color }): void;
+    showToast(message: string, duration?: number, options?: { color?: Color; key?: string }): void;
     setTroopSlotButtonsVisible(visible: boolean): void;
     registerDragDropCallback(callback: (x: number, y: number) => void): void;
     updateSkillStatus(available: boolean): void;

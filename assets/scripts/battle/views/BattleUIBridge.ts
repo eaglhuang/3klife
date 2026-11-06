@@ -11,6 +11,7 @@
  */
 
 import { tallyLegendDeployLine } from '../../core/systems/TallyScripts';
+import { aptitudeToastPayload } from '../../core/systems/AptitudeDialogue';
 import { salvageSummaryLines } from '../../core/systems/StageSalvageSettlement';
 import { DELEGATE_OFF_LINE, DELEGATE_UNAVAILABLE_LINE, delegateOnLine, FOOD_EMPTY_LINE } from '../../core/systems/SortieDeployScripts';
 import { wisdomMeterText, WISDOM_SURGE_LOG } from '../shared/WisdomMeter';
@@ -144,6 +145,7 @@ export function createBattleSceneContext(): BattleSceneContext {
 
 // ─────────────────────────────────────────────────────────────────────────────
 
+
 export class BattleUIBridge {
   /** 已寫進戰鬥紀錄的智謀觸發次數（PROG-2-1577） */
   private _wisdomTriggersLogged = 0;
@@ -224,6 +226,8 @@ export class BattleUIBridge {
       svc.event.on(EVENT_NAMES.TallyDeployed,           this._onTallyDeployed.bind(this)),
       svc.event.on(EVENT_NAMES.BattleSkillNotice,       (line: string) => { this.appendLog(line); }),
       svc.event.on(EVENT_NAMES.TroopCounterLine,        (line: string) => { this.appendLog(line); }),
+      svc.event.on(EVENT_NAMES.AptitudeDialogue,        this._onAptitudeDialogue.bind(this)),
+      svc.event.on(EVENT_NAMES.ShowToast,               this._onShowToast.bind(this)),
       svc.event.on(EVENT_NAMES.AutoBattleToggled,       this._onAutoBattleToggled.bind(this)),
       svc.event.on(EVENT_NAMES.DelegateToggled,         this._onDelegateToggled.bind(this)),
       svc.event.on(EVENT_NAMES.RequestGeneralQuickView, this._onRequestGeneralQuickView.bind(this)),
@@ -942,6 +946,23 @@ export class BattleUIBridge {
   private _noteEnemySkillRevealed(data: { faction: Faction; skillId?: string; skillName?: string }): void {
     const skillId = data.skillId ?? data.skillName;
     if (data.faction === Faction.Enemy && skillId) this._revealedEnemySkills.add(skillId);
+  }
+
+  /**
+   * 適性台詞（戰場適性系統 §G，APT-14；PROG-2-1866 接上畫面）：寫進戰報並浮一條 Toast。
+   * 天氣轉變的台詞（風向突變）也走這條，所以天氣切換時玩家會看到提示。
+   */
+  private _onAptitudeDialogue(data: { turn: number; line: string }): void {
+    if (!data?.line) return;
+    this.appendLog(data.line);
+    const toast = aptitudeToastPayload(data.line);
+    this.ctx.deployRuntime?.showToast(toast.message, toast.duration, { key: toast.key });
+  }
+
+  /** 其他元件要求的短提示（如大招充能未滿，PROG-2-1866）：交給同一套 Toast 佇列 */
+  private _onShowToast(data: { text: string; duration?: number }): void {
+    if (!data?.text) return;
+    this.ctx.deployRuntime?.showToast(data.text, data.duration);
   }
 
   private _onRequestGeneralQuickView(req: { side: 'player' | 'enemy'; isEnemy: boolean }): void {
