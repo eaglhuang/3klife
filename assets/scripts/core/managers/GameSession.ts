@@ -72,6 +72,8 @@ import { SeededRandom, LEGACY_RANDOM_SEED } from '../systems/SeededRandom';
 import { applyAcademyGraduation, type AcademyGraduationResult } from '../systems/nurture/AcademyGraduation';
 import type { AcademyStateSnapshot } from '../systems/nurture/AcademyTypes';
 import { calculatePrestigeGain, clanPrestigeTierOf } from '../systems/GenerationalLegacy';
+import { clanPrestigeBenefitOf } from '../systems/MvpLoopController';
+import { ITEM_VITALITY_PILL } from '../systems/ItemDef';
 import { createEmptyMercenaryBundle, normalizeMercenaryBundle, serializeMercenaryBundle, type MercenarySaveBundle } from '../systems/MercenarySaveModel';
 import { bondMercenaryToRoster, rarityOfTemplate, statsOfTemplate, type RosterBondResult } from '../systems/MercenaryRoster';
 import { useTrialTicket, type TrialTicketRejectReason, type TrialTicketResult } from '../systems/MercenaryTrialTicket';
@@ -134,7 +136,7 @@ import type { HallCandidate } from '../systems/HallCharacterRoll';
 import { buildHallSpotRows, EMPTY_HALL_SPOT_STATE, HallSpotRow, HallSpotState, refreshHallCharacterSpots } from '../systems/HallCharacterPresenter';
 import { buildHallStageFeed, type HallStageFeed, type HallStageProfile } from '../systems/HallStageFeed';
 import type { HallVolunteerTask } from '../systems/HallVolunteer';
-import { createPlayerSaveSnapshot, normalizeGachaMentorJournal, normalizeHallAssignLog, type GachaMentorJournalEntry, normalizeSandtableMarkerTerritories, normalizeSortiePresets, normalizeGachaWalletSave, type GachaWalletSave, normalizeDailySubsidyRecord, type DailySubsidyRecord, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeAutoNurtureTickets, normalizeFlag, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot, normalizeClanPrestige } from '../services/PlayerSaveService';
+import { createPlayerSaveSnapshot, normalizeGachaMentorJournal, normalizeHallAssignLog, type GachaMentorJournalEntry, normalizeSandtableMarkerTerritories, normalizeSortiePresets, normalizeGachaWalletSave, type GachaWalletSave, normalizeDailySubsidyRecord, type DailySubsidyRecord, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeAutoNurtureTickets, normalizeFlag, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot, normalizeClanPrestige, normalizeShrineOfferingDay } from '../services/PlayerSaveService';
 import { appendAssignRecord, autoAssignHallTask, listAssignRecords, settleLatestAssign, settleOpenAssignsForSeason, type HallAssignOutcome, type HallAutoAssignRecord, type HallAutoAssignResult, type HallAutoAssignTaskInput } from '../systems/HallAutoAssign';
 import type { HallTaskIntelInput } from '../systems/HallTaskIntel';
 import { estimateSortiePower } from '../systems/SortiePrediction';
@@ -769,6 +771,8 @@ export class GameSession {
     private _aiAdaptiveStreak: AiAdaptiveStreak = { ...EMPTY_AI_ADAPTIVE_STREAK };
     /** 祠堂軍功聲望（與 ClanTier 血統階層雙軌並存） */
     private _clanPrestige = 0;
+    /** 祠堂每日供奉最後領取日（UTC+8，YYYY-MM-DD）；從未領為 null（PROG-2-1915） */
+    private _shrineOfferingDay: string | null = null;
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
     private _prison: PrisonState<GeneralConfig> = createPrisonState<GeneralConfig>();
     /** 來投時依 uid 查回的武將配置（generals.json）；大廳載入後由 setGeneralTemplates 注入 */
@@ -1925,6 +1929,7 @@ export class GameSession {
         this._itemAcquisitionLog = [];
         this._aiAdaptiveStreak = { ...EMPTY_AI_ADAPTIVE_STREAK };
         this._clanPrestige = 0;
+        this._shrineOfferingDay = null;
         this._sevenDayJourney = createSevenDayJourneyState();
         this._officerState = initialOfficerState();
         this._sandtableMarkerTerritories = [];
@@ -2584,6 +2589,29 @@ export class GameSession {
     /** 祠堂聲望等級 1~5 */
     public get clanPrestigeTier(): number {
         return clanPrestigeTierOf(this._clanPrestige);
+    }
+
+    /** 祠堂每日供奉數量（PM 暫定：補元散 1 顆） */
+    public static readonly SHRINE_OFFERING_PILLS = 1;
+
+    /** 今天能否領祠堂供奉：祠堂福祉含每日靈丹（Lv.5）且今天尚未領 */
+    public canClaimShrineOffering(epochMs: number): boolean {
+        return clanPrestigeBenefitOf(this.clanPrestigeTier).dailyShrinePill && this._shrineOfferingDay !== loginDayOf(epochMs);
+    }
+
+    /**
+     * 領祠堂每日供奉（doc_spec_0310 §3 Lv.5，PROG-2-1915）：UTC+8 切日、同日一次，發補元散入背包並自動存檔。
+     * 不符資格或今天已領回傳 0。
+     */
+    public async claimShrineOffering(epochMs: number): Promise<number> {
+        if (!this.canClaimShrineOffering(epochMs)) return 0;
+        const before = this._inventory;
+        this._inventory = addItem(this._inventory, ITEM_VITALITY_PILL, GameSession.SHRINE_OFFERING_PILLS);
+        this._recordGain(before, 'DROP');
+        this._shrineOfferingDay = loginDayOf(epochMs);
+        this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
+        if (this._autoSave && this._save) await this.save();
+        return GameSession.SHRINE_OFFERING_PILLS;
     }
 
     public get aiAdaptiveStreak(): AiAdaptiveStreak {
@@ -4748,8 +4776,8 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'shrineOfferingDay'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'shrineOfferingDay'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
@@ -4782,6 +4810,7 @@ export class GameSession {
         if (this._itemAcquisitionLog.length > 0) fields.itemAcquisitionLog = this._itemAcquisitionLog.slice();
         if (this._aiAdaptiveStreak.consecutiveWins > 0 || this._aiAdaptiveStreak.consecutiveLosses > 0) fields.aiAdaptiveStreak = { ...this._aiAdaptiveStreak };
         if (this._clanPrestige > 0) fields.clanPrestige = this._clanPrestige;
+        if (this._shrineOfferingDay) fields.shrineOfferingDay = this._shrineOfferingDay;
         return fields;
     }
 
@@ -4816,6 +4845,7 @@ export class GameSession {
         this._itemAcquisitionLog = normalizeAcquisitionLog(snapshot.itemAcquisitionLog);
         this._aiAdaptiveStreak = normalizeAiAdaptiveStreak(snapshot.aiAdaptiveStreak);
         this._clanPrestige = normalizeClanPrestige(snapshot.clanPrestige);
+        this._shrineOfferingDay = normalizeShrineOfferingDay(snapshot.shrineOfferingDay);
     }
 
     /**
