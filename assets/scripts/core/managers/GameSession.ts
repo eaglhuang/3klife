@@ -69,6 +69,8 @@ import type { SpiritCard } from '../models/SpiritCard';
 import type { MentorCard } from '../models/MentorCard';
 import { normalizeDeck, toggleDeckCard, DeckToggleOutcome } from '../services/PlayerDeckRules';
 import { SeededRandom, LEGACY_RANDOM_SEED } from '../systems/SeededRandom';
+import { applyAcademyGraduation, type AcademyGraduationResult } from '../systems/nurture/AcademyGraduation';
+import type { AcademyStateSnapshot } from '../systems/nurture/AcademyTypes';
 import { createEmptyMercenaryBundle, normalizeMercenaryBundle, serializeMercenaryBundle, type MercenarySaveBundle } from '../systems/MercenarySaveModel';
 import { bondMercenaryToRoster, rarityOfTemplate, statsOfTemplate, type RosterBondResult } from '../systems/MercenaryRoster';
 import { useTrialTicket, type TrialTicketRejectReason, type TrialTicketResult } from '../systems/MercenaryTrialTicket';
@@ -1056,6 +1058,21 @@ export class GameSession {
         this._inventory = result.inventory;
         this._roster.replaceAll(this._roster.getAll().map((g) => (g.id === generalId ? { ...g, vitality: result.vitality, maxVitality: max } : g)));
         this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return result;
+    }
+
+    /**
+     * 學府結業寫回名冊並自動存檔（PROG-2-1909）：五維、戰法、特質一起落地。
+     * 查無武將回傳 null；快照未結業或不屬於該武將時由 applyAcademyGraduation 拋錯，名冊不變。
+     */
+    public async graduateFromAcademy(generalId: string, snapshot: Readonly<AcademyStateSnapshot>): Promise<AcademyGraduationResult | null> {
+        const general = this._roster.getAll().find((g) => g.id === generalId);
+        if (!general) return null;
+        const result = applyAcademyGraduation(general, snapshot);
+        this._roster.replaceAll(this._roster.getAll().map((g) => (g.id === generalId ? result.general : g)));
         if (this._autoSave && this._save) {
             await this.save();
         }

@@ -3,7 +3,7 @@
  * AcademyGraduation — 學府結業寫回武將本體（純邏輯，不依賴 cc）。
  *
  * 學府全程只改鏡像快照；結業後才把五維、學到的戰法寫回武將，並給出評級 S/A/B/C。
- * 特質目前武將資料沒有欄位，先隨結果回傳，由呼叫端決定存放處。
+ * 學到的特質寫進 learnedTraits（PROG-2-1909），重複的不再加。
  *
  * Unity 對照：像副本結束時把暫存角色資料 Commit 回存檔角色。
  */
@@ -21,7 +21,7 @@ export interface AcademyGraduationResult {
     statTotal: number;
     /** 這次新學會的戰法 */
     newTactics: string[];
-    /** 學府解鎖的特質（武將資料尚無欄位） */
+    /** 這次新解鎖的特質 */
     traits: string[];
 }
 
@@ -48,5 +48,8 @@ export function applyAcademyGraduation(general: Readonly<GeneralConfig>, snapsho
     const known = next.learnedTactics ?? [];
     const newTactics = snapshot.learnedTactics.filter((t, i, arr) => arr.indexOf(t) === i && known.indexOf(t) < 0);
     next.learnedTactics = [...known, ...newTactics];
-    return { general: next, grade: academyGradeOf(statTotal), statTotal, newTactics, traits: [...snapshot.learnedTraits] };
+    const knownTraits = next.learnedTraits ?? [];
+    const traits = snapshot.learnedTraits.filter((t, i, arr) => arr.indexOf(t) === i && knownTraits.indexOf(t) < 0);
+    next.learnedTraits = [...knownTraits, ...traits];
+    return { general: next, grade: academyGradeOf(statTotal), statTotal, newTactics, traits };
 }
