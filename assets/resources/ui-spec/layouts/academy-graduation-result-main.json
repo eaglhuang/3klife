@@ -1,0 +1,155 @@
+{
+  "id": "academy-graduation-result-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "AcademyGraduationRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "AcademyGraduationCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 720,
+        "height": 480,
+        "skinSlot": "academy.graduation.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "AcademyGraduationTitleLabel",
+            "id": "academyGradTitle",
+            "widget": {
+              "top": 20,
+              "left": 24,
+              "right": 24
+            },
+            "height": 40,
+            "text": "學府結業",
+            "styleSlot": "academy.graduation.label.title"
+          },
+          {
+            "type": "label",
+            "name": "AcademyGraduationGradeLabel",
+            "id": "academyGradGrade",
+            "widget": {
+              "top": 84,
+              "left": 24,
+              "right": 24
+            },
+            "height": 64,
+            "text": "",
+            "styleSlot": "academy.graduation.label.grade"
+          },
+          {
+            "type": "label",
+            "name": "AcademyGraduationStatTotalLabel",
+            "id": "academyGradStatTotal",
+            "widget": {
+              "top": 160,
+              "left": 24,
+              "right": 24
+            },
+            "height": 32,
+            "text": "",
+            "styleSlot": "academy.graduation.label.body"
+          },
+          {
+            "type": "panel",
+            "name": "AcademyGraduationTacticsBox",
+            "widget": {
+              "top": 208,
+              "left": 24,
+              "right": 24
+            },
+            "height": 84,
+            "skinSlot": "academy.graduation.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "AcademyGraduationTacticsLabel",
+                "id": "academyGradTactics",
+                "widget": {
+                  "top": 8,
+                  "left": 12,
+                  "right": 12
+                },
+                "height": 68,
+                "text": "",
+                "styleSlot": "academy.graduation.label.body"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "AcademyGraduationTraitsBox",
+            "widget": {
+              "top": 304,
+              "left": 24,
+              "right": 24
+            },
+            "height": 84,
+            "skinSlot": "academy.graduation.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "AcademyGraduationTraitsLabel",
+                "id": "academyGradTraits",
+                "widget": {
+                  "top": 8,
+                  "left": 12,
+                  "right": 12
+                },
+                "height": 68,
+                "text": "",
+                "styleSlot": "academy.graduation.label.body"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "AcademyGraduationCloseButton",
+            "id": "btnAcademyGradClose",
+            "widget": {
+              "bottom": 20,
+              "left": 24,
+              "right": 24
+            },
+            "height": 44,
+            "skinSlot": "academy.graduation.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "AcademyGraduationCloseLabel",
+                "id": "academyGradCloseLabel",
+                "widget": {
+                  "top": 8,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "確認",
+                "styleSlot": "academy.graduation.label.button"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "id": "academy-graduation-result-default",
+  "version": 1,
+  "bundle": "lobby_ui",
+  "atlasPolicy": "lobby_ui",
+  "slots": {
+    "academy.graduation.card.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 232
+    },
+    "academy.graduation.row.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 180
+    },
+    "academy.graduation.button.bg": {
+      "kind": "color-rect",
+      "color": "primary",
+      "alpha": 140
+    },
+    "academy.graduation.label.title": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 28,
+      "lineHeight": 34,
+      "color": "secondaryLight",
+      "overflow": "CLAMP",
+      "isBold": true
+    },
+    "academy.graduation.label.body": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "color": "secondaryLight",
+      "overflow": "CLAMP"
+    },
+    "academy.graduation.label.button": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 20,
+      "lineHeight": 24,
+      "color": "secondaryLight",
+      "overflow": "CLAMP",
+      "isBold": true
+    },
+    "academy.graduation.label.grade": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 56,
+      "lineHeight": 64,
+      "color": "secondaryLight",
+      "overflow": "CLAMP",
+      "isBold": true
+    }
+  }
+}

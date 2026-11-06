@@ -1,0 +1,17 @@
+{
+  "id": "academy-graduation-result-screen",
+  "version": 1,
+  "uiId": "AcademyGraduationResult",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "academy-graduation-result-main",
+  "skin": "academy-graduation-result-default",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}
