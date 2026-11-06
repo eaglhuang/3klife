@@ -10,8 +10,8 @@
   "tags": [],
   "createdAt": "2026-11-05T14:30:28.536Z",
   "createdByActor": "codex-gpt-6.1-sol",
-  "lastTransitionId": "2026-11-06T22-41-44-292Z-scope-amendment-550fde37faeb",
-  "lastTransitionAt": "2026-11-06T22:41:44.292Z",
+  "lastTransitionId": "2026-11-06T22-55-06-685Z-scope-amendment-83571847345e",
+  "lastTransitionAt": "2026-11-06T22:55:06.685Z",
   "ledgerContractVersion": "task-ledger/v1",
   "reservedAt": "2026-11-05T17:15:58.821Z",
   "promotedAt": "2026-11-05T17:15:58.826Z",
@@ -25,6 +25,12 @@
       ".atm/history/evidence/UI-2-0121.*",
       ".atm/history/task-events/UI-2-0121/**",
       ".atm/history/tasks/UI-2-0121.json",
+      ".github/skills/general-portrait-style/**",
+      ".github/skills/general-portrait-style/assets/approved-female.png",
+      ".github/skills/general-portrait-style/assets/approved-male-comparison.png",
+      ".github/skills/general-portrait-style/assets/da-qiao-reference.png",
+      ".github/skills/general-portrait-style/assets/zhen-ji-reference.webp",
+      ".github/skills/general-portrait-style/SKILL.md",
       "artifacts/general-avatar-review/**",
       "artifacts/general-avatar-review/da-qiao-peach-spear-candidate.png",
       "artifacts/general-avatar-review/page-999.json",
@@ -355,20 +361,20 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-f3535845fc73eedd",
-    "ticketDigest": "sha256:f3535845fc73eedddd570441905d96a8aed1452167993467fc210384619ed83e",
+    "ticketId": "wat-2908e9fef12c79fe",
+    "ticketDigest": "sha256:2908e9fef12c79feac5a883a675dab8a22d1189b10ef77704f0e4e1de07c57a5",
     "taskId": "UI-2-0121",
     "origin": "claim",
     "actorId": "codex-gpt-6.1-terra",
     "laneSessionId": "lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d",
     "claimGeneration": "lease-f957fb02b01d",
-    "issuedAt": "2026-11-06T22:41:44.011Z",
-    "expiresAt": "2026-11-06T23:11:44.011Z",
-    "scopeDigest": "sha256:7dc2ce8ba12e000f7cd4a0f182ac632524bf596df327e73a94e3ecf073b2b6ec",
+    "issuedAt": "2026-11-06T22:55:06.558Z",
+    "expiresAt": "2026-11-06T23:25:06.558Z",
+    "scopeDigest": "sha256:b6556c20016139b04520f82c8ecb5b7f4c3e7d456c582c805fde3d0a0a556d20",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-11-06T22:41:44.011Z"
+      "selectedAt": "2026-11-06T22:55:06.558Z"
     },
     "grants": [
       {
@@ -378,6 +384,12 @@
           ".atm/history/evidence/git-head.jsonl",
           ".atm/history/task-events/UI-2-0121/**",
           ".atm/history/tasks/UI-2-0121.json",
+          ".github/skills/general-portrait-style/**",
+          ".github/skills/general-portrait-style/SKILL.md",
+          ".github/skills/general-portrait-style/assets/approved-female.png",
+          ".github/skills/general-portrait-style/assets/approved-male-comparison.png",
+          ".github/skills/general-portrait-style/assets/da-qiao-reference.png",
+          ".github/skills/general-portrait-style/assets/zhen-ji-reference.webp",
           "artifacts/general-avatar-review/**",
           "artifacts/general-avatar-review/da-qiao-peach-spear-candidate.png",
           "artifacts/general-avatar-review/page-999.json",
@@ -695,7 +707,7 @@
           "docs/ui-quality-tasks/UI-2-0121.json",
           "docs/ui-quality-todo.json"
         ],
-        "digest": "sha256:f7525af65b28932e8f042da929b212585398b4b74ff08a346253214a8dac3a28"
+        "digest": "sha256:4a5582c675fc66b41faf7821cc4fa74a790f7ca38118fedffb49b36cbc996dd1"
       },
       {
         "kind": "lifecycle-operation",
@@ -747,6 +759,12 @@
       ".atm/history/evidence/UI-2-0121.*",
       ".atm/history/task-events/UI-2-0121/**",
       ".atm/history/tasks/UI-2-0121.json",
+      ".github/skills/general-portrait-style/**",
+      ".github/skills/general-portrait-style/assets/approved-female.png",
+      ".github/skills/general-portrait-style/assets/approved-male-comparison.png",
+      ".github/skills/general-portrait-style/assets/da-qiao-reference.png",
+      ".github/skills/general-portrait-style/assets/zhen-ji-reference.webp",
+      ".github/skills/general-portrait-style/SKILL.md",
       "artifacts/general-avatar-review/**",
       "artifacts/general-avatar-review/da-qiao-peach-spear-candidate.png",
       "artifacts/general-avatar-review/page-999.json",
@@ -1707,6 +1725,12 @@
     "assets/resources/sprites/ui_avatars/cropped/xiao_qiao_avatar.png",
     "assets/resources/sprites/generals/avatars/zhen_ji_avatar.png",
     "assets/resources/sprites/generals/zhen_ji_portrait.png",
-    "assets/resources/sprites/ui_avatars/cropped/zhen_ji_avatar.png"
+    "assets/resources/sprites/ui_avatars/cropped/zhen_ji_avatar.png",
+    ".github/skills/general-portrait-style/**",
+    ".github/skills/general-portrait-style/assets/approved-female.png",
+    ".github/skills/general-portrait-style/assets/approved-male-comparison.png",
+    ".github/skills/general-portrait-style/SKILL.md",
+    ".github/skills/general-portrait-style/assets/da-qiao-reference.png",
+    ".github/skills/general-portrait-style/assets/zhen-ji-reference.webp"
   ]
 }

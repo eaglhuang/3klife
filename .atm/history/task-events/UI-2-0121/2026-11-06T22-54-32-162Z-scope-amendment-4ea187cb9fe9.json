@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-06T22-54-32-162Z-scope-amendment-4ea187cb9fe9",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:0c02cf38a2c21c3b1fd51e58cd5cefac6e7df6336b396325f0627bc681d9da56",
+  "createdAt": "2026-11-06T22:54:32.162Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \".github/skills/general-portrait-style/SKILL.md,.github/skills/general-portrait-style/assets/approved-female.png,.github/skills/general-portrait-style/assets/approved-male-comparison.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
