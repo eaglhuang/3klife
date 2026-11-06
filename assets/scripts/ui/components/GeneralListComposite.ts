@@ -18,6 +18,7 @@ import { EVENT_NPC_INTERACTION_COMPLETED } from '../../core/dialogue/NpcMemoryAd
 import { services } from '../../core/managers/ServiceLoader';
 import { CompositePanel } from '../core/CompositePanel';
 import { factionDisplayName } from '../core/FactionDisplay';
+import { sortGenerals } from '../core/GeneralListSort';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { RetirementFlowController } from '../core/RetirementFlowController';
@@ -1146,35 +1147,8 @@ export class GeneralListComposite extends CompositePanel {
             }
         });
         if (!this._sortKey) return list;
-        const key = this._sortKey;
-        const asc = this._sortAsc;
-
-        list.sort((a, b) => {
-            let va: unknown;
-            let vb: unknown;
-
-            if (key === 'troop') {
-                const rankOf = (g: GeneralConfig) => {
-                    const grades = Object.values(g.troopAptitude ?? {});
-                    return grades.length > 0
-                        ? Math.max(...grades.map(gr => APTITUDE_ORDER[gr as string] ?? 0))
-                        : 0;
-                };
-                va = rankOf(a); vb = rankOf(b);
-            } else {
-                va = (a as unknown as Record<string, unknown>)[key];
-                vb = (b as unknown as Record<string, unknown>)[key];
-            }
-
-            if (typeof va === 'number' && typeof vb === 'number') {
-                return asc ? va - vb : vb - va;
-            }
-            const sa = String(va ?? '');
-            const sb = String(vb ?? '');
-            return asc ? sa.localeCompare(sb, 'zh-TW') : sb.localeCompare(sa, 'zh-TW');
-        });
-
-        return list;
+        // 缺值一律排最後，避免數字與字串混比造成排序錯亂（PROG-2-1882）
+        return sortGenerals(list, this._sortKey, this._sortAsc);
     }
 
     // ── 工具 ─────────────────────────────────────────────────
