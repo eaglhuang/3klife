@@ -5,6 +5,7 @@ import { BattleTactic, Faction, GAME_CONFIG } from '../../core/config/Constants'
 import { BattleState } from '../models/BattleState';
 
 import { FLOOD_ATTACK_PUSH_DEPTH_DELTA, FLOOD_ATTACK_PUSH_LANE_DELTA } from '../shared/BattleTacticBehavior';
+import { deployCellHint } from "../shared/DeployCellHint";
 import { resolveBattleSceneDisplayRule, type BattleSceneBaseStyle } from '../shared/BattleSceneMode';
 const { ccclass, property } = _decorator;
 
@@ -1258,16 +1259,16 @@ export class BoardRenderer extends Component {
             this.applyCellOverlayStyle(cellNode, primaryMaterial, accentMaterial);
         });
 
-        // 玩家部署提示 (只在玩家回合顯示)
+        // 玩家部署提示 (只在玩家回合顯示)：可部署亮綠、被占或被擋覆蓋紅色（主戰場UI規格書 §3.3，PROG-2-1876）
         if (this.deployHintFaction === Faction.Player) {
             const deployDepth = 0;
             for (let lane = 0; lane < GAME_CONFIG.GRID_LANES; lane++) {
-                const cell = state.getCell(lane, deployDepth);
-                if (!cell || cell.occupantId) continue;
+                const hint = deployCellHint(state, lane, deployDepth);
+                if (!hint) continue;
 
                 const cellNode = this.cellNodes.get(`${lane},${deployDepth}`);
                 if (!cellNode) continue;
-                this.applyCellOverlayStyle(cellNode, this.playerDeployHintFillMaterial);
+                this.applyCellOverlayStyle(cellNode, hint === 'open' ? this.playerDeployHintFillMaterial : this.enemyDeployHintFillMaterial);
             }
         }
 
