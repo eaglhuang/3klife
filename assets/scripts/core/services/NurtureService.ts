@@ -40,7 +40,7 @@ import { buildNurtureRecordRow, revelationLevelOf, type NurtureRecordDraft } fro
 import { UNVEILING_AGE, UnveilingGeneral } from '../systems/Unveiling';
 import {
     childUltimateCandidates,
-    rollChildUltimateAwaken,
+    childUltimateAwakenProbability,
     unlockInheritedUltimate,
     type ChildUltimateDefinition,
     type ChildUltimateParent,
@@ -484,7 +484,9 @@ export class NurtureService {
         const awakened: NurtureChildUltimate[] = [];
         for (const candidate of candidates) {
             if (owned.some((u) => u.ultimateId === candidate.ultimateId)) continue;
-            if (!rollChildUltimateAwaken(candidate.greenGeneLevel, true, this._rng()())) continue;
+            // doc_spec_0340 §2.1（使用者 2026-11-07 裁決改用新公式）：保底 5% + 等級 × 5%，上限 80%。
+            // 培育流程尚無雙親親密度來源，先帶 0（不給 +10%），接上親密度後再傳入。
+            if (!(this._rng()() < childUltimateAwakenProbability(candidate.greenGeneLevel, 0))) continue;
             owned = unlockInheritedUltimate(owned, candidate.ultimateId, candidate.sourceParentUid).list;
             awakened.push({ ultimateId: candidate.ultimateId, fromFather: candidate.sourceParentUid === child.fatherId });
         }
