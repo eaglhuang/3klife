@@ -207,6 +207,8 @@ import { DailyReportController } from '../core/DailyReportController';
 import { dailySubsidyText, economySubsidyBannerText } from '../core/DailySubsidyNotice';
 import type { TabKey } from '../components/character-ds3/GeneralDetailChromePresenter';
 import { ensureDs3SideAction, ensureDs3SideLabel, setDs3SideActionEnabled } from '../components/character-ds3/Ds3SideActions';
+import { ensureDs3JournalPeek } from '../components/character-ds3/Ds3JournalPeek';
+import { characterJournalPeekText } from '../core/CharacterJournalPeek';
 import { SUITABILITY_BADGE_LABEL, suitabilityBadgeText } from '../../core/systems/HallSuitability';
 import { DS3_BLOODLINE_TREE_NODE_NAME, ensureDs3BloodlineTree } from '../components/character-ds3/Ds3BloodlineTree';
 import { BLOODLINE_TREE_OPEN_LINE } from '../../core/systems/BloodlineTreeSlots';
@@ -225,6 +227,7 @@ const FACTOR_HEX_POSITION = { x: 90, y: -260 };
 const GALLERY_ENTRY_NODE_NAME = 'GeneralVersionGalleryEntry';
 const CHARACTER_DS3_SIDE_ACTION_INDEX = { journal: 0, soulInject: 1, gallery: 2, totalTp: 3, expertView: 4, volunteer: 5 };
 const VOLUNTEER_TASK_NODE_NAME = 'btnVolunteerTask';
+const JOURNAL_PEEK_NODE_NAME = 'JournalPeekBubble';
 const EXPERT_VIEW_NODE_NAME = 'btnExpertView';
 const EXPERT_VIEW_ON_LINE = '專家視圖已開啟：直接顯示完整族譜與數值，功能解鎖不變。';
 const EXPERT_VIEW_OFF_LINE = '專家視圖已關閉：依家族階段逐步揭露。';
@@ -4478,6 +4481,24 @@ export class LobbyScene extends Component {
         return null;
     }
 
+    /** HUM-06: latest journal entry bubble on the character page; click opens the general's journal. */
+    private _refreshCharacterDs3JournalPeek(): void {
+        const host = this._characterDs3Surface()?.node;
+        if (!host) return;
+        const general = this._characterDs3General;
+        const text = general ? characterJournalPeekText({ entries: services().session.queryJournal({ generalUid: general.id }) }, general.id) : null;
+        if (!text) {
+            const existing = host.getChildByName(JOURNAL_PEEK_NODE_NAME);
+            if (existing) existing.active = false;
+            return;
+        }
+        const peek = ensureDs3JournalPeek(host, JOURNAL_PEEK_NODE_NAME);
+        peek.label.string = text;
+        peek.button.node.active = true;
+        peek.button.node.off(Button.EventType.CLICK, this._onCharacterDs3JournalClick, this);
+        peek.button.node.on(Button.EventType.CLICK, this._onCharacterDs3JournalClick, this);
+    }
+
     /** HUM-07: volunteer badge on the character page; hidden when the general has no open volunteer task. */
     private _bindCharacterDs3Volunteer(): void {
         const host = this._characterDs3Surface()?.node;
@@ -4510,6 +4531,7 @@ export class LobbyScene extends Component {
     /** 寄宿戰魂按鈕：綁定點按，並依可否寄宿設定灰階（PROG-2-1058） */
     private _bindCharacterDs3SoulInject(): void {
         this._bindCharacterDs3Volunteer();
+        this._refreshCharacterDs3JournalPeek();
         const button = this._characterDs3SoulInjectButton();
         if (!button) {
             UCUFLogger.warn(LogCategory.LIFECYCLE, '[LobbyScene] Character DS3 soul inject button missing', { buttonNode: 'btnSoulInject' });
