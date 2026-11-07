@@ -1,0 +1,275 @@
+{
+  "id": "duplicate-pull-popup-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "DuplicatePullPopupRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "DuplicatePullBackdrop",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "skinSlot": "dup.backdrop.bg"
+      },
+      {
+        "type": "panel",
+        "name": "DuplicatePullCard",
+        "id": "dupCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 1280,
+        "height": 760,
+        "skinSlot": "dup.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "DupTitle",
+            "id": "dupTitle",
+            "widget": {
+              "top": 26,
+              "left": 200,
+              "right": 200
+            },
+            "height": 48,
+            "text": "宿命牽引・名將重逢",
+            "styleSlot": "dup.label.title"
+          },
+          {
+            "type": "label",
+            "name": "DupPager",
+            "id": "dupPager",
+            "widget": {
+              "top": 34,
+              "right": 40
+            },
+            "height": 32,
+            "text": "",
+            "styleSlot": "dup.label.meta",
+            "width": 160
+          },
+          {
+            "type": "label",
+            "name": "DupSubtitle",
+            "id": "dupSubtitle",
+            "widget": {
+              "top": 88,
+              "left": 48,
+              "right": 48
+            },
+            "height": 36,
+            "text": "",
+            "styleSlot": "dup.label.subtitle"
+          },
+          {
+            "type": "panel",
+            "name": "DupRebirthCard",
+            "id": "dupRebirthCard",
+            "widget": {
+              "top": 150,
+              "left": 48
+            },
+            "width": 568,
+            "height": 470,
+            "skinSlot": "dup.card.rebirth.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DupRebirthTitle",
+                "id": "dupRebirthTitle",
+                "widget": {
+                  "top": 22,
+                  "left": 24,
+                  "right": 24
+                },
+                "height": 44,
+                "text": "復生重練",
+                "styleSlot": "dup.label.rebirth.title"
+              },
+              {
+                "type": "label",
+                "name": "DupRebirthTagline",
+                "id": "dupRebirthTagline",
+                "widget": {
+                  "top": 72,
+                  "left": 24,
+                  "right": 24
+                },
+                "height": 30,
+                "text": "青龍靈光／突破極限",
+                "styleSlot": "dup.label.tagline"
+              },
+              {
+                "type": "label",
+                "name": "DupRebirthBody",
+                "id": "dupRebirthBody",
+                "widget": {
+                  "top": 120,
+                  "left": 40,
+                  "right": 32
+                },
+                "height": 220,
+                "text": "",
+                "styleSlot": "dup.label.body"
+              },
+              {
+                "type": "button",
+                "name": "BtnDupRebirth",
+                "id": "btnDupRebirth",
+                "widget": {
+                  "bottom": 26,
+                  "hCenter": true
+                },
+                "width": 320,
+                "height": 64,
+                "skinSlot": "dup.button.rebirth.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnDupRebirthLabel",
+                    "id": "dupRebirthLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "選擇復生重練",
+                    "styleSlot": "dup.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "DupInfusionCard",
+            "id": "dupInfusionCard",
+            "widget": {
+              "top": 150,
+              "right": 48
+            },
+            "width": 568,
+            "height": 470,
+            "skinSlot": "dup.card.infusion.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DupInfusionTitle",
+                "id": "dupInfusionTitle",
+                "widget": {
+                  "top": 22,
+                  "left": 24,
+                  "right": 24
+                },
+                "height": 44,
+                "text": "血脈灌注",
+                "styleSlot": "dup.label.infusion.title"
+              },
+              {
+                "type": "label",
+                "name": "DupInfusionTagline",
+                "id": "dupInfusionTagline",
+                "widget": {
+                  "top": 72,
+                  "left": 24,
+                  "right": 24
+                },
+                "height": 30,
+                "text": "金鳳神芒／即時增強",
+                "styleSlot": "dup.label.tagline"
+              },
+              {
+                "type": "label",
+                "name": "DupInfusionBody",
+                "id": "dupInfusionBody",
+                "widget": {
+                  "top": 120,
+                  "left": 40,
+                  "right": 32
+                },
+                "height": 220,
+                "text": "",
+                "styleSlot": "dup.label.body"
+              },
+              {
+                "type": "button",
+                "name": "BtnDupInfusion",
+                "id": "btnDupInfusion",
+                "widget": {
+                  "bottom": 26,
+                  "hCenter": true
+                },
+                "width": 320,
+                "height": 64,
+                "skinSlot": "dup.button.infusion.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnDupInfusionLabel",
+                    "id": "dupInfusionLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "選擇血脈灌注",
+                    "styleSlot": "dup.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnDupBatchDefault",
+            "id": "btnDupBatchDefault",
+            "widget": {
+              "bottom": 30,
+              "left": 48
+            },
+            "width": 760,
+            "height": 52,
+            "skinSlot": "dup.button.toggle.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnDupBatchDefaultLabel",
+                "id": "dupBatchLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "[ ] 本次抽卡批次預設沿用此選擇",
+                "styleSlot": "dup.label.button"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
