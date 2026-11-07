@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { allocateSceneTiles, resolveSceneBgKey, SCENE_TILE_PRESETS, validateSceneTilePresets, type SceneTilePresetTable } from '../assets/scripts/battle/shared/SceneTilePresets';
+import { allocateSceneTiles, placeSceneTiles, resolveSceneBgKey, SCENE_TILE_PRESETS, validateSceneTilePresets, type SceneTilePresetTable } from '../assets/scripts/battle/shared/SceneTilePresets';
 import { BattleState } from '../assets/scripts/battle/models/BattleState';
 import { resolveBattleTacticBehavior } from '../assets/scripts/battle/shared/BattleTacticBehavior';
 import { BattleTactic } from '../assets/scripts/core/config/Constants';
@@ -30,6 +30,30 @@ export function createSceneTilePresetsSuite(): TestSuite {
     assert.equals('bg_city_wall', resolveSceneBgKey('SCENE_SIEGE'));
     assert.equals('bg_normal_day', resolveSceneBgKey('SCENE_UNKNOWN'));
     assert.equals(10, allocateSceneTiles(SCENE_TILE_PRESETS, 'SCENE_UNKNOWN', 10).normal);
+  });
+
+  suite.test('最大餘數同分依 stealth > hazard > forceMove > normal 補齊，總數恰為 cellCount（doc_spec_0369 §2）', () => {
+    const table: SceneTilePresetTable = { version: 1, presets: { T: { normal: 25, stealth: 25, hazard: 25, forceMove: 25 } } };
+    const c = allocateSceneTiles(table, 'T', 6);
+    assert.equals('2,2,1,1', [c.stealth, c.hazard, c.forceMove, c.normal].join(','));
+    for (const n of [40, 48, 37]) {
+      const r = allocateSceneTiles(SCENE_TILE_PRESETS, 'SCENE_SIEGE', n);
+      assert.equals(n, r.normal + r.stealth + r.hazard + r.forceMove);
+    }
+  });
+
+  suite.test('種子放置可重現且部署底線全為 normal（doc_spec_0369 §4）', () => {
+    const a = placeSceneTiles(SCENE_TILE_PRESETS, 'SCENE_FLOOD', 5, 8, 42);
+    const b = placeSceneTiles(SCENE_TILE_PRESETS, 'SCENE_FLOOD', 5, 8, 42);
+    assert.equals(JSON.stringify(a), JSON.stringify(b));
+    for (const row of a) {
+      assert.equals('normal', row[0]);
+      assert.equals('normal', row[7]);
+    }
+    const flat = a.flat();
+    assert.equals(18, flat.filter((k) => k === 'forceMove').length); // 中段僅 30 格，多出 2 格退為 normal
+    assert.equals(12, flat.filter((k) => k === 'hazard').length);
+    assert.isTrue(JSON.stringify(placeSceneTiles(SCENE_TILE_PRESETS, 'SCENE_FLOOD', 5, 8, 7)) !== JSON.stringify(a));
   });
 
   suite.test('內建表與 JSON 檔一致', () => {
