@@ -9,7 +9,7 @@
 | ID | 里程碑 | 工作包 | 類型 | 工時 | 狀態 | 依賴 | 驗收條件 | 現況證據 | 最新核對(v16.9) |
 |---|:---:|---|:---:|:---:|:---:|---|---|---|---|
 | **RAI-15** | M9 | 軍師智力軍事任務偵知分段（BASIC/ADVANCED/MASTER、Intel band） | logic | 1 | 🟡 純邏輯 | - | INT 邊界 50/70/90 分段測試通過 | core/systems/RivalExpansion.ts E-11／F-6 軍師 | [v17.2 更正 2026-11-07] 未開始→純邏輯 |
-| **RAI-16** | M9 | External_Power 異域壓力源與 Expedition_Dossier（S3 全球遠征） | content | 2 | ⚪ 未開始 | OFC-06 | 3 類異域壓力源可顯示於沙盤檔案並依 dossier_state 切換 | 無 |  |
+| **RAI-16** | M9 | External_Power 異域壓力源與 Expedition_Dossier（S3 全球遠征） | content | 2 | 🟡 純邏輯 | OFC-06 | 3 類異域壓力源可顯示於沙盤檔案並依 dossier_state 切換 | ExternalPowerDossier.ts（PROG-2-1968 #1873） | [v17.7 更正 2026-11-07] 未開始→純邏輯；已做、待接沙盤 UI |
 | **GOV-01** | M9 | 五類內政任務資料表與公式常數（Base、主屬性、Weight） | data | 1 | 🟢 已接線 | - | gov-tasks.json 五類任務含公式參數並由 schema 驗證 | core/systems/DomesticTasks.ts 五任務表 | [v17.2 更正 2026-11-07] 未開始→已接線 |
 | **GOV-02** | M9 | 內政產出計算 calcGovOutput（含人口紅利/政策修正/總計拆分） | logic | 2 | 🟡 純邏輯 | GOV-01 | 五任務產出與 F 節一致，並輸出 基礎/人口紅利/政策/總計 四欄 | FormulaSystem.calculateDiplomacyOutput 與 D | [v17.2 更正 2026-11-07] 未開始→純邏輯 |
 | **GOV-03** | M9 | 人口→城市兵源上限與補兵速度模型（City_Troop_Cap/Recruit_Regen、8000 保底） | logic | 3 | 🟡 純邏輯 | GOV-02 | 初期城市兵源上限≥8000；政策調整只改貢獻傾向，無逐場徵兵 | GovernorHallView、BattleController 兵源上限／補兵 | [v17.2 更正 2026-11-07] 未開始→純邏輯 |

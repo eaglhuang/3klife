@@ -28,11 +28,11 @@
 | **TSK-06** | M10 | 將頁 名聲/官職/統領軍勢 區塊 | ui | 2 | 🟢 已接線 | ECO-02 | 顯示帶兵上限、城市兵源、預估出征軍勢 | [v16.4 第三批核對 2026-10-27] master #1102–#1143 已接上（已接線）；待 QA／實機驗收 |  |
 | **TSK-07** | M10 | general-detail-equip / aptitude content schema 與 Mapper | tool | 3 | 🟢 已接線 | TSK-04, TSK-05 | schema 通過 validate-ui-specs --strict，Mapper 組裝三/五段資料 | contracts 僅 general-detail-content/overview schema；無 EquipMapper/AptitudeMapper | 未開始→已接線；#1334 EquipPageSegments 接 GeneralDetailOverviewMapper |
 | **TSK-08** | M10 | GearModules/AptitudeModules fragment 與 BindPathPolicy | ui | 2 | 🟢 已接線 | TSK-07 | layout JSON 與 runtime bind path 一致 | EquipBindPathPolicy 被 CharacterDs3EquipChild 匯入；PROG-2-1394（#1339） | [v17.2 更正 2026-11-07] 未開始→已接線 |
-| **TSK-09** | M9 | Data Read Model：Spirit_Card_Collection/Spirit_Family_State/Inventory_Service Display_Bucket | data | 3 | ⚪ 未開始 | EQP-01 | 欄位補齊並可算 SELF/FAMILY/ECHO | 無 |  |
+| **TSK-09** | M9 | Data Read Model：Spirit_Card_Collection/Spirit_Family_State/Inventory_Service Display_Bucket | data | 3 | 🟡 純邏輯 | EQP-01 | 欄位補齊並可算 SELF/FAMILY/ECHO | SpiritFamilyReadModel.ts（PROG-2-1965 #1868） | [v17.7 更正 2026-11-07] 未開始→純邏輯；已做、待接存檔／UI |
 | **TSK-10** | M10 | Profile_Presentation 與 Bloodline_Ultimate read model | data | 2 | 🟢 已接線 | TSK-09 | Default_Tab/StoryDock 狀態/五階奧義可讀 | 無 | 未開始→已接線；#1287（c1693f52）GeneralReadModel 補 Bloodline_Ultimate 子欄位；GDART-08 未改 |
 | **TSK-11** | M5 | 戰場與治理新增軍勢欄位及人口貢獻 UI | ui | 3 | 🟡 純邏輯 | ECO-02 | 顯示 City_Troops_Current/Cap、Sortie_Troop_Pool 與 Returned_Troops | [v6 核對 2026-10-14] 城市兵源與出征軍勢面板 Presenter（50dc5f1a）純邏輯；畫面接線未核對 |  |
 | **TSK-12** | M10 | Dialog shell 共用與 spirit-tally-detail 共用入口 | ui | 2 | 📄 僅資料 | TSK-03, TSK-05 | 英靈卡/虎符詳情都導向 spirit-tally-detail-main.json | assets/resources/ui-spec/layouts/spirit-tally-detail-main.json 存在，尚未接線 |  |
-| **TSK-13** | M9 | 多家族卡平衡檢查 | test | 1.5 | ⚪ 未開始 | TSK-09 | 多卡不線性疊加的平衡測試通過 | 無 |  |
+| **TSK-13** | M9 | 多家族卡平衡檢查 | test | 1.5 | 🟡 純邏輯 | TSK-09 | 多卡不線性疊加的平衡測試通過 | tests/MultiSpiritCardBalance.test.ts（PROG-2-1966 #1870） | [v17.7 更正 2026-11-07] 未開始→純邏輯；平衡測試已過 |
 | **BAG-01** | M8 | 武將背包基礎結構與六欄定義與解鎖（3基礎+3進階） | logic | 2 | ✅ 已驗收 | - | Unlocked_Slots 控制各欄可用，錯類型被拒 | [v6 核對 2026-10-14] 武將背包六欄結構與解鎖（fbc60396，PROG-2-0324）；GeneralBackpack 1 處呼叫端與 2 個測試 |  |
 | **BAG-02** | M8 | 主城倉庫：50格、擴容+20、上限200 | logic | 2 | 🟢 已接線 | - | capacity=50+n×20 且不超過200，滿倉拒絕存入 | [v6 核對 2026-10-14] 主城倉庫容量與滿倉拒絕存入（491e7b4c、db749023，PROG-2-0323）已在 master；WarehouseCapacity 接 GeneralEquipTransfer。注意：PM 先前說 PR #186 未合，請 PM 確認此提交是否為 BAG-02 的合併 |  |
 | **BAG-03** | M8 | 裝備/卸下操作（倉庫↔武將）含鎖定檢查 | logic | 2 | 🟢 已接線 | BAG-01, BAG-02 | 移動後兩端資料一致 | 無 | 未開始→已接線；GearEquipFlow 接 GameSession 與 GearSlotPickController；有測試 |

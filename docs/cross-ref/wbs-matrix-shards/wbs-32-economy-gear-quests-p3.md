@@ -22,10 +22,10 @@
 | **SPI-04** | M9 | 命槽單插、雙卡同裝（1英靈+1虎符） | logic | 2 | 🟢 已接線 | SPI-01 | 重複插入被拒，兩卡可同裝 | core/systems/SpiritSlotFlow.ts 被 GameSession、GeneralDetailBloodlineChild 匯入；PROG-2-1280（#1166） | [v17.2 更正 2026-11-07] 未開始→已接線 |
 | **SPI-05** | M9 | 光效三階 SELF/FAMILY/ECHO 與家族封頂 | logic | 3 | ⚪ 未開始 | SPI-04 | 依裝配者計算共鳴階並封頂 | 無 |  |
 | **SPI-06** | M9 | 主卡/副卡模型與 CardGrowth=min(cap,pool)、溢出轉 Family_Fame/Depth | logic | 3 | ⚪ 未開始 | SPI-02 | 設為主卡後供養只灌主卡，戰鬥中鎖定 | 無 |  |
-| **SPI-07** | M9 | 家族積分 HeadScore+MeritScore 與四階世家等級 | logic | 4 | ⚪ 未開始 | SPI-06 | 權重100/80/120%與階位解鎖測試通過 | 無 |  |
-| **SPI-08** | M9 | 家族名聲值供養消耗與降階 | logic | 2 | ⚪ 未開始 | SPI-07 | 名聲不足時高階效果降階 | 無 |  |
+| **SPI-07** | M9 | 家族積分 HeadScore+MeritScore 與四階世家等級 | logic | 4 | 🟡 純邏輯 | SPI-06 | 權重100/80/120%與階位解鎖測試通過 | ClanScoreTier.ts（PROG-2-1961 #1863） | [v17.7 更正 2026-11-07] 未開始→純邏輯；已做、待接存檔／UI；門檻暫定 |
+| **SPI-08** | M9 | 家族名聲值供養消耗與降階 | logic | 2 | 🟡 純邏輯 | SPI-07 | 名聲不足時高階效果降階 | ClanFame.ts（PROG-2-1962 #1864） | [v17.7 更正 2026-11-07] 未開始→純邏輯；已做、待接存檔／UI |
 | **SPI-09** | M9 | 姓氏零和與家傳絕學弱化 | logic | 2 | ⚪ 未開始 | SPI-07 | 子嗣只能計入一姓，非本姓獲弱化效果 | 無（M2 血統在 BloodlineGraph.ts，無姓氏歸屬） |  |
-| **SPI-10** | M9 | 防火牆：近親衰減、同宗不相殘、質重於量 | logic | 2 | ⚪ 未開始 | SPI-07 | 內戰功勳打折、近親效率下降 | 無 |  |
-| **SPI-11** | M9 | 傳道與專屬奧義權限 | logic | 2 | ⚪ 未開始 | SPI-02 | 英靈卡可授祖靈加護並消耗資源與次數 | 無 |  |
+| **SPI-10** | M9 | 防火牆：近親衰減、同宗不相殘、質重於量 | logic | 2 | 🟡 純邏輯 | SPI-07 | 內戰功勳打折、近親效率下降 | ClanFirewall.ts（PROG-2-1963 #1866） | [v17.7 更正 2026-11-07] 未開始→純邏輯；已做、待接存檔／UI |
+| **SPI-11** | M9 | 傳道與專屬奧義權限 | logic | 2 | 🟡 純邏輯 | SPI-02 | 英靈卡可授祖靈加護並消耗資源與次數 | AncestorBlessing.ts（PROG-2-1964 #1867）；專屬奧義沿用 LegendaryMentoring | [v17.7 更正 2026-11-07] 未開始→純邏輯；已做、待接存檔／UI；階位門檻待裁決 |
 | **SPI-12** | M9 | 世家總覽/英靈陳列室/詳情/雙卡結算 UI | ui | 5 | 📄 僅資料 | SPI-06, SPI-03 | 總覽與陳列室分組顯示並可設主卡 | assets/scripts/ui/core/SpiritFamilyOverviewRoute.ts（顯示模型殼）；LobbyScene.ts onClickSpiritFamilyOverview；spirit-tally-detail-main.json |  |
 | **SPI-13** | M9 | 幼兒指派低效內政（MCQ Q51）、戰場單場覺醒上限1（Q52）、姓氏匹配保證戰法提示（Q32） | logic | 2 | ⚪ 未開始 | SPI-09 | 三條 MCQ 規則各有單元測試 | 無 |  |

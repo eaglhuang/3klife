@@ -10,7 +10,7 @@
 |---|:---:|---|:---:|:---:|:---:|---|---|---|---|
 | **ORAC-06** | M9 | 名士解鎖（占卜次數/劇情進度） | logic | 1 | 🟢 已接線 | ORAC-01, ORAC-04 | 累計占卜達標解鎖龐統等名士，未解鎖顯示 UI_ORACLE_LOCKED | [v16.8 更正 2026-10-28] 名士解鎖由 GameSession.isSageUnlocked 與 SageDivination.ts 提供，SageOracleController、LobbyScene 呼叫；鎖定提示改語系鍵（#1239/#1249），協調者確認 |  |
 | **ORAC-07** | M9 | 矛盾預言提示（兩名士意見相左，待 5 歲驗證） | ui | 1 | 🟢 已接線 | ORAC-05 | 同一對父母多次占卜結果衝突時顯示 UI_ORACLE_CONFLICT | 無 | 未開始→已接線；v16.9 協調線回報：SageOracleController 已有意見相左提示；LobbyScene 掛載 |
-| **ORAC-08** | M10 | 祖輩顯靈台詞（命中祖先標籤觸發補充台詞） | content | 2 | ⚪ 未開始 | ORAC-02 | 命中特定祖先標籤時附加顯靈台詞，且不改變準確率 | 無 |  |
+| **ORAC-08** | M10 | 祖輩顯靈台詞（命中祖先標籤觸發補充台詞） | content | 2 | 🟡 純邏輯 | ORAC-02 | 命中特定祖先標籤時附加顯靈台詞，且不改變準確率 | AncestorApparitionLines.ts（PROG-2-1967 #1871） | [v17.7 更正 2026-11-07] 未開始→純邏輯；已做、待接結緣 UI |
 | **ORAC-09** | M10 | 名士台詞/批語模板（各名士風格、含左慈含糊） | content | 2 | ⚪ 未開始 | ORAC-01 | 各名士至少 5 組模板，覆蓋色系傾向與關鍵詞 | 無 |  |
 | **ORAC-10** | M9 | 準確率單元測試（固定種子） | test | 1 | 🟡 純邏輯 | ORAC-02 | 三個規格示例以 unit test 通過 | [v16.8 核對 2026-10-28] master #1219–#1251 已接上（純邏輯）；待 QA／實機驗收 |  |
 | **DUP-01** | M8 | 重複卡彈窗 UI 契約落地（抽卡重複卡彈窗：兩個分流按鈕與預覽） | ui | 3 | ⚪ 未開始 | SAME-03 | 重複抽卡彈窗顯示『復生重練/血脈灌注』並能回傳選擇 | 無；契約檔 artifacts/ui-qa/UI-2-0054/duplicate-hero-bloodline-flow-contract-v1.md 屬設計文件 |  |
