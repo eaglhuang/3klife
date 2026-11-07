@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "meng-huo": {
+      "x": 390,
+      "y": 0,
+      "w": 380,
+      "h": 380,
+      "source": "reviewed",
+      "$note": "2026-11-08 孟獲青銅暖膚全身重繪；頭像保留髮飾及肩頸。"
+    },
     "lu-meng": {
       "x": 350,
       "y": 0,
