@@ -159,7 +159,8 @@ import { ITEM_JOB_CHANGE_ORDER, ITEM_TRIAL_TICKET, ITEM_WISH_SPEED_CARD } from '
 import { ITEM_ORACLE_TOKEN } from '../../core/systems/ItemDef';
 import { JOB_CHANGE_ORDER_OFFER } from '../../core/systems/ItemShopPricing';
 import { PrisonerPopupController } from '../core/PrisonerPopupController';
-import { DuplicatePullPopupController, type DuplicatePullChoice, type DuplicatePullEntry, type DuplicatePullRoute } from '../core/DuplicatePullPopupController';
+import { DuplicatePullPopupController, DUPLICATE_INFUSION_VALUE, infusionTargetsOf, rebirthTargetsOf, splitOwnedDuplicates, type DuplicatePullChoice, type DuplicatePullEntry, type DuplicatePullRoute } from '../core/DuplicatePullPopupController';
+import { spiritSlotViewOf } from '../../core/systems/SpiritSlotState';
 import { DestinyShopController, destinyBriefTexts } from '../core/DestinyShopController';
 import { SortieSetupController, type SortieRole } from '../core/SortieSetupController';
 import type { PowDecision } from '../../core/systems/PrisonerOfWar';
@@ -466,9 +467,10 @@ export class LobbyScene extends Component {
         // 抽卡結果入冊不存檔，由 batch 統一存一次（PROG-2-1003）
         enroll: (results) => {
             // 支援卡池只發教官卡，不把武將收進名冊（PROG-2-1085）
+            this._gachaOwnedDuplicates = [];
             this._gachaEnrollResult = results[0]?.poolId === MENTOR_POOL_ID
                 ? { added: [], duplicates: [], rebirths: [] } as unknown as AddGeneralsResult
-                : services().session.enrollGenerals(results.map((entry) => entry.general), { rebirthOnDuplicate: true, fromGacha: true });
+                : this._enrollGachaGenerals(results.map((entry) => entry.general));
             // 支援卡教官卡同批登記；實際寫入在入冊存檔後由 _applyGachaMentorJournal 補上（PROG-2-1004）
             services().session.queueGachaMentorDraw({
                 drawn: results.map((entry) => entry.general),
@@ -481,6 +483,51 @@ export class LobbyScene extends Component {
     /** 最近一次抽卡的入冊結果（由 enroll 寫入，_onGachaPullSuccess 讀取做提示） */
     private _gachaEnrollResult: AddGeneralsResult | null = null;
     private _gachaSaveBatching = false;
+
+    /** DUP-05: duplicates already owned before this pull wait for the route popup; the rest enroll as before. */
+    private _gachaOwnedDuplicates: GeneralConfig[] = [];
+
+    private _enrollGachaGenerals(generals: GeneralConfig[]): AddGeneralsResult {
+        const ownedIds = new Set(services().session.roster.map((general) => general.id));
+        const { owned, rest } = splitOwnedDuplicates(generals, ownedIds);
+        this._gachaOwnedDuplicates = owned;
+        return services().session.enrollGenerals(rest, { rebirthOnDuplicate: true, fromGacha: true });
+    }
+
+    /** DUP-05: ask rebirth / infusion for owned duplicates, then merge rebirths into the enroll result. */
+    private async _routeGachaOwnedDuplicates(): Promise<void> {
+        const owned = this._gachaOwnedDuplicates;
+        this._gachaOwnedDuplicates = [];
+        if (owned.length === 0) return;
+        const cards = new Map<string, SpiritCard | null>();
+        for (const general of owned) {
+            if (!cards.has(general.id)) cards.set(general.id, await this._spiritCardForInfusion(general.id));
+        }
+        const choices = await this.askDuplicatePullRoutes(owned.map((general) => ({
+            id: general.id,
+            name: general.name,
+            infusionAvailable: cards.get(general.id) !== null,
+        })));
+        const rebirth = await services().session.addGenerals(rebirthTargetsOf(owned, choices), { rebirthOnDuplicate: true, fromGacha: true });
+        const base = this._gachaEnrollResult ?? { added: [], duplicates: [], rebirths: [], bondPointsGained: 0 };
+        this._gachaEnrollResult = {
+            added: base.added,
+            duplicates: [...base.duplicates, ...rebirth.duplicates],
+            rebirths: [...base.rebirths, ...rebirth.rebirths],
+            bondPointsGained: (base.bondPointsGained ?? 0) + rebirth.bondPointsGained,
+        };
+        for (const general of infusionTargetsOf(owned, choices)) {
+            const card = cards.get(general.id);
+            if (card) await this.openBloodlineInfusionResult(card, DUPLICATE_INFUSION_VALUE);
+        }
+    }
+
+    /** Spirit card equipped in the general's destiny slot (provisional: record Bound_General_UID is the card uid). */
+    private async _spiritCardForInfusion(generalId: string): Promise<SpiritCard | null> {
+        const uid = spiritSlotViewOf(services().session.inventoryRecords, generalId, false).card?.Bound_General_UID;
+        if (!uid) return null;
+        return (await services().legacy?.getArchiver().getSpiritCard(uid)) ?? null;
+    }
 
     /** 扣款、保底、入冊併成一次存檔：批次中途不寫，結束時只存一次 */
     private _batchGachaSave<T>(fn: () => T): T {
@@ -3953,6 +4000,7 @@ export class LobbyScene extends Component {
                 services().event.emit('SHOW_TOAST', { message, duration: 3 });
                 return;
             }
+            await this._routeGachaOwnedDuplicates();
             const { added, duplicates, rebirths } = this._gachaEnrollResult ?? { added: [], duplicates: [], rebirths: [] };
             const parts: string[] = [];
             if (added.length > 0) {
