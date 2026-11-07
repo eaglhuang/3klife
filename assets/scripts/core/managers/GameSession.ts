@@ -144,6 +144,7 @@ import { estimateSortiePower } from '../systems/SortiePrediction';
 import { BASE_RESOURCE_CAPS, clampResource } from '../systems/ResourceCap';
 import { computeDeathBattleScore, settleDeathTallies, TALLY_DEATH_SCORE_TUNING } from '../systems/TallyDeathSettlement';
 import { settleDeathSpiritCards, spiritCardNoticeSpec } from '../systems/SpiritCardDeathSettlement';
+import { buildDualCardSettlements, type DualCardSettlementPayload } from '../systems/DualCardSettlement';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { applyBattleExpToCard, readCardStarState, tallyBattleOutcome } from '../systems/TigerTallyStar';
 import { resolveTallyBreakthrough, type TallyBreakthroughResult } from '../systems/TigerTallyBreakthrough';
@@ -1482,6 +1483,16 @@ export class GameSession {
     }
 
     private _tallyNotices: TallyLine[] = [];
+    /** 名將陣亡的雙卡結算彈窗資料（SPI-12）；不存檔，顯示端取走一次 */
+    private _dualCardSettlements: DualCardSettlementPayload[] = [];
+
+    /** 取走尚未顯示的雙卡結算（英靈卡＋虎符，PROG-2-2083） */
+    public consumeDualCardSettlements(): DualCardSettlementPayload[] {
+        const payloads = this._dualCardSettlements;
+        this._dualCardSettlements = [];
+        return payloads;
+    }
+
 
     /** 取走尚未顯示的虎符提示（產出、升星，PROG-2-1768）；戰場結算或大廳換季時顯示一次 */
     public consumeTallyNotices(translate?: TallyTranslate): string[] {
@@ -1686,6 +1697,14 @@ export class GameSession {
         const nameOfTemplate = (id: string) => after.find((g) => (g.templateId ?? g.id) === id)?.name ?? id;
         for (const id of spirit.produced) this._tallyNotices.push(spiritCardNoticeSpec(nameOfTemplate(id), false));
         for (const id of spirit.merged) this._tallyNotices.push(spiritCardNoticeSpec(nameOfTemplate(id), true));
+        // 雙卡結算彈窗資料：兩條產出線各自獨立，只產其一時另一半為 null
+        // fallen 傳全名冊即可：只有這次產出卡的武將會被列入
+        this._dualCardSettlements.push(...buildDualCardSettlements({
+            fallen: after,
+            spiritTemplateIds: [...spirit.produced, ...spirit.merged],
+            spiritRecords: this._inventoryRecords,
+            producedTallies: result.produced.map((uid) => this._tallyCards[uid]).filter((card) => !!card),
+        }));
         this._syncInventoryRecords();
     }
 
