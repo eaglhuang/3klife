@@ -6,6 +6,8 @@
  *   - 抽卡結算拿到已持有的名將時，逐位詢問「復生重練／血脈灌注」
  *   - 十連抽防疲勞：勾選「本次抽卡批次預設沿用此選擇」後，選一次就套用到剩下的重複卡
  *   - ask() 回傳 Promise，全部選完才 resolve，每位重複卡一筆選擇
+ *   - 沒有可灌注的英靈卡時，灌注按鈕不能按；批次沿用灌注時這幾位改走復生（DUP-05；PROG-2-2073）
+ *   - 轉蛋接線：splitOwnedDuplicates 先把已持有的重複卡留下，rebirthTargetsOf／infusionTargetsOf 依選擇分流
  *
  * 所有 texts / actives / enabled 的 key 都等於 duplicate-pull-popup-main.json 的節點 id，
  * tests/DuplicatePullPopup.test.ts 會逐一比對。
@@ -18,6 +20,8 @@ export type DuplicatePullRoute = 'rebirth' | 'infusion';
 export interface DuplicatePullEntry {
     id: string;
     name: string;
+    /** 有沒有可灌注的英靈卡；缺欄位視為有 */
+    infusionAvailable?: boolean;
 }
 
 export interface DuplicatePullChoice {
@@ -46,9 +50,33 @@ export const DUPLICATE_PULL_TEXTS = {
         tagline: '金鳳神芒／即時增強',
         bullets: ['既有英靈卡獲得 500 經驗', '專屬虎符戰鬥屬性提升', '宗族聲望立即增加 50 點', '現役武將狀態完全保留'],
         button: '選擇血脈灌注',
+        unavailable: '未裝配英靈卡，無法灌注',
     },
     batchDefault: '本次抽卡批次預設沿用此選擇',
 } as const;
+
+/** 血脈灌注的傳承經驗（規格書 §3：英靈卡獲得 500 點傳承經驗值） */
+export const DUPLICATE_INFUSION_VALUE = 500;
+
+const canInfuse = (entry: DuplicatePullEntry): boolean => entry.infusionAvailable !== false;
+
+/** 轉蛋結果分成「抽卡前就已持有」與其餘；其餘照原本入冊（含同批第二張的轉生） */
+export function splitOwnedDuplicates<T extends { id: string }>(generals: readonly T[], ownedIds: ReadonlySet<string>): { owned: T[]; rest: T[] } {
+    const owned: T[] = [];
+    const rest: T[] = [];
+    for (const general of generals) (ownedIds.has(general.id) ? owned : rest).push(general);
+    return { owned, rest };
+}
+
+/** 要走復生的重複卡：選了復生，或沒有選擇（彈窗中止時維持原本的轉生行為） */
+export function rebirthTargetsOf<T extends { id: string }>(owned: readonly T[], choices: readonly DuplicatePullChoice[]): T[] {
+    return owned.filter((general, index) => choices[index]?.id !== general.id || choices[index].route !== 'infusion');
+}
+
+/** 要走灌注的重複卡 */
+export function infusionTargetsOf<T extends { id: string }>(owned: readonly T[], choices: readonly DuplicatePullChoice[]): T[] {
+    return owned.filter((general, index) => choices[index]?.id === general.id && choices[index].route === 'infusion');
+}
 
 const bulletText = (lines: readonly string[]): string => lines.map((line) => `• ${line}`).join('\n');
 
@@ -83,8 +111,10 @@ export class DuplicatePullPopupController {
     /** 選定目前這位；勾選批次預設時一併套用到剩下的。全部選完回傳 true（畫面該關閉）。 */
     choose(route: DuplicatePullRoute): boolean {
         if (!this.isOpen()) return true;
+        const entry = this.current();
+        if (route === 'infusion' && entry && !canInfuse(entry)) return false;
         const remaining = this._queue.slice(this._choices.length, this._batchDefault ? undefined : this._choices.length + 1);
-        for (const entry of remaining) this._choices.push({ id: entry.id, route });
+        for (const next of remaining) this._choices.push({ id: next.id, route: route === 'infusion' && !canInfuse(next) ? 'rebirth' : route });
         if (this._choices.length < this._queue.length) return false;
         this._finish();
         return true;
@@ -111,12 +141,12 @@ export class DuplicatePullPopupController {
                 dupInfusionTitle: DUPLICATE_PULL_TEXTS.infusion.title,
                 dupInfusionTagline: DUPLICATE_PULL_TEXTS.infusion.tagline,
                 dupInfusionBody: bulletText(DUPLICATE_PULL_TEXTS.infusion.bullets),
-                dupInfusionLabel: DUPLICATE_PULL_TEXTS.infusion.button,
+                dupInfusionLabel: entry && !canInfuse(entry) ? DUPLICATE_PULL_TEXTS.infusion.unavailable : DUPLICATE_PULL_TEXTS.infusion.button,
                 dupBatchLabel: `${this._batchDefault ? '[✓]' : '[ ]'} ${DUPLICATE_PULL_TEXTS.batchDefault}`,
             },
             // 只剩一位時沒有「沿用」的意義，勾選列隱藏
             actives: { btnDupBatchDefault: total - this._choices.length > 1 },
-            enabled: { btnDupRebirth: entry !== null, btnDupInfusion: entry !== null },
+            enabled: { btnDupRebirth: entry !== null, btnDupInfusion: entry !== null && canInfuse(entry) },
         };
     }
 
