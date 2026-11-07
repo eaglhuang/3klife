@@ -14,6 +14,7 @@
     "bml.hero.public": { "kind": "color-rect", "color": "mirrorHeroPublic", "alpha": 168 },
     "bml.hero.spirit": { "kind": "color-rect", "color": "mirrorHeroSpirit", "alpha": 168 },
     "bml.unowned.veil": { "kind": "color-rect", "color": "mirrorUnownedBase", "alpha": 92 },
+    "bml.unowned.lockBadge": { "kind": "color-rect", "color": "mirrorUnownedBadge", "alpha": 204 },
     "bml.panel.state": { "kind": "color-rect", "color": "surfaceSepiaDeep", "alpha": 210 },
     "bml.badge.state": { "kind": "color-rect", "color": "mirrorBadge", "alpha": 214 },
     "bml.sigil.field": { "kind": "color-rect", "color": "mirrorSigilField", "alpha": 132 },
@@ -49,6 +50,14 @@
       "lineHeight": 30,
       "color": "mirrorLabelName",
       "horizontalAlign": "CENTER"
+    },
+    "bml.label.unowned": {
+      "kind": "label-style",
+      "fontSize": 18,
+      "lineHeight": 22,
+      "color": "mirrorUnownedBase",
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
     },
     "bml.label.state": {
       "kind": "label-style",

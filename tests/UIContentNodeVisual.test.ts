@@ -64,8 +64,8 @@ export function createUIContentNodeVisualSuite(): TestSuite {
         const spirit = new Node('SpiritHero');
         const core = new Node('VesselCore');
         const sprite = core.addComponent(Sprite);
-        const veil = new Node('UnownedVeil');
-        const binder = fakeBinder({ SpiritHero: spirit, 'CenterStage/VesselCore': core, UnownedVeil: veil });
+        const veil = new Node('UnownedLayer');
+        const binder = fakeBinder({ SpiritHero: spirit, 'CenterStage/VesselCore': core, UnownedLayer: veil });
         new UIContentBinder().bindWithSchema(binder, { schemaId: schema.schemaId, familyId: schema.familyId, requiredFields: [] } as never, schema,
             { spiritBrightness: 'dim', auraColor: 'purple', showLockBadge: false }, { suppressUnresolvedWarnings: true });
         assert.equals(110, spirit.getComponent(UIOpacity)!.opacity);
