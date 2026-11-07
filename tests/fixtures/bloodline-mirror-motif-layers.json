@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "$note": "血脈命鏡 motif layer（BML-11）。依《血脈命鏡過場載入規格書》§4.4：中國元素是可替換的 motif layer，不是核心骨架。motifSlots 以外的 skin 槽位在各變體間必須完全相同；換變體只換 motifSlots。",
+  "layout": "bloodline-mirror-loading-main",
+  "motifSlots": [
+    "bml.bg.full",
+    "bml.sigil.field",
+    "bml.crest.badge",
+    "bml.panel.state",
+    "bml.panel.tip"
+  ],
+  "variants": {
+    "cn-classic": "bloodline-mirror-loading-default",
+    "intl-neutral": "bloodline-mirror-loading-intl"
+  }
+}
