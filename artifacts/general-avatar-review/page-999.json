@@ -1,0 +1,11 @@
+{
+  "page": 999,
+  "purpose": "吳國五將正式頭像並排辨識檢查",
+  "items": [
+    { "position": 1, "file": "sun_ce_avatar.png", "id": "sun-ce" },
+    { "position": 2, "file": "gan_ning_avatar.png", "id": "gan-ning" },
+    { "position": 3, "file": "ling_tong_avatar.png", "id": "ling-tong" },
+    { "position": 4, "file": "xu_sheng_avatar.png", "id": "xu-sheng" },
+    { "position": 5, "file": "zhou_yu_avatar.png", "id": "zhou-yu" }
+  ]
+}
