@@ -23,6 +23,7 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { services } from '../../core/managers/ServiceLoader';
 import type { ContentContractRef } from './UISpecTypes';
 import type { UITemplateBinder } from './UITemplateBinder';
+import { applyContentNodeVisual, type ContentNodeVisualSpec } from './UIContentNodeVisual';
 
 export interface ContentContractSchemaField {
     type: string;
@@ -34,6 +35,8 @@ export interface ContentContractSchemaField {
     range?: [number, number];
     /** 正則模式驗證（當 type 為 string 時有效） */
     pattern?: string;
+    /** 字串值 → 節點透明度／sprite 顏色對照（bindPath 指向非 Label 節點時生效） */
+    nodeVisual?: ContentNodeVisualSpec;
 }
 
 export interface ContentContractSchema {
@@ -206,6 +209,8 @@ export class UIContentBinder {
                 if (node) {
                     if (typeof value === 'boolean') {
                         node.active = value;
+                    } else if (typeof value === 'string' && schema?.fields?.[key]?.nodeVisual) {
+                        applyContentNodeVisual(node, schema.fields[key].nodeVisual!, value);
                     }
                     continue;
                 }

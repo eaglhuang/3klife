@@ -101,14 +101,16 @@
       "enum": ["dim", "normal", "bright"],
       "required": false,
       "description": "右側英靈亮度。",
-      "bindPath": "SpiritHero"
+      "bindPath": "SpiritHero",
+      "nodeVisual": { "opacity": { "dim": 110, "normal": 190, "bright": 255 } }
     },
     "auraColor": {
       "type": "string",
       "enum": ["gold", "purple", "blue", "silver"],
       "required": false,
       "description": "定心者 aura 色（金傳說／紫史詩／藍稀有／銀白低階或未完整覺醒）。",
-      "bindPath": "CenterStage/VesselCore"
+      "bindPath": "CenterStage/VesselCore",
+      "nodeVisual": { "spriteColor": { "gold": "#FFC107", "purple": "#9C27B0", "blue": "#2196F3", "silver": "#E0E0E0" } }
     },
     "showLockBadge": {
       "type": "boolean",
