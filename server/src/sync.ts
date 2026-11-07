@@ -13,6 +13,7 @@ import {
     SyncResponse
 } from '../../shared/protocols';
 import { validateSyncPatchPaths } from '../schema/sync06-patch-whitelist';
+import { findPiiInRecords, requireHttpsMiddleware } from './sync-security';
 import { SYNC_BODY_LIMIT, SyncRateLimiter, syncPayloadTooLargeHandler, syncRateLimitMiddleware } from './sync-limits';
 
 /**
@@ -164,6 +165,8 @@ export interface SyncRouteOptions {
     log?: (message: string) => void;
     /** 每分鐘同步次數限制（SYNC-05）；預設不開，index.ts 正式啟動時開啟 */
     rateLimiter?: SyncRateLimiter;
+    /** 強制 HTTPS（SYNC-09）；預設不開＝dev 例外，index.ts 於 production 開啟 */
+    requireHttps?: boolean;
 }
 
 export function registerSyncRoutes(app: Express, store: PlayerStore, options: SyncRouteOptions = {}): void {
@@ -194,6 +197,11 @@ export function registerSyncRoutes(app: Express, store: PlayerStore, options: Sy
             return res.status(400).json({ Success: false, Message: `Hash chain broken at Seq #${chain.seq}. Sync rejected.`, Server_Time: Date.now() });
         }
 
+        // SYNC-09：Action_Records 不得含 PII（PROG-2-1989）
+        const pii = findPiiInRecords(records);
+        if (pii) {
+            return res.status(400).json({ Success: false, Message: `PII is not allowed in Action_Records (Seq #${pii.seq} ${pii.path}).`, Server_Time: Date.now() });
+        }
         replayActions(player, records);
         const newSecret = rotateSecret(player, chain.lastHash);
         const response: SyncResponse = {
@@ -238,6 +246,9 @@ export function registerSyncRoutes(app: Express, store: PlayerStore, options: Sy
             return endpointError(res, 400, error instanceof Error ? error.message : String(error));
         }
 
+        // SYNC-09：Action_Records 不得含 PII（PROG-2-1989）
+        const pii = findPiiInRecords(records);
+        if (pii) return endpointError(res, 400, `PII is not allowed in Action_Records (Seq #${pii.seq} ${pii.path}).`);
         replayActions(player, records);
         player.Save_Snapshot = nextSnapshot;
         const newHash = patches.length > 0
@@ -296,6 +307,9 @@ export function registerSyncRoutes(app: Express, store: PlayerStore, options: Sy
             return endpointError(res, 400, `Hash chain broken at Seq #${chain.seq}.`);
         }
 
+        // SYNC-09：Action_Records 不得含 PII（PROG-2-1989）
+        const pii = findPiiInRecords(records);
+        if (pii) return endpointError(res, 400, `PII is not allowed in Action_Records (Seq #${pii.seq} ${pii.path}).`);
         replayActions(player, records);
         const newSessionSecret = rotateSecret(player, chain.lastHash);
         log(`[Server] Compressed actions sync for ${body.playerId}: ${records.length} records`);
@@ -309,6 +323,7 @@ export function registerSyncRoutes(app: Express, store: PlayerStore, options: Sy
 export function createSyncApp(store: PlayerStore = createDefaultPlayerStore(), options: SyncRouteOptions = {}): Express {
     const app = express();
     app.use(express.json({ limit: SYNC_BODY_LIMIT }));
+    if (options.requireHttps) app.use(requireHttpsMiddleware(true));
     if (options.rateLimiter) app.use(syncRateLimitMiddleware(options.rateLimiter));
     registerSyncRoutes(app, store, options);
     app.use(syncPayloadTooLargeHandler());

@@ -7,6 +7,7 @@ import { Pool } from 'pg';
 
 import { createDefaultPlayerStore, registerSyncRoutes } from './sync';
 import { SYNC_BODY_LIMIT, syncPayloadTooLargeHandler, syncRateLimitMiddleware } from './sync-limits';
+import { requireHttpsMiddleware } from './sync-security';
 
 function loadEnvFiles(): void {
     const envCandidates = [
@@ -62,6 +63,8 @@ const postgresPool = postgresConfigured
     : null;
 
 app.use(cors());
+// SYNC-09：正式環境同步路由強制 HTTPS，dev（非 production）例外；/healthz 不擋，供容器探針
+app.use('/sync', requireHttpsMiddleware(process.env.NODE_ENV === 'production'));
 app.use(express.json({ limit: SYNC_BODY_LIMIT }));
 app.use(syncRateLimitMiddleware());
 
