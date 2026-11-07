@@ -143,7 +143,7 @@ import type { HallTaskIntelInput } from '../systems/HallTaskIntel';
 import { estimateSortiePower } from '../systems/SortiePrediction';
 import { BASE_RESOURCE_CAPS, clampResource } from '../systems/ResourceCap';
 import { computeDeathBattleScore, settleDeathTallies, TALLY_DEATH_SCORE_TUNING } from '../systems/TallyDeathSettlement';
-import { settleDeathSpiritCards } from '../systems/SpiritCardDeathSettlement';
+import { settleDeathSpiritCards, spiritCardNoticeSpec } from '../systems/SpiritCardDeathSettlement';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { applyBattleExpToCard, readCardStarState, tallyBattleOutcome } from '../systems/TigerTallyStar';
 import { resolveTallyBreakthrough, type TallyBreakthroughResult } from '../systems/TigerTallyBreakthrough';
@@ -1675,12 +1675,17 @@ export class GameSession {
         this._tallyHoldings = result.holdings;
         this._tallyCards = { ...result.cards };
         // 名將陣亡同步產英靈卡（SPI-02；同模板覆蓋不新增，非 TALLY 列不受下方同步影響）
-        this._inventoryRecords = settleDeathSpiritCards(this._inventoryRecords, before, after).records;
+        const spirit = settleDeathSpiritCards(this._inventoryRecords, before, after);
+        this._inventoryRecords = spirit.records;
         for (const uid of result.produced) {
             const card = this._tallyCards[uid];
             const source = after.find((g) => g.id === card?.sourceGeneralUid);
             if (card) this._tallyNotices.push(tallyProducedSpec(source?.name ?? card.sourceGeneralUid, this._tallyNameOf(card)));
         }
+        // 英靈卡產出／覆蓋也進同一提示佇列，戰場結算與大廳換季時一起顯示（SPI-12 雙卡結算）
+        const nameOfTemplate = (id: string) => after.find((g) => (g.templateId ?? g.id) === id)?.name ?? id;
+        for (const id of spirit.produced) this._tallyNotices.push(spiritCardNoticeSpec(nameOfTemplate(id), false));
+        for (const id of spirit.merged) this._tallyNotices.push(spiritCardNoticeSpec(nameOfTemplate(id), true));
         this._syncInventoryRecords();
     }
 

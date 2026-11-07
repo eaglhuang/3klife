@@ -18,6 +18,8 @@ export type TallyTranslate = (key: string, ...args: string[]) => string;
 /** 保底繁中模板（與 assets/resources/i18n/zh-TW.json 同文，測試鎖住） */
 const ZH_TW_FALLBACK: Readonly<Record<string, string>> = {
     SCRIPT_TALLY_PRODUCED: '{0} 殞落沙場後留下了【虎符：{1}】，精銳永存！',
+    SCRIPT_SPIRIT_CARD_PRODUCED: '{0} 英魂不散，留下了【英靈卡：{0}】，已收入世家陳列室。',
+    SCRIPT_SPIRIT_CARD_MERGED: '{0} 的英靈再度歸來，【英靈卡：{0}】的血脈積分累加了。',
     SCRIPT_TALLY_EQUIP: '{0} 裝備了【{1}】，現可指揮 {2}！',
     SCRIPT_TALLY_UNEQUIP: '{0} 卸下了【{1}】。',
     SCRIPT_TALLY_STAR_UP: '【{0}】升至 {1}★！{2} 戰力大幅提升！',
