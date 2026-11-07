@@ -1,0 +1,70 @@
+{
+  "version": 1,
+  "$note": "血脈美術審查清單（BVC-04）。auto 項由 tests/BloodlineArtForbiddenZone.test.ts 掃血脈相關 ui-spec、i18n 與 sprite 檔名；manual 項為美術驗收時逐項人工確認。",
+  "scopes": {
+    "screens": [
+      "bloodline-mirror-awakening-screen",
+      "bloodline-mirror-loading-screen",
+      "general-bloodline-vignette-screen",
+      "general-detail-bloodline-v3-screen",
+      "spirit-card-detail-screen",
+      "spirit-codex-screen",
+      "spirit-tally-detail-screen"
+    ],
+    "i18nKeyPattern": "bloodline|mirror|spirit|lineage|awaken",
+    "spriteNamePattern": "bloodline|mirror|crest|spirit|sigil|lineage"
+  },
+  "items": [
+    {
+      "id": "BVC-FZ-01",
+      "check": "auto",
+      "rule": "不走科技 DNA、雙螺旋、基因工程",
+      "source": "doc_ui_0008 規格摘要",
+      "patterns": ["\\bdna\\b", "helix", "genetic[-_ ]?engineer", "雙螺旋", "基因工程", "基因序列"]
+    },
+    {
+      "id": "BVC-FZ-02",
+      "check": "auto",
+      "rule": "不走實驗室、試管、培養槽",
+      "source": "doc_ui_0008 規格摘要；doc_ui_0005 §9.1 第 2 點",
+      "patterns": ["laborator", "\\blab\\b", "test[-_ ]?tube", "beaker", "實驗室", "試管", "培養槽"]
+    },
+    {
+      "id": "BVC-FZ-03",
+      "check": "auto",
+      "rule": "不走 HUD、全息、科幻介面",
+      "source": "doc_ui_0008 規格摘要",
+      "patterns": ["\\bhud\\b", "hologra", "sci-?fi", "cyber", "全息", "科幻"]
+    },
+    {
+      "id": "BVC-FZ-04",
+      "check": "manual",
+      "rule": "血脈面不得有恐怖裂臉、污染感",
+      "source": "doc_ui_0005 §9.1 第 3 點"
+    },
+    {
+      "id": "BVC-FZ-05",
+      "check": "manual",
+      "rule": "不做成西方奇幻召喚獸頁；命紋靈獸不是萌系寵物，而是血脈象徵物",
+      "source": "doc_ui_0005 §9.1 第 4 點；doc_ui_0008 規格摘要"
+    },
+    {
+      "id": "BVC-FZ-06",
+      "check": "manual",
+      "rule": "不是普通資訊頁加 ghost overlay，也不是沒有 UI 邏輯的單純海報圖",
+      "source": "doc_ui_0005 §9.1 第 1、5 點"
+    },
+    {
+      "id": "BVC-FZ-07",
+      "check": "manual",
+      "rule": "右側血脈面不是 generic 藍色靈魂武將；中央門不過度 fantasy 發光，保留古老感",
+      "source": "doc_ui_0005 §9.2 第 2、3 點"
+    },
+    {
+      "id": "BVC-FZ-08",
+      "check": "manual",
+      "rule": "血脈感以古老命紋、祖靈獸印、血脈 crest、命盤連線表現，五處共用同一套 crest 語言",
+      "source": "doc_ui_0008 規格摘要"
+    }
+  ]
+}
