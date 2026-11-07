@@ -425,6 +425,8 @@ export class LobbyScene extends Component {
     private _hallThemeFrame: HallThemeFrame | null = null;
     private _bloodlineMirrorLoadingHost: UIScreenPreviewHost | null = null;
     private _bloodlineMirrorAwakeningHost: UIScreenPreviewHost | null = null;
+    private _bloodlineMirrorAscensionHost: UIScreenPreviewHost | null = null;
+    private _bloodlineMirrorUnownedHost: UIScreenPreviewHost | null = null;
     private _characterDs3Host: UIScreenPreviewHost | null = null;
     /** 每位武將上次顯示的因子狀態，用來判斷這次新亮起的顏色（只在同一武將的二次檢視才播解鎖特效） */
     private readonly _factorHexInputsByGeneral = new Map<string, FactorHexInput[]>();
@@ -4073,6 +4075,14 @@ export class LobbyScene extends Component {
         this._bloodlineMirrorAwakeningHost = await this._mountPreviewScreenHost('BloodlineMirrorAwakeningHost', 'bloodline-mirror-awakening-screen', [
             { buttonId: 'PrimaryActionButton', handler: () => { void services().ui.goBack(); } },
         ]);
+
+        this._bloodlineMirrorAscensionHost = await this._mountPreviewScreenHost('BloodlineMirrorAscensionHost', 'bloodline-mirror-ascension-screen', [
+            { buttonId: 'PrimaryActionButton', handler: () => { void services().ui.goBack(); } },
+        ]);
+
+        this._bloodlineMirrorUnownedHost = await this._mountPreviewScreenHost('BloodlineMirrorUnownedHost', 'bloodline-mirror-unowned-screen', [
+            { buttonId: 'PrimaryActionButton', handler: () => { void services().ui.goBack(); } },
+        ]);
     }
 
     private async _mountEliteTroopCodexPanel(): Promise<void> {
@@ -4557,6 +4567,8 @@ export class LobbyScene extends Component {
         const spiritFamilyOverviewController = this._createSpiritFamilyOverviewController();
         const bloodlineMirrorLoadingController = this._createPreviewScreenController(this._bloodlineMirrorLoadingHost, 'bloodline-mirror-loading-screen');
         const bloodlineMirrorAwakeningController = this._createPreviewScreenController(this._bloodlineMirrorAwakeningHost, 'bloodline-mirror-awakening-screen');
+        const bloodlineMirrorAscensionController = this._createPreviewScreenController(this._bloodlineMirrorAscensionHost, 'bloodline-mirror-ascension-screen');
+        const bloodlineMirrorUnownedController = this._createPreviewScreenController(this._bloodlineMirrorUnownedHost, 'bloodline-mirror-unowned-screen');
         const eliteTroopCodexController = this._createEliteTroopCodexController();
         const missionDetailDialogController = this._createLobbyMissionDetailDialogController();
         const leaderboardController = this._createLobbyLeaderboardController();
@@ -4572,6 +4584,8 @@ export class LobbyScene extends Component {
         services().ui.register(UIID.SpiritFamilyOverview, spiritFamilyOverviewController);
         services().ui.register(UIID.BloodlineMirrorLoading, bloodlineMirrorLoadingController);
         services().ui.register(UIID.BloodlineMirrorAwakening, bloodlineMirrorAwakeningController);
+        services().ui.register(UIID.BloodlineMirrorAscension, bloodlineMirrorAscensionController);
+        services().ui.register(UIID.BloodlineMirrorUnowned, bloodlineMirrorUnownedController);
         services().ui.register(UIID.EliteTroopCodex, eliteTroopCodexController);
         services().ui.register(UIID.LobbyMissionDetailDialog, missionDetailDialogController);
         services().ui.register(UIID.LobbyLeaderboard, leaderboardController);
