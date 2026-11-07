@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-07T17-09-57-117Z-scope-amendment-baea64b270d4",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:eef042595d3cd7979c4b84ac8090e3cd51e13efa4f7641b4e1644c1e4db44fdb",
+  "createdAt": "2026-11-07T17:09:57.117Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/wang_yi_portrait.png,assets/resources/sprites/generals/avatars/wang_yi_avatar.png,assets/resources/sprites/ui_avatars/cropped/wang_yi_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
