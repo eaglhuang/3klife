@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-07T14-52-45-919Z-scope-amendment-27839f6830d0",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:6ecfd8f5418547c3532af3f0a4bf1480870a83536a044b16163bf134214b4447",
+  "createdAt": "2026-11-07T14:52:45.919Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/guo_jia_portrait.png,assets/resources/sprites/generals/avatars/guo_jia_avatar.png,assets/resources/sprites/ui_avatars/cropped/guo_jia_avatar.png,assets/resources/sprites/generals/wei_yan_portrait.png,assets/resources/sprites/generals/avatars/wei_yan_avatar.png,assets/resources/sprites/ui_avatars/cropped/wei_yan_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
