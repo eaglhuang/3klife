@@ -28,6 +28,8 @@ import {
   type SkillExecutionResult,
 } from '../../shared/SkillRuntimeContract';
 import { services } from '../../core/managers/ServiceLoader';
+import { dispatchSpecialRule, type SpecialRuleDispatchResult } from '../skills/special/SpecialRuleDispatch';
+import type { UltimateSpecialRuleDef } from '../../shared/SkillRuntimeContract';
 import { selfBurstBlocksEffect, startSelfBurst } from '../shared/SelfBurstWindow';
 import { startTeamAura, teamAuraResistsDebuff } from '../shared/TeamAura';
 import { resolveTeamRecover } from '../shared/TeamRecover';
@@ -72,6 +74,8 @@ export interface BattleSkillDispatcherContext {
   getUnitSourceGeneralId?(unitId: string): string | null;
   /** 祖先成名奧義的戰法 id（英靈附體，PROG-2-1603）；查不到回 null，沿用本體奧義 */
   getAncestorSignatureSkillId?(ancestorTemplateId: string | null): string | null;
+  /** 奧義的 USPECIAL 特殊規則（ULT-10，PROG-2-1978）；查不到或沒填回 undefined，不走特殊規則 */
+  getUltimateSpecialRule?(ultimateId: string): UltimateSpecialRuleDef | null | undefined;
 }
 
 /** 負責技能分發與執行上下文建立（seed tactic、direct skill、skill request 執行、context builder） */
@@ -154,8 +158,18 @@ export class BattleSkillDispatcher {
       }
       // 敵方全體減益家族（SYS-SKILL-ULT-0004）：對敵方陣營掛持續層、附加狀態、驅散增益
       this.applyEnemyMassDebuff(casterFaction, options.ultimateId);
+      // USPECIAL 白名單特殊規則（ULT-10，PROG-2-1978）：奧義定義有 specialRule 才生效
+      this.applyUltimateSpecialRule(casterFaction, options.ultimateId, options.targetUnitUid ?? null);
     }
     return result;
+  }
+
+  /** 依奧義定義套用 USPECIAL 規則；白名單外或沒填 specialRule 不生效 */
+  public applyUltimateSpecialRule(casterFaction: Faction, ultimateId: string, targetUnitUid: string | null = null): SpecialRuleDispatchResult {
+    const casterUnitId = casterFaction === Faction.Player ? this.context.getPlayerGeneralUnitId() : this.context.getEnemyGeneralUnitId();
+    return dispatchSpecialRule(this.context.getUltimateSpecialRule?.(ultimateId), {
+      state: this.context.state, casterFaction, casterUnitId, targetUnitUid, ultimateId,
+    });
   }
 
   private applyEnemyMassDebuff(casterFaction: Faction, ultimateId: string): void {

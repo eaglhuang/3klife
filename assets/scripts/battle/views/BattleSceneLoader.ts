@@ -9,7 +9,7 @@ import { assetManager, AudioClip } from "cc";
 import { services } from "../../core/managers/ServiceLoader";
 import { GeneralUnit, GeneralConfig } from "../../core/models/GeneralUnit";
 import { Faction } from "../../core/config/Constants";
-import type { UltimateEffectFamily } from "../../shared/SkillRuntimeContract";
+import type { UltimateEffectFamily, UltimateSpecialRuleDef } from "../../shared/SkillRuntimeContract";
 import type { CreateSortieInput } from '../../core/systems/SortieDeploy';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 
@@ -82,6 +82,11 @@ export function findUltimateFamily(ultimateId: string): UltimateEffectFamily | n
 export function findUltimateDamageDef(ultimateId: string): { slot?: number; scalingStat?: string | null; name?: string } | undefined {
   const def = ultimateDefinitionMap.get(ultimateId);
   return def ? { slot: def.slot, scalingStat: def.scalingStat, name: def.name } : undefined;
+}
+
+/** 奧義的 USPECIAL 特殊規則（ULT-10，PROG-2-1978）；沒填或查不到回 undefined */
+export function findUltimateSpecialRule(ultimateId: string): UltimateSpecialRuleDef | null | undefined {
+  return ultimateDefinitionMap.get(ultimateId)?.specialRule;
 }
 
 /** 奧義 base_power 表（NumericalConfig.Ult_Base_Power）；尚未載入時回傳 undefined（PROG-2-0927） */

@@ -112,6 +112,12 @@ export interface CanonicalTacticDefinition {
     tacticModules?: TacticModuleType[];
 }
 
+/** USPECIAL 特殊規則（ULT-10，PROG-2-1978）：kind 為白名單五項之一，參數由資料給 */
+export interface UltimateSpecialRuleDef {
+    kind: string;
+    params?: Readonly<Record<string, number | string>>;
+}
+
 export interface CanonicalUltimateDefinition {
     id: string;
     templateId?: string;
@@ -129,6 +135,8 @@ export interface CanonicalUltimateDefinition {
     family?: UltimateEffectFamily | null;
     /** 明寫的演出設定檔 id；資料目前沒有，缺省退回家族預設（PROG-2-1320） */
     cinematicProfile?: string | null;
+    /** USPECIAL 特殊規則；缺省代表此奧義不走特殊規則（PROG-2-1978） */
+    specialRule?: UltimateSpecialRuleDef | null;
     targetMode?: BattleSkillTargetMode;
     timing?: BattleSkillTiming;
     manualTargeting?: boolean;
