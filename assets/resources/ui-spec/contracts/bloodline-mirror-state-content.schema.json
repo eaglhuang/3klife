@@ -3,7 +3,7 @@
   "schemaId": "bloodline-mirror-state-content",
   "familyId": "fullscreen-result",
   "version": 1,
-  "description": "血脈命鏡 fullscreen-result 共用內容契約，對應 loading / awakening / ascension / unowned-preview 四種 state。",
+  "description": "血脈命鏡 fullscreen-result 共用內容契約，對應 loading / awakening / ascension / unowned-preview / owned-legendary 五種 state。",
   "fields": {
     "stateBadgeLabel": {
       "type": "string",
@@ -83,6 +83,38 @@
       "required": true,
       "description": "五格故事帶內容。",
       "bindPath": "StoryStrip"
+    },
+    "showPrimaryAction": {
+      "type": "boolean",
+      "required": false,
+      "description": "主操作按鈕是否顯示（BMV3-02 state 差異）。",
+      "bindPath": "MirrorStatePanels/ActionRow/PrimaryActionButton"
+    },
+    "showTips": {
+      "type": "boolean",
+      "required": false,
+      "description": "提示面板是否顯示。",
+      "bindPath": "MirrorStatePanels/TipPanel"
+    },
+    "spiritBrightness": {
+      "type": "string",
+      "enum": ["dim", "normal", "bright"],
+      "required": false,
+      "description": "右側英靈亮度。",
+      "bindPath": "SpiritHero"
+    },
+    "auraColor": {
+      "type": "string",
+      "enum": ["gold", "purple", "blue", "silver"],
+      "required": false,
+      "description": "定心者 aura 色（金傳說／紫史詩／藍稀有／銀白低階或未完整覺醒）。",
+      "bindPath": "CenterStage/VesselCore"
+    },
+    "showLockBadge": {
+      "type": "boolean",
+      "required": false,
+      "description": "未持有鎖定標記是否顯示。",
+      "bindPath": "UnownedVeil"
     }
   },
   "requiredFields": [

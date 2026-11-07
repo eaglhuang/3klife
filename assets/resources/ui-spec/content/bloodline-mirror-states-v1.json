@@ -23,6 +23,11 @@
       "publicMarker": "現世武將",
       "spiritMarker": "英靈命相",
       "crestState": "placeholder",
+      "showPrimaryAction": true,
+      "showTips": true,
+      "spiritBrightness": "dim",
+      "auraColor": "silver",
+      "showLockBadge": false,
       "storyCells": {
         "origin": {
           "title": "起源",
@@ -65,6 +70,11 @@
       "publicMarker": "現世武將",
       "spiritMarker": "英靈已現",
       "crestState": "awakened",
+      "showPrimaryAction": true,
+      "showTips": true,
+      "spiritBrightness": "bright",
+      "auraColor": "gold",
+      "showLockBadge": false,
       "storyCells": {
         "origin": {
           "title": "起源",
@@ -107,6 +117,11 @@
       "publicMarker": "現世武將",
       "spiritMarker": "命鏡重鑄",
       "crestState": "revealed",
+      "showPrimaryAction": true,
+      "showTips": true,
+      "spiritBrightness": "normal",
+      "auraColor": "silver",
+      "showLockBadge": false,
       "storyCells": {
         "origin": {
           "title": "根基",
@@ -149,6 +164,11 @@
       "publicMarker": "現世剪影",
       "spiritMarker": "英靈傳聞",
       "crestState": "rumored",
+      "showPrimaryAction": true,
+      "showTips": true,
+      "spiritBrightness": "dim",
+      "auraColor": "silver",
+      "showLockBadge": true,
       "storyCells": {
         "origin": {
           "title": "傳聞",
@@ -169,6 +189,53 @@
         "future": {
           "title": "伏筆",
           "body": "保留未來命途與陣營聯動的伏筆，讓預覽仍有吸引力。"
+        }
+      }
+    },
+    "owned-legendary": {
+      "screenIds": [],
+      "stateBadgeLabel": "傳說英靈",
+      "headerTitle": "傳說命格常駐",
+      "headerSubtitle": "已持有並完整覺醒的傳說武將，命鏡只作展示",
+      "phaseLabel": "階段: 已覺醒",
+      "rarityLabel": "稀有度: 傳說",
+      "mirrorLabel": "命鏡: 長明",
+      "crestLabel": "命紋: 已覺醒",
+      "tipTitle": "傳說提示",
+      "tipBody": "已持有的傳說武將不再顯示操作與提示，專注呈現金色 aura 與英靈全貌。",
+      "progressLabel": "命格圓滿",
+      "primaryActionLabel": "查看命格",
+      "tipProfile": "owned",
+      "tipSource": "bloodline-mirror-loading-tips-v1#owned",
+      "heroPresentation": "duality",
+      "publicMarker": "現世武將",
+      "spiritMarker": "傳說英靈",
+      "crestState": "awakened",
+      "showPrimaryAction": false,
+      "showTips": false,
+      "spiritBrightness": "bright",
+      "auraColor": "gold",
+      "showLockBadge": false,
+      "storyCells": {
+        "origin": {
+          "title": "起源",
+          "body": "回顧武將出身與成名之路，作為傳說命格的起點。"
+        },
+        "bloodline": {
+          "title": "血脈",
+          "body": "完整列出祖紋名稱與血脈支系，傳說級命格不再保留伏筆。"
+        },
+        "trial": {
+          "title": "試煉",
+          "body": "記下覺醒時跨過的關鍵試煉，讓傳說有可被傳頌的代價。"
+        },
+        "awakening": {
+          "title": "覺醒",
+          "body": "以金色命紋定格覺醒瞬間，作為英靈常駐的形象。"
+        },
+        "future": {
+          "title": "未來",
+          "body": "點出傳說武將對家族血脈與後代傳承的長期影響。"
         }
       }
     }
