@@ -189,6 +189,7 @@ import { SolidBackground } from '../components/SolidBackground';
 import { ToastMessage } from '../components/ToastMessage';
 import { applyUIPreviewBinderState } from '../core/UIPreviewStateApplicator';
 import { buildSpiritFamilyOverviewDisplayModel, type SpiritFamilyOverviewOpenPayload, type SpiritFamilyOverviewStoryCell } from '../core/SpiritFamilyOverviewRoute';
+import { buildSpiritFamilyOverviewRows, spiritFamilyOverviewSummaryTexts } from '../core/SpiritFamilyOverviewSummary';
 import { buildMirrorFateStrip } from '../../core/systems/MirrorFateStrip';
 import { familyOverviewHotspotVisible } from '../../core/systems/FamilyOverviewHotspot';
 import { BLOODLINE_MIRROR_LOADING_TIPS_PATH, LoadingTipsContent, pickLoadingTips } from '../../core/systems/LoadingTips';
@@ -5162,7 +5163,8 @@ export class LobbyScene extends Component {
 
         const displayModel = buildSpiritFamilyOverviewDisplayModel(payload);
         applyUIPreviewBinderState(binder, {
-            texts: displayModel.texts,
+            // SPI-12: the lobby entry lists the collected spirit cards grouped by family
+            texts: payload?.origin === 'general-detail' ? displayModel.texts : { ...displayModel.texts, ...this._spiritFamilySummaryTexts() },
             actives: {
                 UnownedVeil: false,
                 PublicHero: true,
@@ -5187,6 +5189,13 @@ export class LobbyScene extends Component {
                 [`${basePath}/StoryBody`]: storyCell.body,
             });
         });
+    }
+
+    /** SPI-12: family-grouped summary of collected spirit cards (main card, destiny slot / relic counts). */
+    private _spiritFamilySummaryTexts(): Record<string, string> {
+        const cards = Object.values(services().session.inventoryViews.spiritCards);
+        const nameOf = (templateId: string): string | undefined => this._generals.find((g) => g.id === templateId)?.name;
+        return spiritFamilyOverviewSummaryTexts(buildSpiritFamilyOverviewRows(cards, nameOf));
     }
 
     /** 依武將 id 取 5 格命運帶；找不到武將或沒有故事條時回傳 null。 */
