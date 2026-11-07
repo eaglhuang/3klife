@@ -8,7 +8,7 @@
 
 | ID | 里程碑 | 工作包 | 類型 | 工時 | 狀態 | 依賴 | 驗收條件 | 現況證據 | 最新核對(v16.9) |
 |---|:---:|---|:---:|:---:|:---:|---|---|---|---|
-| **HUM-06** | M9 | GeneralJournalPeek 日誌氣泡與完整生平實錄彈窗 | ui | 4 | ⚪ 未開始 | HUM-01 | 氣泡顯示時間戳+動作，點擊開生平彈窗 | 無 |  |
+| **HUM-06** | M9 | GeneralJournalPeek 日誌氣泡與完整生平實錄彈窗 | ui | 4 | 🟡 純邏輯 | HUM-01 | 氣泡顯示時間戳+動作，點擊開生平彈窗 | GeneralJournalPeek.ts（PROG-2-1969 #1874） | [v17.7 更正 2026-11-07] 未開始→純邏輯；已做、待接人物頁 UI |
 | **HUM-07** | M9 | 任務適合度 Suitability Badge 與大廳任務牆跳轉 | ui | 3 | ⚪ 未開始 | HUM-01 | 自告奮勇+50% 任務顯示自薦徽章並可跳轉 | 無（依賴大廳任務牆） |  |
 | **GDART-01** | M10 | 共用骨架節點命名固定（Overlay/PopupBody/HeaderPanel/SummaryStrip/TabBar/ContentFrame/FooterPanel） | ui | 2 | 🟢 已接線 | - | 節點名與 GeneralDetailPanel 查找路徑一致 | assets/resources/ui-spec/layouts/general-detail-main.json；GeneralDetailComposite.ts 使用 RightTabBar/ContentSlot 等；與清單命名不完全一致 |  |
 | **GDART-02** | M10 | bg_ink_main 不對稱九宮格背景延展 | ui | 1 | 🟢 已接線 | - | 左右 border 保留立繪留白與山景，禁 simple 縮放 | assets/resources/ui-spec/skins/general-detail-default.json；ui-spec/placeholders/bg_ink_detail |  |
