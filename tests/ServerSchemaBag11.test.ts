@@ -75,6 +75,14 @@ export function createServerSchemaBag11Suite(): TestSuite {
         assert.isTrue(validateGearEquipRecordRow(row({ is_locked: 1 as unknown as boolean })).some((issue) => issue.path === 'is_locked'));
     });
 
+    suite.test('acquired_at 超前伺服端時間 5 分鐘以上會被擋（doc_spec_0439 §4-2）', () => {
+        const now = Date.parse('2026-11-07T12:00:00Z');
+        const at = (iso: string) => validateGearEquipRecordRow(row({ acquired_at: iso }), now).some((issue) => issue.path === 'acquired_at');
+        assert.equals(false, at('2026-11-07T12:05:00Z'));
+        assert.equals(true, at('2026-11-07T12:05:01Z'));
+        assert.equals(false, validateGearEquipRecordRow(row({ acquired_at: '2099-01-01T00:00:00Z' })).some((issue) => issue.path === 'acquired_at'));
+    });
+
     suite.test('acquired_at 不可解析時會被擋', () => {
         assert.isTrue(validateGearEquipRecordRow(row({ acquired_at: 'not-a-date' })).some((issue) => issue.path === 'acquired_at'));
     });

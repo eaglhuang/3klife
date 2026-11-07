@@ -40,6 +40,8 @@ export type GearEquipRowIssue = { path: string; message: string };
 
 const ID_MAX = 32;
 const INT_MAX = 2147483647;
+/** acquired_at 可超前伺服端時間的容差（防時鐘回撥；伺服端裝備記錄表結構與客端同步協議規格書 doc_spec_0439 §4-2，PROG-2-2054） */
+export const GEAR_ACQUIRED_AT_FUTURE_TOLERANCE_MS = 5 * 60 * 1000;
 
 function isIdString(value: unknown): value is string {
     return typeof value === 'string' && value.length > 0 && value.length <= ID_MAX;
@@ -49,8 +51,8 @@ function isPositiveInt(value: unknown): value is number {
     return typeof value === 'number' && Number.isInteger(value) && value >= 1 && value <= INT_MAX;
 }
 
-/** 列驗證：ID 長度、slot_type 代碼、倉庫與武將綁定的一致性、數量與時間格式。 */
-export function validateGearEquipRecordRow(row: GearEquipRecordRow): GearEquipRowIssue[] {
+/** 列驗證：ID 長度、slot_type 代碼、倉庫與武將綁定的一致性、數量與時間格式；給 serverNowMs 時另擋超前容差的時戳。 */
+export function validateGearEquipRecordRow(row: GearEquipRecordRow, serverNowMs?: number): GearEquipRowIssue[] {
     const issues: GearEquipRowIssue[] = [];
 
     for (const key of ['equip_id', 'player_id', 'item_id'] as const) {
@@ -81,6 +83,8 @@ export function validateGearEquipRecordRow(row: GearEquipRecordRow): GearEquipRo
 
     if (typeof row.acquired_at !== 'string' || Number.isNaN(Date.parse(row.acquired_at))) {
         issues.push({ path: 'acquired_at', message: '必須為可解析的時間字串' });
+    } else if (serverNowMs !== undefined && Date.parse(row.acquired_at) > serverNowMs + GEAR_ACQUIRED_AT_FUTURE_TOLERANCE_MS) {
+        issues.push({ path: 'acquired_at', message: '不可超前伺服端時間 5 分鐘以上' });
     }
 
     return issues;
