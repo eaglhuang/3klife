@@ -15,6 +15,7 @@ import {
     SIEGE_MOAT_TILE_NOTE,
     sceneLadderDefenseBypassOf,
     SIEGE_WALL_DEFENSE_MULTIPLIER,
+    SIEGE_WALL_RANGE_BONUS,
     sceneDefenseMultiplierOf,
     sceneSiegeDamageMultiplierOf,
 } from '../assets/scripts/battle/shared/BattleTacticBehavior';
@@ -32,6 +33,16 @@ export function createSiegeSceneSuite(): TestSuite {
     const suite = new TestSuite('SiegeScene (攻城戰最小版 PROG-2-1589)');
     const siege = { battleTactic: BattleTactic.Siege } as never;
     const normal = { battleTactic: BattleTactic.Normal } as never;
+
+    suite.test('城牆守軍射程 +1，城外守軍與我方不加（doc_spec_0372 §2.3）', () => {
+        const behavior = resolveBattleTacticBehavior(BattleTactic.Siege);
+        const ranged = (faction: Faction, depth: number) => ({ faction, depth, lane: 1, attackRange: 2 }) as unknown as TroopUnit;
+        const state = {} as unknown as BattleState;
+        assert.equals(2 + SIEGE_WALL_RANGE_BONUS, behavior.getEffectiveAttackRange(ranged(Faction.Enemy, 6), state));
+        assert.equals(2, behavior.getEffectiveAttackRange(ranged(Faction.Enemy, 5), state));
+        assert.equals(2, behavior.getEffectiveAttackRange(ranged(Faction.Player, 7), state));
+        assert.equals(2, resolveBattleTacticBehavior(BattleTactic.Normal).getEffectiveAttackRange(ranged(Faction.Enemy, 7), state));
+    });
 
     suite.test('攻城戰對應 siege 場景', () => {
         assert.equals('siege', resolveBattleSceneMode(BattleTactic.Siege));

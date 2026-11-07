@@ -87,6 +87,8 @@ export const SIEGE_MOAT_MOVE_DELTA = -1;
 export const SIEGE_MOAT_TILE_NOTE = 'scene-gambit:siege-moat';
 export const SIEGE_WALL_DEFENSE_MULTIPLIER = 1.5;
 export const SIEGE_RAM_MULTIPLIER = 2;
+/** 城牆守軍居高臨下射程 +1（攻城戰城門防禦城牆地利與器械破陣數值規格書 doc_spec_0372 §2.3，PROG-2-2052） */
+export const SIEGE_WALL_RANGE_BONUS = 1;
 /** 水淹深水格每回合傷害（PROG-2-1591，暫定） */
 export const FLOOD_DEEP_WATER_DAMAGE_PER_TURN = 10;
 const FLOOD_DEPTH_START = 2;
@@ -487,6 +489,9 @@ export const BATTLE_TACTIC_BEHAVIOR_REGISTRY: Readonly<Record<BattleSceneMode, B
     applyStartOfBattle: applySiegeMoat,
     getDefenseMultiplier: (unit: TroopUnit) => (
       isSiegeWallDefender(unit) ? SIEGE_WALL_DEFENSE_MULTIPLIER : 1
+    ),
+    getEffectiveAttackRange: (unit: TroopUnit) => (
+      isSiegeWallDefender(unit) ? unit.attackRange + SIEGE_WALL_RANGE_BONUS : unit.attackRange
     ),
     getSiegeDamageMultiplier: (unit: TroopUnit) => (unit.faction === Faction.Player ? SIEGE_RAM_MULTIPLIER : 1),
     getCatapultDamage: (unit: TroopUnit) => (unit.faction === Faction.Player ? SIEGE_CATAPULT_DAMAGE : 0),
