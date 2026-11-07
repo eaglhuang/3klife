@@ -252,7 +252,12 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
         }
 
         this._bindSpiritSlotClick('SlotUnequipButton', generalId, () => services().session.unequipSpiritCard(generalId, false));
-        this._bindSpiritSlotClick('SlotSetMainButton', generalId, () => services().session.setPrimarySpiritCard(generalId, false));
+        this._bindSpiritSlotClick('SlotSetMainButton', generalId, () => {
+            const result = services().session.setPrimarySpiritCard(generalId, false);
+            // 主卡提示（doc_spec_0632 §4，PROG-2-2085）：設定成功才提示獨享家族香火
+            if (result.ok) services().event.emit('SHOW_TOAST', { message: this.t('UI_SPIRIT_MAIN_CARD_ACTIVE'), duration: 2 });
+            return result;
+        });
         this._bindSpiritSlotClick('SlotInsertButton', generalId, () => this._openSpiritPicker(generalId, 'insert'));
         this._bindSpiritSlotClick('SlotReplaceButton', generalId, () => this._openSpiritPicker(generalId, 'replace'));
     }
