@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-07T15-06-40-180Z-scope-amendment-d14e6da3c689",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:81eb737ceed8ecc573bcca2a5aab0d76d9d089d2b9c178dab0886cfe8b5f94ec",
+  "createdAt": "2026-11-07T15:06:40.180Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/zhang_fei_portrait.png,assets/resources/sprites/generals/avatars/zhang_fei_avatar.png,assets/resources/sprites/ui_avatars/cropped/zhang_fei_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
