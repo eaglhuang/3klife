@@ -73,3 +73,10 @@ export function regenMilitaryOneSeason(reserve: MilitaryReserve, seasons = 1, fo
         food: Math.min(reserve.foodCap, reserve.food + food),
     };
 }
+
+/** 恢復季數達此值（約一年）即提示【兵源空虛】（城市兵源鏈每季恢復與戰損回扣數值模型規格書 doc_spec_0375 §4，PROG-2-2053） */
+export const TROOP_RESERVE_DEPLETED_TURNS = 4;
+
+export function isTroopReserveDepleted(turnsToRecover: number): boolean {
+    return turnsToRecover >= TROOP_RESERVE_DEPLETED_TURNS;
+}

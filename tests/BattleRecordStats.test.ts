@@ -13,7 +13,7 @@ import {
     retireTallyGrade,
     winRate,
 } from '../assets/scripts/core/systems/BattleRecordStats';
-import { applySortieResult, FOOD_PER_SEASON, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../assets/scripts/core/systems/MilitaryReserve';
+import { applySortieResult, FOOD_PER_SEASON, isTroopReserveDepleted, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../assets/scripts/core/systems/MilitaryReserve';
 import { BASE_RESOURCE_CAPS } from '../assets/scripts/core/systems/ResourceCap';
 import { formatSortieSummary } from '../assets/scripts/core/systems/SortieDeploy';
 import { BattleRosterGeneral, settleBattle } from '../assets/scripts/core/systems/BattleRoster';
@@ -33,6 +33,12 @@ function adult(id: string, extra: Partial<BattleRosterGeneral> = {}): GeneralCon
 
 export function createBattleRecordStatsSuite(): TestSuite {
     const suite = new TestSuite('BattleRecordStats');
+
+    suite.test('兵源空虛：恢復季數 ≥ 4 才提示（doc_spec_0375 §4）', () => {
+        assert.equals(false, isTroopReserveDepleted(3));
+        assert.equals(true, isTroopReserveDepleted(4));
+        assert.equals(true, isTroopReserveDepleted(Infinity));
+    });
 
     suite.test('單場表現：我方傷害、承傷、擊殺、治療分開累加，敵方治療不算', () => {
         const t = new BattlePerformanceTracker('player');
