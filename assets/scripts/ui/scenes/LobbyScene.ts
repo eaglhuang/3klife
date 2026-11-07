@@ -207,6 +207,7 @@ import { DailyReportController } from '../core/DailyReportController';
 import { dailySubsidyText, economySubsidyBannerText } from '../core/DailySubsidyNotice';
 import type { TabKey } from '../components/character-ds3/GeneralDetailChromePresenter';
 import { ensureDs3SideAction, ensureDs3SideLabel, setDs3SideActionEnabled } from '../components/character-ds3/Ds3SideActions';
+import { SUITABILITY_BADGE_LABEL, suitabilityBadgeText } from '../../core/systems/HallSuitability';
 import { DS3_BLOODLINE_TREE_NODE_NAME, ensureDs3BloodlineTree } from '../components/character-ds3/Ds3BloodlineTree';
 import { BLOODLINE_TREE_OPEN_LINE } from '../../core/systems/BloodlineTreeSlots';
 import { delegateSchedule } from '../../core/systems/AutoNurture';
@@ -222,7 +223,8 @@ const FACTOR_HEX_POSITION = { x: 90, y: -260 };
 
 /** 圖鑑入口的暫定位置（PROVISIONAL：畫面沒有預留節點，程式掛在 CharacterDs3Host 下，待 Codex 實機微調） */
 const GALLERY_ENTRY_NODE_NAME = 'GeneralVersionGalleryEntry';
-const CHARACTER_DS3_SIDE_ACTION_INDEX = { journal: 0, soulInject: 1, gallery: 2, totalTp: 3, expertView: 4 };
+const CHARACTER_DS3_SIDE_ACTION_INDEX = { journal: 0, soulInject: 1, gallery: 2, totalTp: 3, expertView: 4, volunteer: 5 };
+const VOLUNTEER_TASK_NODE_NAME = 'btnVolunteerTask';
 const EXPERT_VIEW_NODE_NAME = 'btnExpertView';
 const EXPERT_VIEW_ON_LINE = '專家視圖已開啟：直接顯示完整族譜與數值，功能解鎖不變。';
 const EXPERT_VIEW_OFF_LINE = '專家視圖已關閉：依家族階段逐步揭露。';
@@ -4476,8 +4478,38 @@ export class LobbyScene extends Component {
         return null;
     }
 
+    /** HUM-07: volunteer badge on the character page; hidden when the general has no open volunteer task. */
+    private _bindCharacterDs3Volunteer(): void {
+        const host = this._characterDs3Surface()?.node;
+        if (!host) return;
+        const general = this._characterDs3General;
+        const target = general ? this._hallBoard?.volunteerTaskFor(general.id) ?? null : null;
+        const button = host.getChildByName(VOLUNTEER_TASK_NODE_NAME)?.getComponent(Button)
+            ?? (target ? ensureDs3SideAction(host, VOLUNTEER_TASK_NODE_NAME, SUITABILITY_BADGE_LABEL, CHARACTER_DS3_SIDE_ACTION_INDEX.volunteer) : null);
+        if (!button) return;
+        button.node.active = target !== null;
+        button.node.off(Button.EventType.CLICK, this._onCharacterDs3VolunteerClick, this);
+        button.node.on(Button.EventType.CLICK, this._onCharacterDs3VolunteerClick, this);
+    }
+
+    private _onCharacterDs3VolunteerClick(): void {
+        const general = this._characterDs3General;
+        if (general) this.openVolunteerTask(general.id);
+    }
+
+    /** HUM-07: open the hall wall at the general's volunteer task and show its detail dialog. */
+    public openVolunteerTask(generalId: string): boolean {
+        const target = this._hallBoard?.volunteerTaskFor(generalId);
+        if (!target) return false;
+        this._openHallBoard(target.board);
+        this._onClickHallDetail(target.index);
+        this._showToast(suitabilityBadgeText(target.taskTitle));
+        return true;
+    }
+
     /** 寄宿戰魂按鈕：綁定點按，並依可否寄宿設定灰階（PROG-2-1058） */
     private _bindCharacterDs3SoulInject(): void {
+        this._bindCharacterDs3Volunteer();
         const button = this._characterDs3SoulInjectButton();
         if (!button) {
             UCUFLogger.warn(LogCategory.LIFECYCLE, '[LobbyScene] Character DS3 soul inject button missing', { buttonNode: 'btnSoulInject' });

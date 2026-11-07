@@ -16,6 +16,7 @@ import { HallBoardKey, HallPlayerState } from '../../core/systems/HallMissionBoa
 import { buildHallBoardRows, HallTaskRow } from '../../core/systems/HallMissionBoardPresenter';
 import { HallTask, LobbyHub } from '../../core/systems/LobbyHubSchema';
 import { HallSpotRow } from '../../core/systems/HallCharacterPresenter';
+import { findVolunteerTask, HallVolunteerTaskRef } from '../../core/systems/HallSuitability';
 
 export const HALL_BOARD_MAX_ROWS = 6;
 export const HALL_BOARD_SPOT_SLOTS = 4;
@@ -102,6 +103,17 @@ export class HallBoardPanelController {
         const row = this.rows()[index];
         if (!row) return undefined;
         return this._deps.hub().Mission_Boards[this._board]?.Tasks.find((task) => task.Task_ID === row.taskId);
+    }
+
+    /** 這位武將自薦、且還開著的任務（HUM-07）：回傳牆別與列號供人物頁跳轉；沒有時回傳 null。 */
+    public volunteerTaskFor(generalId: string): HallVolunteerTaskRef | null {
+        const hub = this._deps.hub();
+        const boards = (Object.keys(BOARD_TITLE) as HallBoardKey[]).map((board) => ({
+            board,
+            rows: this.rowsFor(board),
+            tasks: hub.Mission_Boards[board]?.Tasks ?? [],
+        }));
+        return findVolunteerTask(boards, generalId, new Set(Object.values(this._deps.assignments())));
     }
 
     /** 接取第 index 列任務：指派給出戰主將。 */
