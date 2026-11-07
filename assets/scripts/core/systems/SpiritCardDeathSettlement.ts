@@ -10,7 +10,7 @@
  * - 「名將」以 characterCategory 為 famed／mythical／titled 判定。
  * - Spirit_Family_Key 取模板 id 的第一段轉大寫（zhao-yun → FAMILY_ZHAO），對齊 §I-2 範例。
  * - 本次死亡貢獻的 LineageScore 暫用五維（武智統政魅）總和，規格只給累加公式未給貢獻值。
- * - 新卡放陳列室（CLAN_RELIC）、副卡、非家族主卡；依 §E-3 允許雙卡同裝。
+ * - 新卡放陳列室（CLAN_RELIC）、副卡、非家族主卡（只寫 isPrimary，PROG-2-1971）；依 §E-3 允許雙卡同裝。
  * Unity 對照：像死亡事件的 handler 往背包 upsert 一筆 ScriptableObject 實例。
  */
 import type { GeneralConfig } from '../models/GeneralUnit';
@@ -62,12 +62,12 @@ export function buildDeathSpiritCard(general: DeathCandidate): InventoryRecord {
         Source_Type: 'DeathSettlement',
         Display_Bucket: 'CLAN_RELIC',
         Is_Displayed: true,
+        isPrimary: false,
         Attributes: {
             General_Template_ID: templateId,
             Spirit_Family_Key: spiritFamilyKeyOf(templateId),
             LineageScore: Object.values(stats).reduce((sum, v) => sum + v, 0),
             Card_Role: 'BACKUP',
-            Family_Primary_Flag: false,
             DualEquip_Allowed: true,
             Has_Retired_Before: general.isMentorCard === true,
             Final_Stats: stats,
