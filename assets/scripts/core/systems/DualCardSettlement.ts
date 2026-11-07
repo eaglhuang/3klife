@@ -14,6 +14,8 @@
 import type { TigerTallyCard } from '../models/TigerTallyCard';
 import type { InventoryRecord } from './InventoryProjection';
 import { spiritCardIdOf } from './SpiritCardDeathSettlement';
+import type { TallyLine } from './TallyLineSpec';
+import { troopNameOf } from './TallySlotView';
 
 export interface DualCardFinalStats { lead: number; war: number; int: number; pol: number; cha: number }
 
@@ -74,4 +76,23 @@ export function buildDualCardSettlements(input: DualCardSettlementInput): DualCa
         });
     }
     return payloads;
+}
+
+/**
+ * 結算彈窗的文字列（Key＋參數，顯示端用 i18n 組字）：英靈卡有產出時先念台詞與定格數值，再念虎符兵種與適性。
+ * 正式的金卷／符節動畫彈窗未做前，戰場結算細項與大廳換季 toast 先用這些文字呈現。
+ */
+export function dualCardSettlementSpecs(payload: DualCardSettlementPayload): TallyLine[] {
+    const lines: TallyLine[] = [];
+    const spirit = payload.spiritCard;
+    if (spirit) {
+        const s = spirit.finalStats;
+        lines.push({ key: 'UI_SPIRIT_HERO_FALLEN', args: [] });
+        lines.push({ key: 'UI_DUAL_CARD_SPIRIT_STATS', args: [payload.generalName, ...[s.lead, s.war, s.int, s.pol, s.cha].map(String)] });
+    }
+    const tally = payload.tigerTally;
+    if (tally) {
+        lines.push({ key: 'UI_DUAL_CARD_TALLY_APTITUDE', args: [payload.generalName, troopNameOf(tally), tally.aptitudeTier || '—'] });
+    }
+    return lines;
 }

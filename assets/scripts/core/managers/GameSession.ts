@@ -144,7 +144,7 @@ import { estimateSortiePower } from '../systems/SortiePrediction';
 import { BASE_RESOURCE_CAPS, clampResource } from '../systems/ResourceCap';
 import { computeDeathBattleScore, settleDeathTallies, TALLY_DEATH_SCORE_TUNING } from '../systems/TallyDeathSettlement';
 import { settleDeathSpiritCards, spiritCardNoticeSpec } from '../systems/SpiritCardDeathSettlement';
-import { buildDualCardSettlements, type DualCardSettlementPayload } from '../systems/DualCardSettlement';
+import { buildDualCardSettlements, dualCardSettlementSpecs, type DualCardSettlementPayload } from '../systems/DualCardSettlement';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { applyBattleExpToCard, readCardStarState, tallyBattleOutcome } from '../systems/TigerTallyStar';
 import { resolveTallyBreakthrough, type TallyBreakthroughResult } from '../systems/TigerTallyBreakthrough';
@@ -1491,6 +1491,11 @@ export class GameSession {
         const payloads = this._dualCardSettlements;
         this._dualCardSettlements = [];
         return payloads;
+    }
+
+    /** 取走雙卡結算並組成文字列（PROG-2-2084）；沒給 translate 用繁中保底 */
+    public consumeDualCardSettlementLines(translate?: TallyTranslate): string[] {
+        return this.consumeDualCardSettlements().flatMap(dualCardSettlementSpecs).map((line) => formatTallyLine(line, translate));
     }
 
 

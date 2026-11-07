@@ -809,7 +809,9 @@ export class LobbyScene extends Component {
             }),
             services().event.on(GAME_SESSION_EVENTS.SeasonAdvanced, () => {
                 const session = services().session;
-                for (const message of [...session.consumeRivalNotices(), ...session.consumeTallyNotices((key, ...args) => services().i18n.t(key, ...args))]) {
+                const translate = (key: string, ...args: string[]) => services().i18n.t(key, ...args);
+                // 雙卡結算（SPI-12，PROG-2-2084）：大廳換季時陣亡名將的英靈卡與虎符細項接在虎符提示後
+                for (const message of [...session.consumeRivalNotices(), ...session.consumeTallyNotices(translate), ...session.consumeDualCardSettlementLines(translate)]) {
                     services().event.emit('SHOW_TOAST', { message, duration: 3 });
                 }
             }),
