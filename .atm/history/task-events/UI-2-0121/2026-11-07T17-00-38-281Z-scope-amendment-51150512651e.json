@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-07T17-00-38-281Z-scope-amendment-51150512651e",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:1393d2a4241cbf24fb6291912fe95cc7e2690665fc13946188bb8afe157d1f38",
+  "createdAt": "2026-11-07T17:00:38.281Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/taishi_ci_portrait.png,assets/resources/sprites/generals/avatars/taishi_ci_avatar.png,assets/resources/sprites/ui_avatars/cropped/taishi_ci_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
