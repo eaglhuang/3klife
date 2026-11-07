@@ -190,6 +190,7 @@ import { familyOverviewHotspotVisible } from '../../core/systems/FamilyOverviewH
 import { BLOODLINE_MIRROR_LOADING_TIPS_PATH, LoadingTipsContent, pickLoadingTips } from '../../core/systems/LoadingTips';
 import { provisionalTeachingSpirit } from '../../core/systems/TeachingSpiritProvisional';
 import { UITemplateBinder } from '../core/UITemplateBinder';
+import { startMirrorAmbientMotion } from '../core/UIMirrorAmbientMotion';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { warnGeneralSchemaOnLoad } from '../../core/models/GeneralSchema';
 import { coreFieldCoverage, formatCoreFieldCoverage } from '../../core/systems/GeneralCoreFields';
@@ -4083,6 +4084,11 @@ export class LobbyScene extends Component {
         this._bloodlineMirrorUnownedHost = await this._mountPreviewScreenHost('BloodlineMirrorUnownedHost', 'bloodline-mirror-unowned-screen', [
             { buttonId: 'PrimaryActionButton', handler: () => { void services().ui.goBack(); } },
         ]);
+
+        // 命鏡低頻動效（BMV3-04）：霧化、呼吸光、英靈淡閃
+        for (const host of [this._bloodlineMirrorLoadingHost, this._bloodlineMirrorAwakeningHost, this._bloodlineMirrorAscensionHost, this._bloodlineMirrorUnownedHost]) {
+            if (host) startMirrorAmbientMotion(host);
+        }
     }
 
     private async _mountEliteTroopCodexPanel(): Promise<void> {
