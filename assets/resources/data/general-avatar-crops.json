@@ -1228,11 +1228,12 @@
       "source": "reviewed"
     },
     "sun-lu-yu": {
-      "x": 160,
+      "x": 330,
       "y": 0,
-      "w": 200,
-      "h": 200,
-      "source": "reviewed"
+      "w": 340,
+      "h": 340,
+      "source": "reviewed",
+      "$note": "2026-11-07 孫魯育新版，保留鳳簪、低盤髻、臉與肩線。"
     },
     "zhao-e": {
       "x": 155,
