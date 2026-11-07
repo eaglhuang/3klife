@@ -10,8 +10,8 @@
   "tags": [],
   "createdAt": "2026-11-05T14:30:28.536Z",
   "createdByActor": "codex-gpt-6.1-sol",
-  "lastTransitionId": "2026-11-07T00-03-09-600Z-renew-58c22d957658",
-  "lastTransitionAt": "2026-11-07T00:03:09.600Z",
+  "lastTransitionId": "2026-11-07T00-36-33-992Z-renew-1574d8bd1305",
+  "lastTransitionAt": "2026-11-07T00:36:33.992Z",
   "ledgerContractVersion": "task-ledger/v1",
   "reservedAt": "2026-11-05T17:15:58.821Z",
   "promotedAt": "2026-11-05T17:15:58.826Z",
@@ -19,7 +19,7 @@
     "actorId": "codex-gpt-6.1-terra",
     "leaseId": "lease-f957fb02b01d",
     "claimedAt": "2026-11-05T17:15:58.833Z",
-    "heartbeatAt": "2026-11-07T00:03:09.438Z",
+    "heartbeatAt": "2026-11-07T00:36:33.822Z",
     "ttlSeconds": 1800,
     "files": [
       ".atm/history/evidence/UI-2-0121.*",
@@ -361,20 +361,20 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-92fcd94c4aa254ac",
-    "ticketDigest": "sha256:92fcd94c4aa254ac9e3e9e4ba5663f33ac84b308b87ef308b80c9117b1afaac5",
+    "ticketId": "wat-e05cb286be97c52c",
+    "ticketDigest": "sha256:e05cb286be97c52cdc844950475ec7ce466f25c6a1206f4b675f47a68f859dfd",
     "taskId": "UI-2-0121",
     "origin": "claim",
     "actorId": "codex-gpt-6.1-terra",
     "laneSessionId": "lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d",
     "claimGeneration": "lease-f957fb02b01d",
-    "issuedAt": "2026-11-07T00:03:09.438Z",
-    "expiresAt": "2026-11-07T00:33:09.438Z",
+    "issuedAt": "2026-11-07T00:36:33.822Z",
+    "expiresAt": "2026-11-07T01:06:33.822Z",
     "scopeDigest": "sha256:b6556c20016139b04520f82c8ecb5b7f4c3e7d456c582c805fde3d0a0a556d20",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-11-07T00:03:09.438Z"
+      "selectedAt": "2026-11-07T00:36:33.822Z"
     },
     "grants": [
       {
