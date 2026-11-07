@@ -12,7 +12,7 @@
 import type { TigerTallyCard } from '../../core/models/TigerTallyCard';
 import type { SpiritCard } from '../../core/models/SpiritCard';
 import type { TallyCardData } from '../../shared/TallyCardContract';
-import type { SpiritCardDetailLookup } from './SpiritCardDetailTexts';
+import { fallbackSpiritCardDetailText, type SpiritCardDetailLookup } from './SpiritCardDetailTexts';
 import { spiritTallyDetailOfSpirit, spiritTallyDetailOfTally, type SpiritTallyDetailView } from './SpiritTallyDetailView';
 
 export const SPIRIT_TALLY_CHAIN_TEXTS = {
@@ -77,4 +77,22 @@ export function spiritTallyChainView(
         texts.UnitName = SPIRIT_TALLY_CHAIN_TEXTS.noTally;
     }
     return { texts, infuseEnabled: base.infuseEnabled };
+}
+
+/**
+ * 虎符詳情的「虎符層級」行（DUP-03，PROG-2-2081）：依虎符實例的來源名將找英靈卡，讀血脈灌注累積的 linkedTallyLevel。
+ * 找不到虎符實例或英靈卡時回空字串（不顯示）；灌注後重開詳情即讀到新值。
+ */
+export function tallyLinkedLevelText(
+    instanceUid: string | undefined,
+    tallies: Readonly<Record<string, TigerTallyCard>>,
+    spirits: readonly SpiritCard[],
+    lookup: SpiritCardDetailLookup = fallbackSpiritCardDetailText,
+): string {
+    const source = instanceUid ? tallies[instanceUid]?.sourceGeneralUid : undefined;
+    const spirit = source ? spirits.find((s) => s.uid === source) : undefined;
+    if (!spirit) return '';
+    const raw = spirit.linkedTallyLevel;
+    const level = typeof raw === 'number' && Number.isFinite(raw) && raw > 0 ? Math.floor(raw) : 0;
+    return lookup('ui.spirit_card.linked_tally_level', String(level));
 }
