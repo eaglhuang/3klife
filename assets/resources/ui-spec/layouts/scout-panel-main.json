@@ -1,0 +1,396 @@
+{
+  "id": "scout-panel-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "ScoutPanelRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "ScoutPanelBackdrop",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "skinSlot": "scout.backdrop.bg"
+      },
+      {
+        "type": "panel",
+        "name": "ScoutPanelCard",
+        "id": "scoutCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 1100,
+        "height": 800,
+        "skinSlot": "scout.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "ScoutTitle",
+            "id": "scoutTitle",
+            "widget": {
+              "top": 26,
+              "left": 48,
+              "right": 48
+            },
+            "height": 48,
+            "text": "戰前偵查",
+            "styleSlot": "scout.label.title"
+          },
+          {
+            "type": "panel",
+            "name": "ScoutEnemyBlock",
+            "id": "scoutEnemyBlock",
+            "widget": {
+              "top": 96,
+              "left": 48,
+              "right": 48
+            },
+            "height": 112,
+            "skinSlot": "scout.block.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "ScoutEnemyHeading",
+                "id": "scoutEnemyHeading",
+                "widget": {
+                  "top": 12,
+                  "left": 24,
+                  "right": 24
+                },
+                "height": 34,
+                "text": "敵首情報",
+                "styleSlot": "scout.label.heading"
+              },
+              {
+                "type": "label",
+                "name": "ScoutEnemyBody",
+                "id": "scoutEnemyBody",
+                "widget": {
+                  "top": 54,
+                  "left": 24,
+                  "right": 24
+                },
+                "height": 44,
+                "text": "",
+                "styleSlot": "scout.label.body"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "ScoutMechanicBlock",
+            "id": "scoutMechanicBlock",
+            "widget": {
+              "top": 224,
+              "left": 48,
+              "right": 48
+            },
+            "height": 112,
+            "skinSlot": "scout.block.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "ScoutMechanicHeading",
+                "id": "scoutMechanicHeading",
+                "widget": {
+                  "top": 12,
+                  "left": 24,
+                  "right": 24
+                },
+                "height": 34,
+                "text": "核心機制",
+                "styleSlot": "scout.label.heading"
+              },
+              {
+                "type": "label",
+                "name": "ScoutMechanicBody",
+                "id": "scoutMechanicBody",
+                "widget": {
+                  "top": 54,
+                  "left": 24,
+                  "right": 24
+                },
+                "height": 44,
+                "text": "",
+                "styleSlot": "scout.label.body"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "ScoutRiskBlock",
+            "id": "scoutRiskBlock",
+            "widget": {
+              "top": 352,
+              "left": 48,
+              "right": 48
+            },
+            "height": 112,
+            "skinSlot": "scout.block.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "ScoutRiskHeading",
+                "id": "scoutRiskHeading",
+                "widget": {
+                  "top": 12,
+                  "left": 24,
+                  "right": 24
+                },
+                "height": 34,
+                "text": "風險標籤",
+                "styleSlot": "scout.label.heading"
+              },
+              {
+                "type": "label",
+                "name": "ScoutRiskBody",
+                "id": "scoutRiskBody",
+                "widget": {
+                  "top": 54,
+                  "left": 24,
+                  "right": 24
+                },
+                "height": 44,
+                "text": "",
+                "styleSlot": "scout.label.body"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "ScoutLoadoutBlock",
+            "id": "scoutLoadoutBlock",
+            "widget": {
+              "top": 480,
+              "left": 48,
+              "right": 48
+            },
+            "height": 112,
+            "skinSlot": "scout.block.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "ScoutLoadoutHeading",
+                "id": "scoutLoadoutHeading",
+                "widget": {
+                  "top": 12,
+                  "left": 24,
+                  "right": 24
+                },
+                "height": 34,
+                "text": "推薦檢核",
+                "styleSlot": "scout.label.heading"
+              },
+              {
+                "type": "label",
+                "name": "ScoutLoadoutReady",
+                "id": "scoutLoadoutReady",
+                "widget": {
+                  "top": 54,
+                  "left": 24,
+                  "right": 24
+                },
+                "height": 44,
+                "text": "",
+                "styleSlot": "scout.label.ready"
+              },
+              {
+                "type": "label",
+                "name": "ScoutLoadoutMissing",
+                "id": "scoutLoadoutMissing",
+                "widget": {
+                  "top": 54,
+                  "left": 24,
+                  "right": 24
+                },
+                "height": 44,
+                "text": "",
+                "styleSlot": "scout.label.missing"
+              },
+              {
+                "type": "label",
+                "name": "ScoutLoadoutRisk",
+                "id": "scoutLoadoutRisk",
+                "widget": {
+                  "top": 54,
+                  "left": 24,
+                  "right": 24
+                },
+                "height": 44,
+                "text": "",
+                "styleSlot": "scout.label.risk"
+              },
+              {
+                "type": "label",
+                "name": "ScoutLoadoutNone",
+                "id": "scoutLoadoutNone",
+                "widget": {
+                  "top": 54,
+                  "left": 24,
+                  "right": 24
+                },
+                "height": 44,
+                "text": "",
+                "styleSlot": "scout.label.body"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnScoutCancel",
+            "id": "btnScoutCancel",
+            "widget": {
+              "bottom": 36,
+              "left": 160
+            },
+            "width": 320,
+            "height": 72,
+            "skinSlot": "scout.button.cancel.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnScoutCancelLabel",
+                "id": "scoutCancelLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "暫不出征",
+                "styleSlot": "scout.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnScoutSortie",
+            "id": "btnScoutSortie",
+            "widget": {
+              "bottom": 36,
+              "right": 160
+            },
+            "width": 320,
+            "height": 72,
+            "skinSlot": "scout.button.sortie.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnScoutSortieLabel",
+                "id": "scoutSortieLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "出征",
+                "styleSlot": "scout.label.button"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "ScoutConfirm",
+            "id": "scoutConfirm",
+            "widget": {
+              "hCenter": true,
+              "vCenter": true
+            },
+            "width": 760,
+            "height": 320,
+            "skinSlot": "scout.confirm.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "ScoutConfirmBody",
+                "id": "scoutConfirmBody",
+                "widget": {
+                  "top": 60,
+                  "left": 40,
+                  "right": 40
+                },
+                "height": 80,
+                "text": "兵勢凶險，仍可強行出征",
+                "styleSlot": "scout.label.confirm"
+              },
+              {
+                "type": "button",
+                "name": "BtnScoutConfirmNo",
+                "id": "btnScoutConfirmNo",
+                "widget": {
+                  "bottom": 40,
+                  "left": 60
+                },
+                "width": 280,
+                "height": 68,
+                "skinSlot": "scout.button.cancel.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnScoutConfirmNoLabel",
+                    "id": "scoutConfirmNoLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "再想想",
+                    "styleSlot": "scout.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnScoutConfirmYes",
+                "id": "btnScoutConfirmYes",
+                "widget": {
+                  "bottom": 40,
+                  "right": 60
+                },
+                "width": 280,
+                "height": 68,
+                "skinSlot": "scout.button.risk.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnScoutConfirmYesLabel",
+                    "id": "scoutConfirmYesLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "強行出征",
+                    "styleSlot": "scout.label.button"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

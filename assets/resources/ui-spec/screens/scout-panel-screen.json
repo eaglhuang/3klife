@@ -1,0 +1,17 @@
+{
+  "id": "scout-panel-screen",
+  "version": 1,
+  "uiId": "ScoutPanel",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "scout-panel-main",
+  "skin": "scout-panel-screen.skin",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}
