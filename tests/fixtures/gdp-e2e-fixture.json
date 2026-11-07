@@ -1,0 +1,15 @@
+{
+  "$note": "doc_spec_0343 §2 確定性 fixture（PROG-2-2029）；兵種營清單為測試用，正式 34 營名冊待補",
+  "troopCampIds": ["camp_baiyi", "camp_xianzhen", "camp_hubao"],
+  "tacticIds": ["tactic_charge", "tactic_fire"],
+  "base": [
+    { "templateId": "Zhao_Yun", "name": "趙雲", "str": 96, "lea": 91, "specialTroopCampId": "camp_baiyi", "tacticIds": ["tactic_charge"] },
+    { "templateId": "Guan_Yu", "name": "關羽", "str": 97, "lea": 95 }
+  ],
+  "incoming": [
+    { "Template_ID": "Zhao_Yun", "int": "76" },
+    { "Template_ID": "Gao_Shun", "name": "高順", "str": 85, "specialTroopCampId": "camp_xianzhen" },
+    "malformed-row",
+    { "name": "無名氏" }
+  ]
+}
