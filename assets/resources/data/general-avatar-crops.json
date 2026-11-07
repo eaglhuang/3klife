@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "sima-zhao": {
+      "x": 330,
+      "y": 0,
+      "w": 370,
+      "h": 370,
+      "source": "reviewed",
+      "$note": "2026-11-08 司馬昭魏藍銅金輕甲重繪；頭像保留髮飾與肩頸。"
+    },
     "sima-shi": {
       "x": 330,
       "y": 0,

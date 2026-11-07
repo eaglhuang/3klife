@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-07T16-44-55-469Z-scope-amendment-134cb422a9e4",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:5cb58f454142e3fba3ca439d544fe0f4fb2902570f707d57d5c270559d6d850b",
+  "createdAt": "2026-11-07T16:44:55.469Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/sima_zhao_portrait.png,assets/resources/sprites/generals/avatars/sima_zhao_avatar.png,assets/resources/sprites/ui_avatars/cropped/sima_zhao_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
