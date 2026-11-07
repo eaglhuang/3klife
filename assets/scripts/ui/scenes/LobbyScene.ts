@@ -172,7 +172,8 @@ import { formatDeathNotice } from '../core/LifeVitalityPresenter';
 import { buildSpiritCodexTexts, spiritRelicsNewestFirst, SPIRIT_CODEX_MAX_ROWS, withSpiritCodexFallback } from '../core/SpiritCodexController';
 import { UltimateCodexController } from '../core/UltimateCodexController';
 import { withSpiritCardDetailFallback } from '../core/SpiritCardDetailTexts';
-import { SPIRIT_TALLY_DETAIL_SCREEN_ID, spiritTallyDetailOfSpirit } from '../core/SpiritTallyDetailView';
+import { SPIRIT_TALLY_DETAIL_SCREEN_ID } from '../core/SpiritTallyDetailView';
+import { spiritTallyChainView } from '../core/SpiritTallyChain';
 import type { SpiritCard } from '../../core/models/SpiritCard';
 import { lifeImprintLine } from '../../core/systems/LifeImprint';
 import { CLAN_TIER_NAMES, clanHighGateLine, clanTierUpLine } from '../../core/systems/ClanTier';
@@ -180,7 +181,7 @@ import { clanHallLine } from '../../core/systems/ClanHall';
 import { customGoldBornLine } from '../../core/systems/CustomGoldFactor';
 import { CLAN_TRADITION_MIN_TIER as CLAN_TRADITION_TOAST_TIER, clanTitleText, clanTraditionLine } from '../../core/systems/ClanTradition';
 import { lifeScriptCopy, type LifeScriptEvent } from '../../core/systems/LifeScriptCopy';
-import { getTallyCardSummaries } from '../../core/config/TallyCardCatalog';
+import { buildTallyCardCatalog, getTallyCardSummaries } from '../../core/config/TallyCardCatalog';
 import { DeckSelectController } from '../core/DeckSelectController';
 import { LeadSelectController } from '../core/LeadSelectController';
 import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
@@ -3775,7 +3776,8 @@ export class LobbyScene extends Component {
             return;
         }
         const lookup = withSpiritCardDetailFallback((key, ...args) => services().i18n.t(key, ...args));
-        const view = spiritTallyDetailOfSpirit(card, lookup);
+        // SPV-04: fill the tally / elite troop columns with the tally produced by the same general
+        const view = spiritTallyChainView(card, Object.values(services().session.tallyCards), buildTallyCardCatalog().values(), lookup);
         applyFlowView(binder, { texts: view.texts, actives: {}, enabled: { btnInfuseSpiritCard: view.infuseEnabled } });
         host.node.active = true;
         this._bringNodeToFront(host.node);
