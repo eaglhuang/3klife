@@ -53,6 +53,14 @@ export function createReadModelValidatorsSuite(): TestSuite {
         assert.isTrue(dual.issues.includes('GENERAL_HAS_SPIRIT'));
     });
 
+    suite.test('英靈卡：同家族只能有 1 張主卡，他族各自 1 張不衝突（英靈世家系統 §I-3，PROG-2-2057）', () => {
+        const liu = { ...spirit('SPIRIT_3', null, 'MAIN'), Spirit_Family_Key: 'FAMILY_LIU' };
+        assert.isTrue(validateSpiritCards({ SPIRIT_1: spirit('SPIRIT_1', null, 'MAIN'), SPIRIT_3: liu }).ok);
+        const twoMain = validateSpiritCards({ SPIRIT_1: spirit('SPIRIT_1', 'liu', 'MAIN'), SPIRIT_2: spirit('SPIRIT_2', 'guan', 'MAIN') });
+        assert.isFalse(twoMain.ok);
+        assert.isTrue(twoMain.issues.includes('FAMILY_MULTIPLE_MAIN'));
+    });
+
     suite.test('出征編制：主將必填，三角色不重覆', () => {
         assert.isTrue(validateSortieLoadoutReadModel({ Commander_UID: 'A', Strategist_UID: 'B', Deputy_UID: 'C' }).ok);
         assert.isTrue(validateSortieLoadoutReadModel({ Commander_UID: 'A', Strategist_UID: null, Deputy_UID: null }).ok, '支援角色可空');
