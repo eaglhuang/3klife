@@ -160,6 +160,8 @@ import { ITEM_ORACLE_TOKEN } from '../../core/systems/ItemDef';
 import { JOB_CHANGE_ORDER_OFFER } from '../../core/systems/ItemShopPricing';
 import { PrisonerPopupController } from '../core/PrisonerPopupController';
 import { DuplicatePullPopupController, DUPLICATE_INFUSION_VALUE, infusionTargetsOf, rebirthTargetsOf, splitOwnedDuplicates, type DuplicatePullChoice, type DuplicatePullEntry, type DuplicatePullRoute } from '../core/DuplicatePullPopupController';
+import { buildLobbyScout, ScoutPanelController } from '../core/ScoutPanelController';
+import type { TacticCounterTagTable } from '../../core/systems/LoadoutCheck';
 import { spiritSlotViewOf } from '../../core/systems/SpiritSlotState';
 import { DestinyShopController, destinyBriefTexts } from '../core/DestinyShopController';
 import { SortieSetupController, type SortieRole } from '../core/SortieSetupController';
@@ -425,6 +427,9 @@ export class LobbyScene extends Component {
     private _prisoner: PrisonerPopupController | null = null;
     private _duplicatePullHost: UIScreenPreviewHost | null = null;
     private readonly _duplicatePull = new DuplicatePullPopupController();
+    private _scoutPanelHost: UIScreenPreviewHost | null = null;
+    private readonly _scoutPanel = new ScoutPanelController();
+    private _tacticCounterTags: TacticCounterTagTable | null = null;
     private _destinyShopHost: UIScreenPreviewHost | null = null;
     private _destinyShop: DestinyShopController | null = null;
     private _sortieHost: UIScreenPreviewHost | null = null;
@@ -635,6 +640,7 @@ export class LobbyScene extends Component {
         await this._mountMarriageProposalPopup();
         await this._mountPrisonerPopup();
         await this._mountDuplicatePullPopup();
+        await this._mountScoutPanel();
         await this._mountDestinyShop();
         await this._mountYearReport();
         await this._mountDeckSelect();
@@ -3477,6 +3483,50 @@ export class LobbyScene extends Component {
         return result;
     }
 
+    /** LVL-03: pre-battle scout panel (four intel blocks, high-risk confirm). Rules live in ScoutPanelController. */
+    private async _mountScoutPanel(): Promise<void> {
+        const close = (): void => { if (this._scoutPanelHost) this._scoutPanelHost.node.active = false; };
+        const refresh = (): void => { const binder = this._scoutPanelHost?.binder; if (binder) applyFlowView(binder, this._scoutPanel.getView()); };
+        this._scoutPanelHost = await this._mountPreviewScreenHost('ScoutPanelHost', 'scout-panel-screen', [
+            { buttonId: 'btnScoutSortie', handler: () => { if (this._scoutPanel.sortie()) close(); else refresh(); } },
+            { buttonId: 'btnScoutCancel', handler: () => { this._scoutPanel.cancel(); close(); } },
+            { buttonId: 'btnScoutConfirmYes', handler: () => { this._scoutPanel.confirm(); close(); } },
+            { buttonId: 'btnScoutConfirmNo', handler: () => { this._scoutPanel.back(); refresh(); } },
+        ]);
+    }
+
+    /** LVL-03: show the scout panel before sortie; false when the player backs out. No host or encounter never blocks. */
+    private async _askScoutBeforeSortie(): Promise<boolean> {
+        const encounter = this._currentEncounter();
+        const host = this._scoutPanelHost;
+        if (!encounter || !host) return true;
+        const enemy = this._generals.find((g) => g.id === encounter.enemyGeneralId);
+        const leadId = services().session.resolveLeadGeneralId(encounter.playerGeneralId);
+        const lead = services().session.roster.find((g) => g.id === leadId) ?? this._generals.find((g) => g.id === leadId);
+        const scout = buildLobbyScout(
+            encounter,
+            enemy ? { name: enemy.name, ...(enemy.title ? { title: enemy.title } : {}) } : null,
+            (lead?.tacticSlots ?? []).map((slot) => slot.tacticId),
+            await this._loadTacticCounterTags(),
+        );
+        const result = this._scoutPanel.ask(scout);
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        if (host.binder) applyFlowView(host.binder, this._scoutPanel.getView());
+        return result;
+    }
+
+    private async _loadTacticCounterTags(): Promise<TacticCounterTagTable> {
+        if (this._tacticCounterTags) return this._tacticCounterTags;
+        try {
+            const data = await services().resource.loadJson<{ tags?: TacticCounterTagTable }>('data/tactic-counter-tags', { tags: ['LobbyScene'] });
+            this._tacticCounterTags = data.tags ?? {};
+        } catch {
+            return {};
+        }
+        return this._tacticCounterTags;
+    }
+
     private _refreshDuplicatePullPopup(): void {
         const binder = this._duplicatePullHost?.binder;
         if (binder) applyFlowView(binder, this._duplicatePull.getView());
@@ -6158,6 +6208,7 @@ export class LobbyScene extends Component {
 
     /** 開戰：攻城戰先扣主將的攻城壽命（存檔後才切場景），其餘直接切場景 */
     private async _enterBattle(battleTactic?: BattleTactic): Promise<void> {
+        if (!(await this._askScoutBeforeSortie())) return;
         const params = this._buildBattleEntryParams(battleTactic);
         const siege = lifespanCommandForBattleKind(this._currentEncounter()?.battleKind);
         if (siege && params.playerGeneralId) {

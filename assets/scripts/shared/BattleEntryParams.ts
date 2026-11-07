@@ -46,6 +46,10 @@ export interface EncounterConfig {
   requiredLoadout?: string[];
   /** 高建議對策標籤（關卡設計 §D-2，PROG-2-1763）；只缺這些為「缺少」 */
   highlyRecommendedLoadout?: string[];
+  /** 關卡主題（例如攻城、夜襲）；戰前偵查面板的核心機制（PROG-2-2076） */
+  theme?: string;
+  /** 致命威脅標籤（例如騎兵衝擊）；戰前偵查面板的風險標籤（PROG-2-2076） */
+  riskTags?: string[];
 }
 
 /**
