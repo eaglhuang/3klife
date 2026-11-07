@@ -62,6 +62,12 @@ export async function loadGeneralAvatar(idOrPortraitKey: string, withPlaceholder
     return firstLoadable([avatarPlaceholderPath(await genderOf(generalIdFromKey(idOrPortraitKey)))]);
 }
 
+/** 血統樹 1、2 代先祖用的共用低解析度圖示：只依性別取剪影，整棵樹共用同兩張貼圖（BUI-07）。 */
+export async function loadSharedAncestorIcon(id: string): Promise<SpriteFrame | null> {
+    await ensureConfig();
+    return firstLoadable([avatarPlaceholderPath(await genderOf(generalIdFromKey(id)))]);
+}
+
 /** 立繪：依標準路徑規則。 */
 export async function loadGeneralPortrait(idOrPortraitKey: string): Promise<SpriteFrame | null> {
     await ensureConfig();
