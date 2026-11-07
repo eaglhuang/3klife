@@ -23,7 +23,10 @@
         "children": [
           { "type": "image", "name": "UnownedVeil", "widget": { "top": 0, "bottom": 0, "left": 0, "right": 0 }, "skinSlot": "bml.unowned.veil" },
           { "type": "panel", "name": "LockBadge", "widget": { "top": 24, "left": "42%", "right": "42%" }, "height": 40, "skinSlot": "bml.unowned.lockBadge" },
-          { "type": "label", "name": "UnownedStateTag", "widget": { "top": 24, "left": "42%", "right": "42%" }, "height": 40, "styleSlot": "bml.label.unowned" }
+          { "type": "label", "name": "UnownedStateTag", "widget": { "top": 24, "left": "42%", "right": "42%" }, "height": 40, "styleSlot": "bml.label.unowned" },
+          { "type": "label", "name": "UnownedMarkerMeet", "widget": { "bottom": 24, "left": "8%", "right": "68%" }, "height": 32, "styleSlot": "bml.label.unowned" },
+          { "type": "label", "name": "UnownedMarkerFate", "widget": { "bottom": 24, "left": "36%", "right": "36%" }, "height": 32, "styleSlot": "bml.label.unowned" },
+          { "type": "label", "name": "UnownedMarkerSpirit", "widget": { "bottom": 24, "left": "68%", "right": "8%" }, "height": 32, "styleSlot": "bml.label.unowned" }
         ]
       },
       {

@@ -123,6 +123,24 @@
       "required": false,
       "description": "未持有標籤文字（mirror-unowned-state-tag），隨 UnownedLayer 顯示。",
       "bindPath": "UnownedLayer/UnownedStateTag"
+    },
+    "unownedMarkerMeet": {
+      "type": "string",
+      "required": false,
+      "description": "未持有標示「未結識」（BML-07），隨 UnownedLayer 顯示。",
+      "bindPath": "UnownedLayer/UnownedMarkerMeet"
+    },
+    "unownedMarkerFate": {
+      "type": "string",
+      "required": false,
+      "description": "未持有標示「命格未開」（BML-07），隨 UnownedLayer 顯示。",
+      "bindPath": "UnownedLayer/UnownedMarkerFate"
+    },
+    "unownedMarkerSpirit": {
+      "type": "string",
+      "required": false,
+      "description": "未持有標示「尚未得其英靈」（BML-07），隨 UnownedLayer 顯示。",
+      "bindPath": "UnownedLayer/UnownedMarkerSpirit"
     }
   },
   "requiredFields": [
