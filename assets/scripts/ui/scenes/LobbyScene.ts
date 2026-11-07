@@ -191,6 +191,7 @@ import { BLOODLINE_MIRROR_LOADING_TIPS_PATH, LoadingTipsContent, pickLoadingTips
 import { provisionalTeachingSpirit } from '../../core/systems/TeachingSpiritProvisional';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { startMirrorAmbientMotion } from '../core/UIMirrorAmbientMotion';
+import { runMirrorInfusion } from '../core/UIBloodlineMirrorInfusion';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { warnGeneralSchemaOnLoad } from '../../core/models/GeneralSchema';
 import { coreFieldCoverage, formatCoreFieldCoverage } from '../../core/systems/GeneralCoreFields';
@@ -5057,6 +5058,15 @@ export class LobbyScene extends Component {
         });
         // 抽完、回轉蛋頁都會走這裡；天命值跟著刷新（PROG-2-1158）
         this._refreshDestinyBrief();
+    }
+
+    /** DUP-04: infuse a duplicate into the spirit card, then show the result on the mirror ascension page. */
+    public async openBloodlineInfusionResult(card: SpiritCard, duplicateCardValue: number): Promise<boolean> {
+        const texts = await runMirrorInfusion(services().session, card, duplicateCardValue);
+        if (!texts) return false;
+        await services().ui.open(UIID.BloodlineMirrorAscension);
+        this._bloodlineMirrorAscensionHost?.binder?.setTexts(texts);
+        return true;
     }
 
     private _createLobbyMainController(): IUIManagedController {
