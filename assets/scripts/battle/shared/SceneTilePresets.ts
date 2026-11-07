@@ -19,8 +19,28 @@ export const SCENE_TILE_PRESETS: SceneTilePresetTable = {
     SCENE_FOREST_AMBUSH: { stealth: 60, hazard: 20, normal: 20 },
     SCENE_CANYON_ROCK: { hazard: 40, normal: 30, forceMove: 30 },
     SCENE_FLOOD: { forceMove: 50, hazard: 30, normal: 20 },
+    // 以下三場景依《場景戰法六種設定檔JSON資料驅動結構規格書》doc_spec_0368 §2（PROG-2-2050）
+    SCENE_NIGHT_RAID: { normal: 70, hazard: 30 },
+    SCENE_FIRE_RAID: { normal: 40, hazard: 60 },
+    SCENE_SIEGE: { normal: 50, hazard: 30, forceMove: 20 },
   },
 };
+
+/** 各場景背景資源鍵（doc_spec_0368 §2）；不在表中者回退 SCENE_FALLBACK_BG_KEY（§3-3） */
+export const SCENE_BG_KEYS: Readonly<Record<string, string>> = {
+  SCENE_FOREST_AMBUSH: 'bg_forest_dense',
+  SCENE_NIGHT_RAID: 'bg_canyon_night',
+  SCENE_CANYON_ROCK: 'bg_canyon_day',
+  SCENE_FLOOD: 'bg_river_flood',
+  SCENE_FIRE_RAID: 'bg_plains_fire',
+  SCENE_SIEGE: 'bg_city_wall',
+};
+
+export const SCENE_FALLBACK_BG_KEY = 'bg_normal_day';
+
+export function resolveSceneBgKey(sceneId: string): string {
+  return SCENE_BG_KEYS[sceneId] ?? SCENE_FALLBACK_BG_KEY;
+}
 
 /** 檢查配置表：比例須為非負整數且每個場景合計 100；回傳錯誤訊息清單（空陣列代表通過） */
 export function validateSceneTilePresets(table: SceneTilePresetTable): string[] {

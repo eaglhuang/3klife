@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { allocateSceneTiles, SCENE_TILE_PRESETS, validateSceneTilePresets, type SceneTilePresetTable } from '../assets/scripts/battle/shared/SceneTilePresets';
+import { allocateSceneTiles, resolveSceneBgKey, SCENE_TILE_PRESETS, validateSceneTilePresets, type SceneTilePresetTable } from '../assets/scripts/battle/shared/SceneTilePresets';
 import { BattleState } from '../assets/scripts/battle/models/BattleState';
 import { resolveBattleTacticBehavior } from '../assets/scripts/battle/shared/BattleTacticBehavior';
 import { BattleTactic } from '../assets/scripts/core/config/Constants';
@@ -20,6 +20,16 @@ export function createSceneTilePresetsSuite(): TestSuite {
     assert.equals(60, table.presets.SCENE_FOREST_AMBUSH.stealth ?? 0);
     assert.equals(40, table.presets.SCENE_CANYON_ROCK.hazard ?? 0);
     assert.equals(50, table.presets.SCENE_FLOOD.forceMove ?? 0);
+  });
+
+  suite.test('六種場景皆有地格比例與背景鍵，未知場景回退 normal 100 與 bg_normal_day（doc_spec_0368）', () => {
+    const ids = ['SCENE_FOREST_AMBUSH', 'SCENE_NIGHT_RAID', 'SCENE_CANYON_ROCK', 'SCENE_FLOOD', 'SCENE_FIRE_RAID', 'SCENE_SIEGE'];
+    for (const id of ids) assert.isTrue(SCENE_TILE_PRESETS.presets[id] !== undefined);
+    assert.equals(60, SCENE_TILE_PRESETS.presets.SCENE_FIRE_RAID.hazard ?? 0);
+    assert.equals(20, SCENE_TILE_PRESETS.presets.SCENE_SIEGE.forceMove ?? 0);
+    assert.equals('bg_city_wall', resolveSceneBgKey('SCENE_SIEGE'));
+    assert.equals('bg_normal_day', resolveSceneBgKey('SCENE_UNKNOWN'));
+    assert.equals(10, allocateSceneTiles(SCENE_TILE_PRESETS, 'SCENE_UNKNOWN', 10).normal);
   });
 
   suite.test('內建表與 JSON 檔一致', () => {

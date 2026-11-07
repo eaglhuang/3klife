@@ -4,6 +4,9 @@
   "presets": {
     "SCENE_FOREST_AMBUSH": { "stealth": 60, "hazard": 20, "normal": 20 },
     "SCENE_CANYON_ROCK": { "hazard": 40, "normal": 30, "forceMove": 30 },
-    "SCENE_FLOOD": { "forceMove": 50, "hazard": 30, "normal": 20 }
+    "SCENE_FLOOD": { "forceMove": 50, "hazard": 30, "normal": 20 },
+    "SCENE_NIGHT_RAID": { "normal": 70, "hazard": 30 },
+    "SCENE_FIRE_RAID": { "normal": 40, "hazard": 60 },
+    "SCENE_SIEGE": { "normal": 50, "hazard": 30, "forceMove": 20 }
   }
 }
