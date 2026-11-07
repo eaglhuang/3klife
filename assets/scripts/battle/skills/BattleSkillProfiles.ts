@@ -6,7 +6,7 @@ import { BattleSkillAutoAimMode, BattleSkillTargetMode, type SkillScalingStat } 
 export type BattleSkillFalloffRule = 'none' | 'linear-step';
 export type BattleSkillEffectKind =
   | 'damage' | 'heal' | 'control' | 'link' | 'counter' | 'reset'
-  | 'push' | 'push-fire' | 'root' | 'slow' | 'dot' | 'morale' | 'tile-buff' | 'extra-attack' | 'vitality' | 'control-override' | 'revive';
+  | 'push' | 'push-fire' | 'root' | 'slow' | 'dot' | 'morale' | 'tile-buff' | 'extra-attack' | 'vitality' | 'control-override' | 'revive' | 'discord';
 
 export interface BattleSkillProfile {
   battleSkillId: string;
@@ -446,6 +446,16 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     effectKind: 'control-override',
     coefficient: 0,
     controlTurns: 2,
+  },
+  // 離間（SCN-09 控制類格子戰法，PROG-2-1985 暫定資料）：目標 2 格內有同伴才生效，倒戈 1 回合
+  'sow-discord': {
+    battleSkillId: 'sow-discord',
+    targetMode: BattleSkillTargetMode.EnemySingle,
+    manualTargeting: false,
+    autoAimMode: 'frontmost-enemy',
+    effectKind: 'discord',
+    coefficient: 0,
+    controlTurns: 1,
   },
   'cao-cao-ult-revive': {
     battleSkillId: 'cao-cao-ult-revive',
