@@ -10,8 +10,8 @@
   "tags": [],
   "createdAt": "2026-11-05T14:30:28.536Z",
   "createdByActor": "codex-gpt-6.1-sol",
-  "lastTransitionId": "2026-11-07T08-24-47-457Z-scope-amendment-225a709155d7",
-  "lastTransitionAt": "2026-11-07T08:24:47.457Z",
+  "lastTransitionId": "2026-11-07T08-42-08-741Z-scope-amendment-c872e427e6bd",
+  "lastTransitionAt": "2026-11-07T08:42:08.741Z",
   "ledgerContractVersion": "task-ledger/v1",
   "reservedAt": "2026-11-05T17:15:58.821Z",
   "promotedAt": "2026-11-05T17:15:58.826Z",
@@ -34,6 +34,7 @@
       "artifacts/general-avatar-review/**",
       "artifacts/general-avatar-review/cao-cao-style-candidate.png",
       "artifacts/general-avatar-review/da-qiao-peach-spear-candidate.png",
+      "artifacts/general-avatar-review/liu-bei-style-candidate.png",
       "artifacts/general-avatar-review/page-999.json",
       "artifacts/general-avatar-review/page-999.png",
       "artifacts/ui-generated/bao-san-niang/bao_san_niang_candidate_1.png",
@@ -365,20 +366,20 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-48c216724d66f3a4",
-    "ticketDigest": "sha256:48c216724d66f3a4d9de64bca17f0e94eb3af873e3937af3f13f75c90238b09b",
+    "ticketId": "wat-78ffcae9cf756a39",
+    "ticketDigest": "sha256:78ffcae9cf756a39dea4b906971b28853653ea72897842c27df14d01a4219bc0",
     "taskId": "UI-2-0121",
     "origin": "claim",
     "actorId": "codex-gpt-6.1-terra",
     "laneSessionId": "lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d",
     "claimGeneration": "lease-f957fb02b01d",
-    "issuedAt": "2026-11-07T08:24:47.288Z",
-    "expiresAt": "2026-11-07T08:54:47.288Z",
-    "scopeDigest": "sha256:0dc7e55929b215e8baab012a1bed1ea8c40bcd9043229f3f0775bcdf0c1545cf",
+    "issuedAt": "2026-11-07T08:42:08.617Z",
+    "expiresAt": "2026-11-07T09:12:08.617Z",
+    "scopeDigest": "sha256:42ad2a5b00617a8486751f98fd2fdce8255d9a276e1745f63f71b1646fc85d9c",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-11-07T08:24:47.288Z"
+      "selectedAt": "2026-11-07T08:42:08.617Z"
     },
     "grants": [
       {
@@ -397,6 +398,7 @@
           "artifacts/general-avatar-review/**",
           "artifacts/general-avatar-review/cao-cao-style-candidate.png",
           "artifacts/general-avatar-review/da-qiao-peach-spear-candidate.png",
+          "artifacts/general-avatar-review/liu-bei-style-candidate.png",
           "artifacts/general-avatar-review/page-999.json",
           "artifacts/general-avatar-review/page-999.png",
           "artifacts/ui-generated/bao-san-niang/bao_san_niang_candidate_1.png",
@@ -715,7 +717,7 @@
           "docs/ui-quality-tasks/UI-2-0121.json",
           "docs/ui-quality-todo.json"
         ],
-        "digest": "sha256:1de6a9efb3aa50faf092d4002dc8e0e9bd6c2e8969098401ee78941a09b78172"
+        "digest": "sha256:4e7b8a4195967222f45e4acfcc235c2d452b0220dd62b9c7fa8188a1e673949e"
       },
       {
         "kind": "lifecycle-operation",
@@ -776,6 +778,7 @@
       "artifacts/general-avatar-review/**",
       "artifacts/general-avatar-review/cao-cao-style-candidate.png",
       "artifacts/general-avatar-review/da-qiao-peach-spear-candidate.png",
+      "artifacts/general-avatar-review/liu-bei-style-candidate.png",
       "artifacts/general-avatar-review/page-999.json",
       "artifacts/general-avatar-review/page-999.png",
       "artifacts/ui-generated/bao-san-niang/bao_san_niang_candidate_1.png",
@@ -1750,6 +1753,7 @@
     "assets/resources/sprites/generals/avatars/cao_cao_avatar.png",
     "assets/resources/sprites/generals/cao_cao_portrait.png",
     "assets/resources/sprites/ui_avatars/cropped/cao_cao_avatar.png",
-    "artifacts/general-avatar-review/cao-cao-style-candidate.png"
+    "artifacts/general-avatar-review/cao-cao-style-candidate.png",
+    "artifacts/general-avatar-review/liu-bei-style-candidate.png"
   ]
 }
