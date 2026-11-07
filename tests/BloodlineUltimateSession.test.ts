@@ -6,7 +6,7 @@
  * Unity 對照：EditMode Test，直接呼叫 GameSession 的公開方法，不開 Scene。
  */
 import { assert, TestSuite } from './TestRunner';
-import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
+import { GAME_SESSION_EVENTS, GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 
 function general(extra: Record<string, unknown> = {}): GeneralConfig {
@@ -37,6 +37,18 @@ export function createBloodlineUltimateSessionSuite(): TestSuite {
         assert.equals(1, session.roster[0].bloodlineUltimate?.stageCurrent);
     });
 
+    suite.test('升星過場事件：上限確實提高才廣播，未提高或找不到武將不廣播（BML-06）', async () => {
+        const session = sessionWith(general({ bloodlineUltimate: { stageCap: 2, stageCurrent: 1 } }));
+        const events: Array<{ name: string; payload: unknown }> = [];
+        session.setEventEmitter({ emit: (name, payload) => { events.push({ name, payload }); } });
+        await session.raiseBloodlineUltimateCap('gen_ult', 4);
+        await session.raiseBloodlineUltimateCap('gen_ult', 4);
+        await session.raiseBloodlineUltimateCap('missing', 5);
+        const raised = events.filter((e) => e.name === GAME_SESSION_EVENTS.BloodlineStageCapRaised);
+        assert.equals(1, raised.length);
+        assert.equals(JSON.stringify({ generalId: 'gen_ult', stageCapBefore: 2, stageCap: 4 }), JSON.stringify(raised[0].payload));
+    });
+
     suite.test('awakenBloodlineUltimate：找不到武將回傳 GENERAL_NOT_FOUND', async () => {
         const session = sessionWith(general());
         const result = await session.awakenBloodlineUltimate('missing');
@@ -55,6 +67,19 @@ export function createBloodlineUltimateSessionSuite(): TestSuite {
         if (!result.ok) return;
         assert.equals(2, result.awakenedStage);
         assert.equals(2, session.roster[0].bloodlineUltimate?.stageCurrent);
+    });
+
+    suite.test('覺醒過場事件：成功才廣播並帶點亮階數，被擋不廣播（BML-06）', async () => {
+        const record = (wins: number) => ({ bloodlineUltimate: { stageCap: 3, stageCurrent: 1 }, battleRecord: { wins, losses: 0, milestones: ['FIRST_WIN'] } });
+        for (const [wins, expected] of [[100, 1], [99, 0]] as const) {
+            const session = sessionWith(general(record(wins)));
+            const events: Array<{ name: string; payload: unknown }> = [];
+            session.setEventEmitter({ emit: (name, payload) => { events.push({ name, payload }); } });
+            await session.awakenBloodlineUltimate('gen_ult');
+            const awakened = events.filter((e) => e.name === GAME_SESSION_EVENTS.BloodlineStageAwakened);
+            assert.equals(expected, awakened.length);
+            if (expected) assert.equals(JSON.stringify({ generalId: 'gen_ult', awakenedStage: 2 }), JSON.stringify(awakened[0].payload));
+        }
     });
 
     suite.test('awakenBloodlineUltimate：名聲不足被擋，回傳原因且名冊不變', async () => {

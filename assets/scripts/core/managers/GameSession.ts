@@ -397,7 +397,22 @@ export const GAME_SESSION_EVENTS = {
     InventoryChanged: 'game-session-inventory-changed',
     /** payload: DiscoveryGain（只在升級時廣播；phaseAfter > phaseBefore 時 UI 播放新色階解鎖提示） */
     DiscoveryLevelChanged: 'game-session-discovery-level-changed',
+    /** payload: BloodlineStageCapRaisedPayload（升星確實提高五階奧義上限時廣播，升星過場用；BML-06，PROG-2-2056） */
+    BloodlineStageCapRaised: 'game-session-bloodline-stage-cap-raised',
+    /** payload: BloodlineStageAwakenedPayload（五階奧義覺醒成功時廣播，覺醒過場用；BML-06，PROG-2-2056） */
+    BloodlineStageAwakened: 'game-session-bloodline-stage-awakened',
 } as const;
+
+export interface BloodlineStageCapRaisedPayload {
+    generalId: string;
+    stageCapBefore: number;
+    stageCap: number;
+}
+
+export interface BloodlineStageAwakenedPayload {
+    generalId: string;
+    awakenedStage: number;
+}
 
 /** 季度增齡事件的廣播頻道：死亡、成長階段、過峰、退役候選四種 */
 function agingEventChannel(event: AgingEvent): string {
@@ -3578,13 +3593,21 @@ export class GameSession {
         return { ok: true, transferredFactor: plan.transferredFactor };
     }
 
-    /** 升星後提高某位武將五階奧義的 Stage_Cap（PROG-2-0718）；找不到武將回傳 false，成功才改名冊並存檔 */
+    /** 升星後提高某位武將五階奧義的 Stage_Cap（PROG-2-0718）；找不到武將回傳 false，成功才改名冊並存檔；上限確實提高才廣播過場事件 */
     public async raiseBloodlineUltimateCap(generalId: string, stars: number): Promise<boolean> {
         const roster = this._roster.getAll();
-        if (!roster.some((g) => g.id === generalId)) return false;
-        this._roster.replaceAll(roster.map((g) => (g.id === generalId ? raiseBloodlineUltimateCap(g, stars) : g)));
+        const target = roster.find((g) => g.id === generalId);
+        if (!target) return false;
+        const raised = raiseBloodlineUltimateCap(target, stars);
+        this._roster.replaceAll(roster.map((g) => (g.id === generalId ? raised : g)));
         if (this._autoSave && this._save) {
             await this.save();
+        }
+        const stageCapBefore = target.bloodlineUltimate?.stageCap ?? 1;
+        const stageCap = raised.bloodlineUltimate?.stageCap ?? 1;
+        if (stageCap > stageCapBefore) {
+            const payload: BloodlineStageCapRaisedPayload = { generalId, stageCapBefore, stageCap };
+            this._emit(GAME_SESSION_EVENTS.BloodlineStageCapRaised, payload);
         }
         return true;
     }
@@ -3603,6 +3626,8 @@ export class GameSession {
         if (this._autoSave && this._save) {
             await this.save();
         }
+        const payload: BloodlineStageAwakenedPayload = { generalId, awakenedStage: result.awakenedStage };
+        this._emit(GAME_SESSION_EVENTS.BloodlineStageAwakened, payload);
         return { ok: true, awakenedStage: result.awakenedStage };
     }
 
