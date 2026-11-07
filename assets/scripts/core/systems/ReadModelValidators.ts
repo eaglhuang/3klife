@@ -65,6 +65,7 @@ export type ReadModelIssue =
     | 'BAD_CARD_ROLE'
     | 'GENERAL_HAS_TALLY'
     | 'GENERAL_HAS_SPIRIT'
+    | 'FAMILY_MULTIPLE_MAIN'
     | 'ROLE_DUPLICATE'
     | 'MISSING_COMMANDER'
     | 'FOOD_OVER_MAX'
@@ -97,13 +98,18 @@ export function validateTalismanInventory(table: Readonly<Record<string, Talisma
     return result(issues);
 }
 
-/** 英靈卡表：鍵與 Spirit_ID 一致、Card_Role 只允許 MAIN / BACKUP、一將一命 */
+/** 英靈卡表：鍵與 Spirit_ID 一致、Card_Role 只允許 MAIN / BACKUP、一將一命、同家族只有 1 張主卡（英靈世家系統 §I-3，PROG-2-2057） */
 export function validateSpiritCards(table: Readonly<Record<string, SpiritCardEntry>>): ReadModelCheck {
     const issues: ReadModelIssue[] = [];
     const holders = new Set<string>();
+    const mainFamilies = new Set<string>();
     for (const [key, entry] of Object.entries(table)) {
         if (entry.Spirit_ID !== key) issues.push('ID_MISMATCH');
         if (entry.Card_Role !== 'MAIN' && entry.Card_Role !== 'BACKUP') issues.push('BAD_CARD_ROLE');
+        if (entry.Card_Role === 'MAIN') {
+            if (mainFamilies.has(entry.Spirit_Family_Key)) issues.push('FAMILY_MULTIPLE_MAIN');
+            mainFamilies.add(entry.Spirit_Family_Key);
+        }
         if (entry.Equipped_General_UID !== null) {
             if (holders.has(entry.Equipped_General_UID)) issues.push('GENERAL_HAS_SPIRIT');
             holders.add(entry.Equipped_General_UID);
