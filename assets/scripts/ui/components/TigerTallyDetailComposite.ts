@@ -15,6 +15,8 @@ import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { TallyCardData } from './TigerTallyComposite';
 import { SPIRIT_TALLY_DETAIL_SCREEN_ID, spiritTallyDetailOfTally } from '../core/SpiritTallyDetailView';
+import { tallyLinkedLevelText } from '../core/SpiritTallyChain';
+import { withSpiritCardDetailFallback } from '../core/SpiritCardDetailTexts';
 
 const { ccclass } = _decorator;
 
@@ -38,6 +40,8 @@ export class TigerTallyDetailComposite extends CompositePanel {
     private _abilityCards: Node | null = null;
     private _isMounted = false;
     private _visible = false;
+    /** 虎符層級是非同步讀英靈卡；連點兩張虎符時，前一張晚到的結果不能蓋上來 */
+    private _linkedLevelSeq = 0;
 
     protected onDestroy(): void {
         this.unmount();
@@ -79,11 +83,27 @@ export class TigerTallyDetailComposite extends CompositePanel {
 
     private _populate(data: TallyCardData): void {
         this._binder?.setTexts(spiritTallyDetailOfTally(data).texts);
+        void this._applyLinkedTallyLevel(data);
 
         void this._applyTypeIcon(data);
         void this._applyArt(data);
         this._fillTraitCards(data);
         this._fillAbilityCards(data);
+    }
+
+    /** 虎符層級（DUP-03）：來源名將英靈卡上血脈灌注累積的層級；讀不到就留空 */
+    private async _applyLinkedTallyLevel(data: TallyCardData): Promise<void> {
+        const seq = ++this._linkedLevelSeq;
+        this._binder?.setTexts({ linkedTallyLabel: '' });
+        let text = '';
+        try {
+            const spirits = (await services().legacy?.getArchiver().getAllSpiritCards()) ?? [];
+            const lookup = withSpiritCardDetailFallback((key, ...args) => services().i18n.t(key, ...args));
+            text = tallyLinkedLevelText(data.instanceUid, services().session.tallyCards, spirits, lookup);
+        } catch {
+            text = '';
+        }
+        if (seq === this._linkedLevelSeq) this._binder?.setTexts({ linkedTallyLabel: text });
     }
 
     private _fillTraitCards(data: TallyCardData): void {
