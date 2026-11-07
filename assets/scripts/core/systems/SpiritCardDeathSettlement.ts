@@ -17,6 +17,7 @@ import type { GeneralConfig } from '../models/GeneralUnit';
 import { GENERAL_STATUS_DEAD } from './GeneralAging';
 import type { InventoryRecord } from './InventoryProjection';
 import { upsertSpiritCard } from './SpiritCardMerge';
+import type { TallyLine } from './TallyLineSpec';
 
 /** 視為「名將」、死亡必出英靈卡的角色分類（暫定） */
 export const SPIRIT_CARD_CATEGORIES: readonly string[] = ['famed', 'mythical', 'titled'];
@@ -100,4 +101,9 @@ export function settleDeathSpiritCards(
         (result.merged ? merged : produced).push(general.templateId ?? general.id);
     }
     return { records: next, produced, merged };
+}
+
+/** 死亡結算提示句（與虎符提示同一佇列；文案暫定，待 COPY-01 定稿）：新卡與覆蓋各一句 */
+export function spiritCardNoticeSpec(generalName: string, merged: boolean): TallyLine {
+    return { key: merged ? 'SCRIPT_SPIRIT_CARD_MERGED' : 'SCRIPT_SPIRIT_CARD_PRODUCED', args: [generalName] };
 }
