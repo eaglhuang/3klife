@@ -1,4 +1,5 @@
 // @spec-source → 奧義系統.md §子嗣奧義覺醒；WBS ULT-15
+// @spec-source → 子嗣家傳奧義覺醒與因子機率規格書.md (doc_spec_0340) §2.1 覺醒公式、§3 繼承紀錄（PROG-2-2025）
 /**
  * ChildUltimateAwaken — 子嗣奧義覺醒的機率與繼承紀錄（純邏輯，不依賴 cc）
  *
@@ -92,4 +93,62 @@ export function unlockInheritedUltimate(
     }
     const entry: InheritedUltimate = { ultimateId, level: 1, isInherited: true, sourceParentUid };
     return { list: [...owned, entry], added: true };
+}
+
+// ── doc_spec_0340：保底＋親密度＋上限的覺醒公式與完整繼承紀錄（PROG-2-2025）──
+// 培育流程目前仍呼叫 rollChildUltimateAwaken（只算等級 × 0.05）；是否切換到下方公式待裁決。
+
+/** §2.1 參數：保底、每級加成、親密度門檻與加成、單次上限 */
+export const CHILD_ULT_AWAKEN_TUNING = {
+    baseRate: 0.05,
+    perGreenLevel: 0.05,
+    affinityThreshold: 80,
+    affinityBonus: 0.10,
+    cap: 0.80,
+} as const;
+
+/** §3：家傳奧義的精力折扣（扣減 20%） */
+export const INHERITED_ULT_VITALITY_DISCOUNT = 0.20;
+
+/** §3：帶世代與精力折扣的繼承紀錄 */
+export interface InheritedUltimateRecord {
+    ultimateId: string;
+    isInherited: true;
+    sourceParentUid: string;
+    /** 距初祖世代差；1 代表嫡子 */
+    inheritedGen: number;
+    vitalityCostDiscount: number;
+}
+
+export interface ChildAwakenContext {
+    childUid: string;
+    parentUid: string;
+    parentUltimateId: string;
+    greenGeneLevel: number;
+    parentAffinity: number;
+    /** 由入學種子的確定性亂數提供，範圍 [0, 1) */
+    randomRoll: number;
+    /** 父方本身是繼承來的奧義時傳入父方世代；省略視為初祖 0 */
+    parentInheritedGen?: number;
+}
+
+/** §2.1：min(上限, 保底 + 綠色等級 × 0.05 + 親密度加成)；等級非有限數或為負時視為 0 */
+export function childUltimateAwakenProbability(greenGeneLevel: number, parentAffinity: number): number {
+    const t = CHILD_ULT_AWAKEN_TUNING;
+    const level = Number.isFinite(greenGeneLevel) && greenGeneLevel > 0 ? greenGeneLevel : 0;
+    const affinity = Number.isFinite(parentAffinity) && parentAffinity >= t.affinityThreshold ? t.affinityBonus : 0;
+    return Math.min(t.cap, t.baseRate + level * t.perGreenLevel + affinity);
+}
+
+/** §2.1／§3：擲覺醒，成功回傳繼承紀錄，失敗回傳 null */
+export function evaluateUltimateAwakening(ctx: ChildAwakenContext): InheritedUltimateRecord | null {
+    if (!(ctx.randomRoll < childUltimateAwakenProbability(ctx.greenGeneLevel, ctx.parentAffinity))) return null;
+    const parentGen = Number.isInteger(ctx.parentInheritedGen) && (ctx.parentInheritedGen as number) > 0 ? (ctx.parentInheritedGen as number) : 0;
+    return {
+        ultimateId: ctx.parentUltimateId,
+        isInherited: true,
+        sourceParentUid: ctx.parentUid,
+        inheritedGen: parentGen + 1,
+        vitalityCostDiscount: INHERITED_ULT_VITALITY_DISCOUNT,
+    };
 }
