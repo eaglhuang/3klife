@@ -22,6 +22,9 @@ import {
 import { installAdaptiveResolution } from '../core/AdaptiveResolution';
 import { services } from '../../core/managers/ServiceLoader';
 import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
+import { BLOODLINE_MIRROR_LOADING_SCREEN_ID, BLOODLINE_MIRROR_STATES_PATH, MirrorLoadingCarousel, type BloodlineMirrorStatesContent } from '../core/UIBloodlineMirrorLoading';
+import { startMirrorAmbientMotion } from '../core/UIMirrorAmbientMotion';
+import { buildMirrorLoadingRotation, MIRROR_LOADING_ROTATION } from '../../core/systems/MirrorLoadingRotation';
 import { GeneralDetailComposite } from '../components/GeneralDetailComposite';
 import { GeneralListComposite } from '../components/GeneralListComposite';
 import { EliteTroopCodexComposite } from '../components/EliteTroopCodexComposite';
@@ -444,6 +447,7 @@ export class LoadingScene extends Component {
 
         // 載入背景圖
         this._loadBackground();
+        void this._mountBloodlineMirrorLoading(root);
     }
 
     private _buildPreviewHost() {
@@ -1719,6 +1723,35 @@ export class LoadingScene extends Component {
         return new Promise((resolve) => {
             setTimeout(resolve, ms);
         });
+    }
+
+    /** BML-05: bloodline mirror loading carousel; on failure keep the plain background. */
+    private async _mountBloodlineMirrorLoading(root: Node): Promise<void> {
+        try {
+            const hostNode = new Node('BloodlineMirrorLoadingHost');
+            hostNode.layer = root.layer;
+            root.addChild(hostNode);
+            hostNode.addComponent(UITransform).setContentSize(1920, 1080);
+            const widget = hostNode.addComponent(Widget);
+            widget.isAlignTop = widget.isAlignBottom = widget.isAlignLeft = widget.isAlignRight = true;
+            widget.top = widget.bottom = widget.left = widget.right = 0;
+
+            const host = hostNode.addComponent(UIScreenPreviewHost);
+            await host.showScreen(BLOODLINE_MIRROR_LOADING_SCREEN_ID);
+            if (!this.isValid || !host.binder) return;
+            startMirrorAmbientMotion(host);
+
+            const [content, all] = await Promise.all([
+                services().resource.loadJson<BloodlineMirrorStatesContent>(BLOODLINE_MIRROR_STATES_PATH, { tags: ['BloodlineMirrorLoading'] }),
+                services().resource.loadJson<GeneralConfig[]>('data/generals', { tags: ['BloodlineMirrorLoading'] }),
+            ]);
+            const entries = buildMirrorLoadingRotation(PlayerRosterService.getAll(), all ?? []);
+            const carousel = await MirrorLoadingCarousel.create(host.binder, content, entries);
+            if (!this.isValid || !carousel.next()) return;
+            host.schedule(() => { carousel.next(); }, MIRROR_LOADING_ROTATION.intervalSec);
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.LIFECYCLE, '[LoadingScene] bloodline mirror loading mount failed', error);
+        }
     }
 
     private async _startTransition() {
