@@ -10,8 +10,8 @@
   "tags": [],
   "createdAt": "2026-11-05T14:30:28.536Z",
   "createdByActor": "codex-gpt-6.1-sol",
-  "lastTransitionId": "2026-11-07T16-44-55-469Z-scope-amendment-134cb422a9e4",
-  "lastTransitionAt": "2026-11-07T16:44:55.469Z",
+  "lastTransitionId": "2026-11-07T16-52-27-152Z-scope-amendment-35adfa7d080f",
+  "lastTransitionAt": "2026-11-07T16:52:27.152Z",
   "ledgerContractVersion": "task-ledger/v1",
   "reservedAt": "2026-11-05T17:15:58.821Z",
   "promotedAt": "2026-11-05T17:15:58.826Z",
@@ -178,6 +178,7 @@
       "assets/resources/sprites/generals/avatars/sima_yi_avatar.png",
       "assets/resources/sprites/generals/avatars/sima_zhao_avatar.png",
       "assets/resources/sprites/generals/avatars/sun_ce_avatar.png",
+      "assets/resources/sprites/generals/avatars/sun_jian_avatar.png",
       "assets/resources/sprites/generals/avatars/sun_lu_ban_avatar.png",
       "assets/resources/sprites/generals/avatars/sun_lu_ban_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/sun_lu_yu_avatar.png",
@@ -279,6 +280,7 @@
       "assets/resources/sprites/generals/sima_yi_portrait.png",
       "assets/resources/sprites/generals/sima_zhao_portrait.png",
       "assets/resources/sprites/generals/sun_ce_portrait.png",
+      "assets/resources/sprites/generals/sun_jian_portrait.png",
       "assets/resources/sprites/generals/sun_lu_ban_portrait.png",
       "assets/resources/sprites/generals/sun_lu_ban_portrait.png.meta",
       "assets/resources/sprites/generals/sun_lu_yu_portrait.png",
@@ -385,6 +387,7 @@
       "assets/resources/sprites/ui_avatars/cropped/sima_yi_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/sima_zhao_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/sun_ce_avatar.png",
+      "assets/resources/sprites/ui_avatars/cropped/sun_jian_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/sun_lu_ban_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/sun_lu_ban_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/sun_lu_yu_avatar.png",
@@ -438,20 +441,20 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-71147665d17e6067",
-    "ticketDigest": "sha256:71147665d17e60674f34dc9a61f28d7886a9e5cdb50a9ba2a01af262f2060725",
+    "ticketId": "wat-ddd3cc1cb04da3b3",
+    "ticketDigest": "sha256:ddd3cc1cb04da3b37389fe2681dc61f505bddfdd74a54c304f93be20533893e9",
     "taskId": "UI-2-0121",
     "origin": "claim",
     "actorId": "codex-gpt-6.1-terra",
     "laneSessionId": "lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d",
     "claimGeneration": "lease-f957fb02b01d",
-    "issuedAt": "2026-11-07T16:44:55.195Z",
-    "expiresAt": "2026-11-07T17:14:55.195Z",
-    "scopeDigest": "sha256:1cf2319f7c1ee7e6590a8aa23da9791bbf32f0702fe59541e9678698e1bc0174",
+    "issuedAt": "2026-11-07T16:52:27.018Z",
+    "expiresAt": "2026-11-07T17:22:27.018Z",
+    "scopeDigest": "sha256:977627d6adbb779e59ad44a5d1c839e21b284bcbe6acfa44a0d10f07cebfa5ca",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-11-07T16:44:55.195Z"
+      "selectedAt": "2026-11-07T16:52:27.018Z"
     },
     "grants": [
       {
@@ -614,6 +617,7 @@
           "assets/resources/sprites/generals/avatars/sima_yi_avatar.png",
           "assets/resources/sprites/generals/avatars/sima_zhao_avatar.png",
           "assets/resources/sprites/generals/avatars/sun_ce_avatar.png",
+          "assets/resources/sprites/generals/avatars/sun_jian_avatar.png",
           "assets/resources/sprites/generals/avatars/sun_lu_ban_avatar.png",
           "assets/resources/sprites/generals/avatars/sun_lu_ban_avatar.png.meta",
           "assets/resources/sprites/generals/avatars/sun_lu_yu_avatar.png",
@@ -715,6 +719,7 @@
           "assets/resources/sprites/generals/sima_yi_portrait.png",
           "assets/resources/sprites/generals/sima_zhao_portrait.png",
           "assets/resources/sprites/generals/sun_ce_portrait.png",
+          "assets/resources/sprites/generals/sun_jian_portrait.png",
           "assets/resources/sprites/generals/sun_lu_ban_portrait.png",
           "assets/resources/sprites/generals/sun_lu_ban_portrait.png.meta",
           "assets/resources/sprites/generals/sun_lu_yu_portrait.png",
@@ -821,6 +826,7 @@
           "assets/resources/sprites/ui_avatars/cropped/sima_yi_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/sima_zhao_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/sun_ce_avatar.png",
+          "assets/resources/sprites/ui_avatars/cropped/sun_jian_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/sun_lu_ban_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/sun_lu_ban_avatar.png.meta",
           "assets/resources/sprites/ui_avatars/cropped/sun_lu_yu_avatar.png",
@@ -861,7 +867,7 @@
           "docs/ui-quality-tasks/UI-2-0121.json",
           "docs/ui-quality-todo.json"
         ],
-        "digest": "sha256:def3f063bfbb7ce7f3a174048b745cf735512601d15279399b37b23b31ef6c7b"
+        "digest": "sha256:19fc702b7fbc3eeb9d3ddfe7409556f299185f5ce154bef0899e27ed2f134692"
       },
       {
         "kind": "lifecycle-operation",
@@ -1066,6 +1072,7 @@
       "assets/resources/sprites/generals/avatars/sima_yi_avatar.png",
       "assets/resources/sprites/generals/avatars/sima_zhao_avatar.png",
       "assets/resources/sprites/generals/avatars/sun_ce_avatar.png",
+      "assets/resources/sprites/generals/avatars/sun_jian_avatar.png",
       "assets/resources/sprites/generals/avatars/sun_lu_ban_avatar.png",
       "assets/resources/sprites/generals/avatars/sun_lu_ban_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/sun_lu_yu_avatar.png",
@@ -1167,6 +1174,7 @@
       "assets/resources/sprites/generals/sima_yi_portrait.png",
       "assets/resources/sprites/generals/sima_zhao_portrait.png",
       "assets/resources/sprites/generals/sun_ce_portrait.png",
+      "assets/resources/sprites/generals/sun_jian_portrait.png",
       "assets/resources/sprites/generals/sun_lu_ban_portrait.png",
       "assets/resources/sprites/generals/sun_lu_ban_portrait.png.meta",
       "assets/resources/sprites/generals/sun_lu_yu_portrait.png",
@@ -1273,6 +1281,7 @@
       "assets/resources/sprites/ui_avatars/cropped/sima_yi_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/sima_zhao_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/sun_ce_avatar.png",
+      "assets/resources/sprites/ui_avatars/cropped/sun_jian_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/sun_lu_ban_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/sun_lu_ban_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/sun_lu_yu_avatar.png",
@@ -2042,6 +2051,9 @@
     "assets/resources/sprites/ui_avatars/cropped/sima_shi_avatar.png",
     "assets/resources/sprites/generals/avatars/sima_zhao_avatar.png",
     "assets/resources/sprites/generals/sima_zhao_portrait.png",
-    "assets/resources/sprites/ui_avatars/cropped/sima_zhao_avatar.png"
+    "assets/resources/sprites/ui_avatars/cropped/sima_zhao_avatar.png",
+    "assets/resources/sprites/generals/avatars/sun_jian_avatar.png",
+    "assets/resources/sprites/generals/sun_jian_portrait.png",
+    "assets/resources/sprites/ui_avatars/cropped/sun_jian_avatar.png"
   ]
 }

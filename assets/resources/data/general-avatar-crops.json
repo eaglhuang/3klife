@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "sun-jian": {
+      "x": 350,
+      "y": 0,
+      "w": 380,
+      "h": 380,
+      "source": "reviewed",
+      "$note": "2026-11-08 孫堅吳紅金甲重繪；頭像保留紅羽盔與肩頸。"
+    },
     "sima-zhao": {
       "x": 330,
       "y": 0,
