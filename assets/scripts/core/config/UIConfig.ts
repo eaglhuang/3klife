@@ -42,6 +42,10 @@ export enum UIID {
     GeneralList = "GeneralList",
     /** 血脈命鏡覺醒動畫頁面 */
     BloodlineMirrorAwakening = "BloodlineMirrorAwakening",
+    /** 血脈命鏡升星／二轉頁面（BML-04） */
+    BloodlineMirrorAscension = "BloodlineMirrorAscension",
+    /** 血脈命鏡未持有預覽頁面（BML-04） */
+    BloodlineMirrorUnowned = "BloodlineMirrorUnowned",
 
     // ── 彈窗層（LayerType.PopUp）── 堆疊式 ───────────────────────────────────
     /** 武將詳情彈窗（基本資訊、技能、裝備） */
@@ -176,6 +180,16 @@ export const UIConfig: Record<UIID, UIConfigEntry> = {
     [UIID.BloodlineMirrorAwakening]: {
         layer: LayerType.UI,
         prefab: "ui/bloodline-mirror-awakening",
+        backdrop: { enabled: true, opacity: 180, blocksInput: true, closeOnTap: false },
+    },
+    [UIID.BloodlineMirrorAscension]: {
+        layer: LayerType.UI,
+        prefab: "ui/bloodline-mirror-ascension",
+        backdrop: { enabled: true, opacity: 180, blocksInput: true, closeOnTap: false },
+    },
+    [UIID.BloodlineMirrorUnowned]: {
+        layer: LayerType.UI,
+        prefab: "ui/bloodline-mirror-unowned",
         backdrop: { enabled: true, opacity: 180, blocksInput: true, closeOnTap: false },
     },
 

@@ -99,7 +99,7 @@
       }
     },
     "ascension": {
-      "screenIds": [],
+      "screenIds": ["BloodlineMirrorAscension"],
       "stateBadgeLabel": "命鏡升星",
       "headerTitle": "星階正在重鑄",
       "headerSubtitle": "命鏡將既有命紋推向更高層級的穩定結構",
@@ -146,7 +146,7 @@
       }
     },
     "unowned-preview": {
-      "screenIds": [],
+      "screenIds": ["BloodlineMirrorUnowned"],
       "stateBadgeLabel": "未持有預覽",
       "headerTitle": "命鏡只開一隙",
       "headerSubtitle": "尚未持有時，只能看到殘片級的英靈命相",

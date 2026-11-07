@@ -17,6 +17,20 @@
       "defaultState": "awakening"
     },
     {
+      "screenId": "bloodline-mirror-ascension-screen",
+      "screenVersion": 1,
+      "provider": "declarative-content",
+      "contentSource": "bloodline-mirror-states-v1",
+      "defaultState": "ascension"
+    },
+    {
+      "screenId": "bloodline-mirror-unowned-screen",
+      "screenVersion": 1,
+      "provider": "declarative-content",
+      "contentSource": "bloodline-mirror-states-v1",
+      "defaultState": "unowned-preview"
+    },
+    {
       "screenId": "bloodline-mirror-loading-screen",
       "screenVersion": 1,
       "provider": "declarative-content",
