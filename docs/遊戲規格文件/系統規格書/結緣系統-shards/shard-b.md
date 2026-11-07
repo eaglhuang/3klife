@@ -53,6 +53,18 @@ if (Ancestor_14.contains(same Bloodline_ID)):
     Mutant_Rate(Negative) += 50%
 ```
 
+### 宿敵世仇交融（權威真相來源見 doc_spec_0311）
+```
+if (HistoricalPairTable.isRival(Father, Mother)):
+    Conception_Rate *= 0.70          // 受孕率降低 30%
+    Vitality_Cost += 20             // 雙方精力額外消耗 20 點
+    Clan_Affinity -= 15             // 雙方家族親密度扣減 15 點
+    Base_EP = AvgParentsEP - 10     // 基礎 EP 承受 -10 懲罰
+    if (Destiny_Roll >= 80):        // 天命逆鱗爆發
+        Base_EP += 25               // 淨增 +15 點極限爆發力
+    Wolf_Mutation = Roll(35% ~ 50%) // 機率突變獲得【狼性】白色因子
+```
+
 ---
 
 ## G. 劇本相關

@@ -10,7 +10,7 @@
 |---|:---:|---|:---:|:---:|:---:|---|---|---|---|
 | **GDP-10** | M0 | 管線工具測試與 CI 整合 | test | 2 | 🟡 純邏輯 | GDP-03, GDP-04 | ingest→merge→validate 以 fixture 跑端到端並進 compute-gate | [v9 核對 2026-10-15] GDP-10 管線端到端測試（afe1be5d，#449）；工具測試，CI 整合未核對 |  |
 | **NUM-01** | M7 | 武將化身單挑 ATK/暴擊/閃躲公式（E-11/E-14） | logic | 1 | ✅ 已驗收 | - | FormulaSystem 單測涵蓋 ATK(STR×0.7+LEA×0.3)、crit(上限50%)、dodge(上限40%) | assets/scripts/core/systems/FormulaSystem.ts；tests/FormulaSystem.test.ts（crit/dodge/攻擊力共約8案） |  |
-| **NUM-02** | M7 | 單挑接受判定與拒絕懲罰（score≥0.58） | logic | 1 | 🟡 純邏輯 | NUM-01 | score=0.45HP+0.35兵力+0.2戰力，≥0.58接受；拒絕全軍攻防與HP減半有測試 | assets/scripts/battle/runtime/BattleDuelResolver.ts:89-90、BattleGeneralDuelFlow.ts:232；tests/BattleCombatRegression.test.ts 僅間接涵蓋，未確認拒絕懲罰斷言 |  |
+| **NUM-02** | M7 | 單挑接受判定與拒絕懲罰（score≥0.58） | logic | 1 | 🟢 已接線 | NUM-01 | score=0.45HP+0.35兵力+0.2戰力，≥0.58接受；拒絕全軍攻防與HP減半有測試 | [v17.3 更正 2026-11-07] 純邏輯→已接線；assets/scripts/core/systems/AiDuelDecision.ts、DuelAcceptanceRules.test.ts 通過；已由 doc_spec_0314 確立權威規格 |  |
 | **NUM-03** | M7 | 主傷害公式完整乘區（剋制×地形×天氣×兵種適性×general_buff，E-3/F-1） | logic | 3 | 🟢 已接線 | NUM-04 | calculateDamage 納入天氣、兵種適性效率、general_buff，並與規格表數值對照測試 | [v6 核對 2026-10-14] 兵種剋制五角與機械 ×1.5（4fa7790c，PROG-2-0341）；主傷害乘區（地形×天氣×適性）既有接線；完整公式未逐項核對 |  |
 | **NUM-04** | M0 | 數值常數集中化 NumericalConfig JSON + FormulaRegistry（I 節） | data | 3 | 🟡 純邏輯 | - | Counter/Aptitude/Age/Reincarnation/Ult/Tally 常數由單一 JSON 載入，可熱更新，Constants.ts 不再 hardcode | [v9 核對 2026-10-15] NumericalConfig.ts 與測試已加入；src 無呼叫端，數值仍散在各模組 |  |
 | **NUM-05** | M5 | 兵種剋制表與適性等級修正表（E-4/E-5，含粉色因子→適性轉換） | logic | 2 | 🟢 已接線 | NUM-04 | S~D 的攻防/移動/命中修正與 0.8~1.2 效率可查，粉因子★→適性、≥5同適性升級有測試 | [v3 核對 2026-10-13] BattleAptitude.ts 適性表（攻防/移動/命中）＋ TROOP_COUNTER_MAP；戰場 BattleCombatResolver 使用 |  |

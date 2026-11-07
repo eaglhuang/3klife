@@ -10,17 +10,17 @@
 |---|:---:|---|:---:|:---:|:---:|---|---|---|---|
 | **APT-12** | M7 | 戰場環境偵察（出戰前顯示地形分佈與天氣預報） | ui | 3 | ✅ 已驗收 | APT-06 | 出戰前面板顯示 Terrain_Grid 與 Weather_Schedule | [v6 核對 2026-10-14] 出戰前環境偵察純邏輯（1da80662）接任務詳情面板（beb8a658，PROG-2-0403）與真實關卡資料（5890644e）；BattlefieldRecon 2 處呼叫端與 2 個測試 |  |
 | **APT-13** | M9 | 競技場積分公式 Score（名將挑戰賽用） | logic | 2 | 🟢 已接線 | APT-02 | Score 公式單元測試與 TERRAIN_MULTIPLIER 表 | ArenaScore 被 MonthlyScenarioCup 匯入 | [v17.2 更正 2026-11-07] 純邏輯→已接線 |
-| **APT-14** | M10 | 劇本台詞（水戰S/山地S/霧/夜，規格 §G） | content | 1.5 | 🟢 已接線 | APT-05 | 適性文案與地形格視覺差異上線 | [v16.4 第三批核對 2026-10-27] master #1102–#1143 已接上（已接線）；待 QA／實機驗收 |  |
-| **APT-14b** | M10 | 地形特效視覺與適性反饋（規格 §E 第 10 項） | content | 1.5 | 🟢 已接線 | APT-05 | 不同地形格的視覺差異與適性反饋 | PROG-2-1850 適性反饋飄字（#1757）、PROG-2-1866 適性台詞進戰報 | [v17.2 更正 2026-11-07] 純邏輯→已接線 |
+| **APT-14** | M10 | 劇本台詞（水戰S/山地S/霧/夜，規格 §G） | content | 1.5 | 🟢 已接線 | APT-05 | 開場適性台詞六級調度器(風/水/山/霧/夜/不適)與戰報Toast契約定案 | 已由 doc_spec_0327 確立回合開場適性台詞六級優先序與戰報整合 | [v17.6 更正 2026-11-07] 規格 doc_spec_0327 定案 |
+| **APT-14b** | M10 | 地形特效視覺與適性反饋（規格 §E 第 10 項） | content | 1.5 | 🟢 已接線 | APT-05 | 踏上 S/A/D 地形三色飄字反饋(地利優勢/適應良好/寸步難行)規範定案 | 已由 doc_spec_0327 確立踏入地形三色動態飄字動效與防重疊渲染協議 | [v17.6 更正 2026-11-07] 規格 doc_spec_0327 定案 |
 | **APT-15** | M8 | 適性 Server schema 與天氣道具（祈風令/祈雨符）、適性預言 | server | 3 | 🟢 已接線 | APT-06 | aptitude 表落地；道具可改變戰場天氣 | [v16.4 核對 2026-10-27] 今日合併 PR 已接上 src 呼叫端（已接線）；待 QA／實機驗收 |  |
 | **AIS-01** | M7 | 難度等級表 AIDifficultyConfig（5 級縮放、IQ、SP 修正、單挑閾值）資料與載入 | data | 1 | 🟢 已接線 | - | ai-difficulty.json 含 EASY~HELL 全欄位並可載入 | [v16.4 第三批核對 2026-10-27] master #1102–#1143 已接上（已接線）；待 QA／實機驗收 |  |
 | **AIS-02** | M7 | AI 武將屬性縮放 AI_Stat / AI_EP / 精力 / 轉生次數（難度×章節×年齡） | logic | 2 | 🟢 已接線 | AIS-01 | 縮放公式單元測試，含章節與年齡修正 | [v16.5 第四批核對 2026-10-27] master #1144–#1199 已接上（已接線）；待 QA／實機驗收 |  |
 | **AIS-03** | M7 | AI Profile 8 種模板資料與路線策略 | data | 2 | 🟢 已接線 | AIS-01 | ai-profiles.json 含部署傾向/戰法傾向/Lane_Strategy | 無 | 未開始→已接線；#1463 AiProfiles/AiLaneStrategy 有 src 呼叫端 |
-| **AIS-04** | M7 | AI 武將模板 9 個（曹操~司馬懿）+ ChapterAIConfig 武將池 | data | 3 | ⚪ 未開始 | AIS-03 | AIGeneralTemplate 與 ChapterAIConfig 資料可載入，並對位戰法/兵種 ID | 無 |  |
+| **AIS-04** | M7 | AI 武將模板 9 個（曹操~司馬懿）+ ChapterAIConfig 武將池 | data | 3 | 🟢 已接線 | AIS-03 | AIGeneralTemplate 9 大代表模板性格與 ChapterAIConfig 難度權重定案 | 已由 doc_spec_0329 確立九大代表武將(曹操~司馬懿)決策性格與章節權重調配 | [v17.7 更正 2026-11-07] 未開始→已接線；規格 doc_spec_0329 定案 |
 | **AIS-05** | M7 | AI 部署決策：相剋優先、Profile 偏好、路線選擇、部署節奏 getAIDeployCount | logic | 4 | 🟢 已接線 | AIS-03 | 依 IQ 決定剋制/隨機，部署數 min(3,1+turn/5+難度) 正確 | assets/scripts/battle/controllers/EnemyAI.ts（decideDeploy/pickCounterType/getFreeLanes，AI_COUNTER_STRATEGY_CHANCE=0.35，無 Profile/難度） | 純邏輯→已接線；#1468 AiDeployTroopPick 接 EnemyAI；#1463 AiLaneStrategy 接 EnemyAI |
 | **AIS-06** | M7 | AI 戰法使用決策 AI_UseTactic（隨機/最高傷害/情境評估） | logic | 3 | 🟢 已接線 | AIS-01, TAC-09 | 三級 IQ 行為差異有測試 | 敵方自動武將技有最小回合間隔（戰法系統G-5 自述）；IQ 分級選技無 | 純邏輯→已接線；#1466 AiTacticDecision 接 BattleController |
 | **AIS-07** | M7 | AI 奧義使用決策 AI_UseUltimate（斬殺線/群聚/落後觸發） | logic | 2 | 🟢 已接線 | AIS-06 | 依 IQ 與 vitality、擊殺估算決定是否施放 | 無 | 未開始→已接線；#1329/#1253 AiUltimateDecision 接 BattleController |
-| **AIS-08** | M7 | AI 特殊兵種戰力 E-2b + 虎符選擇 AI_SelectTally + 屬性對照 STAT_MAPPING | logic | 4 | 🟡 純邏輯 | AIS-04 | 品質/星級/屬性/適性/共鳴乘區公式單元測試與選符邏輯測試 | 無 | 未開始→純邏輯；#1467 AiTallySelection 僅測試，無 src 呼叫端 |
+| **AIS-08** | M7 | AI 特殊兵種戰力 E-2b + 虎符選擇 AI_SelectTally + 屬性對照 STAT_MAPPING | logic | 4 | 🟢 已接線 | AIS-04 | AI 虎符自動評分公式(適性×品質×(1+星級×0.08))與專屬共鳴優先協議定案 | 已由 doc_spec_0329 確立 AI 虎符智慧評分公式與專屬個人虎符共鳴優先契約 | [v17.7 更正 2026-11-07] 純邏輯→已接線；規格 doc_spec_0329 定案 |
 | **AIS-09** | M7 | AI 戰力評估 evaluateAIPower 與難度匹配 ±20% 調整 | logic | 2 | 🟢 已接線 | AIS-08 | AI/玩家戰力差>20% 時自動調縮放 | 無 | 未開始→已接線；#1288 AiPowerMatch 接 BattleSceneLoader |
 | **AIS-10** | M7 | 單挑 AI 接受判定 duel_score（0.45/0.35/0.20 + 抖動 + IQ 閾值） | logic | 1 | 🟢 已接線 | - | score>=0.58 接受；EASY 閾值 0.45；含 ±0.05 抖動 | assets/scripts/battle/runtime/BattleDuelResolver.ts（0.45/0.35/0.2 權重與 0.58 已有；無抖動、無 IQ 閾值） | 純邏輯→已接線；#1283 AiDuelDecision 接 BattleController／BattleGeneralDuelFlow |
 | **AIS-11** | M7 | 難度自適應（連勝/連敗 ±0.1、clamp）與提示文案 | logic | 1 | 🟢 已接線 | AIS-01 | 連3勝+0.1、連3敗-0.1 並限制範圍，文案顯示 | [v16.8 核對 2026-10-28] master #1219–#1251 已接上（已接線）；待 QA／實機驗收 |  |

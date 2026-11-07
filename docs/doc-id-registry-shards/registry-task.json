@@ -12664,5 +12664,233 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-1902.md",
     "title": "PROG-2-1902 學府培育總控與防 SL 確定性引擎",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2121",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1903.md",
+    "title": "PROG-2-1903 潁川書院策論手牌與清談辯難",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2122",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1904.md",
+    "title": "PROG-2-1904 潁川書院教官羈絆與經典清談事件",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2123",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1905.md",
+    "title": "PROG-2-1905 戰場即時將階晉升與兵種戰術相剋",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2124",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1906.md",
+    "title": "PROG-2-1906 先祖傳奇教官萃取與雙柱血脈共鳴",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2125",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1907.md",
+    "title": "PROG-2-1907 學府結業寫回與 MVP 核心循環貫通驗收",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2126",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1908.md",
+    "title": "PROG-2-1908 先祖傳承加成與門風特質接進學府總控",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2127",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1909.md",
+    "title": "PROG-2-1909 學府結業特質寫入武將存檔",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2128",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1910.md",
+    "title": "PROG-2-1910 祠堂軍功聲望五階與 60 歲榮譽退役",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2129",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1911.md",
+    "title": "PROG-2-1911 MVP 五階段總控與祠堂子嗣福祉",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2130",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1912.md",
+    "title": "PROG-2-1912 退役功業累積祠堂聲望並存檔",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2131",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1913.md",
+    "title": "PROG-2-1913 子嗣出生套用祠堂聲望福祉",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2132",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1914.md",
+    "title": "PROG-2-1914 祠堂福祉接學府精力上限與第 4 教官插槽",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2133",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1915.md",
+    "title": "PROG-2-1915 祠堂 Lv.5 每日靈丹供奉",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2134",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1916.md",
+    "title": "PROG-2-1916 祠堂 Lv.4 子嗣紫色因子保底",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2135",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1917.md",
+    "title": "PROG-2-1917 道具精元定價全表與購買流程（ECO-04）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2136",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1918.md",
+    "title": "PROG-2-1918 名將挑戰賽 BOSS 挑戰券經濟（ECO-12）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2137",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1919.md",
+    "title": "PROG-2-1919 月卡期間每季精力回復 ×1.2（VIT-08 前半）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2138",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1921.md",
+    "title": "PROG-2-1921 禮包組合系統（ITM-09）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2139",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1922.md",
+    "title": "PROG-2-1922 英靈卡唯一性與覆蓋規則（SPI-02）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2140",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1923.md",
+    "title": "PROG-2-1923 天命重置卷（LUK-07）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2141",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1924.md",
+    "title": "PROG-2-1924 啟動場景靜態參照審計 lint（HOT-09）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2142",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1925.md",
+    "title": "PROG-2-1925 破釜沉舟殘局模式與 STR 軟上限（FORM-06）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2143",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1926.md",
+    "title": "PROG-2-1926 AI 武將模板 9 個（AIS-04）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2144",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1927.md",
+    "title": "PROG-2-1927 家族供養只灌主卡（SPI-06）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2145",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1928.md",
+    "title": "PROG-2-1928 英靈卡共鳴三階與家族封頂（SPI-05）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2146",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1929.md",
+    "title": "PROG-2-1929 姓氏零和與家傳絕學弱化（SPI-09）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2147",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1950.md",
+    "title": "PROG-2-1950 裝備暫定資料 24 件（裁決 #7）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2148",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1951.md",
+    "title": "PROG-2-1951 名士好感等級與劇情解鎖暫定數值（裁決 #10）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2149",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1952.md",
+    "title": "PROG-2-1952 刪除廢棄的 GeneralListPanel.ts（裁決 #11）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2150",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1953.md",
+    "title": "PROG-2-1953 Agent1/2/3 舊卡清理（第二批 40 張 UI-2）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2151",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1954.md",
+    "title": "PROG-2-1954 名士好感自訂暫定值標註",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2152",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1955.md",
+    "title": "PROG-2-1955 Agent1/2/3 舊卡清理（第三批：7 張大卡精簡結卡）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2153",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1956.md",
+    "title": "PROG-2-1956 學府結業結算畫面接線",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2154",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1957.md",
+    "title": "PROG-2-1957 兵種卡 UI-2-0100／UI-2-0108 收尾",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2155",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1958.md",
+    "title": "PROG-2-1958 祠堂聲望畫面接線",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2156",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1959.md",
+    "title": "PROG-2-1959 WBS 進度盤點矩陣拆分片",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2157",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1960.md",
+    "title": "PROG-2-1960 WBS 矩陣狀態稽核",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2158",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1930.md",
+    "title": "PROG-2-1930 幼兒低效內政與單場覺醒上限（SPI-13 Q51/Q52）",
+    "category": "task"
   }
 ]

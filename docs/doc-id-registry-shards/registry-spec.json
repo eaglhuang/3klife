@@ -1846,5 +1846,131 @@
     "path": "docs/遊戲規格文件/系統規格書/世代功業傳承與退役教官轉化功能規格書.md",
     "title": "世代功業傳承與退役教官轉化功能規格書 (Generational Legacy & Mentor Transformation)",
     "category": "spec"
+  },
+  {
+    "id": "doc_spec_0311",
+    "path": "docs/遊戲規格文件/系統規格書/宿敵血統交融與狼性突變功能規格書.md",
+    "title": "宿敵血統交融與狼性突變功能規格書 (Rival Bloodline Fusion & Lupine Mutation)",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0312",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣開獎天象與職能宿命分流規格書.md",
+    "title": "子嗣開獎天象與職能宿命分流規格書 (Child Awakening, Omens & Career Fate)",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0313",
+    "path": "docs/遊戲規格文件/系統規格書/虎符套裝羈絆與戰場部署調配規格書.md",
+    "title": "虎符套裝羈絆與戰場部署調配規格書 (Tiger Tally Set Synergy & Deployment Presets)",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0314",
+    "path": "docs/遊戲規格文件/系統規格書/戰場武將單挑對決與斬將功能規格書.md",
+    "title": "戰場武將單挑對決與斬將功能規格書 (Battlefield Duel & Execution System)",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0315",
+    "path": "docs/遊戲規格文件/系統規格書/結緣生育輔助道具與幼年環境功能規格書.md",
+    "title": "結緣生育輔助道具與幼年環境功能規格書 (Breeding Auxiliary Items & Early Childhood Environment)",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0316",
+    "path": "docs/遊戲規格文件/系統規格書/延壽仙丹時間加速與不老傳說功能規格書.md",
+    "title": "延壽仙丹時間加速與不老傳說功能規格書 (Longevity Elixir, Time Warp & Immortal Legend)",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0317",
+    "path": "docs/遊戲規格文件/系統規格書/三國特殊兵種三十四營編制與專屬戰法規格書.md",
+    "title": "三國特殊兵種三十四營編制與專屬戰法規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0318",
+    "path": "docs/遊戲規格文件/系統規格書/教官支援卡被動技能與碎片合成規格書.md",
+    "title": "教官支援卡被動技能與碎片合成規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0319",
+    "path": "docs/遊戲規格文件/系統規格書/武將資料結構列舉驗證與掛載協議規格書.md",
+    "title": "武將資料結構列舉驗證與掛載協議規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0320",
+    "path": "docs/遊戲規格文件/系統規格書/名將本體資料結構與多型轉型規格書.md",
+    "title": "名將本體資料結構與多型轉型規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0321",
+    "path": "docs/遊戲規格文件/系統規格書/因子色彩職能標籤與卡片視覺契約規格書.md",
+    "title": "因子色彩職能標籤與卡片視覺契約規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0322",
+    "path": "docs/遊戲規格文件/系統規格書/五階血脈奧義解鎖與名聲事蹟點亮規格書.md",
+    "title": "五階血脈奧義解鎖與名聲事蹟點亮規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0323",
+    "path": "docs/遊戲規格文件/系統規格書/戰場相鄰合攻聯動與情誼共鳴規格書.md",
+    "title": "戰場相鄰合攻聯動與情誼共鳴規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0324",
+    "path": "docs/遊戲規格文件/系統規格書/白色突變因子與極端天氣環境免疫規格書.md",
+    "title": "白色突變因子與極端天氣環境免疫規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0325",
+    "path": "docs/遊戲規格文件/系統規格書/教官精力欄位統一與教學邊界防護規格書.md",
+    "title": "教官精力欄位統一與教學邊界防護規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0326",
+    "path": "docs/遊戲規格文件/系統規格書/關係親密度每季衰退維護與家風傳承規格書.md",
+    "title": "關係親密度每季衰退維護與家風傳承規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0327",
+    "path": "docs/遊戲規格文件/系統規格書/地形適性飄字反饋與戰況台詞管線規格書.md",
+    "title": "地形適性飄字反饋與戰況台詞管線規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0328",
+    "path": "docs/遊戲規格文件/系統規格書/因子覺醒碎裂狀態機與條件判定規格書.md",
+    "title": "因子覺醒碎裂狀態機與條件判定規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0329",
+    "path": "docs/遊戲規格文件/系統規格書/戰場委任AI武將模板與章節權重調配規格書.md",
+    "title": "戰場委任AI武將模板與章節權重調配規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0330",
+    "path": "docs/遊戲規格文件/系統規格書/家族血統關係圖鑑節點與視覺佈局規格書.md",
+    "title": "家族血統關係圖鑑節點與視覺佈局規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0331",
+    "path": "docs/遊戲規格文件/系統規格書/重複名將分流彈窗與復生重練協議規格書.md",
+    "title": "重複名將分流彈窗與復生重練協議規格書",
+    "category": "spec"
   }
 ]
