@@ -1,4 +1,5 @@
 import { UCUFLogger, LogCategory } from '../utils/UCUFLogger';
+import { resolveLocalizedString } from './LocaleFallback';
 // @spec-source → 見 docs/cross-reference-index.md
 import { Font, JsonAsset, resources } from "cc";
 
@@ -90,8 +91,8 @@ export class I18nSystem {
      *   t("ui.damage.receive", "100")    → "受到 100 點傷害"
      */
     t(key: string, ...args: string[]): string {
-        const assets = this.cache.get(this._locale);
-        let str = assets?.strings[key] ?? key;
+        // doc_spec_0342 §4.2：目標語系缺條目時依 zh-TW → zh-CN 回退（只查已載入的語系），最後回傳 key
+        let str = resolveLocalizedString(key, this._locale, (locale) => this.cache.get(locale as LocaleCode)?.strings);
         args.forEach((arg, i) => {
             str = str.replace(`{${i}}`, arg);
         });
