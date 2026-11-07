@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-07T15-38-37-931Z-scope-amendment-d11479c25903",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:9cc41c11749e61f08fb3aba97965844d38840e901cb7e58b686840d59d304850",
+  "createdAt": "2026-11-07T15:38:37.931Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/cao_zhi_portrait.png,assets/resources/sprites/generals/avatars/cao_zhi_avatar.png,assets/resources/sprites/ui_avatars/cropped/cao_zhi_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
