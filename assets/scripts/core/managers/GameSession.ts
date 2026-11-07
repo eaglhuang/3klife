@@ -26,7 +26,8 @@ import type { NurtureRiteResult } from '../systems/EnrollmentRites';
 import { resolveRivalPlayerEvents } from '../systems/RivalPlayerEvents';
 import { respondToRivalProposal, type ProposalResponse } from '../systems/RivalProposals';
 import { resolveTallyName, troopNameOf } from '../systems/TallySlotView';
-import { tallyProducedLine, tallyStarUpLine } from '../systems/TallyScripts';
+import { tallyProducedSpec, tallyStarUpSpec } from '../systems/TallyScripts';
+import { formatTallyLine, type TallyLine, type TallyTranslate } from '../systems/TallyLineSpec';
 import { UCUFLogger, LogCategory } from '../utils/UCUFLogger';
 import { normalizeOfficerSnapshot, officerUnlocksOf, type OfficerUnlocks } from '../systems/OfficerSnapshot';
 import { addOfficerExp, BATTLE_MERIT_OFFICER_TASK, applyEraShiftToOfficerState, calcOfficerExpGain, initialOfficerState, normalizeOfficerState, toOfficerSnapshot, type OfficerState, type OfficerTaskResult } from '../systems/OfficerState';
@@ -1479,13 +1480,14 @@ export class GameSession {
         this._inventoryRecords = [...others, ...buildTallyInventoryRecords(this._tallyCards, this._tallyHoldings.holders)];
     }
 
-    private _tallyNotices: string[] = [];
+    private _tallyNotices: TallyLine[] = [];
 
     /** 取走尚未顯示的虎符提示（產出、升星，PROG-2-1768）；戰場結算或大廳換季時顯示一次 */
-    public consumeTallyNotices(): string[] {
+    public consumeTallyNotices(translate?: TallyTranslate): string[] {
         const notices = this._tallyNotices;
         this._tallyNotices = [];
-        return notices;
+        // PROG-2-1987：存 Key＋參數，取走時由顯示端的 i18n 組字；沒給 translate 用繁中保底
+        return notices.map((line) => formatTallyLine(line, translate));
     }
 
     private _tallyNameOf(card: TigerTallyCard): string {
@@ -1507,7 +1509,7 @@ export class GameSession {
             const applied = applyBattleExpToCard(card, outcome);
             if (applied.stars > readCardStarState(card).star) {
                 this.recordPlayerLog('TALLY_UPGRADE');
-                this._tallyNotices.push(tallyStarUpLine(this._tallyNameOf(card), applied.stars, troopNameOf(card)));
+                this._tallyNotices.push(tallyStarUpSpec(this._tallyNameOf(card), applied.stars, troopNameOf(card)));
             }
             nextCards[uid] = { ...card, ...applied };
             changed = true;
@@ -1674,7 +1676,7 @@ export class GameSession {
         for (const uid of result.produced) {
             const card = this._tallyCards[uid];
             const source = after.find((g) => g.id === card?.sourceGeneralUid);
-            if (card) this._tallyNotices.push(tallyProducedLine(source?.name ?? card.sourceGeneralUid, this._tallyNameOf(card)));
+            if (card) this._tallyNotices.push(tallyProducedSpec(source?.name ?? card.sourceGeneralUid, this._tallyNameOf(card)));
         }
         this._syncInventoryRecords();
     }

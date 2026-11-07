@@ -20,10 +20,11 @@ import { EVENT_NAMES } from '../../../core/config/Constants';
 import { buildSpiritInsertPlan, type SpiritInsertPlan, type SpiritInsertStageId } from '../../../core/systems/SpiritInsertSequence';
 import { nextInsertTargetIndex } from '../../../core/systems/TallyInsertTarget';
 import {
-    buildTallySlotCardView, buildTallySlotDetailText, resolveTallyName, tallyEquipLine, tallyHintHeight, tallyLoyaltyDropLine,
-    tallyPickHint, tallySlotButtons, tallyUnequipLine, tallyUnequipWarn, TALLY_SLOT_EMPTY_NAME, TALLY_SLOT_MAX_STARS,
+    buildTallySlotCardView, buildTallySlotDetailText, resolveTallyName, tallyEquipSpec, tallyHintHeight, tallyLoyaltyDropSpec,
+    tallyPickHint, tallySlotButtons, tallyUnequipSpec, tallyUnequipWarn, TALLY_SLOT_EMPTY_NAME, TALLY_SLOT_MAX_STARS,
     TALLY_SLOT_NOT_IN_ROSTER, TALLY_SLOT_NO_CANDIDATE, TALLY_SLOT_SEASON_LIMIT, type TallySlotMode,
 } from '../../../core/systems/TallySlotView';
+import { formatTallyLine, type TallyLine } from '../../../core/systems/TallyLineSpec';
 import type { TigerTallyCard } from '../../../core/models/TigerTallyCard';
 import { buildAptitudeView, APTITUDE_EMPTY_TEXT, type AptitudeView } from '../../../core/systems/AptitudeView';
 import { TALLY_CONFISCATE_LOYALTY_DROP } from '../../../core/systems/TigerTallyLoyalty';
@@ -403,7 +404,12 @@ export class CharacterDs3AptitudeChild extends ChildPanelBase {
             return;
         }
         const view = buildTallySlotCardView(next, this._tallyNameOf(next));
-        this._setMode('view', tallyEquipLine(this._generalName, view.name, view.troopName));
+        this._setMode('view', this._tallyLine(tallyEquipSpec(this._generalName, view.name, view.troopName)));
+    }
+
+    /** 虎符劇本句走 i18n（PROG-2-1987）；查不到 Key 時用繁中保底 */
+    private _tallyLine(line: TallyLine): string {
+        return formatTallyLine(line, (key, ...args) => this.t(key, ...args));
     }
 
     private async _confirmUnequip(): Promise<void> {
@@ -426,8 +432,8 @@ export class CharacterDs3AptitudeChild extends ChildPanelBase {
             return;
         }
         await session.unequipTally(card.uid);
-        const lines = [tallyUnequipLine(this._generalName, this._tallyNameOf(card))];
-        if (loyalty.delta < 0) lines.push(tallyLoyaltyDropLine(this._generalName));
+        const lines = [this._tallyLine(tallyUnequipSpec(this._generalName, this._tallyNameOf(card)))];
+        if (loyalty.delta < 0) lines.push(this._tallyLine(tallyLoyaltyDropSpec(this._generalName)));
         this._setMode('view', lines.join('\n'));
     }
 
@@ -440,7 +446,7 @@ export class CharacterDs3AptitudeChild extends ChildPanelBase {
             this._setMode('view', '');
             return;
         }
-        this._setMode('view', [tallyUnequipLine(this._generalName, this._tallyNameOf(card)), tallyLoyaltyDropLine(this._generalName)].join('\n'));
+        this._setMode('view', [this._tallyLine(tallyUnequipSpec(this._generalName, this._tallyNameOf(card))), this._tallyLine(tallyLoyaltyDropSpec(this._generalName))].join('\n'));
     }
 
     private _onSpiritInserted(data: unknown): void {

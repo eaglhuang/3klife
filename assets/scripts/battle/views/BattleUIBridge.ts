@@ -10,7 +10,8 @@
  *             + UIEventHandler (純事件轉接，無業務邏輯)
  */
 
-import { tallyLegendDeployLine } from '../../core/systems/TallyScripts';
+import { tallyLegendDeploySpec } from '../../core/systems/TallyScripts';
+import { formatTallyLine, type TallyTranslate } from '../../core/systems/TallyLineSpec';
 import { aptitudeToastPayload } from '../../core/systems/AptitudeDialogue';
 import { setBattleTimeScale } from './BattleTimeScale';
 import { statusEffectFloatText } from '../shared/StatusEffectLabel';
@@ -436,9 +437,12 @@ export class BattleUIBridge {
     c.unitRenderer?.playDeploy(unit);
   }
 
+  /** 虎符劇本句走 i18n（PROG-2-1987） */
+  private readonly _tallyTranslate: TallyTranslate = (key, ...args) => services().i18n.t(key, ...args);
+
   private _onTallyDeployed(templateId: string): void {
-    const line = tallyLegendDeployLine(templateId);
-    if (line) this.appendLog(line);
+    const spec = tallyLegendDeploySpec(templateId);
+    if (spec) this.appendLog(formatTallyLine(spec, this._tallyTranslate));
   }
 
   private _onUnitDamaged(data: {
@@ -887,7 +891,7 @@ export class BattleUIBridge {
       const phaseLines = settlement.discovery ? discoveryPhaseUnlockLines(settlement.discovery) : [];
       for (const line of phaseLines) this.appendLog(line);
       if (phaseLines.length > 0) this.ctx.resultPopup?.appendDetails?.(phaseLines);
-      const tallyNotices = services().session.consumeTallyNotices();
+      const tallyNotices = services().session.consumeTallyNotices(this._tallyTranslate);
       for (const line of tallyNotices) this.appendLog(line);
       if (tallyNotices.length > 0) this.ctx.resultPopup?.appendDetails?.(tallyNotices);
       // 地窖保護（ECO-06，PROG-2-1342）：戰敗時糧草被保底，寫日誌並加進結算細項
