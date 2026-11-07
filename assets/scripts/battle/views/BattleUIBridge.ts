@@ -894,6 +894,10 @@ export class BattleUIBridge {
       const tallyNotices = services().session.consumeTallyNotices(this._tallyTranslate);
       for (const line of tallyNotices) this.appendLog(line);
       if (tallyNotices.length > 0) this.ctx.resultPopup?.appendDetails?.(tallyNotices);
+      // 雙卡結算（SPI-12，PROG-2-2084）：名將陣亡時英靈卡定格數值與虎符適性，接在虎符提示後
+      const dualCardLines = services().session.consumeDualCardSettlementLines(this._tallyTranslate);
+      for (const line of dualCardLines) this.appendLog(line);
+      if (dualCardLines.length > 0) this.ctx.resultPopup?.appendDetails?.(dualCardLines);
       // 地窖保護（ECO-06，PROG-2-1342）：戰敗時糧草被保底，寫日誌並加進結算細項
       const cellar = cellarProtectionText(services().session.lastCellarProtectedFood);
       if (cellar) {
