@@ -170,6 +170,9 @@
       "auraColor": "silver",
       "showLockBadge": true,
       "unownedTagLabel": "未持有",
+      "unownedMarkerMeet": "未結識",
+      "unownedMarkerFate": "命格未開",
+      "unownedMarkerSpirit": "尚未得其英靈",
       "storyCells": {
         "origin": {
           "title": "傳聞",

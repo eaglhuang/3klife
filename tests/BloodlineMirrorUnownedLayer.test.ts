@@ -44,7 +44,7 @@ export function createBloodlineMirrorUnownedLayerSuite(): TestSuite {
             assert.isTrue(!!findByPath(layout.root, bindPath), `${field} -> ${bindPath} 找不到節點`);
         }
         const layer = findByPath(layout.root, 'UnownedLayer')!;
-        assert.equals('UnownedVeil,LockBadge,UnownedStateTag', (layer.children ?? []).map((c) => c.name).join(','));
+        assert.equals('UnownedVeil,LockBadge,UnownedStateTag,UnownedMarkerMeet,UnownedMarkerFate,UnownedMarkerSpirit', (layer.children ?? []).map((c) => c.name).join(','));
         for (const child of layer.children ?? []) {
             const slot = child.skinSlot ?? child.styleSlot;
             assert.isTrue(!!slot && slot in skin.slots, `${child.name} 的槽位 ${String(slot)} 不在 skin`);
