@@ -13,6 +13,8 @@ const SCENE_GAMBIT_PROFILE: Partial<Record<BattleTactic, { battleSkillId: string
   [BattleTactic.RockSlide]: { battleSkillId: 'scene-rock-slide', notes: 'scene:rock-slide' },
   [BattleTactic.AmbushAttack]: { battleSkillId: 'scene-ambush-attack', notes: 'scene:ambush-attack' },
   [BattleTactic.NightRaid]: { battleSkillId: 'scene-night-raid', notes: 'scene:night-raid' },
+  // 攻城（場景全局戰法注入與場勢視覺連動規格書 doc_spec_0366 §2，PROG-2-2049）
+  [BattleTactic.Siege]: { battleSkillId: 'scene-siege', notes: 'scene:siege' },
 };
 
 export class SceneGambitAdapter {

@@ -232,6 +232,19 @@ export function createBattleSkillSourceTranslatorSuite(): TestSuite {
         assert.equals('tactic-dragon-pierce', request!.tacticId!);
     });
 
+    suite.test('buildSceneGambitRequest：六種場景皆轉成開局全域請求，Normal 回 null（doc_spec_0366 §5-1）', () => {
+        const translator = createTranslator([]);
+        const tactics = [BattleTactic.FireAttack, BattleTactic.FloodAttack, BattleTactic.RockSlide, BattleTactic.AmbushAttack, BattleTactic.NightRaid, BattleTactic.Siege];
+        for (const tactic of tactics) {
+            const request = translator.buildSceneGambitRequest(tactic);
+            assert.isTrue(request !== null);
+            assert.equals(BattleSkillTargetMode.GlobalStage, request!.targetMode);
+            assert.equals(BattleSkillTiming.StartOfBattle, request!.timing);
+        }
+        assert.equals('scene-siege', translator.buildSceneGambitRequest(BattleTactic.Siege)!.battleSkillId);
+        assert.equals(null, translator.buildSceneGambitRequest(BattleTactic.Normal));
+    });
+
     suite.test('buildSceneGambitRequest：可將 battle tactic enum 轉成 global-stage request', () => {
         const translator = createTranslator([]);
         const request = translator.buildSceneGambitRequest(BattleTactic.FloodAttack);
