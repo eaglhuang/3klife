@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-07T16-37-32-348Z-scope-amendment-f29e1da3c0da",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:3da4237b49ed8bb4049597a32ee4e927680e57fed51c345efcd97f62089f9baa",
+  "createdAt": "2026-11-07T16:37:32.348Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/sima_shi_portrait.png,assets/resources/sprites/generals/avatars/sima_shi_avatar.png,assets/resources/sprites/ui_avatars/cropped/sima_shi_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}

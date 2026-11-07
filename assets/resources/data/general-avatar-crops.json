@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "sima-shi": {
+      "x": 330,
+      "y": 0,
+      "w": 370,
+      "h": 370,
+      "source": "reviewed",
+      "$note": "2026-11-08 司馬師深藍紫文武造型重繪；頭像保留高冠與肩頸。"
+    },
     "meng-huo": {
       "x": 390,
       "y": 0,
