@@ -98,6 +98,8 @@ export class BattleState {
   public readonly damageLinks = new Map<string, DamageLinkState>();
   public readonly counterReactions = new Map<string, CounterReactionState>();
   public readonly actionResets = new Map<string, ActionResetState>();
+  /** USPECIAL 死亡觸發掛勾（ULT-10，PROG-2-1976）：unitId → 效果 id 清單，陣亡後由 SpecialDeathTriggerRule 取出 */
+  public readonly deathTriggers = new Map<string, string[]>();
 
   public playerGeneral: GeneralUnit | null = null;
   public enemyGeneral: GeneralUnit | null = null;
@@ -186,6 +188,7 @@ export class BattleState {
     this.damageLinks.clear();
     this.counterReactions.clear();
     this.actionResets.clear();
+    this.deathTriggers.clear();
     this.floodOriginalTerrain.clear();
     this.cells.forEach(cell => {
       cell.occupantId = null;
