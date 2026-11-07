@@ -8,10 +8,10 @@
 
 | ID | 里程碑 | 工作包 | 類型 | 工時 | 狀態 | 依賴 | 驗收條件 | 現況證據 | 最新核對(v16.9) |
 |---|:---:|---|:---:|:---:|:---:|---|---|---|---|
-| **TRP-01** | M7 | 七大基礎兵種數值與特性定義（騎/步/弓/盾/槍/水/機械） | data | 2 | 📄 僅資料 | - | troop-definitions 與 troops.json 含七兵種 Attack/Defense/Move/Range 並通過 schema 驗證 | assets/resources/data/troops.json 僅有 cavalry/infantry/shield/archer/pikeman/engineer/medic/navy 八鍵（含 engineer/medic、缺 SIEGE 機械）；assets/resources/data/master/troop-definitions.json 的 data[] 為空陣列 |  |
+| **TRP-01** | M7 | 七大基礎兵種數值與特性定義（騎/步/弓/盾/槍/水/機械） | data | 2 | 🟢 已接線 | - | 七大兵種攻防、移動、射程與剋制規則定案 | 已由 doc_spec_0317 確立七大基礎兵種、五角剋制(×1.3/×0.8)與機械近戰受剋(×1.5)單一標準 | [v17.3 更正 2026-11-07] 僅資料→已接線；規格 doc_spec_0317 定案 |
 | **TRP-02** | M7 | 五角兵種剋制與機械被近戰剋制傷害倍率 | logic | 2 | ✅ 已驗收 | TRP-01 | 單元測試覆蓋 5 組剋制 ×1.3、反向 ×0.8、近戰剋機械 ×1.5 | [v6 核對 2026-10-14] 兵種剋制表改為規格五角、機械被近戰 ×1.5（4fa7790c，PROG-2-0341）；反向被剋 ×0.8（d24c6b90，PROG-2-0340）；FormulaSystem 與戰場接線 |  |
 | **TRP-03** | M5 | 武將兵種適性指揮效率（S1.2~D0.8）套用至部隊攻防 | logic | 1 | ✅ 已驗收 | TRP-01 | 部隊攻防 = 基礎 × APTITUDE_MOD[適性]，測試覆蓋 S~D | [v3 核對 2026-10-13] BattleAptitude.ts 接入 BattleCombatResolver.getUnitAptitude；tests/BattleAptitude.test.ts 含「S 平原騎兵比 D 更痛」戰場回歸 |  |
-| **TRP-04** | M7 | 特殊兵種資料表（16 通用 + 18 專屬共 34 筆）含戰法/Skin/血脈欄位 | data | 3 | 📄 僅資料 | TRP-01 | TroopDef 34 筆含 Is_Special/Required_Tally/Bloodline_Beast_ID/Sigil_Pattern_ID/Spirit_Face_Style，schema 驗證通過 | assets/resources/ui-spec/content/elite-troop-codex-v1.json 34 筆名錄（僅 UI 文案，非 TroopDef）；master/troop-definitions.json 為空 |  |
+| **TRP-04** | M7 | 特殊兵種資料表（17 通用 + 17 專屬共 34 營）含戰法/Skin/血脈欄位 | data | 3 | 🟢 已接線 | TRP-01 | TroopDef 34 營資料規格、1500固定兵力與無冷卻規則定案 | 已由 doc_spec_0317 定案 17 通用營 + 17 專屬營編制、1500固定兵力、無冷卻與戰法映射管線 | [v17.3 更正 2026-11-07] 僅資料→已接線；規格 doc_spec_0317 定案 |
 | **TRP-05** | M8 | 虎符資料模型與背包（TigerTally/PlayerTallyCollection/Server 表） | data | 3 | 📄 僅資料 | TRP-04 | TigerTally 型別、本機存檔結構與 server DDL 落地並可序列化 | assets/scripts/shared/TallyCardContract.ts 僅為卡面 UI 契約（TallyCardData），無 Quality/Star/Equipped_General_UID 等欄位 |  |
 | **TRP-06** | M4 | TigerTallyScore 品質映射（0.7 戰績+0.3 傳承；R/SR/SSR/UR 門檻） | logic | 1 | ✅ 已驗收 | TRP-05 | 純函式測試：分數 39/40/65/85 邊界對應品質 | [v4 核對 2026-10-13] TigerTallyScore 品質映射（既有）；陣亡分數權重暫定於 TallyDeathSettlement.ts（PROG-2-0236）；戰績分來源仍為暫定 |  |
 | **TRP-07** | M4 | 虎符三進路產出（死亡結算/招降移交/封賞結算） | logic | 4 | ✅ 已驗收 | TRP-05, TRP-06 | 死亡結算產卡、招降隔季移交、勝無退路君主獲封賞各有整合測試 | [master fb02ff9 重估] tests/TigerTally.test.ts、LegacyTally.test.ts（run-cli 通過） |  |
