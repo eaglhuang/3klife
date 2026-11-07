@@ -143,6 +143,7 @@ import type { HallTaskIntelInput } from '../systems/HallTaskIntel';
 import { estimateSortiePower } from '../systems/SortiePrediction';
 import { BASE_RESOURCE_CAPS, clampResource } from '../systems/ResourceCap';
 import { computeDeathBattleScore, settleDeathTallies, TALLY_DEATH_SCORE_TUNING } from '../systems/TallyDeathSettlement';
+import { settleDeathSpiritCards } from '../systems/SpiritCardDeathSettlement';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { applyBattleExpToCard, readCardStarState, tallyBattleOutcome } from '../systems/TigerTallyStar';
 import { resolveTallyBreakthrough, type TallyBreakthroughResult } from '../systems/TigerTallyBreakthrough';
@@ -1673,6 +1674,8 @@ export class GameSession {
         const result = settleDeathTallies({ holdings: this._tallyHoldings, cards: this._tallyCards }, before.map(withTroop), after.map(withTroop), season);
         this._tallyHoldings = result.holdings;
         this._tallyCards = { ...result.cards };
+        // 名將陣亡同步產英靈卡（SPI-02；同模板覆蓋不新增，非 TALLY 列不受下方同步影響）
+        this._inventoryRecords = settleDeathSpiritCards(this._inventoryRecords, before, after).records;
         for (const uid of result.produced) {
             const card = this._tallyCards[uid];
             const source = after.find((g) => g.id === card?.sourceGeneralUid);
