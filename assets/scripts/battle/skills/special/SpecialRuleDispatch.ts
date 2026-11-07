@@ -12,7 +12,7 @@ import type { UltimateSpecialRuleDef } from '../../../shared/SkillRuntimeContrac
 import type { BattleState } from '../../models/BattleState';
 import { applySpecialActionReset } from './SpecialActionResetRule';
 import { applySpecialBuffTransfer } from './SpecialBuffTransferRule';
-import { attachDeathTrigger } from './SpecialDeathTriggerRule';
+import { attachDeathTrigger, takeDeathTriggers } from './SpecialDeathTriggerRule';
 import { applySpecialFieldShift } from './SpecialFieldShiftRule';
 import { applySpecialRevive } from './SpecialReviveRule';
 
@@ -83,4 +83,28 @@ export function dispatchSpecialRule(def: Readonly<UltimateSpecialRuleDef> | null
         }
     }
     return { outcome: affected.length > 0 ? 'APPLIED' : 'NO_EFFECT', kind: def.kind, affectedIds: affected };
+}
+
+export interface DeathTriggerSettlement {
+    triggerId: string;
+    result: SpecialRuleDispatchResult;
+}
+
+/**
+ * 單位陣亡後結算它身上的死亡觸發（PROG-2-1979）。
+ * 掛勾 id 指向一個帶 specialRule 的奧義定義，以陣亡者陣營為施放方套用；取出即清，每個掛勾只觸發一次。
+ * 暫定：結算時沒有施放者單位（增益轉移因此不生效）；查不到定義的掛勾回 NOT_SPECIAL。
+ */
+export function settleDeathTriggers(
+    state: BattleState,
+    deadUnitId: string,
+    deadFaction: Faction,
+    lookup: (triggerId: string) => Readonly<UltimateSpecialRuleDef> | null | undefined,
+): DeathTriggerSettlement[] {
+    return takeDeathTriggers(state, deadUnitId).map((triggerId) => ({
+        triggerId,
+        result: dispatchSpecialRule(lookup(triggerId), {
+            state, casterFaction: deadFaction, casterUnitId: null, targetUnitUid: null, ultimateId: triggerId,
+        }),
+    }));
 }

@@ -193,6 +193,7 @@ export class BattleController {
     state: this.state,
     turnManager: this.turnManager,
     relationsBetween: (attackerId, helperId) => this.relationsBetweenUnits(attackerId, helperId),
+    getUltimateSpecialRule: (ultimateId) => findUltimateSpecialRule(ultimateId),
     getPlayerGeneralUnitId: () => this.playerGeneralUnitId,
     getEnemyGeneralUnitId: () => this.enemyGeneralUnitId,
     setPlayerGeneralUnitId: (unitId) => {

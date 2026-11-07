@@ -54,6 +54,8 @@ import {
   NAVAL_COMBINED_DAMAGE_RATIO,
 } from '../../core/systems/FactorTacticLinkage';
 
+import { settleDeathTriggers } from '../skills/special/SpecialRuleDispatch';
+import type { UltimateSpecialRuleDef } from '../../shared/SkillRuntimeContract';
 export interface BattleCombatAction {
   attackerId: string;
   targetId: string | null;
@@ -68,6 +70,8 @@ export interface BattleCombatResolverContext {
   setEnemyGeneralUnitId(unitId: string | null): void;
   /** 兩個部隊背後武將的史實關係；沒提供時不觸發史實合攻（PROG-2-1065） */
   relationsBetween?(attackerId: string, helperId: string): readonly HistoricalRelation[];
+  /** 死亡觸發掛勾 id 對應的 USPECIAL 規則（ULT-10，PROG-2-1979）；沒提供時陣亡只清掛勾不結算 */
+  getUltimateSpecialRule?(ultimateId: string): UltimateSpecialRuleDef | null | undefined;
 }
 
 /** 堅盾（靈感戰法，PROG-2-1600 暫定）：防禦 ×1.2 */
@@ -678,6 +682,8 @@ export class BattleCombatResolver {
     svc.buff.clearUnit(unit.id);
     clearMorale(unit);
     svc.event.emit(EVENT_NAMES.UnitDied, { unitId: unit.id, lane, depth, faction, type });
+    // USPECIAL 死亡觸發（ULT-10，PROG-2-1979）：取出即清，每個掛勾只觸發一次
+    settleDeathTriggers(this.context.state, unit.id, faction, (id) => this.context.getUltimateSpecialRule?.(id));
     // 遺計定遼（奉孝符，PROG-2-1572）：陣亡時全場敵軍混亂（暈眩）
     const confusion = tallyDeathConfusionOf(unit, this.context.state.units.values());
     if (confusion) {
