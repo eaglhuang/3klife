@@ -10,8 +10,8 @@
   "tags": [],
   "createdAt": "2026-11-05T14:30:28.536Z",
   "createdByActor": "codex-gpt-6.1-sol",
-  "lastTransitionId": "2026-11-07T08-59-39-008Z-scope-amendment-377c68b2051f",
-  "lastTransitionAt": "2026-11-07T08:59:39.008Z",
+  "lastTransitionId": "2026-11-07T09-25-10-913Z-scope-amendment-0856ee7020c6",
+  "lastTransitionAt": "2026-11-07T09:25:10.913Z",
   "ledgerContractVersion": "task-ledger/v1",
   "reservedAt": "2026-11-05T17:15:58.821Z",
   "promotedAt": "2026-11-05T17:15:58.826Z",
@@ -37,6 +37,7 @@
       "artifacts/general-avatar-review/liu-bei-style-candidate.png",
       "artifacts/general-avatar-review/page-999.json",
       "artifacts/general-avatar-review/page-999.png",
+      "artifacts/general-avatar-review/zhang-fei-serpent-spear-candidate.png",
       "artifacts/ui-generated/bao-san-niang/bao_san_niang_candidate_1.png",
       "artifacts/ui-generated/bao-san-niang/bao_san_niang_portrait_prompt_v1.txt",
       "artifacts/ui-generated/bian_fu_ren_portrait_candidate_1.png",
@@ -372,20 +373,20 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-ac9c5ab037a5886f",
-    "ticketDigest": "sha256:ac9c5ab037a5886fe2ae673124c11c96bf994dcfa113d7552bf6e08f41b818c7",
+    "ticketId": "wat-3ad27f6d9d100144",
+    "ticketDigest": "sha256:3ad27f6d9d1001444ed91adbc3363c98f850cb7b62524361c00a7b053a287e48",
     "taskId": "UI-2-0121",
     "origin": "claim",
     "actorId": "codex-gpt-6.1-terra",
     "laneSessionId": "lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d",
     "claimGeneration": "lease-f957fb02b01d",
-    "issuedAt": "2026-11-07T08:59:38.857Z",
-    "expiresAt": "2026-11-07T09:29:38.857Z",
-    "scopeDigest": "sha256:593894dc26d41fa15738b32117dc8c070f89ff8a9bdef11c9ab055568d4cbc75",
+    "issuedAt": "2026-11-07T09:25:10.785Z",
+    "expiresAt": "2026-11-07T09:55:10.785Z",
+    "scopeDigest": "sha256:42294c90484deb276e21844babf55afb71bb7ff6ccd46c94b0acd0a122cba3bc",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-11-07T08:59:38.857Z"
+      "selectedAt": "2026-11-07T09:25:10.785Z"
     },
     "grants": [
       {
@@ -407,6 +408,7 @@
           "artifacts/general-avatar-review/liu-bei-style-candidate.png",
           "artifacts/general-avatar-review/page-999.json",
           "artifacts/general-avatar-review/page-999.png",
+          "artifacts/general-avatar-review/zhang-fei-serpent-spear-candidate.png",
           "artifacts/ui-generated/bao-san-niang/bao_san_niang_candidate_1.png",
           "artifacts/ui-generated/bao-san-niang/bao_san_niang_portrait_prompt_v1.txt",
           "artifacts/ui-generated/bian_fu_ren_portrait_candidate_1.png",
@@ -729,7 +731,7 @@
           "docs/ui-quality-tasks/UI-2-0121.json",
           "docs/ui-quality-todo.json"
         ],
-        "digest": "sha256:8cfb031dd96ea2283edab6b216b4cd2f43610ea60ba24e78ae25646eea71d776"
+        "digest": "sha256:404d790752f3aea38aa2a894d795b6f5d2d7fb47c40c63f0f528011972c7e4a4"
       },
       {
         "kind": "lifecycle-operation",
@@ -793,6 +795,7 @@
       "artifacts/general-avatar-review/liu-bei-style-candidate.png",
       "artifacts/general-avatar-review/page-999.json",
       "artifacts/general-avatar-review/page-999.png",
+      "artifacts/general-avatar-review/zhang-fei-serpent-spear-candidate.png",
       "artifacts/ui-generated/bao-san-niang/bao_san_niang_candidate_1.png",
       "artifacts/ui-generated/bao-san-niang/bao_san_niang_portrait_prompt_v1.txt",
       "artifacts/ui-generated/bian_fu_ren_portrait_candidate_1.png",
@@ -1778,6 +1781,7 @@
     "assets/resources/sprites/ui_avatars/cropped/liu_bei_avatar.png",
     "assets/resources/sprites/generals/avatars/sun_quan_avatar.png",
     "assets/resources/sprites/generals/sun_quan_portrait.png",
-    "assets/resources/sprites/ui_avatars/cropped/sun_quan_avatar.png"
+    "assets/resources/sprites/ui_avatars/cropped/sun_quan_avatar.png",
+    "artifacts/general-avatar-review/zhang-fei-serpent-spear-candidate.png"
   ]
 }
