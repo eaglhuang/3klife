@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-07T16-16-15-415Z-scope-amendment-03940c069b3d",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:c5286e389552a1d0f15b5e6356aa8245505f8a6e8bb8de98375c516fb0a7feba",
+  "createdAt": "2026-11-07T16:16:15.415Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/ma_liang_portrait.png,assets/resources/sprites/generals/avatars/ma_liang_avatar.png,assets/resources/sprites/ui_avatars/cropped/ma_liang_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
