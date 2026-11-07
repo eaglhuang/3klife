@@ -104,7 +104,8 @@ function projectSpiritCard(record: InventoryRecord): SpiritCardEntry | string {
     const templateId = str(attrs, 'General_Template_ID');
     const familyKey = str(attrs, 'Spirit_Family_Key');
     const cardRole = attrs['Card_Role'];
-    const primaryFlag = attrs['Family_Primary_Flag'];
+    // 主卡單一真相（PROG-2-1971）：isPrimary 有值就以它為準；舊列沒有 isPrimary 才沿用屬性旗標，兩者都缺不補預設值
+    const primaryFlag = typeof record.isPrimary === 'boolean' ? record.isPrimary : attrs['Family_Primary_Flag'];
     const dualEquip = attrs['DualEquip_Allowed'];
     if (lineage === null || templateId === null || familyKey === null) {
         return 'SPIRIT_CARD 缺少 LineageScore／General_Template_ID／Spirit_Family_Key';
