@@ -116,7 +116,13 @@
       "type": "boolean",
       "required": false,
       "description": "未持有鎖定標記是否顯示。",
-      "bindPath": "UnownedVeil"
+      "bindPath": "UnownedLayer"
+    },
+    "unownedTagLabel": {
+      "type": "string",
+      "required": false,
+      "description": "未持有標籤文字（mirror-unowned-state-tag），隨 UnownedLayer 顯示。",
+      "bindPath": "UnownedLayer/UnownedStateTag"
     }
   },
   "requiredFields": [

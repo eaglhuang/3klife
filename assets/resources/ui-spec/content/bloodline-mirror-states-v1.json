@@ -169,6 +169,7 @@
       "spiritBrightness": "dim",
       "auraColor": "silver",
       "showLockBadge": true,
+      "unownedTagLabel": "未持有",
       "storyCells": {
         "origin": {
           "title": "傳聞",

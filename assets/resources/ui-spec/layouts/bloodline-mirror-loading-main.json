@@ -16,7 +16,16 @@
       { "type": "image", "name": "MirrorBackground", "widget": { "top": 0, "bottom": 0, "left": 0, "right": 0 }, "skinSlot": "bml.bg.full" },
       { "type": "image", "name": "PublicHero", "widget": { "top": 88, "bottom": 226, "left": 56 }, "width": "30%", "skinSlot": "bml.hero.public" },
       { "type": "image", "name": "SpiritHero", "widget": { "top": 88, "bottom": 226, "right": 56 }, "width": "30%", "skinSlot": "bml.hero.spirit" },
-      { "type": "image", "name": "UnownedVeil", "widget": { "top": 88, "bottom": 226, "left": 56, "right": 56 }, "skinSlot": "bml.unowned.veil" },
+      {
+        "type": "container",
+        "name": "UnownedLayer",
+        "widget": { "top": 88, "bottom": 226, "left": 56, "right": 56 },
+        "children": [
+          { "type": "image", "name": "UnownedVeil", "widget": { "top": 0, "bottom": 0, "left": 0, "right": 0 }, "skinSlot": "bml.unowned.veil" },
+          { "type": "panel", "name": "LockBadge", "widget": { "top": 24, "left": "42%", "right": "42%" }, "height": 40, "skinSlot": "bml.unowned.lockBadge" },
+          { "type": "label", "name": "UnownedStateTag", "widget": { "top": 24, "left": "42%", "right": "42%" }, "height": 40, "styleSlot": "bml.label.unowned" }
+        ]
+      },
       {
         "type": "container",
         "name": "MirrorChrome",
