@@ -1,5 +1,7 @@
 // @spec-source → 戰法場景規格書.md (doc_spec_0039) C 段「Tile 預設」、F 段 P0 Tile-State 預設配置表（PROG-2-1584）
 /** 場景 Tile 種類：一般、隱蔽、危險（陷阱／落石／深水）、強制位移（水流） */
+import { SeededRandom } from '../../core/systems/SeededRandom';
+
 export type SceneTileKind = 'normal' | 'stealth' | 'hazard' | 'forceMove';
 
 export const SCENE_TILE_KINDS: readonly SceneTileKind[] = ['normal', 'stealth', 'hazard', 'forceMove'];
@@ -57,6 +59,8 @@ export function validateSceneTilePresets(table: SceneTilePresetTable): string[] 
   return errors;
 }
 
+const REMAINDER_TIE_ORDER: readonly SceneTileKind[] = ['stealth', 'hazard', 'forceMove', 'normal'];
+
 /**
  * 依比例把 cellCount 格分配到各 Tile 種類（最大餘數法，總數恰為 cellCount）。
  * 場景不在表中時全部為 normal。
@@ -76,7 +80,38 @@ export function allocateSceneTiles(table: SceneTilePresetTable, sceneId: string,
     assigned += result[kind];
     remainders.push({ kind, rest: exact - result[kind] });
   }
-  remainders.sort((a, b) => b.rest - a.rest);
+  // 餘數相等時依 stealth > hazard > forceMove > normal 補齊（doc_spec_0369 §2.2-3，PROG-2-2051）
+  remainders.sort((a, b) => (b.rest - a.rest) || (REMAINDER_TIE_ORDER.indexOf(a.kind) - REMAINDER_TIE_ORDER.indexOf(b.kind)));
   for (let i = 0; assigned < cellCount; i += 1, assigned += 1) result[remainders[i % remainders.length].kind] += 1;
   return result;
+}
+
+/**
+ * 依種子把場景地格放到 lanes × depth 棋盤（doc_spec_0369 §4，PROG-2-2051）。
+ * 先按全盤格數分配，再以 Fisher-Yates 洗牌把非 normal 地格放進中段；
+ * 雙方部署底線（depth 0 與最後一排）一律 normal，中段放不下的部分也退為 normal。
+ * 回傳 grid[lane][depth]；同種子同場景結果一致。
+ */
+export function placeSceneTiles(table: SceneTilePresetTable, sceneId: string, lanes: number, depth: number, seed: number): SceneTileKind[][] {
+  const grid: SceneTileKind[][] = [];
+  for (let lane = 0; lane < lanes; lane += 1) grid.push(new Array<SceneTileKind>(depth).fill('normal'));
+  const counts = allocateSceneTiles(table, sceneId, lanes * depth);
+  const interior: Array<[number, number]> = [];
+  for (let lane = 0; lane < lanes; lane += 1) {
+    for (let d = 1; d < depth - 1; d += 1) interior.push([lane, d]);
+  }
+  const rng = new SeededRandom(seed);
+  for (let i = interior.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(rng.next() * (i + 1));
+    [interior[i], interior[j]] = [interior[j], interior[i]];
+  }
+  let cursor = 0;
+  for (const kind of REMAINDER_TIE_ORDER) {
+    if (kind === 'normal') continue;
+    for (let n = 0; n < counts[kind] && cursor < interior.length; n += 1, cursor += 1) {
+      const [lane, d] = interior[cursor];
+      grid[lane][d] = kind;
+    }
+  }
+  return grid;
 }
