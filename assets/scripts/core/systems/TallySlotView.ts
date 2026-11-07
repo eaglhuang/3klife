@@ -13,6 +13,7 @@ import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { resolveTroopDisplayName } from '../models/TroopUnit';
 import { getTallyGrainCost, TALLY_TROOP_COST } from './SortieDeploy';
 import { readCardStarState, starStatMultiplier } from './TigerTallyStar';
+import { formatTallyLine, type TallyLine } from './TallyLineSpec';
 
 export const TALLY_SLOT_EMPTY_NAME = '尚未裝備虎符';
 export const TALLY_SLOT_NO_CANDIDATE = '沒有可用的虎符。';
@@ -115,16 +116,28 @@ export function tallyUnequipWarn(generalName: string): string {
     return `卸下虎符會使 ${generalName} 忠誠度下降。`;
 }
 
+export function tallyEquipSpec(generalName: string, tallyName: string, troopName: string): TallyLine {
+    return { key: 'SCRIPT_TALLY_EQUIP', args: [generalName, tallyName, troopName] };
+}
+
 export function tallyEquipLine(generalName: string, tallyName: string, troopName: string): string {
-    return `${generalName} 裝備了【${tallyName}】，現可指揮 ${troopName}！`;
+    return formatTallyLine(tallyEquipSpec(generalName, tallyName, troopName));
+}
+
+export function tallyUnequipSpec(generalName: string, tallyName: string): TallyLine {
+    return { key: 'SCRIPT_TALLY_UNEQUIP', args: [generalName, tallyName] };
 }
 
 export function tallyUnequipLine(generalName: string, tallyName: string): string {
-    return `${generalName} 卸下了【${tallyName}】。`;
+    return formatTallyLine(tallyUnequipSpec(generalName, tallyName));
+}
+
+export function tallyLoyaltyDropSpec(generalName: string): TallyLine {
+    return { key: 'SCRIPT_TALLY_LOYALTY_DROP', args: [generalName] };
 }
 
 export function tallyLoyaltyDropLine(generalName: string): string {
-    return `${generalName} 對被拔除虎符一事感到不滿，忠誠度下降。`;
+    return formatTallyLine(tallyLoyaltyDropSpec(generalName));
 }
 
 /** 提示列高度：依換行與字數估算行數；沒有文字時為 0 */

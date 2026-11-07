@@ -743,7 +743,7 @@ export class LobbyScene extends Component {
             }),
             services().event.on(GAME_SESSION_EVENTS.SeasonAdvanced, () => {
                 const session = services().session;
-                for (const message of [...session.consumeRivalNotices(), ...session.consumeTallyNotices()]) {
+                for (const message of [...session.consumeRivalNotices(), ...session.consumeTallyNotices((key, ...args) => services().i18n.t(key, ...args))]) {
                     services().event.emit('SHOW_TOAST', { message, duration: 3 });
                 }
             }),
