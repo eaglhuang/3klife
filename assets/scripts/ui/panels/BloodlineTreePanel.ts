@@ -4,7 +4,8 @@ import { BloodlineGraph, PEDIGREE_SLOTS, type Pedigree, type PedigreeSlot } from
 import { resolveFactorColor, type FactorColor } from '../../core/systems/FactorInheritance';
 import { services } from '../../core/managers/ServiceLoader';
 import { ancestorAvatarId, ancestorCardText, buildBloodlineTreeSlots, BloodlineTreeSlot, TREE_CARD_AVATAR, UNKNOWN_ANCESTOR_CARD_TEXT, sharedAncestorUids, TREE_CARD_KIN_FRAME } from '../../core/systems/BloodlineTreeSlots';
-import { loadGeneralAvatar } from '../core/GeneralAvatarLoader';
+import { loadGeneralAvatar, loadSharedAncestorIcon } from '../core/GeneralAvatarLoader';
+import { treeAvatarSource } from '../../core/systems/BloodlineTreeAvatarBudget';
 import { treeCardNodeName } from '../../core/systems/BloodlineTreeBinding';
 import { buildNodeCards } from '../../core/systems/BloodlineNodeCards';
 import { redrawBloodlineTreeConnections } from '../components/BloodlineTreeLines';
@@ -181,7 +182,7 @@ export class BloodlineTreePanel extends Component {
             const cardNode = container.getChildByPath(treeCardNodeName(row, i));
             if (cardNode) {
                 this._bindPeek(cardNode, person, this._colorOfPerson(person));
-                this._bindAvatar(cardNode, person);
+                this._bindAvatar(cardNode, person, row);
                 const kinFrame = cardNode.getChildByName(TREE_CARD_KIN_FRAME);
                 if (kinFrame) kinFrame.active = !!uid && this._kinUids.has(uid);
             }
@@ -193,8 +194,11 @@ export class BloodlineTreePanel extends Component {
         }
     }
 
-    /** 版面沒有 Avatar 節點的卡片（結緣畫面的舊版樹）不處理 */
-    private _bindAvatar(cardNode: Node, person: { uid: string; is_virtual?: boolean } | null): void {
+    /**
+     * 版面沒有 Avatar 節點的卡片（結緣畫面的舊版樹）不處理。
+     * 效能防呆（BUI-07）：只有父母排載真頭像，1、2 代先祖用共用剪影，避免整棵樹 14 張貼圖。
+     */
+    private _bindAvatar(cardNode: Node, person: { uid: string; is_virtual?: boolean } | null, row: 1 | 2 | 3): void {
         const holder = cardNode.getChildByName(TREE_CARD_AVATAR.nodeName);
         if (!holder) return;
         const id = ancestorAvatarId(person);
@@ -204,7 +208,8 @@ export class BloodlineTreePanel extends Component {
         if (!id || !sprite) return;
         sprite.spriteFrame = null;
         const seq = this._avatarSeq;
-        void loadGeneralAvatar(id).then((frame) => {
+        const load = treeAvatarSource(row, person) === 'REAL' ? loadGeneralAvatar(id) : loadSharedAncestorIcon(id);
+        void load.then((frame) => {
             if (frame && seq === this._avatarSeq && sprite.isValid) sprite.spriteFrame = frame;
         });
     }
