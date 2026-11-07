@@ -23,6 +23,7 @@ import { awakenFactor, AwakeningCandidate, FactorAwakenedEvent, listAwakeningCan
 import { ALL_FACTOR_COLORS, FactorColor, normalizeFactorColor } from './FactorInheritance';
 import type { FactorPoolEntry } from './BreedingSystem';
 
+import type { AncestorApparition } from './SageAncestorApparition';
 export type SageId = 'zhuge-liang' | 'hua-tuo' | 'sima-hui' | 'xu-shao' | 'pang-tong' | 'zuo-ci';
 
 export interface SageDefinition {
@@ -65,6 +66,8 @@ export interface SageDivinationResult {
     hintColor: FactorColor | null;
     /** 本次是否擲了骰（擲了才算一次占卜，呼叫端據此扣求籤令） */
     consumed: boolean;
+    /** 祖輩顯靈補充台詞（ORAC-08，PROG-2-1981）：只在有擲骰時附上；不影響準確率與擲骰 */
+    apparition?: AncestorApparition | null;
 }
 
 export function getSage(sageId: string): SageDefinition | undefined {

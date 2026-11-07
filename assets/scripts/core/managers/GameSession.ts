@@ -188,6 +188,7 @@ import { normalizeBondPoints, overflowBondPoints, overflowRarityOf } from '../sy
 import { borrowCandidateOf, type NpcFriendMentor } from '../systems/NpcFriendMentor';
 import { canBorrow, createBorrow, normalizeBorrowLedger, type BorrowBlockReason, type BorrowLedger, type BorrowRequest } from '../systems/FriendBorrow';
 import { emptySoulFragmentLedger, injectFromLedger, normalizeSoulFragmentLedger, recordDeathFragment, type SoulFragmentLedger } from '../systems/SoulFragmentLedger';
+import { apparitionForDivination } from '../systems/SageApparitionLineage';
 import { divineFactor, getSage, predictOffspring, ProphecyKeywordSource, ProphecyResult, SageDivinationResult } from '../systems/SageDivination';
 import type { FactorPoolEntry } from '../systems/BreedingSystem';
 import { planBloodlineMergeForGenerals, type BloodlineMergeRejectReason } from '../systems/BloodlineMerge';
@@ -3725,6 +3726,10 @@ export class GameSession {
         }
         if (result.event) {
             this._emit(GAME_SESSION_EVENTS.FactorAwakened, result.event);
+        }
+        // 祖輩顯靈（ORAC-08，PROG-2-1981）：擲骰之後才附上，純敘事、不動準確率與擲骰順序
+        if (result.consumed) {
+            return { ...result, apparition: apparitionForDivination(roster.find((g) => g.id === generalId), roster) };
         }
         return result;
     }
