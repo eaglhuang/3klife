@@ -159,6 +159,7 @@ import { ITEM_JOB_CHANGE_ORDER, ITEM_TRIAL_TICKET, ITEM_WISH_SPEED_CARD } from '
 import { ITEM_ORACLE_TOKEN } from '../../core/systems/ItemDef';
 import { JOB_CHANGE_ORDER_OFFER } from '../../core/systems/ItemShopPricing';
 import { PrisonerPopupController } from '../core/PrisonerPopupController';
+import { DuplicatePullPopupController, type DuplicatePullChoice, type DuplicatePullEntry, type DuplicatePullRoute } from '../core/DuplicatePullPopupController';
 import { DestinyShopController, destinyBriefTexts } from '../core/DestinyShopController';
 import { SortieSetupController, type SortieRole } from '../core/SortieSetupController';
 import type { PowDecision } from '../../core/systems/PrisonerOfWar';
@@ -416,6 +417,8 @@ export class LobbyScene extends Component {
     private _marriageProposal: MarriageProposalPopupController | null = null;
     private _yearReport: YearReportController<UIScreenPreviewHost> | null = null;
     private _prisoner: PrisonerPopupController | null = null;
+    private _duplicatePullHost: UIScreenPreviewHost | null = null;
+    private readonly _duplicatePull = new DuplicatePullPopupController();
     private _destinyShopHost: UIScreenPreviewHost | null = null;
     private _destinyShop: DestinyShopController | null = null;
     private _sortieHost: UIScreenPreviewHost | null = null;
@@ -579,6 +582,7 @@ export class LobbyScene extends Component {
         await this._mountDaughterRoutePopup();
         await this._mountMarriageProposalPopup();
         await this._mountPrisonerPopup();
+        await this._mountDuplicatePullPopup();
         await this._mountDestinyShop();
         await this._mountYearReport();
         await this._mountDeckSelect();
@@ -3392,6 +3396,44 @@ export class LobbyScene extends Component {
             { buttonId: 'btnImprison', handler: () => { decide('imprison'); } },
             { buttonId: 'btnRelease', handler: () => { decide('release'); } },
         ]);
+    }
+
+    /** DUP-01: duplicate pull popup (rebirth / infusion). Choice logic lives in DuplicatePullPopupController. */
+    private async _mountDuplicatePullPopup(): Promise<void> {
+        const choose = (route: DuplicatePullRoute): void => {
+            if (this._duplicatePull.choose(route)) this._closeDuplicatePullPopup();
+            else this._refreshDuplicatePullPopup();
+        };
+        this._duplicatePullHost = await this._mountPreviewScreenHost('DuplicatePullPopupHost', 'duplicate-pull-popup-screen', [
+            { buttonId: 'btnDupRebirth', handler: () => { choose('rebirth'); } },
+            { buttonId: 'btnDupInfusion', handler: () => { choose('infusion'); } },
+            { buttonId: 'btnDupBatchDefault', handler: () => { this._duplicatePull.toggleBatchDefault(); this._refreshDuplicatePullPopup(); } },
+        ]);
+    }
+
+    /** DUP-01: ask the player to route each duplicate pull; resolves with one choice per entry. */
+    public askDuplicatePullRoutes(entries: DuplicatePullEntry[]): Promise<DuplicatePullChoice[]> {
+        const result = this._duplicatePull.ask(entries);
+        const host = this._duplicatePullHost;
+        if (!host) {
+            this._duplicatePull.cancel();
+        } else if (this._duplicatePull.isOpen()) {
+            host.node.active = true;
+            this._bringNodeToFront(host.node);
+            this._refreshDuplicatePullPopup();
+        }
+        return result;
+    }
+
+    private _refreshDuplicatePullPopup(): void {
+        const binder = this._duplicatePullHost?.binder;
+        if (binder) applyFlowView(binder, this._duplicatePull.getView());
+    }
+
+    private _closeDuplicatePullPopup(): void {
+        if (this._duplicatePullHost) {
+            this._duplicatePullHost.node.active = false;
+        }
     }
 
     private _openPrisonerPopupIfPending(): void {

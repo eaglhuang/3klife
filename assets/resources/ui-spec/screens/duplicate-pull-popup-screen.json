@@ -1,0 +1,17 @@
+{
+  "id": "duplicate-pull-popup-screen",
+  "version": 1,
+  "uiId": "DuplicatePullPopup",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "duplicate-pull-popup-main",
+  "skin": "duplicate-pull-popup-screen.skin",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}
