@@ -13,6 +13,7 @@ import {
     SyncResponse
 } from '../../shared/protocols';
 import { validateSyncPatchPaths } from '../schema/sync06-patch-whitelist';
+import { SYNC_BODY_LIMIT, SyncRateLimiter, syncPayloadTooLargeHandler, syncRateLimitMiddleware } from './sync-limits';
 
 /**
  * 同步契約（伺服器端）。
@@ -161,6 +162,8 @@ function authenticate(store: PlayerStore, playerId: string | undefined, token: s
 
 export interface SyncRouteOptions {
     log?: (message: string) => void;
+    /** 每分鐘同步次數限制（SYNC-05）；預設不開，index.ts 正式啟動時開啟 */
+    rateLimiter?: SyncRateLimiter;
 }
 
 export function registerSyncRoutes(app: Express, store: PlayerStore, options: SyncRouteOptions = {}): void {
@@ -305,7 +308,9 @@ export function registerSyncRoutes(app: Express, store: PlayerStore, options: Sy
 /** 建立只含同步路由的 app（測試與 index.ts 共用）。 */
 export function createSyncApp(store: PlayerStore = createDefaultPlayerStore(), options: SyncRouteOptions = {}): Express {
     const app = express();
-    app.use(express.json({ limit: '5mb' }));
+    app.use(express.json({ limit: SYNC_BODY_LIMIT }));
+    if (options.rateLimiter) app.use(syncRateLimitMiddleware(options.rateLimiter));
     registerSyncRoutes(app, store, options);
+    app.use(syncPayloadTooLargeHandler());
     return app;
 }

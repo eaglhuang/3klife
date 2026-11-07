@@ -6,6 +6,7 @@ import path from 'path';
 import { Pool } from 'pg';
 
 import { createDefaultPlayerStore, registerSyncRoutes } from './sync';
+import { SYNC_BODY_LIMIT, syncPayloadTooLargeHandler, syncRateLimitMiddleware } from './sync-limits';
 
 function loadEnvFiles(): void {
     const envCandidates = [
@@ -61,7 +62,8 @@ const postgresPool = postgresConfigured
     : null;
 
 app.use(cors());
-app.use(express.json({ limit: '5mb' }));
+app.use(express.json({ limit: SYNC_BODY_LIMIT }));
+app.use(syncRateLimitMiddleware());
 
 // 模擬伺服器端資料庫中的玩家數據快照（同步路由見 ./sync.ts）
 const mockDatabase = createDefaultPlayerStore();
@@ -243,6 +245,7 @@ app.get('/healthz', async (_req: Request, res: Response) => {
 });
 
 registerSyncRoutes(app, mockDatabase);
+app.use(syncPayloadTooLargeHandler());
 
 app.listen(port, host, () => {
     console.log(`Game Server Simulation running at http://${host}:${port}`);
