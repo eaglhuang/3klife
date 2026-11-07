@@ -80,6 +80,11 @@ const PRESENTATION_BY_SKILL_ID: Record<string, BattleSkillPresentation> = {
     categoryTag: '壓制',
     effectStatus: '【壓制】司馬影策：全敵範圍壓制',
   },
+  'sow-discord': {
+    name: '離間',
+    categoryTag: '離間',
+    effectStatus: '【離間】離間：敵軍倒戈互攻一回合',
+  },
 };
 
 export function getBattleSkillPresentation(skillId: string): BattleSkillPresentation {

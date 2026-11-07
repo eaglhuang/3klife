@@ -184,5 +184,16 @@
       { "type": "buff",      "buffId": "stun",         "duration": 1, "target": "single", "atTime": 0.48 },
       { "type": "floatText", "text": "閉月惑心！",       "target": "targets", "atTime": 0.52 }
     ]
+  },
+  {
+    "id": "sow-discord",
+    "label": "離間",
+    "description": "散布流言，使敵方相鄰兩隊互相攻擊一回合。（暫定資料 PROG-2-1985）",
+    "costSp": 60,
+    "steps": [
+      { "type": "animation", "clip": "Skill",        "atTime": 0 },
+      { "type": "vfx",       "blockId": "impact_shock", "target": "targets", "atTime": 0.4 },
+      { "type": "floatText", "text": "離間！",       "target": "targets", "atTime": 0.5 }
+    ]
   }
 ]
