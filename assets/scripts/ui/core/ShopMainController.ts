@@ -3,7 +3,7 @@
  * ShopMainController — 百寶閣的精元購買流程（純邏輯，不依賴 cc）。
  *
  * 價格只讀 ITEM_SHOP_OFFERS，不在畫面寫死。精元會直接扣，所以同一列要按兩次才成交。
- * 暫定：金幣、印記、積分三個分頁規格沒有商品，先隱藏。
+ * 暫定：金幣、印記、積分三個分頁規格沒有商品，只剩一頁時分頁列沒有意義，整列先隱藏。
  * Unity 對照：像 ShopPresenter，只組 ViewModel 與處理點擊，扣款與發貨交給注入的服務。
  */
 import { canAffordOffer, ITEM_SHOP_OFFERS, purchaseShopOffer, type ShopOffer } from '../../core/systems/ItemShopPricing';
@@ -37,8 +37,6 @@ const OFFER_EFFECT_TEXT: Readonly<Record<string, string>> = Object.freeze({
     [ITEM_JOB_CHANGE_ORDER]: '20 歲轉職 ×1',
     [ITEM_LONGEVITY_PILL]: '壽命 +3 歲',
 });
-
-const HIDDEN_TABS = ['tabGold', 'tabStamp', 'tabScore'];
 
 export class ShopMainController {
     private readonly _offers: readonly Readonly<ShopOffer>[];
@@ -108,9 +106,7 @@ export class ShopMainController {
             texts[`shopRow${i}Price`] = this._pendingIndex === i ? '確認購買' : `精元 ${offer.price}`;
             enabled[`shopRow${i}`] = !this._busy;
         });
-        const actives: Record<string, boolean> = {};
-        for (const tab of HIDDEN_TABS) actives[tab] = false;
-        return { texts, actives, enabled };
+        return { texts, actives: { shopTabRow: false }, enabled };
     }
 
     private _nameOf(offer: Readonly<ShopOffer>): string {

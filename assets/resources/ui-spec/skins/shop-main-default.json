@@ -108,7 +108,7 @@
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 26,
       "lineHeight": 32,
-      "color": "textOnParchment",
+      "color": "textPrimary",
       "overflow": "CLAMP",
       "horizontalAlign": "LEFT"
     },
@@ -126,7 +126,7 @@
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 28,
-      "color": "textOnParchmentMuted",
+      "color": "secondaryLight",
       "overflow": "CLAMP",
       "horizontalAlign": "CENTER"
     },
