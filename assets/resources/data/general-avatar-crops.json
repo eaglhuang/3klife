@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "liu-feng": {
+      "x": 340,
+      "y": 40,
+      "w": 350,
+      "h": 350,
+      "source": "reviewed",
+      "$note": "2026-11-08 劉封蜀綠金甲佩劍造型裁切。"
+    },
     "liao-hua": {
       "x": 300,
       "y": 20,
