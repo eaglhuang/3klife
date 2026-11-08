@@ -155,7 +155,7 @@
                     },
                     "height": 40,
                     "text": "選擇復生重練",
-                    "styleSlot": "dup.label.button"
+                    "styleSlot": "dup.label.button.choice"
                   }
                 ]
               }
@@ -185,6 +185,19 @@
                 "height": 44,
                 "text": "血脈灌注",
                 "styleSlot": "dup.label.infusion.title"
+              },
+              {
+                "type": "label",
+                "name": "DupInfusionRecommend",
+                "id": "dupInfusionRecommend",
+                "widget": {
+                  "top": 26,
+                  "right": 24
+                },
+                "width": 96,
+                "height": 36,
+                "text": "推薦",
+                "styleSlot": "dup.label.recommend"
               },
               {
                 "type": "label",
@@ -235,7 +248,7 @@
                     },
                     "height": 40,
                     "text": "選擇血脈灌注",
-                    "styleSlot": "dup.label.button"
+                    "styleSlot": "dup.label.button.choice"
                   }
                 ]
               }
