@@ -57,7 +57,7 @@ import { buildYearReport, normalizeYearAgingEvents, YearReport } from '../system
 import { backfillTallyTroopTypes, mainTroopTypeOf } from '../systems/TigerTally';
 import { normalizeCountdownState, createCountdown, OPENING_TRAVEL_DURATION_MS, OPENING_TRAVEL_TARGET_ID, type CountdownState } from '../systems/CountdownManager';
 import { createTravelCountdown, normalizeTravelCountdown, tickTravelCountdown, type TravelCountdown } from '../systems/TravelCountdown';
-import { ageGeneralsOneSeason, AgingEvent, isGeneralDead, RandomSource } from '../systems/GeneralAging';
+import { ageGeneralsOneSeason, AgingEvent, isGeneralDead, RandomSource, RETIREMENT_AGE } from '../systems/GeneralAging';
 import { applyWarInjury } from '../systems/WarInjury';
 import { settleStageSalvage } from '../systems/StageSalvageSettlement';
 import type { SalvageTotals } from '../systems/StrategistHud';
@@ -440,6 +440,8 @@ export interface SessionEventEmitter {
 
 export interface SeasonAdvancedPayload {
     advance: SeasonAdvanceResult;
+    /** 本季滿 65 歲被系統強制轉教官卡的武將 id（SPI-01 退役雙軌，PROG-2-1994）；沒有時省略 */
+    forcedRetirements?: string[];
     /** 季度治理報告句（領地治理 §G，PROG-2-1773）；本季沒有任何產出時沒有 */
     governanceReport?: string;
     /** 新一季發生治理事件時的提示句 */
@@ -4030,6 +4032,8 @@ export class GameSession {
         this._releaseGearOfInactiveGenerals();
         this._settleOpenHallAssigns(formatSeasonLabel(advance.previous));
         this._settleDeaths(deathBaseline, rosterBeforeLifecycle, advance.current.totalSeasonsElapsed);
+        // 退役雙軌（SPI-01）：60 歲可主動榮譽退役；滿 65 歲仍在位的由系統強制轉教官卡
+        const forcedRetirements = await this._forceRetireOverAge();
         // 陣亡或退休的武將不再佔著內政任務格
         this._governance = this._governance.filter((a) => roster.some((general) => general.id === a.generalUid && general.status !== 'dead'));
         if (this._autoGovernance) this._fillAutoGovernance();
@@ -4094,7 +4098,7 @@ export class GameSession {
             this._familySynergy = finalizeAdultChildren(this._familySynergy, this._roster.getAll());
             this._marriageProposal = rollMarriageProposal(this._roster.getAll(), this._clanTier, `suitor-${governanceSeason}`, remarkRandomOf(`marriage|${governanceSeason}|${this._seeded.snapshot().state}`), this._familySynergy);
         }
-        const payload: SeasonAdvancedPayload = { ...(yuedanLines.length > 0 ? { yuedanLines } : {}), ...(this._tallyFoodDiscountArmed ? { foodLowLine: FOOD_LOW_LINE } : {}), ...(treasures.length > 0 ? { prisonTreasureLines: treasures.map((entry) => prisonTreasureLine(entry.targetName, ITEM_DISPLAY_NAMES[ITEM_TREASURE])) } : {}), ...(governanceReport ? { governanceReport } : {}), ...(eventNotice ? { governanceEventLine: eventNotice } : {}), advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids } : {}), ...(mercenaryDay.dayThreeUids.length > 0 ? { mercenaryDayThree: mercenaryDay.dayThreeUids } : {}), ...(mercenaryDay.trustUids.length > 0 ? { mercenaryTrust: mercenaryDay.trustUids } : {}) };
+        const payload: SeasonAdvancedPayload = { ...(forcedRetirements.length > 0 ? { forcedRetirements } : {}), ...(yuedanLines.length > 0 ? { yuedanLines } : {}), ...(this._tallyFoodDiscountArmed ? { foodLowLine: FOOD_LOW_LINE } : {}), ...(treasures.length > 0 ? { prisonTreasureLines: treasures.map((entry) => prisonTreasureLine(entry.targetName, ITEM_DISPLAY_NAMES[ITEM_TREASURE])) } : {}), ...(governanceReport ? { governanceReport } : {}), ...(eventNotice ? { governanceEventLine: eventNotice } : {}), advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids } : {}), ...(mercenaryDay.dayThreeUids.length > 0 ? { mercenaryDayThree: mercenaryDay.dayThreeUids } : {}), ...(mercenaryDay.trustUids.length > 0 ? { mercenaryTrust: mercenaryDay.trustUids } : {}) };
         if (this._autoSave && this._save) {
             await this.save();
         }
@@ -4169,6 +4173,27 @@ export class GameSession {
         this._leadGeneralId = null;
         this._emit(GAME_SESSION_EVENTS.LeadGeneralChanged, null);
         return true;
+    }
+
+    /**
+     * 退役雙軌的系統強制線（SPI-01，PROG-2-1994）：存活、尚未退役、年齡 >= 65 的武將轉教官卡。
+     * 沿用 retireGeneral（不帶因子媒介與傳家裝備對象）；單一武將退役失敗不影響其他人。回傳實際退役的 id。
+     */
+    private async _forceRetireOverAge(): Promise<string[]> {
+        if (!this._lifecycle) return [];
+        const due = this._roster.getAll()
+            .filter((g) => !isGeneralDead(g) && !(g as GeneralConfig & { isMentorCard?: boolean }).isMentorCard && (g.age ?? 0) >= RETIREMENT_AGE)
+            .map((g) => g.id);
+        const retired: string[] = [];
+        for (const id of due) {
+            try {
+                await this.retireGeneral(id);
+                retired.push(id);
+            } catch (error) {
+                console.warn(`[retire] 強制退役 ${id} 失敗：${(error as Error).message}`);
+            }
+        }
+        return retired;
     }
 
     /**

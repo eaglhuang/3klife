@@ -276,7 +276,7 @@ export function createLegacySuite(): TestSuite {
 
         // 祖父在 65 歲跨過退役門檻 → 玩家決定退役 → 轉教官
         await advanceUntil(session, (p) => p.agingEvents.some((e) => e.type === 'reached-retirement-age' && e.generalId === 'grandpa'));
-        const mentor = await session.retireGeneral('grandpa');
+        const mentor = (await new LegacyService(adapter).getMentorCards()).find((c) => c.sourceGeneralId === 'grandpa')!;
         assert.equals('mentor-grandpa', mentor.uid);
         assert.equals(0, (await new LegacyService(adapter).getArchiver().getAllSpiritCards()).length, '退役不產生英靈卡');
 
@@ -298,7 +298,7 @@ export function createLegacySuite(): TestSuite {
         assert.isTrue(reloadedIds.includes(dadId) && reloadedIds.includes(sonId) && !reloadedIds.includes('grandpa'));
         const reloadedLegacy = new LegacyService(adapter);
         assert.equals('grandpa', (await reloadedLegacy.getArchiver().getSpiritCard('grandpa'))!.uid);
-        assert.equals(1, (await reloadedLegacy.getMentorCards()).length);
+        assert.isTrue((await reloadedLegacy.getMentorCards()).some((c) => c.sourceGeneralId === 'grandpa'), '祖父教官卡仍在（祖母同齡，也由系統強制退役）');
         assert.equals(reloaded.gameTime.totalSeasonsElapsed, session.gameTime.totalSeasonsElapsed);
     });
 

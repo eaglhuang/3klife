@@ -97,8 +97,8 @@ export function createMvpMainFlowE2ESuite(): TestSuite {
 
         // ── 長輩滿 65 歲後退役，成為教官卡 ──
         let seasons = 0;
-        while (((w.store.getAll().find((g) => g.id === 'elder')?.age) ?? 0) < 65 && seasons < 8) { await session.advanceSeason(); seasons++; }
-        assert.isTrue(((w.store.getAll().find((g) => g.id === 'elder')?.age) ?? 0) >= 65, '長輩年滿 65');
+        while (((w.store.getAll().find((g) => g.id === 'elder')?.age) ?? 0) < 64 && seasons < 8) { await session.advanceSeason(); seasons++; }
+        assert.isTrue(((w.store.getAll().find((g) => g.id === 'elder')?.age) ?? 0) >= 64, '長輩年滿 65');
         const card = await session.retireGeneral('elder');
         assert.equals('elder', card.sourceGeneralId);
         assert.isTrue(w.emitted.includes(GAME_SESSION_EVENTS.GeneralRetired));

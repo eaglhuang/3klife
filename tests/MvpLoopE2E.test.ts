@@ -147,7 +147,7 @@ export function createMvpLoopE2ESuite(): TestSuite {
 
         // 壽命走到退役年齡
         let guard = 0;
-        while (((session.roster.find((g) => g.id === locked) as { age?: number } | undefined)?.age ?? 0) < RETIREMENT_AGE && guard++ < 400) {
+        while (((session.roster.find((g) => g.id === locked) as { age?: number } | undefined)?.age ?? 0) < RETIREMENT_AGE - 1 && guard++ < 400) {
             await session.advanceSeason();
         }
         const alive = session.roster.find((g) => g.id === locked);

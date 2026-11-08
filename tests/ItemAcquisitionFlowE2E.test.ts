@@ -45,11 +45,11 @@ export function createItemAcquisitionFlowE2ESuite(): TestSuite {
         services().initialize();
         sys.localStorage.removeItem('CLIENT_DEVICE_ID');
         const adapter = new MemoryStorageAdapter();
-        const a = build(adapter, [person('elder', '男', 64, { careerClass: 'Scholar' }), person('lead', '男', 30)]);
+        const a = build(adapter, [person('elder', '男', 62, { careerClass: 'Scholar' }), person('lead', '男', 30)]);
         a.startNewGame(21);
         for (let d = 0; d < 5; d++) a.recordLoginAt(DAY0 + d * DAY_MS);
         for (let i = 0; i < 6; i++) await a.advanceSeason();
-        while (((a.getDeployableGenerals().find((g) => g.id === 'elder')?.age) ?? 99) < 65 && a.gameTime.totalSeasonsElapsed < 40) await a.advanceSeason();
+        while (((a.getDeployableGenerals().find((g) => g.id === 'elder')?.age) ?? 99) < 64 && a.gameTime.totalSeasonsElapsed < 40) await a.advanceSeason();
         await a.retireGeneral('elder');
         assertLedgerMatches(a, '長流程後');
 

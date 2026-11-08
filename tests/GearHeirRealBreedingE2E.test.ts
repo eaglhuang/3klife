@@ -58,8 +58,8 @@ export function createGearHeirRealBreedingE2ESuite(): TestSuite {
 
         // 父親滿 65 歲
         let guard = 0;
-        while (((find(w, 'hero') as GeneralConfig).age ?? 0) < 65 && guard++ < 20) await w.session.advanceSeason();
-        assert.isTrue(((find(w, 'hero') as GeneralConfig).age ?? 0) >= 65, '父親年滿 65');
+        while (((find(w, 'hero') as GeneralConfig).age ?? 0) < 64 && guard++ < 20) await w.session.advanceSeason();
+        assert.isTrue(((find(w, 'hero') as GeneralConfig).age ?? 0) >= 64, '父親近 65 歲');
 
         // 配偶與外人不能當接收者，被拒時裝備與名冊都不變
         for (const bad of ['lady', 'stranger']) {

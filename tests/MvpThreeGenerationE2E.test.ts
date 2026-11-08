@@ -75,10 +75,11 @@ export function createMvpThreeGenerationE2ESuite(): TestSuite {
         const childId = gen3.child!.id;
 
         // ── 祖輩退役成教官卡，帶第三代培育畢業 ──
+        // 年滿 65 歲由系統強制轉教官卡（SPI-01 退役雙軌，PROG-2-1994）
         assert.isTrue((find(w, 'grandpa')?.age ?? 0) >= 65, '祖輩年滿 65');
-        const card = await w.session.retireGeneral('grandpa');
-        assert.equals('grandpa', card.sourceGeneralId);
+        assert.isTrue((find(w, 'grandpa') as { isMentorCard?: boolean } | undefined)?.isMentorCard === true, '祖輩已被系統強制轉教官卡');
         const mentors = await w.legacy.getMentorCards();
+        assert.equals('grandpa', mentors[0].sourceGeneralId);
         const gen3Rating = await unveilAndGraduate(w, childId, mentors);
         assert.isTrue(!!gen3Rating, '第三代畢業');
 
@@ -93,7 +94,7 @@ export function createMvpThreeGenerationE2ESuite(): TestSuite {
         const gen3Loaded = loaded(childId)!;
         assert.isTrue([gen3Loaded.fatherId, gen3Loaded.motherId].includes(fatherId), '第三代的父母鏈指向第二代');
         assert.equals(gen3Rating, (loaded(childId) as { graduationRating?: string }).graduationRating);
-        assert.equals(1, (await b.legacy.getMentorCards()).length, '祖輩教官卡仍在');
+        assert.isTrue((await b.legacy.getMentorCards()).some((c) => c.sourceGeneralId === 'grandpa'), '祖輩教官卡仍在（祖母同齡，也由系統強制退役）');
         assert.isTrue(b.session.clearedStageIds.includes('stage-1'));
     });
 
