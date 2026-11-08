@@ -19,6 +19,7 @@ import type { GeneralConfig, GeneralDualLayerStatConfig, GeneralGeneConfig, Gene
 import type { MentorCard } from '../models/MentorCard';
 import { evaluateAwakeningTitle } from './AwakeningTitle';
 import { RandomSource } from './GeneralAging';
+import { applyPassiveSave, passiveSavingsOfSupport, totalVitalitySave, type MentorPassiveSavings } from './MentorPassiveSavings';
 import type { UnveilingGeneral } from './Unveiling';
 import { effectiveGrowthModifier } from './Unveiling';
 import { HybridSkillSource, rollHybridTrigger } from './HybridSkill';
@@ -99,7 +100,7 @@ export class NurtureError extends Error {}
  * 與 models/MentorCard（退役當下的武將快照）不同：後者是「資料」，這個是「效果」；
  * 退役教官用 mentorFromCard() 轉換，其他來源（卡池、傭兵）直接組出這個型別。
  */
-export interface TrainingMentor {
+export interface TrainingMentor extends MentorPassiveSavings {
     id: string;
     name: string;
     /** 教官家族名，之後做世家保底時比對子嗣姓氏 */
@@ -452,7 +453,8 @@ export function executeRound(
     } else {
         const failureRate = trainingFailureRate(vigorBefore, source.mentors.filter((mentor) => source.mentorSlots[mentor.id] === action));
         const failed = failureRate > 0 && random() < failureRate;
-        const cost = Math.round(randInt(random, TRAINING_VIGOR_COST[0], TRAINING_VIGOR_COST[1]) * (options.trainingVigorMultiplier ?? 1));
+        // 教官卡 VITALITY_SAVE：帶著的教官體力消耗減免相加（封頂），乘算（PROG-2-1999，暫定）；沒帶卡時 ×1 不變
+        const cost = Math.round(applyPassiveSave(randInt(random, TRAINING_VIGOR_COST[0], TRAINING_VIGOR_COST[1]) * (options.trainingVigorMultiplier ?? 1), totalVitalitySave(source.mentors)));
         session.vigor = Math.max(0, vigorBefore - cost);
         log.failureRate = failureRate;
         log.mentorsOnSlot = source.mentors.filter((mentor) => source.mentorSlots[mentor.id] === action).map((mentor) => mentor.id);
@@ -726,6 +728,7 @@ export function mentorFromCard(
         ...(perks.initialFriendship > 0 ? { friendship: perks.initialFriendship } : {}),
         // 呼叫端明確覆寫時照用；否則卡片爆發率依突破星等成長（PROG-2-1163）
         burstRate: overrides.burstRate ?? burstRateAtStar(card.support?.slotBurstRate ?? MENTOR_CARD_DEFAULT_BURST_RATE, stars),
+        ...passiveSavingsOfSupport(card.support, stars),
         familyName: overrides.familyName ?? (card.name ? surnameOf(card.name) : undefined),
         ...(card.support
             ? {

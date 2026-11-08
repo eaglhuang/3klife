@@ -50,6 +50,7 @@ import { hasMatchingGreenFactor, learnTacticInto, type TacticLearnCheck } from '
 import { canStartAutoNurture, consumeAutoNurtureTicket, isAutoNurtureUnlocked, resolveAutoSchedule, runAutoNurtureSeason, type AutoNurtureBlockReason } from '../systems/AutoNurture';
 import { inspiredTacticIds, type NurtureAction, type NurtureRoundLog } from '../systems/NurtureSystem';
 import { learnTpCost } from '../systems/FactorTacticLinkage';
+import { applyPassiveSave, totalTacticTpDiscount } from '../systems/MentorPassiveSavings';
 import type { GeneralConfig } from '../models/GeneralUnit';
 import { advanceDaughtersOneYear, assignDaughterRoute, daughtersAwaitingRoute, type AssignDaughterResult, type DaughterRecord, type DaughterRoute } from '../systems/DaughterComingOfAge';
 import { formatSeasonLabel, GameClock, GameTimeState, SeasonAdvanceResult, SEASONS_PER_YEAR } from '../systems/GameClock';
@@ -3499,7 +3500,8 @@ export class GameSession {
         if (session.status !== 'completed') return { ok: false, blocked: 'NOT_GRADUATING', learned: [...(general.learnedTactics ?? [])] };
         if (!inspiredTacticIds(session).includes(tacticId)) return { ok: false, blocked: 'NOT_INSPIRED', learned: [...(general.learnedTactics ?? [])] };
         const green = hasMatchingGreenFactor(general.genes, tacticId);
-        const tpCost = Math.ceil(learnTpCost(getTacticTpCost(tacticId), green));
+        // 教官卡 TP_Bonus：帶著的教官戰法 TP 消耗減免相加（封頂），乘算後進位（PROG-2-1999，暫定）
+        const tpCost = Math.ceil(applyPassiveSave(learnTpCost(getTacticTpCost(tacticId), green), totalTacticTpDiscount(session.mentors)));
         const check = learnTacticInto(general.learnedTactics ?? [], tacticId, battleIntelligenceOf(general), session.tp, tpCost);
         if (!check.ok) return check;
         this._nurture!.restoreState({
