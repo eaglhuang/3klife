@@ -230,7 +230,7 @@ import { forgeCustomGold, mergeCustomFactors, normalizeCustomFactors } from '../
 import { HIDDEN_LINEAGE_COST, normalizePedigreeProbes, PEDIGREE_PROBE_COST, pedigreeProbeKey, STAT_PROBE_COST, statProbeKey } from '../systems/PedigreeProbe';
 import type { RumorStatKey } from '../systems/MatchRumor';
 import { yuedanBannerLines } from '../systems/YuedanReview';
-import { dueChildOmens } from '../systems/ChildUnveiling';
+import { dueChildOmens, epitaphJournalEntry } from '../systems/ChildUnveiling';
 import { clanHallNameOf, normalizeClanHall } from '../systems/ClanHall';
 import { CLAN_TRADITION_MIN_TIER, clanTraditionOf, normalizeClanTradition, type ClanTradition } from '../systems/ClanTradition';
 import { seasonModifiersOf } from '../systems/SeasonModifiers';
@@ -3347,6 +3347,19 @@ export class GameSession {
         });
     }
 
+    /** 老死與燃壽死亡都算入祀絕筆（doc_spec_0312 §5.3，PROG-2-2107）；亡者要從季結移除前的名冊找 */
+    private _recordDeathEpitaphs(before: readonly GeneralConfig[], events: readonly AgingEvent[]): void {
+        for (const event of events) {
+            const dead = event.type === 'died' ? before.find((g) => g.id === event.generalId) : undefined;
+            if (dead) this._recordEpitaph(dead, 'natural');
+        }
+    }
+
+    private _recordEpitaph(general: GeneralConfig, cause: 'retire' | 'natural'): void {
+        const entry = epitaphJournalEntry(general, cause, this._journal.entries.length + 1, seasonJournalTimestamp(this._clock.state));
+        if (entry) this.recordJournal(entry);
+    }
+
     /** 立春名士占卜（doc_spec_0312 §2，PROG-2-2106）：符合門檻的子嗣各寫一則日誌，回傳換季通知要顯示的台詞 */
     private _recordChildOmens(): string[] {
         return dueChildOmens(this._roster.getAll(), this._factorDictionary).map((notice) => {
@@ -4195,6 +4208,7 @@ export class GameSession {
         const eventNotice = this.governanceEventNotice;
         const yuedanLines = advance.yearEnded ? yuedanBannerLines(this._roster.getAll()) : [];
         const omenLines = advance.yearEnded ? this._recordChildOmens() : [];
+        this._recordDeathEpitaphs(rosterBeforeLifecycle, agingEvents);
         // 新提親取代去年沒回覆的；同樣不消耗主亂數
         if (advance.yearEnded) {
             this._familySynergy = finalizeAdultChildren(this._familySynergy, this._roster.getAll());
@@ -4456,6 +4470,8 @@ export class GameSession {
         }
         this.recordPlayerLog('GENERAL_RETIRE');
         this._recordEventJournal('GENERAL_RETIRE', retiredSubjects);
+        const retired = roster.find((g) => g.id === generalId);
+        if (retired) this._recordEpitaph(retired, 'retire');
         this._emit(GAME_SESSION_EVENTS.GeneralRetired, result.card);
         if (prestige) this._emit(GAME_SESSION_EVENTS.ClanPrestigeChanged, prestige);
         this._emitLifeImprints(retireImprints.imprinted);

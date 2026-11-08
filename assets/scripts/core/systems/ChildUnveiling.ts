@@ -11,11 +11,13 @@
  *
  * 與既有 SageRemarks 的天象（依季節與種子抽選的演出用）並存；本檔是依資質門檻判定的正式提示。
  * 暫定：開獎典禮 UI、宿命選擇彈窗與福祉實際套用另卡。
+ * 暫定（PROG-2-2107）：規格寫告別信入庫家族演武堂，但演武堂與信件閱讀畫面都還沒有，絕筆先寫進日誌；戰歿另卡接戰場。
  * 暫定（PROG-2-2106）：規格只寫「立春換季時播報」，每年重報同一句會洗版，先定為出生後第一個立春報一次。
  * Unity 對照：像一組 static 規則表 + 查表函式，輸入子嗣資料、輸出顯示用結果。
  */
 import { CHILD_STATUS_MYSTERY } from './BreedingSystem';
 import type { FactorDictionary } from './FactorInheritance';
+import type { JournalEntryInput } from './JournalLog';
 
 export type ChildOmenId = 'OMEN_PURPLE_QI' | 'OMEN_METEOR_DREAM' | 'OMEN_TIGER_ROAR' | 'OMEN_DEER_HERB';
 export type CareerFateType = 'Warrior' | 'Scholar' | 'ClanKeeper' | 'Hermit';
@@ -170,4 +172,24 @@ export function epitaphTypeFor(cause: 'retire' | 'battle' | 'natural', finalRank
     if (cause === 'battle') return 'BattleDeath';
     if (cause === 'natural') return 'ClanShrine';
     return finalRank >= RETIREMENT_EPITAPH_MIN_RANK ? 'Retirement' : null;
+}
+
+/** 絕筆比一般退役、出生事件（60）更該留在晨報 */
+export const EPITAPH_JOURNAL_PRIORITY = 70;
+
+/** 組成絕筆日誌；這個死因不寫絕筆（將階不足的退役）回傳 null。 */
+export function epitaphJournalEntry(
+    general: { readonly id: string; readonly name?: string; readonly generalRank?: number },
+    cause: 'retire' | 'battle' | 'natural', sequence: number, timestamp: string,
+): JournalEntryInput | null {
+    const type = epitaphTypeFor(cause, general.generalRank ?? 0);
+    if (!type) return null;
+    return {
+        entryId: `EPITAPH-${sequence}`,
+        timestamp,
+        category: 'GROWTH',
+        relatedGeneralUids: [general.id],
+        priority: EPITAPH_JOURNAL_PRIORITY,
+        summary: `${general.name ?? general.id}絕筆：${EPITAPH_TEXT[type]}`,
+    };
 }
