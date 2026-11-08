@@ -88,8 +88,8 @@
                 "name": "ColumnHeaderRow",
                 "widget": {
                   "top": 24,
-                  "left": 24,
-                  "right": 20
+                  "left": 42,
+                  "right": 2
                 },
                 "height": 28,
                 "layout": {
@@ -201,8 +201,8 @@
                   "layout": {
                     "type": "horizontal",
                     "spacing": 0,
-                    "paddingLeft": 18,
-                    "paddingRight": 18,
+                    "paddingLeft": 36,
+                    "paddingRight": 0,
                     "paddingTop": 10,
                     "paddingBottom": 10
                   },
