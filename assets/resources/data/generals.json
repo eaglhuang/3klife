@@ -3702,8 +3702,8 @@
       "cha": 72,
       "luk": 59
     },
-    "skillId": null,
-    "battlePrimarySkillId": null,
+    "skillId": "sow-discord",
+    "battlePrimarySkillId": "sow-discord",
     "preferredTerrain": "forest",
     "terrainDefenseBonus": 0.05,
     "source": "資料中心 master build",
