@@ -70,16 +70,17 @@ export const MENTOR_ARCHETYPE_DEFS: Readonly<Record<MentorArchetype, MentorArche
     },
 };
 
+/** 舊存檔或測試假資料可能缺欄位：缺 trainingSlotAffinity 不視為「無專精」，其餘缺值當空 */
 type ArchetypeSource = Pick<SupportCardDef, 'statBonus' | 'tacticInspireEvents' | 'trainingSlotAffinity' | 'synergyPartners' | 'synergyEventId'>;
 
 function statTotal(def: ArchetypeSource): number {
-    return Object.values(def.statBonus).reduce<number>((sum, v) => sum + (typeof v === 'number' ? v : 0), 0);
+    return Object.values(def.statBonus ?? {}).reduce<number>((sum, v) => sum + (typeof v === 'number' ? v : 0), 0);
 }
 
 const RULES: Readonly<Record<MentorArchetype, (def: ArchetypeSource) => boolean>> = {
-    GROUP: (def) => !!def.synergyEventId && def.synergyPartners.length > 0,
-    RESOURCE: (def) => def.trainingSlotAffinity.length === 0,
-    SKILL_BANK: (def) => def.tacticInspireEvents.length >= MENTOR_ARCHETYPE_THRESHOLDS.skillBankMinInspireEvents
+    GROUP: (def) => !!def.synergyEventId && (def.synergyPartners?.length ?? 0) > 0,
+    RESOURCE: (def) => Array.isArray(def.trainingSlotAffinity) && def.trainingSlotAffinity.length === 0,
+    SKILL_BANK: (def) => (def.tacticInspireEvents?.length ?? 0) >= MENTOR_ARCHETYPE_THRESHOLDS.skillBankMinInspireEvents
         && statTotal(def) <= MENTOR_ARCHETYPE_THRESHOLDS.skillBankMaxStatTotal,
     STAT_STICK: () => true,
 };
