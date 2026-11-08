@@ -31,11 +31,14 @@ import {
     previewAtavismSeeds,
     previewBreedingEp,
     expectedFactorPool,
+    FATHER_VIGOR_COST,
+    MOTHER_VIGOR_COST,
     toPersonRecord,
     kinPurificationTargets,
 } from '../systems/BreedingSystem';
 import type { KinPurificationTarget } from '../systems/KinPurification';
 import type { FactorColor, FactorDictionary } from '../systems/FactorInheritance';
+import { failedConceptionVitalityRefund } from '../systems/BreedingAuxItems';
 import { femaleSourceConceptionMod, type FemaleSource } from '../systems/FemaleSource';
 import { affinityResolverOf, conceptionModBetween, type HistoricalPairTable } from '../systems/HistoricalPairs';
 import { generateVirtualAncestry, toRegistryEntries } from '../systems/VirtualAncestorGenerator';
@@ -253,6 +256,8 @@ export class BreedingService {
         const ids = new Set(roster.map((g) => g.id));
         const historicalPairs = this._pairs();
         const childId = (this._options.childIdFactory ?? defaultChildId)(father, mother, ids);
+        // 要在 onBreedPerformed 清掉道具標記之前讀
+        const itemConceptionMod = this._options.itemConceptionMod?.();
 
         const result = breed({
             father,
@@ -272,10 +277,19 @@ export class BreedingService {
             motherConceptionMod: femaleSourceConceptionMod(this._options.getFemaleSource?.(mother.id) ?? null),
             historicalConceptionMod: historicalPairs ? conceptionModBetween(historicalPairs, father.id, mother.id) : undefined,
             seasonConceptionMod: this._options.seasonConceptionMod?.(),
-            itemConceptionMod: this._options.itemConceptionMod?.(),
+            itemConceptionMod,
         });
         if (result.outcome === 'blocked') return result;
         this._options.onBreedPerformed?.();
+        if (result.outcome === 'failed' && (itemConceptionMod ?? 1) > 1) {
+            const refund = {
+                father: failedConceptionVitalityRefund(FATHER_VIGOR_COST),
+                mother: failedConceptionVitalityRefund(MOTHER_VIGOR_COST),
+            };
+            result.vitalityRefund = refund;
+            result.father = { ...result.father, vitality: (result.father.vitality ?? 0) + refund.father };
+            result.mother = { ...result.mother, vitality: (result.mother.vitality ?? 0) + refund.mother };
+        }
         result.relationEvents = relationEventsForBreeding(
             this._pairs(),
             this._relationEvents,
