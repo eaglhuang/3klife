@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "liao-hua": {
+      "x": 300,
+      "y": 20,
+      "w": 350,
+      "h": 350,
+      "source": "reviewed",
+      "$note": "2026-11-08 廖化蜀綠銅甲持刀造型裁切。"
+    },
     "huang-quan": {
       "x": 335,
       "y": 0,

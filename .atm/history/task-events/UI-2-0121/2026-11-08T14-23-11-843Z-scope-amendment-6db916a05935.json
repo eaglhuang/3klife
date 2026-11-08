@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-08T14-23-11-843Z-scope-amendment-6db916a05935",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:940a864e7bf6b37e8357c4d0162d151a2107b93ff56e7d56a4c56c45f5792058",
+  "createdAt": "2026-11-08T14:23:11.843Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/liao_hua_portrait.png,assets/resources/sprites/generals/avatars/liao_hua_avatar.png,assets/resources/sprites/ui_avatars/cropped/liao_hua_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
