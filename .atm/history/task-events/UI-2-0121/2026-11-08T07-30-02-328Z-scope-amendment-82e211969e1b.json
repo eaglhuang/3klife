@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-08T07-30-02-328Z-scope-amendment-82e211969e1b",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:d97c533cf66a6cd6da47402c0d3de281ce3eca3399cafab771ecacb498e25fec",
+  "createdAt": "2026-11-08T07:30:02.328Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/xun_yu_portrait.png,assets/resources/sprites/generals/avatars/xun_yu_avatar.png,assets/resources/sprites/ui_avatars/cropped/xun_yu_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
