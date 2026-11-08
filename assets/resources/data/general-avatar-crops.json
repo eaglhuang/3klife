@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "zhu-rong": {
+      "x": 320,
+      "y": 0,
+      "w": 370,
+      "h": 370,
+      "source": "reviewed",
+      "$note": "2026-11-08 男性神話祝融焰銅甲重繪；與祝融夫人為不同角色。"
+    },
     "zhou-tai": {
       "x": 345,
       "y": 85,
