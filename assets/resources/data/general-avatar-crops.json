@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "xiahou-yuan": {
+      "x": 330,
+      "y": 0,
+      "w": 370,
+      "h": 370,
+      "source": "reviewed",
+      "$note": "2026-11-08 夏侯淵魏藍棕甲重繪；頭像保留頭帶與肩頸。"
+    },
     "sun-jian": {
       "x": 350,
       "y": 0,
