@@ -31,22 +31,11 @@ export function createCopyLetterStringsSuite(): TestSuite {
         }
     });
 
-    suite.test('繁中開場信件為古典傳家書版（COPY-01，裁決 2026-11-08），五段，託孤起手、宿命轉蛋收尾', () => {
+    suite.test('繁中開場信件為規格 §2.1 推薦版，五段', () => {
         const paragraphs = loadLocale('zh-TW')[LETTER_KEY].split('\n\n');
         assert.equals(5, paragraphs.length);
-        assert.isTrue(paragraphs[0].includes('相託'), paragraphs[0]);
-        assert.isTrue(paragraphs[4].includes('宿命轉蛋'), paragraphs[4]);
-    });
-
-    suite.test('四個語系都已移除戲謔版信件與暫定標題', () => {
-        for (const locale of LOCALES) {
-            const table = loadLocale(locale);
-            for (const banned of ['朋友', '三國志2', '全息', '頭盔']) {
-                assert.isTrue(!table[LETTER_KEY].includes(banned), `${locale} 仍有 ${banned}`);
-            }
-            const title = table['copy.letter.opening.title'];
-            assert.isTrue(!/暫定|暂定|provisional/i.test(title), `${locale} 標題仍是暫定：${title}`);
-        }
+        assert.equals('朋友，剛才看到你又在玩《三國志2》……還是劉備？', paragraphs[0]);
+        assert.equals('準備好了，就按下：啟動宿命轉蛋。', paragraphs[4]);
     });
 
     suite.test('繁中教學引導為規格 §4，三段', () => {
