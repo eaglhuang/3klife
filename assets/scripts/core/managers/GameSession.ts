@@ -186,6 +186,7 @@ import { specialActionFactorTags } from '../systems/BattleSpecialActions';
 import { applyDuplicatePull, RebirthPullResult } from '../systems/Rebirth';
 import { bondedMercenaryGeneralIds, duplicatePopupGeneralIds, mercenaryRebirthStatCap } from '../systems/MercenaryRebirth';
 import { randomizePulledTactics } from '../systems/TacticRandomization';
+import { resolveReleaseEpiphanyWithTactic, type ReleaseEpiphanyTacticResult } from '../systems/ReleaseEpiphany';
 import { withUltimateUnlockState } from '../systems/UltimateSlotUnlock';
 import { MentorDuplicateOutcome, overflowToastText, resolveMentorDuplicate } from '../systems/MentorOverflow';
 import { normalizeBondPoints, overflowBondPoints, overflowRarityOf } from '../systems/OverflowBond';
@@ -2123,7 +2124,7 @@ export class GameSession {
         return result;
     }
 
-    public async resolvePrisoner(targetUid: string, decision: PowDecision, options: { gold?: number } = {}): Promise<PowResolution | null> {
+    public async resolvePrisoner(targetUid: string, decision: PowDecision, options: { gold?: number } = {}): Promise<(PowResolution & { epiphany?: ReleaseEpiphanyTacticResult }) | null> {
         const pending = this._prison.pending.find((p) => p.record.targetUid === targetUid);
         if (!pending) return null;
         const resolution = resolvePowDecision(pending.record, decision, {
@@ -2184,10 +2185,38 @@ export class GameSession {
             // addGenerals 廣播 RosterChanged；監獄狀態另外存檔
             await this.addGenerals([{ ...pending.target }]);
         }
+        // 放走敵將頓悟（LVL-13，PROG-2-1996）：軍資 = 呼叫端傳入的黃金；實際花費併入 goldSpent 讓呼叫端照扣
+        const epiphany = resolution.released ? this._applyReleaseEpiphany(options.gold ?? 0) : null;
         if (this._autoSave && this._save) {
             await this.save();
         }
-        return resolution;
+        return epiphany ? { ...resolution, goldSpent: resolution.goldSpent + epiphany.suppliesSpent, epiphany } : resolution;
+    }
+
+    /**
+     * 放走敵將的頓悟（LVL-13）：我方存活的非教官卡武將 >= 10 人且軍資足夠時，隨機一名武將習得教官專屬戰法，
+     * 專屬戰法都學會了才改為既有戰法 Level +1。沒觸發回傳 null，不動任何資料。
+     */
+    private _applyReleaseEpiphany(supplies: number): ReleaseEpiphanyTacticResult | null {
+        const all = this._roster.getAll();
+        const isMentor = (g: GeneralConfig): boolean => (g as GeneralConfig & { isMentorCard?: boolean }).isMentorCard === true;
+        const living = all.filter((g) => !isGeneralDead(g) && !isMentor(g));
+        const mentorExclusive = Array.from(new Set(all.filter(isMentor).flatMap((g) => g.learnedTactics ?? [])));
+        const result = resolveReleaseEpiphanyWithTactic({
+            candidates: living.map((g) => ({ id: g.id, learned: g.learnedTactics ?? [], exp: g.tacticExp ?? {} })),
+            mentorExclusive,
+            supplies,
+            rng: this._random,
+        });
+        if (!result.triggered || !result.gain || !result.winnerId) return null;
+        const gain = result.gain;
+        this._roster.replaceAll(all.map((g) => {
+            if (g.id !== result.winnerId) return g;
+            return gain.kind === 'learn'
+                ? { ...g, learnedTactics: [...(g.learnedTactics ?? []), gain.tacticId] }
+                : { ...g, tacticExp: { ...(g.tacticExp ?? {}), [gain.tacticId]: gain.expAfter } };
+        }));
+        return result;
     }
 
     /** 注入武將配置（generals.json），供俘虜來投時依 uid 重建武將 */
