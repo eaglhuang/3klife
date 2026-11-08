@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-08T08-06-34-349Z-scope-amendment-800e763ef2ad",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:c852013f22938f45ed518fe465cb5489812a3e696c344a94d6b32e8788f57b49",
+  "createdAt": "2026-11-08T08:06:34.349Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/cao_ang_portrait.png,assets/resources/sprites/generals/avatars/cao_ang_avatar.png,assets/resources/sprites/ui_avatars/cropped/cao_ang_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}

@@ -10,8 +10,8 @@
   "tags": [],
   "createdAt": "2026-11-05T14:30:28.536Z",
   "createdByActor": "codex-gpt-6.1-sol",
-  "lastTransitionId": "2026-11-08T08-01-35-237Z-scope-amendment-86ef3b945c01",
-  "lastTransitionAt": "2026-11-08T08:01:35.237Z",
+  "lastTransitionId": "2026-11-08T08-06-34-349Z-scope-amendment-800e763ef2ad",
+  "lastTransitionAt": "2026-11-08T08:06:34.349Z",
   "ledgerContractVersion": "task-ledger/v1",
   "reservedAt": "2026-11-05T17:15:58.821Z",
   "promotedAt": "2026-11-05T17:15:58.826Z",
@@ -117,6 +117,7 @@
       "assets/resources/sprites/generals/avatars/cai_shi_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/cai_wenji_avatar.png",
       "assets/resources/sprites/generals/avatars/cai_yan_avatar.png",
+      "assets/resources/sprites/generals/avatars/cao_ang_avatar.png",
       "assets/resources/sprites/generals/avatars/cao_cao_avatar.png",
       "assets/resources/sprites/generals/avatars/cao_hua_avatar.png",
       "assets/resources/sprites/generals/avatars/cao_hua_avatar.png.meta",
@@ -232,6 +233,7 @@
       "assets/resources/sprites/generals/cai_shi_portrait.png.meta",
       "assets/resources/sprites/generals/cai_wenji_portrait.png",
       "assets/resources/sprites/generals/cai_yan_portrait.png",
+      "assets/resources/sprites/generals/cao_ang_portrait.png",
       "assets/resources/sprites/generals/cao_cao_portrait.png",
       "assets/resources/sprites/generals/cao_hua_portrait.png",
       "assets/resources/sprites/generals/cao_hua_portrait.png.meta",
@@ -347,6 +349,7 @@
       "assets/resources/sprites/ui_avatars/cropped/cai_shi_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/cai_wenji_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/cai_yan_avatar.png",
+      "assets/resources/sprites/ui_avatars/cropped/cao_ang_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/cao_cao_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/cao_hua_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/cao_hua_avatar.png.meta",
@@ -474,20 +477,20 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-7ace0e841835b4c6",
-    "ticketDigest": "sha256:7ace0e841835b4c6d29102d9acefcc6bd16138c43b80e104b4043650f9a2db25",
+    "ticketId": "wat-560ff7c21f1b4855",
+    "ticketDigest": "sha256:560ff7c21f1b4855abe5d6c72bf21d144d01c525e65fb7f7754235048081c0a9",
     "taskId": "UI-2-0121",
     "origin": "claim",
     "actorId": "codex-gpt-6.1-terra",
     "laneSessionId": "lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d",
     "claimGeneration": "lease-f957fb02b01d",
-    "issuedAt": "2026-11-08T08:01:35.112Z",
-    "expiresAt": "2026-11-08T08:31:35.112Z",
-    "scopeDigest": "sha256:ead13a5d09a192ae69d02598d655958eaf53301bddfbc73fb658b9f8b058bb2a",
+    "issuedAt": "2026-11-08T08:06:34.225Z",
+    "expiresAt": "2026-11-08T08:36:34.225Z",
+    "scopeDigest": "sha256:2b1e51c00701302ca10f25fcde958f552c45413788e64cce185ce69ba8efbce6",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-11-08T08:01:35.112Z"
+      "selectedAt": "2026-11-08T08:06:34.225Z"
     },
     "grants": [
       {
@@ -589,6 +592,7 @@
           "assets/resources/sprites/generals/avatars/cai_shi_avatar.png.meta",
           "assets/resources/sprites/generals/avatars/cai_wenji_avatar.png",
           "assets/resources/sprites/generals/avatars/cai_yan_avatar.png",
+          "assets/resources/sprites/generals/avatars/cao_ang_avatar.png",
           "assets/resources/sprites/generals/avatars/cao_cao_avatar.png",
           "assets/resources/sprites/generals/avatars/cao_hua_avatar.png",
           "assets/resources/sprites/generals/avatars/cao_hua_avatar.png.meta",
@@ -704,6 +708,7 @@
           "assets/resources/sprites/generals/cai_shi_portrait.png.meta",
           "assets/resources/sprites/generals/cai_wenji_portrait.png",
           "assets/resources/sprites/generals/cai_yan_portrait.png",
+          "assets/resources/sprites/generals/cao_ang_portrait.png",
           "assets/resources/sprites/generals/cao_cao_portrait.png",
           "assets/resources/sprites/generals/cao_hua_portrait.png",
           "assets/resources/sprites/generals/cao_hua_portrait.png.meta",
@@ -819,6 +824,7 @@
           "assets/resources/sprites/ui_avatars/cropped/cai_shi_avatar.png.meta",
           "assets/resources/sprites/ui_avatars/cropped/cai_wenji_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/cai_yan_avatar.png",
+          "assets/resources/sprites/ui_avatars/cropped/cao_ang_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/cao_cao_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/cao_hua_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/cao_hua_avatar.png.meta",
@@ -933,7 +939,7 @@
           "docs/ui-quality-tasks/UI-2-0121.json",
           "docs/ui-quality-todo.json"
         ],
-        "digest": "sha256:b289233359db483720ede2353402d2ee981c05bf50fe6396aa586bd800d11a51"
+        "digest": "sha256:9e65ae1f936a84094c03a03d21f53257873f88872937dda56dbc16e9e75c0984"
       },
       {
         "kind": "lifecycle-operation",
@@ -1077,6 +1083,7 @@
       "assets/resources/sprites/generals/avatars/cai_shi_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/cai_wenji_avatar.png",
       "assets/resources/sprites/generals/avatars/cai_yan_avatar.png",
+      "assets/resources/sprites/generals/avatars/cao_ang_avatar.png",
       "assets/resources/sprites/generals/avatars/cao_cao_avatar.png",
       "assets/resources/sprites/generals/avatars/cao_hua_avatar.png",
       "assets/resources/sprites/generals/avatars/cao_hua_avatar.png.meta",
@@ -1192,6 +1199,7 @@
       "assets/resources/sprites/generals/cai_shi_portrait.png.meta",
       "assets/resources/sprites/generals/cai_wenji_portrait.png",
       "assets/resources/sprites/generals/cai_yan_portrait.png",
+      "assets/resources/sprites/generals/cao_ang_portrait.png",
       "assets/resources/sprites/generals/cao_cao_portrait.png",
       "assets/resources/sprites/generals/cao_hua_portrait.png",
       "assets/resources/sprites/generals/cao_hua_portrait.png.meta",
@@ -1307,6 +1315,7 @@
       "assets/resources/sprites/ui_avatars/cropped/cai_shi_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/cai_wenji_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/cai_yan_avatar.png",
+      "assets/resources/sprites/ui_avatars/cropped/cao_ang_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/cao_cao_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/cao_hua_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/cao_hua_avatar.png.meta",
@@ -2272,6 +2281,9 @@
     "assets/resources/sprites/ui_avatars/cropped/zhuge_jin_avatar.png",
     "assets/resources/sprites/generals/avatars/zhuge_ke_avatar.png",
     "assets/resources/sprites/generals/zhuge_ke_portrait.png",
-    "assets/resources/sprites/ui_avatars/cropped/zhuge_ke_avatar.png"
+    "assets/resources/sprites/ui_avatars/cropped/zhuge_ke_avatar.png",
+    "assets/resources/sprites/generals/avatars/cao_ang_avatar.png",
+    "assets/resources/sprites/generals/cao_ang_portrait.png",
+    "assets/resources/sprites/ui_avatars/cropped/cao_ang_avatar.png"
   ]
 }
