@@ -31,6 +31,8 @@ export type AgingGeneral = GeneralConfig & {
     maxLifespan?: number;
     /** 紅色因子等級（每級 +3 歲壽命） */
     redGeneLevel?: number;
+    /** 已服延壽丹顆數（每將終生上限見 LongevityRules）；舊檔缺值視為 0 */
+    longevityPillCount?: number;
 };
 
 export type AgingEventType = 'reached-retirement-age' | 'died' | 'entered-growth-stage' | 'passed-peak';

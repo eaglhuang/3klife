@@ -35,16 +35,27 @@ export interface ItemBagFlowView {
     actives: Record<string, boolean>;
 }
 
+/** 使用道具的對象武將（PROG-2-2105） */
+export interface ItemBagGeneralTarget {
+    readonly id: string;
+    readonly name: string;
+}
+
 export interface ItemBagDeps {
     inventory: () => PlayerInventory;
     /** 取得紀錄（BAG-08 寶物圖鑑摘要用）；未給視為空紀錄 */
     acquisitionLog?: () => readonly ItemAcquisitionRecord[];
     useItem: (itemId: string, nowMs: number) => ItemUseResult;
     now: () => number;
+    /** 要選武將才能用的道具：itemId → 對該武將使用，回傳提示文字（PROG-2-2105） */
+    generalTargetUses?: Readonly<Record<string, (target: ItemBagGeneralTarget) => Promise<string>>>;
+    /** 開選將畫面；玩家選定後呼叫 onPick */
+    pickGeneral?: (onPick: (target: ItemBagGeneralTarget) => void) => void;
 }
 
 const MSG_NONE_SELECTED = '請先選擇道具';
 const MSG_NOT_USABLE = '此道具目前無法使用';
+const MSG_TARGET_USE_FAILED = '使用失敗，請稍後再試';
 const MSG_ALREADY_ARMED = '安胎藥已生效中，下一次結緣成功時才會消耗';
 /** 道具系統 §G 安胎藥使用（PROG-2-1774） */
 const MSG_FERTILITY_USED = '安胎藥服下，此次結緣成功率大增！';
@@ -59,6 +70,8 @@ function rejectMessage(result: Extract<ItemUseResult, { ok: false }>): string {
 export class ItemBagController {
     private _selectedId: string | null = null;
     private _pendingConfirm = false;
+    private _useTarget: ItemBagGeneralTarget | null = null;
+    private _cancelPick: (() => void) | null = null;
     private _message = '';
     private _page = 0;
     private _category: ItemCategory | null = null;
@@ -75,7 +88,7 @@ export class ItemBagController {
         this._category = category;
         this._page = 0;
         this._selectedId = null;
-        this._pendingConfirm = false;
+        this._clearPending();
         this._message = '';
     }
 
@@ -111,14 +124,14 @@ export class ItemBagController {
         const next = this.page + delta;
         if (next < 0 || next >= this.pageCount()) return;
         this._page = next;
-        this._pendingConfirm = false;
+        this._clearPending();
         this._message = '';
     }
 
     /** 點目前頁第 index 列選取道具；取消任何待確認的使用。 */
     public select(index: number): void {
         this._selectedId = this.rows()[index]?.itemId ?? null;
-        this._pendingConfirm = false;
+        this._clearPending();
         this._message = '';
     }
 
@@ -129,13 +142,38 @@ export class ItemBagController {
             this._message = MSG_NONE_SELECTED;
             return;
         }
+        if (this._deps.generalTargetUses?.[row.itemId]) {
+            this._requestGeneralTarget(row);
+            return;
+        }
         this._pendingConfirm = true;
         this._message = `使用 ${row.name} ×1？`;
     }
 
+    /** 已選好對象武將、等待確定（PROG-2-2105）。 */
+    public get hasUseTarget(): boolean {
+        return this._pendingConfirm && this._useTarget !== null;
+    }
+
+    /** 按「確定」且已選好對象：對該武將使用道具，結果文字寫入提示；連按只會用一次。 */
+    public async confirmTargetUse(): Promise<void> {
+        const row = this._selectedRow();
+        const target = this._useTarget;
+        const use = row ? this._deps.generalTargetUses?.[row.itemId] : undefined;
+        if (!this._pendingConfirm || !row || !target || !use) return;
+        this._clearPending();
+        this._message = '';
+        try {
+            this._message = await use(target);
+        } catch {
+            this._message = MSG_TARGET_USE_FAILED;
+        }
+        if (this._selectedRow() === null) this._selectedId = null;
+    }
+
     /** 按「取消」：關掉確認，不用道具。 */
     public cancelUse(): void {
-        this._pendingConfirm = false;
+        this._clearPending();
         this._message = '';
     }
 
@@ -144,7 +182,7 @@ export class ItemBagController {
         const row = this._selectedRow();
         if (!this._pendingConfirm || !row) return null;
         const result = this._deps.useItem(row.itemId, this._deps.now());
-        this._pendingConfirm = false;
+        this._clearPending();
         this._message = result.ok === true ? (result.fertilityMultiplier !== undefined ? MSG_FERTILITY_USED : `已使用 ${row.name}`) : rejectMessage(result);
         if (this._selectedRow() === null) this._selectedId = null;
         return result;
@@ -177,6 +215,31 @@ export class ItemBagController {
             actives[`btnBagTab${index}`] = true;
         });
         return { texts, actives };
+    }
+
+    /** 先選武將，選定後才進確認，避免誤點就扣掉付費道具；選將途中換了道具就不算數。 */
+    private _requestGeneralTarget(row: ItemBagRow): void {
+        const pick = this._deps.pickGeneral;
+        if (!pick) {
+            this._message = MSG_NOT_USABLE;
+            return;
+        }
+        const itemId = row.itemId;
+        let requestStillValid = true;
+        this._cancelPick = () => { requestStillValid = false; };
+        pick((target) => {
+            if (!requestStillValid || this._selectedId !== itemId) return;
+            this._useTarget = target;
+            this._pendingConfirm = true;
+            this._message = `讓 ${target.name} 使用 ${row.name} ×1？`;
+        });
+    }
+
+    private _clearPending(): void {
+        this._pendingConfirm = false;
+        this._useTarget = null;
+        this._cancelPick?.();
+        this._cancelPick = null;
     }
 
     /** 寶物分類下才顯示圖鑑摘要（BAG-08），其他分類回空字串。 */
