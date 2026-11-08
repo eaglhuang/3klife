@@ -261,7 +261,7 @@ import {
     type GovernanceResult,
 } from '../systems/GovernanceAssignment';
 import { planAutoGovernance } from '../systems/DomesticAutoGovernance';
-import { CHILD_ASSIGNMENT_AGE, domesticAssignmentFor } from '../systems/SpiritMcqRules';
+import { CHILD_ASSIGNMENT_AGE, checkAwakeningQuota, domesticAssignmentFor } from '../systems/SpiritMcqRules';
 import { isDescendant, magistrateGoldBonus } from '../systems/ChildMagistrate';
 import {
     maxTaskSlotsForLevel,
@@ -4606,6 +4606,8 @@ export class GameSession {
             });
         }
         for (const entry of settlement.entries) {
+            // Q52：單場戰鬥最多覺醒 1 個因子（PROG-2-1991）；額度用完後不再擲，也不消耗亂數
+            if (!checkAwakeningQuota(awakenings.length)) break;
             const index = roster.findIndex((g) => g.id === entry.generalId);
             const actions = options.specialActions?.[entry.generalId] ?? [];
             const rolled = rollBattleAwakening(roster[index], {
