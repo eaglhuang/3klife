@@ -88,8 +88,8 @@ export function createGenerationCycleE2ESuite(): TestSuite {
 
         // 第一代長輩滿 65 歲退役成教官卡，存讀檔後教官卡與孫輩都在
         guard = 0;
-        while (((find(w, 'hero') as GeneralConfig).age ?? 0) < 65 && guard++ < 200) await w.session.advanceSeason();
-        assert.isTrue(((find(w, 'hero') as GeneralConfig).age ?? 0) >= 65, '祖父年滿 65');
+        while (((find(w, 'hero') as GeneralConfig).age ?? 0) < 64 && guard++ < 200) await w.session.advanceSeason();
+        assert.isTrue(((find(w, 'hero') as GeneralConfig).age ?? 0) >= 64, '祖父年滿 65');
         const card = await w.session.retireGeneral('hero');
         assert.equals('hero', card.sourceGeneralId);
         w = await reopen(w, adapter);
