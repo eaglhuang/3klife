@@ -10,8 +10,8 @@
   "tags": [],
   "createdAt": "2026-11-05T14:30:28.536Z",
   "createdByActor": "codex-gpt-6.1-sol",
-  "lastTransitionId": "2026-11-08T13-45-34-971Z-scope-amendment-df746f908e1e",
-  "lastTransitionAt": "2026-11-08T13:45:34.971Z",
+  "lastTransitionId": "2026-11-08T13-49-37-552Z-scope-amendment-b46bb8fa5242",
+  "lastTransitionAt": "2026-11-08T13:49:37.552Z",
   "ledgerContractVersion": "task-ledger/v1",
   "reservedAt": "2026-11-05T17:15:58.821Z",
   "promotedAt": "2026-11-05T17:15:58.826Z",
@@ -151,6 +151,7 @@
       "assets/resources/sprites/generals/avatars/guo_nu_wang_avatar.png",
       "assets/resources/sprites/generals/avatars/guo_nu_wang_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/han_dang_avatar.png",
+      "assets/resources/sprites/generals/avatars/he_qi_avatar.png",
       "assets/resources/sprites/generals/avatars/hua_man_avatar.png",
       "assets/resources/sprites/generals/avatars/hua_man_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/hua_tuo_avatar.png",
@@ -275,6 +276,7 @@
       "assets/resources/sprites/generals/guo_nu_wang_portrait.png",
       "assets/resources/sprites/generals/guo_nu_wang_portrait.png.meta",
       "assets/resources/sprites/generals/han_dang_portrait.png",
+      "assets/resources/sprites/generals/he_qi_portrait.png",
       "assets/resources/sprites/generals/hua_man_portrait.png",
       "assets/resources/sprites/generals/hua_man_portrait.png.meta",
       "assets/resources/sprites/generals/hua_tuo_portrait.png",
@@ -401,6 +403,7 @@
       "assets/resources/sprites/ui_avatars/cropped/guo_nu_wang_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/guo_nu_wang_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/han_dang_avatar.png",
+      "assets/resources/sprites/ui_avatars/cropped/he_qi_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/hua_man_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/hua_man_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/hua_tuo_avatar.png",
@@ -502,20 +505,20 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-7cb1dc12a45f1b41",
-    "ticketDigest": "sha256:7cb1dc12a45f1b41d54e7ac02b5122abd33c133afb86dfeff269b0a7ebde4051",
+    "ticketId": "wat-eab8f21f00b968e2",
+    "ticketDigest": "sha256:eab8f21f00b968e2c72b7ba058bd0b2e2a6e430ee66a8530c0717ca7a183947f",
     "taskId": "UI-2-0121",
     "origin": "claim",
     "actorId": "codex-gpt-6.1-terra",
     "laneSessionId": "lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d",
     "claimGeneration": "lease-f957fb02b01d",
-    "issuedAt": "2026-11-08T13:45:34.825Z",
-    "expiresAt": "2026-11-08T14:15:34.825Z",
-    "scopeDigest": "sha256:13980a44c1e2d9e9ca5da0b9a09f0c3aec2cc95706ea64bbcb63ac47543161f0",
+    "issuedAt": "2026-11-08T13:49:37.261Z",
+    "expiresAt": "2026-11-08T14:19:37.261Z",
+    "scopeDigest": "sha256:9edfd6be1e0c5163843b17f5736d9b0e2a66dc5a1bdb3321b24081f7cdc60524",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-11-08T13:45:34.825Z"
+      "selectedAt": "2026-11-08T13:49:37.261Z"
     },
     "grants": [
       {
@@ -651,6 +654,7 @@
           "assets/resources/sprites/generals/avatars/guo_nu_wang_avatar.png",
           "assets/resources/sprites/generals/avatars/guo_nu_wang_avatar.png.meta",
           "assets/resources/sprites/generals/avatars/han_dang_avatar.png",
+          "assets/resources/sprites/generals/avatars/he_qi_avatar.png",
           "assets/resources/sprites/generals/avatars/hua_man_avatar.png",
           "assets/resources/sprites/generals/avatars/hua_man_avatar.png.meta",
           "assets/resources/sprites/generals/avatars/hua_tuo_avatar.png",
@@ -775,6 +779,7 @@
           "assets/resources/sprites/generals/guo_nu_wang_portrait.png",
           "assets/resources/sprites/generals/guo_nu_wang_portrait.png.meta",
           "assets/resources/sprites/generals/han_dang_portrait.png",
+          "assets/resources/sprites/generals/he_qi_portrait.png",
           "assets/resources/sprites/generals/hua_man_portrait.png",
           "assets/resources/sprites/generals/hua_man_portrait.png.meta",
           "assets/resources/sprites/generals/hua_tuo_portrait.png",
@@ -901,6 +906,7 @@
           "assets/resources/sprites/ui_avatars/cropped/guo_nu_wang_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/guo_nu_wang_avatar.png.meta",
           "assets/resources/sprites/ui_avatars/cropped/han_dang_avatar.png",
+          "assets/resources/sprites/ui_avatars/cropped/he_qi_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/hua_man_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/hua_man_avatar.png.meta",
           "assets/resources/sprites/ui_avatars/cropped/hua_tuo_avatar.png",
@@ -989,7 +995,7 @@
           "docs/ui-quality-tasks/UI-2-0121.json",
           "docs/ui-quality-todo.json"
         ],
-        "digest": "sha256:7760c43ca414b2e7eeed075d213955e2107c77d6cbf59abe4d791105e5d204f7"
+        "digest": "sha256:420a0dbd497fe684b39f2cc321c01fdd58a8504b4880eb113096b007b75112a4"
       },
       {
         "kind": "lifecycle-operation",
@@ -1167,6 +1173,7 @@
       "assets/resources/sprites/generals/avatars/guo_nu_wang_avatar.png",
       "assets/resources/sprites/generals/avatars/guo_nu_wang_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/han_dang_avatar.png",
+      "assets/resources/sprites/generals/avatars/he_qi_avatar.png",
       "assets/resources/sprites/generals/avatars/hua_man_avatar.png",
       "assets/resources/sprites/generals/avatars/hua_man_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/hua_tuo_avatar.png",
@@ -1291,6 +1298,7 @@
       "assets/resources/sprites/generals/guo_nu_wang_portrait.png",
       "assets/resources/sprites/generals/guo_nu_wang_portrait.png.meta",
       "assets/resources/sprites/generals/han_dang_portrait.png",
+      "assets/resources/sprites/generals/he_qi_portrait.png",
       "assets/resources/sprites/generals/hua_man_portrait.png",
       "assets/resources/sprites/generals/hua_man_portrait.png.meta",
       "assets/resources/sprites/generals/hua_tuo_portrait.png",
@@ -1417,6 +1425,7 @@
       "assets/resources/sprites/ui_avatars/cropped/guo_nu_wang_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/guo_nu_wang_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/han_dang_avatar.png",
+      "assets/resources/sprites/ui_avatars/cropped/he_qi_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/hua_man_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/hua_man_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/hua_tuo_avatar.png",
@@ -2420,6 +2429,9 @@
     "assets/resources/sprites/ui_avatars/cropped/han_dang_avatar.png",
     "assets/resources/sprites/generals/avatars/hua_tuo_avatar.png",
     "assets/resources/sprites/generals/hua_tuo_portrait.png",
-    "assets/resources/sprites/ui_avatars/cropped/hua_tuo_avatar.png"
+    "assets/resources/sprites/ui_avatars/cropped/hua_tuo_avatar.png",
+    "assets/resources/sprites/generals/avatars/he_qi_avatar.png",
+    "assets/resources/sprites/generals/he_qi_portrait.png",
+    "assets/resources/sprites/ui_avatars/cropped/he_qi_avatar.png"
   ]
 }

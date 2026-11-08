@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-08T13-49-37-552Z-scope-amendment-b46bb8fa5242",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:1330dca9359f2bdb4ad5ab172c9ba5e6b298ba1b0ee70da178340b14c8379c65",
+  "createdAt": "2026-11-08T13:49:37.552Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/he_qi_portrait.png,assets/resources/sprites/generals/avatars/he_qi_avatar.png,assets/resources/sprites/ui_avatars/cropped/he_qi_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
