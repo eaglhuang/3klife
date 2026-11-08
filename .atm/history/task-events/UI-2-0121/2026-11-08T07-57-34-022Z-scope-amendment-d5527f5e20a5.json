@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-08T07-57-34-022Z-scope-amendment-d5527f5e20a5",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:bfc8615b53583a4580c4b0834e4d395b2c1d9cfbc1c3c33cef95c3fd63b45c0a",
+  "createdAt": "2026-11-08T07:57:34.022Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/zhuge_jin_portrait.png,assets/resources/sprites/generals/avatars/zhuge_jin_avatar.png,assets/resources/sprites/ui_avatars/cropped/zhuge_jin_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
