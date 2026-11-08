@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "guan-xing": {
+      "x": 320,
+      "y": 100,
+      "w": 350,
+      "h": 350,
+      "source": "reviewed",
+      "$note": "2026-11-08 關興蜀綠銀甲立繪裁切。"
+    },
     "dong-zhuo": {
       "x": 330,
       "y": 0,
