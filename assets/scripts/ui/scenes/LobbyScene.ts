@@ -501,7 +501,7 @@ export class LobbyScene extends Component {
     private _gachaOwnedDuplicates: GeneralConfig[] = [];
 
     private _enrollGachaGenerals(generals: GeneralConfig[]): AddGeneralsResult {
-        const ownedIds = new Set(services().session.roster.map((general) => general.id));
+        const ownedIds = services().session.duplicatePopupOwnedIds();
         const { owned, rest } = splitOwnedDuplicates(generals, ownedIds);
         this._gachaOwnedDuplicates = owned;
         return services().session.enrollGenerals(rest, { rebirthOnDuplicate: true, fromGacha: true });

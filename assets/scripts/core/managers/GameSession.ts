@@ -184,6 +184,7 @@ import type { FactorColor, FactorDefinition, FactorDictionary } from '../systems
 import { visibleFactorColors as factorColorsVisibleAtLevel } from '../systems/FactorMask';
 import { specialActionFactorTags } from '../systems/BattleSpecialActions';
 import { applyDuplicatePull, RebirthPullResult } from '../systems/Rebirth';
+import { bondedMercenaryGeneralIds, duplicatePopupGeneralIds, mercenaryRebirthStatCap } from '../systems/MercenaryRebirth';
 import { randomizePulledTactics } from '../systems/TacticRandomization';
 import { withUltimateUnlockState } from '../systems/UltimateSlotUnlock';
 import { MentorDuplicateOutcome, overflowToastText, resolveMentorDuplicate } from '../systems/MentorOverflow';
@@ -4405,6 +4406,14 @@ export class GameSession {
         this._gachaMentorJournal = this._gachaMentorJournal.filter((_, i) => i !== index);
     }
 
+    /** 重複卡要跳分流彈窗的武將 id：已結義傭兵自動二轉，不在其中（MERC-09） */
+    public duplicatePopupOwnedIds(): Set<string> {
+        return duplicatePopupGeneralIds(
+            this._roster.getAll().map((general) => general.id),
+            bondedMercenaryGeneralIds(this._mercenaries.mercenaries),
+        );
+    }
+
     public async addGenerals(generals: GeneralConfig[], options: AddGeneralsOptions = {}): Promise<AddGeneralsResult> {
         const result = this.enrollGenerals(generals, options);
         if (result.added.length > 0 || result.rebirths.length > 0) {
@@ -4443,6 +4452,7 @@ export class GameSession {
             // 同一批先抽到的新武將還在 added 裡、尚未進名冊，批內第二張也要算重複（與跨批一致）
             const roster = this._roster.getAll();
             const byId = new Map([...roster, ...added].map((general) => [general.id, general]));
+            const bondedMercenaries = bondedMercenaryGeneralIds(this._mercenaries.mercenaries);
             for (const duplicate of duplicates) {
                 const target = byId.get(duplicate.id);
                 if (!target) continue;
@@ -4452,7 +4462,9 @@ export class GameSession {
                     rebirthCount: pull.rebirthCount,
                     ultimateSlots: withUltimateUnlockState(target.ultimateSlots ?? [], pull.rebirthCount),
                 });
-                rebirths.push({ id: duplicate.id, ...pull });
+                rebirths.push(bondedMercenaries.has(duplicate.id)
+                    ? { id: duplicate.id, ...pull, mercenaryStatCap: mercenaryRebirthStatCap(pull.rebirthCount) }
+                    : { id: duplicate.id, ...pull });
                 if (pull.overflow) {
                     bondPointsGained += overflowBondPoints(overflowRarityOf(target));
                 }

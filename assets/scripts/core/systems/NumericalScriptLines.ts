@@ -19,13 +19,13 @@ export function critLine(generalName: string, damage: number): string {
 }
 
 /** 這批抽卡的轉生突破句；滿轉溢出沒有增加上限，不算 */
-export function rebirthBreakthroughLine(rebirths: ReadonlyArray<{ overflow: boolean; rebirthCount: number; attributeCap: number }>): string | null {
-    let top: { rebirthCount: number; attributeCap: number } | null = null;
+export function rebirthBreakthroughLine(rebirths: ReadonlyArray<{ overflow: boolean; rebirthCount: number; attributeCap: number; mercenaryStatCap?: number }>): string | null {
+    let top: { rebirthCount: number; attributeCap: number; mercenaryStatCap?: number } | null = null;
     for (const rebirth of rebirths) {
         if (rebirth.overflow) continue;
         if (!top || rebirth.rebirthCount > top.rebirthCount) top = rebirth;
     }
-    return top ? `第 ${top.rebirthCount - 1} 次轉生！屬性上限突破至 ${top.attributeCap}！` : null;
+    return top ? `第 ${top.rebirthCount - 1} 次轉生！屬性上限突破至 ${top.mercenaryStatCap ?? top.attributeCap}！` : null;
 }
 
 export function highEpLine(ep: number | undefined): string | null {

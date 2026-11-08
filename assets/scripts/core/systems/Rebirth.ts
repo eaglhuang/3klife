@@ -51,6 +51,8 @@ export interface RebirthPullResult {
     overflow: boolean;
     attributeCap: number;
     trainingChances: number;
+    /** 已結義傭兵自動二轉時的單項五維上限（MERC-09）；其他武將沒有這個欄位 */
+    mercenaryStatCap?: number;
 }
 
 /** 一批抽卡最多顯示幾句轉生語音（暫定，避免十連抽排隊太久） */
