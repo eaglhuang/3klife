@@ -25,6 +25,17 @@ export function assignDomesticTask(age: number, taskIsLowEfficiency: boolean, ch
     return { ok: true, efficiency: e };
 }
 
+/** Q51 暫定：幼兒可做的低效內政（規格未列，暫取農耕、商業這類輕活；PROG-2-2090） */
+export const CHILD_LOW_EFFICIENCY_TASKS: readonly string[] = ['farming', 'commerce'];
+/** Q51 暫定：幼兒做低效內政的效率倍率 */
+export const CHILD_TASK_EFFICIENCY = 0.5;
+
+/** 依年齡與內政任務判斷能否指派與效率；缺年齡的舊資料視為成年。 */
+export function domesticAssignmentFor(age: number | undefined, task: string): ChildAssignmentResult {
+    if (typeof age !== 'number' || !Number.isFinite(age)) return { ok: true, efficiency: 1 };
+    return assignDomesticTask(age, CHILD_LOW_EFFICIENCY_TASKS.includes(task), CHILD_TASK_EFFICIENCY);
+}
+
 /** 單場戰鬥的覺醒計數；每場開戰時重新建立。 */
 export interface BattleAwakeningBudget {
     used: number;

@@ -261,6 +261,7 @@ import {
     type GovernanceResult,
 } from '../systems/GovernanceAssignment';
 import { planAutoGovernance } from '../systems/DomesticAutoGovernance';
+import { CHILD_ASSIGNMENT_AGE, domesticAssignmentFor } from '../systems/SpiritMcqRules';
 import { isDescendant, magistrateGoldBonus } from '../systems/ChildMagistrate';
 import {
     maxTaskSlotsForLevel,
@@ -3106,7 +3107,10 @@ export class GameSession {
 
     /** 指派武將到內政任務格（GOV-04）；被拒絕時不改動狀態。 */
     public assignGovernor(task: string, generalUid: string, maxSlots: number = this.maxTaskSlots): GovernanceResult {
-        if (!this._roster.getAll().some((general) => general.id === generalUid)) return { ok: false, reason: 'invalid-general', assignments: this.governanceAssignments };
+        const general = this._roster.getAll().find((g) => g.id === generalUid);
+        if (!general) return { ok: false, reason: 'invalid-general', assignments: this.governanceAssignments };
+        // SPI-13 Q51：未滿 15 歲只能做低效內政
+        if (!domesticAssignmentFor(general.age, task).ok) return { ok: false, reason: 'child-only-low-efficiency', assignments: this.governanceAssignments };
         const result = assignGovernanceGeneral(this._governance, task, generalUid, maxSlots);
         if (result.ok) this._governance = result.assignments;
         return result;
@@ -3116,7 +3120,13 @@ export class GameSession {
     public domesticGovernorStats(task: string): DomesticStats | null {
         const uid = this._governance.find((a) => a.task === task)?.generalUid;
         const general = uid ? this._roster.getAll().find((g) => g.id === uid) : undefined;
-        return general ? this.domesticStatsOf(general) : null;
+        if (!general) return null;
+        const stats = this.domesticStatsOf(general);
+        const assignment = domesticAssignmentFor(general.age, task);
+        const efficiency = assignment.ok ? assignment.efficiency : 0;
+        if (efficiency === 1) return stats;
+        // 幼兒做低效內政：屬性打折後再進產出公式
+        return { str: stats.str * efficiency, int: stats.int * efficiency, pol: stats.pol * efficiency, cha: stats.cha * efficiency };
     }
 
     /** 武將的內政用屬性（頂層欄位優先，舊資料退回 stats 子物件）。 */
@@ -3172,7 +3182,8 @@ export class GameSession {
     /** 空格依 §F 親和度補上閒置武將（PROG-2-1160 同一規則）；已有主事的格子不動 */
     private _fillAutoGovernance(): number {
         const candidates = this._roster.getAll()
-            .filter((general) => general.status !== 'dead')
+            // 自動治理不派幼兒（Q51 只許低效內政，留給玩家手動指派）
+            .filter((general) => general.status !== 'dead' && !(typeof general.age === 'number' && general.age < CHILD_ASSIGNMENT_AGE))
             .map((general) => ({ id: general.id, stats: this.domesticStatsOf(general) }));
         const picks = planAutoGovernance(candidates, (task) => this._governance.find((a) => a.task === task)?.generalUid ?? null);
         let filled = 0;
