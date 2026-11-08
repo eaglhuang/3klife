@@ -6,10 +6,15 @@
  * 暫定：好感 20–39 為普通、40 以上為感人（規格邊界 40 歸感人）；內文沿用字串表範例，感人版文案待企劃。
  *
  * Unity 對照：像一個 Inbox ScriptableObject 存信件列表，每封信帶 isRead；UI 只讀列表與未讀數。
+ * 暫定（PROG-2-2108）：收件匣還沒有閱讀畫面，信同時寫一則日誌，玩家從晨報與日誌中樞讀得到。
  */
+
+import type { JournalEntryInput } from './JournalLog';
 
 export const FAREWELL_MIN_AFFECTION = 20;
 export const FAREWELL_MOVING_AFFECTION = 40;
+/** 與退役、出生事件（60）同級，一封信不該被日常事件擠出晨報（暫定） */
+export const FAREWELL_JOURNAL_PRIORITY = 60;
 /** 收件匣上限（QA 2026-10-27 暫定）：只保留最新的信件。 */
 export const FAREWELL_INBOX_LIMIT = 50;
 
@@ -62,4 +67,16 @@ export function markFarewellLetterRead(inbox: readonly FarewellLetter[], id: str
 
 export function unreadFarewellCount(inbox: readonly FarewellLetter[]): number {
     return inbox.filter(item => !item.read).length;
+}
+
+/** 把信組成日誌；ID 跟著信件，同一封信不會變成兩則。 */
+export function farewellJournalEntry(letter: FarewellLetter, timestamp: string): JournalEntryInput {
+    return {
+        entryId: `FAREWELL-${letter.id}`,
+        timestamp,
+        category: 'INTERACTION',
+        relatedGeneralUids: [letter.uid],
+        priority: FAREWELL_JOURNAL_PRIORITY,
+        summary: `${letter.generalName}來信：${letter.body}`,
+    };
 }

@@ -84,7 +84,7 @@ import { advanceTrialDay } from '../systems/MercenaryTrialDay';
 import { reachedTrialDayThree, reachedTrustStage } from '../systems/MercenaryScripts';
 import { recordTrialBattle } from '../systems/MercenaryBattleRecord';
 import { settleTrialRollover, type DepartureEvent } from '../systems/MercenaryDeparture';
-import { appendFarewellLetter, createFarewellLetter, FarewellLetter, markFarewellLetterRead } from '../systems/FarewellLetterInbox';
+import { appendFarewellLetter, createFarewellLetter, FarewellLetter, farewellJournalEntry, markFarewellLetterRead } from '../systems/FarewellLetterInbox';
 import { EMPTY_LOGIN_STREAK, LoginStreakState, loginDayOf, recordLogin } from '../systems/LoginStreak';
 import { dailySubsidyOf, type SubsidyResourceKey } from '../systems/DailySubsidy';
 import { activateMonthlyCard, claimMonthlyCardDaily, isMonthlyCardExpiring, monthlyCardDaysLeft, monthlyCardVitalityMultiplier, normalizeMonthlyCard, type MonthlyCardState } from '../systems/MonthlyCard';
@@ -1014,7 +1014,11 @@ export class GameSession {
             if (reachedTrustStage(merc, next)) trustUids.push(merc.uid);
             return next;
         });
-        for (const letter of letters) this._farewellLetters = appendFarewellLetter(this._farewellLetters, letter);
+        for (const letter of letters) {
+            const isNew = !this._farewellLetters.some((item) => item.id === letter.id);
+            this._farewellLetters = appendFarewellLetter(this._farewellLetters, letter);
+            if (isNew) this.recordJournal(farewellJournalEntry(letter, seasonJournalTimestamp(this._clock.state)));
+        }
         this._mercenaries = {
             ...this._mercenaries,
             mercenaries,
