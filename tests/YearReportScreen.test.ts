@@ -24,8 +24,8 @@ export function createYearReportScreenSuite(): TestSuite {
             { year: 3, seasons: 4, deaths: 2, retirementCandidates: 1 },
             withYearReportFallback((key) => key),
         );
-        assert.equals('3', texts.yearReportYear);
-        assert.equals('3 年度總結', texts.yearReportTitle);
+        assert.equals('', texts.yearReportYear);
+        assert.equals('第 3 年總結', texts.yearReportTitle);
         assert.equals('本年歿：2 人', texts.yearReportDeaths);
         assert.equals('本年屆齡退役候選：1 人', texts.yearReportRetirements);
         assert.equals('關閉', texts.closeYearReportLabel);

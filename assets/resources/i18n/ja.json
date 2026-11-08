@@ -282,7 +282,7 @@
   "ui.retire_review.farewell_gold": "「老いの身が生涯の征戦と治国で得たもの（EP {0}）を、今ここに我が一族の秘伝【{1}】として凝らす！後の子孫よ、謹んで守り伝えよ！」",
   "ui.retire_review.farewell_tutor": "「老臣の筋骨は衰え、再び刀を取り馬を駆けることは叶いませぬ。宗学の太傅となり、生涯の戦陣（EP {0}）を孫に余さず伝えましょう！」",
   "ui.retire_review.grant_scroll": "竹簡 ×1 を獲得",
-  "ui.year_report.title": "{0}年度総括",
+  "ui.year_report.title": "第{0}年の総括",
   "ui.year_report.intro": "一年が暮れ、今年を振り返る……",
   "ui.year_report.deaths": "今年の死去：{0} 人",
   "ui.year_report.retirements": "今年の退役候補：{0} 人",

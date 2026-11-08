@@ -295,7 +295,7 @@
   "ui.retire_review.farewell_gold": "「老夫畢生征戰治國之所得（EP {0}），今盡數凝練為我族傳世絕學——【{1}】！\n凡我後世子孫，當謹守勿失！」",
   "ui.retire_review.farewell_tutor": "「老臣筋骨已衰，難復提刀躍馬；\n願入宗學為太傅，將一生沙場戰陣（EP {0}）傾囊傳予小孫！」",
   "ui.retire_review.grant_scroll": "獲得竹簡 ×1",
-  "ui.year_report.title": "{0} 年度總結",
+  "ui.year_report.title": "第 {0} 年總結",
   "ui.year_report.intro": "一年將盡，回首今年……",
   "ui.year_report.deaths": "本年歿：{0} 人",
   "ui.year_report.retirements": "本年屆齡退役候選：{0} 人",

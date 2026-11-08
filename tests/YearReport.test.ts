@@ -43,7 +43,7 @@ export function createYearReportSuite(): TestSuite {
         const texts = buildYearReportTexts(report, withYearReportFallback(key => key));
         assert.equals('本年歿：1 人', texts.yearReportDeaths);
         assert.equals('一年將盡，回首今年……', texts.yearReportIntro);
-        assert.equals('2', texts.yearReportYear);
+        assert.equals('', texts.yearReportYear);
     });
 
     suite.test('zh-TW 語系表與程式內預設一致（ui.year_report.*）', () => {

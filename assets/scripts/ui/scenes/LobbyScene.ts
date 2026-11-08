@@ -170,7 +170,7 @@ import { SortieSetupController, type SortieRole } from '../core/SortieSetupContr
 import type { PowDecision } from '../../core/systems/PrisonerOfWar';
 import { OracleCouple, SageOracleController } from '../core/SageOracleController';
 import { buildRetireReviewTexts, RETIRE_REVIEW_OPEN_EVENT, withRetireReviewFallback, type RetireReviewOpenPayload } from '../core/RetireReviewController';
-import { formatDeathNotice } from '../core/LifeVitalityPresenter';
+import { formatDeathNotice, formatForcedRetirementNotice } from '../core/LifeVitalityPresenter';
 import { buildSpiritCodexTexts, spiritRelicsNewestFirst, SPIRIT_CODEX_MAX_ROWS, withSpiritCodexFallback } from '../core/SpiritCodexController';
 import { UltimateCodexController } from '../core/UltimateCodexController';
 import { withSpiritCardDetailFallback } from '../core/SpiritCardDetailTexts';
@@ -1247,7 +1247,8 @@ export class LobbyScene extends Component {
                 const died = payload as AgingEvent | undefined;
                 if (!died) return;
                 const diedGeneral = services().session.roster.find((g) => g.id === died.generalId);
-                const name = diedGeneral ? formatGeneralDisplayName(diedGeneral.name, diedGeneral.title) : died.generalId;
+                const diedName = died.generalName ?? diedGeneral?.name;
+                const name = diedName ? formatGeneralDisplayName(diedName, died.generalTitle ?? diedGeneral?.title) : died.generalId;
                 // 死亡通知與劇本句合併成一則 toast，避免兩則重疊（PM 裁示，PROG-2-0800）
                 const script = this._lifeScriptText('death', name, died.age);
                 services().event.emit('SHOW_TOAST', { message: `${formatDeathNotice(name, died.age)}\n${script}`, duration: 4 });
@@ -2015,16 +2016,27 @@ export class LobbyScene extends Component {
     /** 天下征鋒彈窗（PROG-2-2101）：入口在任務牆；戰後回大廳時順便發放待領獎勵 */
     private async _mountExtremeTask(): Promise<void> {
         this._extremeTaskHost = await this._mountPreviewScreenHost('ExtremeTaskHost', 'extreme-task-screen', [
-            { buttonId: 'btnClose', handler: () => { if (this._extremeTaskHost) this._extremeTaskHost.node.active = false; } },
+            { buttonId: 'btnClose', handler: () => { this._closeExtremeTask(); } },
             { buttonId: 'btnChallenge', handler: () => { void this._onClickExtremeChallenge(); } },
         ]);
         this._extremeTaskHost.node.active = false;
         await this._claimExtremeRewards();
     }
 
+    /** 從任務牆開啟時，關閉後要回到任務牆 */
+    private _extremeReturnsToHall = false;
+
+    private _closeExtremeTask(): void {
+        if (this._extremeTaskHost) this._extremeTaskHost.node.active = false;
+        if (this._extremeReturnsToHall) this._openHallBoard();
+        this._extremeReturnsToHall = false;
+    }
+
     private _openExtremeTask(): void {
         const host = this._extremeTaskHost;
         if (!host) return;
+        this._extremeReturnsToHall = this._hallBoardHost?.node.active === true;
+        this._closeHallBoard();
         this._extremeTaskMessage = '';
         host.node.active = true;
         this._bringNodeToFront(host.node);
@@ -4075,10 +4087,18 @@ export class LobbyScene extends Component {
             gold: () => gacha.getCurrencyAmount('gold'),
             spendGold: (amount) => gacha.spendCurrency('gold', amount),
         });
+        // 同一季的人事消息合併成一則，避免 toast 互相重疊
+        const notices: string[] = [];
+        if (payload.forcedRetirementNames?.length) {
+            notices.push(formatForcedRetirementNotice(payload.forcedRetirementNames));
+        }
         if (salary && salary.departedNames.length > 0) {
-            services().event.emit('SHOW_TOAST', { message: `${salary.departedNames.join('、')} 因長期欠薪憤而下野`, duration: 3 });
+            notices.push(`${salary.departedNames.join('、')} 因長期欠薪憤而下野`);
         } else if (salary && salary.unpaid.length > 0) {
-            services().event.emit('SHOW_TOAST', { message: `國庫不足，${salary.unpaid.length} 位武將本季欠薪，忠誠下降`, duration: 3 });
+            notices.push(`國庫不足，${salary.unpaid.length} 位武將本季欠薪，忠誠下降`);
+        }
+        if (notices.length > 0) {
+            services().event.emit('SHOW_TOAST', { message: notices.join('\n'), duration: 3 });
         }
         return payload;
     }

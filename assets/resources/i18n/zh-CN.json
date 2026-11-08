@@ -282,7 +282,7 @@
   "ui.retire_review.farewell_gold": "「老夫毕生征战治国之所得（EP {0}），今尽数凝练为我族传世绝学——【{1}】！\n凡我后世子孙，当谨守勿失！」",
   "ui.retire_review.farewell_tutor": "「老臣筋骨已衰，难复提刀跃马；\n愿入宗学为太傅，将一生沙场战阵（EP {0}）倾囊传予小孙！」",
   "ui.retire_review.grant_scroll": "获得竹简 ×1",
-  "ui.year_report.title": "{0} 年度总结",
+  "ui.year_report.title": "第 {0} 年总结",
   "ui.year_report.intro": "一年将尽，回首今年……",
   "ui.year_report.deaths": "本年殁：{0} 人",
   "ui.year_report.retirements": "本年届龄退役候选：{0} 人",
