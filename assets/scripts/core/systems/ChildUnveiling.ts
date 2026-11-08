@@ -11,8 +11,11 @@
  *
  * 與既有 SageRemarks 的天象（依季節與種子抽選的演出用）並存；本檔是依資質門檻判定的正式提示。
  * 暫定：開獎典禮 UI、宿命選擇彈窗與福祉實際套用另卡。
+ * 暫定（PROG-2-2106）：規格只寫「立春換季時播報」，每年重報同一句會洗版，先定為出生後第一個立春報一次。
  * Unity 對照：像一組 static 規則表 + 查表函式，輸入子嗣資料、輸出顯示用結果。
  */
+import { CHILD_STATUS_MYSTERY } from './BreedingSystem';
+import type { FactorDictionary } from './FactorInheritance';
 
 export type ChildOmenId = 'OMEN_PURPLE_QI' | 'OMEN_METEOR_DREAM' | 'OMEN_TIGER_ROAR' | 'OMEN_DEER_HERB';
 export type CareerFateType = 'Warrior' | 'Scholar' | 'ClanKeeper' | 'Hermit';
@@ -94,6 +97,43 @@ export function pickChildOmen(
     if (stats.str >= OMEN_TIGER_MIN_STAT || stats.lea >= OMEN_TIGER_MIN_STAT) return 'OMEN_TIGER_ROAR';
     if (lateBloomerCandidate) return 'OMEN_DEER_HERB';
     return null;
+}
+
+/** 只報一次：出生到滿 1 歲之間一定會碰到一次立春 */
+export const OMEN_REPORT_MAX_AGE = 1;
+
+export interface OmenChild extends Partial<ChildStats> {
+    id: string;
+    name?: string;
+    age?: number;
+    status?: string;
+    ep?: number;
+    stats?: Partial<ChildStats>;
+    genes?: readonly { id?: string }[];
+}
+
+export interface ChildOmenNotice {
+    readonly childId: string;
+    readonly omenId: ChildOmenId;
+    readonly line: string;
+}
+
+function omenStats(child: OmenChild): ChildStats {
+    const read = (key: keyof ChildStats) => child[key] ?? child.stats?.[key] ?? 0;
+    return { str: read('str'), int: read('int'), lea: read('lea'), pol: read('pol'), cha: read('cha'), luk: read('luk') };
+}
+
+/** 立春時要播報天象的子嗣：神祕期、未滿 OMEN_REPORT_MAX_AGE 歲、且有符合門檻的天象。 */
+export function dueChildOmens(roster: readonly OmenChild[], dictionary?: FactorDictionary | null): ChildOmenNotice[] {
+    const notices: ChildOmenNotice[] = [];
+    for (const child of roster) {
+        if (child.status !== CHILD_STATUS_MYSTERY || (child.age ?? Infinity) > OMEN_REPORT_MAX_AGE) continue;
+        const stats = omenStats(child);
+        const hasGold = (child.genes ?? []).some((gene) => gene.id !== undefined && dictionary?.get(gene.id)?.color === 'gold');
+        const omenId = pickChildOmen(child.ep ?? 0, hasGold, stats, isLateBloomerCandidate(stats, false));
+        if (omenId) notices.push({ childId: child.id, omenId, line: `${child.name ?? child.id}：${OMEN_TEXT[omenId]}` });
+    }
+    return notices;
 }
 
 /** 大器晚成擲骰：需有資格；帶天象 35%、否則 10%，可再乘宿命倍率。random 回傳 [0,1)。 */
