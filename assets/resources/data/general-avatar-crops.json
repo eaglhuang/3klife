@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "yuan-shao": {
+      "x": 320,
+      "y": 0,
+      "w": 390,
+      "h": 390,
+      "source": "reviewed",
+      "$note": "2026-11-08 袁紹金象牙與酒紅重繪；頭像保留冠飾與肩頸。"
+    },
     "xiahou-yuan": {
       "x": 330,
       "y": 0,
