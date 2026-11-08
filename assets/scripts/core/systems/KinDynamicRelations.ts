@@ -127,6 +127,19 @@ export class DynamicRelationBook {
         return updated;
     }
 
+    /** 扣減某武將所有動態關係的親密度，下限 0；回傳實際改動的筆數（RET-10 欠薪） */
+    weakenFor(uid: string, amount: number): number {
+        let changed = 0;
+        for (const [key, relation] of this.relations) {
+            if (relation.uidA !== uid && relation.uidB !== uid) continue;
+            const next = Math.max(0, relation.intimacy - amount);
+            if (next === relation.intimacy) continue;
+            this.relations.set(key, { ...relation, intimacy: next });
+            changed += 1;
+        }
+        return changed;
+    }
+
     /** 存檔用快照：回傳新陣列，不共享內部物件 */
     snapshot(): DynamicRelation[] {
         return Array.from(this.relations.values()).map((r) => ({ ...r }));

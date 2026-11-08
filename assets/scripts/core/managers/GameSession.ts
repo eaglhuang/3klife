@@ -249,6 +249,7 @@ import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral, UNVEILING_AGE, GEN
 import { injectCatalystFactor, markCatalystUsed, type CatalystGeneral } from '../systems/GeneCatalyst';
 import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
 import { DynamicRelationBook, battleComradePairs, type DynamicRelationResult } from '../systems/KinDynamicRelations';
+import { SALARY_ARREARS_PENALTY, createSalaryLedger, normalizeSalaryLedger, settleSalaries, type SalaryLedger, type SalarySettlement } from '../systems/GeneralSalary';
 import { RelationEventLedger } from '../systems/RelationEvents';
 import { cloneNpcMemory, createNpcMemory, normalizeNpcMemory, normalizeNpcPlayerId, npcPlayerIdFromSeed, type NpcMemoryRecord } from '../systems/NpcMemoryReadModel';
 import { NpcInteractionLimiter } from '../systems/NpcUtilityAI';
@@ -797,6 +798,7 @@ export class GameSession {
     /** 祠堂軍功聲望（與 ClanTier 血統階層雙軌並存） */
     private _clanPrestige = 0;
     private _infusionRecords: InfusionRecord[] = [];
+    private _salaryLedger: SalaryLedger = createSalaryLedger();
     /** 祠堂每日供奉最後領取日（UTC+8，YYYY-MM-DD）；從未領為 null（PROG-2-1915） */
     private _shrineOfferingDay: string | null = null;
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
@@ -1988,6 +1990,7 @@ export class GameSession {
         this._aiAdaptiveStreak = { ...EMPTY_AI_ADAPTIVE_STREAK };
         this._clanPrestige = 0;
         this._infusionRecords = [];
+        this._salaryLedger = createSalaryLedger();
         this._shrineOfferingDay = null;
         this._sevenDayJourney = createSevenDayJourneyState();
         this._officerState = initialOfficerState();
@@ -4166,6 +4169,63 @@ export class GameSession {
         return payload;
     }
 
+    /** 武將連續欠薪季數（沒有欠薪回 0） */
+    public salaryArrearsOf(generalId: string): number {
+        return this._salaryLedger.arrears[generalId] ?? 0;
+    }
+
+    /**
+     * 每季武將薪資（RET-10）：薪資從國庫扣，欠薪者忠誠與親密各 -15，連續欠薪滿 2 季起 30% 下野。
+     * 同一季只結算一次，重複呼叫回傳 null。傭兵由傭兵維持費負責，退役與陣亡者不領薪。
+     *
+     * 暫定：親密扣該將所有動態關係；轉蛋名將與主將不下野；下野者直接離開名冊，虎符收回。
+     */
+    public async settleGeneralSalaries(
+        wallet: { gold: () => number; spendGold: (amount: number) => boolean },
+        rollOf?: (generalId: string) => number,
+    ): Promise<(SalarySettlement & { departedNames: string[] }) | null> {
+        const season = this._clock.state.totalSeasonsElapsed;
+        if (this._salaryLedger.lastSettledSeason === season) return null;
+        const mercenaryIds = new Set<string>();
+        for (const merc of this._mercenaries.mercenaries) {
+            mercenaryIds.add(merc.uid);
+            if (merc.generalId) mercenaryIds.add(merc.generalId);
+        }
+        const isGacha = (general: GeneralConfig): boolean =>
+            this._tallyLoyalty[general.id]?.isGachaHero === true || general.loyaltyState?.sourceType === 'Gacha';
+        const roster = this._roster.getAll();
+        const payees = roster
+            .filter((g) => !isGeneralDead(g) && !(g as { isMentorCard?: boolean }).isMentorCard && !mercenaryIds.has(g.id))
+            .map((g) => ({ id: g.id, rank: g.generalRank ?? 0, canDesert: !isGacha(g) && g.id !== this._leadGeneralId }));
+        // 下野判定另開序列，不消耗主亂數，既有結算的結果不受影響
+        const roll = rollOf ?? ((id: string): number => remarkRandomOf(`salary|${season}|${id}`)());
+        let settlement = settleSalaries(payees, wallet.gold(), this._salaryLedger, season, roll);
+        if (settlement.totalPaid > 0 && !wallet.spendGold(settlement.totalPaid)) {
+            settlement = settleSalaries(payees, 0, this._salaryLedger, season, roll);
+        }
+        this._salaryLedger = settlement.ledger;
+        let loyaltyDropped = false;
+        for (const id of settlement.unpaid) {
+            this.dynamicRelations.weakenFor(id, SALARY_ARREARS_PENALTY);
+            const general = roster.find((g) => g.id === id);
+            if (!general || isGacha(general)) continue;
+            const current = this._tallyLoyalty[id] ?? createTallyLoyaltyState(TALLY_LOYALTY_INITIAL, false);
+            this._tallyLoyalty = { ...this._tallyLoyalty, [id]: { ...current, loyalty: Math.max(0, current.loyalty - SALARY_ARREARS_PENALTY) } };
+            loyaltyDropped = true;
+        }
+        if (loyaltyDropped) this.recordPlayerLog('LOYALTY_DROP');
+        const gone = new Set(settlement.departed);
+        const departedNames = roster.filter((g) => gone.has(g.id)).map((g) => g.name);
+        if (gone.size > 0) {
+            this._roster.replaceAll(roster.filter((g) => !gone.has(g.id)));
+            for (const id of settlement.departed) this._tallyHoldings = confiscateFrom(this._tallyHoldings, id).state;
+            this._syncInventoryRecords();
+            this._releaseGearOfInactiveGenerals();
+        }
+        if (this._autoSave && this._save) await this.save();
+        return { ...settlement, departedNames };
+    }
+
     /**
      * 年度推進：一直推進季，直到本年年末（第 4 季結束）為止，回傳年報。
      * 從第 1 季開始會跑滿 4 季；從中間季開始則跑到該年年末。最多推進 SEASONS_PER_YEAR 季。
@@ -4925,8 +4985,8 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'shrineOfferingDay'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'shrineOfferingDay'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'shrineOfferingDay'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'shrineOfferingDay'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
@@ -4960,6 +5020,7 @@ export class GameSession {
         if (this._aiAdaptiveStreak.consecutiveWins > 0 || this._aiAdaptiveStreak.consecutiveLosses > 0) fields.aiAdaptiveStreak = { ...this._aiAdaptiveStreak };
         if (this._clanPrestige > 0) fields.clanPrestige = this._clanPrestige;
         if (this._infusionRecords.length > 0) fields.infusionRecords = this._infusionRecords.map((record) => ({ ...record }));
+        if (this._salaryLedger.lastSettledSeason !== null) fields.salaryLedger = { arrears: { ...this._salaryLedger.arrears }, lastSettledSeason: this._salaryLedger.lastSettledSeason };
         if (this._shrineOfferingDay) fields.shrineOfferingDay = this._shrineOfferingDay;
         return fields;
     }
@@ -4996,6 +5057,7 @@ export class GameSession {
         this._aiAdaptiveStreak = normalizeAiAdaptiveStreak(snapshot.aiAdaptiveStreak);
         this._clanPrestige = normalizeClanPrestige(snapshot.clanPrestige);
         this._infusionRecords = normalizeInfusionRecords(snapshot.infusionRecords);
+        this._salaryLedger = normalizeSalaryLedger(snapshot.salaryLedger);
         this._shrineOfferingDay = normalizeShrineOfferingDay(snapshot.shrineOfferingDay);
     }
 

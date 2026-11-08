@@ -3984,7 +3984,7 @@ export class LobbyScene extends Component {
                 .filter((g) => g.status !== 'dead' && (g.age ?? 0) >= BREEDING_MIN_AGE)
                 .map((g) => g.id));
             let adults = adultIds();
-            const result = await fastForwardSeasons(() => session.advanceSeason(), () => {
+            const result = await fastForwardSeasons(() => this._advanceSeasonWithSalaries(), () => {
                 const now = adultIds();
                 const grew = Array.from(now).some((id) => !adults.has(id));
                 adults = now;
@@ -4001,9 +4001,26 @@ export class LobbyScene extends Component {
         }
     }
 
+    /** 推進一季並發武將薪資（RET-10）；有欠薪或下野時提示玩家 */
+    private async _advanceSeasonWithSalaries() {
+        const session = services().session;
+        const payload = await session.advanceSeason();
+        const gacha = this._localGachaService;
+        const salary = await session.settleGeneralSalaries({
+            gold: () => gacha.getCurrencyAmount('gold'),
+            spendGold: (amount) => gacha.spendCurrency('gold', amount),
+        });
+        if (salary && salary.departedNames.length > 0) {
+            services().event.emit('SHOW_TOAST', { message: `${salary.departedNames.join('、')} 因長期欠薪憤而下野`, duration: 3 });
+        } else if (salary && salary.unpaid.length > 0) {
+            services().event.emit('SHOW_TOAST', { message: `國庫不足，${salary.unpaid.length} 位武將本季欠薪，忠誠下降`, duration: 3 });
+        }
+        return payload;
+    }
+
     private async _onClickAdvanceSeason(): Promise<void> {
         try {
-            const { advance, agingEvents, quarterlyReports } = await services().session.advanceSeason();
+            const { advance, agingEvents, quarterlyReports } = await this._advanceSeasonWithSalaries();
             const died = agingEvents.filter((event) => event.type === 'died').length;
             const suffix = died > 0 ? `（${died} 位武將離世）` : '';
             services().event.emit('SHOW_TOAST', {
