@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "cao-pi": {
+      "x": 330,
+      "y": 20,
+      "w": 370,
+      "h": 370,
+      "source": "reviewed",
+      "$note": "2026-11-08 曹丕魏藍紫金重繪；頭像保留高冠與肩頸。"
+    },
     "cao-ang": {
       "x": 340,
       "y": 70,
