@@ -1,9 +1,8 @@
 {
   "id": "general-list-default",
-  "version": 8,
+  "version": 9,
   "bundle": "lobby_ui",
   "atlasPolicy": "lobby_general",
-  "$fragments": ["common-parchment-default", "header-rarity-plaque-default"],
   "slots": {
     "general.backdrop.scrim": {
       "kind": "color-rect",
@@ -12,236 +11,74 @@
     },
     "general.header.bar": {
       "kind": "color-rect",
-      "color": "surfaceDeep",
-      "alpha": 236
-    },
-    "general.header.title": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 44,
-      "lineHeight": 48,
-      "color": "textAccent",
-      "outlineColor": "#1A1A1A",
-      "outlineWidth": 1,
-      "horizontalAlign": "CENTER",
-      "verticalAlign": "CENTER",
-      "overflow": "SHRINK",
-      "isBold": true
-    },
-    "widget.header.plaque.base": {
-      "kind": "color-rect",
-      "color": "surfaceDeep",
-      "alpha": 214
-    },
-    "widget.header.plaque.fill": {
-      "kind": "sprite-frame",
-      "path": "sprites/ui_families/general_detail/detail_header_fill",
-      "spriteType": "simple",
-      "allowAutoAtlas": true,
-      "opacity": 0.92
-    },
-    "widget.header.plaque.band": {
-      "kind": "sprite-frame",
-      "path": "sprites/ui_families/general_detail/formal/header_band_formal",
-      "spriteType": "sliced",
-      "border": [20, 0, 20, 0],
-      "allowAutoAtlas": true,
-      "opacity": 0.42
-    },
-    "widget.header.plaque.title": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 34,
-      "lineHeight": 36,
-      "color": "text.parchment.primary",
-      "outlineWidth": 0,
-      "horizontalAlign": "LEFT",
-      "verticalAlign": "CENTER",
-      "overflow": "SHRINK",
-      "isBold": true
-    },
-    "widget.header.plaque.subtitle": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 15,
-      "lineHeight": 18,
-      "color": "accent.gold.base",
-      "outlineWidth": 0,
-      "horizontalAlign": "LEFT",
-      "verticalAlign": "CENTER",
-      "overflow": "SHRINK"
-    },
-    "widget.header.plaque.badge.underlay": {
-      "kind": "sprite-frame",
-      "path": "sprites/ui_families/common/parchment/fill",
-      "spriteType": "sliced",
-      "border": [16, 16, 16, 16],
-      "allowAutoAtlas": true,
-      "opacity": 0.9
-    },
-    "widget.header.plaque.badge.fill": {
-      "kind": "sprite-frame",
-      "path": "sprites/ui_families/common/parchment/fill",
-      "spriteType": "sliced",
-      "border": [16, 16, 16, 16],
-      "allowAutoAtlas": true,
-      "opacity": 0.96
-    },
-    "widget.header.plaque.badge.label": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 18,
-      "lineHeight": 22,
-      "color": "text.parchment.primary",
-      "outlineWidth": 0,
-      "horizontalAlign": "CENTER",
-      "verticalAlign": "CENTER",
-      "isBold": true,
-      "overflow": "SHRINK"
-    },
-    "parchment.bg.fill": {
-      "kind": "sprite-frame",
-      "path": "sprites/ui_families/general_detail/v3_final/info_card_panel_parchment_rect_v1",
-      "spriteType": "sliced",
-      "border": [22, 28, 22, 28],
-      "allowAutoAtlas": true,
-      "opacity": 0.95,
-      "color": "#FFFFFF"
-    },
-    "parchment.bg.frame": {
-      "kind": "sprite-frame",
-      "path": "sprites/ui_families/common/parchment/frame",
-      "spriteType": "sliced",
-      "border": [16, 16, 16, 16],
-      "allowAutoAtlas": true,
-      "opacity": 0.86
-    },
-    "parchment.bg.bleed": {
-      "kind": "sprite-frame",
-      "path": "sprites/ui_families/common/bleed/bleed_parchment",
-      "spriteType": "sliced",
-      "border": [24, 24, 24, 24],
-      "allowAutoAtlas": true,
-      "opacity": 0.18
-    },
-    "parchment.bg.shadow": {
-      "kind": "sprite-frame",
-      "path": "sprites/ui_families/common/shadow/shadow_01",
-      "spriteType": "sliced",
-      "border": [20, 20, 20, 20],
-      "allowAutoAtlas": true,
-      "opacity": 0.28,
-      "offsetY": 10
-    },
-    "parchment.bg.noise": {
-      "kind": "sprite-frame",
-      "path": "sprites/ui_families/common/noise/paper_noise_256",
-      "spriteType": "tiled",
-      "opacity": 0.08,
-      "blendMode": "alpha"
-    },
-    "detail.bg.fullscreen": {
-      "kind": "sprite-frame",
-      "path": "sprites/ui_families/general_detail/detail_content_bg",
-      "spriteType": "sliced",
-      "border": [96, 360, 96, 420],
-      "allowAutoAtlas": false
-    },
-    "general.header.bg": {
-      "kind": "sprite-frame",
-      "path": "sprites/ui_families/general_detail/v3_final/story_caption_strip_parchment_v1",
-      "spriteType": "sliced",
-      "border": [18, 56, 18, 56],
-      "allowAutoAtlas": true,
-      "opacity": 0.92,
-      "color": "#FFFFFF"
+      "color": "backgroundDeep",
+      "alpha": 255
     },
     "general.list.bg": {
-      "kind": "sprite-frame",
-      "path": "sprites/ui_families/general_detail/v3_final/info_card_panel_parchment_rect_v1",
-      "spriteType": "sliced",
-      "border": [22, 28, 22, 28],
-      "opacity": 0.92,
-      "color": "#FFFFFF",
-      "allowAutoAtlas": true
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 255
+    },
+    "general.row.bg": {
+      "kind": "color-rect",
+      "color": "surfaceHigh",
+      "alpha": 255
+    },
+    "general.button.bg": {
+      "kind": "color-rect",
+      "color": "primary",
+      "alpha": 255
     },
     "general.scrollbar.track": {
       "kind": "color-rect",
       "color": "surfaceDeep",
-      "alpha": 96
+      "alpha": 160
     },
     "general.scrollbar.thumb": {
-      "kind": "sprite-frame",
-      "path": "sprites/ui_families/common/parchment/fill",
-      "spriteType": "sliced",
-      "border": [16, 16, 16, 16],
-      "allowAutoAtlas": true,
-      "opacity": 0.86,
-      "color": "#E1C77B"
+      "kind": "color-rect",
+      "color": "secondaryLight",
+      "alpha": 200
     },
-    "general.list.shadow": {
-      "kind": "sprite-frame",
-      "path": "sprites/ui_families/common/shadow/shadow_01",
-      "spriteType": "sliced",
-      "border": [20, 20, 20, 20],
-      "allowAutoAtlas": true
-    },
-    "general.row.bg": {
-      "kind": "sprite-frame",
-      "path": "sprites/ui_families/general_detail/v3_final/module_card_panel_mint_rect_v1",
-      "spriteType": "sliced",
-      "border": [20, 24, 20, 24],
-      "allowAutoAtlas": true,
-      "opacity": 0.98
-    },
-    "general.label.title": {
+    "general.header.title": {
       "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 32,
       "lineHeight": 40,
-      "color": "secondary",
+      "color": "secondaryLight",
       "horizontalAlign": "LEFT",
-      "overflow": "SHRINK"
+      "verticalAlign": "CENTER",
+      "overflow": "SHRINK",
+      "isBold": true
+    },
+    "general.label.button": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 22,
+      "lineHeight": 28,
+      "color": "secondaryLight",
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
+      "overflow": "SHRINK",
+      "isBold": true
     },
     "general.label.header": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 18,
-      "lineHeight": 24,
-      "color": "textOffWhite",
-      "isBold": true,
+      "fontSize": 20,
+      "lineHeight": 26,
+      "color": "secondaryLight",
       "horizontalAlign": "LEFT",
       "verticalAlign": "CENTER",
-      "overflow": "SHRINK"
+      "overflow": "SHRINK",
+      "isBold": true
     },
     "general.label.headerCenter": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 18,
-      "lineHeight": 24,
-      "color": "textOffWhite",
-      "isBold": true,
+      "fontSize": 20,
+      "lineHeight": 26,
+      "color": "secondaryLight",
       "horizontalAlign": "CENTER",
-      "verticalAlign": "CENTER",
-      "overflow": "SHRINK"
-    },
-    "general.label.headerAction": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 17,
-      "lineHeight": 22,
-      "color": "accent.gold.base",
-      "isBold": true,
-      "horizontalAlign": "CENTER",
-      "verticalAlign": "CENTER",
-      "overflow": "SHRINK"
-    },
-    "general.label.kicker": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 13,
-      "lineHeight": 18,
-      "color": "accent.gold.base",
-      "horizontalAlign": "LEFT",
       "verticalAlign": "CENTER",
       "overflow": "SHRINK",
       "isBold": true
@@ -251,19 +88,18 @@
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 24,
       "lineHeight": 30,
-      "color": "text.parchment.primary",
-      "isBold": true,
+      "color": "textPrimary",
       "horizontalAlign": "LEFT",
       "verticalAlign": "CENTER",
-      "overflow": "SHRINK"
+      "overflow": "SHRINK",
+      "isBold": true
     },
     "general.label.value": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 26,
-      "color": "text.parchment.primary",
-      "isBold": true,
+      "color": "textPrimary",
       "horizontalAlign": "LEFT",
       "verticalAlign": "CENTER",
       "overflow": "SHRINK"
@@ -273,83 +109,15 @@
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 26,
-      "color": "text.parchment.primary",
-      "isBold": true,
+      "color": "textPrimary",
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER",
       "overflow": "SHRINK"
     },
-    "general.label.faction": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 18,
-      "lineHeight": 24,
-      "color": "text.parchment.secondary",
-      "isBold": true,
-      "horizontalAlign": "LEFT",
-      "verticalAlign": "CENTER",
-      "overflow": "SHRINK"
-    },
-    "general.label.positive": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 20,
-      "lineHeight": 26,
-      "color": "textPositiveOnParchment",
-      "isBold": true,
-      "horizontalAlign": "LEFT",
-      "verticalAlign": "CENTER",
-      "overflow": "SHRINK"
-    },
-    "general.label.action": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 18,
-      "lineHeight": 22,
-      "color": "accent.gold.base",
-      "isBold": true,
-      "horizontalAlign": "CENTER",
-      "verticalAlign": "CENTER",
-      "overflow": "SHRINK"
-    },
-    "general.label.meta": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 14,
-      "lineHeight": 18,
-      "color": "text.parchment.secondary",
-      "horizontalAlign": "LEFT",
-      "verticalAlign": "CENTER",
-      "overflow": "SHRINK"
-    },
-    "general.label.button": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 20,
-      "lineHeight": 24,
-      "color": "textAccent",
-      "isBold": true,
-      "horizontalAlign": "CENTER",
-      "verticalAlign": "CENTER",
-      "overflow": "SHRINK"
-    },
-    "ui-common-metal.equipment.primary": {
-      "kind": "button-skin",
-      "normal": "sprites/ui_families/common/equipment/btn_primary_normal",
-      "pressed": "sprites/ui_families/common/equipment/btn_primary_pressed",
-      "disabled": "sprites/ui_families/common/equipment/btn_primary_disabled",
-      "spriteType": "sliced",
-      "border": [20, 20, 20, 20],
-      "allowAutoAtlas": true
-    },
-    "list.button.primary": {
-      "kind": "button-skin",
-      "normal": "sprites/ui_families/common/equipment/btn_primary_normal",
-      "pressed": "sprites/ui_families/common/equipment/btn_primary_pressed",
-      "disabled": "sprites/ui_families/common/equipment/btn_primary_disabled",
-      "spriteType": "sliced",
-      "border": [20, 20, 20, 20],
-      "allowAutoAtlas": true
+    "general.datalist.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 255
     }
   }
 }
