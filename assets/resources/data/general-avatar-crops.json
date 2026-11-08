@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "dong-zhuo": {
+      "x": 330,
+      "y": 0,
+      "w": 420,
+      "h": 420,
+      "source": "reviewed",
+      "$note": "2026-11-08 董卓酒紫銅甲重繪；頭像保留頭冠與肩頸。"
+    },
     "cheng-pu": {
       "x": 340,
       "y": 90,

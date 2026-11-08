@@ -10,8 +10,8 @@
   "tags": [],
   "createdAt": "2026-11-05T14:30:28.536Z",
   "createdByActor": "codex-gpt-6.1-sol",
-  "lastTransitionId": "2026-11-08T13-18-49-849Z-scope-amendment-87c5decabee1",
-  "lastTransitionAt": "2026-11-08T13:18:49.849Z",
+  "lastTransitionId": "2026-11-08T13-23-42-457Z-scope-amendment-a0b574520455",
+  "lastTransitionAt": "2026-11-08T13:23:42.457Z",
   "ledgerContractVersion": "task-ledger/v1",
   "reservedAt": "2026-11-05T17:15:58.821Z",
   "promotedAt": "2026-11-05T17:15:58.826Z",
@@ -135,6 +135,7 @@
       "assets/resources/sprites/generals/avatars/diao_chan_avatar.png",
       "assets/resources/sprites/generals/avatars/dong_bai_avatar.png",
       "assets/resources/sprites/generals/avatars/dong_bai_avatar.png.meta",
+      "assets/resources/sprites/generals/avatars/dong_zhuo_avatar.png",
       "assets/resources/sprites/generals/avatars/fan_shi_avatar.png",
       "assets/resources/sprites/generals/avatars/fan_shi_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/gan_ning_avatar.png",
@@ -255,6 +256,7 @@
       "assets/resources/sprites/generals/diao_chan_portrait.png",
       "assets/resources/sprites/generals/dong_bai_portrait.png",
       "assets/resources/sprites/generals/dong_bai_portrait.png.meta",
+      "assets/resources/sprites/generals/dong_zhuo_portrait.png",
       "assets/resources/sprites/generals/fan_shi_portrait.png",
       "assets/resources/sprites/generals/fan_shi_portrait.png.meta",
       "assets/resources/sprites/generals/gan_ning_portrait.png",
@@ -374,6 +376,7 @@
       "assets/resources/sprites/ui_avatars/cropped/diao_chan_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/dong_bai_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/dong_bai_avatar.png.meta",
+      "assets/resources/sprites/ui_avatars/cropped/dong_zhuo_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/fan_shi_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/fan_shi_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/gan_ning_avatar.png",
@@ -486,20 +489,20 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-5640ad9681e22137",
-    "ticketDigest": "sha256:5640ad9681e22137dfccb785ec04e6f037d8402a6167e356d2e319ddafb1efcf",
+    "ticketId": "wat-b223672dcbf2fb88",
+    "ticketDigest": "sha256:b223672dcbf2fb8834f40239b96784f1d965b3eb76d8b83781cc1a61f8fb94b2",
     "taskId": "UI-2-0121",
     "origin": "claim",
     "actorId": "codex-gpt-6.1-terra",
     "laneSessionId": "lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d",
     "claimGeneration": "lease-f957fb02b01d",
-    "issuedAt": "2026-11-08T13:18:49.712Z",
-    "expiresAt": "2026-11-08T13:48:49.712Z",
-    "scopeDigest": "sha256:e3104cc32c4de7f336dbbd01e673769efe0e0efbecc605deba1f6a127c5d236a",
+    "issuedAt": "2026-11-08T13:23:42.316Z",
+    "expiresAt": "2026-11-08T13:53:42.316Z",
+    "scopeDigest": "sha256:6b055ff5f0a7edf4bbbff35c366d9e8c290c63f5167fe1d39406e8c897399948",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-11-08T13:18:49.712Z"
+      "selectedAt": "2026-11-08T13:23:42.316Z"
     },
     "grants": [
       {
@@ -619,6 +622,7 @@
           "assets/resources/sprites/generals/avatars/diao_chan_avatar.png",
           "assets/resources/sprites/generals/avatars/dong_bai_avatar.png",
           "assets/resources/sprites/generals/avatars/dong_bai_avatar.png.meta",
+          "assets/resources/sprites/generals/avatars/dong_zhuo_avatar.png",
           "assets/resources/sprites/generals/avatars/fan_shi_avatar.png",
           "assets/resources/sprites/generals/avatars/fan_shi_avatar.png.meta",
           "assets/resources/sprites/generals/avatars/gan_ning_avatar.png",
@@ -739,6 +743,7 @@
           "assets/resources/sprites/generals/diao_chan_portrait.png",
           "assets/resources/sprites/generals/dong_bai_portrait.png",
           "assets/resources/sprites/generals/dong_bai_portrait.png.meta",
+          "assets/resources/sprites/generals/dong_zhuo_portrait.png",
           "assets/resources/sprites/generals/fan_shi_portrait.png",
           "assets/resources/sprites/generals/fan_shi_portrait.png.meta",
           "assets/resources/sprites/generals/gan_ning_portrait.png",
@@ -858,6 +863,7 @@
           "assets/resources/sprites/ui_avatars/cropped/diao_chan_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/dong_bai_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/dong_bai_avatar.png.meta",
+          "assets/resources/sprites/ui_avatars/cropped/dong_zhuo_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/fan_shi_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/fan_shi_avatar.png.meta",
           "assets/resources/sprites/ui_avatars/cropped/gan_ning_avatar.png",
@@ -957,7 +963,7 @@
           "docs/ui-quality-tasks/UI-2-0121.json",
           "docs/ui-quality-todo.json"
         ],
-        "digest": "sha256:0f841980d81d59efe971e3a14a15b999883b0d8f9f339b3d78fa96c9f8fc1607"
+        "digest": "sha256:cfdb3841ffa7e877759c356bb03df9322ca7f4c807b2941618d834a7f7d03048"
       },
       {
         "kind": "lifecycle-operation",
@@ -1119,6 +1125,7 @@
       "assets/resources/sprites/generals/avatars/diao_chan_avatar.png",
       "assets/resources/sprites/generals/avatars/dong_bai_avatar.png",
       "assets/resources/sprites/generals/avatars/dong_bai_avatar.png.meta",
+      "assets/resources/sprites/generals/avatars/dong_zhuo_avatar.png",
       "assets/resources/sprites/generals/avatars/fan_shi_avatar.png",
       "assets/resources/sprites/generals/avatars/fan_shi_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/gan_ning_avatar.png",
@@ -1239,6 +1246,7 @@
       "assets/resources/sprites/generals/diao_chan_portrait.png",
       "assets/resources/sprites/generals/dong_bai_portrait.png",
       "assets/resources/sprites/generals/dong_bai_portrait.png.meta",
+      "assets/resources/sprites/generals/dong_zhuo_portrait.png",
       "assets/resources/sprites/generals/fan_shi_portrait.png",
       "assets/resources/sprites/generals/fan_shi_portrait.png.meta",
       "assets/resources/sprites/generals/gan_ning_portrait.png",
@@ -1358,6 +1366,7 @@
       "assets/resources/sprites/ui_avatars/cropped/diao_chan_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/dong_bai_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/dong_bai_avatar.png.meta",
+      "assets/resources/sprites/ui_avatars/cropped/dong_zhuo_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/fan_shi_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/fan_shi_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/gan_ning_avatar.png",
@@ -2356,6 +2365,9 @@
     "assets/resources/sprites/ui_avatars/cropped/cheng_pu_avatar.png",
     "assets/resources/sprites/generals/avatars/dian_wei_avatar.png",
     "assets/resources/sprites/generals/dian_wei_portrait.png",
-    "assets/resources/sprites/ui_avatars/cropped/dian_wei_avatar.png"
+    "assets/resources/sprites/ui_avatars/cropped/dian_wei_avatar.png",
+    "assets/resources/sprites/generals/avatars/dong_zhuo_avatar.png",
+    "assets/resources/sprites/generals/dong_zhuo_portrait.png",
+    "assets/resources/sprites/ui_avatars/cropped/dong_zhuo_avatar.png"
   ]
 }
