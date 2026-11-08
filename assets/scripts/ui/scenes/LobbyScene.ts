@@ -85,6 +85,7 @@ import { journalSummaryText, type JournalTextLookup } from '../core/JournalTexts
 import { GeneralJournalController } from '../core/GeneralJournalController';
 import { BattleReviewController } from '../core/BattleReviewController';
 import { TournamentPanelController, tournamentSeasonCardLines } from '../core/TournamentPanelController';
+import { extremeRewardToast, extremeTaskFlowView } from '../core/ExtremeTaskPanelController';
 import { WishAltarController, WISH_ALTAR_SLOTS } from '../core/WishAltarController';
 import { dispatchClickMessage, dispatchSettleToast } from '../../core/systems/DispatchCatalog';
 import { WAREHOUSE_EXPANSION_ITEM } from '../../core/managers/GameSession';
@@ -316,6 +317,10 @@ export class LobbyScene extends Component {
 
     private _generals: GeneralConfig[] = [];
     private _encounters: EncounterConfig[] = [];
+    /** 天下征鋒的 BOSS 關（PROG-2-2101）；不混進連環破與大廳開戰關卡 */
+    private _extremeEncounters: EncounterConfig[] = [];
+    private _extremeTaskHost: UIScreenPreviewHost | null = null;
+    private _extremeTaskMessage = '';
     private _listPanel: GeneralListComposite | null = null;
     private _detailPanel: GeneralDetailComposite | null = null;
     private _lobbyMainHost: UIScreenPreviewHost | null = null;
@@ -620,6 +625,7 @@ export class LobbyScene extends Component {
         await this._mountWishAltar();
         await this._mountDailyReport();
         await this._mountHallBoard();
+        await this._mountExtremeTask();
         await this._mountLobbyHall();
         await this._mountMercenaryPanel();
         await this._mountGovernorHall();
@@ -693,7 +699,9 @@ export class LobbyScene extends Component {
             const encounterEnvelope = await services().resource.loadJson<{ encounters: EncounterConfig[] }>(
                 'data/encounters', { tags: ['LobbyScene'] }
             );
-            this._encounters = encounterEnvelope.encounters ?? [];
+            const allEncounters = encounterEnvelope.encounters ?? [];
+            this._encounters = allEncounters.filter((e) => !e.extreme);
+            this._extremeEncounters = allEncounters.filter((e) => e.extreme);
         } catch (error) {
             UCUFLogger.error(LogCategory.DATA, '[LobbyScene] 載入資料失敗:', error);
         }
@@ -1998,9 +2006,66 @@ export class LobbyScene extends Component {
             { buttonId: 'btnHallBoardMilitary', handler: () => { this._switchHallBoard('Military'); } },
             { buttonId: 'btnHallBoardDomestic', handler: () => { this._switchHallBoard('Domestic'); } },
             { buttonId: 'btnHallBoardExpedition', handler: () => { this._switchHallBoard('Expedition'); } },
+            { buttonId: 'btnHallBoardExtreme', handler: () => { this._openExtremeTask(); } },
             ...rowBindings,
         ]);
         this._hallBoardHost.node.active = false;
+    }
+
+    /** 天下征鋒彈窗（PROG-2-2101）：入口在任務牆；戰後回大廳時順便發放待領獎勵 */
+    private async _mountExtremeTask(): Promise<void> {
+        this._extremeTaskHost = await this._mountPreviewScreenHost('ExtremeTaskHost', 'extreme-task-screen', [
+            { buttonId: 'btnClose', handler: () => { if (this._extremeTaskHost) this._extremeTaskHost.node.active = false; } },
+            { buttonId: 'btnChallenge', handler: () => { void this._onClickExtremeChallenge(); } },
+        ]);
+        this._extremeTaskHost.node.active = false;
+        await this._claimExtremeRewards();
+    }
+
+    private _openExtremeTask(): void {
+        const host = this._extremeTaskHost;
+        if (!host) return;
+        this._extremeTaskMessage = '';
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshExtremeTask();
+    }
+
+    private _extremeEncounterOf(stageId: string): EncounterConfig | undefined {
+        return this._extremeEncounters.find((e) => e.id === stageId);
+    }
+
+    private _refreshExtremeTask(): void {
+        const binder = this._extremeTaskHost?.binder;
+        if (!binder) return;
+        const status = services().session.extremeTaskStatus(Date.now());
+        const enemyId = this._extremeEncounterOf(status.stageId)?.enemyGeneralId;
+        const bossName = this._generals.find((g) => g.id === enemyId)?.name ?? enemyId ?? '尚未開放';
+        applyFlowView(binder, extremeTaskFlowView({ freeLeft: status.freeLeft, orders: status.orders, bossName }, this._extremeTaskMessage));
+    }
+
+    private async _claimExtremeRewards(): Promise<void> {
+        const gacha = this._localGachaService;
+        const drops = await services().session.claimExtremeTaskRewards((amount) => { gacha.grantCurrency('gold', amount); });
+        if (drops.length > 0) services().event.emit('SHOW_TOAST', { message: extremeRewardToast(drops), duration: 3 });
+    }
+
+    private async _onClickExtremeChallenge(): Promise<void> {
+        const session = services().session;
+        const encounter = this._extremeEncounterOf(session.extremeTaskStatus(Date.now()).stageId);
+        if (!encounter) {
+            this._extremeTaskMessage = '本週的 BOSS 關卡資料讀取失敗';
+            this._refreshExtremeTask();
+            return;
+        }
+        const started = await session.startExtremeTask(Date.now());
+        if (!started.ok) {
+            this._extremeTaskMessage = '本週次數已用完，也沒有極限挑戰令';
+            this._refreshExtremeTask();
+            return;
+        }
+        const params = this._buildBattleEntryParams(undefined, encounter);
+        services().scene.switchScene(SceneName.Battle, { ...params, tutorial: false, teachingSpirit: null });
     }
 
     /** 傭兵面板（MERC-07）：隱藏掛載，入口在城池主選單「武將 → 傭兵結義」（PROG-2-1152），對外提供 openMercenaryPanel()。 */
@@ -6262,8 +6327,7 @@ export class LobbyScene extends Component {
         return pending ?? this._encounters[0];
     }
 
-    private _buildBattleEntryParams(battleTactic?: BattleTactic): IBattleEntryParams {
-        const encounter = this._currentEncounter();
+    private _buildBattleEntryParams(battleTactic?: BattleTactic, encounter: EncounterConfig | undefined = this._currentEncounter()): IBattleEntryParams {
         if (!encounter) {
             return {
                 ...DEFAULT_BATTLE_ENTRY_PARAMS,
