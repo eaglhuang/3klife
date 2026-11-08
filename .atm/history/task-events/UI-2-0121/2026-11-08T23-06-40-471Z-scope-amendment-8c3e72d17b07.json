@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-08T23-06-40-471Z-scope-amendment-8c3e72d17b07",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:f2613361c53f4af2cb0a91cbdabd6581cdc719208d732378d5ea00d114f6199a",
+  "createdAt": "2026-11-08T23:06:40.471Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/ma_teng_portrait.png,assets/resources/sprites/generals/avatars/ma_teng_avatar.png,assets/resources/sprites/ui_avatars/cropped/ma_teng_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}

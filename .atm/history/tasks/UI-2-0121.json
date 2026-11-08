@@ -10,8 +10,8 @@
   "tags": [],
   "createdAt": "2026-11-05T14:30:28.536Z",
   "createdByActor": "codex-gpt-6.1-sol",
-  "lastTransitionId": "2026-11-08T22-56-46-870Z-scope-amendment-637a5a52384a",
-  "lastTransitionAt": "2026-11-08T22:56:46.870Z",
+  "lastTransitionId": "2026-11-08T23-06-40-471Z-scope-amendment-8c3e72d17b07",
+  "lastTransitionAt": "2026-11-08T23:06:40.471Z",
   "ledgerContractVersion": "task-ledger/v1",
   "reservedAt": "2026-11-05T17:15:58.821Z",
   "promotedAt": "2026-11-05T17:15:58.826Z",
@@ -184,6 +184,7 @@
       "assets/resources/sprites/generals/avatars/ma_chao_avatar.png",
       "assets/resources/sprites/generals/avatars/ma_dai_avatar.png",
       "assets/resources/sprites/generals/avatars/ma_liang_avatar.png",
+      "assets/resources/sprites/generals/avatars/ma_teng_avatar.png",
       "assets/resources/sprites/generals/avatars/ma_yun_lu_avatar.png",
       "assets/resources/sprites/generals/avatars/ma_yun_lu_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/meng_huo_avatar.png",
@@ -314,6 +315,7 @@
       "assets/resources/sprites/generals/ma_chao_portrait.png",
       "assets/resources/sprites/generals/ma_dai_portrait.png",
       "assets/resources/sprites/generals/ma_liang_portrait.png",
+      "assets/resources/sprites/generals/ma_teng_portrait.png",
       "assets/resources/sprites/generals/ma_yun_lu_portrait.png",
       "assets/resources/sprites/generals/ma_yun_lu_portrait.png.meta",
       "assets/resources/sprites/generals/meng_huo_portrait.png",
@@ -448,6 +450,7 @@
       "assets/resources/sprites/ui_avatars/cropped/ma_chao_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/ma_dai_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/ma_liang_avatar.png",
+      "assets/resources/sprites/ui_avatars/cropped/ma_teng_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/ma_yun_lu_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/ma_yun_lu_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/meng_huo_avatar.png",
@@ -523,20 +526,20 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-5cbe28a340bd3637",
-    "ticketDigest": "sha256:5cbe28a340bd363781ab71ca89c8c3a603f1c55d202474b2e2235df9fa2ac150",
+    "ticketId": "wat-4834740306db47d6",
+    "ticketDigest": "sha256:4834740306db47d6047fc47b0777b48ad933c3caa784760a6d20688050939d81",
     "taskId": "UI-2-0121",
     "origin": "claim",
     "actorId": "codex-gpt-6.1-terra",
     "laneSessionId": "lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d",
     "claimGeneration": "lease-f957fb02b01d",
-    "issuedAt": "2026-11-08T22:56:46.157Z",
-    "expiresAt": "2026-11-08T23:26:46.157Z",
-    "scopeDigest": "sha256:da30a0390567d3ac40fdfa02460e2814ff0976746a4bd71cdad013cbf8a100d9",
+    "issuedAt": "2026-11-08T23:06:40.297Z",
+    "expiresAt": "2026-11-08T23:36:40.297Z",
+    "scopeDigest": "sha256:0783d26326bcc47b8d034d0d8ca16717555546a02de36f2484e41bdd3a41d909",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-11-08T22:56:46.157Z"
+      "selectedAt": "2026-11-08T23:06:40.297Z"
     },
     "grants": [
       {
@@ -705,6 +708,7 @@
           "assets/resources/sprites/generals/avatars/ma_chao_avatar.png",
           "assets/resources/sprites/generals/avatars/ma_dai_avatar.png",
           "assets/resources/sprites/generals/avatars/ma_liang_avatar.png",
+          "assets/resources/sprites/generals/avatars/ma_teng_avatar.png",
           "assets/resources/sprites/generals/avatars/ma_yun_lu_avatar.png",
           "assets/resources/sprites/generals/avatars/ma_yun_lu_avatar.png.meta",
           "assets/resources/sprites/generals/avatars/meng_huo_avatar.png",
@@ -835,6 +839,7 @@
           "assets/resources/sprites/generals/ma_chao_portrait.png",
           "assets/resources/sprites/generals/ma_dai_portrait.png",
           "assets/resources/sprites/generals/ma_liang_portrait.png",
+          "assets/resources/sprites/generals/ma_teng_portrait.png",
           "assets/resources/sprites/generals/ma_yun_lu_portrait.png",
           "assets/resources/sprites/generals/ma_yun_lu_portrait.png.meta",
           "assets/resources/sprites/generals/meng_huo_portrait.png",
@@ -969,6 +974,7 @@
           "assets/resources/sprites/ui_avatars/cropped/ma_chao_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/ma_dai_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/ma_liang_avatar.png",
+          "assets/resources/sprites/ui_avatars/cropped/ma_teng_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/ma_yun_lu_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/ma_yun_lu_avatar.png.meta",
           "assets/resources/sprites/ui_avatars/cropped/meng_huo_avatar.png",
@@ -1031,7 +1037,7 @@
           "docs/ui-quality-tasks/UI-2-0121.json",
           "docs/ui-quality-todo.json"
         ],
-        "digest": "sha256:2d1d4d920cf61e511bd86f69db2158b674ebddfaec4e78b0e1772df92521e536"
+        "digest": "sha256:66ecb88fa7a54344b1f925cf3843c1c2d8045e4bb1373f50ee6a3a951f8b6511"
       },
       {
         "kind": "lifecycle-operation",
@@ -1242,6 +1248,7 @@
       "assets/resources/sprites/generals/avatars/ma_chao_avatar.png",
       "assets/resources/sprites/generals/avatars/ma_dai_avatar.png",
       "assets/resources/sprites/generals/avatars/ma_liang_avatar.png",
+      "assets/resources/sprites/generals/avatars/ma_teng_avatar.png",
       "assets/resources/sprites/generals/avatars/ma_yun_lu_avatar.png",
       "assets/resources/sprites/generals/avatars/ma_yun_lu_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/meng_huo_avatar.png",
@@ -1372,6 +1379,7 @@
       "assets/resources/sprites/generals/ma_chao_portrait.png",
       "assets/resources/sprites/generals/ma_dai_portrait.png",
       "assets/resources/sprites/generals/ma_liang_portrait.png",
+      "assets/resources/sprites/generals/ma_teng_portrait.png",
       "assets/resources/sprites/generals/ma_yun_lu_portrait.png",
       "assets/resources/sprites/generals/ma_yun_lu_portrait.png.meta",
       "assets/resources/sprites/generals/meng_huo_portrait.png",
@@ -1506,6 +1514,7 @@
       "assets/resources/sprites/ui_avatars/cropped/ma_chao_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/ma_dai_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/ma_liang_avatar.png",
+      "assets/resources/sprites/ui_avatars/cropped/ma_teng_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/ma_yun_lu_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/ma_yun_lu_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/meng_huo_avatar.png",
@@ -2538,6 +2547,9 @@
     "assets/resources/sprites/ui_avatars/cropped/lu_kang_avatar.png",
     "assets/resources/sprites/generals/avatars/ma_dai_avatar.png",
     "assets/resources/sprites/generals/ma_dai_portrait.png",
-    "assets/resources/sprites/ui_avatars/cropped/ma_dai_avatar.png"
+    "assets/resources/sprites/ui_avatars/cropped/ma_dai_avatar.png",
+    "assets/resources/sprites/generals/avatars/ma_teng_avatar.png",
+    "assets/resources/sprites/generals/ma_teng_portrait.png",
+    "assets/resources/sprites/ui_avatars/cropped/ma_teng_avatar.png"
   ]
 }
