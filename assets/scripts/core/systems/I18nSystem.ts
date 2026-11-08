@@ -43,6 +43,11 @@ interface LocaleAssets {
  *   字串：resources/i18n/{locale}.json
  *   字型：resources/fonts/locale/{locale}/{role}.ttf
  */
+/** 把 {0}、{1} 換成參數；同一佔位可重複出現，沒給參數的保留原樣 */
+export function fillI18nArgs(template: string, args: readonly string[]): string {
+    return template.replace(/\{(\d+)\}/g, (match, index: string) => args[Number(index)] ?? match);
+}
+
 export class I18nSystem {
     private _locale: LocaleCode = 'zh-TW';
     private cache = new Map<LocaleCode, LocaleAssets>();
@@ -92,11 +97,8 @@ export class I18nSystem {
      */
     t(key: string, ...args: string[]): string {
         // doc_spec_0342 §4.2：目標語系缺條目時依 zh-TW → zh-CN 回退（只查已載入的語系），最後回傳 key
-        let str = resolveLocalizedString(key, this._locale, (locale) => this.cache.get(locale as LocaleCode)?.strings);
-        args.forEach((arg, i) => {
-            str = str.replace(`{${i}}`, arg);
-        });
-        return str;
+        const str = resolveLocalizedString(key, this._locale, (locale) => this.cache.get(locale as LocaleCode)?.strings);
+        return fillI18nArgs(str, args);
     }
 
     /**

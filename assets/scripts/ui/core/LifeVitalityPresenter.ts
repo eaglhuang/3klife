@@ -179,6 +179,11 @@ export function formatVitalityCost(cost: number): string {
     return `此行動消耗精力 ${cost}`;
 }
 
+/** 滿 65 歲由系統強制退役（SPI-01）時的提示 */
+export function formatForcedRetirementNotice(names: readonly string[]): string {
+    return `${names.join('、')} 屆齡榮退，轉任教官`;
+}
+
 /** UI_DEATH_NOTIFY */
 export function formatDeathNotice(name: string, age: number): string {
     return `${name} 辭世，享年 ${Math.floor(age)} 歲`;

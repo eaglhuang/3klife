@@ -56,6 +56,9 @@ export interface AgingEvent {
     age: number;
     /** 只有 entered-growth-stage 事件會帶 */
     stage?: LifeGrowthStage;
+    /** 發事件時由 GameSession 補上：結算後武將可能已不在名冊，UI 查不到姓名 */
+    generalName?: string;
+    generalTitle?: string;
 }
 
 /** 回傳 [0, 1) 的亂數來源；測試時可注入固定序列 */

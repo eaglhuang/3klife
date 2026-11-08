@@ -449,6 +449,8 @@ export interface SeasonAdvancedPayload {
     advance: SeasonAdvanceResult;
     /** 本季滿 65 歲被系統強制轉教官卡的武將 id（SPI-01 退役雙軌，PROG-2-1994）；沒有時省略 */
     forcedRetirements?: string[];
+    /** 與 forcedRetirements 同序的姓名，供通知顯示 */
+    forcedRetirementNames?: string[];
     /** 季度治理報告句（領地治理 §G，PROG-2-1773）；本季沒有任何產出時沒有 */
     governanceReport?: string;
     /** 新一季發生治理事件時的提示句 */
@@ -4140,7 +4142,7 @@ export class GameSession {
             this._familySynergy = finalizeAdultChildren(this._familySynergy, this._roster.getAll());
             this._marriageProposal = rollMarriageProposal(this._roster.getAll(), this._clanTier, `suitor-${governanceSeason}`, remarkRandomOf(`marriage|${governanceSeason}|${this._seeded.snapshot().state}`), this._familySynergy);
         }
-        const payload: SeasonAdvancedPayload = { ...(forcedRetirements.length > 0 ? { forcedRetirements } : {}), ...(yuedanLines.length > 0 ? { yuedanLines } : {}), ...(this._tallyFoodDiscountArmed ? { foodLowLine: FOOD_LOW_LINE } : {}), ...(treasures.length > 0 ? { prisonTreasureLines: treasures.map((entry) => prisonTreasureLine(entry.targetName, ITEM_DISPLAY_NAMES[ITEM_TREASURE])) } : {}), ...(governanceReport ? { governanceReport } : {}), ...(eventNotice ? { governanceEventLine: eventNotice } : {}), advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids } : {}), ...(mercenaryDay.dayThreeUids.length > 0 ? { mercenaryDayThree: mercenaryDay.dayThreeUids } : {}), ...(mercenaryDay.trustUids.length > 0 ? { mercenaryTrust: mercenaryDay.trustUids } : {}) };
+        const payload: SeasonAdvancedPayload = { ...(forcedRetirements.length > 0 ? { forcedRetirements, forcedRetirementNames: forcedRetirements.map((id) => rosterBeforeLifecycle.find((general) => general.id === id)?.name ?? id) } : {}), ...(yuedanLines.length > 0 ? { yuedanLines } : {}), ...(this._tallyFoodDiscountArmed ? { foodLowLine: FOOD_LOW_LINE } : {}), ...(treasures.length > 0 ? { prisonTreasureLines: treasures.map((entry) => prisonTreasureLine(entry.targetName, ITEM_DISPLAY_NAMES[ITEM_TREASURE])) } : {}), ...(governanceReport ? { governanceReport } : {}), ...(eventNotice ? { governanceEventLine: eventNotice } : {}), advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids } : {}), ...(mercenaryDay.dayThreeUids.length > 0 ? { mercenaryDayThree: mercenaryDay.dayThreeUids } : {}), ...(mercenaryDay.trustUids.length > 0 ? { mercenaryTrust: mercenaryDay.trustUids } : {}) };
         if (this._autoSave && this._save) {
             await this.save();
         }
@@ -4158,7 +4160,8 @@ export class GameSession {
             this._emit(GAME_SESSION_EVENTS.GeneralUnveiled, event);
         }
         for (const event of aging.events) {
-            this._emit(agingEventChannel(event), event);
+            const source = rosterBeforeLifecycle.find((general) => general.id === event.generalId);
+            this._emit(agingEventChannel(event), source ? { ...event, generalName: source.name, generalTitle: source.title } : event);
         }
         for (const card of lifecycle?.spiritCards ?? []) {
             this._emit(GAME_SESSION_EVENTS.SpiritCardCreated, card);
