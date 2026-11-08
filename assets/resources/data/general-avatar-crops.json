@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "han-dang": {
+      "x": 340,
+      "y": 65,
+      "w": 350,
+      "h": 350,
+      "source": "reviewed",
+      "$note": "2026-11-08 韓當吳紅銅甲重繪裁切。"
+    },
     "guo-huai": {
       "x": 310,
       "y": 45,
