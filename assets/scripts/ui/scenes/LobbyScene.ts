@@ -161,7 +161,8 @@ import { domesticAssignmentFor } from '../../core/systems/SpiritMcqRules';
 import { isDescendant } from '../../core/systems/ChildMagistrate';
 import { ITEM_JOB_CHANGE_ORDER, ITEM_TRIAL_TICKET, ITEM_WISH_SPEED_CARD } from '../../core/systems/PlayerInventory';
 import { ITEM_LONGEVITY_PILL, ITEM_ORACLE_TOKEN } from '../../core/systems/ItemDef';
-import { JOB_CHANGE_ORDER_OFFER } from '../../core/systems/ItemShopPricing';
+import { ITEM_SHOP_OFFERS, JOB_CHANGE_ORDER_OFFER } from '../../core/systems/ItemShopPricing';
+import { ShopMainController } from '../core/ShopMainController';
 import { PrisonerPopupController } from '../core/PrisonerPopupController';
 import { DuplicatePullPopupController, DUPLICATE_INFUSION_VALUE, infusionTargetsOf, rebirthTargetsOf, splitOwnedDuplicates, type DuplicatePullChoice, type DuplicatePullEntry, type DuplicatePullRoute } from '../core/DuplicatePullPopupController';
 import { buildLobbyScout, ScoutPanelController } from '../core/ScoutPanelController';
@@ -327,6 +328,7 @@ export class LobbyScene extends Component {
     private _detailPanel: GeneralDetailComposite | null = null;
     private _lobbyMainHost: UIScreenPreviewHost | null = null;
     private _shopMainHost: UIScreenPreviewHost | null = null;
+    private _shopMain: ShopMainController | null = null;
     private _gachaHost: UIScreenPreviewHost | null = null;
     private _seasonHud: SeasonHudController<UIScreenPreviewHost> | null = null;
     private _cityHubHost: UIScreenPreviewHost | null = null;
@@ -4357,10 +4359,33 @@ export class LobbyScene extends Component {
         });
     }
 
-    private async _mountSecondaryMainHubs(): Promise<void> {
+    /** 百寶閣：精元買道具（經濟系統 §道具定價，PROG-2-2120） */
+    private async _mountShopMain(): Promise<void> {
+        this._shopMain = new ShopMainController({
+            gems: () => this._localGachaService.getCurrencyAmount('gems'),
+            owned: (itemId) => services().session.itemCount(itemId),
+            spendGems: (amount) => this._localGachaService.spendCurrency('gems', amount),
+            grant: (itemId, quantity) => services().session.addItem(itemId, quantity, 'SHOP'),
+        });
         this._shopMainHost = await this._mountPreviewScreenHost('ShopMainHost', 'shop-main-screen', [
             { buttonId: 'btnClose', handler: () => { void services().ui.goBack(); } },
+            ...ITEM_SHOP_OFFERS.map((_, i) => ({ buttonId: `shopRow${i}`, handler: () => { void this._onTapShopOffer(i); } })),
         ]);
+    }
+
+    private async _onTapShopOffer(index: number): Promise<void> {
+        await this._shopMain?.tapOffer(index);
+        this._refreshWalletPreviewState();
+        this._refreshShopMain();
+    }
+
+    private _refreshShopMain(): void {
+        const binder = this._shopMainHost?.binder;
+        if (binder && this._shopMain) applyFlowView(binder, this._shopMain.getView());
+    }
+
+    private async _mountSecondaryMainHubs(): Promise<void> {
+        await this._mountShopMain();
 
         this._gachaHost = await this._mountPreviewScreenHost('GachaHost', GACHA_SCREEN_ID, []);
         attachCurrencyCheatPanel(this._localGachaService, undefined, () => { PlayerRosterService.clear(); }, () => {
@@ -4917,7 +4942,10 @@ export class LobbyScene extends Component {
         const lobbyMainController = this._createLobbyMainController();
         const generalListController = this._createGeneralListController();
         const generalDetailController = this._createGeneralDetailController();
-        const shopMainController = this._createPreviewScreenController(this._shopMainHost, 'shop-main-screen');
+        const shopMainController = this._createPreviewScreenController(this._shopMainHost, 'shop-main-screen', () => {
+            this._shopMain?.open();
+            this._refreshShopMain();
+        });
         const gachaController = this._createPreviewScreenController(this._gachaHost, GACHA_SCREEN_ID, () => {
             this._applyGachaFlowPresentation(this._gachaHost, true);
             this._refreshWalletPreviewState();

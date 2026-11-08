@@ -103,6 +103,33 @@
       "border": [20, 20, 20, 20],
       "allowAutoAtlas": true
     },
+    "shop.label.offerName": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 26,
+      "lineHeight": 32,
+      "color": "textOnParchment",
+      "overflow": "CLAMP",
+      "horizontalAlign": "LEFT"
+    },
+    "shop.label.offerPrice": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 22,
+      "lineHeight": 28,
+      "color": "textOnParchment",
+      "overflow": "CLAMP",
+      "horizontalAlign": "CENTER"
+    },
+    "shop.label.offerNotice": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 22,
+      "lineHeight": 28,
+      "color": "textOnParchmentMuted",
+      "overflow": "CLAMP",
+      "horizontalAlign": "CENTER"
+    },
     "shop.button.primary": {
       "kind": "button-skin",
       "normal": "sprites/ui_families/common/commerce/btn_primary_normal",
