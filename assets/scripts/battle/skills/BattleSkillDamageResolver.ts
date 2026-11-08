@@ -1,6 +1,7 @@
 // @spec-source → 戰法系統.md (doc_spec_0038)；PROG-2-1429 依建檔紀錄補標出處
 import { TerrainType, TroopType, Weather } from '../../core/config/Constants';
 import { fireDamageMultiplier, isFireTactic } from '../../core/systems/WeatherTacticRestriction';
+import { lastSpurtAdjustedDamage } from '../../core/systems/LastSpurt';
 import { fateBlessingLevel, fateDamageMultiplier } from '../../core/systems/FateBlessing';
 import { GeneralUnit } from '../../core/models/GeneralUnit';
 import { TroopUnit } from '../../core/models/TroopUnit';
@@ -46,7 +47,9 @@ export class BattleSkillDamageResolver {
       attackBonus: caster.attackBonus,
     });
     const chargedDamage = this.applyCharge(profile, context, caster, target, rawBaseDamage);
-    const baseDamage = this.applyFirstTurn(profile, context, chargedDamage);
+    const firstTurnDamage = this.applyFirstTurn(profile, context, chargedDamage);
+    // 破釜沉舟（FORM-06，PROG-2-1992）：殘局後戰法傷害同樣套 √(STR/500)
+    const baseDamage = context.isLastSpurt?.() ? lastSpurtAdjustedDamage(firstTurnDamage, caster.str) : firstTurnDamage;
 
     const weather = context.getWeather?.() ?? Weather.Clear;
     const weatherMultiplier = fireDamageMultiplier(profile.tags ?? [], weather) * weatherDamageMultiplierOf(profile, weather);
