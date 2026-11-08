@@ -10,8 +10,8 @@
   "tags": [],
   "createdAt": "2026-11-05T14:30:28.536Z",
   "createdByActor": "codex-gpt-6.1-sol",
-  "lastTransitionId": "2026-11-08T13-23-42-457Z-scope-amendment-a0b574520455",
-  "lastTransitionAt": "2026-11-08T13:23:42.457Z",
+  "lastTransitionId": "2026-11-08T13-29-09-411Z-scope-amendment-8131f8610480",
+  "lastTransitionAt": "2026-11-08T13:29:09.411Z",
   "ledgerContractVersion": "task-ledger/v1",
   "reservedAt": "2026-11-05T17:15:58.821Z",
   "promotedAt": "2026-11-05T17:15:58.826Z",
@@ -262,6 +262,7 @@
       "assets/resources/sprites/generals/gan_ning_portrait.png",
       "assets/resources/sprites/generals/gan_shi_portrait.png",
       "assets/resources/sprites/generals/gan_shi_portrait.png.meta",
+      "assets/resources/sprites/generals/gongsun_zan_portrait.png",
       "assets/resources/sprites/generals/guan_yin_ping_portrait.png",
       "assets/resources/sprites/generals/guan_yu_portrait.png",
       "assets/resources/sprites/generals/guo_jia_portrait.png",
@@ -489,20 +490,20 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-b223672dcbf2fb88",
-    "ticketDigest": "sha256:b223672dcbf2fb8834f40239b96784f1d965b3eb76d8b83781cc1a61f8fb94b2",
+    "ticketId": "wat-d06f79334b38a083",
+    "ticketDigest": "sha256:d06f79334b38a08389a5fc80a6232444f2ded2ddabe92b0f15450e4dd9821e12",
     "taskId": "UI-2-0121",
     "origin": "claim",
     "actorId": "codex-gpt-6.1-terra",
     "laneSessionId": "lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d",
     "claimGeneration": "lease-f957fb02b01d",
-    "issuedAt": "2026-11-08T13:23:42.316Z",
-    "expiresAt": "2026-11-08T13:53:42.316Z",
-    "scopeDigest": "sha256:6b055ff5f0a7edf4bbbff35c366d9e8c290c63f5167fe1d39406e8c897399948",
+    "issuedAt": "2026-11-08T13:29:09.142Z",
+    "expiresAt": "2026-11-08T13:59:09.142Z",
+    "scopeDigest": "sha256:d7bb5373b6ae5b05787e5a57fe0403ba48d23012ca93edf0036331478b29da3c",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-11-08T13:23:42.316Z"
+      "selectedAt": "2026-11-08T13:29:09.142Z"
     },
     "grants": [
       {
@@ -749,6 +750,7 @@
           "assets/resources/sprites/generals/gan_ning_portrait.png",
           "assets/resources/sprites/generals/gan_shi_portrait.png",
           "assets/resources/sprites/generals/gan_shi_portrait.png.meta",
+          "assets/resources/sprites/generals/gongsun_zan_portrait.png",
           "assets/resources/sprites/generals/guan_yin_ping_portrait.png",
           "assets/resources/sprites/generals/guan_yu_portrait.png",
           "assets/resources/sprites/generals/guo_jia_portrait.png",
@@ -963,7 +965,7 @@
           "docs/ui-quality-tasks/UI-2-0121.json",
           "docs/ui-quality-todo.json"
         ],
-        "digest": "sha256:cfdb3841ffa7e877759c356bb03df9322ca7f4c807b2941618d834a7f7d03048"
+        "digest": "sha256:c452af81971d9028905edabf406a6839e7262501b129901944a81b65baad746b"
       },
       {
         "kind": "lifecycle-operation",
@@ -1252,6 +1254,7 @@
       "assets/resources/sprites/generals/gan_ning_portrait.png",
       "assets/resources/sprites/generals/gan_shi_portrait.png",
       "assets/resources/sprites/generals/gan_shi_portrait.png.meta",
+      "assets/resources/sprites/generals/gongsun_zan_portrait.png",
       "assets/resources/sprites/generals/guan_yin_ping_portrait.png",
       "assets/resources/sprites/generals/guan_yu_portrait.png",
       "assets/resources/sprites/generals/guo_jia_portrait.png",
@@ -2368,6 +2371,7 @@
     "assets/resources/sprites/ui_avatars/cropped/dian_wei_avatar.png",
     "assets/resources/sprites/generals/avatars/dong_zhuo_avatar.png",
     "assets/resources/sprites/generals/dong_zhuo_portrait.png",
-    "assets/resources/sprites/ui_avatars/cropped/dong_zhuo_avatar.png"
+    "assets/resources/sprites/ui_avatars/cropped/dong_zhuo_avatar.png",
+    "assets/resources/sprites/generals/gongsun_zan_portrait.png"
   ]
 }
