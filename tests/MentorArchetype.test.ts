@@ -65,5 +65,16 @@ export function createMentorArchetypeSuite(): TestSuite {
         assert.equals('GROUP', classifyMentorArchetype(defs.find((def) => def.name === '關羽')!));
     });
 
+    suite.test('裁決 2026-11-08 第 4 項：指定教官卡落在指定原型', () => {
+        const raw = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'assets/resources/data/mentor-support-cards.json'), 'utf8'));
+        const defs = [...parseSupportCatalog(raw).byGeneralId.values()];
+        const expected: Array<[string, string]> = [
+            ['荀彧', 'RESOURCE'], ['郭嘉', 'SKILL_BANK'], ['關羽', 'GROUP'], ['劉備', 'GROUP'], ['呂布', 'STAT_STICK'], ['張飛', 'STAT_STICK'],
+        ];
+        for (const [name, archetype] of expected) {
+            assert.equals(archetype, classifyMentorArchetype(defs.find((def) => def.name === name)!), name);
+        }
+    });
+
     return suite;
 }

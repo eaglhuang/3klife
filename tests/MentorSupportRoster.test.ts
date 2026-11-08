@@ -31,6 +31,18 @@ export function createMentorSupportRosterSuite(): TestSuite {
         for (const id of pool!.candidateIds) assert.isTrue(generals.has(id), `缺 ${id}`);
     });
 
+    suite.test('支援卡夥伴都指向存在的支援卡', () => {
+        const raw = cards as unknown as { Support: { Support_ID: string; Synergy_Partners: string[] } }[];
+        for (const entry of raw) {
+            for (const partner of entry.Support.Synergy_Partners) assert.isTrue(ids.has(partner), `${entry.Support.Support_ID} 缺 ${partner}`);
+        }
+    });
+
+    suite.test('裁決指定的荀彧、郭嘉、劉備可從支援卡池抽到', () => {
+        const pool = pools.find((p) => p.poolId === 'mentor-pool')!;
+        for (const id of ['xun-yu', 'guo-jia', 'liu-bei']) assert.isTrue(pool.candidateIds.includes(id), id);
+    });
+
     suite.test('SSR／SR／R 各至少一張', () => {
         for (const rarity of ['SSR', 'SR', 'R']) {
             assert.isTrue(cards.some((c) => c.Support.Rarity === rarity), rarity);

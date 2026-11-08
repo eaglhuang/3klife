@@ -786,5 +786,199 @@
       "Role_Boundary": "TeachingOnly",
       "_provisional": "PROG-2-1099：補齊羈絆與 R 卡的暫定資料，數值待企劃校正"
     }
+  },
+  {
+    "General_ID": "xun-yu",
+    "Support": {
+      "Support_ID": "SUP_XUNYU_SR_01",
+      "Name": "荀彧",
+      "Rarity": "SR",
+      "Teaching_Style": "政略",
+      "Stat_Bonus": {
+        "INT": 7,
+        "POL": 4
+      },
+      "Tactic_Inspire_Events": [
+        {
+          "Event_ID": "EVT_XUNYU_01",
+          "Tactic_ID": "TAC_INSPIRE",
+          "Trigger_Window": [
+            1,
+            18
+          ],
+          "Base_Rate": 0.25,
+          "Min_Star": 0
+        }
+      ],
+      "Passive_Effects": [
+        {
+          "Effect": "VITALITY_SAVE",
+          "Value": 0.2,
+          "Min_Star": 0
+        }
+      ],
+      "Friendship_Bonus": [
+        1.0,
+        1.1,
+        1.2,
+        1.3,
+        1.4,
+        1.5
+      ],
+      "Training_Effect": [
+        1.0,
+        1.05,
+        1.1,
+        1.15,
+        1.2,
+        1.3
+      ],
+      "Training_Slot_Affinity": [
+        "INT",
+        "POL"
+      ],
+      "Slot_Burst_Rate": 0.55,
+      "Synergy_Partners": [],
+      "Source": "Gacha",
+      "Role_Boundary": "TeachingOnly",
+      "_provisional": "PROG-2-2096：裁決 2026-11-08 第 4 項指定的特徵（體力消耗 -20%）為定案，其餘數值參考同稀有度暫定，待企劃校正"
+    }
+  },
+  {
+    "General_ID": "guo-jia",
+    "Support": {
+      "Support_ID": "SUP_GUOJIA_SSR_01",
+      "Name": "郭嘉",
+      "Rarity": "SSR",
+      "Teaching_Style": "奇策",
+      "Stat_Bonus": {
+        "INT": 9,
+        "POL": 4
+      },
+      "Tactic_Inspire_Events": [
+        {
+          "Event_ID": "EVT_GUOJIA_01",
+          "Tactic_ID": "TAC_SLOW",
+          "Trigger_Window": [
+            1,
+            18
+          ],
+          "Base_Rate": 0.25,
+          "Min_Star": 0
+        },
+        {
+          "Event_ID": "EVT_GUOJIA_02",
+          "Tactic_ID": "TAC_NIGHT_RAID",
+          "Trigger_Window": [
+            18,
+            36
+          ],
+          "Base_Rate": 0.15,
+          "Min_Star": 3
+        }
+      ],
+      "Passive_Effects": [
+        {
+          "Effect": "TP_Bonus",
+          "Value": 0.3,
+          "Min_Star": 0
+        }
+      ],
+      "Friendship_Bonus": [
+        1.0,
+        1.1,
+        1.2,
+        1.3,
+        1.4,
+        1.5
+      ],
+      "Training_Effect": [
+        1.0,
+        1.05,
+        1.1,
+        1.15,
+        1.2,
+        1.3
+      ],
+      "Training_Slot_Affinity": [
+        "INT",
+        "POL"
+      ],
+      "Slot_Burst_Rate": 0.55,
+      "Synergy_Partners": [],
+      "Source": "Gacha",
+      "Role_Boundary": "TeachingOnly",
+      "_provisional": "PROG-2-2096：裁決 2026-11-08 第 4 項指定的特徵（戰法 TP 折扣 30%）為定案，其餘數值參考同稀有度暫定，待企劃校正"
+    }
+  },
+  {
+    "General_ID": "liu-bei",
+    "Support": {
+      "Support_ID": "SUP_LIUBEI_SSR_01",
+      "Name": "劉備",
+      "Rarity": "SSR",
+      "Teaching_Style": "仁德",
+      "Stat_Bonus": {
+        "CHA": 8,
+        "POL": 5
+      },
+      "Tactic_Inspire_Events": [
+        {
+          "Event_ID": "EVT_LIUBEI_01",
+          "Tactic_ID": "TAC_INSPIRE",
+          "Trigger_Window": [
+            1,
+            18
+          ],
+          "Base_Rate": 0.25,
+          "Min_Star": 0
+        },
+        {
+          "Event_ID": "EVT_LIUBEI_02",
+          "Tactic_ID": "TAC_SWORN_FURY",
+          "Trigger_Window": [
+            18,
+            36
+          ],
+          "Base_Rate": 0.15,
+          "Min_Star": 3
+        }
+      ],
+      "Passive_Effects": [
+        {
+          "Effect": "TP_Bonus",
+          "Value": 0.15,
+          "Min_Star": 0
+        }
+      ],
+      "Friendship_Bonus": [
+        1.0,
+        1.1,
+        1.2,
+        1.3,
+        1.4,
+        1.5
+      ],
+      "Training_Effect": [
+        1.0,
+        1.05,
+        1.1,
+        1.15,
+        1.2,
+        1.3
+      ],
+      "Training_Slot_Affinity": [
+        "CHA",
+        "POL"
+      ],
+      "Slot_Burst_Rate": 0.55,
+      "Synergy_Partners": [
+        "SUP_GUAN_SSR_01",
+        "SUP_ZHANG_SSR_01"
+      ],
+      "Source": "Gacha",
+      "Role_Boundary": "TeachingOnly",
+      "_provisional": "PROG-2-2096：裁決 2026-11-08 第 4 項指定的特徵（多夥伴）為定案，其餘數值參考同稀有度暫定，待企劃校正"
+    }
   }
 ]
