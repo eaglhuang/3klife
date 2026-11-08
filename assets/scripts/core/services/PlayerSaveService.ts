@@ -107,6 +107,7 @@ import { normalizeOpeningPhaseId } from '../systems/OpeningProgress';
 import { normalizeEnrollGrantDay } from '../systems/DailyFreeEnroll';
 import { normalizeAcquisitionLog, type ItemAcquisitionRecord } from '../systems/ItemAcquisitionLog';
 import { normalizeAiAdaptiveStreak, type AiAdaptiveStreak } from '../systems/AiAdaptiveDifficulty';
+import { normalizeSalaryLedger, type SalaryLedger } from '../systems/GeneralSalary';
 
 export const PLAYER_SAVE_KEY = 'player.save';
 /** 備份槽的 key 後綴（DS-14）：主檔為 `<key>`，上一份有效存檔為 `<key>.bak` */
@@ -230,6 +231,8 @@ export interface PlayerSaveSnapshot {
     clanPrestige?: number;
     /** 血脈灌注帳本 INFUSION_RECORD；後加的選填欄位，舊檔缺值視為沒有紀錄；版號不升 */
     infusionRecords?: InfusionRecord[];
+    /** 武將欠薪帳本（RET-10）；後加的選填欄位，舊檔缺值視為沒有欠薪；版號不升 */
+    salaryLedger?: SalaryLedger;
     /** 祠堂每日供奉最後領取日（PROG-2-1915）；選填，舊檔缺值視為未領 */
     shrineOfferingDay?: string;
     /** 抽卡待補教官卡日誌（PROG-2-1004）：與扣款、入冊同批存檔，教官卡寫入後移除；舊檔沒有時讀回空陣列 */
@@ -664,6 +667,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(normalizeEnrollGrantDay(snapshot.enrollGrantDay) !== null ? { enrollGrantDay: normalizeEnrollGrantDay(snapshot.enrollGrantDay)! } : {}),
         ...(snapshot.aiAdaptiveStreak !== undefined ? { aiAdaptiveStreak: normalizeAiAdaptiveStreak(snapshot.aiAdaptiveStreak) } : {}),
         ...(normalizeInfusionRecords(snapshot.infusionRecords).length > 0 ? { infusionRecords: normalizeInfusionRecords(snapshot.infusionRecords) } : {}),
+        ...(snapshot.salaryLedger !== undefined ? { salaryLedger: normalizeSalaryLedger(snapshot.salaryLedger) } : {}),
         ...(normalizeClanPrestige(snapshot.clanPrestige) > 0 ? { clanPrestige: normalizeClanPrestige(snapshot.clanPrestige) } : {}),
         ...(normalizeShrineOfferingDay(snapshot.shrineOfferingDay) !== null ? { shrineOfferingDay: normalizeShrineOfferingDay(snapshot.shrineOfferingDay)! } : {}),
         ...(snapshot.gachaMentorJournal !== undefined ? { gachaMentorJournal: normalizeGachaMentorJournal(snapshot.gachaMentorJournal) } : {}),
