@@ -39,7 +39,12 @@ export function battleExpGain(outcome: TallyBattleOutcome): number {
 
 /** 套用一場戰鬥的經驗：經驗累加後，依門檻自動升星，直到封頂（不超過 3★ 與品質上限） */
 export function applyBattleExp(state: TallyStarState, outcome: TallyBattleOutcome): TallyStarState {
-    const exp = state.exp + battleExpGain(outcome);
+    return addTallyExp(state, battleExpGain(outcome));
+}
+
+/** 加一筆虎符經驗（戰鬥、血脈灌注共用）：依門檻自動升星，不超過 3★ 與品質上限 */
+export function addTallyExp(state: TallyStarState, amount: number): TallyStarState {
+    const exp = state.exp + amount;
     const cap = Math.min(BATTLE_GROWTH_STAR_LIMIT, QUALITY_STAR_CAP[state.quality]);
     let star = state.star;
     while (star < cap && TALLY_STAR_EXP[star + 1] !== undefined && exp >= TALLY_STAR_EXP[star + 1]) {

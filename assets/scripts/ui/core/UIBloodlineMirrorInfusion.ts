@@ -8,7 +8,7 @@ import type { SpiritCard } from '../../core/models/SpiritCard';
 import type { SpiritCardInfusionState } from '../../core/systems/BloodlineInfusion';
 
 export interface MirrorInfusionSession {
-    infuseSpiritCard(uid: string, duplicateCardValue: number): Promise<SpiritCard | null>;
+    infuseSpiritCard(uid: string, duplicateCardValue: number, generalId?: string): Promise<SpiritCard | null>;
 }
 
 /** 依命鏡 layout 節點名給的文字 */
@@ -35,7 +35,8 @@ export async function runMirrorInfusion(
     session: MirrorInfusionSession,
     card: Pick<SpiritCard, 'uid' | 'name'> & SpiritCardInfusionState,
     duplicateCardValue: number,
+    generalId?: string,
 ): Promise<MirrorInfusionResultTexts | null> {
-    const infused = await session.infuseSpiritCard(card.uid, duplicateCardValue);
+    const infused = await session.infuseSpiritCard(card.uid, duplicateCardValue, generalId);
     return infused ? buildMirrorInfusionResultTexts(card.name, card, infused) : null;
 }

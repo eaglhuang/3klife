@@ -137,7 +137,7 @@ import type { HallCandidate } from '../systems/HallCharacterRoll';
 import { buildHallSpotRows, EMPTY_HALL_SPOT_STATE, HallSpotRow, HallSpotState, refreshHallCharacterSpots } from '../systems/HallCharacterPresenter';
 import { buildHallStageFeed, type HallStageFeed, type HallStageProfile } from '../systems/HallStageFeed';
 import type { HallVolunteerTask } from '../systems/HallVolunteer';
-import { createPlayerSaveSnapshot, normalizeGachaMentorJournal, normalizeHallAssignLog, type GachaMentorJournalEntry, normalizeSandtableMarkerTerritories, normalizeSortiePresets, normalizeGachaWalletSave, type GachaWalletSave, normalizeDailySubsidyRecord, type DailySubsidyRecord, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeAutoNurtureTickets, normalizeFlag, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot, normalizeClanPrestige, normalizeShrineOfferingDay } from '../services/PlayerSaveService';
+import { createPlayerSaveSnapshot, normalizeInfusionRecords, normalizeGachaMentorJournal, normalizeHallAssignLog, type GachaMentorJournalEntry, normalizeSandtableMarkerTerritories, normalizeSortiePresets, normalizeGachaWalletSave, type GachaWalletSave, normalizeDailySubsidyRecord, type DailySubsidyRecord, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeAutoNurtureTickets, normalizeFlag, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot, normalizeClanPrestige, normalizeShrineOfferingDay } from '../services/PlayerSaveService';
 import { appendAssignRecord, autoAssignHallTask, listAssignRecords, settleLatestAssign, settleOpenAssignsForSeason, type HallAssignOutcome, type HallAutoAssignRecord, type HallAutoAssignResult, type HallAutoAssignTaskInput } from '../systems/HallAutoAssign';
 import type { HallTaskIntelInput } from '../systems/HallTaskIntel';
 import { estimateSortiePower } from '../systems/SortiePrediction';
@@ -146,7 +146,7 @@ import { computeDeathBattleScore, settleDeathTallies, TALLY_DEATH_SCORE_TUNING }
 import { settleDeathSpiritCards, spiritCardNoticeSpec } from '../systems/SpiritCardDeathSettlement';
 import { buildDualCardSettlements, dualCardSettlementSpecs, type DualCardSettlementPayload } from '../systems/DualCardSettlement';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
-import { applyBattleExpToCard, readCardStarState, tallyBattleOutcome } from '../systems/TigerTallyStar';
+import { applyBattleExpToCard, readCardStarState, tallyBattleOutcome, addTallyExp } from '../systems/TigerTallyStar';
 import { resolveTallyBreakthrough, type TallyBreakthroughResult } from '../systems/TigerTallyBreakthrough';
 import { countGeneralBagSlots } from '../systems/BagDomain';
 import { confiscateFrom, createTallyHoldings, equipTally, onGeneralDeath, takeTallyAway, tallyOfGeneral, transferTally, unequipTally, type TallyHoldingsResult, type TallyHoldings } from '../systems/TigerTallyHoldings';
@@ -184,6 +184,7 @@ import type { FactorColor, FactorDefinition, FactorDictionary } from '../systems
 import { visibleFactorColors as factorColorsVisibleAtLevel } from '../systems/FactorMask';
 import { specialActionFactorTags } from '../systems/BattleSpecialActions';
 import { applyDuplicatePull, RebirthPullResult } from '../systems/Rebirth';
+import { applyInfusionStats, bloodlineInfusionGrant, tallyInfusionLevelOf, type InfusionRecord } from '../systems/DuplicatePullRouting';
 import { bondedMercenaryGeneralIds, duplicatePopupGeneralIds, mercenaryRebirthStatCap } from '../systems/MercenaryRebirth';
 import { randomizePulledTactics } from '../systems/TacticRandomization';
 import { resolveReleaseEpiphanyWithTactic, type ReleaseEpiphanyTacticResult } from '../systems/ReleaseEpiphany';
@@ -795,6 +796,7 @@ export class GameSession {
     private _aiAdaptiveStreak: AiAdaptiveStreak = { ...EMPTY_AI_ADAPTIVE_STREAK };
     /** 祠堂軍功聲望（與 ClanTier 血統階層雙軌並存） */
     private _clanPrestige = 0;
+    private _infusionRecords: InfusionRecord[] = [];
     /** 祠堂每日供奉最後領取日（UTC+8，YYYY-MM-DD）；從未領為 null（PROG-2-1915） */
     private _shrineOfferingDay: string | null = null;
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
@@ -1985,6 +1987,7 @@ export class GameSession {
         this._itemAcquisitionLog = [];
         this._aiAdaptiveStreak = { ...EMPTY_AI_ADAPTIVE_STREAK };
         this._clanPrestige = 0;
+        this._infusionRecords = [];
         this._shrineOfferingDay = null;
         this._sevenDayJourney = createSevenDayJourneyState();
         this._officerState = initialOfficerState();
@@ -4922,8 +4925,8 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'shrineOfferingDay'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'shrineOfferingDay'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'shrineOfferingDay'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'shrineOfferingDay'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
@@ -4956,6 +4959,7 @@ export class GameSession {
         if (this._itemAcquisitionLog.length > 0) fields.itemAcquisitionLog = this._itemAcquisitionLog.slice();
         if (this._aiAdaptiveStreak.consecutiveWins > 0 || this._aiAdaptiveStreak.consecutiveLosses > 0) fields.aiAdaptiveStreak = { ...this._aiAdaptiveStreak };
         if (this._clanPrestige > 0) fields.clanPrestige = this._clanPrestige;
+        if (this._infusionRecords.length > 0) fields.infusionRecords = this._infusionRecords.map((record) => ({ ...record }));
         if (this._shrineOfferingDay) fields.shrineOfferingDay = this._shrineOfferingDay;
         return fields;
     }
@@ -4991,6 +4995,7 @@ export class GameSession {
         this._itemAcquisitionLog = normalizeAcquisitionLog(snapshot.itemAcquisitionLog);
         this._aiAdaptiveStreak = normalizeAiAdaptiveStreak(snapshot.aiAdaptiveStreak);
         this._clanPrestige = normalizeClanPrestige(snapshot.clanPrestige);
+        this._infusionRecords = normalizeInfusionRecords(snapshot.infusionRecords);
         this._shrineOfferingDay = normalizeShrineOfferingDay(snapshot.shrineOfferingDay);
     }
 
@@ -5030,11 +5035,55 @@ export class GameSession {
     /**
      * 血脈灌注（PROG-2-1074）：把重複卡灌入既有英靈卡。沒有掛 SeasonLifecycle（或其 archiver）時回傳 null。
      * 灌注數值由呼叫端傳入（規格未定）。不產生新本體。
+     * 裁決 2026-11-08 第 16 項：同時給現役武將全屬性 +5%、專屬虎符經驗 +150、宗族聲望 +50，並寫入 INFUSION_RECORD。
+     * generalId 是拿到加成的現役武將；缺值時用英靈卡 uid 對名冊。
      */
-    public async infuseSpiritCard(uid: string, duplicateCardValue: number): Promise<SpiritCard | null> {
+    public async infuseSpiritCard(uid: string, duplicateCardValue: number, generalId?: string): Promise<SpiritCard | null> {
         const archiver = this._lifecycle?.getArchiver?.();
         if (!archiver) return null;
-        return archiver.infuseSpiritCard(uid, duplicateCardValue);
+        const infused = await archiver.infuseSpiritCard(uid, duplicateCardValue);
+        this._applyInfusionGrant(infused, generalId ?? uid);
+        if (this._autoSave && this._save) await this.save();
+        return infused;
+    }
+
+    /** 武將模板目前的虎符層級 0~5（同步，戰場端用）；來自灌注帳本 */
+    public tallyInfusionLevelOf(templateId: string): number {
+        return tallyInfusionLevelOf(this._infusionRecords, templateId);
+    }
+
+    public get infusionRecords(): readonly InfusionRecord[] {
+        return this._infusionRecords.map((record) => ({ ...record }));
+    }
+
+    private _applyInfusionGrant(card: SpiritCard, generalId: string): void {
+        const roster = this._roster.getAll();
+        const general = roster.find((entry) => entry.id === generalId);
+        const templateId = general?.templateId ?? generalId;
+        const tally = Object.values(this._tallyCards).find((entry) => entry.templateId === templateId);
+        const cardHash = `${card.uid}#${card.bloodlineLevel ?? 0}`;
+        const grant = bloodlineInfusionGrant(templateId, !!tally, cardHash, Date.now());
+
+        if (general) {
+            this._roster.replaceAll(roster.map((entry) => (entry === general ? applyInfusionStats(entry) : entry)));
+        }
+        if (tally) {
+            const before = readCardStarState(tally);
+            const next = addTallyExp(before, grant.tallyExp);
+            if (next.star > before.star) {
+                this.recordPlayerLog('TALLY_UPGRADE');
+                this._tallyNotices.push(tallyStarUpSpec(this._tallyNameOf(tally), next.star, troopNameOf(tally)));
+            }
+            this._tallyCards = { ...this._tallyCards, [tally.uid]: { ...tally, stars: next.star, battleExp: next.exp } };
+            this._syncInventoryRecords();
+        }
+        const tierBefore = clanPrestigeTierOf(this._clanPrestige);
+        this._clanPrestige += grant.clanReputation;
+        const tier = clanPrestigeTierOf(this._clanPrestige);
+        this._infusionRecords = [...this._infusionRecords, { ...grant.record, linkedTallyLevel: card.linkedTallyLevel ?? 0 }];
+        this._emit(GAME_SESSION_EVENTS.ClanPrestigeChanged, {
+            generalId, gain: grant.clanReputation, prestige: this._clanPrestige, tier, tierUp: tier > tierBefore,
+        } satisfies ClanPrestigeChangedPayload);
     }
 
     public async save(): Promise<PlayerSaveSnapshot> {
