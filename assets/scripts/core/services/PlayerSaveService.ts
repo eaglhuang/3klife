@@ -1,3 +1,4 @@
+import type { InfusionRecord } from '../systems/DuplicatePullRouting';
 import { normalizeMarriageProposal, type MarriageProposal } from '../systems/MarriageProposal';
 import { normalizeFamilySynergy, type FamilySynergyLedger } from '../systems/FamilySynergy';
 import { normalizePedigreeProbes } from '../systems/PedigreeProbe';
@@ -227,6 +228,8 @@ export interface PlayerSaveSnapshot {
     aiAdaptiveStreak?: AiAdaptiveStreak;
     /** 祠堂軍功聲望（PROG-2-1912）；後加的選填欄位，舊檔缺值視為 0；版號不升 */
     clanPrestige?: number;
+    /** 血脈灌注帳本 INFUSION_RECORD；後加的選填欄位，舊檔缺值視為沒有紀錄；版號不升 */
+    infusionRecords?: InfusionRecord[];
     /** 祠堂每日供奉最後領取日（PROG-2-1915）；選填，舊檔缺值視為未領 */
     shrineOfferingDay?: string;
     /** 抽卡待補教官卡日誌（PROG-2-1004）：與扣款、入冊同批存檔，教官卡寫入後移除；舊檔沒有時讀回空陣列 */
@@ -660,6 +663,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.itemAcquisitionLog !== undefined ? { itemAcquisitionLog: normalizeAcquisitionLog(snapshot.itemAcquisitionLog) } : {}),
         ...(normalizeEnrollGrantDay(snapshot.enrollGrantDay) !== null ? { enrollGrantDay: normalizeEnrollGrantDay(snapshot.enrollGrantDay)! } : {}),
         ...(snapshot.aiAdaptiveStreak !== undefined ? { aiAdaptiveStreak: normalizeAiAdaptiveStreak(snapshot.aiAdaptiveStreak) } : {}),
+        ...(normalizeInfusionRecords(snapshot.infusionRecords).length > 0 ? { infusionRecords: normalizeInfusionRecords(snapshot.infusionRecords) } : {}),
         ...(normalizeClanPrestige(snapshot.clanPrestige) > 0 ? { clanPrestige: normalizeClanPrestige(snapshot.clanPrestige) } : {}),
         ...(normalizeShrineOfferingDay(snapshot.shrineOfferingDay) !== null ? { shrineOfferingDay: normalizeShrineOfferingDay(snapshot.shrineOfferingDay)! } : {}),
         ...(snapshot.gachaMentorJournal !== undefined ? { gachaMentorJournal: normalizeGachaMentorJournal(snapshot.gachaMentorJournal) } : {}),
@@ -811,6 +815,17 @@ export class PlayerSaveService {
         }
         return this._ready;
     }
+}
+
+/** 灌注帳本讀檔正規化：不是陣列視為空，丟掉欄位不合法的條目 */
+export function normalizeInfusionRecords(value: unknown): InfusionRecord[] {
+    if (!Array.isArray(value)) return [];
+    return value.filter((entry: Partial<InfusionRecord> | null): entry is InfusionRecord => !!entry
+        && entry.kind === 'INFUSION_RECORD'
+        && typeof entry.templateId === 'string'
+        && typeof entry.cardHash === 'string'
+        && typeof entry.timestamp === 'number')
+        .map((entry) => ({ ...entry }));
 }
 
 /** 祠堂聲望讀檔正規化：非數字或負數視為 0、取整數 */

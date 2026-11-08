@@ -531,7 +531,7 @@ export class LobbyScene extends Component {
         };
         for (const general of infusionTargetsOf(owned, choices)) {
             const card = cards.get(general.id);
-            if (card) await this.openBloodlineInfusionResult(card, DUPLICATE_INFUSION_VALUE);
+            if (card) await this.openBloodlineInfusionResult(card, DUPLICATE_INFUSION_VALUE, general.id);
         }
     }
 
@@ -5273,8 +5273,8 @@ export class LobbyScene extends Component {
     }
 
     /** DUP-04: infuse a duplicate into the spirit card, then show the result on the mirror ascension page. */
-    public async openBloodlineInfusionResult(card: SpiritCard, duplicateCardValue: number): Promise<boolean> {
-        const texts = await runMirrorInfusion(services().session, card, duplicateCardValue);
+    public async openBloodlineInfusionResult(card: SpiritCard, duplicateCardValue: number, generalId?: string): Promise<boolean> {
+        const texts = await runMirrorInfusion(services().session, card, duplicateCardValue, generalId);
         if (!texts) return false;
         await services().ui.open(UIID.BloodlineMirrorAscension);
         this._bloodlineMirrorAscensionHost?.binder?.setTexts(texts);

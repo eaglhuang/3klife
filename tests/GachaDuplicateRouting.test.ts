@@ -63,7 +63,7 @@ export function createGachaDuplicateRoutingSuite(): TestSuite {
         assert.equals(500, DUPLICATE_INFUSION_VALUE);
         assert.isTrue(lobby.includes('this._enrollGachaGenerals(results.map((entry) => entry.general))'));
         assert.isTrue(lobby.includes('await this._routeGachaOwnedDuplicates();'));
-        assert.isTrue(lobby.includes('this.openBloodlineInfusionResult(card, DUPLICATE_INFUSION_VALUE)'));
+        assert.isTrue(lobby.includes('this.openBloodlineInfusionResult(card, DUPLICATE_INFUSION_VALUE, general.id)'));
     });
 
     return suite;
