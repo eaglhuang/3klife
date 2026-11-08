@@ -51,6 +51,8 @@ export interface DomesticPanelDeps {
     assignedUid?: (taskId: DomesticTaskId) => string | null;
     /** uid = null 表示卸下；回傳是否成功 */
     assign?: (taskId: DomesticTaskId, uid: string | null) => boolean;
+    /** 武將做該任務的效率倍率（SPI-13 Q51 幼兒低效內政）；0 = 不可指派，不提供時一律 1 */
+    efficiency?: (taskId: DomesticTaskId, uid: string) => number;
     /** 自動治理開關（§E #7，PROG-2-1161）；setAutoMode 回傳開啟時補了幾格 */
     autoMode?: () => boolean;
     setAutoMode?: (on: boolean) => number;
@@ -98,7 +100,8 @@ export class DomesticPanelController {
         if (!candidates || !assignedUid || !assign) return;
         const busy = new Set(NODE_TASKS.filter((t) => t !== taskId).map((t) => assignedUid(t)).filter((uid): uid is string => !!uid));
         const order = candidates()
-            .filter((c) => !busy.has(c.id))
+            .filter((c) => !busy.has(c.id) && this._efficiency(taskId, c.id) > 0)
+            .map((c) => this._scaled(taskId, c))
             .sort((a, b) => domesticOutputFor(taskId, b.stats).amount - domesticOutputFor(taskId, a.stats).amount);
         const current = assignedUid(taskId);
         const index = order.findIndex((c) => c.id === current);
@@ -119,7 +122,9 @@ export class DomesticPanelController {
     public autoAssign(): number {
         const { candidates, assignedUid, assign } = this._deps;
         if (!candidates || !assignedUid || !assign) return 0;
-        const picks = planAutoGovernance(candidates(), assignedUid);
+        // 與 GameSession 自動治理同規則：任一任務打折的武將（幼兒）不自動派
+        const full = candidates().filter((c) => NODE_TASKS.every((t) => this._efficiency(t, c.id) === 1));
+        const picks = planAutoGovernance(full, assignedUid);
         const done = picks.filter((pick) => assign(pick.task, pick.generalUid)).length;
         this._notice = done > 0
             ? '太守府已自動安排武將執行內政。'
@@ -174,7 +179,20 @@ export class DomesticPanelController {
     private _governorOf(taskId: DomesticTaskId): DomesticGovernor | null {
         const uid = this._deps.assignedUid?.(taskId);
         if (!uid) return null;
-        return this._deps.candidates?.().find((c) => c.id === uid) ?? null;
+        const candidate = this._deps.candidates?.().find((c) => c.id === uid);
+        return candidate ? this._scaled(taskId, candidate) : null;
+    }
+
+    private _efficiency(taskId: DomesticTaskId, uid: string): number {
+        return this._deps.efficiency?.(taskId, uid) ?? 1;
+    }
+
+    /** 依效率倍率打折屬性，讓產出預覽與 GameSession 實際結算一致 */
+    private _scaled(taskId: DomesticTaskId, candidate: DomesticGovernorCandidate): DomesticGovernorCandidate {
+        const e = this._efficiency(taskId, candidate.id);
+        if (e === 1) return candidate;
+        const { str, int, pol, cha } = candidate.stats;
+        return { ...candidate, stats: { str: str * e, int: int * e, pol: pol * e, cha: cha * e } };
     }
 
     /** 選一項任務；同季已選過時不呼叫 GameSession，直接回報提示 */

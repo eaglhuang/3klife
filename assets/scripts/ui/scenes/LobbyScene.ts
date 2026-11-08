@@ -154,6 +154,7 @@ import type { RedFaceCardLike } from '../../core/systems/RedFaceShowcase';
 import { parseRedFaceCopy, redFaceTravelCopy } from '../../core/systems/RedFaceCopy';
 import { validateSupportPool } from '../../core/systems/SupportPoolValidator';
 import type { DomesticTaskId } from '../../core/systems/DomesticTasks';
+import { domesticAssignmentFor } from '../../core/systems/SpiritMcqRules';
 import { isDescendant } from '../../core/systems/ChildMagistrate';
 import { ITEM_JOB_CHANGE_ORDER, ITEM_TRIAL_TICKET, ITEM_WISH_SPEED_CARD } from '../../core/systems/PlayerInventory';
 import { ITEM_ORACLE_TOKEN } from '../../core/systems/ItemDef';
@@ -1567,6 +1568,10 @@ export class LobbyScene extends Component {
                 else if (!session.assignGovernor(taskId, uid).ok) return false;
                 void session.save().catch(() => undefined);
                 return true;
+            },
+            efficiency: (taskId: DomesticTaskId, uid: string) => {
+                const result = domesticAssignmentFor(services().session.roster.find((general) => general.id === uid)?.age, taskId);
+                return result.ok ? result.efficiency : 0;
             },
             // 子嗣郡城縣令（PROG-2-1162）：黃金產出加成；任命變動即存檔
             magistrateCandidates: () => services().session.roster
