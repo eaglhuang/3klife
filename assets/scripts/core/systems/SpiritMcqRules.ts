@@ -45,6 +45,14 @@ export function createBattleAwakeningBudget(): BattleAwakeningBudget {
     return { used: 0 };
 }
 
+/**
+ * 結算資料層的 Q52 額度檢查（PROG-2-1991）：本場已覺醒 awakenedSoFar 個，還能不能再覺醒一個。
+ * 只管「單場 ≤ 1」；規格括號的「同一個戰法只能覺醒一次」要戰鬥內的戰法呼叫點，戰鬥模組解鎖後再接。
+ */
+export function checkAwakeningQuota(awakenedSoFar: number, max: number = MAX_BATTLE_AWAKENINGS): boolean {
+    return awakenedSoFar < max;
+}
+
 /** 嘗試覺醒一個因子：本場還有額度就扣 1 並回 true，否則回 false。 */
 export function tryConsumeBattleAwakening(budget: BattleAwakeningBudget): boolean {
     if (budget.used >= MAX_BATTLE_AWAKENINGS) return false;
