@@ -10,8 +10,8 @@
   "tags": [],
   "createdAt": "2026-11-05T14:30:28.536Z",
   "createdByActor": "codex-gpt-6.1-sol",
-  "lastTransitionId": "2026-11-08T07-48-35-491Z-scope-amendment-ac8fe034a0dd",
-  "lastTransitionAt": "2026-11-08T07:48:35.491Z",
+  "lastTransitionId": "2026-11-08T07-52-44-726Z-scope-amendment-68a320712b9b",
+  "lastTransitionAt": "2026-11-08T07:52:44.726Z",
   "ledgerContractVersion": "task-ledger/v1",
   "reservedAt": "2026-11-05T17:15:58.821Z",
   "promotedAt": "2026-11-05T17:15:58.826Z",
@@ -468,20 +468,20 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-aae684b03badaa45",
-    "ticketDigest": "sha256:aae684b03badaa45c0a5efdc397b0b53f4029db72c477c81b597adb40f288ecd",
+    "ticketId": "wat-6a2196993c710937",
+    "ticketDigest": "sha256:6a2196993c710937fa91721bf4482652c5571d6b0674e8bff90c22bab1ee6e60",
     "taskId": "UI-2-0121",
     "origin": "claim",
     "actorId": "codex-gpt-6.1-terra",
     "laneSessionId": "lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d",
     "claimGeneration": "lease-f957fb02b01d",
-    "issuedAt": "2026-11-08T07:48:35.364Z",
-    "expiresAt": "2026-11-08T08:18:35.364Z",
+    "issuedAt": "2026-11-08T07:52:44.422Z",
+    "expiresAt": "2026-11-08T08:22:44.422Z",
     "scopeDigest": "sha256:19fd1dced6340ed87e7ad70f78e107466e8db5f9790caf527759b90129727d76",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-11-08T07:48:35.364Z"
+      "selectedAt": "2026-11-08T07:52:44.422Z"
     },
     "grants": [
       {

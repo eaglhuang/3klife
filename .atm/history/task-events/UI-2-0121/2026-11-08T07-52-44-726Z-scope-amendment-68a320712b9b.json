@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-08T07-52-44-726Z-scope-amendment-68a320712b9b",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:4a48133c060325ef3d0fb1c87599a6300d0950198034faee9ffeeaf050e5cbd7",
+  "createdAt": "2026-11-08T07:52:44.726Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/zhu_rong_furen_portrait.png,assets/resources/sprites/generals/avatars/zhu_rong_furen_avatar.png,assets/resources/sprites/ui_avatars/cropped/zhu_rong_furen_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
