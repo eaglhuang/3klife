@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "ma-dai": {
+      "x": 355,
+      "y": 0,
+      "w": 350,
+      "h": 350,
+      "source": "reviewed",
+      "$note": "2026-11-09 馬岱蜀綠沙金持刀造型裁切。"
+    },
     "lu-kang": {
       "x": 325,
       "y": 0,
