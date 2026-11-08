@@ -2,12 +2,14 @@
 /**
  * MentorHoldingRows — 「我的教官卡」列表的列資料（PROG-2-1097，純邏輯，不依賴 cc）
  *
- * 持有教官卡 → 列文字（名稱、稀有度、星等、專長、TP 加成）與詳情資料；
+ * 持有教官卡 → 列文字（名稱、稀有度、星等、專長、TP 加成、原型標籤）與詳情資料；
+ * 原型標籤（FORM-04，PROG-2-2088）只在卡片帶支援卡資料時顯示，判定見 MentorArchetype。
  * 排序：稀有度高的在前，同稀有度星等高的在前。
  */
 import type { MentorCard } from '../../core/models/MentorCard';
 import { mentorFromCard } from '../../core/systems/NurtureSystem';
 import { mentorToCardData, type MentorCardData } from '../../core/systems/MentorCardTabs';
+import { classifyMentorArchetype, MENTOR_ARCHETYPE_DEFS } from '../../core/systems/MentorArchetype';
 import { statLabelOf } from './NurtureFlowController';
 import { type BreedTextLookup, fallbackBreedText } from './BreedingTexts';
 
@@ -28,12 +30,13 @@ export function mentorHoldingRows(cards: readonly MentorCard[], t: BreedTextLook
             const stars = mentor.stars ?? 0;
             const specialty = statLabelOf(t, mentor.specialty);
             const head = [card.name, rarity, `★${stars}`].filter(Boolean).join('　');
+            const archetype = card.support ? `　${MENTOR_ARCHETYPE_DEFS[classifyMentorArchetype(card.support)].label}` : '';
             return {
                 uid: card.uid,
                 name: card.name,
                 rarity,
                 stars,
-                text: `${head}\n專長 ${specialty}　TP +${mentor.tpBonus}`,
+                text: `${head}\n專長 ${specialty}　TP +${mentor.tpBonus}${archetype}`,
                 card: mentorToCardData(mentor),
             };
         })
