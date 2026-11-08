@@ -250,6 +250,8 @@ import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral, UNVEILING_AGE, GEN
 import { injectCatalystFactor, markCatalystUsed, type CatalystGeneral } from '../systems/GeneCatalyst';
 import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
 import { DynamicRelationBook, battleComradePairs, type DynamicRelationResult } from '../systems/KinDynamicRelations';
+import { ITEM_EXTREME_CHALLENGE_ORDER, createExtremeTaskState, extremeFreeAttemptsLeft, extremeStageOfWeek, extremeWeekIndexOf, isExtremeStage, normalizeExtremeTaskState, startExtremeTask, type ExtremeTaskState } from '../systems/ExtremeTaskBoard';
+import { rollExtremeTaskDrop, type ExtremeTaskDrop } from '../systems/ExtremeTaskDrop';
 import { SALARY_ARREARS_PENALTY, createSalaryLedger, normalizeSalaryLedger, settleSalaries, type SalaryLedger, type SalarySettlement } from '../systems/GeneralSalary';
 import { RelationEventLedger } from '../systems/RelationEvents';
 import { cloneNpcMemory, createNpcMemory, normalizeNpcMemory, normalizeNpcPlayerId, npcPlayerIdFromSeed, type NpcMemoryRecord } from '../systems/NpcMemoryReadModel';
@@ -800,6 +802,7 @@ export class GameSession {
     private _clanPrestige = 0;
     private _infusionRecords: InfusionRecord[] = [];
     private _salaryLedger: SalaryLedger = createSalaryLedger();
+    private _extremeTask: ExtremeTaskState = createExtremeTaskState();
     /** 祠堂每日供奉最後領取日（UTC+8，YYYY-MM-DD）；從未領為 null（PROG-2-1915） */
     private _shrineOfferingDay: string | null = null;
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
@@ -1992,6 +1995,7 @@ export class GameSession {
         this._clanPrestige = 0;
         this._infusionRecords = [];
         this._salaryLedger = createSalaryLedger();
+        this._extremeTask = createExtremeTaskState();
         this._shrineOfferingDay = null;
         this._sevenDayJourney = createSevenDayJourneyState();
         this._officerState = initialOfficerState();
@@ -4171,6 +4175,57 @@ export class GameSession {
         return payload;
     }
 
+    /** 天下征鋒現況：本週免費次數、挑戰令、本週 BOSS 關卡、待領獎勵（PROG-2-2101） */
+    public extremeTaskStatus(nowMs: number): { freeLeft: number; orders: number; stageId: string; activeStageId: string | null; pendingRewards: ExtremeTaskDrop[] } {
+        return {
+            freeLeft: extremeFreeAttemptsLeft(this._extremeTask, nowMs),
+            orders: this.itemCount(ITEM_EXTREME_CHALLENGE_ORDER),
+            stageId: extremeStageOfWeek(extremeWeekIndexOf(nowMs)),
+            activeStageId: this._extremeTask.activeStageId,
+            pendingRewards: this._extremeTask.rewards.map((drop) => ({ ...drop })),
+        };
+    }
+
+    /** 開戰：先用每週免費次數，用完消耗 1 張極限挑戰令；開戰即扣，輸了不退。 */
+    public async startExtremeTask(nowMs: number): Promise<{ ok: true; stageId: string; usedOrder: boolean } | { ok: false; reason: 'NO_ATTEMPTS' }> {
+        const result = startExtremeTask(this._extremeTask, nowMs, this.itemCount(ITEM_EXTREME_CHALLENGE_ORDER));
+        if (!result.ok) return result;
+        if (result.usedOrder) {
+            const next = consumeItem(this._inventory, ITEM_EXTREME_CHALLENGE_ORDER, 1);
+            if (next === null) return { ok: false, reason: 'NO_ATTEMPTS' };
+            this._inventory = next;
+            this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
+        }
+        this._extremeTask = result.state;
+        if (this._autoSave && this._save) await this.save();
+        return { ok: true, stageId: result.stageId, usedOrder: result.usedOrder };
+    }
+
+    /** 領走待領獎勵：金幣交給呼叫端的錢包，道具進背包；回傳領到的內容。 */
+    public async claimExtremeTaskRewards(grantGold: (amount: number) => void): Promise<ExtremeTaskDrop[]> {
+        const drops = this._extremeTask.rewards;
+        if (drops.length === 0) return [];
+        this._extremeTask = { ...this._extremeTask, rewards: [] };
+        for (const drop of drops) {
+            if (drop.kind === 'gold') grantGold(drop.amount);
+            else await this.addItem(drop.itemId, drop.count, 'DROP');
+        }
+        if (this._autoSave && this._save) await this.save();
+        return drops.map((drop) => ({ ...drop }));
+    }
+
+    /** 戰鬥結算時收尾進行中的極限戰：通關抽一次掉落，其他結果只清狀態；別的關卡不影響。 */
+    private _settleExtremeTask(result: BattleResult, stageId: string | undefined): void {
+        const active = this._extremeTask.activeStageId;
+        if (active === null || stageId !== active) return;
+        const rewards = [...this._extremeTask.rewards];
+        if (result === 'player-win') {
+            // 另開序列，不消耗主亂數，既有結算的結果不受影響
+            rewards.push(rollExtremeTaskDrop(remarkRandomOf(`extreme|${this._extremeTask.weekIndex}|${this._extremeTask.attempts}|${active}`)));
+        }
+        this._extremeTask = { ...this._extremeTask, activeStageId: null, rewards };
+    }
+
     /** 武將連續欠薪季數（沒有欠薪回 0） */
     public salaryArrearsOf(generalId: string): number {
         return this._salaryLedger.arrears[generalId] ?? 0;
@@ -4640,7 +4695,8 @@ export class GameSession {
         // 勝利才記通關；同一關重複通關不會重複記入
         const clearedBefore = this._clearedStageIds.length;
         const beforeRoster = this._roster.getAll();
-        if (result === 'player-win' && options.stageId) {
+        this._settleExtremeTask(result, options.stageId);
+        if (result === 'player-win' && options.stageId && !isExtremeStage(options.stageId)) {
             this._clearedStageIds = normalizeClearedStageIds([...this._clearedStageIds, options.stageId]);
         }
         const clearChanged = this._clearedStageIds.length !== clearedBefore;
@@ -4987,8 +5043,8 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'shrineOfferingDay'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'shrineOfferingDay'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'shrineOfferingDay'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'shrineOfferingDay'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
@@ -5022,6 +5078,7 @@ export class GameSession {
         if (this._aiAdaptiveStreak.consecutiveWins > 0 || this._aiAdaptiveStreak.consecutiveLosses > 0) fields.aiAdaptiveStreak = { ...this._aiAdaptiveStreak };
         if (this._clanPrestige > 0) fields.clanPrestige = this._clanPrestige;
         if (this._infusionRecords.length > 0) fields.infusionRecords = this._infusionRecords.map((record) => ({ ...record }));
+        if (this._extremeTask.weekIndex >= 0 || this._extremeTask.rewards.length > 0) fields.extremeTask = { ...this._extremeTask, rewards: this._extremeTask.rewards.map((drop) => ({ ...drop })) };
         if (this._salaryLedger.lastSettledSeason !== null) fields.salaryLedger = { arrears: { ...this._salaryLedger.arrears }, lastSettledSeason: this._salaryLedger.lastSettledSeason };
         if (this._shrineOfferingDay) fields.shrineOfferingDay = this._shrineOfferingDay;
         return fields;
@@ -5060,6 +5117,7 @@ export class GameSession {
         this._clanPrestige = normalizeClanPrestige(snapshot.clanPrestige);
         this._infusionRecords = normalizeInfusionRecords(snapshot.infusionRecords);
         this._salaryLedger = normalizeSalaryLedger(snapshot.salaryLedger);
+        this._extremeTask = normalizeExtremeTaskState(snapshot.extremeTask);
         this._shrineOfferingDay = normalizeShrineOfferingDay(snapshot.shrineOfferingDay);
     }
 

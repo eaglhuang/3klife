@@ -57,6 +57,78 @@
         { "type": "infantry", "lane": 2 },
         { "type": "archer",   "lane": 4 }
       ]
+    },
+    {
+      "id": "extreme-lu-bu",
+      "name": "天下征鋒・呂布",
+      "aiDifficulty": "hell",
+      "extreme": true,
+      "battleKind": "field",
+      "playerGeneralId": "zhang-fei",
+      "enemyGeneralId": "lu-bu",
+      "backgroundId": "bg_normal_night",
+      "playerEquipment": [],
+      "enemyEquipment": [],
+      "terrain": [
+        ["plain", "plain", "forest", "forest", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain", "plain", "plain"],
+        ["river", "river", "river", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "forest", "forest", "plain", "plain", "plain", "plain"]
+      ],
+      "enemyInitialDeployment": [
+        { "type": "archer",   "lane": 0 },
+        { "type": "infantry", "lane": 2 },
+        { "type": "archer",   "lane": 4 }
+      ]
+    },
+    {
+      "id": "extreme-cao-cao",
+      "name": "天下征鋒・曹操",
+      "aiDifficulty": "hell",
+      "extreme": true,
+      "battleKind": "field",
+      "playerGeneralId": "zhang-fei",
+      "enemyGeneralId": "cao-cao",
+      "backgroundId": "bg_normal_night",
+      "playerEquipment": [],
+      "enemyEquipment": [],
+      "terrain": [
+        ["plain", "plain", "forest", "forest", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain", "plain", "plain"],
+        ["river", "river", "river", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "forest", "forest", "plain", "plain", "plain", "plain"]
+      ],
+      "enemyInitialDeployment": [
+        { "type": "archer",   "lane": 0 },
+        { "type": "infantry", "lane": 2 },
+        { "type": "archer",   "lane": 4 }
+      ]
+    },
+    {
+      "id": "extreme-guan-yu",
+      "name": "天下征鋒・關羽",
+      "aiDifficulty": "hell",
+      "extreme": true,
+      "battleKind": "field",
+      "playerGeneralId": "zhang-fei",
+      "enemyGeneralId": "guan-yu",
+      "backgroundId": "bg_normal_night",
+      "playerEquipment": [],
+      "enemyEquipment": [],
+      "terrain": [
+        ["plain", "plain", "forest", "forest", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain", "plain", "plain"],
+        ["river", "river", "river", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "forest", "forest", "plain", "plain", "plain", "plain"]
+      ],
+      "enemyInitialDeployment": [
+        { "type": "archer",   "lane": 0 },
+        { "type": "infantry", "lane": 2 },
+        { "type": "archer",   "lane": 4 }
+      ]
     }
   ]
 }

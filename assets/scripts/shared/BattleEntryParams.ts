@@ -36,6 +36,8 @@ export interface EncounterConfig {
   playerEquipment?: string[];
   /** 敵軍裝備 ID 列表（預留） */
   enemyEquipment?: string[];
+  /** 天下征鋒的 BOSS 關（PROG-2-2101）：不進大廳開戰關卡清單，只能從極限任務入口出戰 */
+  extreme?: boolean;
   /** 所屬連環破主鏈 id（PROG-2-0215）；沒有就是獨立關卡 */
   chainId?: string;
   /** 主鏈內順序，越小越前面（PROG-2-0215） */

@@ -1,0 +1,17 @@
+{
+  "id": "extreme-task-screen",
+  "version": 1,
+  "uiId": "ExtremeTaskPanel",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "extreme-task-main",
+  "skin": "extreme-task-screen.skin",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}
