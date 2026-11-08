@@ -26,12 +26,12 @@
     },
     "dup.button.rebirth.bg": {
       "kind": "color-rect",
-      "color": "primary",
+      "color": "dupRebirthCyan",
       "alpha": 220
     },
     "dup.button.infusion.bg": {
       "kind": "color-rect",
-      "color": "primary",
+      "color": "dupInfusionGold",
       "alpha": 220
     },
     "dup.button.toggle.bg": {
@@ -71,7 +71,7 @@
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 34,
       "lineHeight": 42,
-      "color": "secondaryLight",
+      "color": "dupRebirthCyan",
       "overflow": "CLAMP",
       "isBold": true,
       "horizontalAlign": "CENTER"
@@ -81,7 +81,7 @@
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 34,
       "lineHeight": 42,
-      "color": "secondaryLight",
+      "color": "dupInfusionGold",
       "overflow": "CLAMP",
       "isBold": true,
       "horizontalAlign": "CENTER"
@@ -102,6 +102,26 @@
       "lineHeight": 32,
       "color": "secondaryLight",
       "overflow": "SHRINK"
+    },
+    "dup.label.recommend": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 24,
+      "lineHeight": 32,
+      "color": "dupInfusionGold",
+      "overflow": "SHRINK",
+      "isBold": true,
+      "horizontalAlign": "RIGHT"
+    },
+    "dup.label.button.choice": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 26,
+      "lineHeight": 34,
+      "color": "textInk",
+      "overflow": "SHRINK",
+      "isBold": true,
+      "horizontalAlign": "CENTER"
     },
     "dup.label.button": {
       "kind": "label-style",

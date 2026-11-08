@@ -30,6 +30,18 @@ const TEN = [
 export function createDuplicatePullPopupSuite(): TestSuite {
     const suite = new TestSuite('DuplicatePullPopup (重複抽卡分流彈窗 DUP-01 PROG-2-2072)');
 
+    suite.test('裁決色碼：左青焰碧藍、右琥珀金且標推薦；亮底按鈕用深色字', () => {
+        const tokens = readSpec<{ colors: Record<string, string> }>('ui-design-tokens.json').colors;
+        assert.equals('#00D2D3', tokens.dupRebirthCyan);
+        assert.equals('#FFD32A', tokens.dupInfusionGold);
+        const { slots } = readSpec<{ slots: Record<string, { color?: string }> }>('skins/duplicate-pull-popup-screen.skin.json');
+        assert.equals('dupRebirthCyan', slots['dup.button.rebirth.bg'].color);
+        assert.equals('dupInfusionGold', slots['dup.button.infusion.bg'].color);
+        assert.equals('textInk', slots['dup.label.button.choice'].color);
+        const layoutText = fs.readFileSync(path.join(UI_SPEC, 'layouts/duplicate-pull-popup-main.json'), 'utf8');
+        assert.isTrue(layoutText.includes('"id": "dupInfusionRecommend"'));
+    });
+
     suite.test('view key 全部對得到 layout 節點 id；screen 指向自己的 layout/skin', () => {
         const layoutIds = ids(readSpec<{ root: SpecNode }>('layouts/duplicate-pull-popup-main.json').root);
         const ctrl = new DuplicatePullPopupController();
