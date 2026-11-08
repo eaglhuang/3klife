@@ -91,12 +91,14 @@ export interface TallyBattleInfo {
     templateId: string;
     /** 來源武將的模板 id，供史實合攻查關係；虎符即來源模板（TigerTally.produceDeathTally），不查名冊 */
     sourceTemplateId: string;
+    /** 血脈灌注的虎符層級 0~5（PROG-2-1998）；場景以 GameSession.tallyInfusionLevelOf 查到後帶入，沒帶視為 0 */
+    infusionLevel?: number;
 }
 
 /**
  * 出陣時戰場讀取虎符的資訊。來源武將戰死後已不在名冊，因此來源模板直接取虎符的 templateId，
  * 不能依賴 sourceGeneralUid 回頭查名冊（PM QA 2026-10-21）。
  */
-export function tallyBattleInfoOf(card: TigerTallyCard): TallyBattleInfo {
-    return { star: readCardStarState(card).star, templateId: card.templateId, sourceTemplateId: card.templateId };
+export function tallyBattleInfoOf(card: TigerTallyCard, infusionLevel = 0): TallyBattleInfo {
+    return { star: readCardStarState(card).star, templateId: card.templateId, sourceTemplateId: card.templateId, infusionLevel };
 }
