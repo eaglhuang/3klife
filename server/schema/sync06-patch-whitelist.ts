@@ -75,6 +75,7 @@ export const SYNC_PATCH_ROOT_KEYS: readonly string[] = [
     'infusionRecords',
     'salaryLedger',
     'extremeTask',
+    'pendingSceneGambit',
     'shrineOfferingDay',
     'gachaMentorJournal',
     'hallAssignLog',

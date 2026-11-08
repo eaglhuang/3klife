@@ -108,6 +108,7 @@ import { normalizeEnrollGrantDay } from '../systems/DailyFreeEnroll';
 import { normalizeAcquisitionLog, type ItemAcquisitionRecord } from '../systems/ItemAcquisitionLog';
 import { normalizeAiAdaptiveStreak, type AiAdaptiveStreak } from '../systems/AiAdaptiveDifficulty';
 import { normalizeExtremeTaskState, type ExtremeTaskState } from '../systems/ExtremeTaskBoard';
+import { normalizePendingSceneGambit, type PendingSceneGambit } from '../systems/HallSceneGambit';
 import { normalizeSalaryLedger, type SalaryLedger } from '../systems/GeneralSalary';
 
 export const PLAYER_SAVE_KEY = 'player.save';
@@ -236,6 +237,8 @@ export interface PlayerSaveSnapshot {
     salaryLedger?: SalaryLedger;
     /** 天下征鋒每週次數與待領獎勵（PROG-2-2101）；後加的選填欄位，舊檔缺值視為本週未挑戰；版號不升 */
     extremeTask?: ExtremeTaskState;
+    /** 軍事任務帶來、等下一場戰鬥判定的場景戰法（SCN-04，PROG-2-2103）；後加的選填欄位，舊檔缺值視為沒有；版號不升 */
+    pendingSceneGambit?: PendingSceneGambit;
     /** 祠堂每日供奉最後領取日（PROG-2-1915）；選填，舊檔缺值視為未領 */
     shrineOfferingDay?: string;
     /** 抽卡待補教官卡日誌（PROG-2-1004）：與扣款、入冊同批存檔，教官卡寫入後移除；舊檔沒有時讀回空陣列 */
@@ -671,6 +674,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.aiAdaptiveStreak !== undefined ? { aiAdaptiveStreak: normalizeAiAdaptiveStreak(snapshot.aiAdaptiveStreak) } : {}),
         ...(normalizeInfusionRecords(snapshot.infusionRecords).length > 0 ? { infusionRecords: normalizeInfusionRecords(snapshot.infusionRecords) } : {}),
         ...(snapshot.salaryLedger !== undefined ? { salaryLedger: normalizeSalaryLedger(snapshot.salaryLedger) } : {}),
+        ...(normalizePendingSceneGambit(snapshot.pendingSceneGambit) ? { pendingSceneGambit: normalizePendingSceneGambit(snapshot.pendingSceneGambit)! } : {}),
         ...(snapshot.extremeTask !== undefined ? { extremeTask: normalizeExtremeTaskState(snapshot.extremeTask) } : {}),
         ...(normalizeClanPrestige(snapshot.clanPrestige) > 0 ? { clanPrestige: normalizeClanPrestige(snapshot.clanPrestige) } : {}),
         ...(normalizeShrineOfferingDay(snapshot.shrineOfferingDay) !== null ? { shrineOfferingDay: normalizeShrineOfferingDay(snapshot.shrineOfferingDay)! } : {}),

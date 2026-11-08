@@ -11,6 +11,7 @@ import { installAdaptiveResolution } from '../core/AdaptiveResolution';
 import { LobbyHallScreenBinder, type LobbyHallDockId, type LobbyHallPanelId } from '../core/LobbyHallScreenBinder';
 import { hallFestivalIdOf, mainLobbyBackdropOf, resolveHallTheme as resolveHallSceneTheme, type HallThemeConfig } from '../../core/systems/HallTheme';
 import { LobbyBackdrop } from '../core/LobbyBackdrop';
+import { sceneGambitNotice, sceneGambitPendingNotice } from '../core/HallSceneGambitText';
 import type { HallSeasonFxConfig } from '../../core/systems/HallSeasonFx';
 import type { HallStageDecor } from '../../core/systems/HallStageCrowdPose';
 import type { HallMapEventCatalog } from '../../core/systems/HallMapEventMapper';
@@ -2764,6 +2765,12 @@ export class LobbyScene extends Component {
         applyFlowView(binder, this._hallBoard.getFlowView());
     }
 
+    private _hallDispatchToast(taskId: string, success: boolean): string {
+        if (!success) return '任務失敗';
+        const pending = services().session.pendingSceneGambit;
+        return pending?.taskId === taskId ? `任務成功\n${sceneGambitPendingNotice(pending.tactic)}` : '任務成功';
+    }
+
     /** 大廳任務派遣：找出目前牆面的任務，交給 GameSession 判定並結算。 */
     private async _dispatchHallTask(taskId: string, generalId: string): Promise<boolean> {
         const board = this._hallBoard?.board;
@@ -2783,7 +2790,7 @@ export class LobbyScene extends Component {
             return false;
         }
         this._lobbyHall?.reactToDispatch(task.Difficulty);
-        services().event.emit('SHOW_TOAST', { message: result.outcome.success ? '任務成功' : '任務失敗', duration: 2.5 });
+        services().event.emit('SHOW_TOAST', { message: this._hallDispatchToast(taskId, result.outcome.success), duration: 2.5 });
         return true;
     }
 
@@ -6329,7 +6336,7 @@ export class LobbyScene extends Component {
     /** 開戰：攻城戰先扣主將的攻城壽命（存檔後才切場景），其餘直接切場景 */
     private async _enterBattle(battleTactic?: BattleTactic): Promise<void> {
         if (!(await this._askScoutBeforeSortie())) return;
-        const params = this._buildBattleEntryParams(battleTactic);
+        const params = this._buildBattleEntryParams(battleTactic ?? await this._resolveSceneGambit());
         const siege = lifespanCommandForBattleKind(this._currentEncounter()?.battleKind);
         if (siege && params.playerGeneralId) {
             await services().session.spendSiegeLifespan(params.playerGeneralId);
@@ -6345,6 +6352,17 @@ export class LobbyScene extends Component {
         const cleared = new Set(services().session.clearedStageIds);
         const pending = this._encounters.find((e) => !cleared.has(e.id) && isStageUnlocked(e.id, this._encounters, cleared));
         return pending ?? this._encounters[0];
+    }
+
+    /** 軍事任務帶來的場景戰法（SCN-04）：教學戰不判定；只有發動成功才回傳戰法 */
+    private async _resolveSceneGambit(): Promise<BattleTactic | undefined> {
+        const session = services().session;
+        const encounter = this._currentEncounter();
+        if (!encounter || isTutorialBattle(session.clearedStageIds)) return undefined;
+        const outcome = await session.resolvePendingSceneGambit(session.resolveLeadGeneralId(encounter.playerGeneralId));
+        if (!outcome) return undefined;
+        services().event.emit('SHOW_TOAST', { message: sceneGambitNotice(outcome), duration: 3 });
+        return outcome.kind === 'triggered' ? outcome.tactic : undefined;
     }
 
     private _buildBattleEntryParams(battleTactic?: BattleTactic, encounter: EncounterConfig | undefined = this._currentEncounter()): IBattleEntryParams {

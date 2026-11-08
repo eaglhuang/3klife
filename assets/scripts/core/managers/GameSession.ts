@@ -250,6 +250,7 @@ import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral, UNVEILING_AGE, GEN
 import { injectCatalystFactor, markCatalystUsed, type CatalystGeneral } from '../systems/GeneCatalyst';
 import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
 import { DynamicRelationBook, battleComradePairs, type DynamicRelationResult } from '../systems/KinDynamicRelations';
+import { normalizePendingSceneGambit, pendingSceneGambitOfTask, resolveSceneGambit, type PendingSceneGambit, type SceneGambitOutcome } from '../systems/HallSceneGambit';
 import { ITEM_EXTREME_CHALLENGE_ORDER, createExtremeTaskState, extremeFreeAttemptsLeft, extremeStageOfWeek, extremeWeekIndexOf, isExtremeStage, normalizeExtremeTaskState, startExtremeTask, type ExtremeTaskState } from '../systems/ExtremeTaskBoard';
 import { rollExtremeTaskDrop, type ExtremeTaskDrop } from '../systems/ExtremeTaskDrop';
 import { SALARY_ARREARS_PENALTY, createSalaryLedger, normalizeSalaryLedger, settleSalaries, type SalaryLedger, type SalarySettlement } from '../systems/GeneralSalary';
@@ -805,6 +806,7 @@ export class GameSession {
     private _infusionRecords: InfusionRecord[] = [];
     private _salaryLedger: SalaryLedger = createSalaryLedger();
     private _extremeTask: ExtremeTaskState = createExtremeTaskState();
+    private _pendingSceneGambit: PendingSceneGambit | null = null;
     /** 祠堂每日供奉最後領取日（UTC+8，YYYY-MM-DD）；從未領為 null（PROG-2-1915） */
     private _shrineOfferingDay: string | null = null;
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
@@ -1998,6 +2000,7 @@ export class GameSession {
         this._infusionRecords = [];
         this._salaryLedger = createSalaryLedger();
         this._extremeTask = createExtremeTaskState();
+        this._pendingSceneGambit = null;
         this._shrineOfferingDay = null;
         this._sevenDayJourney = createSevenDayJourneyState();
         this._officerState = initialOfficerState();
@@ -3391,11 +3394,34 @@ export class GameSession {
         const assigned = await this.assignHallTask(task.Task_ID, generalId);
         if (!assigned) return { ok: false, reason: 'NO_GENERAL' };
         this.settleHallMission(result.outcome);
+        // 場景戰法唯一來源是軍事任務（doc_spec_0039 B-1）：任務成功才記，下一場戰鬥判定
+        const sceneGambit = result.outcome.success ? pendingSceneGambitOfTask(task) : null;
+        if (sceneGambit) this._pendingSceneGambit = sceneGambit;
         this._awardGeneralFame(generalId, hallMissionFameGain(result.outcome));
         this._recordEventJournal(result.outcome.success ? 'DISPATCH_SUCCESS' : 'DISPATCH_FAIL', this._journalSubjects([generalId]));
         // 任務結束：同一任務若有未結算的委任紀錄，一併結清（PROG-2-1008）
         await this.settleHallAssign(task.Task_ID, result.outcome.success ? 'success' : 'failure', new Date().toISOString());
         return result;
+    }
+
+    /** 等下一場戰鬥判定的場景戰法（SCN-04）；沒有時為 null */
+    public get pendingSceneGambit(): PendingSceneGambit | null {
+        return this._pendingSceneGambit ? { ...this._pendingSceneGambit } : null;
+    }
+
+    /**
+     * 開戰前判定場景戰法（SCN-04）：未達門檻保留到下一場，擲過骰就用掉。
+     * 發動者是本場主將；情報用玩家目前的情報值。沒有待發動時回傳 null。
+     */
+    public async resolvePendingSceneGambit(generalId: string, roll: () => number = Math.random): Promise<SceneGambitOutcome | null> {
+        const pending = this._pendingSceneGambit;
+        if (!pending) return null;
+        const general = this._roster.getAll().find((g) => g.id === generalId);
+        const outcome = resolveSceneGambit(pending.tactic, general?.int ?? general?.stats?.int ?? 0, this.intel, roll());
+        if (outcome.kind === 'blocked') return outcome;
+        this._pendingSceneGambit = null;
+        if (this._autoSave && this._save) await this.save();
+        return outcome;
     }
 
     /** 大廳任務指派（唯讀副本）：任務 id → 指派武將 id。 */
@@ -5046,8 +5072,8 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'shrineOfferingDay'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'shrineOfferingDay'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
@@ -5081,6 +5107,7 @@ export class GameSession {
         if (this._aiAdaptiveStreak.consecutiveWins > 0 || this._aiAdaptiveStreak.consecutiveLosses > 0) fields.aiAdaptiveStreak = { ...this._aiAdaptiveStreak };
         if (this._clanPrestige > 0) fields.clanPrestige = this._clanPrestige;
         if (this._infusionRecords.length > 0) fields.infusionRecords = this._infusionRecords.map((record) => ({ ...record }));
+        if (this._pendingSceneGambit) fields.pendingSceneGambit = { ...this._pendingSceneGambit };
         if (this._extremeTask.weekIndex >= 0 || this._extremeTask.rewards.length > 0) fields.extremeTask = { ...this._extremeTask, rewards: this._extremeTask.rewards.map((drop) => ({ ...drop })) };
         if (this._salaryLedger.lastSettledSeason !== null) fields.salaryLedger = { arrears: { ...this._salaryLedger.arrears }, lastSettledSeason: this._salaryLedger.lastSettledSeason };
         if (this._shrineOfferingDay) fields.shrineOfferingDay = this._shrineOfferingDay;
@@ -5121,6 +5148,7 @@ export class GameSession {
         this._infusionRecords = normalizeInfusionRecords(snapshot.infusionRecords);
         this._salaryLedger = normalizeSalaryLedger(snapshot.salaryLedger);
         this._extremeTask = normalizeExtremeTaskState(snapshot.extremeTask);
+        this._pendingSceneGambit = normalizePendingSceneGambit(snapshot.pendingSceneGambit);
         this._shrineOfferingDay = normalizeShrineOfferingDay(snapshot.shrineOfferingDay);
     }
 

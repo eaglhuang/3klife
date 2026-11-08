@@ -81,6 +81,7 @@
           },
           {
             "Task_ID": "M-ELITE-01",
+            "Scene_Gambit": "night-raid",
             "Task_Title": "夜襲敵營",
             "Task_Brief": "深入敵方營地奪取糧倉",
             "Task_Detail": "深入敵方營地奪取糧倉（範例資料，正式文案待企劃提供）",
