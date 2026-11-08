@@ -167,45 +167,320 @@
         "$ref": "fragments/layouts/parchment-panel",
         "children": [
           {
-            "type": "scroll-view",
-            "name": "ShopItems",
-            "id": "shopItemList",
+            "type": "container",
+            "name": "ShopOffers",
             "widget": {
-              "top": 0,
-              "left": 0,
-              "right": 0,
-              "bottom": 0
+              "top": 32,
+              "bottom": 24,
+              "hCenter": true
+            },
+            "width": 1400,
+            "layout": {
+              "type": "vertical",
+              "spacing": 16
             },
             "children": [
               {
                 "type": "container",
-                "name": "ItemGrid",
-                "id": "itemGrid",
-                "width": "100%",
-                "layout": {
-                  "type": "grid",
-                  "cellWidth": 280,
-                  "cellHeight": 200,
-                  "spacing": 24,
-                  "paddingTop": 24,
-                  "paddingBottom": 24,
-                  "paddingLeft": 36,
-                  "paddingRight": 36,
-                  "startAxis": "horizontal"
-                },
-                "itemTemplate": {
-                  "$ref": "fragments/layouts/item-cell"
-                }
+                "name": "ShopOffer0",
+                "width": 1400,
+                "height": 88,
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "ShopRow0Name",
+                    "id": "shopRow0Name",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 16
+                    },
+                    "width": 1080,
+                    "height": 44,
+                    "text": "",
+                    "styleSlot": "shop.label.offerName"
+                  },
+                  {
+                    "type": "button",
+                    "name": "ShopRow0",
+                    "id": "shopRow0",
+                    "widget": {
+                      "vCenter": true,
+                      "right": 16
+                    },
+                    "width": 240,
+                    "height": 68,
+                    "skinSlot": "shop.button.primary",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "ShopRow0Price",
+                        "id": "shopRow0Price",
+                        "widget": {
+                          "vCenter": true,
+                          "hCenter": true
+                        },
+                        "width": 220,
+                        "height": 40,
+                        "text": "",
+                        "styleSlot": "shop.label.offerPrice"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "container",
+                "name": "ShopOffer1",
+                "width": 1400,
+                "height": 88,
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "ShopRow1Name",
+                    "id": "shopRow1Name",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 16
+                    },
+                    "width": 1080,
+                    "height": 44,
+                    "text": "",
+                    "styleSlot": "shop.label.offerName"
+                  },
+                  {
+                    "type": "button",
+                    "name": "ShopRow1",
+                    "id": "shopRow1",
+                    "widget": {
+                      "vCenter": true,
+                      "right": 16
+                    },
+                    "width": 240,
+                    "height": 68,
+                    "skinSlot": "shop.button.primary",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "ShopRow1Price",
+                        "id": "shopRow1Price",
+                        "widget": {
+                          "vCenter": true,
+                          "hCenter": true
+                        },
+                        "width": 220,
+                        "height": 40,
+                        "text": "",
+                        "styleSlot": "shop.label.offerPrice"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "container",
+                "name": "ShopOffer2",
+                "width": 1400,
+                "height": 88,
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "ShopRow2Name",
+                    "id": "shopRow2Name",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 16
+                    },
+                    "width": 1080,
+                    "height": 44,
+                    "text": "",
+                    "styleSlot": "shop.label.offerName"
+                  },
+                  {
+                    "type": "button",
+                    "name": "ShopRow2",
+                    "id": "shopRow2",
+                    "widget": {
+                      "vCenter": true,
+                      "right": 16
+                    },
+                    "width": 240,
+                    "height": 68,
+                    "skinSlot": "shop.button.primary",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "ShopRow2Price",
+                        "id": "shopRow2Price",
+                        "widget": {
+                          "vCenter": true,
+                          "hCenter": true
+                        },
+                        "width": 220,
+                        "height": 40,
+                        "text": "",
+                        "styleSlot": "shop.label.offerPrice"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "container",
+                "name": "ShopOffer3",
+                "width": 1400,
+                "height": 88,
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "ShopRow3Name",
+                    "id": "shopRow3Name",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 16
+                    },
+                    "width": 1080,
+                    "height": 44,
+                    "text": "",
+                    "styleSlot": "shop.label.offerName"
+                  },
+                  {
+                    "type": "button",
+                    "name": "ShopRow3",
+                    "id": "shopRow3",
+                    "widget": {
+                      "vCenter": true,
+                      "right": 16
+                    },
+                    "width": 240,
+                    "height": 68,
+                    "skinSlot": "shop.button.primary",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "ShopRow3Price",
+                        "id": "shopRow3Price",
+                        "widget": {
+                          "vCenter": true,
+                          "hCenter": true
+                        },
+                        "width": 220,
+                        "height": 40,
+                        "text": "",
+                        "styleSlot": "shop.label.offerPrice"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "container",
+                "name": "ShopOffer4",
+                "width": 1400,
+                "height": 88,
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "ShopRow4Name",
+                    "id": "shopRow4Name",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 16
+                    },
+                    "width": 1080,
+                    "height": 44,
+                    "text": "",
+                    "styleSlot": "shop.label.offerName"
+                  },
+                  {
+                    "type": "button",
+                    "name": "ShopRow4",
+                    "id": "shopRow4",
+                    "widget": {
+                      "vCenter": true,
+                      "right": 16
+                    },
+                    "width": 240,
+                    "height": 68,
+                    "skinSlot": "shop.button.primary",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "ShopRow4Price",
+                        "id": "shopRow4Price",
+                        "widget": {
+                          "vCenter": true,
+                          "hCenter": true
+                        },
+                        "width": 220,
+                        "height": 40,
+                        "text": "",
+                        "styleSlot": "shop.label.offerPrice"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "container",
+                "name": "ShopOffer5",
+                "width": 1400,
+                "height": 88,
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "ShopRow5Name",
+                    "id": "shopRow5Name",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 16
+                    },
+                    "width": 1080,
+                    "height": 44,
+                    "text": "",
+                    "styleSlot": "shop.label.offerName"
+                  },
+                  {
+                    "type": "button",
+                    "name": "ShopRow5",
+                    "id": "shopRow5",
+                    "widget": {
+                      "vCenter": true,
+                      "right": 16
+                    },
+                    "width": 240,
+                    "height": 68,
+                    "skinSlot": "shop.button.primary",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "ShopRow5Price",
+                        "id": "shopRow5Price",
+                        "widget": {
+                          "vCenter": true,
+                          "hCenter": true
+                        },
+                        "width": 220,
+                        "height": 40,
+                        "text": "",
+                        "styleSlot": "shop.label.offerPrice"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "ShopNotice",
+                "id": "shopNotice",
+                "width": 1400,
+                "height": 44,
+                "text": "",
+                "styleSlot": "shop.label.offerNotice"
               }
             ]
           }
         ]
       }
     ]
-  },
-  "validation": {
-    "exceptions": {
-      "no-empty-container": "ItemGrid 為執行期動態填充容器"
-    }
   }
 }
