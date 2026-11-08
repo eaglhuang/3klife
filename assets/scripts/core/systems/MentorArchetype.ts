@@ -1,4 +1,4 @@
-// @spec-source → 育成與戰鬥公式基準手冊 第六章 6.1 教官卡四大核心設計原型；WBS FORM-04；PROG-2-2087
+// @spec-source → 育成與戰鬥公式基準手冊 第六章 6.1 教官卡四大核心設計原型；WBS FORM-04；PROG-2-2087、PROG-2-2092
 /**
  * MentorArchetype — 教官支援卡的四大設計原型與公式干預點（純邏輯，不依賴 cc）。
  *
@@ -7,25 +7,33 @@
  * - 資源調度型 RESOURCE：無專精設施，靠體力減免／回復運勢維持訓練節奏，不觸發傾囊相授。
  * - 集團體系型 GROUP：多角色共綁，帶專屬連動事件（全局光環）。
  *
- * 判定依 SupportCardDef 既有欄位，照 MENTOR_ARCHETYPE_ORDER 由上往下取第一個成立的原型。
+ * 判定依特徵（裁決 2026-11-08），不比屬性總值；照 MENTOR_ARCHETYPE_ORDER 取第一個成立的原型：
+ * - 資源調度：有體力減免（VITALITY_SAVE），或無專精設施。
+ * - 戰法大核：金戰法啟發率 ≥ 20%，或戰法 TP 折扣 ≥ 30%。
+ * - 集團體系：至少 2 位羈絆夥伴，或有連動事件（全局光環）。
+ * - 其餘為數值炮台。
  * 暫定：
- * - 門檻（MENTOR_ARCHETYPE_THRESHOLDS）規格未給數字，取現有 12 張卡的分布設定，之後可改表不改程式。
+ * - 卡資料沒有金戰法標記，先把帶血統需求的家傳戰法事件視為金戰法。
+ * - 「多武將」取至少 2 位夥伴：現有卡多半只有 1 位（呂布也是），算進去會違背裁決「呂布為數值炮台」。
+ * - TP 折扣先讀 TP_Bonus 被動；VITALITY_SAVE 目前只影響分類，培育公式尚未讀取。
  * - 範例卡沿用規格 6.1 的情境範例（呂布／郭嘉／荀彧／桃園結義），尚未有正式卡資料。
  * Unity 對照：像一張 ScriptableObject 的分類規則表，UI 和平衡工具都只查表。
  */
-import type { SupportCardDef } from '../models/MentorSupportSchema';
+import type { PassiveEffectKind, SupportCardDef } from '../models/MentorSupportSchema';
 
-export const MENTOR_ARCHETYPES = ['GROUP', 'RESOURCE', 'SKILL_BANK', 'STAT_STICK'] as const;
+export const MENTOR_ARCHETYPES = ['RESOURCE', 'SKILL_BANK', 'GROUP', 'STAT_STICK'] as const;
 export type MentorArchetype = typeof MENTOR_ARCHETYPES[number];
 
-/** 判定先後：越特殊的原型越先判，數值炮台是預設 */
+/** 判定先後依裁決：資源調度 → 戰法大核 → 集團體系，數值炮台是預設 */
 export const MENTOR_ARCHETYPE_ORDER: readonly MentorArchetype[] = MENTOR_ARCHETYPES;
 
 export const MENTOR_ARCHETYPE_THRESHOLDS = {
-    /** 戰法大核：至少幾個戰法啟發事件 */
-    skillBankMinInspireEvents: 2,
-    /** 戰法大核：固定屬性加成總和上限（本身不提供高屬性） */
-    skillBankMaxStatTotal: 8,
+    /** 戰法大核：金戰法啟發率下限 */
+    skillBankMinGoldInspireRate: 0.2,
+    /** 戰法大核：戰法 TP 折扣下限 */
+    skillBankMinTpDiscount: 0.3,
+    /** 集團體系：多武將羈絆至少幾位夥伴 */
+    groupMinPartners: 2,
 } as const;
 
 export interface MentorArchetypeDef {
@@ -71,17 +79,18 @@ export const MENTOR_ARCHETYPE_DEFS: Readonly<Record<MentorArchetype, MentorArche
 };
 
 /** 舊存檔或測試假資料可能缺欄位：缺 trainingSlotAffinity 不視為「無專精」，其餘缺值當空 */
-type ArchetypeSource = Pick<SupportCardDef, 'statBonus' | 'tacticInspireEvents' | 'trainingSlotAffinity' | 'synergyPartners' | 'synergyEventId'>;
+type ArchetypeSource = Pick<SupportCardDef, 'passiveEffects' | 'tacticInspireEvents' | 'trainingSlotAffinity' | 'synergyPartners' | 'synergyEventId'>;
 
-function statTotal(def: ArchetypeSource): number {
-    return Object.values(def.statBonus ?? {}).reduce<number>((sum, v) => sum + (typeof v === 'number' ? v : 0), 0);
+function passiveValue(def: ArchetypeSource, effect: PassiveEffectKind): number {
+    return Math.max(0, ...(def.passiveEffects ?? []).filter((p) => p.effect === effect).map((p) => p.value));
 }
 
 const RULES: Readonly<Record<MentorArchetype, (def: ArchetypeSource) => boolean>> = {
-    GROUP: (def) => !!def.synergyEventId && (def.synergyPartners?.length ?? 0) > 0,
-    RESOURCE: (def) => Array.isArray(def.trainingSlotAffinity) && def.trainingSlotAffinity.length === 0,
-    SKILL_BANK: (def) => (def.tacticInspireEvents?.length ?? 0) >= MENTOR_ARCHETYPE_THRESHOLDS.skillBankMinInspireEvents
-        && statTotal(def) <= MENTOR_ARCHETYPE_THRESHOLDS.skillBankMaxStatTotal,
+    RESOURCE: (def) => passiveValue(def, 'VITALITY_SAVE') > 0
+        || (Array.isArray(def.trainingSlotAffinity) && def.trainingSlotAffinity.length === 0),
+    SKILL_BANK: (def) => passiveValue(def, 'TP_Bonus') >= MENTOR_ARCHETYPE_THRESHOLDS.skillBankMinTpDiscount
+        || (def.tacticInspireEvents ?? []).some((event) => !!event.bloodlineRequired && event.baseRate >= MENTOR_ARCHETYPE_THRESHOLDS.skillBankMinGoldInspireRate),
+    GROUP: (def) => !!def.synergyEventId || (def.synergyPartners?.length ?? 0) >= MENTOR_ARCHETYPE_THRESHOLDS.groupMinPartners,
     STAT_STICK: () => true,
 };
 
