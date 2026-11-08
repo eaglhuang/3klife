@@ -58,7 +58,10 @@ export interface TallyDeathSettlementResult extends TallyDeathState {
 interface DeathCandidate extends TigerTallyGeneral {
     status?: string;
     battleRecord?: BattleRecord;
-    /** 已退役（教官卡）的武將留在名冊，退役時已發過虎符，之後死亡不再產卡（PROG-2-0739） */
+    /**
+     * 已退役（教官卡）的武將留在名冊。退役當下不產虎符，之後壽終死亡時補發（名將身後傳承規格 doc_spec_0570 §2.2，
+     * 使用者裁決 2026-11-08，PROG-2-1993）；重複結算由 before 已陣亡與 uid 已存在擋下。
+     */
     isMentorCard?: boolean;
 }
 
@@ -83,7 +86,7 @@ export function settleDeathTallies(
     const returned: string[] = [];
 
     for (const general of after) {
-        if (!isDead(general) || wasDead.has(general.id) || general.isMentorCard) continue;
+        if (!isDead(general) || wasDead.has(general.id)) continue;
 
         const back = onGeneralDeath(holdings, general.id);
         holdings = back.state;

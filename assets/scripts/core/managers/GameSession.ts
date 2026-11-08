@@ -1689,10 +1689,11 @@ export class GameSession {
         // 死亡產卡的兵種：武將資料沒有 troopType 時，由適性推出主兵種（PROG-2-0582）
         const withTroop = (general: GeneralConfig) => ({ troopType: mainTroopTypeOf(general.troopAptitude), ...general });
         const result = settleDeathTallies({ holdings: this._tallyHoldings, cards: this._tallyCards }, before.map(withTroop), after.map(withTroop), season);
-        this._tallyHoldings = result.holdings;
-        this._tallyCards = { ...result.cards };
         // 名將陣亡同步產英靈卡（SPI-02；同模板覆蓋不新增，非 TALLY 列不受下方同步影響）
         const spirit = settleDeathSpiritCards(this._inventoryRecords, before, after);
+        // 虎符與英靈卡兩條線先都算完再一起寫入（PROG-2-1993：先退役後死亡的補發要嘛都發要嘛都不發）
+        this._tallyHoldings = result.holdings;
+        this._tallyCards = { ...result.cards };
         this._inventoryRecords = spirit.records;
         for (const uid of result.produced) {
             const card = this._tallyCards[uid];
