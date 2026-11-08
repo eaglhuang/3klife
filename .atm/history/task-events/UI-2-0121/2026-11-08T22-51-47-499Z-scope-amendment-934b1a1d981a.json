@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-08T22-51-47-499Z-scope-amendment-934b1a1d981a",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:5b4179826c55aa232c295c4e771011a549fe22a9fa9554f95ed1f8f7892872c5",
+  "createdAt": "2026-11-08T22:51:47.499Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/lu_kang_portrait.png,assets/resources/sprites/generals/avatars/lu_kang_avatar.png,assets/resources/sprites/ui_avatars/cropped/lu_kang_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
