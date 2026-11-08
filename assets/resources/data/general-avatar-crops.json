@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "cheng-pu": {
+      "x": 340,
+      "y": 90,
+      "w": 370,
+      "h": 370,
+      "source": "reviewed",
+      "$note": "2026-11-08 程普吳紅鐵甲老將重繪；頭像保留灰鬚與肩頸。"
+    },
     "cao-pi": {
       "x": 330,
       "y": 20,

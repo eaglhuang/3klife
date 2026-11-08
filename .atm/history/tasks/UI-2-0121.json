@@ -10,8 +10,8 @@
   "tags": [],
   "createdAt": "2026-11-05T14:30:28.536Z",
   "createdByActor": "codex-gpt-6.1-sol",
-  "lastTransitionId": "2026-11-08T08-12-20-996Z-scope-amendment-7d3570fcaf47",
-  "lastTransitionAt": "2026-11-08T08:12:20.996Z",
+  "lastTransitionId": "2026-11-08T13-15-01-755Z-renew-8c6aa6a0be80",
+  "lastTransitionAt": "2026-11-08T13:15:01.755Z",
   "ledgerContractVersion": "task-ledger/v1",
   "reservedAt": "2026-11-05T17:15:58.821Z",
   "promotedAt": "2026-11-05T17:15:58.826Z",
@@ -19,7 +19,7 @@
     "actorId": "codex-gpt-6.1-terra",
     "leaseId": "lease-f957fb02b01d",
     "claimedAt": "2026-11-05T17:15:58.833Z",
-    "heartbeatAt": "2026-11-08T07:13:14.460Z",
+    "heartbeatAt": "2026-11-08T13:15:01.563Z",
     "ttlSeconds": 1800,
     "files": [
       ".atm/history/evidence/UI-2-0121.*",
@@ -128,6 +128,7 @@
       "assets/resources/sprites/generals/avatars/cao_xian_avatar.png",
       "assets/resources/sprites/generals/avatars/cao_xian_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/cao_zhi_avatar.png",
+      "assets/resources/sprites/generals/avatars/cheng_pu_avatar.png",
       "assets/resources/sprites/generals/avatars/da_qiao_avatar.png",
       "assets/resources/sprites/generals/avatars/da_qiao_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/diao_chan_avatar.png",
@@ -246,6 +247,7 @@
       "assets/resources/sprites/generals/cao_xian_portrait.png.meta",
       "assets/resources/sprites/generals/cao_zhi_portrait.png",
       "assets/resources/sprites/generals/chen_dao_portrait.png",
+      "assets/resources/sprites/generals/cheng_pu_portrait.png",
       "assets/resources/sprites/generals/da_qiao_portrait.png",
       "assets/resources/sprites/generals/da_qiao_portrait.png.meta",
       "assets/resources/sprites/generals/diao_chan_portrait.png",
@@ -363,6 +365,7 @@
       "assets/resources/sprites/ui_avatars/cropped/cao_xian_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/cao_zhi_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/chen_dao_avatar.png",
+      "assets/resources/sprites/ui_avatars/cropped/cheng_pu_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/da_qiao_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/da_qiao_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/diao_chan_avatar.png",
@@ -480,20 +483,20 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-62449ae52cdf1e6c",
-    "ticketDigest": "sha256:62449ae52cdf1e6c295970c438c9a0b2fa0c75265a7f23916b2fd13449ca2e29",
+    "ticketId": "wat-e9d8725275b8f493",
+    "ticketDigest": "sha256:e9d8725275b8f493c93f5c1d4ebb0f44d03ef03386670e94a50c6808ebe22699",
     "taskId": "UI-2-0121",
     "origin": "claim",
     "actorId": "codex-gpt-6.1-terra",
     "laneSessionId": "lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d",
     "claimGeneration": "lease-f957fb02b01d",
-    "issuedAt": "2026-11-08T08:12:20.853Z",
-    "expiresAt": "2026-11-08T08:42:20.853Z",
-    "scopeDigest": "sha256:e22fe7a16f8a43cfd4cb254dfcd35553f6ec23be04e46bafb6320a6af1eb8026",
+    "issuedAt": "2026-11-08T13:15:01.563Z",
+    "expiresAt": "2026-11-08T13:45:01.563Z",
+    "scopeDigest": "sha256:f71b2547d879fa86fd0c29b171e47d25265d8ca8682ee3e4e34ea39d3b4c9a41",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-11-08T08:12:20.853Z"
+      "selectedAt": "2026-11-08T13:15:01.563Z"
     },
     "grants": [
       {
@@ -606,6 +609,7 @@
           "assets/resources/sprites/generals/avatars/cao_xian_avatar.png",
           "assets/resources/sprites/generals/avatars/cao_xian_avatar.png.meta",
           "assets/resources/sprites/generals/avatars/cao_zhi_avatar.png",
+          "assets/resources/sprites/generals/avatars/cheng_pu_avatar.png",
           "assets/resources/sprites/generals/avatars/da_qiao_avatar.png",
           "assets/resources/sprites/generals/avatars/da_qiao_avatar.png.meta",
           "assets/resources/sprites/generals/avatars/diao_chan_avatar.png",
@@ -724,6 +728,7 @@
           "assets/resources/sprites/generals/cao_xian_portrait.png.meta",
           "assets/resources/sprites/generals/cao_zhi_portrait.png",
           "assets/resources/sprites/generals/chen_dao_portrait.png",
+          "assets/resources/sprites/generals/cheng_pu_portrait.png",
           "assets/resources/sprites/generals/da_qiao_portrait.png",
           "assets/resources/sprites/generals/da_qiao_portrait.png.meta",
           "assets/resources/sprites/generals/diao_chan_portrait.png",
@@ -841,6 +846,7 @@
           "assets/resources/sprites/ui_avatars/cropped/cao_xian_avatar.png.meta",
           "assets/resources/sprites/ui_avatars/cropped/cao_zhi_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/chen_dao_avatar.png",
+          "assets/resources/sprites/ui_avatars/cropped/cheng_pu_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/da_qiao_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/da_qiao_avatar.png.meta",
           "assets/resources/sprites/ui_avatars/cropped/diao_chan_avatar.png",
@@ -945,7 +951,7 @@
           "docs/ui-quality-tasks/UI-2-0121.json",
           "docs/ui-quality-todo.json"
         ],
-        "digest": "sha256:2f496ae65def018a8266f76bcdd70254197b0f0f201b5f458ac9911d6990882c"
+        "digest": "sha256:ca9857d96224cd6e7af33693b1153c6c88cb275827036eb693c75bc6c5c3a2c3"
       },
       {
         "kind": "lifecycle-operation",
@@ -1100,6 +1106,7 @@
       "assets/resources/sprites/generals/avatars/cao_xian_avatar.png",
       "assets/resources/sprites/generals/avatars/cao_xian_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/cao_zhi_avatar.png",
+      "assets/resources/sprites/generals/avatars/cheng_pu_avatar.png",
       "assets/resources/sprites/generals/avatars/da_qiao_avatar.png",
       "assets/resources/sprites/generals/avatars/da_qiao_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/diao_chan_avatar.png",
@@ -1218,6 +1225,7 @@
       "assets/resources/sprites/generals/cao_xian_portrait.png.meta",
       "assets/resources/sprites/generals/cao_zhi_portrait.png",
       "assets/resources/sprites/generals/chen_dao_portrait.png",
+      "assets/resources/sprites/generals/cheng_pu_portrait.png",
       "assets/resources/sprites/generals/da_qiao_portrait.png",
       "assets/resources/sprites/generals/da_qiao_portrait.png.meta",
       "assets/resources/sprites/generals/diao_chan_portrait.png",
@@ -1335,6 +1343,7 @@
       "assets/resources/sprites/ui_avatars/cropped/cao_xian_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/cao_zhi_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/chen_dao_avatar.png",
+      "assets/resources/sprites/ui_avatars/cropped/cheng_pu_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/da_qiao_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/da_qiao_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/diao_chan_avatar.png",
@@ -2296,6 +2305,9 @@
     "assets/resources/sprites/ui_avatars/cropped/cao_ang_avatar.png",
     "assets/resources/sprites/generals/avatars/cao_pi_avatar.png",
     "assets/resources/sprites/generals/cao_pi_portrait.png",
-    "assets/resources/sprites/ui_avatars/cropped/cao_pi_avatar.png"
+    "assets/resources/sprites/ui_avatars/cropped/cao_pi_avatar.png",
+    "assets/resources/sprites/generals/avatars/cheng_pu_avatar.png",
+    "assets/resources/sprites/generals/cheng_pu_portrait.png",
+    "assets/resources/sprites/ui_avatars/cropped/cheng_pu_avatar.png"
   ]
 }

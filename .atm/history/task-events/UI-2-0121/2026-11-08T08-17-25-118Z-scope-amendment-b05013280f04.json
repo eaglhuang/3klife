@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-08T08-17-25-118Z-scope-amendment-b05013280f04",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:2b7401f2c49e86ab49e5c71cc5e0a0bf2447a734f5656f4052ea3a9353381331",
+  "createdAt": "2026-11-08T08:17:25.118Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/cheng_pu_portrait.png,assets/resources/sprites/generals/avatars/cheng_pu_avatar.png,assets/resources/sprites/ui_avatars/cropped/cheng_pu_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
