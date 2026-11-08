@@ -24,7 +24,8 @@ export type GovernanceRejectReason =
     | 'invalid-general'
     | 'task-occupied'
     | 'general-already-assigned'
-    | 'no-free-slot';
+    | 'no-free-slot'
+    | 'child-only-low-efficiency';
 
 export interface GovernanceResult {
     ok: boolean;
