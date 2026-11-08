@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-08T08-01-35-237Z-scope-amendment-86ef3b945c01",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:7a3ef59daeaf697be548a7caba0315620047251d1999635366ac6dbb6064aca4",
+  "createdAt": "2026-11-08T08:01:35.237Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/zhuge_ke_portrait.png,assets/resources/sprites/generals/avatars/zhuge_ke_avatar.png,assets/resources/sprites/ui_avatars/cropped/zhuge_ke_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}

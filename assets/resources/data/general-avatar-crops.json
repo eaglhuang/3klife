@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "zhuge-ke": {
+      "x": 330,
+      "y": 0,
+      "w": 370,
+      "h": 370,
+      "source": "reviewed",
+      "$note": "2026-11-08 諸葛恪吳紅炭灰文武重繪；頭像保留低冠與肩頸。"
+    },
     "zhuge-jin": {
       "x": 330,
       "y": 0,
