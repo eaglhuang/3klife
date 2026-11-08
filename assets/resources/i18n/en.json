@@ -590,7 +590,7 @@
   "ui.ultimate_codex.empty": "No ultimates unlocked yet.",
   "ui.ultimate_codex.more": "{0} more not shown",
   "ui.ultimate_codex.close": "Close",
-  "copy.letter.opening.title": "A letter for you (provisional title)",
+  "copy.letter.opening.title": "A letter for you",
   "battle.aptitude.line.wind": "The wind shifts — {Name}: a gale is coming! Fire attacks will hit harder!",
   "battle.aptitude.line.water-s": "{Name} is in their element — on the water, none can stand against them!",
   "battle.aptitude.line.mountain-s": "{Name} fights on the mountain — one man holds the pass!",
