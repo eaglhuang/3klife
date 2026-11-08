@@ -613,6 +613,8 @@ export interface BreedingResult {
     /** 外戚血脈純化升星的結果（PROG-2-1819） */
     kinPurification?: KinPurificationOutcome;
     outcome: BreedingOutcome;
+    /** 用了受孕道具仍失敗時，父母各返還的慰問精力（doc_spec_0315 §4，PROG-2-2109） */
+    vitalityRefund?: { father: number; mother: number };
     /** 本次結緣新觸發的治理關係事件（KIN-08，例如宿敵配種）；blocked 時不產生 */
     relationEvents?: RelationEventHit[];
     /** 本次結緣的模式標記；舊呼叫端不傳時為 Standard */

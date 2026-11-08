@@ -354,6 +354,9 @@ export class BondingSetupController {
         const motherLifespan = this._deps.spendLifespan?.(motherId, 'breeding');
         if (result.outcome === 'failed') {
             this._notice = `${result.father.name} 與 ${result.mother.name} 此番未能結緣受孕，精力已消耗`;
+            if (result.vitalityRefund) {
+                this._notice += `。道具慰問返還精力：${result.father.name} ${result.vitalityRefund.father}、${result.mother.name} ${result.vitalityRefund.mother}`;
+            }
         } else {
             const child = result.child!;
             const gender = child.gender === '女' ? '千金' : '麟兒';
