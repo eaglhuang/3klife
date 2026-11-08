@@ -38,6 +38,15 @@ export function createCopyLetterStringsSuite(): TestSuite {
         assert.equals('準備好了，就按下：啟動宿命轉蛋。', paragraphs[4]);
     });
 
+    suite.test('開場信件標題定稿，四語系不再是暫定（裁決修正令 COPY-01）', () => {
+        const expected: Record<string, string> = {
+            'zh-TW': '致你的一封信', 'zh-CN': '致你的一封信', en: 'A letter for you', ja: 'あなたへの一通の手紙',
+        };
+        for (const locale of LOCALES) {
+            assert.equals(expected[locale], loadLocale(locale)['copy.letter.opening.title'], locale);
+        }
+    });
+
     suite.test('繁中教學引導為規格 §4，三段', () => {
         const paragraphs = loadLocale('zh-TW')[TUTORIAL_KEY].split('\n\n');
         assert.equals(3, paragraphs.length);
