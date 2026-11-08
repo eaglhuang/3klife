@@ -32,7 +32,7 @@ export const SPEC_STAT_TO_TRAINING: Readonly<Record<string, TrainingKind>> = {
     POL: 'pol',
     CHA: 'cha',
 };
-export const PASSIVE_EFFECT_KINDS = ['TP_Bonus', 'Training_Rate', 'Initial_Friendship'] as const;
+export const PASSIVE_EFFECT_KINDS = ['TP_Bonus', 'Training_Rate', 'Initial_Friendship', 'VITALITY_SAVE'] as const;
 export type PassiveEffectKind = typeof PASSIVE_EFFECT_KINDS[number];
 
 export interface TacticInspireEventDef {
