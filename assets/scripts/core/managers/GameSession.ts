@@ -190,6 +190,7 @@ import { bondedMercenaryGeneralIds, duplicatePopupGeneralIds, mercenaryRebirthSt
 import { randomizePulledTactics } from '../systems/TacticRandomization';
 import { resolveReleaseEpiphanyWithTactic, type ReleaseEpiphanyTacticResult } from '../systems/ReleaseEpiphany';
 import { withUltimateUnlockState } from '../systems/UltimateSlotUnlock';
+import { offlineBehaviorJournalEntry } from '../systems/OfflinePersonalityBehavior';
 import { MentorDuplicateOutcome, overflowToastText, resolveMentorDuplicate } from '../systems/MentorOverflow';
 import { normalizeBondPoints, overflowBondPoints, overflowRarityOf } from '../systems/OverflowBond';
 import { borrowCandidateOf, type NpcFriendMentor } from '../systems/NpcFriendMentor';
@@ -2816,6 +2817,13 @@ export class GameSession {
         });
     }
 
+    /** 性格離線行為（HUM-03，PROG-2-2104）：挑一位在世武將寫進日誌，晨報與人物頁氣泡都讀得到 */
+    private _recordOfflineBehavior(): void {
+        const entry = offlineBehaviorJournalEntry(this._roster.getAll().filter((g) => g.status !== 'dead'), this._random,
+            this._journal.entries.length + 1, seasonJournalTimestamp(this._clock.state));
+        if (entry) this.recordJournal(entry);
+    }
+
     /** 離線互動候選：名冊在世武將之間的動態關係 */
     private _offlineInteractionCandidates(): OfflineInteractionCandidate[] {
         const generals = this._roster.getAll().filter((g) => g.status !== 'dead').map((g) => ({ id: g.id, name: g.name }));
@@ -2904,6 +2912,8 @@ export class GameSession {
         this._loginStreak = recordLogin(this._loginStreak, epochMs);
         // 掛機產出：今天的登入日超過已發放的最大日才發一次免費入學令（PROG-2-1374，張數依太守府等級；高水位防止回撥時鐘重領）
         const today = loginDayOf(epochMs);
+        // 性格離線行為（HUM-03）：隔天第一次登入才有「昨晚」可寫；沿用入學令的切日高水位，回撥時鐘不會重發
+        const offlineBehaviorDue = this._enrollGrantDay !== null && isNewEnrollGrantDay(this._enrollGrantDay, today);
         if (isNewEnrollGrantDay(this._enrollGrantDay, today)) {
             const beforeEnroll = this._inventory;
             this._inventory = addItem(this._inventory, ITEM_ADMISSION_TOKEN, dailyFreeEnrollCount(this._territoryLevel));
@@ -2934,6 +2944,7 @@ export class GameSession {
         this.settleDispatchJobs(epochMs, grantGold);
         // 離線互動：寫進日誌後才產生晨報，讓晨報可挑到（PROG-2-1193）
         this.runOfflineInteraction(epochMs);
+        if (offlineBehaviorDue) this._recordOfflineBehavior();
         // 晨報：上次登入後新增的日誌挑高優先條目（PROG-2-1174）
         this._morningReport = refreshMorningReport(this._morningReport, this._journal.entries, this._officerState.currentTier);
     }
