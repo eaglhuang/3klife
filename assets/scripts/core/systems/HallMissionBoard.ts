@@ -19,6 +19,8 @@ export interface HallGateTask {
     Required_Stage?: number;
     /** 選填：軍事任務的情報門檻（只影響軍事牆）。 */
     Required_Intel?: number;
+    /** 選填：接取成功後下一場戰鬥嘗試發動的場景戰法（SCN-04） */
+    Scene_Gambit?: string;
     Is_Accepted: boolean;
 }
 

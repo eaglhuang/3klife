@@ -7,6 +7,8 @@
  * Unity 對照：像 ScriptableObject 的 OnValidate，把所有欄位問題一次列出，不讓壞資料進場景。
  */
 
+import { isSceneGambitTactic } from './HallSceneGambit';
+
 export const HALL_DIFFICULTIES = ['EASY', 'NORMAL', 'ELITE', 'ADVANCED', 'HELL'] as const;
 export const HALL_TASK_ACTIONS = ['RECON', 'EXECUTE', 'WAIT', 'ASSIGN'] as const;
 export const HALL_DAY_NIGHT_MODES = ['DAY', 'NIGHT'] as const;
@@ -31,6 +33,8 @@ export interface HallTask {
     Difficulty: HallDifficulty;
     Required_Rank: number;
     Required_Intel?: number;
+    /** 選填：接取成功後下一場戰鬥嘗試發動的場景戰法（BattleTactic 值，SCN-04） */
+    Scene_Gambit?: string;
     Intel_Reveal_Percent: number;
     Selected_General_UID: string | null;
     Is_Accepted: boolean;
@@ -121,6 +125,9 @@ function checkTask(issues: LobbyHubIssue[], path: string, value: unknown): void 
     if (!isInt(value.Required_Rank, 0)) issues.push({ path: `${path}.Required_Rank`, message: '必須為非負整數' });
     if (value.Required_Intel !== undefined && !isInt(value.Required_Intel, 0, 100)) {
         issues.push({ path: `${path}.Required_Intel`, message: '必須為 0~100 的整數' });
+    }
+    if (value.Scene_Gambit !== undefined && !isSceneGambitTactic(value.Scene_Gambit)) {
+        issues.push({ path: `${path}.Scene_Gambit`, message: '必須為有門檻定義的場景戰法' });
     }
     if (!isInt(value.Intel_Reveal_Percent, 0, 100)) {
         issues.push({ path: `${path}.Intel_Reveal_Percent`, message: '必須為 0~100 的整數' });
