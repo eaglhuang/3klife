@@ -230,6 +230,7 @@ import { forgeCustomGold, mergeCustomFactors, normalizeCustomFactors } from '../
 import { HIDDEN_LINEAGE_COST, normalizePedigreeProbes, PEDIGREE_PROBE_COST, pedigreeProbeKey, STAT_PROBE_COST, statProbeKey } from '../systems/PedigreeProbe';
 import type { RumorStatKey } from '../systems/MatchRumor';
 import { yuedanBannerLines } from '../systems/YuedanReview';
+import { dueChildOmens } from '../systems/ChildUnveiling';
 import { clanHallNameOf, normalizeClanHall } from '../systems/ClanHall';
 import { CLAN_TRADITION_MIN_TIER, clanTraditionOf, normalizeClanTradition, type ClanTradition } from '../systems/ClanTradition';
 import { seasonModifiersOf } from '../systems/SeasonModifiers';
@@ -463,6 +464,8 @@ export interface SeasonAdvancedPayload {
     prisonTreasureLines?: string[];
     /** 年度月旦評放榜句（血統傳承 G4 §G，PROG-2-1803）；只有跨年進春季、榜上有人時才有 */
     yuedanLines?: string[];
+    /** 立春子嗣天象（doc_spec_0312 §2，PROG-2-2106）；只有跨年進入春季且有符合門檻的子嗣才有 */
+    omenLines?: string[];
     agingEvents: AgingEvent[];
     /** 本季新開獎的子嗣 */
     unveilings: UnveilingEvent[];
@@ -549,6 +552,8 @@ export interface AddGeneralsOptions {
 
 /** 季結日誌的排序優先級（PROG-2-0976）；低於戰鬥與派駐條目，不會擠掉它們 */
 const SEASON_JOURNAL_PRIORITY = 50;
+/** 子嗣天象一輩子只報一次，比季結日誌優先 */
+const CHILD_OMEN_JOURNAL_PRIORITY = 60;
 
 /**
  * 季結日誌的時間戳只作排序鍵（PROG-2-0976，暫定）：以「年-季序號-01」表示，
@@ -3342,6 +3347,21 @@ export class GameSession {
         });
     }
 
+    /** 立春名士占卜（doc_spec_0312 §2，PROG-2-2106）：符合門檻的子嗣各寫一則日誌，回傳換季通知要顯示的台詞 */
+    private _recordChildOmens(): string[] {
+        return dueChildOmens(this._roster.getAll(), this._factorDictionary).map((notice) => {
+            this.recordJournal({
+                entryId: `CHILD_OMEN-${this._journal.entries.length + 1}`,
+                timestamp: seasonJournalTimestamp(this._clock.state),
+                category: 'GROWTH',
+                relatedGeneralUids: [notice.childId],
+                priority: CHILD_OMEN_JOURNAL_PRIORITY,
+                summary: notice.line,
+            });
+            return notice.line;
+        });
+    }
+
     /** 事件寫入日誌（PROG-2-1175）：時間沿用季度日誌的遊戲時間，ID 用目前條目數 +1。 */
     private _recordEventJournal(kind: JournalEventKind, subjects: readonly JournalEventSubject[]): void {
         const seq = this._journal.entries.length + 1;
@@ -4174,12 +4194,13 @@ export class GameSession {
         this._governanceEvent = rollGovernanceEvent(governanceSeason, governanceRandom);
         const eventNotice = this.governanceEventNotice;
         const yuedanLines = advance.yearEnded ? yuedanBannerLines(this._roster.getAll()) : [];
+        const omenLines = advance.yearEnded ? this._recordChildOmens() : [];
         // 新提親取代去年沒回覆的；同樣不消耗主亂數
         if (advance.yearEnded) {
             this._familySynergy = finalizeAdultChildren(this._familySynergy, this._roster.getAll());
             this._marriageProposal = rollMarriageProposal(this._roster.getAll(), this._clanTier, `suitor-${governanceSeason}`, remarkRandomOf(`marriage|${governanceSeason}|${this._seeded.snapshot().state}`), this._familySynergy);
         }
-        const payload: SeasonAdvancedPayload = { ...(forcedRetirements.length > 0 ? { forcedRetirements, forcedRetirementNames: forcedRetirements.map((id) => rosterBeforeLifecycle.find((general) => general.id === id)?.name ?? id) } : {}), ...(yuedanLines.length > 0 ? { yuedanLines } : {}), ...(this._tallyFoodDiscountArmed ? { foodLowLine: FOOD_LOW_LINE } : {}), ...(treasures.length > 0 ? { prisonTreasureLines: treasures.map((entry) => prisonTreasureLine(entry.targetName, ITEM_DISPLAY_NAMES[ITEM_TREASURE])) } : {}), ...(governanceReport ? { governanceReport } : {}), ...(eventNotice ? { governanceEventLine: eventNotice } : {}), advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids } : {}), ...(mercenaryDay.dayThreeUids.length > 0 ? { mercenaryDayThree: mercenaryDay.dayThreeUids } : {}), ...(mercenaryDay.trustUids.length > 0 ? { mercenaryTrust: mercenaryDay.trustUids } : {}) };
+        const payload: SeasonAdvancedPayload = { ...(forcedRetirements.length > 0 ? { forcedRetirements, forcedRetirementNames: forcedRetirements.map((id) => rosterBeforeLifecycle.find((general) => general.id === id)?.name ?? id) } : {}), ...(yuedanLines.length > 0 ? { yuedanLines } : {}), ...(omenLines.length > 0 ? { omenLines } : {}), ...(this._tallyFoodDiscountArmed ? { foodLowLine: FOOD_LOW_LINE } : {}), ...(treasures.length > 0 ? { prisonTreasureLines: treasures.map((entry) => prisonTreasureLine(entry.targetName, ITEM_DISPLAY_NAMES[ITEM_TREASURE])) } : {}), ...(governanceReport ? { governanceReport } : {}), ...(eventNotice ? { governanceEventLine: eventNotice } : {}), advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids } : {}), ...(mercenaryDay.dayThreeUids.length > 0 ? { mercenaryDayThree: mercenaryDay.dayThreeUids } : {}), ...(mercenaryDay.trustUids.length > 0 ? { mercenaryTrust: mercenaryDay.trustUids } : {}) };
         if (this._autoSave && this._save) {
             await this.save();
         }

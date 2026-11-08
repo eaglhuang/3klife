@@ -3201,6 +3201,8 @@ export class LobbyScene extends Component {
                 if (payload?.governanceEventLine) services().event.emit('SHOW_TOAST', { message: payload.governanceEventLine, duration: 3 });
                 // 年度月旦評放榜（血統傳承 G4 §G，PROG-2-1803）
                 for (const message of payload?.yuedanLines ?? []) services().event.emit('SHOW_TOAST', { message, duration: 4 });
+                // 立春子嗣天象（doc_spec_0312 §2，PROG-2-2106）
+                for (const message of payload?.omenLines ?? []) services().event.emit('SHOW_TOAST', { message, duration: 4 });
                 // 糧草告急（經濟 §G）、囚犯交出傳家寶（道具 §G，PROG-2-1774）
                 if (payload?.foodLowLine) services().event.emit('SHOW_TOAST', { message: payload.foodLowLine, duration: 3 });
                 for (const line of payload?.prisonTreasureLines ?? []) services().event.emit('SHOW_TOAST', { message: line, duration: 3 });
