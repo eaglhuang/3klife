@@ -284,6 +284,7 @@ interface GeneralListOpenPayload {
         factionFilter?: 'all' | 'player' | 'enemy';
         npcDialogueDevControls?: boolean;
         npcDialogueSaveId?: string;
+        pickerMode?: boolean;
     };
 }
 
@@ -2273,7 +2274,7 @@ export class LobbyScene extends Component {
                 }
                 this.openItemBag();
             },
-            options: { factionFilter: 'all' },
+            options: { factionFilter: 'all', pickerMode: true },
         } satisfies GeneralListOpenPayload);
     }
 
@@ -5564,6 +5565,7 @@ export class LobbyScene extends Component {
                 await this._listPanel!.show(activePayload.generals, activePayload.options?.factionFilter ?? 'all', {
                     npcDialogueDevControls: activePayload.options?.npcDialogueDevControls,
                     npcDialogueSaveId: activePayload.options?.npcDialogueSaveId ?? services().sync.getMemorySaveId(),
+                    pickerMode: activePayload.options?.pickerMode,
                 });
             },
             hide: () => {

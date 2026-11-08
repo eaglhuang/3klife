@@ -32,6 +32,8 @@ type GeneralFilterMode = 'all' | 'player' | 'enemy';
 export interface GeneralListShowOptions {
     npcDialogueDevControls?: boolean;
     npcDialogueSaveId?: string;
+    /** 只用來選一位武將（例如道具使用對象）：不顯示退役操作列 */
+    pickerMode?: boolean;
 }
 
 // 兵種等級順序，供排序比較
@@ -163,6 +165,7 @@ export class GeneralListComposite extends CompositePanel {
     private _npcDialogueProviderTraceLabel: Label | null = null;
     private _npcDialogueMenuNode: Node | null = null;
     private _npcDialogueMenuMode: NpcDialogueMenuMode = 'keyword';
+    private _pickerMode = false;
 
     // ── 生命週期 ─────────────────────────────────────────────
 
@@ -184,6 +187,7 @@ export class GeneralListComposite extends CompositePanel {
         this._allGenerals = generals;
         this._filterMode = filterMode;
         this._npcDialogueDevControls = !!options.npcDialogueDevControls;
+        this._pickerMode = !!options.pickerMode;
         this._npcDialogueMemorySaveId = options.npcDialogueSaveId?.trim() || services().sync.getMemorySaveId();
 
         UCUFLogger.info(LogCategory.LIFECYCLE, '[GeneralListComposite] show start', {
@@ -660,6 +664,7 @@ export class GeneralListComposite extends CompositePanel {
         const listWidget = this.node.getChildByPath(this._mainPath(LIST_REL_PATH))?.getComponent(Widget);
         if (listWidget) { listWidget.bottom = 134; listWidget.updateAlignment(); }
         toolbar.setSiblingIndex(panel.children.length - 1);
+        toolbar.active = !this._pickerMode;
         this._refreshRetirementToolbar();
     }
 
