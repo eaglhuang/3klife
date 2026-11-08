@@ -62,6 +62,7 @@ import { resolveTallyTemplateId } from '../../core/config/TigerTallySpecTactics'
 import { buildTallyCardCatalog, type TallyDeployRef } from '../../core/config/TallyCardCatalog';
 import { buildAiTallyPool, allocateAiTallies } from '../../core/systems/AiTallyPool';
 import { starStatMultiplier, tallyBattleOutcome } from '../../core/systems/TigerTallyStar';
+import { tallyInfusionStatMultiplier } from '../../core/systems/TallyInfusionBonus';
 import { applyTallyPassive } from '../shared/TallyPassive';
 import { describeActiveTallySets } from '../../core/systems/TigerTallySetBonus';
 import type { TacticCondition } from '../../core/systems/TacticCondition';
@@ -178,7 +179,7 @@ export class BattleController {
   });
   private tacticDefinitionMap = new Map<string, CanonicalTacticDefinition>();
   /** 虎符卡片實例的星級與模板 id 查詢（由場景注入玩家卡組；沒注入時一律 1★、無模板） */
-  public tallyInfoOf: (tallyId: string) => { star: number; templateId: string; sourceTemplateId?: string | null } | null = () => null;
+  public tallyInfoOf: (tallyId: string) => { star: number; templateId: string; sourceTemplateId?: string | null; infusionLevel?: number } | null = () => null;
   /** 史實配對表（KIN-02）；合攻判定讀它，未設定時不觸發史實合攻（PROG-2-1065） */
   public historicalPairs: HistoricalPairTable | null = null;
   /** 本場出陣過的虎符 id（PROG-2-0573：戰後依此結算戰鬥經驗） */
@@ -397,7 +398,8 @@ export class BattleController {
     const commander: TallyCommanderInfo | null = general ? toTallyCommander(general.id, general.gender) : null;
     unit.tallyId = ref.cardUid;
     const info = this.tallyInfoOf(ref.cardUid);
-    unit.tallyStarMultiplier = starStatMultiplier(info?.star ?? 1);
+    // 星級倍率 × 灌注層級倍率（PROG-2-1998，暫定：每層 +6%）
+    unit.tallyStarMultiplier = starStatMultiplier(info?.star ?? 1) * tallyInfusionStatMultiplier(info?.infusionLevel);
     unit.tallyTemplateId = info?.templateId ?? null;
     applyTallyPassive(unit, unit.tallyTemplateId);
     if (unit.tallyTemplateId) services().event.emit(EVENT_NAMES.TallyDeployed, unit.tallyTemplateId);
