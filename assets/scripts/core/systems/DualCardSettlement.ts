@@ -7,12 +7,15 @@
  * - 虎符適性取武將 troopAptitude 對該兵種的等級。
  *
  * 暫定：
- * - legendaryDeeds 先留空：死亡結算當下拿不到戰報，事蹟摘要（SpiritArchiveSnapshot）另卡接。
+ * - legendaryDeeds 取名冊武將累積的 battleRecord，沿用英靈快照的事蹟摘要（SpiritArchiveSnapshot.summarizeHeroicDeeds）。
+ * - 結算文字最多列 DUAL_CARD_DEED_LIMIT 條功業，避免結算細項被洗版（上限暫定）。
  * - 武將沒有該兵種適性時 aptitudeTier 為空字串，由畫面決定不顯示。
  * Unity 對照：像戰後結算的 DTO，給 UI 彈窗佇列消費。
  */
 import type { TigerTallyCard } from '../models/TigerTallyCard';
+import type { BattleRecordLike } from './BattleRecordStats';
 import type { InventoryRecord } from './InventoryProjection';
+import { summarizeHeroicDeeds } from './SpiritArchiveSnapshot';
 import { spiritCardIdOf } from './SpiritCardDeathSettlement';
 import type { TallyLine } from './TallyLineSpec';
 import { troopNameOf } from './TallySlotView';
@@ -31,6 +34,8 @@ export interface DualCardFallenGeneral {
     templateId?: string;
     name?: string;
     troopAptitude?: Record<string, string>;
+    /** 名冊武將戰後累積的戰績（BattleRoster.settleBattle 寫入） */
+    battleRecord?: BattleRecordLike;
 }
 
 export interface DualCardSettlementInput {
@@ -70,7 +75,7 @@ export function buildDualCardSettlements(input: DualCardSettlementInput): DualCa
             fallenGeneralId: general.id,
             generalName: general.name ?? general.id,
             spiritCard: hasSpirit
-                ? { cardId, finalStats: finalStatsOf(input.spiritRecords.find((r) => r.Inventory_ID === cardId)), legendaryDeeds: [] }
+                ? { cardId, finalStats: finalStatsOf(input.spiritRecords.find((r) => r.Inventory_ID === cardId)), legendaryDeeds: summarizeHeroicDeeds(general.battleRecord) }
                 : null,
             tigerTally: tally ? { tallyId: tally.uid, troopType, aptitudeTier: general.troopAptitude?.[troopType] ?? '' } : null,
         });
@@ -82,6 +87,9 @@ export function buildDualCardSettlements(input: DualCardSettlementInput): DualCa
  * 結算彈窗的文字列（Key＋參數，顯示端用 i18n 組字）：英靈卡有產出時先念台詞與定格數值，再念虎符兵種與適性。
  * 正式的金卷／符節動畫彈窗未做前，戰場結算細項與大廳換季 toast 先用這些文字呈現。
  */
+/** 結算文字列出的功業條數上限（暫定） */
+export const DUAL_CARD_DEED_LIMIT = 3;
+
 export function dualCardSettlementSpecs(payload: DualCardSettlementPayload): TallyLine[] {
     const lines: TallyLine[] = [];
     const spirit = payload.spiritCard;
@@ -89,6 +97,7 @@ export function dualCardSettlementSpecs(payload: DualCardSettlementPayload): Tal
         const s = spirit.finalStats;
         lines.push({ key: 'UI_SPIRIT_HERO_FALLEN', args: [] });
         lines.push({ key: 'UI_DUAL_CARD_SPIRIT_STATS', args: [payload.generalName, ...[s.lead, s.war, s.int, s.pol, s.cha].map(String)] });
+        for (const deed of spirit.legendaryDeeds.slice(0, DUAL_CARD_DEED_LIMIT)) lines.push({ key: 'UI_DUAL_CARD_DEED', args: [deed] });
     }
     const tally = payload.tigerTally;
     if (tally) {
