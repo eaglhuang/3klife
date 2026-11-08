@@ -7,7 +7,7 @@
  *   - 使用鈕按下 → GameSession.useLongevityPillOnGeneral()，把結果轉成提示文字
  *   - 拒絕原因（沒有道具、已陣亡、找不到武將）轉成對玩家說明的文字
  *
- * 文案規格未定字串 key，先用中文預設（PROG-2-1348 暫定）。按鈕放哪個畫面待 PM 決定，這裡不碰場景節點。
+ * 文案規格未定字串 key，先用中文預設（PROG-2-1348 暫定）。入口在道具背包（PROG-2-2105），這裡不碰場景節點。
  * Unity 對照：MVP 的 Presenter，同 VitalityPillController。
  */
 import type { LongevityPillUseResult } from '../../core/systems/LongevityPill';
@@ -18,6 +18,7 @@ type RejectReason = Extract<LongevityPillUseResult, { ok: false }>['reason'] | '
 export const LONGEVITY_PILL_REJECT_TEXT: Record<RejectReason, string> = {
     'no-item': '延壽丹不足',
     dead: '這位武將已經辭世，無法服用延壽丹',
+    limit: '這位武將已服滿 3 顆延壽丹',
     'no-general': '找不到這位武將',
 };
 

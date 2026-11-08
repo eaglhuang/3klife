@@ -51,7 +51,7 @@ import { buildBattlefieldReconForEncounter } from '../../core/systems/Battlefiel
 import { buildEnvScoutLines } from '../core/EnvScoutPresenter';
 import { lifespanCommandForBattleKind } from '../../core/systems/LifespanWiring';
 import type { UnveilingEvent } from '../../core/systems/Unveiling';
-import type { AgingEvent } from '../../core/systems/GeneralAging';
+import { isGeneralDead, type AgingEvent } from '../../core/systems/GeneralAging';
 import type { NurtureAction } from '../../core/systems/NurtureSystem';
 import { TRAINING_KINDS } from '../../core/systems/NurtureSystem';
 import { MENTOR_DECK_SIZE } from '../../core/systems/MentorDeck';
@@ -59,6 +59,7 @@ import { attachSupportToCards, MENTOR_POOL_ID, parseSupportCatalog, SupportCatal
 import { friendMentorCard } from '../../core/systems/NpcFriendMentor';
 import { NurtureFlowController } from '../core/NurtureFlowController';
 import { VitalityPillController } from '../core/VitalityPillController';
+import { LongevityPillController } from '../core/LongevityPillController';
 import { MentorCardDetailController } from '../core/MentorCardDetailController';
 import { GeneralVersionGalleryController } from '../core/GeneralVersionGalleryController';
 import type { GeneralVersionRecord } from '../../core/models/GeneralVersion';
@@ -137,7 +138,7 @@ import type { HallBoardKey } from '../../core/systems/HallMissionBoard';
 import { MercenaryPanelController, MERC_PANEL_MAX_ROWS, fallenOwnerLabel } from '../core/MercenaryPanelController';
 import { rivalRulerIds } from '../../core/systems/FallenOfficerMarket';
 import { GovernorHallController, GovernorTerritoryInfo } from '../core/GovernorHallController';
-import { BAG_CATEGORY_TABS, BAG_ROW_SLOTS, ItemBagController } from '../core/ItemBagController';
+import { BAG_CATEGORY_TABS, BAG_ROW_SLOTS, ItemBagController, type ItemBagGeneralTarget } from '../core/ItemBagController';
 import { planTerritoryUpgrade } from '../../core/systems/TerritoryUpgrade';
 import { rarityOfTemplate } from '../../core/systems/MercenaryRoster';
 import { mercBondedLine, mercDayThreeLine, mercFarewellLine, mercTrustLine } from '../../core/systems/MercenaryScripts';
@@ -159,7 +160,7 @@ import type { DomesticTaskId } from '../../core/systems/DomesticTasks';
 import { domesticAssignmentFor } from '../../core/systems/SpiritMcqRules';
 import { isDescendant } from '../../core/systems/ChildMagistrate';
 import { ITEM_JOB_CHANGE_ORDER, ITEM_TRIAL_TICKET, ITEM_WISH_SPEED_CARD } from '../../core/systems/PlayerInventory';
-import { ITEM_ORACLE_TOKEN } from '../../core/systems/ItemDef';
+import { ITEM_LONGEVITY_PILL, ITEM_ORACLE_TOKEN } from '../../core/systems/ItemDef';
 import { JOB_CHANGE_ORDER_OFFER } from '../../core/systems/ItemShopPricing';
 import { PrisonerPopupController } from '../core/PrisonerPopupController';
 import { DuplicatePullPopupController, DUPLICATE_INFUSION_VALUE, infusionTargetsOf, rebirthTargetsOf, splitOwnedDuplicates, type DuplicatePullChoice, type DuplicatePullEntry, type DuplicatePullRoute } from '../core/DuplicatePullPopupController';
@@ -2209,6 +2210,10 @@ export class LobbyScene extends Component {
             acquisitionLog: () => services().session.itemAcquisitionLog,
             useItem: (itemId, nowMs) => services().session.useItem(itemId, nowMs),
             now: () => Date.now(),
+            generalTargetUses: {
+                [ITEM_LONGEVITY_PILL]: (target) => new LongevityPillController({ session: services().session }).use(target.id, target.name),
+            },
+            pickGeneral: (onPick) => { this._pickGeneralForItemBag(onPick); },
         });
         const rowBindings = Array.from({ length: BAG_ROW_SLOTS }, (_, index) => ({
             buttonId: `btnBagRow${index}`,
@@ -2247,8 +2252,39 @@ export class LobbyScene extends Component {
         }
     }
 
+    /** 背包道具選對象（PROG-2-2105）：先收起背包開武將清單，選定後關清單回背包等確定。 */
+    private _pickGeneralForItemBag(onPick: (target: ItemBagGeneralTarget) => void): void {
+        const generals = services().session.roster.filter((general) => !isGeneralDead(general));
+        if (generals.length === 0) {
+            services().event.emit('SHOW_TOAST', { message: '目前沒有可使用的武將', duration: 2 });
+            return;
+        }
+        this._closeItemBag();
+        void services().ui.open(UIID.GeneralList, {
+            generals,
+            onSelectGeneral: async (config: GeneralConfig) => {
+                onPick({ id: config.id, name: config.name });
+                if (services().ui.isOpen(UIID.GeneralList)) {
+                    await services().ui.closeCurrentUI();
+                } else {
+                    this._listPanel?.hide();
+                }
+                this.openItemBag();
+            },
+            options: { factionFilter: 'all' },
+        } satisfies GeneralListOpenPayload);
+    }
+
     /** 確定使用：成功才存檔；失敗的提示已由 ItemBagController 寫入畫面。 */
     private _onConfirmItemBagUse(): void {
+        if (this._itemBag?.hasUseTarget) {
+            void this._itemBag.confirmTargetUse().then(() => {
+                void services().session.save().catch(() => undefined);
+                this._refreshItemBag();
+            });
+            this._refreshItemBag();
+            return;
+        }
         const result = this._itemBag?.confirmUse();
         if (result?.ok) void services().session.save().catch(() => undefined);
         this._refreshItemBag();
