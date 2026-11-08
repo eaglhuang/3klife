@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "huang-gai": {
+      "x": 340,
+      "y": 15,
+      "w": 350,
+      "h": 350,
+      "source": "reviewed",
+      "$note": "2026-11-08 黃蓋吳紅古銅鐵鞭造型裁切。"
+    },
     "he-qi": {
       "x": 370,
       "y": 45,
