@@ -15,6 +15,8 @@ export interface BattleSkillExecutionContext {
   /** 回復所屬陣營武將的精力（對酒當歌）：回復精力上限 × ratio，封頂；有武將回 true。舊測試 context 可不提供 */
   restoreFactionVitality?(faction: Faction, ratio: number): boolean;
   getTerrain(lane: number, depth: number): TerrainType;
+  /** 是否已進入破釜沉舟殘局（FORM-06，PROG-2-1992）；舊測試 context 可不提供，視為未進入 */
+  isLastSpurt?(): boolean;
   /** 施放者所在格（PROG-2-0756：衝鋒判定直線用）；舊測試 context 可不提供，視為無衝鋒 */
   getCasterCell?(casterFaction: Faction): { lane: number; depth: number } | null;
   /** 施放者的射程上限（林地 D 視野受限，PROG-2-0789）；沒有上限時為 null */

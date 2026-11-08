@@ -16,6 +16,12 @@ export const LAST_SPURT_STR_BASE = 500;
 export const LAST_SPURT_STR_SOFT_CAP = 1200;
 export const LAST_SPURT_OVERFLOW_FACTOR = 0.5;
 
+/**
+ * 暫定（PROG-2-1992）：武將 STR 欄位是 0~100，規格公式的 STR 基準 500／軟上限 1200 是另一個尺度，
+ * 先把武將 STR 乘 10 換算（STR 50＝基準 500、STR 100＝1000，超過 1200 靠加成），規格沒給換算。
+ */
+export const LAST_SPURT_GENERAL_STR_SCALE = 10;
+
 /** 第 5 回合起，或存活比例低於 50%，進入破釜沉舟。aliveRatio 取 0~1。 */
 export function isLastSpurtMode(turn: number, aliveRatio: number): boolean {
     return turn >= LAST_SPURT_TURN || aliveRatio < LAST_SPURT_ALIVE_RATIO;
@@ -33,4 +39,12 @@ export function lastSpurtStrFactor(str: number): number {
 /** 殘局爆發傷害：基礎傷害 × STR 係數 × 兵種終盤係數。 */
 export function lastSpurtDamage(baseDamage: number, str: number, troopFinaleFactor = 1): number {
     return baseDamage * lastSpurtStrFactor(str) * troopFinaleFactor;
+}
+
+/**
+ * 殘局傷害接到實際結算：把武將 STR（0~100 尺度）換算後套 lastSpurtDamage，取整、至少 1。
+ * 戰鬥傷害路徑（普攻與戰法）在殘局中呼叫；沒有武將時呼叫端不呼叫。
+ */
+export function lastSpurtAdjustedDamage(baseDamage: number, generalStr: number, troopFinaleFactor = 1): number {
+    return Math.max(1, Math.floor(lastSpurtDamage(baseDamage, generalStr * LAST_SPURT_GENERAL_STR_SCALE, troopFinaleFactor)));
 }

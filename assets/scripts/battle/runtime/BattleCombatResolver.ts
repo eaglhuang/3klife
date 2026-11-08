@@ -14,6 +14,7 @@ import { BattleTurnManager } from './BattleTurnManager';
 import { resolveBattleTacticBehavior, sceneDefenseMultiplierOf, sceneLadderDefenseBypassOf } from '../shared/BattleTacticBehavior';
 import { canTargetUnderStealth, isHiddenOnTile, isRangedAttack } from '../shared/StealthTile';
 import { weatherRangedHitDelta, weatherRangedRangeDelta } from '../../core/systems/WeatherTacticRestriction';
+import { lastSpurtAdjustedDamage } from '../../core/systems/LastSpurt';
 import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
 import { getTerrainTroopEffect, terrainAttackRangeCapOf, terrainEvasionBonusOf } from '../../core/systems/TerrainTroopRules';
 import { zoneDefenseMultiplier } from '../shared/FormationZone';
@@ -330,6 +331,10 @@ export class BattleCombatResolver {
       state: this.context.state,
     });
     damage = this.applyTallyPhysicalDamageMod(damageAdjustment.damage, attacker, defender);
+    // 破釜沉舟（FORM-06，PROG-2-1992）：殘局後普攻傷害 × √(STR/500)（STR 軟上限折半）
+    if (this.context.state.lastSpurtMode && attackerGeneral) {
+      damage = lastSpurtAdjustedDamage(damage, attackerGeneral.str);
+    }
     const actionReset = this.context.state.getActionReset(attacker.id);
     if (actionReset?.firstHitPending) {
       damage = Math.max(1, Math.floor(damage * actionReset.firstHitMultiplier));
