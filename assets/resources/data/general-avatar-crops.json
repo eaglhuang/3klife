@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "guo-huai": {
+      "x": 310,
+      "y": 45,
+      "w": 350,
+      "h": 350,
+      "source": "reviewed",
+      "$note": "2026-11-08 郭淮魏藍鐵甲重繪裁切。"
+    },
     "guan-xing": {
       "x": 320,
       "y": 100,
