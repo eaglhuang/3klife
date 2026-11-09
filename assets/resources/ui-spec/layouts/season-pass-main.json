@@ -1,0 +1,301 @@
+{
+  "id": "season-pass-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "SeasonPassRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "SeasonPassBackdrop",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "skinSlot": "season.pass.backdrop.bg"
+      },
+      {
+        "type": "panel",
+        "name": "SeasonPassCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 860,
+        "height": 560,
+        "skinSlot": "season.pass.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "SeasonPassTitle",
+            "id": "passTitle",
+            "widget": {
+              "top": 20,
+              "left": 24,
+              "right": 24
+            },
+            "height": 40,
+            "text": "",
+            "styleSlot": "season.pass.label.title"
+          },
+          {
+            "type": "label",
+            "name": "SeasonPassLevel",
+            "id": "passLevel",
+            "widget": {
+              "top": 72,
+              "left": 24,
+              "right": 24
+            },
+            "height": 40,
+            "text": "",
+            "styleSlot": "season.pass.label.body"
+          },
+          {
+            "type": "panel",
+            "name": "SeasonPassTierBox",
+            "widget": {
+              "top": 128,
+              "left": 24,
+              "right": 24
+            },
+            "height": 170,
+            "skinSlot": "season.pass.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "SeasonPassTierTitle",
+                "id": "passTierTitle",
+                "widget": {
+                  "top": 12,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 40,
+                "text": "",
+                "styleSlot": "season.pass.label.tier"
+              },
+              {
+                "type": "label",
+                "name": "SeasonPassFree",
+                "id": "passFree",
+                "widget": {
+                  "top": 60,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 40,
+                "text": "",
+                "styleSlot": "season.pass.label.body"
+              },
+              {
+                "type": "label",
+                "name": "SeasonPassPremium",
+                "id": "passPremium",
+                "widget": {
+                  "top": 110,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 40,
+                "text": "",
+                "styleSlot": "season.pass.label.body"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "SeasonPassPrev",
+            "id": "btnPrevPassTier",
+            "widget": {
+              "top": 312,
+              "left": 24
+            },
+            "height": 44,
+            "skinSlot": "season.pass.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "SeasonPassPrevLabel",
+                "id": "prevPassLabel",
+                "widget": {
+                  "top": 8,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "上一級",
+                "styleSlot": "season.pass.label.button"
+              }
+            ],
+            "width": 200
+          },
+          {
+            "type": "button",
+            "name": "SeasonPassNext",
+            "id": "btnNextPassTier",
+            "widget": {
+              "top": 312,
+              "right": 24
+            },
+            "height": 44,
+            "skinSlot": "season.pass.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "SeasonPassNextLabel",
+                "id": "nextPassLabel",
+                "widget": {
+                  "top": 8,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "下一級",
+                "styleSlot": "season.pass.label.button"
+              }
+            ],
+            "width": 200
+          },
+          {
+            "type": "button",
+            "name": "SeasonPassClaim",
+            "id": "btnClaimPass",
+            "widget": {
+              "top": 312,
+              "hCenter": true
+            },
+            "height": 44,
+            "skinSlot": "season.pass.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "SeasonPassClaimLabel",
+                "id": "claimPassLabel",
+                "widget": {
+                  "top": 8,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "一鍵領取",
+                "styleSlot": "season.pass.label.button"
+              }
+            ],
+            "width": 320
+          },
+          {
+            "type": "label",
+            "name": "SeasonPassMockNote",
+            "id": "passMockNote",
+            "widget": {
+              "top": 372,
+              "left": 24,
+              "right": 24
+            },
+            "height": 36,
+            "text": "",
+            "styleSlot": "season.pass.label.body"
+          },
+          {
+            "type": "button",
+            "name": "SeasonPassMockLevel",
+            "id": "btnMockPassLevel",
+            "widget": {
+              "top": 416,
+              "left": 24
+            },
+            "height": 44,
+            "skinSlot": "season.pass.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "SeasonPassMockLevelLabel",
+                "id": "mockLevelLabel",
+                "widget": {
+                  "top": 8,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "模擬升 1 級",
+                "styleSlot": "season.pass.label.button"
+              }
+            ],
+            "width": 396
+          },
+          {
+            "type": "button",
+            "name": "SeasonPassMockPremium",
+            "id": "btnMockPassPremium",
+            "widget": {
+              "top": 416,
+              "right": 24
+            },
+            "height": 44,
+            "skinSlot": "season.pass.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "SeasonPassMockPremiumLabel",
+                "id": "mockPremiumLabel",
+                "widget": {
+                  "top": 8,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "模擬解鎖黃金戰令",
+                "styleSlot": "season.pass.label.button"
+              }
+            ],
+            "width": 396
+          },
+          {
+            "type": "button",
+            "name": "SeasonPassClose",
+            "id": "btnClosePass",
+            "widget": {
+              "bottom": 24,
+              "left": 24,
+              "right": 24
+            },
+            "height": 44,
+            "skinSlot": "season.pass.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "SeasonPassCloseLabel",
+                "id": "closePassLabel",
+                "widget": {
+                  "top": 8,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "關閉",
+                "styleSlot": "season.pass.label.button"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

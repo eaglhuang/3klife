@@ -113,6 +113,7 @@ import { normalizeAcquisitionLog, type ItemAcquisitionRecord } from '../systems/
 import { normalizeAiAdaptiveStreak, type AiAdaptiveStreak } from '../systems/AiAdaptiveDifficulty';
 import { normalizeExtremeTaskState, type ExtremeTaskState } from '../systems/ExtremeTaskBoard';
 import { normalizePendingSceneGambit, type PendingSceneGambit } from '../systems/HallSceneGambit';
+import { isDefaultSeasonPassState, normalizeSeasonPassState, type SeasonPassState } from '../systems/SeasonPass';
 import { normalizeSalaryLedger, type SalaryLedger } from '../systems/GeneralSalary';
 
 export const PLAYER_SAVE_KEY = 'player.save';
@@ -251,6 +252,8 @@ export interface PlayerSaveSnapshot {
     pendingSceneGambit?: PendingSceneGambit;
     /** 祠堂每日供奉最後領取日（PROG-2-1915）；選填，舊檔缺值視為未領 */
     shrineOfferingDay?: string;
+    /** 季度通行證 Mock（ECO-13）；全新狀態不寫入 */
+    seasonPass?: SeasonPassState;
     /** 抽卡待補教官卡日誌（PROG-2-1004）：與扣款、入冊同批存檔，教官卡寫入後移除；舊檔沒有時讀回空陣列 */
     gachaMentorJournal?: GachaMentorJournalEntry[];
     /** 大廳任務 AI 委任紀錄（HALL-05，PROG-2-1006）：只增不改（結算除外）；舊檔沒有時讀回空陣列 */
@@ -694,6 +697,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.extremeTask !== undefined ? { extremeTask: normalizeExtremeTaskState(snapshot.extremeTask) } : {}),
         ...(normalizeClanPrestige(snapshot.clanPrestige) > 0 ? { clanPrestige: normalizeClanPrestige(snapshot.clanPrestige) } : {}),
         ...(normalizeShrineOfferingDay(snapshot.shrineOfferingDay) !== null ? { shrineOfferingDay: normalizeShrineOfferingDay(snapshot.shrineOfferingDay)! } : {}),
+        ...(!isDefaultSeasonPassState(normalizeSeasonPassState(snapshot.seasonPass)) ? { seasonPass: normalizeSeasonPassState(snapshot.seasonPass) } : {}),
         ...(snapshot.gachaMentorJournal !== undefined ? { gachaMentorJournal: normalizeGachaMentorJournal(snapshot.gachaMentorJournal) } : {}),
         ...(snapshot.hallAssignLog !== undefined ? { hallAssignLog: normalizeHallAssignLog(snapshot.hallAssignLog) } : {}),
         ...(snapshot.inventoryRecords !== undefined ? { inventoryRecords: normalizeInventoryRecords(snapshot.inventoryRecords) } : {}),
