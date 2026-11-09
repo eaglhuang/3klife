@@ -96,5 +96,37 @@ export function createMorningReportSuite(): TestSuite {
         assert.isTrue(new GameSession(3).createSnapshot().morningReport === undefined);
     });
 
+    suite.test('一天只產生一次：同日再登入不重算，當天新日誌留到隔天並計入紅點（裁決 11/09 第 7 題）', () => {
+        const session = new GameSession(1);
+        session.recordJournal({ entryId: 'J1', timestamp: '0190-01-01T00:00:00', category: 'DISPATCH', relatedGeneralUids: [], priority: 80, summary: '趙雲完成邊境巡查。' });
+        session.recordLoginAt(Date.parse('2026-10-27T10:00:00+08:00'));
+        session.markMorningReportRead();
+        assert.equals(0, session.pendingMorningJournalCount);
+        session.recordJournal({ entryId: 'J2', timestamp: '0190-01-01T00:00:00', category: 'BATTLE', relatedGeneralUids: [], priority: 90, summary: '戰後捷報。' });
+        session.recordJournal({ entryId: 'J3', timestamp: '0190-01-01T00:00:00', category: 'GROWTH', relatedGeneralUids: [], priority: 10, summary: '暗線。', visibility: 'HIDDEN' });
+        assert.equals(1, session.pendingMorningJournalCount, 'HIDDEN 不算');
+        session.recordLoginAt(Date.parse('2026-10-27T20:00:00+08:00'));
+        assert.equals(0, session.morningReportLines.length, '同一天不再彈');
+        assert.equals('J1', session.morningReport.items.map((i) => i.entryId).join(','), '今天晨報內容不變，仍可回看');
+        assert.equals(1, session.pendingMorningJournalCount);
+        session.recordLoginAt(Date.parse('2026-10-28T08:00:00+08:00'));
+        assert.equals(`${MORNING_REPORT_OPENING}|戰後捷報。`, session.morningReportLines.join('|'), '隔天晨報帶出昨天的新日誌');
+        assert.equals(0, session.pendingMorningJournalCount);
+    });
+
+    suite.test('產生日跨存讀檔保留；舊存檔沒有產生日時下次登入照常產生', () => {
+        const session = new GameSession(1);
+        session.recordJournal({ entryId: 'J1', timestamp: '0190-01-01T00:00:00', category: 'BATTLE', relatedGeneralUids: [], priority: 60, summary: '一戰告捷。' });
+        session.recordLoginAt(Date.parse('2026-10-27T10:00:00+08:00'));
+        const snapshot = JSON.parse(JSON.stringify(session.createSnapshot())) as PlayerSaveSnapshot;
+        assert.isTrue(typeof snapshot.morningReport?.day === 'string');
+        const legacy = { ...snapshot, morningReport: { journalMark: 0, items: [], read: true } } as PlayerSaveSnapshot;
+        const restored = new GameSession(2);
+        restored.restoreLifespanState(legacy);
+        restored.recordJournal({ entryId: 'J9', timestamp: '0190-01-01T00:00:00', category: 'DISPATCH', relatedGeneralUids: [], priority: 70, summary: '舊檔新報。' });
+        restored.recordLoginAt(Date.parse('2026-10-27T11:00:00+08:00'));
+        assert.isTrue(restored.morningReportLines.length > 0);
+    });
+
     return suite;
 }

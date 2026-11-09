@@ -261,5 +261,18 @@ export function createDomesticPanelControllerSuite(): TestSuite {
         assert.equals('已卸下郡城縣令', controller.getFlowView().texts.noticeLabel);
     });
 
+    suite.test('晨報入口紅點：有待看日誌才加 ●（裁決 11/09 第 7 題）', () => {
+        let pending = 0;
+        const controller = new DomesticPanelController({
+            log: () => new GameSession(1).domesticLog,
+            season: () => 0,
+            choose: async () => ({ ok: false } as never),
+            journalPending: () => pending,
+        });
+        assert.equals('晨報・派遣板 ▶', controller.getFlowView().texts.btnOpenJournalHubLabel);
+        pending = 2;
+        assert.equals('晨報・派遣板 ▶ ●', controller.getFlowView().texts.btnOpenJournalHubLabel);
+    });
+
     return suite;
 }

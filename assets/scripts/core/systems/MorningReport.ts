@@ -1,4 +1,4 @@
-// @spec-source → 武將日誌與離線互動系統.md (doc_spec_0015) §E-2、§F-1、§G；PROG-2-1174（JRN-02）
+// @spec-source → 武將日誌與離線互動系統.md (doc_spec_0015) §E-2、§F-1、§G；PROG-2-1174（JRN-02）；裁決 11/09 第 7 題（PROG-2-2200）
 /**
  * MorningReport — 晨報摘要：每次登入把上次登入後新增的日誌挑 1~3 則高優先條目（純邏輯，不依賴 cc）。
  *
@@ -6,6 +6,8 @@
  * - 日誌只增不刪，時間窗以「上次登入時的條目數」為標記，標記之後的條目才是候選。
  * - 同類別只留最高的一則，避免重複性事件洗版（§F-1 規則 3）。
  * - freshnessWeight／characterAffinityWeight 規格未給數值，暫定皆為 1，等同依 Priority 排序。
+ * - 一天只產生一次（裁決 11/09 第 7 題）：同一登入日再登入不重算，當天戰鬥等新增的日誌留到隔天的晨報；
+ *   這段期間待看的日誌數由 pendingMorningJournalCount 給大廳紅點用。
  *
  * Unity 對照：登入後的 Summary Overlay 資料來源，像從 Timeline Log 篩出的 Daily Digest。
  */
@@ -32,6 +34,8 @@ export interface MorningReportState {
     journalMark: number;
     items: MorningReportItem[];
     read: boolean;
+    /** 產生這份晨報的登入日（loginDayOf）；舊存檔沒有此欄，下一次登入照常產生 */
+    day?: string;
 }
 
 export const EMPTY_MORNING_REPORT: Readonly<MorningReportState> = { journalMark: 0, items: [], read: true };
@@ -56,8 +60,12 @@ export function buildMorningReport(candidates: readonly JournalEntry[], officerT
     return picked.slice(0, morningReportSlotCount(officerTier));
 }
 
-/** 登入時更新晨報：標記之後新增的日誌才是候選；沒有新條目時清空並視為已讀。 */
-export function refreshMorningReport(state: Readonly<MorningReportState>, entries: readonly JournalEntry[], officerTier: number): MorningReportState {
+/**
+ * 登入時更新晨報：標記之後新增的日誌才是候選；沒有新條目時清空並視為已讀。
+ * 有給 today 且與上次產生日相同時原樣保留（不重算、不移動標記），新日誌累積到隔天。
+ */
+export function refreshMorningReport(state: Readonly<MorningReportState>, entries: readonly JournalEntry[], officerTier: number, today?: string): MorningReportState {
+    if (today !== undefined && state.day === today) return copyMorningReport(state);
     const mark = Math.min(state.journalMark, entries.length);
     const items = buildMorningReport(entries.slice(mark), officerTier).map((e) => ({
         entryId: e.entryId,
@@ -65,11 +73,25 @@ export function refreshMorningReport(state: Readonly<MorningReportState>, entrie
         ...(e.summaryKey !== undefined ? { summaryKey: e.summaryKey } : {}),
         ...(e.summaryArgs !== undefined ? { summaryArgs: [...e.summaryArgs] } : {}),
     }));
-    return { journalMark: entries.length, items, read: items.length === 0 };
+    return { journalMark: entries.length, items, read: items.length === 0, ...(today !== undefined ? { day: today } : {}) };
+}
+
+export function copyMorningReport(state: Readonly<MorningReportState>): MorningReportState {
+    return {
+        journalMark: state.journalMark,
+        items: state.items.map((i) => ({ ...i, ...(i.summaryArgs ? { summaryArgs: [...i.summaryArgs] } : {}) })),
+        read: state.read,
+        ...(state.day !== undefined ? { day: state.day } : {}),
+    };
 }
 
 export function markMorningReportRead(state: Readonly<MorningReportState>): MorningReportState {
-    return { journalMark: state.journalMark, items: state.items.map((i) => ({ ...i })), read: true };
+    return { ...copyMorningReport(state), read: true };
+}
+
+/** 晨報產生後新增、要等隔天晨報才會整理的日誌數（不含 HIDDEN）；大廳紅點用。 */
+export function pendingMorningJournalCount(state: Readonly<MorningReportState>, entries: readonly JournalEntry[]): number {
+    return entries.slice(Math.min(state.journalMark, entries.length)).filter((e) => e.visibility !== 'HIDDEN').length;
 }
 
 /** 未讀時回傳 [開頭句, 每則摘要]，否則空陣列。 */
@@ -97,5 +119,6 @@ export function normalizeMorningReportState(raw: unknown): MorningReportState {
                     ? { summaryArgs: [...i.summaryArgs] } : {}),
             }))
         : [];
-    return { journalMark, items, read: value.read !== false || items.length === 0 };
+    const day = typeof value.day === 'string' && value.day.length > 0 ? value.day : undefined;
+    return { journalMark, items, read: value.read !== false || items.length === 0, ...(day !== undefined ? { day } : {}) };
 }

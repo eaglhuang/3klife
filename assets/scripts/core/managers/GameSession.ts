@@ -107,7 +107,7 @@ import {
 import { buildJournalEvent, type JournalEventKind, type JournalEventSubject } from '../systems/JournalEvents';
 import { journalReactionLine } from '../systems/JournalReaction';
 import {
-    EMPTY_MORNING_REPORT, markMorningReportRead, morningReportLines, normalizeMorningReportState, refreshMorningReport,
+    EMPTY_MORNING_REPORT, copyMorningReport, markMorningReportRead, morningReportLines, normalizeMorningReportState, pendingMorningJournalCount, refreshMorningReport,
     unreadMorningReportCount, type MorningReportState,
 } from '../systems/MorningReport';
 import {
@@ -3093,8 +3093,8 @@ export class GameSession {
         // 離線互動：寫進日誌後才產生晨報，讓晨報可挑到（PROG-2-1193）
         this.runOfflineInteraction(epochMs);
         if (offlineBehaviorDue) this._recordOfflineBehavior();
-        // 晨報：上次登入後新增的日誌挑高優先條目（PROG-2-1174）
-        this._morningReport = refreshMorningReport(this._morningReport, this._journal.entries, this._officerState.currentTier);
+        // 晨報：上次登入後新增的日誌挑高優先條目（PROG-2-1174）；一天只產生一次，當天新日誌留到隔天（裁決 11/09 第 7 題）
+        this._morningReport = refreshMorningReport(this._morningReport, this._journal.entries, this._officerState.currentTier, today);
     }
 
     private _playerLogs: PlayerLogEntry[] = [];
@@ -3286,7 +3286,12 @@ export class GameSession {
 
     /** 晨報（複本） */
     public get morningReport(): MorningReportState {
-        return { journalMark: this._morningReport.journalMark, items: this._morningReport.items.map((i) => ({ ...i })), read: this._morningReport.read };
+        return copyMorningReport(this._morningReport);
+    }
+
+    /** 今天晨報之後新增、留到隔天晨報的日誌數；大廳晨報入口的紅點（裁決 11/09 第 7 題） */
+    public get pendingMorningJournalCount(): number {
+        return pendingMorningJournalCount(this._morningReport, this._journal.entries);
     }
 
     /** 未讀時為 [開頭句, 每則摘要]，否則空陣列 */
