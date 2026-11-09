@@ -33,7 +33,7 @@ import { EVENT_NAMES, Faction, SP_PER_KILL, TroopType, TurnPhase } from '../../c
 import { battleAptitudeProfileOf, terrainGradeOf } from '../../core/systems/BattleAptitude';
 import { TerrainFeedbackTracker } from '../../core/systems/TerrainAptitudeFeedback';
 import { TERRAIN_LABEL } from '../../ui/core/EnvScoutPresenter';
-import { applyOpeningWinGuarantee, autoResolveOutcome } from '../runtime/BattleAutoResolve';
+import { applyOpeningWinGuarantee, quickResolveOutcome } from '../runtime/BattleAutoResolve';
 import { FIELD_AUTO_BATTLE_JOURNAL } from '../../core/systems/OfflineBattleSnapshot';
 import { services } from '../../core/managers/ServiceLoader';
 import { BattlePerformanceTracker, formatPerformance } from '../../core/systems/BattleRecordStats';
@@ -769,7 +769,10 @@ export class BattleUIBridge {
     c.battleLogPanel?.setDelegateActive?.(c.ctrl?.isDelegateEnabled() ?? false);
   }
 
-  /** 自動鈕（PROG-2-1091）：開啟即依雙方數值模擬勝負，走既有 BattleEnded → 結算彈窗流程 */
+  /**
+   * 自動鈕（PROG-2-1091）：開啟即依雙方數值模擬勝負，走既有 BattleEnded → 結算彈窗流程。
+   * 極速決戰（PROG-2-2202）：加兵種互克與主將個性特寫，三幕戰報寫進戰場日誌。
+   */
   private _onAutoBattleToggled(enabled: boolean): void {
     const state = this.ctx.ctrl?.state;
     if (!enabled || !state || state.battleEndAnnounced) return;
@@ -778,11 +781,10 @@ export class BattleUIBridge {
       troops: Array.from(state.units.values()).filter((u) => u.faction === faction && !u.isDead()),
       fortressHp,
     });
-    const outcome = applyOpeningWinGuarantee(
-      autoResolveOutcome(side(Faction.Player, state.playerFortressHp), side(Faction.Enemy, state.enemyFortressHp), Math.random),
-      services().session.firstBattleCleared,
-    );
-    this.appendLog(`自動模擬：我方戰力 ${outcome.playerPower}，敵方戰力 ${outcome.enemyPower}`);
+    const quick = quickResolveOutcome(side(Faction.Player, state.playerFortressHp), side(Faction.Enemy, state.enemyFortressHp), Math.random);
+    const outcome = applyOpeningWinGuarantee(quick, services().session.firstBattleCleared);
+    for (const line of quick.reportLines) this.appendLog(line);
+    if (outcome.result !== quick.result) this.appendLog('終局定勢：援軍及時趕到，我軍反敗為勝！');
     this._recordAutoBattleSnapshot(outcome.result, outcome.playerPower, outcome.enemyPower);
     state.battleEndAnnounced = true;
     services().event.emit(EVENT_NAMES.BattleEnded, { result: outcome.result });
