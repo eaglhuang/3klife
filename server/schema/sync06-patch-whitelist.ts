@@ -57,6 +57,7 @@ export const SYNC_PATCH_ROOT_KEYS: readonly string[] = [
     'dailySubsidy',
     'monthlyCard',
     'officerTrial',
+    'openingOffers',
     'playerLogs',
     'dailyNews',
     'morningReport',
