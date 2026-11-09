@@ -38,6 +38,7 @@ import { SeasonReportComposite, type SeasonReportOpenPayload } from '../componen
 import { SandtableTerritoryComposite, type SandtableTerritoryOpenPayload } from '../components/SandtableTerritoryComposite';
 import { LocalGachaService, type LocalGachaResultEntry } from '../../core/services/LocalGachaService';
 import { PlayerRosterService } from '../../core/services/PlayerRosterService';
+import type { BloodlineStageAwakenedPayload, BloodlineStageCapRaisedPayload } from '../../core/managers/GameSession';
 import { GAME_SESSION_EVENTS, GameSession, type AddGeneralsResult, type ClanPrestigeChangedPayload, type ClanTierUpPayload, type MilestoneUpPayload, type CustomGoldFactorBornPayload, type LifeImprintedPayload, type RivalSeasonEventsPayload } from '../../core/managers/GameSession';
 import { buildSageRemarks, remarkRandomOf } from '../../core/systems/SageRemarks';
 import { SAGES } from '../../core/systems/SageDivination';
@@ -205,6 +206,7 @@ import { provisionalTeachingSpirit } from '../../core/systems/TeachingSpiritProv
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { startMirrorAmbientMotion } from '../core/UIMirrorAmbientMotion';
 import { runMirrorInfusion } from '../core/UIBloodlineMirrorInfusion';
+import { buildStageAwakenedTexts, buildStageCapRaisedTexts, type MirrorStageResultTexts } from '../core/UIBloodlineMirrorStageResult';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { warnGeneralSchemaOnLoad } from '../../core/models/GeneralSchema';
 import { coreFieldCoverage, formatCoreFieldCoverage } from '../../core/systems/GeneralCoreFields';
@@ -1241,6 +1243,17 @@ export class LobbyScene extends Component {
                 for (const message of discoveryPhaseUnlockLines(payload as DiscoveryGain)) {
                     services().event.emit('SHOW_TOAST', { message, duration: 3 });
                 }
+            }),
+            // 五階奧義升星／覺醒成功過場（BML-06，PROG-2-2126）
+            event.on(GAME_SESSION_EVENTS.BloodlineStageAwakened, (payload?: unknown) => {
+                const { generalId, awakenedStage } = payload as BloodlineStageAwakenedPayload;
+                const name = services().session.roster.find((g) => g.id === generalId)?.name ?? generalId;
+                void this._showBloodlineStageResult(UIID.BloodlineMirrorAwakening, this._bloodlineMirrorAwakeningHost, buildStageAwakenedTexts((key, ...args) => services().i18n.t(key, ...args), name, awakenedStage));
+            }),
+            event.on(GAME_SESSION_EVENTS.BloodlineStageCapRaised, (payload?: unknown) => {
+                const { generalId, stageCapBefore, stageCap } = payload as BloodlineStageCapRaisedPayload;
+                const name = services().session.roster.find((g) => g.id === generalId)?.name ?? generalId;
+                void this._showBloodlineStageResult(UIID.BloodlineMirrorAscension, this._bloodlineMirrorAscensionHost, buildStageCapRaisedTexts((key, ...args) => services().i18n.t(key, ...args), name, stageCapBefore, stageCap));
             }),
             // 因子爆發系統 §G 覺醒提示（PROG-2-1783）：培育、名士占卜都走這個事件
             event.on(GAME_SESSION_EVENTS.FactorAwakened, (payload?: unknown) => {
@@ -5520,6 +5533,12 @@ export class LobbyScene extends Component {
         });
         // 抽完、回轉蛋頁都會走這裡；天命值跟著刷新（PROG-2-1158）
         this._refreshDestinyBrief();
+    }
+
+    /** 開命鏡結果頁並蓋上結果文字；按鈕沿用 goBack，回到開啟前的畫面。 */
+    private async _showBloodlineStageResult(uiId: UIID, host: UIScreenPreviewHost | null, texts: MirrorStageResultTexts): Promise<void> {
+        await services().ui.open(uiId);
+        host?.binder?.setTexts(texts);
     }
 
     /** DUP-04: infuse a duplicate into the spirit card, then show the result on the mirror ascension page. */
