@@ -6,8 +6,10 @@
  * - 八種插槽各對應 crest、badge、icon、虎符兵牌；沒有專屬圖時退回通用佔位圖（使用者裁決：美術到了再換）。
  * - 色調與紋樣 id 仍由 CrestStyle 負責，這裡不另立一套色票。
  *
- * 暫定（完整契約稿不在 repo，規格只寫「要固定對應」）：
- * - 六色的紋樣、材質、靈獸名稱都是暫定值；資料檔以 provisional 標記，定案後可直接改資料。
+ * 暫定：六色對照取自主目錄未進版控的 doc_spec_0670（六色血統因子紋樣材質與六大靈獸原型視覺契約規格書），
+ * 該文件尚未確認為定案，資料檔以 provisional 標記；材質是三層共用，不分顏色。
+ * 該文件的「顏色對應單一屬性」與 FactorInheritance 依用途分色不一致，這張表不收屬性欄位。
+ * 插槽以已進版控的 bloodline-symbol-slot-contract-v1.md 為準，doc_spec_0672 的 SLOT_01～08 尚未採用。
  *
  * Unity 對照：像一張 ScriptableObject 對照表，查不到專屬 Sprite 時回傳預設 Sprite。
  */
@@ -43,8 +45,15 @@ const SLOT_TIERS: Readonly<Record<BloodlineSlotId, BloodlineSlotTier>> = {
 
 export interface BloodlineFactorVisual {
     pattern: string;
-    material: string;
+    beastId: string;
     beastFamily: string;
+}
+
+/** 三層材質：所有顏色共用，顏色差異只在紋樣與靈光 */
+export interface BloodlineMaterialLayers {
+    base: string;
+    inlay: string;
+    aura: string;
 }
 
 export interface BloodlineSlotUi {
@@ -64,6 +73,7 @@ export interface BloodlineSlotRow {
 
 export interface BloodlineVisualTable {
     placeholder: BloodlineSlotUi;
+    materialLayers: BloodlineMaterialLayers;
     factors: Readonly<Record<FactorColor, BloodlineFactorVisual>>;
     slots: readonly BloodlineSlotRow[];
 }
@@ -73,13 +83,14 @@ export type ParseBloodlineVisualResult =
     | { ok: false; issues: string[] };
 
 const UI_KEYS: readonly (keyof BloodlineSlotUi)[] = ['crest', 'badge', 'icon', 'tallyToken'];
-const FACTOR_KEYS: readonly (keyof BloodlineFactorVisual)[] = ['pattern', 'material', 'beastFamily'];
+const FACTOR_KEYS: readonly (keyof BloodlineFactorVisual)[] = ['pattern', 'beastId', 'beastFamily'];
+const MATERIAL_KEYS: readonly (keyof BloodlineMaterialLayers)[] = ['base', 'inlay', 'aura'];
 const GENDERS: readonly string[] = ['male', 'female'];
 
 const isText = (value: unknown): value is string => typeof value === 'string' && value.length > 0;
 
 function checkFactors(factors: Record<string, Record<string, unknown>> | undefined, issues: string[]): void {
-    const seen: Record<string, Set<unknown>> = { pattern: new Set(), material: new Set(), beastFamily: new Set() };
+    const seen: Record<string, Set<unknown>> = { pattern: new Set(), beastId: new Set(), beastFamily: new Set() };
     for (const color of ALL_FACTOR_COLORS) {
         const row = factors?.[color];
         for (const key of FACTOR_KEYS) {
@@ -114,16 +125,20 @@ function checkSlots(slots: unknown, issues: string[]): void {
     }
 }
 
-/** 驗證資料檔：六色與八種插槽都要齊，紋樣、材質、靈獸不得跨色重複，佔位圖四種都要有 */
+/** 驗證資料檔：六色與八種插槽都要齊，紋樣、靈獸不得跨色重複，三層材質與佔位圖四種都要有 */
 export function parseBloodlineVisualTable(raw: unknown): ParseBloodlineVisualResult {
     const issues: string[] = [];
     const data = (raw && typeof raw === 'object' ? raw : {}) as {
         placeholder?: Record<string, unknown>;
+        materialLayers?: Record<string, unknown>;
         factors?: Record<string, Record<string, unknown>>;
         slots?: unknown;
     };
     for (const key of UI_KEYS) {
         if (!isText(data.placeholder?.[key])) issues.push(`佔位圖缺少 ${key}`);
+    }
+    for (const key of MATERIAL_KEYS) {
+        if (!isText(data.materialLayers?.[key])) issues.push(`三層材質缺少 ${key}`);
     }
     checkFactors(data.factors, issues);
     checkSlots(data.slots, issues);
