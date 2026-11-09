@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-09T07-09-17-995Z-scope-amendment-c73d66420ad7",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:144abafceb9a686af6dc3b988d82801239613387f2fb9ad31031d39e2185f1f2",
+  "createdAt": "2026-11-09T07:09:17.995Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/sha_mo_ke_portrait.png,assets/resources/sprites/generals/avatars/sha_mo_ke_avatar.png,assets/resources/sprites/ui_avatars/cropped/sha_mo_ke_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
