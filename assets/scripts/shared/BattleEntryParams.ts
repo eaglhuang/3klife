@@ -99,6 +99,11 @@ export interface IBattleEntryParams {
   teachingSpirit?: { spiritId: string; spiritName: string; geneIds: readonly string[] } | null;
 }
 
+/** 戰場頂部關卡標題：沿用版面字距，字與字之間留空格 */
+export function formatBattleStageTitle(name: string | undefined): string {
+  return Array.from((name ?? '').replace(/\s+/g, '')).join(' ');
+}
+
 /** QA 工具 / preview target 5 使用的預設參數 */
 export const DEFAULT_BATTLE_ENTRY_PARAMS: IBattleEntryParams = {
   entrySource: 'preview',

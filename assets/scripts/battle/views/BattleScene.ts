@@ -12,7 +12,7 @@ import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { services } from "../../core/managers/ServiceLoader";
 import { bindHeldTallyInstances } from '../../core/config/TallyCardCatalog';
 import { tallyBattleInfoOf } from "../../core/systems/TigerTallyStar";
-import { IBattleEntryParams, DEFAULT_BATTLE_ENTRY_PARAMS, formatBattleEntryLog } from '../../shared/BattleEntryParams';
+import { IBattleEntryParams, DEFAULT_BATTLE_ENTRY_PARAMS, formatBattleEntryLog, formatBattleStageTitle } from '../../shared/BattleEntryParams';
 import { SceneName } from "../../shared/CommonEnums";
 import { stageThemeVisionRadius } from "../shared/StageThemeSalvage";
 import { GeneralUnit } from "../../core/models/GeneralUnit";
@@ -372,6 +372,7 @@ export class BattleScene extends Component {
       this.hud?.setEnemyGeneralId(egId);
       this.hud?.setPlayerName(pg.name);
       this.hud?.setEnemyName(eg.name);
+      this.hud?.setStageTitle(formatBattleStageTitle(encounter?.name));
       this.hud?.refresh(
         snap.turn,
         snap.playerFood,
