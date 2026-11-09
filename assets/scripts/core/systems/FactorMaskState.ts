@@ -1,5 +1,7 @@
 // @spec-source → 因子解鎖系統.md；PROG-2-0103 PM 薄包裝裁定；PROG-2-0513 PM 裁定：FUL-02 差異函式與詳情 Presenter
 import { factorMaskView } from './FactorMask';
+import { ALL_FACTOR_COLORS, normalizeFactorColor } from './FactorInheritance';
+import { factorTagColorOf } from './FactorTagTokens';
 import type { GeneralGeneConfig } from '../models/GeneralUnit';
 
 export interface FactorMaskStateView {
@@ -16,6 +18,19 @@ export interface FactorMaskStateView {
 export function buildFactorMaskView(factor: GeneralGeneConfig, playerDiscoveryLevel: number, previousView?: FactorMaskStateView): FactorMaskStateView {
     const view = factorMaskView(factor, playerDiscoveryLevel);
     return { label: view.label, locked: !view.revealed, playAnimation: previousView?.locked === true && view.revealed };
+}
+
+/** 看不見的因子列字色（灰鎖） */
+export const FACTOR_LOCKED_TINT = '#8A8A8A';
+
+/**
+ * 因子列字色：看不見時灰色，看得見時用因子色；沒有因子或色系不明回 null，由畫面保留原字色。
+ */
+export function factorLabelTint(factor: GeneralGeneConfig | null | undefined, playerDiscoveryLevel: number): string | null {
+    if (!factor) return null;
+    if (!factorMaskView(factor, playerDiscoveryLevel).revealed) return FACTOR_LOCKED_TINT;
+    const color = normalizeFactorColor(factor.type);
+    return color && ALL_FACTOR_COLORS.includes(color) ? factorTagColorOf(color) : null;
 }
 
 /** 一組因子的 view，順序與輸入相同；previous 依槽位對應。 */
@@ -46,31 +61,26 @@ export function newlyUnlockedSlots(
 
 /**
  * 詳情畫面的 Presenter：保存上一次的 view，輸出「剛解鎖」槽位。
- * 依武將 id 分開保存；換人時從頭開始，不會把別人的舊狀態當成剛解鎖。
+ * 依武將 id 分開保存，來回切換武將不會弄丟狀態，也不會把別人的舊狀態當成剛解鎖。
+ * 第一次看到的武將沒有舊狀態，不回報（與 playAnimation 規則一致）。
  * 動畫由 View 依 justRevealed 播放，這裡不處理畫面。
  */
 export class FactorMaskPresenter {
-    private _generalId: string | null = null;
-    private _views: FactorMaskStateView[] | undefined;
+    private readonly _viewsByGeneral = new Map<string, FactorMaskStateView[]>();
 
     update(
         generalId: string,
         genes: readonly GeneralGeneConfig[],
         playerDiscoveryLevel: number,
     ): { views: FactorMaskStateView[]; justRevealed: number[] } {
-        if (generalId !== this._generalId) {
-            this._generalId = generalId;
-            this._views = undefined;
-        }
-        const previous = this._views;
+        const previous = this._viewsByGeneral.get(generalId);
         const views = buildFactorMaskViews(genes, playerDiscoveryLevel, previous);
         const justRevealed = newlyUnlockedSlots(previous, views);
-        this._views = views;
+        this._viewsByGeneral.set(generalId, views);
         return { views, justRevealed };
     }
 
     reset(): void {
-        this._generalId = null;
-        this._views = undefined;
+        this._viewsByGeneral.clear();
     }
 }
