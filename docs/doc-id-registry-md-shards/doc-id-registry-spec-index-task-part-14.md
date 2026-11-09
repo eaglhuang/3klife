@@ -62,3 +62,7 @@
 | `doc_task_2357` | docs/agent-briefs/tasks/PROG/PROG-2-2146.md | PROG-2-2146 太守府不可升級時顯示停用按鈕與原因（GOV-07） |
 | `doc_task_2358` | docs/agent-briefs/tasks/PROG/PROG-2-2147.md | PROG-2-2147 粉色因子血統同因子升階接進子嗣與戰場（APT-09） |
 | `doc_task_2359` | docs/agent-briefs/tasks/PROG/PROG-2-2148.md | PROG-2-2148 教官卡詳情接上被動效果與培育事件（MENT-13） |
+| `doc_task_2360` | docs/agent-briefs/tasks/PROG/PROG-2-2149.md | PROG-2-2149 大廳季度推進「下一季」核心發動機與武將個性動態事件（LOOP-01） |
+| `doc_task_2361` | docs/agent-briefs/tasks/PROG/PROG-2-2150.md | PROG-2-2150 出征極速決戰Auto-Resolve與武將個性單挑演算法（LOOP-02） |
+| `doc_task_2362` | docs/agent-briefs/tasks/PROG/PROG-2-2151.md | PROG-2-2151 三國季報晨報重構與市井奇遇隨機互動閉環（LOOP-03） |
+| `doc_task_2363` | docs/agent-briefs/tasks/PROG/PROG-2-2152.md | PROG-2-2152 代際傳承自然引導流與子嗣抓周入學學府閉環（LOOP-04） |

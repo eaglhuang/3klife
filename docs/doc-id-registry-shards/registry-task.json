@@ -14098,5 +14098,29 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-2148.md",
     "title": "PROG-2-2148 教官卡詳情接上被動效果與培育事件（MENT-13）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2360",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2149.md",
+    "title": "PROG-2-2149 大廳季度推進「下一季」核心發動機與武將個性動態事件（LOOP-01）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2361",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2150.md",
+    "title": "PROG-2-2150 出征極速決戰Auto-Resolve與武將個性單挑演算法（LOOP-02）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2362",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2151.md",
+    "title": "PROG-2-2151 三國季報晨報重構與市井奇遇隨機互動閉環（LOOP-03）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2363",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2152.md",
+    "title": "PROG-2-2152 代際傳承自然引導流與子嗣抓周入學學府閉環（LOOP-04）",
+    "category": "task"
   }
 ]
