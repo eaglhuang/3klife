@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "yin-mo": {
+      "x": 310,
+      "y": 40,
+      "w": 350,
+      "h": 350,
+      "source": "reviewed",
+      "$note": "2026-11-09 尹默蜀綠暖褐經學家造型裁切。"
+    },
     "yang-yi": {
       "x": 310,
       "y": 0,

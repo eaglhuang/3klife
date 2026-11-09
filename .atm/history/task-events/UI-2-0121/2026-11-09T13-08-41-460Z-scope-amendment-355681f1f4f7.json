@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-09T13-08-41-460Z-scope-amendment-355681f1f4f7",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:5dda3e611294629cec081d892d91f11b260f312e9573a9049955cc5d7352b1ba",
+  "createdAt": "2026-11-09T13:08:41.460Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/yin_mo_portrait.png,assets/resources/sprites/generals/avatars/yin_mo_avatar.png,assets/resources/sprites/ui_avatars/cropped/yin_mo_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
