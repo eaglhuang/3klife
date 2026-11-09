@@ -82,7 +82,7 @@ export function createItemBagControllerSuite(): TestSuite {
         const controller = new ItemBagController({ inventory: () => all, useItem: () => ({ ok: true, inventory: {} }), now: () => 0 });
         controller.turnPage(1);
         assert.equals(1, controller.page);
-        for (const row of controller.rows()) delete all[row.itemId];
+        for (const itemId of Object.keys(all).slice(BAG_ROW_SLOTS)) delete all[itemId];
         assert.equals(0, controller.page);
         assert.isTrue(controller.rows().length > 0);
     });

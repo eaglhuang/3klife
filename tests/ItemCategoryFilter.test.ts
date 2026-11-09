@@ -56,12 +56,12 @@ export function createItemCategoryFilterSuite(): TestSuite {
         assert.equals('未選擇道具', controller.getFlowView().texts.bagDetailName);
     });
 
-    suite.test('消耗品篩選後列數不超過一頁，清回 null 恢復全部', () => {
+    suite.test('消耗品篩選後只列消耗品，清回 null 恢復全部', () => {
         const all: Record<string, number> = {};
         for (const def of ITEM_DEFS) all[def.id] = 1;
         const controller = controllerWith(all);
         controller.setCategory('消耗品');
-        assert.isTrue(controller.allRows().length <= BAG_ROW_SLOTS);
+        assert.equals(ITEM_DEFS.filter((def) => def.category === '消耗品').length, controller.allRows().length);
         controller.setCategory(null);
         assert.equals(ITEM_DEFS.length, controller.allRows().length);
     });
