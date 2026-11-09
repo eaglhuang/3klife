@@ -181,7 +181,7 @@
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 24,
       "lineHeight": 28,
-      "color": "textOnParchment",
+      "color": "secondaryLight",
       "isBold": true,
       "overflow": "SHRINK"
     },

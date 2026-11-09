@@ -809,6 +809,7 @@
                     "width": 168,
                     "height": 32,
                     "skinSlot": "mission.dialog.toggle",
+                    "styleSlot": "mission.dialog.label.button",
                     "text": "AI 委任",
                     "bind": "aiDelegateChecked"
                   },
@@ -837,7 +838,6 @@
                     "width": 176,
                     "height": 56,
                     "skinSlot": "mission.dialog.btn.secondary",
-                    "text": "再探",
                     "children": [
                       {
                         "type": "label",
@@ -857,7 +857,6 @@
                     "width": 176,
                     "height": 56,
                     "skinSlot": "mission.dialog.btn.primary",
-                    "text": "執行",
                     "children": [
                       {
                         "type": "label",
@@ -877,7 +876,6 @@
                     "width": 176,
                     "height": 56,
                     "skinSlot": "mission.dialog.btn.secondary",
-                    "text": "等待",
                     "children": [
                       {
                         "type": "label",
@@ -897,7 +895,6 @@
                     "width": 176,
                     "height": 56,
                     "skinSlot": "mission.dialog.btn.primary",
-                    "text": "委任",
                     "children": [
                       {
                         "type": "label",

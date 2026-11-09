@@ -200,6 +200,12 @@ export class UIPreviewNodeFactory {
         width: number,
         height: number,
     ): Promise<void> {
+        // 規格自帶唯一內容節點：節點路徑要維持 ScrollView/<內容>，走另一種結構
+        if (spec.children?.length === 1) {
+            await this._buildScrollShell(node, spec, width, height);
+            return;
+        }
+
         // 背景 skin 掛在 DataList 節點本身
         await this.buildPanel(node, spec);
 
@@ -288,6 +294,52 @@ export class UIPreviewNodeFactory {
 
         // 儲存 itemTemplate，供 onBuildComplete 動態生成列項時取用
         (node as any)._itemTemplate = spec.itemTemplate;
+    }
+
+    /**
+     * 規格自帶內容的捲動區：ScrollView 節點本身當 viewport。
+     * Mask 與 Sprite 不能同節點，所以背景 skin 移到第一個子節點。內容由 bindScrollContent 接上。
+     * Unity 對照：ScrollRect 與 Mask 同物件，Background 是獨立子物件
+     */
+    private async _buildScrollShell(node: Node, spec: UILayoutNodeSpec, width: number, height: number): Promise<void> {
+        const bg = new Node('ScrollBg');
+        bg.layer = node.layer;
+        bg.parent = node;
+        bg.addComponent(UITransform).setContentSize(width, height);
+        const bgWidget = bg.addComponent(Widget);
+        bgWidget.isAlignTop = bgWidget.isAlignBottom = bgWidget.isAlignLeft = bgWidget.isAlignRight = true;
+        bgWidget.top = bgWidget.bottom = bgWidget.left = bgWidget.right = 0;
+        await this.buildPanel(bg, spec);
+
+        const mask = node.addComponent(Mask);
+        mask.type = Mask.Type.GRAPHICS_RECT;
+
+        const sv = node.addComponent(ScrollView);
+        sv.horizontal = false;
+        sv.vertical = true;
+    }
+
+    /**
+     * 把規格自帶的內容節點接成 ScrollView.content：頂端對齊、高度跟著子節點，往下捲。
+     * ScrollView 在 onEnable 才註冊內容的事件，這裡節點可能已啟用，所以重新啟用一次。
+     */
+    bindScrollContent(scrollNode: Node, content: Node): void {
+        const sv = scrollNode.getComponent(ScrollView);
+        const view = scrollNode.getComponent(UITransform);
+        const contentT = content.getComponent(UITransform);
+        if (!sv || !view || !contentT) return;
+
+        contentT.setAnchorPoint(0.5, 1);
+        const layout = content.getComponent(Layout);
+        if (layout) {
+            layout.resizeMode = Layout.ResizeMode.CONTAINER;
+            layout.updateLayout(true);
+        }
+        content.setPosition((0.5 - view.anchorX) * view.width, (1 - view.anchorY) * view.height);
+
+        sv.enabled = false;
+        sv.content = content;
+        sv.enabled = true;
     }
 
     /**
