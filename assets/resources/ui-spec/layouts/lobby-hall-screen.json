@@ -30,8 +30,8 @@
             "type": "panel",
             "name": "LobbyHallScreen_div_1",
             "widget": {
-              "top": -200,
-              "left": 0
+              "hCenter": true,
+              "vCenter": true
             },
             "_ucufId": "lobby-hall-screen.hall-bg",
             "width": 1920,
@@ -76,7 +76,7 @@
                   "paddingTop": 6,
                   "paddingRight": 20,
                   "paddingBottom": 6,
-                  "paddingLeft": 6
+                  "paddingLeft": 92
                 },
                 "children": [
                   {
@@ -373,7 +373,11 @@
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_7",
                     "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-7"
                   }
-                ]
+                ],
+                "widget": {
+                  "top": 18,
+                  "left": 20
+                }
               },
               {
                 "type": "panel",
@@ -385,20 +389,28 @@
                   {
                     "type": "label",
                     "name": "LobbyHallScreen_div_19",
-                    "width": 328,
+                    "width": 262,
                     "height": 32,
                     "text": "夜襲烏巢糧倉",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_19",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-19"
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-19",
+                    "widget": {
+                      "top": 10,
+                      "left": 14
+                    }
                   },
                   {
                     "type": "label",
                     "name": "LobbyHallScreen_div_20",
-                    "width": 328,
+                    "width": 240,
                     "height": 20,
                     "text": "情報 50% · 派遣 張飛",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_20",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-20"
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-20",
+                    "widget": {
+                      "top": 54,
+                      "left": 14
+                    }
                   },
                   {
                     "type": "panel",
@@ -419,7 +431,11 @@
                         "width": 64,
                         "height": 28
                       }
-                    ]
+                    ],
+                    "widget": {
+                      "top": 12,
+                      "right": 14
+                    }
                   },
                   {
                     "type": "label",
@@ -428,9 +444,17 @@
                     "height": 19,
                     "text": "已接取 · 置頂",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_10",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-10"
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-10",
+                    "widget": {
+                      "bottom": 12,
+                      "right": 14
+                    }
                   }
-                ]
+                ],
+                "widget": {
+                  "top": 74,
+                  "left": 20
+                }
               },
               {
                 "type": "panel",
@@ -442,20 +466,28 @@
                   {
                     "type": "label",
                     "name": "LobbyHallScreen_div_22",
-                    "width": 330,
+                    "width": 262,
                     "height": 32,
                     "text": "圍堵汝南黃巾",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_22",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-22"
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-22",
+                    "widget": {
+                      "top": 10,
+                      "left": 14
+                    }
                   },
                   {
                     "type": "label",
                     "name": "LobbyHallScreen_div_23",
-                    "width": 330,
+                    "width": 240,
                     "height": 20,
                     "text": "情報 50% · 耗時 2 季",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_23",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-23"
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-23",
+                    "widget": {
+                      "top": 54,
+                      "left": 14
+                    }
                   },
                   {
                     "type": "panel",
@@ -476,9 +508,17 @@
                         "width": 64,
                         "height": 28
                       }
-                    ]
+                    ],
+                    "widget": {
+                      "top": 12,
+                      "right": 14
+                    }
                   }
-                ]
+                ],
+                "widget": {
+                  "top": 182,
+                  "left": 20
+                }
               },
               {
                 "type": "panel",
@@ -490,20 +530,28 @@
                   {
                     "type": "label",
                     "name": "LobbyHallScreen_div_25",
-                    "width": 330,
+                    "width": 262,
                     "height": 32,
                     "text": "遣使結好江東",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_25",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-25"
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-25",
+                    "widget": {
+                      "top": 10,
+                      "left": 14
+                    }
                   },
                   {
                     "type": "label",
                     "name": "LobbyHallScreen_div_26",
-                    "width": 330,
+                    "width": 240,
                     "height": 20,
                     "text": "情報 100% · 耗時 1 季",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_26",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-26"
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-26",
+                    "widget": {
+                      "top": 54,
+                      "left": 14
+                    }
                   },
                   {
                     "type": "panel",
@@ -524,9 +572,17 @@
                         "width": 64,
                         "height": 28
                       }
-                    ]
+                    ],
+                    "widget": {
+                      "top": 12,
+                      "right": 14
+                    }
                   }
-                ]
+                ],
+                "widget": {
+                  "top": 290,
+                  "left": 20
+                }
               },
               {
                 "type": "panel",
@@ -538,20 +594,28 @@
                   {
                     "type": "label",
                     "name": "LobbyHallScreen_div_28",
-                    "width": 330,
+                    "width": 262,
                     "height": 32,
                     "text": "邊境斥候巡防",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_28",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-28"
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-28",
+                    "widget": {
+                      "top": 10,
+                      "left": 14
+                    }
                   },
                   {
                     "type": "label",
                     "name": "LobbyHallScreen_div_29",
-                    "width": 330,
+                    "width": 240,
                     "height": 20,
                     "text": "情報 50% · 耗時 1 季",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_29",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-29"
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-29",
+                    "widget": {
+                      "top": 54,
+                      "left": 14
+                    }
                   },
                   {
                     "type": "panel",
@@ -572,9 +636,17 @@
                         "width": 64,
                         "height": 28
                       }
-                    ]
+                    ],
+                    "widget": {
+                      "top": 12,
+                      "right": 14
+                    }
                   }
-                ]
+                ],
+                "widget": {
+                  "top": 398,
+                  "left": 20
+                }
               },
               {
                 "type": "panel",
@@ -647,7 +719,11 @@
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_19",
                     "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-19"
                   }
-                ]
+                ],
+                "widget": {
+                  "top": 18,
+                  "left": 20
+                }
               },
               {
                 "type": "panel",
@@ -659,20 +735,28 @@
                   {
                     "type": "label",
                     "name": "LobbyHallScreen_div_33",
-                    "width": 328,
+                    "width": 262,
                     "height": 32,
                     "text": "新野賑災",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_33",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-33"
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-33",
+                    "widget": {
+                      "top": 10,
+                      "left": 14
+                    }
                   },
                   {
                     "type": "label",
                     "name": "LobbyHallScreen_div_34",
-                    "width": 328,
+                    "width": 240,
                     "height": 20,
                     "text": "情報 100% · 派遣 魏延",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_34",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-34"
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-34",
+                    "widget": {
+                      "top": 54,
+                      "left": 14
+                    }
                   },
                   {
                     "type": "panel",
@@ -693,7 +777,11 @@
                         "width": 64,
                         "height": 28
                       }
-                    ]
+                    ],
+                    "widget": {
+                      "top": 12,
+                      "right": 14
+                    }
                   },
                   {
                     "type": "label",
@@ -702,9 +790,17 @@
                     "height": 19,
                     "text": "已接取 · 置頂",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_22",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-22"
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-22",
+                    "widget": {
+                      "bottom": 12,
+                      "right": 14
+                    }
                   }
-                ]
+                ],
+                "widget": {
+                  "top": 74,
+                  "left": 20
+                }
               },
               {
                 "type": "panel",
@@ -716,20 +812,28 @@
                   {
                     "type": "label",
                     "name": "LobbyHallScreen_div_36",
-                    "width": 330,
+                    "width": 262,
                     "height": 32,
                     "text": "尋訪臥龍",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_36",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-36"
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-36",
+                    "widget": {
+                      "top": 10,
+                      "left": 14
+                    }
                   },
                   {
                     "type": "label",
                     "name": "LobbyHallScreen_div_37",
-                    "width": 330,
+                    "width": 240,
                     "height": 20,
                     "text": "情報 50% · 耗時 3 季",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_37",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-37"
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-37",
+                    "widget": {
+                      "top": 54,
+                      "left": 14
+                    }
                   },
                   {
                     "type": "panel",
@@ -750,9 +854,17 @@
                         "width": 64,
                         "height": 28
                       }
-                    ]
+                    ],
+                    "widget": {
+                      "top": 12,
+                      "right": 14
+                    }
                   }
-                ]
+                ],
+                "widget": {
+                  "top": 182,
+                  "left": 20
+                }
               },
               {
                 "type": "panel",
@@ -764,20 +876,28 @@
                   {
                     "type": "label",
                     "name": "LobbyHallScreen_div_39",
-                    "width": 330,
+                    "width": 262,
                     "height": 32,
                     "text": "整頓治安",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_39",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-39"
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-39",
+                    "widget": {
+                      "top": 10,
+                      "left": 14
+                    }
                   },
                   {
                     "type": "label",
                     "name": "LobbyHallScreen_div_40",
-                    "width": 330,
+                    "width": 240,
                     "height": 20,
                     "text": "情報 100% · 耗時 1 季",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_40",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-40"
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-40",
+                    "widget": {
+                      "top": 54,
+                      "left": 14
+                    }
                   },
                   {
                     "type": "panel",
@@ -798,9 +918,17 @@
                         "width": 64,
                         "height": 28
                       }
-                    ]
+                    ],
+                    "widget": {
+                      "top": 12,
+                      "right": 14
+                    }
                   }
-                ]
+                ],
+                "widget": {
+                  "top": 290,
+                  "left": 20
+                }
               },
               {
                 "type": "panel",
@@ -812,20 +940,28 @@
                   {
                     "type": "label",
                     "name": "LobbyHallScreen_div_42",
-                    "width": 330,
+                    "width": 262,
                     "height": 32,
                     "text": "開闢荊襄商路",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_42",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-42"
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-42",
+                    "widget": {
+                      "top": 10,
+                      "left": 14
+                    }
                   },
                   {
                     "type": "label",
                     "name": "LobbyHallScreen_div_43",
-                    "width": 330,
+                    "width": 240,
                     "height": 20,
                     "text": "情報 50% · 耗時 2 季",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_43",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-43"
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-43",
+                    "widget": {
+                      "top": 54,
+                      "left": 14
+                    }
                   },
                   {
                     "type": "panel",
@@ -846,9 +982,17 @@
                         "width": 64,
                         "height": 28
                       }
-                    ]
+                    ],
+                    "widget": {
+                      "top": 12,
+                      "right": 14
+                    }
                   }
-                ]
+                ],
+                "widget": {
+                  "top": 398,
+                  "left": 20
+                }
               },
               {
                 "type": "panel",
@@ -883,7 +1027,7 @@
             "type": "container",
             "name": "LobbyHallScreen_div_45",
             "widget": {
-              "left": 552,
+              "hCenter": -321,
               "top": 560
             },
             "width": 175,
@@ -956,7 +1100,7 @@
             "type": "container",
             "name": "LobbyHallScreen_div_46",
             "widget": {
-              "left": 897,
+              "hCenter": -1,
               "top": 610
             },
             "width": 125,
@@ -1029,7 +1173,7 @@
             "type": "container",
             "name": "LobbyHallScreen_div_47",
             "widget": {
-              "left": 1194,
+              "hCenter": 320,
               "top": 584
             },
             "width": 171,
@@ -1102,7 +1246,7 @@
             "type": "container",
             "name": "LobbyHallScreen_div_48",
             "widget": {
-              "left": 749,
+              "hCenter": -161,
               "top": 670
             },
             "width": 101,
@@ -1193,7 +1337,7 @@
             "type": "container",
             "name": "LobbyHallScreen_div_49",
             "widget": {
-              "left": 1038,
+              "hCenter": 160,
               "top": 666
             },
             "width": 163,
@@ -1266,8 +1410,8 @@
             "type": "panel",
             "name": "LobbyHallScreen_div_50",
             "widget": {
-              "top": 520,
-              "left": 1000
+              "hCenter": 190,
+              "top": 520
             },
             "_ucufId": "lobby-hall-screen.bubble",
             "width": 300,

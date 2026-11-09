@@ -24,6 +24,10 @@ export class HallMapTurnPlayer extends Component {
     @property(Node) ping: Node | null = null;
     @property(Label) pingGlyph: Label | null = null;
     @property(Label) pingLabel: Label | null = null;
+    /** 季節色層：蓋在勢力圖上，位置大小跟著視窗 */
+    public tint: Node | null = null;
+    /** 只在放大聚焦時顯示的節點（設計稿 mini 模式不顯示階段標籤） */
+    public focusOnly: Node[] = [];
 
     private _layout: HallMapLayout | null = null;
     private _canvas: HallMapCanvasSize = { width: 1920, height: 1080 };
@@ -66,8 +70,11 @@ export class HallMapTurnPlayer extends Component {
         const pose = hallMapStagePose(mode, step?.focus ?? null, this._layout, this._canvas);
         const sec = instant ? 0 : this._layout.transitionSec;
         this._tweenRect(this.viewport, pose.viewport, sec);
+        this._tweenRect(this.tint, pose.viewport, sec);
         this._tweenRect(this.content, pose.content, sec);
         if (this.viewport) this.viewport.active = pose.viewport.visible;
+        if (this.tint) this.tint.active = pose.viewport.visible;
+        for (const node of this.focusOnly) node.active = mode === 'focus';
         this._applyPing(pose, step);
     }
 
