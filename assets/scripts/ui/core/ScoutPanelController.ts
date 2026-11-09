@@ -15,6 +15,7 @@
  */
 import type { EncounterConfig } from '../../shared/BattleEntryParams';
 import { checkRecommendedLoadout, loadoutTagsOf, type TacticCounterTagTable } from '../../core/systems/LoadoutCheck';
+import { stageThemeMechanicNotes } from '../../core/systems/StageThemeIntel';
 import { buildScoutPanelIntel, scoutSortieAction, type ScoutEnemyLeader, type ScoutPanelIntel } from '../../core/systems/ScoutIntel';
 
 export interface ScoutPanelView {
@@ -64,7 +65,7 @@ export function buildLobbyScout(
     const mechanic = encounter.theme ?? (encounter.battleKind ? BATTLE_KIND_MECHANIC[encounter.battleKind] : undefined);
     // 整個關卡設定都交給防火牆，由 buildScoutPanelIntel 只挑四區塊需要的欄位
     const intel = buildScoutPanelIntel(
-        { ...encounter, enemyLeader: enemy, coreMechanics: mechanic ? [mechanic] : [], riskTags: encounter.riskTags ?? [] },
+        { ...encounter, enemyLeader: enemy, coreMechanics: [...(mechanic ? [mechanic] : []), ...stageThemeMechanicNotes(encounter.stageThemeId)], riskTags: encounter.riskTags ?? [] },
         { state: check.state, gaps: check.gaps },
     );
     return { intel, hasRecommendation: required.length + recommended.length > 0 };
