@@ -410,7 +410,10 @@ export class UIPreviewBuilder extends Component {
             }
             const childWidthAllocations = this._allocateHorizontalFlowWidths(spec, effectiveW);
             for (const child of spec.children) {
-                await this._buildNode(child, node, childWidthAllocations.get(child) ?? effectiveW, effectiveH);
+                const childNode = await this._buildNode(child, node, childWidthAllocations.get(child) ?? effectiveW, effectiveH);
+                if (isScrollListRoot && spec.children.length === 1) {
+                    this.nodeFactory.bindScrollContent(node, childNode);
+                }
             }
             this._resizeFlowNodeToContent(node, spec, flowChildInLayout);
         }
