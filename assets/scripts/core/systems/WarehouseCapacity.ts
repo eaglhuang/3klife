@@ -1,4 +1,4 @@
-// @spec-source → WBS v3 BAG-02（主城倉庫：50 格、擴容 +20、上限 200）
+// @spec-source → WBS v3 BAG-02（主城倉庫：50 格、擴容 +20、上限 200）；裁決 11/09 第 6 題（擴容 50/100/200 階梯）
 /**
  * WarehouseCapacity — 主城倉庫的容量與存入判斷，純邏輯，不依賴 cc。
  *
@@ -10,6 +10,8 @@
 export const WAREHOUSE_BASE_SLOTS = 50;
 export const WAREHOUSE_EXPAND_STEP = 20;
 export const WAREHOUSE_MAX_SLOTS = 200;
+/** 擴容玉璧階梯價（裁決 11/09 第 6 題）：第 1 次 50、第 2 次 100、第 3 次起 200 */
+export const WAREHOUSE_EXPAND_GEM_LADDER: readonly number[] = [50, 100, 200];
 
 export type WarehouseRejectReason = 'full';
 
@@ -28,6 +30,13 @@ function assertCount(value: number, label: string): void {
 export function warehouseCapacity(expansions: number): number {
     assertCount(expansions, '擴容次數');
     return Math.min(WAREHOUSE_MAX_SLOTS, WAREHOUSE_BASE_SLOTS + expansions * WAREHOUSE_EXPAND_STEP);
+}
+
+/** 下一次擴容的玉璧價：已擴容次數超出階梯長度時沿用最後一階。 */
+export function warehouseExpandGemCost(expansions: number): number {
+    assertCount(expansions, '擴容次數');
+    const ladder = WAREHOUSE_EXPAND_GEM_LADDER;
+    return ladder[Math.min(expansions, ladder.length - 1)];
 }
 
 /** 還能不能再擴容：容量未達上限才可擴。 */

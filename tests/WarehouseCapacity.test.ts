@@ -1,6 +1,7 @@
 import { assert, TestSuite } from './TestRunner';
 import {
     canExpandWarehouse,
+    warehouseExpandGemCost,
     storeIntoWarehouse,
     warehouseCapacity,
     WAREHOUSE_MAX_SLOTS,
@@ -18,6 +19,13 @@ export function createWarehouseCapacitySuite(): TestSuite {
     suite.test('容量上限 200：擴容 8 次即達上限，之後不再增加', () => {
         assert.equals(WAREHOUSE_MAX_SLOTS, warehouseCapacity(8));
         assert.equals(WAREHOUSE_MAX_SLOTS, warehouseCapacity(20));
+    });
+
+    suite.test('擴容玉璧階梯：50 → 100 → 之後都 200（裁決 11/09 第 6 題）', () => {
+        assert.equals(50, warehouseExpandGemCost(0));
+        assert.equals(100, warehouseExpandGemCost(1));
+        assert.equals(200, warehouseExpandGemCost(2));
+        assert.equals(200, warehouseExpandGemCost(7));
     });
 
     suite.test('達上限後不可再擴容', () => {

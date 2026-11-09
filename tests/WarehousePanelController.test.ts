@@ -22,7 +22,7 @@ export function createWarehousePanelControllerSuite(): TestSuite {
     suite.test('容量文字顯示已用/上限，可擴容時按鈕文字為 +20 格', () => {
         const view = new WarehousePanelController(makeDeps()).getFlowView();
         assert.equals('容量 12/50', view.texts.warehouseCapacity);
-        assert.equals('擴容 +20 格', view.texts.btnWarehouseExpandLabel);
+        assert.equals('擴容 +20 格（50 玉璧）', view.texts.btnWarehouseExpandLabel);
         assert.isTrue(view.enabled.btnWarehouseExpand);
         assert.isFalse(view.actives.warehouseNotice);
     });
@@ -63,10 +63,10 @@ export function createWarehousePanelControllerSuite(): TestSuite {
         assert.equals('主城倉庫已滿！請清理或擴充空間。', rejected.getFlowView().texts.warehouseNotice);
     });
 
-    suite.test('擴容失敗時顯示失敗提示，容量不因此改變', () => {
+    suite.test('擴容失敗時提示玉璧不足與價格，容量不因此改變', () => {
         const controller = new WarehousePanelController(makeDeps({ expand: () => false }));
         assert.isFalse(controller.expandSelected());
-        assert.equals('擴容失敗，請稍後再試', controller.getFlowView().texts.warehouseNotice);
+        assert.equals('玉璧不足：擴容需要 50 玉璧', controller.getFlowView().texts.warehouseNotice);
     });
 
     suite.test('layout 節點 id 涵蓋所有 flow key，skin slot 都已定義', () => {

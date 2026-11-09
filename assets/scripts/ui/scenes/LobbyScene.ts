@@ -94,9 +94,9 @@ import { extremeRewardToast, extremeTaskFlowView } from '../core/ExtremeTaskPane
 import { WishAltarController, WISH_ALTAR_SLOTS } from '../core/WishAltarController';
 import { dispatchClickMessage, dispatchSettleToast } from '../../core/systems/DispatchCatalog';
 import { WAREHOUSE_EXPANSION_ITEM } from '../../core/managers/GameSession';
+import { warehouseExpandGemCost } from '../../core/systems/WarehouseCapacity';
 
 /** 倉庫擴容費用：規格（doc_spec_0017）只寫「付費或任務解鎖」，暫定每次 5000 金幣 */
-const WAREHOUSE_EXPAND_GOLD_COST = 5000;
 import type { SeasonAdvancedPayload } from '../../core/managers/GameSession';
 import { bloodlineBirthLines } from '../../core/systems/BloodlineBirthLines';
 import type { DiscoveryGain } from '../../core/systems/DiscoveryProgress';
@@ -1728,7 +1728,7 @@ export class LobbyScene extends Component {
 
     /**
      * 主城倉庫（倉庫系統 §倉庫容量，PROG-2-1103）：容量規則在 WarehouseCapacity，這裡只綁按鈕、套 view。
-     * 擴容費用規格未定，暫定每次 WAREHOUSE_EXPAND_GOLD_COST 金幣。
+     * 擴容扣玉璧，價格照 WarehouseCapacity 的階梯（裁決 11/09 第 6 題）；自動整理不收費。
      */
     private async _mountWarehouse(): Promise<void> {
         const gacha = this._localGachaService;
@@ -1738,8 +1738,9 @@ export class LobbyScene extends Component {
             storedRecords: () => services().session.inventoryRecords.filter((record) => !record.equippedBy),
             setLocked: (inventoryId, locked) => services().session.setInventoryLocked(inventoryId, locked),
             expand: () => {
-                if (!gacha.spendCurrency('gold', WAREHOUSE_EXPAND_GOLD_COST)) {
-                    services().event.emit('SHOW_TOAST', { message: `金幣不足：擴容需要 ${WAREHOUSE_EXPAND_GOLD_COST} 金幣`, duration: 2 });
+                const cost = warehouseExpandGemCost(services().session.warehouseExpansions);
+                if (!gacha.spendCurrency('gems', cost)) {
+                    services().event.emit('SHOW_TOAST', { message: `玉璧不足：擴容需要 ${cost} 玉璧`, duration: 2 });
                     return false;
                 }
                 void services().session.addItem(WAREHOUSE_EXPANSION_ITEM, 1, 'SHOP');

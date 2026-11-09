@@ -13,6 +13,7 @@
 import { warehouseFullLine } from '../../core/systems/BackpackScripts';
 import {
     canExpandWarehouse,
+    warehouseExpandGemCost,
     warehouseCapacity,
     WAREHOUSE_EXPAND_STEP,
     WarehouseStoreResult,
@@ -83,7 +84,7 @@ export class WarehousePanelController {
             return false;
         }
         const ok = this._deps.expand();
-        this._notice = ok ? null : '擴容失敗，請稍後再試';
+        this._notice = ok ? null : `玉璧不足：擴容需要 ${warehouseExpandGemCost(this._deps.expansions())} 玉璧`;
         return ok;
     }
 
@@ -164,7 +165,7 @@ export class WarehousePanelController {
             warehouseNotice: notice,
             btnWarehouseSortLabel: `排序：${WAREHOUSE_SORT_LABEL[this._sortKey]}`,
             warehouseList: this.listText(),
-            btnWarehouseExpandLabel: expandable ? `擴容 +${WAREHOUSE_EXPAND_STEP} 格` : '已達上限',
+            btnWarehouseExpandLabel: expandable ? `擴容 +${WAREHOUSE_EXPAND_STEP} 格（${warehouseExpandGemCost(this._deps.expansions())} 玉璧）` : '已達上限',
             btnCloseLabel: '關閉',
             btnWarehousePrevLabel: '上一件',
             btnWarehouseNextLabel: '下一件',
