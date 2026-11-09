@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "provisional": true,
+  "offers": [
+    {
+      "id": "faction-set-pack",
+      "price": 29.99,
+      "quote": "只需旅費 29.99，美人與文官可一同加入，文武齊備護主公。",
+      "trigger": "lead-selected"
+    },
+    {
+      "id": "icebreaker-pack",
+      "price": 0.99,
+      "quote": "妾身若搭馬車需三天，若有 0.99 盤纏，即刻便到。",
+      "after": "faction-set-pack"
+    }
+  ]
+}

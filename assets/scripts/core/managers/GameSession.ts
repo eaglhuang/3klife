@@ -32,6 +32,7 @@ import { UCUFLogger, LogCategory } from '../utils/UCUFLogger';
 import { normalizeOfficerSnapshot, officerUnlocksOf, type OfficerUnlocks } from '../systems/OfficerSnapshot';
 import { addOfficerExp, BATTLE_MERIT_OFFICER_TASK, applyEraShiftToOfficerState, calcOfficerExpGain, initialOfficerState, normalizeOfficerState, toOfficerSnapshot, type OfficerState, type OfficerTaskResult } from '../systems/OfficerState';
 import { officerPermissionsOf, type OfficerPermissions } from '../systems/OfficerPermissions';
+import { FRESH_OPENING_OFFER_STATE, nextOpeningOffer, normalizeOpeningOfferState, resolveOpeningOffer, type OpeningOffer, type OpeningOfferOutcome, type OpeningOfferState, type OpeningOfferTable } from '../systems/OpeningOffer';
 import { activeOfficerTrial, boostedOfficerExp, effectiveOfficerState, grantOfficerTrial, normalizeOfficerTrial, type OfficerTrial, type OfficerTrialGrant } from '../systems/OfficerCommerce';
 import { canPlaceSandtableMarker, remainingSandtableMarkers } from '../systems/SandtableMarkers';
 import { buildStartingSpiritTalisman, normalizeStartingTalisman, type StartingSpiritTalisman, type TeachingSpiritInput } from '../systems/TeachingSpiritTalisman';
@@ -795,6 +796,8 @@ export class GameSession {
     /** 新玩家開場進行中的幕 id（PROG-2-1371）；開場結束為 null */
     private _postLoadHook: (() => void | Promise<void>) | null = null;
     private _openingPhase: string | null = null;
+    /** 開場商業序列的回應紀錄（OPEN-12）；存檔欄位 openingOffers */
+    private _openingOffers: OpeningOfferState = { ...FRESH_OPENING_OFFER_STATE };
     /** 已發放免費入學令的最大登入日（YYYY-MM-DD，高水位）；從未發過為 null（PROG-2-1374 修正，PM 裁定） */
     private _enrollGrantDay: string | null = null;
     // ---- 道具取得來源紀錄（ITM-05，PROG-2-1383）：與數量分開存放，隨 lifespanSaveFields 存檔 ----
@@ -2008,6 +2011,7 @@ export class GameSession {
         this._breedingBirthRecords = [];
         this._familySystemUnlockedFlag = false;
         this._openingPhase = null;
+        this._openingOffers = { ...FRESH_OPENING_OFFER_STATE };
         this._enrollGrantDay = null;
         this._itemAcquisitionLog = [];
         this._aiAdaptiveStreak = { ...EMPTY_AI_ADAPTIVE_STREAK };
@@ -2764,6 +2768,18 @@ export class GameSession {
 
     public get aiAdaptiveStreak(): AiAdaptiveStreak {
         return { ...this._aiAdaptiveStreak };
+    }
+
+    /** 現在該出的開場商品（OPEN-12）；選定主將前或教學在前景時為 null */
+    public nextOpeningOffer(table: Readonly<OpeningOfferTable>, tutorialBlocking: boolean): OpeningOffer | null {
+        return nextOpeningOffer(table, this._openingOffers, { leadSelected: this._leadGeneralId !== null, tutorialBlocking });
+    }
+
+    /** 記下玩家對開場商品的回應（OPEN-12）：只記結果，不收款也不發貨；不自動存檔 */
+    public resolveOpeningOffer(table: Readonly<OpeningOfferTable>, offerId: string, outcome: OpeningOfferOutcome): boolean {
+        const result = resolveOpeningOffer(table, this._openingOffers, offerId, outcome, this._leadGeneralId !== null);
+        if (result.ok) this._openingOffers = result.state;
+        return result.ok;
     }
 
     /** 記下目前開場幕（PROG-2-1371）；有存檔服務時自動存檔，關遊戲後才接得回來。 */
@@ -5165,8 +5181,8 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'officerTrial' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'officerTrial' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'officerTrial' | 'openingOffers' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'officerTrial' | 'openingOffers' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
@@ -5197,6 +5213,9 @@ export class GameSession {
         if (this._startingTalisman !== null) fields.startingTalisman = this.startingTalisman!;
         if (this._familySystemUnlockedFlag) fields.familySystemUnlocked = true;
         if (this._openingPhase !== null) fields.openingPhase = this._openingPhase;
+        if (this._openingOffers.declined.length > 0 || this._openingOffers.purchased.length > 0) {
+            fields.openingOffers = { declined: [...this._openingOffers.declined], purchased: [...this._openingOffers.purchased] };
+        }
         if (this._enrollGrantDay !== null) fields.enrollGrantDay = this._enrollGrantDay;
         if (this._itemAcquisitionLog.length > 0) fields.itemAcquisitionLog = this._itemAcquisitionLog.slice();
         if (this._aiAdaptiveStreak.consecutiveWins > 0 || this._aiAdaptiveStreak.consecutiveLosses > 0) fields.aiAdaptiveStreak = { ...this._aiAdaptiveStreak };
@@ -5236,6 +5255,7 @@ export class GameSession {
         this._recordSandtableUnlockReached();
         this._startingTalisman = normalizeStartingTalisman(snapshot.startingTalisman);
         this._openingPhase = normalizeOpeningPhaseId(snapshot.openingPhase);
+        this._openingOffers = normalizeOpeningOfferState(snapshot.openingOffers);
         this._enrollGrantDay = normalizeEnrollGrantDay(snapshot.enrollGrantDay);
         this._itemAcquisitionLog = normalizeAcquisitionLog(snapshot.itemAcquisitionLog);
         this._aiAdaptiveStreak = normalizeAiAdaptiveStreak(snapshot.aiAdaptiveStreak);
