@@ -32,6 +32,7 @@ import { UCUFLogger, LogCategory } from '../utils/UCUFLogger';
 import { normalizeOfficerSnapshot, officerUnlocksOf, type OfficerUnlocks } from '../systems/OfficerSnapshot';
 import { addOfficerExp, BATTLE_MERIT_OFFICER_TASK, applyEraShiftToOfficerState, calcOfficerExpGain, initialOfficerState, normalizeOfficerState, toOfficerSnapshot, type OfficerState, type OfficerTaskResult } from '../systems/OfficerState';
 import { officerPermissionsOf, type OfficerPermissions } from '../systems/OfficerPermissions';
+import { activeOfficerTrial, boostedOfficerExp, effectiveOfficerState, grantOfficerTrial, normalizeOfficerTrial, type OfficerTrial, type OfficerTrialGrant } from '../systems/OfficerCommerce';
 import { canPlaceSandtableMarker, remainingSandtableMarkers } from '../systems/SandtableMarkers';
 import { buildStartingSpiritTalisman, normalizeStartingTalisman, type StartingSpiritTalisman, type TeachingSpiritInput } from '../systems/TeachingSpiritTalisman';
 import { normalizeOpeningPhaseId } from '../systems/OpeningProgress';
@@ -763,6 +764,8 @@ export class GameSession {
     /** 女性武將來源（uid → 來源，FEM-01）；戰俘女將歸入名冊時寫入（PROG-2-0245） */
     /** 官職狀態（OFC-03）：階位、經驗與解鎖歷史；存檔為扁平欄位 officerState */
     private _officerState: OfficerState = initialOfficerState();
+    /** 高階官職試用（OFC-12）：只影響有效階位，不覆寫正式官職 */
+    private _officerTrial: OfficerTrial | null = null;
     /** 世界沙盤標記所在的領地 id（OFC-06 / PROG-2-0965）；每領地最多一個，數量上限由官職階段決定 */
     private _sandtableMarkerTerritories: readonly string[] = [];
     /** 世界沙盤解鎖歷史（HALL-08）：只增不減，天下重組後不倒退 */
@@ -2016,6 +2019,7 @@ export class GameSession {
         this._shrineOfferingDay = null;
         this._sevenDayJourney = createSevenDayJourneyState();
         this._officerState = initialOfficerState();
+        this._officerTrial = null;
         this._sandtableMarkerTerritories = [];
         this._sandtableUnlockHistory = [];
         this._startingTalisman = null;
@@ -2688,12 +2692,28 @@ export class GameSession {
 
     /** 官職權限快照（唯讀，OFC-04）：大廳、領地、沙盤與他國 AI 只經此取得權限。 */
     public get officerPermissions(): Readonly<OfficerPermissions> {
-        return officerPermissionsOf(this._officerState);
+        return officerPermissionsOf(this._effectiveOfficerState());
     }
 
     /** 目前官職解鎖（唯讀）：由官職階位推得任務難度上限、欄位數、沙盤階段、熱點數。 */
     public get officerUnlocks(): OfficerUnlocks {
-        return officerUnlocksOf(normalizeOfficerSnapshot(toOfficerSnapshot(this._officerState)));
+        return officerUnlocksOf(normalizeOfficerSnapshot(toOfficerSnapshot(this._effectiveOfficerState())));
+    }
+
+    /** 進行中的高階官職試用（OFC-12）；沒有或已到期為 null */
+    public get activeOfficerTrial(): OfficerTrial | null {
+        return activeOfficerTrial(this._officerTrial, this._clock.state.totalSeasonsElapsed);
+    }
+
+    /** 開始高階官職試用（活動呼叫，OFC-12）：到期後權限自動回到正式階位；不自動存檔 */
+    public grantOfficerTrial(tier: number, seasons: number): OfficerTrialGrant {
+        const grant = grantOfficerTrial(this._officerTrial, this._officerState.currentTier, tier, seasons, this._clock.state.totalSeasonsElapsed);
+        if (grant.ok) this._officerTrial = grant.trial;
+        return grant;
+    }
+
+    private _effectiveOfficerState(): OfficerState {
+        return effectiveOfficerState(this._officerState, this._officerTrial, this._clock.state.totalSeasonsElapsed);
     }
 
     /** 世界沙盤已放置標記數（唯讀，OFC-06）。 */
@@ -2785,7 +2805,8 @@ export class GameSession {
 
     /** 官職階段達到時寫入解鎖歷史；只增不減，重複呼叫不會產生重複階段。 */
     private _recordSandtableUnlockReached(): void {
-        const official = this.officerUnlocks.sandtableStage;
+        // 只看正式階位：試用階位不能留下永久的沙盤解鎖紀錄
+        const official = officerUnlocksOf(normalizeOfficerSnapshot(toOfficerSnapshot(this._officerState))).sandtableStage;
         if (!official) return;
         this._sandtableUnlockHistory = recordSandtableUnlock(this._sandtableUnlockHistory, sandtableStageIdOf(official));
     }
@@ -3423,8 +3444,9 @@ export class GameSession {
      * 官職經驗入帳（OFC-03）：依任務結果算經驗（F-1）並晉升，回傳這次新解鎖的階位（由低到高）。
      * 只升不降；天下大亂不會動到官職（F-3）。
      */
-    public gainOfficerExp(task: OfficerTaskResult): number[] {
-        const result = addOfficerExp(this._officerState, calcOfficerExpGain(task));
+    public gainOfficerExp(task: OfficerTaskResult, epochMs: number = Date.now()): number[] {
+        const monthlyCardActive = monthlyCardDaysLeft(this._monthlyCard, epochMs) > 0;
+        const result = addOfficerExp(this._officerState, boostedOfficerExp(calcOfficerExpGain(task), monthlyCardActive));
         this._officerState = result.state;
         this._recordSandtableUnlockReached();
         return result.promotedTiers;
@@ -5143,8 +5165,8 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'officerTrial' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'officerTrial' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
@@ -5158,6 +5180,8 @@ export class GameSession {
         if (this._loginStreak.lastLoginDay !== null) fields.loginStreak = this.loginStreak;
         if (this._dailySubsidy) fields.dailySubsidy = this.dailySubsidy!;
         if (this._monthlyCard) fields.monthlyCard = { ...this._monthlyCard };
+        const trial = this.activeOfficerTrial;
+        if (trial) fields.officerTrial = trial;
         if (this._playerLogs.length > 0) fields.playerLogs = this.playerLogs;
         if (this._dailyNews.lastLoginMs !== null) fields.dailyNews = this.dailyNews;
         if (this._sevenDayJourney.firstLoginDay !== null) fields.sevenDayJourney = this.sevenDayJourney;
@@ -5375,6 +5399,7 @@ export class GameSession {
         this._npcMemory = normalizeNpcMemory(snapshot.npcMemory, this._npcPlayerId) ?? createNpcMemory(this._npcPlayerId);
         this._legacyCount = normalizeLegacyCount(snapshot.legacyCount);
         this._officerState = normalizeOfficerState(snapshot.officerState);
+        this._officerTrial = normalizeOfficerTrial(snapshot.officerTrial);
         this._sandtableMarkerTerritories = normalizeSandtableMarkerTerritories(snapshot.sandtableMarkerTerritories);
         this.restoreLifespanState(snapshot);
         this._gachaMentorJournal = normalizeGachaMentorJournal(snapshot.gachaMentorJournal);

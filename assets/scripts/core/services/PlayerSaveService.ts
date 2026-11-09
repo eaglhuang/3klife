@@ -74,6 +74,7 @@ import type { JournalEntry } from '../systems/JournalLog';
 import type { FarewellLetter } from '../systems/FarewellLetterInbox';
 import type { LoginStreakState } from '../systems/LoginStreak';
 import { normalizeSevenDayJourney, type SevenDayJourneyState } from '../systems/SevenDayJourney';
+import { normalizeOfficerTrial, type OfficerTrial } from '../systems/OfficerCommerce';
 import { normalizeMonthlyCard, type MonthlyCardState } from '../systems/MonthlyCard';
 
 /** 每日補貼紀錄：上次領取日（YYYY-MM-DD，UTC+8）與該日各項補量 */
@@ -200,6 +201,8 @@ export interface PlayerSaveSnapshot {
     dailySubsidy?: DailySubsidyRecord;
     /** 月卡（Player_Economy.Monthly_Card，PROG-2-1359）：開通過才寫入；版號不升 */
     monthlyCard?: MonthlyCardState;
+    /** 高階官職試用（OFC-12）；不覆寫 officerState */
+    officerTrial?: OfficerTrial;
     /** 三國日報素材：前 24h 玩家行為紀錄（PROG-2-1170）；只在有紀錄時寫入，舊檔沒有時讀回空陣列；版號不升 */
     playerLogs?: PlayerLogEntry[];
     /** 三國日報：當日生成的日報與已讀狀態（PROG-2-1170）；舊檔沒有時為從未生成；版號不升 */
@@ -661,6 +664,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.sevenDayJourney !== undefined ? { sevenDayJourney: normalizeSevenDayJourney(snapshot.sevenDayJourney) } : {}),
         ...(normalizeDailySubsidyRecord(snapshot.dailySubsidy) ? { dailySubsidy: normalizeDailySubsidyRecord(snapshot.dailySubsidy)! } : {}),
         ...(normalizeMonthlyCard(snapshot.monthlyCard) ? { monthlyCard: normalizeMonthlyCard(snapshot.monthlyCard)! } : {}),
+        ...(normalizeOfficerTrial(snapshot.officerTrial) ? { officerTrial: normalizeOfficerTrial(snapshot.officerTrial)! } : {}),
         ...(snapshot.playerLogs !== undefined ? { playerLogs: normalizePlayerLogs(snapshot.playerLogs) } : {}),
         ...(snapshot.dailyNews !== undefined ? { dailyNews: normalizeDailyNewsState(snapshot.dailyNews) } : {}),
         ...(snapshot.morningReport !== undefined ? { morningReport: normalizeMorningReportState(snapshot.morningReport) } : {}),
