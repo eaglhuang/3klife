@@ -120,6 +120,33 @@
                 "styleSlot": "sortie.label.name"
               },
               {
+                "type": "button",
+                "name": "BtnToggleSceneGambit",
+                "id": "btnToggleSceneGambit",
+                "widget": {
+                  "top": 0,
+                  "right": 8
+                },
+                "height": 40,
+                "width": 460,
+                "skinSlot": "sortie.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnToggleSceneGambitLabel",
+                    "id": "sceneGambitToggleLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 36,
+                    "text": "",
+                    "styleSlot": "sortie.label.button"
+                  }
+                ]
+              },
+              {
                 "type": "panel",
                 "name": "StrategistColumn",
                 "widget": {
@@ -404,7 +431,7 @@
                 "id": "sortiePredict",
                 "widget": {
                   "top": 472,
-                  "left": 8,
+                  "left": 368,
                   "right": 8
                 },
                 "height": 30,

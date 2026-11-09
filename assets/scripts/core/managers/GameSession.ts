@@ -3557,13 +3557,24 @@ export class GameSession {
         return this._pendingSceneGambit ? { ...this._pendingSceneGambit } : null;
     }
 
+    /** 出征編制的「任務戰法加成」勾選（裁決 11/09 第 12 題）；沒有待發動時回傳 false */
+    public async setPendingSceneGambitArmed(armed: boolean): Promise<boolean> {
+        const pending = this._pendingSceneGambit;
+        if (!pending) return false;
+        if (armed) delete pending.disarmed;
+        else pending.disarmed = true;
+        if (this._autoSave && this._save) await this.save();
+        return true;
+    }
+
     /**
      * 開戰前判定場景戰法（SCN-04）：未達門檻保留到下一場，擲過骰就用掉。
+     * 取消勾選時不判定、不用掉，視同本場沒有。
      * 發動者是本場主將；情報用玩家目前的情報值。沒有待發動時回傳 null。
      */
     public async resolvePendingSceneGambit(generalId: string, roll: () => number = Math.random): Promise<SceneGambitOutcome | null> {
         const pending = this._pendingSceneGambit;
-        if (!pending) return null;
+        if (!pending || pending.disarmed) return null;
         const general = this._roster.getAll().find((g) => g.id === generalId);
         const outcome = resolveSceneGambit(pending.tactic, general?.int ?? general?.stats?.int ?? 0, this.intel, roll());
         if (outcome.kind === 'blocked') return outcome;

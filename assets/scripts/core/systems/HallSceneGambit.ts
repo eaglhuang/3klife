@@ -15,6 +15,8 @@ import { sceneGambitChanceFor, sceneGambitGateOf } from './SceneGambitRules';
 export interface PendingSceneGambit {
     taskId: string;
     tactic: BattleTactic;
+    /** 玩家在出征編制取消勾選：開戰不判定、保留到下一場。接到新任務會換成新的一筆，自動恢復勾選 */
+    disarmed?: boolean;
 }
 
 export type SceneGambitOutcome =
@@ -35,7 +37,10 @@ export function pendingSceneGambitOfTask(task: { Task_ID: string; Scene_Gambit?:
 export function normalizePendingSceneGambit(raw: unknown): PendingSceneGambit | null {
     const value = raw as Partial<PendingSceneGambit> | null | undefined;
     if (!value || typeof value.taskId !== 'string' || value.taskId.length === 0) return null;
-    return isSceneGambitTactic(value.tactic) ? { taskId: value.taskId, tactic: value.tactic } : null;
+    if (!isSceneGambitTactic(value.tactic)) return null;
+    const pending: PendingSceneGambit = { taskId: value.taskId, tactic: value.tactic };
+    if (value.disarmed === true) pending.disarmed = true;
+    return pending;
 }
 
 /** roll 為 [0,1) 亂數，小於成功率即發動 */
