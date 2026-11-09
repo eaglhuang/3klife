@@ -379,15 +379,15 @@ export class GeneralDetailStatsChild extends ChildPanelBase {
         const color = this._hexToColor(colorHex);
         color.a = Math.max(0, Math.min(255, Math.round(alpha)));
 
-        const sprite = node.getComponent(Sprite);
-        if (sprite) {
-            sprite.color = color;
-            return;
-        }
-
         const solidBackground = node.getComponent(SolidBackground);
         if (solidBackground) {
             solidBackground.color = color;
+            return;
+        }
+
+        const sprite = node.getComponent(Sprite);
+        if (sprite) {
+            sprite.color = color;
         }
     }
 

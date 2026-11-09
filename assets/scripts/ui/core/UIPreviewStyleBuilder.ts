@@ -161,7 +161,7 @@ export class UIPreviewStyleBuilder {
         if (slot && (slot.kind === 'color-rect' || (slot as any).kind === 'color')) {
             const resolvedColor = this.skinResolver.resolveColor((slot as any).color);
             const alpha = resolveOpacity((slot as any).alpha ?? (slot as any).opacity);
-            // alpha / opacity 直接寫入 SolidBackground 的 color.a，避免 UIOpacity cascade 影響子節點（Labels 等）
+            // alpha / opacity 寫入 SolidBackground 的 color.a：元件會烘進貼圖，不會壓暗子節點（Labels 等）
             // Unity 對照：Image.color = new Color(r,g,b,a) 只影響自身 renderer，不 cascade
             if (alpha !== null) {
                 resolvedColor.a = alpha;

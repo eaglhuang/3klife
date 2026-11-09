@@ -1,3 +1,4 @@
+import { setSpriteFillColor } from '../components/SolidBackground';
 import { Color, UITransform } from 'cc';
 import type { GeneralDetailRarityTier } from '../../core/models/GeneralUnit';
 import { UITemplateBinder } from './UITemplateBinder';
@@ -38,7 +39,7 @@ export function applyUIPreviewBinderState(binder: UITemplateBinder, state: UIPre
             if (sprite) {
                 const color = toColor(colorValue);
                 if (color) {
-                    sprite.color = color;
+                    setSpriteFillColor(sprite, color);
                 }
             }
         }

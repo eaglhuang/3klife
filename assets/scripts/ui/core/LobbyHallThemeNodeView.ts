@@ -7,6 +7,7 @@
  * SpriteFrame 載入函式可注入，預設走 resources.load；同一節點連續換圖時只採用最後一次的結果。
  * Unity 對照：像一個持有 Transform 根節點的 ThemeBinder，用 tag 找 Image 後換 sprite 與 color。
  */
+import { setSpriteFillColor } from '../components/SolidBackground';
 import { Color, Node, resources, Sprite, SpriteFrame, UIOpacity } from 'cc';
 import type { HallTint } from '../../core/systems/HallTheme';
 import type { LobbyHallThemeView } from './LobbyHallThemeApplier';
@@ -60,7 +61,7 @@ export class LobbyHallThemeNodeView implements LobbyHallThemeView {
         const alpha = Math.round(Math.min(1, Math.max(0, tint.alpha)) * 255);
         const sprite = node.getComponent(Sprite);
         if (sprite) {
-            sprite.color = new Color(rgb[0], rgb[1], rgb[2], alpha);
+            setSpriteFillColor(sprite, new Color(rgb[0], rgb[1], rgb[2], alpha));
             return;
         }
         // 沒有 Sprite 的容器（皮膚由子節點繪製）只能調整整體透明度

@@ -120,17 +120,16 @@ export class GradientBackground extends Component {
     }
 
     public setTintColor(color?: Color | null): void {
+        const alphaChanged = (color ? color.a : 255) !== this._tintColor.a;
         this._tintColor = color
             ? new Color(color.r, color.g, color.b, color.a)
             : new Color(255, 255, 255, 255);
-        if (this._sprite) {
-            this._sprite.color = new Color(
-                this._tintColor.r,
-                this._tintColor.g,
-                this._tintColor.b,
-                this._tintColor.a,
-            );
+        if (!this._sprite) return;
+        if (alphaChanged) {
+            this._redraw();
+            return;
         }
+        this._sprite.color = new Color(this._tintColor.r, this._tintColor.g, this._tintColor.b, 255);
     }
 
     private _resolveFiniteNumber(value: unknown, fallback: number): number {
@@ -183,6 +182,7 @@ export class GradientBackground extends Component {
         const textureWidth = aspect >= 1 ? maxTextureSide : Math.max(2, Math.round(maxTextureSide * aspect));
         const textureHeight = aspect >= 1 ? Math.max(2, Math.round(maxTextureSide / aspect)) : maxTextureSide;
         const data = new Uint8Array(textureWidth * textureHeight * 4);
+        const tintAlpha = this._tintColor.a / 255;
 
         const angleRad = (this._angle * Math.PI) / 180;
         const dirX = Math.sin(angleRad);
@@ -215,7 +215,8 @@ export class GradientBackground extends Component {
                 data[index] = color.r;
                 data[index + 1] = color.g;
                 data[index + 2] = color.b;
-                data[index + 3] = color.a;
+                // 透明度烘進像素：寫進 sprite.color 的話 Cocos 會乘給子節點，文字一起變暗
+                data[index + 3] = Math.round(color.a * tintAlpha);
             }
         }
 
@@ -237,12 +238,7 @@ export class GradientBackground extends Component {
         sprite.sizeMode = Sprite.SizeMode.CUSTOM;
         sprite.type = Sprite.Type.SIMPLE;
         sprite.spriteFrame = frame;
-        sprite.color = new Color(
-            this._tintColor.r,
-            this._tintColor.g,
-            this._tintColor.b,
-            this._tintColor.a,
-        );
+        sprite.color = new Color(this._tintColor.r, this._tintColor.g, this._tintColor.b, 255);
     }
 
     private _sampleRadialT(normalizedX: number, normalizedY: number): number {
