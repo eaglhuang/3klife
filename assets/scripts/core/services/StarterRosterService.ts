@@ -9,6 +9,8 @@ export interface StarterRosterOptions {
     coreGeneralId?: StarterGeneralId;
     /** 開局紅顏（OpeningBeauty 抽出）：排在六位名將之後入名冊，讓第一次結緣有母方。 */
     beautyGeneralId?: string;
+    /** 宿命轉蛋抽到的整包武將；沒給時沿用六位初始名將。必須包含核心主將 */
+    rosterIds?: readonly string[];
 }
 
 function copyValue<T>(value: T): T {
@@ -25,7 +27,8 @@ function copyValue<T>(value: T): T {
 export function buildStarterRoster(generals: readonly GeneralConfig[], options: StarterRosterOptions = {}): GeneralConfig[] {
     const coreId = options.coreGeneralId ?? STARTER_CORE_GENERAL_ID;
     if (!STARTER_GENERAL_IDS.some(id => id === coreId)) throw new Error('[StarterRoster] 核心主將不在六位初始名將內');
-    const ids: string[] = [...STARTER_GENERAL_IDS];
+    const ids: string[] = [...(options.rosterIds ?? STARTER_GENERAL_IDS)];
+    if (!ids.includes(coreId)) throw new Error('[StarterRoster] 核心主將不在這次的名冊內');
     if (options.beautyGeneralId && !ids.includes(options.beautyGeneralId)) ids.push(options.beautyGeneralId);
     const roster = ids.map(id => {
         const matches = generals.filter(general => general.id === id);

@@ -11,10 +11,10 @@ import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStora
 import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
 import { STARTER_GENERAL_IDS } from '../assets/scripts/core/services/StarterRosterService';
 import {
-    confirmDestinyGacha, createDestinyGachaState, optionsFromGachaConfig, resetDestinyGacha, selectDestinyGacha,
+    confirmDestinyGacha, createDestinyGachaState, resetDestinyGacha, selectDestinyGacha,
 } from '../assets/scripts/core/systems/DestinyGacha';
 import {
-    DESTINY_POOL_IDS, destinyOptionsFromConfig, rollDestinyPool, startNewGameFromDestiny,
+    DESTINY_POOL_IDS, destinyFillerIds, destinyOptionsFromConfig, isDestinyStar, rollDestinyPool, startNewGameFromDestiny,
 } from '../assets/scripts/core/systems/DestinyPool';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -39,67 +39,102 @@ function newSession(): GameSession {
     return session;
 }
 
+function seeded(seed: number): () => number {
+    let x = seed;
+    return () => { x = (x * 1664525 + 1013904223) % 4294967296; return x / 4294967296; };
+}
+
 export function createDestinyPoolSuite(): TestSuite {
-    const suite = new TestSuite('DestinyPool (宿命轉蛋六人池與接新局)');
+    const suite = new TestSuite('DestinyPool (宿命轉蛋新手武將池與接新局)');
 
-    suite.test('宿命池就是六位初始名將；抽數封頂在池子大小（設定十連也只抽 6）', () => {
-        assert.equals(STARTER_GENERAL_IDS.join(','), DESTINY_POOL_IDS.join(','));
-        const config = heroPoolConfig();
-        assert.equals(10, config.pickCount);
-        const options = destinyOptionsFromConfig(config);
-        assert.equals(6, options.pickCount);
-        assert.equals(config.firstPickOnly, options.firstPickOnly);
-        assert.equals(config.resetEnabled, options.resetEnabled);
-    });
-
-    suite.test('直接套 hero-pool 設定會被拒（20 人池、十連不重複需 ≥10 人），封頂後的六人池抽得出來且不重複', () => {
-        const raw = optionsFromGachaConfig(heroPoolConfig());
-        const rejected = rollDestinyPool(createDestinyGachaState(), raw, () => 0.3);
-        assert.isFalse(rejected.ok);
-        assert.equals('pool-too-small', rejected.reason!);
-        const options = destinyOptionsFromConfig(heroPoolConfig());
-        const result = rollDestinyPool(createDestinyGachaState(), options, () => 0.3);
-        assert.isTrue(result.ok, '六人池封頂後應能抽');
-        assert.equals(6, result.state.rolled.length);
-        assert.equals(6, new Set(result.state.rolled).size);
-        assert.equals([...DESTINY_POOL_IDS].sort().join(','), [...result.state.rolled].sort().join(','));
-    });
-
-    suite.test('洗牌→選定→確認鎖定→開新局：鎖誰誰就是核心主將（六位逐一驗）', async () => {
-        const options = destinyOptionsFromConfig(heroPoolConfig());
-        for (const id of DESTINY_POOL_IDS) {
-            let state = rollDestinyPool(createDestinyGachaState(), options, () => 0.5).state;
-            state = resetDestinyGacha(state, options).state;
-            state = rollDestinyPool(state, options, () => 0.1).state;
-            state = selectDestinyGacha(state, id, options).state;
-            state = confirmDestinyGacha(state).state;
-            const session = newSession();
-            const core = await startNewGameFromDestiny(session, 20261015, realGenerals(), state);
-            assert.equals(id, core);
-            assert.equals(id, session.leadGeneralId);
-            assert.equals(6, session.roster.length);
+    suite.test('一般武將只有低稀有度男性，不含六位名將', () => {
+        const generals = realGenerals();
+        const fillers = destinyFillerIds(generals);
+        assert.isTrue(fillers.length >= 9, '要補得滿九格');
+        for (const id of fillers) {
+            const g = generals.find((x) => x.id === id)!;
+            assert.isTrue(g.rarityTier === 'common' || g.rarityTier === 'rare', `${id} 稀有度過高`);
+            assert.isTrue(g.gender !== '女', `${id} 屬於紅顏池`);
+            assert.isFalse(isDestinyStar(id));
         }
     });
 
-    suite.test('尚未鎖定（只選定未確認／只抽未選）不能開新局，名冊不被動到', async () => {
+    suite.test('一輪十連不重複，名將至少一位、其餘是一般武將', () => {
+        const generals = realGenerals();
+        const fillers = new Set(destinyFillerIds(generals));
         const options = destinyOptionsFromConfig(heroPoolConfig());
-        const rolled = rollDestinyPool(createDestinyGachaState(), options, () => 0.2).state;
-        // 真實設定 confirmRequired=false 會在選擇時自動鎖定，這裡要「已選未鎖」狀態所以強制要求確認
+        assert.equals(10, options.pickCount);
+        const random = seeded(7);
+        const counts = new Set<number>();
+        for (let i = 0; i < 300; i++) {
+            const { ok, state } = rollDestinyPool(createDestinyGachaState(), options, generals, random);
+            assert.isTrue(ok);
+            assert.equals(10, new Set(state.rolled).size);
+            const stars = state.rolled.filter(isDestinyStar);
+            assert.isTrue(stars.length >= 1);
+            counts.add(stars.length);
+            for (const id of state.rolled) assert.isTrue(isDestinyStar(id) || fillers.has(id), id);
+        }
+        assert.isTrue(counts.size > 1, '名將人數要有差別，重抽才有意義');
+    });
+
+    suite.test('運氣再好也只有六位名將，其餘四格仍是一般武將', () => {
+        const generals = realGenerals();
+        const { state } = rollDestinyPool(createDestinyGachaState(), destinyOptionsFromConfig(heroPoolConfig()), generals, () => 0);
+        assert.equals(DESTINY_POOL_IDS.length, state.rolled.filter(isDestinyStar).length);
+        assert.equals(10, state.rolled.length);
+    });
+
+    suite.test('一般武將不夠補滿就拒絕', () => {
+        const result = rollDestinyPool(createDestinyGachaState(), destinyOptionsFromConfig(heroPoolConfig()), [], () => 0.5);
+        assert.isFalse(result.ok);
+        assert.equals('pool-too-small', result.reason!);
+    });
+
+    suite.test('確認後整包入名冊，選中的名將是核心主將；重置後是新的一輪', async () => {
+        const generals = realGenerals();
+        const options = destinyOptionsFromConfig(heroPoolConfig());
+        const random = seeded(11);
+        let state = rollDestinyPool(createDestinyGachaState(), options, generals, random).state;
+        state = resetDestinyGacha(state, options).state;
+        assert.equals(0, state.rolled.length);
+        state = rollDestinyPool(state, options, generals, random).state;
+        const core = state.rolled.find(isDestinyStar)!;
+        state = selectDestinyGacha(state, core, { ...options, confirmRequired: true }).state;
+        state = confirmDestinyGacha(state).state;
+        const session = newSession();
+        assert.equals(core, await startNewGameFromDestiny(session, 20261109, generals, state));
+        assert.equals(core, session.leadGeneralId);
+        assert.equals([...state.rolled].sort().join(','), session.roster.map((g) => g.id).sort().join(','));
+    });
+
+    suite.test('每位一般武將的資料都開得了局', async () => {
+        const generals = realGenerals();
+        const fillers = destinyFillerIds(generals);
+        const session = newSession();
+        await session.startNewGameWithStarters(1, generals, { coreGeneralId: 'zhang-fei', rosterIds: ['zhang-fei', ...fillers] });
+        assert.equals(fillers.length + 1, session.roster.length);
+    });
+
+    suite.test('尚未鎖定不能開新局，名冊不被動到', async () => {
+        const generals = realGenerals();
+        const options = destinyOptionsFromConfig(heroPoolConfig());
+        const rolled = rollDestinyPool(createDestinyGachaState(), options, generals, () => 0.2).state;
         const selected = selectDestinyGacha(rolled, rolled.rolled[0], { ...options, confirmRequired: true }).state;
         for (const state of [createDestinyGachaState(), rolled, selected]) {
             const session = newSession();
             let failed = false;
-            try { await startNewGameFromDestiny(session, 1, realGenerals(), state); } catch { failed = true; }
+            try { await startNewGameFromDestiny(session, 1, generals, state); } catch { failed = true; }
             assert.isTrue(failed);
             assert.equals(0, session.roster.length);
         }
     });
 
-    suite.test('鎖定的不在宿命池（例如舊的 20 人池抽到曹操）→ 拒絕', async () => {
+    suite.test('一般武將不能當核心', async () => {
         const session = newSession();
         let failed = false;
         try {
-            await startNewGameFromDestiny(session, 1, realGenerals(), { phase: 'locked', rolled: [], selected: 'cao-cao', locked: 'cao-cao', resets: 0 });
+            await startNewGameFromDestiny(session, 1, realGenerals(), { phase: 'locked', rolled: ['cao-cao'], selected: 'cao-cao', locked: 'cao-cao', resets: 0 });
         } catch { failed = true; }
         assert.isTrue(failed);
         assert.equals(0, session.roster.length);

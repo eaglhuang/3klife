@@ -45,7 +45,9 @@ function fixture(hasPool = true, isNewPlayer = true, loadedSession?: GameSession
         if (!binding) throw new Error(`Missing binding ${id}`);
         binding.handler();
     };
-    return { panels, ports, session, hosts, events, click };
+    // 只有宿命名將能選：逐格點，一般武將的格子不會有反應
+    const clickStar = () => { for (let i = 0; i < 10; i++) click('DestinyOpeningHost', `btnFrame${i}`); };
+    return { panels, ports, session, hosts, events, click, clickStar };
 }
 
 const flush = () => new Promise<void>(resolve => setImmediate(resolve));
@@ -63,11 +65,11 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         // 開不起來時回 false，大廳據此照舊顯示（PROG-2-1620）
         assert.isFalse(f.panels.openDestiny());
     });
-    suite.test('保留 host/screen 與六列按鈕契約；開啟與重置刷新畫面', async () => {
+    suite.test('保留 host/screen 與十格按鈕契約；開啟與重置刷新畫面', async () => {
         const f = fixture();
         await f.panels.mountDestiny();
         const host = f.hosts.get('DestinyOpeningHost')!;
-        assert.equals(9, host.bindings.length);
+        assert.equals(13, host.bindings.length);
         assert.equals('mount:DestinyOpeningHost:destiny-opening-screen', f.events[0]);
         assert.isFalse(host.node.active);
         assert.isTrue(f.panels.openDestiny());
@@ -109,7 +111,7 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         f.panels.openDestiny();
         f.click('DestinyOpeningHost', 'btnDestinyRoll');
         await flush();
-        f.click('DestinyOpeningHost', 'btnFrame0');
+        f.clickStar();
         f.click('DestinyOpeningHost', 'btnDestinyConfirm');
         await flush();
         assert.isTrue(f.hosts.get('DestinyOpeningHost')!.node.active);
@@ -119,7 +121,7 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         await flush();
         assert.isFalse(f.hosts.get('DestinyOpeningHost')!.node.active);
         assert.equals('hud,destiny-locked', f.events.filter(e => e === 'hud' || e === 'destiny-locked').join(','));
-        assert.equals(7, f.session.roster.length);
+        assert.equals(11, f.session.roster.length);
         const tutorial = f.hosts.get('OnboardingTutorialHost')!;
         assert.isTrue(tutorial.node.active);
         assert.equals('1 / 3', tutorial.texts.tutorialStep);
@@ -138,7 +140,7 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         f.panels.openDestiny();
         f.click('DestinyOpeningHost', 'btnDestinyRoll');
         await flush();
-        f.click('DestinyOpeningHost', 'btnFrame0');
+        f.clickStar();
         f.click('DestinyOpeningHost', 'btnDestinyConfirm');
         await flush();
         assert.isTrue(f.hosts.get('DestinyOpeningHost')!.node.active);
@@ -146,7 +148,7 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         assert.isTrue(f.hosts.get('DestinyOpeningHost')!.texts.destinyMessage.includes('開局失敗'));
         assert.equals(0, f.events.filter(e => e.startsWith('beauty:')).length);
         fail = false;
-        f.click('DestinyOpeningHost', 'btnFrame0');
+        f.clickStar();
         f.click('DestinyOpeningHost', 'btnDestinyConfirm');
         await flush();
         assert.isFalse(f.hosts.get('DestinyOpeningHost')!.node.active);
@@ -169,7 +171,7 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         f.panels.openDestiny();
         f.click('DestinyOpeningHost', 'btnDestinyRoll');
         await flush();
-        f.click('DestinyOpeningHost', 'btnFrame0');
+        f.clickStar();
         f.click('DestinyOpeningHost', 'btnDestinyConfirm');
         await flush();
         assert.equals(2, calls);
@@ -180,13 +182,13 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         assert.equals(0, f.events.filter(e => e === 'hud' || e === 'destiny-locked' || e.startsWith('beauty:')).length);
         await f.panels.nextTutorial();
         assert.equals(0, f.session.onboarding.nextIndex);
-        f.click('DestinyOpeningHost', 'btnFrame0');
+        f.clickStar();
         f.click('DestinyOpeningHost', 'btnDestinyConfirm');
         await flush();
         assert.equals(4, calls);
         assert.equals(3, persisted);
         assert.equals(1, f.events.filter(e => e.startsWith('beauty:')).length);
-        assert.equals(7, f.session.roster.length);
+        assert.equals(11, f.session.roster.length);
         assert.isFalse(f.hosts.get('DestinyOpeningHost')!.node.active);
         assert.isTrue(f.hosts.get('OnboardingTutorialHost')!.node.active);
         assert.equals('1 / 3', f.hosts.get('OnboardingTutorialHost')!.texts.tutorialStep);
@@ -199,7 +201,7 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
             original.panels.openDestiny();
             original.click('DestinyOpeningHost', 'btnDestinyRoll');
             await flush();
-            original.click('DestinyOpeningHost', 'btnFrame0');
+            original.clickStar();
             original.click('DestinyOpeningHost', 'btnDestinyConfirm');
             await flush();
             if (progress !== 'missing') {
@@ -218,7 +220,7 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
             // Match LobbyScene's load-result decision; do not mock load or ready.
             const loaded = await restored.load();
             assert.isTrue(loaded);
-            assert.equals(6, restored.roster.length);
+            assert.equals(10, restored.roster.length);
             assert.equals(original.session.leadGeneralId, restored.leadGeneralId);
             const expected = progress === 'missing' ? 0 : progress;
             assert.equals(expected, restored.onboarding.nextIndex);
@@ -244,10 +246,10 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         f.panels.openDestiny();
         f.click('DestinyOpeningHost', 'btnDestinyRoll');
         await flush();
-        f.click('DestinyOpeningHost', 'btnFrame0');
+        f.clickStar();
         f.click('DestinyOpeningHost', 'btnDestinyConfirm');
         await flush();
-        assert.equals(7, f.session.roster.length);
+        assert.equals(11, f.session.roster.length);
         assert.equals(1, f.events.filter(e => e.startsWith('beauty:')).length);
         assert.isTrue(f.events.findIndex(e => e.startsWith('beauty:')) < f.events.indexOf('hud'));
         assert.isTrue(f.events.indexOf('hud') < f.events.indexOf('destiny-locked'));
@@ -267,11 +269,11 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         f.panels.openDestiny();
         f.click('DestinyOpeningHost', 'btnDestinyRoll');
         await flush();
-        f.click('DestinyOpeningHost', 'btnFrame0');
+        f.clickStar();
         f.click('DestinyOpeningHost', 'btnDestinyConfirm');
         await flush();
         assert.equals(2, calls);
-        assert.equals(7, f.session.roster.length);
+        assert.equals(11, f.session.roster.length);
         assert.isTrue(f.hosts.get('DestinyOpeningHost')!.node.active);
         assert.isFalse(f.hosts.get('OnboardingTutorialHost')!.node.active);
         assert.equals(0, f.events.filter(e => e.startsWith('beauty:') || e === 'hud' || e === 'destiny-locked').length);
@@ -285,13 +287,13 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         assert.equals(1, f.events.filter(e => e === 'destiny-locked').length);
     });
     for (const withBeauty of [false, true]) {
-        suite.test(`real JSON/load backup recovery retains ${withBeauty ? 7 : 6} roster and old-player tutorial gate`, async () => {
+        suite.test(`real JSON/load backup recovery retains ${withBeauty ? 11 : 10} roster and old-player tutorial gate`, async () => {
             const original = fixture(true, true, undefined, withBeauty);
             await original.panels.mountDestiny();
             original.panels.openDestiny();
             original.click('DestinyOpeningHost', 'btnDestinyRoll');
             await flush();
-            original.click('DestinyOpeningHost', 'btnFrame0');
+            original.clickStar();
             original.click('DestinyOpeningHost', 'btnDestinyConfirm');
             await flush();
             const snapshot = await original.session.save();
@@ -308,7 +310,7 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
             const loaded = await restored.load();
             assert.isTrue(loaded);
             assert.isTrue(service.lastLoadRecoveredFromBackup());
-            assert.equals(withBeauty ? 7 : 6, restored.roster.length);
+            assert.equals(withBeauty ? 11 : 10, restored.roster.length);
             assert.equals(original.session.leadGeneralId, restored.leadGeneralId);
             assert.equals(0, restored.onboarding.nextIndex);
             const f = fixture(true, !loaded, restored);

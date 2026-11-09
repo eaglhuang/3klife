@@ -77,10 +77,10 @@
             "name": "DestinyMessage",
             "id": "destinyMessage",
             "widget": {
-              "top": 750,
+              "top": 776,
               "left": 32
             },
-            "height": 40,
+            "height": 34,
             "text": "",
             "styleSlot": "do.label.meta",
             "width": 1300
@@ -103,11 +103,11 @@
             "name": "BtnFrame0",
             "id": "btnFrame0",
             "widget": {
-              "top": 125,
-              "left": 34
+              "top": 118,
+              "left": 36
             },
-            "width": 200,
-            "height": 470,
+            "width": 240,
+            "height": 300,
             "skinSlot": "pg.frame.bg",
             "children": [
               {
@@ -120,15 +120,15 @@
                   "left": 0,
                   "right": 0
                 },
-                "width": 200,
-                "height": 470,
+                "width": 240,
+                "height": 300,
                 "children": [
                   {
                     "type": "image",
                     "name": "Frame0Portrait",
                     "id": "frame0Portrait",
-                    "width": 200,
-                    "height": 470,
+                    "width": 240,
+                    "height": 300,
                     "skinSlot": "pg.portrait"
                   }
                 ]
@@ -142,7 +142,7 @@
                   "left": 0,
                   "right": 0
                 },
-                "height": 110,
+                "height": 84,
                 "skinSlot": "pg.plate"
               },
               {
@@ -150,11 +150,11 @@
                 "name": "Frame0Name",
                 "id": "frame0Name",
                 "widget": {
-                  "bottom": 44,
+                  "bottom": 30,
                   "left": 8,
                   "right": 8
                 },
-                "height": 50,
+                "height": 46,
                 "text": "",
                 "styleSlot": "pg.label.name"
               },
@@ -163,11 +163,11 @@
                 "name": "Frame0Sub",
                 "id": "frame0Sub",
                 "widget": {
-                  "bottom": 12,
+                  "bottom": 4,
                   "left": 8,
                   "right": 8
                 },
-                "height": 30,
+                "height": 28,
                 "text": "",
                 "styleSlot": "pg.label.sub"
               },
@@ -181,35 +181,22 @@
                   "left": 0,
                   "right": 0
                 },
-                "width": 200,
-                "height": 470,
+                "width": 240,
+                "height": 300,
                 "skinSlot": "pg.sel"
               }
             ]
-          },
-          {
-            "type": "label",
-            "name": "Frame0Quote",
-            "id": "frame0Quote",
-            "widget": {
-              "top": 607,
-              "left": 34
-            },
-            "width": 200,
-            "height": 112,
-            "text": "",
-            "styleSlot": "do.label.quote"
           },
           {
             "type": "button",
             "name": "BtnFrame1",
             "id": "btnFrame1",
             "widget": {
-              "top": 125,
-              "left": 258
+              "top": 118,
+              "left": 308
             },
-            "width": 200,
-            "height": 470,
+            "width": 240,
+            "height": 300,
             "skinSlot": "pg.frame.bg",
             "children": [
               {
@@ -222,15 +209,15 @@
                   "left": 0,
                   "right": 0
                 },
-                "width": 200,
-                "height": 470,
+                "width": 240,
+                "height": 300,
                 "children": [
                   {
                     "type": "image",
                     "name": "Frame1Portrait",
                     "id": "frame1Portrait",
-                    "width": 200,
-                    "height": 470,
+                    "width": 240,
+                    "height": 300,
                     "skinSlot": "pg.portrait"
                   }
                 ]
@@ -244,7 +231,7 @@
                   "left": 0,
                   "right": 0
                 },
-                "height": 110,
+                "height": 84,
                 "skinSlot": "pg.plate"
               },
               {
@@ -252,11 +239,11 @@
                 "name": "Frame1Name",
                 "id": "frame1Name",
                 "widget": {
-                  "bottom": 44,
+                  "bottom": 30,
                   "left": 8,
                   "right": 8
                 },
-                "height": 50,
+                "height": 46,
                 "text": "",
                 "styleSlot": "pg.label.name"
               },
@@ -265,11 +252,11 @@
                 "name": "Frame1Sub",
                 "id": "frame1Sub",
                 "widget": {
-                  "bottom": 12,
+                  "bottom": 4,
                   "left": 8,
                   "right": 8
                 },
-                "height": 30,
+                "height": 28,
                 "text": "",
                 "styleSlot": "pg.label.sub"
               },
@@ -283,35 +270,22 @@
                   "left": 0,
                   "right": 0
                 },
-                "width": 200,
-                "height": 470,
+                "width": 240,
+                "height": 300,
                 "skinSlot": "pg.sel"
               }
             ]
-          },
-          {
-            "type": "label",
-            "name": "Frame1Quote",
-            "id": "frame1Quote",
-            "widget": {
-              "top": 607,
-              "left": 258
-            },
-            "width": 200,
-            "height": 112,
-            "text": "",
-            "styleSlot": "do.label.quote"
           },
           {
             "type": "button",
             "name": "BtnFrame2",
             "id": "btnFrame2",
             "widget": {
-              "top": 125,
-              "left": 482
+              "top": 118,
+              "left": 580
             },
-            "width": 200,
-            "height": 470,
+            "width": 240,
+            "height": 300,
             "skinSlot": "pg.frame.bg",
             "children": [
               {
@@ -324,15 +298,15 @@
                   "left": 0,
                   "right": 0
                 },
-                "width": 200,
-                "height": 470,
+                "width": 240,
+                "height": 300,
                 "children": [
                   {
                     "type": "image",
                     "name": "Frame2Portrait",
                     "id": "frame2Portrait",
-                    "width": 200,
-                    "height": 470,
+                    "width": 240,
+                    "height": 300,
                     "skinSlot": "pg.portrait"
                   }
                 ]
@@ -346,7 +320,7 @@
                   "left": 0,
                   "right": 0
                 },
-                "height": 110,
+                "height": 84,
                 "skinSlot": "pg.plate"
               },
               {
@@ -354,11 +328,11 @@
                 "name": "Frame2Name",
                 "id": "frame2Name",
                 "widget": {
-                  "bottom": 44,
+                  "bottom": 30,
                   "left": 8,
                   "right": 8
                 },
-                "height": 50,
+                "height": 46,
                 "text": "",
                 "styleSlot": "pg.label.name"
               },
@@ -367,11 +341,11 @@
                 "name": "Frame2Sub",
                 "id": "frame2Sub",
                 "widget": {
-                  "bottom": 12,
+                  "bottom": 4,
                   "left": 8,
                   "right": 8
                 },
-                "height": 30,
+                "height": 28,
                 "text": "",
                 "styleSlot": "pg.label.sub"
               },
@@ -385,35 +359,22 @@
                   "left": 0,
                   "right": 0
                 },
-                "width": 200,
-                "height": 470,
+                "width": 240,
+                "height": 300,
                 "skinSlot": "pg.sel"
               }
             ]
-          },
-          {
-            "type": "label",
-            "name": "Frame2Quote",
-            "id": "frame2Quote",
-            "widget": {
-              "top": 607,
-              "left": 482
-            },
-            "width": 200,
-            "height": 112,
-            "text": "",
-            "styleSlot": "do.label.quote"
           },
           {
             "type": "button",
             "name": "BtnFrame3",
             "id": "btnFrame3",
             "widget": {
-              "top": 125,
-              "left": 706
+              "top": 118,
+              "left": 852
             },
-            "width": 200,
-            "height": 470,
+            "width": 240,
+            "height": 300,
             "skinSlot": "pg.frame.bg",
             "children": [
               {
@@ -426,15 +387,15 @@
                   "left": 0,
                   "right": 0
                 },
-                "width": 200,
-                "height": 470,
+                "width": 240,
+                "height": 300,
                 "children": [
                   {
                     "type": "image",
                     "name": "Frame3Portrait",
                     "id": "frame3Portrait",
-                    "width": 200,
-                    "height": 470,
+                    "width": 240,
+                    "height": 300,
                     "skinSlot": "pg.portrait"
                   }
                 ]
@@ -448,7 +409,7 @@
                   "left": 0,
                   "right": 0
                 },
-                "height": 110,
+                "height": 84,
                 "skinSlot": "pg.plate"
               },
               {
@@ -456,11 +417,11 @@
                 "name": "Frame3Name",
                 "id": "frame3Name",
                 "widget": {
-                  "bottom": 44,
+                  "bottom": 30,
                   "left": 8,
                   "right": 8
                 },
-                "height": 50,
+                "height": 46,
                 "text": "",
                 "styleSlot": "pg.label.name"
               },
@@ -469,11 +430,11 @@
                 "name": "Frame3Sub",
                 "id": "frame3Sub",
                 "widget": {
-                  "bottom": 12,
+                  "bottom": 4,
                   "left": 8,
                   "right": 8
                 },
-                "height": 30,
+                "height": 28,
                 "text": "",
                 "styleSlot": "pg.label.sub"
               },
@@ -487,35 +448,22 @@
                   "left": 0,
                   "right": 0
                 },
-                "width": 200,
-                "height": 470,
+                "width": 240,
+                "height": 300,
                 "skinSlot": "pg.sel"
               }
             ]
-          },
-          {
-            "type": "label",
-            "name": "Frame3Quote",
-            "id": "frame3Quote",
-            "widget": {
-              "top": 607,
-              "left": 706
-            },
-            "width": 200,
-            "height": 112,
-            "text": "",
-            "styleSlot": "do.label.quote"
           },
           {
             "type": "button",
             "name": "BtnFrame4",
             "id": "btnFrame4",
             "widget": {
-              "top": 125,
-              "left": 930
+              "top": 118,
+              "left": 1124
             },
-            "width": 200,
-            "height": 470,
+            "width": 240,
+            "height": 300,
             "skinSlot": "pg.frame.bg",
             "children": [
               {
@@ -528,15 +476,15 @@
                   "left": 0,
                   "right": 0
                 },
-                "width": 200,
-                "height": 470,
+                "width": 240,
+                "height": 300,
                 "children": [
                   {
                     "type": "image",
                     "name": "Frame4Portrait",
                     "id": "frame4Portrait",
-                    "width": 200,
-                    "height": 470,
+                    "width": 240,
+                    "height": 300,
                     "skinSlot": "pg.portrait"
                   }
                 ]
@@ -550,7 +498,7 @@
                   "left": 0,
                   "right": 0
                 },
-                "height": 110,
+                "height": 84,
                 "skinSlot": "pg.plate"
               },
               {
@@ -558,11 +506,11 @@
                 "name": "Frame4Name",
                 "id": "frame4Name",
                 "widget": {
-                  "bottom": 44,
+                  "bottom": 30,
                   "left": 8,
                   "right": 8
                 },
-                "height": 50,
+                "height": 46,
                 "text": "",
                 "styleSlot": "pg.label.name"
               },
@@ -571,11 +519,11 @@
                 "name": "Frame4Sub",
                 "id": "frame4Sub",
                 "widget": {
-                  "bottom": 12,
+                  "bottom": 4,
                   "left": 8,
                   "right": 8
                 },
-                "height": 30,
+                "height": 28,
                 "text": "",
                 "styleSlot": "pg.label.sub"
               },
@@ -589,35 +537,22 @@
                   "left": 0,
                   "right": 0
                 },
-                "width": 200,
-                "height": 470,
+                "width": 240,
+                "height": 300,
                 "skinSlot": "pg.sel"
               }
             ]
-          },
-          {
-            "type": "label",
-            "name": "Frame4Quote",
-            "id": "frame4Quote",
-            "widget": {
-              "top": 607,
-              "left": 930
-            },
-            "width": 200,
-            "height": 112,
-            "text": "",
-            "styleSlot": "do.label.quote"
           },
           {
             "type": "button",
             "name": "BtnFrame5",
             "id": "btnFrame5",
             "widget": {
-              "top": 125,
-              "left": 1154
+              "top": 430,
+              "left": 36
             },
-            "width": 200,
-            "height": 470,
+            "width": 240,
+            "height": 300,
             "skinSlot": "pg.frame.bg",
             "children": [
               {
@@ -630,15 +565,15 @@
                   "left": 0,
                   "right": 0
                 },
-                "width": 200,
-                "height": 470,
+                "width": 240,
+                "height": 300,
                 "children": [
                   {
                     "type": "image",
                     "name": "Frame5Portrait",
                     "id": "frame5Portrait",
-                    "width": 200,
-                    "height": 470,
+                    "width": 240,
+                    "height": 300,
                     "skinSlot": "pg.portrait"
                   }
                 ]
@@ -652,7 +587,7 @@
                   "left": 0,
                   "right": 0
                 },
-                "height": 110,
+                "height": 84,
                 "skinSlot": "pg.plate"
               },
               {
@@ -660,11 +595,11 @@
                 "name": "Frame5Name",
                 "id": "frame5Name",
                 "widget": {
-                  "bottom": 44,
+                  "bottom": 30,
                   "left": 8,
                   "right": 8
                 },
-                "height": 50,
+                "height": 46,
                 "text": "",
                 "styleSlot": "pg.label.name"
               },
@@ -673,11 +608,11 @@
                 "name": "Frame5Sub",
                 "id": "frame5Sub",
                 "widget": {
-                  "bottom": 12,
+                  "bottom": 4,
                   "left": 8,
                   "right": 8
                 },
-                "height": 30,
+                "height": 28,
                 "text": "",
                 "styleSlot": "pg.label.sub"
               },
@@ -691,22 +626,378 @@
                   "left": 0,
                   "right": 0
                 },
-                "width": 200,
-                "height": 470,
+                "width": 240,
+                "height": 300,
+                "skinSlot": "pg.sel"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnFrame6",
+            "id": "btnFrame6",
+            "widget": {
+              "top": 430,
+              "left": 308
+            },
+            "width": 240,
+            "height": 300,
+            "skinSlot": "pg.frame.bg",
+            "children": [
+              {
+                "type": "container",
+                "name": "Frame6Mask",
+                "id": "frame6Mask",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 240,
+                "height": 300,
+                "children": [
+                  {
+                    "type": "image",
+                    "name": "Frame6Portrait",
+                    "id": "frame6Portrait",
+                    "width": 240,
+                    "height": 300,
+                    "skinSlot": "pg.portrait"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame6Plate",
+                "id": "frame6Plate",
+                "widget": {
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 84,
+                "skinSlot": "pg.plate"
+              },
+              {
+                "type": "label",
+                "name": "Frame6Name",
+                "id": "frame6Name",
+                "widget": {
+                  "bottom": 30,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 46,
+                "text": "",
+                "styleSlot": "pg.label.name"
+              },
+              {
+                "type": "label",
+                "name": "Frame6Sub",
+                "id": "frame6Sub",
+                "widget": {
+                  "bottom": 4,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "",
+                "styleSlot": "pg.label.sub"
+              },
+              {
+                "type": "panel",
+                "name": "Frame6Sel",
+                "id": "frame6Sel",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 240,
+                "height": 300,
+                "skinSlot": "pg.sel"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnFrame7",
+            "id": "btnFrame7",
+            "widget": {
+              "top": 430,
+              "left": 580
+            },
+            "width": 240,
+            "height": 300,
+            "skinSlot": "pg.frame.bg",
+            "children": [
+              {
+                "type": "container",
+                "name": "Frame7Mask",
+                "id": "frame7Mask",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 240,
+                "height": 300,
+                "children": [
+                  {
+                    "type": "image",
+                    "name": "Frame7Portrait",
+                    "id": "frame7Portrait",
+                    "width": 240,
+                    "height": 300,
+                    "skinSlot": "pg.portrait"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame7Plate",
+                "id": "frame7Plate",
+                "widget": {
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 84,
+                "skinSlot": "pg.plate"
+              },
+              {
+                "type": "label",
+                "name": "Frame7Name",
+                "id": "frame7Name",
+                "widget": {
+                  "bottom": 30,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 46,
+                "text": "",
+                "styleSlot": "pg.label.name"
+              },
+              {
+                "type": "label",
+                "name": "Frame7Sub",
+                "id": "frame7Sub",
+                "widget": {
+                  "bottom": 4,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "",
+                "styleSlot": "pg.label.sub"
+              },
+              {
+                "type": "panel",
+                "name": "Frame7Sel",
+                "id": "frame7Sel",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 240,
+                "height": 300,
+                "skinSlot": "pg.sel"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnFrame8",
+            "id": "btnFrame8",
+            "widget": {
+              "top": 430,
+              "left": 852
+            },
+            "width": 240,
+            "height": 300,
+            "skinSlot": "pg.frame.bg",
+            "children": [
+              {
+                "type": "container",
+                "name": "Frame8Mask",
+                "id": "frame8Mask",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 240,
+                "height": 300,
+                "children": [
+                  {
+                    "type": "image",
+                    "name": "Frame8Portrait",
+                    "id": "frame8Portrait",
+                    "width": 240,
+                    "height": 300,
+                    "skinSlot": "pg.portrait"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame8Plate",
+                "id": "frame8Plate",
+                "widget": {
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 84,
+                "skinSlot": "pg.plate"
+              },
+              {
+                "type": "label",
+                "name": "Frame8Name",
+                "id": "frame8Name",
+                "widget": {
+                  "bottom": 30,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 46,
+                "text": "",
+                "styleSlot": "pg.label.name"
+              },
+              {
+                "type": "label",
+                "name": "Frame8Sub",
+                "id": "frame8Sub",
+                "widget": {
+                  "bottom": 4,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "",
+                "styleSlot": "pg.label.sub"
+              },
+              {
+                "type": "panel",
+                "name": "Frame8Sel",
+                "id": "frame8Sel",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 240,
+                "height": 300,
+                "skinSlot": "pg.sel"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnFrame9",
+            "id": "btnFrame9",
+            "widget": {
+              "top": 430,
+              "left": 1124
+            },
+            "width": 240,
+            "height": 300,
+            "skinSlot": "pg.frame.bg",
+            "children": [
+              {
+                "type": "container",
+                "name": "Frame9Mask",
+                "id": "frame9Mask",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 240,
+                "height": 300,
+                "children": [
+                  {
+                    "type": "image",
+                    "name": "Frame9Portrait",
+                    "id": "frame9Portrait",
+                    "width": 240,
+                    "height": 300,
+                    "skinSlot": "pg.portrait"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame9Plate",
+                "id": "frame9Plate",
+                "widget": {
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 84,
+                "skinSlot": "pg.plate"
+              },
+              {
+                "type": "label",
+                "name": "Frame9Name",
+                "id": "frame9Name",
+                "widget": {
+                  "bottom": 30,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 46,
+                "text": "",
+                "styleSlot": "pg.label.name"
+              },
+              {
+                "type": "label",
+                "name": "Frame9Sub",
+                "id": "frame9Sub",
+                "widget": {
+                  "bottom": 4,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "",
+                "styleSlot": "pg.label.sub"
+              },
+              {
+                "type": "panel",
+                "name": "Frame9Sel",
+                "id": "frame9Sel",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 240,
+                "height": 300,
                 "skinSlot": "pg.sel"
               }
             ]
           },
           {
             "type": "label",
-            "name": "Frame5Quote",
-            "id": "frame5Quote",
+            "name": "DestinyQuote",
+            "id": "destinyQuote",
             "widget": {
-              "top": 607,
-              "left": 1154
+              "top": 736,
+              "left": 50
             },
-            "width": 200,
-            "height": 112,
+            "width": 1300,
+            "height": 40,
             "text": "",
             "styleSlot": "do.label.quote"
           },

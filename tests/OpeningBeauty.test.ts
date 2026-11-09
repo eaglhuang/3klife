@@ -4,6 +4,7 @@
  * 六位初始名將全是男性，開局結緣沒有母方；規格（新手開場第四幕、§8）安排紅顏池作血統定錨。
  * 這裡驗：紅顏池支援卡 id 轉武將 id、只收女性武將、開新局後紅顏在名冊且能當結緣母方。
  */
+import { isDestinyStar } from '../assets/scripts/core/systems/DestinyPool';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { assert, TestSuite } from './TestRunner';
@@ -66,7 +67,7 @@ export function createOpeningBeautySuite(): TestSuite {
             onStarted: () => undefined,
         });
         controller.roll();
-        assert.isTrue(await controller.select(0));
+        assert.isTrue(await controller.select(controller.state.rolled.findIndex(isDestinyStar)));
         assert.isTrue(await controller.confirm());
         assert.equals('zhen-ji', controller.beautyId);
         const beauty = session.roster.find(g => g.id === 'zhen-ji');
