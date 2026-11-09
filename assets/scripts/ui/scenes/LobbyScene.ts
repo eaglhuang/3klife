@@ -2159,17 +2159,10 @@ export class LobbyScene extends Component {
         return result.ok ? template.name : null;
     }
 
-    /** 太守府（GOV-07）：隱藏掛載，入口待 PM 指定，對外提供 openGovernorHall()。 */
+    /** 太守府（GOV-07）：隱藏掛載，由城市大廳開啟；數值來自 GameSession.governorSnapshot()。 */
     private async _mountGovernorHall(): Promise<void> {
-        // 人口、民心與產出的正式來源尚未接線（領地資料來源另卡），暫以零值顯示
         this._govHall = new GovernorHallController({
-            snapshot: () => ({
-                population: 0,
-                morale: 0,
-                gold: { base: 0, populationBonus: 0, policyModifier: 0 },
-                food: { base: 0, populationBonus: 0, policyModifier: 0 },
-                cityTroops: { current: 0, cap: 0, recruitPerTurn: 0 },
-            }),
+            snapshot: () => services().session.governorSnapshot(),
             territory: () => this._governorTerritoryInfo(),
         });
         this._govHallHost = await this._mountPreviewScreenHost('GovernorHallHost', 'governor-hall-screen', [

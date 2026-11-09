@@ -222,6 +222,7 @@ import { type CampaignStageDef, enabledCampaignStages, getCampaignStage, isCampa
 import { phaseFactorColors, phaseForLevel, type UnlockPhase } from '../systems/UnlockPhase';
 import { protectedAfterLoss, CELLAR_PROTECTION } from '../systems/CellarProtection';
 import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
+import { buildGovernorSnapshot, type GovernorSnapshot } from '../systems/GovernorHallView';
 import { buildEraResetEvent } from '../systems/EraReset';
 import { buildQuarterlyBattleReportRows, type QuarterlyBattleReportRow } from '../systems/RetireReviewCopy';
 import { withLifeImprints } from '../systems/LifeImprint';
@@ -2678,6 +2679,11 @@ export class GameSession {
 
     public get military(): MilitaryReserve {
         return { ...this._military };
+    }
+
+    /** 太守府的治理快照：季節倍率取目前季節，與季結入帳一致 */
+    public governorSnapshot(): GovernorSnapshot {
+        return buildGovernorSnapshot(this._military, seasonModifiersOf(this._clock.state.currentSeason).foodMultiplier);
     }
 
     /** 最近一場出征結算被地窖保護保住的糧草（PROG-2-1341）；沒觸發為 0，不存檔 */
