@@ -1,0 +1,841 @@
+{
+  "id": "relation-graph-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "RelationGraphRoot",
+    "id": "relationGraphRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "RelationGraphCard",
+        "id": "relationGraphCard",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "skinSlot": "mp.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "RelationTitle",
+            "id": "relationTitle",
+            "widget": {
+              "top": 22,
+              "left": 32
+            },
+            "height": 40,
+            "text": "關係圖鑑",
+            "styleSlot": "mp.label.title",
+            "width": 220
+          },
+          {
+            "type": "label",
+            "name": "RelationHint",
+            "id": "relationHint",
+            "widget": {
+              "top": 30,
+              "left": 260
+            },
+            "height": 26,
+            "text": "",
+            "styleSlot": "mp.label.meta",
+            "width": 800
+          },
+          {
+            "type": "button",
+            "name": "BtnClose",
+            "id": "btnClose",
+            "widget": {
+              "top": 16,
+              "right": 48
+            },
+            "width": 110,
+            "height": 48,
+            "skinSlot": "mp.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnCloseLabel",
+                "id": "btnCloseLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "關閉",
+                "styleSlot": "mp.label.button"
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "name": "RelationStage",
+            "id": "relationStage",
+            "widget": {
+              "top": 72,
+              "bottom": 16,
+              "left": 16,
+              "right": 16
+            },
+            "children": [
+              {
+                "type": "panel",
+                "name": "RelationCenter",
+                "id": "relationCenter",
+                "widget": {
+                  "hCenter": true,
+                  "vCenter": true
+                },
+                "width": 80,
+                "height": 80,
+                "skinSlot": "mp.center.bg",
+                "children": [
+                  {
+                    "type": "image",
+                    "name": "RelationCenterAvatar",
+                    "id": "relationCenterAvatar",
+                    "widget": {
+                      "top": 4,
+                      "bottom": 4,
+                      "left": 4,
+                      "right": 4
+                    },
+                    "width": 72,
+                    "height": 72
+                  },
+                  {
+                    "type": "label",
+                    "name": "RelationCenterName",
+                    "id": "relationCenterName",
+                    "widget": {
+                      "bottom": -36,
+                      "left": -60,
+                      "right": -60
+                    },
+                    "height": 34,
+                    "text": "",
+                    "styleSlot": "mp.label.centerName",
+                    "horizontalAlign": "CENTER"
+                  }
+                ]
+              },
+              {
+                "type": "container",
+                "name": "RelationRing",
+                "id": "relationRing",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "children": [
+                  {
+                    "type": "button",
+                    "name": "RelationNode0",
+                    "id": "relationNode0",
+                    "width": 56,
+                    "height": 56,
+                    "skinSlot": "mp.node.bg",
+                    "children": [
+                      {
+                        "type": "image",
+                        "name": "RelationNodeAvatar0",
+                        "id": "relationNodeAvatar0",
+                        "widget": {
+                          "top": 2,
+                          "bottom": 2,
+                          "left": 2,
+                          "right": 2
+                        },
+                        "width": 52,
+                        "height": 52
+                      },
+                      {
+                        "type": "label",
+                        "name": "RelationNodeName0",
+                        "id": "relationNodeName0",
+                        "widget": {
+                          "bottom": -28,
+                          "left": -24,
+                          "right": -24
+                        },
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "mp.label.node",
+                        "horizontalAlign": "CENTER"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "RelationNode1",
+                    "id": "relationNode1",
+                    "width": 56,
+                    "height": 56,
+                    "skinSlot": "mp.node.bg",
+                    "children": [
+                      {
+                        "type": "image",
+                        "name": "RelationNodeAvatar1",
+                        "id": "relationNodeAvatar1",
+                        "widget": {
+                          "top": 2,
+                          "bottom": 2,
+                          "left": 2,
+                          "right": 2
+                        },
+                        "width": 52,
+                        "height": 52
+                      },
+                      {
+                        "type": "label",
+                        "name": "RelationNodeName1",
+                        "id": "relationNodeName1",
+                        "widget": {
+                          "bottom": -28,
+                          "left": -24,
+                          "right": -24
+                        },
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "mp.label.node",
+                        "horizontalAlign": "CENTER"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "RelationNode2",
+                    "id": "relationNode2",
+                    "width": 56,
+                    "height": 56,
+                    "skinSlot": "mp.node.bg",
+                    "children": [
+                      {
+                        "type": "image",
+                        "name": "RelationNodeAvatar2",
+                        "id": "relationNodeAvatar2",
+                        "widget": {
+                          "top": 2,
+                          "bottom": 2,
+                          "left": 2,
+                          "right": 2
+                        },
+                        "width": 52,
+                        "height": 52
+                      },
+                      {
+                        "type": "label",
+                        "name": "RelationNodeName2",
+                        "id": "relationNodeName2",
+                        "widget": {
+                          "bottom": -28,
+                          "left": -24,
+                          "right": -24
+                        },
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "mp.label.node",
+                        "horizontalAlign": "CENTER"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "RelationNode3",
+                    "id": "relationNode3",
+                    "width": 56,
+                    "height": 56,
+                    "skinSlot": "mp.node.bg",
+                    "children": [
+                      {
+                        "type": "image",
+                        "name": "RelationNodeAvatar3",
+                        "id": "relationNodeAvatar3",
+                        "widget": {
+                          "top": 2,
+                          "bottom": 2,
+                          "left": 2,
+                          "right": 2
+                        },
+                        "width": 52,
+                        "height": 52
+                      },
+                      {
+                        "type": "label",
+                        "name": "RelationNodeName3",
+                        "id": "relationNodeName3",
+                        "widget": {
+                          "bottom": -28,
+                          "left": -24,
+                          "right": -24
+                        },
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "mp.label.node",
+                        "horizontalAlign": "CENTER"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "RelationNode4",
+                    "id": "relationNode4",
+                    "width": 56,
+                    "height": 56,
+                    "skinSlot": "mp.node.bg",
+                    "children": [
+                      {
+                        "type": "image",
+                        "name": "RelationNodeAvatar4",
+                        "id": "relationNodeAvatar4",
+                        "widget": {
+                          "top": 2,
+                          "bottom": 2,
+                          "left": 2,
+                          "right": 2
+                        },
+                        "width": 52,
+                        "height": 52
+                      },
+                      {
+                        "type": "label",
+                        "name": "RelationNodeName4",
+                        "id": "relationNodeName4",
+                        "widget": {
+                          "bottom": -28,
+                          "left": -24,
+                          "right": -24
+                        },
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "mp.label.node",
+                        "horizontalAlign": "CENTER"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "RelationNode5",
+                    "id": "relationNode5",
+                    "width": 56,
+                    "height": 56,
+                    "skinSlot": "mp.node.bg",
+                    "children": [
+                      {
+                        "type": "image",
+                        "name": "RelationNodeAvatar5",
+                        "id": "relationNodeAvatar5",
+                        "widget": {
+                          "top": 2,
+                          "bottom": 2,
+                          "left": 2,
+                          "right": 2
+                        },
+                        "width": 52,
+                        "height": 52
+                      },
+                      {
+                        "type": "label",
+                        "name": "RelationNodeName5",
+                        "id": "relationNodeName5",
+                        "widget": {
+                          "bottom": -28,
+                          "left": -24,
+                          "right": -24
+                        },
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "mp.label.node",
+                        "horizontalAlign": "CENTER"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "RelationNode6",
+                    "id": "relationNode6",
+                    "width": 56,
+                    "height": 56,
+                    "skinSlot": "mp.node.bg",
+                    "children": [
+                      {
+                        "type": "image",
+                        "name": "RelationNodeAvatar6",
+                        "id": "relationNodeAvatar6",
+                        "widget": {
+                          "top": 2,
+                          "bottom": 2,
+                          "left": 2,
+                          "right": 2
+                        },
+                        "width": 52,
+                        "height": 52
+                      },
+                      {
+                        "type": "label",
+                        "name": "RelationNodeName6",
+                        "id": "relationNodeName6",
+                        "widget": {
+                          "bottom": -28,
+                          "left": -24,
+                          "right": -24
+                        },
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "mp.label.node",
+                        "horizontalAlign": "CENTER"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "RelationNode7",
+                    "id": "relationNode7",
+                    "width": 56,
+                    "height": 56,
+                    "skinSlot": "mp.node.bg",
+                    "children": [
+                      {
+                        "type": "image",
+                        "name": "RelationNodeAvatar7",
+                        "id": "relationNodeAvatar7",
+                        "widget": {
+                          "top": 2,
+                          "bottom": 2,
+                          "left": 2,
+                          "right": 2
+                        },
+                        "width": 52,
+                        "height": 52
+                      },
+                      {
+                        "type": "label",
+                        "name": "RelationNodeName7",
+                        "id": "relationNodeName7",
+                        "widget": {
+                          "bottom": -28,
+                          "left": -24,
+                          "right": -24
+                        },
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "mp.label.node",
+                        "horizontalAlign": "CENTER"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "RelationNode8",
+                    "id": "relationNode8",
+                    "width": 56,
+                    "height": 56,
+                    "skinSlot": "mp.node.bg",
+                    "children": [
+                      {
+                        "type": "image",
+                        "name": "RelationNodeAvatar8",
+                        "id": "relationNodeAvatar8",
+                        "widget": {
+                          "top": 2,
+                          "bottom": 2,
+                          "left": 2,
+                          "right": 2
+                        },
+                        "width": 52,
+                        "height": 52
+                      },
+                      {
+                        "type": "label",
+                        "name": "RelationNodeName8",
+                        "id": "relationNodeName8",
+                        "widget": {
+                          "bottom": -28,
+                          "left": -24,
+                          "right": -24
+                        },
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "mp.label.node",
+                        "horizontalAlign": "CENTER"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "RelationNode9",
+                    "id": "relationNode9",
+                    "width": 56,
+                    "height": 56,
+                    "skinSlot": "mp.node.bg",
+                    "children": [
+                      {
+                        "type": "image",
+                        "name": "RelationNodeAvatar9",
+                        "id": "relationNodeAvatar9",
+                        "widget": {
+                          "top": 2,
+                          "bottom": 2,
+                          "left": 2,
+                          "right": 2
+                        },
+                        "width": 52,
+                        "height": 52
+                      },
+                      {
+                        "type": "label",
+                        "name": "RelationNodeName9",
+                        "id": "relationNodeName9",
+                        "widget": {
+                          "bottom": -28,
+                          "left": -24,
+                          "right": -24
+                        },
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "mp.label.node",
+                        "horizontalAlign": "CENTER"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "RelationNode10",
+                    "id": "relationNode10",
+                    "width": 56,
+                    "height": 56,
+                    "skinSlot": "mp.node.bg",
+                    "children": [
+                      {
+                        "type": "image",
+                        "name": "RelationNodeAvatar10",
+                        "id": "relationNodeAvatar10",
+                        "widget": {
+                          "top": 2,
+                          "bottom": 2,
+                          "left": 2,
+                          "right": 2
+                        },
+                        "width": 52,
+                        "height": 52
+                      },
+                      {
+                        "type": "label",
+                        "name": "RelationNodeName10",
+                        "id": "relationNodeName10",
+                        "widget": {
+                          "bottom": -28,
+                          "left": -24,
+                          "right": -24
+                        },
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "mp.label.node",
+                        "horizontalAlign": "CENTER"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "RelationNode11",
+                    "id": "relationNode11",
+                    "width": 56,
+                    "height": 56,
+                    "skinSlot": "mp.node.bg",
+                    "children": [
+                      {
+                        "type": "image",
+                        "name": "RelationNodeAvatar11",
+                        "id": "relationNodeAvatar11",
+                        "widget": {
+                          "top": 2,
+                          "bottom": 2,
+                          "left": 2,
+                          "right": 2
+                        },
+                        "width": 52,
+                        "height": 52
+                      },
+                      {
+                        "type": "label",
+                        "name": "RelationNodeName11",
+                        "id": "relationNodeName11",
+                        "widget": {
+                          "bottom": -28,
+                          "left": -24,
+                          "right": -24
+                        },
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "mp.label.node",
+                        "horizontalAlign": "CENTER"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "RelationNode12",
+                    "id": "relationNode12",
+                    "width": 56,
+                    "height": 56,
+                    "skinSlot": "mp.node.bg",
+                    "children": [
+                      {
+                        "type": "image",
+                        "name": "RelationNodeAvatar12",
+                        "id": "relationNodeAvatar12",
+                        "widget": {
+                          "top": 2,
+                          "bottom": 2,
+                          "left": 2,
+                          "right": 2
+                        },
+                        "width": 52,
+                        "height": 52
+                      },
+                      {
+                        "type": "label",
+                        "name": "RelationNodeName12",
+                        "id": "relationNodeName12",
+                        "widget": {
+                          "bottom": -28,
+                          "left": -24,
+                          "right": -24
+                        },
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "mp.label.node",
+                        "horizontalAlign": "CENTER"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "RelationNode13",
+                    "id": "relationNode13",
+                    "width": 56,
+                    "height": 56,
+                    "skinSlot": "mp.node.bg",
+                    "children": [
+                      {
+                        "type": "image",
+                        "name": "RelationNodeAvatar13",
+                        "id": "relationNodeAvatar13",
+                        "widget": {
+                          "top": 2,
+                          "bottom": 2,
+                          "left": 2,
+                          "right": 2
+                        },
+                        "width": 52,
+                        "height": 52
+                      },
+                      {
+                        "type": "label",
+                        "name": "RelationNodeName13",
+                        "id": "relationNodeName13",
+                        "widget": {
+                          "bottom": -28,
+                          "left": -24,
+                          "right": -24
+                        },
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "mp.label.node",
+                        "horizontalAlign": "CENTER"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "RelationNode14",
+                    "id": "relationNode14",
+                    "width": 56,
+                    "height": 56,
+                    "skinSlot": "mp.node.bg",
+                    "children": [
+                      {
+                        "type": "image",
+                        "name": "RelationNodeAvatar14",
+                        "id": "relationNodeAvatar14",
+                        "widget": {
+                          "top": 2,
+                          "bottom": 2,
+                          "left": 2,
+                          "right": 2
+                        },
+                        "width": 52,
+                        "height": 52
+                      },
+                      {
+                        "type": "label",
+                        "name": "RelationNodeName14",
+                        "id": "relationNodeName14",
+                        "widget": {
+                          "bottom": -28,
+                          "left": -24,
+                          "right": -24
+                        },
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "mp.label.node",
+                        "horizontalAlign": "CENTER"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "RelationNode15",
+                    "id": "relationNode15",
+                    "width": 56,
+                    "height": 56,
+                    "skinSlot": "mp.node.bg",
+                    "children": [
+                      {
+                        "type": "image",
+                        "name": "RelationNodeAvatar15",
+                        "id": "relationNodeAvatar15",
+                        "widget": {
+                          "top": 2,
+                          "bottom": 2,
+                          "left": 2,
+                          "right": 2
+                        },
+                        "width": 52,
+                        "height": 52
+                      },
+                      {
+                        "type": "label",
+                        "name": "RelationNodeName15",
+                        "id": "relationNodeName15",
+                        "widget": {
+                          "bottom": -28,
+                          "left": -24,
+                          "right": -24
+                        },
+                        "height": 26,
+                        "text": "",
+                        "styleSlot": "mp.label.node",
+                        "horizontalAlign": "CENTER"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "RelationEmpty",
+                "id": "relationEmpty",
+                "widget": {
+                  "hCenter": true,
+                  "bottom": 280
+                },
+                "height": 36,
+                "text": "",
+                "styleSlot": "mp.label.bodyCenter",
+                "width": 600,
+                "horizontalAlign": "CENTER"
+              },
+              {
+                "type": "label",
+                "name": "RelationOverflow",
+                "id": "relationOverflow",
+                "widget": {
+                  "bottom": 8,
+                  "right": 16
+                },
+                "height": 26,
+                "text": "",
+                "styleSlot": "mp.label.meta",
+                "width": 260,
+                "horizontalAlign": "RIGHT"
+              },
+              {
+                "type": "panel",
+                "name": "RelationPeek",
+                "id": "relationPeek",
+                "width": 220,
+                "height": 140,
+                "skinSlot": "mp.peek.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "PeekName",
+                    "id": "peekName",
+                    "widget": {
+                      "top": 8,
+                      "left": 12,
+                      "right": 12
+                    },
+                    "height": 34,
+                    "text": "",
+                    "styleSlot": "mp.label.name"
+                  },
+                  {
+                    "type": "label",
+                    "name": "PeekRelation",
+                    "id": "peekRelation",
+                    "widget": {
+                      "top": 46,
+                      "left": 12,
+                      "right": 12
+                    },
+                    "height": 26,
+                    "text": "",
+                    "styleSlot": "mp.label.meta"
+                  },
+                  {
+                    "type": "label",
+                    "name": "PeekIntimacy",
+                    "id": "peekIntimacy",
+                    "widget": {
+                      "top": 74,
+                      "left": 12,
+                      "right": 12
+                    },
+                    "height": 26,
+                    "text": "",
+                    "styleSlot": "mp.label.meta"
+                  },
+                  {
+                    "type": "label",
+                    "name": "PeekStatus",
+                    "id": "peekStatus",
+                    "widget": {
+                      "top": 102,
+                      "left": 12,
+                      "right": 12
+                    },
+                    "height": 26,
+                    "text": "",
+                    "styleSlot": "mp.label.meta"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

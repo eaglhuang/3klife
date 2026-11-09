@@ -31,7 +31,7 @@ export function createLobbyCityHubControllerSuite(): TestSuite {
 
     suite.test('五類收納涵蓋大廳所有功能入口，不重複', () => {
         const actions = LOBBY_CATEGORIES.flatMap(c => c.items.map(i => i.id));
-        assert.equals(21, actions.length, '含幕府大廳（UI-2-0149）、祠堂（PROG-2-1958）');
+        assert.equals(22, actions.length, '含幕府大廳（UI-2-0149）、祠堂（PROG-2-1958）、關係圖鑑（PROG-2-2123）');
         assert.equals(actions.length, new Set(actions).size);
         assert.equals(5, LOBBY_SUB_SLOTS);
     });
