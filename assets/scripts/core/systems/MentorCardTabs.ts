@@ -1,5 +1,6 @@
 // @spec-source → 教官系統（支援卡）.md (doc_spec_0027)；PROG-2-1429 依建檔紀錄補標出處
 import type { TrainingMentor } from './NurtureSystem';
+import { inspiredTacticName } from './InspiredTacticMap';
 
 /**
  * MentorCardTabs — 教官卡詳情三頁籤與星等鎖頭（MENT-13，純邏輯，不依賴 cc）
@@ -116,6 +117,9 @@ export function buildMentorCardTabView(card: MentorCardData, tab: MentorCardTab 
 /** 版面固定列數：與 mentor-card-detail-main.json 的 row_0 … row_5 對應 */
 export const MENTOR_CARD_LAYOUT_ROWS = 6;
 
+/** 頁籤沒有任何列時顯示在第一列，避免玩家以為畫面壞掉 */
+export const MENTOR_CARD_EMPTY_TEXT = '暫無資料';
+
 /**
  * 把 view 轉成 cc 端 applier 要的 texts / actives（節點 id 與 mentor-card-detail-main.json 對齊）。
  * 只做字串與顯示旗標對應，不做規則判斷。
@@ -136,19 +140,38 @@ export function toMentorCardLayoutState(view: MentorCardTabView, title: string):
         texts[`rowLock_${i}`] = row.lockText ?? '';
         actives[`rowLock_${i}`] = row.locked;
     }
+    if (view.rows.length === 0) {
+        actives.row_0 = true;
+        actives.rowLock_0 = false;
+        texts.rowLabel_0 = MENTOR_CARD_EMPTY_TEXT;
+        texts.rowLock_0 = '';
+    }
     return { texts, actives };
 }
 
 /**
- * 培育中的教官 → 詳情頁資料（入口用）。
- * 目前培育 session 只帶教官的數值與專長，事件與小插曲資料尚未進 session，
- * 所以這裡只給支援效果一列；事件 / 小插曲待接入教官卡資料後補上。
+ * 教官 → 詳情頁資料（持有列表與培育入口共用）。
+ * - 支援效果：TP 加成（專長名稱由 UI 端傳入，core 不查字串表；沒傳時顯示科目代碼），加上 mentorFromCard 依星等解鎖後實際生效的被動減免。
+ *   尚未解鎖的被動不在教官身上，所以不會列出；目前資料的被動都是 ★0 解鎖。
+ * - 培育事件：支援卡的戰法靈感事件，Min_Star 對應事件組（組 n 需 ★(n-1)）。
+ *   沒帶支援卡的教官沒有事件。
+ * - 小插曲：資料表還沒有這一欄，維持空。
  */
-export function mentorToCardData(mentor: Pick<TrainingMentor, 'tpBonus' | 'specialty' | 'stars'>): MentorCardData {
+export function mentorToCardData(mentor: Pick<TrainingMentor, 'tpBonus' | 'specialty' | 'stars' | 'inspire' | 'vitalitySave' | 'tacticTpDiscount'>, specialtyLabel: string = mentor.specialty): MentorCardData {
+    const effects: MentorEffectEntry[] = [{ id: 'SUPPORT_BASE', label: `${specialtyLabel} 專長　TP 加成 +${Math.round(mentor.tpBonus)}%` }];
+    if (mentor.vitalitySave) effects.push({ id: 'VITALITY_SAVE', label: `訓練體力消耗 -${Math.round(mentor.vitalitySave * 100)}%` });
+    if (mentor.tacticTpDiscount) effects.push({ id: 'TP_DISCOUNT', label: `兌換戰法 TP 消耗 -${Math.round(mentor.tacticTpDiscount * 100)}%` });
+    const events: MentorEventEntry[] = (mentor.inspire?.events ?? [])
+        .map((event) => ({
+            id: event.eventId,
+            group: event.minStar + 1,
+            skillName: `${inspiredTacticName(event.tacticId) ?? '未知戰法'}${event.bloodlineRequired ? '（家傳）' : ''}`,
+        }))
+        .sort((a, b) => a.group - b.group);
     return {
         star: mentor.stars ?? 0,
-        effects: [{ id: 'SUPPORT_BASE', label: `${mentor.specialty} 專長　TP 加成 +${Math.round(mentor.tpBonus)}%` }],
-        events: [],
+        effects,
+        events,
         stories: [],
     };
 }

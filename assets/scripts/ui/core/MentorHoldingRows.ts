@@ -37,7 +37,7 @@ export function mentorHoldingRows(cards: readonly MentorCard[], t: BreedTextLook
                 rarity,
                 stars,
                 text: `${head}\n專長 ${specialty}　TP +${mentor.tpBonus}${archetype}`,
-                card: mentorToCardData(mentor),
+                card: mentorToCardData(mentor, specialty),
             };
         })
         .sort((a, b) => (RARITY_ORDER[a.rarity] ?? 9) - (RARITY_ORDER[b.rarity] ?? 9) || b.stars - a.stars)

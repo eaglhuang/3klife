@@ -739,7 +739,7 @@ export class NurtureFlowController {
         const session = child ? this._deps.nurture.getSession(child.id) : null;
         const mentor = session?.mentors[0];
         if (!mentor) return null;
-        return { title: mentor.name, card: mentorToCardData(mentor) };
+        return { title: mentor.name, card: mentorToCardData(mentor, statLabelOf(this._deps.text ?? fallbackBreedText, mentor.specialty)) };
     }
 
     cycleDelegatePolicy(): void {
