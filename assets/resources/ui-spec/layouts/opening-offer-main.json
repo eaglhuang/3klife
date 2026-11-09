@@ -1,0 +1,167 @@
+{
+  "id": "opening-offer-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "OpeningOfferRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "OpeningOfferBackdrop",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "skinSlot": "opening.offer.backdrop.bg"
+      },
+      {
+        "type": "panel",
+        "name": "OpeningOfferCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 760,
+        "height": 440,
+        "skinSlot": "opening.offer.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "OpeningOfferTitle",
+            "id": "offerTitle",
+            "widget": {
+              "top": 20,
+              "left": 24,
+              "right": 24
+            },
+            "height": 40,
+            "text": "",
+            "styleSlot": "opening.offer.label.title"
+          },
+          {
+            "type": "panel",
+            "name": "OpeningOfferQuoteBox",
+            "widget": {
+              "top": 80,
+              "left": 24,
+              "right": 24
+            },
+            "height": 150,
+            "skinSlot": "opening.offer.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "OpeningOfferQuote",
+                "id": "offerQuote",
+                "widget": {
+                  "top": 12,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 126,
+                "text": "",
+                "styleSlot": "opening.offer.label.body"
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "OpeningOfferPrice",
+            "id": "offerPrice",
+            "widget": {
+              "top": 244,
+              "left": 24,
+              "right": 24
+            },
+            "height": 64,
+            "text": "",
+            "styleSlot": "opening.offer.label.tier"
+          },
+          {
+            "type": "label",
+            "name": "OpeningOfferMockNote",
+            "id": "offerMockNote",
+            "widget": {
+              "top": 312,
+              "left": 24,
+              "right": 24
+            },
+            "height": 32,
+            "text": "",
+            "styleSlot": "opening.offer.label.body"
+          },
+          {
+            "type": "button",
+            "name": "OpeningOfferDecline",
+            "id": "btnOfferDecline",
+            "widget": {
+              "bottom": 24,
+              "left": 24
+            },
+            "height": 48,
+            "width": 340,
+            "skinSlot": "opening.offer.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "OpeningOfferDeclineLabel",
+                "id": "offerDeclineLabel",
+                "widget": {
+                  "top": 10,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "婉拒",
+                "styleSlot": "opening.offer.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "OpeningOfferBuy",
+            "id": "btnOfferBuy",
+            "widget": {
+              "bottom": 24,
+              "right": 24
+            },
+            "height": 48,
+            "width": 340,
+            "skinSlot": "opening.offer.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "OpeningOfferBuyLabel",
+                "id": "offerBuyLabel",
+                "widget": {
+                  "top": 10,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "模擬購買",
+                "styleSlot": "opening.offer.label.button"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

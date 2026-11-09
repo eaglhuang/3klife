@@ -124,6 +124,8 @@ import { MentorBorrowController } from '../core/MentorBorrowController';
 import { GraduationRecordController } from '../core/GraduationRecordController';
 import { AcademyGraduationController } from '../core/AcademyGraduationController';
 import { ClanShrineController } from '../core/ClanShrineController';
+import { OpeningOfferPopupController } from '../core/OpeningOfferPopupController';
+import { parseOpeningOfferTable } from '../../core/systems/OpeningOffer';
 import { SeasonPassController } from '../core/SeasonPassController';
 import type { AcademyGraduationResult } from '../../core/systems/nurture/AcademyGraduation';
 import type { AcademyStateSnapshot } from '../../core/systems/nurture/AcademyTypes';
@@ -351,6 +353,7 @@ export class LobbyScene extends Component {
     private _academyTacticNames: ReadonlyMap<string, string> | null = null;
     /** 祠堂聲望畫面（PROG-2-1958） */
     private _clanShrine: ClanShrineController<UIScreenPreviewHost> | null = null;
+    private _openingOfferPopup: OpeningOfferPopupController<UIScreenPreviewHost> | null = null;
     private _seasonPassPanel: SeasonPassController<UIScreenPreviewHost> | null = null;
     private _mentorBorrow: MentorBorrowController<UIScreenPreviewHost> | null = null;
     /** 「我的教官卡」列表（PROG-2-1097）：重用 mentor-borrow-screen 版面 */
@@ -629,6 +632,7 @@ export class LobbyScene extends Component {
         await this._mountGraduationRecord();
         await this._mountAcademyGraduation();
         await this._mountClanShrine();
+        await this._mountOpeningOffer();
         await this._mountSeasonPass();
         await this._mountMentorBorrow();
         await this._mountMentorHoldings();
@@ -886,6 +890,46 @@ export class LobbyScene extends Component {
             services().event.on(GAME_SESSION_EVENTS.ClanPrestigeChanged, (payload: ClanPrestigeChangedPayload) => { shrine.onPrestigeChanged(payload); }),
             services().event.on(GAME_SESSION_EVENTS.Loaded, () => { shrine.refresh(); }),
         );
+    }
+
+    /**
+     * 開場商品彈窗（OPEN-12 本地 Mock，裁決 11/09 第 11 題，PROG-2-2198）：
+     * 教學戰打完才出；讀檔進大廳與每場戰鬥結算後各檢查一次。只記錄回應，不收款。
+     */
+    private async _mountOpeningOffer(): Promise<void> {
+        let table = null;
+        try {
+            const raw = await services().resource.loadJson<unknown>('data/opening-offers', { tags: ['LobbyScene'] });
+            const parsed = parseOpeningOfferTable(raw);
+            table = parsed.ok ? parsed.table : null;
+        } catch {
+            table = null;
+        }
+        if (!table) return;
+        const offers = table;
+        const popup = new OpeningOfferPopupController<UIScreenPreviewHost>({
+            mountHost: (bindings) => this._mountPreviewScreenHost('OpeningOfferHost', 'opening-offer-screen', bindings),
+            apply: (host, view) => { if (host.binder) applyFlowView(host.binder, view); },
+            next: (now) => services().session.nextOpeningOffer(offers, isTutorialBattle(services().session.clearedStageIds), now),
+            resolve: async (offerId, outcome, now) => {
+                const session = services().session;
+                const ok = session.resolveOpeningOffer(offers, offerId, outcome, now);
+                if (ok) await session.save().catch(() => undefined);
+                return ok;
+            },
+            now: () => Date.now(),
+            toast: (message) => { services().event.emit('SHOW_TOAST', { message, duration: 2.5 }); },
+        });
+        await popup.mount();
+        this._openingOfferPopup = popup;
+        const check = (): void => {
+            if (popup.host && popup.tryOpen()) this._bringNodeToFront(popup.host.node);
+        };
+        this._sessionEventUnsubscribers.push(
+            services().event.on(GAME_SESSION_EVENTS.BattleSettled, check),
+            services().event.on(GAME_SESSION_EVENTS.Loaded, check),
+        );
+        check();
     }
 
     /** 季度通行證面板（ECO-13 Mock，PROG-2-2197） */
