@@ -10,8 +10,8 @@
   "tags": [],
   "createdAt": "2026-11-05T14:30:28.536Z",
   "createdByActor": "codex-gpt-6.1-sol",
-  "lastTransitionId": "2026-11-09T07-56-42-480Z-scope-amendment-286ba576d2ac",
-  "lastTransitionAt": "2026-11-09T07:56:42.480Z",
+  "lastTransitionId": "2026-11-09T12-05-34-701Z-renew-4b5e58db504c",
+  "lastTransitionAt": "2026-11-09T12:05:34.701Z",
   "ledgerContractVersion": "task-ledger/v1",
   "reservedAt": "2026-11-05T17:15:58.821Z",
   "promotedAt": "2026-11-05T17:15:58.826Z",
@@ -19,7 +19,7 @@
     "actorId": "codex-gpt-6.1-terra",
     "leaseId": "lease-f957fb02b01d",
     "claimedAt": "2026-11-05T17:15:58.833Z",
-    "heartbeatAt": "2026-11-09T07:35:36.646Z",
+    "heartbeatAt": "2026-11-09T12:05:34.242Z",
     "ttlSeconds": 1800,
     "files": [
       ".atm/history/evidence/UI-2-0121.*",
@@ -215,6 +215,7 @@
       "assets/resources/sprites/generals/avatars/wu_guo_tai_avatar.png",
       "assets/resources/sprites/generals/avatars/wu_guo_tai_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/wu_tugu_avatar.png",
+      "assets/resources/sprites/generals/avatars/xi_zhi_cai_avatar.png",
       "assets/resources/sprites/generals/avatars/xiahou_dun_avatar.png",
       "assets/resources/sprites/generals/avatars/xiahou_ling_nv_avatar.png",
       "assets/resources/sprites/generals/avatars/xiahou_ling_nv_avatar.png.meta",
@@ -354,6 +355,7 @@
       "assets/resources/sprites/generals/wu_guo_tai_portrait.png",
       "assets/resources/sprites/generals/wu_guo_tai_portrait.png.meta",
       "assets/resources/sprites/generals/wu_tugu_portrait.png",
+      "assets/resources/sprites/generals/xi_zhi_cai_portrait.png",
       "assets/resources/sprites/generals/xiahou_dun_portrait.png",
       "assets/resources/sprites/generals/xiahou_ling_nv_portrait.png",
       "assets/resources/sprites/generals/xiahou_ling_nv_portrait.png.meta",
@@ -495,6 +497,7 @@
       "assets/resources/sprites/ui_avatars/cropped/wu_guo_tai_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/wu_guo_tai_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/wu_tugu_avatar.png",
+      "assets/resources/sprites/ui_avatars/cropped/xi_zhi_cai_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/xiahou_dun_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/xiahou_ling_nv_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/xiahou_ling_nv_avatar.png.meta",
@@ -547,20 +550,20 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-35ac1c566b6be5a3",
-    "ticketDigest": "sha256:35ac1c566b6be5a3d8c3a4cbd7f3d2522004d1888cefaeb144f5364c452f17f8",
+    "ticketId": "wat-bb2cc1e32e652edd",
+    "ticketDigest": "sha256:bb2cc1e32e652edd8c5f5843626c9799e39e0bf9011e759b98a4524273c04a75",
     "taskId": "UI-2-0121",
     "origin": "claim",
     "actorId": "codex-gpt-6.1-terra",
     "laneSessionId": "lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d",
     "claimGeneration": "lease-f957fb02b01d",
-    "issuedAt": "2026-11-09T07:56:42.182Z",
-    "expiresAt": "2026-11-09T08:26:42.182Z",
-    "scopeDigest": "sha256:fc37de7364d475ee753388bf716ee8fd3ffd63519157f1d2b80ea80582579fca",
+    "issuedAt": "2026-11-09T12:05:34.242Z",
+    "expiresAt": "2026-11-09T12:35:34.242Z",
+    "scopeDigest": "sha256:6bb9fba01e39d8e3a320d491f3f678f9876d08670285d373b0de352795bd9afa",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-11-09T07:56:42.182Z"
+      "selectedAt": "2026-11-09T12:05:34.242Z"
     },
     "grants": [
       {
@@ -760,6 +763,7 @@
           "assets/resources/sprites/generals/avatars/wu_guo_tai_avatar.png",
           "assets/resources/sprites/generals/avatars/wu_guo_tai_avatar.png.meta",
           "assets/resources/sprites/generals/avatars/wu_tugu_avatar.png",
+          "assets/resources/sprites/generals/avatars/xi_zhi_cai_avatar.png",
           "assets/resources/sprites/generals/avatars/xiahou_dun_avatar.png",
           "assets/resources/sprites/generals/avatars/xiahou_ling_nv_avatar.png",
           "assets/resources/sprites/generals/avatars/xiahou_ling_nv_avatar.png.meta",
@@ -899,6 +903,7 @@
           "assets/resources/sprites/generals/wu_guo_tai_portrait.png",
           "assets/resources/sprites/generals/wu_guo_tai_portrait.png.meta",
           "assets/resources/sprites/generals/wu_tugu_portrait.png",
+          "assets/resources/sprites/generals/xi_zhi_cai_portrait.png",
           "assets/resources/sprites/generals/xiahou_dun_portrait.png",
           "assets/resources/sprites/generals/xiahou_ling_nv_portrait.png",
           "assets/resources/sprites/generals/xiahou_ling_nv_portrait.png.meta",
@@ -1040,6 +1045,7 @@
           "assets/resources/sprites/ui_avatars/cropped/wu_guo_tai_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/wu_guo_tai_avatar.png.meta",
           "assets/resources/sprites/ui_avatars/cropped/wu_tugu_avatar.png",
+          "assets/resources/sprites/ui_avatars/cropped/xi_zhi_cai_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/xiahou_dun_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/xiahou_ling_nv_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/xiahou_ling_nv_avatar.png.meta",
@@ -1079,7 +1085,7 @@
           "docs/ui-quality-tasks/UI-2-0121.json",
           "docs/ui-quality-todo.json"
         ],
-        "digest": "sha256:f9dd8ff9eabea5aae9b76ca17aab529f79c20fb960b9335d97e3ef533026d571"
+        "digest": "sha256:d0705e83e37887664d5eac3fb191c7df10e8235bbaed0821c50d5d6c4fdc1bf8"
       },
       {
         "kind": "lifecycle-operation",
@@ -1321,6 +1327,7 @@
       "assets/resources/sprites/generals/avatars/wu_guo_tai_avatar.png",
       "assets/resources/sprites/generals/avatars/wu_guo_tai_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/wu_tugu_avatar.png",
+      "assets/resources/sprites/generals/avatars/xi_zhi_cai_avatar.png",
       "assets/resources/sprites/generals/avatars/xiahou_dun_avatar.png",
       "assets/resources/sprites/generals/avatars/xiahou_ling_nv_avatar.png",
       "assets/resources/sprites/generals/avatars/xiahou_ling_nv_avatar.png.meta",
@@ -1460,6 +1467,7 @@
       "assets/resources/sprites/generals/wu_guo_tai_portrait.png",
       "assets/resources/sprites/generals/wu_guo_tai_portrait.png.meta",
       "assets/resources/sprites/generals/wu_tugu_portrait.png",
+      "assets/resources/sprites/generals/xi_zhi_cai_portrait.png",
       "assets/resources/sprites/generals/xiahou_dun_portrait.png",
       "assets/resources/sprites/generals/xiahou_ling_nv_portrait.png",
       "assets/resources/sprites/generals/xiahou_ling_nv_portrait.png.meta",
@@ -1601,6 +1609,7 @@
       "assets/resources/sprites/ui_avatars/cropped/wu_guo_tai_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/wu_guo_tai_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/wu_tugu_avatar.png",
+      "assets/resources/sprites/ui_avatars/cropped/xi_zhi_cai_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/xiahou_dun_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/xiahou_ling_nv_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/xiahou_ling_nv_avatar.png.meta",
@@ -2655,6 +2664,9 @@
     "assets/resources/sprites/ui_avatars/cropped/wu_tugu_avatar.png",
     "assets/resources/sprites/generals/avatars/wen_pin_avatar.png",
     "assets/resources/sprites/generals/wen_pin_portrait.png",
-    "assets/resources/sprites/ui_avatars/cropped/wen_pin_avatar.png"
+    "assets/resources/sprites/ui_avatars/cropped/wen_pin_avatar.png",
+    "assets/resources/sprites/generals/avatars/xi_zhi_cai_avatar.png",
+    "assets/resources/sprites/generals/xi_zhi_cai_portrait.png",
+    "assets/resources/sprites/ui_avatars/cropped/xi_zhi_cai_avatar.png"
   ]
 }
