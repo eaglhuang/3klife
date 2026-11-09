@@ -36,6 +36,21 @@ export function createBloodlineVisualTableSuite(): TestSuite {
         }
     });
 
+    suite.test('六色靈獸依 doc_spec_0670 §1', () => {
+        const table = readTable();
+        const rows = ALL_FACTOR_COLORS.map((color) => `${color}:${table.factors[color].beastFamily}`);
+        assert.equals(
+            ['blue:玄武', 'pink:朱雀', 'green:麒麟', 'white:白虎', 'red:青龍', 'purple:應龍'].sort().join(),
+            rows.sort().join(),
+        );
+    });
+
+    suite.test('缺少三層材質會被擋下', () => {
+        const missing = readRaw();
+        delete missing.materialLayers.inlay;
+        assert.equals(false, parseBloodlineVisualTable(missing).ok);
+    });
+
     suite.test('任一顏色缺欄或跨色重複都會被擋下', () => {
         const missing = readRaw();
         delete missing.factors.red.beastFamily;
