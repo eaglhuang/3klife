@@ -14,6 +14,7 @@ import type { TerritoryUpgradePlan, TerritoryUpgradeRejectReason } from '../../c
 export interface GovernorHallFlowView {
     texts: Record<string, string>;
     actives: Record<string, boolean>;
+    enabled: Record<string, boolean>;
 }
 
 /** 太守府等級與升級規劃（PROG-2-0986）：由 GameSession 的等級、格數與糧草推導。 */
@@ -49,8 +50,8 @@ const DEFAULT_TERRITORY: GovernorTerritoryInfo = {
 export class GovernorHallController {
     constructor(private readonly _deps: GovernorHallDeps) {}
 
-    /** 太守府等級、格數與升級按鈕的文字；按鈕可否只看規劃結果。 */
-    public territoryTexts(): { texts: Record<string, string>; actives: Record<string, boolean> } {
+    /** 太守府等級、格數與升級按鈕的文字；按鈕一律顯示，不可升級時停用並以文字說明原因。 */
+    public territoryTexts(): { texts: Record<string, string>; enabled: Record<string, boolean> } {
         const info = this._deps.territory?.() ?? DEFAULT_TERRITORY;
         const plan = info.plan;
         const upgradeable = plan.ok && !info.goldShortage;
@@ -66,7 +67,7 @@ export class GovernorHallController {
                 govPending: info.pendingLevel === null ? '' : `Lv${info.pendingLevel} 將於季結生效`,
                 btnUpgradeLabel: upgradeLabel,
             },
-            actives: { btnUpgrade: upgradeable },
+            enabled: { btnUpgrade: upgradeable },
         };
     }
 
@@ -78,6 +79,7 @@ export class GovernorHallController {
     /** 扁平 FlowView：key 與 governor-hall-main.json 的節點 id 對應。 */
     public getFlowView(): GovernorHallFlowView {
         const view = this.view();
+        const territory = this.territoryTexts();
         const texts: Record<string, string> = {
             govHallTitle: '太守府',
             govPopulation: view.populationText,
@@ -97,16 +99,16 @@ export class GovernorHallController {
             govTroopRecruit: view.cityTroopCard.recruitText,
             govTroopRecover: view.cityTroopCard.recoverText,
             btnCloseLabel: '關閉',
-            ...this.territoryTexts().texts,
+            ...territory.texts,
         };
         for (const flow of view.flows) {
             texts[this._flowNodeId(flow.key)] = `${flow.label}　${flow.valueText}`;
         }
-        const actives: Record<string, boolean> = { ...this.territoryTexts().actives };
+        const actives: Record<string, boolean> = { btnUpgrade: true };
         for (const flow of view.flows) {
             actives[this._flowNodeId(flow.key)] = true;
         }
-        return { texts, actives };
+        return { texts, actives, enabled: territory.enabled };
     }
 
     private _flowNodeId(key: GovernorHallView['flows'][number]['key']): string {

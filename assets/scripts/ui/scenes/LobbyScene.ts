@@ -2216,8 +2216,7 @@ export class LobbyScene extends Component {
         if (!binder || !this._govHall) {
             return;
         }
-        // 太守府沒有按鈕可按與否的狀態，enabled 給空表
-        applyFlowView(binder, { enabled: {}, ...this._govHall.getFlowView() });
+        applyFlowView(binder, this._govHall.getFlowView());
     }
 
     /** 道具背包（ITM-10）：大廳內政區的「背包」入口；隱藏掛載，對外提供 openItemBag()。 */
