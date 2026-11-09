@@ -136,6 +136,7 @@ import { FOOD_LOW_LINE } from '../systems/ResourceCap';
 import { ITEM_DISPLAY_NAMES } from '../systems/PlayerInventory';
 import { prisonTreasureLine } from '../systems/PrisonerOfWar';
 import { governanceBoostMultiplier, normalizeGovernanceBoosts, planGovernanceBoost, type ActiveGovernanceBoost, type GovernanceBoostRejectReason } from '../systems/GovernanceEfficiencyItem';
+import { EMPTY_SEASON_PERSONALITY_STATE, normalizeSeasonPersonalityState, rollSeasonPersonalityEvents, seasonEventDef, seasonEventFarmMultiplier, seasonEventShortfall, strAfterExp, SEASON_PERSONALITY_TUNING, type SeasonEventInstance, type SeasonPersonalityState } from '../systems/SeasonPersonalityEvents';
 import { governanceEventLine, governanceOutputMultiplier, governanceReportLine, normalizeGovernanceEvent, rollGovernanceEvent, type ActiveGovernanceEvent } from '../systems/GovernanceEvents';
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticStats, type DomesticTaskResult } from '../systems/DomesticTasks';
 import type { HallCandidate } from '../systems/HallCharacterRoll';
@@ -851,6 +852,9 @@ export class GameSession {
     private _governanceEvent: ActiveGovernanceEvent | null = null;
     private _governanceBoosts: ActiveGovernanceBoost[] = [];
     private _governanceEventRandom: RandomSource | null = null;
+    /** 換季武將性格事件（LOOP-01，PROG-2-2201） */
+    private _seasonPersonality: SeasonPersonalityState = { ...EMPTY_SEASON_PERSONALITY_STATE, pending: [] };
+    private _seasonEventRandom: RandomSource | null = null;
     private _rivals: RivalWorld = createRivalWorld();
     /** 付費功能的每日額度（裁決第 19 項）；存檔欄位 paidFeatureQuota */
     private _paidFeatureQuota: PaidFeatureQuotaState = EMPTY_PAID_FEATURE_QUOTA;
@@ -1892,6 +1896,11 @@ export class GameSession {
         this._governanceEventRandom = random;
     }
 
+    /** 測試替身：指定換季性格事件的擲骰來源 */
+    public setSeasonEventRandom(random: RandomSource | null): void {
+        this._seasonEventRandom = random;
+    }
+
     public setAutoSave(enabled: boolean): void {
         this._autoSave = enabled;
     }
@@ -2089,6 +2098,7 @@ export class GameSession {
         this._domesticLog = { ...EMPTY_DOMESTIC_LOG };
         this._governanceEvent = null;
         this._governanceBoosts = [];
+        this._seasonPersonality = { ...EMPTY_SEASON_PERSONALITY_STATE, pending: [] };
         this._rivals = this._withRivalOfficers(createRivalWorld());
         this._mercenaries = createEmptyMercenaryBundle();
     }
@@ -2615,14 +2625,65 @@ export class GameSession {
     /** 本季生效中的治理事件；過季的事件不算 */
     public get activeGovernanceEvent(): ActiveGovernanceEvent | null {
         const event = this._governanceEvent;
-        return event && event.season === this._clock.state.totalSeasonsElapsed ? event : null;
+        const season = this._clock.state.totalSeasonsElapsed;
+        // 批准預修水利的那一季免受天災（PROG-2-2201）
+        if (this._seasonPersonality.season === season && this._seasonPersonality.disasterImmune) return null;
+        return event && event.season === season ? event : null;
     }
 
     /** 內政任務本季的產出倍率（治理事件 × 治理效率道具） */
     public domesticOutputMultiplier(taskId: string): number {
         const season = this._clock.state.totalSeasonsElapsed;
-        return governanceOutputMultiplier(this._governanceEvent, taskId, season)
-            * governanceBoostMultiplier(this._governanceBoosts, taskId, season);
+        const event = this.activeGovernanceEvent;
+        return governanceOutputMultiplier(event, taskId, season)
+            * governanceBoostMultiplier(this._governanceBoosts, taskId, season)
+            * seasonEventFarmMultiplier(this._seasonPersonality, taskId, season);
+    }
+
+    /** 本季還沒回應的第一起武將性格事件；沒有時為 null（PROG-2-2201） */
+    public get pendingSeasonEvent(): SeasonEventInstance | null {
+        const state = this._seasonPersonality;
+        return state.season === this._clock.state.totalSeasonsElapsed && state.pending.length > 0 ? { ...state.pending[0] } : null;
+    }
+
+    /**
+     * 回應本季第一起性格事件（0 = 第一個選項，1 = 第二個）。付不起時拒絕且不變動任何資源。
+     * 銅錢走傳入的錢包（LocalGachaService），糧草、名聲、忠誠、武力在 session 內結算；成功時自動存檔。
+     */
+    public async resolveSeasonEvent(
+        optionIndex: 0 | 1, wallet: { gold: () => number; spendGold: (amount: number) => boolean },
+    ): Promise<{ ok: true; line: string } | { ok: false; reason: 'none' | 'shortfall'; resource?: string }> {
+        const instance = this.pendingSeasonEvent;
+        const def = instance ? seasonEventDef(instance.eventId) : undefined;
+        if (!instance || !def) return { ok: false, reason: 'none' };
+        const option = def.options[optionIndex];
+        const effect = option.effect;
+        const missing = seasonEventShortfall(effect, { gold: wallet.gold(), food: this._military.food });
+        if (missing) return { ok: false, reason: 'shortfall', resource: missing };
+        if ((effect.costGold ?? 0) > 0 && !wallet.spendGold(effect.costGold ?? 0)) return { ok: false, reason: 'shortfall', resource: '銅錢' };
+        if (effect.costFood) this._military = { ...this._military, food: this._military.food - effect.costFood };
+        if (effect.fame) this._fame = Math.min(BASE_RESOURCE_CAPS.fame, this._fame + effect.fame);
+        const general = this._roster.getAll().find((g) => g.id === instance.generalId);
+        if (general && effect.loyalty) {
+            const isGacha = this._tallyLoyalty[general.id]?.isGachaHero === true || general.loyaltyState?.sourceType === 'Gacha';
+            if (!isGacha) {
+                const current = this._tallyLoyalty[general.id] ?? createTallyLoyaltyState(TALLY_LOYALTY_INITIAL, false);
+                this._tallyLoyalty = { ...this._tallyLoyalty, [general.id]: { ...current, loyalty: Math.min(SEASON_PERSONALITY_TUNING.loyaltyMax, current.loyalty + effect.loyalty) } };
+            }
+        }
+        if (general && effect.strExp) {
+            const str = strAfterExp(general.str ?? 0, effect.strExp);
+            if (str !== (general.str ?? 0)) this._roster.replaceAll(this._roster.getAll().map((g) => (g.id === general.id ? { ...g, str } : g)));
+        }
+        const state = this._seasonPersonality;
+        this._seasonPersonality = {
+            ...state,
+            pending: state.pending.slice(1),
+            farmMultiplier: state.farmMultiplier * (effect.farmMultiplier ?? 1),
+            disasterImmune: state.disasterImmune || effect.disasterImmune === true,
+        };
+        if (this._autoSave && this._save) await this.save();
+        return { ok: true, line: `${def.title}・${instance.generalName}：${option.label}，${option.note}` };
     }
 
     /** 使用治理效率道具（GOV-14）：本季該任務產出提升；同任務同季不重複，被拒絕時不扣道具 */
@@ -4383,6 +4444,9 @@ export class GameSession {
         const governanceSeason = advance.current.totalSeasonsElapsed;
         const governanceRandom = this._governanceEventRandom ?? remarkRandomOf(`governance|${governanceSeason}|${this._seeded.snapshot().state}`);
         this._governanceEvent = rollGovernanceEvent(governanceSeason, governanceRandom);
+        // 武將性格自發事件（LOOP-01）：同樣用另一條序列，不消耗主亂數；上一季沒回應的作廢
+        const personalityRandom = this._seasonEventRandom ?? remarkRandomOf(`personality|${governanceSeason}|${this._seeded.snapshot().state}`);
+        this._seasonPersonality = rollSeasonPersonalityEvents(this._roster.getAll(), governanceSeason, personalityRandom);
         const eventNotice = this.governanceEventNotice;
         const yuedanLines = advance.yearEnded ? yuedanBannerLines(this._roster.getAll()) : [];
         const omenLines = advance.yearEnded ? this._recordChildOmens() : [];
@@ -5255,6 +5319,7 @@ export class GameSession {
             domestic: { ...this._domesticLog },
             ...(this._governanceEvent ? { governanceEvent: { ...this._governanceEvent } } : {}),
             ...(this._governanceBoosts.length > 0 ? { governanceBoosts: this._governanceBoosts.map((boost) => ({ ...boost })) } : {}),
+            ...(this._seasonPersonality.season >= 0 ? { seasonPersonality: { ...this._seasonPersonality, pending: this._seasonPersonality.pending.map((e) => ({ ...e })) } } : {}),
             rivals: this._rivals,
             prison: this.prison,
             ...(pending.length > 0 ? { pendingLifespanDeaths: pending } : {}),
@@ -5575,6 +5640,7 @@ export class GameSession {
         this._domesticLog = normalizeDomesticLog(snapshot.domestic);
         this._governanceEvent = normalizeGovernanceEvent(snapshot.governanceEvent);
         this._governanceBoosts = normalizeGovernanceBoosts(snapshot.governanceBoosts);
+        this._seasonPersonality = normalizeSeasonPersonalityState(snapshot.seasonPersonality);
         this._rivals = this._withRivalOfficers(normalizeRivalWorld(snapshot.rivals));
         this._mercenaries = normalizeMercenaryBundle(snapshot.mercenaries);
         if (this._postLoadHook) {

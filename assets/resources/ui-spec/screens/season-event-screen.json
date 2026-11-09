@@ -1,0 +1,17 @@
+{
+  "id": "season-event-screen",
+  "version": 1,
+  "uiId": "SeasonEvent",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "season-event-main",
+  "skin": "season-event-default",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}

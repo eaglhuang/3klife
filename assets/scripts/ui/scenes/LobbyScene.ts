@@ -125,6 +125,7 @@ import { GraduationRecordController } from '../core/GraduationRecordController';
 import { AcademyGraduationController } from '../core/AcademyGraduationController';
 import { ClanShrineController } from '../core/ClanShrineController';
 import { OpeningOfferPopupController } from '../core/OpeningOfferPopupController';
+import { SeasonEventPopupController } from '../core/SeasonEventPopupController';
 import { parseOpeningOfferTable } from '../../core/systems/OpeningOffer';
 import { SeasonPassController } from '../core/SeasonPassController';
 import type { AcademyGraduationResult } from '../../core/systems/nurture/AcademyGraduation';
@@ -354,6 +355,7 @@ export class LobbyScene extends Component {
     /** 祠堂聲望畫面（PROG-2-1958） */
     private _clanShrine: ClanShrineController<UIScreenPreviewHost> | null = null;
     private _openingOfferPopup: OpeningOfferPopupController<UIScreenPreviewHost> | null = null;
+    private _seasonEventPopup: SeasonEventPopupController<UIScreenPreviewHost> | null = null;
     private _seasonPassPanel: SeasonPassController<UIScreenPreviewHost> | null = null;
     private _mentorBorrow: MentorBorrowController<UIScreenPreviewHost> | null = null;
     /** 「我的教官卡」列表（PROG-2-1097）：重用 mentor-borrow-screen 版面 */
@@ -633,6 +635,7 @@ export class LobbyScene extends Component {
         await this._mountAcademyGraduation();
         await this._mountClanShrine();
         await this._mountOpeningOffer();
+        await this._mountSeasonEventPopup();
         await this._mountSeasonPass();
         await this._mountMentorBorrow();
         await this._mountMentorHoldings();
@@ -930,6 +933,34 @@ export class LobbyScene extends Component {
             services().event.on(GAME_SESSION_EVENTS.Loaded, check),
         );
         check();
+    }
+
+    /** 換季武將性格事件彈窗（LOOP-01，PROG-2-2201）：手動換季、快進結束與讀檔後對齊本季待回應事件 */
+    private async _mountSeasonEventPopup(): Promise<void> {
+        const gacha = this._localGachaService;
+        const popup = new SeasonEventPopupController<UIScreenPreviewHost>({
+            mountHost: (bindings) => this._mountPreviewScreenHost('SeasonEventHost', 'season-event-screen', bindings),
+            apply: (host, view) => { if (host.binder) applyFlowView(host.binder, view); },
+            next: () => services().session.pendingSeasonEvent,
+            resolve: async (optionIndex) => {
+                const result = await services().session.resolveSeasonEvent(optionIndex, {
+                    gold: () => gacha.getCurrencyAmount('gold'),
+                    spendGold: (amount) => gacha.spendCurrency('gold', amount),
+                });
+                if (result.ok) this._refreshDomestic();
+                return result;
+            },
+            toast: (message) => { services().event.emit('SHOW_TOAST', { message, duration: 3 }); },
+        });
+        await popup.mount();
+        this._seasonEventPopup = popup;
+        this._sessionEventUnsubscribers.push(services().event.on(GAME_SESSION_EVENTS.Loaded, () => { this._syncSeasonEventPopup(); }));
+        this._syncSeasonEventPopup();
+    }
+
+    private _syncSeasonEventPopup(): void {
+        const popup = this._seasonEventPopup;
+        if (popup?.host && popup.tryOpen()) this._bringNodeToFront(popup.host.node);
     }
 
     /** 季度通行證面板（ECO-13 Mock，PROG-2-2197） */
@@ -4283,6 +4314,7 @@ export class LobbyScene extends Component {
         } finally {
             this._fastForwarding = false;
             this._refreshDomestic();
+            this._syncSeasonEventPopup();
         }
     }
 
@@ -4324,6 +4356,7 @@ export class LobbyScene extends Component {
                 const payload: SeasonReportOpenPayload = { seasonLabel: seasonText(advance.current), reports: quarterlyReports };
                 void services().ui.open(UIID.SeasonReport, payload);
             }
+            this._syncSeasonEventPopup();
         } catch (error) {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 推進季度失敗', error);
             services().event.emit('SHOW_TOAST', { message: '推進季度失敗', duration: 2 });

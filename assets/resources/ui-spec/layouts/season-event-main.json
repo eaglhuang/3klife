@@ -1,0 +1,167 @@
+{
+  "id": "season-event-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "SeasonEventRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "SeasonEventBackdrop",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "skinSlot": "season.event.backdrop.bg"
+      },
+      {
+        "type": "panel",
+        "name": "SeasonEventCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 760,
+        "height": 440,
+        "skinSlot": "season.event.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "SeasonEventTitle",
+            "id": "eventTitle",
+            "widget": {
+              "top": 20,
+              "left": 24,
+              "right": 24
+            },
+            "height": 40,
+            "text": "",
+            "styleSlot": "season.event.label.title"
+          },
+          {
+            "type": "panel",
+            "name": "SeasonEventDescBox",
+            "widget": {
+              "top": 80,
+              "left": 24,
+              "right": 24
+            },
+            "height": 150,
+            "skinSlot": "season.event.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "SeasonEventDesc",
+                "id": "eventDesc",
+                "widget": {
+                  "top": 12,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 126,
+                "text": "",
+                "styleSlot": "season.event.label.body"
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "SeasonEventNoteA",
+            "id": "eventNoteA",
+            "widget": {
+              "top": 256,
+              "left": 24,
+              "right": 24
+            },
+            "height": 32,
+            "text": "",
+            "styleSlot": "season.event.label.body"
+          },
+          {
+            "type": "label",
+            "name": "SeasonEventNoteB",
+            "id": "eventNoteB",
+            "widget": {
+              "top": 296,
+              "left": 24,
+              "right": 24
+            },
+            "height": 32,
+            "text": "",
+            "styleSlot": "season.event.label.body"
+          },
+          {
+            "type": "button",
+            "name": "SeasonEventOptionB",
+            "id": "btnEventOptionB",
+            "widget": {
+              "bottom": 24,
+              "left": 24
+            },
+            "height": 48,
+            "width": 340,
+            "skinSlot": "season.event.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "SeasonEventOptionBLabel",
+                "id": "eventOptionBLabel",
+                "widget": {
+                  "top": 10,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "",
+                "styleSlot": "season.event.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "SeasonEventOptionA",
+            "id": "btnEventOptionA",
+            "widget": {
+              "bottom": 24,
+              "right": 24
+            },
+            "height": 48,
+            "width": 340,
+            "skinSlot": "season.event.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "SeasonEventOptionALabel",
+                "id": "eventOptionALabel",
+                "widget": {
+                  "top": 10,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "",
+                "styleSlot": "season.event.label.button"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

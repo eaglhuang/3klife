@@ -96,6 +96,7 @@ export const SYNC_PATCH_ROOT_KEYS: readonly string[] = [
     'domestic',
     'governanceEvent',
     'governanceBoosts',
+    'seasonPersonality',
     'rivals',
     'mercenaries',
     'femaleSystem',
