@@ -53,7 +53,8 @@ export function createGovernorHallControllerSuite(): TestSuite {
         assert.equals('太守府 Lv1', flow.texts.govLevel);
         assert.equals('內政任務格 2', flow.texts.govSlots);
         assert.equals('', flow.texts.govPending);
-        assert.isFalse(flow.actives.btnUpgrade);
+        assert.isFalse(flow.enabled.btnUpgrade);
+        assert.isTrue(flow.actives.btnUpgrade);
     });
 
     suite.test('可升級時顯示目標等級與費用，按鈕可按', () => {
@@ -62,7 +63,7 @@ export function createGovernorHallControllerSuite(): TestSuite {
             territory: () => ({ level: 1, maxSlots: 2, pendingLevel: null, plan: planTerritoryUpgrade(1, null, 5000) }),
         }).getFlowView();
         assert.equals('升級至 Lv2（金 4000・糧 1000）', flow.texts.btnUpgradeLabel);
-        assert.isTrue(flow.actives.btnUpgrade);
+        assert.isTrue(flow.enabled.btnUpgrade);
     });
 
     suite.test('待生效升級時顯示待生效文字，按鈕不可按並說明原因', () => {
@@ -72,7 +73,8 @@ export function createGovernorHallControllerSuite(): TestSuite {
         }).getFlowView();
         assert.equals('Lv2 將於季結生效', flow.texts.govPending);
         assert.equals('已有待生效的升級', flow.texts.btnUpgradeLabel);
-        assert.isFalse(flow.actives.btnUpgrade);
+        assert.isFalse(flow.enabled.btnUpgrade);
+        assert.isTrue(flow.actives.btnUpgrade);
     });
 
     suite.test('金錢不足時升級按鈕停用並顯示金錢不足提示', () => {
@@ -81,7 +83,8 @@ export function createGovernorHallControllerSuite(): TestSuite {
             territory: () => ({ level: 1, maxSlots: 2, pendingLevel: null, plan: planTerritoryUpgrade(1, null, 5000), goldShortage: true }),
         }).getFlowView();
         assert.equals('金錢不足', flow.texts.btnUpgradeLabel);
-        assert.isFalse(flow.actives.btnUpgrade);
+        assert.isFalse(flow.enabled.btnUpgrade);
+        assert.isTrue(flow.actives.btnUpgrade);
     });
 
     return suite;
