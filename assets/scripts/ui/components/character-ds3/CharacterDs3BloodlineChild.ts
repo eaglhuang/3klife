@@ -3,15 +3,18 @@
 // PROG-2-1691：命分頁依武將寫入爆發力、血脈與強力因子，不再停在張飛範例。
 
 import { placeDs3BarFill } from './Ds3BarFill';
-import { UITransform } from 'cc';
+import { Color, tween, UITransform, Vec3 } from 'cc';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
 import { ds3Label, ds3Node, ds3Reflow, ds3SetActive } from './Ds3NodeLookup';
 import { BEAST_ARCHETYPE_LABELS, beastForGeneral } from '../../../core/systems/BloodlineBeast';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
-import type { GeneralConfig } from '../../../core/models/GeneralUnit';
+import type { GeneralConfig, GeneralGeneConfig } from '../../../core/models/GeneralUnit';
 import { services } from '../../../core/managers/ServiceLoader';
 import { factorDetailVisible, type MilestoneStage } from '../../../core/systems/FamilyMilestone';
 import { epRatingLabel } from '../../../core/systems/BreedingSystem';
+import { factorMaskView } from '../../../core/systems/FactorMask';
+import { parseHexRgb } from '../../../core/systems/FactorTagTokens';
+import { FactorMaskPresenter, factorLabelTint } from '../../../core/systems/FactorMaskState';
 import { buildGeneralDetailOverview } from '../GeneralDetailOverviewMapper';
 
 export interface Ds3FactorRow {
@@ -19,6 +22,8 @@ export interface Ds3FactorRow {
     name: string;
     tag: string;
     desc: string;
+    /** 名稱字色（灰鎖或因子色）；null 表示保留版面原色 */
+    tint: string | null;
 }
 
 export interface Ds3BloodlineView {
@@ -54,25 +59,45 @@ const BLOODLINE_DEMO_NODES = ['BloodlineTrack', 'BloodlineUltimateCond', 'Bloodl
 
 const FACTOR_ICON: Record<string, string> = { 戰鬥: '⚔', 體魄: '🛡', 特質: '🛡', 戰法: '📖' };
 const LOCKED_ICON = '✨';
+const MASKED_ICON = '🔒';
+const MASKED_NAME = '???';
+
+/** 因子亮起動畫：放大倍率與單程秒數 */
+const FACTOR_REVEAL_SCALE = 1.25;
+const FACTOR_REVEAL_SEC = 0.22;
+
+/**
+ * 上一次看到的遮罩狀態。放在模組層：升級通常發生在面板關閉時，
+ * 重開面板換了新實例也要比得出差異（FUL-03）。
+ */
+const factorMaskPresenter = new FactorMaskPresenter();
 
 function clampPercent(value: number): number {
     return Math.max(0, Math.min(100, Number.isFinite(value) ? value : 0));
 }
 
-/** 把武將血脈資料轉成命分頁檢視；因子列數受片段槽位上限限制。G1 不顯示星數（總綱 M_stage 表）。 */
-export function buildDs3BloodlineView(cfg: GeneralConfig, stage: MilestoneStage = 4): Ds3BloodlineView {
+/**
+ * 把武將血脈資料轉成命分頁檢視；因子列數受片段槽位上限限制。G1 不顯示星數（總綱 M_stage 表）。
+ * 玩家發現等級未達門檻的因子只顯示「??? (Lv N 解鎖)」，名稱、類型、說明都不露出。
+ */
+export function buildDs3BloodlineView(cfg: GeneralConfig, stage: MilestoneStage = 4, playerLevel: number = Number.MAX_SAFE_INTEGER): Ds3BloodlineView {
     const showStars = factorDetailVisible(stage);
     const ep = Number.isFinite(cfg.ep) ? Number(cfg.ep) : 0;
     const cards = buildGeneralDetailOverview(cfg).cards;
     const genes = (Array.isArray(cfg.genes) ? cfg.genes : []) as GeneLike[];
     const factors = genes.slice(0, FACTOR_SLOT_COUNT).map((g) => {
+        const gene = g as GeneralGeneConfig;
+        const mask = factorMaskView(gene, playerLevel);
+        const tint = factorLabelTint(gene, playerLevel);
+        // 名稱欄只有 56 寬，放完整遮罩字會被縮到看不清；解鎖等級改放較寬的說明欄
+        if (!mask.revealed) return { icon: MASKED_ICON, name: MASKED_NAME, tag: '', desc: `Lv${mask.requiredLevel + 1} 解鎖`, tint };
         const name = g.displayName ?? '';
         if (g.isLocked) {
             const lv = g.discoveryLevel;
-            return { icon: LOCKED_ICON, name, tag: showStars ? '★?🔒' : '🔒', desc: lv ? `等級 ${lv} 時發現` : '待覺醒' };
+            return { icon: LOCKED_ICON, name, tag: showStars ? '★?🔒' : '🔒', desc: lv ? `等級 ${lv} 時發現` : '待覺醒', tint };
         }
         const type = g.type ?? '';
-        return { icon: FACTOR_ICON[type] ?? LOCKED_ICON, name, tag: showStars ? `${type}★${g.level ?? 0}` : type, desc: g.description ?? '' };
+        return { icon: FACTOR_ICON[type] ?? LOCKED_ICON, name, tag: showStars ? `${type}★${g.level ?? 0}` : type, desc: g.description ?? '', tint };
     });
     const beast = beastForGeneral(cfg.id);
     const parents = (cfg.parentsSummary ?? '').split('/').map((part) => part.trim()).filter((part) => part.length > 0);
@@ -101,6 +126,8 @@ export function buildDs3BloodlineView(cfg: GeneralConfig, stage: MilestoneStage 
 export class CharacterDs3BloodlineChild extends ChildPanelBase {
     override dataSource = 'config';
     private static readonly ROOT_PATH = 'ContentSlot';
+    /** 因子名稱的版面原色，色系不明時還原用 */
+    private readonly _factorBaseColors = new Map<number, Color>();
 
     public override async onMount(_spec: Record<string, unknown>): Promise<void> {
         UCUFLogger.info(LogCategory.LIFECYCLE, '[CharacterDs3BloodlineChild] onMount', { rootPath: CharacterDs3BloodlineChild.ROOT_PATH });
@@ -110,7 +137,10 @@ export class CharacterDs3BloodlineChild extends ChildPanelBase {
         if (!data || typeof data !== 'object') {
             return;
         }
-        const view = buildDs3BloodlineView(data as GeneralConfig, services().session.displayStage);
+        const cfg = data as GeneralConfig;
+        const playerLevel = services().session.discoveryLevel;
+        const view = buildDs3BloodlineView(cfg, services().session.displayStage, playerLevel);
+        const { justRevealed } = factorMaskPresenter.update(cfg.id, cfg.genes ?? [], playerLevel);
 
         BLOODLINE_DEMO_NODES.forEach((name) => this._setActive(name, false));
         this._setText('BloodlineFamily', view.bloodlineName);
@@ -145,8 +175,12 @@ export class CharacterDs3BloodlineChild extends ChildPanelBase {
             this._setText(`BloodlineFactor${i}_name`, row.name);
             this._setText(`BloodlineFactor${i}_tag`, row.tag);
             this._setText(`BloodlineFactor${i}_desc`, row.desc);
+            this._applyFactorTint(i, row.tint);
         }
         ds3Reflow(this.hostNode);
+        for (const slot of justRevealed) {
+            if (slot < FACTOR_SLOT_COUNT) this._playFactorReveal(slot + 1);
+        }
     }
 
     public override validateDataFormat(data: unknown): string | null {
@@ -165,6 +199,27 @@ export class CharacterDs3BloodlineChild extends ChildPanelBase {
 
     private _setActive(nodeName: string, active: boolean): void {
         ds3SetActive(this.binder, this.hostNode, nodeName, active);
+    }
+
+    private _applyFactorTint(row: number, tint: string | null): void {
+        const label = ds3Label(this.binder, this.hostNode, `BloodlineFactor${row}_name`);
+        if (!label) return;
+        if (!this._factorBaseColors.has(row)) {
+            const { r, g, b, a } = label.color;
+            this._factorBaseColors.set(row, new Color(r, g, b, a));
+        }
+        const rgb = tint ? parseHexRgb(tint) : null;
+        label.color = rgb ? new Color(rgb.r, rgb.g, rgb.b, 255) : this._factorBaseColors.get(row)!;
+    }
+
+    /** 灰鎖 → 彩色亮起：字色已換好，這裡放大再縮回提示玩家 */
+    private _playFactorReveal(row: number): void {
+        const node = ds3Node(this.binder, this.hostNode, `BloodlineFactor${row}_name`);
+        if (!node) return;
+        tween(node)
+            .to(FACTOR_REVEAL_SEC, { scale: new Vec3(FACTOR_REVEAL_SCALE, FACTOR_REVEAL_SCALE, 1) })
+            .to(FACTOR_REVEAL_SEC, { scale: new Vec3(1, 1, 1) })
+            .start();
     }
 
     /** 進度條：填色寬度＝軌道寬度 × 百分比，由左往右長 */
