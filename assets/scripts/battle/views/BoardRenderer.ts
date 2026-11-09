@@ -6,6 +6,7 @@ import { BattleState } from '../models/BattleState';
 
 import { FLOOD_ATTACK_PUSH_DEPTH_DELTA, FLOOD_ATTACK_PUSH_LANE_DELTA } from '../shared/BattleTacticBehavior';
 import { deployCellHint, deployCellStyle } from "../shared/DeployCellHint";
+import { zocOverlayCells, type ZocOverlayCell } from '../shared/ZoneOfControl';
 import { resolveBattleSceneDisplayRule, type BattleSceneBaseStyle } from '../shared/BattleSceneMode';
 const { ccclass, property } = _decorator;
 
@@ -101,6 +102,12 @@ export class BoardRenderer extends Component {
     /** 拖曳部署時手指所在格（`lane,depth`），PROG-2-1880 */
     private deployHoverKey: string | null = null;
     private readonly skillPreviewKeys = new Set<string>();
+    /** ZOC 區域標示（PROG-2-2135）；未設定判斷函式時不標示 */
+    private zocGeneralResolver: ((unitId: string) => boolean) | null = null;
+    private zocPlayerHighCostMaterial: Material | null = null;
+    private zocPlayerImpassableMaterial: Material | null = null;
+    private zocEnemyHighCostMaterial: Material | null = null;
+    private zocEnemyImpassableMaterial: Material | null = null;
     private sceneEffectFireFillMaterial: Material | null = null;
     private sceneEffectWaterFillMaterial: Material | null = null;
     private floodRippleFillMaterial: Material | null = null;
@@ -772,6 +779,31 @@ export class BoardRenderer extends Component {
             new Vec4(0.11, 0.18, 0.22, 0.68)
         );
 
+        this.zocPlayerHighCostMaterial = this.createCellMaterial(
+            new Color(92, 190, 235, 18),
+            new Color(128, 212, 245, 96),
+            new Color(214, 242, 255, 60),
+            new Vec4(0.09, 0.16, 0.2, 0.6)
+        );
+        this.zocPlayerImpassableMaterial = this.createCellMaterial(
+            new Color(72, 170, 235, 46),
+            new Color(116, 204, 250, 190),
+            new Color(214, 242, 255, 120),
+            new Vec4(0.11, 0.18, 0.22, 0.68)
+        );
+        this.zocEnemyHighCostMaterial = this.createCellMaterial(
+            new Color(235, 120, 92, 18),
+            new Color(245, 150, 120, 96),
+            new Color(255, 224, 212, 60),
+            new Vec4(0.09, 0.16, 0.2, 0.6)
+        );
+        this.zocEnemyImpassableMaterial = this.createCellMaterial(
+            new Color(235, 92, 72, 46),
+            new Color(250, 128, 104, 190),
+            new Color(255, 224, 212, 120),
+            new Vec4(0.11, 0.18, 0.22, 0.68)
+        );
+
         this.sceneEffectFireFillMaterial = this.createCellMaterial(
             new Color(255, 112, 72, 42),
             new Color(255, 144, 88, 150),
@@ -886,6 +918,28 @@ export class BoardRenderer extends Component {
         if (this.lastRenderedState) {
             this.renderState(this.lastRenderedState);
         }
+    }
+
+    /** 設定主將單位判斷；棋盤據此標示 ZOC 區域（PROG-2-2135） */
+    public setZocGeneralResolver(resolver: ((unitId: string) => boolean) | null): void {
+        this.zocGeneralResolver = resolver;
+    }
+
+    private zocMaterialOf(cell: ZocOverlayCell): Material | null {
+        if (cell.presser === Faction.Player) {
+            return cell.level === 'impassable' ? this.zocPlayerImpassableMaterial : this.zocPlayerHighCostMaterial;
+        }
+        return cell.level === 'impassable' ? this.zocEnemyImpassableMaterial : this.zocEnemyHighCostMaterial;
+    }
+
+    /** 地格效果優先：有火、毒等效果的格子不蓋掉 */
+    private renderZocOverlay(state: BattleState): void {
+        if (!this.zocGeneralResolver) return;
+        zocOverlayCells(state, this.zocGeneralResolver, GAME_CONFIG.GRID_LANES, GAME_CONFIG.GRID_DEPTH).forEach((cell) => {
+            if (state.tileEffects.has(`${cell.lane},${cell.depth}`)) return;
+            const cellNode = this.cellNodes.get(`${cell.lane},${cell.depth}`);
+            if (cellNode) this.applyCellOverlayStyle(cellNode, this.zocMaterialOf(cell));
+        });
     }
 
     public setSkillPreviewCells(cells: Array<{ lane: number; depth: number }>): void {
@@ -1278,6 +1332,8 @@ export class BoardRenderer extends Component {
             if (!primaryMaterial && !accentMaterial) return;
             this.applyCellOverlayStyle(cellNode, primaryMaterial, accentMaterial);
         });
+
+        this.renderZocOverlay(state);
 
         // 玩家部署提示 (只在玩家回合顯示)：可部署亮綠、被占或被擋覆蓋紅色（主戰場UI規格書 §3.3，PROG-2-1876）
         if (this.deployHintFaction === Faction.Player) {

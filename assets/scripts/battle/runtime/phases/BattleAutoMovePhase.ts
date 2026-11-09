@@ -10,7 +10,7 @@ import { forestMoveBonusFor } from '../../../core/systems/FactorTacticLinkage';
 import { forcedMoveBlockedDamageRatio, resolveForcedMove } from '../../shared/ForcedMoveTile';
 import { resolveGhostPath, type GhostPathCell } from '../../shared/GhostMovePath';
 import { hasGhostMove, tallyTerrainMoveBonusOf, tallyTileMoveDeltaOf, canTrampleOver } from '../../shared/TallyPassive';
-import { EMPTY_ZOC_FIELD, buildZocField, type ZocField } from '../../shared/ZoneOfControl';
+import { battleZocField, type ZocField } from '../../shared/ZoneOfControl';
 
 const FORWARD_DIR: Record<Faction, number> = {
   [Faction.Player]: 1,
@@ -55,11 +55,10 @@ export function executeBattleAutoMovePhase(context: BattleAutoMovePhaseContext):
 }
 
 function resolveZocField(context: BattleAutoMovePhaseContext): ZocField {
-  if (context.state.battleTactic === BattleTactic.FloodAttack) return EMPTY_ZOC_FIELD;
   const presserFaction = context.actingFaction === Faction.Player ? Faction.Enemy : Faction.Player;
   const sources = context.getFactionUnits(presserFaction)
     .filter((unit) => !unit.isDead() && context.isGeneralUnit(unit.id));
-  return buildZocField(context.state.getGeneral(presserFaction), context.state.getGeneral(context.actingFaction), sources);
+  return battleZocField(context.state.battleTactic, context.state.getGeneral(presserFaction), context.state.getGeneral(context.actingFaction), sources);
 }
 
 function stepMoveUnit(
