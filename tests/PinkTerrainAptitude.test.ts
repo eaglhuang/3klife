@@ -12,6 +12,25 @@ import {
 import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
 import { Faction, TerrainType } from '../assets/scripts/shared/CommonEnums';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
+import { breed, pinkFactorAncestorCounts, type BreedingGeneral, type PedigreeSource } from '../assets/scripts/core/systems/BreedingSystem';
+import { createEmptyPedigree } from '../assets/scripts/core/services/BloodlineGraph';
+import { normalizeRosterRoles } from '../assets/scripts/core/systems/RosterRoleLoad';
+import { buildFactorDictionary } from '../assets/scripts/core/systems/FactorInheritance';
+import * as fs from 'fs';
+import * as path from 'path';
+
+const dictionary = buildFactorDictionary(JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', 'assets/resources/data/master/gene-dictionary.json'), 'utf8')));
+
+/** 父方往上三人都在族譜上，全部攜帶水戰因子；加上父母本人共 5 位祖先 */
+const FATHER_LINE: PedigreeSource = {
+    getPedigree: (uid) => (uid === 'dad' ? { ...createEmptyPedigree(), F: 'a1', M: 'a2', FF: 'a3' } : createEmptyPedigree()),
+    getPerson: (uid) => ({ uid, template_id: null, name: uid, gene_refs: ['gene_naval'], ep_base: 50, faction: 'shu', is_virtual: true }) as never,
+    commonAncestorDistance: () => null,
+};
+
+function parent(id: string, gender: '男' | '女'): BreedingGeneral {
+    return { id, name: id, faction: 'shu', gender, age: 30, hp: 1000, vitality: 100, maxVitality: 100, str: 80, int: 60, lea: 70, pol: 50, cha: 60, luk: 40 } as unknown as BreedingGeneral;
+}
 
 export function createPinkTerrainAptitudeSuite(): TestSuite {
     const suite = new TestSuite('PinkTerrainAptitude (粉色因子→地形適性 APT-09)');
@@ -71,6 +90,34 @@ export function createPinkTerrainAptitudeSuite(): TestSuite {
 
     suite.test('沒有武將時回傳 null，不丟例外', () => {
         assert.equals(null, battleAptitudeProfileOf(null));
+    });
+
+    suite.test('祖先數依席位計算，只列粉色地形因子', () => {
+        const pedigree = { ...createEmptyPedigree(), F: 'a', M: 'b', FF: 'a' };
+        const profiles = new Map([['a', { factorIds: ['gene_naval', 'gene_bravery'] }], ['b', { factorIds: ['gene_forest'] }]]);
+        assert.equals(JSON.stringify({ gene_naval: 2, gene_forest: 1 }), JSON.stringify(pinkFactorAncestorCounts(pedigree, profiles)));
+    });
+
+    suite.test('受孕時把祖先數存到子嗣，戰場適性因此升一級', () => {
+        let draws = 0;
+        const result = breed({
+            father: parent('dad', '男'),
+            mother: parent('mom', '女'),
+            pedigree: FATHER_LINE,
+            random: () => (draws++ === 0 ? 0 : 0.99),
+            childId: 'baby',
+            dictionary,
+        });
+        assert.equals('conceived', result.outcome);
+        assert.equals(5, result.child!.pinkAncestorCounts!.gene_naval);
+
+        const saved = JSON.parse(JSON.stringify(normalizeRosterRoles([result.child!])[0])) as GeneralConfig;
+        const withGene = { ...saved, genes: [{ id: 'gene_naval', level: 1 }] } as unknown as GeneralConfig;
+        const unit = new GeneralUnit(withGene);
+        assert.equals('B', battleAptitudeProfileOf(unit)!.terrainAptitude!.WATER);
+
+        const noLineage = new GeneralUnit({ ...withGene, pinkAncestorCounts: undefined } as unknown as GeneralConfig);
+        assert.equals('C', battleAptitudeProfileOf(noLineage)!.terrainAptitude!.WATER);
     });
 
     return suite;

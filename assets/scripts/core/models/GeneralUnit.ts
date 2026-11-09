@@ -113,6 +113,8 @@ export class GeneralUnit {
   public readonly weatherAptitude: Readonly<Record<string, string>>;
   /** 遺傳因子（粉色地形因子影響戰場地形適性，APT-09）；複本 */
   public readonly genes: GeneralGeneConfig[];
+  /** 14 人血統中攜帶各粉色地形因子的祖先數（受孕時算好，APT-09） */
+  public readonly pinkAncestorCounts: Readonly<Record<string, number>>;
   /** 培育繼承的祖先模板 id（bloodlineProfile.ancestorTemplateId）；英靈附體施放祖先成名奧義用（PROG-2-1603） */
   public readonly ancestorTemplateId: string | null;
 
@@ -146,6 +148,7 @@ export class GeneralUnit {
     this.terrainAptitude = { ...(config.terrainAptitude ?? {}) };
     this.weatherAptitude = { ...(config.weatherAptitude ?? {}) };
     this.genes = (config.genes ?? []).map((gene) => ({ ...gene }));
+    this.pinkAncestorCounts = { ...(config.pinkAncestorCounts ?? {}) };
     this.ancestorTemplateId = config.bloodlineProfile?.ancestorTemplateId ?? null;
   }
 
@@ -394,6 +397,8 @@ export interface GeneralConfig {
   generatorProfile?: GeneralGeneratorProfileConfig;
   bloodlineProfile?: GeneralBloodlineProfileConfig;
   genes?: GeneralGeneConfig[];
+  /** 14 人血統中攜帶各粉色地形因子的祖先數，key 為因子 id；舊資料沒有視為 0（APT-09） */
+  pinkAncestorCounts?: Record<string, number>;
 
   learnedTactics?: string[];
   /** 學府結業等途徑習得的特質 id（PROG-2-1909） */

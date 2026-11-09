@@ -50,6 +50,7 @@ import { lukMaxForGenes, luckThresholdEffects, type LuckThresholdEffects } from 
 import { forceFatherTacticCopy } from './LuckTacticCopy';
 import { applyFateInheritance } from './LuckFateInheritance';
 import { applyBloodlineMutation } from './LuckBloodlineMutation';
+import { PINK_TERRAIN_FACTOR_KEYS } from './BattleAptitude';
 
 export const BREEDING_MIN_AGE = 20;
 export const FATHER_VIGOR_COST = 50;
@@ -634,6 +635,22 @@ export interface BreedingResult {
     bloodFatigue?: BloodFatigueOutcome;
 }
 
+/**
+ * 14 人血統中攜帶各粉色地形因子的祖先數（APT-09）；沒有人攜帶的因子不列出。
+ * 依席位計算，近親時同一位祖先佔多席就算多次，與 computeEpMvp 的標籤統計同一計法。
+ */
+export function pinkFactorAncestorCounts(pedigree: Pedigree, profiles: ReadonlyMap<string, Pick<AncestorProfile, 'factorIds'>>): Record<string, number> {
+    const counts: Record<string, number> = {};
+    for (const slot of PEDIGREE_SLOTS) {
+        const uid = pedigree[slot];
+        const factorIds = uid ? profiles.get(uid)?.factorIds ?? [] : [];
+        for (const id of Object.keys(PINK_TERRAIN_FACTOR_KEYS)) {
+            if (factorIds.indexOf(id) >= 0) counts[id] = (counts[id] ?? 0) + 1;
+        }
+    }
+    return counts;
+}
+
 /** 預覽 EP（結緣介面用），不消耗亂數也不改任何資料 */
 export function previewBreedingEp(request: Omit<BreedingRequest, 'random' | 'childId'>): { pedigree: Pedigree; ep: EpBreakdown } {
     const pedigree = buildChildPedigree(request.father.id, request.mother.id, request.pedigree);
@@ -812,6 +829,8 @@ function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMo
         birthSeason: request.birthSeason,
     });
     stampAncestralPeaks(child, request, pedigree, profiles);
+    const pinkAncestorCounts = pinkFactorAncestorCounts(pedigree, profiles);
+    if (Object.keys(pinkAncestorCounts).length > 0) child.pinkAncestorCounts = pinkAncestorCounts;
     // 血脈疲勞放在最後擲，不打亂既有亂數序列
     const fatigueInbred = isInbredPair(request.father, request.mother, request.pedigree);
     const fatherFatigue = normalizeBloodFatigue(request.father.bloodFatigue);
