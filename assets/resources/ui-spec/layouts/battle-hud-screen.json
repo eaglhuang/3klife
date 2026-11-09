@@ -123,6 +123,7 @@
                   {
                     "type": "label",
                     "name": "BattleHudScreen_div_7",
+                    "id": "StageTitleLabel",
                     "width": 300,
                     "height": 37,
                     "text": "官 渡 · 烏 巢 劫 糧",
@@ -132,6 +133,7 @@
                   {
                     "type": "label",
                     "name": "BattleHudScreen_div_8",
+                    "id": "StageSubtitleLabel",
                     "width": 300,
                     "height": 14,
                     "text": "GUANDU · RAID AT WUCHAO",

@@ -55,6 +55,7 @@ export class BattleHUDComposite extends CompositePanel {
     private _playerTallySetLabel: Label  | null = null;
     private _pendingPlayerName: string | null = null;
     private _pendingEnemyName: string | null = null;
+    private _pendingStageTitle: string | null = null;
     private _pendingPlayerGeneralId: string | null = null;
     private _pendingEnemyGeneralId: string | null = null;
     private _pendingSceneGambitBadgeText: string | null = null;
@@ -64,6 +65,8 @@ export class BattleHUDComposite extends CompositePanel {
 
     // ── 節點引用（由 _onAfterBuildReady / onBuildComplete 填入）──
     private _turnLabel:           Label  | null = null;
+    private _stageTitleLabel:     Label  | null = null;
+    private _stageSubtitleLabel:  Label  | null = null;
     private _foodLabel:           Label  | null = null;
     private _statusLabel:         Label  | null = null;
     private _sceneGambitBadgeDock: Node   | null = null;
@@ -124,6 +127,8 @@ export class BattleHUDComposite extends CompositePanel {
      */
     protected override _onAfterBuildReady(binder: UITemplateBinder): void {
         this._turnLabel           = binder.getLabel('TurnLabel');
+        this._stageTitleLabel     = binder.getLabel('StageTitleLabel');
+        this._stageSubtitleLabel  = binder.getLabel('StageSubtitleLabel');
         this._foodLabel           = binder.getLabel('FoodLabel');
         this._statusLabel         = binder.getLabel('StatusLabel');
         this._sceneGambitBadgeDock = binder.getNode('SceneGambitBadgeDock');
@@ -225,6 +230,13 @@ export class BattleHUDComposite extends CompositePanel {
     /** 玩家在場的 Set 顯示文字（PROG-2-0580）；沒有 Set 時清空，只是提示、不是持續狀態列 */
     public setPlayerTallySetLabels(labels: string[]): void {
         if (this._playerTallySetLabel) this._playerTallySetLabel.string = labels.join('  ');
+    }
+
+    /** 關卡標題（PROG-2-2133）；關卡資料沒有英文名，副標清空，不留示意稿假字 */
+    public setStageTitle(title: string): void {
+        if (!this._buildCompleted) { this._pendingStageTitle = title; return; }
+        if (this._stageTitleLabel) this._stageTitleLabel.string = title;
+        if (this._stageSubtitleLabel) this._stageSubtitleLabel.string = '';
     }
 
     public setEnemyName(name: string): void {
@@ -381,6 +393,10 @@ export class BattleHUDComposite extends CompositePanel {
         if (this._pendingPlayerName !== null) {
             this.setPlayerName(this._pendingPlayerName);
             this._pendingPlayerName = null;
+        }
+        if (this._pendingStageTitle !== null) {
+            this.setStageTitle(this._pendingStageTitle);
+            this._pendingStageTitle = null;
         }
         if (this._pendingEnemyName !== null) {
             this.setEnemyName(this._pendingEnemyName);

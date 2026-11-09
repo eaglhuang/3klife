@@ -6,10 +6,11 @@
  */
 import * as fs from 'fs';
 import * as path from 'path';
+import { formatBattleStageTitle } from '../assets/scripts/shared/BattleEntryParams';
 import { TestSuite, assert } from './TestRunner';
 
 const LAYOUT = path.join(__dirname, '../assets/resources/ui-spec/layouts/battle-hud-screen.json');
-const REQUIRED = ['TurnLabel', 'PlayerNameLabel', 'PlayerCommandNameLabel', 'EnemyNameLabel'];
+const REQUIRED = ['TurnLabel', 'PlayerNameLabel', 'PlayerCommandNameLabel', 'EnemyNameLabel', 'StageTitleLabel', 'StageSubtitleLabel'];
 
 function collectIds(node: any, out: string[]): string[] {
     if (node?.id) out.push(node.id);
@@ -26,6 +27,20 @@ export function createBattleHudBindingIdsSuite(): TestSuite {
         for (const id of REQUIRED) {
             assert.equals(1, ids.filter((x) => x === id).length, `${id} 應恰好出現一次`);
         }
+    });
+
+    suite.test('關卡標題沿用字距，沒有關卡資料時留空', () => {
+        assert.equals(formatBattleStageTitle('濡須夜劫營'), '濡 須 夜 劫 營');
+        assert.equals(formatBattleStageTitle('水淹 七軍'), '水 淹 七 軍');
+        assert.equals(formatBattleStageTitle(undefined), '');
+    });
+
+    suite.test('戰場真的把關卡名送進 HUD，而且版面標題有綁定', () => {
+        const root = path.join(__dirname, '../assets/scripts');
+        const scene = fs.readFileSync(path.join(root, 'battle/views/BattleScene.ts'), 'utf8');
+        const hud = fs.readFileSync(path.join(root, 'ui/components/BattleHUDComposite.ts'), 'utf8');
+        assert.isTrue(scene.includes('setStageTitle(formatBattleStageTitle(encounter?.name))'));
+        assert.isTrue(hud.includes("binder.getLabel('StageTitleLabel')"));
     });
 
     return suite;
