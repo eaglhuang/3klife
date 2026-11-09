@@ -81,7 +81,7 @@
                     "width": "100%",
                     "height": 22,
                     "text": "總數：34",
-                    "styleSlot": "etc.label.meta"
+                    "styleSlot": "etc.label.meta.onLight"
                   },
                   {
                     "type": "label",
@@ -89,7 +89,7 @@
                     "width": "100%",
                     "height": 22,
                     "text": "正式圖：27",
-                    "styleSlot": "etc.label.meta"
+                    "styleSlot": "etc.label.meta.onLight"
                   },
                   {
                     "type": "label",
@@ -97,7 +97,7 @@
                     "width": "100%",
                     "height": 22,
                     "text": "暫用圖：7",
-                    "styleSlot": "etc.label.meta"
+                    "styleSlot": "etc.label.meta.onLight"
                   }
                 ]
               },

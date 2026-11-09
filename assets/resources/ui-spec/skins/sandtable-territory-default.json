@@ -79,6 +79,24 @@
       "color": "secondaryLight",
       "isBold": false,
       "overflow": "CLAMP"
+    },
+    "sandtable-picker.text.onCard.primary": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 24,
+      "lineHeight": 28,
+      "color": "textInk",
+      "isBold": true,
+      "overflow": "CLAMP"
+    },
+    "sandtable-picker.text.onCard.secondary": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 20,
+      "lineHeight": 24,
+      "color": "textInk",
+      "isBold": false,
+      "overflow": "CLAMP"
     }
   }
 }
