@@ -55,6 +55,7 @@ export class SandtableTerritoryComposite extends CompositePanel {
         this.onRequestClose = payload.onRequestClose ?? null;
         this._applyTexts();
         this.node.active = true;
+        this.node.setSiblingIndex(this.node.parent ? this.node.parent.children.length - 1 : 0);
     }
 
     public hide(): void {
