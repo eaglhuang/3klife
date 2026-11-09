@@ -632,7 +632,7 @@
             "name": "SeasonTitleLabel",
             "width": 360,
             "height": 44,
-            "styleSlot": "sandtable-picker.text.primary",
+            "styleSlot": "sandtable-picker.text.onCard.primary",
             "text": ""
           },
           {
@@ -640,7 +640,7 @@
             "name": "SeasonLineLabel",
             "width": 360,
             "height": 52,
-            "styleSlot": "sandtable-picker.text.secondary",
+            "styleSlot": "sandtable-picker.text.onCard.secondary",
             "text": ""
           },
           {
@@ -648,7 +648,7 @@
             "name": "VenueLineLabel",
             "width": 360,
             "height": 52,
-            "styleSlot": "sandtable-picker.text.secondary",
+            "styleSlot": "sandtable-picker.text.onCard.secondary",
             "text": ""
           },
           {
@@ -656,7 +656,7 @@
             "name": "TeamLineLabel",
             "width": 360,
             "height": 52,
-            "styleSlot": "sandtable-picker.text.secondary",
+            "styleSlot": "sandtable-picker.text.onCard.secondary",
             "text": ""
           }
         ]

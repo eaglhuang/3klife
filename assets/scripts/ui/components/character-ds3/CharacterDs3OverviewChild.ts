@@ -3,6 +3,7 @@ import { setSpriteFillColor } from '../SolidBackground';
 import { Color, Graphics, Label, Node, Sprite, UITransform } from 'cc';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
 import { ds3Label, ds3SetActive } from './Ds3NodeLookup';
+import { DS3_RARITY_PILL_BG, DS3_RARITY_PILL_TEXT } from '../../core/UIContrast';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import type { GeneralDetailOverviewContentState } from '../GeneralDetailOverviewMapper';
 import { TALLY_SUMMARY_CARD_TITLE, tallySummaryCardLines } from '../../../core/systems/GeneralTallySummary';
@@ -17,22 +18,6 @@ import {
 } from '../../core/UIPersonalityBadge';
 
 const PERSONALITY_BADGE_NODE = 'PersonalityBadge';
-
-const DS3_RARITY_PILL_BG: Record<GeneralDetailOverviewContentState['rarityTier'], [number, number, number]> = {
-    common: [76, 175, 80],
-    rare: [33, 150, 243],
-    epic: [156, 39, 176],
-    legendary: [255, 193, 7],
-    mythic: [211, 47, 47],
-};
-
-const DS3_RARITY_PILL_TEXT: Record<GeneralDetailOverviewContentState['rarityTier'], [number, number, number]> = {
-    common: [255, 255, 255],
-    rare: [255, 255, 255],
-    epic: [255, 255, 255],
-    legendary: [45, 30, 0],
-    mythic: [255, 255, 255],
-};
 
 /** character_v3 將分頁身份欄節點（綁定表 ui-bind-maps/character-ds3-main.json 命名） */
 const IDENTITY_LABELS: Partial<Record<keyof GeneralDetailOverviewContentState['identity'], string>> = {
@@ -85,7 +70,7 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
         this._setLabelText('OverviewName', state.headerName);
         this._setLabelText('OverviewRoleBadge', state.headerMeta);
         this._applyPersonalityBadge(state.personalityBadge ?? null);
-        this._setLabelText('OverviewRarityTier', state.rarityLabel);
+        this._setRarityPillText(state.rarityLabel);
         this._setLabelText('OverviewBio', state.biographyBody);
         this._clampBio();
         // 逸事故事條由立繪下方的頁籤展開，這一列在 v3 沒有功能，還會超出畫面
@@ -115,10 +100,17 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
         return null;
     }
 
+    private _setRarityPillText(text: string): void {
+        const label = ds3Label(this.binder, this.hostNode, 'OverviewRarityTier');
+        if (label) label.string = text?.trim() ?? '';
+    }
+
     private _applyRarityPill(tier: GeneralDetailOverviewContentState['rarityTier']): void {
         const pillNode = this.binder.getNode('OverviewRarityTier');
         const pillSprite = pillNode?.getComponent(Sprite) ?? null;
-        const pillLabel = this.binder.getLabel('OverviewRarityTier');
+        // 底板節點（Sprite）自己沒有 Label，文字在子節點；binder 只找得到底板時要往下找，
+        // 否則字色與文字都套不上（人物頁 UR 標籤深字壓在紅／綠底，PROG-2-2113）
+        const pillLabel = ds3Label(this.binder, this.hostNode, 'OverviewRarityTier');
 
         if (pillSprite) {
             setSpriteFillColor(pillSprite, this._toColor(DS3_RARITY_PILL_BG[tier]));
