@@ -541,6 +541,7 @@ export class BattleSkillDispatcher {
       },
       getTerrain: (lane: number, depth: number) => state.getCell(lane, depth)?.terrain ?? TerrainType.Plain,
       isLastSpurt: () => state.lastSpurtMode,
+      isStaminaExhausted: (faction) => state.isStaminaExhausted(faction),
       getCasterCell: (casterFaction: Faction) => {
         // 武將資料沒有格子座標，改由武將的戰場單位取位置（同 PROG-2-0755 的做法）
         const generalId = casterFaction === Faction.Player

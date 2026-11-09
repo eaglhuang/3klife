@@ -345,6 +345,8 @@
   "ui.battle.skill.source_tactic": "Tactic",
   "ui.battle.skill.charging": "{0} charging, not enough SP",
   "ui.battle.last_spurt.entered": "Turn {0} · Last Spurt!",
+  "ui.battle.stamina.exhausted_player": "Our general is exhausted: Last Spurt lost",
+  "ui.battle.stamina.exhausted_enemy": "Enemy general is exhausted: Last Spurt lost",
   "ui.battle.skill.cast_done": "{0} activated",
   "ui.battle.skill.cast_failed": "{0} failed to activate",
   "ui.battle.skill.cast_failed_target": "{0} failed to activate, please choose another target",

@@ -105,6 +105,7 @@ import { fillTacticNumbers, type TacticMetrics } from '../shared/EnemyTacticNumb
 import { aiHoldsTactic, pickTacticByIq } from '../shared/AiTacticDecision';
 import { aiShouldInitiateDuel } from '../../core/systems/AiDuelDecision';
 import { lastSpurtReasonOf } from '../../core/systems/LastSpurtJudge';
+import { burnStamina, staminaPool, willOf } from '../../core/systems/StaminaBurn';
 import { advanceWisdomMeter, applyWisdomSurge } from '../shared/WisdomMeter';
 import { estimateTacticDamage } from '../shared/TacticDamageEstimate';
 import type { TacticAiSituation } from '../shared/TacticAiRules';
@@ -938,6 +939,24 @@ export class BattleController {
     services().event.emit(EVENT_NAMES.LastSpurtEntered, { turn, reason });
   }
 
+  /** 破釜沉舟體力燃燒（FORM-07）：殘局中每回合依部隊平均速度與士氣扣主將體力。 */
+  private burnLastSpurtStamina(): void {
+    if (!this.state.lastSpurtMode) return;
+    const turn = services().battle.getSnapshot().turn;
+    for (const faction of [Faction.Player, Faction.Enemy]) {
+      const general = this.state.getGeneral(faction);
+      const units = this.livingUnitsOf(faction);
+      if (!general || units.length === 0) continue;
+      const before = this.state.generalStamina.get(faction) ?? staminaPool(general.maxHp);
+      if (before === 0) continue;
+      const speed = units.reduce((sum, unit) => sum + unit.getEffectiveMoveRange(), 0) / units.length;
+      const morale = units.reduce((sum, unit) => sum + unit.morale, 0) / units.length;
+      const after = burnStamina(before, speed, willOf(morale, general.luk));
+      this.state.generalStamina.set(faction, after);
+      if (after === 0) services().event.emit(EVENT_NAMES.StaminaExhausted, { faction, turn });
+    }
+  }
+
   public triggerPlayerSeedTactic(options: GeneralSkillCastOptions = {}): boolean {
     if (!this.canUsePlayerSkills()) return false;
 
@@ -1422,6 +1441,7 @@ export class BattleController {
     svc.battle.nextTurn();
     this.state.tickControlledUnits();
     this.updateLastSpurtMode();
+    this.burnLastSpurtStamina();
     this.updateWisdomMeter();
     const weatherBefore = this.state.weather;
     this.applyWeatherForTurn(svc.battle.getSnapshot().turn);

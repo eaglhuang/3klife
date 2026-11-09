@@ -152,6 +152,8 @@ export class BattleState {
   public fallenUnits: TroopUnit[] = [];
   /** 殘局模式（FORM-10）：第 5 回合或存活低於 50% 時進入，進入後不退出 */
   public lastSpurtMode = false;
+  /** 各陣營主將剩餘體力（FORM-07）：進殘局後才建立，歸零後爆發失效 */
+  public generalStamina = new Map<Faction, number>();
   /** 戰場上出現過的最高合計兵力（FORM-10 存活比例分母） */
   public peakTroopCount = 0;
   /** 軍師智謀能量（SCN-10，WisdomMeter）：每回合 INT×0.5 累積，滿 100 觸發後歸零 */
@@ -206,6 +208,7 @@ export class BattleState {
     this.controlledUnits.clear();
     this.fallenUnits = [];
     this.lastSpurtMode = false;
+    this.generalStamina.clear();
     this.peakTroopCount = 0;
     this.wisdomMeter = 0;
     this.wisdomTriggerCount = 0;
@@ -243,6 +246,10 @@ export class BattleState {
       return null;
     }
     return this.cells[lane * GAME_CONFIG.GRID_DEPTH + depth];
+  }
+
+  public isStaminaExhausted(faction: Faction): boolean {
+    return this.generalStamina.get(faction) === 0;
   }
 
   public getGeneral(faction: Faction): GeneralUnit | null {

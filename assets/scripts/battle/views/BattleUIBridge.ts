@@ -213,6 +213,7 @@ export class BattleUIBridge {
       svc.event.on(EVENT_NAMES.KinComboAttack,          this._onKinComboAttack.bind(this)),
       svc.event.on(EVENT_NAMES.RelationEventTriggered,  this._onRelationEventTriggered.bind(this)),
       svc.event.on(EVENT_NAMES.LastSpurtEntered,        this._onLastSpurtEntered.bind(this)),
+      svc.event.on(EVENT_NAMES.StaminaExhausted,        this._onStaminaExhausted.bind(this)),
       svc.event.on(EVENT_NAMES.UnitHealed,              this._onUnitHealed.bind(this)),
       svc.event.on(EVENT_NAMES.UnitMoved,               this._onUnitMoved.bind(this)),
       svc.event.on(EVENT_NAMES.UnitDied,                this._onUnitDied.bind(this)),
@@ -504,6 +505,13 @@ export class BattleUIBridge {
   private _onLastSpurtEntered(data?: { turn: number; reason: 'turn' | 'attrition' }): void {
     if (!data) return;
     this.ctx.deployRuntime?.showToast(services().i18n.t('ui.battle.last_spurt.entered', String(data.turn)), 2.5);
+  }
+
+  /** 主將體力耗盡（FORM-07）：浮一條 Toast 提示殘局爆發失效 */
+  private _onStaminaExhausted(data?: { faction: Faction }): void {
+    if (!data) return;
+    const key = data.faction === Faction.Player ? 'ui.battle.stamina.exhausted_player' : 'ui.battle.stamina.exhausted_enemy';
+    this.ctx.deployRuntime?.showToast(services().i18n.t(key), 2.5);
   }
 
   private _onRelationEventTriggered(data?: { hit: RelationEventHit }): void {

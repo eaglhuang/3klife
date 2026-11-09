@@ -17,6 +17,8 @@ export interface BattleSkillExecutionContext {
   getTerrain(lane: number, depth: number): TerrainType;
   /** 是否已進入破釜沉舟殘局（FORM-06，PROG-2-1992）；舊測試 context 可不提供，視為未進入 */
   isLastSpurt?(): boolean;
+  /** 該陣營主將體力是否已耗盡（FORM-07）；舊測試不提供時視為未耗盡 */
+  isStaminaExhausted?(faction: Faction): boolean;
   /** 施放者所在格（PROG-2-0756：衝鋒判定直線用）；舊測試 context 可不提供，視為無衝鋒 */
   getCasterCell?(casterFaction: Faction): { lane: number; depth: number } | null;
   /** 施放者的射程上限（林地 D 視野受限，PROG-2-0789）；沒有上限時為 null */
