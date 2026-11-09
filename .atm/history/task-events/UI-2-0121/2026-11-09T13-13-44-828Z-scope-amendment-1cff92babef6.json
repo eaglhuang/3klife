@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-09T13-13-44-828Z-scope-amendment-1cff92babef6",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:df30e4dc7796a4d74da7b1f9a79beb44d231981b0c205613c29805b57c76bcdc",
+  "createdAt": "2026-11-09T13:13:44.828Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/yu_ji_portrait.png,assets/resources/sprites/generals/avatars/yu_ji_avatar.png,assets/resources/sprites/ui_avatars/cropped/yu_ji_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
