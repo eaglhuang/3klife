@@ -69,6 +69,12 @@ export interface NationState {
     readonly tradeSeason?: number;
     /** 該季已交易次數 */
     readonly tradeCount?: number;
+    /** 最近一次用通商節鉞刷新令的季序號（OFC-12，單季每國 1 次） */
+    readonly tradeRefreshSeason?: number;
+    /** 最近一次用外交拜帖錦囊的季序號（OFC-12） */
+    readonly giftLetterSeason?: number;
+    /** 該季對這國用過幾次外交拜帖錦囊（上限 GIFT_LETTERS_PER_SEASON） */
+    readonly giftLetterCount?: number;
     /** 內政資源（RAI-01）；舊存檔缺漏時補 AI_STARTING_RESOURCES */
     readonly resources?: NationResources;
     /** 已完成的內政季數（RAI-03 招募每 2 季一次的計數） */
@@ -114,6 +120,9 @@ export const RELATION_TIER_LABEL: Readonly<Record<RelationTier, string>> = {
 /** 送禮花費與邦交增加（規格 +10~+30 依價值，MVP 固定一檔） */
 export const GIFT_GOLD_COST = 1000;
 export const GIFT_RELATION_GAIN = 15;
+/** 外交拜帖錦囊（doc_spec_0634 §2）：單次送禮額外邦交，單季對同一勢力最多生效次數 */
+export const GIFT_LETTER_RELATION_BONUS = 10;
+export const GIFT_LETTERS_PER_SEASON = 2;
 export const ALLIANCE_MIN_RELATION = 40;
 export const ALLIANCE_RELATION_GAIN = 30;
 /** 每季邦交向 0 回歸 */
@@ -172,6 +181,29 @@ export function sendGift(world: RivalWorld, id: string, gold: number): Diplomacy
     if (gold < GIFT_GOLD_COST) return { ok: false, world, goldSpent: 0, message: `金幣不足，送禮需要 ${GIFT_GOLD_COST}` };
     const next = updateNation(world, id, (n) => ({ ...n, relation: clampRelation(n.relation + GIFT_RELATION_GAIN) }));
     return { ok: true, world: next, goldSpent: GIFT_GOLD_COST, message: `向 ${name} 送禮，邦交 +${GIFT_RELATION_GAIN}` };
+}
+
+/** 本季已對該國用過幾次外交拜帖錦囊（記錄的季不是本季時視為 0） */
+export function giftLettersUsed(nation: NationState, season: number): number {
+    return nation.giftLetterSeason === season ? nation.giftLetterCount ?? 0 : 0;
+}
+
+/** 附外交拜帖錦囊送禮：一般送禮再加額外邦交；本季次數用完就整筆拒絕，不白花金幣 */
+export function sendGiftWithLetter(world: RivalWorld, id: string, gold: number, season: number): DiplomacyResult {
+    const name = nationDef(id)?.name ?? id;
+    const used = giftLettersUsed(findNation(world, id), season);
+    if (used >= GIFT_LETTERS_PER_SEASON) {
+        return { ok: false, world, goldSpent: 0, message: `本季對 ${name} 已用過 ${GIFT_LETTERS_PER_SEASON} 次外交拜帖` };
+    }
+    const gift = sendGift(world, id, gold);
+    if (!gift.ok) return gift;
+    const next = updateNation(gift.world, id, (n) => ({
+        ...n,
+        relation: clampRelation(n.relation + GIFT_LETTER_RELATION_BONUS),
+        giftLetterSeason: season,
+        giftLetterCount: used + 1,
+    }));
+    return { ok: true, world: next, goldSpent: gift.goldSpent, message: `向 ${name} 送禮並附拜帖，邦交 +${GIFT_RELATION_GAIN + GIFT_LETTER_RELATION_BONUS}` };
 }
 
 /** 結盟：邦交 ≥ 40 且不在交戰中 */
@@ -522,6 +554,12 @@ export function normalizeRivalWorld(raw: unknown): RivalWorld {
                     : {}),
                 ...(typeof s.tradeSeason === 'number' && Number.isFinite(s.tradeSeason)
                     ? { tradeSeason: Math.floor(s.tradeSeason), tradeCount: Math.max(0, Math.floor(num(s.tradeCount, 0))) }
+                    : {}),
+                ...(typeof s.tradeRefreshSeason === 'number' && Number.isFinite(s.tradeRefreshSeason)
+                    ? { tradeRefreshSeason: Math.floor(s.tradeRefreshSeason) }
+                    : {}),
+                ...(typeof s.giftLetterSeason === 'number' && Number.isFinite(s.giftLetterSeason)
+                    ? { giftLetterSeason: Math.floor(s.giftLetterSeason), giftLetterCount: Math.max(0, Math.floor(num(s.giftLetterCount, 0))) }
                     : {}),
             };
         }),

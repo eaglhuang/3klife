@@ -75,6 +75,7 @@ import type { FarewellLetter } from '../systems/FarewellLetterInbox';
 import type { LoginStreakState } from '../systems/LoginStreak';
 import { normalizeSevenDayJourney, type SevenDayJourneyState } from '../systems/SevenDayJourney';
 import { normalizeOpeningOfferState, type OpeningOfferState } from '../systems/OpeningOffer';
+import { normalizePaidFeatureQuota, type PaidFeatureQuotaState } from '../systems/PaidFeatureQuota';
 import { normalizeOfficerTrial, type OfficerTrial } from '../systems/OfficerCommerce';
 import { normalizeMonthlyCard, type MonthlyCardState } from '../systems/MonthlyCard';
 
@@ -204,6 +205,8 @@ export interface PlayerSaveSnapshot {
     monthlyCard?: MonthlyCardState;
     /** 高階官職試用（OFC-12）；不覆寫 officerState */
     officerTrial?: OfficerTrial;
+    /** 付費功能的每日額度（裁決第 19 項） */
+    paidFeatureQuota?: PaidFeatureQuotaState;
     /** 開場商業序列的回應紀錄（OPEN-12） */
     openingOffers?: OpeningOfferState;
     /** 三國日報素材：前 24h 玩家行為紀錄（PROG-2-1170）；只在有紀錄時寫入，舊檔沒有時讀回空陣列；版號不升 */
@@ -668,6 +671,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(normalizeDailySubsidyRecord(snapshot.dailySubsidy) ? { dailySubsidy: normalizeDailySubsidyRecord(snapshot.dailySubsidy)! } : {}),
         ...(normalizeMonthlyCard(snapshot.monthlyCard) ? { monthlyCard: normalizeMonthlyCard(snapshot.monthlyCard)! } : {}),
         ...(normalizeOfficerTrial(snapshot.officerTrial) ? { officerTrial: normalizeOfficerTrial(snapshot.officerTrial)! } : {}),
+        ...(snapshot.paidFeatureQuota ? { paidFeatureQuota: normalizePaidFeatureQuota(snapshot.paidFeatureQuota) } : {}),
         ...(snapshot.openingOffers ? { openingOffers: normalizeOpeningOfferState(snapshot.openingOffers) } : {}),
         ...(snapshot.playerLogs !== undefined ? { playerLogs: normalizePlayerLogs(snapshot.playerLogs) } : {}),
         ...(snapshot.dailyNews !== undefined ? { dailyNews: normalizeDailyNewsState(snapshot.dailyNews) } : {}),

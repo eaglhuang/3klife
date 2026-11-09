@@ -47,6 +47,19 @@ export function tradesUsed(nation: NationState, season: number): number {
     return nation.tradeSeason === season ? nation.tradeCount ?? 0 : 0;
 }
 
+/** 通商節鉞刷新令（doc_spec_0634 §2）：把本季與該國的交易次數歸零；單季每國 1 次，沒交易過不浪費 */
+export function refreshRivalTrade(world: RivalWorld, nationId: string, season: number): TradeResult {
+    const nation = world.nations.find((n) => n.id === nationId);
+    if (!nation) return { ok: false, world, message: `找不到勢力 ${nationId}` };
+    const name = nationDef(nationId)?.name ?? nationId;
+    if (tradesUsed(nation, season) === 0) return { ok: false, world, message: `本季尚未與 ${name} 交易，不需要刷新` };
+    if (nation.tradeRefreshSeason === season) return { ok: false, world, message: `本季已刷新過與 ${name} 的通商` };
+    const next: RivalWorld = {
+        nations: world.nations.map((n) => (n.id === nationId ? { ...n, tradeCount: 0, tradeRefreshSeason: season } : n)),
+    };
+    return { ok: true, world: next, message: `與 ${name} 的通商次數已刷新` };
+}
+
 /** 收到 amount 單位要付出多少：無條件進位、最少 1；結盟國打 8 折 */
 export function tradeCost(route: TradeRoute, amount: number, allied: boolean): number {
     const raw = amount * route.rate * (allied ? ALLY_TRADE_DISCOUNT : 1);

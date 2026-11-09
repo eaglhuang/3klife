@@ -299,7 +299,10 @@ import {
     type JournalWriteResult,
 } from '../systems/JournalLog';
 import type { DomesticTaskId } from '../systems/DomesticTasks';
-import { TRADE_RESOURCE_NAMES, tradeWithRival as tradeWithRivalPure, type TradeResult } from '../systems/RivalTrade';
+import { refreshRivalTrade as refreshRivalTradePure, TRADE_RESOURCE_NAMES, tradeWithRival as tradeWithRivalPure, type TradeResult } from '../systems/RivalTrade';
+import { sendGiftWithLetter } from '../systems/RivalNations';
+import { ITEM_DIPLOMACY_LETTER } from '../systems/ItemDef';
+import { consumePaidFeatureUse, EMPTY_PAID_FEATURE_QUOTA, normalizePaidFeatureQuota, previewPaidFeatureUse, QUOTA_FEATURE_OFC_REFRESH, type PaidFeatureQuotaState, type QuotaPreview } from '../systems/PaidFeatureQuota';
 import { newAiHegemonOf } from '../systems/RivalHegemony';
 import type { RivalNationRoster } from '../systems/RivalOfficers';
 import type { RivalPowerContext } from '../systems/RivalOfficerSeason';
@@ -845,6 +848,8 @@ export class GameSession {
     private _governanceBoosts: ActiveGovernanceBoost[] = [];
     private _governanceEventRandom: RandomSource | null = null;
     private _rivals: RivalWorld = createRivalWorld();
+    /** 付費功能的每日額度（裁決第 19 項）；存檔欄位 paidFeatureQuota */
+    private _paidFeatureQuota: PaidFeatureQuotaState = EMPTY_PAID_FEATURE_QUOTA;
     /** 他國逐將名冊與重算情境（E-9，PROG-2-1714）；未設定時他國照舊以兵力計軍力 */
     private _rivalOfficers: { rosters: Readonly<Record<string, RivalNationRoster>>; context: RivalPowerContext } | null = null;
     private _rivalRulerIds: Readonly<Record<string, string>> = {};
@@ -2024,6 +2029,7 @@ export class GameSession {
         this._sevenDayJourney = createSevenDayJourneyState();
         this._officerState = initialOfficerState();
         this._officerTrial = null;
+        this._paidFeatureQuota = EMPTY_PAID_FEATURE_QUOTA;
         this._sandtableMarkerTerritories = [];
         this._sandtableUnlockHistory = [];
         this._startingTalisman = null;
@@ -2295,6 +2301,37 @@ export class GameSession {
         if (this._save) {
             await this.save();
         }
+    }
+
+    /** 通商節鉞刷新令的價格預覽（OFC-12）：每日免費 1 次，超額 60 玉璧 */
+    public previewRivalTradeRefresh(gems: number, epochMs: number = Date.now()): QuotaPreview {
+        return previewPaidFeatureUse(this._paidFeatureQuota, QUOTA_FEATURE_OFC_REFRESH, epochMs, gems);
+    }
+
+    /** 使用通商節鉞刷新令（OFC-12）：先確認這次刷新有效才計費，失敗不扣額度也不扣玉璧 */
+    public async refreshRivalTrade(nationId: string, wallet: { gems: number; spend: (n: number) => void }, epochMs: number = Date.now()): Promise<TradeResult> {
+        const result = refreshRivalTradePure(this._rivals, nationId, this._clock.state.totalSeasonsElapsed);
+        if (!result.ok) return result;
+        const quota = consumePaidFeatureUse(this._paidFeatureQuota, QUOTA_FEATURE_OFC_REFRESH, epochMs, wallet.gems);
+        if (!quota.ok) return { ok: false, world: this._rivals, message: '玉璧不足，無法刷新通商' };
+        if (quota.gemsSpent > 0) wallet.spend(quota.gemsSpent);
+        this._paidFeatureQuota = quota.state;
+        this._rivals = result.world;
+        if (this._autoSave && this._save) await this.save();
+        return result;
+    }
+
+    /** 附外交拜帖錦囊送禮（OFC-12）：沒有道具或本季次數用完時不扣金幣也不扣道具 */
+    public async sendRivalGiftWithLetter(nationId: string, wallet: { gold: number; spend: (n: number) => void }): Promise<{ ok: boolean; message: string }> {
+        const inventory = consumeItem(this._inventory, ITEM_DIPLOMACY_LETTER);
+        if (!inventory) return { ok: false, message: '沒有外交拜帖錦囊' };
+        const result = sendGiftWithLetter(this._rivals, nationId, wallet.gold, this._clock.state.totalSeasonsElapsed);
+        if (!result.ok) return { ok: false, message: result.message };
+        wallet.spend(result.goldSpent);
+        this._inventory = inventory;
+        this._rivals = result.world;
+        if (this._autoSave && this._save) await this.save();
+        return { ok: true, message: result.message };
     }
 
     /**
@@ -5181,8 +5218,8 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'officerTrial' | 'openingOffers' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'officerTrial' | 'openingOffers' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'officerTrial' | 'paidFeatureQuota' | 'openingOffers' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'officerTrial' | 'paidFeatureQuota' | 'openingOffers' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
@@ -5198,6 +5235,7 @@ export class GameSession {
         if (this._monthlyCard) fields.monthlyCard = { ...this._monthlyCard };
         const trial = this.activeOfficerTrial;
         if (trial) fields.officerTrial = trial;
+        if (this._paidFeatureQuota.day !== null) fields.paidFeatureQuota = this._paidFeatureQuota;
         if (this._playerLogs.length > 0) fields.playerLogs = this.playerLogs;
         if (this._dailyNews.lastLoginMs !== null) fields.dailyNews = this.dailyNews;
         if (this._sevenDayJourney.firstLoginDay !== null) fields.sevenDayJourney = this.sevenDayJourney;
@@ -5256,6 +5294,7 @@ export class GameSession {
         this._startingTalisman = normalizeStartingTalisman(snapshot.startingTalisman);
         this._openingPhase = normalizeOpeningPhaseId(snapshot.openingPhase);
         this._openingOffers = normalizeOpeningOfferState(snapshot.openingOffers);
+        this._paidFeatureQuota = normalizePaidFeatureQuota(snapshot.paidFeatureQuota);
         this._enrollGrantDay = normalizeEnrollGrantDay(snapshot.enrollGrantDay);
         this._itemAcquisitionLog = normalizeAcquisitionLog(snapshot.itemAcquisitionLog);
         this._aiAdaptiveStreak = normalizeAiAdaptiveStreak(snapshot.aiAdaptiveStreak);

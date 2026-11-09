@@ -50,6 +50,7 @@ export const ITEM_WEATHER_WIND = 'item-weather-wind';
 export const ITEM_WEATHER_RAIN = 'item-weather-rain';
 /** 刷新券（手動刷新傭兵池與地下城，ITM-04b REFRESH；PROG-2-1038 接線）。取得來源為商城，不在本卡。 */
 export const ITEM_REFRESH = 'ITEM_REFRESH';
+export const ITEM_DIPLOMACY_LETTER = 'ITEM_DIPLOMACY_LETTER';
 /** 安胎藥（結緣受孕率 ×1.5，ITM-04b BOOST_CONCEPTION；PROG-2-1038 接線）。取得來源為商城，不在本卡。 */
 export const ITEM_FERTILITY = 'ITEM_FERTILITY';
 /** 入學令（許願池商品，名詞表 Admission_Token；PROG-2-1198，PM 暫定 id）。用途待接線。 */
@@ -108,6 +109,7 @@ export const ITEM_DEFS: readonly ItemDef[] = [
     { id: ITEM_GOV_BOOST_DIPLOMACY, name: '縱橫令', category: '消耗品', rarity: 1 },
     { id: ITEM_GOV_BOOST_ARMS, name: '軍備令', category: '消耗品', rarity: 1 },
     { id: ITEM_GOV_BOOST_SCOUTING, name: '斥候令', category: '消耗品', rarity: 1 },
+    { id: ITEM_DIPLOMACY_LETTER, name: '外交拜帖錦囊', category: '消耗品', rarity: 1 },
 ];
 
 /** 依道具 ID 查定義；沒有定義時回傳 null（例如舊存檔的未知 key） */
