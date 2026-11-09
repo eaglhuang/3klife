@@ -637,13 +637,18 @@ export interface BreedingResult {
 
 /**
  * 14 人血統中攜帶各粉色地形因子的祖先數（APT-09）；沒有人攜帶的因子不列出。
- * 依席位計算，近親時同一位祖先佔多席就算多次，與 computeEpMvp 的標籤統計同一計法。
+ * 依人頭計算：近親時同一位祖先佔多席只算一次（裁決 2026-11-09 第 16b 題），
+ * 否則近親反而更容易湊滿地形適性。已存進舊子嗣的祖先數不回補（第 16a 題）。
+ * 與 computeEpMvp 的標籤統計（依席位）計法不同，不要合併。
  */
 export function pinkFactorAncestorCounts(pedigree: Pedigree, profiles: ReadonlyMap<string, Pick<AncestorProfile, 'factorIds'>>): Record<string, number> {
     const counts: Record<string, number> = {};
+    const counted = new Set<string>();
     for (const slot of PEDIGREE_SLOTS) {
         const uid = pedigree[slot];
-        const factorIds = uid ? profiles.get(uid)?.factorIds ?? [] : [];
+        if (!uid || counted.has(uid)) continue;
+        counted.add(uid);
+        const factorIds = profiles.get(uid)?.factorIds ?? [];
         for (const id of Object.keys(PINK_TERRAIN_FACTOR_KEYS)) {
             if (factorIds.indexOf(id) >= 0) counts[id] = (counts[id] ?? 0) + 1;
         }
