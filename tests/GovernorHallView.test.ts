@@ -74,7 +74,7 @@ export function createGovernorHallViewSuite(): TestSuite {
     suite.test('不改輸入快照', () => {
         const input = snapshot();
         buildGovernorHallView(input);
-        assert.equals(100, input.gold.base);
+        assert.equals(100, input.gold!.base);
         assert.equals(800, input.cityTroops.current);
     });
 

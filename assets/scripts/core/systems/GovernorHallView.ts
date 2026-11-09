@@ -5,9 +5,11 @@
  * - 中央儀表盤顯示人口與民心，四條流向：金錢、糧草、城市兵源上限、補兵速度。
  * - 產出卡拆成 基礎值 / 人口紅利 / 政策修正 / 總計；城市兵源卡顯示 目前 / 上限、每回合補兵、距離回滿。
  * - 數值由呼叫端傳入，本模組不計算產出公式（公式屬於治理結算，另行實作）。
+ * - 人口、民心與金錢季產出還沒有資料來源，以 null 表示並顯示「—」，不用 0 假裝有值。
  *
  * Unity 對照：像 Presenter，把 Model 的數字轉成 Label 的 text 與進度條的 fillAmount，畫面層不自己算。
  */
+import { FOOD_PER_SEASON, type MilitaryReserve } from './MilitaryReserve';
 
 export interface OutputBreakdown {
     base: number;
@@ -16,9 +18,9 @@ export interface OutputBreakdown {
 }
 
 export interface GovernorSnapshot {
-    population: number;
-    morale: number;
-    gold: OutputBreakdown;
+    population: number | null;
+    morale: number | null;
+    gold: OutputBreakdown | null;
     food: OutputBreakdown;
     cityTroops: {
         current: number;
@@ -61,8 +63,28 @@ function signed(value: number): string {
     return value > 0 ? `+${value}` : `${value}`;
 }
 
-function outputCard(title: string, breakdown: OutputBreakdown): OutputCardView {
-    const total = breakdown.base + breakdown.populationBonus + breakdown.policyModifier;
+/** 沒有資料來源時顯示的文字 */
+const NO_DATA = '—';
+
+function textOrNoData(value: number | null): string {
+    return value === null ? NO_DATA : `${value}`;
+}
+
+function outputTotal(breakdown: OutputBreakdown | null): number | null {
+    return breakdown === null ? null : breakdown.base + breakdown.populationBonus + breakdown.policyModifier;
+}
+
+function outputCard(title: string, breakdown: OutputBreakdown | null): OutputCardView {
+    if (breakdown === null) {
+        return {
+            title,
+            baseText: `基礎值 ${NO_DATA}`,
+            populationBonusText: `人口紅利 ${NO_DATA}`,
+            policyModifierText: `政策修正 ${NO_DATA}`,
+            totalText: `總計 ${NO_DATA}`,
+        };
+    }
+    const total = outputTotal(breakdown);
     return {
         title,
         baseText: `基礎值 ${breakdown.base}`,
@@ -92,18 +114,30 @@ function cityTroopCard(troops: GovernorSnapshot['cityTroops']): CityTroopCardVie
     };
 }
 
+/**
+ * 由玩家儲備組出治理快照：兵源與補兵是實際值；糧草基礎值是本季結算會入帳的固定補給（含季節倍率）。
+ * 人口、民心、金錢季產出沒有來源，回 null；金錢目前只來自內政任務與事件，沒有固定季產出。
+ */
+export function buildGovernorSnapshot(military: Readonly<MilitaryReserve>, foodMultiplier = 1): GovernorSnapshot {
+    return {
+        population: null,
+        morale: null,
+        gold: null,
+        food: { base: Math.floor(FOOD_PER_SEASON * Math.max(0, foodMultiplier)), populationBonus: 0, policyModifier: 0 },
+        cityTroops: { current: military.cityTroops, cap: military.cityTroopsCap, recruitPerTurn: military.recruitRegen },
+    };
+}
+
 /** 把治理快照轉成太守府的文字與數值；不改輸入。 */
 export function buildGovernorHallView(snapshot: Readonly<GovernorSnapshot>): GovernorHallView {
     const gold = snapshot.gold;
     const food = snapshot.food;
-    const goldTotal = gold.base + gold.populationBonus + gold.policyModifier;
-    const foodTotal = food.base + food.populationBonus + food.policyModifier;
     return {
-        populationText: `人口 ${snapshot.population}`,
-        moraleText: `民心 ${snapshot.morale}`,
+        populationText: `人口 ${textOrNoData(snapshot.population)}`,
+        moraleText: `民心 ${textOrNoData(snapshot.morale)}`,
         flows: [
-            { key: 'gold', label: '金錢', valueText: `${goldTotal}` },
-            { key: 'food', label: '糧草', valueText: `${foodTotal}` },
+            { key: 'gold', label: '金錢', valueText: textOrNoData(outputTotal(gold)) },
+            { key: 'food', label: '糧草', valueText: textOrNoData(outputTotal(food)) },
             { key: 'cityTroopCap', label: '城市兵源上限', valueText: `${snapshot.cityTroops.cap}` },
             { key: 'recruitRegen', label: '補兵速度', valueText: `${snapshot.cityTroops.recruitPerTurn}` },
         ],
