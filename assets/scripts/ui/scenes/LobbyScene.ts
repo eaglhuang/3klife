@@ -124,6 +124,7 @@ import { MentorBorrowController } from '../core/MentorBorrowController';
 import { GraduationRecordController } from '../core/GraduationRecordController';
 import { AcademyGraduationController } from '../core/AcademyGraduationController';
 import { ClanShrineController } from '../core/ClanShrineController';
+import { SeasonPassController } from '../core/SeasonPassController';
 import type { AcademyGraduationResult } from '../../core/systems/nurture/AcademyGraduation';
 import type { AcademyStateSnapshot } from '../../core/systems/nurture/AcademyTypes';
 import { mentorBorrowRows, type MentorBorrowRow } from '../core/MentorBorrowView';
@@ -350,6 +351,7 @@ export class LobbyScene extends Component {
     private _academyTacticNames: ReadonlyMap<string, string> | null = null;
     /** 祠堂聲望畫面（PROG-2-1958） */
     private _clanShrine: ClanShrineController<UIScreenPreviewHost> | null = null;
+    private _seasonPassPanel: SeasonPassController<UIScreenPreviewHost> | null = null;
     private _mentorBorrow: MentorBorrowController<UIScreenPreviewHost> | null = null;
     /** 「我的教官卡」列表（PROG-2-1097）：重用 mentor-borrow-screen 版面 */
     private _mentorHoldings: MentorHoldingsController<UIScreenPreviewHost> | null = null;
@@ -627,6 +629,7 @@ export class LobbyScene extends Component {
         await this._mountGraduationRecord();
         await this._mountAcademyGraduation();
         await this._mountClanShrine();
+        await this._mountSeasonPass();
         await this._mountMentorBorrow();
         await this._mountMentorHoldings();
         await this._mountMentorCardDetail();
@@ -885,6 +888,28 @@ export class LobbyScene extends Component {
         );
     }
 
+    /** 季度通行證面板（ECO-13 Mock，PROG-2-2197） */
+    private async _mountSeasonPass(): Promise<void> {
+        const panel = new SeasonPassController<UIScreenPreviewHost>({
+            mountHost: (bindings) => this._mountPreviewScreenHost('SeasonPassHost', 'season-pass-screen', bindings),
+            apply: (host, view) => { if (host.binder) applyFlowView(host.binder, view); },
+            state: () => services().session.seasonPass,
+            levelUp: () => services().session.mockSeasonPassLevelUp(),
+            unlockPremium: () => services().session.mockUnlockSeasonPassPremium(),
+            claimAll: () => services().session.claimAllSeasonPass(),
+            toast: (message) => { services().event.emit('SHOW_TOAST', { message, duration: 2.5 }); },
+        });
+        await panel.mount();
+        this._seasonPassPanel = panel;
+    }
+
+    private _openSeasonPass(): void {
+        const panel = this._seasonPassPanel;
+        if (!panel?.host) return;
+        panel.setOpen(true);
+        this._bringNodeToFront(panel.host.node);
+    }
+
     private _openClanShrine(): void {
         const shrine = this._clanShrine;
         if (!shrine?.host) return;
@@ -1078,6 +1103,7 @@ export class LobbyScene extends Component {
             nurture: () => this._openNurtureFlow(),
             supportCard: () => this.onClickSupportCard(),
             shrine: () => this._openClanShrine(),
+            seasonPass: () => this._openSeasonPass(),
             gacha: () => this.onClickGachaMain(),
             shop: () => this.onClickShopMain(),
             warehouse: () => this._openWarehouse(),

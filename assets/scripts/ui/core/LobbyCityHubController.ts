@@ -17,7 +17,7 @@ export type LobbyActionId =
     | 'generalList' | 'mercenary' | 'bonding' | 'jobChange' | 'spiritCodex'
     | 'domestic' | 'recruitHall' | 'hallBoard' | 'sandtable' | 'governorHall' | 'itemBag'
     | 'nurture' | 'supportCard' | 'shrine' | 'relationGraph'
-    | 'gacha' | 'shop' | 'warehouse';
+    | 'gacha' | 'shop' | 'warehouse' | 'seasonPass';
 
 export interface LobbyCategoryDef {
     readonly id: LobbyCategoryId;
@@ -30,7 +30,7 @@ export const LOBBY_CATEGORIES: readonly LobbyCategoryDef[] = [
     { id: 'generals', label: '武將', items: [{ id: 'generalList', label: '武將名冊' }, { id: 'mercenary', label: '傭兵結義' }, { id: 'bonding', label: '結緣' }, { id: 'jobChange', label: '成人禮' }, { id: 'spiritCodex', label: '英靈' }] },
     { id: 'domestic', label: '內政', items: [{ id: 'domestic', label: '內政' }, { id: 'recruitHall', label: '招賢館' }, { id: 'hallBoard', label: '任務牆' }, { id: 'sandtable', label: '天下沙盤' }, { id: 'governorHall', label: '太守府' }] },
     { id: 'nurture', label: '培育', items: [{ id: 'nurture', label: '開獎・培育' }, { id: 'supportCard', label: '支援卡' }, { id: 'shrine', label: '祠堂' }, { id: 'relationGraph', label: '關係圖鑑' }] },
-    { id: 'shop', label: '商城', items: [{ id: 'gacha', label: '轉蛋' }, { id: 'shop', label: '商店' }, { id: 'warehouse', label: '倉庫' }, { id: 'itemBag', label: '背包' }] },
+    { id: 'shop', label: '商城', items: [{ id: 'gacha', label: '轉蛋' }, { id: 'shop', label: '商店' }, { id: 'warehouse', label: '倉庫' }, { id: 'itemBag', label: '背包' }, { id: 'seasonPass', label: '通行證' }] },
 ];
 
 /** 子功能槽位數＝最多子功能的類別 */
