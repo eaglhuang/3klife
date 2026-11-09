@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "yan-liang": {
+      "x": 360,
+      "y": 70,
+      "w": 350,
+      "h": 350,
+      "source": "reviewed",
+      "$note": "2026-11-09 顏良紫金鷹紋長刀造型裁切。"
+    },
     "xu-shu": {
       "x": 350,
       "y": 100,
