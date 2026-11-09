@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-09T12-13-31-012Z-scope-amendment-4379a852bd82",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:4cc9d6d01110d739c0f9908f384c1cea5f8800c0694cec27b61c9dbe6e299996",
+  "createdAt": "2026-11-09T12:13:31.012Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/wang_lang_portrait.png,assets/resources/sprites/generals/avatars/wang_lang_avatar.png,assets/resources/sprites/ui_avatars/cropped/wang_lang_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}

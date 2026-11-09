@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "wang-lang": {
+      "x": 310,
+      "y": 40,
+      "w": 350,
+      "h": 350,
+      "source": "reviewed",
+      "$note": "2026-11-09 王朗魏藍梅紫司徒造型裁切。"
+    },
     "xun-you": {
       "x": 340,
       "y": 160,
