@@ -1,5 +1,6 @@
 {
   "version": 1,
+  "commerce": { "monthlyCardExpMultiplier": 1.2 },
   "tiers": [
     {
       "tier": 1,
