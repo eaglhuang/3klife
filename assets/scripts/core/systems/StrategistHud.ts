@@ -72,6 +72,10 @@ const KIND_LABEL: Readonly<Record<InteractiveObjectKind, string>> = {
     Trap_Cluster: '陷阱',
 };
 
+export function interactiveObjectLabel(kind: InteractiveObjectKind): string {
+    return KIND_LABEL[kind];
+}
+
 const STATE_LABEL: Readonly<Record<InteractiveObjectState, string>> = {
     alive: '存活',
     triggered: '已觸發',

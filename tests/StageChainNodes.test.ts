@@ -18,7 +18,8 @@ const fs = require('fs') as typeof import('fs');
 
 function loadEncounters(): EncounterChainSource[] {
     const raw = fs.readFileSync('assets/resources/data/encounters.json', 'utf8');
-    return (JSON.parse(raw) as { encounters: EncounterChainSource[] }).encounters;
+    return (JSON.parse(raw) as { encounters: EncounterChainSource[] }).encounters
+        .filter((encounter) => encounter.chainId !== 'four-themes-chain');
 }
 
 const GENERAL_NAMES: Record<string, string> = { 'lu-bu': '呂布', 'cao-cao': '曹操' };
