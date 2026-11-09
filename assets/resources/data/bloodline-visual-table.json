@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "provisional": true,
+  "placeholder": {
+    "crest": "sprites/ui_families/general_detail/v3_final/crest_face_final",
+    "badge": "sprites/ui_families/general_detail/icons/v3_parts/badge_rarity_common_flat",
+    "icon": "sprites/ui_families/general_detail/icons/tab_bloodline_active",
+    "tallyToken": "sprites/ui_families/general_detail/v3_final/crest_ring_final"
+  },
+  "factors": {
+    "blue": { "pattern": "雷雲紋", "material": "玄鐵", "beastFamily": "青龍" },
+    "pink": { "pattern": "纏枝花紋", "material": "緋玉", "beastFamily": "九尾狐" },
+    "green": { "pattern": "蟠草紋", "material": "青銅", "beastFamily": "玄龜" },
+    "purple": { "pattern": "星宿篆", "material": "紫晶", "beastFamily": "麒麟" },
+    "white": { "pattern": "霜羽紋", "material": "白銀", "beastFamily": "白虎" },
+    "red": { "pattern": "烈焰紋", "material": "赤金", "beastFamily": "朱雀" }
+  },
+  "slots": [
+    { "id": "CHEST_CORE", "tier": "primary", "label": "胸甲核", "priorityFor": ["male", "female"] },
+    { "id": "WAIST_CORE", "tier": "primary", "label": "腰封核", "priorityFor": ["male", "female"] },
+    { "id": "HAIR_ORNAMENT", "tier": "secondary", "label": "髮飾／髮冠", "priorityFor": ["female"] },
+    { "id": "JADE_PENDANT", "tier": "secondary", "label": "玉佩／掛飾", "priorityFor": ["female"] },
+    { "id": "SHOULDER_CLASP", "tier": "secondary", "label": "肩甲扣件／披肩扣件", "priorityFor": ["male", "female"] },
+    { "id": "WEAPON_CHARM", "tier": "extended", "label": "武器掛飾", "priorityFor": ["male"] },
+    { "id": "ROBE_EDGE", "tier": "extended", "label": "外袍邊紋／裙甲紋", "priorityFor": [] },
+    { "id": "TALLY_TOKEN", "tier": "extended", "label": "虎符／兵牌", "priorityFor": [] }
+  ]
+}
