@@ -9,7 +9,7 @@
  * Unity 對照：像 ScriptableObject 資料表在 Awake 時做 OnValidate，
  * 格式錯就不套用，沿用上一版預設值。
  */
-import { isValidOfficerExpMultiplier, OFFICER_COMMERCE_CONFIG } from './OfficerCommerce';
+import { isValidOfficerExpMultiplier, isValidOfficerTrialHours, OFFICER_COMMERCE_CONFIG } from './OfficerCommerce';
 import { OFFICER_PROMOTION_REWARD_GOLD, OFFICER_TIER_EXP_THRESHOLDS, OFFICER_TIER_MAX, OFFICER_TIER_MIN } from './OfficerState';
 import type { QuestDifficultyCap } from './OfficerSnapshot';
 
@@ -76,24 +76,28 @@ export function parseOfficerTierTable(raw: unknown): ParseOfficerTierResult {
             ...(typeof reward === 'number' ? { promotionRewardGold: reward } : {}),
         });
     });
-    const multiplier = commerceMultiplierOf(raw);
-    if (multiplier !== undefined && !isValidOfficerExpMultiplier(multiplier)) {
+    const commerce = commerceOf(raw);
+    if (commerce.monthlyCardExpMultiplier !== undefined && !isValidOfficerExpMultiplier(commerce.monthlyCardExpMultiplier)) {
         issues.push('commerce.monthlyCardExpMultiplier 必須是不小於 1 的數字');
+    }
+    if (commerce.trialHours !== undefined && !isValidOfficerTrialHours(commerce.trialHours)) {
+        issues.push('commerce.trialHours 必須是正數');
     }
     return issues.length === 0 ? { ok: true, rows } : { ok: false, issues };
 }
 
-/** 商業設定（OFC-12）可省略；省略時沿用內建倍率 */
-function commerceMultiplierOf(raw: unknown): unknown {
-    return (raw as { commerce?: { monthlyCardExpMultiplier?: unknown } }).commerce?.monthlyCardExpMultiplier;
+/** 商業設定（OFC-12）可省略；省略時沿用內建值 */
+function commerceOf(raw: unknown): { monthlyCardExpMultiplier?: unknown; trialHours?: unknown } {
+    return (raw as { commerce?: { monthlyCardExpMultiplier?: unknown; trialHours?: unknown } }).commerce ?? {};
 }
 
-/** 驗證通過才覆寫晉升門檻、晉升獎勵與商業倍率；回傳是否套用 */
+/** 驗證通過才覆寫晉升門檻、晉升獎勵與商業設定；回傳是否套用 */
 export function installOfficerTierTable(raw: unknown): ParseOfficerTierResult {
     const result = parseOfficerTierTable(raw);
     if (result.ok) {
-        const multiplier = commerceMultiplierOf(raw);
-        if (isValidOfficerExpMultiplier(multiplier)) OFFICER_COMMERCE_CONFIG.monthlyCardExpMultiplier = multiplier;
+        const commerce = commerceOf(raw);
+        if (isValidOfficerExpMultiplier(commerce.monthlyCardExpMultiplier)) OFFICER_COMMERCE_CONFIG.monthlyCardExpMultiplier = commerce.monthlyCardExpMultiplier;
+        if (isValidOfficerTrialHours(commerce.trialHours)) OFFICER_COMMERCE_CONFIG.trialHours = commerce.trialHours;
         for (const row of result.rows) {
             OFFICER_TIER_EXP_THRESHOLDS[row.tier] = row.expToReach;
             if (row.tier > OFFICER_TIER_MIN && row.promotionRewardGold !== undefined) {

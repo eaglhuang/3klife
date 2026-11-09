@@ -2706,18 +2706,18 @@ export class GameSession {
 
     /** 進行中的高階官職試用（OFC-12）；沒有或已到期為 null */
     public get activeOfficerTrial(): OfficerTrial | null {
-        return activeOfficerTrial(this._officerTrial, this._clock.state.totalSeasonsElapsed);
+        return activeOfficerTrial(this._officerTrial, Date.now());
     }
 
-    /** 開始高階官職試用（活動呼叫，OFC-12）：到期後權限自動回到正式階位；不自動存檔 */
-    public grantOfficerTrial(tier: number, seasons: number): OfficerTrialGrant {
-        const grant = grantOfficerTrial(this._officerTrial, this._officerState.currentTier, tier, seasons, this._clock.state.totalSeasonsElapsed);
+    /** 開始假節鉞試用（活動呼叫，OFC-12）：高一階 24 小時，到期後權限自動回到正式階位；不自動存檔 */
+    public grantOfficerTrial(epochMs: number = Date.now()): OfficerTrialGrant {
+        const grant = grantOfficerTrial(this._officerTrial, this._officerState.currentTier, epochMs);
         if (grant.ok) this._officerTrial = grant.trial;
         return grant;
     }
 
     private _effectiveOfficerState(): OfficerState {
-        return effectiveOfficerState(this._officerState, this._officerTrial, this._clock.state.totalSeasonsElapsed);
+        return effectiveOfficerState(this._officerState, this._officerTrial, Date.now());
     }
 
     /** 世界沙盤已放置標記數（唯讀，OFC-06）。 */
