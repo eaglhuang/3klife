@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "wen-chou": {
+      "x": 370,
+      "y": 90,
+      "w": 400,
+      "h": 400,
+      "source": "reviewed",
+      "$note": "2026-11-09 文醜赤褐銀甲長槍造型裁切。"
+    },
     "wang-shuang": {
       "x": 500,
       "y": 130,

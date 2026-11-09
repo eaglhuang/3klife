@@ -1,7 +1,7 @@
 {
   "schemaId": "atm.evidenceBundleManifest.v1",
   "taskId": "UI-2-0121",
-  "updatedAt": "2026-11-09T07:41:46.721Z",
+  "updatedAt": "2026-11-09T07:47:33.909Z",
   "updatedBy": "codex-gpt-6.1-terra",
   "freshValidationPasses": [],
   "staleValidationPasses": [],
@@ -1488,6 +1488,34 @@
       "durationMs": 641,
       "runnerKind": "dev-source",
       "sourceCommit": "6b87660eb1623ca334eaa29b4dd09a6a9a6e2b97",
+      "cached": false
+    },
+    {
+      "command": "node tools_node/generate-general-avatars.js wen-chou --verify",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:8d0ed26eb7c6cee91c9b1af3db663d46cc0149c86ce529681c558b369e7cae26",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [],
+      "generatedAt": "2026-11-09T07:46:15.040Z",
+      "startedAt": "2026-11-09T07:46:14.640Z",
+      "finishedAt": "2026-11-09T07:46:15.040Z",
+      "durationMs": 400,
+      "runnerKind": "dev-source",
+      "sourceCommit": "0cb4f4f7f750bfbf2590f4dfba1541567b2de123",
+      "cached": false
+    },
+    {
+      "command": "node tools_node/generate-general-avatars.js wen-chou --verify",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:3abee2c14ae8c1b5b5421e22a0da123912f6630df76655be3fc98125437d97b6",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [],
+      "generatedAt": "2026-11-09T07:47:33.907Z",
+      "startedAt": "2026-11-09T07:47:33.503Z",
+      "finishedAt": "2026-11-09T07:47:33.907Z",
+      "durationMs": 404,
+      "runnerKind": "dev-source",
+      "sourceCommit": "0cb4f4f7f750bfbf2590f4dfba1541567b2de123",
       "cached": false
     }
   ],
