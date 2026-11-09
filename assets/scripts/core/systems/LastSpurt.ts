@@ -45,6 +45,8 @@ export function lastSpurtDamage(baseDamage: number, str: number, troopFinaleFact
  * 殘局傷害接到實際結算：把武將 STR（0~100 尺度）換算後套 lastSpurtDamage，取整、至少 1。
  * 戰鬥傷害路徑（普攻與戰法）在殘局中呼叫；沒有武將時呼叫端不呼叫。
  */
-export function lastSpurtAdjustedDamage(baseDamage: number, generalStr: number, troopFinaleFactor = 1): number {
-    return Math.max(1, Math.floor(lastSpurtDamage(baseDamage, generalStr * LAST_SPURT_GENERAL_STR_SCALE, troopFinaleFactor)));
+export function lastSpurtAdjustedDamage(baseDamage: number, generalStr: number, troopFinaleFactor = 1, staminaExhausted = false): number {
+    const full = lastSpurtDamage(baseDamage, generalStr * LAST_SPURT_GENERAL_STR_SCALE, troopFinaleFactor);
+    // FORM-07：體力耗盡後失去爆發加成；係數本來就小於 1 的低 STR 武將不因此變強
+    return Math.max(1, Math.floor(staminaExhausted ? Math.min(baseDamage, full) : full));
 }

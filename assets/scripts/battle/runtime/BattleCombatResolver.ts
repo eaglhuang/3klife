@@ -333,7 +333,7 @@ export class BattleCombatResolver {
     damage = this.applyTallyPhysicalDamageMod(damageAdjustment.damage, attacker, defender);
     // 破釜沉舟（FORM-06，PROG-2-1992）：殘局後普攻傷害 × √(STR/500)（STR 軟上限折半）
     if (this.context.state.lastSpurtMode && attackerGeneral) {
-      damage = lastSpurtAdjustedDamage(damage, attackerGeneral.str);
+      damage = lastSpurtAdjustedDamage(damage, attackerGeneral.str, 1, this.context.state.isStaminaExhausted(attacker.faction));
     }
     const actionReset = this.context.state.getActionReset(attacker.id);
     if (actionReset?.firstHitPending) {

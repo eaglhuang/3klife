@@ -49,7 +49,7 @@ export class BattleSkillDamageResolver {
     const chargedDamage = this.applyCharge(profile, context, caster, target, rawBaseDamage);
     const firstTurnDamage = this.applyFirstTurn(profile, context, chargedDamage);
     // 破釜沉舟（FORM-06，PROG-2-1992）：殘局後戰法傷害同樣套 √(STR/500)
-    const baseDamage = context.isLastSpurt?.() ? lastSpurtAdjustedDamage(firstTurnDamage, caster.str) : firstTurnDamage;
+    const baseDamage = context.isLastSpurt?.() ? lastSpurtAdjustedDamage(firstTurnDamage, caster.str, 1, context.isStaminaExhausted?.(caster.faction) ?? false) : firstTurnDamage;
 
     const weather = context.getWeather?.() ?? Weather.Clear;
     const weatherMultiplier = fireDamageMultiplier(profile.tags ?? [], weather) * weatherDamageMultiplierOf(profile, weather);

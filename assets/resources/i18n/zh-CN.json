@@ -345,6 +345,8 @@
   "ui.battle.skill.source_tactic": "战法",
   "ui.battle.skill.charging": "{0}蓄力中，SP 不足",
   "ui.battle.last_spurt.entered": "第 {0} 回合・殘局爆發！破釜沉舟",
+  "ui.battle.stamina.exhausted_player": "我军主将体力耗尽，残局爆发失效",
+  "ui.battle.stamina.exhausted_enemy": "敌将体力耗尽，残局爆发失效",
   "ui.battle.skill.cast_done": "{0}已发动",
   "ui.battle.skill.cast_failed": "{0}发动失败",
   "ui.battle.skill.cast_failed_target": "{0}发动失败，请重新选择目标",
