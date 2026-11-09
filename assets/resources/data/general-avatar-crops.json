@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "wang-shuang": {
+      "x": 500,
+      "y": 130,
+      "w": 350,
+      "h": 350,
+      "source": "reviewed",
+      "$note": "2026-11-09 王雙魏藍大刀造型裁切。"
+    },
     "wang-ping": {
       "x": 330,
       "y": 0,
