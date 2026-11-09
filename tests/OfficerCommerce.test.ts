@@ -20,6 +20,8 @@ import * as path from 'path';
 
 const DATA_PATH = path.resolve(__dirname, '..', 'assets/resources/data/officer-tiers.json');
 const readTable = (): Record<string, unknown> => JSON.parse(fs.readFileSync(DATA_PATH, 'utf8'));
+const NOW = Date.UTC(2026, 10, 9);
+const DAY_MS = 24 * 60 * 60 * 1000;
 const NORMAL_TASK = { difficulty: 'NORMAL', boardType: 'MILITARY', success: true } as const;
 
 export function createOfficerCommerceSuite(): TestSuite {
@@ -27,8 +29,8 @@ export function createOfficerCommerceSuite(): TestSuite {
 
     suite.test('月卡效期內才加成，倍率四捨五入', () => {
         assert.equals(100, boostedOfficerExp(100, false));
-        assert.equals(120, boostedOfficerExp(100, true));
-        assert.equals(22, boostedOfficerExp(18, true));
+        assert.equals(115, boostedOfficerExp(100, true));
+        assert.equals(21, boostedOfficerExp(18, true));
     });
 
     suite.test('倍率由資料檔設定，不合法的倍率整份拒絕', () => {
@@ -47,39 +49,53 @@ export function createOfficerCommerceSuite(): TestSuite {
         }
     });
 
-    suite.test('資料檔的倍率與內建值一致', () => {
-        const commerce = readTable().commerce as { monthlyCardExpMultiplier: number };
+    suite.test('資料檔與內建值一致，且符合規格的 +15% 與 24 小時', () => {
+        const commerce = readTable().commerce as { monthlyCardExpMultiplier: number; trialHours: number };
+        assert.equals(1.15, commerce.monthlyCardExpMultiplier);
+        assert.equals(24, commerce.trialHours);
         assert.equals(OFFICER_COMMERCE_CONFIG.monthlyCardExpMultiplier, commerce.monthlyCardExpMultiplier);
+        assert.equals(OFFICER_COMMERCE_CONFIG.trialHours, commerce.trialHours);
     });
 
-    suite.test('試用階位要高於正式階位，時數要合法', () => {
-        assert.equals('not-higher', (grantOfficerTrial(null, 3, 3, 2, 0) as { reason: string }).reason);
-        assert.equals('invalid', (grantOfficerTrial(null, 1, 6, 2, 0) as { reason: string }).reason);
-        assert.equals('invalid', (grantOfficerTrial(null, 1, 3, 0, 0) as { reason: string }).reason);
-        assert.equals(true, grantOfficerTrial(null, 1, 3, 2, 10).ok);
+    suite.test('試用時數由資料檔設定，不合法整份拒絕', () => {
+        const table = readTable();
+        table.commerce = { trialHours: 0 };
+        assert.equals(false, parseOfficerTierTable(table).ok);
+        table.commerce = { trialHours: 48 };
+        assert.equals(true, parseOfficerTierTable(table).ok);
     });
 
-    suite.test('較低階試用不蓋掉進行中的較高階試用，到期後才可以', () => {
-        const high = { tier: 5, expiresSeason: 12 };
-        assert.equals('weaker', (grantOfficerTrial(high, 1, 3, 2, 10) as { reason: string }).reason);
-        assert.equals(true, grantOfficerTrial(high, 1, 3, 2, 12).ok);
+    suite.test('試用比正式階位高一階、為期 24 小時；最高階不發放', () => {
+        const grant = grantOfficerTrial(null, 2, NOW);
+        if (!grant.ok) throw new Error('應可發放');
+        assert.equals(3, grant.trial.tier);
+        assert.equals(NOW + DAY_MS, grant.trial.expiresAt);
+        assert.equals('at-max-tier', (grantOfficerTrial(null, 5, NOW) as { reason: string }).reason);
     });
 
-    suite.test('有效階位只換階位，到期失效，也不把正式階位往下拉', () => {
+    suite.test('試用尚未結束不重複發放，到期後才可以', () => {
+        const trial = { tier: 3, startedAt: NOW, expiresAt: NOW + DAY_MS };
+        assert.equals('already-active', (grantOfficerTrial(trial, 2, NOW + 1) as { reason: string }).reason);
+        assert.equals(true, grantOfficerTrial(trial, 2, NOW + DAY_MS).ok);
+    });
+
+    suite.test('有效階位只換階位，到期或時鐘回撥都失效，也不把正式階位往下拉', () => {
         const state = { ...initialOfficerState(), officerExp: 30 };
-        const trial = { tier: 4, expiresSeason: 12 };
-        assert.equals(4, effectiveOfficerState(state, trial, 11).currentTier);
-        assert.equals(30, effectiveOfficerState(state, trial, 11).officerExp);
-        assert.equals(1, effectiveOfficerState(state, trial, 12).currentTier);
-        assert.equals(null, activeOfficerTrial(trial, 12));
-        assert.equals(5, effectiveOfficerState({ ...state, currentTier: 5 }, trial, 11).currentTier);
+        const trial = { tier: 2, startedAt: NOW, expiresAt: NOW + DAY_MS };
+        assert.equals(2, effectiveOfficerState(state, trial, NOW + DAY_MS - 1).currentTier);
+        assert.equals(30, effectiveOfficerState(state, trial, NOW).officerExp);
+        assert.equals(1, effectiveOfficerState(state, trial, NOW + DAY_MS).currentTier);
+        assert.equals(null, activeOfficerTrial(trial, NOW + DAY_MS));
+        assert.equals(null, activeOfficerTrial(trial, NOW - 1));
+        assert.equals(5, effectiveOfficerState({ ...state, currentTier: 5 }, trial, NOW).currentTier);
     });
 
-    suite.test('讀檔正規化：不合法視為沒有試用', () => {
+    suite.test('讀檔正規化：不合法視為沒有試用，舊的以季計格式也一樣', () => {
         assert.equals(null, normalizeOfficerTrial(undefined));
-        assert.equals(null, normalizeOfficerTrial({ tier: 9, expiresSeason: 3 }));
-        assert.equals(null, normalizeOfficerTrial({ tier: 3, expiresSeason: -1 }));
-        assert.equals(3, normalizeOfficerTrial({ tier: 3, expiresSeason: 3 })!.tier);
+        assert.equals(null, normalizeOfficerTrial({ tier: 3, expiresSeason: 3 }));
+        assert.equals(null, normalizeOfficerTrial({ tier: 9, startedAt: 1, expiresAt: 2 }));
+        assert.equals(null, normalizeOfficerTrial({ tier: 3, startedAt: 2, expiresAt: 2 }));
+        assert.equals(3, normalizeOfficerTrial({ tier: 3, startedAt: 1, expiresAt: 2 })!.tier);
     });
 
     suite.test('GameSession：月卡效期內官職經驗有加成', () => {
@@ -94,18 +110,21 @@ export function createOfficerCommerceSuite(): TestSuite {
 
     suite.test('GameSession：試用中權限升階，正式階位與沙盤解鎖歷史不變，到期就回復', () => {
         const session = new GameSession();
-        assert.equals(true, session.grantOfficerTrial(3, 1).ok);
+        const internals = session as unknown as { _officerTrial: unknown; _officerState: { currentTier: number } };
+        internals._officerState.currentTier = 2;
+        assert.equals(true, session.grantOfficerTrial().ok);
         assert.equals(3, session.activeOfficerTrial!.tier);
         assert.equals('S1', session.officerUnlocks.sandtableStage ?? '');
-        assert.equals(1, session.officerState.currentTier);
+        assert.equals(2, session.officerState.currentTier);
 
         session.gainOfficerExp({ ...NORMAL_TASK, success: false });
         assert.equals(0, session.sandtableUnlockHistory.length);
 
-        (session as unknown as { _officerTrial: unknown })._officerTrial = { tier: 3, expiresSeason: 0 };
+        const past = Date.now() - DAY_MS;
+        internals._officerTrial = { tier: 3, startedAt: past - DAY_MS, expiresAt: past };
         assert.equals(null, session.activeOfficerTrial);
         assert.equals(null, session.officerUnlocks.sandtableStage);
-        assert.equals(1, session.officerState.currentTier);
+        assert.equals(2, session.officerState.currentTier);
     });
 
     return suite;
