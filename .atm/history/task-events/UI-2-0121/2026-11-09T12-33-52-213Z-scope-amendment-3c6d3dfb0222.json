@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-09T12-33-52-213Z-scope-amendment-3c6d3dfb0222",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:39ff43350426fe32efebbd77e3ecb83e9bf454eae81fc569e4c5deea58a52538",
+  "createdAt": "2026-11-09T12:33:52.213Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/xu_zhu_portrait.png,assets/resources/sprites/generals/avatars/xu_zhu_avatar.png,assets/resources/sprites/ui_avatars/cropped/xu_zhu_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
