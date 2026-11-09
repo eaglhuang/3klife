@@ -4143,6 +4143,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnClearDeputy', handler: () => { sortie.clear('deputy'); this._refreshSortieSetup(); } },
             { buttonId: 'btnSavePreset', handler: () => { sortie.savePreset(); this._refreshSortieSetup(); } },
             { buttonId: 'btnApplyPreset', handler: () => { sortie.applyPreset(); this._refreshSortieSetup(); } },
+            { buttonId: 'btnToggleSceneGambit', handler: () => { void sortie.toggleSceneGambit().then(() => { this._refreshSortieSetup(); }); } },
         ]);
         const refresh = (): void => { this._refreshSortieSetup(); };
         const event = services().event;

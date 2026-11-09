@@ -15,6 +15,8 @@
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import type { SortieSupport, SortieSupportSummary } from '../../core/managers/GameSession';
 import type { MilitaryReserve } from '../../core/systems/MilitaryReserve';
+import type { PendingSceneGambit } from '../../core/systems/HallSceneGambit';
+import { sceneGambitToggleText } from './HallSceneGambitText';
 import {
     computeSortiePoolMax,
     SORTIE_LOADOUT_ISSUE_TEXT,
@@ -38,6 +40,8 @@ export interface SortieSetupDeps {
         readonly leadGeneralId: string | null;
         readonly sortieSupport: SortieSupport;
         readonly military: MilitaryReserve;
+        readonly pendingSceneGambit: PendingSceneGambit | null;
+        setPendingSceneGambitArmed(armed: boolean): Promise<boolean>;
         getDeployableGenerals(): GeneralConfig[];
         setSortieSupport(strategistUid: string | null, deputyUid: string | null): SortieLoadoutCheck;
         getSortieSupportSummary(commanderUid: string): SortieSupportSummary;
@@ -127,13 +131,16 @@ export class SortieSetupController {
             sortieNotice: this._notice,
             savePresetLabel: '儲存預設',
             applyPresetLabel: '套用預設',
+            sceneGambitToggleLabel: '',
         };
         const actives: Record<string, boolean> = {
             sortiePanel: commander !== null,
             sortieEmptyHint: commander === null,
+            btnToggleSceneGambit: false,
         };
         const enabled: Record<string, boolean> = {
             btnCloseSortie: true,
+            btnToggleSceneGambit: true,
             btnPrevStrategist: false,
             btnNextStrategist: false,
             btnClearStrategist: false,
@@ -170,6 +177,12 @@ export class SortieSetupController {
 
         texts.sortiePredict = sortiePredictText(commander, this._deps.getEnemyGeneral?.() ?? null);
 
+        const gambit = this._deps.session.pendingSceneGambit;
+        if (gambit) {
+            actives.btnToggleSceneGambit = true;
+            texts.sceneGambitToggleLabel = sceneGambitToggleText(gambit.tactic, !gambit.disarmed);
+        }
+
         const strategistOptions = this.options('strategist').length;
         const deputyOptions = this.options('deputy').length;
         enabled.btnPrevStrategist = strategistOptions > 1;
@@ -181,6 +194,12 @@ export class SortieSetupController {
         enabled.btnSavePreset = this._deps.presets !== undefined;
         enabled.btnApplyPreset = this._deps.presets !== undefined && this._deps.presets.get()[commander.id] !== undefined;
         return { commanderId: commander.id, texts, actives, enabled };
+    }
+
+    /** 切換任務戰法加成的勾選；沒有待發動時不變更 */
+    async toggleSceneGambit(): Promise<void> {
+        const gambit = this._deps.session.pendingSceneGambit;
+        if (gambit) await this._deps.session.setPendingSceneGambitArmed(Boolean(gambit.disarmed));
     }
 
     /** 把目前的參謀官 / 後勤官存成這位主將的編制預設（DEP-14）；沒有預設儲存時回傳 false */

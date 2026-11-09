@@ -92,6 +92,21 @@ export function createHallSceneGambitSuite(): TestSuite {
         assert.equals(BattleTactic.NightRaid, session.pendingSceneGambit?.tactic);
     });
 
+    suite.test('流程：取消勾選不判定也不用掉，勾回後照常判定，新任務自動恢復勾選', async () => {
+        const session = await newSession(new MemoryStorageAdapter());
+        await session.dispatchHallTask(NIGHT_TASK as never, 'Military', PLAYER, 'g-a', 999);
+        assert.isTrue(await session.setPendingSceneGambitArmed(false));
+        assert.equals(null, await session.resolvePendingSceneGambit('g-a', () => 0));
+        assert.equals(BattleTactic.NightRaid, session.pendingSceneGambit?.tactic);
+        await session.dispatchHallTask(NIGHT_TASK as never, 'Military', PLAYER, 'g-a', 999);
+        assert.equals(undefined, session.pendingSceneGambit?.disarmed);
+        await session.setPendingSceneGambitArmed(false);
+        await session.setPendingSceneGambitArmed(true);
+        assert.equals('blocked', (await session.resolvePendingSceneGambit('g-a', () => 0))?.kind, '勾回後照常判定（測試情報為 0，未達門檻）');
+        const empty = await newSession(new MemoryStorageAdapter());
+        assert.isFalse(await empty.setPendingSceneGambitArmed(false), '沒有待發動時不能勾選');
+    });
+
     suite.test('流程：存檔還原後仍在，查不到武將視為智力不足', async () => {
         const adapter = new MemoryStorageAdapter();
         const session = await newSession(adapter);

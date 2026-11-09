@@ -12,6 +12,11 @@ export function sceneGambitPendingNotice(tactic: BattleTactic): string {
     return `下一場戰鬥將嘗試發動【${battleTacticLabel(tactic)}】`;
 }
 
+/** 出征編制的勾選列（裁決 11/09 第 12 題） */
+export function sceneGambitToggleText(tactic: BattleTactic, armed: boolean): string {
+    return `任務戰法加成【${battleTacticLabel(tactic)}】：${armed ? '已勾選' : '未勾選'}`;
+}
+
 /** 開戰前的判定結果提示 */
 export function sceneGambitNotice(outcome: SceneGambitOutcome): string {
     const label = battleTacticLabel(outcome.tactic);
