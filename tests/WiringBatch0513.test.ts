@@ -19,7 +19,7 @@ import type { MentorCard } from '../assets/scripts/core/models/MentorCard';
 import type { GeneralConfig, GeneralGeneConfig } from '../assets/scripts/core/models/GeneralUnit';
 import { factorRequiredLevel, factorMaskView } from '../assets/scripts/core/systems/FactorMask';
 import { factorStageSummary, factorStageText, isGeneFactorVisible, requiredDiscoveryLevel } from '../assets/scripts/core/systems/FactorVisibility';
-import { FactorMaskPresenter, buildFactorMaskView, newlyUnlockedSlots } from '../assets/scripts/core/systems/FactorMaskState';
+import { FACTOR_LOCKED_TINT, FactorMaskPresenter, buildFactorMaskView, factorLabelTint, newlyUnlockedSlots } from '../assets/scripts/core/systems/FactorMaskState';
 
 function seeded(seed: number): () => number {
     let a = seed >>> 0;
@@ -143,6 +143,24 @@ export function createWiringBatch0513Suite(): TestSuite {
         presenter.update('alpha', genes, 1);
         const other = presenter.update('beta', genes, 20);
         assert.equals('', other.justRevealed.join(','), '換武將從頭計算');
+    });
+
+    suite.test('FUL-03 來回切換武將不弄丟狀態，升級後切回來仍會亮起', () => {
+        const presenter = new FactorMaskPresenter();
+        const genes = [gene('white')];
+        presenter.update('alpha', genes, 1);
+        presenter.update('beta', genes, 1);
+        assert.equals('0', presenter.update('alpha', genes, 21).justRevealed.join(','), '切回 alpha，白因子剛解鎖');
+        presenter.reset();
+        assert.equals('', presenter.update('alpha', genes, 1).justRevealed.join(','), 'reset 後視同首次');
+    });
+
+    suite.test('FUL-03 因子列字色：看不見灰色，看得見用因子色，沒有因子或色系不明不改色', () => {
+        assert.equals(FACTOR_LOCKED_TINT, factorLabelTint(gene('white'), 1));
+        assert.equals('#F0F0F0', factorLabelTint(gene('white'), 21));
+        assert.equals('#50A0FF', factorLabelTint(gene('blue'), 1));
+        assert.equals(null, factorLabelTint(undefined, 21));
+        assert.equals(null, factorLabelTint(gene('不明'), 21));
     });
 
     suite.test('FUL-02 差異函式不修改輸入', () => {
