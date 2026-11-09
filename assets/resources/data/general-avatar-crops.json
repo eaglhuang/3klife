@@ -894,11 +894,12 @@
       "source": "reviewed"
     },
     "yu-fan": {
-      "x": 199,
+      "x": 310,
       "y": 0,
-      "w": 220,
-      "h": 220,
-      "source": "reviewed"
+      "w": 350,
+      "h": 350,
+      "source": "reviewed",
+      "$note": "2026-11-09 虞翻赭紅深青文士造型裁切。"
     },
     "chen-wu": {
       "x": 197,
