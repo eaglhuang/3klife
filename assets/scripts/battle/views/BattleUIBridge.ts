@@ -188,6 +188,10 @@ export class BattleUIBridge {
     onReplay:       () => void;
     onBack?:        () => void;
   }): void {
+    this.ctx.boardRenderer?.setZocGeneralResolver((unitId: string) => {
+      const ctrl = this.ctx.ctrl;
+      return !!ctrl && (unitId === ctrl.playerGeneralUnitId || unitId === ctrl.enemyGeneralUnitId);
+    });
     this.unsubscribeEvents();
     this.onBoardPlacement = externalHandlers.onBoardPlacement ?? null;
     this.specialActions.reset();

@@ -297,7 +297,6 @@ export class BattleScene extends Component {
       // 點 HUD 頭像叫出的主將快覽小窗（PROG-2-1864）
       ensureGeneralQuickView(canvas);
       this.sceneContext.boardRenderer = this.boardRenderer;
-      this.boardRenderer?.setZocGeneralResolver((unitId) => !!this.ctrl && (unitId === this.ctrl.playerGeneralUnitId || unitId === this.ctrl.enemyGeneralUnitId));
       this.sceneContext.unitRenderer = this.unitRenderer;
       this.sceneContext.resultPopup = this.resultPopup;
       this.sceneContext.duelChallengePanel = this.duelChallengePanel;
