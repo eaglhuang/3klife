@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — Tech / UI / Art / Data
 
-> 生成日期: 2026-11-06
+> 生成日期: 2026-11-09
 > 這是 `doc-id-registry.md` 的「Tech / UI / Art / Data」分片。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -87,6 +87,9 @@
 | `doc_ui_0093` | docs/i18n/general-detail-overflow-report-batch3.md | ui.general 武將詳情 — 寬度風險摘要（第 3 批，40 鍵） |
 | `doc_ui_0094` | docs/i18n/general-detail-overflow-report-batch4.md | ui.general 武將詳情 — 寬度風險摘要（第 4 批，10 鍵，收尾） |
 | `doc_ui_0095` | docs/ui/UI-vibe-pipeline.md | UI Vibe Pipeline |
+| `doc_ui_0096` | docs/遊戲規格文件/系統規格書/血脈命鏡載入提示內容Schema檢核與驗證閘門規格書.md | 血脈命鏡載入提示內容Schema檢核與驗證閘門規格書 |
+| `doc_ui_0097` | docs/遊戲規格文件/系統規格書/血脈命鏡載入提示加權抽樣與無放回挑選演算法規格書.md | 血脈命鏡載入提示加權抽樣與無放回挑選演算法規格書 |
+| `doc_ui_0098` | docs/遊戲規格文件/系統規格書/血脈命鏡載入提示四池資料結構與持有狀態雙權重規格書.md | 血脈命鏡載入提示四池資料結構與持有狀態雙權重規格書 |
 
 ## 美術非UI類 (`doc_art`)
 

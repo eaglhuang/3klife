@@ -8,11 +8,11 @@
 
 | ID | 里程碑 | 工作包 | 類型 | 工時 | 狀態 | 依賴 | 驗收條件 | 現況證據 | 最新核對(v16.9) |
 |---|:---:|---|:---:|:---:|:---:|---|---|---|---|
-| **BAG-04** | M8 | 裝備效果計算合入戰場數值與品質加成範圍 | logic | 2 | 🟢 已接線 | BAG-01 | SSR+50~100等範圍由品質決定並合入面板 | EquipmentBonus 品質加成範圍；PROG-2-1011（#793）；SortieDeploy 納入 equipmentBonus | [v17.2 更正 2026-11-07] 未開始→已接線；進階欄（名馬／古書／秘寶）尚未合入面板 |
-| **BAG-05** | M8 | 倉庫篩選排序（品質/類型/時間） | logic | 1 | 🟢 已接線 | BAG-02 | 排序結果穩定 | [v16.8 核對 2026-10-28] master #1219–#1251 已接上（已接線）；待 QA／實機驗收 |  |
-| **BAG-06** | M4 | 退役裝備自動回倉 | logic | 1.5 | 🟢 已接線 | BAG-03 | 退役觸發後裝備回倉，滿倉有提示 | [v16.7 更正 2026-10-28] 武將退役或老死後裝備回倉（PR #1065，PROG-2-0681）；GameSession 內有 equippedBy 清除路徑 |  |
-| **BAG-07** | M8 | 物品鎖定與分解回收材料 | logic | 2 | 🟢 已接線 | BAG-03 | 鎖定品不可售/解，分解給材料 | 無 | 未開始→已接線；#1321 GearLockDecompose 接 GameSession；InventoryProjection 修改 |
-| **BAG-08** | M8 | 寶物圖鑑 | content | 2 | 🟢 已接線 | BAG-02 | 取得過的寶物被記錄並顯示 | 無 | 未開始→已接線；#1324 TreasureCodex 接 ItemBagController／LobbyScene |
+| **BAG-04** | M8 | 裝備效果計算合入戰場數值與品質加成範圍 | logic | 2 | 🟢 已接線 | BAG-01 | SSR+50~100等範圍由品質決定並合入面板 | 規格見 doc_spec_0437；EquipmentBonus.ts 品質區間與面板屬性累加、SortieDeploy 納入加成 | [v18.32 核對 2026-11-07] 規格 doc_spec_0437 定案；PROG-2-1011（#793） |
+| **BAG-05** | M8 | 倉庫篩選排序（品質/類型/時間） | logic | 1 | 🟢 已接線 | BAG-02 | 排序結果穩定 | 規格見 doc_spec_0435；WarehouseSort.ts 三軸排序輪播與穩態排序算法 | [v18.31 核對 2026-11-07] 規格 doc_spec_0435 定案；WarehousePanelController 呼叫，LobbyScene 接線 |
+| **BAG-06** | M4 | 退役裝備自動回倉 | logic | 1.5 | 🟢 已接線 | BAG-03 | 退役觸發後裝備回倉，滿倉有提示 | 規格見 doc_spec_0436；GameSession.retireGeneral、_releaseGearOfInactiveGenerals 與滿倉溢出保全 | [v18.31 核對 2026-11-07] 規格 doc_spec_0436 定案；PR #1065 PROG-2-0681 已合 |
+| **BAG-07** | M8 | 物品鎖定與分解回收材料 | logic | 2 | 🟢 已接線 | BAG-03 | 鎖定品不可售/解，分解給材料 | 規格見 doc_spec_0432；GearLockDecompose.ts 鎖定防護、分解出 ITEM_BAMBOO_SLIP | [v18.30 核對 2026-11-07] 規格 doc_spec_0432 定案；#1321 GearLockDecompose 接 GameSession；InventoryProjection 整合 |
+| **BAG-08** | M8 | 寶物圖鑑 | content | 2 | 🟢 已接線 | BAG-02 | 取得過的寶物被記錄並顯示 | 規格見 doc_spec_0433；TreasureCodex.ts 取得日誌與當前持有動態投影圖鑑 | [v18.30 核對 2026-11-07] 規格 doc_spec_0433 定案；#1324 TreasureCodex 接 ItemBagController／LobbyScene |
 | **BAG-09** | M6 | 倉庫/背包 UI 與字串（UI_WAREHOUSE 等） | ui | 3 | 🟢 已接線 | BAG-02, BAG-03 | 顯示容量、擴容按鈕、滿倉提示 | WarehousePanelController 已被 LobbyScene 匯入 | [v17.2 更正 2026-11-07] 純邏輯→已接線；原註記「尚未掛載」已過時 |
 | **BAG-10** | M8 | 虎符/英靈卡不入普通格（Display_Bucket 分域） | logic | 1.5 | 🟢 已接線 | BAG-02 | 英靈卡不占倉庫格數，虎符不可丟棄販賣 | [v16.5 第四批核對 2026-10-27] master #1144–#1199 已接上（已接線）；待 QA／實機驗收 |  |
 | **BAG-11** | M11 | 伺服器裝備記錄表（equip_id/slot_type） | server | 2 | 🟡 純邏輯 | BAG-03 | 表欄位與 schema 對齊並可同步 | server/schema/bag11-equip-row.ts、010_gear_equip_records.sql；PROG-2-1395（#1340） | [v17.2 更正 2026-11-07] 未開始→純邏輯；僅表定義與列驗證 |

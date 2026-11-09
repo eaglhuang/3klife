@@ -1,297 +1,297 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-11-06
-> 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 7/10 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
+> 生成日期: 2026-11-09
+> 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 7/14 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
-## 任務卡類 (`doc_task`) — Part 5/8
+## 任務卡類 (`doc_task`) — Part 2/9
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
-| `doc_task_1158` | docs/agent-briefs/tasks/PROG/PROG-2-0879.md | [PROG-2-0879] cc 型別清理第 3 批（ok 收窄、cellSize 型別） |
-| `doc_task_1159` | docs/agent-briefs/tasks/PROG/PROG-2-0880.md | [PROG-2-0880] 存檔快照映射六表列（MVP-12 client 消費點） |
-| `doc_task_1160` | docs/agent-briefs/tasks/PROG/PROG-2-0881.md | [PROG-2-0881] 因子解鎖階段接到 GameSession（FUL-06 client 端） |
-| `doc_task_1161` | docs/agent-briefs/tasks/PROG/PROG-2-0882.md | [PROG-2-0882] cc 型別清理第 4 批（CompositePanel binder 欄位碰撞） |
-| `doc_task_1162` | docs/agent-briefs/tasks/PROG/PROG-2-0883.md | [PROG-2-0883] LUK-04 Phase 3 紫色可見性接到六角圖 |
-| `doc_task_1163` | docs/agent-briefs/tasks/PROG/PROG-2-0884.md | [PROG-2-0884] GachaDs3 三個子面板對齊 ChildPanelBase 契約 |
-| `doc_task_1164` | docs/agent-briefs/tasks/PROG/PROG-2-0885.md | [PROG-2-0885] 存檔備份與壞檔自動退回上一份（DS-14） |
-| `doc_task_1165` | docs/agent-briefs/tasks/PROG/PROG-2-0886.md | [PROG-2-0886] i18n 佔位補全第 1 批（系統共用／大廳／網路／提示） |
-| `doc_task_1166` | docs/agent-briefs/tasks/PROG/PROG-2-0887.md | [PROG-2-0887] i18n 佔位補全第 2 批（武將詳情 ui.general） |
-| `doc_task_1167` | docs/agent-briefs/tasks/PROG/PROG-2-0888.md | [PROG-2-0888] 六表映射修正：存檔正常時不回報錯誤（MVP-12 QA 回報） |
-| `doc_task_1168` | docs/agent-briefs/tasks/PROG/PROG-2-0889.md | [PROG-2-0889] i18n 佔位補全第 3 批（武將詳情 ui.general） |
-| `doc_task_1169` | docs/agent-briefs/tasks/PROG/PROG-2-0890.md | [PROG-2-0890] i18n 佔位補全第 4 批（武將詳情 ui.general 收尾） |
-| `doc_task_1170` | docs/agent-briefs/tasks/PROG/PROG-2-0891.md | [PROG-2-0891] cc 型別檢查：補 cc/env 模組宣告（報告模式） |
-| `doc_task_1171` | docs/agent-briefs/tasks/PROG/PROG-2-0892.md | [PROG-2-0892] 部署控制器介面對齊（cc 型別檢查，結構性） |
-| `doc_task_1172` | docs/agent-briefs/tasks/PROG/PROG-2-0893.md | [PROG-2-0893] LobbyScene 武將列表 options 型別補 npcDialogueSaveId |
-| `doc_task_1173` | docs/agent-briefs/tasks/PROG/PROG-2-0894.md | [PROG-2-0894] LobbyScene 缺匯出修正（UIManagedController／remarkRandomOf） |
-| `doc_task_1174` | docs/agent-briefs/tasks/PROG/PROG-2-0895.md | [PROG-2-0895] DeployPanel 吐司型別轉換（Component→ToastMessageLike） |
-| `doc_task_1175` | docs/agent-briefs/tasks/PROG/PROG-2-0896.md | [PROG-2-0896] 底座組 en 短標籤縮短（寬度風險） |
-| `doc_task_1176` | docs/agent-briefs/tasks/PROG/PROG-2-0897.md | [PROG-2-0897] 武將速覽讀取 templateId（GeneralQuickViewComposite） |
-| `doc_task_1177` | docs/agent-briefs/tasks/PROG/PROG-2-0898.md | [PROG-2-0898] GameSession 借用檢查收窄（BorrowCheck.blocked） |
-| `doc_task_1178` | docs/agent-briefs/tasks/PROG/PROG-2-0899.md | [PROG-2-0899] UIScreenRuntimeStateRegistry 版本核對參數型別（content） |
-| `doc_task_1179` | docs/agent-briefs/tasks/PROG/PROG-2-0900.md | [PROG-2-0900] 無雙亂舞接線：triggerPlayerBattleSkill 真實戰場驗證 |
-| `doc_task_1180` | docs/agent-briefs/tasks/PROG/PROG-2-0901.md | [PROG-2-0901] 改派建議 Deploy_Suggestion（DEP-10） |
-| `doc_task_1181` | docs/agent-briefs/tasks/PROG/PROG-2-0902.md | [PROG-2-0902] 改派建議文案接上部署畫面（DEP-10 cc 接線） |
-| `doc_task_1182` | docs/agent-briefs/tasks/PROG/PROG-2-0903.md | [PROG-2-0903] 改派二次確認（點兩次，A 案） |
-| `doc_task_1183` | docs/agent-briefs/tasks/PROG/PROG-2-0904.md | [PROG-2-0904] 委任 AI 四級部署策略（DEP-11 純邏輯） |
-| `doc_task_1184` | docs/agent-briefs/tasks/PROG/PROG-2-0905.md | [PROG-2-0905] 委任 AI 部署挑選入口（DEP-11 呼叫端） |
-| `doc_task_1185` | docs/agent-briefs/tasks/PROG/PROG-2-0906.md | [PROG-2-0906] 修 DeployPanel 改派建議的 TS 錯誤 |
-| `doc_task_1186` | docs/agent-briefs/tasks/PROG/PROG-2-0907.md | [PROG-2-0907] 戰法 AI 選技規則（TAC-15 純規則層） |
-| `doc_task_1187` | docs/agent-briefs/tasks/PROG/PROG-2-0908.md | [PROG-2-0908] 委任 AI 接上 BattleController（DEP-11 呼叫端） |
-| `doc_task_1188` | docs/agent-briefs/tasks/PROG/PROG-2-0909.md | [PROG-2-0909] CharacterDs3StatsChild 生命條綁定型別（_bindVital） |
-| `doc_task_1189` | docs/agent-briefs/tasks/PROG/PROG-2-0910.md | [PROG-2-0910] IBattleHUDLike 補 showPersistentStatus |
-| `doc_task_1190` | docs/agent-briefs/tasks/PROG/PROG-2-0912.md | [PROG-2-0912] 敵方戰法候選來源（EnemyAI 接線第 1 段） |
-| `doc_task_1191` | docs/agent-briefs/tasks/PROG/PROG-2-0913.md | [PROG-2-0913] 委任開關接上玩家部署階段（DEP-11 cc 接線） |
-| `doc_task_1192` | docs/agent-briefs/tasks/PROG/PROG-2-0914.md | [PROG-2-0914] 敵方戰法數值填入與選技（EnemyAI 接線第 2 段，純邏輯） |
-| `doc_task_1193` | docs/agent-briefs/tasks/PROG/PROG-2-0915.md | [PROG-2-0915] 戰法預估傷害（敵方選技的數值來源） |
-| `doc_task_1194` | docs/agent-briefs/tasks/PROG/PROG-2-0916.md | [PROG-2-0916] 戰法施放共用入口 castBattleSkill（敵方與玩家同一套結算） |
-| `doc_task_1195` | docs/agent-briefs/tasks/PROG/PROG-2-0917.md | [PROG-2-0917] 虎符裁決欄位約束（TERM-07） |
-| `doc_task_1196` | docs/agent-briefs/tasks/PROG/PROG-2-0918.md | [PROG-2-0918] 敵方選技接進敵方回合（EnemyAI 接線） |
-| `doc_task_1197` | docs/agent-briefs/tasks/PROG/PROG-2-0919.md | [PROG-2-0919] 敵方選技的效果值與地形數值 |
-| `doc_task_1198` | docs/agent-briefs/tasks/PROG/PROG-2-0920.md | [PROG-2-0920] AI 擊殺充能的難度倍率（規格 F-3） |
-| `doc_task_1199` | docs/agent-briefs/tasks/PROG/PROG-2-0921.md | [PROG-2-0921] 戰鬥入口寫入 AI 難度 |
-| `doc_task_1200` | docs/agent-briefs/tasks/PROG/PROG-2-0922.md | [PROG-2-0922] 單挑接受判定與拒絕懲罰（NUM-02） |
-| `doc_task_1201` | docs/agent-briefs/tasks/PROG/PROG-2-0923.md | [PROG-2-0923] 單挑回合上限 |
-| `doc_task_1202` | docs/agent-briefs/tasks/PROG/PROG-2-0924.md | [PROG-2-0924] 戰法 TP 消耗表（NUM-10） |
-| `doc_task_1203` | docs/agent-briefs/tasks/PROG/PROG-2-0925.md | [PROG-2-0925] 奧義傷害公式與 base_power 查表（NUM-09 餘項） |
-| `doc_task_1204` | docs/agent-briefs/tasks/PROG/PROG-2-0926.md | [PROG-2-0926] 場景 preset 對精銳部署上限的影響（DEP-12） |
-| `doc_task_1205` | docs/agent-briefs/tasks/PROG/PROG-2-0927.md | [PROG-2-0927] 奧義傷害接進戰場傷害流程 |
-| `doc_task_1206` | docs/agent-briefs/tasks/PROG/PROG-2-0928.md | [PROG-2-0928] 虎符特殊戰法管線（34 條接 BattleSkill） |
-| `doc_task_1207` | docs/agent-briefs/tasks/PROG/PROG-2-0929.md | [PROG-2-0929] 適性 Server schema 與天氣道具（APT-15） |
-| `doc_task_1208` | docs/agent-briefs/tasks/PROG/PROG-2-0930.md | [PROG-2-0930] 天氣道具接進戰場流程 |
-| `doc_task_1209` | docs/agent-briefs/tasks/PROG/PROG-2-0931.md | [PROG-2-0931] 虎符星級突破成本依目標星級修正（NUM-12 餘項） |
-| `doc_task_1210` | docs/agent-briefs/tasks/PROG/PROG-2-0932.md | [PROG-2-0932] 天氣道具庫存與使用流程（邏輯部分） |
-| `doc_task_1211` | docs/agent-briefs/tasks/PROG/PROG-2-0933.md | [PROG-2-0933] 殼戰法不可施放（QA 對 TRP-15 的提醒） |
-| `doc_task_1212` | docs/agent-briefs/tasks/PROG/PROG-2-0934.md | [PROG-2-0934] 數值系統 UI 字串進 i18n 並在戰場顯示（NUM-16） |
-| `doc_task_1213` | docs/agent-briefs/tasks/PROG/PROG-2-0935.md | [PROG-2-0935] 數值配置 Server 表與熱更新比對（NUM-17） |
-| `doc_task_1214` | docs/agent-briefs/tasks/PROG/PROG-2-0936.md | [PROG-2-0936] 戰場已合卡改號到戰場號段 |
-| `doc_task_1215` | docs/agent-briefs/tasks/PROG/PROG-2-0937.md | [PROG-2-0937] 戰場部署紀錄 Server 列與驗證（DEP-13） |
-| `doc_task_1216` | docs/agent-briefs/tasks/PROG/PROG-2-0938.md | [PROG-2-0938] 史實合攻戰場演出（KIN-09 演出） |
-| `doc_task_1217` | docs/agent-briefs/tasks/PROG/PROG-2-0939.md | [PROG-2-0939] 戰場相關 tsc 錯誤修回基準 |
-| `doc_task_1218` | docs/agent-briefs/tasks/PROG/PROG-2-0940.md | [PROG-2-0940] 兵種／虎符 UI 字串進 i18n（TRP-19） |
-| `doc_task_1219` | docs/agent-briefs/tasks/PROG/PROG-2-0941.md | [PROG-2-0941] 放走俘虜的未來來投（POW-07） |
-| `doc_task_1220` | docs/agent-briefs/tasks/PROG/PROG-2-0942.md | [PROG-2-0942] 監獄格數與擴容（POW-06） |
-| `doc_task_1221` | docs/agent-briefs/tasks/PROG/PROG-2-0943.md | [PROG-2-0943] 放走俘虜來投接線（POW-07 接線） |
-| `doc_task_1222` | docs/agent-briefs/tasks/PROG/PROG-2-0944.md | [PROG-2-0944] 開場信件與教學引導文案入 i18n（COPY-02） |
-| `doc_task_1223` | docs/agent-briefs/tasks/PROG/PROG-2-0945.md | [PROG-2-0945] 趣味台詞彩蛋庫與使用規則（COPY-05） |
-| `doc_task_1224` | docs/agent-briefs/tasks/PROG/PROG-2-0946.md | [PROG-2-0946] 大廳字串與劇本文案入 i18n（HALL-13） |
-| `doc_task_1225` | docs/agent-briefs/tasks/PROG/PROG-2-0947.md | [PROG-2-0947] 正式版文案人工審稿清單（COPY-06） |
-| `doc_task_1226` | docs/agent-briefs/tasks/PROG/PROG-2-0948.md | [PROG-2-0948] 核心武將錨點台詞不可覆蓋（NPC-07） |
-| `doc_task_1227` | docs/agent-briefs/tasks/PROG/PROG-2-0949.md | [PROG-2-0949] 血統樹主角區資料整理（BUI-05） |
-| `doc_task_1228` | docs/agent-briefs/tasks/PROG/PROG-2-0950.md | [PROG-2-0950] 賽季戰績接上戰後結算（REC-10 接線） |
-| `doc_task_1229` | docs/agent-briefs/tasks/PROG/PROG-2-0951.md | [PROG-2-0951] 單場戰報快照接上戰後結算（REC-09 接線） |
-| `doc_task_1230` | docs/agent-briefs/tasks/PROG/PROG-2-0952.md | [PROG-2-0952] 官職詳情頁文案改走語系表並補三語 |
-| `doc_task_1231` | docs/agent-briefs/tasks/PROG/PROG-2-0953.md | [PROG-2-0953] 戰績排行榜排序純邏輯（REC-11 本機部分） |
-| `doc_task_1232` | docs/agent-briefs/tasks/PROG/PROG-2-0954.md | [PROG-2-0954] 世界沙盤標記數量上限（OFC-06 純邏輯） |
-| `doc_task_1233` | docs/agent-briefs/tasks/PROG/PROG-2-0955.md | [PROG-2-0955] 戰績排行榜接上 GameSession（REC-11 本機呼叫端） |
-| `doc_task_1234` | docs/agent-briefs/tasks/PROG/PROG-2-0956.md | [PROG-2-0956] 戰績分頁顯示本賽季戰績 |
-| `doc_task_1235` | docs/agent-briefs/tasks/PROG/PROG-2-0957.md | [PROG-2-0957] 戰績排行榜列資料（畫面前置） |
-| `doc_task_1236` | docs/agent-briefs/tasks/PROG/PROG-2-0958.md | [PROG-2-0958] 世界沙盤標記：GameSession 呼叫端與存檔欄位（OFC-06） |
-| `doc_task_1237` | docs/agent-briefs/tasks/PROG/PROG-2-0959.md | [PROG-2-0959] 戰績排行榜畫面 spec 與 UIConfig（第 1 張） |
-| `doc_task_1238` | docs/agent-briefs/tasks/PROG/PROG-2-0960.md | [PROG-2-0960] 戰績排行榜元件、大廳掛載與戰績分頁入口（第 2 張） |
-| `doc_task_1239` | docs/agent-briefs/tasks/PROG/PROG-2-0961.md | [PROG-2-0961] 時代更迭保留官職：接上 applyEraShiftToOfficerState（OFC-09） |
-| `doc_task_1240` | docs/agent-briefs/tasks/PROG/PROG-2-0962.md | [PROG-2-0962] 季報戰損報告接上季結流程（OFC／REC 季報） |
-| `doc_task_1241` | docs/agent-briefs/tasks/PROG/PROG-2-0963.md | [PROG-2-0963] 季結戰報彈窗接上大廳推進季度 |
-| `doc_task_1242` | docs/agent-briefs/tasks/PROG/PROG-2-0964.md | [PROG-2-0964] 天下沙盤狀態列（唯讀） |
-| `doc_task_1243` | docs/agent-briefs/tasks/PROG/PROG-2-0965.md | [PROG-2-0965] 沙盤標記放置接線（領地） |
-| `doc_task_1244` | docs/agent-briefs/tasks/PROG/PROG-2-0966.md | [PROG-2-0966] 季度戰報排除退休與未成年武將 |
-| `doc_task_1245` | docs/agent-briefs/tasks/PROG/PROG-2-0967.md | [PROG-2-0967] 天下沙盤領地選擇畫面 |
-| `doc_task_1246` | docs/agent-briefs/tasks/PROG/PROG-2-0968.md | [PROG-2-0968] 傭兵五階段插畫進度（MERC-08） |
-| `doc_task_1247` | docs/agent-briefs/tasks/PROG/PROG-2-0969.md | [PROG-2-0969] 傭兵插畫階段存檔與面板接線（MERC-08 續） |
-| `doc_task_1248` | docs/agent-briefs/tasks/PROG/PROG-2-0970.md | [PROG-2-0970] 內政武將指派服務（GOV-04） |
-| `doc_task_1249` | docs/agent-briefs/tasks/PROG/PROG-2-0971.md | [PROG-2-0971] 世襲主城保護與背水一戰（GOV-09） |
-| `doc_task_1250` | docs/agent-briefs/tasks/PROG/PROG-2-0972.md | [PROG-2-0972] 武將日誌主檔與寫入 API（JRN-01） |
-| `doc_task_1251` | docs/agent-briefs/tasks/PROG/PROG-2-0973.md | [PROG-2-0973] 太守府治理頁文字與數值（GOV-07） |
-| `doc_task_1252` | docs/agent-briefs/tasks/PROG/PROG-2-0974.md | [PROG-2-0974] 領地治理純邏輯接到會話（GOV-04 / GOV-09 / JRN-01 接線） |
-| `doc_task_1253` | docs/agent-briefs/tasks/PROG/PROG-2-0975.md | [PROG-2-0975] 領地治理存讀檔接線（指派、主城、日誌） |
-| `doc_task_1254` | docs/agent-briefs/tasks/PROG/PROG-2-0976.md | [PROG-2-0976] 季結自動寫入日誌 |
-| `doc_task_1255` | docs/agent-briefs/tasks/PROG/PROG-2-0980.md | [PROG-2-0980] 太守府 cc 畫面接線（GOV-07 畫面） |
-| `doc_task_1256` | docs/agent-briefs/tasks/PROG/PROG-2-0981.md | [PROG-2-0981] 內政任務格初始 2 格（依規格 Lv1） |
-| `doc_task_1257` | docs/agent-briefs/tasks/PROG/PROG-2-0982.md | [PROG-2-0982] 傭兵告別信進收件匣（RET-03） |
-| `doc_task_1258` | docs/agent-briefs/tasks/PROG/PROG-2-0983.md | [PROG-2-0983] 領地升級與內政任務格數（GOV-08） |
-| `doc_task_1259` | docs/agent-briefs/tasks/PROG/PROG-2-0984.md | [PROG-2-0984] 離線互動事件觸發（JRN-04，F-3 純邏輯） |
-| `doc_task_1260` | docs/agent-briefs/tasks/PROG/PROG-2-0985.md | [PROG-2-0985] 傭兵告別信接線（RET-03 接線） |
-| `doc_task_1261` | docs/agent-briefs/tasks/PROG/PROG-2-0986.md | [PROG-2-0986] 太守府大廳入口與升級按鈕（GOV-07／GOV-08 接線） |
-| `doc_task_1262` | docs/agent-briefs/tasks/PROG/PROG-2-0987.md | [PROG-2-0987] 日曆簽到與連續登入統計（RET-09） |
-| `doc_task_1263` | docs/agent-briefs/tasks/PROG/PROG-2-0988.md | [PROG-2-0988] 非培育子嗣內政職位：屯田官、說客（GOV-10） |
-| `doc_task_1264` | docs/agent-briefs/tasks/PROG/PROG-2-0989.md | [PROG-2-0989] 名將挑戰賽賽季週期、段位與軟重置（TRN-01 純邏輯） |
-| `doc_task_1265` | docs/agent-briefs/tasks/PROG/PROG-2-0990.md | [PROG-2-0990] QA 複查補充：告別信上限與太守府金錢不足提示 |
-| `doc_task_1266` | docs/agent-briefs/tasks/PROG/PROG-2-0991.md | [PROG-2-0991] JRN-04 觸發接到大廳載入；太守府金錢不足提示（QA 補充） |
-| `doc_task_1267` | docs/agent-briefs/tasks/PROG/PROG-2-1000.md | [PROG-2-1000] 存檔從備份還原時大廳提示 |
-| `doc_task_1268` | docs/agent-briefs/tasks/PROG/PROG-2-1001.md | [PROG-2-1001] GeneralDetailOverviewChild 型別錯誤（TS2352／TS2345） |
-| `doc_task_1269` | docs/agent-briefs/tasks/PROG/PROG-2-1002.md | [PROG-2-1002] BattleUIBridge 治療／移動事件誤傳傷害觀測（UnitDamagedPayload） |
-| `doc_task_1270` | docs/agent-briefs/tasks/PROG/PROG-2-1003.md | [PROG-2-1003] 抽卡扣款與入冊併成同一次存檔（原子提交） |
-| `doc_task_1271` | docs/agent-briefs/tasks/PROG/PROG-2-1004.md | [PROG-2-1004] 抽卡教官卡併入同一次提交（日誌補寫） |
-| `doc_task_1272` | docs/agent-briefs/tasks/PROG/PROG-2-1005.md | [PROG-2-1005] 大廳任務情報完整判斷改走 HallTaskIntel（HALL-05 接線第一段） |
-| `doc_task_1273` | docs/agent-briefs/tasks/PROG/PROG-2-1006.md | [PROG-2-1006] 大廳任務 AI 委任與回看紀錄（存檔接線） |
-| `doc_task_1274` | docs/agent-briefs/tasks/PROG/PROG-2-1007.md | [PROG-2-1007] 大廳任務板開啟任務彈窗與委任按鈕接線（HALL-05 缺口一） |
-| `doc_task_1275` | docs/agent-briefs/tasks/PROG/PROG-2-1008.md | [PROG-2-1008] 委任任務戰後結算呼叫點（HALL-05 缺口二） |
-| `doc_task_1276` | docs/agent-briefs/tasks/PROG/PROG-2-1009.md | [PROG-2-1009] 統一物件庫推導虎符與英靈卡視圖（DS-08） |
-| `doc_task_1277` | docs/agent-briefs/tasks/PROG/PROG-2-1010.md | [PROG-2-1010] 基礎資源上限夾制與不足提示（ECO-11） |
-| `doc_task_1278` | docs/agent-briefs/tasks/PROG/PROG-2-1011.md | [PROG-2-1011] 裝備品質加成與合入面板數值（BAG-04） |
-| `doc_task_1279` | docs/agent-briefs/tasks/PROG/PROG-2-1012.md | [PROG-2-1012] 道具效果派發器（ITM-04a） |
-| `doc_task_1280` | docs/agent-briefs/tasks/PROG/PROG-2-1013.md | [PROG-2-1013] 日誌與派遣的一句武將反應（NPC-04） |
-| `doc_task_1281` | docs/agent-briefs/tasks/PROG/PROG-2-1014.md | [PROG-2-1014] 核心武將 Persona Card 暫定資料（NPC-01 補完） |
-| `doc_task_1282` | docs/agent-briefs/tasks/PROG/PROG-2-1015.md | [PROG-2-1015] 季結自動結算大廳委任（QA 缺口） |
-| `doc_task_1283` | docs/agent-briefs/tasks/PROG/PROG-2-1016.md | [PROG-2-1016] 核心武將情境鍵清單（NPC-02） |
-| `doc_task_1284` | docs/agent-briefs/tasks/PROG/PROG-2-1017.md | [PROG-2-1017] 道具效果派發接上補元散（ITM-04b） |
-| `doc_task_1285` | docs/agent-briefs/tasks/PROG/PROG-2-1018.md | [PROG-2-1018] 生成台詞性格漂移防護（NPC-06） |
-| `doc_task_1286` | docs/agent-briefs/tasks/PROG/PROG-2-1019.md | [PROG-2-1019] 加速卡縮短剩餘時間（ECO-08） |
-| `doc_task_1287` | docs/agent-briefs/tasks/PROG/PROG-2-1020.md | [PROG-2-1020] 移除退役產生虎符的來源 |
-| `doc_task_1288` | docs/agent-briefs/tasks/PROG/PROG-2-1021.md | [PROG-2-1021] 統一物件庫存檔與虎符同步（DS-08 儲存段） |
-| `doc_task_1289` | docs/agent-briefs/tasks/PROG/PROG-2-1022.md | [PROG-2-1022] 武將人物頁 Data Read Model 映射層（GDUI-13） |
-| `doc_task_1290` | docs/agent-briefs/tasks/PROG/PROG-2-1023.md | [PROG-2-1023] 資料中心名詞對應：PersonRegistry 與 LoreCache（TERM-06） |
-| `doc_task_1291` | docs/agent-briefs/tasks/PROG/PROG-2-1024.md | [PROG-2-1024] 人物頁 presenter 接上 Data Read Model（GDUI-13 呼叫端） |
-| `doc_task_1292` | docs/agent-briefs/tasks/PROG/PROG-2-1025.md | [PROG-2-1025] 人物頁分頁的空欄位佔位規劃（純邏輯） |
-| `doc_task_1293` | docs/agent-briefs/tasks/PROG/PROG-2-1026.md | [PROG-2-1026] 兵分頁虎符槽讀取統一物件庫（inventoryViews 呼叫端） |
-| `doc_task_1294` | docs/agent-briefs/tasks/PROG/PROG-2-1027.md | [PROG-2-1027] NPC_Memory 最小 read model（DS-09） |
-| `doc_task_1295` | docs/agent-briefs/tasks/PROG/PROG-2-1028.md | [PROG-2-1028] 血統樹節點卡資料映射（BUI-02） |
-| `doc_task_1296` | docs/agent-briefs/tasks/PROG/PROG-2-1029.md | [PROG-2-1029] 血統基因樹遞迴成 14 位先祖表（BUI-03 純邏輯） |
-| `doc_task_1297` | docs/agent-briefs/tasks/PROG/PROG-2-1030.md | [PROG-2-1030] users／save_snapshots 表定義與列驗證（DS-13 部分） |
-| `doc_task_1298` | docs/agent-briefs/tasks/PROG/PROG-2-1031.md | [PROG-2-1031] 虎符／英靈卡不入一般格的分域（BAG-10） |
-| `doc_task_1299` | docs/agent-briefs/tasks/PROG/PROG-2-1032.md | [PROG-2-1032] 安胎藥接結緣受孕率（ITM-04b，BOOST_CONCEPTION） |
-| `doc_task_1300` | docs/agent-briefs/tasks/PROG/PROG-2-1033.md | [PROG-2-1033] 刷新券接傭兵池與救美任務冷卻（ITM-04b，REFRESH） |
-| `doc_task_1301` | docs/agent-briefs/tasks/PROG/PROG-2-1034.md | [PROG-2-1034] 寶頁一般裝備 2x3 格位（GDUI-11） |
-| `doc_task_1302` | docs/agent-briefs/tasks/PROG/PROG-2-1035.md | [PROG-2-1035] 道具背包檢視模型與不足提示（ITM-10） |
-| `doc_task_1303` | docs/agent-briefs/tasks/PROG/PROG-2-1036.md | [PROG-2-1036] 統一物件庫推導武將一般裝備背包 |
-| `doc_task_1304` | docs/agent-briefs/tasks/PROG/PROG-2-1037.md | [PROG-2-1037] 寶頁六格裝備接線（cc 畫面） |
-| `doc_task_1305` | docs/agent-briefs/tasks/PROG/PROG-2-1038.md | [PROG-2-1038] 道具使用流程：刷新券與安胎藥 |
-| `doc_task_1306` | docs/agent-briefs/tasks/PROG/PROG-2-1039.md | [PROG-2-1039] 一般裝備定義表與寶頁顯示裝備名 |
-| `doc_task_1307` | docs/agent-briefs/tasks/PROG/PROG-2-1040.md | [PROG-2-1040] 一般裝備穿戴與卸下（純邏輯） |
-| `doc_task_1308` | docs/agent-briefs/tasks/PROG/PROG-2-1041.md | [PROG-2-1041] 道具背包畫面（ITM-10） |
-| `doc_task_1309` | docs/agent-briefs/tasks/PROG/PROG-2-1042.md | [PROG-2-1042] 技頁三態檢視模型（GDUI-10） |
-| `doc_task_1310` | docs/agent-briefs/tasks/PROG/PROG-2-1043.md | [PROG-2-1043] GameSession 穿戴與卸下一般裝備 |
-| `doc_task_1311` | docs/agent-briefs/tasks/PROG/PROG-2-1044.md | [PROG-2-1044] 寶頁格位選取清單與面板流程（純邏輯） |
-| `doc_task_1312` | docs/agent-briefs/tasks/PROG/PROG-2-1045.md | [PROG-2-1045] 紅顏趕路與商業化提示文案資料化（COPY-04） |
-| `doc_task_1313` | docs/agent-briefs/tasks/PROG/PROG-2-1046.md | [PROG-2-1046] StoryDock 三態與 reflow 切分（GDUI-06 純邏輯） |
-| `doc_task_1314` | docs/agent-briefs/tasks/PROG/PROG-2-1047.md | [PROG-2-1047] 技頁已習得列接上三態檢視模型（GDUI-10 cc 接線） |
-| `doc_task_1315` | docs/agent-briefs/tasks/PROG/PROG-2-1048.md | [PROG-2-1048] 血統樹 14 人版型節點結構（BUI-01） |
-| `doc_task_1316` | docs/agent-briefs/tasks/PROG/PROG-2-1049.md | [PROG-2-1049] 先祖卡節點綁定與文字（BUI-01 後續） |
-| `doc_task_1317` | docs/agent-briefs/tasks/PROG/PROG-2-1050.md | [PROG-2-1050] 借將畫面加畢業紀錄入口（PM 暫定） |
-| `doc_task_1318` | docs/agent-briefs/tasks/PROG/PROG-2-1051.md | [PROG-2-1051] 因子色碼設計 token 外移（BUI-06） |
-| `doc_task_1319` | docs/agent-briefs/tasks/PROG/PROG-2-1052.md | [PROG-2-1052] 因子色碼 JSON 驅動接線（BUI-06 續） |
-| `doc_task_1320` | docs/agent-briefs/tasks/PROG/PROG-2-1053.md | [PROG-2-1053] 子嗣奧義覺醒純邏輯（ULT-15） |
-| `doc_task_1321` | docs/agent-briefs/tasks/PROG/PROG-2-1054.md | [PROG-2-1054] 子嗣奧義覺醒接線（ULT-15 接線） |
-| `doc_task_1322` | docs/agent-briefs/tasks/PROG/PROG-2-1056.md | [PROG-2-1056] 戰魂寄宿接線（SAME-08 接線） |
-| `doc_task_1323` | docs/agent-briefs/tasks/PROG/PROG-2-1057.md | [PROG-2-1057] 寄宿戰魂面板資料（SAME-08 畫面前置） |
-| `doc_task_1324` | docs/agent-briefs/tasks/PROG/PROG-2-1058.md | [PROG-2-1058] 寄宿戰魂按鈕 cc 接線 |
-| `doc_task_1325` | docs/agent-briefs/tasks/PROG/PROG-2-1059.md | [PROG-2-1059] 轉生解鎖奧義欄位（ULT-03） |
-| `doc_task_1326` | docs/agent-briefs/tasks/PROG/PROG-2-1060.md | [PROG-2-1060] 轉生屬性上限對齊奧義系統規格 |
-| `doc_task_1327` | docs/agent-briefs/tasks/PROG/PROG-2-1061.md | [PROG-2-1061] 奧義演出設定解析（ULT-12 前置） |
-| `doc_task_1328` | docs/agent-briefs/tasks/PROG/PROG-2-1062.md | [PROG-2-1062] 奧義效果家族資料（ULT-12 資料缺口） |
-| `doc_task_1329` | docs/agent-briefs/tasks/PROG/PROG-2-1063.md | [PROG-2-1063] 義兄弟相鄰合攻觸發率（KIN-09） |
-| `doc_task_1330` | docs/agent-briefs/tasks/PROG/PROG-2-1064.md | [PROG-2-1064] 復生重練邏輯（SAME-04） |
-| `doc_task_1331` | docs/agent-briefs/tasks/PROG/PROG-2-1065.md | [PROG-2-1065] 史實合攻接進戰場判定（KIN-09 接線） |
-| `doc_task_1332` | docs/agent-briefs/tasks/PROG/PROG-2-1066.md | [PROG-2-1066] 寶頁格位點擊與選取面板版型（cc 接線） |
-| `doc_task_1333` | docs/agent-briefs/tasks/PROG/PROG-2-1067.md | [PROG-2-1067] 名士表與 schema 驗證（ORAC-01） |
-| `doc_task_1334` | docs/agent-briefs/tasks/PROG/PROG-2-1068.md | [PROG-2-1068] 關係組合場景事件（KIN-08） |
-| `doc_task_1335` | docs/agent-briefs/tasks/PROG/PROG-2-1069.md | [PROG-2-1069] 父母因子→子嗣預期因子分布（ORAC-03） |
-| `doc_task_1336` | docs/agent-briefs/tasks/PROG/PROG-2-1070.md | [PROG-2-1070] 寄宿戰魂提示語系化與人物頁總 TP 即時刷新 |
-| `doc_task_1337` | docs/agent-briefs/tasks/PROG/PROG-2-1071.md | [PROG-2-1071] 先祖連線幾何（BUI-04 純邏輯） |
-| `doc_task_1338` | docs/agent-briefs/tasks/PROG/PROG-2-1072.md | [PROG-2-1072] 限定池排程模型（GCH-12） |
-| `doc_task_1339` | docs/agent-briefs/tasks/PROG/PROG-2-1073.md | [PROG-2-1073] 血脈灌注邏輯（SAME-05） |
-| `doc_task_1340` | docs/agent-briefs/tasks/PROG/PROG-2-1074.md | [PROG-2-1074] 血脈灌注接線（SAME-05 存檔與呼叫） |
-| `doc_task_1341` | docs/agent-briefs/tasks/PROG/PROG-2-1075.md | [PROG-2-1075] 戰鬥結果彈窗「返回」回大廳（MVP 循環斷點） |
-| `doc_task_1342` | docs/agent-briefs/tasks/PROG/PROG-2-1076.md | [PROG-2-1076] 戰場 HUD 主將名與回合數接上執行期資料 |
-| `doc_task_1343` | docs/agent-briefs/tasks/PROG/PROG-2-1077.md | [PROG-2-1077] 還原被誤歸檔的傷害數字字型貼圖 |
-| `doc_task_1344` | docs/agent-briefs/tasks/PROG/PROG-2-1078.md | [PROG-2-1078] MVP 三代循環端對端測試（祖→父→子） |
-| `doc_task_1345` | docs/agent-briefs/tasks/PROG/PROG-2-1079.md | [PROG-2-1079] 缺翻譯時 label 退回原文，不露出 auto.* 鍵名 |
-| `doc_task_1346` | docs/agent-briefs/tasks/PROG/PROG-2-1080.md | [PROG-2-1080] 打包後展開 Set/Map/迭代器失效（宿命轉蛋抽不到武將） |
-| `doc_task_1347` | docs/agent-briefs/tasks/PROG/PROG-2-1081.md | [PROG-2-1081] 大廳讀存檔前未初始化服務，重開遊戲被當新玩家 |
-| `doc_task_1348` | docs/agent-briefs/tasks/PROG/PROG-2-1082.md | [PROG-2-1082] 大廳左側浮層互相重疊，季度與出戰資訊看不清楚 |
-| `doc_task_1349` | docs/agent-briefs/tasks/PROG/PROG-2-1083.md | [PROG-2-1083] 戰鬥 HUD 從 HTML 轉來的面板蓋住戰場 |
-| `doc_task_1350` | docs/agent-briefs/tasks/PROG/PROG-2-1084.md | [PROG-2-1084] 開局送一位紅顏，讓第一次結緣有對象 |
-| `doc_task_1351` | docs/agent-briefs/tasks/PROG/PROG-2-1085.md | [PROG-2-1085] 培育入場帶 5 張教官卡：支援卡池、入場編成、訓練格顯示 |
-| `doc_task_1352` | docs/agent-briefs/tasks/PROG/PROG-2-1086.md | [PROG-2-1086] MVP 三代循環斷點：紅顏池開放召喚、移除戰場除錯鈕 |
-| `doc_task_1353` | docs/agent-briefs/tasks/PROG/PROG-2-1087.md | [PROG-2-1087] 他國 AI 勢力核心：邦交、季度行動、外交指令、自動模擬戰鬥結算 |
-| `doc_task_1354` | docs/agent-briefs/tasks/PROG/PROG-2-1088.md | [PROG-2-1088] 外交／出征畫面：他國 AI 勢力存檔、季度行動與可點的文字按鈕 |
-| `doc_task_1355` | docs/agent-briefs/tasks/PROG/PROG-2-1089.md | [PROG-2-1089] 招賢館：20 位名將可直接挑選、用金幣招募入名冊 |
-| `doc_task_1356` | docs/agent-briefs/tasks/PROG/PROG-2-1090.md | [PROG-2-1090] 快進至下個事件：連續推進季度，遇開獎／離世／成年即停 |
-| `doc_task_1357` | docs/agent-briefs/tasks/PROG/PROG-2-1091.md | [PROG-2-1091] 戰鬥自動鈕：依數值模擬直接跳結算 |
-| `doc_task_1358` | docs/agent-briefs/tasks/PROG/PROG-2-1092.md | [PROG-2-1092] CompositePanel 掛載時帶入翻譯字典，結算按鈕不再露出鍵名 |
-| `doc_task_1359` | docs/agent-briefs/tasks/PROG/PROG-2-1093.md | [PROG-2-1093] 支援卡（教官）池改用規格機率 SSR 5% / SR 25% / R 70% |
-| `doc_task_1360` | docs/agent-briefs/tasks/PROG/PROG-2-1094.md | [PROG-2-1094] 轉蛋扣費照規格：靈玉／銅錢符 150／1500，紅顏與支援卡池可十連 |
-| `doc_task_1361` | docs/agent-briefs/tasks/PROG/PROG-2-1095.md | [PROG-2-1095] 教官卡突破／溢出：滿星重複卡轉積分入帳，抽卡提示升星與轉化 |
-| `doc_task_1362` | docs/agent-briefs/tasks/PROG/PROG-2-1096.md | [PROG-2-1096] 培育畫面顯示教官戰法靈感與師友羈絆觸發 |
-| `doc_task_1363` | docs/agent-briefs/tasks/PROG/PROG-2-1097.md | [PROG-2-1097] 大廳「支援」按鈕開啟我的教官卡列表（原本預製件不存在無反應） |
-| `doc_task_1364` | docs/agent-briefs/tasks/PROG/PROG-2-1098.md | [PROG-2-1098] 商店畫面標題與分頁顯示鍵名：補 UI_SHOP_* 四語系翻譯 |
-| `doc_task_1365` | docs/agent-briefs/tasks/PROG/PROG-2-1099.md | [PROG-2-1099] 支援卡池補齊羈絆所需教官卡與 R 卡（暫定資料） |
-| `doc_task_1366` | docs/agent-briefs/tasks/PROG/PROG-2-1100.md | [PROG-2-1100] 重建 cross-ref-code「UI Spec JSON」畫面索引表（工具自動產生） |
-| `doc_task_1367` | docs/agent-briefs/tasks/PROG/PROG-2-1101.md | [PROG-2-1101] 大廳底部三顆空按鈕補上「出征編組／出戰／訓練」 |
-| `doc_task_1368` | docs/agent-briefs/tasks/PROG/PROG-2-1102.md | [PROG-2-1102] 修正 MercenaryBond 過時檔頭註解 |
-| `doc_task_1369` | docs/agent-briefs/tasks/PROG/PROG-2-1103.md | [PROG-2-1103] 主城倉庫面板接進遊戲（內政面板入口、容量顯示、擴容） |
-| `doc_task_1370` | docs/agent-briefs/tasks/PROG/PROG-2-1104.md | [PROG-2-1104] 內政畫面試做極簡半透明風（模糊背景＋墨色半透明面板） |
-| `doc_task_1371` | docs/agent-briefs/tasks/PROG/PROG-2-1105.md | [PROG-2-1105] 引入思源宋體子集字型，先套在內政畫面 |
-| `doc_task_1372` | docs/agent-briefs/tasks/PROG/PROG-2-1106.md | [PROG-2-1106] 標題字距生效，並把極簡半透明風套到外交與招賢館 |
-| `doc_task_1373` | docs/agent-briefs/tasks/PROG/PROG-2-1107.md | [PROG-2-1107] 武將小人頭：可迭代的美術路徑規則＋自動裁切頭像，先接招賢館 |
-| `doc_task_1374` | docs/agent-briefs/tasks/PROG/PROG-2-1108.md | [PROG-2-1108] 依新立繪重裁六位武將頭像 |
-| `doc_task_1375` | docs/agent-briefs/tasks/PROG/PROG-2-1109.md | [PROG-2-1109] 武將頭像改用統一臉高比例重裁 |
-| `doc_task_1376` | docs/agent-briefs/tasks/PROG/PROG-2-1110.md | [PROG-2-1110] 頭像複審結果套用與貂蟬量測修正 |
-| `doc_task_1377` | docs/agent-briefs/tasks/PROG/PROG-2-1111.md | [PROG-2-1111] 貂蟬頭像標為已審 |
-| `doc_task_1378` | docs/agent-briefs/tasks/PROG/PROG-2-1112.md | [PROG-2-1112] 外交畫面勢力按鈕加君主小頭像 |
-| `doc_task_1379` | docs/agent-briefs/tasks/PROG/PROG-2-1113.md | [PROG-2-1113] 趙雲新立繪頭像依臉高規則重裁 |
-| `doc_task_1380` | docs/agent-briefs/tasks/PROG/PROG-2-1114.md | [PROG-2-1114] 頭像改從高解析原圖裁切（先做趙雲） |
-| `doc_task_1381` | docs/agent-briefs/tasks/PROG/PROG-2-1115.md | [PROG-2-1115] 趙雲頭像標為已審 |
-| `doc_task_1382` | docs/agent-briefs/tasks/PROG/PROG-2-1116.md | [PROG-2-1116] 審過的裁切頭像替換正式頭像 |
-| `doc_task_1383` | docs/agent-briefs/tasks/PROG/PROG-2-1117.md | [PROG-2-1117] 未知武將頭像：塗黑臉型加問號 |
-| `doc_task_1384` | docs/agent-briefs/tasks/PROG/PROG-2-1118.md | [PROG-2-1118] 頭像 .meta 生成與縮小模糊修正 |
-| `doc_task_1385` | docs/agent-briefs/tasks/PROG/PROG-2-1119.md | [PROG-2-1119] 未知頭像分男女兩版 |
-| `doc_task_1386` | docs/agent-briefs/tasks/PROG/PROG-2-1120.md | [PROG-2-1120] #871 開場協調修復合併到最新 master 並實測 |
-| `doc_task_1387` | docs/agent-briefs/tasks/PROG/PROG-2-1121.md | [PROG-2-1121] 修正頭像路徑舊測試 |
-| `doc_task_1388` | docs/agent-briefs/tasks/PROG/PROG-2-1122.md | [PROG-2-1122] 內政卡片子節點分組，修正 UI spec 嚴格驗證 |
-| `doc_task_1389` | docs/agent-briefs/tasks/PROG/PROG-2-1123.md | [PROG-2-1123] 宿命轉蛋面板加遮罩並擋住大廳點擊 |
-| `doc_task_1390` | docs/agent-briefs/tasks/PROG/PROG-2-1124.md | [PROG-2-1124] 內政導覽列加「紅顏」入口 |
-| `doc_task_1391` | docs/agent-briefs/tasks/PROG/PROG-2-1125.md | [PROG-2-1125] 紅顏展示：效果標籤中文化與遮罩 |
-| `doc_task_1392` | docs/agent-briefs/tasks/PROG/PROG-2-1126.md | [PROG-2-1126] 紅顏展示與招賢館：一頁六框全身立繪 |
-| `doc_task_1393` | docs/agent-briefs/tasks/PROG/PROG-2-1127.md | [PROG-2-1127] 新手首戰自動模擬保證勝利 |
-| `doc_task_1394` | docs/agent-briefs/tasks/PROG/PROG-2-1128.md | [PROG-2-1128] 俘虜處置顯示敵將立繪、戰鬥結算顯示我方主將頭像 |
-| `doc_task_1395` | docs/agent-briefs/tasks/PROG/PROG-2-1129.md | [PROG-2-1129] 首勝回大廳：紅顏展示關閉後才彈俘虜處置 |
-| `doc_task_1396` | docs/agent-briefs/tasks/PROG/PROG-2-1130.md | [PROG-2-1130] 結緣配置面板下半部疊字重排 |
-| `doc_task_1397` | docs/agent-briefs/tasks/PROG/PROG-2-1131.md | [PROG-2-1131] 結緣面板：父母大頭照、名士批語小頭像 |
-| `doc_task_1398` | docs/agent-briefs/tasks/PROG/PROG-2-1132.md | [PROG-2-1132] 培育畫面：用 TP 學戰法（MVP 結訓點選）＋訓練區重排 |
-| `doc_task_1399` | docs/agent-briefs/tasks/PROG/PROG-2-1133.md | [PROG-2-1133] 戰後覺醒在結算窗揭示（鎖頭碎裂） |
-| `doc_task_1400` | docs/agent-briefs/tasks/PROG/PROG-2-1134.md | [PROG-2-1134] 入學需帶教官、戰法改為靈感觸發後畢業兌換 |
-| `doc_task_1401` | docs/agent-briefs/tasks/PROG/PROG-2-1135.md | [PROG-2-1135] 靈感戰法對應到現有戰法庫（中文名＋戰場效果） |
-| `doc_task_1402` | docs/agent-briefs/tasks/PROG/PROG-2-1136.md | [PROG-2-1136] 回寫 PROG-2-1130～1134 已合併功能至規格與索引 |
-| `doc_task_1403` | docs/agent-briefs/tasks/PROG/PROG-2-1137.md | [PROG-2-1137] 回寫 PROG-2-1135 靈感戰法對應至規格與索引 |
-| `doc_task_1404` | docs/agent-briefs/tasks/PROG/PROG-2-1138.md | [PROG-2-1138] 好友借用教官改在入學前，借來的教官佔第 6 槽參與培育 |
-| `doc_task_1405` | docs/agent-briefs/tasks/PROG/PROG-2-1139.md | [PROG-2-1139] docs: 教官系統（支援卡）規格分片並回寫 PROG-2-1134/1135/1138 實作狀態 |
-| `doc_task_1406` | docs/agent-briefs/tasks/PROG/PROG-2-1140.md | [PROG-2-1140] 結緣面板求籤令數量與底部占卜入口（ORAC-05 移植） |
-| `doc_task_1407` | docs/agent-briefs/tasks/PROG/PROG-2-1141.md | [PROG-2-1141] 英靈卡詳情：血脈灌注欄位與入口（DUP-02） |
-| `doc_task_1408` | docs/agent-briefs/tasks/PROG/PROG-2-1142.md | [PROG-2-1142] 英靈圖鑑詳情按鈕與英靈卡詳情畫面（DUP-02 cc 接線） |
-| `doc_task_1409` | docs/agent-briefs/tasks/PROG/PROG-2-1143.md | [PROG-2-1143] 晝夜與節慶主題配置驅動（HALL-09） |
-| `doc_task_1410` | docs/agent-briefs/tasks/PROG/PROG-2-1144.md | [PROG-2-1144] 同名劇本與字串（SAME-10） |
-| `doc_task_1411` | docs/agent-briefs/tasks/PROG/PROG-2-1145.md | [PROG-2-1145] 17 個靈感戰法各自接上戰場效果 |
-| `doc_task_1412` | docs/agent-briefs/tasks/PROG/PROG-2-1147.md | [PROG-2-1147] 宿命轉蛋改六框立繪，每位名將附登場台詞 |
-| `doc_task_1413` | docs/agent-briefs/tasks/PROG/PROG-2-1148.md | [PROG-2-1148] 主大廳改城池主視覺：君主頂列、都市卡、功能分類收納 |
-| `doc_task_1414` | docs/agent-briefs/tasks/PROG/PROG-2-1149.md | [PROG-2-1149] 選主將標題：主將不在目前頁時誤顯示「不可出戰」 |
-| `doc_task_1415` | docs/agent-briefs/tasks/PROG/PROG-2-1150.md | [PROG-2-1150] 城池主選單「出征」分類直達外交・征伐 |
-| `doc_task_1416` | docs/agent-briefs/tasks/PROG/PROG-2-1151.md | [PROG-2-1151] 城池主選單直達招賢館與倉庫 |
-| `doc_task_1417` | docs/agent-briefs/tasks/PROG/PROG-2-1152.md | [PROG-2-1152] 傭兵試用→結義可玩：主選單入口、試用招募、起始試用券 |
-| `doc_task_1418` | docs/agent-briefs/tasks/PROG/PROG-2-1153.md | [PROG-2-1153] 傭兵面板稀有度寫死 R：結義按鈕點數與實際扣點不一致 |
-| `doc_task_1419` | docs/agent-briefs/tasks/PROG/PROG-2-1154.md | [PROG-2-1154] 傭兵 6 日倒數接上時間軸（MVP 定案一季＝一日） |
-| `doc_task_1420` | docs/agent-briefs/tasks/PROG/PROG-2-1155.md | [PROG-2-1155] 修 LobbyScene 傭兵稀有度型別錯誤 |
-| `doc_task_1421` | docs/agent-briefs/tasks/PROG/PROG-2-1156.md | [PROG-2-1156] 教官爆發補靈感率加成，支援卡帶入擅長格與爆發率 |
-| `doc_task_1422` | docs/agent-briefs/tasks/PROG/PROG-2-1157.md | [PROG-2-1157] 天命商店：大保底 200 抽兌換 SSR（邏輯與服務層） |
-| `doc_task_1423` | docs/agent-briefs/tasks/PROG/PROG-2-1158.md | [PROG-2-1158] 天命商店：兌換畫面與轉蛋頁入口 |
-| `doc_task_1424` | docs/agent-briefs/tasks/PROG/PROG-2-1159.md | [PROG-2-1159] 內政任務格指派武將，產出依武將屬性計算 |
-| `doc_task_1425` | docs/agent-briefs/tasks/PROG/PROG-2-1160.md | [PROG-2-1160] 內政一鍵自動指派（自動治理） |
-| `doc_task_1426` | docs/agent-briefs/tasks/PROG/PROG-2-1161.md | [PROG-2-1161] 內政手動／自動治理切換 |
-| `doc_task_1427` | docs/agent-briefs/tasks/PROG/PROG-2-1162.md | [PROG-2-1162] 子嗣擔任郡城縣令：內政黃金產出加成 |
-| `doc_task_1428` | docs/agent-briefs/tasks/PROG/PROG-2-1163.md | [PROG-2-1163] 教官爆發率隨突破星等成長 |
-| `doc_task_1429` | docs/agent-briefs/tasks/PROG/PROG-2-1164.md | [PROG-2-1164] 教官突破星等「其他加成」接上效果 |
-| `doc_task_1430` | docs/agent-briefs/tasks/PROG/PROG-2-1165.md | [PROG-2-1165] 進度矩陣補登已實作系統（依 @spec-source 重算「尚無實作」列） |
-| `doc_task_1431` | docs/agent-briefs/tasks/PROG/PROG-2-1166.md | [PROG-2-1166] LUK 上限依紫因子計算（LUK-03） |
-| `doc_task_1432` | docs/agent-briefs/tasks/PROG/PROG-2-1167.md | [PROG-2-1167] 教官 ★2「訓練機率 +3%」接上訓練成功率 |
-| `doc_task_1433` | docs/agent-briefs/tasks/PROG/PROG-2-1168.md | [PROG-2-1168] 轉蛋戰法隨機化（第 2、第 3 戰法隨機，重複轉戰法經驗值） |
-| `doc_task_1434` | docs/agent-briefs/tasks/PROG/PROG-2-1169.md | [PROG-2-1169] 三國日報事件引擎（插槽式敘事，純邏輯） |
-| `doc_task_1435` | docs/agent-briefs/tasks/PROG/PROG-2-1170.md | [PROG-2-1170] 三國日報接線：行為紀錄採集、登入生成、存檔 |
-| `doc_task_1436` | docs/agent-briefs/tasks/PROG/PROG-2-1171.md | [PROG-2-1171] 三國日報行為紀錄採集點補齊（缺糧、退役、虎符升級、忠誠下降） |
-| `doc_task_1437` | docs/agent-briefs/tasks/PROG/PROG-2-1172.md | [PROG-2-1172] 三國日報採集點：單挑勝負 |
-| `doc_task_1438` | docs/agent-briefs/tasks/PROG/PROG-2-1173.md | [PROG-2-1173] 大廳登入接線：記錄登入並以 toast 顯示三國日報 |
-| `doc_task_1439` | docs/agent-briefs/tasks/PROG/PROG-2-1174.md | [PROG-2-1174] 晨報摘要生成並於登入時顯示（JRN-02） |
-| `doc_task_1440` | docs/agent-briefs/tasks/PROG/PROG-2-1175.md | [PROG-2-1175] 武將日誌寫入點：戰鬥、派遣、出生、退役 |
-| `doc_task_1441` | docs/agent-briefs/tasks/PROG/PROG-2-1176.md | [PROG-2-1176] 季結自動結算的大廳委任寫入派遣日誌 |
-| `doc_task_1442` | docs/agent-briefs/tasks/PROG/PROG-2-1177.md | [PROG-2-1177] 派遣品質評分（JRN-03 第一段） |
-| `doc_task_1443` | docs/agent-briefs/tasks/PROG/PROG-2-1178.md | [PROG-2-1178] 派遣任務狀態與登入結算（JRN-03 第二段） |
-| `doc_task_1444` | docs/agent-briefs/tasks/PROG/PROG-2-1179.md | [PROG-2-1179] 暫定派遣任務清單與派遣板列（JRN-03 第三段） |
+| `doc_task_0296` | docs/agent-briefs/tasks/ATM/ATM-0-0011.md | [ATM-0-0011] Context budget 治理補強與文件回寫 |
+| `doc_task_0297` | docs/agent-briefs/tasks/ATM/ATM-2-0011.md | [ATM-2-0011] Context budget guard |
+| `doc_task_0298` | docs/agent-briefs/tasks/ATM/ATM-0-0012.md | [ATM-0-0012] task-lock cross-shard 重複鎖定檢查 |
+| `doc_task_0299` | docs/agent-briefs/tasks/ATM/ATM-1.5-0001.md | [ATM-1.5-0001] Seed-as-Spec：種子以自身格式自我描述 |
+| `doc_task_0300` | docs/agent-briefs/tasks/ATM/ATM-1.5-0002.md | [ATM-1.5-0002] Seed 自我驗證：產生第一份 atomic-registry.json |
+| `doc_task_0301` | docs/agent-briefs/tasks/ATM/ATM-1.5-0003.md | [ATM-1.5-0003] ATM-CORE-0001 正式收編：舊 seed 標 @deprecated |
+| `doc_task_0302` | docs/agent-briefs/tasks/ATM/ATM-2-0012.md | [ATM-2-0012] neutralityScanner atom + CI（ATM-CORE-0003） |
+| `doc_task_0303` | docs/agent-briefs/tasks/ATM/ATM-2.5-0001.md | [ATM-2.5-0001] Self-Hosting Alpha Gate：atm self-host-alpha --verify CLI |
+| `doc_task_0304` | docs/agent-briefs/tasks/ATM/ATM-2.5-0002.md | [ATM-2.5-0002] Sandbox Repo Fixture：空白 repo 跑完整 Alpha Gate |
+| `doc_task_0305` | docs/agent-briefs/tasks/ATM/ATM-2.5-0003.md | [ATM-2.5-0003] Multi-Agent 兼容性驗證：confidence gate |
+| `doc_task_0306` | docs/agent-briefs/tasks/ATM/ATM-3-0006.md | [ATM-3-0006] task-lock.js adapter 化：接入 ATM LockAdapter |
+| `doc_task_0307` | docs/agent-briefs/tasks/ATM/ATM-3-0007.md | [ATM-3-0007] compute-gate.js adapter 化：接入 ATM GateAdapter |
+| `doc_task_0308` | docs/agent-briefs/tasks/ATM/ATM-3-0008.md | [ATM-3-0008] doc-id-registry.js adapter 化：接入 ATM DocumentIndexAdapter |
+| `doc_task_0309` | docs/agent-briefs/tasks/ATM/ATM-3-0009.md | [ATM-3-0009] shard-manager.js adapter 化：接入 ATM ShardAdapter |
+| `doc_task_0310` | docs/agent-briefs/tasks/ATM/ATM-3-0010.md | [ATM-3-0010] task-card-opener.js adapter 化：接入 ATM TaskAdapter |
+| `doc_task_0311` | docs/agent-briefs/tasks/ATM/ATM-3-0011.md | [ATM-3-0011] encoding adapter 化：check-encoding-touched / check-encoding-integrity 接入 ATM EncodingAdapter |
+| `doc_task_0312` | docs/agent-briefs/tasks/ATM/ATM-3-0012.md | [ATM-3-0012] task-scope / import-boundary 規則包遷移 + @deprecated 標記 |
+| `doc_task_0313` | docs/agent-briefs/tasks/ATM/ATM-3-0013.md | [ATM-3-0013] finalize-agent-turn.js wrapper 接入 ATM run envelope |
+| `doc_task_0314` | docs/agent-briefs/tasks/ATM/ATM-0-0013.md | [ATM-0-0013] tasks-atm.json thin index 與細分片 |
+| `doc_task_0315` | docs/agent-briefs/tasks/ATM/ATM-0-0014.md | [ATM-0-0014] ATM 瘦身再開工與規劃真相收斂 |
+| `doc_task_0316` | docs/agent-briefs/tasks/ATM/ATM-2-0013.md | [ATM-2-0013] Per-atom folder 以 Atomic ID 命名收斂 |
+| `doc_task_0317` | docs/agent-briefs/tasks/ATM/ATM-2-0014.md | [ATM-2-0014] Registry Version History v0.1（schema-additive only） |
+| `doc_task_0318` | docs/agent-briefs/tasks/ATM/ATM-2-0015.md | [ATM-2-0015] Hash Drift / Version Diff Report |
+| `doc_task_0319` | docs/agent-briefs/tasks/ATM/ATM-2-0016.md | [ATM-2-0016] Test Report Quality Metrics Extension |
+| `doc_task_0320` | docs/agent-briefs/tasks/ATM/ATM-2-0017.md | [ATM-2-0017] Regression Matrix Compare Gate |
+| `doc_task_0321` | docs/agent-briefs/tasks/ATM/ATM-2-0018.md | [ATM-2-0018] BuildAgentPrompt bootstrap atom（000003） |
+| `doc_task_0322` | docs/agent-briefs/tasks/ATM/ATM-2-0019.md | [ATM-2-0019] ExecuteAgentTask effect node dry-run（000004） |
+| `doc_task_0323` | docs/agent-briefs/tasks/ATM/ATM-2-0020.md | [ATM-2-0020] ProposeAtomicUpgrade（000012） |
+| `doc_task_0324` | docs/agent-briefs/tasks/ATM/ATM-2-0021.md | [ATM-2-0021] HumanReviewGate as reference plugin（000013） |
+| `doc_task_0325` | docs/agent-briefs/tasks/ATM/ATM-2-0022.md | [ATM-2-0022] Rollback Registry Pointer & 三段 hash Proof |
+| `doc_task_0326` | docs/agent-briefs/tasks/ATM/ATM-3-0014.md | [ATM-3-0014] 3KLife UsageEvidence shadow adapter |
+| `doc_task_0327` | docs/agent-briefs/tasks/ATM/ATM-4-0007.md | [ATM-4-0007] H2U normalizeCssColor v1.0→v1.1 evolution pilot |
+| `doc_task_0328` | docs/agent-briefs/tasks/ATM/ATM-2-0023.md | [ATM-2-0023] Atomic Map Schema & Registry |
+| `doc_task_0329` | docs/agent-briefs/tasks/ATM/ATM-2-0024.md | [ATM-2-0024] Map-Level Upgrade & Extract-vs-Bump Decision |
+| `doc_task_0330` | docs/agent-briefs/tasks/ATM/ATM-2-0025.md | [ATM-2-0025] Cross-Atom Integration Test Runner |
+| `doc_task_0331` | docs/agent-briefs/tasks/ATM/ATM-4-0008.md | [ATM-4-0008] H2U Map Evolution Pilot |
+| `doc_task_0332` | docs/agent-briefs/tasks/ATM/ATM-2-0026.md | [ATM-2-0026] Semantic Fingerprint + Lineage + TTL Schema Extension |
+| `doc_task_0333` | docs/agent-briefs/tasks/ATM/ATM-2-0027.md | [ATM-2-0027] Atom Status State Machine |
+| `doc_task_0334` | docs/agent-briefs/tasks/ATM/ATM-2-0028.md | [ATM-2-0028] AtomBehavior Plugin SDK |
+| `doc_task_0335` | docs/agent-briefs/tasks/ATM/ATM-2-0029.md | [ATM-2-0029] Reference Behavior Pack（10 內建行為） |
+| `doc_task_0336` | docs/agent-briefs/tasks/ATM/ATM-2-0030.md | [ATM-2-0030] Registry Version / Fingerprint Backfill Sweep |
+| `doc_task_0337` | docs/agent-briefs/tasks/ATM/ATM-2-0031.md | [ATM-2-0031] Lifecycle Police（TTL + Sweep + 狀態機警察） |
+| `doc_task_0338` | docs/agent-briefs/tasks/ATM/ATM-2-0032.md | [ATM-2-0032] Polymorphic Atom Template |
+| `doc_task_0339` | docs/agent-briefs/tasks/ATM/ATM-2-0033.md | [ATM-2-0033] Atomization & Infection Adapter Contract |
+| `doc_task_0340` | docs/agent-briefs/tasks/ATM/ATM-2-0034.md | [ATM-2-0034] Registry Catalog Markdown Projection Atom |
+| `doc_task_0341` | docs/agent-briefs/tasks/ATM/ATM-1-0011.md | [ATM-1-0011] 統一 Atomic ID canonical 命名並清除雙軌識別 |
+| `doc_task_0342` | docs/agent-briefs/tasks/ATM/ATM-2-0035.md | [ATM-2-0035] Official Review Advisory Provider (AI Code Reviewer, non-blocking) |
+| `doc_task_0343` | docs/agent-briefs/tasks/ATM/ATM-2-0036.md | [ATM-2-0036] Stale Atom Workspace Alias Directory Cleanup |
+| `doc_task_0344` | docs/agent-briefs/tasks/ATM/ATM-2-0037.md | [ATM-2-0037] Workbench Alias Drift Guard and Projection Alignment |
+| `doc_task_0345` | docs/agent-briefs/tasks/ATM/ATM-2-0038.md | [ATM-2-0038] Unified Atom Generator — Provisioning Facade & ID Allocator |
+| `doc_task_0346` | docs/agent-briefs/tasks/ATM/ATM-2-0039.md | [ATM-2-0039] Generated Atom Source Template and Code Path Policy |
+| `doc_task_0347` | docs/agent-briefs/tasks/ATM/ATM-2-0040.md | [ATM-2-0040] Backfill Existing Core Atoms Through Atom Generator |
+| `doc_task_0348` | docs/agent-briefs/tasks/ATM/ATM-2-0041.md | [ATM-2-0041] Framework-Wide Generator Provenance Audit |
+| `doc_task_0349` | docs/agent-briefs/tasks/ATM/ATM-2-0042.md | [ATM-2-0042] Unified Atomic Map Generator — Provisioning Facade & Map ID Policy |
+| `doc_task_0350` | docs/agent-briefs/tasks/ATM/ATM-2-0043.md | [ATM-2-0043] Map Source Template & Workbench Policy |
+| `doc_task_0351` | docs/agent-briefs/tasks/ATM/ATM-2-0044.md | [ATM-2-0044] Backfill Existing Maps Through Map Generator |
+| `doc_task_0352` | docs/agent-briefs/tasks/ATM/ATM-2-0045.md | [ATM-2-0045] Map Generator Provenance Audit |
+| `doc_task_0353` | docs/agent-briefs/tasks/ATM/ATM-2-0046.md | [ATM-2-0046] Registry Catalog Map Section Rendering |
+| `doc_task_0354` | docs/agent-briefs/tasks/ATM/ATM-2-0047.md | [ATM-2-0047] URN Resolver and RegistryIndex Facade |
+| `doc_task_0355` | docs/agent-briefs/tasks/ATM/ATM-0-0015.md | [ATM-0-0015] Harness Engineering CAR/HarnessCard 規劃回寫 |
+| `doc_task_0356` | docs/agent-briefs/tasks/ATM/ATM-2-0049.md | [ATM-2-0049] Task id reservation and lock race hardening |
+| `doc_task_0357` | docs/agent-briefs/tasks/ATM/ATM-3-0015.md | [ATM-3-0015] Task card system atomic map planning |
+| `doc_task_0358` | docs/agent-briefs/tasks/ATM/ATM-2-0048.md | [ATM-2-0048] ATM task-router / onboarding contract |
+| `doc_task_0359` | docs/agent-briefs/tasks/ATM/ATM-2.5-0004.md | [ATM-2.5-0004] Alpha1 evolution sandbox fixture |
+| `doc_task_0360` | docs/agent-briefs/tasks/ATM/ATM-2-0050.md | [ATM-2-0050] Framework Function Atomization Coverage Gate |
+| `doc_task_0361` | docs/agent-briefs/tasks/ATM/ATM-2-0051.md | [ATM-2-0051] Coverage Gate Promotion & Self-Coverage Follow-up |
+| `doc_task_0362` | docs/agent-briefs/tasks/ATM/ATM-2-0052.md | [ATM-2-0052] Framework Done-Card Acknowledgement Backwrite |
+| `doc_task_0363` | docs/agent-briefs/tasks/ATM/ATM-2-0053.md | [ATM-2-0053] Atomic Map / Provenance Family Acknowledgement Backwrite |
+| `doc_task_0364` | docs/agent-briefs/tasks/ATM/ATM-2-0054.md | [ATM-2-0054] Task Intake & Lock Stability Acknowledgement Backwrite |
+| `doc_task_0365` | docs/case-studies/h2u-normalize-css-color-evolution-pilot.md | 2026-05-11 Local Workbench Ownership |
+| `doc_task_0366` | docs/agent-briefs/tasks/ATM/ATM-3-0016.md | [ATM-3-0016] Validator Orchestrator 與 AJV Cache 統一入口 |
+| `doc_task_0367` | docs/agent-briefs/tasks/ATM/ATM-7-0001.md | [ATM-7-0001] Evidence retention contract and rotation policy |
+| `doc_task_0368` | docs/agent-briefs/tasks/ATM/ATM-7-0002.md | [ATM-7-0002] Registry sharding and versions sidecar convergence |
+| `doc_task_0369` | docs/agent-briefs/tasks/PROG/PROG-1-0010.md | [PROG-1-0010] BloodlineTreePanel 元件實作（祖先樹 + 因子繼承 + 子嗣預測） |
+| `doc_task_0370` | docs/agent-briefs/tasks/ATM/ATM-8-0001.md | [ATM-8-0001] Stability warnings governance and allowlist contract |
+| `doc_task_0371` | docs/agent-briefs/tasks/ATM/ATM-8-0003.md | [ATM-8-0003] Task-store single-truth anti-bypass guard |
+| `doc_task_0372` | docs/agent-briefs/tasks/ATM/ATM-8-0004.md | [ATM-8-0004] Regression tests for doc-id fallback and closeout |
+| `doc_task_0373` | docs/agent-briefs/tasks/ATM/ATM-2-0055.md | [ATM-2-0055] Agent identity entry hardening for task lock flow |
+| `doc_task_0374` | docs/agent-briefs/tasks/ATM/ATM-2-0056.md | [ATM-2-0056] Single-source governance profile for shared enforcement surfaces |
+| `doc_task_0375` | docs/tasks/TASK-DGB-0000.md | TASK-DGB-0000 Default Governance Profile 計畫定稿與中立性掃描 |
+| `doc_task_0376` | docs/tasks/TASK-DGB-0001.md | TASK-DGB-0001 Profile schema 與 compatibility matrix 接線 |
+| `doc_task_0377` | docs/tasks/TASK-DGB-0002.md | TASK-DGB-0002 Encoding Guard profile 升級 |
+| `doc_task_0378` | docs/tasks/TASK-DGB-0003.md | TASK-DGB-0003 Context Budget policy 配置化 |
+| `doc_task_0379` | docs/tasks/TASK-DGB-0004.md | TASK-DGB-0004 Document Identity registry schema / resolver |
+| `doc_task_0380` | docs/tasks/TASK-DGB-0005.md | TASK-DGB-0005 Document Sharding manager / health check |
+| `doc_task_0381` | docs/tasks/TASK-DGB-0006.md | TASK-DGB-0006 Markdown task card adapter |
+| `doc_task_0382` | docs/tasks/TASK-DGB-0007.md | TASK-DGB-0007 Scope Guard / dirty tree validator |
+| `doc_task_0383` | docs/tasks/TASK-DGB-0008.md | TASK-DGB-0008 Handoff / turn artifact schema |
+| `doc_task_0384` | docs/tasks/TASK-DGB-0009.md | TASK-DGB-0009 Project Memory optional capability 與 conflict finder |
+| `doc_task_0385` | docs/tasks/TASK-DGB-0010.md | TASK-DGB-0010 Upgrade plan / backup / rollback validation |
+| `doc_task_0386` | docs/agent-briefs/tasks/PROG/PROG-2-0012.md | [PROG-2-0012] Scene Quality Pipeline 收斂總卡 |
+| `doc_task_0387` | docs/agent-briefs/tasks/PROG/PROG-2-0013.md | [PROG-2-0013] scene-director 可觀測性與 quality metadata 補強 |
+| `doc_task_0388` | docs/agent-briefs/tasks/PROG/PROG-2-0014.md | [PROG-2-0014] Scene quality regression gate 與 cache 汙染檢查 |
+| `doc_task_0389` | docs/agent-briefs/tasks/PROG/PROG-2-0015.md | [PROG-2-0015] HTML 顯示契約與 fallback 退役清理 |
+| `doc_task_0390` | docs/agent-briefs/tasks/PROG/PROG-2-0016.md | [PROG-2-0016] 短證據上下文擴張與六種子抽取 |
+| `doc_task_0391` | docs/agent-briefs/tasks/PROG/PROG-2-0017.md | [PROG-2-0017] 關係邊 / 互動對象 / readiness 稽核 |
+| `doc_task_0392` | docs/agent-briefs/tasks/WEB/TASK-WEB-0001.md | [TASK-WEB-0001] ATM Petri 培養皿互動 web demo |
+| `doc_task_0393` | docs/agent-briefs/tasks/PROG/PROG-2-0018.md | [PROG-2-0018] Top50 needs-etl-fill 主幹資料注入：primary-canon / 白名單硬關係 → runtime ready events / relationship edges |
+| `doc_task_0394` | docs/agent-briefs/tasks/PROG/PROG-2-0019.md | [PROG-2-0019] Top50 needs-etl-fill ready-event promotion：primary-canon source-event-packets → staged-ready-events |
+| `doc_task_0395` | docs/agent-briefs/tasks/ATM/ATM-0-0016.md | [ATM-0-0016] 固定產品目標並對照既有減負任務 |
+| `doc_task_0396` | docs/agent-briefs/tasks/ATM/ATM-0-0017.md | [ATM-0-0017] 建立獨立審核員短指令與訊息格式 |
+| `doc_task_0397` | docs/agent-briefs/tasks/ATM/ATM-0-0018.md | [ATM-0-0018] 校準審核員的抓偏移與誤擋能力 |
+| `doc_task_0398` | docs/agent-briefs/tasks/ATM/ATM-0-0019.md | [ATM-0-0019] 固定毫秒成本量測與試行基線 |
+| `doc_task_0399` | docs/agent-briefs/tasks/ATM/ATM-0-0020.md | [ATM-0-0020] 試行一：監督單一高耗時熱點的減負 |
+| `doc_task_0400` | docs/agent-briefs/tasks/ATM/ATM-0-0021.md | [ATM-0-0021] 試行二：監督單一 bug 快修不擴張治理 |
+| `doc_task_0401` | docs/agent-briefs/tasks/ATM/ATM-0-0022.md | [ATM-0-0022] 試行三：監督保留多 AI 並行的減負 |
+| `doc_task_0402` | docs/agent-briefs/tasks/ATM/ATM-0-0023.md | [ATM-0-0023] 核算三次試行的淨成本與糾偏品質 |
+| `doc_task_0403` | docs/agent-briefs/tasks/ATM/ATM-0-0024.md | [ATM-0-0024] 裁決保留縮減或停止獨立審核 |
+| `doc_task_0404` | docs/agent-briefs/tasks/ATM/ATM-0-0025.md | [ATM-0-0025] 交付後續 AI 可直接使用的精簡操作單 |
+| `doc_task_0406` | docs/agent-briefs/tasks/PROG/PROG-2-1146.md | [PROG-2-1146] 結緣出生紀錄跨重開保存 |
+| `doc_task_0407` | docs/agent-briefs/tasks/PROG/PROG-2-9012.md | [PROG-2-9012] 他國招募品質門檻與 RNG 邊界回歸測試 |
+| `doc_task_0408` | docs/agent-briefs/tasks/PROG/PROG-2-9013.md | [PROG-2-9013] 他國興衰門檻與效果表回歸測試 |
+| `doc_task_0409` | docs/agent-briefs/tasks/PROG/PROG-2-9014.md | [PROG-2-9014] 月度場景賽威力積分交互回歸測試 |
+| `doc_task_0410` | docs/agent-briefs/tasks/PROG/PROG-2-9015.md | [PROG-2-9015] 名將死亡虎符三項被動 ID 查表修正 |
+| `doc_task_0411` | docs/agent-briefs/tasks/PROG/evidence/PROG-2-1146/revision-2/review.md | PROG-2-1146 independent read-only review |
+| `doc_task_0412` | docs/agent-briefs/tasks/PROG/PROG-2-0020.md | [PROG-2-0020] 遊戲重啟推進：測試入口與健康度修復 |
+| `doc_task_0413` | docs/agent-briefs/tasks/PROG/PROG-2-0021.md | [PROG-2-0021] 遊戲時間（季度推進）與玩家存檔接線 |
+| `doc_task_0414` | docs/agent-briefs/tasks/PROG/PROG-2-0022.md | [PROG-2-0022] 不開編輯器的 Web 建置與冒煙測試 |
+| `doc_task_0415` | docs/agent-briefs/tasks/PROG/PROG-2-0023.md | [PROG-2-0023] 戰場依玩家選定卡組建立虎符手牌 |
+| `doc_task_0416` | docs/agent-briefs/tasks/PROG/PROG-2-0024.md | [PROG-2-0024] 同步契約對齊：雜湊算法與 /sync 端點 |
+| `doc_task_0417` | docs/agent-briefs/tasks/PROG/PROG-2-0025.md | [PROG-2-0025] 大廳接線：抽卡進名冊、季度顯示、開場讀檔 |
+| `doc_task_0418` | docs/agent-briefs/tasks/PROG/PROG-2-0026.md | [PROG-2-0026] 結緣（配種）+ 14 人血統 + 因子繼承（純邏輯） |
+| `doc_task_0419` | docs/agent-briefs/tasks/PROG/PROG-2-0027.md | [PROG-2-0027] 人物 Overview 回歸工具修復、失效 doc_id 與五欄進度表 |
+| `doc_task_0420` | docs/agent-briefs/tasks/PROG/PROG-2-0028.md | [PROG-2-0028] 5 歲開獎 + 宿命分流 + 36 回合培育 + 教官（純邏輯） |
+| `doc_task_0421` | docs/agent-briefs/tasks/PROG/PROG-2-0029.md | [PROG-2-0029] 退役與世代傳承接線（純邏輯） |
+| `doc_task_0422` | docs/agent-briefs/tasks/PROG/PROG-2-0030.md | [PROG-2-0030] 玩家卡組存檔與大廳選卡 |
+| `doc_task_0423` | docs/agent-briefs/tasks/PROG/PROG-2-0031.md | [PROG-2-0031] 退役教官卡接進培育教官 |
+| `doc_task_0424` | docs/agent-briefs/tasks/PROG/PROG-2-0032.md | [PROG-2-0032] 整合主線分支 |
+| `doc_task_0425` | docs/agent-briefs/tasks/PROG/PROG-2-0033.md | [PROG-2-0033] M5 戰場整合：培育武將出戰、結算寫回名冊 |
+| `doc_task_0426` | docs/agent-briefs/tasks/PROG/PROG-2-0034.md | [PROG-2-0034] 開獎與培育最小可玩畫面 |
+| `doc_task_0427` | docs/agent-briefs/tasks/PROG/PROG-2-0035.md | [PROG-2-0035] 決策題落實：MVP 六色因子 |
+| `doc_task_0428` | docs/agent-briefs/tasks/PROG/PROG-2-0036.md | [PROG-2-0036] 紫紅因子配給武將 |
+| `doc_task_0429` | docs/agent-briefs/tasks/PROG/PROG-2-0037.md | [PROG-2-0037] 因子覺醒流程（含紫紅 Phase 3） |
+| `doc_task_0430` | docs/agent-briefs/tasks/PROG/PROG-2-0038.md | [PROG-2-0038] 虎符品質分數與死亡結算產虎符卡（純 TS） |
+| `doc_task_0431` | docs/agent-briefs/tasks/PROG/PROG-2-0040.md | [PROG-2-0040] 死亡結算同時產英靈卡與虎符卡 |
+| `doc_task_0432` | docs/agent-briefs/tasks/PROG/PROG-2-0041.md | [PROG-2-0041] Q17 季度精力恢復率對齊 |
+| `doc_task_0433` | docs/agent-briefs/tasks/PROG/PROG-2-0042.md | [PROG-2-0042] Q25 養成亂數狀態存檔 |
+| `doc_task_0434` | docs/agent-briefs/tasks/PROG/PROG-2-0043.md | [PROG-2-0043] 英靈卡只給名將：歸檔快照與英靈卡分離 |
+| `doc_task_0435` | docs/agent-briefs/tasks/PROG/PROG-2-0044.md | [PROG-2-0044] 因子覺醒：discoveryLevel 成長來源與事件接線 |
+| `doc_task_0436` | docs/agent-briefs/tasks/PROG/PROG-2-0045.md | [PROG-2-0045] 結緣正式介面接線 |
+| `doc_task_0437` | docs/agent-briefs/tasks/PROG/PROG-2-0046.md | [PROG-2-0046] generals 正式史實旗標來源 |
+| `doc_task_0438` | docs/agent-briefs/tasks/PROG/PROG-2-0047.md | [PROG-2-0047] 同名將模板只保留一張正式英靈卡 |
+| `doc_task_0439` | docs/agent-briefs/tasks/PROG/PROG-2-0048.md | [PROG-2-0048] 戰場特定動作偵測 → 因子覺醒 |
+| `doc_task_0440` | docs/agent-briefs/tasks/PROG/PROG-2-0049.md | [PROG-2-0049] 男女精力上限與 ActionSystem 型別修正 |
+| `doc_task_0441` | docs/agent-briefs/tasks/PROG/PROG-2-0050.md | [PROG-2-0050] 補齊測試用 cc stub |
+| `doc_task_0442` | docs/agent-briefs/tasks/PROG/PROG-2-0051.md | [PROG-2-0051] 清掉核心子集剩餘型別錯誤 |
+| `doc_task_0443` | docs/agent-briefs/tasks/PROG/PROG-2-0052.md | [PROG-2-0052] 名士占卜觸發覺醒＋因子字典地形標籤 |
+| `doc_task_0444` | docs/agent-briefs/tasks/PROG/PROG-2-0053.md | [PROG-2-0053] 名士占卜畫面與求籤令扣除 |
+| `doc_task_0445` | docs/agent-briefs/tasks/PROG/PROG-2-0054.md | [PROG-2-0054] Web 冒煙擴充：結緣確認 → 推進一季 → 出戰 |
+| `doc_task_0446` | docs/agent-briefs/tasks/PROG/PROG-2-0055.md | [PROG-2-0055] Web 戰場啟動與面板診斷修復 |
+| `doc_task_0447` | docs/agent-briefs/tasks/PROG/PROG-2-0056.md | [PROG-2-0056] Web 登入到結緣與占卜流程冒煙 |
+| `doc_task_0448` | docs/agent-briefs/tasks/PROG/PROG-2-0057.md | [PROG-2-0057] 大廳正式遊戲導覽節點補齊 |
+| `doc_task_0449` | docs/agent-briefs/tasks/PROG/PROG-2-0058.md | [PROG-2-0058] Web Desktop 可縮放頁面容器 |
+| `doc_task_0450` | docs/agent-briefs/tasks/PROG/PROG-2-0059.md | [PROG-2-0059] 大廳轉蛋召喚操作接線 |
+| `doc_task_0451` | docs/agent-briefs/tasks/PROG/PROG-2-0060.md | [PROG-2-0060] 正式召喚結果展示與同幣別重抽 |
+| `doc_task_0452` | docs/agent-briefs/tasks/PROG/PROG-2-0061.md | [PROG-2-0061] 轉蛋招募後返回大廳 |
+| `doc_task_0453` | docs/agent-briefs/tasks/PROG/PROG-2-0062.md | [PROG-2-0062] 修復 Web 因子 Map iterator 展開 |
+| `doc_task_0454` | docs/agent-briefs/tasks/PROG/PROG-2-0063.md | [PROG-2-0063] 修復 Web 血統因子 Set 與 Map iterator 轉換 |
+| `doc_task_0455` | docs/agent-briefs/tasks/PROG/PROG-2-0064.md | [PROG-2-0064] 修復 Web 已學戰法去重轉譯 |
+| `doc_task_0456` | docs/agent-briefs/tasks/PROG/PROG-2-0065.md | [PROG-2-0065] 名士預言：結緣前預測子嗣與名士解鎖 |
+| `doc_task_0457` | docs/agent-briefs/tasks/PROG/PROG-2-0067.md | [PROG-2-0067] BLT-02 虛擬祖先正式生成器 |
+| `doc_task_0458` | docs/agent-briefs/tasks/PROG/PROG-2-0070.md | [PROG-2-0070] 出征編制、出征軍勢與糧草部署帳本 |
+| `doc_task_0459` | docs/agent-briefs/tasks/PROG/PROG-2-0071.md | [PROG-2-0071] 戰場適性修正接入傷害公式（Q16 重訂適性表） |
+| `doc_task_0460` | docs/agent-briefs/tasks/PROG/PROG-2-0072.md | [PROG-2-0072] 武將戰績擴充、城市兵源與糧草寫回存檔 |
+| `doc_task_0461` | docs/agent-briefs/tasks/PROG/PROG-2-0073.md | [PROG-2-0073] 俘虜處置：POW_Record、四選一與監獄 |
+| `doc_task_0462` | docs/agent-briefs/tasks/PROG/PROG-2-0074.md | [PROG-2-0074] M1 收尾：壽命 UI 與精力 UI（LIFE-05、VIT-06） |
+| `doc_task_0463` | docs/agent-briefs/tasks/PROG/PROG-2-0080.md | [PROG-2-0080] 適性移動與命中修正套進戰場 |
+| `doc_task_0464` | docs/agent-briefs/tasks/PROG/PROG-2-0081.md | [PROG-2-0081] 武將詳情戰績分頁 |
+| `doc_task_0465` | docs/agent-briefs/tasks/PROG/PROG-2-0082.md | [PROG-2-0082] 俘虜四選一彈窗 |
+| `doc_task_0466` | docs/agent-briefs/tasks/PROG/PROG-2-0083.md | [PROG-2-0083] 出征編制：參謀官／後勤官畫面 |
+| `doc_task_0467` | docs/agent-briefs/tasks/PROG/PROG-2-0084.md | [PROG-2-0084] 戰場計謀點與參謀官加成生效 |
+| `doc_task_0468` | docs/agent-briefs/tasks/PROG/PROG-2-0085.md | [PROG-2-0085] 戰法計謀點成本與實際扣點 |
+| `doc_task_0469` | docs/agent-briefs/tasks/PROG/PROG-2-0086.md | [PROG-2-0086] 普通小兵（Militia）戰力公式 |
+| `doc_task_0470` | docs/agent-briefs/tasks/PROG/PROG-2-0087.md | [PROG-2-0087] 普通小兵生成接線 |
+| `doc_task_0471` | docs/agent-briefs/tasks/PROG/PROG-2-0088.md | [PROG-2-0088] 兵種 × 地形強弱勢（純邏輯） |
+| `doc_task_0472` | docs/agent-briefs/tasks/PROG/PROG-2-0089.md | [PROG-2-0089] 兵種 × 地形移動修正接進戰鬥 |
+| `doc_task_0473` | docs/agent-briefs/tasks/PROG/PROG-2-0090.md | [PROG-2-0090] 修復 Web 同步佇列 Map iterator 合併 |
+| `doc_task_0474` | docs/agent-briefs/tasks/PROG/PROG-2-0091.md | [PROG-2-0091] 退役操作流程控制器與確認防重複提交 |
+| `doc_task_0475` | docs/agent-briefs/tasks/PROG/PROG-2-0092.md | [PROG-2-0092] 武將列表退役入口與教官卡實機驗收 |
+| `doc_task_0476` | docs/agent-briefs/tasks/PROG/PROG-2-0093.md | [PROG-2-0093] 實際 Web 祖父子三代退役歸檔與重讀冒煙 |
+| `doc_task_0477` | docs/agent-briefs/tasks/PROG/PROG-2-0094.md | [PROG-2-0094] 實際 Web 戰鬥落敗結算與存檔重讀冒煙 |
+| `doc_task_0478` | docs/agent-briefs/tasks/PROG/PROG-2-0095.md | [PROG-2-0095] 新玩家起始名冊（六位初始名將）與測試帳號隔離 |
+| `doc_task_0479` | docs/agent-briefs/tasks/PROG/PROG-2-0096.md | [PROG-2-0096] 修復戰場武將出陣按鈕與棋盤點擊接線 |
+| `doc_task_0480` | docs/agent-briefs/tasks/PROG/PROG-2-0098.md | [PROG-2-0098] 戰法施放計謀點單一入口與 UI 顯示禁用 |
+| `doc_task_0481` | docs/agent-briefs/tasks/PROG/PROG-2-0099.md | [PROG-2-0099] 主動指令壽命成本純邏輯 (LIFE-09) |
+| `doc_task_0482` | docs/agent-briefs/tasks/PROG/PROG-2-0100.md | [PROG-2-0100] 因子可見性模型（FUL-01） |
+| `doc_task_0483` | docs/agent-briefs/tasks/PROG/PROG-2-0102.md | [PROG-2-0102] Wild Gene 與 Star Jump 純邏輯 (BLT-07) |
+| `doc_task_0484` | docs/agent-briefs/tasks/PROG/PROG-2-0103.md | [PROG-2-0103] 因子遮罩轉換狀態薄包裝 |
+| `doc_task_0485` | docs/agent-briefs/tasks/PROG/PROG-2-0104.md | [PROG-2-0104] Gene Catalyst 因子媒介純邏輯 (BLT-10) |
+| `doc_task_0486` | docs/agent-briefs/tasks/PROG/PROG-2-0105.md | [PROG-2-0105] 退役教官分流純邏輯 |
+| `doc_task_0487` | docs/agent-briefs/tasks/PROG/PROG-2-0109.md | [PROG-2-0109] 新手開場流程純控制器 |
+| `doc_task_0488` | docs/agent-briefs/tasks/PROG/PROG-2-0111.md | [PROG-2-0111] 情報度與 AI 委任邏輯（HALL-05 純邏輯） |
+| `doc_task_0489` | docs/agent-briefs/tasks/PROG/PROG-2-0112.md | [PROG-2-0112] 受傷事件日誌可觀測性 |
+| `doc_task_0490` | docs/agent-briefs/tasks/PROG/PROG-2-0114.md | [PROG-2-0114] Web 實機重驗：0108 完整流程（受傷可觀測版） |
+| `doc_task_0491` | docs/agent-briefs/tasks/PROG/PROG-2-0115.md | [PROG-2-0115] 傭兵池正式入口接線 |
+| `doc_task_0492` | docs/agent-briefs/tasks/PROG/PROG-2-0116.md | [PROG-2-0116] UI 實機驗收：大廳武將點位（#233，HALL-07 畫面） |
+| `doc_task_0493` | docs/agent-briefs/tasks/PROG/PROG-2-0117.md | [PROG-2-0117] UI 實機驗收：HUD 戰法按鈕與 FEM 系列（#255、#253、#254、#256） |
+| `doc_task_0494` | docs/agent-briefs/tasks/PROG/PROG-2-0118.md | [PROG-2-0118] 實機驗收：GCH-10 卡池定位文案與死亡傳承提示（PR #266） |
+| `doc_task_0495` | docs/agent-briefs/tasks/PROG/PROG-2-0119.md | [PROG-2-0119] 實機驗收：M6 大廳收藏、指派、點位與任務牆（#260、#262、#265、#270、#272） |
+| `doc_task_0496` | docs/agent-briefs/tasks/PROG/PROG-2-0120.md | [PROG-2-0120] 實機驗收：紅顏展示畫面（#311） |
+| `doc_task_0497` | docs/agent-briefs/tasks/PROG/PROG-2-0121.md | [PROG-2-0121] 實機驗收：傭兵面板（#312） |
+| `doc_task_0498` | docs/agent-briefs/tasks/PROG/PROG-2-0122.md | [PROG-2-0122] 實機驗收：趕路倒數圖示（#314） |
+| `doc_task_0499` | docs/agent-briefs/tasks/PROG/PROG-2-0123.md | [PROG-2-0123] 實機驗收：任務詳情「是否再探一次？」彈窗（#303、#296） |
+| `doc_task_0500` | docs/agent-briefs/tasks/PROG/PROG-2-0124.md | [PROG-2-0124] 實機驗收：虎符出陣成長、戰場 Set 標籤、首戰教學浮窗（#324、#329、#331） |
+| `doc_task_0501` | docs/agent-briefs/tasks/PROG/PROG-2-0125.md | [PROG-2-0125] 實機驗收：精力閘門與奧義扣精力（#336、#339） |
+| `doc_task_0502` | docs/agent-briefs/tasks/PROG/PROG-2-0126.md | [PROG-2-0126] 實機驗收：夜襲與埋伏營帳佔領勝利（#381） |
+| `doc_task_0503` | docs/agent-briefs/tasks/PROG/PROG-2-0127.md | [PROG-2-0127] 實機驗收：補元散使用流程（PROG-2-0444、#392） |
+| `doc_task_0504` | docs/agent-briefs/tasks/PROG/PROG-2-0128.md | [PROG-2-0128] 實機驗收：天氣禁用計謀可點擊並彈出 Toast（APT-07、PROG-2-0597、#396） |
+| `doc_task_0505` | docs/agent-briefs/tasks/PROG/PROG-2-0129.md | [PROG-2-0129] 實機驗收：自動培育整季與培育畫面按鈕（NUR-14、PROG-2-0548／0549、#399） |
+| `doc_task_0506` | docs/agent-briefs/tasks/PROG/PROG-2-0130.md | [PROG-2-0130] 實機驗收：退役回顧與季度戰報（REC-08、PROG-2-0448、#407／#411／#416） |
+| `doc_task_0507` | docs/agent-briefs/tasks/PROG/PROG-2-0131.md | [PROG-2-0131] 實機驗收：教官卡詳情版面與畫面掛載（MENT-13、PROG-2-0702／0703） |
+| `doc_task_0508` | docs/agent-briefs/tasks/PROG/PROG-2-0132.md | [PROG-2-0132] 實機驗收：英靈圖鑑與精華快照語系（PROG-2-0803、0804、#432） |
+| `doc_task_0509` | docs/agent-briefs/tasks/PROG/PROG-2-0133.md | [PROG-2-0133] 實機驗收：新玩家開場一路走通（PROG-2-0645、0646、0647） |
+| `doc_task_0510` | docs/agent-briefs/tasks/PROG/PROG-2-0134.md | [PROG-2-0134] 重爬 24 筆武將 lore（截斷與消歧義修復後） |
+| `doc_task_0511` | docs/agent-briefs/tasks/PROG/PROG-2-0135.md | [PROG-2-0135] 實機驗收：AI 委任 Toggle 勾選與事件（PROG-2-0494、#473） |
+| `doc_task_0512` | docs/agent-briefs/tasks/PROG/PROG-2-0143.md | [PROG-2-0143] 實機驗收：出征編制「儲存預設」「套用預設」（PROG-2-0784、#538） |
+| `doc_task_0513` | docs/agent-briefs/tasks/PROG/PROG-2-0144.md | [PROG-2-0144] 實機驗收：因子六角圖與解鎖特效（PROG-2-0721、#539） |
+| `doc_task_0514` | docs/agent-briefs/tasks/PROG/PROG-2-0145.md | [PROG-2-0145] 實機驗收：命紋靈獸摘要與六角圖並存（PROG-2-0720、#542） |
+| `doc_task_0515` | docs/agent-briefs/tasks/PROG/PROG-2-0146.md | [PROG-2-0146] 實機驗收：年報畫面彈出與內容（PROG-2-0820、#563） |
+| `doc_task_0516` | docs/agent-briefs/tasks/PROG/PROG-2-0147.md | [PROG-2-0147] 實機驗收：BRD-09 批語面板（PROG-2-0822、#575） |
+| `doc_task_0517` | docs/agent-briefs/tasks/PROG/PROG-2-0148.md | [PROG-2-0148] 實機驗收：BRD-09 天象異變通知（PROG-2-0823、#577） |
+| `doc_task_0518` | docs/agent-briefs/tasks/PROG/PROG-2-0149.md | [PROG-2-0149] 實機驗收：精力劇本 toast 與補元散按鈕（PROG-2-0732、PROG-2-0733、#578、#583） |
+| `doc_task_0519` | docs/agent-briefs/tasks/PROG/PROG-2-0150.md | [PROG-2-0150] 實機驗收：退役畫面因子媒介選擇（PROG-2-0866、#590） |
+| `doc_task_0520` | docs/agent-briefs/tasks/PROG/PROG-2-0151.md | [PROG-2-0151] 實機驗收：宿命揭曉文字與劇本列（PROG-2-0735、#588） |
+| `doc_task_0521` | docs/agent-briefs/tasks/PROG/PROG-2-0152.md | [PROG-2-0152] 實機驗收：武將詳情五階奧義提示行（PROG-2-0740、#600） |
+| `doc_task_0522` | docs/agent-briefs/tasks/PROG/PROG-2-0153.md | [PROG-2-0153] 實機驗收：退役回顧獎勵（虎符／竹簡）（PROG-2-0739、#605） |
+| `doc_task_0523` | docs/agent-briefs/tasks/PROG/PROG-2-0154.md | [PROG-2-0154] 實機驗收：培育英靈循環與傳道按鈕（PROG-2-0871、#613） |
+| `doc_task_0524` | docs/agent-briefs/tasks/PROG/PROG-2-0155.md | [PROG-2-0155] 實機驗收：大廳官職區塊（PROG-2-0831、#614） |
+| `doc_task_0525` | docs/agent-briefs/tasks/PROG/PROG-2-0156.md | [PROG-2-0156] 實機驗收：大廳任務派遣（任務牆→派遣→結算）（PROG-2-0836、#635） |
+| `doc_task_0526` | docs/agent-briefs/tasks/PROG/PROG-2-0157.md | [PROG-2-0157] 實機驗收：武將血脈頁隱藏因子（PROG-2-0712、#638） |
+| `doc_task_0527` | docs/agent-briefs/tasks/PROG/PROG-2-0158.md | [PROG-2-0158] 實機驗收：戰技 Tab 五階血脈傳承奧義操作區（PROG-2-0720、#647） |
+| `doc_task_0528` | docs/agent-briefs/tasks/PROG/PROG-2-0159.md | [PROG-2-0159] 實機驗收：大廳季節卡「本季效果」提示行（PROG-2-0841、#665） |
+| `doc_task_0529` | docs/agent-briefs/tasks/PROG/PROG-2-0160.md | [PROG-2-0160] 實機驗收：因子六角圖依層級遮罩（LUK-04、PROG-2-0883、#663） |
+| `doc_task_0530` | docs/agent-briefs/tasks/PROG/PROG-2-0161.md | [PROG-2-0161] 實機驗收：大廳官職區塊與官職詳情頁（PROG-2-0842、#670） |
+| `doc_task_0531` | docs/agent-briefs/tasks/PROG/PROG-2-0162.md | [PROG-2-0162] 實機驗收：抽卡原子性（PROG-2-1003、PROG-2-1004） |
+| `doc_task_0532` | docs/agent-briefs/tasks/PROG/PROG-2-0163.md | [PROG-2-0163] 實機驗收：存檔從備份還原時大廳 toast（PROG-2-1000） |
+| `doc_task_0533` | docs/agent-briefs/tasks/PROG/PROG-2-0164.md | [PROG-2-0164] 實機驗收：畢業紀錄畫面（PROG-2-0726、PROG-2-0746） |
+| `doc_task_0534` | docs/agent-briefs/tasks/PROG/PROG-2-0165.md | [PROG-2-0165] 實機驗收：委任開關按鈕 btnDelegate（PROG-2-0913、PROG-2-0908） |
+| `doc_task_0535` | docs/agent-briefs/tasks/PROG/PROG-2-0166.md | [PROG-2-0166] 實機驗收：戰績排行榜畫面（PROG-2-0959、PROG-2-0960） |
+| `doc_task_0536` | docs/agent-briefs/tasks/PROG/PROG-2-0167.md | [PROG-2-0167] 實機驗收：借將選擇畫面（PROG-2-0731） |
+| `doc_task_0537` | docs/agent-briefs/tasks/PROG/PROG-2-0168.md | [PROG-2-0168] 實機驗收：畢業紀錄入口（PROG-2-0736、PROG-2-1050，連同 PROG-2-0726 畫面） |
+| `doc_task_0538` | docs/agent-briefs/tasks/PROG/PROG-2-0169.md | [PROG-2-0169] 實機驗收：太守府入口、英靈圖鑑詳情、結緣求籤令（一批三區） |
+| `doc_task_0539` | docs/agent-briefs/tasks/PROG/PROG-2-0170.md | [PROG-2-0170] 實機驗收：寶頁六格裝備、血統樹連線與主角區、道具背包（一批四區） |
+| `doc_task_0540` | docs/agent-briefs/tasks/PROG/PROG-2-0171.md | [PROG-2-0171] 實機驗收：開場信件面板大廳掛載與版面（PROG-2-1305、#1064） |
+| `doc_task_0541` | docs/agent-briefs/tasks/PROG/PROG-2-0172.md | [PROG-2-0172] 實機驗收：命頁左右兩欄版面（PROG-2-1267、#1098） |
+| `doc_task_0542` | docs/agent-briefs/tasks/PROG/PROG-2-0173.md | [PROG-2-0173] 實機驗收：Hazard 格換皮掛點（PROG-2-1307、#1099） |
+| `doc_task_0543` | docs/agent-briefs/tasks/PROG/PROG-2-0174.md | [PROG-2-0174] 實機驗收：適性台詞全域 Toast（PROG-2-1311、#1108） |
+| `doc_task_0544` | docs/agent-briefs/tasks/PROG/PROG-2-0175.md | [PROG-2-0175] 實機驗收：將頁統領軍勢區塊座標（PROG-2-1402、#1131） |
+| `doc_task_0545` | docs/agent-briefs/tasks/PROG/PROG-2-0176.md | [PROG-2-0176] 實機驗收：血統樹樣式、父子連線與卡片位置（PROG-2-1353、#1129） |
+| `doc_task_0546` | docs/agent-briefs/tasks/PROG/PROG-2-0177.md | [PROG-2-0177] 實機驗收：命頁 14 人樹節點命名統一（PROG-2-1273、#1127） |
+| `doc_task_0547` | docs/agent-briefs/tasks/PROG/PROG-2-0200.md | [PROG-2-0200] 步兵山地防禦地形修正接進戰鬥 |
+| `doc_task_0548` | docs/agent-briefs/tasks/PROG/PROG-2-0201.md | [PROG-2-0201] 弓兵地形射程與隱蔽接進戰鬥 |
+| `doc_task_0549` | docs/agent-briefs/tasks/PROG/PROG-2-0202.md | [PROG-2-0202] 戰鬥勝負結算 headless 驗收 |
+| `doc_task_0550` | docs/agent-briefs/tasks/PROG/PROG-2-0203.md | [PROG-2-0203] 虎符拔除忠誠與反洗機制 |
+| `doc_task_0551` | docs/agent-briefs/tasks/PROG/PROG-2-0204.md | [PROG-2-0204] 忠誠門檻：拒命與叛變 |
+| `doc_task_0552` | docs/agent-briefs/tasks/PROG/PROG-2-0205.md | [PROG-2-0205] 虎符轉交的每季次數 |
+| `doc_task_0553` | docs/agent-briefs/tasks/PROG/PROG-2-0206.md | [PROG-2-0206] 戰鬥結束流程的 headless 驗收 |
+| `doc_task_0554` | docs/agent-briefs/tasks/PROG/PROG-2-0207.md | [PROG-2-0207] 勝負判定冪等：BattleEnded 只發一次 |
+| `doc_task_0555` | docs/agent-briefs/tasks/PROG/PROG-2-0208.md | [PROG-2-0208] 戰役勝敗快速預判（NUM-14 預判部分） |
+| `doc_task_0556` | docs/agent-briefs/tasks/PROG/PROG-2-0209.md | [PROG-2-0209] 主將帶隊總戰力 calculateBattlePowerRating（NUM-14 總戰力部分） |
+| `doc_task_0557` | docs/agent-briefs/tasks/PROG/PROG-2-0210.md | [PROG-2-0210] 地形、天氣攻防與虎符適性修正（總戰力的呼叫端查表） |
+| `doc_task_0558` | docs/agent-briefs/tasks/PROG/PROG-2-0211.md | [PROG-2-0211] 適性表 D 級攻防統一為 F-5 的 −0.25 |
+| `doc_task_0559` | docs/agent-briefs/tasks/PROG/PROG-2-0212.md | [PROG-2-0212] 出征編制畫面：戰前粗估勝率 |
+| `doc_task_0560` | docs/agent-briefs/tasks/PROG/PROG-2-0213.md | [PROG-2-0213] 適性表 C 級命中修正統一為 F-5 的 0 |
+| `doc_task_0561` | docs/agent-briefs/tasks/PROG/PROG-2-0214.md | [PROG-2-0214] 連環破主鏈順序解鎖（LVL-02 純邏輯部分） |
+| `doc_task_0562` | docs/agent-briefs/tasks/PROG/PROG-2-0215.md | [PROG-2-0215] 通關進度存檔與關卡 chain 欄位（連環破生效） |
+| `doc_task_0563` | docs/agent-briefs/tasks/PROG/PROG-2-0216.md | [PROG-2-0216] 戰場整隊同血統檢查（SAME-02） |
+| `doc_task_0564` | docs/agent-briefs/tasks/PROG/PROG-2-0217.md | [PROG-2-0217] 傭兵上場限制（MERC-06） |
+| `doc_task_0565` | docs/agent-briefs/tasks/PROG/PROG-2-0218.md | [PROG-2-0218] 結緣受孕年齡因子與近親劣化補齊（BRD-03 / BLT-05 純邏輯） |
+| `doc_task_0566` | docs/agent-briefs/tasks/PROG/PROG-2-0219.md | [PROG-2-0219] 虎符忠誠度接上 GameSession 與存檔（TRP-09 接線） |
+| `doc_task_0567` | docs/agent-briefs/tasks/PROG/PROG-2-0220.md | [PROG-2-0220] 因子視覺遮罩與發現等級（FUL-01 / FUL-02 / FBR-07 純邏輯） |
+| `doc_task_0568` | docs/agent-briefs/tasks/PROG/PROG-2-0221.md | [PROG-2-0221] 壽命消耗接線與超齡死亡 (LIFE-09 接線) |
+| `doc_task_0569` | docs/agent-briefs/tasks/PROG/PROG-2-0222.md | [PROG-2-0222] 主動指令死亡存檔往返 (LIFE-09 接線 續) |
+| `doc_task_0570` | docs/agent-briefs/tasks/PROG/PROG-2-0223.md | [PROG-2-0223] 讀檔後主動指令死亡進季結結算 (LIFE-09 續) |
+| `doc_task_0571` | docs/agent-briefs/tasks/PROG/PROG-2-0224.md | [PROG-2-0224] 結緣壽命耗盡提示 (LIFE-09 補) |
+| `doc_task_0572` | docs/agent-briefs/tasks/PROG/PROG-2-0225.md | [PROG-2-0225] 和平血統線 Breeding_Mode 標記 (BRD-10) |
+| `doc_task_0573` | docs/agent-briefs/tasks/PROG/PROG-2-0226.md | [PROG-2-0226] 20 歲轉職接線 (FATE-06 接線) |
+| `doc_task_0574` | docs/agent-briefs/tasks/PROG/PROG-2-0227.md | [PROG-2-0227] 20 歲成人禮轉職選單流程 (FATE-07 畫面邏輯) |
+| `doc_task_0575` | docs/agent-briefs/tasks/PROG/PROG-2-0228.md | [PROG-2-0228] 既有武將主職後備 (FATE-06 補缺口) |
+| `doc_task_0576` | docs/agent-briefs/tasks/PROG/PROG-2-0229.md | [PROG-2-0229] 新手 3 段式引導接線 (MVP-11 顯示與觸發) |
+| `doc_task_0577` | docs/agent-briefs/tasks/PROG/PROG-2-0230.md | [PROG-2-0230] 戰場拒令（TRP-09 戰場流程） |
+| `doc_task_0578` | docs/agent-briefs/tasks/PROG/PROG-2-0231.md | [PROG-2-0231] 成人禮名單改用主職後備 (FATE-07 接線) |
+| `doc_task_0579` | docs/agent-briefs/tasks/PROG/PROG-2-0232.md | [PROG-2-0232] 將階與名聲欄位落地（TERM-03） |
+| `doc_task_0580` | docs/agent-briefs/tasks/PROG/PROG-2-0233.md | [PROG-2-0233] 虎符持有關係（TRP-08 純邏輯） |
+| `doc_task_0581` | docs/agent-briefs/tasks/PROG/PROG-2-0234.md | [PROG-2-0234] 讀取模型驗證器（DS-06） |
+| `doc_task_0582` | docs/agent-briefs/tasks/PROG/PROG-2-0235.md | [PROG-2-0235] 虎符持有接進存檔與陣亡事件（TRP-08 接線） |
+| `doc_task_0583` | docs/agent-briefs/tasks/PROG/PROG-2-0236.md | [PROG-2-0236] 陣亡產出虎符卡接線（TRP-08） |

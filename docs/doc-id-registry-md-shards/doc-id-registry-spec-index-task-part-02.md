@@ -1,10 +1,10 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-11-06
-> 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 2/10 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
+> 生成日期: 2026-11-09
+> 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 2/14 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
-## 遊戲規格類 (`doc_spec`) — Part 2/2
+## 遊戲規格類 (`doc_spec`) — Part 2/4
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
@@ -29,87 +29,269 @@
 | `doc_spec_0308` | docs/遊戲規格文件/系統規格書/MVP核心循環貫通與遊玩動線功能規格書.md | MVP 核心循環貫通與遊玩動線功能規格書 (Playable Core Loop Vertical Slice) |
 | `doc_spec_0309` | docs/遊戲規格文件/系統規格書/戰場策略相剋與即時將階晉升功能規格書.md | 戰場策略相剋與即時將階晉升功能規格書 (Battle Dynamic Counters & In-Combat Ascension) |
 | `doc_spec_0310` | docs/遊戲規格文件/系統規格書/世代功業傳承與退役教官轉化功能規格書.md | 世代功業傳承與退役教官轉化功能規格書 (Generational Legacy & Mentor Transformation) |
-
-## 索引類 (`doc_index`)
-
-| doc_id | 路徑 | 標題 |
-|--------|------|------|
-| `doc_index_0001` | docs/cross-ref/cross-ref-code.md | Cross-Reference: 代碼索引（代碼 ↔ 規格書 雙向映射） |
-| `doc_index_0002` | docs/cross-ref/cross-ref-specs.md | Cross-Reference: 規格書索引（文件 → 相關文件） |
-| `doc_index_0003` | docs/cross-ref/cross-ref-ui-spec.md | Cross-Reference: UI Spec JSON 資產索引 |
-| `doc_index_0004` | docs/cross-ref/README.md | cross-ref/ |
-| `doc_index_0006` | docs/keep-shards/keep-core.md | Keep Consensus — Core（P0 · §0–§2c） |
-| `doc_index_0007` | docs/cross-reference-index.md | 交叉索引表 (Cross-Reference Index) |
-| `doc_index_0008` | docs/keep-shards/keep-ui-arch.md | Keep Consensus — UI Architecture（§7–§12 · §19–§23） |
-| `doc_index_0009` | docs/keep-shards/keep-status.md | Keep Consensus — Current Status（§14–§18 · §24 · MCP） |
-| `doc_index_0010` | docs/keep-shards/README.md | keep-shards/ |
-| `doc_index_0011` | docs/keep-shards/keep-workflow.md | Keep Consensus — Workflow（§3–§6 · §13） |
-| `doc_index_0012` | docs/keep.summary.md | P0 ATM Bug / Optimization Backlog |
-| `doc_index_0013` | docs/keep.md | P0 ATM Bug / Optimization Backlog |
-| `doc_index_0014` | docs/ui-quality-tasks/README.md | UI Quality Task Shards |
-| `doc_index_0015` | docs/tasks/README.md | tasks/ |
-| `doc_index_0016` | docs/UI品質參考圖/UI-2-0060_血脈命鏡過場/README.md | UI-2-0060 血脈命鏡過場 Canonical Reference |
-| `doc_index_0017` | docs/cross-ref/cross-ref-進度.md | Cross-Reference: 實作進度（規格書 × 代碼 × 測試） |
-| `doc_index_0018` | docs/cross-ref/cross-ref-M6後同步檢查清單.md | Cross-Ref M6 後同步檢查清單 |
-| `doc_index_0019` | docs/ai_atomic_framework/map-replacement-protocol/tasks/README.md | Replacement Protocol Task Cards |
-| `doc_index_0020` | docs/ai_atomic_framework/agent-pack-onboarding/tasks/README.md | ATM 引導工程 Task Cards |
-| `doc_index_0021` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/README.md | ATM 技術債重構 Task Cards |
-| `doc_index_0022` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/tasks/README.md | 3KLife ATM Triangle Strategy Task Cards |
-| `doc_index_0023` | docs/ai_atomic_framework/atomic-police-family/tasks/README.md | 原子警察家族 Task Cards |
-| `doc_index_0024` | docs/ai_atomic_framework/atomic-police-family/specs/README.md | 原子警察家族 Specs |
-| `doc_index_0025` | docs/ai_atomic_framework/universal-language-framework/tasks/README.md | ATM 通用語言框架 Task Cards |
-| `doc_index_0031` | docs/ai_atomic_framework/governance-optimization/tasks/README-gov-0101-0123.md | ATM GOV Task Cards |
-| `doc_index_1001` | docs/ai_atomic_framework/atm-self-atomization/README.md | ATM 框架 100% 自我原子化協調區 |
-| `doc_index_1002` | docs/ai_atomic_framework/atm-self-atomization/tasks/README.md | ATM 100% 自我原子化任務卡索引 |
-| `doc_index_1003` | docs/ai_atomic_framework/atm-self-refactor/tasks/README.md | ATM 自我治理拆分 Task Cards |
-| `doc_index_1004` | docs/ai_atomic_framework/atm-agent-first-operability/README.md | ATM Agent-First 可操作性優化（AAO） |
-| `doc_index_1005` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md | AAO Task Index |
-| `doc_index_1006` | docs/ai_atomic_framework/team-agents/tasks/README.md | Team Agents Task Index |
-| `doc_index_1007` | docs/ai_atomic_framework/team-agents/templates/README.md | Team Agents Templates |
-| `doc_index_1008` | docs/ai_atomic_framework/governance-optimization/tasks/README.md | ATM 治理流程與 Team Agents 加速優化 Task Cards |
-| `doc_index_1009` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/README.md | Adapter-Guided Atomization SDK Initiative |
-| `doc_index_1010` | docs/ai_atomic_framework/arxiv-paper-v1/en/README.md | EN Workspace |
-| `doc_index_1011` | docs/ai_atomic_framework/arxiv-paper-v1/README.md | arXiv Paper v1 — Adapter-Guided Atomization |
-| `doc_index_1012` | docs/ai_atomic_framework/atm-memory-governance/README.md | ATM 跨專案記憶治理（MEM） |
-| `doc_index_1013` | docs/ai_atomic_framework/broker-collision-evidence/runs/B-12-field-2026-06-20/README.md | B-12 Controlled Field Collision Archive |
-| `doc_index_1014` | docs/ai_atomic_framework/broker-collision-evidence/runs/BLOCK-same-owner-overlap-2026-06-22/README.md | BLOCK Same-Owner Overlap Bounded Evidence |
-| `doc_index_1015` | docs/ai_atomic_framework/broker-collision-evidence/runs/close-orch-live-apply-success-2026-06-21-rerun/README.md | close-orch-live-apply-success-2026-06-21-rerun |
-| `doc_index_1016` | docs/ai_atomic_framework/broker-collision-evidence/runs/close-orch-live-lane-escalation-2026-06-21/README.md | close-orch-live-lane-escalation-2026-06-21 |
-| `doc_index_1017` | docs/ai_atomic_framework/broker-collision-evidence/runs/close-orch-positive-layered-2026-06-21/README.md | close-orch-positive-layered-2026-06-21 |
-| `doc_index_1018` | docs/ai_atomic_framework/broker-collision-evidence/runs/POS2-same-owner-bounded-2026-06-22/README.md | POS2 Same-Owner Bounded Evidence |
-| `doc_index_1019` | docs/ai_atomic_framework/cid-hardening/README.md | CID Hardening Lane |
-| `doc_index_1020` | docs/ai_atomic_framework/cid-hardening/tasks/README.md | CID Hardening Task Index |
-| `doc_index_1021` | docs/ai_atomic_framework/git-boundary-admission/README.md | GIT Boundary Admission |
-| `doc_index_1022` | docs/ai_atomic_framework/git-boundary-admission/tasks/README.md | GIT Boundary Admission Task Index |
-| `doc_index_1023` | docs/ai_atomic_framework/multi-agent-orchestration/README.md | MAO Multi-Agent Orchestration |
-| `doc_index_1024` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/README.md | MAO Task Index |
-| `doc_index_1025` | docs/ai_atomic_framework/rft-hardening/tasks/README.md | RFT (Refactor Tracking) Task Index |
-| `doc_index_1026` | docs/ai_atomic_framework/skl-tool-first-upgrade/README.md | SKL Tool-First 升級計畫 |
-| `doc_index_1027` | docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/README.md | SKL Tool-First Task Index |
-| `doc_index_1028` | docs/keep-memory/README.md | keep-memory/ 記憶筆記層契約 |
-| `doc_index_1029` | docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/README.md | R4／R5 待入庫文件包 |
-| `doc_index_1030` | docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/README.md | R5 逐功能獨立規格 v3｜整合工作版 |
-| `doc_index_1031` | docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v2/README.md | R5 功能總清單 v2 |
-| `doc_index_1032` | docs/遊戲規格文件/系統規格書/血統與家系-R5/README.md | R4／R5 文件與案例索引增補 v4 |
-| `doc_index_1033` | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/README.md | 血統遺傳與全玩法文件補全工作包 |
-| `doc_index_1034` | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/validation/README.md | 工作包驗證說明 |
-| `doc_index_1035` | docs/遊戲規格文件/系統規格書/血統與家系-R5/all_gameplay_inventory_v1/README.md | 3KLife 全玩法盤點第一階段 |
-| `doc_index_1036` | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/recruitment-prophecy/README.md | 名士預言與傭兵：有界原碼驗證包 |
-| `doc_index_1037` | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/rival-governance/README.md | G23 他國治理、外交與盛衰：有界驗證包 |
-| `doc_index_1038` | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/roster-identity/README.md | G02 武將名冊與同名版本 / G14 重複名將轉生與分流 |
-| `doc_index_1039` | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/vitality/README.md | G07 有界玩法證據包 |
-| `doc_index_1040` | docs/遊戲規格文件/系統規格書/血統與家系-R5/nation_fall_save_v1/README.md | Nation Fall & Save Chain Verification Package (v1, Fixed `106f053d`) |
-| `doc_index_1041` | docs/cross-ref/code/ui.md | 代碼索引分片：UI |
-| `doc_index_1042` | docs/cross-ref/progress/d1a-rejudge.md | 進度索引分片：D-1a 邏輯欄重判紀錄 |
-| `doc_index_1043` | docs/cross-ref/progress/d2-d3-pending-ui.md | 進度索引分片：D-2 待建 UI Spec／D-3 待定 Contract |
-| `doc_index_1044` | docs/cross-ref/progress/spec-audit-lifespan.md | 規格逐條比對：武將壽命系統.md (doc_spec_0018) |
-| `doc_index_1045` | docs/cross-ref/progress/spec-audit-officer.md | 規格逐條比對：官職系統.md (doc_spec_0014) |
-| `doc_index_1046` | docs/cross-ref/code/battle.md | 代碼索引分片：Battle |
-| `doc_index_1047` | docs/cross-ref/code/core-shared.md | 代碼索引分片：Core 其他目錄與 Shared |
-| `doc_index_1048` | docs/cross-ref/code/core-systems-1.md | 代碼索引分片：Core Systems（上半，依檔名排序） |
-| `doc_index_1049` | docs/cross-ref/code/core-systems-2.md | 代碼索引分片：Core Systems（下半） |
-| `doc_index_1050` | docs/cross-ref/code/tools.md | 代碼索引分片：工具、建置與 Agent Skills |
-| `doc_index_1051` | docs/cross-ref/code/ui-spec-json.md | 代碼索引分片：UI Spec JSON 畫面表 |
-| `doc_index_1052` | docs/遊戲規格文件/系統規格書/血統與家系-R5/handoff_2983a19f_v1/README.md | 3KLife 最新版血統與出生驗證交接包 (v1, Fixed `2983a19f`) |
-| `doc_index_1053` | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/README.md | 天下名門學府賽季劇本功能規格總目錄 (Academies Scenario System Index) |
-| `doc_index_1054` | docs/cross-ref/wbs-progress-inventory-matrix.md | 3KLife WBS 全量功能進度盤點矩陣 (v16.9) |
+| `doc_spec_0311` | docs/遊戲規格文件/系統規格書/宿敵血統交融與狼性突變功能規格書.md | 宿敵血統交融與狼性突變功能規格書 (Rival Bloodline Fusion & Lupine Mutation) |
+| `doc_spec_0312` | docs/遊戲規格文件/系統規格書/子嗣開獎天象與職能宿命分流規格書.md | 子嗣開獎天象與職能宿命分流規格書 (Child Awakening, Omens & Career Fate) |
+| `doc_spec_0313` | docs/遊戲規格文件/系統規格書/虎符套裝羈絆與戰場部署調配規格書.md | 虎符套裝羈絆與戰場部署調配規格書 (Tiger Tally Set Synergy & Deployment Presets) |
+| `doc_spec_0314` | docs/遊戲規格文件/系統規格書/戰場武將單挑對決與斬將功能規格書.md | 戰場武將單挑對決與斬將功能規格書 (Battlefield Duel & Execution System) |
+| `doc_spec_0315` | docs/遊戲規格文件/系統規格書/結緣生育輔助道具與幼年環境功能規格書.md | 結緣生育輔助道具與幼年環境功能規格書 (Breeding Auxiliary Items & Early Childhood Environment) |
+| `doc_spec_0316` | docs/遊戲規格文件/系統規格書/延壽仙丹時間加速與不老傳說功能規格書.md | 延壽仙丹時間加速與不老傳說功能規格書 (Longevity Elixir, Time Warp & Immortal Legend) |
+| `doc_spec_0317` | docs/遊戲規格文件/系統規格書/三國特殊兵種三十四營編制與專屬戰法規格書.md | 三國特殊兵種三十四營編制與專屬戰法規格書 |
+| `doc_spec_0318` | docs/遊戲規格文件/系統規格書/教官支援卡被動技能與碎片合成規格書.md | 教官支援卡被動技能與碎片合成規格書 |
+| `doc_spec_0319` | docs/遊戲規格文件/系統規格書/武將資料結構列舉驗證與掛載協議規格書.md | 武將資料結構列舉驗證與掛載協議規格書 |
+| `doc_spec_0320` | docs/遊戲規格文件/系統規格書/名將本體資料結構與多型轉型規格書.md | 名將本體資料結構與多型轉型規格書 |
+| `doc_spec_0321` | docs/遊戲規格文件/系統規格書/因子色彩職能標籤與卡片視覺契約規格書.md | 因子色彩職能標籤與卡片視覺契約規格書 |
+| `doc_spec_0322` | docs/遊戲規格文件/系統規格書/五階血脈奧義解鎖與名聲事蹟點亮規格書.md | 五階血脈奧義解鎖與名聲事蹟點亮規格書 |
+| `doc_spec_0323` | docs/遊戲規格文件/系統規格書/戰場相鄰合攻聯動與情誼共鳴規格書.md | 戰場相鄰合攻聯動與情誼共鳴規格書 |
+| `doc_spec_0324` | docs/遊戲規格文件/系統規格書/白色突變因子與極端天氣環境免疫規格書.md | 白色突變因子與極端天氣環境免疫規格書 |
+| `doc_spec_0325` | docs/遊戲規格文件/系統規格書/教官精力欄位統一與教學邊界防護規格書.md | 教官精力欄位統一與教學邊界防護規格書 |
+| `doc_spec_0326` | docs/遊戲規格文件/系統規格書/關係親密度每季衰退維護與家風傳承規格書.md | 關係親密度每季衰退維護與家風傳承規格書 |
+| `doc_spec_0327` | docs/遊戲規格文件/系統規格書/地形適性飄字反饋與戰況台詞管線規格書.md | 地形適性飄字反饋與戰況台詞管線規格書 |
+| `doc_spec_0328` | docs/遊戲規格文件/系統規格書/因子覺醒碎裂狀態機與條件判定規格書.md | 因子覺醒碎裂狀態機與條件判定規格書 |
+| `doc_spec_0329` | docs/遊戲規格文件/系統規格書/戰場委任AI武將模板與章節權重調配規格書.md | 戰場委任AI武將模板與章節權重調配規格書 |
+| `doc_spec_0330` | docs/遊戲規格文件/系統規格書/家族血統關係圖鑑節點與視覺佈局規格書.md | 家族血統關係圖鑑節點與視覺佈局規格書 |
+| `doc_spec_0331` | docs/遊戲規格文件/系統規格書/重複名將分流彈窗與復生重練協議規格書.md | 重複名將分流彈窗與復生重練協議規格書 |
+| `doc_spec_0332` | docs/遊戲規格文件/系統規格書/遺傳因子槽GeneObject資料結構與序列化規格書.md | 遺傳因子槽GeneObject資料結構與序列化規格書 |
+| `doc_spec_0333` | docs/遊戲規格文件/系統規格書/NPC記憶模型與離線情境回溯規格書.md | NPC記憶模型與離線情境回溯規格書 |
+| `doc_spec_0334` | docs/遊戲規格文件/系統規格書/伺服端存檔快照與靜態配置同步規格書.md | 伺服端存檔快照與靜態配置同步規格書 |
+| `doc_spec_0335` | docs/遊戲規格文件/系統規格書/全域識別碼命名契約與驗證工具規格書.md | 全域識別碼命名契約與驗證工具規格書 |
+| `doc_spec_0336` | docs/遊戲規格文件/系統規格書/武將稀有度五級分類與商業七色映射規格書.md | 武將稀有度五級分類與商業七色映射規格書 |
+| `doc_spec_0337` | docs/遊戲規格文件/系統規格書/武將稱號系統與同名辨識規格書.md | 武將稱號系統與同名辨識規格書 |
+| `doc_spec_0338` | docs/遊戲規格文件/系統規格書/數值常數庫與公式註冊中心規格書.md | 數值常數庫與公式註冊中心規格書 |
+| `doc_spec_0339` | docs/遊戲規格文件/系統規格書/戰場地格狀態機四態轉換與圖層資料結構規格書.md | 戰場地格狀態機四態轉換與圖層資料結構規格書 |
+| `doc_spec_0340` | docs/遊戲規格文件/系統規格書/子嗣家傳奧義覺醒與因子機率規格書.md | 子嗣家傳奧義覺醒與因子機率規格書 |
+| `doc_spec_0341` | docs/遊戲規格文件/系統規格書/轉生屬性上限突破與奧義傷害數值模型規格書.md | 轉生屬性上限突破與奧義傷害數值模型規格書 |
+| `doc_spec_0342` | docs/遊戲規格文件/系統規格書/特殊兵種與虎符UI多語系鍵值字典規格書.md | 特殊兵種與虎符UI多語系鍵值字典規格書 |
+| `doc_spec_0343` | docs/遊戲規格文件/系統規格書/戰鬥數據管線端到端整合與自動化驗收規格書.md | 戰鬥數據管線端到端整合與自動化驗收規格書 |
+| `doc_spec_0344` | docs/遊戲規格文件/系統規格書/戰法TP點數消耗模型與綠色因子折半減免規格書.md | 戰法TP點數消耗模型與綠色因子折半減免規格書 |
+| `doc_spec_0345` | docs/遊戲規格文件/系統規格書/英靈卡與虎符紋章視覺契約與血脈紋樣規格書.md | 英靈卡與虎符紋章視覺契約與血脈紋樣規格書 |
+| `doc_spec_0346` | docs/遊戲規格文件/系統規格書/虎符名錄圖鑑收錄與委任AI出展調配規格書.md | 虎符名錄圖鑑收錄與委任AI出展調配規格書 |
+| `doc_spec_0347` | docs/遊戲規格文件/系統規格書/戰前情報偵查面板與戰法對策槽位容量規格書.md | 戰前情報偵查面板與戰法對策槽位容量規格書 |
+| `doc_spec_0348` | docs/遊戲規格文件/系統規格書/戰場地格動態圖層VFX與Decal掛載規格書.md | 戰場地格動態圖層VFX與Decal掛載規格書 |
+| `doc_spec_0349` | docs/遊戲規格文件/系統規格書/虎符戰力綜合評級與升星突破成本模型規格書.md | 虎符戰力綜合評級與升星突破成本模型規格書 |
+| `doc_spec_0350` | docs/遊戲規格文件/系統規格書/戰場視覺四層渲染與互動戰術物件狀態機規格書.md | 戰場視覺四層渲染與互動戰術物件狀態機規格書 |
+| `doc_spec_0351` | docs/遊戲規格文件/系統規格書/血脈英靈虎符資料跳轉鏈與命鏡加載文案規格書.md | 血脈英靈虎符資料跳轉鏈與命鏡加載文案規格書 |
+| `doc_spec_0352` | docs/遊戲規格文件/系統規格書/軍師戰場HUD四摘要情資調度規格書.md | 軍師戰場HUD四摘要情資調度規格書 |
+| `doc_spec_0353` | docs/遊戲規格文件/系統規格書/戰場四大主題關卡機制與戰術物資結算規格書.md | 戰場四大主題關卡機制與戰術物資結算規格書 |
+| `doc_spec_0354` | docs/遊戲規格文件/系統規格書/虎符忠誠度維護與戰場抗命背叛數值模型規格書.md | 虎符忠誠度維護與戰場抗命背叛數值模型規格書 |
+| `doc_spec_0355` | docs/遊戲規格文件/系統規格書/虎符卡面UI佈局與部隊卡圖備援渲染規格書.md | 虎符卡面UI佈局與部隊卡圖備援渲染規格書 |
+| `doc_spec_0356` | docs/遊戲規格文件/系統規格書/軍師演武沙盤推演與釋放敵將頓悟捷徑規格書.md | 軍師演武沙盤推演與釋放敵將頓悟捷徑規格書 |
+| `doc_spec_0357` | docs/遊戲規格文件/系統規格書/武將帶兵統御上限與戰場戰損回寫數值錨點規格書.md | 武將帶兵統御上限與戰場戰損回寫數值錨點規格書 |
+| `doc_spec_0358` | docs/遊戲規格文件/系統規格書/戰鬥戰法目標選取流水線與投射判定規格書.md | 戰鬥戰法目標選取流水線與投射判定規格書 |
+| `doc_spec_0359` | docs/遊戲規格文件/系統規格書/戰鬥增益減益效果堆疊與治療結算規格書.md | 戰鬥增益減益效果堆疊與治療結算規格書 |
+| `doc_spec_0360` | docs/遊戲規格文件/系統規格書/天賦戰法自動施放設定檔與AI決策節奏規格書.md | 天賦戰法自動施放設定檔與AI決策節奏規格書 |
+| `doc_spec_0361` | docs/遊戲規格文件/系統規格書/趙家槍法血脈戰法三段穿透遞增數值規格書.md | 趙家槍法血脈戰法三段穿透遞增數值規格書 |
+| `doc_spec_0362` | docs/遊戲規格文件/系統規格書/戰場棋盤控制戰法位移衝刺擊退與阻擋碰撞規格書.md | 戰場棋盤控制戰法位移衝刺擊退與阻擋碰撞規格書 |
+| `doc_spec_0363` | docs/遊戲規格文件/系統規格書/戰鬥反應連鎖連環計傷害共享與反擊再動規格書.md | 戰鬥反應連鎖連環計傷害共享與反擊再動規格書 |
+| `doc_spec_0364` | docs/遊戲規格文件/系統規格書/教官靈感戰法六招體系數值公式與TP消耗規格書.md | 教官靈感戰法六招體系數值公式與TP消耗規格書 |
+| `doc_spec_0365` | docs/遊戲規格文件/系統規格書/虎符專屬戰法十四條落地數值模型與被動機制規格書.md | 虎符專屬戰法十四條落地數值模型與被動機制規格書 |
+| `doc_spec_0366` | docs/遊戲規格文件/系統規格書/場景全局戰法注入與場勢視覺連動規格書.md | 場景全局戰法注入與場勢視覺連動規格書 |
+| `doc_spec_0367` | docs/遊戲規格文件/系統規格書/戰法AI選技決策打分與七步驗收矩陣規格書.md | 戰法AI選技決策打分與七步驗收矩陣規格書 |
+| `doc_spec_0368` | docs/遊戲規格文件/系統規格書/場景戰法六種設定檔JSON資料驅動結構規格書.md | 場景戰法六種設定檔JSON資料驅動結構規格書 |
+| `doc_spec_0369` | docs/遊戲規格文件/系統規格書/戰場地格預設佈局最大餘數分配演算法規格書.md | 戰場地格預設佈局最大餘數分配演算法規格書 |
+| `doc_spec_0370` | docs/遊戲規格文件/系統規格書/場景戰法智力情報雙門檻發動判定模型規格書.md | 場景戰法智力情報雙門檻發動判定模型規格書 |
+| `doc_spec_0371` | docs/遊戲規格文件/系統規格書/森林埋伏與夜襲奇襲戰場環境專屬規則規格書.md | 森林埋伏與夜襲奇襲戰場環境專屬規則規格書 |
+| `doc_spec_0372` | docs/遊戲規格文件/系統規格書/攻城戰城門防禦城牆地利與器械破陣數值規格書.md | 攻城戰城門防禦城牆地利與器械破陣數值規格書 |
+| `doc_spec_0373` | docs/遊戲規格文件/系統規格書/軍師智謀能量每回合累積與全局增幅爆發規格書.md | 軍師智謀能量每回合累積與全局增幅爆發規格書 |
+| `doc_spec_0374` | docs/遊戲規格文件/系統規格書/出征軍勢池容量公式與下限保底規格書.md | 出征軍勢池容量公式與下限保底規格書 |
+| `doc_spec_0375` | docs/遊戲規格文件/系統規格書/城市兵源鏈每季恢復與戰損回扣數值模型規格書.md | 城市兵源鏈每季恢復與戰損回扣數值模型規格書 |
+| `doc_spec_0376` | docs/遊戲規格文件/系統規格書/戰場大回合推進狀態機與階段生命週期規格書.md | 戰場大回合推進狀態機與階段生命週期規格書 |
+| `doc_spec_0377` | docs/遊戲規格文件/系統規格書/戰場部隊部署合法性檢核與三態阻絕提示規格書.md | 戰場部隊部署合法性檢核與三態阻絕提示規格書 |
+| `doc_spec_0378` | docs/遊戲規格文件/系統規格書/戰場糧草即時扣除模型與虎符糧耗矩陣規格書.md | 戰場糧草即時扣除模型與虎符糧耗矩陣規格書 |
+| `doc_spec_0379` | docs/遊戲規格文件/系統規格書/精銳部隊部署上限與攻城器械保留槽計算規格書.md | 精銳部隊部署上限與攻城器械保留槽計算規格書 |
+| `doc_spec_0380` | docs/遊戲規格文件/系統規格書/戰場鄉勇民兵低耗屬性折算與投入兵力規格書.md | 戰場鄉勇民兵低耗屬性折算與投入兵力規格書 |
+| `doc_spec_0381` | docs/遊戲規格文件/系統規格書/出征編制槽位角色互斥鎖與同血脈檢驗規格書.md | 出征編制槽位角色互斥鎖與同血脈檢驗規格書 |
+| `doc_spec_0382` | docs/遊戲規格文件/系統規格書/參謀官計謀點與後勤官軍糧加成計算模型規格書.md | 參謀官計謀點與後勤官軍糧加成計算模型規格書 |
+| `doc_spec_0383` | docs/遊戲規格文件/系統規格書/戰場改派建議與二次確認交互狀態機規格書.md | 戰場改派建議與二次確認交互狀態機規格書 |
+| `doc_spec_0384` | docs/遊戲規格文件/系統規格書/委任AI四級智力部署策略與保留模型規格書.md | 委任AI四級智力部署策略與保留模型規格書 |
+| `doc_spec_0385` | docs/遊戲規格文件/系統規格書/出征整隊編制預設儲存與失效安全推薦規格書.md | 出征整隊編制預設儲存與失效安全推薦規格書 |
+| `doc_spec_0386` | docs/遊戲規格文件/系統規格書/兵種地形強弱勢加成與移動懲罰數值規格書.md | 兵種地形強弱勢加成與移動懲罰數值規格書 |
+| `doc_spec_0387` | docs/遊戲規格文件/系統規格書/五大地形格特殊效果與沙漠精力消耗數值規格書.md | 五大地形格特殊效果與沙漠精力消耗數值規格書 |
+| `doc_spec_0388` | docs/遊戲規格文件/系統規格書/天氣對戰法強約束規則與UI灰化提示規格書.md | 天氣對戰法強約束規則與UI灰化提示規格書 |
+| `doc_spec_0389` | docs/遊戲規格文件/系統規格書/戰場AI部隊部署節奏與相剋車道挑選決策規格書.md | 戰場AI部隊部署節奏與相剋車道挑選決策規格書 |
+| `doc_spec_0390` | docs/遊戲規格文件/系統規格書/戰場AI戰法施放智力分級與情境打分決策規格書.md | 戰場AI戰法施放智力分級與情境打分決策規格書 |
+| `doc_spec_0391` | docs/遊戲規格文件/系統規格書/戰場AI奧義施放門檻與效果家族決策規格書.md | 戰場AI奧義施放門檻與效果家族決策規格書 |
+| `doc_spec_0392` | docs/遊戲規格文件/系統規格書/戰場武將單挑AI接受判定與發起條件數值規格書.md | 戰場武將單挑AI接受判定與發起條件數值規格書 |
+| `doc_spec_0393` | docs/遊戲規格文件/系統規格書/戰鬥AI動態難度自適應微調與提示文案規格書.md | 戰鬥AI動態難度自適應微調與提示文案規格書 |
+| `doc_spec_0394` | docs/遊戲規格文件/系統規格書/戰鬥AI擊殺SP充能難度倍率縮放規格書.md | 戰鬥AI擊殺SP充能難度倍率縮放規格書 |
+| `doc_spec_0395` | docs/遊戲規格文件/系統規格書/戰場地塊狀態矩陣與動態ZOC規則數值規格書.md | 戰場地塊狀態矩陣與動態ZOC規則數值規格書 |
+| `doc_spec_0396` | docs/遊戲規格文件/系統規格書/戰鬥分段控制器破釜沉舟殘局模式切換與STR軟上限規格書.md | 戰鬥分段控制器破釜沉舟殘局模式切換與STR軟上限規格書 |
+| `doc_spec_0397` | docs/遊戲規格文件/系統規格書/戰場主將體力條顯示與疲勞衰竭視覺反饋規格書.md | 戰場主將體力條顯示與疲勞衰竭視覺反饋規格書 |
+| `doc_spec_0398` | docs/遊戲規格文件/系統規格書/育成屬性增長總公式與傾囊相授連乘加成數值規格書.md | 育成屬性增長總公式與傾囊相授連乘加成數值規格書 |
+| `doc_spec_0399` | docs/遊戲規格文件/系統規格書/育成體力疲勞度與訓練失敗率非線性爬升曲線規格書.md | 育成體力疲勞度與訓練失敗率非線性爬升曲線規格書 |
+| `doc_spec_0400` | docs/遊戲規格文件/系統規格書/教官支援卡詞條Schema得意率與同場羈絆加成規格書.md | 教官支援卡詞條Schema得意率與同場羈絆加成規格書 |
+| `doc_spec_0401` | docs/遊戲規格文件/系統規格書/INT智力戰法發動率檢核器與成功率加成數值規格書.md | INT智力戰法發動率檢核器與成功率加成數值規格書 |
+| `doc_spec_0402` | docs/遊戲規格文件/系統規格書/遺傳因子繼承機率模型與藍色三星屬性閾值規格書.md | 遺傳因子繼承機率模型與藍色三星屬性閾值規格書 |
+| `doc_spec_0403` | docs/遊戲規格文件/系統規格書/教官支援卡四大原型戰法組合矩陣與公式干預規格書.md | 教官支援卡四大原型戰法組合矩陣與公式干預規格書 |
+| `doc_spec_0404` | docs/遊戲規格文件/系統規格書/基礎資源經濟模型與四維存儲上限夾制規格書.md | 基礎資源經濟模型與四維存儲上限夾制規格書 |
+| `doc_spec_0405` | docs/遊戲規格文件/系統規格書/地窖保護機制與戰敗保底資源不可掠奪規格書.md | 地窖保護機制與戰敗保底資源不可掠奪規格書 |
+| `doc_spec_0406` | docs/遊戲規格文件/系統規格書/每日資源貧困補貼判定與自動入帳規格書.md | 每日資源貧困補貼判定與自動入帳規格書 |
+| `doc_spec_0407` | docs/遊戲規格文件/系統規格書/道具精元定價表與購買流程數值規格書.md | 道具精元定價表與購買流程數值規格書 |
+| `doc_spec_0408` | docs/遊戲規格文件/系統規格書/許願池核心產量比率表與多輪償還週期規格書.md | 許願池核心產量比率表與多輪償還週期規格書 |
+| `doc_spec_0409` | docs/遊戲規格文件/系統規格書/月卡30天效期權益與每日精力加速卡發放模型規格書.md | 月卡30天效期權益與每日精力加速卡發放模型規格書 |
+| `doc_spec_0410` | docs/遊戲規格文件/系統規格書/加速卡縮期機制與商店定價數值規格書.md | 加速卡縮期機制與商店定價數值規格書 |
+| `doc_spec_0411` | docs/遊戲規格文件/系統規格書/名將挑戰賽BOSS挑戰券與額外報名經濟規格書.md | 名將挑戰賽BOSS挑戰券與額外報名經濟規格書 |
+| `doc_spec_0412` | docs/遊戲規格文件/系統規格書/道具定義ItemDef資料表與付費免費分類規格書.md | 道具定義ItemDef資料表與付費免費分類規格書 |
+| `doc_spec_0413` | docs/遊戲規格文件/系統規格書/道具五大分類與背包篩選列舉規格書.md | 道具五大分類與背包篩選列舉規格書 |
+| `doc_spec_0414` | docs/遊戲規格文件/系統規格書/道具使用效果引擎與功能分派分流規格書.md | 道具使用效果引擎與功能分派分流規格書 |
+| `doc_spec_0415` | docs/遊戲規格文件/系統規格書/極限任務掉落機率模型與獎勵權重分配規格書.md | 極限任務掉落機率模型與獎勵權重分配規格書 |
+| `doc_spec_0416` | docs/遊戲規格文件/系統規格書/掛機離線產出模型與設施等級階梯補給規格書.md | 掛機離線產出模型與設施等級階梯補給規格書 |
+| `doc_spec_0417` | docs/遊戲規格文件/系統規格書/限時過期道具自動回收清算與UI通知規格書.md | 限時過期道具自動回收清算與UI通知規格書 |
+| `doc_spec_0418` | docs/遊戲規格文件/系統規格書/多道具禮包組合架構與批次入庫核驗規格書.md | 多道具禮包組合架構與批次入庫核驗規格書 |
+| `doc_spec_0419` | docs/遊戲規格文件/系統規格書/美酒社交結義消耗與俘虜送禮好感度數值規格書.md | 美酒社交結義消耗與俘虜送禮好感度數值規格書 |
+| `doc_spec_0420` | docs/遊戲規格文件/系統規格書/百寶閣商城與許願祭壇介面狀態切換與多語規格書.md | 百寶閣商城與許願祭壇介面狀態切換與多語規格書 |
+| `doc_spec_0421` | docs/遊戲規格文件/系統規格書/統一物件庫InventoryService資料層與投影視圖規格書.md | 統一物件庫InventoryService資料層與投影視圖規格書 |
+| `doc_spec_0422` | docs/遊戲規格文件/系統規格書/物件分類與來源追蹤欄位規格書.md | 物件分類與來源追蹤欄位規格書 |
+| `doc_spec_0423` | docs/遊戲規格文件/系統規格書/武將六槽裝備配置與最終屬性累加模型規格書.md | 武將六槽裝備配置與最終屬性累加模型規格書 |
+| `doc_spec_0424` | docs/遊戲規格文件/系統規格書/虎符唯一持有性與強制拔除降忠誠規則規格書.md | 虎符唯一持有性與強制拔除降忠誠規則規格書 |
+| `doc_spec_0425` | docs/遊戲規格文件/系統規格書/虎符升星經驗與突破精華消耗數值規格書.md | 虎符升星經驗與突破精華消耗數值規格書 |
+| `doc_spec_0426` | docs/遊戲規格文件/系統規格書/英靈卡命鏡槽單插與替換被動卸除規則規格書.md | 英靈卡命鏡槽單插與替換被動卸除規則規格書 |
+| `doc_spec_0427` | docs/遊戲規格文件/系統規格書/退役武將裝備自動回庫與後代繼承轉移規格書.md | 退役武將裝備自動回庫與後代繼承轉移規格書 |
+| `doc_spec_0428` | docs/遊戲規格文件/系統規格書/武將死亡結算虎符生成與先祖英靈卡建檔規格書.md | 武將死亡結算虎符生成與先祖英靈卡建檔規格書 |
+| `doc_spec_0429` | docs/遊戲規格文件/系統規格書/俘虜無期徒刑審判與傳家寶物搜繳產出規格書.md | 俘虜無期徒刑審判與傳家寶物搜繳產出規格書 |
+| `doc_spec_0430` | docs/遊戲規格文件/系統規格書/戰場參謀官與後勤官出征配置SortieLoadout數值規格書.md | 戰場參謀官與後勤官出征配置SortieLoadout數值規格書 |
+| `doc_spec_0431` | docs/遊戲規格文件/系統規格書/主城倉庫容量模型與擴充階梯規則規格書.md | 主城倉庫容量模型與擴充階梯規則規格書 |
+| `doc_spec_0432` | docs/遊戲規格文件/系統規格書/裝備物品鎖定防護與分解回收鍛造材料規格書.md | 裝備物品鎖定防護與分解回收鍛造材料規格書 |
+| `doc_spec_0433` | docs/遊戲規格文件/系統規格書/寶物圖鑑收集度統計與解鎖檢視模型規格書.md | 寶物圖鑑收集度統計與解鎖檢視模型規格書 |
+| `doc_spec_0434` | docs/遊戲規格文件/系統規格書/武將裝備穿戴卸下操作與雙端資料一致性規格書.md | 武將裝備穿戴卸下操作與雙端資料一致性規格書 |
+| `doc_spec_0435` | docs/遊戲規格文件/系統規格書/主城倉庫三軸篩選排序與穩態比較演算法規格書.md | 主城倉庫三軸篩選排序與穩態比較演算法規格書 |
+| `doc_spec_0436` | docs/遊戲規格文件/系統規格書/退役武將裝備自動回倉與滿倉溢出處置規格書.md | 退役武將裝備自動回倉與滿倉溢出處置規格書 |
+| `doc_spec_0437` | docs/遊戲規格文件/系統規格書/裝備品質加成區間與武將面板屬性累加規格書.md | 裝備品質加成區間與武將面板屬性累加規格書 |
+| `doc_spec_0438` | docs/遊戲規格文件/系統規格書/統一物件庫DisplayBucket顯示分域與格數計算規格書.md | 統一物件庫DisplayBucket顯示分域與格數計算規格書 |
+| `doc_spec_0439` | docs/遊戲規格文件/系統規格書/伺服端裝備記錄表結構與客端同步協議規格書.md | 伺服端裝備記錄表結構與客端同步協議規格書 |
+| `doc_spec_0440` | docs/遊戲規格文件/系統規格書/武將死亡雙卡結算與產卡資格判定規格書.md | 武將死亡雙卡結算與產卡資格判定規格書 |
+| `doc_spec_0441` | docs/遊戲規格文件/系統規格書/英靈卡唯一性原則與輪迴覆蓋演算法規格書.md | 英靈卡唯一性原則與輪迴覆蓋演算法規格書 |
+| `doc_spec_0442` | docs/遊戲規格文件/系統規格書/英靈死亡快照結構與英勇事蹟摘要規格書.md | 英靈死亡快照結構與英勇事蹟摘要規格書 |
+| `doc_spec_0443` | docs/遊戲規格文件/系統規格書/武將命鏡與虎符雙卡同裝共存契約規格書.md | 武將命鏡與虎符雙卡同裝共存契約規格書 |
+| `doc_spec_0444` | docs/遊戲規格文件/系統規格書/英靈卡三階光效共鳴模型與家族封頂數值規格書.md | 英靈卡三階光效共鳴模型與家族封頂數值規格書 |
+| `doc_spec_0445` | docs/遊戲規格文件/系統規格書/英靈主副卡供養模型與溢出轉化世家名聲規格書.md | 英靈主副卡供養模型與溢出轉化世家名聲規格書 |
+| `doc_spec_0446` | docs/遊戲規格文件/系統規格書/世家家族積分構成與四階門閥階位晉升規格書.md | 世家家族積分構成與四階門閥階位晉升規格書 |
+| `doc_spec_0447` | docs/遊戲規格文件/系統規格書/家族名聲值供養消耗與赤字降階保護數值規格書.md | 家族名聲值供養消耗與赤字降階保護數值規格書 |
+| `doc_spec_0448` | docs/遊戲規格文件/系統規格書/姓氏零和歸屬原則與非本姓絕學弱化數值規格書.md | 姓氏零和歸屬原則與非本姓絕學弱化數值規格書 |
+| `doc_spec_0449` | docs/遊戲規格文件/系統規格書/世家防火牆反作弊機制與反膨脹平衡數值規格書.md | 世家防火牆反作弊機制與反膨脹平衡數值規格書 |
+| `doc_spec_0450` | docs/遊戲規格文件/系統規格書/英靈卡祖靈傳道受業與專屬奧義繼承權限規格書.md | 英靈卡祖靈傳道受業與專屬奧義繼承權限規格書 |
+| `doc_spec_0451` | docs/遊戲規格文件/系統規格書/幼兒內政戰場單場覺醒與姓氏戰法保證三條MCQ規則規格書.md | 幼兒內政戰場單場覺醒與姓氏戰法保證三條MCQ規則規格書 |
+| `doc_spec_0452` | docs/遊戲規格文件/系統規格書/大廳總控幕府LobbyHub資料架構與Schema校驗規格書.md | 大廳總控幕府LobbyHub資料架構與Schema校驗規格書 |
+| `doc_spec_0453` | docs/遊戲規格文件/系統規格書/大廳雙牆任務板可見性過濾與置頂排序演算法規格書.md | 大廳雙牆任務板可見性過濾與置頂排序演算法規格書 |
+| `doc_spec_0454` | docs/遊戲規格文件/系統規格書/大廳任務情報度再探揭露與AI委任決策規格書.md | 大廳任務情報度再探揭露與AI委任決策規格書 |
+| `doc_spec_0455` | docs/遊戲規格文件/系統規格書/大廳武將自告奮勇事件判定與成功率加成規格書.md | 大廳武將自告奮勇事件判定與成功率加成規格書 |
+| `doc_spec_0456` | docs/遊戲規格文件/系統規格書/大廳武將點位加權抽樣與60秒洗牌輪播規格書.md | 大廳武將點位加權抽樣與60秒洗牌輪播規格書 |
+| `doc_spec_0457` | docs/遊戲規格文件/系統規格書/世界沙盤三階段演進與天下重組歷史不倒退規格書.md | 世界沙盤三階段演進與天下重組歷史不倒退規格書 |
+| `doc_spec_0458` | docs/遊戲規格文件/系統規格書/大廳晝夜與節慶主題三層配置驅動規格書.md | 大廳晝夜與節慶主題三層配置驅動規格書 |
+| `doc_spec_0459` | docs/遊戲規格文件/系統規格書/許願祭壇大廳入口插槽三態與早中晚三巡規格書.md | 許願祭壇大廳入口插槽三態與早中晚三巡規格書 |
+| `doc_spec_0460` | docs/遊戲規格文件/系統規格書/大廳官職快照讀取與功能欄位熱點解鎖規格書.md | 大廳官職快照讀取與功能欄位熱點解鎖規格書 |
+| `doc_spec_0461` | docs/遊戲規格文件/系統規格書/雙池機率表與Up角色加權配置模型規格書.md | 雙池機率表與Up角色加權配置模型規格書 |
+| `doc_spec_0462` | docs/遊戲規格文件/系統規格書/轉蛋抽取引擎單抽十連與降階抽樣演算法規格書.md | 轉蛋抽取引擎單抽十連與降階抽樣演算法規格書 |
+| `doc_spec_0463` | docs/遊戲規格文件/系統規格書/轉蛋雙重保底機制與天命商店解鎖記帳規格書.md | 轉蛋雙重保底機制與天命商店解鎖記帳規格書 |
+| `doc_spec_0464` | docs/遊戲規格文件/系統規格書/轉蛋貨幣分流付費靈玉免費銅錢符與求籤令定向扣款規格書.md | 轉蛋貨幣分流付費靈玉免費銅錢符與求籤令定向扣款規格書 |
+| `doc_spec_0465` | docs/遊戲規格文件/系統規格書/武將同名重複抽轉生1至5轉屬性上限與培育次數規格書.md | 武將同名重複抽轉生1至5轉屬性上限與培育次數規格書 |
+| `doc_spec_0466` | docs/遊戲規格文件/系統規格書/滿轉溢出轉化結義點數與天命商店自選兌換規格書.md | 滿轉溢出轉化結義點數與天命商店自選兌換規格書 |
+| `doc_spec_0467` | docs/遊戲規格文件/系統規格書/轉蛋同名武將戰法隨機生成與重複轉經驗規格書.md | 轉蛋同名武將戰法隨機生成與重複轉經驗規格書 |
+| `doc_spec_0468` | docs/遊戲規格文件/系統規格書/限定卡池排程時間窗與期間限定角色輪替規格書.md | 限定卡池排程時間窗與期間限定角色輪替規格書 |
+| `doc_spec_0469` | docs/遊戲規格文件/系統規格書/抽卡伺服端同步記錄與離線防回撥校驗規格書.md | 抽卡伺服端同步記錄與離線防回撥校驗規格書 |
+| `doc_spec_0470` | docs/遊戲規格文件/系統規格書/開場引導流程控制器順序狀態機與進出條件規格書.md | 開場引導流程控制器順序狀態機與進出條件規格書 |
+| `doc_spec_0471` | docs/遊戲規格文件/系統規格書/開場宿命轉蛋無限重置十連抽與初始名將鎖定規格書.md | 開場宿命轉蛋無限重置十連抽與初始名將鎖定規格書 |
+| `doc_spec_0472` | docs/遊戲規格文件/系統規格書/趕路倒數管理器離線時間累積與加速到達規格書.md | 趕路倒數管理器離線時間累積與加速到達規格書 |
+| `doc_spec_0473` | docs/遊戲規格文件/系統規格書/武將日誌主檔結構與Action序號回扣API規格書.md | 武將日誌主檔結構與Action序號回扣API規格書 |
+| `doc_spec_0474` | docs/遊戲規格文件/系統規格書/晨報摘要時間窗加權篩選與同類折疊演算法規格書.md | 晨報摘要時間窗加權篩選與同類折疊演算法規格書 |
+| `doc_spec_0475` | docs/遊戲規格文件/系統規格書/武將派遣整備品質四軸評分與高風險防代勞規格書.md | 武將派遣整備品質四軸評分與高風險防代勞規格書 |
+| `doc_spec_0476` | docs/遊戲規格文件/系統規格書/傭兵插畫五階段好感戰鬥解鎖與只進不退規格書.md | 傭兵插畫五階段好感戰鬥解鎖與只進不退規格書 |
+| `doc_spec_0477` | docs/遊戲規格文件/系統規格書/傭兵契約到期告別信好感分級生成與收件匣規格書.md | 傭兵契約到期告別信好感分級生成與收件匣規格書 |
+| `doc_spec_0478` | docs/遊戲規格文件/系統規格書/跨三代血脈因子傳承世代成就與高級貨幣發放規格書.md | 跨三代血脈因子傳承世代成就與高級貨幣發放規格書 |
+| `doc_spec_0479` | docs/遊戲規格文件/系統規格書/武將離線互動事件觸發判定與同登入窗去重規格書.md | 武將離線互動事件觸發判定與同登入窗去重規格書 |
+| `doc_spec_0480` | docs/遊戲規格文件/系統規格書/三國日報行為Log映射與四插槽敘事生成規格書.md | 三國日報行為Log映射與四插槽敘事生成規格書 |
+| `doc_spec_0481` | docs/遊戲規格文件/系統規格書/三國日報事件效果復仇代勞自主特訓與團購獎勵結算規格書.md | 三國日報事件效果復仇代勞自主特訓與團購獎勵結算規格書 |
+| `doc_spec_0482` | docs/遊戲規格文件/系統規格書/退役武將先祖教官轉化與雙柱血脈共鳴培育規格書.md | 退役武將先祖教官轉化與雙柱血脈共鳴培育規格書 |
+| `doc_spec_0483` | docs/遊戲規格文件/系統規格書/日曆簽到連動連續登入統計與時區切日狀態機規格書.md | 日曆簽到連動連續登入統計與時區切日狀態機規格書 |
+| `doc_spec_0484` | docs/遊戲規格文件/系統規格書/七日體驗歷程關鍵留存觸發點與雙軌事件推進規格書.md | 七日體驗歷程關鍵留存觸發點與雙軌事件推進規格書 |
+| `doc_spec_0488` | docs/遊戲規格文件/系統規格書/官職經驗值獲取演算法與成敗領域加成規格書.md | 官職經驗值獲取演算法與成敗領域加成規格書 |
+| `doc_spec_0489` | docs/遊戲規格文件/系統規格書/官職階位晉升狀態機與時代更迭保留規則規格書.md | 官職階位晉升狀態機與時代更迭保留規則規格書 |
+| `doc_spec_0490` | docs/遊戲規格文件/系統規格書/勢力邦交值分段事件增減與送禮加成演算法規格書.md | 勢力邦交值分段事件增減與送禮加成演算法規格書 |
+| `doc_spec_0491` | docs/遊戲規格文件/系統規格書/他國AI軍事擴張決策門檻與五軸目標效用評估規格書.md | 他國AI軍事擴張決策門檻與五軸目標效用評估規格書 |
+| `doc_spec_0492` | docs/遊戲規格文件/系統規格書/霸權領土門檻判定與反霸權同盟橡皮筋反制規格書.md | 霸權領土門檻判定與反霸權同盟橡皮筋反制規格書 |
+| `doc_spec_0493` | docs/遊戲規格文件/系統規格書/他國AI季度內政結算產出與性格效率修正規格書.md | 他國AI季度內政結算產出與性格效率修正規格書 |
+| `doc_spec_0494` | docs/遊戲規格文件/系統規格書/勢力興衰國力五級評估與霸權崩潰連鎖效果規格書.md | 勢力興衰國力五級評估與霸權崩潰連鎖效果規格書 |
+| `doc_spec_0495` | docs/遊戲規格文件/系統規格書/天下大亂時代更迭觸發條件與地圖資產重組規格書.md | 天下大亂時代更迭觸發條件與地圖資產重組規格書 |
+| `doc_spec_0496` | docs/遊戲規格文件/系統規格書/他國AI貿易資源兌換比率與結盟優惠冷卻規格書.md | 他國AI貿易資源兌換比率與結盟優惠冷卻規格書 |
+| `doc_spec_0497` | docs/遊戲規格文件/系統規格書/他國AI外交決策模型與四項意圖推演演算法規格書.md | 他國AI外交決策模型與四項意圖推演演算法規格書 |
+| `doc_spec_0498` | docs/遊戲規格文件/系統規格書/他國AI武將經營結緣退役與俘虜三態處置規格書.md | 他國AI武將經營結緣退役與俘虜三態處置規格書 |
+| `doc_spec_0499` | docs/遊戲規格文件/系統規格書/戰後俘虜勸降機率模型與招募城市兵源扣減規格書.md | 戰後俘虜勸降機率模型與招募城市兵源扣減規格書 |
+| `doc_spec_0500` | docs/遊戲規格文件/系統規格書/五類領地治理任務資料模型與基礎產能表規格書.md | 五類領地治理任務資料模型與基礎產能表規格書 |
+| `doc_spec_0501` | docs/遊戲規格文件/系統規格書/領地內政產出加權計算與季度結算狀態機規格書.md | 領地內政產出加權計算與季度結算狀態機規格書 |
+| `doc_spec_0502` | docs/遊戲規格文件/系統規格書/城市兵源儲備上限與季度自然補兵速度規格書.md | 城市兵源儲備上限與季度自然補兵速度規格書 |
+| `doc_spec_0503` | docs/遊戲規格文件/系統規格書/太守府自動治理全域親和度匹配與指派演算法規格書.md | 太守府自動治理全域親和度匹配與指派演算法規格書 |
+| `doc_spec_0504` | docs/遊戲規格文件/系統規格書/世襲主城絕對保護與背水一戰雙倍防禦被動規格書.md | 世襲主城絕對保護與背水一戰雙倍防禦被動規格書 |
+| `doc_spec_0505` | docs/遊戲規格文件/系統規格書/非培育子嗣內政職位加成與未成年減半模型規格書.md | 非培育子嗣內政職位加成與未成年減半模型規格書 |
+| `doc_spec_0506` | docs/遊戲規格文件/系統規格書/大牢監獄格數容量擴展與每季情報寶物產出規格書.md | 大牢監獄格數容量擴展與每季情報寶物產出規格書 |
+| `doc_spec_0507` | docs/遊戲規格文件/系統規格書/戰俘放走名聲回報與每季五趴未來來投演算法規格書.md | 戰俘放走名聲回報與每季五趴未來來投演算法規格書 |
+| `doc_spec_0508` | docs/遊戲規格文件/系統規格書/戰敗武將虎符沒收歸屬與義釋帶走規則規格書.md | 戰敗武將虎符沒收歸屬與義釋帶走規則規格書 |
+| `doc_spec_0509` | docs/遊戲規格文件/系統規格書/名將挑戰賽賽季週期雙相位輪轉與段位軟重置規格書.md | 名將挑戰賽賽季週期雙相位輪轉與段位軟重置規格書 |
+| `doc_spec_0510` | docs/遊戲規格文件/系統規格書/名將挑戰賽杯賽場地屬性輪替與季節BOSS弱點標籤規格書.md | 名將挑戰賽杯賽場地屬性輪替與季節BOSS弱點標籤規格書 |
+| `doc_spec_0511` | docs/遊戲規格文件/系統規格書/名將挑戰賽陣容鏡像快照凍結與替換配額狀態機規格書.md | 名將挑戰賽陣容鏡像快照凍結與替換配額狀態機規格書 |
+| `doc_spec_0512` | docs/遊戲規格文件/系統規格書/名將挑戰賽非同步對戰配對與假人回退演算法規格書.md | 名將挑戰賽非同步對戰配對與假人回退演算法規格書 |
+| `doc_spec_0513` | docs/遊戲規格文件/系統規格書/名將挑戰賽淘汰賽制五戰三勝與決賽單場地形波動規格書.md | 名將挑戰賽淘汰賽制五戰三勝與決賽單場地形波動規格書 |
+| `doc_spec_0514` | docs/遊戲規格文件/系統規格書/名將挑戰賽參戰次數計數器與精元購買扣款規格書.md | 名將挑戰賽參戰次數計數器與精元購買扣款規格書 |
+| `doc_spec_0515` | docs/遊戲規格文件/系統規格書/名將挑戰賽ELO積分計算模型與段位動態升降規格書.md | 名將挑戰賽ELO積分計算模型與段位動態升降規格書 |
+| `doc_spec_0516` | docs/遊戲規格文件/系統規格書/名將挑戰賽賽季歷史存檔結構與最高連勝留存規格書.md | 名將挑戰賽賽季歷史存檔結構與最高連勝留存規格書 |
+| `doc_spec_0517` | docs/遊戲規格文件/系統規格書/名將挑戰賽段位獎勵黃金階梯表與單次發放防重複規格書.md | 名將挑戰賽段位獎勵黃金階梯表與單次發放防重複規格書 |
+| `doc_spec_0518` | docs/遊戲規格文件/系統規格書/季節虎符標籤映射與BOSS弱點克制倍率規格書.md | 季節虎符標籤映射與BOSS弱點克制倍率規格書 |
+| `doc_spec_0519` | docs/遊戲規格文件/系統規格書/名將挑戰賽九州盃極端場景賽特殊規則與戰力倍率規格書.md | 名將挑戰賽九州盃極端場景賽特殊規則與戰力倍率規格書 |
+| `doc_spec_0520` | docs/遊戲規格文件/系統規格書/名將挑戰賽月度場景賽十二月主題與評分演算法規格書.md | 名將挑戰賽月度場景賽十二月主題與評分演算法規格書 |
+| `doc_spec_0521` | docs/遊戲規格文件/系統規格書/季度制時間時鐘推進器與跨年判定演算法規格書.md | 季度制時間時鐘推進器與跨年判定演算法規格書 |
+| `doc_spec_0522` | docs/遊戲規格文件/系統規格書/治理作戰培育三大模式季度輪轉狀態機規格書.md | 治理作戰培育三大模式季度輪轉狀態機規格書 |
+| `doc_spec_0523` | docs/遊戲規格文件/系統規格書/武將每季增齡壽命結算與天年死亡率演算法規格書.md | 武將每季增齡壽命結算與天年死亡率演算法規格書 |
+| `doc_spec_0524` | docs/遊戲規格文件/系統規格書/培育36回合學府育成與外界一季時間凍結銜接規格書.md | 培育36回合學府育成與外界一季時間凍結銜接規格書 |
+| `doc_spec_0525` | docs/遊戲規格文件/系統規格書/年終結算年報資料模型與四季生歿統計展示規格書.md | 年終結算年報資料模型與四季生歿統計展示規格書 |
+| `doc_spec_0526` | docs/遊戲規格文件/系統規格書/四季特色環境修正表與數值加成規格書.md | 四季特色環境修正表與數值加成規格書 |
+| `doc_spec_0527` | docs/遊戲規格文件/系統規格書/時代更迭60月地圖重組與養成資產保留清單規格書.md | 時代更迭60月地圖重組與養成資產保留清單規格書 |
+| `doc_spec_0528` | docs/遊戲規格文件/系統規格書/名將挑戰賽全服BOSS合力戰與挑戰券經濟狀態機規格書.md | 名將挑戰賽全服BOSS合力戰與挑戰券經濟狀態機規格書 |
+| `doc_spec_0529` | docs/遊戲規格文件/系統規格書/戰後俘虜處置四項延伸分支與高齡轉教官判定規格書.md | 戰後俘虜處置四項延伸分支與高齡轉教官判定規格書 |
+| `doc_spec_0530` | docs/遊戲規格文件/系統規格書/結緣資格十一項排他檢驗與精力待產扣減狀態機規格書.md | 結緣資格十一項排他檢驗與精力待產扣減狀態機規格書 |
+| `doc_spec_0531` | docs/遊戲規格文件/系統規格書/武將結緣受孕率精算公式與五軸修正衰退模型規格書.md | 武將結緣受孕率精算公式與五軸修正衰退模型規格書 |
+| `doc_spec_0532` | docs/遊戲規格文件/系統規格書/三代血親阻擋演算法與同血脈劣化懲罰模型規格書.md | 三代血親阻擋演算法與同血脈劣化懲罰模型規格書 |
+| `doc_spec_0533` | docs/遊戲規格文件/系統規格書/子嗣生成五維遺傳公式與0歲神祕期資料結構規格書.md | 子嗣生成五維遺傳公式與0歲神祕期資料結構規格書 |
+| `doc_spec_0557` | docs/遊戲規格文件/系統規格書/學府培育事件系統受傷好感控流與入學令發放規格書.md | 學府培育事件系統受傷好感控流與入學令發放規格書 |
+| `doc_spec_0558` | docs/遊戲規格文件/系統規格書/戰法學習TP門檻智力槽位與世家血脈金戰法保底規格書.md | 戰法學習TP門檻智力槽位與世家血脈金戰法保底規格書 |
+| `doc_spec_0559` | docs/遊戲規格文件/系統規格書/運氣LUK三重修正模型與Phase3紫色因子可見性解鎖規格書.md | 運氣LUK三重修正模型與Phase3紫色因子可見性解鎖規格書 |
+| `doc_spec_0560` | docs/遊戲規格文件/系統規格書/女性武將品質分級來源標記與受孕率修正模型規格書.md | 女性武將品質分級來源標記與受孕率修正模型規格書 |
+| `doc_spec_0561` | docs/遊戲規格文件/系統規格書/子嗣及笄十四歲職能分流狀態機與女官教官儲備規格書.md | 子嗣及笄十四歲職能分流狀態機與女官教官儲備規格書 |
+| `doc_spec_0562` | docs/遊戲規格文件/系統規格書/教官支援卡五來源獲取管線與星等突破溢出轉化規格書.md | 教官支援卡五來源獲取管線與星等突破溢出轉化規格書 |
+| `doc_spec_0563` | docs/遊戲規格文件/系統規格書/教官戰法靈感觸發引擎與世家血脈保底連動規格書.md | 教官戰法靈感觸發引擎與世家血脈保底連動規格書 |
+| `doc_spec_0564` | docs/遊戲規格文件/系統規格書/教官訓練格爆發機制與六槽鏡像鎖定狀態機規格書.md | 教官訓練格爆發機制與六槽鏡像鎖定狀態機規格書 |
+| `doc_spec_0565` | docs/遊戲規格文件/系統規格書/酒館傭兵刷新週期與地下城救美三階產出模型規格書.md | 酒館傭兵刷新週期與地下城救美三階產出模型規格書 |
+| `doc_spec_0566` | docs/遊戲規格文件/系統規格書/師友同場羈絆對聯動與名將傳道令一生一次奧義規格書.md | 師友同場羈絆對聯動與名將傳道令一生一次奧義規格書 |
+| `doc_spec_0567` | docs/遊戲規格文件/系統規格書/武將二十歲成人禮轉職與退役職能分流產物模型規格書.md | 武將二十歲成人禮轉職與退役職能分流產物模型規格書 |
+| `doc_spec_0568` | docs/遊戲規格文件/系統規格書/武將每季增齡生老病死狀態機與壽命超齡死亡率精算規格書.md | 武將每季增齡生老病死狀態機與壽命超齡死亡率精算規格書 |
+| `doc_spec_0569` | docs/遊戲規格文件/系統規格書/好友教官每日借用快照與戰場戰法來源轉換規格書.md | 好友教官每日借用快照與戰場戰法來源轉換規格書 |
+| `doc_spec_0570` | docs/遊戲規格文件/系統規格書/名將身後傳承英靈虎符雙卡結算與退役轉教官規格書.md | 名將身後傳承英靈虎符雙卡結算與退役轉教官規格書 |
+| `doc_spec_0571` | docs/遊戲規格文件/系統規格書/壽命主動指令雙軌消耗與戰場精力三階戰法限制規格書.md | 壽命主動指令雙軌消耗與戰場精力三階戰法限制規格書 |
+| `doc_spec_0572` | docs/遊戲規格文件/系統規格書/延壽丹使用上限次數約束與演武聖境精華快照繼承規格書.md | 延壽丹使用上限次數約束與演武聖境精華快照繼承規格書 |
+| `doc_spec_0573` | docs/遊戲規格文件/系統規格書/完整版EP爆發力五重加成精算與精力季度回補模型規格書.md | 完整版EP爆發力五重加成精算與精力季度回補模型規格書 |
+| `doc_spec_0574` | docs/遊戲規格文件/系統規格書/職能雙軌分流不可逆鎖定與六維年齡衰退成長曲線規格書.md | 職能雙軌分流不可逆鎖定與六維年齡衰退成長曲線規格書 |
+| `doc_spec_0575` | docs/遊戲規格文件/系統規格書/十四人祖譜標籤共鳴純血判定與宿敵繁育修正規格書.md | 十四人祖譜標籤共鳴純血判定與宿敵繁育修正規格書 |
+| `doc_spec_0576` | docs/遊戲規格文件/系統規格書/動態人際關係建立狀態機與戰場治理共鳴事件規格書.md | 動態人際關係建立狀態機與戰場治理共鳴事件規格書 |
+| `doc_spec_0577` | docs/遊戲規格文件/系統規格書/同名武將多版本資料模型與戰場名號限定排他規格書.md | 同名武將多版本資料模型與戰場名號限定排他規格書 |
+| `doc_spec_0578` | docs/遊戲規格文件/系統規格書/同血緣版本血脈灌注成長與戰魂寄宿TP回流規格書.md | 同血緣版本血脈灌注成長與戰魂寄宿TP回流規格書 |
+| `doc_spec_0579` | docs/遊戲規格文件/系統規格書/六名士占卜預言偏見加權與求籤令消耗記帳規格書.md | 六名士占卜預言偏見加權與求籤令消耗記帳規格書 |
+| `doc_spec_0580` | docs/遊戲規格文件/系統規格書/男女精力消耗差異待產凍結與紅因子上限精算規格書.md | 男女精力消耗差異待產凍結與紅因子上限精算規格書 |
+| `doc_spec_0581` | docs/遊戲規格文件/系統規格書/戰績統計模型勝率守護力精算與退役戰績評分規格書.md | 戰績統計模型勝率守護力精算與退役戰績評分規格書 |
+| `doc_spec_0582` | docs/遊戲規格文件/系統規格書/戰鬥里程碑成就判定與隱藏因子覺醒狀態機規格書.md | 戰鬥里程碑成就判定與隱藏因子覺醒狀態機規格書 |
+| `doc_spec_0583` | docs/遊戲規格文件/系統規格書/六日傭兵結義好感到期退場與三十天冷卻狀態機規格書.md | 六日傭兵結義好感到期退場與三十天冷卻狀態機規格書 |
+| `doc_spec_0584` | docs/遊戲規格文件/系統規格書/傭兵五階段插畫進度好感羈絆解鎖狀態機規格書.md | 傭兵五階段插畫進度好感羈絆解鎖狀態機規格書 |
+| `doc_spec_0585` | docs/遊戲規格文件/系統規格書/傭兵出戰戰績隔離不俘與結義數值快照凍結規格書.md | 傭兵出戰戰績隔離不俘與結義數值快照凍結規格書 |
+| `doc_spec_0586` | docs/遊戲規格文件/系統規格書/傭兵退役轉教官TP折算與因子爆發揭露門檻規格書.md | 傭兵退役轉教官TP折算與因子爆發揭露門檻規格書 |
+| `doc_spec_0587` | docs/遊戲規格文件/系統規格書/太守府領地升級格數模型與武將指派排他狀態機規格書.md | 太守府領地升級格數模型與武將指派排他狀態機規格書 |
+| `doc_spec_0588` | docs/遊戲規格文件/系統規格書/季度內政結算模型與天災產出季度報告資料結構規格書.md | 季度內政結算模型與天災產出季度報告資料結構規格書 |
+| `doc_spec_0589` | docs/遊戲規格文件/系統規格書/軍師智力軍事動向偵知分段與情報頻寬演算法規格書.md | 軍師智力軍事動向偵知分段與情報頻寬演算法規格書 |
+| `doc_spec_0590` | docs/遊戲規格文件/系統規格書/八大AI勢力性格模板與內政意願偏好矩陣規格書.md | 八大AI勢力性格模板與內政意願偏好矩陣規格書 |
+| `doc_spec_0591` | docs/遊戲規格文件/系統規格書/官職系統權限快照API與外交同盟會盟門檻規格書.md | 官職系統權限快照API與外交同盟會盟門檻規格書 |
+| `doc_spec_0592` | docs/遊戲規格文件/系統規格書/將階名聲帶兵上限模型與官職經驗分離架構規格書.md | 將階名聲帶兵上限模型與官職經驗分離架構規格書 |
+| `doc_spec_0593` | docs/遊戲規格文件/系統規格書/武將轉生奧義槽位解鎖與五維上限突破演算法規格書.md | 武將轉生奧義槽位解鎖與五維上限突破演算法規格書 |
+| `doc_spec_0594` | docs/遊戲規格文件/系統規格書/奧義施放精力限制與階梯傷害加成公式規格書.md | 奧義施放精力限制與階梯傷害加成公式規格書 |
+| `doc_spec_0595` | docs/遊戲規格文件/系統規格書/AI家族奧義釋放決策與血脈五階傳承覺醒進度規格書.md | AI家族奧義釋放決策與血脈五階傳承覺醒進度規格書 |
+| `doc_spec_0596` | docs/遊戲規格文件/系統規格書/兵種虎符資料模型與戰績傳承品質評分映射規格書.md | 兵種虎符資料模型與戰績傳承品質評分映射規格書 |
+| `doc_spec_0597` | docs/遊戲規格文件/系統規格書/虎符一至五星經驗升星與精華突破狀態機規格書.md | 虎符一至五星經驗升星與精華突破狀態機規格書 |
+| `doc_spec_0598` | docs/遊戲規格文件/系統規格書/虎符戰場召喚糧草消耗矩陣與軍勢兵力扣減規格書.md | 虎符戰場召喚糧草消耗矩陣與軍勢兵力扣減規格書 |
+| `doc_spec_0599` | docs/遊戲規格文件/系統規格書/戰場危害地格火燒延燒與落石傷害結算演算法規格書.md | 戰場危害地格火燒延燒與落石傷害結算演算法規格書 |
+| `doc_spec_0600` | docs/遊戲規格文件/系統規格書/戰場位移地格水淹推退與受阻碰撞傷害狀態機規格書.md | 戰場位移地格水淹推退與受阻碰撞傷害狀態機規格書 |
+| `doc_spec_0601` | docs/遊戲規格文件/系統規格書/戰場森林掩體格隱蔽伏擊與遠程索敵阻斷規格書.md | 戰場森林掩體格隱蔽伏擊與遠程索敵阻斷規格書 |
+| `doc_spec_0602` | docs/遊戲規格文件/系統規格書/關卡推薦對策三態檢核與高風險挑戰許可狀態機規格書.md | 關卡推薦對策三態檢核與高風險挑戰許可狀態機規格書 |

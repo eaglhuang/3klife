@@ -304,5 +304,23 @@
     "path": "docs/ui/UI-vibe-pipeline.md",
     "title": "UI Vibe Pipeline",
     "category": "ui"
+  },
+  {
+    "id": "doc_ui_0096",
+    "path": "docs/遊戲規格文件/系統規格書/血脈命鏡載入提示內容Schema檢核與驗證閘門規格書.md",
+    "title": "血脈命鏡載入提示內容Schema檢核與驗證閘門規格書",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0097",
+    "path": "docs/遊戲規格文件/系統規格書/血脈命鏡載入提示加權抽樣與無放回挑選演算法規格書.md",
+    "title": "血脈命鏡載入提示加權抽樣與無放回挑選演算法規格書",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0098",
+    "path": "docs/遊戲規格文件/系統規格書/血脈命鏡載入提示四池資料結構與持有狀態雙權重規格書.md",
+    "title": "血脈命鏡載入提示四池資料結構與持有狀態雙權重規格書",
+    "category": "ui"
   }
 ]

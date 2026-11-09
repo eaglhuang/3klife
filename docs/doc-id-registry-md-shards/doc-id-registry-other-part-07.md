@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — 其它類
 
-> 生成日期: 2026-11-06
+> 生成日期: 2026-11-09
 > 這是 `doc-id-registry.md` 的「其它類」分片，第 7/7 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-other.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -257,3 +257,7 @@
 | `doc_other_2696` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-08.md | Doc ID Registry Markdown Index — Spec / Index / Task |
 | `doc_other_2697` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-09.md | Doc ID Registry Markdown Index — Spec / Index / Task |
 | `doc_other_2698` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-10.md | Doc ID Registry Markdown Index — Spec / Index / Task |
+| `doc_other_2699` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-11.md | Doc ID Registry Markdown Index — Spec / Index / Task |
+| `doc_other_2700` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-12.md | Doc ID Registry Markdown Index — Spec / Index / Task |
+| `doc_other_2701` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-13.md | Doc ID Registry Markdown Index — Spec / Index / Task |
+| `doc_other_2702` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-14.md | Doc ID Registry Markdown Index — Spec / Index / Task |

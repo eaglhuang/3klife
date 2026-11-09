@@ -14,7 +14,7 @@
 | **GDART-02** | M10 | bg_ink_main 不對稱九宮格背景延展 | ui | 1 | 🟢 已接線 | - | 左右 border 保留立繪留白與山景，禁 simple 縮放 | assets/resources/ui-spec/skins/general-detail-default.json；ui-spec/placeholders/bg_ink_detail |  |
 | **GDART-03** | M10 | 通用 panel 框體 variants 與 popup_card_bg 九宮格統一 | content | 2 | 🟢 已接線 | - | header/section/footer 共用同一九宮格邊界 | assets/resources/sprites/common/popup_card_bg（依清單進度補充，現況未逐檔驗證） |  |
 | **GDART-04** | M10 | frame/bleed/fill/accent 分層 slot 家族 32 個 skin slot 落地 | content | 8 | 📄 僅資料 | GDART-03 | general-detail-default 含 32 個分層 slot 並以 fill->bleed->frame->content 渲染 | skins/general-detail-default.json 現僅相容期單層 slot；skinLayers 測試 tests/ucuf/skinLayers.test.ts 為通用框架 |  |
-| **GDART-05** | M10 | 六頁 tab icon（idle/active 兩態）production 與接線 | content | 4 | ⚪ 未開始 | GDART-01 | 六個 tab icon 兩態齊備且按鈕尺寸不變 | assets/resources/sprites/ui/general-detail 目錄不存在 |  |
+| **GDART-05** | M10 | 六頁 tab icon（idle/active 兩態）production 與接線 | content | 4 | 🟡 純邏輯 | GDART-01 | 六個 tab icon 兩態齊備且按鈕尺寸不變 | 規格見 doc_spec_0669；TabButtonVisualState 將屬命技寶兵六頁雙態圖示命名矩陣與>=44x44熱區規格 | [v18.41 核對 2026-11-08] 規格 doc_spec_0669 定案；人物頁六頁Tab圖示兩態與最小點擊熱區標準確立 |
 | **GDART-06** | M10 | Row icon 家族（約 25 個）production 與命名 | content | 6 | ⚪ 未開始 | GDART-05 | §6.2 清單 icon 全數存在 spriteFrame 並可載入 | assets/resources/sprites/ui/general-detail 目錄不存在 |  |
 | **GDART-07** | M10 | 頁籤按鈕 normal/pressed/disabled 狀態圖與 44x44 觸控區 | ui | 2 | 📄 僅資料 | GDART-05 | 三態視覺齊備且觸控區≥44x44 | GeneralDetailComposite.ts tab 按鈕；無視覺驗收 |  |
 | **GDART-08** | M10 | 底部操作區 BtnClose 與預留 BtnCompare/Favorite/Lock 節點 | ui | 1 | 📄 僅資料 | GDART-01 | 僅 BtnClose 啟用，其餘節點保留 inactive | layouts/general-detail-main.json 是否含預留節點未逐項核對 |  |

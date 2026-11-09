@@ -8,8 +8,8 @@
 
 | ID | 里程碑 | 工作包 | 類型 | 工時 | 狀態 | 依賴 | 驗收條件 | 現況證據 | 最新核對(v16.9) |
 |---|:---:|---|:---:|:---:|:---:|---|---|---|---|
-| **GCH-06** | M8 | 天命商店與結義點數兌換、溢出轉化積分 | ui | 3 | ✅ 已驗收 | GCH-03, GCH-05 | 大保底達200可兌換任意SSR；5轉滿溢出轉結義金蘭卡/積分並顯示 Toast | [v5 核對 2026-10-14] 滿轉溢出轉結義點數（2e85b065，PROG-2-0315）；OverflowBond 2 處呼叫端，測試通過 |  |
-| **GCH-07** | M8 | 戰法隨機化（同名第2/3戰法隨機、重複轉經驗值） | logic | 2 | 🟢 已接線 | GCH-02 | 同名武將第2、第3戰法在池內隨機抽出，重複時轉經驗值 | TacticRandomization 被 GameSession 匯入；PROG-2-1168（#1006） | [v17.2 更正 2026-11-07] 未開始→已接線 |
+| **GCH-06** | M8 | 天命商店與結義點數兌換、溢出轉化積分 | ui | 3 | ✅ 已驗收 | GCH-03, GCH-05 | 大保底達200可兌換任意SSR；5轉滿溢出轉結義金蘭卡/積分並顯示 Toast | 規格見 doc_spec_0466；OverflowBond.ts 5轉滿溢出對照傭兵費用轉結義點數（100~1200）與天命商店自選焦點SSR兌換 | [v18.40 核對 2026-11-07] 規格 doc_spec_0466 定案；OverflowBond、DestinyShop 接線，測試通過 |
+| **GCH-07** | M8 | 戰法隨機化（同名第2/3戰法隨機、重複轉經驗值） | logic | 2 | 🟢 已接線 | GCH-02 | 同名武將第2、第3戰法在池內隨機抽出，重複時轉經驗值 | 規格見 doc_spec_0467；TacticRandomization.ts 同名抽第2/3戰法隨機生成、固有排除、已持有+100經驗(上限5級)與無損裝填 | [v18.41 核對 2026-11-07] 規格 doc_spec_0467 定案；TacticRandomization 被 GameSession 接線，測試全過 |
 | **GCH-08** | M6 | 轉蛋 UI 流程：池頁簽、機率公告、單抽快速演出/十連開牌、結果頁 | ui | 4 | 🟢 已接線 | GCH-02 | 名將池/支援池/限定頁簽可切換，1抽約2秒演出，10連逐張開牌，顯示距保底抽數 | assets/scripts/ui/core/GachaFlowCoordinator.ts、ui/components/gacha-ds3/Gacha*Child.ts、ui-spec/layouts/gacha-main.json、gacha-pull-result.json；無測試 |  |
 | **GCH-09** | M10 | GachaMain 商業主視覺與人物立繪 soft-alpha/key visual | content | 3 | 🟢 已接線 | GCH-08 | Banner 人物無矩形邊界/白底鬼影/硬切alpha，不壓住池名條與CTA；未就緒池省略人物節點 | tests/fixtures/dom-to-ui/gacha-banner.html 與 baseline；PortraitSoftMask 材質需另查；無 runtime 驗收 |  |
 | **GCH-10** | M6 | 雙池定位導覽與死亡傳承提示（血統種子/培育深度、英靈/虎符提示） | ui | 1 | 🟢 已接線 | GCH-08 | 卡池頁與新手引導明示定位；名將詳情頁提示死亡後留下英靈卡與虎符卡且不在抽卡結果掉落 | [v7 核對 2026-10-14] 雙池定位導覽接入轉蛋畫面（19c9b34e、7e592c85）；GachaPoolGuide 2 處呼叫端；死亡傳承提示 UI 未逐項核對 |  |
@@ -21,12 +21,12 @@
 | **OPEN-02** | M11 | 開場資料表（HeroBase/SupportCardBase/InheritLogic/初始六名將/紅顏/因子標籤/祖先矩陣） | data | 3 | 🟡 純邏輯 | - | 六位初始名將(張飛/魏延/夏侯惇/張郃/孫策/甘寧)含出生地/稱號/主因子與台詞載入驗證通過 | [v6 核對 2026-10-14] 初始六名將表（58e88e37）與 generalId 引用（cdc70353）；無 src 呼叫端 | 2026-10-28 核對 master：InitialHeroTable.ts 與 initial-heroes.json、其測試已於 a33a2a0e（#1206）移除；現以 InitialGeneralShowcase（InitialShowcaseController 呼叫）顯示初始六名將。資料表驗證已不存在，待 PM 裁決是否重建 |
 | **OPEN-03** | M10 | 黑場古文、Win95 信件、漫畫分鏡與像素回憶演出 | ui | 5 | 🟢 已接線 | OPEN-01 | 第一幕四個分鏡依序播放，信件需點擊進入下一幕，含祖紋命篆浮現與像素被因子光痕侵入 | OpeningAct1Cues 被 OpeningIntroController 匯入；PROG-2-1254（#1024） | [v17.2 更正 2026-11-07] 純邏輯→已接線 |
 | **OPEN-04** | M10 | 漩渦吸入/白閃轉場控制器與特效 | ui | 3 | 🟢 已接線 | OPEN-03 | 像素畫面→命盤裂口漩渦→轉蛋盤飛出，轉場節奏明顯，手機可流暢播放 | [v16.5 第四批核對 2026-10-27] master #1144–#1199 已接上（已接線）；待 QA／實機驗收 |  |
-| **OPEN-05** | M6 | 宿命轉蛋：無限重置十連抽、初始名將鎖定與確認 | logic | 3 | ✅ 已驗收 | OPEN-02 | 可無限免費重置十連抽，重置後回初始狀態，確認後鎖定一位初始名將 | [v6 核對 2026-10-14] 宿命轉蛋純狀態機（4e41f8b5）：無限重置十連與初始名將鎖定；DestinyGacha 2 處呼叫端 |  |
+| **OPEN-05** | M6 | 宿命轉蛋：無限重置十連抽、初始名將鎖定與確認 | logic | 3 | ✅ 已驗收 | OPEN-02 | 可無限免費重置十連抽，重置後回初始狀態，確認後鎖定一位初始名將 | 規格見 doc_spec_0471；DestinyGacha.ts idle->rolled->locked狀態機、無限免費重置、firstPickOnly不重複與雙段確認鎖定 | [v18.42 核對 2026-11-07] 規格 doc_spec_0471 定案；DestinyGacha 接線，測試全過 |
 | **OPEN-06** | M10 | 六位初始名將展示卡與登場台詞 | ui | 3 | 🟢 已接線 | OPEN-05 | 每位名將以立繪/骨架動畫登場並播放專屬台詞，名將與紅顏不同畫面 | InitialShowcaseController 被 LobbyScene 匯入；PROG-2-1365（#1193）、PROG-2-1210（#1092） | [v17.2 更正 2026-11-07] 純邏輯→已接線 |
-| **OPEN-07** | M5 | 首戰教學戰（5路x8格）與教學提示浮窗 | logic | 4 | 🟢 已接線 | OPEN-05 | 新手可完成部署/推進/對推教學戰並看到勝敗結算 | [v5 核對 2026-10-14] 首戰教學提示 Presenter 接戰場浮窗（1cca03cb，PROG-2-0241）與提示順序（6092baa7）；FirstBattleTutorial 有呼叫端，BattleTutorialHint 無專屬測試 |  |
+| **OPEN-07** | M5 | 首戰教學戰（5路x8格）與教學提示浮窗 | logic | 4 | 🟢 已接線 | OPEN-05 | 新手可完成部署/推進/對推教學戰並看到勝敗結算 | 規格見 doc_spec_0619；開場首戰五路教學戰流程控制器與提示浮窗狀態機定案；FirstBattleTutorial、BattleTutorialHint 接線 | [v18.8 更正 2026-11-08] 純邏輯→已接線；規格 doc_spec_0619 定案 |
 | **OPEN-08** | M2 | 因子解鎖特效與因子面板/六角圖（AttributePanel） | ui | 3 | 🟢 已接線 | OPEN-07 | 戰鬥觸發因子時顯示字卡與祖紋命篆亮起；因子面板顯示主因子、次級因子與解鎖狀態 | [v11 核對 2026-10-20] 六角圖 cc 接線與解鎖特效（7d0be8bd，PROG-2-0721）；FactorHexGraphic 由 LobbyScene 掛載，FactorHexPanel 測試存在；實機畫面未核對 |  |
 | **OPEN-09** | M2 | 祖先矩陣與血統樹 UI（14人祖譜、子嗣預測、解鎖順序） | ui | 4 | 🟢 已接線 | OPEN-02 | 依主因子→次因子→祖先矩陣→子嗣預測順序解鎖，顯示父母系譜與因子流向 | assets/scripts/ui/panels/BloodlineTreePanel.ts(101行，僅3代)、core/services/BloodlineGraph.ts、core/systems/BloodlineGenerator.ts；14人矩陣與子嗣預測面板無；無測試 |  |
 | **OPEN-10** | M6 | 紅顏池與支援角色展示（貂蟬/甄姬/小喬） | ui | 3 | 🟢 已接線 | OPEN-05 | 紅顏池與名將池分離，粉紫金風格，三位核心紅顏卡面與功能定位文字完整 | [v8 核對 2026-10-15] 紅顏展示接到轉蛋 Support 分頁（36c19dbb）；RedFaceShowcaseController 2 處呼叫端；展示畫面實機未核對 |  |
-| **OPEN-11** | M6 | CountdownManager 趕路倒數（離線累積、常駐圖示、加速/完成） | logic | 3 | 🟢 已接線 | OPEN-10 | 倒數離線時間累積正確，完成後切換已到達狀態，主畫面常駐圖示 | [v7 核對 2026-10-14] CountdownIconView 接 LobbyScene 常駐圖示（7d4e59ce，PROG-2-0469）；CountdownManager 測試；趕路狀態切換未實機核對 |  |
+| **OPEN-11** | M6 | CountdownManager 趕路倒數（離線累積、常駐圖示、加速/完成） | logic | 3 | 🟢 已接線 | OPEN-10 | 倒數離線時間累積正確，完成後切換已到達狀態，主畫面常駐圖示 | 規格見 doc_spec_0472；CountdownManager.ts 絕對時間戳記離線累積、traveling/arrived雙態、立即加速與常駐浮標 | [v18.42 核對 2026-11-07] 規格 doc_spec_0472 定案；CountdownIconView、LobbyScene 接線，測試全過 |
 | **OPEN-12** | M8 | 商業化彈窗與付費入口（0.99 破冰、29.99 全明星包、二次情感付費） | ui | 3 | ⚪ 未開始 | OPEN-10, OPEN-11 | 拒絕29.99後出現0.99彈窗，入口讀取同一配置表，不遮蔽核心教學 | [v16.4 封鎖 blocked 2026-10-27] 商業化（0.99 彈窗、29.99 全明星包、二次付費）待使用者裁決 ；無 |  |
 | **OPEN-13** | M9 | 英靈夢回開場教學戰（傳說英靈→初始虎符/英靈記憶） | logic | 4 | 🟢 已接線 | OPEN-07 | 教學戰後英靈轉為初始虎符/記憶，不成為永久主角 | [v16.4 核對 2026-10-27] 今日合併 PR 已接上 src 呼叫端（已接線）；待 QA／實機驗收 |  |

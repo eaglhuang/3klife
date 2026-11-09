@@ -29,9 +29,9 @@
 | **GDV3-05** | M10 | 6 格故事帶 story-strip-rail 與 story-cell-01~06 slot | ui | 3 | 📄 僅資料 | GDV3-01 | 六格固定 slot 讀 storyStripCells 並依六段節奏顯示 | GeneralUnit.ts storyStripCells、defaultTab 欄位；UI 節點未見實作 |  |
 | **GDV3-06** | M10 | 六格故事節奏內容（早年/入世/功績/命運/血脈真相/延續）撰寫 | content | 5 | 📄 僅資料 | - | 名將故事六格文案符合節奏並通過 schema | GeneralUnit.storyStripCells 型別；generals.json 實際故事格內容比例未驗 |  |
 | **GDV3-07** | M10 | 命紋徽記 family 與背景 motif 資產（crest family）production | content | 5 | ⚪ 未開始 | GDV3-04 | 徽記可 family 化並與色彩因子一致 | 僅 crest_face_formal.png 一張；無 crest family |  |
-| **GDV3-08** | M10 | 可行性邊界守則：日常頁排除長駐血脈虛影/強發光/跑馬燈 | test | 1 | ⚪ 未開始 | GDV3-01 | 審查清單確認日常頁無被排除的效果 | 無自動檢查 |  |
-| **HUM-01** | M9 | GeneralUnit 擴充 personality/loyalty/recentLog/currentSuitability 資料模型 | data | 2 | ⚪ 未開始 | - | 四個選填欄位進型別與 generals schema 並向下相容 | grep personality\|loyalty 於 assets/scripts/core/models/GeneralUnit.ts 無結果 |  |
-| **HUM-02** | M10 | 性格圖騰四型 icon family 與 Header 徽章（義綠/豪紅/睿藍/貪紫） | ui | 3 | ⚪ 未開始 | HUM-01 | Header 緊鄰職能標籤顯示對應顏色圓徽與提示文案 | 無 |  |
-| **HUM-03** | M9 | 性格驅動離線行為規則（尋訪/喝酒/內政/遊歷） | logic | 4 | ⚪ 未開始 | HUM-01 | 四性格依規格觸發對應晨報行為，有單元測試 | 無 |  |
+| **GDV3-08** | M10 | 可行性邊界守則：日常頁排除長駐血脈虛影/強發光/跑馬燈 | test | 1 | 🟡 純邏輯 | GDV3-01 | 審查清單確認日常頁無被排除的效果 | 規格見 doc_spec_0666；日常人物頁視覺可行性邊界、排除五大光污染常駐特效與效能審查清單規格 | [v18.40 核對 2026-11-08] 規格 doc_spec_0666 定案；日常人物頁排除常駐虛影強光跑馬燈與DrawCall<=25確立 |
+| **HUM-01** | M9 | GeneralUnit 擴充 personality/loyalty/recentLog/currentSuitability 資料模型 | data | 2 | 🟡 純邏輯 | - | 四個選填欄位進型別與 generals schema 並向下相容 | 規格見 doc_spec_0664；GeneralUnitExtension personality/loyalty/recentLog/currentSuitability 擴充資料模型 | [v18.39 核對 2026-11-08] 規格 doc_spec_0664 定案；武將性格與忠誠度資料模型向下相容擴充確立 |
+| **HUM-02** | M10 | 性格圖騰四型 icon family 與 Header 徽章（義綠/豪紅/睿藍/貪紫） | ui | 3 | 🟡 純邏輯 | HUM-01 | Header 緊鄰職能標籤顯示對應顏色圓徽與提示文案 | 規格見 doc_spec_0664；義綠/豪紅/睿藍/貪紫四型性格圖騰意象、代表色與Header徽章規範 | [v18.39 核對 2026-11-08] 規格 doc_spec_0664 定案；性格圖騰四型視覺徽章與轉蛋誓約鎖定確立 |
+| **HUM-03** | M9 | 性格驅動離線行為規則（尋訪/喝酒/內政/遊歷） | logic | 4 | 🟡 純邏輯 | HUM-01 | 四性格依規格觸發對應晨報行為，有單元測試 | 規格見 doc_spec_0665；四型性格離線加權行為抽樣狀態機、晨報日誌插槽組裝與防通膨邊界規格 | [v18.40 核對 2026-11-08] 規格 doc_spec_0665 定案；四型性格驅動離線自主行為與晨報事件生成確立 |
 | **HUM-04** | M9 | 忠誠度條 UI 與來源鎖定（轉蛋 100 鎖） | ui | 3 | 🟢 已接線 | HUM-01 | 非轉蛋武將顯示 0~100 條，<60 橙、<30 紅，轉蛋顯示鎖定 100 | LoyaltyGauge 被 CharacterDs3StatsChild 匯入；#1350、轉蛋鎖 100 接線 #1352 | [v17.2 更正 2026-11-07] 未開始→已接線 |
 | **HUM-05** | M9 | 忠誠度系統邏輯與沒收虎符 -30 提示 | logic | 3 | 🟢 已接線 | HUM-04 | 沒收虎符彈提示並扣 30，低忠誠觸發下野/被勸降 | TigerTallyLoyalty 沒收降忠 30 點，CharacterDs3AptitudeChild 沒收按鈕；#1363 | [v17.2 更正 2026-11-07] 未開始→已接線 |

@@ -1,297 +1,297 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-11-06
-> 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 3/10 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
+> 生成日期: 2026-11-09
+> 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 3/14 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
-## 任務卡類 (`doc_task`) — Part 1/8
+## 遊戲規格類 (`doc_spec`) — Part 3/4
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
-| `doc_task_0001` | docs/legacy/agent-collaboration/tasks_index_worldbuilding_2026-04-02.md | 世界觀後續任務索引 |
-| `doc_task_0002` | docs/agent-briefs/tasks_index.md | Tasks Index / UI Quality |
-| `doc_task_0003` | docs/agent-briefs/tasks/HARN/HARN-ARCH-0001.md | [HARN-ARCH-0001] 建立 UI Bridge 介面層（模組邊界修復前置） |
-| `doc_task_0004` | docs/agent-briefs/tasks/HARN/HARN-ARCH-0002.md | [HARN-ARCH-0002] 修復 battle → ui 的非法引用（22 筆） |
-| `doc_task_0005` | docs/agent-briefs/tasks/HARN/HARN-ARCH-0003.md | [HARN-ARCH-0003] 修復 ui→battle / core→ui / core→tools / tools→battle 的非法引用（14 筆） |
-| `doc_task_0006` | docs/agent-briefs/tasks/HARN/HARN-ART-0001.md | [HARN-ART-0001] 建立 Turn Artifact Schema 與版本契約 |
-| `doc_task_0007` | docs/agent-briefs/tasks/HARN/HARN-ART-0002.md | [HARN-ART-0002] 建立 Turn Artifact Validator CLI |
-| `doc_task_0008` | docs/agent-briefs/tasks/HARN/HARN-ART-0003.md | [HARN-ART-0003] 建立 Turn Artifact Storage Policy |
-| `doc_task_0009` | docs/agent-briefs/tasks/HARN/HARN-ART-0004.md | [HARN-ART-0004] 讓 Finalize 使用標準 Artifact 預設路徑 |
-| `doc_task_0010` | docs/agent-briefs/tasks/HARN/HARN-DEMO-0003.md | [HARN-DEMO-0003] Harness opener 實寫驗證 |
-| `doc_task_0011` | docs/agent-briefs/tasks/HARN/HARN-EVAL-0001.md | [HARN-EVAL-0001] 建立 Workflow Path Taxonomy |
-| `doc_task_0012` | docs/agent-briefs/tasks/HARN/HARN-EVAL-0002.md | [HARN-EVAL-0002] 建立 Workflow Baseline Fixture Pack |
-| `doc_task_0013` | docs/agent-briefs/tasks/HARN/HARN-EVAL-0003.md | [HARN-EVAL-0003] 建立 Path Drift Comparator |
-| `doc_task_0014` | docs/agent-briefs/tasks/HARN/HARN-FIX-0001.md | [HARN-FIX-0001] 建立核心系統 Approved Fixtures |
-| `doc_task_0015` | docs/agent-briefs/tasks/HARN/HARN-GOV-0001.md | [HARN-GOV-0001] 建立 Harness Capability Boundary Matrix |
-| `doc_task_0016` | docs/agent-briefs/tasks/HARN/HARN-GOV-0002.md | [HARN-GOV-0002] 更新 Agent Collaboration 強制規則入口 |
-| `doc_task_0017` | docs/agent-briefs/tasks/HARN/HARN-GOV-0003.md | [HARN-GOV-0003] 更新 Task Card Template 的 Harness 欄位 |
-| `doc_task_0018` | docs/agent-briefs/tasks/HARN/HARN-HDO-0001.md | [HARN-HDO-0001] 建立 Handoff Diff Validator Core |
-| `doc_task_0019` | docs/agent-briefs/tasks/HARN/HARN-HDO-0002.md | [HARN-HDO-0002] 建立 Handoff Diff Validator Fixtures |
-| `doc_task_0020` | docs/agent-briefs/tasks/HARN/HARN-HDO-0003.md | [HARN-HDO-0003] 將 Handoff Diff Validator 接入 Finalize |
-| `doc_task_0021` | docs/agent-briefs/tasks/HARN/HARN-HDO-0004.md | [HARN-HDO-0004] 將 Task Lock Scope 納入 Handoff Validator |
-| `doc_task_0022` | docs/agent-briefs/tasks/HARN/HARN-LOG-0001.md | [HARN-LOG-0001] 遷移裸 console.log → UCUFLogger（Battle 模組） |
-| `doc_task_0023` | docs/agent-briefs/tasks/HARN/HARN-LOG-0002.md | [HARN-LOG-0002] 遷移裸 console.log → UCUFLogger（Core 模組） |
-| `doc_task_0024` | docs/agent-briefs/tasks/HARN/HARN-LOG-0003.md | [HARN-LOG-0003] 遷移裸 console.log → UCUFLogger（Tools 模組） |
-| `doc_task_0025` | docs/agent-briefs/tasks/HARN/HARN-LOG-0004.md | [HARN-LOG-0004] 遷移裸 console.log → UCUFLogger（UI 模組 + UCUFLogger 自身） |
-| `doc_task_0026` | docs/agent-briefs/tasks/HARN/HARN-MET-0001.md | [HARN-MET-0001] 建立 Turn Artifact History Query |
-| `doc_task_0027` | docs/agent-briefs/tasks/HARN/HARN-MET-0002.md | [HARN-MET-0002] 建立 Harness Metrics Accumulator |
-| `doc_task_0028` | docs/agent-briefs/tasks/HARN/HARN-MET-0003.md | [HARN-MET-0003] 擴充 Harness Health Report |
-| `doc_task_0029` | docs/agent-briefs/tasks/HARN/HARN-PILOT-0001.md | [HARN-PILOT-0001] 執行 Doc-only Pilot |
-| `doc_task_0030` | docs/agent-briefs/tasks/HARN/HARN-PILOT-0002.md | [HARN-PILOT-0002] 執行 Tooling-code Pilot |
-| `doc_task_0031` | docs/agent-briefs/tasks/HARN/HARN-PILOT-0003.md | [HARN-PILOT-0003] 執行 UI-QA Pilot |
-| `doc_task_0032` | docs/agent-briefs/tasks/HARN/HARN-TRC-0001.md | [HARN-TRC-0001] 定義 Execution Trace Event Schema |
-| `doc_task_0033` | docs/agent-briefs/tasks/HARN/HARN-TRC-0002.md | [HARN-TRC-0002] 建立 Node Tool Trace Middleware |
-| `doc_task_0034` | docs/agent-briefs/tasks/HARN/HARN-TRC-0003.md | [HARN-TRC-0003] 建立 Execution Trace Collector |
-| `doc_task_0035` | docs/agent-briefs/tasks/HARN/HARN-TRC-0004.md | [HARN-TRC-0004] 將 Trace Summary 掛入 Finalize 輸出 |
-| `doc_task_0036` | docs/agent-briefs/tasks/HARN/HARN-UI-0001.md | [HARN-UI-0001] 修復 GeneralDetail UI 契約 4 個結構問題 |
-| `doc_task_0037` | docs/agent-briefs/tasks/UI/UI-2-0013.md | [UI-2-0013] 為 lobby / popup / duel 首批 skin 補上 shadow slot |
-| `doc_task_0038` | docs/agent-briefs/tasks/UI/UI-2-0014.md | [UI-2-0014] 為 general / support / shop / gacha 群組補上 shadow slot |
-| `doc_task_0039` | docs/agent-briefs/tasks/UI/UI-2-0015.md | [UI-2-0015] 為 battle / system 群組補上 shadow slot |
-| `doc_task_0040` | docs/agent-briefs/tasks/UI/UI-2-0016.md | [UI-2-0016] 補齊 `UIPreviewBuilder` 的 popup / Layout / legacy shadow 覆蓋 |
-| `doc_task_0041` | docs/agent-briefs/tasks/UI/UI-2-0017.md | [UI-2-0017] 修補 `general-detail-default` 缺失的 5 個 bleed slot |
-| `doc_task_0042` | docs/agent-briefs/tasks/UI/UI-2-0018.md | [UI-2-0018] 補齊 D 階段 screen-driven preview harness |
-| `doc_task_0043` | docs/agent-briefs/tasks/UI/UI-2-0019.md | [UI-2-0019] 對齊 D-2 的家族目標（paper.utility vs common-parchment） |
-| `doc_task_0044` | docs/agent-briefs/tasks/UI/UI-2-0020.md | [UI-2-0020] 將 shop-main / gacha 接上可驗的 light-surface carrier |
-| `doc_task_0045` | docs/agent-briefs/tasks/UI/UI-2-0021.md | [UI-2-0021] 修復 PreviewInEditor 的 SpriteFrame 資源索引斷鏈 |
-| `doc_task_0046` | docs/agent-briefs/tasks/UI/UI-2-0022.md | [UI-2-0022] 將 general-list 從 placeholder 表格升級為正式九宮格框體 |
-| `doc_task_0047` | docs/agent-briefs/tasks/UI/UI-2-0023.md | [UI-2-0023] Provide Reproducible Headless Preview Capture For D-Stage QA |
-| `doc_task_0048` | docs/agent-briefs/tasks/UI/UI-2-0024.md | [UI-2-0024] 拆分 UIPreviewBuilder 以降低編碼與 merge 風險 |
-| `doc_task_0049` | docs/agent-briefs/tasks/UI/UI-2-0025.md | [UI-2-0025] Align Gacha Preview Contract With `loadFullScreen()` |
-| `doc_task_0050` | docs/agent-briefs/tasks/UI/UI-2-0027.md | [UI-2-0027] 戰場 UI 圖像資產需求總表 |
-| `doc_task_0051` | docs/agent-briefs/tasks/UI/UI-2-0028.md | [UI-2-0028] 戰場 UI Icon 資產清單 |
-| `doc_task_0052` | docs/agent-briefs/tasks/UI/UI-2-0029.md | [UI-2-0029] 戰場 UI Portrait 資產清單 |
-| `doc_task_0053` | docs/agent-briefs/tasks/UI/UI-2-0030.md | [UI-2-0030] 戰場 UI Card Art / Badge 資產清單 |
-| `doc_task_0054` | docs/agent-briefs/tasks/UI/UI-2-0031.md | [UI-2-0031] 建立戰場 UI Fallback 規範 |
-| `doc_task_0055` | docs/agent-briefs/tasks/UI/UI-2-0032.md | [UI-2-0032] 修正 BattleScene Icon 品質差異（v2） |
-| `doc_task_0056` | docs/agent-briefs/tasks/UI/UI-2-0033.md | [UI-2-0033] BattleHUD portrait 改為動態載入 generals 資產 |
-| `doc_task_0057` | docs/agent-briefs/tasks/UI/UI-2-0034.md | [UI-2-0034] TigerTallyPanel 綁定 card art / rarity / type badge |
-| `doc_task_0058` | docs/agent-briefs/tasks/UI/UI-2-0035.md | [UI-2-0035] 擴充 UI 參考圖 icon family 規則庫（20-icon baseline） |
-| `doc_task_0059` | docs/agent-briefs/tasks/UI/UI-2-0036.md | [UI-2-0036] 依 UI-2-0032 生出 BattleScene icon v2 候選稿 |
-| `doc_task_0060` | docs/agent-briefs/tasks/UI/UI-2-0037.md | [UI-2-0037] 擴充 UI 參考圖可量產圖片 family 規則庫（portrait / card / props） |
-| `doc_task_0061` | docs/agent-briefs/tasks/UI/UI-2-0038.md | [UI-2-0038] 建立 BattleHUD portrait 裁片量產規格 |
-| `doc_task_0062` | docs/agent-briefs/tasks/UI/UI-2-0039.md | [UI-2-0039] 建立 TigerTally card art 量產規格 |
-| `doc_task_0063` | docs/agent-briefs/tasks/UI/UI-2-0040.md | [UI-2-0040] 建立 reward container / bundle props 量產規格 |
-| `doc_task_0064` | docs/agent-briefs/tasks/UI/UI-1-0001.md | [UI-1-0001] 搬遷 `nav_ink` 按鈕 Family 視覺資產 |
-| `doc_task_0065` | docs/agent-briefs/tasks/UI/UI-1-0002.md | [UI-1-0002] 搬遷 `paper_utility` 按鈕 Family 視覺資產 |
-| `doc_task_0066` | docs/agent-briefs/tasks/UI/UI-1-0003.md | [UI-1-0003] 搬遷 `warning` 按鈕 Family 視覺資產 |
-| `doc_task_0067` | docs/agent-briefs/tasks/UI/UI-1-0004.md | [UI-1-0004] 產生共用 Shadow / Noise 紋理 |
-| `doc_task_0068` | docs/agent-briefs/tasks/UI/UI-1-0005.md | [UI-1-0005] 水平 Tab 框體 sprites（§2.6 Tab 框體家族） |
-| `doc_task_0069` | docs/agent-briefs/tasks/UI/UI-1-0006.md | [UI-1-0006] Bleed Overlay Sprites（§4.2 三層融合 bleed 層） |
-| `doc_task_0070` | docs/agent-briefs/tasks/UI/UI-1-0007.md | [UI-1-0007] 深色金屬框體 sprites（§2.1 Dark Metal Frame） |
-| `doc_task_0071` | docs/agent-briefs/tasks/UI/UI-1-0008.md | [UI-1-0008] 圓形 Icon 按鈕 sprites（§6.1/6.2/6.4 通用圓形按鈕） |
-| `doc_task_0072` | docs/agent-briefs/tasks/UI/UI-1-0009.md | [UI-1-0009] 垂直菱形 Tab sprites（§2.6 Diamond Tab） |
-| `doc_task_0073` | docs/agent-briefs/tasks/UI/UI-1-0010.md | UI-1-0010 — Badge/角標 Sprite 套件 |
-| `doc_task_0074` | docs/agent-briefs/tasks/UI/UI-1-0011.md | UI-1-0011 — Gold CTA 框體 Sprite (frame/fill/bg) |
-| `doc_task_0075` | docs/agent-briefs/tasks/UI/UI-1-0012.md | UI-1-0012 — §9.6 Skin 契約自動驗證腳本 |
-| `doc_task_0076` | docs/agent-briefs/tasks/UI/UI-1-0013.md | UI-1-0013 — §3.3 Frame Sprite 金色邊框像素掃描腳本 |
-| `doc_task_0077` | docs/agent-briefs/tasks/UI/UI-1-0014.md | [UI-1-0014] Lobby Main nav.ink + shadow 正式 QA |
-| `doc_task_0078` | docs/agent-briefs/tasks/UI/UI-1-0015.md | [UI-1-0015] Shop Main + Gacha Light-Surface QA |
-| `doc_task_0079` | docs/agent-briefs/tasks/UI/UI-1-0016.md | UI-1-0016｜Duel Challenge mixed-family 視覺驗收 |
-| `doc_task_0080` | docs/agent-briefs/tasks/UI/UI-2-0001.md | [UI-2-0001] 更新 `lobby-main-default` Skin 指向 `nav_ink` |
-| `doc_task_0081` | docs/agent-briefs/tasks/UI/UI-2-0002.md | [UI-2-0002] 更新 `duel-challenge-default` Skin 指向 `paper_utility` |
-| `doc_task_0082` | docs/agent-briefs/tasks/UI/UI-2-0003.md | [UI-2-0003] 新增 parchment 系列 design token |
-| `doc_task_0083` | docs/agent-briefs/tasks/UI/UI-2-0004.md | [UI-2-0004] 新增淺底專用 label-style 變體 |
-| `doc_task_0084` | docs/agent-briefs/tasks/UI/UI-2-0005.md | [UI-2-0005] 為 button-skin 新增 selected 第四態 |
-| `doc_task_0085` | docs/agent-briefs/tasks/UI/UI-2-0006.md | [UI-2-0006] 驗證 shared button family 的 border 20px 規範 |
-| `doc_task_0086` | docs/agent-briefs/tasks/UI/UI-2-0007.md | [UI-2-0007] 為多個 skin 補上 shadow slot 定義 |
-| `doc_task_0087` | docs/agent-briefs/tasks/UI/UI-2-0008.md | [UI-2-0008] 建立 item-cell 標準 skin fragment |
-| `doc_task_0088` | docs/agent-briefs/tasks/UI/UI-2-0009.md | [UI-2-0009] 建立 common-parchment skin fragment |
-| `doc_task_0089` | docs/agent-briefs/tasks/UI/UI-2-0010.md | [UI-2-0010] 為 `UIPreviewBuilder` 加入 shadow layer 渲染 |
-| `doc_task_0090` | docs/agent-briefs/tasks/UI/UI-2-0011.md | [UI-2-0011] 為 `UIPreviewBuilder` 加入 noise overlay 混合 |
-| `doc_task_0091` | docs/agent-briefs/tasks/UI/UI-2-0012.md | [UI-2-0012] 更新 `duel.btn.accept` 指向 `ui-common-metal.equipment.primary` |
-| `doc_task_0092` | docs/agent-briefs/tasks/UI/UI-2-0069.md | [UI-2-0069] 血脈命鏡輪播 production |
-| `doc_task_0093` | docs/agent-briefs/tasks/UI/UI-2-0070.md | [UI-2-0070] 英靈虎符與特種軍隊 proof |
-| `doc_task_0094` | docs/agent-briefs/tasks/UI/UI-2-0071.md | [UI-2-0071] BattleScene 靜態質感 benchmark |
-| `doc_task_0095` | docs/agent-briefs/tasks/UI/UI-2-0072.md | [UI-2-0072] 家園與治理地圖 3D family |
-| `doc_task_0096` | docs/agent-briefs/tasks/UI/UI-2-0073.md | [UI-2-0073] Figma + Cocos MCP + Playwright 量產流程藍圖 |
-| `doc_task_0097` | docs/agent-briefs/tasks/UI/UI-2-0074.md | [UI-2-0074] UIConfig UIID 補全 + UIManager 動態載入架構設計 |
-| `doc_task_0098` | docs/agent-briefs/tasks/UI/UI-2-0075.md | [UI-2-0075] UISpecLoader 升級為 ServiceLoader 共享單例 |
-| `doc_task_0099` | docs/agent-briefs/tasks/UI/UI-2-0076.md | [UI-2-0076] Component Binder Migration — 11 個元件批量遷移 |
-| `doc_task_0100` | docs/agent-briefs/tasks/UI/UI-2-0077.md | [UI-2-0077] i18n 語系 hardcoding 移除 |
-| `doc_task_0101` | docs/agent-briefs/tasks/UI/UI-2-0078.md | [UI-2-0078] MemoryManager 基礎實作（LRU + releaseByScope） |
-| `doc_task_0102` | docs/agent-briefs/tasks/UI/UI-2-0079.md | [UI-2-0079] Constants.ts UILayerName deprecated 清理 |
-| `doc_task_0103` | docs/agent-briefs/tasks/UI/UI-2-0080.md | UI-2-0080 — Content Contract Framework 實作 |
-| `doc_task_0104` | docs/agent-briefs/tasks/UI/UI-2-0081.md | UI-2-0081 — Screen → Component Auto-Scaffolder 實作 |
-| `doc_task_0105` | docs/agent-briefs/tasks/UI/UI-2-0082.md | UI-2-0082 — Figma Proof Mapping Sync Pipeline |
-| `doc_task_0106` | docs/agent-briefs/tasks/UI/UI-2-0083.md | UI-2-0083 — Agent Strict Layout Validator 擴充 |
-| `doc_task_0107` | docs/agent-briefs/tasks/UI/UI-2-0084.md | UI-2-0084 — FrameRecipe / MaterialRecipe 契約層 |
-| `doc_task_0108` | docs/agent-briefs/tasks/UI/UI-2-0085.md | UI-2-0085 — Layered Skin Theme Stack |
-| `doc_task_0109` | docs/agent-briefs/tasks/UI/UI-2-0086.md | UI-2-0086 — Visual Asset QA Rule Engine |
-| `doc_task_0110` | docs/agent-briefs/tasks/UI/UI-2-0087.md | UI-2-0087 — Golden Preview Baseline + Compare Board |
-| `doc_task_0111` | docs/agent-briefs/tasks/UI/UI-2-0088.md | UI-2-0088 — Proof Contract / Design AST 中間格式 |
-| `doc_task_0112` | docs/agent-briefs/tasks/UI/UI-2-0089.md | UI-2-0089 — AI 生圖 ArtRecipe 治理 |
-| `doc_task_0113` | docs/agent-briefs/tasks/UI/UI-2-0090.md | UI-2-0090 — UI Skill Orchestration Pack |
-| `doc_task_0114` | docs/agent-briefs/tasks/UI/UI-2-0091.md | UI-2-0091 資產方向 Pilot 收斂 |
-| `doc_task_0115` | docs/agent-briefs/tasks/UI/UI-2-0092.md | UI-2-0092 Jade / Crest / Rarity 正式資產切圖 |
-| `doc_task_0116` | docs/agent-briefs/tasks/UI/UI-2-0093.md | UI-2-0093 GeneralDetailBloodlineV3 Canonical Layout / Content Polish |
-| `doc_task_0117` | docs/agent-briefs/tasks/UI/UI-2-0094.md | UI-2-0094 GeneralDetailBloodlineV3 Canonical Finish Asset Pack |
-| `doc_task_0118` | docs/agent-briefs/tasks/UI/UI-2-0095.md | UI-2-0095 GeneralDetail Crest Formal Production |
-| `doc_task_0119` | docs/agent-briefs/tasks/UI/UI-2-0041.md | [UI-2-0041] 建立主城 building node / interaction 量產規格 |
-| `doc_task_0120` | docs/agent-briefs/tasks/UI/UI-2-0042.md | [UI-2-0042] 建立 outfit torso / paperdoll 量產規格 |
-| `doc_task_0121` | docs/agent-briefs/tasks/UI/UI-2-0043.md | [UI-2-0043] 依 UI-2-0038 產出 BattleHUD portrait crop proof |
-| `doc_task_0122` | docs/agent-briefs/tasks/UI/UI-2-0044.md | [UI-2-0044] 建立 Lobby icon 量產生圖卡 |
-| `doc_task_0123` | docs/agent-briefs/tasks/UI/UI-2-0045.md | [UI-2-0045] 建立武將介紹 / QuickView icon 量產生圖卡 |
-| `doc_task_0124` | docs/agent-briefs/tasks/UI/UI-2-0046.md | [UI-2-0046] 建立 BattleScene 真場景 headless capture 驗證鏈 |
-| `doc_task_0125` | docs/agent-briefs/tasks/UI/UI-2-0047.md | [UI-2-0047] 建立跨功能一致性與量產製程規範 |
-| `doc_task_0126` | docs/agent-briefs/tasks/UI/UI-2-0048.md | [UI-2-0048] 建立功能語意色票規格 |
-| `doc_task_0127` | docs/agent-briefs/tasks/UI/UI-2-0049.md | [UI-2-0049] 建立 family 批次生產模板 |
-| `doc_task_0128` | docs/agent-briefs/tasks/UI/UI-2-0050.md | [UI-2-0050] 建立狀態組與尺寸組標準 |
-| `doc_task_0129` | docs/agent-briefs/tasks/UI/UI-2-0051.md | [UI-2-0051] 建立 screen-context QA 板與比較流程 |
-| `doc_task_0130` | docs/agent-briefs/tasks/UI/UI-2-0052.md | [UI-2-0052] 建立量產規格欄位 Schema |
-| `doc_task_0131` | docs/agent-briefs/tasks/UI/UI-2-0053.md | [UI-2-0053] 重審 BattleScene 主 UI 視覺風格、畫面分布與各主畫面 style profile |
-| `doc_task_0132` | docs/agent-briefs/tasks/UI/UI-2-0054.md | [UI-2-0054] 人物與命鏡主視覺方向收斂 |
-| `doc_task_0133` | docs/agent-briefs/tasks/UI/UI-2-0055.md | [UI-2-0055] 血脈命鏡 Loading tips 文案池 |
-| `doc_task_0134` | docs/agent-briefs/tasks/UI/UI-2-0056.md | [UI-2-0056] 未持有武將標記規則 |
-| `doc_task_0135` | docs/agent-briefs/tasks/UI/UI-2-0057.md | [UI-2-0057] 祖紋命篆 / 命紋靈獸 / 六色因子視覺契約 |
-| `doc_task_0136` | docs/agent-briefs/tasks/UI/UI-2-0058.md | [UI-2-0058] 收斂 GeneralDetailBloodlineV3 第一批 Slot 契約 |
-| `doc_task_0137` | docs/agent-briefs/tasks/UI/UI-2-0059.md | [UI-2-0059] 日常人物頁 v3 UI Spec Skeleton |
-| `doc_task_0138` | docs/agent-briefs/tasks/UI/UI-2-0060.md | [UI-2-0060] 血脈命鏡 v3 ui-spec skeleton |
-| `doc_task_0139` | docs/agent-briefs/tasks/UI/UI-2-0061.md | [UI-2-0061] Story / Bloodline / Crest 內容契約 |
-| `doc_task_0140` | docs/agent-briefs/tasks/UI/UI-2-0062.md | [UI-2-0062] 血脈卡 / 英靈虎符 / 重複卡分流規格 |
-| `doc_task_0141` | docs/agent-briefs/tasks/UI/UI-2-0063.md | [UI-2-0063] UI 圖像索引轉 wireframe / slot-map / codegen-ready 管線 |
-| `doc_task_0142` | docs/agent-briefs/tasks/UI/UI-2-0064.md | [UI-2-0064] 命紋靈獸與虎符特種軍隊連動規格 |
-| `doc_task_0143` | docs/agent-briefs/tasks/UI/UI-2-0065.md | [UI-2-0065] 美術高品質 production roadmap |
-| `doc_task_0144` | docs/agent-briefs/tasks/UI/UI-2-0066.md | [UI-2-0066] 命紋徽記 family final proof |
-| `doc_task_0145` | docs/agent-briefs/tasks/UI/UI-2-0067.md | [UI-2-0067] 角色血脈 retrofit proof |
-| `doc_task_0146` | docs/agent-briefs/tasks/UI/UI-2-0068.md | [UI-2-0068] 六格故事條 production pack |
-| `doc_task_0147` | docs/tasks/battle-ui-p1-ultimate-select-popup_task.md | 任務卡 — battle-ui-p1-ultimate-select-popup |
-| `doc_task_0148` | docs/tasks/battle-ui-p1-unit-type-badge_task.md | 任務卡 — battle-ui-p1-unit-type-badge |
-| `doc_task_0149` | docs/tasks/benchmark-storage-report.md | Benchmark Storage 效能基準報告 |
-| `doc_task_0150` | docs/tasks/core-50-general-quality-report.md | 前 50 核心武將內容品質審校報告 |
-| `doc_task_0151` | docs/tasks/data-center-gap-report.md | 資料中心落差清單 |
-| `doc_task_0152` | docs/tasks/dc-datacenter-tasks.md | 資料中心實作任務 (DC 系列) |
-| `doc_task_0153` | docs/tasks/prog-opening-flow-tasks.md | 新手開場程式規格書 — 可執行任務單總覽 |
-| `doc_task_0154` | docs/tasks/simulate-data-growth-report.md | simulate-data-growth 模擬報告 |
-| `doc_task_0155` | docs/agent-briefs/tasks/UI/UI-2-0108.md | [UI-2-0108] 虎符卡 Battle / 人物頁 共用契約整合 |
-| `doc_task_0156` | docs/agent-briefs/tasks/SYS/SYS-SKILL-CORE-0001.md | [SYS-SKILL-CORE-0001] Shared Skill Runtime 讀模型統一 |
-| `doc_task_0157` | docs/agent-briefs/tasks/SYS/SYS-SKILL-TAC-0001.md | [SYS-SKILL-TAC-0001] 戰法傷害投射模組包 |
-| `doc_task_0158` | docs/agent-briefs/tasks/SYS/SYS-SKILL-TAC-0002.md | [SYS-SKILL-TAC-0002] 戰法增益治療減益模組包 |
-| `doc_task_0159` | docs/agent-briefs/tasks/SYS/SYS-SKILL-TAC-0003.md | [SYS-SKILL-TAC-0003] 戰法位移與棋盤控制模組包 |
-| `doc_task_0160` | docs/agent-briefs/tasks/SYS/SYS-SKILL-TAC-0004.md | [SYS-SKILL-TAC-0004] 戰法反應連鎖條件模組包 |
-| `doc_task_0161` | docs/agent-briefs/tasks/SYS/SYS-SKILL-TAC-0005.md | [SYS-SKILL-TAC-0005] 戰法場景注入與障礙模組包 |
-| `doc_task_0162` | docs/agent-briefs/tasks/SYS/SYS-SKILL-ULT-0001.md | [SYS-SKILL-ULT-0001] 奧義自身爆發家族 |
-| `doc_task_0163` | docs/agent-briefs/tasks/SYS/SYS-SKILL-ULT-0002.md | [SYS-SKILL-ULT-0002] 奧義全隊增益家族 |
-| `doc_task_0164` | docs/agent-briefs/tasks/SYS/SYS-SKILL-ULT-0003.md | [SYS-SKILL-ULT-0003] 奧義團隊回復家族 |
-| `doc_task_0165` | docs/agent-briefs/tasks/SYS/SYS-SKILL-ULT-0004.md | [SYS-SKILL-ULT-0004] 奧義敵方全體減益家族 |
-| `doc_task_0166` | docs/agent-briefs/tasks/SYS/SYS-SKILL-ULT-0005.md | [SYS-SKILL-ULT-0005] 奧義敵將定點傷害家族 |
-| `doc_task_0167` | docs/agent-briefs/tasks/SYS/SYS-SKILL-ULT-0006.md | [SYS-SKILL-ULT-0006] 奧義範圍爆發家族 |
-| `doc_task_0168` | docs/agent-briefs/tasks/SYS/SYS-SKILL-ULT-0007.md | [SYS-SKILL-ULT-0007] 奧義強控與奪取家族 |
-| `doc_task_0169` | docs/agent-briefs/tasks/SYS/SYS-SKILL-ULT-0008.md | [SYS-SKILL-ULT-0008] 奧義特殊規則家族 |
-| `doc_task_0170` | docs/agent-briefs/tasks/SYS/SYS-SKILL-TAC-0006.md | [SYS-SKILL-TAC-0006] 戰法量產驗收 Sprint 規劃（M4/M5 + G-6-3 後續排程） |
-| `doc_task_0174` | docs/agent-briefs/tasks/UI/UI-2-0096.md | UI-2-0096 GeneralDetail Header Chrome Formal Production |
-| `doc_task_0175` | docs/agent-briefs/tasks/UI/UI-2-0097.md | UI-2-0097 GeneralDetail Rarity Badge Formal Production |
-| `doc_task_0176` | docs/agent-briefs/tasks/UI/UI-2-0098.md | [UI-2-0098] Agent3 接手 BattleScene 非 HUD Slice Factory Onboarding |
-| `doc_task_0177` | docs/agent-briefs/tasks/PROG/PROG-2-0001.md | [PROG-2-0001] HTML-to-UCUF Plan5 bootstrap and stale-rule audit |
-| `doc_task_0178` | docs/agent-briefs/tasks/PROG/PROG-2-0002.md | [PROG-2-0002] HTML-to-UCUF stale rule and conflict audit |
-| `doc_task_0179` | docs/agent-briefs/tasks/PROG/PROG-2-0003.md | [PROG-2-0003] HTML-to-UCUF final gate diagnosis contract |
-| `doc_task_0180` | docs/agent-briefs/tasks/PROG/PROG-2-0004.md | [PROG-2-0004] HTML-to-UCUF CSS semantics extraction parity |
-| `doc_task_0181` | docs/agent-briefs/tasks/PROG/PROG-2-0005.md | [PROG-2-0005] UCUF runtime renderer parity closure |
-| `doc_task_0182` | docs/agent-briefs/tasks/PROG/PROG-2-0006.md | [PROG-2-0006] HTML-to-UCUF generated spec authority hardening |
-| `doc_task_0183` | docs/agent-briefs/tasks/PROG/PROG-2-0007.md | [PROG-2-0007] HTML-to-UCUF 95% Umbrella Closeout |
-| `doc_task_0184` | docs/agent-briefs/tasks/PROG/PROG-2-0008.md | [PROG-2-0008] HTML-to-UCUF skill Plan5 workflow rewrite |
-| `doc_task_0185` | docs/agent-briefs/tasks/UI/UI-2-0107.md | [UI-2-0107] BattleScene 數值 Micro Glyph Suite 實際生圖 |
-| `doc_task_0187` | docs/agent-briefs/tasks/UI/UI-2-0109.md | [UI-2-0109] 路線 C 程序化 Shader 擴展（第一階段：水流） |
-| `doc_task_0188` | docs/agent-briefs/tasks/UI/UI-2-0110.md | [UI-2-0110] 虎符部隊卡圖量產規格與 troops_XXX.png 生成 |
-| `doc_task_0189` | docs/agent-briefs/tasks/UI/UI-2-0111.md | [UI-2-0111] 虎符卡片框體像素對位與正式兵種 icon 接線 |
-| `doc_task_0190` | docs/agent-briefs/tasks/UI/UI-3-0100.md | [UI-3-0100] 虎符卡片 UI 美術規格書 — 基礎兵種首批 |
-| `doc_task_0191` | docs/agent-briefs/UCUF-task-card-template.md | UCUF UI Task Card Template |
-| `doc_task_0192` | docs/agent-briefs/UI-task-card-template.md | UI Task Card Template |
-| `doc_task_0193` | docs/tasks/圖1_武將詳情_task.md | 任務卡 — 圖1：武將詳情（草案） |
-| `doc_task_0194` | docs/tasks/圖2_裝備介面_task.md | 任務卡 — 圖2：裝備介面（草案） |
-| `doc_task_0195` | docs/tasks/圖3_戰令商城_task.md | 任務卡 — 圖3：戰令商城（草案） |
-| `doc_task_0196` | docs/tasks/圖4_信件系統_task.md | 任務卡 — 圖4：信件系統（草案） |
-| `doc_task_0197` | docs/tasks/battle-ui-p0-badge-label-placeholder_task.md | 任務：battle-ui-p0-badge-label-placeholder |
-| `doc_task_0198` | docs/tasks/battle-ui-p0-battle-hud-timing-fix_task.md | 任務卡 — battle-ui-p0-battle-hud-timing-fix |
-| `doc_task_0199` | docs/tasks/battle-ui-p0-battle-log-scrollview-fix_task.md | 任務卡 — battle-ui-p0-battle-log-scrollview-fix |
-| `doc_task_0200` | docs/tasks/battle-ui-p0-duel-challenge-fix_task.md | 任務卡 — battle-ui-p0-duel-challenge-fix |
-| `doc_task_0201` | docs/tasks/battle-ui-p1-action-command-hierarchy-pass_task.md | 任務卡 — battle-ui-p1-action-command-hierarchy-pass |
-| `doc_task_0202` | docs/tasks/battle-ui-p1-capture-toolbar-clip_task.md | 任務：battle-ui-p1-capture-toolbar-clip |
-| `doc_task_0203` | docs/tasks/battle-ui-p1-dp-to-food-log_task.md | 任務：battle-ui-p1-dp-to-food-log |
-| `doc_task_0204` | docs/tasks/battle-ui-p1-general-quickview-interactable_task.md | 任務卡 — battle-ui-p1-general-quickview-interactable |
-| `doc_task_0205` | docs/tasks/battle-ui-p1-hp-bar-visual_task.md | 任務：battle-ui-p1-hp-bar-visual |
-| `doc_task_0206` | docs/tasks/battle-ui-p1-reference-layout-minimalism-pass_task.md | 任務卡 — battle-ui-p1-reference-layout-minimalism-pass |
-| `doc_task_0207` | docs/tasks/battle-ui-p1-tally-card-art-troops-fix_task.md | battle-ui-p1-tally-card-art-troops-fix |
-| `doc_task_0210` | docs/tasks/battle-ui-v3-architecture-optimization-plan.md | 戰場 UI 與邏輯架構優化規劃書 |
-| `doc_task_0211` | docs/tasks/battle-vfx-battle-flow-hooks_task.md | 任務卡 battle-vfx-battle-flow-hooks |
-| `doc_task_0212` | docs/tasks/battle-vfx-flood-river-ripple_task.md | 任務卡：battle-vfx-flood-river-ripple |
-| `doc_task_0213` | docs/tasks/battle-vfx-ice-crystal_task.md | 任務卡：battle-vfx-ice-crystal |
-| `doc_task_0214` | docs/tasks/battle-vfx-lightning-arc_task.md | 任務卡：battle-vfx-lightning-arc |
-| `doc_task_0215` | docs/tasks/battle-vfx-poison-fog_task.md | 任務卡：battle-vfx-poison-fog |
-| `doc_task_0216` | docs/tasks/battle-vfx-wind-vortex_task.md | 任務卡：battle-vfx-wind-vortex |
-| `doc_task_0219` | docs/agent-briefs/tasks/PROG/PROG-2-0009.md | [PROG-2-0009] HTML-to-UCUF final diff owner mapper and residual taxonomy hardening |
-| `doc_task_0220` | docs/agent-briefs/tasks/HARN/HARN-PERF-0001.md | [HARN-PERF-0001] 建立自動化效能基準線偵測閘門 |
-| `doc_task_0221` | docs/agent-briefs/tasks/HARN/HARN-GOV-0004.md | [HARN-GOV-0004] 整合死碼偵測至 compute-gate 自動化流程 |
-| `doc_task_0222` | docs/agent-briefs/tasks/HARN/HARN-GOV-0005.md | [HARN-GOV-0005] 強制 Agent 開發合約：所有代碼變動必須通過 compute-gate |
-| `doc_task_0223` | docs/agent-briefs/tasks/HARN/HARN-GOV-0006.md | [HARN-GOV-0006] 建立 Task Scope Gate 與任務範圍守衛 |
-| `doc_task_0224` | docs/agent-briefs/tasks/H2U/H2U-REFACTOR-0001.md | [H2U-REFACTOR-0001] draft-builder.js 拆 5 模組 |
-| `doc_task_0225` | docs/agent-briefs/tasks/H2U/H2U-REFACTOR-0002.md | [H2U-REFACTOR-0002] rule-checkers.js 拆目錄 |
-| `doc_task_0226` | docs/agent-briefs/tasks/H2U/H2U-REFACTOR-0003.md | [H2U-REFACTOR-0003] 抽 browser-capture-core |
-| `doc_task_0227` | docs/agent-briefs/tasks/H2U/H2U-REFACTOR-0004.md | [H2U-REFACTOR-0004] 隔離 Phase B 工具與修補死引用 |
-| `doc_task_0228` | docs/agent-briefs/tasks/H2U/H2U-REFACTOR-0005.md | [H2U-REFACTOR-0005] 整併 5 份 plan 文件 |
-| `doc_task_0229` | docs/agent-briefs/tasks/H2U/H2U-REFACTOR-0006.md | [H2U-REFACTOR-0006] rule-registry 補 fidelityThresholds + knownGaps + draftBuilderStageRules 自動驗證 |
-| `doc_task_0230` | docs/agent-briefs/tasks/PROG/PROG-2-0010.md | [PROG-2-0010] Multi-Fixture Regression Baseline |
-| `doc_task_0231` | docs/agent-briefs/tasks/PROG/PROG-2-0011.md | [PROG-2-0011] CSS coverage → UCUF slot trace（封閉 selectorTracePending） |
-| `doc_task_0232` | docs/agent-briefs/tasks/HARN/HARN-GOV-0007.md | [HARN-GOV-0007] 將 doc-id-registry.json 納入 shard 管理 |
-| `doc_task_0233` | docs/agent-briefs/tasks/HARN/HARN-GOV-0008.md | [HARN-GOV-0008] 強化 doc-id-registry 併發分配與 preserve-id rebuild |
-| `doc_task_0234` | docs/agent-briefs/tasks/PROG/PROG-1-0018.md | [PROG-1-0018] 修復 PROG-1-0017 遺留問題：BattleResult 去重 + FRONT_DEPTH 去重 |
-| `doc_task_0235` | docs/agent-briefs/tasks/UI/UI-2-0099.md | [UI-2-0099] BattleScene 兵種符號 Icon Suite |
-| `doc_task_0236` | docs/agent-briefs/tasks/UI/UI-2-0100.md | [UI-2-0100] TigerTally 兵種卡圖資產 Suite |
-| `doc_task_0237` | docs/agent-briefs/tasks/UI/UI-2-0101.md | [UI-2-0101] BattleScene 數值 Micro Glyph Suite |
-| `doc_task_0238` | docs/agent-briefs/tasks/UI/UI-2-0102.md | UI-2-0102 GeneralDetailOverview First Formal Benchmark Package |
-| `doc_task_0239` | docs/agent-briefs/tasks/UI/UI-2-0103.md | UI-2-0103 Data Showcase Freeze |
-| `doc_task_0240` | docs/agent-briefs/tasks/UI/UI-2-0104.md | UI-2-0104 Portrait Stage & Illustration Finish |
-| `doc_task_0241` | docs/agent-briefs/tasks/UI/UI-2-0105.md | UI-2-0105 UI Chrome & Crest Family Freeze |
-| `doc_task_0242` | docs/agent-briefs/tasks/UI/UI-2-0106.md | UI-2-0106 UI System Freeze + Runtime QA + Docs Backwrite |
-| `doc_task_0243` | docs/agent-briefs/tasks/HARN/HARN-GOV-0009.md | [HARN-GOV-0009] 同步 doc_id 注入並清理 duplicate warnings |
-| `doc_task_0244` | docs/agent-briefs/tasks/HARN/HARN-GOV-0010.md | [HARN-GOV-0010] 完成剩餘 doc_id warning 清理 |
-| `doc_task_0245` | docs/agent-briefs/tasks/ATM/ATM-0-0001.md | [ATM-0-0001] ATM 任務 shard 與 bootstrap 卡 |
-| `doc_task_0246` | docs/agent-briefs/tasks/ATM/ATM-0-0002.md | [ATM-0-0002] 名詞定義新增 ATM 任務代號 |
-| `doc_task_0247` | docs/agent-briefs/tasks/ATM/ATM-0-0003.md | [ATM-0-0003] Roadmap 上游開源化改版 |
-| `doc_task_0248` | docs/agent-briefs/tasks/ATM/ATM-0-0004.md | [ATM-0-0004] 3KLife adopter 計畫書改版 |
-| `doc_task_0249` | docs/agent-briefs/tasks/ATM/ATM-0-0005.md | [ATM-0-0005] 開源拆出 checklist 文件 |
-| `doc_task_0250` | docs/agent-briefs/tasks/ATM/ATM-0-0006.md | [ATM-0-0006] ATM 任務卡模板與開卡規則 |
-| `doc_task_0251` | docs/agent-briefs/tasks/ATM/ATM-1-0001.md | [ATM-1-0001] 上游 repo product charter 與 README |
-| `doc_task_0252` | docs/agent-briefs/tasks/ATM/ATM-1-0002.md | [ATM-1-0002] 上游 monorepo package skeleton |
-| `doc_task_0253` | docs/agent-briefs/tasks/ATM/ATM-1-0003.md | [ATM-1-0003] Atomic Spec schema v0.1 |
-| `doc_task_0254` | docs/agent-briefs/tasks/ATM/ATM-1-0004.md | [ATM-1-0004] CLI init/status/validate MVP |
-| `doc_task_0255` | docs/agent-briefs/tasks/ATM/ATM-1-0005.md | [ATM-1-0005] LocalGitAdapter reference implementation |
-| `doc_task_0256` | docs/agent-briefs/tasks/ATM/ATM-1-0006.md | [ATM-1-0006] JS/TS LanguageAdapter reference |
-| `doc_task_0257` | docs/agent-briefs/tasks/ATM/ATM-1-0007.md | [ATM-1-0007] Hello-world 與 legacy-strangler 範例 |
-| `doc_task_0258` | docs/agent-briefs/tasks/ATM/ATM-2-0001.md | [ATM-2-0001] Core Spec loader/parser |
-| `doc_task_0259` | docs/agent-briefs/tasks/ATM/ATM-2-0002.md | [ATM-2-0002] Scaffold Builder MVP |
-| `doc_task_0260` | docs/agent-briefs/tasks/ATM/ATM-2-0003.md | [ATM-2-0003] Test Runner 與 report schema |
-| `doc_task_0261` | docs/agent-briefs/tasks/ATM/ATM-2-0004.md | [ATM-2-0004] Registry 與 HashLock MVP |
-| `doc_task_0262` | docs/agent-briefs/tasks/ATM/ATM-2-0005.md | [ATM-2-0005] Police plugin API 與內建檢查器 |
-| `doc_task_0263` | docs/agent-briefs/tasks/ATM/ATM-2-0006.md | [ATM-2-0006] Adapter API 與 Plugin SDK 定稿 |
-| `doc_task_0264` | docs/agent-briefs/tasks/ATM/ATM-3-0001.md | [ATM-3-0001] 3KLife ProjectAdapter wrapper |
-| `doc_task_0265` | docs/agent-briefs/tasks/ATM/ATM-3-0002.md | [ATM-3-0002] 3KLife ATM config 與 bootstrap wrapper |
-| `doc_task_0266` | docs/agent-briefs/tasks/ATM/ATM-3-0003.md | [ATM-3-0003] compute-gate ATM profile adapter integration |
-| `doc_task_0267` | docs/agent-briefs/tasks/ATM/ATM-3-0004.md | [ATM-3-0004] doc-id 與 encoding adapter integration |
-| `doc_task_0268` | docs/agent-briefs/tasks/ATM/ATM-3-0005.md | [ATM-3-0005] Cocos runtime adapter policy |
-| `doc_task_0269` | docs/agent-briefs/tasks/ATM/ATM-4-0001.md | [ATM-4-0001] html-to-ucuf reference case study plan |
-| `doc_task_0270` | docs/agent-briefs/tasks/ATM/ATM-4-0002.md | [ATM-4-0002] H2U legacy baseline 與 regression matrix |
-| `doc_task_0271` | docs/agent-briefs/tasks/ATM/ATM-4-0004.md | [ATM-4-0004] parseCssLength 與 parseFragmentList case atoms |
-| `doc_task_0272` | docs/agent-briefs/tasks/ATM/ATM-5-0001.md | [ATM-5-0001] Quick Start 與 API 文件 |
-| `doc_task_0273` | docs/agent-briefs/tasks/ATM/ATM-5-0002.md | [ATM-5-0002] Adapter Guide 與 Plugin SDK 文件 |
-| `doc_task_0274` | docs/agent-briefs/tasks/ATM/ATM-5-0003.md | [ATM-5-0003] Semver Lifecycle 與 Governance |
-| `doc_task_0275` | docs/agent-briefs/tasks/ATM/ATM-5-0004.md | [ATM-5-0004] v0.1 alpha release checklist |
-| `doc_task_0276` | docs/agent-briefs/tasks/ATM/ATM-6-0001.md | [ATM-6-0001] 跨專案 Registry / DB / Vector 決策 |
-| `doc_task_0277` | docs/agent-briefs/tasks/ATM/ATM-6-0002.md | [ATM-6-0002] Community RFC 與貢獻流程 |
-| `doc_task_0278` | docs/agent-briefs/tasks/ATM/ATM-6-0003.md | [ATM-6-0003] 多語言 Adapter 擴張計畫 |
-| `doc_task_0279` | docs/agent-briefs/tasks/ATM/ATM-4-0003.md | [ATM-4-0003] normalizeCssColor 首個 case atom |
-| `doc_task_0280` | docs/agent-briefs/tasks/ATM/ATM-4-0005.md | [ATM-4-0005] Injection plan 與 rollback dry-run |
-| `doc_task_0281` | docs/agent-briefs/tasks/ATM/ATM-0-0007.md | [ATM-0-0007] 上游 roadmap v0.2 技術選型整合 |
-| `doc_task_0282` | docs/agent-briefs/tasks/ATM/ATM-0-0008.md | [ATM-0-0008] 3KLife adapter 技術棧校正矩陣 |
-| `doc_task_0283` | docs/agent-briefs/tasks/ATM/ATM-4-0006.md | [ATM-4-0006] H2U case study 與 Cocos runtime 邊界 |
-| `doc_task_0284` | docs/agent-briefs/tasks/ATM/ATM-5-0005.md | [ATM-5-0005] Living Spec 同步器與 PEV Loop |
-| `doc_task_0285` | docs/agent-briefs/tasks/ATM/ATM-6-0004.md | [ATM-6-0004] Performance Budget Police 與成本控制 |
-| `doc_task_0286` | docs/agent-briefs/tasks/ATM/ATM-6-0005.md | [ATM-6-0005] Capability Sandbox 與審計日誌 |
-| `doc_task_0287` | docs/agent-briefs/tasks/ATM/ATM-0-0009.md | [ATM-0-0009] Default Governance Bundle 切分重規劃 |
-| `doc_task_0288` | docs/agent-briefs/tasks/ATM/ATM-2-0008.md | [ATM-2-0008] Local governance reference plugins |
-| `doc_task_0289` | docs/agent-briefs/tasks/ATM/ATM-2-0007.md | [ATM-2-0007] Default Governance Bundle schema |
-| `doc_task_0290` | docs/agent-briefs/tasks/ATM/ATM-1-0008.md | [ATM-1-0008] Zero-install Agent Bootstrap Pack |
-| `doc_task_0291` | docs/agent-briefs/tasks/ATM/ATM-2-0009.md | [ATM-2-0009] Artifact Log Evidence Store contracts |
-| `doc_task_0292` | docs/agent-briefs/tasks/ATM/ATM-0-0010.md | [ATM-0-0010] Self-hosting first 邊界與中立性 guard 落地 |
-| `doc_task_0293` | docs/agent-briefs/tasks/ATM/ATM-1-0010.md | [ATM-1-0010] Upstream docs neutrality audit |
-| `doc_task_0294` | docs/agent-briefs/tasks/ATM/ATM-2-0010.md | [ATM-2-0010] RuleGuard Read-Only Validator |
-| `doc_task_0295` | docs/agent-briefs/tasks/ATM/ATM-1-0009.md | [ATM-1-0009] Self-hosting alpha proof |
+| `doc_spec_0603` | docs/遊戲規格文件/系統規格書/戰場互動戰利品戰後一次性原子結算入庫規格書.md | 戰場互動戰利品戰後一次性原子結算入庫規格書 |
+| `doc_spec_0604` | docs/遊戲規格文件/系統規格書/戰場BOSS半血親衛隊召喚與護主屏障狀態機規格書.md | 戰場BOSS半血親衛隊召喚與護主屏障狀態機規格書 |
+| `doc_spec_0605` | docs/遊戲規格文件/系統規格書/戰術條件檢核與隱身匿蹤忽略索敵狀態機規格書.md | 戰術條件檢核與隱身匿蹤忽略索敵狀態機規格書 |
+| `doc_spec_0606` | docs/遊戲規格文件/系統規格書/戰法施放可用狀態決策與灰化原因解析規格書.md | 戰法施放可用狀態決策與灰化原因解析規格書 |
+| `doc_spec_0607` | docs/遊戲規格文件/系統規格書/控制類格子戰法離間互鬥與環境干擾定義規格書.md | 控制類格子戰法離間互鬥與環境干擾定義規格書 |
+| `doc_spec_0608` | docs/遊戲規格文件/系統規格書/戰鬥兵力返還戰損結算與六項戰後統計規格書.md | 戰鬥兵力返還戰損結算與六項戰後統計規格書 |
+| `doc_spec_0609` | docs/遊戲規格文件/系統規格書/極端天候遠程射程衰減與命中折減模型規格書.md | 極端天候遠程射程衰減與命中折減模型規格書 |
+| `doc_spec_0610` | docs/遊戲規格文件/系統規格書/粉色因子適性躍升與十四名將血脈共鳴階梯規格書.md | 粉色因子適性躍升與十四名將血脈共鳴階梯規格書 |
+| `doc_spec_0611` | docs/遊戲規格文件/系統規格書/AI戰力動態匹配評估與彈性難度平衡演算法規格書.md | AI戰力動態匹配評估與彈性難度平衡演算法規格書 |
+| `doc_spec_0612` | docs/遊戲規格文件/系統規格書/AI勢力季度全軍強度重算與國力演化狀態機規格書.md | AI勢力季度全軍強度重算與國力演化狀態機規格書 |
+| `doc_spec_0613` | docs/遊戲規格文件/系統規格書/戰場體力池燃燒消耗與六維根性減免裁決規格書.md | 戰場體力池燃燒消耗與六維根性減免裁決規格書 |
+| `doc_spec_0614` | docs/遊戲規格文件/系統規格書/四類技能原型格子映射與戰場動態觸發規格書.md | 四類技能原型格子映射與戰場動態觸發規格書 |
+| `doc_spec_0615` | docs/遊戲規格文件/系統規格書/大廳世家總覽熱點掛載與家族名聲階梯規格書.md | 大廳世家總覽熱點掛載與家族名聲階梯規格書 |
+| `doc_spec_0616` | docs/遊戲規格文件/系統規格書/大廳情境文案庫與城市兵源軍費消耗覆寫規格書.md | 大廳情境文案庫與城市兵源軍費消耗覆寫規格書 |
+| `doc_spec_0617` | docs/遊戲規格文件/系統規格書/重複卡同名升星傭兵二轉與譜牒印記子孫晉升規格書.md | 重複卡同名升星傭兵二轉與譜牒印記子孫晉升規格書 |
+| `doc_spec_0618` | docs/遊戲規格文件/系統規格書/開場初始六名將與紅顏支援卡資料契約規格書.md | 開場初始六名將與紅顏支援卡資料契約規格書 |
+| `doc_spec_0619` | docs/遊戲規格文件/系統規格書/開場首戰五路教學戰流程控制器與提示浮窗狀態機規格書.md | 開場首戰五路教學戰流程控制器與提示浮窗狀態機規格書 |
+| `doc_spec_0620` | docs/遊戲規格文件/系統規格書/武將俸祿薪資發放欠薪忠誠下降與下野叛離規格書.md | 武將俸祿薪資發放欠薪忠誠下降與下野叛離規格書 |
+| `doc_spec_0621` | docs/遊戲規格文件/系統規格書/戰鬥日誌向三國日報轉譯與個人生涯日誌整併規格書.md | 戰鬥日誌向三國日報轉譯與個人生涯日誌整併規格書 |
+| `doc_spec_0622` | docs/遊戲規格文件/系統規格書/初始六名將正式古典台詞與語音立繪契約規格書.md | 初始六名將正式古典台詞與開場信件契約規格書 |
+| `doc_spec_0623` | docs/遊戲規格文件/系統規格書/紅顏千里趕路與雙階商業化提示文案規格書.md | 紅顏千里趕路與雙階商業化提示文案規格書 |
+| `doc_spec_0624` | docs/遊戲規格文件/系統規格書/名將趣味台詞彩蛋庫與休閒情境觸發規格書.md | 名將趣味台詞彩蛋庫與休閒情境觸發規格書 |
+| `doc_spec_0625` | docs/遊戲規格文件/系統規格書/血脈命鏡載入提示四池文案庫與審稿標準規格書.md | 血脈命鏡載入提示四池文案庫與審稿標準規格書 |
+| `doc_spec_0626` | docs/遊戲規格文件/系統規格書/稀缺貨幣精元與結義點數錢包增扣原子交易規格書.md | 稀缺貨幣精元與結義點數錢包增扣原子交易規格書 |
+| `doc_spec_0627` | docs/遊戲規格文件/系統規格書/季度通行證軍功任務追蹤與雙軌獎勵階梯規格書.md | 季度通行證軍功任務追蹤與雙軌獎勵階梯規格書 |
+| `doc_spec_0628` | docs/遊戲規格文件/系統規格書/百寶閣玉璧貨幣定價與道具扣款購買流程規格書.md | 百寶閣玉璧貨幣定價與道具扣款購買流程規格書 |
+| `doc_spec_0629` | docs/遊戲規格文件/系統規格書/裝備背包擴容付費解鎖與強化材料消耗規格書.md | 裝備背包擴容付費解鎖與強化材料消耗規格書 |
+| `doc_spec_0630` | docs/遊戲規格文件/系統規格書/人物頁命寶兵三頁裝配職責與UI分工規格書.md | 人物頁命寶兵三頁裝配職責與UI分工規格書 |
+| `doc_spec_0631` | docs/遊戲規格文件/系統規格書/英靈卡虎符與庫存分桶資料讀取模型規格書.md | 英靈卡虎符與庫存分桶資料讀取模型規格書 |
+| `doc_spec_0632` | docs/遊戲規格文件/系統規格書/世家總覽英靈陳列室與雙卡戰後結算介面規格書.md | 世家總覽英靈陳列室與雙卡戰後結算介面規格書 |
+| `doc_spec_0633` | docs/遊戲規格文件/系統規格書/異域外部壓力源與全球遠征檔案狀態機規格書.md | 異域外部壓力源與全球遠征檔案狀態機規格書 |
+| `doc_spec_0634` | docs/遊戲規格文件/系統規格書/官職俸祿商業加速特權與外交加速錦囊平衡規格書.md | 官職俸祿商業加速特權與外交加速錦囊平衡規格書 |
+| `doc_spec_0635` | docs/遊戲規格文件/系統規格書/太守府商業化擴展與治理效率提升道具平衡規格書.md | 太守府商業化擴展與治理效率提升道具平衡規格書 |
+| `doc_spec_0636` | docs/遊戲規格文件/系統規格書/名將挑戰賽月度場景虎符限時販售與入場券經濟平衡規格書.md | 名將挑戰賽月度場景虎符限時販售與入場券經濟平衡規格書 |
+| `doc_spec_0637` | docs/遊戲規格文件/系統規格書/結緣介面十四人血統樹展開與實時EP評級演算規格書.md | 結緣介面十四人血統樹展開與實時EP評級演算規格書 |
+| `doc_spec_0638` | docs/遊戲規格文件/系統規格書/血統樹十四人祖譜渲染效能防呆與貼圖DrawCall預算規格書.md | 血統樹十四人祖譜渲染效能防呆與貼圖DrawCall預算規格書 |
+| `doc_spec_0639` | docs/遊戲規格文件/系統規格書/祖紋命篆視覺契約與靈獸六原型徽章映射規格書.md | 祖紋命篆視覺契約與靈獸六原型徽章映射規格書 |
+| `doc_spec_0640` | docs/遊戲規格文件/系統規格書/六色因子全域Token整合與血統連線漸變色渲染規格書.md | 六色因子全域Token整合與血統連線漸變色渲染規格書 |
+| `doc_spec_0641` | docs/遊戲規格文件/系統規格書/遺傳因子跳星突變StarJump與重塑洗髓商業平衡規格書.md | 遺傳因子跳星突變StarJump與重塑洗髓商業平衡規格書 |
+| `doc_spec_0642` | docs/遊戲規格文件/系統規格書/白色性格抗性因子與紅色壽命精力因子數值模型規格書.md | 白色性格抗性因子與紅色壽命精力因子數值模型規格書 |
+| `doc_spec_0643` | docs/遊戲規格文件/系統規格書/子嗣資質四階分層揭露狀態機與UI契約規格書.md | 子嗣資質四階分層揭露狀態機與UI契約規格書 |
+| `doc_spec_0644` | docs/遊戲規格文件/系統規格書/天命重置卷天命波動重擲與高運氣種母培育商業規格書.md | 天命重置卷天命波動重擲與高運氣種母培育商業規格書 |
+| `doc_spec_0645` | docs/遊戲規格文件/系統規格書/紅顏天香轉蛋女將卡池五轉小保底與來源名冊規格書.md | 紅顏天香轉蛋女將卡池五轉小保底與來源名冊規格書 |
+| `doc_spec_0646` | docs/遊戲規格文件/系統規格書/戰俘與傭兵女性名將送禮好感度階梯與轉化率規格書.md | 戰俘與傭兵女性名將送禮好感度階梯與轉化率規格書 |
+| `doc_spec_0647` | docs/遊戲規格文件/系統規格書/名士占卜祖輩顯靈台詞觸發與血脈標籤匹配規格書.md | 名士占卜祖輩顯靈台詞觸發與血脈標籤匹配規格書 |
+| `doc_spec_0648` | docs/遊戲規格文件/系統規格書/六大名士預言批語風格庫與左慈含糊讖語模板規格書.md | 六大名士預言批語風格庫與左慈含糊讖語模板規格書 |
+| `doc_spec_0649` | docs/遊戲規格文件/系統規格書/重複名將分流彈窗UI契約與復生重練灌注雙向選擇規格書.md | 重複名將分流彈窗UI契約與復生重練灌注雙向選擇規格書 |
+| `doc_spec_0650` | docs/遊戲規格文件/系統規格書/血脈命鏡升階覺醒介面與重複卡灌注銜接規格書.md | 血脈命鏡升階覺醒介面與重複卡灌注銜接規格書 |
+| `doc_spec_0651` | docs/遊戲規格文件/系統規格書/虎符升階介面與特種軍隊強度灌注晉升規格書.md | 虎符升階介面與特種軍隊強度灌注晉升規格書 |
+| `doc_spec_0652` | docs/遊戲規格文件/系統規格書/五大核心名將歷史趣聞與血脈傳聞敘事文案標準規格書.md | 五大核心名將歷史趣聞與血脈傳聞敘事文案標準規格書 |
+| `doc_spec_0653` | docs/遊戲規格文件/系統規格書/傭兵結義永久化後同名卡自動二轉與屬性上限突破規格書.md | 傭兵結義永久化後同名卡自動二轉與屬性上限突破規格書 |
+| `doc_spec_0654` | docs/遊戲規格文件/系統規格書/全域UI字串Key命名規則UI_SYSTEM_ACTION與i18n字典架構規格書.md | 全域UI字串Key命名規則UI_SYSTEM_ACTION與i18n字典架構規格書 |
+| `doc_spec_0655` | docs/遊戲規格文件/系統規格書/客戶端與伺服端同步API契約型別與標準錯誤碼E001至E099規格書.md | 客戶端與伺服端同步API契約型別與標準錯誤碼E001至E099規格書 |
+| `doc_spec_0656` | docs/遊戲規格文件/系統規格書/伺服器同步限流速率429與請求封包5MB超限413防護規格書.md | 伺服器同步限流速率429與請求封包5MB超限413防護規格書 |
+| `doc_spec_0657` | docs/遊戲規格文件/系統規格書/客戶端語意化版本號三段階梯與Major版本強更導流狀態機規格書.md | 客戶端語意化版本號三段階梯與Major版本強更導流狀態機規格書 |
+| `doc_spec_0658` | docs/遊戲規格文件/系統規格書/啟動場景靜態依賴邊界審計與禁止綁定戰鬥資源靜態Lint規格書.md | 啟動場景靜態依賴邊界審計與禁止綁定戰鬥資源靜態Lint規格書 |
+| `doc_spec_0659` | docs/遊戲規格文件/系統規格書/跨平台Web與Native發佈管線Manifest雜湊產出與CDN長快取規格書.md | 跨平台Web與Native發佈管線Manifest雜湊產出與CDN長快取規格書 |
+| `doc_spec_0660` | docs/遊戲規格文件/系統規格書/原生AssetsManager差異下載熱更場景與重啟進入新版狀態機規格書.md | 原生AssetsManager差異下載熱更場景與重啟進入新版狀態機規格書 |
+| `doc_spec_0661` | docs/遊戲規格文件/系統規格書/Minor次版熱更雙進度條UI互動與Patch補丁靜默驗證規格書.md | Minor次版熱更雙進度條UI互動與Patch補丁靜默驗證規格書 |
+| `doc_spec_0662` | docs/遊戲規格文件/系統規格書/伺服端數值配表熱更新下發與客戶端版本比對快取規格書.md | 伺服端數值配表熱更新下發與客戶端版本比對快取規格書 |
+| `doc_spec_0663` | docs/遊戲規格文件/系統規格書/NPC中台生成結果隔離快取與可丟棄摘要回寫存檔規格書.md | NPC中台生成結果隔離快取與可丟棄摘要回寫存檔規格書 |
+| `doc_spec_0664` | docs/遊戲規格文件/系統規格書/武將四型性格圖騰與忠誠度資料模型擴充規格書.md | 武將四型性格圖騰與忠誠度資料模型擴充規格書 |
+| `doc_spec_0665` | docs/遊戲規格文件/系統規格書/四型性格驅動武將離線自主行為與晨報事件生成規格書.md | 四型性格驅動武將離線自主行為與晨報事件生成規格書 |
+| `doc_spec_0666` | docs/遊戲規格文件/系統規格書/日常人物頁視覺可行性邊界與排除常駐特效審查清單規格書.md | 日常人物頁視覺可行性邊界與排除常駐特效審查清單規格書 |
+| `doc_spec_0667` | docs/遊戲規格文件/系統規格書/武將生平實錄彈窗介面契約與日誌氣泡抽屜規格書.md | 武將生平實錄彈窗介面契約與日誌氣泡抽屜規格書 |
+| `doc_spec_0668` | docs/遊戲規格文件/系統規格書/武將任務適合度徽章演算與大廳看板深層跳轉規格書.md | 武將任務適合度徽章演算與大廳看板深層跳轉規格書 |
+| `doc_spec_0669` | docs/遊戲規格文件/系統規格書/人物頁六頁Tab圖示兩態規格與最小點擊熱區標準規格書.md | 人物頁六頁Tab圖示兩態規格與最小點擊熱區標準規格書 |
+| `doc_spec_0670` | docs/遊戲規格文件/系統規格書/六色血統因子紋樣材質與六大靈獸原型視覺契約規格書.md | 六色血統因子紋樣材質與六大靈獸原型視覺契約規格書 |
+| `doc_spec_0671` | docs/遊戲規格文件/系統規格書/五大UI入口共用血脈徽記元件BloodlineCrestWidget與渲染契約規格書.md | 五大UI入口共用血脈徽記元件BloodlineCrestWidget與渲染契約規格書 |
+| `doc_spec_0672` | docs/遊戲規格文件/系統規格書/血脈象徵八大Slot契約與UI徽記兵牌映射規格書.md | 血脈象徵八大Slot契約與UI徽記兵牌映射規格書 |
+| `doc_spec_0673` | docs/遊戲規格文件/系統規格書/血脈命鏡低頻水墨動效與稀有度靈光Aura渲染規格書.md | 血脈命鏡低頻水墨動效與稀有度靈光Aura渲染規格書 |
+| `doc_spec_0674` | docs/遊戲規格文件/系統規格書/血脈美術禁區守則與無科技HUD視覺審查清單規格書.md | 3KLife 血脈美術禁區守則與無科技HUD視覺審查清單規格書 |
+| `doc_spec_0675` | docs/遊戲規格文件/系統規格書/虎符英靈卡特種軍隊三位一體視覺對應標準規格書.md | 3KLife 虎符英靈卡特種軍隊三位一體視覺對應標準規格書 |
+| `doc_spec_0676` | docs/遊戲規格文件/系統規格書/男女名將立繪Prompt回灌Slot規則與CompareBoard審查規格書.md | 3KLife 男女名將立繪Prompt回灌Slot規則與CompareBoard審查規格書 |
+| `doc_spec_0677` | docs/遊戲規格文件/系統規格書/命鏡裂隙定心者與稀有度Aura靜態圖層分拆標準規格書.md | 3KLife 命鏡裂隙定心者與稀有度Aura靜態圖層分拆標準規格書 |
+| `doc_spec_0678` | docs/遊戲規格文件/系統規格書/五格命運故事帶長卷圖資產生產與慢速橫移動態契約規格書.md | 3KLife 五格命運故事帶長卷圖資產生產與慢速橫移動態契約規格書 |
+| `doc_spec_0679` | docs/遊戲規格文件/系統規格書/國際化Motif圖騰分層置換架構與跨文化視覺禁區審查規格書.md | 3KLife 國際化Motif圖騰分層置換架構與跨文化視覺禁區審查規格書 |
+| `doc_spec_0680` | docs/遊戲規格文件/系統規格書/血脈命鏡五大狀態變體UI表現與稀有度Aura連動規格書.md | 3KLife 血脈命鏡五大狀態變體UI表現與稀有度Aura連動規格書 |
+| `doc_spec_0681` | docs/遊戲規格文件/系統規格書/核心名將立繪SymbolSlot套用與非恐怖裂痕審查驗收規格書.md | 3KLife 核心名將立繪SymbolSlot套用與非恐怖裂痕審查驗收規格書 |
+| `doc_spec_0682` | docs/遊戲規格文件/系統規格書/命鏡鎖定徽章未持有標籤與確認按鈕接線契約規格書.md | 3KLife 命鏡鎖定徽章未持有標籤與確認按鈕接線契約規格書 |
+| `doc_spec_0683` | docs/遊戲規格文件/系統規格書/客戶端資料同步安全傳輸HTTPS強制與個人隱私PII遮蔽過濾規格書.md | 3KLife 客戶端資料同步安全傳輸HTTPS強制與個人隱私PII遮蔽過濾規格書 |
+| `doc_spec_0684` | docs/遊戲規格文件/系統規格書/NPC敘事中台Healthz探針健康度監測與降級靜態模板狀態機規格書.md | 3KLife NPC敘事中台Healthz探針健康度監測與降級靜態模板狀態機規格書 |
+| `doc_spec_0685` | docs/遊戲規格文件/系統規格書/名將PersonaCard多維性格設定檔與證據包解析消費契約規格書.md | 3KLife 名將PersonaCard多維性格設定檔與證據包解析消費契約規格書 |
+| `doc_spec_0686` | docs/遊戲規格文件/系統規格書/客戶端NPC互動記憶四段結構讀寫與上報壓縮狀態機規格書.md | 3KLife 客戶端NPC互動記憶四段結構讀寫與上報壓縮狀態機規格書 |
+| `doc_spec_0687` | docs/遊戲規格文件/系統規格書/客戶端AssetBundle模組切分標準與戰鬥資源動態異步載入規格書.md | 3KLife 客戶端AssetBundle模組切分標準與戰鬥資源動態異步載入規格書 |
+| `doc_spec_0688` | docs/遊戲規格文件/系統規格書/名將官方別稱消歧字典與對話互動情境關鍵字包資料規格書.md | 3KLife 名將官方別稱消歧字典與對話互動情境關鍵字包資料規格書 |
+| `doc_spec_0689` | docs/遊戲規格文件/系統規格書/原生差異下載熱更新ChunkSHA256零信任校驗與單檔斷點續傳規格書.md | 3KLife 原生差異下載熱更新ChunkSHA256零信任校驗與單檔斷點續傳規格書 |
+| `doc_spec_0690` | docs/遊戲規格文件/系統規格書/低階裝置記憶體洩漏監控TextureCache警戒線與自動GC觸發演算法規格書.md | 3KLife 低階裝置記憶體洩漏監控TextureCache警戒線與自動GC觸發演算法規格書 |
+| `doc_spec_0691` | docs/遊戲規格文件/系統規格書/前端未捕獲異常脫敏本地持久化日誌緩衝與背景重試上報規格書.md | 3KLife 前端未捕獲異常脫敏本地持久化日誌緩衝與背景重試上報規格書 |
+| `doc_spec_0692` | docs/遊戲規格文件/系統規格書/多平台Web與Native自動化建置腳本與環境變數注入規格書.md | 3KLife 多平台Web與Native自動化建置腳本與環境變數注入規格書 |
+| `doc_spec_0693` | docs/遊戲規格文件/系統規格書/無頭瀏覽器端到端36回合書院培育防SL自動化驗收測試規格書.md | 3KLife 無頭瀏覽器端到端36回合書院培育防SL自動化驗收測試規格書 |
+| `doc_spec_0694` | docs/遊戲規格文件/系統規格書/全域遊戲行為埋點事件字典離線隊列與網路狀態感知上報規格書.md | 3KLife 全域遊戲行為埋點事件字典離線隊列與網路狀態感知上報規格書 |
+| `doc_spec_0695` | docs/遊戲規格文件/系統規格書/多語系UI文字動態長度自適應縮放與截斷防護規格書.md | 3KLife 多語系UI文字動態長度自適應縮放與截斷防護規格書 |
+| `doc_spec_0696` | docs/遊戲規格文件/系統規格書/全球化發行隱私權政策使用者條款彈窗與授權撤回狀態機規格書.md | 3KLife 全球化發行隱私權政策使用者條款彈窗與授權撤回狀態機規格書 |
+| `doc_spec_0697` | docs/遊戲規格文件/系統規格書/雙平台應用程式商店宣傳圖資分級標籤與多語Meta清單規格書.md | 3KLife 雙平台應用程式商店宣傳圖資分級標籤與多語Meta清單規格書 |
+| `doc_spec_0698` | docs/遊戲規格文件/系統規格書/全專案系統規格大典與單一真相來源全量導航目錄規格書.md | 3KLife 全專案系統規格大典與單一真相來源全量導航目錄規格書 |
+| `doc_spec_0699` | docs/遊戲規格文件/系統規格書/計算型閘門Quick與Full雙階梯掃描策略與防回歸門禁規格書.md | 3KLife 計算型閘門Quick與Full雙階梯掃描策略與防回歸門禁規格書 |
+| `doc_spec_0700` | docs/遊戲規格文件/系統規格書/SemVer版本演進發布火車ReleaseTrain分發協議規格書.md | 3KLife SemVer版本演進發布火車ReleaseTrain分發協議規格書 |
+| `doc_spec_0701` | docs/遊戲規格文件/系統規格書/全域音訊架構AudioManager多軌混音與BGM平滑交叉淡入淡出規格書.md | 3KLife 全域音訊架構AudioManager多軌混音與BGM平滑交叉淡入淡出規格書 |
+| `doc_spec_0702` | docs/遊戲規格文件/系統規格書/戰鬥打擊音效多通道並發限流與同音效冷卻防破音規格書.md | 3KLife 戰鬥打擊音效多通道並發限流與同音效冷卻防破音規格書 |
+| `doc_spec_0703` | docs/遊戲規格文件/系統規格書/音訊資產載入模式串流與記憶體預載分流策略規格書.md | 3KLife 音訊資產載入模式串流與記憶體預載分流策略規格書 |
+| `doc_spec_0704` | docs/遊戲規格文件/系統規格書/戰鬥區塊特效註冊表與組合配方Recipe資料結構規格書.md | 3KLife 戰鬥區塊特效註冊表與組合配方Recipe資料結構規格書 |
+| `doc_spec_0705` | docs/遊戲規格文件/系統規格書/戰鬥特效粒子上限與GPU繪製調用預算審計規格書.md | 3KLife 戰鬥特效粒子上限與GPU繪製調用預算審計規格書 |
+| `doc_spec_0706` | docs/遊戲規格文件/系統規格書/特效節點物件池預熱自動回收與防殘留洩漏狀態機規格書.md | 3KLife 特效節點物件池預熱自動回收與防殘留洩漏狀態機規格書 |
+| `doc_spec_0707` | docs/遊戲規格文件/系統規格書/戰場動態氣候雨雪風霧效果狀態機與兵種攻防修正規格書.md | 3KLife 戰場動態氣候雨雪風霧效果狀態機與兵種攻防修正規格書 |
+| `doc_spec_0708` | docs/遊戲規格文件/系統規格書/戰場高地視野遠程射程加成與險道隘口通行約束規格書.md | 3KLife 戰場高地視野遠程射程加成與險道隘口通行約束規格書 |
+| `doc_spec_0709` | docs/遊戲規格文件/系統規格書/火計蔓延地格演算法與風向風力動態擴散狀態機規格書.md | 3KLife 火計蔓延地格演算法與風向風力動態擴散狀態機規格書 |
+| `doc_spec_0710` | docs/遊戲規格文件/系統規格書/戰場水攻決堤淹沒地格演算法與泥濘阻滯狀態機規格書.md | 3KLife 戰場水攻決堤淹沒地格演算法與泥濘阻滯狀態機規格書 |
+| `doc_spec_0711` | docs/遊戲規格文件/系統規格書/攻城器械投石車雲梯衝車組裝部署與城垣破防狀態機規格書.md | 3KLife 攻城器械投石車雲梯衝車組裝部署與城垣破防狀態機規格書 |
+| `doc_spec_0712` | docs/遊戲規格文件/系統規格書/戰場伏兵誘敵隱蔽判定演算法與背刺夾擊傷害結算規格書.md | 3KLife 戰場伏兵誘敵隱蔽判定演算法與背刺夾擊傷害結算規格書 |
+| `doc_spec_0713` | docs/遊戲規格文件/系統規格書/戰場軍師計謀錦囊施放與消耗型計略點數SP狀態機規格書.md | 3KLife 戰場軍師計謀錦囊施放與消耗型計略點數SP狀態機規格書 |
+| `doc_spec_0714` | docs/遊戲規格文件/系統規格書/戰場糧道輜重隊補給線護送與截糧士氣崩潰狀態機規格書.md | 3KLife 戰場糧道輜重隊補給線護送與截糧士氣崩潰狀態機規格書 |
+| `doc_spec_0715` | docs/遊戲規格文件/系統規格書/戰場夜戰晝夜交替火把照明視野與夜襲突防狀態機規格書.md | 3KLife 戰場夜戰晝夜交替火把照明視野與夜襲突防狀態機規格書 |
+| `doc_spec_0716` | docs/遊戲規格文件/系統規格書/戰場八大經典陣法相剋矩陣與陣型維持加成狀態機規格書.md | 3KLife 戰場八大經典陣法相剋矩陣與陣型維持加成狀態機規格書 |
+| `doc_spec_0717` | docs/遊戲規格文件/系統規格書/傳奇特種兵種虎豹騎陷陣營白馬義從專屬戰陣被動與招募條件規格書.md | 3KLife 傳奇特種兵種虎豹騎陷陣營白馬義從專屬戰陣被動與招募條件規格書 |
+| `doc_spec_0718` | docs/遊戲規格文件/系統規格書/戰役歷史重大事件判定與IF假想歷史線分支狀態機規格書.md | 3KLife 戰役歷史重大事件判定與IF假想歷史線分支狀態機規格書 |
+| `doc_spec_0719` | docs/遊戲規格文件/系統規格書/戰場主帥金鼓旗令傳達半徑與軍令延遲狀態機規格書.md | 3KLife 戰場主帥金鼓旗令傳達半徑與軍令延遲狀態機規格書 |
+| `doc_spec_0720` | docs/遊戲規格文件/系統規格書/戰場傷兵野戰救護醫療所與重傷後遺症殘疾狀態機規格書.md | 3KLife 戰場傷兵野戰救護醫療所與重傷後遺症殘疾狀態機規格書 |
+| `doc_spec_0721` | docs/遊戲規格文件/系統規格書/戰役詐降偽書離間謀略演算法與反間計策成功率狀態機規格書.md | 3KLife 戰役詐降偽書離間謀略演算法與反間計策成功率狀態機規格書 |
+| `doc_spec_0722` | docs/遊戲規格文件/系統規格書/水戰四大戰船樓船蒙衝鬥艦走舸操控特性與風浪顛簸狀態機規格書.md | 3KLife 水戰四大戰船樓船蒙衝鬥艦走舸操控特性與風浪顛簸狀態機規格書 |
+| `doc_spec_0723` | docs/遊戲規格文件/系統規格書/連環船鐵索相連平穩增益與火攻爆發全滅連鎖狀態機規格書.md | 3KLife 連環船鐵索相連平穩增益與火攻爆發全滅連鎖狀態機規格書 |
+| `doc_spec_0724` | docs/遊戲規格文件/系統規格書/戰場攻心心戰四面楚歌散布流言與全軍瓦解狀態機規格書.md | 3KLife 戰場攻心心戰四面楚歌散布流言與全軍瓦解狀態機規格書 |
+| `doc_spec_0725` | docs/遊戲規格文件/系統規格書/城池巷戰街壘工事搭建與街道狹路交鋒狀態機規格書.md | 3KLife 城池巷戰街壘工事搭建與街道狹路交鋒狀態機規格書 |
+| `doc_spec_0726` | docs/遊戲規格文件/系統規格書/地道掘進暗度陳倉塌陷城垣地下奇襲狀態機規格書.md | 3KLife 地道掘進暗度陳倉塌陷城垣地下奇襲狀態機規格書 |
+| `doc_spec_0727` | docs/遊戲規格文件/系統規格書/降將義理相性檢驗與反覆無常呂布式二度背叛狀態機規格書.md | 3KLife 降將義理相性檢驗與反覆無常呂布式二度背叛狀態機規格書 |
+| `doc_spec_0728` | docs/遊戲規格文件/系統規格書/兩軍陣前舌戰文鬥心理卡牌對抗與詞鋒壓制狀態機規格書.md | 3KLife 兩軍陣前舌戰文鬥心理卡牌對抗與詞鋒壓制狀態機規格書 |
+| `doc_spec_0729` | docs/遊戲規格文件/系統規格書/傳世神兵青釭雌雄劍青龍刀鋒芒淬鍊與耐久磨損狀態機規格書.md | 3KLife 傳世神兵青釭雌雄劍青龍刀鋒芒淬鍊與耐久磨損狀態機規格書 |
+| `doc_spec_0730` | docs/遊戲規格文件/系統規格書/傳奇名駒赤兔的盧絕影馳騁衝刺與護主越檀溪狀態機規格書.md | 3KLife 傳奇名駒赤兔的盧絕影馳騁衝刺與護主越檀溪狀態機規格書 |
+| `doc_spec_0731` | docs/遊戲規格文件/系統規格書/城池治安民怨暴動臨界與黃巾流寇起義蔓延狀態機規格書.md | 3KLife 城池治安民怨暴動臨界與黃巾流寇起義蔓延狀態機規格書 |
+| `doc_spec_0732` | docs/遊戲規格文件/系統規格書/名將秋風五丈原七星燈禳星祈命延壽儀軌與氣數逆轉規格書.md | 3KLife 名將秋風五丈原七星燈禳星祈命延壽儀軌與氣數逆轉規格書 |
+| `doc_spec_0733` | docs/遊戲規格文件/系統規格書/勢力朝廷官爵冊封九錫受禪稱帝正統度演算法規格書.md | 3KLife 勢力朝廷官爵冊封九錫受禪稱帝正統度演算法規格書 |
+| `doc_spec_0734` | docs/遊戲規格文件/系統規格書/邊疆異族勢力南蠻烏桓鮮卑朝貢互市借兵與叛亂平定狀態機規格書.md | 3KLife 邊疆異族勢力南蠻烏桓鮮卑朝貢互市借兵與叛亂平定狀態機規格書 |
+| `doc_spec_0735` | docs/遊戲規格文件/系統規格書/名將傳世遺命與白帝城託孤攝政相父輔政狀態機規格書.md | 3KLife 名將傳世遺命與白帝城託孤攝政相父輔政狀態機規格書 |
+| `doc_spec_0736` | docs/遊戲規格文件/系統規格書/全域水系漕運網絡與人工運河開鑿物流調度狀態機規格書.md | 3KLife 全域水系漕運網絡與人工運河開鑿物流調度狀態機規格書 |
+| `doc_spec_0737` | docs/遊戲規格文件/系統規格書/神醫華佗董奉張仲景遊歷採藥青囊醫道傳承與瘟疫拔除狀態機規格書.md | 3KLife 神醫華佗董奉張仲景遊歷採藥青囊醫道傳承與瘟疫拔除狀態機規格書 |
+| `doc_spec_0738` | docs/遊戲規格文件/系統規格書/傳世兵書孟德新書兵法二十四篇研讀注釋與武略突破狀態機規格書.md | 3KLife 傳世兵書孟德新書兵法二十四篇研讀注釋與武略突破狀態機規格書 |
+| `doc_spec_0739` | docs/遊戲規格文件/系統規格書/隱士高人水鏡司馬徽紫虛管輅雲遊尋訪指點迷津機緣狀態機規格書.md | 3KLife 隱士高人水鏡司馬徽紫虛管輅雲遊尋訪指點迷津機緣狀態機規格書 |
+| `doc_spec_0740` | docs/遊戲規格文件/系統規格書/傳世名琴焦尾琴胡笳十八拍廣陵散雅樂合奏與戰場士氣淨化狀態機規格書.md | 3KLife 傳世名琴焦尾琴胡笳十八拍廣陵散雅樂合奏與戰場士氣淨化狀態機規格書 |
+| `doc_spec_0741` | docs/遊戲規格文件/系統規格書/千秋功德碑勒石燕然受命於天篆刻立碑與名望功業沉澱狀態機規格書.md | 3KLife 千秋功德碑勒石燕然受命於天篆刻立碑與名望功業沉澱狀態機規格書 |
+| `doc_spec_0742` | docs/遊戲規格文件/系統規格書/全域烽火台狼煙預警網絡與斥候烽燧秒級情報傳遞狀態機規格書.md | 3KLife 全域烽火台狼煙預警網絡與斥候烽燧秒級情報傳遞狀態機規格書 |
+| `doc_spec_0743` | docs/遊戲規格文件/系統規格書/傳世名酒杜康屠蘇青梅煮酒宴飲結義與割袍斷義狀態機規格書.md | 3KLife 傳世名酒杜康屠蘇青梅煮酒宴飲結義與割袍斷義狀態機規格書 |
+| `doc_spec_0744` | docs/遊戲規格文件/系統規格書/傳奇神弓寶雕弓穿楊狙殺與黃忠百步穿楊暗箭難防狀態機規格書.md | 3KLife 傳奇神弓寶雕弓穿楊狙殺與黃忠百步穿楊暗箭難防狀態機規格書 |
+| `doc_spec_0745` | docs/遊戲規格文件/系統規格書/全域官道驛站拓撲網絡與八百里加急飛驛文書傳遞狀態機規格書.md | 3KLife 全域官道驛站拓撲網絡與八百里加急飛驛文書傳遞狀態機規格書 |
+| `doc_spec_0746` | docs/遊戲規格文件/系統規格書/二十四節氣與四時農桑耕作收穫氣候連動規格書.md | 3KLife 二十四節氣與四時農桑耕作收穫氣候連動規格書 |
+| `doc_spec_0747` | docs/遊戲規格文件/系統規格書/泰山封禪天壇祈福與國家太廟宗祠祭祖規格書.md | 3KLife 泰山封禪天壇祈福與國家太廟宗祠祭祖規格書 |
+| `doc_spec_0748` | docs/遊戲規格文件/系統規格書/夜觀天象紫微垣太白晝見與熒惑守心天譴預警規格書.md | 3KLife 夜觀天象紫微垣太白晝見與熒惑守心天譴預警規格書 |
+| `doc_spec_0749` | docs/遊戲規格文件/系統規格書/長江黃河水系汛期流速與暗礁激流沉船航運阻滯規格書.md | 3KLife 長江黃河水系汛期流速與暗礁激流沉船航運阻滯規格書 |
+| `doc_spec_0750` | docs/遊戲規格文件/系統規格書/水軍船塢等級擴建與艨艟鬥艦大型樓船造船工期規格書.md | 3KLife 水軍船塢等級擴建與艨艟鬥艦大型樓船造船工期規格書 |
+| `doc_spec_0751` | docs/遊戲規格文件/系統規格書/名山險隘太行秦嶺大別山行軍補給損耗與棧道修築狀態機規格書.md | 3KLife 名山險隘太行秦嶺大別山行軍補給損耗與棧道修築狀態機規格書 |
+| `doc_spec_0752` | docs/遊戲規格文件/系統規格書/戰場射箭傳書勸降圍城守軍與瓦解軍心狀態機規格書.md | 3KLife 戰場射箭傳書勸降圍城守軍與瓦解軍心狀態機規格書 |
+| `doc_spec_0753` | docs/遊戲規格文件/系統規格書/斥候改換敵軍軍服偽裝突襲詐開城門狀態機規格書.md | 3KLife 斥候改換敵軍軍服偽裝突襲詐開城門狀態機規格書 |
+| `doc_spec_0754` | docs/遊戲規格文件/系統規格書/敵國王都間諜細作潛伏情報網策反與流言暗殺狀態機規格書.md | 3KLife 敵國王都間諜細作潛伏情報網策反與流言暗殺狀態機規格書 |
+| `doc_spec_0755` | docs/遊戲規格文件/系統規格書/工兵營架設浮橋搭設飛橋與毀橋斷後狀態機規格書.md | 3KLife 工兵營架設浮橋搭設飛橋與毀橋斷後狀態機規格書 |
+| `doc_spec_0756` | docs/遊戲規格文件/系統規格書/沼澤泥潭行軍陷車疫病蔓延與巨木鋪路狀態機規格書.md | 3KLife 沼澤泥潭行軍陷車疫病蔓延與巨木鋪路狀態機規格書 |
+| `doc_spec_0757` | docs/遊戲規格文件/系統規格書/城防護城河開鑿引水灌壕與吊橋起落防禦狀態機規格書.md | 3KLife 城防護城河開鑿引水灌壕與吊橋起落防禦狀態機規格書 |
+| `doc_spec_0758` | docs/遊戲規格文件/系統規格書/深夜百騎劫營甘寧式夜襲與敵營炸營驚潰狀態機規格書.md | 3KLife 深夜百騎劫營甘寧式夜襲與敵營炸營驚潰狀態機規格書 |
+| `doc_spec_0759` | docs/遊戲規格文件/系統規格書/野戰營寨鹿角拒馬壕溝圍欄與巡邏哨塔防禦體系規格書.md | 3KLife 野戰營寨鹿角拒馬壕溝圍欄與巡邏哨塔防禦體系規格書 |
+| `doc_spec_0760` | docs/遊戲規格文件/系統規格書/奇襲烏巢式糧倉重地放火焚糧與全軍斷炊雪崩狀態機規格書.md | 3KLife 奇襲烏巢式糧倉重地放火焚糧與全軍斷炊雪崩狀態機規格書 |
+| `doc_spec_0761` | docs/遊戲規格文件/系統規格書/上游投毒斷絕水源與圍城飲水枯竭疫病狀態機規格書.md | 3KLife 上游投毒斷絕水源與圍城飲水枯竭疫病狀態機規格書 |
+| `doc_spec_0762` | docs/遊戲規格文件/系統規格書/投石機拋擲瘟疫腐屍病畜與城內大疫爆發狀態機規格書.md | 3KLife 投石機拋擲瘟疫腐屍病畜與城內大疫爆發狀態機規格書 |
+| `doc_spec_0763` | docs/遊戲規格文件/系統規格書/軍營飲水煮沸草藥熏蒸消毒與隨軍疾醫防疫體系規格書.md | 3KLife 軍營飲水煮沸草藥熏蒸消毒與隨軍疾醫防疫體系規格書 |
+| `doc_spec_0764` | docs/遊戲規格文件/系統規格書/江面引火漂流火筏點燃敵軍水砦水柵狀態機規格書.md | 3KLife 江面引火漂流火筏點燃敵軍水砦水柵狀態機規格書 |
+| `doc_spec_0765` | docs/遊戲規格文件/系統規格書/水軍軍港鐵索攔江橫江鐵鎖與斷鎖破港狀態機規格書.md | 3KLife 水軍軍港鐵索攔江橫江鐵鎖與斷鎖破港狀態機規格書 |
+| `doc_spec_0766` | docs/遊戲規格文件/系統規格書/水軍接舷肉搏跳幫戰飛爪拋擲與奪艦斬將狀態機規格書.md | 3KLife 水軍接舷肉搏跳幫戰飛爪拋擲與奪艦斬將狀態機規格書 |
+| `doc_spec_0767` | docs/遊戲規格文件/系統規格書/戰艦鋒銳撞角破甲衝撞與敵船斷舨進水沉沒狀態機規格書.md | 3KLife 戰艦鋒銳撞角破甲衝撞與敵船斷舨進水沉沒狀態機規格書 |
+| `doc_spec_0768` | docs/遊戲規格文件/系統規格書/水鬼蛙人潛渡水底鑿穿敵艦木底與偷割錨纜狀態機規格書.md | 3KLife 水鬼蛙人潛渡水底鑿穿敵艦木底與偷割錨纜狀態機規格書 |
+| `doc_spec_0769` | docs/遊戲規格文件/系統規格書/水底沈樁暗刺與帶刺漁網纏繞敵艦舵葉槳槽狀態機規格書.md | 3KLife 水底沈樁暗刺與帶刺漁網纏繞敵艦舵葉槳槽狀態機規格書 |
+| `doc_spec_0770` | docs/遊戲規格文件/系統規格書/投石巨機重力配重槓桿物理與石彈拋物線破壁狀態機規格書.md | 3KLife 投石巨機重力配重槓桿物理與石彈拋物線破壁狀態機規格書 |
+| `doc_spec_0771` | docs/遊戲規格文件/系統規格書/火油陶罐燃燒彈投射與城內房舍烈焰蔓延狀態機規格書.md | 3KLife 火油陶罐燃燒彈投射與城內房舍烈焰蔓延狀態機規格書 |
+| `doc_spec_0772` | docs/遊戲規格文件/系統規格書/城樓生牛皮防護巨網懸掛與緩衝吸收石彈衝擊狀態機規格書.md | 3KLife 城樓生牛皮防護巨網懸掛與緩衝吸收石彈衝擊狀態機規格書 |
+| `doc_spec_0773` | docs/遊戲規格文件/系統規格書/神射營火箭齊射漫天火雨與敵軍陣型引燃混亂狀態機規格書.md | 3KLife 神射營火箭齊射漫天火雨與敵軍陣型引燃混亂狀態機規格書 |
+| `doc_spec_0774` | docs/遊戲規格文件/系統規格書/戰場風向風力突變助燃與火勢反噬燒營狀態機規格書.md | 3KLife 戰場風向風力突變助燃與火勢反噬燒營狀態機規格書 |
+| `doc_spec_0775` | docs/遊戲規格文件/系統規格書/大盾浸泥塗生漆耐火防禦與火箭穿透阻截狀態機規格書.md | 3KLife 大盾浸泥塗生漆耐火防禦與火箭穿透阻截狀態機規格書 |
+| `doc_spec_0776` | docs/遊戲規格文件/系統規格書/引沂泗水系圍堰蓄水與水攻灌城地格演算法規格書.md | 3KLife 引沂泗水系圍堰蓄水與水攻灌城地格演算法規格書 |
+| `doc_spec_0777` | docs/遊戲規格文件/系統規格書/河道沙袋土堤築堰蓄水與工程破堤導流狀態機規格書.md | 3KLife 河道沙袋土堤築堰蓄水與工程破堤導流狀態機規格書 |
+| `doc_spec_0778` | docs/遊戲規格文件/系統規格書/水浸城池水上行舟調度與物資防潮保全狀態機規格書.md | 3KLife 水浸城池水上行舟調度與物資防潮保全狀態機規格書 |
+| `doc_spec_0779` | docs/遊戲規格文件/系統規格書/水軍輕捷走舸江面哨戒探路與快艇追擊攔截狀態機規格書.md | 3KLife 水軍輕捷走舸江面哨戒探路與快艇追擊攔截狀態機規格書 |
+| `doc_spec_0780` | docs/遊戲規格文件/系統規格書/水戰五色令旗號帶與金鼓齊鳴艦隊陣列轉向指令狀態機規格書.md | 3KLife 水戰五色令旗號帶與金鼓齊鳴艦隊陣列轉向指令狀態機規格書 |
+| `doc_spec_0781` | docs/遊戲規格文件/系統規格書/水師戰艦載運飛鴿傳書水陸兩棲情報秒級回傳狀態機規格書.md | 3KLife 水師戰艦載運飛鴿傳書水陸兩棲情報秒級回傳狀態機規格書 |
+| `doc_spec_0782` | docs/遊戲規格文件/系統規格書/大霧垂江草船借箭誘射與稻草束受箭配重平穩狀態機規格書.md | 3KLife 大霧垂江草船借箭誘射與稻草束受箭配重平穩狀態機規格書 |
+| `doc_spec_0783` | docs/遊戲規格文件/系統規格書/拔箭清點矯直箭桿換羽磨鏃工坊批次翻新狀態機規格書.md | 3KLife 拔箭清點矯直箭桿換羽磨鏃工坊批次翻新狀態機規格書 |
+| `doc_spec_0784` | docs/遊戲規格文件/系統規格書/虛張聲勢擂鼓吶喊疑兵布陣逼退追兵狀態機規格書.md | 3KLife 虛張聲勢擂鼓吶喊疑兵布陣逼退追兵狀態機規格書 |
+| `doc_spec_0785` | docs/遊戲規格文件/系統規格書/車輪踏板水車戰艦人踩輪楫逆流疾馳動力狀態機規格書.md | 3KLife 車輪踏板水車戰艦人踩輪楫逆流疾馳動力狀態機規格書 |
+| `doc_spec_0786` | docs/遊戲規格文件/系統規格書/樓船巨型拍竿巨石砸頂粉碎敵船甲板與倒鉤阻截狀態機規格書.md | 3KLife 樓船巨型拍竿巨石砸頂粉碎敵船甲板與倒鉤阻截狀態機規格書 |
+| `doc_spec_0787` | docs/遊戲規格文件/系統規格書/生鐵覆甲生牛皮包敷蒙衝防火箭撞擊防護力狀態機規格書.md | 3KLife 生鐵覆甲生牛皮包敷蒙衝防火箭撞擊防護力狀態機規格書 |
+| `doc_spec_0788` | docs/遊戲規格文件/系統規格書/重型生鐵四爪錨拋錨定泊與絞盤起錨水文拉力狀態機規格書.md | 3KLife 重型生鐵四爪錨拋錨定泊與絞盤起錨水文拉力狀態機規格書 |
+| `doc_spec_0789` | docs/遊戲規格文件/系統規格書/急流走錨拖底失控與巨石浮囊配重沉錨止滑狀態機規格書.md | 3KLife 急流走錨拖底失控與巨石浮囊配重沉錨止滑狀態機規格書 |
+| `doc_spec_0790` | docs/遊戲規格文件/系統規格書/水寨港埠木質繫船樁系纜與潮汐落差浮動泊位狀態機規格書.md | 3KLife 水寨港埠木質繫船樁系纜與潮汐落差浮動泊位狀態機規格書 |
+| `doc_spec_0791` | docs/遊戲規格文件/系統規格書/逆風之字形折返搶風航行與硬帆旋轉受風狀態機規格書.md | 3KLife 逆風之字形折返搶風航行與硬帆旋轉受風狀態機規格書 |
+| `doc_spec_0792` | docs/遊戲規格文件/系統規格書/狂風暴雨桅杆斷裂帆索絞纏與急拋副帆搶修狀態機規格書.md | 3KLife 狂風暴雨桅杆斷裂帆索絞纏與急拋副帆搶修狀態機規格書 |
+| `doc_spec_0793` | docs/遊戲規格文件/系統規格書/敵弓弩手火箭射穿風帆千瘡百孔失速癱瘓狀態機規格書.md | 3KLife 敵弓弩手火箭射穿風帆千瘡百孔失速癱瘓狀態機規格書 |
+| `doc_spec_0794` | docs/遊戲規格文件/系統規格書/江面漂浮引信伏火水雷水底定深炸裂狀態機規格書.md | 3KLife 江面漂浮引信伏火水雷水底定深炸裂狀態機規格書 |
+| `doc_spec_0795` | docs/遊戲規格文件/系統規格書/戰艦三弓床弩連珠重矢齊射撕裂船體狀態機規格書.md | 3KLife 戰艦三弓床弩連珠重矢齊射撕裂船體狀態機規格書 |
+| `doc_spec_0796` | docs/遊戲規格文件/系統規格書/水戰燃放艾草硫磺生煙掩護全軍撤退狀態機規格書.md | 3KLife 水戰燃放艾草硫磺生煙掩護全軍撤退狀態機規格書 |
+| `doc_spec_0797` | docs/遊戲規格文件/系統規格書/八卦陣休生傷杜景死驚開八門推演與破陣地格狀態機規格書.md | 3KLife 八卦陣休生傷杜景死驚開八門推演與破陣地格狀態機規格書 |
+| `doc_spec_0798` | docs/遊戲規格文件/系統規格書/戰場滾木礌石順坡傾瀉與砸碎步騎軍陣物理狀態機規格書.md | 3KLife 戰場滾木礌石順坡傾瀉與砸碎步騎軍陣物理狀態機規格書 |
+| `doc_spec_0799` | docs/遊戲規格文件/系統規格書/地穴暗坑落馬伏弩與連環絆馬索伏擊騎兵狀態機規格書.md | 3KLife 地穴暗坑落馬伏弩與連環絆馬索伏擊騎兵狀態機規格書 |
+| `doc_spec_0800` | docs/遊戲規格文件/系統規格書/鐵蒺藜鹿角拒馬阻截步騎突破與工兵工兵鏟清障狀態機規格書.md | 3KLife 鐵蒺藜鹿角拒馬阻截步騎突破與工兵工兵鏟清障狀態機規格書 |
+| `doc_spec_0801` | docs/遊戲規格文件/系統規格書/三國野戰掘地道穴攻爆破城牆與守軍聽瓮探聽地道狀態機規格書.md | 3KLife 三國野戰掘地道穴攻爆破城牆與守軍聽瓮探聽地道狀態機規格書 |
+| `doc_spec_0802` | docs/遊戲規格文件/系統規格書/戰場擂石霹靂車拋擲重油火球與點燃敵軍望樓雲梯狀態機規格書.md | 3KLife 戰場擂石霹靂車拋擲重油火球與點燃敵軍望樓雲梯狀態機規格書 |
+| `doc_spec_0803` | docs/遊戲規格文件/系統規格書/戰場引火之物枯草乾柴預置與伏火火攻點燃地格蔓延狀態機規格書.md | 3KLife 戰場引火之物枯草乾柴預置與伏火火攻點燃地格蔓延狀態機規格書 |
+| `doc_spec_0804` | docs/遊戲規格文件/系統規格書/戰場假退佯敗誘敵深入與全軍回馬槍回頭反打狀態機規格書.md | 3KLife 戰場假退佯敗誘敵深入與全軍回馬槍回頭反打狀態機規格書 |
+| `doc_spec_0805` | docs/遊戲規格文件/系統規格書/戰場鐵甲連環重騎衝鋒正面撞碎拒馬盾陣動能狀態機規格書.md | 3KLife 戰場鐵甲連環重騎衝鋒正面撞碎拒馬盾陣動能狀態機規格書 |
+| `doc_spec_0806` | docs/遊戲規格文件/系統規格書/戰場中軍金鼓齊鳴號角吹奏與三軍進退號令指令狀態機規格書.md | 3KLife 戰場中軍金鼓齊鳴號角吹奏與三軍進退號令指令狀態機規格書 |
+| `doc_spec_0807` | docs/遊戲規格文件/系統規格書/戰場傳令快騎奔馳送信與敵軍斥候半途截殺搶奪密令狀態機規格書.md | 3KLife 戰場傳令快騎奔馳送信與敵軍斥候半途截殺搶奪密令狀態機規格書 |
+| `doc_spec_0808` | docs/遊戲規格文件/系統規格書/三軍大將督戰隊嚴明軍紀與斬殺擅退潰兵重聚軍心狀態機規格書.md | 3KLife 三軍大將督戰隊嚴明軍紀與斬殺擅退潰兵重聚軍心狀態機規格書 |
+| `doc_spec_0809` | docs/遊戲規格文件/系統規格書/戰場糧道輜重車隊押運與險隘遇伏斷糧雪崩狀態機規格書.md | 3KLife 戰場糧道輜重車隊押運與險隘遇伏斷糧雪崩狀態機規格書 |
+| `doc_spec_0810` | docs/遊戲規格文件/系統規格書/木牛流馬山地運糧機械機關卡榫與防敵繳獲自毀狀態機規格書.md | 3KLife 木牛流馬山地運糧機械機關卡榫與防敵繳獲自毀狀態機規格書 |
+| `doc_spec_0811` | docs/遊戲規格文件/系統規格書/戰地野戰糧倉囤聚防潮防火與深溝高壘巡更防夜襲狀態機規格書.md | 3KLife 戰地野戰糧倉囤聚防潮防火與深溝高壘巡更防夜襲狀態機規格書 |
+| `doc_spec_0812` | docs/遊戲規格文件/系統規格書/戰艦鐵鏈釘板首尾連環釘鎖平穩與懼火引燃連環覆滅狀態機規格書.md | 3KLife 戰艦鐵鏈釘板首尾連環釘鎖平穩與懼火引燃連環覆滅狀態機規格書 |
+| `doc_spec_0813` | docs/遊戲規格文件/系統規格書/水戰快艇走舸滿載膏油伏火偽降詐降突擊點火狀態機規格書.md | 3KLife 水戰快艇走舸滿載膏油伏火偽降詐降突擊點火狀態機規格書 |
+| `doc_spec_0814` | docs/遊戲規格文件/系統規格書/水面火勢烈火燎原江面跳水潰逃與水鬼救援撈捕狀態機規格書.md | 3KLife 水面火勢烈火燎原江面跳水潰逃與水鬼救援撈捕狀態機規格書 |
+| `doc_spec_0815` | docs/遊戲規格文件/系統規格書/戰場反間密信塗改離間君臣與疑心自相殘殺狀態機規格書.md | 3KLife 戰場反間密信塗改離間君臣與疑心自相殘殺狀態機規格書 |
+| `doc_spec_0816` | docs/遊戲規格文件/系統規格書/兩軍陣前舌戰儒將折衝尊俎動搖全軍戰意狀態機規格書.md | 3KLife 兩軍陣前舌戰儒將折衝尊俎動搖全軍戰意狀態機規格書 |
+| `doc_spec_0817` | docs/遊戲規格文件/系統規格書/萬軍叢中斬將奪旗敵軍大陣帥旗傾倒全軍大潰散狀態機規格書.md | 3KLife 萬軍叢中斬將奪旗敵軍大陣帥旗傾倒全軍大潰散狀態機規格書 |
+| `doc_spec_0818` | docs/遊戲規格文件/系統規格書/南蠻藤甲兵油浸乾藤刀箭不入與遇火遇熱焦骨狀態機規格書.md | 3KLife 南蠻藤甲兵油浸乾藤刀箭不入與遇火遇熱焦骨狀態機規格書 |
+| `doc_spec_0819` | docs/遊戲規格文件/系統規格書/南蠻戰象披甲踐踏驚散戰馬與火球巨響受驚狂暴逆踩狀態機規格書.md | 3KLife 南蠻戰象披甲踐踏驚散戰馬與火球巨響受驚狂暴逆踩狀態機規格書 |
+| `doc_spec_0820` | docs/遊戲規格文件/系統規格書/三國戰場驅使虎豹豺狼猛獸撕咬與金鐵巨響破法狀態機規格書.md | 3KLife 三國戰場驅使虎豹豺狼猛獸撕咬與金鐵巨響破法狀態機規格書 |
+| `doc_spec_0821` | docs/遊戲規格文件/系統規格書/南中四番毒泉啞泉滅泉黑泉柔泉毒性反應與解毒狀態機規格書.md | 3KLife 南中四番毒泉啞泉滅泉黑泉柔泉毒性反應與解毒狀態機規格書 |
+| `doc_spec_0822` | docs/遊戲規格文件/系統規格書/北方大軍南下水土不服赤痢瘧疾蔓延與隨軍疾醫隔離狀態機規格書.md | 3KLife 北方大軍南下水土不服赤痢瘧疾蔓延與隨軍疾醫隔離狀態機規格書 |
+| `doc_spec_0823` | docs/遊戲規格文件/系統規格書/戰場瘴氣沼澤毒霧日出而散日落而聚呼吸窒息狀態機規格書.md | 3KLife 戰場瘴氣沼澤毒霧日出而散日落而聚呼吸窒息狀態機規格書 |
+| `doc_spec_0824` | docs/遊戲規格文件/系統規格書/沙袋壅塞河道蓄積千重洪濤決堤水淹七軍狀態機規格書.md | 3KLife 沙袋壅塞河道蓄積千重洪濤決堤水淹七軍狀態機規格書 |
+| `doc_spec_0825` | docs/遊戲規格文件/系統規格書/低窪平川泥沼大水被困泅水與戰船弓弩射網剿捕狀態機規格書.md | 3KLife 低窪平川泥沼大水被困泅水與戰船弓弩射網剿捕狀態機規格書 |
+| `doc_spec_0826` | docs/遊戲規格文件/系統規格書/城防引水外洩開挖環城減水渠防禦水攻狀態機規格書.md | 3KLife 城防引水外洩開挖環城減水渠防禦水攻狀態機規格書 |
+| `doc_spec_0827` | docs/遊戲規格文件/系統規格書/黑夜疑兵立插無數稻草人披掛甲冑旌旗虛張聲勢狀態機規格書.md | 3KLife 黑夜疑兵立插無數稻草人披掛甲冑旌旗虛張聲勢狀態機規格書 |
+| `doc_spec_0828` | docs/遊戲規格文件/系統規格書/大軍夜宿營嘯炸營自相殘殺神經崩潰狂暴狀態機規格書.md | 3KLife 大軍夜宿營嘯炸營自相殘殺神經崩潰狂暴狀態機規格書 |
+| `doc_spec_0829` | docs/遊戲規格文件/系統規格書/三更銜枚摘鈴夜襲敵營放火焚毀中軍大帳狀態機規格書.md | 3KLife 三更銜枚摘鈴夜襲敵營放火焚毀中軍大帳狀態機規格書 |
+| `doc_spec_0830` | docs/遊戲規格文件/系統規格書/大戟士重甲長戟如林下克上刺馬破騎方陣狀態機規格書.md | 3KLife 大戟士重甲長戟如林下克上刺馬破騎方陣狀態機規格書 |
+| `doc_spec_0831` | docs/遊戲規格文件/系統規格書/諸葛連弩十矢俱發機匣簧輪連射漫天鐵雨狀態機規格書.md | 3KLife 諸葛連弩十矢俱發機匣簧輪連射漫天鐵雨狀態機規格書 |
+| `doc_spec_0832` | docs/遊戲規格文件/系統規格書/丹陽精兵山地健步善短兵刀盾貼身纏鬥狀態機規格書.md | 3KLife 丹陽精兵山地健步善短兵刀盾貼身纏鬥狀態機規格書 |
+| `doc_spec_0833` | docs/遊戲規格文件/系統規格書/西陵峽口橫江重鐵索攔截順流戰艦與千尋鐵鎖沉江狀態機規格書.md | 3KLife 西陵峽口橫江重鐵索攔截順流戰艦與千尋鐵鎖沉江狀態機規格書 |
+| `doc_spec_0834` | docs/遊戲規格文件/系統規格書/巨型桐油火炬大筏順流引火燒熔江面橫鎖狀態機規格書.md | 3KLife 巨型桐油火炬大筏順流引火燒熔江面橫鎖狀態機規格書 |
+| `doc_spec_0835` | docs/遊戲規格文件/系統規格書/水寨浮橋水上渡河兵團機動與走舸撞角斷橋狀態機規格書.md | 3KLife 水寨浮橋水上渡河兵團機動與走舸撞角斷橋狀態機規格書 |
+| `doc_spec_0836` | docs/遊戲規格文件/系統規格書/水寨巨木連環水柵營盤與防撞角木樁水門防禦狀態機規格書.md | 3KLife 水寨巨木連環水柵營盤與防撞角木樁水門防禦狀態機規格書 |
+| `doc_spec_0837` | docs/遊戲規格文件/系統規格書/水軍登艦跳幫接舷短兵白刃甲板肉搏奪艦狀態機規格書.md | 3KLife 水軍登艦跳幫接舷短兵白刃甲板肉搏奪艦狀態機規格書 |
+| `doc_spec_0838` | docs/遊戲規格文件/系統規格書/樓船頂層拍竿巨石下墜砸碎敵艦甲板龍骨狀態機規格書.md | 3KLife 樓船頂層拍竿巨石下墜砸碎敵艦甲板龍骨狀態機規格書 |
+| `doc_spec_0839` | docs/遊戲規格文件/系統規格書/戰艦水上雙管猛火油噴筒噴吐火舌火浪狀態機規格書.md | 3KLife 戰艦水上雙管猛火油噴筒噴吐火舌火浪狀態機規格書 |
+| `doc_spec_0840` | docs/遊戲規格文件/系統規格書/江心定深鐵索橫江鐵環浮漂攔阻陣型狀態機規格書.md | 3KLife 江心定深鐵索橫江鐵環浮漂攔阻陣型狀態機規格書 |
+| `doc_spec_0841` | docs/遊戲規格文件/系統規格書/水戰舵樓生牛皮厚板防護箭雨與舵手盲操狀態機規格書.md | 3KLife 水戰舵樓生牛皮厚板防護箭雨與舵手盲操狀態機規格書 |
+| `doc_spec_0842` | docs/遊戲規格文件/系統規格書/戰場內外雙重長圍深溝高壘絕外援困內死狀態機規格書.md | 3KLife 戰場內外雙重長圍深溝高壘絕外援困內死狀態機規格書 |
+| `doc_spec_0843` | docs/遊戲規格文件/系統規格書/攻城臨衝高樓絞盤抵近俯瞰壓制與搭板奪堞狀態機規格書.md | 3KLife 攻城臨衝高樓絞盤抵近俯瞰壓制與搭板奪堞狀態機規格書 |
+| `doc_spec_0844` | docs/遊戲規格文件/系統規格書/守軍夜間麻繩藤筐縋城偷襲焚毀敵攻城重械狀態機規格書.md | 3KLife 守軍夜間麻繩藤筐縋城偷襲焚毀敵攻城重械狀態機規格書 |
+| `doc_spec_0845` | docs/遊戲規格文件/系統規格書/城頭懸索狼牙鐵拍重力砸碎先登與甕城千斤閘斷後狀態機規格書.md | 3KLife 城頭懸索狼牙鐵拍重力砸碎先登與甕城千斤閘斷後狀態機規格書 |
+| `doc_spec_0846` | docs/遊戲規格文件/系統規格書/城垛生鐵大鑊文火熬煮金汁滾燙滲甲潰爛破傷狀態機規格書.md | 3KLife 城垛生鐵大鑊文火熬煮金汁滾燙滲甲潰爛破傷狀態機規格書 |
+| `doc_spec_0847` | docs/遊戲規格文件/系統規格書/城防弩臺伏遠床弩棘輪張弦貫穿衝車串刺步騎狀態機規格書.md | 3KLife 城防弩臺伏遠床弩棘輪張弦貫穿衝車串刺步騎狀態機規格書 |
+| `doc_spec_0848` | docs/遊戲規格文件/系統規格書/戰場攔江築堰改道引水灌城浸泡城基坍陷狀態機規格書.md | 3KLife 戰場攔江築堰改道引水灌城浸泡城基坍陷狀態機規格書 |
+| `doc_spec_0849` | docs/遊戲規格文件/系統規格書/城垣崩塌緊急背土搶築半月弧形月城第二防線狀態機規格書.md | 3KLife 城垣崩塌緊急背土搶築半月弧形月城第二防線狀態機規格書 |
+| `doc_spec_0850` | docs/遊戲規格文件/系統規格書/攻城工兵木幔掩護推動摺疊壕橋搭跨護城河天塹狀態機規格書.md | 3KLife 攻城工兵木幔掩護推動摺疊壕橋搭跨護城河天塹狀態機規格書 |
+| `doc_spec_0851` | docs/遊戲規格文件/系統規格書/陰平百丈懸崖裹氈自滾穿透險隘奇襲要塞狀態機規格書.md | 3KLife 陰平百丈懸崖裹氈自滾穿透險隘奇襲要塞狀態機規格書 |
+| `doc_spec_0852` | docs/遊戲規格文件/系統規格書/秦嶺凌空木棧道行軍穿行與斷柱縱火燒棧阻截狀態機規格書.md | 3KLife 秦嶺凌空木棧道行軍穿行與斷柱縱火燒棧阻截狀態機規格書 |
+| `doc_spec_0853` | docs/遊戲規格文件/系統規格書/劍閣一線天峽谷崖頂落石擂木轟頂封死路徑狀態機規格書.md | 3KLife 劍閣一線天峽谷崖頂落石擂木轟頂封死路徑狀態機規格書 |
+| `doc_spec_0854` | docs/遊戲規格文件/系統規格書/塞外荒原棄輜輕騎千里奔襲白狼山臨陣破軍狀態機規格書.md | 3KLife 塞外荒原棄輜輕騎千里奔襲白狼山臨陣破軍狀態機規格書 |
+| `doc_spec_0855` | docs/遊戲規格文件/系統規格書/塞外沙漠旱海地聽探脈工兵掘井淘沙生水狀態機規格書.md | 3KLife 塞外沙漠旱海地聽探脈工兵掘井淘沙生水狀態機規格書 |
+| `doc_spec_0856` | docs/遊戲規格文件/系統規格書/兩軍前線對峙五丈原軍民分屯耕戰兼備持久糧草狀態機規格書.md | 3KLife 兩軍前線對峙五丈原軍民分屯耕戰兼備持久糧草狀態機規格書 |
+| `doc_spec_0857` | docs/遊戲規格文件/系統規格書/將領立軍令狀背水出征失利軍前正法狀態機規格書.md | 3KLife 將領立軍令狀背水出征失利軍前正法狀態機規格書 |
+| `doc_spec_0858` | docs/遊戲規格文件/系統規格書/周瑜打黃蓋苦肉計身受重刑博取敵酋信任狀態機規格書.md | 3KLife 周瑜打黃蓋苦肉計身受重刑博取敵酋信任狀態機規格書 |
+| `doc_spec_0859` | docs/遊戲規格文件/系統規格書/主帥秘不發喪雕木偶推車臨陣反退多疑追兵狀態機規格書.md | 3KLife 主帥秘不發喪雕木偶推車臨陣反退多疑追兵狀態機規格書 |
+| `doc_spec_0860` | docs/遊戲規格文件/系統規格書/上方谷葫蘆盲端預置火雷引爆與暴雨驟降熄火狀態機規格書.md | 3KLife 上方谷葫蘆盲端預置火雷引爆與暴雨驟降熄火狀態機規格書 |
+| `doc_spec_0861` | docs/遊戲規格文件/系統規格書/依山傍林七百里連營與夜半順風茅草縱火連鎖狀態機規格書.md | 3KLife 依山傍林七百里連營與夜半順風茅草縱火連鎖狀態機規格書 |
+| `doc_spec_0862` | docs/遊戲規格文件/系統規格書/江心險灘水底隱匿生鐵暗樁撞裂敵船龍骨狀態機規格書.md | 3KLife 江心險灘水底隱匿生鐵暗樁撞裂敵船龍骨狀態機規格書 |
+| `doc_spec_0863` | docs/遊戲規格文件/系統規格書/戰場前沿快速撒佈生鐵蒺藜地毯刺馬倒骨狀態機規格書.md | 3KLife 戰場前沿快速撒佈生鐵蒺藜地毯刺馬倒骨狀態機規格書 |
+| `doc_spec_0864` | docs/遊戲規格文件/系統規格書/城垛絞盤探出懸燈與投擲白磷長明火球破夜隱狀態機規格書.md | 3KLife 城垛絞盤探出懸燈與投擲白磷長明火球破夜隱狀態機規格書 |
+| `doc_spec_0865` | docs/遊戲規格文件/系統規格書/戰艦兩舷絞盤升起生牛皮木幔盾牆抗箭雨狀態機規格書.md | 3KLife 戰艦兩舷絞盤升起生牛皮木幔盾牆抗箭雨狀態機規格書 |
+| `doc_spec_0866` | docs/遊戲規格文件/系統規格書/重裝步兵包鐵大盾深釘地樁撐木反震騎兵狀態機規格書.md | 3KLife 重裝步兵包鐵大盾深釘地樁撐木反震騎兵狀態機規格書 |
+| `doc_spec_0867` | docs/遊戲規格文件/系統規格書/工兵吹氣羊皮浮囊扎筏順浪搶渡湍急江河狀態機規格書.md | 3KLife 工兵吹氣羊皮浮囊扎筏順浪搶渡湍急江河狀態機規格書 |
+| `doc_spec_0868` | docs/遊戲規格文件/系統規格書/皮風箱鼓吹艾草雄黃硫磺毒煙薰窒地道敵軍狀態機規格書.md | 3KLife 皮風箱鼓吹艾草雄黃硫磺毒煙薰窒地道敵軍狀態機規格書 |
+| `doc_spec_0869` | docs/遊戲規格文件/系統規格書/雙層牛皮木屋衝車懸掛鐵撞頭轟碎城門營柵狀態機規格書.md | 3KLife 雙層牛皮木屋衝車懸掛鐵撞頭轟碎城門營柵狀態機規格書 |
+| `doc_spec_0870` | docs/遊戲規格文件/系統規格書/山地先登死士飛虎爪拋扣絕壁鐵齒靴攀登奇襲狀態機規格書.md | 3KLife 山地先登死士飛虎爪拋扣絕壁鐵齒靴攀登奇襲狀態機規格書 |
+| `doc_spec_0871` | docs/遊戲規格文件/系統規格書/水鬼口銜蘆管暗潛江底鑿穿船底割斷繫泊纜繩狀態機規格書.md | 3KLife 水鬼口銜蘆管暗潛江底鑿穿船底割斷繫泊纜繩狀態機規格書 |
+| `doc_spec_0872` | docs/遊戲規格文件/系統規格書/水陸兩棲裝甲輪車踏槳行水陸上衝鋒狀態機規格書.md | 3KLife 水陸兩棲裝甲輪車踏槳行水陸上衝鋒狀態機規格書 |
+| `doc_spec_0873` | docs/遊戲規格文件/系統規格書/江面浮筒竹排載負投石機水上浮動砲臺轟擊水寨狀態機規格書.md | 3KLife 江面浮筒竹排載負投石機水上浮動砲臺轟擊水寨狀態機規格書 |
+| `doc_spec_0874` | docs/遊戲規格文件/系統規格書/水下特種鉸刀破除敵水柵連環鐵鎖狀態機規格書.md | 3KLife 水下特種鉸刀破除敵水柵連環鐵鎖狀態機規格書 |
+| `doc_spec_0875` | docs/遊戲規格文件/系統規格書/戰場夜戰八色孔明風燈升空浮升定高信號聯動狀態機規格書.md | 3KLife 戰場夜戰八色孔明風燈升空浮升定高信號聯動狀態機規格書 |
+| `doc_spec_0876` | docs/遊戲規格文件/系統規格書/高空載人偵察風箏迎風放索俯瞰敵軍虛實狀態機規格書.md | 3KLife 高空載人偵察風箏迎風放索俯瞰敵軍虛實狀態機規格書 |
+| `doc_spec_0877` | docs/遊戲規格文件/系統規格書/山陵隘口五里連環烽燧點火傳煙遇霧敲銅鑼警戒狀態機規格書.md | 3KLife 山陵隘口五里連環烽燧點火傳煙遇霧敲銅鑼警戒狀態機規格書 |
+| `doc_spec_0878` | docs/遊戲規格文件/系統規格書/戰場深溝伏兵以枯枝覆土偽裝踩踏塌陷地刺殺傷狀態機規格書.md | 3KLife 戰場深溝伏兵以枯枝覆土偽裝踩踏塌陷地刺殺傷狀態機規格書 |
+| `doc_spec_0879` | docs/遊戲規格文件/系統規格書/樹林懸掛羊皮戰鼓羊蹄踢鼓虛張夜襲聲東擊西狀態機規格書.md | 3KLife 樹林懸掛羊皮戰鼓羊蹄踢鼓虛張夜襲聲東擊西狀態機規格書 |
+| `doc_spec_0880` | docs/遊戲規格文件/系統規格書/野戰鹿角拒馬交錯扎結塗抹瀝青防撞防鋸防步騎狀態機規格書.md | 3KLife 野戰鹿角拒馬交錯扎結塗抹瀝青防撞防鋸防步騎狀態機規格書 |
+| `doc_spec_0881` | docs/遊戲規格文件/系統規格書/戰場夜戰金汁火油燃燒引發壕溝火牆隔絕敵軍增援狀態機規格書.md | 3KLife 戰場夜戰金汁火油燃燒引發壕溝火牆隔絕敵軍增援狀態機規格書 |
+| `doc_spec_0882` | docs/遊戲規格文件/系統規格書/戰馬雙耳裹厚布眼戴皮罩防驚雷火炮驚駭衝撞狀態機規格書.md | 3KLife 戰馬雙耳裹厚布眼戴皮罩防驚雷火炮驚駭衝撞狀態機規格書 |
+| `doc_spec_0883` | docs/遊戲規格文件/系統規格書/雨天泥濘戰場木板鋪道與雙馬並轅陷車救援狀態機規格書.md | 3KLife 雨天泥濘戰場木板鋪道與雙馬並轅陷車救援狀態機規格書 |
+| `doc_spec_0884` | docs/遊戲規格文件/系統規格書/戰艦水上拋射生鐵猛火油火球碰撞碎裂附著燃燒狀態機規格書.md | 3KLife 戰艦水上拋射生鐵猛火油火球碰撞碎裂附著燃燒狀態機規格書 |
+| `doc_spec_0885` | docs/遊戲規格文件/系統規格書/戰場重型投石機連續拋射碎石散彈壓制城垛弓弩手狀態機規格書.md | 3KLife 戰場重型投石機連續拋射碎石散彈壓制城垛弓弩手狀態機規格書 |
+| `doc_spec_0886` | docs/遊戲規格文件/系統規格書/重甲步兵長柄生鐵挽手鉤拉拽敵盾牆破防刺殺狀態機規格書.md | 3KLife 重甲步兵長柄生鐵挽手鉤拉拽敵盾牆破防刺殺狀態機規格書 |
+| `doc_spec_0887` | docs/遊戲規格文件/系統規格書/城防地聽甕深埋坑道伏耳探聽敵軍掘穴地道狀態機規格書.md | 3KLife 城防地聽甕深埋坑道伏耳探聽敵軍掘穴地道狀態機規格書 |
+| `doc_spec_0888` | docs/遊戲規格文件/系統規格書/戰場窄道伏遠諸葛連弩三段式無縫連續齊射狀態機規格書.md | 3KLife 戰場窄道伏遠諸葛連弩三段式無縫連續齊射狀態機規格書 |
+| `doc_spec_0889` | docs/遊戲規格文件/系統規格書/守城自高擲拋陶罐生石灰細粉隨風迷盲敵目狀態機規格書.md | 3KLife 守城自高擲拋陶罐生石灰細粉隨風迷盲敵目狀態機規格書 |

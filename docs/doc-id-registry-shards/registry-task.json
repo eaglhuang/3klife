@@ -12892,5 +12892,1211 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-1930.md",
     "title": "PROG-2-1930 幼兒低效內政與單場覺醒上限（SPI-13 Q51/Q52）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2159",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1931.md",
+    "title": "PROG-2-1931 GeneralConfig 人性化四欄位（HUM-01）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2160",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1932.md",
+    "title": "PROG-2-1932 性格驅動離線行為（HUM-03）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2161",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1933.md",
+    "title": "PROG-2-1933 中台台詞可驗證摘要／可丟棄快取（NPC-10）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2162",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1934.md",
+    "title": "PROG-2-1934 虎符圖鑑已獲狀態（TRP-20 前半）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2163",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1935.md",
+    "title": "PROG-2-1935 USPECIAL 白名單特殊規則（ULT-10）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2164",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1936.md",
+    "title": "PROG-2-1936 名士批語文案模板（ORAC-09）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2165",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1937.md",
+    "title": "PROG-2-1937 俘虜延伸分支（POW-09）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2166",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1938.md",
+    "title": "PROG-2-1938 宿敵配種結算（doc_spec_0311）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2167",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1939.md",
+    "title": "PROG-2-1939 子嗣開獎與職能宿命（doc_spec_0312）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2168",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1940.md",
+    "title": "PROG-2-1940 單挑勝負結算（doc_spec_0314）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2169",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1941.md",
+    "title": "PROG-2-1941 結緣輔助道具與幼年環境（doc_spec_0315）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2170",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1942.md",
+    "title": "PROG-2-1942 延壽仙丹與不老傳說（doc_spec_0316）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2171",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1943.md",
+    "title": "PROG-2-1943 虎符出陣編制（doc_spec_0317）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2172",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1944.md",
+    "title": "PROG-2-1944 教官支援卡碎片庫（doc_spec_0318）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2173",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1945.md",
+    "title": "PROG-2-1945 存檔掛載點與列舉驗證（doc_spec_0319）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2174",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1946.md",
+    "title": "PROG-2-1946 武將生命週期狀態機（doc_spec_0320）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2175",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1947.md",
+    "title": "PROG-2-1947 因子色彩職能標籤（doc_spec_0321）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2176",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1948.md",
+    "title": "PROG-2-1948 五階奧義事蹟點亮（doc_spec_0322）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2177",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1949.md",
+    "title": "PROG-2-1949 相鄰合攻援護結算（doc_spec_0323）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2178",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1961.md",
+    "title": "PROG-2-1961 家族積分與四階世家等級（SPI-07）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2179",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1962.md",
+    "title": "PROG-2-1962 家族名聲值供養消耗與降階（SPI-08）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2180",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1963.md",
+    "title": "PROG-2-1963 家族積分防火牆（SPI-10）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2181",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1964.md",
+    "title": "PROG-2-1964 英靈卡授與祖靈加護（SPI-11）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2182",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1965.md",
+    "title": "PROG-2-1965 英靈卡集合與家族級 read model（TSK-09）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2183",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1966.md",
+    "title": "PROG-2-1966 多家族英靈卡平衡檢查（TSK-13）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2184",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1967.md",
+    "title": "PROG-2-1967 名士批語祖輩顯靈補充台詞（ORAC-08）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2185",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1968.md",
+    "title": "PROG-2-1968 異域壓力源與沙盤遠征檔案（RAI-16）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2186",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1969.md",
+    "title": "PROG-2-1969 人物頁日誌氣泡與完整生平實錄資料（HUM-06）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2187",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1970.md",
+    "title": "PROG-2-1970 WBS 矩陣更正 AIS-13 與九列狀態",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2188",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1971.md",
+    "title": "PROG-2-1971 統一主卡旗標 isPrimary／Family_Primary_Flag",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2189",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1972.md",
+    "title": "PROG-2-1972 暫定裁決寫入規格",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2190",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1973.md",
+    "title": "PROG-2-1973 USPECIAL 復活 接 BattleState（ULT-10）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2191",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1974.md",
+    "title": "PROG-2-1974 USPECIAL 增益轉移 接 BattleState（ULT-10）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2192",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1975.md",
+    "title": "PROG-2-1975 USPECIAL 行動條重置 接 BattleState（ULT-10）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2193",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1976.md",
+    "title": "PROG-2-1976 USPECIAL 死亡觸發 接 BattleState（ULT-10）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2194",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1977.md",
+    "title": "PROG-2-1977 USPECIAL 場勢切換 接 BattleState（ULT-10）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2195",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1978.md",
+    "title": "PROG-2-1978 USPECIAL 五條規則接進 BattleSkillDispatcher",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2196",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1979.md",
+    "title": "PROG-2-1979 死亡觸發接進陣亡流程",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2197",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1980.md",
+    "title": "PROG-2-1980 奧義資料 specialRule 盤點",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2198",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1981.md",
+    "title": "PROG-2-1981 祖輩顯靈接進 divineFactor",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2199",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1982.md",
+    "title": "PROG-2-1982 委任 AI 英靈虎符出展時機（TRP-20 後半）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2200",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1983.md",
+    "title": "PROG-2-1983 格子戰法三大類與離間（SCN-09）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2201",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1984.md",
+    "title": "PROG-2-1984 釋放敵將頓悟捷徑門檻（LVL-13）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2202",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1985.md",
+    "title": "PROG-2-1985 離間與格子戰法三大類接線（SCN-09）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2203",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1986.md",
+    "title": "PROG-2-1986 兵種／虎符劇本與缺漏 UI Key 落地（TRP-19）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2204",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1987.md",
+    "title": "PROG-2-1987 虎符劇本句呼叫端改讀 i18n Key（TRP-19）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2205",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1988.md",
+    "title": "PROG-2-1988 同步限流與大小限制（SYNC-05）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2206",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1989.md",
+    "title": "PROG-2-1989 同步安全規範：HTTPS 強制與 PII 過濾（SYNC-09）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2207",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1990.md",
+    "title": "PROG-2-1990 版號策略與強更導流：Major 不同強制商店更新（HOT-01）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2208",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1991.md",
+    "title": "PROG-2-1991 結算資料層覺醒額度 checkAwakeningQuota（Q52）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2209",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1992.md",
+    "title": "PROG-2-1992 破釜沉舟殘局傷害接進實際傷害結算（FORM-06 收尾）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2210",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1993.md",
+    "title": "PROG-2-1993 先退役後死亡的英靈卡與虎符補發（SPI-01）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2211",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1994.md",
+    "title": "PROG-2-1994 退役雙軌：60 歲可主動、65 歲系統強制轉教官卡（SPI-01）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2212",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1995.md",
+    "title": "PROG-2-1995 離間歸屬：賈詡固有戰法 sow-discord（SCN-09）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2213",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1996.md",
+    "title": "PROG-2-1996 釋放敵將頓悟接線（LVL-13）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2214",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1997.md",
+    "title": "PROG-2-1997 商業化純邏輯接口（EQP-11／OFC-12）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2215",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1998.md",
+    "title": "PROG-2-1998 虎符灌注層級攻防加成",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2216",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1999.md",
+    "title": "PROG-2-1999 教官卡被動接進培育公式",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2217",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2000.md",
+    "title": "PROG-2-2000 教官精力與教學邊界（doc_spec_0325）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2218",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2001.md",
+    "title": "PROG-2-2001 白色因子天候免疫（doc_spec_0324）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2219",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2002.md",
+    "title": "PROG-2-2002 地形適性飄字（doc_spec_0327）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2220",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2003.md",
+    "title": "PROG-2-2003 家風傳承（doc_spec_0326）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2221",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2004.md",
+    "title": "PROG-2-2004 因子覺醒碎裂（doc_spec_0328）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2222",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2005.md",
+    "title": "PROG-2-2005 虎符場景部署（doc_spec_0313）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2223",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2006.md",
+    "title": "PROG-2-2006 關係圖鑑樣式（doc_spec_0330）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2224",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2007.md",
+    "title": "PROG-2-2007 章節 AI 縮放（doc_spec_0329）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2225",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2008.md",
+    "title": "PROG-2-2008 重複名將分流（doc_spec_0331）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2226",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2009.md",
+    "title": "PROG-2-2009 性格圖騰圓徽",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2227",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2010.md",
+    "title": "PROG-2-2010 幽州演武（doc_spec_0304）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2228",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2011.md",
+    "title": "PROG-2-2011 江東督府（doc_spec_0305）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2229",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2012.md",
+    "title": "PROG-2-2012 洛陽太學（doc_spec_0306）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2230",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2013.md",
+    "title": "PROG-2-2013 隆中草廬（doc_spec_0307）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2231",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2014.md",
+    "title": "PROG-2-2014 幽州演武接線（doc_spec_0304）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2232",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2015.md",
+    "title": "PROG-2-2015 江東督府接線（doc_spec_0305）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2233",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2016.md",
+    "title": "PROG-2-2016 洛陽太學接線（doc_spec_0306）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2234",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2017.md",
+    "title": "PROG-2-2017 隆中草廬接線（doc_spec_0307）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2235",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2018.md",
+    "title": "PROG-2-2018 遺傳因子容錯（doc_spec_0332）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2236",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2019.md",
+    "title": "PROG-2-2019 NPC 記憶填槽與淘汰（doc_spec_0333）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2237",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2020.md",
+    "title": "PROG-2-2020 雲端同步校驗（doc_spec_0334）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2238",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2021.md",
+    "title": "PROG-2-2021 識別碼契約（doc_spec_0335）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2239",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2022.md",
+    "title": "PROG-2-2022 同名辨識（doc_spec_0337）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2240",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2023.md",
+    "title": "PROG-2-2023 公式註冊中心（doc_spec_0338）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2241",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2024.md",
+    "title": "PROG-2-2024 地格消長（doc_spec_0339）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2242",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2025.md",
+    "title": "PROG-2-2025 家傳奧義覺醒（doc_spec_0340）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2243",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2026.md",
+    "title": "PROG-2-2026 轉生與奧義數值（doc_spec_0341）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2244",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2027.md",
+    "title": "PROG-2-2027 多語系回退（doc_spec_0342）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2245",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2028.md",
+    "title": "PROG-2-2028 家傳奧義覺醒新公式（doc_spec_0340）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2246",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2029.md",
+    "title": "PROG-2-2029 數據管線端到端驗證（doc_spec_0343）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2247",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2030.md",
+    "title": "PROG-2-2030 戰法 TP 消耗（doc_spec_0344）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2248",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2031.md",
+    "title": "PROG-2-2031 血脈圖騰視覺契約（doc_spec_0345）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2249",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2032.md",
+    "title": "PROG-2-2032 虎符圖鑑與 AI 出展（doc_spec_0346）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2250",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2033.md",
+    "title": "PROG-2-2033 戰前偵查（doc_spec_0347）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2251",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2034.md",
+    "title": "PROG-2-2034 地格 VFX 與 Decal（doc_spec_0348）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2252",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2035.md",
+    "title": "PROG-2-2035 虎符戰力與升星（doc_spec_0349）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2253",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2036.md",
+    "title": "PROG-2-2036 互動物件與四層渲染（doc_spec_0350）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2254",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2037.md",
+    "title": "PROG-2-2037 血脈跳轉鏈（doc_spec_0351）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2255",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2038.md",
+    "title": "PROG-2-2038 軍師 HUD（doc_spec_0352）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2256",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2039.md",
+    "title": "PROG-2-2039 四主題結算（doc_spec_0353）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2257",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2040.md",
+    "title": "PROG-2-2040 虎符忠誠（doc_spec_0354）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2258",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2041.md",
+    "title": "PROG-2-2041 虎符卡面（doc_spec_0355）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2259",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2042.md",
+    "title": "PROG-2-2042 軍師演武（doc_spec_0356）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2260",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2043.md",
+    "title": "PROG-2-2043 帶兵與戰損（doc_spec_0357）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2261",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2044.md",
+    "title": "PROG-2-2044 戰法目標管線（doc_spec_0358）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2262",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2045.md",
+    "title": "PROG-2-2045 堆疊與治療（doc_spec_0359）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2263",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2046.md",
+    "title": "PROG-2-2046 AI 節奏（doc_spec_0360）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2264",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2047.md",
+    "title": "PROG-2-2047 趙家槍法（doc_spec_0361）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2265",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2048.md",
+    "title": "PROG-2-2048 教官六招（doc_spec_0364）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2266",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2049.md",
+    "title": "PROG-2-2049 場景戰法注入（doc_spec_0366）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2267",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2050.md",
+    "title": "PROG-2-2050 場景戰法設定檔（doc_spec_0368）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2268",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2051.md",
+    "title": "PROG-2-2051 地格佈局分配（doc_spec_0369）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2269",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2052.md",
+    "title": "PROG-2-2052 攻城城牆地利（doc_spec_0372）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2270",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2053.md",
+    "title": "PROG-2-2053 兵源空虛警示（doc_spec_0375）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2271",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2054.md",
+    "title": "PROG-2-2054 裝備同步防時鐘回撥（doc_spec_0439）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2272",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2055.md",
+    "title": "PROG-2-2055 AI 季度全軍強度重算（AIS-13）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2273",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2056.md",
+    "title": "PROG-2-2056 升星與覺醒成功廣播過場事件（BML-06）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2274",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2057.md",
+    "title": "PROG-2-2057 英靈卡表同家族主卡唯一檢查（TSK-09／TSK-13 補強）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2275",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2058.md",
+    "title": "PROG-2-2058 日常人物頁可行性邊界自動檢查（GDV3-08）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2276",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2059.md",
+    "title": "PROG-2-2059 名士占卜祖輩顯靈台詞（ORAC-08）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2277",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2060.md",
+    "title": "PROG-2-2060 存檔遷移登錄慣例與逐版 fixture 守則（HOT-03）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2278",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2061.md",
+    "title": "PROG-2-2061 血脈美術禁區審查清單（BVC-04）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2279",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2062.md",
+    "title": "PROG-2-2062 命鏡稀有度 aura 色映射（BMV3-03）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2280",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2063.md",
+    "title": "PROG-2-2063 命鏡五種 state 差異欄位（BMV3-02）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2281",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2064.md",
+    "title": "PROG-2-2064 命鏡英靈亮度與 aura 色接線（BMV3-02 接線）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2282",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2065.md",
+    "title": "PROG-2-2065 命鏡未持有徽章與確認 CTA 接線（BMV3-07）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2283",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2066.md",
+    "title": "PROG-2-2066 命鏡升星與未持有預覽獨立 screen（BML-04）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2284",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2067.md",
+    "title": "PROG-2-2067 命鏡未持有角色三種標示（BML-07）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2285",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2068.md",
+    "title": "PROG-2-2068 命鏡低頻動效（BMV3-04）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2286",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2069.md",
+    "title": "PROG-2-2069 命鏡 Loading 接進場景切換並輪播武將（BML-05）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2287",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2070.md",
+    "title": "PROG-2-2070 命鏡 motif layer 可替換（BML-11）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2288",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2071.md",
+    "title": "PROG-2-2071 命鏡升階頁顯示血脈灌注結果（DUP-04）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2289",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2072.md",
+    "title": "PROG-2-2072 重複抽卡分流彈窗（DUP-01）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2290",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2073.md",
+    "title": "PROG-2-2073 轉蛋重複卡導向分流彈窗（DUP-05）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2291",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2074.md",
+    "title": "PROG-2-2074 人物頁自薦推薦與任務牆跳轉（HUM-07）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2292",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2075.md",
+    "title": "PROG-2-2075 人物頁日誌氣泡（HUM-06）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2293",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2076.md",
+    "title": "PROG-2-2076 大廳出征前戰前偵查面板（LVL-03）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2294",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2077.md",
+    "title": "PROG-2-2077 世家總覽依家族分組顯示英靈卡（SPI-12）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2295",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2078.md",
+    "title": "PROG-2-2078 名將死亡結算產生英靈卡（SPI-02）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2296",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2079.md",
+    "title": "PROG-2-2079 血統樹頭像效能防呆（BUI-07）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2297",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2080.md",
+    "title": "PROG-2-2080 英靈卡詳情串上同名將虎符與軍隊（SPV-04）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2298",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2081.md",
+    "title": "PROG-2-2081 虎符詳情顯示血脈灌注的虎符層級（DUP-03）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2299",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2082.md",
+    "title": "PROG-2-2082 名將陣亡時顯示英靈卡產出提示（SPI-12 雙卡結算）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2300",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2083.md",
+    "title": "PROG-2-2083 戰後雙卡結算彈窗資料與佇列（SPI-12）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2301",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2084.md",
+    "title": "PROG-2-2084 戰後雙卡結算文字顯示（SPI-12）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2302",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2085.md",
+    "title": "PROG-2-2085 設為主卡後顯示主卡提示（SPI-12）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2303",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2086.md",
+    "title": "PROG-2-2086 雙卡結算帶入生平功業（SPI-12）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2304",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2087.md",
+    "title": "PROG-2-2087 教官卡四大原型分類（FORM-04）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2305",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2088.md",
+    "title": "PROG-2-2088 教官卡列表顯示原型標籤（FORM-04）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2306",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2089.md",
+    "title": "PROG-2-2089 命鏡載入 Tips 四池文案擴充（LT-04）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2307",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2090.md",
+    "title": "PROG-2-2090 幼兒內政指派接線（SPI-13 Q51）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2308",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2091.md",
+    "title": "PROG-2-2091 內政面板套用幼兒效率（SPI-13 Q51）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2309",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2092.md",
+    "title": "PROG-2-2092 教官卡原型改依特徵分流（FORM-04）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2310",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2093.md",
+    "title": "PROG-2-2093 重複卡彈窗套用裁決色碼（DUP-01）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2311",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2094.md",
+    "title": "PROG-2-2094 開場信定稿為古典傳家書版（COPY-01）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2312",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2095.md",
+    "title": "PROG-2-2095 開場信還原為使用者原稿（COPY-01）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2313",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2096.md",
+    "title": "PROG-2-2096 教官卡資料分流（荀彧、郭嘉、劉備）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2314",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2097.md",
+    "title": "PROG-2-2097 結義傭兵自動二轉（MERC-09）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2315",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2098.md",
+    "title": "PROG-2-2098 開場信標題定稿（COPY-01）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2316",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2099.md",
+    "title": "PROG-2-2099 血脈灌注補完（全屬性、虎符經驗、聲望、帳本）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2317",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2100.md",
+    "title": "PROG-2-2100 武將每季薪資與欠薪懲罰（RET-10）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2318",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2101.md",
+    "title": "PROG-2-2101 天下征鋒極限任務入口",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2319",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2102.md",
+    "title": "PROG-2-2102 實機巡檢修正",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2320",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2103.md",
+    "title": "PROG-2-2103 軍事任務接取後下一場戰鬥判定場景戰法（SCN-04）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2321",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2104.md",
+    "title": "PROG-2-2104 性格離線行為接進登入與晨報（HUM-03）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2322",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2105.md",
+    "title": "PROG-2-2105 延壽丹背包入口與每將 3 顆上限",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2323",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2106.md",
+    "title": "PROG-2-2106 子嗣立春天象播報（GEN-14）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2324",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2107.md",
+    "title": "PROG-2-2107 退役與老死的告別絕筆進日誌（GEN-14）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2325",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2108.md",
+    "title": "PROG-2-2108 傭兵告別信寫進日誌",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2326",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2109.md",
+    "title": "PROG-2-2109 安胎藥受孕失敗返還慰問精力（BRD-13）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2327",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2110.md",
+    "title": "PROG-2-2110 留存伺服端統計欄位（RET-13）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2328",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2111.md",
+    "title": "PROG-2-2111 治理存檔 Server 表（GOV-13）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2329",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2120.md",
+    "title": "PROG-2-2120 百寶閣精元購買（ECO-04）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2330",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2121.md",
+    "title": "PROG-2-2121 百寶閣文字可讀與關閉鈕（實機巡檢修正）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2331",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2122.md",
+    "title": "PROG-2-2122 道具選將隱藏退役列與姓名讓開列框（實機巡檢修正）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2332",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2123.md",
+    "title": "PROG-2-2123 武將關係圖鑑（KIN-07）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2333",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2124.md",
+    "title": "PROG-2-2124 武將列表改用統一 UI（使用者指示）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2334",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2125.md",
+    "title": "PROG-2-2125 破釜沉舟體力燃燒與根性減免（FORM-07）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2335",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2126.md",
+    "title": "PROG-2-2126 五階奧義升星與覺醒成功過場（BML-06）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2336",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2127.md",
+    "title": "PROG-2-2127 人物頁性格圓徽（HUM-02）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2337",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2128.md",
+    "title": "PROG-2-2128 28 位女將立繪與頭像進 master",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2338",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2129.md",
+    "title": "PROG-2-2129 底色半透明不壓暗子節點",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2339",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2130.md",
+    "title": "PROG-2-2130 動態 ZOC 移動阻擋（FORM-09）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2340",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2131.md",
+    "title": "PROG-2-2131 四主題關卡內容（LVL-10）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2341",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2132.md",
+    "title": "PROG-2-2132 夜襲主題關視野半徑（LVL-10）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2342",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2133.md",
+    "title": "PROG-2-2133 戰場標題顯示實際關卡名",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2343",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2134.md",
+    "title": "PROG-2-2134 治理效率道具（GOV-14）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2344",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2135.md",
+    "title": "PROG-2-2135 ZOC 棋盤區域標示",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2345",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2136.md",
+    "title": "PROG-2-2136 捲動區溢出與任務詳情按鈕疊字",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2346",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2137.md",
+    "title": "PROG-2-2137 季報排行榜沙盤對話框字型與層級",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2347",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2112.md",
+    "title": "PROG-2-2112 任務詳情派遣武將下拉只列可派遣名冊",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2348",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2138.md",
+    "title": "PROG-2-2138 宿命轉蛋改為新手武將池",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2349",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2113.md",
+    "title": "PROG-2-2113 文字對比修正",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2350",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2139.md",
+    "title": "PROG-2-2139 官職商業加速（OFC-12）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2351",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2140.md",
+    "title": "PROG-2-2140 血脈視覺對照表（BVC-02／BSS-04）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2352",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2141.md",
+    "title": "PROG-2-2141 開場商業序列純邏輯（OPEN-12）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2353",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2142.md",
+    "title": "PROG-2-2142 官職商業加速對齊規格（OFC-12）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2354",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2143.md",
+    "title": "PROG-2-2143 通商節鉞刷新令與外交拜帖錦囊（OFC-12）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2355",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2144.md",
+    "title": "PROG-2-2144 血脈視覺表六色對照改依 doc_spec_0670（BVC-02）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2356",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2145.md",
+    "title": "PROG-2-2145 太守府接玩家實際兵源與糧草（TSK-11）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2357",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2146.md",
+    "title": "PROG-2-2146 太守府不可升級時顯示停用按鈕與原因（GOV-07）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2358",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2147.md",
+    "title": "PROG-2-2147 粉色因子血統同因子升階接進子嗣與戰場（APT-09）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2359",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2148.md",
+    "title": "PROG-2-2148 教官卡詳情接上被動效果與培育事件（MENT-13）",
+    "category": "task"
   }
 ]
