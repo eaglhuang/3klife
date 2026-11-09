@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "xu-shu": {
+      "x": 350,
+      "y": 100,
+      "w": 350,
+      "h": 350,
+      "source": "reviewed",
+      "$note": "2026-11-09 徐庶蜀綠米白劍士造型裁切。"
+    },
     "wang-lang": {
       "x": 310,
       "y": 40,
