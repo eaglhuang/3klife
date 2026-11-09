@@ -376,7 +376,12 @@ export function computeStatGain(
         generalGrowth: session.growthModifier - 1,
         baseMorale: 0,
         moraleBoosts: [],
-        trainingBoosts: [synergyBonus, session.clanTraditionKind === kind ? CLAN_TRADITION_TRAINING_BONUS : 0, session.synergyTutorBonus ?? 0],
+        trainingBoosts: [
+            synergyBonus,
+            session.clanTraditionKind === kind ? CLAN_TRADITION_TRAINING_BONUS : 0,
+            session.synergyTutorBonus ?? 0,
+            ...onSlot.map((mentor) => mentor.trainingRate ?? 0),
+        ],
         friendshipBursts: burst ? [MENTOR_BURST_MULTIPLIER - 1] : [],
         extraCrowd: 0,
     });

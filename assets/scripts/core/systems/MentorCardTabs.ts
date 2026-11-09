@@ -157,10 +157,11 @@ export function toMentorCardLayoutState(view: MentorCardTabView, title: string):
  *   沒帶支援卡的教官沒有事件。
  * - 小插曲：資料表還沒有這一欄，維持空。
  */
-export function mentorToCardData(mentor: Pick<TrainingMentor, 'tpBonus' | 'specialty' | 'stars' | 'inspire' | 'vitalitySave' | 'tacticTpDiscount'>, specialtyLabel: string = mentor.specialty): MentorCardData {
+export function mentorToCardData(mentor: Pick<TrainingMentor, 'tpBonus' | 'specialty' | 'stars' | 'inspire' | 'vitalitySave' | 'tacticTpDiscount' | 'trainingRate'>, specialtyLabel: string = mentor.specialty): MentorCardData {
     const effects: MentorEffectEntry[] = [{ id: 'SUPPORT_BASE', label: `${specialtyLabel} 專長　TP 加成 +${Math.round(mentor.tpBonus)}%` }];
     if (mentor.vitalitySave) effects.push({ id: 'VITALITY_SAVE', label: `訓練體力消耗 -${Math.round(mentor.vitalitySave * 100)}%` });
     if (mentor.tacticTpDiscount) effects.push({ id: 'TP_DISCOUNT', label: `兌換戰法 TP 消耗 -${Math.round(mentor.tacticTpDiscount * 100)}%` });
+    if (mentor.trainingRate) effects.push({ id: 'TRAINING_RATE', label: `同格訓練陪伴效果 +${Math.round(mentor.trainingRate * 100)}%` });
     const events: MentorEventEntry[] = (mentor.inspire?.events ?? [])
         .map((event) => ({
             id: event.eventId,

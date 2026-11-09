@@ -25,6 +25,8 @@ export interface MentorPassiveSavings {
     vitalitySave?: number;
     /** 戰法 TP 消耗減免（TP_Bonus），0~1 */
     tacticTpDiscount?: number;
+    /** 陪伴效果提升（Training_Rate）：站在同一格訓練時進 M_Training，0.05 = +5% */
+    trainingRate?: number;
 }
 
 function sumPassive(def: SupportCardDef, star: number, effect: PassiveEffectKind): number {
@@ -39,9 +41,11 @@ export function passiveSavingsOfSupport(def: SupportCardDef | undefined, star: n
     if (!def) return {};
     const vitalitySave = sumPassive(def, star, 'VITALITY_SAVE');
     const tacticTpDiscount = sumPassive(def, star, 'TP_Bonus');
+    const trainingRate = sumPassive(def, star, 'Training_Rate');
     return {
         ...(vitalitySave > 0 ? { vitalitySave } : {}),
         ...(tacticTpDiscount > 0 ? { tacticTpDiscount } : {}),
+        ...(trainingRate > 0 ? { trainingRate } : {}),
     };
 }
 
