@@ -247,6 +247,7 @@ export interface PinkAptitudeGene {
  * 粉色因子覆寫地形適性：粉色因子存在時，該地形的適性由因子等級決定（規格：適性由粉色因子決定），
  * 沒有粉色因子的地形保留原值。回傳新物件，不改來源。
  * 14 人血統的同因子祖先數由呼叫端傳入（key 為因子 id）；沒傳入視為 0，不升級。
+ * 子嗣的祖先數在受孕時存進 pinkAncestorCounts（戰場沒有族譜可查）。
  */
 export function applyPinkTerrainAptitude(
     base: Readonly<Record<string, string>> | null | undefined,
@@ -265,12 +266,12 @@ export function applyPinkTerrainAptitude(
 
 /** 戰場計算適性用的 profile：武將的兵種／天氣適性照舊，地形適性經粉色因子覆寫（APT-09） */
 export function battleAptitudeProfileOf(
-    general: (AptitudeProfile & { genes?: readonly PinkAptitudeGene[] }) | null | undefined,
+    general: (AptitudeProfile & { genes?: readonly PinkAptitudeGene[]; pinkAncestorCounts?: Readonly<Record<string, number>> }) | null | undefined,
 ): AptitudeProfile | null {
     if (!general) return null;
     return {
         troopAptitude: general.troopAptitude,
         weatherAptitude: general.weatherAptitude,
-        terrainAptitude: applyPinkTerrainAptitude(general.terrainAptitude, general.genes),
+        terrainAptitude: applyPinkTerrainAptitude(general.terrainAptitude, general.genes, general.pinkAncestorCounts),
     };
 }
