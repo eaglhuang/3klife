@@ -1,0 +1,63 @@
+{
+  "id": "opening-offer-default",
+  "version": 1,
+  "bundle": "lobby_ui",
+  "atlasPolicy": "lobby_ui",
+  "slots": {
+    "opening.offer.card.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 255
+    },
+    "opening.offer.row.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 180
+    },
+    "opening.offer.button.bg": {
+      "kind": "color-rect",
+      "color": "primary",
+      "alpha": 140
+    },
+    "opening.offer.label.title": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 28,
+      "lineHeight": 34,
+      "color": "secondaryLight",
+      "overflow": "CLAMP",
+      "isBold": true
+    },
+    "opening.offer.label.body": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "color": "secondaryLight",
+      "overflow": "CLAMP"
+    },
+    "opening.offer.label.button": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 20,
+      "lineHeight": 24,
+      "color": "secondaryLight",
+      "overflow": "CLAMP",
+      "isBold": true
+    },
+    "opening.offer.label.tier": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 56,
+      "lineHeight": 64,
+      "color": "secondaryLight",
+      "overflow": "CLAMP",
+      "isBold": true
+    },
+    "opening.offer.backdrop.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 200
+    }
+  }
+}

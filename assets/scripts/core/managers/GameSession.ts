@@ -2815,13 +2815,18 @@ export class GameSession {
     }
 
     /** 現在該出的開場商品（OPEN-12）；選定主將前或教學在前景時為 null */
-    public nextOpeningOffer(table: Readonly<OpeningOfferTable>, tutorialBlocking: boolean): OpeningOffer | null {
-        return nextOpeningOffer(table, this._openingOffers, { leadSelected: this._leadGeneralId !== null, tutorialBlocking });
+    public nextOpeningOffer(table: Readonly<OpeningOfferTable>, tutorialBlocking: boolean, now?: number): OpeningOffer | null {
+        return nextOpeningOffer(table, this._openingOffers, { leadSelected: this._leadGeneralId !== null, tutorialBlocking, now });
+    }
+
+    /** 已模擬購買的開場商品（OPEN-12 Mock 發貨紀錄） */
+    public get purchasedOpeningOffers(): string[] {
+        return [...this._openingOffers.purchased];
     }
 
     /** 記下玩家對開場商品的回應（OPEN-12）：只記結果，不收款也不發貨；不自動存檔 */
-    public resolveOpeningOffer(table: Readonly<OpeningOfferTable>, offerId: string, outcome: OpeningOfferOutcome): boolean {
-        const result = resolveOpeningOffer(table, this._openingOffers, offerId, outcome, this._leadGeneralId !== null);
+    public resolveOpeningOffer(table: Readonly<OpeningOfferTable>, offerId: string, outcome: OpeningOfferOutcome, now?: number): boolean {
+        const result = resolveOpeningOffer(table, this._openingOffers, offerId, outcome, this._leadGeneralId !== null, now);
         if (result.ok) this._openingOffers = result.state;
         return result.ok;
     }
@@ -5289,6 +5294,7 @@ export class GameSession {
         if (this._openingPhase !== null) fields.openingPhase = this._openingPhase;
         if (this._openingOffers.declined.length > 0 || this._openingOffers.purchased.length > 0) {
             fields.openingOffers = { declined: [...this._openingOffers.declined], purchased: [...this._openingOffers.purchased] };
+            if (this._openingOffers.snoozeUntil !== undefined) fields.openingOffers.snoozeUntil = this._openingOffers.snoozeUntil;
         }
         if (this._enrollGrantDay !== null) fields.enrollGrantDay = this._enrollGrantDay;
         if (this._itemAcquisitionLog.length > 0) fields.itemAcquisitionLog = this._itemAcquisitionLog.slice();

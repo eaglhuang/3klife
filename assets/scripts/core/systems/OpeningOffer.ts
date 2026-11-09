@@ -34,12 +34,19 @@ export type ParseOpeningOfferResult =
 export interface OpeningOfferState {
     declined: string[];
     purchased: string[];
+    /** 序列最後一個商品被拒絕後，這個時間（epoch ms）之前不主動再彈（裁決 11/09 第 11 題） */
+    snoozeUntil?: number;
 }
+
+/** 裁決 11/09 第 11 題：最後一個商品再被拒絕後 24 小時不主動彈 */
+export const OPENING_OFFER_SNOOZE_MS = 24 * 60 * 60 * 1000;
 
 export interface OpeningOfferContext {
     leadSelected: boolean;
     /** 核心教學正在前景（呼叫端判斷） */
     tutorialBlocking: boolean;
+    /** 目前時間（epoch ms）；未提供時不重新推薦已拒絕的最後一個商品 */
+    now?: number;
 }
 
 export type OpeningOfferResolveResult =
@@ -94,6 +101,18 @@ export function parseOpeningOfferTable(raw: unknown): ParseOpeningOfferResult {
     return issues.length === 0 ? { ok: true, table: { offers } } : { ok: false, issues };
 }
 
+/** 序列最後一個商品：沒有其他商品以它為 after */
+function tailOffer(table: Readonly<OpeningOfferTable>): OpeningOffer | null {
+    const tail = table.offers.filter((offer) => offer.after !== undefined && !table.offers.some((o) => o.after === offer.id));
+    return tail.length === 1 ? tail[0] : null;
+}
+
+/** 都沒買、最後一個商品已拒絕且冷卻已過：可以再推薦一次最後一個商品 */
+function isReofferable(table: Readonly<OpeningOfferTable>, offer: OpeningOffer, state: Readonly<OpeningOfferState>, now: number | undefined): boolean {
+    if (now === undefined || state.purchased.length > 0 || tailOffer(table)?.id !== offer.id) return false;
+    return state.declined.includes(offer.id) && now >= (state.snoozeUntil ?? 0);
+}
+
 function isEligible(offer: OpeningOffer, state: Readonly<OpeningOfferState>, leadSelected: boolean): boolean {
     if (state.declined.includes(offer.id) || state.purchased.includes(offer.id)) return false;
     if (offer.after !== undefined) return state.declined.includes(offer.after);
@@ -107,7 +126,10 @@ export function nextOpeningOffer(
     context: Readonly<OpeningOfferContext>,
 ): OpeningOffer | null {
     if (context.tutorialBlocking) return null;
-    return table.offers.find((offer) => isEligible(offer, state, context.leadSelected)) ?? null;
+    const fresh = table.offers.find((offer) => isEligible(offer, state, context.leadSelected));
+    if (fresh) return fresh;
+    const tail = tailOffer(table);
+    return context.leadSelected && tail && isReofferable(table, tail, state, context.now) ? tail : null;
 }
 
 /** 記下玩家對商品的回應；只接受目前可回應的商品，避免跳過序列或重複記錄 */
@@ -117,16 +139,22 @@ export function resolveOpeningOffer(
     offerId: string,
     outcome: OpeningOfferOutcome,
     leadSelected: boolean,
+    now?: number,
 ): OpeningOfferResolveResult {
     const offer = table.offers.find((row) => row.id === offerId);
-    if (!offer || !isEligible(offer, state, leadSelected)) return { ok: false };
-    return {
-        ok: true,
-        state: {
-            declined: outcome === 'declined' ? [...state.declined, offerId] : [...state.declined],
-            purchased: outcome === 'purchased' ? [...state.purchased, offerId] : [...state.purchased],
-        },
+    if (!offer || !leadSelected) return { ok: false };
+    const reoffer = isReofferable(table, offer, state, now);
+    if (!reoffer && !isEligible(offer, state, leadSelected)) return { ok: false };
+    const declined = state.declined.filter((id) => !(outcome === 'purchased' && id === offerId));
+    if (outcome === 'declined' && !declined.includes(offerId)) declined.push(offerId);
+    const next: OpeningOfferState = {
+        declined,
+        purchased: outcome === 'purchased' ? [...state.purchased, offerId] : [...state.purchased],
     };
+    // 最後一個商品被拒絕（含冷卻後再拒絕）：重新計 24 小時
+    if (outcome === 'declined' && now !== undefined && tailOffer(table)?.id === offerId) next.snoozeUntil = now + OPENING_OFFER_SNOOZE_MS;
+    else if (outcome === 'declined' && state.snoozeUntil !== undefined) next.snoozeUntil = state.snoozeUntil;
+    return { ok: true, state: next };
 }
 
 function normalizeIds(raw: unknown): string[] {
@@ -139,5 +167,8 @@ function normalizeIds(raw: unknown): string[] {
 export function normalizeOpeningOfferState(raw: unknown): OpeningOfferState {
     const value = (raw ?? {}) as { declined?: unknown; purchased?: unknown };
     const purchased = normalizeIds(value.purchased);
-    return { declined: normalizeIds(value.declined).filter((id) => !purchased.includes(id)), purchased };
+    const state: OpeningOfferState = { declined: normalizeIds(value.declined).filter((id) => !purchased.includes(id)), purchased };
+    const snooze = (raw as { snoozeUntil?: unknown } | null)?.snoozeUntil;
+    if (typeof snooze === 'number' && Number.isFinite(snooze) && snooze > 0) state.snoozeUntil = Math.floor(snooze);
+    return state;
 }
