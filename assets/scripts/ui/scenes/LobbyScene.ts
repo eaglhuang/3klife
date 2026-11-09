@@ -214,6 +214,7 @@ import { DEFAULT_POOL_ID as GACHA_GENERAL_POOL_ID, GachaFlowCoordinator, GACHA_S
 import { buildGachaPoolGuideLines } from '../core/GachaPoolGuidePresenter';
 import { bindGachaActions, GACHA_ACTION_NODES } from '../core/GachaActionBindings';
 import { formatGeneralDisplayName } from '../../core/models/GeneralTitle';
+import { buildMissionGeneralOptions } from '../../core/systems/MissionGeneralOptions';
 import { clanPerkVisible, treeGenerationVisible } from '../../core/systems/FamilyMilestone';
 import { attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearButton, ensureGlobalDevOverlay, refreshCurrencyDisplay } from '../dev/GachaDevOverlay';
 import { DailyReportController } from '../core/DailyReportController';
@@ -6349,11 +6350,11 @@ export class LobbyScene extends Component {
     }
 
     private _buildMissionDetailGeneralOptions(): MissionGeneralOption[] {
-        return this._generals.map((config) => ({
-            id: config.id,
-            label: formatGeneralDisplayName(config.name, config.title),
-            volunteer: this._isMissionDetailVolunteerGeneral(config),
-        }));
+        // 只列玩家名冊中可派遣的武將（PROG-2-2112，大廳系統 §E-9）；不再列整本圖鑑（約 240 位）
+        return buildMissionGeneralOptions(
+            services().session.getDeployableGenerals(),
+            (config) => this._isMissionDetailVolunteerGeneral(config),
+        );
     }
 
     private _resolveMissionDetailSmokeGeneral(
