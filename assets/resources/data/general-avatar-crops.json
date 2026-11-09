@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "yang-yi": {
+      "x": 310,
+      "y": 0,
+      "w": 350,
+      "h": 350,
+      "source": "reviewed",
+      "$note": "2026-11-09 楊儀蜀綠赭金長史造型裁切。"
+    },
     "yan-liang": {
       "x": 360,
       "y": 70,
