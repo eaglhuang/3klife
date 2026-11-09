@@ -28,6 +28,12 @@ export const STAGE_THEME_CONFIGS: Readonly<Record<StageThemeId, StageThemeConfig
     Ambush: { themeId: 'Ambush', keyObjectType: 'Trap_Cluster', keyObjectCount: 3, visionRadius: null },
 };
 
+/** 主題關的玩家視野半徑；不是四主題或該主題不限時回傳 null */
+export function stageThemeVisionRadius(themeId: string | undefined): number | null {
+    if (!themeId || !Object.prototype.hasOwnProperty.call(STAGE_THEME_CONFIGS, themeId)) return null;
+    return STAGE_THEME_CONFIGS[themeId as StageThemeId].visionRadius;
+}
+
 /** §2 物件與斬將加成 */
 export const SALVAGE_STONE_PER_ROCKFALL = 150;
 export const SALVAGE_WOOD_PER_CAMP_OR_GATE = 200;
