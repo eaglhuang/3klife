@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "wen-pin": {
+      "x": 350,
+      "y": 60,
+      "w": 350,
+      "h": 350,
+      "source": "reviewed",
+      "$note": "2026-11-09 文聘魏藍銀灰弩將造型裁切。"
+    },
     "wu-tugu": {
       "x": 380,
       "y": 270,

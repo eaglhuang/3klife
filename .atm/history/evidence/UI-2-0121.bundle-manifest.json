@@ -1,7 +1,7 @@
 {
   "schemaId": "atm.evidenceBundleManifest.v1",
   "taskId": "UI-2-0121",
-  "updatedAt": "2026-11-09T07:53:14.707Z",
+  "updatedAt": "2026-11-09T07:58:02.560Z",
   "updatedBy": "codex-gpt-6.1-terra",
   "freshValidationPasses": [],
   "staleValidationPasses": [],
@@ -1530,6 +1530,20 @@
       "durationMs": 432,
       "runnerKind": "dev-source",
       "sourceCommit": "e742793d5428d6d889ae4664940b688c3e09e951",
+      "cached": false
+    },
+    {
+      "command": "node tools_node/generate-general-avatars.js wen-pin --verify",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:df3e55123e9843543f173e9f91a7ed8ba862a8d6d1484c620549f541ca068c92",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [],
+      "generatedAt": "2026-11-09T07:58:02.559Z",
+      "startedAt": "2026-11-09T07:58:02.143Z",
+      "finishedAt": "2026-11-09T07:58:02.559Z",
+      "durationMs": 416,
+      "runnerKind": "dev-source",
+      "sourceCommit": "54327c40c7fb35af45269e5bc65e982f0ce530c9",
       "cached": false
     }
   ],

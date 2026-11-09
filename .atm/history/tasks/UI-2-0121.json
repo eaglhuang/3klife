@@ -10,8 +10,8 @@
   "tags": [],
   "createdAt": "2026-11-05T14:30:28.536Z",
   "createdByActor": "codex-gpt-6.1-sol",
-  "lastTransitionId": "2026-11-09T07-51-56-764Z-scope-amendment-0528fcd26928",
-  "lastTransitionAt": "2026-11-09T07:51:56.764Z",
+  "lastTransitionId": "2026-11-09T07-56-42-480Z-scope-amendment-286ba576d2ac",
+  "lastTransitionAt": "2026-11-09T07:56:42.480Z",
   "ledgerContractVersion": "task-ledger/v1",
   "reservedAt": "2026-11-05T17:15:58.821Z",
   "promotedAt": "2026-11-05T17:15:58.826Z",
@@ -211,6 +211,7 @@
       "assets/resources/sprites/generals/avatars/wang_yuan_ji_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/wei_yan_avatar.png",
       "assets/resources/sprites/generals/avatars/wen_chou_avatar.png",
+      "assets/resources/sprites/generals/avatars/wen_pin_avatar.png",
       "assets/resources/sprites/generals/avatars/wu_guo_tai_avatar.png",
       "assets/resources/sprites/generals/avatars/wu_guo_tai_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/wu_tugu_avatar.png",
@@ -349,6 +350,7 @@
       "assets/resources/sprites/generals/wei_yan_portrait.png",
       "assets/resources/sprites/generals/wei_yan_portrait.png.meta",
       "assets/resources/sprites/generals/wen_chou_portrait.png",
+      "assets/resources/sprites/generals/wen_pin_portrait.png",
       "assets/resources/sprites/generals/wu_guo_tai_portrait.png",
       "assets/resources/sprites/generals/wu_guo_tai_portrait.png.meta",
       "assets/resources/sprites/generals/wu_tugu_portrait.png",
@@ -489,6 +491,7 @@
       "assets/resources/sprites/ui_avatars/cropped/wang_yuan_ji_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/wei_yan_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/wen_chou_avatar.png",
+      "assets/resources/sprites/ui_avatars/cropped/wen_pin_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/wu_guo_tai_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/wu_guo_tai_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/wu_tugu_avatar.png",
@@ -544,20 +547,20 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-4afe7312c00f35f8",
-    "ticketDigest": "sha256:4afe7312c00f35f8e0f35bdb90d371208fd22399be2b779a6502b91ed919e164",
+    "ticketId": "wat-35ac1c566b6be5a3",
+    "ticketDigest": "sha256:35ac1c566b6be5a3d8c3a4cbd7f3d2522004d1888cefaeb144f5364c452f17f8",
     "taskId": "UI-2-0121",
     "origin": "claim",
     "actorId": "codex-gpt-6.1-terra",
     "laneSessionId": "lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d",
     "claimGeneration": "lease-f957fb02b01d",
-    "issuedAt": "2026-11-09T07:51:56.649Z",
-    "expiresAt": "2026-11-09T08:21:56.649Z",
-    "scopeDigest": "sha256:4a97c95cd0c2f311d4dc8c05bded43008adb283214868631915e8510ac767643",
+    "issuedAt": "2026-11-09T07:56:42.182Z",
+    "expiresAt": "2026-11-09T08:26:42.182Z",
+    "scopeDigest": "sha256:fc37de7364d475ee753388bf716ee8fd3ffd63519157f1d2b80ea80582579fca",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-11-09T07:51:56.649Z"
+      "selectedAt": "2026-11-09T07:56:42.182Z"
     },
     "grants": [
       {
@@ -753,6 +756,7 @@
           "assets/resources/sprites/generals/avatars/wang_yuan_ji_avatar.png.meta",
           "assets/resources/sprites/generals/avatars/wei_yan_avatar.png",
           "assets/resources/sprites/generals/avatars/wen_chou_avatar.png",
+          "assets/resources/sprites/generals/avatars/wen_pin_avatar.png",
           "assets/resources/sprites/generals/avatars/wu_guo_tai_avatar.png",
           "assets/resources/sprites/generals/avatars/wu_guo_tai_avatar.png.meta",
           "assets/resources/sprites/generals/avatars/wu_tugu_avatar.png",
@@ -891,6 +895,7 @@
           "assets/resources/sprites/generals/wei_yan_portrait.png",
           "assets/resources/sprites/generals/wei_yan_portrait.png.meta",
           "assets/resources/sprites/generals/wen_chou_portrait.png",
+          "assets/resources/sprites/generals/wen_pin_portrait.png",
           "assets/resources/sprites/generals/wu_guo_tai_portrait.png",
           "assets/resources/sprites/generals/wu_guo_tai_portrait.png.meta",
           "assets/resources/sprites/generals/wu_tugu_portrait.png",
@@ -1031,6 +1036,7 @@
           "assets/resources/sprites/ui_avatars/cropped/wang_yuan_ji_avatar.png.meta",
           "assets/resources/sprites/ui_avatars/cropped/wei_yan_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/wen_chou_avatar.png",
+          "assets/resources/sprites/ui_avatars/cropped/wen_pin_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/wu_guo_tai_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/wu_guo_tai_avatar.png.meta",
           "assets/resources/sprites/ui_avatars/cropped/wu_tugu_avatar.png",
@@ -1073,7 +1079,7 @@
           "docs/ui-quality-tasks/UI-2-0121.json",
           "docs/ui-quality-todo.json"
         ],
-        "digest": "sha256:2e4023e676b6768ed91ca8c0fd60fffab82e848e44dedb47859ae41811faf2b1"
+        "digest": "sha256:f9dd8ff9eabea5aae9b76ca17aab529f79c20fb960b9335d97e3ef533026d571"
       },
       {
         "kind": "lifecycle-operation",
@@ -1311,6 +1317,7 @@
       "assets/resources/sprites/generals/avatars/wang_yuan_ji_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/wei_yan_avatar.png",
       "assets/resources/sprites/generals/avatars/wen_chou_avatar.png",
+      "assets/resources/sprites/generals/avatars/wen_pin_avatar.png",
       "assets/resources/sprites/generals/avatars/wu_guo_tai_avatar.png",
       "assets/resources/sprites/generals/avatars/wu_guo_tai_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/wu_tugu_avatar.png",
@@ -1449,6 +1456,7 @@
       "assets/resources/sprites/generals/wei_yan_portrait.png",
       "assets/resources/sprites/generals/wei_yan_portrait.png.meta",
       "assets/resources/sprites/generals/wen_chou_portrait.png",
+      "assets/resources/sprites/generals/wen_pin_portrait.png",
       "assets/resources/sprites/generals/wu_guo_tai_portrait.png",
       "assets/resources/sprites/generals/wu_guo_tai_portrait.png.meta",
       "assets/resources/sprites/generals/wu_tugu_portrait.png",
@@ -1589,6 +1597,7 @@
       "assets/resources/sprites/ui_avatars/cropped/wang_yuan_ji_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/wei_yan_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/wen_chou_avatar.png",
+      "assets/resources/sprites/ui_avatars/cropped/wen_pin_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/wu_guo_tai_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/wu_guo_tai_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/wu_tugu_avatar.png",
@@ -2643,6 +2652,9 @@
     "assets/resources/sprites/ui_avatars/cropped/wen_chou_avatar.png",
     "assets/resources/sprites/generals/avatars/wu_tugu_avatar.png",
     "assets/resources/sprites/generals/wu_tugu_portrait.png",
-    "assets/resources/sprites/ui_avatars/cropped/wu_tugu_avatar.png"
+    "assets/resources/sprites/ui_avatars/cropped/wu_tugu_avatar.png",
+    "assets/resources/sprites/generals/avatars/wen_pin_avatar.png",
+    "assets/resources/sprites/generals/wen_pin_portrait.png",
+    "assets/resources/sprites/ui_avatars/cropped/wen_pin_avatar.png"
   ]
 }
