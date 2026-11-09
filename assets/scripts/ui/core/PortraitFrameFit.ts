@@ -39,6 +39,14 @@ export const PORTRAIT_FRAME_SPEC: Readonly<PortraitFrameSpec> = {
     eyeFromTop: 118,
 };
 
+/** 宿命轉蛋十連的小框：兩排五格，只露上半身 */
+export const DESTINY_PORTRAIT_SPEC: Readonly<PortraitFrameSpec> = {
+    frameWidth: 240,
+    frameHeight: 300,
+    faceHeight: 58,
+    eyeFromTop: 76,
+};
+
 /** 開場名將登場卡右側半身立繪框（UI-2-0160）：框比六框寬，臉放大到約 1.5 倍 */
 export const SHOWCASE_PORTRAIT_SPEC: Readonly<PortraitFrameSpec> = {
     frameWidth: 360,

@@ -148,7 +148,7 @@ import { mercBondedLine, mercDayThreeLine, mercFarewellLine, mercTrustLine } fro
 import { EXPEDITION_TRAVEL_TURNS } from '../../core/systems/TravelCountdown';
 import { RedFaceGalleryController } from '../core/RedFaceShowcaseController';
 import { PORTRAIT_GALLERY_PAGE_SIZE } from '../core/PortraitGallery';
-import { FaceMarks, PORTRAIT_FRAME_SPEC, PortraitFrameSpec, SHOWCASE_PORTRAIT_SPEC, fitPortraitInFrame } from '../core/PortraitFrameFit';
+import { DESTINY_PORTRAIT_SPEC, FaceMarks, PORTRAIT_FRAME_SPEC, PortraitFrameSpec, SHOWCASE_PORTRAIT_SPEC, fitPortraitInFrame } from '../core/PortraitFrameFit';
 import { LobbyOpeningPanels } from '../core/LobbyOpeningPanels';
 import { INTRO_TICK_SEC, OpeningIntroController } from '../core/OpeningIntroController';
 import { InitialShowcaseController } from '../core/InitialShowcaseController';
@@ -1984,7 +1984,7 @@ export class LobbyScene extends Component {
                 refreshSeasonHud: () => this._refreshSeasonHud(),
                 notifyBeauty: name => services().event.emit('SHOW_TOAST', { message: `紅顏 ${name} 前來相會，已加入名冊，可到「結緣」配對`, duration: 4 }),
                 advanceOpening: event => { this._advanceOpening(event); },
-                applyFramePortraits: (binder, keys) => this._applyFramePortraits(binder as NonNullable<UIScreenPreviewHost['binder']>, 'destiny', keys),
+                applyFramePortraits: (binder, keys) => this._applyFramePortraits(binder as NonNullable<UIScreenPreviewHost['binder']>, 'destiny', keys, undefined, DESTINY_PORTRAIT_SPEC),
                 openingLetterText: () => ({ title: services().i18n.t('copy.letter.opening.title'), body: openingLetterBodyWithFunLine(services().i18n.t('copy.letter.opening.body'), services().session.magistrateUid ?? '') }),
                 warn: (message, error) => UCUFLogger.warn(LogCategory.DATA, message, error),
             });

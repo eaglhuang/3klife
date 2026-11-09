@@ -19,13 +19,13 @@ import {
     type DestinyGachaResult, type DestinyGachaState,
 } from '../../core/systems/DestinyGacha';
 import {
-    DESTINY_POOL_IDS, destinyOptionsFromConfig, rollDestinyPool, startNewGameFromDestiny,
+    DESTINY_POOL_IDS, destinyOptionsFromConfig, isDestinyStar, rollDestinyPool, startNewGameFromDestiny,
     type DestinyNewGameTarget,
 } from '../../core/systems/DestinyPool';
 import type { StarterGeneralId } from '../../core/services/StarterRosterService';
 
-/** 候選列最多六格（宿命池就是六位）。 */
-export const DESTINY_OPENING_MAX_ROWS = DESTINY_POOL_IDS.length;
+/** 畫面最多十格（十連）。 */
+export const DESTINY_OPENING_MAX_ROWS = 10;
 
 /** 六位初始名將的稱號與登場台詞（新手開場規格書 §6 建議稱號、§5.2 登場台詞） */
 export const DESTINY_INTRO: Readonly<Record<StarterGeneralId, { title: string; quote: string }>> = {
@@ -44,7 +44,7 @@ export interface DestinyOpeningFlowView {
 }
 
 export interface DestinyOpeningDeps {
-    /** 宿命轉蛋規則（gacha-config.json 的 hero-pool），抽數會封頂在六。 */
+    /** 宿命轉蛋規則（gacha-config.json 的 hero-pool）。 */
     config: () => Readonly<GachaConfig>;
     /** 武將資料（generals.json），開新局與顯示名字用。 */
     generals: () => readonly GeneralConfig[];
@@ -82,9 +82,12 @@ export class DestinyOpeningController {
     public get beautyId(): string | null { return this._beautyId; }
 
     /** 六框立繪先選中、看完台詞再按確認（PROG-2-1147），不論設定都要確認 */
-    private _options() { return { ...destinyOptionsFromConfig(this._deps.config()), confirmRequired: true }; }
+    private _options() {
+        const options = destinyOptionsFromConfig(this._deps.config());
+        return { ...options, confirmRequired: true, pickCount: Math.min(options.pickCount, DESTINY_OPENING_MAX_ROWS) };
+    }
 
-    /** 目前畫面上的六位：未轉蛋依宿命池順序，轉蛋後依抽出順序 */
+    /** 目前畫面上的武將：未轉蛋列出六位名將，轉蛋後依抽出順序 */
     private _shown(): readonly string[] { return this._state.phase === 'idle' ? DESTINY_POOL_IDS : this._state.rolled; }
 
     /** 六框立繪 key（與畫面順序一致），給畫面層載立繪 */
@@ -103,7 +106,7 @@ export class DestinyOpeningController {
     /** 轉蛋：抽出本輪候選。 */
     public roll(): boolean {
         if (this._busy) return false;
-        return this._apply(rollDestinyPool(this._state, this._options(), this._deps.random));
+        return this._apply(rollDestinyPool(this._state, this._options(), this._deps.generals(), this._deps.random));
     }
 
     /** 重置：免費、不限次數，回到未抽狀態。 */
@@ -112,11 +115,11 @@ export class DestinyOpeningController {
         return this._apply(resetDestinyGacha(this._state, this._options()));
     }
 
-    /** 點第 index 框：只標記選中，等 confirm() 才開新局。 */
+    /** 點第 index 框：只有宿命名將能當核心；只標記選中，等 confirm() 才開新局。 */
     public async select(index: number): Promise<boolean> {
         if (this._busy) return false;
         const id = this._state.rolled[index];
-        if (id === undefined) return false;
+        if (id === undefined || !isDestinyStar(id)) return false;
         if (!this._apply(selectDestinyGacha(this._state, id, this._options()))) return false;
         if (!this._revealed.has(id) && this._typing?.id !== id) {
             this._finishTyping();
@@ -170,16 +173,35 @@ export class DestinyOpeningController {
         }
     }
 
+    private _shownChars(id: string): number {
+        if (this._revealed.has(id)) return Infinity;
+        return this._typing?.id === id ? this._typing.chars : 0;
+    }
+
+    /** 下方台詞列：目前點選的名將，跟著名字逐字浮現 */
+    private _shownQuote(): string {
+        const id = this._typing?.id ?? this._state.selected;
+        const intro = id ? DESTINY_INTRO[id as StarterGeneralId] : undefined;
+        if (!id || !intro) return '';
+        return `「${intro.quote}」`.slice(0, Math.max(0, this._shownChars(id) - this._nameOf(id).length));
+    }
+
     /** 扁平 FlowView：key 與 destiny-opening-main.json 的節點 id 對應。 */
     public getFlowView(): DestinyOpeningFlowView {
         const s = this._state;
         const idle = s.phase === 'idle';
         const rolled = s.phase === 'rolled';
+        const stars = s.rolled.filter(isDestinyStar).length;
         const texts: Record<string, string> = {
             destinyTitle: '宿命轉蛋',
-            destinyHint: idle ? '六位名將等你召喚：轉蛋決定登場順序，選中的人就是核心主將' : rolled ? (s.selected ? '確認後，這位名將就是你的核心主將' : '點選一位名將，聽完台詞再按確認') : '',
+            destinyHint: idle
+                ? '十連免費重抽：六位宿命名將摻在一般武將裡，抽到滿意再確認，抽到的全部入名冊'
+                : rolled
+                    ? (s.selected ? '按確認開局，這一輪的武將全部入名冊；不滿意可以重置再抽' : `這輪抽到 ${stars} 位宿命名將：點選一位當核心主將，或重置再抽`)
+                    : '',
             destinyMessage: this._lastMessage,
             destinyResetCount: `重置 ${s.resets} 次`,
+            destinyQuote: this._shownQuote(),
             btnDestinyRollLabel: '轉蛋',
             btnDestinyResetLabel: '重置',
             btnDestinyConfirmLabel: '確認',
@@ -193,25 +215,20 @@ export class DestinyOpeningController {
         const shown = this._shown();
         for (let i = 0; i < DESTINY_OPENING_MAX_ROWS; i++) {
             const id = shown[i];
-            const intro = id !== undefined ? DESTINY_INTRO[id as StarterGeneralId] : undefined;
             actives[`btnFrame${i}`] = id !== undefined;
-            const name = id !== undefined ? this._nameOf(id) : '';
-            const quote = intro ? `「${intro.quote}」` : '';
-            const shownChars = id === undefined ? 0
-                : this._revealed.has(id) ? Infinity
-                : this._typing?.id === id ? this._typing.chars : 0;
-            if (shownChars === 0) {
-                // 盲盒：只露綽號，放在名字欄當大字
-                texts[`frame${i}Name`] = intro?.title ?? '';
-                texts[`frame${i}Sub`] = '';
-                texts[`frame${i}Quote`] = '';
-            } else {
-                texts[`frame${i}Name`] = name.slice(0, shownChars);
-                texts[`frame${i}Sub`] = intro?.title ?? '';
-                texts[`frame${i}Quote`] = quote.slice(0, Math.max(0, shownChars - name.length));
-            }
             actives[`frame${i}Sel`] = id !== undefined && id === s.selected;
-            enabled[`btnFrame${i}`] = id !== undefined && rolled && !this._busy;
+            enabled[`btnFrame${i}`] = id !== undefined && isDestinyStar(id) && rolled && !this._busy;
+            const intro = id !== undefined ? DESTINY_INTRO[id as StarterGeneralId] : undefined;
+            if (id === undefined || !intro) {
+                // 一般武將不賣關子，直接露名字
+                texts[`frame${i}Name`] = id === undefined ? '' : this._nameOf(id);
+                texts[`frame${i}Sub`] = '';
+                continue;
+            }
+            const shownChars = this._shownChars(id);
+            // 盲盒：名將沒看過時只露綽號，放在名字欄當大字
+            texts[`frame${i}Name`] = shownChars === 0 ? intro.title : this._nameOf(id).slice(0, shownChars);
+            texts[`frame${i}Sub`] = shownChars === 0 ? '' : intro.title;
         }
         return { texts, actives, enabled };
     }

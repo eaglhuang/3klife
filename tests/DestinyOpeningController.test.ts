@@ -12,6 +12,7 @@ import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/manager
 import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
 import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
 import { STARTER_GENERAL_IDS } from '../assets/scripts/core/services/StarterRosterService';
+import { isDestinyStar } from '../assets/scripts/core/systems/DestinyPool';
 import { DestinyOpeningController, DESTINY_INTRO, DESTINY_OPENING_MAX_ROWS } from '../assets/scripts/ui/core/DestinyOpeningController';
 
 function readJson<T>(relative: string): T {
@@ -41,6 +42,10 @@ function makeController(config: GachaConfig = heroPool, session = newSession(), 
     return { controller, session, started };
 }
 
+function starIndex(controller: DestinyOpeningController): number {
+    return controller.state.rolled.findIndex(isDestinyStar);
+}
+
 function collectIds(node: any, out: Set<string>): void {
     if (node.id) out.add(node.id);
     for (const child of node.children ?? []) collectIds(child, out);
@@ -49,60 +54,70 @@ function collectIds(node: any, out: Set<string>): void {
 export function createDestinyOpeningControllerSuite(): TestSuite {
     const suite = new TestSuite('DestinyOpeningController (宿命轉蛋畫面流程)');
 
-    suite.test('初始只有轉蛋鈕可按；六框是盲盒只露綽號，還不能點（PROG-2-1147、1621）', () => {
+    suite.test('初始只有轉蛋鈕可按；列出六位名將的綽號，還不能點', () => {
         const { controller } = makeController();
         const view = controller.getFlowView();
         assert.isTrue(view.enabled.btnDestinyRoll);
         assert.isFalse(view.enabled.btnDestinyReset);
         assert.isFalse(view.enabled.btnDestinyConfirm);
         assert.equals(STARTER_GENERAL_IDS.join(','), controller.framePortraitKeys().join(','));
-        for (let i = 0; i < DESTINY_OPENING_MAX_ROWS; i++) {
-            const id = STARTER_GENERAL_IDS[i];
+        STARTER_GENERAL_IDS.forEach((id, i) => {
             assert.isTrue(view.actives[`btnFrame${i}`]);
             assert.isFalse(view.enabled[`btnFrame${i}`]);
             assert.equals(DESTINY_INTRO[id].title, view.texts[`frame${i}Name`]);
             assert.equals('', view.texts[`frame${i}Sub`]);
-            assert.equals('', view.texts[`frame${i}Quote`]);
             assert.isFalse(view.actives[`frame${i}Sel`]);
-        }
+        });
+        assert.isFalse(view.actives.btnFrame6);
     });
 
-    suite.test('轉蛋後仍是盲盒（只露綽號），轉蛋鈕停用、重置鈕啟用', () => {
+    suite.test('轉蛋後十格全開：名將露綽號可點，一般武將露名字不可點', () => {
         const { controller } = makeController();
         assert.isTrue(controller.roll());
         const view = controller.getFlowView();
-        const names = Array.from({ length: DESTINY_OPENING_MAX_ROWS }, (_, i) => view.texts[`frame${i}Name`]);
-        const expected = STARTER_GENERAL_IDS.map(id => DESTINY_INTRO[id].title).sort();
-        assert.equals(expected.join(','), [...names].sort().join(','));
+        assert.equals(10, controller.framePortraitKeys().length);
+        controller.state.rolled.forEach((id, i) => {
+            const intro = DESTINY_INTRO[id as keyof typeof DESTINY_INTRO];
+            assert.isTrue(view.actives[`btnFrame${i}`]);
+            assert.equals(!!intro, view.enabled[`btnFrame${i}`]);
+            assert.equals(intro ? intro.title : generals.find(g => g.id === id)!.name, view.texts[`frame${i}Name`]);
+        });
         assert.isFalse(view.enabled.btnDestinyRoll);
         assert.isTrue(view.enabled.btnDestinyReset);
         assert.isFalse(controller.roll());
-        assert.equals(controller.state.rolled.join(','), controller.framePortraitKeys().join(','));
-        assert.isTrue(view.enabled.btnFrame0);
     });
 
-    suite.test('點選後名字與台詞逐字浮現，看完就留著，重置後也不再蓋回去（PROG-2-1621）', async () => {
-        const { controller } = makeController({ ...heroPool, confirmRequired: true });
+    suite.test('點一般武將沒有反應', async () => {
+        const { controller } = makeController();
         controller.roll();
-        const id = controller.state.rolled[0] as keyof typeof DESTINY_INTRO;
+        const i = controller.state.rolled.findIndex(id => !isDestinyStar(id));
+        assert.isFalse(await controller.select(i));
+        assert.isFalse(controller.getFlowView().enabled.btnDestinyConfirm);
+    });
+
+    suite.test('點選名將後名字與台詞逐字浮現，看完就留著', async () => {
+        const { controller } = makeController();
+        controller.roll();
+        const i = starIndex(controller);
+        const id = controller.state.rolled[i] as keyof typeof DESTINY_INTRO;
         const name = generals.find(g => g.id === id)!.name;
-        assert.isTrue(await controller.select(0));
+        assert.isTrue(await controller.select(i));
         assert.isTrue(controller.revealing);
         controller.tickReveal(1);
         let view = controller.getFlowView();
-        assert.equals(name.slice(0, 1), view.texts.frame0Name);
-        assert.equals('', view.texts.frame0Quote);
+        assert.equals(name.slice(0, 1), view.texts[`frame${i}Name`]);
+        assert.equals('', view.texts.destinyQuote);
         controller.tickReveal(name.length + 1);
         view = controller.getFlowView();
-        assert.equals(name, view.texts.frame0Name);
-        assert.equals('「' + DESTINY_INTRO[id].quote.slice(0, 1), view.texts.frame0Quote);
+        assert.equals(name, view.texts[`frame${i}Name`]);
+        assert.equals('「' + DESTINY_INTRO[id].quote.slice(0, 1), view.texts.destinyQuote);
         controller.tickReveal(999);
         assert.isFalse(controller.revealing);
+        assert.equals(`「${DESTINY_INTRO[id].quote}」`, controller.getFlowView().texts.destinyQuote);
         controller.reset();
         view = controller.getFlowView();
-        const idx = controller.framePortraitKeys().indexOf(id);
-        assert.equals(name, view.texts[`frame${idx}Name`]);
-        assert.equals(`「${DESTINY_INTRO[id].quote}」`, view.texts[`frame${idx}Quote`]);
+        assert.equals('', view.texts.destinyQuote);
+        assert.equals(name, view.texts[`frame${STARTER_GENERAL_IDS.indexOf(id)}Name`]);
     });
 
     suite.test('重置回到未抽，次數累計；可再轉蛋', () => {
@@ -113,34 +128,20 @@ export function createDestinyOpeningControllerSuite(): TestSuite {
         assert.isTrue(controller.roll());
     });
 
-    suite.test('真實設定也要確認（PROG-2-1147）：點第 i 框只選中，按確認才以該位為核心開新局並通知存檔', async () => {
+    suite.test('真實設定也要確認：選中不開局，確認後整包入名冊、該位是核心，並通知存檔', async () => {
         assert.isFalse(heroPool.confirmRequired);
-        for (let i = 0; i < DESTINY_OPENING_MAX_ROWS; i++) {
-            const { controller, session, started } = makeController();
-            controller.roll();
-            const picked = controller.state.rolled[i];
-            assert.isTrue(await controller.select(i));
-            assert.isFalse(controller.started);
-            assert.isTrue(controller.getFlowView().actives[`frame${i}Sel`]);
-            assert.isTrue(await controller.confirm());
-            assert.isTrue(controller.started);
-            assert.equals(picked, session.leadGeneralId);
-            assert.equals(picked, started[0]);
-            assert.equals(6, session.roster.length);
-        }
-    });
-
-    suite.test('需要確認的設定：選中不開局，確認鈕啟用，確認後才開局', async () => {
-        const { controller, session } = makeController({ ...heroPool, confirmRequired: true });
+        const { controller, session, started } = makeController();
         controller.roll();
-        assert.isTrue(await controller.select(2));
+        const i = starIndex(controller);
+        const picked = controller.state.rolled[i];
+        assert.isTrue(await controller.select(i));
         assert.isFalse(controller.started);
-        assert.equals(0, session.roster.length);
-        const view = controller.getFlowView();
-        assert.isTrue(view.enabled.btnDestinyConfirm);
-        assert.isTrue(view.actives.frame2Sel);
+        assert.isTrue(controller.getFlowView().actives[`frame${i}Sel`]);
         assert.isTrue(await controller.confirm());
-        assert.equals(controller.state.rolled[2], session.leadGeneralId);
+        assert.isTrue(controller.started);
+        assert.equals(picked, session.leadGeneralId);
+        assert.equals(picked, started[0]);
+        assert.equals(10, session.roster.length);
     });
 
     suite.test('沒有選定就確認、未抽就點列都會被拒絕且不開局', async () => {
@@ -154,11 +155,15 @@ export function createDestinyOpeningControllerSuite(): TestSuite {
 
     suite.test('開局失敗（武將資料缺漏）退回已抽未鎖，可重置重選，不卡死', async () => {
         const session = newSession();
+        const generalsOverride = { ids: new Set<string>() };
         const controller = new DestinyOpeningController({
-            config: () => heroPool, generals: () => [], session, random: () => 0.3, seed: () => 7, onStarted: () => undefined,
+            config: () => heroPool, generals: () => generals.filter(g => !generalsOverride.ids.has(g.id)), session, random: () => 0.3, seed: () => 7, onStarted: () => undefined,
         });
-        controller.roll();
-        assert.isTrue(await controller.select(0));
+        assert.isTrue(controller.roll());
+        // 把名將資料抽掉一位，模擬開局時資料缺漏
+        const broken = controller.state.rolled[starIndex(controller)];
+        generalsOverride.ids.add(broken);
+        assert.isTrue(await controller.select(starIndex(controller)));
         assert.isFalse(await controller.confirm());
         assert.equals('rolled', controller.state.phase);
         assert.isTrue(controller.getFlowView().texts.destinyMessage.startsWith('開局失敗'));
@@ -168,7 +173,7 @@ export function createDestinyOpeningControllerSuite(): TestSuite {
     suite.test('鎖定後 roll / reset 都被拒絕', async () => {
         const { controller } = makeController();
         controller.roll();
-        await controller.select(0);
+        await controller.select(starIndex(controller));
         await controller.confirm();
         assert.isFalse(controller.roll());
         assert.isFalse(controller.reset());

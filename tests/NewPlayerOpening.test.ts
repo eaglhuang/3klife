@@ -3,6 +3,7 @@
  *
  * Unity 對照：像開場 Timeline 的 PlayMode 測試：從第一幕翻頁一路點到宿命鎖定、新局開始。
  */
+import { isDestinyStar } from '../assets/scripts/core/systems/DestinyPool';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { assert, TestSuite } from './TestRunner';
@@ -79,13 +80,13 @@ export function createNewPlayerOpeningSuite(): TestSuite {
         });
         assert.isTrue(destiny.roll());
         assert.equals(null, destinyLockedEvent(destiny.state));
-        assert.isTrue(await destiny.select(0));
+        assert.isTrue(await destiny.select(destiny.state.rolled.findIndex(isDestinyStar)));
         assert.isTrue(await destiny.confirm());
         const locked = destinyLockedEvent(destiny.state)!;
         assert.equals('showcase', flow.advance(locked)!.id);
         assert.equals(null, flow.advance({ type: SHOWCASE_DONE_EVENT }));
         assert.equals(destiny.state.locked, session.leadGeneralId);
-        assert.equals(6, session.roster.length);
+        assert.equals(10, session.roster.length);
     });
 
     suite.test('開場後半：宿命鎖定存檔 → 重開不再是新玩家 → 首戰勝利 → 紅顏只彈一次（存讀往返）', async () => {
@@ -107,7 +108,7 @@ export function createNewPlayerOpeningSuite(): TestSuite {
             random: first.randomSource, seed: () => 1, onStarted: async () => { await first.save(); },
         });
         destiny.roll();
-        assert.isTrue(await destiny.select(1));
+        assert.isTrue(await destiny.select(destiny.state.rolled.findIndex(isDestinyStar)));
         assert.isTrue(await destiny.confirm());
         const leadId = first.leadGeneralId!;
 
