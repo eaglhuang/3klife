@@ -10,8 +10,8 @@
   "tags": [],
   "createdAt": "2026-11-05T14:30:28.536Z",
   "createdByActor": "codex-gpt-6.1-sol",
-  "lastTransitionId": "2026-11-09T12-38-45-270Z-scope-amendment-29c7794c290a",
-  "lastTransitionAt": "2026-11-09T12:38:45.270Z",
+  "lastTransitionId": "2026-11-09T12-43-45-807Z-scope-amendment-03c565b23538",
+  "lastTransitionAt": "2026-11-09T12:43:45.807Z",
   "ledgerContractVersion": "task-ledger/v1",
   "reservedAt": "2026-11-05T17:15:58.821Z",
   "promotedAt": "2026-11-05T17:15:58.826Z",
@@ -235,6 +235,7 @@
       "assets/resources/sprites/generals/avatars/xu_shi_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/xu_shu_avatar.png",
       "assets/resources/sprites/generals/avatars/xu_zhu_avatar.png",
+      "assets/resources/sprites/generals/avatars/xue_zong_avatar.png",
       "assets/resources/sprites/generals/avatars/xun_you_avatar.png",
       "assets/resources/sprites/generals/avatars/xun_yu_avatar.png",
       "assets/resources/sprites/generals/avatars/yang_hui_yu_avatar.png",
@@ -382,6 +383,7 @@
       "assets/resources/sprites/generals/xu_shi_portrait.png.meta",
       "assets/resources/sprites/generals/xu_shu_portrait.png",
       "assets/resources/sprites/generals/xu_zhu_portrait.png",
+      "assets/resources/sprites/generals/xue_zong_portrait.png",
       "assets/resources/sprites/generals/xun_you_portrait.png",
       "assets/resources/sprites/generals/xun_yu_portrait.png",
       "assets/resources/sprites/generals/yang_hui_yu_portrait.png",
@@ -531,6 +533,7 @@
       "assets/resources/sprites/ui_avatars/cropped/xu_shi_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/xu_shu_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/xu_zhu_avatar.png",
+      "assets/resources/sprites/ui_avatars/cropped/xue_zong_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/xun_you_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/xun_yu_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/yang_hui_yu_avatar.png",
@@ -571,20 +574,20 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-5ae720bc50d66332",
-    "ticketDigest": "sha256:5ae720bc50d663322e0a3b95d76e8bc24b651e1bde1dca8a50ce9dc10f3aeb36",
+    "ticketId": "wat-594521bd84e5d922",
+    "ticketDigest": "sha256:594521bd84e5d9221adbebcae445ceba68d28d0bbe7d46065657c02c3738f96e",
     "taskId": "UI-2-0121",
     "origin": "claim",
     "actorId": "codex-gpt-6.1-terra",
     "laneSessionId": "lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d",
     "claimGeneration": "lease-f957fb02b01d",
-    "issuedAt": "2026-11-09T12:38:45.145Z",
-    "expiresAt": "2026-11-09T13:08:45.145Z",
-    "scopeDigest": "sha256:ebe55dbd1d88bcbe6a198ab32e61f7aad1159bb7063ea0172ea85d5c191fa80a",
+    "issuedAt": "2026-11-09T12:43:45.668Z",
+    "expiresAt": "2026-11-09T13:13:45.668Z",
+    "scopeDigest": "sha256:583c95dd70ec924d14f0f3e03658a9c94d7b6cf1c926780110b5f86b33febcb7",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-11-09T12:38:45.145Z"
+      "selectedAt": "2026-11-09T12:43:45.668Z"
     },
     "grants": [
       {
@@ -804,6 +807,7 @@
           "assets/resources/sprites/generals/avatars/xu_shi_avatar.png.meta",
           "assets/resources/sprites/generals/avatars/xu_shu_avatar.png",
           "assets/resources/sprites/generals/avatars/xu_zhu_avatar.png",
+          "assets/resources/sprites/generals/avatars/xue_zong_avatar.png",
           "assets/resources/sprites/generals/avatars/xun_you_avatar.png",
           "assets/resources/sprites/generals/avatars/xun_yu_avatar.png",
           "assets/resources/sprites/generals/avatars/yang_hui_yu_avatar.png",
@@ -951,6 +955,7 @@
           "assets/resources/sprites/generals/xu_shi_portrait.png.meta",
           "assets/resources/sprites/generals/xu_shu_portrait.png",
           "assets/resources/sprites/generals/xu_zhu_portrait.png",
+          "assets/resources/sprites/generals/xue_zong_portrait.png",
           "assets/resources/sprites/generals/xun_you_portrait.png",
           "assets/resources/sprites/generals/xun_yu_portrait.png",
           "assets/resources/sprites/generals/yang_hui_yu_portrait.png",
@@ -1100,6 +1105,7 @@
           "assets/resources/sprites/ui_avatars/cropped/xu_shi_avatar.png.meta",
           "assets/resources/sprites/ui_avatars/cropped/xu_shu_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/xu_zhu_avatar.png",
+          "assets/resources/sprites/ui_avatars/cropped/xue_zong_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/xun_you_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/xun_yu_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/yang_hui_yu_avatar.png",
@@ -1127,7 +1133,7 @@
           "docs/ui-quality-tasks/UI-2-0121.json",
           "docs/ui-quality-todo.json"
         ],
-        "digest": "sha256:30d073ec40dcffe943d099c4a1b180a9eb65a163a6a16336fde593708bb02eea"
+        "digest": "sha256:b953ebeb29cc713fdaf54ca34b387bde2dc120407ece34b5cabd164242c73e5d"
       },
       {
         "kind": "lifecycle-operation",
@@ -1389,6 +1395,7 @@
       "assets/resources/sprites/generals/avatars/xu_shi_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/xu_shu_avatar.png",
       "assets/resources/sprites/generals/avatars/xu_zhu_avatar.png",
+      "assets/resources/sprites/generals/avatars/xue_zong_avatar.png",
       "assets/resources/sprites/generals/avatars/xun_you_avatar.png",
       "assets/resources/sprites/generals/avatars/xun_yu_avatar.png",
       "assets/resources/sprites/generals/avatars/yang_hui_yu_avatar.png",
@@ -1536,6 +1543,7 @@
       "assets/resources/sprites/generals/xu_shi_portrait.png.meta",
       "assets/resources/sprites/generals/xu_shu_portrait.png",
       "assets/resources/sprites/generals/xu_zhu_portrait.png",
+      "assets/resources/sprites/generals/xue_zong_portrait.png",
       "assets/resources/sprites/generals/xun_you_portrait.png",
       "assets/resources/sprites/generals/xun_yu_portrait.png",
       "assets/resources/sprites/generals/yang_hui_yu_portrait.png",
@@ -1685,6 +1693,7 @@
       "assets/resources/sprites/ui_avatars/cropped/xu_shi_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/xu_shu_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/xu_zhu_avatar.png",
+      "assets/resources/sprites/ui_avatars/cropped/xue_zong_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/xun_you_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/xun_yu_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/yang_hui_yu_avatar.png",
@@ -2763,6 +2772,9 @@
     "assets/resources/sprites/ui_avatars/cropped/xu_zhu_avatar.png",
     "assets/resources/sprites/generals/avatars/xu_shu_avatar.png",
     "assets/resources/sprites/generals/xu_shu_portrait.png",
-    "assets/resources/sprites/ui_avatars/cropped/xu_shu_avatar.png"
+    "assets/resources/sprites/ui_avatars/cropped/xu_shu_avatar.png",
+    "assets/resources/sprites/generals/avatars/xue_zong_avatar.png",
+    "assets/resources/sprites/generals/xue_zong_portrait.png",
+    "assets/resources/sprites/ui_avatars/cropped/xue_zong_avatar.png"
   ]
 }
