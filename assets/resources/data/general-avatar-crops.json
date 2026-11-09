@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "wu-tugu": {
+      "x": 380,
+      "y": 270,
+      "w": 350,
+      "h": 350,
+      "source": "reviewed",
+      "$note": "2026-11-09 兀突骨藤甲日月冠造型裁切。"
+    },
     "wen-chou": {
       "x": 370,
       "y": 90,
