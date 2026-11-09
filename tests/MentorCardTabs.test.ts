@@ -10,8 +10,15 @@ import {
     mentorToCardData,
     eventGroupRequiredStar,
     MENTOR_CARD_TAB_LABELS,
+    MENTOR_CARD_EMPTY_TEXT,
+    MENTOR_CARD_LAYOUT_ROWS,
+    toMentorCardLayoutState,
     type MentorCardData,
 } from '../assets/scripts/core/systems/MentorCardTabs';
+import { parseSupportCatalog } from '../assets/scripts/core/systems/MentorSupportCatalog';
+import { inspireEventsFromSupport } from '../assets/scripts/core/systems/MentorInspiration';
+import * as fs from 'fs';
+import * as path from 'path';
 
 function card(star: number): MentorCardData {
     return {
@@ -77,13 +84,68 @@ export function createMentorCardTabsSuite(): TestSuite {
         assert.equals(0, eventGroupRequiredStar(1));
     });
 
-    suite.test('培育教官轉詳情資料：星等帶入，支援效果一列，事件與小插曲暫為空', () => {
+    suite.test('沒帶支援卡的教官：星等帶入，支援效果一列，事件與小插曲為空', () => {
         const data = mentorToCardData({ tpBonus: 20, specialty: 'str', stars: 2 });
         assert.equals(2, data.star);
         assert.equals(1, data.effects.length);
         assert.equals(0, data.events.length);
         assert.equals(0, data.stories.length);
         assert.isTrue(data.effects[0].label.includes('TP 加成 +20%'));
+    });
+
+    suite.test('支援卡教官：被動減免與靈感事件進詳情，未達星等上鎖', () => {
+        const data = mentorToCardData({
+            tpBonus: 20,
+            specialty: 'str',
+            stars: 1,
+            vitalitySave: 0.2,
+            tacticTpDiscount: 0.15,
+            inspire: {
+                friendshipBonusByStar: [],
+                events: [
+                    { eventId: 'E5', tacticId: 'TAC_ZHAO_SPEAR', triggerWindow: [1, 36], baseRate: 0.1, minStar: 5, bloodlineRequired: 'ZHAO' },
+                    { eventId: 'E0', tacticId: 'TAC_LANCE_THRUST', triggerWindow: [1, 12], baseRate: 0.25, minStar: 0 },
+                ],
+            },
+        });
+        assert.equals(3, data.effects.length);
+        assert.isTrue(data.effects[1].label.includes('-20%'));
+        assert.isTrue(data.effects[2].label.includes('-15%'));
+
+        const view = buildMentorCardTabView(data, 'events');
+        assert.equals('長槍突刺', view.rows[0].label);
+        assert.equals(false, view.rows[0].locked);
+        assert.isTrue(view.rows[1].label.endsWith('（家傳）'));
+        assert.equals(true, view.rows[1].locked);
+        assert.isTrue(view.rows[1].lockText!.includes('★5'));
+    });
+
+    suite.test('正式支援卡：每張卡的事件都有中文名、對得上星等，且放得進六列', () => {
+        const raw = JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', 'assets/resources/data/mentor-support-cards.json'), 'utf8'));
+        const catalog = parseSupportCatalog(raw);
+        assert.equals(0, catalog.problems.length);
+        assert.isTrue(catalog.byGeneralId.size > 0);
+        catalog.byGeneralId.forEach((support) => {
+            const mentor = { tpBonus: 0, specialty: 'str' as const, stars: 0, inspire: { events: inspireEventsFromSupport(support), friendshipBonusByStar: [] } };
+            const data = mentorToCardData(mentor);
+            assert.equals(support.tacticInspireEvents.length, data.events.length);
+            assert.isTrue(data.events.length <= MENTOR_CARD_LAYOUT_ROWS);
+            for (const event of data.events) assert.isTrue(!event.skillName.startsWith('未知戰法'));
+        });
+    });
+
+    suite.test('專長顯示 UI 端傳入的名稱，不露科目代碼', () => {
+        const data = mentorToCardData({ tpBonus: 20, specialty: 'str', stars: 0 }, '武力');
+        assert.isTrue(data.effects[0].label.startsWith('武力 專長'));
+    });
+
+    suite.test('空頁籤第一列顯示暫無資料，不留白', () => {
+        const view = buildMentorCardTabView(mentorToCardData({ tpBonus: 20, specialty: 'str', stars: 0 }), 'story');
+        const state = toMentorCardLayoutState(view, '趙雲');
+        assert.equals(true, state.actives.row_0);
+        assert.equals(false, state.actives.rowLock_0);
+        assert.equals(MENTOR_CARD_EMPTY_TEXT, state.texts.rowLabel_0);
+        assert.equals(false, state.actives.row_1);
     });
 
     return suite;
