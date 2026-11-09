@@ -10,6 +10,7 @@ import type {
     GeneralStatsConfig,
 } from '../../core/models/GeneralUnit';
 import { getUIRarityMarkLabel, normalizeUIRarityMarkLabel } from '../core/UIRarityMark';
+import { personalityBadgeOf, type PersonalityBadgeView } from '../core/UIPersonalityBadge';
 import { portraitPathOf } from '../../core/systems/GeneralArtPaths';
 import { isLukVisible } from '../../core/systems/LuckVisibility';
 import { careerTagLabelOf } from '../../core/systems/CareerTag';
@@ -68,6 +69,8 @@ export interface GeneralDetailOverviewContentState {
     headerTitle: string;
     headerName: string;
     headerMeta: string;
+    /** 性格圓徽（HUM-02）；沒有性格時不顯示 */
+    personalityBadge?: PersonalityBadgeView | null;
     rarityLabel: string;
     rarityTier: GeneralDetailRarityTier;
     /** 商業化 7 色展示層（不回寫戰力）；標籤與色值取自 CommercialRarityBand */
@@ -312,6 +315,7 @@ export function buildGeneralDetailOverviewContentState(
         headerTitle: overview.header.title,
         headerName: overview.header.name,
         headerMeta: overview.header.meta,
+        personalityBadge: personalityBadgeOf(config),
         backgroundResource: resolveGeneralDetailBackgroundResource(config),
         rarityLabel: resolveRarityLabel(config),
         rarityTier: resolveRarityTier(config),

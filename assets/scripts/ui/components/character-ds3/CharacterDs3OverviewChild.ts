@@ -1,10 +1,21 @@
 // @spec-source → 武將人物介面規格書.md (doc_ui_0012)；PROG-2-1429 依建檔紀錄補標出處
-import { Color, Label, Sprite, UITransform } from 'cc';
+import { Color, Graphics, Label, Node, Sprite, UITransform } from 'cc';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
 import { ds3Label, ds3SetActive } from './Ds3NodeLookup';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import type { GeneralDetailOverviewContentState } from '../GeneralDetailOverviewMapper';
 import { TALLY_SUMMARY_CARD_TITLE, tallySummaryCardLines } from '../../../core/systems/GeneralTallySummary';
+import { EVENT_NAMES } from '../../../core/config/Constants';
+import { services } from '../../../core/managers/ServiceLoader';
+import {
+    PERSONALITY_BADGE_RADIUS,
+    estimateLabelTextWidth,
+    personalityBadgeOffsetX,
+    type BadgeTextAlign,
+    type PersonalityBadgeView,
+} from '../../core/UIPersonalityBadge';
+
+const PERSONALITY_BADGE_NODE = 'PersonalityBadge';
 
 const DS3_RARITY_PILL_BG: Record<GeneralDetailOverviewContentState['rarityTier'], [number, number, number]> = {
     common: [76, 175, 80],
@@ -60,6 +71,8 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
         }
     }
 
+    private _personalityTooltip = '';
+
     public override onDataUpdate(data: unknown): void {
         if (!data || typeof data !== 'object') {
             return;
@@ -70,6 +83,7 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
 
         this._setLabelText('OverviewName', state.headerName);
         this._setLabelText('OverviewRoleBadge', state.headerMeta);
+        this._applyPersonalityBadge(state.personalityBadge ?? null);
         this._setLabelText('OverviewRarityTier', state.rarityLabel);
         this._setLabelText('OverviewBio', state.biographyBody);
         this._clampBio();
@@ -123,6 +137,60 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
         for (const [key, nodeName] of Object.entries(IDENTITY_LABELS) as [keyof typeof IDENTITY_LABELS, string][]) {
             this._setLabelText(nodeName, state.identity?.[key] ?? '');
         }
+    }
+
+    /** 性格圓徽（HUM-02）：貼在職能標籤文字右側，點一下用 Toast 顯示提示文案 */
+    private _applyPersonalityBadge(view: PersonalityBadgeView | null): void {
+        const anchor = ds3Label(this.binder, this.hostNode, 'OverviewRoleBadge');
+        if (!anchor) return;
+        const host = anchor.node;
+        const existing = host.getChildByName(PERSONALITY_BADGE_NODE);
+        if (!view) {
+            if (existing) existing.active = false;
+            return;
+        }
+        const badge = existing ?? this._createPersonalityBadge(host, anchor);
+        badge.active = true;
+        const graphics = badge.getComponent(Graphics)!;
+        graphics.clear();
+        graphics.fillColor = new Color().fromHEX(view.color);
+        graphics.circle(0, 0, PERSONALITY_BADGE_RADIUS);
+        graphics.fill();
+        badge.getComponentInChildren(Label)!.string = view.glyph;
+        this._personalityTooltip = view.tooltip;
+        const transform = host.getComponent(UITransform)!;
+        badge.setPosition(personalityBadgeOffsetX(
+            estimateLabelTextWidth(anchor.string, anchor.fontSize, 0), // 實測：cacheMode NONE 的字型字距不生效
+            transform.width,
+            transform.anchorX,
+            anchor.horizontalAlign as number as BadgeTextAlign,
+        ), 0);
+    }
+
+    private _createPersonalityBadge(host: Node, anchor: Label): Node {
+        const size = PERSONALITY_BADGE_RADIUS * 2;
+        const badge = new Node(PERSONALITY_BADGE_NODE);
+        badge.layer = host.layer;
+        badge.addComponent(UITransform).setContentSize(size, size);
+        badge.addComponent(Graphics);
+        const glyphNode = new Node('Glyph');
+        glyphNode.layer = host.layer;
+        glyphNode.addComponent(UITransform).setContentSize(size, size);
+        const glyph = glyphNode.addComponent(Label);
+        glyph.font = anchor.font;
+        glyph.useSystemFont = anchor.useSystemFont;
+        glyph.fontSize = 16;
+        glyph.lineHeight = size;
+        glyph.color = Color.WHITE;
+        glyph.cacheMode = Label.CacheMode.NONE;
+        glyph.horizontalAlign = Label.HorizontalAlign.CENTER;
+        glyph.verticalAlign = Label.VerticalAlign.CENTER;
+        badge.addChild(glyphNode);
+        host.addChild(badge);
+        badge.on(Node.EventType.TOUCH_END, () => {
+            services().event.emit(EVENT_NAMES.ShowToast, { text: this._personalityTooltip });
+        });
+        return badge;
     }
 
     /** 小傳長度因人而異，卡片高度固定，超過的部分裁掉，不可蓋到下方區塊 */
