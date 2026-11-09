@@ -1667,6 +1667,7 @@ export class LobbyScene extends Component {
             season: () => services().session.gameTime.totalSeasonsElapsed,
             outputMultiplier: (taskId: DomesticTaskId) => services().session.domesticOutputMultiplier(taskId),
             eventLine: () => services().session.governanceEventNotice,
+            journalPending: () => services().session.pendingMorningJournalCount,
             choose: (taskId: DomesticTaskId) => services().session.chooseDomesticTask(taskId, (amount) => { gacha.grantCurrency('gold', amount); }),
             // 任務格指派武將（GOV-04 / PROG-2-1159）：產出依武將屬性；指派變動即存檔
             candidates: () => services().session.roster

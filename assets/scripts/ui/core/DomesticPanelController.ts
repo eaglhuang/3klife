@@ -63,7 +63,13 @@ export interface DomesticPanelDeps {
     /** 治理事件（領地治理 §G，PROG-2-1773）：本季產出倍率與事件句；不提供時視為沒有事件 */
     outputMultiplier?: (taskId: DomesticTaskId) => number;
     eventLine?: () => string | null;
+    /** 晨報入口紅點（裁決 11/09 第 7 題）：今天晨報之後新增的日誌數；不提供時不顯示 */
+    journalPending?: () => number;
 }
+
+/** 晨報入口按鈕文字（與 domestic-main.json 預設一致）；有待看日誌時加紅點 */
+export const JOURNAL_HUB_ENTRY_LABEL = '晨報・派遣板 ▶';
+export const JOURNAL_HUB_PENDING_MARK = ' ●';
 
 /** 任務 id → 節點名稱片段（layout 節點 id 用 btn<Name> / <name>Output / <name>Chosen） */
 const NODE_NAME: Readonly<Record<DomesticTaskId, string>> = Object.freeze({
@@ -219,6 +225,7 @@ export class DomesticPanelController {
         const texts: Record<string, string> = {
             seasonLabel: `第 ${this._deps.season()} 季`,
             noticeLabel: this._notice ?? this._deps.eventLine?.() ?? '',
+            btnOpenJournalHubLabel: JOURNAL_HUB_ENTRY_LABEL + ((this._deps.journalPending?.() ?? 0) > 0 ? JOURNAL_HUB_PENDING_MARK : ''),
         };
         const actives: Record<string, boolean> = {
             noticeLabel: this._notice !== null || !!this._deps.eventLine?.(),
