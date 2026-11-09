@@ -14100,27 +14100,93 @@
     "category": "task"
   },
   {
-    "id": "doc_task_2360",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2149.md",
-    "title": "PROG-2-2149 大廳季度推進「下一季」核心發動機與武將個性動態事件（LOOP-01）",
+    "id": "doc_task_2364",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2190.md",
+    "title": "PROG-2-2190 人物頁血脈分頁套用因子遮罩、灰鎖與解鎖亮起（FUL-03）",
     "category": "task"
   },
   {
-    "id": "doc_task_2361",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2150.md",
-    "title": "PROG-2-2150 出征極速決戰Auto-Resolve與武將個性單挑演算法（LOOP-02）",
+    "id": "doc_task_2365",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2191.md",
+    "title": "PROG-2-2191 粉色因子祖先數改依人頭去重（裁決 16b）",
     "category": "task"
   },
   {
-    "id": "doc_task_2362",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2151.md",
-    "title": "PROG-2-2151 三國季報晨報重構與市井奇遇隨機互動閉環（LOOP-03）",
+    "id": "doc_task_2366",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2192.md",
+    "title": "PROG-2-2192 教官卡 Training_Rate 進訓練公式（裁決 17a）",
     "category": "task"
   },
   {
-    "id": "doc_task_2363",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2152.md",
-    "title": "PROG-2-2152 代際傳承自然引導流與子嗣抓周入學學府閉環（LOOP-04）",
+    "id": "doc_task_2367",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2193.md",
+    "title": "PROG-2-2193 修幕府大廳版面：任務牆疊字、寬螢幕黑邊",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2368",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2194.md",
+    "title": "PROG-2-2194 重複卡彈窗加升星（裁決 11/09 第 8 題）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2369",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2195.md",
+    "title": "PROG-2-2195 提交主目錄武將立繪、頭像與裁切表（裁決 11/09 第 13 題）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2370",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2196.md",
+    "title": "PROG-2-2196 出征編制加任務戰法加成勾選",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2371",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2197.md",
+    "title": "PROG-2-2197 大廳通行證入口與 1~30 級 Mock 領取",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2372",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2198.md",
+    "title": "PROG-2-2198 開場商品彈窗本地 Mock",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2373",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2199.md",
+    "title": "PROG-2-2199 倉庫擴容改玉璧階梯價",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2374",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2200.md",
+    "title": "PROG-2-2200 晨報換日才彈",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2375",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2201.md",
+    "title": "PROG-2-2201 大廳季度推進「下一季」核心發動機與武將個性動態事件（LOOP-01）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2376",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2202.md",
+    "title": "PROG-2-2202 出征極速決戰Auto-Resolve與武將個性單挑演算法（LOOP-02）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2377",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2203.md",
+    "title": "PROG-2-2203 三國季報晨報重構與市井奇遇隨機互動閉環（LOOP-03）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2378",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2204.md",
+    "title": "PROG-2-2204 代際傳承自然引導流與子嗣抓周入學學府閉環（LOOP-04）",
     "category": "task"
   }
 ]

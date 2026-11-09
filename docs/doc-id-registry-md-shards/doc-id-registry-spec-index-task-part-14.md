@@ -62,7 +62,18 @@
 | `doc_task_2357` | docs/agent-briefs/tasks/PROG/PROG-2-2146.md | PROG-2-2146 太守府不可升級時顯示停用按鈕與原因（GOV-07） |
 | `doc_task_2358` | docs/agent-briefs/tasks/PROG/PROG-2-2147.md | PROG-2-2147 粉色因子血統同因子升階接進子嗣與戰場（APT-09） |
 | `doc_task_2359` | docs/agent-briefs/tasks/PROG/PROG-2-2148.md | PROG-2-2148 教官卡詳情接上被動效果與培育事件（MENT-13） |
-| `doc_task_2360` | docs/agent-briefs/tasks/PROG/PROG-2-2149.md | PROG-2-2149 大廳季度推進「下一季」核心發動機與武將個性動態事件（LOOP-01） |
-| `doc_task_2361` | docs/agent-briefs/tasks/PROG/PROG-2-2150.md | PROG-2-2150 出征極速決戰Auto-Resolve與武將個性單挑演算法（LOOP-02） |
-| `doc_task_2362` | docs/agent-briefs/tasks/PROG/PROG-2-2151.md | PROG-2-2151 三國季報晨報重構與市井奇遇隨機互動閉環（LOOP-03） |
-| `doc_task_2363` | docs/agent-briefs/tasks/PROG/PROG-2-2152.md | PROG-2-2152 代際傳承自然引導流與子嗣抓周入學學府閉環（LOOP-04） |
+| `doc_task_2364` | docs/agent-briefs/tasks/PROG/PROG-2-2190.md | PROG-2-2190 人物頁血脈分頁套用因子遮罩、灰鎖與解鎖亮起（FUL-03） |
+| `doc_task_2365` | docs/agent-briefs/tasks/PROG/PROG-2-2191.md | PROG-2-2191 粉色因子祖先數改依人頭去重（裁決 16b） |
+| `doc_task_2366` | docs/agent-briefs/tasks/PROG/PROG-2-2192.md | PROG-2-2192 教官卡 Training_Rate 進訓練公式（裁決 17a） |
+| `doc_task_2367` | docs/agent-briefs/tasks/PROG/PROG-2-2193.md | PROG-2-2193 修幕府大廳版面：任務牆疊字、寬螢幕黑邊 |
+| `doc_task_2368` | docs/agent-briefs/tasks/PROG/PROG-2-2194.md | PROG-2-2194 重複卡彈窗加升星（裁決 11/09 第 8 題） |
+| `doc_task_2369` | docs/agent-briefs/tasks/PROG/PROG-2-2195.md | PROG-2-2195 提交主目錄武將立繪、頭像與裁切表（裁決 11/09 第 13 題） |
+| `doc_task_2370` | docs/agent-briefs/tasks/PROG/PROG-2-2196.md | PROG-2-2196 出征編制加任務戰法加成勾選 |
+| `doc_task_2371` | docs/agent-briefs/tasks/PROG/PROG-2-2197.md | PROG-2-2197 大廳通行證入口與 1~30 級 Mock 領取 |
+| `doc_task_2372` | docs/agent-briefs/tasks/PROG/PROG-2-2198.md | PROG-2-2198 開場商品彈窗本地 Mock |
+| `doc_task_2373` | docs/agent-briefs/tasks/PROG/PROG-2-2199.md | PROG-2-2199 倉庫擴容改玉璧階梯價 |
+| `doc_task_2374` | docs/agent-briefs/tasks/PROG/PROG-2-2200.md | PROG-2-2200 晨報換日才彈 |
+| `doc_task_2375` | docs/agent-briefs/tasks/PROG/PROG-2-2201.md | PROG-2-2201 大廳季度推進「下一季」核心發動機與武將個性動態事件（LOOP-01） |
+| `doc_task_2376` | docs/agent-briefs/tasks/PROG/PROG-2-2202.md | PROG-2-2202 出征極速決戰Auto-Resolve與武將個性單挑演算法（LOOP-02） |
+| `doc_task_2377` | docs/agent-briefs/tasks/PROG/PROG-2-2203.md | PROG-2-2203 三國季報晨報重構與市井奇遇隨機互動閉環（LOOP-03） |
+| `doc_task_2378` | docs/agent-briefs/tasks/PROG/PROG-2-2204.md | PROG-2-2204 代際傳承自然引導流與子嗣抓周入學學府閉環（LOOP-04） |
