@@ -11,17 +11,19 @@
  *
  * Unity 對照：GeneralRosterPanel，排序可重複點擊欄頭切換升降冪
  */
-import { _decorator, Node, Label, Button, UITransform, Layout, Widget, HorizontalTextAlignment, VerticalTextAlignment, Color } from 'cc';
+import { _decorator, Node, Label, Button, UITransform, Layout, Widget, HorizontalTextAlignment, VerticalTextAlignment, Color, ScrollView, Sprite } from 'cc';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import type { NpcContextOption, NpcDialogueKeywordSelection, NpcDialogueLocale, NpcDialogueModelPreset, NpcDialogueResponse, NpcDialogueSpeechContextMode } from '../../core/services/NpcDialogueService';
 import { EVENT_NPC_INTERACTION_COMPLETED } from '../../core/dialogue/NpcMemoryAdapter';
 import { services } from '../../core/managers/ServiceLoader';
 import { CompositePanel } from '../core/CompositePanel';
 import { factionDisplayName } from '../core/FactionDisplay';
+import { loadGeneralAvatar } from '../core/GeneralAvatarLoader';
 import { sortGenerals } from '../core/GeneralListSort';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { RetirementFlowController } from '../core/RetirementFlowController';
+import { SolidBackground } from './SolidBackground';
 import { RETIRE_REVIEW_OPEN_EVENT, type RetireReviewOpenPayload } from '../core/RetireReviewController';
 
 const { ccclass } = _decorator;
@@ -56,7 +58,6 @@ const COL_SORT_MAP: Record<string, SortKey> = {
 
 const HEADER_TO_ROW_MAP: Record<string, string> = {
     ColName: 'Name',
-    ColGender: 'Gender',
     ColAge: 'Age',
     ColStr: 'Str',
     ColInt: 'Int',
@@ -117,8 +118,17 @@ const NPC_DIALOGUE_MODEL_OPTIONS: Array<{ value: NpcDialogueModelPreset; label: 
 ];
 
 /** 退役列字色：深墨與停用色（PROG-2-1643） */
-const RETIRE_INK = new Color(45, 41, 38, 255);
-const RETIRE_INK_DISABLED = new Color(45, 41, 38, 110);
+const RETIRE_INK = new Color(232, 220, 190, 255);
+const RETIRE_INK_DISABLED = new Color(232, 220, 190, 90);
+/** 引擎會把底圖 alpha 乘給子節點，面板底色若半透明，整張列表的字和頭像都會變暗 */
+const PANEL_BG = new Color(10, 10, 10, 255);
+/** 列高 64 + 列距 8，頭像依此換算可見範圍 */
+const ROW_PITCH = 72;
+/** 頭像載入多抓的列數，捲動時才不會一直看到空格 */
+const AVATAR_PRELOAD_ROWS = 2;
+/** 清單底邊距：退役列顯示時要讓出它的高度 */
+const LIST_BOTTOM = 20;
+const LIST_BOTTOM_WITH_RETIRE = 134;
 
 @ccclass('GeneralListComposite')
 export class GeneralListComposite extends CompositePanel {
@@ -166,6 +176,10 @@ export class GeneralListComposite extends CompositePanel {
     private _npcDialogueMenuNode: Node | null = null;
     private _npcDialogueMenuMode: NpcDialogueMenuMode = 'keyword';
     private _pickerMode = false;
+    /** 開啟時就帶開發旗標才顯示對話測試開關，正式入口看不到 */
+    private _npcDialogueDevEntry = false;
+    private _avatarRows: Array<{ row: Node; generalId: string; requested: boolean }> = [];
+    private _avatarScrollBound = false;
 
     // ── 生命週期 ─────────────────────────────────────────────
 
@@ -182,11 +196,13 @@ export class GeneralListComposite extends CompositePanel {
      * 初次呼叫時掛載畫面；後續呼叫僅刷新列表。
      */
     public async show(generals: GeneralConfig[], filterMode: GeneralFilterMode = 'all', options: GeneralListShowOptions = {}): Promise<void> {
+        this._applyOpaquePanelBg();
         this.node.active = true;
         this._retirementFlow.cancel();
         this._allGenerals = generals;
         this._filterMode = filterMode;
         this._npcDialogueDevControls = !!options.npcDialogueDevControls;
+        this._npcDialogueDevEntry = !!options.npcDialogueDevControls;
         this._pickerMode = !!options.pickerMode;
         this._npcDialogueMemorySaveId = options.npcDialogueSaveId?.trim() || services().sync.getMemorySaveId();
 
@@ -303,6 +319,7 @@ export class GeneralListComposite extends CompositePanel {
     private async _repopulate(): Promise<void> {
         const sorted = this._sortedList();
         this._renderedRowsByGeneralId.clear();
+        this._avatarRows = [];
         const content = this.node.getChildByPath(this._mainPath(CONTENT_REL_PATH));
         if (content) {
             for (const child of [...content.children]) {
@@ -323,7 +340,6 @@ export class GeneralListComposite extends CompositePanel {
                 if (lbl) lbl.string = String(val);
             };
             set('Name',    g.name ?? '—');
-            set('Gender',  this._genderZh(g.gender));
             set('Age',     g.age   ?? '—');
             set('Str',     g.str   ?? 0);
             set('Int',     g.int   ?? 0);
@@ -334,6 +350,7 @@ export class GeneralListComposite extends CompositePanel {
             set('Troop',   this._bestTroop(g));
             set('Faction', factionDisplayName(g.faction));
             this._renderedRowsByGeneralId.set(g.id, row);
+            this._avatarRows.push({ row, generalId: g.id, requested: false });
 
             const button = row.getComponent(Button) ?? row.addComponent(Button);
             button.transition = Button.Transition.NONE;
@@ -354,6 +371,44 @@ export class GeneralListComposite extends CompositePanel {
         this._syncContentWidth();
         this._updateHeaderLabels();
         this._syncHeaderColumnWidths();
+        this._bindAvatarScroll();
+        this._loadVisibleAvatars();
+    }
+
+    private _applyOpaquePanelBg(): void {
+        const solid = this.node.getComponent(SolidBackground);
+        if (solid) solid.color = PANEL_BG.clone();
+        const sprite = this.node.getComponent(Sprite);
+        if (sprite) sprite.color = PANEL_BG;
+    }
+
+    private _bindAvatarScroll(): void {
+        if (this._avatarScrollBound) return;
+        const listNode = this.node.getChildByPath(this._mainPath(LIST_REL_PATH));
+        if (!listNode) return;
+        listNode.on(ScrollView.EventType.SCROLLING, this._loadVisibleAvatars, this);
+        this._avatarScrollBound = true;
+    }
+
+    /** 名冊可能有上百列，只載入看得到的頭像，避免一次吃掉整批貼圖記憶體。 */
+    private _loadVisibleAvatars(): void {
+        const listNode = this.node.getChildByPath(this._mainPath(LIST_REL_PATH));
+        const offset = listNode?.getComponent(ScrollView)?.getScrollOffset().y ?? 0;
+        const height = listNode?.getComponent(UITransform)?.height ?? 0;
+        const first = Math.max(0, Math.floor(offset / ROW_PITCH) - AVATAR_PRELOAD_ROWS);
+        const last = Math.ceil((offset + height) / ROW_PITCH) + AVATAR_PRELOAD_ROWS;
+        for (const entry of this._avatarRows.slice(first, last)) {
+            if (entry.requested) continue;
+            entry.requested = true;
+            const sprite = entry.row.getChildByPath('AvatarBox/Avatar')?.getComponent(Sprite);
+            if (!sprite) continue;
+            void loadGeneralAvatar(entry.generalId).then((frame) => {
+                if (!frame || !sprite.isValid) return;
+                sprite.trim = false;
+                sprite.sizeMode = Sprite.SizeMode.CUSTOM;
+                sprite.spriteFrame = frame;
+            });
+        }
     }
 
     /** 綁定欄頭排序按鈕 */
@@ -479,6 +534,8 @@ export class GeneralListComposite extends CompositePanel {
 
             toggleNode.addComponent(Button).transition = Button.Transition.NONE;
         }
+
+        toggleNode.active = this._npcDialogueDevEntry;
 
         // 同步標籤文字
         const label = toggleNode.getComponent(Label)!;
@@ -646,7 +703,7 @@ export class GeneralListComposite extends CompositePanel {
             const notice = this._addToolbarLabel(toolbar, 'RetirementNotice', 940, 44, 0, 0, '', 17, HorizontalTextAlignment.LEFT);
             // 行高固定 22 才放得下兩行；沿用框高當行高時，長句會被 SHRINK 縮到看不清
             notice.lineHeight = 22;
-            // 底部列放在淺色羊皮紙上，字一律用深墨色（白字會看不見）
+            // 底部列放在深色底上，字一律用淺色
             for (const child of controls.children) {
                 const label = child.getComponent(Label);
                 if (label) label.color = RETIRE_INK;
@@ -660,11 +717,7 @@ export class GeneralListComposite extends CompositePanel {
             layout.updateLayout();
             noticeWidget.updateAlignment();
         }
-        // Reserve footer space instead of covering the last list rows.
-        const listWidget = this.node.getChildByPath(this._mainPath(LIST_REL_PATH))?.getComponent(Widget);
-        if (listWidget) { listWidget.bottom = 134; listWidget.updateAlignment(); }
         toolbar.setSiblingIndex(panel.children.length - 1);
-        toolbar.active = !this._pickerMode;
         this._refreshRetirementToolbar();
     }
 
@@ -673,6 +726,11 @@ export class GeneralListComposite extends CompositePanel {
         if (!toolbar) return;
         const flow = this._retirementFlow;
         const target = flow.selected;
+        // 沒人可退役就整列收起；剛退役完還要留著顯示結果訊息
+        const visible = !this._pickerMode && (!!target || !!flow.notice);
+        toolbar.active = visible;
+        const listWidget = this.node.getChildByPath(this._mainPath(LIST_REL_PATH))?.getComponent(Widget);
+        if (listWidget) { listWidget.bottom = visible ? LIST_BOTTOM_WITH_RETIRE : LIST_BOTTOM; listWidget.updateAlignment(); }
         const controls = toolbar.getChildByName('RetirementControls');
         const targetLabel = controls?.getChildByName('RetirementTarget')?.getComponent(Label);
         if (targetLabel) targetLabel.string = target ? `可退役：${target.name}（${target.age} 歲）` : '自有名冊沒有可退役的武將（65 歲起）';
@@ -1172,12 +1230,6 @@ export class GeneralListComposite extends CompositePanel {
             ? `__safeArea/${LIST_ROOT_NAME}`
             : LIST_ROOT_NAME;
         return `${rootPath}/${path}`;
-    }
-
-    private _genderZh(gender: string | undefined): string {
-        if (gender === '男' || gender === 'male')   return '男';
-        if (gender === '女' || gender === 'female') return '女';
-        return '—';
     }
 
     private _bestTroop(g: GeneralConfig): string {
