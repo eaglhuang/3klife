@@ -411,6 +411,8 @@ export interface GeneralConfig {
   ultimateSlots?: GeneralUltimateSlotConfig[];
   /** 五階血脈傳承奧義的點亮狀態（PROG-2-0737）；缺欄位時讀取端以 normalizeUltimateState 補成初始值 */
   bloodlineUltimate?: { stageCap?: number; stageCurrent?: number };
+  /** 升星累積的同名卡張數（裁決 11/09 第 8 題）；星級就是 bloodlineUltimate.stageCap */
+  starUpCards?: number;
 
   troopAptitude?: Record<string, string>;
   terrainAptitude?: Record<string, string>;

@@ -19,6 +19,11 @@
       "color": "backgroundMid",
       "alpha": 230
     },
+    "dup.card.starup.bg": {
+      "kind": "color-rect",
+      "color": "backgroundMid",
+      "alpha": 230
+    },
     "dup.card.infusion.bg": {
       "kind": "color-rect",
       "color": "backgroundMid",
@@ -27,6 +32,11 @@
     "dup.button.rebirth.bg": {
       "kind": "color-rect",
       "color": "dupRebirthCyan",
+      "alpha": 220
+    },
+    "dup.button.starup.bg": {
+      "kind": "color-rect",
+      "color": "dupStarUpRose",
       "alpha": 220
     },
     "dup.button.infusion.bg": {
@@ -72,6 +82,16 @@
       "fontSize": 34,
       "lineHeight": 42,
       "color": "dupRebirthCyan",
+      "overflow": "CLAMP",
+      "isBold": true,
+      "horizontalAlign": "CENTER"
+    },
+    "dup.label.starup.title": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 34,
+      "lineHeight": 42,
+      "color": "dupStarUpRose",
       "overflow": "CLAMP",
       "isBold": true,
       "horizontalAlign": "CENTER"

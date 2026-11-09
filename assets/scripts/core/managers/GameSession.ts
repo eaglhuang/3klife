@@ -22,6 +22,7 @@
  * Unity 對照：像一個 DontDestroyOnLoad 的 GameManager 持有 TimeManager 與 SaveSystem，
  * 每季呼叫一次 AdvanceSeason()，再用 C# event 通知 UI 更新「第 N 年 M 季」。
  */
+import { addTemplateCard, templateCardStarUpProgress } from '../systems/BloodlineFeatStages';
 import type { NurtureRiteResult } from '../systems/EnrollmentRites';
 import { resolveRivalPlayerEvents } from '../systems/RivalPlayerEvents';
 import { respondToRivalProposal, type ProposalResponse } from '../systems/RivalProposals';
@@ -3857,6 +3858,24 @@ export class GameSession {
             await this.save();
         }
         return { ok: true, transferredFactor: plan.transferredFactor };
+    }
+
+    /** 重複卡升星進度（PROG-2-2194）；不在名冊或已滿 ★5 回 null */
+    public starUpProgress(generalId: string): { stars: number; cards: number; need: number } | null {
+        const target = this._roster.getAll().find((g) => g.id === generalId);
+        if (!target) return null;
+        return templateCardStarUpProgress(target.bloodlineUltimate?.stageCap ?? 1, target.starUpCards ?? 0);
+    }
+
+    /** 投入一張同名卡升星（PROG-2-2194）；集滿就提高星級並廣播上限提升。無法升星回 null。 */
+    public async addStarUpCard(generalId: string): Promise<{ stars: number; cards: number; raised: boolean } | null> {
+        const progress = this.starUpProgress(generalId);
+        if (!progress) return null;
+        const next = addTemplateCard(progress.stars, progress.cards);
+        this._roster.replaceAll(this._roster.getAll().map((g) => (g.id === generalId ? { ...g, starUpCards: next.cards } : g)));
+        if (next.raised) await this.raiseBloodlineUltimateCap(generalId, next.stars);
+        else if (this._autoSave && this._save) await this.save();
+        return next;
     }
 
     /** 升星後提高某位武將五階奧義的 Stage_Cap（PROG-2-0718）；找不到武將回傳 false，成功才改名冊並存檔；上限確實提高才廣播過場事件 */

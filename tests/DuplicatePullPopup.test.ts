@@ -4,7 +4,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { assert, TestSuite } from './TestRunner';
-import { DuplicatePullPopupController } from '../assets/scripts/ui/core/DuplicatePullPopupController';
+import { DuplicatePullPopupController, rebirthTargetsOf, starUpTargetsOf } from '../assets/scripts/ui/core/DuplicatePullPopupController';
 
 const UI_SPEC = path.resolve(__dirname, '../assets/resources/ui-spec');
 
@@ -111,6 +111,36 @@ export function createDuplicatePullPopupSuite(): TestSuite {
         ctrl.cancel();
         assert.equals(0, (await second).length);
         assert.equals(true, ctrl.choose('rebirth'));
+    });
+
+    suite.test('升星：顯示進度；不能升星時按鈕關閉，批次沿用改走復生', async () => {
+        const ctrl = new DuplicatePullPopupController();
+        const pending = ctrl.ask([
+            { id: 'zhao-yun', name: '趙雲', starUp: { stars: 2, cards: 1, need: 2 } },
+            { id: 'guan-yu', name: '關羽', starUp: null },
+        ]);
+        const view = ctrl.getView();
+        assert.isTrue(view.texts.dupStarUpBody.includes('★2'));
+        assert.isTrue(view.texts.dupStarUpBody.includes('1 / 2'));
+        assert.isTrue(view.enabled.btnDupStarUp);
+        ctrl.toggleBatchDefault();
+        ctrl.choose('starUp');
+        const choices = await pending;
+        assert.equals('starUp', choices[0].route);
+        assert.equals('rebirth', choices[1].route);
+        const owned = [{ id: 'zhao-yun' }, { id: 'guan-yu' }];
+        assert.equals('zhao-yun', starUpTargetsOf(owned, choices)[0].id);
+        assert.equals(1, starUpTargetsOf(owned, choices).length);
+        assert.equals('guan-yu', rebirthTargetsOf(owned, choices)[0].id);
+        assert.equals(1, rebirthTargetsOf(owned, choices).length);
+    });
+
+    suite.test('升星：單張不能升星時選了不前進', () => {
+        const ctrl = new DuplicatePullPopupController();
+        void ctrl.ask([{ id: 'guan-yu', name: '關羽' }]);
+        assert.equals(false, ctrl.getView().enabled.btnDupStarUp);
+        assert.equals(false, ctrl.choose('starUp'));
+        assert.isTrue(ctrl.isOpen());
     });
 
     return suite;
