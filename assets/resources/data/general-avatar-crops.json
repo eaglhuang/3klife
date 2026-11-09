@@ -946,11 +946,12 @@
       "source": "reviewed"
     },
     "wen-qin": {
-      "x": 185,
-      "y": 0,
-      "w": 200,
-      "h": 200,
-      "source": "reviewed"
+      "x": 350,
+      "y": 100,
+      "w": 350,
+      "h": 350,
+      "source": "reviewed",
+      "$note": "2026-11-09 文欽魏藍鐵紅刀盾造型裁切。"
     },
     "gongsun-yuan": {
       "x": 180,

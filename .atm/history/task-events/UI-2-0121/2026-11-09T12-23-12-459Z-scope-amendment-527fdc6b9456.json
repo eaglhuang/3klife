@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-09T12-23-12-459Z-scope-amendment-527fdc6b9456",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:b48d3349f0ce0bd1e910353a403a715ddc7d98b400e930477737ff15806c8f48",
+  "createdAt": "2026-11-09T12:23:12.459Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/wen_qin_portrait.png,assets/resources/sprites/generals/avatars/wen_qin_avatar.png,assets/resources/sprites/ui_avatars/cropped/wen_qin_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
