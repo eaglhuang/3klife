@@ -10,8 +10,8 @@
   "tags": [],
   "createdAt": "2026-11-05T14:30:28.536Z",
   "createdByActor": "codex-gpt-6.1-sol",
-  "lastTransitionId": "2026-11-09T12-13-31-012Z-scope-amendment-4379a852bd82",
-  "lastTransitionAt": "2026-11-09T12:13:31.012Z",
+  "lastTransitionId": "2026-11-09T12-18-36-221Z-scope-amendment-34fbf7b0713d",
+  "lastTransitionAt": "2026-11-09T12:18:36.221Z",
   "ledgerContractVersion": "task-ledger/v1",
   "reservedAt": "2026-11-05T17:15:58.821Z",
   "promotedAt": "2026-11-05T17:15:58.826Z",
@@ -204,6 +204,7 @@
       "assets/resources/sprites/generals/avatars/sun_lu_yu_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/sun_quan_avatar.png",
       "assets/resources/sprites/generals/avatars/taishi_ci_avatar.png",
+      "assets/resources/sprites/generals/avatars/wang_ji_avatar.png",
       "assets/resources/sprites/generals/avatars/wang_lang_avatar.png",
       "assets/resources/sprites/generals/avatars/wang_ping_avatar.png",
       "assets/resources/sprites/generals/avatars/wang_shuang_avatar.png",
@@ -345,6 +346,7 @@
       "assets/resources/sprites/generals/sun_lu_yu_portrait.png.meta",
       "assets/resources/sprites/generals/sun_quan_portrait.png",
       "assets/resources/sprites/generals/taishi_ci_portrait.png",
+      "assets/resources/sprites/generals/wang_ji_portrait.png",
       "assets/resources/sprites/generals/wang_lang_portrait.png",
       "assets/resources/sprites/generals/wang_ping_portrait.png",
       "assets/resources/sprites/generals/wang_shuang_portrait.png",
@@ -490,6 +492,7 @@
       "assets/resources/sprites/ui_avatars/cropped/sun_lu_yu_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/sun_quan_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/taishi_ci_avatar.png",
+      "assets/resources/sprites/ui_avatars/cropped/wang_ji_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/wang_lang_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/wang_ping_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/wang_shuang_avatar.png",
@@ -556,20 +559,20 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-dca9ceb5b1c52a69",
-    "ticketDigest": "sha256:dca9ceb5b1c52a690c8069da0e8e0e321d85df4e90dd65f2b8125a860bdce37d",
+    "ticketId": "wat-0940ee0fe8d47cac",
+    "ticketDigest": "sha256:0940ee0fe8d47cacf384e29b26630e794e5dc7dec3829e6efce0a7eb6d024e66",
     "taskId": "UI-2-0121",
     "origin": "claim",
     "actorId": "codex-gpt-6.1-terra",
     "laneSessionId": "lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d",
     "claimGeneration": "lease-f957fb02b01d",
-    "issuedAt": "2026-11-09T12:13:30.734Z",
-    "expiresAt": "2026-11-09T12:43:30.734Z",
-    "scopeDigest": "sha256:e56546f01b38089c535900c3223a0e014b8f75f342bd03d69200e7b46771e882",
+    "issuedAt": "2026-11-09T12:18:36.108Z",
+    "expiresAt": "2026-11-09T12:48:36.108Z",
+    "scopeDigest": "sha256:bc8450b09b4f8a56502e87a7dd89aba1c998e14024e8aeb2eb41dcb6a4e0adb2",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-11-09T12:13:30.734Z"
+      "selectedAt": "2026-11-09T12:18:36.108Z"
     },
     "grants": [
       {
@@ -758,6 +761,7 @@
           "assets/resources/sprites/generals/avatars/sun_lu_yu_avatar.png.meta",
           "assets/resources/sprites/generals/avatars/sun_quan_avatar.png",
           "assets/resources/sprites/generals/avatars/taishi_ci_avatar.png",
+          "assets/resources/sprites/generals/avatars/wang_ji_avatar.png",
           "assets/resources/sprites/generals/avatars/wang_lang_avatar.png",
           "assets/resources/sprites/generals/avatars/wang_ping_avatar.png",
           "assets/resources/sprites/generals/avatars/wang_shuang_avatar.png",
@@ -899,6 +903,7 @@
           "assets/resources/sprites/generals/sun_lu_yu_portrait.png.meta",
           "assets/resources/sprites/generals/sun_quan_portrait.png",
           "assets/resources/sprites/generals/taishi_ci_portrait.png",
+          "assets/resources/sprites/generals/wang_ji_portrait.png",
           "assets/resources/sprites/generals/wang_lang_portrait.png",
           "assets/resources/sprites/generals/wang_ping_portrait.png",
           "assets/resources/sprites/generals/wang_shuang_portrait.png",
@@ -1044,6 +1049,7 @@
           "assets/resources/sprites/ui_avatars/cropped/sun_lu_yu_avatar.png.meta",
           "assets/resources/sprites/ui_avatars/cropped/sun_quan_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/taishi_ci_avatar.png",
+          "assets/resources/sprites/ui_avatars/cropped/wang_ji_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/wang_lang_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/wang_ping_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/wang_shuang_avatar.png",
@@ -1097,7 +1103,7 @@
           "docs/ui-quality-tasks/UI-2-0121.json",
           "docs/ui-quality-todo.json"
         ],
-        "digest": "sha256:0c950293b8e5dd1f402a641942d7bcc6f65dcbcd2bbe5b391ae6f9dd8bf841a3"
+        "digest": "sha256:b75980770f6e0869d02dffd34e54ebfb4d5f62bc4f9bbf04295e834861232298"
       },
       {
         "kind": "lifecycle-operation",
@@ -1328,6 +1334,7 @@
       "assets/resources/sprites/generals/avatars/sun_lu_yu_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/sun_quan_avatar.png",
       "assets/resources/sprites/generals/avatars/taishi_ci_avatar.png",
+      "assets/resources/sprites/generals/avatars/wang_ji_avatar.png",
       "assets/resources/sprites/generals/avatars/wang_lang_avatar.png",
       "assets/resources/sprites/generals/avatars/wang_ping_avatar.png",
       "assets/resources/sprites/generals/avatars/wang_shuang_avatar.png",
@@ -1469,6 +1476,7 @@
       "assets/resources/sprites/generals/sun_lu_yu_portrait.png.meta",
       "assets/resources/sprites/generals/sun_quan_portrait.png",
       "assets/resources/sprites/generals/taishi_ci_portrait.png",
+      "assets/resources/sprites/generals/wang_ji_portrait.png",
       "assets/resources/sprites/generals/wang_lang_portrait.png",
       "assets/resources/sprites/generals/wang_ping_portrait.png",
       "assets/resources/sprites/generals/wang_shuang_portrait.png",
@@ -1614,6 +1622,7 @@
       "assets/resources/sprites/ui_avatars/cropped/sun_lu_yu_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/sun_quan_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/taishi_ci_avatar.png",
+      "assets/resources/sprites/ui_avatars/cropped/wang_ji_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/wang_lang_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/wang_ping_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/wang_shuang_avatar.png",
@@ -2703,6 +2712,9 @@
     "assets/resources/sprites/ui_avatars/cropped/xun_you_avatar.png",
     "assets/resources/sprites/generals/avatars/wang_lang_avatar.png",
     "assets/resources/sprites/generals/wang_lang_portrait.png",
-    "assets/resources/sprites/ui_avatars/cropped/wang_lang_avatar.png"
+    "assets/resources/sprites/ui_avatars/cropped/wang_lang_avatar.png",
+    "assets/resources/sprites/generals/avatars/wang_ji_avatar.png",
+    "assets/resources/sprites/generals/wang_ji_portrait.png",
+    "assets/resources/sprites/ui_avatars/cropped/wang_ji_avatar.png"
   ]
 }

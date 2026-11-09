@@ -924,11 +924,12 @@
       "source": "reviewed"
     },
     "wang-ji": {
-      "x": 160,
+      "x": 320,
       "y": 0,
-      "w": 200,
-      "h": 200,
-      "source": "reviewed"
+      "w": 350,
+      "h": 350,
+      "source": "reviewed",
+      "$note": "2026-11-09 王基魏藍青銅文武造型裁切。"
     },
     "sun-li": {
       "x": 156,
