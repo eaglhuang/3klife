@@ -38,7 +38,7 @@
           "hCenter": true,
           "vCenter": true
         },
-        "width": 1280,
+        "width": 1560,
         "height": 760,
         "skinSlot": "dup.card.bg",
         "children": [
@@ -89,7 +89,7 @@
               "top": 150,
               "left": 48
             },
-            "width": 568,
+            "width": 468,
             "height": 470,
             "skinSlot": "dup.card.rebirth.bg",
             "children": [
@@ -163,13 +163,93 @@
           },
           {
             "type": "panel",
+            "name": "DupStarUpCard",
+            "id": "dupStarUpCard",
+            "widget": {
+              "top": 150,
+              "hCenter": true
+            },
+            "width": 468,
+            "height": 470,
+            "skinSlot": "dup.card.starup.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DupStarUpTitle",
+                "id": "dupStarUpTitle",
+                "widget": {
+                  "top": 22,
+                  "left": 24,
+                  "right": 24
+                },
+                "height": 44,
+                "text": "升星",
+                "styleSlot": "dup.label.starup.title"
+              },
+              {
+                "type": "label",
+                "name": "DupStarUpTagline",
+                "id": "dupStarUpTagline",
+                "widget": {
+                  "top": 72,
+                  "left": 24,
+                  "right": 24
+                },
+                "height": 30,
+                "text": "同名精魄／累積星級",
+                "styleSlot": "dup.label.tagline"
+              },
+              {
+                "type": "label",
+                "name": "DupStarUpBody",
+                "id": "dupStarUpBody",
+                "widget": {
+                  "top": 120,
+                  "left": 40,
+                  "right": 32
+                },
+                "height": 220,
+                "text": "",
+                "styleSlot": "dup.label.body"
+              },
+              {
+                "type": "button",
+                "name": "BtnDupStarUp",
+                "id": "btnDupStarUp",
+                "widget": {
+                  "bottom": 26,
+                  "hCenter": true
+                },
+                "width": 320,
+                "height": 64,
+                "skinSlot": "dup.button.starup.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnDupStarUpLabel",
+                    "id": "dupStarUpLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "選擇升星",
+                    "styleSlot": "dup.label.button.choice"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "panel",
             "name": "DupInfusionCard",
             "id": "dupInfusionCard",
             "widget": {
               "top": 150,
               "right": 48
             },
-            "width": 568,
+            "width": 468,
             "height": 470,
             "skinSlot": "dup.card.infusion.bg",
             "children": [

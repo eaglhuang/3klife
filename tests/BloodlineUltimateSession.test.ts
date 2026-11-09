@@ -94,5 +94,21 @@ export function createBloodlineUltimateSessionSuite(): TestSuite {
         assert.equals(1, session.roster[0].bloodlineUltimate?.stageCurrent);
     });
 
+    suite.test('addStarUpCard：累積同名卡，集滿提高奧義上限；滿星或不在名冊回 null', async () => {
+        const session = sessionWith(general({ bloodlineUltimate: { stageCap: 2, stageCurrent: 1 } }));
+        assert.equals(2, session.starUpProgress('gen_ult')!.need);
+        const first = await session.addStarUpCard('gen_ult');
+        assert.equals(false, first!.raised);
+        assert.equals(1, session.roster[0].starUpCards);
+        const second = await session.addStarUpCard('gen_ult');
+        assert.isTrue(second!.raised);
+        assert.equals(3, session.roster[0].bloodlineUltimate!.stageCap);
+        assert.equals(0, session.roster[0].starUpCards);
+        assert.equals(null, await session.addStarUpCard('missing'));
+        const full = sessionWith(general({ bloodlineUltimate: { stageCap: 5, stageCurrent: 1 } }));
+        assert.equals(null, full.starUpProgress('gen_ult'));
+        assert.equals(null, await full.addStarUpCard('gen_ult'));
+    });
+
     return suite;
 }

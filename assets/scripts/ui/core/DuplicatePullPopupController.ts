@@ -3,7 +3,7 @@
  * DuplicatePullPopupController — 重複抽卡分流彈窗（純邏輯，不依賴 cc）
  *
  * 職責：
- *   - 抽卡結算拿到已持有的名將時，逐位詢問「復生重練／血脈灌注」
+ *   - 抽卡結算拿到已持有的名將時，逐位詢問「復生重練／升星／血脈灌注」
  *   - 十連抽防疲勞：勾選「本次抽卡批次預設沿用此選擇」後，選一次就套用到剩下的重複卡
  *   - ask() 回傳 Promise，全部選完才 resolve，每位重複卡一筆選擇
  *   - 沒有可灌注的英靈卡時，灌注按鈕不能按；批次沿用灌注時這幾位改走復生（DUP-05；PROG-2-2073）
@@ -15,13 +15,15 @@
  * Unity 對照：MVP 的 Presenter。按鈕 onClick 只呼叫 Choose / ToggleBatchDefault，畫面層拿 GetView() 一次刷新。
  */
 
-export type DuplicatePullRoute = 'rebirth' | 'infusion';
+export type DuplicatePullRoute = 'rebirth' | 'infusion' | 'starUp';
 
 export interface DuplicatePullEntry {
     id: string;
     name: string;
     /** 有沒有可灌注的英靈卡；缺欄位視為有 */
     infusionAvailable?: boolean;
+    /** 升星進度；缺欄位或 null 表示不能升星（已滿 ★5 或不在名冊） */
+    starUp?: { stars: number; cards: number; need: number } | null;
 }
 
 export interface DuplicatePullChoice {
@@ -52,6 +54,15 @@ export const DUPLICATE_PULL_TEXTS = {
         button: '選擇血脈灌注',
         unavailable: '未裝配英靈卡，無法灌注',
     },
+    starUp: {
+        title: '升星',
+        tagline: '同名精魄／累積星級',
+        progress: '目前 ★{stars}，同名卡 {cards} / {need}',
+        bullets: ['這張卡計入同名卡', '集滿後升 1 星', '★N 開放血脈奧義第 N 階'],
+        button: '選擇升星',
+        unavailableBody: '已達 ★5 或不在名冊，無法升星',
+        unavailable: '無法升星',
+    },
     batchDefault: '本次抽卡批次預設沿用此選擇',
 } as const;
 
@@ -59,6 +70,7 @@ export const DUPLICATE_PULL_TEXTS = {
 export const DUPLICATE_INFUSION_VALUE = 500;
 
 const canInfuse = (entry: DuplicatePullEntry): boolean => entry.infusionAvailable !== false;
+const canStarUp = (entry: DuplicatePullEntry): boolean => !!entry.starUp;
 
 /** 轉蛋結果分成「抽卡前就已持有」與其餘；其餘照原本入冊（含同批第二張的轉生） */
 export function splitOwnedDuplicates<T extends { id: string }>(generals: readonly T[], ownedIds: ReadonlySet<string>): { owned: T[]; rest: T[] } {
@@ -70,7 +82,7 @@ export function splitOwnedDuplicates<T extends { id: string }>(generals: readonl
 
 /** 要走復生的重複卡：選了復生，或沒有選擇（彈窗中止時維持原本的轉生行為） */
 export function rebirthTargetsOf<T extends { id: string }>(owned: readonly T[], choices: readonly DuplicatePullChoice[]): T[] {
-    return owned.filter((general, index) => choices[index]?.id !== general.id || choices[index].route !== 'infusion');
+    return owned.filter((general, index) => choices[index]?.id !== general.id || choices[index].route === 'rebirth');
 }
 
 /** 要走灌注的重複卡 */
@@ -78,7 +90,22 @@ export function infusionTargetsOf<T extends { id: string }>(owned: readonly T[],
     return owned.filter((general, index) => choices[index]?.id === general.id && choices[index].route === 'infusion');
 }
 
+/** 要走升星的重複卡 */
+export function starUpTargetsOf<T extends { id: string }>(owned: readonly T[], choices: readonly DuplicatePullChoice[]): T[] {
+    return owned.filter((general, index) => choices[index]?.id === general.id && choices[index].route === 'starUp');
+}
+
 const bulletText = (lines: readonly string[]): string => lines.map((line) => `• ${line}`).join('\n');
+
+function starUpBody(entry: DuplicatePullEntry | null): string {
+    const progress = entry?.starUp;
+    if (!progress) return bulletText([DUPLICATE_PULL_TEXTS.starUp.unavailableBody]);
+    const head = DUPLICATE_PULL_TEXTS.starUp.progress
+        .replace('{stars}', String(progress.stars))
+        .replace('{cards}', String(progress.cards))
+        .replace('{need}', String(progress.need));
+    return bulletText([head, ...DUPLICATE_PULL_TEXTS.starUp.bullets]);
+}
 
 export class DuplicatePullPopupController {
     private _queue: DuplicatePullEntry[] = [];
@@ -113,8 +140,9 @@ export class DuplicatePullPopupController {
         if (!this.isOpen()) return true;
         const entry = this.current();
         if (route === 'infusion' && entry && !canInfuse(entry)) return false;
+        if (route === 'starUp' && entry && !canStarUp(entry)) return false;
         const remaining = this._queue.slice(this._choices.length, this._batchDefault ? undefined : this._choices.length + 1);
-        for (const next of remaining) this._choices.push({ id: next.id, route: route === 'infusion' && !canInfuse(next) ? 'rebirth' : route });
+        for (const next of remaining) this._choices.push({ id: next.id, route: this._routeFor(next, route) });
         if (this._choices.length < this._queue.length) return false;
         this._finish();
         return true;
@@ -142,12 +170,23 @@ export class DuplicatePullPopupController {
                 dupInfusionTagline: DUPLICATE_PULL_TEXTS.infusion.tagline,
                 dupInfusionBody: bulletText(DUPLICATE_PULL_TEXTS.infusion.bullets),
                 dupInfusionLabel: entry && !canInfuse(entry) ? DUPLICATE_PULL_TEXTS.infusion.unavailable : DUPLICATE_PULL_TEXTS.infusion.button,
+                dupStarUpTitle: DUPLICATE_PULL_TEXTS.starUp.title,
+                dupStarUpTagline: DUPLICATE_PULL_TEXTS.starUp.tagline,
+                dupStarUpBody: starUpBody(entry),
+                dupStarUpLabel: entry && !canStarUp(entry) ? DUPLICATE_PULL_TEXTS.starUp.unavailable : DUPLICATE_PULL_TEXTS.starUp.button,
                 dupBatchLabel: `${this._batchDefault ? '[✓]' : '[ ]'} ${DUPLICATE_PULL_TEXTS.batchDefault}`,
             },
             // 只剩一位時沒有「沿用」的意義，勾選列隱藏
             actives: { btnDupBatchDefault: total - this._choices.length > 1 },
-            enabled: { btnDupRebirth: entry !== null, btnDupInfusion: entry !== null && canInfuse(entry) },
+            enabled: { btnDupRebirth: entry !== null, btnDupInfusion: entry !== null && canInfuse(entry), btnDupStarUp: entry !== null && canStarUp(entry) },
         };
+    }
+
+    /** 批次沿用時這位走不了選定路線就改走復生 */
+    private _routeFor(entry: DuplicatePullEntry, route: DuplicatePullRoute): DuplicatePullRoute {
+        if (route === 'infusion' && !canInfuse(entry)) return 'rebirth';
+        if (route === 'starUp' && !canStarUp(entry)) return 'rebirth';
+        return route;
     }
 
     private _finish(): void {

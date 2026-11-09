@@ -167,7 +167,7 @@ import { ITEM_LONGEVITY_PILL, ITEM_ORACLE_TOKEN } from '../../core/systems/ItemD
 import { ITEM_SHOP_OFFERS, JOB_CHANGE_ORDER_OFFER } from '../../core/systems/ItemShopPricing';
 import { ShopMainController } from '../core/ShopMainController';
 import { PrisonerPopupController } from '../core/PrisonerPopupController';
-import { DuplicatePullPopupController, DUPLICATE_INFUSION_VALUE, infusionTargetsOf, rebirthTargetsOf, splitOwnedDuplicates, type DuplicatePullChoice, type DuplicatePullEntry, type DuplicatePullRoute } from '../core/DuplicatePullPopupController';
+import { DuplicatePullPopupController, DUPLICATE_INFUSION_VALUE, infusionTargetsOf, rebirthTargetsOf, splitOwnedDuplicates, starUpTargetsOf, type DuplicatePullChoice, type DuplicatePullEntry, type DuplicatePullRoute } from '../core/DuplicatePullPopupController';
 import { buildLobbyScout, ScoutPanelController } from '../core/ScoutPanelController';
 import type { TacticCounterTagTable } from '../../core/systems/LoadoutCheck';
 import { spiritSlotViewOf } from '../../core/systems/SpiritSlotState';
@@ -538,6 +538,7 @@ export class LobbyScene extends Component {
             id: general.id,
             name: general.name,
             infusionAvailable: cards.get(general.id) !== null,
+            starUp: services().session.starUpProgress(general.id),
         })));
         const rebirth = await services().session.addGenerals(rebirthTargetsOf(owned, choices), { rebirthOnDuplicate: true, fromGacha: true });
         const base = this._gachaEnrollResult ?? { added: [], duplicates: [], rebirths: [], bondPointsGained: 0 };
@@ -547,6 +548,11 @@ export class LobbyScene extends Component {
             rebirths: [...base.rebirths, ...rebirth.rebirths],
             bondPointsGained: (base.bondPointsGained ?? 0) + rebirth.bondPointsGained,
         };
+        for (const general of starUpTargetsOf(owned, choices)) {
+            const result = await services().session.addStarUpCard(general.id);
+            if (result?.raised) this._showToast(`${general.name} 升至 ★${result.stars}`);
+            else if (result) this._showToast(`${general.name} 同名卡 +1`);
+        }
         for (const general of infusionTargetsOf(owned, choices)) {
             const card = cards.get(general.id);
             if (card) await this.openBloodlineInfusionResult(card, DUPLICATE_INFUSION_VALUE, general.id);
@@ -3679,6 +3685,7 @@ export class LobbyScene extends Component {
         this._duplicatePullHost = await this._mountPreviewScreenHost('DuplicatePullPopupHost', 'duplicate-pull-popup-screen', [
             { buttonId: 'btnDupRebirth', handler: () => { choose('rebirth'); } },
             { buttonId: 'btnDupInfusion', handler: () => { choose('infusion'); } },
+            { buttonId: 'btnDupStarUp', handler: () => { choose('starUp'); } },
             { buttonId: 'btnDupBatchDefault', handler: () => { this._duplicatePull.toggleBatchDefault(); this._refreshDuplicatePullPopup(); } },
         ]);
     }

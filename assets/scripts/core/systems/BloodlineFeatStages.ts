@@ -67,6 +67,21 @@ export const HISTORICAL_STAR_UP_COST: Readonly<Record<number, { templateCards: n
     4: { templateCards: 5, soulStones: 200 },
 };
 
+/** 史實名將用同名卡升星的進度；已滿 ★5 回 null。 */
+export function templateCardStarUpProgress(stars: number, cards: number): { stars: number; cards: number; need: number } | null {
+    const cost = HISTORICAL_STAR_UP_COST[stars];
+    return cost ? { stars, cards, need: cost.templateCards } : null;
+}
+
+/** 投入一張同名卡：集滿當前星級所需張數就升 1 星並扣掉；已滿 ★5 不變。 */
+export function addTemplateCard(stars: number, cards: number): { stars: number; cards: number; raised: boolean } {
+    const progress = templateCardStarUpProgress(stars, cards);
+    if (!progress) return { stars, cards, raised: false };
+    const total = cards + 1;
+    if (total < progress.need) return { stars, cards: total, raised: false };
+    return { stars: stars + 1, cards: total - progress.need, raised: true };
+}
+
 /** 世代子嗣升星（索引 = 目前星級 1~4）：譜牒印記枚數。 */
 export const DESCENDANT_STAR_UP_SEALS: Readonly<Record<number, number>> = { 1: 1, 2: 2, 3: 4, 4: 8 };
 

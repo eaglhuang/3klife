@@ -3,7 +3,7 @@
  */
 import { assert, TestSuite } from './TestRunner';
 import {
-    BloodlineFeat, checkFeatStage, stageCapForStars, stageNodeState, starUpCost,
+    BloodlineFeat, checkFeatStage, stageCapForStars, stageNodeState, starUpCost, addTemplateCard, templateCardStarUpProgress,
 } from '../assets/scripts/core/systems/BloodlineFeatStages';
 
 export function createBloodlineFeatStagesSuite(): TestSuite {
@@ -37,6 +37,22 @@ export function createBloodlineFeatStagesSuite(): TestSuite {
         const d = starUpCost(3, false);
         assert.isTrue(d !== null && d.kind === 'descendant' && d.lineageSeals === 4);
         assert.equals(null, starUpCost(5, false));
+    });
+
+    suite.test('同名卡升星：集滿才升 1 星並扣張數，滿星不變', () => {
+        const first = addTemplateCard(1, 0);
+        assert.equals(2, first.stars);
+        assert.equals(0, first.cards);
+        assert.isTrue(first.raised);
+        const partial = addTemplateCard(3, 1);
+        assert.equals(3, partial.stars);
+        assert.equals(2, partial.cards);
+        assert.equals(false, partial.raised);
+        assert.equals(4, addTemplateCard(3, 2).stars);
+        assert.equals(5, addTemplateCard(5, 0).stars);
+        assert.equals(false, addTemplateCard(5, 0).raised);
+        assert.equals(null, templateCardStarUpProgress(5, 0));
+        assert.equals(5, templateCardStarUpProgress(4, 2)!.need);
     });
 
     return suite;
