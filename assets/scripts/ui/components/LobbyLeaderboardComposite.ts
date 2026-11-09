@@ -56,6 +56,7 @@ export class LobbyLeaderboardComposite extends CompositePanel {
 
         this._applyTexts();
         this.node.active = true;
+        this.node.setSiblingIndex(this.node.parent ? this.node.parent.children.length - 1 : 0);
     }
 
     public hide(): void {

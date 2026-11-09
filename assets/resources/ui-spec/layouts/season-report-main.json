@@ -77,7 +77,7 @@
                 "name": "TitleLabel",
                 "width": 280,
                 "height": 56,
-                "skinSlot": "season-report.text.title",
+                "styleSlot": "season-report.text.title",
                 "text": "季度戰報"
               },
               {
@@ -85,7 +85,7 @@
                 "name": "SeasonLabel",
                 "width": 360,
                 "height": 56,
-                "skinSlot": "season-report.text.primary",
+                "styleSlot": "season-report.text.primary",
                 "text": ""
               },
               {
@@ -102,7 +102,7 @@
                     "name": "CloseLabel",
                     "width": "100%",
                     "height": "100%",
-                    "skinSlot": "season-report.text.primary",
+                    "styleSlot": "season-report.text.primary",
                     "text": "X"
                   }
                 ]
@@ -113,7 +113,7 @@
             "type": "scroll-view",
             "name": "ScrollView",
             "width": "100%",
-            "height": 620,
+            "height": 732,
             "skinSlot": "season-report.scroll.bg",
             "children": [
               {
@@ -135,7 +135,7 @@
                     "name": "EmptyHintLabel",
                     "width": "100%",
                     "height": 56,
-                    "skinSlot": "season-report.text.secondary",
+                    "styleSlot": "season-report.text.secondary",
                     "text": ""
                   },
                   {
@@ -158,7 +158,7 @@
                         "name": "RankLabel",
                         "width": 80,
                         "height": 56,
-                        "skinSlot": "season-report.text.primary",
+                        "styleSlot": "season-report.text.primary",
                         "text": "-"
                       },
                       {
@@ -166,7 +166,7 @@
                         "name": "LineLabel",
                         "width": 600,
                         "height": 56,
-                        "skinSlot": "season-report.text.secondary",
+                        "styleSlot": "season-report.text.secondary",
                         "text": "-"
                       }
                     ]
@@ -191,7 +191,7 @@
                         "name": "RankLabel",
                         "width": 80,
                         "height": 56,
-                        "skinSlot": "season-report.text.primary",
+                        "styleSlot": "season-report.text.primary",
                         "text": "-"
                       },
                       {
@@ -199,7 +199,7 @@
                         "name": "LineLabel",
                         "width": 600,
                         "height": 56,
-                        "skinSlot": "season-report.text.secondary",
+                        "styleSlot": "season-report.text.secondary",
                         "text": "-"
                       }
                     ]
@@ -224,7 +224,7 @@
                         "name": "RankLabel",
                         "width": 80,
                         "height": 56,
-                        "skinSlot": "season-report.text.primary",
+                        "styleSlot": "season-report.text.primary",
                         "text": "-"
                       },
                       {
@@ -232,7 +232,7 @@
                         "name": "LineLabel",
                         "width": 600,
                         "height": 56,
-                        "skinSlot": "season-report.text.secondary",
+                        "styleSlot": "season-report.text.secondary",
                         "text": "-"
                       }
                     ]
@@ -257,7 +257,7 @@
                         "name": "RankLabel",
                         "width": 80,
                         "height": 56,
-                        "skinSlot": "season-report.text.primary",
+                        "styleSlot": "season-report.text.primary",
                         "text": "-"
                       },
                       {
@@ -265,7 +265,7 @@
                         "name": "LineLabel",
                         "width": 600,
                         "height": 56,
-                        "skinSlot": "season-report.text.secondary",
+                        "styleSlot": "season-report.text.secondary",
                         "text": "-"
                       }
                     ]
@@ -290,7 +290,7 @@
                         "name": "RankLabel",
                         "width": 80,
                         "height": 56,
-                        "skinSlot": "season-report.text.primary",
+                        "styleSlot": "season-report.text.primary",
                         "text": "-"
                       },
                       {
@@ -298,7 +298,7 @@
                         "name": "LineLabel",
                         "width": 600,
                         "height": 56,
-                        "skinSlot": "season-report.text.secondary",
+                        "styleSlot": "season-report.text.secondary",
                         "text": "-"
                       }
                     ]
@@ -323,7 +323,7 @@
                         "name": "RankLabel",
                         "width": 80,
                         "height": 56,
-                        "skinSlot": "season-report.text.primary",
+                        "styleSlot": "season-report.text.primary",
                         "text": "-"
                       },
                       {
@@ -331,7 +331,7 @@
                         "name": "LineLabel",
                         "width": 600,
                         "height": 56,
-                        "skinSlot": "season-report.text.secondary",
+                        "styleSlot": "season-report.text.secondary",
                         "text": "-"
                       }
                     ]
@@ -360,7 +360,7 @@
                 "name": "HintLabel",
                 "width": "100%",
                 "height": 48,
-                "skinSlot": "season-report.text.secondary",
+                "styleSlot": "season-report.text.secondary",
                 "text": ""
               }
             ]

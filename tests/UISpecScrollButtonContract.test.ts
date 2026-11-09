@@ -14,6 +14,7 @@ interface SpecNode {
     text?: string;
     textKey?: string;
     bind?: string;
+    skinSlot?: string;
     children?: SpecNode[];
     itemTemplate?: unknown;
 }
@@ -42,6 +43,11 @@ export function createUISpecScrollButtonContractSuite(): TestSuite {
         const hits = collect((n) => (n.type === 'button' || n.type === 'toggle')
             && (n.text !== undefined || !!n.textKey || !!n.bind)
             && (n.children ?? []).some((c) => c.type === 'label'));
+        assert.equals('', hits.join(', '));
+    });
+
+    suite.test('標籤的文字樣式要放在 styleSlot', () => {
+        const hits = collect((n) => n.type === 'label' && /\.text\./.test(n.skinSlot ?? ''));
         assert.equals('', hits.join(', '));
     });
 
