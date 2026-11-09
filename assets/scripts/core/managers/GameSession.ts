@@ -257,6 +257,7 @@ import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral, UNVEILING_AGE, GEN
 import { injectCatalystFactor, markCatalystUsed, type CatalystGeneral } from '../systems/GeneCatalyst';
 import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
 import { DynamicRelationBook, battleComradePairs, type DynamicRelationResult } from '../systems/KinDynamicRelations';
+import { claimAllSeasonPass, createSeasonPassState, isDefaultSeasonPassState, mockSeasonPassLevelUp, normalizeSeasonPassState, type SeasonPassReward, type SeasonPassState } from '../systems/SeasonPass';
 import { normalizePendingSceneGambit, pendingSceneGambitOfTask, resolveSceneGambit, type PendingSceneGambit, type SceneGambitOutcome } from '../systems/HallSceneGambit';
 import { ITEM_EXTREME_CHALLENGE_ORDER, createExtremeTaskState, extremeFreeAttemptsLeft, extremeStageOfWeek, extremeWeekIndexOf, isExtremeStage, normalizeExtremeTaskState, startExtremeTask, type ExtremeTaskState } from '../systems/ExtremeTaskBoard';
 import { rollExtremeTaskDrop, type ExtremeTaskDrop } from '../systems/ExtremeTaskDrop';
@@ -827,6 +828,7 @@ export class GameSession {
     private _pendingSceneGambit: PendingSceneGambit | null = null;
     /** 祠堂每日供奉最後領取日（UTC+8，YYYY-MM-DD）；從未領為 null（PROG-2-1915） */
     private _shrineOfferingDay: string | null = null;
+    private _seasonPass: SeasonPassState = createSeasonPassState();
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
     private _prison: PrisonState<GeneralConfig> = createPrisonState<GeneralConfig>();
     /** 來投時依 uid 查回的武將配置（generals.json）；大廳載入後由 setGeneralTemplates 注入 */
@@ -2028,6 +2030,7 @@ export class GameSession {
         this._extremeTask = createExtremeTaskState();
         this._pendingSceneGambit = null;
         this._shrineOfferingDay = null;
+        this._seasonPass = createSeasonPassState();
         this._sevenDayJourney = createSevenDayJourneyState();
         this._officerState = initialOfficerState();
         this._officerTrial = null;
@@ -2808,6 +2811,38 @@ export class GameSession {
         this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
         if (this._autoSave && this._save) await this.save();
         return GameSession.SHRINE_OFFERING_PILLS;
+    }
+
+    /** 季度通行證（ECO-13 Mock，裁決 11/09 第 12 題） */
+    public get seasonPass(): SeasonPassState {
+        return { ...this._seasonPass, claimedFree: this._seasonPass.claimedFree.slice(), claimedPremium: this._seasonPass.claimedPremium.slice() };
+    }
+
+    /** Mock 升 1 級：軍功任務追蹤尚未接上 */
+    public async mockSeasonPassLevelUp(): Promise<void> {
+        this._seasonPass = mockSeasonPassLevelUp(this._seasonPass);
+        if (this._autoSave && this._save) await this.save();
+    }
+
+    /** Mock 解鎖黃金戰令：不扣款 */
+    public async mockUnlockSeasonPassPremium(): Promise<void> {
+        this._seasonPass = { ...this._seasonPass, premium: true };
+        if (this._autoSave && this._save) await this.save();
+    }
+
+    /** 一鍵領取（ECO-13 §5）：有道具的進背包，遊戲還沒有的內容只記錄已領 */
+    public async claimAllSeasonPass(): Promise<SeasonPassReward[]> {
+        const { state, rewards } = claimAllSeasonPass(this._seasonPass);
+        if (rewards.length === 0) return rewards;
+        const before = this._inventory;
+        for (const reward of rewards) {
+            if (reward.itemId) this._inventory = addItem(this._inventory, reward.itemId, reward.count);
+        }
+        this._recordGain(before, 'DROP');
+        this._seasonPass = state;
+        this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
+        if (this._autoSave && this._save) await this.save();
+        return rewards;
     }
 
     public get aiAdaptiveStreak(): AiAdaptiveStreak {
@@ -5243,8 +5278,8 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'officerTrial' | 'paidFeatureQuota' | 'openingOffers' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'officerTrial' | 'paidFeatureQuota' | 'openingOffers' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'officerTrial' | 'paidFeatureQuota' | 'openingOffers' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay' | 'seasonPass'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'officerTrial' | 'paidFeatureQuota' | 'openingOffers' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay' | 'seasonPass'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
@@ -5288,6 +5323,7 @@ export class GameSession {
         if (this._extremeTask.weekIndex >= 0 || this._extremeTask.rewards.length > 0) fields.extremeTask = { ...this._extremeTask, rewards: this._extremeTask.rewards.map((drop) => ({ ...drop })) };
         if (this._salaryLedger.lastSettledSeason !== null) fields.salaryLedger = { arrears: { ...this._salaryLedger.arrears }, lastSettledSeason: this._salaryLedger.lastSettledSeason };
         if (this._shrineOfferingDay) fields.shrineOfferingDay = this._shrineOfferingDay;
+        if (!isDefaultSeasonPassState(this._seasonPass)) fields.seasonPass = this.seasonPass;
         return fields;
     }
 
@@ -5329,6 +5365,7 @@ export class GameSession {
         this._extremeTask = normalizeExtremeTaskState(snapshot.extremeTask);
         this._pendingSceneGambit = normalizePendingSceneGambit(snapshot.pendingSceneGambit);
         this._shrineOfferingDay = normalizeShrineOfferingDay(snapshot.shrineOfferingDay);
+        this._seasonPass = normalizeSeasonPassState(snapshot.seasonPass);
     }
 
     /**
