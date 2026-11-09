@@ -12,8 +12,9 @@
  * LobbyScene 只負責掛 host、載設定檔、把動作接到既有流程。
  * Unity 對照：像掛在大廳 Canvas 上的 Presenter，持有主題綁定器與粒子層，按鈕事件往外拋。
  */
-import { Label, Node, UITransform } from 'cc';
+import { Label, Node, UITransform, view } from 'cc';
 import type { HallMapLayout, HallMapTurnStep } from '../../core/systems/HallMapFocusPlanner';
+import { hallBgCoverScale } from '../../core/systems/HallBackgroundFit';
 import { HallThemeConfig, resolveHallTheme } from '../../core/systems/HallTheme';
 import type { HallSeason, HallSeasonFxConfig } from '../../core/systems/HallSeasonFx';
 import type { HallStageCast } from '../../core/systems/HallStageDirector';
@@ -73,6 +74,10 @@ function setText(node: Node | undefined, text: string): void {
 /** 綁定器自建、緊接在沙盤後面的圖層節點名稱 */
 const LAYER_NAMES: readonly string[] = ['HallStageCrowd', 'HallSeasonFx'];
 
+/** 版面裡沙盤群組（sandbox-group）的固定尺寸 */
+const HALL_SANDBOX_WIDTH = 1920;
+const HALL_SANDBOX_HEIGHT = 1080;
+
 export class LobbyHallScreenBinder {
     private readonly _applier: LobbyHallThemeApplier;
     private _fx: HallSeasonFxLayer | null = null;
@@ -87,6 +92,7 @@ export class LobbyHallScreenBinder {
     /** screenRoot：畫面根節點（layout root，例如 LobbyHallScreen）。 */
     constructor(private readonly _screenRoot: Node, private readonly _deps: LobbyHallScreenDeps) {
         this._applier = new LobbyHallThemeApplier(new LobbyHallThemeNodeView(_screenRoot));
+        this._fitBackground();
         this._bindTap('lobby-hall-screen.back', () => _deps.onBack());
         for (const id of LOBBY_HALL_DOCK_IDS) this._bindTap(`lobby-hall-screen.dock-${id}`, () => _deps.onDock(id));
         const onPanel = _deps.onPanel;
@@ -94,6 +100,15 @@ export class LobbyHallScreenBinder {
         if (_deps.mapLayout) this._map = this._createMapPlayer(_deps.mapLayout);
         if (_deps.stage) this._createStage(_deps.stage);
         if (_deps.fxConfig) this._fx = this._createFxLayer(_deps.fxConfig);
+    }
+
+    /** 視窗比 16:9 寬時放大底圖蓋滿左右，不拉寬變形 */
+    private _fitBackground(): void {
+        const bg = findUcufNode(this._screenRoot, 'lobby-hall-screen.hall-bg');
+        if (!bg) return;
+        const size = view.getVisibleSize();
+        const scale = hallBgCoverScale(size.width, size.height);
+        bg.setScale(scale, scale, 1);
     }
 
     /** 顯示或隱藏場景面板（例如家族系統未解鎖時隱藏世家） */
@@ -205,8 +220,12 @@ export class LobbyHallScreenBinder {
         player.ping = ping;
         player.pingGlyph = labels[0] ?? null;
         player.pingLabel = labels[1] ?? null;
-        const rootSize = this._screenRoot.getComponent(UITransform);
-        player.configure(layout, { width: rootSize?.width ?? 1920, height: rootSize?.height ?? 1080 });
+        player.tint = findUcufNode(this._screenRoot, 'lobby-hall-screen.season-tint');
+        player.focusOnly = ['stage-s1', 'stage-s2', 'stage-s3']
+            .map((id) => findUcufNode(this._screenRoot, `lobby-hall-screen.${id}`))
+            .filter((n): n is Node => !!n);
+        // 沙盤群組固定 1920×1080 置中，座標要用群組尺寸；用實際畫面寬度會在寬螢幕把地圖往左推
+        player.configure(layout, { width: HALL_SANDBOX_WIDTH, height: HALL_SANDBOX_HEIGHT });
         player.setMode('mini', true);
         return player;
     }
