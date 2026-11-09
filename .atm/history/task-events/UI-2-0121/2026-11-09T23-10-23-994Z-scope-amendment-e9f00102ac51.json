@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-09T23-10-23-994Z-scope-amendment-e9f00102ac51",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:382384eed907831da2218cad8bae8d171d7cdb6c721010d53b67198143ba2fcc",
+  "createdAt": "2026-11-09T23:10:23.994Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/cai_yan_portrait.png,assets/resources/sprites/generals/cai_wenji_portrait.png,assets/resources/sprites/generals/avatars/cai_yan_avatar.png,assets/resources/sprites/generals/avatars/cai_wenji_avatar.png,assets/resources/sprites/ui_avatars/cropped/cai_yan_avatar.png,assets/resources/sprites/ui_avatars/cropped/cai_wenji_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
