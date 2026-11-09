@@ -92,10 +92,10 @@ export function createPinkTerrainAptitudeSuite(): TestSuite {
         assert.equals(null, battleAptitudeProfileOf(null));
     });
 
-    suite.test('祖先數依席位計算，只列粉色地形因子', () => {
+    suite.test('祖先數依人頭計算，同一祖先佔多席只算一次，只列粉色地形因子', () => {
         const pedigree = { ...createEmptyPedigree(), F: 'a', M: 'b', FF: 'a' };
         const profiles = new Map([['a', { factorIds: ['gene_naval', 'gene_bravery'] }], ['b', { factorIds: ['gene_forest'] }]]);
-        assert.equals(JSON.stringify({ gene_naval: 2, gene_forest: 1 }), JSON.stringify(pinkFactorAncestorCounts(pedigree, profiles)));
+        assert.equals(JSON.stringify({ gene_naval: 1, gene_forest: 1 }), JSON.stringify(pinkFactorAncestorCounts(pedigree, profiles)));
     });
 
     suite.test('受孕時把祖先數存到子嗣，戰場適性因此升一級', () => {
