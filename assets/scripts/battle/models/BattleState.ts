@@ -118,6 +118,8 @@ export class BattleState {
   public sceneCaster: Faction = Faction.Enemy;
   /** 營帳格座標覆寫（夜襲／埋伏）；null 時用預設：敵方後排中央（PM 暫定） */
   public sceneCampPosition: { lane: number; depth: number } | null = null;
+  /** 玩家視野半徑（夜襲主題關，PROG-2-2132）；null 為不限。只影響畫面 */
+  public visionRadius: number | null = null;
   /** 本局是否已對外發出 BattleEnded（勝負判定可重複呼叫，事件只發一次） */
   public battleEndAnnounced = false;
   /** 關卡級回收累計（關卡設計系統 §I，PROG-2-1462）：戰中只累計，戰鬥結束隨 BattleEnded 帶出 */
@@ -207,6 +209,7 @@ export class BattleState {
     this.sceneFlags = { stealthOpenTurns: 0, nightRaid: false, nightRaidOpenTurns: 0 };
     this.controlledUnits.clear();
     this.fallenUnits = [];
+    this.visionRadius = null;
     this.lastSpurtMode = false;
     this.generalStamina.clear();
     this.peakTroopCount = 0;

@@ -39,6 +39,7 @@ import { BattleTactic, Faction, GAME_CONFIG, TroopType } from "../../core/config
 import { GeneralUnit } from "../../core/models/GeneralUnit";
 import { TroopUnit } from "../../core/models/TroopUnit";
 import { BattleState } from "../models/BattleState";
+import { isUnitVisibleToPlayer } from "../shared/BattleVision";
 import { BoardRenderer } from "./BoardRenderer";
 import { SpineGeneralOverlay } from "./SpineGeneralOverlay";
 import { BATTLE_VISUAL_TIMING } from "./BattlePresentationTiming";
@@ -1283,6 +1284,7 @@ export class UnitRenderer extends Component {
       view.worldNode.setScale(new Vec3(this.unitScale, this.unitHeight, this.unitScale));
       void this.ensureTroopFormation(view, unit);
     }
+    this.applyPlayerVision(view, unit);
 
     const attackBonus = unit.getEffectiveAttack() - unit.attack;
     const hpBonus = unit.getEffectiveMaxHp() - unit.maxHp;
@@ -1900,6 +1902,18 @@ export class UnitRenderer extends Component {
     view.formationRoot.active = true;
     view.worldNode.setScale(Vec3.ONE);
     this.applyTroopFormationTransform(view, unit);
+    this.applyPlayerVision(view, unit);
+  }
+
+  /**
+   * 夜襲視野（PROG-2-2132）：視野外的敵軍連同標籤一起不畫。
+   * 世界節點用縮放隱藏，不可設 active=false：tween 會暫停，movingUnits 清不掉，回合流程要等到逾時。
+   * 可見時不動縮放，由呼叫端依顯示模式設定，所以要在設完縮放之後呼叫。
+   */
+  private applyPlayerVision(view: UnitView, unit: TroopUnit): void {
+    const visible = !this.latestState || isUnitVisibleToPlayer(this.latestState, unit);
+    view.labelNode.active = visible;
+    if (!visible) view.worldNode.setScale(Vec3.ZERO);
   }
 
   private applyTroopFormationTransform(view: UnitView, unit: TroopUnit): void {

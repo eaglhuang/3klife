@@ -14,6 +14,7 @@ import { bindHeldTallyInstances } from '../../core/config/TallyCardCatalog';
 import { tallyBattleInfoOf } from "../../core/systems/TigerTallyStar";
 import { IBattleEntryParams, DEFAULT_BATTLE_ENTRY_PARAMS, formatBattleEntryLog } from '../../shared/BattleEntryParams';
 import { SceneName } from "../../shared/CommonEnums";
+import { stageThemeVisionRadius } from "../shared/StageThemeSalvage";
 import { GeneralUnit } from "../../core/models/GeneralUnit";
 import { BattleController } from "../controllers/BattleController";
 import { TerrainGrid } from "../models/BattleState";
@@ -228,6 +229,8 @@ export class BattleScene extends Component {
         difficulty,
         enemyScale?.difficulty.difficultyBonus ?? 0,
       );
+      // 夜襲視野（PROG-2-2132）：只看關卡主題；軍事任務觸發的夜襲戰法是我方優勢，不限視野
+      this.ctrl.state.visionRadius = stageThemeVisionRadius(encounter?.stageThemeId);
       if (enemyScale) this.ctrl.configureAiDifficulty(enemyScale.difficulty);
       // 天氣排程（PROG-2-0401）：入口參數優先，沒有才用 encounter 設定
       const weatherSchedule = battleParams.weatherSchedule ?? encounter?.weatherSchedule;
