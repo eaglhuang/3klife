@@ -78,6 +78,8 @@ import { FAST_FORWARD_REASON_TEXT, fastForwardSeasons } from '../../core/systems
 import { BREEDING_MIN_AGE } from '../../core/systems/BreedingSystem';
 import { RECRUIT_ROWS_PER_PAGE, RecruitHallController } from '../core/RecruitHallController';
 import { loadGeneralAvatar, loadGeneralPortrait } from '../core/GeneralAvatarLoader';
+import { RELATION_GRAPH_SLOTS, RelationGraphController } from '../core/RelationGraphController';
+import { RelationGraphRenderer } from '../core/RelationGraphRenderer';
 import { overflowToastText } from '../../core/systems/MentorOverflow';
 import { AGING_CIVIL_LINE } from '../../core/systems/PeakCurve';
 import { RIVAL_NATION_SLOTS, RivalDiplomacyController } from '../core/RivalDiplomacyController';
@@ -401,6 +403,9 @@ export class LobbyScene extends Component {
     private _govHallHost: UIScreenPreviewHost | null = null;
     private _govHall: GovernorHallController | null = null;
     private _itemBagHost: UIScreenPreviewHost | null = null;
+    private _relationGraphHost: UIScreenPreviewHost | null = null;
+    private _relationGraph: RelationGraphController | null = null;
+    private _relationGraphRenderer: RelationGraphRenderer | null = null;
     private _itemBag: ItemBagController | null = null;
     /** 太守府升級因金錢不足被拒（PROG-2-0991）；重新開啟太守府時清除。 */
     private _territoryGoldShortage = false;
@@ -635,6 +640,7 @@ export class LobbyScene extends Component {
         await this._mountMercenaryPanel();
         await this._mountGovernorHall();
         await this._mountItemBag();
+        await this._mountRelationGraph();
         await this._mountRedFaceShowcase();
         // 語系字串從沒被載入過，信件/教學等 t(key) 都回傳鍵名（PROG-2-1623）；開場面板前先載好
         try {
@@ -1056,6 +1062,7 @@ export class LobbyScene extends Component {
             domestic: () => this._openDomestic(),
             governorHall: () => this.openGovernorHall(),
             itemBag: () => this.openItemBag(),
+            relationGraph: () => { void this._openRelationGraph(); },
             recruitHall: () => this._openRecruitHall(),
             hallBoard: () => this._openHallBoard(),
             sandtable: () => this._onClickOpenSandtable(),
@@ -2253,6 +2260,73 @@ export class LobbyScene extends Component {
         if (this._itemBagHost) {
             this._itemBagHost.node.active = false;
         }
+    }
+
+    /** 關係圖鑑（KIN-07）：隱藏掛載；開啟時先選中心武將，選定後才顯示圖。 */
+    private async _mountRelationGraph(): Promise<void> {
+        this._relationGraph = new RelationGraphController({
+            table: () => services().historicalPairTable(),
+            relations: () => services().session.dynamicRelations.snapshot(),
+            nameOf: (id) => services().session.roster.find((g) => g.id === id)?.name
+                ?? this._generals.find((g) => g.id === id)?.name
+                ?? id,
+        });
+        const nodeBindings = Array.from({ length: RELATION_GRAPH_SLOTS }, (_, slot) => ({
+            buttonId: `relationNode${slot}`,
+            handler: () => { this._tapRelationNode(slot); },
+        }));
+        const host = await this._mountPreviewScreenHost('RelationGraphHost', 'relation-graph-screen', [
+            { buttonId: 'btnClose', handler: () => { host.node.active = false; } },
+            ...nodeBindings,
+        ]);
+        if (!host.node.getComponent(BlockInputEvents)) host.node.addComponent(BlockInputEvents);
+        host.node.active = false;
+        this._relationGraphHost = host;
+    }
+
+    private async _openRelationGraph(): Promise<void> {
+        const generals = services().session.roster.filter((general) => !isGeneralDead(general));
+        if (generals.length === 0) {
+            services().event.emit('SHOW_TOAST', { message: '目前沒有可查看的武將', duration: 2 });
+            return;
+        }
+        if (!services().historicalPairTable()) await services().loadHistoricalPairs();
+        void services().ui.open(UIID.GeneralList, {
+            generals,
+            onSelectGeneral: async (config: GeneralConfig) => {
+                if (services().ui.isOpen(UIID.GeneralList)) {
+                    await services().ui.closeCurrentUI();
+                } else {
+                    this._listPanel?.hide();
+                }
+                this._showRelationGraph(config.id);
+            },
+            options: { factionFilter: 'all', pickerMode: true },
+        } satisfies GeneralListOpenPayload);
+    }
+
+    private _showRelationGraph(centerId: string): void {
+        const host = this._relationGraphHost;
+        if (!host || !this._relationGraph) return;
+        this._relationGraph.open(centerId);
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshRelationGraph('open');
+    }
+
+    private _tapRelationNode(slot: number): void {
+        const result = this._relationGraph?.tapNode(slot);
+        if (result === 'peek' || result === 'recenter') this._refreshRelationGraph(result);
+    }
+
+    private _refreshRelationGraph(reason: 'open' | 'peek' | 'recenter'): void {
+        const binder = this._relationGraphHost?.binder;
+        const graph = this._relationGraph;
+        if (!binder || !graph) return;
+        applyFlowView(binder, { enabled: {}, ...graph.getFlowView() });
+        this._relationGraphRenderer ??= new RelationGraphRenderer(binder);
+        if (reason === 'peek') this._relationGraphRenderer.renderPeek(graph);
+        else this._relationGraphRenderer.render(graph, reason === 'recenter');
     }
 
     /** 背包道具選對象（PROG-2-2105）：先收起背包開武將清單，選定後關清單回背包等確定。 */
