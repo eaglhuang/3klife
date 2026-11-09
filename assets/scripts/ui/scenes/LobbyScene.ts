@@ -930,6 +930,8 @@ export class LobbyScene extends Component {
             services().event.on(GAME_SESSION_EVENTS.Loaded, check),
         );
         check();
+    }
+
     /** 季度通行證面板（ECO-13 Mock，PROG-2-2197） */
     private async _mountSeasonPass(): Promise<void> {
         const panel = new SeasonPassController<UIScreenPreviewHost>({
