@@ -1,3 +1,4 @@
+import { setSpriteFillColor } from '../components/SolidBackground';
 import { Color, Node, Sprite, UIOpacity } from 'cc';
 
 /**
@@ -29,7 +30,7 @@ export function applyContentNodeVisual(node: Node, spec: ContentNodeVisualSpec, 
     const color = typeof hex === 'string' ? parseHexColor(hex) : null;
     const sprite = color ? node.getComponent(Sprite) : null;
     if (sprite && color) {
-        sprite.color = color;
+        setSpriteFillColor(sprite, color);
         applied = true;
     }
     return applied;

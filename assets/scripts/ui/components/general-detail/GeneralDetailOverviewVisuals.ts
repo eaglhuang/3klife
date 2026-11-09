@@ -14,6 +14,7 @@ import type { GeneralDetailRarityTier } from '../../../core/models/GeneralUnit';
 import type { SpriteFrame } from 'cc';
 import type { UISkinResolver } from '../../core/UISkinResolver';
 import { applyUIRarityMarkToNodes } from '../../core/UIRarityMarkVisual';
+import { getSpriteFillColor, setSpriteFillColor } from '../SolidBackground';
 
 type OverviewVisualPassPaths = {
     coreStatsCard: string;
@@ -353,7 +354,7 @@ function applyOverviewVisualPassToRoot(
         if (barSprite) {
             const color = colors.teal.clone();
             color.a = 224;
-            barSprite.color = color;
+            setSpriteFillColor(barSprite, color);
             const barOpacity = awakeningBarFill.getComponent(UIOpacity);
             if (barOpacity) {
                 barOpacity.opacity = 255;
@@ -445,7 +446,7 @@ function _setSpriteColor(root: Node, path: string, color: Color): void {
     if (!node) return;
     const sprite = node.getComponent(Sprite);
     if (!sprite) return;
-    sprite.color = color.clone();
+    setSpriteFillColor(sprite, color.clone());
     _refreshRenderable(sprite);
 }
 
@@ -455,9 +456,9 @@ function _setNodeOpacity(root: Node, path: string, opacityValue: number): void {
     const clampedOpacity = Math.max(0, Math.min(255, opacityValue));
     const sprite = node.getComponent(Sprite);
     if (sprite) {
-        const color = sprite.color.clone();
+        const color = getSpriteFillColor(sprite).clone();
         color.a = clampedOpacity;
-        sprite.color = color;
+        setSpriteFillColor(sprite, color);
         _refreshRenderable(sprite);
 
         const opacity = node.getComponent(UIOpacity);

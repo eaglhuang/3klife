@@ -377,7 +377,10 @@ export class GeneralListComposite extends CompositePanel {
 
     private _applyOpaquePanelBg(): void {
         const solid = this.node.getComponent(SolidBackground);
-        if (solid) solid.color = PANEL_BG.clone();
+        if (solid) {
+            solid.color = PANEL_BG.clone();
+            return;
+        }
         const sprite = this.node.getComponent(Sprite);
         if (sprite) sprite.color = PANEL_BG;
     }

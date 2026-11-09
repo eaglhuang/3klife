@@ -1,4 +1,5 @@
 // @spec-source → 武將人物介面規格書.md (doc_ui_0012)；PROG-2-1429 依建檔紀錄補標出處
+import { setSpriteFillColor } from '../SolidBackground';
 import { Color, Graphics, Label, Node, Sprite, UITransform } from 'cc';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
 import { ds3Label, ds3SetActive } from './Ds3NodeLookup';
@@ -120,7 +121,7 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
         const pillLabel = this.binder.getLabel('OverviewRarityTier');
 
         if (pillSprite) {
-            pillSprite.color = this._toColor(DS3_RARITY_PILL_BG[tier]);
+            setSpriteFillColor(pillSprite, this._toColor(DS3_RARITY_PILL_BG[tier]));
         }
 
         if (pillLabel) {

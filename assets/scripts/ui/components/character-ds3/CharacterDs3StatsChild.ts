@@ -499,14 +499,14 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
     /** 條的寬度已由 _syncVital 依比例設定，這裡只換成 LifeVitalityPresenter 給的三段色 */
     private _setBarColorHex(fillNode: Node, hex: string): void {
         const color = this._hexToColor(hex);
-        const sprite = fillNode.getComponent(Sprite);
-        if (sprite) {
-            sprite.color = color;
-            return;
-        }
         const solidBackground = fillNode.getComponent(SolidBackground);
         if (solidBackground) {
             solidBackground.color = color;
+            return;
+        }
+        const sprite = fillNode.getComponent(Sprite);
+        if (sprite) {
+            sprite.color = color;
         }
     }
 

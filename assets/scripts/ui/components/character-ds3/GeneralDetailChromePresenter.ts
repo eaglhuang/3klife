@@ -1,4 +1,5 @@
 // @spec-source → 武將人物介面規格書.md (doc_ui_0012)；PROG-2-1429 依建檔紀錄補標出處
+import { setSpriteFillColor } from '../SolidBackground';
 import type { UITemplateBinder } from '../../core/UITemplateBinder';
 import type { UISkinResolver } from '../../core/UISkinResolver';
 import type { ChildPanelBase } from '../../core/ChildPanelBase';
@@ -399,7 +400,7 @@ export class GeneralDetailChromePresenter {
             opacity.opacity = isActive ? 255 : 224;
             const sprite = button.getComponent(Sprite);
             if (sprite) {
-                sprite.color = isActive ? activeSpriteColor : inactiveSpriteColor;
+                setSpriteFillColor(sprite, isActive ? activeSpriteColor : inactiveSpriteColor);
             }
             if (label) {
                 label.color = isActive ? activeLabelColor : inactiveLabelColor;
