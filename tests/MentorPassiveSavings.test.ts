@@ -3,6 +3,7 @@
  *
  * Unity 對照：EditMode Test，鎖住減免的乘算、相加、封頂與「沒帶卡行為不變」。
  */
+import { mentorToCardData } from '../assets/scripts/core/systems/MentorCardTabs';
 import { assert, TestSuite } from './TestRunner';
 import {
     applyPassiveSave,
@@ -12,6 +13,7 @@ import {
     totalVitalitySave,
 } from '../assets/scripts/core/systems/MentorPassiveSavings';
 import {
+    computeStatGain,
     createNurtureSession,
     executeRound,
     mentorFromCard,
@@ -185,6 +187,23 @@ export function createMentorPassiveSavingsSuite(): TestSuite {
         const { session, port } = learnSession(24, { tacticTpDiscount: 0.9 });
         assert.isTrue((await session.learnTactic('lead', 'TAC_A')).ok);
         assert.equals(12, port.state.sessions[0].tp);
+    });
+
+    suite.test('Training_Rate：站在同格才進 M_Training，別格與沒有此被動時增益不變', () => {
+        const rated = mentor('m1', { specialty: 'int', trainingRate: 0.5 });
+        const plain = mentor('m1', { specialty: 'int' });
+        const gain = (m: TrainingMentor, slot: 'str' | 'int') =>
+            computeStatGain({ mentors: [m], mentorSlots: { m1: slot }, growthModifier: 1 }, 'str', 100).gain;
+        assert.equals(gain(plain, 'int'), gain(rated, 'int'));
+        assert.equals(Math.round(gain(plain, 'str') * 1.5), gain(rated, 'str'));
+    });
+
+    suite.test('Training_Rate：依 Min_Star 解鎖並由 mentorToCardData 列出', () => {
+        const def = { passiveEffects: [{ effect: 'Training_Rate', value: 0.05, minStar: 2 }] } as unknown as SupportCardDef;
+        assert.equals(undefined, passiveSavingsOfSupport(def, 1).trainingRate);
+        assert.equals(0.05, passiveSavingsOfSupport(def, 2).trainingRate);
+        const data = mentorToCardData(mentor('m1', { trainingRate: 0.05 }));
+        assert.isTrue(data.effects.some((e) => e.id === 'TRAINING_RATE' && e.label.indexOf('+5%') >= 0));
     });
 
     return suite;
