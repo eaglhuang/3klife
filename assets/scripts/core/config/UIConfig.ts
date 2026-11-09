@@ -178,12 +178,12 @@ export const UIConfig: Record<UIID, UIConfigEntry> = {
         backdrop: { enabled: true, opacity: 180, blocksInput: true, closeOnTap: false },
     },
     [UIID.BloodlineMirrorAwakening]: {
-        layer: LayerType.UI,
+        layer: LayerType.PopUp,
         prefab: "ui/bloodline-mirror-awakening",
         backdrop: { enabled: true, opacity: 180, blocksInput: true, closeOnTap: false },
     },
     [UIID.BloodlineMirrorAscension]: {
-        layer: LayerType.UI,
+        layer: LayerType.PopUp,
         prefab: "ui/bloodline-mirror-ascension",
         backdrop: { enabled: true, opacity: 180, blocksInput: true, closeOnTap: false },
     },
