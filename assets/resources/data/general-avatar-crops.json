@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "xun-you": {
+      "x": 340,
+      "y": 160,
+      "w": 350,
+      "h": 350,
+      "source": "reviewed",
+      "$note": "2026-11-09 荀攸魏藍玉青軍師造型裁切。"
+    },
     "wen-pin": {
       "x": 350,
       "y": 60,
