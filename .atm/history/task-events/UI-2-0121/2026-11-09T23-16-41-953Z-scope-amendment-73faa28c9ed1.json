@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-09T23-16-41-953Z-scope-amendment-73faa28c9ed1",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:b8e5d310e5e555f82b6bd747471f6de913254faff3480d06243b1314422e872f",
+  "createdAt": "2026-11-09T23:16:41.953Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/huang_yue_ying_portrait.png,assets/resources/sprites/generals/huang_yueying_portrait.png,assets/resources/sprites/generals/avatars/huang_yue_ying_avatar.png,assets/resources/sprites/generals/avatars/huang_yueying_avatar.png,assets/resources/sprites/ui_avatars/cropped/huang_yue_ying_avatar.png,assets/resources/sprites/ui_avatars/cropped/huang_yueying_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}

@@ -1,6 +1,6 @@
 {
   "taskId": "UI-2-0121",
-  "updatedAt": "2026-11-09T23:12:07.949Z",
+  "updatedAt": "2026-11-09T23:18:28.943Z",
   "evidence": [
     {
       "evidenceKind": "validation",
@@ -10607,6 +10607,87 @@
         "commandRunCache": {
           "schemaId": "atm.commandRunCache.v1",
           "cacheKey": "sha256:49c4fe3c7a9f0c727b1b0fe230f94c350d45b5744b7cd52feee25844a0ccbdff",
+          "reusedRunCount": 0,
+          "runCount": 1,
+          "sourcePath": null
+        }
+      }
+    },
+    {
+      "evidenceKind": "validation",
+      "evidenceType": "test",
+      "summary": "Auto-run: node tools_node/generate-general-avatars.js huang-yue-ying --verify",
+      "artifactPaths": [],
+      "evidenceFreshness": "fresh",
+      "producedBy": "codex-gpt-6.1-terra",
+      "sessionId": "session-20261105171558-codex-gpt-6.1-sol-UI-2-0121-3220962ee1",
+      "createdAt": "2026-11-09T23:18:28.943Z",
+      "details": {
+        "actorId": "codex-gpt-6.1-terra",
+        "sessionId": "session-20261105171558-codex-gpt-6.1-sol-UI-2-0121-3220962ee1",
+        "kind": "test",
+        "freshness": "fresh",
+        "commandRuns": [
+          {
+            "command": "node tools_node/generate-general-avatars.js huang-yue-ying --verify",
+            "exitCode": 0,
+            "stdoutSha256": "sha256:dc1b757ce335feca85dac256d82a83fdee5eec9fb079fbb0e28541b1a03aac44",
+            "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "startedAt": "2026-11-09T23:18:28.456Z",
+            "finishedAt": "2026-11-09T23:18:28.942Z",
+            "durationMs": 486,
+            "cached": false,
+            "cwd": ".",
+            "runnerKind": "dev-source",
+            "sourceCommit": "18c7def1b7255ccf50fdd64e4d4833d53ed573c3",
+            "cacheKey": "sha256:e7645dc1cef2dd24cc0df63ccc398e957d0467687f99682ffe4e393e875e56fe",
+            "generatedAt": "2026-11-09T23:18:28.942Z",
+            "canonicalObservation": {
+              "schemaId": "atm.telemetryObservation.v1",
+              "specVersion": "0.1.0",
+              "migration": {
+                "strategy": "none",
+                "fromVersion": null,
+                "notes": "Canonical telemetry observation contract."
+              },
+              "observationId": "sha256:e7645dc1cef2dd24cc0df63ccc398e957d0467687f99682ffe4e393e875e56fe",
+              "producerId": "evidence.command-runs",
+              "producerVersion": "0.1.0",
+              "observationKind": "command-run",
+              "status": "canonical",
+              "source": "evidence-command-run-normalizer",
+              "sourceAvailability": "available",
+              "storagePolicy": "tracked-compact-digest",
+              "generatedAt": "2026-11-09T23:18:28.942Z",
+              "observedAt": "2026-11-09T23:18:28.942Z",
+              "startedAt": "2026-11-09T23:18:28.456Z",
+              "finishedAt": "2026-11-09T23:18:28.942Z",
+              "durationMs": 486,
+              "laneSessionId": null,
+              "taskId": "UI-2-0121",
+              "batchId": null,
+              "waveId": null,
+              "inputDigest": "sha256:4cec22af03e1875c15ea507f79d086e5d5a5955b6a434a54004bfa56afba4b46",
+              "outputDigest": "sha256:f6cadb85baf97a2b663aec1e8bbbcaf50324b059f4fdbe128cfdb47e9965c349",
+              "cache": {
+                "key": "sha256:e7645dc1cef2dd24cc0df63ccc398e957d0467687f99682ffe4e393e875e56fe",
+                "hit": false
+              },
+              "extensions": {
+                "command": "node tools_node/generate-general-avatars.js huang-yue-ying --verify",
+                "cwd": ".",
+                "exitCode": 0,
+                "validators": [],
+                "runnerKind": "dev-source",
+                "sourceCommit": "18c7def1b7255ccf50fdd64e4d4833d53ed573c3",
+                "runnerVersion": null
+              }
+            }
+          }
+        ],
+        "commandRunCache": {
+          "schemaId": "atm.commandRunCache.v1",
+          "cacheKey": "sha256:e738067e88e0ff28190d602463c375d4d776f74811702ebc73ae85cb546a6b61",
           "reusedRunCount": 0,
           "runCount": 1,
           "sourcePath": null
