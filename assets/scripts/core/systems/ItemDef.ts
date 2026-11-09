@@ -70,6 +70,12 @@ export const ITEM_WOOD = 'ITEM_WOOD';
 export const ITEM_INTEL = 'ITEM_INTEL';
 export const ITEM_WEAPON_MATERIAL = 'ITEM_WEAPON_MATERIAL';
 export const ITEM_INSTRUCTOR_EXP = 'ITEM_INSTRUCTOR_EXP';
+/** 治理效率道具（領地治理 §C，GOV-14；PROG-2-2134，暫定 id）。取得來源待商城接線 */
+export const ITEM_GOV_BOOST_FARMING = 'ITEM_GOV_BOOST_FARMING';
+export const ITEM_GOV_BOOST_COMMERCE = 'ITEM_GOV_BOOST_COMMERCE';
+export const ITEM_GOV_BOOST_DIPLOMACY = 'ITEM_GOV_BOOST_DIPLOMACY';
+export const ITEM_GOV_BOOST_ARMS = 'ITEM_GOV_BOOST_ARMS';
+export const ITEM_GOV_BOOST_SCOUTING = 'ITEM_GOV_BOOST_SCOUTING';
 
 /** 順序即背包顯示順序（ItemBagView 依 ITEM_DISPLAY_NAMES 的 key 順序列出），調換前先確認 UI 影響 */
 export const ITEM_DEFS: readonly ItemDef[] = [
@@ -97,6 +103,11 @@ export const ITEM_DEFS: readonly ItemDef[] = [
     { id: ITEM_INTEL, name: '情報', category: '材料', rarity: 1 },
     { id: ITEM_WEAPON_MATERIAL, name: '武器材料', category: '材料', rarity: 1 },
     { id: ITEM_INSTRUCTOR_EXP, name: '教官心得', category: '材料', rarity: 1 },
+    { id: ITEM_GOV_BOOST_FARMING, name: '農耕令', category: '消耗品', rarity: 1 },
+    { id: ITEM_GOV_BOOST_COMMERCE, name: '商賈令', category: '消耗品', rarity: 1 },
+    { id: ITEM_GOV_BOOST_DIPLOMACY, name: '縱橫令', category: '消耗品', rarity: 1 },
+    { id: ITEM_GOV_BOOST_ARMS, name: '軍備令', category: '消耗品', rarity: 1 },
+    { id: ITEM_GOV_BOOST_SCOUTING, name: '斥候令', category: '消耗品', rarity: 1 },
 ];
 
 /** 依道具 ID 查定義；沒有定義時回傳 null（例如舊存檔的未知 key） */

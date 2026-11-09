@@ -132,6 +132,7 @@ import { remarkRandomOf } from '../systems/SageRemarks';
 import { FOOD_LOW_LINE } from '../systems/ResourceCap';
 import { ITEM_DISPLAY_NAMES } from '../systems/PlayerInventory';
 import { prisonTreasureLine } from '../systems/PrisonerOfWar';
+import { governanceBoostMultiplier, normalizeGovernanceBoosts, planGovernanceBoost, type ActiveGovernanceBoost, type GovernanceBoostRejectReason } from '../systems/GovernanceEfficiencyItem';
 import { governanceEventLine, governanceOutputMultiplier, governanceReportLine, normalizeGovernanceEvent, rollGovernanceEvent, type ActiveGovernanceEvent } from '../systems/GovernanceEvents';
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticStats, type DomesticTaskResult } from '../systems/DomesticTasks';
 import type { HallCandidate } from '../systems/HallCharacterRoll';
@@ -835,6 +836,7 @@ export class GameSession {
     private _domesticLog: DomesticSeasonLog = { ...EMPTY_DOMESTIC_LOG };
     /** 治理事件（PROG-2-1773）：只在發生那一季有效 */
     private _governanceEvent: ActiveGovernanceEvent | null = null;
+    private _governanceBoosts: ActiveGovernanceBoost[] = [];
     private _governanceEventRandom: RandomSource | null = null;
     private _rivals: RivalWorld = createRivalWorld();
     /** 他國逐將名冊與重算情境（E-9，PROG-2-1714）；未設定時他國照舊以兵力計軍力 */
@@ -2067,6 +2069,7 @@ export class GameSession {
         this._openingRedFaceShown = false;
         this._domesticLog = { ...EMPTY_DOMESTIC_LOG };
         this._governanceEvent = null;
+        this._governanceBoosts = [];
         this._rivals = this._withRivalOfficers(createRivalWorld());
         this._mercenaries = createEmptyMercenaryBundle();
     }
@@ -2565,9 +2568,24 @@ export class GameSession {
         return event && event.season === this._clock.state.totalSeasonsElapsed ? event : null;
     }
 
-    /** 內政任務本季的產出倍率（治理事件） */
+    /** 內政任務本季的產出倍率（治理事件 × 治理效率道具） */
     public domesticOutputMultiplier(taskId: string): number {
-        return governanceOutputMultiplier(this._governanceEvent, taskId, this._clock.state.totalSeasonsElapsed);
+        const season = this._clock.state.totalSeasonsElapsed;
+        return governanceOutputMultiplier(this._governanceEvent, taskId, season)
+            * governanceBoostMultiplier(this._governanceBoosts, taskId, season);
+    }
+
+    /** 使用治理效率道具（GOV-14）：本季該任務產出提升；同任務同季不重複，被拒絕時不扣道具 */
+    public async useGovernanceEfficiencyItem(itemId: string): Promise<{ ok: true } | { ok: false; reason: GovernanceBoostRejectReason | 'no-item' }> {
+        const plan = planGovernanceBoost(this._governanceBoosts, itemId, this._clock.state.totalSeasonsElapsed);
+        if (!plan.ok) return plan;
+        const inventory = consumeItem(this._inventory, itemId);
+        if (!inventory) return { ok: false, reason: 'no-item' };
+        this._inventory = inventory;
+        this._governanceBoosts = plan.boosts;
+        if (this._autoSave && this._save) await this.save();
+        this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
+        return { ok: true };
     }
 
     /** 本季治理事件的提示句；沒有事件回傳 null */
@@ -5080,6 +5098,7 @@ export class GameSession {
             },
             domestic: { ...this._domesticLog },
             ...(this._governanceEvent ? { governanceEvent: { ...this._governanceEvent } } : {}),
+            ...(this._governanceBoosts.length > 0 ? { governanceBoosts: this._governanceBoosts.map((boost) => ({ ...boost })) } : {}),
             rivals: this._rivals,
             prison: this.prison,
             ...(pending.length > 0 ? { pendingLifespanDeaths: pending } : {}),
@@ -5387,6 +5406,7 @@ export class GameSession {
             || (snapshot.resources?.firstBattleCleared === undefined && this._clearedStageIds.length > 0);
         this._domesticLog = normalizeDomesticLog(snapshot.domestic);
         this._governanceEvent = normalizeGovernanceEvent(snapshot.governanceEvent);
+        this._governanceBoosts = normalizeGovernanceBoosts(snapshot.governanceBoosts);
         this._rivals = this._withRivalOfficers(normalizeRivalWorld(snapshot.rivals));
         this._mercenaries = normalizeMercenaryBundle(snapshot.mercenaries);
         if (this._postLoadHook) {

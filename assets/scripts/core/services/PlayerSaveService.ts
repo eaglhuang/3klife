@@ -1,3 +1,4 @@
+import { normalizeGovernanceBoosts, type ActiveGovernanceBoost } from '../systems/GovernanceEfficiencyItem';
 import type { InfusionRecord } from '../systems/DuplicatePullRouting';
 import { normalizeMarriageProposal, type MarriageProposal } from '../systems/MarriageProposal';
 import { normalizeFamilySynergy, type FamilySynergyLedger } from '../systems/FamilySynergy';
@@ -269,6 +270,8 @@ export interface PlayerSaveSnapshot {
     domestic?: DomesticSeasonLog;
     /** 本季治理事件；後加的選填欄位，舊檔讀回視為沒有事件（PROG-2-1773） */
     governanceEvent?: ActiveGovernanceEvent | null;
+    /** 生效中的治理效率道具（GOV-14） */
+    governanceBoosts?: ActiveGovernanceBoost[];
     /** 他國 AI 勢力狀態；後加的選填欄位，舊檔讀回為初始勢力（PROG-2-1088） */
     rivals?: RivalWorld;
     /** 傭兵存檔包（試用、薪水、冷卻）；後加的選填欄位，舊檔讀回為空包（MERC-01） */
@@ -611,6 +614,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.resources !== undefined && snapshot.resources !== null ? { resources: { fame: normalizeFame((snapshot.resources as { fame?: unknown }).fame), scorePoints: normalizeScorePoints((snapshot.resources as { scorePoints?: unknown }).scorePoints), autoNurtureTickets: normalizeAutoNurtureTickets((snapshot.resources as { autoNurtureTickets?: unknown }).autoNurtureTickets), mainlineNurtureClearedOnce: normalizeFlag((snapshot.resources as { mainlineNurtureClearedOnce?: unknown }).mainlineNurtureClearedOnce), ...optionalFlag((snapshot.resources as { firstBattleCleared?: unknown }).firstBattleCleared, 'firstBattleCleared'), ...optionalFlag((snapshot.resources as { openingRedFaceShown?: unknown }).openingRedFaceShown, 'openingRedFaceShown') } } : {}),
         ...(snapshot.domestic !== undefined ? { domestic: normalizeDomesticLog(snapshot.domestic) } : {}),
         ...(snapshot.governanceEvent ? { governanceEvent: normalizeGovernanceEvent(snapshot.governanceEvent) } : {}),
+        ...(snapshot.governanceBoosts ? { governanceBoosts: normalizeGovernanceBoosts(snapshot.governanceBoosts) } : {}),
         ...(snapshot.rivals !== undefined ? { rivals: normalizeRivalWorld(snapshot.rivals) } : {}),
         ...(snapshot.mercenaries !== undefined ? { mercenaries: normalizeMercenaryBundle(snapshot.mercenaries) } : {}),
         ...(snapshot.onboarding !== undefined ? { onboarding: normalizeOnboardingState(snapshot.onboarding) } : {}),
