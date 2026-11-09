@@ -10,6 +10,7 @@ import { forestMoveBonusFor } from '../../../core/systems/FactorTacticLinkage';
 import { forcedMoveBlockedDamageRatio, resolveForcedMove } from '../../shared/ForcedMoveTile';
 import { resolveGhostPath, type GhostPathCell } from '../../shared/GhostMovePath';
 import { hasGhostMove, tallyTerrainMoveBonusOf, tallyTileMoveDeltaOf, canTrampleOver } from '../../shared/TallyPassive';
+import { EMPTY_ZOC_FIELD, buildZocField, type ZocField } from '../../shared/ZoneOfControl';
 
 const FORWARD_DIR: Record<Faction, number> = {
   [Faction.Player]: 1,
@@ -46,12 +47,27 @@ export function executeBattleAutoMovePhase(context: BattleAutoMovePhaseContext):
     return a.lane - b.lane;
   });
 
+  // 移動階段中敵方不動，壓制區整個階段算一次（FORM-09，PROG-2-2130）
+  const zocField = resolveZocField(context);
   for (const unit of units) {
-    stepMoveUnit(unit, svc, context);
+    stepMoveUnit(unit, svc, context, zocField);
   }
 }
 
-function stepMoveUnit(unit: TroopUnit, svc: ReturnType<typeof services>, context: BattleAutoMovePhaseContext): void {
+function resolveZocField(context: BattleAutoMovePhaseContext): ZocField {
+  if (context.state.battleTactic === BattleTactic.FloodAttack) return EMPTY_ZOC_FIELD;
+  const presserFaction = context.actingFaction === Faction.Player ? Faction.Enemy : Faction.Player;
+  const sources = context.getFactionUnits(presserFaction)
+    .filter((unit) => !unit.isDead() && context.isGeneralUnit(unit.id));
+  return buildZocField(context.state.getGeneral(presserFaction), context.state.getGeneral(context.actingFaction), sources);
+}
+
+function stepMoveUnit(
+  unit: TroopUnit,
+  svc: ReturnType<typeof services>,
+  context: BattleAutoMovePhaseContext,
+  zocField: ZocField,
+): void {
   unit.chargeCells = 0;
   if (svc.buff.hasBuff(unit.id, StatusEffect.Stun)) {
     unit.isShieldWallActive = false;
@@ -92,6 +108,12 @@ function stepMoveUnit(unit: TroopUnit, svc: ReturnType<typeof services>, context
     if (!nextCell) break;
     if (context.isCellMovementBlocked(unit.lane, nextDepth)) break;
 
+    // 擋路的敵軍交給下方處理（踐踏、盾牆）；空格與友軍格才因壓制停下
+    const nextZoc = zocField.at(unit.lane, nextDepth);
+    const nextOccupant = nextCell.occupantId ? context.state.units.get(nextCell.occupantId) : null;
+    const enemyAhead = !!nextOccupant && nextOccupant.faction !== unit.faction;
+    if (nextZoc.blocksEntry && !enemyAhead) break;
+
     if (nextCell.occupantId) {
       const blocker = context.state.units.get(nextCell.occupantId)!;
 
@@ -99,7 +121,8 @@ function stepMoveUnit(unit: TroopUnit, svc: ReturnType<typeof services>, context
       if (canTrampleOver(unit, blocker)) {
         const landDepth = nextDepth + dir;
         const landCell = context.state.getCell(unit.lane, landDepth);
-        if (landCell && !landCell.occupantId && !context.isCellMovementBlocked(unit.lane, landDepth)) {
+        const landZoc = zocField.at(unit.lane, landDepth);
+        if (landCell && !landCell.occupantId && !context.isCellMovementBlocked(unit.lane, landDepth) && !landZoc.blocksEntry) {
           const fromDepth = unit.depth;
           context.state.getCell(unit.lane, fromDepth)!.occupantId = null;
           unit.moveTo(unit.lane, landDepth);
@@ -115,7 +138,7 @@ function stepMoveUnit(unit: TroopUnit, svc: ReturnType<typeof services>, context
           });
           context.turnManager.markUnitMoved(unit.id);
           context.consumeTileBuff(unit);
-          remainingMoveBudget -= 1;
+          remainingMoveBudget -= 1 + landZoc.extraCost;
           remainingMoveBudget += applyTileEffectOnEnter(unit, dir, svc, context);
           if (unit.isDead()) return;
           continue;
@@ -165,7 +188,7 @@ function stepMoveUnit(unit: TroopUnit, svc: ReturnType<typeof services>, context
         context.turnManager.markUnitMoved(unit.id);
 
         context.consumeTileBuff(unit);
-        remainingMoveBudget -= 1;
+        remainingMoveBudget -= 1 + nextZoc.extraCost;
         remainingMoveBudget += applyTileEffectOnEnter(unit, dir, svc, context);
         if (unit.isDead()) return;
         continue;
@@ -192,7 +215,7 @@ function stepMoveUnit(unit: TroopUnit, svc: ReturnType<typeof services>, context
     });
     context.turnManager.markUnitMoved(unit.id);
     context.consumeTileBuff(unit);
-    remainingMoveBudget -= 1;
+    remainingMoveBudget -= 1 + nextZoc.extraCost;
     remainingMoveBudget += applyTileEffectOnEnter(unit, dir, svc, context);
     // 位移受阻傷害可能讓單位陣亡：不再拿死掉的單位走下一步
     if (unit.isDead()) return;
