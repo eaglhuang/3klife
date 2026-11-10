@@ -10,8 +10,8 @@
   "tags": [],
   "createdAt": "2026-11-05T14:30:28.536Z",
   "createdByActor": "codex-gpt-6.1-sol",
-  "lastTransitionId": "2026-11-10T11-14-05-973Z-scope-amendment-f8a8a4945745",
-  "lastTransitionAt": "2026-11-10T11:14:05.973Z",
+  "lastTransitionId": "2026-11-10T11-18-45-108Z-scope-amendment-a3ed480c7920",
+  "lastTransitionAt": "2026-11-10T11:18:45.108Z",
   "ledgerContractVersion": "task-ledger/v1",
   "reservedAt": "2026-11-05T17:15:58.821Z",
   "promotedAt": "2026-11-05T17:15:58.826Z",
@@ -265,6 +265,7 @@
       "assets/resources/sprites/generals/avatars/zhong_hui_avatar.png",
       "assets/resources/sprites/generals/avatars/zhou_tai_avatar.png",
       "assets/resources/sprites/generals/avatars/zhou_yu_avatar.png",
+      "assets/resources/sprites/generals/avatars/zhu_ran_avatar.png",
       "assets/resources/sprites/generals/avatars/zhu_rong_avatar.png",
       "assets/resources/sprites/generals/avatars/zhu_rong_furen_avatar.png",
       "assets/resources/sprites/generals/avatars/zhu_rong_furen_avatar.png.meta",
@@ -428,6 +429,7 @@
       "assets/resources/sprites/generals/zhong_hui_portrait.png",
       "assets/resources/sprites/generals/zhou_tai_portrait.png",
       "assets/resources/sprites/generals/zhou_yu_portrait.png",
+      "assets/resources/sprites/generals/zhu_ran_portrait.png",
       "assets/resources/sprites/generals/zhu_rong_furen_portrait.png",
       "assets/resources/sprites/generals/zhu_rong_furen_portrait.png.meta",
       "assets/resources/sprites/generals/zhu_rong_portrait.png",
@@ -591,6 +593,7 @@
       "assets/resources/sprites/ui_avatars/cropped/zhong_hui_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/zhou_tai_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/zhou_yu_avatar.png",
+      "assets/resources/sprites/ui_avatars/cropped/zhu_ran_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/zhu_rong_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/zhu_rong_furen_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/zhu_rong_furen_avatar.png.meta",
@@ -617,20 +620,20 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-ab82da32b49522c5",
-    "ticketDigest": "sha256:ab82da32b49522c58f02811f11f4724e84ea306f5c91ba4e75c704d79754d91d",
+    "ticketId": "wat-031d7f6c34fd4ee2",
+    "ticketDigest": "sha256:031d7f6c34fd4ee29e4ee38b5fee87e86c0769b42b5926641a3d2065a72632c9",
     "taskId": "UI-2-0121",
     "origin": "claim",
     "actorId": "codex-gpt-6.1-terra",
     "laneSessionId": "lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d",
     "claimGeneration": "lease-f957fb02b01d",
-    "issuedAt": "2026-11-10T11:14:05.864Z",
-    "expiresAt": "2026-11-10T11:44:05.864Z",
-    "scopeDigest": "sha256:68c15419153416fc0cbe88f065d3f306a75cfe2772ad3f0c09771c4b72222192",
+    "issuedAt": "2026-11-10T11:18:45.006Z",
+    "expiresAt": "2026-11-10T11:48:45.006Z",
+    "scopeDigest": "sha256:6c8ff6f1ec4a8c262b93895be5e341534703b3041de18f244cd92b307730dd76",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-11-10T11:14:05.864Z"
+      "selectedAt": "2026-11-10T11:18:45.006Z"
     },
     "grants": [
       {
@@ -880,6 +883,7 @@
           "assets/resources/sprites/generals/avatars/zhong_hui_avatar.png",
           "assets/resources/sprites/generals/avatars/zhou_tai_avatar.png",
           "assets/resources/sprites/generals/avatars/zhou_yu_avatar.png",
+          "assets/resources/sprites/generals/avatars/zhu_ran_avatar.png",
           "assets/resources/sprites/generals/avatars/zhu_rong_avatar.png",
           "assets/resources/sprites/generals/avatars/zhu_rong_furen_avatar.png",
           "assets/resources/sprites/generals/avatars/zhu_rong_furen_avatar.png.meta",
@@ -1043,6 +1047,7 @@
           "assets/resources/sprites/generals/zhong_hui_portrait.png",
           "assets/resources/sprites/generals/zhou_tai_portrait.png",
           "assets/resources/sprites/generals/zhou_yu_portrait.png",
+          "assets/resources/sprites/generals/zhu_ran_portrait.png",
           "assets/resources/sprites/generals/zhu_rong_furen_portrait.png",
           "assets/resources/sprites/generals/zhu_rong_furen_portrait.png.meta",
           "assets/resources/sprites/generals/zhu_rong_portrait.png",
@@ -1206,6 +1211,7 @@
           "assets/resources/sprites/ui_avatars/cropped/zhong_hui_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/zhou_tai_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/zhou_yu_avatar.png",
+          "assets/resources/sprites/ui_avatars/cropped/zhu_ran_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/zhu_rong_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/zhu_rong_furen_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/zhu_rong_furen_avatar.png.meta",
@@ -1219,7 +1225,7 @@
           "docs/ui-quality-tasks/UI-2-0121.json",
           "docs/ui-quality-todo.json"
         ],
-        "digest": "sha256:0752a81d3bc3bf688a6e40d46811b3059feba7b6cbd289829a8f18c4ff594e49"
+        "digest": "sha256:20d2e19e1b2234ca54b2619b00a4b1761a10e3955b7518e45c706e3e7e3459a2"
       },
       {
         "kind": "lifecycle-operation",
@@ -1511,6 +1517,7 @@
       "assets/resources/sprites/generals/avatars/zhong_hui_avatar.png",
       "assets/resources/sprites/generals/avatars/zhou_tai_avatar.png",
       "assets/resources/sprites/generals/avatars/zhou_yu_avatar.png",
+      "assets/resources/sprites/generals/avatars/zhu_ran_avatar.png",
       "assets/resources/sprites/generals/avatars/zhu_rong_avatar.png",
       "assets/resources/sprites/generals/avatars/zhu_rong_furen_avatar.png",
       "assets/resources/sprites/generals/avatars/zhu_rong_furen_avatar.png.meta",
@@ -1674,6 +1681,7 @@
       "assets/resources/sprites/generals/zhong_hui_portrait.png",
       "assets/resources/sprites/generals/zhou_tai_portrait.png",
       "assets/resources/sprites/generals/zhou_yu_portrait.png",
+      "assets/resources/sprites/generals/zhu_ran_portrait.png",
       "assets/resources/sprites/generals/zhu_rong_furen_portrait.png",
       "assets/resources/sprites/generals/zhu_rong_furen_portrait.png.meta",
       "assets/resources/sprites/generals/zhu_rong_portrait.png",
@@ -1837,6 +1845,7 @@
       "assets/resources/sprites/ui_avatars/cropped/zhong_hui_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/zhou_tai_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/zhou_yu_avatar.png",
+      "assets/resources/sprites/ui_avatars/cropped/zhu_ran_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/zhu_rong_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/zhu_rong_furen_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/zhu_rong_furen_avatar.png.meta",
@@ -3005,6 +3014,9 @@
     "assets/resources/sprites/ui_avatars/cropped/zhang_zhao_avatar.png",
     "assets/resources/sprites/generals/avatars/pan_zhang_avatar.png",
     "assets/resources/sprites/generals/pan_zhang_portrait.png",
-    "assets/resources/sprites/ui_avatars/cropped/pan_zhang_avatar.png"
+    "assets/resources/sprites/ui_avatars/cropped/pan_zhang_avatar.png",
+    "assets/resources/sprites/generals/avatars/zhu_ran_avatar.png",
+    "assets/resources/sprites/generals/zhu_ran_portrait.png",
+    "assets/resources/sprites/ui_avatars/cropped/zhu_ran_avatar.png"
   ]
 }

@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "zhu-ran": {
+      "x": 330,
+      "y": 0,
+      "w": 380,
+      "h": 380,
+      "source": "reviewed",
+      "$note": "2026-11-10 朱然紅黑火紋新版，保留束髮、面容與肩甲。"
+    },
     "pan-zhang": {
       "x": 230,
       "y": 100,
