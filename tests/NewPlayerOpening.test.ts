@@ -13,7 +13,7 @@ import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/manager
 import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
 import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
 import { destinyLockedEvent } from '../assets/scripts/core/systems/DestinyOpening';
-import { createNewPlayerOpeningFlow, INTRO_PANELS, OPENING_INTRO_DONE, SHOWCASE_DONE_EVENT } from '../assets/scripts/core/systems/NewPlayerOpening';
+import { createNewPlayerOpeningFlow, INTRO_PANELS, OPENING_INTRO_DONE, SHOWCASE_DONE_EVENT, shouldMountOpeningFirst } from '../assets/scripts/core/systems/NewPlayerOpening';
 import { DestinyOpeningController } from '../assets/scripts/ui/core/DestinyOpeningController';
 import { OpeningIntroController } from '../assets/scripts/ui/core/OpeningIntroController';
 
@@ -48,6 +48,12 @@ export function createNewPlayerOpeningSuite(): TestSuite {
         assert.isFalse(done.actives.introCard);
         assert.isFalse(done.enabled.btnIntroNext);
         assert.isFalse(intro.next());
+    });
+
+    suite.test('開場優先掛載（PROG-2-2216）：新玩家或開場未播完才先掛開場面板', () => {
+        assert.isTrue(shouldMountOpeningFirst(true, null), '新玩家');
+        assert.isTrue(shouldMountOpeningFirst(false, 'showcase'), '讀檔接回開場');
+        assert.isFalse(shouldMountOpeningFirst(false, null), '舊玩家照原順序');
     });
 
     suite.test('幕序（PROG-2-2215）：start → intro；intro-done → showcase；showcase-done → destiny；destiny-locked → 結束', () => {
