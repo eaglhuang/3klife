@@ -11,10 +11,6 @@ manifest: ../ui-quality-todo.json
 > New UI tasks must also follow `template family -> content contract -> skin fragment -> smoke route -> docs backwrite`.
 > See [UI-task-card-template.md](./UI-task-card-template.md).
 
-## 程式流程修復（非 UI 生產卡）
-
-- [PROG-2-2208](./tasks/PROG/PROG-2-2208.md)：新手開場與季報互斥，blocked，P0，cursor-grok-bot；真相來源為 `docs/tasks/tasks-prog.json`。
-
 ## Summary
 
 - Total: 1717
