@@ -2,7 +2,7 @@
 // @spec-source → 見 docs/cross-reference-index.md
 import { deputySupportLine } from '../../core/systems/SortieDeployScripts';
 import { DEV } from 'cc/env';
-import { _decorator, Component, Label, Node, Vec3, geometry } from "cc";
+import { _decorator, Component, Label, Node, Vec3, geometry, UIOpacity, BlockInputEvents, UITransform } from "cc";
 import {
   Faction,
   GAME_CONFIG,
@@ -135,6 +135,18 @@ export class BattleScene extends Component {
   }
 
   // ─── 生命週期 ─────────────────────────────────────────────────────────────
+
+  private _startupOpacity: UIOpacity | null = null;
+  private _startupBlocker: BlockInputEvents | null = null;
+
+  onLoad(): void {
+    const canvas = this.getCanvasNode();
+    if (!canvas) return;
+    // 不停用 Canvas：子元件仍需初始化，但範例 HUD 不得先曝光或接受點擊。
+    this._startupOpacity = canvas.getComponent(UIOpacity) ?? canvas.addComponent(UIOpacity);
+    this._startupOpacity.opacity = 0;
+    if (!canvas.getComponent(BlockInputEvents)) this._startupBlocker = canvas.addComponent(BlockInputEvents);
+  }
 
   async start(): Promise<void> {
     UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] start() 開始執行");
@@ -444,12 +456,37 @@ export class BattleScene extends Component {
       });
       this.refreshBattleViews();
 
+      if (this.hud && !(await this.hud.waitUntilReady(15000))) {
+        throw new Error('戰鬥 HUD 初始化逾時');
+      }
+      if (this._startupOpacity) this._startupOpacity.opacity = 255;
+      this._startupBlocker?.destroy();
+      this._startupBlocker = null;
       await this._signalCaptureReadyIfNeeded();
 
       UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] ✅ start() 全部完成");
     } catch (e) {
       UCUFLogger.error(LogCategory.BATTLE, "[BattleScene] ❌ start() 發生錯誤:", e);
       this._signalCaptureErrorIfNeeded(e);
+      // 失敗也不曝光範例 HUD；顯示可理解的錯誤，避免永久黑畫面。
+      const canvas = this.getCanvasNode();
+      if (canvas) {
+        for (const child of canvas.children) {
+          const opacity = child.getComponent(UIOpacity) ?? child.addComponent(UIOpacity);
+          opacity.opacity = 0;
+        }
+        const errorNode = new Node('BattleLoadError');
+        errorNode.layer = canvas.layer;
+        errorNode.parent = canvas;
+        errorNode.addComponent(UITransform).setContentSize(1200, 160);
+        const label = errorNode.addComponent(Label);
+        label.string = '戰鬥載入失敗，請重新整理頁面再試。';
+        label.fontSize = 32;
+        label.lineHeight = 44;
+        label.horizontalAlign = Label.HorizontalAlign.CENTER;
+        if (this._startupOpacity) this._startupOpacity.opacity = 255;
+      }
+
     }
   }
 

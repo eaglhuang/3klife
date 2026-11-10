@@ -65,3 +65,10 @@ export class MirrorLoadingCarousel {
         return applyMirrorLoadingEntry(this._binder, this._content, this._schema, entry, this._contentBinder) ? entry : null;
     }
 }
+
+/** 真實場景預載進度；未知總數不偽造百分比。 */
+export function sceneLoadingProgressText(completed: number, total: number): string {
+    if (!Number.isFinite(total) || total <= 0 || !Number.isFinite(completed)) return '載入中…';
+    const percent = Math.floor(Math.max(0, Math.min(1, completed / total)) * 100);
+    return `載入中 ${percent}%`;
+}

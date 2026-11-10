@@ -27,6 +27,7 @@ export interface LobbyOpeningPanelPorts {
     bringToFront: (node: Node) => void;
     refreshSeasonHud: () => void;
     notifyBeauty: (name: string) => void;
+    canNotifyBeauty?: () => boolean;
     advanceOpening: (event: OpeningFlowEvent) => void;
     /** 宿命轉蛋六框載立繪（與招賢館同一套擺位，PROG-2-1147）；keys 依框序 */
     applyFramePortraits?: (binder: NonNullable<LobbyOpeningPanelHost['binder']>, keys: readonly string[]) => void;
@@ -46,6 +47,7 @@ export class LobbyOpeningPanels {
     private _destinyHost: LobbyOpeningPanelHost | null = null;
     /** 上次載入的立繪順序；沒變就不重載，避免每次點選都閃一下 */
     private _destinyPortraitKeys = '';
+    private _pendingBeauty: string | null = null;
 
     constructor(private readonly _ports: LobbyOpeningPanelPorts) {}
 
@@ -61,7 +63,16 @@ export class LobbyOpeningPanels {
         this.refreshOnboarding();
     }
 
+    /** 與季報共用宿主的開場守衛；出場介紹或教學未結束時保留通知。 */
+    public flushPendingBeauty(): void {
+        if (!this._pendingBeauty || this._ports.canNotifyBeauty?.() === false) return;
+        const name = this._pendingBeauty;
+        this._pendingBeauty = null;
+        this._ports.notifyBeauty(name);
+    }
+
     public refreshOnboarding(): void {
+        this.flushPendingBeauty();
         const host = this._onboardingHost;
         const onboarding = this._onboarding;
         if (!host || !onboarding) return;
@@ -144,7 +155,10 @@ export class LobbyOpeningPanels {
                 if (session.hasSaveService) await session.save();
                 const beautyId = this._destiny?.beautyId;
                 const beautyName = beautyId ? this._ports.generals().find(g => g.id === beautyId)?.name : null;
-                if (beautyName) this._ports.notifyBeauty(beautyName);
+                if (beautyName) {
+                    this._pendingBeauty = beautyName;
+                    this.flushPendingBeauty();
+                }
                 this._ports.refreshSeasonHud();
             },
         });

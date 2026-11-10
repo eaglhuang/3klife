@@ -22,7 +22,7 @@ import {
 import { installAdaptiveResolution } from '../core/AdaptiveResolution';
 import { services } from '../../core/managers/ServiceLoader';
 import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
-import { BLOODLINE_MIRROR_LOADING_SCREEN_ID, BLOODLINE_MIRROR_STATES_PATH, MirrorLoadingCarousel, type BloodlineMirrorStatesContent } from '../core/UIBloodlineMirrorLoading';
+import { BLOODLINE_MIRROR_LOADING_SCREEN_ID, BLOODLINE_MIRROR_STATES_PATH, MirrorLoadingCarousel, sceneLoadingProgressText, type BloodlineMirrorStatesContent } from '../core/UIBloodlineMirrorLoading';
 import { startMirrorAmbientMotion } from '../core/UIMirrorAmbientMotion';
 import { buildMirrorLoadingRotation, MIRROR_LOADING_ROTATION } from '../../core/systems/MirrorLoadingRotation';
 import { GeneralDetailComposite } from '../components/GeneralDetailComposite';
@@ -98,6 +98,8 @@ export class LoadingScene extends Component {
     public previewVariant = '';
 
     private _bgNode: Node | null = null;
+    private _mirrorLoadingHost: UIScreenPreviewHost | null = null;
+    private _loadingProgressText = '載入中…';
     private _bgSpriteFrame: SpriteFrame | null = null;
     private _previewHost: UIScreenPreviewHost | null = null;
     private _previewViewportFitTimer: number | null = null;
@@ -1727,8 +1729,10 @@ export class LoadingScene extends Component {
 
     /** BML-05: bloodline mirror loading carousel; on failure keep the plain background. */
     private async _mountBloodlineMirrorLoading(root: Node): Promise<void> {
+        let hostNode: Node | null = null;
         try {
-            const hostNode = new Node('BloodlineMirrorLoadingHost');
+            hostNode = new Node('BloodlineMirrorLoadingHost');
+            hostNode.active = false;
             hostNode.layer = root.layer;
             root.addChild(hostNode);
             hostNode.addComponent(UITransform).setContentSize(1920, 1080);
@@ -1747,11 +1751,26 @@ export class LoadingScene extends Component {
             ]);
             const entries = buildMirrorLoadingRotation(PlayerRosterService.getAll(), all ?? []);
             const carousel = await MirrorLoadingCarousel.create(host.binder, content, entries);
-            if (!this.isValid || !carousel.next()) return;
-            host.schedule(() => { carousel.next(); }, MIRROR_LOADING_ROTATION.intervalSec);
+            if (!this.isValid || !carousel.next()) { hostNode.destroy(); return; }
+            this._mirrorLoadingHost = host;
+            this._refreshSceneLoadingProgress();
+            hostNode.active = true;
+            host.schedule(() => { carousel.next(); this._refreshSceneLoadingProgress(); }, MIRROR_LOADING_ROTATION.intervalSec);
         } catch (error) {
+            hostNode?.destroy();
             UCUFLogger.warn(LogCategory.LIFECYCLE, '[LoadingScene] bloodline mirror loading mount failed', error);
         }
+    }
+
+    private _refreshSceneLoadingProgress(): void {
+        const binder = this._mirrorLoadingHost?.binder;
+        binder?.setTexts({ ProgressLabel: this._loadingProgressText });
+        // 載入只顯示真進度，隱藏展示佔位。
+        binder?.setActives({ PrimaryActionButton: false, PublicHero: false, SpiritHero: false,
+            SigilField: false, MirrorGate: false, VesselCore: false, CrestBadge: false,
+            StoryStrip: false, StoryRail: false });
+        const hint = this._resolveRootNode().getChildByName('LoadingHintLabel')?.getComponent(Label);
+        if (hint) hint.string = this._loadingProgressText;
     }
 
     private async _startTransition() {
@@ -1766,8 +1785,9 @@ export class LoadingScene extends Component {
         }
 
         // 預載入目標場景
-        director.preloadScene(target.name, (_completedCount, _totalCount) => {
-            // 此處可更新進度條 UI
+        director.preloadScene(target.name, (completedCount, totalCount) => {
+            this._loadingProgressText = sceneLoadingProgressText(completedCount, totalCount);
+            this._refreshSceneLoadingProgress();
         }, async (error) => {
             if (error) {
                 UCUFLogger.error(LogCategory.LIFECYCLE, `[LoadingScene] 載入場景 ${target.name}失敗:`, error);

@@ -150,7 +150,7 @@
                 "name": "Frame0Name",
                 "id": "frame0Name",
                 "widget": {
-                  "bottom": 30,
+                  "bottom": 40,
                   "left": 8,
                   "right": 8
                 },
@@ -167,7 +167,7 @@
                   "left": 8,
                   "right": 8
                 },
-                "height": 28,
+                "height": 34,
                 "text": "",
                 "styleSlot": "pg.label.sub"
               },
@@ -239,7 +239,7 @@
                 "name": "Frame1Name",
                 "id": "frame1Name",
                 "widget": {
-                  "bottom": 30,
+                  "bottom": 40,
                   "left": 8,
                   "right": 8
                 },
@@ -256,7 +256,7 @@
                   "left": 8,
                   "right": 8
                 },
-                "height": 28,
+                "height": 34,
                 "text": "",
                 "styleSlot": "pg.label.sub"
               },
@@ -328,7 +328,7 @@
                 "name": "Frame2Name",
                 "id": "frame2Name",
                 "widget": {
-                  "bottom": 30,
+                  "bottom": 40,
                   "left": 8,
                   "right": 8
                 },
@@ -345,7 +345,7 @@
                   "left": 8,
                   "right": 8
                 },
-                "height": 28,
+                "height": 34,
                 "text": "",
                 "styleSlot": "pg.label.sub"
               },
@@ -417,7 +417,7 @@
                 "name": "Frame3Name",
                 "id": "frame3Name",
                 "widget": {
-                  "bottom": 30,
+                  "bottom": 40,
                   "left": 8,
                   "right": 8
                 },
@@ -434,7 +434,7 @@
                   "left": 8,
                   "right": 8
                 },
-                "height": 28,
+                "height": 34,
                 "text": "",
                 "styleSlot": "pg.label.sub"
               },
@@ -506,7 +506,7 @@
                 "name": "Frame4Name",
                 "id": "frame4Name",
                 "widget": {
-                  "bottom": 30,
+                  "bottom": 40,
                   "left": 8,
                   "right": 8
                 },
@@ -523,7 +523,7 @@
                   "left": 8,
                   "right": 8
                 },
-                "height": 28,
+                "height": 34,
                 "text": "",
                 "styleSlot": "pg.label.sub"
               },
@@ -595,7 +595,7 @@
                 "name": "Frame5Name",
                 "id": "frame5Name",
                 "widget": {
-                  "bottom": 30,
+                  "bottom": 40,
                   "left": 8,
                   "right": 8
                 },
@@ -612,7 +612,7 @@
                   "left": 8,
                   "right": 8
                 },
-                "height": 28,
+                "height": 34,
                 "text": "",
                 "styleSlot": "pg.label.sub"
               },
@@ -684,7 +684,7 @@
                 "name": "Frame6Name",
                 "id": "frame6Name",
                 "widget": {
-                  "bottom": 30,
+                  "bottom": 40,
                   "left": 8,
                   "right": 8
                 },
@@ -701,7 +701,7 @@
                   "left": 8,
                   "right": 8
                 },
-                "height": 28,
+                "height": 34,
                 "text": "",
                 "styleSlot": "pg.label.sub"
               },
@@ -773,7 +773,7 @@
                 "name": "Frame7Name",
                 "id": "frame7Name",
                 "widget": {
-                  "bottom": 30,
+                  "bottom": 40,
                   "left": 8,
                   "right": 8
                 },
@@ -790,7 +790,7 @@
                   "left": 8,
                   "right": 8
                 },
-                "height": 28,
+                "height": 34,
                 "text": "",
                 "styleSlot": "pg.label.sub"
               },
@@ -862,7 +862,7 @@
                 "name": "Frame8Name",
                 "id": "frame8Name",
                 "widget": {
-                  "bottom": 30,
+                  "bottom": 40,
                   "left": 8,
                   "right": 8
                 },
@@ -879,7 +879,7 @@
                   "left": 8,
                   "right": 8
                 },
-                "height": 28,
+                "height": 34,
                 "text": "",
                 "styleSlot": "pg.label.sub"
               },
@@ -951,7 +951,7 @@
                 "name": "Frame9Name",
                 "id": "frame9Name",
                 "widget": {
-                  "bottom": 30,
+                  "bottom": 40,
                   "left": 8,
                   "right": 8
                 },
@@ -968,7 +968,7 @@
                   "left": 8,
                   "right": 8
                 },
-                "height": 28,
+                "height": 34,
                 "text": "",
                 "styleSlot": "pg.label.sub"
               },
@@ -993,7 +993,7 @@
             "name": "DestinyQuote",
             "id": "destinyQuote",
             "widget": {
-              "top": 736,
+              "top": 768,
               "left": 50
             },
             "width": 1300,

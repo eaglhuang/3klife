@@ -1,3 +1,4 @@
+import { presentLobbyLead } from '../core/LobbyLeadPresentation';
 // @spec-source → 見 docs/cross-reference-index.md
 import { openingLetterBodyWithFunLine } from '../../core/systems/FunLineLibrary';
 import { ERA_SHIFT_TEXT, formatHegemonRise } from '../../core/systems/RivalRulerLines';
@@ -2254,6 +2255,12 @@ export class LobbyScene extends Component {
                 },
                 bringToFront: node => this._bringNodeToFront(node),
                 refreshSeasonHud: () => this._refreshSeasonHud(),
+                canNotifyBeauty: () => canShowSeasonChronicle({
+                    openingUiReady: this._openingUiReady,
+                    openingInProgress: this._isOpeningInProgress(),
+                    onboarding: services().session.onboarding,
+                    openingLetter: services().session.openingLetter,
+                }),
                 notifyBeauty: name => services().event.emit('SHOW_TOAST', { message: `紅顏 ${name} 前來相會，已加入名冊，可到「結緣」配對`, duration: 4 }),
                 advanceOpening: event => { this._advanceOpening(event); },
                 onOverlayChanged: () => { this._seasonChroniclePopup?.refreshAvailability(); },
@@ -4454,6 +4461,7 @@ export class LobbyScene extends Component {
 
     private _refreshLeadSelect(): void {
         this._leadSelect?.refresh();
+        this._refreshLobbyLeadPortrait();
     }
 
     /**
@@ -4715,6 +4723,7 @@ export class LobbyScene extends Component {
         }
 
         this._bindLobbyDock(binder);
+        this._refreshLobbyLeadPortrait();
 
         binder.setTexts({
             HeroWallTitle: '世家巡檢',
@@ -4724,6 +4733,25 @@ export class LobbyScene extends Component {
             DispatchBoardBody: '先看總覽，再進各家的英靈陳列室；武將命頁只在已形成分支時提供捷徑。',
             DispatchBoardActionLabel: '前往世家總覽',
         });
+    }
+
+    /** 大廳範例立繪不可冒充玩家主將；清空舊圖後才非同步載入。 */
+    private _refreshLobbyLeadPortrait(): void {
+        const binder = this._lobbyMainHost?.binder;
+        if (!binder) return;
+        const id = services().session.leadGeneralId;
+        const general = services().session.roster.find(g => g.id === id);
+        const root = binder.getNode('LobbyMainScreen_div_21');
+        const portrait = root?.getChildByName('skinLayer_LobbyMainScreen_div_21_LobbyMainScreen_img_2');
+        const sprite = portrait?.getComponent(Sprite);
+        void presentLobbyLead(general ?? null, {
+            setTexts: texts => binder.setTexts(texts),
+            setFrame: frame => { if (sprite) sprite.spriteFrame = frame; },
+            setVisible: visible => { if (portrait) portrait.active = visible; },
+            load: loadGeneralPortrait,
+            isCurrent: () => !!portrait?.isValid && binder === this._lobbyMainHost?.binder
+                && id === services().session.leadGeneralId,
+        }).catch(error => UCUFLogger.warn(LogCategory.UI, '[LobbyScene] 主將立繪載入失敗', error));
     }
 
     /** 百寶閣：精元買道具（經濟系統 §道具定價，PROG-2-2120） */
