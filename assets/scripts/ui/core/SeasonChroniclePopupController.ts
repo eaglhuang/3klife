@@ -7,8 +7,21 @@
  * 歷史卷軸（PROG-2-2206）：「往期」「較新」在本季與往期之間翻頁；往期只能看，不能抉擇；
  * 本季奇遇未抉擇時仍可翻閱往期，但收起季報前必須回到本季完成抉擇；翻頁不扣款、不改奇遇狀態。
  */
+import { isOnboardingComplete, type OnboardingState } from '../../core/systems/OnboardingTutorial';
+import { shouldShowOpeningLetter, type OpeningLetterState } from '../../core/systems/OpeningLetter';
 import { cityEncounterDef, type SeasonChronicleState } from '../../core/systems/SeasonChronicle';
 import type { MentorHoldingsButtonBinding, MentorHoldingsHostLike } from './MentorHoldingsController';
+
+/** 開場 FSM、信件與三段教學全部退場後，才放行季報；掛載途中也必須保持關閉。 */
+export function canShowSeasonChronicle(context: {
+    openingUiReady: boolean;
+    openingInProgress: boolean;
+    onboarding: OnboardingState;
+    openingLetter: OpeningLetterState;
+}): boolean {
+    return context.openingUiReady && !context.openingInProgress
+        && isOnboardingComplete(context.onboarding) && !shouldShowOpeningLetter(context.openingLetter);
+}
 
 export interface SeasonChronicleView {
     texts: Record<string, string>;
@@ -87,6 +100,10 @@ export interface SeasonChroniclePopupDeps<H extends MentorHoldingsHostLike> {
     markRead(): void;
     resolve(optionIndex: 0 | 1): Promise<CityEncounterResolveResult>;
     toast(message: string): void;
+    /** 所有開窗入口共用的守衛；不允許時合併為一筆待開請求，不標記已讀。 */
+    canOpen?: () => boolean;
+    /** 延後開窗也需由宿主拉至最上層。 */
+    onOpened?: (host: H) => void;
 }
 
 export class SeasonChroniclePopupController<H extends MentorHoldingsHostLike> {
@@ -94,6 +111,8 @@ export class SeasonChroniclePopupController<H extends MentorHoldingsHostLike> {
     private _busy = false;
     private _resultLine: string | null = null;
     private _page = 0;
+    private _pendingOpen = false;
+    private _shownSeason: number | null = null;
 
     constructor(private readonly _deps: SeasonChroniclePopupDeps<H>) {}
 
@@ -120,12 +139,32 @@ export class SeasonChroniclePopupController<H extends MentorHoldingsHostLike> {
     public open(): boolean {
         if (!this._host) return false;
         if (this._deps.state().season < 0) return false;
+        if (this._deps.canOpen?.() === false) {
+            this._pendingOpen = true;
+            // 不使用透明度假隱藏：整個 host 退場，文字、按鈕與輸入遮罩一併停用。
+            this._host.node.active = false;
+            return false;
+        }
+        this._pendingOpen = false;
+        if (this.isOpen && this._shownSeason === this._deps.state().season) return true;
+        this._shownSeason = this._deps.state().season;
         this._resultLine = null;
         this._page = 0;
         this._render();
         this._host.node.active = true;
         this._deps.markRead();
+        this._deps.onOpened?.(this._host);
         return true;
+    }
+
+    /** 開場狀態改變時重查；有遮擋就真正隱藏，解除後最多重播一筆待開請求。 */
+    public refreshAvailability(): boolean {
+        if (this._deps.canOpen?.() === false) {
+            if (this.isOpen) this._pendingOpen = true;
+            if (this._host) this._host.node.active = false;
+            return false;
+        }
+        return this._pendingOpen ? this.open() : false;
     }
 
     /** 目前頁碼：0 為本季，n 為往期第 n 筆 */
