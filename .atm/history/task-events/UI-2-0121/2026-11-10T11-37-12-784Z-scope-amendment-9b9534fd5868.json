@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-10T11-37-12-784Z-scope-amendment-9b9534fd5868",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:7f2b690fa3131324bfb718cb69b76f3b028464c3cb873c371f3d902f106b0095",
+  "createdAt": "2026-11-10T11:37:12.784Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/zhang_lu_portrait.png,assets/resources/sprites/generals/avatars/zhang_lu_avatar.png,assets/resources/sprites/ui_avatars/cropped/zhang_lu_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}

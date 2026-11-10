@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "zhang-lu": {
+      "x": 320,
+      "y": 0,
+      "w": 400,
+      "h": 400,
+      "source": "reviewed",
+      "$note": "2026-11-10 張魯金青領袖新版，保留頭冠、面容與肩線。"
+    },
     "liu-zhang": {
       "x": 330,
       "y": 50,
