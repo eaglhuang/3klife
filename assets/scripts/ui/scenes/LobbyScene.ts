@@ -128,6 +128,8 @@ import { OpeningOfferPopupController } from '../core/OpeningOfferPopupController
 import { SeasonEventPopupController } from '../core/SeasonEventPopupController';
 import { SeasonChroniclePopupController } from '../core/SeasonChroniclePopupController';
 import { LineageMilestonePopupController } from '../core/LineageMilestonePopupController';
+import { QuickSortiePopupController, resolveQuickSortie, type QuickSortieResolution } from '../core/QuickSortieController';
+import { FIELD_AUTO_BATTLE_JOURNAL } from '../../core/systems/OfflineBattleSnapshot';
 import type { ChronicleTrigger } from '../../core/systems/SeasonChronicle';
 import { parseOpeningOfferTable } from '../../core/systems/OpeningOffer';
 import { SeasonPassController } from '../core/SeasonPassController';
@@ -361,6 +363,7 @@ export class LobbyScene extends Component {
     private _seasonEventPopup: SeasonEventPopupController<UIScreenPreviewHost> | null = null;
     private _seasonChroniclePopup: SeasonChroniclePopupController<UIScreenPreviewHost> | null = null;
     private _lineagePopup: LineageMilestonePopupController<UIScreenPreviewHost> | null = null;
+    private _quickSortiePopup: QuickSortiePopupController<UIScreenPreviewHost> | null = null;
     private _seasonPassPanel: SeasonPassController<UIScreenPreviewHost> | null = null;
     private _mentorBorrow: MentorBorrowController<UIScreenPreviewHost> | null = null;
     /** 「我的教官卡」列表（PROG-2-1097）：重用 mentor-borrow-screen 版面 */
@@ -643,6 +646,7 @@ export class LobbyScene extends Component {
         await this._mountSeasonChroniclePopup();
         await this._mountSeasonEventPopup();
         await this._mountLineagePopup();
+        await this._mountQuickSortiePopup();
         await this._mountSeasonPass();
         await this._mountMentorBorrow();
         await this._mountMentorHoldings();
@@ -1019,6 +1023,73 @@ export class LobbyScene extends Component {
         this._lineagePopup = popup;
         this._sessionEventUnsubscribers.push(services().event.on(GAME_SESSION_EVENTS.Loaded, () => { this._syncLineagePopup(); }));
         this._syncLineagePopup();
+    }
+
+    /** 出征雙軌選擇（PROG-2-2205）：按「出戰」先選親自指揮或極速決戰 */
+    private async _mountQuickSortiePopup(): Promise<void> {
+        const popup = new QuickSortiePopupController<UIScreenPreviewHost>({
+            mountHost: (bindings) => this._mountPreviewScreenHost('QuickSortieHost', 'quick-sortie-screen', bindings),
+            apply: (host, view) => { if (host.binder) applyFlowView(host.binder, view); },
+        });
+        await popup.mount();
+        this._quickSortiePopup = popup;
+    }
+
+    /** 出戰：新手教學戰或沒有關卡資料時照舊直接進戰場，其餘先彈出模式選擇 */
+    private _chooseSortieMode(): void {
+        const encounter = this._currentEncounter();
+        const popup = this._quickSortiePopup;
+        if (!encounter || !popup?.host || isTutorialBattle(services().session.clearedStageIds)) {
+            void this._enterBattle();
+            return;
+        }
+        const enemyName = this._generals.find((g) => g.id === encounter.enemyGeneralId)?.name ?? encounter.enemyGeneralId;
+        const opened = popup.open({
+            stageName: encounter.name,
+            enemyName,
+            command: () => { void this._enterBattle(); },
+            quick: () => this._runQuickSortie(encounter),
+        });
+        if (!opened) {
+            void this._enterBattle();
+            return;
+        }
+        this._bringNodeToFront(popup.host.node);
+    }
+
+    /**
+     * 極速決戰（doc_spec_1170 §三-1，PROG-2-2205）：不切場景，主將五維直接推演；
+     * 戰後照戰場流程寫 AUTO_RESOLVE 快照與 recordBattle（通關、戰績、官職、虎符、覺醒）。
+     */
+    private async _runQuickSortie(encounter: EncounterConfig): Promise<{ resolution: QuickSortieResolution; details: string[] } | null> {
+        if (!(await this._askScoutBeforeSortie())) return null;
+        const session = services().session;
+        const pgId = session.resolveLeadGeneralId(encounter.playerGeneralId);
+        const siege = lifespanCommandForBattleKind(encounter.battleKind);
+        if (siege && pgId) await session.spendSiegeLifespan(pgId);
+        const player = session.roster.find((g) => g.id === pgId) ?? this._generals.find((g) => g.id === pgId) ?? null;
+        const enemy = this._generals.find((g) => g.id === encounter.enemyGeneralId) ?? null;
+        const resolution = resolveQuickSortie(player, enemy, session.firstBattleCleared, Math.random);
+        const clock = session.gameTime;
+        const kind = resolution.result === 'player-win' ? 'win' : resolution.result === 'enemy-win' ? 'lose' : 'draw';
+        session.recordAutoResolveBattle({
+            battleType: 'AUTO_RESOLVE',
+            seed: `${clock.currentYear}-${clock.currentSeason}-${encounter.id}`,
+            lineup: [player ? { id: player.id, str: player.str, int: player.int, lea: player.lea, currentHp: player.hp, maxHp: player.hp } : null],
+            tileState: { encounterId: encounter.id, offBoard: true },
+            tactics: [],
+            win: resolution.result === 'player-win',
+            playerStrength: resolution.playerPower,
+            enemyStrength: resolution.enemyPower,
+        }, FIELD_AUTO_BATTLE_JOURNAL[kind], pgId ? [pgId] : []);
+        const details: string[] = [];
+        if (pgId) {
+            const settlement = await session.recordBattle([pgId], resolution.result, { stageId: encounter.id });
+            const entry = settlement.entries[0];
+            if (entry) details.push(`${player?.name ?? pgId} 精力 ${entry.vitalityBefore}→${entry.vitalityAfter}，功勳 +${entry.meritGained}${entry.epGained > 0 ? `，EP +${entry.epGained}` : ''}`);
+            details.push(...settlement.awakenings.flatMap(factorAwakeningLines));
+        }
+        return { resolution, details };
     }
 
     private _syncLineagePopup(): void {
@@ -6670,7 +6741,7 @@ export class LobbyScene extends Component {
     }
 
     public onClickEnterBattle() {
-        void this._enterBattle();
+        this._chooseSortieMode();
     }
 
     public onClickFloodBattle() {

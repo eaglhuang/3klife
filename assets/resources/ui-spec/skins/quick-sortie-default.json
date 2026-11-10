@@ -1,0 +1,62 @@
+{
+  "id": "quick-sortie-default",
+  "version": 1,
+  "bundle": "lobby_ui",
+  "atlasPolicy": "lobby_ui",
+  "slots": {
+    "quick.sortie.card.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 255
+    },
+    "quick.sortie.row.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 180
+    },
+    "quick.sortie.button.bg": {
+      "kind": "color-rect",
+      "color": "primary",
+      "alpha": 140
+    },
+    "quick.sortie.label.title": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 28,
+      "lineHeight": 36,
+      "color": "secondaryLight",
+      "overflow": "CLAMP",
+      "isBold": true
+    },
+    "quick.sortie.label.body": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 20,
+      "lineHeight": 30,
+      "color": "secondaryLight",
+      "overflow": "CLAMP"
+    },
+    "quick.sortie.label.note": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 18,
+      "lineHeight": 26,
+      "color": "secondaryLight",
+      "overflow": "CLAMP"
+    },
+    "quick.sortie.label.button": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 20,
+      "lineHeight": 24,
+      "color": "secondaryLight",
+      "overflow": "CLAMP",
+      "isBold": true
+    },
+    "quick.sortie.backdrop.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 200
+    }
+  }
+}

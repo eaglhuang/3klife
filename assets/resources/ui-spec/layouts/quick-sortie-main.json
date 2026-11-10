@@ -1,0 +1,208 @@
+{
+  "id": "quick-sortie-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "QuickSortieRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "QuickSortieBackdrop",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "skinSlot": "quick.sortie.backdrop.bg"
+      },
+      {
+        "type": "panel",
+        "name": "QuickSortieCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 920,
+        "height": 600,
+        "skinSlot": "quick.sortie.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "QuickSortieTitle",
+            "id": "quickSortieTitle",
+            "widget": {
+              "top": 20,
+              "left": 24,
+              "right": 24
+            },
+            "height": 44,
+            "text": "",
+            "styleSlot": "quick.sortie.label.title"
+          },
+          {
+            "type": "panel",
+            "name": "QuickSortieBodyBox",
+            "widget": {
+              "top": 80,
+              "left": 24,
+              "right": 24
+            },
+            "height": 260,
+            "skinSlot": "quick.sortie.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "QuickSortieBody",
+                "id": "quickSortieBody",
+                "widget": {
+                  "top": 12,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 236,
+                "text": "",
+                "styleSlot": "quick.sortie.label.body"
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "QuickSortieDetail",
+            "id": "quickSortieDetail",
+            "widget": {
+              "top": 356,
+              "left": 24,
+              "right": 24
+            },
+            "height": 120,
+            "text": "",
+            "styleSlot": "quick.sortie.label.note"
+          },
+          {
+            "type": "button",
+            "name": "QuickSortieCommand",
+            "id": "btnCommandBattle",
+            "widget": {
+              "bottom": 28,
+              "left": 24
+            },
+            "height": 52,
+            "width": 260,
+            "skinSlot": "quick.sortie.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "QuickSortieCommandLabel",
+                "id": "commandBattleLabel",
+                "widget": {
+                  "top": 12,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "",
+                "styleSlot": "quick.sortie.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "QuickSortieQuick",
+            "id": "btnQuickBattle",
+            "widget": {
+              "bottom": 28,
+              "hCenter": true
+            },
+            "height": 52,
+            "width": 260,
+            "skinSlot": "quick.sortie.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "QuickSortieQuickLabel",
+                "id": "quickBattleLabel",
+                "widget": {
+                  "top": 12,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "",
+                "styleSlot": "quick.sortie.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "QuickSortieCancel",
+            "id": "btnSortieCancel",
+            "widget": {
+              "bottom": 28,
+              "right": 24
+            },
+            "height": 52,
+            "width": 260,
+            "skinSlot": "quick.sortie.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "QuickSortieCancelLabel",
+                "id": "sortieCancelLabel",
+                "widget": {
+                  "top": 12,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "",
+                "styleSlot": "quick.sortie.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "QuickSortieReportClose",
+            "id": "btnQuickReportClose",
+            "widget": {
+              "bottom": 28,
+              "hCenter": true
+            },
+            "height": 52,
+            "width": 380,
+            "skinSlot": "quick.sortie.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "QuickSortieReportCloseLabel",
+                "id": "quickReportCloseLabel",
+                "widget": {
+                  "top": 12,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "",
+                "styleSlot": "quick.sortie.label.button"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
