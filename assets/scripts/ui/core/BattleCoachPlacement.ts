@@ -5,7 +5,7 @@ export function coachRectsOverlap(a: CoachRect, b: CoachRect): boolean {
         && a.y < b.y + b.height + 8 && a.y + a.height + 8 > b.y;
 }
 export function battleCoachPlacement(width: number, height: number, obstacles: readonly CoachRect[], minimized = false): CoachRect | null {
-    const sizes = minimized ? [[144,48]] : [[Math.min(720,width-32),224],[Math.min(480,width-32),284]];
+    const sizes = minimized ? [[144,72]] : [[Math.min(720,width-32),248],[Math.min(480,width-32),308]];
     for (const [w,h] of sizes) {
         if (w < (minimized ? 144 : 360)) continue;
         for (let y = 184; y + h <= height - 16; y += 16) {

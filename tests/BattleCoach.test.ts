@@ -40,9 +40,9 @@ export function createBattleCoachSuite(): TestSuite {
    assert.isTrue(r!.x>=0&&r!.y>=0&&r!.x+r!.width<=w&&r!.y+r!.height<=h);
   });
  }
- suite.test('完全沒空位時不蓋HUD；收起頁籤也是48px', () => {
+ suite.test('完全沒空位時不蓋HUD；收起頁籤也是72設計px（720p為48px）', () => {
   assert.equals(null,battleCoachPlacement(360,640,[{x:0,y:0,width:360,height:640}],true));
-  const r=battleCoachPlacement(1080,1920,[],true)!;assert.equals(48,r.height);
+  const r=battleCoachPlacement(1080,1920,[],true)!;assert.equals(72,r.height);
  });
  suite.test('收合不受事件強行展開、綁定重開/翻頁與resize，移除600px遮擋箭頭', () => {
   const src=readFileSync(join(__dirname,'../assets/scripts/ui/components/BattleScenePanel.ts'),'utf8');

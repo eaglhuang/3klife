@@ -25,7 +25,7 @@
           "top": 184,
           "hCenter": true
         },
-        "height": 224,
+        "height": 248,
         "skinSlot": "tutorial.card.bg",
         "children": [
           {
@@ -34,7 +34,7 @@
             "id": "guideText",
             "widget": {
               "top": 8,
-              "bottom": 64,
+              "bottom": 88,
               "left": 16,
               "right": 16
             },
@@ -46,7 +46,7 @@
             "name": "guidePrevious",
             "id": "guidePrevious",
             "width": 104,
-            "height": 48,
+            "height": 72,
             "widget": {
               "left": 16,
               "bottom": 8
@@ -72,7 +72,7 @@
             "name": "guideNext",
             "id": "guideNext",
             "width": 104,
-            "height": 48,
+            "height": 72,
             "widget": {
               "left": 128,
               "bottom": 8
@@ -98,7 +98,7 @@
             "name": "guideMinimize",
             "id": "guideMinimize",
             "width": 104,
-            "height": 48,
+            "height": 72,
             "widget": {
               "left": 240,
               "bottom": 8
@@ -183,7 +183,7 @@
         "id": "guideResume",
         "active": false,
         "width": 144,
-        "height": 48,
+        "height": 72,
         "widget": {
           "top": 184,
           "hCenter": true
