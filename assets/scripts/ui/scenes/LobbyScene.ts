@@ -126,7 +126,7 @@ import { AcademyGraduationController } from '../core/AcademyGraduationController
 import { ClanShrineController } from '../core/ClanShrineController';
 import { OpeningOfferPopupController } from '../core/OpeningOfferPopupController';
 import { SeasonEventPopupController } from '../core/SeasonEventPopupController';
-import { SeasonChroniclePopupController } from '../core/SeasonChroniclePopupController';
+import { canShowSeasonChronicle, SeasonChroniclePopupController } from '../core/SeasonChroniclePopupController';
 import { LineageMilestonePopupController } from '../core/LineageMilestonePopupController';
 import { QuickSortiePopupController, resolveQuickSortie, type QuickSortieResolution } from '../core/QuickSortieController';
 import { FIELD_AUTO_BATTLE_JOURNAL } from '../../core/systems/OfflineBattleSnapshot';
@@ -445,6 +445,8 @@ export class LobbyScene extends Component {
     private _intro: OpeningIntroController | null = null;
     /** 宿命轉蛋面板開不起來時為 true，此時開場不再擋住大廳 */
     private _openingUnavailable = false;
+    /** 所有開場面板與大廳尚未掛載完成前，季報只能排隊（PROG-2-2208）。 */
+    private _openingUiReady = false;
     private _introTickScheduled = false;
     private _showcase: InitialShowcaseController | null = null;
     private _showcaseHost: UIScreenPreviewHost | null = null;
@@ -710,6 +712,8 @@ export class LobbyScene extends Component {
         await this._mountSandtableTerritoryPanel();
         this._registerUIControllers();
         await services().ui.open(UIID.LobbyMain);
+        this._openingUiReady = true;
+        this._seasonChroniclePopup?.refreshAvailability();
         // 首勝紅顏展示開著時先不彈俘虜窗，等紅顏關閉再彈（PROG-2-1129）
         if (!this._redFaceHost?.node.active) {
             this._openDaughterRoutePopupIfPending();
@@ -988,6 +992,13 @@ export class LobbyScene extends Component {
         const gacha = this._localGachaService;
         const popup = new SeasonChroniclePopupController<UIScreenPreviewHost>({
             mountHost: (bindings) => this._mountPreviewScreenHost('SeasonChronicleHost', 'season-chronicle-screen', bindings),
+            canOpen: () => canShowSeasonChronicle({
+                openingUiReady: this._openingUiReady,
+                openingInProgress: this._isOpeningInProgress(),
+                onboarding: services().session.onboarding,
+                openingLetter: services().session.openingLetter,
+            }),
+            onOpened: (host) => this._bringNodeToFront(host.node),
             apply: (host, view) => { if (host.binder) applyFlowView(host.binder, view); },
             state: () => services().session.seasonChronicle,
             archive: () => services().session.chronicleArchive,
@@ -1107,7 +1118,7 @@ export class LobbyScene extends Component {
     private _openSeasonChronicle(trigger: ChronicleTrigger): void {
         const popup = this._seasonChroniclePopup;
         if (!popup?.host || !services().session.chronicleShouldOpen(trigger)) return;
-        if (popup.open()) this._bringNodeToFront(popup.host.node);
+        popup.open();
     }
 
     /** 季度通行證面板（ECO-13 Mock，PROG-2-2197） */
@@ -2220,7 +2231,7 @@ export class LobbyScene extends Component {
             applyFlowView(host.binder, this._journalHub.getFlowView());
         }
         const chronicle = this._seasonChroniclePopup;
-        if (session.seasonChronicleUnread && chronicle?.host && chronicle.open()) this._bringNodeToFront(chronicle.host.node);
+        if (session.seasonChronicleUnread) chronicle?.open();
     }
 
     /**
@@ -2245,6 +2256,7 @@ export class LobbyScene extends Component {
                 refreshSeasonHud: () => this._refreshSeasonHud(),
                 notifyBeauty: name => services().event.emit('SHOW_TOAST', { message: `紅顏 ${name} 前來相會，已加入名冊，可到「結緣」配對`, duration: 4 }),
                 advanceOpening: event => { this._advanceOpening(event); },
+                onOverlayChanged: () => { this._seasonChroniclePopup?.refreshAvailability(); },
                 applyFramePortraits: (binder, keys) => this._applyFramePortraits(binder as NonNullable<UIScreenPreviewHost['binder']>, 'destiny', keys, undefined, DESTINY_PORTRAIT_SPEC),
                 openingLetterText: () => ({ title: services().i18n.t('copy.letter.opening.title'), body: openingLetterBodyWithFunLine(services().i18n.t('copy.letter.opening.body'), services().session.magistrateUid ?? '') }),
                 warn: (message, error) => UCUFLogger.warn(LogCategory.DATA, message, error),
@@ -2816,7 +2828,11 @@ export class LobbyScene extends Component {
         this._recordOpeningPhase();
         this._onOpeningPhaseAdvanced();
         // 開場最後一幕結束才把大廳打開（PROG-2-1620）
-        if (wasInProgress && !this._isOpeningInProgress()) void services().ui.open(UIID.LobbyMain);
+        if (wasInProgress && !this._isOpeningInProgress()) {
+            void services().ui.open(UIID.LobbyMain).then(() => { this._seasonChroniclePopup?.refreshAvailability(); });
+        } else {
+            this._seasonChroniclePopup?.refreshAvailability();
+        }
     }
 
     /** 新玩家開場是否還在某一幕（intro／destiny／showcase）；大廳主畫面在此期間不顯示 */
@@ -5862,6 +5878,8 @@ export class LobbyScene extends Component {
                 // 大廳 HUD 拉到最前後，新手教學／開場信件要再壓回最上層，不能被大廳蓋住（PROG-2-1624）
                 this._openingPanels?.refreshOnboarding();
                 this._openingPanels?.refreshOpeningLetter();
+                this._seasonChroniclePopup?.refreshAvailability();
+                if (this._seasonChroniclePopup?.isOpen) this._bringNodeToFront(this._seasonChroniclePopup.host!.node);
             },
             hide: () => {
                 this._lobbyMainHost!.node.active = false;

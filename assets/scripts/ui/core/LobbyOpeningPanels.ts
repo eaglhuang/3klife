@@ -32,6 +32,8 @@ export interface LobbyOpeningPanelPorts {
     applyFramePortraits?: (binder: NonNullable<LobbyOpeningPanelHost['binder']>, keys: readonly string[]) => void;
     /** 開場信件的標題與本文（已查好 i18n 的字串） */
     openingLetterText?: () => { title: string; body: string };
+    /** 開場面板完成顯示／退場後，通知宿主重查延後彈窗。 */
+    onOverlayChanged?: () => void;
     warn: (message: string, error?: unknown) => void;
 }
 
@@ -64,6 +66,7 @@ export class LobbyOpeningPanels {
         const onboarding = this._onboarding;
         if (!host || !onboarding) return;
         host.node.active = onboarding.shouldShow();
+        this._ports.onOverlayChanged?.();
         if (!host.node.active) return;
         this._ports.bringToFront(host.node);
         if (host.binder) applyFlowView(host.binder, onboarding.getFlowView());
@@ -97,6 +100,7 @@ export class LobbyOpeningPanels {
         const ready = !this._ports.isNewPlayer() || this._destinyAfterLetter;
         const show = ready && shouldShowOpeningLetter(this._ports.session().openingLetter);
         host.node.active = show;
+        this._ports.onOverlayChanged?.();
         if (!show) return;
         this._ports.bringToFront(host.node);
         if (host.binder) {
@@ -117,6 +121,7 @@ export class LobbyOpeningPanels {
             this._destinyAfterLetter = false;
             this._showDestiny();
         }
+        this._ports.onOverlayChanged?.();
     }
 
     public async mountDestiny(): Promise<void> {

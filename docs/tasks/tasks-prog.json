@@ -25,9 +25,9 @@
   "generated": "2026-04-06",
   "summary": {
     "done": 38,
-    "in_progress": 2,
+    "in_progress": 3,
     "open": 82,
-    "total": 122
+    "total": 123
   },
   "tasks": [
     {
@@ -4577,6 +4577,59 @@
         "tests/NamedTallyPassiveAlias.test.ts"
       ],
       "notes": "2026-10-30 | 狀態: done | 驗證: 原版紅4failed/7passed，修正綠11/11；full串行重查5458passed/3既有Cocos skipped；test及cc-check tsc均exit0零錯誤；standard11/11；scope/encoding/diff-check通過。前兩次full有SyncContract5失敗，未修改同步；原始22e50e241基底full5447passed/3skipped，單獨SyncContract9/9，時序原因尚未確證，保留日誌 | 變更: 僅三行改既有passiveOf及新增回歸；基底22e50e241，開工17d03127f；fetch確認無相關前進；不碰1627韌性或其他規則 | 阻塞: none；僅本地交付未push/PR/merge",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2379",
+      "id": "PROG-2-2208",
+      "title": "新手開場與三國季報互斥排程修復",
+      "owner": "cursor-grok-bot",
+      "priority": "P0",
+      "status": "blocked",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-10",
+      "created_by_agent": "cursor-grok-bot",
+      "started_at": "2026-11-10T20:02:39+08:00",
+      "started_by_agent": "cursor-grok-bot",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "修復 Issue #2067 第1、2、6項：新手開場期間延後季報，完成後僅開一次，不留下遮擋或殘影。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "開場期間不顯示季報",
+        "開場完成後僅顯示一次",
+        "舊玩家首登與戰後行為不變",
+        "單元測試與型別檢查通過"
+      ],
+      "deliverables": [
+        "流程修正",
+        "回歸測試",
+        "Windows 視覺驗證交接"
+      ],
+      "notes": "2026-11-10 | 狀態: blocked | 驗證: 單測7397通過/3略過，測試型別0錯誤 | 變更: 完成季報互斥與八項回歸測試 | 阻塞: CheckList文件分片閘門、ATM缺少准入票據；Windows視覺驗收待建置",
       "brief": {
         "style": "classic",
         "label": "",
