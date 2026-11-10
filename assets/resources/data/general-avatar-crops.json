@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "liu-zhang": {
+      "x": 330,
+      "y": 50,
+      "w": 400,
+      "h": 400,
+      "source": "reviewed",
+      "$note": "2026-11-10 劉璋赭橙墨綠州牧新版，保留頭冠、面容與肩線。"
+    },
     "tao-qian": {
       "x": 320,
       "y": 0,
