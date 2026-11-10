@@ -83,6 +83,7 @@ interface UnitView {
   hpBar: Graphics;
   troopType: TroopType;
   usingTroopFormation: boolean;
+  usingGeneralPawn?: boolean;
 }
 
 interface UnitShapeProfile {
@@ -1118,21 +1119,10 @@ export class UnitRenderer extends Component {
     // 加上高度偏移後投影到螢幕空間
     const worldPos = worldNode.worldPosition.clone();
     worldPos.y += yOffset;
-    this.worldCamera.worldToScreen(worldPos, this.screenPosBuf);
 
-    const uiCamera = this.canvasNode.getComponentInChildren(Camera);
-    if (uiCamera) {
-      uiCamera.screenToWorld(this.screenPosBuf, this.uiWorldPosBuf);
-      const uiTrans = this.uiRoot.getComponent(UITransform);
-      if (uiTrans) {
-        uiTrans.convertToNodeSpaceAR(this.uiWorldPosBuf, this.uiProjectionBuffer);
-        labelNode.setPosition(this.uiProjectionBuffer);
-      }
-    } else {
-      // fallback：直接由 worldCamera 轉換
-      this.worldCamera.convertToUINode(worldPos, this.uiRoot, this.uiProjectionBuffer);
-      labelNode.setPosition(this.uiProjectionBuffer);
-    }
+    // 引擎 API 同時處理 UI 相機與 Canvas 縮放；不可拿3D螢幕深度交給UI相機screenToWorld。
+    this.worldCamera.convertToUINode(worldPos, this.uiRoot, this.uiProjectionBuffer);
+    labelNode.setPosition(this.uiProjectionBuffer);
   }
 
   private createUnitView(unit: TroopUnit): UnitView {
@@ -1141,6 +1131,9 @@ export class UnitRenderer extends Component {
     const worldNode = new Node(`Unit_${unit.id}`);
     worldNode.layer = Layers.Enum.DEFAULT;
     this.worldRoot!.addChild(worldNode);
+    // 第一個 playDeploy 可能要等模型下載；不能讓名牌先停在世界原點。
+    const initialPosition = this.getUnitWorldPosition(unit.lane, unit.depth);
+    if (initialPosition) worldNode.setWorldPosition(initialPosition);
 
     // 效果層：bump / recoil / charge 動畫在此子節點的 local position 播放，
     // 父節點 worldNode 的 worldPosition tween（移動）永遠不受影響。
@@ -1270,7 +1263,8 @@ export class UnitRenderer extends Component {
       view.accentNode.active = false;
       view.bodyNode.active = false;
       view.formationRoot.active = true;
-      this.applyTroopFormationTransform(view, unit);
+      if (view.usingGeneralPawn) view.formationRoot.setPosition(0, -this.unitHeight * 0.5, 0);
+      else this.applyTroopFormationTransform(view, unit);
       view.worldNode.setScale(Vec3.ONE);
     } else {
       view.bodyNode.active = true;
@@ -1301,7 +1295,8 @@ export class UnitRenderer extends Component {
 
     // 更新下排兵種名稱（小兵顯示完整對應名稱，將軍化身則顯示「將」）
     if (view.bottomNameLabel) {
-      view.bottomNameLabel.string = this.isGeneralAvatarUnit(unit) ? "將" : unit.name;
+      view.bottomNameLabel.string = this.isGeneralAvatarUnit(unit)
+        ? `${this.latestState?.getGeneral(unit.faction)?.name ?? unit.name}（主將棋子）` : unit.name;
     }
 
     this.updateFloodRaft(view, unit);
@@ -1788,8 +1783,34 @@ export class UnitRenderer extends Component {
     };
   }
 
+  /** 主將化身不可落入小兵 cube fallback；暫無對應模型時使用明示身分的通用戰術棋子。 */
+  private ensureGeneralPawn(view: UnitView, unit: TroopUnit): void {
+    if (view.usingTroopFormation) return;
+    const material = view.bodyNode.getComponent(MeshRenderer)?.getSharedMaterial(0);
+    const parts = [
+      { name: 'GeneralPawnBody', mesh: utils.MeshUtils.createMesh(primitives.cylinder(0.16, 0.27, 0.44, { radialSegments: 12 })), y: 0.22 },
+      { name: 'GeneralPawnHead', mesh: utils.MeshUtils.createMesh(primitives.sphere(0.18, { segments: 12 })), y: 0.61 },
+    ];
+    for (const part of parts) {
+      const node = new Node(part.name);
+      node.layer = Layers.Enum.DEFAULT;
+      view.formationRoot.addChild(node);
+      node.setPosition(0, part.y, 0);
+      const renderer = node.addComponent(MeshRenderer);
+      renderer.mesh = part.mesh;
+      if (material) renderer.setSharedMaterial(material, 0);
+    }
+    view.usingGeneralPawn = true;
+    view.usingTroopFormation = true;
+    view.bodyNode.active = false;
+    view.accentNode.active = false;
+    view.formationRoot.active = true;
+    UCUFLogger.info(LogCategory.BATTLE, `[UnitRenderer] 主將化身 ${unit.id} 使用通用戰術棋子（非角色專屬模型）`);
+  }
+
   private async ensureTroopFormation(view: UnitView, unit: TroopUnit): Promise<void> {
     if (this.isGeneralAvatarUnit(unit)) {
+      this.ensureGeneralPawn(view, unit);
       return;
     }
     if (view.usingTroopFormation || view.formationRoot.children.length > 0) {
