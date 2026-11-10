@@ -17,7 +17,7 @@
       "bottom": 18,
       "right": 18
     },
-    "width": 246,
+    "width": 344,
     "height": 226,
     "children": [
       {
@@ -28,7 +28,7 @@
           "right": 0,
           "bottom": 0
         },
-        "width": 246,
+        "width": 344,
         "height": 142,
         "skinSlot": "action.dock.bg",
         "_doc": "右下指令底座，先以深色 plate 建立主從關係；之後若有正式美術可替換。"
@@ -38,24 +38,24 @@
         "name": "EndTurnBtn",
         "id": "endTurnBtn",
         "widget": {
-          "top": 12,
-          "left": 130
+          "top": 8,
+          "right": 0
         },
-        "width": 48,
-        "height": 48,
+        "width": 212,
+        "height": 60,
         "skinSlot": "action.util.endturn",
-        "_doc": "待機 / 結束回合屬低頻操作，縮為最小次級按鈕，放在操作群上方內側。",
+        "_doc": "主要回合操作：可讀文字與完整點擊區；不再縮成待機圖示。",
         "children": [
           {
             "type": "image",
             "name": "EndTurnIcon",
             "id": "endTurnIcon",
             "widget": {
-              "top": 6,
-              "left": 15
+              "left": 14,
+              "top": 18
             },
-            "width": 18,
-            "height": 18,
+            "width": 24,
+            "height": 24,
             "skinSlot": "action.icon.endturn",
             "_doc": "F8 command overlay glyph"
           },
@@ -63,13 +63,14 @@
             "type": "label",
             "name": "EndTurnLabel",
             "widget": {
-              "left": 4,
-              "right": 4,
-              "bottom": 4
+              "left": 48,
+              "right": 10,
+              "top": 12,
+              "bottom": 12
             },
-            "width": 40,
-            "height": 16,
-            "text": "待機",
+            "width": 154,
+            "height": 36,
+            "text": "結束回合",
             "styleSlot": "action.util.endturn.label"
           }
         ]
@@ -127,7 +128,7 @@
         "name": "TacticsBtn",
         "id": "tacticsBtn",
         "widget": {
-          "right": 68,
+          "right": 98,
           "bottom": 8
         },
         "width": 82,

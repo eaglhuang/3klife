@@ -141,6 +141,16 @@ export class BattleLogComposite extends CompositePanel {
             this.logLabel = binder.getLabel('LogLabel') ?? null!;
         }
         this._contentNode = binder.getNode('ContentNode');
+        // content 是頂端錨點，文字也要頂端對齊；否則上半段會長到遮罩／標題之上。
+        const contentTf = this._contentNode?.getComponent(UITransform);
+        const labelTf = this.logLabel?.node.getComponent(UITransform);
+        if (contentTf && labelTf) {
+            labelTf.setAnchorPoint(0.5, 1);
+            labelTf.setContentSize(Math.max(1, contentTf.width - 24), labelTf.height);
+            this.logLabel.node.setPosition(0, -12, 0);
+            this.logLabel.overflow = Label.Overflow.RESIZE_HEIGHT;
+            this.logLabel.enableWrapText = true;
+        }
 
         // 可折疊的日誌面板節點
         this._logPanelNode = binder.getNode('BattleLogPanel');
@@ -176,11 +186,14 @@ export class BattleLogComposite extends CompositePanel {
     private _flush(): void {
         if (!this.logLabel) return;
         this.logLabel.string = this._lines.join('\n');
+        this.logLabel.updateRenderData(true);
 
         const contentTf = this._contentNode?.getComponent(UITransform);
         if (contentTf) {
             const lineH = this.logLabel.lineHeight || 18;
-            const estimated = Math.max(180, this._lines.length * lineH + 24);
+            const renderedHeight = this.logLabel.node.getComponent(UITransform)?.height ?? this._lines.length * lineH;
+            const viewportHeight = this.scrollView?.node.getComponent(UITransform)?.height ?? 180;
+            const estimated = Math.max(viewportHeight, renderedHeight + 24);
             contentTf.setContentSize(contentTf.width, estimated);
         }
         this.scrollView?.scrollToBottom(0.05);
