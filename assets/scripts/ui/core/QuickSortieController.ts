@@ -8,7 +8,7 @@
  *
  * Unity 對照：純 C# Presenter，宿主（LobbyScene）注入切場景與結算；不依賴 cc。
  */
-import { applyOpeningWinGuarantee, quickResolveOutcome, type AutoResolveGeneral, type AutoResolveSide, type QuickResolveOutcome } from '../../battle/runtime/BattleAutoResolve';
+import { applyOpeningWinGuarantee, quickResolveOutcome, type AutoResolveGeneral, type AutoResolveSide, type QuickResolveOutcome } from '../../core/systems/AutoResolve';
 import type { MentorHoldingsButtonBinding, MentorHoldingsHostLike } from './MentorHoldingsController';
 
 export interface QuickSortieGeneral {
