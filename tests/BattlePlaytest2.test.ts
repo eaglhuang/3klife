@@ -56,14 +56,19 @@ export function createBattlePlaytest2Suite(): TestSuite {
         assert.equals(1, services().battle.getSnapshot().turn);
         assert.equals(1, ended); off();
     });
-    suite.test('首戰十二回合仍未結束會結算；非教學戰仍遵守原本上限', () => {
+    suite.test('首戰方案 (b)：拿掉 12 回合強制判負時限，由第 8 回合提示接手', () => {
         const c = fresh(); c.tutorialBattle = true;
         services().battle['turn'] = 12;
         assert.equals('ongoing', c['checkVictory']());
         services().battle['turn'] = 13;
-        assert.equals('enemy-win', c['checkVictory']());
+        assert.equals('ongoing', c['checkVictory']());
         const normal = fresh(); services().battle['turn'] = 13;
         assert.equals('ongoing', normal['checkVictory']());
+        const g = new FirstBattleOperationGuide();
+        g.advance('deployed');
+        g.advance('turn-stalemate');
+        assert.equals('stalemate', g.step);
+        assert.contains(g.hint?.message ?? '', '退');
     });
     suite.test('教學第二步在完成一回合後進第三步，不等 SP 滿；失敗也能收起', () => {
         const g = new FirstBattleOperationGuide(); g.advance('deployed');

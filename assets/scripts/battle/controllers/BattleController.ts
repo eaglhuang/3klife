@@ -1513,10 +1513,7 @@ export class BattleController {
   }
 
   private checkVictory(): BattleResult {
-    const result = resolveBattleVictory(this.state);
-    if (result !== 'ongoing') return result;
-    if (this.tutorialBattle && services().battle.getSnapshot().turn > 12) return this.retreatBattle();
-    return result;
+    return resolveBattleVictory(this.state);
   }
 
   private randomInt(min: number, max: number): number {
