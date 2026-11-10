@@ -1,3 +1,4 @@
+import { DEV } from 'cc/env';
 import { UCUFLogger, LogCategory } from '../core/utils/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 import {
@@ -52,10 +53,14 @@ export class VideoPlayerTest extends Component {
     private _onCompleteCallback: (() => void) | null = null;
 
     start() {
+        if (!DEV) return;
+        // 測試片在 assets 外；開發時依卡片指令啟動本機檔案伺服器。
+        if (!this.localClip && !this.remoteURL) this.remoteURL = 'http://127.0.0.1:8789/zhao-ultimate.mp4';
         UCUFLogger.info(LogCategory.DATA, '[VideoPlayerTest] 就緒。按空白鍵播放影片，按 ESC 跳過。');
     }
 
     onEnable() {
+        if (!DEV) return;
         input.on(Input.EventType.KEY_DOWN, this._onKeyDown, this);
     }
 
@@ -84,6 +89,7 @@ export class VideoPlayerTest extends Component {
      *   Unity 對照: Timeline 的 Signal 或 PlayableDirector.stopped 事件。
      */
     public playFullScreen(onComplete?: () => void) {
+        if (!DEV) { onComplete?.(); return; }
         if (this._isPlaying) {
             UCUFLogger.warn(LogCategory.DATA, '[VideoPlayerTest] 影片正在播放中');
             return;

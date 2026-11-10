@@ -1762,10 +1762,7 @@
     "_enabled": true,
     "__prefab": null,
     "remoteURL": "",
-    "localClip": {
-      "__uuid__": "fdd29d18-9502-4664-bd4b-cd79462db922",
-      "__expectedType__": "cc.VideoClip"
-    },
+    "localClip": null,
     "autoCloseOnComplete": true,
     "skipAfterSeconds": 2,
     "_id": "e6iEHGMCNHi66zV+QybkGD"
