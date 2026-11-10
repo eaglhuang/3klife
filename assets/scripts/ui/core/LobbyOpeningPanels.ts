@@ -97,8 +97,8 @@ export class LobbyOpeningPanels {
     }
 
     /**
-     * 開場信件面板（PROG-2-1305）。新局在宿命轉蛋「之前」開（PROG-2-1622：先讀劇情再選將），
-     * 由 openDestiny 先開信、關信後才進轉蛋；舊玩家未讀照常顯示。已讀後不再自動開；關閉時記為已讀並存檔。
+     * 開場信件面板（PROG-2-1305）。新局在第一幕後由 openLetterThen 開信，關信後才接下一步
+     * （PROG-2-2215：信 → 六名將登場 → 宿命轉蛋）；舊玩家未讀照常顯示。已讀後不再自動開；關閉時記為已讀並存檔。
      */
     public async mountOpeningLetter(): Promise<void> {
         this._openingLetterHost = await this._ports.mountHost('OpeningLetterHost', 'opening-letter-screen', [
@@ -110,7 +110,7 @@ export class LobbyOpeningPanels {
     public refreshOpeningLetter(): void {
         const host = this._openingLetterHost;
         if (!host) return;
-        const ready = !this._ports.isNewPlayer() || this._destinyAfterLetter;
+        const ready = !this._ports.isNewPlayer() || this._afterLetter !== null;
         const show = ready && shouldShowOpeningLetter(this._ports.session().openingLetter);
         host.node.active = show;
         this._ports.onOverlayChanged?.();
@@ -130,11 +130,10 @@ export class LobbyOpeningPanels {
         } catch (error) {
             this._ports.warn('[LobbyScene] 開場信件已讀存檔失敗', error);
         }
-        if (this._destinyAfterLetter) {
-            this._destinyAfterLetter = false;
-            this._showDestiny();
-        }
+        const next = this._afterLetter;
+        this._afterLetter = null;
         this._ports.onOverlayChanged?.();
+        next?.();
     }
 
     public async mountDestiny(): Promise<void> {
@@ -179,21 +178,28 @@ export class LobbyOpeningPanels {
         ]);
     }
 
+    /**
+     * 新局開信，讀完關掉才執行 next（PROG-2-2215：信之後接六名將登場）。
+     * 信已讀或面板沒掛上時直接執行 next，不讓開場卡住。
+     */
+    public openLetterThen(next: () => void): void {
+        if (this._openingLetterHost && shouldShowOpeningLetter(this._ports.session().openingLetter)) {
+            this._afterLetter = next;
+            this.refreshOpeningLetter();
+            return;
+        }
+        next();
+    }
+
     /** 打開宿命轉蛋；轉蛋設定載入失敗、面板沒掛上時回 false */
     public openDestiny(): boolean {
         if (!this._destinyHost) return false;
-        // 先開信件（劇情描述），讀完關掉才進轉蛋
-        if (this._openingLetterHost && shouldShowOpeningLetter(this._ports.session().openingLetter)) {
-            this._destinyAfterLetter = true;
-            this.refreshOpeningLetter();
-            return true;
-        }
         this._showDestiny();
         return true;
     }
 
-    /** 新局信件讀完後要接著開宿命轉蛋 */
-    private _destinyAfterLetter = false;
+    /** 新局信件讀完後要接著做的下一步 */
+    private _afterLetter: (() => void) | null = null;
 
     private _showDestiny(): void {
         const host = this._destinyHost;

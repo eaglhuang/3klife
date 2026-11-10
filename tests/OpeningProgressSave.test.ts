@@ -36,7 +36,8 @@ export function createOpeningProgressSaveSuite(): TestSuite {
         const flow = createNewPlayerOpeningFlow();
         assert.isTrue(flow.restoreAt('showcase'));
         assert.equals('showcase', flow.current()!.id);
-        assert.equals(null, flow.advance({ type: SHOWCASE_DONE_EVENT }));
+        assert.equals('destiny', flow.advance({ type: SHOWCASE_DONE_EVENT })!.id);
+        assert.equals(null, flow.advance({ type: 'destiny-locked' }));
     });
 
     suite.test('flow.restoreAt 認不得的幕 id 回傳 false，流程保持未開始', () => {

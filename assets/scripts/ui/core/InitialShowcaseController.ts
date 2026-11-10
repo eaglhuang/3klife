@@ -6,11 +6,14 @@
  * 翻完最後一位回傳 true，由呼叫端送出 showcase-done。
  * 輸出扁平 FlowView，key 與 initial-showcase-main.json 的節點 id 一一對應。
  *
- * 暫定：幕位置放在宿命鎖定之後、第三幕之前（規格只寫第二幕分鏡 6，未寫先後）。
+ * 幕位置：開場信之後、宿命轉蛋之前（PROG-2-2215 使用者裁決），六名將說完台詞引導玩家進轉蛋。
  *
  * Unity 對照：Presenter。畫面只讀 getFlowView()，按鈕只呼叫 next()，像一份 Showcase 清單逐筆播放。
  */
 import { INITIAL_SHOWCASE_ENTRIES, SHOWCASE_LINE_STYLE_DEFAULT, showcaseLineOf, type InitialShowcaseEntry, type ShowcaseLineStyle } from '../../core/systems/InitialGeneralShowcase';
+
+/** 最後一位名將的按鈕：帶玩家進宿命轉蛋 */
+export const SHOWCASE_LAST_BUTTON = '前往宿命轉蛋';
 
 export interface InitialShowcaseFlowView {
     texts: Record<string, string>;
@@ -51,7 +54,7 @@ export class InitialShowcaseController {
                 showcaseLine: entry ? `「${showcaseLineOf(entry, this._lineStyle)}」` : '',
                 showcaseFactors: entry ? entry.factorTags.join('・') : '',
                 showcaseStep: entry ? `${this._index + 1} / ${this._entries.length}` : '',
-                btnShowcaseNextLabel: isLast ? '開始冒險' : '下一位',
+                btnShowcaseNextLabel: isLast ? SHOWCASE_LAST_BUTTON : '下一位',
             },
             actives: { showcaseCard: !this.finished },
             enabled: { btnShowcaseNext: !this.finished },

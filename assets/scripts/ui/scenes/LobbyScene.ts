@@ -690,9 +690,10 @@ export class LobbyScene extends Component {
             console.warn('[LobbyScene] 語系字串載入失敗', error);
         }
         await this._mountDestinyOpening();
+        // 信件先掛：讀檔接回名將登場幕時要先開信（PROG-2-2215）
+        await this._mountOpeningLetter();
         await this._mountOpeningIntro();
         await this._mountOnboardingTutorial();
-        await this._mountOpeningLetter();
         await this._mountSageOracle();
         await this._mountRetireReview();
         await this._mountSpiritCodex();
@@ -771,8 +772,8 @@ export class LobbyScene extends Component {
             this._refreshWalletPreviewState();
         });
 
-        // 核心架構合一：幕府政廳即為主大廳，登入後直接坐鎮大堂
-        this._openLobbyHall();
+        // 核心架構合一：幕府政廳即為主大廳，登入後直接坐鎮大堂；新玩家開場走完才開（PROG-2-2215）
+        if (!this._isOpeningInProgress()) this._openLobbyHall();
     }
 
     /** 他國逐將名冊與重算情境（E-9，PROG-2-1715）；失敗時他國照舊以兵力計軍力 */
@@ -2819,7 +2820,7 @@ export class LobbyScene extends Component {
     }
 
     /**
-     * 新玩家開場第一幕（情懷定錨）：沒有存檔時先走 intro 逐頁，翻完才開宿命轉蛋。
+     * 新玩家開場第一幕（情懷定錨）：沒有存檔時先走 intro 逐頁，翻完開信、六名將登場，最後宿命轉蛋。
      * 幕序在 NewPlayerOpening，這裡只綁按鈕、套 FlowView，並依目前幕開關兩個面板。
      */
     private async _mountOpeningIntro(): Promise<void> {
@@ -2845,6 +2846,7 @@ export class LobbyScene extends Component {
         this._onOpeningPhaseAdvanced();
         // 開場最後一幕結束才把大廳打開（PROG-2-1620）
         if (wasInProgress && !this._isOpeningInProgress()) {
+            if (this._ready) this._openLobbyHall();
             void services().ui.open(UIID.LobbyMain).then(() => { this._seasonChroniclePopup?.refreshAvailability(); });
         } else {
             this._seasonChroniclePopup?.refreshAvailability();
@@ -2877,11 +2879,20 @@ export class LobbyScene extends Component {
                 this._showIntro();
                 break;
             case 'destiny':
-                this.openDestinyOpening();
-                break;
             case 'showcase':
-                void this._showInitialShowcase();
+                this._enterOpeningPhase(phaseId);
                 break;
+        }
+    }
+
+    /** 進入名將登場或宿命轉蛋幕：名將登場前先讀完開場信（PROG-2-2215：信 → 六名將 → 轉蛋）。 */
+    private _enterOpeningPhase(phaseId: string): void {
+        if (phaseId === 'showcase') {
+            const show = () => { void this._showInitialShowcase(); };
+            if (this._openingPanels) this._openingPanels.openLetterThen(show);
+            else show();
+        } else if (phaseId === 'destiny') {
+            this.openDestinyOpening();
         }
     }
 
@@ -2916,12 +2927,10 @@ export class LobbyScene extends Component {
         this._refreshIntro();
     }
 
-    /** 宿命鎖定後流程進入名將登場幕時才掛載展示畫面。 */
+    /** 幕切換後開對應畫面：第一幕後開信再名將登場，名將登場後進宿命轉蛋。 */
     private _onOpeningPhaseAdvanced(): void {
-        if (this._openingFlow?.current()?.id !== 'showcase') {
-            return;
-        }
-        void this._showInitialShowcase();
+        const phaseId = this._openingFlow?.current()?.id;
+        if (phaseId) this._enterOpeningPhase(phaseId);
     }
 
     private async _showInitialShowcase(): Promise<void> {
@@ -2941,7 +2950,7 @@ export class LobbyScene extends Component {
             this._refreshShowcase();
             return;
         }
-        // 名將登場結束：離開展示，流程進入第三幕
+        // 名將登場結束：離開展示，流程進入宿命轉蛋
         if (this._showcaseHost) {
             this._showcaseHost.node.active = false;
         }
@@ -2969,15 +2978,14 @@ export class LobbyScene extends Component {
         this._finishIntro();
     }
 
-    /** 第一幕結束：停止自動播放計時，離開 intro，進入宿命轉蛋。 */
+    /** 第一幕結束：停止自動播放計時，離開 intro；流程進名將登場幕，由 _onOpeningPhaseAdvanced 先開信。 */
     private _finishIntro(): void {
         this.unschedule(this._tickIntro);
         this._introTickScheduled = false;
-        this._advanceOpening({ type: OPENING_INTRO_DONE });
         if (this._introHost) {
             this._introHost.node.active = false;
         }
-        this.openDestinyOpening();
+        this._advanceOpening({ type: OPENING_INTRO_DONE });
     }
 
     private _refreshIntro(): void {
