@@ -770,6 +770,9 @@ export class LobbyScene extends Component {
         ensureGlobalDevOverlay(this._localGachaService, undefined, () => { PlayerRosterService.clear(); }, () => {
             this._refreshWalletPreviewState();
         });
+
+        // 核心架構合一：幕府政廳即為主大廳，登入後直接坐鎮大堂
+        this._openLobbyHall();
     }
 
     /** 他國逐將名冊與重算情境（E-9，PROG-2-1715）；失敗時他國照舊以兵力計軍力 */
@@ -3373,8 +3376,7 @@ export class LobbyScene extends Component {
             themeConfig,
             fxConfig,
             onBack: () => {
-                this._lobbyHall?.closeStage();
-                host.node.active = false;
+                services().event.emit('SHOW_TOAST', { message: '主公已在幕府大堂坐鎮' });
             },
             onDock: (id) => dock[id](),
             onPanel: (id) => panels[id](),

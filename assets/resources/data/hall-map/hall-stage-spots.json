@@ -1,5 +1,5 @@
 {
-  "$note": "幕府大廳 Q 版武將站位（設計座標 1920x1080，左上原點）。footX/footY 為腳底中心；height 為顯示高度。前 5 點取自 Design System/design_handoff/lobby-hall 設計稿，spot-6/7 為暫定外側後排、待設計稿補位。",
+  "$note": "幕府大廳 Q 版武將站位（設計座標 1920x1080，左上原點）。footX/footY 為腳底中心；height 為顯示高度。前 5 點取自 Design System/design_handoff/lobby-hall 設計稿，spot-6/7 為外側後排。全員 100% 採用 3Q 小娃娃，無專屬 Q 版圖時以通用 3Q 素體 fallback，杜絕半身立繪與頭像站堂。",
   "canvas": { "width": 1920, "height": 1080 },
   "faceCenterX": 960,
   "spots": [
@@ -14,6 +14,6 @@
   "fillOrder": ["spot-2", "spot-4", "spot-5", "spot-1", "spot-3", "spot-6", "spot-7"],
   "spriteCandidates": [
     "sprites/generals/chibi/{snake}_chibi",
-    "sprites/generals/avatars/{snake}_avatar"
+    "sprites/generals/chibi/generic_chibi"
   ]
 }

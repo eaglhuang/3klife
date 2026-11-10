@@ -53,10 +53,10 @@ export function createHallStagePlannerSuite(): TestSuite {
         assert.equals(p.stageY, 540 - 872, '腳底 y 轉為 y 向上');
     });
 
-    suite.test('圖檔候選：Q 版優先、頭像其次，id 轉底線', () => {
+    suite.test('圖檔候選：Q 版優先、通用 3Q 其次，id 轉底線', () => {
         const p = planHallStage([{ id: 'zhuge-liang', name: '諸葛亮' }], LAYOUT)[0];
         assert.equals(p.spriteCandidates.join('|'),
-            'sprites/generals/chibi/zhuge_liang_chibi|sprites/generals/avatars/zhuge_liang_avatar', '候選路徑');
+            'sprites/generals/chibi/zhuge_liang_chibi|sprites/generals/chibi/generic_chibi', '候選路徑');
         assert.equals(generalIdToSnake('Sima-Yi'), 'sima_yi', 'kebab 轉底線');
     });
 

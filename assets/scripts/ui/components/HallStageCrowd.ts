@@ -85,14 +85,23 @@ export class HallStageCrowd extends Component {
         sprite.sizeMode = Sprite.SizeMode.RAW;
         this.node.addChild(body);
 
-        const tag = this._makeLabel(`tag-${placement.generalId}`, placement.title ? `${placement.title}・${placement.name}` : placement.name, 18, TAG_COLOR);
+        const tag = this._makeLabel(`tag-${placement.generalId}`, placement.title ? `${placement.title}・${placement.name}` : placement.name, 16, TAG_COLOR);
         const mark = placement.hasTaskMark ? this._makeLabel(`mark-${placement.generalId}`, '!', 30, MARK_COLOR) : null;
 
         const frame = await this._loadFirst(placement.spriteCandidates);
         if (token !== this._showToken || !body.isValid) return;
-        if (frame) sprite.spriteFrame = frame;
+        if (frame) {
+            sprite.spriteFrame = frame;
+            const origW = frame.originalSize.width;
+            const origH = frame.originalSize.height;
+            const targetH = placement.height;
+            // 3Q 小人最大寬度約束在 140px，防止橫向穿模與過度膨脹
+            const targetW = Math.min(origW * (targetH / Math.max(1, origH)), 140);
+            body.getComponent(UITransform)!.setContentSize(targetW, targetH);
+            sprite.sizeMode = Sprite.SizeMode.CUSTOM;
+        }
 
-        const pose = hallStageCrowdPose(placement, frame ? frame.originalSize.height : placement.height, decor, index);
+        const pose = hallStageCrowdPose(placement, placement.height, decor, index);
         body.setPosition(pose.body.x, pose.body.y, 0);
         body.setScale(pose.body.scaleX, pose.body.scaleY, 1);
         tag.setPosition(pose.tag.x, pose.tag.y, 0);
