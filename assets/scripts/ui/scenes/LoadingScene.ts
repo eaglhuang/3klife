@@ -19,6 +19,7 @@ import {
     resources,
     JsonAsset,
 } from 'cc';
+import { SceneLoadProgress } from '../../shared/SceneLoadProgress';
 import { installAdaptiveResolution } from '../core/AdaptiveResolution';
 import { services } from '../../core/managers/ServiceLoader';
 import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
@@ -1786,10 +1787,12 @@ export class LoadingScene extends Component {
 
         // 預載入目標場景
         director.preloadScene(target.name, (completedCount, totalCount) => {
+            SceneLoadProgress.report(completedCount, totalCount);
             this._loadingProgressText = sceneLoadingProgressText(completedCount, totalCount);
             this._refreshSceneLoadingProgress();
         }, async (error) => {
             if (error) {
+                SceneLoadProgress.fail();
                 UCUFLogger.error(LogCategory.LIFECYCLE, `[LoadingScene] 載入場景 ${target.name}失敗:`, error);
                 return;
             }
@@ -1804,7 +1807,7 @@ export class LoadingScene extends Component {
             }
 
             // 正式進入目標場景
-            director.loadScene(target.name);
+            director.loadScene(target.name, (error: Error | null) => { if (error) SceneLoadProgress.fail(); });
         });
     }
 }

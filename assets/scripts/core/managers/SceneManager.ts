@@ -1,5 +1,6 @@
 // @spec-source → 見 docs/cross-reference-index.md
 import { director } from "cc";
+import { SceneLoadProgress } from '../../shared/SceneLoadProgress';
 import { SceneName } from "../config/Constants";
 
 export class SceneManager {
@@ -14,7 +15,10 @@ export class SceneManager {
         this.targetScene = targetSceneName;
         this.sceneData = data;
         this.boardRenderer = null; // 場景切換時清除舊場景的 boardRenderer 參照
-        director.loadScene(SceneName.Loading);
+        if (targetSceneName === SceneName.Lobby || targetSceneName === SceneName.Battle) {
+            SceneLoadProgress.begin('正在準備載入場景');
+        } else SceneLoadProgress.complete();
+        director.loadScene(SceneName.Loading, (error: Error | null) => { if (error) SceneLoadProgress.fail(); });
     }
 
     /**
