@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "zhong-hui": {
+      "x": 320,
+      "y": 0,
+      "w": 380,
+      "h": 380,
+      "source": "reviewed",
+      "$note": "2026-11-10 鍾會藍青文士將軍新版，保留冠帽、面容及肩甲。"
+    },
     "yin-mo": {
       "x": 310,
       "y": 40,
