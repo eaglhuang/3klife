@@ -244,6 +244,7 @@ export function createSeasonChronicleSuite(): TestSuite {
             mountHost: async () => host as never,
             apply: () => undefined,
             state: () => state,
+            archive: () => [],
             seasonLabel: () => '春',
             markRead: () => { state = { ...state, read: true }; },
             resolve: async (index) => {

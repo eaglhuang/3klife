@@ -48,7 +48,7 @@
             "widget": {
               "top": 20,
               "left": 24,
-              "right": 200
+              "right": 480
             },
             "height": 48,
             "text": "",
@@ -77,6 +77,60 @@
                 },
                 "height": 28,
                 "text": "收起季報",
+                "styleSlot": "season.chronicle.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "SeasonChroniclePrev",
+            "id": "btnChroniclePrev",
+            "widget": {
+              "top": 20,
+              "right": 334
+            },
+            "height": 48,
+            "width": 130,
+            "skinSlot": "season.chronicle.page.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "SeasonChroniclePrevLabel",
+                "id": "chroniclePrevLabel",
+                "widget": {
+                  "top": 10,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "",
+                "styleSlot": "season.chronicle.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "SeasonChronicleNext",
+            "id": "btnChronicleNext",
+            "widget": {
+              "top": 20,
+              "right": 196
+            },
+            "height": 48,
+            "width": 130,
+            "skinSlot": "season.chronicle.page.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "SeasonChronicleNextLabel",
+                "id": "chronicleNextLabel",
+                "widget": {
+                  "top": 10,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "",
                 "styleSlot": "season.chronicle.label.button"
               }
             ]

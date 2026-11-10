@@ -5,31 +5,64 @@
   "atlasPolicy": "lobby_ui",
   "slots": {
     "season.chronicle.card.bg": {
-      "kind": "color-rect",
-      "color": "backgroundDeep",
-      "alpha": 255
+      "kind": "sprite-frame",
+      "path": "sprites/ui_families/common/parchment/frame",
+      "spriteType": "sliced",
+      "border": [
+        16,
+        16,
+        16,
+        16
+      ],
+      "allowAutoAtlas": true
     },
     "season.chronicle.row.bg": {
-      "kind": "color-rect",
-      "color": "backgroundDeep",
-      "alpha": 180
+      "kind": "sprite-frame",
+      "path": "sprites/ui_families/common/parchment/fill",
+      "spriteType": "sliced",
+      "border": [
+        16,
+        16,
+        16,
+        16
+      ],
+      "allowAutoAtlas": true,
+      "opacity": 0.85
     },
     "season.chronicle.button.bg": {
-      "kind": "color-rect",
-      "color": "primary",
-      "alpha": 140
+      "kind": "button-skin",
+      "normal": "sprites/ui_families/common/paper_utility/btn_primary_normal",
+      "pressed": "sprites/ui_families/common/paper_utility/btn_primary_pressed",
+      "disabled": "sprites/ui_families/common/paper_utility/btn_primary_disabled",
+      "spriteType": "sliced",
+      "border": [
+        12,
+        12,
+        12,
+        12
+      ],
+      "allowAutoAtlas": true
     },
     "season.chronicle.close.bg": {
-      "kind": "color-rect",
-      "color": "primary",
-      "alpha": 100
+      "kind": "button-skin",
+      "normal": "sprites/ui_families/common/paper_utility/btn_primary_normal",
+      "pressed": "sprites/ui_families/common/paper_utility/btn_primary_pressed",
+      "disabled": "sprites/ui_families/common/paper_utility/btn_primary_disabled",
+      "spriteType": "sliced",
+      "border": [
+        12,
+        12,
+        12,
+        12
+      ],
+      "allowAutoAtlas": true
     },
     "season.chronicle.label.title": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 30,
       "lineHeight": 40,
-      "color": "secondaryLight",
+      "color": "textOnParchment",
       "overflow": "CLAMP",
       "isBold": true
     },
@@ -38,7 +71,7 @@
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 24,
       "lineHeight": 32,
-      "color": "secondaryLight",
+      "color": "textOnParchment",
       "overflow": "CLAMP",
       "isBold": true
     },
@@ -47,7 +80,7 @@
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 28,
-      "color": "secondaryLight",
+      "color": "textOnParchment",
       "overflow": "CLAMP"
     },
     "season.chronicle.label.note": {
@@ -55,7 +88,7 @@
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 26,
-      "color": "secondaryLight",
+      "color": "textOnParchmentMuted",
       "overflow": "CLAMP"
     },
     "season.chronicle.label.button": {
@@ -63,7 +96,7 @@
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 24,
-      "color": "secondaryLight",
+      "color": "textOnParchment",
       "overflow": "CLAMP",
       "isBold": true
     },
@@ -71,6 +104,20 @@
       "kind": "color-rect",
       "color": "backgroundDeep",
       "alpha": 200
+    },
+    "season.chronicle.page.bg": {
+      "kind": "button-skin",
+      "normal": "sprites/ui_families/common/paper_utility/btn_primary_normal",
+      "pressed": "sprites/ui_families/common/paper_utility/btn_primary_pressed",
+      "disabled": "sprites/ui_families/common/paper_utility/btn_primary_disabled",
+      "spriteType": "sliced",
+      "border": [
+        12,
+        12,
+        12,
+        12
+      ],
+      "allowAutoAtlas": true
     }
   }
 }

@@ -284,3 +284,37 @@ export function normalizeSeasonChronicle(value: unknown): SeasonChronicleState {
         read: v.read === true,
     };
 }
+
+/** 歷史卷軸最多保留的季數（PROG-2-2206，暫定 12 季＝3 年） */
+export const CHRONICLE_ARCHIVE_LIMIT = 12;
+
+/**
+ * 新一季季報產生前，把上一季收進歷史卷軸（doc_spec_1171 狀態機「存入存檔與歷史卷軸」，PROG-2-2206）。
+ * 新的在前；同季不重複；尚未產生（season < 0）或與新季同季時不收；超過上限捨棄最舊的。
+ */
+export function archiveSeasonChronicle(
+    archive: readonly SeasonChronicleState[],
+    previous: Readonly<SeasonChronicleState>,
+    nextSeason: number,
+): SeasonChronicleState[] {
+    const kept = archive.map(copySeasonChronicle);
+    if (previous.season < 0 || previous.season === nextSeason) return kept;
+    const entry = { ...copySeasonChronicle(previous), read: true };
+    return [entry, ...kept.filter((e) => e.season !== previous.season)]
+        .sort((a, b) => b.season - a.season)
+        .slice(0, CHRONICLE_ARCHIVE_LIMIT);
+}
+
+/** 讀檔正規化：濾掉壞資料與重複季，新的在前，最多 CHRONICLE_ARCHIVE_LIMIT 季 */
+export function normalizeChronicleArchive(value: unknown): SeasonChronicleState[] {
+    if (!Array.isArray(value)) return [];
+    const seen = new Set<number>();
+    const entries: SeasonChronicleState[] = [];
+    for (const raw of value) {
+        const entry = normalizeSeasonChronicle(raw);
+        if (entry.season < 0 || seen.has(entry.season)) continue;
+        seen.add(entry.season);
+        entries.push({ ...entry, read: true });
+    }
+    return entries.sort((a, b) => b.season - a.season).slice(0, CHRONICLE_ARCHIVE_LIMIT);
+}
