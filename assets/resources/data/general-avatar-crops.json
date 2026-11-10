@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "pan-zhang": {
+      "x": 230,
+      "y": 100,
+      "w": 400,
+      "h": 400,
+      "source": "reviewed",
+      "$note": "2026-11-10 潘璋紅銅長刀新版，保留束髮、面容與肩甲。"
+    },
     "zhang-zhao": {
       "x": 320,
       "y": 0,

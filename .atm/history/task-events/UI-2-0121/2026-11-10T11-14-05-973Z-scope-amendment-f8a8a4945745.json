@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-10T11-14-05-973Z-scope-amendment-f8a8a4945745",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:2c035b6ace18824ffcadc04fc6fb7ca03a39a6191ba3eb81802019719d835206",
+  "createdAt": "2026-11-10T11:14:05.973Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/pan_zhang_portrait.png,assets/resources/sprites/generals/avatars/pan_zhang_avatar.png,assets/resources/sprites/ui_avatars/cropped/pan_zhang_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
