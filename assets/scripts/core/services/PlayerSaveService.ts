@@ -1,6 +1,6 @@
 import { normalizeGovernanceBoosts, type ActiveGovernanceBoost } from '../systems/GovernanceEfficiencyItem';
 import { normalizeSeasonPersonalityState, type SeasonPersonalityState } from '../systems/SeasonPersonalityEvents';
-import { normalizeSeasonChronicle, type SeasonChronicleState } from '../systems/SeasonChronicle';
+import { normalizeChronicleArchive, normalizeSeasonChronicle, type SeasonChronicleState } from '../systems/SeasonChronicle';
 import { normalizeLineageQueue, type LineageMilestone } from '../systems/LineageMilestones';
 import type { InfusionRecord } from '../systems/DuplicatePullRouting';
 import { normalizeMarriageProposal, type MarriageProposal } from '../systems/MarriageProposal';
@@ -291,6 +291,8 @@ export interface PlayerSaveSnapshot {
     seasonPersonality?: SeasonPersonalityState;
     /** 三國季報（PROG-2-2203）；後加的選填欄位，舊檔讀回為空 */
     seasonChronicle?: SeasonChronicleState;
+    /** 季報歷史卷軸（PROG-2-2206）；後加的選填欄位，舊檔讀回為空 */
+    seasonChronicleArchive?: SeasonChronicleState[];
     /** 代際傳承里程碑隊列（PROG-2-2204）；後加的選填欄位，舊檔讀回為空 */
     lineageQueue?: LineageMilestone[];
     /** 他國 AI 勢力狀態；後加的選填欄位，舊檔讀回為初始勢力（PROG-2-1088） */
@@ -638,6 +640,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.governanceBoosts ? { governanceBoosts: normalizeGovernanceBoosts(snapshot.governanceBoosts) } : {}),
         ...(snapshot.seasonPersonality ? { seasonPersonality: normalizeSeasonPersonalityState(snapshot.seasonPersonality) } : {}),
         ...(snapshot.seasonChronicle ? { seasonChronicle: normalizeSeasonChronicle(snapshot.seasonChronicle) } : {}),
+        ...(snapshot.seasonChronicleArchive ? { seasonChronicleArchive: normalizeChronicleArchive(snapshot.seasonChronicleArchive) } : {}),
         ...(snapshot.lineageQueue ? { lineageQueue: normalizeLineageQueue(snapshot.lineageQueue) } : {}),
         ...(snapshot.rivals !== undefined ? { rivals: normalizeRivalWorld(snapshot.rivals) } : {}),
         ...(snapshot.mercenaries !== undefined ? { mercenaries: normalizeMercenaryBundle(snapshot.mercenaries) } : {}),

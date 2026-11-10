@@ -314,6 +314,12 @@ function toastPregnantMother(bonding: { pregnantMotherHint(): string | null }): 
     if (hint) services().event.emit('SHOW_TOAST', { message: hint, duration: 2 });
 }
 
+/** 由目前時鐘倒推某季（totalSeasonsElapsed）的年份與季序；歷史卷軸的標題用（PROG-2-2206） */
+function seasonClockOf(now: { currentYear: number; currentSeason: number; totalSeasonsElapsed: number }, season: number): { currentYear: number; currentSeason: number } {
+    const index = now.currentYear * 4 + (now.currentSeason - 1) - (now.totalSeasonsElapsed - season);
+    return { currentYear: Math.floor(index / 4), currentSeason: (((index % 4) + 4) % 4) + 1 };
+}
+
 /** 季節字串：走 i18n（ui.season.display），語系表未載入時退回 zh-TW 預設（PROG-2-0730） */
 function seasonText(state: Parameters<typeof seasonDisplayText>[1]): string {
     return seasonDisplayText((key, ...args) => services().i18n.t(key, ...args), state);
@@ -984,7 +990,8 @@ export class LobbyScene extends Component {
             mountHost: (bindings) => this._mountPreviewScreenHost('SeasonChronicleHost', 'season-chronicle-screen', bindings),
             apply: (host, view) => { if (host.binder) applyFlowView(host.binder, view); },
             state: () => services().session.seasonChronicle,
-            seasonLabel: () => seasonText(services().session.gameTime),
+            archive: () => services().session.chronicleArchive,
+            seasonLabel: (season) => seasonText(seasonClockOf(services().session.gameTime, season)),
             markRead: () => { void services().session.markSeasonChronicleRead().catch(() => undefined); this._refreshDomestic(); },
             resolve: async (optionIndex) => {
                 const result = await services().session.resolveCityEncounter(optionIndex, {

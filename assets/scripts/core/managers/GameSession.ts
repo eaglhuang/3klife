@@ -136,7 +136,7 @@ import { FOOD_LOW_LINE } from '../systems/ResourceCap';
 import { ITEM_DISPLAY_NAMES } from '../systems/PlayerInventory';
 import { prisonTreasureLine } from '../systems/PrisonerOfWar';
 import { governanceBoostMultiplier, normalizeGovernanceBoosts, planGovernanceBoost, type ActiveGovernanceBoost, type GovernanceBoostRejectReason } from '../systems/GovernanceEfficiencyItem';
-import { applyEncounterToRoster, chronicleShouldOpen, cityEncounterDef, cityEncounterNeedsLead, cityEncounterShortfall, copySeasonChronicle, EMPTY_SEASON_CHRONICLE, normalizeSeasonChronicle, synthesizeSeasonChronicle, type ChronicleTrigger, type SeasonChronicleState } from '../systems/SeasonChronicle';
+import { applyEncounterToRoster, archiveSeasonChronicle, chronicleShouldOpen, cityEncounterDef, cityEncounterNeedsLead, cityEncounterShortfall, copySeasonChronicle, EMPTY_SEASON_CHRONICLE, normalizeChronicleArchive, normalizeSeasonChronicle, synthesizeSeasonChronicle, type ChronicleTrigger, type SeasonChronicleState } from '../systems/SeasonChronicle';
 import { ITEM_WOOD } from '../systems/ItemDef';
 import { applyGraspChoice, comingOfAgeCrossings, enqueueLineageMilestones, graspItemDef, isMilestoneValid, normalizeLineageQueue, type GraspItemId, type LineageGeneral, type LineageMilestone } from '../systems/LineageMilestones';
 import { EMPTY_SEASON_PERSONALITY_STATE, normalizeSeasonPersonalityState, rollSeasonPersonalityEvents, seasonEventDef, seasonEventFarmMultiplier, seasonEventShortfall, strAfterExp, SEASON_PERSONALITY_TUNING, type SeasonEventInstance, type SeasonPersonalityState } from '../systems/SeasonPersonalityEvents';
@@ -860,6 +860,8 @@ export class GameSession {
     private _seasonEventRandom: RandomSource | null = null;
     // 三國季報（LOOP-03，PROG-2-2203）：換季合成，奇遇抉擇與已讀隨存檔
     private _seasonChronicle: SeasonChronicleState = copySeasonChronicle(EMPTY_SEASON_CHRONICLE);
+    // 季報歷史卷軸（PROG-2-2206）：新的在前，最多 12 季，隨存檔
+    private _chronicleArchive: SeasonChronicleState[] = [];
     private _chronicleRandom: RandomSource | null = null;
     // 代際傳承里程碑隊列（LOOP-04，PROG-2-2204）：抓周、及冠依序處理，隨存檔
     private _lineageQueue: LineageMilestone[] = [];
@@ -2115,6 +2117,7 @@ export class GameSession {
         this._governanceBoosts = [];
         this._seasonPersonality = { ...EMPTY_SEASON_PERSONALITY_STATE, pending: [] };
         this._seasonChronicle = copySeasonChronicle(EMPTY_SEASON_CHRONICLE);
+        this._chronicleArchive = [];
         this._loginStartedNewDay = false;
         this._lineageQueue = [];
         this._rivals = this._withRivalOfficers(createRivalWorld());
@@ -2748,6 +2751,11 @@ export class GameSession {
         return copySeasonChronicle(this._seasonChronicle);
     }
 
+    /** 季報歷史卷軸（複本，新的在前；PROG-2-2206） */
+    public get chronicleArchive(): SeasonChronicleState[] {
+        return this._chronicleArchive.map(copySeasonChronicle);
+    }
+
     /** 最近一次登入是不是換日後第一次 */
     public get loginStartedNewDay(): boolean {
         return this._loginStartedNewDay;
@@ -3244,6 +3252,7 @@ export class GameSession {
         // 三國季報：換日首登才算（晨報一天只產生一次，用它的產生日判斷）；本季還沒有季報（新局、舊檔）時補合成
         this._loginStartedNewDay = this._morningReport.day !== today;
         if (this._loginStartedNewDay && this._seasonChronicle.season !== this._clock.state.totalSeasonsElapsed) {
+            this._chronicleArchive = archiveSeasonChronicle(this._chronicleArchive, this._seasonChronicle, this._clock.state.totalSeasonsElapsed);
             this._seasonChronicle = this._synthesizeChronicle(this._clock.state.totalSeasonsElapsed);
         }
         // 性格離線行為（HUM-03）：隔天第一次登入才有「昨晚」可寫；沿用入學令的切日高水位，回撥時鐘不會重發
@@ -4578,6 +4587,7 @@ export class GameSession {
         const personalityRandom = this._seasonEventRandom ?? remarkRandomOf(`personality|${governanceSeason}|${this._seeded.snapshot().state}`);
         this._seasonPersonality = rollSeasonPersonalityEvents(this._roster.getAll(), governanceSeason, personalityRandom);
         // 三國季報（LOOP-03）：同樣用另一條序列；上一季沒抉擇的奇遇作廢
+        this._chronicleArchive = archiveSeasonChronicle(this._chronicleArchive, this._seasonChronicle, governanceSeason);
         this._seasonChronicle = this._synthesizeChronicle(governanceSeason);
         // 代際傳承（LOOP-04）：本季 5 歲開獎的子嗣排入抓周，跨過 15 歲的已開獎子嗣排入及冠入學
         this._lineageQueue = enqueueLineageMilestones(this._lineageQueue, [
@@ -5458,6 +5468,7 @@ export class GameSession {
             ...(this._governanceEvent ? { governanceEvent: { ...this._governanceEvent } } : {}),
             ...(this._governanceBoosts.length > 0 ? { governanceBoosts: this._governanceBoosts.map((boost) => ({ ...boost })) } : {}),
             ...(this._seasonChronicle.season >= 0 ? { seasonChronicle: copySeasonChronicle(this._seasonChronicle) } : {}),
+            ...(this._chronicleArchive.length > 0 ? { seasonChronicleArchive: this._chronicleArchive.map(copySeasonChronicle) } : {}),
             ...(this._lineageQueue.length > 0 ? { lineageQueue: this._lineageQueue.map((m) => ({ ...m })) } : {}),
             ...(this._seasonPersonality.season >= 0 ? { seasonPersonality: { ...this._seasonPersonality, pending: this._seasonPersonality.pending.map((e) => ({ ...e })) } } : {}),
             rivals: this._rivals,
@@ -5782,6 +5793,7 @@ export class GameSession {
         this._governanceBoosts = normalizeGovernanceBoosts(snapshot.governanceBoosts);
         this._seasonPersonality = normalizeSeasonPersonalityState(snapshot.seasonPersonality);
         this._seasonChronicle = normalizeSeasonChronicle(snapshot.seasonChronicle);
+        this._chronicleArchive = normalizeChronicleArchive(snapshot.seasonChronicleArchive);
         this._lineageQueue = normalizeLineageQueue(snapshot.lineageQueue);
         this._rivals = this._withRivalOfficers(normalizeRivalWorld(snapshot.rivals));
         this._mercenaries = normalizeMercenaryBundle(snapshot.mercenaries);
