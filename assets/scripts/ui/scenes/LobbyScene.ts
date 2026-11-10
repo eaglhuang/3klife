@@ -127,6 +127,7 @@ import { ClanShrineController } from '../core/ClanShrineController';
 import { OpeningOfferPopupController } from '../core/OpeningOfferPopupController';
 import { SeasonEventPopupController } from '../core/SeasonEventPopupController';
 import { SeasonChroniclePopupController } from '../core/SeasonChroniclePopupController';
+import { LineageMilestonePopupController } from '../core/LineageMilestonePopupController';
 import type { ChronicleTrigger } from '../../core/systems/SeasonChronicle';
 import { parseOpeningOfferTable } from '../../core/systems/OpeningOffer';
 import { SeasonPassController } from '../core/SeasonPassController';
@@ -359,6 +360,7 @@ export class LobbyScene extends Component {
     private _openingOfferPopup: OpeningOfferPopupController<UIScreenPreviewHost> | null = null;
     private _seasonEventPopup: SeasonEventPopupController<UIScreenPreviewHost> | null = null;
     private _seasonChroniclePopup: SeasonChroniclePopupController<UIScreenPreviewHost> | null = null;
+    private _lineagePopup: LineageMilestonePopupController<UIScreenPreviewHost> | null = null;
     private _seasonPassPanel: SeasonPassController<UIScreenPreviewHost> | null = null;
     private _mentorBorrow: MentorBorrowController<UIScreenPreviewHost> | null = null;
     /** 「我的教官卡」列表（PROG-2-1097）：重用 mentor-borrow-screen 版面 */
@@ -640,6 +642,7 @@ export class LobbyScene extends Component {
         await this._mountOpeningOffer();
         await this._mountSeasonChroniclePopup();
         await this._mountSeasonEventPopup();
+        await this._mountLineagePopup();
         await this._mountSeasonPass();
         await this._mountMentorBorrow();
         await this._mountMentorHoldings();
@@ -992,6 +995,35 @@ export class LobbyScene extends Component {
         await popup.mount();
         this._seasonChroniclePopup = popup;
         if (services().session.loginStartedNewDay) this._openSeasonChronicle('daily-first-login');
+    }
+
+    /** 代際傳承彈窗（LOOP-04，PROG-2-2204）：換季、快進結束與讀檔後依序處理抓周與及冠入學 */
+    private async _mountLineagePopup(): Promise<void> {
+        const popup = new LineageMilestonePopupController<UIScreenPreviewHost>({
+            mountHost: (bindings) => this._mountPreviewScreenHost('LineageMilestoneHost', 'lineage-milestone-screen', bindings),
+            apply: (host, view) => { if (host.binder) applyFlowView(host.binder, view); },
+            next: () => services().session.pendingLineageMilestone,
+            chooseGrasp: async (itemId) => {
+                const result = await services().session.chooseGrasp(itemId);
+                if (result.ok) this._refreshNurtureFlow();
+                return result;
+            },
+            dismissComingOfAge: () => services().session.dismissComingOfAge(),
+            openAcademy: (childId) => {
+                this._openNurtureFlow();
+                void this._nurtureFlow?.recommendAncestorDeck(childId).then(() => { this._refreshNurtureFlow(); });
+            },
+            toast: (message) => { services().event.emit('SHOW_TOAST', { message, duration: 3 }); },
+        });
+        await popup.mount();
+        this._lineagePopup = popup;
+        this._sessionEventUnsubscribers.push(services().event.on(GAME_SESSION_EVENTS.Loaded, () => { this._syncLineagePopup(); }));
+        this._syncLineagePopup();
+    }
+
+    private _syncLineagePopup(): void {
+        const popup = this._lineagePopup;
+        if (popup?.host && popup.tryOpen()) this._bringNodeToFront(popup.host.node);
     }
 
     private _openSeasonChronicle(trigger: ChronicleTrigger): void {
@@ -4357,6 +4389,7 @@ export class LobbyScene extends Component {
             this._refreshDomestic();
             this._openSeasonChronicle('season-advance');
             this._syncSeasonEventPopup();
+            this._syncLineagePopup();
         }
     }
 
@@ -4400,6 +4433,7 @@ export class LobbyScene extends Component {
             }
             this._openSeasonChronicle('season-advance');
             this._syncSeasonEventPopup();
+            this._syncLineagePopup();
         } catch (error) {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 推進季度失敗', error);
             services().event.emit('SHOW_TOAST', { message: '推進季度失敗', duration: 2 });

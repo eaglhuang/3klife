@@ -138,6 +138,7 @@ import { prisonTreasureLine } from '../systems/PrisonerOfWar';
 import { governanceBoostMultiplier, normalizeGovernanceBoosts, planGovernanceBoost, type ActiveGovernanceBoost, type GovernanceBoostRejectReason } from '../systems/GovernanceEfficiencyItem';
 import { applyEncounterToRoster, chronicleShouldOpen, cityEncounterDef, cityEncounterNeedsLead, cityEncounterShortfall, copySeasonChronicle, EMPTY_SEASON_CHRONICLE, normalizeSeasonChronicle, synthesizeSeasonChronicle, type ChronicleTrigger, type SeasonChronicleState } from '../systems/SeasonChronicle';
 import { ITEM_WOOD } from '../systems/ItemDef';
+import { applyGraspChoice, comingOfAgeCrossings, enqueueLineageMilestones, graspItemDef, isMilestoneValid, normalizeLineageQueue, type GraspItemId, type LineageGeneral, type LineageMilestone } from '../systems/LineageMilestones';
 import { EMPTY_SEASON_PERSONALITY_STATE, normalizeSeasonPersonalityState, rollSeasonPersonalityEvents, seasonEventDef, seasonEventFarmMultiplier, seasonEventShortfall, strAfterExp, SEASON_PERSONALITY_TUNING, type SeasonEventInstance, type SeasonPersonalityState } from '../systems/SeasonPersonalityEvents';
 import { governanceEventLine, governanceOutputMultiplier, governanceReportLine, normalizeGovernanceEvent, rollGovernanceEvent, type ActiveGovernanceEvent } from '../systems/GovernanceEvents';
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticStats, type DomesticTaskResult } from '../systems/DomesticTasks';
@@ -860,6 +861,8 @@ export class GameSession {
     // 三國季報（LOOP-03，PROG-2-2203）：換季合成，奇遇抉擇與已讀隨存檔
     private _seasonChronicle: SeasonChronicleState = copySeasonChronicle(EMPTY_SEASON_CHRONICLE);
     private _chronicleRandom: RandomSource | null = null;
+    // 代際傳承里程碑隊列（LOOP-04，PROG-2-2204）：抓周、及冠依序處理，隨存檔
+    private _lineageQueue: LineageMilestone[] = [];
     /** 最近一次 recordLoginAt 是不是換日後第一次登入（季報首登彈窗用，不存檔） */
     private _loginStartedNewDay = false;
     private _rivals: RivalWorld = createRivalWorld();
@@ -2113,6 +2116,7 @@ export class GameSession {
         this._seasonPersonality = { ...EMPTY_SEASON_PERSONALITY_STATE, pending: [] };
         this._seasonChronicle = copySeasonChronicle(EMPTY_SEASON_CHRONICLE);
         this._loginStartedNewDay = false;
+        this._lineageQueue = [];
         this._rivals = this._withRivalOfficers(createRivalWorld());
         this._mercenaries = createEmptyMercenaryBundle();
     }
@@ -2698,6 +2702,40 @@ export class GameSession {
         };
         if (this._autoSave && this._save) await this.save();
         return { ok: true, line: `${def.title}・${instance.generalName}：${option.label}，${option.note}` };
+    }
+
+    /** 隊首仍有效的代際里程碑（陣亡、離隊、已抓過周的自動略過）；沒有時為 null（PROG-2-2204） */
+    public get pendingLineageMilestone(): (LineageMilestone & { generalName: string }) | null {
+        const roster = this._roster.getAll() as unknown as LineageGeneral[];
+        const valid = this._lineageQueue.filter((m) => isMilestoneValid(m, roster));
+        if (valid.length !== this._lineageQueue.length) this._lineageQueue = valid;
+        const head = valid[0];
+        if (!head) return null;
+        const general = roster.find((g) => g.id === head.generalId);
+        return { ...head, generalName: general?.name ?? head.generalId };
+    }
+
+    /** 抓周三選一：隊首須為抓周；兩項屬性 ×1.1 寫回名冊並移出隊列，自動存檔 */
+    public async chooseGrasp(itemId: GraspItemId): Promise<{ ok: true; line: string } | { ok: false; reason: 'none' }> {
+        const head = this.pendingLineageMilestone;
+        const def = graspItemDef(itemId);
+        if (!head || head.kind !== 'grasp' || !def) return { ok: false, reason: 'none' };
+        const general = this._roster.getAll().find((g) => g.id === head.generalId);
+        const updated = general ? applyGraspChoice(general as unknown as LineageGeneral, itemId) : null;
+        if (!general || !updated) return { ok: false, reason: 'none' };
+        this._roster.replaceAll(this._roster.getAll().map((g) => (g.id === general.id ? (updated as unknown as GeneralConfig) : g)));
+        this._lineageQueue = this._lineageQueue.filter((m) => !(m.kind === 'grasp' && m.generalId === general.id));
+        if (this._autoSave && this._save) await this.save();
+        return { ok: true, line: `${general.name}${def.label}，志在${def.aspiration}：${def.note}` };
+    }
+
+    /** 關掉隊首的及冠通知（送入學府或稍後）；回傳該子嗣 id */
+    public async dismissComingOfAge(): Promise<string | null> {
+        const head = this.pendingLineageMilestone;
+        if (!head || head.kind !== 'coming-of-age') return null;
+        this._lineageQueue = this._lineageQueue.slice(1);
+        if (this._autoSave && this._save) await this.save();
+        return head.generalId;
     }
 
     private _synthesizeChronicle(season: number): SeasonChronicleState {
@@ -4541,6 +4579,12 @@ export class GameSession {
         this._seasonPersonality = rollSeasonPersonalityEvents(this._roster.getAll(), governanceSeason, personalityRandom);
         // 三國季報（LOOP-03）：同樣用另一條序列；上一季沒抉擇的奇遇作廢
         this._seasonChronicle = this._synthesizeChronicle(governanceSeason);
+        // 代際傳承（LOOP-04）：本季 5 歲開獎的子嗣排入抓周，跨過 15 歲的已開獎子嗣排入及冠入學
+        this._lineageQueue = enqueueLineageMilestones(this._lineageQueue, [
+            ...unveil.events.map((event) => ({ kind: 'grasp' as const, generalId: event.generalId, season: governanceSeason })),
+            ...comingOfAgeCrossings(beforeRoster as unknown as LineageGeneral[], this._roster.getAll() as unknown as LineageGeneral[])
+                .map((generalId) => ({ kind: 'coming-of-age' as const, generalId, season: governanceSeason })),
+        ]);
         const eventNotice = this.governanceEventNotice;
         const yuedanLines = advance.yearEnded ? yuedanBannerLines(this._roster.getAll()) : [];
         const omenLines = advance.yearEnded ? this._recordChildOmens() : [];
@@ -5414,6 +5458,7 @@ export class GameSession {
             ...(this._governanceEvent ? { governanceEvent: { ...this._governanceEvent } } : {}),
             ...(this._governanceBoosts.length > 0 ? { governanceBoosts: this._governanceBoosts.map((boost) => ({ ...boost })) } : {}),
             ...(this._seasonChronicle.season >= 0 ? { seasonChronicle: copySeasonChronicle(this._seasonChronicle) } : {}),
+            ...(this._lineageQueue.length > 0 ? { lineageQueue: this._lineageQueue.map((m) => ({ ...m })) } : {}),
             ...(this._seasonPersonality.season >= 0 ? { seasonPersonality: { ...this._seasonPersonality, pending: this._seasonPersonality.pending.map((e) => ({ ...e })) } } : {}),
             rivals: this._rivals,
             prison: this.prison,
@@ -5737,6 +5782,7 @@ export class GameSession {
         this._governanceBoosts = normalizeGovernanceBoosts(snapshot.governanceBoosts);
         this._seasonPersonality = normalizeSeasonPersonalityState(snapshot.seasonPersonality);
         this._seasonChronicle = normalizeSeasonChronicle(snapshot.seasonChronicle);
+        this._lineageQueue = normalizeLineageQueue(snapshot.lineageQueue);
         this._rivals = this._withRivalOfficers(normalizeRivalWorld(snapshot.rivals));
         this._mercenaries = normalizeMercenaryBundle(snapshot.mercenaries);
         if (this._postLoadHook) {
