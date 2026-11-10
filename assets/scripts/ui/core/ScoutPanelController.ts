@@ -37,7 +37,7 @@ export const SCOUT_PANEL_TEXTS = {
     mechanicHeading: '核心機制',
     riskHeading: '風險標籤',
     loadoutHeading: '推薦檢核',
-    noIntel: '暫無情報',
+    noIntel: '尚未偵查：目前沒有可用情報，未列出不代表沒有風險。',
     loadoutReady: '✔ 已具備對策',
     loadoutMissing: '⚠ 缺少：{gaps}',
     loadoutRisk: '☠ 高風險：缺少{gaps}',
@@ -139,6 +139,7 @@ export class ScoutPanelController {
                 scoutRiskHeading: t.riskHeading,
                 scoutRiskBody: intel && intel.riskTags.length > 0 ? intel.riskTags.map((tag) => `【${tag}】`).join(' ') : t.noIntel,
                 scoutLoadoutHeading: t.loadoutHeading,
+                scoutLoadoutHelp: intel?.loadoutGaps.length ? scoutLoadoutHelp(intel.loadoutGaps) : '對策比對的是目前主將已裝備的戰法，不是整個背包；仍可自行決定是否出征。',
                 scoutLoadoutReady: t.loadoutReady,
                 scoutLoadoutMissing: t.loadoutMissing.replace('{gaps}', gaps),
                 scoutLoadoutRisk: t.loadoutRisk.replace('{gaps}', gaps),
@@ -170,4 +171,10 @@ export class ScoutPanelController {
         this._confirming = false;
         resolve?.(sortie);
     }
+}
+
+/** 僅提供裝備路徑，不虛構玩家持有的戰法或敵軍站位。 */
+export function scoutLoadoutHelp(gaps: readonly string[]): string {
+    if (gaps.length === 0) return '';
+    return `返回大廳→武將→主將→「技」，裝備帶【${gaps.join('、')}】標籤的戰法；背包有但未裝備不算。若尚未持有，可稍後取得或先行出征。`;
 }

@@ -1,0 +1,116 @@
+{
+  "id": "battle-operation-guide-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "BattleOperationGuideRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "BattleGuideCard",
+        "widget": {
+          "top": 100,
+          "left": 330,
+          "right": 390
+        },
+        "height": 112,
+        "skinSlot": "tutorial.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "BattleGuideText",
+            "id": "guideText",
+            "widget": {
+              "top": 12,
+              "bottom": 12,
+              "left": 20,
+              "right": 20
+            },
+            "text": "",
+            "styleSlot": "tutorial.label.body"
+          }
+        ]
+      },
+      {
+        "type": "container",
+        "name": "TutorialHighlight",
+        "id": "tutorialHighlight",
+        "active": false,
+        "width": 240,
+        "height": 88,
+        "children": [
+          {
+            "type": "panel",
+            "name": "HighlightTop",
+            "widget": {
+              "top": 0,
+              "left": 0,
+              "right": 0
+            },
+            "height": 4,
+            "skinSlot": "tutorial.button.confirm.bg"
+          },
+          {
+            "type": "panel",
+            "name": "HighlightBottom",
+            "widget": {
+              "bottom": 0,
+              "left": 0,
+              "right": 0
+            },
+            "height": 4,
+            "skinSlot": "tutorial.button.confirm.bg"
+          },
+          {
+            "type": "panel",
+            "name": "HighlightLeft",
+            "widget": {
+              "top": 0,
+              "bottom": 0,
+              "left": 0
+            },
+            "width": 4,
+            "skinSlot": "tutorial.button.confirm.bg"
+          },
+          {
+            "type": "panel",
+            "name": "HighlightRight",
+            "widget": {
+              "top": 0,
+              "bottom": 0,
+              "right": 0
+            },
+            "width": 4,
+            "skinSlot": "tutorial.button.confirm.bg"
+          },
+          {
+            "type": "label",
+            "name": "TutorialPointer",
+            "id": "tutorialPointer",
+            "widget": {
+              "bottom": -44,
+              "hCenter": true
+            },
+            "width": 600,
+            "height": 40,
+            "text": "▲ 操作此處",
+            "styleSlot": "tutorial.label.title"
+          }
+        ]
+      }
+    ]
+  }
+}

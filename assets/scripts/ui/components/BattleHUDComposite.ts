@@ -126,6 +126,7 @@ export class BattleHUDComposite extends CompositePanel {
      * Unity 對照：MonoBehaviour.Start()
      */
     protected override _onAfterBuildReady(binder: UITemplateBinder): void {
+        binder.getButton('btnHudUltimate')?.node.on(Button.EventType.CLICK, () => { services().event.emit('hud-ultimate-requested', undefined); }, this);
         this._turnLabel           = binder.getLabel('TurnLabel');
         this._stageTitleLabel     = binder.getLabel('StageTitleLabel');
         this._stageSubtitleLabel  = binder.getLabel('StageSubtitleLabel');

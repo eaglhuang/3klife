@@ -223,6 +223,7 @@ export class ActionCommandComposite extends CompositePanel {
 
     private _subscribeEvents(): void {
         this._unsubs.push(
+            services().event.on('hud-ultimate-requested', () => this._onUltimateClick()),
             services().event.on(EVENT_NAMES.GeneralSpChanged, this._onSpChanged.bind(this)),
             services().event.on(EVENT_NAMES.GeneralSkillUsed, this._onSkillUsed.bind(this)),
         );

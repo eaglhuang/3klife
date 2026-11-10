@@ -36,6 +36,7 @@ export interface LobbyOpeningPanelPorts {
     /** 開場面板完成顯示／退場後，通知宿主重查延後彈窗。 */
     onOverlayChanged?: () => void;
     warn: (message: string, error?: unknown) => void;
+    focusTutorial?: (host: LobbyOpeningPanelHost, step: number) => void;
 }
 
 /** 大廳開場面板接線；Scene 保留 Cocos 掛載與公開入口。 */
@@ -81,6 +82,7 @@ export class LobbyOpeningPanels {
         if (!host.node.active) return;
         this._ports.bringToFront(host.node);
         if (host.binder) applyFlowView(host.binder, onboarding.getFlowView());
+        this._ports.focusTutorial?.(host, this._ports.session().onboarding.nextIndex);
     }
 
     public async nextTutorial(): Promise<void> {

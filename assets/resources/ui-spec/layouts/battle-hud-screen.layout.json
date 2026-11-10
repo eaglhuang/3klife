@@ -2114,7 +2114,7 @@
                     ]
                   },
                   {
-                    "type": "panel",
+                    "type": "button",
                     "name": "BattleHudScreen_div_136",
                     "widget": {
                       "top": 0,
@@ -2149,7 +2149,8 @@
                         "text": "ULTIMATE",
                         "styleSlot": "auto.battle-hud-screen.battlehudscreen_div_138"
                       }
-                    ]
+                    ],
+                    "id": "btnHudUltimate"
                   },
                   {
                     "type": "panel",
