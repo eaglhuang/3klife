@@ -1,6 +1,6 @@
 {
   "taskId": "UI-2-0121",
-  "updatedAt": "2026-11-10T05:36:04.874Z",
+  "updatedAt": "2026-11-10T05:40:41.717Z",
   "evidence": [
     {
       "evidenceKind": "validation",
@@ -11255,6 +11255,87 @@
         "commandRunCache": {
           "schemaId": "atm.commandRunCache.v1",
           "cacheKey": "sha256:7de7967b01f01ccbe3845879c6c2b1192a8bd808724dd776aefd199f486db896",
+          "reusedRunCount": 0,
+          "runCount": 1,
+          "sourcePath": null
+        }
+      }
+    },
+    {
+      "evidenceKind": "validation",
+      "evidenceType": "test",
+      "summary": "Auto-run: node tools_node/generate-general-avatars.js zhou-yu --verify",
+      "artifactPaths": [],
+      "evidenceFreshness": "fresh",
+      "producedBy": "codex-gpt-6.1-terra",
+      "sessionId": "session-20261105171558-codex-gpt-6.1-sol-UI-2-0121-3220962ee1",
+      "createdAt": "2026-11-10T05:40:41.717Z",
+      "details": {
+        "actorId": "codex-gpt-6.1-terra",
+        "sessionId": "session-20261105171558-codex-gpt-6.1-sol-UI-2-0121-3220962ee1",
+        "kind": "test",
+        "freshness": "fresh",
+        "commandRuns": [
+          {
+            "command": "node tools_node/generate-general-avatars.js zhou-yu --verify",
+            "exitCode": 0,
+            "stdoutSha256": "sha256:cfad82fc0fe5f9657a6cbbcd6428ca0b4a456b64c1ce5cad57f37ba742952c2a",
+            "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "startedAt": "2026-11-10T05:40:41.394Z",
+            "finishedAt": "2026-11-10T05:40:41.716Z",
+            "durationMs": 322,
+            "cached": false,
+            "cwd": ".",
+            "runnerKind": "dev-source",
+            "sourceCommit": "3d5b4c20713ec82e26135f98bb27c0a90d9ce913",
+            "cacheKey": "sha256:43e822b941b5e8612397a62a1581d3504061cd3738b2ee356e16f640d94a8051",
+            "generatedAt": "2026-11-10T05:40:41.716Z",
+            "canonicalObservation": {
+              "schemaId": "atm.telemetryObservation.v1",
+              "specVersion": "0.1.0",
+              "migration": {
+                "strategy": "none",
+                "fromVersion": null,
+                "notes": "Canonical telemetry observation contract."
+              },
+              "observationId": "sha256:43e822b941b5e8612397a62a1581d3504061cd3738b2ee356e16f640d94a8051",
+              "producerId": "evidence.command-runs",
+              "producerVersion": "0.1.0",
+              "observationKind": "command-run",
+              "status": "canonical",
+              "source": "evidence-command-run-normalizer",
+              "sourceAvailability": "available",
+              "storagePolicy": "tracked-compact-digest",
+              "generatedAt": "2026-11-10T05:40:41.716Z",
+              "observedAt": "2026-11-10T05:40:41.716Z",
+              "startedAt": "2026-11-10T05:40:41.394Z",
+              "finishedAt": "2026-11-10T05:40:41.716Z",
+              "durationMs": 322,
+              "laneSessionId": null,
+              "taskId": "UI-2-0121",
+              "batchId": null,
+              "waveId": null,
+              "inputDigest": "sha256:b95afaa92a6345f07fc3bdc5cd0c9fe9188066c33fd71b6aa89d3dda13ea830e",
+              "outputDigest": "sha256:94f8ad92633a6d2646237e162fe35e7ddbacd57fc6bdad436c3b01b510068b3a",
+              "cache": {
+                "key": "sha256:43e822b941b5e8612397a62a1581d3504061cd3738b2ee356e16f640d94a8051",
+                "hit": false
+              },
+              "extensions": {
+                "command": "node tools_node/generate-general-avatars.js zhou-yu --verify",
+                "cwd": ".",
+                "exitCode": 0,
+                "validators": [],
+                "runnerKind": "dev-source",
+                "sourceCommit": "3d5b4c20713ec82e26135f98bb27c0a90d9ce913",
+                "runnerVersion": null
+              }
+            }
+          }
+        ],
+        "commandRunCache": {
+          "schemaId": "atm.commandRunCache.v1",
+          "cacheKey": "sha256:babe08fb0281fc847de739603e8810174c7a9730f2bdd6d6da6f1bf737023580",
           "reusedRunCount": 0,
           "runCount": 1,
           "sourcePath": null
