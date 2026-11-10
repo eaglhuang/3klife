@@ -3438,6 +3438,8 @@ export class LobbyScene extends Component {
             this._lobbyHall?.playMapTurn(this._pendingHallMapTurn);
             this._pendingHallMapTurn = null;
         }
+        // 新手引導未看完時維持在大堂之上（PROG-2-2215：大堂改在開場結束才開，不能蓋住引導）
+        this._openingPanels?.refreshOnboarding();
     }
 
     /** 幕府大廳左右牆（UI-2-0153）：左軍務、右內政，資料同任務板；任務資料沒載到時維持設計稿文字 */
