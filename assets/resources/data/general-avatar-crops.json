@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "fa-zheng": {
+      "x": 340,
+      "y": 0,
+      "w": 360,
+      "h": 360,
+      "source": "reviewed",
+      "$note": "2026-11-10 法正蜀綠文士新版，保留髮冠、面容與肩線。"
+    },
     "ding-feng": {
       "x": 360,
       "y": 30,
