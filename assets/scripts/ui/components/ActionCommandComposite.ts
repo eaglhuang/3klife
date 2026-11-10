@@ -296,7 +296,7 @@ export class ActionCommandComposite extends CompositePanel {
     private _onUltimateClick(): void {
         const isReady = this._maxSp > 0 && this._currentSp >= this._maxSp;
         if (!isReady) {
-            services().event.emit(EVENT_NAMES.ShowToast, { text: services().i18n.t('ui.ultimate.charging') });
+            services().event.emit(EVENT_NAMES.ShowToast, { text: `${services().i18n.t('ui.ultimate.charging')}（目前 SP ${this._currentSp}/${this._maxSp}，需要 ${this._maxSp}）` });
             return;
         }
 

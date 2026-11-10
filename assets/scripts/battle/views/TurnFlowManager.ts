@@ -62,6 +62,7 @@ export class TurnFlowManager {
 
     const playerResult = c.ctrl.resolvePlayerTurn();
     this.scene.scheduleOnce(() => this.pollCombatDrain(0, () => {
+      if (!c.isAdvancingTurn || this._advanceTurnGeneration !== gen) return;
       if (playerResult !== 'ongoing') {
         this.finalizeAdvance();
         return;
@@ -72,9 +73,11 @@ export class TurnFlowManager {
       this.bridge.playTurnBanner(Faction.Enemy);
       this.bridge.showEnemyThinkingPanel();
       this.scene.scheduleOnce(() => {
+        if (!c.isAdvancingTurn || this._advanceTurnGeneration !== gen) return;
         // 「敵軍行動中…」一路顯示到我方回合開始，涵蓋敵軍動作演出（PROG-2-1891）
         c.ctrl?.resolveEnemyTurn();
           this.scene.scheduleOnce(() => this.pollCombatDrain(0, () => {
+            if (!c.isAdvancingTurn || this._advanceTurnGeneration !== gen) return;
             c.ctrl?.finalizeEnemyTurn();
             this.finalizeAdvance();
           }), BATTLE_TURN_FLOW_TIMING.postSubturnVisualBufferSec);
@@ -89,6 +92,7 @@ export class TurnFlowManager {
     this.bridge.hideEnemyThinkingPanel();
     this.bridge.playTurnBanner(Faction.Player);
     c.boardRenderer?.setDeployHintFaction(Faction.Player);
+    this.bridge.refreshBattleViews();
   }
 
   private pollCombatDrain(attempts: number, onDone: () => void): void {
@@ -109,7 +113,10 @@ export class TurnFlowManager {
 
   public onPlayerDeployed(): void {
     this.ctx.deployRuntime?.showToast('部署完成，等待敵軍行動...', BATTLE_TURN_FLOW_TIMING.deployCompletedToastSec);
-    this.scene.scheduleOnce(() => this.onEndTurn(), BATTLE_TURN_FLOW_TIMING.autoAdvanceAfterDeploySec);
+    const gen = this._advanceTurnGeneration;
+    this.scene.scheduleOnce(() => {
+      if (this._advanceTurnGeneration === gen) this.onEndTurn();
+    }, BATTLE_TURN_FLOW_TIMING.autoAdvanceAfterDeploySec);
   }
 
   public onTactics(): void {

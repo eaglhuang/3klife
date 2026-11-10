@@ -15,7 +15,8 @@ export class BattleTutorialHint {
             events.on(EVENT_NAMES.UnitDeployed, d => { if (d.faction === Faction.Player) advance('deployed'); }),
             events.on(EVENT_NAMES.GeneralSpChanged, d => { if (d.faction === Faction.Player && d.maxSp > 0 && d.sp >= d.maxSp) advance('sp-ready'); }),
             events.on(EVENT_NAMES.GeneralSkillUsed, d => { if (d.faction === Faction.Player && d.sourceType === SkillSourceType.Ultimate) advance('ultimate-used'); }),
-            events.on(EVENT_NAMES.BattleEnded, d => { if (d.result === 'player-win') advance('won'); }),
+            events.on(EVENT_NAMES.TurnPhaseChanged, d => { if (d.turn > 1) advance('turn-ended'); }),
+            events.on(EVENT_NAMES.BattleEnded, () => advance('ended')),
         );
         this._showCurrent();
     }
