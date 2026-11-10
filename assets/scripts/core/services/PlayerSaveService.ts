@@ -1,5 +1,6 @@
 import { normalizeGovernanceBoosts, type ActiveGovernanceBoost } from '../systems/GovernanceEfficiencyItem';
 import { normalizeSeasonPersonalityState, type SeasonPersonalityState } from '../systems/SeasonPersonalityEvents';
+import { normalizeSeasonChronicle, type SeasonChronicleState } from '../systems/SeasonChronicle';
 import type { InfusionRecord } from '../systems/DuplicatePullRouting';
 import { normalizeMarriageProposal, type MarriageProposal } from '../systems/MarriageProposal';
 import { normalizeFamilySynergy, type FamilySynergyLedger } from '../systems/FamilySynergy';
@@ -287,6 +288,8 @@ export interface PlayerSaveSnapshot {
     governanceBoosts?: ActiveGovernanceBoost[];
     /** 換季武將性格事件（PROG-2-2201）；後加的選填欄位，舊檔讀回為空 */
     seasonPersonality?: SeasonPersonalityState;
+    /** 三國季報（PROG-2-2203）；後加的選填欄位，舊檔讀回為空 */
+    seasonChronicle?: SeasonChronicleState;
     /** 他國 AI 勢力狀態；後加的選填欄位，舊檔讀回為初始勢力（PROG-2-1088） */
     rivals?: RivalWorld;
     /** 傭兵存檔包（試用、薪水、冷卻）；後加的選填欄位，舊檔讀回為空包（MERC-01） */
@@ -631,6 +634,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.governanceEvent ? { governanceEvent: normalizeGovernanceEvent(snapshot.governanceEvent) } : {}),
         ...(snapshot.governanceBoosts ? { governanceBoosts: normalizeGovernanceBoosts(snapshot.governanceBoosts) } : {}),
         ...(snapshot.seasonPersonality ? { seasonPersonality: normalizeSeasonPersonalityState(snapshot.seasonPersonality) } : {}),
+        ...(snapshot.seasonChronicle ? { seasonChronicle: normalizeSeasonChronicle(snapshot.seasonChronicle) } : {}),
         ...(snapshot.rivals !== undefined ? { rivals: normalizeRivalWorld(snapshot.rivals) } : {}),
         ...(snapshot.mercenaries !== undefined ? { mercenaries: normalizeMercenaryBundle(snapshot.mercenaries) } : {}),
         ...(snapshot.onboarding !== undefined ? { onboarding: normalizeOnboardingState(snapshot.onboarding) } : {}),

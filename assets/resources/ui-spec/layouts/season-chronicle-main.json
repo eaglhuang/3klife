@@ -1,0 +1,258 @@
+{
+  "id": "season-chronicle-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "SeasonChronicleRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "SeasonChronicleBackdrop",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "skinSlot": "season.chronicle.backdrop.bg"
+      },
+      {
+        "type": "panel",
+        "name": "SeasonChronicleCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 960,
+        "height": 720,
+        "skinSlot": "season.chronicle.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "SeasonChronicleTitle",
+            "id": "chronicleTitle",
+            "widget": {
+              "top": 20,
+              "left": 24,
+              "right": 200
+            },
+            "height": 48,
+            "text": "",
+            "styleSlot": "season.chronicle.label.title"
+          },
+          {
+            "type": "button",
+            "name": "SeasonChronicleClose",
+            "id": "btnCloseChronicle",
+            "widget": {
+              "top": 20,
+              "right": 24
+            },
+            "height": 48,
+            "width": 160,
+            "skinSlot": "season.chronicle.close.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "SeasonChronicleCloseLabel",
+                "id": "closeChronicleLabel",
+                "widget": {
+                  "top": 10,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "收起季報",
+                "styleSlot": "season.chronicle.label.button"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "SeasonChronicleTrendBox",
+            "widget": {
+              "top": 84,
+              "left": 24,
+              "right": 24
+            },
+            "height": 80,
+            "skinSlot": "season.chronicle.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "SeasonChronicleTrend",
+                "id": "chronicleTrend",
+                "widget": {
+                  "top": 10,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 60,
+                "text": "",
+                "styleSlot": "season.chronicle.label.body"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "SeasonChronicleGossipBox",
+            "widget": {
+              "top": 180,
+              "left": 24,
+              "right": 24
+            },
+            "height": 150,
+            "skinSlot": "season.chronicle.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "SeasonChronicleGossip",
+                "id": "chronicleGossip",
+                "widget": {
+                  "top": 10,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 130,
+                "text": "",
+                "styleSlot": "season.chronicle.label.body"
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "SeasonChronicleEncounterTitle",
+            "id": "encounterTitle",
+            "widget": {
+              "top": 348,
+              "left": 24,
+              "right": 24
+            },
+            "height": 36,
+            "text": "",
+            "styleSlot": "season.chronicle.label.heading"
+          },
+          {
+            "type": "panel",
+            "name": "SeasonChronicleEncounterBox",
+            "widget": {
+              "top": 392,
+              "left": 24,
+              "right": 24
+            },
+            "height": 200,
+            "skinSlot": "season.chronicle.row.bg",
+            "children": [
+              {
+                "type": "container",
+                "name": "SeasonChronicleEncounterText",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "SeasonChronicleEncounterDesc",
+                    "id": "encounterDesc",
+                    "widget": {
+                      "top": 10,
+                      "left": 16,
+                      "right": 16
+                    },
+                    "height": 64,
+                    "text": "",
+                    "styleSlot": "season.chronicle.label.body"
+                  },
+                  {
+                    "type": "label",
+                    "name": "SeasonChronicleEncounterNote",
+                    "id": "encounterNote",
+                    "widget": {
+                      "top": 84,
+                      "left": 16,
+                      "right": 16
+                    },
+                    "height": 104,
+                    "text": "",
+                    "styleSlot": "season.chronicle.label.note"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "SeasonChronicleEncounterB",
+            "id": "btnEncounterB",
+            "widget": {
+              "bottom": 24,
+              "left": 24
+            },
+            "height": 48,
+            "width": 420,
+            "skinSlot": "season.chronicle.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "SeasonChronicleEncounterBLabel",
+                "id": "encounterOptionBLabel",
+                "widget": {
+                  "top": 10,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "",
+                "styleSlot": "season.chronicle.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "SeasonChronicleEncounterA",
+            "id": "btnEncounterA",
+            "widget": {
+              "bottom": 24,
+              "right": 24
+            },
+            "height": 48,
+            "width": 420,
+            "skinSlot": "season.chronicle.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "SeasonChronicleEncounterALabel",
+                "id": "encounterOptionALabel",
+                "widget": {
+                  "top": 10,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "",
+                "styleSlot": "season.chronicle.label.button"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
