@@ -12,7 +12,8 @@
  *
  * Unity 對照：BattleUIManager（掛 Canvas 根的 Coordinator Component）
  */
-import { _decorator, Component, Node, UITransform, Widget } from 'cc';
+import { _decorator, Component, Node, UITransform, Widget, Button, Label, Vec3 } from 'cc';
+import { battleCoachPlacement, type CoachRect } from '../core/BattleCoachPlacement';
 import { UIScreenPreviewHost } from './UIScreenPreviewHost';
 import { placeTutorialTarget } from '../core/OnboardingTargetHighlight';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
@@ -70,6 +71,9 @@ export class BattleScenePanel extends Component {
 
     private _guideHost: UIScreenPreviewHost | null = null;
     private _guideMount: Promise<void> | null = null;
+    private _guideMinimized = false;
+    private _guideControlsBound = false;
+    private readonly _guideLayoutTick = (): void => { this._layoutOperationGuide(); };
     private _guideHint: { message: string; target: string } | null = null;
 
     private async _showOperationGuide(hint: { message: string; target: string } | null): Promise<void> {
@@ -93,13 +97,61 @@ export class BattleScenePanel extends Component {
         const current = this._guideHint;
         this._guideHost.node.active = !!current;
         if (!current) return;
-        const find = (root: Node): Node | null => {
-            if (root.name === current.target) return root;
-            for (const child of root.children) { const found = find(child); if (found) return found; }
-            return null;
+        if (!this._guideControlsBound) {
+            this._guideControlsBound = true;
+            const binder = this._guideHost.binder;
+            binder?.getNode('guidePrevious')?.on(Button.EventType.CLICK, () => services().event.emit('first-battle-guide-previous', undefined), this);
+            binder?.getNode('guideNext')?.on(Button.EventType.CLICK, () => services().event.emit('first-battle-guide-next', undefined), this);
+            binder?.getNode('guideMinimize')?.on(Button.EventType.CLICK, () => { this._guideMinimized = true; this._layoutOperationGuide(); }, this);
+            binder?.getNode('guideResume')?.on(Button.EventType.CLICK, () => { this._guideMinimized = false; this._layoutOperationGuide(); }, this);
+            this.schedule(this._guideLayoutTick, 0.25);
+        }
+        this._layoutOperationGuide();
+    }
+
+    /** 以真正渲染節點邊界避讓HUD；不把整個透明Canvas當障礙物。 */
+    private _layoutOperationGuide(): void {
+        const host = this._guideHost;
+        const current = this._guideHint;
+        if (!host?.node.isValid || !current) return;
+        const binder = host.binder;
+        const root = host.node.getComponent(UITransform);
+        if (!root) return;
+        const obstacles: CoachRect[] = [];
+        const reserved = new Set(['BattleHudScreen_div_1','TopBar','ProgressBars','FortressBarsPlate',
+            'TigerTallyRoot','SidePanelRoot','ActionCommandRoot','BattleHudScreen_div_122',
+            'BattleHudScreen_button_1','DeployRoot','DeployPanelRoot','StrategistHudRoot']);
+        let target: Node | null = null;
+        const visit = (n: Node): void => {
+            if (n === host.node || !n.activeInHierarchy) return;
+            if (n.name === current.target) target = n;
+            const tf = n.getComponent(UITransform);
+            if (tf) {
+                const b = tf.getBoundingBoxToWorld();
+                const a = root.convertToNodeSpaceAR(new Vec3(b.x,b.y,0));
+                const z = root.convertToNodeSpaceAR(new Vec3(b.x+b.width,b.y+b.height,0));
+                const r = { x: Math.min(a.x,z.x)+root.width*root.anchorX,
+                    y: root.height*(1-root.anchorY)-Math.max(a.y,z.y), width: Math.abs(z.x-a.x), height: Math.abs(z.y-a.y) };
+                if (reserved.has(n.name) || (n.getComponent(Label) && r.y < 184 && r.y+r.height > 0)) obstacles.push(r);
+            }
+            for (const child of n.children) visit(child);
         };
-        this._guideHost.binder?.setTexts({ guideText: current.message, tutorialPointer: '▲ 操作此處' });
-        placeTutorialTarget(this._guideHost.binder, this.node.parent ? find(this.node.parent) : null);
+        if (this.node.parent) visit(this.node.parent);
+        const expanded = !this._guideMinimized && battleCoachPlacement(root.width,root.height,obstacles);
+        const compact = !expanded;
+        const rect = expanded || battleCoachPlacement(root.width,root.height,obstacles,true);
+        binder?.setActives({ guideCard: !!rect && !compact, guideResume: !!rect && compact });
+        binder?.setTexts({ guideText: current.message });
+        const panel = binder?.getNode(compact ? 'guideResume' : 'guideCard');
+        if (panel && rect) {
+            const widget = panel.getComponent(Widget);
+            if (widget) widget.enabled = false;
+            panel.getComponent(UITransform)?.setContentSize(rect.width,rect.height);
+            panel.setPosition(rect.x+rect.width/2-root.width*root.anchorX,
+                root.height*(1-root.anchorY)-rect.y-rect.height/2,0);
+            for (const child of panel.children) child.getComponent(Widget)?.updateAlignment();
+        }
+        placeTutorialTarget(binder, compact ? null : target);
     }
 
     onLoad(): void {
@@ -226,6 +278,8 @@ export class BattleScenePanel extends Component {
     }
 
     onDestroy(): void {
+        this.unschedule(this._guideLayoutTick);
+        this._guideHost?.node.destroy();
         this._unsubs.forEach(fn => fn());
         this._unsubs.length = 0;
     }
