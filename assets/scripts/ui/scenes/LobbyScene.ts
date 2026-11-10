@@ -3813,7 +3813,9 @@ export class LobbyScene extends Component {
         ]);
         this._sessionEventUnsubscribers.push(
             services().event.on(GAME_SESSION_EVENTS.DaughterComingOfAge, (payload?: unknown) => {
-                for (const daughter of (payload as DaughterAwaitingRoute[] | undefined) ?? []) {
+                // 先存成具名變數再迴圈：Cocos 建置用的 Babel 遇到 for-of 裡「型別斷言 ?? []」會崩，tsc 抓不到
+                const daughters: DaughterAwaitingRoute[] = (payload as DaughterAwaitingRoute[] | undefined) ?? [];
+                for (const daughter of daughters) {
                     services().event.emit('SHOW_TOAST', { message: daughterComingOfAgeToast(daughter.name), duration: 3 });
                 }
                 this._openDaughterRoutePopupIfPending();
