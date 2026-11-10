@@ -1535,7 +1535,8 @@
                   }
                 ]
               }
-            ]
+            ],
+            "active": false
           },
           {
             "type": "panel",
@@ -1896,7 +1897,8 @@
                   }
                 ]
               }
-            ]
+            ],
+            "active": false
           },
           {
             "type": "container",
