@@ -303,6 +303,7 @@ export class BattleUIBridge {
     c.unitRenderer?.renderState(state);
     // 更新 deploy runtime 的技能可發動狀態
     const pg = state.playerGeneral;
+    if (pg) services().event.emit(EVENT_NAMES.GeneralSpChanged, { faction: Faction.Player, sp: pg.currentSp, maxSp: pg.maxSp });
     if (pg && c.deployRuntime) {
       c.deployRuntime.updateSkillStatus(pg.canUseSkill() && c.ctrl.canUsePlayerSkills());
     }
@@ -795,8 +796,7 @@ export class BattleUIBridge {
     const state = this.ctx.ctrl?.state;
     if (!state || state.battleEndAnnounced) return;
     this.appendLog('我方撤退，本場判定戰敗');
-    state.battleEndAnnounced = true;
-    services().event.emit(EVENT_NAMES.BattleEnded, { result: 'enemy-win' });
+    this.ctx.ctrl?.retreatBattle();
   }
 
   /** 自動鈕結算留 AUTO_RESOLVE 快照與日誌（doc_spec_0015 §F-4，PROG-2-1185）；在 BattleEnded 前寫入，由戰後存檔一併帶走 */

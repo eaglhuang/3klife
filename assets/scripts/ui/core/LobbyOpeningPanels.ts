@@ -98,7 +98,7 @@ export class LobbyOpeningPanels {
 
     /**
      * 開場信件面板（PROG-2-1305）。新局在第一幕後由 openLetterThen 開信，關信後才接下一步
-     * （PROG-2-2215：信 → 六名將登場 → 宿命轉蛋）；舊玩家未讀照常顯示。已讀後不再自動開；關閉時記為已讀並存檔。
+     * （PROG-2-2222：信 → 六名將登場 → 宿命轉蛋）；舊玩家未讀照常顯示。已讀後不再自動開；關閉時記為已讀並存檔。
      */
     public async mountOpeningLetter(): Promise<void> {
         this._openingLetterHost = await this._ports.mountHost('OpeningLetterHost', 'opening-letter-screen', [
@@ -179,7 +179,7 @@ export class LobbyOpeningPanels {
     }
 
     /**
-     * 新局開信，讀完關掉才執行 next（PROG-2-2215：信之後接六名將登場）。
+     * 新局開信，讀完關掉才執行 next（PROG-2-2222：信之後接六名將登場）。
      * 信已讀或面板沒掛上時直接執行 next，不讓開場卡住。
      */
     public openLetterThen(next: () => void): void {

@@ -2,7 +2,7 @@
  * InitialShowcaseController.test.ts — 六位初始名將逐一登場（OPEN-06，PROG-2-1365）headless 測試
  *
  * 鎖住：依規格順序翻六位、最後一位回傳 true、結束後不再動作；FlowView 文字對應名將資料；
- * 最後一位按鈕改為「前往宿命轉蛋」（PROG-2-2215：名將說完引導進轉蛋）；layout 含所有 FlowView key，skin 含全部 slot。
+ * 最後一位按鈕改為「前往宿命轉蛋」（PROG-2-2222：名將說完引導進轉蛋）；layout 含所有 FlowView key，skin 含全部 slot。
  *
  * Unity 對照：EditMode Test 依序走訪 Showcase 清單，驗證每一筆的顯示資料與結束條件。
  */
@@ -49,7 +49,7 @@ export function createInitialShowcaseControllerSuite(): TestSuite {
         assert.isTrue(view.enabled.btnShowcaseNext);
     });
 
-    suite.test('最後一位按鈕改為前往宿命轉蛋（PROG-2-2215）', () => {
+    suite.test('最後一位按鈕改為前往宿命轉蛋（PROG-2-2222）', () => {
         const intro = new InitialShowcaseController();
         for (let i = 0; i < INITIAL_SHOWCASE_ENTRIES.length - 1; i++) intro.next();
         assert.equals('前往宿命轉蛋', intro.getFlowView().texts.btnShowcaseNextLabel);

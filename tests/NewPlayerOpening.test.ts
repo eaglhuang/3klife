@@ -50,7 +50,7 @@ export function createNewPlayerOpeningSuite(): TestSuite {
         assert.isFalse(intro.next());
     });
 
-    suite.test('幕序（PROG-2-2215）：start → intro；intro-done → showcase；showcase-done → destiny；destiny-locked → 結束', () => {
+    suite.test('幕序（PROG-2-2222）：start → intro；intro-done → showcase；showcase-done → destiny；destiny-locked → 結束', () => {
         const flow = createNewPlayerOpeningFlow();
         assert.equals('intro', flow.start()!.id);
         assert.equals('intro', flow.advance({ type: SHOWCASE_DONE_EVENT })!.id);
