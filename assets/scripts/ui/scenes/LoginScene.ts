@@ -17,6 +17,17 @@ export class LoginScene extends Component {
 
     private _title: TitleScreenBinder | null = null;
 
+    onLoad(): void {
+        // 預設 Button 沒有遊戲用途；非同步掛載標題前就隱藏，BtnStart 保留備援。
+        const hidePlaceholder = (root: Node): void => {
+            for (const child of root.children) {
+                if (child.name === 'Button') child.active = false;
+                else hidePlaceholder(child);
+            }
+        };
+        hidePlaceholder(this.node);
+    }
+
     start(): void {
         installAdaptiveResolution();
         ensureGlobalDevOverlay();

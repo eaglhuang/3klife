@@ -54,6 +54,22 @@ const flush = () => new Promise<void>(resolve => setImmediate(resolve));
 
 export function createLobbyOpeningPanelsSuite(): TestSuite {
     const suite = new TestSuite('LobbyOpeningPanels extraction contracts');
+    suite.test('紅顏通知等開場守衛放行才出現，而且只出現一次', async () => {
+        const f = fixture();
+        let ready = false;
+        f.ports.canNotifyBeauty = () => ready;
+        await f.panels.mountOnboarding();
+        await f.panels.mountDestiny();
+        f.panels.openDestiny();
+        f.click('DestinyOpeningHost', 'btnDestinyRoll'); await flush();
+        f.clickStar(); f.click('DestinyOpeningHost', 'btnDestinyConfirm'); await flush();
+        assert.equals(0, f.events.filter(e => e.startsWith('beauty:')).length);
+        f.panels.refreshOnboarding();
+        assert.equals(0, f.events.filter(e => e.startsWith('beauty:')).length);
+        ready = true;
+        f.panels.refreshOnboarding(); f.panels.flushPendingBeauty();
+        assert.equals(1, f.events.filter(e => e.startsWith('beauty:')).length);
+    });
     suite.test('沒有掛載的入口為 no-op；缺 hero-pool 保留警告且不建立面板', async () => {
         const f = fixture(false);
         f.panels.openDestiny();

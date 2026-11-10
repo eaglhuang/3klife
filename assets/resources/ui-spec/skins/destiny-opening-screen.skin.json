@@ -103,8 +103,8 @@
     "pg.label.sub": {
       "kind": "label-style",
       "font": "fonts/notoserif_tc/notoserif_tc",
-      "fontSize": 22,
-      "lineHeight": 28,
+      "fontSize": 26,
+      "lineHeight": 32,
       "color": "#B4A08A",
       "overflow": "SHRINK",
       "horizontalAlign": "CENTER",
@@ -113,8 +113,8 @@
     "do.label.quote": {
       "kind": "label-style",
       "font": "fonts/notoserif_tc/notoserif_tc",
-      "fontSize": 20,
-      "lineHeight": 27,
+      "fontSize": 28,
+      "lineHeight": 36,
       "color": "#E8D6B0",
       "overflow": "SHRINK",
       "horizontalAlign": "CENTER",
