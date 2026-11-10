@@ -3319,7 +3319,7 @@ export class LobbyScene extends Component {
             },
         };
         this._recruitHost = await this._mountPreviewScreenHost('RecruitHallHost', 'recruit-hall-screen', [
-            { buttonId: 'btnClose', handler: () => { if (this._recruitHost) this._recruitHost.node.active = false; } },
+            { buttonId: 'btnClose', handler: () => { this.returnToLobbyHall(); } },
             { buttonId: 'btnRescue', handler: () => { void this._onClickDungeonRescue(); } },
             ...rowButtons,
             recruitButton,
@@ -4771,7 +4771,7 @@ export class LobbyScene extends Component {
             grant: (itemId, quantity) => services().session.addItem(itemId, quantity, 'SHOP'),
         });
         this._shopMainHost = await this._mountPreviewScreenHost('ShopMainHost', 'shop-main-screen', [
-            { buttonId: 'btnClose', handler: () => { void services().ui.goBack(); } },
+            { buttonId: 'btnClose', handler: () => { this.returnToLobbyHall(); } },
             ...ITEM_SHOP_OFFERS.map((_, i) => ({ buttonId: `shopRow${i}`, handler: () => { void this._onTapShopOffer(i); } })),
         ]);
     }
@@ -4797,23 +4797,23 @@ export class LobbyScene extends Component {
         this._refreshWalletPreviewState();
 
         this._spiritFamilyOverviewHost = await this._mountPreviewScreenHost('SpiritFamilyOverviewHost', 'bloodline-mirror-loading-screen', [
-            { buttonId: 'PrimaryActionButton', handler: () => { void services().ui.goBack(); } },
+            { buttonId: 'PrimaryActionButton', handler: () => { this.returnToLobbyHall(); } },
         ]);
 
         this._bloodlineMirrorLoadingHost = await this._mountPreviewScreenHost('BloodlineMirrorLoadingHost', 'bloodline-mirror-loading-screen', [
-            { buttonId: 'PrimaryActionButton', handler: () => { void services().ui.goBack(); } },
+            { buttonId: 'PrimaryActionButton', handler: () => { this.returnToLobbyHall(); } },
         ]);
 
         this._bloodlineMirrorAwakeningHost = await this._mountPreviewScreenHost('BloodlineMirrorAwakeningHost', 'bloodline-mirror-awakening-screen', [
-            { buttonId: 'PrimaryActionButton', handler: () => { void services().ui.goBack(); } },
+            { buttonId: 'PrimaryActionButton', handler: () => { this.returnToLobbyHall(); } },
         ]);
 
         this._bloodlineMirrorAscensionHost = await this._mountPreviewScreenHost('BloodlineMirrorAscensionHost', 'bloodline-mirror-ascension-screen', [
-            { buttonId: 'PrimaryActionButton', handler: () => { void services().ui.goBack(); } },
+            { buttonId: 'PrimaryActionButton', handler: () => { this.returnToLobbyHall(); } },
         ]);
 
         this._bloodlineMirrorUnownedHost = await this._mountPreviewScreenHost('BloodlineMirrorUnownedHost', 'bloodline-mirror-unowned-screen', [
-            { buttonId: 'PrimaryActionButton', handler: () => { void services().ui.goBack(); } },
+            { buttonId: 'PrimaryActionButton', handler: () => { this.returnToLobbyHall(); } },
         ]);
 
         // 命鏡低頻動效（BMV3-04）：霧化、呼吸光、英靈淡閃
@@ -5627,14 +5627,16 @@ export class LobbyScene extends Component {
         const button = node.getComponent(Button) ?? node.addComponent(Button);
         button.transition = Button.Transition.NONE;
         node.off(Button.EventType.CLICK, undefined, this);
-        node.on(Button.EventType.CLICK, () => { void this._goBackToLobby(); }, this);
+        node.on(Button.EventType.CLICK, () => { this.returnToLobbyHall(); }, this);
+        node.off('touch-end', undefined, this);
+        node.on('touch-end', () => { this.returnToLobbyHall(); }, this);
         const labelNode = node.getChildByName('Label') ?? new Node('Label');
         labelNode.layer = node.layer;
         if (!labelNode.parent) labelNode.parent = node;
         const labelTransform = labelNode.getComponent(UITransform) ?? labelNode.addComponent(UITransform);
         labelTransform.setContentSize(180, 52);
         const label = labelNode.getComponent(Label) ?? labelNode.addComponent(Label);
-        label.string = '‹ 返回大廳';
+        label.string = '‹ 返回政廳';
         label.fontSize = 22;
         label.color = Color.WHITE;
         label.horizontalAlign = Label.HorizontalAlign.CENTER;
@@ -5733,11 +5735,27 @@ export class LobbyScene extends Component {
         }, 0);
     }
 
+    /**
+     * 集中管理的大廳返回樞紐（Single Source of Truth）。
+     * 確保所有子系統（轉蛋、武將、內政、出征、商城等）返回時，100% 穩定回到幕府主政廳。
+     */
+    public returnToLobbyHall(): void {
+        if (this._gachaHost) this._gachaHost.node.active = false;
+        if (this._shopMainHost) this._shopMainHost.node.active = false;
+        if (this._recruitHost) this._recruitHost.node.active = false;
+        if (this._scoutPanelHost) this._scoutPanelHost.node.active = false;
+        if (this._destinyShopHost) this._destinyShopHost.node.active = false;
+        if (this._spiritCodexHost) this._spiritCodexHost.node.active = false;
+        if (this._ultimateCodexHost) this._ultimateCodexHost.node.active = false;
+        if (this._nurtureHost) this._nurtureHost.node.active = false;
+        if (this._domesticHost) this._domesticHost.node.active = false;
+        if (this._warehouseHost) this._warehouseHost.node.active = false;
+        this._openLobbyHall();
+    }
+
     private async _goBackToLobby(): Promise<void> {
-        const wentBack = await services().ui.goBack();
-        if (!wentBack) {
-            await services().ui.open(UIID.LobbyMain);
-        }
+        await services().ui.goBack();
+        this.returnToLobbyHall();
     }
 
     private _applySpiritFamilyOverviewState(

@@ -92,7 +92,7 @@ export class UIPreviewBuilder extends Component {
         }
         UCUFLogger.info(LogCategory.UI, `[UIPreviewBuilder] buildScreen 開始 layout="${layout.id ?? '?'}" skin="${skin?.id ?? 'null'}" node="${this.node?.name ?? 'null'}"`);
 
-        this.shadowManager.clearDetachedShadows();
+        this.shadowManager?.clearDetachedShadows();
 
         if (skin) {
             this.skinResolver.setManifest(skin, tokens);
@@ -102,7 +102,7 @@ export class UIPreviewBuilder extends Component {
             await this.skinResolver.preloadSlots(Object.keys(skin.slots));
         }
         if (i18n)   { this.i18nStrings = i18n; }
-        if (tokens) { this.tokens = tokens; this.shadowManager.tokens = tokens; }
+        if (tokens) { this.tokens = tokens; if (this.shadowManager) this.shadowManager.tokens = tokens; }
 
         // 每次 buildScreen 前同步 i18nStrings 給 nodeFactory
         this.nodeFactory.i18nStrings = this.i18nStrings;
