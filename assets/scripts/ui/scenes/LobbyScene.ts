@@ -1,3 +1,4 @@
+import { SceneLoadProgress } from '../../shared/SceneLoadProgress';
 import { presentLobbyLead } from '../core/LobbyLeadPresentation';
 // @spec-source → 見 docs/cross-reference-index.md
 import { openingLetterBodyWithFunLine } from '../../core/systems/FunLineLibrary';
@@ -621,6 +622,8 @@ export class LobbyScene extends Component {
     }
 
     async start() {
+        SceneLoadProgress.begin('正在準備大廳');
+        try {
         installAdaptiveResolution();
         // 讀存檔前先備妥服務（存檔後端、名冊、生命週期）；否則 load() 因未設定存檔服務而失敗，每次重開都被當成新玩家
         services().initialize(this.node);
@@ -767,12 +770,17 @@ export class LobbyScene extends Component {
         }, 1);
 
         this._ready = true;
+        SceneLoadProgress.complete();
         ensureGlobalDevOverlay(this._localGachaService, undefined, () => { PlayerRosterService.clear(); }, () => {
             this._refreshWalletPreviewState();
         });
 
         // 核心架構合一：幕府政廳即為主大廳，登入後直接坐鎮大堂
         this._openLobbyHall();
+        } catch (error) {
+            SceneLoadProgress.fail();
+            UCUFLogger.error(LogCategory.LIFECYCLE, '[LobbyScene] 初始化失敗', error);
+        }
     }
 
     /** 他國逐將名冊與重算情境（E-9，PROG-2-1715）；失敗時他國照舊以兵力計軍力 */
@@ -4912,6 +4920,7 @@ export class LobbyScene extends Component {
 
         const host = hostNode.getComponent(UIScreenPreviewHost) ?? hostNode.addComponent(UIScreenPreviewHost);
         await host.showScreen(screenId);
+        SceneLoadProgress.step();
         this._bindScreenButtons(host, bindings);
         hostNode.active = false;
         return host;

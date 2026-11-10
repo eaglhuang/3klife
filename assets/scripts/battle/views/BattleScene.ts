@@ -1,3 +1,4 @@
+import { SceneLoadProgress } from '../../shared/SceneLoadProgress';
 
 // @spec-source → 見 docs/cross-reference-index.md
 import { deputySupportLine } from '../../core/systems/SortieDeployScripts';
@@ -149,6 +150,7 @@ export class BattleScene extends Component {
   }
 
   async start(): Promise<void> {
+    SceneLoadProgress.begin('正在準備戰鬥', 7);
     UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] start() 開始執行");
     const isBattleCaptureMode = this._isBattleCaptureMode();
     // [UI-2-0026] 預設隱藏 gridDebugLabel，避免場景預設 active=true 時顯示 "label" 佔位符
@@ -173,6 +175,7 @@ export class BattleScene extends Component {
       await services().loadHistoricalPairs();
       this.ctrl.historicalPairs = services().historicalPairTable();
       await this.ctrl.loadData();
+      SceneLoadProgress.step();
       UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] BattleController 資料載入完成");
 
       // 2.5 載入技能定義至 ActionSystem（skills.json → action.registerSkills）
@@ -185,6 +188,7 @@ export class BattleScene extends Component {
           prewarmBattleAudioClips(),
       ]);
       UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] ActionSystem + VFX 效果表載入完成");
+      SceneLoadProgress.step();
 
       // 2.6 預熱 VFX 池（依據 VFX_BLOCK_REGISTRY 中定義的 prefabPath）
       // capture mode 只做靜態 UI / HUD 驗證，不需要把整批可選特效池都預熱進來，
@@ -198,6 +202,7 @@ export class BattleScene extends Component {
 
       // 2.7 解析戰場入口參數（統一 Lobby / Preview / Replay 路徑）
       const battleParams = this._resolveBattleParams();
+      SceneLoadProgress.step();
       this._battleParams = battleParams;
       this.currentEncounterId = battleParams.encounterId;
       this.sceneContext.encounterId = battleParams.encounterId;
@@ -228,6 +233,7 @@ export class BattleScene extends Component {
       services().material.registerShader('unit-base', 'effect:unit-base', 'critical');
       services().material.registerShader('heroine-toon', 'effect:heroine-toon', 'critical');
       await services().material.warmupCritical(this.node);
+      SceneLoadProgress.step();
 
       // 5. 開始第一場戰鬥（含地形、天氣、戰法）
       // 戰場關係事件帳本（PROG-2-1415）：同一關只觸發一次，已播紀錄隨存檔保存
@@ -297,6 +303,7 @@ export class BattleScene extends Component {
       const initialCards = bindHeldTallyInstances(buildTallyCards(battleParams.selectedCardIds), services().session.tallyCards);
       this.battleScenePanel?.setCards(initialCards);
       this.battleScenePanel?.setUltimateSkills(buildUltimateSkills(pg));
+      SceneLoadProgress.step();
       this.battleScenePanel?.setTacticSummary(buildTacticSummary(pg).label, this.ctrl.getPlayerTacticPointState());
       this.sceneContext.hud = this.hud;
       this.sceneContext.deployRuntime = this._deployPanelRuntime;
@@ -436,6 +443,7 @@ export class BattleScene extends Component {
 
       // 8. 初始背景與切換功能（Debug UI）
       this.sceneBackground = await initSceneBackground(this.node.scene!, backgroundId);
+      SceneLoadProgress.step();
       // 切換背景是開發用按鈕，正式打包不顯示（PROG-2-1086）
       if (!isBattleCaptureMode && DEV) {
         addBackgroundSwitchUI(canvas, this.sceneBackground, this._deployPanelRuntime);
@@ -461,6 +469,8 @@ export class BattleScene extends Component {
       if (this.hud && !(await this.hud.waitUntilReady(15000))) {
         throw new Error('戰鬥 HUD 初始化逾時');
       }
+      SceneLoadProgress.step();
+      SceneLoadProgress.complete();
       if (this._startupOpacity) this._startupOpacity.opacity = 255;
       this._startupBlocker?.destroy();
       this._startupBlocker = null;
@@ -468,6 +478,7 @@ export class BattleScene extends Component {
 
       UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] ✅ start() 全部完成");
     } catch (e) {
+      SceneLoadProgress.fail();
       UCUFLogger.error(LogCategory.BATTLE, "[BattleScene] ❌ start() 發生錯誤:", e);
       this._signalCaptureErrorIfNeeded(e);
       // 失敗也不曝光範例 HUD；顯示可理解的錯誤，避免永久黑畫面。
