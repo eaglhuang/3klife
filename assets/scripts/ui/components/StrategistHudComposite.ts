@@ -7,7 +7,7 @@
  *
  * Unity 對照：常駐 HUD 的 Controller，資料由 Presenter 算好，這裡只 label.text = 與調 RectTransform 高度。
  */
-import { _decorator, Color, Graphics, Node, tween, UIOpacity, UITransform, v3, Vec3, Widget } from 'cc';
+import { _decorator, Color, Graphics, Node, tween, UIOpacity, UITransform, Label, v3, Vec3, Widget } from 'cc';
 import { CompositePanel } from '../core/CompositePanel';
 import type { UITemplateBinder } from '../core/UITemplateBinder';
 import type { StrategistHudView } from '../../battle/shared/StrategistHudView';
@@ -62,11 +62,21 @@ export class StrategistHudComposite extends CompositePanel implements IStrategis
         if (!binder || !view) return;
         binder.setTexts({ summaryText: view.summaryText, wisdomText: view.wisdomText });
         binder.setActives({ summaryBand: view.summaryText.length > 0 });
+        const summary = binder.getLabel('summaryText');
+        const content = binder.getNode('summaryContent')?.getComponent(UITransform);
+        if (summary && content) {
+            summary.overflow = Label.Overflow.RESIZE_HEIGHT;
+            summary.enableWrapText = true;
+            summary.node.getComponent(UITransform)?.setAnchorPoint(0.5,1);
+            summary.node.setPosition(0,0,0);
+            summary.updateRenderData(true);
+            content.setContentSize(content.width,Math.max(72,summary.node.getComponent(UITransform)?.height ?? 72));
+        }
         const fill = binder.getNode('wisdomFill');
         const fillSize = fill?.getComponent(UITransform);
         const trackSize = fill?.parent?.getComponent(UITransform);
         if (!fill || !fillSize || !trackSize) return;
-        fillSize.setContentSize(fillSize.width, trackSize.height * view.wisdomRatio);
+        fillSize.setContentSize(trackSize.width * view.wisdomRatio, trackSize.height);
         fill.getComponent(Widget)?.updateAlignment();
     }
 

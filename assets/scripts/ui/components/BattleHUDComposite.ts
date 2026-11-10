@@ -145,8 +145,18 @@ export class BattleHUDComposite extends CompositePanel {
         this._spReadyLabel = binder.getLabel('BattleHudScreen_div_129');
         this._spFill = binder.getNode('BattleHudScreen_div_126')?.getChildByName('skinLayer_BattleHudScreen_div_128_BattleHudScreen_i_9') ?? null;
         for (const label of [this._spLabel, this._spReadyLabel]) {
-            label?.node.getComponent(UITransform)?.setContentSize(180, 18);
+            label?.node.getComponent(UITransform)?.setContentSize(320, 32);
         }
+        // 百分比寬度在builder只求值一次，Canvas變寬窄後也要重算標題區。
+        const topBar = binder.getNode('BattleHudScreen_div_1');
+        const resizeTitle = (): void => {
+            const width = topBar?.getComponent(UITransform)?.width;
+            if (!width) return;
+            binder.getNode('BattleHudScreen_div_6')?.getComponent(UITransform)?.setContentSize(width * 0.35, 53);
+            binder.getNode('BattleHudScreen_div_7')?.getComponent(UITransform)?.setContentSize(width * 0.35, 40);
+        };
+        topBar?.on(Node.EventType.SIZE_CHANGED, resizeTitle, this);
+        resizeTitle();
         this._renderSp(0, 0);
         this._turnLabel           = binder.getLabel('TurnLabel');
         this._stageTitleLabel     = binder.getLabel('StageTitleLabel');

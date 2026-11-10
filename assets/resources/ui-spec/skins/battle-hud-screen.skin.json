@@ -68,8 +68,8 @@
     "auto.battle-hud-screen.battlehudscreen_div_4": {
       "kind": "label-style",
       "font": "fonts/newsreader/newsreader",
-      "fontSize": 34,
-      "lineHeight": 48,
+      "fontSize": 28,
+      "lineHeight": 36,
       "letterSpacing": 2.72,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
@@ -97,7 +97,7 @@
     "auto.battle-hud-screen.battlehudscreen_div_7": {
       "kind": "label-style",
       "font": "fonts/newsreader/newsreader",
-      "fontSize": 26,
+      "fontSize": 28,
       "lineHeight": 36,
       "letterSpacing": 7.8,
       "color": "stdLabelButton",
@@ -152,8 +152,8 @@
     "auto.battle-hud-screen.battlehudscreen_div_12": {
       "kind": "label-style",
       "font": "fonts/newsreader/newsreader",
-      "fontSize": 16,
-      "lineHeight": 22,
+      "fontSize": 28,
+      "lineHeight": 36,
       "letterSpacing": 0,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
@@ -3534,8 +3534,8 @@
     "auto.battle-hud-screen.battlehudscreen_div_127": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
-      "fontSize": 10,
-      "lineHeight": 14,
+      "fontSize": 24,
+      "lineHeight": 28,
       "letterSpacing": 2.5,
       "color": "textKhaki",
       "outlineColor": "colorOutlineDark",
@@ -3607,8 +3607,8 @@
     "auto.battle-hud-screen.battlehudscreen_div_129": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
-      "fontSize": 10,
-      "lineHeight": 14,
+      "fontSize": 24,
+      "lineHeight": 28,
       "letterSpacing": 2.5,
       "color": "textKhaki",
       "outlineColor": "colorOutlineDark",

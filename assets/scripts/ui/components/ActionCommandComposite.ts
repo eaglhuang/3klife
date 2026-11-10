@@ -48,6 +48,7 @@ export class ActionCommandComposite extends CompositePanel {
     private _spRingSprite: Sprite | null = null;
     private _ultLabel:     Label  | null = null;
     private _spPctLabel:   Label  | null = null;
+    private _tacticsButtonCaption = '計謀';
     private _tacticsLabel: Label  | null = null;
     private _ultimateBtnNode: Node | null = null;
     private _ultimatePopupHost: Node | null = null;
@@ -123,12 +124,14 @@ export class ActionCommandComposite extends CompositePanel {
         // 不能施放時顯示原因（PROG-2-0408），否則顯示計點
         this._tacticsSummaryLabel = (label.trim() || '計謀') +
             (reason ? `\n${reason}` : points?.current !== undefined ? `\n點 ${points.current}/${points.max}` : '');
+        this._tacticsButtonCaption = reason ? '計謀\n受限'
+            : points?.current !== undefined ? `計謀\n${points.current > 99 ? '99+' : `${Math.max(0, Math.floor(points.current))}點`}` : '計謀';
         this._tacticEnabled = points?.enabled ?? true;
         // 天氣禁用：變灰但保留點擊，讓點擊後的天氣 Toast 出得來（PROG-2-0597）
         this._tacticClickable = this._tacticEnabled || reason === TACTIC_REASON_WEATHER;
         if (this._tacticsButton) this._tacticsButton.interactable = this._tacticClickable;
         if (this._tacticsLabel) {
-            this._tacticsLabel.string = this._tacticsSummaryLabel;
+            this._tacticsLabel.string = this._tacticsButtonCaption;
             if (this._tacticsEnabledColor) this._tacticsLabel.color = this._tacticEnabled
                 ? this._tacticsEnabledColor : new Color(130, 130, 130, 255);
         }
@@ -150,7 +153,7 @@ export class ActionCommandComposite extends CompositePanel {
         const label = btn.getChildByName('DuelLabel')?.getComponent(Label) ?? null;
         if (!label) return;
         if (this._duelLabelText === null) this._duelLabelText = label.string.replace(/^🔒\s*/, '');
-        label.string = this._duelLocked ? `🔒 ${this._duelLabelText}` : this._duelLabelText;
+        label.string = this._duelLocked ? `${this._duelLabelText}\n鎖定` : this._duelLabelText;
     }
 
     public waitUntilReady(timeoutMs = 5000): Promise<boolean> {
@@ -183,11 +186,11 @@ export class ActionCommandComposite extends CompositePanel {
         this._tacticsLabel  = binder.getLabel('TacticsLabel');
         if (this._tacticsLabel) {
             this._tacticsEnabledColor = this._tacticsLabel.color.clone();
-            this._tacticsLabel.node.getComponent(UITransform)?.setContentSize(62, 32);
-            this._tacticsLabel.fontSize = 12;
-            this._tacticsLabel.lineHeight = 14;
-            this._tacticsLabel.overflow = Label.Overflow.SHRINK;
-            this._tacticsLabel.string = this._tacticsSummaryLabel;
+            this._tacticsLabel.node.getComponent(UITransform)?.setContentSize(66, 56);
+            this._tacticsLabel.fontSize = 24;
+            this._tacticsLabel.lineHeight = 28;
+            this._tacticsLabel.overflow = Label.Overflow.CLAMP;
+            this._tacticsLabel.string = this._tacticsButtonCaption;
             if (!this._tacticEnabled) this._tacticsLabel.color = new Color(130, 130, 130, 255);
         }
         
