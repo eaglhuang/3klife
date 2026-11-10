@@ -10,8 +10,8 @@
   "tags": [],
   "createdAt": "2026-11-05T14:30:28.536Z",
   "createdByActor": "codex-gpt-6.1-sol",
-  "lastTransitionId": "2026-11-10T05-51-08-428Z-renew-c69902a77fa0",
-  "lastTransitionAt": "2026-11-10T05:51:08.428Z",
+  "lastTransitionId": "2026-11-10T06-03-56-798Z-scope-amendment-241daca6b84c",
+  "lastTransitionAt": "2026-11-10T06:03:56.798Z",
   "ledgerContractVersion": "task-ledger/v1",
   "reservedAt": "2026-11-05T17:15:58.821Z",
   "promotedAt": "2026-11-05T17:15:58.826Z",
@@ -128,6 +128,7 @@
       "assets/resources/sprites/generals/avatars/cao_xian_avatar.png",
       "assets/resources/sprites/generals/avatars/cao_xian_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/cao_zhi_avatar.png",
+      "assets/resources/sprites/generals/avatars/chen_dao_avatar.png",
       "assets/resources/sprites/generals/avatars/cheng_pu_avatar.png",
       "assets/resources/sprites/generals/avatars/da_qiao_avatar.png",
       "assets/resources/sprites/generals/avatars/da_qiao_avatar.png.meta",
@@ -592,20 +593,20 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-757295334295011f",
-    "ticketDigest": "sha256:757295334295011f547d762b437ebeca470c85e232883d8de1f34cb68fe493c1",
+    "ticketId": "wat-1505926312f48dd4",
+    "ticketDigest": "sha256:1505926312f48dd4709caedb3ea839512cc84dc3b41f5fca739a45be9474ef33",
     "taskId": "UI-2-0121",
     "origin": "claim",
     "actorId": "codex-gpt-6.1-terra",
     "laneSessionId": "lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d",
     "claimGeneration": "lease-f957fb02b01d",
-    "issuedAt": "2026-11-10T05:51:08.121Z",
-    "expiresAt": "2026-11-10T06:21:08.121Z",
-    "scopeDigest": "sha256:db1babff77461b5a811c3cf79ffcb746213f9ca0de3b0bf7da3c9f0cafc303b3",
+    "issuedAt": "2026-11-10T06:03:56.689Z",
+    "expiresAt": "2026-11-10T06:33:56.689Z",
+    "scopeDigest": "sha256:3a99e2400e2391bc3efffb7752961cbc10b66763d84e9f38ba320bc330a2f370",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-11-10T05:51:08.121Z"
+      "selectedAt": "2026-11-10T06:03:56.689Z"
     },
     "grants": [
       {
@@ -718,6 +719,7 @@
           "assets/resources/sprites/generals/avatars/cao_xian_avatar.png",
           "assets/resources/sprites/generals/avatars/cao_xian_avatar.png.meta",
           "assets/resources/sprites/generals/avatars/cao_zhi_avatar.png",
+          "assets/resources/sprites/generals/avatars/chen_dao_avatar.png",
           "assets/resources/sprites/generals/avatars/cheng_pu_avatar.png",
           "assets/resources/sprites/generals/avatars/da_qiao_avatar.png",
           "assets/resources/sprites/generals/avatars/da_qiao_avatar.png.meta",
@@ -1169,7 +1171,7 @@
           "docs/ui-quality-tasks/UI-2-0121.json",
           "docs/ui-quality-todo.json"
         ],
-        "digest": "sha256:9140e16477696563a5bb2577a77077292ddbfee2e9cd8f6a0107e1fc9b80019b"
+        "digest": "sha256:5e75223e462befc1db4524ee0f60bf7d07964949303fcc7c6dc3c617f3611fba"
       },
       {
         "kind": "lifecycle-operation",
@@ -1324,6 +1326,7 @@
       "assets/resources/sprites/generals/avatars/cao_xian_avatar.png",
       "assets/resources/sprites/generals/avatars/cao_xian_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/cao_zhi_avatar.png",
+      "assets/resources/sprites/generals/avatars/chen_dao_avatar.png",
       "assets/resources/sprites/generals/avatars/cheng_pu_avatar.png",
       "assets/resources/sprites/generals/avatars/da_qiao_avatar.png",
       "assets/resources/sprites/generals/avatars/da_qiao_avatar.png.meta",
@@ -2329,7 +2332,7 @@
       "source": "minted",
       "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d\""
     },
-    "createdAt": "2026-11-09T22:53:26.700Z",
+    "createdAt": "2026-11-10T05:51:08.455Z",
     "status": "active"
   },
   "scopePaths": [
@@ -2889,6 +2892,7 @@
     "assets/resources/sprites/ui_avatars/cropped/yin_mo_avatar.png",
     "assets/resources/sprites/generals/avatars/yu_ji_avatar.png",
     "assets/resources/sprites/generals/yu_ji_portrait.png",
-    "assets/resources/sprites/ui_avatars/cropped/yu_ji_avatar.png"
+    "assets/resources/sprites/ui_avatars/cropped/yu_ji_avatar.png",
+    "assets/resources/sprites/generals/avatars/chen_dao_avatar.png"
   ]
 }
