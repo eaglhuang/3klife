@@ -23,7 +23,9 @@ export function createDeployedUnitPresentationSuite(): TestSuite {
    const src=readFileSync(join(__dirname,'../assets/scripts/battle/views/UnitRenderer.ts'),'utf8');
    const start=src.indexOf('private createUnitView('),end=src.indexOf('private updateUnitView(',start);
    const create=src.slice(start,end);
-   assert.isTrue(create.indexOf('worldNode.setWorldPosition(initialPosition)')<create.indexOf('void this.ensureTroopFormation'));
+   const positionAt = create.indexOf('worldNode.setWorldPosition(initialPosition)');
+   const loadAt = create.indexOf('void this.ensureTroopFormation');
+   assert.isTrue(positionAt >= 0 && loadAt >= 0 && positionAt < loadAt);
  });
  suite.test('缺專屬美術使用可辨識棋子與真實姓名，沒有借用其他角色模型', () => {
    const src=readFileSync(join(__dirname,'../assets/scripts/battle/views/UnitRenderer.ts'),'utf8');
