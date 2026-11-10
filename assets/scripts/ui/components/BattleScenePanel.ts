@@ -13,7 +13,7 @@
  * Unity 對照：BattleUIManager（掛 Canvas 根的 Coordinator Component）
  */
 import { _decorator, Component, Node, UITransform, Widget, Button, Label, Vec3 } from 'cc';
-import { battleCoachPlacement, type CoachRect } from '../core/BattleCoachPlacement';
+import { battleCoachPlacement, battleCoachIsObstacle, type CoachRect } from '../core/BattleCoachPlacement';
 import { UIScreenPreviewHost } from './UIScreenPreviewHost';
 import { placeTutorialTarget } from '../core/OnboardingTargetHighlight';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
@@ -118,13 +118,11 @@ export class BattleScenePanel extends Component {
         const root = host.node.getComponent(UITransform);
         if (!root) return;
         const obstacles: CoachRect[] = [];
-        const reserved = new Set(['BattleHudScreen_div_1','TopBar','ProgressBars','FortressBarsPlate',
-            'TigerTallyRoot','SidePanelRoot','ActionCommandRoot','BattleHudScreen_div_122',
-            'BattleHudScreen_button_1','DeployRoot','DeployPanelRoot','StrategistHudRoot']);
         let target: Node | null = null;
-        const visit = (n: Node): void => {
+        const visit = (n: Node, covered = false): void => {
             if (n === host.node || !n.activeInHierarchy) return;
             if (n.name === current.target) target = n;
+            let blocks = false;
             const tf = n.getComponent(UITransform);
             if (tf) {
                 const b = tf.getBoundingBoxToWorld();
@@ -132,9 +130,12 @@ export class BattleScenePanel extends Component {
                 const z = root.convertToNodeSpaceAR(new Vec3(b.x+b.width,b.y+b.height,0));
                 const r = { x: Math.min(a.x,z.x)+root.width*root.anchorX,
                     y: root.height*(1-root.anchorY)-Math.max(a.y,z.y), width: Math.abs(z.x-a.x), height: Math.abs(z.y-a.y) };
-                if (reserved.has(n.name) || (n.getComponent(Label) && r.y < 184 && r.y+r.height > 0)) obstacles.push(r);
+                blocks = battleCoachIsObstacle(n.name, r, root.width, root.height, !!n.getComponent(Label));
+                if (!covered && blocks) obstacles.push(r);
             }
-            for (const child of n.children) visit(child);
+            // 已有實體面板邊界時不重複計入其子節點，尤其scroll裁切外的全文Label。
+            // 仍遍歷以找到教學框的目標按鈕。
+            for (const child of n.children) visit(child, covered || blocks);
         };
         if (this.node.parent) visit(this.node.parent);
         const expanded = !this._guideMinimized && battleCoachPlacement(root.width,root.height,obstacles);

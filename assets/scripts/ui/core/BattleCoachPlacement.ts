@@ -18,3 +18,12 @@ export function battleCoachPlacement(width: number, height: number, obstacles: r
     }
     return null;
 }
+
+const HUD_REGIONS = new Set(['BattleHudScreen_div_1', 'TopBar', 'ProgressBars', 'FortressBarsPlate',
+    'TigerTallyRoot', 'SidePanelRoot', 'ActionCommandRoot', 'BattleHudScreen_div_122',
+    'BattleHudScreen_button_1', 'DeployRoot', 'DeployPanelRoot', 'SummaryBand', 'WisdomColumn']);
+/** 只保留實體區域；透明全畫布與scroll內容不能被當成整片遮擋。 */
+export function battleCoachIsObstacle(name: string, r: CoachRect, width: number, height: number, isLabel = false): boolean {
+    if (r.width >= width * 0.98 && r.height >= height * 0.98) return false;
+    return HUD_REGIONS.has(name) || (isLabel && r.y < 184 && r.y + r.height > 0);
+}

@@ -2,7 +2,7 @@ import { TestSuite, assert } from './TestRunner';
 import { BattleTutorialHint } from '../assets/scripts/battle/views/BattleTutorialHint';
 import { FirstBattleOperationGuide } from '../assets/scripts/core/systems/FirstBattleOperationGuide';
 import { EVENT_NAMES, Faction, SP_PER_KILL } from '../assets/scripts/core/config/Constants';
-import { battleCoachPlacement, coachRectsOverlap } from '../assets/scripts/ui/core/BattleCoachPlacement';
+import { battleCoachPlacement, coachRectsOverlap, battleCoachIsObstacle } from '../assets/scripts/ui/core/BattleCoachPlacement';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 export function createBattleCoachSuite(): TestSuite {
@@ -51,6 +51,17 @@ export function createBattleCoachSuite(): TestSuite {
   assert.contains(src,"binder?.getNode('guideResume')?.on(Button.EventType.CLICK");
   const layout=JSON.parse(readFileSync(join(__dirname,'../assets/resources/ui-spec/layouts/battle-operation-guide-main.json'),'utf8'));
   assert.isFalse(JSON.stringify(layout).includes('tutorialPointer'));
+ });
+ suite.test('透明Canvas不擋住全部教學；軍師只保留可見摘要/智謀區，scroll子內容不重複計算', () => {
+  const full={x:0,y:0,width:1920,height:1080};
+  assert.isFalse(battleCoachIsObstacle('StrategistHudRoot',full,1920,1080));
+  assert.isFalse(battleCoachIsObstacle('DeployRoot',full,1920,1080));
+  assert.isTrue(battleCoachIsObstacle('SummaryBand',{x:8,y:96,width:224,height:72},1920,1080));
+  assert.isTrue(battleCoachIsObstacle('WisdomColumn',{x:1558,y:112,width:344,height:48},1920,1080));
+  const src=readFileSync(join(__dirname,'../assets/scripts/ui/components/BattleScenePanel.ts'),'utf8');
+  assert.contains(src,'blocks = battleCoachIsObstacle(n.name');
+  assert.contains(src,'if (!covered && blocks) obstacles.push(r)');
+  assert.contains(src,'visit(child, covered || blocks)');
  });
  return suite;
 }
