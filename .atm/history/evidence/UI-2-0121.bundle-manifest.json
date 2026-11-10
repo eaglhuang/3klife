@@ -1,7 +1,7 @@
 {
   "schemaId": "atm.evidenceBundleManifest.v1",
   "taskId": "UI-2-0121",
-  "updatedAt": "2026-11-10T11:24:05.713Z",
+  "updatedAt": "2026-11-10T11:28:43.894Z",
   "updatedBy": "codex-gpt-6.1-terra",
   "freshValidationPasses": [],
   "staleValidationPasses": [],
@@ -2146,6 +2146,20 @@
       "durationMs": 367,
       "runnerKind": "dev-source",
       "sourceCommit": "c31943beabb5fafc3e7a689119433a08ea73f1d9",
+      "cached": false
+    },
+    {
+      "command": "node tools_node/generate-general-avatars.js tao-qian --verify",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:da7aba8756fd4ea49056dedd411285472b17356a0ed0b427ca9fc39ca3c99645",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [],
+      "generatedAt": "2026-11-10T11:28:43.894Z",
+      "startedAt": "2026-11-10T11:28:43.405Z",
+      "finishedAt": "2026-11-10T11:28:43.894Z",
+      "durationMs": 489,
+      "runnerKind": "dev-source",
+      "sourceCommit": "1590bf9da94574bee21b8e1e6552781268e6ad14",
       "cached": false
     }
   ],

@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "tao-qian": {
+      "x": 320,
+      "y": 0,
+      "w": 400,
+      "h": 400,
+      "source": "reviewed",
+      "$note": "2026-11-10 陶謙紫米州牧新版，保留頭冠、面容與肩線。"
+    },
     "liu-biao": {
       "x": 350,
       "y": 45,
