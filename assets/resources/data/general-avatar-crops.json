@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "liu-biao": {
+      "x": 350,
+      "y": 45,
+      "w": 360,
+      "h": 360,
+      "source": "reviewed",
+      "$note": "2026-11-10 劉表青綠州牧新版，保留髮冠、面容與肩線。"
+    },
     "zhu-ran": {
       "x": 330,
       "y": 0,

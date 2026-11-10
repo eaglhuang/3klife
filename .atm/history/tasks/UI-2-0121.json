@@ -10,8 +10,8 @@
   "tags": [],
   "createdAt": "2026-11-05T14:30:28.536Z",
   "createdByActor": "codex-gpt-6.1-sol",
-  "lastTransitionId": "2026-11-10T11-18-45-108Z-scope-amendment-a3ed480c7920",
-  "lastTransitionAt": "2026-11-10T11:18:45.108Z",
+  "lastTransitionId": "2026-11-10T11-23-08-947Z-scope-amendment-d5c293861d90",
+  "lastTransitionAt": "2026-11-10T11:23:08.947Z",
   "ledgerContractVersion": "task-ledger/v1",
   "reservedAt": "2026-11-05T17:15:58.821Z",
   "promotedAt": "2026-11-05T17:15:58.826Z",
@@ -177,6 +177,7 @@
       "assets/resources/sprites/generals/avatars/liao_hua_avatar.png",
       "assets/resources/sprites/generals/avatars/ling_tong_avatar.png",
       "assets/resources/sprites/generals/avatars/liu_bei_avatar.png",
+      "assets/resources/sprites/generals/avatars/liu_biao_avatar.png",
       "assets/resources/sprites/generals/avatars/liu_feng_avatar.png",
       "assets/resources/sprites/generals/avatars/lu_bu_avatar.png",
       "assets/resources/sprites/generals/avatars/lu_bu_avatar.png.meta",
@@ -340,6 +341,7 @@
       "assets/resources/sprites/generals/liao_hua_portrait.png",
       "assets/resources/sprites/generals/ling_tong_portrait.png",
       "assets/resources/sprites/generals/liu_bei_portrait.png",
+      "assets/resources/sprites/generals/liu_biao_portrait.png",
       "assets/resources/sprites/generals/liu_feng_portrait.png",
       "assets/resources/sprites/generals/lu_bu_portrait.png",
       "assets/resources/sprites/generals/lu_bu_portrait.png.meta",
@@ -505,6 +507,7 @@
       "assets/resources/sprites/ui_avatars/cropped/liao_hua_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/ling_tong_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/liu_bei_avatar.png",
+      "assets/resources/sprites/ui_avatars/cropped/liu_biao_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/liu_feng_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/lu_bu_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/lu_bu_avatar.png.meta",
@@ -620,20 +623,20 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-031d7f6c34fd4ee2",
-    "ticketDigest": "sha256:031d7f6c34fd4ee29e4ee38b5fee87e86c0769b42b5926641a3d2065a72632c9",
+    "ticketId": "wat-117ade18d47b19fd",
+    "ticketDigest": "sha256:117ade18d47b19fde028e9566d2720019e5c1e1068bdc90a310488fff67104ae",
     "taskId": "UI-2-0121",
     "origin": "claim",
     "actorId": "codex-gpt-6.1-terra",
     "laneSessionId": "lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d",
     "claimGeneration": "lease-f957fb02b01d",
-    "issuedAt": "2026-11-10T11:18:45.006Z",
-    "expiresAt": "2026-11-10T11:48:45.006Z",
-    "scopeDigest": "sha256:6c8ff6f1ec4a8c262b93895be5e341534703b3041de18f244cd92b307730dd76",
+    "issuedAt": "2026-11-10T11:23:08.841Z",
+    "expiresAt": "2026-11-10T11:53:08.841Z",
+    "scopeDigest": "sha256:ce503713bb9ba0011e2a14a472c8fa79326bb3b149ef1620f374aa5cfad128c4",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-11-10T11:18:45.006Z"
+      "selectedAt": "2026-11-10T11:23:08.841Z"
     },
     "grants": [
       {
@@ -795,6 +798,7 @@
           "assets/resources/sprites/generals/avatars/liao_hua_avatar.png",
           "assets/resources/sprites/generals/avatars/ling_tong_avatar.png",
           "assets/resources/sprites/generals/avatars/liu_bei_avatar.png",
+          "assets/resources/sprites/generals/avatars/liu_biao_avatar.png",
           "assets/resources/sprites/generals/avatars/liu_feng_avatar.png",
           "assets/resources/sprites/generals/avatars/lu_bu_avatar.png",
           "assets/resources/sprites/generals/avatars/lu_bu_avatar.png.meta",
@@ -958,6 +962,7 @@
           "assets/resources/sprites/generals/liao_hua_portrait.png",
           "assets/resources/sprites/generals/ling_tong_portrait.png",
           "assets/resources/sprites/generals/liu_bei_portrait.png",
+          "assets/resources/sprites/generals/liu_biao_portrait.png",
           "assets/resources/sprites/generals/liu_feng_portrait.png",
           "assets/resources/sprites/generals/lu_bu_portrait.png",
           "assets/resources/sprites/generals/lu_bu_portrait.png.meta",
@@ -1123,6 +1128,7 @@
           "assets/resources/sprites/ui_avatars/cropped/liao_hua_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/ling_tong_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/liu_bei_avatar.png",
+          "assets/resources/sprites/ui_avatars/cropped/liu_biao_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/liu_feng_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/lu_bu_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/lu_bu_avatar.png.meta",
@@ -1225,7 +1231,7 @@
           "docs/ui-quality-tasks/UI-2-0121.json",
           "docs/ui-quality-todo.json"
         ],
-        "digest": "sha256:20d2e19e1b2234ca54b2619b00a4b1761a10e3955b7518e45c706e3e7e3459a2"
+        "digest": "sha256:7102f5afc5940983bf9c4ea4cc11452e9679211e28e75b5c895ca14eb62a534f"
       },
       {
         "kind": "lifecycle-operation",
@@ -1429,6 +1435,7 @@
       "assets/resources/sprites/generals/avatars/liao_hua_avatar.png",
       "assets/resources/sprites/generals/avatars/ling_tong_avatar.png",
       "assets/resources/sprites/generals/avatars/liu_bei_avatar.png",
+      "assets/resources/sprites/generals/avatars/liu_biao_avatar.png",
       "assets/resources/sprites/generals/avatars/liu_feng_avatar.png",
       "assets/resources/sprites/generals/avatars/lu_bu_avatar.png",
       "assets/resources/sprites/generals/avatars/lu_bu_avatar.png.meta",
@@ -1592,6 +1599,7 @@
       "assets/resources/sprites/generals/liao_hua_portrait.png",
       "assets/resources/sprites/generals/ling_tong_portrait.png",
       "assets/resources/sprites/generals/liu_bei_portrait.png",
+      "assets/resources/sprites/generals/liu_biao_portrait.png",
       "assets/resources/sprites/generals/liu_feng_portrait.png",
       "assets/resources/sprites/generals/lu_bu_portrait.png",
       "assets/resources/sprites/generals/lu_bu_portrait.png.meta",
@@ -1757,6 +1765,7 @@
       "assets/resources/sprites/ui_avatars/cropped/liao_hua_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/ling_tong_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/liu_bei_avatar.png",
+      "assets/resources/sprites/ui_avatars/cropped/liu_biao_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/liu_feng_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/lu_bu_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/lu_bu_avatar.png.meta",
@@ -3017,6 +3026,9 @@
     "assets/resources/sprites/ui_avatars/cropped/pan_zhang_avatar.png",
     "assets/resources/sprites/generals/avatars/zhu_ran_avatar.png",
     "assets/resources/sprites/generals/zhu_ran_portrait.png",
-    "assets/resources/sprites/ui_avatars/cropped/zhu_ran_avatar.png"
+    "assets/resources/sprites/ui_avatars/cropped/zhu_ran_avatar.png",
+    "assets/resources/sprites/generals/avatars/liu_biao_avatar.png",
+    "assets/resources/sprites/generals/liu_biao_portrait.png",
+    "assets/resources/sprites/ui_avatars/cropped/liu_biao_avatar.png"
   ]
 }
