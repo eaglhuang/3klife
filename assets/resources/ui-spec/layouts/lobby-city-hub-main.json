@@ -308,9 +308,8 @@
         "name": "SubMenu",
         "id": "subMenu",
         "widget": {
-          "bottom": 120,
-          "left": 520,
-          "right": 520
+          "bottom": 156,
+          "hCenter": true
         },
         "height": 116,
         "skinSlot": "hub.panel.bg",
@@ -463,15 +462,15 @@
               }
             ]
           }
-        ]
+        ],
+        "width": 900
       },
       {
         "type": "container",
         "name": "CategoryBar",
         "widget": {
           "bottom": 24,
-          "left": 360,
-          "right": 360
+          "hCenter": true
         },
         "height": 84,
         "children": [
@@ -610,7 +609,8 @@
               }
             ]
           }
-        ]
+        ],
+        "width": 1200
       }
     ]
   }
