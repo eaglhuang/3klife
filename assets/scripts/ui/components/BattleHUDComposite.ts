@@ -23,6 +23,7 @@ import { buildBattleSkillEffectMessage, buildBattleSkillUsedMessage } from '../.
 import { services } from '../../core/managers/ServiceLoader';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
+import { BattleSettingsComposite } from './BattleSettingsComposite';
 import { SolidBackground } from './SolidBackground';
 import { isVitalityBarGrayed, vitalityBarRatio } from '../../core/systems/VitalityBarView';
 import { FORTRESS_MAX_HP, fortressBarRatio } from '../../core/systems/FortressBarView';
@@ -45,6 +46,11 @@ export class BattleHUDComposite extends CompositePanel {
 
     // ── 私有狀態 ─────────────────────────────────────────────
     private _isMounted = false;
+    private _settings: BattleSettingsComposite | null = null;
+    private _spLabel: Label | null = null;
+    private _chargeLabel: Label | null = null;
+    private _spFill: Node | null = null;
+    private _spReadyLabel: Label | null = null;
     private _buildCompleted = false;
     private _playerGeneralMaxHp = 1;
     private _enemyGeneralMaxHp  = 1;
@@ -127,6 +133,21 @@ export class BattleHUDComposite extends CompositePanel {
      */
     protected override _onAfterBuildReady(binder: UITemplateBinder): void {
         binder.getButton('btnHudUltimate')?.node.on(Button.EventType.CLICK, () => { services().event.emit('hud-ultimate-requested', undefined); }, this);
+        // HTML 匯入的齒輪／退原本只是裝飾，沒有任何 Button 或事件。
+        for (const id of ['BattleHudScreen_div_12', 'BattleHudScreen_div_142']) {
+            const node = binder.getNode(id);
+            if (!node) continue;
+            if (!node.getComponent(Button)) node.addComponent(Button);
+            node.on(Button.EventType.CLICK, () => { void this._showSettings(); }, this);
+        }
+        this._spLabel = binder.getLabel('BattleHudScreen_div_127');
+        this._chargeLabel = binder.getLabel('BattleHudScreen_div_121');
+        this._spReadyLabel = binder.getLabel('BattleHudScreen_div_129');
+        this._spFill = binder.getNode('BattleHudScreen_div_126')?.getChildByName('skinLayer_BattleHudScreen_div_128_BattleHudScreen_i_9') ?? null;
+        for (const label of [this._spLabel, this._spReadyLabel]) {
+            label?.node.getComponent(UITransform)?.setContentSize(180, 18);
+        }
+        this._renderSp(0, 0);
         this._turnLabel           = binder.getLabel('TurnLabel');
         this._stageTitleLabel     = binder.getLabel('StageTitleLabel');
         this._stageSubtitleLabel  = binder.getLabel('StageSubtitleLabel');
@@ -300,6 +321,24 @@ export class BattleHUDComposite extends CompositePanel {
         });
     }
 
+    private async _showSettings(): Promise<void> {
+        const host = this.node.parent ?? this.node;
+        const node = host.getChildByName('BattleSettings') ?? new Node('BattleSettings');
+        node.layer = this.node.layer;
+        if (!node.parent) host.addChild(node);
+        (node.getComponent(UITransform) ?? node.addComponent(UITransform)).setContentSize(1920, 1080);
+        this._settings = node.getComponent(BattleSettingsComposite) ?? node.addComponent(BattleSettingsComposite);
+        try { await this._settings.show(); }
+        catch { services().event.emit(EVENT_NAMES.ShowToast, { text: '設定載入失敗，請再試一次' }); }
+    }
+
+    private _renderSp(sp: number, maxSp: number): void {
+        if (this._spLabel) this._spLabel.string = `SP ${sp}/${maxSp}`;
+        if (this._chargeLabel) this._chargeLabel.string = `奧義消耗 SP ${maxSp}；目前 ${sp}/${maxSp}`;
+        if (this._spReadyLabel) this._spReadyLabel.string = maxSp > 0 && sp >= maxSp ? '奧義可施放' : '奧義蓄力中';
+        this._spFill?.setScale(maxSp > 0 ? Math.min(1, sp / maxSp) : 0, 1, 1);
+    }
+
     // ── 私有工具 ─────────────────────────────────────────────
 
     private _flushReadyWaiters(ready: boolean): void {
@@ -378,6 +417,9 @@ export class BattleHUDComposite extends CompositePanel {
         if (this._unsubs.length > 0) return; // 防止重複訂閱
         const ev = services().event;
         this._unsubs.push(
+            ev.on(EVENT_NAMES.GeneralSpChanged, (d: { faction: Faction; sp: number; maxSp: number }) => {
+                if (d.faction === Faction.Player) this._renderSp(d.sp, d.maxSp);
+            }),
             ev.on(EVENT_NAMES.TurnPhaseChanged,  (d) => this._onTurnPhaseChanged(d as { turn: number; food: number; maxFood: number })),
             ev.on(EVENT_NAMES.GeneralDamagedVisualCommitted, (d) => this._onGeneralDamaged(d as { faction: Faction; hp: number; maxHp: number })),
             ev.on(EVENT_NAMES.GeneralSkillUsed,  (d) => this._onGeneralSkillUsed(d as { faction: Faction; skillId?: string; skillName?: string; sourceType?: any })),

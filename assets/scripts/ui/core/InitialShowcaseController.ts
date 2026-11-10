@@ -6,7 +6,7 @@
  * 翻完最後一位回傳 true，由呼叫端送出 showcase-done。
  * 輸出扁平 FlowView，key 與 initial-showcase-main.json 的節點 id 一一對應。
  *
- * 幕位置：開場信之後、宿命轉蛋之前（PROG-2-2215 使用者裁決），六名將說完台詞引導玩家進轉蛋。
+ * 幕位置：開場信之後、宿命轉蛋之前（PROG-2-2222 使用者裁決），六名將說完台詞引導玩家進轉蛋。
  *
  * Unity 對照：Presenter。畫面只讀 getFlowView()，按鈕只呼叫 next()，像一份 Showcase 清單逐筆播放。
  */

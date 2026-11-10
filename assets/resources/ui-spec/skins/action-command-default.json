@@ -160,8 +160,8 @@
     "action.util.endturn.label": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 10,
-      "lineHeight": 12,
+      "fontSize": 24,
+      "lineHeight": 30,
       "color": "textHintGray",
       "horizontalAlign": "CENTER"
     },

@@ -22,7 +22,7 @@ export interface LobbyOpeningPanelPorts {
     generals: () => readonly GeneralConfig[];
     /** 新局，或讀檔後開場尚未播完 */
     isNewPlayer: () => boolean;
-    /** 大廳面板是否已掛完；開場優先掛載時新手引導要等它（引導指向大廳按鈕，PROG-2-2216）。未提供視為已就緒 */
+    /** 大廳面板是否已掛完；開場優先掛載時新手引導要等它（引導指向大廳按鈕，PROG-2-2223）。未提供視為已就緒 */
     lobbyReady?: () => boolean;
     loadGachaConfig: () => Promise<GachaConfig[]>;
     mountHost: (name: string, screen: string, bindings: { buttonId: string; handler: () => void }[]) => Promise<LobbyOpeningPanelHost>;
@@ -54,7 +54,7 @@ export class LobbyOpeningPanels {
 
     constructor(private readonly _ports: LobbyOpeningPanelPorts) {}
 
-    /** 目前顯示中的開場面板節點（信件、宿命轉蛋、新手引導），供宿主維持最上層（PROG-2-2216）。 */
+    /** 目前顯示中的開場面板節點（信件、宿命轉蛋、新手引導），供宿主維持最上層（PROG-2-2223）。 */
     public activeHostNodes(): Node[] {
         return [this._openingLetterHost, this._destinyHost, this._onboardingHost]
             .filter((host): host is LobbyOpeningPanelHost => host !== null && host.node.active)
@@ -107,7 +107,7 @@ export class LobbyOpeningPanels {
 
     /**
      * 開場信件面板（PROG-2-1305）。新局在第一幕後由 openLetterThen 開信，關信後才接下一步
-     * （PROG-2-2215：信 → 六名將登場 → 宿命轉蛋）；舊玩家未讀照常顯示。已讀後不再自動開；關閉時記為已讀並存檔。
+     * （PROG-2-2222：信 → 六名將登場 → 宿命轉蛋）；舊玩家未讀照常顯示。已讀後不再自動開；關閉時記為已讀並存檔。
      */
     public async mountOpeningLetter(): Promise<void> {
         this._openingLetterHost = await this._ports.mountHost('OpeningLetterHost', 'opening-letter-screen', [
@@ -188,7 +188,7 @@ export class LobbyOpeningPanels {
     }
 
     /**
-     * 新局開信，讀完關掉才執行 next（PROG-2-2215：信之後接六名將登場）。
+     * 新局開信，讀完關掉才執行 next（PROG-2-2222：信之後接六名將登場）。
      * 信已讀或面板沒掛上時直接執行 next，不讓開場卡住。
      */
     public openLetterThen(next: () => void): void {

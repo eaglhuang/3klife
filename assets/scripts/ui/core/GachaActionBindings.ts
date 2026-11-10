@@ -12,8 +12,8 @@ export const GACHA_ACTION_NODES = {
 
 type Action = keyof typeof GACHA_ACTION_NODES;
 interface ActionNode {
-    off(event: string, callback: undefined, owner: object): void;
-    on(event: string, callback: () => void, owner: object): void;
+    off(event: string, callback?: any, owner?: object): void;
+    on(event: string, callback: (...args: any[]) => void, owner?: object): void;
 }
 
 export function bindGachaActions<T extends ActionNode>(
@@ -24,9 +24,16 @@ export function bindGachaActions<T extends ActionNode>(
     for (const action of Object.keys(GACHA_ACTION_NODES) as Action[]) {
         const name = GACHA_ACTION_NODES[action];
         const node = getNode(name);
-        if (!node) throw new Error(`[GachaActions] Missing action node: ${name}`);
+        if (!node) continue;
         prepareButton(node);
-        node.off(event, undefined, owner);
-        node.on(event, actions[action], owner);
+        const handler = actions[action];
+        if (!handler) continue;
+        node.off(event, handler, owner);
+        node.on(event, handler, owner);
+        // 增加 TOUCH_END 備用事件監聽，確保滑鼠與觸控直接點擊時 100% 觸發
+        if (event !== 'touch-end') {
+            node.off('touch-end', handler, owner);
+            node.on('touch-end', handler, owner);
+        }
     }
 }

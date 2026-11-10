@@ -340,7 +340,7 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
             assert.isFalse(service.lastLoadRecoveredFromBackup());
         });
     }
-    suite.test('新局：開信後關信才接下一步（名將登場），只接一次（PROG-2-2215）', async () => {
+    suite.test('新局：開信後關信才接下一步（名將登場），只接一次（PROG-2-2222）', async () => {
         const f = fixture();
         await f.panels.mountOpeningLetter();
         await f.panels.mountDestiny();
@@ -357,7 +357,7 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         assert.equals(1, nextCalls, '重複關信不重複接續');
     });
 
-    suite.test('信已讀：openLetterThen 直接接下一步，不再開信（PROG-2-2215）', async () => {
+    suite.test('信已讀：openLetterThen 直接接下一步，不再開信（PROG-2-2222）', async () => {
         const f = fixture();
         await f.panels.mountOpeningLetter();
         await f.session.markOpeningLetterSeen();
@@ -367,7 +367,7 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         assert.isFalse(f.hosts.get('OpeningLetterHost')!.node.active);
     });
 
-    suite.test('新手引導等大廳掛完才出現：宿命鎖定後 lobbyReady 為 false 時不顯示（PROG-2-2216）', async () => {
+    suite.test('新手引導等大廳掛完才出現：宿命鎖定後 lobbyReady 為 false 時不顯示（PROG-2-2223）', async () => {
         const f = fixture();
         let lobbyReady = false;
         f.ports.lobbyReady = () => lobbyReady;
@@ -383,7 +383,7 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         assert.isTrue(f.hosts.get('OnboardingTutorialHost')!.node.active);
     });
 
-    suite.test('activeHostNodes 只回顯示中的開場面板，供宿主維持最上層（PROG-2-2216）', async () => {
+    suite.test('activeHostNodes 只回顯示中的開場面板，供宿主維持最上層（PROG-2-2223）', async () => {
         const f = fixture();
         await f.panels.mountOpeningLetter();
         await f.panels.mountDestiny();
@@ -397,7 +397,7 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         assert.isTrue(f.panels.activeHostNodes()[0] === f.hosts.get('DestinyOpeningHost')!.node);
     });
 
-    suite.test('名將登場後開宿命轉蛋：直接進轉蛋，不再插信（PROG-2-2215）', async () => {
+    suite.test('名將登場後開宿命轉蛋：直接進轉蛋，不再插信（PROG-2-2222）', async () => {
         const f = fixture();
         await f.panels.mountOpeningLetter();
         await f.panels.mountDestiny();

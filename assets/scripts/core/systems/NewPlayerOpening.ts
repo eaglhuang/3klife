@@ -3,7 +3,7 @@
  * NewPlayerOpening — 新玩家開場的幕序與第一幕文字，純 TS，不依賴 cc。
  *
  * 幕序：intro（第一幕情懷定錨，結尾接「致你的一封信」）→ showcase（六名將逐一登場說台詞）→ destiny（宿命轉蛋）；
- * 宿命鎖定即開場結束（PROG-2-2215 使用者裁決：信之後先由六名將引導，再進轉蛋）。
+ * 宿命鎖定即開場結束（PROG-2-2222 使用者裁決：信之後先由六名將引導，再進轉蛋）。
  * 第三幕首戰教學由戰場內的教學提示與大廳 3 段式引導負責（不在大廳內推進），
  * 第四幕紅顏需要「首戰已通過」的存檔旗標，尚未有欄位，暫不自動觸發。
  * 台詞為 PM 暫定文字：規格只給主軸（§5.1），沒有逐字稿，正式文案待企劃。
@@ -34,7 +34,7 @@ export const INTRO_PANELS: readonly IntroPanel[] = Object.freeze([
     { id: 'vortex', text: '白點擴散成漩渦，舊日的靈魂被吸進命盤裂口，\n轉蛋盤自遠而近飛來。', button: '進入宿命' },
 ]);
 
-/** 新玩家開場：intro 以 intro-done 離開 → showcase 以 showcase-done 離開 → destiny 以 destiny-locked 離開（開場結束，PROG-2-2215） */
+/** 新玩家開場：intro 以 intro-done 離開 → showcase 以 showcase-done 離開 → destiny 以 destiny-locked 離開（開場結束，PROG-2-2222） */
 export function createNewPlayerOpeningFlow(): OpeningFlowController {
     const config: OpeningFlowConfig = {
         phases: [
@@ -47,7 +47,7 @@ export function createNewPlayerOpeningFlow(): OpeningFlowController {
 }
 
 /**
- * 是否先掛開場面板（PROG-2-2216）：新玩家，或讀檔後開場還沒播完。
+ * 是否先掛開場面板（PROG-2-2223）：新玩家，或讀檔後開場還沒播完。
  * 線上首開時其他約 40 個大廳面板逐一下載要一分多鐘，先掛開場才能馬上看到旁白。
  */
 export function shouldMountOpeningFirst(isNewPlayer: boolean, openingPhase: string | null): boolean {

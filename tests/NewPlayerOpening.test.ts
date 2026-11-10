@@ -50,13 +50,13 @@ export function createNewPlayerOpeningSuite(): TestSuite {
         assert.isFalse(intro.next());
     });
 
-    suite.test('開場優先掛載（PROG-2-2216）：新玩家或開場未播完才先掛開場面板', () => {
+    suite.test('開場優先掛載（PROG-2-2223）：新玩家或開場未播完才先掛開場面板', () => {
         assert.isTrue(shouldMountOpeningFirst(true, null), '新玩家');
         assert.isTrue(shouldMountOpeningFirst(false, 'showcase'), '讀檔接回開場');
         assert.isFalse(shouldMountOpeningFirst(false, null), '舊玩家照原順序');
     });
 
-    suite.test('幕序（PROG-2-2215）：start → intro；intro-done → showcase；showcase-done → destiny；destiny-locked → 結束', () => {
+    suite.test('幕序（PROG-2-2222）：start → intro；intro-done → showcase；showcase-done → destiny；destiny-locked → 結束', () => {
         const flow = createNewPlayerOpeningFlow();
         assert.equals('intro', flow.start()!.id);
         assert.equals('intro', flow.advance({ type: SHOWCASE_DONE_EVENT })!.id);

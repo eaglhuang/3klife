@@ -1103,12 +1103,18 @@ export class BattleController {
   }
 
   public resolveEnemyTurn(): BattleResult {
+    if (this.flowStateMachine.isFinished()) return this.flowStateMachine.result!;
+    if (this.pendingEnemyTurnResult !== null) return this.pendingEnemyTurnResult;
     const result = this.executeRuntimeTurnPlan(this.buildEnemyTurnPhaseExecutors(), false);
     this.pendingEnemyTurnResult = result;
     return result;
   }
 
   public finalizeEnemyTurn(): BattleResult {
+    if (this.flowStateMachine.isFinished()) {
+      this.pendingEnemyTurnResult = null;
+      return this.flowStateMachine.result!;
+    }
     const result = this.pendingEnemyTurnResult;
     if (result === null) {
       return this.flowStateMachine.result ?? 'ongoing';
@@ -1220,6 +1226,7 @@ export class BattleController {
           turnManager: this.turnManager,
           turn: services().battle.getSnapshot().turn,
           difficultyBonus: this.state.aiDifficultyBonus,
+          tutorialBattle: this.tutorialBattle,
           spawnEnemyUnit: (type, lane, depth, unitName) => this.unitSpawner.spawnUnit(type, Faction.Enemy, lane, depth, unitName),
           isCellMovementBlocked: (lane, depth) => this.combatResolver.isCellMovementBlocked(lane, depth),
           announce: (line) => services().event.emit(EVENT_NAMES.BattleSkillNotice, line),
@@ -1488,6 +1495,21 @@ export class BattleController {
 
   private canRequestGeneralDuel(): boolean {
     return this.flowStateMachine.canRequestGeneralDuel();
+  }
+
+  /** 首戰教學最多十二個完整回合，避免已無操作教學價值仍需磨空城池。只限 tutorial。 */
+  public tutorialBattle = false;
+
+  public retreatBattle(): BattleResult {
+    if (this.flowStateMachine.isFinished()) return this.flowStateMachine.result!;
+    this.pendingEnemyTurnResult = null;
+    this.pendingAdvanceTurnResult = null;
+    this.commitBattleResult('enemy-win');
+    if (!this.state.battleEndAnnounced) {
+      this.state.battleEndAnnounced = true;
+      services().event.emit(EVENT_NAMES.BattleEnded, { result: 'enemy-win' });
+    }
+    return 'enemy-win';
   }
 
   private checkVictory(): BattleResult {
