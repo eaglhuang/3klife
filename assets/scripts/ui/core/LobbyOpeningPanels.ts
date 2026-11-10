@@ -28,7 +28,6 @@ export interface LobbyOpeningPanelPorts {
     refreshSeasonHud: () => void;
     notifyBeauty: (name: string) => void;
     canNotifyBeauty?: () => boolean;
-    focusTutorial?: (host: LobbyOpeningPanelHost, step: number) => void;
     advanceOpening: (event: OpeningFlowEvent) => void;
     /** 宿命轉蛋六框載立繪（與招賢館同一套擺位，PROG-2-1147）；keys 依框序 */
     applyFramePortraits?: (binder: NonNullable<LobbyOpeningPanelHost['binder']>, keys: readonly string[]) => void;
@@ -37,6 +36,7 @@ export interface LobbyOpeningPanelPorts {
     /** 開場面板完成顯示／退場後，通知宿主重查延後彈窗。 */
     onOverlayChanged?: () => void;
     warn: (message: string, error?: unknown) => void;
+    focusTutorial?: (host: LobbyOpeningPanelHost, step: number) => void;
 }
 
 /** 大廳開場面板接線；Scene 保留 Cocos 掛載與公開入口。 */

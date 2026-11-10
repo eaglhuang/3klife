@@ -1,8 +1,8 @@
-import { placeTutorialTarget } from '../core/OnboardingTargetHighlight';
-import { ONBOARDING_ACTIONS } from '../core/OnboardingFlowController';
 import { presentLobbyLead } from '../core/LobbyLeadPresentation';
 // @spec-source → 見 docs/cross-reference-index.md
 import { openingLetterBodyWithFunLine } from '../../core/systems/FunLineLibrary';
+import { placeTutorialTarget } from '../core/OnboardingTargetHighlight';
+import { ONBOARDING_ACTIONS } from '../core/OnboardingFlowController';
 import { ERA_SHIFT_TEXT, formatHegemonRise } from '../../core/systems/RivalRulerLines';
 import { nationDef } from '../../core/systems/RivalNations';
 import type { RivalRostersConfig } from '../../core/systems/RivalOfficers';
@@ -2257,10 +2257,6 @@ export class LobbyScene extends Component {
                 },
                 bringToFront: node => this._bringNodeToFront(node),
                 refreshSeasonHud: () => this._refreshSeasonHud(),
-                focusTutorial: (host, step) => {
-                    const action = Object.values(ONBOARDING_ACTIONS)[step];
-                    placeTutorialTarget(host.binder as UITemplateBinder | null, action ? this._cityHubHost?.binder?.getNode(action.target) ?? null : null);
-                },
                 canNotifyBeauty: () => canShowSeasonChronicle({
                     openingUiReady: this._openingUiReady,
                     openingInProgress: this._isOpeningInProgress(),
@@ -2273,6 +2269,10 @@ export class LobbyScene extends Component {
                 applyFramePortraits: (binder, keys) => this._applyFramePortraits(binder as NonNullable<UIScreenPreviewHost['binder']>, 'destiny', keys, undefined, DESTINY_PORTRAIT_SPEC),
                 openingLetterText: () => ({ title: services().i18n.t('copy.letter.opening.title'), body: openingLetterBodyWithFunLine(services().i18n.t('copy.letter.opening.body'), services().session.magistrateUid ?? '') }),
                 warn: (message, error) => UCUFLogger.warn(LogCategory.DATA, message, error),
+                focusTutorial: (host, step) => {
+                    const action = Object.values(ONBOARDING_ACTIONS)[step];
+                    placeTutorialTarget(host.binder as UITemplateBinder | null, action ? this._cityHubHost?.binder?.getNode(action.target) ?? null : null);
+                },
             });
         }
         return this._openingPanels;
