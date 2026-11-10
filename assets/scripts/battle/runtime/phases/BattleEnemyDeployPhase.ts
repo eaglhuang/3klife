@@ -21,6 +21,8 @@ export interface BattleEnemyDeployPhaseContext {
   readonly turn: number;
   /** 敵方難度加成（ai-difficulty.json 的 difficultyBonus），用於 F-2 部署數 */
   readonly difficultyBonus: number;
+  /** 明確教學戰鬥才套有限波次；一般戰鬥維持原公式與 Boss 親衛隊。 */
+  readonly tutorialBattle?: boolean;
   spawnEnemyUnit(type: TroopType, lane: number, depth: number, unitName?: string): void;
   isCellMovementBlocked(lane: number, depth: number): boolean;
   /** 戰報提示（親衛隊現身）；測試替身可不實作 */
@@ -28,10 +30,14 @@ export interface BattleEnemyDeployPhaseContext {
 }
 
 export function executeBattleEnemyDeployPhase(context: BattleEnemyDeployPhaseContext): void {
-  const deployCount = getAIDeployCount({ difficultyBonus: context.difficultyBonus }, context.turn);
+  // 教學限定設計假設：首回合練習部署，第2/4/6回合各一隊，之後不再補兵。
+  // 不改兵種數值、糧草、主將、基地血量或一般戰鬥難度公式。
+  const deployCount = context.tutorialBattle
+    ? ([2, 4, 6].includes(context.turn) ? 1 : 0)
+    : getAIDeployCount({ difficultyBonus: context.difficultyBonus }, context.turn);
   const decisions = context.enemyAi.decideDeploy(context.state, context.turnManager.enemyFood, deployCount);
   const deployDepth = GAME_CONFIG.GRID_DEPTH - 1;
-  summonBossGuard(context, deployDepth);
+  if (!context.tutorialBattle) summonBossGuard(context, deployDepth);
 
   for (const decision of decisions) {
     if (context.state.getCell(decision.lane, deployDepth)?.occupantId) continue;

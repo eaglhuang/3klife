@@ -1226,6 +1226,7 @@ export class BattleController {
           turnManager: this.turnManager,
           turn: services().battle.getSnapshot().turn,
           difficultyBonus: this.state.aiDifficultyBonus,
+          tutorialBattle: this.tutorialBattle,
           spawnEnemyUnit: (type, lane, depth, unitName) => this.unitSpawner.spawnUnit(type, Faction.Enemy, lane, depth, unitName),
           isCellMovementBlocked: (lane, depth) => this.combatResolver.isCellMovementBlocked(lane, depth),
           announce: (line) => services().event.emit(EVENT_NAMES.BattleSkillNotice, line),
