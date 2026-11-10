@@ -1,6 +1,6 @@
 {
   "taskId": "UI-2-0121",
-  "updatedAt": "2026-11-10T06:24:41.848Z",
+  "updatedAt": "2026-11-10T06:29:17.104Z",
   "evidence": [
     {
       "evidenceKind": "validation",
@@ -12065,6 +12065,87 @@
         "commandRunCache": {
           "schemaId": "atm.commandRunCache.v1",
           "cacheKey": "sha256:acb60c44fd7b581c4ab8b5309d36d65f43bcce367c154ca5d5b6fb1c74a34189",
+          "reusedRunCount": 0,
+          "runCount": 1,
+          "sourcePath": null
+        }
+      }
+    },
+    {
+      "evidenceKind": "validation",
+      "evidenceType": "test",
+      "summary": "Auto-run: node tools_node/generate-general-avatars.js ding-feng --verify",
+      "artifactPaths": [],
+      "evidenceFreshness": "fresh",
+      "producedBy": "codex-gpt-6.1-terra",
+      "sessionId": "session-20261105171558-codex-gpt-6.1-sol-UI-2-0121-3220962ee1",
+      "createdAt": "2026-11-10T06:29:17.104Z",
+      "details": {
+        "actorId": "codex-gpt-6.1-terra",
+        "sessionId": "session-20261105171558-codex-gpt-6.1-sol-UI-2-0121-3220962ee1",
+        "kind": "test",
+        "freshness": "fresh",
+        "commandRuns": [
+          {
+            "command": "node tools_node/generate-general-avatars.js ding-feng --verify",
+            "exitCode": 0,
+            "stdoutSha256": "sha256:d6dfff60d90f0762c27a764fdb7a37f0e6cc505c99af9ea99461f75fecfcb64e",
+            "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "startedAt": "2026-11-10T06:29:16.792Z",
+            "finishedAt": "2026-11-10T06:29:17.104Z",
+            "durationMs": 312,
+            "cached": false,
+            "cwd": ".",
+            "runnerKind": "dev-source",
+            "sourceCommit": "6ac91abbef17c32edc935998b5f5ab8fada346a0",
+            "cacheKey": "sha256:595275ed8e9f3d36d2cebfa625ba2f727b7c842f1b597ae07c3a7691a63cfa92",
+            "generatedAt": "2026-11-10T06:29:17.104Z",
+            "canonicalObservation": {
+              "schemaId": "atm.telemetryObservation.v1",
+              "specVersion": "0.1.0",
+              "migration": {
+                "strategy": "none",
+                "fromVersion": null,
+                "notes": "Canonical telemetry observation contract."
+              },
+              "observationId": "sha256:595275ed8e9f3d36d2cebfa625ba2f727b7c842f1b597ae07c3a7691a63cfa92",
+              "producerId": "evidence.command-runs",
+              "producerVersion": "0.1.0",
+              "observationKind": "command-run",
+              "status": "canonical",
+              "source": "evidence-command-run-normalizer",
+              "sourceAvailability": "available",
+              "storagePolicy": "tracked-compact-digest",
+              "generatedAt": "2026-11-10T06:29:17.104Z",
+              "observedAt": "2026-11-10T06:29:17.104Z",
+              "startedAt": "2026-11-10T06:29:16.792Z",
+              "finishedAt": "2026-11-10T06:29:17.104Z",
+              "durationMs": 312,
+              "laneSessionId": null,
+              "taskId": "UI-2-0121",
+              "batchId": null,
+              "waveId": null,
+              "inputDigest": "sha256:92d0fd1d16444d67d62a3c1450aeb6aaee47943bf85e224a91880f2f85aa1f8d",
+              "outputDigest": "sha256:15d182027e838788acbd49762b23b27909e2ed34cce957e66da7d33d49f8c8a1",
+              "cache": {
+                "key": "sha256:595275ed8e9f3d36d2cebfa625ba2f727b7c842f1b597ae07c3a7691a63cfa92",
+                "hit": false
+              },
+              "extensions": {
+                "command": "node tools_node/generate-general-avatars.js ding-feng --verify",
+                "cwd": ".",
+                "exitCode": 0,
+                "validators": [],
+                "runnerKind": "dev-source",
+                "sourceCommit": "6ac91abbef17c32edc935998b5f5ab8fada346a0",
+                "runnerVersion": null
+              }
+            }
+          }
+        ],
+        "commandRunCache": {
+          "schemaId": "atm.commandRunCache.v1",
+          "cacheKey": "sha256:0063ceee485978bd4a2126b10ca41aa2324596a678c4694597364d3085638ec5",
           "reusedRunCount": 0,
           "runCount": 1,
           "sourcePath": null

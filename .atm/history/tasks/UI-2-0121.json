@@ -10,8 +10,8 @@
   "tags": [],
   "createdAt": "2026-11-05T14:30:28.536Z",
   "createdByActor": "codex-gpt-6.1-sol",
-  "lastTransitionId": "2026-11-10T06-23-43-918Z-scope-amendment-40b7b0164f87",
-  "lastTransitionAt": "2026-11-10T06:23:43.918Z",
+  "lastTransitionId": "2026-11-10T06-28-21-887Z-scope-amendment-25caeb67d7b9",
+  "lastTransitionAt": "2026-11-10T06:28:21.887Z",
   "ledgerContractVersion": "task-ledger/v1",
   "reservedAt": "2026-11-05T17:15:58.821Z",
   "promotedAt": "2026-11-05T17:15:58.826Z",
@@ -135,6 +135,7 @@
       "assets/resources/sprites/generals/avatars/deng_ai_avatar.png",
       "assets/resources/sprites/generals/avatars/dian_wei_avatar.png",
       "assets/resources/sprites/generals/avatars/diao_chan_avatar.png",
+      "assets/resources/sprites/generals/avatars/ding_feng_avatar.png",
       "assets/resources/sprites/generals/avatars/dong_bai_avatar.png",
       "assets/resources/sprites/generals/avatars/dong_bai_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/dong_zhuo_avatar.png",
@@ -294,6 +295,7 @@
       "assets/resources/sprites/generals/deng_ai_portrait.png",
       "assets/resources/sprites/generals/dian_wei_portrait.png",
       "assets/resources/sprites/generals/diao_chan_portrait.png",
+      "assets/resources/sprites/generals/ding_feng_portrait.png",
       "assets/resources/sprites/generals/dong_bai_portrait.png",
       "assets/resources/sprites/generals/dong_bai_portrait.png.meta",
       "assets/resources/sprites/generals/dong_zhuo_portrait.png",
@@ -453,6 +455,7 @@
       "assets/resources/sprites/ui_avatars/cropped/deng_ai_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/dian_wei_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/diao_chan_avatar.png",
+      "assets/resources/sprites/ui_avatars/cropped/ding_feng_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/dong_bai_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/dong_bai_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/dong_zhuo_avatar.png",
@@ -605,20 +608,20 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-9f8fd64b81ea93d0",
-    "ticketDigest": "sha256:9f8fd64b81ea93d00939708acc6ac8edc06b9773167299fcd1824f9d263d3ba0",
+    "ticketId": "wat-15a9672bd14cd7bd",
+    "ticketDigest": "sha256:15a9672bd14cd7bdb898f6ea9e4e2fbde68ab157a2a902dcc476a35eeca24c43",
     "taskId": "UI-2-0121",
     "origin": "claim",
     "actorId": "codex-gpt-6.1-terra",
     "laneSessionId": "lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d",
     "claimGeneration": "lease-f957fb02b01d",
-    "issuedAt": "2026-11-10T06:23:43.794Z",
-    "expiresAt": "2026-11-10T06:53:43.794Z",
-    "scopeDigest": "sha256:d0629ed9da4f1b83c2be39ce41f0ac00e3fd6641992139552ab1b81291849a23",
+    "issuedAt": "2026-11-10T06:28:21.783Z",
+    "expiresAt": "2026-11-10T06:58:21.783Z",
+    "scopeDigest": "sha256:76b24ed60cdec3dd462982178b1ffc57668d8ff28943223893d61275fd48f56a",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-11-10T06:23:43.794Z"
+      "selectedAt": "2026-11-10T06:28:21.783Z"
     },
     "grants": [
       {
@@ -738,6 +741,7 @@
           "assets/resources/sprites/generals/avatars/deng_ai_avatar.png",
           "assets/resources/sprites/generals/avatars/dian_wei_avatar.png",
           "assets/resources/sprites/generals/avatars/diao_chan_avatar.png",
+          "assets/resources/sprites/generals/avatars/ding_feng_avatar.png",
           "assets/resources/sprites/generals/avatars/dong_bai_avatar.png",
           "assets/resources/sprites/generals/avatars/dong_bai_avatar.png.meta",
           "assets/resources/sprites/generals/avatars/dong_zhuo_avatar.png",
@@ -897,6 +901,7 @@
           "assets/resources/sprites/generals/deng_ai_portrait.png",
           "assets/resources/sprites/generals/dian_wei_portrait.png",
           "assets/resources/sprites/generals/diao_chan_portrait.png",
+          "assets/resources/sprites/generals/ding_feng_portrait.png",
           "assets/resources/sprites/generals/dong_bai_portrait.png",
           "assets/resources/sprites/generals/dong_bai_portrait.png.meta",
           "assets/resources/sprites/generals/dong_zhuo_portrait.png",
@@ -1056,6 +1061,7 @@
           "assets/resources/sprites/ui_avatars/cropped/deng_ai_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/dian_wei_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/diao_chan_avatar.png",
+          "assets/resources/sprites/ui_avatars/cropped/ding_feng_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/dong_bai_avatar.png",
           "assets/resources/sprites/ui_avatars/cropped/dong_bai_avatar.png.meta",
           "assets/resources/sprites/ui_avatars/cropped/dong_zhuo_avatar.png",
@@ -1195,7 +1201,7 @@
           "docs/ui-quality-tasks/UI-2-0121.json",
           "docs/ui-quality-todo.json"
         ],
-        "digest": "sha256:98012ee1ed709a858a6cf8b72abdf342093799b590a5de51337b098e44e86069"
+        "digest": "sha256:b4bf36311ba71e6adaa0203d9cbae1fa15767c1e6ca83d7b44dfa0cb0b584344"
       },
       {
         "kind": "lifecycle-operation",
@@ -1357,6 +1363,7 @@
       "assets/resources/sprites/generals/avatars/deng_ai_avatar.png",
       "assets/resources/sprites/generals/avatars/dian_wei_avatar.png",
       "assets/resources/sprites/generals/avatars/diao_chan_avatar.png",
+      "assets/resources/sprites/generals/avatars/ding_feng_avatar.png",
       "assets/resources/sprites/generals/avatars/dong_bai_avatar.png",
       "assets/resources/sprites/generals/avatars/dong_bai_avatar.png.meta",
       "assets/resources/sprites/generals/avatars/dong_zhuo_avatar.png",
@@ -1516,6 +1523,7 @@
       "assets/resources/sprites/generals/deng_ai_portrait.png",
       "assets/resources/sprites/generals/dian_wei_portrait.png",
       "assets/resources/sprites/generals/diao_chan_portrait.png",
+      "assets/resources/sprites/generals/ding_feng_portrait.png",
       "assets/resources/sprites/generals/dong_bai_portrait.png",
       "assets/resources/sprites/generals/dong_bai_portrait.png.meta",
       "assets/resources/sprites/generals/dong_zhuo_portrait.png",
@@ -1675,6 +1683,7 @@
       "assets/resources/sprites/ui_avatars/cropped/deng_ai_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/dian_wei_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/diao_chan_avatar.png",
+      "assets/resources/sprites/ui_avatars/cropped/ding_feng_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/dong_bai_avatar.png",
       "assets/resources/sprites/ui_avatars/cropped/dong_bai_avatar.png.meta",
       "assets/resources/sprites/ui_avatars/cropped/dong_zhuo_avatar.png",
@@ -2941,6 +2950,9 @@
     "assets/resources/sprites/ui_avatars/cropped/deng_ai_avatar.png",
     "assets/resources/sprites/generals/avatars/yu_jin_avatar.png",
     "assets/resources/sprites/generals/yu_jin_portrait.png",
-    "assets/resources/sprites/ui_avatars/cropped/yu_jin_avatar.png"
+    "assets/resources/sprites/ui_avatars/cropped/yu_jin_avatar.png",
+    "assets/resources/sprites/generals/avatars/ding_feng_avatar.png",
+    "assets/resources/sprites/generals/ding_feng_portrait.png",
+    "assets/resources/sprites/ui_avatars/cropped/ding_feng_avatar.png"
   ]
 }

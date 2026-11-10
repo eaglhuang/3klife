@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-10T06-28-21-887Z-scope-amendment-25caeb67d7b9",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:e2fa30b61547be853d5b2676209f219c0f0d2e5528b385499ed7d5adafab1ef9",
+  "createdAt": "2026-11-10T06:28:21.887Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/ding_feng_portrait.png,assets/resources/sprites/generals/avatars/ding_feng_avatar.png,assets/resources/sprites/ui_avatars/cropped/ding_feng_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}

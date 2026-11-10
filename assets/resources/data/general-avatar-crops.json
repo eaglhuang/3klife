@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "ding-feng": {
+      "x": 360,
+      "y": 30,
+      "w": 380,
+      "h": 380,
+      "source": "reviewed",
+      "$note": "2026-11-10 丁奉紅銅短刀新版，保留冠飾、面容與肩甲。"
+    },
     "yu-jin": {
       "x": 400,
       "y": 50,
