@@ -1,7 +1,7 @@
 {
   "schemaId": "atm.evidenceBundleManifest.v1",
   "taskId": "UI-2-0121",
-  "updatedAt": "2026-11-10T11:38:24.515Z",
+  "updatedAt": "2026-11-10T11:43:51.108Z",
   "updatedBy": "codex-gpt-6.1-terra",
   "freshValidationPasses": [],
   "staleValidationPasses": [],
@@ -2188,6 +2188,20 @@
       "durationMs": 365,
       "runnerKind": "dev-source",
       "sourceCommit": "b624a1838402ba3bebf7a1cc604ef5f5a59a4607",
+      "cached": false
+    },
+    {
+      "command": "node tools_node/generate-general-avatars.js han-sui --verify",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:8b8260f635fa4196bd2d6e1de69471616f2c440c1d907ae7f149085b3ae9f3ff",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [],
+      "generatedAt": "2026-11-10T11:43:51.107Z",
+      "startedAt": "2026-11-10T11:43:50.774Z",
+      "finishedAt": "2026-11-10T11:43:51.107Z",
+      "durationMs": 333,
+      "runnerKind": "dev-source",
+      "sourceCommit": "38d4e4c3f4322134ae900734d17b38106e05b4ba",
       "cached": false
     }
   ],

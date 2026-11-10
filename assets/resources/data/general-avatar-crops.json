@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "han-sui": {
+      "x": 310,
+      "y": -20,
+      "w": 420,
+      "h": 420,
+      "source": "reviewed",
+      "$note": "2026-11-10 韓遂赭砂深青西涼新版，保留頭飾、面容與肩甲。"
+    },
     "zhang-lu": {
       "x": 320,
       "y": 0,
