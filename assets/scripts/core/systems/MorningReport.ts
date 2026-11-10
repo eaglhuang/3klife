@@ -36,6 +36,8 @@ export interface MorningReportState {
     read: boolean;
     /** 產生這份晨報的登入日（loginDayOf）；舊存檔沒有此欄，下一次登入照常產生 */
     day?: string;
+    /** 晨報派遣板上次打開時的日誌數（PROG-2-2203 紅點打開即熄）；隔天晨報重算時清掉 */
+    seenMark?: number;
 }
 
 export const EMPTY_MORNING_REPORT: Readonly<MorningReportState> = { journalMark: 0, items: [], read: true };
@@ -82,7 +84,13 @@ export function copyMorningReport(state: Readonly<MorningReportState>): MorningR
         items: state.items.map((i) => ({ ...i, ...(i.summaryArgs ? { summaryArgs: [...i.summaryArgs] } : {}) })),
         read: state.read,
         ...(state.day !== undefined ? { day: state.day } : {}),
+        ...(state.seenMark !== undefined ? { seenMark: state.seenMark } : {}),
     };
+}
+
+/** 打開晨報派遣板：目前的日誌都算看過，紅點熄滅（不影響隔天晨報要整理的範圍） */
+export function markJournalHubSeen(state: Readonly<MorningReportState>, entries: readonly JournalEntry[]): MorningReportState {
+    return { ...copyMorningReport(state), seenMark: entries.length };
 }
 
 export function markMorningReportRead(state: Readonly<MorningReportState>): MorningReportState {
@@ -91,7 +99,8 @@ export function markMorningReportRead(state: Readonly<MorningReportState>): Morn
 
 /** 晨報產生後新增、要等隔天晨報才會整理的日誌數（不含 HIDDEN）；大廳紅點用。 */
 export function pendingMorningJournalCount(state: Readonly<MorningReportState>, entries: readonly JournalEntry[]): number {
-    return entries.slice(Math.min(state.journalMark, entries.length)).filter((e) => e.visibility !== 'HIDDEN').length;
+    const from = Math.max(state.journalMark, state.seenMark ?? 0);
+    return entries.slice(Math.min(from, entries.length)).filter((e) => e.visibility !== 'HIDDEN').length;
 }
 
 /** 未讀時回傳 [開頭句, 每則摘要]，否則空陣列。 */
@@ -120,5 +129,6 @@ export function normalizeMorningReportState(raw: unknown): MorningReportState {
             }))
         : [];
     const day = typeof value.day === 'string' && value.day.length > 0 ? value.day : undefined;
-    return { journalMark, items, read: value.read !== false || items.length === 0, ...(day !== undefined ? { day } : {}) };
+    const seenMark = typeof value.seenMark === 'number' && Number.isFinite(value.seenMark) && value.seenMark >= 0 ? Math.floor(value.seenMark) : undefined;
+    return { journalMark, items, read: value.read !== false || items.length === 0, ...(day !== undefined ? { day } : {}), ...(seenMark !== undefined ? { seenMark } : {}) };
 }

@@ -126,6 +126,8 @@ import { AcademyGraduationController } from '../core/AcademyGraduationController
 import { ClanShrineController } from '../core/ClanShrineController';
 import { OpeningOfferPopupController } from '../core/OpeningOfferPopupController';
 import { SeasonEventPopupController } from '../core/SeasonEventPopupController';
+import { SeasonChroniclePopupController } from '../core/SeasonChroniclePopupController';
+import type { ChronicleTrigger } from '../../core/systems/SeasonChronicle';
 import { parseOpeningOfferTable } from '../../core/systems/OpeningOffer';
 import { SeasonPassController } from '../core/SeasonPassController';
 import type { AcademyGraduationResult } from '../../core/systems/nurture/AcademyGraduation';
@@ -356,6 +358,7 @@ export class LobbyScene extends Component {
     private _clanShrine: ClanShrineController<UIScreenPreviewHost> | null = null;
     private _openingOfferPopup: OpeningOfferPopupController<UIScreenPreviewHost> | null = null;
     private _seasonEventPopup: SeasonEventPopupController<UIScreenPreviewHost> | null = null;
+    private _seasonChroniclePopup: SeasonChroniclePopupController<UIScreenPreviewHost> | null = null;
     private _seasonPassPanel: SeasonPassController<UIScreenPreviewHost> | null = null;
     private _mentorBorrow: MentorBorrowController<UIScreenPreviewHost> | null = null;
     /** 「我的教官卡」列表（PROG-2-1097）：重用 mentor-borrow-screen 版面 */
@@ -635,6 +638,7 @@ export class LobbyScene extends Component {
         await this._mountAcademyGraduation();
         await this._mountClanShrine();
         await this._mountOpeningOffer();
+        await this._mountSeasonChroniclePopup();
         await this._mountSeasonEventPopup();
         await this._mountSeasonPass();
         await this._mountMentorBorrow();
@@ -961,6 +965,39 @@ export class LobbyScene extends Component {
     private _syncSeasonEventPopup(): void {
         const popup = this._seasonEventPopup;
         if (popup?.host && popup.tryOpen()) this._bringNodeToFront(popup.host.node);
+    }
+
+    /**
+     * 三國季報彈窗（LOOP-03，PROG-2-2203）：只在換季與換日首登時自動開；戰後回大廳同一天再進場不開（規格 §三-2）。
+     * 掛在性格事件彈窗之前，兩者同時開時性格事件在上層。
+     */
+    private async _mountSeasonChroniclePopup(): Promise<void> {
+        const gacha = this._localGachaService;
+        const popup = new SeasonChroniclePopupController<UIScreenPreviewHost>({
+            mountHost: (bindings) => this._mountPreviewScreenHost('SeasonChronicleHost', 'season-chronicle-screen', bindings),
+            apply: (host, view) => { if (host.binder) applyFlowView(host.binder, view); },
+            state: () => services().session.seasonChronicle,
+            seasonLabel: () => seasonText(services().session.gameTime),
+            markRead: () => { void services().session.markSeasonChronicleRead().catch(() => undefined); this._refreshDomestic(); },
+            resolve: async (optionIndex) => {
+                const result = await services().session.resolveCityEncounter(optionIndex, {
+                    gold: () => gacha.getCurrencyAmount('gold'),
+                    spendGold: (amount) => gacha.spendCurrency('gold', amount),
+                });
+                if (result.ok) this._refreshDomestic();
+                return result;
+            },
+            toast: (message) => { services().event.emit('SHOW_TOAST', { message, duration: 3 }); },
+        });
+        await popup.mount();
+        this._seasonChroniclePopup = popup;
+        if (services().session.loginStartedNewDay) this._openSeasonChronicle('daily-first-login');
+    }
+
+    private _openSeasonChronicle(trigger: ChronicleTrigger): void {
+        const popup = this._seasonChroniclePopup;
+        if (!popup?.host || !services().session.chronicleShouldOpen(trigger)) return;
+        if (popup.open()) this._bringNodeToFront(popup.host.node);
     }
 
     /** 季度通行證面板（ECO-13 Mock，PROG-2-2197） */
@@ -1698,7 +1735,7 @@ export class LobbyScene extends Component {
             season: () => services().session.gameTime.totalSeasonsElapsed,
             outputMultiplier: (taskId: DomesticTaskId) => services().session.domesticOutputMultiplier(taskId),
             eventLine: () => services().session.governanceEventNotice,
-            journalPending: () => services().session.pendingMorningJournalCount,
+            journalPending: () => services().session.pendingMorningJournalCount + (services().session.seasonChronicleUnread ? 1 : 0),
             choose: (taskId: DomesticTaskId) => services().session.chooseDomesticTask(taskId, (amount) => { gacha.grantCurrency('gold', amount); }),
             // 任務格指派武將（GOV-04 / PROG-2-1159）：產出依武將屬性；指派變動即存檔
             candidates: () => services().session.roster
@@ -2058,6 +2095,8 @@ export class LobbyScene extends Component {
         }
         // 遊戲中到期的派遣也在開板時結算發獎（PROG-2-1182）
         const session = services().session;
+        // 打開即熄紅點（PROG-2-2203）；本季季報還沒看過時一併疊在上層打開
+        session.markJournalHubSeen();
         const done = session.settleDispatchJobs(Date.now(), (amount) => { this._localGachaService.grantCurrency('gold', amount); });
         if (done.length > 0) {
             const roster = session.roster;
@@ -2070,6 +2109,8 @@ export class LobbyScene extends Component {
         if (host.binder) {
             applyFlowView(host.binder, this._journalHub.getFlowView());
         }
+        const chronicle = this._seasonChroniclePopup;
+        if (session.seasonChronicleUnread && chronicle?.host && chronicle.open()) this._bringNodeToFront(chronicle.host.node);
     }
 
     /**
@@ -4314,6 +4355,7 @@ export class LobbyScene extends Component {
         } finally {
             this._fastForwarding = false;
             this._refreshDomestic();
+            this._openSeasonChronicle('season-advance');
             this._syncSeasonEventPopup();
         }
     }
@@ -4356,6 +4398,7 @@ export class LobbyScene extends Component {
                 const payload: SeasonReportOpenPayload = { seasonLabel: seasonText(advance.current), reports: quarterlyReports };
                 void services().ui.open(UIID.SeasonReport, payload);
             }
+            this._openSeasonChronicle('season-advance');
             this._syncSeasonEventPopup();
         } catch (error) {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 推進季度失敗', error);

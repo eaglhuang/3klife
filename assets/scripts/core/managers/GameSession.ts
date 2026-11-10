@@ -107,7 +107,7 @@ import {
 import { buildJournalEvent, type JournalEventKind, type JournalEventSubject } from '../systems/JournalEvents';
 import { journalReactionLine } from '../systems/JournalReaction';
 import {
-    EMPTY_MORNING_REPORT, copyMorningReport, markMorningReportRead, morningReportLines, normalizeMorningReportState, pendingMorningJournalCount, refreshMorningReport,
+    EMPTY_MORNING_REPORT, copyMorningReport, markJournalHubSeen, markMorningReportRead, morningReportLines, normalizeMorningReportState, pendingMorningJournalCount, refreshMorningReport,
     unreadMorningReportCount, type MorningReportState,
 } from '../systems/MorningReport';
 import {
@@ -136,6 +136,8 @@ import { FOOD_LOW_LINE } from '../systems/ResourceCap';
 import { ITEM_DISPLAY_NAMES } from '../systems/PlayerInventory';
 import { prisonTreasureLine } from '../systems/PrisonerOfWar';
 import { governanceBoostMultiplier, normalizeGovernanceBoosts, planGovernanceBoost, type ActiveGovernanceBoost, type GovernanceBoostRejectReason } from '../systems/GovernanceEfficiencyItem';
+import { applyEncounterToRoster, chronicleShouldOpen, cityEncounterDef, cityEncounterNeedsLead, cityEncounterShortfall, copySeasonChronicle, EMPTY_SEASON_CHRONICLE, normalizeSeasonChronicle, synthesizeSeasonChronicle, type ChronicleTrigger, type SeasonChronicleState } from '../systems/SeasonChronicle';
+import { ITEM_WOOD } from '../systems/ItemDef';
 import { EMPTY_SEASON_PERSONALITY_STATE, normalizeSeasonPersonalityState, rollSeasonPersonalityEvents, seasonEventDef, seasonEventFarmMultiplier, seasonEventShortfall, strAfterExp, SEASON_PERSONALITY_TUNING, type SeasonEventInstance, type SeasonPersonalityState } from '../systems/SeasonPersonalityEvents';
 import { governanceEventLine, governanceOutputMultiplier, governanceReportLine, normalizeGovernanceEvent, rollGovernanceEvent, type ActiveGovernanceEvent } from '../systems/GovernanceEvents';
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticStats, type DomesticTaskResult } from '../systems/DomesticTasks';
@@ -855,6 +857,11 @@ export class GameSession {
     /** 換季武將性格事件（LOOP-01，PROG-2-2201） */
     private _seasonPersonality: SeasonPersonalityState = { ...EMPTY_SEASON_PERSONALITY_STATE, pending: [] };
     private _seasonEventRandom: RandomSource | null = null;
+    // 三國季報（LOOP-03，PROG-2-2203）：換季合成，奇遇抉擇與已讀隨存檔
+    private _seasonChronicle: SeasonChronicleState = copySeasonChronicle(EMPTY_SEASON_CHRONICLE);
+    private _chronicleRandom: RandomSource | null = null;
+    /** 最近一次 recordLoginAt 是不是換日後第一次登入（季報首登彈窗用，不存檔） */
+    private _loginStartedNewDay = false;
     private _rivals: RivalWorld = createRivalWorld();
     /** 付費功能的每日額度（裁決第 19 項）；存檔欄位 paidFeatureQuota */
     private _paidFeatureQuota: PaidFeatureQuotaState = EMPTY_PAID_FEATURE_QUOTA;
@@ -1901,6 +1908,11 @@ export class GameSession {
         this._seasonEventRandom = random;
     }
 
+    /** 測試替身：指定三國季報合成的擲骰來源 */
+    public setChronicleRandom(random: RandomSource | null): void {
+        this._chronicleRandom = random;
+    }
+
     public setAutoSave(enabled: boolean): void {
         this._autoSave = enabled;
     }
@@ -2099,6 +2111,8 @@ export class GameSession {
         this._governanceEvent = null;
         this._governanceBoosts = [];
         this._seasonPersonality = { ...EMPTY_SEASON_PERSONALITY_STATE, pending: [] };
+        this._seasonChronicle = copySeasonChronicle(EMPTY_SEASON_CHRONICLE);
+        this._loginStartedNewDay = false;
         this._rivals = this._withRivalOfficers(createRivalWorld());
         this._mercenaries = createEmptyMercenaryBundle();
     }
@@ -2686,6 +2700,74 @@ export class GameSession {
         return { ok: true, line: `${def.title}・${instance.generalName}：${option.label}，${option.note}` };
     }
 
+    private _synthesizeChronicle(season: number): SeasonChronicleState {
+        const random = this._chronicleRandom ?? remarkRandomOf(`chronicle|${season}|${this._seeded.snapshot().state}`);
+        return synthesizeSeasonChronicle({ season, nations: this._rivals.nations, generals: this._roster.getAll() }, random);
+    }
+
+    /** 本季三國季報（PROG-2-2203）；season 為 -1 表示還沒有 */
+    public get seasonChronicle(): SeasonChronicleState {
+        return copySeasonChronicle(this._seasonChronicle);
+    }
+
+    /** 最近一次登入是不是換日後第一次 */
+    public get loginStartedNewDay(): boolean {
+        return this._loginStartedNewDay;
+    }
+
+    /** 本季季報還沒打開過（大廳紅點） */
+    public get seasonChronicleUnread(): boolean {
+        return this._seasonChronicle.season === this._clock.state.totalSeasonsElapsed && this._seasonChronicle.season >= 0 && !this._seasonChronicle.read;
+    }
+
+    /** 依時機判斷要不要自動彈出季報；戰後回大廳一律 false（規格 §三-2） */
+    public chronicleShouldOpen(trigger: ChronicleTrigger): boolean {
+        return chronicleShouldOpen(this._seasonChronicle, this._clock.state.totalSeasonsElapsed, trigger);
+    }
+
+    /** 季報打開過一次即已讀，紅點熄滅；有變動才存檔 */
+    public async markSeasonChronicleRead(): Promise<void> {
+        if (this._seasonChronicle.read) return;
+        this._seasonChronicle = { ...copySeasonChronicle(this._seasonChronicle), read: true };
+        if (this._autoSave && this._save) await this.save();
+    }
+
+    /**
+     * 市井奇遇抉擇（0 = 積極行動，1 = 放棄）；當季只能一次，付不起時拒絕且不變動資源。
+     * 銅錢走傳入的錢包，糧草、木材、名聲與名冊在 session 內結算；成功時自動存檔。
+     */
+    public async resolveCityEncounter(
+        optionIndex: 0 | 1, wallet: { gold: () => number; spendGold: (amount: number) => boolean },
+    ): Promise<{ ok: true; line: string } | { ok: false; reason: 'none' | 'shortfall' | 'no-target'; resource?: string }> {
+        const state = this._seasonChronicle;
+        const def = cityEncounterDef(state.encounterId);
+        if (!def || state.season !== this._clock.state.totalSeasonsElapsed || state.encounterChoice !== null) return { ok: false, reason: 'none' };
+        const option = def.options[optionIndex];
+        const effect = option.effect;
+        const roster = this._roster.getAll();
+        const leadId = roster.some((g) => g.id === this._leadGeneralId && g.status !== 'dead')
+            ? this._leadGeneralId
+            : roster.find((g) => g.status !== 'dead')?.id ?? null;
+        if (cityEncounterNeedsLead(effect) && !leadId) return { ok: false, reason: 'no-target' };
+        const missing = cityEncounterShortfall(effect, { gold: wallet.gold(), food: this._military.food, wood: itemCount(this._inventory, ITEM_WOOD) });
+        if (missing) return { ok: false, reason: 'shortfall', resource: missing };
+        if ((effect.costGold ?? 0) > 0 && !wallet.spendGold(effect.costGold ?? 0)) return { ok: false, reason: 'shortfall', resource: '銅錢' };
+        if (effect.costFood) this._military = { ...this._military, food: this._military.food - effect.costFood };
+        if (effect.costWood) {
+            this._inventory = consumeItem(this._inventory, ITEM_WOOD, effect.costWood) ?? this._inventory;
+            this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
+        }
+        if (effect.fame) this._fame = Math.min(BASE_RESOURCE_CAPS.fame, this._fame + effect.fame);
+        if (effect.leadCavalryGrades || effect.leadStr || effect.maxVitality || effect.elderLifespan) {
+            this._roster.replaceAll(applyEncounterToRoster(roster, leadId, effect, (g) => g.maxVitality ?? g.vitality ?? baseVitalityMaxOf(g.gender)));
+        }
+        this._seasonChronicle = { ...copySeasonChronicle(state), encounterChoice: optionIndex, read: true };
+        if (this._autoSave && this._save) await this.save();
+        const leadName = leadId ? roster.find((g) => g.id === leadId)?.name ?? leadId : '';
+        const target = cityEncounterNeedsLead(effect) && leadName ? `（${leadName}）` : '';
+        return { ok: true, line: `${def.title}：${option.label}，${option.note}${target}` };
+    }
+
     /** 使用治理效率道具（GOV-14）：本季該任務產出提升；同任務同季不重複，被拒絕時不扣道具 */
     public async useGovernanceEfficiencyItem(itemId: string): Promise<{ ok: true } | { ok: false; reason: GovernanceBoostRejectReason | 'no-item' }> {
         const plan = planGovernanceBoost(this._governanceBoosts, itemId, this._clock.state.totalSeasonsElapsed);
@@ -3121,6 +3203,11 @@ export class GameSession {
         this._loginStreak = recordLogin(this._loginStreak, epochMs);
         // 掛機產出：今天的登入日超過已發放的最大日才發一次免費入學令（PROG-2-1374，張數依太守府等級；高水位防止回撥時鐘重領）
         const today = loginDayOf(epochMs);
+        // 三國季報：換日首登才算（晨報一天只產生一次，用它的產生日判斷）；本季還沒有季報（新局、舊檔）時補合成
+        this._loginStartedNewDay = this._morningReport.day !== today;
+        if (this._loginStartedNewDay && this._seasonChronicle.season !== this._clock.state.totalSeasonsElapsed) {
+            this._seasonChronicle = this._synthesizeChronicle(this._clock.state.totalSeasonsElapsed);
+        }
         // 性格離線行為（HUM-03）：隔天第一次登入才有「昨晚」可寫；沿用入學令的切日高水位，回撥時鐘不會重發
         const offlineBehaviorDue = this._enrollGrantDay !== null && isNewEnrollGrantDay(this._enrollGrantDay, today);
         if (isNewEnrollGrantDay(this._enrollGrantDay, today)) {
@@ -3353,6 +3440,11 @@ export class GameSession {
     /** 今天晨報之後新增、留到隔天晨報的日誌數；大廳晨報入口的紅點（裁決 11/09 第 7 題） */
     public get pendingMorningJournalCount(): number {
         return pendingMorningJournalCount(this._morningReport, this._journal.entries);
+    }
+
+    /** 打開晨報派遣板：紅點熄滅（PROG-2-2203 修正看過不熄）；不存檔，下次存檔一併寫入 */
+    public markJournalHubSeen(): void {
+        this._morningReport = markJournalHubSeen(this._morningReport, this._journal.entries);
     }
 
     /** 未讀時為 [開頭句, 每則摘要]，否則空陣列 */
@@ -4447,6 +4539,8 @@ export class GameSession {
         // 武將性格自發事件（LOOP-01）：同樣用另一條序列，不消耗主亂數；上一季沒回應的作廢
         const personalityRandom = this._seasonEventRandom ?? remarkRandomOf(`personality|${governanceSeason}|${this._seeded.snapshot().state}`);
         this._seasonPersonality = rollSeasonPersonalityEvents(this._roster.getAll(), governanceSeason, personalityRandom);
+        // 三國季報（LOOP-03）：同樣用另一條序列；上一季沒抉擇的奇遇作廢
+        this._seasonChronicle = this._synthesizeChronicle(governanceSeason);
         const eventNotice = this.governanceEventNotice;
         const yuedanLines = advance.yearEnded ? yuedanBannerLines(this._roster.getAll()) : [];
         const omenLines = advance.yearEnded ? this._recordChildOmens() : [];
@@ -5319,6 +5413,7 @@ export class GameSession {
             domestic: { ...this._domesticLog },
             ...(this._governanceEvent ? { governanceEvent: { ...this._governanceEvent } } : {}),
             ...(this._governanceBoosts.length > 0 ? { governanceBoosts: this._governanceBoosts.map((boost) => ({ ...boost })) } : {}),
+            ...(this._seasonChronicle.season >= 0 ? { seasonChronicle: copySeasonChronicle(this._seasonChronicle) } : {}),
             ...(this._seasonPersonality.season >= 0 ? { seasonPersonality: { ...this._seasonPersonality, pending: this._seasonPersonality.pending.map((e) => ({ ...e })) } } : {}),
             rivals: this._rivals,
             prison: this.prison,
@@ -5641,6 +5736,7 @@ export class GameSession {
         this._governanceEvent = normalizeGovernanceEvent(snapshot.governanceEvent);
         this._governanceBoosts = normalizeGovernanceBoosts(snapshot.governanceBoosts);
         this._seasonPersonality = normalizeSeasonPersonalityState(snapshot.seasonPersonality);
+        this._seasonChronicle = normalizeSeasonChronicle(snapshot.seasonChronicle);
         this._rivals = this._withRivalOfficers(normalizeRivalWorld(snapshot.rivals));
         this._mercenaries = normalizeMercenaryBundle(snapshot.mercenaries);
         if (this._postLoadHook) {
