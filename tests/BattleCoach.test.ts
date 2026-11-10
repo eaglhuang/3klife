@@ -12,6 +12,7 @@ export function createBattleCoachSuite(): TestSuite {
   g.advance('next');g.advance('next');assert.equals('ultimate',g.step);
   assert.contains(g.hint!.message,'擊殺');g.advance('next');assert.contains(g.hint!.message,'陣地');
   g.advance('next');assert.contains(g.hint!.message,'撤退');g.advance('previous');assert.equals('victory',g.step);
+  g.advance('turn-stalemate');assert.isFalse(g.hint!.message.includes('方方'));
   g.advance('ended');g.advance('next');assert.equals(null,g.hint);
  });
  suite.test('真實事件推進，SP成本同源、非玩家事件不誤推、沒有重複toast、dispose清乾淨', () => {

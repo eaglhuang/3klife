@@ -6,7 +6,7 @@ export const OPERATION_GUIDE = {
     ultimate: { message: '③ SP 是奧義能量：我軍擊殺敵隊可充能，不是每按回合就增加。蓄滿後點「斬／奧義」選技能與目標；成功施放才消耗全部 SP。', target: 'UltimateBtn' },
     victory: { message: '④ 勝負：擊敗敵將或摧毀敵陣地即可勝利；我將陣亡、我方陣地歸零或達一般回合上限會失敗。沒有奧義也能取勝。', target: 'EndTurnBtn' },
     retreat: { message: '⑤ 撤退：隨時點上方「退」或齒輪，再確認撤退，進入敗戰結算；不是直接關閉遊戲。不想看提示可按「收起」，之後仍可展開。', target: 'BattleHudScreen_div_12' },
-    stalemate: { message: '⑤ 提示：戰局若陷入膠著，隨時可點擊上方方「退」結束教學進入政廳。', target: 'BattleHudScreen_div_12' },
+    stalemate: { message: '⑤ 提示：戰局若陷入膠著，隨時可點擊上方「退」結束教學進入政廳。', target: 'BattleHudScreen_div_12' },
 } as const;
 export class FirstBattleOperationGuide {
     step: OperationStep = 'deploy';
