@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-10T06-19-09-259Z-scope-amendment-bc74b8e19610",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:57e9405d5f476be2c95e5c543d1d07c944f5b0cfcb999b95f7d8d07bc1f096aa",
+  "createdAt": "2026-11-10T06:19:09.259Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/deng_ai_portrait.png,assets/resources/sprites/generals/avatars/deng_ai_avatar.png,assets/resources/sprites/ui_avatars/cropped/deng_ai_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}

@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "deng-ai": {
+      "x": 270,
+      "y": 50,
+      "w": 360,
+      "h": 360,
+      "source": "reviewed",
+      "$note": "2026-11-10 鄧艾藍褐山紋老將新版，保留頭盔、面容與肩甲。"
+    },
     "zhong-hui": {
       "x": 320,
       "y": 0,
