@@ -36,10 +36,10 @@
       "disabled": "sprites/ui_families/common/paper_utility/btn_primary_disabled",
       "spriteType": "sliced",
       "border": [
-        12,
-        12,
-        12,
-        12
+        20,
+        20,
+        20,
+        20
       ],
       "allowAutoAtlas": true
     },
@@ -50,10 +50,10 @@
       "disabled": "sprites/ui_families/common/paper_utility/btn_primary_disabled",
       "spriteType": "sliced",
       "border": [
-        12,
-        12,
-        12,
-        12
+        20,
+        20,
+        20,
+        20
       ],
       "allowAutoAtlas": true
     },
@@ -112,10 +112,10 @@
       "disabled": "sprites/ui_families/common/paper_utility/btn_primary_disabled",
       "spriteType": "sliced",
       "border": [
-        12,
-        12,
-        12,
-        12
+        20,
+        20,
+        20,
+        20
       ],
       "allowAutoAtlas": true
     }

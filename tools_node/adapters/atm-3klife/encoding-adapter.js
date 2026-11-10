@@ -75,6 +75,7 @@ class EncodingAdapter {
       cwd: this.projectRoot,
       encoding: 'utf8',
       shell: false,
+      maxBuffer: 64 * 1024 * 1024,
     });
 
     if ((result.status ?? 1) !== 0) {
