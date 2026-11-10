@@ -27,7 +27,7 @@
           "left": 32
         },
         "width": 320,
-        "height": 232,
+        "height": 286,
         "skinSlot": "deck.select.card.bg",
         "children": [
           {
@@ -40,15 +40,28 @@
               "right": 12
             },
             "height": 30,
-            "text": "出戰卡組 0/4",
+            "text": "手動已選 0/4",
             "styleSlot": "deck.select.label.title"
+          },
+          {
+            "type": "label",
+            "name": "DeckHintLabel",
+            "id": "deckHintLabel",
+            "widget": {
+              "top": 40,
+              "left": 12,
+              "right": 12
+            },
+            "height": 48,
+            "text": "可選卡：點選加入或移除\n未選卡時使用預設卡組",
+            "styleSlot": "deck.select.label.card"
           },
           {
             "type": "button",
             "name": "DeckCardButton0",
             "id": "btnDeckCard0",
             "widget": {
-              "top": 48,
+              "top": 94,
               "left": 12,
               "right": 12
             },
@@ -75,7 +88,7 @@
             "name": "DeckCardButton1",
             "id": "btnDeckCard1",
             "widget": {
-              "top": 92,
+              "top": 138,
               "left": 12,
               "right": 12
             },
@@ -102,7 +115,7 @@
             "name": "DeckCardButton2",
             "id": "btnDeckCard2",
             "widget": {
-              "top": 136,
+              "top": 182,
               "left": 12,
               "right": 12
             },
@@ -129,7 +142,7 @@
             "name": "DeckCardButton3",
             "id": "btnDeckCard3",
             "widget": {
-              "top": 180,
+              "top": 226,
               "left": 12,
               "right": 12
             },

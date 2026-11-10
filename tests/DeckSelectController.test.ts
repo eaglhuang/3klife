@@ -25,7 +25,7 @@ function harness(outcome: () => Promise<string>) {
         warn: () => { log.warns++; },
     });
     const click = (id: string) => bindings.find((b) => b.buttonId === id)?.handler();
-    return { ctrl, log, click, bindingCount: () => bindings.length };
+    return { ctrl, log, click, deck, bindingCount: () => bindings.length };
 }
 
 export function createDeckSelectControllerSuite(): TestSuite {
@@ -35,8 +35,8 @@ export function createDeckSelectControllerSuite(): TestSuite {
         const h = harness(async () => 'added');
         await h.ctrl.mount();
         assert.equals(DECK_SELECT_SLOTS, h.bindingCount());
-        assert.isTrue(h.log.texts.deckTitleLabel.startsWith('出戰卡組 1/'));
-        assert.equals('　 甲（攻）', h.log.texts.deckCardLabel0);
+        assert.isTrue(h.log.texts.deckTitleLabel.startsWith('手動已選 1/'));
+        assert.equals('＋ 甲（攻）', h.log.texts.deckCardLabel0);
         assert.equals('✓ 乙（守）', h.log.texts.deckCardLabel1);
         assert.equals('－', h.log.texts.deckCardLabel2);
         assert.isFalse(h.log.actives.btnDeckCard3);
@@ -56,6 +56,16 @@ export function createDeckSelectControllerSuite(): TestSuite {
         await broken.ctrl.clickCard(1);
         assert.equals(1, broken.log.warns);
         assert.equals('卡組存檔失敗，請稍後再試', broken.log.toasts[0]);
+    });
+
+    suite.test('空手動卡組仍列出可選卡，但不把目錄數量當成已選數量', async () => {
+        const h = harness(async () => 'added');
+        h.deck.length = 0;
+        await h.ctrl.mount();
+        assert.equals('手動已選 0/4', h.log.texts.deckTitleLabel);
+        assert.equals('＋ 甲（攻）', h.log.texts.deckCardLabel0);
+        assert.contains(h.log.texts.deckHintLabel, '可選卡');
+        assert.contains(h.log.texts.deckHintLabel, '未選卡時使用預設卡組');
     });
 
     return suite;

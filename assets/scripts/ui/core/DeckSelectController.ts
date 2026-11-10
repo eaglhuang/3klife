@@ -50,12 +50,13 @@ export class DeckSelectController<H extends MentorHoldingsHostLike> {
         const deck = this._deps.deck();
         const cards = this._deps.cards();
         const texts: Record<string, string> = {
-            deckTitleLabel: `出戰卡組 ${deck.length}/${PLAYER_DECK_MAX_SIZE}`,
+            deckTitleLabel: `手動已選 ${deck.length}/${PLAYER_DECK_MAX_SIZE}`,
+            deckHintLabel: '可選卡：點選加入或移除\n未選卡時使用預設卡組',
         };
         const actives: Record<string, boolean> = {};
         for (let slot = 0; slot < DECK_SELECT_SLOTS; slot++) {
             const card = cards[slot];
-            texts[`deckCardLabel${slot}`] = card ? `${deck.includes(card.id) ? '✓' : '　'} ${card.name}（${card.sub}）` : '－';
+            texts[`deckCardLabel${slot}`] = card ? `${deck.includes(card.id) ? '✓' : '＋'} ${card.name}（${card.sub}）` : '－';
             actives[`btnDeckCard${slot}`] = card !== undefined;
         }
         binder.setTexts(texts);

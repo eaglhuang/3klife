@@ -27,6 +27,22 @@
         },
         "children": [
           {
+            "type": "container",
+            "name": "LobbyMainScreen_div_21",
+            "width": 402,
+            "height": 720,
+            "skinLayers": [
+              {
+                "layerId": "LobbyMainScreen_div_21_LobbyMainScreen_img_2",
+                "slotId": "auto.lobby-main-screen.lobbymainscreen_img_2",
+                "zOrder": 0,
+                "expand": false,
+                "width": 402,
+                "height": 720
+              }
+            ]
+          },
+          {
             "type": "label",
             "name": "LobbyMainScreen_div_1",
             "widget": {
@@ -973,16 +989,6 @@
               }
             ]
           }
-        ],
-        "skinLayers": [
-          {
-            "layerId": "LobbyMainScreen_div_21_LobbyMainScreen_img_2",
-            "slotId": "auto.lobby-main-screen.lobbymainscreen_img_2",
-            "zOrder": 0,
-            "expand": false,
-            "width": 402,
-            "height": 720
-          }
         ]
       },
       {
@@ -1127,7 +1133,7 @@
                   "vCenter": true
                 },
                 "height": 30,
-              "textKey": "UI_NAV_FLOOD",
+                "textKey": "UI_NAV_FLOOD",
                 "styleSlot": "lobby.gameplay.nav.label"
               }
             ]
