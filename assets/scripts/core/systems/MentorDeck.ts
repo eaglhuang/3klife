@@ -30,6 +30,13 @@ export function defaultMentorDeck(cards: readonly MentorCard[]): MentorDeck {
     return Array.from({ length: MENTOR_DECK_SIZE }, (_, i) => sorted[i]?.uid ?? null);
 }
 
+/** 指定優先的教官（如先祖教官，PROG-2-2204）排在前面，其餘依強度補滿 */
+export function preferredMentorDeck(cards: readonly MentorCard[], preferredUids: ReadonlySet<string>): MentorDeck {
+    const rank = (card: MentorCard): number => (preferredUids.has(card.uid) ? 1 : 0);
+    const sorted = [...cards].sort((a, b) => rank(b) - rank(a) || mentorPower(b) - mentorPower(a));
+    return Array.from({ length: MENTOR_DECK_SIZE }, (_, i) => sorted[i]?.uid ?? null);
+}
+
 /** 把編成裡已不在可用清單的 uid 換成空格（也去除重複） */
 export function sanitizeMentorDeck(deck: MentorDeck, cards: readonly MentorCard[]): MentorDeck {
     const available = new Set(cards.map((card) => card.uid));

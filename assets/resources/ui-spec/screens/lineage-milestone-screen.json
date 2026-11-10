@@ -1,0 +1,17 @@
+{
+  "id": "lineage-milestone-screen",
+  "version": 1,
+  "uiId": "LineageMilestone",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "lineage-milestone-main",
+  "skin": "lineage-milestone-default",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}

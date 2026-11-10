@@ -1,0 +1,235 @@
+{
+  "id": "lineage-milestone-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "LineageMilestoneRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "LineageMilestoneBackdrop",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "skinSlot": "lineage.milestone.backdrop.bg"
+      },
+      {
+        "type": "panel",
+        "name": "LineageMilestoneCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 880,
+        "height": 500,
+        "skinSlot": "lineage.milestone.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "LineageMilestoneTitle",
+            "id": "milestoneTitle",
+            "widget": {
+              "top": 20,
+              "left": 24,
+              "right": 24
+            },
+            "height": 44,
+            "text": "",
+            "styleSlot": "lineage.milestone.label.title"
+          },
+          {
+            "type": "panel",
+            "name": "LineageMilestoneDescBox",
+            "widget": {
+              "top": 80,
+              "left": 24,
+              "right": 24
+            },
+            "height": 110,
+            "skinSlot": "lineage.milestone.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "LineageMilestoneDesc",
+                "id": "milestoneDesc",
+                "widget": {
+                  "top": 12,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 86,
+                "text": "",
+                "styleSlot": "lineage.milestone.label.body"
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "LineageMilestoneNote",
+            "id": "milestoneNote",
+            "widget": {
+              "top": 206,
+              "left": 24,
+              "right": 24
+            },
+            "height": 120,
+            "text": "",
+            "styleSlot": "lineage.milestone.label.note"
+          },
+          {
+            "type": "button",
+            "name": "LineageGraspSword",
+            "id": "btnGraspSword",
+            "widget": {
+              "bottom": 28,
+              "left": 24
+            },
+            "height": 52,
+            "width": 260,
+            "skinSlot": "lineage.milestone.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "LineageGraspSwordLabel",
+                "id": "graspSwordLabel",
+                "widget": {
+                  "top": 12,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "",
+                "styleSlot": "lineage.milestone.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "LineageGraspBamboo",
+            "id": "btnGraspBamboo",
+            "widget": {
+              "bottom": 28,
+              "hCenter": true
+            },
+            "height": 52,
+            "width": 260,
+            "skinSlot": "lineage.milestone.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "LineageGraspBambooLabel",
+                "id": "graspBambooLabel",
+                "widget": {
+                  "top": 12,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "",
+                "styleSlot": "lineage.milestone.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "LineageGraspJade",
+            "id": "btnGraspJade",
+            "widget": {
+              "bottom": 28,
+              "right": 24
+            },
+            "height": 52,
+            "width": 260,
+            "skinSlot": "lineage.milestone.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "LineageGraspJadeLabel",
+                "id": "graspJadeLabel",
+                "widget": {
+                  "top": 12,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "",
+                "styleSlot": "lineage.milestone.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "LineageMilestoneLater",
+            "id": "btnMilestoneLater",
+            "widget": {
+              "bottom": 28,
+              "left": 24
+            },
+            "height": 52,
+            "width": 380,
+            "skinSlot": "lineage.milestone.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "LineageMilestoneLaterLabel",
+                "id": "milestoneLaterLabel",
+                "widget": {
+                  "top": 12,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "",
+                "styleSlot": "lineage.milestone.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "LineageSendAcademy",
+            "id": "btnSendAcademy",
+            "widget": {
+              "bottom": 28,
+              "right": 24
+            },
+            "height": 52,
+            "width": 380,
+            "skinSlot": "lineage.milestone.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "LineageSendAcademyLabel",
+                "id": "sendAcademyLabel",
+                "widget": {
+                  "top": 12,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "",
+                "styleSlot": "lineage.milestone.label.button"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

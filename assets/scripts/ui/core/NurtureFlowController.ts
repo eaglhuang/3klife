@@ -59,8 +59,10 @@ import {
     MENTOR_DECK_SIZE,
     MentorDeck,
     mentorDeckCards,
+    preferredMentorDeck,
     sanitizeMentorDeck,
 } from '../../core/systems/MentorDeck';
+import { ancestorIdsOf, ancestorMentorsFirst, guestScholarMentorCard, isAncestorMentor, isGuestMentorCard, type LineageGeneral } from '../../core/systems/LineageMilestones';
 import { describeLifecycle } from './GeneralLifecyclePresenter';
 import {
     buildNurtureSessionContentState,
@@ -328,8 +330,49 @@ export class NurtureFlowController {
     /** 重新讀可帶入的教官卡（排除別場培育鎖定的），並整理入場編成；第一次讀時帶預設最強 5 位 */
     async loadDeck(): Promise<void> {
         const locked = new Set(this._deps.nurture.lockedMentorIds());
-        this._deckCandidates = (await this._deps.loadMentorCards()).filter((card) => !locked.has(card.uid));
+        const owned = (await this._deps.loadMentorCards()).filter((card) => !locked.has(card.uid));
+        // 先祖教官置頂（PROG-2-2204）；及冠直通學府的子嗣在家中沒有可用教官時改由客卿名儒（水鏡先生）任教，入學不會卡死。
+        // 一般入口維持「至少帶 1 位教官」（PROG-2-1134）。
+        const childId = this.selectedId;
+        this._deckCandidates = owned.length > 0
+            ? ancestorMentorsFirst(owned, this._ancestorsOf(childId, owned))
+            : childId && childId === this._guestChildId ? [guestScholarMentorCard(childId)] : [];
         this._deck = this._deck === null ? defaultMentorDeck(this._deckCandidates) : sanitizeMentorDeck(this._deck, this._deckCandidates);
+        if (this._deck.every((uid) => uid === null) && this._deckCandidates.length > 0) this._deck = defaultMentorDeck(this._deckCandidates);
+    }
+
+    /** 經及冠通知送進學府的子嗣：只有這位可在缺教官時由客卿任教（PROG-2-2204） */
+    private _guestChildId: string | null = null;
+
+    /** 子嗣的直系血親 id；查不到子嗣時為空 */
+    private _ancestorsOf(childId: string | null, cards: readonly MentorCard[]): Set<string> {
+        const roster = this._deps.roster.getAll() as unknown as LineageGeneral[];
+        const child = childId ? roster.find((g) => g.id === childId) : undefined;
+        return child ? ancestorIdsOf(child, roster, cards) : new Set<string>();
+    }
+
+    /** 目前子嗣的先祖教官 uid（編成標記用） */
+    private _ancestorUids(): Set<string> {
+        const ancestors = this._ancestorsOf(this.selectedId, this._deckCandidates);
+        return new Set(this._deckCandidates.filter((card) => isAncestorMentor(card, ancestors)).map((card) => card.uid));
+    }
+
+    /**
+     * 及冠入學直通（PROG-2-2204）：選好這位子嗣並把先祖教官排進編成最前面，其餘依強度補滿。
+     * 回傳排進去的先祖教官名字（沒有時為空陣列）。
+     */
+    async recommendAncestorDeck(childId: string): Promise<string[]> {
+        this._guestChildId = childId;
+        this.select(childId);
+        await this.loadDeck();
+        const preferred = this._ancestorUids();
+        this._deck = preferredMentorDeck(this._deckCandidates, preferred);
+        const names = this._deckCandidates.filter((card) => preferred.has(card.uid)).map((card) => card.name);
+        const guest = this._deckCandidates.some((card) => isGuestMentorCard(card));
+        this._notice = names.length > 0
+            ? `先祖傳承：${names.join('、')} 已排入教官編成`
+            : guest ? '家中尚無可用教官，已請客卿名儒（水鏡先生）任教' : '家中尚無退役先祖教官，已帶入最強教官';
+        return names;
     }
 
     /** 點入場編成第 slot 格：換成下一位可用教官，最後一位之後回到空格 */
@@ -688,7 +731,7 @@ export class NurtureFlowController {
                     ? `入學將消耗 1 張入學令（本季剩 ${this._deps.nurture.admissionsLeft()} 張），帶上下方編成的教官（自有最多 ${MENTOR_DECK_SIZE} 位＋好友借用 1 位）`
                     : NO_MENTOR_HINT;
             const lookup = this._deps.text ?? fallbackBreedText;
-            Object.assign(texts, buildDeckTexts(this.deck, this._deckCandidates, lookup));
+            Object.assign(texts, buildDeckTexts(this.deck, this._deckCandidates, lookup, this._ancestorUids()));
             for (let i = 0; i < MENTOR_DECK_SIZE; i++) enabled[`btnDeckSlot${i}`] = this._deckCandidates.length > 0;
             Object.assign(texts, buildSlotTexts(child, null, lookup));
             return { mode: 'start', childId: child.id, texts, actives, enabled };
@@ -860,7 +903,10 @@ function phaseRangeText(phase: PhaseBlock, t: BreedTextLookup): string {
 const STAR_TEXT = (stars: number): string => (stars > 0 ? '★'.repeat(stars) : '☆0');
 
 /** 入場編成五格的文字：教官名、星等、擅長科目；空格提示可點選 */
-function buildDeckTexts(deck: MentorDeck, candidates: readonly MentorCard[], t: BreedTextLookup): Record<string, string> {
+/** 先祖教官在編成格上的標記（PROG-2-2204） */
+export const ANCESTOR_MENTOR_MARK = '【先祖傳承】';
+
+function buildDeckTexts(deck: MentorDeck, candidates: readonly MentorCard[], t: BreedTextLookup, ancestorUids: ReadonlySet<string> = new Set()): Record<string, string> {
     const byUid = new Map(candidates.map((card) => [card.uid, card]));
     const texts: Record<string, string> = {};
     let filled = 0;
@@ -869,7 +915,7 @@ function buildDeckTexts(deck: MentorDeck, candidates: readonly MentorCard[], t: 
         if (card) {
             filled++;
             const mentor = mentorFromCard(card);
-            texts[`deckSlotLabel${i}`] = `${card.name}\n${statLabelOf(t, mentor.specialty)}擅長 ${STAR_TEXT(mentor.stars ?? 0)}`;
+            texts[`deckSlotLabel${i}`] = `${ancestorUids.has(card.uid) ? ANCESTOR_MENTOR_MARK : ''}${card.name}\n${statLabelOf(t, mentor.specialty)}擅長 ${STAR_TEXT(mentor.stars ?? 0)}`;
         } else {
             texts[`deckSlotLabel${i}`] = candidates.length > 0 ? '空格\n點此選教官' : '空格';
         }
