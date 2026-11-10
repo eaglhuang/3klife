@@ -243,6 +243,7 @@ export class BattleScene extends Component {
       );
       // 夜襲視野（PROG-2-2132）：只看關卡主題；軍事任務觸發的夜襲戰法是我方優勢，不限視野
       this.ctrl.state.visionRadius = stageThemeVisionRadius(encounter?.stageThemeId);
+      this.ctrl.tutorialBattle = battleParams.tutorial === true;
       if (enemyScale) this.ctrl.configureAiDifficulty(enemyScale.difficulty);
       // 天氣排程（PROG-2-0401）：入口參數優先，沒有才用 encounter 設定
       const weatherSchedule = battleParams.weatherSchedule ?? encounter?.weatherSchedule;
@@ -427,6 +428,7 @@ export class BattleScene extends Component {
       UCUFLogger.info(LogCategory.BATTLE, `[BattleScene] HUD 已刷新: ${!!this.hud}`);
       this.battleLogPanel?.clear();
       this.battleLogPanel?.append(`第 ${snap.turn} 回合開始，糧草 ${snap.playerFood}`);
+      if (battleParams.tutorial) this.battleLogPanel?.append('首戰教學最多十二回合；未分勝負則以撤退結算，可隨時從「退」確認撤退。');
       const deputyLine = deputySupportLine(support.deputy?.name, support.deputyBonus.foodCapBonus);
       if (deputyLine) this.battleLogPanel?.append(deputyLine);
       if (enemyScale?.adaptiveHint) this.battleLogPanel?.append(enemyScale.adaptiveHint);
