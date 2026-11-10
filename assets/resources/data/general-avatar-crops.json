@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "zhang-zhao": {
+      "x": 320,
+      "y": 0,
+      "w": 400,
+      "h": 400,
+      "source": "reviewed",
+      "$note": "2026-11-10 張昭紅白文士新版，保留文士冠、長鬚與肩線。"
+    },
     "fa-zheng": {
       "x": 340,
       "y": 0,
