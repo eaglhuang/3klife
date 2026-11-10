@@ -309,6 +309,19 @@
             ]
           },
           {
+            "type": "label",
+            "name": "ScoutLoadoutHelp",
+            "id": "scoutLoadoutHelp",
+            "widget": {
+              "top": 610,
+              "left": 48,
+              "right": 48
+            },
+            "height": 72,
+            "text": "",
+            "styleSlot": "scout.label.body"
+          },
+          {
             "type": "panel",
             "name": "ScoutConfirm",
             "id": "scoutConfirm",

@@ -1,3 +1,5 @@
+import { placeTutorialTarget } from '../core/OnboardingTargetHighlight';
+import { ONBOARDING_ACTIONS } from '../core/OnboardingFlowController';
 import { presentLobbyLead } from '../core/LobbyLeadPresentation';
 // @spec-source → 見 docs/cross-reference-index.md
 import { openingLetterBodyWithFunLine } from '../../core/systems/FunLineLibrary';
@@ -2255,6 +2257,10 @@ export class LobbyScene extends Component {
                 },
                 bringToFront: node => this._bringNodeToFront(node),
                 refreshSeasonHud: () => this._refreshSeasonHud(),
+                focusTutorial: (host, step) => {
+                    const action = Object.values(ONBOARDING_ACTIONS)[step];
+                    placeTutorialTarget(host.binder as UITemplateBinder | null, action ? this._cityHubHost?.binder?.getNode(action.target) ?? null : null);
+                },
                 canNotifyBeauty: () => canShowSeasonChronicle({
                     openingUiReady: this._openingUiReady,
                     openingInProgress: this._isOpeningInProgress(),

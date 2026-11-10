@@ -1,0 +1,8 @@
+{
+  "id": "battle-operation-guide-screen",
+  "version": 1,
+  "uiId": "battle-operation-guide-screen",
+  "layout": "battle-operation-guide-main",
+  "skin": "onboarding-tutorial-screen.skin",
+  "bundle": "battle_ui"
+}

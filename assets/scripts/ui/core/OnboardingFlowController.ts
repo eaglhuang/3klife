@@ -22,6 +22,12 @@ export interface OnboardingDeps {
     acknowledge: (segmentId: 'fate' | 'growth' | 'legacy') => Promise<OnboardingResult>;
 }
 
+export const ONBOARDING_ACTIONS = {
+    fate: { target: 'ResourceBar', label: '資源列', text: '右上資源列：金是銅錢，用於日常養成；玉是玉璧，用於召喚與購物；糧供出征部署；兵是城池可用兵力。數量以畫面即時顯示為準。' },
+    growth: { target: 'btnCatSortie', label: '出征', text: '下方「出征」開啟出征選單；先看戰前偵查與推薦對策，再選戰鬥。首次請選需要棋盤操作的戰鬥，學習部署、推進與奧義。' },
+    legacy: { target: 'btnCatGenerals', label: '武將', text: '下方「武將」查看名冊；選主將後可看「技」的戰法與「命」的血統。完成本頁後，從「出征」開始第一戰。' },
+} as const;
+
 export class OnboardingFlowController {
     constructor(private readonly _deps: OnboardingDeps) {}
 
@@ -48,6 +54,8 @@ export class OnboardingFlowController {
         return {
             texts: {
                 tutorialText: segment ? segment.text : '',
+                tutorialAction: segment ? ONBOARDING_ACTIONS[segment.id].text : '',
+                tutorialPointer: segment ? `▲ ${ONBOARDING_ACTIONS[segment.id].label}` : '',
                 tutorialStep: segment ? `${shown} / ${total}` : '',
                 btnNextTutorialLabel: shown >= total ? '開始遊戲' : '下一步',
             },

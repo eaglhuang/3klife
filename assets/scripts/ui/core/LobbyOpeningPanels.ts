@@ -28,6 +28,7 @@ export interface LobbyOpeningPanelPorts {
     refreshSeasonHud: () => void;
     notifyBeauty: (name: string) => void;
     canNotifyBeauty?: () => boolean;
+    focusTutorial?: (host: LobbyOpeningPanelHost, step: number) => void;
     advanceOpening: (event: OpeningFlowEvent) => void;
     /** 宿命轉蛋六框載立繪（與招賢館同一套擺位，PROG-2-1147）；keys 依框序 */
     applyFramePortraits?: (binder: NonNullable<LobbyOpeningPanelHost['binder']>, keys: readonly string[]) => void;
@@ -81,6 +82,7 @@ export class LobbyOpeningPanels {
         if (!host.node.active) return;
         this._ports.bringToFront(host.node);
         if (host.binder) applyFlowView(host.binder, onboarding.getFlowView());
+        this._ports.focusTutorial?.(host, this._ports.session().onboarding.nextIndex);
     }
 
     public async nextTutorial(): Promise<void> {

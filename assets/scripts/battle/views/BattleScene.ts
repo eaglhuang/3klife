@@ -270,10 +270,7 @@ export class BattleScene extends Component {
       });
       if (!battleStateCheck.ok) UCUFLogger.warn(LogCategory.BATTLE, `[BattleScene] 戰場狀態 read model 不合法: ${battleStateCheck.issues.join(', ')}`);
       this.ctrl.configureOrderLoyalty(buildOrderLoyalty(pg));
-      // 首戰教學浮窗（PROG-2-0241）：只在教學戰開啟，用既有 toast 顯示
-      if (battleParams.tutorial) {
-        this.tutorialHint = new BattleTutorialHint(services().event, (msg) => this.deployRuntime?.showToast(msg));
-      }
+
       UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] 戰鬥已初始化");
 
       // 6. 連結 UI 元件（自動尋找，不依賴 Inspector 綁定）
@@ -455,6 +452,11 @@ export class BattleScene extends Component {
         onBack: () => this._onBackToLobby(),
       });
       this.refreshBattleViews();
+      if (battleParams.tutorial) {
+        this.tutorialHint = new BattleTutorialHint(services().event,
+          msg => this.deployRuntime?.showToast(msg, 5),
+          hint => services().event.emit('first-battle-guide', hint));
+      }
 
       if (this.hud && !(await this.hud.waitUntilReady(15000))) {
         throw new Error('戰鬥 HUD 初始化逾時');

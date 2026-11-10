@@ -12,7 +12,10 @@
  *
  * Unity 對照：BattleUIManager（掛 Canvas 根的 Coordinator Component）
  */
-import { _decorator, Component, Node } from 'cc';
+import { _decorator, Component, Node, UITransform, Widget } from 'cc';
+import { UIScreenPreviewHost } from './UIScreenPreviewHost';
+import { placeTutorialTarget } from '../core/OnboardingTargetHighlight';
+import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { EVENT_NAMES, Faction, TurnPhase } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
 import { UI_EVENTS } from '../core/UIEvents';
@@ -64,6 +67,40 @@ export class BattleScenePanel extends Component {
     private readonly _unsubs: (() => void)[] = [];
 
     // ── 生命週期 ─────────────────────────────────────────────
+
+    private _guideHost: UIScreenPreviewHost | null = null;
+    private _guideMount: Promise<void> | null = null;
+    private _guideHint: { message: string; target: string } | null = null;
+
+    private async _showOperationGuide(hint: { message: string; target: string } | null): Promise<void> {
+        this._guideHint = hint;
+        if (!hint) { if (this._guideHost) this._guideHost.node.active = false; return; }
+        if (!this._guideHost) {
+            const node = new Node('FirstBattleOperationGuide');
+            node.layer = this.node.layer;
+            node.parent = this.node;
+            node.active = false;
+            node.addComponent(UITransform).setContentSize(1920, 1080);
+            const widget = node.addComponent(Widget);
+            widget.isAlignTop = widget.isAlignBottom = widget.isAlignLeft = widget.isAlignRight = true;
+            widget.top = widget.bottom = widget.left = widget.right = 0;
+            this._guideHost = node.addComponent(UIScreenPreviewHost);
+            this._guideMount = this._guideHost.showScreen('battle-operation-guide-screen');
+        }
+        try { await this._guideMount; }
+        catch (error) { UCUFLogger.error(LogCategory.UI, '首戰操作提示載入失敗', error); return; }
+        if (!this.node.isValid || !this._guideHost.node.isValid) return;
+        const current = this._guideHint;
+        this._guideHost.node.active = !!current;
+        if (!current) return;
+        const find = (root: Node): Node | null => {
+            if (root.name === current.target) return root;
+            for (const child of root.children) { const found = find(child); if (found) return found; }
+            return null;
+        };
+        this._guideHost.binder?.setTexts({ guideText: current.message, tutorialPointer: '▲ 操作此處' });
+        placeTutorialTarget(this._guideHost.binder, this.node.parent ? find(this.node.parent) : null);
+    }
 
     onLoad(): void {
         services().initialize(this.node);
@@ -197,6 +234,7 @@ export class BattleScenePanel extends Component {
 
     private _subscribeEvents(): void {
         this._unsubs.push(
+            services().event.on('first-battle-guide', hint => { void this._showOperationGuide(hint as { message: string; target: string } | null); }),
             // [P3-R1c] 訂閱 UI_EVENTS.CardSelected（由 TigerTallyPanel._onCardClick 發送）
             // 取代舊有的 onCardSelect 函式指標注入，消除 _wireCallbacks 的時序依賴
             services().event.on(UI_EVENTS.CardSelected, (payload: { index: number; data: TallyCardData }) => {
