@@ -157,6 +157,29 @@ function main() {
     ok('50% border-radius normalizes to numeric cornerRadius');
   }
 
+  // [overflow-clip-leaf-clamp] [inline-text-run-single-label]（PROG-2-2232）
+  {
+    const parsed = buildDraftFromHtml(`
+      <html><body>
+        <div id="track" style="width:200px;height:6px;overflow:hidden;display:flex">
+          <div id="fill" style="width:300px;height:6px;background:#f00"></div>
+        </div>
+        <div id="brief" style="width:200px;font-size:11px">本池為 <strong>Seed</strong> 系列<br>第二行</div>
+      </body></html>
+    `, { screenId: 'clip-self-test', bundle: 'ui_common' });
+    const byId = {};
+    (function walk(n) { if (n && n.id) byId[n.id] = n; ((n && n.children) || []).forEach(walk); })(parsed.layoutDraft);
+    if (!byId.fill || byId.fill.width !== 200) {
+      fail(`overflow:hidden parent should clamp leaf child to content width 200, got ${JSON.stringify(byId.fill)}`);
+    }
+    ok('overflow:hidden clamps leaf child to parent content box');
+    const brief = byId.brief;
+    if (!brief || brief.type !== 'label' || brief.text !== '本池為 Seed 系列\n第二行' || (brief.children && brief.children.length) || brief.layout) {
+      fail(`inline text run should collapse into one label with br newline, got ${JSON.stringify(brief)}`);
+    }
+    ok('inline strong/br text run collapses into a single label');
+  }
+
   withTempDir((tmp) => {
     const layout = path.join(tmp, 'out.layout.json');
     const skin = path.join(tmp, 'out.skin.json');

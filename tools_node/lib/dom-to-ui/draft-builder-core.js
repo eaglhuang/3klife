@@ -141,6 +141,9 @@ function buildDraftFromHtml(html, opts) {
     canvasFromHtml || {},
     opts.canvas || {},
   );
+  // 量測框換算成 widget 邊距時，沒有父快照就以畫布當父框；未記到 ctx 會一律退回 1334×750，
+  // 讓 1920 畫布上靠右／靠下的元件邊距少掉 586／330 而跑出畫面（PROG-2-2232）
+  ctx.canvas = canvas;
 
   const rootName = opts.rootName || pascal(opts.screenId);
   const rootNode = {
@@ -464,6 +467,11 @@ function processElement(el, ctx, depth) {
   if (generatedEffectNodes.length > 0) node._generatedBefore = generatedEffectNodes;
 
   if (nodeType === 'composite') return node;
+  // 混排段落已合成單一文字：行內強調不再拆成子節點，也不需要排版（PROG-2-2232）
+  if (nodeType === 'label' && hasOnlyTextContent(el) && (el.children || []).some(c => c.type === 'element')) {
+    delete node.layout;
+    return node;
+  }
 
   // ---- 7. recurse children ----
   const childNodes = [];
@@ -523,6 +531,7 @@ function processElement(el, ctx, depth) {
 
   // §7.9 resolve flex-fill child widths for horizontal containers
   resolveFillChildWidths(node, childNodes);
+  clampClippedLeafChildren(node, childNodes, style);
 
   if (childNodes.length > 0) node.children = childNodes;
   normalizeTabRailAndButtonLayout(node, ctx);
@@ -571,6 +580,27 @@ function normalizeSingleChildFill(node, ctx) {
  * assign widths for children tagged with _flexFill=true (CSS flex:1 / flex-grow>0).
  * After assignment the _flexFill marker is removed from all children.
  */
+// 父框 overflow 會裁切時，矩形子項被裁後的樣子就是與內容框的交集：
+// 沒有內容的純色塊直接把寬高夾到內容框，不必在引擎端加遮罩（例：機率條填色寬度超過 100%）（PROG-2-2232）
+function clampClippedLeafChildren(node, childNodes, style) {
+  const overflow = String((style && style.overflow) || '').trim().toLowerCase();
+  if (!/^(hidden|clip)\b/.test(overflow)) return;
+  const pad = boxPaddingFromStyle(style);
+  const maxW = typeof node.width === 'number' ? Math.max(1, node.width - pad.paddingLeft - pad.paddingRight) : null;
+  const maxH = typeof node.height === 'number' ? Math.max(1, node.height - pad.paddingTop - pad.paddingBottom) : null;
+  for (const child of childNodes) {
+    if (!child || typeof child !== 'object') continue;
+    if (child.type !== 'panel' && child.type !== 'container') continue;
+    if (Array.isArray(child.children) && child.children.length > 0) continue;
+    // 寬高由 widget 左右／上下拉伸決定的層（如外擴的陰影）不夾，避免與拉伸邊距矛盾
+    const w = child.widget || {};
+    const stretchX = w.left != null && w.right != null;
+    const stretchY = w.top != null && w.bottom != null;
+    if (!stretchX && maxW != null && typeof child.width === 'number' && child.width > maxW) child.width = maxW;
+    if (!stretchY && maxH != null && typeof child.height === 'number' && child.height > maxH) child.height = maxH;
+  }
+}
+
 function resolveFillChildWidths(node, childNodes) {
   // Remove the _flexFill marker from all children regardless.
   const fillChildren = [];
@@ -1226,14 +1256,25 @@ function isEmptyFlexSpacer(tag, style, attrs, el, hasBg) {
   return width == null && height == null;
 }
 
+// 只有文字的框（含行內強調 strong/em/a/small 與換行 br 的混排段落）視為一個文字節點：
+// 拆成多個子節點會變成直排、各自換行而跑出框外；整段合成一個 label 才會照框寬換行（PROG-2-2232）
 function hasOnlyTextContent(el) {
   if (!el || !Array.isArray(el.children)) return false;
   let hasText = false;
   for (const child of el.children) {
-    if (child.type === 'element') return false;
+    if (child.type === 'element') {
+      if (child.tag === 'br') continue;
+      if (!RICH_TEXT_INNER_TAGS.has(child.tag) || !isInlineTextRun(child)) return false;
+      hasText = true;
+      continue;
+    }
     if (child.type === 'text' && String(child.value || '').trim()) hasText = true;
   }
   return hasText;
+}
+
+function isInlineTextRun(el) {
+  return (el.children || []).every(c => c.type !== 'element' || c.tag === 'br' || (RICH_TEXT_INNER_TAGS.has(c.tag) && isInlineTextRun(c)));
 }
 
 function inferCompositeRendererHint(tag, el, attrs) {
@@ -2051,13 +2092,18 @@ function looseTextBoxAlign(style) {
   return null;
 }
 
+// <br> 轉成換行；其餘空白照瀏覽器規則收成單一空格（PROG-2-2232）
 function collectText(el) {
+  return collectRawText(el).split('\n').map(line => line.replace(/\s+/g, ' ').trim()).join('\n').trim();
+}
+
+function collectRawText(el) {
   const parts = [];
-  for (const c of el.children) {
-    if (c.type === 'text') parts.push(c.value);
-    else if (c.type === 'element') parts.push(collectText(c));
+  for (const c of el.children || []) {
+    if (c.type === 'text') parts.push(String(c.value || '').replace(/\n/g, ' '));
+    else if (c.type === 'element') parts.push(c.tag === 'br' ? '\n' : collectRawText(c));
   }
-  return parts.join('').trim().replace(/\s+/g, ' ');
+  return parts.join('');
 }
 
 function containsRichInner(el) {
