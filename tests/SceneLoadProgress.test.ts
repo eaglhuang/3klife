@@ -1,6 +1,6 @@
 // @spec-source → Issue #2074；PROG-2-2216
 import { assert, TestSuite } from './TestRunner';
-import { LoadProgressState, sceneLoadState, SceneLoadProgress } from '../assets/scripts/shared/SceneLoadProgress';
+import { LoadProgressState, SCENE_LOAD_PROGRESS_CSS, sceneLoadState, SceneLoadProgress } from '../assets/scripts/shared/SceneLoadProgress';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 export function createSceneLoadProgressSuite(): TestSuite {
@@ -40,11 +40,24 @@ export function createSceneLoadProgressSuite(): TestSuite {
         } };
         try {
             SceneLoadProgress.begin('資源'); SceneLoadProgress.report(2, 4);
-            const bar = elements.find(e => e.tag === 'progress'); assert.equals(2, bar.value);
+            const root = elements.find(e => e.id === 'scene-load-progress');
+            const fill = elements.find(e => e.className === 'slp-fill');
+            assert.equals('determinate', root.attrs['data-mode']); assert.equals('50%', fill.style.width);
             SceneLoadProgress.begin('大廳'); SceneLoadProgress.step();
-            assert.equals(1, attached); assert.equals(undefined, bar.value);
+            assert.equals(1, attached); assert.equals('indeterminate', root.attrs['data-mode']); assert.equals('', fill.style.width);
             SceneLoadProgress.complete(); assert.equals(1, removed);
         } finally { SceneLoadProgress.complete(); g.document = oldDocument; }
+    });
+    suite.test('精緻框＋漸層光棒：細框、6px 光棒、金色漸層與掃光，不用瀏覽器原生白底與 progress 元件 PROG-2-2230', () => {
+        const css = SCENE_LOAD_PROGRESS_CSS;
+        assert.contains(css, 'border:1px solid rgba(212,175,55');
+        assert.contains(css, '.slp-track{position:relative;height:6px');
+        assert.contains(css, 'linear-gradient(90deg,#7A5A12,#D4AF37');
+        assert.contains(css, 'animation:slp-sweep');
+        assert.contains(css, '[data-mode="indeterminate"] .slp-fill');
+        const src = readFileSync(join(__dirname, '../assets/scripts/shared/SceneLoadProgress.ts'), 'utf8');
+        assert.isFalse(src.includes("createElement('progress')"));
+        assert.isFalse(src.includes("background: 'Canvas'"));
     });
     suite.test('場景接線覆蓋開始遊戲、真預載、大廳完成及戰鬥遮罩退場', () => {
         const read = (p: string) => readFileSync(join(__dirname, '../assets/scripts', p), 'utf8');
