@@ -7,19 +7,28 @@ export function tutorialPointerPlacement(x: number, y: number, targetHeight: num
     const center = Math.max(viewportLeft + half + 8, Math.min(viewportRight - half - 8, x));
     return { above: y - targetHeight / 2 - 44 < viewportBottom + 8, offsetX: center - x };
 }
-/** 依真實節點世界邊界定位；僅畫框與箭頭，不攔截原按鈕觸控。 */
-export function placeTutorialTarget(binder: UITemplateBinder | null, target: Node | null): void {
+/**
+ * 依真實節點世界邊界定位；僅畫框與箭頭，不攔截原按鈕觸控。
+ * 可給多個節點（例如大堂頂列的金／玉／糧／兵），框取合併邊界（PROG-2-2226）。
+ */
+export function placeTutorialTarget(binder: UITemplateBinder | null, target: Node | readonly Node[] | null): void {
     const frame = binder?.getNode('tutorialHighlight');
     if (!frame) return;
-    const source = target?.getComponent(UITransform);
+    const targets: readonly Node[] = target === null ? [] : Array.isArray(target) ? target : [target as Node];
+    const sources = targets.map(node => node.getComponent(UITransform));
     const parent = frame.parent?.getComponent(UITransform);
     const transform = frame.getComponent(UITransform);
-    frame.active = !!source && !!parent && !!transform && !!target?.activeInHierarchy;
-    if (!frame.active || !source || !parent || !transform) return;
-    const left = -source.width * source.anchorX;
-    const bottom = -source.height * source.anchorY;
-    const corners = [[left, bottom], [left + source.width, bottom], [left, bottom + source.height], [left + source.width, bottom + source.height]]
-        .map(([x, y]) => parent.convertToNodeSpaceAR(source.convertToWorldSpaceAR(new Vec3(x, y, 0))));
+    frame.active = targets.length > 0 && sources.every(s => !!s) && !!parent && !!transform && targets.every(node => node.activeInHierarchy);
+    if (!frame.active || !parent || !transform) return;
+    const corners: Vec3[] = [];
+    const ready: UITransform[] = sources.filter((s): s is UITransform => !!s);
+    for (const source of ready) {
+        const left = -source.width * source.anchorX;
+        const bottom = -source.height * source.anchorY;
+        for (const [x, y] of [[left, bottom], [left + source.width, bottom], [left, bottom + source.height], [left + source.width, bottom + source.height]]) {
+            corners.push(parent.convertToNodeSpaceAR(source.convertToWorldSpaceAR(new Vec3(x, y, 0))));
+        }
+    }
     const min = new Vec3(Math.min(...corners.map(p => p.x)), Math.min(...corners.map(p => p.y)), 0);
     const max = new Vec3(Math.max(...corners.map(p => p.x)), Math.max(...corners.map(p => p.y)), 0);
     transform.setContentSize(Math.abs(max.x - min.x) + 16, Math.abs(max.y - min.y) + 16);
