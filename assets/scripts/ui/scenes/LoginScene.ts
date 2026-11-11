@@ -18,14 +18,8 @@ export class LoginScene extends Component {
     private _title: TitleScreenBinder | null = null;
 
     onLoad(): void {
-        // 預設 Button 沒有遊戲用途；非同步掛載標題前就隱藏，BtnStart 保留備援。
-        const hidePlaceholder = (root: Node): void => {
-            for (const child of root.children) {
-                if (child.name === 'Button') child.active = false;
-                else hidePlaceholder(child);
-            }
-        };
-        hidePlaceholder(this.node);
+        // 舊版標題一開始就藏起來（PROG-2-2240）：標題載入期間只看到啟動底圖，不露出灰底舊標題；載入失敗才拿出來備援。
+        this._setLegacyTitleActive(this.node, false);
     }
 
     start(): void {
@@ -49,12 +43,14 @@ export class LoginScene extends Component {
             await host.showScreen('title-screen');
         } catch (error) {
             console.warn('[LoginScene] title-screen 載入失敗，改用場景內舊標題', error);
+            // 備援：拿出舊標題，但預設 Button 沒有遊戲用途，只留 BtnStart 等節點
+            this._setLegacyTitleActive(this.node, true);
+            this._hideNamed(this.node, 'Button');
             hostNode.destroy();
             this._finishWebBoot();
             return;
         }
         this._title = new TitleScreenBinder(hostNode, Node.EventType.TOUCH_END, { onStart: () => this.onClickStart() });
-        this._hideLegacyTitle(this.node);
         hostNode.active = true;
         this._finishWebBoot();
     }
@@ -63,14 +59,31 @@ export class LoginScene extends Component {
     private _finishWebBoot(): void {
         if (typeof document === 'undefined') return;
         document.getElementById('web-boot-progress')?.remove();
+        // 標題已畫好才淡出啟動底圖，避免中間閃一格空白畫布
+        const backdrop = document.getElementById('web-boot-backdrop');
+        if (backdrop) {
+            // 這段也被測試以純 JS 執行，不寫型別註記；沒有 rAF 的環境退回 setTimeout
+            const nextFrame = typeof requestAnimationFrame === 'function' ? requestAnimationFrame : setTimeout;
+            nextFrame(() => nextFrame(() => {
+                if (backdrop.style) backdrop.style.opacity = '0';
+                setTimeout(() => backdrop.remove(), 400);
+            }));
+        }
         if (typeof window !== 'undefined') window.dispatchEvent(new Event('3klife-boot-ready'));
     }
 
-    private _hideLegacyTitle(root: Node): void {
+    private _setLegacyTitleActive(root: Node, active: boolean): void {
         for (const child of root.children) {
             if (child.name === 'TitleScreenHost') continue;
-            if (LEGACY_TITLE_NODES.includes(child.name)) child.active = false;
-            else this._hideLegacyTitle(child);
+            if (LEGACY_TITLE_NODES.includes(child.name)) child.active = active;
+            else this._setLegacyTitleActive(child, active);
+        }
+    }
+
+    private _hideNamed(root: Node, name: string): void {
+        for (const child of root.children) {
+            if (child.name === name) child.active = false;
+            else this._hideNamed(child, name);
         }
     }
 

@@ -70,11 +70,14 @@ export function createNewcomerUiRegressionSuite(): TestSuite {
         const skin = JSON.parse(read('assets/resources/ui-spec/skins/destiny-opening-screen.skin.json'));
         assert.isTrue(skin.slots['pg.label.sub'].fontSize >= 26);
     });
-    suite.test('標題初始化先隱藏預設 Button，不移除可用的 BtnStart 備援', () => {
+    suite.test('標題初始化先藏舊標題（含預設 Button），載入失敗才拿出 BtnStart 備援且不放回 Button（PROG-2-2240）', () => {
         const src = read('assets/scripts/ui/scenes/LoginScene.ts');
         const onLoad = src.slice(src.indexOf('onLoad(): void'), src.indexOf('start(): void'));
-        assert.contains(onLoad, "child.name === 'Button'");
-        assert.isFalse(onLoad.includes("child.name === 'BtnStart'"));
+        assert.contains(onLoad, '_setLegacyTitleActive(this.node, false)');
+        assert.contains(src, "const LEGACY_TITLE_NODES: readonly string[] = ['Button', 'TitleLabel', 'SubtitleLabel', 'BtnStart'];");
+        const fallback = src.slice(src.indexOf('} catch (error) {'), src.indexOf('hostNode.destroy();'));
+        assert.contains(fallback, '_setLegacyTitleActive(this.node, true)');
+        assert.contains(fallback, "_hideNamed(this.node, 'Button')");
     });
     suite.test('戰鬥在第一個 await 前遮蔽 UI，正式背景及 HUD 完成後才揭露', () => {
         const src = read('assets/scripts/battle/views/BattleScene.ts');
