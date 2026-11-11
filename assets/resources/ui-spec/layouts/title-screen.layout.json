@@ -62,7 +62,8 @@
                     "name": "TitleScreen_span_2",
                     "text": "三國志・生存",
                     "styleSlot": "auto.title-screen.titlescreen_span_2",
-                    "textKey": "auto.title-screen.title-screen-span-2"
+                    "textKey": "auto.title-screen.title-screen-span-2",
+                    "active": false
                   },
                   {
                     "type": "panel",
@@ -92,7 +93,8 @@
                         "type": "label",
                         "name": "TitleScreen_span_5",
                         "text": "生",
-                        "styleSlot": "auto.title-screen.titlescreen_span_5"
+                        "styleSlot": "auto.title-screen.titlescreen_span_5",
+                        "active": false
                       }
                     ]
                   }
@@ -136,7 +138,8 @@
                     "name": "TitleScreen_span_7",
                     "text": "THREE KINGDOMS · SURVIVAL",
                     "styleSlot": "auto.title-screen.titlescreen_span_7",
-                    "textKey": "auto.title-screen.title-screen-span-7"
+                    "textKey": "auto.title-screen.title-screen-span-7",
+                    "active": false
                   }
                 ]
               },
@@ -172,7 +175,7 @@
             "name": "TitleScreen_div_10",
             "widget": {
               "top": 742,
-              "left": 960
+              "horizontalCenter": 0
             },
             "id": "title-screen.start",
             "width": 440,
