@@ -704,7 +704,7 @@
       "stage": "layout-extraction",
       "status": "active",
       "ruleIds": ["H2U-P4-004", "H2U-P4-012"],
-      "testTags": ["per-tab-replay-required-for-tabbed-source"]
+      "testTags": ["per-tab-replay-required-for-tabbed-source", "overflow-clip-leaf-clamp", "inline-text-run-single-label"]
     },
     {
       "stage": "skin-extraction",

@@ -356,10 +356,16 @@ async function runPerTabReplay(args) {
     }
   }
   result.ok = result.fragments.length > 0 && result.fragments.every(fragment => fragment.ok);
+  // 先用重播出的第一個分頁改正內容區的預設內容檔，再清掉仍指向不存在檔案的插槽；
+  // 順序顛倒時，轉換初期猜的預設檔名（不存在）會讓內容區先被降成空容器（PROG-2-2232）。
+  let nextRouting = null;
+  let lazySlotUpdate = { changed: 0 };
+  if (result.ok) {
+    nextRouting = writePerTabReplayRouting(paths, opts, routing, result.fragments, helpers);
+    lazySlotUpdate = updateLazySlotDefaultFragments(paths.finalLayout, nextRouting, helpers);
+  }
   result.unresolvedLazySlots = dropUnresolvedLazySlots(paths.finalLayout, runtime.fragmentsDir, helpers).dropped;
   if (result.ok) {
-    const nextRouting = writePerTabReplayRouting(paths, opts, routing, result.fragments, helpers);
-    const lazySlotUpdate = updateLazySlotDefaultFragments(paths.finalLayout, nextRouting, helpers);
     result.regionMounts = markRegionMounts(paths.finalLayout, runtime.fragmentsDir, nextRouting, helpers).marked;
     result.tabRoutingPath = helpers.rel(helpers.sidecarPath(paths.finalLayout, '.tab-routing.json'));
     result.tabRoutingCount = nextRouting.tabs.length;
