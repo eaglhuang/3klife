@@ -1,6 +1,6 @@
 {
   "taskId": "UI-2-0121",
-  "updatedAt": "2026-11-11T00:42:33.575Z",
+  "updatedAt": "2026-11-11T11:17:41.426Z",
   "evidence": [
     {
       "evidenceKind": "validation",
@@ -13280,6 +13280,87 @@
         "commandRunCache": {
           "schemaId": "atm.commandRunCache.v1",
           "cacheKey": "sha256:c34aae346481ac562e1583c4ce6b1cc5400ae31813b8b68b94e55fb7090e54d3",
+          "reusedRunCount": 0,
+          "runCount": 1,
+          "sourcePath": null
+        }
+      }
+    },
+    {
+      "evidenceKind": "validation",
+      "evidenceType": "test",
+      "summary": "Auto-run: node tools_node/prepare-view-image.js --input assets/resources/sprites/generals/guan_yu_battle.png",
+      "artifactPaths": [],
+      "evidenceFreshness": "fresh",
+      "producedBy": "codex-gpt-6.1-terra",
+      "sessionId": "session-20261105171558-codex-gpt-6.1-sol-UI-2-0121-3220962ee1",
+      "createdAt": "2026-11-11T11:17:41.426Z",
+      "details": {
+        "actorId": "codex-gpt-6.1-terra",
+        "sessionId": "session-20261105171558-codex-gpt-6.1-sol-UI-2-0121-3220962ee1",
+        "kind": "test",
+        "freshness": "fresh",
+        "commandRuns": [
+          {
+            "command": "node tools_node/prepare-view-image.js --input assets/resources/sprites/generals/guan_yu_battle.png",
+            "exitCode": 0,
+            "stdoutSha256": "sha256:1bfe7b63a997a33b866aa34789012ffd3604858485561f726723007f7821c07b",
+            "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "startedAt": "2026-11-11T11:17:40.334Z",
+            "finishedAt": "2026-11-11T11:17:41.425Z",
+            "durationMs": 1091,
+            "cached": false,
+            "cwd": ".",
+            "runnerKind": "dev-source",
+            "sourceCommit": "6ba6450b30720db34f6ea31fdda6ca39a661b827",
+            "cacheKey": "sha256:7527565d03e4c7c6869b556cf73472963fa94b33a029884809c7e2f518fd606b",
+            "generatedAt": "2026-11-11T11:17:41.425Z",
+            "canonicalObservation": {
+              "schemaId": "atm.telemetryObservation.v1",
+              "specVersion": "0.1.0",
+              "migration": {
+                "strategy": "none",
+                "fromVersion": null,
+                "notes": "Canonical telemetry observation contract."
+              },
+              "observationId": "sha256:7527565d03e4c7c6869b556cf73472963fa94b33a029884809c7e2f518fd606b",
+              "producerId": "evidence.command-runs",
+              "producerVersion": "0.1.0",
+              "observationKind": "command-run",
+              "status": "canonical",
+              "source": "evidence-command-run-normalizer",
+              "sourceAvailability": "available",
+              "storagePolicy": "tracked-compact-digest",
+              "generatedAt": "2026-11-11T11:17:41.425Z",
+              "observedAt": "2026-11-11T11:17:41.425Z",
+              "startedAt": "2026-11-11T11:17:40.334Z",
+              "finishedAt": "2026-11-11T11:17:41.425Z",
+              "durationMs": 1091,
+              "laneSessionId": null,
+              "taskId": "UI-2-0121",
+              "batchId": null,
+              "waveId": null,
+              "inputDigest": "sha256:351e579ff4044955837e6923dfcc5a18b88fca6e3e929bda659683477127e929",
+              "outputDigest": "sha256:6ce1d6a20395ca9bf68fe2d1dfe1c5291b12e0f2bb15d1d99ca24bf7f191527e",
+              "cache": {
+                "key": "sha256:7527565d03e4c7c6869b556cf73472963fa94b33a029884809c7e2f518fd606b",
+                "hit": false
+              },
+              "extensions": {
+                "command": "node tools_node/prepare-view-image.js --input assets/resources/sprites/generals/guan_yu_battle.png",
+                "cwd": ".",
+                "exitCode": 0,
+                "validators": [],
+                "runnerKind": "dev-source",
+                "sourceCommit": "6ba6450b30720db34f6ea31fdda6ca39a661b827",
+                "runnerVersion": null
+              }
+            }
+          }
+        ],
+        "commandRunCache": {
+          "schemaId": "atm.commandRunCache.v1",
+          "cacheKey": "sha256:ea6e03fe6d61510b0ad41a4bfc2f021de2cececbe7cb675122675ed6b795a6be",
           "reusedRunCount": 0,
           "runCount": 1,
           "sourcePath": null

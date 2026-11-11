@@ -1,7 +1,7 @@
 {
   "schemaId": "atm.actorRegistry",
   "specVersion": "0.1.0",
-  "generatedAt": "2026-11-09T07:38:19.421Z",
+  "generatedAt": "2026-11-11T11:00:30.330Z",
   "actors": [
     {
       "actorId": "claude-code-haiku-5-5",
@@ -177,7 +177,7 @@
       "gitName": "codex-gpt-6.1-terra",
       "gitEmail": "codex-gpt-6.1-terra@atm.local",
       "createdAt": "2026-11-06T14:31:22.444Z",
-      "updatedAt": "2026-11-09T07:38:19.419Z"
+      "updatedAt": "2026-11-11T11:00:30.329Z"
     },
     {
       "actorId": "cursor-gpt-5.2",

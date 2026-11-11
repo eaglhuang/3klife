@@ -1,7 +1,7 @@
 {
   "schemaId": "atm.evidenceBundleManifest.v1",
   "taskId": "UI-2-0121",
-  "updatedAt": "2026-11-11T00:42:33.575Z",
+  "updatedAt": "2026-11-11T11:17:41.426Z",
   "updatedBy": "codex-gpt-6.1-terra",
   "freshValidationPasses": [],
   "staleValidationPasses": [],
@@ -2258,6 +2258,20 @@
       "durationMs": 331,
       "runnerKind": "dev-source",
       "sourceCommit": "1d0abac5ffd1a0934252898ffe90552948653043",
+      "cached": false
+    },
+    {
+      "command": "node tools_node/prepare-view-image.js --input assets/resources/sprites/generals/guan_yu_battle.png",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:1bfe7b63a997a33b866aa34789012ffd3604858485561f726723007f7821c07b",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [],
+      "generatedAt": "2026-11-11T11:17:41.425Z",
+      "startedAt": "2026-11-11T11:17:40.334Z",
+      "finishedAt": "2026-11-11T11:17:41.425Z",
+      "durationMs": 1091,
+      "runnerKind": "dev-source",
+      "sourceCommit": "6ba6450b30720db34f6ea31fdda6ca39a661b827",
       "cached": false
     }
   ],
