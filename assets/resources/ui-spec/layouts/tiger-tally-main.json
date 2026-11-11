@@ -282,7 +282,7 @@
             "id": "costBadge1",
             "widget": {
               "left": 14,
-              "top": 38
+              "top": 44
             },
             "width": 48,
             "height": 30,
@@ -552,7 +552,7 @@
             "id": "costBadge2",
             "widget": {
               "left": 14,
-              "top": 38
+              "top": 44
             },
             "width": 48,
             "height": 30,
@@ -822,7 +822,7 @@
             "id": "costBadge3",
             "widget": {
               "left": 14,
-              "top": 38
+              "top": 44
             },
             "width": 48,
             "height": 30,
@@ -1092,7 +1092,7 @@
             "id": "costBadge4",
             "widget": {
               "left": 14,
-              "top": 38
+              "top": 44
             },
             "width": 48,
             "height": 30,
