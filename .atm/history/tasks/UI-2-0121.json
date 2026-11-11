@@ -10,8 +10,8 @@
   "tags": [],
   "createdAt": "2026-11-05T14:30:28.536Z",
   "createdByActor": "codex-gpt-6.1-sol",
-  "lastTransitionId": "2026-11-11T00-41-35-506Z-scope-amendment-ba55fd3faa30",
-  "lastTransitionAt": "2026-11-11T00:41:35.506Z",
+  "lastTransitionId": "2026-11-11T00-47-27-159Z-scope-amendment-e402c7fce4a9",
+  "lastTransitionAt": "2026-11-11T00:47:27.159Z",
   "ledgerContractVersion": "task-ledger/v1",
   "reservedAt": "2026-11-05T17:15:58.821Z",
   "promotedAt": "2026-11-05T17:15:58.826Z",
@@ -354,6 +354,8 @@
       "assets/resources/sprites/generals/liu_biao_portrait.png",
       "assets/resources/sprites/generals/liu_feng_portrait.png",
       "assets/resources/sprites/generals/liu_zhang_portrait.png",
+      "assets/resources/sprites/generals/lu_bu_battle.png",
+      "assets/resources/sprites/generals/lu_bu_battle.png.meta",
       "assets/resources/sprites/generals/lu_bu_portrait.png",
       "assets/resources/sprites/generals/lu_bu_portrait.png.meta",
       "assets/resources/sprites/generals/lu_kang_portrait.png",
@@ -644,20 +646,20 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-9033a74dc8220a67",
-    "ticketDigest": "sha256:9033a74dc8220a679d00ff65732a97e05087dd69a667e1a0bde56d3e59c629d6",
+    "ticketId": "wat-f7e63a69f6c78a78",
+    "ticketDigest": "sha256:f7e63a69f6c78a7886645c31f9dbc73caa195fa0d0c99165f44c77d728850ee9",
     "taskId": "UI-2-0121",
     "origin": "claim",
     "actorId": "codex-gpt-6.1-terra",
     "laneSessionId": "lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d",
     "claimGeneration": "lease-f957fb02b01d",
-    "issuedAt": "2026-11-11T00:41:35.394Z",
-    "expiresAt": "2026-11-11T01:11:35.394Z",
-    "scopeDigest": "sha256:a524d46495bbfd190f66133b05389fbfb1af23fcb295318564d2a8038a4c287f",
+    "issuedAt": "2026-11-11T00:47:27.052Z",
+    "expiresAt": "2026-11-11T01:17:27.052Z",
+    "scopeDigest": "sha256:5b83265840b00a441baf4b5783a8a92ff3f06a9c1887f6d6189660670f24a869",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-11-11T00:41:35.394Z"
+      "selectedAt": "2026-11-11T00:47:27.052Z"
     },
     "grants": [
       {
@@ -996,6 +998,8 @@
           "assets/resources/sprites/generals/liu_biao_portrait.png",
           "assets/resources/sprites/generals/liu_feng_portrait.png",
           "assets/resources/sprites/generals/liu_zhang_portrait.png",
+          "assets/resources/sprites/generals/lu_bu_battle.png",
+          "assets/resources/sprites/generals/lu_bu_battle.png.meta",
           "assets/resources/sprites/generals/lu_bu_portrait.png",
           "assets/resources/sprites/generals/lu_bu_portrait.png.meta",
           "assets/resources/sprites/generals/lu_kang_portrait.png",
@@ -1273,7 +1277,7 @@
           "docs/ui-quality-tasks/UI-2-0121.json",
           "docs/ui-quality-todo.json"
         ],
-        "digest": "sha256:c30ee1937670929dd5a2ad5487d217a860494930f2ec47521ded22be76c44a58"
+        "digest": "sha256:5d3fac9473523d4da69e57892142a39932c676d260751c8c197391b43195bab4"
       },
       {
         "kind": "lifecycle-operation",
@@ -1654,6 +1658,8 @@
       "assets/resources/sprites/generals/liu_biao_portrait.png",
       "assets/resources/sprites/generals/liu_feng_portrait.png",
       "assets/resources/sprites/generals/liu_zhang_portrait.png",
+      "assets/resources/sprites/generals/lu_bu_battle.png",
+      "assets/resources/sprites/generals/lu_bu_battle.png.meta",
       "assets/resources/sprites/generals/lu_bu_portrait.png",
       "assets/resources/sprites/generals/lu_bu_portrait.png.meta",
       "assets/resources/sprites/generals/lu_kang_portrait.png",
@@ -3143,6 +3149,8 @@
     "assets/resources/sprites/ui_avatars/cropped/cao_xiu_avatar.png",
     "assets/resources/sprites/generals/avatars/bu_zhi_avatar.png",
     "assets/resources/sprites/generals/bu_zhi_portrait.png",
-    "assets/resources/sprites/ui_avatars/cropped/bu_zhi_avatar.png"
+    "assets/resources/sprites/ui_avatars/cropped/bu_zhi_avatar.png",
+    "assets/resources/sprites/generals/lu_bu_battle.png",
+    "assets/resources/sprites/generals/lu_bu_battle.png.meta"
   ]
 }
