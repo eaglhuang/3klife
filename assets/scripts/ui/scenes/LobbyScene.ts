@@ -165,6 +165,8 @@ import { DESTINY_PORTRAIT_SPEC, FaceMarks, PORTRAIT_FRAME_SPEC, PortraitFrameSpe
 import { LobbyOpeningPanels } from '../core/LobbyOpeningPanels';
 import { INTRO_TICK_SEC, OpeningIntroController } from '../core/OpeningIntroController';
 import { InitialShowcaseController } from '../core/InitialShowcaseController';
+import { PortraitSwapGuard } from '../core/PortraitSwapGuard';
+import { INITIAL_SHOWCASE_ENTRIES } from '../../core/systems/InitialGeneralShowcase';
 import { createNewPlayerOpeningFlow, OPENING_INTRO_DONE, SHOWCASE_DONE_EVENT, shouldMountOpeningFirst } from '../../core/systems/NewPlayerOpening';
 import { OPENING_BEAUTY_POOL_ID, openingBeautyCandidates } from '../../core/systems/OpeningBeauty';
 import type { OpeningFlowController } from '../../core/systems/OpeningFlowController';
@@ -223,7 +225,8 @@ import { buildStageAwakenedTexts, buildStageCapRaisedTexts, type MirrorStageResu
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { warnGeneralSchemaOnLoad } from '../../core/models/GeneralSchema';
 import { coreFieldCoverage, formatCoreFieldCoverage } from '../../core/systems/GeneralCoreFields';
-import { DEFAULT_POOL_ID as GACHA_GENERAL_POOL_ID, GachaFlowCoordinator, GACHA_SCREEN_ID } from '../core/GachaFlowCoordinator';
+import { DEFAULT_POOL_ID as GACHA_GENERAL_POOL_ID, GachaFlowCoordinator, GACHA_PULL_RESULT_SCREEN_ID, GACHA_SCREEN_ID } from '../core/GachaFlowCoordinator';
+import { buildDestinyOpeningResults } from '../core/DestinyOpeningResult';
 import { buildGachaPoolGuideLines } from '../core/GachaPoolGuidePresenter';
 import { bindGachaActions, GACHA_ACTION_NODES } from '../core/GachaActionBindings';
 import { formatGeneralDisplayName } from '../../core/models/GeneralTitle';
@@ -404,6 +407,8 @@ export class LobbyScene extends Component {
     private _domesticHost: UIScreenPreviewHost | null = null;
     /** 各列表頭像載入序號，避免舊的非同步載入蓋掉新內容 */
     private readonly _avatarSeq = new Map<string, number>();
+    /** 立繪框換人時，新圖載完前先藏舊圖（PROG-2-2236） */
+    private readonly _portraitSwap = new PortraitSwapGuard();
     private _fastForwarding = false;
     private _recruitHost: UIScreenPreviewHost | null = null;
     private _recruit: RecruitHallController | null = null;
@@ -2285,6 +2290,7 @@ export class LobbyScene extends Component {
                 }),
                 notifyBeauty: name => services().event.emit('SHOW_TOAST', { message: `紅顏 ${name} 前來相會，已加入名冊，可到「結緣」配對`, duration: 4 }),
                 advanceOpening: event => { this._advanceOpening(event); },
+                showDestinyResult: view => this._showDestinyOpeningResult(view),
                 onOverlayChanged: () => { this._seasonChroniclePopup?.refreshAvailability(); },
                 applyFramePortraits: (binder, keys) => this._applyFramePortraits(binder as NonNullable<UIScreenPreviewHost['binder']>, 'destiny', keys, undefined, DESTINY_PORTRAIT_SPEC),
                 openingLetterText: () => ({ title: services().i18n.t('copy.letter.opening.title'), body: openingLetterBodyWithFunLine(services().i18n.t('copy.letter.opening.body'), services().session.magistrateUid ?? '') }),
@@ -2302,6 +2308,26 @@ export class LobbyScene extends Component {
             });
         }
         return this._openingPanels;
+    }
+
+    /**
+     * 開場宿命轉蛋結算（PROG-2-2236，issue #2086）：借 PROG-2-2221 的滿版結果畫面，另開宿主蓋在開場上；
+     * 玩家按進入大廳／關閉後收掉宿主並 resolve，開場才往下走。
+     */
+    private async _showDestinyOpeningResult(view: { coreId: string; rolledIds: readonly string[] }): Promise<void> {
+        const results = buildDestinyOpeningResults(view.rolledIds, this._generals);
+        if (results.length === 0) return;
+        const host = await this._mountPreviewScreenHost('DestinyResultHost', GACHA_PULL_RESULT_SCREEN_ID);
+        if (!host.node.getComponent(BlockInputEvents)) host.node.addComponent(BlockInputEvents);
+        let close!: () => void;
+        const closed = new Promise<void>((resolve) => { close = resolve; });
+        await this._getGachaFlowCoordinator().presentOpeningResults(host, results, view.coreId, () => {
+            host.node.active = false;
+            close();
+        });
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        await closed;
     }
 
     private async _mountOnboardingTutorial(): Promise<void> {
@@ -3021,6 +3047,8 @@ export class LobbyScene extends Component {
 
     private async _showInitialShowcase(): Promise<void> {
         this._showcase = new InitialShowcaseController();
+        // 六位名將的立繪先預載，按下一位時不用等下載（PROG-2-2236）
+        for (const entry of INITIAL_SHOWCASE_ENTRIES) void loadGeneralPortrait(entry.generalId);
         if (!this._showcaseHost) {
             this._showcaseHost = await this._mountPreviewScreenHost('InitialShowcaseHost', 'initial-showcase-screen', [
                 { buttonId: 'btnShowcaseNext', handler: () => { this._onClickShowcaseNext(); } },
@@ -3585,11 +3613,19 @@ export class LobbyScene extends Component {
             const sprite = binder.getSprite(portraitId);
             if (!holder || !sprite) return;
             if (!holder.getComponent(Mask)) holder.addComponent(Mask).type = Mask.Type.GRAPHICS_RECT;
+            // 換成另一位：新圖載完前不顯示上一位或版面預設的剪影（issue #2086：孫策甘寧同圖、張飛「?」）
+            const slot = `${prefix}:${i}`;
+            if (this._portraitSwap.begin(slot, key)) {
+                this._portraitSwap.clear(slot);
+                sprite.enabled = false;
+            }
             void (async () => {
                 const id = key.replace(/_portrait$/, '').replace(/_/g, '-');
                 const [portrait, marks] = await Promise.all([loadGeneralPortrait(key), this._loadFaceMarks()]);
                 const frame = portrait ?? await loadGeneralAvatar(key);
-                if (!frame || seq !== this._avatarSeq.get(prefix) || !sprite.isValid) return;
+                if (seq !== this._avatarSeq.get(prefix) || !sprite.isValid) return;
+                // 真的沒有任何圖：才露出版面預設的剪影
+                if (!frame) { sprite.enabled = true; return; }
                 sprite.trim = false;
                 sprite.sizeMode = Sprite.SizeMode.CUSTOM;
                 sprite.spriteFrame = frame;
@@ -3600,6 +3636,8 @@ export class LobbyScene extends Component {
                     : { width: 200, height: 200, x: 0, y: spec.frameHeight / 2 - 40 - 100 };
                 sprite.node.getComponent(UITransform)?.setContentSize(place.width, place.height);
                 sprite.node.setPosition(place.x, place.y);
+                sprite.enabled = true;
+                this._portraitSwap.shown(slot, key);
             })();
         });
     }

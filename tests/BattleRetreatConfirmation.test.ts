@@ -1,4 +1,4 @@
-// @spec-source → Issue #2086；PROG-2-2232
+// @spec-source → Issue #2086；PROG-2-2238
 import { TestSuite, assert } from './TestRunner';
 import { BattleController } from '../assets/scripts/battle/controllers/BattleController';
 import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
