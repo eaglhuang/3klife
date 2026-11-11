@@ -50,11 +50,20 @@ export class LoginScene extends Component {
         } catch (error) {
             console.warn('[LoginScene] title-screen 載入失敗，改用場景內舊標題', error);
             hostNode.destroy();
+            this._finishWebBoot();
             return;
         }
         this._title = new TitleScreenBinder(hostNode, Node.EventType.TOUCH_END, { onStart: () => this.onClickStart() });
         this._hideLegacyTitle(this.node);
         hostNode.active = true;
+        this._finishWebBoot();
+    }
+
+    /** HTML 提示只跨越引擎與標題載入，不遮住已可操作的標題／備援按鈕。 */
+    private _finishWebBoot(): void {
+        if (typeof document === 'undefined') return;
+        document.getElementById('web-boot-progress')?.remove();
+        if (typeof window !== 'undefined') window.dispatchEvent(new Event('3klife-boot-ready'));
     }
 
     private _hideLegacyTitle(root: Node): void {
