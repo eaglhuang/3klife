@@ -40,3 +40,19 @@ html, body {
   --safe-bottom: env(safe-area-inset-bottom);
   --safe-left: env(safe-area-inset-left);
 }
+
+/* 啟動底圖：與 #GameDiv 同一個 16:9 框，蓋在畫布上，標題掛好後移除（PROG-2-2240） */
+#web-boot-backdrop {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100vw;
+  height: 56.25vw;
+  max-width: 177.7777777778vh;
+  max-height: 100vh;
+  background: #0d0a06 url("boot-bg.jpg") center / cover no-repeat;
+  z-index: 2147483645;
+  pointer-events: none;
+  transition: opacity .35s ease-out;
+}
