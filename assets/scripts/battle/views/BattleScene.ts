@@ -465,7 +465,8 @@ export class BattleScene extends Component {
       if (battleParams.tutorial) {
         this.tutorialHint = new BattleTutorialHint(services().event,
           msg => this.deployRuntime?.showToast(msg, 5),
-          hint => services().event.emit('first-battle-guide', hint));
+          hint => services().event.emit('first-battle-guide', hint),
+          () => ({ current: this.ctrl!.state.playerGeneral?.currentSp ?? 0, max: this.ctrl!.state.playerGeneral?.maxSp ?? 0 }));
       }
 
       if (this.hud && !(await this.hud.waitUntilReady(15000))) {
