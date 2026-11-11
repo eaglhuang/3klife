@@ -26,7 +26,7 @@ export function createNewcomerHudLayoutSuite(): TestSuite {
             assert.isTrue(node(root, 'BattleHudScreen_div_1').active !== false);
         }
         const log = layout('battle-log-main.json').root;
-        assert.equals(16, log.widget.right); assert.equals(168, log.widget.top);
+        assert.equals(16, log.widget.right); assert.equals(184, log.widget.top); // PROG-2-2225 HUD 五視窗稽核後下移
     });
     return suite;
 }
