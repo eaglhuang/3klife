@@ -310,13 +310,13 @@
     },
     "auto.title-screen.titlescreen_span_1": {
       "kind": "label-style",
-      "font": "fonts/newsreader/newsreader",
+      "font": "fonts/notoserif_tc/notoserif_tc",
       "fontSize": 168,
       "lineHeight": 168,
       "letterSpacing": 24,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 4,
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER",
       "isBold": true
@@ -364,7 +364,7 @@
     },
     "auto.title-screen.titlescreen_span_4": {
       "kind": "label-style",
-      "font": "fonts/newsreader/newsreader",
+      "font": "fonts/notoserif_tc/notoserif_tc",
       "fontSize": 52,
       "lineHeight": 74,
       "letterSpacing": 0,
@@ -468,7 +468,7 @@
     },
     "auto.title-screen.titlescreen_div_9": {
       "kind": "label-style",
-      "font": "fonts/newsreader/newsreader",
+      "font": "fonts/notoserif_tc/notoserif_tc",
       "fontSize": 34,
       "lineHeight": 48,
       "letterSpacing": 12,
@@ -587,7 +587,7 @@
     },
     "auto.title-screen.titlescreen_span_8": {
       "kind": "label-style",
-      "font": "fonts/newsreader/newsreader",
+      "font": "fonts/notoserif_tc/notoserif_tc",
       "fontSize": 42,
       "lineHeight": 88,
       "letterSpacing": 18,
@@ -658,7 +658,7 @@
     },
     "auto.title-screen.titlescreen_span_9": {
       "kind": "label-style",
-      "font": "fonts/newsreader/newsreader",
+      "font": "fonts/notoserif_tc/notoserif_tc",
       "fontSize": 32,
       "lineHeight": 68,
       "letterSpacing": 0,
@@ -728,7 +728,7 @@
     },
     "auto.title-screen.titlescreen_span_10": {
       "kind": "label-style",
-      "font": "fonts/newsreader/newsreader",
+      "font": "fonts/notoserif_tc/notoserif_tc",
       "fontSize": 32,
       "lineHeight": 68,
       "letterSpacing": 0,
@@ -798,7 +798,7 @@
     },
     "auto.title-screen.titlescreen_span_11": {
       "kind": "label-style",
-      "font": "fonts/newsreader/newsreader",
+      "font": "fonts/notoserif_tc/notoserif_tc",
       "fontSize": 32,
       "lineHeight": 68,
       "letterSpacing": 0,
