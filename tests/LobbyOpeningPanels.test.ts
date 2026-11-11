@@ -340,17 +340,70 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
             assert.isFalse(service.lastLoadRecoveredFromBackup());
         });
     }
-    suite.test('新局：開宿命轉蛋時先開信件，關信後才進轉蛋（PROG-2-1622）', async () => {
+    suite.test('新局：開信後關信才接下一步（名將登場），只接一次（PROG-2-2222）', async () => {
         const f = fixture();
         await f.panels.mountOpeningLetter();
         await f.panels.mountDestiny();
         assert.isFalse(f.hosts.get('OpeningLetterHost')!.node.active);
-        assert.isTrue(f.panels.openDestiny());
+        let nextCalls = 0;
+        f.panels.openLetterThen(() => { nextCalls++; });
         assert.isTrue(f.hosts.get('OpeningLetterHost')!.node.active);
-        assert.isFalse(f.hosts.get('DestinyOpeningHost')!.node.active);
+        assert.equals(0, nextCalls, '信沒關前不接下一步');
+        assert.isFalse(f.hosts.get('DestinyOpeningHost')!.node.active, '信之後不是直接進轉蛋');
         await f.panels.closeOpeningLetter();
         assert.isFalse(f.hosts.get('OpeningLetterHost')!.node.active);
+        assert.equals(1, nextCalls);
+        await f.panels.closeOpeningLetter();
+        assert.equals(1, nextCalls, '重複關信不重複接續');
+    });
+
+    suite.test('信已讀：openLetterThen 直接接下一步，不再開信（PROG-2-2222）', async () => {
+        const f = fixture();
+        await f.panels.mountOpeningLetter();
+        await f.session.markOpeningLetterSeen();
+        let nextCalls = 0;
+        f.panels.openLetterThen(() => { nextCalls++; });
+        assert.equals(1, nextCalls);
+        assert.isFalse(f.hosts.get('OpeningLetterHost')!.node.active);
+    });
+
+    suite.test('新手引導等大廳掛完才出現：宿命鎖定後 lobbyReady 為 false 時不顯示（PROG-2-2223）', async () => {
+        const f = fixture();
+        let lobbyReady = false;
+        f.ports.lobbyReady = () => lobbyReady;
+        await f.panels.mountOnboarding();
+        await f.panels.mountDestiny();
+        f.panels.openDestiny();
+        f.click('DestinyOpeningHost', 'btnDestinyRoll'); await flush();
+        f.clickStar(); f.click('DestinyOpeningHost', 'btnDestinyConfirm'); await flush();
+        assert.isTrue(f.events.includes('destiny-locked'));
+        assert.isFalse(f.hosts.get('OnboardingTutorialHost')!.node.active, '大廳還沒掛完，引導箭頭沒有目標');
+        lobbyReady = true;
+        f.panels.refreshOnboarding();
+        assert.isTrue(f.hosts.get('OnboardingTutorialHost')!.node.active);
+    });
+
+    suite.test('activeHostNodes 只回顯示中的開場面板，供宿主維持最上層（PROG-2-2223）', async () => {
+        const f = fixture();
+        await f.panels.mountOpeningLetter();
+        await f.panels.mountDestiny();
+        assert.equals(0, f.panels.activeHostNodes().length);
+        f.panels.openLetterThen(() => undefined);
+        const nodes = f.panels.activeHostNodes();
+        assert.equals(1, nodes.length);
+        assert.isTrue(nodes[0] === f.hosts.get('OpeningLetterHost')!.node);
+        await f.panels.closeOpeningLetter();
+        assert.isTrue(f.panels.openDestiny());
+        assert.isTrue(f.panels.activeHostNodes()[0] === f.hosts.get('DestinyOpeningHost')!.node);
+    });
+
+    suite.test('名將登場後開宿命轉蛋：直接進轉蛋，不再插信（PROG-2-2222）', async () => {
+        const f = fixture();
+        await f.panels.mountOpeningLetter();
+        await f.panels.mountDestiny();
+        assert.isTrue(f.panels.openDestiny());
         assert.isTrue(f.hosts.get('DestinyOpeningHost')!.node.active);
+        assert.isFalse(f.hosts.get('OpeningLetterHost')!.node.active);
     });
 
     return suite;

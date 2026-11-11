@@ -36,7 +36,7 @@ export function createNewcomerGuidanceSuite(): TestSuite {
         assert.equals('deploy', g.step); assert.isFalse(g.advance('ultimate-used'));
         assert.isTrue(g.advance('deployed')); assert.equals('clash', g.step);
         assert.isTrue(g.advance('sp-ready')); assert.equals('ultimate', g.step);
-        assert.equals('BattleHudScreen_div_136', g.hint?.target);
+        assert.equals('UltimateBtn', g.hint?.target);
         assert.isTrue(g.advance('ultimate-used')); assert.equals('victory', g.step);
         assert.isTrue(g.advance('won')); assert.equals(null, g.hint);
     });
@@ -52,8 +52,8 @@ export function createNewcomerGuidanceSuite(): TestSuite {
         handlers.get(EVENT_NAMES.UnitDeployed)!({ faction: Faction.Enemy }); assert.equals(1, shown.length);
         handlers.get(EVENT_NAMES.UnitDeployed)!({ faction: Faction.Player });
         handlers.get(EVENT_NAMES.GeneralSpChanged)!({ faction: Faction.Player, sp: 1, maxSp: 100 }); assert.equals('EndTurnBtn', shown[shown.length - 1]);
-        handlers.get(EVENT_NAMES.GeneralSpChanged)!({ faction: Faction.Player, sp: 100, maxSp: 100 }); assert.equals('BattleHudScreen_div_136', shown[shown.length - 1]);
-        handlers.get(EVENT_NAMES.GeneralSkillUsed)!({ faction: Faction.Player, sourceType: 'tactic' }); assert.equals('BattleHudScreen_div_136', shown[shown.length - 1]);
+        handlers.get(EVENT_NAMES.GeneralSpChanged)!({ faction: Faction.Player, sp: 100, maxSp: 100 }); assert.equals('UltimateBtn', shown[shown.length - 1]);
+        handlers.get(EVENT_NAMES.GeneralSkillUsed)!({ faction: Faction.Player, sourceType: 'tactic' }); assert.equals('UltimateBtn', shown[shown.length - 1]);
         handlers.get(EVENT_NAMES.GeneralSkillUsed)!({ faction: Faction.Player, sourceType: 'ultimate' }); assert.equals('EndTurnBtn', shown[shown.length - 1]);
         hint.dispose(); assert.equals(0, handlers.size); assert.equals(null, shown[shown.length - 1]);
     });

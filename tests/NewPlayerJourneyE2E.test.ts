@@ -43,6 +43,7 @@ export function createNewPlayerJourneyE2ESuite(): TestSuite {
         const tokenDay1 = a.itemCount(ITEM_ADMISSION_TOKEN);
         assert.isTrue(tokenDay1 >= 1, '首登發入學令');
         flowA.advance({ type: OPENING_INTRO_DONE });
+        flowA.advance({ type: SHOWCASE_DONE_EVENT });
         await a.setOpeningPhase(flowA.current()!.id);
         assert.equals('destiny', a.openingPhase);
         await a.save();
@@ -57,9 +58,6 @@ export function createNewPlayerJourneyE2ESuite(): TestSuite {
         b.recordLoginAt(DAY1 + HOUR);
         assert.equals(tokenDay1, b.itemCount(ITEM_ADMISSION_TOKEN), '同日重登不重發');
         flowB.advance({ type: DESTINY_LOCKED_EVENT_TYPE });
-        await b.setOpeningPhase(flowB.current()!.id);
-        assert.equals('showcase', b.openingPhase);
-        flowB.advance({ type: SHOWCASE_DONE_EVENT });
         await b.setOpeningPhase(flowB.current()?.id ?? null);
         assert.equals(null, b.openingPhase, '開場結束');
         assert.isFalse(b.shouldShowOpeningRedFace, '首戰前不彈紅顏');

@@ -126,8 +126,8 @@
     "action.ultimate.label": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 18,
-      "lineHeight": 22,
+      "fontSize": 24,
+      "lineHeight": 28,
       "color": "secondaryLight",
       "horizontalAlign": "CENTER",
       "isBold": true,
@@ -136,24 +136,24 @@
     "action.sp.pct.label": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
-      "fontSize": 13,
-      "lineHeight": 16,
+      "fontSize": 22,
+      "lineHeight": 26,
       "color": "textCyanLight",
       "horizontalAlign": "CENTER"
     },
     "action.skill.label": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 11,
-      "lineHeight": 13,
+      "fontSize": 24,
+      "lineHeight": 28,
       "color": "textSteelLight",
       "horizontalAlign": "CENTER"
     },
     "action.util.label": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 11,
-      "lineHeight": 13,
+      "fontSize": 24,
+      "lineHeight": 28,
       "color": "textSteelLighter",
       "horizontalAlign": "CENTER"
     },

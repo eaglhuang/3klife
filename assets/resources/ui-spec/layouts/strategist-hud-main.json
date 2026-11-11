@@ -20,29 +20,38 @@
     },
     "children": [
       {
-        "type": "panel",
+        "type": "scroll-view",
         "name": "SummaryBand",
         "id": "summaryBand",
         "widget": {
-          "top": 145,
-          "hCenter": 0
+          "top": 96,
+          "left": 8
         },
-        "width": 900,
-        "height": 34,
+        "width": 224,
+        "height": 72,
         "skinSlot": "strategist.band.bg",
         "children": [
           {
-            "type": "label",
-            "name": "SummaryText",
-            "id": "summaryText",
-            "widget": {
-              "top": 2,
-              "bottom": 2,
-              "left": 12,
-              "right": 12
-            },
-            "text": "",
-            "styleSlot": "strategist.label.summary"
+            "type": "container",
+            "name": "SummaryContent",
+            "id": "summaryContent",
+            "width": "100%",
+            "height": 72,
+            "children": [
+              {
+                "type": "label",
+                "name": "SummaryText",
+                "id": "summaryText",
+                "widget": {
+                  "top": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "text": "",
+                "styleSlot": "strategist.label.summary",
+                "height": 72
+              }
+            ]
           }
         ]
       },
@@ -50,22 +59,22 @@
         "type": "container",
         "name": "WisdomColumn",
         "widget": {
-          "top": 165,
-          "left": 318
+          "top": 112,
+          "right": 18
         },
-        "width": 90,
-        "height": 372,
+        "width": 344,
+        "height": 48,
         "children": [
           {
             "type": "panel",
             "name": "WisdomTrack",
             "id": "wisdomTrack",
             "widget": {
-              "top": 30,
-              "hCenter": 0
+              "bottom": 0,
+              "hCenter": true
             },
-            "width": 18,
-            "height": 342,
+            "width": 320,
+            "height": 8,
             "skinSlot": "strategist.wisdom.track",
             "children": [
               {
@@ -73,12 +82,13 @@
                 "name": "WisdomFill",
                 "id": "wisdomFill",
                 "widget": {
-                  "bottom": 0,
                   "left": 0,
-                  "right": 0
+                  "top": 0,
+                  "bottom": 0
                 },
-                "height": 0,
-                "skinSlot": "strategist.wisdom.fill"
+                "height": 8,
+                "skinSlot": "strategist.wisdom.fill",
+                "width": 0
               }
             ]
           },
@@ -88,10 +98,10 @@
             "id": "wisdomText",
             "widget": {
               "top": 0,
-              "hCenter": 0
+              "hCenter": true
             },
-            "width": 90,
-            "height": 24,
+            "width": 344,
+            "height": 32,
             "text": "",
             "styleSlot": "strategist.label.wisdom"
           }
