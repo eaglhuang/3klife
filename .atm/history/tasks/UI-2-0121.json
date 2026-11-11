@@ -10,8 +10,8 @@
   "tags": [],
   "createdAt": "2026-11-05T14:30:28.536Z",
   "createdByActor": "codex-gpt-6.1-sol",
-  "lastTransitionId": "2026-11-11T02-32-35-085Z-renew-9a9a5feb62a9",
-  "lastTransitionAt": "2026-11-11T02:32:35.085Z",
+  "lastTransitionId": "2026-11-11T05-40-35-882Z-renew-7ab44b9f54f3",
+  "lastTransitionAt": "2026-11-11T05:40:35.882Z",
   "ledgerContractVersion": "task-ledger/v1",
   "reservedAt": "2026-11-05T17:15:58.821Z",
   "promotedAt": "2026-11-05T17:15:58.826Z",
@@ -19,7 +19,7 @@
     "actorId": "codex-gpt-6.1-terra",
     "leaseId": "lease-f957fb02b01d",
     "claimedAt": "2026-11-05T17:15:58.833Z",
-    "heartbeatAt": "2026-11-11T02:32:34.288Z",
+    "heartbeatAt": "2026-11-11T05:40:35.682Z",
     "ttlSeconds": 1800,
     "files": [
       ".atm/history/evidence/UI-2-0121.*",
@@ -437,6 +437,8 @@
       "assets/resources/sprites/generals/yuan_shu_portrait.png",
       "assets/resources/sprites/generals/zhang_chun_hua_portrait.png",
       "assets/resources/sprites/generals/zhang_chun_hua_portrait.png.meta",
+      "assets/resources/sprites/generals/zhang_fei_battle.png",
+      "assets/resources/sprites/generals/zhang_fei_battle.png.meta",
       "assets/resources/sprites/generals/zhang_fei_portrait.png",
       "assets/resources/sprites/generals/zhang_he_portrait.png",
       "assets/resources/sprites/generals/zhang_liao_portrait.png",
@@ -648,26 +650,27 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-55f83d11816e5188",
-    "ticketDigest": "sha256:55f83d11816e518898dd349bba0a5f86aaa7a545ce1ca9544124f04465fd1149",
+    "ticketId": "wat-0d4d01670ce2b6ee",
+    "ticketDigest": "sha256:0d4d01670ce2b6ee128a1fe46e7dfb122357f98956b422395c4ab4ca358e99c5",
     "taskId": "UI-2-0121",
     "origin": "claim",
     "actorId": "codex-gpt-6.1-terra",
     "laneSessionId": "lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d",
     "claimGeneration": "lease-f957fb02b01d",
-    "issuedAt": "2026-11-11T02:32:34.288Z",
-    "expiresAt": "2026-11-11T03:02:34.288Z",
-    "scopeDigest": "sha256:7d1db55b6321b0e001077cb45c2ff952bbd5b24678c3aa0fc9c270f4cfc812ec",
+    "issuedAt": "2026-11-11T05:40:35.682Z",
+    "expiresAt": "2026-11-11T06:10:35.682Z",
+    "scopeDigest": "sha256:e7b3cf2695596d38767a8a3deb2df01c6ddc49ed9f71a26932298bc6591b35fa",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-11-11T02:32:34.288Z"
+      "selectedAt": "2026-11-11T05:40:35.682Z"
     },
     "grants": [
       {
         "kind": "file-write",
         "values": [
           ".atm/history/evidence/UI-2-0121.*",
+          ".atm/history/evidence/git-head.jsonl",
           ".atm/history/task-events/UI-2-0121/**",
           ".atm/history/tasks/UI-2-0121.json",
           ".github/skills/general-portrait-style/**",
@@ -1082,6 +1085,8 @@
           "assets/resources/sprites/generals/yuan_shu_portrait.png",
           "assets/resources/sprites/generals/zhang_chun_hua_portrait.png",
           "assets/resources/sprites/generals/zhang_chun_hua_portrait.png.meta",
+          "assets/resources/sprites/generals/zhang_fei_battle.png",
+          "assets/resources/sprites/generals/zhang_fei_battle.png.meta",
           "assets/resources/sprites/generals/zhang_fei_portrait.png",
           "assets/resources/sprites/generals/zhang_he_portrait.png",
           "assets/resources/sprites/generals/zhang_liao_portrait.png",
@@ -1280,7 +1285,7 @@
           "docs/ui-quality-tasks/UI-2-0121.json",
           "docs/ui-quality-todo.json"
         ],
-        "digest": "sha256:78884bcd557bd04a68e4cc797afe759d39ac992d6c37dfa92dd6aba2f22182af"
+        "digest": "sha256:db367c08b77bb600a477c737c66d4e1ffdf5faebab45543cb6a41644883d80e6"
       },
       {
         "kind": "lifecycle-operation",
@@ -1744,6 +1749,8 @@
       "assets/resources/sprites/generals/yuan_shu_portrait.png",
       "assets/resources/sprites/generals/zhang_chun_hua_portrait.png",
       "assets/resources/sprites/generals/zhang_chun_hua_portrait.png.meta",
+      "assets/resources/sprites/generals/zhang_fei_battle.png",
+      "assets/resources/sprites/generals/zhang_fei_battle.png.meta",
       "assets/resources/sprites/generals/zhang_fei_portrait.png",
       "assets/resources/sprites/generals/zhang_he_portrait.png",
       "assets/resources/sprites/generals/zhang_liao_portrait.png",
@@ -2025,6 +2032,7 @@
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/avatars/bian_fu_ren_avatar.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/avatars/bian_fu_ren_avatar.png.meta",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/avatars/bu_lian_shi_avatar.png",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/avatars/bu_zhi_avatar.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/avatars/cai_shi_avatar.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/avatars/cai_shi_avatar.png.meta",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/avatars/cai_wenji_avatar.png",
@@ -2039,6 +2047,7 @@
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/avatars/cao_ren_avatar.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/avatars/cao_xian_avatar.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/avatars/cao_xian_avatar.png.meta",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/avatars/cao_xiu_avatar.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/avatars/cao_zhi_avatar.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/avatars/chen_dao_avatar.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/avatars/cheng_pu_avatar.png",
@@ -2195,6 +2204,7 @@
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/bian_fu_ren_portrait.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/bian_fu_ren_portrait.png.meta",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/bu_lian_shi_portrait.png",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/bu_zhi_portrait.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/cai_shi_portrait.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/cai_shi_portrait.png.meta",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/cai_wenji_portrait.png",
@@ -2209,6 +2219,7 @@
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/cao_ren_portrait.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/cao_xian_portrait.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/cao_xian_portrait.png.meta",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/cao_xiu_portrait.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/cao_zhi_portrait.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/chen_dao_portrait.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/cheng_pu_portrait.png",
@@ -2230,6 +2241,8 @@
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/gongsun_zan_portrait.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/guan_xing_portrait.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/guan_yin_ping_portrait.png",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/guan_yu_battle.png",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/guan_yu_battle.png.meta",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/guan_yu_portrait.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/guo_huai_portrait.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/guo_jia_portrait.png",
@@ -2262,6 +2275,8 @@
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/liu_biao_portrait.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/liu_feng_portrait.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/liu_zhang_portrait.png",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/lu_bu_battle.png",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/lu_bu_battle.png.meta",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/lu_bu_portrait.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/lu_bu_portrait.png.meta",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/lu_kang_portrait.png",
@@ -2365,6 +2380,7 @@
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/ui_avatars/cropped/bian_fu_ren_avatar.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/ui_avatars/cropped/bian_fu_ren_avatar.png.meta",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/ui_avatars/cropped/bu_lian_shi_avatar.png",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/ui_avatars/cropped/bu_zhi_avatar.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/ui_avatars/cropped/cai_shi_avatar.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/ui_avatars/cropped/cai_shi_avatar.png.meta",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/ui_avatars/cropped/cai_wenji_avatar.png",
@@ -2379,6 +2395,7 @@
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/ui_avatars/cropped/cao_ren_avatar.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/ui_avatars/cropped/cao_xian_avatar.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/ui_avatars/cropped/cao_xian_avatar.png.meta",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/ui_avatars/cropped/cao_xiu_avatar.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/ui_avatars/cropped/cao_zhi_avatar.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/ui_avatars/cropped/chen_dao_avatar.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/ui_avatars/cropped/cheng_pu_avatar.png",
@@ -2542,7 +2559,7 @@
       "source": "minted",
       "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d\""
     },
-    "createdAt": "2026-11-11T00:26:02.994Z",
+    "createdAt": "2026-11-11T02:32:35.131Z",
     "status": "active"
   },
   "scopePaths": [
@@ -3158,6 +3175,8 @@
     "assets/resources/sprites/generals/lu_bu_battle.png",
     "assets/resources/sprites/generals/lu_bu_battle.png.meta",
     "assets/resources/sprites/generals/guan_yu_battle.png",
-    "assets/resources/sprites/generals/guan_yu_battle.png.meta"
+    "assets/resources/sprites/generals/guan_yu_battle.png.meta",
+    "assets/resources/sprites/generals/zhang_fei_battle.png",
+    "assets/resources/sprites/generals/zhang_fei_battle.png.meta"
   ]
 }
