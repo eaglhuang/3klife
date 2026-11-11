@@ -1,5 +1,5 @@
 // @spec-source → 見 docs/cross-reference-index.md
-import { _decorator, Node, UIOpacity } from 'cc';
+import { _decorator, Node, UIOpacity, UITransform } from 'cc';
 import { UIPreviewBuilder } from '../core/UIPreviewBuilder';
 import type { ICompositeRenderer } from '../core/interfaces/ICompositeRenderer';
 import { CocosCompositeRenderer } from '../platform/cocos/CocosCompositeRenderer';
@@ -107,6 +107,35 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
 
         await this._switchPreviewSlot(entry, fragmentId);
         return true;
+    }
+
+    /**
+     * 在畫面上任一具名節點（anchor）底下掛一份獨立的版面片段，並登記到 binder 以便依名稱填資料。
+     * 用於轉換產出之外、由程式附加的區塊（例如轉蛋某一池的附加展示），重轉原稿不會洗掉它。
+     * 同一錨點已掛過同一片段時不重建；replaceContent 為 true 時先藏起錨點原有的子節點（例如佔位文字）。
+     * Unity 對照：在指定 RectTransform 下 Instantiate 一個 SubView prefab。
+     */
+    public async mountSection(anchorName: string, fragmentId: string, replaceContent = false): Promise<Node | null> {
+        const anchor = this._binder?.getNode(anchorName) ?? null;
+        if (!anchor || !anchor.isValid) {
+            console.warn(`[UIScreenPreviewHost] mountSection: 找不到錨點 ${anchorName}`);
+            return null;
+        }
+        const fragmentLayout = await this._specLoader.loadLayout(fragmentId);
+        const rootName = fragmentLayout.root?.name;
+        const existing = rootName ? anchor.getChildByName(rootName) : null;
+        if (existing && existing.isValid) return existing;
+        if (replaceContent) {
+            for (const child of anchor.children) child.active = false;
+        }
+        const transform = anchor.getComponent(UITransform);
+        await this._buildNode(fragmentLayout.root, anchor, transform?.width ?? 0, transform?.height ?? 0);
+        this._postBuildPass(anchor);
+        const sectionRoot = anchor.children[anchor.children.length - 1] ?? null;
+        if (this._binder && sectionRoot) {
+            this._binder.bindLazyFragment(sectionRoot, fragmentLayout.root);
+        }
+        return sectionRoot;
     }
 
     /**

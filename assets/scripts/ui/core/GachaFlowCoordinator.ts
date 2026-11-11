@@ -11,7 +11,7 @@ import { loadGeneralPortrait } from './GeneralAvatarLoader';
 
 export const DEFAULT_POOL_ID = 'GENERAL_STANDARD_01';
 
-export const GACHA_SCREEN_ID = 'gacha-ds3';
+export { GACHA_SCREEN_ID } from './GachaScreenNodes';
 export const GACHA_PULL_RESULT_SCREEN_ID = 'gacha-pull-result';
 
 const GACHA_PULL_RESULT_CARD_NODE_MAP = [

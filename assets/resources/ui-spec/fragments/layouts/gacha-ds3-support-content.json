@@ -37,49 +37,76 @@
           "children": [
             {
               "type": "container",
-              "name": "GachaDs3TabSupport_div_2",
+              "name": "GachaDs3TabSupport_div_2_margin",
               "width": 408,
-              "height": 44,
+              "height": 64,
               "layout": {
-                "type": "horizontal",
-                "alignItems": "start",
-                "justifyContent": "space-between"
+                "type": "vertical",
+                "paddingTop": 0,
+                "paddingBottom": 20
               },
               "children": [
                 {
                   "type": "container",
-                  "name": "GachaDs3TabSupport_div_3",
-                  "width": 127,
+                  "name": "GachaDs3TabSupport_div_2",
+                  "width": 408,
                   "height": 44,
                   "layout": {
-                    "type": "vertical"
+                    "type": "horizontal",
+                    "alignItems": "start",
+                    "justifyContent": "space-between"
                   },
                   "children": [
                     {
-                      "type": "label",
-                      "name": "GachaDs3TabSupport_div_4",
-                      "width": 127,
-                      "height": 26,
-                      "text": "傳奇召喚",
-                      "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_4"
+                      "type": "container",
+                      "name": "GachaDs3TabSupport_div_3",
+                      "width": 119,
+                      "height": 44,
+                      "layout": {
+                        "type": "vertical",
+                        "alignItems": "start"
+                      },
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "GachaDs3TabSupport_div_4",
+                          "width": 119,
+                          "height": 26,
+                          "text": "支援卡召喚",
+                          "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_4"
+                        },
+                        {
+                          "type": "label",
+                          "name": "GachaDs3TabSupport_div_5",
+                          "width": 119,
+                          "height": 13,
+                          "text": "培育深度，鍛造最強後盾",
+                          "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_5"
+                        }
+                      ]
                     },
                     {
-                      "type": "label",
-                      "name": "GachaDs3TabSupport_div_5",
-                      "width": 127,
-                      "height": 13,
-                      "text": "稀世傳奇，命運之星的新生",
-                      "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_5"
+                      "type": "panel",
+                      "name": "GachaDs3TabSupport_div_6",
+                      "width": 97,
+                      "height": 23,
+                      "skinSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_6",
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "GachaDs3TabSupport_span_1",
+                          "widget": {
+                            "left": 12,
+                            "top": 4
+                          },
+                          "text": "Nurture Depth",
+                          "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_span_1",
+                          "width": 73,
+                          "height": 15
+                        }
+                      ]
                     }
                   ]
-                },
-                {
-                  "type": "label",
-                  "name": "GachaDs3TabSupport_div_6",
-                  "width": 56,
-                  "height": 23,
-                  "text": "常設池",
-                  "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_6"
                 }
               ]
             },
@@ -90,6 +117,7 @@
               "height": 69,
               "layout": {
                 "type": "vertical",
+                "alignItems": "start",
                 "spacingY": 8
               },
               "children": [
@@ -107,9 +135,9 @@
                     {
                       "type": "label",
                       "name": "GachaDs3TabSupport_div_9",
-                      "width": 61,
+                      "width": 78,
                       "height": 13,
-                      "text": "UR 保底進度",
+                      "text": "SSR 支援卡保底",
                       "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_9"
                     },
                     {
@@ -125,20 +153,18 @@
                 {
                   "type": "panel",
                   "name": "GachaDs3TabSupport_div_11",
-                  "widget": {
-                    "top": 0,
-                    "left": 0,
-                    "right": 0,
-                    "bottom": 0
-                  },
                   "width": 408,
                   "height": 30,
+                  "layout": {
+                    "type": "vertical",
+                    "alignItems": "start"
+                  },
                   "skinSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_11",
                   "children": [
                     {
                       "type": "panel",
                       "name": "GachaDs3TabSupport_div_12",
-                      "width": 196,
+                      "width": 142,
                       "height": 28,
                       "_motionId": "gacha-ds3tab-support_div_12.transition",
                       "layout": {
@@ -154,11 +180,11 @@
                       "children": [
                         {
                           "type": "label",
-                          "name": "GachaDs3TabSupport_span_1",
-                          "width": 43,
+                          "name": "GachaDs3TabSupport_span_2",
+                          "width": 39,
                           "height": 18,
-                          "text": "87 / 180",
-                          "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_span_1"
+                          "text": "28 / 80",
+                          "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_span_2"
                         }
                       ]
                     }
@@ -176,18 +202,10 @@
                   "children": [
                     {
                       "type": "label",
-                      "name": "GachaDs3TabSupport_span_2",
+                      "name": "GachaDs3TabSupport_span_3",
                       "width": 6,
                       "height": 13,
                       "text": "0",
-                      "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_span_2"
-                    },
-                    {
-                      "type": "label",
-                      "name": "GachaDs3TabSupport_span_3",
-                      "width": 20,
-                      "height": 13,
-                      "text": "25%",
                       "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_span_3"
                     },
                     {
@@ -195,15 +213,15 @@
                       "name": "GachaDs3TabSupport_span_4",
                       "width": 20,
                       "height": 13,
-                      "text": "50%",
+                      "text": "25%",
                       "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_span_4"
                     },
                     {
                       "type": "label",
                       "name": "GachaDs3TabSupport_span_5",
-                      "width": 19,
+                      "width": 20,
                       "height": 13,
-                      "text": "75%",
+                      "text": "50%",
                       "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_span_5"
                     },
                     {
@@ -211,8 +229,16 @@
                       "name": "GachaDs3TabSupport_span_6",
                       "width": 19,
                       "height": 13,
-                      "text": "保底",
+                      "text": "75%",
                       "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_span_6"
+                    },
+                    {
+                      "type": "label",
+                      "name": "GachaDs3TabSupport_span_7",
+                      "width": 19,
+                      "height": 13,
+                      "text": "保底",
+                      "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_span_7"
                     }
                   ]
                 }
@@ -222,9 +248,10 @@
               "type": "container",
               "name": "GachaDs3TabSupport_div_14",
               "width": 408,
-              "height": 188,
+              "height": 154,
               "layout": {
                 "type": "vertical",
+                "alignItems": "start",
                 "spacingY": 10
               },
               "children": [
@@ -240,7 +267,7 @@
                   "type": "container",
                   "name": "GachaDs3TabSupport_div_16",
                   "width": 408,
-                  "height": 165,
+                  "height": 131,
                   "layout": {
                     "type": "vertical",
                     "justifyContent": "start",
@@ -277,12 +304,16 @@
                           "name": "GachaDs3TabSupport_div_19",
                           "width": 290,
                           "height": 5,
+                          "layout": {
+                            "type": "vertical",
+                            "alignItems": "start"
+                          },
                           "skinSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_19",
                           "children": [
                             {
                               "type": "panel",
                               "name": "GachaDs3TabSupport_div_20",
-                              "width": 239,
+                              "width": 254,
                               "height": 5,
                               "_motionId": "gacha-ds3tab-support_div_20.transition",
                               "skinSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_20"
@@ -294,7 +325,7 @@
                           "name": "GachaDs3TabSupport_div_21",
                           "width": 42,
                           "height": 17,
-                          "text": "58.30%",
+                          "text": "62.00%",
                           "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_21"
                         }
                       ]
@@ -329,6 +360,10 @@
                           "name": "GachaDs3TabSupport_div_24",
                           "width": 290,
                           "height": 5,
+                          "layout": {
+                            "type": "vertical",
+                            "alignItems": "start"
+                          },
                           "skinSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_24",
                           "children": [
                             {
@@ -381,12 +416,16 @@
                           "name": "GachaDs3TabSupport_div_29",
                           "width": 290,
                           "height": 5,
+                          "layout": {
+                            "type": "vertical",
+                            "alignItems": "start"
+                          },
                           "skinSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_29",
                           "children": [
                             {
                               "type": "panel",
                               "name": "GachaDs3TabSupport_div_30",
-                              "width": 41,
+                              "width": 37,
                               "height": 5,
                               "_motionId": "gacha-ds3tab-support_div_30.transition",
                               "skinSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_30"
@@ -398,7 +437,7 @@
                           "name": "GachaDs3TabSupport_div_31",
                           "width": 42,
                           "height": 17,
-                          "text": "10.00%",
+                          "text": "9.00%",
                           "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_31"
                         }
                       ]
@@ -433,12 +472,16 @@
                           "name": "GachaDs3TabSupport_div_34",
                           "width": 290,
                           "height": 5,
+                          "layout": {
+                            "type": "vertical",
+                            "alignItems": "start"
+                          },
                           "skinSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_34",
                           "children": [
                             {
                               "type": "panel",
                               "name": "GachaDs3TabSupport_div_35",
-                              "width": 16,
+                              "width": 12,
                               "height": 5,
                               "_motionId": "gacha-ds3tab-support_div_35.transition",
                               "skinSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_35"
@@ -450,60 +493,8 @@
                           "name": "GachaDs3TabSupport_div_36",
                           "width": 42,
                           "height": 17,
-                          "text": "4.00%",
+                          "text": "3.00%",
                           "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_36"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "panel",
-                      "name": "GachaDs3TabSupport_div_37",
-                      "width": 408,
-                      "height": 29,
-                      "layout": {
-                        "type": "horizontal",
-                        "alignItems": "center",
-                        "justifyContent": "start",
-                        "spacingX": 10,
-                        "paddingTop": 6,
-                        "paddingRight": 10,
-                        "paddingBottom": 6,
-                        "paddingLeft": 10
-                      },
-                      "skinSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_37",
-                      "children": [
-                        {
-                          "type": "label",
-                          "name": "GachaDs3TabSupport_div_38",
-                          "width": 36,
-                          "height": 14,
-                          "text": "UR",
-                          "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_38"
-                        },
-                        {
-                          "type": "panel",
-                          "name": "GachaDs3TabSupport_div_39",
-                          "width": 290,
-                          "height": 5,
-                          "skinSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_39",
-                          "children": [
-                            {
-                              "type": "panel",
-                              "name": "GachaDs3TabSupport_div_40",
-                              "width": 7,
-                              "height": 5,
-                              "_motionId": "gacha-ds3tab-support_div_40.transition",
-                              "skinSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_40"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "label",
-                          "name": "GachaDs3TabSupport_div_41",
-                          "width": 42,
-                          "height": 17,
-                          "text": "1.70%",
-                          "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_41"
                         }
                       ]
                     }
@@ -513,7 +504,7 @@
             },
             {
               "type": "panel",
-              "name": "GachaDs3TabSupport_div_42",
+              "name": "GachaDs3TabSupport_div_37",
               "width": 408,
               "height": 68,
               "layout": {
@@ -525,473 +516,118 @@
                 "paddingBottom": 12,
                 "paddingLeft": 16
               },
-              "skinSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_42",
+              "skinSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_37",
               "children": [
                 {
                   "type": "container",
-                  "name": "GachaDs3TabSupport_div_43",
-                  "width": 40,
+                  "name": "GachaDs3TabSupport_div_38",
+                  "width": 39,
                   "height": 42,
                   "layout": {
                     "type": "vertical",
+                    "alignItems": "center",
                     "spacingY": 4
                   },
                   "children": [
                     {
                       "type": "label",
-                      "name": "GachaDs3TabSupport_div_44",
-                      "width": 40,
+                      "name": "GachaDs3TabSupport_div_39",
+                      "width": 39,
                       "height": 13,
                       "text": "單抽",
-                      "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_44"
+                      "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_39"
                     },
                     {
                       "type": "label",
-                      "name": "GachaDs3TabSupport_div_45",
-                      "width": 40,
+                      "name": "GachaDs3TabSupport_div_40",
+                      "width": 39,
                       "height": 25,
-                      "text": "◈ 50",
-                      "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_45"
+                      "text": "◈ 30",
+                      "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_40"
                     }
                   ]
                 },
                 {
                   "type": "panel",
-                  "name": "GachaDs3TabSupport_div_46",
+                  "name": "GachaDs3TabSupport_div_41",
                   "width": 1,
                   "height": 36,
-                  "skinSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_46"
+                  "skinSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_41"
                 },
                 {
                   "type": "container",
-                  "name": "GachaDs3TabSupport_div_47",
-                  "width": 50,
-                  "height": 42,
-                  "layout": {
-                    "type": "vertical",
-                    "spacingY": 4
-                  },
-                  "children": [
-                    {
-                      "type": "label",
-                      "name": "GachaDs3TabSupport_div_48",
-                      "width": 50,
-                      "height": 13,
-                      "text": "十連",
-                      "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_48"
-                    },
-                    {
-                      "type": "label",
-                      "name": "GachaDs3TabSupport_div_49",
-                      "width": 50,
-                      "height": 25,
-                      "text": "◈ 450",
-                      "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_49"
-                    }
-                  ]
-                },
-                {
-                  "type": "panel",
-                  "name": "GachaDs3TabSupport_div_50",
-                  "width": 1,
-                  "height": 36,
-                  "skinSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_50"
-                },
-                {
-                  "type": "container",
-                  "name": "GachaDs3TabSupport_div_51",
+                  "name": "GachaDs3TabSupport_div_42",
                   "width": 49,
                   "height": 42,
                   "layout": {
                     "type": "vertical",
+                    "alignItems": "center",
                     "spacingY": 4
                   },
                   "children": [
                     {
                       "type": "label",
-                      "name": "GachaDs3TabSupport_div_52",
+                      "name": "GachaDs3TabSupport_div_43",
+                      "width": 49,
+                      "height": 13,
+                      "text": "十連",
+                      "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_43"
+                    },
+                    {
+                      "type": "label",
+                      "name": "GachaDs3TabSupport_div_44",
+                      "width": 49,
+                      "height": 25,
+                      "text": "◈ 280",
+                      "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_44"
+                    }
+                  ]
+                },
+                {
+                  "type": "panel",
+                  "name": "GachaDs3TabSupport_div_45",
+                  "width": 1,
+                  "height": 36,
+                  "skinSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_45"
+                },
+                {
+                  "type": "container",
+                  "name": "GachaDs3TabSupport_div_46",
+                  "width": 49,
+                  "height": 42,
+                  "layout": {
+                    "type": "vertical",
+                    "alignItems": "center",
+                    "spacingY": 4
+                  },
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "GachaDs3TabSupport_div_47",
                       "width": 49,
                       "height": 13,
                       "text": "我的餘額",
-                      "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_52"
+                      "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_47"
                     },
                     {
                       "type": "label",
-                      "name": "GachaDs3TabSupport_div_53",
+                      "name": "CostBalanceValue",
                       "width": 49,
                       "height": 25,
                       "text": "◈ 340",
-                      "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_53"
+                      "styleSlot": "auto.gacha-ds3-tab-support.costbalancevalue"
                     }
                   ]
                 }
               ]
             },
             {
-              "type": "container",
-              "name": "GachaDs3TabSupport_div_54",
+              "type": "label",
+              "name": "GachaDs3TabSupport_div_48",
               "width": 408,
-              "height": 31
-            },
-            {
-              "type": "container",
-              "name": "redFaceShowcaseRoot",
-              "width": 408,
-              "height": 810,
-              "layout": {
-                "type": "vertical",
-                "justifyContent": "start",
-                "spacingY": 10
-              },
-              "children": [
-                {
-                  "type": "label",
-                  "name": "redFaceTitle",
-                  "width": 408,
-                  "height": 40,
-                  "text": "紅顏池・展示"
-                },
-                {
-                  "type": "label",
-                  "name": "redFaceEmptyLabel",
-                  "width": 408,
-                  "height": 40,
-                  "text": ""
-                },
-                {
-                  "type": "panel",
-                  "name": "redFaceRow0",
-                  "width": 408,
-                  "height": 88,
-                  "layout": {
-                    "type": "horizontal",
-                    "alignItems": "center",
-                    "justifyContent": "space-between",
-                    "paddingTop": 8,
-                    "paddingRight": 10,
-                    "paddingBottom": 8,
-                    "paddingLeft": 10
-                  },
-                  "children": [
-                    {
-                      "type": "container",
-                      "name": "redFaceRow0Info",
-                      "width": 240,
-                      "height": 72,
-                      "layout": {
-                        "type": "vertical",
-                        "justifyContent": "center",
-                        "spacingY": 4
-                      },
-                      "children": [
-                        {
-                          "type": "label",
-                          "name": "redFaceRow0Name",
-                          "width": 240,
-                          "height": 30,
-                          "text": ""
-                        },
-                        {
-                          "type": "label",
-                          "name": "redFaceRow0Tag",
-                          "width": 240,
-                          "height": 24,
-                          "text": ""
-                        }
-                      ]
-                    },
-                    {
-                      "type": "button",
-                      "name": "btnRedFaceRow0",
-                      "width": 120,
-                      "height": 48,
-                      "children": [
-                        {
-                          "type": "label",
-                          "name": "btnRedFaceRow0Label",
-                          "width": 120,
-                          "height": 30,
-                          "text": "檢視"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "panel",
-                  "name": "redFaceRow1",
-                  "width": 408,
-                  "height": 88,
-                  "layout": {
-                    "type": "horizontal",
-                    "alignItems": "center",
-                    "justifyContent": "space-between",
-                    "paddingTop": 8,
-                    "paddingRight": 10,
-                    "paddingBottom": 8,
-                    "paddingLeft": 10
-                  },
-                  "children": [
-                    {
-                      "type": "container",
-                      "name": "redFaceRow1Info",
-                      "width": 240,
-                      "height": 72,
-                      "layout": {
-                        "type": "vertical",
-                        "justifyContent": "center",
-                        "spacingY": 4
-                      },
-                      "children": [
-                        {
-                          "type": "label",
-                          "name": "redFaceRow1Name",
-                          "width": 240,
-                          "height": 30,
-                          "text": ""
-                        },
-                        {
-                          "type": "label",
-                          "name": "redFaceRow1Tag",
-                          "width": 240,
-                          "height": 24,
-                          "text": ""
-                        }
-                      ]
-                    },
-                    {
-                      "type": "button",
-                      "name": "btnRedFaceRow1",
-                      "width": 120,
-                      "height": 48,
-                      "children": [
-                        {
-                          "type": "label",
-                          "name": "btnRedFaceRow1Label",
-                          "width": 120,
-                          "height": 30,
-                          "text": "檢視"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "panel",
-                  "name": "redFaceRow2",
-                  "width": 408,
-                  "height": 88,
-                  "layout": {
-                    "type": "horizontal",
-                    "alignItems": "center",
-                    "justifyContent": "space-between",
-                    "paddingTop": 8,
-                    "paddingRight": 10,
-                    "paddingBottom": 8,
-                    "paddingLeft": 10
-                  },
-                  "children": [
-                    {
-                      "type": "container",
-                      "name": "redFaceRow2Info",
-                      "width": 240,
-                      "height": 72,
-                      "layout": {
-                        "type": "vertical",
-                        "justifyContent": "center",
-                        "spacingY": 4
-                      },
-                      "children": [
-                        {
-                          "type": "label",
-                          "name": "redFaceRow2Name",
-                          "width": 240,
-                          "height": 30,
-                          "text": ""
-                        },
-                        {
-                          "type": "label",
-                          "name": "redFaceRow2Tag",
-                          "width": 240,
-                          "height": 24,
-                          "text": ""
-                        }
-                      ]
-                    },
-                    {
-                      "type": "button",
-                      "name": "btnRedFaceRow2",
-                      "width": 120,
-                      "height": 48,
-                      "children": [
-                        {
-                          "type": "label",
-                          "name": "btnRedFaceRow2Label",
-                          "width": 120,
-                          "height": 30,
-                          "text": "檢視"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "panel",
-                  "name": "redFaceRow3",
-                  "width": 408,
-                  "height": 88,
-                  "layout": {
-                    "type": "horizontal",
-                    "alignItems": "center",
-                    "justifyContent": "space-between",
-                    "paddingTop": 8,
-                    "paddingRight": 10,
-                    "paddingBottom": 8,
-                    "paddingLeft": 10
-                  },
-                  "children": [
-                    {
-                      "type": "container",
-                      "name": "redFaceRow3Info",
-                      "width": 240,
-                      "height": 72,
-                      "layout": {
-                        "type": "vertical",
-                        "justifyContent": "center",
-                        "spacingY": 4
-                      },
-                      "children": [
-                        {
-                          "type": "label",
-                          "name": "redFaceRow3Name",
-                          "width": 240,
-                          "height": 30,
-                          "text": ""
-                        },
-                        {
-                          "type": "label",
-                          "name": "redFaceRow3Tag",
-                          "width": 240,
-                          "height": 24,
-                          "text": ""
-                        }
-                      ]
-                    },
-                    {
-                      "type": "button",
-                      "name": "btnRedFaceRow3",
-                      "width": 120,
-                      "height": 48,
-                      "children": [
-                        {
-                          "type": "label",
-                          "name": "btnRedFaceRow3Label",
-                          "width": 120,
-                          "height": 30,
-                          "text": "檢視"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "panel",
-                  "name": "redFaceRow4",
-                  "width": 408,
-                  "height": 88,
-                  "layout": {
-                    "type": "horizontal",
-                    "alignItems": "center",
-                    "justifyContent": "space-between",
-                    "paddingTop": 8,
-                    "paddingRight": 10,
-                    "paddingBottom": 8,
-                    "paddingLeft": 10
-                  },
-                  "children": [
-                    {
-                      "type": "container",
-                      "name": "redFaceRow4Info",
-                      "width": 240,
-                      "height": 72,
-                      "layout": {
-                        "type": "vertical",
-                        "justifyContent": "center",
-                        "spacingY": 4
-                      },
-                      "children": [
-                        {
-                          "type": "label",
-                          "name": "redFaceRow4Name",
-                          "width": 240,
-                          "height": 30,
-                          "text": ""
-                        },
-                        {
-                          "type": "label",
-                          "name": "redFaceRow4Tag",
-                          "width": 240,
-                          "height": 24,
-                          "text": ""
-                        }
-                      ]
-                    },
-                    {
-                      "type": "button",
-                      "name": "btnRedFaceRow4",
-                      "width": 120,
-                      "height": 48,
-                      "children": [
-                        {
-                          "type": "label",
-                          "name": "btnRedFaceRow4Label",
-                          "width": 120,
-                          "height": 30,
-                          "text": "檢視"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "panel",
-                  "name": "redFaceDetail",
-                  "width": 408,
-                  "height": 220,
-                  "layout": {
-                    "type": "vertical",
-                    "justifyContent": "start",
-                    "spacingY": 6,
-                    "paddingTop": 12,
-                    "paddingRight": 14,
-                    "paddingBottom": 12,
-                    "paddingLeft": 14
-                  },
-                  "children": [
-                    {
-                      "type": "label",
-                      "name": "redFaceDetailName",
-                      "width": 380,
-                      "height": 30,
-                      "text": ""
-                    },
-                    {
-                      "type": "label",
-                      "name": "redFaceDetailTags",
-                      "width": 380,
-                      "height": 24,
-                      "text": ""
-                    },
-                    {
-                      "type": "label",
-                      "name": "redFaceDetailLine",
-                      "width": 380,
-                      "height": 120,
-                      "text": ""
-                    }
-                  ]
-                }
-              ]
+              "height": 31,
+              "text": "✦ 十連保證 SR 以上 1 枚 ✦ 保底不跨池累積\n✦ 限定武將機率加成 ×1.5 ✦ 抽出已擁有武將轉換碎片",
+              "styleSlot": "auto.gacha-ds3-tab-support.gachads3tabsupport_div_48"
             }
           ]
         }

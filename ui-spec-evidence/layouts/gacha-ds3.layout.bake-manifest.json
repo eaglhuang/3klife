@@ -4,7 +4,7 @@
   "screenId": "gacha-ds3",
   "sidecarBundle": "resources",
   "sidecarRoot": "assets/resources/sidecars/gacha-ds3/",
-  "sourceHtml": "artifacts/html-to-ucuf-plan5/gacha-ds3/gacha-ds3.ucuf-ready.html",
+  "sourceHtml": "artifacts/skill-test-html-to-ucuf/gacha-ds3/gacha-ds3.ucuf-ready.html",
   "viewport": {
     "width": 1920,
     "height": 1080
@@ -35,12 +35,12 @@
   },
   "entries": [
     {
-      "bakeId": "gacha-ds3__div_39__backdrop-filter",
+      "bakeId": "gacha-ds3__div_45__backdrop-filter",
       "screenId": "gacha-ds3",
       "selector": "div.nav-arrow.next[3]",
       "ucufId": "gacha-ds3.nav-arrow-2",
       "tag": "div",
-      "nodeId": 39,
+      "nodeId": 45,
       "property": "backdrop-filter",
       "value": "blur(8px)",
       "capability": "assetize",
@@ -62,12 +62,12 @@
       "status": "needs-art-direction"
     },
     {
-      "bakeId": "gacha-ds3__div_38__backdrop-filter",
+      "bakeId": "gacha-ds3__div_44__backdrop-filter",
       "screenId": "gacha-ds3",
       "selector": "div.nav-arrow.prev[2]",
       "ucufId": "gacha-ds3.nav-arrow",
       "tag": "div",
-      "nodeId": 38,
+      "nodeId": 44,
       "property": "backdrop-filter",
       "value": "blur(8px)",
       "capability": "assetize",
@@ -89,12 +89,12 @@
       "status": "needs-art-direction"
     },
     {
-      "bakeId": "gacha-ds3__div_44__backdrop-filter",
+      "bakeId": "gacha-ds3__div_50__backdrop-filter",
       "screenId": "gacha-ds3",
       "selector": "div#pool-brief.pool-brief[5]",
       "ucufId": null,
       "tag": "div",
-      "nodeId": 44,
+      "nodeId": 50,
       "property": "backdrop-filter",
       "value": "blur(10px)",
       "capability": "assetize",
@@ -143,12 +143,12 @@
       "status": "needs-art-asset"
     },
     {
-      "bakeId": "gacha-ds3__div_14__background-image",
+      "bakeId": "gacha-ds3__div_16__background-image",
       "screenId": "gacha-ds3",
       "selector": "div#banner-stage.banner-stage[0]>div#pool-panel-legendary.banner-slide[1]>div.banner-bg-fill[0]",
       "ucufId": null,
       "tag": "div",
-      "nodeId": 14,
+      "nodeId": 16,
       "property": "background-image",
       "value": "radial-gradient(120% 80% at 40% 30%, rgb(42, 26, 0) 0%, rgb(26, 15, 0) 40%, rgb(10, 6, 18) 100%)",
       "capability": "assetize",
@@ -170,12 +170,12 @@
       "status": "needs-art-asset"
     },
     {
-      "bakeId": "gacha-ds3__div_25__background-image",
+      "bakeId": "gacha-ds3__div_29__background-image",
       "screenId": "gacha-ds3",
       "selector": "div#banner-stage.banner-stage[0]>div#pool-panel-support.banner-slide[2]>div.banner-bg-fill[0]",
       "ucufId": null,
       "tag": "div",
-      "nodeId": 25,
+      "nodeId": 29,
       "property": "background-image",
       "value": "radial-gradient(120% 80% at 40% 30%, rgb(6, 32, 32) 0%, rgb(4, 20, 20) 40%, rgb(3, 10, 10) 100%)",
       "capability": "assetize",

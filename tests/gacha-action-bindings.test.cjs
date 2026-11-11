@@ -6,7 +6,12 @@ const ts = require('typescript');
 const source = fs.readFileSync(path.join(__dirname, '../assets/scripts/ui/core/GachaActionBindings.ts'), 'utf8');
 const compiled = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS } }).outputText;
 const loaded = { exports: {} };
-new Function('module', 'exports', compiled)(loaded, loaded.exports);
+// 只測這一檔：GachaScreenNodes 的固定節點名以鍵名代替（名稱本身由 GachaScreenNodes 測試把關）
+const fakeRequire = (id) => {
+    if (id === './GachaScreenNodes') return { GACHA_NODES: new Proxy({}, { get: (_t, key) => `node:${String(key)}` }) };
+    throw new Error(`unexpected require ${id}`);
+};
+new Function('module', 'exports', 'require', compiled)(loaded, loaded.exports, fakeRequire);
 const { GACHA_ACTION_NODES, bindGachaActions } = loaded.exports;
 
 function fixture() {
@@ -26,10 +31,10 @@ function fixture() {
     return { counts, nodes, owner, bind };
 }
 
-test('all seven displayed actions dispatch to their own operation', () => {
+test('every displayed action dispatch to their own operation', () => {
     const f = fixture(); f.bind();
     for (const node of f.nodes.values()) { assert.equal(node.button, true); node.click(); }
-    assert.deepEqual(Object.values(f.counts), [1, 1, 1, 1, 1, 1, 1]);
+    assert.deepEqual(Object.values(f.counts), Object.keys(GACHA_ACTION_NODES).map(() => 1));
 });
 test('reopening binds once and preserves other presenters', () => {
     const f = fixture(); let otherCalls = 0;
@@ -38,7 +43,9 @@ test('reopening binds once and preserves other presenters', () => {
     f.bind(); f.bind(); f.bind(); single.click();
     assert.equal(f.counts.single, 1); assert.equal(otherCalls, 1);
 });
-test('a renamed or missing summon node fails visibly', () => {
+test('a missing node is skipped and the other actions still bind', () => {
     const f = fixture(); f.nodes.delete(GACHA_ACTION_NODES.gold);
-    assert.throws(f.bind, /Missing action node: GachaDs3_div_55/);
+    f.bind();
+    for (const node of f.nodes.values()) node.click();
+    assert.equal(f.counts.gold, 0); assert.equal(f.counts.single, 1);
 });

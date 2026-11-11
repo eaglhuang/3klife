@@ -2,12 +2,15 @@
 /** gacha-ds3 的互動節點原本是 label/panel；由宿主補上 Button。
  * Unity 對照：為既有 RectTransform 加 Button，並重設本 Presenter 的 onClick。
  */
+import { GACHA_NODES } from './GachaScreenNodes';
+
+// 節點名來自原稿固定 id／class（PROG-2-2237），重轉不會改名
 export const GACHA_ACTION_NODES = {
-    previous: 'BtnPoolPrev', next: 'BtnPoolNext', history: 'GachaDs3_div_42',
-    single: 'GachaDs3_div_43', ten: 'GachaDs3_div_48',
-    gold: 'GachaDs3_div_55', ticket: 'GachaDs3_div_56',
+    previous: GACHA_NODES.poolPrev, next: GACHA_NODES.poolNext, history: GACHA_NODES.history,
+    single: GACHA_NODES.pullSingle, ten: GACHA_NODES.pullTen,
+    gold: GACHA_NODES.goldSummon, ticket: GACHA_NODES.ticketSummon,
     // 左上角原「名將池說明」框改當天命商店入口（PROG-2-1158）
-    destiny: 'GachaDs3_div_35',
+    destiny: GACHA_NODES.poolBrief,
 } as const;
 
 type Action = keyof typeof GACHA_ACTION_NODES;

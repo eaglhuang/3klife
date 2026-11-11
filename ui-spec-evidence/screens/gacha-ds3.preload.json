@@ -8,7 +8,6 @@
     "spriteFrames": [],
     "fonts": [
       "fonts/manrope/manrope",
-      "fonts/newsreader/newsreader",
       "fonts/notosans_tc/notosans_tc"
     ],
     "fragments": []
@@ -23,7 +22,7 @@
         ]
       },
       {
-        "slotName": "GachaDs3_div_57",
+        "slotName": "GachaDs3_div_36",
         "warmupHint": "manual",
         "fragments": []
       }
@@ -36,7 +35,7 @@
   "_warnings": [
     {
       "code": "lazy-slot-missing-default-fragment",
-      "slotName": "GachaDs3_div_57"
+      "slotName": "GachaDs3_div_36"
     }
   ]
 }

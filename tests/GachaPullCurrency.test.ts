@@ -7,6 +7,7 @@
 import { TestSuite, assert } from './TestRunner';
 import { pickGachaCurrency } from '../assets/scripts/core/systems/GachaCurrency';
 import { STARTER_GACHA_WALLET } from '../assets/scripts/core/services/GachaWalletRules';
+import { GACHA_NODES, gachaPullBarTexts } from '../assets/scripts/ui/core/GachaScreenNodes';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const fs = require('fs') as typeof import('fs');
@@ -39,8 +40,9 @@ export function createGachaPullCurrencySuite(): TestSuite {
         assert.isTrue(lobby.includes('this._runLocalGacha(10), 10)'));
         assert.isTrue(lobby.includes('this._runBeautySummon(drawCount)'));
         assert.isTrue(lobby.includes('this._runSupportSummon(drawCount)'));
-        assert.isTrue(lobby.includes("GachaDs3_div_47: '150'"));
-        assert.isTrue(lobby.includes("GachaDs3_div_53: '1500'"));
+        const bar = gachaPullBarTexts();
+        assert.equals('150', bar[GACHA_NODES.pullSingleCost]);
+        assert.equals('1500', bar[GACHA_NODES.pullTenCost]);
         const flow = read('assets/scripts/ui/core/GachaFlowCoordinator.ts');
         assert.isTrue(flow.includes('performSupportCardSummon(poolId, drawCount, generals)'));
         assert.isTrue(flow.includes('performPoolTicketSummon(poolId, drawCount, generals)'));
