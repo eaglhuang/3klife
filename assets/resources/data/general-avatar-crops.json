@@ -3,6 +3,14 @@
   "version": 1,
   "outputSize": 256,
   "crops": {
+    "cao-xiu": {
+      "x": 300,
+      "y": -20,
+      "w": 420,
+      "h": 420,
+      "source": "reviewed",
+      "$note": "2026-11-11 曹休藍白古金新版，保留束髮、面容與肩甲。"
+    },
     "yuan-shu": {
       "x": 300,
       "y": 0,

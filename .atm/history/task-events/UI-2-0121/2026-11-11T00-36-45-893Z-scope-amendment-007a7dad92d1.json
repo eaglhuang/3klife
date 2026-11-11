@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-11T00-36-45-893Z-scope-amendment-007a7dad92d1",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-terra",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:d100333e0d8a644e03e195cb2f1ec4ce446597fca6593edd3e1dd2315e2a5b98",
+  "createdAt": "2026-11-11T00:36:45.893Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-terra --add \"assets/resources/sprites/generals/cao_xiu_portrait.png,assets/resources/sprites/generals/avatars/cao_xiu_avatar.png,assets/resources/sprites/ui_avatars/cropped/cao_xiu_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
