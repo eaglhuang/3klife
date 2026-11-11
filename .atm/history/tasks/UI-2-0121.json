@@ -10,8 +10,8 @@
   "tags": [],
   "createdAt": "2026-11-05T14:30:28.536Z",
   "createdByActor": "codex-gpt-6.1-sol",
-  "lastTransitionId": "2026-11-11T01-58-39-121Z-scope-amendment-4ab184e59a45",
-  "lastTransitionAt": "2026-11-11T01:58:39.121Z",
+  "lastTransitionId": "2026-11-11T02-32-35-085Z-renew-9a9a5feb62a9",
+  "lastTransitionAt": "2026-11-11T02:32:35.085Z",
   "ledgerContractVersion": "task-ledger/v1",
   "reservedAt": "2026-11-05T17:15:58.821Z",
   "promotedAt": "2026-11-05T17:15:58.826Z",
@@ -19,7 +19,7 @@
     "actorId": "codex-gpt-6.1-terra",
     "leaseId": "lease-f957fb02b01d",
     "claimedAt": "2026-11-05T17:15:58.833Z",
-    "heartbeatAt": "2026-11-11T00:26:02.835Z",
+    "heartbeatAt": "2026-11-11T02:32:34.288Z",
     "ttlSeconds": 1800,
     "files": [
       ".atm/history/evidence/UI-2-0121.*",
@@ -648,27 +648,26 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-cfc6fd27ed77b0d8",
-    "ticketDigest": "sha256:cfc6fd27ed77b0d8b4dd2dabde737b0d4004d145d3fd491e8e33162ba68b346d",
+    "ticketId": "wat-55f83d11816e5188",
+    "ticketDigest": "sha256:55f83d11816e518898dd349bba0a5f86aaa7a545ce1ca9544124f04465fd1149",
     "taskId": "UI-2-0121",
     "origin": "claim",
     "actorId": "codex-gpt-6.1-terra",
     "laneSessionId": "lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d",
     "claimGeneration": "lease-f957fb02b01d",
-    "issuedAt": "2026-11-11T01:58:38.982Z",
-    "expiresAt": "2026-11-11T02:28:38.982Z",
-    "scopeDigest": "sha256:f51ec4882feb0bc5de885b5e357752b27084ff645b91b973355d7cab58029483",
+    "issuedAt": "2026-11-11T02:32:34.288Z",
+    "expiresAt": "2026-11-11T03:02:34.288Z",
+    "scopeDigest": "sha256:7d1db55b6321b0e001077cb45c2ff952bbd5b24678c3aa0fc9c270f4cfc812ec",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-11-11T01:58:38.982Z"
+      "selectedAt": "2026-11-11T02:32:34.288Z"
     },
     "grants": [
       {
         "kind": "file-write",
         "values": [
           ".atm/history/evidence/UI-2-0121.*",
-          ".atm/history/evidence/git-head.jsonl",
           ".atm/history/task-events/UI-2-0121/**",
           ".atm/history/tasks/UI-2-0121.json",
           ".github/skills/general-portrait-style/**",
@@ -1281,7 +1280,7 @@
           "docs/ui-quality-tasks/UI-2-0121.json",
           "docs/ui-quality-todo.json"
         ],
-        "digest": "sha256:8c8cbd135aa473def38ec1785e8b552500460f4ab20b803d7491f9067fa683c0"
+        "digest": "sha256:78884bcd557bd04a68e4cc797afe759d39ac992d6c37dfa92dd6aba2f22182af"
       },
       {
         "kind": "lifecycle-operation",
