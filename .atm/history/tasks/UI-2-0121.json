@@ -10,8 +10,8 @@
   "tags": [],
   "createdAt": "2026-11-05T14:30:28.536Z",
   "createdByActor": "codex-gpt-6.1-sol",
-  "lastTransitionId": "2026-11-11T17-04-14-203Z-scope-amendment-ce54177fd2cd",
-  "lastTransitionAt": "2026-11-11T17:04:14.203Z",
+  "lastTransitionId": "2026-11-11T17-41-05-510Z-scope-amendment-48ec9f035de1",
+  "lastTransitionAt": "2026-11-11T17:41:05.510Z",
   "ledgerContractVersion": "task-ledger/v1",
   "reservedAt": "2026-11-05T17:15:58.821Z",
   "promotedAt": "2026-11-05T17:15:58.826Z",
@@ -19,7 +19,7 @@
     "actorId": "codex-gpt-6.1-sol",
     "leaseId": "lease-f957fb02b01d",
     "claimedAt": "2026-11-05T17:15:58.833Z",
-    "heartbeatAt": "2026-11-11T16:49:22.220Z",
+    "heartbeatAt": "2026-11-11T17:36:37.728Z",
     "ttlSeconds": 1800,
     "files": [
       ".atm/history/evidence/UI-2-0121.*",
@@ -323,6 +323,8 @@
       "assets/resources/sprites/generals/gan_shi_portrait.png.meta",
       "assets/resources/sprites/generals/gongsun_zan_portrait.png",
       "assets/resources/sprites/generals/guan_xing_portrait.png",
+      "assets/resources/sprites/generals/guan_yin_ping_battle.png",
+      "assets/resources/sprites/generals/guan_yin_ping_battle.png.meta",
       "assets/resources/sprites/generals/guan_yin_ping_portrait.png",
       "assets/resources/sprites/generals/guan_yu_battle.png",
       "assets/resources/sprites/generals/guan_yu_battle.png.meta",
@@ -654,20 +656,20 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-69728d95a1c595f3",
-    "ticketDigest": "sha256:69728d95a1c595f3928ad78e9e4cd8de2ac78d7153630eb373aec45c37efde90",
+    "ticketId": "wat-d85e4a0ca1b24342",
+    "ticketDigest": "sha256:d85e4a0ca1b243429ac7b338eaae194c70b41f22c4ef97d14b15f13513797bbe",
     "taskId": "UI-2-0121",
     "origin": "claim",
     "actorId": "codex-gpt-6.1-sol",
     "laneSessionId": "lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d",
     "claimGeneration": "lease-f957fb02b01d",
-    "issuedAt": "2026-11-11T17:04:14.078Z",
-    "expiresAt": "2026-11-11T17:34:14.078Z",
-    "scopeDigest": "sha256:3bfeca620a5769613b0e8fd8805ebdd891460f0c07cba79c45d0125591c6cb88",
+    "issuedAt": "2026-11-11T17:41:05.364Z",
+    "expiresAt": "2026-11-11T18:11:05.364Z",
+    "scopeDigest": "sha256:349bdf9b54023ad26c4ac08eadc9cdf911ad458606979140646f85b39093b6cc",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-11-11T17:04:14.078Z"
+      "selectedAt": "2026-11-11T17:41:05.364Z"
     },
     "grants": [
       {
@@ -975,6 +977,8 @@
           "assets/resources/sprites/generals/gan_shi_portrait.png.meta",
           "assets/resources/sprites/generals/gongsun_zan_portrait.png",
           "assets/resources/sprites/generals/guan_xing_portrait.png",
+          "assets/resources/sprites/generals/guan_yin_ping_battle.png",
+          "assets/resources/sprites/generals/guan_yin_ping_battle.png.meta",
           "assets/resources/sprites/generals/guan_yin_ping_portrait.png",
           "assets/resources/sprites/generals/guan_yu_battle.png",
           "assets/resources/sprites/generals/guan_yu_battle.png.meta",
@@ -1293,7 +1297,7 @@
           "docs/ui-quality-tasks/UI-2-0121.json",
           "docs/ui-quality-todo.json"
         ],
-        "digest": "sha256:940df0dd25e2b36a58e3a4e365649c919d19bb3e89ef4ee3aa534f29c827f6d3"
+        "digest": "sha256:96f66ee6380ab979261a15687d80410fc4149515b9006360b2ce3711190e79e9"
       },
       {
         "kind": "lifecycle-operation",
@@ -1643,6 +1647,8 @@
       "assets/resources/sprites/generals/gan_shi_portrait.png.meta",
       "assets/resources/sprites/generals/gongsun_zan_portrait.png",
       "assets/resources/sprites/generals/guan_xing_portrait.png",
+      "assets/resources/sprites/generals/guan_yin_ping_battle.png",
+      "assets/resources/sprites/generals/guan_yin_ping_battle.png.meta",
       "assets/resources/sprites/generals/guan_yin_ping_portrait.png",
       "assets/resources/sprites/generals/guan_yu_battle.png",
       "assets/resources/sprites/generals/guan_yu_battle.png.meta",
@@ -2211,6 +2217,8 @@
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/avatars/zhuge_jin_avatar.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/avatars/zhuge_ke_avatar.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/avatars/zhuge_liang_avatar.png",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/bao_san_niang_battle.png",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/bao_san_niang_battle.png.meta",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/bao_san_niang_portrait.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/bao_san_niang_portrait.png.meta",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/bian_fu_ren_portrait.png",
@@ -2252,6 +2260,8 @@
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/gan_shi_portrait.png.meta",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/gongsun_zan_portrait.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/guan_xing_portrait.png",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/guan_yin_ping_battle.png",
+      "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/guan_yin_ping_battle.png.meta",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/guan_yin_ping_portrait.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/guan_yu_battle.png",
       "C:/Users/User/.codex/worktrees/ui-portrait-review/3KLife/assets/resources/sprites/generals/guan_yu_battle.png.meta",
@@ -2575,7 +2585,7 @@
       "source": "minted",
       "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d\""
     },
-    "createdAt": "2026-11-11T16:49:22.368Z",
+    "createdAt": "2026-11-11T17:36:37.881Z",
     "status": "active"
   },
   "scopePaths": [
@@ -3197,6 +3207,8 @@
     "assets/resources/sprites/generals/ma_chao_battle.png",
     "assets/resources/sprites/generals/ma_chao_battle.png.meta",
     "assets/resources/sprites/generals/bao_san_niang_battle.png",
-    "assets/resources/sprites/generals/bao_san_niang_battle.png.meta"
+    "assets/resources/sprites/generals/bao_san_niang_battle.png.meta",
+    "assets/resources/sprites/generals/guan_yin_ping_battle.png",
+    "assets/resources/sprites/generals/guan_yin_ping_battle.png.meta"
   ]
 }
