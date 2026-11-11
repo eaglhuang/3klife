@@ -70,7 +70,8 @@
                 "text": "彈窗 POPUP",
                 "styleSlot": "auto.gacha-pull-result.gachapullresult_div_4"
               }
-            ]
+            ],
+            "active": false
           },
           {
             "type": "panel",
@@ -2413,7 +2414,8 @@
                   }
                 ]
               }
-            ]
+            ],
+            "active": false
           },
           {
             "type": "panel",
@@ -2619,7 +2621,8 @@
                         "type": "label",
                         "name": "GachaPullResult_div_194",
                         "text": "▸ 限時復刻 · 第三季",
-                        "styleSlot": "auto.gacha-pull-result.gachapullresult_div_194"
+                        "styleSlot": "auto.gacha-pull-result.gachapullresult_div_194",
+                        "active": false
                       },
                       {
                         "type": "label",
@@ -3295,17 +3298,74 @@
             "id": "screen-popup",
             "width": 1920,
             "height": 1080,
-            "layout": {
-              "type": "grid",
-              "spacingX": 24,
-              "spacingY": 24,
-              "constraint": "fixed-col",
-              "constraintNum": 3,
-              "cellWidth": 624,
-              "cellHeight": 1080
-            },
             "skinSlot": "auto.gacha-pull-result.gachapullresult_div_264",
             "children": [
+              {
+                "type": "container",
+                "name": "GachaPullResult_hero_showcase",
+                "width": 680,
+                "height": 1080,
+                "active": true,
+                "widget": {
+                  "hCenter": -320,
+                  "vCenter": 0
+                },
+                "children": [
+                  {
+                    "type": "image",
+                    "name": "GachaPullResult_hero_portrait",
+                    "skinSlot": "auto.gacha-pull-result.hero_portrait",
+                    "width": 660,
+                    "height": 980,
+                    "objectFit": "contain",
+                    "widget": {
+                      "hCenter": 0,
+                      "vCenter": 30
+                    }
+                  },
+                  {
+                    "type": "container",
+                    "name": "GachaPullResult_hero_badge_box",
+                    "skinSlot": "auto.gacha-pull-result.hero_badge_box",
+                    "width": 380,
+                    "height": 110,
+                    "widget": {
+                      "hCenter": 0,
+                      "bottom": 35
+                    },
+                    "layout": {
+                      "type": "vertical",
+                      "alignItems": "center",
+                      "justifyContent": "center",
+                      "spacingY": 4,
+                      "paddingTop": 8,
+                      "paddingBottom": 8,
+                      "paddingLeft": 16,
+                      "paddingRight": 16
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "GachaPullResult_hero_rarity",
+                        "skinSlot": "auto.gacha-pull-result.hero_rarity",
+                        "text": "✦ 絕世 SSR · 最高稀有 ✦"
+                      },
+                      {
+                        "type": "label",
+                        "name": "GachaPullResult_hero_name",
+                        "skinSlot": "auto.gacha-pull-result.hero_name",
+                        "text": "關羽 · 雲長"
+                      },
+                      {
+                        "type": "label",
+                        "name": "GachaPullResult_hero_desc",
+                        "skinSlot": "auto.gacha-pull-result.hero_desc",
+                        "text": "義薄雲天 · 威震華夏"
+                      }
+                    ]
+                  }
+                ]
+              },
               {
                 "type": "panel",
                 "name": "GachaPullResult_div_265",
@@ -3611,7 +3671,8 @@
                       }
                     ]
                   }
-                ]
+                ],
+                "active": false
               },
               {
                 "type": "panel",
@@ -3776,7 +3837,8 @@
                       }
                     ]
                   }
-                ]
+                ],
+                "active": false
               },
               {
                 "type": "panel",
@@ -4122,7 +4184,8 @@
                       }
                     ]
                   }
-                ]
+                ],
+                "active": false
               },
               {
                 "type": "panel",
@@ -4283,7 +4346,8 @@
                       }
                     ]
                   }
-                ]
+                ],
+                "active": false
               },
               {
                 "type": "panel",
@@ -5254,7 +5318,12 @@
                       }
                     ]
                   }
-                ]
+                ],
+                "active": true,
+                "widget": {
+                  "hCenter": 340,
+                  "vCenter": 0
+                }
               },
               {
                 "type": "panel",
@@ -5400,7 +5469,8 @@
                       }
                     ]
                   }
-                ]
+                ],
+                "active": false
               }
             ]
           }

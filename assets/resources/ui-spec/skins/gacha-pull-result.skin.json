@@ -5999,6 +5999,72 @@
       "outlineWidth": 2,
       "horizontalAlign": "START",
       "isBold": true
+    },
+    "auto.gacha-pull-result.hero_portrait": {
+      "kind": "sprite-frame",
+      "path": "sprites/generals/guan_yu_portrait",
+      "expectedWidth": 700,
+      "expectedHeight": 1020
+    },
+    "auto.gacha-pull-result.hero_badge_box": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "surface",
+            "offset": 0,
+            "opacity": 0.92
+          },
+          {
+            "color": "backgroundMid",
+            "offset": 1,
+            "opacity": 0.98
+          }
+        ]
+      },
+      "cornerRadius": 12,
+      "borderWidth": 2,
+      "borderColor": "rarityGold"
+    },
+    "auto.gacha-pull-result.hero_rarity": {
+      "kind": "label-style",
+      "font": "fonts/manrope/manrope",
+      "fontSize": 14,
+      "lineHeight": 18,
+      "letterSpacing": 1.2,
+      "color": "rarityGold",
+      "horizontalAlign": "CENTER",
+      "isBold": true,
+      "shadow": {
+        "offsetX": 0,
+        "offsetY": 0,
+        "blur": 8,
+        "color": "#FFAA00"
+      }
+    },
+    "auto.gacha-pull-result.hero_name": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/newsreader",
+      "fontSize": 26,
+      "lineHeight": 32,
+      "letterSpacing": 1,
+      "color": "colorWhite",
+      "outlineColor": "#000000",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.gacha-pull-result.hero_desc": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/newsreader",
+      "fontSize": 13,
+      "lineHeight": 16,
+      "letterSpacing": 0.5,
+      "color": "gdv3TextMuted",
+      "horizontalAlign": "CENTER",
+      "isBold": false
     }
   },
   "bundles": [

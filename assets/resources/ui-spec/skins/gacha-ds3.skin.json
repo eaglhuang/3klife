@@ -158,68 +158,10 @@
       }
     },
     "auto.gacha-ds3.gachads3_div_6": {
-      "kind": "gradient-rect",
-      "backgroundLayers": [
-        {
-          "kind": "gradient",
-          "gradient": {
-            "type": "linear",
-            "repeating": true,
-            "angle": 45,
-            "shape": null,
-            "center": null,
-            "radius": null,
-            "repeatSpanPx": 12,
-            "stops": [
-              {
-                "color": "rgb(30, 16, 40)",
-                "offset": 0
-              },
-              {
-                "color": "rgb(30, 16, 40)",
-                "offset": 0.5
-              },
-              {
-                "color": "rgb(37, 24, 51)",
-                "offset": 0.5
-              },
-              {
-                "color": "rgb(37, 24, 51)",
-                "offset": 1
-              }
-            ]
-          }
-        }
-      ],
-      "gradient": {
-        "type": "linear",
-        "repeating": true,
-        "angle": 45,
-        "repeatSpanPx": 12,
-        "stops": [
-          {
-            "color": "rgb(30, 16, 40)",
-            "offset": 0,
-            "opacity": 1
-          },
-          {
-            "color": "rgb(30, 16, 40)",
-            "offset": 0.5,
-            "opacity": 1
-          },
-          {
-            "color": "rgb(37, 24, 51)",
-            "offset": 0.5,
-            "opacity": 1
-          },
-          {
-            "color": "rgb(37, 24, 51)",
-            "offset": 1,
-            "opacity": 1
-          }
-        ]
-      },
-      "cornerRadius": 20
+      "kind": "sprite-frame",
+      "path": "sprites/generals/guan_yu_portrait",
+      "expectedWidth": 480,
+      "expectedHeight": 748
     },
     "auto.gacha-ds3.gachads3_div_8": {
       "kind": "label-style",
@@ -424,68 +366,10 @@
       }
     },
     "auto.gacha-ds3.gachads3_div_16": {
-      "kind": "gradient-rect",
-      "backgroundLayers": [
-        {
-          "kind": "gradient",
-          "gradient": {
-            "type": "linear",
-            "repeating": true,
-            "angle": 45,
-            "shape": null,
-            "center": null,
-            "radius": null,
-            "repeatSpanPx": 12,
-            "stops": [
-              {
-                "color": "rgb(30, 24, 16)",
-                "offset": 0
-              },
-              {
-                "color": "rgb(30, 24, 16)",
-                "offset": 0.5
-              },
-              {
-                "color": "rgb(37, 31, 16)",
-                "offset": 0.5
-              },
-              {
-                "color": "rgb(37, 31, 16)",
-                "offset": 1
-              }
-            ]
-          }
-        }
-      ],
-      "gradient": {
-        "type": "linear",
-        "repeating": true,
-        "angle": 45,
-        "repeatSpanPx": 12,
-        "stops": [
-          {
-            "color": "rgb(30, 24, 16)",
-            "offset": 0,
-            "opacity": 1
-          },
-          {
-            "color": "rgb(30, 24, 16)",
-            "offset": 0.5,
-            "opacity": 1
-          },
-          {
-            "color": "rgb(37, 31, 16)",
-            "offset": 0.5,
-            "opacity": 1
-          },
-          {
-            "color": "rgb(37, 31, 16)",
-            "offset": 1,
-            "opacity": 1
-          }
-        ]
-      },
-      "cornerRadius": 20
+      "kind": "sprite-frame",
+      "path": "sprites/generals/lu_bu_portrait",
+      "expectedWidth": 480,
+      "expectedHeight": 748
     },
     "auto.gacha-ds3.gachads3_div_18": {
       "kind": "label-style",
@@ -690,68 +574,10 @@
       }
     },
     "auto.gacha-ds3.gachads3_div_26": {
-      "kind": "gradient-rect",
-      "backgroundLayers": [
-        {
-          "kind": "gradient",
-          "gradient": {
-            "type": "linear",
-            "repeating": true,
-            "angle": 45,
-            "shape": null,
-            "center": null,
-            "radius": null,
-            "repeatSpanPx": 12,
-            "stops": [
-              {
-                "color": "rgb(14, 30, 30)",
-                "offset": 0
-              },
-              {
-                "color": "rgb(14, 30, 30)",
-                "offset": 0.5
-              },
-              {
-                "color": "rgb(18, 30, 30)",
-                "offset": 0.5
-              },
-              {
-                "color": "rgb(18, 30, 30)",
-                "offset": 1
-              }
-            ]
-          }
-        }
-      ],
-      "gradient": {
-        "type": "linear",
-        "repeating": true,
-        "angle": 45,
-        "repeatSpanPx": 12,
-        "stops": [
-          {
-            "color": "rgb(14, 30, 30)",
-            "offset": 0,
-            "opacity": 1
-          },
-          {
-            "color": "rgb(14, 30, 30)",
-            "offset": 0.5,
-            "opacity": 1
-          },
-          {
-            "color": "rgb(18, 30, 30)",
-            "offset": 0.5,
-            "opacity": 1
-          },
-          {
-            "color": "rgb(18, 30, 30)",
-            "offset": 1,
-            "opacity": 1
-          }
-        ]
-      },
-      "cornerRadius": 20
+      "kind": "sprite-frame",
+      "path": "sprites/generals/zhuge_liang_portrait",
+      "expectedWidth": 480,
+      "expectedHeight": 748
     },
     "auto.gacha-ds3.gachads3_div_28": {
       "kind": "label-style",

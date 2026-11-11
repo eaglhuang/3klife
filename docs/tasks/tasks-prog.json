@@ -4598,6 +4598,64 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_0411",
+      "id": "PROG-2-2221",
+      "title": "轉蛋系統介面重構與返回路徑統一（方案 B）",
+      "owner": "Antigravity",
+      "priority": "P0",
+      "status": "in-progress",
+      "type": "ui",
+      "phase": "M6",
+      "created": "2026-11-11",
+      "created_by_agent": "Antigravity",
+      "started_at": "2026-11-11T06:58:48+08:00",
+      "started_by_agent": "Antigravity",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依方案 B 將轉蛋結果頁改為左側滿版武將立繪 + 右側十連卡牌彈窗，接入真實武將立繪，補齊卡池名將立繪，並集中管理返回政廳跳轉。",
+      "related": [
+        "#2073",
+        "PROG-2-2213",
+        "PROG-2-2214"
+      ],
+      "depends": [],
+      "acceptance": [
+        "轉蛋結果頁聚焦展示金色召喚結果彈窗，剔除多餘示範視窗",
+        "卡池主畫面中央補齊關羽等高解析度立繪展示",
+        "結果頁右上角 ✕ 與返回卡池按鈕正確關閉並返回",
+        "實際運行截圖提供審閱，獲准後交付"
+      ],
+      "deliverables": [
+        "assets/resources/ui-spec/layouts/gacha-pull-result.json",
+        "assets/resources/ui-spec/layouts/gacha-pull-result.layout.json",
+        "assets/resources/ui-spec/skins/gacha-ds3.skin.json",
+        "assets/scripts/ui/core/GachaFlowCoordinator.ts"
+      ],
+      "notes": "2026-11-11 | 狀態: in-progress | 驗證: 實機截圖完成（左側滿版關羽立繪與資訊框 + 右側十連抽卡片），單元測試與 standard gate 全過 | 變更: 增加 GachaPullResult_hero_showcase 滿版立繪、資訊牌漸層樣式、十連抽彈窗右移、更新 GachaFlowCoordinator 動態立繪邏輯 | 阻塞: 待使用者審核最新滿版立繪截圖後交付",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "npm test tests/GachaFlowCoordinator.test.ts",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

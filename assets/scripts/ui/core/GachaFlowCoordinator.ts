@@ -1,5 +1,5 @@
 // @spec-source → 轉蛋系統.md (doc_spec_0042)；PROG-2-1429 依建檔紀錄補標出處
-import { Button } from 'cc';
+import { Button, Sprite, SpriteFrame, Texture2D, resources } from 'cc';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { LocalGachaService, type LocalGachaResultEntry } from '../../core/services/LocalGachaService';
 import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
@@ -206,7 +206,14 @@ export class GachaFlowCoordinator {
             GachaPullResult_span_13: `SSR+ ×${rarityStats.high}`,
             GachaPullResult_span_14: `SR ×${rarityStats.mid}`,
             GachaPullResult_span_15: `R/N ×${rarityStats.low}`,
+            GachaPullResult_hero_rarity: topResult ? `✦ ${this._toPullResultRarityLabel(topResult.rarityTier)} · 絕世登場 ✦` : '✦ 絕世名將 ✦',
+            GachaPullResult_hero_name: topResult ? `${topResult.general.name}${topResult.general.courtesyName ? ` · ${topResult.general.courtesyName}` : ''}` : '絕世名將',
+            GachaPullResult_hero_desc: topResult ? (topResult.general.description || '義薄雲天 · 威震華夏 · 萬世流芳') : '名揚四海 · 天下歸心',
         });
+
+        if (topResult) {
+            this._updateHeroPortrait(binder, topResult.general.id);
+        }
 
         this._resultBackAction = this._options.onBackToGacha;
         this._resultRepullAction = repull;
@@ -216,6 +223,13 @@ export class GachaFlowCoordinator {
             backNode.getComponent(Button) ?? backNode.addComponent(Button);
             backNode.off(Button.EventType.CLICK, this._onResultBack, this);
             backNode.on(Button.EventType.CLICK, this._onResultBack, this);
+        }
+
+        const closeNode = binder.getNode('GachaPullResult_div_344');
+        if (closeNode) {
+            closeNode.getComponent(Button) ?? closeNode.addComponent(Button);
+            closeNode.off(Button.EventType.CLICK, this._onResultBack, this);
+            closeNode.on(Button.EventType.CLICK, this._onResultBack, this);
         }
 
         const repullNode = binder.getNode('GachaPullResult_div_413');
@@ -294,6 +308,30 @@ export class GachaFlowCoordinator {
         Promise.resolve(action()).catch((error) => {
             UCUFLogger.warn(LogCategory.LIFECYCLE, '[GachaFlowCoordinator] repull action failed', error);
         }).then(() => { this._resultRepullPending = false; });
+    }
+
+    private _updateHeroPortrait(binder: any, generalId: string): void {
+        const portraitNode = binder.getNode ? binder.getNode('GachaPullResult_hero_portrait') : null;
+        if (!portraitNode) return;
+        const sprite = portraitNode.getComponent(Sprite) || portraitNode.addComponent(Sprite);
+        const normId = generalId.toLowerCase().replace(/-/g, '_');
+        const portraitPath = `sprites/generals/${normId}_portrait`;
+        
+        if (typeof resources !== 'undefined' && resources.load) {
+            resources.load(`${portraitPath}/spriteFrame`, SpriteFrame, (err, sf) => {
+                if (!err && sf) {
+                    sprite.spriteFrame = sf;
+                } else {
+                    resources.load(portraitPath, Texture2D, (texErr, tex) => {
+                        if (!texErr && tex) {
+                            const fallbackSf = new SpriteFrame();
+                            fallbackSf.texture = tex;
+                            sprite.spriteFrame = fallbackSf;
+                        }
+                    });
+                }
+            });
+        }
     }
 
     private _emitError(error: unknown, fallbackMessage: string): void {
