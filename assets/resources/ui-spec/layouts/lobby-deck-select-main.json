@@ -23,7 +23,7 @@
         "type": "panel",
         "name": "DeckSelectCard",
         "widget": {
-          "top": 448,
+          "top": 390,
           "left": 32
         },
         "width": 320,

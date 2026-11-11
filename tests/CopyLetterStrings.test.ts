@@ -35,7 +35,7 @@ export function createCopyLetterStringsSuite(): TestSuite {
         const paragraphs = loadLocale('zh-TW')[LETTER_KEY].split('\n\n');
         assert.equals(5, paragraphs.length);
         assert.equals('朋友，剛才看到你又在玩《三國志2》……還是劉備？', paragraphs[0]);
-        assert.equals('準備好了，就按下：啟動宿命轉蛋。', paragraphs[4]);
+        assert.equals('準備好了，就按下：會見各方豪傑。', paragraphs[4]);
     });
 
     suite.test('開場信件標題定稿，四語系不再是暫定（裁決修正令 COPY-01）', () => {
