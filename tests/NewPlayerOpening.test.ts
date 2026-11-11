@@ -50,16 +50,17 @@ export function createNewPlayerOpeningSuite(): TestSuite {
         assert.isFalse(intro.next());
     });
 
-    suite.test('幕序：start → intro；intro-done → destiny；destiny-locked → showcase；showcase-done → 結束', () => {
+    suite.test('幕序（PROG-2-2222）：start → intro；intro-done → showcase；showcase-done → destiny；destiny-locked → 結束', () => {
         const flow = createNewPlayerOpeningFlow();
         assert.equals('intro', flow.start()!.id);
-        assert.equals('intro', flow.advance({ type: 'destiny-locked' })!.id);
-        assert.equals('destiny', flow.advance({ type: OPENING_INTRO_DONE })!.id);
-        assert.equals('showcase', flow.advance({ type: 'destiny-locked' })!.id);
-        assert.equals(null, flow.advance({ type: SHOWCASE_DONE_EVENT }));
+        assert.equals('intro', flow.advance({ type: SHOWCASE_DONE_EVENT })!.id);
+        assert.equals('showcase', flow.advance({ type: OPENING_INTRO_DONE })!.id);
+        assert.equals('showcase', flow.advance({ type: 'destiny-locked' })!.id, '名將還沒說完不能直接鎖定宿命');
+        assert.equals('destiny', flow.advance({ type: SHOWCASE_DONE_EVENT })!.id);
+        assert.equals(null, flow.advance({ type: 'destiny-locked' }));
     });
 
-    suite.test('一路走通：翻完第一幕 → 宿命轉蛋 → 鎖定後開新局，幕序結束', async () => {
+    suite.test('一路走通：翻完第一幕 → 六名將登場 → 宿命轉蛋 → 鎖定後開新局，幕序結束', async () => {
         const generals = readJson<GeneralConfig[]>('assets/resources/data/generals.json');
         const heroPool = readJson<GachaConfig[]>('assets/resources/data/gacha-config.json').find(c => c.poolId === 'hero-pool')!;
         const session = new GameSession();
@@ -72,7 +73,8 @@ export function createNewPlayerOpeningSuite(): TestSuite {
         const intro = new OpeningIntroController();
         let finished = false;
         while (!finished) finished = intro.next();
-        assert.equals('destiny', flow.advance({ type: OPENING_INTRO_DONE })!.id);
+        assert.equals('showcase', flow.advance({ type: OPENING_INTRO_DONE })!.id);
+        assert.equals('destiny', flow.advance({ type: SHOWCASE_DONE_EVENT })!.id);
 
         const destiny = new DestinyOpeningController({
             config: () => heroPool, generals: () => generals, session,
@@ -83,8 +85,7 @@ export function createNewPlayerOpeningSuite(): TestSuite {
         assert.isTrue(await destiny.select(destiny.state.rolled.findIndex(isDestinyStar)));
         assert.isTrue(await destiny.confirm());
         const locked = destinyLockedEvent(destiny.state)!;
-        assert.equals('showcase', flow.advance(locked)!.id);
-        assert.equals(null, flow.advance({ type: SHOWCASE_DONE_EVENT }));
+        assert.equals(null, flow.advance(locked));
         assert.equals(destiny.state.locked, session.leadGeneralId);
         assert.equals(10, session.roster.length);
     });

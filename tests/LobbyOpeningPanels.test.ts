@@ -340,17 +340,40 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
             assert.isFalse(service.lastLoadRecoveredFromBackup());
         });
     }
-    suite.test('新局：開宿命轉蛋時先開信件，關信後才進轉蛋（PROG-2-1622）', async () => {
+    suite.test('新局：開信後關信才接下一步（名將登場），只接一次（PROG-2-2222）', async () => {
         const f = fixture();
         await f.panels.mountOpeningLetter();
         await f.panels.mountDestiny();
         assert.isFalse(f.hosts.get('OpeningLetterHost')!.node.active);
-        assert.isTrue(f.panels.openDestiny());
+        let nextCalls = 0;
+        f.panels.openLetterThen(() => { nextCalls++; });
         assert.isTrue(f.hosts.get('OpeningLetterHost')!.node.active);
-        assert.isFalse(f.hosts.get('DestinyOpeningHost')!.node.active);
+        assert.equals(0, nextCalls, '信沒關前不接下一步');
+        assert.isFalse(f.hosts.get('DestinyOpeningHost')!.node.active, '信之後不是直接進轉蛋');
         await f.panels.closeOpeningLetter();
         assert.isFalse(f.hosts.get('OpeningLetterHost')!.node.active);
+        assert.equals(1, nextCalls);
+        await f.panels.closeOpeningLetter();
+        assert.equals(1, nextCalls, '重複關信不重複接續');
+    });
+
+    suite.test('信已讀：openLetterThen 直接接下一步，不再開信（PROG-2-2222）', async () => {
+        const f = fixture();
+        await f.panels.mountOpeningLetter();
+        await f.session.markOpeningLetterSeen();
+        let nextCalls = 0;
+        f.panels.openLetterThen(() => { nextCalls++; });
+        assert.equals(1, nextCalls);
+        assert.isFalse(f.hosts.get('OpeningLetterHost')!.node.active);
+    });
+
+    suite.test('名將登場後開宿命轉蛋：直接進轉蛋，不再插信（PROG-2-2222）', async () => {
+        const f = fixture();
+        await f.panels.mountOpeningLetter();
+        await f.panels.mountDestiny();
+        assert.isTrue(f.panels.openDestiny());
         assert.isTrue(f.hosts.get('DestinyOpeningHost')!.node.active);
+        assert.isFalse(f.hosts.get('OpeningLetterHost')!.node.active);
     });
 
     return suite;
