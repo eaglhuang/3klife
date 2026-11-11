@@ -10,6 +10,25 @@
     <link rel="icon" href="favicon.ico">
   </head>
   <body>
+    <!-- 先於引擎下載顯示；沒有可知總量，不捏造百分比。 -->
+    <div id="web-boot-progress" role="status" aria-live="polite"
+      style="position:fixed;left:10%;right:10%;bottom:12%;text-align:center;color:#e8d9a8;font:16px/1.6 sans-serif;z-index:2147483646;pointer-events:none">
+      正在啟動遊戲…初次載入可能需要較久，請稍候。
+    </div>
+    <script>
+      (function () {
+        function bootFailed() {
+          var status = document.getElementById('web-boot-progress');
+          if (status) status.textContent = '啟動遇到問題，若持續停留請重新整理。';
+        }
+        window.addEventListener('error', bootFailed);
+        window.addEventListener('unhandledrejection', bootFailed);
+        window.addEventListener('3klife-boot-ready', function () {
+          window.removeEventListener('error', bootFailed);
+          window.removeEventListener('unhandledrejection', bootFailed);
+        }, { once: true });
+      })();
+    </script>
     <div id="GameDiv" cc_exact_fit_screen="false">
       <div id="Cocos3dGameContainer">
         <canvas id="GameCanvas" tabindex="0" aria-label="3KLife 遊戲畫面"></canvas>

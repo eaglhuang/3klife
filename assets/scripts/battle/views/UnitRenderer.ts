@@ -84,6 +84,8 @@ interface UnitView {
   troopType: TroopType;
   usingTroopFormation: boolean;
   usingGeneralPawn?: boolean;
+  formationLoad?: Promise<void>;
+  formationLoading?: boolean;
 }
 
 interface UnitShapeProfile {
@@ -122,6 +124,8 @@ interface BadgeView {
 interface TileBuffView {
   node: Node;
   label: Label;
+  lane: number;
+  depth: number;
 }
 
 /** 掠奪飄字每行間隔（秒） */
@@ -170,8 +174,7 @@ export class UnitRenderer extends Component {
   private readonly dyingUnits = new Set<string>();
   private readonly uiProjectionBuffer = new Vec3();
   // lateUpdate 每幀重用的 Vec3 暫存，避免動態分配（對照 Unity: 快取 Vector3 工具變數）
-  private readonly screenPosBuf = new Vec3();
-  private readonly uiWorldPosBuf = new Vec3();
+  private readonly labelWorldPosBuf = new Vec3();
   private readonly generalViews = new Map<Faction, GeneralView>();
   private readonly spineGenerals = new SpineGeneralOverlay(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   private readonly tileBuffViews = new Map<string, TileBuffView>();
@@ -291,19 +294,9 @@ export class UnitRenderer extends Component {
       this.unitViews.set(unit.id, view);
     }
 
-    // 等待 formation prefab 載入：確保部署動畫使用正確尺寸（Vec3.ONE）與面向
-    // createUnitView 已呼叫過 ensureTroopFormation，這裡直接等 prefab 並建立
-    if (!view.usingTroopFormation && !this.isGeneralAvatarUnit(unit)) {
-      const entry = TROOP_UNIT_ASSET_CATALOG[unit.type];
-      if (entry) {
-        const general = this.latestState?.getGeneral(unit.faction);
-        const subFaction = general ? (GENERAL_SUBFACTION_MAP[general.id] ?? SubFaction.Shu) : SubFaction.Shu;
-        const prefab = await this.loadTroopPrefab(unit.type, entry, subFaction);
-        if (prefab && view.worldNode.isValid && view.formationRoot.children.length === 0) {
-          this.buildTroopFormation(view, prefab, unit, entry);
-        }
-      }
-    }
+    // 建構、refresh 與部署演出共用同一個載入任務，完成即換模型，不等下回合。
+    await this.ensureTroopFormation(view, unit);
+    if (!view.worldNode.isValid) return;
 
     // 以正確狀態（formation 已就緒）更新視圖，取得最終尺寸與面向
     this.updateUnitView(view, unit);
@@ -839,11 +832,8 @@ export class UnitRenderer extends Component {
       this.projectWorldLabel(view.worldNode, view.labelNode, this.labelHeight + 0.28);
     });
 
-    this.tileBuffViews.forEach((view, key) => {
-      const parts = key.split(",");
-      const lane = parseInt(parts[0], 10);
-      const depth = parseInt(parts[1], 10);
-      const pos = this.boardRenderer?.getCellWorldPosition(lane, depth, 0.12);
+    this.tileBuffViews.forEach(view => {
+      const pos = this.boardRenderer?.getCellWorldPosition(view.lane, view.depth, 0.12);
       if (!pos) return;
       this.projectWorldPoint(pos, view.node);
     });
@@ -1117,7 +1107,7 @@ export class UnitRenderer extends Component {
     if (!this.uiRoot || !this.worldCamera || !this.canvasNode) return;
 
     // 加上高度偏移後投影到螢幕空間
-    const worldPos = worldNode.worldPosition.clone();
+    const worldPos = worldNode.getWorldPosition(this.labelWorldPosBuf);
     worldPos.y += yOffset;
 
     // 引擎 API 同時處理 UI 相機與 Canvas 縮放；不可拿3D螢幕深度交給UI相機screenToWorld。
@@ -1267,8 +1257,8 @@ export class UnitRenderer extends Component {
       else this.applyTroopFormationTransform(view, unit);
       view.worldNode.setScale(Vec3.ONE);
     } else {
-      view.bodyNode.active = true;
-      view.accentNode.active = true;
+      view.bodyNode.active = !view.formationLoading;
+      view.accentNode.active = !view.formationLoading;
       view.formationRoot.active = false;
       view.bodyNode.setScale(profile.bodyScale);
       view.bodyNode.setPosition(0, 0, 0); // 重置 cube 位置（formation 底板與 cube 共用 bodyNode）
@@ -1296,7 +1286,9 @@ export class UnitRenderer extends Component {
     // 更新下排兵種名稱（小兵顯示完整對應名稱，將軍化身則顯示「將」）
     if (view.bottomNameLabel) {
       view.bottomNameLabel.string = this.isGeneralAvatarUnit(unit)
-        ? `${this.latestState?.getGeneral(unit.faction)?.name ?? unit.name}（主將棋子）` : unit.name;
+        ? `${this.latestState?.getGeneral(unit.faction)?.name ?? unit.name}（主將棋子）`
+        : view.formationLoading ? `${unit.name}（模型載入中）`
+          : view.formationLoad && !view.usingTroopFormation ? `${unit.name}（戰術棋子）` : unit.name;
     }
 
     this.updateFloodRaft(view, unit);
@@ -1621,7 +1613,7 @@ export class UnitRenderer extends Component {
           .repeatForever()
           .start();
 
-        view = { node, label };
+        view = { node, label, lane: buff.lane, depth: buff.depth };
         this.tileBuffViews.set(key, view);
       }
       view.label.string = buff.rarity === "rare" ? `★ ${buff.text}` : buff.text;
@@ -1644,19 +1636,7 @@ export class UnitRenderer extends Component {
 
   private projectWorldPoint(worldPos: Vec3, targetNode: Node): void {
     if (!this.uiRoot || !this.worldCamera || !this.canvasNode) return;
-
-    this.worldCamera.worldToScreen(worldPos, this.screenPosBuf);
-    const uiCamera = this.canvasNode.getComponentInChildren(Camera);
-    if (uiCamera) {
-      uiCamera.screenToWorld(this.screenPosBuf, this.uiWorldPosBuf);
-      const uiTrans = this.uiRoot.getComponent(UITransform);
-      if (uiTrans) {
-        uiTrans.convertToNodeSpaceAR(this.uiWorldPosBuf, this.uiProjectionBuffer);
-        targetNode.setPosition(this.uiProjectionBuffer);
-      }
-      return;
-    }
-
+    // 與單位名牌同一投影 API，免除每個 Buff 每幀搜尋 Canvas 的相機子樹。
     this.worldCamera.convertToUINode(worldPos, this.uiRoot, this.uiProjectionBuffer);
     targetNode.setPosition(this.uiProjectionBuffer);
   }
@@ -1808,30 +1788,37 @@ export class UnitRenderer extends Component {
     UCUFLogger.info(LogCategory.BATTLE, `[UnitRenderer] 主將化身 ${unit.id} 使用通用戰術棋子（非角色專屬模型）`);
   }
 
-  private async ensureTroopFormation(view: UnitView, unit: TroopUnit): Promise<void> {
+  private ensureTroopFormation(view: UnitView, unit: TroopUnit): Promise<void> {
     if (this.isGeneralAvatarUnit(unit)) {
       this.ensureGeneralPawn(view, unit);
-      return;
+      return Promise.resolve();
     }
-    if (view.usingTroopFormation || view.formationRoot.children.length > 0) {
-      return;
-    }
-
+    if (view.usingTroopFormation || view.formationRoot.children.length > 0) return Promise.resolve();
+    if (view.formationLoad) return view.formationLoad;
     const entry = TROOP_UNIT_ASSET_CATALOG[unit.type];
-    if (!entry) {
-      return;
-    }
-
-    // 根據主將 ID 決定所屬國籍子陣營（綠/藍/紅）
+    if (!entry) return Promise.resolve();
     const general = this.latestState?.getGeneral(unit.faction);
     const subFaction = general ? (GENERAL_SUBFACTION_MAP[general.id] ?? SubFaction.Shu) : SubFaction.Shu;
-
-    const prefab = await this.loadTroopPrefab(unit.type, entry, subFaction);
-    if (!prefab || !view.worldNode.isValid || view.formationRoot.children.length > 0) {
-      return;
-    }
-
-    this.buildTroopFormation(view, prefab, unit, entry);
+    view.formationLoading = true;
+    // 等資源時保留陣營圓環與名牌，不把工程用方塊當成正式士兵。
+    view.bodyNode.active = false;
+    view.accentNode.active = false;
+    if (view.bottomNameLabel) view.bottomNameLabel.string = `${unit.name}（模型載入中）`;
+    view.formationLoad = (async () => {
+      try {
+        const prefab = await this.loadTroopPrefab(unit.type, entry, subFaction);
+        if (!view.worldNode.isValid) return;
+        if (prefab && view.formationRoot.children.length === 0) this.buildTroopFormation(view, prefab, unit, entry);
+      } finally {
+        view.formationLoading = false;
+        if (view.worldNode.isValid) {
+          view.bodyNode.active = !view.usingTroopFormation;
+          view.accentNode.active = !view.usingTroopFormation;
+          if (view.bottomNameLabel) view.bottomNameLabel.string = view.usingTroopFormation ? unit.name : `${unit.name}（戰術棋子）`;
+        }
+      }
+    })();
+    return view.formationLoad;
   }
 
   private loadTroopPrefab(type: TroopType, entry: TroopUnitAssetEntry, subFaction: SubFaction): Promise<Prefab | null> {
