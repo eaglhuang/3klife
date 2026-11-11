@@ -53,13 +53,42 @@ export class UIPreviewBuilder extends Component {
     // 字型預載快取，buildScreen 前預載，applyLabelStyle 時直接取用
     private _fontCache = new Map<string, Font | null>();
 
-    // 協作模組（Unity 對照：各 Manager / Helper component）
-    private readonly layoutBuilder = new UIPreviewLayoutBuilder();
-    private readonly styleBuilder  = new UIPreviewStyleBuilder(this.skinResolver, this._fontCache);
-    private readonly nodeFactory   = new UIPreviewNodeFactory(this.skinResolver, this.styleBuilder, this.layoutBuilder);
-    private readonly shadowManager = new UIPreviewShadowManager(
-        this.skinResolver, this.styleBuilder, this.layoutBuilder, () => this.node,
-    );
+    // 協作模組（Unity 對照：各 Manager / Helper component，採用 Lazy Getter 確保 Component 生命週期中永不為 null）
+    private _layoutBuilder: UIPreviewLayoutBuilder | null = null;
+    private get layoutBuilder(): UIPreviewLayoutBuilder {
+        if (!this._layoutBuilder) {
+            this._layoutBuilder = new UIPreviewLayoutBuilder();
+        }
+        return this._layoutBuilder;
+    }
+
+    private _styleBuilder: UIPreviewStyleBuilder | null = null;
+    private get styleBuilder(): UIPreviewStyleBuilder {
+        if (!this._styleBuilder) {
+            if (!this.skinResolver) this.skinResolver = new UISkinResolver();
+            if (!this._fontCache) this._fontCache = new Map();
+            this._styleBuilder = new UIPreviewStyleBuilder(this.skinResolver, this._fontCache);
+        }
+        return this._styleBuilder;
+    }
+
+    private _nodeFactory: UIPreviewNodeFactory | null = null;
+    private get nodeFactory(): UIPreviewNodeFactory {
+        if (!this._nodeFactory) {
+            this._nodeFactory = new UIPreviewNodeFactory(this.skinResolver, this.styleBuilder, this.layoutBuilder);
+        }
+        return this._nodeFactory;
+    }
+
+    private _shadowManager: UIPreviewShadowManager | null = null;
+    private get shadowManager(): UIPreviewShadowManager {
+        if (!this._shadowManager) {
+            this._shadowManager = new UIPreviewShadowManager(
+                this.skinResolver, this.styleBuilder, this.layoutBuilder, () => this.node,
+            );
+        }
+        return this._shadowManager;
+    }
 
     // ─── 公開 API ─────────────────────────────────────────────────────────────
 
@@ -105,7 +134,9 @@ export class UIPreviewBuilder extends Component {
         if (tokens) { this.tokens = tokens; if (this.shadowManager) this.shadowManager.tokens = tokens; }
 
         // 每次 buildScreen 前同步 i18nStrings 給 nodeFactory
-        this.nodeFactory.i18nStrings = this.i18nStrings;
+        if (this.nodeFactory) {
+            this.nodeFactory.i18nStrings = this.i18nStrings ?? {};
+        }
 
         // 實際尺寸優先 (PROG-2-1628)
         const hostT = host.getComponent(UITransform);
