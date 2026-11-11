@@ -204,7 +204,7 @@
       "color": "#F7FAFF",
       "horizontalAlign": "CENTER",
       "isBold": true,
-      "overflow": "truncate",
+      "overflow": "SHRINK",
       "_doc": "名稱退成頂部輔助資訊，讓頭像與底部數值成為第一視線。"
     },
     "tally.label.sub": {

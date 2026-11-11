@@ -118,6 +118,8 @@ export class BattleHUDComposite extends CompositePanel {
         director.on(Director.EVENT_BEFORE_SCENE_LAUNCH, this._hideForSceneLeave, this);
         if (!this._isActiveBattleScene()) { this.node.active = false; return; }
         services().initialize(this.node);
+        // 建構前就接收 SP，避免掛載期間漏掉已知上限（各將可能為 80 或 100）。
+        this._subscribeEvents();
         await this.show();
     }
 
@@ -180,7 +182,7 @@ export class BattleHUDComposite extends CompositePanel {
         };
         topBar?.on(Node.EventType.SIZE_CHANGED, resizeTitle, this);
         resizeTitle();
-        this._renderSp(0, 0);
+        this._renderSp(this._spState.sp, this._spState.maxSp);
         this._turnLabel           = binder.getLabel('TurnLabel');
         this._stageTitleLabel     = binder.getLabel('StageTitleLabel');
         this._stageSubtitleLabel  = binder.getLabel('StageSubtitleLabel');
@@ -365,7 +367,18 @@ export class BattleHUDComposite extends CompositePanel {
         catch { services().event.emit(EVENT_NAMES.ShowToast, { text: '設定載入失敗，請再試一次' }); }
     }
 
+    private _spState = { sp: 0, maxSp: 0 };
+
     private _renderSp(sp: number, maxSp: number): void {
+        this._spState = { sp, maxSp };
+        // 真實主將尚未就緒時不假造上限，也不曝光無意義的 0/0。
+        if (maxSp <= 0) {
+            if (this._spLabel) this._spLabel.string = 'SP 準備中';
+            if (this._chargeLabel) this._chargeLabel.string = '奧義數值準備中';
+            if (this._spReadyLabel) this._spReadyLabel.string = '奧義準備中';
+            this._spFill?.setScale(0, 1, 1);
+            return;
+        }
         if (this._spLabel) this._spLabel.string = `SP ${sp}/${maxSp}`;
         if (this._chargeLabel) this._chargeLabel.string = `奧義消耗 SP ${maxSp}；目前 ${sp}/${maxSp}`;
         if (this._spReadyLabel) this._spReadyLabel.string = maxSp > 0 && sp >= maxSp ? '奧義可施放' : '奧義蓄力中';

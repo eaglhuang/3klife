@@ -18,7 +18,7 @@ export function createStrategistHudLogSuite(): TestSuite {
             salvage: { ...ZERO, stone: 3 },
             missingCounters: ['抗混亂'],
         });
-        assert.equals('軍師：危害 火場延燒｜營帳：存活 2；陷阱：存活 1｜回收 石材 3｜缺少抗混亂', line);
+        assert.equals('軍師：危害 火場延燒\n營帳：存活 2；陷阱：存活 1\n回收 石材 3\n缺少抗混亂', line);
         assert.equals('軍師：回收 補給 5', strategistHudLogLine({ hazardsThisTurn: [], interactiveObjects: [], salvage: { ...ZERO, supply: 5 }, missingCounters: [] }));
     });
 
@@ -30,7 +30,7 @@ export function createStrategistHudLogSuite(): TestSuite {
             missingCounters: [],
             executing: { name: '曹操', int: 91, tactic: '火攻' },
         });
-        assert.equals('軍師：曹操 INT 91，正在執行：火攻｜危害 火場延燒', line);
+        assert.equals('軍師：曹操 INT 91，正在執行：火攻\n危害 火場延燒', line);
     });
 
     return suite;
