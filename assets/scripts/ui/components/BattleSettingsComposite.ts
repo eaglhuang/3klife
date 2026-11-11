@@ -3,7 +3,7 @@
  * BattleSettingsComposite — 戰場設定面板（音樂、音效、撤退、繼續戰鬥）
  *
  * 以 `battle-settings-screen` 三層 spec 建構；全畫面半透明遮罩擋住棋盤點擊。
- * 撤退需三秒內連按兩次，確認後發出 RetreatRequested，由戰場橋接層判定戰敗。
+ * 撤退需在同次開啟內按兩次，確認後發出 RetreatRequested，由戰場橋接層判定戰敗。
  *
  * Unity 對照：Overlay Canvas 上的 OptionsMenu Panel，按鈕 onClick 直接改 AudioMixer 參數。
  */
@@ -45,6 +45,7 @@ export class BattleSettingsComposite extends CompositePanel {
     }
 
     public hide(): void {
+        this._retreatArmedAt = null;
         const opacity = this.node.getComponent(UIOpacity) ?? this.node.addComponent(UIOpacity);
         tween(opacity)
             .to(0.12, { opacity: 0 })

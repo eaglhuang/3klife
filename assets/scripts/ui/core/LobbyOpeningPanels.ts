@@ -31,6 +31,11 @@ export interface LobbyOpeningPanelPorts {
     notifyBeauty: (name: string) => void;
     canNotifyBeauty?: () => boolean;
     advanceOpening: (event: OpeningFlowEvent) => void;
+    /**
+     * 宿命轉蛋確認開局後的滿版結算（PROG-2-2236，沿用 PROG-2-2221 的結果畫面）：
+     * 大立繪為選定的核心名將，下方列出本輪抽出的名單；玩家關閉後 resolve，開場才往下走。未提供則直接往下走。
+     */
+    showDestinyResult?: (view: { coreId: string; rolledIds: readonly string[] }) => Promise<void>;
     /** 宿命轉蛋六框載立繪（與招賢館同一套擺位，PROG-2-1147）；keys 依框序 */
     applyFramePortraits?: (binder: NonNullable<LobbyOpeningPanelHost['binder']>, keys: readonly string[]) => void;
     /** 開場信件的標題與本文（已查好 i18n 的字串） */
@@ -51,6 +56,8 @@ export class LobbyOpeningPanels {
     /** 上次載入的立繪順序；沒變就不重載，避免每次點選都閃一下 */
     private _destinyPortraitKeys = '';
     private _pendingBeauty: string | null = null;
+    /** 開局後的結算畫面：未顯示 → 顯示中 → 已關閉；只顯示一次 */
+    private _destinyResult: 'pending' | 'showing' | 'done' = 'pending';
 
     constructor(private readonly _ports: LobbyOpeningPanelPorts) {}
 
@@ -63,7 +70,9 @@ export class LobbyOpeningPanels {
 
     public async mountOnboarding(): Promise<void> {
         this._onboarding = new OnboardingFlowController({
-            ready: () => (this._ports.lobbyReady?.() ?? true) && (!this._ports.isNewPlayer() || this._destiny?.started === true),
+            // 結算畫面還開著時不出引導，避免疊在結算上（PROG-2-2236）
+            ready: () => (this._ports.lobbyReady?.() ?? true)
+                && (!this._ports.isNewPlayer() || (this._destiny?.started === true && this._destinyResult !== 'showing')),
             state: () => this._ports.session().onboarding,
             acknowledge: segmentId => this._ports.session().acknowledgeOnboarding(segmentId),
         });
@@ -223,13 +232,31 @@ export class LobbyOpeningPanels {
         this.refreshOpeningLetter();
         if (this._destiny?.started && this._destinyHost) {
             this._destinyHost.node.active = false;
-            if (destinyLockedEvent(this._destiny.state)) {
-                this._ports.advanceOpening(destinyLockedEvent(this._destiny.state)!);
-            }
+            void this._presentDestinyResultThenAdvance();
             return;
         }
         this.refreshDestiny();
         this._scheduleReveal();
+    }
+
+    /** 開局後先給滿版結算，關閉後才推進開場；結算失敗不擋開場（PROG-2-2236） */
+    private async _presentDestinyResultThenAdvance(): Promise<void> {
+        const destiny = this._destiny;
+        if (!destiny || this._destinyResult !== 'pending') return;
+        const state = destiny.state;
+        const show = this._ports.showDestinyResult;
+        if (show && state.locked) {
+            this._destinyResult = 'showing';
+            try {
+                await show({ coreId: state.locked, rolledIds: [...state.rolled] });
+            } catch (error) {
+                this._ports.warn('[LobbyScene] 宿命轉蛋結算畫面顯示失敗', error);
+            }
+        }
+        this._destinyResult = 'done';
+        const event = destinyLockedEvent(state);
+        if (event) this._ports.advanceOpening(event);
+        this.refreshOnboarding();
     }
 
     /** 盲盒逐字浮現：每 60ms 露一個字，露完停（PROG-2-1621） */

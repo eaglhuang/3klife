@@ -1,13 +1,13 @@
 /**
  * BattleSettingsView — 戰場設定面板純邏輯（PROG-2-1890）
  *
- * 覆蓋：音訊偏好讀取與防呆、開關文字、撤退兩段式確認與逾時。
+ * 覆蓋：音訊偏好讀取與防呆、開關文字、撤退兩段式確認與慢速確認。
  *
  * Unity 對照：像測 OptionsMenu ViewModel，不需要場景或 UI。
  */
 import { assert, TestSuite } from './TestRunner';
 import {
-    audioToggleText, parseAudioPrefs, RETREAT_CONFIRM_WINDOW_MS, retreatButtonText, retreatClick,
+    audioToggleText, parseAudioPrefs, retreatButtonText, retreatClick,
 } from '../assets/scripts/core/systems/BattleSettingsView';
 
 export function createBattleSettingsViewSuite(): TestSuite {
@@ -26,20 +26,20 @@ export function createBattleSettingsViewSuite(): TestSuite {
         assert.equals('音效：關', audioToggleText('sfx', true));
     });
 
-    suite.test('撤退：第一次只待確認，視窗內第二次才生效', () => {
+    suite.test('撤退：第一次只待確認，第二次才生效', () => {
         const first = retreatClick(null, 1000);
         assert.equals(false, first.confirmed);
         assert.equals(1000, first.armedAt);
-        const second = retreatClick(first.armedAt, 1000 + RETREAT_CONFIRM_WINDOW_MS);
+        const second = retreatClick(first.armedAt, 4000);
         assert.equals(true, second.confirmed);
         assert.equals(null, second.armedAt);
         assert.equals(true, retreatButtonText(true) !== retreatButtonText(false));
     });
 
-    suite.test('撤退：逾時後再按視為新的第一次', () => {
-        const late = retreatClick(1000, 1000 + RETREAT_CONFIRM_WINDOW_MS + 1);
-        assert.equals(false, late.confirmed);
-        assert.equals(1000 + RETREAT_CONFIRM_WINDOW_MS + 1, late.armedAt);
+    suite.test('撤退：慢速點擊不會被隱藏期限吞掉', () => {
+        const late = retreatClick(1000, 61000);
+        assert.equals(true, late.confirmed);
+        assert.equals(null, late.armedAt);
     });
 
     return suite;
