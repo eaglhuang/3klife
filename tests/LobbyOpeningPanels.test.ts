@@ -406,5 +406,43 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         assert.isFalse(f.hosts.get('OpeningLetterHost')!.node.active);
     });
 
+    suite.test('開局後先顯示十連結算，關閉才送 locked 並放行教學（PROG-2-2236）', async () => {
+        const f = fixture();
+        let close!: () => void;
+        let shown: { coreId: string; rolledIds: readonly string[] } | null = null;
+        f.ports.showDestinyResult = view => {
+            shown = view;
+            f.events.push('result');
+            return new Promise<void>(resolve => { close = resolve; });
+        };
+        await f.panels.mountOnboarding();
+        await f.panels.mountDestiny();
+        f.panels.openDestiny();
+        f.click('DestinyOpeningHost', 'btnDestinyRoll'); await flush();
+        f.clickStar(); f.click('DestinyOpeningHost', 'btnDestinyConfirm'); await flush();
+        assert.isFalse(f.hosts.get('DestinyOpeningHost')!.node.active);
+        assert.isTrue(shown !== null);
+        assert.equals(10, shown!.rolledIds.length);
+        assert.isTrue(shown!.rolledIds.includes(shown!.coreId));
+        assert.isFalse(f.events.includes('destiny-locked'));
+        f.panels.refreshOnboarding();
+        assert.isFalse(f.hosts.get('OnboardingTutorialHost')!.node.active, '結算畫面還開著，教學不可蓋上去');
+        close(); await flush();
+        assert.equals('result,destiny-locked', f.events.filter(e => e === 'result' || e === 'destiny-locked').join(','));
+        assert.isTrue(f.hosts.get('OnboardingTutorialHost')!.node.active);
+    });
+
+    suite.test('結算畫面失敗只警告，開場照常往下走（PROG-2-2236）', async () => {
+        const f = fixture();
+        f.ports.showDestinyResult = async () => { throw new Error('mount failed'); };
+        await f.panels.mountOnboarding();
+        await f.panels.mountDestiny();
+        f.panels.openDestiny();
+        f.click('DestinyOpeningHost', 'btnDestinyRoll'); await flush();
+        f.clickStar(); f.click('DestinyOpeningHost', 'btnDestinyConfirm'); await flush(); await flush();
+        assert.isTrue(f.events.some(e => e.includes('結算畫面顯示失敗')));
+        assert.equals(1, f.events.filter(e => e === 'destiny-locked').length);
+    });
+
     return suite;
 }
