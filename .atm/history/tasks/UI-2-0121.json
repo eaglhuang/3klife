@@ -10,8 +10,8 @@
   "tags": [],
   "createdAt": "2026-11-05T14:30:28.536Z",
   "createdByActor": "codex-gpt-6.1-sol",
-  "lastTransitionId": "2026-11-11T00-47-27-159Z-scope-amendment-e402c7fce4a9",
-  "lastTransitionAt": "2026-11-11T00:47:27.159Z",
+  "lastTransitionId": "2026-11-11T01-58-39-121Z-scope-amendment-4ab184e59a45",
+  "lastTransitionAt": "2026-11-11T01:58:39.121Z",
   "ledgerContractVersion": "task-ledger/v1",
   "reservedAt": "2026-11-05T17:15:58.821Z",
   "promotedAt": "2026-11-05T17:15:58.826Z",
@@ -322,6 +322,8 @@
       "assets/resources/sprites/generals/gongsun_zan_portrait.png",
       "assets/resources/sprites/generals/guan_xing_portrait.png",
       "assets/resources/sprites/generals/guan_yin_ping_portrait.png",
+      "assets/resources/sprites/generals/guan_yu_battle.png",
+      "assets/resources/sprites/generals/guan_yu_battle.png.meta",
       "assets/resources/sprites/generals/guan_yu_portrait.png",
       "assets/resources/sprites/generals/guo_huai_portrait.png",
       "assets/resources/sprites/generals/guo_jia_portrait.png",
@@ -646,20 +648,20 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-f7e63a69f6c78a78",
-    "ticketDigest": "sha256:f7e63a69f6c78a7886645c31f9dbc73caa195fa0d0c99165f44c77d728850ee9",
+    "ticketId": "wat-cfc6fd27ed77b0d8",
+    "ticketDigest": "sha256:cfc6fd27ed77b0d8b4dd2dabde737b0d4004d145d3fd491e8e33162ba68b346d",
     "taskId": "UI-2-0121",
     "origin": "claim",
     "actorId": "codex-gpt-6.1-terra",
     "laneSessionId": "lane-20261105171558-codex-gpt-6.1-sol-5d8d83b82d",
     "claimGeneration": "lease-f957fb02b01d",
-    "issuedAt": "2026-11-11T00:47:27.052Z",
-    "expiresAt": "2026-11-11T01:17:27.052Z",
-    "scopeDigest": "sha256:5b83265840b00a441baf4b5783a8a92ff3f06a9c1887f6d6189660670f24a869",
+    "issuedAt": "2026-11-11T01:58:38.982Z",
+    "expiresAt": "2026-11-11T02:28:38.982Z",
+    "scopeDigest": "sha256:f51ec4882feb0bc5de885b5e357752b27084ff645b91b973355d7cab58029483",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-11-11T00:47:27.052Z"
+      "selectedAt": "2026-11-11T01:58:38.982Z"
     },
     "grants": [
       {
@@ -966,6 +968,8 @@
           "assets/resources/sprites/generals/gongsun_zan_portrait.png",
           "assets/resources/sprites/generals/guan_xing_portrait.png",
           "assets/resources/sprites/generals/guan_yin_ping_portrait.png",
+          "assets/resources/sprites/generals/guan_yu_battle.png",
+          "assets/resources/sprites/generals/guan_yu_battle.png.meta",
           "assets/resources/sprites/generals/guan_yu_portrait.png",
           "assets/resources/sprites/generals/guo_huai_portrait.png",
           "assets/resources/sprites/generals/guo_jia_portrait.png",
@@ -1277,7 +1281,7 @@
           "docs/ui-quality-tasks/UI-2-0121.json",
           "docs/ui-quality-todo.json"
         ],
-        "digest": "sha256:5d3fac9473523d4da69e57892142a39932c676d260751c8c197391b43195bab4"
+        "digest": "sha256:8c8cbd135aa473def38ec1785e8b552500460f4ab20b803d7491f9067fa683c0"
       },
       {
         "kind": "lifecycle-operation",
@@ -1626,6 +1630,8 @@
       "assets/resources/sprites/generals/gongsun_zan_portrait.png",
       "assets/resources/sprites/generals/guan_xing_portrait.png",
       "assets/resources/sprites/generals/guan_yin_ping_portrait.png",
+      "assets/resources/sprites/generals/guan_yu_battle.png",
+      "assets/resources/sprites/generals/guan_yu_battle.png.meta",
       "assets/resources/sprites/generals/guan_yu_portrait.png",
       "assets/resources/sprites/generals/guo_huai_portrait.png",
       "assets/resources/sprites/generals/guo_jia_portrait.png",
@@ -3151,6 +3157,8 @@
     "assets/resources/sprites/generals/bu_zhi_portrait.png",
     "assets/resources/sprites/ui_avatars/cropped/bu_zhi_avatar.png",
     "assets/resources/sprites/generals/lu_bu_battle.png",
-    "assets/resources/sprites/generals/lu_bu_battle.png.meta"
+    "assets/resources/sprites/generals/lu_bu_battle.png.meta",
+    "assets/resources/sprites/generals/guan_yu_battle.png",
+    "assets/resources/sprites/generals/guan_yu_battle.png.meta"
   ]
 }
