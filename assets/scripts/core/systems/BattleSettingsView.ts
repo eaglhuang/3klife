@@ -2,7 +2,7 @@
 /**
  * BattleSettingsView — 戰場設定面板的顯示文字、音訊偏好與撤退確認（純邏輯，不依賴 cc）
  *
- * 面板內容：音樂開關、音效開關、撤退（三秒內再按一次才生效）、繼續戰鬥。
+ * 面板內容：音樂開關、音效開關、撤退（同次開啟內再按一次才生效）、繼續戰鬥。
  *
  * Unity 對照：像 OptionsMenu 的 ViewModel，只算字串與狀態，由 View 套到 Label 與 Button 上。
  */
@@ -32,15 +32,13 @@ export function audioToggleText(kind: 'bgm' | 'sfx', muted: boolean): string {
     return `${kind === 'bgm' ? '音樂' : '音效'}：${muted ? '關' : '開'}`;
 }
 
-/** 第一次按撤退後，需在這段時間內再按一次才算確認 */
-export const RETREAT_CONFIRM_WINDOW_MS = 3000;
-
 /**
- * 撤退按鈕點擊：第一次只「待確認」，確認視窗內第二次才生效；逾時重新算第一次。
- * armedAt 為上次待確認的時間戳（null 表示未待確認）。
+ * 撤退按鈕點擊：第一次只待確認，第二次明確確認才生效。
+ * 待確認狀態由設定面板關閉／重開時取消，不使用隱藏時間窗。
+ * Web 載入／卡頓可能超過三秒；只要文字仍顯示「再按一次」就必須可以確認。
  */
 export function retreatClick(armedAt: number | null, now: number): { confirmed: boolean; armedAt: number | null } {
-    if (armedAt !== null && now - armedAt <= RETREAT_CONFIRM_WINDOW_MS) return { confirmed: true, armedAt: null };
+    if (armedAt !== null) return { confirmed: true, armedAt: null };
     return { confirmed: false, armedAt: now };
 }
 
