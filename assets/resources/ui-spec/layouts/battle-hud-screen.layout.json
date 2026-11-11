@@ -32,8 +32,7 @@
             "widget": {
               "top": 0,
               "left": 0,
-              "right": 0,
-              "bottom": 992
+              "right": 0
             },
             "_ucufId": "battle-hud-screen.topbar",
             "_visualZone": "header",
@@ -70,7 +69,7 @@
               {
                 "type": "container",
                 "name": "BattleHudScreen_div_2",
-                "width": 232,
+                "width": 208,
                 "height": 64,
                 "layout": {
                   "type": "horizontal",
@@ -82,7 +81,7 @@
                   {
                     "type": "container",
                     "name": "BattleHudScreen_div_3",
-                    "width": 232,
+                    "width": 208,
                     "height": 64,
                     "layout": {
                       "type": "vertical"
@@ -91,11 +90,12 @@
                       {
                         "type": "label",
                         "name": "BattleHudScreen_div_4",
-                        "width": 232,
-                        "height": 49,
+                        "width": 208,
+                        "height": 40,
                         "text": "第 7 回合",
                         "styleSlot": "auto.battle-hud-screen.battlehudscreen_div_4",
-                        "textKey": "auto.battle-hud-screen.battle-hud-screen-div-4"
+                        "textKey": "auto.battle-hud-screen.battle-hud-screen-div-4",
+                        "id": "TurnLabel"
                       },
                       {
                         "type": "label",
@@ -104,7 +104,8 @@
                         "height": 15,
                         "text": "BATTLE TURN · PLAYER PHASE",
                         "styleSlot": "auto.battle-hud-screen.battlehudscreen_div_5",
-                        "textKey": "auto.battle-hud-screen.battle-hud-screen-div-5"
+                        "textKey": "auto.battle-hud-screen.battle-hud-screen-div-5",
+                        "active": false
                       }
                     ]
                   }
@@ -113,7 +114,7 @@
               {
                 "type": "container",
                 "name": "BattleHudScreen_div_6",
-                "width": 300,
+                "width": "35%",
                 "height": 53,
                 "layout": {
                   "type": "vertical"
@@ -122,11 +123,11 @@
                   {
                     "type": "label",
                     "name": "BattleHudScreen_div_7",
-                    "width": 300,
-                    "height": 37,
-                    "text": "官 渡 · 烏 巢 劫 糧",
+                    "width": "100%",
+                    "height": 40,
+                    "text": "虎牢關之戰",
                     "styleSlot": "auto.battle-hud-screen.battlehudscreen_div_7",
-                    "textKey": "auto.battle-hud-screen.battle-hud-screen-div-7"
+                    "id": "StageTitleLabel"
                   },
                   {
                     "type": "label",
@@ -135,15 +136,17 @@
                     "height": 14,
                     "text": "GUANDU · RAID AT WUCHAO",
                     "styleSlot": "auto.battle-hud-screen.battlehudscreen_div_8",
-                    "textKey": "auto.battle-hud-screen.battle-hud-screen-div-8"
+                    "textKey": "auto.battle-hud-screen.battle-hud-screen-div-8",
+                    "active": false,
+                    "id": "StageSubtitleLabel"
                   }
                 ]
               },
               {
                 "type": "container",
                 "name": "BattleHudScreen_div_9",
-                "width": 164,
-                "height": 48,
+                "width": 72,
+                "height": 72,
                 "layout": {
                   "type": "horizontal",
                   "justifyContent": "start",
@@ -161,7 +164,8 @@
                     },
                     "text": "×2",
                     "styleSlot": "auto.battle-hud-screen.battlehudscreen_div_10",
-                    "textKey": "auto.battle-hud-screen.battle-hud-screen-div-10"
+                    "textKey": "auto.battle-hud-screen.battle-hud-screen-div-10",
+                    "active": false
                   },
                   {
                     "type": "label",
@@ -173,18 +177,19 @@
                       "cellHeight": 48
                     },
                     "text": "自",
-                    "styleSlot": "auto.battle-hud-screen.battlehudscreen_div_11"
+                    "styleSlot": "auto.battle-hud-screen.battlehudscreen_div_11",
+                    "active": false
                   },
                   {
                     "type": "label",
                     "name": "BattleHudScreen_div_12",
-                    "width": 48,
-                    "height": 48,
+                    "width": 72,
+                    "height": 72,
                     "layout": {
                       "type": "grid",
-                      "cellHeight": 48
+                      "cellHeight": 72
                     },
-                    "text": "⚙",
+                    "text": "退",
                     "styleSlot": "auto.battle-hud-screen.battlehudscreen_div_12"
                   }
                 ]
@@ -227,7 +232,8 @@
                     "width": 23,
                     "height": 16,
                     "text": "關羽",
-                    "styleSlot": "auto.battle-hud-screen.battlehudscreen_div_58"
+                    "styleSlot": "auto.battle-hud-screen.battlehudscreen_div_58",
+                    "id": "PlayerNameLabel"
                   },
                   {
                     "type": "label",
@@ -492,7 +498,8 @@
                     "width": 23,
                     "height": 16,
                     "text": "呂布",
-                    "styleSlot": "auto.battle-hud-screen.battlehudscreen_div_78"
+                    "styleSlot": "auto.battle-hud-screen.battlehudscreen_div_78",
+                    "id": "EnemyNameLabel"
                   },
                   {
                     "type": "label",
@@ -1904,19 +1911,11 @@
             "type": "container",
             "name": "BattleHudScreen_div_122",
             "widget": {
-              "left": 488,
-              "right": -98,
-              "top": 900,
-              "bottom": -310
+              "bottom": 260,
+              "right": 18
             },
-            "width": 944,
-            "height": 160,
-            "layout": {
-              "type": "horizontal",
-              "alignItems": "end",
-              "justifyContent": "start",
-              "spacingX": 22
-            },
+            "width": 344,
+            "height": 100,
             "children": [
               {
                 "type": "container",
@@ -1947,7 +1946,8 @@
                     "width": 154,
                     "height": 36,
                     "text": "關 羽",
-                    "styleSlot": "auto.battle-hud-screen.battlehudscreen_div_124"
+                    "styleSlot": "auto.battle-hud-screen.battlehudscreen_div_124",
+                    "id": "PlayerCommandNameLabel"
                   }
                 ],
                 "skinLayers": [
@@ -1971,53 +1971,48 @@
                       "bottom": 6
                     }
                   }
-                ]
+                ],
+                "active": false
               },
               {
                 "type": "container",
                 "name": "BattleHudScreen_div_125",
-                "width": 762,
-                "height": 132,
-                "layout": {
-                  "type": "horizontal",
-                  "alignItems": "center",
-                  "justifyContent": "start",
-                  "spacingX": 14,
-                  "paddingTop": 10,
-                  "paddingRight": 18,
-                  "paddingBottom": 10,
-                  "paddingLeft": 18
-                },
+                "width": 344,
+                "height": 100,
                 "children": [
                   {
                     "type": "container",
                     "name": "BattleHudScreen_div_126",
-                    "width": 180,
-                    "height": 54,
-                    "layout": {
-                      "type": "vertical",
-                      "alignItems": "end",
-                      "justifyContent": "start",
-                      "spacingY": 6
-                    },
+                    "width": 344,
+                    "height": 100,
                     "children": [
                       {
                         "type": "label",
                         "name": "BattleHudScreen_div_127",
-                        "width": 62,
-                        "height": 14,
+                        "width": 320,
+                        "height": 32,
                         "text": "SP · 5 / 5",
                         "styleSlot": "auto.battle-hud-screen.battlehudscreen_div_127",
-                        "textKey": "auto.battle-hud-screen.battle-hud-screen-div-127"
+                        "textKey": "auto.battle-hud-screen.battle-hud-screen-div-127",
+                        "widget": {
+                          "top": 8,
+                          "left": 12,
+                          "right": 12
+                        }
                       },
                       {
                         "type": "label",
                         "name": "BattleHudScreen_div_129",
-                        "width": 79,
-                        "height": 14,
+                        "width": 320,
+                        "height": 32,
                         "text": "ULT · READY",
                         "styleSlot": "auto.battle-hud-screen.battlehudscreen_div_129",
-                        "textKey": "auto.battle-hud-screen.battle-hud-screen-div-129"
+                        "textKey": "auto.battle-hud-screen.battle-hud-screen-div-129",
+                        "widget": {
+                          "top": 44,
+                          "left": 12,
+                          "right": 12
+                        }
                       }
                     ],
                     "skinLayers": [
@@ -2032,10 +2027,20 @@
                         "slotId": "auto.battle-hud-screen.battlehudscreen_i_9",
                         "zOrder": 1,
                         "expand": false,
-                        "width": 178,
-                        "height": 12
+                        "width": 320,
+                        "height": 12,
+                        "widget": {
+                          "bottom": 8,
+                          "hCenter": true
+                        }
                       }
-                    ]
+                    ],
+                    "widget": {
+                      "left": 0,
+                      "right": 0,
+                      "top": 0,
+                      "bottom": 0
+                    }
                   },
                   {
                     "type": "panel",
@@ -2073,7 +2078,8 @@
                         "text": "ATTACK",
                         "styleSlot": "auto.battle-hud-screen.battlehudscreen_div_132"
                       }
-                    ]
+                    ],
+                    "active": false
                   },
                   {
                     "type": "panel",
@@ -2111,7 +2117,8 @@
                         "text": "TACTICS",
                         "styleSlot": "auto.battle-hud-screen.battlehudscreen_div_135"
                       }
-                    ]
+                    ],
+                    "active": false
                   },
                   {
                     "type": "button",
@@ -2150,7 +2157,8 @@
                         "styleSlot": "auto.battle-hud-screen.battlehudscreen_div_138"
                       }
                     ],
-                    "id": "btnHudUltimate"
+                    "id": "btnHudUltimate",
+                    "active": false
                   },
                   {
                     "type": "panel",
@@ -2188,7 +2196,8 @@
                         "text": "DEFEND",
                         "styleSlot": "auto.battle-hud-screen.battlehudscreen_div_141"
                       }
-                    ]
+                    ],
+                    "active": false
                   },
                   {
                     "type": "panel",
@@ -2226,7 +2235,8 @@
                         "text": "RETREAT",
                         "styleSlot": "auto.battle-hud-screen.battlehudscreen_div_144"
                       }
-                    ]
+                    ],
+                    "active": false
                   }
                 ],
                 "skinLayers": [
@@ -2235,37 +2245,13 @@
                     "slotId": "auto.battle-hud-screen.battlehudscreen_div_125",
                     "zOrder": -1,
                     "expand": true
-                  },
-                  {
-                    "layerId": "BattleHudScreen_div_136_CssShadow",
-                    "slotId": "auto.battle-hud-screen.battlehudscreen_div_136_cssshadow",
-                    "zOrder": 0,
-                    "expand": false,
-                    "width": 180,
-                    "height": 180,
-                    "widget": {
-                      "top": -36,
-                      "left": -36,
-                      "right": -36,
-                      "bottom": -36
-                    }
                   }
-                ]
-              }
-            ],
-            "skinLayers": [
-              {
-                "layerId": "BattleHudScreen_div_123_CssShadow",
-                "slotId": "auto.battle-hud-screen.battlehudscreen_div_123_cssshadow",
-                "zOrder": 0,
-                "expand": false,
-                "width": 208,
-                "height": 208,
+                ],
                 "widget": {
-                  "top": -24,
-                  "left": -24,
-                  "right": -24,
-                  "bottom": -24
+                  "left": 0,
+                  "right": 0,
+                  "top": 0,
+                  "bottom": 0
                 }
               }
             ]
@@ -2298,7 +2284,8 @@
                 "_cssEffect": "shadow",
                 "_generatedEffectFor": "BattleHudScreen_button_1"
               }
-            ]
+            ],
+            "active": false
           }
         ]
       }

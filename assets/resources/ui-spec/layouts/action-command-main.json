@@ -42,7 +42,7 @@
           "right": 0
         },
         "width": 212,
-        "height": 60,
+        "height": 72,
         "skinSlot": "action.util.endturn",
         "_doc": "主要回合操作：可讀文字與完整點擊區；不再縮成待機圖示。",
         "children": [
@@ -52,7 +52,7 @@
             "id": "endTurnIcon",
             "widget": {
               "left": 14,
-              "top": 18
+              "top": 24
             },
             "width": 24,
             "height": 24,
@@ -69,7 +69,7 @@
               "bottom": 12
             },
             "width": 154,
-            "height": 36,
+            "height": 48,
             "text": "結束回合",
             "styleSlot": "action.util.endturn.label"
           }
@@ -106,20 +106,30 @@
             "name": "UltLabel",
             "id": "ultLabel",
             "width": 92,
-            "height": 30,
+            "height": 36,
             "styleSlot": "action.ultimate.label",
             "bind": "battle.ultName",
-            "_doc": "SP未滿顯示'奧義'；SP滿顯示'發動'"
+            "_doc": "SP未滿顯示'奧義'；SP滿顯示'發動'",
+            "widget": {
+              "top": 34,
+              "left": 8,
+              "right": 8
+            }
           },
           {
             "type": "label",
             "name": "SpPctLabel",
             "id": "spPctLabel",
             "width": 78,
-            "height": 20,
+            "height": 28,
             "styleSlot": "action.sp.pct.label",
             "bind": "battle.spPct",
-            "_doc": "顯示'SP 75%'，SP滿時隱藏"
+            "_doc": "顯示'SP 75%'，SP滿時隱藏",
+            "widget": {
+              "top": 76,
+              "left": 8,
+              "right": 8
+            }
           }
         ]
       },
@@ -147,18 +157,19 @@
             "width": 28,
             "height": 28,
             "skinSlot": "action.icon.tactics",
-            "_doc": "F8 command overlay glyph"
+            "_doc": "F8 command overlay glyph",
+            "active": false
           },
           {
             "type": "label",
             "name": "TacticsLabel",
             "widget": {
-              "left": 10,
-              "right": 10,
-              "bottom": 10
+              "left": 8,
+              "right": 8,
+              "bottom": 12
             },
-            "width": 50,
-            "height": 18,
+            "width": 66,
+            "height": 56,
             "text": "計謀",
             "styleSlot": "action.util.label"
           }
@@ -188,18 +199,19 @@
             "width": 28,
             "height": 28,
             "skinSlot": "action.icon.duel",
-            "_doc": "F8 command overlay glyph"
+            "_doc": "F8 command overlay glyph",
+            "active": false
           },
           {
             "type": "label",
             "name": "DuelLabel",
             "widget": {
-              "left": 10,
-              "right": 10,
-              "bottom": 10
+              "left": 8,
+              "right": 8,
+              "bottom": 12
             },
-            "width": 50,
-            "height": 18,
+            "width": 66,
+            "height": 56,
             "text": "單挑",
             "styleSlot": "action.util.label"
           }

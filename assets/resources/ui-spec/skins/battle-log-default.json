@@ -72,8 +72,8 @@
     "log.label.title": {
       "kind": "label-style",
       "font": "fonts/newsreader/newsreader",
-      "fontSize": 15,
-      "lineHeight": 20,
+      "fontSize": 24,
+      "lineHeight": 32,
       "color": "secondaryLight",
       "isBold": true,
       "overflow": "CLAMP",
@@ -82,24 +82,24 @@
     "log.label.toggle": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 14,
-      "lineHeight": 18,
+      "fontSize": 24,
+      "lineHeight": 32,
       "color": "textWarmGold",
       "horizontalAlign": "CENTER"
     },
     "log.label.content": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 12,
-      "lineHeight": 18,
+      "fontSize": 24,
+      "lineHeight": 32,
       "color": "textSteelLight",
       "overflow": "RESIZE_HEIGHT"
     },
     "log.label.btn": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 12,
-      "lineHeight": 16,
+      "fontSize": 24,
+      "lineHeight": 32,
       "color": "rarityWhite",
       "horizontalAlign": "CENTER"
     }
