@@ -33,12 +33,12 @@
       "autoSmoke": true
     },
     {
-      "featureId": "lazy-slot-fragment:GachaDs3/GachaDs3_body/GachaDs3_div_57",
+      "featureId": "lazy-slot-fragment:GachaDs3/GachaDs3_body/GachaDs3_div_36",
       "kind": "lazy-slot-fragment",
       "sourceFile": null,
-      "nodePath": "GachaDs3/GachaDs3_body/GachaDs3_div_57",
-      "triggerNode": "GachaDs3/GachaDs3_body/GachaDs3_div_57",
-      "targetNode": "GachaDs3_div_57",
+      "nodePath": "GachaDs3/GachaDs3_body/GachaDs3_div_36",
+      "triggerNode": "GachaDs3/GachaDs3_body/GachaDs3_div_36",
+      "targetNode": "GachaDs3_div_36",
       "ucufId": null,
       "defaultFragment": null,
       "warmupHint": "manual",

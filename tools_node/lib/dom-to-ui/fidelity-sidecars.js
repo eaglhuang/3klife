@@ -12,6 +12,7 @@ const { buildWaivers } = require('./image-waiver');
 const { loadTokenRegistry } = require('./token-registry');
 const { appendCssCapabilityCandidate } = require('./rule-evolution2');
 const { buildBakeManifest } = require('./bake-manifest');
+const { bindMapPathFor, loadBindMap, installBindMap } = require('../html-to-ucuf/bind-map');
 
 const CHROME_CANDIDATES = [
   'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
@@ -83,6 +84,13 @@ async function buildFidelitySidecars(args) {
     await page.setViewport(viewport);
     await page.goto(toFileUrl(htmlPath), { waitUntil: 'networkidle0', timeout: 30000 });
     await waitForPageSettle(page);
+    // 綁定表依 screenId 自動套用：原稿已有 data-name 標記時流程不跑預先渲染，
+    // 名字必須在轉換器實際讀取的這份瀏覽器 DOM 上寫入，否則重轉會退回流水號。
+    if (args.screenId) {
+      const report = await installBindMap(page, loadBindMap(bindMapPathFor(args.screenId)));
+      const missed = report.filter(r => !r.matched).map(r => r.name);
+      if (missed.length) console.warn(`[fidelity-sidecars] bind-map unmatched: ${missed.join(', ')}`);
+    }
     captureResult = await captureComputedStyles(page);
     await page.close();
   } finally {

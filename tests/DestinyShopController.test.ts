@@ -10,6 +10,7 @@ import * as path from 'path';
 import { assert, TestSuite } from './TestRunner';
 import { DestinyShopController, destinyBriefTexts, type DestinyShopDeps } from '../assets/scripts/ui/core/DestinyShopController';
 import { GACHA_ACTION_NODES } from '../assets/scripts/ui/core/GachaActionBindings';
+import { GACHA_NODES } from '../assets/scripts/ui/core/GachaScreenNodes';
 import type { DestinyShopBlockReason } from '../assets/scripts/core/systems/DestinyShop';
 
 const UI_SPEC = path.resolve(__dirname, '../assets/resources/ui-spec');
@@ -118,7 +119,7 @@ export function createDestinyShopControllerSuite(): TestSuite {
     suite.test('接線：轉蛋頁左上角入口節點存在，LobbyScene 掛上天命商店 screen', () => {
         const gacha = readSpec<{ root?: SpecNode; nodes?: SpecNode[] }>('layouts/gacha-ds3.json');
         const roots = gacha.nodes ?? (gacha.root ? [gacha.root] : []);
-        for (const name of [GACHA_ACTION_NODES.destiny, 'GachaDs3_div_36', 'GachaDs3_strong_1']) {
+        for (const name of [GACHA_ACTION_NODES.destiny, GACHA_NODES.briefTag, GACHA_NODES.briefLine]) {
             assert.isTrue(roots.some((r) => hasName(r, name)), `gacha-ds3 缺 ${name}`);
         }
         const lobby = fs.readFileSync(path.resolve(__dirname, '../assets/scripts/ui/scenes/LobbyScene.ts'), 'utf8');

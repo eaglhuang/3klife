@@ -7,6 +7,7 @@ import {
     RedFaceShowcaseDeps,
     toRedFaceTabFlowView,
 } from '../assets/scripts/ui/core/RedFaceShowcaseController';
+import { GACHA_POOL_INDEX, GACHA_POOLS, RED_FACE_SECTION_FRAGMENT } from '../assets/scripts/ui/core/GachaScreenNodes';
 import type { RedFaceCardLike } from '../assets/scripts/core/systems/RedFaceShowcase';
 
 function readJson(relative: string): any {
@@ -131,8 +132,8 @@ export function createRedFaceShowcaseControllerSuite(): TestSuite {
         assert.isTrue(tab.enabled.btnRedFaceRow0);
     });
 
-    suite.test('Support 分頁 fragment 的節點 name 涵蓋分頁所有 flow key', () => {
-        const fragment = readJson('assets/resources/ui-spec/fragments/layouts/gacha-ds3-support-content.json');
+    suite.test('紅顏展示區塊（程式掛上的獨立片段）的節點 name 涵蓋所有 flow key，且掛在紅顏池', () => {
+        const fragment = readJson(`assets/resources/ui-spec/${RED_FACE_SECTION_FRAGMENT}.json`);
         const names = new Set<string>();
         const walk = (node: any): void => {
             if (!node || typeof node !== 'object') return;
@@ -143,9 +144,13 @@ export function createRedFaceShowcaseControllerSuite(): TestSuite {
         const view = toRedFaceTabFlowView(new RedFaceShowcaseController(makeDeps()).getFlowView());
         const keys = [...Object.keys(view.texts), ...Object.keys(view.actives), ...Object.keys(view.enabled)];
         for (const key of keys) {
-            assert.isTrue(names.has(key), `Support 分頁 fragment 缺少節點 ${key}`);
+            assert.isTrue(names.has(key), `紅顏展示片段缺少節點 ${key}`);
         }
-        assert.isTrue(names.has('GachaDs3TabSupport_div_42'), '既有 Support 內容必須保留');
+        const redFacePool = GACHA_POOLS[GACHA_POOL_INDEX.redFace];
+        assert.equals(RED_FACE_SECTION_FRAGMENT, redFacePool.section?.fragment);
+        // 轉換產出的分頁內容不再夾帶手接的紅顏節點，重轉不會洗掉展示
+        const support = JSON.stringify(readJson('assets/resources/ui-spec/fragments/layouts/gacha-ds3-support-content.json'));
+        assert.isFalse(support.includes('redFace'));
     });
 
     return suite;

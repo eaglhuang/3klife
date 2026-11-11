@@ -159,7 +159,9 @@ import { planTerritoryUpgrade } from '../../core/systems/TerritoryUpgrade';
 import { rarityOfTemplate } from '../../core/systems/MercenaryRoster';
 import { mercBondedLine, mercDayThreeLine, mercFarewellLine, mercTrustLine } from '../../core/systems/MercenaryScripts';
 import { EXPEDITION_TRAVEL_TURNS } from '../../core/systems/TravelCountdown';
-import { RedFaceGalleryController } from '../core/RedFaceShowcaseController';
+import { RED_FACE_SHOW_MAX_ROWS, RedFaceGalleryController, RedFaceShowcaseController, RedFaceShowcaseDeps, toRedFaceTabFlowView } from '../core/RedFaceShowcaseController';
+import { GACHA_NODES, GACHA_POOL_INDEX, GACHA_POOLS, GachaPoolDef, RED_FACE_SECTION_ROW_BUTTON } from '../core/GachaScreenNodes';
+import { GachaPoolSwitcher } from '../core/GachaPoolSwitcher';
 import { PORTRAIT_GALLERY_PAGE_SIZE } from '../core/PortraitGallery';
 import { DESTINY_PORTRAIT_SPEC, FaceMarks, PORTRAIT_FRAME_SPEC, PortraitFrameSpec, SHOWCASE_PORTRAIT_SPEC, fitPortraitInFrame } from '../core/PortraitFrameFit';
 import { LobbyOpeningPanels } from '../core/LobbyOpeningPanels';
@@ -224,7 +226,6 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { warnGeneralSchemaOnLoad } from '../../core/models/GeneralSchema';
 import { coreFieldCoverage, formatCoreFieldCoverage } from '../../core/systems/GeneralCoreFields';
 import { DEFAULT_POOL_ID as GACHA_GENERAL_POOL_ID, GachaFlowCoordinator, GACHA_SCREEN_ID } from '../core/GachaFlowCoordinator';
-import { buildGachaPoolGuideLines } from '../core/GachaPoolGuidePresenter';
 import { bindGachaActions, GACHA_ACTION_NODES } from '../core/GachaActionBindings';
 import { formatGeneralDisplayName } from '../../core/models/GeneralTitle';
 import { buildMissionGeneralOptions } from '../../core/systems/MissionGeneralOptions';
@@ -513,7 +514,11 @@ export class LobbyScene extends Component {
     /** 寄宿戰魂兩段確認：第一次點按後記下待確認的亡者 uid */
     private _soulInjectArmedDeadUid: string | null = null;
     private _isCharacterDs3TabSwitching = false;
-    private _gachaPoolIndex = 0;
+    /** 轉蛋畫面切池（各池共用同一畫面，PROG-2-2237） */
+    private _gachaPoolSwitcher: GachaPoolSwitcher | null = null;
+    /** 轉蛋紅顏池的五列展示（掛在紅顏池橫幅上） */
+    private _gachaRedFace: RedFaceShowcaseController | null = null;
+    private get _gachaPoolIndex(): number { return this._gachaPoolSwitcher?.index ?? GACHA_POOL_INDEX.general; }
     private _characterDs3TabBindRetryCount = 0;
     private readonly _singlePlayerModeToggleHandles: Array<{ root: Node; label: Label }> = [];
     private readonly _localGachaService = new LocalGachaService({
@@ -2766,12 +2771,15 @@ export class LobbyScene extends Component {
         if (redFaceCopy.ok === false) {
             console.warn(`[RedFaceCopy] ${redFaceCopy.reason}`);
         }
-        this._redFace = new RedFaceGalleryController({
+        const redFaceDeps: RedFaceShowcaseDeps = {
             pool: () => (supportPool ? { candidateIds: supportPool.candidateIds ?? [] } : null),
             cards: () => supportCards ?? [],
             generalPoolIds: () => heroPoolIds,
             travelCopy: () => (redFaceCopy.ok ? redFaceTravelCopy(redFaceCopy.table, services().session.countdown, Date.now()) : null),
-        });
+        };
+        this._redFace = new RedFaceGalleryController(redFaceDeps);
+        // 轉蛋紅顏池的展示列用同一份資料（PROG-2-2237）
+        this._gachaRedFace = new RedFaceShowcaseController(redFaceDeps);
         const redFace = this._redFace;
         const frameBindings = Array.from({ length: PORTRAIT_GALLERY_PAGE_SIZE }, (_, i) => ({
             buttonId: `btnFrame${i}`,
@@ -4228,7 +4236,7 @@ export class LobbyScene extends Component {
         const brief = pool
             ? destinyBriefTexts(gacha.getDestinyShopCredits(pool.poolId), gacha.getPullsToNextDestinyCredit(pool.poolId), true)
             : destinyBriefTexts(0, 0, false);
-        this._gachaHost?.binder?.setTexts({ GachaDs3_div_36: brief.tag, GachaDs3_strong_1: brief.line });
+        this._gachaHost?.binder?.setTexts({ [GACHA_NODES.briefTag]: brief.tag, [GACHA_NODES.briefLine]: brief.line });
     }
 
     /** 年報畫面（UI_YEAR_REPORT，TIME-07）：年末 YearEnded 時彈出，文字走 zh-TW 預設退回 */
@@ -5747,32 +5755,23 @@ export class LobbyScene extends Component {
         if (!host?.binder) {
             return;
         }
-        const pools = ['general', 'legendary', 'support'] as const;
-        this._gachaPoolIndex = 0;
-
-        const showPool = (idx: number): void => {
-            const actives: Record<string, boolean> = {};
-            for (let i = 0; i < pools.length; i++) {
-                actives[`BannerSlide_${pools[i]}`] = (i === idx);
-            }
-            host.binder!.setActives(actives);
-            this._refreshDestinyBrief();
-        };
-
-        showPool(this._gachaPoolIndex);
+        // 三池共用轉蛋畫面：切池一次換橫幅、右側內容、橫幅區塊與該池附加區塊（PROG-2-2237）
+        const switcher = new GachaPoolSwitcher({
+            setActives: (actives) => host.binder?.setActives(actives),
+            setTexts: (texts) => host.binder?.setTexts(texts),
+            switchLazySlot: (slot, fragment) => host.switchLazySlot(slot, fragment),
+            applyTabRegionsForFragment: (fragment) => host.applyTabRegionsForFragment(fragment),
+            mountSection: (anchor, fragment, replace) => host.mountSection(anchor, fragment, replace),
+        }, GACHA_POOLS, (pool) => this._onGachaPoolShown(host, pool));
+        this._gachaPoolSwitcher = switcher;
+        void switcher.show(GACHA_POOL_INDEX.general);
 
         bindGachaActions((name) => host.binder!.getNode(name), (node) => {
             const button = node.getComponent(Button) ?? node.addComponent(Button);
             button.interactable = true;
         }, {
-            previous: () => {
-                this._gachaPoolIndex = (this._gachaPoolIndex - 1 + pools.length) % pools.length;
-                showPool(this._gachaPoolIndex);
-            },
-            next: () => {
-                this._gachaPoolIndex = (this._gachaPoolIndex + 1) % pools.length;
-                showPool(this._gachaPoolIndex);
-            },
+            previous: () => { void switcher.step(-1); },
+            next: () => { void switcher.step(1); },
             history: () => { void this._showGachaHistory(); },
             destiny: () => { void this._openDestinyShop(); },
             single: () => { void this._runGachaAction(() => this._runLocalGacha(1), 1); },
@@ -5780,6 +5779,13 @@ export class LobbyScene extends Component {
             gold: () => { void this._runGachaAction(() => this._runGoldSummon()); },
             ticket: () => { void this._runGachaAction(() => this._runTicketSummon()); },
         }, this, Button.EventType.CLICK);
+        // 池圓點也走同一個切池流程（宿主只會換右側內容，不換橫幅與附加區塊）
+        GACHA_POOLS.forEach((pool, index) => {
+            const dot = host.binder?.getNode(`PoolDot_${pool.key}`);
+            if (!dot) return;
+            dot.off(Node.EventType.TOUCH_END, undefined, this);
+            dot.on(Node.EventType.TOUCH_END, () => { void switcher.show(index); }, this);
+        });
         // 「‹ 返回大廳」是宿主後加的鈕，會蓋住左上角的天命商店入口；入口往下移一列並放大字（原稿字高 12px 看不清，PROG-2-1158）
         const destinyEntry = host.binder.getNode(GACHA_ACTION_NODES.destiny);
         const destinyWidget = destinyEntry?.getComponent(Widget);
@@ -5788,7 +5794,7 @@ export class LobbyScene extends Component {
             destinyWidget.isAlignRight = false;
             destinyWidget.top = 92;
             destinyEntry.getComponent(UITransform)?.setContentSize(280, 88);
-            for (const [name, size] of [['GachaDs3_div_36', 22], ['GachaDs3_strong_1', 20]] as const) {
+            for (const [name, size] of [[GACHA_NODES.briefTag, 22], [GACHA_NODES.briefLine, 20]] as const) {
                 const label = host.binder.getNode(name)?.getComponent(Label);
                 if (!label) continue;
                 label.fontSize = size;
@@ -5797,30 +5803,41 @@ export class LobbyScene extends Component {
             }
             destinyWidget.updateAlignment();
         }
-        const guideLines = buildGachaPoolGuideLines();
-        host.binder.setTexts({
-            GachaDs3_div_8: guideLines.generalSeries,
-            GachaDs3_div_18: '★ 紅顏池 · 召喚券 1 張抽 1 位',
-            GachaDs3_div_19: '紅 顏',
-            GachaDs3_div_20: '大喬、小喬、甄姬、黃月英、蔡琰',
-            GachaDs3_div_21: '抽到的武將入名冊，成年後可到「結緣」配對',
-            GachaDs3_div_28: guideLines.supportSeries,
-            GachaDs3_div_44: '單 抽 ×1', GachaDs3_div_47: '150',
-            GachaDs3_div_49: '十 連 ×10', GachaDs3_div_53: '1500',
-            GachaDs3_div_55: '金幣召喚（500）', GachaDs3_div_56: '使用召喚券（1）',
-        });
+    }
+
+    /** 切池完成（內容已載入）：刷新天命入口、餘額，以及該池的附加區塊資料。 */
+    private _onGachaPoolShown(host: UIScreenPreviewHost, pool: GachaPoolDef): void {
+        this._refreshDestinyBrief();
+        this._refreshWalletPreviewState();
+        if (pool.section && this._gachaRedFace && host.binder) {
+            for (let i = 0; i < RED_FACE_SHOW_MAX_ROWS; i++) {
+                const button = host.binder.getButton(RED_FACE_SECTION_ROW_BUTTON(i));
+                if (!button) continue;
+                button.node.off(Button.EventType.CLICK, undefined, this);
+                button.node.on(Button.EventType.CLICK, () => {
+                    this._gachaRedFace?.select(i);
+                    this._refreshGachaRedFace();
+                }, this);
+            }
+            this._refreshGachaRedFace();
+        }
+    }
+
+    private _refreshGachaRedFace(): void {
+        const binder = this._gachaHost?.binder;
+        if (binder && this._gachaRedFace) applyFlowView(binder, toRedFaceTabFlowView(this._gachaRedFace.getFlowView()));
     }
 
     private async _runGachaAction(action: () => Promise<void>, drawCount = 1): Promise<void> {
         if (this._gachaPullPending) return;
         // 名將池走一般轉蛋；支援卡池改抽教官卡；其他池尚未開放。
-        if (this._gachaPoolIndex === 1) {
+        if (this._gachaPoolIndex === GACHA_POOL_INDEX.redFace) {
             // 紅顏池：單抽／十連各扣 1／10 張召喚券（PROG-2-1086、PROG-2-1094）；金幣／召喚券鈕視同單抽
             action = () => this._runBeautySummon(drawCount);
-        } else if (this._gachaPoolIndex === 2) {
+        } else if (this._gachaPoolIndex === GACHA_POOL_INDEX.support) {
             // 支援卡池：單抽／十連各扣 1／10 張支援券（PROG-2-1085、PROG-2-1094）
             action = () => this._runSupportSummon(drawCount);
-        } else if (this._gachaPoolIndex !== 0) {
+        } else if (this._gachaPoolIndex !== GACHA_POOL_INDEX.general) {
             services().event.emit('SHOW_TOAST', { message: '此卡池尚未開放召喚，請切回名將召喚。', duration: 2.5 });
             return;
         }
@@ -5960,8 +5977,7 @@ export class LobbyScene extends Component {
         });
 
         this._gachaHost?.binder?.setTexts({
-            CostBalanceValue: gachaBalanceText,
-            GachaDs3TabGeneral_div_48: gachaBalanceText,
+            [GACHA_NODES.balance]: gachaBalanceText,
         });
         // 抽完、回轉蛋頁都會走這裡；天命值跟著刷新（PROG-2-1158）
         this._refreshDestinyBrief();

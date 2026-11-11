@@ -157,60 +157,168 @@
         ]
       }
     },
-    "auto.gacha-ds3.gachads3_div_6": {
-      "kind": "sprite-frame",
-      "path": "sprites/generals/guan_yu_portrait",
-      "expectedWidth": 480,
-      "expectedHeight": 748
+    "auto.gacha-ds3.poolgeneralart": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": true,
+            "angle": 45,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "repeatSpanPx": 12,
+            "stops": [
+              {
+                "color": "rgb(30, 16, 40)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(30, 16, 40)",
+                "offset": 0.5
+              },
+              {
+                "color": "rgb(37, 24, 51)",
+                "offset": 0.5
+              },
+              {
+                "color": "rgb(37, 24, 51)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": true,
+        "angle": 45,
+        "repeatSpanPx": 12,
+        "stops": [
+          {
+            "color": "rgb(30, 16, 40)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(30, 16, 40)",
+            "offset": 0.5,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(37, 24, 51)",
+            "offset": 0.5,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(37, 24, 51)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 20,
+      "cornerRadii": [
+        20,
+        20,
+        0,
+        0
+      ]
     },
-    "auto.gacha-ds3.gachads3_div_8": {
+    "auto.gacha-ds3.gachads3_span_1": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 1.44,
+      "color": "gacha_ds3_local_color_09",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "auto.gacha-ds3.gachads3_span_2": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 1.44,
+      "color": "gacha_ds3_local_color_09",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "auto.gacha-ds3.gachads3_div_7": {
+      "kind": "color-rect",
+      "color": "rarityPurple",
+      "opacity": 0.15,
+      "cornerRadius": 4,
+      "borderWidth": 1,
+      "borderColor": "#9c27b0"
+    },
+    "auto.gacha-ds3.poolgeneraleventchip": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2,
-      "color": "textPrimary",
+      "color": "gacha_ds3_local_color_03",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.gacha-ds3.gachads3_div_9": {
+    "auto.gacha-ds3.poolgeneralheroname": {
       "kind": "label-style",
-      "font": "fonts/newsreader/newsreader",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 72,
       "lineHeight": 72,
       "letterSpacing": 5.76,
-      "color": "textPrimary",
+      "color": "gacha_ds3_local_color_03",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.gacha-ds3.gachads3_div_10": {
+    "auto.gacha-ds3.poolgeneralherotitle": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 5.6,
-      "color": "textPrimary",
+      "color": "gacha_ds3_local_color_11",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "style": "bodySm"
     },
-    "auto.gacha-ds3.gachads3_div_11": {
+    "auto.gacha-ds3.gachads3_div_8": {
+      "kind": "color-rect",
+      "color": "rarityPurple",
+      "opacity": 0.15,
+      "cornerRadius": 8,
+      "borderWidth": 1,
+      "borderColor": "#9c27b059"
+    },
+    "auto.gacha-ds3.poolgeneralguarantee": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 1.1,
-      "color": "textPrimary",
+      "color": "gacha_ds3_local_color_03",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "START"
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
     },
-    "auto.gacha-ds3.gachads3_div_12": {
+    "auto.gacha-ds3.gachads3_div_9": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -279,7 +387,7 @@
         ]
       }
     },
-    "auto.gacha-ds3.gachads3_div_13": {
+    "auto.gacha-ds3.gachads3_div_10": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -322,7 +430,7 @@
         ]
       }
     },
-    "auto.gacha-ds3.gachads3_div_14": {
+    "auto.gacha-ds3.gachads3_div_11": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -365,15 +473,111 @@
         ]
       }
     },
-    "auto.gacha-ds3.gachads3_div_16": {
-      "kind": "sprite-frame",
-      "path": "sprites/generals/lu_bu_portrait",
-      "expectedWidth": 480,
-      "expectedHeight": 748
+    "auto.gacha-ds3.poollegendaryart": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": true,
+            "angle": 45,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "repeatSpanPx": 12,
+            "stops": [
+              {
+                "color": "rgb(30, 24, 16)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(30, 24, 16)",
+                "offset": 0.5
+              },
+              {
+                "color": "rgb(37, 31, 16)",
+                "offset": 0.5
+              },
+              {
+                "color": "rgb(37, 31, 16)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": true,
+        "angle": 45,
+        "repeatSpanPx": 12,
+        "stops": [
+          {
+            "color": "rgb(30, 24, 16)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(30, 24, 16)",
+            "offset": 0.5,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(37, 31, 16)",
+            "offset": 0.5,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(37, 31, 16)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 20,
+      "cornerRadii": [
+        20,
+        20,
+        0,
+        0
+      ]
     },
-    "auto.gacha-ds3.gachads3_div_18": {
+    "auto.gacha-ds3.gachads3_span_3": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 1.44,
+      "color": "gacha_ds3_local_color_07",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "auto.gacha-ds3.gachads3_span_4": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 1.44,
+      "color": "gacha_ds3_local_color_07",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "auto.gacha-ds3.gachads3_div_14": {
+      "kind": "color-rect",
+      "color": "rarityGold",
+      "opacity": 0.15,
+      "cornerRadius": 4,
+      "borderWidth": 1,
+      "borderColor": "gacha_ds3_local_color_08"
+    },
+    "auto.gacha-ds3.poollegendaryeventchip": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2,
@@ -381,11 +585,12 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.gacha-ds3.gachads3_div_19": {
+    "auto.gacha-ds3.poollegendaryheroname": {
       "kind": "label-style",
-      "font": "fonts/newsreader/newsreader",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 72,
       "lineHeight": 72,
       "letterSpacing": 5.76,
@@ -393,11 +598,12 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.gacha-ds3.gachads3_div_20": {
+    "auto.gacha-ds3.poollegendaryherotitle": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 5.6,
@@ -405,20 +611,30 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "style": "bodySm"
     },
-    "auto.gacha-ds3.gachads3_div_21": {
+    "auto.gacha-ds3.gachads3_div_15": {
+      "kind": "color-rect",
+      "color": "rarityGold",
+      "opacity": 0.15,
+      "cornerRadius": 8,
+      "borderWidth": 1,
+      "borderColor": "#ffc10759"
+    },
+    "auto.gacha-ds3.poollegendaryguarantee": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 1.1,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "START"
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
     },
-    "auto.gacha-ds3.gachads3_div_22": {
+    "auto.gacha-ds3.gachads3_div_16": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -487,7 +703,7 @@
         ]
       }
     },
-    "auto.gacha-ds3.gachads3_div_23": {
+    "auto.gacha-ds3.gachads3_div_17": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -530,7 +746,7 @@
         ]
       }
     },
-    "auto.gacha-ds3.gachads3_div_24": {
+    "auto.gacha-ds3.gachads3_div_18": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -573,15 +789,111 @@
         ]
       }
     },
-    "auto.gacha-ds3.gachads3_div_26": {
-      "kind": "sprite-frame",
-      "path": "sprites/generals/zhuge_liang_portrait",
-      "expectedWidth": 480,
-      "expectedHeight": 748
+    "auto.gacha-ds3.poolsupportart": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": true,
+            "angle": 45,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "repeatSpanPx": 12,
+            "stops": [
+              {
+                "color": "rgb(14, 30, 30)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(14, 30, 30)",
+                "offset": 0.5
+              },
+              {
+                "color": "rgb(18, 30, 30)",
+                "offset": 0.5
+              },
+              {
+                "color": "rgb(18, 30, 30)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": true,
+        "angle": 45,
+        "repeatSpanPx": 12,
+        "stops": [
+          {
+            "color": "rgb(14, 30, 30)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(14, 30, 30)",
+            "offset": 0.5,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(18, 30, 30)",
+            "offset": 0.5,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(18, 30, 30)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 20,
+      "cornerRadii": [
+        20,
+        20,
+        0,
+        0
+      ]
     },
-    "auto.gacha-ds3.gachads3_div_28": {
+    "auto.gacha-ds3.gachads3_span_5": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 1.44,
+      "color": "gacha_ds3_local_color_06",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "auto.gacha-ds3.gachads3_span_6": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 1.44,
+      "color": "gacha_ds3_local_color_06",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "auto.gacha-ds3.gachads3_div_21": {
+      "kind": "color-rect",
+      "color": "stdCrestColor",
+      "opacity": 0.12,
+      "cornerRadius": 4,
+      "borderWidth": 1,
+      "borderColor": "#8ccfc4"
+    },
+    "auto.gacha-ds3.poolsupporteventchip": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2,
@@ -589,11 +901,12 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.gacha-ds3.gachads3_div_29": {
+    "auto.gacha-ds3.poolsupportheroname": {
       "kind": "label-style",
-      "font": "fonts/newsreader/newsreader",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 72,
       "lineHeight": 72,
       "letterSpacing": 5.76,
@@ -601,11 +914,12 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.gacha-ds3.gachads3_div_30": {
+    "auto.gacha-ds3.poolsupportherotitle": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 5.6,
@@ -613,20 +927,30 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "style": "bodySm"
     },
-    "auto.gacha-ds3.gachads3_div_31": {
+    "auto.gacha-ds3.gachads3_div_22": {
+      "kind": "color-rect",
+      "color": "stdCrestColor",
+      "opacity": 0.12,
+      "cornerRadius": 8,
+      "borderWidth": 1,
+      "borderColor": "#8ccfc44d"
+    },
+    "auto.gacha-ds3.poolsupportguarantee": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 1.1,
       "color": "stdCrestColor",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "START"
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
     },
-    "auto.gacha-ds3.gachads3_div_32": {
+    "auto.gacha-ds3.gachads3_div_23": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -669,9 +993,9 @@
         ]
       }
     },
-    "auto.gacha-ds3.gachads3_div_33": {
+    "auto.gacha-ds3.gachads3_div_24": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2.2,
@@ -679,11 +1003,12 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.gacha-ds3.gachads3_div_34": {
+    "auto.gacha-ds3.gachads3_div_25": {
       "kind": "label-style",
-      "font": "fonts/newsreader/newsreader",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 2.24,
@@ -691,10 +1016,19 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "style": "labelLg",
       "isBold": true
     },
     "auto.gacha-ds3.btnpoolprev": {
+      "kind": "color-rect",
+      "color": "colorBlack",
+      "opacity": 0.55,
+      "cornerRadius": 32,
+      "borderWidth": 2,
+      "borderColor": "#ffffff1f"
+    },
+    "auto.gacha-ds3.gachads3_span_7": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 26,
@@ -703,10 +1037,19 @@
       "color": "textSecondary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "START",
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3.btnpoolnext": {
+      "kind": "color-rect",
+      "color": "colorBlack",
+      "opacity": 0.55,
+      "cornerRadius": 32,
+      "borderWidth": 2,
+      "borderColor": "#ffffff1f"
+    },
+    "auto.gacha-ds3.gachads3_span_8": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 26,
@@ -715,7 +1058,8 @@
       "color": "textSecondary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "START",
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3.pooldot_general": {
@@ -724,7 +1068,7 @@
       "opacity": 1,
       "cornerRadius": 4,
       "borderWidth": 1,
-      "borderColor": "secondary"
+      "borderColor": "#d4af37"
     },
     "auto.gacha-ds3.pooldot_legendary": {
       "kind": "color-rect",
@@ -742,7 +1086,7 @@
       "borderWidth": 1,
       "borderColor": "#ffffff4d"
     },
-    "auto.gacha-ds3.gachads3_div_35": {
+    "auto.gacha-ds3.poolbrief": {
       "kind": "color-rect",
       "color": "colorBlack",
       "opacity": 0.75,
@@ -750,9 +1094,9 @@
       "borderWidth": 1,
       "borderColor": "#ffffff14"
     },
-    "auto.gacha-ds3.gachads3_div_36": {
+    "auto.gacha-ds3.brieftag": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 8,
       "lineHeight": 11,
       "letterSpacing": 1.6,
@@ -760,19 +1104,20 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.gacha-ds3.gachads3_strong_1": {
+    "auto.gacha-ds3.briefline": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
       "lineHeight": 17,
       "letterSpacing": 0.44,
-      "color": "textPrimary",
+      "color": "textSecondary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
-      "isBold": true
+      "verticalAlign": "CENTER"
     },
     "auto.gacha-ds3.rightpanel": {
       "kind": "gradient-rect",
@@ -817,9 +1162,17 @@
             "opacity": 1
           }
         ]
-      }
+      },
+      "borderSides": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 1
+      },
+      "borderWidth": 1,
+      "borderColor": "#9c27b01f"
     },
-    "auto.gacha-ds3.gachads3_div_38": {
+    "auto.gacha-ds3.gachads3_div_26": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -862,22 +1215,31 @@
             "opacity": 0.8
           }
         ]
-      }
+      },
+      "borderSides": {
+        "top": 1,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "borderWidth": 1,
+      "borderColor": "#ffffff0f"
     },
-    "auto.gacha-ds3.gachads3_div_40": {
+    "auto.gacha-ds3.gachads3_div_28": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.62,
-      "color": "textPrimary",
+      "color": "gacha_ds3_local_color_01",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT"
+      "horizontalAlign": "LEFT",
+      "verticalAlign": "CENTER"
     },
-    "auto.gacha-ds3.gachads3_div_41": {
+    "auto.gacha-ds3.gachads3_div_29": {
       "kind": "label-style",
-      "font": "fonts/newsreader/newsreader",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 1.44,
@@ -885,11 +1247,20 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "LEFT",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.gacha-ds3.gachads3_div_42": {
+    "auto.gacha-ds3.btngachahistory": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.04,
+      "cornerRadius": 10,
+      "borderWidth": 1,
+      "borderColor": "gacha_ds3_local_color_04"
+    },
+    "auto.gacha-ds3.gachads3_span_9": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 1.3,
@@ -897,9 +1268,10 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.gacha-ds3.gachads3_div_43": {
+    "auto.gacha-ds3.btnpullsingle": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -945,9 +1317,9 @@
       "borderWidth": 2,
       "borderColor": "gacha_ds3_local_color_13"
     },
-    "auto.gacha-ds3.gachads3_div_44": {
+    "auto.gacha-ds3.pullsinglelabel": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 1.6,
@@ -955,15 +1327,73 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.gacha-ds3.gachads3_div_45": {
+    "auto.gacha-ds3.gachads3_div_30": {
       "kind": "color-rect",
       "color": "colorBlack",
       "opacity": 0.25,
       "cornerRadius": 20
     },
-    "auto.gacha-ds3.gachads3_div_46": {
+    "auto.gacha-ds3.gachads3_div_31": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "radial",
+            "repeating": false,
+            "angle": 180,
+            "shape": "circle",
+            "center": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "radius": {
+              "x": 0.5
+            },
+            "stops": [
+              {
+                "color": "gacha_ds3_local_color_05",
+                "offset": 0
+              },
+              {
+                "color": "rgb(106, 27, 154)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "radial",
+        "repeating": false,
+        "angle": 180,
+        "shape": "circle",
+        "center": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "radius": {
+          "x": 0.5
+        },
+        "stops": [
+          {
+            "color": "gacha_ds3_local_color_05",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(106, 27, 154)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 7
+    },
+    "auto.gacha-ds3.gachads3_span_10": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 7,
@@ -972,22 +1402,24 @@
       "color": "colorWhite",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "START",
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.gacha-ds3.gachads3_div_47": {
+    "auto.gacha-ds3.pullsinglecost": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 1.6,
-      "color": "textPrimary",
+      "color": "gacha_ds3_local_color_05",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.gacha-ds3.gachads3_div_48": {
+    "auto.gacha-ds3.btnpullten": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -1044,9 +1476,9 @@
       "borderWidth": 2,
       "borderColor": "gacha_ds3_local_color_12"
     },
-    "auto.gacha-ds3.gachads3_div_49": {
+    "auto.gacha-ds3.pulltenlabel": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 1.6,
@@ -1054,11 +1486,12 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.gacha-ds3.gachads3_div_50": {
+    "auto.gacha-ds3.gachads3_div_32": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 1.6,
@@ -1066,15 +1499,73 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.gacha-ds3.gachads3_div_51": {
+    "auto.gacha-ds3.gachads3_div_33": {
       "kind": "color-rect",
       "color": "colorBlack",
       "opacity": 0.3,
       "cornerRadius": 20
     },
-    "auto.gacha-ds3.gachads3_div_52": {
+    "auto.gacha-ds3.gachads3_div_34": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "radial",
+            "repeating": false,
+            "angle": 180,
+            "shape": "circle",
+            "center": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "radius": {
+              "x": 0.5
+            },
+            "stops": [
+              {
+                "color": "gacha_ds3_local_color_05",
+                "offset": 0
+              },
+              {
+                "color": "rgb(106, 27, 154)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "radial",
+        "repeating": false,
+        "angle": 180,
+        "shape": "circle",
+        "center": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "radius": {
+          "x": 0.5
+        },
+        "stops": [
+          {
+            "color": "gacha_ds3_local_color_05",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(106, 27, 154)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 7
+    },
+    "auto.gacha-ds3.gachads3_span_11": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 7,
@@ -1083,10 +1574,11 @@
       "color": "colorWhite",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "START",
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.gacha-ds3.gachads3_div_53": {
+    "auto.gacha-ds3.pulltencost": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 13,
@@ -1096,23 +1588,33 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.gacha-ds3.gachads3_span_1": {
+    "auto.gacha-ds3.gachads3_span_12": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1.6,
-      "color": "textPrimary",
+      "color": "gacha_ds3_local_color_10",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.gacha-ds3.gachads3_div_55": {
+    "auto.gacha-ds3.btngoldsummon": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.04,
+      "cornerRadius": 8,
+      "borderWidth": 1,
+      "borderColor": "gacha_ds3_local_color_04"
+    },
+    "auto.gacha-ds3.goldsummonlabel": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.88,
@@ -1120,11 +1622,20 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.gacha-ds3.gachads3_div_56": {
+    "auto.gacha-ds3.btnticketsummon": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.04,
+      "cornerRadius": 8,
+      "borderWidth": 1,
+      "borderColor": "gacha_ds3_local_color_04"
+    },
+    "auto.gacha-ds3.ticketsummonlabel": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.88,
@@ -1132,14 +1643,15 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.gacha-ds3.gachads3_div_57": {
+    "auto.gacha-ds3.gachads3_div_36": {
       "kind": "color-rect",
       "color": "colorBlack",
       "opacity": 0.85
     },
-    "auto.gacha-ds3.gachads3_div_58": {
+    "auto.gacha-ds3.gachads3_div_37": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -1195,9 +1707,18 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "LEFT",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.gacha-ds3.gachads3_div_60": {
+    "auto.gacha-ds3.gachads3_div_39": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.06,
+      "cornerRadius": 20,
+      "borderWidth": 1.5,
+      "borderColor": "outline"
+    },
+    "auto.gacha-ds3.gachads3_span_13": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
@@ -1206,11 +1727,12 @@
       "color": "textKhaki",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT"
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_4": {
       "kind": "label-style",
-      "font": "fonts/newsreader/newsreader",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 26,
       "letterSpacing": 1.76,
@@ -1218,34 +1740,45 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_5": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.62,
       "color": "rarityPurple",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "START"
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_6": {
+      "kind": "color-rect",
+      "color": "rarityPurple",
+      "opacity": 0.2,
+      "cornerRadius": 20,
+      "borderWidth": 1,
+      "borderColor": "#9c27b0"
+    },
+    "auto.gacha-ds3-tab-general.gachads3tabgeneral_span_1": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.08,
-      "color": "textPrimary",
+      "color": "gacha_ds3_local_color_03",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_9": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.62,
@@ -1253,18 +1786,20 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_10": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 0.6,
       "color": "outline",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "START"
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_11": {
       "kind": "color-rect",
@@ -1292,7 +1827,7 @@
                 "offset": 0
               },
               {
-                "color": "gacha_ds3_local_color_05",
+                "color": "gacha_ds3_local_color_03",
                 "offset": 1
               }
             ]
@@ -1310,14 +1845,14 @@
             "opacity": 1
           },
           {
-            "color": "gacha_ds3_local_color_05",
+            "color": "gacha_ds3_local_color_03",
             "offset": 1,
             "opacity": 1
           }
         ]
       }
     },
-    "auto.gacha-ds3-tab-general.gachads3tabgeneral_span_1": {
+    "auto.gacha-ds3-tab-general.gachads3tabgeneral_span_2": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 13,
@@ -1327,18 +1862,8 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
-    },
-    "auto.gacha-ds3-tab-general.gachads3tabgeneral_span_2": {
-      "kind": "label-style",
-      "font": "fonts/manrope/manrope",
-      "fontSize": 9,
-      "lineHeight": 13,
-      "letterSpacing": 0.54,
-      "color": "textPrimary",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START"
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_span_3": {
       "kind": "label-style",
@@ -1346,10 +1871,11 @@
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
-      "color": "textPrimary",
+      "color": "gacha_ds3_local_color_01",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "START"
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_span_4": {
       "kind": "label-style",
@@ -1357,10 +1883,11 @@
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
-      "color": "textPrimary",
+      "color": "gacha_ds3_local_color_01",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "START"
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_span_5": {
       "kind": "label-style",
@@ -1368,10 +1895,11 @@
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
-      "color": "textPrimary",
+      "color": "gacha_ds3_local_color_01",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "START"
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_span_6": {
       "kind": "label-style",
@@ -1379,14 +1907,27 @@
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
-      "color": "textPrimary",
+      "color": "gacha_ds3_local_color_01",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "START"
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.gacha-ds3-tab-general.gachads3tabgeneral_span_7": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 9,
+      "lineHeight": 13,
+      "letterSpacing": 0.54,
+      "color": "gacha_ds3_local_color_01",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_15": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.8,
@@ -1394,13 +1935,22 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_17": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.024,
-      "cornerRadius": 6
+      "cornerRadius": 6,
+      "borderSides": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 3
+      },
+      "borderWidth": 3,
+      "borderColor": "#484848"
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_18": {
       "kind": "label-style",
@@ -1408,10 +1958,11 @@
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1,
-      "color": "textPrimary",
+      "color": "gacha_ds3_local_color_02",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_19": {
@@ -1421,8 +1972,10 @@
       "cornerRadius": 3
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_20": {
-      "kind": "transparent",
-      "_unmappedBackground": "rgb(104, 104, 104)"
+      "kind": "color-rect",
+      "color": "gacha_ds3_local_color_02",
+      "opacity": 1,
+      "cornerRadius": 3
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_21": {
       "kind": "label-style",
@@ -1430,10 +1983,11 @@
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
-      "color": "textPrimary",
+      "color": "gacha_ds3_local_color_02",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "RIGHT",
+      "verticalAlign": "CENTER",
       "overflow": "RESIZE_HEIGHT",
       "isBold": true
     },
@@ -1441,7 +1995,15 @@
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.024,
-      "cornerRadius": 6
+      "cornerRadius": 6,
+      "borderSides": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 3
+      },
+      "borderWidth": 3,
+      "borderColor": "#3a7a3d"
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_23": {
       "kind": "label-style",
@@ -1453,6 +2015,7 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_24": {
@@ -1477,6 +2040,7 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "RIGHT",
+      "verticalAlign": "CENTER",
       "overflow": "RESIZE_HEIGHT",
       "isBold": true
     },
@@ -1484,7 +2048,15 @@
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.024,
-      "cornerRadius": 6
+      "cornerRadius": 6,
+      "borderSides": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 3
+      },
+      "borderWidth": 3,
+      "borderColor": "#1a5c9a"
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_28": {
       "kind": "label-style",
@@ -1496,6 +2068,7 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_29": {
@@ -1520,6 +2093,7 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "RIGHT",
+      "verticalAlign": "CENTER",
       "overflow": "RESIZE_HEIGHT",
       "isBold": true
     },
@@ -1527,7 +2101,15 @@
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.024,
-      "cornerRadius": 6
+      "cornerRadius": 6,
+      "borderSides": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 3
+      },
+      "borderWidth": 3,
+      "borderColor": "#662299"
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_33": {
       "kind": "label-style",
@@ -1539,6 +2121,7 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_34": {
@@ -1563,6 +2146,7 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "RIGHT",
+      "verticalAlign": "CENTER",
       "overflow": "RESIZE_HEIGHT",
       "isBold": true
     },
@@ -1576,14 +2160,15 @@
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_39": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.26,
       "color": "outline",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "CENTER"
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_40": {
       "kind": "label-style",
@@ -1591,10 +2176,11 @@
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
-      "color": "textPrimary",
+      "color": "gacha_ds3_local_color_05",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_41": {
@@ -1604,14 +2190,15 @@
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_43": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.26,
       "color": "outline",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "CENTER"
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_44": {
       "kind": "label-style",
@@ -1619,10 +2206,11 @@
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
-      "color": "textPrimary",
+      "color": "gacha_ds3_local_color_05",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_45": {
@@ -1632,16 +2220,17 @@
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_47": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.26,
       "color": "outline",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "CENTER"
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
     },
-    "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_48": {
+    "auto.gacha-ds3-tab-general.costbalancevalue": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 18,
@@ -1651,11 +2240,25 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
       "isBold": true
+    },
+    "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_48": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 9,
+      "lineHeight": 15,
+      "letterSpacing": 0.72,
+      "color": "gacha_ds3_local_color_04",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
+      "overflow": "RESIZE_HEIGHT"
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_4": {
       "kind": "label-style",
-      "font": "fonts/newsreader/newsreader",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 26,
       "letterSpacing": 1.76,
@@ -1663,22 +2266,32 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_5": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.62,
       "color": "secondary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "START"
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_6": {
+      "kind": "color-rect",
+      "color": "rarityGold",
+      "opacity": 0.2,
+      "cornerRadius": 20,
+      "borderWidth": 1,
+      "borderColor": "gacha_ds3_local_color_08"
+    },
+    "auto.gacha-ds3-tab-legendary.gachads3tablegendary_span_1": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.08,
@@ -1686,11 +2299,12 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_9": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.62,
@@ -1698,18 +2312,20 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_10": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 0.6,
       "color": "outline",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "START"
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_11": {
       "kind": "color-rect",
@@ -1733,7 +2349,7 @@
             "radius": null,
             "stops": [
               {
-                "color": "gacha_ds3_local_color_06",
+                "color": "gacha_ds3_local_color_08",
                 "offset": 0
               },
               {
@@ -1750,7 +2366,7 @@
         "angle": 90,
         "stops": [
           {
-            "color": "gacha_ds3_local_color_06",
+            "color": "gacha_ds3_local_color_08",
             "offset": 0,
             "opacity": 1
           },
@@ -1762,7 +2378,7 @@
         ]
       }
     },
-    "auto.gacha-ds3-tab-legendary.gachads3tablegendary_span_1": {
+    "auto.gacha-ds3-tab-legendary.gachads3tablegendary_span_2": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 13,
@@ -1772,18 +2388,8 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
-    },
-    "auto.gacha-ds3-tab-legendary.gachads3tablegendary_span_2": {
-      "kind": "label-style",
-      "font": "fonts/manrope/manrope",
-      "fontSize": 9,
-      "lineHeight": 13,
-      "letterSpacing": 0.54,
-      "color": "textPrimary",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START"
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_span_3": {
       "kind": "label-style",
@@ -1791,10 +2397,11 @@
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
-      "color": "textPrimary",
+      "color": "gacha_ds3_local_color_01",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "START"
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_span_4": {
       "kind": "label-style",
@@ -1802,10 +2409,11 @@
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
-      "color": "textPrimary",
+      "color": "gacha_ds3_local_color_01",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "START"
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_span_5": {
       "kind": "label-style",
@@ -1813,10 +2421,11 @@
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
-      "color": "textPrimary",
+      "color": "gacha_ds3_local_color_01",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "START"
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_span_6": {
       "kind": "label-style",
@@ -1824,14 +2433,27 @@
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
-      "color": "textPrimary",
+      "color": "gacha_ds3_local_color_01",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "START"
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.gacha-ds3-tab-legendary.gachads3tablegendary_span_7": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 9,
+      "lineHeight": 13,
+      "letterSpacing": 0.54,
+      "color": "gacha_ds3_local_color_01",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_15": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.8,
@@ -1839,13 +2461,22 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_17": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.024,
-      "cornerRadius": 6
+      "cornerRadius": 6,
+      "borderSides": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 3
+      },
+      "borderWidth": 3,
+      "borderColor": "#484848"
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_18": {
       "kind": "label-style",
@@ -1853,10 +2484,11 @@
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1,
-      "color": "textPrimary",
+      "color": "gacha_ds3_local_color_02",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_19": {
@@ -1866,8 +2498,10 @@
       "cornerRadius": 3
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_20": {
-      "kind": "transparent",
-      "_unmappedBackground": "rgb(104, 104, 104)"
+      "kind": "color-rect",
+      "color": "gacha_ds3_local_color_02",
+      "opacity": 1,
+      "cornerRadius": 3
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_21": {
       "kind": "label-style",
@@ -1875,10 +2509,11 @@
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
-      "color": "textPrimary",
+      "color": "gacha_ds3_local_color_02",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "RIGHT",
+      "verticalAlign": "CENTER",
       "overflow": "RESIZE_HEIGHT",
       "isBold": true
     },
@@ -1886,7 +2521,15 @@
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.024,
-      "cornerRadius": 6
+      "cornerRadius": 6,
+      "borderSides": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 3
+      },
+      "borderWidth": 3,
+      "borderColor": "#3a7a3d"
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_23": {
       "kind": "label-style",
@@ -1898,6 +2541,7 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_24": {
@@ -1922,6 +2566,7 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "RIGHT",
+      "verticalAlign": "CENTER",
       "overflow": "RESIZE_HEIGHT",
       "isBold": true
     },
@@ -1929,7 +2574,15 @@
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.024,
-      "cornerRadius": 6
+      "cornerRadius": 6,
+      "borderSides": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 3
+      },
+      "borderWidth": 3,
+      "borderColor": "#1a5c9a"
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_28": {
       "kind": "label-style",
@@ -1941,6 +2594,7 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_29": {
@@ -1965,6 +2619,7 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "RIGHT",
+      "verticalAlign": "CENTER",
       "overflow": "RESIZE_HEIGHT",
       "isBold": true
     },
@@ -1972,7 +2627,15 @@
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.024,
-      "cornerRadius": 6
+      "cornerRadius": 6,
+      "borderSides": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 3
+      },
+      "borderWidth": 3,
+      "borderColor": "#662299"
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_33": {
       "kind": "label-style",
@@ -1984,6 +2647,7 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_34": {
@@ -2008,6 +2672,7 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "RIGHT",
+      "verticalAlign": "CENTER",
       "overflow": "RESIZE_HEIGHT",
       "isBold": true
     },
@@ -2015,7 +2680,15 @@
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.024,
-      "cornerRadius": 6
+      "cornerRadius": 6,
+      "borderSides": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 3
+      },
+      "borderWidth": 3,
+      "borderColor": "gacha_ds3_local_color_08"
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_38": {
       "kind": "label-style",
@@ -2027,6 +2700,7 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_39": {
@@ -2051,6 +2725,7 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "RIGHT",
+      "verticalAlign": "CENTER",
       "overflow": "RESIZE_HEIGHT",
       "isBold": true
     },
@@ -2064,14 +2739,15 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_44": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.26,
       "color": "outline",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "CENTER"
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_45": {
       "kind": "label-style",
@@ -2083,6 +2759,7 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_46": {
@@ -2092,14 +2769,15 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_48": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.26,
       "color": "outline",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "CENTER"
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_49": {
       "kind": "label-style",
@@ -2111,6 +2789,7 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_50": {
@@ -2120,16 +2799,17 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_52": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.26,
       "color": "outline",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "CENTER"
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
     },
-    "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_53": {
+    "auto.gacha-ds3-tab-legendary.costbalancevalue": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 18,
@@ -2139,11 +2819,341 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
       "isBold": true
+    },
+    "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_53": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 9,
+      "lineHeight": 15,
+      "letterSpacing": 0.72,
+      "color": "gacha_ds3_local_color_04",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
+      "overflow": "RESIZE_HEIGHT"
+    },
+    "auto.gacha-ds3-tab-legendary-pool-panel-legendary.gachads3tablegendarypoolpanellegendary_div_1": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "radial",
+            "repeating": false,
+            "angle": 180,
+            "shape": "120% 80% at 40% 30%",
+            "center": {
+              "x": 0.4,
+              "y": 0.3
+            },
+            "radius": {
+              "x": 1.2,
+              "y": 0.8
+            },
+            "repeatSpanRatio": 1,
+            "stops": [
+              {
+                "color": "rgb(42, 26, 0)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(26, 15, 0)",
+                "offset": 0.4
+              },
+              {
+                "color": "rgb(10, 6, 18)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "radial",
+        "repeating": false,
+        "angle": 180,
+        "repeatSpanRatio": 1,
+        "shape": "120% 80% at 40% 30%",
+        "center": {
+          "x": 0.4,
+          "y": 0.3
+        },
+        "radius": {
+          "x": 1.2,
+          "y": 0.8
+        },
+        "stops": [
+          {
+            "color": "rgb(42, 26, 0)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(26, 15, 0)",
+            "offset": 0.4,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(10, 6, 18)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.gacha-ds3-tab-legendary-pool-panel-legendary.gachads3tablegendarypoolpanellegendary_div_2": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 90,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(0, 0, 0, 0)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(10, 6, 18)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 90,
+        "stops": [
+          {
+            "color": "colorBlack",
+            "offset": 0,
+            "opacity": 0
+          },
+          {
+            "color": "rgb(10, 6, 18)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.gacha-ds3-tab-legendary-pool-panel-legendary.gachads3tablegendarypoolpanellegendary_div_3": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 0,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgb(10, 6, 18)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(0, 0, 0, 0)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 0,
+        "stops": [
+          {
+            "color": "rgb(10, 6, 18)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "colorBlack",
+            "offset": 1,
+            "opacity": 0
+          }
+        ]
+      }
+    },
+    "auto.gacha-ds3-tab-legendary-pool-panel-legendary.poollegendaryart": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": true,
+            "angle": 45,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "repeatSpanPx": 12,
+            "stops": [
+              {
+                "color": "rgb(30, 24, 16)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(30, 24, 16)",
+                "offset": 0.5
+              },
+              {
+                "color": "rgb(37, 31, 16)",
+                "offset": 0.5
+              },
+              {
+                "color": "rgb(37, 31, 16)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": true,
+        "angle": 45,
+        "repeatSpanPx": 12,
+        "stops": [
+          {
+            "color": "rgb(30, 24, 16)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(30, 24, 16)",
+            "offset": 0.5,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(37, 31, 16)",
+            "offset": 0.5,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(37, 31, 16)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 20,
+      "cornerRadii": [
+        20,
+        20,
+        0,
+        0
+      ]
+    },
+    "auto.gacha-ds3-tab-legendary-pool-panel-legendary.gachads3tablegendarypoolpanellegendary_span_1": {
+      "kind": "label-style",
+      "font": "fonts/manrope/manrope",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 1.44,
+      "color": "gacha_ds3_local_color_07",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "auto.gacha-ds3-tab-legendary-pool-panel-legendary.gachads3tablegendarypoolpanellegendary_span_2": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 1.44,
+      "color": "gacha_ds3_local_color_07",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "auto.gacha-ds3-tab-legendary-pool-panel-legendary.gachads3tablegendarypoolpanellegendary_div_6": {
+      "kind": "color-rect",
+      "color": "rarityGold",
+      "opacity": 0.15,
+      "cornerRadius": 4,
+      "borderWidth": 1,
+      "borderColor": "gacha_ds3_local_color_08"
+    },
+    "auto.gacha-ds3-tab-legendary-pool-panel-legendary.poollegendaryeventchip": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.gacha-ds3-tab-legendary-pool-panel-legendary.poollegendaryheroname": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 72,
+      "lineHeight": 72,
+      "letterSpacing": 5.76,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.gacha-ds3-tab-legendary-pool-panel-legendary.poollegendaryherotitle": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 14,
+      "lineHeight": 20,
+      "letterSpacing": 5.6,
+      "color": "resourceGold",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
+      "style": "bodySm"
+    },
+    "auto.gacha-ds3-tab-legendary-pool-panel-legendary.gachads3tablegendarypoolpanellegendary_div_7": {
+      "kind": "color-rect",
+      "color": "rarityGold",
+      "opacity": 0.15,
+      "cornerRadius": 8,
+      "borderWidth": 1,
+      "borderColor": "#ffc10759"
+    },
+    "auto.gacha-ds3-tab-legendary-pool-panel-legendary.poollegendaryguarantee": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 11,
+      "lineHeight": 15,
+      "letterSpacing": 1.1,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_4": {
       "kind": "label-style",
-      "font": "fonts/newsreader/newsreader",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 26,
       "letterSpacing": 1.76,
@@ -2151,53 +3161,66 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_5": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.62,
-      "color": "secondary",
+      "color": "stdButtonPrimary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "START"
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_6": {
+      "kind": "color-rect",
+      "color": "stdCrestColor",
+      "opacity": 0.15,
+      "cornerRadius": 20,
+      "borderWidth": 1,
+      "borderColor": "#8ccfc4"
+    },
+    "auto.gacha-ds3-tab-support.gachads3tabsupport_span_1": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.08,
-      "color": "secondaryLight",
+      "color": "mirrorSigilField",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_9": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.62,
-      "color": "secondary",
+      "color": "stdButtonPrimary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_10": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 0.6,
       "color": "outline",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "START"
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_11": {
       "kind": "color-rect",
@@ -2205,7 +3228,7 @@
       "opacity": 0.5,
       "cornerRadius": 6,
       "borderWidth": 1,
-      "borderColor": "#d4af3740"
+      "borderColor": "#3f6a6240"
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_12": {
       "kind": "gradient-rect",
@@ -2221,11 +3244,11 @@
             "radius": null,
             "stops": [
               {
-                "color": "gacha_ds3_local_color_06",
+                "color": "rgb(30, 74, 68)",
                 "offset": 0
               },
               {
-                "color": "rgb(255, 224, 136)",
+                "color": "rgb(140, 207, 196)",
                 "offset": 1
               }
             ]
@@ -2238,19 +3261,19 @@
         "angle": 90,
         "stops": [
           {
-            "color": "gacha_ds3_local_color_06",
+            "color": "rgb(30, 74, 68)",
             "offset": 0,
             "opacity": 1
           },
           {
-            "color": "secondaryLight",
+            "color": "stdCrestColor",
             "offset": 1,
             "opacity": 1
           }
         ]
       }
     },
-    "auto.gacha-ds3-tab-support.gachads3tabsupport_span_1": {
+    "auto.gacha-ds3-tab-support.gachads3tabsupport_span_2": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 13,
@@ -2260,18 +3283,8 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
-    },
-    "auto.gacha-ds3-tab-support.gachads3tabsupport_span_2": {
-      "kind": "label-style",
-      "font": "fonts/manrope/manrope",
-      "fontSize": 9,
-      "lineHeight": 13,
-      "letterSpacing": 0.54,
-      "color": "textPrimary",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START"
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_span_3": {
       "kind": "label-style",
@@ -2279,10 +3292,11 @@
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
-      "color": "textPrimary",
+      "color": "gacha_ds3_local_color_01",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "START"
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_span_4": {
       "kind": "label-style",
@@ -2290,10 +3304,11 @@
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
-      "color": "textPrimary",
+      "color": "gacha_ds3_local_color_01",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "START"
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_span_5": {
       "kind": "label-style",
@@ -2301,10 +3316,11 @@
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
-      "color": "textPrimary",
+      "color": "gacha_ds3_local_color_01",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "START"
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_span_6": {
       "kind": "label-style",
@@ -2312,14 +3328,27 @@
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
-      "color": "textPrimary",
+      "color": "gacha_ds3_local_color_01",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "START"
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.gacha-ds3-tab-support.gachads3tabsupport_span_7": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 9,
+      "lineHeight": 13,
+      "letterSpacing": 0.54,
+      "color": "gacha_ds3_local_color_01",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_15": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.8,
@@ -2327,13 +3356,22 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_17": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.024,
-      "cornerRadius": 6
+      "cornerRadius": 6,
+      "borderSides": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 3
+      },
+      "borderWidth": 3,
+      "borderColor": "#484848"
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_18": {
       "kind": "label-style",
@@ -2341,10 +3379,11 @@
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1,
-      "color": "textPrimary",
+      "color": "gacha_ds3_local_color_02",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_19": {
@@ -2354,8 +3393,10 @@
       "cornerRadius": 3
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_20": {
-      "kind": "transparent",
-      "_unmappedBackground": "rgb(104, 104, 104)"
+      "kind": "color-rect",
+      "color": "gacha_ds3_local_color_02",
+      "opacity": 1,
+      "cornerRadius": 3
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_21": {
       "kind": "label-style",
@@ -2363,10 +3404,11 @@
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
-      "color": "textPrimary",
+      "color": "gacha_ds3_local_color_02",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "RIGHT",
+      "verticalAlign": "CENTER",
       "overflow": "RESIZE_HEIGHT",
       "isBold": true
     },
@@ -2374,7 +3416,15 @@
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.024,
-      "cornerRadius": 6
+      "cornerRadius": 6,
+      "borderSides": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 3
+      },
+      "borderWidth": 3,
+      "borderColor": "#3a7a3d"
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_23": {
       "kind": "label-style",
@@ -2386,6 +3436,7 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_24": {
@@ -2410,6 +3461,7 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "RIGHT",
+      "verticalAlign": "CENTER",
       "overflow": "RESIZE_HEIGHT",
       "isBold": true
     },
@@ -2417,7 +3469,15 @@
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.024,
-      "cornerRadius": 6
+      "cornerRadius": 6,
+      "borderSides": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 3
+      },
+      "borderWidth": 3,
+      "borderColor": "#1a5c9a"
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_28": {
       "kind": "label-style",
@@ -2429,6 +3489,7 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_29": {
@@ -2453,6 +3514,7 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "RIGHT",
+      "verticalAlign": "CENTER",
       "overflow": "RESIZE_HEIGHT",
       "isBold": true
     },
@@ -2460,7 +3522,15 @@
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.024,
-      "cornerRadius": 6
+      "cornerRadius": 6,
+      "borderSides": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 3
+      },
+      "borderWidth": 3,
+      "borderColor": "#2a4a44"
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_33": {
       "kind": "label-style",
@@ -2468,10 +3538,11 @@
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1,
-      "color": "rarityPurple",
+      "color": "stdButtonPrimary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_34": {
@@ -2482,7 +3553,7 @@
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_35": {
       "kind": "color-rect",
-      "color": "rarityPurple",
+      "color": "stdButtonPrimary",
       "opacity": 1,
       "cornerRadius": 3
     },
@@ -2492,132 +3563,35 @@
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
-      "color": "rarityPurple",
+      "color": "stdButtonPrimary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "RIGHT",
+      "verticalAlign": "CENTER",
       "overflow": "RESIZE_HEIGHT",
       "isBold": true
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_37": {
       "kind": "color-rect",
       "color": "colorWhite",
-      "opacity": 0.024,
-      "cornerRadius": 6
-    },
-    "auto.gacha-ds3-tab-support.gachads3tabsupport_div_38": {
-      "kind": "label-style",
-      "font": "fonts/manrope/manrope",
-      "fontSize": 10,
-      "lineHeight": 14,
-      "letterSpacing": 1,
-      "color": "rarityGold",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "isBold": true
-    },
-    "auto.gacha-ds3-tab-support.gachads3tabsupport_div_39": {
-      "kind": "color-rect",
-      "color": "colorBlack",
-      "opacity": 0.5,
-      "cornerRadius": 3
-    },
-    "auto.gacha-ds3-tab-support.gachads3tabsupport_div_40": {
-      "kind": "color-rect",
-      "color": "rarityGold",
-      "opacity": 1,
-      "cornerRadius": 3
-    },
-    "auto.gacha-ds3-tab-support.gachads3tabsupport_div_41": {
-      "kind": "label-style",
-      "font": "fonts/manrope/manrope",
-      "fontSize": 12,
-      "lineHeight": 17,
-      "letterSpacing": 0,
-      "color": "rarityGold",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "RIGHT",
-      "overflow": "RESIZE_HEIGHT",
-      "isBold": true
-    },
-    "auto.gacha-ds3-tab-support.gachads3tabsupport_div_42": {
-      "kind": "color-rect",
-      "color": "colorWhite",
       "opacity": 0.03,
       "cornerRadius": 10,
       "borderWidth": 1,
-      "borderColor": "#ffc1071f"
+      "borderColor": "#8ccfc41a"
     },
-    "auto.gacha-ds3-tab-support.gachads3tabsupport_div_44": {
+    "auto.gacha-ds3-tab-support.gachads3tabsupport_div_39": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.26,
       "color": "outline",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "CENTER"
-    },
-    "auto.gacha-ds3-tab-support.gachads3tabsupport_div_45": {
-      "kind": "label-style",
-      "font": "fonts/manrope/manrope",
-      "fontSize": 18,
-      "lineHeight": 25,
-      "letterSpacing": 0,
-      "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "CENTER",
-      "isBold": true
+      "verticalAlign": "CENTER"
     },
-    "auto.gacha-ds3-tab-support.gachads3tabsupport_div_46": {
-      "kind": "color-rect",
-      "color": "colorWhite",
-      "opacity": 0.08
-    },
-    "auto.gacha-ds3-tab-support.gachads3tabsupport_div_48": {
-      "kind": "label-style",
-      "font": "fonts/manrope/manrope",
-      "fontSize": 9,
-      "lineHeight": 13,
-      "letterSpacing": 1.26,
-      "color": "outline",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "CENTER"
-    },
-    "auto.gacha-ds3-tab-support.gachads3tabsupport_div_49": {
-      "kind": "label-style",
-      "font": "fonts/manrope/manrope",
-      "fontSize": 18,
-      "lineHeight": 25,
-      "letterSpacing": 0,
-      "color": "secondaryLight",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "CENTER",
-      "isBold": true
-    },
-    "auto.gacha-ds3-tab-support.gachads3tabsupport_div_50": {
-      "kind": "color-rect",
-      "color": "colorWhite",
-      "opacity": 0.08
-    },
-    "auto.gacha-ds3-tab-support.gachads3tabsupport_div_52": {
-      "kind": "label-style",
-      "font": "fonts/manrope/manrope",
-      "fontSize": 9,
-      "lineHeight": 13,
-      "letterSpacing": 1.26,
-      "color": "outline",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "CENTER"
-    },
-    "auto.gacha-ds3-tab-support.gachads3tabsupport_div_53": {
+    "auto.gacha-ds3-tab-support.gachads3tabsupport_div_40": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 18,
@@ -2627,7 +3601,397 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
       "isBold": true
+    },
+    "auto.gacha-ds3-tab-support.gachads3tabsupport_div_41": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.08
+    },
+    "auto.gacha-ds3-tab-support.gachads3tabsupport_div_43": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 9,
+      "lineHeight": 13,
+      "letterSpacing": 1.26,
+      "color": "outline",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "auto.gacha-ds3-tab-support.gachads3tabsupport_div_44": {
+      "kind": "label-style",
+      "font": "fonts/manrope/manrope",
+      "fontSize": 18,
+      "lineHeight": 25,
+      "letterSpacing": 0,
+      "color": "mirrorSigilField",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.gacha-ds3-tab-support.gachads3tabsupport_div_45": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.08
+    },
+    "auto.gacha-ds3-tab-support.gachads3tabsupport_div_47": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 9,
+      "lineHeight": 13,
+      "letterSpacing": 1.26,
+      "color": "outline",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "auto.gacha-ds3-tab-support.costbalancevalue": {
+      "kind": "label-style",
+      "font": "fonts/manrope/manrope",
+      "fontSize": 18,
+      "lineHeight": 25,
+      "letterSpacing": 0,
+      "color": "mirrorSigilField",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.gacha-ds3-tab-support.gachads3tabsupport_div_48": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 9,
+      "lineHeight": 15,
+      "letterSpacing": 0.72,
+      "color": "gacha_ds3_local_color_04",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
+      "overflow": "RESIZE_HEIGHT"
+    },
+    "auto.gacha-ds3-tab-support-pool-panel-support.gachads3tabsupportpoolpanelsupport_div_1": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "radial",
+            "repeating": false,
+            "angle": 180,
+            "shape": "120% 80% at 40% 30%",
+            "center": {
+              "x": 0.4,
+              "y": 0.3
+            },
+            "radius": {
+              "x": 1.2,
+              "y": 0.8
+            },
+            "repeatSpanRatio": 1,
+            "stops": [
+              {
+                "color": "rgb(6, 32, 32)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(4, 20, 20)",
+                "offset": 0.4
+              },
+              {
+                "color": "rgb(3, 10, 10)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "radial",
+        "repeating": false,
+        "angle": 180,
+        "repeatSpanRatio": 1,
+        "shape": "120% 80% at 40% 30%",
+        "center": {
+          "x": 0.4,
+          "y": 0.3
+        },
+        "radius": {
+          "x": 1.2,
+          "y": 0.8
+        },
+        "stops": [
+          {
+            "color": "rgb(6, 32, 32)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(4, 20, 20)",
+            "offset": 0.4,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(3, 10, 10)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.gacha-ds3-tab-support-pool-panel-support.gachads3tabsupportpoolpanelsupport_div_2": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 90,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(0, 0, 0, 0)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(3, 10, 10)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 90,
+        "stops": [
+          {
+            "color": "colorBlack",
+            "offset": 0,
+            "opacity": 0
+          },
+          {
+            "color": "rgb(3, 10, 10)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.gacha-ds3-tab-support-pool-panel-support.gachads3tabsupportpoolpanelsupport_div_3": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 0,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgb(3, 10, 10)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(0, 0, 0, 0)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 0,
+        "stops": [
+          {
+            "color": "rgb(3, 10, 10)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "colorBlack",
+            "offset": 1,
+            "opacity": 0
+          }
+        ]
+      }
+    },
+    "auto.gacha-ds3-tab-support-pool-panel-support.poolsupportart": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": true,
+            "angle": 45,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "repeatSpanPx": 12,
+            "stops": [
+              {
+                "color": "rgb(14, 30, 30)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(14, 30, 30)",
+                "offset": 0.5
+              },
+              {
+                "color": "rgb(18, 30, 30)",
+                "offset": 0.5
+              },
+              {
+                "color": "rgb(18, 30, 30)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": true,
+        "angle": 45,
+        "repeatSpanPx": 12,
+        "stops": [
+          {
+            "color": "rgb(14, 30, 30)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(14, 30, 30)",
+            "offset": 0.5,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(18, 30, 30)",
+            "offset": 0.5,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(18, 30, 30)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 20,
+      "cornerRadii": [
+        20,
+        20,
+        0,
+        0
+      ]
+    },
+    "auto.gacha-ds3-tab-support-pool-panel-support.gachads3tabsupportpoolpanelsupport_span_1": {
+      "kind": "label-style",
+      "font": "fonts/manrope/manrope",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 1.44,
+      "color": "gacha_ds3_local_color_06",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "auto.gacha-ds3-tab-support-pool-panel-support.gachads3tabsupportpoolpanelsupport_span_2": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 1.44,
+      "color": "gacha_ds3_local_color_06",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "auto.gacha-ds3-tab-support-pool-panel-support.gachads3tabsupportpoolpanelsupport_div_6": {
+      "kind": "color-rect",
+      "color": "stdCrestColor",
+      "opacity": 0.12,
+      "cornerRadius": 4,
+      "borderWidth": 1,
+      "borderColor": "#8ccfc4"
+    },
+    "auto.gacha-ds3-tab-support-pool-panel-support.poolsupporteventchip": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2,
+      "color": "mirrorSigilField",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.gacha-ds3-tab-support-pool-panel-support.poolsupportheroname": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 72,
+      "lineHeight": 72,
+      "letterSpacing": 5.76,
+      "color": "mirrorSigilField",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.gacha-ds3-tab-support-pool-panel-support.poolsupportherotitle": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 14,
+      "lineHeight": 20,
+      "letterSpacing": 5.6,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
+      "style": "bodySm"
+    },
+    "auto.gacha-ds3-tab-support-pool-panel-support.gachads3tabsupportpoolpanelsupport_div_7": {
+      "kind": "color-rect",
+      "color": "stdCrestColor",
+      "opacity": 0.12,
+      "cornerRadius": 8,
+      "borderWidth": 1,
+      "borderColor": "#8ccfc44d"
+    },
+    "auto.gacha-ds3-tab-support-pool-panel-support.poolsupportguarantee": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 11,
+      "lineHeight": 15,
+      "letterSpacing": 1.1,
+      "color": "stdCrestColor",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
     }
   },
   "bundles": [
@@ -2655,7 +4019,9 @@
           "H2U-P4-012"
         ],
         "testTags": [
-          "per-tab-replay-required-for-tabbed-source"
+          "per-tab-replay-required-for-tabbed-source",
+          "overflow-clip-leaf-clamp",
+          "inline-text-run-single-label"
         ]
       },
       {
@@ -2730,60 +4096,88 @@
     "tokenUsageReport": {
       "colors": [
         {
-          "token": "secondaryLight",
-          "detail": "auto.gacha-ds3.gachads3_div_18.color"
+          "token": "rarityPurple",
+          "detail": "auto.gacha-ds3.gachads3_div_7.color"
+        },
+        {
+          "token": "rarityPurple",
+          "detail": "auto.gacha-ds3.gachads3_div_8.color"
+        },
+        {
+          "token": "rarityGold",
+          "detail": "auto.gacha-ds3.gachads3_div_14.color"
         },
         {
           "token": "secondaryLight",
-          "detail": "auto.gacha-ds3.gachads3_div_19.color"
+          "detail": "auto.gacha-ds3.poollegendaryeventchip.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.gacha-ds3.poollegendaryheroname.color"
         },
         {
           "token": "resourceGold",
-          "detail": "auto.gacha-ds3.gachads3_div_20.color"
+          "detail": "auto.gacha-ds3.poollegendaryherotitle.color"
+        },
+        {
+          "token": "rarityGold",
+          "detail": "auto.gacha-ds3.gachads3_div_15.color"
         },
         {
           "token": "secondaryLight",
+          "detail": "auto.gacha-ds3.poollegendaryguarantee.color"
+        },
+        {
+          "token": "stdCrestColor",
           "detail": "auto.gacha-ds3.gachads3_div_21.color"
         },
         {
           "token": "mirrorSigilField",
-          "detail": "auto.gacha-ds3.gachads3_div_28.color"
+          "detail": "auto.gacha-ds3.poolsupporteventchip.color"
         },
         {
           "token": "mirrorSigilField",
-          "detail": "auto.gacha-ds3.gachads3_div_29.color"
+          "detail": "auto.gacha-ds3.poolsupportheroname.color"
         },
         {
           "token": "secondaryLight",
-          "detail": "auto.gacha-ds3.gachads3_div_30.color"
+          "detail": "auto.gacha-ds3.poolsupportherotitle.color"
         },
         {
           "token": "stdCrestColor",
-          "detail": "auto.gacha-ds3.gachads3_div_31.color"
+          "detail": "auto.gacha-ds3.gachads3_div_22.color"
+        },
+        {
+          "token": "stdCrestColor",
+          "detail": "auto.gacha-ds3.poolsupportguarantee.color"
         },
         {
           "token": "textPrimary",
-          "detail": "auto.gacha-ds3.gachads3_div_33.color"
+          "detail": "auto.gacha-ds3.gachads3_div_24.color"
         },
         {
           "token": "secondaryLight",
-          "detail": "auto.gacha-ds3.gachads3_div_34.color"
+          "detail": "auto.gacha-ds3.gachads3_div_25.color"
         },
         {
-          "token": "textSecondary",
+          "token": "colorBlack",
           "detail": "auto.gacha-ds3.btnpoolprev.color"
         },
         {
           "token": "textSecondary",
+          "detail": "auto.gacha-ds3.gachads3_span_7.color"
+        },
+        {
+          "token": "colorBlack",
           "detail": "auto.gacha-ds3.btnpoolnext.color"
+        },
+        {
+          "token": "textSecondary",
+          "detail": "auto.gacha-ds3.gachads3_span_8.color"
         },
         {
           "token": "secondary",
           "detail": "auto.gacha-ds3.pooldot_general.color"
-        },
-        {
-          "token": "secondary",
-          "detail": "auto.gacha-ds3.pooldot_general.borderColor"
         },
         {
           "token": "colorWhite",
@@ -2795,140 +4189,224 @@
         },
         {
           "token": "colorBlack",
-          "detail": "auto.gacha-ds3.gachads3_div_35.color"
+          "detail": "auto.gacha-ds3.poolbrief.color"
         },
         {
           "token": "rarityPurple",
-          "detail": "auto.gacha-ds3.gachads3_div_36.color"
-        },
-        {
-          "token": "secondaryLight",
-          "detail": "auto.gacha-ds3.gachads3_div_41.color"
-        },
-        {
-          "token": "textOnParchmentMuted",
-          "detail": "auto.gacha-ds3.gachads3_div_42.color"
+          "detail": "auto.gacha-ds3.brieftag.color"
         },
         {
           "token": "textSecondary",
-          "detail": "auto.gacha-ds3.gachads3_div_44.color"
+          "detail": "auto.gacha-ds3.briefline.color"
         },
         {
-          "token": "colorBlack",
-          "detail": "auto.gacha-ds3.gachads3_div_45.color"
-        },
-        {
-          "token": "colorWhite",
-          "detail": "auto.gacha-ds3.gachads3_div_46.color"
-        },
-        {
-          "token": "gdv3InkDeep",
-          "detail": "auto.gacha-ds3.gachads3_div_49.color"
-        },
-        {
-          "token": "gdv3InkDeep",
-          "detail": "auto.gacha-ds3.gachads3_div_50.color"
-        },
-        {
-          "token": "colorBlack",
-          "detail": "auto.gacha-ds3.gachads3_div_51.color"
+          "token": "secondaryLight",
+          "detail": "auto.gacha-ds3.gachads3_div_29.color"
         },
         {
           "token": "colorWhite",
-          "detail": "auto.gacha-ds3.gachads3_div_52.color"
-        },
-        {
-          "token": "gdv3InkDeep",
-          "detail": "auto.gacha-ds3.gachads3_div_53.color"
+          "detail": "auto.gacha-ds3.btngachahistory.color"
         },
         {
           "token": "textOnParchmentMuted",
-          "detail": "auto.gacha-ds3.gachads3_div_55.color"
+          "detail": "auto.gacha-ds3.gachads3_span_9.color"
         },
         {
-          "token": "textOnParchmentMuted",
-          "detail": "auto.gacha-ds3.gachads3_div_56.color"
+          "token": "textSecondary",
+          "detail": "auto.gacha-ds3.pullsinglelabel.color"
         },
         {
           "token": "colorBlack",
-          "detail": "auto.gacha-ds3.gachads3_div_57.color"
+          "detail": "auto.gacha-ds3.gachads3_div_30.color"
+        },
+        {
+          "token": "colorWhite",
+          "detail": "auto.gacha-ds3.gachads3_span_10.color"
+        },
+        {
+          "token": "gdv3InkDeep",
+          "detail": "auto.gacha-ds3.pulltenlabel.color"
+        },
+        {
+          "token": "gdv3InkDeep",
+          "detail": "auto.gacha-ds3.gachads3_div_32.color"
+        },
+        {
+          "token": "colorBlack",
+          "detail": "auto.gacha-ds3.gachads3_div_33.color"
+        },
+        {
+          "token": "colorWhite",
+          "detail": "auto.gacha-ds3.gachads3_span_11.color"
+        },
+        {
+          "token": "gdv3InkDeep",
+          "detail": "auto.gacha-ds3.pulltencost.color"
+        },
+        {
+          "token": "colorWhite",
+          "detail": "auto.gacha-ds3.btngoldsummon.color"
+        },
+        {
+          "token": "textOnParchmentMuted",
+          "detail": "auto.gacha-ds3.goldsummonlabel.color"
+        },
+        {
+          "token": "colorWhite",
+          "detail": "auto.gacha-ds3.btnticketsummon.color"
+        },
+        {
+          "token": "textOnParchmentMuted",
+          "detail": "auto.gacha-ds3.ticketsummonlabel.color"
+        },
+        {
+          "token": "colorBlack",
+          "detail": "auto.gacha-ds3.gachads3_div_36.color"
         },
         {
           "token": "secondaryLight",
           "detail": "auto.gacha-ds3.gachads3_h2_1.color"
         },
         {
+          "token": "colorWhite",
+          "detail": "auto.gacha-ds3.gachads3_div_39.color"
+        },
+        {
+          "token": "outline",
+          "detail": "auto.gacha-ds3.gachads3_div_39.borderColor"
+        },
+        {
           "token": "textKhaki",
-          "detail": "auto.gacha-ds3.gachads3_div_60.color"
+          "detail": "auto.gacha-ds3.gachads3_span_13.color"
         }
       ],
       "cssVars": [],
       "spacing": [
         {
+          "token": "spacing.xs",
+          "detail": "GachaDs3_div_7.padding"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "GachaDs3_div_7.padding"
+        },
+        {
+          "token": "spacing.sm",
+          "detail": "GachaDs3_div_8.padding"
+        },
+        {
+          "token": "spacing.xs",
+          "detail": "GachaDs3_div_14.padding"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "GachaDs3_div_14.padding"
+        },
+        {
+          "token": "spacing.sm",
+          "detail": "GachaDs3_div_15.padding"
+        },
+        {
+          "token": "spacing.xs",
+          "detail": "GachaDs3_div_21.padding"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "GachaDs3_div_21.padding"
+        },
+        {
+          "token": "spacing.sm",
+          "detail": "GachaDs3_div_22.padding"
+        },
+        {
           "token": "spacing.lg",
-          "detail": "GachaDs3_div_35.padding"
+          "detail": "PoolBrief.padding"
         },
         {
           "token": "spacing.xl",
-          "detail": "GachaDs3_div_42.padding"
+          "detail": "BtnGachaHistory.padding"
         },
         {
           "token": "spacing.md",
-          "detail": "GachaDs3_div_45.padding"
+          "detail": "GachaDs3_div_30.padding"
         },
         {
           "token": "spacing.md",
-          "detail": "GachaDs3_div_51.padding"
+          "detail": "GachaDs3_div_33.padding"
         },
         {
           "token": "spacing.sm",
-          "detail": "GachaDs3_div_54.gap"
+          "detail": "GachaDs3_div_35.gap"
         },
         {
           "token": "spacing.sm",
-          "detail": "GachaDs3_div_55.gap"
+          "detail": "BtnGoldSummon.gap"
         },
         {
           "token": "spacing.sm",
-          "detail": "GachaDs3_div_56.gap"
+          "detail": "BtnTicketSummon.gap"
         },
         {
           "token": "spacing.xl",
-          "detail": "GachaDs3_div_59.padding"
+          "detail": "GachaDs3_div_38.padding"
         },
         {
           "token": "spacing.xxl",
-          "detail": "GachaDs3_div_59.padding"
+          "detail": "GachaDs3_div_38.padding"
         },
         {
           "token": "spacing.xxl",
-          "detail": "GachaDs3_div_61.padding"
+          "detail": "GachaDs3_div_40.padding"
         }
       ],
       "typography": [
         {
-          "token": "typography.bodySm",
-          "detail": "auto.gacha-ds3.gachads3_div_10.style"
+          "token": "spacing.md",
+          "detail": "auto.gacha-ds3.gachads3_span_1.fontSize"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "auto.gacha-ds3.gachads3_span_2.fontSize"
         },
         {
           "token": "typography.bodySm",
-          "detail": "auto.gacha-ds3.gachads3_div_20.style"
+          "detail": "auto.gacha-ds3.poolgeneralherotitle.style"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "auto.gacha-ds3.gachads3_span_3.fontSize"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "auto.gacha-ds3.gachads3_span_4.fontSize"
         },
         {
           "token": "typography.bodySm",
-          "detail": "auto.gacha-ds3.gachads3_div_30.style"
+          "detail": "auto.gacha-ds3.poollegendaryherotitle.style"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "auto.gacha-ds3.gachads3_span_5.fontSize"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "auto.gacha-ds3.gachads3_span_6.fontSize"
+        },
+        {
+          "token": "typography.bodySm",
+          "detail": "auto.gacha-ds3.poolsupportherotitle.style"
         },
         {
           "token": "typography.labelLg",
-          "detail": "auto.gacha-ds3.gachads3_div_34.style"
+          "detail": "auto.gacha-ds3.gachads3_div_25.style"
         },
         {
           "token": "spacing.lg",
-          "detail": "auto.gacha-ds3.gachads3_div_34.fontSize"
+          "detail": "auto.gacha-ds3.gachads3_div_25.fontSize"
         },
         {
           "token": "spacing.sm",
-          "detail": "auto.gacha-ds3.gachads3_div_36.fontSize"
+          "detail": "auto.gacha-ds3.brieftag.fontSize"
         }
       ],
       "artWarnings": [
@@ -2949,12 +4427,12 @@
         },
         {
           "code": "asymmetric-border-radius-approximated",
-          "node": "GachaDs3_div_6",
+          "node": "PoolGeneralArt",
           "detail": "非對稱圓角不適合直接轉成單一九宮或 color-rect"
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "GachaDs3_div_7",
+          "node": "GachaDs3_div_6",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
@@ -2964,22 +4442,22 @@
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "GachaDs3_div_13",
+          "node": "GachaDs3_div_10",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "GachaDs3_div_14",
+          "node": "GachaDs3_div_11",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
           "code": "asymmetric-border-radius-approximated",
-          "node": "GachaDs3_div_16",
+          "node": "PoolLegendaryArt",
           "detail": "非對稱圓角不適合直接轉成單一九宮或 color-rect"
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "GachaDs3_div_17",
+          "node": "GachaDs3_div_13",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
@@ -2989,27 +4467,27 @@
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "GachaDs3_div_23",
+          "node": "GachaDs3_div_17",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "GachaDs3_div_24",
+          "node": "GachaDs3_div_18",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
           "code": "asymmetric-border-radius-approximated",
-          "node": "GachaDs3_div_26",
+          "node": "PoolSupportArt",
           "detail": "非對稱圓角不適合直接轉成單一九宮或 color-rect"
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "GachaDs3_div_27",
+          "node": "GachaDs3_div_20",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "GachaDs3_div_32",
+          "node": "GachaDs3_div_23",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
@@ -3039,12 +4517,12 @@
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "GachaDs3_div_35",
+          "node": "PoolBrief",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
           "code": "css-effect-needs-art-review",
-          "node": "GachaDs3_div_35",
+          "node": "PoolBrief",
           "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
         },
         {
@@ -3054,58 +4532,92 @@
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "GachaDs3_div_38",
+          "node": "GachaDs3_div_26",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
           "code": "css-effect-needs-art-review",
-          "node": "GachaDs3_div_43",
+          "node": "BtnPullSingle",
           "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
         },
         {
           "code": "css-effect-needs-art-review",
-          "node": "GachaDs3_div_48",
+          "node": "BtnPullTen",
           "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "GachaDs3_div_57",
+          "node": "GachaDs3_div_36",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
           "code": "css-effect-needs-art-review",
-          "node": "GachaDs3_div_57",
+          "node": "GachaDs3_div_36",
           "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
         },
         {
           "code": "node-opacity-washes-children-risk",
-          "node": "GachaDs3_div_57",
+          "node": "GachaDs3_div_36",
           "detail": "容器 opacity 會連子文字一起洗淡，應優先放到背景 skin"
         },
         {
           "code": "overflow-hidden-clipping-risk",
-          "node": "GachaDs3_div_58",
+          "node": "GachaDs3_div_37",
           "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
         },
         {
           "code": "css-effect-needs-art-review",
-          "node": "GachaDs3_div_58",
+          "node": "GachaDs3_div_37",
           "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
         }
       ]
     },
     "tokenSources": {
-      "runtimePath": "c:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\ui-design-tokens.json",
-      "handoffPath": "c:\\Users\\User\\3KLife\\Design System\\design_handoff\\source\\ui-design-tokens.json",
-      "sourcePath": "c:\\Users\\User\\3KLife\\Design System 3\\source\\ui-design-tokens.json"
+      "runtimePath": "C:\\Users\\User\\wt-2237\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+      "handoffPath": "C:\\Users\\User\\wt-2237\\Design System\\design_handoff\\source\\ui-design-tokens.json",
+      "sourcePath": "C:\\Users\\User\\3KLife\\Design System 3\\source\\ui-design-tokens.json"
     },
-    "tokenConflictReport": [],
+    "tokenConflictReport": [
+      {
+        "section": "typography",
+        "token": "headlineFont",
+        "previousSource": "runtime",
+        "previousPath": "C:\\Users\\User\\wt-2237\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+        "source": "source",
+        "path": "C:\\Users\\User\\3KLife\\Design System 3\\source\\ui-design-tokens.json",
+        "previousValue": "fonts/newsreader/newsreader",
+        "value": "fonts/newsreader/font",
+        "chosenSource": "source"
+      },
+      {
+        "section": "typography",
+        "token": "bodyFont",
+        "previousSource": "runtime",
+        "previousPath": "C:\\Users\\User\\wt-2237\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+        "source": "source",
+        "path": "C:\\Users\\User\\3KLife\\Design System 3\\source\\ui-design-tokens.json",
+        "previousValue": "fonts/notosans_tc/notosans_tc",
+        "value": "fonts/notosans_tc/font",
+        "chosenSource": "source"
+      },
+      {
+        "section": "typography",
+        "token": "labelFont",
+        "previousSource": "runtime",
+        "previousPath": "C:\\Users\\User\\wt-2237\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+        "source": "source",
+        "path": "C:\\Users\\User\\3KLife\\Design System 3\\source\\ui-design-tokens.json",
+        "previousValue": "fonts/manrope/manrope",
+        "value": "fonts/manrope/font",
+        "chosenSource": "source"
+      }
+    ],
     "atlasUsageReport": {
       "atlases": [],
       "atlasCount": 0,
       "limit": 4,
       "_warning": null
     },
-    "perTabReplayMergedAt": "2026-05-12T16:10:46.155Z"
+    "perTabReplayMergedAt": "2026-11-11T16:15:27.097Z"
   }
 }

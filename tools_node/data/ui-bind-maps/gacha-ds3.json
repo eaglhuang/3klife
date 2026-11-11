@@ -1,0 +1,138 @@
+{
+  "$note": "轉蛋畫面 gacha-ds3（Design System 3/ui_kits/gacha）固定節點名；PROG-2-2237 起取代轉換器流水號（GachaDs3_div_N），重轉不再改名。名稱常數集中在 assets/scripts/ui/core/GachaScreenNodes.ts。 外框有底色的文字（標籤、保底、金幣／召喚券鈕）用 looseText 把名字給裡面的文字，外框是 panel、文字是子 label。",
+  "bindings": [
+    {
+      "name": "PoolBrief",
+      "selector": "#pool-brief"
+    },
+    {
+      "name": "BriefTag",
+      "selector": "#brief-tag"
+    },
+    {
+      "name": "BriefLine",
+      "selector": "#brief-line"
+    },
+    {
+      "name": "BtnGachaHistory",
+      "selector": ".btn-history"
+    },
+    {
+      "name": "BtnPullSingle",
+      "selector": ".pull-single"
+    },
+    {
+      "name": "PullSingleLabel",
+      "selector": ".pull-single .pull-label"
+    },
+    {
+      "name": "PullSingleCost",
+      "selector": ".pull-single .pc-num"
+    },
+    {
+      "name": "BtnPullTen",
+      "selector": ".pull-ten"
+    },
+    {
+      "name": "PullTenLabel",
+      "selector": ".pull-ten .pull-label"
+    },
+    {
+      "name": "PullTenCost",
+      "selector": ".pull-ten .pc-num"
+    },
+    {
+      "name": "BtnGoldSummon",
+      "selector": ".btn-alt-group .btn-alt",
+      "index": 0
+    },
+    {
+      "name": "BtnTicketSummon",
+      "selector": ".btn-alt-group .btn-alt",
+      "index": 1
+    },
+    {
+      "name": "GoldSummonLabel",
+      "selector": ".btn-alt-group .btn-alt",
+      "index": 0,
+      "looseText": true
+    },
+    {
+      "name": "TicketSummonLabel",
+      "selector": ".btn-alt-group .btn-alt",
+      "index": 1,
+      "looseText": true
+    },
+    {
+      "name": "PoolGeneralEventChip",
+      "selector": "#pool-panel-general .banner-event-chip",
+      "looseText": true
+    },
+    {
+      "name": "PoolGeneralHeroName",
+      "selector": "#pool-panel-general .banner-hero-name"
+    },
+    {
+      "name": "PoolGeneralHeroTitle",
+      "selector": "#pool-panel-general .banner-hero-title"
+    },
+    {
+      "name": "PoolGeneralGuarantee",
+      "selector": "#pool-panel-general .banner-guarantee-chip",
+      "looseText": true
+    },
+    {
+      "name": "PoolLegendaryEventChip",
+      "selector": "#pool-panel-legendary .banner-event-chip",
+      "looseText": true
+    },
+    {
+      "name": "PoolLegendaryHeroName",
+      "selector": "#pool-panel-legendary .banner-hero-name"
+    },
+    {
+      "name": "PoolLegendaryHeroTitle",
+      "selector": "#pool-panel-legendary .banner-hero-title"
+    },
+    {
+      "name": "PoolLegendaryGuarantee",
+      "selector": "#pool-panel-legendary .banner-guarantee-chip",
+      "looseText": true
+    },
+    {
+      "name": "PoolSupportEventChip",
+      "selector": "#pool-panel-support .banner-event-chip",
+      "looseText": true
+    },
+    {
+      "name": "PoolSupportHeroName",
+      "selector": "#pool-panel-support .banner-hero-name"
+    },
+    {
+      "name": "PoolSupportHeroTitle",
+      "selector": "#pool-panel-support .banner-hero-title"
+    },
+    {
+      "name": "PoolSupportGuarantee",
+      "selector": "#pool-panel-support .banner-guarantee-chip",
+      "looseText": true
+    },
+    {
+      "name": "CostBalanceValue",
+      "selector": "#rp-content .cost-card .cost-val",
+      "index": 2
+    },
+    {
+      "name": "PoolGeneralArt",
+      "selector": "#pool-panel-general .banner-art-placeholder"
+    },
+    {
+      "name": "PoolLegendaryArt",
+      "selector": "#pool-panel-legendary .banner-art-placeholder"
+    },
+    {
+      "name": "PoolSupportArt",
+      "selector": "#pool-panel-support .banner-art-placeholder"
+    }
+  ]
+}

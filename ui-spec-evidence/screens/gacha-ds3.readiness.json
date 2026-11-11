@@ -1,12 +1,12 @@
 {
   "schemaVersion": "1.0.0",
   "screenId": "gacha-ds3",
-  "generatedAt": "2026-05-12T16:10:59.247Z",
+  "generatedAt": "2026-11-11T16:15:35.015Z",
   "verdict": "not-ready",
-  "readinessScore": 0.958,
+  "readinessScore": 0.833,
   "summary": {
-    "blockerUnits": 1,
-    "actionUnits": 1,
+    "blockerUnits": 3,
+    "actionUnits": 4,
     "bounded": true,
     "nextCriticalAction": "capture Cocos Editor target screen and run final compare"
   },
@@ -14,24 +14,21 @@
     "layout": "assets/resources/ui-spec/layouts/gacha-ds3.json",
     "skin": "assets/resources/ui-spec/skins/gacha-ds3.skin.json",
     "screen": "assets/resources/ui-spec/screens/gacha-ds3.json",
-    "captureProtocol": "assets/resources/ui-spec/screens/gacha-ds3.final-capture-protocol.json",
-    "zoneOwnership": "assets/resources/ui-spec/screens/gacha-ds3.zone-ownership.json",
+    "captureProtocol": "ui-spec-evidence/screens/gacha-ds3.final-capture-protocol.json",
+    "zoneOwnership": "ui-spec-evidence/screens/gacha-ds3.zone-ownership.json",
     "tabRouting": "assets/resources/ui-spec/screens/gacha-ds3.tab-routing.json",
-    "preload": "assets/resources/ui-spec/screens/gacha-ds3.preload.json",
-    "performance": "assets/resources/ui-spec/screens/gacha-ds3.performance.json",
-    "bakeManifest": "assets/resources/ui-spec/layouts/gacha-ds3.layout.bake-manifest.json",
+    "preload": "ui-spec-evidence/screens/gacha-ds3.preload.json",
+    "performance": "ui-spec-evidence/screens/gacha-ds3.performance.json",
+    "bakeManifest": "ui-spec-evidence/layouts/gacha-ds3.layout.bake-manifest.json",
     "artAuthorityWaivers": "assets/resources/ui-spec/screens/gacha-ds3.art-authority-waivers.json",
-    "finalVerdict": "artifacts/html-to-ucuf-plan5/gacha-ds3/gacha-ds3.html-cocos-verdict.json"
+    "finalVerdict": "artifacts/skill-test-html-to-ucuf/gacha-ds3/gacha-ds3.html-cocos-verdict.json"
   },
   "gates": {
     "finalGate": {
       "status": "blocker",
       "pass": false,
       "workUnits": 1,
-      "summary": "runtimeVsSource raw=0.6475 adjusted=0.6475 verdict=fail",
-      "rawScore": 0.6474922839506173,
-      "adjustedScore": 0.6474922839506173,
-      "verdict": "fail"
+      "summary": "no measured Cocos Editor final compare verdict"
     },
     "capture": {
       "status": "pass",
@@ -105,8 +102,32 @@
     "fragmentGeometry": {
       "status": "pass",
       "workUnits": 0,
-      "summary": "3 referenced fragments follow fill-root geometry contract",
+      "summary": "5 referenced fragments follow fill-root geometry contract",
       "checks": [
+        {
+          "fragment": "fragments/layouts/gacha-ds3-legendary-pool-panel-legendary",
+          "source": "layout.defaultFragment",
+          "slotId": "BannerSlide_legendary",
+          "status": "pass",
+          "code": "fill-root-ok",
+          "summary": "fragment mount layers fill lazySlot",
+          "recommendation": null,
+          "findings": [],
+          "filePath": "C:\\Users\\User\\wt-2237\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-legendary-pool-panel-legendary.json",
+          "path": "fragments/layouts/gacha-ds3-legendary-pool-panel-legendary.json"
+        },
+        {
+          "fragment": "fragments/layouts/gacha-ds3-support-pool-panel-support",
+          "source": "layout.defaultFragment",
+          "slotId": "BannerSlide_support",
+          "status": "pass",
+          "code": "fill-root-ok",
+          "summary": "fragment mount layers fill lazySlot",
+          "recommendation": null,
+          "findings": [],
+          "filePath": "C:\\Users\\User\\wt-2237\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-support-pool-panel-support.json",
+          "path": "fragments/layouts/gacha-ds3-support-pool-panel-support.json"
+        },
         {
           "fragment": "fragments/layouts/gacha-ds3-general-content",
           "source": "layout.defaultFragment",
@@ -116,7 +137,7 @@
           "summary": "fragment mount layers fill lazySlot",
           "recommendation": null,
           "findings": [],
-          "filePath": "c:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-general-content.json",
+          "filePath": "C:\\Users\\User\\wt-2237\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-general-content.json",
           "path": "fragments/layouts/gacha-ds3-general-content.json"
         },
         {
@@ -129,7 +150,7 @@
           "summary": "fragment mount layers fill lazySlot",
           "recommendation": null,
           "findings": [],
-          "filePath": "c:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-legendary-content.json",
+          "filePath": "C:\\Users\\User\\wt-2237\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-legendary-content.json",
           "path": "fragments/layouts/gacha-ds3-legendary-content.json"
         },
         {
@@ -142,20 +163,26 @@
           "summary": "fragment mount layers fill lazySlot",
           "recommendation": null,
           "findings": [],
-          "filePath": "c:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-support-content.json",
+          "filePath": "C:\\Users\\User\\wt-2237\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-support-content.json",
           "path": "fragments/layouts/gacha-ds3-support-content.json"
         }
       ],
       "failures": []
     },
     "textBinding": {
-      "status": "pass",
-      "workUnits": 0,
-      "summary": "0/18 dynamic text candidates missing bind/i18n contract",
-      "totalTextNodes": 33,
-      "dynamicCandidateCount": 18,
-      "missingContractCount": 0,
-      "samples": []
+      "status": "warn",
+      "workUnits": 1,
+      "summary": "1/13 dynamic text candidates missing bind/i18n contract",
+      "totalTextNodes": 27,
+      "dynamicCandidateCount": 13,
+      "missingContractCount": 1,
+      "samples": [
+        {
+          "name": "PullSingleCost",
+          "path": "GachaDs3/GachaDs3_body/GachaDs3_div_26/BtnPullSingle/GachaDs3_div_30_margin/GachaDs3_div_30/PullSingleCost",
+          "text": "30"
+        }
+      ]
     },
     "visualPolicy": {
       "status": "pass",
@@ -171,42 +198,57 @@
       "unsafeAutoBakeCount": 0
     },
     "loading": {
-      "status": "pass",
-      "workUnits": 0,
-      "summary": "preload/performance sidecars present and current",
+      "status": "blocker",
+      "workUnits": 2,
+      "summary": "performance report stale: nodeCount 84 != actual 62; node-count-blocker: 84 (>60)",
       "actualLayoutStats": {
-        "nodeCount": 56,
-        "deferredNodeCount": 4,
-        "totalNodeCount": 60,
-        "maxDepth": 6,
+        "nodeCount": 62,
+        "deferredNodeCount": 5,
+        "totalNodeCount": 67,
+        "maxDepth": 8,
         "colorRectCount": 0,
-        "lazySlotCount": 2,
+        "lazySlotCount": 4,
         "warmupHints": {
           "next-frame": 0,
           "idle": 0,
           "tab-hover": 0,
-          "manual": 1,
+          "manual": 3,
           "first-frame": 1
         }
       },
       "reportedRendering": {
-        "nodeCount": 56,
-        "deferredNodeCount": 4,
-        "totalNodeCount": 60,
-        "maxDepth": 6,
-        "estimatedDrawCalls": 3,
+        "nodeCount": 84,
+        "deferredNodeCount": 5,
+        "totalNodeCount": 89,
+        "maxDepth": 8,
+        "estimatedDrawCalls": 2,
         "colorRectCount": 0
       },
-      "skinSlotCount": 197,
-      "issues": []
+      "skinSlotCount": 242,
+      "issues": [
+        "performance report stale: nodeCount 84 != actual 62",
+        "node-count-blocker: 84 (>60)"
+      ]
     }
   },
   "issues": [
     {
       "severity": "blocker",
       "code": "final-gate",
-      "summary": "runtimeVsSource raw=0.6475 adjusted=0.6475 verdict=fail",
+      "summary": "no measured Cocos Editor final compare verdict",
       "workUnits": 1
+    },
+    {
+      "severity": "warn",
+      "code": "text-binding",
+      "summary": "1/13 dynamic text candidates missing bind/i18n contract",
+      "workUnits": 1
+    },
+    {
+      "severity": "blocker",
+      "code": "loading-performance",
+      "summary": "performance report stale: nodeCount 84 != actual 62; node-count-blocker: 84 (>60)",
+      "workUnits": 2
     }
   ]
 }
