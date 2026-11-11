@@ -3,7 +3,7 @@ import { presentLobbyLead } from '../core/LobbyLeadPresentation';
 // @spec-source → 見 docs/cross-reference-index.md
 import { openingLetterBodyWithFunLine } from '../../core/systems/FunLineLibrary';
 import { placeTutorialTarget } from '../core/OnboardingTargetHighlight';
-import { ONBOARDING_ACTIONS } from '../core/OnboardingFlowController';
+import { onboardingActionIdAt, resolveTutorialTargets } from '../core/OnboardingTargetResolver';
 import { ERA_SHIFT_TEXT, formatHegemonRise } from '../../core/systems/RivalRulerLines';
 import { nationDef } from '../../core/systems/RivalNations';
 import type { RivalRostersConfig } from '../../core/systems/RivalOfficers';
@@ -2289,9 +2289,15 @@ export class LobbyScene extends Component {
                 applyFramePortraits: (binder, keys) => this._applyFramePortraits(binder as NonNullable<UIScreenPreviewHost['binder']>, 'destiny', keys, undefined, DESTINY_PORTRAIT_SPEC),
                 openingLetterText: () => ({ title: services().i18n.t('copy.letter.opening.title'), body: openingLetterBodyWithFunLine(services().i18n.t('copy.letter.opening.body'), services().session.magistrateUid ?? '') }),
                 warn: (message, error) => UCUFLogger.warn(LogCategory.DATA, message, error),
+                // 幕府大堂開著時城市畫面被整個蓋住：改框大堂上的同功能入口（PROG-2-2226）
                 focusTutorial: (host, step) => {
-                    const action = Object.values(ONBOARDING_ACTIONS)[step];
-                    placeTutorialTarget(host.binder as UITemplateBinder | null, action ? this._cityHubHost?.binder?.getNode(action.target) ?? null : null);
+                    const actionId = onboardingActionIdAt(step);
+                    const hall = this._lobbyHallHost?.node ?? null;
+                    const targets = actionId ? resolveTutorialTargets(actionId, {
+                        hallRoot: hall?.activeInHierarchy ? hall : null,
+                        cityTarget: name => this._cityHubHost?.binder?.getNode(name) ?? null,
+                    }) : [];
+                    placeTutorialTarget(host.binder as UITemplateBinder | null, targets);
                 },
             });
         }
@@ -2888,8 +2894,12 @@ export class LobbyScene extends Component {
         if (wasInProgress && !this._isOpeningInProgress() && !this._openingUiReady) {
             this._showLobbyLoadingHint();
         } else if (wasInProgress && !this._isOpeningInProgress()) {
-            if (this._ready) this._openLobbyHall();
-            void services().ui.open(UIID.LobbyMain).then(() => { this._seasonChroniclePopup?.refreshAvailability(); });
+            // 先開城市層（LobbyMain.show 會把城市畫面、選卡等拉到最前）再開大堂，與 start() 同順序；
+            // 順序反了大堂會被城市層整片蓋住，新手引導也框到底下的入口（PROG-2-2226）
+            void services().ui.open(UIID.LobbyMain).then(() => {
+                if (this._ready) this._openLobbyHall();
+                this._seasonChroniclePopup?.refreshAvailability();
+            });
         } else {
             this._seasonChroniclePopup?.refreshAvailability();
         }
@@ -3516,6 +3526,8 @@ export class LobbyScene extends Component {
         }
         // 新手引導未看完時維持在大堂之上（PROG-2-2222：大堂改在開場結束才開，不能蓋住引導）
         this._openingPanels?.refreshOnboarding();
+        // 大堂剛啟用的這一幀 Widget 尚未對齊，下一幀再定位一次聚焦框（PROG-2-2226）
+        this.scheduleOnce(() => { this._openingPanels?.refreshOnboarding(); }, 0);
     }
 
     /** 幕府大廳左右牆（UI-2-0153）：左軍務、右內政，資料同任務板；任務資料沒載到時維持設計稿文字 */
