@@ -1,11 +1,13 @@
 // @spec-source → 轉蛋系統.md (doc_spec_0042)；PROG-2-1429 依建檔紀錄補標出處
-import { Button, Sprite, SpriteFrame, Texture2D, resources } from 'cc';
+import { Button, Node, Sprite, UITransform } from 'cc';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { LocalGachaService, type LocalGachaResultEntry } from '../../core/services/LocalGachaService';
 import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { showGachaHistory, showGachaResults } from '../dev/GachaDevOverlay';
 import { pickGachaCurrency, quoteGachaCost } from '../../core/systems/GachaCurrency';
+import { fitContain, pickTopGachaResult } from './GachaResultRanking';
+import { loadGeneralPortrait } from './GeneralAvatarLoader';
 
 export const DEFAULT_POOL_ID = 'GENERAL_STANDARD_01';
 
@@ -42,6 +44,7 @@ export interface GachaFlowCoordinatorOptions {
 }
 
 export class GachaFlowCoordinator {
+    private _heroPortraitSeq = 0;
     private readonly _options: GachaFlowCoordinatorOptions;
     private _resultBackAction: (() => void | Promise<void>) | null = null;
     private _resultRepullAction: (() => void | Promise<void>) | null = null;
@@ -156,10 +159,31 @@ export class GachaFlowCoordinator {
             await showGachaResults(title, results, () => { void repull(); });
             return;
         }
+        await this._renderPullResult(host, drawCount, results, title, currency, {
+            hero: pickTopGachaResult(results),
+            onBack: this._options.onBackToGacha,
+            repull,
+        });
+    }
 
-        const ranks: Record<string, number> = { mythic: 5, legendary: 4, epic: 3, rare: 2, common: 1 };
-        const topResult = results.reduce<LocalGachaResultEntry | undefined>((best, entry) =>
-            !best || (ranks[entry.rarityTier] ?? 0) > (ranks[best.rarityTier] ?? 0) ? entry : best, undefined);
+    /**
+     * 開場宿命轉蛋（PROG-2-2236）：抽卡已在開場流程完成，這裡只借同一個滿版結果畫面展示。
+     * 大立繪固定為玩家選定的核心名將（不一定是最高稀有）；開場不能再抽，返回／關閉都呼叫 onClose。
+     */
+    public async presentOpeningResults(
+        host: UIScreenPreviewHost, results: LocalGachaResultEntry[], heroId: string, onClose: () => void | Promise<void>,
+    ): Promise<void> {
+        const hero = results.find(entry => entry.general.id === heroId) ?? pickTopGachaResult(results);
+        await this._renderPullResult(host, results.length, results, '宿命轉蛋', 'gems', { hero, onBack: onClose, repull: null });
+    }
+
+    private async _renderPullResult(
+        host: UIScreenPreviewHost, drawCount: number, results: LocalGachaResultEntry[], title: string,
+        currency: 'gems' | 'gold' | 'tickets' | 'mentorTickets',
+        flow: { hero: LocalGachaResultEntry | undefined; onBack: () => void | Promise<void>; repull: (() => void | Promise<void>) | null },
+    ): Promise<void> {
+        const topResult = flow.hero;
+        const repull = flow.repull;
         const summary = results
             .slice(0, 5)
             .map((entry) => `${this._toPullResultRarityLabel(entry.rarityTier)} ${entry.general.name}`)
@@ -186,21 +210,24 @@ export class GachaFlowCoordinator {
         const cards = ['347', '353', '359', '365', '371', '378', '383', '388', '393', '398'];
         const cardActives: Record<string, boolean> = {};
         cards.forEach((id, index) => { cardActives[`GachaPullResult_div_${id}`] = index < results.length; });
+        // 開場沒有再抽：藏起再抽鈕（PROG-2-2236）
+        cardActives.GachaPullResult_div_413 = repull !== null;
         binder.setActives(cardActives);
 
+        const opening = repull === null;
         binder.setTexts({
             ...cardTexts,
-            GachaPullResult_div_42: drawCount === 10 ? this._options.tenPullHeaderText ?? '本地轉蛋結果 · 十連抽' : `${title}結果`,
+            GachaPullResult_div_42: opening ? `${title} · ${drawCount === 10 ? '十連抽' : '結果'}` : drawCount === 10 ? this._options.tenPullHeaderText ?? '本地轉蛋結果 · 十連抽' : `${title}結果`,
             GachaPullResult_div_195: topResult ? topResult.general.name : '本次召喚結果',
             GachaPullResult_div_196: topResult
-                ? `${this._toPullResultRarityLabel(topResult.rarityTier)} · 本次最高稀有`
+                ? `${this._toPullResultRarityLabel(topResult.rarityTier)} · ${opening ? '宿命核心' : '本次最高稀有'}`
                 : '召喚完成',
             GachaPullResult_div_139: summary || '本次召喚已完成。',
             GachaPullResult_div_203: `${results.length} / ${drawCount}`,
             GachaPullResult_div_343: `✦ ${title}結果 (${results.length}/${drawCount})${topResult ? ` · 最高 ${this._toPullResultRarityLabel(topResult.rarityTier)} ${topResult.general.name}` : ''}`,
-            GachaPullResult_div_202: '返回轉蛋 ›',
+            GachaPullResult_div_202: opening ? '進入大廳 ›' : '返回轉蛋 ›',
             GachaPullResult_div_173: drawCount === 10 ? '再抽十連' : `再${title}一次`,
-            GachaPullResult_div_412: '返回卡池',
+            GachaPullResult_div_412: opening ? '進入大廳' : '返回卡池',
             GachaPullResult_div_413: drawCount === 10 ? '再抽十連' : `再${title}一次`,
             GachaPullResult_div_186: `${currency === 'gold' ? '金幣' : currency === 'tickets' ? '召喚券' : currency === 'mentorTickets' ? '支援券' : '玉'} ${wallet[currency].toLocaleString('zh-TW')}`,
             GachaPullResult_span_13: `SSR+ ×${rarityStats.high}`,
@@ -215,7 +242,7 @@ export class GachaFlowCoordinator {
             this._updateHeroPortrait(binder, topResult.general.id);
         }
 
-        this._resultBackAction = this._options.onBackToGacha;
+        this._resultBackAction = flow.onBack;
         this._resultRepullAction = repull;
 
         const backNode = binder.getNode('GachaPullResult_div_412');
@@ -232,7 +259,7 @@ export class GachaFlowCoordinator {
             closeNode.on(Button.EventType.CLICK, this._onResultBack, this);
         }
 
-        const repullNode = binder.getNode('GachaPullResult_div_413');
+        const repullNode = repull ? binder.getNode('GachaPullResult_div_413') : null;
         if (repullNode) {
             repullNode.getComponent(Button) ?? repullNode.addComponent(Button);
             repullNode.off(Button.EventType.CLICK, this._onResultRepullTen, this);
@@ -311,27 +338,30 @@ export class GachaFlowCoordinator {
     }
 
     private _updateHeroPortrait(binder: any, generalId: string): void {
-        const portraitNode = binder.getNode ? binder.getNode('GachaPullResult_hero_portrait') : null;
+        const portraitNode: Node | null = binder.getNode ? binder.getNode('GachaPullResult_hero_portrait') : null;
         if (!portraitNode) return;
-        const sprite = portraitNode.getComponent(Sprite) || portraitNode.addComponent(Sprite);
-        const normId = generalId.toLowerCase().replace(/-/g, '_');
-        const portraitPath = `sprites/generals/${normId}_portrait`;
-        
-        if (typeof resources !== 'undefined' && resources.load) {
-            resources.load(`${portraitPath}/spriteFrame`, SpriteFrame, (err, sf) => {
-                if (!err && sf) {
-                    sprite.spriteFrame = sf;
-                } else {
-                    resources.load(portraitPath, Texture2D, (texErr, tex) => {
-                        if (!texErr && tex) {
-                            const fallbackSf = new SpriteFrame();
-                            fallbackSf.texture = tex;
-                            sprite.spriteFrame = fallbackSf;
-                        }
-                    });
-                }
-            });
-        }
+        // 版面 objectFit 非 fill 時，圖畫在 <id>_ImageContent 子節點（已按 contain 置中）；換圖要換在那裡並重算大小，
+        // 不能在外框另掛 Sprite，否則版面烘進去的示意立繪（關羽）會疊在後面（issue #2086）。
+        const content = portraitNode.getChildByName(`${portraitNode.name}_ImageContent`);
+        const sprite = (content ?? portraitNode).getComponent(Sprite) ?? (content ?? portraitNode).addComponent(Sprite);
+        // 新立繪載完前先藏起來：不讓版面預設圖或上一位冒充這次的主角
+        const seq = ++this._heroPortraitSeq;
+        sprite.enabled = false;
+        void loadGeneralPortrait(generalId).then((frame) => {
+            if (seq !== this._heroPortraitSeq || !sprite.isValid || !frame) return;
+            sprite.sizeMode = Sprite.SizeMode.CUSTOM;
+            sprite.trim = false;
+            sprite.spriteFrame = frame;
+            const box = portraitNode.getComponent(UITransform);
+            const target = sprite.node.getComponent(UITransform);
+            if (box && target) {
+                const fit = fitContain(box.width, box.height, frame.originalSize.width, frame.originalSize.height);
+                target.setContentSize(fit.width, fit.height);
+            }
+            sprite.enabled = true;
+        }).catch((error) => {
+            UCUFLogger.warn(LogCategory.LIFECYCLE, '[GachaFlowCoordinator] hero portrait load failed', error);
+        });
     }
 
     private _emitError(error: unknown, fallbackMessage: string): void {
