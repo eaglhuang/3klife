@@ -45,3 +45,11 @@ export function createNewPlayerOpeningFlow(): OpeningFlowController {
     };
     return new OpeningFlowController(config);
 }
+
+/**
+ * 是否先掛開場面板（PROG-2-2223）：新玩家，或讀檔後開場還沒播完。
+ * 線上首開時其他約 40 個大廳面板逐一下載要一分多鐘，先掛開場才能馬上看到旁白。
+ */
+export function shouldMountOpeningFirst(isNewPlayer: boolean, openingPhase: string | null): boolean {
+    return isNewPlayer || openingPhase !== null;
+}

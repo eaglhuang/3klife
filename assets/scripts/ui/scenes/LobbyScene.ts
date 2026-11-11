@@ -165,7 +165,7 @@ import { DESTINY_PORTRAIT_SPEC, FaceMarks, PORTRAIT_FRAME_SPEC, PortraitFrameSpe
 import { LobbyOpeningPanels } from '../core/LobbyOpeningPanels';
 import { INTRO_TICK_SEC, OpeningIntroController } from '../core/OpeningIntroController';
 import { InitialShowcaseController } from '../core/InitialShowcaseController';
-import { createNewPlayerOpeningFlow, OPENING_INTRO_DONE, SHOWCASE_DONE_EVENT } from '../../core/systems/NewPlayerOpening';
+import { createNewPlayerOpeningFlow, OPENING_INTRO_DONE, SHOWCASE_DONE_EVENT, shouldMountOpeningFirst } from '../../core/systems/NewPlayerOpening';
 import { OPENING_BEAUTY_POOL_ID, openingBeautyCandidates } from '../../core/systems/OpeningBeauty';
 import type { OpeningFlowController } from '../../core/systems/OpeningFlowController';
 import type { GachaConfig } from '../../core/models/GachaConfig';
@@ -242,6 +242,10 @@ import { BLOODLINE_TREE_OPEN_LINE } from '../../core/systems/BloodlineTreeSlots'
 import { delegateSchedule } from '../../core/systems/AutoNurture';
 
 const { ccclass } = _decorator;
+/** 開場走完、大廳還在掛載時的整備提示（PROG-2-2223） */
+const LOBBY_LOADING_HINT_TEXT = '幕府大堂整備中，請稍候……';
+const LOBBY_LOADING_HINT_FONT_SIZE = 36;
+const LOBBY_LOADING_HINT_SIZE = { width: 900, height: 80 };
 
 /** 命紋靈獸摘要的暫定位置（PROVISIONAL：畫面沒有預留節點，程式掛在 CharacterDs3Host 下，待 Codex 實機微調） */
 /** 六角圖暫定位置與半徑：畫面沒有預留節點，由程式掛在 CharacterDs3Host 下（PROVISIONAL，座標待 Codex 實機微調） */
@@ -344,6 +348,9 @@ interface GachaPoolConfigLike {
 export class LobbyScene extends Component {
 
     private _generals: GeneralConfig[] = [];
+    /** 武將資料載入（只發一次）；開場優先時提早與面板掛載並行，宿命轉蛋只等它（PROG-2-2223） */
+    private _generalsLoad: Promise<GeneralConfig[]> | null = null;
+    private _lobbyLoadingHint: Node | null = null;
     private _encounters: EncounterConfig[] = [];
     /** 天下征鋒的 BOSS 關（PROG-2-2101）；不混進連環破與大廳開戰關卡 */
     private _extremeEncounters: EncounterConfig[] = [];
@@ -646,80 +653,87 @@ export class LobbyScene extends Component {
         this._ensureWidget(detailNode);
 
         this._isNewPlayer = !(await this._loadPlayerSave());
-        await this._mountLobbyMainHub();
-        await this._mountLobbyBackdrop();
-        await this._mountSecondaryMainHubs();
-        await this._mountSeasonHud();
-        await this._mountCityHub();
-        await this._mountOfficerHud();
-        await this._mountNurtureFlow();
-        await this._mountGraduationRecord();
-        await this._mountAcademyGraduation();
-        await this._mountClanShrine();
-        await this._mountOpeningOffer();
-        await this._mountSeasonChroniclePopup();
-        await this._mountSeasonEventPopup();
-        await this._mountLineagePopup();
-        await this._mountQuickSortiePopup();
-        await this._mountSeasonPass();
-        await this._mountMentorBorrow();
-        await this._mountMentorHoldings();
-        await this._mountMentorCardDetail();
-        await this._mountGeneralVersionGallery();
-        await this._mountBondingSetup();
-        await this._mountJobChange();
-        await this._mountDomestic();
-        await this._mountRecruitHall();
-        await this._mountRivalDiplomacy();
-        await this._mountWarehouse();
-        await this._mountJournalHub();
-        await this._mountGeneralJournal();
-        await this._mountBattleReview();
-        await this._mountTournament();
-        await this._mountWishAltar();
-        await this._mountDailyReport();
-        await this._mountHallBoard();
-        await this._mountExtremeTask();
-        await this._mountLobbyHall();
-        await this._mountMercenaryPanel();
-        await this._mountGovernorHall();
-        await this._mountItemBag();
-        await this._mountRelationGraph();
-        await this._mountRedFaceShowcase();
-        // 語系字串從沒被載入過，信件/教學等 t(key) 都回傳鍵名（PROG-2-1623）；開場面板前先載好
-        try {
-            await services().i18n.setLocale(services().i18n.locale);
-        } catch (error) {
-            console.warn('[LobbyScene] 語系字串載入失敗', error);
+        // 開場優先（PROG-2-2223）：新玩家或讀檔接回開場時先掛開場面板、立刻顯示旁白，其餘面板之後再掛；
+        // 後掛的面板一律放在最上層，所以每掛一個就把開場面板拉回最上層。舊玩家照原順序。
+        const openingFirst = shouldMountOpeningFirst(this._isNewPlayer, services().session.openingPhase);
+        if (openingFirst) {
+            void this._loadGenerals().catch(() => undefined);
+            await this._mountOpeningPanels();
         }
-        await this._mountDestinyOpening();
-        // 信件先掛：讀檔接回名將登場幕時要先開信（PROG-2-2222）
-        await this._mountOpeningLetter();
-        await this._mountOpeningIntro();
-        await this._mountOnboardingTutorial();
-        await this._mountSageOracle();
-        await this._mountRetireReview();
-        await this._mountSpiritCodex();
-        await this._mountUltimateCodex();
-        await this._mountDaughterRoutePopup();
-        await this._mountMarriageProposalPopup();
-        await this._mountPrisonerPopup();
-        await this._mountDuplicatePullPopup();
-        await this._mountScoutPanel();
-        await this._mountDestinyShop();
-        await this._mountYearReport();
-        await this._mountDeckSelect();
-        await this._mountLeadSelect();
-        await this._mountSortieSetup();
-        await this._mountCharacterDs3Host();
-        await this._mountEliteTroopCodexPanel();
-        await this._mountLobbyMissionDetailDialogPanel();
-        await this._mountLobbyLeaderboardPanel();
-        await this._mountSeasonReportPanel();
-        await this._mountSandtableTerritoryPanel();
+        const mounts: Array<() => Promise<void>> = [
+            () => this._mountLobbyMainHub(),
+            () => this._mountLobbyBackdrop(),
+            () => this._mountSecondaryMainHubs(),
+            () => this._mountSeasonHud(),
+            () => this._mountCityHub(),
+            () => this._mountOfficerHud(),
+            () => this._mountNurtureFlow(),
+            () => this._mountGraduationRecord(),
+            () => this._mountAcademyGraduation(),
+            () => this._mountClanShrine(),
+            () => this._mountOpeningOffer(),
+            () => this._mountSeasonChroniclePopup(),
+            () => this._mountSeasonEventPopup(),
+            () => this._mountLineagePopup(),
+            () => this._mountQuickSortiePopup(),
+            () => this._mountSeasonPass(),
+            () => this._mountMentorBorrow(),
+            () => this._mountMentorHoldings(),
+            () => this._mountMentorCardDetail(),
+            () => this._mountGeneralVersionGallery(),
+            () => this._mountBondingSetup(),
+            () => this._mountJobChange(),
+            () => this._mountDomestic(),
+            () => this._mountRecruitHall(),
+            () => this._mountRivalDiplomacy(),
+            () => this._mountWarehouse(),
+            () => this._mountJournalHub(),
+            () => this._mountGeneralJournal(),
+            () => this._mountBattleReview(),
+            () => this._mountTournament(),
+            () => this._mountWishAltar(),
+            () => this._mountDailyReport(),
+            () => this._mountHallBoard(),
+            () => this._mountExtremeTask(),
+            () => this._mountLobbyHall(),
+            () => this._mountMercenaryPanel(),
+            () => this._mountGovernorHall(),
+            () => this._mountItemBag(),
+            () => this._mountRelationGraph(),
+            () => this._mountRedFaceShowcase(),
+            ...(openingFirst ? [] : [() => this._mountOpeningPanels()]),
+            () => this._mountSageOracle(),
+            () => this._mountRetireReview(),
+            () => this._mountSpiritCodex(),
+            () => this._mountUltimateCodex(),
+            () => this._mountDaughterRoutePopup(),
+            () => this._mountMarriageProposalPopup(),
+            () => this._mountPrisonerPopup(),
+            () => this._mountDuplicatePullPopup(),
+            () => this._mountScoutPanel(),
+            () => this._mountDestinyShop(),
+            () => this._mountYearReport(),
+            () => this._mountDeckSelect(),
+            () => this._mountLeadSelect(),
+            () => this._mountSortieSetup(),
+            () => this._mountCharacterDs3Host(),
+            () => this._mountEliteTroopCodexPanel(),
+            () => this._mountLobbyMissionDetailDialogPanel(),
+            () => this._mountLobbyLeaderboardPanel(),
+            () => this._mountSeasonReportPanel(),
+            () => this._mountSandtableTerritoryPanel(),
+        ];
+        for (const mount of mounts) {
+            await mount();
+            if (openingFirst) this._keepOpeningOnTop();
+        }
         this._registerUIControllers();
         await services().ui.open(UIID.LobbyMain);
         this._openingUiReady = true;
+        // 開場優先掛載（PROG-2-2223）：大廳掛完才收起整備提示、顯示新手引導（引導要指向大廳按鈕）
+        this._lobbyLoadingHint?.destroy();
+        this._lobbyLoadingHint = null;
+        this._openingPanels?.refreshOnboarding();
         this._seasonChroniclePopup?.refreshAvailability();
         // 首勝紅顏展示開著時先不彈俘虜窗，等紅顏關閉再彈（PROG-2-1129）
         if (!this._redFaceHost?.node.active) {
@@ -745,9 +759,7 @@ export class LobbyScene extends Component {
                 services().loadSeasonModifiers()
             ]);
             
-            this._generals = await services().resource.loadJson<GeneralConfig[]>(
-                'data/generals', { tags: ['LobbyScene'] }
-            );
+            this._generals = await this._loadGenerals();
             // 武將資料格式檢查（MVP-01）：只警告，不中斷大廳載入
             warnGeneralSchemaOnLoad(this._generals, 'LobbyScene data/generals');
             // 核心欄位覆蓋率（GDP-05）：只記一行摘要，不擋大廳載入
@@ -764,11 +776,6 @@ export class LobbyScene extends Component {
             UCUFLogger.error(LogCategory.DATA, '[LobbyScene] 載入資料失敗:', error);
         }
         await this._setupRivalOfficers();
-
-        // 測試 Toast
-        this.scheduleOnce(() => {
-            services().event.emit('SHOW_TOAST', { message: '系統：水墨金屬 UI 已啟動 (v2.2)' });
-        }, 1);
 
         this._ready = true;
         SceneLoadProgress.complete();
@@ -2260,6 +2267,7 @@ export class LobbyScene extends Component {
                 generals: () => this._generals,
                 // 讀檔接回未播完的開場也算：信件與教學要等開場走到該幕才出現，不疊在開場上（PROG-2-1635）
                 isNewPlayer: () => this._isNewPlayer || this._isOpeningInProgress(),
+                lobbyReady: () => this._openingUiReady,
                 loadGachaConfig: async () => await this._loadDataJson<GachaConfig[]>('data/gacha-config') ?? [],
                 mountHost: async (name, screen, bindings) => {
                     const host = await this._mountPreviewScreenHost(name, screen, bindings);
@@ -2812,6 +2820,29 @@ export class LobbyScene extends Component {
         this._applyFramePortraits(binder, 'redFace', this._redFace.framePortraitKeys());
     }
 
+    /** 語系字串＋開場面板（宿命轉蛋、信件、第一幕、新手引導）；開場優先時最先掛（PROG-2-2223）。 */
+    private async _mountOpeningPanels(): Promise<void> {
+        // 語系字串從沒被載入過，信件/教學等 t(key) 都回傳鍵名（PROG-2-1623）；開場面板前先載好
+        try {
+            await services().i18n.setLocale(services().i18n.locale);
+        } catch (error) {
+            console.warn('[LobbyScene] 語系字串載入失敗', error);
+        }
+        await this._mountDestinyOpening();
+        // 信件先掛：讀檔接回名將登場幕時要先開信（PROG-2-2222）
+        await this._mountOpeningLetter();
+        await this._mountOpeningIntro();
+        await this._mountOnboardingTutorial();
+    }
+
+    /** 開場優先掛載期間，把正在顯示的開場面板拉回最上層，後掛的面板不會蓋住旁白（PROG-2-2223）。 */
+    private _keepOpeningOnTop(): void {
+        const nodes = [this._introHost?.node, this._showcaseHost?.node, ...(this._openingPanels?.activeHostNodes() ?? [])];
+        for (const node of nodes) {
+            if (node?.active) this._bringNodeToFront(node);
+        }
+    }
+
     /**
      * 新局宿命轉蛋（OPEN-05）：新玩家（沒有存檔）進大廳時先開，鎖定後開新局並存檔。
      * 規則全在 DestinyOpeningController（純邏輯），這裡只綁按鈕、套 FlowView。
@@ -2853,7 +2884,10 @@ export class LobbyScene extends Component {
         this._recordOpeningPhase();
         this._onOpeningPhaseAdvanced();
         // 開場最後一幕結束才把大廳打開（PROG-2-1620）
-        if (wasInProgress && !this._isOpeningInProgress()) {
+        // 開場優先掛載（PROG-2-2223）時大廳可能還沒掛完：先顯示整備提示，交給 start() 掛完後開大廳
+        if (wasInProgress && !this._isOpeningInProgress() && !this._openingUiReady) {
+            this._showLobbyLoadingHint();
+        } else if (wasInProgress && !this._isOpeningInProgress()) {
             if (this._ready) this._openLobbyHall();
             void services().ui.open(UIID.LobbyMain).then(() => { this._seasonChroniclePopup?.refreshAvailability(); });
         } else {
@@ -2900,8 +2934,42 @@ export class LobbyScene extends Component {
             if (this._openingPanels) this._openingPanels.openLetterThen(show);
             else show();
         } else if (phaseId === 'destiny') {
-            this.openDestinyOpening();
+            // 開場優先掛載（PROG-2-2223）時武將資料可能還沒載完；轉蛋抽武將要用，只等武將資料
+            if (this._generals.length > 0) {
+                this.openDestinyOpening();
+                return;
+            }
+            void this._loadGenerals()
+                .then(generals => {
+                    if (this._generals.length === 0) this._generals = generals;
+                    services().session.setGeneralTemplates(this._generals);
+                })
+                .catch(error => { UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 宿命轉蛋前武將資料載入失敗', error); })
+                .then(() => { this.openDestinyOpening(); });
         }
+    }
+
+    /** 開場走完但大廳還沒掛完時的整備提示，避免黑畫面（PROG-2-2223）；大廳掛完即移除。 */
+    private _showLobbyLoadingHint(): void {
+        if (this._lobbyLoadingHint || this._openingUiReady) return;
+        const node = new Node('LobbyLoadingHint');
+        node.layer = this.node.layer;
+        node.parent = this.node;
+        node.addComponent(UITransform).setContentSize(LOBBY_LOADING_HINT_SIZE.width, LOBBY_LOADING_HINT_SIZE.height);
+        const label = node.addComponent(Label);
+        label.string = LOBBY_LOADING_HINT_TEXT;
+        label.fontSize = LOBBY_LOADING_HINT_FONT_SIZE;
+        label.lineHeight = LOBBY_LOADING_HINT_FONT_SIZE + 8;
+        label.color = new Color(232, 200, 120, 255);
+        this._bringNodeToFront(node);
+        this._lobbyLoadingHint = node;
+    }
+
+    private _loadGenerals(): Promise<GeneralConfig[]> {
+        if (!this._generalsLoad) {
+            this._generalsLoad = services().resource.loadJson<GeneralConfig[]>('data/generals', { tags: ['LobbyScene'] });
+        }
+        return this._generalsLoad;
     }
 
     private _showIntro(): void {

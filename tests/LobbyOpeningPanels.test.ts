@@ -367,6 +367,36 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         assert.isFalse(f.hosts.get('OpeningLetterHost')!.node.active);
     });
 
+    suite.test('新手引導等大廳掛完才出現：宿命鎖定後 lobbyReady 為 false 時不顯示（PROG-2-2223）', async () => {
+        const f = fixture();
+        let lobbyReady = false;
+        f.ports.lobbyReady = () => lobbyReady;
+        await f.panels.mountOnboarding();
+        await f.panels.mountDestiny();
+        f.panels.openDestiny();
+        f.click('DestinyOpeningHost', 'btnDestinyRoll'); await flush();
+        f.clickStar(); f.click('DestinyOpeningHost', 'btnDestinyConfirm'); await flush();
+        assert.isTrue(f.events.includes('destiny-locked'));
+        assert.isFalse(f.hosts.get('OnboardingTutorialHost')!.node.active, '大廳還沒掛完，引導箭頭沒有目標');
+        lobbyReady = true;
+        f.panels.refreshOnboarding();
+        assert.isTrue(f.hosts.get('OnboardingTutorialHost')!.node.active);
+    });
+
+    suite.test('activeHostNodes 只回顯示中的開場面板，供宿主維持最上層（PROG-2-2223）', async () => {
+        const f = fixture();
+        await f.panels.mountOpeningLetter();
+        await f.panels.mountDestiny();
+        assert.equals(0, f.panels.activeHostNodes().length);
+        f.panels.openLetterThen(() => undefined);
+        const nodes = f.panels.activeHostNodes();
+        assert.equals(1, nodes.length);
+        assert.isTrue(nodes[0] === f.hosts.get('OpeningLetterHost')!.node);
+        await f.panels.closeOpeningLetter();
+        assert.isTrue(f.panels.openDestiny());
+        assert.isTrue(f.panels.activeHostNodes()[0] === f.hosts.get('DestinyOpeningHost')!.node);
+    });
+
     suite.test('名將登場後開宿命轉蛋：直接進轉蛋，不再插信（PROG-2-2222）', async () => {
         const f = fixture();
         await f.panels.mountOpeningLetter();

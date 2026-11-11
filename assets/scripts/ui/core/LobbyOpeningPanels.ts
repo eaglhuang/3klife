@@ -22,6 +22,8 @@ export interface LobbyOpeningPanelPorts {
     generals: () => readonly GeneralConfig[];
     /** 新局，或讀檔後開場尚未播完 */
     isNewPlayer: () => boolean;
+    /** 大廳面板是否已掛完；開場優先掛載時新手引導要等它（引導指向大廳按鈕，PROG-2-2223）。未提供視為已就緒 */
+    lobbyReady?: () => boolean;
     loadGachaConfig: () => Promise<GachaConfig[]>;
     mountHost: (name: string, screen: string, bindings: { buttonId: string; handler: () => void }[]) => Promise<LobbyOpeningPanelHost>;
     bringToFront: (node: Node) => void;
@@ -52,9 +54,16 @@ export class LobbyOpeningPanels {
 
     constructor(private readonly _ports: LobbyOpeningPanelPorts) {}
 
+    /** 目前顯示中的開場面板節點（信件、宿命轉蛋、新手引導），供宿主維持最上層（PROG-2-2223）。 */
+    public activeHostNodes(): Node[] {
+        return [this._openingLetterHost, this._destinyHost, this._onboardingHost]
+            .filter((host): host is LobbyOpeningPanelHost => host !== null && host.node.active)
+            .map(host => host.node);
+    }
+
     public async mountOnboarding(): Promise<void> {
         this._onboarding = new OnboardingFlowController({
-            ready: () => !this._ports.isNewPlayer() || this._destiny?.started === true,
+            ready: () => (this._ports.lobbyReady?.() ?? true) && (!this._ports.isNewPlayer() || this._destiny?.started === true),
             state: () => this._ports.session().onboarding,
             acknowledge: segmentId => this._ports.session().acknowledgeOnboarding(segmentId),
         });
