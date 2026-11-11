@@ -1,7 +1,7 @@
 /** 首戰操作第一版：事件推進提示；不改戰鬥規則、不自行發獎。 */
 export type OperationStep = 'deploy' | 'clash' | 'ultimate' | 'victory' | 'retreat' | 'stalemate' | 'completed';
 export const OPERATION_GUIDE = {
-    deploy: { message: '① 部署：選左側兵種卡，拖到我方底線的中路格（第3路）部署；灰色卡表示糧草或條件不足。', target: 'TigerTallyRoot' },
+    deploy: { message: '① 部署：選左側兵種卡，拖到我方底線的中路格（第3路）部署；灰色卡表示糧草或條件不足。卡上 15 是糧草費用；底部 40／100、35／120 是攻擊／生命，不是蓄力。奧義蓄力請看 SP。', target: 'TigerTallyRoot' },
     clash: { message: '② 推進交鋒：部署後按「結束回合」推進部隊；與敵軍接觸會自動交鋒，觀察戰報及怒氣。', target: 'EndTurnBtn' },
     ultimate: { message: '③ SP 是奧義能量：我軍擊殺敵隊可充能，不是每按回合就增加。蓄滿後點「斬／奧義」選技能與目標；成功施放才消耗全部 SP。', target: 'UltimateBtn' },
     victory: { message: '④ 勝負：擊敗敵將或摧毀敵陣地即可勝利；我將陣亡、我方陣地歸零或達一般回合上限會失敗。沒有奧義也能取勝。', target: 'EndTurnBtn' },

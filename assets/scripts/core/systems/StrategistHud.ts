@@ -114,7 +114,7 @@ export function buildStrategistHudSummary(input: StrategistHudInput): Strategist
 /**
  * 軍師 HUD 的戰場日誌句（PROG-2-1744，暫定）：戰場尚無 HUD 欄位節點，先在回合開始寫進戰場日誌。
  * 只列有內容的欄位（執行中戰法、危害、物件、回收、缺口），都是預設空值時回傳空字串，不寫日誌。
- * 例：「軍師：曹操 INT 91，正在執行：火攻｜危害 火場延燒｜營帳：存活 2｜回收 石材 3｜缺少抗混亂」
+ * 欄位各自換行（環境、危害、物件等），避免窄幅視窗留下孤立分隔符。
  */
 export function strategistHudLogLine(input: StrategistHudInput): string {
     const summary = buildStrategistHudSummary(input);
@@ -125,7 +125,7 @@ export function strategistHudLogLine(input: StrategistHudInput): string {
     if (input.interactiveObjects.length > 0) parts.push(summary.interactiveObjectStatus.split('\n').join('；'));
     if ((Object.keys(SALVAGE_LABEL) as (keyof SalvageTotals)[]).some((key) => input.salvage[key] > 0)) parts.push(`回收 ${summary.stageSalvageSummary}`);
     if (input.missingCounters.length > 0) parts.push(summary.recommendedLoadoutGap);
-    return parts.length > 0 ? `軍師：${parts.join('｜')}` : '';
+    return parts.length > 0 ? `軍師：${parts.join('\n')}` : '';
 }
 
 /** 「曹操 INT 91，正在執行：夜襲（情報 30 / 40）」；情報以 目前值 / 門檻 呈現，不用百分比（§6.3） */
