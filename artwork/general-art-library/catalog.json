@@ -1342,6 +1342,17 @@
             "version": "0002",
             "file": "standing/wei_yan__魏延__standing_0002.png",
             "status": "review-pending"
+          },
+          {
+            "version": "0003",
+            "file": "standing/wei_yan__魏延__standing_0003.png",
+            "status": "review-pending",
+            "style": "anime-influenced face; semi-realistic materials",
+            "palette": "pine green-charcoal iron-antique bronze",
+            "distinguishingFeatures": "narrow long face, high cheekbones, sharp eyes, short tied beard, black-green high crown and long tied hair; distinct from Zhang Fei",
+            "weapon": "compact forward-curved single-edged long-handled blade",
+            "sha256": "e0cf256a7e1a10a2232c56abd5c797c09443a5107663a5c7e5a0e9c3d09216ca",
+            "canvas": "1024x1536 RGBA"
           }
         ]
       },
