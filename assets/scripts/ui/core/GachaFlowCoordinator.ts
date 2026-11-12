@@ -1,6 +1,7 @@
 // @spec-source → 轉蛋系統.md (doc_spec_0042)；PROG-2-1429 依建檔紀錄補標出處
 import { Button, Node, Sprite, UITransform } from 'cc';
 import { disableCharCacheForCjk } from './LabelCjkCache';
+import { formatGachaLine, loadGachaLines } from './GachaLines';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { LocalGachaService, type LocalGachaResultEntry } from '../../core/services/LocalGachaService';
 import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
@@ -181,7 +182,9 @@ export class GachaFlowCoordinator {
             labels: {
                 header: `宿命轉蛋 · 十連全收${pool.resets > 0 ? `（已重轉 ${pool.resets} 次）` : ''}`,
                 heroSub: '宿命名將',
-                heroDesc: pool.message || (pool.quote ? `「${pool.quote}」` : ''),
+                // 有訊息先顯示訊息；否則用台詞表，台詞表沒有才用池內引言
+                heroDesc: pool.message,
+                heroDescFallback: pool.quote ? `「${pool.quote}」` : '',
                 back: '確定 · 全部收下',
                 repull: '免費重轉',
             },
@@ -194,7 +197,7 @@ export class GachaFlowCoordinator {
         flow: {
             hero: LocalGachaResultEntry | undefined; onBack: () => void | Promise<void>; repull: (() => void | Promise<void>) | null;
             /** 池別文案（宿命池等）；沒給時用一般轉蛋文案 */
-            labels?: { header: string; heroSub: string; heroDesc: string; back: string; repull: string };
+            labels?: { header: string; heroSub: string; heroDesc: string; heroDescFallback?: string; back: string; repull: string };
         },
     ): Promise<void> {
         const topResult = flow.hero;
@@ -214,6 +217,8 @@ export class GachaFlowCoordinator {
         }
 
         const rarityStats = this._buildPullResultRarityStats(results);
+        // 本次主角登場台詞（PROG-2-2244）：所有池共用；沒有台詞退回原本描述
+        const heroLine = topResult ? formatGachaLine(await loadGachaLines(), topResult.general.id) : null;
 
         try { await host.showScreen(GACHA_PULL_RESULT_SCREEN_ID); }
         catch { throw new Error('召喚已完成並入冊，但結果畫面載入失敗。'); }
@@ -250,11 +255,11 @@ export class GachaFlowCoordinator {
             GachaPullResult_span_15: `R/N ×${rarityStats.low}`,
             GachaPullResult_hero_rarity: topResult ? `✦ ${this._toPullResultRarityLabel(topResult.rarityTier)} · 絕世登場 ✦` : '✦ 絕世名將 ✦',
             GachaPullResult_hero_name: topResult ? `${topResult.general.name}${topResult.general.courtesyName ? ` · ${topResult.general.courtesyName}` : ''}` : '絕世名將',
-            GachaPullResult_hero_desc: topResult ? (topResult.general.description || '義薄雲天 · 威震華夏 · 萬世流芳') : '名揚四海 · 天下歸心',
+            GachaPullResult_hero_desc: heroLine ?? (topResult ? (topResult.general.description || '義薄雲天 · 威震華夏 · 萬世流芳') : '名揚四海 · 天下歸心'),
             ...(labels ? {
                 GachaPullResult_div_42: labels.header,
                 GachaPullResult_div_196: topResult ? `${this._toPullResultRarityLabel(topResult.rarityTier)} · ${labels.heroSub}` : labels.heroSub,
-                GachaPullResult_hero_desc: labels.heroDesc,
+                GachaPullResult_hero_desc: labels.heroDesc || heroLine || labels.heroDescFallback || '',
                 GachaPullResult_div_202: `${labels.back} ›`,
                 GachaPullResult_div_412: labels.back,
                 GachaPullResult_div_173: labels.repull,
