@@ -10,6 +10,8 @@ export interface GeneralArtPathConfig {
     portrait: readonly string[];
     avatar: readonly string[];
     avatarPlaceholder: string;
+    /** 舊 id → 名冊 id（PROG-2-2246）：同一人舊檔名已刪，支援卡等舊 id 改讀新圖 */
+    aliases: Readonly<Record<string, string>>;
 }
 
 export const GENERAL_ART_PATHS_JSON = 'data/general-art-paths';
@@ -18,6 +20,7 @@ const DEFAULT_CONFIG: GeneralArtPathConfig = {
     portrait: ['sprites/generals/{file}_portrait'],
     avatar: ['sprites/generals/avatars/{file}_avatar', 'sprites/ui_avatars/cropped/{file}_avatar'],
     avatarPlaceholder: 'sprites/ui_avatars/unknown_avatar_{gender}',
+    aliases: { 'huang-yueying': 'huang-yue-ying', 'cai-wenji': 'cai-yan', 'zhen-mi': 'zhen-ji' },
 };
 
 let _config: GeneralArtPathConfig = DEFAULT_CONFIG;
@@ -33,6 +36,7 @@ export function configureGeneralArtPaths(raw: Partial<GeneralArtPathConfig> | nu
         portrait: Array.isArray(raw.portrait) && raw.portrait.length ? raw.portrait : DEFAULT_CONFIG.portrait,
         avatar: Array.isArray(raw.avatar) && raw.avatar.length ? raw.avatar : DEFAULT_CONFIG.avatar,
         avatarPlaceholder: typeof raw.avatarPlaceholder === 'string' ? raw.avatarPlaceholder : DEFAULT_CONFIG.avatarPlaceholder,
+        aliases: raw.aliases && typeof raw.aliases === 'object' ? raw.aliases : DEFAULT_CONFIG.aliases,
     };
 }
 
@@ -43,7 +47,8 @@ export function resetGeneralArtPaths(): void {
 /** 'portraits/generals/cao-cao'（portraitKey）或 'cao-cao' → 'cao-cao' */
 export function generalIdFromKey(idOrPortraitKey: string): string {
     const parts = idOrPortraitKey.split('/');
-    return parts[parts.length - 1];
+    const id = parts[parts.length - 1];
+    return _config.aliases[id] ?? id;
 }
 
 function fill(template: string, generalId: string): string {
