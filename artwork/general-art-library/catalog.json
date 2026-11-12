@@ -473,6 +473,15 @@
             "status": "asset-imported",
             "weaponClass": "long-polearm",
             "poseCode": "LH-035"
+          },
+          {
+            "version": "0002",
+            "file": "battle/guan_yin_ping__關銀屏__battle_0002.png",
+            "status": "review-pending",
+            "poseCode": "LH-035",
+            "poseLabel": "雙手蓄勢橫擊",
+            "sha256": "6042472505717aa2de73b99fdbba449b9897ecbedbe974061c2640499382e167",
+            "canvas": "1024x1536 RGBA"
           }
         ]
       },

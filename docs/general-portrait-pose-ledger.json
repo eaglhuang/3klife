@@ -1,0 +1,188 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-11-12",
+  "purpose": "各武器系列共用姿勢的唯一分配台帳。先登記再出稿，選定後保留，正式驗收後標記使用。",
+  "series": {
+    "LH": {
+      "name": "長柄武器",
+      "validCodes": [
+        "LH-001",
+        "LH-090"
+      ],
+      "uniquenessScope": "同一姿勢系列不得重複；相似剪影、攻擊方向或受力方式也應避免。"
+    },
+    "SW": {
+      "name": "刀劍",
+      "validCodes": [
+        "SW-001",
+        "SW-060"
+      ],
+      "uniquenessScope": "同一姿勢系列不得重複；相似剪影、攻擊方向或受力方式也應避免。"
+    }
+  },
+  "assignments": [
+    {
+      "generalId": "guan-yin-ping",
+      "generalName": "關銀屏",
+      "series": "LH",
+      "poseCode": "LH-035",
+      "poseLabel": "雙手蓄勢橫擊",
+      "selection": "使用者先前選定",
+      "selectionLocked": true,
+      "status": "reserved",
+      "uniqueness": "unverified",
+      "source": "UI-2-0171",
+      "note": "使用者已核定 LH-035 雙手蓄勢橫擊；battle_0002 已作為 review-pending 候選依此製作。與全系列姿勢完成比對及使用者採用前，不標記正式驗收。"
+    },
+    {
+      "generalId": "huang-zhong",
+      "generalName": "黃忠",
+      "series": "LH",
+      "poseCode": null,
+      "selection": "A",
+      "selectionLocked": true,
+      "status": "unmapped",
+      "uniqueness": "unverified",
+      "source": "conversation selection",
+      "note": "A 是使用者已確認的姿勢選擇，禁止要求重選或重出三稿；原草稿未找到前維持此選擇並待映射，不把任何編號當成可用。"
+    },
+    {
+      "generalId": "zhao-yun",
+      "generalName": "趙雲",
+      "series": "LH",
+      "poseCode": null,
+      "selection": "保留使用者確認的既有圖片",
+      "selectionLocked": true,
+      "status": "unmapped",
+      "uniqueness": "unverified",
+      "source": "conversation selection",
+      "note": "使用者已確認維持既有圖片，禁止要求重選或重出姿勢；原圖未找到前維持此選擇並待映射，不把任何編號當成可用。"
+    },
+    {
+      "generalId": "guan-yu",
+      "generalName": "關羽",
+      "series": "LH",
+      "poseCode": null,
+      "selection": "初選 A；之後由使用者提供關羽參考圖並逐步修正，最終核定為左上蓄勢、前腳屈膝、往左下斜劈",
+      "selectionLocked": true,
+      "status": "unmapped",
+      "uniqueness": "unverified",
+      "source": "conversation selection + user reference 697FB544-C599-4DDD-9D54-1D5B95F1A660",
+      "supersededDraftBoards": [
+        {
+          "artifact": "exec-f101bba3-a90f-4906-bb81-32dd2ca5bda8.png",
+          "generatedAt": "2026-11-11T17:56:11+08:00",
+          "status": "superseded_by_user_reference"
+        },
+        {
+          "artifact": "exec-02aa00a0-f7f7-454e-8057-bf2433d754a3.png",
+          "generatedAt": "2026-11-11T17:58:35+08:00",
+          "status": "superseded_repeated_motion_set"
+        },
+        {
+          "artifact": "exec-7bcfe7c2-eed6-448b-a380-1ccc7918dc52.png",
+          "generatedAt": "2026-11-11T18:01:14+08:00",
+          "status": "superseded_repeated_motion_set"
+        }
+      ],
+      "note": "初選 A 後，使用者提供關羽動作參考圖並核定最終方向；三張存檔的 A/B/C 選項板都沿用相同下劈、橫掃、上挑動作家族的變體，屬於同一角色的反覆重出，不得當成不同角色的新姿勢供選或重畫。保留最終動作簽名，待按使用者 001–090 姿勢圖逐一比對並補代碼；禁止要求重選或推測編號。"
+    },
+    {
+      "generalId": "ma-chao",
+      "generalName": "馬超",
+      "series": "LH",
+      "poseCode": "LH-052",
+      "selection": "C",
+      "selectionLocked": true,
+      "status": "reserved",
+      "uniqueness": "unverified",
+      "source": "conversation selection + recovered draft boards",
+      "selectionBoards": [
+        "exec-bf28a2e5-dfd8-4393-a051-8241060beede.png",
+        "exec-217f468c-2017-4c6c-ac7a-4a3cfe38b9d4.png"
+      ],
+      "note": "兩張留存選項板都清楚標示 A=LH-034、B=LH-041、C=LH-052，使用者選定的 C 因此鎖定為 LH-052；這是同一選項板的再輸出，不能算成第二組新姿勢。使用者選擇不可重選。原稿未標動作名稱，不另推測。待與其餘已選姿勢完成剪影比對後確認唯一性。"
+    },
+    {
+      "generalId": "zhang-fei",
+      "generalName": "張飛",
+      "series": "LH",
+      "poseCode": null,
+      "selection": "使用者確認既有姿勢不需修改",
+      "selectionLocked": true,
+      "status": "unmapped",
+      "uniqueness": "unverified",
+      "source": "conversation selection",
+      "note": "使用者已確認既有姿勢不需修改，禁止要求重選或重出姿勢；待由已核定戰鬥圖映射，不把任何編號當成可用。"
+    },
+    {
+      "generalId": "lu-bu",
+      "generalName": "呂布",
+      "series": "LH",
+      "poseCode": null,
+      "selection": "使用者確認既有姿勢不需修改",
+      "selectionLocked": true,
+      "status": "unmapped",
+      "uniqueness": "unverified",
+      "source": "conversation selection",
+      "note": "使用者已確認既有姿勢不需修改，禁止要求重選或重出姿勢；待由已核定戰鬥圖映射，不把任何編號當成可用。"
+    },
+    {
+      "generalId": "bao-san-niang",
+      "generalName": "鮑三娘",
+      "series": "LH",
+      "poseCode": null,
+      "selection": "B",
+      "selectionLocked": true,
+      "status": "unmapped",
+      "uniqueness": "unverified",
+      "source": "conversation selection",
+      "note": "B 是使用者已確認的姿勢選擇，禁止要求重選或重出三稿；原草稿未找到前維持此選擇並待映射，不把任何編號當成可用。"
+    },
+    {
+      "generalId": "lu-ling-qi",
+      "generalName": "呂玲綺",
+      "series": "LH",
+      "poseCode": null,
+      "selection": "B",
+      "selectionLocked": true,
+      "status": "unmapped",
+      "uniqueness": "unverified",
+      "source": "conversation selection",
+      "note": "B 是使用者已確認的姿勢選擇，禁止要求重選或重出三稿；原草稿未找到前維持此選擇並待映射，不把任何編號當成可用。"
+    },
+    {
+      "generalId": "ma-yun-lu",
+      "generalName": "馬雲騄",
+      "series": "LH",
+      "poseCode": null,
+      "selection": "A",
+      "selectionLocked": true,
+      "status": "unmapped",
+      "uniqueness": "unverified",
+      "source": "conversation selection",
+      "note": "A 是使用者已確認的姿勢選擇，禁止要求重選或重出三稿；原草稿未找到前維持此選擇並待映射，不把任何編號當成可用。"
+    },
+    {
+      "generalId": "zhu-rong",
+      "generalName": "祝融夫人",
+      "series": "LH",
+      "poseCode": null,
+      "selection": "B",
+      "selectionLocked": true,
+      "status": "unmapped",
+      "uniqueness": "unverified",
+      "source": "conversation selection",
+      "note": "B 是使用者已確認的姿勢選擇，禁止要求重選或重出三稿；原草稿未找到前維持此選擇並待映射，不把任何編號當成可用。"
+    }
+  ],
+  "audit": {
+    "coverage": "partial",
+    "reason": "關銀屏已映射至 LH-035、馬超 C 已由原三稿核對為 LH-052；其餘 9 位已知姿勢選擇已鎖定但尚未映射。已找回關羽初選 A 的兩張重複草稿板及使用者後續核定的參考圖；最終動作仍待對照 LH 編號。未知編號不可視為未使用，禁止用新草稿覆蓋已確認選擇。",
+    "nextSteps": [
+      "逐一核對已有正式戰鬥圖、原始三姿勢圖與使用者後續參考圖，回填系列代碼；馬超 C 已記為 LH-052，關羽最終參考圖已記錄但尚未對應 LH 編號。",
+      "為已選 A/B/C 草稿找回對應編號；找不到時保留已鎖定選擇並標為待映射，不要求使用者重選、不推測編號。",
+      "完成全體已選角色的代碼核對後，再釋出關銀屏 LH-035 的唯一性確認並開始正式入庫。"
+    ]
+  }
+}
