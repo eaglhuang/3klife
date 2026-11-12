@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-27T11-55-19-572Z-scope-amendment-b2594f97c250",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:42665f11da4a2a76613a7722b3ae2886d3c48ea36474ff247facb3461a0217e9",
+  "createdAt": "2026-10-27T11:55:19.572Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1 --add artifacts/ui-quality/UI-2-0121/LuBu_fullbody_candidate_v1_1024x1536.png --reason \"同步呂布候選路徑至 active task claim direction lock\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "同步呂布候選路徑至 active task claim direction lock"
+  }
+}

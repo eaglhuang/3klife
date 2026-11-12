@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-27T11-25-15-709Z-scope-amendment-016313ab3dc9",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:598a1c6d0ef5fa802ede0251562f3a5e8d394f7e4773ebc0c6897141c4c8c716",
+  "createdAt": "2026-10-27T11:25:15.709Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1 --add \"artifacts/ui-quality/UI-2-0121/da_qiao_ribbon_trim_mask_v7.png,artifacts/ui-quality/UI-2-0121/DaQiao_RibbonInpaint_candidate_v2.png\" --reason \"擴大大喬下身衣帶 inpaint 遮罩並產生 v2 候選\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "擴大大喬下身衣帶 inpaint 遮罩並產生 v2 候選"
+  }
+}

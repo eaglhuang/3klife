@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-27T11-02-12-106Z-scope-amendment-4d31e3031067",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:09cd7a8d2a989a0a40ce0a741c52e24a2bafdb0017f878b9db241b4fe05f1544",
+  "createdAt": "2026-10-27T11:02:12.106Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1 --add \"assets/resources/sprites/generals/cai_wenji_portrait.png,artifacts/ui-quality/UI-2-0121/CaiWenji_before_guqin_hand_revision.png\" --reason \"採用蔡文姬古琴握姿候選並保留正式圖備份\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "採用蔡文姬古琴握姿候選並保留正式圖備份"
+  }
+}

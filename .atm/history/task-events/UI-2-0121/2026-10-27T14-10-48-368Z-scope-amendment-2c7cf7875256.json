@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-27T14-10-48-368Z-scope-amendment-2c7cf7875256",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:d0bc4838f130007f3637ba50f0fc0c8e95c54a4c9c88226c3276a265e791643d",
+  "createdAt": "2026-10-27T14:10:48.368Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1 --add \"artifacts/general-avatars/master/sun_ce_avatar.png,artifacts/general-avatars/overview.png\" --reason \"孫策頭像工具同步輸出的預覽與母圖\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "孫策頭像工具同步輸出的預覽與母圖"
+  }
+}

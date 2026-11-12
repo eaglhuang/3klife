@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-27T15-55-09-207Z-scope-amendment-cf1d1efc1dc3",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:2a70226a0c8c1cde1b27972f71e7b5cbb5a0c69e1f2c3086d6df5f0b949a866b",
+  "createdAt": "2026-10-27T15:55:09.207Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1 --add \"artifacts/ui-quality/UI-2-0121/CaiWenji_face_candidate_v3_512x768.png,artifacts/ui-quality/UI-2-0121/CaiWenji_DaQiao_head_compare_v3.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}

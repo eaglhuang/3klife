@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-12T02-09-28-707Z-scope-amendment-24fb205eef3c",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:eb5eb0d80655ebe34624c7b7c913e0107fefb020f97dbbb2a545ad089e975bdb",
+  "createdAt": "2026-11-12T02:09:28.707Z",
+  "command": "node atm.mjs tasks scope remove --task UI-2-0121 --actor codex-gpt-6.1-sol --remove artwork/general-art-library/avatars/cai_wen姬__avatar_0002.png --json",
+  "amendmentMetadata": {
+    "amendmentClass": "scope-shrink",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "Remove an incorrect non-deliverable shared scope path."
+  }
+}

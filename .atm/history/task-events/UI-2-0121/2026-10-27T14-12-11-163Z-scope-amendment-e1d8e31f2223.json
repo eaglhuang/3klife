@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-27T14-12-11-163Z-scope-amendment-e1d8e31f2223",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:ee53ef12fcce840efc92dd72374fe35c8e1798de9b5bc4d9ecf344f3627e5758",
+  "createdAt": "2026-10-27T14:12:11.163Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1 --add artifacts/ui-quality/UI-2-0121/record-sunce-v5-adoption.js --reason \"將孫策v5臉部驗收回寫既有任務卡\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "將孫策v5臉部驗收回寫既有任務卡"
+  }
+}

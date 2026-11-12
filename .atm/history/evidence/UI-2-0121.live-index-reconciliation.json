@@ -1,0 +1,24 @@
+{
+  "schemaId": "atm.liveIndexReconciliation.v1",
+  "headAdvanced": true,
+  "reconciledPaths": [
+    "artwork/general-art-library/avatars/sun_shang_xiang__孫尚香__avatar_0003.png",
+    "artwork/general-art-library/catalog.json",
+    "artwork/general-art-library/standing/sun_shang_xiang__孫尚香__standing_0003.png",
+    "assets/resources/data/general-avatar-crops.json",
+    "assets/resources/sprites/generals/avatars/sun_shang_xiang_avatar.png",
+    "assets/resources/sprites/generals/sun_shang_xiang_portrait.png",
+    "assets/resources/sprites/ui_avatars/cropped/sun_shang_xiang_avatar.png"
+  ],
+  "retainedPaths": [
+    {
+      "path": ".atm/catalog/registry/actors.json",
+      "reason": "worktree-diverged",
+      "firstUnreconciledCommit": "92b82dd7d8ad40f336451fb10cbd25a5f7e612f6"
+    }
+  ],
+  "clean": false,
+  "failure": null,
+  "taskId": "UI-2-0121",
+  "createdAt": "2026-11-12T01:18:02.232Z"
+}

@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-12T02-08-56-010Z-scope-amendment-ca816020d7cd",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:16fac7ad3ce35e3f3e61a9e84bd4e0619364a38bb570b1d0390e7169955615f7",
+  "createdAt": "2026-11-12T02:08:56.010Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-sol --add \".agents/skills/general-portrait-style/SKILL.md,docs/art/character-palette-ledger.md,artwork/general-art-library/catalog.json,artwork/general-art-library/standing/cai_wenji__蔡文姬__standing_0001.png,artwork/general-art-library/standing/cai_wenji__蔡文姬__standing_0002.png,artwork/general-art-library/avatars/cai_wenji__蔡文姬__avatar_0001.png,artwork/general-art-library/avatars/cai_wenji__蔡文姬__avatar_0002.png,assets/resources/data/general-avatar-crops.json,assets/resources/sprites/generals/cai_wenji_portrait.png,assets/resources/sprites/generals/avatars/cai_wenji_avatar.png,assets/resources/sprites/ui_avatars/cropped/cai_wenji_avatar.png\" --reason \"依使用者最新要求將成年女性立繪統一改為成熟豐滿自然胸腰曲線，先完成蔡文姬並保存版本與頭像\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "依使用者最新要求將成年女性立繪統一改為成熟豐滿自然胸腰曲線，先完成蔡文姬並保存版本與頭像"
+  }
+}

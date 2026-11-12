@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-27T11-09-44-426Z-scope-amendment-bf4af2ae79d5",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:f009059261bbc2977ef02db2c936917d4b9b031b86241a5bde39327d14204c57",
+  "createdAt": "2026-10-27T11:09:44.426Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1 --add artifacts/ui-quality/UI-2-0121/DaQiao_Ribbons_Simplified_v10_masked-composite.png --reason \"以v5紅色遮罩重新合成大喬衣帶候選\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "以v5紅色遮罩重新合成大喬衣帶候選"
+  }
+}

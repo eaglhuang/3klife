@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-27T10-59-26-251Z-scope-amendment-211672fab0a1",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:29d37ac218bbe65c09e98b8a638b6e5e3cf876c6b26990a2e38c1b6ac0a32be1",
+  "createdAt": "2026-10-27T10:59:26.251Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1 --add \"artifacts/ui-quality/UI-2-0121/CaiWenji_left_hand_gen_v5.png,artifacts/ui-quality/UI-2-0121/CaiWenji_right_hand_gen_v5.png\" --reason \"儲存手部局部重繪來源並合成v5候選\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "儲存手部局部重繪來源並合成v5候選"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-27T10-49-23-938Z-scope-amendment-6bf7a78fc924",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:cb6804f35032c97bc4caa2a1bd1e4bad1ef21940f70081cb9a4b3c3422df3bb4",
+  "createdAt": "2026-10-27T10:49:23.938Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1 --add \"artifacts/ui-quality/UI-2-0121/CaiWenji_guqin_hands_mask_v3.png,artifacts/ui-quality/UI-2-0121/CaiWenji_guqin_hands_inpaint_v3.png\" --reason \"蔡文姬古琴手部遮罩依500px定位修正\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "蔡文姬古琴手部遮罩依500px定位修正"
+  }
+}

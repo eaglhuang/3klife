@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-27T10-52-28-002Z-scope-amendment-75d987097d54",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:8f94bbe524ecae13ba69137ce23859b54e02109f6c68cc730ce73acb681e1cd9",
+  "createdAt": "2026-10-27T10:52:28.002Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1 --add artifacts/ui-quality/UI-2-0121/CaiWenji_guqin_hands_inpaint_v4.png --reason \"蔡文姬手部高解析度局部inpaint候選\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "蔡文姬手部高解析度局部inpaint候選"
+  }
+}

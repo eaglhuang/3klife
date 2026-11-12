@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-27T11-59-19-569Z-scope-amendment-5e137e95c80a",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:2572373eba355c41ffc01b50c6cd75832b328c421ca1cfbc43a8f4ca9ecc424c",
+  "createdAt": "2026-10-27T11:59:19.569Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1 --add docs/ai_atomic_framework/atm-backlog-shards/aao-status.md --reason \"記錄 UI-2-0121 重現 ATM scope amendment 與 claim allowedFiles 不同步\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "記錄 UI-2-0121 重現 ATM scope amendment 與 claim allowedFiles 不同步"
+  }
+}

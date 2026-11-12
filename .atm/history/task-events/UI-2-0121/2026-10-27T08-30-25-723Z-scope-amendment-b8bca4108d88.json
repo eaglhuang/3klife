@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-27T08-30-25-723Z-scope-amendment-b8bca4108d88",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:cbfa9d290c4c65e1a6f4bd85359ba4b04ea281d29811416b4c1d97ca5fa8054f",
+  "createdAt": "2026-10-27T08:30:25.723Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1 --add \"artifacts/ui-quality/UI-2-0121/LuBu_fullbody_candidate_v2_purple_black.png,artifacts/ui-quality/UI-2-0121/LuBu_fullbody_candidate_v2_512x768.png,artifacts/ui-quality/UI-2-0121/LuBu_before_purple_black_revision.png,artifacts/ui-quality/UI-2-0121/ZhangFei_LuBu_after_ZhangFei.png,artifacts/ui-quality/UI-2-0121/write-ticket-temporary.json,assets/resources/sprites/generals/lu_bu_portrait.png,assets/resources/data/general-avatar-crops.json,assets/resources/sprites/ui_avatars/cropped/lu_bu_avatar.png,assets/resources/sprites/ui_avatars/cropped/lu_bu_avatar.png.meta,artifacts/general-avatars/master/lu_bu_avatar.png,artifacts/general-avatars/overview.png,docs/ui-quality-tasks/UI-2-0121.json,docs/agent-briefs/tasks/UI/UI-2-0121.md\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}

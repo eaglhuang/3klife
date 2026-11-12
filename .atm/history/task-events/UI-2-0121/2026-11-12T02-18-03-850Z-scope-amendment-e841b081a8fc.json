@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-12T02-18-03-850Z-scope-amendment-e841b081a8fc",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:dcf4844a599abe7f41fb89976b92b4a96155e0ddb181b1b6a4aecba37cab0cf8",
+  "createdAt": "2026-11-12T02:18:03.850Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-sol --add \"artwork/general-art-library/standing/cai_wenji__蔡文姬__standing_0003.png,artwork/general-art-library/avatars/cai_wenji__蔡文姬__avatar_0003.png\" --reason \"依使用者新增的半透明絲質薄紗偏好追加蔡文姬造型版本，保留先前核定候選供追溯\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "依使用者新增的半透明絲質薄紗偏好追加蔡文姬造型版本，保留先前核定候選供追溯"
+  }
+}

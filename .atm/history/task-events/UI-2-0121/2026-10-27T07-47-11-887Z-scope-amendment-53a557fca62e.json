@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-27T07-47-11-887Z-scope-amendment-53a557fca62e",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:b9506a603784bdf846979e3519273ce5b8814d8eca08c07ad0b70c244bfb4d11",
+  "createdAt": "2026-10-27T07:47:11.887Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1 --add \"artifacts/ui-quality/UI-2-0121/LiuBei_fullbody_candidate_v1_512x768.png,artifacts/ui-quality/UI-2-0121/write-ticket-temporary.json,assets/resources/sprites/ui_avatars/cropped/liu_bei_avatar.png,assets/resources/sprites/ui_avatars/cropped/liu_bei_avatar.png.meta\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}

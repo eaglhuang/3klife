@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-27T11-48-53-543Z-scope-amendment-92c5b9754e33",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:db110eca77fe0b774c0c002329a78564686ba107097bb6650c78dc128790784c",
+  "createdAt": "2026-10-27T11:48:53.543Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1 --add artifacts/ui-quality/UI-2-0121/LuBu_fullbody_candidate_v1_512x768.png --reason \"建立呂布紫黑全身立繪候選，供目視驗收後決定是否採用\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "建立呂布紫黑全身立繪候選，供目視驗收後決定是否採用"
+  }
+}

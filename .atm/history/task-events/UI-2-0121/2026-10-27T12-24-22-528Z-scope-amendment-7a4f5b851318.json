@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-27T12-24-22-528Z-scope-amendment-7a4f5b851318",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:c3f0484110512e07dbb6e40c6f48462f8661b0d97a4516ae056e3a268985a84d",
+  "createdAt": "2026-10-27T12:24:22.528Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1 --add \"artifacts/ui-quality/UI-2-0121/sun-ce-before-color-revision.png,artifacts/ui-quality/UI-2-0121/sun-ce-color-candidate-v1-512x768.png,assets/resources/sprites/generals/sun_ce_portrait.png\" --reason \"套用已驗收的孫策配色修正並保留原版回復點\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "套用已驗收的孫策配色修正並保留原版回復點"
+  }
+}

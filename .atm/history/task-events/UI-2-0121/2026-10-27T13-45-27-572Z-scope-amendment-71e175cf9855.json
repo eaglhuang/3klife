@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-27T13-45-27-572Z-scope-amendment-71e175cf9855",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:1a89b0e1347b90a872b9e9f988f19d1d2f7c94de8528ba456670c7280a44f38f",
+  "createdAt": "2026-10-27T13:45:27.572Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1 --add \"artifacts/ui-quality/UI-2-0121/SunCe_head_mask.js,artifacts/ui-quality/UI-2-0121/SunCe_head_mask.png\" --reason \"為孫策五官／髮束局部 inpaint 建立遮罩，避免重畫身甲與武器\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "為孫策五官／髮束局部 inpaint 建立遮罩，避免重畫身甲與武器"
+  }
+}

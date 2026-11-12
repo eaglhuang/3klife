@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-27T11-31-32-250Z-scope-amendment-1f807e290e54",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:ce695a12c9e9d230f2db4cbbc4aaace0fd0d067b95fca775644d58352b6f97e6",
+  "createdAt": "2026-10-27T11:31:32.250Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1 --add \"artifacts/ui-quality/UI-2-0121/da_qiao_ribbon_alpha_trim_mask_v2.png,artifacts/ui-quality/UI-2-0121/DaQiao_ribbon_alpha_trim_candidate_v2.png\" --reason \"沿左側外輪廓平滑修剪大喬下身外飄布尾\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "沿左側外輪廓平滑修剪大喬下身外飄布尾"
+  }
+}

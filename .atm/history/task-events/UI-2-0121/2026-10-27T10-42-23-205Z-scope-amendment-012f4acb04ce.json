@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-27T10-42-23-205Z-scope-amendment-012f4acb04ce",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:7e92a551df647fd1aa63afb3c35b9a633317a87e3d6ba21e3017efdfd3a1ac7f",
+  "createdAt": "2026-10-27T10:42:23.205Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1 --add \"artifacts/ui-quality/UI-2-0121/CaiWenji_guqin_hands_mask_v2.png,artifacts/ui-quality/UI-2-0121/CaiWenji_guqin_hands_inpaint_v2.png\" --reason \"蔡文姬古琴局部遮罩縮小版候選\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "蔡文姬古琴局部遮罩縮小版候選"
+  }
+}

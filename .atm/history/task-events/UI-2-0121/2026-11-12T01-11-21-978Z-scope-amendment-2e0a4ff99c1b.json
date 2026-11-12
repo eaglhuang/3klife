@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-12T01-11-21-978Z-scope-amendment-2e0a4ff99c1b",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:1925d1e9ab49b04e1d26870a58a4f677ae074eca7b93bce88273f73adf973b19",
+  "createdAt": "2026-11-12T01:11:21.978Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-sol --add \".agents/skills/general-portrait-style/SKILL.md,artwork/general-art-library/README.md,artwork/general-art-library/catalog.json,artwork/general-art-library/standing/sun_shang_xiang__孫尚香__standing_0001.png,artwork/general-art-library/standing/sun_shang_xiang__孫尚香__standing_0002.png,artwork/general-art-library/standing/zhuge_liang__諸葛亮__standing_0001.png,artwork/general-art-library/standing/zhuge_liang__諸葛亮__standing_0002.png,artwork/general-art-library/avatars/sun_shang_xiang__孫尚香__avatar_0001.png,artwork/general-art-library/avatars/sun_shang_xiang__孫尚香__avatar_0002.png,artwork/general-art-library/avatars/zhuge_liang__諸葛亮__avatar_0001.png,artwork/general-art-library/avatars/zhuge_liang__諸葛亮__avatar_0002.png,assets/resources/data/general-avatar-crops.json,assets/resources/sprites/generals/sun_shang_xiang_portrait.png,assets/resources/sprites/generals/zhuge_liang_portrait.png,assets/resources/sprites/generals/avatars/sun_shang_xiang_avatar.png,assets/resources/sprites/generals/avatars/zhuge_liang_avatar.png,assets/resources/sprites/ui_avatars/cropped/sun_shang_xiang_avatar.png,assets/resources/sprites/ui_avatars/cropped/zhuge_liang_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}

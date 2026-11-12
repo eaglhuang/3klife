@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-12T01-51-07-911Z-scope-amendment-4deb0f81da68",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:fefc324e29eff7b664a5eda1b86243cbd4799554f31a8086b8f106eb45ad7203",
+  "createdAt": "2026-11-12T01:51:07.911Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-sol --add \".agents/skills/general-portrait-style/SKILL.md,docs/art/character-palette-ledger.md,artwork/general-art-library/catalog.json,artwork/general-art-library/standing/xiao_qiao__小喬__standing_0001.png,artwork/general-art-library/standing/xiao_qiao__小喬__standing_0002.png,artwork/general-art-library/avatars/xiao_qiao__小喬__avatar_0001.png,artwork/general-art-library/avatars/xiao_qiao__小喬__avatar_0002.png,assets/resources/data/general-avatar-crops.json,assets/resources/sprites/generals/xiao_qiao_portrait.png,assets/resources/sprites/generals/avatars/xiao_qiao_avatar.png,assets/resources/sprites/ui_avatars/cropped/xiao_qiao_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}

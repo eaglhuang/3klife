@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-27T08-15-46-965Z-scope-amendment-c75775529564",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:2a73f7ba5e1960e644e044c5c5defed2320e4ae1cbc7d9f7ab5015341d53b0c0",
+  "createdAt": "2026-10-27T08:15:46.965Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1 --add \"artifacts/ui-quality/UI-2-0121/HuangZhong_fullbody_candidate_v2.png,artifacts/ui-quality/UI-2-0121/HuangZhong_fullbody_candidate_v2_512x768.png,artifacts/ui-quality/UI-2-0121/HuangZhong_official_v2_compare.png,artifacts/ui-quality/UI-2-0121/write-ticket-temporary.json\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}

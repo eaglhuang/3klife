@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-27T13-24-41-853Z-scope-amendment-508621c55ae5",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:c18484f95a4ee5b96f2c46cb9b9d3a5f3794b9c974848fda8f919c75e4c93a81",
+  "createdAt": "2026-10-27T13:24:41.853Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1 --add \"assets/resources/sprites/generals/huang_yueying_portrait.png,artifacts/ui-quality/UI-2-0121/HuangYueying_before_v2_replacement.png,artifacts/ui-quality/UI-2-0121/HuangYueying_EngineerFace_FullRevision_v2_512x768.png,assets/resources/sprites/generals/avatars/huang_yueying_avatar.png,docs/agent-briefs/tasks/UI/UI-2-0121.md\" --reason \"採用已完成對照驗收的黃月英 v2，更新正式立繪、保留原稿備份並重生頭像\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "採用已完成對照驗收的黃月英 v2，更新正式立繪、保留原稿備份並重生頭像"
+  }
+}

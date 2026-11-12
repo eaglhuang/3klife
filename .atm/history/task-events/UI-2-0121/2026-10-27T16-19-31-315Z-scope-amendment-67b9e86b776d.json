@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-27T16-19-31-315Z-scope-amendment-67b9e86b776d",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:7906e6a3f1108b1defd315662f3b23018fe1fcd62d65a59b033f653b4f2bf049",
+  "createdAt": "2026-10-27T16:19:31.315Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1 --add \"assets/resources/sprites/generals/jia_xu_portrait.png,assets/resources/sprites/generals/avatars/jia_xu_avatar.png,artifacts/ui-quality/UI-2-0121,docs/agent-briefs/tasks/UI/UI-2-0121.md,docs/ui-quality-tasks/UI-2-0121.json\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
