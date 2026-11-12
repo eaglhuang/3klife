@@ -17,3 +17,13 @@ export function disableCharCacheForCjk(root: Node): void {
     }
     for (const child of root.children) disableCharCacheForCjk(child);
 }
+
+/**
+ * 把所有 CHAR 快取 Label 改成不快取（PROG-2-2247）：結果畫面每次都換字，
+ * 逐字快取會留下上一輪的字形殘影而疊字；這類一直換字的畫面整片關掉。
+ */
+export function disableCharCache(root: Node): void {
+    const label = root.getComponent(Label);
+    if (label && label.cacheMode === CACHE_CHAR) label.cacheMode = CACHE_NONE;
+    for (const child of root.children) disableCharCache(child);
+}
