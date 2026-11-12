@@ -116,6 +116,48 @@
       "smallAvatar": {
         "status": "not-created"
       }
+    },
+    {
+      "uid": "bu-lian-shi",
+      "name": "步練師",
+      "standing": {
+        "activeVersion": "0002",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "standing/bu_lian_shi__步練師__standing_0001.png",
+            "status": "superseded"
+          },
+          {
+            "version": "0002",
+            "file": "standing/bu_lian_shi__步練師__standing_0002.png",
+            "status": "integrated"
+          }
+        ]
+      },
+      "battle": {
+        "status": "not-created"
+      },
+      "avatar": {
+        "activeVersion": "0002",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "avatars/bu_lian_shi__步練師__avatar_0001.png",
+            "status": "superseded"
+          },
+          {
+            "version": "0002",
+            "file": "avatars/bu_lian_shi__步練師__avatar_0002.png",
+            "status": "integrated"
+          }
+        ]
+      },
+      "smallAvatar": {
+        "status": "not-created"
+      }
     }
   ]
 }
