@@ -1,0 +1,1663 @@
+{
+  "version": 1,
+  "generatedAt": "2026-11-12T00:22:35.123Z",
+  "sourceRoster": "data/generals-index.json",
+  "directories": {
+    "standing": "standing/",
+    "battle": "battle/",
+    "avatars": "avatars/"
+  },
+  "counts": {
+    "generals": 235,
+    "standing": 235,
+    "battle": 5,
+    "avatars": 235
+  },
+  "generals": [
+    {
+      "uid": "cao-cao",
+      "name": "曹操",
+      "standing": "standing/cao_cao__曹操__standing.png",
+      "battle": null,
+      "avatar": "avatars/cao_cao__曹操__avatar.png"
+    },
+    {
+      "uid": "liu-bei",
+      "name": "劉備",
+      "standing": "standing/liu_bei__劉備__standing.png",
+      "battle": null,
+      "avatar": "avatars/liu_bei__劉備__avatar.png"
+    },
+    {
+      "uid": "sun-quan",
+      "name": "孫權",
+      "standing": "standing/sun_quan__孫權__standing.png",
+      "battle": null,
+      "avatar": "avatars/sun_quan__孫權__avatar.png"
+    },
+    {
+      "uid": "zhuge-liang",
+      "name": "諸葛亮",
+      "standing": "standing/zhuge_liang__諸葛亮__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhuge_liang__諸葛亮__avatar.png"
+    },
+    {
+      "uid": "zhou-yu",
+      "name": "周瑜",
+      "standing": "standing/zhou_yu__周瑜__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhou_yu__周瑜__avatar.png"
+    },
+    {
+      "uid": "guan-yu",
+      "name": "關羽",
+      "standing": "standing/guan_yu__關羽__standing.png",
+      "battle": "battle/guan_yu__關羽__battle.png",
+      "avatar": "avatars/guan_yu__關羽__avatar.png"
+    },
+    {
+      "uid": "zhang-fei",
+      "name": "張飛",
+      "standing": "standing/zhang_fei__張飛__standing.png",
+      "battle": "battle/zhang_fei__張飛__battle.png",
+      "avatar": "avatars/zhang_fei__張飛__avatar.png"
+    },
+    {
+      "uid": "zhao-yun",
+      "name": "趙雲",
+      "standing": "standing/zhao_yun__趙雲__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhao_yun__趙雲__avatar.png"
+    },
+    {
+      "uid": "lu-bu",
+      "name": "呂布",
+      "standing": "standing/lu_bu__呂布__standing.png",
+      "battle": null,
+      "avatar": "avatars/lu_bu__呂布__avatar.png"
+    },
+    {
+      "uid": "sima-yi",
+      "name": "司馬懿",
+      "standing": "standing/sima_yi__司馬懿__standing.png",
+      "battle": null,
+      "avatar": "avatars/sima_yi__司馬懿__avatar.png"
+    },
+    {
+      "uid": "dian-wei",
+      "name": "典韋",
+      "standing": "standing/dian_wei__典韋__standing.png",
+      "battle": null,
+      "avatar": "avatars/dian_wei__典韋__avatar.png"
+    },
+    {
+      "uid": "xu-zhu",
+      "name": "許褚",
+      "standing": "standing/xu_zhu__許褚__standing.png",
+      "battle": null,
+      "avatar": "avatars/xu_zhu__許褚__avatar.png"
+    },
+    {
+      "uid": "huang-zhong",
+      "name": "黃忠",
+      "standing": "standing/huang_zhong__黃忠__standing.png",
+      "battle": null,
+      "avatar": "avatars/huang_zhong__黃忠__avatar.png"
+    },
+    {
+      "uid": "ma-chao",
+      "name": "馬超",
+      "standing": "standing/ma_chao__馬超__standing.png",
+      "battle": null,
+      "avatar": "avatars/ma_chao__馬超__avatar.png"
+    },
+    {
+      "uid": "lu-xun",
+      "name": "陸遜",
+      "standing": "standing/lu_xun__陸遜__standing.png",
+      "battle": null,
+      "avatar": "avatars/lu_xun__陸遜__avatar.png"
+    },
+    {
+      "uid": "taishi-ci",
+      "name": "太史慈",
+      "standing": "standing/taishi_ci__太史慈__standing.png",
+      "battle": null,
+      "avatar": "avatars/taishi_ci__太史慈__avatar.png"
+    },
+    {
+      "uid": "zhang-liao",
+      "name": "張遼",
+      "standing": "standing/zhang_liao__張遼__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhang_liao__張遼__avatar.png"
+    },
+    {
+      "uid": "xu-huang",
+      "name": "徐晃",
+      "standing": "standing/xu_huang__徐晃__standing.png",
+      "battle": null,
+      "avatar": "avatars/xu_huang__徐晃__avatar.png"
+    },
+    {
+      "uid": "cao-ren",
+      "name": "曹仁",
+      "standing": "standing/cao_ren__曹仁__standing.png",
+      "battle": null,
+      "avatar": "avatars/cao_ren__曹仁__avatar.png"
+    },
+    {
+      "uid": "pang-tong",
+      "name": "龐統",
+      "standing": "standing/pang_tong__龐統__standing.png",
+      "battle": null,
+      "avatar": "avatars/pang_tong__龐統__avatar.png"
+    },
+    {
+      "uid": "guo-jia",
+      "name": "郭嘉",
+      "standing": "standing/guo_jia__郭嘉__standing.png",
+      "battle": null,
+      "avatar": "avatars/guo_jia__郭嘉__avatar.png"
+    },
+    {
+      "uid": "xun-yu",
+      "name": "荀彧",
+      "standing": "standing/xun_yu__荀彧__standing.png",
+      "battle": null,
+      "avatar": "avatars/xun_yu__荀彧__avatar.png"
+    },
+    {
+      "uid": "jia-xu",
+      "name": "賈詡",
+      "standing": "standing/jia_xu__賈詡__standing.png",
+      "battle": null,
+      "avatar": "avatars/jia_xu__賈詡__avatar.png"
+    },
+    {
+      "uid": "zhang-he",
+      "name": "張郃",
+      "standing": "standing/zhang_he__張郃__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhang_he__張郃__avatar.png"
+    },
+    {
+      "uid": "yu-jin",
+      "name": "于禁",
+      "standing": "standing/yu_jin__于禁__standing.png",
+      "battle": null,
+      "avatar": "avatars/yu_jin__于禁__avatar.png"
+    },
+    {
+      "uid": "cao-ang",
+      "name": "曹昂",
+      "standing": "standing/cao_ang__曹昂__standing.png",
+      "battle": null,
+      "avatar": "avatars/cao_ang__曹昂__avatar.png"
+    },
+    {
+      "uid": "xiahou-dun",
+      "name": "夏侯惇",
+      "standing": "standing/xiahou_dun__夏侯惇__standing.png",
+      "battle": null,
+      "avatar": "avatars/xiahou_dun__夏侯惇__avatar.png"
+    },
+    {
+      "uid": "xiahou-yuan",
+      "name": "夏侯淵",
+      "standing": "standing/xiahou_yuan__夏侯淵__standing.png",
+      "battle": null,
+      "avatar": "avatars/xiahou_yuan__夏侯淵__avatar.png"
+    },
+    {
+      "uid": "wei-yan",
+      "name": "魏延",
+      "standing": "standing/wei_yan__魏延__standing.png",
+      "battle": null,
+      "avatar": "avatars/wei_yan__魏延__avatar.png"
+    },
+    {
+      "uid": "jiang-wei",
+      "name": "姜維",
+      "standing": "standing/jiang_wei__姜維__standing.png",
+      "battle": null,
+      "avatar": "avatars/jiang_wei__姜維__avatar.png"
+    },
+    {
+      "uid": "deng-ai",
+      "name": "鄧艾",
+      "standing": "standing/deng_ai__鄧艾__standing.png",
+      "battle": null,
+      "avatar": "avatars/deng_ai__鄧艾__avatar.png"
+    },
+    {
+      "uid": "zhong-hui",
+      "name": "鍾會",
+      "standing": "standing/zhong_hui__鍾會__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhong_hui__鍾會__avatar.png"
+    },
+    {
+      "uid": "huang-gai",
+      "name": "黃蓋",
+      "standing": "standing/huang_gai__黃蓋__standing.png",
+      "battle": null,
+      "avatar": "avatars/huang_gai__黃蓋__avatar.png"
+    },
+    {
+      "uid": "cheng-pu",
+      "name": "程普",
+      "standing": "standing/cheng_pu__程普__standing.png",
+      "battle": null,
+      "avatar": "avatars/cheng_pu__程普__avatar.png"
+    },
+    {
+      "uid": "han-dang",
+      "name": "韓當",
+      "standing": "standing/han_dang__韓當__standing.png",
+      "battle": null,
+      "avatar": "avatars/han_dang__韓當__avatar.png"
+    },
+    {
+      "uid": "gan-ning",
+      "name": "甘寧",
+      "standing": "standing/gan_ning__甘寧__standing.png",
+      "battle": null,
+      "avatar": "avatars/gan_ning__甘寧__avatar.png"
+    },
+    {
+      "uid": "ling-tong",
+      "name": "凌統",
+      "standing": "standing/ling_tong__凌統__standing.png",
+      "battle": null,
+      "avatar": "avatars/ling_tong__凌統__avatar.png"
+    },
+    {
+      "uid": "zhou-tai",
+      "name": "周泰",
+      "standing": "standing/zhou_tai__周泰__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhou_tai__周泰__avatar.png"
+    },
+    {
+      "uid": "xu-sheng",
+      "name": "徐盛",
+      "standing": "standing/xu_sheng__徐盛__standing.png",
+      "battle": null,
+      "avatar": "avatars/xu_sheng__徐盛__avatar.png"
+    },
+    {
+      "uid": "ding-feng",
+      "name": "丁奉",
+      "standing": "standing/ding_feng__丁奉__standing.png",
+      "battle": null,
+      "avatar": "avatars/ding_feng__丁奉__avatar.png"
+    },
+    {
+      "uid": "zhang-zhao",
+      "name": "張昭",
+      "standing": "standing/zhang_zhao__張昭__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhang_zhao__張昭__avatar.png"
+    },
+    {
+      "uid": "lu-meng",
+      "name": "呂蒙",
+      "standing": "standing/lu_meng__呂蒙__standing.png",
+      "battle": null,
+      "avatar": "avatars/lu_meng__呂蒙__avatar.png"
+    },
+    {
+      "uid": "sun-ce",
+      "name": "孫策",
+      "standing": "standing/sun_ce__孫策__standing.png",
+      "battle": null,
+      "avatar": "avatars/sun_ce__孫策__avatar.png"
+    },
+    {
+      "uid": "sun-jian",
+      "name": "孫堅",
+      "standing": "standing/sun_jian__孫堅__standing.png",
+      "battle": null,
+      "avatar": "avatars/sun_jian__孫堅__avatar.png"
+    },
+    {
+      "uid": "dong-zhuo",
+      "name": "董卓",
+      "standing": "standing/dong_zhuo__董卓__standing.png",
+      "battle": null,
+      "avatar": "avatars/dong_zhuo__董卓__avatar.png"
+    },
+    {
+      "uid": "yuan-shao",
+      "name": "袁紹",
+      "standing": "standing/yuan_shao__袁紹__standing.png",
+      "battle": null,
+      "avatar": "avatars/yuan_shao__袁紹__avatar.png"
+    },
+    {
+      "uid": "liu-biao",
+      "name": "劉表",
+      "standing": "standing/liu_biao__劉表__standing.png",
+      "battle": null,
+      "avatar": "avatars/liu_biao__劉表__avatar.png"
+    },
+    {
+      "uid": "ma-teng",
+      "name": "馬騰",
+      "standing": "standing/ma_teng__馬騰__standing.png",
+      "battle": null,
+      "avatar": "avatars/ma_teng__馬騰__avatar.png"
+    },
+    {
+      "uid": "gongsun-zan",
+      "name": "公孫瓚",
+      "standing": "standing/gongsun_zan__公孫瓚__standing.png",
+      "battle": null,
+      "avatar": "avatars/gongsun_zan__公孫瓚__avatar.png"
+    },
+    {
+      "uid": "tao-qian",
+      "name": "陶謙",
+      "standing": "standing/tao_qian__陶謙__standing.png",
+      "battle": null,
+      "avatar": "avatars/tao_qian__陶謙__avatar.png"
+    },
+    {
+      "uid": "liu-zhang",
+      "name": "劉璋",
+      "standing": "standing/liu_zhang__劉璋__standing.png",
+      "battle": null,
+      "avatar": "avatars/liu_zhang__劉璋__avatar.png"
+    },
+    {
+      "uid": "zhang-lu",
+      "name": "張魯",
+      "standing": "standing/zhang_lu__張魯__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhang_lu__張魯__avatar.png"
+    },
+    {
+      "uid": "han-sui",
+      "name": "韓遂",
+      "standing": "standing/han_sui__韓遂__standing.png",
+      "battle": null,
+      "avatar": "avatars/han_sui__韓遂__avatar.png"
+    },
+    {
+      "uid": "yuan-shu",
+      "name": "袁術",
+      "standing": "standing/yuan_shu__袁術__standing.png",
+      "battle": null,
+      "avatar": "avatars/yuan_shu__袁術__avatar.png"
+    },
+    {
+      "uid": "kong-rong",
+      "name": "孔融",
+      "standing": "standing/kong_rong__孔融__standing.png",
+      "battle": null,
+      "avatar": "avatars/kong_rong__孔融__avatar.png"
+    },
+    {
+      "uid": "liu-yan",
+      "name": "劉焉",
+      "standing": "standing/liu_yan__劉焉__standing.png",
+      "battle": null,
+      "avatar": "avatars/liu_yan__劉焉__avatar.png"
+    },
+    {
+      "uid": "cao-pi",
+      "name": "曹丕",
+      "standing": "standing/cao_pi__曹丕__standing.png",
+      "battle": null,
+      "avatar": "avatars/cao_pi__曹丕__avatar.png"
+    },
+    {
+      "uid": "cao-xiu",
+      "name": "曹休",
+      "standing": "standing/cao_xiu__曹休__standing.png",
+      "battle": null,
+      "avatar": "avatars/cao_xiu__曹休__avatar.png"
+    },
+    {
+      "uid": "sima-zhao",
+      "name": "司馬昭",
+      "standing": "standing/sima_zhao__司馬昭__standing.png",
+      "battle": null,
+      "avatar": "avatars/sima_zhao__司馬昭__avatar.png"
+    },
+    {
+      "uid": "sima-shi",
+      "name": "司馬師",
+      "standing": "standing/sima_shi__司馬師__standing.png",
+      "battle": null,
+      "avatar": "avatars/sima_shi__司馬師__avatar.png"
+    },
+    {
+      "uid": "zhuge-jin",
+      "name": "諸葛瑾",
+      "standing": "standing/zhuge_jin__諸葛瑾__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhuge_jin__諸葛瑾__avatar.png"
+    },
+    {
+      "uid": "zhuge-ke",
+      "name": "諸葛恪",
+      "standing": "standing/zhuge_ke__諸葛恪__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhuge_ke__諸葛恪__avatar.png"
+    },
+    {
+      "uid": "bu-zhi",
+      "name": "步騭",
+      "standing": "standing/bu_zhi__步騭__standing.png",
+      "battle": null,
+      "avatar": "avatars/bu_zhi__步騭__avatar.png"
+    },
+    {
+      "uid": "zhu-ran",
+      "name": "朱然",
+      "standing": "standing/zhu_ran__朱然__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhu_ran__朱然__avatar.png"
+    },
+    {
+      "uid": "pan-zhang",
+      "name": "潘璋",
+      "standing": "standing/pan_zhang__潘璋__standing.png",
+      "battle": null,
+      "avatar": "avatars/pan_zhang__潘璋__avatar.png"
+    },
+    {
+      "uid": "ma-zhong",
+      "name": "馬忠",
+      "standing": "standing/ma_zhong__馬忠__standing.png",
+      "battle": null,
+      "avatar": "avatars/ma_zhong__馬忠__avatar.png"
+    },
+    {
+      "uid": "liu-feng",
+      "name": "劉封",
+      "standing": "standing/liu_feng__劉封__standing.png",
+      "battle": null,
+      "avatar": "avatars/liu_feng__劉封__avatar.png"
+    },
+    {
+      "uid": "meng-da",
+      "name": "孟達",
+      "standing": "standing/meng_da__孟達__standing.png",
+      "battle": null,
+      "avatar": "avatars/meng_da__孟達__avatar.png"
+    },
+    {
+      "uid": "peng-yang",
+      "name": "彭羕",
+      "standing": "standing/peng_yang__彭羕__standing.png",
+      "battle": null,
+      "avatar": "avatars/peng_yang__彭羕__avatar.png"
+    },
+    {
+      "uid": "fa-zheng",
+      "name": "法正",
+      "standing": "standing/fa_zheng__法正__standing.png",
+      "battle": null,
+      "avatar": "avatars/fa_zheng__法正__avatar.png"
+    },
+    {
+      "uid": "huang-quan",
+      "name": "黃權",
+      "standing": "standing/huang_quan__黃權__standing.png",
+      "battle": null,
+      "avatar": "avatars/huang_quan__黃權__avatar.png"
+    },
+    {
+      "uid": "li-yan",
+      "name": "李嚴",
+      "standing": "standing/li_yan__李嚴__standing.png",
+      "battle": null,
+      "avatar": "avatars/li_yan__李嚴__avatar.png"
+    },
+    {
+      "uid": "wang-ping",
+      "name": "王平",
+      "standing": "standing/wang_ping__王平__standing.png",
+      "battle": null,
+      "avatar": "avatars/wang_ping__王平__avatar.png"
+    },
+    {
+      "uid": "zhang-yi",
+      "name": "張嶷",
+      "standing": "standing/zhang_yi__張嶷__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhang_yi__張嶷__avatar.png"
+    },
+    {
+      "uid": "liao-hua",
+      "name": "廖化",
+      "standing": "standing/liao_hua__廖化__standing.png",
+      "battle": null,
+      "avatar": "avatars/liao_hua__廖化__avatar.png"
+    },
+    {
+      "uid": "guan-xing",
+      "name": "關興",
+      "standing": "standing/guan_xing__關興__standing.png",
+      "battle": null,
+      "avatar": "avatars/guan_xing__關興__avatar.png"
+    },
+    {
+      "uid": "zhang-bao",
+      "name": "張苞",
+      "standing": "standing/zhang_bao__張苞__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhang_bao__張苞__avatar.png"
+    },
+    {
+      "uid": "ma-dai",
+      "name": "馬岱",
+      "standing": "standing/ma_dai__馬岱__standing.png",
+      "battle": null,
+      "avatar": "avatars/ma_dai__馬岱__avatar.png"
+    },
+    {
+      "uid": "cao-hong",
+      "name": "曹洪",
+      "standing": "standing/cao_hong__曹洪__standing.png",
+      "battle": null,
+      "avatar": "avatars/cao_hong__曹洪__avatar.png"
+    },
+    {
+      "uid": "cao-zhang",
+      "name": "曹彰",
+      "standing": "standing/cao_zhang__曹彰__standing.png",
+      "battle": null,
+      "avatar": "avatars/cao_zhang__曹彰__avatar.png"
+    },
+    {
+      "uid": "man-chong",
+      "name": "滿寵",
+      "standing": "standing/man_chong__滿寵__standing.png",
+      "battle": null,
+      "avatar": "avatars/man_chong__滿寵__avatar.png"
+    },
+    {
+      "uid": "wang-shuang",
+      "name": "王雙",
+      "standing": "standing/wang_shuang__王雙__standing.png",
+      "battle": null,
+      "avatar": "avatars/wang_shuang__王雙__avatar.png"
+    },
+    {
+      "uid": "guo-huai",
+      "name": "郭淮",
+      "standing": "standing/guo_huai__郭淮__standing.png",
+      "battle": null,
+      "avatar": "avatars/guo_huai__郭淮__avatar.png"
+    },
+    {
+      "uid": "chen-tai",
+      "name": "陳泰",
+      "standing": "standing/chen_tai__陳泰__standing.png",
+      "battle": null,
+      "avatar": "avatars/chen_tai__陳泰__avatar.png"
+    },
+    {
+      "uid": "wen-pin",
+      "name": "文聘",
+      "standing": "standing/wen_pin__文聘__standing.png",
+      "battle": null,
+      "avatar": "avatars/wen_pin__文聘__avatar.png"
+    },
+    {
+      "uid": "le-jin",
+      "name": "樂進",
+      "standing": "standing/le_jin__樂進__standing.png",
+      "battle": null,
+      "avatar": "avatars/le_jin__樂進__avatar.png"
+    },
+    {
+      "uid": "li-dian",
+      "name": "李典",
+      "standing": "standing/li_dian__李典__standing.png",
+      "battle": null,
+      "avatar": "avatars/li_dian__李典__avatar.png"
+    },
+    {
+      "uid": "chen-qun",
+      "name": "陳群",
+      "standing": "standing/chen_qun__陳群__standing.png",
+      "battle": null,
+      "avatar": "avatars/chen_qun__陳群__avatar.png"
+    },
+    {
+      "uid": "hua-xin",
+      "name": "華歆",
+      "standing": "standing/hua_xin__華歆__standing.png",
+      "battle": null,
+      "avatar": "avatars/hua_xin__華歆__avatar.png"
+    },
+    {
+      "uid": "wang-lang",
+      "name": "王朗",
+      "standing": "standing/wang_lang__王朗__standing.png",
+      "battle": null,
+      "avatar": "avatars/wang_lang__王朗__avatar.png"
+    },
+    {
+      "uid": "xun-you",
+      "name": "荀攸",
+      "standing": "standing/xun_you__荀攸__standing.png",
+      "battle": null,
+      "avatar": "avatars/xun_you__荀攸__avatar.png"
+    },
+    {
+      "uid": "cheng-yu",
+      "name": "程昱",
+      "standing": "standing/cheng_yu__程昱__standing.png",
+      "battle": null,
+      "avatar": "avatars/cheng_yu__程昱__avatar.png"
+    },
+    {
+      "uid": "liu-ye",
+      "name": "劉曄",
+      "standing": "standing/liu_ye__劉曄__standing.png",
+      "battle": null,
+      "avatar": "avatars/liu_ye__劉曄__avatar.png"
+    },
+    {
+      "uid": "sun-shao",
+      "name": "孫邵",
+      "standing": "standing/sun_shao__孫邵__standing.png",
+      "battle": null,
+      "avatar": "avatars/sun_shao__孫邵__avatar.png"
+    },
+    {
+      "uid": "gu-yong",
+      "name": "顧雍",
+      "standing": "standing/gu_yong__顧雍__standing.png",
+      "battle": null,
+      "avatar": "avatars/gu_yong__顧雍__avatar.png"
+    },
+    {
+      "uid": "zhu-jun",
+      "name": "朱治",
+      "standing": "standing/zhu_jun__朱治__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhu_jun__朱治__avatar.png"
+    },
+    {
+      "uid": "lv-fan",
+      "name": "呂範",
+      "standing": "standing/lv_fan__呂範__standing.png",
+      "battle": null,
+      "avatar": "avatars/lv_fan__呂範__avatar.png"
+    },
+    {
+      "uid": "sun-huan",
+      "name": "孫桓",
+      "standing": "standing/sun_huan__孫桓__standing.png",
+      "battle": null,
+      "avatar": "avatars/sun_huan__孫桓__avatar.png"
+    },
+    {
+      "uid": "sun-jun",
+      "name": "孫峻",
+      "standing": "standing/sun_jun__孫峻__standing.png",
+      "battle": null,
+      "avatar": "avatars/sun_jun__孫峻__avatar.png"
+    },
+    {
+      "uid": "he-qi",
+      "name": "賀齊",
+      "standing": "standing/he_qi__賀齊__standing.png",
+      "battle": null,
+      "avatar": "avatars/he_qi__賀齊__avatar.png"
+    },
+    {
+      "uid": "lu-kang",
+      "name": "陸抗",
+      "standing": "standing/lu_kang__陸抗__standing.png",
+      "battle": null,
+      "avatar": "avatars/lu_kang__陸抗__avatar.png"
+    },
+    {
+      "uid": "zhu-huan",
+      "name": "朱桓",
+      "standing": "standing/zhu_huan__朱桓__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhu_huan__朱桓__avatar.png"
+    },
+    {
+      "uid": "lu-yin",
+      "name": "陸胤",
+      "standing": "standing/lu_yin__陸胤__standing.png",
+      "battle": null,
+      "avatar": "avatars/lu_yin__陸胤__avatar.png"
+    },
+    {
+      "uid": "cheng-bing",
+      "name": "程秉",
+      "standing": "standing/cheng_bing__程秉__standing.png",
+      "battle": null,
+      "avatar": "avatars/cheng_bing__程秉__avatar.png"
+    },
+    {
+      "uid": "han-xuan",
+      "name": "韓玄",
+      "standing": "standing/han_xuan__韓玄__standing.png",
+      "battle": null,
+      "avatar": "avatars/han_xuan__韓玄__avatar.png"
+    },
+    {
+      "uid": "jin-xuan",
+      "name": "金旋",
+      "standing": "standing/jin_xuan__金旋__standing.png",
+      "battle": null,
+      "avatar": "avatars/jin_xuan__金旋__avatar.png"
+    },
+    {
+      "uid": "liu-du",
+      "name": "劉度",
+      "standing": "standing/liu_du__劉度__standing.png",
+      "battle": null,
+      "avatar": "avatars/liu_du__劉度__avatar.png"
+    },
+    {
+      "uid": "zhao-fan",
+      "name": "趙范",
+      "standing": "standing/zhao_fan__趙范__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhao_fan__趙范__avatar.png"
+    },
+    {
+      "uid": "wen-chou",
+      "name": "文醜",
+      "standing": "standing/wen_chou__文醜__standing.png",
+      "battle": null,
+      "avatar": "avatars/wen_chou__文醜__avatar.png"
+    },
+    {
+      "uid": "yan-liang",
+      "name": "顏良",
+      "standing": "standing/yan_liang__顏良__standing.png",
+      "battle": null,
+      "avatar": "avatars/yan_liang__顏良__avatar.png"
+    },
+    {
+      "uid": "zhang-bao-enemy",
+      "name": "張寶",
+      "standing": "standing/zhang_bao_enemy__張寶__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhang_bao_enemy__張寶__avatar.png"
+    },
+    {
+      "uid": "zhang-jue",
+      "name": "張角",
+      "standing": "standing/zhang_jue__張角__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhang_jue__張角__avatar.png"
+    },
+    {
+      "uid": "zhang-liang-enemy",
+      "name": "張梁",
+      "standing": "standing/zhang_liang_enemy__張梁__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhang_liang_enemy__張梁__avatar.png"
+    },
+    {
+      "uid": "hua-tuo",
+      "name": "華佗",
+      "standing": "standing/hua_tuo__華佗__standing.png",
+      "battle": null,
+      "avatar": "avatars/hua_tuo__華佗__avatar.png"
+    },
+    {
+      "uid": "mi-zhu",
+      "name": "麋竺",
+      "standing": "standing/mi_zhu__麋竺__standing.png",
+      "battle": null,
+      "avatar": "avatars/mi_zhu__麋竺__avatar.png"
+    },
+    {
+      "uid": "jian-yong",
+      "name": "簡雍",
+      "standing": "standing/jian_yong__簡雍__standing.png",
+      "battle": null,
+      "avatar": "avatars/jian_yong__簡雍__avatar.png"
+    },
+    {
+      "uid": "sun-qian",
+      "name": "孫乾",
+      "standing": "standing/sun_qian__孫乾__standing.png",
+      "battle": null,
+      "avatar": "avatars/sun_qian__孫乾__avatar.png"
+    },
+    {
+      "uid": "yin-mo",
+      "name": "尹默",
+      "standing": "standing/yin_mo__尹默__standing.png",
+      "battle": null,
+      "avatar": "avatars/yin_mo__尹默__avatar.png"
+    },
+    {
+      "uid": "deng-zhi",
+      "name": "鄧芝",
+      "standing": "standing/deng_zhi__鄧芝__standing.png",
+      "battle": null,
+      "avatar": "avatars/deng_zhi__鄧芝__avatar.png"
+    },
+    {
+      "uid": "yang-yi",
+      "name": "楊儀",
+      "standing": "standing/yang_yi__楊儀__standing.png",
+      "battle": null,
+      "avatar": "avatars/yang_yi__楊儀__avatar.png"
+    },
+    {
+      "uid": "fei-yi",
+      "name": "費禕",
+      "standing": "standing/fei_yi__費禕__standing.png",
+      "battle": null,
+      "avatar": "avatars/fei_yi__費禕__avatar.png"
+    },
+    {
+      "uid": "dong-yun",
+      "name": "董允",
+      "standing": "standing/dong_yun__董允__standing.png",
+      "battle": null,
+      "avatar": "avatars/dong_yun__董允__avatar.png"
+    },
+    {
+      "uid": "xu-shu",
+      "name": "徐庶",
+      "standing": "standing/xu_shu__徐庶__standing.png",
+      "battle": null,
+      "avatar": "avatars/xu_shu__徐庶__avatar.png"
+    },
+    {
+      "uid": "pang-de",
+      "name": "龐德",
+      "standing": "standing/pang_de__龐德__standing.png",
+      "battle": null,
+      "avatar": "avatars/pang_de__龐德__avatar.png"
+    },
+    {
+      "uid": "zhang-xiu",
+      "name": "張繡",
+      "standing": "standing/zhang_xiu__張繡__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhang_xiu__張繡__avatar.png"
+    },
+    {
+      "uid": "zhang-xian",
+      "name": "張羨",
+      "standing": "standing/zhang_xian__張羨__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhang_xian__張羨__avatar.png"
+    },
+    {
+      "uid": "liu-bao",
+      "name": "劉豹",
+      "standing": "standing/liu_bao__劉豹__standing.png",
+      "battle": null,
+      "avatar": "avatars/liu_bao__劉豹__avatar.png"
+    },
+    {
+      "uid": "ke-bi-neng",
+      "name": "軻比能",
+      "standing": "standing/ke_bi_neng__軻比能__standing.png",
+      "battle": null,
+      "avatar": "avatars/ke_bi_neng__軻比能__avatar.png"
+    },
+    {
+      "uid": "meng-huo",
+      "name": "孟獲",
+      "standing": "standing/meng_huo__孟獲__standing.png",
+      "battle": null,
+      "avatar": "avatars/meng_huo__孟獲__avatar.png"
+    },
+    {
+      "uid": "zhu-rong",
+      "name": "祝融",
+      "standing": "standing/zhu_rong__祝融__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhu_rong__祝融__avatar.png"
+    },
+    {
+      "uid": "wu-tugu",
+      "name": "兀突骨",
+      "standing": "standing/wu_tugu__兀突骨__standing.png",
+      "battle": null,
+      "avatar": "avatars/wu_tugu__兀突骨__avatar.png"
+    },
+    {
+      "uid": "ahui-nan",
+      "name": "阿會喃",
+      "standing": "standing/ahui_nan__阿會喃__standing.png",
+      "battle": null,
+      "avatar": "avatars/ahui_nan__阿會喃__avatar.png"
+    },
+    {
+      "uid": "dong-tu-na",
+      "name": "董荼那",
+      "standing": "standing/dong_tu_na__董荼那__standing.png",
+      "battle": null,
+      "avatar": "avatars/dong_tu_na__董荼那__avatar.png"
+    },
+    {
+      "uid": "jin-huan-san-jie",
+      "name": "金環三結",
+      "standing": "standing/jin_huan_san_jie__金環三結__standing.png",
+      "battle": null,
+      "avatar": "avatars/jin_huan_san_jie__金環三結__avatar.png"
+    },
+    {
+      "uid": "yuan-tan",
+      "name": "袁譚",
+      "standing": "standing/yuan_tan__袁譚__standing.png",
+      "battle": null,
+      "avatar": "avatars/yuan_tan__袁譚__avatar.png"
+    },
+    {
+      "uid": "yuan-shang",
+      "name": "袁尚",
+      "standing": "standing/yuan_shang__袁尚__standing.png",
+      "battle": null,
+      "avatar": "avatars/yuan_shang__袁尚__avatar.png"
+    },
+    {
+      "uid": "yuan-xi",
+      "name": "袁熙",
+      "standing": "standing/yuan_xi__袁熙__standing.png",
+      "battle": null,
+      "avatar": "avatars/yuan_xi__袁熙__avatar.png"
+    },
+    {
+      "uid": "gao-lan",
+      "name": "高覽",
+      "standing": "standing/gao_lan__高覽__standing.png",
+      "battle": null,
+      "avatar": "avatars/gao_lan__高覽__avatar.png"
+    },
+    {
+      "uid": "gao-gan",
+      "name": "高幹",
+      "standing": "standing/gao_gan__高幹__standing.png",
+      "battle": null,
+      "avatar": "avatars/gao_gan__高幹__avatar.png"
+    },
+    {
+      "uid": "tian-feng",
+      "name": "田豐",
+      "standing": "standing/tian_feng__田豐__standing.png",
+      "battle": null,
+      "avatar": "avatars/tian_feng__田豐__avatar.png"
+    },
+    {
+      "uid": "ju-shou",
+      "name": "沮授",
+      "standing": "standing/ju_shou__沮授__standing.png",
+      "battle": null,
+      "avatar": "avatars/ju_shou__沮授__avatar.png"
+    },
+    {
+      "uid": "guo-tu",
+      "name": "郭圖",
+      "standing": "standing/guo_tu__郭圖__standing.png",
+      "battle": null,
+      "avatar": "avatars/guo_tu__郭圖__avatar.png"
+    },
+    {
+      "uid": "shen-pei",
+      "name": "審配",
+      "standing": "standing/shen_pei__審配__standing.png",
+      "battle": null,
+      "avatar": "avatars/shen_pei__審配__avatar.png"
+    },
+    {
+      "uid": "dong-zhao",
+      "name": "董昭",
+      "standing": "standing/dong_zhao__董昭__standing.png",
+      "battle": null,
+      "avatar": "avatars/dong_zhao__董昭__avatar.png"
+    },
+    {
+      "uid": "han-hao",
+      "name": "韓浩",
+      "standing": "standing/han_hao__韓浩__standing.png",
+      "battle": null,
+      "avatar": "avatars/han_hao__韓浩__avatar.png"
+    },
+    {
+      "uid": "wang-yi",
+      "name": "王異",
+      "standing": "standing/wang_yi__王異__standing.png",
+      "battle": null,
+      "avatar": "avatars/wang_yi__王異__avatar.png"
+    },
+    {
+      "uid": "xi-zhi-cai",
+      "name": "戲志才",
+      "standing": "standing/xi_zhi_cai__戲志才__standing.png",
+      "battle": null,
+      "avatar": "avatars/xi_zhi_cai__戲志才__avatar.png"
+    },
+    {
+      "uid": "mao-jie",
+      "name": "毛玠",
+      "standing": "standing/mao_jie__毛玠__standing.png",
+      "battle": null,
+      "avatar": "avatars/mao_jie__毛玠__avatar.png"
+    },
+    {
+      "uid": "lu-su",
+      "name": "魯肅",
+      "standing": "standing/lu_su__魯肅__standing.png",
+      "battle": null,
+      "avatar": "avatars/lu_su__魯肅__avatar.png"
+    },
+    {
+      "uid": "huo-yi",
+      "name": "霍弋",
+      "standing": "standing/huo_yi__霍弋__standing.png",
+      "battle": null,
+      "avatar": "avatars/huo_yi__霍弋__avatar.png"
+    },
+    {
+      "uid": "liao-li",
+      "name": "廖立",
+      "standing": "standing/liao_li__廖立__standing.png",
+      "battle": null,
+      "avatar": "avatars/liao_li__廖立__avatar.png"
+    },
+    {
+      "uid": "du-qiong",
+      "name": "杜瓊",
+      "standing": "standing/du_qiong__杜瓊__standing.png",
+      "battle": null,
+      "avatar": "avatars/du_qiong__杜瓊__avatar.png"
+    },
+    {
+      "uid": "fei-guan",
+      "name": "費觀",
+      "standing": "standing/fei_guan__費觀__standing.png",
+      "battle": null,
+      "avatar": "avatars/fei_guan__費觀__avatar.png"
+    },
+    {
+      "uid": "luo-xian",
+      "name": "羅憲",
+      "standing": "standing/luo_xian__羅憲__standing.png",
+      "battle": null,
+      "avatar": "avatars/luo_xian__羅憲__avatar.png"
+    },
+    {
+      "uid": "jiang-wan",
+      "name": "蔣琬",
+      "standing": "standing/jiang_wan__蔣琬__standing.png",
+      "battle": null,
+      "avatar": "avatars/jiang_wan__蔣琬__avatar.png"
+    },
+    {
+      "uid": "gou-fu",
+      "name": "句扶",
+      "standing": "standing/gou_fu__句扶__standing.png",
+      "battle": null,
+      "avatar": "avatars/gou_fu__句扶__avatar.png"
+    },
+    {
+      "uid": "liu-chen",
+      "name": "劉諶",
+      "standing": "standing/liu_chen__劉諶__standing.png",
+      "battle": null,
+      "avatar": "avatars/liu_chen__劉諶__avatar.png"
+    },
+    {
+      "uid": "zhu-bao",
+      "name": "朱褒",
+      "standing": "standing/zhu_bao__朱褒__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhu_bao__朱褒__avatar.png"
+    },
+    {
+      "uid": "li-hui",
+      "name": "李恢",
+      "standing": "standing/li_hui__李恢__standing.png",
+      "battle": null,
+      "avatar": "avatars/li_hui__李恢__avatar.png"
+    },
+    {
+      "uid": "chen-zhi",
+      "name": "陳祗",
+      "standing": "standing/chen_zhi__陳祗__standing.png",
+      "battle": null,
+      "avatar": "avatars/chen_zhi__陳祗__avatar.png"
+    },
+    {
+      "uid": "zhang-yi-shu",
+      "name": "張翼（蜀）",
+      "standing": "standing/zhang_yi_shu__張翼（蜀）__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhang_yi_shu__張翼（蜀）__avatar.png"
+    },
+    {
+      "uid": "fu-tong",
+      "name": "傅彤",
+      "standing": "standing/fu_tong__傅彤__standing.png",
+      "battle": null,
+      "avatar": "avatars/fu_tong__傅彤__avatar.png"
+    },
+    {
+      "uid": "ma-liang",
+      "name": "馬良",
+      "standing": "standing/ma_liang__馬良__standing.png",
+      "battle": null,
+      "avatar": "avatars/ma_liang__馬良__avatar.png"
+    },
+    {
+      "uid": "guan-suo",
+      "name": "關索",
+      "standing": "standing/guan_suo__關索__standing.png",
+      "battle": null,
+      "avatar": "avatars/guan_suo__關索__avatar.png"
+    },
+    {
+      "uid": "yu-fan",
+      "name": "虞翻",
+      "standing": "standing/yu_fan__虞翻__standing.png",
+      "battle": null,
+      "avatar": "avatars/yu_fan__虞翻__avatar.png"
+    },
+    {
+      "uid": "chen-wu",
+      "name": "陳武",
+      "standing": "standing/chen_wu__陳武__standing.png",
+      "battle": null,
+      "avatar": "avatars/chen_wu__陳武__avatar.png"
+    },
+    {
+      "uid": "sun-yi",
+      "name": "孫翊",
+      "standing": "standing/sun_yi__孫翊__standing.png",
+      "battle": null,
+      "avatar": "avatars/sun_yi__孫翊__avatar.png"
+    },
+    {
+      "uid": "zhu-ji",
+      "name": "朱績",
+      "standing": "standing/zhu_ji__朱績__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhu_ji__朱績__avatar.png"
+    },
+    {
+      "uid": "quan-cong",
+      "name": "全琮",
+      "standing": "standing/quan_cong__全琮__standing.png",
+      "battle": null,
+      "avatar": "avatars/quan_cong__全琮__avatar.png"
+    },
+    {
+      "uid": "lv-dai",
+      "name": "呂岱",
+      "standing": "standing/lv_dai__呂岱__standing.png",
+      "battle": null,
+      "avatar": "avatars/lv_dai__呂岱__avatar.png"
+    },
+    {
+      "uid": "hu-zun",
+      "name": "胡遵",
+      "standing": "standing/hu_zun__胡遵__standing.png",
+      "battle": null,
+      "avatar": "avatars/hu_zun__胡遵__avatar.png"
+    },
+    {
+      "uid": "wang-ji",
+      "name": "王基",
+      "standing": "standing/wang_ji__王基__standing.png",
+      "battle": null,
+      "avatar": "avatars/wang_ji__王基__avatar.png"
+    },
+    {
+      "uid": "sun-li",
+      "name": "孫禮",
+      "standing": "standing/sun_li__孫禮__standing.png",
+      "battle": null,
+      "avatar": "avatars/sun_li__孫禮__avatar.png"
+    },
+    {
+      "uid": "wang-hun",
+      "name": "王渾",
+      "standing": "standing/wang_hun__王渾__standing.png",
+      "battle": null,
+      "avatar": "avatars/wang_hun__王渾__avatar.png"
+    },
+    {
+      "uid": "wen-qin",
+      "name": "文欽",
+      "standing": "standing/wen_qin__文欽__standing.png",
+      "battle": null,
+      "avatar": "avatars/wen_qin__文欽__avatar.png"
+    },
+    {
+      "uid": "gongsun-yuan",
+      "name": "公孫淵",
+      "standing": "standing/gongsun_yuan__公孫淵__standing.png",
+      "battle": null,
+      "avatar": "avatars/gongsun_yuan__公孫淵__avatar.png"
+    },
+    {
+      "uid": "mu-lu-da-wang",
+      "name": "木鹿大王",
+      "standing": "standing/mu_lu_da_wang__木鹿大王__standing.png",
+      "battle": null,
+      "avatar": "avatars/mu_lu_da_wang__木鹿大王__avatar.png"
+    },
+    {
+      "uid": "e-huan",
+      "name": "鄂煥",
+      "standing": "standing/e_huan__鄂煥__standing.png",
+      "battle": null,
+      "avatar": "avatars/e_huan__鄂煥__avatar.png"
+    },
+    {
+      "uid": "sha-mo-ke",
+      "name": "沙摩柯",
+      "standing": "standing/sha_mo_ke__沙摩柯__standing.png",
+      "battle": null,
+      "avatar": "avatars/sha_mo_ke__沙摩柯__avatar.png"
+    },
+    {
+      "uid": "mi-heng",
+      "name": "禰衡",
+      "standing": "standing/mi_heng__禰衡__standing.png",
+      "battle": null,
+      "avatar": "avatars/mi_heng__禰衡__avatar.png"
+    },
+    {
+      "uid": "tian-chou",
+      "name": "田疇",
+      "standing": "standing/tian_chou__田疇__standing.png",
+      "battle": null,
+      "avatar": "avatars/tian_chou__田疇__avatar.png"
+    },
+    {
+      "uid": "guan-ning",
+      "name": "管寧",
+      "standing": "standing/guan_ning__管寧__standing.png",
+      "battle": null,
+      "avatar": "avatars/guan_ning__管寧__avatar.png"
+    },
+    {
+      "uid": "zuo-ci",
+      "name": "左慈",
+      "standing": "standing/zuo_ci__左慈__standing.png",
+      "battle": null,
+      "avatar": "avatars/zuo_ci__左慈__avatar.png"
+    },
+    {
+      "uid": "yu-ji",
+      "name": "于吉",
+      "standing": "standing/yu_ji__于吉__standing.png",
+      "battle": null,
+      "avatar": "avatars/yu_ji__于吉__avatar.png"
+    },
+    {
+      "uid": "liu-ba",
+      "name": "劉巴",
+      "standing": "standing/liu_ba__劉巴__standing.png",
+      "battle": null,
+      "avatar": "avatars/liu_ba__劉巴__avatar.png"
+    },
+    {
+      "uid": "qin-mi",
+      "name": "秦宓",
+      "standing": "standing/qin_mi__秦宓__standing.png",
+      "battle": null,
+      "avatar": "avatars/qin_mi__秦宓__avatar.png"
+    },
+    {
+      "uid": "yi-ji",
+      "name": "伊籍",
+      "standing": "standing/yi_ji__伊籍__standing.png",
+      "battle": null,
+      "avatar": "avatars/yi_ji__伊籍__avatar.png"
+    },
+    {
+      "uid": "fei-shi",
+      "name": "費詩",
+      "standing": "standing/fei_shi__費詩__standing.png",
+      "battle": null,
+      "avatar": "avatars/fei_shi__費詩__avatar.png"
+    },
+    {
+      "uid": "zhang-nan",
+      "name": "張南",
+      "standing": "standing/zhang_nan__張南__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhang_nan__張南__avatar.png"
+    },
+    {
+      "uid": "fu-shou",
+      "name": "傅肜",
+      "standing": "standing/fu_shou__傅肜__standing.png",
+      "battle": null,
+      "avatar": "avatars/fu_shou__傅肜__avatar.png"
+    },
+    {
+      "uid": "sun-sheng",
+      "name": "孫盛",
+      "standing": "standing/sun_sheng__孫盛__standing.png",
+      "battle": null,
+      "avatar": "avatars/sun_sheng__孫盛__avatar.png"
+    },
+    {
+      "uid": "wei-zhao",
+      "name": "韋昭",
+      "standing": "standing/wei_zhao__韋昭__standing.png",
+      "battle": null,
+      "avatar": "avatars/wei_zhao__韋昭__avatar.png"
+    },
+    {
+      "uid": "xue-zong",
+      "name": "薛綜",
+      "standing": "standing/xue_zong__薛綜__standing.png",
+      "battle": null,
+      "avatar": "avatars/xue_zong__薛綜__avatar.png"
+    },
+    {
+      "uid": "zhu-yi",
+      "name": "朱異",
+      "standing": "standing/zhu_yi__朱異__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhu_yi__朱異__avatar.png"
+    },
+    {
+      "uid": "pan-jun",
+      "name": "潘浚",
+      "standing": "standing/pan_jun__潘浚__standing.png",
+      "battle": null,
+      "avatar": "avatars/pan_jun__潘浚__avatar.png"
+    },
+    {
+      "uid": "cao-zhi",
+      "name": "曹植",
+      "standing": "standing/cao_zhi__曹植__standing.png",
+      "battle": null,
+      "avatar": "avatars/cao_zhi__曹植__avatar.png"
+    },
+    {
+      "uid": "lv-kai",
+      "name": "呂凱",
+      "standing": "standing/lv_kai__呂凱__standing.png",
+      "battle": null,
+      "avatar": "avatars/lv_kai__呂凱__avatar.png"
+    },
+    {
+      "uid": "chen-dao",
+      "name": "陳到",
+      "standing": "standing/chen_dao__陳到__standing.png",
+      "battle": null,
+      "avatar": "avatars/chen_dao__陳到__avatar.png"
+    },
+    {
+      "uid": "wu-ban",
+      "name": "吳班",
+      "standing": "standing/wu_ban__吳班__standing.png",
+      "battle": null,
+      "avatar": "avatars/wu_ban__吳班__avatar.png"
+    },
+    {
+      "uid": "sun-hao",
+      "name": "孫皓",
+      "standing": "standing/sun_hao__孫皓__standing.png",
+      "battle": null,
+      "avatar": "avatars/sun_hao__孫皓__avatar.png"
+    },
+    {
+      "uid": "diao-chan",
+      "name": "貂蟬",
+      "standing": "standing/diao_chan__貂蟬__standing.png",
+      "battle": null,
+      "avatar": "avatars/diao_chan__貂蟬__avatar.png"
+    },
+    {
+      "uid": "da-qiao",
+      "name": "大喬",
+      "standing": "standing/da_qiao__大喬__standing.png",
+      "battle": null,
+      "avatar": "avatars/da_qiao__大喬__avatar.png"
+    },
+    {
+      "uid": "xiao-qiao",
+      "name": "小喬",
+      "standing": "standing/xiao_qiao__小喬__standing.png",
+      "battle": null,
+      "avatar": "avatars/xiao_qiao__小喬__avatar.png"
+    },
+    {
+      "uid": "zhen-ji",
+      "name": "甄姬",
+      "standing": "standing/zhen_ji__甄姬__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhen_ji__甄姬__avatar.png"
+    },
+    {
+      "uid": "sun-shang-xiang",
+      "name": "孫尚香",
+      "standing": "standing/sun_shang_xiang__孫尚香__standing.png",
+      "battle": null,
+      "avatar": "avatars/sun_shang_xiang__孫尚香__avatar.png"
+    },
+    {
+      "uid": "cai-yan",
+      "name": "蔡琰",
+      "standing": "standing/cai_yan__蔡琰__standing.png",
+      "battle": null,
+      "avatar": "avatars/cai_yan__蔡琰__avatar.png"
+    },
+    {
+      "uid": "huang-yue-ying",
+      "name": "黃月英",
+      "standing": "standing/huang_yue_ying__黃月英__standing.png",
+      "battle": null,
+      "avatar": "avatars/huang_yue_ying__黃月英__avatar.png"
+    },
+    {
+      "uid": "zhang-chun-hua",
+      "name": "張春華",
+      "standing": "standing/zhang_chun_hua__張春華__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhang_chun_hua__張春華__avatar.png"
+    },
+    {
+      "uid": "xin-xian-ying",
+      "name": "辛憲英",
+      "standing": "standing/xin_xian_ying__辛憲英__standing.png",
+      "battle": null,
+      "avatar": "avatars/xin_xian_ying__辛憲英__avatar.png"
+    },
+    {
+      "uid": "bu-lian-shi",
+      "name": "步練師",
+      "standing": "standing/bu_lian_shi__步練師__standing.png",
+      "battle": null,
+      "avatar": "avatars/bu_lian_shi__步練師__avatar.png"
+    },
+    {
+      "uid": "guan-yin-ping",
+      "name": "關銀屏",
+      "standing": "standing/guan_yin_ping__關銀屏__standing.png",
+      "battle": "battle/guan_yin_ping__關銀屏__battle.png",
+      "avatar": "avatars/guan_yin_ping__關銀屏__avatar.png"
+    },
+    {
+      "uid": "lu-ling-qi",
+      "name": "呂玲綺",
+      "standing": "standing/lu_ling_qi__呂玲綺__standing.png",
+      "battle": null,
+      "avatar": "avatars/lu_ling_qi__呂玲綺__avatar.png"
+    },
+    {
+      "uid": "ma-yun-lu",
+      "name": "馬雲騄",
+      "standing": "standing/ma_yun_lu__馬雲騄__standing.png",
+      "battle": null,
+      "avatar": "avatars/ma_yun_lu__馬雲騄__avatar.png"
+    },
+    {
+      "uid": "dong-bai",
+      "name": "董白",
+      "standing": "standing/dong_bai__董白__standing.png",
+      "battle": null,
+      "avatar": "avatars/dong_bai__董白__avatar.png"
+    },
+    {
+      "uid": "fan-shi",
+      "name": "樊氏",
+      "standing": "standing/fan_shi__樊氏__standing.png",
+      "battle": null,
+      "avatar": "avatars/fan_shi__樊氏__avatar.png"
+    },
+    {
+      "uid": "bian-fu-ren",
+      "name": "卞夫人",
+      "standing": "standing/bian_fu_ren__卞夫人__standing.png",
+      "battle": null,
+      "avatar": "avatars/bian_fu_ren__卞夫人__avatar.png"
+    },
+    {
+      "uid": "wu-guo-tai",
+      "name": "吳國太",
+      "standing": "standing/wu_guo_tai__吳國太__standing.png",
+      "battle": null,
+      "avatar": "avatars/wu_guo_tai__吳國太__avatar.png"
+    },
+    {
+      "uid": "guo-nu-wang",
+      "name": "郭女王",
+      "standing": "standing/guo_nu_wang__郭女王__standing.png",
+      "battle": null,
+      "avatar": "avatars/guo_nu_wang__郭女王__avatar.png"
+    },
+    {
+      "uid": "wang-yuan-ji",
+      "name": "王元姬",
+      "standing": "standing/wang_yuan_ji__王元姬__standing.png",
+      "battle": null,
+      "avatar": "avatars/wang_yuan_ji__王元姬__avatar.png"
+    },
+    {
+      "uid": "xiahou-shi",
+      "name": "夏侯氏",
+      "standing": "standing/xiahou_shi__夏侯氏__standing.png",
+      "battle": null,
+      "avatar": "avatars/xiahou_shi__夏侯氏__avatar.png"
+    },
+    {
+      "uid": "xiahou-ling-nv",
+      "name": "夏侯令女",
+      "standing": "standing/xiahou_ling_nv__夏侯令女__standing.png",
+      "battle": null,
+      "avatar": "avatars/xiahou_ling_nv__夏侯令女__avatar.png"
+    },
+    {
+      "uid": "gan-shi",
+      "name": "甘氏",
+      "standing": "standing/gan_shi__甘氏__standing.png",
+      "battle": null,
+      "avatar": "avatars/gan_shi__甘氏__avatar.png"
+    },
+    {
+      "uid": "mi-shi",
+      "name": "糜氏",
+      "standing": "standing/mi_shi__糜氏__standing.png",
+      "battle": null,
+      "avatar": "avatars/mi_shi__糜氏__avatar.png"
+    },
+    {
+      "uid": "cao-jie",
+      "name": "曹節",
+      "standing": "standing/cao_jie__曹節__standing.png",
+      "battle": null,
+      "avatar": "avatars/cao_jie__曹節__avatar.png"
+    },
+    {
+      "uid": "sun-lu-ban",
+      "name": "孫魯班",
+      "standing": "standing/sun_lu_ban__孫魯班__standing.png",
+      "battle": null,
+      "avatar": "avatars/sun_lu_ban__孫魯班__avatar.png"
+    },
+    {
+      "uid": "sun-lu-yu",
+      "name": "孫魯育",
+      "standing": "standing/sun_lu_yu__孫魯育__standing.png",
+      "battle": null,
+      "avatar": "avatars/sun_lu_yu__孫魯育__avatar.png"
+    },
+    {
+      "uid": "zhao-e",
+      "name": "趙娥",
+      "standing": "standing/zhao_e__趙娥__standing.png",
+      "battle": null,
+      "avatar": "avatars/zhao_e__趙娥__avatar.png"
+    },
+    {
+      "uid": "yang-hui-yu",
+      "name": "羊徽瑜",
+      "standing": "standing/yang_hui_yu__羊徽瑜__standing.png",
+      "battle": null,
+      "avatar": "avatars/yang_hui_yu__羊徽瑜__avatar.png"
+    },
+    {
+      "uid": "zhu-rong-furen",
+      "name": "祝融夫人",
+      "standing": "standing/zhu_rong_furen__祝融夫人__standing.png",
+      "battle": "battle/zhu_rong_furen__祝融夫人__battle.png",
+      "avatar": "avatars/zhu_rong_furen__祝融夫人__avatar.png"
+    },
+    {
+      "uid": "bao-san-niang",
+      "name": "鮑三娘",
+      "standing": "standing/bao_san_niang__鮑三娘__standing.png",
+      "battle": "battle/bao_san_niang__鮑三娘__battle.png",
+      "avatar": "avatars/bao_san_niang__鮑三娘__avatar.png"
+    },
+    {
+      "uid": "hua-man",
+      "name": "花鬘",
+      "standing": "standing/hua_man__花鬘__standing.png",
+      "battle": null,
+      "avatar": "avatars/hua_man__花鬘__avatar.png"
+    },
+    {
+      "uid": "cai-shi",
+      "name": "蔡氏",
+      "standing": "standing/cai_shi__蔡氏__standing.png",
+      "battle": null,
+      "avatar": "avatars/cai_shi__蔡氏__avatar.png"
+    },
+    {
+      "uid": "cao-hua",
+      "name": "曹華",
+      "standing": "standing/cao_hua__曹華__standing.png",
+      "battle": null,
+      "avatar": "avatars/cao_hua__曹華__avatar.png"
+    },
+    {
+      "uid": "cao-xian",
+      "name": "曹憲",
+      "standing": "standing/cao_xian__曹憲__standing.png",
+      "battle": null,
+      "avatar": "avatars/cao_xian__曹憲__avatar.png"
+    },
+    {
+      "uid": "xu-shi",
+      "name": "徐氏",
+      "standing": "standing/xu_shi__徐氏__standing.png",
+      "battle": null,
+      "avatar": "avatars/xu_shi__徐氏__avatar.png"
+    }
+  ]
+}
