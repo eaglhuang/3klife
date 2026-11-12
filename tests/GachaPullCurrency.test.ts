@@ -8,6 +8,8 @@ import { TestSuite, assert } from './TestRunner';
 import { pickGachaCurrency } from '../assets/scripts/core/systems/GachaCurrency';
 import { STARTER_GACHA_WALLET } from '../assets/scripts/core/services/GachaWalletRules';
 import { GACHA_NODES, gachaPullBarTexts } from '../assets/scripts/ui/core/GachaScreenNodes';
+import { disableCharCacheForCjk } from '../assets/scripts/ui/core/LabelCjkCache';
+import { Label, Node } from 'cc';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const fs = require('fs') as typeof import('fs');
@@ -47,6 +49,16 @@ export function createGachaPullCurrencySuite(): TestSuite {
         assert.isTrue(flow.includes('performSupportCardSummon(poolId, drawCount, generals)'));
         assert.isTrue(flow.includes('performPoolTicketSummon(poolId, drawCount, generals)'));
         assert.isTrue(flow.includes('pickGachaCurrency('));
+    });
+
+    suite.test('結果畫面含中文的 CHAR 快取 Label 改不快取，英數字不動（PROG-2-2243）', () => {
+        const root = new Node('root');
+        const mk = (text: string): Label => { const n = new Node(text); root.children.push(n); const l = n.addComponent(Label); l.string = text; l.cacheMode = 2; return l; };
+        const cjk = mk('確定 · 全部收下');
+        const ascii = mk('SR x1');
+        disableCharCacheForCjk(root);
+        assert.equals(0, cjk.cacheMode);
+        assert.equals(2, ascii.cacheMode);
     });
 
     return suite;

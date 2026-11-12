@@ -1,5 +1,6 @@
 // @spec-source → 轉蛋系統.md (doc_spec_0042)；PROG-2-1429 依建檔紀錄補標出處
 import { Button, Node, Sprite, UITransform } from 'cc';
+import { disableCharCacheForCjk } from './LabelCjkCache';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { LocalGachaService, type LocalGachaResultEntry } from '../../core/services/LocalGachaService';
 import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
@@ -261,6 +262,9 @@ export class GachaFlowCoordinator {
             } : {}),
         });
 
+        // 逐字快取（CHAR）配英文 TTF 時中文畫不出來；結果畫面的中文 Label 一律改不快取
+        disableCharCacheForCjk(host.node);
+
         if (topResult) {
             this._updateHeroPortrait(binder, topResult.general.id);
         }
@@ -394,3 +398,4 @@ export class GachaFlowCoordinator {
         this._options.onShowError(message);
     }
 }
+
