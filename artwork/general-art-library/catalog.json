@@ -1139,6 +1139,17 @@
             "version": "0002",
             "file": "standing/guo_jia__郭嘉__standing_0002.png",
             "status": "review-pending"
+          },
+          {
+            "version": "0003",
+            "file": "standing/guo_jia__郭嘉__standing_0003.png",
+            "status": "review-pending",
+            "style": "anime-influenced face; semi-realistic materials",
+            "palette": "Wei blue-ivory-antique gold",
+            "prop": "campaign ledger",
+            "distinguishingFeatures": "younger adult, sharp narrow eyes, low dark ponytail, knowing half-smile; distinct from Zhuge Liang",
+            "sha256": "0e03e4c60d01c8efd56bc0ba7bf03df076a8341e20afacf4f96b9236757e2de8",
+            "canvas": "1024x1536 RGBA"
           }
         ]
       },
