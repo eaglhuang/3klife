@@ -17,7 +17,7 @@
       "uid": "sun-shang-xiang",
       "name": "孫尚香",
       "standing": {
-        "activeVersion": "0004",
+        "activeVersion": "0006",
         "status": "integrated",
         "history": [
           {
@@ -38,6 +38,16 @@
           {
             "version": "0004",
             "file": "standing/sun_shang_xiang__孫尚香__standing_0004.png",
+            "status": "superseded"
+          },
+          {
+            "version": "0005",
+            "file": "standing/sun_shang_xiang__孫尚香__standing_0005.png",
+            "status": "superseded"
+          },
+          {
+            "version": "0006",
+            "file": "standing/sun_shang_xiang__孫尚香__standing_0006.png",
             "status": "integrated"
           }
         ]
@@ -46,7 +56,7 @@
         "status": "not-created"
       },
       "avatar": {
-        "activeVersion": "0004",
+        "activeVersion": "0006",
         "status": "integrated",
         "history": [
           {
@@ -67,6 +77,16 @@
           {
             "version": "0004",
             "file": "avatars/sun_shang_xiang__孫尚香__avatar_0004.png",
+            "status": "superseded"
+          },
+          {
+            "version": "0005",
+            "file": "avatars/sun_shang_xiang__孫尚香__avatar_0005.png",
+            "status": "superseded"
+          },
+          {
+            "version": "0006",
+            "file": "avatars/sun_shang_xiang__孫尚香__avatar_0006.png",
             "status": "integrated"
           }
         ]

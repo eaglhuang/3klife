@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-12T07-21-34-301Z-import-1b2ecf600b44",
+  "taskId": "UI-2-0130",
+  "action": "import",
+  "actorId": null,
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0130.json",
+  "taskSha256": "sha256:387c0bb95bff91af72a99d4f8a59168462e74579590457f2477ade84e8be9602",
+  "createdAt": "2026-11-12T07:21:34.301Z",
+  "command": "node atm.mjs tasks import"
+}

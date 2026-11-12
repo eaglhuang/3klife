@@ -1,0 +1,65 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "",
+      "id": "UI-2-0130",
+      "title": "孫尚香正式立繪右手持劍柄修正",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-11-12",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-11-12T13:08:30+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依使用者修正要求，將孫尚香右手明確繪為握住劍柄，手指不得觸碰劍刃；統一正式立繪版本、遊戲資源與大頭裁切，保留角色獨特臉部及紅／深青配色。",
+      "related": [
+        "UI-2-0121"
+      ],
+      "depends": [],
+      "acceptance": [
+        "右手手指完整包覆劍柄且不碰刃",
+        "劍長自然、護手與柄刃結構清楚",
+        "1024x1536透明立繪人物完整落在安全框",
+        "256x256頭像臉部水平置中且符合既有大頭比例",
+        "版本目錄、正式遊戲資源與catalog版本紀錄一致"
+      ],
+      "deliverables": [
+        "artwork/general-art-library/standing/sun_shang_xiang__孫尚香__standing_0006.png",
+        "artwork/general-art-library/avatars/sun_shang_xiang__孫尚香__avatar_0006.png",
+        "artwork/general-art-library/catalog.json",
+        "assets/resources/sprites/generals/sun_shang_xiang_portrait.png",
+        "assets/resources/sprites/generals/avatars/sun_shang_xiang_avatar.png",
+        "assets/resources/sprites/ui_avatars/cropped/sun_shang_xiang_avatar.png"
+      ],
+      "notes": "2026-11-12 | 狀態: in-progress | 驗證: 1024x1536透明立繪；雙手握在護手下方劍柄，未碰刃；頭像由現行裁切流程重生，Cocos匯入與catalog同步待核對 | 變更: standing_0006及avatar_0006取代遊戲目前資源 | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

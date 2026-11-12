@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-12T07-10-21-347Z-scope-amendment-6bccf3027c07",
+  "taskId": "UI-2-0130",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0130.json",
+  "taskSha256": "sha256:6e1e888ca4a8af5bd841645c95d6472e1968e1f8c0c484e901ababb3a1a36875",
+  "createdAt": "2026-11-12T07:10:21.347Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0130 --actor codex-gpt-6.1-sol --add \"artwork/general-art-library/standing/sun_shang_xiang__孫尚香__standing_0006.png,artwork/general-art-library/avatars/sun_shang_xiang__孫尚香__avatar_0006.png,artwork/general-art-library/catalog.json,assets/resources/sprites/generals/sun_shang_xiang_portrait.png,assets/resources/sprites/generals/avatars/sun_shang_xiang_avatar.png,assets/resources/sprites/ui_avatars/cropped/sun_shang_xiang_avatar.png\" --class generated-artifact --phase closeout --reason \"使用者核准將 UI-2-0130 已列明的孫尚香立繪與頭像交付檔加入任務鎖範圍，以正式整合並提交。\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "generated-artifact",
+    "amendmentPhase": "closeout",
+    "amendmentMode": "normal",
+    "reason": "使用者核准將 UI-2-0130 已列明的孫尚香立繪與頭像交付檔加入任務鎖範圍，以正式整合並提交。"
+  }
+}

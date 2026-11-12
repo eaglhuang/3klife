@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-12T07-22-27-125Z-scope-amendment-3afcf5e28067",
+  "taskId": "UI-2-0130",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0130.json",
+  "taskSha256": "sha256:e29f30737bbd519af100b84c6a055bdedf693a4dee60468ae712c65509bc33aa",
+  "createdAt": "2026-11-12T07:22:27.125Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0130 --actor codex-gpt-6.1-sol --add \"artwork/general-art-library/standing/sun_shang_xiang__孫尚香__standing_0006.png,artwork/general-art-library/avatars/sun_shang_xiang__孫尚香__avatar_0006.png,artwork/general-art-library/catalog.json,assets/resources/sprites/generals/sun_shang_xiang_portrait.png,assets/resources/sprites/generals/avatars/sun_shang_xiang_avatar.png,assets/resources/sprites/ui_avatars/cropped/sun_shang_xiang_avatar.png\" --class generated-artifact --phase closeout --reason \"恢復使用者核准的 UI-2-0130 孫尚香素材交付範圍；前次任務匯入重置 scopePaths，重新同步既有授權範圍。\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "generated-artifact",
+    "amendmentPhase": "closeout",
+    "amendmentMode": "normal",
+    "reason": "恢復使用者核准的 UI-2-0130 孫尚香素材交付範圍；前次任務匯入重置 scopePaths，重新同步既有授權範圍。"
+  }
+}
