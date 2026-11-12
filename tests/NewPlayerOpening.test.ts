@@ -28,9 +28,10 @@ function collectIds(node: any, out: Set<string>): void {
 export function createNewPlayerOpeningSuite(): TestSuite {
     const suite = new TestSuite('NewPlayerOpening (新玩家開場流程)');
 
-    suite.test('第一幕四頁：古文 → 信件（按鈕為「開始宿命轉蛋」）→ 像素回憶 → 漩渦', () => {
+    suite.test('第一幕四頁：古文 → 信件 → 像素回憶 → 漩渦（最後一頁按鈕才是「開始宿命轉蛋」）→ 像素回憶 → 漩渦', () => {
         assert.equals('ancient,letter,pixel,vortex', INTRO_PANELS.map(p => p.id).join(','));
-        assert.equals('開始宿命轉蛋', INTRO_PANELS[1].button);
+        assert.equals('繼續', INTRO_PANELS[1].button);
+        assert.equals('開始宿命轉蛋', INTRO_PANELS[3].button);
     });
 
     suite.test('OpeningIntroController 逐頁翻，翻完最後一頁才回傳 true，之後不再動作', () => {

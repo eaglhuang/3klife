@@ -82,7 +82,6 @@ export class OpeningIntroController {
     public getFlowView(): OpeningIntroFlowView {
         const panel = this._panels[Math.min(this._index, this._panels.length - 1)];
         const done = this.finished;
-        const playing = this.autoPlaying;
         return {
             texts: {
                 introText: done ? '' : panel.text,
@@ -90,7 +89,8 @@ export class OpeningIntroController {
                 btnIntroNextLabel: done ? '' : panel.button,
             },
             actives: { introCard: !done },
-            enabled: { btnIntroNext: !done && !playing },
+            // 自動播放中按鈕仍可點，用來跳過動畫（#2107-7：漩渦期間按鈕變暗看似卡住）
+            enabled: { btnIntroNext: !done },
         };
     }
 }

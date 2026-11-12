@@ -209,7 +209,11 @@ export class LobbyHallScreenBinder {
         const bubble = findUcufNode(this._screenRoot, 'lobby-hall-screen.bubble');
         // 選項列＝有兩個以上子節點的那一列（執行期另插的陰影等節點沒有子節點）
         const choiceRow = bubble?.children.filter(child => child.children.length >= 2).pop();
-        if (!bubble || !choiceRow) return;
+        if (!bubble) return;
+        // 點泡泡本體也收起（#2107-9）；選項按鈕的觸控先處理，不會被本體吃掉
+        bubble.off(Node.EventType.TOUCH_END);
+        bubble.on(Node.EventType.TOUCH_END, () => { bubble.active = false; });
+        if (!choiceRow) return;
         for (const choice of choiceRow.children) {
             choice.off(Node.EventType.TOUCH_END);
             choice.on(Node.EventType.TOUCH_END, () => { bubble.active = false; });

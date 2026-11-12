@@ -99,6 +99,11 @@ export function createNewcomerUiRegressionSuite(): TestSuite {
         assert.isTrue(src.includes("'lobby-hall-screen.bubble'"));
         assert.isTrue(src.includes('bubble.active = false'));
         assert.isTrue(src.includes('this._bindBubbleChoices();'));
+        // #2107-9：泡泡本體也能點
+        assert.isTrue(src.includes('bubble.on(Node.EventType.TOUCH_END'));
+        // #2107-3：名牌等小人站位算好才建立
+        const crowd = readFileSync(join(__dirname, '../assets/scripts/ui/components/HallStageCrowd.ts'), 'utf8');
+        assert.isTrue(crowd.indexOf('const tag = this._makeLabel') > crowd.indexOf('await this._loadFirst'));
     });
     return suite;
 }

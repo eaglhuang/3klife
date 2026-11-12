@@ -1,5 +1,5 @@
 // @spec-source → 轉蛋系統.md (doc_spec_0042)；PROG-2-1429 依建檔紀錄補標出處
-import { Button, Node, Sprite, UITransform } from 'cc';
+import { Button, Node, Sprite, UITransform, Widget } from 'cc';
 import { disableCharCache } from './LabelCjkCache';
 import { formatGachaLine, loadGachaLines } from './GachaLines';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
@@ -15,6 +15,9 @@ export const DEFAULT_POOL_ID = 'GENERAL_STANDARD_01';
 
 export { GACHA_SCREEN_ID } from './GachaScreenNodes';
 export const GACHA_PULL_RESULT_SCREEN_ID = 'gacha-pull-result';
+
+/** 揭曉後武將立繪回到左側的水平位移（與版面 hCenter 一致） */
+const HERO_SIDE_CENTER_X = -320;
 
 /** 卡片頭像節點名（PROG-2-2247） */
 const CARD_PORTRAIT_NODE = 'CardPortrait';
@@ -278,6 +281,7 @@ export class GachaFlowCoordinator {
         if (topResult) {
             this._updateHeroPortrait(binder, topResult.general.id);
         }
+        this._stageHeroReveal(binder, topResult !== null);
 
         this._resultBackAction = flow.onBack;
         this._resultRepullAction = repull;
@@ -372,6 +376,32 @@ export class GachaFlowCoordinator {
         Promise.resolve(action()).catch((error) => {
             UCUFLogger.warn(LogCategory.LIFECYCLE, '[GachaFlowCoordinator] repull action failed', error);
         }).then(() => { this._resultRepullPending = false; });
+    }
+
+    /**
+     * 兩段揭曉（#2107-8）：先讓最高稀有武將置中獨佔全螢幕，結果面板藏起來；
+     * 點畫面任一處才把武將移回左側、亮出結果面板，兩者不再同時擠在畫面上。
+     */
+    private _stageHeroReveal(binder: any, hasHero: boolean): void {
+        const showcase: Node | null = binder.getNode ? binder.getNode('GachaPullResult_hero_showcase') : null;
+        const panel: Node | null = binder.getNode ? binder.getNode('GachaPullResult_div_341') : null;
+        const stage: Node | null = binder.getNode ? binder.getNode('GachaPullResult_div_264') : null;
+        if (!showcase || !panel || !stage) return;
+        const widget = showcase.getComponent(Widget);
+        const sideCenter = HERO_SIDE_CENTER_X;
+        const place = (x: number): void => {
+            if (widget) { widget.horizontalCenter = x; widget.updateAlignment(); }
+            else showcase.setPosition(x, showcase.position.y, 0);
+        };
+        stage.off(Node.EventType.TOUCH_END);
+        if (!hasHero) { place(sideCenter); panel.active = true; return; }
+        place(0);
+        panel.active = false;
+        stage.on(Node.EventType.TOUCH_END, () => {
+            stage.off(Node.EventType.TOUCH_END);
+            place(sideCenter);
+            panel.active = true;
+        });
     }
 
     /**
