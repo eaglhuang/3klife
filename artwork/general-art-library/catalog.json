@@ -69,7 +69,7 @@
       "uid": "zhuge-liang",
       "name": "諸葛亮",
       "standing": {
-        "activeVersion": "0002",
+        "activeVersion": "0003",
         "status": "integrated",
         "history": [
           {
@@ -80,6 +80,11 @@
           {
             "version": "0002",
             "file": "standing/zhuge_liang__諸葛亮__standing_0002.png",
+            "status": "superseded"
+          },
+          {
+            "version": "0003",
+            "file": "standing/zhuge_liang__諸葛亮__standing_0003.png",
             "status": "integrated"
           }
         ]
@@ -88,7 +93,7 @@
         "status": "not-created"
       },
       "avatar": {
-        "activeVersion": "0002",
+        "activeVersion": "0003",
         "status": "integrated",
         "history": [
           {
@@ -99,6 +104,11 @@
           {
             "version": "0002",
             "file": "avatars/zhuge_liang__諸葛亮__avatar_0002.png",
+            "status": "superseded"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/zhuge_liang__諸葛亮__avatar_0003.png",
             "status": "integrated"
           }
         ]
