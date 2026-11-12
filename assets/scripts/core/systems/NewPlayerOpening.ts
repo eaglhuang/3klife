@@ -22,16 +22,16 @@ export const SHOWCASE_DONE_EVENT = 'showcase-done';
 export interface IntroPanel {
     id: 'ancient' | 'letter' | 'pixel' | 'vortex';
     text: string;
-    /** 此頁按鈕文字（信件頁是規格指定的「開始宿命轉蛋」） */
+    /** 此頁按鈕文字（「開始宿命轉蛋」放在真正進入轉蛋的最後一頁，#2107-6） */
     button: string;
 }
 
 /** 第一幕四個分鏡：黑場古文 → Win95 信件 → 像素回憶 → 時空漩渦 */
 export const INTRO_PANELS: readonly IntroPanel[] = Object.freeze([
     { id: 'ancient', text: '天下大勢，分久必合，合久必分。\n祖紋命篆在黑暗中浮現，一個名字接著一個名字。', button: '繼續' },
-    { id: 'letter', text: '你是不是又在回味那段三國舊作？\n遺憾，是可以被改寫的。\n我們為你備好了夢境觀測位與全息頭盔，幾位脾氣很硬、卻願意跟隨你的宿命之將，正在等你。', button: '開始宿命轉蛋' },
+    { id: 'letter', text: '你是不是又在回味那段三國舊作？\n遺憾，是可以被改寫的。\n我們為你備好了夢境觀測位與全息頭盔，幾位脾氣很硬、卻願意跟隨你的宿命之將，正在等你。', button: '繼續' },
     { id: 'pixel', text: '熟悉的像素地圖、六大諸侯的頭像……\n六色因子的光痕正侵入舊日的記憶。', button: '繼續' },
-    { id: 'vortex', text: '白點擴散成漩渦，舊日的靈魂被吸進命盤裂口，\n轉蛋盤自遠而近飛來。', button: '進入宿命' },
+    { id: 'vortex', text: '白點擴散成漩渦，舊日的靈魂被吸進命盤裂口，\n轉蛋盤自遠而近飛來。', button: '開始宿命轉蛋' },
 ]);
 
 /** 新玩家開場：intro 以 intro-done 離開 → showcase 以 showcase-done 離開 → destiny 以 destiny-locked 離開（開場結束，PROG-2-2222） */

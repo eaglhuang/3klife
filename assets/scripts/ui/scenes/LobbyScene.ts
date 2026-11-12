@@ -3032,6 +3032,8 @@ export class LobbyScene extends Component {
         }
         host.node.active = true;
         this._bringNodeToFront(host.node);
+        // 開場故事已能看，大廳在背景續載；不讓「正在準備大廳」進度條蓋在故事上（#2107-7）
+        SceneLoadProgress.complete();
         this._refreshIntro();
         this._scheduleIntroTick();
     }
@@ -3045,11 +3047,13 @@ export class LobbyScene extends Component {
     }
 
     /** 漩渦等自動播放分鏡每步推進；非自動播放時不動作。 */
-    private _tickIntro(): void {
+    private _tickIntro(dt?: number): void {
         if (!this._intro?.autoPlaying) {
             return;
         }
-        if (this._intro.tick(INTRO_TICK_SEC * 1000)) {
+        // 用實際經過時間推進：背景載入拖慢幀率時，漩渦不會被拉長成十幾秒（#2107-7）
+        const stepSec = typeof dt === 'number' && dt > 0 ? dt : INTRO_TICK_SEC;
+        if (this._intro.tick(stepSec * 1000)) {
             this._finishIntro();
             return;
         }

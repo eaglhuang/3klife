@@ -85,9 +85,6 @@ export class HallStageCrowd extends Component {
         sprite.sizeMode = Sprite.SizeMode.RAW;
         this.node.addChild(body);
 
-        const tag = this._makeLabel(`tag-${placement.generalId}`, placement.title ? `${placement.title}・${placement.name}` : placement.name, 16, TAG_COLOR);
-        const mark = placement.hasTaskMark ? this._makeLabel(`mark-${placement.generalId}`, '!', 30, MARK_COLOR) : null;
-
         const frame = await this._loadFirst(placement.spriteCandidates);
         if (token !== this._showToken || !body.isValid) return;
         if (frame) {
@@ -101,6 +98,9 @@ export class HallStageCrowd extends Component {
             sprite.sizeMode = Sprite.SizeMode.CUSTOM;
         }
 
+        // 名牌等小人載完、站位算好才建立（#2107-3）：先建會停在原點，載入慢時幾張名牌疊在畫面中間
+        const tag = this._makeLabel(`tag-${placement.generalId}`, placement.title ? `${placement.title}・${placement.name}` : placement.name, 16, TAG_COLOR);
+        const mark = placement.hasTaskMark ? this._makeLabel(`mark-${placement.generalId}`, '!', 30, MARK_COLOR) : null;
         const pose = hallStageCrowdPose(placement, placement.height, decor, index);
         body.setPosition(pose.body.x, pose.body.y, 0);
         body.setScale(pose.body.scaleX, pose.body.scaleY, 1);

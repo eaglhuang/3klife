@@ -32,10 +32,11 @@ export function createOpeningIntroVortexSuite(): TestSuite {
         assert.isTrue(intro.autoPlaying);
     });
 
-    suite.test('漩渦播放中按鈕停用，標示頁數不變', () => {
+    suite.test('漩渦播放中按鈕仍可點（跳過動畫，#2107-7），標示頁數不變', () => {
         const intro = reachVortex();
         const view = intro.getFlowView();
-        assert.isFalse(view.enabled.btnIntroNext);
+        assert.isTrue(view.enabled.btnIntroNext);
+        assert.isTrue(intro.next());
         assert.equals('4 / 4', view.texts.introStep);
     });
 
