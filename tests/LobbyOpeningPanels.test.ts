@@ -22,7 +22,7 @@ function fixture(hasPool = true, isNewPlayer = true, loadedSession?: GameSession
         session: () => session,
         generals: () => read<GeneralConfig[]>('generals.json'),
         isNewPlayer: () => isNewPlayer,
-        loadGachaConfig: async () => hasPool ? read<GachaConfig[]>('gacha-config.json').filter(pool => withBeauty || pool.poolId === 'hero-pool') : [],
+        loadGachaConfig: async () => hasPool ? read<GachaConfig[]>('gacha-config.json').filter(pool => withBeauty || pool.poolId === 'destiny-pool') : [],
         mountHost: async (name, screen, bindings) => {
             events.push(`mount:${name}:${screen}`);
             const host = { node: { active: false }, texts: {}, bindings };
@@ -38,6 +38,18 @@ function fixture(hasPool = true, isNewPlayer = true, loadedSession?: GameSession
         refreshSeasonHud: () => { events.push('hud'); },
         advanceOpening: event => { events.push(event.type); },
         warn: message => { events.push(message); },
+        // 宿命池用轉蛋結果畫面（PROG-2-2243）：假宿主記下本輪名單與重轉／確定兩顆鈕
+        presentDestinyPool: async (view, actions) => {
+            events.push('pool');
+            const prev = hosts.get('DestinyOpeningHost');
+            const host = prev ?? { node: { active: false }, texts: {}, bindings: [] };
+            host.texts = { destinyMessage: view.message, destinyResetCount: `重置 ${view.resets} 次`, rolled: view.rolledIds.join(','), core: view.coreId ?? '' };
+            host.bindings = [{ buttonId: 'btnDestinyReroll', handler: actions.reroll }, { buttonId: 'btnDestinyConfirm', handler: actions.confirm }];
+            host.node.active = true;
+            hosts.set('DestinyOpeningHost', host);
+            return host.node as never;
+        },
+        closeDestinyPool: () => { const h = hosts.get('DestinyOpeningHost'); if (h) h.node.active = false; },
     };
     const panels = new LobbyOpeningPanels(ports);
     const click = (host: string, id: string) => {
@@ -45,9 +57,7 @@ function fixture(hasPool = true, isNewPlayer = true, loadedSession?: GameSession
         if (!binding) throw new Error(`Missing binding ${id}`);
         binding.handler();
     };
-    // 只有宿命名將能選：逐格點，一般武將的格子不會有反應
-    const clickStar = () => { for (let i = 0; i < 10; i++) click('DestinyOpeningHost', `btnFrame${i}`); };
-    return { panels, ports, session, hosts, events, click, clickStar };
+    return { panels, ports, session, hosts, events, click };
 }
 
 const flush = () => new Promise<void>(resolve => setImmediate(resolve));
@@ -61,8 +71,8 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         await f.panels.mountOnboarding();
         await f.panels.mountDestiny();
         f.panels.openDestiny();
-        f.click('DestinyOpeningHost', 'btnDestinyRoll'); await flush();
-        f.clickStar(); f.click('DestinyOpeningHost', 'btnDestinyConfirm'); await flush();
+        await flush();
+        f.click('DestinyOpeningHost', 'btnDestinyConfirm'); await flush();
         assert.equals(0, f.events.filter(e => e.startsWith('beauty:')).length);
         f.panels.refreshOnboarding();
         assert.equals(0, f.events.filter(e => e.startsWith('beauty:')).length);
@@ -70,32 +80,33 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         f.panels.refreshOnboarding(); f.panels.flushPendingBeauty();
         assert.equals(1, f.events.filter(e => e.startsWith('beauty:')).length);
     });
-    suite.test('沒有掛載的入口為 no-op；缺 hero-pool 保留警告且不建立面板', async () => {
+    suite.test('沒有掛載的入口為 no-op；缺 destiny-pool 保留警告且不建立面板', async () => {
         const f = fixture(false);
         f.panels.openDestiny();
         f.panels.refreshOnboarding();
         await f.panels.nextTutorial();
         await f.panels.mountDestiny();
         assert.equals(0, f.hosts.size);
-        assert.isTrue(f.events[0].includes('找不到 hero-pool'));
+        assert.isTrue(f.events[0].includes('找不到 destiny-pool'));
         // 開不起來時回 false，大廳據此照舊顯示（PROG-2-1620）
         assert.isFalse(f.panels.openDestiny());
     });
-    suite.test('保留 host/screen 與十格按鈕契約；開啟與重置刷新畫面', async () => {
+    suite.test('宿命池用轉蛋結果畫面：打開就轉一輪恰一位名將，重轉免費並重畫（PROG-2-2243）', async () => {
         const f = fixture();
         await f.panels.mountDestiny();
-        const host = f.hosts.get('DestinyOpeningHost')!;
-        assert.equals(13, host.bindings.length);
-        assert.equals('mount:DestinyOpeningHost:destiny-opening-screen', f.events[0]);
-        assert.isFalse(host.node.active);
+        assert.isFalse(f.hosts.has('DestinyOpeningHost'), '掛載時不另開宿命專用畫面');
         assert.isTrue(f.panels.openDestiny());
-        assert.isTrue(host.node.active);
-        f.click('DestinyOpeningHost', 'btnDestinyRoll');
         await flush();
-        assert.isTrue(!!host.texts.frame0Name);
-        f.click('DestinyOpeningHost', 'btnDestinyReset');
+        const host = f.hosts.get('DestinyOpeningHost')!;
+        assert.isTrue(host.node.active);
+        assert.equals(2, host.bindings.length, '只有重轉與確定');
+        const first = host.texts.rolled;
+        assert.equals(10, first.split(',').length);
+        assert.isTrue(!!host.texts.core);
+        f.click('DestinyOpeningHost', 'btnDestinyReroll');
         await flush();
         assert.equals('重置 1 次', host.texts.destinyResetCount);
+        assert.equals(10, host.texts.rolled.split(',').length);
     });
     suite.test('舊玩家維持教學顯示；下一步失敗仍警告並刷新', async () => {
         const f = fixture(true, false);
@@ -125,9 +136,8 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         assert.equals(0, f.session.onboarding.nextIndex);
         await f.panels.mountDestiny();
         f.panels.openDestiny();
-        f.click('DestinyOpeningHost', 'btnDestinyRoll');
         await flush();
-        f.clickStar();
+        await flush();
         f.click('DestinyOpeningHost', 'btnDestinyConfirm');
         await flush();
         assert.isTrue(f.hosts.get('DestinyOpeningHost')!.node.active);
@@ -154,9 +164,8 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         await f.panels.mountOnboarding();
         await f.panels.mountDestiny();
         f.panels.openDestiny();
-        f.click('DestinyOpeningHost', 'btnDestinyRoll');
         await flush();
-        f.clickStar();
+        await flush();
         f.click('DestinyOpeningHost', 'btnDestinyConfirm');
         await flush();
         assert.isTrue(f.hosts.get('DestinyOpeningHost')!.node.active);
@@ -164,7 +173,6 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         assert.isTrue(f.hosts.get('DestinyOpeningHost')!.texts.destinyMessage.includes('開局失敗'));
         assert.equals(0, f.events.filter(e => e.startsWith('beauty:')).length);
         fail = false;
-        f.clickStar();
         f.click('DestinyOpeningHost', 'btnDestinyConfirm');
         await flush();
         assert.isFalse(f.hosts.get('DestinyOpeningHost')!.node.active);
@@ -185,9 +193,8 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         await f.panels.mountOnboarding();
         await f.panels.mountDestiny();
         f.panels.openDestiny();
-        f.click('DestinyOpeningHost', 'btnDestinyRoll');
         await flush();
-        f.clickStar();
+        await flush();
         f.click('DestinyOpeningHost', 'btnDestinyConfirm');
         await flush();
         assert.equals(2, calls);
@@ -198,7 +205,6 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         assert.equals(0, f.events.filter(e => e === 'hud' || e === 'destiny-locked' || e.startsWith('beauty:')).length);
         await f.panels.nextTutorial();
         assert.equals(0, f.session.onboarding.nextIndex);
-        f.clickStar();
         f.click('DestinyOpeningHost', 'btnDestinyConfirm');
         await flush();
         assert.equals(4, calls);
@@ -215,9 +221,8 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
             const original = fixture(true, true, undefined, false);
             await original.panels.mountDestiny();
             original.panels.openDestiny();
-            original.click('DestinyOpeningHost', 'btnDestinyRoll');
+            
             await flush();
-            original.clickStar();
             original.click('DestinyOpeningHost', 'btnDestinyConfirm');
             await flush();
             if (progress !== 'missing') {
@@ -260,9 +265,8 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         const f = fixture();
         await f.panels.mountDestiny();
         f.panels.openDestiny();
-        f.click('DestinyOpeningHost', 'btnDestinyRoll');
         await flush();
-        f.clickStar();
+        await flush();
         f.click('DestinyOpeningHost', 'btnDestinyConfirm');
         await flush();
         assert.equals(11, f.session.roster.length);
@@ -283,9 +287,8 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         await f.panels.mountOnboarding();
         await f.panels.mountDestiny();
         f.panels.openDestiny();
-        f.click('DestinyOpeningHost', 'btnDestinyRoll');
         await flush();
-        f.clickStar();
+        await flush();
         f.click('DestinyOpeningHost', 'btnDestinyConfirm');
         await flush();
         assert.equals(2, calls);
@@ -307,9 +310,8 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
             const original = fixture(true, true, undefined, withBeauty);
             await original.panels.mountDestiny();
             original.panels.openDestiny();
-            original.click('DestinyOpeningHost', 'btnDestinyRoll');
+            
             await flush();
-            original.clickStar();
             original.click('DestinyOpeningHost', 'btnDestinyConfirm');
             await flush();
             const snapshot = await original.session.save();
@@ -349,7 +351,7 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         f.panels.openLetterThen(() => { nextCalls++; });
         assert.isTrue(f.hosts.get('OpeningLetterHost')!.node.active);
         assert.equals(0, nextCalls, '信沒關前不接下一步');
-        assert.isFalse(f.hosts.get('DestinyOpeningHost')!.node.active, '信之後不是直接進轉蛋');
+        assert.isFalse(f.hosts.has('DestinyOpeningHost'), '信之後不是直接進轉蛋');
         await f.panels.closeOpeningLetter();
         assert.isFalse(f.hosts.get('OpeningLetterHost')!.node.active);
         assert.equals(1, nextCalls);
@@ -374,8 +376,8 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         await f.panels.mountOnboarding();
         await f.panels.mountDestiny();
         f.panels.openDestiny();
-        f.click('DestinyOpeningHost', 'btnDestinyRoll'); await flush();
-        f.clickStar(); f.click('DestinyOpeningHost', 'btnDestinyConfirm'); await flush();
+        await flush();
+        f.click('DestinyOpeningHost', 'btnDestinyConfirm'); await flush();
         assert.isTrue(f.events.includes('destiny-locked'));
         assert.isFalse(f.hosts.get('OnboardingTutorialHost')!.node.active, '大廳還沒掛完，引導箭頭沒有目標');
         lobbyReady = true;
@@ -394,6 +396,7 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         assert.isTrue(nodes[0] === f.hosts.get('OpeningLetterHost')!.node);
         await f.panels.closeOpeningLetter();
         assert.isTrue(f.panels.openDestiny());
+        await flush();
         assert.isTrue(f.panels.activeHostNodes()[0] === f.hosts.get('DestinyOpeningHost')!.node);
     });
 
@@ -406,42 +409,19 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         assert.isFalse(f.hosts.get('OpeningLetterHost')!.node.active);
     });
 
-    suite.test('開局後先顯示十連結算，關閉才送 locked 並放行教學（PROG-2-2236）', async () => {
+    suite.test('按確定十位全收：收掉宿命池畫面、送 locked 並放行教學（PROG-2-2243）', async () => {
         const f = fixture();
-        let close!: () => void;
-        let shown: { coreId: string; rolledIds: readonly string[] } | null = null;
-        f.ports.showDestinyResult = view => {
-            shown = view;
-            f.events.push('result');
-            return new Promise<void>(resolve => { close = resolve; });
-        };
         await f.panels.mountOnboarding();
         await f.panels.mountDestiny();
         f.panels.openDestiny();
-        f.click('DestinyOpeningHost', 'btnDestinyRoll'); await flush();
-        f.clickStar(); f.click('DestinyOpeningHost', 'btnDestinyConfirm'); await flush();
+        await flush();
+        const rolled = f.hosts.get('DestinyOpeningHost')!.texts.rolled.split(',');
+        f.click('DestinyOpeningHost', 'btnDestinyConfirm'); await flush(); await flush();
         assert.isFalse(f.hosts.get('DestinyOpeningHost')!.node.active);
-        assert.isTrue(shown !== null);
-        assert.equals(10, shown!.rolledIds.length);
-        assert.isTrue(shown!.rolledIds.includes(shown!.coreId));
-        assert.isFalse(f.events.includes('destiny-locked'));
-        f.panels.refreshOnboarding();
-        assert.isFalse(f.hosts.get('OnboardingTutorialHost')!.node.active, '結算畫面還開著，教學不可蓋上去');
-        close(); await flush();
-        assert.equals('result,destiny-locked', f.events.filter(e => e === 'result' || e === 'destiny-locked').join(','));
-        assert.isTrue(f.hosts.get('OnboardingTutorialHost')!.node.active);
-    });
-
-    suite.test('結算畫面失敗只警告，開場照常往下走（PROG-2-2236）', async () => {
-        const f = fixture();
-        f.ports.showDestinyResult = async () => { throw new Error('mount failed'); };
-        await f.panels.mountOnboarding();
-        await f.panels.mountDestiny();
-        f.panels.openDestiny();
-        f.click('DestinyOpeningHost', 'btnDestinyRoll'); await flush();
-        f.clickStar(); f.click('DestinyOpeningHost', 'btnDestinyConfirm'); await flush(); await flush();
-        assert.isTrue(f.events.some(e => e.includes('結算畫面顯示失敗')));
         assert.equals(1, f.events.filter(e => e === 'destiny-locked').length);
+        assert.equals(rolled.slice().sort().join(','), f.session.roster.map(g => g.id).filter(id => rolled.includes(id)).sort().join(','));
+        f.panels.refreshOnboarding();
+        assert.isTrue(f.hosts.get('OnboardingTutorialHost')!.node.active);
     });
 
     return suite;

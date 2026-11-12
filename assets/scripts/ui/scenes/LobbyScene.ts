@@ -163,7 +163,7 @@ import { RED_FACE_SHOW_MAX_ROWS, RedFaceGalleryController, RedFaceShowcaseContro
 import { GACHA_NODES, GACHA_POOL_INDEX, GACHA_POOLS, GachaPoolDef, RED_FACE_SECTION_ROW_BUTTON } from '../core/GachaScreenNodes';
 import { GachaPoolSwitcher } from '../core/GachaPoolSwitcher';
 import { PORTRAIT_GALLERY_PAGE_SIZE } from '../core/PortraitGallery';
-import { DESTINY_PORTRAIT_SPEC, FaceMarks, PORTRAIT_FRAME_SPEC, PortraitFrameSpec, SHOWCASE_PORTRAIT_SPEC, fitPortraitInFrame } from '../core/PortraitFrameFit';
+import { FaceMarks, PORTRAIT_FRAME_SPEC, PortraitFrameSpec, SHOWCASE_PORTRAIT_SPEC, fitPortraitInFrame } from '../core/PortraitFrameFit';
 import { LobbyOpeningPanels } from '../core/LobbyOpeningPanels';
 import { INTRO_TICK_SEC, OpeningIntroController } from '../core/OpeningIntroController';
 import { InitialShowcaseController } from '../core/InitialShowcaseController';
@@ -229,6 +229,7 @@ import { warnGeneralSchemaOnLoad } from '../../core/models/GeneralSchema';
 import { coreFieldCoverage, formatCoreFieldCoverage } from '../../core/systems/GeneralCoreFields';
 import { DEFAULT_POOL_ID as GACHA_GENERAL_POOL_ID, GachaFlowCoordinator, GACHA_PULL_RESULT_SCREEN_ID, GACHA_SCREEN_ID } from '../core/GachaFlowCoordinator';
 import { buildDestinyOpeningResults } from '../core/DestinyOpeningResult';
+import type { DestinyPoolView } from '../core/DestinyOpeningController';
 import { bindGachaActions, GACHA_ACTION_NODES } from '../core/GachaActionBindings';
 import { formatGeneralDisplayName } from '../../core/models/GeneralTitle';
 import { buildMissionGeneralOptions } from '../../core/systems/MissionGeneralOptions';
@@ -2296,9 +2297,9 @@ export class LobbyScene extends Component {
                 }),
                 notifyBeauty: name => services().event.emit('SHOW_TOAST', { message: `紅顏 ${name} 前來相會，已加入名冊，可到「結緣」配對`, duration: 4 }),
                 advanceOpening: event => { this._advanceOpening(event); },
-                showDestinyResult: view => this._showDestinyOpeningResult(view),
+                presentDestinyPool: (view, actions) => this._presentDestinyPool(view, actions),
+                closeDestinyPool: () => { if (this._destinyPoolHost) this._destinyPoolHost.node.active = false; },
                 onOverlayChanged: () => { this._seasonChroniclePopup?.refreshAvailability(); },
-                applyFramePortraits: (binder, keys) => this._applyFramePortraits(binder as NonNullable<UIScreenPreviewHost['binder']>, 'destiny', keys, undefined, DESTINY_PORTRAIT_SPEC),
                 openingLetterText: () => ({ title: services().i18n.t('copy.letter.opening.title'), body: openingLetterBodyWithFunLine(services().i18n.t('copy.letter.opening.body'), services().session.magistrateUid ?? '') }),
                 warn: (message, error) => UCUFLogger.warn(LogCategory.DATA, message, error),
                 // 幕府大堂開著時城市畫面被整個蓋住：改框大堂上的同功能入口（PROG-2-2226）
@@ -2316,24 +2317,25 @@ export class LobbyScene extends Component {
         return this._openingPanels;
     }
 
+    /** 宿命池結果畫面的宿主（重轉時沿用） */
+    private _destinyPoolHost: UIScreenPreviewHost | null = null;
+
     /**
-     * 開場宿命轉蛋結算（PROG-2-2236，issue #2086）：借 PROG-2-2221 的滿版結果畫面，另開宿主蓋在開場上；
-     * 玩家按進入大廳／關閉後收掉宿主並 resolve，開場才往下走。
+     * 宿命池（PROG-2-2243）：轉蛋系統的一池，用十連結果畫面顯示本輪，另開宿主蓋在開場上；
+     * 重轉／確定由 LobbyOpeningPanels 接回 DestinyOpeningController。
      */
-    private async _showDestinyOpeningResult(view: { coreId: string; rolledIds: readonly string[] }): Promise<void> {
+    private async _presentDestinyPool(view: DestinyPoolView, actions: { reroll: () => void; confirm: () => void }): Promise<Node | null> {
         const results = buildDestinyOpeningResults(view.rolledIds, this._generals);
-        if (results.length === 0) return;
-        const host = await this._mountPreviewScreenHost('DestinyResultHost', GACHA_PULL_RESULT_SCREEN_ID);
+        if (results.length === 0) return null;
+        const host = this._destinyPoolHost ?? await this._mountPreviewScreenHost('DestinyPoolHost', GACHA_PULL_RESULT_SCREEN_ID);
+        this._destinyPoolHost = host;
         if (!host.node.getComponent(BlockInputEvents)) host.node.addComponent(BlockInputEvents);
-        let close!: () => void;
-        const closed = new Promise<void>((resolve) => { close = resolve; });
-        await this._getGachaFlowCoordinator().presentOpeningResults(host, results, view.coreId, () => {
-            host.node.active = false;
-            close();
+        await this._getGachaFlowCoordinator().presentDestinyPool(host, results, {
+            heroId: view.coreId, quote: view.quote, message: view.message, resets: view.resets,
+            onReroll: actions.reroll, onConfirm: actions.confirm,
         });
         host.node.active = true;
-        this._bringNodeToFront(host.node);
-        await closed;
+        return host.node;
     }
 
     private async _mountOnboardingTutorial(): Promise<void> {

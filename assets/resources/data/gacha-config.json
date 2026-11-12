@@ -83,5 +83,32 @@
     "confirmRequired": true,
     "currencyType": "mentorTicket",
     "singlePullCost": 1
+  },
+  {
+    "poolId": "destiny-pool",
+    "poolName": "宿命池",
+    "poolType": "destiny",
+    "resetEnabled": true,
+    "guaranteeRarity": "epic",
+    "guaranteeThreshold": 10,
+    "pickCount": 10,
+    "candidateIds": [],
+    "firstPickOnly": true,
+    "confirmRequired": false,
+    "singlePullCost": 0,
+    "guaranteedIds": [
+      "zhang-fei",
+      "wei-yan",
+      "xiahou-dun",
+      "zhang-he",
+      "sun-ce",
+      "gan-ning"
+    ],
+    "guaranteedCount": 1,
+    "fillerRarityTiers": [
+      "common",
+      "rare"
+    ],
+    "fillerExcludeGender": "女"
   }
 ]
