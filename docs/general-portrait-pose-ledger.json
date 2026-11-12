@@ -173,7 +173,7 @@
       "status": "unmapped",
       "uniqueness": "unverified",
       "source": "conversation selection",
-      "note": "B 是使用者已確認的姿勢選擇，禁止要求重選或重出三稿；原草稿未找到前維持此選擇並待映射，不把任何編號當成可用。"
+      "note": "使用者已核定 B 姿勢；battle_0003 保留該姿勢並修正眼神直視鏡頭。原始 B 草稿與正式姿勢編號尚未映射，保留 unmapped，不要求重選、不推測編號。"
     }
   ],
   "audit": {

@@ -616,6 +616,15 @@
             "version": "0002",
             "file": "battle/zhu_rong_furen__祝融夫人__battle_0002.png",
             "status": "review-pending"
+          },
+          {
+            "version": "0003",
+            "file": "battle/zhu_rong_furen__祝融夫人__battle_0003.png",
+            "status": "review-pending",
+            "poseSelection": "B",
+            "gaze": "direct-to-camera",
+            "sha256": "bbff2fc575ffca99b909e46c771eaec0bcb9e44879dbf6e091bc3adcb3d56ed1",
+            "canvas": "1024x1536 RGBA"
           }
         ]
       },
