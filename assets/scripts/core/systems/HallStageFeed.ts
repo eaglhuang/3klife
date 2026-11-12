@@ -23,6 +23,16 @@ export interface HallStageFeed {
     taskMarkIds: Set<string>;
 }
 
+/**
+ * 名牌要顯示的稱號；沒有稱號或只是佔位（去掉【】後就是本名，如「【傅肜】」）回 null，
+ * 避免名牌變成「【傅肜】・傅肜」雙重文字（issue #2099 第 7 項，武將資料多數稱號仍是佔位）。
+ */
+export function displayTitleOf(title: string | null | undefined, name: string): string | null {
+    const trimmed = (title ?? '').trim();
+    if (!trimmed) return null;
+    return trimmed.replace(/[【】\s]/g, '') === name ? null : trimmed;
+}
+
 /** 查不到檔案的武將略過（資料尚未載入或已離開）。 */
 export function buildHallStageFeed(
     rows: readonly HallSpotRow[],
@@ -34,7 +44,8 @@ export function buildHallStageFeed(
     for (const row of rows) {
         const profile = profileOf(row.id);
         if (!profile) continue;
-        generals.push(profile.title ? { id: row.id, name: profile.name, title: profile.title } : { id: row.id, name: profile.name });
+        const title = displayTitleOf(profile.title, profile.name);
+        generals.push(title ? { id: row.id, name: profile.name, title } : { id: row.id, name: profile.name });
         if (row.assigned) continue;
         const general = { id: row.id, roleTags: profile.roleTags, mood: profile.mood };
         if (openTasks.some(task => shouldShowVolunteerEvent(task, general))) taskMarkIds.add(row.id);

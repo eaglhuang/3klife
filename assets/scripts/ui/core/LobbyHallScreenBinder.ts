@@ -97,6 +97,7 @@ export class LobbyHallScreenBinder {
         for (const id of LOBBY_HALL_DOCK_IDS) this._bindTap(`lobby-hall-screen.dock-${id}`, () => _deps.onDock(id));
         const onPanel = _deps.onPanel;
         if (onPanel) for (const id of LOBBY_HALL_PANEL_IDS) this._bindTap(`lobby-hall-screen.${id}`, () => onPanel(id));
+        this._bindBubbleChoices();
         if (_deps.mapLayout) this._map = this._createMapPlayer(_deps.mapLayout);
         if (_deps.stage) this._createStage(_deps.stage);
         if (_deps.fxConfig) this._fx = this._createFxLayer(_deps.fxConfig);
@@ -197,6 +198,21 @@ export class LobbyHallScreenBinder {
         if (this._fx && theme.fxSeason !== this._fxSeason) {
             this._fxSeason = theme.fxSeason;
             this._fx.setSeason(theme.fxSeason);
+        }
+    }
+
+    /**
+     * 武將對話泡泡（issue #2099 第 6 項）：設計稿最後一列是「交給你／再議」兩顆選項，轉出來是 panel 不接點擊，
+     * 點了沒反應、泡泡一直留著。兩顆選項都收起泡泡（還沒有對應的派遣流程）。
+     */
+    private _bindBubbleChoices(): void {
+        const bubble = findUcufNode(this._screenRoot, 'lobby-hall-screen.bubble');
+        // 選項列＝有兩個以上子節點的那一列（執行期另插的陰影等節點沒有子節點）
+        const choiceRow = bubble?.children.filter(child => child.children.length >= 2).pop();
+        if (!bubble || !choiceRow) return;
+        for (const choice of choiceRow.children) {
+            choice.off(Node.EventType.TOUCH_END);
+            choice.on(Node.EventType.TOUCH_END, () => { bubble.active = false; });
         }
     }
 
