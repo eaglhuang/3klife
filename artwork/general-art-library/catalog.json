@@ -158,6 +158,48 @@
       "smallAvatar": {
         "status": "not-created"
       }
+    },
+    {
+      "uid": "zhen-ji",
+      "name": "甄姬",
+      "standing": {
+        "activeVersion": "0002",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "standing/zhen_ji__甄姬__standing_0001.png",
+            "status": "superseded"
+          },
+          {
+            "version": "0002",
+            "file": "standing/zhen_ji__甄姬__standing_0002.png",
+            "status": "integrated"
+          }
+        ]
+      },
+      "battle": {
+        "status": "not-created"
+      },
+      "avatar": {
+        "activeVersion": "0002",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "avatars/zhen_ji__甄姬__avatar_0001.png",
+            "status": "superseded"
+          },
+          {
+            "version": "0002",
+            "file": "avatars/zhen_ji__甄姬__avatar_0002.png",
+            "status": "integrated"
+          }
+        ]
+      },
+      "smallAvatar": {
+        "status": "not-created"
+      }
     }
   ]
 }
