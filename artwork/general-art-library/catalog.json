@@ -378,6 +378,48 @@
       "smallAvatar": {
         "status": "not-created"
       }
+    },
+    {
+      "uid": "huang-yue-ying",
+      "name": "黃月英",
+      "standing": {
+        "activeVersion": "0002",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "standing/huang_yue_ying__黃月英__standing_0001.png",
+            "status": "superseded"
+          },
+          {
+            "version": "0002",
+            "file": "standing/huang_yue_ying__黃月英__standing_0002.png",
+            "status": "integrated"
+          }
+        ]
+      },
+      "battle": {
+        "status": "not-created"
+      },
+      "avatar": {
+        "activeVersion": "0002",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "avatars/huang_yue_ying__黃月英__avatar_0001.png",
+            "status": "superseded"
+          },
+          {
+            "version": "0002",
+            "file": "avatars/huang_yue_ying__黃月英__avatar_0002.png",
+            "status": "integrated"
+          }
+        ]
+      },
+      "smallAvatar": {
+        "status": "not-created"
+      }
     }
   ]
 }

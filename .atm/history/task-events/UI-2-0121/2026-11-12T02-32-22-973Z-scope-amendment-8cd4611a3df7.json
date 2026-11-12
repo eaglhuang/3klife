@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-12T02-32-22-973Z-scope-amendment-8cd4611a3df7",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:e35b8c8ce9f366927b07d9365602fdaa608525a94062d4dd85eea7c6b96cd997",
+  "createdAt": "2026-11-12T02:32:22.973Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-sol --add \"artwork/general-art-library/standing/huang_yue_ying__黃月英__standing_0001.png,artwork/general-art-library/standing/huang_yue_ying__黃月英__standing_0002.png,artwork/general-art-library/avatars/huang_yue_ying__黃月英__avatar_0001.png,artwork/general-art-library/avatars/huang_yue_ying__黃月英__avatar_0002.png,assets/resources/sprites/generals/huang_yueying_portrait.png,assets/resources/sprites/generals/huang_yue_ying_portrait.png,assets/resources/sprites/generals/avatars/huang_yueying_avatar.png,assets/resources/sprites/generals/avatars/huang_yue_ying_avatar.png,assets/resources/sprites/ui_avatars/cropped/huang_yueying_avatar.png,assets/resources/sprites/ui_avatars/cropped/huang_yue_ying_avatar.png\" --reason \"依女將統一成熟豐滿曲線與大喬開放度基準，重設黃月英站姿並同步正式別名立繪和頭像\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "依女將統一成熟豐滿曲線與大喬開放度基準，重設黃月英站姿並同步正式別名立繪和頭像"
+  }
+}
