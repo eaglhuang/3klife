@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-12T03-18-03-327Z-scope-amendment-0a1135c4d4ab",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:3ac1bce9248ef62ba0ea5ecceb75947f3529fafd38a9f7a68f9d1eee268a125d",
+  "createdAt": "2026-11-12T03:18:03.327Z",
+  "command": "node atm.mjs tasks scope remove --task UI-2-0121 --actor codex-gpt-6.1-sol --remove artwork/general-art-library/avatars/diao_chan__貂蟬__avatar_0001.png,artwork/general-art-library/avatars/diao_chan__貂蟬__avatar_0002.png,artwork/general-art-library/standing/diao_chan__貂蟬__standing_0001.png,artwork/general-art-library/standing/diao_chan__貂蟬__standing_0002.png,assets/resources/sprites/generals/avatars/diao_chan_avatar.png,assets/resources/sprites/generals/diao_chan_portrait.png,assets/resources/sprites/ui_avatars/cropped/diao_chan_avatar.png --json",
+  "amendmentMetadata": {
+    "amendmentClass": "scope-shrink",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "Keep unreviewed Diao Chan work out of the current Sun Shangxiang deliverable; evaluate it separately."
+  }
+}
