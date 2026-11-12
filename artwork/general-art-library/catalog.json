@@ -106,6 +106,16 @@
             "version": "0003",
             "file": "standing/zhuge_liang__諸葛亮__standing_0003.png",
             "status": "integrated"
+          },
+          {
+            "version": "0004",
+            "file": "standing/zhuge_liang__諸葛亮__standing_0004.png",
+            "status": "review-pending",
+            "style": "anime-influenced face; semi-realistic materials",
+            "palette": "black-white",
+            "weapon": "feather fan",
+            "sha256": "05a749f59a0da03a7d6be632c59e65a5c512c3fa3483491ba049d76d9f1d0a7d",
+            "canvas": "1024x1536 RGBA"
           }
         ]
       },
