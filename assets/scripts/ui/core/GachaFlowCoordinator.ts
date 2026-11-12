@@ -1,6 +1,6 @@
 // @spec-source → 轉蛋系統.md (doc_spec_0042)；PROG-2-1429 依建檔紀錄補標出處
 import { Button, Node, Sprite, UITransform } from 'cc';
-import { disableCharCacheForCjk } from './LabelCjkCache';
+import { disableCharCache } from './LabelCjkCache';
 import { formatGachaLine, loadGachaLines } from './GachaLines';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { LocalGachaService, type LocalGachaResultEntry } from '../../core/services/LocalGachaService';
@@ -9,12 +9,15 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { showGachaHistory, showGachaResults } from '../dev/GachaDevOverlay';
 import { pickGachaCurrency, quoteGachaCost } from '../../core/systems/GachaCurrency';
 import { fitContain, pickTopGachaResult } from './GachaResultRanking';
-import { loadGeneralPortrait } from './GeneralAvatarLoader';
+import { loadGeneralAvatar, loadGeneralPortrait } from './GeneralAvatarLoader';
 
 export const DEFAULT_POOL_ID = 'GENERAL_STANDARD_01';
 
 export { GACHA_SCREEN_ID } from './GachaScreenNodes';
 export const GACHA_PULL_RESULT_SCREEN_ID = 'gacha-pull-result';
+
+/** 卡片頭像節點名（PROG-2-2247） */
+const CARD_PORTRAIT_NODE = 'CardPortrait';
 
 const GACHA_PULL_RESULT_CARD_NODE_MAP = [
     { rarityId: 'GachaPullResult_div_351', nameId: 'GachaPullResult_div_352' },
@@ -47,6 +50,7 @@ export interface GachaFlowCoordinatorOptions {
 
 export class GachaFlowCoordinator {
     private _heroPortraitSeq = 0;
+    private _cardPortraitSeq = 0;
     private readonly _options: GachaFlowCoordinatorOptions;
     private _resultBackAction: (() => void | Promise<void>) | null = null;
     private _resultRepullAction: (() => void | Promise<void>) | null = null;
@@ -267,8 +271,9 @@ export class GachaFlowCoordinator {
             } : {}),
         });
 
-        // 逐字快取（CHAR）配英文 TTF 時中文畫不出來；結果畫面的中文 Label 一律改不快取
-        disableCharCacheForCjk(host.node);
+        // 逐字快取（CHAR）配英文 TTF 時中文畫不出來，換字後也會疊字；結果畫面整片改不快取
+        disableCharCache(host.node);
+        this._updateCardPortraits(binder, cards, results);
 
         if (topResult) {
             this._updateHeroPortrait(binder, topResult.general.id);
@@ -367,6 +372,45 @@ export class GachaFlowCoordinator {
         Promise.resolve(action()).catch((error) => {
             UCUFLogger.warn(LogCategory.LIFECYCLE, '[GachaFlowCoordinator] repull action failed', error);
         }).then(() => { this._resultRepullPending = false; });
+    }
+
+    /**
+     * 十張卡片各掛武將頭像（PROG-2-2247）：掛在卡片第一層底框裡，放在名稱上方；
+     * 載完才顯示，換輪時先藏起來，不讓上一輪的頭像冒充。
+     */
+    private _updateCardPortraits(binder: any, cardIds: readonly string[], results: LocalGachaResultEntry[]): void {
+        const seq = ++this._cardPortraitSeq;
+        cardIds.forEach((id, index) => {
+            const card: Node | null = binder.getNode ? binder.getNode(`GachaPullResult_div_${id}`) : null;
+            const frameHost = card?.children[0];
+            const cardBox = card?.getComponent(UITransform);
+            if (!card || !frameHost || !cardBox) return;
+            let portraitNode = frameHost.getChildByName(CARD_PORTRAIT_NODE);
+            if (!portraitNode) {
+                portraitNode = new Node(CARD_PORTRAIT_NODE);
+                portraitNode.layer = frameHost.layer;
+                portraitNode.parent = frameHost;
+                portraitNode.addComponent(UITransform);
+                portraitNode.addComponent(Sprite);
+            }
+            const sprite = portraitNode.getComponent(Sprite)!;
+            sprite.enabled = false;
+            const entry = results[index];
+            if (!entry) return;
+            // 頭像占卡寬 86%，置於卡片上半部，下方留給名稱
+            const size = Math.round(cardBox.width * 0.86);
+            portraitNode.getComponent(UITransform)!.setContentSize(size, size);
+            portraitNode.setPosition(0, cardBox.height * 0.5 - size * 0.5 - cardBox.height * 0.12, 0);
+            void loadGeneralAvatar(entry.general.id).then((frame) => {
+                if (seq !== this._cardPortraitSeq || !sprite.isValid || !frame) return;
+                sprite.sizeMode = Sprite.SizeMode.CUSTOM;
+                sprite.trim = false;
+                sprite.spriteFrame = frame;
+                sprite.enabled = true;
+            }).catch((error) => {
+                UCUFLogger.warn(LogCategory.LIFECYCLE, '[GachaFlowCoordinator] card portrait load failed', error);
+            });
+        });
     }
 
     private _updateHeroPortrait(binder: any, generalId: string): void {

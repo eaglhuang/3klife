@@ -8,7 +8,7 @@ import { TestSuite, assert } from './TestRunner';
 import { pickGachaCurrency } from '../assets/scripts/core/systems/GachaCurrency';
 import { STARTER_GACHA_WALLET } from '../assets/scripts/core/services/GachaWalletRules';
 import { GACHA_NODES, gachaPullBarTexts } from '../assets/scripts/ui/core/GachaScreenNodes';
-import { disableCharCacheForCjk } from '../assets/scripts/ui/core/LabelCjkCache';
+import { disableCharCache, disableCharCacheForCjk } from '../assets/scripts/ui/core/LabelCjkCache';
 import { Label, Node } from 'cc';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -59,6 +59,19 @@ export function createGachaPullCurrencySuite(): TestSuite {
         disableCharCacheForCjk(root);
         assert.equals(0, cjk.cacheMode);
         assert.equals(2, ascii.cacheMode);
+    });
+
+    suite.test('結果畫面所有 CHAR 快取 Label 改不快取，卡片掛頭像（PROG-2-2247）', () => {
+        const root = new Node('root');
+        const mk = (text: string, mode: number): Label => { const n = new Node(text); root.children.push(n); const l = n.addComponent(Label); l.string = text; l.cacheMode = mode; return l; };
+        const ascii = mk('SSR+ x0', 2);
+        const bitmap = mk('x1', 1);
+        disableCharCache(root);
+        assert.equals(0, ascii.cacheMode);
+        assert.equals(1, bitmap.cacheMode);
+        const flow = read('assets/scripts/ui/core/GachaFlowCoordinator.ts');
+        assert.isTrue(flow.includes('this._updateCardPortraits(binder, cards, results)'));
+        assert.isTrue(flow.includes('loadGeneralAvatar(entry.general.id)'));
     });
 
     return suite;
