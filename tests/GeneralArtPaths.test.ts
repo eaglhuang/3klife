@@ -43,6 +43,14 @@ export function createGeneralArtPathsSuite(): TestSuite {
         assert.equals(JSON.stringify(def.portrait), JSON.stringify(raw.portrait));
         assert.equals(JSON.stringify(def.avatar), JSON.stringify(raw.avatar));
         assert.equals(def.avatarPlaceholder, raw.avatarPlaceholder);
+        assert.equals(JSON.stringify(def.aliases), JSON.stringify(raw.aliases));
+    });
+
+    suite.test('舊 id 改讀名冊 id 的圖，同一人只留一套（PROG-2-2246）', () => {
+        assert.equals('sprites/generals/huang_yue_ying_portrait', portraitPathOf('portraits/support/huang-yueying'));
+        assert.equals('sprites/generals/avatars/cai_yan_avatar', avatarCandidates('cai-wenji')[0]);
+        assert.equals('sprites/generals/zhen_ji_portrait', portraitPathOf('zhen-mi'));
+        assert.equals('sprites/generals/cao_cao_portrait', portraitPathOf('cao-cao'));
     });
 
     suite.test('未知頭像依性別挑男女版，無性別用男版', () => {
