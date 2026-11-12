@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-12T07-35-16-494Z-scope-amendment-af323808dbfb",
+  "taskId": "UI-2-0171",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0171.json",
+  "taskSha256": "sha256:dc6060c9a99cbb9554c0b4792c6f3a98cc1838b4f1ef58b0b5d8ae85f1718553",
+  "createdAt": "2026-11-12T07:35:16.494Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0171 --actor codex-gpt-6.1-sol --add \"artwork/general-art-library/standing/guan_yin_ping__關銀屏__standing_0001.png,artwork/general-art-library/battle/guan_yin_ping__關銀屏__battle_0001.png,artwork/general-art-library/avatars/guan_yin_ping__關銀屏__avatar_0001.png,artwork/general-art-library/catalog.json,assets/resources/sprites/generals/guan_yin_ping_battle.png,docs/agent-briefs/tasks/UI/UI-2-0171.md,docs/ui-quality-tasks/UI-2-0171.json,docs/ui-quality-todo.json\" --class generated-artifact --phase delivery --reason \"使用者明確要求持續完成所有武將立繪，並依既定任務交付關銀屏戰鬥圖、版本化站立圖與頭像及正式遊戲接入；擴列此任務卡已明列之交付路徑。\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "generated-artifact",
+    "amendmentPhase": "delivery",
+    "amendmentMode": "normal",
+    "reason": "使用者明確要求持續完成所有武將立繪，並依既定任務交付關銀屏戰鬥圖、版本化站立圖與頭像及正式遊戲接入；擴列此任務卡已明列之交付路徑。"
+  }
+}

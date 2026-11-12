@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-12T07-47-42-135Z-scope-amendment-bdc130ac3a5d",
+  "taskId": "UI-2-0171",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0171.json",
+  "taskSha256": "sha256:98d039751013600998dff549b4a061052b1017090f7457a71eef6d69e165c775",
+  "createdAt": "2026-11-12T07:47:42.135Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0171 --actor codex-gpt-6.1-sol --add \"docs/general-portrait-pose-ledger.json,.agents/skills/general-portrait-style/SKILL.md\" --class project-rule --phase planning --reason \"使用者指出戰鬥姿勢重複；建立正式姿勢分配台帳並將查表／唯一性檢查設為後續立繪前置，避免再用 A/B/C 無編號選擇直接繪製。\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "project-rule",
+    "amendmentPhase": "planning",
+    "amendmentMode": "normal",
+    "reason": "使用者指出戰鬥姿勢重複；建立正式姿勢分配台帳並將查表／唯一性檢查設為後續立繪前置，避免再用 A/B/C 無編號選擇直接繪製。"
+  }
+}

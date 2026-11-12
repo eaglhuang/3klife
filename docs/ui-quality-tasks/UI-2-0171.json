@@ -1,0 +1,67 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "",
+      "id": "UI-2-0171",
+      "title": "關銀屏戰鬥立繪（已選姿勢 LH-035）",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-11-12",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-11-12T14:37:00+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依使用者先前選定的長柄武器姿勢 LH-035「雙手蓄勢橫擊」，以現行關銀屏站立立繪為角色參照，完成有戰鬥感且眼神看向鏡頭的正式戰鬥立繪；並將站立圖與頭像納入固定版本化目錄。",
+      "related": [
+        "UI-2-0121"
+      ],
+      "depends": [],
+      "acceptance": [
+        "動態姿勢符合 LH-035 雙手蓄勢橫擊；腰肩步伐呈現合理蓄力與橫擊受力",
+        "戰鬥表情明確、眼神銳利且看向鏡頭",
+        "沿用關銀屏已核定臉型、髮式、蜀國綠配色與輕甲，保持已有人物辨識",
+        "1024x1536透明背景、全身及武器落在安全構圖內",
+        "版本化站立、戰鬥、大頭像均列入 general-art-library/catalog.json，戰鬥圖更新 runtime 路徑"
+      ],
+      "deliverables": [
+        "artwork/general-art-library/standing/guan_yin_ping__關銀屏__standing_0001.png",
+        "artwork/general-art-library/battle/guan_yin_ping__關銀屏__battle_0001.png",
+        "artwork/general-art-library/avatars/guan_yin_ping__關銀屏__avatar_0001.png",
+        "artwork/general-art-library/catalog.json",
+        "assets/resources/sprites/generals/guan_yin_ping_battle.png",
+        "docs/agent-briefs/tasks/UI/UI-2-0171.md",
+        "docs/ui-quality-tasks/UI-2-0171.json",
+        "docs/ui-quality-todo.json"
+      ],
+      "notes": "2026-11-12 | 狀態: in-progress | 驗證: pending | 變更: 依已選 LH-035 製作關銀屏戰鬥圖並補齊固定目錄版本 | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-11-12",
+  "purpose": "各武器系列共用姿勢的唯一分配台帳。先登記再出稿，選定後保留，正式驗收後標記使用。",
+  "series": {
+    "LH": {
+      "name": "長柄武器",
+      "validCodes": ["LH-001", "LH-090"],
+      "uniquenessScope": "同一姿勢系列不得重複；相似剪影、攻擊方向或受力方式也應避免。"
+    },
+    "SW": {
+      "name": "刀劍",
+      "validCodes": ["SW-001", "SW-060"],
+      "uniquenessScope": "同一姿勢系列不得重複；相似剪影、攻擊方向或受力方式也應避免。"
+    }
+  },
+  "assignments": [
+    {
+      "generalId": "guan-yin-ping",
+      "generalName": "關銀屏",
+      "series": "LH",
+      "poseCode": "LH-035",
+      "poseLabel": "雙手蓄勢橫擊",
+      "selection": "使用者先前選定",
+      "status": "reserved",
+      "uniqueness": "unverified",
+      "source": "UI-2-0171",
+      "note": "目前任務卡唯一有正式姿勢代碼的既有選擇；待把歷史 A/B/C 選擇對照回編號後才能確認無撞姿勢。未完成對照前不作正式入庫。"
+    },
+    {
+      "generalId": "huang-zhong",
+      "generalName": "黃忠",
+      "series": "LH",
+      "poseCode": null,
+      "selection": "A",
+      "status": "unmapped",
+      "uniqueness": "unverified",
+      "source": "conversation selection",
+      "note": "選擇已收到，但當時草稿未記正式姿勢代碼。"
+    },
+    {
+      "generalId": "zhao-yun",
+      "generalName": "趙雲",
+      "series": "LH",
+      "poseCode": null,
+      "selection": "保留使用者確認的既有圖片",
+      "status": "unmapped",
+      "uniqueness": "unverified",
+      "source": "conversation selection",
+      "note": "已確認維持圖片，原選擇未在任務資料中記錄正式編號。"
+    },
+    {
+      "generalId": "guan-yu",
+      "generalName": "關羽",
+      "series": "LH",
+      "poseCode": null,
+      "selection": "A；左上起勢、前腳屈膝、往左下斜劈",
+      "status": "unmapped",
+      "uniqueness": "unverified",
+      "source": "conversation selection",
+      "note": "動作方向與關鍵姿勢已確認，草稿未標正式姿勢代碼。"
+    },
+    {
+      "generalId": "ma-chao",
+      "generalName": "馬超",
+      "series": "LH",
+      "poseCode": null,
+      "selection": "C",
+      "status": "unmapped",
+      "uniqueness": "unverified",
+      "source": "conversation selection",
+      "note": "選擇已收到，草稿未記正式姿勢代碼。"
+    },
+    {
+      "generalId": "zhang-fei",
+      "generalName": "張飛",
+      "series": "LH",
+      "poseCode": null,
+      "selection": "使用者確認既有姿勢不需修改",
+      "status": "unmapped",
+      "uniqueness": "unverified",
+      "source": "conversation selection",
+      "note": "需由已核定戰鬥圖回填姿勢代碼。"
+    },
+    {
+      "generalId": "lu-bu",
+      "generalName": "呂布",
+      "series": "LH",
+      "poseCode": null,
+      "selection": "使用者確認既有姿勢不需修改",
+      "status": "unmapped",
+      "uniqueness": "unverified",
+      "source": "conversation selection",
+      "note": "需由已核定戰鬥圖回填姿勢代碼。"
+    },
+    {
+      "generalId": "bao-san-niang",
+      "generalName": "鮑三娘",
+      "series": "LH",
+      "poseCode": null,
+      "selection": "B",
+      "status": "unmapped",
+      "uniqueness": "unverified",
+      "source": "conversation selection",
+      "note": "選擇已收到，草稿未記正式姿勢代碼。"
+    },
+    {
+      "generalId": "lu-ling-qi",
+      "generalName": "呂玲綺",
+      "series": "LH",
+      "poseCode": null,
+      "selection": "B",
+      "status": "unmapped",
+      "uniqueness": "unverified",
+      "source": "conversation selection",
+      "note": "選擇已收到，草稿未記正式姿勢代碼。"
+    },
+    {
+      "generalId": "ma-yun-lu",
+      "generalName": "馬雲騄",
+      "series": "LH",
+      "poseCode": null,
+      "selection": "A",
+      "status": "unmapped",
+      "uniqueness": "unverified",
+      "source": "conversation selection",
+      "note": "選擇已收到，草稿未記正式姿勢代碼。"
+    },
+    {
+      "generalId": "zhu-rong",
+      "generalName": "祝融夫人",
+      "series": "LH",
+      "poseCode": null,
+      "selection": "B",
+      "status": "unmapped",
+      "uniqueness": "unverified",
+      "source": "conversation selection",
+      "note": "選擇已收到，草稿未記正式姿勢代碼。"
+    }
+  ],
+  "audit": {
+    "coverage": "partial",
+    "reason": "現存任務卡只把關銀屏記為 LH-035；其他已知選擇多為 A/B/C，尚未映射到使用者提供的正式編號圖。不得將未登錄代碼視為未使用。",
+    "nextSteps": [
+      "逐一核對已有正式戰鬥圖與使用者先前挑選的姿勢圖，回填其系列代碼。",
+      "為已選 A/B/C 草稿找回對應編號；找不到時先請使用者重新確認該角色姿勢，不推測編號。",
+      "完成全體已選角色的代碼核對後，再釋出關銀屏 LH-035 的唯一性確認並開始正式入庫。"
+    ]
+  }
+}

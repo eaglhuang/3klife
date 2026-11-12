@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-12T07-43-10-259Z-scope-amendment-fa8668ea4ace",
+  "taskId": "UI-2-0171",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0171.json",
+  "taskSha256": "sha256:c75071851987630ea213a79eefea7f9d395e371c1b8244713a6f12f479fa6879",
+  "createdAt": "2026-11-12T07:43:10.259Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0171 --actor codex-gpt-6.1-sol --add assets/resources/sprites/generals/guan_yin_ping_battle.png.meta --class generated-artifact --phase integration --reason \"戰鬥立繪屬 Cocos resources 資產，納入對應 importer meta 以保持 asset-db 可識別。\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "generated-artifact",
+    "amendmentPhase": "integration",
+    "amendmentMode": "normal",
+    "reason": "戰鬥立繪屬 Cocos resources 資產，納入對應 importer meta 以保持 asset-db 可識別。"
+  }
+}

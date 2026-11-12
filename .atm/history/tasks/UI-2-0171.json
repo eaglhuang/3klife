@@ -1,0 +1,275 @@
+{
+  "schemaVersion": "atm.workItem.v0.2",
+  "workItemId": "UI-2-0171",
+  "title": "關銀屏戰鬥立繪（已選姿勢 LH-035）",
+  "status": "running",
+  "milestone": null,
+  "dependencies": [],
+  "acceptance": [],
+  "deliverables": [
+    "artwork/general-art-library/standing/guan_yin_ping__關銀屏__standing_0001.png",
+    "artwork/general-art-library/battle/guan_yin_ping__關銀屏__battle_0001.png",
+    "artwork/general-art-library/avatars/guan_yin_ping__關銀屏__avatar_0001.png",
+    "artwork/general-art-library/catalog.json",
+    "assets/resources/sprites/generals/guan_yin_ping_battle.png",
+    "docs/agent-briefs/tasks/UI/UI-2-0171.md",
+    "docs/ui-quality-tasks/UI-2-0171.json",
+    "docs/ui-quality-todo.json"
+  ],
+  "scopePaths": [
+    ".atm/history/evidence/UI-2-0171.*",
+    ".atm/history/task-events/UI-2-0171/**",
+    ".atm/history/tasks/UI-2-0171.json",
+    "artwork/general-art-library/avatars/guan_yin_ping__關銀屏__avatar_0001.png",
+    "artwork/general-art-library/battle/guan_yin_ping__關銀屏__battle_0001.png",
+    "artwork/general-art-library/catalog.json",
+    "artwork/general-art-library/standing/guan_yin_ping__關銀屏__standing_0001.png",
+    "assets/resources/sprites/generals/guan_yin_ping_battle.png",
+    "docs/agent-briefs/tasks/UI/UI-2-0171.md",
+    "docs/ui-quality-tasks/UI-2-0171.json",
+    "docs/ui-quality-todo.json",
+    "assets/resources/sprites/generals/guan_yin_ping_battle.png.meta",
+    ".agents/skills/general-portrait-style/SKILL.md",
+    "docs/general-portrait-pose-ledger.json"
+  ],
+  "validators": [],
+  "planningRepo": null,
+  "targetRepo": null,
+  "closureAuthority": null,
+  "planningReadOnlyPaths": [],
+  "planningMirrorPaths": [],
+  "planningArtifacts": [],
+  "outOfScope": [],
+  "nonGoals": [],
+  "evidenceRequired": null,
+  "rollbackStrategy": null,
+  "rollbackNotes": null,
+  "atomizationImpact": {
+    "ownerAtomOrMap": null,
+    "atomCid": null,
+    "mapUpdates": []
+  },
+  "legacyImportAliases": {},
+  "importDiagnostics": [
+    {
+      "code": "IMPORT_BODY_SECTION_IGNORED",
+      "severity": "warning",
+      "message": "Front-matter `deliverables` key is present; body section deliverables were ignored in favour of front-matter values.",
+      "field": "deliverables"
+    },
+    {
+      "severity": "info",
+      "code": "ATM_TASK_IMPORT_PLANNING_IN_PROGRESS_CLAIMABLE",
+      "message": "Task UI-2-0171 declared planning status in-progress; imported target ledger status as ready so an agent can claim it through next --claim."
+    }
+  ],
+  "tags": [],
+  "notes": "- 2026-11-12 | 狀態: in-progress | 驗證: pending | 變更: 依已選 LH-035 製作關銀屏戰鬥圖並補齊固定目錄版本 | 阻塞: none",
+  "source": {
+    "planPath": "docs/agent-briefs/tasks/UI/UI-2-0171.md",
+    "sectionTitle": "UI-2-0171",
+    "headingLine": 35,
+    "hash": "c450b71d4813aea4",
+    "planningSourceSeal": {
+      "schemaId": "atm.planningSourceSeal.v1",
+      "repoIdentity": "https://github.com/eaglhuang/3klife.git",
+      "repoRoot": "C:/Users/User/.codex/worktrees/sun-shangxiang-portrait-delivery/3KLife",
+      "taskCardPath": "docs/agent-briefs/tasks/UI/UI-2-0171.md",
+      "planningCommitSha": null,
+      "contentDigest": "sha256:c450b71d4813aea46545217c60705b55e42cc18042e83ff27c2238cb6fb10bae",
+      "amendmentEpoch": 0,
+      "sealedAt": "2026-11-12T06:40:49.898Z"
+    }
+  },
+  "importedAt": "2026-11-12T06:40:49.898Z",
+  "workAdmission": {
+    "recoveryMode": "auto",
+    "resolvedRecoveryMode": "enabled",
+    "policyDigest": "sha256:bcb386515289e44fdcd42d646710ef1c28605e33ad8bd67ced526a53dc2fa9eb"
+  },
+  "causalGraph": {
+    "causalDependencies": [],
+    "startConditions": [],
+    "softRelations": [],
+    "changedPublicSeams": [],
+    "causalImpactEdges": [],
+    "parallelFrontierInputs": [],
+    "validatorReferences": [],
+    "phaseOwner": null
+  },
+  "testContributions": [],
+  "requiredTestCaseIds": [],
+  "phaseTestCaseIds": [],
+  "advisoryTestCaseIds": [],
+  "dependencyClassification": {
+    "schemaId": "atm.taskDependencyClassification.v1",
+    "semantics": "legacy",
+    "edges": []
+  },
+  "frontmatterFidelity": {
+    "schemaId": "atm.taskFrontmatterFidelity.v1",
+    "specVersion": "0.1.0",
+    "ok": true,
+    "checkedFields": [],
+    "findings": []
+  },
+  "lastTransitionId": "2026-11-12T07-47-42-135Z-scope-amendment-bdc130ac3a5d",
+  "lastTransitionAt": "2026-11-12T07:47:42.135Z",
+  "ledgerContractVersion": "task-ledger/v1",
+  "claim": {
+    "actorId": "codex-gpt-6.1-sol",
+    "leaseId": "lease-94551d18084c",
+    "claimedAt": "2026-11-12T06:41:08.993Z",
+    "heartbeatAt": "2026-11-12T07:34:56.527Z",
+    "ttlSeconds": 1800,
+    "files": [
+      ".agents/skills/general-portrait-style/SKILL.md",
+      ".atm/history/evidence/UI-2-0171.*",
+      ".atm/history/task-events/UI-2-0171/**",
+      ".atm/history/tasks/UI-2-0171.json",
+      "artwork/general-art-library/avatars/guan_yin_ping__關銀屏__avatar_0001.png",
+      "artwork/general-art-library/battle/guan_yin_ping__關銀屏__battle_0001.png",
+      "artwork/general-art-library/catalog.json",
+      "artwork/general-art-library/standing/guan_yin_ping__關銀屏__standing_0001.png",
+      "assets/resources/sprites/generals/guan_yin_ping_battle.png",
+      "assets/resources/sprites/generals/guan_yin_ping_battle.png.meta",
+      "docs/agent-briefs/tasks/UI/UI-2-0171.md",
+      "docs/general-portrait-pose-ledger.json",
+      "docs/ui-quality-tasks/UI-2-0171.json",
+      "docs/ui-quality-todo.json"
+    ],
+    "state": "active",
+    "laneSession": {
+      "laneSessionId": "lane-20261112064109-codex-gpt-6.1-sol-1585fae54a",
+      "status": "adopted",
+      "source": "minted",
+      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261112064109-codex-gpt-6.1-sol-1585fae54a\""
+    }
+  },
+  "owner": "codex-gpt-6.1-sol",
+  "startedAt": "2026-11-12T06:41:08.993Z",
+  "startedByActor": "codex-gpt-6.1-sol",
+  "workAdmissionTicket": {
+    "schemaId": "atm.workAdmissionTicket.v1",
+    "specVersion": "0.1.0",
+    "ticketId": "wat-250bf04b9bb8fdf5",
+    "ticketDigest": "sha256:250bf04b9bb8fdf5a93175de9575c298901e8fe0abc5b13fc3c25e27cb44f56e",
+    "taskId": "UI-2-0171",
+    "origin": "claim",
+    "actorId": "codex-gpt-6.1-sol",
+    "laneSessionId": "lane-20261112064109-codex-gpt-6.1-sol-1585fae54a",
+    "claimGeneration": "lease-94551d18084c",
+    "issuedAt": "2026-11-12T07:47:41.675Z",
+    "expiresAt": "2026-11-12T08:17:41.675Z",
+    "scopeDigest": "sha256:0cceb5314d233dd4d074e83d6c19dbf822859d245af681c7f0fc17f03cd477d0",
+    "runnerSelection": {
+      "runnerKind": "frozen",
+      "runnerRef": "release/atm-onefile/atm.mjs",
+      "selectedAt": "2026-11-12T07:47:41.675Z"
+    },
+    "grants": [
+      {
+        "kind": "file-write",
+        "values": [
+          ".agents/skills/general-portrait-style/SKILL.md",
+          ".atm/history/evidence/UI-2-0171.*",
+          ".atm/history/task-events/UI-2-0171/**",
+          ".atm/history/tasks/UI-2-0171.json",
+          "artwork/general-art-library/avatars/guan_yin_ping__關銀屏__avatar_0001.png",
+          "artwork/general-art-library/battle/guan_yin_ping__關銀屏__battle_0001.png",
+          "artwork/general-art-library/catalog.json",
+          "artwork/general-art-library/standing/guan_yin_ping__關銀屏__standing_0001.png",
+          "assets/resources/sprites/generals/guan_yin_ping_battle.png",
+          "assets/resources/sprites/generals/guan_yin_ping_battle.png.meta",
+          "docs/agent-briefs/tasks/UI/UI-2-0171.md",
+          "docs/general-portrait-pose-ledger.json",
+          "docs/ui-quality-tasks/UI-2-0171.json",
+          "docs/ui-quality-todo.json"
+        ],
+        "digest": "sha256:67c96035f4c430f9854a2d6fd62c8298e6e4705c72f2b42ed1ebcecedd1f3577"
+      },
+      {
+        "kind": "lifecycle-operation",
+        "values": [
+          "close",
+          "commit",
+          "push",
+          "stage",
+          "write"
+        ],
+        "digest": "sha256:a2f98ae20b476885ded7ed9f79b94ad99cf2b615779e9a8cc266680fc60f009f"
+      },
+      {
+        "kind": "process-manifest",
+        "values": [],
+        "digest": "sha256:706ceedd89f6ac8c08a76e915fa88ba979c4552a0890c95d8f9e01cc090afb8f"
+      }
+    ],
+    "deferredForeignResidue": [],
+    "recovery": {
+      "requestedMode": "auto",
+      "resolvedMode": "enabled",
+      "reasons": [
+        "complex-task"
+      ],
+      "maxSavePoints": 2,
+      "perTaskByteBudget": 16777216,
+      "repositoryByteBudget": 268435456,
+      "handoffTtlSeconds": 604800,
+      "tempRoot": ".atm/runtime/work-admission-temp",
+      "policyDigest": "sha256:bcb386515289e44fdcd42d646710ef1c28605e33ad8bd67ced526a53dc2fa9eb"
+    }
+  },
+  "startedBySessionId": "session-20261112064108-codex-gpt-6.1-sol-UI-2-0171-10fc4e9e90",
+  "taskDirectionLock": {
+    "schemaId": "atm.taskDirectionLock.v1",
+    "specVersion": "0.1.0",
+    "taskId": "UI-2-0171",
+    "batchId": null,
+    "scopeKey": null,
+    "queueId": null,
+    "queueIndex": null,
+    "allowedFiles": [
+      ".agents/skills/general-portrait-style/SKILL.md",
+      ".atm/history/evidence/UI-2-0171.*",
+      ".atm/history/task-events/UI-2-0171/**",
+      ".atm/history/tasks/UI-2-0171.json",
+      "artwork/general-art-library/avatars/guan_yin_ping__關銀屏__avatar_0001.png",
+      "artwork/general-art-library/battle/guan_yin_ping__關銀屏__battle_0001.png",
+      "artwork/general-art-library/catalog.json",
+      "artwork/general-art-library/standing/guan_yin_ping__關銀屏__standing_0001.png",
+      "assets/resources/sprites/generals/guan_yin_ping_battle.png",
+      "assets/resources/sprites/generals/guan_yin_ping_battle.png.meta",
+      "docs/agent-briefs/tasks/UI/UI-2-0171.md",
+      "docs/general-portrait-pose-ledger.json",
+      "docs/ui-quality-tasks/UI-2-0171.json",
+      "docs/ui-quality-todo.json"
+    ],
+    "planningReadOnlyPaths": [
+      "C:/Users/User/.codex/worktrees/sun-shangxiang-portrait-delivery/3KLife/artwork/general-art-library/avatars/guan_yin_ping__關銀屏__avatar_0001.png",
+      "C:/Users/User/.codex/worktrees/sun-shangxiang-portrait-delivery/3KLife/artwork/general-art-library/battle/guan_yin_ping__關銀屏__battle_0001.png",
+      "C:/Users/User/.codex/worktrees/sun-shangxiang-portrait-delivery/3KLife/artwork/general-art-library/catalog.json",
+      "C:/Users/User/.codex/worktrees/sun-shangxiang-portrait-delivery/3KLife/artwork/general-art-library/standing/guan_yin_ping__關銀屏__standing_0001.png",
+      "C:/Users/User/.codex/worktrees/sun-shangxiang-portrait-delivery/3KLife/assets/resources/sprites/generals/guan_yin_ping_battle.png",
+      "C:/Users/User/.codex/worktrees/sun-shangxiang-portrait-delivery/3KLife/docs/agent-briefs/tasks/UI/UI-2-0171.md"
+    ],
+    "planningMirrorPaths": [
+      "docs/agent-briefs/",
+      "docs/agent-briefs/tasks/",
+      "docs/agent-briefs/tasks/UI/",
+      "docs/agent-briefs/tasks/UI/UI-2-0171.md"
+    ],
+    "allowPlanningMirror": false,
+    "promptHash": "c6002aab151a54f27b4ae0cbd1339f52a31e3b64376b9390c24c30a49ac8ffc9",
+    "actorId": "codex-gpt-6.1-sol",
+    "sessionId": null,
+    "laneSession": {
+      "laneSessionId": "lane-20261112064109-codex-gpt-6.1-sol-1585fae54a",
+      "status": "active",
+      "source": "minted",
+      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261112064109-codex-gpt-6.1-sol-1585fae54a\""
+    },
+    "createdAt": "2026-11-12T06:41:18.259Z",
+    "status": "active"
+  }
+}
