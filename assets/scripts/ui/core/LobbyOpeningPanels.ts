@@ -4,9 +4,10 @@ import type { GameSession } from '../../core/managers/GameSession';
 import type { GachaConfig } from '../../core/models/GachaConfig';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import type { OpeningFlowEvent } from '../../core/config/OpeningFlowConfig';
-import { DestinyOpeningController, DESTINY_OPENING_MAX_ROWS } from './DestinyOpeningController';
+import { DestinyOpeningController, type DestinyPoolView } from './DestinyOpeningController';
 import { OnboardingFlowController } from './OnboardingFlowController';
 import { destinyLockedEvent } from '../../core/systems/DestinyOpening';
+import { DESTINY_POOL_ID } from '../../core/systems/DestinyPool';
 import { shouldShowOpeningLetter } from '../../core/systems/OpeningLetter';
 import { OPENING_BEAUTY_POOL_ID, rollOpeningBeauty } from '../../core/systems/OpeningBeauty';
 import { applyFlowView } from './NurtureFlowViewApplier';
@@ -32,12 +33,12 @@ export interface LobbyOpeningPanelPorts {
     canNotifyBeauty?: () => boolean;
     advanceOpening: (event: OpeningFlowEvent) => void;
     /**
-     * 宿命轉蛋確認開局後的滿版結算（PROG-2-2236，沿用 PROG-2-2221 的結果畫面）：
-     * 大立繪為選定的核心名將，下方列出本輪抽出的名單；玩家關閉後 resolve，開場才往下走。未提供則直接往下走。
+     * 宿命池（PROG-2-2243）：用轉蛋系統的十連結果畫面顯示這一輪，按鈕只有重轉／確定。
+     * 每次重轉、確定失敗都會再呼叫一次重畫；回傳畫面節點供維持最上層。未提供則略過宿命池。
      */
-    showDestinyResult?: (view: { coreId: string; rolledIds: readonly string[] }) => Promise<void>;
-    /** 宿命轉蛋六框載立繪（與招賢館同一套擺位，PROG-2-1147）；keys 依框序 */
-    applyFramePortraits?: (binder: NonNullable<LobbyOpeningPanelHost['binder']>, keys: readonly string[]) => void;
+    presentDestinyPool?: (view: DestinyPoolView, actions: { reroll: () => void; confirm: () => void }) => Promise<Node | null>;
+    /** 確定開局後收掉宿命池畫面 */
+    closeDestinyPool?: () => void;
     /** 開場信件的標題與本文（已查好 i18n 的字串） */
     openingLetterText?: () => { title: string; body: string };
     /** 開場面板完成顯示／退場後，通知宿主重查延後彈窗。 */
@@ -52,27 +53,28 @@ export class LobbyOpeningPanels {
     private _onboardingHost: LobbyOpeningPanelHost | null = null;
     private _openingLetterHost: LobbyOpeningPanelHost | null = null;
     private _destiny: DestinyOpeningController | null = null;
-    private _destinyHost: LobbyOpeningPanelHost | null = null;
-    /** 上次載入的立繪順序；沒變就不重載，避免每次點選都閃一下 */
-    private _destinyPortraitKeys = '';
+    /** 宿命池畫面節點（轉蛋結果畫面的宿主） */
+    private _destinyNode: Node | null = null;
     private _pendingBeauty: string | null = null;
-    /** 開局後的結算畫面：未顯示 → 顯示中 → 已關閉；只顯示一次 */
-    private _destinyResult: 'pending' | 'showing' | 'done' = 'pending';
+    /** 宿命池開局後已推進開場；只推進一次 */
+    private _destinyAdvanced = false;
 
     constructor(private readonly _ports: LobbyOpeningPanelPorts) {}
 
     /** 目前顯示中的開場面板節點（信件、宿命轉蛋、新手引導），供宿主維持最上層（PROG-2-2223）。 */
     public activeHostNodes(): Node[] {
-        return [this._openingLetterHost, this._destinyHost, this._onboardingHost]
+        const nodes = [this._openingLetterHost, this._onboardingHost]
             .filter((host): host is LobbyOpeningPanelHost => host !== null && host.node.active)
             .map(host => host.node);
+        if (this._destinyNode?.active && !this._destinyAdvanced) nodes.splice(1, 0, this._destinyNode);
+        return nodes;
     }
 
     public async mountOnboarding(): Promise<void> {
         this._onboarding = new OnboardingFlowController({
             // 結算畫面還開著時不出引導，避免疊在結算上（PROG-2-2236）
             ready: () => (this._ports.lobbyReady?.() ?? true)
-                && (!this._ports.isNewPlayer() || (this._destiny?.started === true && this._destinyResult !== 'showing')),
+                && (!this._ports.isNewPlayer() || this._destiny?.started === true),
             state: () => this._ports.session().onboarding,
             acknowledge: segmentId => this._ports.session().acknowledgeOnboarding(segmentId),
         });
@@ -156,9 +158,9 @@ export class LobbyOpeningPanels {
 
     public async mountDestiny(): Promise<void> {
         const config = await this._ports.loadGachaConfig();
-        const heroPool = (Array.isArray(config) ? config : []).find(pool => pool.poolId === 'hero-pool');
+        const heroPool = (Array.isArray(config) ? config : []).find(pool => pool.poolId === DESTINY_POOL_ID);
         if (!heroPool) {
-            this._ports.warn('[LobbyScene] 找不到 hero-pool 轉蛋設定，略過宿命轉蛋');
+            this._ports.warn('[LobbyScene] 找不到 destiny-pool 轉蛋設定，略過宿命轉蛋');
             return;
         }
         const beautyPool = (Array.isArray(config) ? config : []).find(pool => pool.poolId === OPENING_BEAUTY_POOL_ID);
@@ -181,19 +183,6 @@ export class LobbyOpeningPanels {
                 this._ports.refreshSeasonHud();
             },
         });
-        const act = (task: () => Promise<unknown> | unknown): (() => void) => () => {
-            void Promise.resolve(task()).then(() => { this.afterDestinyAction(); });
-        };
-        const rowBindings = Array.from({ length: DESTINY_OPENING_MAX_ROWS }, (_, i) => ({
-            buttonId: `btnFrame${i}`,
-            handler: act(() => this._destiny?.select(i)),
-        }));
-        this._destinyHost = await this._ports.mountHost('DestinyOpeningHost', 'destiny-opening-screen', [
-            { buttonId: 'btnDestinyRoll', handler: act(() => this._destiny?.roll()) },
-            { buttonId: 'btnDestinyReset', handler: act(() => this._destiny?.reset()) },
-            { buttonId: 'btnDestinyConfirm', handler: act(() => this._destiny?.confirm()) },
-            ...rowBindings,
-        ]);
     }
 
     /**
@@ -209,78 +198,45 @@ export class LobbyOpeningPanels {
         next();
     }
 
-    /** 打開宿命轉蛋；轉蛋設定載入失敗、面板沒掛上時回 false */
+    /** 打開宿命池：第一次自動轉一輪；設定載入失敗、沒有畫面接口時回 false */
     public openDestiny(): boolean {
-        if (!this._destinyHost) return false;
-        this._showDestiny();
+        if (!this._destiny || !this._ports.presentDestinyPool) return false;
+        if (this._destiny.state.phase === 'idle') this._destiny.roll();
+        void this._presentDestiny();
         return true;
     }
 
     /** 新局信件讀完後要接著做的下一步 */
     private _afterLetter: (() => void) | null = null;
 
-    private _showDestiny(): void {
-        const host = this._destinyHost;
-        if (!host) return;
-        host.node.active = true;
-        this._ports.bringToFront(host.node);
-        this.refreshDestiny();
+    private async _presentDestiny(): Promise<void> {
+        const destiny = this._destiny;
+        const present = this._ports.presentDestinyPool;
+        if (!destiny || !present) return;
+        try {
+            this._destinyNode = await present(destiny.getView(), {
+                reroll: () => { if (destiny.reroll()) void this._presentDestiny(); },
+                confirm: () => { void destiny.confirm().then(() => this.afterDestinyAction()); },
+            });
+            if (this._destinyNode) this._ports.bringToFront(this._destinyNode);
+        } catch (error) {
+            this._ports.warn('[LobbyScene] 宿命池畫面顯示失敗', error);
+        }
     }
 
     private afterDestinyAction(): void {
         this.refreshOnboarding();
         this.refreshOpeningLetter();
-        if (this._destiny?.started && this._destinyHost) {
-            this._destinyHost.node.active = false;
-            void this._presentDestinyResultThenAdvance();
+        const destiny = this._destiny;
+        if (!destiny?.started) {
+            void this._presentDestiny();
             return;
         }
-        this.refreshDestiny();
-        this._scheduleReveal();
-    }
-
-    /** 開局後先給滿版結算，關閉後才推進開場；結算失敗不擋開場（PROG-2-2236） */
-    private async _presentDestinyResultThenAdvance(): Promise<void> {
-        const destiny = this._destiny;
-        if (!destiny || this._destinyResult !== 'pending') return;
-        const state = destiny.state;
-        const show = this._ports.showDestinyResult;
-        if (show && state.locked) {
-            this._destinyResult = 'showing';
-            try {
-                await show({ coreId: state.locked, rolledIds: [...state.rolled] });
-            } catch (error) {
-                this._ports.warn('[LobbyScene] 宿命轉蛋結算畫面顯示失敗', error);
-            }
-        }
-        this._destinyResult = 'done';
-        const event = destinyLockedEvent(state);
+        if (this._destinyAdvanced) return;
+        this._destinyAdvanced = true;
+        this._ports.closeDestinyPool?.();
+        const event = destinyLockedEvent(destiny.state);
         if (event) this._ports.advanceOpening(event);
         this.refreshOnboarding();
-    }
-
-    /** 盲盒逐字浮現：每 60ms 露一個字，露完停（PROG-2-1621） */
-    private _revealTimer: ReturnType<typeof setInterval> | null = null;
-    private _scheduleReveal(): void {
-        if (this._revealTimer || !this._destiny?.revealing) return;
-        this._revealTimer = setInterval(() => {
-            this._destiny?.tickReveal();
-            this.refreshDestiny();
-            if (!this._destiny?.revealing && this._revealTimer) {
-                clearInterval(this._revealTimer);
-                this._revealTimer = null;
-            }
-        }, 60);
-    }
-
-    private refreshDestiny(): void {
-        const binder = this._destinyHost?.binder;
-        if (!binder || !this._destiny) return;
-        applyFlowView(binder, this._destiny.getFlowView());
-        const keys = this._destiny.framePortraitKeys();
-        if (keys.join(',') !== this._destinyPortraitKeys) {
-            this._destinyPortraitKeys = keys.join(',');
-            this._ports.applyFramePortraits?.(binder, keys);
-        }
     }
 }

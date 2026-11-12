@@ -3,7 +3,6 @@
  *
  * Unity 對照：像開場 Timeline 的 PlayMode 測試：從第一幕翻頁一路點到宿命鎖定、新局開始。
  */
-import { isDestinyStar } from '../assets/scripts/core/systems/DestinyPool';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { assert, TestSuite } from './TestRunner';
@@ -68,7 +67,7 @@ export function createNewPlayerOpeningSuite(): TestSuite {
 
     suite.test('一路走通：翻完第一幕 → 六名將登場 → 宿命轉蛋 → 鎖定後開新局，幕序結束', async () => {
         const generals = readJson<GeneralConfig[]>('assets/resources/data/generals.json');
-        const heroPool = readJson<GachaConfig[]>('assets/resources/data/gacha-config.json').find(c => c.poolId === 'hero-pool')!;
+        const heroPool = readJson<GachaConfig[]>('assets/resources/data/gacha-config.json').find(c => c.poolId === 'destiny-pool')!;
         const session = new GameSession();
         session.setRosterStore(new InMemoryRosterStore([]));
         session.setSaveService(new PlayerSaveService(new MemoryStorageAdapter()));
@@ -88,7 +87,6 @@ export function createNewPlayerOpeningSuite(): TestSuite {
         });
         assert.isTrue(destiny.roll());
         assert.equals(null, destinyLockedEvent(destiny.state));
-        assert.isTrue(await destiny.select(destiny.state.rolled.findIndex(isDestinyStar)));
         assert.isTrue(await destiny.confirm());
         const locked = destinyLockedEvent(destiny.state)!;
         assert.equals(null, flow.advance(locked));
@@ -98,7 +96,7 @@ export function createNewPlayerOpeningSuite(): TestSuite {
 
     suite.test('開場後半：宿命鎖定存檔 → 重開不再是新玩家 → 首戰勝利 → 紅顏只彈一次（存讀往返）', async () => {
         const generals = readJson<GeneralConfig[]>('assets/resources/data/generals.json');
-        const heroPool = readJson<GachaConfig[]>('assets/resources/data/gacha-config.json').find(c => c.poolId === 'hero-pool')!;
+        const heroPool = readJson<GachaConfig[]>('assets/resources/data/gacha-config.json').find(c => c.poolId === 'destiny-pool')!;
         const adapter = new MemoryStorageAdapter();
         const make = (): GameSession => {
             const s = new GameSession();
@@ -115,7 +113,6 @@ export function createNewPlayerOpeningSuite(): TestSuite {
             random: first.randomSource, seed: () => 1, onStarted: async () => { await first.save(); },
         });
         destiny.roll();
-        assert.isTrue(await destiny.select(destiny.state.rolled.findIndex(isDestinyStar)));
         assert.isTrue(await destiny.confirm());
         const leadId = first.leadGeneralId!;
 

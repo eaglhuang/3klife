@@ -7,7 +7,8 @@
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import type { LocalGachaResultEntry } from '../../core/services/LocalGachaService';
 
-export const DESTINY_OPENING_RESULT_POOL_ID = 'hero-pool';
+/** 宿命池是轉蛋系統的一池（PROG-2-2243） */
+export const DESTINY_OPENING_RESULT_POOL_ID = 'destiny-pool';
 
 export function buildDestinyOpeningResults(
     rolledIds: readonly string[],

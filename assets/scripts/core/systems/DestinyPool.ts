@@ -1,13 +1,12 @@
-// @spec-source → 使用者裁定 2026-11-09（宿命轉蛋是真正的轉蛋：六位名將摻一般武將，無限重抽）；新手開場規格書.md §4 分鏡 5、§6；WBS OPEN-05
+// @spec-source → 使用者裁定 2026-11-12（doc_spec_0471 文首：宿命轉蛋是轉蛋系統的一池，每輪恰一位宿命名將，十連全收）；轉蛋系統.md §L；PROG-2-2243
 /**
- * DestinyPool — 宿命轉蛋的新手武將池與接新局入口，純 TS，不依賴 cc。
+ * DestinyPool — 轉蛋系統「宿命池」（gacha-config.json 的 destiny-pool）的抽法與接新局入口，純 TS，不依賴 cc。
  *
- * 一輪十連：六位宿命名將是這個池的高級武將，其餘格子由一般武將補滿；
- * 每輪至少一位名將，所以永遠選得出核心。不滿意就免費重抽。
- * 確認後，這一輪抽到的武將全部入名冊，玩家從抽到的名將裡選一位當核心。
+ * 一輪十連：必出名單（六大宿命名將）恰好抽 guaranteedCount 位，其餘格子由一般武將補滿；
+ * 不滿意就免費重轉。按確定後，這一輪十位全部入名冊，本輪的宿命名將就是核心主將，不用點選。
+ * 必出名單、人數、一般武將的稀有度與排除性別都寫在池設定，這裡只有預設值。
  *
- * Unity 對照：像一個 ScriptableObject 的「開局卡池」，一般武將直接由武將資料的稀有度篩出來，
- * 不必另外維護名單；鎖定後把整包 id 交給 GameSession 開新局。
+ * Unity 對照：像一個 ScriptableObject 的卡池設定，抽法讀設定，不在程式裡寫死名單。
  */
 import type { GachaConfig } from '../models/GachaConfig';
 import type { GeneralConfig } from '../models/GeneralUnit';
@@ -17,32 +16,46 @@ import {
     type DestinyGachaOptions, type DestinyGachaResult, type DestinyGachaState,
 } from './DestinyGacha';
 
-/** 宿命名將：六位初始名將（順序同 STARTER_GENERAL_IDS） */
+/** 轉蛋設定裡宿命池的 id */
+export const DESTINY_POOL_ID = 'destiny-pool';
+/** 宿命名將：六位初始名將（順序同 STARTER_GENERAL_IDS）；池設定沒填 guaranteedIds 時的預設 */
 export const DESTINY_POOL_IDS: readonly StarterGeneralId[] = STARTER_GENERAL_IDS;
 
-/** 每格抽中宿命名將的機率（暫定，待使用者定案） */
-export const DESTINY_STAR_RATE = 0.1;
-/** 每輪保底的宿命名將人數 */
-export const DESTINY_MIN_STARS = 1;
-/** 可當一般武將的稀有度 */
-const DESTINY_FILLER_TIERS: readonly string[] = ['common', 'rare'];
-/** 女性武將屬於紅顏池，不放進這裡 */
-const DESTINY_EXCLUDED_GENDER = '女';
+const DEFAULT_GUARANTEED_COUNT = 1;
+const DEFAULT_FILLER_TIERS: readonly string[] = ['common', 'rare'];
+const DEFAULT_EXCLUDED_GENDER = '女';
 
 export function isDestinyStar(id: string): boolean {
     return DESTINY_POOL_IDS.some((star) => star === id);
 }
 
-/** 搭配用的一般武將：稀有度低的男性武將，排除六位名將 */
-export function destinyFillerIds(generals: readonly GeneralConfig[]): string[] {
-    return generals
-        .filter((g) => DESTINY_FILLER_TIERS.includes(String(g.rarityTier)) && g.gender !== DESTINY_EXCLUDED_GENDER && !isDestinyStar(g.id))
-        .map((g) => g.id);
+/** 宿命池的抽法設定（從池設定讀，缺的用預設） */
+export interface DestinyPoolRules extends DestinyGachaOptions {
+    guaranteedIds: readonly string[];
+    guaranteedCount: number;
+    fillerRarityTiers: readonly string[];
+    fillerExcludeGender: string;
 }
 
 /** 從轉蛋設定取規則 */
-export function destinyOptionsFromConfig(config: Readonly<GachaConfig>): DestinyGachaOptions {
-    return optionsFromGachaConfig(config);
+export function destinyOptionsFromConfig(config: Readonly<GachaConfig>): DestinyPoolRules {
+    return {
+        ...optionsFromGachaConfig(config),
+        guaranteedIds: config.guaranteedIds?.length ? config.guaranteedIds : DESTINY_POOL_IDS,
+        guaranteedCount: config.guaranteedCount ?? DEFAULT_GUARANTEED_COUNT,
+        fillerRarityTiers: config.fillerRarityTiers?.length ? config.fillerRarityTiers : DEFAULT_FILLER_TIERS,
+        fillerExcludeGender: config.fillerExcludeGender ?? DEFAULT_EXCLUDED_GENDER,
+    };
+}
+
+/** 搭配用的一般武將：符合稀有度、排除指定性別與必出名單 */
+export function destinyFillerIds(generals: readonly GeneralConfig[], rules?: Readonly<DestinyPoolRules>): string[] {
+    const tiers = rules?.fillerRarityTiers ?? DEFAULT_FILLER_TIERS;
+    const gender = rules?.fillerExcludeGender ?? DEFAULT_EXCLUDED_GENDER;
+    const stars = rules?.guaranteedIds ?? DESTINY_POOL_IDS;
+    return generals
+        .filter((g) => tiers.includes(String(g.rarityTier)) && g.gender !== gender && !stars.includes(g.id))
+        .map((g) => g.id);
 }
 
 function drawWithoutReplacement(pool: readonly string[], count: number, random: () => number): string[] {
@@ -55,23 +68,27 @@ function drawWithoutReplacement(pool: readonly string[], count: number, random: 
     return picked;
 }
 
-/** 抽一輪：先決定名將人數（至少保底），其餘補一般武將，再打散順序。同一輪不重複。 */
+/** 抽一輪：必出名單恰好 guaranteedCount 位，其餘補一般武將，再打散順序。同一輪不重複。 */
 export function rollDestinyPool(
     state: Readonly<DestinyGachaState>,
-    options: Readonly<DestinyGachaOptions>,
+    rules: Readonly<DestinyPoolRules>,
     generals: readonly GeneralConfig[],
     random: () => number,
 ): DestinyGachaResult {
-    let starCount = 0;
-    for (let i = 0; i < options.pickCount; i++) {
-        if (random() < DESTINY_STAR_RATE) starCount++;
-    }
-    starCount = Math.min(DESTINY_POOL_IDS.length, options.pickCount, Math.max(DESTINY_MIN_STARS, starCount));
+    const starCount = Math.min(rules.guaranteedIds.length, rules.pickCount, rules.guaranteedCount);
+    const fillers = destinyFillerIds(generals, rules);
+    if (fillers.length < rules.pickCount - starCount) return { ok: false, state: { ...state }, reason: 'pool-too-small' };
     const picks = [
-        ...drawWithoutReplacement(DESTINY_POOL_IDS, starCount, random),
-        ...drawWithoutReplacement(destinyFillerIds(generals), options.pickCount - starCount, random),
+        ...drawWithoutReplacement(rules.guaranteedIds, starCount, random),
+        ...drawWithoutReplacement(fillers, rules.pickCount - starCount, random),
     ];
-    return rollDestinyGacha(state, picks, { ...options, firstPickOnly: true }, random);
+    return rollDestinyGacha(state, picks, { ...rules, firstPickOnly: true }, random);
+}
+
+/** 本輪的核心主將：抽到的第一位宿命名將 */
+export function destinyCoreOf(state: Readonly<DestinyGachaState>): StarterGeneralId | null {
+    const id = state.rolled.find(isDestinyStar);
+    return (id as StarterGeneralId | undefined) ?? null;
 }
 
 /** 開新局需要的最小介面（GameSession 滿足） */

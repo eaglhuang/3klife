@@ -15,7 +15,7 @@ export function createDestinyOpeningResultSuite(): TestSuite {
         assert.equals(1, results[0].drawIndex);
         assert.equals(2, results[1].drawIndex);
         assert.equals('rare', results[1].rarityTier);
-        assert.equals('hero-pool', results[0].poolId);
+        assert.equals('destiny-pool', results[0].poolId);
         assert.isTrue(results[1].displayText.includes('乙'));
     });
     suite.test('pickTopGachaResult 取最高稀有度，同階取先抽到的', () => {

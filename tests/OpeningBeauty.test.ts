@@ -4,7 +4,6 @@
  * 六位初始名將全是男性，開局結緣沒有母方；規格（新手開場第四幕、§8）安排紅顏池作血統定錨。
  * 這裡驗：紅顏池支援卡 id 轉武將 id、只收女性武將、開新局後紅顏在名冊且能當結緣母方。
  */
-import { isDestinyStar } from '../assets/scripts/core/systems/DestinyPool';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { assert, TestSuite } from './TestRunner';
@@ -23,7 +22,7 @@ function readJson<T>(relative: string): T {
 
 const generals = readJson<GeneralConfig[]>('assets/resources/data/generals.json');
 const pools = readJson<GachaConfig[]>('assets/resources/data/gacha-config.json');
-const heroPool = pools.find(c => c.poolId === 'hero-pool')!;
+const heroPool = pools.find(c => c.poolId === 'destiny-pool')!;
 const beautyPool = pools.find(c => c.poolId === OPENING_BEAUTY_POOL_ID)!;
 
 export function createOpeningBeautySuite(): TestSuite {
@@ -67,13 +66,12 @@ export function createOpeningBeautySuite(): TestSuite {
             onStarted: () => undefined,
         });
         controller.roll();
-        assert.isTrue(await controller.select(controller.state.rolled.findIndex(isDestinyStar)));
         assert.isTrue(await controller.confirm());
         assert.equals('zhen-ji', controller.beautyId);
         const beauty = session.roster.find(g => g.id === 'zhen-ji');
         assert.isTrue(!!beauty, '紅顏應在名冊');
         assert.isTrue((beauty!.age ?? 0) >= 20, '紅顏應已成年、可結緣');
-        assert.isTrue(controller.getFlowView().texts.destinyMessage.includes('甄姬'));
+        assert.isTrue(controller.getView().message.includes('甄姬'));
     });
 
     return suite;

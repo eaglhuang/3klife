@@ -1,5 +1,6 @@
 // @spec-source → 轉蛋系統.md (doc_spec_0042)；PROG-2-1429 依建檔紀錄補標出處
 import { Button, Node, Sprite, UITransform } from 'cc';
+import { disableCharCacheForCjk } from './LabelCjkCache';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { LocalGachaService, type LocalGachaResultEntry } from '../../core/services/LocalGachaService';
 import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
@@ -167,20 +168,34 @@ export class GachaFlowCoordinator {
     }
 
     /**
-     * 開場宿命轉蛋（PROG-2-2236）：抽卡已在開場流程完成，這裡只借同一個滿版結果畫面展示。
-     * 大立繪固定為玩家選定的核心名將（不一定是最高稀有）；開場不能再抽，返回／關閉都呼叫 onClose。
+     * 宿命池（PROG-2-2243）：轉蛋系統的一池，免費。用同一個十連結果畫面顯示本輪，
+     * 「再抽」改成免費「重轉」，「返回」改成「確定」（十位全收）；大立繪是本輪的宿命名將。
      */
-    public async presentOpeningResults(
-        host: UIScreenPreviewHost, results: LocalGachaResultEntry[], heroId: string, onClose: () => void | Promise<void>,
+    public async presentDestinyPool(
+        host: UIScreenPreviewHost, results: LocalGachaResultEntry[],
+        pool: { heroId: string | null; quote: string; message: string; resets: number; onReroll: () => void; onConfirm: () => void },
     ): Promise<void> {
-        const hero = results.find(entry => entry.general.id === heroId) ?? pickTopGachaResult(results);
-        await this._renderPullResult(host, results.length, results, '宿命轉蛋', 'gems', { hero, onBack: onClose, repull: null });
+        const hero = results.find(entry => entry.general.id === pool.heroId) ?? pickTopGachaResult(results);
+        await this._renderPullResult(host, results.length, results, '宿命轉蛋', 'gems', {
+            hero, onBack: pool.onConfirm, repull: pool.onReroll,
+            labels: {
+                header: `宿命轉蛋 · 十連全收${pool.resets > 0 ? `（已重轉 ${pool.resets} 次）` : ''}`,
+                heroSub: '宿命名將',
+                heroDesc: pool.message || (pool.quote ? `「${pool.quote}」` : ''),
+                back: '確定 · 全部收下',
+                repull: '免費重轉',
+            },
+        });
     }
 
     private async _renderPullResult(
         host: UIScreenPreviewHost, drawCount: number, results: LocalGachaResultEntry[], title: string,
         currency: 'gems' | 'gold' | 'tickets' | 'mentorTickets',
-        flow: { hero: LocalGachaResultEntry | undefined; onBack: () => void | Promise<void>; repull: (() => void | Promise<void>) | null },
+        flow: {
+            hero: LocalGachaResultEntry | undefined; onBack: () => void | Promise<void>; repull: (() => void | Promise<void>) | null;
+            /** 池別文案（宿命池等）；沒給時用一般轉蛋文案 */
+            labels?: { header: string; heroSub: string; heroDesc: string; back: string; repull: string };
+        },
     ): Promise<void> {
         const topResult = flow.hero;
         const repull = flow.repull;
@@ -210,11 +225,11 @@ export class GachaFlowCoordinator {
         const cards = ['347', '353', '359', '365', '371', '378', '383', '388', '393', '398'];
         const cardActives: Record<string, boolean> = {};
         cards.forEach((id, index) => { cardActives[`GachaPullResult_div_${id}`] = index < results.length; });
-        // 開場沒有再抽：藏起再抽鈕（PROG-2-2236）
         cardActives.GachaPullResult_div_413 = repull !== null;
         binder.setActives(cardActives);
 
         const opening = repull === null;
+        const labels = flow.labels;
         binder.setTexts({
             ...cardTexts,
             GachaPullResult_div_42: opening ? `${title} · ${drawCount === 10 ? '十連抽' : '結果'}` : drawCount === 10 ? this._options.tenPullHeaderText ?? '本地轉蛋結果 · 十連抽' : `${title}結果`,
@@ -236,7 +251,19 @@ export class GachaFlowCoordinator {
             GachaPullResult_hero_rarity: topResult ? `✦ ${this._toPullResultRarityLabel(topResult.rarityTier)} · 絕世登場 ✦` : '✦ 絕世名將 ✦',
             GachaPullResult_hero_name: topResult ? `${topResult.general.name}${topResult.general.courtesyName ? ` · ${topResult.general.courtesyName}` : ''}` : '絕世名將',
             GachaPullResult_hero_desc: topResult ? (topResult.general.description || '義薄雲天 · 威震華夏 · 萬世流芳') : '名揚四海 · 天下歸心',
+            ...(labels ? {
+                GachaPullResult_div_42: labels.header,
+                GachaPullResult_div_196: topResult ? `${this._toPullResultRarityLabel(topResult.rarityTier)} · ${labels.heroSub}` : labels.heroSub,
+                GachaPullResult_hero_desc: labels.heroDesc,
+                GachaPullResult_div_202: `${labels.back} ›`,
+                GachaPullResult_div_412: labels.back,
+                GachaPullResult_div_173: labels.repull,
+                GachaPullResult_div_413: labels.repull,
+            } : {}),
         });
+
+        // 逐字快取（CHAR）配英文 TTF 時中文畫不出來；結果畫面的中文 Label 一律改不快取
+        disableCharCacheForCjk(host.node);
 
         if (topResult) {
             this._updateHeroPortrait(binder, topResult.general.id);
@@ -371,3 +398,4 @@ export class GachaFlowCoordinator {
         this._options.onShowError(message);
     }
 }
+

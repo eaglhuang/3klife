@@ -7,7 +7,8 @@ import type { HeroRarity } from './HeroBase';
 export type GachaPoolType =
   | 'hero'      // 名將池：可重置，抽將領
   | 'support'   // 紅顏池：支援角色
-  | 'mentor';   // 支援卡池：只產生教官卡，不入名冊（PROG-2-1085）
+  | 'mentor'    // 支援卡池：只產生教官卡，不入名冊（PROG-2-1085）
+  | 'destiny';  // 宿命池：新手開場免費十連，每輪必出一位宿命名將（PROG-2-2243）
 
 export interface GachaConfig {
   /** 唯一識別字 */
@@ -34,4 +35,12 @@ export interface GachaConfig {
   currencyType?: 'gem' | 'ticket' | 'mentorTicket';
   /** 單次十連所需貨幣數量 */
   singlePullCost?: number;
+  /** 必出名單：每輪從這裡抽 guaranteedCount 位（宿命池＝六大宿命名將，PROG-2-2243）*/
+  guaranteedIds?: string[];
+  /** 每輪必出幾位（恰好這個數）*/
+  guaranteedCount?: number;
+  /** 其餘格子的一般武將稀有度（從武將資料篩，不另列名單）*/
+  fillerRarityTiers?: string[];
+  /** 一般武將排除的性別（女性歸紅顏池）*/
+  fillerExcludeGender?: string;
 }

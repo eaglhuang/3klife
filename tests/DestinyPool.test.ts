@@ -28,7 +28,7 @@ function realGenerals(): GeneralConfig[] {
 
 function heroPoolConfig(): GachaConfig {
     const configs = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../assets/resources/data/gacha-config.json'), 'utf8')) as GachaConfig[];
-    return configs.find((c) => c.poolId === 'hero-pool')!;
+    return configs.find((c) => c.poolId === 'destiny-pool')!;
 }
 
 function newSession(): GameSession {
@@ -59,7 +59,7 @@ export function createDestinyPoolSuite(): TestSuite {
         }
     });
 
-    suite.test('一輪十連不重複，名將至少一位、其餘是一般武將', () => {
+    suite.test('一輪十連不重複，恰一位宿命名將、其餘是一般武將（PROG-2-2243）', () => {
         const generals = realGenerals();
         const fillers = new Set(destinyFillerIds(generals));
         const options = destinyOptionsFromConfig(heroPoolConfig());
@@ -71,17 +71,19 @@ export function createDestinyPoolSuite(): TestSuite {
             assert.isTrue(ok);
             assert.equals(10, new Set(state.rolled).size);
             const stars = state.rolled.filter(isDestinyStar);
-            assert.isTrue(stars.length >= 1);
-            counts.add(stars.length);
+            assert.equals(1, stars.length);
+            counts.add(state.rolled.indexOf(stars[0]));
             for (const id of state.rolled) assert.isTrue(isDestinyStar(id) || fillers.has(id), id);
         }
-        assert.isTrue(counts.size > 1, '名將人數要有差別，重抽才有意義');
+        assert.isTrue(counts.size > 1, '名將位置要打散');
     });
 
-    suite.test('運氣再好也只有六位名將，其餘四格仍是一般武將', () => {
+    suite.test('必出人數與名單讀池設定，不寫死在程式', () => {
         const generals = realGenerals();
-        const { state } = rollDestinyPool(createDestinyGachaState(), destinyOptionsFromConfig(heroPoolConfig()), generals, () => 0);
-        assert.equals(DESTINY_POOL_IDS.length, state.rolled.filter(isDestinyStar).length);
+        const config = { ...heroPoolConfig(), guaranteedIds: ['zhang-fei', 'sun-ce'], guaranteedCount: 2 };
+        const { state } = rollDestinyPool(createDestinyGachaState(), destinyOptionsFromConfig(config), generals, () => 0);
+        assert.equals('sun-ce,zhang-fei', state.rolled.filter(isDestinyStar).sort().join(','));
+        assert.equals(DESTINY_POOL_IDS.length, 6);
         assert.equals(10, state.rolled.length);
     });
 
