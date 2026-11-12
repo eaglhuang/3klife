@@ -1,0 +1,30 @@
+{
+  "schemaId": "atm.liveIndexReconciliation.v1",
+  "headAdvanced": true,
+  "reconciledPaths": [
+    ".agents/skills/general-portrait-style/SKILL.md",
+    ".atm/catalog/registry/actors.json",
+    ".atm/history/evidence/UI-2-0171.write-ticket.json",
+    ".atm/history/task-events/UI-2-0171/2026-11-12T06-40-50-628Z-import-cf893a710f64.json",
+    ".atm/history/task-events/UI-2-0171/2026-11-12T06-41-18-250Z-claim-f67279350b60.json",
+    ".atm/history/task-events/UI-2-0171/2026-11-12T07-34-56-822Z-renew-c0fccc8811e5.json",
+    ".atm/history/task-events/UI-2-0171/2026-11-12T07-35-16-494Z-scope-amendment-af323808dbfb.json",
+    ".atm/history/task-events/UI-2-0171/2026-11-12T07-43-10-259Z-scope-amendment-fa8668ea4ace.json",
+    ".atm/history/task-events/UI-2-0171/2026-11-12T07-47-42-135Z-scope-amendment-bdc130ac3a5d.json",
+    ".atm/history/tasks/UI-2-0171.json",
+    "docs/agent-briefs/tasks/UI/UI-2-0171.md",
+    "docs/general-portrait-pose-ledger.json",
+    "docs/ui-quality-tasks/UI-2-0171.json"
+  ],
+  "retainedPaths": [
+    {
+      "path": ".atm/history/evidence/git-head.jsonl",
+      "reason": "worktree-diverged",
+      "firstUnreconciledCommit": "eeb2c8ff7c10b23f6066d56fb9dd8afa583c1571"
+    }
+  ],
+  "clean": false,
+  "failure": null,
+  "taskId": "UI-2-0171",
+  "createdAt": "2026-11-12T07:50:46.650Z"
+}
