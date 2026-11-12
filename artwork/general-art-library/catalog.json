@@ -200,6 +200,48 @@
       "smallAvatar": {
         "status": "not-created"
       }
+    },
+    {
+      "uid": "da-qiao",
+      "name": "大喬",
+      "standing": {
+        "activeVersion": "0002",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "standing/da_qiao__大喬__standing_0001.png",
+            "status": "superseded"
+          },
+          {
+            "version": "0002",
+            "file": "standing/da_qiao__大喬__standing_0002.png",
+            "status": "integrated"
+          }
+        ]
+      },
+      "battle": {
+        "status": "not-created"
+      },
+      "avatar": {
+        "activeVersion": "0002",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "avatars/da_qiao__大喬__avatar_0001.png",
+            "status": "superseded"
+          },
+          {
+            "version": "0002",
+            "file": "avatars/da_qiao__大喬__avatar_0002.png",
+            "status": "integrated"
+          }
+        ]
+      },
+      "smallAvatar": {
+        "status": "not-created"
+      }
     }
   ]
 }
