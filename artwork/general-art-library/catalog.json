@@ -1,0 +1,111 @@
+{
+  "version": 1,
+  "updatedAt": "2026-11-12",
+  "conventions": {
+    "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
+    "kinds": [
+      "standing",
+      "battle",
+      "avatar",
+      "small_avatar"
+    ],
+    "immutableVersions": true,
+    "runtimePackaged": false
+  },
+  "entries": [
+    {
+      "uid": "sun-shang-xiang",
+      "name": "孫尚香",
+      "standing": {
+        "activeVersion": "0003",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "standing/sun_shang_xiang__孫尚香__standing_0001.png",
+            "status": "superseded"
+          },
+          {
+            "version": "0002",
+            "file": "standing/sun_shang_xiang__孫尚香__standing_0002.png",
+            "status": "superseded"
+          },
+          {
+            "version": "0003",
+            "file": "standing/sun_shang_xiang__孫尚香__standing_0003.png",
+            "status": "integrated"
+          }
+        ]
+      },
+      "battle": {
+        "status": "not-created"
+      },
+      "avatar": {
+        "activeVersion": "0003",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "avatars/sun_shang_xiang__孫尚香__avatar_0001.png",
+            "status": "superseded"
+          },
+          {
+            "version": "0002",
+            "file": "avatars/sun_shang_xiang__孫尚香__avatar_0002.png",
+            "status": "superseded"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/sun_shang_xiang__孫尚香__avatar_0003.png",
+            "status": "integrated"
+          }
+        ]
+      },
+      "smallAvatar": {
+        "status": "not-created"
+      }
+    },
+    {
+      "uid": "zhuge-liang",
+      "name": "諸葛亮",
+      "standing": {
+        "activeVersion": "0002",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "standing/zhuge_liang__諸葛亮__standing_0001.png",
+            "status": "superseded"
+          },
+          {
+            "version": "0002",
+            "file": "standing/zhuge_liang__諸葛亮__standing_0002.png",
+            "status": "integrated"
+          }
+        ]
+      },
+      "battle": {
+        "status": "not-created"
+      },
+      "avatar": {
+        "activeVersion": "0002",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "avatars/zhuge_liang__諸葛亮__avatar_0001.png",
+            "status": "superseded"
+          },
+          {
+            "version": "0002",
+            "file": "avatars/zhuge_liang__諸葛亮__avatar_0002.png",
+            "status": "integrated"
+          }
+        ]
+      },
+      "smallAvatar": {
+        "status": "not-created"
+      }
+    }
+  ]
+}
