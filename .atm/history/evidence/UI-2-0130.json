@@ -1,0 +1,88 @@
+{
+  "taskId": "UI-2-0130",
+  "updatedAt": "2026-11-12T07:27:49.252Z",
+  "evidence": [
+    {
+      "evidenceKind": "validation",
+      "evidenceType": "test",
+      "summary": "孫尚香 v0006 頭像驗證通過；版本圖、遊戲立繪與頭像資源均列為本次交付。驗證執行時透過 NODE_PATH 載入正式 repo 的 pngjs。",
+      "artifactPaths": [
+        "artwork/general-art-library/standing/sun_shang_xiang__孫尚香__standing_0006.png",
+        "artwork/general-art-library/avatars/sun_shang_xiang__孫尚香__avatar_0006.png",
+        "artwork/general-art-library/catalog.json",
+        "assets/resources/sprites/generals/sun_shang_xiang_portrait.png",
+        "assets/resources/sprites/generals/avatars/sun_shang_xiang_avatar.png",
+        "assets/resources/sprites/ui_avatars/cropped/sun_shang_xiang_avatar.png"
+      ],
+      "evidenceFreshness": "fresh",
+      "producedBy": "codex-gpt-6.1-sol",
+      "sessionId": "session-20261112060447-codex-gpt-6.1-sol-UI-2-0130-1855093580",
+      "createdAt": "2026-11-12T07:27:49.252Z",
+      "details": {
+        "actorId": "codex-gpt-6.1-sol",
+        "sessionId": "session-20261112060447-codex-gpt-6.1-sol-UI-2-0130-1855093580",
+        "kind": "test",
+        "freshness": "fresh",
+        "commandRuns": [
+          {
+            "command": "node tools_node/generate-general-avatars.js sun_shang_xiang --verify (NODE_PATH=C:/Users/User/3KLife/node_modules)",
+            "exitCode": 0,
+            "stdoutSha256": "sha256:bf887e2117a2518726a6aacc36c64706e087f784faa94b30248761b09fc6d6b8",
+            "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "cached": false,
+            "cwd": ".",
+            "runnerKind": "unknown",
+            "sourceCommit": "9f9fa4d32972e28d4ff9333d33c1a776ffdd751b",
+            "cacheKey": "sha256:f49e54efac9db9b8ac9fc9e281c7d7c0280cb7313db119a655dcf8e743bd9ddd",
+            "generatedAt": "2026-11-12T07:27:49.283Z",
+            "canonicalObservation": {
+              "schemaId": "atm.telemetryObservation.v1",
+              "specVersion": "0.1.0",
+              "migration": {
+                "strategy": "none",
+                "fromVersion": null,
+                "notes": "Canonical telemetry observation contract."
+              },
+              "observationId": "sha256:f49e54efac9db9b8ac9fc9e281c7d7c0280cb7313db119a655dcf8e743bd9ddd",
+              "producerId": "evidence.command-runs",
+              "producerVersion": "0.1.0",
+              "observationKind": "command-run",
+              "status": "canonical",
+              "source": "evidence-command-run-normalizer",
+              "sourceAvailability": "available",
+              "storagePolicy": "tracked-compact-digest",
+              "generatedAt": "2026-11-12T07:27:49.283Z",
+              "observedAt": "2026-11-12T07:27:49.283Z",
+              "laneSessionId": null,
+              "taskId": "UI-2-0130",
+              "batchId": null,
+              "waveId": null,
+              "inputDigest": "sha256:c969bc8722d1fda95fe8744f2c0e1a4817bd1eb2ed1a6318261b05724138fe35",
+              "outputDigest": "sha256:aba15444c6b5998f5bd45c458abdd1e115a14eb8bdf9e0860d5e7e8fa9f2cf3b",
+              "cache": {
+                "key": "sha256:f49e54efac9db9b8ac9fc9e281c7d7c0280cb7313db119a655dcf8e743bd9ddd",
+                "hit": false
+              },
+              "extensions": {
+                "command": "node tools_node/generate-general-avatars.js sun_shang_xiang --verify (NODE_PATH=C:/Users/User/3KLife/node_modules)",
+                "cwd": ".",
+                "exitCode": 0,
+                "validators": [],
+                "runnerKind": "unknown",
+                "sourceCommit": "9f9fa4d32972e28d4ff9333d33c1a776ffdd751b",
+                "runnerVersion": null
+              }
+            }
+          }
+        ],
+        "commandRunCache": {
+          "schemaId": "atm.commandRunCache.v1",
+          "cacheKey": "sha256:936e3a90f0b380b0b0c2ae47982bc6b19d72845487c3724ca731248b05c61573",
+          "reusedRunCount": 0,
+          "runCount": 1,
+          "sourcePath": null
+        }
+      }
+    }
+  ]
+}

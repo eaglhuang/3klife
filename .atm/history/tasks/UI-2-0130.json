@@ -2,7 +2,7 @@
   "schemaVersion": "atm.workItem.v0.2",
   "workItemId": "UI-2-0130",
   "title": "孫尚香正式立繪右手持劍柄修正",
-  "status": "running",
+  "status": "done",
   "milestone": null,
   "dependencies": [],
   "acceptance": [],
@@ -115,7 +115,7 @@
     "actorId": "codex-gpt-6.1-sol",
     "leaseId": "lease-a7562bc23c07",
     "claimedAt": "2026-11-12T06:04:47.489Z",
-    "heartbeatAt": "2026-11-12T07:24:05.758Z",
+    "heartbeatAt": "2026-11-12T07:28:50.893Z",
     "ttlSeconds": 1800,
     "files": [
       ".atm/history/evidence/UI-2-0130.*",
@@ -133,13 +133,14 @@
       "docs/ui-quality-tasks/UI-2-0130.json",
       "docs/ui-quality-todo.json"
     ],
-    "state": "active",
+    "state": "released",
     "laneSession": {
       "laneSessionId": "lane-20261112060447-codex-gpt-6.1-sol-fa4834df41",
       "status": "adopted",
       "source": "minted",
       "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261112060447-codex-gpt-6.1-sol-fa4834df41\""
-    }
+    },
+    "reason": "closed"
   },
   "owner": "codex-gpt-6.1-sol",
   "startedAt": "2026-11-12T06:04:47.489Z",
@@ -183,8 +184,8 @@
     "createdAt": "2026-11-12T06:04:48.483Z",
     "status": "active"
   },
-  "lastTransitionId": "2026-11-12T07-24-05-851Z-renew-e450dc47fab3",
-  "lastTransitionAt": "2026-11-12T07:24:05.851Z",
+  "lastTransitionId": "2026-11-12T07-28-50-895Z-close-44c5471e880e",
+  "lastTransitionAt": "2026-11-12T07:28:50.895Z",
   "ledgerContractVersion": "task-ledger/v1",
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
@@ -256,5 +257,8 @@
       "tempRoot": ".atm/runtime/work-admission-temp",
       "policyDigest": "sha256:bcb386515289e44fdcd42d646710ef1c28605e33ad8bd67ced526a53dc2fa9eb"
     }
-  }
+  },
+  "closedAt": "2026-11-12T07:28:50.893Z",
+  "closedByActor": "codex-gpt-6.1-sol",
+  "closedBySessionId": "session-20261112060447-codex-gpt-6.1-sol-UI-2-0130-1855093580"
 }
