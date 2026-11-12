@@ -2122,7 +2122,8 @@ export class LobbyScene extends Component {
             { buttonId: 'btnOpenJournalHub', handler: () => { close(); this._openJournalHub(); } },
             { buttonId: 'btnRevenge', handler: () => { this._claimRevenge(); } },
         ]);
-        const report = this._dailyReport;
+        // 新玩家／開場進行中不開日報（issue #2099 第 10 項）：首日日報只是「首次生成」，疊在開場與載入上反而擋路
+        const report = this._isNewPlayer || this._isOpeningInProgress() ? null : this._dailyReport;
         this._dailyReportHost.node.active = report !== null;
         if (!report) return;
         this._bringNodeToFront(this._dailyReportHost.node);
@@ -2893,9 +2894,15 @@ export class LobbyScene extends Component {
 
     public openDestinyOpening(): void {
         if (this._openingPanels?.openDestiny()) return;
-        // 宿命轉蛋開不起來（例如轉蛋設定缺失）：不讓玩家卡在空畫面，照舊顯示大廳（PROG-2-1620）
-        this._openingUnavailable = true;
-        void services().ui.open(UIID.LobbyMain);
+        // 面板沒掛上（例如網路慢、轉蛋設定第一次沒載到）先重掛一次，不要直接跳過新手十連抽（issue #2099）
+        void this._mountDestinyOpening()
+            .catch(error => { UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 宿命轉蛋重掛失敗', error); })
+            .then(() => {
+                if (this._openingPanels?.openDestiny()) return;
+                // 重掛仍開不起來（例如轉蛋設定缺失）：不讓玩家卡在空畫面，照舊顯示大廳（PROG-2-1620）
+                this._openingUnavailable = true;
+                void services().ui.open(UIID.LobbyMain);
+            });
     }
 
     /**

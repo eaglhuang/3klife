@@ -86,5 +86,19 @@ export function createNewcomerUiRegressionSuite(): TestSuite {
         assert.isTrue(src.indexOf('await initSceneBackground') < reveal);
         assert.isTrue(src.indexOf('await this.hud.waitUntilReady(15000)') < reveal);
     });
+    suite.test('宿命轉蛋面板沒掛上先重掛再開，新玩家不跳日報（PROG-2-2241，issue #2099）', () => {
+        const src = read('assets/scripts/ui/scenes/LobbyScene.ts');
+        const open = src.slice(src.indexOf('public openDestinyOpening(): void {'));
+        const body = open.slice(0, open.indexOf('\n    }\n'));
+        assert.isTrue(body.indexOf('this._mountDestinyOpening()') > 0, '先重掛');
+        assert.isTrue(body.indexOf('this._mountDestinyOpening()') < body.indexOf('this._openingUnavailable = true'), '重掛後才放棄');
+        assert.isTrue(src.includes('this._isNewPlayer || this._isOpeningInProgress() ? null : this._dailyReport'), '新玩家不開日報');
+    });
+    suite.test('大廳對話泡泡選項可點並收起泡泡（PROG-2-2241，issue #2099）', () => {
+        const src = read('assets/scripts/ui/core/LobbyHallScreenBinder.ts');
+        assert.isTrue(src.includes("'lobby-hall-screen.bubble'"));
+        assert.isTrue(src.includes('bubble.active = false'));
+        assert.isTrue(src.includes('this._bindBubbleChoices();'));
+    });
     return suite;
 }

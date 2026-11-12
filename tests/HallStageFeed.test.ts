@@ -2,7 +2,7 @@
  * HallStageFeed.test.ts — 幕府大廳在場武將資料餵送（UI-2-0138，UI-2-0123 子項）
  */
 import { assert, TestSuite } from './TestRunner';
-import { buildHallStageFeed, HallStageProfile } from '../assets/scripts/core/systems/HallStageFeed';
+import { buildHallStageFeed, displayTitleOf, HallStageProfile } from '../assets/scripts/core/systems/HallStageFeed';
 import { VOLUNTEER_EAGER_MOOD, VOLUNTEER_SHOWN_FLAG } from '../assets/scripts/core/systems/HallVolunteer';
 
 const PROFILES: Record<string, HallStageProfile> = {
@@ -21,6 +21,13 @@ export function createHallStageFeedSuite(): TestSuite {
         assert.lengthEquals(2, feed.generals, '人數');
         assert.equals(feed.generals[0].title, '前將軍', '關羽官職');
         assert.equals('title' in feed.generals[1], false, '張飛無官職');
+    });
+
+    suite.test('佔位稱號（【本名】）不帶 title，名牌不重複本名（issue #2099）', () => {
+        const feed = buildHallStageFeed([row('fu-tong')], () => ({ name: '傅肜', title: '【傅肜】', roleTags: [], mood: 'CALM' }), []);
+        assert.equals('title' in feed.generals[0], false, '佔位稱號略過');
+        assert.equals(displayTitleOf('【前將軍】', '關羽'), '【前將軍】', '真稱號保留');
+        assert.equals(displayTitleOf('  ', '關羽'), null, '空白稱號');
     });
 
     suite.test('查不到檔案的武將略過', () => {
