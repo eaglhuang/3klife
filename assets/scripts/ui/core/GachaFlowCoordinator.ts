@@ -1,5 +1,5 @@
 // @spec-source → 轉蛋系統.md (doc_spec_0042)；PROG-2-1429 依建檔紀錄補標出處
-import { Button, Node, Sprite, UITransform, Widget } from 'cc';
+import { Button, Color, Label, Node, Sprite, UITransform, Widget } from 'cc';
 import { disableCharCache } from './LabelCjkCache';
 import { formatGachaLine, loadGachaLines } from './GachaLines';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
@@ -18,6 +18,7 @@ export const GACHA_PULL_RESULT_SCREEN_ID = 'gacha-pull-result';
 
 /** 揭曉後武將立繪回到左側的水平位移（與版面 hCenter 一致） */
 const HERO_SIDE_CENTER_X = -320;
+const REPULL_ENABLED_COLOR = new Color(245, 210, 122, 255);
 
 /** 卡片頭像節點名（PROG-2-2247） */
 const CARD_PORTRAIT_NODE = 'CardPortrait';
@@ -186,6 +187,8 @@ export class GachaFlowCoordinator {
         const hero = results.find(entry => entry.general.id === pool.heroId) ?? pickTopGachaResult(results);
         await this._renderPullResult(host, results.length, results, '宿命轉蛋', 'gems', {
             hero, onBack: pool.onConfirm, repull: pool.onReroll,
+            // 新手十連（#2107）：全螢幕展示完就收起武將，結果面板旁不再貼大立繪
+            hideHeroAfterReveal: true,
             labels: {
                 header: `宿命轉蛋 · 十連全收${pool.resets > 0 ? `（已重轉 ${pool.resets} 次）` : ''}`,
                 heroSub: '宿命名將',
@@ -205,6 +208,8 @@ export class GachaFlowCoordinator {
             hero: LocalGachaResultEntry | undefined; onBack: () => void | Promise<void>; repull: (() => void | Promise<void>) | null;
             /** 池別文案（宿命池等）；沒給時用一般轉蛋文案 */
             labels?: { header: string; heroSub: string; heroDesc: string; heroDescFallback?: string; back: string; repull: string };
+            /** 點掉全螢幕展示後收起武將（只留結果面板）；預設移到面板左側 */
+            hideHeroAfterReveal?: boolean;
         },
     ): Promise<void> {
         const topResult = flow.hero;
@@ -281,7 +286,8 @@ export class GachaFlowCoordinator {
         if (topResult) {
             this._updateHeroPortrait(binder, topResult.general.id);
         }
-        this._stageHeroReveal(binder, topResult !== null);
+        this._stageHeroReveal(binder, topResult !== null, flow.hideHeroAfterReveal === true);
+        this._styleRepullButton(binder, repull !== null);
 
         this._resultBackAction = flow.onBack;
         this._resultRepullAction = repull;
@@ -382,7 +388,14 @@ export class GachaFlowCoordinator {
      * 兩段揭曉（#2107-8）：先讓最高稀有武將置中獨佔全螢幕，結果面板藏起來；
      * 點畫面任一處才把武將移回左側、亮出結果面板，兩者不再同時擠在畫面上。
      */
-    private _stageHeroReveal(binder: any, hasHero: boolean): void {
+    /** 可按的再抽／免費重轉用亮金字；skin 的深墨字配上沒有底圖的按鈕看起來像停用（#2107） */
+    private _styleRepullButton(binder: any, enabled: boolean): void {
+        const node: Node | null = binder.getNode ? binder.getNode('GachaPullResult_div_413') : null;
+        const label = node?.getComponent(Label);
+        if (label && enabled) label.color = REPULL_ENABLED_COLOR;
+    }
+
+    private _stageHeroReveal(binder: any, hasHero: boolean, hideAfterReveal = false): void {
         const showcase: Node | null = binder.getNode ? binder.getNode('GachaPullResult_hero_showcase') : null;
         const panel: Node | null = binder.getNode ? binder.getNode('GachaPullResult_div_341') : null;
         const stage: Node | null = binder.getNode ? binder.getNode('GachaPullResult_div_264') : null;
@@ -393,13 +406,21 @@ export class GachaFlowCoordinator {
             if (widget) { widget.horizontalCenter = x; widget.updateAlignment(); }
             else showcase.setPosition(x, showcase.position.y, 0);
         };
+        // 收起武將時結果面板置中，不留左半邊空白
+        const panelWidget = panel.getComponent(Widget);
+        const centerPanel = (): void => {
+            if (panelWidget) { panelWidget.isAlignHorizontalCenter = true; panelWidget.horizontalCenter = 0; panelWidget.updateAlignment(); }
+            else panel.setPosition(0, panel.position.y, 0);
+        };
         stage.off(Node.EventType.TOUCH_END);
-        if (!hasHero) { place(sideCenter); panel.active = true; return; }
+        showcase.active = true; // 重轉後重新展示（上一輪可能已收起）
+        if (!hasHero) { place(sideCenter); showcase.active = !hideAfterReveal; if (hideAfterReveal) centerPanel(); panel.active = true; return; }
         place(0);
         panel.active = false;
         stage.on(Node.EventType.TOUCH_END, () => {
             stage.off(Node.EventType.TOUCH_END);
-            place(sideCenter);
+            if (hideAfterReveal) { showcase.active = false; centerPanel(); }
+            else place(sideCenter);
             panel.active = true;
         });
     }
