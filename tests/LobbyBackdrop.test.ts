@@ -1,9 +1,9 @@
 /**
  * LobbyBackdrop.test.ts — 主大廳背景沿用幕府大廳季節背景（UI-2-0159）
  */
-import { Node, Sprite, SpriteFrame, UITransform } from 'cc';
+import { Node, Sprite, SpriteFrame, UITransform, view } from 'cc';
 import { assert, TestSuite } from './TestRunner';
-import { coverSize, LobbyBackdrop } from '../assets/scripts/ui/core/LobbyBackdrop';
+import { coverSize, LobbyBackdrop, resolveBackdropView } from '../assets/scripts/ui/core/LobbyBackdrop';
 import { SolidBackground } from '../assets/scripts/ui/components/SolidBackground';
 import { mainLobbyBackdropOf, resolveHallTheme, type HallThemeConfig } from '../assets/scripts/core/systems/HallTheme';
 
@@ -88,6 +88,29 @@ export function createLobbyBackdropSuite(): TestSuite {
         backdrop.apply({ backgroundPath: 'bg/missing', layers: [] });
         pending[2].done(null);
         assert.equals(art.getComponent(Sprite)!.spriteFrame, summer, '失敗保留');
+    });
+
+    suite.test('可見範圍寬於 16:9 時，背景與遮罩依可見範圍 cover，不留黑邊', () => {
+        const visible = { width: 2340, height: 1080 };
+        assert.equals(resolveBackdropView(VIEW, visible).width, 2340, '改用可見寬度');
+        assert.equals(resolveBackdropView(VIEW, null).width, 1920, '無效時退回設計尺寸');
+        const visibleView = view as { getVisibleSize?: () => { width: number; height: number } };
+        const previous = visibleView.getVisibleSize;
+        visibleView.getVisibleSize = () => visible;
+        try {
+            const parent = new Node('Background');
+            const pending: Array<{ path: string; done: (f: SpriteFrame | null) => void }> = [];
+            const backdrop = new LobbyBackdrop(parent, VIEW, (path, done) => { pending.push({ path, done }); });
+            backdrop.apply({ backgroundPath: 'bg/wide', layers: [{ color: '#000000', alpha: 0.4 }] });
+            pending[0].done(frame(1920, 1080));
+            const artSize = backdrop.art.getComponent(UITransform)!;
+            assert.equals(`${artSize.width}x${artSize.height}`, '2340x1316.25', 'cover 可見範圍');
+            const shadeSize = backdrop.shadeLayers[0].getComponent(UITransform)!;
+            assert.equals(`${shadeSize.width}x${shadeSize.height}`, '2340x1080', '遮罩鋪滿可見範圍');
+        } finally {
+            if (previous) visibleView.getVisibleSize = previous;
+            else delete visibleView.getVisibleSize;
+        }
     });
 
     return suite;

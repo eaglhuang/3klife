@@ -1,23 +1,20 @@
 html, body {
   width: 100%;
   height: 100%;
+  min-height: 100dvh;
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background: #000;
+  background: #0d0a06 url("boot-bg.jpg") center / cover no-repeat;
 }
 
-/* The existing game UI uses a 1920 x 1080 design canvas.
-   Fit the entire view in the window; keep extra space as letterboxing. */
+/* Fill the window, including areas wider than 16:9.
+   The engine uses FIXED_HEIGHT on wide screens; UI stays in the design safe area. */
 #GameDiv {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 100vw;
-  height: 56.25vw;
-  max-width: 177.7777777778vh;
-  max-height: 100vh;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   border: 0;
   margin: 0;
   padding: 0;
@@ -41,16 +38,12 @@ html, body {
   --safe-left: env(safe-area-inset-left);
 }
 
-/* 啟動底圖：與 #GameDiv 同一個 16:9 框，蓋在畫布上，標題掛好後移除（PROG-2-2240） */
+/* 啟動底圖：與 #GameDiv 同樣鋪滿視窗，標題掛好後移除（PROG-2-2240） */
 #web-boot-backdrop {
   position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 100vw;
-  height: 56.25vw;
-  max-width: 177.7777777778vh;
-  max-height: 100vh;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   background: #0d0a06 url("boot-bg.jpg") center / cover no-repeat;
   z-index: 2147483645;
   pointer-events: none;
