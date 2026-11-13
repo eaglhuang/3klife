@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-13T05-13-43-151Z-claim-56afdeda67b4",
+  "taskId": "UI-2-0172",
+  "action": "claim",
+  "actorId": "claude-code-opus-5-5",
+  "sessionId": "session-20261113051342-claude-code-opus-5-5-UI-2-0172-083f226908",
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0172.json",
+  "taskSha256": "sha256:2ef413edb0c88dd34953bb49145218d2f1105c2ccb2838d16a5766db704463df",
+  "createdAt": "2026-11-13T05:13:43.151Z",
+  "command": "node atm.mjs tasks claim"
+}

@@ -8,6 +8,7 @@
 
 export interface GeneralArtPathConfig {
     portrait: readonly string[];
+    battle: readonly string[];
     avatar: readonly string[];
     avatarPlaceholder: string;
     /** 舊 id → 名冊 id（PROG-2-2246）：同一人舊檔名已刪，支援卡等舊 id 改讀新圖 */
@@ -18,6 +19,7 @@ export const GENERAL_ART_PATHS_JSON = 'data/general-art-paths';
 
 const DEFAULT_CONFIG: GeneralArtPathConfig = {
     portrait: ['sprites/generals/{file}_portrait'],
+    battle: ['sprites/generals/{file}_battle'],
     avatar: ['sprites/generals/avatars/{file}_avatar', 'sprites/ui_avatars/cropped/{file}_avatar'],
     avatarPlaceholder: 'sprites/ui_avatars/unknown_avatar_{gender}',
     aliases: { 'huang-yueying': 'huang-yue-ying', 'cai-wenji': 'cai-yan', 'zhen-mi': 'zhen-ji' },
@@ -34,6 +36,7 @@ export function configureGeneralArtPaths(raw: Partial<GeneralArtPathConfig> | nu
     if (!raw) return;
     _config = {
         portrait: Array.isArray(raw.portrait) && raw.portrait.length ? raw.portrait : DEFAULT_CONFIG.portrait,
+        battle: Array.isArray(raw.battle) && raw.battle.length ? raw.battle : DEFAULT_CONFIG.battle,
         avatar: Array.isArray(raw.avatar) && raw.avatar.length ? raw.avatar : DEFAULT_CONFIG.avatar,
         avatarPlaceholder: typeof raw.avatarPlaceholder === 'string' ? raw.avatarPlaceholder : DEFAULT_CONFIG.avatarPlaceholder,
         aliases: raw.aliases && typeof raw.aliases === 'object' ? raw.aliases : DEFAULT_CONFIG.aliases,
@@ -64,6 +67,25 @@ export function portraitCandidates(idOrPortraitKey: string): string[] {
 /** 主要立繪路徑（同步場合用，例如 view model）。 */
 export function portraitPathOf(idOrPortraitKey: string): string {
     return portraitCandidates(idOrPortraitKey)[0];
+}
+
+/** 戰鬥立繪候選路徑（依序嘗試）；沒有戰鬥版時由呼叫端退回站姿。 */
+export function battleCandidates(idOrPortraitKey: string): string[] {
+    const id = generalIdFromKey(idOrPortraitKey);
+    return _config.battle.map((t) => fill(t, id));
+}
+
+/** 依序嘗試候選資源路徑，回傳第一個成功載入的資源。 */
+export async function loadFirstAvailableArtCandidate<T>(paths: readonly string[], load: (path: string) => Promise<T | null>): Promise<T | null> {
+    for (const path of paths) {
+        try {
+            const value = await load(path);
+            if (value) return value;
+        } catch {
+            // 單一路徑載入失敗時，繼續嘗試下一個候選。
+        }
+    }
+    return null;
 }
 
 /** 頭像候選路徑：正式頭像 → 自動裁切頭像；全部失敗時由呼叫端用 avatarPlaceholder。 */

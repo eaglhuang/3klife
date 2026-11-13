@@ -4,6 +4,7 @@
   "portrait": [
     "sprites/generals/{file}_portrait"
   ],
+  "battle": ["sprites/generals/{file}_battle"],
   "avatar": [
     "sprites/generals/avatars/{file}_avatar",
     "sprites/ui_avatars/cropped/{file}_avatar"

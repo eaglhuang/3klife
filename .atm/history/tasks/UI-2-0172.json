@@ -1,0 +1,338 @@
+{
+  "schemaVersion": "atm.workItem.v0.2",
+  "workItemId": "UI-2-0172",
+  "title": "UI-2-0172",
+  "status": "running",
+  "milestone": null,
+  "dependencies": [],
+  "acceptance": [],
+  "deliverables": [
+    "assets/scripts/core/systems/GeneralArtPaths.ts",
+    "assets/resources/data/general-art-paths.json",
+    "assets/scripts/ui/components/BattleHUDComposite.ts",
+    "assets/scripts/ui/core/BattleArtController.ts",
+    "tests/GeneralArtPaths.test.ts",
+    "tests/BattleArtController.test.ts",
+    "docs/agent-briefs/tasks/UI/UI-2-0172.md",
+    "docs/ui-quality-tasks/UI-2-0172.json",
+    "docs/agent-briefs/tasks_index.md",
+    "docs/doc-id-registry-shards/registry-task.json",
+    "docs/doc-id-registry.json"
+  ],
+  "scopePaths": [
+    "assets/scripts/core/systems/GeneralArtPaths.ts",
+    "assets/resources/data/general-art-paths.json",
+    "assets/scripts/ui/components/BattleHUDComposite.ts",
+    "assets/scripts/ui/core/BattleArtController.ts",
+    "tests/GeneralArtPaths.test.ts",
+    "tests/BattleArtController.test.ts",
+    "docs/agent-briefs/tasks/UI/UI-2-0172.md",
+    "docs/ui-quality-tasks/UI-2-0172.json",
+    "docs/agent-briefs/tasks_index.md",
+    "docs/doc-id-registry-shards/registry-task.json",
+    "docs/doc-id-registry.json",
+    ".atm/history/evidence/UI-2-0172.*",
+    ".atm/history/task-events/UI-2-0172/**",
+    ".atm/history/tasks/UI-2-0172.json"
+  ],
+  "validators": [
+    "npm test",
+    "npx tsc -p tsconfig.test.json --noEmit",
+    "npm run gate:standard"
+  ],
+  "planningRepo": "3KLife",
+  "targetRepo": "3KLife",
+  "closureAuthority": null,
+  "planningReadOnlyPaths": [],
+  "planningMirrorPaths": [],
+  "planningArtifacts": [],
+  "outOfScope": [],
+  "nonGoals": [],
+  "evidenceRequired": null,
+  "rollbackStrategy": null,
+  "rollbackNotes": null,
+  "atomizationImpact": {
+    "ownerAtomOrMap": "battle.general-art-loading",
+    "atomCid": null,
+    "mapUpdates": [],
+    "extractionCandidates": [
+      {
+        "atom": "battle.tactic-flash-art-loader",
+        "pattern": "Adapter/Port",
+        "source": "assets/scripts/ui/components/BattleHUDComposite.ts",
+        "disposition": "extract",
+        "inlineReason": "null"
+      }
+    ]
+  },
+  "legacyImportAliases": {},
+  "importDiagnostics": [
+    {
+      "code": "IMPORT_BODY_SECTION_IGNORED",
+      "severity": "warning",
+      "message": "Front-matter `deliverables` key is present; body section deliverables were ignored in favour of front-matter values.",
+      "field": "deliverables"
+    },
+    {
+      "code": "ATM_TASK_IMPORT_MECHANICAL_SPLIT_SCOPE_CHECKLIST",
+      "severity": "warning",
+      "field": "scopePaths",
+      "message": "Mechanical split/facade/module task appears to declare a narrow file boundary. Before the first delivery commit, review sibling files such as types.ts, shared.ts, constants.ts, registry files, and lane modules; add all expected paths once with `node atm.mjs tasks scope add --task <id> --paths <paths> --json`.",
+      "candidates": [
+        "assets/scripts/core/systems/GeneralArtPaths.ts",
+        "assets/resources/data/general-art-paths.json",
+        "assets/scripts/ui/components/BattleHUDComposite.ts",
+        "assets/scripts/ui/core/BattleArtController.ts",
+        "tests/GeneralArtPaths.test.ts",
+        "tests/BattleArtController.test.ts",
+        "docs/agent-briefs/tasks/UI/UI-2-0172.md",
+        "docs/ui-quality-tasks/UI-2-0172.json",
+        "docs/agent-briefs/tasks_index.md",
+        "docs/doc-id-registry-shards/registry-task.json",
+        "docs/doc-id-registry.json"
+      ]
+    },
+    {
+      "code": "ATM_TASK_IMPORT_LEGACY_VALIDATOR_PROJECTION",
+      "severity": "warning",
+      "field": "validators",
+      "message": "Command-only validators were projected to 3 advisory legacy case id(s) for migration. Prefer requiredTestCaseIds / testContributions for new cards."
+    },
+    {
+      "severity": "info",
+      "code": "ATM_TASK_IMPORT_PLANNING_IN_PROGRESS_CLAIMABLE",
+      "message": "Task UI-2-0172 declared planning status in-progress; imported target ledger status as ready so an agent can claim it through next --claim."
+    }
+  ],
+  "tags": [],
+  "notes": "- 2026-11-12 | 狀態: in-progress | 驗證: pending | 變更: Codex 開始實作戰鬥立繪讀取支援 | 阻塞: none",
+  "source": {
+    "planPath": "docs/agent-briefs/tasks/UI/UI-2-0172.md",
+    "sectionTitle": "UI-2-0172",
+    "headingLine": 64,
+    "hash": "eca7393e9c58a2e4",
+    "planningSourceSeal": {
+      "schemaId": "atm.planningSourceSeal.v1",
+      "repoIdentity": "https://github.com/eaglhuang/3klife.git",
+      "repoRoot": "C:/Users/User/3KLife",
+      "taskCardPath": "docs/agent-briefs/tasks/UI/UI-2-0172.md",
+      "planningCommitSha": null,
+      "contentDigest": "sha256:eca7393e9c58a2e4e41ce067cf2590f65f4f01276089ae647a4644f8819dc106",
+      "amendmentEpoch": 3,
+      "sealedAt": "2026-11-13T05:15:43.873Z"
+    }
+  },
+  "importedAt": "2026-11-13T05:15:43.873Z",
+  "workAdmission": {
+    "recoveryMode": "auto",
+    "resolvedRecoveryMode": "enabled",
+    "policyDigest": "sha256:bcb386515289e44fdcd42d646710ef1c28605e33ad8bd67ced526a53dc2fa9eb"
+  },
+  "causalGraph": {
+    "causalDependencies": [],
+    "startConditions": [],
+    "softRelations": [],
+    "changedPublicSeams": [],
+    "causalImpactEdges": [],
+    "parallelFrontierInputs": [],
+    "validatorReferences": [],
+    "phaseOwner": null
+  },
+  "testContributions": [],
+  "requiredTestCaseIds": [],
+  "phaseTestCaseIds": [],
+  "advisoryTestCaseIds": [],
+  "legacyValidatorProjection": [
+    {
+      "schemaId": "atm.validatorExecutionContract.v1",
+      "specVersion": "0.1.0",
+      "responsibility": "advisory",
+      "caseId": "legacy_cmd_npm.test",
+      "command": "npm test",
+      "legacyProjection": true,
+      "acceptanceIds": [],
+      "impactEdges": []
+    },
+    {
+      "schemaId": "atm.validatorExecutionContract.v1",
+      "specVersion": "0.1.0",
+      "responsibility": "advisory",
+      "caseId": "legacy_cmd_npx.tsc.p.tsconfig.test.json.noemit",
+      "command": "npx tsc -p tsconfig.test.json --noEmit",
+      "legacyProjection": true,
+      "acceptanceIds": [],
+      "impactEdges": []
+    },
+    {
+      "schemaId": "atm.validatorExecutionContract.v1",
+      "specVersion": "0.1.0",
+      "responsibility": "advisory",
+      "caseId": "legacy_cmd_npm.run.gate.standard",
+      "command": "npm run gate:standard",
+      "legacyProjection": true,
+      "acceptanceIds": [],
+      "impactEdges": []
+    }
+  ],
+  "dependencyClassification": {
+    "schemaId": "atm.taskDependencyClassification.v1",
+    "semantics": "legacy",
+    "edges": []
+  },
+  "frontmatterFidelity": {
+    "schemaId": "atm.taskFrontmatterFidelity.v1",
+    "specVersion": "0.1.0",
+    "ok": true,
+    "checkedFields": [
+      "atomizationImpact"
+    ],
+    "findings": []
+  },
+  "claim": {
+    "actorId": "claude-code-opus-5-5",
+    "leaseId": "lease-72c2c885c8d8",
+    "claimedAt": "2026-11-13T05:13:42.949Z",
+    "heartbeatAt": "2026-11-13T06:12:59.554Z",
+    "ttlSeconds": 1800,
+    "files": [
+      ".atm/history/evidence/UI-2-0172.*",
+      ".atm/history/task-events/UI-2-0172/**",
+      ".atm/history/tasks/UI-2-0172.json",
+      "assets/resources/data/general-art-paths.json",
+      "assets/scripts/core/systems/GeneralArtPaths.ts",
+      "assets/scripts/ui/components/BattleHUDComposite.ts",
+      "assets/scripts/ui/core/BattleArtController.ts",
+      "docs/agent-briefs/tasks_index.md",
+      "docs/agent-briefs/tasks/UI/UI-2-0172.md",
+      "docs/doc-id-registry-shards/registry-task.json",
+      "docs/doc-id-registry.json",
+      "docs/ui-quality-tasks/UI-2-0172.json",
+      "tests/BattleArtController.test.ts",
+      "tests/GeneralArtPaths.test.ts"
+    ],
+    "state": "active",
+    "reason": "owner approved takeover to finish closeout (amendment epoch 2 re-import)",
+    "laneSession": {
+      "laneSessionId": "lane-20261113060537-claude-code-opus-5-5-15429f85a7",
+      "status": "active",
+      "source": "option",
+      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261113060537-claude-code-opus-5-5-15429f85a7\""
+    }
+  },
+  "owner": "claude-code-opus-5-5",
+  "startedAt": "2026-11-12T15:40:50.380Z",
+  "startedBySessionId": "session-20261113051342-claude-code-opus-5-5-UI-2-0172-083f226908",
+  "taskDirectionLock": {
+    "schemaId": "atm.taskDirectionLock.v1",
+    "specVersion": "0.1.0",
+    "taskId": "UI-2-0172",
+    "batchId": null,
+    "scopeKey": null,
+    "queueId": null,
+    "queueIndex": null,
+    "allowedFiles": [
+      ".atm/history/evidence/UI-2-0172.*",
+      ".atm/history/task-events/UI-2-0172/**",
+      ".atm/history/tasks/UI-2-0172.json",
+      "assets/resources/data/general-art-paths.json",
+      "assets/scripts/core/systems/GeneralArtPaths.ts",
+      "assets/scripts/ui/components/BattleHUDComposite.ts",
+      "assets/scripts/ui/core/BattleArtController.ts",
+      "docs/agent-briefs/tasks_index.md",
+      "docs/agent-briefs/tasks/UI/UI-2-0172.md",
+      "docs/doc-id-registry-shards/registry-task.json",
+      "docs/doc-id-registry.json",
+      "docs/ui-quality-tasks/UI-2-0172.json",
+      "tests/BattleArtController.test.ts",
+      "tests/GeneralArtPaths.test.ts"
+    ],
+    "planningReadOnlyPaths": [],
+    "planningMirrorPaths": [],
+    "allowPlanningMirror": false,
+    "promptHash": "f25196a8d3b88ce157f31491743d8f572f4e1129d6504042c9f17f51c73f7393",
+    "actorId": "claude-code-opus-5-5",
+    "sessionId": "session-20261113051342-claude-code-opus-5-5-UI-2-0172-083f226908",
+    "laneSession": {
+      "laneSessionId": "lane-20261113051342-claude-code-opus-5-5-37c1f2b036",
+      "status": "active",
+      "source": "minted",
+      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261113051342-claude-code-opus-5-5-37c1f2b036\""
+    },
+    "createdAt": "2026-11-13T05:13:43.150Z",
+    "status": "active"
+  },
+  "lastTransitionId": "2026-11-13T06-12-59-947Z-renew-866c940d27bd",
+  "lastTransitionAt": "2026-11-13T06:12:59.947Z",
+  "ledgerContractVersion": "task-ledger/v1",
+  "workAdmissionTicket": {
+    "schemaId": "atm.workAdmissionTicket.v1",
+    "specVersion": "0.1.0",
+    "ticketId": "wat-1540b62a382d164a",
+    "ticketDigest": "sha256:1540b62a382d164ab8d4867f3d18bceb9698be514f2fb761c45f53cd8efbf947",
+    "taskId": "UI-2-0172",
+    "origin": "claim",
+    "actorId": "claude-code-opus-5-5",
+    "laneSessionId": "lane-20261113060537-claude-code-opus-5-5-15429f85a7",
+    "claimGeneration": "lease-72c2c885c8d8",
+    "issuedAt": "2026-11-13T06:12:59.554Z",
+    "expiresAt": "2026-11-13T06:42:59.554Z",
+    "scopeDigest": "sha256:c0aac5894ac5d11631ce34b593b1ff92ed8dd769044da8a95aeac7135090ee78",
+    "runnerSelection": {
+      "runnerKind": "frozen",
+      "runnerRef": "release/atm-onefile/atm.mjs",
+      "selectedAt": "2026-11-13T06:12:59.554Z"
+    },
+    "grants": [
+      {
+        "kind": "file-write",
+        "values": [
+          ".atm/history/evidence/UI-2-0172.*",
+          ".atm/history/task-events/UI-2-0172/**",
+          ".atm/history/tasks/UI-2-0172.json",
+          "assets/resources/data/general-art-paths.json",
+          "assets/scripts/core/systems/GeneralArtPaths.ts",
+          "assets/scripts/ui/components/BattleHUDComposite.ts",
+          "assets/scripts/ui/core/BattleArtController.ts",
+          "docs/agent-briefs/tasks/UI/UI-2-0172.md",
+          "docs/agent-briefs/tasks_index.md",
+          "docs/doc-id-registry-shards/registry-task.json",
+          "docs/doc-id-registry.json",
+          "docs/ui-quality-tasks/UI-2-0172.json",
+          "tests/BattleArtController.test.ts",
+          "tests/GeneralArtPaths.test.ts"
+        ],
+        "digest": "sha256:f0c8c5eb76094af885e4e8c6831f50e60480a7c0b3621a71dd9a1c132d48e0c9"
+      },
+      {
+        "kind": "lifecycle-operation",
+        "values": [
+          "close",
+          "commit",
+          "push",
+          "stage",
+          "write"
+        ],
+        "digest": "sha256:a2f98ae20b476885ded7ed9f79b94ad99cf2b615779e9a8cc266680fc60f009f"
+      },
+      {
+        "kind": "process-manifest",
+        "values": [],
+        "digest": "sha256:706ceedd89f6ac8c08a76e915fa88ba979c4552a0890c95d8f9e01cc090afb8f"
+      }
+    ],
+    "deferredForeignResidue": [],
+    "recovery": {
+      "requestedMode": "auto",
+      "resolvedMode": "enabled",
+      "reasons": [
+        "complex-task"
+      ],
+      "maxSavePoints": 2,
+      "perTaskByteBudget": 16777216,
+      "repositoryByteBudget": 268435456,
+      "handoffTtlSeconds": 604800,
+      "tempRoot": ".atm/runtime/work-admission-temp",
+      "policyDigest": "sha256:bcb386515289e44fdcd42d646710ef1c28605e33ad8bd67ced526a53dc2fa9eb"
+    }
+  }
+}

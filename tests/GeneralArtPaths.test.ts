@@ -3,6 +3,7 @@ import * as path from 'path';
 import { TestSuite, assert } from './TestRunner';
 import {
     avatarCandidates,
+    battleCandidates,
     avatarPlaceholderPath,
     configureGeneralArtPaths,
     firstKnownGender,
@@ -20,6 +21,12 @@ export function createGeneralArtPathsSuite(): TestSuite {
         resetGeneralArtPaths();
         assert.equals('sprites/generals/cao_cao_portrait', portraitPathOf('cao-cao'));
         assert.equals('sprites/generals/cao_cao_portrait', portraitPathOf('portraits/generals/cao-cao'));
+    });
+
+    suite.test('battle 路徑支援武將 id 與 portraitKey', () => {
+        resetGeneralArtPaths();
+        assert.equals('sprites/generals/guan_yu_battle', battleCandidates('guan-yu')[0]);
+        assert.equals('sprites/generals/guan_yu_battle', battleCandidates('portraits/generals/guan-yu')[0]);
     });
 
     suite.test('頭像先找正式頭像，再找自動裁切', () => {
@@ -41,6 +48,7 @@ export function createGeneralArtPathsSuite(): TestSuite {
         const raw = JSON.parse(fs.readFileSync(JSON_PATH, 'utf8'));
         const def = defaultGeneralArtPaths();
         assert.equals(JSON.stringify(def.portrait), JSON.stringify(raw.portrait));
+        assert.equals(JSON.stringify(def.battle), JSON.stringify(raw.battle));
         assert.equals(JSON.stringify(def.avatar), JSON.stringify(raw.avatar));
         assert.equals(def.avatarPlaceholder, raw.avatarPlaceholder);
         assert.equals(JSON.stringify(def.aliases), JSON.stringify(raw.aliases));

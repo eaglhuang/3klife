@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-13T03-01-05-439Z-scope-amendment-04b93bfab47f",
+  "taskId": "UI-2-0172",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0172.json",
+  "taskSha256": "sha256:29be7ec13c60170c434ad754fc26138c74ee3d372645a89758b6aa86cab2292b",
+  "createdAt": "2026-11-13T03:01:05.439Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0172 --actor codex-gpt-6.1-sol --add \"docs/agent-briefs/tasks_index.md,docs/agent-briefs/CheckList.md,docs/agent-briefs/tasks/UI/UI-2-0172.md,docs/doc-id-registry-shards/registry-task.json,docs/doc-id-registry.json,docs/ui-quality-todo.json\" --reason \"依 UI-2-0172 實際交付對齊主目錄 claim 與任務鎖；納入任務索引、任務卡、清單、品質待辦及本卡 doc-id 登錄\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "依 UI-2-0172 實際交付對齊主目錄 claim 與任務鎖；納入任務索引、任務卡、清單、品質待辦及本卡 doc-id 登錄"
+  }
+}
