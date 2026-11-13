@@ -1,5 +1,5 @@
 // @spec-source → 轉蛋系統.md §L；PROG-2-9020 統一轉蛋入口
-import type { GachaConfig } from '../models/GachaConfig';
+import type { GachaConfig, GachaPoolPresentationConfig } from '../models/GachaConfig';
 import type { GeneralConfig } from '../models/GeneralUnit';
 import type { LocalGachaResultEntry } from '../services/LocalGachaService';
 import { resolveGachaPoolPresentation, type GachaPoolPresentation } from './GachaPoolPresentation';
@@ -35,18 +35,24 @@ export interface GachaPullOutcome {
 export class GachaSystem {
     private readonly _rulesByType = new Map<string, GachaPoolRule>();
     private readonly _rulesById = new Map<string, GachaPoolRule>();
+    private readonly _presentById = new Map<string, GachaPoolPresentationConfig>();
 
     constructor(private readonly _pools: () => readonly GachaConfig[]) {}
 
     registerType(poolType: string, rule: GachaPoolRule): this { this._rulesByType.set(poolType, rule); return this; }
-    registerPool(poolId: string, rule: GachaPoolRule): this { this._rulesById.set(poolId, rule); return this; }
+    /** 以 poolId 註冊規則；presentation 給不在設定檔的池當預設呈現（設定檔有寫則以設定檔為準） */
+    registerPool(poolId: string, rule: GachaPoolRule, presentation?: GachaPoolPresentationConfig): this {
+        this._rulesById.set(poolId, rule);
+        if (presentation) this._presentById.set(poolId, presentation);
+        return this;
+    }
 
     pool(poolId: string): GachaConfig | null {
         return this._pools().find(p => p.poolId === poolId) ?? null;
     }
 
     presentation(poolId: string): GachaPoolPresentation {
-        return resolveGachaPoolPresentation(this.pool(poolId), poolId);
+        return resolveGachaPoolPresentation(this.pool(poolId), poolId, this._presentById.get(poolId));
     }
 
     hasRule(poolId: string): boolean {
@@ -60,6 +66,6 @@ export class GachaSystem {
         const rule = this._rulesById.get(request.poolId) ?? (type ? this._rulesByType.get(type) : undefined);
         if (!rule) throw new Error(`[GachaSystem] 沒有可用的抽卡規則：${request.poolId}`);
         const results = await rule.pull(request, pool);
-        return { poolId: request.poolId, drawCount: request.drawCount, results, presentation: resolveGachaPoolPresentation(pool, request.poolId) };
+        return { poolId: request.poolId, drawCount: request.drawCount, results, presentation: resolveGachaPoolPresentation(pool, request.poolId, this._presentById.get(request.poolId)) };
     }
 }

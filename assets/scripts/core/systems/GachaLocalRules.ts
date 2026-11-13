@@ -1,6 +1,7 @@
 // @spec-source → 轉蛋系統.md §L；PROG-2-9020 本機轉蛋各池規則
 import type { LocalGachaRollOptions, LocalGachaService } from '../services/LocalGachaService';
 import { pickGachaCurrency, quoteGachaCost } from './GachaCurrency';
+import type { GachaPoolPresentationConfig } from '../models/GachaConfig';
 import type { GachaPoolRule, GachaSystem } from './GachaSystem';
 
 export interface LocalGachaRuleOptions {
@@ -43,10 +44,30 @@ export function mentorPoolRule(service: LocalGachaService): GachaPoolRule {
     };
 }
 
+/** 不在 gacha-config 的程式池（舊金幣召喚、召喚券）：池 id 與預設呈現 */
+export const GOLD_SUMMON_POOL_ID = 'gold-summon';
+export const TICKET_SUMMON_POOL_ID = 'ticket-summon';
+export const LEGACY_SUMMON_PRESENTATION: Readonly<Record<string, GachaPoolPresentationConfig>> = {
+    [GOLD_SUMMON_POOL_ID]: { title: '金幣召喚', currency: 'gold' },
+    [TICKET_SUMMON_POOL_ID]: { title: '召喚券', currency: 'tickets' },
+};
+
+/** 金幣召喚：扣金幣抽將入名冊 */
+export function goldSummonRule(service: LocalGachaService, opts: LocalGachaRuleOptions = {}): GachaPoolRule {
+    return { pull: (req) => service.performGoldSummon(req.drawCount, req.generals, opts.rollOptions ?? {}) };
+}
+
+/** 召喚券：扣召喚券抽將入名冊 */
+export function ticketSummonRule(service: LocalGachaService, opts: LocalGachaRuleOptions = {}): GachaPoolRule {
+    return { pull: (req) => service.performTicketSummon(req.drawCount, req.generals, opts.rollOptions ?? {}) };
+}
+
 /** 依池類型註冊本機規則；extraHeroPoolIds 給不在設定檔裡的舊池 id（常設池 GENERAL_STANDARD_01） */
 export function registerLocalGachaRules(system: GachaSystem, service: LocalGachaService, opts: LocalGachaRuleOptions = {}, extraHeroPoolIds: readonly string[] = []): GachaSystem {
     const hero = heroPoolRule(service, opts);
     system.registerType('hero', hero).registerType('support', beautyPoolRule(service)).registerType('mentor', mentorPoolRule(service));
     for (const id of extraHeroPoolIds) system.registerPool(id, hero);
+    system.registerPool(GOLD_SUMMON_POOL_ID, goldSummonRule(service, opts), LEGACY_SUMMON_PRESENTATION[GOLD_SUMMON_POOL_ID]);
+    system.registerPool(TICKET_SUMMON_POOL_ID, ticketSummonRule(service, opts), LEGACY_SUMMON_PRESENTATION[TICKET_SUMMON_POOL_ID]);
     return system;
 }

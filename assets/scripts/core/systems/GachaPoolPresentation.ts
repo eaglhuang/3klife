@@ -23,8 +23,12 @@ const FALLBACK: Required<Pick<GachaPoolPresentationConfig, 'title' | 'tenTitle' 
     title: '單抽', tenTitle: '十連抽', currency: 'gems', repull: 'paid', heroReveal: 'side', inventory: 'roster',
 };
 
-export function resolveGachaPoolPresentation(pool: Readonly<GachaConfig> | null | undefined, poolId = pool?.poolId ?? ''): GachaPoolPresentation {
-    const cfg: GachaPoolPresentationConfig = pool?.presentation ?? {};
+export function resolveGachaPoolPresentation(
+    pool: Readonly<GachaConfig> | null | undefined, poolId = pool?.poolId ?? '',
+    /** 不在設定檔的程式註冊池（金幣召喚、召喚券）用的預設呈現 */
+    fallback?: Readonly<GachaPoolPresentationConfig>,
+): GachaPoolPresentation {
+    const cfg: GachaPoolPresentationConfig = pool?.presentation ?? fallback ?? {};
     const hasLabels = cfg.header !== undefined || cfg.heroSub !== undefined || cfg.backLabel !== undefined || cfg.repullLabel !== undefined;
     return {
         poolId,
