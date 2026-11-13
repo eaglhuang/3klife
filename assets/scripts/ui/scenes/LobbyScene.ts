@@ -6775,6 +6775,8 @@ export class LobbyScene extends Component {
             // 模板的 faction 是魏／蜀／吳等歷史陣營，不是名冊的持有狀態。
             factionFilter: 'all',
             tenPullHeaderText: '本地轉蛋結果 · 十連抽',
+            // 各池呈現（標題、貨幣、再抽方式）讀池設定，所有抽卡走轉蛋系統（PROG-2-9020）
+            loadPools: () => this._loadDataJson<GachaConfig[]>('data/gacha-config'),
             onAfterPullSuccess: (results) => { void this._onGachaPullSuccess(results); },
             onWalletChanged: () => {
                 this._refreshSinglePlayerModeToggleVisuals();

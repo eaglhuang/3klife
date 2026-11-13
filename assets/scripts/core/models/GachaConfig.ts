@@ -43,4 +43,33 @@ export interface GachaConfig {
   fillerRarityTiers?: string[];
   /** 一般武將排除的性別（女性歸紅顏池）*/
   fillerExcludeGender?: string;
+  /** 結果畫面呈現（轉蛋系統統一入口讀取；PROG-2-9020）。沒給的欄位走 poolType 預設 */
+  presentation?: GachaPoolPresentationConfig;
+}
+
+/** 抽完之後「再抽」鍵的行為：付費再抽、免費重轉（宿命池）、不可再抽 */
+export type GachaRepullMode = 'paid' | 'freeReroll' | 'none';
+/** 全螢幕展示完的武將：移到結果面板左側，或收起只留面板 */
+export type GachaHeroReveal = 'side' | 'hide';
+/** 抽到的東西去哪：武將名冊，或只變教官卡 */
+export type GachaInventoryTarget = 'roster' | 'mentorCard';
+/** 結果畫面使用的貨幣顯示 */
+export type GachaDisplayCurrency = 'gems' | 'gold' | 'tickets' | 'mentorTickets';
+
+export interface GachaPoolPresentationConfig {
+  /** 單抽標題（例：召喚券） */
+  title?: string;
+  /** 十連標題（例：召喚券十連） */
+  tenTitle?: string;
+  currency?: GachaDisplayCurrency;
+  repull?: GachaRepullMode;
+  heroReveal?: GachaHeroReveal;
+  inventory?: GachaInventoryTarget;
+  /** 以下為池別文案覆寫；沒給就用結果畫面的一般文案 */
+  header?: string;
+  /** 重轉過時接在標題後，{n} 換成次數 */
+  headerResetSuffix?: string;
+  heroSub?: string;
+  backLabel?: string;
+  repullLabel?: string;
 }
