@@ -73,7 +73,7 @@ export function createGachaPullCurrencySuite(): TestSuite {
         assert.isTrue(flow.includes('this._updateCardPortraits(binder, cards, results)'));
         assert.isTrue(flow.includes('loadGeneralAvatar(entry.general.id)'));
         // #2107-8：先全螢幕展示武將，點擊後才亮出結果面板
-        assert.isTrue(flow.includes('this._stageHeroReveal(binder, topResult !== null)'));
+        assert.isTrue(flow.includes('this._stageHeroReveal(binder, topResult !== null, flow.hideHeroAfterReveal === true)'));
         assert.isTrue(flow.includes('panel.active = false'));
     });
 
