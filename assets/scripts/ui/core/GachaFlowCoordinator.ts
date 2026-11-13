@@ -1,5 +1,6 @@
 // @spec-source → 轉蛋系統.md (doc_spec_0042)；PROG-2-1429 依建檔紀錄補標出處
 import { Button, Color, Label, Node, Sprite, UITransform, Widget } from 'cc';
+import { fullScreenPanelScale } from './GachaFullScreenPanel';
 import { disableCharCache } from './LabelCjkCache';
 import { formatGachaLine, loadGachaLines } from './GachaLines';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
@@ -9,7 +10,7 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { showGachaHistory, showGachaResults } from '../dev/GachaDevOverlay';
 import type { GachaConfig } from '../../core/models/GachaConfig';
 import { GachaSystem, type GachaPullOutcome } from '../../core/systems/GachaSystem';
-import { registerLocalGachaRules } from '../../core/systems/GachaLocalRules';
+import { GOLD_SUMMON_POOL_ID, TICKET_SUMMON_POOL_ID, registerLocalGachaRules } from '../../core/systems/GachaLocalRules';
 import { gachaPoolHeader, gachaPoolTitle } from '../../core/systems/GachaPoolPresentation';
 import { DESTINY_POOL_ID } from '../../core/systems/DestinyPool';
 import { fitContain, pickTopGachaResult } from './GachaResultRanking';
@@ -132,32 +133,13 @@ export class GachaFlowCoordinator {
         }
     }
 
+    /** 金幣召喚、召喚券也是轉蛋系統的一池（PROG-2-9021） */
     public async runGoldSummon(): Promise<void> {
-        try {
-            const results = await this._options.gachaService.performGoldSummon(
-                1,
-                this._options.getGenerals(),
-                { factionFilter: this._options.factionFilter },
-            );
-            this._notifyPullSuccess(results);
-            await this._presentLocalGachaResults(1, results, '金幣召喚', () => this.runGoldSummon(), 'gold');
-        } catch (error) {
-            this._emitError(error, '金幣召喚失敗');
-        }
+        await this._runPool(GOLD_SUMMON_POOL_ID, 1, this._options.getGenerals(), 'gold', () => this.runGoldSummon(), '金幣召喚失敗');
     }
 
     public async runTicketSummon(): Promise<void> {
-        try {
-            const results = await this._options.gachaService.performTicketSummon(
-                1,
-                this._options.getGenerals(),
-                { factionFilter: this._options.factionFilter },
-            );
-            this._notifyPullSuccess(results);
-            await this._presentLocalGachaResults(1, results, '召喚券', () => this.runTicketSummon(), 'tickets');
-        } catch (error) {
-            this._emitError(error, '召喚券失敗');
-        }
+        await this._runPool(TICKET_SUMMON_POOL_ID, 1, this._options.getGenerals(), 'tickets', () => this.runTicketSummon(), '召喚券失敗');
     }
 
     /** 紅顏池召喚（PROG-2-1086）：扣 1 張召喚券抽 1 位女性武將，入名冊後可去結緣 */
@@ -180,25 +162,6 @@ export class GachaFlowCoordinator {
             ? async () => { await this._options.onRepullTen!(); }
             : () => this.runLocalGacha(resolvedCount);
         await this._runPool(poolId, resolvedCount, this._options.getGenerals(), 'hero', retry, '單機轉蛋失敗');
-    }
-
-    private async _presentLocalGachaResults(
-        drawCount: number, results: LocalGachaResultEntry[],
-        title = drawCount === 1 ? '單抽' : '十連抽',
-        retry?: () => Promise<void>, currency: 'gems' | 'gold' | 'tickets' | 'mentorTickets' = 'gems',
-    ): Promise<void> {
-        const host = this._options.getHost();
-        const repull = retry ?? (drawCount === 10 && this._options.onRepullTen
-            ? this._options.onRepullTen : () => this.runLocalGacha(drawCount));
-        if (!host) {
-            await showGachaResults(title, results, () => { void repull(); });
-            return;
-        }
-        await this._renderPullResult(host, drawCount, results, title, currency, {
-            hero: pickTopGachaResult(results),
-            onBack: this._options.onBackToGacha,
-            repull,
-        });
     }
 
     /**
@@ -434,11 +397,17 @@ export class GachaFlowCoordinator {
             if (widget) { widget.horizontalCenter = x; widget.updateAlignment(); }
             else showcase.setPosition(x, showcase.position.y, 0);
         };
-        // 收起武將時結果面板置中，不留左半邊空白
+        // 收起武將時結果面板置中並等比放大成滿版十連（使用者 11/13：要全螢幕滿版，不是小框）
         const panelWidget = panel.getComponent(Widget);
+        panel.setScale(1, 1, 1);
         const centerPanel = (): void => {
-            if (panelWidget) { panelWidget.isAlignHorizontalCenter = true; panelWidget.horizontalCenter = 0; panelWidget.updateAlignment(); }
-            else panel.setPosition(0, panel.position.y, 0);
+            if (panelWidget) {
+                panelWidget.isAlignHorizontalCenter = true; panelWidget.horizontalCenter = 0;
+                panelWidget.isAlignVerticalCenter = true; panelWidget.verticalCenter = 0;
+                panelWidget.updateAlignment();
+            } else panel.setPosition(0, 0, 0);
+            const scale = fullScreenPanelScale(stage.getComponent(UITransform), panel.getComponent(UITransform));
+            panel.setScale(scale, scale, 1);
         };
         stage.off(Node.EventType.TOUCH_END);
         showcase.active = true; // 重轉後重新展示（上一輪可能已收起）
