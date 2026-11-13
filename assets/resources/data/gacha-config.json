@@ -32,7 +32,15 @@
     "firstPickOnly": true,
     "confirmRequired": false,
     "currencyType": "gem",
-    "singlePullCost": 1000
+    "singlePullCost": 1000,
+    "presentation": {
+      "title": "單抽",
+      "tenTitle": "十連抽",
+      "currency": "gems",
+      "repull": "paid",
+      "heroReveal": "side",
+      "inventory": "roster"
+    }
   },
   {
     "poolId": "support-pool",
@@ -52,7 +60,15 @@
     "firstPickOnly": false,
     "confirmRequired": true,
     "currencyType": "ticket",
-    "singlePullCost": 1
+    "singlePullCost": 1,
+    "presentation": {
+      "title": "召喚券",
+      "tenTitle": "召喚券十連",
+      "currency": "tickets",
+      "repull": "paid",
+      "heroReveal": "side",
+      "inventory": "roster"
+    }
   },
   {
     "poolId": "mentor-pool",
@@ -82,7 +98,15 @@
     "firstPickOnly": false,
     "confirmRequired": true,
     "currencyType": "mentorTicket",
-    "singlePullCost": 1
+    "singlePullCost": 1,
+    "presentation": {
+      "title": "支援券",
+      "tenTitle": "支援券十連",
+      "currency": "mentorTickets",
+      "repull": "paid",
+      "heroReveal": "side",
+      "inventory": "mentorCard"
+    }
   },
   {
     "poolId": "destiny-pool",
@@ -109,6 +133,19 @@
       "common",
       "rare"
     ],
-    "fillerExcludeGender": "女"
+    "fillerExcludeGender": "女",
+    "presentation": {
+      "title": "宿命轉蛋",
+      "tenTitle": "宿命轉蛋",
+      "currency": "gems",
+      "repull": "freeReroll",
+      "heroReveal": "hide",
+      "inventory": "roster",
+      "header": "宿命轉蛋 · 十連全收",
+      "headerResetSuffix": "（已重轉 {n} 次）",
+      "heroSub": "宿命名將",
+      "backLabel": "確定 · 全部收下",
+      "repullLabel": "免費重轉"
+    }
   }
 ]

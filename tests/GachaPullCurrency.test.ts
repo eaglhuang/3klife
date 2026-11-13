@@ -45,10 +45,11 @@ export function createGachaPullCurrencySuite(): TestSuite {
         const bar = gachaPullBarTexts();
         assert.equals('150', bar[GACHA_NODES.pullSingleCost]);
         assert.equals('1500', bar[GACHA_NODES.pullTenCost]);
-        const flow = read('assets/scripts/ui/core/GachaFlowCoordinator.ts');
-        assert.isTrue(flow.includes('performSupportCardSummon(poolId, drawCount, generals)'));
-        assert.isTrue(flow.includes('performPoolTicketSummon(poolId, drawCount, generals)'));
-        assert.isTrue(flow.includes('pickGachaCurrency('));
+        // 抽卡規則統一在轉蛋系統（PROG-2-9020）
+        const rules = read('assets/scripts/core/systems/GachaLocalRules.ts');
+        assert.isTrue(rules.includes('performSupportCardSummon(req.poolId, req.drawCount, req.generals)'));
+        assert.isTrue(rules.includes('performPoolTicketSummon(req.poolId, req.drawCount, req.generals)'));
+        assert.isTrue(rules.includes('pickGachaCurrency('));
     });
 
     suite.test('結果畫面含中文的 CHAR 快取 Label 改不快取，英數字不動（PROG-2-2243）', () => {

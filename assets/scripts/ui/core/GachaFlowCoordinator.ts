@@ -7,7 +7,11 @@ import { LocalGachaService, type LocalGachaResultEntry } from '../../core/servic
 import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { showGachaHistory, showGachaResults } from '../dev/GachaDevOverlay';
-import { pickGachaCurrency, quoteGachaCost } from '../../core/systems/GachaCurrency';
+import type { GachaConfig } from '../../core/models/GachaConfig';
+import { GachaSystem, type GachaPullOutcome } from '../../core/systems/GachaSystem';
+import { registerLocalGachaRules } from '../../core/systems/GachaLocalRules';
+import { gachaPoolHeader, gachaPoolTitle } from '../../core/systems/GachaPoolPresentation';
+import { DESTINY_POOL_ID } from '../../core/systems/DestinyPool';
 import { fitContain, pickTopGachaResult } from './GachaResultRanking';
 import { loadGeneralAvatar, loadGeneralPortrait } from './GeneralAvatarLoader';
 
@@ -50,6 +54,8 @@ export interface GachaFlowCoordinatorOptions {
     gemsCostPerPull?: number;
     tenPullHeaderText?: string;
     formatError?: (error: unknown, fallbackMessage: string) => string;
+    /** 讀池設定（data/gacha-config）；沒給時各池用 poolType 預設呈現 */
+    loadPools?: () => Promise<GachaConfig[] | null>;
 }
 
 export class GachaFlowCoordinator {
@@ -60,8 +66,61 @@ export class GachaFlowCoordinator {
     private _resultRepullAction: (() => void | Promise<void>) | null = null;
     private _resultRepullPending = false;
 
+    private _pools: GachaConfig[] = [];
+    private _poolsLoaded: Promise<void> | null = null;
+    private readonly _system: GachaSystem;
+
     public constructor(options: GachaFlowCoordinatorOptions) {
         this._options = options;
+        // 所有抽卡都走轉蛋系統的一池（PROG-2-9020）；常設池 id 不在設定檔，另外掛名將池規則
+        this._system = registerLocalGachaRules(
+            new GachaSystem(() => this._pools), options.gachaService,
+            { rollOptions: { factionFilter: options.factionFilter }, gemsCostPerPull: options.gemsCostPerPull },
+            [options.poolId ?? DEFAULT_POOL_ID],
+        );
+    }
+
+    /** 轉蛋系統（給大廳其他入口共用同一套池與規則） */
+    public get system(): GachaSystem { return this._system; }
+
+    private _ensurePools(): Promise<void> {
+        if (!this._poolsLoaded) {
+            const load = this._options.loadPools;
+            this._poolsLoaded = load
+                ? load().then((pools) => { this._pools = Array.isArray(pools) ? pools : []; }).catch(() => undefined)
+                : Promise.resolve();
+        }
+        return this._poolsLoaded;
+    }
+
+    /** 統一抽卡：轉蛋系統抽 → 通知 → 依池呈現設定顯示結果 */
+    private async _runPool(poolId: string, drawCount: number, generals: GeneralConfig[], poolTypeHint: string, retry: () => Promise<void>, failMessage: string): Promise<void> {
+        try {
+            await this._ensurePools();
+            const outcome = await this._system.pull({ poolId, drawCount, generals, poolTypeHint });
+            this._notifyPullSuccess(outcome.results);
+            await this._presentOutcome(outcome, retry);
+        } catch (error) {
+            this._emitError(error, failMessage);
+        }
+    }
+
+    private async _presentOutcome(outcome: GachaPullOutcome, retry: () => Promise<void>): Promise<void> {
+        const p = outcome.presentation;
+        const title = gachaPoolTitle(p, outcome.drawCount);
+        const repull = p.repull === 'none' ? null : retry;
+        const host = this._options.getHost();
+        if (!host) {
+            await showGachaResults(title, outcome.results, () => { void retry(); });
+            return;
+        }
+        await this._renderPullResult(host, outcome.drawCount, outcome.results, title, p.currency, {
+            hero: pickTopGachaResult(outcome.results),
+            onBack: this._options.onBackToGacha,
+            repull,
+            hideHeroAfterReveal: p.heroReveal === 'hide',
+            labels: p.labels ? { header: p.labels.header, heroSub: p.labels.heroSub, heroDesc: '', back: p.labels.back, repull: p.labels.repull } : undefined,
+        });
     }
 
     public async showHistory(limit = 30): Promise<void> {
@@ -103,14 +162,7 @@ export class GachaFlowCoordinator {
 
     /** 紅顏池召喚（PROG-2-1086）：扣 1 張召喚券抽 1 位女性武將，入名冊後可去結緣 */
     public async runBeautySummon(poolId: string, generals: GeneralConfig[], drawCount = 1): Promise<void> {
-        try {
-            if (generals.length === 0) throw new Error('紅顏池目前沒有可抽的武將');
-            const results = await this._options.gachaService.performPoolTicketSummon(poolId, drawCount, generals);
-            this._notifyPullSuccess(results);
-            await this._presentLocalGachaResults(drawCount, results, drawCount === 10 ? '召喚券十連' : '召喚券', () => this.runBeautySummon(poolId, generals, drawCount), 'tickets');
-        } catch (error) {
-            this._emitError(error, '紅顏池召喚失敗');
-        }
+        await this._runPool(poolId, drawCount, generals, 'support', () => this.runBeautySummon(poolId, generals, drawCount), '紅顏池召喚失敗');
     }
 
     /**
@@ -118,43 +170,16 @@ export class GachaFlowCoordinator {
      * generals 由呼叫端先篩成本池候選且有支援卡資料的武將。
      */
     public async runSupportSummon(poolId: string, generals: GeneralConfig[], drawCount = 1): Promise<void> {
-        try {
-            if (generals.length === 0) throw new Error('支援卡池目前沒有可抽的教官');
-            const results = await this._options.gachaService.performSupportCardSummon(poolId, drawCount, generals);
-            this._notifyPullSuccess(results);
-            await this._presentLocalGachaResults(drawCount, results, drawCount === 10 ? '支援券十連' : '支援券', () => this.runSupportSummon(poolId, generals, drawCount), 'mentorTickets');
-        } catch (error) {
-            this._emitError(error, '支援卡召喚失敗');
-        }
+        await this._runPool(poolId, drawCount, generals, 'mentor', () => this.runSupportSummon(poolId, generals, drawCount), '支援卡召喚失敗');
     }
 
     public async runLocalGacha(drawCount: number): Promise<void> {
         const resolvedCount = Math.max(1, Math.floor(Number.isFinite(drawCount) ? drawCount : 1));
         const poolId = this._options.poolId ?? DEFAULT_POOL_ID;
-        const service = this._options.gachaService;
-
-        try {
-            // 規格單抽 150、十連 1500，常設池先扣銅錢符；預覽場景有指定 gemsCostPerPull 時沿用舊的靈玉單價
-            const fixed = this._options.gemsCostPerPull;
-            const pick = fixed !== undefined
-                ? { coin: 'gems' as const, cost: resolvedCount * fixed }
-                : pickGachaCurrency('HERO', resolvedCount, { gems: service.getCurrencyAmount('gems'), bronze: service.getCurrencyAmount('bronze') });
-            if (!pick) {
-                throw new Error(`靈玉或銅錢符不足，需要 ${quoteGachaCost(resolvedCount)}`);
-            }
-            const results = await service.performLocalGacha(
-                poolId,
-                resolvedCount,
-                pick.cost,
-                this._options.getGenerals(),
-                { factionFilter: this._options.factionFilter },
-                pick.coin,
-            );
-            this._notifyPullSuccess(results);
-            await this._presentLocalGachaResults(resolvedCount, results);
-        } catch (error) {
-            this._emitError(error, '單機轉蛋失敗');
-        }
+        const retry = resolvedCount === 10 && this._options.onRepullTen
+            ? async () => { await this._options.onRepullTen!(); }
+            : () => this.runLocalGacha(resolvedCount);
+        await this._runPool(poolId, resolvedCount, this._options.getGenerals(), 'hero', retry, '單機轉蛋失敗');
     }
 
     private async _presentLocalGachaResults(
@@ -185,19 +210,22 @@ export class GachaFlowCoordinator {
         pool: { heroId: string | null; quote: string; message: string; resets: number; onReroll: () => void; onConfirm: () => void },
     ): Promise<void> {
         const hero = results.find(entry => entry.general.id === pool.heroId) ?? pickTopGachaResult(results);
-        await this._renderPullResult(host, results.length, results, '宿命轉蛋', 'gems', {
-            hero, onBack: pool.onConfirm, repull: pool.onReroll,
-            // 新手十連（#2107）：全螢幕展示完就收起武將，結果面板旁不再貼大立繪
-            hideHeroAfterReveal: true,
-            labels: {
-                header: `宿命轉蛋 · 十連全收${pool.resets > 0 ? `（已重轉 ${pool.resets} 次）` : ''}`,
-                heroSub: '宿命名將',
+        // 文案、再抽方式、展示後收起武將都讀池設定（PROG-2-9020）
+        await this._ensurePools();
+        const p = this._system.presentation(DESTINY_POOL_ID);
+        const labels = p.labels;
+        await this._renderPullResult(host, results.length, results, gachaPoolTitle(p, results.length), p.currency, {
+            hero, onBack: pool.onConfirm, repull: p.repull === 'none' ? null : pool.onReroll,
+            hideHeroAfterReveal: p.heroReveal === 'hide',
+            labels: labels ? {
+                header: gachaPoolHeader(p, pool.resets),
+                heroSub: labels.heroSub,
                 // 有訊息先顯示訊息；否則用台詞表，台詞表沒有才用池內引言
                 heroDesc: pool.message,
                 heroDescFallback: pool.quote ? `「${pool.quote}」` : '',
-                back: '確定 · 全部收下',
-                repull: '免費重轉',
-            },
+                back: labels.back,
+                repull: labels.repull,
+            } : undefined,
         });
     }
 

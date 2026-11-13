@@ -10,7 +10,7 @@ export function createDestinyTenPullRevealSuite(): TestSuite {
     const flow = read('assets/scripts/ui/core/GachaFlowCoordinator.ts');
 
     suite.test('宿命池要求展示後收起武將，一般轉蛋仍移到面板左側', () => {
-        assert.isTrue(flow.includes('hideHeroAfterReveal: true'));
+        assert.isTrue(flow.includes("hideHeroAfterReveal: p.heroReveal === 'hide'"));
         assert.isTrue(flow.includes('if (hideAfterReveal) { showcase.active = false; centerPanel(); }'));
         assert.isTrue(flow.includes('else place(sideCenter);'));
     });
