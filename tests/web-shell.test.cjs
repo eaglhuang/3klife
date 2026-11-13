@@ -7,7 +7,8 @@ const puppeteer = require('puppeteer-core');
 const root = path.resolve(__dirname, '..');
 const template = fs.readFileSync(path.join(root, 'build-templates/web-desktop/index.ejs'), 'utf8');
 const css = fs.readFileSync(path.join(root, 'build-templates/web-desktop/style.css'), 'utf8');
-const { getFrameSize, installResponsiveFrame } = require('../build-templates/web-desktop/responsive-frame');
+const manifest = JSON.parse(fs.readFileSync(path.join(root, 'build-templates/web-desktop/manifest.webmanifest'), 'utf8'));
+const { getFrameSize, readWindowSize, installResponsiveFrame } = require('../build-templates/web-desktop/responsive-frame');
 let browser;
 let page;
 before(async () => {
@@ -28,7 +29,18 @@ test('keeps Cocos build substitutions and avoids fixed preview dimensions', () =
     assert.ok(template.includes('<%= projectName %>'));
     assert.doesNotMatch(template, /previewWidth|previewHeight|class="header"|class="footer"/);
 });
-test('fits the whole 16:9 canvas on initial load and after window resize', async () => {
+
+test('adds web-app metas so a home-screen launch can go fullscreen', () => {
+    assert.match(template, /name="apple-mobile-web-app-capable"\s+content="yes"/);
+    assert.match(template, /name="mobile-web-app-capable"\s+content="yes"/);
+    assert.match(template, /name="apple-mobile-web-app-status-bar-style"\s+content="black-translucent"/);
+    assert.match(template, /viewport-fit=cover/);
+    assert.match(template, /rel="manifest"\s+href="manifest.webmanifest"/);
+    assert.equal(manifest.display, 'fullscreen');
+    assert.equal(manifest.orientation, 'landscape');
+});
+
+test('fills the window on initial load and after resize, including wider-than-16:9 screens', async () => {
     const html = template.replace('<%= projectName %>', 'Test')
         .replace(/<link[^>]*>/g, '')
         .replace('<%- include(cocosTemplate, {}) %>', '')
@@ -42,17 +54,15 @@ test('fits the whole 16:9 canvas on initial load and after window resize', async
             return { x: r.x, y: r.y, width: r.width, height: r.height,
                 scrollWidth: document.documentElement.scrollWidth, scrollHeight: document.documentElement.scrollHeight };
         });
-        const expectedWidth = Math.min(width, height * 16 / 9);
-        const expectedHeight = Math.min(height, width * 9 / 16);
-        assert.ok(Math.abs(rect.width - expectedWidth) < 0.1, `${width}x${height} width`);
-        assert.ok(Math.abs(rect.height - expectedHeight) < 0.1, `${width}x${height} height`);
-        assert.ok(Math.abs(rect.x - (width - expectedWidth) / 2) < 0.1);
-        assert.ok(Math.abs(rect.y - (height - expectedHeight) / 2) < 0.1);
+        assert.ok(Math.abs(rect.width - width) < 0.1, `${width}x${height} width`);
+        assert.ok(Math.abs(rect.height - height) < 0.1, `${width}x${height} height`);
+        assert.ok(Math.abs(rect.x) < 0.1);
+        assert.ok(Math.abs(rect.y) < 0.1);
         assert.ok(rect.scrollWidth <= width && rect.scrollHeight <= height, 'No page overflow');
     }
 });
 
-test('engine frame follows window resize with letterboxing and an event listener', () => {
+test('engine frame follows the full window size with an event listener', () => {
     const calls = [];
     const listeners = new Map();
     const engine = { view: { setFrameSize: (width, height) => calls.push([width, height]) } };
@@ -60,16 +70,17 @@ test('engine frame follows window resize with letterboxing and an event listener
         addEventListener: (name, fn) => listeners.set(name, fn),
         removeEventListener: (name) => listeners.delete(name) };
     const dispose = installResponsiveFrame(engine, browserWindow);
-    assert.deepEqual(calls.pop(), [1280, 720]);
+    assert.deepEqual(calls.pop(), [1280, 960]);
     browserWindow.innerWidth = 2340; browserWindow.innerHeight = 1080;
     listeners.get('resize')();
-    assert.deepEqual(calls.pop(), [1920, 1080]);
+    assert.deepEqual(calls.pop(), [2340, 1080]);
     browserWindow.innerHeight = 0;
     listeners.get('resize')();
     assert.equal(calls.length, 0);
     dispose();
     assert.equal(listeners.size, 0);
-    assert.deepEqual(getFrameSize(800, 600), { width: 800, height: 450 });
+    assert.deepEqual(getFrameSize(800, 600), { width: 800, height: 600 });
+    assert.deepEqual(readWindowSize({ innerWidth: 2340, innerHeight: 1080, visualViewport: { width: 800, height: 360 } }), { width: 800, height: 360 });
 });
 
 test('release bootstrap uses the imported engine without window.cc', async () => {
@@ -83,5 +94,5 @@ test('release bootstrap uses the imported engine without window.cc', async () =>
         System: { import: (name) => { assert.equal(name, 'cc'); return Promise.resolve(engine); } },
         console: { error: (message) => assert.fail(message) } });
     await new Promise((resolve) => setImmediate(resolve));
-    assert.deepEqual(calls, [[1280, 720]]);
+    assert.deepEqual(calls, [[1280, 960]]);
 });

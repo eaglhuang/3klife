@@ -7,7 +7,7 @@
  * - 連續換圖只採用最後一次載入結果；圖載入失敗時保留原本的底色。
  * Unity 對照：像 Canvas 最底層的 RawImage（AspectRatioFitter = EnvelopeParent）加幾張半透明 Image。
  */
-import { Color, Node, Sprite, SpriteFrame, UITransform } from 'cc';
+import { Color, Node, Sprite, SpriteFrame, UITransform, view } from 'cc';
 import type { MainLobbyBackdrop } from '../../core/systems/HallTheme';
 import { SolidBackground } from '../components/SolidBackground';
 import { loadSpriteFrameFromResources, parseHexRgb, type SpriteFrameLoader } from './LobbyHallThemeNodeView';
@@ -18,10 +18,18 @@ export interface BackdropSize {
 }
 
 /** 等比放大到剛好蓋滿 view；圖尺寸無效時直接用 view 尺寸 */
-export function coverSize(image: Readonly<BackdropSize>, view: Readonly<BackdropSize>): BackdropSize {
-    if (image.width <= 0 || image.height <= 0) return { width: view.width, height: view.height };
-    const scale = Math.max(view.width / image.width, view.height / image.height);
+export function coverSize(image: Readonly<BackdropSize>, viewSize: Readonly<BackdropSize>): BackdropSize {
+    if (image.width <= 0 || image.height <= 0) return { width: viewSize.width, height: viewSize.height };
+    const scale = Math.max(viewSize.width / image.width, viewSize.height / image.height);
     return { width: image.width * scale, height: image.height * scale };
+}
+
+/** 寬於設計尺寸時改用可見範圍，讓背景 cover 兩側，不留黑邊 */
+export function resolveBackdropView(fallback: Readonly<BackdropSize>, visible?: Readonly<BackdropSize> | null): BackdropSize {
+    if (visible && visible.width > 0 && visible.height > 0) {
+        return { width: visible.width, height: visible.height };
+    }
+    return { width: fallback.width, height: fallback.height };
 }
 
 function frameSizeOf(frame: SpriteFrame): BackdropSize {
@@ -63,7 +71,7 @@ export class LobbyBackdrop {
             const sprite = this._art.getComponent(Sprite) ?? this._art.addComponent(Sprite);
             sprite.sizeMode = Sprite.SizeMode.CUSTOM;
             sprite.spriteFrame = frame;
-            const size = coverSize(frameSizeOf(frame), this._view);
+            const size = coverSize(frameSizeOf(frame), this._resolvedView());
             (this._art.getComponent(UITransform) ?? this._art.addComponent(UITransform)).setContentSize(size.width, size.height);
             this._art.active = true;
         });
@@ -84,9 +92,15 @@ export class LobbyBackdrop {
 
     private _addLayer(index: number): Node {
         const node = this._child(`BackdropShade${index}`);
-        (node.getComponent(UITransform) ?? node.addComponent(UITransform)).setContentSize(this._view.width, this._view.height);
+        const size = this._resolvedView();
+        (node.getComponent(UITransform) ?? node.addComponent(UITransform)).setContentSize(size.width, size.height);
         this._layers[index] = node;
         return node;
+    }
+
+    private _resolvedView(): BackdropSize {
+        const visible = (view as { getVisibleSize?: () => BackdropSize }).getVisibleSize?.();
+        return resolveBackdropView(this._view, visible);
     }
 
     private _child(name: string): Node {

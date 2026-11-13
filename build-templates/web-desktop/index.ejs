@@ -4,14 +4,19 @@
     <meta charset="utf-8">
     <title><%= projectName %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="manifest" href="manifest.webmanifest">
     <link rel="stylesheet" type="text/css" href="<%= cssUrl %>">
     <link rel="preload" as="image" href="boot-bg.jpg">
     <link rel="icon" href="favicon.ico">
+    <link rel="apple-touch-icon" href="favicon.ico">
   </head>
   <body>
-    <!-- 引擎與標題載入前先鋪標題底圖（PROG-2-2240），標題掛好後由 LoginScene 移除；大小同 GameDiv 的 16:9 框。 -->
+    <!-- 引擎與標題載入前先鋪標題底圖（PROG-2-2240），標題掛好後由 LoginScene 移除；大小同 GameDiv，鋪滿視窗。 -->
     <div id="web-boot-backdrop" aria-hidden="true"></div>
     <!-- 先於引擎下載顯示；沒有可知總量，不捏造百分比。 -->
     <div id="web-boot-progress" role="status" aria-live="polite"
