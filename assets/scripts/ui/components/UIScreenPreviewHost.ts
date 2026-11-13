@@ -1,5 +1,6 @@
 // @spec-source → 見 docs/cross-reference-index.md
 import { _decorator, Node, UIOpacity, UITransform } from 'cc';
+import { EDITOR, PREVIEW } from 'cc/env';
 import { UIPreviewBuilder } from '../core/UIPreviewBuilder';
 import type { ICompositeRenderer } from '../core/interfaces/ICompositeRenderer';
 import { CocosCompositeRenderer } from '../platform/cocos/CocosCompositeRenderer';
@@ -53,6 +54,11 @@ interface PreviewInteractionSmokeResult {
     status: 'bound' | 'missing-trigger' | 'missing-route' | 'unsupported';
     slotId?: string;
     fragment?: string;
+}
+
+/** 編輯器／預覽才在每次掛載重讀 spec（方便改 JSON 即時看）；正式版沿用快取（#2115）。 */
+export function shouldReloadScreenSpecOnMount(editor: boolean, preview: boolean): boolean {
+    return editor || preview;
 }
 
 /**
@@ -210,8 +216,8 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
         this._isLoading = true;
         try {
             this._destroyBuiltChildren();
-            // 強制讓 specLoader 重新從磁碟載入最新 spec（清除 session 快取中的舊值）
-            this._specLoader.invalidateScreen(screenId);
+            // 只在編輯器／預覽重讀最新 spec；正式版 spec 不會變，每次掛載都強制釋放會讓回大廳時重抓約 200 個 JSON（#2115）
+            if (shouldReloadScreenSpecOnMount(EDITOR, PREVIEW)) this._specLoader.invalidateScreen(screenId);
 
             const { screen, layout, skin } = await this._specLoader.loadFullScreen(screenId);
             this._layoutRoot = layout.root;
