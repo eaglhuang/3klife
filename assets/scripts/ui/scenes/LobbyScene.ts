@@ -10,6 +10,7 @@ import type { RivalRostersConfig } from '../../core/systems/RivalOfficers';
 import { buildRivalOfficerSetup, type RivalOfficerSetupInput, type RivalSetupGeneral } from '../../core/systems/RivalOfficerSetup';
 import { inspiredTacticName } from '../../core/systems/InspiredTacticMap';
 import { parseLimitedPoolWindows } from '../../core/systems/LimitedPoolSchedule';
+import { expandLimitedPoolRotations, parseLimitedPoolRotations } from '../../core/systems/LimitedPoolRotation';
 import { _decorator, BlockInputEvents, Button, Color, Component, instantiate, JsonAsset, Label, Mask, Node, Sprite, UITransform, Widget, resources } from 'cc';
 import { installAdaptiveResolution } from '../core/AdaptiveResolution';
 import { LobbyHallScreenBinder, type LobbyHallDockId, type LobbyHallPanelId } from '../core/LobbyHallScreenBinder';
@@ -161,6 +162,9 @@ import { mercBondedLine, mercDayThreeLine, mercFarewellLine, mercTrustLine } fro
 import { EXPEDITION_TRAVEL_TURNS } from '../../core/systems/TravelCountdown';
 import { RED_FACE_SHOW_MAX_ROWS, RedFaceGalleryController, RedFaceShowcaseController, RedFaceShowcaseDeps, toRedFaceTabFlowView } from '../core/RedFaceShowcaseController';
 import { GACHA_NODES, GACHA_POOL_INDEX, GACHA_POOLS, GachaPoolDef, RED_FACE_SECTION_ROW_BUTTON } from '../core/GachaScreenNodes';
+import { LocalGachaApi } from '../../core/gacha/LocalGachaApi';
+import { parseGachaMainPools, type GachaApi, type GachaMainPoolConfig } from '../../core/gacha/GachaApi';
+import { gachaApiTexts, gachaAutoSizeNodes } from '../core/GachaApiTexts';
 import { GachaPoolSwitcher } from '../core/GachaPoolSwitcher';
 import { PORTRAIT_GALLERY_PAGE_SIZE } from '../core/PortraitGallery';
 import { FaceMarks, PORTRAIT_FRAME_SPEC, PortraitFrameSpec, SHOWCASE_PORTRAIT_SPEC, fitPortraitInFrame } from '../core/PortraitFrameFit';
@@ -246,6 +250,8 @@ import { SUITABILITY_BADGE_LABEL, suitabilityBadgeText } from '../../core/system
 import { DS3_BLOODLINE_TREE_NODE_NAME, ensureDs3BloodlineTree } from '../components/character-ds3/Ds3BloodlineTree';
 import { BLOODLINE_TREE_OPEN_LINE } from '../../core/systems/BloodlineTreeSlots';
 import { delegateSchedule } from '../../core/systems/AutoNurture';
+/** 限定池 id（gacha-config／limited-pool-schedule 對應，PROG-2-9024） */
+const LIMITED_POOL_ID = 'limited-pool';
 
 const { ccclass } = _decorator;
 /** 開場走完、大廳還在掛載時的整備提示（PROG-2-2223） */
@@ -628,6 +634,9 @@ export class LobbyScene extends Component {
         void services().session.save().catch(() => undefined);
     }
     private _gachaFlowCoordinator: GachaFlowCoordinator | null = null;
+    private _gachaApi: GachaApi | null = null;
+    private _gachaMainPools: GachaMainPoolConfig[] = [];
+    private readonly _gachaCandidatesCache = new Map<string, GeneralConfig[]>();
     private _gachaPullPending = false;
     private _ready = false;
     /** 回大廳不重建：去戰鬥前停放已掛的介面（Issue #2120） */
@@ -1430,7 +1439,8 @@ export class LobbyScene extends Component {
                 resolve(err || !asset ? null : asset.json);
             });
         });
-        this._localGachaService.setLimitedPoolWindows(parseLimitedPoolWindows(raw));
+        // 逐期 windows ＋ 每週輪替 rotations 展開（PROG-2-9024）
+        this._localGachaService.setLimitedPoolWindows([...parseLimitedPoolWindows(raw), ...expandLimitedPoolRotations(parseLimitedPoolRotations(raw), Date.now())]);
     }
 
     /** 教官支援卡目錄（mentor-support-cards.json）：只讀一次；讀取失敗視為空目錄，不擋培育 */
@@ -4264,8 +4274,9 @@ export class LobbyScene extends Component {
 
     /** 轉蛋輪播序號 → 天命商店池；紅顏池（召喚券）不累計天命值 */
     private _destinyPoolOf(index: number): { poolId: string; title: string } | null {
-        if (index === 0) return { poolId: GACHA_GENERAL_POOL_ID, title: '名將池' };
-        if (index === 2) return { poolId: MENTOR_POOL_ID, title: '教官池' };
+        if (index === GACHA_POOL_INDEX.general) return { poolId: GACHA_GENERAL_POOL_ID, title: '名將池' };
+        if (index === GACHA_POOL_INDEX.limited) return { poolId: LIMITED_POOL_ID, title: '限定池' };
+        if (index === GACHA_POOL_INDEX.support) return { poolId: MENTOR_POOL_ID, title: '教官池' };
         return null;
     }
 
@@ -5823,6 +5834,8 @@ export class LobbyScene extends Component {
         if (!host?.binder) {
             return;
         }
+        // 從結果頁回來會重建畫面，保留原本所在的池（PROG-2-9024）
+        const keepIndex = this._gachaPoolSwitcher?.index ?? GACHA_POOL_INDEX.general;
         // 三池共用轉蛋畫面：切池一次換橫幅、右側內容、橫幅區塊與該池附加區塊（PROG-2-2237）
         const switcher = new GachaPoolSwitcher({
             setActives: (actives) => host.binder?.setActives(actives),
@@ -5832,7 +5845,9 @@ export class LobbyScene extends Component {
             mountSection: (anchor, fragment, replace) => host.mountSection(anchor, fragment, replace),
         }, GACHA_POOLS, (pool) => this._onGachaPoolShown(host, pool));
         this._gachaPoolSwitcher = switcher;
-        void switcher.show(GACHA_POOL_INDEX.general);
+        // 限定池期間外不出現在輪播（PROG-2-9024）
+        switcher.setHidden((pool) => pool.key === 'limited' && !this._localGachaService.getOpenLimitedWindow(LIMITED_POOL_ID));
+        void switcher.show(keepIndex);
 
         bindGachaActions((name) => host.binder!.getNode(name), (node) => {
             const button = node.getComponent(Button) ?? node.addComponent(Button);
@@ -5877,6 +5892,7 @@ export class LobbyScene extends Component {
     private _onGachaPoolShown(host: UIScreenPreviewHost, pool: GachaPoolDef): void {
         this._refreshDestinyBrief();
         this._refreshWalletPreviewState();
+        void this._applyGachaApiTexts(pool);
         if (pool.section && this._gachaRedFace && host.binder) {
             for (let i = 0; i < RED_FACE_SHOW_MAX_ROWS; i++) {
                 const button = host.binder.getButton(RED_FACE_SECTION_ROW_BUTTON(i));
@@ -5905,6 +5921,9 @@ export class LobbyScene extends Component {
         } else if (this._gachaPoolIndex === GACHA_POOL_INDEX.support) {
             // 支援卡池：單抽／十連各扣 1／10 張支援券（PROG-2-1085、PROG-2-1094）
             action = () => this._runSupportSummon(drawCount);
+        } else if (this._gachaPoolIndex === GACHA_POOL_INDEX.limited) {
+            // 限定池：只收靈玉，單抽 150／十連 1500；本期焦點武將機率提升（PROG-2-9024）
+            action = () => this._runLimitedSummon(drawCount);
         } else if (this._gachaPoolIndex !== GACHA_POOL_INDEX.general) {
             services().event.emit('SHOW_TOAST', { message: '此卡池尚未開放召喚，請切回名將召喚。', duration: 2.5 });
             return;
@@ -6740,6 +6759,62 @@ export class LobbyScene extends Component {
         const ids = new Set(openingBeautyCandidates(pool, this._generals));
         const generals = this._generals.filter((general) => ids.has(general.id));
         await this._getGachaFlowCoordinator().runBeautySummon(OPENING_BEAUTY_POOL_ID, generals, drawCount);
+    }
+
+    private async _runLimitedSummon(drawCount = 1): Promise<void> {
+        await this._getGachaFlowCoordinator().runLimitedSummon(LIMITED_POOL_ID, await this._gachaCandidates(LIMITED_POOL_ID), drawCount);
+    }
+
+    /** 池設定 candidateIds 對應的武將；沒寫候選時用全部武將 */
+    private async _gachaCandidates(poolId: string): Promise<GeneralConfig[]> {
+        if (poolId === MENTOR_POOL_ID) return this._supportPoolGenerals();
+        const gachaConfig = await this._loadDataJson<GachaConfig[]>('data/gacha-config');
+        const pool = (Array.isArray(gachaConfig) ? gachaConfig : []).find((entry) => entry.poolId === poolId);
+        if (poolId === OPENING_BEAUTY_POOL_ID) {
+            const ids = new Set(openingBeautyCandidates(pool, this._generals));
+            return this._generals.filter((general) => ids.has(general.id));
+        }
+        const ids = pool?.candidateIds ?? [];
+        return ids.length > 0 ? this._generals.filter((general) => ids.includes(general.id)) : this._generals;
+    }
+
+    /** 轉蛋標準 API（本機實作；日後換伺服器實作，畫面不改，PROG-2-9024） */
+    private _getGachaApi(): GachaApi {
+        if (this._gachaApi) return this._gachaApi;
+        const coordinator = this._getGachaFlowCoordinator();
+        this._gachaApi = new LocalGachaApi({
+            system: coordinator.system,
+            service: this._localGachaService,
+            pools: () => this._gachaMainPools,
+            candidates: (poolId) => this._gachaCandidatesCache.get(poolId) ?? [],
+        });
+        return this._gachaApi;
+    }
+
+    private async _loadGachaMainPools(): Promise<void> {
+        if (this._gachaMainPools.length > 0) return;
+        this._gachaMainPools = parseGachaMainPools(await this._loadDataJson<unknown>('data/gacha-main-pools'));
+        for (const pool of this._gachaMainPools) this._gachaCandidatesCache.set(pool.poolId, await this._gachaCandidates(pool.poolId));
+    }
+
+    /** 切池後用 API 的池資料蓋上價格、餘額、焦點武將與保底（PROG-2-9024） */
+    private async _applyGachaApiTexts(pool: GachaPoolDef): Promise<void> {
+        await this._loadGachaMainPools();
+        const api = this._getGachaApi();
+        const [pools, wallet] = await Promise.all([api.listPools(), api.getWallet()]);
+        const dto = pools.find((p) => p.poolId === pool.poolId);
+        if (!dto || this._gachaPoolSwitcher?.pool !== pool) return;
+        const nameOf = (id: string): string => this._generals.find((g) => g.id === id)?.name ?? id;
+        const binder = this._gachaHost?.binder;
+        if (!binder) return;
+        // 動態文字：依內容撐開，並關掉字元快取（CHAR 模式下原稿沒出現過的字畫不出來）
+        for (const name of [...gachaAutoSizeNodes(pool), GACHA_NODES.balance]) {
+            const label = binder.getNode(name)?.getComponent(Label);
+            if (!label) continue;
+            label.cacheMode = Label.CacheMode.NONE;
+            if (name !== GACHA_NODES.balance) label.overflow = Label.Overflow.NONE;
+        }
+        binder.setTexts(gachaApiTexts(pool, dto, wallet, nameOf, Date.now()));
     }
 
     private async _runSupportSummon(drawCount = 1): Promise<void> {

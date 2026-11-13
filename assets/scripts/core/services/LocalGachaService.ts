@@ -347,6 +347,22 @@ export class LocalGachaService {
         });
     }
 
+    /** 本池累計抽數與上次出 SSR 的抽數（PROG-2-9024，轉蛋 API 的保底顯示用） */
+    public getPoolPityState(poolId: string): { pullCount: number; lastSsrPull: number } {
+        const state = normalizeGachaPity(this._pityBookOf()[poolId]);
+        return { pullCount: state.pullCount, lastSsrPull: state.lastSsrPull ?? 0 };
+    }
+
+    /** 此刻各限定池的焦點武將（池未開放時為空陣列） */
+    public getFeaturedGeneralIds(poolId: string, nowMs: number = Date.now()): string[] {
+        return featuredGeneralsOf(this._limitedWindows, poolId, nowMs);
+    }
+
+    /** 此刻開放中的限定池時間窗（沒有時為 null） */
+    public getOpenLimitedWindow(poolId: string, nowMs: number = Date.now()): LimitedPoolWindow | null {
+        return this._limitedWindows.find((w) => w.poolId === poolId && isLimitedPoolOpen(w, nowMs)) ?? null;
+    }
+
     /** 天命商店（PROG-2-1157）：本池目前可兌換次數（每池每滿 200 抽 1 次） */
     public getDestinyShopCredits(poolId: string): number {
         return destinyShopCredits(this._pityBookOf()[poolId]);

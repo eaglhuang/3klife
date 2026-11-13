@@ -37,7 +37,7 @@ export const GACHA_NODES = {
     balance: 'CostBalanceValue',
 } as const;
 
-export type GachaPoolKey = 'general' | 'legendary' | 'support';
+export type GachaPoolKey = 'general' | 'limited' | 'legendary' | 'support';
 
 /** 池的附加區塊：由程式掛在該池橫幅的某個節點下，不在轉換產出裡。 */
 export interface GachaPoolSection {
@@ -52,6 +52,8 @@ export interface GachaPoolSection {
 export interface GachaPoolDef {
     /** 原稿的池 id（pool-panel-<key>） */
     key: GachaPoolKey;
+    /** 轉蛋系統的池 id（gacha-main-pools.json 對應，PROG-2-9024） */
+    poolId: string;
     /** 橫幅節點名 */
     banner: string;
     /** 右側內容片段 */
@@ -64,12 +66,13 @@ export interface GachaPoolDef {
     section?: GachaPoolSection;
 }
 
-function poolDef(key: GachaPoolKey, section?: GachaPoolSection): GachaPoolDef {
-    const prefix = `Pool${key.charAt(0).toUpperCase()}${key.slice(1)}`;
+function poolDef(key: GachaPoolKey, poolId: string, section?: GachaPoolSection, layoutKey: GachaPoolKey = key): GachaPoolDef {
+    const prefix = `Pool${layoutKey.charAt(0).toUpperCase()}${layoutKey.slice(1)}`;
     return {
         key,
-        banner: `BannerSlide_${key}`,
-        contentFragment: `fragments/layouts/${GACHA_SCREEN_ID}-${key}-content`,
+        poolId,
+        banner: `BannerSlide_${layoutKey}`,
+        contentFragment: `fragments/layouts/${GACHA_SCREEN_ID}-${layoutKey}-content`,
         eventChip: `${prefix}EventChip`,
         heroName: `${prefix}HeroName`,
         heroTitle: `${prefix}HeroTitle`,
@@ -82,14 +85,18 @@ function poolDef(key: GachaPoolKey, section?: GachaPoolSection): GachaPoolDef {
 export const RED_FACE_SECTION_FRAGMENT = 'fragments/layouts/gacha-pool-red-face-section';
 export const RED_FACE_SECTION_ROW_BUTTON = (index: number): string => `btnRedFaceRow${index}`;
 
-/** 依輪播順序：0 名將池、1 紅顏池（support-pool）、2 支援卡池（mentor-pool）。 */
+/**
+ * 依輪播順序：0 名將池、1 限定池（limited-pool，黑金；暫用名將池版面換字）、2 紅顏池（support-pool）、3 支援卡池（mentor-pool）。
+ * 限定池沒有開放時間窗時，畫面切池會略過它（PROG-2-9024）。
+ */
 export const GACHA_POOLS: readonly GachaPoolDef[] = [
-    poolDef('general'),
-    poolDef('legendary', { anchor: 'PoolLegendaryArt', fragment: RED_FACE_SECTION_FRAGMENT, replaceContent: true }),
-    poolDef('support'),
+    poolDef('general', 'GENERAL_STANDARD_01'),
+    poolDef('limited', 'limited-pool', undefined, 'general'),
+    poolDef('legendary', 'support-pool', { anchor: 'PoolLegendaryArt', fragment: RED_FACE_SECTION_FRAGMENT, replaceContent: true }),
+    poolDef('support', 'mentor-pool'),
 ];
 
-export const GACHA_POOL_INDEX = { general: 0, redFace: 1, support: 2 } as const;
+export const GACHA_POOL_INDEX = { general: 0, limited: 1, redFace: 2, support: 3 } as const;
 
 /** 各池共用的抽卡列文字。 */
 export function gachaPullBarTexts(): Record<string, string> {
@@ -109,6 +116,8 @@ export function gachaPoolBannerTexts(pool: GachaPoolDef): Record<string, string>
     switch (pool.key) {
         case 'general':
             return { [pool.eventChip]: guide.generalSeries };
+        case 'limited':
+            return { [pool.eventChip]: '★ 限定召喚 · 本期限定' };
         case 'legendary':
             return {
                 [pool.eventChip]: '★ 紅顏池 · 召喚券 1 張抽 1 位',

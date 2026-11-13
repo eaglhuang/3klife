@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "$note": "轉蛋主畫面的池清單（PROG-2-9024）。順序即左右切換順序；limited 只在限定池開放時出現。費用、貨幣、主題色由此設定，機率與保底由轉蛋引擎提供。",
+  "pools": [
+    {
+      "key": "general",
+      "poolId": "GENERAL_STANDARD_01",
+      "theme": "wood",
+      "name": "名將召喚",
+      "sub": "以血脈為種，召來傳世名將",
+      "badge": "常設池",
+      "series": "★ 名將系列 · 常設",
+      "brief": "常駐大池，靈玉或銅錢符皆可召喚\n抽得武將直接入名冊",
+      "showcaseGeneralId": "guan-yu",
+      "currencies": ["bronze", "gems"],
+      "singleCost": 150,
+      "tenCost": 1500,
+      "pityLabel": "SSR 保底進度"
+    },
+    {
+      "key": "limited",
+      "poolId": "limited-pool",
+      "theme": "black-gold",
+      "name": "限定召喚",
+      "sub": "本期限定名將，期滿下架",
+      "badge": "期間限定",
+      "series": "★ 本期限定",
+      "brief": "僅限靈玉召喚，銅錢符不可用\n本期焦點武將機率提升",
+      "currencies": ["gems"],
+      "singleCost": 150,
+      "tenCost": 1500,
+      "pityLabel": "SSR 保底進度"
+    },
+    {
+      "key": "heroine",
+      "poolId": "support-pool",
+      "theme": "sakura",
+      "name": "紅顏召喚",
+      "sub": "紅顏天香，傾城名將入幕",
+      "badge": "常設池",
+      "series": "★ 紅顏系列 · 常設",
+      "brief": "女將專屬池，使用召喚券\n抽得女將入名冊",
+      "showcaseGeneralId": "da-qiao",
+      "currencies": ["tickets"],
+      "singleCost": 1,
+      "tenCost": 10,
+      "pityLabel": "SSR 保底進度"
+    },
+    {
+      "key": "support",
+      "poolId": "mentor-pool",
+      "theme": "jade",
+      "name": "支援卡召喚",
+      "sub": "培育深度，鍛造最強後盾",
+      "badge": "教官池",
+      "series": "★ 教官系列 · 常設",
+      "brief": "使用支援券召喚教官卡\n教官卡不入名冊，用於培育",
+      "showcaseGeneralId": "zhuge-liang",
+      "currencies": ["mentorTickets"],
+      "singleCost": 1,
+      "tenCost": 10,
+      "pityLabel": "SSR 保底進度"
+    }
+  ]
+}

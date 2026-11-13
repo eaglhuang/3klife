@@ -1,6 +1,6 @@
 // @spec-source → 轉蛋系統.md §L；PROG-2-9020 本機轉蛋各池規則
 import type { LocalGachaRollOptions, LocalGachaService } from '../services/LocalGachaService';
-import { pickGachaCurrency, quoteGachaCost } from './GachaCurrency';
+import { pickGachaCurrency, quoteGachaCost, type GachaPoolKind } from './GachaCurrency';
 import type { GachaPoolPresentationConfig } from '../models/GachaConfig';
 import type { GachaPoolRule, GachaSystem } from './GachaSystem';
 
@@ -10,15 +10,15 @@ export interface LocalGachaRuleOptions {
     gemsCostPerPull?: number;
 }
 
-/** 名將池：扣靈玉或銅錢符，抽將入名冊 */
-export function heroPoolRule(service: LocalGachaService, opts: LocalGachaRuleOptions = {}): GachaPoolRule {
+/** 名將池：扣靈玉或銅錢符，抽將入名冊；kind=LIMITED 時只收靈玉（限定池，焦點武將由排程帶入） */
+export function heroPoolRule(service: LocalGachaService, opts: LocalGachaRuleOptions = {}, kind: GachaPoolKind = 'HERO'): GachaPoolRule {
     return {
         async pull(req) {
             const fixed = opts.gemsCostPerPull;
             const pick = fixed !== undefined
                 ? { coin: 'gems' as const, cost: req.drawCount * fixed }
-                : pickGachaCurrency('HERO', req.drawCount, { gems: service.getCurrencyAmount('gems'), bronze: service.getCurrencyAmount('bronze') });
-            if (!pick) throw new Error(`靈玉或銅錢符不足，需要 ${quoteGachaCost(req.drawCount)}`);
+                : pickGachaCurrency(kind, req.drawCount, { gems: service.getCurrencyAmount('gems'), bronze: service.getCurrencyAmount('bronze') });
+            if (!pick) throw new Error(`${kind === 'LIMITED' ? '靈玉' : '靈玉或銅錢符'}不足，需要 ${quoteGachaCost(req.drawCount)}`);
             return service.performLocalGacha(req.poolId, req.drawCount, pick.cost, req.generals, opts.rollOptions ?? {}, pick.coin);
         },
     };
@@ -65,7 +65,7 @@ export function ticketSummonRule(service: LocalGachaService, opts: LocalGachaRul
 /** 依池類型註冊本機規則；extraHeroPoolIds 給不在設定檔裡的舊池 id（常設池 GENERAL_STANDARD_01） */
 export function registerLocalGachaRules(system: GachaSystem, service: LocalGachaService, opts: LocalGachaRuleOptions = {}, extraHeroPoolIds: readonly string[] = []): GachaSystem {
     const hero = heroPoolRule(service, opts);
-    system.registerType('hero', hero).registerType('support', beautyPoolRule(service)).registerType('mentor', mentorPoolRule(service));
+    system.registerType('hero', hero).registerType('limited', heroPoolRule(service, opts, 'LIMITED')).registerType('support', beautyPoolRule(service)).registerType('mentor', mentorPoolRule(service));
     for (const id of extraHeroPoolIds) system.registerPool(id, hero);
     system.registerPool(GOLD_SUMMON_POOL_ID, goldSummonRule(service, opts), LEGACY_SUMMON_PRESENTATION[GOLD_SUMMON_POOL_ID]);
     system.registerPool(TICKET_SUMMON_POOL_ID, ticketSummonRule(service, opts), LEGACY_SUMMON_PRESENTATION[TICKET_SUMMON_POOL_ID]);

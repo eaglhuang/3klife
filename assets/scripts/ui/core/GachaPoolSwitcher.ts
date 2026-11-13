@@ -37,9 +37,21 @@ export class GachaPoolSwitcher {
         return this._pools[this._index];
     }
 
+    /** 暫不開放的池（例如限定池期間外）切池時略過 */
+    private _hidden: (pool: GachaPoolDef) => boolean = () => false;
+
+    public setHidden(predicate: (pool: GachaPoolDef) => boolean): void {
+        this._hidden = predicate;
+    }
+
     public step(delta: number): Promise<void> {
         const count = this._pools.length;
-        return this.show((((this._index + delta) % count) + count) % count);
+        let next = this._index;
+        for (let i = 0; i < count; i++) {
+            next = (((next + delta) % count) + count) % count;
+            if (!this._hidden(this._pools[next])) break;
+        }
+        return this.show(next);
     }
 
     public async show(index: number): Promise<void> {
@@ -48,7 +60,8 @@ export class GachaPoolSwitcher {
         const seq = ++this._seq;
         const pool = this._pools[index];
         const actives: Record<string, boolean> = {};
-        for (const each of this._pools) actives[each.banner] = each === pool;
+        // 限定池與名將池共用橫幅節點，以節點名判斷，避免後面的池把同一節點關掉
+        for (const each of this._pools) actives[each.banner] = each.banner === pool.banner;
         this._port.setActives(actives);
 
         await this._port.switchLazySlot(GACHA_CONTENT_SLOT, pool.contentFragment);
