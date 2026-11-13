@@ -1,5 +1,6 @@
 // @spec-source → 轉蛋系統.md (doc_spec_0042)；PROG-2-1429 依建檔紀錄補標出處
 import { Button, Color, Label, Node, Sprite, UITransform, Widget } from 'cc';
+import { fullScreenPanelScale } from './GachaFullScreenPanel';
 import { disableCharCache } from './LabelCjkCache';
 import { formatGachaLine, loadGachaLines } from './GachaLines';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
@@ -396,11 +397,17 @@ export class GachaFlowCoordinator {
             if (widget) { widget.horizontalCenter = x; widget.updateAlignment(); }
             else showcase.setPosition(x, showcase.position.y, 0);
         };
-        // 收起武將時結果面板置中，不留左半邊空白
+        // 收起武將時結果面板置中並等比放大成滿版十連（使用者 11/13：要全螢幕滿版，不是小框）
         const panelWidget = panel.getComponent(Widget);
+        panel.setScale(1, 1, 1);
         const centerPanel = (): void => {
-            if (panelWidget) { panelWidget.isAlignHorizontalCenter = true; panelWidget.horizontalCenter = 0; panelWidget.updateAlignment(); }
-            else panel.setPosition(0, panel.position.y, 0);
+            if (panelWidget) {
+                panelWidget.isAlignHorizontalCenter = true; panelWidget.horizontalCenter = 0;
+                panelWidget.isAlignVerticalCenter = true; panelWidget.verticalCenter = 0;
+                panelWidget.updateAlignment();
+            } else panel.setPosition(0, 0, 0);
+            const scale = fullScreenPanelScale(stage.getComponent(UITransform), panel.getComponent(UITransform));
+            panel.setScale(scale, scale, 1);
         };
         stage.off(Node.EventType.TOUCH_END);
         showcase.active = true; // 重轉後重新展示（上一輪可能已收起）
