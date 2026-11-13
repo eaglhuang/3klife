@@ -6,6 +6,19 @@ import { SceneName } from "../config/Constants";
 export class SceneManager {
     private targetScene: string = "";
     private sceneData: any = null;
+    private beforeSwitchListeners: Array<(targetSceneName: string) => void> = [];
+
+    /**
+     * 登記「離開目前場景前」要做的事（同步執行，在 director.loadScene 之前），例如把 UI 停放到 UIScreenRetainCache。
+     * 回傳取消登記的函式；場景元件請在 onDestroy 取消。單一監聽者丟例外不影響其他監聽者與換場。
+     */
+    public onBeforeSwitch(listener: (targetSceneName: string) => void): () => void {
+        this.beforeSwitchListeners.push(listener);
+        return () => {
+            const index = this.beforeSwitchListeners.indexOf(listener);
+            if (index >= 0) this.beforeSwitchListeners.splice(index, 1);
+        };
+    }
 
     /**
      * 切換場景：A -> LoadingScene -> B
@@ -15,6 +28,9 @@ export class SceneManager {
         this.targetScene = targetSceneName;
         this.sceneData = data;
         this.boardRenderer = null; // 場景切換時清除舊場景的 boardRenderer 參照
+        for (const listener of [...this.beforeSwitchListeners]) {
+            try { listener(targetSceneName); } catch (error) { console.warn('[SceneManager] onBeforeSwitch 監聽者失敗', error); }
+        }
         if (targetSceneName === SceneName.Lobby || targetSceneName === SceneName.Battle) {
             SceneLoadProgress.begin('正在準備載入場景');
         } else SceneLoadProgress.complete();
