@@ -155,6 +155,11 @@ export class GachaFlowCoordinator {
         await this._runPool(poolId, drawCount, generals, 'mentor', () => this.runSupportSummon(poolId, generals, drawCount), '支援卡召喚失敗');
     }
 
+    /** 限定池召喚（PROG-2-9024）：只收靈玉，本期焦點武將由排程帶入並提高機率 */
+    public async runLimitedSummon(poolId: string, generals: GeneralConfig[], drawCount = 1): Promise<void> {
+        await this._runPool(poolId, drawCount, generals, 'limited', () => this.runLimitedSummon(poolId, generals, drawCount), '限定池召喚失敗');
+    }
+
     public async runLocalGacha(drawCount: number): Promise<void> {
         const resolvedCount = Math.max(1, Math.floor(Number.isFinite(drawCount) ? drawCount : 1));
         const poolId = this._options.poolId ?? DEFAULT_POOL_ID;

@@ -94,6 +94,19 @@ export function createGachaPoolSwitcherSuite(): TestSuite {
         assert.equals(GACHA_POOL_INDEX.support, switcher.index);
     });
 
+    suite.test('限定池期間外切池時略過；限定池與名將池共用橫幅（PROG-2-9024）', async () => {
+        const rec = recorder();
+        const switcher = new GachaPoolSwitcher(rec);
+        switcher.setHidden((pool) => pool.key === 'limited');
+        await switcher.step(1);
+        assert.equals(GACHA_POOL_INDEX.redFace, switcher.index);
+        switcher.setHidden(() => false);
+        await switcher.show(GACHA_POOL_INDEX.limited);
+        const limited = GACHA_POOLS[GACHA_POOL_INDEX.limited];
+        assert.equals(GACHA_POOLS[GACHA_POOL_INDEX.general].banner, limited.banner);
+        assert.equals('limited-pool', limited.poolId);
+    });
+
     suite.test('固定節點名都登記在 gacha-ds3 綁定表（重轉不會變回流水號）', () => {
         const bound = new Set<string>(readJson('tools_node/data/ui-bind-maps/gacha-ds3.json').bindings.map((b: { name: string }) => b.name));
         // 這兩個名字原稿本身就有 data-name
