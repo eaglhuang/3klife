@@ -1,0 +1,79 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_2379",
+      "id": "UI-2-0172",
+      "title": "戰鬥立繪路徑解析與戰法特寫載入",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M6",
+      "created": "2026-11-12",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-11-12T23:30:48+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "新增武將戰鬥立繪候選路徑；戰法特寫優先讀取戰鬥版，缺圖時回退站姿。此卡只含程式、設定、測試與任務追蹤，不接入或搬動圖檔。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "GeneralArtPaths 提供 battle 預設路徑及 battleCandidates，並同時支援武將 id 與 portraitKey",
+        "戰法特寫優先載入 battle 資源，缺少時回退 standing 資源",
+        "單元測試涵蓋 battle 路徑解析與載入回退",
+        "TypeScript、相關單元測試及 compute-gate standard 通過",
+        "PR 不含任何圖檔",
+        "從 BattleHUDComposite 抽出的藝術資源載入模組不超過 600 行，且原元件縮減至不超過 600 行"
+      ],
+      "deliverables": [
+        "assets/scripts/core/systems/GeneralArtPaths.ts",
+        "assets/resources/data/general-art-paths.json",
+        "assets/scripts/ui/components/BattleHUDComposite.ts",
+        "assets/scripts/ui/core/BattleArtController.ts",
+        "tests/GeneralArtPaths.test.ts",
+        "tests/BattleArtController.test.ts",
+        "docs/agent-briefs/tasks/UI/UI-2-0172.md",
+        "docs/ui-quality-tasks/UI-2-0172.json"
+      ],
+      "notes": "2026-11-12 | 狀態: in-progress | 驗證: pending | 變更: Codex 開始實作戰鬥立繪讀取支援 | 阻塞: none",
+      "atomizationImpact": {
+        "ownerAtomOrMap": "battle.general-art-loading",
+        "mapUpdates": [],
+        "extractionCandidates": [
+          {
+            "atom": "battle.tactic-flash-art-loader",
+            "pattern": "Adapter/Port",
+            "source": "assets/scripts/ui/components/BattleHUDComposite.ts",
+            "disposition": "extract",
+            "inlineReason": null
+          }
+        ]
+      },
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

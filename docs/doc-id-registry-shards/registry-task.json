@@ -14188,5 +14188,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-2204.md",
     "title": "PROG-2-2204 代際傳承自然引導流與子嗣抓周入學學府閉環（LOOP-04）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2379",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0172.md",
+    "title": "[UI-2-0172] 戰鬥立繪路徑解析與戰法特寫載入",
+    "category": "task"
   }
 ]

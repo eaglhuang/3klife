@@ -1,4 +1,3 @@
-import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md  (UCUF M12)
 /**
  * BattleHUDComposite — 戰鬥 HUD（CompositePanel 版）
@@ -13,9 +12,9 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
  *
  * Unity 對照：GameHUDController，監聽事件更新各個 Binding
  */
-import { _decorator, Button, Color, Director, director, Label, Node, Sprite, UITransform, Vec3 } from 'cc';
-import { portraitPathOf } from '../../core/systems/GeneralArtPaths';
-import { loadGeneralAvatar } from '../core/GeneralAvatarLoader';
+import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
+import { _decorator, Button, Color, Director, director, Label, Node, Sprite, UITransform } from 'cc';
+import { BattleArtController } from '../core/BattleArtController';
 import { playTacticFlash, TACTIC_FLASH_NODE } from '../core/TacticFlashOverlay';
 import type { TacticFlashTiming, TacticFlashView } from '../../shared/interfaces/IBattleUIComponents';
 import { EVENT_NAMES, Faction, GAME_CONFIG, SceneName } from '../../core/config/Constants';
@@ -28,9 +27,7 @@ import { SolidBackground } from './SolidBackground';
 import { isVitalityBarGrayed, vitalityBarRatio } from '../../core/systems/VitalityBarView';
 import { FORTRESS_MAX_HP, fortressBarRatio } from '../../core/systems/FortressBarView';
 import { foodLabelText } from '../../core/systems/FoodLabelText';
-
 const { ccclass } = _decorator;
-
 /** 精力條（FORM-11）在血條正下方的高度與間距 */
 const VITALITY_BAR_HEIGHT = 6;
 const VITALITY_BAR_GAP = 4;
@@ -62,11 +59,8 @@ export class BattleHUDComposite extends CompositePanel {
     private _pendingPlayerName: string | null = null;
     private _pendingEnemyName: string | null = null;
     private _pendingStageTitle: string | null = null;
-    private _pendingPlayerGeneralId: string | null = null;
-    private _pendingEnemyGeneralId: string | null = null;
+    private readonly _battleArt = new BattleArtController();
     private _pendingSceneGambitBadgeText: string | null = null;
-    private _playerPortraitLoadSeq = 0;
-    private _enemyPortraitLoadSeq = 0;
     private _persistentStatusMsg: string | null = null;
 
     // ── 節點引用（由 _onAfterBuildReady / onBuildComplete 填入）──
@@ -91,8 +85,6 @@ export class BattleHUDComposite extends CompositePanel {
     // 頂部長條顯示城寨（陣地）血量，頭像旁標籤顯示主將血量（doc_ui_0001 §2.1，PROG-2-1889）
     private _playerFortressHp = FORTRESS_MAX_HP;
     private _enemyFortressHp  = FORTRESS_MAX_HP;
-    private _playerPortraitNode:  Node | null = null;
-    private _enemyPortraitNode:   Node | null = null;
     // 體力條（FORM-11）：玩家血條下方的細條，執行期建立；值先存起來，建好後再套用
     private _playerVitalityTrack: Node | null = null;
     private _playerVitalityFill:  Node | null = null;
@@ -196,11 +188,8 @@ export class BattleHUDComposite extends CompositePanel {
         this._enemyNameLabel      = binder.getLabel('EnemyNameLabel');
         this._playerFortressLabel = binder.getLabel('PlayerFortressLabel');
         this._enemyFortressLabel  = binder.getLabel('EnemyFortressLabel');
-        this._playerPortraitNode  = binder.getNode('PlayerPortrait');
-        this._enemyPortraitNode   = binder.getNode('EnemyPortrait');
-
-        this._bindPortraitInteraction(this._playerPortraitNode, 'player');
-        this._bindPortraitInteraction(this._enemyPortraitNode,  'enemy');
+        this._battleArt.bindPortrait('player', binder.getNode('PlayerPortrait'));
+        this._battleArt.bindPortrait('enemy', binder.getNode('EnemyPortrait'));
     }
 
     /**
@@ -303,10 +292,8 @@ export class BattleHUDComposite extends CompositePanel {
 
     /** SSR／UR 戰法的半身英靈閃現（PROG-2-1861）：用施放方主將立繪；掛在 HUD 的父節點最上層，避免被卡欄蓋住；連續施放時新的取代舊的 */
     public async playTacticFlash(view: TacticFlashView, timing: TacticFlashTiming): Promise<void> {
-        const generalId = view.side === 'player' ? this._pendingPlayerGeneralId : this._pendingEnemyGeneralId;
-        const portrait = generalId
-            ? await services().resource.loadSpriteFrame(this._buildPortraitPath(generalId)).catch(() => null)
-            : null;
+        const generalId = this._battleArt.getGeneralId(view.side);
+        const portrait = generalId ? await this._battleArt.loadTacticFlash(generalId) : null;
         if (!this.node.isValid) return;
         const host = this.node.parent?.isValid ? this.node.parent : this.node;
         host.getChildByName(TACTIC_FLASH_NODE)?.destroy();
@@ -314,13 +301,13 @@ export class BattleHUDComposite extends CompositePanel {
     }
 
     public setPlayerGeneralId(generalId: string): void {
-        this._pendingPlayerGeneralId = generalId;
-        if (this._buildCompleted) this._refreshPortrait('player');
+        this._battleArt.setGeneralId('player', generalId);
+        if (this._buildCompleted) this._battleArt.refresh('player');
     }
 
     public setEnemyGeneralId(generalId: string): void {
-        this._pendingEnemyGeneralId = generalId;
-        if (this._buildCompleted) this._refreshPortrait('enemy');
+        this._battleArt.setGeneralId('enemy', generalId);
+        if (this._buildCompleted) this._battleArt.refresh('enemy');
     }
 
     public showPersistentStatus(msg: string): void {
@@ -491,11 +478,11 @@ export class BattleHUDComposite extends CompositePanel {
             this.setEnemyName(this._pendingEnemyName);
             this._pendingEnemyName = null;
         }
-        if (this._pendingPlayerGeneralId !== null) {
-            this._refreshPortrait('player');
+        if (this._battleArt.getGeneralId('player') !== null) {
+            this._battleArt.refresh('player');
         }
-        if (this._pendingEnemyGeneralId !== null) {
-            this._refreshPortrait('enemy');
+        if (this._battleArt.getGeneralId('enemy') !== null) {
+            this._battleArt.refresh('enemy');
         }
         if (this._pendingSceneGambitBadgeText !== null) {
             this.showSceneGambitBadge(this._pendingSceneGambitBadgeText);
@@ -556,77 +543,6 @@ export class BattleHUDComposite extends CompositePanel {
 
     private _onSkillEffect(d: { faction: Faction; skillId: string }): void {
         this._flashStatus(buildBattleSkillEffectMessage(d.skillId));
-    }
-
-    // ── 頭像互動 ─────────────────────────────────────────────
-
-    private _onPortraitClick(side: 'player' | 'enemy'): void {
-        const isEnemy = side === 'enemy';
-        services().event.emit(EVENT_NAMES.RequestGeneralQuickView, { side, isEnemy });
-        UCUFLogger.info(LogCategory.UI, `[BattleHUDComposite] 頭像點擊 → ${side}`);
-    }
-
-    private _bindPortraitInteraction(node: Node | null, side: 'player' | 'enemy'): void {
-        if (!node) return;
-        const defaultScale = node.scale.clone();
-        const pressedScale = new Vec3(defaultScale.x * 1.05, defaultScale.y * 1.05, defaultScale.z);
-
-        node.on(Button.EventType.CLICK, () => this._onPortraitClick(side), this);
-        node.on(Node.EventType.TOUCH_START, () => { node.setScale(pressedScale); }, this);
-        const resetScale = () => node.setScale(defaultScale);
-        node.on(Node.EventType.TOUCH_END,   resetScale, this);
-        node.on(Node.EventType.TOUCH_CANCEL,resetScale, this);
-    }
-
-    private _refreshPortrait(side: 'player' | 'enemy'): void {
-        void this._applyPortrait(side);
-    }
-
-    private async _applyPortrait(side: 'player' | 'enemy'): Promise<void> {
-        const portraitNode = side === 'player' ? this._playerPortraitNode : this._enemyPortraitNode;
-        const generalId    = side === 'player' ? this._pendingPlayerGeneralId : this._pendingEnemyGeneralId;
-        const fallbackPath = this._getPortraitFallbackPath(side);
-
-        if (!portraitNode) return;
-
-        const loadSeq = side === 'player'
-            ? ++this._playerPortraitLoadSeq
-            : ++this._enemyPortraitLoadSeq;
-
-        const res = services().resource;
-        let spriteFrame = null;
-
-        if (generalId) {
-            // 優先嘗試頭像（正式 → 自動裁切，規則見 data/general-art-paths.json）
-            spriteFrame = await loadGeneralAvatar(generalId, false);
-            // 退回完整立繪
-            if (!spriteFrame) {
-                spriteFrame = await res.loadSpriteFrame(this._buildPortraitPath(generalId)).catch(() => null);
-                if (!spriteFrame) UCUFLogger.warn(LogCategory.UI, `[BattleHUDComposite] ${side} 立繪載入失敗：${generalId}`);
-            }
-        }
-
-        // 最終退回 placeholder
-        if (!spriteFrame) {
-            spriteFrame = await res.loadSpriteFrame(fallbackPath).catch(() => null);
-        }
-
-        const latestSeq = side === 'player' ? this._playerPortraitLoadSeq : this._enemyPortraitLoadSeq;
-        if (loadSeq !== latestSeq || !spriteFrame) return;
-
-        const sprite = portraitNode.getComponent(Sprite) ?? portraitNode.addComponent(Sprite);
-        sprite.spriteFrame = spriteFrame;
-        sprite.sizeMode = Sprite.SizeMode.CUSTOM;
-    }
-
-    private _buildPortraitPath(generalId: string): string {
-        return portraitPathOf(generalId);
-    }
-
-    private _getPortraitFallbackPath(side: 'player' | 'enemy'): string {
-        return side === 'player'
-            ? 'sprites/battle/portrait_player_placeholder'
-            : 'sprites/battle/portrait_enemy_placeholder';
     }
 
     // ── 內部更新 ─────────────────────────────────────────────

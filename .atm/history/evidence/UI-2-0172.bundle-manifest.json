@@ -1,0 +1,79 @@
+{
+  "schemaId": "atm.evidenceBundleManifest.v1",
+  "taskId": "UI-2-0172",
+  "updatedAt": "2026-11-12T16:30:25.166Z",
+  "updatedBy": "codex-gpt-6.1-sol",
+  "freshValidationPasses": [
+    "gate:standard",
+    "npx tsc -p tsconfig.test.json --noEmit",
+    "test"
+  ],
+  "staleValidationPasses": [],
+  "commandRuns": [
+    {
+      "command": "npx tsc -p tsconfig.test.json --noEmit",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "npx tsc -p tsconfig.test.json --noEmit"
+      ],
+      "generatedAt": "2026-11-12T16:25:30.888Z",
+      "startedAt": "2026-11-12T16:25:15.294Z",
+      "finishedAt": "2026-11-12T16:25:30.888Z",
+      "durationMs": 15594,
+      "runnerKind": "dev-source",
+      "sourceCommit": "b728b2f996a6336071d8f406027b1a775b43073d",
+      "cached": false
+    },
+    {
+      "command": "npm test *> $null; exit $LASTEXITCODE",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "test"
+      ],
+      "generatedAt": "2026-11-12T16:26:05.352Z",
+      "startedAt": "2026-11-12T16:25:50.231Z",
+      "finishedAt": "2026-11-12T16:26:05.352Z",
+      "durationMs": 15121,
+      "runnerKind": "dev-source",
+      "sourceCommit": "b728b2f996a6336071d8f406027b1a775b43073d",
+      "cached": false
+    },
+    {
+      "command": "npm test *> $null; exit $LASTEXITCODE",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "test"
+      ],
+      "generatedAt": "2026-11-12T16:28:21.732Z",
+      "startedAt": "2026-11-12T16:28:08.525Z",
+      "finishedAt": "2026-11-12T16:28:21.732Z",
+      "durationMs": 13207,
+      "runnerKind": "dev-source",
+      "sourceCommit": "b728b2f996a6336071d8f406027b1a775b43073d",
+      "cached": false
+    },
+    {
+      "command": "npm run gate:standard *> $null; exit $LASTEXITCODE",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "gate:standard"
+      ],
+      "generatedAt": "2026-11-12T16:30:25.164Z",
+      "startedAt": "2026-11-12T16:30:04.690Z",
+      "finishedAt": "2026-11-12T16:30:25.164Z",
+      "durationMs": 20474,
+      "runnerKind": "dev-source",
+      "sourceCommit": "b728b2f996a6336071d8f406027b1a775b43073d",
+      "cached": false
+    }
+  ],
+  "artifactPaths": []
+}

@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-13T05-21-21-096Z-scope-amendment-106e64f412f1",
+  "taskId": "UI-2-0172",
+  "action": "scope-amendment",
+  "actorId": "claude-code-opus-5-5",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0172.json",
+  "taskSha256": "sha256:71245d6988a17caedfc313c586d9d60fc58c5fb998488b96ff293b60636e2816",
+  "createdAt": "2026-11-13T05:21:21.096Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0172 --actor claude-code-opus-5-5 --add \"assets/scripts/core/systems/GeneralArtPaths.ts,assets/resources/data/general-art-paths.json,assets/scripts/ui/components/BattleHUDComposite.ts,assets/scripts/ui/core/BattleArtController.ts,tests/GeneralArtPaths.test.ts,tests/BattleArtController.test.ts,docs/agent-briefs/tasks/UI/UI-2-0172.md,docs/ui-quality-tasks/UI-2-0172.json,docs/agent-briefs/tasks_index.md,docs/doc-id-registry-shards/registry-task.json,docs/doc-id-registry.json\" --reason \"sync claim scope with re-imported deliverables\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "sync claim scope with re-imported deliverables"
+  }
+}

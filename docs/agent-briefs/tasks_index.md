@@ -1,6 +1,6 @@
 ---
 title: UI Quality Tasks Index
-generated: 2026-10-20
+generated: 2026-11-12
 manifest: ../ui-quality-todo.json
 ---
 
@@ -13,17 +13,10 @@ manifest: ../ui-quality-todo.json
 
 ## Summary
 
-- Total: 1717
-- done: 1281
-- completed: 8
-- in-progress: 41
-- in-review: 256
-- open: 99
-- not-started: 1
-- blocked: 4
-- deferred: 2
-- partial: 19
-- ready: 6
+- Total: 58
+- done: 35
+- in-progress: 6
+- open: 17
 
 ## Tasks
 
@@ -85,3 +78,5 @@ manifest: ../ui-quality-todo.json
 | PROG-1-0015 | Agent1 | open | P2 | P | validation | [PROG-1-0015](./tasks/PROG-1-0015.md) |
 | PROG-1-0016 | Agent1 | open | P2 | P | validation | [PROG-1-0016](./tasks/PROG-1-0016.md) |
 | TASK-UI-9001 | codex-gpt-6 | in-progress | P1 | M6 | refactor | [TASK-UI-9001](./tasks/TASK-UI-9001.md) |
+| UI-2-0121 | codex-gpt-6.1 | in-progress | P1 | M6 | art | [UI-2-0121](./tasks/UI-2-0121.md) |
+| UI-2-0172 | codex-gpt-6.1-sol | in-progress | P1 | M6 | implementation | [UI-2-0172](./tasks/UI-2-0172.md) |

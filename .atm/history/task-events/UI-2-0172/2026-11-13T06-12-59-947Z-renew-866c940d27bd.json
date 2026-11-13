@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-13T06-12-59-947Z-renew-866c940d27bd",
+  "taskId": "UI-2-0172",
+  "action": "renew",
+  "actorId": "claude-code-opus-5-5",
+  "sessionId": "session-20261113051342-claude-code-opus-5-5-UI-2-0172-083f226908",
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0172.json",
+  "taskSha256": "sha256:0f84f04d90ccb412ce7214599d6f03062573ce1af64cd2f475ff4bb632a6b9dd",
+  "createdAt": "2026-11-13T06:12:59.947Z",
+  "command": "node atm.mjs tasks renew"
+}
