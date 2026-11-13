@@ -10,7 +10,7 @@ export function createBattleStartupProjectionSuite(): TestSuite {
  suite.test('每次單位投影共用世界座標暫存，不 clone、不改世界座標', () => {
    const source = { x: 2, y: 3, z: 4 }; const scratch = {}; const buffer = {};
    const received: any[] = []; let placed: any;
-   const renderer: any = { uiRoot: {}, canvasNode: {}, labelWorldPosBuf: scratch, uiProjectionBuffer: buffer,
+   const renderer: any = { projectToOverlay: UnitRenderer.prototype['projectToOverlay'], uiRoot: { getComponent: () => null }, canvasNode: { getComponent: () => null }, labelWorldPosBuf: scratch, uiProjectionBuffer: buffer,
      worldCamera: { convertToUINode: (p: any, _root: any, out: any) => { received.push(p); out.y = p.y; } } };
    const node = { getWorldPosition: (out: any) => { assert.equals(scratch, out); return Object.assign(out, source); },
      worldPosition: { clone: () => { throw new Error('不應逐幀 clone'); } } };
@@ -20,7 +20,7 @@ export function createBattleStartupProjectionSuite(): TestSuite {
  });
  suite.test('Buff 採同一引擎投影，不逐標籤搜尋相機子樹', () => {
    let calls = 0; const buffer = {}; const input = { x: 4, y: 5, z: 6 }; let placed: any;
-   const renderer = { uiRoot: {}, canvasNode: { getComponentInChildren: () => { throw new Error('不可逐幀樹搜尋'); } },
+   const renderer = { projectToOverlay: UnitRenderer.prototype['projectToOverlay'], uiRoot: { getComponent: () => null }, canvasNode: { getComponent: () => null, getComponentInChildren: () => { throw new Error('不可逐幀樹搜尋'); } },
      uiProjectionBuffer: buffer, worldCamera: { convertToUINode: (p: any) => { assert.equals(input, p); calls++; } } };
    UnitRenderer.prototype['projectWorldPoint'].call(renderer, input, { setPosition: (p: any) => { placed = p; } });
    assert.equals(1, calls); assert.equals(buffer, placed);
@@ -75,6 +75,18 @@ export function createBattleStartupProjectionSuite(): TestSuite {
      assert.contains(src, 'hostNode.destroy();\n            this._finishWebBoot();');
      assert.contains(src, 'hostNode.active = true;\n        this._finishWebBoot();');
    } finally { global.document = oldDocument; global.window = oldWindow; }
+ });
+  suite.test('有 Canvas 相機時走螢幕座標再轉回疊層本地座標（#2107-4／10）', () => {
+   const order: string[] = []; let placed: any;
+   const uiCamera = { screenToWorld: (s: any, out: any) => { order.push('ui'); assert.equals(0, s.z); return Object.assign(out, { x: s.x, y: s.y, z: 9 }); } };
+   const renderer: any = { projectToOverlay: UnitRenderer.prototype['projectToOverlay'], uiProjectionBuffer: {}, screenProjectionBuffer: {},
+     canvasNode: { getComponent: () => ({ cameraComponent: uiCamera }) },
+     uiRoot: { getComponent: () => ({ convertToNodeSpaceAR: (w: any, out: any) => { order.push('local'); return Object.assign(out, { x: w.x - 960, y: w.y - 540, z: w.z }); } }) },
+     worldCamera: { worldToScreen: (_p: any, out: any) => { order.push('screen'); return Object.assign(out, { x: 1000, y: 600, z: 0.7 }); },
+       convertToUINode: () => { throw new Error('有 Canvas 相機時不可走 convertToUINode'); } } };
+   UnitRenderer.prototype['projectWorldPoint'].call(renderer, { x: 1, y: 2, z: 3 }, { setPosition: (p: any) => { placed = { ...p }; } });
+   assert.equals('screen,ui,local', order.join(','));
+   assert.equals(40, placed.x); assert.equals(60, placed.y); assert.equals(0, placed.z);
  });
  return suite;
 }

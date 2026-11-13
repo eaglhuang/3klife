@@ -16,10 +16,11 @@ export function createBattleHudIssue2086Suite(): TestSuite {
     });
     suite.test('卡牌數字說明與 atk hp cost 實際欄位對應，不誤稱蓄力', () => {
         const text = OPERATION_GUIDE.deploy.message;
-        assert.contains(text, '15 是糧草費用'); assert.contains(text, '40／100、35／120 是攻擊／生命');
+        assert.contains(text, '「糧15」是糧草費用'); assert.contains(text, '「攻40／命100」是攻擊／生命');
         assert.contains(text, '不是蓄力'); assert.contains(text, 'SP');
         const src = fs.readFileSync(path.join(__dirname, '../assets/scripts/ui/components/TigerTallyComposite.ts'), 'utf8');
-        assert.contains(src, '`${data.atk}`'); assert.contains(src, '`${data.hp}`'); assert.contains(src, 'String(data.cost)');
+        // #2107-5：卡面常駐前綴
+        assert.contains(src, "TALLY_STAT_PREFIX = { atk: '攻', hp: '命', cost: '糧' }"); assert.contains(src, '${TALLY_STAT_PREFIX.atk}${data.atk}'); assert.contains(src, '${TALLY_STAT_PREFIX.cost}${data.cost}');
     });
     suite.test('SP 建構前到達的 80 上限保留，未取得上限不顯示 0/0', () => {
         const hud: any = { _spLabel: null, _chargeLabel: null, _spReadyLabel: null, _spFill: null };
@@ -38,6 +39,17 @@ export function createBattleHudIssue2086Suite(): TestSuite {
         assert.equals('SHRINK', skin.slots['tally.label.name'].overflow);
         const line = strategistHudLogLine({ hazardsThisTurn: ['火場'], interactiveObjects: [], salvage: { stone: 0, wood: 0, supply: 0, intel: 0, weaponMaterial: 0, instructorExp: 0 }, missingCounters: [], environmentBonus: '平原 +10%、水域 -25%' });
         assert.contains(line, '\n危害 火場'); assert.isFalse(line.includes('｜')); assert.isFalse(line.includes('|'));
+    });
+    suite.test('撤退結算說撤退、返回大廳換場不因 guide 節點已失效而卡死（#2107-1／2）', () => {
+        const read = (p: string) => fs.readFileSync(path.join(__dirname, '../assets/scripts/', p), 'utf8');
+        assert.contains(read('battle/controllers/BattleController.ts'), "result: 'enemy-win', retreated: true");
+        assert.contains(read('battle/views/BattleUIBridge.ts'), 'data.retreated === true');
+        const popup = read('ui/components/ResultPopupComposite.ts');
+        assert.contains(popup, 'retreat ? RETREAT_DESCRIPTION');
+        assert.contains(popup, "title: retreat ? '撤退'");
+        const panel = read('ui/components/BattleScenePanel.ts');
+        assert.contains(panel, 'if (guideNode?.isValid) guideNode.destroy();');
+        assert.equals(false, panel.includes('this._guideHost?.node.destroy()'));
     });
     return suite;
 }

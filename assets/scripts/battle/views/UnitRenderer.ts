@@ -5,6 +5,7 @@ import {
   _decorator,
   ImageAsset,
   Camera,
+  Canvas,
   Color,
   Component,
   gfx,
@@ -173,6 +174,7 @@ export class UnitRenderer extends Component {
   private readonly movingUnits = new Set<string>();
   private readonly dyingUnits = new Set<string>();
   private readonly uiProjectionBuffer = new Vec3();
+  private readonly screenProjectionBuffer = new Vec3();
   // lateUpdate 每幀重用的 Vec3 暫存，避免動態分配（對照 Unity: 快取 Vector3 工具變數）
   private readonly labelWorldPosBuf = new Vec3();
   private readonly generalViews = new Map<Faction, GeneralView>();
@@ -1111,8 +1113,7 @@ export class UnitRenderer extends Component {
     worldPos.y += yOffset;
 
     // 引擎 API 同時處理 UI 相機與 Canvas 縮放；不可拿3D螢幕深度交給UI相機screenToWorld。
-    this.worldCamera.convertToUINode(worldPos, this.uiRoot, this.uiProjectionBuffer);
-    labelNode.setPosition(this.uiProjectionBuffer);
+    this.projectToOverlay(worldPos, labelNode);
   }
 
   private createUnitView(unit: TroopUnit): UnitView {
@@ -1634,11 +1635,32 @@ export class UnitRenderer extends Component {
     });
   }
 
+  /**
+   * 3D 世界點 → 螢幕 → Canvas 相機 → UnitOverlayRoot 本地座標。
+   * 網頁建置下 convertToUINode 回傳以左下角為原點的座標，標籤整批偏到右上角（#2107-4／10），
+   * 改走 worldToScreen + Canvas 相機 screenToWorld + convertToNodeSpaceAR；取不到 Canvas 相機才退回舊 API。
+   */
+  private projectToOverlay(worldPos: Vec3, target: Node): void {
+    if (!this.uiRoot || !this.worldCamera) return;
+    const uiCamera = this.canvasNode?.getComponent(Canvas)?.cameraComponent;
+    const rootTf = this.uiRoot.getComponent(UITransform);
+    if (!uiCamera || !rootTf) {
+      this.worldCamera.convertToUINode(worldPos, this.uiRoot, this.uiProjectionBuffer);
+      target.setPosition(this.uiProjectionBuffer);
+      return;
+    }
+    const screen = this.worldCamera.worldToScreen(worldPos, this.screenProjectionBuffer);
+    screen.z = 0;
+    uiCamera.screenToWorld(screen, this.uiProjectionBuffer);
+    rootTf.convertToNodeSpaceAR(this.uiProjectionBuffer, this.uiProjectionBuffer);
+    this.uiProjectionBuffer.z = 0;
+    target.setPosition(this.uiProjectionBuffer);
+  }
+
   private projectWorldPoint(worldPos: Vec3, targetNode: Node): void {
     if (!this.uiRoot || !this.worldCamera || !this.canvasNode) return;
     // 與單位名牌同一投影 API，免除每個 Buff 每幀搜尋 Canvas 的相機子樹。
-    this.worldCamera.convertToUINode(worldPos, this.uiRoot, this.uiProjectionBuffer);
-    targetNode.setPosition(this.uiProjectionBuffer);
+    this.projectToOverlay(worldPos, targetNode);
   }
 
   private bumpNodeForward(node: Node, faction: Faction, distance: number): void {

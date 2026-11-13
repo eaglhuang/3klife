@@ -109,6 +109,9 @@ const TALLY_TIER_STYLE: Record<TallyCardData['rarity'], {
 import { TallyCardData } from '../../shared/TallyCardContract';
 export type { TallyCardData } from '../../shared/TallyCardContract';
 
+/** 卡面數字前綴（#2107-5）：攻擊、生命、糧草費 */
+export const TALLY_STAT_PREFIX = { atk: '攻', hp: '命', cost: '糧' } as const;
+
 @ccclass('TigerTallyComposite')
 export class TigerTallyComposite extends CompositePanel {
     private _templateBinder: UITemplateBinder | null = null;
@@ -201,13 +204,17 @@ export class TigerTallyComposite extends CompositePanel {
             }
 
             const atkLabel = this._templateBinder.getNode(`AtkLabel${slot}`)?.getComponent(Label);
-            if (atkLabel) { atkLabel.string = `${data.atk}`; }
+            // 卡面常駐標示數字意義（#2107-5）：收起教學後仍看得出 攻擊／生命／糧草費
+            if (atkLabel) { atkLabel.string = `${TALLY_STAT_PREFIX.atk}${data.atk}`; }
 
             const hpLabel = this._templateBinder.getNode(`HpLabel${slot}`)?.getComponent(Label);
-            if (hpLabel) { hpLabel.string = `${data.hp}`; }
+            if (hpLabel) { hpLabel.string = `${TALLY_STAT_PREFIX.hp}${data.hp}`; }
 
             const costLabel = this._templateBinder.getNode(`CostBadge${slot}`)?.getComponent(Label);
-            if (costLabel) { costLabel.string = String(data.cost); }
+            if (costLabel) {
+                costLabel.overflow = Label.Overflow.SHRINK;
+                costLabel.string = `${TALLY_STAT_PREFIX.cost}${data.cost}`;
+            }
 
             const rarityLabel = this._templateBinder.getNode(`RarityLabel${slot}`)?.getComponent(Label);
             if (rarityLabel) {

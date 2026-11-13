@@ -14,7 +14,7 @@ export function createDeployedUnitPresentationSuite(): TestSuite {
  suite.test('名牌走引擎3D→UI轉換並加高度，不把3D深度交給UI相機', () => {
    let input:any=null, placed:any=null;
    const pos={x:3,y:4,z:5}; const result={x:20,y:30,z:0};
-   UnitRenderer.prototype['projectWorldLabel'].call({uiRoot:{},canvasNode:{},uiProjectionBuffer:result,labelWorldPosBuf:{},
+   UnitRenderer.prototype['projectWorldLabel'].call({projectToOverlay:UnitRenderer.prototype['projectToOverlay'],uiRoot:{getComponent:()=>null},canvasNode:{getComponent:()=>null},uiProjectionBuffer:result,labelWorldPosBuf:{},
      worldCamera:{convertToUINode:(v:any)=>{input={...v};}}} as any,
      {getWorldPosition:(out:any)=>Object.assign(out,pos)}, {setPosition:(v:any)=>{placed=v;}},0.55);
    assert.equals(4.55,input.y);assert.equals(result,placed);

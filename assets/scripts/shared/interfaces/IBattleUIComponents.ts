@@ -54,7 +54,7 @@ export interface IDuelChallengeLike {
 export interface IResultPopupLike {
     node: Node;
     /** details：戰後結算摘要（出征軍勢 / 戰損 / 本場戰績），接在描述下方 */
-    showResult(result: string, details?: string, generalId?: string): Promise<void>;
+    showResult(result: string, details?: string, generalId?: string, retreated?: boolean): Promise<void>;
     show(result: any): Promise<void>;
     /** 結算窗開著時在描述下方追加行（戰後覺醒，PROG-2-1133） */
     appendDetails?(lines: readonly string[]): void;

@@ -1507,7 +1507,8 @@ export class BattleController {
     this.commitBattleResult('enemy-win');
     if (!this.state.battleEndAnnounced) {
       this.state.battleEndAnnounced = true;
-      services().event.emit(EVENT_NAMES.BattleEnded, { result: 'enemy-win' });
+      // retreated：結算文案改說撤退，不說「敵方突破防線」（#2107-2）
+      services().event.emit(EVENT_NAMES.BattleEnded, { result: 'enemy-win', retreated: true });
     }
     return 'enemy-win';
   }

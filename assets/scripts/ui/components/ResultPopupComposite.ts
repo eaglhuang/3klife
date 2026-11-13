@@ -22,6 +22,9 @@ export interface BattleResult {
     rewards?: string;
 }
 
+/** 主動撤退的結算說明（#2107-2） */
+export const RETREAT_DESCRIPTION = '我方主動撤退，保存兵力，來日再戰。';
+
 @ccclass('ResultPopupComposite')
 export class ResultPopupComposite extends CompositePanel {
     private _binder: UITemplateBinder | null = null;
@@ -73,7 +76,7 @@ export class ResultPopupComposite extends CompositePanel {
 
     /** BattleScene 使用的結果 key 相容入口。 */
     /** generalId：我方主將（kebab id），結算窗上方顯示其頭像（PROG-2-1128）；沒有則留剪影 */
-    public async showResult(result: string, details?: string, generalId?: string): Promise<void> {
+    public async showResult(result: string, details?: string, generalId?: string, retreated = false): Promise<void> {
         const typeMap: Record<string, BattleResult['resultType']> = {
             'player-win': 'victory', 'victory': 'victory',
             'enemy-win': 'defeat',   'defeat': 'defeat',
@@ -90,10 +93,13 @@ export class ResultPopupComposite extends CompositePanel {
             stalemate: '雙方勢均力敵，不分勝負。',
         };
         const resultType = typeMap[result] ?? 'stalemate';
+        // 主動撤退也判戰敗，但標題與文案要說撤退（#2107-2）
+        const retreat = retreated && resultType === 'defeat';
+        const desc = retreat ? RETREAT_DESCRIPTION : descMap[resultType];
         await this.show({
             resultType,
-            title: titleMap[resultType],
-            description: details ? `${descMap[resultType]}\n${details}` : descMap[resultType],
+            title: retreat ? '撤退' : titleMap[resultType],
+            description: details ? `${desc}\n${details}` : desc,
         });
         void this._applyGeneralAvatar(generalId);
     }
