@@ -9,7 +9,7 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { showGachaHistory, showGachaResults } from '../dev/GachaDevOverlay';
 import type { GachaConfig } from '../../core/models/GachaConfig';
 import { GachaSystem, type GachaPullOutcome } from '../../core/systems/GachaSystem';
-import { registerLocalGachaRules } from '../../core/systems/GachaLocalRules';
+import { GOLD_SUMMON_POOL_ID, TICKET_SUMMON_POOL_ID, registerLocalGachaRules } from '../../core/systems/GachaLocalRules';
 import { gachaPoolHeader, gachaPoolTitle } from '../../core/systems/GachaPoolPresentation';
 import { DESTINY_POOL_ID } from '../../core/systems/DestinyPool';
 import { fitContain, pickTopGachaResult } from './GachaResultRanking';
@@ -132,32 +132,13 @@ export class GachaFlowCoordinator {
         }
     }
 
+    /** 金幣召喚、召喚券也是轉蛋系統的一池（PROG-2-9021） */
     public async runGoldSummon(): Promise<void> {
-        try {
-            const results = await this._options.gachaService.performGoldSummon(
-                1,
-                this._options.getGenerals(),
-                { factionFilter: this._options.factionFilter },
-            );
-            this._notifyPullSuccess(results);
-            await this._presentLocalGachaResults(1, results, '金幣召喚', () => this.runGoldSummon(), 'gold');
-        } catch (error) {
-            this._emitError(error, '金幣召喚失敗');
-        }
+        await this._runPool(GOLD_SUMMON_POOL_ID, 1, this._options.getGenerals(), 'gold', () => this.runGoldSummon(), '金幣召喚失敗');
     }
 
     public async runTicketSummon(): Promise<void> {
-        try {
-            const results = await this._options.gachaService.performTicketSummon(
-                1,
-                this._options.getGenerals(),
-                { factionFilter: this._options.factionFilter },
-            );
-            this._notifyPullSuccess(results);
-            await this._presentLocalGachaResults(1, results, '召喚券', () => this.runTicketSummon(), 'tickets');
-        } catch (error) {
-            this._emitError(error, '召喚券失敗');
-        }
+        await this._runPool(TICKET_SUMMON_POOL_ID, 1, this._options.getGenerals(), 'tickets', () => this.runTicketSummon(), '召喚券失敗');
     }
 
     /** 紅顏池召喚（PROG-2-1086）：扣 1 張召喚券抽 1 位女性武將，入名冊後可去結緣 */
@@ -180,25 +161,6 @@ export class GachaFlowCoordinator {
             ? async () => { await this._options.onRepullTen!(); }
             : () => this.runLocalGacha(resolvedCount);
         await this._runPool(poolId, resolvedCount, this._options.getGenerals(), 'hero', retry, '單機轉蛋失敗');
-    }
-
-    private async _presentLocalGachaResults(
-        drawCount: number, results: LocalGachaResultEntry[],
-        title = drawCount === 1 ? '單抽' : '十連抽',
-        retry?: () => Promise<void>, currency: 'gems' | 'gold' | 'tickets' | 'mentorTickets' = 'gems',
-    ): Promise<void> {
-        const host = this._options.getHost();
-        const repull = retry ?? (drawCount === 10 && this._options.onRepullTen
-            ? this._options.onRepullTen : () => this.runLocalGacha(drawCount));
-        if (!host) {
-            await showGachaResults(title, results, () => { void repull(); });
-            return;
-        }
-        await this._renderPullResult(host, drawCount, results, title, currency, {
-            hero: pickTopGachaResult(results),
-            onBack: this._options.onBackToGacha,
-            repull,
-        });
     }
 
     /**

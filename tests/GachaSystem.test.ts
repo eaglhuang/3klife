@@ -5,6 +5,8 @@ import * as path from 'path';
 import { GachaSystem, type GachaPoolRule } from '../assets/scripts/core/systems/GachaSystem';
 import { gachaPoolHeader, gachaPoolTitle, resolveGachaPoolPresentation } from '../assets/scripts/core/systems/GachaPoolPresentation';
 import type { GachaConfig } from '../assets/scripts/core/models/GachaConfig';
+import { GOLD_SUMMON_POOL_ID, TICKET_SUMMON_POOL_ID, registerLocalGachaRules } from '../assets/scripts/core/systems/GachaLocalRules';
+import type { LocalGachaService } from '../assets/scripts/core/services/LocalGachaService';
 
 const pools: GachaConfig[] = JSON.parse(fs.readFileSync(path.join(__dirname, '../assets/resources/data/gacha-config.json'), 'utf-8'));
 const byId = (id: string) => pools.find(p => p.poolId === id)!;
@@ -70,6 +72,23 @@ export function createGachaSystemSuite(): TestSuite {
         let message = '';
         try { await sys.pull({ poolId: 'destiny-pool', drawCount: 10, generals: [] }); } catch (e) { message = String(e); }
         assert.isTrue(message.includes('destiny-pool'));
+    });
+
+    suite.test('金幣召喚、召喚券是轉蛋系統的程式池：走各自規則、帶原標題與貨幣（PROG-2-9021）', async () => {
+        const calls: string[] = [];
+        const service = {
+            async performGoldSummon(n: number, _g: unknown, o: { factionFilter?: string }) { calls.push(`gold:${n}:${o.factionFilter}`); return []; },
+            async performTicketSummon(n: number, _g: unknown, o: { factionFilter?: string }) { calls.push(`ticket:${n}:${o.factionFilter}`); return []; },
+        } as unknown as LocalGachaService;
+        const sys = registerLocalGachaRules(new GachaSystem(() => pools), service, { rollOptions: { factionFilter: 'player' } });
+        const gold = await sys.pull({ poolId: GOLD_SUMMON_POOL_ID, drawCount: 1, generals: [] });
+        const ticket = await sys.pull({ poolId: TICKET_SUMMON_POOL_ID, drawCount: 1, generals: [] });
+        assert.equals('gold:1:player,ticket:1:player', calls.join(','));
+        assert.equals('金幣召喚', gold.presentation.title);
+        assert.equals('gold', gold.presentation.currency);
+        assert.equals('召喚券', ticket.presentation.title);
+        assert.equals('tickets', ticket.presentation.currency);
+        assert.equals('paid', ticket.presentation.repull);
     });
 
     return suite;
