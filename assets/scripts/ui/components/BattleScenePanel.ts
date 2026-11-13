@@ -280,7 +280,10 @@ export class BattleScenePanel extends Component {
 
     onDestroy(): void {
         this.unschedule(this._guideLayoutTick);
-        this._guideHost?.node.destroy();
+        // 換場時 guide 節點可能已隨場景先被銷毀，node 變 null；不檢查會每格丟例外卡死換場（#2107-1）
+        const guideNode = this._guideHost?.node;
+        if (guideNode?.isValid) guideNode.destroy();
+        this._guideHost = null;
         this._unsubs.forEach(fn => fn());
         this._unsubs.length = 0;
     }
