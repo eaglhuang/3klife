@@ -210,6 +210,7 @@ import { buildTallyCardCatalog, getTallyCardSummaries } from '../../core/config/
 import { DeckSelectController } from '../core/DeckSelectController';
 import { LeadSelectController } from '../core/LeadSelectController';
 import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
+import { LobbyScreenRetention } from './LobbyScreenRetention';
 import { cyclePoolItem } from '../../core/systems/GeneralPoolCycle';
 import { SolidBackground } from '../components/SolidBackground';
 import { ToastMessage } from '../components/ToastMessage';
@@ -629,6 +630,9 @@ export class LobbyScene extends Component {
     private _gachaFlowCoordinator: GachaFlowCoordinator | null = null;
     private _gachaPullPending = false;
     private _ready = false;
+    /** 回大廳不重建：去戰鬥前停放已掛的介面（Issue #2120） */
+    private readonly _retention = new LobbyScreenRetention(() => services().i18n.currentLocale);
+    private _offBeforeSwitch: (() => void) | null = null;
 
     /** 等待 LobbyScene 資料初始化完成（供 headless smoke route 使用） */
     public async waitForReady(timeoutMs = 8000): Promise<boolean> {
@@ -645,6 +649,7 @@ export class LobbyScene extends Component {
         installAdaptiveResolution();
         // 讀存檔前先備妥服務（存檔後端、名冊、生命週期）；否則 load() 因未設定存檔服務而失敗，每次重開都被當成新玩家
         services().initialize(this.node);
+        this._offBeforeSwitch = services().scene.onBeforeSwitch((target) => this._retention.onBeforeSwitch(target));
         void this._loadLimitedPoolSchedule();
         // 為 LobbyScene 大背板生成穩定的組件背景
         const bgNode = this.node.getChildByName('Background');
@@ -826,6 +831,8 @@ export class LobbyScene extends Component {
     }
 
     protected onDestroy(): void {
+        this._offBeforeSwitch?.();
+        this._offBeforeSwitch = null;
         for (const unsubscribe of this._sessionEventUnsubscribers) {
             unsubscribe();
         }
@@ -965,7 +972,7 @@ export class LobbyScene extends Component {
         if (!table) return;
         const offers = table;
         const popup = new OpeningOfferPopupController<UIScreenPreviewHost>({
-            mountHost: (bindings) => this._mountPreviewScreenHost('OpeningOfferHost', 'opening-offer-screen', bindings),
+            mountHost: (bindings) => this._mountPreviewScreenHost('OpeningOfferHost', 'opening-offer-screen', bindings, false),
             apply: (host, view) => { if (host.binder) applyFlowView(host.binder, view); },
             next: (now) => services().session.nextOpeningOffer(offers, isTutorialBattle(services().session.clearedStageIds), now),
             resolve: async (offerId, outcome, now) => {
@@ -2168,7 +2175,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnWish', handler: () => { afterAction(altar.wish()); } },
             { buttonId: 'btnClaim', handler: () => { afterAction(altar.claim()); } },
             ...slotHandlers,
-        ]);
+        ], this._canRetainFlowHosts());
         this._wishAltarHost.node.active = false;
     }
 
@@ -2282,7 +2289,7 @@ export class LobbyScene extends Component {
                 lobbyReady: () => this._openingUiReady,
                 loadGachaConfig: async () => await this._loadDataJson<GachaConfig[]>('data/gacha-config') ?? [],
                 mountHost: async (name, screen, bindings) => {
-                    const host = await this._mountPreviewScreenHost(name, screen, bindings);
+                    const host = await this._mountPreviewScreenHost(name, screen, bindings, false);
                     // 宿命轉蛋是選核心主將前的強制步驟：遮罩下的大廳按鈕不能點
                     if (screen === 'destiny-opening-screen') host.node.addComponent(BlockInputEvents);
                     return host;
@@ -2327,7 +2334,7 @@ export class LobbyScene extends Component {
     private async _presentDestinyPool(view: DestinyPoolView, actions: { reroll: () => void; confirm: () => void }): Promise<Node | null> {
         const results = buildDestinyOpeningResults(view.rolledIds, this._generals);
         if (results.length === 0) return null;
-        const host = this._destinyPoolHost ?? await this._mountPreviewScreenHost('DestinyPoolHost', GACHA_PULL_RESULT_SCREEN_ID);
+        const host = this._destinyPoolHost ?? await this._mountPreviewScreenHost('DestinyPoolHost', GACHA_PULL_RESULT_SCREEN_ID, [], false);
         this._destinyPoolHost = host;
         if (!host.node.getComponent(BlockInputEvents)) host.node.addComponent(BlockInputEvents);
         await this._getGachaFlowCoordinator().presentDestinyPool(host, results, {
@@ -2916,7 +2923,7 @@ export class LobbyScene extends Component {
         this._openingFlow = createNewPlayerOpeningFlow();
         this._introHost = await this._mountPreviewScreenHost('OpeningIntroHost', 'opening-intro-screen', [
             { buttonId: 'btnIntroNext', handler: () => { this._onClickIntroNext(); } },
-        ]);
+        ], false);
         if (this._isNewPlayer) {
             this._openingFlow.start();
             this._recordOpeningPhase();
@@ -2949,6 +2956,11 @@ export class LobbyScene extends Component {
     }
 
     /** 新玩家開場是否還在某一幕（intro／destiny／showcase）；大廳主畫面在此期間不顯示 */
+    /** 開場、十連會改轉蛋／許願台的呈現；只有舊玩家且不在開場時才停放這些宿主（Issue #2120）。 */
+    private _canRetainFlowHosts(): boolean {
+        return !this._isNewPlayer && !this._isOpeningInProgress();
+    }
+
     private _isOpeningInProgress(): boolean {
         return !this._openingUnavailable && (this._openingFlow?.current() ?? null) !== null;
     }
@@ -3073,7 +3085,7 @@ export class LobbyScene extends Component {
         if (!this._showcaseHost) {
             this._showcaseHost = await this._mountPreviewScreenHost('InitialShowcaseHost', 'initial-showcase-screen', [
                 { buttonId: 'btnShowcaseNext', handler: () => { this._onClickShowcaseNext(); } },
-            ]);
+            ], false);
         }
         this._showcaseHost.node.active = true;
         this._bringNodeToFront(this._showcaseHost.node);
@@ -4800,7 +4812,8 @@ export class LobbyScene extends Component {
     }
 
     private async _mountLobbyMainHub(): Promise<void> {
-        const hostNode = this.node.getChildByName('LobbyMainHost') ?? new Node('LobbyMainHost');
+        const restored = this._retention.take('LobbyMainHost', this.node);
+        const hostNode = restored ?? this.node.getChildByName('LobbyMainHost') ?? new Node('LobbyMainHost');
         hostNode.active = false; // 先隱藏，避免 showScreen 期間閃屏
         hostNode.layer = this.node.layer;
         if (!hostNode.parent) {
@@ -4812,10 +4825,11 @@ export class LobbyScene extends Component {
         hostNode.setSiblingIndex(Math.max(backgroundIndex + 1, 0));
 
         this._lobbyMainHost = hostNode.getComponent(UIScreenPreviewHost) ?? hostNode.addComponent(UIScreenPreviewHost);
-        await this._lobbyMainHost.showScreen('lobby-main-screen');
+        if (!restored || !this._lobbyMainHost.binder) await this._lobbyMainHost.showScreen('lobby-main-screen');
 
         this._configureLobbyMainHub(this._lobbyMainHost.binder);
         hostNode.active = false;
+        this._retention.register('LobbyMainHost', hostNode);
     }
 
     /** 大廳底部 dock（設計稿：出征編組／出　戰／訓練）：版面轉換只留下空按鈕，這裡補文字並接到既有流程 */
@@ -4947,7 +4961,7 @@ export class LobbyScene extends Component {
     private async _mountSecondaryMainHubs(): Promise<void> {
         await this._mountShopMain();
 
-        this._gachaHost = await this._mountPreviewScreenHost('GachaHost', GACHA_SCREEN_ID, []);
+        this._gachaHost = await this._mountPreviewScreenHost('GachaHost', GACHA_SCREEN_ID, [], this._canRetainFlowHosts());
         attachCurrencyCheatPanel(this._localGachaService, undefined, () => { PlayerRosterService.clear(); }, () => {
             this._refreshWalletPreviewState();
         });
@@ -5055,8 +5069,11 @@ export class LobbyScene extends Component {
         hostName: string,
         screenId: string,
         bindings: ScreenButtonBinding[] = [],
+        retain = true,
     ): Promise<UIScreenPreviewHost> {
-        const hostNode = this.node.getChildByName(hostName) ?? new Node(hostName);
+        // 戰鬥回來先取停放的節點（Issue #2120）；拿到就不重建，只重綁按鈕
+        const restored = retain ? this._retention.take(hostName, this.node) : null;
+        const hostNode = restored ?? this.node.getChildByName(hostName) ?? new Node(hostName);
         hostNode.active = false; // 先隱藏，避免 showScreen 期間閃屏
         hostNode.layer = this.node.layer;
         if (!hostNode.parent) {
@@ -5068,10 +5085,11 @@ export class LobbyScene extends Component {
         hostNode.setSiblingIndex(Math.max(backgroundIndex + 1, hostNode.getSiblingIndex()));
 
         const host = hostNode.getComponent(UIScreenPreviewHost) ?? hostNode.addComponent(UIScreenPreviewHost);
-        await host.showScreen(screenId);
+        if (!restored || !host.binder) await host.showScreen(screenId);
         SceneLoadProgress.step();
         this._bindScreenButtons(host, bindings);
         hostNode.active = false;
+        if (retain) this._retention.register(hostName, hostNode);
         return host;
     }
 
@@ -5079,9 +5097,8 @@ export class LobbyScene extends Component {
         this._characterDs3Host = await this._mountPreviewScreenHost('CharacterDs3Host', 'character-ds3-main');
         this._bindCharacterDs3PreviewTabRouting();
         // 立繪左右箭頭（pool.prev／pool.next）：在武將清單中切到上一位／下一位，停留目前分頁
-        this._characterDs3Host?.node.on(UIScreenPreviewHost.EVENT_POOL_CYCLE, (step: number) => {
-            this._cycleCharacterDs3General(step);
-        });
+        this._characterDs3Host?.node.off(UIScreenPreviewHost.EVENT_POOL_CYCLE, this._cycleCharacterDs3General, this);
+        this._characterDs3Host?.node.on(UIScreenPreviewHost.EVENT_POOL_CYCLE, this._cycleCharacterDs3General, this);
         this._bloodlineVignetteHost = await this._mountPreviewScreenHost('BloodlineVignetteHost', 'general-bloodline-vignette-screen', [
             { buttonId: 'btnCloseVignette', handler: () => this._setBloodlineVignetteOpen(false) },
         ]);

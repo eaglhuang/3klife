@@ -102,6 +102,7 @@ export class Node {
     get components(): any[] { return this._components; }
     destroyAllChildren(): void { /* mock */ }
     removeFromParent(): void { /* mock */ }
+    setParent(value: Node | null, _keepWorldTransform?: boolean): void { this.parent = value; }
     private _parent: Node | null = null;
     public layer = 1;
     private _handlers = new Map<string, Array<(arg?: any) => void>>();
