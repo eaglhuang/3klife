@@ -7,13 +7,23 @@
  *
  * Unity 對照：AssetDatabase.LoadAssetAtPath + 物件快取
  */
-import { _decorator } from 'cc';
+import { _decorator, JsonAsset, resources } from 'cc';
 import { ResourceManager } from '../../core/systems/ResourceManager';
 import type { UILayoutSpec, UISkinManifest, UIScreenSpec, UISkinFragment, UILayoutNodeSpec, UITemplateSpec, UIWidgetFragmentSpec, FrameRecipe, SkinSlot } from './UISpecTypes';
 import { CURRENT_SPEC_VERSION } from './UISpecTypes';
 import { UCUFLogger, LogCategory } from './UCUFLogger';
 
 const { ccclass } = _decorator;
+
+/**
+ * 資源清單明確沒有此 JSON 時回 true，可直接略過載入；拿不到清單（如測試替身）時回 false，照舊嘗試載入。
+ * 缺檔的 sidecar／local-tokens 走 resources.load 會失敗並印警告，每個畫面都要多等，大廳一次掛 60 多個畫面（#2115）。
+ */
+export function isJsonMissingFromResources(path: string): boolean {
+    const bundle = resources as unknown as { getInfoWithPath?: (p: string, type?: unknown) => unknown } | undefined;
+    if (!bundle || typeof bundle.getInfoWithPath !== 'function') return false;
+    return !bundle.getInfoWithPath(path, JsonAsset);
+}
 
 @ccclass('UISpecLoader')
 export class UISpecLoader {
@@ -296,6 +306,7 @@ export class UISpecLoader {
     async loadScreenSidecar<T = any>(screenId: string, suffix: string): Promise<T | null> {
         const cleanSuffix = suffix.replace(/^\.+/, '').replace(/\.json$/i, '');
         const resourcePath = `ui-spec/screens/${screenId}.${cleanSuffix}`;
+        if (isJsonMissingFromResources(resourcePath)) return null;
         try {
             return await this._rm.loadJson<T>(resourcePath, { tags: ['UISpec', 'Sidecar'] });
         } catch (error) {
@@ -333,14 +344,17 @@ export class UISpecLoader {
 
         const baseTokens = await this.loadDesignTokens();
         let localTokens: any = null;
+        const localTokensPath = `ui-spec/screens/${screenId}.local-tokens`;
 
-        try {
-            localTokens = await this._rm.loadJson<any>(
-                `ui-spec/screens/${screenId}.local-tokens`,
-                { tags: ['UISpec', 'UIScreenLocalTokens'] },
-            );
-        } catch {
-            localTokens = null;
+        if (!isJsonMissingFromResources(localTokensPath)) {
+            try {
+                localTokens = await this._rm.loadJson<any>(
+                    localTokensPath,
+                    { tags: ['UISpec', 'UIScreenLocalTokens'] },
+                );
+            } catch {
+                localTokens = null;
+            }
         }
 
         if (!localTokens || typeof localTokens !== 'object') {
