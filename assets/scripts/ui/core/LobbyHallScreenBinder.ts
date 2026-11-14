@@ -27,6 +27,7 @@ import { HallSeasonFxLayer } from '../components/HallSeasonFxLayer';
 import { HallStageCrowd } from '../components/HallStageCrowd';
 import { hallCrowdReactionOf } from '../../core/systems/HallCrowdReaction';
 import { LobbyHallStageController } from './LobbyHallStageController';
+import type { HallWanderData } from '../../shared/lobby/wanderSupport';
 import { LobbyHallThemeApplier } from './LobbyHallThemeApplier';
 import { LobbyHallThemeNodeView } from './LobbyHallThemeNodeView';
 import { findUcufNode } from './UcufNodeLookup';
@@ -49,6 +50,8 @@ export interface LobbyHallStageDepsInput {
     readonly refreshSpots: (nowSec: number) => void;
     readonly cast: () => HallStageCast;
     readonly nowSec: () => number;
+    /** 走動設定（data/hall-map/hall-wander.json）；null 或沒給時人群維持原本的靜態小人 */
+    readonly wander?: HallWanderData | null;
 }
 
 export interface LobbyHallScreenDeps {
@@ -84,6 +87,7 @@ export class LobbyHallScreenBinder {
     private _fxSeason: HallSeason | null = null;
     private _crowd: HallStageCrowd | null = null;
     private _stage: LobbyHallStageController | null = null;
+    private _bubbleTimer: ReturnType<typeof setTimeout> | null = null;
     private _map: HallMapTurnPlayer | null = null;
     private readonly _tickStage = (): void => {
         if (this._stage && this._deps.stage) this._stage.tick(this._deps.stage.nowSec());
@@ -225,6 +229,19 @@ export class LobbyHallScreenBinder {
         }
     }
 
+    /** 點到發呆中的武將：沿用大廳既有泡泡，約 bubbleSeconds 秒後收起並讓武將繼續走（泡泡先被點掉也一樣放行） */
+    private _showBubbleFor(crowd: HallStageCrowd, generalId: string, seconds: number): void {
+        const bubble = findUcufNode(this._screenRoot, 'lobby-hall-screen.bubble');
+        if (!bubble) return;
+        if (this._bubbleTimer) clearTimeout(this._bubbleTimer);
+        bubble.active = true;
+        this._bubbleTimer = setTimeout(() => {
+            this._bubbleTimer = null;
+            if (bubble.isValid) bubble.active = false;
+            crowd.releaseActor(generalId);
+        }, seconds * 1000);
+    }
+
     private _bindTap(ucufId: string, handler: () => void): void {
         const node = findUcufNode(this._screenRoot, ucufId);
         if (!node) return;
@@ -263,6 +280,7 @@ export class LobbyHallScreenBinder {
         this._insertAfterSandbox(node);
         const crowd = node.addComponent(HallStageCrowd);
         crowd.configure(input.decor);
+        crowd.configureWander(input.wander ?? null, input.layout.canvas, (generalId) => this._showBubbleFor(crowd, generalId, input.wander?.bubbleSeconds ?? 2));
         this._crowd = crowd;
         // 設計稿的示意名牌（npc-sample-N）只是版面樣本；真人群上場就關掉，免得與人群名牌疊字
         for (let i = 1; ; i++) {
