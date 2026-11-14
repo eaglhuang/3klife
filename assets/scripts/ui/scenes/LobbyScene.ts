@@ -12,7 +12,7 @@ import { buildRivalOfficerSetup, type RivalOfficerSetupInput, type RivalSetupGen
 import { inspiredTacticName } from '../../core/systems/InspiredTacticMap';
 import { parseLimitedPoolWindows } from '../../core/systems/LimitedPoolSchedule';
 import { expandLimitedPoolRotations, parseLimitedPoolRotations } from '../../core/systems/LimitedPoolRotation';
-import { _decorator, BlockInputEvents, Button, Color, Component, instantiate, JsonAsset, Label, Mask, Node, Sprite, UITransform, Widget, resources } from 'cc';
+import { _decorator, BlockInputEvents, Button, Canvas, Color, Component, instantiate, JsonAsset, Label, Mask, Node, Sprite, UITransform, Widget, resources } from 'cc';
 import { installAdaptiveResolution } from '../core/AdaptiveResolution';
 import { LobbyHallScreenBinder, type LobbyHallDockId, type LobbyHallPanelId } from '../core/LobbyHallScreenBinder';
 import { hallFestivalIdOf, mainLobbyBackdropOf, resolveHallTheme as resolveHallSceneTheme, type HallThemeConfig } from '../../core/systems/HallTheme';
@@ -5718,6 +5718,8 @@ export class LobbyScene extends Component {
             node: host.node,
             show: async () => {
                 host.node.active = true;
+                // 全螢幕畫面要吃掉點擊：否則會穿透點到底下大廳的按鈕（#2148 後續回報）
+                if (!host.node.getComponent(BlockInputEvents)) host.node.addComponent(BlockInputEvents);
                 this._bringNodeToFront(host.node);
                 await host.showScreen(screenId);
                 onShown?.();
@@ -6853,7 +6855,7 @@ export class LobbyScene extends Component {
         return this._gachaSkinVariants;
     }
 
-    /** 橫幅立繪：藏起原稿「立繪佔位」字樣，在框內等比放入武將立繪並貼齊底部 */
+    /** 橫幅立繪：藏起原稿「立繪佔位」字樣，主角立繪等比放大到畫面高度並貼齊框底 */
     private _applyGachaBannerPortrait(artNode: Node | null, generalId: string): void {
         if (!artNode) return;
         const box = artNode.getComponent(UITransform);
@@ -6881,7 +6883,11 @@ export class LobbyScene extends Component {
             sprite.sizeMode = Sprite.SizeMode.CUSTOM;
             sprite.trim = false;
             sprite.spriteFrame = frame;
-            const fit = fitContain(box.width, box.height, frame.originalSize.width, frame.originalSize.height);
+            // 主角立繪盡量放大：底邊貼原框底，往上撐到畫面頂端（留邊），寬度可超出原框，但不超出畫面
+            const canvas = artNode.scene?.getComponentInChildren(Canvas)?.node.getComponent(UITransform) ?? null;
+            const bottomY = artNode.worldPosition.y - box.height * box.anchorY;
+            const topY = canvas ? canvas.node.worldPosition.y + canvas.height * (1 - canvas.anchorY) : bottomY + box.height;
+            const fit = fitContain(box.width * 1.8, Math.max(box.height, topY - bottomY - 24), frame.originalSize.width, frame.originalSize.height);
             const ui = portrait!.getComponent(UITransform)!;
             ui.setContentSize(fit.width, fit.height);
             // 錨點依外框換算，讓立繪底邊貼齊框底

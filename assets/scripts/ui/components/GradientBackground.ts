@@ -163,7 +163,15 @@ export class GradientBackground extends Component {
         if (normalized[normalized.length - 1].offset < 1) {
             normalized.push({ color: normalized[normalized.length - 1].color, offset: 1 });
         }
-        return normalized;
+        // 全透明色標借用最近的不透明色標 RGB：預乘內插下它的 RGB 本來就不影響結果，
+        // 但貼圖以未預乘格式線性過濾時，透明像素的黑色會滲進邊緣，在漸層透明端畫出一條暗線
+        return normalized.map((stop, index) => {
+            if (stop.color.a > 0) return stop;
+            const near = [...normalized.slice(index + 1), ...normalized.slice(0, index).reverse()]
+                .sort((a, b) => Math.abs(a.offset - stop.offset) - Math.abs(b.offset - stop.offset))
+                .find(other => other.color.a > 0);
+            return near ? { offset: stop.offset, color: new Color(near.color.r, near.color.g, near.color.b, 0) } : stop;
+        });
     }
 
     private _redraw(): void {
@@ -227,6 +235,9 @@ export class GradientBackground extends Component {
         // 測試用 cc 型別樁沒有 Filter 列舉，經 any 取用
         const nearest = (Texture2D as any).Filter?.NEAREST;
         if (hasEdge && nearest !== undefined) texture.setFilters(nearest, nearest);
+        // 預設包覆是重複：線性過濾時邊緣像素會混到對邊顏色，漸層透明端出現一條暗線（例如邊緣漸暗層的內緣）
+        const clamp = (Texture2D as any).WrapMode?.CLAMP_TO_EDGE;
+        if (clamp !== undefined) texture.setWrapMode(clamp, clamp);
         (texture as any).loaded = true;
 
         const frame = new SpriteFrame();
@@ -369,7 +380,7 @@ export class GradientBackground extends Component {
             const la = left.color.a;
             const ra = right.color.a;
             const a = la + (ra - la) * mix;
-            if (a <= 0) return new Color(0, 0, 0, 0);
+            if (a <= 0) return new Color(left.color.r, left.color.g, left.color.b, 0);
             const channel = (l: number, r: number) => Math.round((l * la + (r * ra - l * la) * mix) / a);
             return new Color(
                 channel(left.color.r, right.color.r),
