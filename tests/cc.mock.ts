@@ -88,6 +88,8 @@ export class Sprite {
     declare static Type: any;
 }
 export class UIOpacity { opacity = 255; }
+/** 全螢幕攔截點擊（奧義 cut-in 疊層，PROG-2-2250） */
+export class BlockInputEvents { }
 export class Prefab { decRef(): void { /* mock */ } }
 
 // ─── Node ───────────────────────────────────────────────────────────────────
@@ -97,7 +99,7 @@ export class ProgressBar {
 }
 
 export class Node {
-    static readonly EventType = { NODE_DESTROYED: 'node-destroyed', SIZE_CHANGED: 'size-changed' };
+    static readonly EventType = { NODE_DESTROYED: 'node-destroyed', SIZE_CHANGED: 'size-changed', TOUCH_END: 'touch-end', MOUSE_UP: 'mouse-up' };
     public children: Node[] = [];
     get components(): any[] { return this._components; }
     destroyAllChildren(): void { /* mock */ }
@@ -149,6 +151,7 @@ export class Node {
     }
 
     addChild(node: Node): void { node.parent = this; }
+    insertChild(node: Node, _index: number): void { node.parent = this; }
     getChildByName(name: string): Node | null { return this.children.find(c => c.name === name) || null; }
     
     removeAllChildren(): void {
@@ -248,6 +251,7 @@ export const sys = {
     NetworkType: { NONE: 0, LAN: 1, WWAN: 2 },
     isNative: false,
     getNetworkType(): number { return 1; },
+    getSafeAreaRect(): { x: number; y: number; width: number; height: number } { return { x: 0, y: 0, width: 1920, height: 1080 }; },
     localStorage: {
         _data: new Map<string, string>(),
         getItem(key: string): string | null { return this._data.get(key) ?? null; },
@@ -388,6 +392,7 @@ export const ResolutionPolicy = { EXACT_FIT: 0, NO_BORDER: 1, SHOW_ALL: 2, FIXED
 export const view = {
     getFrameSize: () => ({ width: 1920, height: 1080 }),
     getDesignResolutionSize: () => ({ width: 1920, height: 1080 }),
+    getVisibleSize: () => ({ width: 1920, height: 1080 }),
     setResolutionPolicy: (_policy: number): void => undefined,
     on: (_event: string, _cb: () => void): void => undefined,
 };
