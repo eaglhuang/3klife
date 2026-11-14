@@ -82,6 +82,8 @@
                             "name": "GachaDs3_span_1",
                             "text": "hero artwork",
                             "styleSlot": "auto.gacha-ds3.gachads3_span_1",
+                            "width": 94,
+                            "height": 17,
                             "textKey": "auto.gacha-ds3.gacha-ds3-span-1"
                           },
                           {
@@ -89,6 +91,8 @@
                             "name": "GachaDs3_span_2",
                             "text": "立繪佔位",
                             "styleSlot": "auto.gacha-ds3.gachads3_span_2",
+                            "width": 54,
+                            "height": 17,
                             "textKey": "auto.gacha-ds3.gacha-ds3-span-2"
                           }
                         ]
@@ -415,7 +419,9 @@
                 "type": "label",
                 "name": "GachaDs3_span_9",
                 "text": "‹",
-                "styleSlot": "auto.gacha-ds3.gachads3_span_9"
+                "styleSlot": "auto.gacha-ds3.gachads3_span_9",
+                "width": 31,
+                "height": 78
               }
             ]
           },
@@ -442,7 +448,9 @@
                 "type": "label",
                 "name": "GachaDs3_span_10",
                 "text": "›",
-                "styleSlot": "auto.gacha-ds3.gachads3_span_10"
+                "styleSlot": "auto.gacha-ds3.gachads3_span_10",
+                "width": 31,
+                "height": 78
               }
             ]
           },
@@ -957,7 +965,9 @@
                             "type": "label",
                             "name": "GachaDs3_span_13",
                             "text": "✕",
-                            "styleSlot": "auto.gacha-ds3.gachads3_span_13"
+                            "styleSlot": "auto.gacha-ds3.gachads3_span_13",
+                            "width": 20,
+                            "height": 28
                           }
                         ]
                       }

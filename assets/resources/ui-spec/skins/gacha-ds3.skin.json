@@ -3298,58 +3298,7 @@
       "isBold": true
     },
     "auto.gacha-ds3-tab-legendary-pool-panel-legendary.poollegendaryheroname": {
-      "kind": "gradient-rect",
-      "backgroundLayers": [
-        {
-          "kind": "gradient",
-          "gradient": {
-            "type": "linear",
-            "repeating": false,
-            "angle": 180,
-            "shape": null,
-            "center": null,
-            "radius": null,
-            "repeatSpanRatio": 0.55,
-            "stops": [
-              {
-                "color": "rgb(255, 246, 208)",
-                "offset": 0
-              },
-              {
-                "color": "gacha_ds3_local_color_24",
-                "offset": 0.55
-              },
-              {
-                "color": "rgb(184, 134, 11)",
-                "offset": 1
-              }
-            ]
-          }
-        }
-      ],
-      "gradient": {
-        "type": "linear",
-        "repeating": false,
-        "angle": 180,
-        "repeatSpanRatio": 0.55,
-        "stops": [
-          {
-            "color": "rgb(255, 246, 208)",
-            "offset": 0,
-            "opacity": 1
-          },
-          {
-            "color": "gacha_ds3_local_color_24",
-            "offset": 0.55,
-            "opacity": 1
-          },
-          {
-            "color": "rgb(184, 134, 11)",
-            "offset": 1,
-            "opacity": 1
-          }
-        ]
-      }
+      "kind": "transparent"
     },
     "auto.gacha-ds3-tab-legendary-pool-panel-legendary.gachads3tablegendarypoolpanellegendary_span_3": {
       "kind": "label-style",
@@ -3357,7 +3306,7 @@
       "fontSize": 120,
       "lineHeight": 120,
       "letterSpacing": 9.6,
-      "color": "textPrimary",
+      "color": "gacha_ds3_local_color_24",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
@@ -5303,18 +5252,18 @@
       ]
     },
     "tokenSources": {
-      "runtimePath": "C:\\Users\\User\\3KLife-wt-gacha2\\assets\\resources\\ui-spec\\ui-design-tokens.json",
-      "handoffPath": "C:\\Users\\User\\3KLife-wt-gacha2\\Design System\\design_handoff\\source\\ui-design-tokens.json",
-      "sourcePath": "C:\\Users\\User\\3KLife-wt-gacha2\\Design System 3\\source\\ui-design-tokens.json"
+      "runtimePath": "C:\\Users\\User\\3KLife-wt-g3\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+      "handoffPath": "C:\\Users\\User\\3KLife-wt-g3\\Design System\\design_handoff\\source\\ui-design-tokens.json",
+      "sourcePath": "C:\\Users\\User\\3KLife-wt-g3\\Design System 3\\source\\ui-design-tokens.json"
     },
     "tokenConflictReport": [
       {
         "section": "typography",
         "token": "headlineFont",
         "previousSource": "runtime",
-        "previousPath": "C:\\Users\\User\\3KLife-wt-gacha2\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+        "previousPath": "C:\\Users\\User\\3KLife-wt-g3\\assets\\resources\\ui-spec\\ui-design-tokens.json",
         "source": "source",
-        "path": "C:\\Users\\User\\3KLife-wt-gacha2\\Design System 3\\source\\ui-design-tokens.json",
+        "path": "C:\\Users\\User\\3KLife-wt-g3\\Design System 3\\source\\ui-design-tokens.json",
         "previousValue": "fonts/newsreader/newsreader",
         "value": "fonts/newsreader/font",
         "chosenSource": "source"
@@ -5323,9 +5272,9 @@
         "section": "typography",
         "token": "bodyFont",
         "previousSource": "runtime",
-        "previousPath": "C:\\Users\\User\\3KLife-wt-gacha2\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+        "previousPath": "C:\\Users\\User\\3KLife-wt-g3\\assets\\resources\\ui-spec\\ui-design-tokens.json",
         "source": "source",
-        "path": "C:\\Users\\User\\3KLife-wt-gacha2\\Design System 3\\source\\ui-design-tokens.json",
+        "path": "C:\\Users\\User\\3KLife-wt-g3\\Design System 3\\source\\ui-design-tokens.json",
         "previousValue": "fonts/notosans_tc/notosans_tc",
         "value": "fonts/notosans_tc/font",
         "chosenSource": "source"
@@ -5334,9 +5283,9 @@
         "section": "typography",
         "token": "labelFont",
         "previousSource": "runtime",
-        "previousPath": "C:\\Users\\User\\3KLife-wt-gacha2\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+        "previousPath": "C:\\Users\\User\\3KLife-wt-g3\\assets\\resources\\ui-spec\\ui-design-tokens.json",
         "source": "source",
-        "path": "C:\\Users\\User\\3KLife-wt-gacha2\\Design System 3\\source\\ui-design-tokens.json",
+        "path": "C:\\Users\\User\\3KLife-wt-g3\\Design System 3\\source\\ui-design-tokens.json",
         "previousValue": "fonts/manrope/manrope",
         "value": "fonts/manrope/font",
         "chosenSource": "source"
@@ -5353,6 +5302,6 @@
       "limit": 4,
       "_warning": null
     },
-    "perTabReplayMergedAt": "2026-11-14T05:58:44.042Z"
+    "perTabReplayMergedAt": "2026-11-14T09:11:08.874Z"
   }
 }

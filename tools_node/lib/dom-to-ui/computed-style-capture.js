@@ -231,6 +231,19 @@ async function captureComputedStyles(page) {
         out._localRect = localRect(el);
       }
       out._textContent = pseudo ? null : (el.children.length === 0 ? (el.textContent || '').trim().slice(0, 200) : null);
+      // background-clip:text（漸層字）：底圖被裁成自己與子孫的字形，記下漸層讓轉換端改成字色、不畫成底塊
+      if (!pseudo) {
+        for (let node = el; node && node.nodeType === 1; node = node.parentElement) {
+          const ncs = node === el ? cs : window.getComputedStyle(node);
+          const clip = ncs.getPropertyValue('background-clip') || ncs.getPropertyValue('-webkit-background-clip');
+          const image = ncs.getPropertyValue('background-image');
+          if (clip.trim() === 'text' && image && image !== 'none') {
+            out._textClipGradient = image.trim();
+            out._textClipOwner = node === el;
+            break;
+          }
+        }
+      }
       return out;
     }
 
