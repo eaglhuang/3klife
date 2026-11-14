@@ -8,7 +8,7 @@ milestone: MEM-M0
 depends_on: []
 related_plan: docs/ai_atomic_framework/atm-memory-governance/ATM 跨專案記憶治理計畫書.md
 planning_repo: 3KLife
-target_repo: 3KLife
+target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 scopePaths:
   - "docs/keep-memory/README.md"

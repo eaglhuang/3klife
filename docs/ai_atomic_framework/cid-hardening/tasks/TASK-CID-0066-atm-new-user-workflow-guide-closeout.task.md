@@ -3,6 +3,7 @@ task_id: TASK-CID-0066
 title: "ATM new user workflow guide closeout"
 status: done
 priority: P1
+target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 started_by_agent: captain
 completed_by_agent: "captain"
