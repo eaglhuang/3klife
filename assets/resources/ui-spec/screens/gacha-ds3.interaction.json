@@ -24,7 +24,7 @@
       }
     },
     {
-      "id": "gacha-ds3_div_12.open-panel",
+      "id": "gacha-ds3_div_9.open-panel",
       "trigger": "BtnGachaHistory",
       "event": "click",
       "type": "openPanel",
@@ -35,8 +35,8 @@
       }
     },
     {
-      "id": "gacha-ds3_div_30.close-modal",
-      "trigger": "GachaDs3_div_39",
+      "id": "gacha-ds3_div_31.close-modal",
+      "trigger": "GachaDs3_div_43",
       "event": "click",
       "type": "closeModal",
       "target": "historyModal",

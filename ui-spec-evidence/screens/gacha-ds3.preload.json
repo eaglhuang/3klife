@@ -3,9 +3,12 @@
   "version": 1,
   "firstScreen": {
     "bundles": [
-      "lobby_ui"
+      "lobby_ui",
+      "ui_bg"
     ],
-    "spriteFrames": [],
+    "spriteFrames": [
+      "sprites/ui_bg/recruit_bg"
+    ],
     "fonts": [
       "fonts/manrope/manrope",
       "fonts/notosans_tc/notosans_tc"
@@ -22,20 +25,20 @@
         ]
       },
       {
-        "slotName": "GachaDs3_div_36",
+        "slotName": "GachaDs3_div_40",
         "warmupHint": "manual",
         "fragments": []
       }
     ]
   },
   "counts": {
-    "firstScreenSpriteCount": 0,
+    "firstScreenSpriteCount": 1,
     "deferredSpriteCount": 0
   },
   "_warnings": [
     {
       "code": "lazy-slot-missing-default-fragment",
-      "slotName": "GachaDs3_div_36"
+      "slotName": "GachaDs3_div_40"
     }
   ]
 }

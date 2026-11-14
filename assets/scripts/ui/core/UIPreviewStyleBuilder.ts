@@ -15,7 +15,7 @@
  * Unity 對照：相當於 UIStyleApplier + UILayoutHelper 的組合
  */
 import { Node, Sprite, Label, Button, Font, Color, Vec2, UITransform, Widget, director } from 'cc';
-import { LabelCharAtlasBudget } from './LabelCharAtlasBudget';
+import { LabelCharAtlasBudget, isLetterSpacingVisible } from './LabelCharAtlasBudget';
 import { RoundedRectBackground } from '../components/RoundedRectBackground';
 import { SolidBackground } from '../components/SolidBackground';
 import { GradientBackground, GradientColorStop } from '../components/GradientBackground';
@@ -494,8 +494,8 @@ export class UIPreviewStyleBuilder {
         label.color           = style.color;
         label.spacingX        = style.letterSpacing;
         // Cocos 3.8 的 TTF 預設模式不吃 spacingX，只有逐字快取（CHAR）走 bmfont 排版才會套用字距
-        const wantsCharCache = style.letterSpacing > 0
-            && charAtlasBudget.reserve(label.string, style.fontSize, `${style.fontPath ?? ''}|${style.color.r},${style.color.g},${style.color.b},${style.color.a}|${style.outlineWidth ?? 0}`);
+        const wantsCharCache = isLetterSpacingVisible(style.letterSpacing, style.fontSize)
+            && charAtlasBudget.reserve(label.string, style.fontSize, `${style.fontPath ?? ''}|${style.color.r},${style.color.g},${style.color.b},${style.color.a}|${style.outlineWidth ?? 0}`, style.outlineWidth ?? 0);
         if (wantsCharCache) {
             label.cacheMode = Label.CacheMode.CHAR;
         } else if (label.cacheMode === Label.CacheMode.CHAR) {

@@ -66,6 +66,8 @@ function parseArgs(argv) {
     emitVisualReview: true,
     strict: false,
     warnOnly: false,
+    // 片段（分頁內容）只是頁面的一部分：不帶整頁 body 底圖
+    fragment: false,
     validate: false,
     layoutInput: null,
     skinInput: null,
@@ -122,6 +124,7 @@ function parseArgs(argv) {
       case '--no-emit-visual-review': opts.emitVisualReview = false; break;
       case '--strict': opts.strict = true; break;
       case '--warn-only': opts.warnOnly = true; break;
+      case '--fragment': opts.fragment = true; break;
       case '--validate': opts.validate = true; break;
       case '--layout-input': opts.layoutInput = next(); break;
       case '--skin-input': opts.skinInput = next(); break;
@@ -500,6 +503,7 @@ async function main(argv) {
       tokensRuntime: opts.tokensRuntime,
       tokensHandoff: opts.tokensHandoff,
       useComputedStyle: opts.useComputedStyle,
+      fragment: opts.fragment,
       fidelitySnapshots,
       canvas: effectiveCanvas || undefined,
     });

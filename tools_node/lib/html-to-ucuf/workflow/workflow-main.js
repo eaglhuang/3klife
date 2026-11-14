@@ -2,6 +2,7 @@
 const { bindMapPathFor } = require('../bind-map');
 const { applyTabButtonVisualStates } = require('../tab-button-states');
 const fs = require('fs');
+const { writeSkinVariants } = require('./skin-variants');
 
 async function runWorkflowMain(ctx) {
   const {
@@ -285,6 +286,20 @@ async function runWorkflowMain(ctx) {
     removedCount: tokenGovernance.diff.removedCount,
     persistedCount: tokenGovernance.diff.persistedCount,
   });
+
+  // 分頁切換整頁主題 → 配色變體側檔（不同步執行期時寫到本次輸出目錄）
+  const tokenColors = (readJsonIfExists(path.resolve(ROOT, tokenGovernance.localTokenPath)) || {}).colors || {};
+  const skinVariants = writeSkinVariants({
+    screenId: opts.screenId,
+    baseSkinPath: paths.finalSkin,
+    baseLayoutPath: paths.finalLayout,
+    tokenColors,
+    themes: perTabReplay.themes || [],
+    outPath: opts.runtimeSync === false
+      ? path.join(paths.tabReplayDir, `${opts.screenId}.skin-variants.json`)
+      : path.join(resolveCanonicalRuntimePaths(opts.screenId).screensDir, `${opts.screenId}.skin-variants.json`),
+  });
+  steps.push({ step: 'skin-variants', exitCode: 0, ok: true, ...skinVariants });
 
   const runtimeSync = syncFinalArtifactsToRuntime(paths, opts, uiVersion);
   steps.push(buildRuntimeSyncStep(runtimeSync));

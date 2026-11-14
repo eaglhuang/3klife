@@ -71,6 +71,15 @@ export class UISkinResolver {
         this._spriteCache.clear();
     }
 
+    /**
+     * 追加 slot（同一畫面的配色變體用；不清快取，原有 slot 不受影響）。
+     * Unity 對照：在既有 Theme 上加一組 Override 樣式。
+     */
+    registerSlots(slots: Record<string, SkinSlot>): void {
+        if (!this._manifest) return;
+        Object.assign(this._manifest.slots, slots);
+    }
+
     /** 取得 slot 定義（原始 JSON 數據） */
     getSlot(slotId: string): SkinSlot | null {
         return this._manifest?.slots[slotId] ?? null;

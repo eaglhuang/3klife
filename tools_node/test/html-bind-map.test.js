@@ -42,6 +42,12 @@ assert.strictEqual(bioDiv.childNodes.length, 2);
 assert.strictEqual(bioDiv.childNodes[1].attrs['data-name'], 'OverviewBio');
 assert.strictEqual(bioDiv.childNodes[1].childNodes[0], bioText);
 assert.strictEqual(bioDiv.attrs['data-name'], undefined);
+// 原稿已把同名標在外框上：名字移給文字後外框移除同名，避免兩節點撞樣式槽
+bioDiv.attrs['data-name'] = 'OverviewBio';
+bioDiv.removeAttribute = function (k) { delete this.attrs[k]; };
+applyBindMapInPage(bioEntry);
+assert.strictEqual(bioDiv.attrs['data-name'], undefined);
+assert.strictEqual(bioDiv.childNodes[1].attrs['data-name'], 'OverviewBio');
 delete nodes.div;
 
 // whenText：畫面沒有該文字就不套用也不回報未命中，切頁重用的元素要清掉舊名

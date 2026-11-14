@@ -35,7 +35,29 @@ export const GACHA_NODES = {
     ticketSummonLabel: 'TicketSummonLabel',
     /** 右側內容「我的餘額」 */
     balance: 'CostBalanceValue',
+    /** 十連原價（刪除線，與現價相同時藏起來） */
+    pullTenOriginalCost: 'PullTenOriginalCost',
+    /** 橫幅上方「當前卡池」名稱 */
+    poolNameStrip: 'PoolNameStripValue',
+    /** 右側內容（各池片段同名，PROG-2-9025） */
+    rpPoolName: 'RpPoolName',
+    rpPoolSub: 'RpPoolSub',
+    rpPoolBadge: 'RpPoolBadge',
+    pityTitle: 'PityTitle',
+    pityRemain: 'PityRemain',
+    pityTrack: 'PityTrack',
+    pityFill: 'PityFill',
+    pityFillLabel: 'PityFillLabel',
 } as const;
+
+/** 右側機率格第 index 格（由稀有度高到低） */
+export const GACHA_RATE_NODES = (index: number): { item: string; rarity: string; pct: string } => ({
+    item: `RateItem${index}`,
+    rarity: `RateRarity${index}`,
+    pct: `RatePct${index}`,
+});
+/** 原稿各池機率格最多幾格 */
+export const GACHA_RATE_ROWS = 4;
 
 export type GachaPoolKey = 'general' | 'limited' | 'legendary' | 'support';
 
@@ -63,10 +85,15 @@ export interface GachaPoolDef {
     heroName: string;
     heroTitle: string;
     guarantee: string;
+    /** 橫幅立繪框 */
+    art: string;
+    /** 原稿的池 id（分頁 key）；也是整頁配色變體鍵（gacha-ds3.skin-variants.json，轉換器依分頁產生） */
+    layoutKey: string;
     section?: GachaPoolSection;
 }
 
-function poolDef(key: GachaPoolKey, poolId: string, section?: GachaPoolSection, layoutKey: GachaPoolKey = key): GachaPoolDef {
+/** layoutKey：原稿的池 id（general／legendary＝限定黑金／heroine＝紅顏／support） */
+function poolDef(key: GachaPoolKey, poolId: string, layoutKey: string, section?: GachaPoolSection): GachaPoolDef {
     const prefix = `Pool${layoutKey.charAt(0).toUpperCase()}${layoutKey.slice(1)}`;
     return {
         key,
@@ -77,6 +104,8 @@ function poolDef(key: GachaPoolKey, poolId: string, section?: GachaPoolSection, 
         heroName: `${prefix}HeroName`,
         heroTitle: `${prefix}HeroTitle`,
         guarantee: `${prefix}Guarantee`,
+        art: `${prefix}ArtSlot`,
+        layoutKey,
         section,
     };
 }
@@ -86,14 +115,14 @@ export const RED_FACE_SECTION_FRAGMENT = 'fragments/layouts/gacha-pool-red-face-
 export const RED_FACE_SECTION_ROW_BUTTON = (index: number): string => `btnRedFaceRow${index}`;
 
 /**
- * 依輪播順序：0 名將池、1 限定池（limited-pool，黑金；暫用名將池版面換字）、2 紅顏池（support-pool）、3 支援卡池（mentor-pool）。
- * 限定池沒有開放時間窗時，畫面切池會略過它（PROG-2-9024）。
+ * 依輪播順序：0 名將池、1 限定池（limited-pool，黑金）、2 紅顏池（support-pool）、3 支援卡池（mentor-pool）。
+ * 各池對應原稿同名橫幅與右側片段，配色走 skin 變體（PROG-2-9025）。限定池沒有開放時間窗時切池會略過它（PROG-2-9024）。
  */
 export const GACHA_POOLS: readonly GachaPoolDef[] = [
-    poolDef('general', 'GENERAL_STANDARD_01'),
-    poolDef('limited', 'limited-pool', undefined, 'general'),
-    poolDef('legendary', 'support-pool', { anchor: 'PoolLegendaryArt', fragment: RED_FACE_SECTION_FRAGMENT, replaceContent: true }),
-    poolDef('support', 'mentor-pool'),
+    poolDef('general', 'GENERAL_STANDARD_01', 'general'),
+    poolDef('limited', 'limited-pool', 'legendary'),
+    poolDef('legendary', 'support-pool', 'heroine'),
+    poolDef('support', 'mentor-pool', 'support'),
 ];
 
 export const GACHA_POOL_INDEX = { general: 0, limited: 1, redFace: 2, support: 3 } as const;
@@ -101,12 +130,11 @@ export const GACHA_POOL_INDEX = { general: 0, limited: 1, redFace: 2, support: 3
 /** 各池共用的抽卡列文字。 */
 export function gachaPullBarTexts(): Record<string, string> {
     return {
-        [GACHA_NODES.pullSingleLabel]: '單 抽 ×1',
+        [GACHA_NODES.pullSingleLabel]: '單抽',
         [GACHA_NODES.pullSingleCost]: '150',
-        [GACHA_NODES.pullTenLabel]: '十 連 ×10',
+        [GACHA_NODES.pullTenLabel]: '十連抽',
         [GACHA_NODES.pullTenCost]: '1500',
-        [GACHA_NODES.goldSummonLabel]: '金幣召喚（500）',
-        [GACHA_NODES.ticketSummonLabel]: '使用召喚券（1）',
+        [GACHA_NODES.goldSummonLabel]: '×500',
     };
 }
 
@@ -119,12 +147,7 @@ export function gachaPoolBannerTexts(pool: GachaPoolDef): Record<string, string>
         case 'limited':
             return { [pool.eventChip]: '★ 限定召喚 · 本期限定' };
         case 'legendary':
-            return {
-                [pool.eventChip]: '★ 紅顏池 · 召喚券 1 張抽 1 位',
-                [pool.heroName]: '紅 顏',
-                [pool.heroTitle]: '大喬、小喬、甄姬、黃月英、蔡琰',
-                [pool.guarantee]: '抽到的武將入名冊，成年後可到「結緣」配對',
-            };
+            return { [pool.eventChip]: '★ 紅顏系列 · 常設' };
         case 'support':
             return { [pool.eventChip]: guide.supportSeries };
         default:

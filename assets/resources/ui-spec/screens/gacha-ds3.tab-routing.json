@@ -1,6 +1,6 @@
 {
   "screenId": "gacha-ds3",
-  "generatedAt": "2026-11-11T16:15:27.098Z",
+  "generatedAt": "2026-11-14T05:58:44.044Z",
   "source": "per-tab-replay",
   "tabs": [
     {
@@ -33,6 +33,25 @@
       ]
     },
     {
+      "id": "Heroine",
+      "key": "heroine",
+      "mount": "RightPanel",
+      "mountSource": "source-dom:tab-content-contract",
+      "lifecycle": "lazy",
+      "fragment": "fragments/layouts/gacha-ds3-heroine-content",
+      "childPanelClass": "GachaDs3HeroineChildPanel",
+      "replaySourceHtml": "artifacts/skill-test-html-to-ucuf/gacha-ds3/tab-replay/gacha-ds3.heroine.right-content.html",
+      "regions": [
+        {
+          "mount": "pool-panel-heroine",
+          "fragment": "fragments/layouts/gacha-ds3-heroine-pool-panel-heroine"
+        }
+      ],
+      "hides": [
+        "pool-panel-general"
+      ]
+    },
+    {
       "id": "Support",
       "key": "support",
       "mount": "RightPanel",
@@ -53,11 +72,11 @@
     }
   ],
   "summary": {
-    "tabCount": 3,
+    "tabCount": 4,
     "mountSlotIds": [
       "RightPanel"
     ],
     "missingMountCount": 0,
-    "missingTriggerCount": 3
+    "missingTriggerCount": 4
   }
 }

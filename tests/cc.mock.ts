@@ -29,7 +29,7 @@ export class Label {
     static readonly VerticalAlign   = { TOP: 0, CENTER: 1, BOTTOM: 2 };
     static readonly Overflow        = { NONE: 0, CLAMP: 1, SHRINK: 2, RESIZE_HEIGHT: 3 };
     static readonly CacheMode       = { NONE: 0, BITMAP: 1, CHAR: 2 };
-    string = ''; fontSize = 20; color = new Color(); horizontalAlign = 0; verticalAlign = 0; overflow = 0;
+    isValid = true; string = ''; fontSize = 20; color = new Color(); horizontalAlign = 0; verticalAlign = 0; overflow = 0;
     isBold = false; font: any = null; lineHeight = 0;
     declare spacingX: number;
     declare cacheMode: number;
@@ -79,7 +79,7 @@ export class Toggle extends Button {
     isChecked = false;
 }
 export class Sprite {
-    enabled = true; spriteFrame: any = null;
+    enabled = true; isValid = true; spriteFrame: any = null;
     declare color: Color;
     declare sizeMode: number;
     declare type: number;

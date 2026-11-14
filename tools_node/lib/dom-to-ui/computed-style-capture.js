@@ -234,7 +234,8 @@ async function captureComputedStyles(page) {
       return out;
     }
 
-    const all = document.querySelectorAll('body *');
+    // body 本身也擷取：整頁底圖、底色與 body::before／::after 遮罩只存在 body 上（轉換時成為最底層節點）
+    const all = document.querySelectorAll('body, body *');
     const snapshots = [];
     let nodeId = 0;
     // First pass: assign each element a unique id via WeakMap so we can

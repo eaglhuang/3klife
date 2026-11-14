@@ -13,8 +13,8 @@
     "source": "gacha-main-states-v1",
     "state": "bloodline-seed"
   },
-  "runtimeVersion": "gacds3-20261112-004",
-  "runtimeVersionUpdatedAt": "2026-11-11T16:15:27.128Z",
+  "runtimeVersion": "gacds3-20261114-026",
+  "runtimeVersionUpdatedAt": "2026-11-14T05:58:44.108Z",
   "tabRouting": {
     "General": {
       "slotId": "RightPanel",
@@ -23,6 +23,10 @@
     "Legendary": {
       "slotId": "RightPanel",
       "fragment": "fragments/layouts/gacha-ds3-legendary-content"
+    },
+    "Heroine": {
+      "slotId": "RightPanel",
+      "fragment": "fragments/layouts/gacha-ds3-heroine-content"
     },
     "Support": {
       "slotId": "RightPanel",

@@ -7,7 +7,7 @@ import { CocosCompositeRenderer } from '../platform/cocos/CocosCompositeRenderer
 import { services } from '../../core/managers/ServiceLoader';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { applyUIScreenRuntimeState } from '../core/UIScreenRuntimeStateRegistry';
-import type { UILayoutNodeSpec, UIScreenSpec, TabRoute } from '../core/UISpecTypes';
+import type { SkinSlot, UILayoutNodeSpec, UIScreenSpec, TabRoute } from '../core/UISpecTypes';
 import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
 
 const { ccclass, property } = _decorator;
@@ -319,6 +319,55 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
                 clicked.node.on(Node.EventType.TOUCH_END, callback, this);
                 this._sidecarInteractionHooks.push({ node: clicked.node, callback });
             }
+        }
+    }
+
+    /**
+     * 套用同一畫面的配色變體（例如轉蛋各池主題）：變體只換 slot 樣式，不重建節點。
+     * slots 以原 slot id 為鍵；傳 null 代表回到原配色。
+     * Unity 對照：切換 Theme 時對已存在的 Image／Text 重新套色。
+     */
+    public async applySkinVariant(variantKey: string | null, slots: Record<string, SkinSlot> | null): Promise<void> {
+        if (!this._layoutRoot || !this._binder) return;
+        const overrides = variantKey && slots ? slots : {};
+        const registered: Record<string, SkinSlot> = {};
+        for (const [slotId, slot] of Object.entries(overrides)) registered[`${slotId}@${variantKey}`] = slot;
+        this.skinResolver.registerSlots(registered);
+        const pick = (slotId: string | undefined): string | undefined =>
+            slotId && overrides[slotId] ? `${slotId}@${variantKey}` : slotId;
+        const stack: UILayoutNodeSpec[] = [this._layoutRoot];
+        while (stack.length > 0) {
+            const spec = stack.pop()!;
+            stack.push(...(spec.children ?? []));
+            await this._restyleSkinLayers(spec, overrides, pick);
+            const touched = (spec.skinSlot && overrides[spec.skinSlot]) || (spec.styleSlot && overrides[spec.styleSlot]);
+            // 換過色的節點即使這次沒有覆寫也要重套一次，才能回到原配色
+            if (!spec.name || (!touched && !this._variantTouched.has(spec.name))) continue;
+            const node = this._binder.getNode(spec.name);
+            if (!node) continue;
+            const source: UILayoutNodeSpec = { ...spec, children: [], skinSlot: pick(spec.skinSlot), styleSlot: pick(spec.styleSlot) };
+            await this._restyleFromSpec(node, { ...spec, children: [] }, source);
+            if (touched) this._variantTouched.add(spec.name);
+            else this._variantTouched.delete(spec.name);
+        }
+    }
+
+    private readonly _variantTouched = new Set<string>();
+
+    /** 最佳化併進 skinLayers 的整面背景（例如 body 底色）也要跟著換色；圖層節點名為 skinLayer_<layerId> */
+    private async _restyleSkinLayers(spec: UILayoutNodeSpec, overrides: Record<string, SkinSlot>,
+        pick: (slotId: string | undefined) => string | undefined): Promise<void> {
+        if (!spec.name || !spec.skinLayers?.length) return;
+        const host = this._binder!.getNode(spec.name);
+        if (!host) return;
+        for (const layer of spec.skinLayers) {
+            const key = `${spec.name}/${layer.layerId}`;
+            const touched = !!overrides[layer.slotId];
+            if (!touched && !this._variantTouched.has(key)) continue;
+            const child = host.getChildByName(`skinLayer_${layer.layerId}`);
+            if (child) await this.styleBuilder.applyBackgroundSkin(child, pick(layer.slotId)!);
+            if (touched) this._variantTouched.add(key);
+            else this._variantTouched.delete(key);
         }
     }
 

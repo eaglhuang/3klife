@@ -6,6 +6,7 @@ import { placeTutorialTarget } from '../core/OnboardingTargetHighlight';
 import { onboardingActionIdAt, resolveTutorialTargets } from '../core/OnboardingTargetResolver';
 import { ERA_SHIFT_TEXT, formatHegemonRise } from '../../core/systems/RivalRulerLines';
 import { nationDef } from '../../core/systems/RivalNations';
+import type { SkinSlot } from '../core/UISpecTypes';
 import type { RivalRostersConfig } from '../../core/systems/RivalOfficers';
 import { buildRivalOfficerSetup, type RivalOfficerSetupInput, type RivalSetupGeneral } from '../../core/systems/RivalOfficerSetup';
 import { inspiredTacticName } from '../../core/systems/InspiredTacticMap';
@@ -164,7 +165,7 @@ import { RED_FACE_SHOW_MAX_ROWS, RedFaceGalleryController, RedFaceShowcaseContro
 import { GACHA_NODES, GACHA_POOL_INDEX, GACHA_POOLS, GachaPoolDef, RED_FACE_SECTION_ROW_BUTTON } from '../core/GachaScreenNodes';
 import { LocalGachaApi } from '../../core/gacha/LocalGachaApi';
 import { parseGachaMainPools, type GachaApi, type GachaMainPoolConfig } from '../../core/gacha/GachaApi';
-import { gachaApiTexts, gachaAutoSizeNodes } from '../core/GachaApiTexts';
+import { gachaApiView, gachaAutoSizeNodes } from '../core/GachaApiTexts';
 import { GachaPoolSwitcher } from '../core/GachaPoolSwitcher';
 import { PORTRAIT_GALLERY_PAGE_SIZE } from '../core/PortraitGallery';
 import { FaceMarks, PORTRAIT_FRAME_SPEC, PortraitFrameSpec, SHOWCASE_PORTRAIT_SPEC, fitPortraitInFrame } from '../core/PortraitFrameFit';
@@ -192,7 +193,7 @@ import { DuplicatePullPopupController, DUPLICATE_INFUSION_VALUE, infusionTargets
 import { buildLobbyScout, ScoutPanelController } from '../core/ScoutPanelController';
 import type { TacticCounterTagTable } from '../../core/systems/LoadoutCheck';
 import { spiritSlotViewOf } from '../../core/systems/SpiritSlotState';
-import { DestinyShopController, destinyBriefTexts } from '../core/DestinyShopController';
+import { DestinyShopController } from '../core/DestinyShopController';
 import { SortieSetupController, type SortieRole } from '../core/SortieSetupController';
 import type { PowDecision } from '../../core/systems/PrisonerOfWar';
 import { OracleCouple, SageOracleController } from '../core/SageOracleController';
@@ -232,6 +233,7 @@ import { buildStageAwakenedTexts, buildStageCapRaisedTexts, type MirrorStageResu
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { warnGeneralSchemaOnLoad } from '../../core/models/GeneralSchema';
 import { coreFieldCoverage, formatCoreFieldCoverage } from '../../core/systems/GeneralCoreFields';
+import { fitContain } from '../core/GachaResultRanking';
 import { DEFAULT_POOL_ID as GACHA_GENERAL_POOL_ID, GachaFlowCoordinator, GACHA_PULL_RESULT_SCREEN_ID, GACHA_SCREEN_ID } from '../core/GachaFlowCoordinator';
 import { buildDestinyOpeningResults } from '../core/DestinyOpeningResult';
 import type { DestinyPoolView } from '../core/DestinyOpeningController';
@@ -4304,13 +4306,10 @@ export class LobbyScene extends Component {
     }
 
     /** 轉蛋頁左上角入口：顯示目前輪播池的天命值（UI_PITY_BIG） */
+    /** 左上說明框依原稿顯示各池說明（由 _applyGachaApiTexts 填）；天命進度在限定池天命值條與橫幅保底標籤（PROG-2-9025） */
     private _refreshDestinyBrief(): void {
-        const pool = this._destinyPoolOf(this._gachaPoolIndex);
-        const gacha = this._localGachaService;
-        const brief = pool
-            ? destinyBriefTexts(gacha.getDestinyShopCredits(pool.poolId), gacha.getPullsToNextDestinyCredit(pool.poolId), true)
-            : destinyBriefTexts(0, 0, false);
-        this._gachaHost?.binder?.setTexts({ [GACHA_NODES.briefTag]: brief.tag, [GACHA_NODES.briefLine]: brief.line });
+        const pool = this._gachaPoolSwitcher?.pool;
+        if (pool) void this._applyGachaApiTexts(pool);
     }
 
     /** 年報畫面（UI_YEAR_REPORT，TIME-07）：年末 YearEnded 時彈出，文字走 zh-TW 預設退回 */
@@ -5876,21 +5875,12 @@ export class LobbyScene extends Component {
             destinyWidget.isAlignBottom = false;
             destinyWidget.isAlignRight = false;
             destinyWidget.top = 92;
-            destinyEntry.getComponent(UITransform)?.setContentSize(280, 88);
-            for (const [name, size] of [[GACHA_NODES.briefTag, 22], [GACHA_NODES.briefLine, 20]] as const) {
-                const label = host.binder.getNode(name)?.getComponent(Label);
-                if (!label) continue;
-                label.fontSize = size;
-                label.lineHeight = size + 6;
-                label.node.getComponent(UITransform)?.setContentSize(248, size + 8);
-            }
             destinyWidget.updateAlignment();
         }
     }
 
     /** 切池完成（內容已載入）：刷新天命入口、餘額，以及該池的附加區塊資料。 */
     private _onGachaPoolShown(host: UIScreenPreviewHost, pool: GachaPoolDef): void {
-        this._refreshDestinyBrief();
         this._refreshWalletPreviewState();
         void this._applyGachaApiTexts(pool);
         if (pool.section && this._gachaRedFace && host.binder) {
@@ -6801,12 +6791,17 @@ export class LobbyScene extends Component {
     private async _applyGachaApiTexts(pool: GachaPoolDef): Promise<void> {
         await this._loadGachaMainPools();
         const api = this._getGachaApi();
-        const [pools, wallet] = await Promise.all([api.listPools(), api.getWallet()]);
+        const [pools, wallet, variants] = await Promise.all([api.listPools(), api.getWallet(), this._loadGachaSkinVariants()]);
         const dto = pools.find((p) => p.poolId === pool.poolId);
         if (!dto || this._gachaPoolSwitcher?.pool !== pool) return;
         const nameOf = (id: string): string => this._generals.find((g) => g.id === id)?.name ?? id;
-        const binder = this._gachaHost?.binder;
-        if (!binder) return;
+        const host = this._gachaHost;
+        const binder = host?.binder;
+        if (!host || !binder) return;
+        // 各池整頁配色（原稿切池改 body[data-pool]，轉換器依分頁產生變體；沒有變體＝原配色）：只重套變色的 slot（PROG-2-9025）
+        await host.applySkinVariant(pool.layoutKey, variants?.[pool.layoutKey]?.slots ?? null);
+        if (this._gachaPoolSwitcher?.pool !== pool) return;
+        const view = gachaApiView(pool, dto, wallet, nameOf, Date.now());
         // 動態文字：依內容撐開，並關掉字元快取（CHAR 模式下原稿沒出現過的字畫不出來）
         for (const name of [...gachaAutoSizeNodes(pool), GACHA_NODES.balance]) {
             const label = binder.getNode(name)?.getComponent(Label);
@@ -6814,8 +6809,61 @@ export class LobbyScene extends Component {
             label.cacheMode = Label.CacheMode.NONE;
             if (name !== GACHA_NODES.balance) label.overflow = Label.Overflow.NONE;
         }
-        binder.setTexts(gachaApiTexts(pool, dto, wallet, nameOf, Date.now()));
+        binder.setTexts(view.texts);
+        binder.setActives(view.actives);
+        // 保底條：填色寬度＝外框寬 × 進度
+        const track = binder.getNode(GACHA_NODES.pityTrack)?.getComponent(UITransform);
+        const fill = binder.getNode(GACHA_NODES.pityFill)?.getComponent(UITransform);
+        if (track && fill) fill.setContentSize(Math.max(0, track.width * view.pityRatio), fill.height);
+        const heroId = pool.key === 'limited' ? dto.featuredGeneralIds[0] : dto.showcaseGeneralId;
+        if (heroId) this._applyGachaBannerPortrait(binder.getNode(pool.art), heroId);
     }
+
+    private _gachaSkinVariants: Record<string, { slots: Record<string, SkinSlot> }> | null = null;
+
+    /** 轉蛋各池配色變體（tools_node/build-ucuf-skin-variants.js 產出） */
+    private async _loadGachaSkinVariants(): Promise<Record<string, { slots: Record<string, SkinSlot> }> | null> {
+        if (this._gachaSkinVariants) return this._gachaSkinVariants;
+        const doc = await new Promise<{ variants?: Record<string, { slots: Record<string, SkinSlot> }> } | null>((resolve) => {
+            resources.load(`ui-spec/screens/${GACHA_SCREEN_ID}.skin-variants`, JsonAsset, (err, asset) => resolve(err || !asset ? null : asset.json as any));
+        });
+        this._gachaSkinVariants = doc?.variants ?? {};
+        return this._gachaSkinVariants;
+    }
+
+    /** 橫幅立繪：藏起原稿「立繪佔位」字樣，在框內等比放入武將立繪並貼齊底部 */
+    private _applyGachaBannerPortrait(artNode: Node | null, generalId: string): void {
+        if (!artNode) return;
+        const box = artNode.getComponent(UITransform);
+        if (!box) return;
+        for (const child of artNode.children) if (child.name !== 'GachaBannerPortrait') child.active = false;
+        let portrait = artNode.getChildByName('GachaBannerPortrait');
+        if (!portrait) {
+            portrait = new Node('GachaBannerPortrait');
+            portrait.layer = artNode.layer;
+            portrait.addComponent(UITransform);
+            artNode.addChild(portrait);
+        }
+        const sprite = portrait.getComponent(Sprite) ?? portrait.addComponent(Sprite);
+        const seq = (this._gachaBannerPortraitSeq = (this._gachaBannerPortraitSeq ?? 0) + 1);
+        if ((portrait as any)._gachaGeneralId === generalId && sprite.spriteFrame) return;
+        sprite.enabled = false;
+        void loadGeneralPortrait(generalId).then((frame) => {
+            if (seq !== this._gachaBannerPortraitSeq || !sprite.isValid || !frame) return;
+            sprite.sizeMode = Sprite.SizeMode.CUSTOM;
+            sprite.trim = false;
+            sprite.spriteFrame = frame;
+            const fit = fitContain(box.width, box.height, frame.originalSize.width, frame.originalSize.height);
+            const ui = portrait!.getComponent(UITransform)!;
+            ui.setContentSize(fit.width, fit.height);
+            // 錨點依外框換算，讓立繪底邊貼齊框底
+            portrait!.setPosition(box.width * (0.5 - box.anchorX), -box.height * box.anchorY + fit.height / 2, 0);
+            (portrait as any)._gachaGeneralId = generalId;
+            sprite.enabled = true;
+        }).catch(() => { /* 立繪載入失敗就留空框 */ });
+    }
+
+    private _gachaBannerPortraitSeq = 0;
 
     private async _runSupportSummon(drawCount = 1): Promise<void> {
         await this._getGachaFlowCoordinator().runSupportSummon(MENTOR_POOL_ID, await this._supportPoolGenerals(), drawCount);

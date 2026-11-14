@@ -89,7 +89,9 @@ export class UITemplateBinder {
 
     /** 取得綁定的 Node（優先查 id，fallback 查 name） */
     getNode(id: string): Node | null {
-        return this._nodeMap.get(id) ?? null;
+        // 切換分頁／卡池後舊片段節點已銷毀；銷毀的節點不回傳，免得呼叫端對死節點取元件而拋錯
+        const node = this._nodeMap.get(id);
+        return node && node.isValid ? node : null;
     }
 
     /** 以 layout 相對路徑取得綁定的 Node（不含 root name） */
@@ -99,7 +101,8 @@ export class UITemplateBinder {
 
     /** 取得綁定的 Label */
     getLabel(id: string): Label | null {
-        return this._labelMap.get(id) ?? null;
+        const label = this._labelMap.get(id);
+        return label && label.isValid ? label : null;
     }
 
     /** 以 layout 相對路徑取得綁定的 Label（不含 root name） */
@@ -109,7 +112,8 @@ export class UITemplateBinder {
 
     /** 取得綁定的 Sprite */
     getSprite(id: string): Sprite | null {
-        return this._spriteMap.get(id) ?? null;
+        const sprite = this._spriteMap.get(id);
+        return sprite && sprite.isValid ? sprite : null;
     }
 
     /** 以 layout 相對路徑取得綁定的 Sprite（不含 root name） */
@@ -119,14 +123,12 @@ export class UITemplateBinder {
 
     /** 取得綁定的 Button */
     getButton(id: string): Button | null {
-        const node = this._nodeMap.get(id);
-        return node?.getComponent(Button) ?? null;
+        return this.getNode(id)?.getComponent(Button) ?? null;
     }
 
     /** 取得綁定的 ProgressBar */
     getProgressBar(id: string): ProgressBar | null {
-        const node = this._nodeMap.get(id);
-        return node?.getComponent(ProgressBar) ?? null;
+        return this.getNode(id)?.getComponent(ProgressBar) ?? null;
     }
 
     /** 取得綁定的 ScrollView */
@@ -138,7 +140,7 @@ export class UITemplateBinder {
     /** 批次設定 Label 文字 */
     setTexts(data: Record<string, string>): void {
         for (const [id, text] of Object.entries(data)) {
-            const label = this._labelMap.get(id);
+            const label = this.getLabel(id);
             if (label) {
                 label.string = text;
             }
@@ -158,7 +160,7 @@ export class UITemplateBinder {
     /** 批次設定 Node active 狀態 */
     setActives(data: Record<string, boolean>): void {
         for (const [id, active] of Object.entries(data)) {
-            const node = this._nodeMap.get(id);
+            const node = this.getNode(id);
             if (node) {
                 node.active = active;
             }

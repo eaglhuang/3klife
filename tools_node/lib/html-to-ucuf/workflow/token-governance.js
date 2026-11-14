@@ -187,7 +187,12 @@ function applyScreenLocalColorTokensToSkin(skinPath, localTokenPayload, helpers)
 
 function regenerateScreenLocalTokens(args) {
   const { paths, opts, helpers } = args;
-  const runtimePaths = helpers.resolveCanonicalRuntimePaths(opts.screenId);
+  // 不同步執行期（--no-runtime-sync，例如轉主題變體）時色票表寫到本次輸出目錄，
+  // 不可覆蓋正式色票表：skin 的 local_color_NN 編號是每次轉換各自決定的
+  const runtimeSyncOff = !!opts && opts.runtimeSync === false;
+  const runtimePaths = runtimeSyncOff
+    ? { screenLocalTokenPath: path.join(path.dirname(paths.localTokenDiffReport), `${opts.screenId}.local-tokens.json`) }
+    : helpers.resolveCanonicalRuntimePaths(opts.screenId);
   const suggestionFiles = collectTokenSuggestionFiles(paths);
   const previous = helpers.readJsonIfExists(runtimePaths.screenLocalTokenPath);
   const payload = buildScreenLocalTokenPayload(opts.screenId, suggestionFiles, helpers);
@@ -227,4 +232,5 @@ function regenerateScreenLocalTokens(args) {
 
 module.exports = {
   regenerateScreenLocalTokens,
+  normalizeColorValue,
 };

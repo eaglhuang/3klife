@@ -13,17 +13,14 @@
       "name": "GachaDs3LegendaryPoolPanelLegendaryRoot",
       "children": [
         {
-          "type": "panel",
-          "name": "GachaDs3TabLegendaryPoolPanelLegendary_div_1",
-          "width": 1920,
-          "height": 1080,
-          "skinSlot": "auto.gacha-ds3-tab-legendary-pool-panel-legendary.gachads3tablegendarypoolpanellegendary_div_1"
-        },
-        {
           "type": "container",
-          "name": "GachaDs3TabLegendaryPoolPanelLegendary_div_4",
-          "width": 1920,
-          "height": 1080,
+          "name": "PoolLegendaryArt",
+          "widget": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0
+          },
           "layout": {
             "type": "horizontal",
             "alignItems": "end",
@@ -32,7 +29,7 @@
           "children": [
             {
               "type": "panel",
-              "name": "PoolLegendaryArt",
+              "name": "PoolLegendaryArtSlot",
               "width": 480,
               "height": 918,
               "layout": {
@@ -40,23 +37,33 @@
                 "alignItems": "center",
                 "justifyContent": "center"
               },
-              "skinSlot": "auto.gacha-ds3-tab-legendary-pool-panel-legendary.poollegendaryart",
+              "skinSlot": "auto.gacha-ds3-tab-legendary-pool-panel-legendary.poollegendaryartslot",
               "children": [
                 {
                   "type": "label",
                   "name": "GachaDs3TabLegendaryPoolPanelLegendary_span_1",
                   "text": "hero artwork",
-                  "styleSlot": "auto.gacha-ds3-tab-legendary-pool-panel-legendary.gachads3tablegendarypoolpanellegendary_span_1",
-                  "width": 480
+                  "styleSlot": "auto.gacha-ds3-tab-legendary-pool-panel-legendary.gachads3tablegendarypoolpanellegendary_span_1"
                 },
                 {
                   "type": "label",
                   "name": "GachaDs3TabLegendaryPoolPanelLegendary_span_2",
                   "text": "立繪佔位",
-                  "styleSlot": "auto.gacha-ds3-tab-legendary-pool-panel-legendary.gachads3tablegendarypoolpanellegendary_span_2",
-                  "width": 480
+                  "styleSlot": "auto.gacha-ds3-tab-legendary-pool-panel-legendary.gachads3tablegendarypoolpanellegendary_span_2"
                 }
               ]
+            },
+            {
+              "type": "panel",
+              "name": "PoolLegendaryArt_PseudoBefore",
+              "widget": {
+                "left": 690,
+                "top": 180
+              },
+              "skinSlot": "auto.gacha-ds3-tab-legendary-pool-panel-legendary.poollegendaryart_pseudobefore",
+              "_cssPseudo": "before",
+              "width": 900,
+              "height": 900
             }
           ]
         },
@@ -64,12 +71,11 @@
           "type": "panel",
           "name": "GachaDs3TabLegendaryPoolPanelLegendary_div_2",
           "widget": {
-            "top": 0,
             "right": 0,
+            "top": 0,
             "bottom": 0
           },
           "width": 180,
-          "height": 1080,
           "skinSlot": "auto.gacha-ds3-tab-legendary-pool-panel-legendary.gachads3tablegendarypoolpanellegendary_div_2"
         },
         {
@@ -80,87 +86,99 @@
             "right": 0,
             "bottom": 0
           },
-          "width": 1920,
           "height": 120,
           "skinSlot": "auto.gacha-ds3-tab-legendary-pool-panel-legendary.gachads3tablegendarypoolpanellegendary_div_3"
         },
         {
           "type": "container",
-          "name": "GachaDs3TabLegendaryPoolPanelLegendary_div_5",
+          "name": "GachaDs3TabLegendaryPoolPanelLegendary_div_4",
           "widget": {
-            "left": 52,
-            "bottom": 44
+            "left": 180,
+            "bottom": 56
           },
-          "width": 249,
-          "height": 189,
+          "width": 389,
+          "height": 320,
           "layout": {
             "type": "vertical",
             "alignItems": "start",
-            "spacingY": 12
+            "spacingY": 16
           },
           "children": [
             {
               "type": "panel",
-              "name": "GachaDs3TabLegendaryPoolPanelLegendary_div_6",
-              "width": 124,
-              "height": 24,
+              "name": "GachaDs3TabLegendaryPoolPanelLegendary_div_5",
+              "width": 314,
+              "height": 49,
               "layout": {
                 "type": "vertical",
                 "alignItems": "start",
-                "paddingTop": 4,
-                "paddingRight": 12,
-                "paddingBottom": 4,
-                "paddingLeft": 12
+                "paddingTop": 6,
+                "paddingRight": 18,
+                "paddingBottom": 6,
+                "paddingLeft": 18
               },
-              "skinSlot": "auto.gacha-ds3-tab-legendary-pool-panel-legendary.gachads3tablegendarypoolpanellegendary_div_6",
+              "skinSlot": "auto.gacha-ds3-tab-legendary-pool-panel-legendary.gachads3tablegendarypoolpanellegendary_div_5",
               "children": [
                 {
                   "type": "label",
                   "name": "PoolLegendaryEventChip",
-                  "width": 98,
-                  "height": 14,
-                  "text": "★ 傳奇系列 · 常設",
+                  "width": 274,
+                  "height": 33,
+                  "text": "★ 本期限定 · 剩 6 天",
                   "styleSlot": "auto.gacha-ds3-tab-legendary-pool-panel-legendary.poollegendaryeventchip"
                 }
               ]
             },
             {
-              "type": "label",
+              "type": "panel",
               "name": "PoolLegendaryHeroName",
-              "width": 249,
-              "height": 72,
-              "text": "呂 布",
-              "styleSlot": "auto.gacha-ds3-tab-legendary-pool-panel-legendary.poollegendaryheroname"
+              "width": 389,
+              "height": 120,
+              "skinSlot": "auto.gacha-ds3-tab-legendary-pool-panel-legendary.poollegendaryheroname",
+              "children": [
+                {
+                  "type": "label",
+                  "name": "GachaDs3TabLegendaryPoolPanelLegendary_span_3",
+                  "widget": {
+                    "left": 0,
+                    "top": 0
+                  },
+                  "text": "呂 布",
+                  "styleSlot": "auto.gacha-ds3-tab-legendary-pool-panel-legendary.gachads3tablegendarypoolpanellegendary_span_3",
+                  "width": 389,
+                  "height": 120
+                }
+              ]
             },
             {
               "type": "label",
               "name": "PoolLegendaryHeroTitle",
-              "width": 249,
-              "height": 19,
-              "text": "天下無雙 · UR 武將",
+              "width": 389,
+              "height": 41,
+              "text": "天下無雙 · 限定 SSR",
               "styleSlot": "auto.gacha-ds3-tab-legendary-pool-panel-legendary.poollegendaryherotitle"
             },
             {
               "type": "panel",
-              "name": "GachaDs3TabLegendaryPoolPanelLegendary_div_7",
-              "width": 249,
-              "height": 33,
+              "name": "GachaDs3TabLegendaryPoolPanelLegendary_div_6",
+              "width": 360,
+              "height": 60,
               "layout": {
                 "type": "vertical",
                 "alignItems": "start",
-                "paddingTop": 8,
-                "paddingRight": 18,
-                "paddingBottom": 8,
-                "paddingLeft": 18
+                "paddingTop": 10,
+                "paddingRight": 22,
+                "paddingBottom": 10,
+                "paddingLeft": 22
               },
-              "skinSlot": "auto.gacha-ds3-tab-legendary-pool-panel-legendary.gachads3tablegendarypoolpanellegendary_div_7",
+              "skinSlot": "auto.gacha-ds3-tab-legendary-pool-panel-legendary.gachads3tablegendarypoolpanellegendary_div_6",
               "children": [
                 {
                   "type": "label",
                   "name": "PoolLegendaryGuarantee",
-                  "width": 211,
-                  "height": 15,
-                  "text": "👑 UR 保底 180 抽 SSR 保底 90 抽",
+                  "width": 312,
+                  "height": 36,
+                  "text": "👑 200 抽可換限定 SSR",
                   "styleSlot": "auto.gacha-ds3-tab-legendary-pool-panel-legendary.poollegendaryguarantee"
                 }
               ]

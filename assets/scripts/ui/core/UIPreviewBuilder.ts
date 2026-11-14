@@ -63,7 +63,7 @@ export class UIPreviewBuilder extends Component {
     }
 
     private _styleBuilder: UIPreviewStyleBuilder | null = null;
-    private get styleBuilder(): UIPreviewStyleBuilder {
+    protected get styleBuilder(): UIPreviewStyleBuilder {
         if (!this._styleBuilder) {
             if (!this.skinResolver) this.skinResolver = new UISkinResolver();
             if (!this._fontCache) this._fontCache = new Map();

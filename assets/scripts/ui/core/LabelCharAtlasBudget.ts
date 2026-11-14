@@ -8,19 +8,27 @@ const BUDGET_RATIO = 0.35;
 const MAX_TEXT_LENGTH = 12;
 const GLYPH_CELL_RATIO = 1.25;
 const GLYPH_CELL_PADDING = 4;
+/** 字距低於字級的這個比例時肉眼看不出差異，不值得佔圖集（換膚每換一色就要另存一份字元） */
+const MIN_VISIBLE_SPACING_EM = 0.05;
+
+/** 字距是否大到值得改走 CHAR（只有 CHAR 會套用字距） */
+export function isLetterSpacingVisible(letterSpacing: number, fontSize: number): boolean {
+    return letterSpacing > 0 && letterSpacing >= fontSize * MIN_VISIBLE_SPACING_EM;
+}
 
 export class LabelCharAtlasBudget {
     private readonly _glyphs = new Set<string>();
     private _usedArea = 0;
 
     /** 文字可用 CHAR 時預約其字元並回傳 true；styleKey 為字型＋顏色等會讓引擎另存一份字元的樣式。 */
-    public reserve(text: string, fontSize: number, styleKey: string): boolean {
+    public reserve(text: string, fontSize: number, styleKey: string, outlineWidth = 0): boolean {
         const chars = [...text];
         if (chars.length === 0 || chars.length > MAX_TEXT_LENGTH) {
             return false;
         }
 
-        const cell = Math.ceil(fontSize * GLYPH_CELL_RATIO) + GLYPH_CELL_PADDING;
+        // 描邊會把每格字元往四周撐大
+        const cell = Math.ceil(fontSize * GLYPH_CELL_RATIO) + GLYPH_CELL_PADDING + Math.max(0, outlineWidth) * 2;
         const fresh = Array.from(new Set(chars))
             .map((char) => `${char}|${fontSize}|${styleKey}`)
             .filter((key) => !this._glyphs.has(key));
