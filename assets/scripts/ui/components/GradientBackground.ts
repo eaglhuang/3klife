@@ -365,11 +365,17 @@ export class GradientBackground extends Component {
             }
             const span = Math.max(0.0001, right.offset - left.offset);
             const mix = Math.max(0, Math.min(1, (t - left.offset) / span));
+            // 照 CSS 規範在預乘透明度空間內插：直接內插 RGB 會讓近透明的淺色端把高透明度區染亮
+            const la = left.color.a;
+            const ra = right.color.a;
+            const a = la + (ra - la) * mix;
+            if (a <= 0) return new Color(0, 0, 0, 0);
+            const channel = (l: number, r: number) => Math.round((l * la + (r * ra - l * la) * mix) / a);
             return new Color(
-                Math.round(left.color.r + (right.color.r - left.color.r) * mix),
-                Math.round(left.color.g + (right.color.g - left.color.g) * mix),
-                Math.round(left.color.b + (right.color.b - left.color.b) * mix),
-                Math.round(left.color.a + (right.color.a - left.color.a) * mix),
+                channel(left.color.r, right.color.r),
+                channel(left.color.g, right.color.g),
+                channel(left.color.b, right.color.b),
+                Math.round(a),
             );
         }
         return stops[stops.length - 1].color;

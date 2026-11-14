@@ -273,7 +273,12 @@ function parseDeclarations(body) {
     if (idx <= 0) continue;
     const key = rawDecl.slice(0, idx).trim().toLowerCase();
     const value = rawDecl.slice(idx + 1).trim();
-    if (key) out[camelizeCss(key)] = value;
+    if (!key) continue;
+    const prop = camelizeCss(key);
+    // 同一區塊裡重複的屬性：後寫的覆蓋前面，但 !important 只會被另一個 !important 蓋掉
+    const important = /!\s*important\s*$/i;
+    if (important.test(out[prop] || '') && !important.test(value)) continue;
+    out[prop] = value;
   }
   return out;
 }

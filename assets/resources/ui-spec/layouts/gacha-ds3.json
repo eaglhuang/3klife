@@ -367,10 +367,11 @@
               "left": 0,
               "right": 600
             },
+            "active": false,
             "height": 56,
             "layout": {
-              "type": "horizontal",
-              "alignItems": "center",
+              "type": "vertical",
+              "alignItems": "start",
               "paddingTop": 0,
               "paddingRight": 120,
               "paddingBottom": 0,
