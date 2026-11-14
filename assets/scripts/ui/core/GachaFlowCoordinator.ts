@@ -258,9 +258,13 @@ export class GachaFlowCoordinator {
             GachaPullResult_div_412: opening ? '進入大廳' : '返回卡池',
             GachaPullResult_div_413: drawCount === 10 ? '再抽十連' : `再${title}一次`,
             GachaPullResult_div_186: `${currency === 'gold' ? '金幣' : currency === 'tickets' ? '召喚券' : currency === 'mentorTickets' ? '支援券' : '玉'} ${wallet[currency].toLocaleString('zh-TW')}`,
-            GachaPullResult_span_13: `SSR+ ×${rarityStats.high}`,
+            GachaPullResult_span_13: `SSR ×${rarityStats.high}`,
             GachaPullResult_span_14: `SR ×${rarityStats.mid}`,
-            GachaPullResult_span_15: `R/N ×${rarityStats.low}`,
+            GachaPullResult_span_15: `R ×${rarityStats.low}`,
+            // 原稿「SSR <strong>×1</strong>」轉成父標籤整句＋子標籤疊在字尾；整句改由父標籤顯示，清掉子標籤免得疊字
+            GachaPullResult_strong_5: '',
+            GachaPullResult_strong_6: '',
+            GachaPullResult_strong_7: '',
             GachaPullResult_hero_rarity: topResult ? `✦ ${this._toPullResultRarityLabel(topResult.rarityTier)} · 絕世登場 ✦` : '✦ 絕世名將 ✦',
             GachaPullResult_hero_name: topResult ? `${topResult.general.name}${topResult.general.courtesyName ? ` · ${topResult.general.courtesyName}` : ''}` : '絕世名將',
             GachaPullResult_hero_desc: heroLine ?? (topResult ? (topResult.general.description || '義薄雲天 · 威震華夏 · 萬世流芳') : '名揚四海 · 天下歸心'),
@@ -275,6 +279,7 @@ export class GachaFlowCoordinator {
             } : {}),
         });
 
+        await this._restyleCardsByRarity(host, cards, results);
         // 逐字快取（CHAR）配英文 TTF 時中文畫不出來，換字後也會疊字；結果畫面整片改不快取
         disableCharCache(host.node);
         this._updateCardPortraits(binder, cards, results);
@@ -326,6 +331,27 @@ export class GachaFlowCoordinator {
                 UCUFLogger.warn(LogCategory.DATA, '[GachaFlowCoordinator] onWalletChanged failed', error);
             }
         }
+    }
+
+    /**
+     * 結果卡配色照實際稀有度：原稿十張示意卡各有寫死的稀有度與配色，
+     * 依抽到的稀有度找原稿同稀有度那張當樣板換樣式（UR／LR 用 SSR、N 用 R；原稿沒有的稀有度維持原樣）。
+     */
+    private async _restyleCardsByRarity(host: UIScreenPreviewHost, cards: readonly string[], results: LocalGachaResultEntry[]): Promise<void> {
+        const templateOf = new Map<string, string>();
+        GACHA_PULL_RESULT_CARD_NODE_MAP.forEach((nodeMap, index) => {
+            const rarity = String(host.findLayoutSpec(nodeMap.rarityId)?.text ?? '').trim().toUpperCase();
+            if (rarity && !templateOf.has(rarity)) templateOf.set(rarity, `GachaPullResult_div_${cards[index]}`);
+        });
+        const family = (rarity: string): string => (rarity === 'UR' || rarity === 'LR' ? 'SSR' : rarity === 'N' ? 'R' : rarity);
+        const pairs: Array<{ target: string; template: string }> = [];
+        results.slice(0, cards.length).forEach((entry, index) => {
+            const rarity = this._toPullResultRarityLabel(entry.rarityTier);
+            const template = templateOf.get(rarity) ?? templateOf.get(family(rarity));
+            const target = `GachaPullResult_div_${cards[index]}`;
+            if (template && template !== target) pairs.push({ target, template });
+        });
+        await host.restyleLike(pairs);
     }
 
     private _toPullResultRarityLabel(rarityTier: string | null | undefined): string {
