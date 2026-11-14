@@ -472,6 +472,9 @@ export class BattleScene extends Component {
       if (this.hud && !(await this.hud.waitUntilReady(15000))) {
         throw new Error('戰鬥 HUD 初始化逾時');
       }
+      await this.battleScenePanel?.actionCommandComposite?.waitUntilReady(15000);
+      // 確保所有在非同步建構完成後才就緒的 HUD 與行動指令元件同步到初始戰鬥數值（Issue #2159）
+      this.refreshBattleViews();
       SceneLoadProgress.step();
       SceneLoadProgress.complete();
       if (this._startupOpacity) this._startupOpacity.opacity = 255;

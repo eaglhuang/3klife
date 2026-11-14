@@ -411,8 +411,10 @@ export class UISpecLoader {
      * @param locale 語系碼（如 'zh-TW'、'en-US'）
      */
     async loadI18n(locale: string): Promise<Record<string, string>> {
+        // 空字串會組出 "i18n/" 目錄路徑，觸發 ResourceManager 報錯（Issue #2159）
+        const normalizedLocale = (locale ?? '').trim() || 'zh-TW';
         return this._rm.loadJson<Record<string, string>>(
-            `i18n/${locale}`, { tags: ['i18n'] }
+            `i18n/${normalizedLocale}`, { tags: ['i18n'] }
         );
     }
 

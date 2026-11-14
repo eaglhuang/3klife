@@ -221,7 +221,8 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
 
             const { screen, layout, skin } = await this._specLoader.loadFullScreen(screenId);
             this._layoutRoot = layout.root;
-            const i18n = await this._specLoader.loadI18n(this.locale);
+            const effectiveLocale = (this.locale ?? '').trim() || services().i18n?.currentLocale?.trim() || 'zh-TW';
+            const i18n = await this._specLoader.loadI18n(effectiveLocale).catch(() => ({} as Record<string, string>));
             const tokens = await this._specLoader.loadDesignTokensForScreen(screenId);
 
             await this.buildScreen(layout, skin, i18n, tokens);

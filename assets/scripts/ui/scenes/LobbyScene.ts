@@ -809,6 +809,8 @@ export class LobbyScene extends Component {
 
         this._ready = true;
         SceneLoadProgress.complete();
+        // 載入遮罩完整關閉後再視條件開啟日報，避免日報浮在 loading progress 畫面上（Issue #2159）
+        this._openDailyReportIfPending();
         ensureGlobalDevOverlay(this._localGachaService, undefined, () => { PlayerRosterService.clear(); }, () => {
             this._refreshWalletPreviewState();
         });
@@ -2154,7 +2156,7 @@ export class LobbyScene extends Component {
         this._tournamentHost.node.active = false;
     }
 
-    /** 日報／晨報登入面板（PROG-2-1192）：有未讀才開；「晨報派遣板」直接切到派遣板 */
+    /** 日報／晨報登入面板（PROG-2-1192）：預先掛載但維持隱藏，等載入遮罩結束後才由 _openDailyReportIfPending 開啟 */
     private async _mountDailyReport(): Promise<void> {
         const close = (): void => { if (this._dailyReportHost) this._dailyReportHost.node.active = false; };
         this._dailyReportHost = await this._mountPreviewScreenHost('DailyReportHost', 'daily-report-screen', [
@@ -2162,6 +2164,13 @@ export class LobbyScene extends Component {
             { buttonId: 'btnOpenJournalHub', handler: () => { close(); this._openJournalHub(); } },
             { buttonId: 'btnRevenge', handler: () => { this._claimRevenge(); } },
         ]);
+        // 掛載期間先保持隱藏，待 SceneLoadProgress.complete() 完成後再打開（Issue #2159）
+        this._dailyReportHost.node.active = false;
+    }
+
+    /** 在載入遮罩完全收起後視新舊玩家與開場狀態開啟待讀日報（Issue #2159） */
+    private _openDailyReportIfPending(): void {
+        if (!this._dailyReportHost) return;
         // 新玩家／開場進行中不開日報（issue #2099 第 10 項）：首日日報只是「首次生成」，疊在開場與載入上反而擋路
         const report = this._isNewPlayer || this._isOpeningInProgress() ? null : this._dailyReport;
         this._dailyReportHost.node.active = report !== null;

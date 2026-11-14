@@ -1,8 +1,18 @@
 {
   "schemaId": "atm.actorRegistry",
   "specVersion": "0.1.0",
-  "generatedAt": "2026-11-12T02:46:15.900Z",
+  "generatedAt": "2026-11-14T16:17:59.912Z",
   "actors": [
+    {
+      "actorId": "antigravity-gemini",
+      "actorKind": "ai-agent",
+      "displayName": "antigravity-gemini",
+      "editor": "antigravity",
+      "gitName": "antigravity-gemini",
+      "gitEmail": "antigravity-gemini@atm.local",
+      "createdAt": "2026-11-14T16:17:59.911Z",
+      "updatedAt": "2026-11-14T16:17:59.911Z"
+    },
     {
       "actorId": "claude-code-haiku-5-5",
       "actorKind": "ai-agent",

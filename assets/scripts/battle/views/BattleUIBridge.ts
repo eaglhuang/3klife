@@ -161,6 +161,7 @@ export class BattleUIBridge {
   /** 推薦戰法檢核（PROG-2-1763）：每個關卡只查一次；缺口帶進軍師 HUD 的對策缺口欄 */
   private _loadoutCheckedFor: string | null = null;
   private _loadoutGaps: string[] = [];
+  private _lastEndedPayload: { result: string; retreated?: boolean } | null = null;
   private readonly unsubs: (() => void)[] = [];
   /** 本場我方的戰場特定動作（騎兵衝鋒、背刺…），戰後交給覺醒判定 */
   private readonly specialActions = new BattleSpecialActionTracker();
@@ -816,7 +817,15 @@ export class BattleUIBridge {
   /** 設定面板確認撤退（PROG-2-1890）：判定我方戰敗，走既有 BattleEnded → 結算彈窗流程 */
   private _onRetreatRequested(): void {
     const state = this.ctx.ctrl?.state;
-    if (!state || state.battleEndAnnounced) return;
+    if (!state) return;
+    if (state.battleEndAnnounced) {
+      const popup = this.ctx.resultPopup;
+      if (popup && !popup.node.active) {
+        const last = this._lastEndedPayload ?? { result: 'enemy-win', retreated: true };
+        void popup.showResult(last.result, undefined, this.ctx.pg?.id, last.retreated === true);
+      }
+      return;
+    }
     this.appendLog('我方撤退，本場判定戰敗');
     this.ctx.ctrl?.retreatBattle();
   }
@@ -846,6 +855,7 @@ export class BattleUIBridge {
   }
 
   private _onBattleEnded(data: { result: string; retreated?: boolean }): void {
+    this._lastEndedPayload = { result: data.result, retreated: data.retreated };
     const c = this.ctx;
     const effectKey = resolveBattleResultEffectKey(data.result);
     if (effectKey) {
