@@ -1026,6 +1026,7 @@
           {
             "type": "container",
             "name": "LobbyHallScreen_div_45",
+            "_ucufId": "lobby-hall-screen.npc-sample-1",
             "widget": {
               "hCenter": -321,
               "top": 560
@@ -1099,6 +1100,7 @@
           {
             "type": "container",
             "name": "LobbyHallScreen_div_46",
+            "_ucufId": "lobby-hall-screen.npc-sample-2",
             "widget": {
               "hCenter": -1,
               "top": 610
@@ -1172,6 +1174,7 @@
           {
             "type": "container",
             "name": "LobbyHallScreen_div_47",
+            "_ucufId": "lobby-hall-screen.npc-sample-3",
             "widget": {
               "hCenter": 320,
               "top": 584
@@ -1245,6 +1248,7 @@
           {
             "type": "container",
             "name": "LobbyHallScreen_div_48",
+            "_ucufId": "lobby-hall-screen.npc-sample-4",
             "widget": {
               "hCenter": -161,
               "top": 670
@@ -1336,6 +1340,7 @@
           {
             "type": "container",
             "name": "LobbyHallScreen_div_49",
+            "_ucufId": "lobby-hall-screen.npc-sample-5",
             "widget": {
               "hCenter": 160,
               "top": 666

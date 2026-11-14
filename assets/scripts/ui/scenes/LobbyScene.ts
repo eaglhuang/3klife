@@ -379,6 +379,8 @@ export class LobbyScene extends Component {
     private _seasonHud: SeasonHudController<UIScreenPreviewHost> | null = null;
     private _cityHubHost: UIScreenPreviewHost | null = null;
     private _cityHubCategory: LobbyCategoryId | null = null;
+    /** 城池子選單的原父節點與順序（大廳開著時暫時搬到大廳上層） */
+    private _cityHubSubMenuHome: { parent: Node; index: number } | null = null;
     private _cityHubAvatarId: string | null = null;
     private _officerPanels: OfficerPanelsController<UIScreenPreviewHost> | null = null;
     private _bloodlineVignetteHost: UIScreenPreviewHost | null = null;
@@ -1395,6 +1397,20 @@ export class LobbyScene extends Component {
         run[action]();
     }
 
+    /**
+     * 幕府大廳全螢幕蓋在城池上；子選單展開且大廳開著時，把子選單節點搬到大廳最上層（保留世界座標），
+     * 收起或大廳關閉就搬回城池原位。只移動既有節點，不另建一份選單。
+     */
+    private _syncCityHubSubMenuLayer(menu: Node | null): void {
+        if (!menu) return;
+        const home = this._cityHubSubMenuHome ??= { parent: menu.parent!, index: menu.getSiblingIndex() };
+        const hall = this._lobbyHallHost?.node;
+        const overHall = !!hall && hall.activeInHierarchy && menu.active;
+        const target = overHall ? hall : home.parent;
+        if (menu.parent !== target) menu.setParent(target, true);
+        menu.setSiblingIndex(overHall ? target.children.length - 1 : home.index);
+    }
+
     private _refreshCityHub(): void {
         const binder = this._cityHubHost?.binder;
         if (!binder) return;
@@ -1418,6 +1434,7 @@ export class LobbyScene extends Component {
         });
         binder.setTexts(view.texts);
         binder.setActives(view.actives);
+        this._syncCityHubSubMenuLayer(binder.getNode('subMenu'));
         if (leadId && leadId !== this._cityHubAvatarId) {
             this._cityHubAvatarId = leadId;
             const holder = binder.getNode('lordAvatarMask');
@@ -3525,12 +3542,13 @@ export class LobbyScene extends Component {
         const session = services().session;
         const host = await this._mountPreviewScreenHost('LobbyHallHost', 'lobby-hall-screen');
         this._lobbyHallHost = host;
-        const dock: Record<LobbyHallDockId, () => void> = {
-            sortie: () => this.onClickEnterBattle(),
-            generals: () => this.onClickGeneralList(),
-            domestic: () => this._openDomestic(),
-            training: () => this._openNurtureFlow(),
-            shop: () => this.onClickShopMain(),
+        // 大廳底欄與城池底欄同一套分類：點了展開城池子選單（轉蛋等入口都在裡面），不再各自直達單一功能
+        const dockCategory: Record<LobbyHallDockId, LobbyCategoryId> = {
+            sortie: 'sortie', generals: 'generals', domestic: 'domestic', training: 'nurture', shop: 'shop',
+        };
+        const dock = (id: LobbyHallDockId): void => {
+            this._cityHubCategory = toggleCategory(this._cityHubCategory, dockCategory[id]);
+            this._refreshCityHub();
         };
         // 場景面板（UI-2-0152）：左牆軍務／外交、右牆內政／人脈、許願祭壇、世家總覽
         const panels: Record<LobbyHallPanelId, () => void> = {
@@ -3545,7 +3563,7 @@ export class LobbyScene extends Component {
             onBack: () => {
                 services().event.emit('SHOW_TOAST', { message: '主公已在幕府大堂坐鎮' });
             },
-            onDock: (id) => dock[id](),
+            onDock: dock,
             onPanel: (id) => panels[id](),
             // Q 版武將人群（UI-2-0150）；自告奮勇任務來源未定，先不給任務（不顯示「!」）
             stage: stageLayout && stageDecor
@@ -6137,6 +6155,7 @@ export class LobbyScene extends Component {
                 }
                 if (this._cityHubHost) {
                     this._cityHubCategory = null;
+                    this._refreshCityHub(); // 子選單若暫放在大廳上層，收起並搬回
                     this._cityHubHost.node.active = false;
                 }
                 this._closeNurtureFlow();
