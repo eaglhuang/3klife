@@ -259,6 +259,12 @@ export class LobbyHallScreenBinder {
         const crowd = node.addComponent(HallStageCrowd);
         crowd.configure(input.decor);
         this._crowd = crowd;
+        // 設計稿的示意名牌（npc-sample-N）只是版面樣本；真人群上場就關掉，免得與人群名牌疊字
+        for (let i = 1; ; i++) {
+            const sample = findUcufNode(this._screenRoot, `lobby-hall-screen.npc-sample-${i}`);
+            if (!sample) break;
+            sample.active = false;
+        }
         this._stage = new LobbyHallStageController(input.layout, {
             refreshSpots: input.refreshSpots,
             cast: input.cast,
