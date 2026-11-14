@@ -5252,18 +5252,18 @@
       ]
     },
     "tokenSources": {
-      "runtimePath": "C:\\Users\\User\\3KLife-wt-g3\\assets\\resources\\ui-spec\\ui-design-tokens.json",
-      "handoffPath": "C:\\Users\\User\\3KLife-wt-g3\\Design System\\design_handoff\\source\\ui-design-tokens.json",
-      "sourcePath": "C:\\Users\\User\\3KLife-wt-g3\\Design System 3\\source\\ui-design-tokens.json"
+      "runtimePath": "C:\\Users\\User\\3KLife-wt-g4\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+      "handoffPath": "C:\\Users\\User\\3KLife-wt-g4\\Design System\\design_handoff\\source\\ui-design-tokens.json",
+      "sourcePath": "C:\\Users\\User\\3KLife-wt-g4\\Design System 3\\source\\ui-design-tokens.json"
     },
     "tokenConflictReport": [
       {
         "section": "typography",
         "token": "headlineFont",
         "previousSource": "runtime",
-        "previousPath": "C:\\Users\\User\\3KLife-wt-g3\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+        "previousPath": "C:\\Users\\User\\3KLife-wt-g4\\assets\\resources\\ui-spec\\ui-design-tokens.json",
         "source": "source",
-        "path": "C:\\Users\\User\\3KLife-wt-g3\\Design System 3\\source\\ui-design-tokens.json",
+        "path": "C:\\Users\\User\\3KLife-wt-g4\\Design System 3\\source\\ui-design-tokens.json",
         "previousValue": "fonts/newsreader/newsreader",
         "value": "fonts/newsreader/font",
         "chosenSource": "source"
@@ -5272,9 +5272,9 @@
         "section": "typography",
         "token": "bodyFont",
         "previousSource": "runtime",
-        "previousPath": "C:\\Users\\User\\3KLife-wt-g3\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+        "previousPath": "C:\\Users\\User\\3KLife-wt-g4\\assets\\resources\\ui-spec\\ui-design-tokens.json",
         "source": "source",
-        "path": "C:\\Users\\User\\3KLife-wt-g3\\Design System 3\\source\\ui-design-tokens.json",
+        "path": "C:\\Users\\User\\3KLife-wt-g4\\Design System 3\\source\\ui-design-tokens.json",
         "previousValue": "fonts/notosans_tc/notosans_tc",
         "value": "fonts/notosans_tc/font",
         "chosenSource": "source"
@@ -5283,9 +5283,9 @@
         "section": "typography",
         "token": "labelFont",
         "previousSource": "runtime",
-        "previousPath": "C:\\Users\\User\\3KLife-wt-g3\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+        "previousPath": "C:\\Users\\User\\3KLife-wt-g4\\assets\\resources\\ui-spec\\ui-design-tokens.json",
         "source": "source",
-        "path": "C:\\Users\\User\\3KLife-wt-g3\\Design System 3\\source\\ui-design-tokens.json",
+        "path": "C:\\Users\\User\\3KLife-wt-g4\\Design System 3\\source\\ui-design-tokens.json",
         "previousValue": "fonts/manrope/manrope",
         "value": "fonts/manrope/font",
         "chosenSource": "source"
@@ -5302,6 +5302,6 @@
       "limit": 4,
       "_warning": null
     },
-    "perTabReplayMergedAt": "2026-11-14T09:11:08.874Z"
+    "perTabReplayMergedAt": "2026-11-14T10:40:47.329Z"
   }
 }
