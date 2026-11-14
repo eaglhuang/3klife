@@ -1,0 +1,23 @@
+{
+  "seed": 20261113,
+  "floor": { "x0": 480, "y0": 842, "x1": 1440, "y1": 933 },
+  "floorPolygon": [
+    { "x": 540, "y": 848 },
+    { "x": 1380, "y": 848 },
+    { "x": 1440, "y": 933 },
+    { "x": 480, "y": 933 }
+  ],
+  "idleSeconds": [2, 4],
+  "minDistance": 150,
+  "generalScale": 0.22,
+  "animMix": 0.18,
+  "clickRadius": 90,
+  "bubbleSeconds": 2,
+  "maxStepSec": 0.1,
+  "spine": {
+    "zhao-yun": "spine/generals/zhao_yun/zhao_v2",
+    "zhang-fei": "spine/generals/zhang_fei/char2",
+    "guan-yu": "spine/generals/guan_yu/guan_yu",
+    "lu-bu": "spine/generals/lu_bu/lu_bu"
+  }
+}

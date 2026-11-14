@@ -11,17 +11,39 @@
  *
  * Unity 對照：像一個 Spawner，把 spawn 資料逐筆 Instantiate 成 SpriteRenderer＋名牌，動畫用 DOTween 迴圈。
  */
-import { _decorator, Color, Component, Label, Node, Sprite, SpriteFrame, Tween, tween, UITransform, Vec3 } from 'cc';
+import { _decorator, Color, Component, Label, Node, resources, Sprite, SpriteFrame, sp, Tween, tween, UITransform, Vec3 } from 'cc';
 import { services } from '../../core/managers/ServiceLoader';
 import type { HallStagePlacement } from '../../core/systems/HallStagePlanner';
 import { HallStageDecor, hallStageCrowdPose } from '../../core/systems/HallStageCrowdPose';
 import type { HallCrowdReaction } from '../../core/systems/HallCrowdReaction';
+import { HallWander, WANDER_ANIMS, type WanderActorState } from '../../shared/lobby/wanderCore';
+import {
+    CanvasSize,
+    HallWanderData,
+    buildWanderConfig,
+    clampWanderDt,
+    spinePathFor,
+    wanderToStage,
+} from '../../shared/lobby/wanderSupport';
 
 const { ccclass } = _decorator;
 
 const CONTENT_TAG = 'lobby-hall-crowd';
 const TAG_COLOR = new Color(255, 233, 176, 255);
 const MARK_COLOR = new Color(255, 224, 136, 255);
+/** Spine 骨架高度（單位）：點擊判定框與名牌高度用，與 SpineGeneralOverlay 的 1300px 骨架一致 */
+const SKELETON_BOX = { width: 420, height: 1300 };
+
+/** 走動中的 Spine 武將（Issue #2135）：節點、骨架與最近一次的動畫／狀態 */
+interface SpineActor {
+    placement: HallStagePlacement;
+    node: Node;
+    skeleton: sp.Skeleton;
+    tag: Node;
+    mark: Node | null;
+    anim: string;
+    state: WanderActorState | null;
+}
 
 @ccclass('HallStageCrowd')
 export class HallStageCrowd extends Component {
@@ -29,18 +51,47 @@ export class HallStageCrowd extends Component {
     private _showToken = 0;
     /** 每位在場武將頭頂的位置（集體反應用）；clear 時清空 */
     private readonly _headPositions = new Map<string, Vec3>();
+    private _wanderData: HallWanderData | null = null;
+    private _canvas: CanvasSize = { width: 1920, height: 1080 };
+    private _onActorTap: ((generalId: string) => void) | null = null;
+    private _wander: HallWander | null = null;
+    private readonly _spineActors = new Map<string, SpineActor>();
 
     public configure(decor: HallStageDecor): void {
         this._decor = decor;
+    }
+
+    /**
+     * 啟用走動（Issue #2135）：對照表裡有 Spine 路徑的武將改播骨架並隨機走動，沒有的維持靜態小人。
+     * 不呼叫或資料為 null 時整個大廳維持原本行為。onTap 在玩家點到發呆中的武將時呼叫（該武將已原地停住）。
+     */
+    public configureWander(data: HallWanderData | null, canvas: Readonly<CanvasSize>, onTap: (generalId: string) => void): void {
+        this._wanderData = data;
+        this._canvas = { width: canvas.width, height: canvas.height };
+        this._onActorTap = onTap;
     }
 
     /** 依站位重建全部武將；再次呼叫會先清掉上一批（含進行中的載入結果）。 */
     public show(placements: readonly HallStagePlacement[]): void {
         this.clear();
         const token = ++this._showToken;
-        placements.forEach((placement, index) => {
-            void this._spawn(placement, index, token);
+        void Promise.all(placements.map((placement, index) => this._spawn(placement, index, token))).then(() => {
+            if (token === this._showToken) this._startWander();
         });
+    }
+
+    /** 對話結束後讓武將繼續走（泡泡收起時呼叫） */
+    public releaseActor(generalId: string): void {
+        this._wander?.unlock(generalId);
+    }
+
+    protected update(dt: number): void {
+        const wander = this._wander;
+        const data = this._wanderData;
+        if (!wander || !data) return;
+        // 從大廳停放回來時 dt 可能很大；截斷後角色從原地接著走
+        const states = wander.step(clampWanderDt(dt, data.maxStepSec));
+        states.forEach((state, order) => this._applyState(state, order, data));
     }
 
     /** 集體反應（大廳 §E-5，PROG-2-1740）：在場每位武將頭上短暫跳出字，時間到自動移除；人群為空時不動 */
@@ -64,6 +115,8 @@ export class HallStageCrowd extends Component {
     public clear(): void {
         this._showToken++;
         this._headPositions.clear();
+        this._wander = null;
+        this._spineActors.clear();
         for (const child of [...this.node.children]) {
             Tween.stopAllByTarget(child);
             child.destroy();
@@ -77,6 +130,7 @@ export class HallStageCrowd extends Component {
     private async _spawn(placement: HallStagePlacement, index: number, token: number): Promise<void> {
         const decor = this._decor;
         if (!decor) return;
+        if (await this._spawnSpine(placement, token, decor)) return;
 
         const body = new Node(`crowd-${placement.generalId}`);
         body.layer = this.node.layer;
@@ -110,6 +164,96 @@ export class HallStageCrowd extends Component {
 
         this._playIdle(body, pose.body.scaleX, pose.body.scaleY, pose.idleDelaySec, decor);
         if (mark) this._playBob(mark, decor);
+    }
+
+    /**
+     * 有 Spine 骨架就建走動武將並回傳 true；沒列在對照表、骨架載不到（美術只在私有倉庫）回傳 false，由呼叫端退回靜態小人。
+     * 被新一輪 show 取代時回傳 true（本輪結果作廢，不再往下建靜態小人）。
+     */
+    private async _spawnSpine(placement: HallStagePlacement, token: number, decor: HallStageDecor): Promise<boolean> {
+        const data = this._wanderData;
+        const path = data ? spinePathFor(data, placement.generalId) : null;
+        if (!data || !path) return false;
+        const skeletonData = await new Promise<sp.SkeletonData | null>((resolve) => {
+            resources.load(path, sp.SkeletonData, (err, asset) => resolve(err || !asset ? null : asset));
+        });
+        if (token !== this._showToken) return true;
+        if (!skeletonData) return false;
+
+        const body = new Node(`crowd-${placement.generalId}`);
+        body.layer = this.node.layer;
+        const transform = body.addComponent(UITransform);
+        transform.setAnchorPoint(0.5, 0);
+        transform.setContentSize(SKELETON_BOX.width, SKELETON_BOX.height);
+        const skeleton = body.addComponent(sp.Skeleton);
+        skeleton.premultipliedAlpha = false;
+        skeleton.skeletonData = skeletonData;
+        const anims = WANDER_ANIMS.general;
+        const runtime = skeletonData.getRuntimeData();
+        // 舊版骨架可能還沒有新步態；缺動作就不播，避免踩空報錯
+        const hasIdle = !!runtime?.findAnimation(anims.idle);
+        const hasWalk = !!runtime?.findAnimation(anims.walk);
+        if (hasIdle) skeleton.setAnimation(0, anims.idle, true);
+        if (hasIdle && hasWalk) {
+            skeleton.setMix(anims.idle, anims.walk, data.animMix);
+            skeleton.setMix(anims.walk, anims.idle, data.animMix);
+        }
+        this.node.addChild(body);
+
+        const tag = this._makeLabel(`tag-${placement.generalId}`, placement.title ? `${placement.title}・${placement.name}` : placement.name, 16, TAG_COLOR);
+        const mark = placement.hasTaskMark ? this._makeLabel(`mark-${placement.generalId}`, '!', 30, MARK_COLOR) : null;
+        this._spineActors.set(placement.generalId, { placement, node: body, skeleton, tag, mark, anim: anims.idle, state: null });
+        // 先放在站位上，走動模擬接手前不會停在原點
+        const headY = placement.stageY + placement.height + decor.markAboveHeadPx;
+        body.setScale(data.generalScale, data.generalScale, 1);
+        body.setPosition(placement.stageX, placement.stageY, 0);
+        tag.setPosition(placement.stageX, placement.stageY - decor.tagBelowFootPx, 0);
+        mark?.setPosition(placement.stageX, headY, 0);
+        this._headPositions.set(placement.generalId, new Vec3(placement.stageX, headY, 0));
+        body.on(Node.EventType.TOUCH_END, () => this._onBodyTap(placement.generalId));
+        return true;
+    }
+
+    /** 所有武將建完才起算走動；沒有任何 Spine 武將就不建模擬 */
+    private _startWander(): void {
+        const data = this._wanderData;
+        if (!data || this._spineActors.size === 0) return;
+        const roster = Array.from(this._spineActors.values()).map(a => ({ id: a.placement.generalId, stageX: a.placement.stageX, stageY: a.placement.stageY }));
+        this._wander = new HallWander(buildWanderConfig(data, roster, this._canvas));
+    }
+
+    private _applyState(state: WanderActorState, order: number, data: HallWanderData): void {
+        const actor = this._spineActors.get(state.id);
+        const decor = this._decor;
+        if (!actor || !actor.node.isValid || !decor) return;
+        const stage = wanderToStage({ x: state.x, y: state.y }, this._canvas);
+        const headY = stage.y + actor.placement.height + decor.markAboveHeadPx;
+        actor.state = state;
+        actor.node.setPosition(stage.x, stage.y, 0);
+        // 往哪邊走就翻哪邊：scaleX 正負，不另做鏡像動畫
+        actor.node.setScale(data.generalScale * state.facing, data.generalScale, 1);
+        // states 已是由遠到近，越靠下越在前面
+        actor.node.setSiblingIndex(order);
+        actor.tag.setPosition(stage.x, stage.y - decor.tagBelowFootPx, 0);
+        actor.mark?.setPosition(stage.x, headY, 0);
+        this._headPositions.set(state.id, new Vec3(stage.x, headY, 0));
+        if (actor.anim !== state.anim && actor.skeleton.skeletonData?.getRuntimeData()?.findAnimation(state.anim)) {
+            actor.anim = state.anim;
+            actor.skeleton.setAnimation(0, state.anim, true);
+        }
+    }
+
+    /** 只有發呆中的武將接點擊：停在原地、通知外面開對話，過一陣子自動放行繼續走 */
+    private _onBodyTap(generalId: string): void {
+        const wander = this._wander;
+        const data = this._wanderData;
+        const actor = this._spineActors.get(generalId);
+        if (!wander || !data || !actor?.state) return;
+        const hit = wander.pickIdleAt(actor.state.x, actor.state.y, 1);
+        if (!hit || hit.id !== generalId) return;
+        wander.lockIdle(generalId);
+        this._onActorTap?.(generalId);
+        this.scheduleOnce(() => this.releaseActor(generalId), data.bubbleSeconds);
     }
 
     private _makeLabel(name: string, text: string, fontSize: number, color: Color): Node {

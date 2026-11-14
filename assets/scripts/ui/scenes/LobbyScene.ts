@@ -26,6 +26,7 @@ import { buildLobbyHallWallView } from '../../core/systems/LobbyHallWallView';
 import { buildLobbyHallAltarView } from '../core/LobbyHallAltarView';
 import { buildHallMapTurnSteps, hasHallMapFocus, type HallMapProvinceSource } from '../../core/systems/HallMapSeasonTurn';
 import type { HallStageLayout } from '../../core/systems/HallStagePlanner';
+import { parseHallWanderData } from '../../shared/lobby/wanderSupport';
 import { UIID, LayerType } from '../../core/config/UIConfig';
 import type { GeneralConfig, GeneralDetailDefaultTab } from '../../core/models/GeneralUnit';
 import { services } from '../../core/managers/ServiceLoader';
@@ -3530,11 +3531,12 @@ export class LobbyScene extends Component {
     }
 
     private async _mountLobbyHall(): Promise<void> {
-        const [themeConfig, fxConfig, stageLayout, stageDecor, mapLayout, mapCatalog, provinceFile] = await Promise.all([
+        const [themeConfig, fxConfig, stageLayout, stageDecor, wanderRaw, mapLayout, mapCatalog, provinceFile] = await Promise.all([
             this._loadDataJson<HallThemeConfig>('data/hall-map/hall-theme'),
             this._loadDataJson<HallSeasonFxConfig>('data/hall-map/hall-season-fx'),
             this._loadDataJson<HallStageLayout>('data/hall-map/hall-stage-spots'),
             this._loadDataJson<HallStageDecor>('data/hall-map/hall-stage-decor'),
+            this._loadDataJson<unknown>('data/hall-map/hall-wander'),
             this._loadDataJson<HallMapLayout>('data/hall-map/hall-map-layout'),
             this._loadDataJson<HallMapEventCatalog>('data/hall-map/hall-map-events'),
             this._loadDataJson<{ provinces: HallMapProvinceSource[] }>('data/hall-map/han13-provinces'),
@@ -3573,6 +3575,7 @@ export class LobbyScene extends Component {
                     refreshSpots: (nowSec) => { session.refreshHallSpots(nowSec, session.randomSource); },
                     cast: () => session.hallStageCast([]),
                     nowSec: () => Date.now() / 1000,
+                    wander: parseHallWanderData(wanderRaw),
                 }
                 : null,
             mapLayout,
