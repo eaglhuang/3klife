@@ -2,8 +2,10 @@
 // 滿了以後新字直接畫不出來（warnID 12100）。這裡估算圖集用量：超出預算的文字改走 TTF，只少字距、不會缺字。
 
 const ATLAS_AREA = 1024 * 1024;
-/** 只預約七成：其餘留給執行期才換字的短文字，以及排版留白 */
-const BUDGET_RATIO = 0.35;
+/** 套樣式與執行期換字都從這裡預約；引擎按列擺放字元、列高取最高字，實測列內空隙可達用量兩倍以上 */
+const BUDGET_RATIO = 0.25;
+/** 大字一格就佔一大塊、還把整列撐高；超過這個字級（含螢幕縮放）改走 TTF，字距由原稿空白呈現 */
+const MAX_CHAR_FONT_SIZE = 40;
 /** 過長多半是內文或資料綁定，字元不可預期，不走 CHAR */
 const MAX_TEXT_LENGTH = 12;
 const GLYPH_CELL_RATIO = 1.25;
@@ -23,7 +25,7 @@ export class LabelCharAtlasBudget {
     /** 文字可用 CHAR 時預約其字元並回傳 true；styleKey 為字型＋顏色等會讓引擎另存一份字元的樣式。 */
     public reserve(text: string, fontSize: number, styleKey: string, outlineWidth = 0): boolean {
         const chars = [...text];
-        if (chars.length === 0 || chars.length > MAX_TEXT_LENGTH) {
+        if (chars.length === 0 || chars.length > MAX_TEXT_LENGTH || fontSize > MAX_CHAR_FONT_SIZE) {
             return false;
         }
 
@@ -40,6 +42,11 @@ export class LabelCharAtlasBudget {
         fresh.forEach((key) => this._glyphs.add(key));
         this._usedArea = nextArea;
         return true;
+    }
+
+    /** 引擎實際擺不下（估算比真實擺放樂觀）時呼叫：之後一律拒絕，直到換場景清空圖集。 */
+    public exhaust(): void {
+        this._usedArea = Number.POSITIVE_INFINITY;
     }
 
     /** 引擎在場景切換時清空圖集，預算跟著歸零。 */

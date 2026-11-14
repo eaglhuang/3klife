@@ -393,6 +393,7 @@ export const view = {
     getFrameSize: () => ({ width: 1920, height: 1080 }),
     getDesignResolutionSize: () => ({ width: 1920, height: 1080 }),
     getVisibleSize: () => ({ width: 1920, height: 1080 }),
+    getScaleX: (): number => 1,
     setResolutionPolicy: (_policy: number): void => undefined,
     on: (_event: string, _cb: () => void): void => undefined,
 };

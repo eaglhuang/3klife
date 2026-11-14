@@ -515,6 +515,9 @@ function processElement(el, ctx, depth) {
         if (!node.layout) sub.widget = { left: layout.paddingLeft || 0, top: layout.paddingTop || 0 };
       }
     }
+    if (inlineRow && source !== child && sub && sub.type === 'label' && sub.width == null) {
+      Object.assign(sub, estimateInlineTextBox(sub.text, ctx.skinSlots[sub.styleSlot]));
+    }
     const startIndex = childNodes.length;
     appendNodeWithGeneratedSiblings(childNodes, wrapFlexItemMainAxisMargin(sub, source, style, ctx));
     // 排版容器靠子項順序定位：留在流內的子項（含 relative）維持文件順序，只有脫離流的子項依疊放順序排
@@ -2143,6 +2146,25 @@ function wrapLooseTextNode(textNode, parentStyle, centerByDefault) {
   };
 }
 
+/**
+ * 行內橫排的匿名文字沒有量到的盒子：依字級估內容寬高，否則引擎把寬度當 0、逐字換行成直排。
+ * 全形字與箭頭符號約一個字級寬、半形約 0.55 字級，空白約 0.3 字級，每字再加字距。
+ */
+function estimateInlineTextBox(text, labelStyle) {
+  const fontSize = Number(labelStyle && labelStyle.fontSize) || 16;
+  const spacing = Number(labelStyle && labelStyle.letterSpacing) || 0;
+  let em = 0;
+  const chars = [...String(text || '')];
+  for (const ch of chars) {
+    if (/\s/.test(ch)) em += 0.3;
+    else em += /[←-⯿⺀-￯]/.test(ch) ? 1 : 0.55;
+  }
+  return {
+    width: Math.max(1, Math.ceil(em * fontSize + spacing * chars.length)),
+    height: Math.ceil(Number(labelStyle && labelStyle.lineHeight) || fontSize * 1.25),
+  };
+}
+
 // grid 看 justify-items（place-items 第二值），flex 看主軸 justify-content 或縱向的 align-items
 function looseTextBoxAlign(style) {
   if (!style) return null;
@@ -2211,6 +2233,10 @@ function ensureSpriteSlot(ctx, slotId, attrs, style, sizeHint) {
 
 function ensureSpriteOrColorSlot(ctx, slotId, style, attrs, sizeHint) {
   if (ctx.skinSlots[slotId]) return;
+  if (style._textClipOwner) {
+    ctx.skinSlots[slotId] = { kind: 'transparent' };
+    return;
+  }
   if (attrs['data-sprite']) {
     return ensureSpriteSlot(ctx, slotId, attrs, style, sizeHint);
   }
@@ -2449,6 +2475,15 @@ function normalizeCssColorLiteral(value) {
 function clampCssByte(value) {
   if (!Number.isFinite(value)) return 0;
   return Math.max(0, Math.min(255, Math.round(value)));
+}
+
+/** 取漸層最接近中段的色停（漸層字的代表色）；解析不出漸層時回 null */
+function gradientMidColor(backgroundImage) {
+  const layer = parseBackgroundImage(backgroundImage).find(l => l && l.kind === 'gradient' && l.gradient);
+  const stops = layer ? layer.gradient.stops || [] : [];
+  if (stops.length === 0) return null;
+  const at = (stop) => Math.abs((typeof stop.offset === 'number' ? stop.offset : 0) - 0.5);
+  return stops.reduce((best, stop) => (at(stop) < at(best) ? stop : best)).color || null;
 }
 
 function buildGradientRectSlot(ctx, backgroundImage, slotId) {
@@ -2805,6 +2840,12 @@ function mergeComputedStyle(style, attrs, ctx) {
   const computedBgImage = meaningfulBackgroundImage(computed['background-image']);
   if (computedBgImage) out.backgroundImage = computedBgImage;
   assignComputed(out, 'color', computed.color, meaningfulCssColor);
+  // 漸層字（background-clip:text）：引擎沒有漸層字，取漸層中段色當字色；底圖只屬於字形，不另畫底塊
+  if (computed._textClipGradient) {
+    const fill = gradientMidColor(computed._textClipGradient);
+    if (fill) out.color = fill;
+    if (computed._textClipOwner) out._textClipOwner = true;
+  }
   assignComputed(out, 'width', computed.width, meaningfulCssLength);
   assignComputed(out, 'height', computed.height, meaningfulCssLength);
   // 定位四邊只換算作者原本有寫的邊（PROG-2-1641）：瀏覽器對絕對定位元素會把四邊全算成 px，

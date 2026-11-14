@@ -14,7 +14,7 @@
  *
  * Unity 對照：相當於 UIStyleApplier + UILayoutHelper 的組合
  */
-import { Node, Sprite, Label, Button, Font, Color, Vec2, UITransform, Widget, director } from 'cc';
+import { Node, Sprite, Label, Button, Font, Color, Vec2, UITransform, Widget, director, view } from 'cc';
 import { LabelCharAtlasBudget, isLetterSpacingVisible } from './LabelCharAtlasBudget';
 import { RoundedRectBackground } from '../components/RoundedRectBackground';
 import { SolidBackground } from '../components/SolidBackground';
@@ -493,14 +493,6 @@ export class UIPreviewStyleBuilder {
         label.lineHeight      = style.lineHeight;
         label.color           = style.color;
         label.spacingX        = style.letterSpacing;
-        // Cocos 3.8 的 TTF 預設模式不吃 spacingX，只有逐字快取（CHAR）走 bmfont 排版才會套用字距
-        const wantsCharCache = isLetterSpacingVisible(style.letterSpacing, style.fontSize)
-            && charAtlasBudget.reserve(label.string, style.fontSize, `${style.fontPath ?? ''}|${style.color.r},${style.color.g},${style.color.b},${style.color.a}|${style.outlineWidth ?? 0}`, style.outlineWidth ?? 0);
-        if (wantsCharCache) {
-            label.cacheMode = Label.CacheMode.CHAR;
-        } else if (label.cacheMode === Label.CacheMode.CHAR) {
-            label.cacheMode = Label.CacheMode.NONE;
-        }
         label.horizontalAlign = style.horizontalAlign;
         label.verticalAlign   = style.verticalAlign;
         // overflow floor：不允許 skin 將 overflow 設為 NONE（0），
@@ -533,12 +525,85 @@ export class UIPreviewStyleBuilder {
         label.isBold = !!style.isBold && !boldFont;
         const font = boldFont || (style.fontPath ? this.fontCache.get(style.fontPath) : null);
         if (font) label.font = font;
+        // Cocos 3.8 的 TTF 預設模式不吃 spacingX，只有逐字快取（CHAR）走 bmfont 排版才會套用字距；
+        // 樣式全部套完才切模式，避免中途的字型／顏色組合被重複計費（預約見 installCharAtlasGuard）
+        label.cacheMode = isLetterSpacingVisible(style.letterSpacing, style.fontSize) ? Label.CacheMode.CHAR : Label.CacheMode.NONE;
     }
 }
 
 const charAtlasBudget = new LabelCharAtlasBudget();
 // 引擎在同一事件清空字元圖集
 director?.on?.('director_before_scene_launch', () => charAtlasBudget.reset());
+
+/** 這些屬性一變，引擎就會把字以新組合另存一份到字元圖集；cacheMode 改成 CHAR 時也要預約 */
+const GLYPH_KEY_PROPS = ['string', 'color', 'fontSize', 'outlineWidth', 'font', 'isBold', 'cacheMode'] as const;
+let reservingCharCache = false;
+
+/**
+ * 字元圖集只增不減：執行期換字、換色、換字級、換描邊（資料回填、換池換色、縮字），以及 instantiate 複製出的標籤，
+ * 都會另存字元。所以在 Label 原型統一攔截：處於 CHAR 模式的標籤每次變動或啟用，都用當下實際值從同一份預算預約；
+ * 預約不到就退回一般模式：少字距、但字不會消失。
+ */
+function installCharAtlasGuard(): void {
+    const proto = Label?.prototype as unknown as Record<string, unknown> | undefined;
+    if (!proto) return;
+    for (const key of GLYPH_KEY_PROPS) {
+        const accessor = findAccessor(proto, key);
+        if (!accessor?.get || !accessor.set) continue;
+        const { get, set } = accessor;
+        Object.defineProperty(proto, key, {
+            configurable: true,
+            enumerable: accessor.enumerable,
+            get(this: Label) { return get.call(this); },
+            set(this: Label, value: unknown) { set.call(this, value); reserveCharCache(this); },
+        });
+    }
+    // 估算只能近似引擎的列式擺放：畫完若字元四邊形少於應有字數，表示圖集真的滿了，改回一般模式並停止再開 CHAR
+    // 引擎每幀由 UIRendererManager 呼叫 updateRenderer() 重排髒掉的標籤（繼承自 UIRenderer）
+    const updateRenderer = proto.updateRenderer as ((this: Label) => void) | undefined;
+    if (typeof updateRenderer === 'function') {
+        proto.updateRenderer = function (this: Label): void {
+            updateRenderer.call(this);
+            if (this.cacheMode !== Label.CacheMode.CHAR || this.overflow === Label.Overflow.CLAMP) return;
+            const expected = (this.string || '').replace(/\s/g, '').length * 4;
+            const drawn = (this as unknown as { renderData?: { vertexCount?: number } }).renderData?.vertexCount ?? expected;
+            if (drawn < expected) {
+                charAtlasBudget.exhaust();
+                this.cacheMode = Label.CacheMode.NONE;
+            }
+        };
+    }
+    const onEnable = proto.onEnable as ((this: Label) => void) | undefined;
+    if (typeof onEnable === 'function') {
+        proto.onEnable = function (this: Label): void { reserveCharCache(this); onEnable.call(this); };
+    }
+}
+
+function reserveCharCache(label: Label): void {
+    if (reservingCharCache || label.cacheMode !== Label.CacheMode.CHAR) return;
+    reservingCharCache = true;
+    try {
+        // 引擎依螢幕縮放（view.getScaleX）放大每格字元，高解析螢幕要用放大後的字級估面積
+        const scale = Math.max(1, view?.getScaleX?.() || 1);
+        const c = label.color;
+        const styleKey = `${label.font?.uuid ?? ''}|${c.r},${c.g},${c.b},${c.a}|${label.isBold ? 1 : 0}|${label.outlineWidth ?? 0}`;
+        if (!charAtlasBudget.reserve(label.string, label.fontSize * scale, styleKey, label.outlineWidth ?? 0)) {
+            label.cacheMode = Label.CacheMode.NONE;
+        }
+    } finally {
+        reservingCharCache = false;
+    }
+}
+
+installCharAtlasGuard();
+
+function findAccessor(proto: object | null, key: string): PropertyDescriptor | undefined {
+    for (let p = proto; p; p = Object.getPrototypeOf(p)) {
+        const d = Object.getOwnPropertyDescriptor(p, key);
+        if (d) return d;
+    }
+    return undefined;
+}
 
 function textInRanges(text: string, ranges?: Array<[number, number]>): boolean {
     if (!ranges) return true;

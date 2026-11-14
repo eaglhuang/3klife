@@ -43,13 +43,17 @@
                   "type": "label",
                   "name": "GachaDs3TabLegendaryPoolPanelLegendary_span_1",
                   "text": "hero artwork",
-                  "styleSlot": "auto.gacha-ds3-tab-legendary-pool-panel-legendary.gachads3tablegendarypoolpanellegendary_span_1"
+                  "styleSlot": "auto.gacha-ds3-tab-legendary-pool-panel-legendary.gachads3tablegendarypoolpanellegendary_span_1",
+                  "width": 94,
+                  "height": 17
                 },
                 {
                   "type": "label",
                   "name": "GachaDs3TabLegendaryPoolPanelLegendary_span_2",
                   "text": "立繪佔位",
-                  "styleSlot": "auto.gacha-ds3-tab-legendary-pool-panel-legendary.gachads3tablegendarypoolpanellegendary_span_2"
+                  "styleSlot": "auto.gacha-ds3-tab-legendary-pool-panel-legendary.gachads3tablegendarypoolpanellegendary_span_2",
+                  "width": 54,
+                  "height": 17
                 }
               ]
             },

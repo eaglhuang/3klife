@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "screenId": "gacha-ds3",
-  "generatedAt": "2026-11-14T05:58:53.329Z",
+  "generatedAt": "2026-11-14T09:11:17.735Z",
   "verdict": "not-ready",
   "readinessScore": 0.833,
   "summary": {
@@ -120,7 +120,7 @@
           "summary": "fragment mount layers fill lazySlot",
           "recommendation": null,
           "findings": [],
-          "filePath": "C:\\Users\\User\\3KLife-wt-gacha2\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-legendary-pool-panel-legendary.json",
+          "filePath": "C:\\Users\\User\\3KLife-wt-g3\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-legendary-pool-panel-legendary.json",
           "path": "fragments/layouts/gacha-ds3-legendary-pool-panel-legendary.json"
         },
         {
@@ -132,7 +132,7 @@
           "summary": "fragment mount layers fill lazySlot",
           "recommendation": null,
           "findings": [],
-          "filePath": "C:\\Users\\User\\3KLife-wt-gacha2\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-heroine-pool-panel-heroine.json",
+          "filePath": "C:\\Users\\User\\3KLife-wt-g3\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-heroine-pool-panel-heroine.json",
           "path": "fragments/layouts/gacha-ds3-heroine-pool-panel-heroine.json"
         },
         {
@@ -144,7 +144,7 @@
           "summary": "fragment mount layers fill lazySlot",
           "recommendation": null,
           "findings": [],
-          "filePath": "C:\\Users\\User\\3KLife-wt-gacha2\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-support-pool-panel-support.json",
+          "filePath": "C:\\Users\\User\\3KLife-wt-g3\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-support-pool-panel-support.json",
           "path": "fragments/layouts/gacha-ds3-support-pool-panel-support.json"
         },
         {
@@ -156,7 +156,7 @@
           "summary": "fragment mount layers fill lazySlot",
           "recommendation": null,
           "findings": [],
-          "filePath": "C:\\Users\\User\\3KLife-wt-gacha2\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-general-content.json",
+          "filePath": "C:\\Users\\User\\3KLife-wt-g3\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-general-content.json",
           "path": "fragments/layouts/gacha-ds3-general-content.json"
         },
         {
@@ -169,7 +169,7 @@
           "summary": "fragment mount layers fill lazySlot",
           "recommendation": null,
           "findings": [],
-          "filePath": "C:\\Users\\User\\3KLife-wt-gacha2\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-legendary-content.json",
+          "filePath": "C:\\Users\\User\\3KLife-wt-g3\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-legendary-content.json",
           "path": "fragments/layouts/gacha-ds3-legendary-content.json"
         },
         {
@@ -182,7 +182,7 @@
           "summary": "fragment mount layers fill lazySlot",
           "recommendation": null,
           "findings": [],
-          "filePath": "C:\\Users\\User\\3KLife-wt-gacha2\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-heroine-content.json",
+          "filePath": "C:\\Users\\User\\3KLife-wt-g3\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-heroine-content.json",
           "path": "fragments/layouts/gacha-ds3-heroine-content.json"
         },
         {
@@ -195,7 +195,7 @@
           "summary": "fragment mount layers fill lazySlot",
           "recommendation": null,
           "findings": [],
-          "filePath": "C:\\Users\\User\\3KLife-wt-gacha2\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-support-content.json",
+          "filePath": "C:\\Users\\User\\3KLife-wt-g3\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-support-content.json",
           "path": "fragments/layouts/gacha-ds3-support-content.json"
         }
       ],
