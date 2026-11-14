@@ -1,10 +1,15 @@
 {
   "screenId": "gacha-ds3",
   "currentBundle": "lobby_ui",
-  "distribution": [],
+  "distribution": [
+    {
+      "bundle": "ui_bg",
+      "spriteCount": 1
+    }
+  ],
   "suggestion": {
-    "primary": "lobby_ui",
-    "confidence": "low",
-    "reason": "no-sprite-frame-slots"
+    "primary": "ui_bg",
+    "confidence": "high",
+    "reason": "current=lobby_ui 但實際資產主要落在 ui_bg (1)"
   }
 }

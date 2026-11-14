@@ -56,7 +56,12 @@ function applyBindMapInPage(entries) {
       if (entry.text != null) nodes = nodes.filter(node => norm(node.textContent) === norm(entry.text));
       let node = nodes[entry.index || 0];
       // looseText：名字給元素裡直接的裸文字（例如標題後面接的內文），包成 span 再命名
-      if (node && entry.looseText) node = wrapLooseText(node);
+      if (node && entry.looseText) {
+        const host = node;
+        node = wrapLooseText(node);
+        // 名字必須唯一：原稿若已把同名標在外框上，名字移給文字後外框改回自動命名，否則兩節點共用同一個樣式槽
+        if (node && host.getAttribute('data-name') === entry.name) host.removeAttribute('data-name');
+      }
       if (node && node.getAttribute('data-name') !== entry.name) node.setAttribute('data-name', entry.name);
       report.push({ name: entry.name, matched: !!node });
     }

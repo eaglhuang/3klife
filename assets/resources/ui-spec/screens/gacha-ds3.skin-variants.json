@@ -1,0 +1,2192 @@
+{
+  "version": 1,
+  "screenId": "gacha-ds3",
+  "variants": {
+    "legendary": {
+      "slots": {
+        "auto.gacha-ds3.gachads3_body_pseudobefore": {
+          "kind": "gradient-rect",
+          "backgroundLayers": [
+            {
+              "kind": "gradient",
+              "gradient": {
+                "type": "radial",
+                "repeating": false,
+                "angle": 180,
+                "shape": "at 35% 45%",
+                "center": {
+                  "x": 0.35,
+                  "y": 0.45
+                },
+                "radius": {
+                  "x": 0.9192388155425119,
+                  "y": 0.7778174593052024
+                },
+                "repeatSpanRatio": 0.75,
+                "stops": [
+                  {
+                    "color": "#FFF0DC14",
+                    "offset": 0
+                  },
+                  {
+                    "color": "#000000B8",
+                    "offset": 0.75
+                  }
+                ]
+              }
+            }
+          ],
+          "gradient": {
+            "type": "radial",
+            "repeating": false,
+            "angle": 180,
+            "repeatSpanRatio": 0.75,
+            "shape": "at 35% 45%",
+            "center": {
+              "x": 0.35,
+              "y": 0.45
+            },
+            "radius": {
+              "x": 0.9192388155425119,
+              "y": 0.7778174593052024
+            },
+            "stops": [
+              {
+                "color": "#FFF0DC14",
+                "offset": 0,
+                "opacity": 0.08
+              },
+              {
+                "color": "colorBlack",
+                "offset": 0.75,
+                "opacity": 0.72
+              }
+            ]
+          }
+        },
+        "auto.gacha-ds3.poolgeneralart_pseudobefore": {
+          "kind": "gradient-rect",
+          "backgroundLayers": [
+            {
+              "kind": "gradient",
+              "gradient": {
+                "type": "radial",
+                "repeating": false,
+                "angle": 180,
+                "shape": "circle",
+                "center": {
+                  "x": 0.5,
+                  "y": 0.5
+                },
+                "radius": {
+                  "x": 0.5
+                },
+                "repeatSpanRatio": 0.65,
+                "stops": [
+                  {
+                    "color": "#FFC85073",
+                    "offset": 0
+                  },
+                  {
+                    "color": "#00000000",
+                    "offset": 0.65
+                  }
+                ]
+              }
+            }
+          ],
+          "gradient": {
+            "type": "radial",
+            "repeating": false,
+            "angle": 180,
+            "repeatSpanRatio": 0.65,
+            "shape": "circle",
+            "center": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "radius": {
+              "x": 0.5
+            },
+            "stops": [
+              {
+                "color": "#FFC85073",
+                "offset": 0,
+                "opacity": 0.45
+              },
+              {
+                "color": "colorBlack",
+                "offset": 0.65,
+                "opacity": 0
+              }
+            ]
+          }
+        },
+        "auto.gacha-ds3.gachads3_div_6": {
+          "kind": "gradient-rect",
+          "backgroundLayers": [
+            {
+              "kind": "gradient",
+              "gradient": {
+                "type": "linear",
+                "repeating": false,
+                "angle": 90,
+                "shape": null,
+                "center": null,
+                "radius": null,
+                "stops": [
+                  {
+                    "color": "#00000000",
+                    "offset": 0
+                  },
+                  {
+                    "color": "#0A0612",
+                    "offset": 1
+                  }
+                ]
+              }
+            }
+          ],
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 90,
+            "stops": [
+              {
+                "color": "colorBlack",
+                "offset": 0,
+                "opacity": 0
+              },
+              {
+                "color": "#0A0612",
+                "offset": 1,
+                "opacity": 1
+              }
+            ]
+          }
+        },
+        "auto.gacha-ds3.poolgeneraleventchip": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 24,
+          "lineHeight": 34,
+          "letterSpacing": 4.8,
+          "color": "#FFE9A8",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.poolgeneralherotitle": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 30,
+          "lineHeight": 42,
+          "letterSpacing": 6,
+          "color": "#FFE9A8",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "shadow": {
+            "offsetX": 0,
+            "offsetY": 2,
+            "blur": 6,
+            "color": "#000000CC"
+          }
+        },
+        "auto.gacha-ds3.gachads3_div_7": {
+          "kind": "gradient-rect",
+          "backgroundLayers": [
+            {
+              "kind": "gradient",
+              "gradient": {
+                "type": "linear",
+                "repeating": false,
+                "angle": 0,
+                "shape": null,
+                "center": null,
+                "radius": null,
+                "stops": [
+                  {
+                    "color": "#060402FA",
+                    "offset": 0
+                  },
+                  {
+                    "color": "#00000000",
+                    "offset": 1
+                  }
+                ]
+              }
+            }
+          ],
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 0,
+            "stops": [
+              {
+                "color": "#060402FA",
+                "offset": 0,
+                "opacity": 0.98
+              },
+              {
+                "color": "colorBlack",
+                "offset": 1,
+                "opacity": 0
+              }
+            ]
+          }
+        },
+        "auto.gacha-ds3.poolgeneralguarantee": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 26,
+          "lineHeight": 36,
+          "letterSpacing": 2.6,
+          "color": "#FFE9A8",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER"
+        },
+        "auto.gacha-ds3.btnpoolprev": {
+          "kind": "color-rect",
+          "color": "#0A0703",
+          "opacity": 0.85,
+          "cornerRadius": 60,
+          "borderWidth": 2,
+          "borderColor": "#ffd25ad9"
+        },
+        "auto.gacha-ds3.gachads3_span_9": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 56,
+          "lineHeight": 78,
+          "letterSpacing": 0,
+          "color": "#FFE9A8",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "CENTER",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.btnpoolnext": {
+          "kind": "color-rect",
+          "color": "#0A0703",
+          "opacity": 0.85,
+          "cornerRadius": 60,
+          "borderWidth": 2,
+          "borderColor": "#ffd25ad9"
+        },
+        "auto.gacha-ds3.gachads3_span_10": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 56,
+          "lineHeight": 78,
+          "letterSpacing": 0,
+          "color": "#FFE9A8",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "CENTER",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.pooldot_general": {
+          "kind": "color-rect",
+          "color": "colorWhite",
+          "opacity": 0.2,
+          "cornerRadius": 9,
+          "borderWidth": 1,
+          "borderColor": "#ffffff4d"
+        },
+        "auto.gacha-ds3.pooldot_legendary": {
+          "kind": "color-rect",
+          "color": "secondary",
+          "opacity": 1,
+          "cornerRadius": 9,
+          "borderWidth": 1,
+          "borderColor": "#D4AF37"
+        },
+        "auto.gacha-ds3.poolbrief": {
+          "kind": "color-rect",
+          "color": "#0A0703",
+          "opacity": 0.85,
+          "cornerRadius": 8,
+          "borderWidth": 2,
+          "borderColor": "#ffd25ad9"
+        },
+        "auto.gacha-ds3.brieftag": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 22,
+          "lineHeight": 31,
+          "letterSpacing": 2.2,
+          "color": "#FFE9A8",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.rightpanel": {
+          "kind": "gradient-rect",
+          "backgroundLayers": [
+            {
+              "kind": "gradient",
+              "gradient": {
+                "type": "linear",
+                "repeating": false,
+                "angle": 180,
+                "shape": null,
+                "center": null,
+                "radius": null,
+                "stops": [
+                  {
+                    "color": "#0E0A06E6",
+                    "offset": 0
+                  },
+                  {
+                    "color": "#060402F0",
+                    "offset": 1
+                  }
+                ]
+              }
+            }
+          ],
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "stops": [
+              {
+                "color": "#0E0A06E6",
+                "offset": 0,
+                "opacity": 0.9
+              },
+              {
+                "color": "#060402F0",
+                "offset": 1,
+                "opacity": 0.94
+              }
+            ]
+          },
+          "borderSides": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 3
+          },
+          "borderWidth": 3,
+          "borderColor": "#ffd25ad9"
+        },
+        "auto.gacha-ds3.gachads3_div_26": {
+          "kind": "gradient-rect",
+          "backgroundLayers": [
+            {
+              "kind": "gradient",
+              "gradient": {
+                "type": "linear",
+                "repeating": false,
+                "angle": 180,
+                "shape": null,
+                "center": null,
+                "radius": null,
+                "stops": [
+                  {
+                    "color": "#161008F2",
+                    "offset": 0
+                  },
+                  {
+                    "color": "#060402FA",
+                    "offset": 1
+                  }
+                ]
+              }
+            }
+          ],
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "stops": [
+              {
+                "color": "#161008F2",
+                "offset": 0,
+                "opacity": 0.95
+              },
+              {
+                "color": "#060402FA",
+                "offset": 1,
+                "opacity": 0.98
+              }
+            ]
+          },
+          "borderSides": {
+            "top": 3,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "borderWidth": 3,
+          "borderColor": "#ffd25ad9"
+        },
+        "auto.gacha-ds3.btngachahistory": {
+          "kind": "gradient-rect",
+          "backgroundLayers": [
+            {
+              "kind": "gradient",
+              "gradient": {
+                "type": "linear",
+                "repeating": false,
+                "angle": 180,
+                "shape": null,
+                "center": null,
+                "radius": null,
+                "stops": [
+                  {
+                    "color": "#281E0ED9",
+                    "offset": 0
+                  },
+                  {
+                    "color": "#0C0804E6",
+                    "offset": 1
+                  }
+                ]
+              }
+            }
+          ],
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "stops": [
+              {
+                "color": "#281E0ED9",
+                "offset": 0,
+                "opacity": 0.85
+              },
+              {
+                "color": "#0C0804E6",
+                "offset": 1,
+                "opacity": 0.9
+              }
+            ]
+          },
+          "cornerRadius": 22,
+          "borderWidth": 2,
+          "borderColor": "#ffd25ad9"
+        },
+        "auto.gacha-ds3.gachads3_div_28": {
+          "kind": "label-style",
+          "font": "fonts/manrope/manrope",
+          "fontSize": 52,
+          "lineHeight": 52,
+          "letterSpacing": 0.96,
+          "color": "#FFE9A8",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.gachads3_div_29": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 26,
+          "lineHeight": 36,
+          "letterSpacing": 0.96,
+          "color": "#FFE9A8",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.btngoldsummon": {
+          "kind": "gradient-rect",
+          "backgroundLayers": [
+            {
+              "kind": "gradient",
+              "gradient": {
+                "type": "linear",
+                "repeating": false,
+                "angle": 180,
+                "shape": null,
+                "center": null,
+                "radius": null,
+                "stops": [
+                  {
+                    "color": "#281E0ED9",
+                    "offset": 0
+                  },
+                  {
+                    "color": "#0C0804E6",
+                    "offset": 1
+                  }
+                ]
+              }
+            }
+          ],
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "stops": [
+              {
+                "color": "#281E0ED9",
+                "offset": 0,
+                "opacity": 0.85
+              },
+              {
+                "color": "#0C0804E6",
+                "offset": 1,
+                "opacity": 0.9
+              }
+            ]
+          },
+          "cornerRadius": 22,
+          "borderWidth": 2,
+          "borderColor": "#ffd25ad9"
+        },
+        "auto.gacha-ds3.gachads3_div_30": {
+          "kind": "label-style",
+          "font": "fonts/manrope/manrope",
+          "fontSize": 52,
+          "lineHeight": 52,
+          "letterSpacing": 0.96,
+          "color": "#FFE9A8",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.gachads3_div_31": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 26,
+          "lineHeight": 36,
+          "letterSpacing": 0.96,
+          "color": "#FFE9A8",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.goldsummonlabel": {
+          "kind": "label-style",
+          "font": "fonts/manrope/manrope",
+          "fontSize": 22,
+          "lineHeight": 31,
+          "letterSpacing": 0.96,
+          "color": "#E8C870",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.btnticketsummon": {
+          "kind": "gradient-rect",
+          "backgroundLayers": [
+            {
+              "kind": "gradient",
+              "gradient": {
+                "type": "linear",
+                "repeating": false,
+                "angle": 180,
+                "shape": null,
+                "center": null,
+                "radius": null,
+                "stops": [
+                  {
+                    "color": "#281E0ED9",
+                    "offset": 0
+                  },
+                  {
+                    "color": "#0C0804E6",
+                    "offset": 1
+                  }
+                ]
+              }
+            }
+          ],
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "stops": [
+              {
+                "color": "#281E0ED9",
+                "offset": 0,
+                "opacity": 0.85
+              },
+              {
+                "color": "#0C0804E6",
+                "offset": 1,
+                "opacity": 0.9
+              }
+            ]
+          },
+          "cornerRadius": 22,
+          "borderWidth": 2,
+          "borderColor": "#ffd25ad9"
+        },
+        "auto.gacha-ds3.gachads3_div_32": {
+          "kind": "label-style",
+          "font": "fonts/manrope/manrope",
+          "fontSize": 52,
+          "lineHeight": 52,
+          "letterSpacing": 0.96,
+          "color": "#FFE9A8",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.gachads3_div_33": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 26,
+          "lineHeight": 36,
+          "letterSpacing": 0.96,
+          "color": "#FFE9A8",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.ticketsummonlabel": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 22,
+          "lineHeight": 31,
+          "letterSpacing": 0.96,
+          "color": "#E8C870",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.btnpullsingle": {
+          "kind": "gradient-rect",
+          "backgroundLayers": [
+            {
+              "kind": "gradient",
+              "gradient": {
+                "type": "linear",
+                "repeating": false,
+                "angle": 180,
+                "shape": null,
+                "center": null,
+                "radius": null,
+                "stops": [
+                  {
+                    "color": "#8A1414",
+                    "offset": 0
+                  },
+                  {
+                    "color": "#3E0606",
+                    "offset": 1
+                  }
+                ]
+              }
+            }
+          ],
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "stops": [
+              {
+                "color": "#8A1414",
+                "offset": 0,
+                "opacity": 1
+              },
+              {
+                "color": "#3E0606",
+                "offset": 1,
+                "opacity": 1
+              }
+            ]
+          },
+          "cornerRadius": 26,
+          "borderWidth": 3,
+          "borderColor": "#D4AF37"
+        }
+      }
+    },
+    "heroine": {
+      "slots": {
+        "auto.gacha-ds3.gachads3_body_pseudobefore": {
+          "kind": "gradient-rect",
+          "backgroundLayers": [
+            {
+              "kind": "gradient",
+              "gradient": {
+                "type": "radial",
+                "repeating": false,
+                "angle": 180,
+                "shape": "at 35% 45%",
+                "center": {
+                  "x": 0.35,
+                  "y": 0.45
+                },
+                "radius": {
+                  "x": 0.9192388155425119,
+                  "y": 0.7778174593052024
+                },
+                "repeatSpanRatio": 0.75,
+                "stops": [
+                  {
+                    "color": "#FFF0DC14",
+                    "offset": 0
+                  },
+                  {
+                    "color": "#3C0E2480",
+                    "offset": 0.75
+                  }
+                ]
+              }
+            }
+          ],
+          "gradient": {
+            "type": "radial",
+            "repeating": false,
+            "angle": 180,
+            "repeatSpanRatio": 0.75,
+            "shape": "at 35% 45%",
+            "center": {
+              "x": 0.35,
+              "y": 0.45
+            },
+            "radius": {
+              "x": 0.9192388155425119,
+              "y": 0.7778174593052024
+            },
+            "stops": [
+              {
+                "color": "#FFF0DC14",
+                "offset": 0,
+                "opacity": 0.08
+              },
+              {
+                "color": "#3C0E2480",
+                "offset": 0.75,
+                "opacity": 0.5
+              }
+            ]
+          }
+        },
+        "auto.gacha-ds3.poolgeneralart_pseudobefore": {
+          "kind": "gradient-rect",
+          "backgroundLayers": [
+            {
+              "kind": "gradient",
+              "gradient": {
+                "type": "radial",
+                "repeating": false,
+                "angle": 180,
+                "shape": "circle",
+                "center": {
+                  "x": 0.5,
+                  "y": 0.5
+                },
+                "radius": {
+                  "x": 0.5
+                },
+                "repeatSpanRatio": 0.65,
+                "stops": [
+                  {
+                    "color": "#FFA0C866",
+                    "offset": 0
+                  },
+                  {
+                    "color": "#00000000",
+                    "offset": 0.65
+                  }
+                ]
+              }
+            }
+          ],
+          "gradient": {
+            "type": "radial",
+            "repeating": false,
+            "angle": 180,
+            "repeatSpanRatio": 0.65,
+            "shape": "circle",
+            "center": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "radius": {
+              "x": 0.5
+            },
+            "stops": [
+              {
+                "color": "#FFA0C866",
+                "offset": 0,
+                "opacity": 0.4
+              },
+              {
+                "color": "colorBlack",
+                "offset": 0.65,
+                "opacity": 0
+              }
+            ]
+          }
+        },
+        "auto.gacha-ds3.gachads3_div_6": {
+          "kind": "gradient-rect",
+          "backgroundLayers": [
+            {
+              "kind": "gradient",
+              "gradient": {
+                "type": "linear",
+                "repeating": false,
+                "angle": 90,
+                "shape": null,
+                "center": null,
+                "radius": null,
+                "stops": [
+                  {
+                    "color": "#00000000",
+                    "offset": 0
+                  },
+                  {
+                    "color": "#0A0612",
+                    "offset": 1
+                  }
+                ]
+              }
+            }
+          ],
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 90,
+            "stops": [
+              {
+                "color": "colorBlack",
+                "offset": 0,
+                "opacity": 0
+              },
+              {
+                "color": "#0A0612",
+                "offset": 1,
+                "opacity": 1
+              }
+            ]
+          }
+        },
+        "auto.gacha-ds3.poolgeneraleventchip": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 24,
+          "lineHeight": 34,
+          "letterSpacing": 4.8,
+          "color": "#FFE2EE",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.poolgeneralheroname": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 120,
+          "lineHeight": 120,
+          "letterSpacing": 9.6,
+          "color": "#FFE2EE",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.poolgeneralherotitle": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 30,
+          "lineHeight": 42,
+          "letterSpacing": 6,
+          "color": "#FFE2EE",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "shadow": {
+            "offsetX": 0,
+            "offsetY": 2,
+            "blur": 6,
+            "color": "#000000CC"
+          }
+        },
+        "auto.gacha-ds3.gachads3_div_7": {
+          "kind": "gradient-rect",
+          "backgroundLayers": [
+            {
+              "kind": "gradient",
+              "gradient": {
+                "type": "linear",
+                "repeating": false,
+                "angle": 0,
+                "shape": null,
+                "center": null,
+                "radius": null,
+                "stops": [
+                  {
+                    "color": "#46162EF7",
+                    "offset": 0
+                  },
+                  {
+                    "color": "#00000000",
+                    "offset": 1
+                  }
+                ]
+              }
+            }
+          ],
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 0,
+            "stops": [
+              {
+                "color": "#46162EF7",
+                "offset": 0,
+                "opacity": 0.97
+              },
+              {
+                "color": "colorBlack",
+                "offset": 1,
+                "opacity": 0
+              }
+            ]
+          }
+        },
+        "auto.gacha-ds3.poolgeneralguarantee": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 26,
+          "lineHeight": 36,
+          "letterSpacing": 2.6,
+          "color": "#FFE2EE",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER"
+        },
+        "auto.gacha-ds3.btnpoolprev": {
+          "kind": "color-rect",
+          "color": "#541C38",
+          "opacity": 0.82,
+          "cornerRadius": 60,
+          "borderWidth": 2,
+          "borderColor": "#ffaacdb3"
+        },
+        "auto.gacha-ds3.gachads3_span_9": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 56,
+          "lineHeight": 78,
+          "letterSpacing": 0,
+          "color": "#FFE2EE",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "CENTER",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.btnpoolnext": {
+          "kind": "color-rect",
+          "color": "#541C38",
+          "opacity": 0.82,
+          "cornerRadius": 60,
+          "borderWidth": 2,
+          "borderColor": "#ffaacdb3"
+        },
+        "auto.gacha-ds3.gachads3_span_10": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 56,
+          "lineHeight": 78,
+          "letterSpacing": 0,
+          "color": "#FFE2EE",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "CENTER",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.pooldot_general": {
+          "kind": "color-rect",
+          "color": "colorWhite",
+          "opacity": 0.2,
+          "cornerRadius": 9,
+          "borderWidth": 1,
+          "borderColor": "#ffffff4d"
+        },
+        "auto.gacha-ds3.pooldot_heroine": {
+          "kind": "color-rect",
+          "color": "secondary",
+          "opacity": 1,
+          "cornerRadius": 9,
+          "borderWidth": 1,
+          "borderColor": "#D4AF37"
+        },
+        "auto.gacha-ds3.poolbrief": {
+          "kind": "color-rect",
+          "color": "#541C38",
+          "opacity": 0.82,
+          "cornerRadius": 8,
+          "borderWidth": 2,
+          "borderColor": "#ffaacdb3"
+        },
+        "auto.gacha-ds3.brieftag": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 22,
+          "lineHeight": 31,
+          "letterSpacing": 2.2,
+          "color": "#FFE2EE",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.rightpanel": {
+          "kind": "gradient-rect",
+          "backgroundLayers": [
+            {
+              "kind": "gradient",
+              "gradient": {
+                "type": "linear",
+                "repeating": false,
+                "angle": 180,
+                "shape": null,
+                "center": null,
+                "radius": null,
+                "stops": [
+                  {
+                    "color": "#60243ED6",
+                    "offset": 0
+                  },
+                  {
+                    "color": "#3E1428E6",
+                    "offset": 1
+                  }
+                ]
+              }
+            }
+          ],
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "stops": [
+              {
+                "color": "#60243ED6",
+                "offset": 0,
+                "opacity": 0.84
+              },
+              {
+                "color": "#3E1428E6",
+                "offset": 1,
+                "opacity": 0.9
+              }
+            ]
+          },
+          "borderSides": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 3
+          },
+          "borderWidth": 3,
+          "borderColor": "#ffaacdb3"
+        },
+        "auto.gacha-ds3.gachads3_div_26": {
+          "kind": "gradient-rect",
+          "backgroundLayers": [
+            {
+              "kind": "gradient",
+              "gradient": {
+                "type": "linear",
+                "repeating": false,
+                "angle": 180,
+                "shape": null,
+                "center": null,
+                "radius": null,
+                "stops": [
+                  {
+                    "color": "#782C4EED",
+                    "offset": 0
+                  },
+                  {
+                    "color": "#46162EF7",
+                    "offset": 1
+                  }
+                ]
+              }
+            }
+          ],
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "stops": [
+              {
+                "color": "#782C4EED",
+                "offset": 0,
+                "opacity": 0.93
+              },
+              {
+                "color": "#46162EF7",
+                "offset": 1,
+                "opacity": 0.97
+              }
+            ]
+          },
+          "borderSides": {
+            "top": 3,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "borderWidth": 3,
+          "borderColor": "#ffaacdb3"
+        },
+        "auto.gacha-ds3.btngachahistory": {
+          "kind": "gradient-rect",
+          "backgroundLayers": [
+            {
+              "kind": "gradient",
+              "gradient": {
+                "type": "linear",
+                "repeating": false,
+                "angle": 180,
+                "shape": null,
+                "center": null,
+                "radius": null,
+                "stops": [
+                  {
+                    "color": "#AA4874B3",
+                    "offset": 0
+                  },
+                  {
+                    "color": "#602240D9",
+                    "offset": 1
+                  }
+                ]
+              }
+            }
+          ],
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "stops": [
+              {
+                "color": "#AA4874B3",
+                "offset": 0,
+                "opacity": 0.7
+              },
+              {
+                "color": "#602240D9",
+                "offset": 1,
+                "opacity": 0.85
+              }
+            ]
+          },
+          "cornerRadius": 22,
+          "borderWidth": 2,
+          "borderColor": "#ffaacdb3"
+        },
+        "auto.gacha-ds3.gachads3_div_28": {
+          "kind": "label-style",
+          "font": "fonts/manrope/manrope",
+          "fontSize": 52,
+          "lineHeight": 52,
+          "letterSpacing": 0.96,
+          "color": "#FFE2EE",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.gachads3_div_29": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 26,
+          "lineHeight": 36,
+          "letterSpacing": 0.96,
+          "color": "#FFE2EE",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.btngoldsummon": {
+          "kind": "gradient-rect",
+          "backgroundLayers": [
+            {
+              "kind": "gradient",
+              "gradient": {
+                "type": "linear",
+                "repeating": false,
+                "angle": 180,
+                "shape": null,
+                "center": null,
+                "radius": null,
+                "stops": [
+                  {
+                    "color": "#AA4874B3",
+                    "offset": 0
+                  },
+                  {
+                    "color": "#602240D9",
+                    "offset": 1
+                  }
+                ]
+              }
+            }
+          ],
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "stops": [
+              {
+                "color": "#AA4874B3",
+                "offset": 0,
+                "opacity": 0.7
+              },
+              {
+                "color": "#602240D9",
+                "offset": 1,
+                "opacity": 0.85
+              }
+            ]
+          },
+          "cornerRadius": 22,
+          "borderWidth": 2,
+          "borderColor": "#ffaacdb3"
+        },
+        "auto.gacha-ds3.gachads3_div_30": {
+          "kind": "label-style",
+          "font": "fonts/manrope/manrope",
+          "fontSize": 52,
+          "lineHeight": 52,
+          "letterSpacing": 0.96,
+          "color": "#FFE2EE",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.gachads3_div_31": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 26,
+          "lineHeight": 36,
+          "letterSpacing": 0.96,
+          "color": "#FFE2EE",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.goldsummonlabel": {
+          "kind": "label-style",
+          "font": "fonts/manrope/manrope",
+          "fontSize": 22,
+          "lineHeight": 31,
+          "letterSpacing": 0.96,
+          "color": "#F6C3D8",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.btnticketsummon": {
+          "kind": "gradient-rect",
+          "backgroundLayers": [
+            {
+              "kind": "gradient",
+              "gradient": {
+                "type": "linear",
+                "repeating": false,
+                "angle": 180,
+                "shape": null,
+                "center": null,
+                "radius": null,
+                "stops": [
+                  {
+                    "color": "#AA4874B3",
+                    "offset": 0
+                  },
+                  {
+                    "color": "#602240D9",
+                    "offset": 1
+                  }
+                ]
+              }
+            }
+          ],
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "stops": [
+              {
+                "color": "#AA4874B3",
+                "offset": 0,
+                "opacity": 0.7
+              },
+              {
+                "color": "#602240D9",
+                "offset": 1,
+                "opacity": 0.85
+              }
+            ]
+          },
+          "cornerRadius": 22,
+          "borderWidth": 2,
+          "borderColor": "#ffaacdb3"
+        },
+        "auto.gacha-ds3.gachads3_div_32": {
+          "kind": "label-style",
+          "font": "fonts/manrope/manrope",
+          "fontSize": 52,
+          "lineHeight": 52,
+          "letterSpacing": 0.96,
+          "color": "#FFE2EE",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.gachads3_div_33": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 26,
+          "lineHeight": 36,
+          "letterSpacing": 0.96,
+          "color": "#FFE2EE",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.ticketsummonlabel": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 22,
+          "lineHeight": 31,
+          "letterSpacing": 0.96,
+          "color": "#F6C3D8",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.btnpullsingle": {
+          "kind": "gradient-rect",
+          "backgroundLayers": [
+            {
+              "kind": "gradient",
+              "gradient": {
+                "type": "linear",
+                "repeating": false,
+                "angle": 180,
+                "shape": null,
+                "center": null,
+                "radius": null,
+                "stops": [
+                  {
+                    "color": "#B0306A",
+                    "offset": 0
+                  },
+                  {
+                    "color": "#6E1640",
+                    "offset": 1
+                  }
+                ]
+              }
+            }
+          ],
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "stops": [
+              {
+                "color": "#B0306A",
+                "offset": 0,
+                "opacity": 1
+              },
+              {
+                "color": "#6E1640",
+                "offset": 1,
+                "opacity": 1
+              }
+            ]
+          },
+          "cornerRadius": 26,
+          "borderWidth": 3,
+          "borderColor": "#D4AF37"
+        }
+      }
+    },
+    "support": {
+      "slots": {
+        "auto.gacha-ds3.gachads3_body_pseudobefore": {
+          "kind": "gradient-rect",
+          "backgroundLayers": [
+            {
+              "kind": "gradient",
+              "gradient": {
+                "type": "radial",
+                "repeating": false,
+                "angle": 180,
+                "shape": "at 35% 45%",
+                "center": {
+                  "x": 0.35,
+                  "y": 0.45
+                },
+                "radius": {
+                  "x": 0.9192388155425119,
+                  "y": 0.7778174593052024
+                },
+                "repeatSpanRatio": 0.75,
+                "stops": [
+                  {
+                    "color": "#FFF0DC14",
+                    "offset": 0
+                  },
+                  {
+                    "color": "#041E168C",
+                    "offset": 0.75
+                  }
+                ]
+              }
+            }
+          ],
+          "gradient": {
+            "type": "radial",
+            "repeating": false,
+            "angle": 180,
+            "repeatSpanRatio": 0.75,
+            "shape": "at 35% 45%",
+            "center": {
+              "x": 0.35,
+              "y": 0.45
+            },
+            "radius": {
+              "x": 0.9192388155425119,
+              "y": 0.7778174593052024
+            },
+            "stops": [
+              {
+                "color": "#FFF0DC14",
+                "offset": 0,
+                "opacity": 0.08
+              },
+              {
+                "color": "#041E168C",
+                "offset": 0.75,
+                "opacity": 0.55
+              }
+            ]
+          }
+        },
+        "auto.gacha-ds3.poolgeneralart_pseudobefore": {
+          "kind": "gradient-rect",
+          "backgroundLayers": [
+            {
+              "kind": "gradient",
+              "gradient": {
+                "type": "radial",
+                "repeating": false,
+                "angle": 180,
+                "shape": "circle",
+                "center": {
+                  "x": 0.5,
+                  "y": 0.5
+                },
+                "radius": {
+                  "x": 0.5
+                },
+                "repeatSpanRatio": 0.65,
+                "stops": [
+                  {
+                    "color": "#8CE6BE52",
+                    "offset": 0
+                  },
+                  {
+                    "color": "#00000000",
+                    "offset": 0.65
+                  }
+                ]
+              }
+            }
+          ],
+          "gradient": {
+            "type": "radial",
+            "repeating": false,
+            "angle": 180,
+            "repeatSpanRatio": 0.65,
+            "shape": "circle",
+            "center": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "radius": {
+              "x": 0.5
+            },
+            "stops": [
+              {
+                "color": "#8CE6BE52",
+                "offset": 0,
+                "opacity": 0.32
+              },
+              {
+                "color": "colorBlack",
+                "offset": 0.65,
+                "opacity": 0
+              }
+            ]
+          }
+        },
+        "auto.gacha-ds3.gachads3_div_6": {
+          "kind": "gradient-rect",
+          "backgroundLayers": [
+            {
+              "kind": "gradient",
+              "gradient": {
+                "type": "linear",
+                "repeating": false,
+                "angle": 90,
+                "shape": null,
+                "center": null,
+                "radius": null,
+                "stops": [
+                  {
+                    "color": "#00000000",
+                    "offset": 0
+                  },
+                  {
+                    "color": "#0A0612",
+                    "offset": 1
+                  }
+                ]
+              }
+            }
+          ],
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 90,
+            "stops": [
+              {
+                "color": "colorBlack",
+                "offset": 0,
+                "opacity": 0
+              },
+              {
+                "color": "#0A0612",
+                "offset": 1,
+                "opacity": 1
+              }
+            ]
+          }
+        },
+        "auto.gacha-ds3.poolgeneraleventchip": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 24,
+          "lineHeight": 34,
+          "letterSpacing": 4.8,
+          "color": "#DDF5EA",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.poolgeneralheroname": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 120,
+          "lineHeight": 120,
+          "letterSpacing": 9.6,
+          "color": "#DDF5EA",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.poolgeneralherotitle": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 30,
+          "lineHeight": 42,
+          "letterSpacing": 6,
+          "color": "#DDF5EA",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "shadow": {
+            "offsetX": 0,
+            "offsetY": 2,
+            "blur": 6,
+            "color": "#000000CC"
+          }
+        },
+        "auto.gacha-ds3.gachads3_div_7": {
+          "kind": "gradient-rect",
+          "backgroundLayers": [
+            {
+              "kind": "gradient",
+              "gradient": {
+                "type": "linear",
+                "repeating": false,
+                "angle": 0,
+                "shape": null,
+                "center": null,
+                "radius": null,
+                "stops": [
+                  {
+                    "color": "#08281EF7",
+                    "offset": 0
+                  },
+                  {
+                    "color": "#00000000",
+                    "offset": 1
+                  }
+                ]
+              }
+            }
+          ],
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 0,
+            "stops": [
+              {
+                "color": "#08281EF7",
+                "offset": 0,
+                "opacity": 0.97
+              },
+              {
+                "color": "colorBlack",
+                "offset": 1,
+                "opacity": 0
+              }
+            ]
+          }
+        },
+        "auto.gacha-ds3.poolgeneralguarantee": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 26,
+          "lineHeight": 36,
+          "letterSpacing": 2.6,
+          "color": "#DDF5EA",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER"
+        },
+        "auto.gacha-ds3.btnpoolprev": {
+          "kind": "color-rect",
+          "color": "#0E3024",
+          "opacity": 0.82,
+          "cornerRadius": 60,
+          "borderWidth": 2,
+          "borderColor": "#8ccfb4a6"
+        },
+        "auto.gacha-ds3.gachads3_span_9": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 56,
+          "lineHeight": 78,
+          "letterSpacing": 0,
+          "color": "#DDF5EA",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "CENTER",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.btnpoolnext": {
+          "kind": "color-rect",
+          "color": "#0E3024",
+          "opacity": 0.82,
+          "cornerRadius": 60,
+          "borderWidth": 2,
+          "borderColor": "#8ccfb4a6"
+        },
+        "auto.gacha-ds3.gachads3_span_10": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 56,
+          "lineHeight": 78,
+          "letterSpacing": 0,
+          "color": "#DDF5EA",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "CENTER",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.pooldot_general": {
+          "kind": "color-rect",
+          "color": "colorWhite",
+          "opacity": 0.2,
+          "cornerRadius": 9,
+          "borderWidth": 1,
+          "borderColor": "#ffffff4d"
+        },
+        "auto.gacha-ds3.pooldot_support": {
+          "kind": "color-rect",
+          "color": "secondary",
+          "opacity": 1,
+          "cornerRadius": 9,
+          "borderWidth": 1,
+          "borderColor": "#D4AF37"
+        },
+        "auto.gacha-ds3.poolbrief": {
+          "kind": "color-rect",
+          "color": "#0E3024",
+          "opacity": 0.82,
+          "cornerRadius": 8,
+          "borderWidth": 2,
+          "borderColor": "#8ccfb4a6"
+        },
+        "auto.gacha-ds3.brieftag": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 22,
+          "lineHeight": 31,
+          "letterSpacing": 2.2,
+          "color": "#DDF5EA",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.rightpanel": {
+          "kind": "gradient-rect",
+          "backgroundLayers": [
+            {
+              "kind": "gradient",
+              "gradient": {
+                "type": "linear",
+                "repeating": false,
+                "angle": 180,
+                "shape": null,
+                "center": null,
+                "radius": null,
+                "stops": [
+                  {
+                    "color": "#123A2CDB",
+                    "offset": 0
+                  },
+                  {
+                    "color": "#08241CEB",
+                    "offset": 1
+                  }
+                ]
+              }
+            }
+          ],
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "stops": [
+              {
+                "color": "#123A2CDB",
+                "offset": 0,
+                "opacity": 0.86
+              },
+              {
+                "color": "#08241CEB",
+                "offset": 1,
+                "opacity": 0.92
+              }
+            ]
+          },
+          "borderSides": {
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 3
+          },
+          "borderWidth": 3,
+          "borderColor": "#8ccfb4a6"
+        },
+        "auto.gacha-ds3.gachads3_div_26": {
+          "kind": "gradient-rect",
+          "backgroundLayers": [
+            {
+              "kind": "gradient",
+              "gradient": {
+                "type": "linear",
+                "repeating": false,
+                "angle": 180,
+                "shape": null,
+                "center": null,
+                "radius": null,
+                "stops": [
+                  {
+                    "color": "#164836F0",
+                    "offset": 0
+                  },
+                  {
+                    "color": "#08281EF7",
+                    "offset": 1
+                  }
+                ]
+              }
+            }
+          ],
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "stops": [
+              {
+                "color": "#164836F0",
+                "offset": 0,
+                "opacity": 0.94
+              },
+              {
+                "color": "#08281EF7",
+                "offset": 1,
+                "opacity": 0.97
+              }
+            ]
+          },
+          "borderSides": {
+            "top": 3,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "borderWidth": 3,
+          "borderColor": "#8ccfb4a6"
+        },
+        "auto.gacha-ds3.btngachahistory": {
+          "kind": "gradient-rect",
+          "backgroundLayers": [
+            {
+              "kind": "gradient",
+              "gradient": {
+                "type": "linear",
+                "repeating": false,
+                "angle": 180,
+                "shape": null,
+                "center": null,
+                "radius": null,
+                "stops": [
+                  {
+                    "color": "#286E54B8",
+                    "offset": 0
+                  },
+                  {
+                    "color": "#103C2CDB",
+                    "offset": 1
+                  }
+                ]
+              }
+            }
+          ],
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "stops": [
+              {
+                "color": "#286E54B8",
+                "offset": 0,
+                "opacity": 0.72
+              },
+              {
+                "color": "#103C2CDB",
+                "offset": 1,
+                "opacity": 0.86
+              }
+            ]
+          },
+          "cornerRadius": 22,
+          "borderWidth": 2,
+          "borderColor": "#8ccfb4a6"
+        },
+        "auto.gacha-ds3.gachads3_div_28": {
+          "kind": "label-style",
+          "font": "fonts/manrope/manrope",
+          "fontSize": 52,
+          "lineHeight": 52,
+          "letterSpacing": 0.96,
+          "color": "#DDF5EA",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.gachads3_div_29": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 26,
+          "lineHeight": 36,
+          "letterSpacing": 0.96,
+          "color": "#DDF5EA",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.btngoldsummon": {
+          "kind": "gradient-rect",
+          "backgroundLayers": [
+            {
+              "kind": "gradient",
+              "gradient": {
+                "type": "linear",
+                "repeating": false,
+                "angle": 180,
+                "shape": null,
+                "center": null,
+                "radius": null,
+                "stops": [
+                  {
+                    "color": "#286E54B8",
+                    "offset": 0
+                  },
+                  {
+                    "color": "#103C2CDB",
+                    "offset": 1
+                  }
+                ]
+              }
+            }
+          ],
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "stops": [
+              {
+                "color": "#286E54B8",
+                "offset": 0,
+                "opacity": 0.72
+              },
+              {
+                "color": "#103C2CDB",
+                "offset": 1,
+                "opacity": 0.86
+              }
+            ]
+          },
+          "cornerRadius": 22,
+          "borderWidth": 2,
+          "borderColor": "#8ccfb4a6"
+        },
+        "auto.gacha-ds3.gachads3_div_30": {
+          "kind": "label-style",
+          "font": "fonts/manrope/manrope",
+          "fontSize": 52,
+          "lineHeight": 52,
+          "letterSpacing": 0.96,
+          "color": "#DDF5EA",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.gachads3_div_31": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 26,
+          "lineHeight": 36,
+          "letterSpacing": 0.96,
+          "color": "#DDF5EA",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.goldsummonlabel": {
+          "kind": "label-style",
+          "font": "fonts/manrope/manrope",
+          "fontSize": 22,
+          "lineHeight": 31,
+          "letterSpacing": 0.96,
+          "color": "#B5E0CC",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.btnticketsummon": {
+          "kind": "gradient-rect",
+          "backgroundLayers": [
+            {
+              "kind": "gradient",
+              "gradient": {
+                "type": "linear",
+                "repeating": false,
+                "angle": 180,
+                "shape": null,
+                "center": null,
+                "radius": null,
+                "stops": [
+                  {
+                    "color": "#286E54B8",
+                    "offset": 0
+                  },
+                  {
+                    "color": "#103C2CDB",
+                    "offset": 1
+                  }
+                ]
+              }
+            }
+          ],
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "stops": [
+              {
+                "color": "#286E54B8",
+                "offset": 0,
+                "opacity": 0.72
+              },
+              {
+                "color": "#103C2CDB",
+                "offset": 1,
+                "opacity": 0.86
+              }
+            ]
+          },
+          "cornerRadius": 22,
+          "borderWidth": 2,
+          "borderColor": "#8ccfb4a6"
+        },
+        "auto.gacha-ds3.gachads3_div_32": {
+          "kind": "label-style",
+          "font": "fonts/manrope/manrope",
+          "fontSize": 52,
+          "lineHeight": 52,
+          "letterSpacing": 0.96,
+          "color": "#DDF5EA",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.gachads3_div_33": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 26,
+          "lineHeight": 36,
+          "letterSpacing": 0.96,
+          "color": "#DDF5EA",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.ticketsummonlabel": {
+          "kind": "label-style",
+          "font": "fonts/notosans_tc/notosans_tc",
+          "fontSize": 22,
+          "lineHeight": 31,
+          "letterSpacing": 0.96,
+          "color": "#B5E0CC",
+          "outlineColor": "colorOutlineDark",
+          "outlineWidth": 2,
+          "horizontalAlign": "START",
+          "verticalAlign": "CENTER",
+          "isBold": true
+        },
+        "auto.gacha-ds3.btnpullsingle": {
+          "kind": "gradient-rect",
+          "backgroundLayers": [
+            {
+              "kind": "gradient",
+              "gradient": {
+                "type": "linear",
+                "repeating": false,
+                "angle": 180,
+                "shape": null,
+                "center": null,
+                "radius": null,
+                "stops": [
+                  {
+                    "color": "#1F6B50",
+                    "offset": 0
+                  },
+                  {
+                    "color": "#0E3D2C",
+                    "offset": 1
+                  }
+                ]
+              }
+            }
+          ],
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "stops": [
+              {
+                "color": "#1F6B50",
+                "offset": 0,
+                "opacity": 1
+              },
+              {
+                "color": "#0E3D2C",
+                "offset": 1,
+                "opacity": 1
+              }
+            ]
+          },
+          "cornerRadius": 26,
+          "borderWidth": 3,
+          "borderColor": "#D4AF37"
+        }
+      }
+    }
+  }
+}

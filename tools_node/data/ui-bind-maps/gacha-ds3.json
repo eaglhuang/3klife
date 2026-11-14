@@ -123,15 +123,19 @@
       "index": 2
     },
     {
-      "name": "PoolGeneralArt",
+      "name": "PoolGeneralArtSlot",
       "selector": "#pool-panel-general .banner-art-placeholder"
     },
     {
-      "name": "PoolLegendaryArt",
+      "name": "PoolLegendaryArtSlot",
       "selector": "#pool-panel-legendary .banner-art-placeholder"
     },
     {
-      "name": "PoolSupportArt",
+      "name": "PoolHeroineArtSlot",
+      "selector": "#pool-panel-heroine .banner-art-placeholder"
+    },
+    {
+      "name": "PoolSupportArtSlot",
       "selector": "#pool-panel-support .banner-art-placeholder"
     }
   ]

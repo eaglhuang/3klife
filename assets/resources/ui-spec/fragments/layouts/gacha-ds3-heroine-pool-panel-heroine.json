@@ -1,0 +1,158 @@
+{
+  "type": "container",
+  "name": "TabHeroinePoolPanelHeroineContent",
+  "widget": {
+    "top": 0,
+    "left": 0,
+    "right": 0,
+    "bottom": 0
+  },
+  "children": [
+    {
+      "type": "container",
+      "name": "GachaDs3HeroinePoolPanelHeroineRoot",
+      "children": [
+        {
+          "type": "container",
+          "name": "PoolHeroineArt",
+          "widget": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0
+          },
+          "layout": {
+            "type": "horizontal",
+            "alignItems": "end",
+            "justifyContent": "center"
+          },
+          "children": [
+            {
+              "type": "label",
+              "name": "PoolHeroineArtSlot",
+              "width": 480,
+              "height": 918,
+              "text": "hero artwork\n立繪佔位",
+              "styleSlot": "auto.gacha-ds3-tab-heroine-pool-panel-heroine.poolheroineartslot"
+            },
+            {
+              "type": "panel",
+              "name": "PoolHeroineArt_PseudoBefore",
+              "widget": {
+                "left": 690,
+                "top": 180
+              },
+              "skinSlot": "auto.gacha-ds3-tab-heroine-pool-panel-heroine.poolheroineart_pseudobefore",
+              "_cssPseudo": "before",
+              "width": 900,
+              "height": 900
+            }
+          ]
+        },
+        {
+          "type": "panel",
+          "name": "GachaDs3TabHeroinePoolPanelHeroine_div_2",
+          "widget": {
+            "right": 0,
+            "top": 0,
+            "bottom": 0
+          },
+          "width": 180,
+          "skinSlot": "auto.gacha-ds3-tab-heroine-pool-panel-heroine.gachads3tabheroinepoolpanelheroine_div_2"
+        },
+        {
+          "type": "panel",
+          "name": "GachaDs3TabHeroinePoolPanelHeroine_div_3",
+          "widget": {
+            "left": 0,
+            "right": 0,
+            "bottom": 0
+          },
+          "height": 120,
+          "skinSlot": "auto.gacha-ds3-tab-heroine-pool-panel-heroine.gachads3tabheroinepoolpanelheroine_div_3"
+        },
+        {
+          "type": "container",
+          "name": "GachaDs3TabHeroinePoolPanelHeroine_div_4",
+          "widget": {
+            "left": 180,
+            "bottom": 56
+          },
+          "width": 389,
+          "height": 320,
+          "layout": {
+            "type": "vertical",
+            "alignItems": "start",
+            "spacingY": 16
+          },
+          "children": [
+            {
+              "type": "panel",
+              "name": "PoolHeroineEventChip",
+              "width": 276,
+              "height": 49,
+              "skinSlot": "auto.gacha-ds3-tab-heroine-pool-panel-heroine.poolheroineeventchip",
+              "children": [
+                {
+                  "type": "label",
+                  "name": "GachaDs3TabHeroinePoolPanelHeroine_span_1",
+                  "widget": {
+                    "left": 18,
+                    "top": 6
+                  },
+                  "text": "★ 紅顏系列 · 常設",
+                  "styleSlot": "auto.gacha-ds3-tab-heroine-pool-panel-heroine.gachads3tabheroinepoolpanelheroine_span_1",
+                  "width": 240,
+                  "height": 37
+                }
+              ]
+            },
+            {
+              "type": "label",
+              "name": "PoolHeroineHeroName",
+              "width": 389,
+              "height": 120,
+              "text": "大 喬",
+              "styleSlot": "auto.gacha-ds3-tab-heroine-pool-panel-heroine.poolheroineheroname"
+            },
+            {
+              "type": "label",
+              "name": "PoolHeroineHeroTitle",
+              "width": 389,
+              "height": 41,
+              "text": "國色天香 · SSR 武將",
+              "styleSlot": "auto.gacha-ds3-tab-heroine-pool-panel-heroine.poolheroineherotitle"
+            },
+            {
+              "type": "panel",
+              "name": "PoolHeroineGuarantee",
+              "width": 351,
+              "height": 60,
+              "skinSlot": "auto.gacha-ds3-tab-heroine-pool-panel-heroine.poolheroineguarantee",
+              "children": [
+                {
+                  "type": "label",
+                  "name": "GachaDs3TabHeroinePoolPanelHeroine_span_2",
+                  "widget": {
+                    "left": 22,
+                    "top": 10
+                  },
+                  "text": "🌸 每 5 抽必得 SR 以上",
+                  "styleSlot": "auto.gacha-ds3-tab-heroine-pool-panel-heroine.gachads3tabheroinepoolpanelheroine_span_2",
+                  "width": 307,
+                  "height": 40
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "widget": {
+        "top": 0,
+        "left": 0,
+        "right": 0,
+        "bottom": 0
+      }
+    }
+  ]
+}

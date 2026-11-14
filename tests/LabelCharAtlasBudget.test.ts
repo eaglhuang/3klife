@@ -2,7 +2,7 @@
  * LabelCharAtlasBudget.test.ts — 字元圖集預算：超出時改走 TTF，避免新字畫不出來（UI-2-0164）
  */
 import { assert, TestSuite } from './TestRunner';
-import { LabelCharAtlasBudget } from '../assets/scripts/ui/core/LabelCharAtlasBudget';
+import { LabelCharAtlasBudget, isLetterSpacingVisible } from '../assets/scripts/ui/core/LabelCharAtlasBudget';
 
 export function createLabelCharAtlasBudgetSuite(): TestSuite {
     const suite = new TestSuite('LabelCharAtlasBudget');
@@ -34,6 +34,17 @@ export function createLabelCharAtlasBudgetSuite(): TestSuite {
         assert.equals(false, budget.reserve('將', 200, 'noto|new'));
         budget.reset();
         assert.equals(true, budget.reserve('將', 200, 'noto|new'));
+    });
+
+    suite.test('字距太小不走 CHAR；描邊讓字元佔更多預算', () => {
+        assert.equals(false, isLetterSpacingVisible(0.96, 26));
+        assert.equals(true, isLetterSpacingVisible(4, 26));
+        const plain = new LabelCharAtlasBudget();
+        const outlined = new LabelCharAtlasBudget();
+        let a = 0, b = 0;
+        while (plain.reserve('將', 200, `p|${a}`)) a += 1;
+        while (outlined.reserve('將', 200, `o|${b}`, 40)) b += 1;
+        assert.equals(true, b < a);
     });
 
     return suite;

@@ -17,40 +17,38 @@
     "artistOverride": "For autoBake entries only: drop a same-named PNG at outputPath to replace the placeholder; converter loads via uuid, no code change required."
   },
   "summary": {
-    "totalEntries": 6,
+    "totalEntries": 4,
     "autoBakeEntries": 0,
-    "reviewOnlyEntries": 6,
+    "reviewOnlyEntries": 4,
     "byProperty": {
-      "backdrop-filter": 3,
-      "background-image": 3
+      "backdrop-filter": 4
     },
     "bySkinSlotKind": {
-      "shadow-set": 3,
-      "background-set": 3
+      "shadow-set": 4
     },
     "byBakeAction": {
-      "review-only": 3,
-      "manual-art-asset": 3
+      "review-only": 2,
+      "manual-art-asset": 2
     }
   },
   "entries": [
     {
-      "bakeId": "gacha-ds3__div_45__backdrop-filter",
+      "bakeId": "gacha-ds3__div_54__backdrop-filter",
       "screenId": "gacha-ds3",
       "selector": "div.nav-arrow.next[3]",
       "ucufId": "gacha-ds3.nav-arrow-2",
       "tag": "div",
-      "nodeId": 45,
+      "nodeId": 54,
       "property": "backdrop-filter",
       "value": "blur(8px)",
       "capability": "assetize",
       "bakeMode": null,
       "bakeNote": null,
       "target": {
-        "x": 1376,
-        "y": 508,
-        "width": 64,
-        "height": 64,
+        "x": 1180,
+        "y": 480,
+        "width": 120,
+        "height": 120,
         "dpr": 2
       },
       "outputPath": null,
@@ -62,12 +60,12 @@
       "status": "needs-art-direction"
     },
     {
-      "bakeId": "gacha-ds3__div_44__backdrop-filter",
+      "bakeId": "gacha-ds3__div_53__backdrop-filter",
       "screenId": "gacha-ds3",
       "selector": "div.nav-arrow.prev[2]",
       "ucufId": "gacha-ds3.nav-arrow",
       "tag": "div",
-      "nodeId": 44,
+      "nodeId": 53,
       "property": "backdrop-filter",
       "value": "blur(8px)",
       "capability": "assetize",
@@ -75,9 +73,9 @@
       "bakeNote": null,
       "target": {
         "x": 20,
-        "y": 508,
-        "width": 64,
-        "height": 64,
+        "y": 480,
+        "width": 120,
+        "height": 120,
         "dpr": 2
       },
       "outputPath": null,
@@ -89,12 +87,12 @@
       "status": "needs-art-direction"
     },
     {
-      "bakeId": "gacha-ds3__div_50__backdrop-filter",
+      "bakeId": "gacha-ds3__div_60__backdrop-filter",
       "screenId": "gacha-ds3",
       "selector": "div#pool-brief.pool-brief[5]",
       "ucufId": null,
       "tag": "div",
-      "nodeId": 50,
+      "nodeId": 60,
       "property": "backdrop-filter",
       "value": "blur(10px)",
       "capability": "assetize",
@@ -103,94 +101,40 @@
       "target": {
         "x": 20,
         "y": 16,
-        "width": 185,
-        "height": 72,
+        "width": 410,
+        "height": 149,
         "dpr": 2
       },
       "outputPath": null,
       "bundleHint": "resources",
       "skinSlotKind": "shadow-set",
       "autoBake": false,
-      "bakeAction": "review-only",
-      "artGuidance": "Not auto-baked by default. Add data-ucuf-bake=\"fragment\" only to small standalone missing visual fragments.",
-      "status": "needs-art-direction"
-    },
-    {
-      "bakeId": "gacha-ds3__div_3__background-image",
-      "screenId": "gacha-ds3",
-      "selector": "div#banner-stage.banner-stage[0]>div#pool-panel-general.banner-slide.active[0]>div.banner-bg-fill[0]",
-      "ucufId": null,
-      "tag": "div",
-      "nodeId": 3,
-      "property": "background-image",
-      "value": "radial-gradient(120% 80% at 40% 30%, rgb(26, 10, 46) 0%, rgb(22, 6, 31) 40%, rgb(10, 6, 18) 100%)",
-      "capability": "assetize",
-      "bakeMode": null,
-      "bakeNote": null,
-      "target": {
-        "x": 0,
-        "y": 0,
-        "width": 1460,
-        "height": 880,
-        "dpr": 2
-      },
-      "outputPath": null,
-      "bundleHint": "resources",
-      "skinSlotKind": "background-set",
-      "autoBake": false,
       "bakeAction": "manual-art-asset",
       "artGuidance": "Element is too large for screenshot-fragment bake. Use a proper art asset/JPG/family layer, not a captured UI rectangle.",
       "status": "needs-art-asset"
     },
     {
-      "bakeId": "gacha-ds3__div_16__background-image",
+      "bakeId": "gacha-ds3__div_64__backdrop-filter",
       "screenId": "gacha-ds3",
-      "selector": "div#banner-stage.banner-stage[0]>div#pool-panel-legendary.banner-slide[1]>div.banner-bg-fill[0]",
+      "selector": "div#right-panel.right-panel[6]",
       "ucufId": null,
       "tag": "div",
-      "nodeId": 16,
-      "property": "background-image",
-      "value": "radial-gradient(120% 80% at 40% 30%, rgb(42, 26, 0) 0%, rgb(26, 15, 0) 40%, rgb(10, 6, 18) 100%)",
+      "nodeId": 64,
+      "property": "backdrop-filter",
+      "value": "blur(6px)",
       "capability": "assetize",
       "bakeMode": null,
       "bakeNote": null,
       "target": {
-        "x": 0,
+        "x": 1320,
         "y": 0,
-        "width": 1460,
-        "height": 880,
+        "width": 600,
+        "height": 860,
         "dpr": 2
       },
       "outputPath": null,
       "bundleHint": "resources",
-      "skinSlotKind": "background-set",
-      "autoBake": false,
-      "bakeAction": "manual-art-asset",
-      "artGuidance": "Element is too large for screenshot-fragment bake. Use a proper art asset/JPG/family layer, not a captured UI rectangle.",
-      "status": "needs-art-asset"
-    },
-    {
-      "bakeId": "gacha-ds3__div_29__background-image",
-      "screenId": "gacha-ds3",
-      "selector": "div#banner-stage.banner-stage[0]>div#pool-panel-support.banner-slide[2]>div.banner-bg-fill[0]",
-      "ucufId": null,
-      "tag": "div",
-      "nodeId": 29,
-      "property": "background-image",
-      "value": "radial-gradient(120% 80% at 40% 30%, rgb(6, 32, 32) 0%, rgb(4, 20, 20) 40%, rgb(3, 10, 10) 100%)",
-      "capability": "assetize",
-      "bakeMode": null,
-      "bakeNote": null,
-      "target": {
-        "x": 0,
-        "y": 0,
-        "width": 1460,
-        "height": 880,
-        "dpr": 2
-      },
-      "outputPath": null,
-      "bundleHint": "resources",
-      "skinSlotKind": "background-set",
+      "skinSlotKind": "shadow-set",
       "autoBake": false,
       "bakeAction": "manual-art-asset",
       "artGuidance": "Element is too large for screenshot-fragment bake. Use a proper art asset/JPG/family layer, not a captured UI rectangle.",

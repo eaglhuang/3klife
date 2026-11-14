@@ -278,9 +278,10 @@ async function runPerTabReplay(args) {
       slotWidthByTabId.set(tab.id, width);
     }
   }
-  const convertHtml = async (htmlPath, fragmentScreenId, label) => {
-    const layoutOut = path.join(paths.tabReplayDir, `${fragmentScreenId}.layout.json`);
-    const skinOut = path.join(paths.tabReplayDir, `${fragmentScreenId}.skin.json`);
+  // fragment=false：整頁主題快照，要帶 body 底圖與遮罩
+  const convertHtml = async (htmlPath, fragmentScreenId, label, outDir = paths.tabReplayDir, fragment = true) => {
+    const layoutOut = path.join(outDir, `${fragmentScreenId}.layout.json`);
+    const skinOut = path.join(outDir, `${fragmentScreenId}.skin.json`);
     const conversionArgs = [
       '--input', htmlPath,
       '--output', layoutOut,
@@ -294,6 +295,7 @@ async function runPerTabReplay(args) {
       '--warn-only',
       '--no-backup',
     ];
+    if (fragment) conversionArgs.push('--fragment');
     const tokensSourcePath = sourcePackage && sourcePackage.tokensPath ? sourcePackage.tokensPath : null;
     const sourceCssPath = sourcePackage && sourcePackage.cssPath ? sourcePackage.cssPath : null;
     if (tokensSourcePath && fs.existsSync(tokensSourcePath)) {
@@ -306,6 +308,16 @@ async function runPerTabReplay(args) {
     const proc = await helpers.runNodeStep(`dom-to-ui-json:tab-fragment:${label}`, 'dom-to-ui-json.js', conversionArgs);
     return { proc, converted: helpers.readJsonIfExists(layoutOut), skinOut };
   };
+  // 整頁主題快照放子目錄：色票治理只收 tabReplayDir 第一層的色票建議，主題轉換不可混進正式色票表
+  const themeDir = path.join(paths.tabReplayDir, 'themes');
+  result.themes = [];
+  for (const tab of manifest.tabs || []) {
+    if (!tab.ok || !tab.themeHtml) continue;
+    helpers.ensureDir(themeDir);
+    const key = toKebab(tab.key || tab.id);
+    const theme = await convertHtml(tab.themeHtml, `${prefix}-theme-${key}`, `theme:${key}`, themeDir, false);
+    if (theme.proc.status === 0) result.themes.push({ key, skinPath: theme.skinOut });
+  }
   for (const tab of manifest.tabs || []) {
     if (!tab.ok || !tab.html) {
       result.fragments.push({ id: tab.id, ok: false, error: tab.error || 'missing-html' });

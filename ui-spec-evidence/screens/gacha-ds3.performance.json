@@ -1,19 +1,19 @@
 {
   "screenId": "gacha-ds3",
   "rendering": {
-    "nodeCount": 84,
+    "nodeCount": 94,
     "deferredNodeCount": 5,
-    "totalNodeCount": 89,
+    "totalNodeCount": 99,
     "maxDepth": 8,
-    "estimatedDrawCalls": 2,
+    "estimatedDrawCalls": 3,
     "colorRectCount": 0
   },
   "loading": {
-    "atlasCount": 0,
+    "atlasCount": 1,
     "atlasLimit": 4,
-    "preloadSpriteCount": 0,
+    "preloadSpriteCount": 1,
     "deferredSpriteCount": 0,
-    "estimatedTextureBytes": 0,
+    "estimatedTextureBytes": 8294400,
     "fontCount": 2
   },
   "lifecycle": {
@@ -28,7 +28,7 @@
   },
   "runtimeGate": {
     "nodeCount": {
-      "value": 84,
+      "value": 94,
       "warning": 35,
       "blocker": 60,
       "status": "fail"
@@ -43,10 +43,11 @@
   "verdict": {
     "level": "blocker",
     "warnings": [
-      "node-count-warning: 84 (>35)"
+      "node-count-warning: 94 (>35)",
+      "texture-memory-warning: 7.91MB > 4.00MB"
     ],
     "blockers": [
-      "node-count-blocker: 84 (>60)"
+      "node-count-blocker: 94 (>60)"
     ]
   }
 }

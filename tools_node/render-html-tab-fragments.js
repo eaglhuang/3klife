@@ -76,6 +76,11 @@ function toRuntimeTabId(value) {
   return key.replace(/(^|[-_])([a-z])/g, (_, __, c) => c.toUpperCase());
 }
 
+function serializeAttrs(attrs) {
+  if (!Array.isArray(attrs)) return '';
+  return attrs.map(([name, value]) => ` ${name}="${String(value).replace(/&/g, '&amp;').replace(/"/g, '&quot;')}"`).join('');
+}
+
 function toPascal(value) {
   return String(value || '')
     .split(/[^a-z0-9]+/i)
@@ -240,6 +245,9 @@ async function main() {
     }
 
     const baselineVisibleIds = await page.evaluate(collectVisibleIds);
+    // 初始狀態的 <html>/<body> 屬性；分頁切換若改了它們（例如 body[data-pool] 換整頁主題），
+    // 該分頁另存一份整頁快照，讓工作流程轉出整頁配色變體（PROG-2-9025）
+    const baselineStateAttrs = await page.evaluate(collectStateAttrs);
 
     for (let index = 0; index < tabs.length; index += 1) {
       const tab = tabs[index];
@@ -419,6 +427,9 @@ async function main() {
         return {
           ok: true,
           head: document.head ? document.head.innerHTML : '',
+          // 保留切分頁後 <html>/<body> 上的狀態屬性（例如 body[data-pool]），片段重算樣式才吃得到分頁主題
+          rootAttrs: Array.from(document.documentElement.attributes).map(a => [a.name, a.value]),
+          bodyAttrs: document.body ? Array.from(document.body.attributes).map(a => [a.name, a.value]) : [],
           html: clone.outerHTML,
           textLength: (clone.textContent || '').trim().length,
           childCount: clone.children ? clone.children.length : 0,
@@ -441,8 +452,11 @@ async function main() {
       const fragmentPath = path.join(outputDir, `${opts.screenId}.${tab.key}.right-content.html`);
       const regions = [];
       let hides = [];
+      let themeHtml = null;
       if (result.ok) {
-        const html = `<!doctype html>\n<html><head>${result.head}</head><body>${result.html}</body></html>\n`;
+        const htmlOpen = `<html${serializeAttrs(result.rootAttrs)}>`;
+        const bodyOpen = `<body${serializeAttrs(result.bodyAttrs)}>`;
+        const html = `<!doctype html>\n${htmlOpen}<head>${result.head}</head>${bodyOpen}${result.html}</body></html>\n`;
         fs.writeFileSync(fragmentPath, html, 'utf8');
         // Areas outside the content host that this tab shows or hides (e.g. a full-width
         // family tree replacing the portrait); each shown area becomes its own fragment.
@@ -452,9 +466,19 @@ async function main() {
           rootNamePrefix: `${opts.rootNamePrefix || toPascal(opts.screenId)}${tab.id}`,
         });
         hides = delta.hides;
+        const stateAttrs = { rootAttrs: result.rootAttrs, bodyAttrs: result.bodyAttrs };
+        if (JSON.stringify(stateAttrs) !== JSON.stringify(baselineStateAttrs)) {
+          themeHtml = path.join(outputDir, `${opts.screenId}.${tab.key}.theme.html`);
+          const bodyInner = await page.evaluate(() => document.body.innerHTML);
+          // 快照是已算好的畫面：拿掉 <script>，否則重開時原稿腳本會把頁面重設回第一個分頁的主題
+          const noScript = (h) => String(h).replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
+          fs.writeFileSync(themeHtml, `<!doctype html>
+${htmlOpen}<head>${noScript(result.head)}</head>${bodyOpen}${noScript(bodyInner)}</body></html>
+`, 'utf8');
+        }
         for (const region of delta.regions) {
           const regionPath = path.join(outputDir, `${opts.screenId}.${tab.key}.region.${region.id}.html`);
-          fs.writeFileSync(regionPath, `<!doctype html>\n<html><head>${result.head}</head><body>${region.html}</body></html>\n`, 'utf8');
+          fs.writeFileSync(regionPath, `<!doctype html>\n${htmlOpen}<head>${result.head}</head>${bodyOpen}${region.html}</body></html>\n`, 'utf8');
           regions.push({ id: region.id, html: regionPath });
         }
       }
@@ -474,6 +498,7 @@ async function main() {
         fixAction: result.fixAction || undefined,
         regions: regions.length > 0 ? regions : undefined,
         hides: hides.length > 0 ? hides : undefined,
+        themeHtml: themeHtml || undefined,
       });
     }
 
@@ -501,6 +526,11 @@ module.exports = {
   parseArgs,
   main,
 };
+
+function collectStateAttrs() {
+  const attrs = element => (element ? Array.from(element.attributes).map(a => [a.name, a.value]) : []);
+  return { rootAttrs: attrs(document.documentElement), bodyAttrs: attrs(document.body) };
+}
 
 async function discoverTabs(page, opts) {
   const discovered = await page.evaluate(({ tabSelector }) => {

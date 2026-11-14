@@ -57,8 +57,8 @@
       "source": "css-transition"
     },
     {
-      "id": "gacha-ds3_div_5.transition",
-      "target": "GachaDs3_div_5",
+      "id": "gacha-ds3_div_4.transition",
+      "target": "GachaDs3_div_4",
       "trigger": "state-change",
       "preset": "fade",
       "token": "slow",
@@ -70,8 +70,8 @@
       "source": "css-transition"
     },
     {
-      "id": "gacha-ds3_div_12.transition",
-      "target": "GachaDs3_div_12",
+      "id": "gacha-ds3_div_9.transition",
+      "target": "GachaDs3_div_9",
       "trigger": "state-change",
       "preset": "scale-fade",
       "token": "fast",
@@ -84,8 +84,8 @@
       "source": "css-transition"
     },
     {
-      "id": "gacha-ds3_div_13.transition",
-      "target": "GachaDs3_div_13",
+      "id": "btn-gold-summon.transition",
+      "target": "BtnGoldSummon",
       "trigger": "state-change",
       "preset": "scale-fade",
       "token": "fast",
@@ -98,8 +98,8 @@
       "source": "css-transition"
     },
     {
-      "id": "gacha-ds3_div_18.transition",
-      "target": "GachaDs3_div_18",
+      "id": "btn-ticket-summon.transition",
+      "target": "BtnTicketSummon",
       "trigger": "state-change",
       "preset": "scale-fade",
       "token": "fast",
@@ -112,8 +112,8 @@
       "source": "css-transition"
     },
     {
-      "id": "gacha-ds3_div_25.transition",
-      "target": "GachaDs3_div_25",
+      "id": "gacha-ds3_div_17.transition",
+      "target": "GachaDs3_div_17",
       "trigger": "state-change",
       "preset": "scale-fade",
       "token": "fast",
@@ -126,8 +126,8 @@
       "source": "css-transition"
     },
     {
-      "id": "gacha-ds3_div_26.transition",
-      "target": "GachaDs3_div_26",
+      "id": "gacha-ds3_div_22.transition",
+      "target": "GachaDs3_div_22",
       "trigger": "state-change",
       "preset": "scale-fade",
       "token": "fast",
@@ -140,8 +140,8 @@
       "source": "css-transition"
     },
     {
-      "id": "gacha-ds3_div_27.transition",
-      "target": "GachaDs3_div_27",
+      "id": "gacha-ds3_div_28.transition",
+      "target": "GachaDs3_div_28",
       "trigger": "state-change",
       "preset": "fade",
       "token": "slow",
@@ -153,8 +153,8 @@
       "source": "css-transition"
     },
     {
-      "id": "gacha-ds3_div_30.transition",
-      "target": "GachaDs3_div_30",
+      "id": "gacha-ds3_div_31.transition",
+      "target": "GachaDs3_div_31",
       "trigger": "state-change",
       "preset": "scale-fade",
       "token": "fast",
@@ -171,6 +171,6 @@
   "summary": {
     "motionCount": 10,
     "tokenCount": 5,
-    "manualRewriteCount": 11
+    "manualRewriteCount": 10
   }
 }

@@ -234,11 +234,23 @@ function processElement(el, ctx, depth) {
       widget: { top: 0, left: 0, right: 0, bottom: 0 },
       children: [],
     };
+    // html／body 自己的背景（底圖、底色）與 ::before／::after 遮罩是整頁最底層：
+    // 展開時不能丟，轉成撐滿的底層節點，放在所有子元素之前
+    // 片段轉換（opts.fragment）只是頁面的一塊，整頁底圖由主畫面負責，不重複產生
+    const pageStyle = ctx.opts.fragment ? {} : collectElementStyle(el, ctx).style;
+    if (hasMeaningfulBackground(pageStyle)) {
+      const bgName = `${out.name}_Background`;
+      const slotId = autoSlotId(ctx, bgName);
+      out.children.push({ type: 'panel', name: bgName, widget: { top: 0, left: 0, right: 0, bottom: 0 }, skinSlot: slotId });
+      ensureSpriteOrColorSlot(ctx, slotId, pageStyle, el.attrs || {}, { width: ctx.canvas.designWidth, height: ctx.canvas.designHeight });
+    }
+    out.children.push(...buildPseudoVisualNodes(ctx, pageStyle, out.name, 'before'));
     for (const c of el.children) {
       if (c.type !== 'element') continue;
       const sub = processElement(c, ctx, depth + 1);
       if (sub) out.children.push(sub);
     }
+    out.children.push(...buildPseudoVisualNodes(ctx, pageStyle, out.name, 'after'));
     // collapse single-child wrappers
     if (out.children.length === 1) return out.children[0];
     return out.children.length === 0 ? null : out;
@@ -349,10 +361,10 @@ function processElement(el, ctx, depth) {
     if (parseFloat(flexValIL.split(/\s+/)[0]) > 0) node._flexFill = true;
     const computedGeometry = deriveComputedGeometry(ctx, style, nodeType);
     if (computedGeometry && computedGeometry.widget) node.widget = computedGeometry.widget;
-    const width = computedGeometry && computedGeometry.width != null
+    const width = computedGeometry && (computedGeometry.width != null || computedGeometry.stretchX)
       ? computedGeometry.width
       : pickDim(style.width, attrs.width);
-    const height = computedGeometry && computedGeometry.height != null
+    const height = computedGeometry && (computedGeometry.height != null || computedGeometry.stretchY)
       ? computedGeometry.height
       : pickDim(style.height, attrs.height);
     if (width != null) node.width = width;
@@ -391,10 +403,10 @@ function processElement(el, ctx, depth) {
   // ---- 4. dimensions ----
   const computedGeometry = deriveComputedGeometry(ctx, style, nodeType);
   if (computedGeometry && computedGeometry.widget) node.widget = computedGeometry.widget;
-  const width = computedGeometry && computedGeometry.width != null
+  const width = computedGeometry && (computedGeometry.width != null || computedGeometry.stretchX)
     ? computedGeometry.width
     : pickDim(style.width, attrs.width);
-  const height = computedGeometry && computedGeometry.height != null
+  const height = computedGeometry && (computedGeometry.height != null || computedGeometry.stretchY)
     ? computedGeometry.height
     : pickDim(style.height, attrs.height);
   if (width != null) node.width = width;
@@ -489,7 +501,9 @@ function processElement(el, ctx, depth) {
     if (source.type !== 'element') continue;
     const sub = processElement(source, ctx, depth + 1);
     // 匿名文字沒有量到寬度：用容器內容寬（扣左右內距），否則引擎不知在哪換行
-    if (source !== child && sub && sub.type === 'label' && sub.width == null && typeof node.width === 'number') {
+    // 行內橫排（見 inferBlockFlowLayout）的文字依內容寬，不撐滿容器
+    const inlineRow = nodeType !== 'button' && node.layout && node.layout.type === 'horizontal';
+    if (!inlineRow && source !== child && sub && sub.type === 'label' && sub.width == null && typeof node.width === 'number') {
       const layout = node.layout || boxPaddingFromStyle(style);
       sub.width = Math.max(1, node.width - (layout.paddingLeft || 0) - (layout.paddingRight || 0));
       // 按鈕文字在瀏覽器預設上下置中：撐滿按鈕高度
@@ -1046,6 +1060,37 @@ function deriveComputedGeometry(ctx, style, nodeType) {
   const hasImageFit = nodeType === 'image' && hasMeaningfulObjectFit(style.objectFit);
   const hasPercentEdge = [style.left, style.right, style.top, style.bottom]
     .some(value => typeof value === 'string' && /%\s*$/.test(value.trim()));
+  // 脫離流且對邊都釘住（inset:0、left+right 等）：照邊距拉伸，不寫死量到的寬高，
+  // 否則片段在全螢幕量到 1920 寬，掛進較窄的父框就超出、子項置中位置跑掉
+  // 只看原稿寫的值：有 inset 或對邊都寫、且沒寫寬（高）才算拉伸
+  const authored = style._authored || {};
+  const edgePx = (v) => (typeof v === 'string' && /^-?[\d.]+(px)?$/.test(v.trim()) ? Math.round(parseFloat(v)) : null);
+  const insetAll = edgePx(String(authored.inset || '').trim().split(/\s+/)[0] || '');
+  const pinned = (a, b, dim) => insetAll != null && authored.inset.trim().split(/\s+/).length === 1
+    ? authored[dim] == null
+    : edgePx(authored[a]) != null && edgePx(authored[b]) != null && authored[dim] == null;
+  const stretchX = hasOutOfFlowPosition && !hasTransform && pinned('left', 'right', 'width');
+  const stretchY = hasOutOfFlowPosition && !hasTransform && pinned('top', 'bottom', 'height');
+  const edgeOf = (side) => (insetAll != null && authored[side] == null ? insetAll : edgePx(authored[side]) || 0);
+  if (stretchX || stretchY) {
+    const rect = normalizeRect(style._computedRect);
+    // 沒拉伸的那一軸：原稿寫哪一邊就釘哪一邊（right:0 的側欄要貼右，bottom:0 的底列要貼底）
+    const pinOne = (near, far, fallback) => (authored[far] != null && authored[near] == null
+      ? { [far]: edgeOf(far) }
+      : { [near]: authored[near] != null ? edgeOf(near) : fallback });
+    const parentRect = rect && lookupComputedParentRect(ctx, style);
+    const edges = parentRect ? rectToParentEdges(rect, parentRect) : { left: 0, top: 0 };
+    const widget = Object.assign(
+      stretchX ? { left: edgeOf('left'), right: edgeOf('right') } : pinOne('left', 'right', edges.left),
+      stretchY ? { top: edgeOf('top'), bottom: edgeOf('bottom') } : pinOne('top', 'bottom', edges.top),
+    );
+    return {
+      width: stretchX ? null : rect ? Math.max(1, Math.round(rect.w)) : null,
+      height: stretchY ? null : rect ? Math.max(1, Math.round(rect.h)) : null,
+      stretchX, stretchY,
+      widget,
+    };
+  }
   const shouldMap = hasOutOfFlowPosition && (hasTransform || hasImageFit || hasPercentEdge);
   if (!shouldMap) {
     // 行內元素的 computed width／height 是 auto，實際大小只能從量到的框取得；否則會被父排版撐滿整列
@@ -1579,17 +1624,33 @@ function assignWidgetEdge(target, key, rawValue) {
   if (/^-?\d+(?:\.\d+)?%$/.test(raw)) target[key] = raw;
 }
 
+// CSS 疊層：一般宣告 inline > id > class；但樣式表的 !important 蓋過沒有 !important 的 inline
+// （例如主題 CSS 用 !important 把 inline 漸層壓成透明）。合併後拿掉 !important 字樣，後續解析才讀得懂值
+function applyImportantCascade(...layers) {
+  const isImportant = (v) => typeof v === 'string' && /!\s*important\s*$/i.test(v);
+  const strip = (v) => (isImportant(v) ? v.replace(/\s*!\s*important\s*$/i, '') : v);
+  const out = {};
+  const locked = new Set();
+  for (const layer of layers) {
+    for (const [key, value] of Object.entries(layer || {})) {
+      if (locked.has(key) && !isImportant(value)) continue;
+      out[key] = strip(value);
+      if (isImportant(value)) locked.add(key);
+    }
+  }
+  return out;
+}
+
 function collectElementStyle(el, ctx) {
   const attrs = (el && el.attrs) || {};
   const cls = (attrs.class || '').split(/\s+/).filter(Boolean);
   const styleFromInline = parseInlineStyle(attrs.style || '');
   const styleFromClass = mergeClassStyles(cls, ctx.classRules || {}, ctx.styleRules || [], attrs, el && el.tag);
   const styleFromId = attrs.id ? ((ctx.idRules || {})[attrs.id] || {}) : {};
-  const style = mergeComputedStyle(
-    Object.assign({}, styleFromClass, styleFromId, styleFromInline),
-    attrs,
-    ctx,
-  );
+  const authored = applyImportantCascade(styleFromClass, styleFromId, styleFromInline);
+  const style = mergeComputedStyle(Object.assign({}, authored), attrs, ctx);
+  // 計算值會把 auto 寬高與四邊都填成 px；拉伸判斷需要原稿寫的值，另外留一份
+  Object.defineProperty(style, '_authored', { value: authored, enumerable: false });
   return { attrs, cls, style };
 }
 
@@ -1684,6 +1745,18 @@ function inferBlockFlowLayout(style, ctx, nodeName, el) {
   const padding = resolveBoxEdges(style, 'padding', ctx && ctx.tokenRegistry);
   if (childElements.length === 0) return null;
   if (childElements.some(child => childHasOutOfFlowPosition(child, ctx))) return null;
+
+  // 行內混排（「還差 <b>N</b> 抽」）：裸文字與行內子元素在瀏覽器同一行，引擎改用橫排並垂直置中
+  const hasBareText = (el.children || []).some(c => c.type === 'text' && String(c.value || '').trim());
+  const allInline = childElements.every(child => /^inline(-block)?$/.test(String(collectElementStyle(child, ctx).style.display || 'inline').trim().toLowerCase()));
+  if (hasBareText && allInline) {
+    const textAlign = String(style.textAlign || '').trim().toLowerCase();
+    return {
+      type: 'horizontal',
+      alignItems: 'center',
+      justifyContent: textAlign === 'center' ? 'center' : /^(right|end)$/.test(textAlign) ? 'end' : 'start',
+    };
+  }
 
   const out = { type: 'vertical' };
   // 區塊流裡比父窄的子框（行內標籤等）照 text-align 放：預設靠左，引擎垂直排版預設卻是置中
@@ -2861,6 +2934,19 @@ function buildPseudoVisualNode(ctx, parentName, snapshot) {
     _cssPosition: (snapshot.styles || {}).position,
     _cssZIndex: (snapshot.styles || {})['z-index'],
   };
+  // 有明確寬高的絕對定位偽元素（光暈、角標等）照計算後的 left/top＋translate 定位，不撐滿父框
+  const raw = snapshot.styles || {};
+  const px = (v) => (typeof v === 'string' && /^-?[\d.]+px$/.test(v.trim()) ? parseFloat(v) : null);
+  const w = px(raw.width), h = px(raw.height), left = px(raw.left), top = px(raw.top);
+  if (/^(absolute|fixed)$/.test(String(raw.position || '')) && w != null && h != null && left != null && top != null) {
+    const m = String(raw.transform || '').match(/^matrix\(([^)]+)\)$/);
+    const parts = m ? m[1].split(',').map(Number) : null;
+    const tx = parts && parts.length === 6 ? parts[4] : 0;
+    const ty = parts && parts.length === 6 ? parts[5] : 0;
+    node.widget = { left: Math.round(left + tx), top: Math.round(top + ty) };
+    node.width = Math.round(w);
+    node.height = Math.round(h);
+  }
   const opacity = parseOpacity(style.opacity);
   if (opacity !== null) node.opacity = opacity;
   return node;
