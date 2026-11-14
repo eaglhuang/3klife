@@ -85,6 +85,7 @@ import { FAST_FORWARD_REASON_TEXT, fastForwardSeasons } from '../../core/systems
 import { BREEDING_MIN_AGE } from '../../core/systems/BreedingSystem';
 import { RECRUIT_ROWS_PER_PAGE, RecruitHallController } from '../core/RecruitHallController';
 import { loadGeneralAvatar, loadGeneralPortrait } from '../core/GeneralAvatarLoader';
+import { setPlaceholderBackdropVisible } from '../core/PlaceholderBackdrop';
 import { RELATION_GRAPH_SLOTS, RelationGraphController } from '../core/RelationGraphController';
 import { RelationGraphRenderer } from '../core/RelationGraphRenderer';
 import { overflowToastText } from '../../core/systems/MentorOverflow';
@@ -6865,10 +6866,16 @@ export class LobbyScene extends Component {
         }
         const sprite = portrait.getComponent(Sprite) ?? portrait.addComponent(Sprite);
         const seq = (this._gachaBannerPortraitSeq = (this._gachaBannerPortraitSeq ?? 0) + 1);
-        if ((portrait as any)._gachaGeneralId === generalId && sprite.spriteFrame) return;
+        if ((portrait as any)._gachaGeneralId === generalId && sprite.spriteFrame) {
+            setPlaceholderBackdropVisible(artNode, false);
+            return;
+        }
         sprite.enabled = false;
         void loadGeneralPortrait(generalId).then((frame) => {
-            if (seq !== this._gachaBannerPortraitSeq || !sprite.isValid || !frame) return;
+            if (seq !== this._gachaBannerPortraitSeq || !sprite.isValid) return;
+            // 有立繪才收掉原稿佔位框；載入不到就留著框
+            setPlaceholderBackdropVisible(artNode, !frame);
+            if (!frame) return;
             sprite.sizeMode = Sprite.SizeMode.CUSTOM;
             sprite.trim = false;
             sprite.spriteFrame = frame;
@@ -6879,7 +6886,7 @@ export class LobbyScene extends Component {
             portrait!.setPosition(box.width * (0.5 - box.anchorX), -box.height * box.anchorY + fit.height / 2, 0);
             (portrait as any)._gachaGeneralId = generalId;
             sprite.enabled = true;
-        }).catch(() => { /* 立繪載入失敗就留空框 */ });
+        }).catch(() => { setPlaceholderBackdropVisible(artNode, true); });
     }
 
     private _gachaBannerPortraitSeq = 0;
