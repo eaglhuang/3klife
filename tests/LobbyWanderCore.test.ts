@@ -189,5 +189,77 @@ export function createLobbyWanderCoreSuite(): TestSuite {
         assert.isTrue(ordered);
     });
 
+    suite.test('走動中不掉頭：連續兩個 walk 幀 facing 不變（被擋住也只會先停下，不會中途反向）', () => {
+        // 六個人擠在地板帶裡，最容易互相擋住
+        const w = new HallWander(config(20261113, ['a', 'b', 'c', 'd', 'e', 'f']));
+        const prev = new Map<string, { state: string; facing: number }>();
+        let flips = 0;
+        let walkFrames = 0;
+        run(w, 300, () => {
+            for (const s of w.drawOrder()) {
+                const before = prev.get(s.id);
+                if (before && before.state === 'walk' && s.state === 'walk') {
+                    walkFrames++;
+                    if (before.facing !== s.facing) flips++;
+                }
+                prev.set(s.id, { state: s.state, facing: s.facing });
+            }
+        });
+        assert.isTrue(walkFrames > 300, '要有足夠的走路幀');
+        assert.equals(0, flips);
+    });
+
+    suite.test('被擋住就先站住：不會讓角色穿過別人，也不會永遠卡死', () => {
+        const w = new HallWander(config(20261113, ['a', 'b', 'c', 'd', 'e', 'f']));
+        let min = Number.POSITIVE_INFINITY;
+        let blockedIdle = 0;
+        const prevState = new Map<string, string>();
+        run(w, 300, () => {
+            const st = w.drawOrder();
+            for (let i = 0; i < st.length; i++) {
+                if (prevState.get(st[i].id) === 'walk' && st[i].state === 'idle') blockedIdle++;
+                prevState.set(st[i].id, st[i].state);
+                for (let j = i + 1; j < st.length; j++) min = Math.min(min, Math.hypot(st[i].x - st[j].x, st[i].y - st[j].y));
+            }
+        });
+        assert.isTrue(min > 100, `最近距離 ${min.toFixed(1)} 低於迴避距離`);
+        assert.isTrue(blockedIdle > 0, '走動 300 秒內應該有停下來的時候');
+    });
+
+    suite.test('起點太近的兩個人可以走開：只擋「正在靠近」，不擋離開', () => {
+        const cfg = config(20261113, ['a', 'b']);
+        cfg.actors[0].start = { x: 900, y: 880 };
+        cfg.actors[1].start = { x: 940, y: 880 };
+        const w = new HallWander(cfg);
+        let far = 0;
+        run(w, 120, () => {
+            const [p, q] = w.drawOrder();
+            far = Math.max(far, Math.hypot(p.x - q.x, p.y - q.y));
+        });
+        assert.isTrue(far > 108, `最遠只有 ${far.toFixed(1)}，兩人互卡沒分開`);
+    });
+
+    suite.test('固定在原地的人（靜態小人）：不會被推動，其他人也不會穿過他', () => {
+        const w = new HallWander(config(20261113, ['a', 'b', 'c', 'd']));
+        const fixed = ['c', 'd'];
+        const home = new Map<string, { x: number; y: number }>();
+        w.drawOrder().forEach((s) => { if (fixed.includes(s.id)) home.set(s.id, { x: s.x, y: s.y }); });
+        fixed.forEach((id) => w.lockIdle(id));
+        let moved = 0;
+        let min = Number.POSITIVE_INFINITY;
+        run(w, 180, () => {
+            const st = w.drawOrder();
+            for (const s of st) {
+                const h = home.get(s.id);
+                if (h && (s.x !== h.x || s.y !== h.y)) moved++;
+                if (h) {
+                    for (const o of st) if (!fixed.includes(o.id)) min = Math.min(min, Math.hypot(o.x - s.x, o.y - s.y));
+                }
+            }
+        });
+        assert.equals(0, moved);
+        assert.isTrue(min > 100, `走動的人離固定的人最近只有 ${min.toFixed(1)}`);
+    });
+
     return suite;
 }

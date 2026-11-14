@@ -45,6 +45,13 @@ interface SpineActor {
     state: WanderActorState | null;
 }
 
+/** 靜態小人：節點與它站的舞台座標（走動模擬用來避開，不會被推動） */
+interface StaticActor {
+    node: Node;
+    stageX: number;
+    stageY: number;
+}
+
 @ccclass('HallStageCrowd')
 export class HallStageCrowd extends Component {
     private _decor: HallStageDecor | null = null;
@@ -56,6 +63,8 @@ export class HallStageCrowd extends Component {
     private _onActorTap: ((generalId: string) => void) | null = null;
     private _wander: HallWander | null = null;
     private readonly _spineActors = new Map<string, SpineActor>();
+    /** 沒有骨架、維持靜態小人的武將：走動時當作不動的障礙物，並與走動武將一起依 y 排前後 */
+    private readonly _staticActors = new Map<string, StaticActor>();
 
     public configure(decor: HallStageDecor): void {
         this._decor = decor;
@@ -117,6 +126,7 @@ export class HallStageCrowd extends Component {
         this._headPositions.clear();
         this._wander = null;
         this._spineActors.clear();
+        this._staticActors.clear();
         for (const child of [...this.node.children]) {
             Tween.stopAllByTarget(child);
             child.destroy();
@@ -164,6 +174,7 @@ export class HallStageCrowd extends Component {
 
         this._playIdle(body, pose.body.scaleX, pose.body.scaleY, pose.idleDelaySec, decor);
         if (mark) this._playBob(mark, decor);
+        if (frame) this._staticActors.set(placement.generalId, { node: body, stageX: pose.body.x, stageY: pose.body.y });
     }
 
     /**
@@ -183,11 +194,13 @@ export class HallStageCrowd extends Component {
         const body = new Node(`crowd-${placement.generalId}`);
         body.layer = this.node.layer;
         const transform = body.addComponent(UITransform);
-        transform.setAnchorPoint(0.5, 0);
-        transform.setContentSize(SKELETON_BOX.width, SKELETON_BOX.height);
         const skeleton = body.addComponent(sp.Skeleton);
         skeleton.premultipliedAlpha = false;
         skeleton.skeletonData = skeletonData;
+        // 指定骨架資料時 Skeleton 會把 UITransform 改成骨架原始邊界（900×1300、錨點 0.4），
+        // 點擊判定框要在這之後才設，否則會落在錯的位置與大小
+        transform.setAnchorPoint(0.5, 0);
+        transform.setContentSize(SKELETON_BOX.width, SKELETON_BOX.height);
         const anims = WANDER_ANIMS.general;
         const runtime = skeletonData.getRuntimeData();
         // 舊版骨架可能還沒有新步態；缺動作就不播，避免踩空報錯
@@ -218,14 +231,27 @@ export class HallStageCrowd extends Component {
     private _startWander(): void {
         const data = this._wanderData;
         if (!data || this._spineActors.size === 0) return;
-        const roster = Array.from(this._spineActors.values()).map(a => ({ id: a.placement.generalId, stageX: a.placement.stageX, stageY: a.placement.stageY }));
-        this._wander = new HallWander(buildWanderConfig(data, roster, this._canvas));
+        const roster = [
+            ...Array.from(this._spineActors.values()).map(a => ({ id: a.placement.generalId, stageX: a.placement.stageX, stageY: a.placement.stageY })),
+            ...Array.from(this._staticActors.entries()).map(([id, a]) => ({ id, stageX: a.stageX, stageY: a.stageY })),
+        ];
+        // 載入完成的先後不固定；依 id 排序，固定種子才會每次走出同樣的路線
+        roster.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+        const wander = new HallWander(buildWanderConfig(data, roster, this._canvas));
+        // 靜態小人不走：一直鎖在原地，其他人會繞開，前後順序也一起算
+        this._staticActors.forEach((_actor, id) => wander.lockIdle(id));
+        this._wander = wander;
     }
 
     private _applyState(state: WanderActorState, order: number, data: HallWanderData): void {
         const actor = this._spineActors.get(state.id);
         const decor = this._decor;
-        if (!actor || !actor.node.isValid || !decor) return;
+        if (!actor) {
+            const fixed = this._staticActors.get(state.id);
+            if (fixed?.node.isValid) fixed.node.setSiblingIndex(order);
+            return;
+        }
+        if (!actor.node.isValid || !decor) return;
         const stage = wanderToStage({ x: state.x, y: state.y }, this._canvas);
         const headY = stage.y + actor.placement.height + decor.markAboveHeadPx;
         actor.state = state;

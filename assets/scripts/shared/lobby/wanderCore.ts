@@ -1,5 +1,6 @@
 // @spec-source → Issue #2135（幕府大廳 Q 版人物隨機走動）；來源 spine-trial lobby-wander-gait-v2 (856b82b) render/lobby_wander/wanderCore.ts
-// 原樣移植、不改邏輯：產生器端調步伐時整檔重新同步即可。
+// 以移植為主；3klife 只動了 tick()/blockedBy()/pickTarget() 三處（搜尋 "[3klife]"），整檔重新同步時要把這兩處帶回去，
+// 或請 spine-trial 端收進上游：被擋住時不要在走動中直接掉頭（掉頭瞬間 scaleX 翻面，站立腳會彈到另一側）；選目標時就轉向。
 /**
  * Engine-agnostic lobby-hall wander core.
  *
@@ -310,7 +311,10 @@ export class HallWander {
       const step = a.cfg.speed * dt;
       if (this.blockedBy(a, a.x + (dist < 1e-6 ? 0 : (dx / dist) * step),
                           a.y + (dist < 1e-6 ? 0 : (dy / dist) * step))) {
-        this.pickTarget(a);
+        // [3klife] 被擋住：先站住（idle）等一下再重選目標。原版在這裡直接 pickTarget，
+        // 角色會在走動中立刻反向，scaleX 翻面時站立腳會從一側彈到另一側（腳滑／跳）。
+        a.state = 'idle';
+        a.idleLeft = this.rng.float(this.config.idleSeconds![0], this.config.idleSeconds![1]);
         return;
       }
       if (dist <= Math.max(step, 1.5)) {
@@ -333,7 +337,9 @@ export class HallWander {
     const min = this.config.minDistance! * 0.72;
     for (const o of this.actors) {
       if (o === self) continue;
-      if (Math.hypot(nx - o.x, ny - o.y) < min) return true;
+      const next = Math.hypot(nx - o.x, ny - o.y);
+      // [3klife] 只有「正在靠近」才算擋住；起點本來就太近時要讓人走得開，否則兩人永遠互卡
+      if (next < min && next < Math.hypot(self.x - o.x, self.y - o.y)) return true;
     }
     return false;
   }
@@ -382,6 +388,9 @@ export class HallWander {
     a.tx = tx;
     a.ty = ty;
     a.state = 'walk';
+    // [3klife] 選到目標的當下就轉向。原版要到第一個位移幀才改 facing，
+    // 動畫已切成 walk 後才翻面，會多出一幀「面向舊方向的走路」。
+    if (Math.abs(tx - a.x) > 1.2) a.facing = tx < a.x ? -1 : 1;
   }
 
   private randomPoint(): Vec2 {
