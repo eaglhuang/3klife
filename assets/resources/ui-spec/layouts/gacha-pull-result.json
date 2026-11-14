@@ -33,7 +33,7 @@
             "height": 1080,
             "children": [
               {
-                "type": "container",
+                "type": "image",
                 "name": "GachaPullResult_hero_portrait",
                 "widget": {
                   "top": 20,
@@ -42,7 +42,9 @@
                 "_ucufId": "gacha-pull-result.hero-portrait",
                 "_visualZone": "portrait",
                 "width": 660,
-                "height": 930
+                "height": 930,
+                "objectFit": "contain",
+                "skinSlot": "auto.gacha-pull-result.gachapullresult_hero_portrait"
               },
               {
                 "type": "panel",

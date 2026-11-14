@@ -45,6 +45,12 @@
         ]
       }
     },
+    "auto.gacha-pull-result.gachapullresult_hero_portrait": {
+      "kind": "sprite-frame",
+      "path": "sprites/generals/guan_yu_portrait",
+      "expectedWidth": 660,
+      "expectedHeight": 930
+    },
     "auto.gacha-pull-result.gachapullresult_hero_badge_box": {
       "kind": "gradient-rect",
       "backgroundLayers": [
@@ -1737,8 +1743,13 @@
     },
     "tokenConflictReport": [],
     "atlasUsageReport": {
-      "atlases": [],
-      "atlasCount": 0,
+      "atlases": [
+        {
+          "atlasId": "generals/guan_yu_portrait",
+          "slotCount": 1
+        }
+      ],
+      "atlasCount": 1,
       "limit": 4,
       "_warning": null
     }
