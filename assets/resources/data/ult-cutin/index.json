@@ -1,0 +1,4 @@
+{
+  "$comment": "有奧義漫畫分鏡 cut-in 的武將清單（Issue #2139，PROG-2-2250）。新武將：放分鏡圖到 sprites/ult_cutin/<id>/，放設定檔 data/ult-cutin/<id>.json，再把 id 加進 generals；不用改程式。沒列在這裡的武將施放奧義時直接播奧義特效。",
+  "generals": ["zhao-yun"]
+}

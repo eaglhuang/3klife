@@ -13,7 +13,9 @@
 import { tallyLegendDeploySpec } from '../../core/systems/TallyScripts';
 import { formatTallyLine, type TallyTranslate } from '../../core/systems/TallyLineSpec';
 import { aptitudeToastPayload } from '../../core/systems/AptitudeDialogue';
-import { setBattleTimeScale } from './BattleTimeScale';
+import { setBattlePaused, setBattleTimeScale } from './BattleTimeScale';
+import { UltCutinDirector } from './UltCutinDirector';
+import { isUltCutinPlaying } from '../../ui/core/UltCutinOverlay';
 import { statusEffectFloatText } from '../shared/StatusEffectLabel';
 import { salvageSummaryLines } from '../../core/systems/StageSalvageSettlement';
 import { DELEGATE_OFF_LINE, DELEGATE_UNAVAILABLE_LINE, delegateOnLine, FOOD_EMPTY_LINE } from '../../core/systems/SortieDeployScripts';
@@ -166,6 +168,8 @@ export class BattleUIBridge {
   private readonly performance = new BattlePerformanceTracker(Faction.Player);
   private readonly terrainFeedback = new TerrainFeedbackTracker();
   private onBoardPlacement: ((screenX: number, screenY: number) => void) | null = null;
+  /** 奧義漫畫分鏡 cut-in（Issue #2139）：一場戰鬥一個，「第二次施放走重播」以單場為界 */
+  private readonly ultCutin = new UltCutinDirector();
 
   constructor(
     private readonly ctx: BattleSceneContext,
@@ -196,6 +200,9 @@ export class BattleUIBridge {
     this.onBoardPlacement = externalHandlers.onBoardPlacement ?? null;
     this.specialActions.reset();
     this.performance.reset();
+    this.ultCutin.resetBattle();
+    this.ultCutin.prefetch(this.ctx.pg?.id);
+    this.ultCutin.prefetch(this.ctx.eg?.id);
     const svc = services();
     const c = this.ctx;
     const actionCommandNode = (c.battleScenePanel?.actionCommandComposite ?? c.battleScenePanel?.actionCommandPanel)?.node ?? null;
@@ -269,6 +276,7 @@ export class BattleUIBridge {
   }
 
   public unsubscribeEvents(): void {
+    setBattlePaused(false);
     setBattleTimeScale(1);
     this.unsubs.forEach(fn => fn());
     this.unsubs.length = 0;
@@ -691,6 +699,20 @@ export class BattleUIBridge {
   }
 
   private _onGeneralSkillUsed(data: { faction: Faction; skillId?: string; skillName?: string; sourceType?: SkillSourceType; generalName?: string }): void {
+    // 奧義：先播武將的漫畫分鏡 cut-in（戰場暫停），播完才接既有的奧義特效；沒有 cut-in 的武將維持原本時序
+    if (data.sourceType === SkillSourceType.Ultimate) {
+      const generalId = (data.faction === Faction.Player ? this.ctx.pg : this.ctx.eg)?.id;
+      const hud = this.ctx.hud;
+      if (hud?.node?.isValid && this.ultCutin.mayPlay(generalId)) {
+        void this.ultCutin.play(generalId, hud.node.parent?.isValid ? hud.node.parent : hud.node)
+          .then(() => this._presentGeneralSkillUsed(data));
+        return;
+      }
+    }
+    this._presentGeneralSkillUsed(data);
+  }
+
+  private _presentGeneralSkillUsed(data: { faction: Faction; skillId?: string; skillName?: string; sourceType?: SkillSourceType; generalName?: string }): void {
     this.refreshBattleViews();
     this.ctx.unitRenderer?.playGeneralAttackPose(data.faction);
     const skillId = data.skillId ?? data.skillName ?? null;
@@ -962,6 +984,8 @@ export class BattleUIBridge {
   }
 
   private handleBoardRelease(screenX: number, screenY: number): void {
+    // cut-in 播放中：這次點擊只用來跳過，不能點穿到棋盤落子或選目標
+    if (isUltCutinPlaying()) return;
     if (this.ctx.skillTargetingFlow?.isPending) {
       this.ctx.skillTargetingFlow.handleSkillTargetClick(screenX, screenY);
       return;

@@ -11848,5 +11848,23 @@
     "path": "docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-14.md",
     "title": "Doc ID Registry Markdown Index — Spec / Index / Task",
     "category": "other"
+  },
+  {
+    "id": "doc_other_2703",
+    "path": "docs/美術-武將大招分鏡規範-01-交付與連貫.md",
+    "title": "武將大招漫畫分鏡繪圖規範（1/3）交付與連貫",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2704",
+    "path": "docs/美術-武將大招分鏡規範-02-拍點畫風與接入.md",
+    "title": "武將大招漫畫分鏡繪圖規範（2/3）拍點、畫風、武將表與遊戲內接入",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2705",
+    "path": "docs/美術-武將大招分鏡規範-03-提示詞與驗收.md",
+    "title": "武將大招漫畫分鏡繪圖規範（3/3）提示詞與驗收",
+    "category": "other"
   }
 ]

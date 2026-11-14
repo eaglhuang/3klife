@@ -1,0 +1,85 @@
+{
+  "id": "ult_cutin.zhao_yun",
+  "generalId": "zhao_yun",
+  "generalName": "趙雲",
+  "skillName": "龍膽·破軍",
+  "intro": {
+    "duration": 0.4,
+    "dimTo": 0.68,
+    "letterboxIn": 0.2
+  },
+  "panels": [
+    {
+      "imageKey": "ult_cutin/zhao_yun/01_charge",
+      "hold": 0.6,
+      "zoomFrom": 1.0,
+      "zoomTo": 1.06,
+      "zoomEase": "easeInOut",
+      "transition": "fade",
+      "fadeIn": 0.2,
+      "sfx": [{ "key": "whoosh", "offset": -0.04 }]
+    },
+    {
+      "imageKey": "ult_cutin/zhao_yun/02_strike",
+      "hold": 0.5,
+      "zoomFrom": 1.13,
+      "zoomTo": 1.04,
+      "zoomEase": "punch",
+      "transition": "cut",
+      "flashFrames": 3,
+      "flashColor": [1, 1, 1],
+      "flashPeak": 0.9,
+      "shakeAmp": 6.5,
+      "shakeFrames": 6,
+      "sfx": [{ "key": "hit", "offset": 0 }]
+    },
+    {
+      "imageKey": "ult_cutin/zhao_yun/03_burst",
+      "hold": 0.6,
+      "zoomFrom": 1.16,
+      "zoomTo": 1.06,
+      "zoomEase": "punch",
+      "transition": "cut",
+      "flashFrames": 3,
+      "flashColor": [0.96, 0.98, 1],
+      "flashPeak": 0.92,
+      "shakeAmp": 12,
+      "shakeFrames": 8,
+      "sfx": [
+        { "key": "hit_heavy", "offset": 0 },
+        { "key": "roar", "offset": 0.03 }
+      ]
+    }
+  ],
+  "textOverlays": [
+    {
+      "panelIndex": 2,
+      "delay": 0.1,
+      "fadeIn": 0.133,
+      "generalName": "趙雲",
+      "skillName": "龍膽·破軍"
+    }
+  ],
+  "outro": {
+    "duration": 0.5,
+    "flashFrames": 3,
+    "flashColor": [0.86, 0.94, 1],
+    "burstColor": [0.47, 0.75, 1],
+    "letterboxOut": 0.27
+  },
+  "sfx": [{ "key": "boom", "time": 2.1 }],
+  "voice": {
+    "key": "voice.zhao_yun.ult",
+    "panelIndex": 0,
+    "offset": 0.05
+  },
+  "speed": 1,
+  "replay": {
+    "duration": 0.8,
+    "panelIndices": [1, 2],
+    "playVoice": false
+  },
+  "letterboxMax": 0.06111111111111111,
+  "referenceFps": 30,
+  "shakeSeed": 1
+}
