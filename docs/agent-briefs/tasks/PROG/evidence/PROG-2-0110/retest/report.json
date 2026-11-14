@@ -1,0 +1,1 @@
+{"sceneName":"LobbyScene","exitCode":1,"unverified":["lifespan","tutorial-battle","sortie","bloodline-tree"],"failure":"找不到大廳可操作沙盤入口","master":"07728d4f8","completed":false,"gate":"4/9; governance scope coverage blocked","engineStarted":true,"errorCount":1,"passed":["onboarding-actions","mercenary-entry-empty-list-return","domestic-entry","mission-board-entry"]}
