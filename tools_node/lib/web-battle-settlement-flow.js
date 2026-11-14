@@ -86,7 +86,7 @@ async function runBattleSettlementFlow(page, options = {}) {
     await login();
     await click('GameplayGacha');
     await click('GachaDs3_div_48');
-    await click('GachaPullResult_div_412');
+    await click('GachaPullResult_back');
     await click('GachaReturnToLobby');
     await click('LeadGeneralButton0');
     const beforeRoster = await roster();

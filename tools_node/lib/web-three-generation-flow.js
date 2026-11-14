@@ -135,12 +135,12 @@ async function runThreeGenerationFlow(page, options = {}) {
     }
     await login();
     await click('GameplayGacha', 1200);
-    await click('GachaDs3_div_48', 900); await click('GachaPullResult_div_412', 900);
+    await click('GachaDs3_div_48', 900); await click('GachaPullResult_back', 900);
     for (let i = 0; i < 30; i++) {
         const roster = (await state()).roster;
         if (roster.some(g => g.gender === '女') && roster.some(g => g.gender === '男')) break;
         if (i === 29) throw Error('No natural parent pair after recruitment');
-        await click('GachaDs3_div_55', 900); await click('GachaPullResult_div_412', 900);
+        await click('GachaDs3_div_55', 900); await click('GachaPullResult_back', 900);
     }
     await click('GachaReturnToLobby'); await seasons(1);
     const founders = (await state()).roster;
