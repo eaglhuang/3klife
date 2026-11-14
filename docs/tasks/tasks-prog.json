@@ -25,9 +25,9 @@
   "generated": "2026-04-06",
   "summary": {
     "done": 38,
-    "in_progress": 2,
+    "in_progress": 4,
     "open": 82,
-    "total": 122
+    "total": 124
   },
   "tasks": [
     {
@@ -4646,6 +4646,56 @@
         "input": [],
         "output": [],
         "validation_cmd": "npm test tests/GachaFlowCoordinator.test.ts",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9030",
+      "title": "戰場共用 Q 版單位演出與單挑流程",
+      "owner": "cursor-grok-bot",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-14",
+      "created_by_agent": "cursor-grok-bot",
+      "started_at": "2026-11-14T20:20:10+08:00",
+      "started_by_agent": "cursor-grok-bot",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "武將及小兵共用演出狀態、設定與 Spine 接層；單挑流程建立於共用層。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "共用狀態與單挑測試通過",
+        "TypeScript 與 compute gate 通過"
+      ],
+      "deliverables": [
+        "共用演出核心",
+        "戰場接入"
+      ],
+      "notes": "2026-11-14 | 狀態: in-progress | 驗證: quick 3/3、standard 12/12、測試 tsc 通過 | 變更: 共用核心雛形 | 阻塞: 正式 tsc 缺 Cocos 產生設定且 TypeScript 版本不相容；單挑流程與接線未完成",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
         "rollback_hint": "",
         "execution_steps": []
       },
