@@ -5,11 +5,11 @@
   "command": "node atm.mjs next --json",
   "status": "replaced",
   "sourceKind": "internal-build-sync",
-  "sourcePath": "C:\\Users\\User\\AI-Atomic-Framework\\release\\atm-onefile\\atm.mjs",
-  "sha256": "7dec83053e8634d6002ef109b27583b0b1340ec78ba915b4e648623743949b9c",
-  "existingSha256": "6586d5ce1c707798f1ff3726cc9166c1a2d642b615423e125ab6f21297d23484",
-  "sizeBytes": 4139798,
-  "frameworkVersion": "0.1.0",
-  "sourceCommit": "2eb0db3182a6a0f582858e3174dab71ef9006fa1",
-  "generatedAt": "2026-09-05T11:08:34.657Z"
+  "sourcePath": "C:\\Users\\User\\AppData\\Local\\Temp\\claude\\51b98266c618bdf2\\eb4f6a73-d83d-4304-a8dc-eeed395fafd6\\scratchpad\\wt-sync4\\release\\atm-onefile\\atm.mjs",
+  "sha256": "43d939be3290158991643b7c8835500a51a4e916cbedec2ec2f83387cd4395ca",
+  "existingSha256": "38d69567089f3224423d6e7a38f34343ecbad4e5664abc792aabdc4e1a61a0fe",
+  "sizeBytes": 5548323,
+  "frameworkVersion": "0.1.29",
+  "sourceCommit": "cd88b1d4904bd9811bc13a0eb3c067b60afd7813",
+  "generatedAt": "2026-11-14T05:13:32.379Z"
 }
