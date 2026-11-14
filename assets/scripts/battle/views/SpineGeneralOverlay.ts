@@ -1,119 +1,182 @@
 import { Node, UITransform, resources, sp } from 'cc';
-import { Faction } from '../../core/config/Constants';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
+import { UnitAction, UnitPresentationCore, UnitPresentationState } from '../shared/UnitPresentationCore';
+import { UnitSpineConfig } from '../shared/UnitPresentationConfig';
+import { DuelExchange, DuelPresentationCore } from '../shared/DuelPresentationCore';
 
-/**
- * 戰場武將 Spine 2D 疊層（spine-trial 共用骨架產出的 Spine 4.2 角色）。
- *
- * 武將 3D 模型照舊在世界座標，這裡在 UI 層掛一個 sp.Skeleton，位置由 UnitRenderer 每次投影傳入；
- * 平時循環 idle，武將出招時播一次 spear_thrust、中招時播一次 hit_knockback，都再回 idle；
- * 陣亡播 death_fall 並停在倒地姿勢。
- * Unity 對照：像在 Canvas 上掛一個 SkeletonGraphic 跟著角色的螢幕座標走。
- */
-interface SpineGeneralEntry {
-  /** resources 底下的 SkeletonData 路徑（不含副檔名） */
-  path: string;
-  /** 骨架 1300px 高，縮到戰場上的顯示比例 */
-  scale: number;
+interface Entry {
+  config: UnitSpineConfig;
+  core: UnitPresentationCore;
+  node: Node | null;
+  revision: number;
+  facing: 1 | -1;
+  loading: boolean;
+  ready: Array<(loaded: boolean) => void>;
+  visible: boolean;
 }
 
-/** 陣營預設角色；之後改成依武將 id 對表即可 */
-const SPINE_GENERAL_BY_FACTION: Record<string, SpineGeneralEntry> = {
-  [Faction.Player]: { path: 'spine/generals/zhao_yun/zhao_v2', scale: 0.22 },
-  [Faction.Enemy]: { path: 'spine/generals/zhang_fei/char2', scale: 0.22 },
-};
-
-const IDLE = 'idle';
-const ATTACK = 'spear_thrust';
-const HIT = 'hit_knockback';
-const DEATH = 'death_fall';
-const MIRROR_SKIN = 'hand_mirror';
-
-export class SpineGeneralOverlay {
-  private readonly nodes = new Map<string, Node>();
-  private readonly loading = new Set<string>();
-  private readonly dead = new Set<string>();
-
+/** 武將與兵種共用的 Cocos/Spine 薄接層；素材路徑與動作皆由設定提供。 */
+export class SpineUnitOverlay {
+  private readonly entries = new Map<string, Entry>();
+  private readonly failed = new Set<string>();
+  private readonly pendingRemovals = new Set<string>();
+  private duel: { core: DuelPresentationCore; ids: [string, string]; resolve: () => void } | null = null;
   constructor(private readonly getParent: () => Node | null, private readonly layer: () => number) {}
 
-  /** 確保該陣營的 Spine 武將存在並移到 uiPos；回傳是否已顯示（可用來隱藏 3D 模型） */
-  public sync(faction: Faction, uiX: number, uiY: number): boolean {
-    const node = this.nodes.get(faction);
-    if (node?.isValid) {
-      if (this.dead.delete(faction)) node.getComponent(sp.Skeleton)?.setAnimation(0, IDLE, true); // 新戰局復活
-      node.setPosition(uiX, uiY, 0);
-      return true;
+  public sync(id: string, config: UnitSpineConfig, x: number, y: number, facing: 1 | -1, moving: boolean, dt: number, visible = true): boolean {
+    this.pendingRemovals.delete(id);
+    let entry = this.entries.get(id);
+    if (entry && entry.config.path !== config.path) { this.remove(id); entry = undefined; }
+    if (!entry) {
+      entry = { config, core: new UnitPresentationCore(config, { x, y }, facing), node: null, revision: -1, facing, loading: false, ready: [], visible };
+      this.entries.set(id, entry);
     }
-    void this.load(faction, uiX, uiY);
-    return false;
+    if (!entry.node && !entry.loading) this.load(id, entry);
+    entry.visible = visible;
+    if (!this.duel?.ids.includes(id)) entry.core.follow({ x, y }, moving, dt);
+    return !!entry.node?.isValid;
   }
 
-  public remove(faction: Faction): void {
-    const node = this.nodes.get(faction);
-    if (node?.isValid) node.destroy();
-    this.nodes.delete(faction);
-    this.dead.delete(faction);
+  public update(dt: number): void {
+    const controlled = this.duel?.ids;
+    if (this.duel) {
+      const duel = this.duel;
+      const result = duel.core.step(dt);
+      duel.ids.forEach((id, i) => { const e = this.entries.get(id); if (e) this.apply(e, result.units[i]); });
+      if (result.phase === 'done') {
+        this.duel = null;
+        for (const id of duel.ids) if (this.pendingRemovals.has(id)) this.remove(id);
+        duel.resolve();
+      }
+    }
+    for (const [id, entry] of this.entries) {
+      if (!controlled?.includes(id)) this.apply(entry, entry.core.step(dt));
+    }
+    const sorted = [...this.entries.values()].filter(e => e.node?.isValid)
+      .sort((a, b) => b.core.snapshot().foot.y - a.core.snapshot().foot.y);
+    sorted.forEach((entry, index) => entry.node?.setSiblingIndex(index));
   }
 
-  public playAttack(faction: Faction): void {
-    this.playOnce(faction, ATTACK);
-  }
-
-  /** 中招：被打退再踏回原位 */
-  public playHit(faction: Faction): void {
-    this.playOnce(faction, HIT);
-  }
-
-  /** 陣亡：倒地後停住；回傳是否有 Spine 武將可演（false 時呼叫端照舊移除） */
-  public playDeath(faction: Faction): boolean {
-    const skel = this.nodes.get(faction)?.getComponent(sp.Skeleton);
-    if (!skel) return false;
-    if (this.dead.has(faction)) return true;
-    if (!this.hasAnimation(skel, DEATH)) return false;
-    this.dead.add(faction);
-    skel.setAnimation(0, DEATH, false);
+  public play(id: string, action: UnitAction): boolean {
+    const entry = this.entries.get(id);
+    if (!entry?.node?.isValid) return false;
+    const skel = entry.node.getComponent(sp.Skeleton);
+    if (!skel?.skeletonData?.getRuntimeData()?.findAnimation(entry.config.clips[action].name)) return false;
+    if (action !== 'fall' || entry.core.snapshot().action !== 'fall') entry.core.play(action);
     return true;
   }
-
-  private playOnce(faction: Faction, anim: string): void {
-    const skel = this.nodes.get(faction)?.getComponent(sp.Skeleton);
-    if (!skel || this.dead.has(faction) || !this.hasAnimation(skel, anim)) return;
-    skel.setAnimation(0, anim, false);
-    skel.addAnimation(0, IDLE, true, 0);
+  public exists(id: string): boolean { return this.entries.has(id); }
+  public revive(id: string): void {
+    const entry = this.entries.get(id);
+    if (entry && !this.duel?.ids.includes(id) && entry.core.snapshot().action === 'fall') entry.core.play('idle');
   }
 
-  /** 美術只留本機，舊版骨架可能還沒有新動作；缺動作時略過而不報錯 */
-  private hasAnimation(skel: sp.Skeleton, anim: string): boolean {
-    return !!skel.skeletonData?.getRuntimeData()?.findAnimation(anim);
+  public async playDuel(a: string, b: string, winner: 0 | 1 | null, fallen: boolean, exchanges: readonly DuelExchange[]): Promise<void> {
+    if (this.duel) return;
+    const loaded = await Promise.all([this.waitForEntry(a), this.waitForEntry(b)]);
+    if (!loaded.every(Boolean) || this.duel) return;
+    const first = this.entries.get(a), second = this.entries.get(b);
+    if (!first?.node?.isValid || !second?.node?.isValid) return;
+    const left = first.core.snapshot().foot, right = second.core.snapshot().foot;
+    const midpoint = { x: (left.x + right.x) / 2, y: (left.y + right.y) / 2 };
+    const dx = right.x - left.x, dy = right.y - left.y, distance = Math.hypot(dx, dy);
+    const direction = distance > 0.001 ? { x: dx / distance, y: dy / distance } : { x: 1, y: 0 };
+    const gap = Math.min(90, Math.max(40, distance / 4));
+    const core = new DuelPresentationCore(
+      { unit: first.core, sideline: left, arena: { x: midpoint.x - direction.x * gap, y: midpoint.y - direction.y * gap } },
+      { unit: second.core, sideline: right, arena: { x: midpoint.x + direction.x * gap, y: midpoint.y + direction.y * gap } }, winner, fallen, exchanges,
+    );
+    return new Promise<void>(resolve => { this.duel = { core, ids: [a, b], resolve }; });
   }
 
-  private async load(faction: Faction, x: number, y: number): Promise<void> {
-    const entry = SPINE_GENERAL_BY_FACTION[faction];
+  public remove(id: string): void {
+    if (this.duel?.ids.includes(id)) { this.pendingRemovals.add(id); return; }
+    this.pendingRemovals.delete(id);
+    const entry = this.entries.get(id);
+    if (entry) this.finishLoading(entry, false);
+    if (entry?.node?.isValid) entry.node.destroy();
+    this.entries.delete(id);
+  }
+  private waitForEntry(id: string): Promise<boolean> {
+    const entry = this.entries.get(id);
+    if (!entry || this.failed.has(entry.config.path)) return Promise.resolve(false);
+    if (entry.node?.isValid) return Promise.resolve(true);
+    if (!entry.loading) this.load(id, entry);
+    if (entry.node?.isValid) return Promise.resolve(true);
+    if (!entry.loading) return Promise.resolve(false);
+    return new Promise(resolve => {
+      let settled = false;
+      const finish = (value: boolean): void => {
+        if (settled) return;
+        settled = true; clearTimeout(timer);
+        const index = entry.ready.indexOf(finish);
+        if (index >= 0) entry.ready.splice(index, 1);
+        resolve(value);
+      };
+      const timer = setTimeout(() => finish(false), 3000);
+      entry.ready.push(finish);
+    });
+  }
+  private finishLoading(entry: Entry, success: boolean): void {
+    for (const done of entry.ready.splice(0)) done(success);
+  }
+  public clear(): void {
+    if (this.duel) { this.duel.resolve(); this.duel = null; }
+    for (const id of this.entries.keys()) this.remove(id);
+  }
+
+  private apply(entry: Entry, state: UnitPresentationState): void {
+    const node = entry.node;
+    const skeleton = node?.getComponent(sp.Skeleton);
+    if (!node?.isValid || !skeleton) return;
+    node.active = entry.visible || !!this.duel?.ids.some(id => this.entries.get(id) === entry);
+    const offset = entry.config.footOffset;
+    node.setPosition(state.foot.x - offset.x * entry.config.displayScale * state.facing,
+      state.foot.y - offset.y * entry.config.displayScale, 0);
+    node.setScale(entry.config.displayScale * state.facing, entry.config.displayScale, 1);
+    if (entry.facing !== state.facing || entry.revision < 0) {
+      const skin = state.facing < 0 && entry.config.mirrorSkin && skeleton.skeletonData?.getRuntimeData()?.findSkin(entry.config.mirrorSkin)
+        ? entry.config.mirrorSkin : 'default';
+      skeleton.setSkin(skin);
+      entry.facing = state.facing;
+    }
+    if (entry.revision !== state.revision) {
+      const name = state.clip.name;
+      if (skeleton.skeletonData?.getRuntimeData()?.findAnimation(name)) skeleton.setAnimation(0, name, state.clip.loop);
+      else UCUFLogger.warn(LogCategory.BATTLE, `[SpineUnitOverlay] 缺少動作 ${name}: ${entry.config.path}`);
+      entry.revision = state.revision;
+    }
+    skeleton.timeScale = state.animationSpeed;
+  }
+
+  private load(id: string, entry: Entry): void {
     const parent = this.getParent();
-    if (!entry || !parent || this.loading.has(faction)) return;
-    this.loading.add(faction);
-    resources.load(entry.path, sp.SkeletonData, (err, data) => {
-      this.loading.delete(faction);
+    if (!parent || this.failed.has(entry.config.path)) return;
+    entry.loading = true;
+    resources.load(entry.config.path, sp.SkeletonData, (err, data) => {
+      entry.loading = false;
+      if (this.entries.get(id) !== entry || !parent.isValid) { this.finishLoading(entry, false); return; }
       if (err || !data) {
-        UCUFLogger.warn(LogCategory.BATTLE, `[SpineGeneralOverlay] 載入失敗: ${entry.path}`, err);
+        this.failed.add(entry.config.path);
+        UCUFLogger.warn(LogCategory.BATTLE, `[SpineUnitOverlay] 載入失敗: ${entry.config.path}`, err);
+        this.finishLoading(entry, false);
         return;
       }
-      if (!parent.isValid || this.nodes.has(faction)) return;
-      const node = new Node(`SpineGeneral_${faction}`);
-      node.layer = this.layer();
-      node.addComponent(UITransform);
-      parent.addChild(node);
-      node.setSiblingIndex(0); // 壓在 HUD 標籤之下
-      // 原畫朝畫面右；敵方鏡像朝左
-      node.setScale(faction === Faction.Enemy ? -entry.scale : entry.scale, entry.scale, 1);
-      node.setPosition(x, y, 0);
-      const skel = node.addComponent(sp.Skeleton);
-      skel.premultipliedAlpha = false;
-      skel.skeletonData = data;
-      // 鏡像後仍要右手持槍：spine-trial 產出的 hand_mirror 皮膚
-      if (faction === Faction.Enemy && data.getRuntimeData()?.findSkin(MIRROR_SKIN)) skel.setSkin(MIRROR_SKIN);
-      skel.setAnimation(0, IDLE, true);
-      this.nodes.set(faction, node);
+      const runtime = data.getRuntimeData();
+      const missing = Object.values(entry.config.clips).map(clip => clip.name).find(name => !runtime?.findAnimation(name));
+      if (missing) {
+        this.failed.add(entry.config.path);
+        UCUFLogger.warn(LogCategory.BATTLE, `[SpineUnitOverlay] 素材缺少共用動作 ${missing}: ${entry.config.path}`);
+        this.finishLoading(entry, false);
+        return;
+      }
+      const node = new Node(`SpineUnit_${id}`);
+      node.layer = this.layer(); node.addComponent(UITransform); parent.addChild(node); node.setSiblingIndex(0);
+      const skeleton = node.addComponent(sp.Skeleton);
+      skeleton.premultipliedAlpha = false; skeleton.skeletonData = data;
+      entry.node = node;
+      this.apply(entry, entry.core.snapshot());
+      this.finishLoading(entry, true);
     });
   }
 }
