@@ -30,6 +30,14 @@ export class HallStageCrowd extends Component {
     /** 每位在場武將頭頂的位置（集體反應用）；clear 時清空 */
     private readonly _headPositions = new Map<string, Vec3>();
 
+    /** 名牌顯示開關：大廳上層展開子選單時暫藏，避免選單壓住名牌（#2148-3） */
+    private _tagsVisible = true;
+
+    public setTagsVisible(visible: boolean): void {
+        this._tagsVisible = visible;
+        for (const child of this.node.children) if (child.name.startsWith('tag-')) child.active = visible;
+    }
+
     public configure(decor: HallStageDecor): void {
         this._decor = decor;
     }
@@ -105,6 +113,7 @@ export class HallStageCrowd extends Component {
         body.setPosition(pose.body.x, pose.body.y, 0);
         body.setScale(pose.body.scaleX, pose.body.scaleY, 1);
         tag.setPosition(pose.tag.x, pose.tag.y, 0);
+        tag.active = this._tagsVisible;
         if (mark) mark.setPosition(pose.mark.x, pose.mark.y, 0);
         this._headPositions.set(placement.generalId, new Vec3(pose.mark.x, pose.mark.y, 0));
 

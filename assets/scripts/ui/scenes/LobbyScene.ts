@@ -1410,6 +1410,8 @@ export class LobbyScene extends Component {
         const target = overHall ? hall : home.parent;
         if (menu.parent !== target) menu.setParent(target, true);
         menu.setSiblingIndex(overHall ? target.children.length - 1 : home.index);
+        // 子選單壓在中間武將名牌上：展開時暫藏名牌，收起再顯示
+        this._lobbyHall?.setCrowdTagsVisible(!overHall);
     }
 
     private _refreshCityHub(): void {
