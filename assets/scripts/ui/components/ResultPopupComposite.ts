@@ -3,7 +3,7 @@
  * ResultPopupComposite — 戰鬥結果彈窗（Composite 版）
  * Wave 2 migration from ResultPopup - shows victory/defeat/stalemate results
  */
-import { _decorator, Button, Color, Mask, Node, Sprite, Tween, tween, UIOpacity, Vec3, Widget } from 'cc';
+import { _decorator, Button, Color, Mask, Node, Sprite, Tween, tween, UIOpacity, UITransform, Vec3, Widget } from 'cc';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { loadGeneralAvatar } from '../core/GeneralAvatarLoader';
@@ -29,18 +29,31 @@ export const RETREAT_DESCRIPTION = '我方主動撤退，保存兵力，來日�
 export class ResultPopupComposite extends CompositePanel {
     private _binder: UITemplateBinder | null = null;
     private _isMounted = false;
+    private _mounting: Promise<void> | null = null;
     private _visible = false;
     private _description = '';
 
     protected onDestroy(): void {
         this.unmount();
         this._isMounted = false;
+        this._mounting = null;
     }
 
     public async show(result: BattleResult): Promise<void> {
+        // BattleScene.scene 的 Canvas/Popup 預設為 active=false 且尺寸為 100x100；
+        // 必須在 mount 前先開啟節點、撐滿全螢幕尺寸並對齊，否則子層百分比佈局會以 100x100 建構（Issue #2159）。
+        this.node.active = true;
+        const parentSize = this.node.parent?.getComponent(UITransform)?.contentSize;
+        const tf = this.node.getComponent(UITransform) ?? this.node.addComponent(UITransform);
+        tf.setContentSize(parentSize ? parentSize.width : 1920, parentSize ? parentSize.height : 1080);
+        bringNodeToFront(this.node);
+        stretchWidgetToParent(this.node.getComponent(Widget) ?? this.node.addComponent(Widget));
+
         if (!this._isMounted) {
-            await this.mount('result-popup-screen');
-            this._isMounted = true;
+            if (!this._mounting) {
+                this._mounting = this.mount('result-popup-screen').then(() => { this._isMounted = true; });
+            }
+            try { await this._mounting; } finally { this._mounting = null; }
         }
 
         this._description = result.description;
@@ -53,6 +66,11 @@ export class ResultPopupComposite extends CompositePanel {
         bringNodeToFront(this.node);
         // 場景裡的 Popup host 只設置中、固定 100×100，全螢幕深色遮罩跟著縮小看不到（規格書 §4.2，PROG-2-1879）
         stretchWidgetToParent(this.node.getComponent(Widget) ?? this.node.addComponent(Widget));
+        const childWidgets = (this.node as unknown as { getComponentsInChildren?: (ctor: typeof Widget) => Widget[] })
+            .getComponentsInChildren?.(Widget) ?? [];
+        for (const widget of childWidgets) {
+            widget.updateAlignment?.();
+        }
 
         this.node.active = true;
         this._visible = true;

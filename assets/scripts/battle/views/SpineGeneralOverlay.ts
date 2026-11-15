@@ -52,7 +52,7 @@ export class SpineUnitOverlay {
     for (const [id, entry] of this.entries) {
       if (!controlled?.includes(id)) this.apply(entry, entry.core.step(dt));
     }
-    const sorted = [...this.entries.values()].filter(e => e.node?.isValid)
+    const sorted = Array.from(this.entries.values()).filter(e => e.node?.isValid)
       .sort((a, b) => b.core.snapshot().foot.y - a.core.snapshot().foot.y);
     sorted.forEach((entry, index) => entry.node?.setSiblingIndex(index));
   }

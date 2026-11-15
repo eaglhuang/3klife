@@ -190,8 +190,9 @@ export class LobbyHallScreenBinder {
         if (reaction && this._crowd) this._crowd.react(reaction);
     }
 
-    /** 人群名牌顯示開關：子選單蓋在大廳上層時暫藏 */
+    /** 人群名牌顯示開關：子選單蓋在大廳上層時暫藏，並一併收起開啟中的泡泡避免重疊 */
     setCrowdTagsVisible(visible: boolean): void {
+        if (!visible) this._closeBubble();
         this._crowd?.setTagsVisible(visible);
     }
 
@@ -290,7 +291,7 @@ export class LobbyHallScreenBinder {
         return seconds;
     }
 
-    /** 泡泡跟著武將頭頂：改 Widget 的水平置中與上緣距離（設計稿是固定位置），並夾在畫面內 */
+    /** 泡泡跟著武將頭頂：改 Widget 的水平置中與上緣距離（設計稿是固定位置），夾在畫面內並避開啟用中的天下勢力圖 */
     private _placeBubbleAbove(bubble: Node, generalId: string): void {
         const widget = bubble.getComponent(Widget);
         const head = this._crowd?.headPositionOf(generalId);
@@ -299,11 +300,40 @@ export class LobbyHallScreenBinder {
         if (!widget || !head || !parentSize || !size) return;
         const margin = 12;
         const halfW = size.width / 2;
+        const hCenter = Math.max(-parentSize.width / 2 + halfW + margin, Math.min(parentSize.width / 2 - halfW - margin, head.x));
+        // 泡泡下緣貼在頭頂標記上方；上緣離畫面頂至少留一個邊距
+        let top = Math.max(margin, parentSize.height / 2 - (head.y + size.height));
+
+        const sandbox = findUcufNode(this._screenRoot, 'lobby-hall-screen.sandbox');
+        const sandboxTrans = sandbox?.active ? sandbox.getComponent(UITransform) : null;
+        if (sandbox && sandbox.active && sandboxTrans) {
+            let sbCenterX = sandbox.position.x;
+            let sbCenterY = sandbox.position.y;
+            let cur: Node | null = sandbox.parent;
+            let depth = 0;
+            while (cur && cur !== bubble.parent && depth++ < 4) {
+                sbCenterX += cur.position?.x ?? 0;
+                sbCenterY += cur.position?.y ?? 0;
+                cur = cur.parent;
+            }
+            const sbScaleX = Math.abs(sandbox.scale?.x ?? 1);
+            const sbScaleY = Math.abs(sandbox.scale?.y ?? 1);
+            const sbHalfW = (sandboxTrans.width * sbScaleX) / 2;
+            const sbHalfH = (sandboxTrans.height * sbScaleY) / 2;
+            const sbTop = parentSize.height / 2 - (sbCenterY + sbHalfH);
+            const sbBottom = parentSize.height / 2 - (sbCenterY - sbHalfH);
+            const overlapX = Math.abs(hCenter - sbCenterX) < (halfW + sbHalfW + margin);
+            const overlapY = top < (sbBottom + margin) && (top + size.height) > (sbTop - margin);
+            if (overlapX && overlapY) {
+                const maxTop = Math.max(margin, parentSize.height - size.height - 120);
+                top = Math.min(maxTop, Math.max(top, sbBottom + margin));
+            }
+        }
+
         widget.isAbsoluteHorizontalCenter = true;
         widget.isAbsoluteTop = true;
-        widget.horizontalCenter = Math.max(-parentSize.width / 2 + halfW + margin, Math.min(parentSize.width / 2 - halfW - margin, head.x));
-        // 泡泡下緣貼在頭頂標記上方；上緣離畫面頂至少留一個邊距
-        widget.top = Math.max(margin, parentSize.height / 2 - (head.y + size.height));
+        widget.horizontalCenter = hCenter;
+        widget.top = top;
         widget.updateAlignment();
     }
 

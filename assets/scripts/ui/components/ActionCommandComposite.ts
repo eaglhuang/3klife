@@ -100,9 +100,10 @@ export class ActionCommandComposite extends CompositePanel {
         if (this._isMounted) return;
         try {
             UCUFLogger.info(LogCategory.UI, '[ActionCommandComposite] mount() start — node:', this.node.name, 'parent:', this.node.parent?.name);
+            // 先訂閱事件，避免非同步掛載期間錯失初始 GeneralSpChanged（Issue #2159）
+            this._subscribeEvents();
             await super.mount('action-command-screen');
             this._isMounted = true;
-            this._subscribeEvents();
             // 診斷：mount 完成後記錄位置資訊
             const root = this.node.children[0];
             if (root) {
@@ -207,6 +208,8 @@ export class ActionCommandComposite extends CompositePanel {
         binder.getNode('DuelBtn')?.on(Button.EventType.CLICK, this._onDuelClick, this);
         this._duelButtonNode = binder.getNode('DuelBtn');
         this._applyDuelLock();
+        // 綁定完成後立即用目前 SP 狀態重繪一次，避免首幀殘留版型預設字「奧義準備中」（Issue #2159）
+        this._onSpChanged({ faction: Faction.Player, sp: this._currentSp, maxSp: this._maxSp });
 
         UCUFLogger.info(LogCategory.UI, 
             `[ActionCommandComposite] 綁定完成 — ring:${!!this._spRingSprite}` +
@@ -225,6 +228,7 @@ export class ActionCommandComposite extends CompositePanel {
     // ── 事件訂閱 ─────────────────────────────────────────────
 
     private _subscribeEvents(): void {
+        if (this._unsubs.length > 0) return;
         this._unsubs.push(
             services().event.on('hud-ultimate-requested', () => this._onUltimateClick()),
             services().event.on(EVENT_NAMES.GeneralSpChanged, this._onSpChanged.bind(this)),

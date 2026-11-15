@@ -145,6 +145,32 @@ const HP_BAR_COLOR = {
 /** 名牌旁精力能量環半徑（PROG-2-1853） */
 const VITALITY_RING_RADIUS = 24;
 
+/**
+ * 主將名牌＋精力環在 Overlay 上的安全座標區間（以 1920x1080 中心為基準等比例換算），
+ * 避開左側虎符列與右上軍師／控制鈕區域（Issue #2159）。
+ */
+export function clampGeneralOverlayPosition(
+  x: number,
+  y: number,
+  canvasWidth = 1920,
+  canvasHeight = 1080,
+): { x: number; y: number } {
+  const safeW = canvasWidth > 0 ? canvasWidth : 1920;
+  const safeH = canvasHeight > 0 ? canvasHeight : 1080;
+  const scaleX = safeW / 1920;
+  const scaleY = safeH / 1080;
+  const halfW = safeW / 2;
+  const halfH = safeH / 2;
+  const minX = -(halfW - 390 * scaleX);
+  const maxX = halfW - 430 * scaleX;
+  const minY = -(halfH - 320 * scaleY);
+  const maxY = halfH - 230 * scaleY;
+  return {
+    x: minX <= maxX ? Math.min(maxX, Math.max(minX, x)) : 0,
+    y: minY <= maxY ? Math.min(maxY, Math.max(minY, y)) : 0,
+  };
+}
+
 @ccclass("UnitRenderer")
 export class UnitRenderer extends Component {
   @property({ tooltip: "cube 單位高度" })
@@ -853,7 +879,7 @@ export class UnitRenderer extends Component {
     });
 
     this.generalViews.forEach((view, faction) => {
-      this.projectWorldLabel(view.worldNode, view.labelNode, this.labelHeight + 0.28);
+      this.projectClampedGeneralLabel(view);
       const general = this.latestState?.getGeneral(faction);
       const config = general && generalSpineConfig(general.id, general.templateId);
       if (config) {
@@ -979,7 +1005,11 @@ export class UnitRenderer extends Component {
         }
         uiRoot.setPosition(Vec3.ZERO);
       }
+      // 置於 Canvas 最底層，確保 3D 浮動名牌／武將徽章永遠排在 HUD／設定／結算視窗之下（Issue #2159）
+      uiRoot.setSiblingIndex(0);
       this.uiRoot = uiRoot;
+    } else if (this.uiRoot) {
+      this.uiRoot.setSiblingIndex(0);
     }
   }
 
@@ -1039,10 +1069,9 @@ export class UnitRenderer extends Component {
     view.hpLabel.string = `${Math.max(0, general.currentHp)}`;
     this.drawVitalityRing(view, vitalityRingView(general.vitality, general.maxVitality));
     view.labelOpacity.opacity = 255;
-    this.projectWorldLabel(view.worldNode, view.labelNode, this.labelHeight + 0.28);
+    const label = this.projectClampedGeneralLabel(view);
 
     // Spine 2D 武將站在標籤下方；載入完成後隱藏 3D 模型
-    const label = view.labelNode.position;
     const config = generalSpineConfig(general.id, general.templateId);
     this.spineUnits.revive(`general:${faction}`);
     const side = this.generalSidelineFoot(faction);
@@ -1165,6 +1194,17 @@ export class UnitRenderer extends Component {
     view.worldNode.destroy();
     view.labelNode.destroy();
     this.generalViews.delete(faction);
+  }
+
+  private projectClampedGeneralLabel(view: GeneralView): Vec3 {
+    this.projectWorldLabel(view.worldNode, view.labelNode, this.labelHeight + 0.28);
+    const rootSize = this.uiRoot?.getComponent(UITransform)?.contentSize;
+    const pos = view.labelNode.position;
+    const clamped = clampGeneralOverlayPosition(pos.x, pos.y, rootSize?.width, rootSize?.height);
+    if (clamped.x !== pos.x || clamped.y !== pos.y) {
+      view.labelNode.setPosition(clamped.x, clamped.y, pos.z);
+    }
+    return view.labelNode.position;
   }
 
   private projectWorldLabel(worldNode: Node, labelNode: Node, yOffset: number): void {
@@ -1703,7 +1743,9 @@ export class UnitRenderer extends Component {
    * 改走 worldToScreen + Canvas 相機 screenToWorld + convertToNodeSpaceAR；取不到 Canvas 相機才退回舊 API。
    */
   private projectToOverlay(worldPos: Vec3, target: Node): void {
-    const point = this.overlayPoint(worldPos);
+    const point = typeof this.overlayPoint === 'function'
+      ? this.overlayPoint(worldPos)
+      : UnitRenderer.prototype.overlayPoint.call(this, worldPos);
     if (point) target.setPosition(point);
   }
 

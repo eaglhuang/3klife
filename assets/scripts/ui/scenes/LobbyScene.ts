@@ -818,6 +818,8 @@ export class LobbyScene extends Component {
 
         this._ready = true;
         SceneLoadProgress.complete();
+        // 載入遮罩完整關閉後再視條件開啟日報，避免日報浮在 loading progress 畫面上（Issue #2159）
+        this._openDailyReportIfPending();
         ensureGlobalDevOverlay(this._localGachaService, undefined, () => { PlayerRosterService.clear(); }, () => {
             this._refreshWalletPreviewState();
         });
@@ -1419,6 +1421,7 @@ export class LobbyScene extends Component {
         const target = overHall ? hall : home.parent;
         if (menu.parent !== target) menu.setParent(target, true);
         menu.setSiblingIndex(overHall ? target.children.length - 1 : home.index);
+        menu.getComponent(Widget)?.updateAlignment();
         // 子選單壓在中間武將名牌上：展開時暫藏名牌，收起再顯示
         this._lobbyHall?.setCrowdTagsVisible(!overHall);
     }
@@ -2163,7 +2166,7 @@ export class LobbyScene extends Component {
         this._tournamentHost.node.active = false;
     }
 
-    /** 日報／晨報登入面板（PROG-2-1192）：有未讀才開；「晨報派遣板」直接切到派遣板 */
+    /** 日報／晨報登入面板（PROG-2-1192）：預先掛載但維持隱藏，等載入遮罩結束後才由 _openDailyReportIfPending 開啟 */
     private async _mountDailyReport(): Promise<void> {
         const close = (): void => { if (this._dailyReportHost) this._dailyReportHost.node.active = false; };
         this._dailyReportHost = await this._mountPreviewScreenHost('DailyReportHost', 'daily-report-screen', [
@@ -2171,6 +2174,13 @@ export class LobbyScene extends Component {
             { buttonId: 'btnOpenJournalHub', handler: () => { close(); this._openJournalHub(); } },
             { buttonId: 'btnRevenge', handler: () => { this._claimRevenge(); } },
         ]);
+        // 掛載期間先保持隱藏，待 SceneLoadProgress.complete() 完成後再打開（Issue #2159）
+        this._dailyReportHost.node.active = false;
+    }
+
+    /** 在載入遮罩完全收起後視新舊玩家與開場狀態開啟待讀日報（Issue #2159） */
+    private _openDailyReportIfPending(): void {
+        if (!this._dailyReportHost) return;
         // 新玩家／開場進行中不開日報（issue #2099 第 10 項）：首日日報只是「首次生成」，疊在開場與載入上反而擋路
         const report = this._isNewPlayer || this._isOpeningInProgress() ? null : this._dailyReport;
         this._dailyReportHost.node.active = report !== null;
@@ -6228,6 +6238,11 @@ export class LobbyScene extends Component {
                     leadSelectHost.node.active = true;
                     this._bringNodeToFront(leadSelectHost.node);
                     this._refreshLeadSelect();
+                }
+                // 從子畫面返回大廳時，若幕府大廳處於開啟狀態，需拉回城池層之上並重新同步子選單層級（Issue #2159）
+                if (this._lobbyHallHost?.node.active) {
+                    this._bringNodeToFront(this._lobbyHallHost.node);
+                    this._syncCityHubSubMenuLayer(this._cityHubHost?.binder?.getNode('subMenu') ?? null);
                 }
                 // 進場時先掛好的日報面板（有未讀才開）也要壓回大廳之上，不然字會疊在大廳上（PROG-2-1625）
                 if (this._dailyReportHost?.node.active) this._bringNodeToFront(this._dailyReportHost.node);

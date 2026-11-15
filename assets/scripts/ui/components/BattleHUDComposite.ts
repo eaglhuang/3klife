@@ -13,7 +13,9 @@
  * Unity 對照：GameHUDController，監聽事件更新各個 Binding
  */
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
-import { _decorator, Button, Color, Director, director, Label, Node, Sprite, UITransform } from 'cc';
+import { _decorator, Button, Color, Director, director, Label, Node, Sprite, UITransform, Widget } from 'cc';
+import { bringNodeToFront } from '../core/NodeBringToFront';
+import { stretchWidgetToParent } from '../core/WidgetStretch';
 import { BattleArtController } from '../core/BattleArtController';
 import { playTacticFlash, TACTIC_FLASH_NODE } from '../core/TacticFlashOverlay';
 import type { TacticFlashTiming, TacticFlashView } from '../../shared/interfaces/IBattleUIComponents';
@@ -344,14 +346,25 @@ export class BattleHUDComposite extends CompositePanel {
     }
 
     private async _showSettings(): Promise<void> {
+        services().event.emit(EVENT_NAMES.ShowSettingsRequested);
         const host = this.node.parent ?? this.node;
         const node = host.getChildByName('BattleSettings') ?? new Node('BattleSettings');
         node.layer = this.node.layer;
         if (!node.parent) host.addChild(node);
-        (node.getComponent(UITransform) ?? node.addComponent(UITransform)).setContentSize(1920, 1080);
+        const hostSize = host.getComponent(UITransform)?.contentSize;
+        (node.getComponent(UITransform) ?? node.addComponent(UITransform)).setContentSize(
+            hostSize ? hostSize.width : 1920,
+            hostSize ? hostSize.height : 1080,
+        );
+        stretchWidgetToParent(node.getComponent(Widget) ?? node.addComponent(Widget));
+        bringNodeToFront(node);
         this._settings = node.getComponent(BattleSettingsComposite) ?? node.addComponent(BattleSettingsComposite);
-        try { await this._settings.show(); }
-        catch { services().event.emit(EVENT_NAMES.ShowToast, { text: '設定載入失敗，請再試一次' }); }
+        try {
+            await this._settings.show();
+            bringNodeToFront(node);
+        } catch {
+            services().event.emit(EVENT_NAMES.ShowToast, { text: '設定載入失敗，請再試一次' });
+        }
     }
 
     private _spState = { sp: 0, maxSp: 0 };
@@ -488,6 +501,7 @@ export class BattleHUDComposite extends CompositePanel {
             this.showSceneGambitBadge(this._pendingSceneGambitBadgeText);
             this._pendingSceneGambitBadgeText = null;
         }
+        this._renderSp(this._spState.sp, this._spState.maxSp);
     }
 
     public showSceneGambitBadge(text: string): void {
