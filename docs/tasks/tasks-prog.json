@@ -5596,6 +5596,26 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "id": "PROG-2-9047",
+      "title": "無頭線上試玩全流程驗收腳本 playtest-online",
+      "phase": "2",
+      "status": "done",
+      "priority": "P1",
+      "owner": "ClaudeCode_claude-haiku-5-5",
+      "created_at": "2026-11-15T12:00:00+08:00",
+      "started_at": "2026-11-15T12:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-haiku-5-5",
+      "depends_on": [],
+      "target_files": [
+        "tools_node/playtest-online.js",
+        "docs/agent-briefs/tasks/PROG/PROG-2-9047.md",
+        "docs/tasks/tasks-prog.json",
+        "docs/web-playtest-online.md"
+      ],
+      "notes": "2026-11-16 | 狀態: done | 驗證: compute-gate standard、test tsc 0、run-cli 單元測試；線上版（最新部署）實跑 2~3/7 步：開機通過；開場規格 BtnDestinyRoll/BtnDestinyConfirm/BtnFrame0 沒出現（實際流程為介紹頁→信→展示頁→SR 武將揭曉→GachaPullResult→教學頁→大廳）；血統樹底板實測 560×1080、預期 1200×1080；戰鬥可打到「勝利」結算回大廳（約 23 秒），但部分情況出征面板點 BtnScoutSortie 後 120 秒進不了戰場；轉蛋返回大廳後底欄 BtnCat* 節點消失；大廳小人點擊 5 秒內未見對話泡泡；另有開機 pageerror（點開始過快：TypeError reading off）與戰後大廳每幀 rotatedAtSec of null（_buildHallCast）| 變更: 新增 tools_node/playtest-online.js、docs/web-playtest-online.md | 阻塞: 遊戲端問題只記錄，未改遊戲程式",
+      "completed_at": "2026-11-16T00:00:00+08:00"
     }
   ]
 }
