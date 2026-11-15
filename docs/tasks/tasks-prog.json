@@ -5795,7 +5795,7 @@
       "id": "PROG-2-9104",
       "title": "線上驗收：開場宿命轉蛋步驟按鈕名稱核對",
       "phase": "2",
-      "status": "in-progress",
+      "status": "done",
       "priority": "P1",
       "owner": "ClaudeCode_claude-opus-5-5",
       "created_at": "2026-11-16T12:00:00+08:00",
@@ -5810,13 +5810,14 @@
         "docs/agent-briefs/tasks/PROG/PROG-2-9104.md",
         "docs/tasks/tasks-prog.json"
       ],
-      "notes": "2026-11-16 | 狀態: in-progress"
+      "notes": "2026-11-16 | 狀態: done | 結論: 腳本預期錯 | 證據: 宿命轉蛋 2026-11-12 改為轉蛋系統一池（PROG-2-2243，LobbyScene._presentDestinyPool 用 GachaPullResult 十連畫面、確定鈕 GachaPullResult_close）；BtnDestinyRoll/BtnDestinyConfirm/BtnFrame0 只剩舊 layout destiny-opening-main.json，程式未掛載；實跑開場順序 BtnIntroNext×4→BtnCloseOpeningLetter→BtnShowcaseNext×6→GachaPullResult_close→BtnNextTutorial×3 | 變更: playtest-online.js 開場序列改為現行流程、docs/web-playtest-online.md 補說明 | 驗證: 線上版（https://eaglhuang.github.io/3klife-play/）以修正後腳本實跑 6/7 步通過（唯一失敗為 PROG-2-9106 轉蛋返回）；把 PROG-2-9106 修正邏輯注入線上版後 7/7 通過；compute-gate standard、test tsc 0、run-cli ALL PASS 7737",
+      "completed_at": "2026-11-16T15:00:00+08:00"
     },
     {
       "id": "PROG-2-9105",
       "title": "線上驗收：人物介紹命分頁血統樹底板尺寸核對",
       "phase": "2",
-      "status": "in-progress",
+      "status": "done",
       "priority": "P1",
       "owner": "ClaudeCode_claude-opus-5-5",
       "created_at": "2026-11-16T12:00:00+08:00",
@@ -5830,13 +5831,14 @@
         "docs/agent-briefs/tasks/PROG/PROG-2-9105.md",
         "docs/tasks/tasks-prog.json"
       ],
-      "notes": "2026-11-16 | 狀態: in-progress"
+      "notes": "2026-11-16 | 狀態: done | 結論: 腳本預期錯（量錯節點） | 證據: 腳本量的 TabBloodlineContent／CharacterDs3MainBloodlineRoot 是右欄 ContentSlot 的分頁內容（560 寬），血統樹左區是執行期建在 CharacterDs3Main 底下的 Ds3BloodlineTree；線上版實測 Ds3BloodlineTree 1200×1080＝主體 1920−720 × 1080，符合 PROG-2-9041 | 變更: playtest-online.js 改量 Ds3BloodlineTree | 驗證: 線上版（https://eaglhuang.github.io/3klife-play/）以修正後腳本實跑 6/7 步通過（唯一失敗為 PROG-2-9106 轉蛋返回）；把 PROG-2-9106 修正邏輯注入線上版後 7/7 通過；compute-gate standard、test tsc 0、run-cli ALL PASS 7737",
+      "completed_at": "2026-11-16T15:00:00+08:00"
     },
     {
       "id": "PROG-2-9106",
       "title": "轉蛋返回大廳後城池底欄 BtnCat* 消失",
       "phase": "2",
-      "status": "in-progress",
+      "status": "done",
       "priority": "P1",
       "owner": "ClaudeCode_claude-opus-5-5",
       "created_at": "2026-11-16T12:00:00+08:00",
@@ -5852,13 +5854,14 @@
         "docs/agent-briefs/tasks/PROG/PROG-2-9106.md",
         "docs/tasks/tasks-prog.json"
       ],
-      "notes": "2026-11-16 | 狀態: in-progress"
+      "notes": "2026-11-16 | 狀態: done | 結論: 真 bug，已修 | 原因: 轉蛋是 UIManager 替換式頁面，打開時收掉 LobbyMain（城池底欄 BtnCat*、季節 HUD）；返回鈕 GachaReturnToLobby 呼叫 returnToLobbyHall 只關宿主、直接開大堂，UIManager 仍停在 GachaMain，LobbyMain 不回來（之後從別頁返回還會把轉蛋翻回來；戰後季報彈窗也被埋在大堂下） | 變更: 新增 ui/core/LobbyHallReturn.ts（restoreLobbyMainUi：沿歷史逐頁 close 直到 LobbyMain，沒有就 open）、LobbyScene.returnToLobbyHall 呼叫並防重入、tests/LobbyHallReturn.test.ts 5 案 | 實跑證據: 同邏輯注入線上版後返回大堂 BtnCatShop 在、getCurrentUI()=LobbyMain、大堂在最上層 | 驗證: 線上版（https://eaglhuang.github.io/3klife-play/）以修正後腳本實跑 6/7 步通過（唯一失敗為 PROG-2-9106 轉蛋返回）；把 PROG-2-9106 修正邏輯注入線上版後 7/7 通過；compute-gate standard、test tsc 0、run-cli ALL PASS 7737",
+      "completed_at": "2026-11-16T15:00:00+08:00"
     },
     {
       "id": "PROG-2-9107",
       "title": "大廳點走動小人後對話泡泡未出現",
       "phase": "2",
-      "status": "in-progress",
+      "status": "done",
       "priority": "P1",
       "owner": "ClaudeCode_claude-opus-5-5",
       "created_at": "2026-11-16T12:00:00+08:00",
@@ -5872,7 +5875,8 @@
         "docs/agent-briefs/tasks/PROG/PROG-2-9107.md",
         "docs/tasks/tasks-prog.json"
       ],
-      "notes": "2026-11-16 | 狀態: in-progress"
+      "notes": "2026-11-16 | 狀態: done | 結論: 腳本預期錯 | 證據: 泡泡由 LobbyHallScreenBinder 以 _ucufId 'lobby-hall-screen.bubble' 找節點，實際節點名是轉換器流水號 LobbyHallScreen_div_50，腳本用名稱 regex (^|.)bubble$ 永遠找不到；改用 _ucufId 後線上版點 crowd-gongsun-zan 237ms 內泡泡 LobbyHallScreen_div_50 變 active | 變更: playtest-online.js 新增 activeUcufNodes 依語意 id 找節點 | 另記: 開機背景第 37 個面板掛載失敗（TypeError reading 'name'）偶發 console error，與本卡無關 | 驗證: 線上版（https://eaglhuang.github.io/3klife-play/）以修正後腳本實跑 6/7 步通過（唯一失敗為 PROG-2-9106 轉蛋返回）；把 PROG-2-9106 修正邏輯注入線上版後 7/7 通過；compute-gate standard、test tsc 0、run-cli ALL PASS 7737",
+      "completed_at": "2026-11-16T15:00:00+08:00"
     }
   ]
 }
