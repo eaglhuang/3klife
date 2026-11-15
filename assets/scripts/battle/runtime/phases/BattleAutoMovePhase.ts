@@ -1,5 +1,5 @@
 // @spec-source → 戰場部署系統.md (doc_spec_0040)、demo_技術架構.md (doc_tech_0015)；PROG-2-1429 依建檔紀錄補標出處
-import { BattleTactic, EVENT_NAMES, Faction, StatusEffect, TerrainType, TroopType } from '../../../core/config/Constants';
+import { BattleTactic, EVENT_NAMES, Faction, GAME_CONFIG, StatusEffect, TerrainType, TroopType } from '../../../core/config/Constants';
 import { services } from '../../../core/managers/ServiceLoader';
 import type { TroopUnit } from '../../../core/models/TroopUnit';
 import type { BattleState } from '../../models/BattleState';
@@ -22,8 +22,9 @@ const FORWARD_DIR: Record<Faction, number> = {
  * 原因：實機騎兵在平原一回合可從深度 0 衝到深度 6（基礎移動 + 地形 + 適性等加成疊加且無上限），
  * 幾乎一回合橫越全場，玩家看不懂也沒有應對空間。上限套在所有加成算完之後，對整回合累計生效，
  * 我方與敵方一致。被擊退、強制位移（forcedMove）、技能瞬移不計入，只限制一般自動前進。
+ * 數值來源：GAME_CONFIG.maxMoveCellsPerTurn（Constants.ts）。此處轉出供測試引用。
  */
-export const MAX_MOVE_CELLS_PER_TURN = 3;
+export const MAX_MOVE_CELLS_PER_TURN: number = GAME_CONFIG.maxMoveCellsPerTurn;
 
 export interface BattleAutoMovePhaseContext {
   readonly state: BattleState;
