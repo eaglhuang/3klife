@@ -1965,6 +1965,25 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "displayStatus": "not-yet-verified",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/wei_yan__魏延__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "78ae62ba81bf26b8ed58ef6fb9590927becb1acec73a5f0001d8ab8bd6d0576a",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "long-handled single-edged dao",
+            "gaze": "direct-to-camera",
+            "sourceStanding": "standing/wei_yan__魏延__standing_0003.png",
+            "poseLabel": "低身前踏，上撩斜切",
+            "note": "沿用松綠、炭黑、古銅甲色及原立姿單刃長柄彎刀；等比例縮放置入中央安全區。"
+          }
+        ]
       }
     },
     {
