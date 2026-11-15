@@ -4986,7 +4986,7 @@
         "docs/tasks/tasks-prog.json",
         "docs/web-playtest-online.md"
       ],
-      "notes": "2026-11-15 | 狀態: done | 驗證: compute-gate standard 12/12、test tsc 0、run-cli ALL PASS 7681 passed/3 skipped；線上版實跑 0/6：開機 pageerror TypeError reading off，大廳停在「啟動遇到問題」，開場規格中 BtnDestinyRoll/BtnDestinyConfirm/BtnFrame0/BtnNextTutorial 未出現，大廳後續步驟無法驗證 | 變更: 新增 tools_node/playtest-online.js、docs/web-playtest-online.md | 阻塞: 遊戲端開機 pageerror 待修（只記錄，未改遊戲程式）",
+      "notes": "2026-11-15 | 狀態: done | 驗證: compute-gate standard 12/12、test tsc 0、run-cli ALL PASS 7691 passed/3 skipped（合併 master 後）；線上版實跑 0/6：開機 pageerror TypeError reading off，大廳停在「啟動遇到問題」，開場規格中 BtnDestinyRoll/BtnDestinyConfirm/BtnFrame0/BtnNextTutorial 未出現，大廳後續步驟無法驗證 | 變更: 新增 tools_node/playtest-online.js、docs/web-playtest-online.md | 阻塞: 遊戲端開機 pageerror 待修（只記錄，未改遊戲程式）",
       "completed_at": "2026-11-15T00:00:00+08:00"
     }
   ]
