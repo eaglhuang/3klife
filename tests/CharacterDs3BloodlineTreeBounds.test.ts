@@ -1,34 +1,36 @@
 import { TestSuite, assert } from './TestRunner';
-import { DS3_BLOODLINE_LEFT_REGION_WIDTH, ds3BloodlineTreeCenterX } from '../assets/scripts/ui/components/character-ds3/Ds3BloodlineTreeGeometry';
+import { DS3_RIGHT_COLUMN_WIDTH, ds3BloodlineRegion } from '../assets/scripts/ui/components/character-ds3/Ds3BloodlineTreeGeometry';
 import { coverSize } from '../assets/scripts/ui/core/ScreenBackdrop';
 
-/** 左區設計寬（62% × 1920）：樹不可超過這個範圍，否則會蓋到右欄 ContentSlot（x 1200 起） */
-const LEFT_REGION_WIDTH = DS3_BLOODLINE_LEFT_REGION_WIDTH;
-
-/** 把樹根中心 x 換算成樹左緣（host 原點在中心） */
-function treeLeftEdge(hostWidth: number): number {
-    return ds3BloodlineTreeCenterX(hostWidth) - LEFT_REGION_WIDTH / 2;
+/** 左區四邊（host 原點在中心） */
+function edges(hostWidth: number, hostHeight: number): { left: number; right: number; top: number; bottom: number } {
+    const r = ds3BloodlineRegion(hostWidth, hostHeight);
+    return { left: r.x - r.width / 2, right: r.x + r.width / 2, top: r.height / 2, bottom: -r.height / 2 };
 }
 
 export function createCharacterDs3BloodlineTreeBoundsSuite(): TestSuite {
     const suite = new TestSuite('CharacterDs3BloodlineTreeBounds');
 
-    suite.test('16:9 設計寬：樹貼齊左緣 0～1190，與舊版位置一致', () => {
-        assert.equals(-365, ds3BloodlineTreeCenterX(1920));
-        assert.equals(-960, treeLeftEdge(1920));
+    suite.test('16:9 設計尺寸：左區 0～1200 寬、1080 高，右緣正好貼右欄', () => {
+        const r = ds3BloodlineRegion(1920, 1080);
+        assert.equals(1200, r.width);
+        assert.equals(1080, r.height);
+        assert.equals(-360, r.x);
+        assert.equals(960 - DS3_RIGHT_COLUMN_WIDTH, edges(1920, 1080).right);
     });
 
-    suite.test('寬視窗（host 2009 寬）：樹仍貼齊左緣，不隨主體中心右移', () => {
-        // 舊版固定 -365 在 2009 寬下左緣會落在 -960+44 處，右緣壓進 ContentSlot
-        const right = ds3BloodlineTreeCenterX(2009) + LEFT_REGION_WIDTH / 2;
-        assert.equals(-1004.5, treeLeftEdge(2009));
-        assert.equals(-1004.5 + LEFT_REGION_WIDTH, right);
-    });
-
-    suite.test('任意主體寬度：樹左緣恆為主體左緣', () => {
-        for (const w of [1920, 2009, 2400, 2832]) {
-            assert.equals(-w / 2, treeLeftEdge(w));
+    suite.test('寬視窗：左區跟著變寬，左貼主體左緣、右貼右欄，中間不留縫', () => {
+        for (const w of [2009, 2400, 2832]) {
+            const e = edges(w, 1080);
+            assert.equals(-w / 2, e.left);
+            assert.equals(w / 2 - DS3_RIGHT_COLUMN_WIDTH, e.right);
         }
+    });
+
+    suite.test('高視窗（比 16:9 高）：左區上下撐滿主體，不露出底下人物圖', () => {
+        const e = edges(1920, 1514);
+        assert.equals(757, e.top);
+        assert.equals(-757, e.bottom);
     });
 
     suite.test('底圖 cover：主體比設計寬時，底圖仍蓋滿主體（不留兩側）', () => {
