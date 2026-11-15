@@ -464,7 +464,33 @@
         ]
       },
       "battle": {
-        "status": "not-created"
+        "activeVersion": "0002",
+        "status": "review-pending",
+        "displayStatus": "not-yet-verified",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/xiao_qiao__小喬__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "d26340ff5f64dfd7b190fa8d5386eda4d94c2a05e16ca10b190659423212e996",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "paired hand fans",
+            "sourceStanding": "standing/xiao_qiao__小喬__standing_0002.png",
+            "note": "Pre-existing remote battle artwork had no catalog entry; retained unchanged pending owner review."
+          },
+          {
+            "version": "0002",
+            "file": "battle/xiao_qiao__小喬__battle_0002.png",
+            "status": "review-pending",
+            "sha256": "1a545d996c07bb05106cfb0ce2daab9b816683d7418af49b2e9d27533d5c312a",
+            "canvas": "1024x1536 RGBA",
+            "poseSelection": "B; turning dual-fan sweep with raised guard",
+            "gaze": "toward camera",
+            "weaponClass": "paired hand fans",
+            "sourceStanding": "standing/xiao_qiao__小喬__standing_0002.png",
+            "note": "New candidate. Transparent alpha confirmed; 125px and 250px previews reviewed. Awaiting owner review; not integrated into runtime."
+          }
+        ]
       },
       "avatar": {
         "activeVersion": "0002",
