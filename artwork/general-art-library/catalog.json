@@ -6419,6 +6419,25 @@
             "qc": "125px inline preview: centered three-quarter face with composed confident half-smile; full hair ornament and chin; crop at shoulder guard tops with no central chest panel; transparent corner alpha."
           }
         ]
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "poseLabel": "低身側步，斜劍護身",
+        "weaponClass": "sword",
+        "poseSelection": "AI-selected distinct pose",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/zhang_chun_hua__張春華__battle_0001.png",
+            "status": "review-pending",
+            "poseLabel": "低身側步，斜劍護身",
+            "weaponClass": "sword",
+            "sha256": "9a21f2d5d816a45301accacbd56ecdab907d9f28da52a4160c24aa31abed5ba2",
+            "canvas": "1024x1536 RGBA",
+            "qc": "Full-body three-quarter combat stance; eyes to camera; straight sword; crop/scale adjusted to x=128..896 safe width."
+          }
+        ]
       }
     },
     {
