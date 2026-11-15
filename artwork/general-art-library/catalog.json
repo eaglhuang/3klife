@@ -1362,6 +1362,23 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/xu_zhu__許褚__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "4e919cd18b3489d4ce48006d32a5b6255747f6647704843e0c78b710c184ef56",
+            "canvas": "256x256 RGBA",
+            "faceCenter": "visually centered",
+            "crop": "shoulder-line",
+            "source": "avatars/xu_zhu__許褚__avatar_0002.png",
+            "note": "Standing-derived avatar crop only; full topknot, face and chin retained, crop ends at upper shoulder line without torso redraw."
+          }
+        ]
       }
     },
     {
