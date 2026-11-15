@@ -14,7 +14,7 @@ class Node {
 }
 class Skeleton {
   constructor() { this.calls = []; this.timeScale = 1; }
-  setAnimation(_track, name, loop) { this.calls.push({ name, loop }); }
+  setAnimation(_track, name, loop) { this.calls.push({ name, loop }); this.track = { trackTime: 0, delay: 0 }; return this.track; }
   setSkin(name) { this.skin = name; }
 }
 class SkeletonData {}
@@ -40,6 +40,47 @@ const { SpineUnitOverlay } = require('../assets/scripts/battle/views/SpineGenera
 const { generalSpineConfig, soldierSpineConfig } = require('../assets/scripts/battle/shared/UnitPresentationConfig');
 
 (async () => {
+  // 小隊：隊員共用同一份骨架資料、依人數顯示、站在帶頭者面向的後方、動作錯開
+  {
+    const squadRoot = new Node('squadRoot');
+    const squadOverlay = new SpineUnitOverlay(() => squadRoot, () => 1);
+    const cfg = soldierSpineConfig(false);
+    const before = loadCounts.get(cfg.path) || 0;
+    assert.equal(squadOverlay.sync('s1', cfg, 100, 50, 1, false, 0, true, 3), true);
+    squadOverlay.update(0);
+    assert.equal(loadCounts.get(cfg.path) - before, 1, '三個人只載入一次素材');
+    const lead = squadRoot.children.find(n => n.name === 'SpineUnit_s1');
+    const m1 = squadRoot.children.find(n => n.name === 'SpineUnit_s1_m1');
+    const m2 = squadRoot.children.find(n => n.name === 'SpineUnit_s1_m2');
+    assert.ok(lead && m1 && m2);
+    assert.equal(m1.getComponent(Skeleton).skeletonData, lead.getComponent(Skeleton).skeletonData);
+    assert.equal(m1.active, true); assert.equal(m2.active, true);
+    assert.ok(m1.position.x < lead.position.x, '面向右時隊員在左後方');
+    assert.equal(m1.getComponent(Skeleton).calls[0].name, 'idle');
+    assert.ok(m1.getComponent(Skeleton).track.trackTime > 0, '循環動作起始時間錯開');
+    assert.ok(lead.index > m1.index, '帶頭者比上方的隊員更靠近鏡頭');
+    assert.ok(m2.index > lead.index, '下方的隊員蓋在帶頭者上面');
+    squadOverlay.sync('s1', cfg, 100, 50, 1, false, 0, true, 2);
+    squadOverlay.update(0);
+    assert.equal(m1.active, true); assert.equal(m2.active, false, '兵力下降後少一人');
+    // 朝向在建立時決定：另開一隊面向左的來驗站位與鏡像造型
+    squadOverlay.sync('s2', cfg, 300, 50, -1, false, 0, true, 3); squadOverlay.update(0);
+    const lead2 = squadRoot.children.find(n => n.name === 'SpineUnit_s2');
+    const m1b = squadRoot.children.find(n => n.name === 'SpineUnit_s2_m1');
+    assert.ok(m1b.position.x > lead2.position.x, '面向左時隊員在右後方');
+    assert.equal(m1b.getComponent(Skeleton).skin, 'hand_mirror');
+    assert.ok(m1b.scale.x < 0, '隊員跟著帶頭者翻面');
+    squadOverlay.play('s1', 'attack'); squadOverlay.update(0);
+    assert.equal(m1.getComponent(Skeleton).calls.at(-1).name, 'duel_attack');
+    assert.ok(m1.getComponent(Skeleton).track.delay > 0, '一次性動作依序出手');
+    squadOverlay.sync('s1', cfg, 100, 50, 1, false, 0, false, 3);
+    squadOverlay.update(0);
+    assert.equal(m1.active, false, '帶頭者隱藏時隊員也隱藏');
+    squadOverlay.remove('s1');
+    assert.equal(m1.isValid, false); assert.equal(m2.isValid, false);
+    const { squadMemberCount } = require('../assets/scripts/battle/shared/UnitPresentationConfig');
+    assert.deepEqual([100, 67, 66, 34, 33, 1, 0].map(hp => squadMemberCount(hp, 100)), [3, 3, 2, 2, 1, 1, 1]);
+  }
   const root = new Node('root');
   const overlay = new SpineUnitOverlay(() => root, () => 1);
   const general = generalSpineConfig('zhao-yun');

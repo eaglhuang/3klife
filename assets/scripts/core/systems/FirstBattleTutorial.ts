@@ -61,7 +61,7 @@ export function isFirstBattleTeachingDone(progress: FirstBattleProgress): boolea
 /** 各步驟浮窗文字（暫定，待 P0 UI_ 字串表定案） */
 export const FIRST_BATTLE_HINT_TEXT: Readonly<Record<FirstBattleStep, string>> = Object.freeze({
     deploy: '從底線選一位部將，點擊格子部署',
-    advance: '讓部隊向前推進，逼近敵陣',
+    advance: '部署後按「結束回合」，讓部隊向前推進，逼近敵陣',
     clash: '讓我方部隊與敵軍正面交鋒，完成對推',
 });
 
