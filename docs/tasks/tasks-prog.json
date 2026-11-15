@@ -4706,6 +4706,60 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9037",
+      "title": "轉蛋立繪統一腳底基準線與身高比例",
+      "owner": "claude-code-haiku-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-15",
+      "created_by_agent": "claude-code-haiku-5-5",
+      "started_at": "2026-11-15T11:40:20+08:00",
+      "started_by_agent": "claude-code-haiku-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "轉蛋橫幅立繪改用量測的不透明邊界（頭頂／腳底／中心），統一腳底基準線與身高比例縮放，以最高者驗算頭頂不出畫面。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "單元測試涵蓋基準線、身高比例、最高者驗算與全部立繪資料",
+        "TypeScript 與 compute gate 通過",
+        "7456 預覽腳底同高、比例一致、最高者不超出畫面並截圖比對"
+      ],
+      "deliverables": [
+        "tools_node/measure-gacha-portrait-bounds.js",
+        "assets/resources/data/general-portrait-bounds.json",
+        "assets/scripts/ui/core/GachaPortraitBaseline.ts",
+        "LobbyScene 轉蛋橫幅立繪接入",
+        "tests/gacha-portrait-baseline.test.ts"
+      ],
+      "notes": "2026-11-15 | 狀態: in-progress | 驗證: 單元測試 ALL PASS；tsc 0 錯誤 | 變更: 量測工具＋邊界資料＋基準線換算；橫幅立繪改統一腳底與身高 | 待辦: 7456 實跑截圖比對（主目錄需同步才能看到工作樹改動）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
   "schemaId": "atm.actorRegistry",
   "specVersion": "0.1.0",
-  "generatedAt": "2026-11-14T16:17:59.912Z",
+  "generatedAt": "2026-11-15T11:22:37.902Z",
   "actors": [
     {
       "actorId": "antigravity-gemini",
@@ -21,7 +21,7 @@
       "gitName": "claude-code-haiku-5-5",
       "gitEmail": "claude-code-haiku-5-5@atm.local",
       "createdAt": "2026-10-13T15:10:33.820Z",
-      "updatedAt": "2026-10-13T15:10:33.820Z"
+      "updatedAt": "2026-11-15T11:22:37.900Z"
     },
     {
       "actorId": "claude-code-opus-5-5",
