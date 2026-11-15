@@ -3,6 +3,7 @@ task_id: TASK-AAO-0145
 title: "Auto-generated residue guard and auto-clean before governed commit"
 status: done
 priority: P0
+target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 depends_on:
   - TASK-AAO-0141

@@ -6,6 +6,7 @@ started_at: 2026-06-18T11:00:00Z
 started_by_agent: cursor-gpt-5.2
 notes: "2026-06-18 | delivery 2c6f90664 | close AAF da9c3dd8 planning fd22e776 | build-release-hygiene + governed git entrypoint"
 priority: P1
+target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 depends_on:
   - TASK-AAO-0141

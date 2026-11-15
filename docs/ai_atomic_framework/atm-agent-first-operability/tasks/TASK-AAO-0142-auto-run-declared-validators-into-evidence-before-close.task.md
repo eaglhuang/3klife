@@ -6,6 +6,7 @@ started_at: 2026-06-18T06:00:00Z
 started_by_agent: cursor-gpt-5.2
 owner: atm-core
 priority: P0
+target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 depends_on:
   - TASK-AAO-0015
