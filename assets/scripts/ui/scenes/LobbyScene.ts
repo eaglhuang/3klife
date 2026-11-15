@@ -14,7 +14,7 @@ import { parseLimitedPoolWindows } from '../../core/systems/LimitedPoolSchedule'
 import { expandLimitedPoolRotations, parseLimitedPoolRotations } from '../../core/systems/LimitedPoolRotation';
 import { _decorator, BlockInputEvents, Button, Canvas, Color, Component, instantiate, JsonAsset, Label, Mask, Node, Sprite, sys, UITransform, Widget, resources } from 'cc';
 import { installAdaptiveResolution } from '../core/AdaptiveResolution';
-import { LobbyHallScreenBinder, type HallActorTapView, type LobbyHallDockId, type LobbyHallPanelId } from '../core/LobbyHallScreenBinder';
+import { computeSubMenuCenterX, LobbyHallScreenBinder, type HallActorTapView, type LobbyHallDockId, type LobbyHallPanelId } from '../core/LobbyHallScreenBinder';
 import { hallFestivalIdOf, mainLobbyBackdropOf, resolveHallTheme as resolveHallSceneTheme, type HallThemeConfig } from '../../core/systems/HallTheme';
 import { LobbyBackdrop } from '../core/LobbyBackdrop';
 import { sceneGambitNotice, sceneGambitPendingNotice } from '../core/HallSceneGambitText';
@@ -362,6 +362,33 @@ interface GachaPoolConfigLike {
     poolId: string;
     poolType: string;
     candidateIds?: string[];
+}
+
+function alignSubMenuToHall(
+    menu: Node,
+    hall: Node | undefined,
+    overHall: boolean,
+    category: LobbyCategoryId | null | undefined,
+    lobbyHall: LobbyHallScreenBinder | null | undefined,
+): void {
+    if (BlockInputEvents && overHall && !menu.getComponent(BlockInputEvents)) menu.addComponent(BlockInputEvents);
+    const widget = menu.getComponent(Widget);
+    if (!widget) return;
+    if (overHall && hall && category) {
+        const dockId: LobbyHallDockId = category === 'nurture' ? 'training' : category;
+        const buttonX = lobbyHall?.getDockButtonCenterX(dockId);
+        const hallW = hall.getComponent(UITransform)?.width ?? 1920;
+        const menuW = menu.getComponent(UITransform)?.width ?? 480;
+        widget.isAlignHorizontalCenter = true;
+        widget.horizontalCenter = buttonX !== null && buttonX !== undefined
+            ? computeSubMenuCenterX(buttonX, hallW, menuW)
+            : 0;
+        widget.bottom = 120;
+        return;
+    }
+    widget.isAlignHorizontalCenter = true;
+    widget.horizontalCenter = 0;
+    widget.bottom = 156;
 }
 
 @ccclass('LobbyScene')
@@ -1457,8 +1484,8 @@ export class LobbyScene extends Component {
         const target = overHall ? hall : home.parent;
         if (menu.parent !== target) menu.setParent(target, true);
         menu.setSiblingIndex(overHall ? target.children.length - 1 : home.index);
+        alignSubMenuToHall(menu, hall, overHall, this._cityHubCategory, this._lobbyHall);
         menu.getComponent(Widget)?.updateAlignment();
-        // 子選單壓在中間武將名牌上：展開時暫藏名牌，收起再顯示
         this._lobbyHall?.setCrowdTagsVisible(!overHall);
     }
 
@@ -5307,6 +5334,11 @@ export class LobbyScene extends Component {
         }
 
         this._ensureWidget(hostNode);
+        // 彈窗／全螢幕 host 必須吃掉點擊，避免點空白或按鈕邊緣穿透到底層大廳與武將
+        const nonBlockingHosts = new Set(['LobbyHallHost', 'LobbyMainHost', 'SeasonHudHost']);
+        if (BlockInputEvents && !nonBlockingHosts.has(hostName) && !hostNode.getComponent(BlockInputEvents)) {
+            hostNode.addComponent(BlockInputEvents);
+        }
         const backgroundIndex = this.node.getChildByName('Background')?.getSiblingIndex() ?? -1;
         hostNode.setSiblingIndex(Math.max(backgroundIndex + 1, hostNode.getSiblingIndex()));
 
