@@ -1200,6 +1200,20 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/guan_yu__關羽__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "81f448b7db74160a4c2e312b21c6962f23b7edce97e4b6c992569fc917b2d8d5",
+            "canvas": "1254x1254 RGBA",
+            "note": "Existing remote small-avatar file discovered without a catalog record; crop provenance remains to be confirmed before approval."
+          }
+        ]
       }
     },
     {
@@ -1531,6 +1545,20 @@
             "canvas": "1024x1536 RGBA",
             "weaponClass": "bow",
             "note": "Existing pose A artwork registered from the library; no duplicate pose generated."
+          }
+        ]
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/huang_zhong__黃忠__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "da74e1743b1cae619ad32fd2cffaca0e8fa9be7332c781246941d99cc500bb79",
+            "canvas": "1254x1254 RGBA",
+            "note": "Existing remote small-avatar file discovered without a catalog record; crop provenance remains to be confirmed before approval."
           }
         ]
       }
