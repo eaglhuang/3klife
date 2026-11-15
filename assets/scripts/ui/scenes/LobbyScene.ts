@@ -762,8 +762,15 @@ export class LobbyScene extends Component {
             () => this._mountSeasonReportPanel(),
             () => this._mountSandtableTerritoryPanel(),
         ];
-        for (const mount of mounts) {
-            await mount();
+        for (let index = 0; index < mounts.length; index++) {
+            const mount = mounts[index];
+            // 單一面板掛載失敗（舊存檔資料、畫面規格載入錯誤）只記錄並跳過，
+            // 不可中斷整串掛載，否則「幕府大堂整備中」遮罩永遠收不起來（PROG-2-9035）
+            try {
+                await mount();
+            } catch (error) {
+                UCUFLogger.error(LogCategory.UI, `[LobbyScene] 第 ${index} 個面板掛載失敗，已略過`, error);
+            }
             if (openingFirst) this._keepOpeningOnTop();
         }
         this._registerUIControllers();
