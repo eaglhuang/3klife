@@ -1506,6 +1506,24 @@
             "note": "Standing-derived avatar crop only; full topknot, face and chin retained, crop ends at upper shoulder line without torso redraw."
           }
         ]
+      },
+      "battle": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/xu_zhu__許褚__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "94b541695083b3ffc7e3a7fb77844484a6928718f0f143350a2c9625b2ef9e7e",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "long-handled dao",
+            "poseLabel": "低身轉體水平橫掃",
+            "gaze": "direct-to-camera",
+            "sourceStanding": "standing/xu_zhu__許褚__standing_0002.png",
+            "note": "延續核定站姿的藍金虎紋重甲；全身與長柄大刀完整入框，刀柄筆直。候選待審，未接入遊戲。"
+          }
+        ]
       }
     },
     {
