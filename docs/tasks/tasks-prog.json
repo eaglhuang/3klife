@@ -5112,6 +5112,94 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9049",
+      "title": "戰場音效與受擊反應補齊",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-16T01:54:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "系統性驗證盤點：戰場只有受擊、武器、雷三種聲音；移動、部署、陣亡、治療、增益、閃避、暴擊、城寨受擊都沒有音效，主將受擊沒有命中特效，陣亡戰報顯示單位代號。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: done | 驗證: 實機攔截到 start／footstep／weapon／hurt／boom／die 依事件播放；單元測試全過、型別檢查 0 錯 | 變更: 九個新音效鍵接到部署、移動、陣亡、治療、增益、閃避、暴擊、城寨受擊；主將受擊補命中特效；陣亡戰報顯示名稱 | 阻塞: 無；音色為既有音檔暫代，待音效豐富度一併重選",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9050",
+      "title": "戰場按鈕回饋缺口修正",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-16T01:54:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "按鈕盤點：計謀鈕不可用時點了沒反應；自動鈕一按就不可逆地結算整場；未指派奧義的佔位列可以被選取送出。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: done | 驗證: 實機點計謀鈕出現「計謀暫不可用：計謀點不足」；單元測試全過、型別檢查 0 錯 | 變更: 計謀鈕灰階可點並說明原因、自動鈕二次確認、未指派奧義不可選 | 阻塞: 無；提示文字尚未走多語系",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
