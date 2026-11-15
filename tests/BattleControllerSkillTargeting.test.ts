@@ -508,7 +508,7 @@ export function createBattleControllerSkillTargetingSuite(): TestSuite {
         assert.equals(3, cavalry.depth);
     });
 
-    suite.test('tryDeployTroop：一般戰場新部署的騎兵仍保留正常移動距離', () => {
+    suite.test('tryDeployTroop：新部署的騎兵當回合原地待命，下一回合才以正常移動距離前進', () => {
         services().initialize();
         const ctrl = new BattleController();
         const playerGeneral = createGeneral('ma-chao', Faction.Player, 'ma-chao-charge');
@@ -519,9 +519,16 @@ export function createBattleControllerSkillTargetingSuite(): TestSuite {
         assert.isTrue(outcome.ok);
         assert.isDefined(outcome.unit);
 
-        // 騎兵移動力 2 + 平原加成 2（TerrainTroopRules，PROG-2-0088）= 4，從部署格 depth 0 前進到 depth 4
-        const result = ctrl.resolvePlayerTurn();
-        assert.equals('ongoing', result);
+        // 部署當回合不行動（PROG-2-9048）
+        assert.equals('ongoing', ctrl.resolvePlayerTurn());
+        assert.equals(0, outcome.unit!.depth);
+        assert.isTrue(ctrl['turnManager'].isUnitDeployedThisTurn(outcome.unit!.id));
+
+        // 下一回合：騎兵移動力 2 + 平原加成 2（TerrainTroopRules，PROG-2-0088）= 4，從部署格 depth 0 前進到 depth 4
+        ctrl.resolveEnemyTurn();
+        ctrl.finalizeEnemyTurn();
+        assert.isFalse(ctrl['turnManager'].isUnitDeployedThisTurn(outcome.unit!.id));
+        assert.equals('ongoing', ctrl.resolvePlayerTurn());
         assert.equals(4, outcome.unit!.depth);
     });
 

@@ -40,7 +40,7 @@ function run(sc: Scene): void {
     const context: BattleAutoMovePhaseContext = {
         state: sc.state,
         actingFaction: Faction.Player,
-        turnManager: { markUnitMoved: () => undefined } as unknown as BattleAutoMovePhaseContext['turnManager'],
+        turnManager: { markUnitMoved: () => undefined, isUnitDeployedThisTurn: () => false } as unknown as BattleAutoMovePhaseContext['turnManager'],
         consumeTileBuff: () => undefined,
         getFactionUnits: (faction) => [...sc.state.units.values()].filter((unit) => unit.faction === faction),
         isCellMovementBlocked: (lane, depth) => lane === 2 && sc.blockedDepths.has(depth),

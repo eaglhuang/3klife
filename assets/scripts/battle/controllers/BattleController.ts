@@ -468,6 +468,7 @@ export class BattleController {
     unit.factorEffects = factorBattleEffectsOf(unit.factorGenes, this.factorEffectMap);
     if (options.tally) this.bindTallyAffinity(unit, options.tally);
     this.turnManager.notePlayerDeployment();
+    this.turnManager.markUnitDeployed(unit.id);
     this.checkBattleRelationEvents();
     if (this.sortie) {
       // 帶虎符出陣時登記卡片與名稱，供戰後逐虎符回報（PROG-2-1751）
@@ -1227,7 +1228,11 @@ export class BattleController {
           turn: services().battle.getSnapshot().turn,
           difficultyBonus: this.state.aiDifficultyBonus,
           tutorialBattle: this.tutorialBattle,
-          spawnEnemyUnit: (type, lane, depth, unitName) => this.unitSpawner.spawnUnit(type, Faction.Enemy, lane, depth, unitName),
+          spawnEnemyUnit: (type, lane, depth, unitName) => {
+            const unit = this.unitSpawner.spawnUnit(type, Faction.Enemy, lane, depth, unitName);
+            this.turnManager.markUnitDeployed(unit.id);
+            return unit;
+          },
           isCellMovementBlocked: (lane, depth) => this.combatResolver.isCellMovementBlocked(lane, depth),
           announce: (line) => services().event.emit(EVENT_NAMES.BattleSkillNotice, line),
         });
@@ -1308,6 +1313,7 @@ export class BattleController {
           resolveActionResetAfterAttack: (attacker, didKill, actions) => this.combatResolver.resolveActionResetAfterAttack(attacker, didKill, actions),
           onGeneralUnitKilled: (faction, svc) => this.combatResolver.onGeneralUnitKilled(faction, svc),
           onUnitKilled: (unit, killer, svc) => this.combatResolver.onUnitKilled(unit, killer, svc),
+          isUnitDeployedThisTurn: (unitId) => this.turnManager.isUnitDeployedThisTurn(unitId),
         });
         return {};
       case 'enemy-combat-resolve':
@@ -1323,6 +1329,7 @@ export class BattleController {
           resolveActionResetAfterAttack: (attacker, didKill, actions) => this.combatResolver.resolveActionResetAfterAttack(attacker, didKill, actions),
           onGeneralUnitKilled: (faction, svc) => this.combatResolver.onGeneralUnitKilled(faction, svc),
           onUnitKilled: (unit, killer, svc) => this.combatResolver.onUnitKilled(unit, killer, svc),
+          isUnitDeployedThisTurn: (unitId) => this.turnManager.isUnitDeployedThisTurn(unitId),
         });
         return {};
       case 'player-special-resolve':
