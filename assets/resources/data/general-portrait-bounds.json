@@ -1,0 +1,1895 @@
+{
+  "$comment": "全身立繪不透明邊界（tools_node/measure-gacha-portrait-bounds.js 產出，勿手改）。單位：原圖像素，y 向下。",
+  "version": 1,
+  "alphaThreshold": 16,
+  "portraits": {
+    "ahui-nan": {
+      "w": 512,
+      "h": 768,
+      "top": 17,
+      "bottom": 751,
+      "cx": 250.5,
+      "heightRatio": 1
+    },
+    "bao-san-niang": {
+      "w": 1024,
+      "h": 1536,
+      "top": 3,
+      "bottom": 1531,
+      "cx": 510.5,
+      "heightRatio": 1
+    },
+    "bian-fu-ren": {
+      "w": 512,
+      "h": 768,
+      "top": 4,
+      "bottom": 766,
+      "cx": 239,
+      "heightRatio": 1
+    },
+    "bu-lian-shi": {
+      "w": 1024,
+      "h": 1536,
+      "top": 16,
+      "bottom": 1522,
+      "cx": 491.5,
+      "heightRatio": 1
+    },
+    "bu-zhi": {
+      "w": 1024,
+      "h": 1536,
+      "top": 3,
+      "bottom": 1509,
+      "cx": 498.5,
+      "heightRatio": 1
+    },
+    "cai-shi": {
+      "w": 1024,
+      "h": 1536,
+      "top": 4,
+      "bottom": 1536,
+      "cx": 493.5,
+      "heightRatio": 1
+    },
+    "cai-yan": {
+      "w": 1024,
+      "h": 1536,
+      "top": 11,
+      "bottom": 1521,
+      "cx": 508,
+      "heightRatio": 1
+    },
+    "cao-ang": {
+      "w": 1024,
+      "h": 1536,
+      "top": 108,
+      "bottom": 1414,
+      "cx": 468,
+      "heightRatio": 1
+    },
+    "cao-cao": {
+      "w": 1024,
+      "h": 1536,
+      "top": 9,
+      "bottom": 1517,
+      "cx": 513.5,
+      "heightRatio": 1
+    },
+    "cao-hong": {
+      "w": 512,
+      "h": 768,
+      "top": 1,
+      "bottom": 766,
+      "cx": 256,
+      "heightRatio": 1
+    },
+    "cao-hua": {
+      "w": 1024,
+      "h": 1536,
+      "top": 8,
+      "bottom": 1535,
+      "cx": 503,
+      "heightRatio": 1
+    },
+    "cao-jie": {
+      "w": 512,
+      "h": 768,
+      "top": 26,
+      "bottom": 741,
+      "cx": 253,
+      "heightRatio": 1
+    },
+    "cao-pi": {
+      "w": 1024,
+      "h": 1536,
+      "top": 46,
+      "bottom": 1512,
+      "cx": 511.5,
+      "heightRatio": 1
+    },
+    "cao-ren": {
+      "w": 1024,
+      "h": 1536,
+      "top": 7,
+      "bottom": 1522,
+      "cx": 542.5,
+      "heightRatio": 1
+    },
+    "cao-xian": {
+      "w": 1024,
+      "h": 1536,
+      "top": 3,
+      "bottom": 1534,
+      "cx": 509,
+      "heightRatio": 1
+    },
+    "cao-xiu": {
+      "w": 1024,
+      "h": 1536,
+      "top": 12,
+      "bottom": 1519,
+      "cx": 553.5,
+      "heightRatio": 1
+    },
+    "cao-zhang": {
+      "w": 512,
+      "h": 768,
+      "top": 4,
+      "bottom": 756,
+      "cx": 251,
+      "heightRatio": 1
+    },
+    "cao-zhi": {
+      "w": 1024,
+      "h": 1536,
+      "top": 23,
+      "bottom": 1512,
+      "cx": 522,
+      "heightRatio": 1
+    },
+    "chen-dao": {
+      "w": 1024,
+      "h": 1536,
+      "top": 17,
+      "bottom": 1530,
+      "cx": 540.5,
+      "heightRatio": 1
+    },
+    "chen-qun": {
+      "w": 512,
+      "h": 768,
+      "top": 3,
+      "bottom": 762,
+      "cx": 256,
+      "heightRatio": 1
+    },
+    "chen-tai": {
+      "w": 512,
+      "h": 768,
+      "top": 2,
+      "bottom": 750,
+      "cx": 263.5,
+      "heightRatio": 1
+    },
+    "chen-wu": {
+      "w": 512,
+      "h": 768,
+      "top": 2,
+      "bottom": 764,
+      "cx": 254.5,
+      "heightRatio": 1
+    },
+    "chen-zhi": {
+      "w": 512,
+      "h": 768,
+      "top": 65,
+      "bottom": 720,
+      "cx": 273,
+      "heightRatio": 1
+    },
+    "cheng-bing": {
+      "w": 512,
+      "h": 768,
+      "top": 6,
+      "bottom": 763,
+      "cx": 252,
+      "heightRatio": 1
+    },
+    "cheng-pu": {
+      "w": 1024,
+      "h": 1536,
+      "top": 10,
+      "bottom": 1489,
+      "cx": 487.5,
+      "heightRatio": 1
+    },
+    "cheng-yu": {
+      "w": 512,
+      "h": 768,
+      "top": 1,
+      "bottom": 763,
+      "cx": 255.5,
+      "heightRatio": 1
+    },
+    "da-qiao": {
+      "w": 1024,
+      "h": 1536,
+      "top": 11,
+      "bottom": 1524,
+      "cx": 499.5,
+      "heightRatio": 1
+    },
+    "deng-ai": {
+      "w": 1024,
+      "h": 1536,
+      "top": 32,
+      "bottom": 1506,
+      "cx": 512,
+      "heightRatio": 1
+    },
+    "deng-zhi": {
+      "w": 512,
+      "h": 768,
+      "top": 6,
+      "bottom": 761,
+      "cx": 263.5,
+      "heightRatio": 1
+    },
+    "dian-wei": {
+      "w": 1024,
+      "h": 1536,
+      "top": 29,
+      "bottom": 1481,
+      "cx": 466.5,
+      "heightRatio": 1
+    },
+    "diao-chan": {
+      "w": 971,
+      "h": 1620,
+      "top": 9,
+      "bottom": 1614,
+      "cx": 479.5,
+      "heightRatio": 1
+    },
+    "ding-feng": {
+      "w": 1024,
+      "h": 1535,
+      "top": 49,
+      "bottom": 1479,
+      "cx": 517,
+      "heightRatio": 1
+    },
+    "dong-bai": {
+      "w": 512,
+      "h": 768,
+      "top": 35,
+      "bottom": 738,
+      "cx": 211.5,
+      "heightRatio": 1
+    },
+    "dong-tu-na": {
+      "w": 512,
+      "h": 768,
+      "top": 6,
+      "bottom": 758,
+      "cx": 260.5,
+      "heightRatio": 1
+    },
+    "dong-yun": {
+      "w": 512,
+      "h": 768,
+      "top": 6,
+      "bottom": 761,
+      "cx": 262,
+      "heightRatio": 1
+    },
+    "dong-zhao": {
+      "w": 512,
+      "h": 768,
+      "top": 17,
+      "bottom": 752,
+      "cx": 260,
+      "heightRatio": 1
+    },
+    "dong-zhuo": {
+      "w": 1024,
+      "h": 1536,
+      "top": 40,
+      "bottom": 1508,
+      "cx": 515,
+      "heightRatio": 1
+    },
+    "du-qiong": {
+      "w": 512,
+      "h": 768,
+      "top": 7,
+      "bottom": 762,
+      "cx": 258.5,
+      "heightRatio": 1
+    },
+    "e-huan": {
+      "w": 512,
+      "h": 768,
+      "top": 0,
+      "bottom": 750,
+      "cx": 240.5,
+      "heightRatio": 1
+    },
+    "fa-zheng": {
+      "w": 1024,
+      "h": 1536,
+      "top": 12,
+      "bottom": 1524,
+      "cx": 487.5,
+      "heightRatio": 1
+    },
+    "fan-shi": {
+      "w": 512,
+      "h": 768,
+      "top": 42,
+      "bottom": 730,
+      "cx": 261,
+      "heightRatio": 1
+    },
+    "fei-guan": {
+      "w": 512,
+      "h": 768,
+      "top": 7,
+      "bottom": 760,
+      "cx": 256,
+      "heightRatio": 1
+    },
+    "fei-shi": {
+      "w": 512,
+      "h": 768,
+      "top": 2,
+      "bottom": 764,
+      "cx": 255,
+      "heightRatio": 1
+    },
+    "fei-yi": {
+      "w": 512,
+      "h": 768,
+      "top": 5,
+      "bottom": 760,
+      "cx": 255.5,
+      "heightRatio": 1
+    },
+    "fu-shou": {
+      "w": 512,
+      "h": 768,
+      "top": 0,
+      "bottom": 754,
+      "cx": 258.5,
+      "heightRatio": 1
+    },
+    "fu-tong": {
+      "w": 512,
+      "h": 768,
+      "top": 1,
+      "bottom": 768,
+      "cx": 260,
+      "heightRatio": 1
+    },
+    "gan-ning": {
+      "w": 1024,
+      "h": 1536,
+      "top": 8,
+      "bottom": 1528,
+      "cx": 546.5,
+      "heightRatio": 1
+    },
+    "gan-shi": {
+      "w": 512,
+      "h": 768,
+      "top": 25,
+      "bottom": 743,
+      "cx": 258,
+      "heightRatio": 1
+    },
+    "gao-gan": {
+      "w": 512,
+      "h": 768,
+      "top": 15,
+      "bottom": 747,
+      "cx": 259,
+      "heightRatio": 1
+    },
+    "gao-lan": {
+      "w": 512,
+      "h": 768,
+      "top": 19,
+      "bottom": 748,
+      "cx": 251,
+      "heightRatio": 1
+    },
+    "gongsun-yuan": {
+      "w": 512,
+      "h": 768,
+      "top": 0,
+      "bottom": 766,
+      "cx": 264,
+      "heightRatio": 1
+    },
+    "gongsun-zan": {
+      "w": 1024,
+      "h": 1536,
+      "top": 63,
+      "bottom": 1483,
+      "cx": 498,
+      "heightRatio": 1
+    },
+    "gou-fu": {
+      "w": 512,
+      "h": 768,
+      "top": 3,
+      "bottom": 762,
+      "cx": 249.5,
+      "heightRatio": 1
+    },
+    "gu-yong": {
+      "w": 512,
+      "h": 768,
+      "top": 6,
+      "bottom": 760,
+      "cx": 252.5,
+      "heightRatio": 1
+    },
+    "guan-ning": {
+      "w": 512,
+      "h": 768,
+      "top": 4,
+      "bottom": 763,
+      "cx": 254.5,
+      "heightRatio": 1
+    },
+    "guan-suo": {
+      "w": 512,
+      "h": 768,
+      "top": 2,
+      "bottom": 765,
+      "cx": 261.5,
+      "heightRatio": 1
+    },
+    "guan-xing": {
+      "w": 1024,
+      "h": 1536,
+      "top": 17,
+      "bottom": 1518,
+      "cx": 520,
+      "heightRatio": 1
+    },
+    "guan-yin-ping": {
+      "w": 1024,
+      "h": 1536,
+      "top": 5,
+      "bottom": 1533,
+      "cx": 501,
+      "heightRatio": 1
+    },
+    "guan-yu": {
+      "w": 1024,
+      "h": 1536,
+      "top": 179,
+      "bottom": 1439,
+      "cx": 526.5,
+      "heightRatio": 1
+    },
+    "guo-huai": {
+      "w": 1024,
+      "h": 1536,
+      "top": 10,
+      "bottom": 1521,
+      "cx": 510.5,
+      "heightRatio": 1
+    },
+    "guo-jia": {
+      "w": 1024,
+      "h": 1536,
+      "top": 93,
+      "bottom": 1469,
+      "cx": 518,
+      "heightRatio": 1
+    },
+    "guo-nu-wang": {
+      "w": 512,
+      "h": 768,
+      "top": 34,
+      "bottom": 741,
+      "cx": 257.5,
+      "heightRatio": 1
+    },
+    "guo-tu": {
+      "w": 512,
+      "h": 768,
+      "top": 22,
+      "bottom": 746,
+      "cx": 247.5,
+      "heightRatio": 1
+    },
+    "han-dang": {
+      "w": 1024,
+      "h": 1536,
+      "top": 102,
+      "bottom": 1495,
+      "cx": 467,
+      "heightRatio": 1
+    },
+    "han-hao": {
+      "w": 512,
+      "h": 768,
+      "top": 21,
+      "bottom": 748,
+      "cx": 266.5,
+      "heightRatio": 1
+    },
+    "han-sui": {
+      "w": 1024,
+      "h": 1536,
+      "top": 12,
+      "bottom": 1501,
+      "cx": 514,
+      "heightRatio": 1
+    },
+    "han-xuan": {
+      "w": 512,
+      "h": 768,
+      "top": 5,
+      "bottom": 764,
+      "cx": 268,
+      "heightRatio": 1
+    },
+    "he-qi": {
+      "w": 1024,
+      "h": 1536,
+      "top": 13,
+      "bottom": 1503,
+      "cx": 467,
+      "heightRatio": 1
+    },
+    "hu-zun": {
+      "w": 512,
+      "h": 768,
+      "top": 72,
+      "bottom": 682,
+      "cx": 259,
+      "heightRatio": 1
+    },
+    "hua-man": {
+      "w": 1024,
+      "h": 1536,
+      "top": 4,
+      "bottom": 1524,
+      "cx": 517.5,
+      "heightRatio": 1
+    },
+    "hua-tuo": {
+      "w": 1024,
+      "h": 1536,
+      "top": 5,
+      "bottom": 1525,
+      "cx": 502.5,
+      "heightRatio": 1
+    },
+    "hua-xin": {
+      "w": 512,
+      "h": 768,
+      "top": 10,
+      "bottom": 759,
+      "cx": 252.5,
+      "heightRatio": 1
+    },
+    "huang-gai": {
+      "w": 1024,
+      "h": 1536,
+      "top": 23,
+      "bottom": 1512,
+      "cx": 490,
+      "heightRatio": 1
+    },
+    "huang-quan": {
+      "w": 1023,
+      "h": 1537,
+      "top": 8,
+      "bottom": 1531,
+      "cx": 517,
+      "heightRatio": 1
+    },
+    "huang-yue-ying": {
+      "w": 1024,
+      "h": 1536,
+      "top": 5,
+      "bottom": 1535,
+      "cx": 507.5,
+      "heightRatio": 1
+    },
+    "huang-zhong": {
+      "w": 512,
+      "h": 768,
+      "top": 14,
+      "bottom": 755,
+      "cx": 261.5,
+      "heightRatio": 1
+    },
+    "huo-yi": {
+      "w": 512,
+      "h": 768,
+      "top": 2,
+      "bottom": 766,
+      "cx": 265,
+      "heightRatio": 1
+    },
+    "jia-xu": {
+      "w": 1024,
+      "h": 1536,
+      "top": 12,
+      "bottom": 1524,
+      "cx": 489,
+      "heightRatio": 1
+    },
+    "jian-yong": {
+      "w": 512,
+      "h": 768,
+      "top": 2,
+      "bottom": 763,
+      "cx": 264,
+      "heightRatio": 1
+    },
+    "jiang-wan": {
+      "w": 512,
+      "h": 768,
+      "top": 3,
+      "bottom": 760,
+      "cx": 254.5,
+      "heightRatio": 1
+    },
+    "jiang-wei": {
+      "w": 1024,
+      "h": 1536,
+      "top": 51,
+      "bottom": 1497,
+      "cx": 568,
+      "heightRatio": 1
+    },
+    "jin-huan-san-jie": {
+      "w": 1024,
+      "h": 1536,
+      "top": 18,
+      "bottom": 1520,
+      "cx": 510,
+      "heightRatio": 1
+    },
+    "jin-xuan": {
+      "w": 512,
+      "h": 768,
+      "top": 5,
+      "bottom": 759,
+      "cx": 249.5,
+      "heightRatio": 1
+    },
+    "ju-shou": {
+      "w": 1024,
+      "h": 1536,
+      "top": 2,
+      "bottom": 1533,
+      "cx": 485,
+      "heightRatio": 1
+    },
+    "ke-bi-neng": {
+      "w": 1024,
+      "h": 1536,
+      "top": 18,
+      "bottom": 1525,
+      "cx": 492,
+      "heightRatio": 1
+    },
+    "kong-rong": {
+      "w": 1024,
+      "h": 1536,
+      "top": 5,
+      "bottom": 1532,
+      "cx": 492.5,
+      "heightRatio": 1
+    },
+    "le-jin": {
+      "w": 1024,
+      "h": 1536,
+      "top": 13,
+      "bottom": 1512,
+      "cx": 501.5,
+      "heightRatio": 1
+    },
+    "li-dian": {
+      "w": 1024,
+      "h": 1536,
+      "top": 65,
+      "bottom": 1513,
+      "cx": 487.5,
+      "heightRatio": 1
+    },
+    "li-hui": {
+      "w": 512,
+      "h": 768,
+      "top": 2,
+      "bottom": 766,
+      "cx": 246,
+      "heightRatio": 1
+    },
+    "li-yan": {
+      "w": 512,
+      "h": 768,
+      "top": 4,
+      "bottom": 764,
+      "cx": 264,
+      "heightRatio": 1
+    },
+    "liao-hua": {
+      "w": 1024,
+      "h": 1536,
+      "top": 48,
+      "bottom": 1517,
+      "cx": 547.5,
+      "heightRatio": 1
+    },
+    "liao-li": {
+      "w": 512,
+      "h": 768,
+      "top": 6,
+      "bottom": 763,
+      "cx": 257,
+      "heightRatio": 1
+    },
+    "ling-tong": {
+      "w": 1024,
+      "h": 1536,
+      "top": 177,
+      "bottom": 1380,
+      "cx": 524,
+      "heightRatio": 1
+    },
+    "liu-ba": {
+      "w": 512,
+      "h": 768,
+      "top": 2,
+      "bottom": 766,
+      "cx": 251,
+      "heightRatio": 1
+    },
+    "liu-bao": {
+      "w": 512,
+      "h": 768,
+      "top": 26,
+      "bottom": 754,
+      "cx": 293.5,
+      "heightRatio": 1
+    },
+    "liu-bei": {
+      "w": 1024,
+      "h": 1536,
+      "top": 18,
+      "bottom": 1517,
+      "cx": 520.5,
+      "heightRatio": 1
+    },
+    "liu-biao": {
+      "w": 1024,
+      "h": 1536,
+      "top": 69,
+      "bottom": 1487,
+      "cx": 520.5,
+      "heightRatio": 1
+    },
+    "liu-chen": {
+      "w": 512,
+      "h": 768,
+      "top": 3,
+      "bottom": 765,
+      "cx": 250,
+      "heightRatio": 1
+    },
+    "liu-du": {
+      "w": 512,
+      "h": 768,
+      "top": 2,
+      "bottom": 762,
+      "cx": 259.5,
+      "heightRatio": 1
+    },
+    "liu-feng": {
+      "w": 1024,
+      "h": 1536,
+      "top": 49,
+      "bottom": 1481,
+      "cx": 476,
+      "heightRatio": 1
+    },
+    "liu-yan": {
+      "w": 512,
+      "h": 768,
+      "top": 45,
+      "bottom": 722,
+      "cx": 254.5,
+      "heightRatio": 1
+    },
+    "liu-ye": {
+      "w": 512,
+      "h": 768,
+      "top": 2,
+      "bottom": 765,
+      "cx": 243,
+      "heightRatio": 1
+    },
+    "liu-zhang": {
+      "w": 1024,
+      "h": 1536,
+      "top": 83,
+      "bottom": 1446,
+      "cx": 510,
+      "heightRatio": 1
+    },
+    "lu-bu": {
+      "w": 1024,
+      "h": 1536,
+      "top": 8,
+      "bottom": 1511,
+      "cx": 497,
+      "heightRatio": 1
+    },
+    "lu-kang": {
+      "w": 1024,
+      "h": 1536,
+      "top": 7,
+      "bottom": 1525,
+      "cx": 470.5,
+      "heightRatio": 1
+    },
+    "lu-ling-qi": {
+      "w": 1024,
+      "h": 1536,
+      "top": 6,
+      "bottom": 1505,
+      "cx": 519.5,
+      "heightRatio": 1
+    },
+    "lu-meng": {
+      "w": 1024,
+      "h": 1536,
+      "top": 15,
+      "bottom": 1506,
+      "cx": 510,
+      "heightRatio": 1
+    },
+    "lu-su": {
+      "w": 1024,
+      "h": 1536,
+      "top": 4,
+      "bottom": 1532,
+      "cx": 484,
+      "heightRatio": 1
+    },
+    "lu-xun": {
+      "w": 1024,
+      "h": 1536,
+      "top": 10,
+      "bottom": 1524,
+      "cx": 513,
+      "heightRatio": 1
+    },
+    "lu-yin": {
+      "w": 512,
+      "h": 768,
+      "top": 5,
+      "bottom": 761,
+      "cx": 250,
+      "heightRatio": 1
+    },
+    "luo-xian": {
+      "w": 512,
+      "h": 768,
+      "top": 6,
+      "bottom": 762,
+      "cx": 270,
+      "heightRatio": 1
+    },
+    "lv-dai": {
+      "w": 512,
+      "h": 768,
+      "top": 2,
+      "bottom": 765,
+      "cx": 239.5,
+      "heightRatio": 1
+    },
+    "lv-fan": {
+      "w": 512,
+      "h": 768,
+      "top": 4,
+      "bottom": 762,
+      "cx": 252.5,
+      "heightRatio": 1
+    },
+    "lv-kai": {
+      "w": 512,
+      "h": 768,
+      "top": 4,
+      "bottom": 761,
+      "cx": 279,
+      "heightRatio": 1
+    },
+    "ma-chao": {
+      "w": 1024,
+      "h": 1536,
+      "top": 14,
+      "bottom": 1508,
+      "cx": 529.5,
+      "heightRatio": 1
+    },
+    "ma-dai": {
+      "w": 1024,
+      "h": 1536,
+      "top": 27,
+      "bottom": 1513,
+      "cx": 448.5,
+      "heightRatio": 1
+    },
+    "ma-liang": {
+      "w": 1024,
+      "h": 1536,
+      "top": 7,
+      "bottom": 1525,
+      "cx": 499,
+      "heightRatio": 1
+    },
+    "ma-teng": {
+      "w": 1024,
+      "h": 1536,
+      "top": 113,
+      "bottom": 1455,
+      "cx": 591.5,
+      "heightRatio": 1
+    },
+    "ma-yun-lu": {
+      "w": 1024,
+      "h": 1536,
+      "top": 7,
+      "bottom": 1519,
+      "cx": 515.5,
+      "heightRatio": 1
+    },
+    "ma-zhong": {
+      "w": 512,
+      "h": 768,
+      "top": 3,
+      "bottom": 763,
+      "cx": 246,
+      "heightRatio": 1
+    },
+    "man-chong": {
+      "w": 512,
+      "h": 768,
+      "top": 1,
+      "bottom": 763,
+      "cx": 255.5,
+      "heightRatio": 1
+    },
+    "mao-jie": {
+      "w": 512,
+      "h": 768,
+      "top": 4,
+      "bottom": 762,
+      "cx": 255.5,
+      "heightRatio": 1
+    },
+    "meng-da": {
+      "w": 512,
+      "h": 768,
+      "top": 3,
+      "bottom": 761,
+      "cx": 263.5,
+      "heightRatio": 1
+    },
+    "meng-huo": {
+      "w": 1024,
+      "h": 1536,
+      "top": 14,
+      "bottom": 1515,
+      "cx": 525.5,
+      "heightRatio": 1
+    },
+    "mi-heng": {
+      "w": 512,
+      "h": 768,
+      "top": 4,
+      "bottom": 762,
+      "cx": 268,
+      "heightRatio": 1
+    },
+    "mi-shi": {
+      "w": 512,
+      "h": 768,
+      "top": 27,
+      "bottom": 740,
+      "cx": 264,
+      "heightRatio": 1
+    },
+    "mi-zhu": {
+      "w": 512,
+      "h": 768,
+      "top": 3,
+      "bottom": 764,
+      "cx": 250.5,
+      "heightRatio": 1
+    },
+    "mu-lu-da-wang": {
+      "w": 512,
+      "h": 768,
+      "top": 1,
+      "bottom": 753,
+      "cx": 285.5,
+      "heightRatio": 1
+    },
+    "pan-jun": {
+      "w": 512,
+      "h": 768,
+      "top": 6,
+      "bottom": 761,
+      "cx": 269,
+      "heightRatio": 1
+    },
+    "pan-zhang": {
+      "w": 1024,
+      "h": 1536,
+      "top": 88,
+      "bottom": 1456,
+      "cx": 523,
+      "heightRatio": 1
+    },
+    "pang-de": {
+      "w": 1024,
+      "h": 1536,
+      "top": 12,
+      "bottom": 1513,
+      "cx": 485,
+      "heightRatio": 1
+    },
+    "pang-tong": {
+      "w": 1024,
+      "h": 1536,
+      "top": 5,
+      "bottom": 1528,
+      "cx": 492.5,
+      "heightRatio": 1
+    },
+    "peng-yang": {
+      "w": 512,
+      "h": 768,
+      "top": 4,
+      "bottom": 763,
+      "cx": 269.5,
+      "heightRatio": 1
+    },
+    "qin-mi": {
+      "w": 512,
+      "h": 768,
+      "top": 1,
+      "bottom": 765,
+      "cx": 262,
+      "heightRatio": 1
+    },
+    "quan-cong": {
+      "w": 512,
+      "h": 768,
+      "top": 4,
+      "bottom": 761,
+      "cx": 246.5,
+      "heightRatio": 1
+    },
+    "sha-mo-ke": {
+      "w": 1024,
+      "h": 1536,
+      "top": 19,
+      "bottom": 1512,
+      "cx": 446.5,
+      "heightRatio": 1
+    },
+    "shen-pei": {
+      "w": 512,
+      "h": 768,
+      "top": 18,
+      "bottom": 747,
+      "cx": 258,
+      "heightRatio": 1
+    },
+    "sima-hui": {
+      "w": 512,
+      "h": 768,
+      "top": 39,
+      "bottom": 730,
+      "cx": 256,
+      "heightRatio": 1
+    },
+    "sima-shi": {
+      "w": 1024,
+      "h": 1536,
+      "top": 7,
+      "bottom": 1526,
+      "cx": 534,
+      "heightRatio": 1
+    },
+    "sima-yi": {
+      "w": 1024,
+      "h": 1536,
+      "top": 13,
+      "bottom": 1524,
+      "cx": 481,
+      "heightRatio": 1
+    },
+    "sima-zhao": {
+      "w": 1024,
+      "h": 1536,
+      "top": 13,
+      "bottom": 1515,
+      "cx": 464.5,
+      "heightRatio": 1
+    },
+    "sun-ce": {
+      "w": 1024,
+      "h": 1536,
+      "top": 82,
+      "bottom": 1474,
+      "cx": 500,
+      "heightRatio": 1
+    },
+    "sun-hao": {
+      "w": 512,
+      "h": 768,
+      "top": 4,
+      "bottom": 765,
+      "cx": 268,
+      "heightRatio": 1
+    },
+    "sun-huan": {
+      "w": 512,
+      "h": 768,
+      "top": 6,
+      "bottom": 762,
+      "cx": 231.5,
+      "heightRatio": 1
+    },
+    "sun-jian": {
+      "w": 1024,
+      "h": 1536,
+      "top": 47,
+      "bottom": 1503,
+      "cx": 525,
+      "heightRatio": 1
+    },
+    "sun-jun": {
+      "w": 512,
+      "h": 768,
+      "top": 4,
+      "bottom": 760,
+      "cx": 256.5,
+      "heightRatio": 1
+    },
+    "sun-li": {
+      "w": 512,
+      "h": 768,
+      "top": 17,
+      "bottom": 752,
+      "cx": 277,
+      "heightRatio": 1
+    },
+    "sun-lu-ban": {
+      "w": 1024,
+      "h": 1536,
+      "top": 7,
+      "bottom": 1526,
+      "cx": 488,
+      "heightRatio": 1
+    },
+    "sun-lu-yu": {
+      "w": 1024,
+      "h": 1536,
+      "top": 19,
+      "bottom": 1505,
+      "cx": 490.5,
+      "heightRatio": 1
+    },
+    "sun-qian": {
+      "w": 512,
+      "h": 768,
+      "top": 4,
+      "bottom": 762,
+      "cx": 256,
+      "heightRatio": 1
+    },
+    "sun-quan": {
+      "w": 1024,
+      "h": 1536,
+      "top": 32,
+      "bottom": 1473,
+      "cx": 508.5,
+      "heightRatio": 1
+    },
+    "sun-shang-xiang": {
+      "w": 1024,
+      "h": 1536,
+      "top": 39,
+      "bottom": 1508,
+      "cx": 477.5,
+      "heightRatio": 1
+    },
+    "sun-shao": {
+      "w": 512,
+      "h": 768,
+      "top": 4,
+      "bottom": 760,
+      "cx": 250,
+      "heightRatio": 1
+    },
+    "sun-sheng": {
+      "w": 512,
+      "h": 768,
+      "top": 4,
+      "bottom": 762,
+      "cx": 280,
+      "heightRatio": 1
+    },
+    "sun-yi": {
+      "w": 512,
+      "h": 768,
+      "top": 3,
+      "bottom": 767,
+      "cx": 265,
+      "heightRatio": 1
+    },
+    "taishi-ci": {
+      "w": 1024,
+      "h": 1536,
+      "top": 16,
+      "bottom": 1509,
+      "cx": 507.5,
+      "heightRatio": 1
+    },
+    "tao-qian": {
+      "w": 1024,
+      "h": 1536,
+      "top": 25,
+      "bottom": 1515,
+      "cx": 493,
+      "heightRatio": 1
+    },
+    "tian-chou": {
+      "w": 512,
+      "h": 768,
+      "top": 2,
+      "bottom": 765,
+      "cx": 271,
+      "heightRatio": 1
+    },
+    "tian-feng": {
+      "w": 512,
+      "h": 768,
+      "top": 18,
+      "bottom": 749,
+      "cx": 259,
+      "heightRatio": 1
+    },
+    "wang-hun": {
+      "w": 512,
+      "h": 768,
+      "top": 1,
+      "bottom": 761,
+      "cx": 266.5,
+      "heightRatio": 1
+    },
+    "wang-ji": {
+      "w": 1024,
+      "h": 1536,
+      "top": 10,
+      "bottom": 1530,
+      "cx": 482,
+      "heightRatio": 1
+    },
+    "wang-lang": {
+      "w": 1024,
+      "h": 1536,
+      "top": 63,
+      "bottom": 1502,
+      "cx": 494.5,
+      "heightRatio": 1
+    },
+    "wang-ping": {
+      "w": 1024,
+      "h": 1536,
+      "top": 7,
+      "bottom": 1521,
+      "cx": 510,
+      "heightRatio": 1
+    },
+    "wang-shuang": {
+      "w": 1199,
+      "h": 1312,
+      "top": 150,
+      "bottom": 1216,
+      "cx": 490.5,
+      "heightRatio": 1
+    },
+    "wang-yi": {
+      "w": 1024,
+      "h": 1536,
+      "top": 3,
+      "bottom": 1514,
+      "cx": 484,
+      "heightRatio": 1
+    },
+    "wang-yuan-ji": {
+      "w": 512,
+      "h": 768,
+      "top": 0,
+      "bottom": 768,
+      "cx": 262.5,
+      "heightRatio": 1
+    },
+    "wei-yan": {
+      "w": 1024,
+      "h": 1536,
+      "top": 97,
+      "bottom": 1455,
+      "cx": 502.5,
+      "heightRatio": 1
+    },
+    "wei-zhao": {
+      "w": 512,
+      "h": 768,
+      "top": 5,
+      "bottom": 764,
+      "cx": 256.5,
+      "heightRatio": 1
+    },
+    "wen-chou": {
+      "w": 1024,
+      "h": 1536,
+      "top": 6,
+      "bottom": 1520,
+      "cx": 481.5,
+      "heightRatio": 1
+    },
+    "wen-pin": {
+      "w": 1024,
+      "h": 1536,
+      "top": 74,
+      "bottom": 1487,
+      "cx": 526,
+      "heightRatio": 1
+    },
+    "wen-qin": {
+      "w": 1024,
+      "h": 1536,
+      "top": 139,
+      "bottom": 1470,
+      "cx": 472.5,
+      "heightRatio": 1
+    },
+    "wu-ban": {
+      "w": 1024,
+      "h": 1536,
+      "top": 142,
+      "bottom": 1449,
+      "cx": 551.5,
+      "heightRatio": 1
+    },
+    "wu-guo-tai": {
+      "w": 512,
+      "h": 768,
+      "top": 36,
+      "bottom": 751,
+      "cx": 245.5,
+      "heightRatio": 1
+    },
+    "wu-tugu": {
+      "w": 1024,
+      "h": 1536,
+      "top": 296,
+      "bottom": 1340,
+      "cx": 511.5,
+      "heightRatio": 1
+    },
+    "xi-zhi-cai": {
+      "w": 1024,
+      "h": 1536,
+      "top": 8,
+      "bottom": 1512,
+      "cx": 509,
+      "heightRatio": 1
+    },
+    "xiahou-dun": {
+      "w": 1024,
+      "h": 1536,
+      "top": 10,
+      "bottom": 1515,
+      "cx": 478,
+      "heightRatio": 1
+    },
+    "xiahou-ling-nv": {
+      "w": 512,
+      "h": 768,
+      "top": 26,
+      "bottom": 743,
+      "cx": 253,
+      "heightRatio": 1
+    },
+    "xiahou-shi": {
+      "w": 512,
+      "h": 768,
+      "top": 60,
+      "bottom": 717,
+      "cx": 275,
+      "heightRatio": 1
+    },
+    "xiahou-yuan": {
+      "w": 1024,
+      "h": 1536,
+      "top": 10,
+      "bottom": 1493,
+      "cx": 463.5,
+      "heightRatio": 1
+    },
+    "xiao-qiao": {
+      "w": 1024,
+      "h": 1536,
+      "top": 0,
+      "bottom": 1516,
+      "cx": 606,
+      "heightRatio": 1
+    },
+    "xin-xian-ying": {
+      "w": 1024,
+      "h": 1536,
+      "top": 6,
+      "bottom": 1531,
+      "cx": 505.5,
+      "heightRatio": 1
+    },
+    "xu-huang": {
+      "w": 1024,
+      "h": 1536,
+      "top": 7,
+      "bottom": 1523,
+      "cx": 514,
+      "heightRatio": 1
+    },
+    "xu-sheng": {
+      "w": 1024,
+      "h": 1536,
+      "top": 39,
+      "bottom": 1514,
+      "cx": 478.5,
+      "heightRatio": 1
+    },
+    "xu-shi": {
+      "w": 1024,
+      "h": 1536,
+      "top": 2,
+      "bottom": 1532,
+      "cx": 507.5,
+      "heightRatio": 1
+    },
+    "xu-shu": {
+      "w": 1024,
+      "h": 1536,
+      "top": 130,
+      "bottom": 1492,
+      "cx": 472,
+      "heightRatio": 1
+    },
+    "xu-zhu": {
+      "w": 1086,
+      "h": 1448,
+      "top": 42,
+      "bottom": 1415,
+      "cx": 516,
+      "heightRatio": 1
+    },
+    "xue-zong": {
+      "w": 1024,
+      "h": 1536,
+      "top": 145,
+      "bottom": 1472,
+      "cx": 519.5,
+      "heightRatio": 1
+    },
+    "xun-you": {
+      "w": 1024,
+      "h": 1536,
+      "top": 185,
+      "bottom": 1471,
+      "cx": 514,
+      "heightRatio": 1
+    },
+    "xun-yu": {
+      "w": 1024,
+      "h": 1536,
+      "top": 8,
+      "bottom": 1529,
+      "cx": 497,
+      "heightRatio": 1
+    },
+    "yan-liang": {
+      "w": 1024,
+      "h": 1536,
+      "top": 25,
+      "bottom": 1480,
+      "cx": 439,
+      "heightRatio": 1
+    },
+    "yang-hui-yu": {
+      "w": 512,
+      "h": 768,
+      "top": 49,
+      "bottom": 733,
+      "cx": 272.5,
+      "heightRatio": 1
+    },
+    "yang-yi": {
+      "w": 1024,
+      "h": 1536,
+      "top": 24,
+      "bottom": 1506,
+      "cx": 501,
+      "heightRatio": 1
+    },
+    "yi-ji": {
+      "w": 1024,
+      "h": 1536,
+      "top": 86,
+      "bottom": 1482,
+      "cx": 497.5,
+      "heightRatio": 1
+    },
+    "yin-mo": {
+      "w": 1024,
+      "h": 1536,
+      "top": 73,
+      "bottom": 1487,
+      "cx": 510.5,
+      "heightRatio": 1
+    },
+    "yu-fan": {
+      "w": 1024,
+      "h": 1536,
+      "top": 26,
+      "bottom": 1509,
+      "cx": 510,
+      "heightRatio": 1
+    },
+    "yu-ji": {
+      "w": 1024,
+      "h": 1536,
+      "top": 51,
+      "bottom": 1497,
+      "cx": 483,
+      "heightRatio": 1
+    },
+    "yu-jin": {
+      "w": 1024,
+      "h": 1536,
+      "top": 13,
+      "bottom": 1423,
+      "cx": 526.5,
+      "heightRatio": 1
+    },
+    "yuan-shang": {
+      "w": 512,
+      "h": 768,
+      "top": 16,
+      "bottom": 751,
+      "cx": 253,
+      "heightRatio": 1
+    },
+    "yuan-shao": {
+      "w": 1024,
+      "h": 1536,
+      "top": 28,
+      "bottom": 1508,
+      "cx": 498,
+      "heightRatio": 1
+    },
+    "yuan-shu": {
+      "w": 1024,
+      "h": 1536,
+      "top": 22,
+      "bottom": 1520,
+      "cx": 490.5,
+      "heightRatio": 1
+    },
+    "yuan-tan": {
+      "w": 512,
+      "h": 768,
+      "top": 15,
+      "bottom": 735,
+      "cx": 254,
+      "heightRatio": 1
+    },
+    "yuan-xi": {
+      "w": 512,
+      "h": 768,
+      "top": 20,
+      "bottom": 739,
+      "cx": 268.5,
+      "heightRatio": 1
+    },
+    "zhang-bao-enemy": {
+      "w": 512,
+      "h": 768,
+      "top": 1,
+      "bottom": 756,
+      "cx": 257.5,
+      "heightRatio": 1
+    },
+    "zhang-bao": {
+      "w": 512,
+      "h": 768,
+      "top": 39,
+      "bottom": 728,
+      "cx": 260.5,
+      "heightRatio": 1
+    },
+    "zhang-chun-hua": {
+      "w": 1024,
+      "h": 1536,
+      "top": 1,
+      "bottom": 1527,
+      "cx": 455.5,
+      "heightRatio": 1
+    },
+    "zhang-fei": {
+      "w": 512,
+      "h": 768,
+      "top": 42,
+      "bottom": 724,
+      "cx": 257,
+      "heightRatio": 1
+    },
+    "zhang-he": {
+      "w": 1024,
+      "h": 1536,
+      "top": 9,
+      "bottom": 1524,
+      "cx": 527,
+      "heightRatio": 1
+    },
+    "zhang-jue": {
+      "w": 512,
+      "h": 768,
+      "top": 13,
+      "bottom": 757,
+      "cx": 255,
+      "heightRatio": 1
+    },
+    "zhang-liang-enemy": {
+      "w": 512,
+      "h": 768,
+      "top": 1,
+      "bottom": 760,
+      "cx": 266.5,
+      "heightRatio": 1
+    },
+    "zhang-liao": {
+      "w": 1024,
+      "h": 1536,
+      "top": 9,
+      "bottom": 1514,
+      "cx": 455.5,
+      "heightRatio": 1
+    },
+    "zhang-lu": {
+      "w": 1024,
+      "h": 1536,
+      "top": 39,
+      "bottom": 1511,
+      "cx": 499.5,
+      "heightRatio": 1
+    },
+    "zhang-nan": {
+      "w": 512,
+      "h": 768,
+      "top": 3,
+      "bottom": 756,
+      "cx": 261.5,
+      "heightRatio": 1
+    },
+    "zhang-xian": {
+      "w": 512,
+      "h": 768,
+      "top": 2,
+      "bottom": 764,
+      "cx": 253.5,
+      "heightRatio": 1
+    },
+    "zhang-xiu": {
+      "w": 512,
+      "h": 768,
+      "top": 0,
+      "bottom": 757,
+      "cx": 260,
+      "heightRatio": 1
+    },
+    "zhang-yi": {
+      "w": 512,
+      "h": 768,
+      "top": 1,
+      "bottom": 751,
+      "cx": 256,
+      "heightRatio": 1
+    },
+    "zhang-yi-shu": {
+      "w": 512,
+      "h": 768,
+      "top": 3,
+      "bottom": 762,
+      "cx": 236,
+      "heightRatio": 1
+    },
+    "zhang-zhao": {
+      "w": 1024,
+      "h": 1536,
+      "top": 24,
+      "bottom": 1509,
+      "cx": 485.5,
+      "heightRatio": 1
+    },
+    "zhao-e": {
+      "w": 512,
+      "h": 768,
+      "top": 36,
+      "bottom": 737,
+      "cx": 240,
+      "heightRatio": 1
+    },
+    "zhao-fan": {
+      "w": 512,
+      "h": 768,
+      "top": 9,
+      "bottom": 762,
+      "cx": 254,
+      "heightRatio": 1
+    },
+    "zhao-yun": {
+      "w": 1024,
+      "h": 1536,
+      "top": 1,
+      "bottom": 1497,
+      "cx": 493.5,
+      "heightRatio": 1
+    },
+    "zhen-ji": {
+      "w": 1024,
+      "h": 1536,
+      "top": 5,
+      "bottom": 1522,
+      "cx": 507,
+      "heightRatio": 1
+    },
+    "zhong-hui": {
+      "w": 1024,
+      "h": 1536,
+      "top": 19,
+      "bottom": 1520,
+      "cx": 490,
+      "heightRatio": 1
+    },
+    "zhou-tai": {
+      "w": 1024,
+      "h": 1536,
+      "top": 4,
+      "bottom": 1488,
+      "cx": 500,
+      "heightRatio": 1
+    },
+    "zhou-yu": {
+      "w": 1024,
+      "h": 1536,
+      "top": 23,
+      "bottom": 1519,
+      "cx": 495,
+      "heightRatio": 1
+    },
+    "zhu-bao": {
+      "w": 512,
+      "h": 768,
+      "top": 3,
+      "bottom": 763,
+      "cx": 249,
+      "heightRatio": 1
+    },
+    "zhu-huan": {
+      "w": 512,
+      "h": 768,
+      "top": 4,
+      "bottom": 755,
+      "cx": 252.5,
+      "heightRatio": 1
+    },
+    "zhu-ji": {
+      "w": 512,
+      "h": 768,
+      "top": 3,
+      "bottom": 763,
+      "cx": 265,
+      "heightRatio": 1
+    },
+    "zhu-jun": {
+      "w": 512,
+      "h": 768,
+      "top": 9,
+      "bottom": 752,
+      "cx": 249.5,
+      "heightRatio": 1
+    },
+    "zhu-ran": {
+      "w": 1024,
+      "h": 1536,
+      "top": 6,
+      "bottom": 1522,
+      "cx": 458.5,
+      "heightRatio": 1
+    },
+    "zhu-rong-furen": {
+      "w": 1024,
+      "h": 1536,
+      "top": 0,
+      "bottom": 1533,
+      "cx": 533,
+      "heightRatio": 1
+    },
+    "zhu-rong": {
+      "w": 1024,
+      "h": 1536,
+      "top": 1,
+      "bottom": 1528,
+      "cx": 465,
+      "heightRatio": 1
+    },
+    "zhu-yi": {
+      "w": 512,
+      "h": 768,
+      "top": 4,
+      "bottom": 757,
+      "cx": 240,
+      "heightRatio": 1
+    },
+    "zhuge-jin": {
+      "w": 1024,
+      "h": 1536,
+      "top": 10,
+      "bottom": 1521,
+      "cx": 480,
+      "heightRatio": 1
+    },
+    "zhuge-ke": {
+      "w": 1024,
+      "h": 1536,
+      "top": 9,
+      "bottom": 1530,
+      "cx": 497,
+      "heightRatio": 1
+    },
+    "zhuge-liang": {
+      "w": 1024,
+      "h": 1536,
+      "top": 86,
+      "bottom": 1461,
+      "cx": 508,
+      "heightRatio": 1
+    },
+    "zuo-ci": {
+      "w": 512,
+      "h": 768,
+      "top": 2,
+      "bottom": 763,
+      "cx": 258,
+      "heightRatio": 1
+    }
+  }
+}
