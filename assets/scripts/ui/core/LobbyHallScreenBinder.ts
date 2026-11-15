@@ -282,6 +282,8 @@ export class LobbyHallScreenBinder {
         this._bubbleAccept = content.volunteer?.onAccept ?? null;
         const seconds = content.volunteer ? VOLUNTEER_BUBBLE_SEC : (input.wander?.bubbleSeconds ?? 2);
         bubble.active = true;
+        // 設計稿的泡泡夾在勢力圖等元件之間，跟著頭頂移動後會被蓋住，開啟時拉到最上層
+        bubble.setSiblingIndex(bubble.parent ? bubble.parent.children.length - 1 : 0);
         this._placeBubbleAbove(bubble, generalId);
         if (this._bubbleTimer) clearTimeout(this._bubbleTimer);
         this._bubbleTimer = setTimeout(() => this._closeBubble(), seconds * 1000);
