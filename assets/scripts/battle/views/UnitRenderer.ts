@@ -867,7 +867,7 @@ export class UnitRenderer extends Component {
       if (unit) {
         const isGeneral = this.isGeneralAvatarUnit(unit);
         const general = isGeneral ? this.latestState?.getGeneral(unit.faction) : null;
-        const config = isGeneral ? (general ? generalSpineConfig(general.id, general.templateId) : null) : soldierSpineConfig(unit.type === TroopType.Archer);
+        const config = isGeneral ? (general ? generalSpineConfig(general.id, general.templateId) : null) : soldierSpineConfig(unit.type === TroopType.Archer, unit.faction === Faction.Enemy);
         if (config) {
           const p = view.labelNode.position;
           const foot = isGeneral ? this.generalSidelineFoot(unit.faction) : this.unitGroundFoot(view);
