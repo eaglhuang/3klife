@@ -94,6 +94,18 @@ export function createGachaPoolSwitcherSuite(): TestSuite {
         assert.equals(GACHA_POOL_INDEX.support, switcher.index);
     });
 
+    suite.test('作廢舊 switcher 後，它在途的切換不再寫字或換區塊（畫面重建時不會把舊池掛回）', async () => {
+        const rec = recorder(true);
+        const stale = new GachaPoolSwitcher(rec);
+        const pending = stale.show(GACHA_POOL_INDEX.limited);
+        stale.cancel();
+        rec.release.forEach(release => release());
+        await pending;
+        assert.isFalse(rec.log.includes('texts'));
+        assert.isFalse(rec.log.some(entry => entry.startsWith('regions:')));
+        assert.isFalse(rec.log.some(entry => entry.startsWith('section:')));
+    });
+
     suite.test('限定池期間外切池時略過；限定池用原稿黑金橫幅與配色變體（PROG-2-9024、9025）', async () => {
         const rec = recorder();
         const switcher = new GachaPoolSwitcher(rec);

@@ -543,6 +543,8 @@ export class LobbyScene extends Component {
     private _isCharacterDs3TabSwitching = false;
     /** 轉蛋畫面切池（各池共用同一畫面，PROG-2-2237） */
     private _gachaPoolSwitcher: GachaPoolSwitcher | null = null;
+    /** 目前 switcher 綁定的畫面 binder；畫面重建後 binder 會換新，才需要重綁按鈕（PROG-2-9037） */
+    private _gachaCarouselBinder: object | null = null;
     /** 轉蛋紅顏池的五列展示（掛在紅顏池橫幅上） */
     private _gachaRedFace: RedFaceShowcaseController | null = null;
     private get _gachaPoolIndex(): number { return this._gachaPoolSwitcher?.index ?? GACHA_POOL_INDEX.general; }
@@ -5960,18 +5962,30 @@ export class LobbyScene extends Component {
         }
         // 從結果頁回來會重建畫面，保留原本所在的池（PROG-2-9024）
         const keepIndex = this._gachaPoolSwitcher?.index ?? GACHA_POOL_INDEX.general;
+        // 同一畫面再次進入：重用既有 switcher 與已綁定的按鈕，只切回原池。
+        // 每次都重綁會疊加監聽器，一次點擊同時驅動多個舊 switcher，右側面板就會疊成兩層（PROG-2-9037）
+        const binder = host.binder;
+        const reuse = this._gachaPoolSwitcher !== null && this._gachaCarouselBinder === binder;
         // 三池共用轉蛋畫面：切池一次換橫幅、右側內容、橫幅區塊與該池附加區塊（PROG-2-2237）
-        const switcher = new GachaPoolSwitcher({
-            setActives: (actives) => host.binder?.setActives(actives),
-            setTexts: (texts) => host.binder?.setTexts(texts),
-            switchLazySlot: (slot, fragment) => host.switchLazySlot(slot, fragment),
-            applyTabRegionsForFragment: (fragment) => host.applyTabRegionsForFragment(fragment),
-            mountSection: (anchor, fragment, replace) => host.mountSection(anchor, fragment, replace),
-        }, GACHA_POOLS, (pool) => this._onGachaPoolShown(host, pool));
-        this._gachaPoolSwitcher = switcher;
+        const switcher = reuse && this._gachaPoolSwitcher
+            ? this._gachaPoolSwitcher
+            : new GachaPoolSwitcher({
+                setActives: (actives) => host.binder?.setActives(actives),
+                setTexts: (texts) => host.binder?.setTexts(texts),
+                switchLazySlot: (slot, fragment) => host.switchLazySlot(slot, fragment),
+                applyTabRegionsForFragment: (fragment) => host.applyTabRegionsForFragment(fragment),
+                mountSection: (anchor, fragment, replace) => host.mountSection(anchor, fragment, replace),
+            }, GACHA_POOLS, (pool) => this._onGachaPoolShown(host, pool));
+        if (!reuse) {
+            // 畫面已重建：作廢舊 switcher 在途的切換，避免它把舊池內容掛回新畫面
+            this._gachaPoolSwitcher?.cancel();
+            this._gachaPoolSwitcher = switcher;
+            this._gachaCarouselBinder = binder;
+        }
         // 限定池期間外不出現在輪播（PROG-2-9024）
         switcher.setHidden((pool) => pool.key === 'limited' && !this._localGachaService.getOpenLimitedWindow(LIMITED_POOL_ID));
         void switcher.show(keepIndex);
+        if (reuse) return;
 
         bindGachaActions((name) => host.binder!.getNode(name), (node) => {
             const button = node.getComponent(Button) ?? node.addComponent(Button);

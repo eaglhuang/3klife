@@ -44,6 +44,11 @@ export class GachaPoolSwitcher {
         this._hidden = predicate;
     }
 
+    /** 作廢在途的切換：畫面重建、改由新的 switcher 接手時呼叫，舊的切換不再寫入畫面（PROG-2-9037） */
+    public cancel(): void {
+        this._seq++;
+    }
+
     public step(delta: number): Promise<void> {
         const count = this._pools.length;
         let next = this._index;
