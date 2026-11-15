@@ -947,6 +947,7 @@ export class UIPreviewBuilder extends Component {
         const t = UCUFLogger.perfBegin('UIPreviewBuilder._postBuildPass');
         this._realignAllWidgets(root);
         this._updateAllLayouts(root);
+        this._realignAllWidgets(root);
         this._enforceContainerBounds(root);
         this.layoutBuilder.applyPostLayoutAlignment(root);
         this._realignAllWidgets(root);

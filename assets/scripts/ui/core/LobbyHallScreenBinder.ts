@@ -110,6 +110,19 @@ const LAYER_NAMES: readonly string[] = ['HallStageCrowd', 'HallSeasonFx'];
 const HALL_SANDBOX_WIDTH = 1920;
 const HALL_SANDBOX_HEIGHT = 1080;
 
+/** 計算大廳底欄子選單的水平置中偏移，使選單對齊觸發按鈕且不超出大廳左右邊界。 */
+export function computeSubMenuCenterX(
+    dockCenterX: number,
+    hallWidth: number,
+    menuWidth: number,
+    margin = 24,
+): number {
+    if (!Number.isFinite(dockCenterX) || !Number.isFinite(hallWidth) || hallWidth <= 0) return 0;
+    const safeMenuW = Number.isFinite(menuWidth) && menuWidth > 0 ? menuWidth : 0;
+    const halfLimit = Math.max(0, hallWidth / 2 - safeMenuW / 2 - margin);
+    return Math.max(-halfLimit, Math.min(halfLimit, dockCenterX));
+}
+
 export class LobbyHallScreenBinder {
     private readonly _applier: LobbyHallThemeApplier;
     private _fx: HallSeasonFxLayer | null = null;
@@ -245,6 +258,17 @@ export class LobbyHallScreenBinder {
     setCrowdTagsVisible(visible: boolean): void {
         if (!visible) this._closeBubble();
         this._crowd?.setTagsVisible(visible);
+    }
+
+    /** 取得指定底欄按鈕相對於大廳根節點的水平中心座標（設計座標）。 */
+    getDockButtonCenterX(dockId: LobbyHallDockId): number | null {
+        const node = findUcufNode(this._screenRoot, `lobby-hall-screen.dock-${dockId}`);
+        if (!node) return null;
+        const rootTransform = this._screenRoot.getComponent(UITransform);
+        if (rootTransform && node.worldPosition) {
+            return rootTransform.convertToNodeSpaceAR(node.worldPosition).x;
+        }
+        return node.position.x + (node.parent?.position.x ?? 0);
     }
 
     /** 播放換季聚焦序列；沒有地圖播放器時不動 */

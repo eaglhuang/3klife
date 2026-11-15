@@ -4829,6 +4829,51 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "id": "PROG-2-9041",
+      "title": "修補線上試玩第三輪問題（Widget先於Layout對齊、彈窗BlockInputEvents防點穿、底欄子選單水平對齊、大廳武將站位防重疊）",
+      "phase": "2",
+      "status": "done",
+      "priority": "P0",
+      "owner": "ClaudeCode",
+      "created_at": "2026-11-15T13:59:52.300Z",
+      "started_at": "2026-11-15T13:59:52.300Z",
+      "started_by_agent": "ClaudeCode",
+      "completed_at": "2026-11-15T13:59:52.300Z",
+      "depends_on": [
+        "PROG-2-9040"
+      ],
+      "target_files": [
+        "assets/scripts/ui/scenes/LobbyScene.ts",
+        "assets/scripts/ui/core/UIPreviewBuilder.ts",
+        "assets/scripts/ui/core/LobbyHallScreenBinder.ts",
+        "assets/resources/data/hall-map/hall-stage-spots.json",
+        "docs/tasks/tasks-prog.json",
+        "tests/PlaytestRound3Fixes.test.ts"
+      ],
+      "notes": "2026-11-15 | 狀態: done | 驗證: unit tests 7676 passed / 3 skipped / 0 failed, check-test-tsc-baseline 0 errors, check-encoding-touched passed | 變更: _postBuildPass 改為 Widget 先行對齊再執行 Layout 分佈、_mountPreviewScreenHost 與子選單補齊 BlockInputEvents 防穿透、子選單對齊對應底欄按鈕並做安全邊界限制、hall-stage-spots.json 縮減武將高度避免互撞及重疊天下勢力圖 | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
