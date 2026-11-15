@@ -941,6 +941,9 @@ export class LobbyScene extends Component {
     }
 
     protected onDestroy(): void {
+        // 離開大廳（例如進戰場）要停掉站位輪換計時器，否則回大廳時舊場景的計時器仍在跑，讀到已銷毀的欄位（PROG-2-9103）
+        this._lobbyHall?.stopStageTicking();
+        this._lobbyHall = null;
         this._offBeforeSwitch?.();
         this._offBeforeSwitch = null;
         for (const unsubscribe of this._sessionEventUnsubscribers) {
@@ -3732,6 +3735,8 @@ export class LobbyScene extends Component {
      * 其餘從我方擁有的武將輪替 2~3 位出來走動；沒有骨架（不會走）的武將排在後面。
      */
     private _buildHallCast(wander: HallWanderData | null): HallStageCast {
+        // 舊大廳已銷毀但計時器還在：回空名單，不再碰已清空的欄位（PROG-2-9103）
+        if (!this.isValid) return { generals: [], taskMarkIds: new Set<string>() };
         const session = services().session;
         const owned = session.hallCandidates().map(c => ({
             id: c.id,
