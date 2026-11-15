@@ -13,13 +13,13 @@ import { PEDIGREE_SEAT_WEIGHTS, pedigreeRowLabel, TREE_CARD_AVATAR, TREE_CARD_KI
 import { type MilestoneStage } from '../../../core/systems/FamilyMilestone';
 import { bloodlineTreeRowVisible } from '../../../core/systems/BloodlineTreeViewMode';
 import { BloodlineTreePanel } from '../../panels/BloodlineTreePanel';
-import { DS3_BLOODLINE_LEFT_REGION_WIDTH, DS3_DESIGN_WIDTH, ds3BloodlineTreeCenterX } from './Ds3BloodlineTreeGeometry';
+import { DS3_DESIGN_HEIGHT, DS3_DESIGN_WIDTH, ds3BloodlineRegion, type Ds3BloodlineRegion } from './Ds3BloodlineTreeGeometry';
 import { BLOODLINE_VIEW_TOGGLE_NODE, ensureBloodlineViewToggle, refreshBloodlineViewToggle } from '../BloodlineTreeViewToggle';
 
 export const DS3_BLOODLINE_TREE_NODE_NAME = 'Ds3BloodlineTree';
 
-/** 左區佔畫面 0～1190 px；host 座標以畫面中心為原點，其餘座標相對左區中心 */
-const REGION = { x: -365, width: DS3_BLOODLINE_LEFT_REGION_WIDTH, height: 1080 };
+/** 左區預設＝設計解析度下扣掉右欄的整塊；實際大小每次開啟依主體重算。其餘座標相對左區中心 */
+const REGION = ds3BloodlineRegion(DS3_DESIGN_WIDTH, DS3_DESIGN_HEIGHT);
 const LABEL_COLUMN_X = -405;
 const CARDS_CENTER_X = 115;
 const TITLE = { text: '家族血統樹', y: 480, width: 920, height: 40, fontSize: 26, color: '#FFE088' };
@@ -125,10 +125,7 @@ function refreshGenLabels(root: Node, panel: BloodlineTreePanel): void {
 function buildTree(host: Node): Node {
     const root = addNode(host, DS3_BLOODLINE_TREE_NODE_NAME, REGION.x, 0, REGION.width, REGION.height);
     root.addComponent(BlockInputEvents);
-    const background = root.addComponent(Graphics);
-    background.fillColor = BACKGROUND;
-    background.rect(-REGION.width / 2, -REGION.height / 2, REGION.width, REGION.height);
-    background.fill();
+    root.addComponent(Graphics);
 
     addLabel(root, 'TreeTitle', TITLE.text, CARDS_CENTER_X, TITLE.y, TITLE.width, TITLE.height, TITLE.fontSize, new Color().fromHEX(TITLE.color)).overflow = Label.Overflow.SHRINK;
     addNode(root, 'LineGraphics', 0, 0, REGION.width, REGION.height);
@@ -152,11 +149,24 @@ function buildTree(host: Node): Node {
     return root;
 }
 
+/** 依主體尺寸把左區撐滿（左到右欄、上到下），並重畫底板；只改外框，樹內容維持置中 */
+function fitRegion(root: Node, region: Ds3BloodlineRegion): void {
+    root.setPosition(region.x, 0, root.position.z);
+    root.getComponent(UITransform)?.setContentSize(region.width, region.height);
+    root.getChildByName('LineGraphics')?.getComponent(UITransform)?.setContentSize(region.width, region.height);
+    const background = root.getComponent(Graphics);
+    if (!background) return;
+    background.clear();
+    background.fillColor = BACKGROUND;
+    background.rect(-region.width / 2, -region.height / 2, region.width, region.height);
+    background.fill();
+}
+
 /** 取得（或建立）血統樹面板，並填入本代姓名與家族門第 */
 export function ensureDs3BloodlineTree(host: Node, subjectName: string, clanTierName: string, stage: MilestoneStage = 4): BloodlineTreePanel {
     const root = host.getChildByName(DS3_BLOODLINE_TREE_NODE_NAME) ?? buildTree(host);
-    const hostWidth = host.getComponent(UITransform)?.width ?? DS3_DESIGN_WIDTH;
-    root.setPosition(ds3BloodlineTreeCenterX(hostWidth), root.position.y, root.position.z);
+    const hostTransform = host.getComponent(UITransform);
+    fitRegion(root, ds3BloodlineRegion(hostTransform?.width ?? DS3_DESIGN_WIDTH, hostTransform?.height ?? DS3_DESIGN_HEIGHT));
     const subjectLabel = root.getChildByName('TargetPortrait')?.getChildByName('Txt')?.getComponent(Label);
     if (subjectLabel) subjectLabel.string = subjectName;
     const titleLabel = root.getChildByName('TreeTitle')?.getComponent(Label);
