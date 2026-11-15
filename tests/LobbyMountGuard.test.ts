@@ -13,7 +13,7 @@ export function createLobbyMountGuardSuite(): TestSuite {
         assert.isTrue(/try \{\s*await mount\(\);\s*\} catch/.test(body), 'await mount() 必須包在 try/catch 內');
         assert.isTrue(body.includes('UCUFLogger.error'), '掛載失敗要記錄錯誤');
     });
-    suite.test('非必要面板移到大廳出現後背景掛載，且背景掛載也逐項防護（PROG-2-9039）', () => {
+    suite.test('非必要面板移到大廳出現後背景掛載，且背景掛載也逐項防護（PROG-2-9040）', () => {
         const src = fs.readFileSync(path.join(__dirname, '../assets/scripts/ui/scenes/LobbyScene.ts'), 'utf-8');
         const startIdx = src.indexOf('const mounts: Array<() => Promise<void>> = [');
         const critical = src.slice(startIdx, src.indexOf('];', startIdx));

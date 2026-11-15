@@ -656,7 +656,7 @@ export class LobbyScene extends Component {
     private readonly _gachaCandidatesCache = new Map<string, GeneralConfig[]>();
     private _gachaPullPending = false;
     private _ready = false;
-    /** 大廳出現後才背景掛載的面板（PROG-2-9039） */
+    /** 大廳出現後才背景掛載的面板（PROG-2-9040） */
     private _deferredMounts: Array<() => Promise<void>> = [];
     /** 回大廳不重建：去戰鬥前停放已掛的介面（Issue #2120） */
     private readonly _retention = new LobbyScreenRetention(() => services().i18n.currentLocale);
@@ -732,7 +732,7 @@ export class LobbyScene extends Component {
             () => this._mountSeasonReportPanel(),
             () => this._mountSandtableTerritoryPanel(),
         ];
-        // 只在玩家點開時才用得到的彈窗／子畫面：大廳出現後再於背景掛載（PROG-2-9039）。
+        // 只在玩家點開時才用得到的彈窗／子畫面：大廳出現後再於背景掛載（PROG-2-9040）。
         // 大廳預先掛載數從 10 月的 6 個長到 60 多個，全部擋在載入遮罩前會讓進大廳越來越慢。
         this._deferredMounts = [
             () => this._mountGraduationRecord(),
@@ -851,7 +851,7 @@ export class LobbyScene extends Component {
         }
     }
 
-    /** 背景掛載非必要面板（PROG-2-9039）：逐個掛、每個之間讓出一幀，失敗只記錄不中斷 */
+    /** 背景掛載非必要面板（PROG-2-9040）：逐個掛、每個之間讓出一幀，失敗只記錄不中斷 */
     private async _runDeferredMounts(): Promise<void> {
         const mounts = this._deferredMounts;
         this._deferredMounts = [];
