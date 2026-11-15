@@ -1320,6 +1320,23 @@
             "weaponClass": "long-polearm"
           }
         ]
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/ma_chao__馬超__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "ae5846a33758798f1a99a40a7c0176b9bef2d156b6731982250c0bddb1096e03",
+            "canvas": "1254x1254 RGBA",
+            "source": "standing/ma_chao__馬超__standing_0002.png",
+            "crop": "shoulder-line",
+            "cropBox": "x=395,y=0,w=360,h=360",
+            "qc": "125px preview: direct crop from approved standing art; full silver head ornament, face and chin visible, face centered, shoulders at lower edge."
+          }
+        ]
       }
     },
     {
