@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-15",
+  "updatedAt": "2026-11-16",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -1587,6 +1587,21 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/jia_xu__賈詡__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "d13709edb14f36f8b150275542f8b8e3ae1b1ba6fb082979aa4e2d1444bc524c",
+            "canvas": "1254x1254 RGBA",
+            "faceCenter": "visually centered",
+            "crop": "shoulder-line"
+          }
+        ]
       }
     },
     {
