@@ -5,11 +5,11 @@
   "command": "node atm.mjs next --json",
   "status": "replaced",
   "sourceKind": "internal-build-sync",
-  "sourcePath": "C:\\Users\\User\\AppData\\Local\\Temp\\claude\\51b98266c618bdf2\\eb4f6a73-d83d-4304-a8dc-eeed395fafd6\\scratchpad\\wt-sync4\\release\\atm-onefile\\atm.mjs",
-  "sha256": "43d939be3290158991643b7c8835500a51a4e916cbedec2ec2f83387cd4395ca",
-  "existingSha256": "38d69567089f3224423d6e7a38f34343ecbad4e5664abc792aabdc4e1a61a0fe",
-  "sizeBytes": 5548323,
-  "frameworkVersion": "0.1.29",
-  "sourceCommit": "cd88b1d4904bd9811bc13a0eb3c067b60afd7813",
-  "generatedAt": "2026-11-14T05:13:32.379Z"
+  "sourcePath": "C:\\Users\\User\\atm-wt\\charter\\release\\atm-onefile\\atm.mjs",
+  "sha256": "ca1c9b4930dbbe126b1134e25cdc2ceefc46167a637fafe1b91c28255bb3cc01",
+  "existingSha256": "43d939be3290158991643b7c8835500a51a4e916cbedec2ec2f83387cd4395ca",
+  "sizeBytes": 5562135,
+  "frameworkVersion": "0.1.30",
+  "sourceCommit": "09c2a530aa0ed3371cecd3f927b596a9efcff99e",
+  "generatedAt": "2026-11-15T21:39:43.595Z"
 }
