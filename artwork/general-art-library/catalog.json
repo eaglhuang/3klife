@@ -6762,6 +6762,28 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0002",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/zhao_e__趙娥__small_avatar_0001.png",
+            "status": "superseded",
+            "sha256": "0720BBB5E3E6E1A4EE41AFD2FAFF91E00E397A0EEB41DF778DE87859B7D9B8E4",
+            "canvas": "1254x1254 RGBA",
+            "note": "Existing library file retained as prior version; replaced by the user-selected v0002."
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/zhao_e__趙娥__small_avatar_0002.png",
+            "status": "review-pending",
+            "sha256": "D15C0EF777769AD58783E1DA383EC6DA68AC27E45C73CAFCE21EC9F11FEE98A4",
+            "canvas": "1254x1254 RGBA",
+            "qc": "User-approved portrait; face centered with slight three-quarter angle; complete head visible; crop at shoulder line with no chest."
+          }
+        ]
       }
     },
     {
