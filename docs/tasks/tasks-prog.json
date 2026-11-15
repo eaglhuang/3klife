@@ -4713,7 +4713,7 @@
       "title": "轉蛋立繪統一腳底基準線與身高比例",
       "owner": "claude-code-haiku-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-15",
@@ -4738,7 +4738,7 @@
         "LobbyScene 轉蛋橫幅立繪接入",
         "tests/gacha-portrait-baseline.test.ts"
       ],
-      "notes": "2026-11-15 | 狀態: in-progress | 驗證: 單元測試 ALL PASS；tsc 0 錯誤 | 變更: 量測工具＋邊界資料＋基準線換算；橫幅立繪改統一腳底與身高 | 待辦: 7456 實跑截圖比對（主目錄需同步才能看到工作樹改動）",
+      "notes": "2026-11-15 | 狀態: done | 驗證: 單元測試 ALL PASS（含 tests/gacha-portrait-baseline.test.ts）；tsc 0 錯誤；compute-gate standard 12/12 | 變更: PR #2168 已合併（9068d07cf）；轉蛋橫幅立繪改統一腳底基準線與身高比例縮放 | 實機驗證: 本機 7456 無法載入 LobbyScene（預覽建置回報 not in build settings，畫面全黑），未取得截圖；改由部署後線上版驗收（腳底同高、比例一致、最高者不超出畫面）",
       "brief": {
         "style": "classic",
         "label": "",
