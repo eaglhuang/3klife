@@ -6614,6 +6614,35 @@
             "qc": "Inline review: clear coquettish smile and three-quarter angle; complete head and ornaments, face centered, crop ends at shoulder tops with no chest; transparent corner alpha."
           }
         ]
+      },
+      "battle": {
+        "activeVersion": "0002",
+        "status": "review-pending",
+        "displayStatus": "not-yet-verified",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/diao_chan__貂蟬__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "af89ad9286fcc1e66d2c4992a091379bdab0d7f5ee13f72ebda309fb9186e336",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "sword/dance prop",
+            "sourceStanding": "standing/diao_chan__貂蟬__standing_0002.png",
+            "note": "Pre-existing remote artwork lacked a catalog record; retained unchanged pending owner review."
+          },
+          {
+            "version": "0002",
+            "file": "battle/diao_chan__貂蟬__battle_0002.png",
+            "status": "review-pending",
+            "sha256": "7e165f6836b5f40704adff8a553ab3f511f061e3cc6a652b0e2378aac667fa1d",
+            "canvas": "1024x1536 RGBA",
+            "poseSelection": "distinctive one-handed sword guard with graceful counterbalance",
+            "gaze": "toward camera",
+            "weaponClass": "jian sword",
+            "sourceStanding": "standing/diao_chan__貂蟬__standing_0002.png",
+            "note": "New transparent candidate; eyes corrected toward camera; previewed at 125px and 250px. Awaiting owner review; not integrated into runtime."
+          }
+        ]
       }
     },
     {
