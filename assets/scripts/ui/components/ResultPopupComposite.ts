@@ -3,7 +3,7 @@
  * ResultPopupComposite — 戰鬥結果彈窗（Composite 版）
  * Wave 2 migration from ResultPopup - shows victory/defeat/stalemate results
  */
-import { _decorator, Button, Color, Mask, Node, Sprite, Tween, tween, UIOpacity, UITransform, Vec3, Widget } from 'cc';
+import { _decorator, BlockInputEvents, Button, Color, Mask, Node, Sprite, Tween, tween, UIOpacity, UITransform, Vec3, Widget } from 'cc';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { loadGeneralAvatar } from '../core/GeneralAvatarLoader';
@@ -175,7 +175,10 @@ export class ResultPopupComposite extends CompositePanel {
         this._binder = binder;
         binder.getButton('BtnBack')?.node.on(Button.EventType.CLICK, this._onClickBack, this);
         binder.getButton('BtnReplay')?.node.on(Button.EventType.CLICK, this._onClickReplay, this);
-        binder.getNode('Overlay')?.on(Node.EventType.TOUCH_END, this.hide, this);
+        // 點暗幕不關閉結算窗：戰鬥已結束、棋盤不能再操作，關掉後玩家沒有任何出口會卡在戰場（PROG-2-9307）。
+        // 只能從「返回大廳」或「再戰一次」離開；暗幕只負責擋住底下的點擊。
+        const overlay = binder.getNode('Overlay');
+        if (overlay && !overlay.getComponent(BlockInputEvents)) overlay.addComponent(BlockInputEvents);
     }
 
     private _onClickBack(): void {

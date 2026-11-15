@@ -456,5 +456,26 @@ export function createIssue2159BattleHudRetreatFixesSuite(): TestSuite {
         assert.equals(false, tagsLog[0]);
     });
 
+
+    suite.test('結算窗點暗幕不關閉：戰鬥已結束，關掉後玩家沒有出口（PROG-2-9307）', () => {
+        const popupNode = makeRichNode('Popup');
+        const popup = popupNode.addComponent(ResultPopupComposite);
+        const overlay = makeRichNode('Overlay', popupNode);
+        const handlers: string[] = [];
+        overlay.on = (type: string) => { handlers.push(type); };
+        const added: unknown[] = [];
+        overlay.getComponent = () => null;
+        overlay.addComponent = (ctor: unknown) => { added.push(ctor); return {}; };
+        const button = (): any => ({ node: { on: () => undefined } });
+        popup._onAfterBuildReady({
+            getButton: () => button(),
+            getNode: (name: string) => (name === 'Overlay' ? overlay : null),
+        });
+        popup._visible = true;
+        popupNode.active = true;
+        assert.equals(0, handlers.length);
+        assert.equals(1, added.length);
+        assert.equals(true, popupNode.active);
+    });
     return suite;
 }
