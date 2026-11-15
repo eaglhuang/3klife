@@ -960,6 +960,23 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/liu_bei__劉備__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "1acef519787d01d1676ef798f7cb26f5408675a330976e6041d2053edd6b5143",
+            "canvas": "256x256 RGBA",
+            "source": "avatars/liu_bei__劉備__avatar_0002.png (crop-only, standing-derived)",
+            "crop": "shoulder-line",
+            "cropBox": "x=26,y=3,w=204,h=204",
+            "qc": "No redraw or design changes; face centered, full headpiece and face kept, only shoulder tops at lower edge."
+          }
+        ]
       }
     },
     {
@@ -986,6 +1003,23 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/sun_quan__孫權__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "9dc4fed14e0e589c5ceac54f268538506fd0b5cbefb30c1576d75c463e2208c2",
+            "canvas": "256x256 RGBA",
+            "faceCenter": "visually centered",
+            "crop": "shoulder-line",
+            "source": "avatars/sun_quan__孫權__avatar_0002.png",
+            "note": "Derived by proportional crop and resize only; full crown, face and chin preserved. Tall crown limits face occupancy; shoulder-line framing avoids redesign."
+          }
+        ]
       }
     },
     {
@@ -1012,6 +1046,25 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "displayStatus": "not-yet-verified",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/zhou_yu__周瑜__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "1774b65d7ce1c3aeb699249593e1032b77701776b72ac621effb6c42bf2e0c29",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "jian",
+            "gaze": "direct-to-camera",
+            "sourceStanding": "standing/zhou_yu__周瑜__standing_0002.png",
+            "poseLabel": "披袍轉身，斜向拔劍迎擊",
+            "note": "依已核定站姿保留周瑜紅白金衣甲與臉部辨識；等比例縮放置中，未改造人物造型。"
+          }
+        ]
       }
     },
     {
@@ -1164,6 +1217,23 @@
             "weaponClass": "halberd"
           }
         ]
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/lu_bu__呂布__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "220b37dff7c458788abbe956c969caa5f723e48ffe402d798f4d961f45f9e0aa",
+            "canvas": "1254x1254 RGBA",
+            "source": "standing/lu_bu__呂布__standing_0002.png",
+            "crop": "shoulder-line",
+            "cropBox": "x=420,y=50,w=300,h=300",
+            "qc": "125px preview: direct crop from approved standing art; complete face and gold crown retained, face centered, head fills approximately 72%, shoulder armor edge visible."
+          }
+        ]
       }
     },
     {
@@ -1190,6 +1260,28 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "status": "review-pending",
+        "activeVersion": "0002",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/sima_yi__司馬懿__small_avatar_0001.png",
+            "status": "superseded",
+            "sha256": "b6b9af5f4839235845d26d355beee3866c45aa0252ed37b7bdd654359359cbd7",
+            "canvas": "1254x1254 RGBA",
+            "qc": "既有版本，保留為歷史版。"
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/sima_yi__司馬懿__small_avatar_0002.png",
+            "status": "review-pending",
+            "sha256": "8956384df0f68eb7230086aacb44f7abbad34eef6c7d28f1c31999413d23242f",
+            "canvas": "1254x1254 RGBA",
+            "qc": "使用者核准的生成原圖，像素原樣收錄；250px 預覽確認頭冠與下巴完整、臉部居中、肩線取景，無重繪或裁切。"
+          }
+        ]
       }
     },
     {
@@ -1227,6 +1319,23 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/dian_wei__典韋__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "59433cebe77e524e087047e63f9db3b4c5e96ce11f0bf82c51659c8a5922916a",
+            "canvas": "1254x1254 RGBA",
+            "source": "standing/dian_wei__典韋__standing_0002.png",
+            "crop": "shoulder-line",
+            "cropBox": "x=372,y=10,w=300,h=300",
+            "qc": "125px preview: direct crop from approved standing art; headband, full face and chin visible, face centered, shoulder armor edge only."
+          }
+        ]
       }
     },
     {
@@ -1320,6 +1429,23 @@
             "weaponClass": "long-polearm"
           }
         ]
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/ma_chao__馬超__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "ae5846a33758798f1a99a40a7c0176b9bef2d156b6731982250c0bddb1096e03",
+            "canvas": "1254x1254 RGBA",
+            "source": "standing/ma_chao__馬超__standing_0002.png",
+            "crop": "shoulder-line",
+            "cropBox": "x=395,y=0,w=360,h=360",
+            "qc": "125px preview: direct crop from approved standing art; full silver head ornament, face and chin visible, face centered, shoulders at lower edge."
+          }
+        ]
       }
     },
     {
@@ -1398,6 +1524,25 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "displayStatus": "not-yet-verified",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/zhang_liao__張遼__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "ce40977d6b00d6376fbae4ca615bb48ee92430c1a7085163c4c0df7c01c67b2f",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "long-handled dao with crescent blade",
+            "gaze": "direct-to-camera",
+            "sourceStanding": "standing/zhang_liao__張遼__standing_0002.png",
+            "poseLabel": "轉身斜斬，前踏壓陣",
+            "note": "保留藍銀札甲、紅藍高馬尾與原立姿長柄偃月刃；單純等比例縮放至中央安全區。"
+          }
+        ]
       }
     },
     {
@@ -1487,6 +1632,23 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/pang_tong__龐統__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "05251875eaa0e0e7772bad19c47cd644afad09125918fab816b482d8ae9d4911",
+            "canvas": "1254x1254 RGBA",
+            "source": "standing/pang_tong__龐統__standing_0002.png",
+            "crop": "shoulder-line",
+            "cropBox": "x=440,y=0,w=360,h=360",
+            "qc": "125px preview: direct crop from approved standing art; full plume/crown base, face and chin visible, face centered, shoulder edge only."
+          }
+        ]
       }
     },
     {
@@ -1602,6 +1764,23 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/xun_yu__荀彧__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "365718eee03aad24529b4a94b4af4295ac54064db36ce81bdfcf8fb236d1928b",
+            "canvas": "1254x1254 RGBA",
+            "source": "standing/xun_yu__荀彧__standing_0002.png",
+            "crop": "shoulder-line",
+            "cropBox": "x=380,y=0,w=420,h=420",
+            "qc": "125px preview: direct crop from approved standing art; broad scholar hat, face and chin visible, face visually centered, shoulders at lower edge."
+          }
+        ]
       }
     },
     {
@@ -1820,6 +1999,25 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "displayStatus": "not-yet-verified",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/wei_yan__魏延__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "78ae62ba81bf26b8ed58ef6fb9590927becb1acec73a5f0001d8ab8bd6d0576a",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "long-handled single-edged dao",
+            "gaze": "direct-to-camera",
+            "sourceStanding": "standing/wei_yan__魏延__standing_0003.png",
+            "poseLabel": "低身前踏，上撩斜切",
+            "note": "沿用松綠、炭黑、古銅甲色及原立姿單刃長柄彎刀；等比例縮放置入中央安全區。"
+          }
+        ]
       }
     },
     {
@@ -4862,6 +5060,23 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/wang_yi__王異__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "7eae7adc8221877011a9db1a57bdc75ad28be0626b5b06289381b028da5f0788",
+            "canvas": "1254x1254 RGBA",
+            "source": "standing/wang_yi__王異__standing_0002.png",
+            "crop": "shoulder-line",
+            "cropBox": "x=319,y=0,w=330,h=330",
+            "qc": "125px preview: original standing-art crop only; head and chin intact, face centered, head fills approximately 75%, shoulder edge visible."
+          }
+        ]
       }
     },
     {
@@ -6402,6 +6617,25 @@
             "qc": "125px inline preview: centered three-quarter face with composed confident half-smile; full hair ornament and chin; crop at shoulder guard tops with no central chest panel; transparent corner alpha."
           }
         ]
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "poseLabel": "低身側步，斜劍護身",
+        "weaponClass": "sword",
+        "poseSelection": "AI-selected distinct pose",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/zhang_chun_hua__張春華__battle_0001.png",
+            "status": "review-pending",
+            "poseLabel": "低身側步，斜劍護身",
+            "weaponClass": "sword",
+            "sha256": "9a21f2d5d816a45301accacbd56ecdab907d9f28da52a4160c24aa31abed5ba2",
+            "canvas": "1024x1536 RGBA",
+            "qc": "Full-body three-quarter combat stance; eyes to camera; straight sword; crop/scale adjusted to x=128..896 safe width."
+          }
+        ]
       }
     },
     {
@@ -6618,6 +6852,24 @@
             "sha256": "7D64DC59A504454A3712F2CE080851F53ED426C972F842B20C5DCCE75DF8E3B1",
             "canvas": "1254x1254 RGBA",
             "qc": "125px review: face centered on canvas, gentle three-quarter turn and composed half-smile; full head and jade ornament visible; crop ends at upper shoulder edges with no chest."
+          }
+        ]
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "displayStatus": "not-yet-verified",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/wang_yuan_ji__王元姬__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "86b5fd3249eb6be5edca85a1549d923940a9894edbd2e1c54a515dc900c1dfa0",
+            "canvas": "1024x1536 RGBA",
+            "poseSelection": "distinct tactical command stance, scroll unfurled and direction gesture",
+            "gaze": "direct-to-camera",
+            "sourceStanding": "standing/wang_yuan_ji__王元姬__standing_0002.png",
+            "note": "Battlefield strategist presentation; no invented weapon; transparent cutout and complete figure verified."
           }
         ]
       }
@@ -6902,6 +7154,25 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "displayStatus": "not-yet-verified",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/hua_man__花鬘__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "a3f89240c755ce1ef71a41864a17ff2b59c6690dd26c4968e1fa38702b6f0321",
+            "canvas": "1024x1536 RGBA",
+            "poseSelection": "low turning step, dual short crescent-hook blades in opposing attack and guard lines",
+            "gaze": "direct-to-camera",
+            "sourceStanding": "standing/hua_man__花鬘__standing_0002.png",
+            "weaponClass": "paired short crescent-hook blades",
+            "note": "Character and weapon design follow approved standing art. Whole transparent layer was translated 27px right for centered safe framing; no crop or stretch."
+          }
+        ]
       }
     },
     {
@@ -6928,6 +7199,23 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/cai_shi__蔡氏__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "44649f910cfb50c1f949230bba888d3093a484d4d94183851f2eb6c53414d8ad",
+            "canvas": "1254x1254 RGBA",
+            "source": "standing/cai_shi__蔡氏__standing_0002.png",
+            "crop": "shoulder-line",
+            "cropBox": "x=349,y=0,w=330,h=330",
+            "qc": "125px preview: original standing-art crop only; head and chin intact, face centered, shoulder line visible; original hair ornament retained."
+          }
+        ]
       }
     },
     {

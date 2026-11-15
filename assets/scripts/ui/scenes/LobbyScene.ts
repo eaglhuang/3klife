@@ -28,7 +28,17 @@ import { buildHallMapTurnSteps, hasHallMapFocus, type HallMapProvinceSource } fr
 import type { HallStageLayout } from '../../core/systems/HallStagePlanner';
 import { parseHallWanderData, spinePathFor, type HallWanderData } from '../../shared/lobby/wanderSupport';
 import { INITIAL_WALKER_STATE, planHallWalkers, type WalkerPlanState } from '../../core/systems/HallWalkerPlan';
-import { HallChatStore, parseChatBook, pickChatLine } from '../../core/systems/HallChatLines';
+import { HallChatStore, parseChatBook } from '../../core/systems/HallChatLines';
+import {
+    createHttpChatBookFetcher,
+    createLobbyDialogueProvider,
+    parseCloudDialogueConfig,
+    periodOfHour,
+    pickDialogueLine,
+    type LobbyDialogueContext,
+    type LobbyDialogueEvent,
+    type LobbyDialogueProvider,
+} from '../../core/systems/LobbyDialogueProvider';
 import { displayTitleOf } from '../../core/systems/HallStageFeed';
 import type { HallStageCast } from '../../core/systems/HallStageDirector';
 import { UIID, LayerType } from '../../core/config/UIConfig';
@@ -489,7 +499,10 @@ export class LobbyScene extends Component {
     private _hallBoard: HallBoardPanelController | null = null;
     /** 大廳輪替走動的當班名單狀態（60 秒換一批）與聊天台詞庫（Issue #2135） */
     private _hallWalkerState: WalkerPlanState = INITIAL_WALKER_STATE;
-    private _hallChat: HallChatStore | null = null;
+    /** 大廳台詞：內建底稿＋本機快取（store），對外只經由 LobbyDialogueProvider 取台詞 */
+    private _hallChatStore: HallChatStore | null = null;
+    private _hallDialogue: LobbyDialogueProvider | null = null;
+    /** 每位武將、每種事件上一句說的是哪句，連點時避開同一句 */
     private readonly _hallChatLast = new Map<string, string>();
     private _mercPanelHost: UIScreenPreviewHost | null = null;
     private _mercPanel: MercenaryPanelController | null = null;
@@ -2311,6 +2324,7 @@ export class LobbyScene extends Component {
     }
 
     private _openWishAltar(): void {
+        this._lobbyHall?.hideBubble();
         const host = this._wishAltarHost;
         if (!host || !this._wishAltar) {
             return;
@@ -3400,6 +3414,7 @@ export class LobbyScene extends Component {
 
     /** 開啟任務牆；傳入 board 時直接切到該牆（天下沙盤入口走 Expedition）。 */
     private _openHallBoard(board?: HallBoardKey): void {
+        this._lobbyHall?.hideBubble();
         const host = this._hallBoardHost;
         if (!host) {
             return;
@@ -3647,10 +3662,15 @@ export class LobbyScene extends Component {
         this._hallThemeConfig = themeConfig;
         const wander = parseHallWanderData(wanderRaw);
         // 內建台詞當離線底稿，本機快取（連線時同步來的新台詞）疊在上面
-        this._hallChat = new HallChatStore(
+        const chatStore = new HallChatStore(
             parseChatBook(chatRaw) ?? { version: 0, generic: [], generals: {} },
             { get: (key) => sys.localStorage.getItem(key), set: (key, value) => sys.localStorage.setItem(key, value) },
         );
+        this._hallChatStore = chatStore;
+        // 台詞接口：本地底稿為準；雲端開關預設關閉，開了也只在背景同步、失敗就退回本地
+        this._hallDialogue = createLobbyDialogueProvider(chatRaw, chatStore, {
+            fetcher: createHttpChatBookFetcher(parseCloudDialogueConfig(chatRaw).endpoint),
+        });
         const host = await this._mountPreviewScreenHost('LobbyHallHost', 'lobby-hall-screen');
         this._lobbyHallHost = host;
         // 大廳底欄與城池底欄同一套分類：點了展開城池子選單（轉蛋等入口都在裡面），不再各自直達單一功能
@@ -3658,6 +3678,7 @@ export class LobbyScene extends Component {
             sortie: 'sortie', generals: 'generals', domestic: 'domestic', training: 'nurture', shop: 'shop',
         };
         const dock = (id: LobbyHallDockId): void => {
+            this._lobbyHall?.hideBubble();
             this._cityHubCategory = toggleCategory(this._cityHubCategory, dockCategory[id]);
             this._refreshCityHub();
         };
@@ -3746,17 +3767,35 @@ export class LobbyScene extends Component {
         if (!profile) return null;
         const volunteer = this._hallBoard?.volunteerTaskFor(generalId) ?? null;
         if (volunteer) {
+            const text = this._speakLobby(generalId, 'volunteer', { task: volunteer.taskTitle });
+            if (text === null) return null;
             return {
                 name: profile.name,
-                text: `主公，「${volunteer.taskTitle}」讓我去吧！`,
+                text,
                 volunteer: { onAccept: () => { this.openVolunteerTask(generalId); } },
             };
         }
-        const chat = this._hallChat;
-        const pick = chat ? pickChatLine(chat.book, generalId, this._hallFriendshipOf(generalId), this._hallChatLast.get(generalId) ?? null, session.randomSource) : null;
-        if (!pick) return null;
-        this._hallChatLast.set(generalId, pick.line.id);
-        return { name: profile.name, text: pick.line.text };
+        const text = this._speakLobby(generalId, 'tap', {});
+        return text === null ? null : { name: profile.name, text };
+    }
+
+    /**
+     * 從台詞接口取一句（連點避開上一句）。台詞文字內可用 {key} 佔位，由 vars 代入。
+     * 接口沒有任何可用台詞時回傳 null，呼叫端就不開泡泡。
+     */
+    private _speakLobby(generalId: string, event: LobbyDialogueEvent, vars: Record<string, string>): string | null {
+        const dialogue = this._hallDialogue;
+        if (!dialogue) return null;
+        const context: LobbyDialogueContext = {
+            friendship: this._hallFriendshipOf(generalId),
+            period: periodOfHour(new Date().getHours()),
+            event,
+        };
+        const key = `${generalId}:${event}`;
+        const line = pickDialogueLine(dialogue.getLines(generalId, context), this._hallChatLast.get(key) ?? null, services().session.randomSource);
+        if (!line) return null;
+        this._hallChatLast.set(key, line.id);
+        return line.text.replace(/\{(\w+)\}/g, (whole, name: string) => vars[name] ?? whole);
     }
 
     /** 武將友誼值：友誼系統尚未建立，暫一律 0（只會說一開始就解鎖的台詞）；日後改接真正的友誼資料 */
@@ -3769,7 +3808,7 @@ export class LobbyScene extends Component {
      * 成功就寫入本機快取，下次離線也能用；失敗或沒有新版回傳 false，不影響現有台詞。
      */
     public syncHallChatLines(fetcher: (() => Promise<unknown>) | null): Promise<boolean> {
-        return this._hallChat ? this._hallChat.sync(fetcher) : Promise.resolve(false);
+        return this._hallChatStore ? this._hallChatStore.sync(fetcher) : Promise.resolve(false);
     }
 
     private _openLobbyHall(): void {
@@ -7223,6 +7262,7 @@ export class LobbyScene extends Component {
     }
 
     public onClickSpiritFamilyOverview() {
+        this._lobbyHall?.hideBubble();
         this.scheduleOnce(() => {
             void services().ui.open(UIID.SpiritFamilyOverview, {
                 origin: 'lobby',

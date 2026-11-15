@@ -27,6 +27,9 @@ import { services } from '../../core/managers/ServiceLoader';
 
 const { ccclass, property } = _decorator;
 
+/** 自動鈕二次確認的時間窗（毫秒） */
+const AUTO_CONFIRM_WINDOW_MS = 3000;
+
 @ccclass("BattleLogComposite")
 export class BattleLogComposite extends CompositePanel {
 
@@ -50,7 +53,8 @@ export class BattleLogComposite extends CompositePanel {
     private _isMounted = false;
     private readonly _readyWaiters: Array<(ready: boolean) => void> = [];
     // 控制列狀態
-    private _isAuto   = false;  // 自動戰鬥開關
+    private _isAuto   = false;  // 自動戰鬥開關（確認生效後恆為 true）
+    private _autoArmedAt: number | null = null;  // 自動鈕第一次按下的時間（待確認）
     private _speed    = 1;      // 遊戲速度（1 | 2）
     private _settings: BattleSettingsComposite | null = null;
     // 控制列節點引用（供視覺反饋使用）
@@ -210,12 +214,25 @@ export class BattleLogComposite extends CompositePanel {
 
     // ── 私有：按鈕事件處理 ───────────────────────────────────────────────────
 
+    /**
+     * 自動鈕：自動結算整場戰鬥不可逆，需在 3 秒內按兩次才生效。
+     * 第一次只跳 Toast 提示；逾時未再按則視為取消（狀態不變）。
+     * 生效後 _isAuto 保持 true，按鈕外觀不再翻回「關閉」。
+     */
     private _onAutoClick(): void {
-        this._isAuto = !this._isAuto;
+        if (this._isAuto) return;
+        const now = Date.now();
+        if (this._autoArmedAt === null || now - this._autoArmedAt > AUTO_CONFIRM_WINDOW_MS) {
+            this._autoArmedAt = now;
+            services().event.emit(EVENT_NAMES.ShowToast, { text: '再按一次：自動結算整場戰鬥' });
+            return;
+        }
+        this._autoArmedAt = null;
+        this._isAuto = true;
         const op = this._btnAuto?.getComponent('cc.UIOpacity') as any;
-        if (op) op.opacity = this._isAuto ? 180 : 255;
-        services().event.emit(EVENT_NAMES.AutoBattleToggled, this._isAuto);
-        UCUFLogger.info(LogCategory.UI, `[BattleLogComposite] AutoBattle → ${this._isAuto}`);
+        if (op) op.opacity = 180;
+        services().event.emit(EVENT_NAMES.AutoBattleToggled, true);
+        UCUFLogger.info(LogCategory.UI, '[BattleLogComposite] AutoBattle → true（已確認）');
     }
 
     private _onDelegateClick(): void {

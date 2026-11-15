@@ -27,12 +27,22 @@ import { services } from '../../core/managers/ServiceLoader';
 import { CompositePanel } from '../core/CompositePanel';
 import { TACTIC_REASON_WEATHER } from '../core/TacticAvailabilityPresenter';
 import { UITemplateBinder } from '../core/UITemplateBinder';
-import { UltimateSelectPopup, UltimateSkillItem } from './UltimateSelectPopup';
+import { UltimateSelectPopup, UltimateSkillItem, UNASSIGNED_ULTIMATE_SKILL_ID } from './UltimateSelectPopup';
 import { markUsedUltimates, ultimateUsageKey } from '../core/UltimateUsage';
 import { SkillSourceType } from '../../shared/SkillRuntimeContract';
 import { logBattleUIPosition } from './BattleUIDiag';
 
 const { ccclass, property } = _decorator;
+
+/**
+ * 計謀鈕灰階顯示。不使用 interactable=false：Button 不可互動時收不到 CLICK，
+ * 就無法跳出不可用原因的 Toast，因此按鈕保持可點，由 _onTacticsClick 擋下。
+ */
+function applyTacticsDim(button: Button | null, enabled: boolean): void {
+    if (!button) return;
+    button.interactable = true;
+    for (const sprite of button.node.getComponentsInChildren(Sprite)) sprite.grayscale = !enabled;
+}
 
 @ccclass('ActionCommandComposite')
 export class ActionCommandComposite extends CompositePanel {
@@ -60,6 +70,8 @@ export class ActionCommandComposite extends CompositePanel {
     // ── 目前 SP 狀態 ──────────────────────────────────────────
     private _tacticEnabled = true;
     private _tacticClickable = true;
+    /** 計謀不可用的原因（由 setTacticSummary 傳入，用於點擊時的 Toast 說明） */
+    private _tacticReason: string | null = null;
     private _tacticsButton: Button | null = null;
     private _duelButtonNode: Node | null = null;
     private _duelLocked = false;
@@ -130,7 +142,8 @@ export class ActionCommandComposite extends CompositePanel {
         this._tacticEnabled = points?.enabled ?? true;
         // 天氣禁用：變灰但保留點擊，讓點擊後的天氣 Toast 出得來（PROG-2-0597）
         this._tacticClickable = this._tacticEnabled || reason === TACTIC_REASON_WEATHER;
-        if (this._tacticsButton) this._tacticsButton.interactable = this._tacticClickable;
+        this._tacticReason = reason ?? null;
+        applyTacticsDim(this._tacticsButton, this._tacticEnabled);
         if (this._tacticsLabel) {
             this._tacticsLabel.string = this._tacticsButtonCaption;
             if (this._tacticsEnabledColor) this._tacticsLabel.color = this._tacticEnabled
@@ -203,7 +216,7 @@ export class ActionCommandComposite extends CompositePanel {
         // 結束回合、計謀、單挑
         binder.getNode('EndTurnBtn')?.on(Button.EventType.CLICK, this._onEndTurnClick, this);
         this._tacticsButton = binder.getNode('TacticsBtn')?.getComponent(Button) ?? null;
-        if (this._tacticsButton) this._tacticsButton.interactable = this._tacticClickable;
+        applyTacticsDim(this._tacticsButton, this._tacticEnabled);
         binder.getNode('TacticsBtn')?.on(Button.EventType.CLICK, this._onTacticsClick, this);
         binder.getNode('DuelBtn')?.on(Button.EventType.CLICK, this._onDuelClick, this);
         this._duelButtonNode = binder.getNode('DuelBtn');
@@ -317,7 +330,7 @@ export class ActionCommandComposite extends CompositePanel {
 
         const skills = this._ultimateSkills.length > 0
             ? markUsedUltimates(this._ultimateSkills, this._usedUltimateSkillIds)
-            : [{ skillId: 'unassigned-ultimate', label: services().i18n.t('ui.ultimate.unassigned'), costSp: this._maxSp }];
+            : [{ skillId: UNASSIGNED_ULTIMATE_SKILL_ID, label: services().i18n.t('ui.ultimate.unassigned'), costSp: this._maxSp }];
 
         this.ultimateSelectPopup.show(skills, this._ultimateBtnNode ?? undefined);
     }
@@ -329,8 +342,15 @@ export class ActionCommandComposite extends CompositePanel {
 
     /** 計謀：通知父節點 */
     private _onTacticsClick(): void {
+        // 不可用時先說明原因（灰掉的按鈕點了不能沒有回饋），再擋下
+        if (!this._tacticClickable) this._toastTacticsBlocked();
         if (!this._tacticClickable) return;
         this.node.emit('tactics');
+    }
+
+    private _toastTacticsBlocked(): void {
+        const text = this._tacticReason ? `計謀暫不可用：${this._tacticReason}` : '計謀點不足或本回合已用過';
+        services().event.emit(EVENT_NAMES.ShowToast, { text });
     }
 
     /**

@@ -17,6 +17,8 @@ export interface BattleCombatPhaseContext {
   resolveActionResetAfterAttack(attacker: TroopUnit, didKill: boolean, actions: BattleCombatAction[]): void;
   onGeneralUnitKilled(faction: Faction, svc: ReturnType<typeof services>): void;
   onUnitKilled(unit: TroopUnit, killer: TroopUnit | null, svc: ReturnType<typeof services>): void;
+  /** 本回合剛部署的部隊不主動攻擊（PROG-2-9048）；不提供時視為都可攻擊 */
+  isUnitDeployedThisTurn?(unitId: string): boolean;
 }
 
 export function executeBattleCombatPhase(context: BattleCombatPhaseContext): void {
@@ -74,6 +76,7 @@ function buildFactionAttackActions(
     if (unit.attackRange === 0) continue;
     if (unit.isDead()) continue;
     if (svc.buff.hasBuff(unit.id, StatusEffect.Stun)) continue;
+    if (context.isUnitDeployedThisTurn?.(unit.id)) continue;
     units.push(unit);
   }
 
