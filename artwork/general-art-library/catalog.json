@@ -1244,6 +1244,23 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/dian_wei__典韋__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "59433cebe77e524e087047e63f9db3b4c5e96ce11f0bf82c51659c8a5922916a",
+            "canvas": "1254x1254 RGBA",
+            "source": "standing/dian_wei__典韋__standing_0002.png",
+            "crop": "shoulder-line",
+            "cropBox": "x=372,y=10,w=300,h=300",
+            "qc": "125px preview: direct crop from approved standing art; headband, full face and chin visible, face centered, shoulder armor edge only."
+          }
+        ]
       }
     },
     {
