@@ -39,7 +39,10 @@ export const GAME_CONFIG = {
    * 暫定值，用來維持戰鬥長度，之後依實測調整。
    */
   generalDamageMultiplier: 1.5,
-  TURN_LIMIT: 50,
+  // 規格《戰場大回合推進狀態機》：回合數超過 30 裁定攻方撤退失敗
+  TURN_LIMIT: 30,
+  // 首戰教學戰的回合上限：十回合內必分勝負，不讓新玩家磨空城池；用盡算敵軍退兵、我方獲勝（總PM 裁定）
+  TUTORIAL_TURN_LIMIT: 10,
   AI_COUNTER_STRATEGY_CHANCE: 0.35,
   // 武將化身單挑：暴擊與閃躲參數（對應 E-11/E-14）
   GENERAL_BASE_CRIT_CHANCE: 0.05,         // 基礎暴擊率 5%（與 E-11 baseCrit 對應）

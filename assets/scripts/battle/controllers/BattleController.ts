@@ -306,6 +306,7 @@ export class BattleController {
     this.sortie = null;
     services().buff.clearAll(); // 清除上一場的狀態效果
     services().battle.beginBattle();
+    this.applyTutorialTurnLimit();
     this.applyStartOfBattleSceneGambit();
     this.tileBuffLifecycleManager.spawnTileBuffsForTurn();
   }
@@ -1512,8 +1513,19 @@ export class BattleController {
     return this.flowStateMachine.canRequestGeneralDuel();
   }
 
-  /** 首戰教學最多十二個完整回合，避免已無操作教學價值仍需磨空城池。只限 tutorial。 */
-  public tutorialBattle = false;
+  /** 首戰教學戰：敵方只補有限波次；回合上限改為 GAME_CONFIG.TUTORIAL_TURN_LIMIT，用盡算我方獲勝，避免磨空城池。 */
+  public get tutorialBattle(): boolean { return this._tutorialBattle; }
+  public set tutorialBattle(value: boolean) {
+    this._tutorialBattle = value;
+    this.applyTutorialTurnLimit();
+  }
+  private _tutorialBattle = false;
+
+  /** 開戰會把回合上限重設回預設值，所以開戰後與旗標變更時都要重新套用（含「再戰一次」） */
+  private applyTutorialTurnLimit(): void {
+    // 教學戰不強制判負（PROG-2-2215 方案 b）：回合用盡算敵軍退兵、玩家獲勝
+    if (this._tutorialBattle) services().battle.configureTurnLimit(GAME_CONFIG.TUTORIAL_TURN_LIMIT, 'player-win');
+  }
 
   public retreatBattle(): BattleResult {
     if (this.flowStateMachine.isFinished()) return this.flowStateMachine.result!;

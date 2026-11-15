@@ -9,6 +9,9 @@ export interface TurnSnapshot {
   playerFood: number;
 }
 
+/** 回合用盡時的勝方 */
+export type TurnLimitOutcome = 'enemy-win' | 'player-win';
+
 export interface BattleFoodConfig {
   initial: number;
   max: number;
@@ -29,6 +32,10 @@ export class BattleSystem {
   private eventSystem: EventSystem | null = null;
   /** 本場糧草設定；出征帳本（PROG-2-0070）會改成「玩家糧草儲備、不每回合補」 */
   private foodConfig: BattleFoodConfig = { ...DEFAULT_FOOD_CONFIG };
+  /** 本場回合上限；預設取全域設定，教學戰會改短 */
+  private turnLimit: number = GAME_CONFIG.TURN_LIMIT;
+  /** 回合用盡時誰贏：一般戰鬥是攻方（玩家）撤退落敗；教學戰改成敵軍退兵、玩家獲勝 */
+  private turnLimitOutcome: TurnLimitOutcome = 'enemy-win';
 
   /** 由 ServiceLoader 或外部注入 EventSystem */
   public setEventSystem(eventSystem: EventSystem): void {
@@ -40,7 +47,24 @@ export class BattleSystem {
     this.phase = TurnPhase.PlayerDeploy;
     this.foodConfig = { ...DEFAULT_FOOD_CONFIG };
     this.playerFood = this.foodConfig.initial;
+    this.turnLimit = GAME_CONFIG.TURN_LIMIT;
+    this.turnLimitOutcome = 'enemy-win';
     this.emitPhaseChange();
+  }
+
+  /** 改用指定的回合上限與用盡時的勝方；上限不是正整數就整個忽略。beginBattle() 會恢復預設 */
+  public configureTurnLimit(limit: number, outcome: TurnLimitOutcome = 'enemy-win'): void {
+    if (!Number.isInteger(limit) || limit <= 0) return;
+    this.turnLimit = limit;
+    this.turnLimitOutcome = outcome;
+  }
+
+  public getTurnLimitOutcome(): TurnLimitOutcome {
+    return this.turnLimitOutcome;
+  }
+
+  public getTurnLimit(): number {
+    return this.turnLimit;
   }
 
   /** 改用指定的糧草設定並重設目前糧草；beginBattle() 會恢復預設 */
@@ -103,7 +127,7 @@ export class BattleSystem {
   }
 
   public isTurnLimitReached(): boolean {
-    return this.turn > GAME_CONFIG.TURN_LIMIT;
+    return this.turn > this.turnLimit;
   }
 
   /**

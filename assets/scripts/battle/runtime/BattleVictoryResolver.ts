@@ -9,12 +9,14 @@ export function resolveBattleVictory(state: BattleState): BattleResult {
   const playerGeneral = state.playerGeneral;
   const enemyGeneral = state.enemyGeneral;
 
-  const playerLost = (playerGeneral?.isDead() ?? false)
-    || state.playerFortressHp <= 0
-    || svc.battle.isTurnLimitReached();
+  const playerBroken = (playerGeneral?.isDead() ?? false) || state.playerFortressHp <= 0;
+  const enemyBroken = (enemyGeneral?.isDead() ?? false) || state.enemyFortressHp <= 0;
+  // 回合用盡：一般戰鬥判攻方（玩家）撤退落敗；教學戰判敵軍退兵、玩家獲勝。已有一方被打垮時不看回合
+  const timeUp = svc.battle.isTurnLimitReached() && !playerBroken && !enemyBroken;
+  const timeUpWinner = svc.battle.getTurnLimitOutcome();
 
-  const enemyLost = (enemyGeneral?.isDead() ?? false)
-    || state.enemyFortressHp <= 0;
+  const playerLost = playerBroken || (timeUp && timeUpWinner === 'enemy-win');
+  const enemyLost = enemyBroken || (timeUp && timeUpWinner === 'player-win');
 
   let result: BattleResult = 'ongoing';
   if (playerLost && enemyLost) result = 'draw';
@@ -25,7 +27,14 @@ export function resolveBattleVictory(state: BattleState): BattleResult {
   if (result !== 'ongoing' && !state.battleEndAnnounced) {
     state.battleEndAnnounced = true;
     // 關卡級回收（PROG-2-1462）：戰後摘要依此結算，帶快照避免後續改動
-    svc.event.emit(EVENT_NAMES.BattleEnded, { result, salvage: { ...state.stageSalvage } });
+    // 只因回合用盡而落敗時，主將與城寨都還在：結算文案要說撤退，不說「敵方突破防線」
+    const retreated = timeUp && result === 'enemy-win';
+    svc.event.emit(EVENT_NAMES.BattleEnded, {
+      result,
+      salvage: { ...state.stageSalvage },
+      ...(retreated ? { retreated: true } : {}),
+      ...(timeUp ? { timeUp: true } : {}),
+    });
   }
 
   return result;

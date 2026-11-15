@@ -435,7 +435,7 @@ export class BattleScene extends Component {
       UCUFLogger.info(LogCategory.BATTLE, `[BattleScene] HUD 已刷新: ${!!this.hud}`);
       this.battleLogPanel?.clear();
       this.battleLogPanel?.append(`第 ${snap.turn} 回合開始，糧草 ${snap.playerFood}`);
-      if (battleParams.tutorial) this.battleLogPanel?.append('首戰教學最多十二回合；未分勝負則以撤退結算，可隨時從「退」確認撤退。');
+      if (battleParams.tutorial) this.battleLogPanel?.append(`首戰教學最多 ${GAME_CONFIG.TUTORIAL_TURN_LIMIT} 回合；守到最後敵軍會自行退兵，算我方獲勝。也可隨時從「退」確認撤退。`);
       const deputyLine = deputySupportLine(support.deputy?.name, support.deputyBonus.foodCapBonus);
       if (deputyLine) this.battleLogPanel?.append(deputyLine);
       if (enemyScale?.adaptiveHint) this.battleLogPanel?.append(enemyScale.adaptiveHint);

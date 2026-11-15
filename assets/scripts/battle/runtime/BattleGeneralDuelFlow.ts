@@ -404,8 +404,10 @@ export class BattleGeneralDuelFlow {
     const pg = this.context.state.playerGeneral;
     const eg = this.context.state.enemyGeneral;
 
-    const playerLost = (pg?.isDead() ?? false) || svc.battle.isTurnLimitReached();
-    const enemyLost = (eg?.isDead() ?? false);
+    // 回合用盡的勝方與 resolveBattleVictory 一致（教學戰是玩家勝）
+    const timeUp = svc.battle.isTurnLimitReached() && !(pg?.isDead() ?? false) && !(eg?.isDead() ?? false);
+    const playerLost = (pg?.isDead() ?? false) || (timeUp && svc.battle.getTurnLimitOutcome() === 'enemy-win');
+    const enemyLost = (eg?.isDead() ?? false) || (timeUp && svc.battle.getTurnLimitOutcome() === 'player-win');
 
     let result: BattleResult = "ongoing";
     if (playerLost && enemyLost) result = "draw";
