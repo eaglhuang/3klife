@@ -22,8 +22,22 @@ export interface HallWanderData {
     bubbleSeconds: number;
     /** 單次更新最長秒數；從停放回大廳時 dt 可能很大，截斷避免角色瞬間跳走。 */
     maxStepSec: number;
-    /** 武將 id → resources 底下的 SkeletonData 路徑；沒列的武將維持靜態小人。 */
+    /** 武將 id → resources 底下的 SkeletonData 路徑；沒列的武將是靜態小人，改走通用步態。 */
     spine: Record<string, string>;
+    /** 通用步態（沒有骨架的靜態小人）：走動時上下晃的高度（舞台像素）與每秒晃幾次。 */
+    staticGait: { bobPx: number; bobHz: number };
+}
+
+/** 通用步態的預設值：設定檔缺欄位時使用 */
+export const DEFAULT_STATIC_GAIT = { bobPx: 7, bobHz: 2.4 } as const;
+
+/**
+ * 靜態小人（沒有骨架）走動中的垂直偏移：以「落腳」節奏取絕對值的正弦，每步彈起一次、落地回到 0。
+ * phaseSec 是該角色走動累計秒數；站著（walking=false）不晃，回傳 0。
+ */
+export function staticBobOffset(gait: Readonly<{ bobPx: number; bobHz: number }>, phaseSec: number, walking: boolean): number {
+    if (!walking) return 0;
+    return Math.abs(Math.sin(Math.PI * gait.bobHz * phaseSec)) * gait.bobPx;
 }
 
 export interface CanvasSize {
@@ -97,6 +111,14 @@ export function clampWanderDt(dt: number, maxStepSec: number): number {
     return Math.min(dt, maxStepSec);
 }
 
+function parseStaticGait(raw: unknown): { bobPx: number; bobHz: number } {
+    const g = (raw && typeof raw === 'object' ? raw : {}) as { bobPx?: unknown; bobHz?: unknown };
+    return {
+        bobPx: typeof g.bobPx === 'number' && Number.isFinite(g.bobPx) && g.bobPx >= 0 ? g.bobPx : DEFAULT_STATIC_GAIT.bobPx,
+        bobHz: typeof g.bobHz === 'number' && Number.isFinite(g.bobHz) && g.bobHz > 0 ? g.bobHz : DEFAULT_STATIC_GAIT.bobHz,
+    };
+}
+
 /** 設定檔最低限度檢查；缺欄位就回傳 null，大廳整個退回靜態小人。 */
 export function parseHallWanderData(raw: unknown): HallWanderData | null {
     if (!raw || typeof raw !== 'object') return null;
@@ -118,5 +140,6 @@ export function parseHallWanderData(raw: unknown): HallWanderData | null {
         bubbleSeconds: Number.isFinite(d.bubbleSeconds) ? (d.bubbleSeconds as number) : 2,
         maxStepSec: Number.isFinite(d.maxStepSec) && (d.maxStepSec as number) > 0 ? (d.maxStepSec as number) : 0.1,
         spine: d.spine && typeof d.spine === 'object' ? { ...d.spine } : {},
+        staticGait: parseStaticGait(d.staticGait),
     };
 }

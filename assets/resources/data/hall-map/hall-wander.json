@@ -14,6 +14,7 @@
   "clickRadius": 90,
   "bubbleSeconds": 2,
   "maxStepSec": 0.1,
+  "staticGait": { "bobPx": 7, "bobHz": 2.4 },
   "spine": {
     "zhao-yun": "spine/generals/zhao_yun/zhao_v2",
     "zhang-fei": "spine/generals/zhang_fei/char2",

@@ -26,6 +26,7 @@ import {
     buildWanderConfig,
     clampWanderDt,
     spinePathFor,
+    staticBobOffset,
     wanderEntryPoint,
     wanderToStage,
 } from '../../shared/lobby/wanderSupport';
@@ -53,6 +54,13 @@ interface CrowdActor {
     stageY: number;
     /** 正在走出畫面：不能再點、不再接受名單更新 */
     leaving: boolean;
+    /** 靜態小人的通用步態用：站位姿態的縮放（正值，翻面由走動方向決定）與兩個累計時鐘 */
+    baseScaleX: number;
+    baseScaleY: number;
+    /** 站立呼吸的相位時鐘（秒） */
+    breathSec: number;
+    /** 這一段連續走動已走了幾秒（落腳節奏的相位），停下就歸零 */
+    walkSec: number;
 }
 
 @ccclass('HallStageCrowd')
@@ -155,9 +163,9 @@ export class HallStageCrowd extends Component {
         });
     }
 
-    /** 對話結束後讓武將繼續走（泡泡收起時呼叫）；靜態小人本來就鎖在原地，不放行 */
+    /** 對話結束後讓武將繼續走（泡泡收起時呼叫） */
     public releaseActor(generalId: string): void {
-        if (this._actors.get(generalId)?.skeleton) this._wander?.unlock(generalId);
+        if (this._actors.has(generalId)) this._wander?.unlock(generalId);
     }
 
     protected update(dt: number): void {
@@ -165,8 +173,9 @@ export class HallStageCrowd extends Component {
         const data = this._wanderData;
         if (!wander || !data) return;
         // 從大廳停放回來時 dt 可能很大；截斷後角色從原地接著走
-        const states = wander.step(clampWanderDt(dt, data.maxStepSec));
-        states.forEach((state, order) => this._applyState(state, order, data));
+        const step = clampWanderDt(dt, data.maxStepSec);
+        const states = wander.step(step);
+        states.forEach((state, order) => this._applyState(state, order, data, step));
         wander.drainRemoved().forEach(id => this._dispose(id));
     }
 
@@ -241,18 +250,29 @@ export class HallStageCrowd extends Component {
         const tag = this._makeLabel(`tag-${placement.generalId}`, this._tagText(placement), 16, TAG_COLOR);
         const mark = placement.hasTaskMark ? this._makeLabel(`mark-${placement.generalId}`, '!', 30, MARK_COLOR) : null;
         const pose = hallStageCrowdPose(placement, placement.height, decor, index);
-        body.setPosition(pose.body.x, pose.body.y, 0);
+        const data = this._wanderData;
+        // 啟用走動時沒有骨架的武將也走（通用步態）：輪替進場的從場外走進來，位置與晃動由走動模擬每幀決定
+        const walks = !!data;
+        const at = data && arrive
+            ? wanderToStage(wanderEntryPoint(data, pose.body.x, pose.body.y, this._canvas), this._canvas)
+            : { x: pose.body.x, y: pose.body.y };
+        body.setPosition(at.x, at.y, 0);
         body.setScale(pose.body.scaleX, pose.body.scaleY, 1);
-        tag.setPosition(pose.tag.x, pose.tag.y, 0);
+        tag.setPosition(at.x, at.y - decor.tagBelowFootPx, 0);
         tag.active = this._tagsVisible;
-        if (mark) mark.setPosition(pose.mark.x, pose.mark.y, 0);
-        this._headPositions.set(placement.generalId, new Vec3(pose.mark.x, pose.mark.y, 0));
+        const headY = at.y + placement.height + decor.markAboveHeadPx;
+        if (mark) mark.setPosition(at.x, headY, 0);
+        this._headPositions.set(placement.generalId, new Vec3(at.x, headY, 0));
 
-        this._playIdle(body, pose.body.scaleX, pose.body.scaleY, pose.idleDelaySec, decor);
-        if (mark) this._playBob(mark, decor);
+        if (!walks) {
+            this._playIdle(body, pose.body.scaleX, pose.body.scaleY, pose.idleDelaySec, decor);
+            if (mark) this._playBob(mark, decor);
+        }
         const actor: CrowdActor = {
             id: placement.generalId, placement, node: body, skeleton: null, tag, mark,
-            anim: '', state: null, stageX: pose.body.x, stageY: pose.body.y, leaving: false,
+            anim: '', state: null, stageX: at.x, stageY: at.y, leaving: false,
+            baseScaleX: Math.abs(pose.body.scaleX), baseScaleY: pose.body.scaleY,
+            breathSec: pose.idleDelaySec, walkSec: 0,
         };
         this._bindTap(actor);
         return actor;
@@ -308,6 +328,7 @@ export class HallStageCrowd extends Component {
         const actor: CrowdActor = {
             id: placement.generalId, placement, node: body, skeleton, tag, mark,
             anim: anims.idle, state: null, stageX: at.x, stageY: at.y, leaving: false,
+            baseScaleX: data.generalScale, baseScaleY: data.generalScale, breathSec: 0, walkSec: 0,
         };
         this._bindTap(actor);
         return actor;
@@ -321,7 +342,6 @@ export class HallStageCrowd extends Component {
         if (!this._wander) this._wander = new HallWander(buildWanderConfig(data, [], this._canvas));
         // 起點就是節點當下的位置：輪替進場的 Spine 武將在場外，其餘在站位上
         this._wander.addActor(buildWanderActor(data, { id: actor.id, stageX: actor.stageX, stageY: actor.stageY }, this._canvas));
-        if (!actor.skeleton) this._wander.lockIdle(actor.id);
     }
 
     // ─────────────────────────── 退場／更新 ───────────────────────────
@@ -329,7 +349,7 @@ export class HallStageCrowd extends Component {
     private _retire(id: string): void {
         const actor = this._actors.get(id);
         if (!actor || actor.leaving) return;
-        if (actor.skeleton && this._wander) {
+        if (this._wander) {
             actor.leaving = true;
             this._wander.leave(id);
             return;
@@ -364,7 +384,8 @@ export class HallStageCrowd extends Component {
             const head = this._headPositions.get(actor.id);
             actor.mark = this._makeLabel(`mark-${actor.id}`, '!', 30, MARK_COLOR);
             if (head) actor.mark.setPosition(head.x, head.y, 0);
-            if (!actor.skeleton) this._playBob(actor.mark, decor);
+            // 靜態小人走動時標記由走動模擬每幀定位，不能再疊上下彈的動畫
+            if (!actor.skeleton && !this._wanderData) this._playBob(actor.mark, decor);
         } else if (!placement.hasTaskMark && actor.mark) {
             Tween.stopAllByTarget(actor.mark);
             if (actor.mark.isValid) actor.mark.destroy();
@@ -372,12 +393,42 @@ export class HallStageCrowd extends Component {
         }
     }
 
-    private _applyState(state: WanderActorState, order: number, data: HallWanderData): void {
+    /**
+     * 沒有骨架的靜態小人走動：位置跟走動模擬、依方向左右翻面（scaleX 正負）、
+     * 走動時依落腳節奏上下彈、站著時沿用原本的呼吸起伏。日後骨架量產後會被 Spine 武將取代。
+     */
+    private _applyStaticState(actor: CrowdActor, state: WanderActorState, order: number, data: HallWanderData, dt: number): void {
+        const decor = this._decor;
+        if (!decor) return;
+        const stage = wanderToStage({ x: state.x, y: state.y }, this._canvas);
+        const walking = state.anim === WANDER_ANIMS.general.walk;
+        actor.state = state;
+        actor.walkSec = walking ? actor.walkSec + dt : 0;
+        actor.breathSec += dt;
+        let lift: number;
+        let stretch = 1;
+        if (walking) {
+            lift = staticBobOffset(data.staticGait, actor.walkSec, true);
+        } else {
+            const k = (1 - Math.cos((2 * Math.PI * actor.breathSec) / decor.idle.periodSec)) / 2;
+            lift = decor.idle.risePx * k;
+            stretch = 1 + decor.idle.stretchY * k;
+        }
+        actor.node.setPosition(stage.x, stage.y + lift, 0);
+        actor.node.setScale(actor.baseScaleX * state.facing, actor.baseScaleY * stretch, 1);
+        actor.node.setSiblingIndex(order);
+        const headY = stage.y + actor.placement.height + decor.markAboveHeadPx;
+        actor.tag.setPosition(stage.x, stage.y - decor.tagBelowFootPx, 0);
+        actor.mark?.setPosition(stage.x, headY, 0);
+        this._headPositions.set(state.id, new Vec3(stage.x, headY, 0));
+    }
+
+    private _applyState(state: WanderActorState, order: number, data: HallWanderData, dt: number): void {
         const actor = this._actors.get(state.id);
         const decor = this._decor;
         if (!actor || !actor.node.isValid) return;
         if (!actor.skeleton) {
-            actor.node.setSiblingIndex(order);
+            this._applyStaticState(actor, state, order, data, dt);
             return;
         }
         if (!decor) return;
@@ -405,21 +456,23 @@ export class HallStageCrowd extends Component {
     }
 
     /**
-     * Spine 武將只有發呆中才接點擊：停在原地、通知外面開對話，過一陣子自動放行繼續走。
-     * 靜態小人本來就站著，點了直接通知外面。退場中的不接。
+     * Spine 武將只有發呆中才接點擊（走動中的骨架判定框跟不上腳步）；靜態小人（通用步態）走動中也能點。
+     * 點到都是：停在原地、通知外面開對話，過一陣子自動放行繼續走。退場中的不接。
      */
     private _onBodyTap(generalId: string): void {
         const actor = this._actors.get(generalId);
         if (!actor || actor.leaving) return;
-        if (!actor.skeleton) {
-            this._onActorTap?.(generalId);
-            return;
-        }
         const wander = this._wander;
         const data = this._wanderData;
-        if (!wander || !data || !actor.state) return;
-        const hit = wander.pickIdleAt(actor.state.x, actor.state.y, 1);
-        if (!hit || hit.id !== generalId) return;
+        if (!wander || !data || !actor.state) {
+            // 沒啟用走動：靜態小人本來就站著，點了直接通知外面
+            if (!actor.skeleton) this._onActorTap?.(generalId);
+            return;
+        }
+        if (actor.skeleton) {
+            const hit = wander.pickIdleAt(actor.state.x, actor.state.y, 1);
+            if (!hit || hit.id !== generalId) return;
+        }
         wander.lockIdle(generalId);
         // 外面可回傳要停多久（自薦任務的對話框要開比較久）；沒回傳就用設定檔的泡泡秒數
         const holdSec = this._onActorTap?.(generalId);

@@ -14,7 +14,9 @@ import {
     buildWanderConfig,
     clampWanderDt,
     parseHallWanderData,
+    DEFAULT_STATIC_GAIT,
     spinePathFor,
+    staticBobOffset,
     stageToWander,
     wanderEntryPoint,
     wanderToStage,
@@ -102,6 +104,29 @@ export function createLobbyWanderSupportSuite(): TestSuite {
         assert.equals(actorSpeed('general', data.generalScale), actor.speed);
         const fromSpot = buildWanderActor(data, { id: 'a', stageX: -320, stageY: -332 }, CANVAS);
         assert.equals(640, fromSpot.start.x);
+    });
+
+    suite.test('通用步態（沒有骨架的小人）：站著不晃、走動時每步彈起一次且不超過設定高度、落腳時回到 0', () => {
+        const gait = { bobPx: 7, bobHz: 2 };
+        assert.equals(0, staticBobOffset(gait, 0.3, false));
+        assert.isTrue(staticBobOffset(gait, 0, true) < 1e-9, '起步在地面');
+        assert.isTrue(staticBobOffset(gait, 0.5, true) < 1e-9, '每步（1/bobHz 秒）落腳一次');
+        assert.isTrue(Math.abs(staticBobOffset(gait, 0.25, true) - 7) < 1e-9, '步中間彈到最高');
+        for (let t = 0; t < 3; t += 0.013) {
+            const v = staticBobOffset(gait, t, true);
+            assert.isTrue(v >= 0 && v <= 7 + 1e-9);
+        }
+    });
+
+    suite.test('通用步態設定：資料檔有值、缺欄位或壞值退回預設', () => {
+        const good = loadData() as Record<string, unknown>;
+        const data = parseHallWanderData(good)!;
+        assert.isTrue(data.staticGait.bobPx > 0 && data.staticGait.bobHz > 0);
+        const missing = parseHallWanderData({ ...good, staticGait: undefined })!;
+        assert.equals(DEFAULT_STATIC_GAIT.bobPx, missing.staticGait.bobPx);
+        const bad = parseHallWanderData({ ...good, staticGait: { bobPx: -3, bobHz: 0 } })!;
+        assert.equals(DEFAULT_STATIC_GAIT.bobHz, bad.staticGait.bobHz);
+        assert.equals(DEFAULT_STATIC_GAIT.bobPx, bad.staticGait.bobPx);
     });
 
     return suite;
