@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "source": "../轉蛋系統.md",
+  "indexTitle": "轉蛋系統規格書",
+  "indexPath": "docs/遊戲規格文件/系統規格書/轉蛋系統.md",
+  "type": "markdown-h2",
+  "preambleShard": "core",
+  "defaultShard": "rulings",
+  "shards": [
+    {
+      "name": "core",
+      "title": "A–E 系統描述、目的、商業、TA、功能清單",
+      "pattern": "^[A-E]\\."
+    },
+    {
+      "name": "formula",
+      "title": "F–G 公式與劇本／主視覺",
+      "pattern": "^[F-G]\\."
+    },
+    {
+      "name": "schema",
+      "title": "H–I 字串與 Data Schema",
+      "pattern": "^[H-I]\\."
+    },
+    {
+      "name": "terms",
+      "title": "J–K 名詞定義與傳承邊界",
+      "pattern": "^[J-K]\\."
+    },
+    {
+      "name": "rulings",
+      "title": "L 與 MCQ 裁決紀錄",
+      "pattern": "^L\\."
+    }
+  ]
+}

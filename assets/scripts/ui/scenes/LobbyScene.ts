@@ -239,7 +239,7 @@ import { buildStageAwakenedTexts, buildStageCapRaisedTexts, type MirrorStageResu
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { warnGeneralSchemaOnLoad } from '../../core/models/GeneralSchema';
 import { coreFieldCoverage, formatCoreFieldCoverage } from '../../core/systems/GeneralCoreFields';
-import { fitContain } from '../core/GachaResultRanking';
+import { PortraitBounds, PortraitBoundsDoc, placePortraitOnBaseline } from '../core/GachaPortraitBaseline';
 import { DEFAULT_POOL_ID as GACHA_GENERAL_POOL_ID, GachaFlowCoordinator, GACHA_PULL_RESULT_SCREEN_ID, GACHA_SCREEN_ID } from '../core/GachaFlowCoordinator';
 import { buildDestinyOpeningResults } from '../core/DestinyOpeningResult';
 import type { DestinyPoolView } from '../core/DestinyOpeningController';
@@ -6996,7 +6996,7 @@ export class LobbyScene extends Component {
             return;
         }
         sprite.enabled = false;
-        void loadGeneralPortrait(generalId).then((frame) => {
+        void Promise.all([loadGeneralPortrait(generalId), this._loadPortraitBounds()]).then(([frame, bounds]) => {
             if (seq !== this._gachaBannerPortraitSeq || !sprite.isValid) return;
             // 有立繪才收掉原稿佔位框；載入不到就留著框
             setPlaceholderBackdropVisible(artNode, !frame);
@@ -7004,21 +7004,31 @@ export class LobbyScene extends Component {
             sprite.sizeMode = Sprite.SizeMode.CUSTOM;
             sprite.trim = false;
             sprite.spriteFrame = frame;
-            // 主角立繪盡量放大：底邊貼原框底，往上撐到畫面頂端（留邊），寬度可超出原框，但不超出畫面
+            // 統一腳底基準線＋統一身高比例（PROG-2-9037）：腳底貼原框底，頭頂上限為畫面頂端留邊
             const canvas = artNode.scene?.getComponentInChildren(Canvas)?.node.getComponent(UITransform) ?? null;
-            const bottomY = artNode.worldPosition.y - box.height * box.anchorY;
-            const topY = canvas ? canvas.node.worldPosition.y + canvas.height * (1 - canvas.anchorY) : bottomY + box.height;
-            const fit = fitContain(box.width * 1.8, Math.max(box.height, topY - bottomY - 24), frame.originalSize.width, frame.originalSize.height);
+            const topLocal = canvas ? canvas.node.worldPosition.y + canvas.height * (1 - canvas.anchorY) - artNode.worldPosition.y : box.height * (1 - box.anchorY);
+            const baseline = placePortraitOnBaseline(
+                bounds?.[generalId] ?? { w: frame.originalSize.width, h: frame.originalSize.height, top: 0, bottom: frame.originalSize.height, cx: frame.originalSize.width / 2 },
+                { baselineY: -box.height * box.anchorY, headLimitY: topLocal - 24, centerX: box.width * (0.5 - box.anchorX) },
+            );
             const ui = portrait!.getComponent(UITransform)!;
-            ui.setContentSize(fit.width, fit.height);
-            // 錨點依外框換算，讓立繪底邊貼齊框底
-            portrait!.setPosition(box.width * (0.5 - box.anchorX), -box.height * box.anchorY + fit.height / 2, 0);
+            ui.setContentSize(baseline.width, baseline.height);
+            portrait!.setPosition(baseline.x, baseline.y, 0);
             (portrait as any)._gachaGeneralId = generalId;
             sprite.enabled = true;
         }).catch(() => { setPlaceholderBackdropVisible(artNode, true); });
     }
 
     private _gachaBannerPortraitSeq = 0;
+
+    /** 立繪不透明邊界（tools_node/measure-gacha-portrait-bounds.js 產出）；只載一次 */
+    private _loadPortraitBounds(): Promise<Record<string, PortraitBounds>> {
+        this._portraitBounds ??= this._loadDataJson<PortraitBoundsDoc>('data/general-portrait-bounds')
+            .then((doc) => doc?.portraits ?? {})
+            .catch(() => ({}));
+        return this._portraitBounds;
+    }
+    private _portraitBounds: Promise<Record<string, PortraitBounds>> | null = null;
 
     private async _runSupportSummon(drawCount = 1): Promise<void> {
         await this._getGachaFlowCoordinator().runSupportSummon(MENTOR_POOL_ID, await this._supportPoolGenerals(), drawCount);
