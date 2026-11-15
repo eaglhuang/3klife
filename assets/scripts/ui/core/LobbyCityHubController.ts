@@ -97,6 +97,14 @@ export interface LobbyCityHubInput {
 export interface LobbyCityHubFlowView {
     readonly texts: Record<string, string>;
     readonly actives: Record<string, boolean>;
+    readonly visibleSubCount: number;
+}
+
+/** 依目前分類的可見按鈕數計算 SubMenu 緊湊寬度，避免只有 2-4 個選項時右側留下空白底板 */
+export function computeSubMenuWidth(visibleCount: number): number {
+    const count = Math.max(0, Math.floor(visibleCount));
+    if (count <= 0) return 192;
+    return Math.min(900, Math.max(192, 16 + count * 160 + (count - 1) * 12 + 16));
 }
 
 function num(value: number): string {
@@ -138,13 +146,15 @@ export function buildLobbyCityHubView(input: LobbyCityHubInput): LobbyCityHubFlo
     const actives: Record<string, boolean> = { subMenu: input.openCategory !== null };
     const open = LOBBY_CATEGORIES.find(c => c.id === input.openCategory);
     texts.subMenuTitle = open ? open.label : '';
+    let visibleSubCount = 0;
     for (let i = 0; i < LOBBY_SUB_SLOTS; i++) {
         const item = open?.items[i];
         actives[`btnSub${i}`] = !!item;
+        if (item) visibleSubCount++;
         texts[`sub${i}Label`] = item ? (input.actionLabels?.[item.id] ?? item.label) : '';
     }
     for (const c of LOBBY_CATEGORIES) {
         texts[`${categoryButtonId(c.id)}Label`] = c.id === input.openCategory ? `▲ ${c.label}` : c.label;
     }
-    return { texts, actives };
+    return { texts, actives, visibleSubCount };
 }

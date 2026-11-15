@@ -124,21 +124,31 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
      * 同一錨點已掛過同一片段時不重建；replaceContent 為 true 時先藏起錨點原有的子節點（例如佔位文字）。
      * Unity 對照：在指定 RectTransform 下 Instantiate 一個 SubView prefab。
      */
+    private _isNodeUsable(node: Node | null | undefined): node is Node {
+        return Boolean(node && node.isValid !== false && Array.isArray(node.children));
+    }
+
+    private _isHostUsable(): boolean {
+        return this.isValid !== false && this._isNodeUsable(this.node);
+    }
+
     public async mountSection(anchorName: string, fragmentId: string, replaceContent = false): Promise<Node | null> {
         const anchor = this._binder?.getNode(anchorName) ?? null;
-        if (!anchor || !anchor.isValid) {
+        if (!this._isNodeUsable(anchor)) {
             console.warn(`[UIScreenPreviewHost] mountSection: 找不到錨點 ${anchorName}`);
             return null;
         }
         const fragmentLayout = await this._specLoader.loadLayout(fragmentId);
+        if (this.isValid === false || !this._isNodeUsable(anchor)) return null;
         const rootName = fragmentLayout.root?.name;
         const existing = rootName ? anchor.getChildByName(rootName) : null;
-        if (existing && existing.isValid) return existing;
+        if (existing && existing.isValid !== false) return existing;
         if (replaceContent) {
             for (const child of anchor.children) child.active = false;
         }
         const transform = anchor.getComponent(UITransform);
         await this._buildNode(fragmentLayout.root, anchor, transform?.width ?? 0, transform?.height ?? 0);
+        if (this.isValid === false || !this._isNodeUsable(anchor)) return null;
         this._postBuildPass(anchor);
         const sectionRoot = anchor.children[anchor.children.length - 1] ?? null;
         if (this._binder && sectionRoot) {
@@ -204,6 +214,9 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
             console.warn('[UIScreenPreviewHost] screenId 為空，略過載入');
             return;
         }
+        if (!this._isHostUsable()) {
+            return;
+        }
 
         if (this._isLoading) {
             console.warn(`[UIScreenPreviewHost] 正在載入中，略過重複請求: ${screenId}`);
@@ -223,19 +236,28 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
             if (shouldReloadScreenSpecOnMount(EDITOR, PREVIEW)) this._specLoader.invalidateScreen(screenId);
 
             const { screen, layout, skin } = await this._specLoader.loadFullScreen(screenId);
+            if (!this._isHostUsable()) return;
             this._layoutRoot = layout.root;
             const effectiveLocale = (this.locale ?? '').trim() || services().i18n?.currentLocale?.trim() || 'zh-TW';
             const i18n = await this._specLoader.loadI18n(effectiveLocale).catch(() => ({} as Record<string, string>));
+            if (!this._isHostUsable()) return;
             const tokens = await this._specLoader.loadDesignTokensForScreen(screenId);
+            if (!this._isHostUsable()) return;
 
             await this.buildScreen(layout, skin, i18n, tokens);
+            if (!this._isHostUsable()) return;
             await this._loadDefaultFragments(screen);
+            if (!this._isHostUsable()) return;
             await this._installSyncedInteractionSidecars(screenId, screen);
+            if (!this._isHostUsable()) return;
             this._currentScreenId = screenId;
             await this._applyRuntimeState(screenId);
 
             UCUFLogger.info(LogCategory.UI, `[UIScreenPreviewHost] mounted ${screenId} -> ${screen.uiId}`);
         } catch (error) {
+            if (!this._isHostUsable()) {
+                return;
+            }
             console.error(`[UIScreenPreviewHost] 載入 screen 失敗: ${screenId}`, error);
             throw error;
         } finally {
@@ -249,6 +271,7 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
         this._interactionActionsBound = 0;
         this._binder = null;
         this._lazySlots.clear();
+        if (!this._isNodeUsable(this.node)) return;
         const children = [...this.node.children];
         for (const child of children) {
             child.destroy();
@@ -634,6 +657,9 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
     }
 
     private async _applyPreviewSlot(entry: PreviewLazySlotEntry, fragmentId: string): Promise<void> {
+        if (this.isValid === false || !this._isNodeUsable(entry.node)) {
+            return;
+        }
         if (entry.currentFragmentId === fragmentId && entry.node.children.length > 0) {
             return;
         }
@@ -645,7 +671,9 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
         }
 
         const fragmentLayout = await this._specLoader.loadLayout(fragmentId);
+        if (this.isValid === false || !this._isNodeUsable(entry.node)) return;
         await this._buildNode(fragmentLayout.root, entry.node, entry.parentW, entry.parentH);
+        if (this.isValid === false || !this._isNodeUsable(entry.node)) return;
         this._postBuildPass(entry.node);
 
         const fragmentRootNode = entry.node.children[entry.node.children.length - 1] ?? null;

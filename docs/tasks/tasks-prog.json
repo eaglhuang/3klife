@@ -4874,6 +4874,56 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "id": "PROG-2-9042",
+      "title": "瀏覽器實機試玩 Round 4 修正：UIScreenPreviewHost 非同步生命週期防護與大廳 SubMenu 動態寬度收合",
+      "priority": "P1",
+      "phase": "M2",
+      "status": "done",
+      "owner": "ClaudeCode",
+      "category": "ui-architecture",
+      "description": "1) UIScreenPreviewHost 在 showScreen / mountSection / _destroyBuiltChildren / _applyPreviewSlot 加入 isValid 與 children 陣列防護，避免 LoadingScene 切場或非同步載入途中節點銷毀拋出 Cannot read properties of null (reading length)；2) LobbyCityHubController 新增 computeSubMenuWidth 並於 LobbyScene._refreshCityHub 動態收合 SubMenu 寬度，消除 2-4 選項時右側空白底板；3) 新增 PlaytestRound4Fixes.test.ts 單元測試。",
+      "acceptance": "check-test-tsc-baseline 0 errors、check-encoding-touched passed、unit tests 7681 passed / 3 skipped / 0 failed、gate:standard 12/12 通過。",
+      "doc_refs": [
+        "doc_spec_0002"
+      ],
+      "created_at": "2026-11-15T14:41:12.766Z",
+      "started_at": "2026-11-15T14:41:12.766Z",
+      "started_by_agent": "ClaudeCode",
+      "completed_at": "2026-11-15T14:41:12.766Z",
+      "depends_on": [
+        "PROG-2-9041"
+      ],
+      "target_files": [
+        "assets/scripts/ui/components/UIScreenPreviewHost.ts",
+        "assets/scripts/ui/core/LobbyCityHubController.ts",
+        "assets/scripts/ui/scenes/LobbyScene.ts",
+        "docs/tasks/tasks-prog.json",
+        "tests/PlaytestRound4Fixes.test.ts"
+      ],
+      "notes": "2026-11-15 | 狀態: done | 驗證: unit tests 7681 passed / 3 skipped / 0 failed, check-test-tsc-baseline 0 errors, check-encoding-touched passed | 變更: UIScreenPreviewHost 加入非同步節點銷毀防護解決 bloodline-mirror-loading-screen children.length null 錯誤；SubMenu 依可見按鈕數動態縮放寬度避免空白底板 | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
