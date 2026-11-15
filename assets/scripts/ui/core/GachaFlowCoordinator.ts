@@ -21,25 +21,14 @@ export const DEFAULT_POOL_ID = 'GENERAL_STANDARD_01';
 export { GACHA_SCREEN_ID } from './GachaScreenNodes';
 export const GACHA_PULL_RESULT_SCREEN_ID = 'gacha-pull-result';
 
-/** 揭曉後武將立繪回到左側的水平位移（與版面 hCenter 一致） */
-const HERO_SIDE_CENTER_X = -320;
 const REPULL_ENABLED_COLOR = new Color(245, 210, 122, 255);
 
 /** 卡片頭像節點名（PROG-2-2247） */
 const CARD_PORTRAIT_NODE = 'CardPortrait';
 
-const GACHA_PULL_RESULT_CARD_NODE_MAP = [
-    { rarityId: 'GachaPullResult_div_351', nameId: 'GachaPullResult_div_352' },
-    { rarityId: 'GachaPullResult_div_357', nameId: 'GachaPullResult_div_358' },
-    { rarityId: 'GachaPullResult_div_363', nameId: 'GachaPullResult_div_364' },
-    { rarityId: 'GachaPullResult_div_369', nameId: 'GachaPullResult_div_370' },
-    { rarityId: 'GachaPullResult_div_375', nameId: 'GachaPullResult_div_377' },
-    { rarityId: 'GachaPullResult_div_381', nameId: 'GachaPullResult_div_382' },
-    { rarityId: 'GachaPullResult_div_386', nameId: 'GachaPullResult_div_387' },
-    { rarityId: 'GachaPullResult_div_391', nameId: 'GachaPullResult_div_392' },
-    { rarityId: 'GachaPullResult_div_396', nameId: 'GachaPullResult_div_397' },
-    { rarityId: 'GachaPullResult_div_402', nameId: 'GachaPullResult_div_403' },
-] as const;
+/** 十連結果卡節點（原稿 Design System 3/ui_kits/gacha-pull-result，data-name 指定） */
+const GACHA_PULL_RESULT_CARDS = Array.from({ length: 10 }, (_, i) => `GachaPullResult_card_${i}`);
+const GACHA_PULL_RESULT_CARD_NODE_MAP = GACHA_PULL_RESULT_CARDS.map((card) => ({ rarityId: `${card}_tag`, nameId: `${card}_name` }));
 
 export interface GachaFlowCoordinatorOptions {
     gachaService: LocalGachaService;
@@ -210,11 +199,6 @@ export class GachaFlowCoordinator {
     ): Promise<void> {
         const topResult = flow.hero;
         const repull = flow.repull;
-        const summary = results
-            .slice(0, 5)
-            .map((entry) => `${this._toPullResultRarityLabel(entry.rarityTier)} ${entry.general.name}`)
-            .join(' / ');
-        const wallet = this._options.gachaService.getWalletSnapshot();
         const cardTexts: Record<string, string> = {};
 
         for (let index = 0; index < GACHA_PULL_RESULT_CARD_NODE_MAP.length; index += 1) {
@@ -235,46 +219,30 @@ export class GachaFlowCoordinator {
             throw new Error('召喚已完成並入冊，但結果畫面 binder 缺失。');
         }
 
-        const cards = ['347', '353', '359', '365', '371', '378', '383', '388', '393', '398'];
+        const cards = GACHA_PULL_RESULT_CARDS;
         const cardActives: Record<string, boolean> = {};
-        cards.forEach((id, index) => { cardActives[`GachaPullResult_div_${id}`] = index < results.length; });
-        cardActives.GachaPullResult_div_413 = repull !== null;
+        cards.forEach((name, index) => { cardActives[name] = index < results.length; });
+        cardActives.GachaPullResult_repull = repull !== null;
         binder.setActives(cardActives);
 
         const opening = repull === null;
         const labels = flow.labels;
         binder.setTexts({
             ...cardTexts,
-            GachaPullResult_div_42: opening ? `${title} · ${drawCount === 10 ? '十連抽' : '結果'}` : drawCount === 10 ? this._options.tenPullHeaderText ?? '本地轉蛋結果 · 十連抽' : `${title}結果`,
-            GachaPullResult_div_195: topResult ? topResult.general.name : '本次召喚結果',
-            GachaPullResult_div_196: topResult
-                ? `${this._toPullResultRarityLabel(topResult.rarityTier)} · ${opening ? '宿命核心' : '本次最高稀有'}`
-                : '召喚完成',
-            GachaPullResult_div_139: summary || '本次召喚已完成。',
-            GachaPullResult_div_203: `${results.length} / ${drawCount}`,
-            GachaPullResult_div_343: `✦ ${title}結果 (${results.length}/${drawCount})${topResult ? ` · 最高 ${this._toPullResultRarityLabel(topResult.rarityTier)} ${topResult.general.name}` : ''}`,
-            GachaPullResult_div_202: opening ? '進入大廳 ›' : '返回轉蛋 ›',
-            GachaPullResult_div_173: drawCount === 10 ? '再抽十連' : `再${title}一次`,
-            GachaPullResult_div_412: opening ? '進入大廳' : '返回卡池',
-            GachaPullResult_div_413: drawCount === 10 ? '再抽十連' : `再${title}一次`,
-            GachaPullResult_div_186: `${currency === 'gold' ? '金幣' : currency === 'tickets' ? '召喚券' : currency === 'mentorTickets' ? '支援券' : '玉'} ${wallet[currency].toLocaleString('zh-TW')}`,
-            GachaPullResult_span_13: `SSR+ ×${rarityStats.high}`,
-            GachaPullResult_span_14: `SR ×${rarityStats.mid}`,
-            GachaPullResult_span_15: `R/N ×${rarityStats.low}`,
+            GachaPullResult_title: `✦ ${labels?.header ?? title}結果 (${results.length}/${drawCount})${topResult ? ` · 最高 ${this._toPullResultRarityLabel(topResult.rarityTier)} ${topResult.general.name}` : ''}`,
+            GachaPullResult_back: labels?.back ?? (opening ? '進入大廳' : '返回卡池'),
+            GachaPullResult_repull: labels?.repull ?? (drawCount === 10 ? '再抽十連' : `再${title}一次`),
+            GachaPullResult_sum_high: `SSR ×${rarityStats.high}`,
+            GachaPullResult_sum_mid: `SR ×${rarityStats.mid}`,
+            GachaPullResult_sum_low: `R ×${rarityStats.low}`,
             GachaPullResult_hero_rarity: topResult ? `✦ ${this._toPullResultRarityLabel(topResult.rarityTier)} · 絕世登場 ✦` : '✦ 絕世名將 ✦',
             GachaPullResult_hero_name: topResult ? `${topResult.general.name}${topResult.general.courtesyName ? ` · ${topResult.general.courtesyName}` : ''}` : '絕世名將',
             GachaPullResult_hero_desc: heroLine ?? (topResult ? (topResult.general.description || '義薄雲天 · 威震華夏 · 萬世流芳') : '名揚四海 · 天下歸心'),
-            ...(labels ? {
-                GachaPullResult_div_42: labels.header,
-                GachaPullResult_div_196: topResult ? `${this._toPullResultRarityLabel(topResult.rarityTier)} · ${labels.heroSub}` : labels.heroSub,
-                GachaPullResult_hero_desc: labels.heroDesc || heroLine || labels.heroDescFallback || '',
-                GachaPullResult_div_202: `${labels.back} ›`,
-                GachaPullResult_div_412: labels.back,
-                GachaPullResult_div_173: labels.repull,
-                GachaPullResult_div_413: labels.repull,
-            } : {}),
+            // 宿命池等有專屬文案時覆蓋
+            ...(labels ? { GachaPullResult_hero_desc: labels.heroDesc || heroLine || labels.heroDescFallback || '' } : {}),
         });
 
+        await this._restyleCardsByRarity(host, cards, results);
         // 逐字快取（CHAR）配英文 TTF 時中文畫不出來，換字後也會疊字；結果畫面整片改不快取
         disableCharCache(host.node);
         this._updateCardPortraits(binder, cards, results);
@@ -288,21 +256,21 @@ export class GachaFlowCoordinator {
         this._resultBackAction = flow.onBack;
         this._resultRepullAction = repull;
 
-        const backNode = binder.getNode('GachaPullResult_div_412');
+        const backNode = binder.getNode('GachaPullResult_back');
         if (backNode) {
             backNode.getComponent(Button) ?? backNode.addComponent(Button);
             backNode.off(Button.EventType.CLICK, this._onResultBack, this);
             backNode.on(Button.EventType.CLICK, this._onResultBack, this);
         }
 
-        const closeNode = binder.getNode('GachaPullResult_div_344');
+        const closeNode = binder.getNode('GachaPullResult_close');
         if (closeNode) {
             closeNode.getComponent(Button) ?? closeNode.addComponent(Button);
             closeNode.off(Button.EventType.CLICK, this._onResultBack, this);
             closeNode.on(Button.EventType.CLICK, this._onResultBack, this);
         }
 
-        const repullNode = repull ? binder.getNode('GachaPullResult_div_413') : null;
+        const repullNode = repull ? binder.getNode('GachaPullResult_repull') : null;
         if (repullNode) {
             repullNode.getComponent(Button) ?? repullNode.addComponent(Button);
             repullNode.off(Button.EventType.CLICK, this._onResultRepullTen, this);
@@ -326,6 +294,27 @@ export class GachaFlowCoordinator {
                 UCUFLogger.warn(LogCategory.DATA, '[GachaFlowCoordinator] onWalletChanged failed', error);
             }
         }
+    }
+
+    /**
+     * 結果卡配色照實際稀有度：原稿十張示意卡各有寫死的稀有度與配色，
+     * 依抽到的稀有度找原稿同稀有度那張當樣板換樣式（UR／LR 用 SSR、N 用 R；原稿沒有的稀有度維持原樣）。
+     */
+    private async _restyleCardsByRarity(host: UIScreenPreviewHost, cards: readonly string[], results: LocalGachaResultEntry[]): Promise<void> {
+        const templateOf = new Map<string, string>();
+        GACHA_PULL_RESULT_CARD_NODE_MAP.forEach((nodeMap, index) => {
+            const rarity = String(host.findLayoutSpec(nodeMap.rarityId)?.text ?? '').trim().toUpperCase();
+            if (rarity && !templateOf.has(rarity)) templateOf.set(rarity, cards[index]);
+        });
+        const family = (rarity: string): string => (rarity === 'UR' || rarity === 'LR' ? 'SSR' : rarity === 'N' ? 'R' : rarity);
+        const pairs: Array<{ target: string; template: string }> = [];
+        results.slice(0, cards.length).forEach((entry, index) => {
+            const rarity = this._toPullResultRarityLabel(entry.rarityTier);
+            const template = templateOf.get(rarity) ?? templateOf.get(family(rarity));
+            const target = cards[index];
+            if (template && template !== target) pairs.push({ target, template });
+        });
+        await host.restyleLike(pairs);
     }
 
     private _toPullResultRarityLabel(rarityTier: string | null | undefined): string {
@@ -386,22 +375,23 @@ export class GachaFlowCoordinator {
      */
     /** 可按的再抽／免費重轉用亮金字；skin 的深墨字配上沒有底圖的按鈕看起來像停用（#2107） */
     private _styleRepullButton(binder: any, enabled: boolean): void {
-        const node: Node | null = binder.getNode ? binder.getNode('GachaPullResult_div_413') : null;
+        const node: Node | null = binder.getNode ? binder.getNode('GachaPullResult_repull') : null;
         const label = node?.getComponent(Label);
         if (label && enabled) label.color = REPULL_ENABLED_COLOR;
     }
 
     private _stageHeroReveal(binder: any, hasHero: boolean, hideAfterReveal = false): void {
         const showcase: Node | null = binder.getNode ? binder.getNode('GachaPullResult_hero_showcase') : null;
-        const panel: Node | null = binder.getNode ? binder.getNode('GachaPullResult_div_341') : null;
-        const stage: Node | null = binder.getNode ? binder.getNode('GachaPullResult_div_264') : null;
+        const panel: Node | null = binder.getNode ? binder.getNode('GachaPullResult_panel') : null;
+        const stage: Node | null = binder.getNode ? binder.getNode('GachaPullResult_stage') : null;
         if (!showcase || !panel || !stage) return;
+        // 側邊位置取版面原位（原稿左側留白區）；對齊元件關掉，改由程式移動
         const widget = showcase.getComponent(Widget);
-        const sideCenter = HERO_SIDE_CENTER_X;
-        const place = (x: number): void => {
-            if (widget) { widget.horizontalCenter = x; widget.updateAlignment(); }
-            else showcase.setPosition(x, showcase.position.y, 0);
-        };
+        if (widget) widget.enabled = false;
+        const holder = showcase as Node & { __sideX?: number };
+        holder.__sideX ??= showcase.position.x;
+        const sideCenter = holder.__sideX;
+        const place = (x: number): void => { showcase.setPosition(x, showcase.position.y, 0); };
         // 收起武將時結果面板置中並等比放大成滿版十連（使用者 11/13：要全螢幕滿版，不是小框）
         const panelWidget = panel.getComponent(Widget);
         panel.setScale(1, 1, 1);
@@ -434,15 +424,17 @@ export class GachaFlowCoordinator {
     private _updateCardPortraits(binder: any, cardIds: readonly string[], results: LocalGachaResultEntry[]): void {
         const seq = ++this._cardPortraitSeq;
         cardIds.forEach((id, index) => {
-            const card: Node | null = binder.getNode ? binder.getNode(`GachaPullResult_div_${id}`) : null;
-            const frameHost = card?.children[0];
+            const card: Node | null = binder.getNode ? binder.getNode(id) : null;
+            const frameHost = card;
             const cardBox = card?.getComponent(UITransform);
             if (!card || !frameHost || !cardBox) return;
             let portraitNode = frameHost.getChildByName(CARD_PORTRAIT_NODE);
             if (!portraitNode) {
                 portraitNode = new Node(CARD_PORTRAIT_NODE);
                 portraitNode.layer = frameHost.layer;
-                portraitNode.parent = frameHost;
+                // 插在卡面底圖層之上、框線／角標／名牌之下
+                const art = frameHost.getChildByName(`skinLayer_${id}_art`);
+                frameHost.insertChild(portraitNode, art ? art.getSiblingIndex() + 1 : 0);
                 portraitNode.addComponent(UITransform);
                 portraitNode.addComponent(Sprite);
             }
@@ -450,10 +442,10 @@ export class GachaFlowCoordinator {
             sprite.enabled = false;
             const entry = results[index];
             if (!entry) return;
-            // 頭像占卡寬 86%，置於卡片上半部，下方留給名稱
-            const size = Math.round(cardBox.width * 0.86);
+            // 頭像填滿名牌以上的卡面（名牌約占卡高 20%）
+            const size = Math.round(Math.min(cardBox.width * 0.94, cardBox.height * 0.78));
             portraitNode.getComponent(UITransform)!.setContentSize(size, size);
-            portraitNode.setPosition(0, cardBox.height * 0.5 - size * 0.5 - cardBox.height * 0.12, 0);
+            portraitNode.setPosition(0, cardBox.height * 0.5 - size * 0.5 - cardBox.height * 0.03, 0);
             void loadGeneralAvatar(entry.general.id).then((frame) => {
                 if (seq !== this._cardPortraitSeq || !sprite.isValid || !frame) return;
                 sprite.sizeMode = Sprite.SizeMode.CUSTOM;

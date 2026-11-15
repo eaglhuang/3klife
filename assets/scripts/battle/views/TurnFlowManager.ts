@@ -40,7 +40,7 @@ export class TurnFlowManager {
 
   public onEndTurn(): void {
     const c = this.ctx;
-    if (!c.ctrl || c.isAdvancingTurn) return;
+    if (!c.ctrl || c.isAdvancingTurn || c.isDuelPanelActive) return;
     c.skillTargetingFlow?.cancelPendingSkillTargeting(false);
     if (c.ctrl.isWaitingDuelPlacement) {
       c.deployRuntime?.showToast('請先完成武將出陣', BATTLE_TURN_FLOW_TIMING.shortToastSec);
@@ -53,12 +53,14 @@ export class TurnFlowManager {
     c.boardRenderer?.setDeployHintFaction(Faction.Player);
     this.bridge.refreshBattleViews();
     const gen = ++this._advanceTurnGeneration;
-    this.scene.scheduleOnce(() => {
+    const checkAdvanceSafety = (): void => {
       if (c.isAdvancingTurn && this._advanceTurnGeneration === gen) {
+        if (c.isDuelPanelActive) { this.scene.scheduleOnce(checkAdvanceSafety, 1); return; }
         UCUFLogger.warn(LogCategory.BATTLE, '[TurnFlowManager] isAdvancingTurn safety-reset（超時 20s），強制解鎖');
         this.finalizeAdvance();
       }
-    }, BATTLE_TURN_FLOW_TIMING.advanceSafetyUnlockSec);
+    };
+    this.scene.scheduleOnce(checkAdvanceSafety, BATTLE_TURN_FLOW_TIMING.advanceSafetyUnlockSec);
 
     const playerResult = c.ctrl.resolvePlayerTurn();
     this.scene.scheduleOnce(() => this.pollCombatDrain(0, () => {
@@ -68,20 +70,26 @@ export class TurnFlowManager {
         return;
       }
 
-      c.boardRenderer?.setDeployHintFaction(Faction.Enemy);
-      // 敵方回合開始用橫幅提示（使用者 2026-11-06 裁決，PROG-2-1888）
-      this.bridge.playTurnBanner(Faction.Enemy);
-      this.bridge.showEnemyThinkingPanel();
-      this.scene.scheduleOnce(() => {
+      this.checkDuelChallenge();
+      this.pollCombatDrain(0, () => {
         if (!c.isAdvancingTurn || this._advanceTurnGeneration !== gen) return;
-        // 「敵軍行動中…」一路顯示到我方回合開始，涵蓋敵軍動作演出（PROG-2-1891）
-        c.ctrl?.resolveEnemyTurn();
+        c.boardRenderer?.setDeployHintFaction(Faction.Enemy);
+        this.bridge.playTurnBanner(Faction.Enemy);
+        this.bridge.showEnemyThinkingPanel();
+        this.scene.scheduleOnce(() => {
+          if (!c.isAdvancingTurn || this._advanceTurnGeneration !== gen) return;
+          c.ctrl?.resolveEnemyTurn();
           this.scene.scheduleOnce(() => this.pollCombatDrain(0, () => {
             if (!c.isAdvancingTurn || this._advanceTurnGeneration !== gen) return;
-            c.ctrl?.finalizeEnemyTurn();
-            this.finalizeAdvance();
+            this.checkDuelChallenge();
+            this.pollCombatDrain(0, () => {
+              if (!c.isAdvancingTurn || this._advanceTurnGeneration !== gen) return;
+              c.ctrl?.finalizeEnemyTurn();
+              this.finalizeAdvance();
+            });
           }), BATTLE_TURN_FLOW_TIMING.postSubturnVisualBufferSec);
-      }, BATTLE_TURN_FLOW_TIMING.enemyThinkingLeadInSec);
+        }, BATTLE_TURN_FLOW_TIMING.enemyThinkingLeadInSec);
+      });
     }), BATTLE_TURN_FLOW_TIMING.postSubturnVisualBufferSec);
   }
 
@@ -173,7 +181,7 @@ export class TurnFlowManager {
     const c = this.ctx;
     UCUFLogger.info(LogCategory.BATTLE, `[TurnFlowManager] doDeployRaycast screen=(${screenX.toFixed(0)},${screenY.toFixed(0)}) advancing=${c.isAdvancingTurn}`);
 
-    if (c.isAdvancingTurn) {
+    if (c.isAdvancingTurn || c.isDuelPanelActive) {
       UCUFLogger.info(LogCategory.BATTLE, '[TurnFlowManager] doDeployRaycast: 回合推進中，忽略');
       return;
     }
@@ -253,7 +261,7 @@ export class TurnFlowManager {
 
   public checkDuelChallenge(): void {
     const c = this.ctx;
-    if (!c.ctrl || c.ctrl.isDuelChallengeResolved()) return;
+    if (!c.ctrl || c.isDuelPanelActive || c.ctrl.isDuelChallengeResolved()) return;
 
     let challengerFaction: Faction | null = null;
     if (c.ctrl.isGeneralFacingEnemyGeneral(Faction.Player)) {
@@ -292,10 +300,16 @@ export class TurnFlowManager {
     }
   }
 
-  private _onPlayerDuelDecision(accepted: boolean): void {
+  private async _onPlayerDuelDecision(accepted: boolean): Promise<void> {
     const c = this.ctx;
     if (!c.ctrl) return;
-    const duelResult = c.ctrl.resolveDuelChallenge(Faction.Enemy, accepted);
+    let duelResult: string;
+    try { duelResult = await this.bridge.resolveDuelPresentation(Faction.Enemy, accepted); }
+    catch (error) {
+      UCUFLogger.error(LogCategory.BATTLE, '[TurnFlowManager] 單挑處理失敗', error);
+      c.isDuelPanelActive = false; c.isAdvancingTurn = false; return;
+    }
+    if (!this.scene.isValid) return;
     this._showDuelResultToast(duelResult, accepted, Faction.Enemy);
     c.isDuelPanelActive = false;
     c.isAdvancingTurn = false;
@@ -305,7 +319,7 @@ export class TurnFlowManager {
     this.bridge.refreshBattleViews();
   }
 
-  private _resolveEnemyDuelDecision(challengerFaction: Faction): void {
+  private async _resolveEnemyDuelDecision(challengerFaction: Faction): Promise<void> {
     const c = this.ctx;
     if (!c.ctrl) return;
     const decision = c.ctrl.evaluateDuelAcceptance(challengerFaction);
@@ -313,7 +327,15 @@ export class TurnFlowManager {
     c.battleLogPanel?.append(
       `${defenderName} 單挑評估分數：${decision.score.toFixed(2)}（${decision.accepted ? '接受' : '拒絕'}）`
     );
-    const duelResult = c.ctrl.resolveDuelChallenge(challengerFaction, decision.accepted);
+    if (decision.accepted) c.isDuelPanelActive = true;
+    let duelResult: string;
+    try { duelResult = await this.bridge.resolveDuelPresentation(challengerFaction, decision.accepted); }
+    catch (error) {
+      UCUFLogger.error(LogCategory.BATTLE, '[TurnFlowManager] 單挑處理失敗', error);
+      c.isDuelPanelActive = false; return;
+    }
+    if (!this.scene.isValid) return;
+    c.isDuelPanelActive = false;
     this._showDuelResultToast(duelResult, decision.accepted, decision.defenderFaction);
     this.bridge.refreshBattleViews();
   }

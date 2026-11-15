@@ -58,6 +58,8 @@ import type { AiDeployPreference } from '../systems/AiDeployTroopPick';
  */
 export class GeneralUnit {
   public readonly id: string;
+  /** 名冊實例的原始武將模板，用於查找對應美術設定。 */
+  public readonly templateId: string | null;
   public readonly name: string;
   public readonly faction: Faction;
   /** 性別文字（設定檔原值，例如 男／女），虎符適性（TRP-13）用 */
@@ -120,6 +122,7 @@ export class GeneralUnit {
 
   constructor(config: GeneralConfig) {
     this.id = config.id;
+    this.templateId = config.templateId ?? null;
     this.name = config.name;
     this.faction = config.faction;
     this.gender = config.gender;
