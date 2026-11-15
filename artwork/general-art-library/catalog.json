@@ -6736,6 +6736,23 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/dong_bai__董白__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "c78639c2e09b896ecacbbe144d4f38df2aef2a7f0e51b83211f2902231cff046",
+            "canvas": "256x256 RGBA",
+            "source": "standing/dong_bai__董白__standing_0002.png (crop-only)",
+            "crop": "shoulder-line",
+            "cropBox": "x=205,y=15,w=160,h=160",
+            "qc": "No redraw or design changes; full hair ornament, face and chin retained; face centered; shoulder and collar only."
+          }
+        ]
       }
     },
     {
