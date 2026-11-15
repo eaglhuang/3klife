@@ -452,6 +452,7 @@ export class LobbyScene extends Component {
     /** 幕府大廳（UI-2-0149）：另開入口，與主大廳並存 */
     private _lobbyHallHost: UIScreenPreviewHost | null = null;
     private _lobbyHall: LobbyHallScreenBinder | null = null;
+    private _hallThemeConfig: HallThemeConfig | null = null;
     private _lobbyBackdrop: LobbyBackdrop | null = null;
     private _lobbyBackdropConfig: HallThemeConfig | null = null;
     /** 大廳沒開時收到的換季聚焦序列，下次開大廳播一次 */
@@ -827,6 +828,8 @@ export class LobbyScene extends Component {
 
         this._ready = true;
         SceneLoadProgress.complete();
+        // 載入進度完全收起後再刷新開場信件，避免舊玩家在 loading 期間看到信件疊在進度條上
+        this._openingPanels?.refreshOpeningLetter();
         // 載入遮罩完整關閉後再視條件開啟日報，避免日報浮在 loading progress 畫面上（Issue #2159）
         this._openDailyReportIfPending();
         ensureGlobalDevOverlay(this._localGachaService, undefined, () => { PlayerRosterService.clear(); }, () => {
@@ -1390,6 +1393,7 @@ export class LobbyScene extends Component {
     }
 
     private _runCityHubAction(action: LobbyActionId): void {
+        this._closeSecondaryOverlayHosts();
         const run: Record<LobbyActionId, () => void> = {
             battle: () => this.onClickEnterBattle(),
             rival: () => this._openRivalDiplomacy(),
@@ -1458,6 +1462,7 @@ export class LobbyScene extends Component {
         });
         binder.setTexts(view.texts);
         binder.setActives(view.actives);
+        this._refreshLobbyHallTopbar();
         this._syncCityHubSubMenuLayer(binder.getNode('subMenu'));
         if (leadId && leadId !== this._cityHubAvatarId) {
             this._cityHubAvatarId = leadId;
@@ -1947,6 +1952,7 @@ export class LobbyScene extends Component {
         const domestic = new DomesticPanelController({
             log: () => services().session.domesticLog,
             season: () => services().session.gameTime.totalSeasonsElapsed,
+            seasonDisplay: () => `第 ${services().session.gameTime.totalSeasonsElapsed + 1} 季`,
             outputMultiplier: (taskId: DomesticTaskId) => services().session.domesticOutputMultiplier(taskId),
             eventLine: () => services().session.governanceEventNotice,
             journalPending: () => services().session.pendingMorningJournalCount + (services().session.seasonChronicleUnread ? 1 : 0),
@@ -3573,6 +3579,7 @@ export class LobbyScene extends Component {
             this._loadDataJson<{ provinces: HallMapProvinceSource[] }>('data/hall-map/han13-provinces'),
         ]);
         const session = services().session;
+        this._hallThemeConfig = themeConfig;
         const wander = parseHallWanderData(wanderRaw);
         // 內建台詞當離線底稿，本機快取（連線時同步來的新台詞）疊在上面
         this._hallChat = new HallChatStore(
@@ -3714,6 +3721,7 @@ export class LobbyScene extends Component {
             new Date().getHours(),
             hallFestivalIdOf(this._lobbyHub?.Current_Theme.Festival_Theme_ID),
         );
+        this._refreshLobbyHallTopbar();
         this._refreshLobbyHallWalls();
         this._refreshLobbyHallAltar();
         this._lobbyHall?.setPanelVisible('clan', familyOverviewHotspotVisible(services().session.familySystemUnlocked));
@@ -3734,6 +3742,62 @@ export class LobbyScene extends Component {
         if (!board || !this._lobbyHall) return;
         this._lobbyHall.setWall('wall-left', buildLobbyHallWallView(board.rowsFor('Military'), HALL_BOARD_MAX_ROWS));
         this._lobbyHall.setWall('wall-right', buildLobbyHallWallView(board.rowsFor('Domestic'), HALL_BOARD_MAX_ROWS));
+    }
+
+    /** 同步幕府大廳頂列的資源數、官職主將與年季晝夜 */
+    private _refreshLobbyHallTopbar(): void {
+        if (!this._lobbyHall) return;
+        const session = services().session;
+        const wallet = this._localGachaService.getWalletSnapshot();
+        const leadName = session.roster.find((g) => g.id === session.leadGeneralId)?.name ?? '張飛';
+        const rankName = officerDisplayOf(session.officerState).rankName || '鄉里義士';
+        const seasonNames = ['春', '夏', '秋', '冬'] as const;
+        const seasonChar = seasonNames[Math.max(0, Math.min(3, (session.gameTime.currentSeason || 1) - 1))];
+        const hour = new Date().getHours();
+        const isNight = this._hallThemeConfig
+            ? resolveHallSceneTheme({ seasonIndex: session.gameTime.currentSeason, hour }, this._hallThemeConfig).daypart === 'night'
+            : (hour >= 18 || hour < 6);
+        this._lobbyHall.setTopbar({
+            gold: wallet.gold,
+            gems: wallet.gems,
+            food: session.military.food,
+            troops: session.military.cityTroops,
+            officerSubtitle: `官職 ${rankName} · 主將 ${leadName}`,
+            timeLabel: `第 ${session.gameTime.currentYear} 年 ${seasonChar} · ${isNight ? '夜' : '晝'}`,
+        });
+    }
+
+    /** 切換功能頁面或回到主政廳前，統一收起所有大廳次級覆蓋彈窗，避免遮擋或攔截點擊 */
+    private _closeSecondaryOverlayHosts(): void {
+        const secondaryHosts: Array<UIScreenPreviewHost | null> = [
+            this._hallBoardHost,
+            this._wishAltarHost,
+            this._rivalHost,
+            this._domesticHost,
+            this._nurtureFlowHost,
+            this._bondingHost,
+            this._jobChangeHost,
+            this._mercPanelHost,
+            this._govHallHost,
+            this._itemBagHost,
+            this._relationGraphHost,
+            this._journalHubHost,
+            this._generalJournalHost,
+            this._battleReviewHost,
+            this._tournamentHost,
+            this._extremeTaskHost,
+            this._spiritCodexHost,
+            this._warehouseHost,
+            this._recruitHost,
+            this._scoutPanelHost,
+            this._destinyShopHost,
+        ];
+        for (const host of secondaryHosts) {
+            if (host?.node?.isValid) host.node.active = false;
+        }
+        this._seasonPassPanel?.setOpen(false);
+        this._clanShrine?.setOpen(false);
+        this._ultimateCodex?.close();
     }
 
     private _openRecruitHall(): void {
@@ -3852,7 +3916,11 @@ export class LobbyScene extends Component {
         const act = (run: () => Promise<void>): void => {
             void run().catch((error) => {
                 UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 外交指令失敗', error);
-            }).finally(() => { this._refreshRivalDiplomacy(); });
+            }).finally(() => {
+                this._refreshRivalDiplomacy();
+                this._refreshWalletPreviewState();
+                this._refreshCityHub();
+            });
         };
         const nationButtons = Array.from({ length: RIVAL_NATION_SLOTS }, (_, i) => ({
             buttonId: `btnNation${i}`,
@@ -6074,14 +6142,7 @@ export class LobbyScene extends Component {
     public returnToLobbyHall(): void {
         if (this._gachaHost) this._gachaHost.node.active = false;
         if (this._shopMainHost) this._shopMainHost.node.active = false;
-        if (this._recruitHost) this._recruitHost.node.active = false;
-        if (this._scoutPanelHost) this._scoutPanelHost.node.active = false;
-        if (this._destinyShopHost) this._destinyShopHost.node.active = false;
-        if (this._spiritCodexHost) this._spiritCodexHost.node.active = false;
-        if (this._ultimateCodexHost) this._ultimateCodexHost.node.active = false;
-        if (this._nurtureHost) this._nurtureHost.node.active = false;
-        if (this._domesticHost) this._domesticHost.node.active = false;
-        if (this._warehouseHost) this._warehouseHost.node.active = false;
+        this._closeSecondaryOverlayHosts();
         this._openLobbyHall();
     }
 
@@ -6179,6 +6240,12 @@ export class LobbyScene extends Component {
             return;
         }
         node.setSiblingIndex(parent.children.length - 1);
+        if (parent === this.node && node.name !== 'ToastContainer') {
+            const toastNode = this.node.getChildByName('ToastContainer');
+            if (toastNode) {
+                toastNode.setSiblingIndex(parent.children.length - 1);
+            }
+        }
     }
 
     private _refreshWalletPreviewState(): void {
@@ -6195,6 +6262,7 @@ export class LobbyScene extends Component {
         this._gachaHost?.binder?.setTexts({
             [GACHA_NODES.balance]: gachaBalanceText,
         });
+        this._refreshLobbyHallTopbar();
         // 抽完、回轉蛋頁都會走這裡；天命值跟著刷新（PROG-2-1158）
         this._refreshDestinyBrief();
     }

@@ -130,7 +130,7 @@ export class LobbyOpeningPanels {
     public refreshOpeningLetter(): void {
         const host = this._openingLetterHost;
         if (!host) return;
-        const ready = !this._ports.isNewPlayer() || this._afterLetter !== null;
+        const ready = this._afterLetter !== null || (!this._ports.isNewPlayer() && (this._ports.lobbyReady?.() ?? true));
         const show = ready && shouldShowOpeningLetter(this._ports.session().openingLetter);
         host.node.active = show;
         this._ports.onOverlayChanged?.();

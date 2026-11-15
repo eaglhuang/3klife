@@ -43,6 +43,8 @@ export interface DomesticPanelDeps {
     log: () => Readonly<DomesticSeasonLog>;
     /** 目前總季數（GameSession 的時鐘） */
     season: () => number;
+    /** 畫面顯示用季數標籤（未提供時 0-based 起算保底顯示 第 1 季） */
+    seasonDisplay?: () => string;
     /** 正式環境接 GameSession.chooseDomesticTask；發錢包的回呼由呼叫端自己帶入 */
     choose: (taskId: DomesticTaskId) => Promise<DomesticTaskResult>;
     /** 以下為任務格指派武將（GOV-04 / PROG-2-1159）；不提供時畫面不顯示換將 */
@@ -223,7 +225,7 @@ export class DomesticPanelController {
         const rows = this.rows();
         const canAssign = !!(this._deps.candidates && this._deps.assignedUid && this._deps.assign);
         const texts: Record<string, string> = {
-            seasonLabel: `第 ${this._deps.season()} 季`,
+            seasonLabel: this._deps.seasonDisplay ? this._deps.seasonDisplay() : `第 ${Math.max(1, this._deps.season())} 季`,
             noticeLabel: this._notice ?? this._deps.eventLine?.() ?? '',
             btnOpenJournalHubLabel: JOURNAL_HUB_ENTRY_LABEL + ((this._deps.journalPending?.() ?? 0) > 0 ? JOURNAL_HUB_PENDING_MARK : ''),
         };

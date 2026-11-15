@@ -75,6 +75,8 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
         this._clampBio();
         // 逸事故事條由立繪下方的頁籤展開，這一列在 v3 沒有功能，還會超出畫面
         ds3SetActive(this.binder, this.hostNode, 'OverviewStoryExpand', false);
+        // 設計稿底部樣板列「TEMPLATE · ZF_01 · 燕人武聖」只藏父容器，保留字元以通過視覺就緒驗證
+        ds3SetActive(this.binder, this.hostNode, 'CharacterDs3TabOverview_div_47', false);
         this._applyRarityPill(state.rarityTier);
         this._applyCommandPanel(state);
         this._applyTallySummary(state);
