@@ -89,7 +89,7 @@
   {
     "poolId": "support-pool",
     "poolName": "紅顏池",
-    "poolType": "support",
+    "poolType": "heroine",
     "resetEnabled": false,
     "guaranteeRarity": "rare",
     "guaranteeThreshold": 5,

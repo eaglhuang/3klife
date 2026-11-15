@@ -25,6 +25,7 @@ export function buildBreedingPreviewLines(ep: EpBreakdown, tagName?: (tag: strin
         `異脈 ${signed(ep.outcross)}`,
         `契合 ${signed(ep.affinity)}`,
     ];
+    if ((ep.parentBonus ?? 0) !== 0) breakdownParts.push(`親代 ${signed(ep.parentBonus!)}`);
     if (ep.vitalityFull !== 0) breakdownParts.push(`精力 ${signed(ep.vitalityFull)}`);
     if (ep.fate !== 0) breakdownParts.push(`天命 ${signed(ep.fate)}`);
 

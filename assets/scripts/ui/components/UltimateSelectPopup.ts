@@ -24,6 +24,9 @@ import { SolidBackground } from './SolidBackground';
 
 const { ccclass } = _decorator;
 
+/** 玩家尚未指派奧義時，ActionCommandComposite 塞入的佔位技能 ID（非真技能，不可施放） */
+export const UNASSIGNED_ULTIMATE_SKILL_ID = 'unassigned-ultimate';
+
 /** 奧義技能項目 */
 export interface UltimateSkillItem {
     /** 技能 ID（對應 skills.json） */
@@ -200,9 +203,10 @@ export class UltimateSelectPopup extends UIPreviewBuilder {
             const background = rowNode.addComponent(SolidBackground);
             background.color = skill.used ? new Color(26, 32, 42, 110) : new Color(26, 32, 42, 216);
 
+            const isUnassigned = skill.skillId === UNASSIGNED_ULTIMATE_SKILL_ID;
             const button = rowNode.addComponent(Button);
             button.target = rowNode;
-            button.interactable = !skill.used;
+            button.interactable = !skill.used && !isUnassigned;
 
             const rowLayout = rowNode.addComponent(Layout);
             rowLayout.type = Layout.Type.HORIZONTAL;
@@ -225,6 +229,10 @@ export class UltimateSelectPopup extends UIPreviewBuilder {
 
             rowNode.on(Button.EventType.CLICK, () => {
                 if (skill.used) return;
+                if (isUnassigned) {
+                    services().event.emit(EVENT_NAMES.ShowToast, { text: '尚未指派奧義' });
+                    return;
+                }
                 services().event.emit(EVENT_NAMES.UltimateSkillSelected, { skillId: skill.skillId, ultimateId: skill.ultimateId });
                 this.hide();
             }, this);

@@ -163,7 +163,11 @@ export class ServiceLoader {
      *                 若不傳入則 AudioSystem 無法初始化（音效功能停用）。
      */
     public initialize(hostNode?: Node): void {
-        if (this.initialized) return;
+        if (this.initialized) {
+            // 第一次初始化可能沒帶節點（或宿主已隨場景銷毀）；之後任何帶節點的呼叫都能把音源補掛回來
+            if (hostNode && !this.audio.isReady()) this.audio.setup(hostNode);
+            return;
+        }
 
         this.battle.setEventSystem(this.event);
         this.game.setEventSystem(this.event);

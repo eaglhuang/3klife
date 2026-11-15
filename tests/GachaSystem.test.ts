@@ -56,10 +56,10 @@ export function createGachaSystemSuite(): TestSuite {
         const calls: string[] = [];
         let loaded: GachaConfig[] = [];
         const sys = new GachaSystem(() => loaded)
-            .registerType('support', fakeRule('beauty', calls))
+            .registerType('heroine', fakeRule('beauty', calls))
             .registerType('hero', fakeRule('hero', calls))
             .registerPool('GENERAL_STANDARD_01', fakeRule('standard', calls));
-        await sys.pull({ poolId: 'support-pool', drawCount: 10, generals: [], poolTypeHint: 'support' });
+        await sys.pull({ poolId: 'support-pool', drawCount: 10, generals: [], poolTypeHint: 'heroine' });
         loaded = pools;
         const out = await sys.pull({ poolId: 'hero-pool', drawCount: 1, generals: [] });
         await sys.pull({ poolId: 'GENERAL_STANDARD_01', drawCount: 10, generals: [], poolTypeHint: 'hero' });

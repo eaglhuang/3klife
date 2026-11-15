@@ -610,5 +610,11 @@
     "path": ".github/skills/atm-captain-dispatch-standard/SKILL.md",
     "title": "ATM Captain Dispatch Standard (派工規範手冊)",
     "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0125",
+    "path": ".agents/skills/general-portrait-style/SKILL.md",
+    "title": "3KLife 武將立繪與頭像校準",
+    "category": "agentskill"
   }
 ]

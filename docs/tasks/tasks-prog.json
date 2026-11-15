@@ -4968,6 +4968,238 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "id": "PROG-2-9045",
+      "title": "血統遺傳 EP 精算升級：對齊 doc_spec_1098 門檻、納入共鳴階梯與雙親 EP_Base 貢獻並重建 doc-id-registry",
+      "priority": "P1",
+      "phase": "M2",
+      "status": "done",
+      "owner": "ClaudeCode",
+      "category": "core-gameplay",
+      "description": "1) BreedingSystem.ts 調整常數對齊 doc_spec_1098 (EP_OUTCROSS_BONUS=10, EP_AFFINITY_BONUS=10, EP_VITALITY_FULL_BONUS=5)；2) 新增 computeResonanceBonus (3~4→+5, 5~6→+10, ≥7→+15) 與 computeParentEpBonus (雙親平均 EP 相對 65 折算 -10..+20)，使結緣切換父親時預估 EP 即時呈現差異；3) BreedingPreviewPresenter.ts 預覽明細顯示「親代 +N/-N」；4) 同步更新既有測試並新增 BondingEpFormula.test.ts；5) 執行 doc-id-registry.js 重建索引清除 7 筆失效紀錄。",
+      "acceptance": "check-test-tsc-baseline 0 errors、check-encoding-touched passed、unit tests 7695 passed / 3 skipped / 0 failed、gate:standard 12/12 通過。",
+      "doc_refs": [
+        "doc_spec_1098",
+        "doc_spec_0011",
+        "doc_spec_0028"
+      ],
+      "created_at": "2026-11-15T17:18:33.381Z",
+      "started_at": "2026-11-15T17:18:33.381Z",
+      "started_by_agent": "ClaudeCode",
+      "completed_at": "2026-11-15T17:18:33.381Z",
+      "depends_on": [
+        "PROG-2-9044"
+      ],
+      "target_files": [
+        "assets/scripts/core/systems/BreedingSystem.ts",
+        "assets/scripts/ui/core/BreedingPreviewPresenter.ts",
+        "tests/Breeding.test.ts",
+        "tests/EpVitalityFull.test.ts",
+        "tests/HistoricalPairs.test.ts",
+        "tests/KinRelation.test.ts",
+        "tests/VirtualAncestor.test.ts",
+        "tests/BondingEpFormula.test.ts",
+        "docs/tasks/tasks-prog.json"
+      ],
+      "notes": "2026-11-16 | 狀態: done | 驗證: unit tests 7695 passed / 3 skipped / 0 failed, check-test-tsc-baseline 0 errors, doc-id-registry --verify 0 errors (5908 entries) | 變更: 對齊 doc_spec_1098 門檻、新增共鳴階梯與雙親 EP_Base 貢獻並更新結緣預覽明細、重建 doc-id-registry | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9044",
+      "title": "戰場無聲：音源掛到常駐節點並允許補掛",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-15",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-15 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9048",
+      "title": "部署當回合不得行動",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-15",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者裁定：部署當回合該部隊不得行動，下一回合才移動與攻擊；雙方一致。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: done | 驗證: 真實畫面第 1 回合部署、第 2 回合原地、第 3 回合前進；單元測試全過 | 變更: 回合管理器記錄本回合剛部署的單位，移動與攻擊階段跳過 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9049",
+      "title": "戰場音效與受擊反應補齊",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-16T01:54:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "系統性驗證盤點：戰場只有受擊、武器、雷三種聲音；移動、部署、陣亡、治療、增益、閃避、暴擊、城寨受擊都沒有音效，主將受擊沒有命中特效，陣亡戰報顯示單位代號。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: done | 驗證: 實機攔截到 start／footstep／weapon／hurt／boom／die 依事件播放；單元測試全過、型別檢查 0 錯 | 變更: 九個新音效鍵接到部署、移動、陣亡、治療、增益、閃避、暴擊、城寨受擊；主將受擊補命中特效；陣亡戰報顯示名稱 | 阻塞: 無；音色為既有音檔暫代，待音效豐富度一併重選",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9050",
+      "title": "戰場按鈕回饋缺口修正",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-16T01:54:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "按鈕盤點：計謀鈕不可用時點了沒反應；自動鈕一按就不可逆地結算整場；未指派奧義的佔位列可以被選取送出。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: done | 驗證: 實機點計謀鈕出現「計謀暫不可用：計謀點不足」；單元測試全過、型別檢查 0 錯 | 變更: 計謀鈕灰階可點並說明原因、自動鈕二次確認、未指派奧義不可選 | 阻塞: 無；提示文字尚未走多語系",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

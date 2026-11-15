@@ -133,7 +133,7 @@ export class GachaFlowCoordinator {
 
     /** 紅顏池召喚（PROG-2-1086）：扣 1 張召喚券抽 1 位女性武將，入名冊後可去結緣 */
     public async runBeautySummon(poolId: string, generals: GeneralConfig[], drawCount = 1): Promise<void> {
-        await this._runPool(poolId, drawCount, generals, 'support', () => this.runBeautySummon(poolId, generals, drawCount), '紅顏池召喚失敗');
+        await this._runPool(poolId, drawCount, generals, 'heroine', () => this.runBeautySummon(poolId, generals, drawCount), '紅顏池召喚失敗');
     }
 
     /**
