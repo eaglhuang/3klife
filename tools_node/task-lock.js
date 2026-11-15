@@ -9,7 +9,17 @@ function parseFiles(rawArgs) {
   if (filesFlagIndex < 0) {
     return [];
   }
-  return rawArgs.slice(filesFlagIndex + 1).filter((arg) => !arg.startsWith('--'));
+  const tokens = rawArgs.slice(filesFlagIndex + 1).filter((arg) => !String(arg).startsWith('--'));
+  const files = [];
+  for (const token of tokens) {
+    for (const piece of String(token).split(',')) {
+      const file = piece.trim();
+      if (file && !files.includes(file)) {
+        files.push(file);
+      }
+    }
+  }
+  return files;
 }
 
 function printUsage() {
