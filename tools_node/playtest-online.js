@@ -597,16 +597,21 @@ async function main() {
         await step('lobby-walker-bubble', async (rec) => {
             await requireLobby();
             const crowdRe = '^crowd-.*';
-            const before = await page.evaluate((re) => window.__pt.activeNodeNames(re), '(NpcDialogue|Bubble|Speech|Dialogue|JournalPeek)');
+            // 泡泡是 UCUF 既有節點 lobby-hall-screen.bubble，平常 active=false，點到在場武將才開
+            const bubbleRe = '(^|\\.)bubble$';
+            rec.detail.bubbleBefore = await page.evaluate((re) => window.__pt.activeNodeNames(re), bubbleRe);
             const walker = await waitUntil(() => page.evaluate((re) => window.__pt.findNodeName(re), crowdRe), 30000, '找不到走動小人（crowd-*）');
             rec.detail.walker = walker;
             const tapped = await page.evaluate((re) => window.__pt.tapNode(re), crowdRe);
             if (!tapped) throw new Error('點擊小人失敗');
             const bubbles = await waitUntil(async () => {
-                const now = await page.evaluate((re) => window.__pt.activeNodeNames(re), '(NpcDialogue|Bubble|Speech|Dialogue|JournalPeek)');
-                const added = now.filter((n) => !before.includes(n));
-                return added.length ? added : null;
-            }, 5000, '點小人後沒有出現對話泡泡');
+                const now = await page.evaluate((re) => window.__pt.activeNodeNames(re), bubbleRe);
+                return now.length ? now : null;
+            }, 5000, '點小人後 lobby-hall-screen.bubble 沒有變為 active').catch(async (e) => {
+                const all = await page.evaluate(() => Object.keys(window.__pt.nameCounts('ubble|Dialog|Speech')));
+                const crowd = await page.evaluate(() => window.__pt.nameCounts('^crowd-'));
+                throw new Error(`${e.message}（名稱含 bubble/dialog 的節點：${all.join(', ') || '無'}；crowd 節點：${Object.keys(crowd).join(', ') || '無'}）`);
+            });
             rec.detail.bubbleNodes = Array.from(new Set(bubbles));
             return rec.detail;
         }, { skipIfFailed: true });
@@ -669,6 +674,8 @@ async function main() {
             await waitUntil(async () => {
                 if ((await scene()) === 'BattleScene') return true;
                 await page.evaluate((re) => window.__pt.clickButton(re), deployRe);
+                // 兵勢凶險時會再跳「強行出征」確認框
+                await page.evaluate(() => window.__pt.clickByText('.*', '^\\s*強行出征\\s*$'));
                 await delay(2000);
                 return false;
             }, BATTLE_LIMIT_MS, `出征面板無法進入戰場（可按按鈕：${(await listButtons()).join(', ')}）`);
@@ -677,14 +684,44 @@ async function main() {
             // 加速（若有）；自動戰鬥若預設已開就不重複點
             await delay(1500);
             await clickButton('^BtnFastForward$');
+            // 首戰教學框：收起；再把第一張兵卡拖到我方底線第 3 路（座標以 1920x1080 截圖比例換算）
+            await page.evaluate(() => window.__pt.clickByText('.*', '^\\s*收起\\s*$'));
+            await delay(800);
+            const vp = page.viewport();
+            const sx = vp.width * (120 / 1920), sy = vp.height * (285 / 1080);
+            const ex = vp.width * (570 / 1920), ey = vp.height * (760 / 1080);
+            await page.mouse.move(sx, sy);
+            await page.mouse.down();
+            await page.mouse.move((sx + ex) / 2, (sy + ey) / 2, { steps: 12 });
+            await page.mouse.move(ex, ey, { steps: 12 });
+            await page.mouse.up();
+            await delay(1000);
             // 等結算：BattleReview 出現，或場景自動回大廳
-            const settled = await waitUntil(async () => {
-                if ((await scene()) === 'LobbyScene') return 'auto-lobby';
-                if (await page.evaluate(() => window.__pt.scenePresence('BattleReview'))) return 'review';
-                if ((await page.evaluate(() => window.__pt.textsMatching('^(勝利|失敗|戰敗|平手)$'))).length) return 'review';
+            // 回合數有在前進就不算卡住；停滯超過 BATTLE_LIMIT_MS 或總時間超過 6 分鐘才判失敗
+            let settled = null;
+            let lastRound = -1;
+            let lastProgressAt = Date.now();
+            const hardDeadline = Date.now() + 360000;
+            while (!settled) {
+                if ((await scene()) === 'LobbyScene') { settled = 'auto-lobby'; break; }
+                if (await page.evaluate(() => window.__pt.scenePresence('BattleReview'))) { settled = 'review'; break; }
+                if ((await page.evaluate(() => window.__pt.textsMatching('^(勝利|失敗|戰敗|平手)$'))).length) { settled = 'review'; break; }
+                const roundTexts = await page.evaluate(() => window.__pt.textsMatching('^第\\s*\\d+\\s*回合$'));
+                const round = roundTexts.length ? Number(String(roundTexts[0]).replace(/\D/g, '')) : -1;
+                if (round !== lastRound) { lastRound = round; lastProgressAt = Date.now(); }
+                rec.detail.lastRound = lastRound;
+                // 首戰教學戰打不死（回合持續推進仍無勝負）：超過 20 回合改按右上「退」結束教學，記錄為 retreat
+                if (lastRound >= 20) {
+                    rec.detail.retreatedAtRound = rec.detail.retreatedAtRound || lastRound;
+                    await page.evaluate(() => window.__pt.clickByText('.*', '^\s*退\s*$'));
+                    await page.evaluate(() => window.__pt.clickByText('.*', '^\s*(確認|確定|是|撤退|結束教學)\s*$'));
+                }
                 await page.evaluate(() => window.__pt.clickButton('^BtnAuto$'));
-                return false;
-            }, BATTLE_LIMIT_MS, `戰鬥未在 120 秒內結算（可按按鈕：${(await listButtons()).join(', ')}）`);
+                await page.evaluate(() => window.__pt.clickButton('^(BtnEndTurn|btnEndTurn|EndTurnBtn)$'));
+                if (Date.now() - lastProgressAt > BATTLE_LIMIT_MS) throw new Error(`戰鬥卡住：第 ${lastRound} 回合起超過 ${Math.round(BATTLE_LIMIT_MS / 1000)} 秒沒有推進（可按按鈕：${(await listButtons()).join(', ')}）`);
+                if (Date.now() > hardDeadline) throw new Error(`戰鬥 6 分鐘內未結算（停在第 ${lastRound} 回合；回合仍在推進，疑似戰鬥變長）`);
+                await delay(1000);
+            }
             rec.detail.settledBy = settled;
             rec.detail.battleMs = Date.now() - battleT0;
             if (settled === 'review') {
