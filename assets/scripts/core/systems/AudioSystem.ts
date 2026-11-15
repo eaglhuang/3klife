@@ -1,6 +1,6 @@
 import { UCUFLogger, LogCategory } from '../utils/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
-import { AudioClip, AudioSource, Node, tween } from "cc";
+import { AudioClip, AudioSource, Node, director, tween } from "cc";
 import { AUDIO_PREFS_KEY, parseAudioPrefs, type AudioPrefs } from "./BattleSettingsView";
 
 /**
@@ -28,6 +28,8 @@ export class AudioSystem {
     /** 追蹤 BGM 目標音量，crossfade 漸进終點用 */
     private bgmVolume: number = 0.5;
     private sfxSource: AudioSource | null = null;
+    /** 掛音源的節點（正常為常駐節點 AudioHost）；失效時要重新 setup */
+    private host: Node | null = null;
     private loopSource: AudioSource | null = null;
     /** 玩家在設定面板關掉的音樂／音效（存 localStorage，PROG-2-1890） */
     private prefs: AudioPrefs = parseAudioPrefs(null);
@@ -52,6 +54,9 @@ export class AudioSystem {
      * Unity 對照：相當於在 GameManager 物件上掛 3 個 AudioSource 組件
      */
     public setup(hostNode: Node): void {
+        // 音源掛在跨場景常駐的專用節點上：呼叫端的節點（登入頁、面板）會隨場景銷毀，
+        // 直接掛上去的話換到戰場後音源就失效，整場沒有聲音。
+        hostNode = this.host = this._persistentHost(hostNode);
         this.bgmSource = hostNode.addComponent(AudioSource);
         this.bgmSource.loop = true;
         this.bgmSource.volume = 0.5;
@@ -69,6 +74,20 @@ export class AudioSystem {
         this.loopSource.volume = 0.8;
 
         this.prefs = parseAudioPrefs(this._readPrefs());
+    }
+
+    /** 音源是否還能用；尚未掛載或宿主已被銷毀時為 false，需要再 setup 一次。 */
+    public isReady(): boolean {
+        return !!this.sfxSource && !!this.host?.isValid;
+    }
+
+    private _persistentHost(fallback: Node): Node {
+        const scene = director?.getScene?.();
+        if (!scene) return fallback;
+        const host = new Node('AudioHost');
+        scene.addChild(host);
+        director.addPersistRootNode(host);
+        return host;
     }
 
     // ─────────────────────────────────────────
