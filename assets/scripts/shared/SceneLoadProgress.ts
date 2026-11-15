@@ -6,8 +6,10 @@ export class LoadProgressState {
     public total: number | null = null;
     public active = false;
     public failed = false;
+    /** 角落小條模式（PROG-2-9044）：畫面已可操作、只剩背景載入時縮到右下角，不擋畫面但仍可觀察進度 */
+    public compact = false;
     begin(phase: string, total: number | null = null): void {
-        this.phase = phase; this.completed = 0;
+        this.phase = phase; this.completed = 0; this.compact = false;
         this.total = total !== null && Number.isFinite(total) && total > 0 ? total : null;
         this.active = true; this.failed = false;
     }
@@ -49,6 +51,9 @@ export const SCENE_LOAD_PROGRESS_CSS = `
 #scene-load-progress[data-mode="failed"] .slp-fill{width:100%;background:#8A2A1E;box-shadow:none}
 #scene-load-progress button{pointer-events:auto;align-self:center;margin-top:2px;padding:4px 18px;font:inherit;
   color:#2D1E00;background:linear-gradient(180deg,#FFE088,#D4AF37);border:1px solid #FFF3C4;border-radius:3px;cursor:pointer}
+#scene-load-progress[data-compact="1"]{left:auto;right:12px;bottom:12px;transform:none;width:200px;
+  padding:4px 8px 6px;gap:4px;font-size:11px;letter-spacing:1px;opacity:.8}
+#scene-load-progress[data-compact="1"] .slp-track{height:3px}
 @keyframes slp-sweep{to{left:100%}}
 @keyframes slp-flow{0%{left:-32%}100%{left:100%}}
 `;
@@ -68,6 +73,8 @@ function render(): void {
         track.append(fill); root.append(style, label, track); document.body.appendChild(root);
     }
     label!.textContent = sceneLoadState.text;
+    if (sceneLoadState.compact && !sceneLoadState.failed) root.setAttribute('data-compact', '1');
+    else root.removeAttribute('data-compact');
     if (sceneLoadState.failed) {
         root.setAttribute('data-mode', 'failed');
     } else if (sceneLoadState.total !== null) {
@@ -82,6 +89,12 @@ export const SceneLoadProgress = {
     begin(phase: string, total: number | null = null): void { sceneLoadState.begin(phase, total); render(); },
     report(completed: number, total: number): void { sceneLoadState.report(completed, total); if (sceneLoadState.active) render(); },
     step(): void { sceneLoadState.step(); if (sceneLoadState.active) render(); },
+    /** 畫面已可操作、剩餘載入改在背景進行：從角落小條開始新階段 */
+    beginBackground(phase: string, total: number | null = null): void {
+        sceneLoadState.begin(phase, total); sceneLoadState.compact = true; render();
+    },
+    /** 目前階段改縮到角落小條（例如開場旁白已出現、大廳仍在後面整備） */
+    minimize(): void { if (!sceneLoadState.active) return; sceneLoadState.compact = true; render(); },
     complete(): void {
         sceneLoadState.active = false;
         root?.remove(); root = null; label = null; fill = null;
