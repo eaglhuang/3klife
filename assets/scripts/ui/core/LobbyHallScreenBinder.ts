@@ -12,7 +12,7 @@
  * LobbyScene 只負責掛 host、載設定檔、把動作接到既有流程。
  * Unity 對照：像掛在大廳 Canvas 上的 Presenter，持有主題綁定器與粒子層，按鈕事件往外拋。
  */
-import { Label, Node, UITransform, view } from 'cc';
+import { Label, Node, UITransform, Widget, view } from 'cc';
 import type { HallMapLayout, HallMapTurnStep } from '../../core/systems/HallMapFocusPlanner';
 import { hallBgCoverScale } from '../../core/systems/HallBackgroundFit';
 import { HallThemeConfig, resolveHallTheme } from '../../core/systems/HallTheme';
@@ -44,6 +44,18 @@ export const LOBBY_HALL_PANEL_IDS: readonly LobbyHallPanelId[] = ['wall-left', '
 /** 人群 tick 間隔（秒）；點位 60 秒才輪換，這裡只是檢查頻率 */
 export const STAGE_TICK_SEC = 5;
 
+/** 點到在場武將後，泡泡要顯示的內容（由 LobbyScene 依自薦任務／聊天台詞決定） */
+export interface HallActorTapView {
+    /** 泡泡抬頭：「{name}：」 */
+    name: string;
+    text: string;
+    /** 有值＝這位武將正在自薦任務：泡泡顯示「交給你／再議」，按「交給你」才呼叫 onAccept；沒有就是單純聊天（不顯示選項、自動收起） */
+    volunteer?: { onAccept: () => void };
+}
+
+/** 聊天泡泡停留秒數取自設定檔 bubbleSeconds；自薦任務要讓玩家有時間決定，停久一點 */
+export const VOLUNTEER_BUBBLE_SEC = 8;
+
 export interface LobbyHallStageDepsInput {
     readonly layout: HallStageLayout;
     readonly decor: HallStageDecor;
@@ -52,6 +64,8 @@ export interface LobbyHallStageDepsInput {
     readonly nowSec: () => number;
     /** 走動設定（data/hall-map/hall-wander.json）；null 或沒給時人群維持原本的靜態小人 */
     readonly wander?: HallWanderData | null;
+    /** 點到武將時決定泡泡內容；回傳 null 就不開泡泡 */
+    readonly onActorTap?: (generalId: string) => HallActorTapView | null;
 }
 
 export interface LobbyHallScreenDeps {
@@ -88,6 +102,9 @@ export class LobbyHallScreenBinder {
     private _crowd: HallStageCrowd | null = null;
     private _stage: LobbyHallStageController | null = null;
     private _bubbleTimer: ReturnType<typeof setTimeout> | null = null;
+    /** 目前泡泡屬於誰與「交給你」要做什麼；泡泡收起時清空 */
+    private _bubbleActor: string | null = null;
+    private _bubbleAccept: (() => void) | null = null;
     private _map: HallMapTurnPlayer | null = null;
     private readonly _tickStage = (): void => {
         if (this._stage && this._deps.stage) this._stage.tick(this._deps.stage.nowSec());
@@ -195,6 +212,7 @@ export class LobbyHallScreenBinder {
     closeStage(): void {
         if (!this._stage || !this._crowd) return;
         this._crowd.unschedule(this._tickStage);
+        this._closeBubble();
         this._stage.close();
     }
 
@@ -211,35 +229,80 @@ export class LobbyHallScreenBinder {
     }
 
     /**
-     * 武將對話泡泡（issue #2099 第 6 項）：設計稿最後一列是「交給你／再議」兩顆選項，轉出來是 panel 不接點擊，
-     * 點了沒反應、泡泡一直留著。兩顆選項都收起泡泡（還沒有對應的派遣流程）。
+     * 武將對話泡泡（issue #2099 第 6 項；Issue #2135 改為由武將觸發）：平常收起，點到在場武將才出現。
+     * 設計稿最後一列是「交給你／再議」兩顆選項（轉出來是 panel 不接點擊）：自薦任務時「交給你」呼叫 onAccept，
+     * 兩顆都收起泡泡；單純聊天時整列隱藏。點泡泡本體也收起（#2107-9）；選項按鈕的觸控先處理，不會被本體吃掉。
      */
     private _bindBubbleChoices(): void {
         const bubble = findUcufNode(this._screenRoot, 'lobby-hall-screen.bubble');
-        // 選項列＝有兩個以上子節點的那一列（執行期另插的陰影等節點沒有子節點）
-        const choiceRow = bubble?.children.filter(child => child.children.length >= 2).pop();
         if (!bubble) return;
-        // 點泡泡本體也收起（#2107-9）；選項按鈕的觸控先處理，不會被本體吃掉
+        // 選項列＝有兩個以上子節點的那一列（執行期另插的陰影等節點沒有子節點）
+        const choiceRow = bubble.children.filter(child => child.children.length >= 2).pop();
+        // 設計稿的示範對話不該一直掛在畫面上
+        bubble.active = false;
         bubble.off(Node.EventType.TOUCH_END);
-        bubble.on(Node.EventType.TOUCH_END, () => { bubble.active = false; });
+        bubble.on(Node.EventType.TOUCH_END, () => this._closeBubble());
         if (!choiceRow) return;
-        for (const choice of choiceRow.children) {
-            choice.off(Node.EventType.TOUCH_END);
-            choice.on(Node.EventType.TOUCH_END, () => { bubble.active = false; });
-        }
+        const [accept, decline] = choiceRow.children;
+        accept.off(Node.EventType.TOUCH_END);
+        accept.on(Node.EventType.TOUCH_END, () => {
+            const onAccept = this._bubbleAccept;
+            this._closeBubble();
+            onAccept?.();
+        });
+        decline.off(Node.EventType.TOUCH_END);
+        decline.on(Node.EventType.TOUCH_END, () => this._closeBubble());
     }
 
-    /** 點到發呆中的武將：沿用大廳既有泡泡，約 bubbleSeconds 秒後收起並讓武將繼續走（泡泡先被點掉也一樣放行） */
-    private _showBubbleFor(crowd: HallStageCrowd, generalId: string, seconds: number): void {
-        const bubble = findUcufNode(this._screenRoot, 'lobby-hall-screen.bubble');
-        if (!bubble) return;
-        if (this._bubbleTimer) clearTimeout(this._bubbleTimer);
-        bubble.active = true;
-        this._bubbleTimer = setTimeout(() => {
+    /** 收起泡泡並讓那位武將繼續走（泡泡先被點掉、逾時、離開大廳都走這裡） */
+    private _closeBubble(): void {
+        if (this._bubbleTimer) {
+            clearTimeout(this._bubbleTimer);
             this._bubbleTimer = null;
-            if (bubble.isValid) bubble.active = false;
-            crowd.releaseActor(generalId);
-        }, seconds * 1000);
+        }
+        const bubble = findUcufNode(this._screenRoot, 'lobby-hall-screen.bubble');
+        if (bubble?.isValid) bubble.active = false;
+        const actor = this._bubbleActor;
+        this._bubbleActor = null;
+        this._bubbleAccept = null;
+        if (actor) this._crowd?.releaseActor(actor);
+    }
+
+    /** 點到在場武將：依內容開泡泡並回傳該武將要停多久；沒有內容回傳 undefined（用預設停留） */
+    private _openActorBubble(generalId: string, input: LobbyHallStageDepsInput): number | undefined {
+        const content = input.onActorTap?.(generalId) ?? null;
+        const bubble = findUcufNode(this._screenRoot, 'lobby-hall-screen.bubble');
+        if (!content || !bubble) return undefined;
+        const [nameLabel, textLabel] = bubble.children;
+        const choiceRow = bubble.children.filter(child => child.children.length >= 2).pop();
+        setText(nameLabel, `${content.name}：`);
+        setText(textLabel, content.text);
+        if (choiceRow) choiceRow.active = !!content.volunteer;
+        this._bubbleActor = generalId;
+        this._bubbleAccept = content.volunteer?.onAccept ?? null;
+        const seconds = content.volunteer ? VOLUNTEER_BUBBLE_SEC : (input.wander?.bubbleSeconds ?? 2);
+        bubble.active = true;
+        this._placeBubbleAbove(bubble, generalId);
+        if (this._bubbleTimer) clearTimeout(this._bubbleTimer);
+        this._bubbleTimer = setTimeout(() => this._closeBubble(), seconds * 1000);
+        return seconds;
+    }
+
+    /** 泡泡跟著武將頭頂：改 Widget 的水平置中與上緣距離（設計稿是固定位置），並夾在畫面內 */
+    private _placeBubbleAbove(bubble: Node, generalId: string): void {
+        const widget = bubble.getComponent(Widget);
+        const head = this._crowd?.headPositionOf(generalId);
+        const parentSize = bubble.parent?.getComponent(UITransform);
+        const size = bubble.getComponent(UITransform);
+        if (!widget || !head || !parentSize || !size) return;
+        const margin = 12;
+        const halfW = size.width / 2;
+        widget.isAbsoluteHorizontalCenter = true;
+        widget.isAbsoluteTop = true;
+        widget.horizontalCenter = Math.max(-parentSize.width / 2 + halfW + margin, Math.min(parentSize.width / 2 - halfW - margin, head.x));
+        // 泡泡下緣貼在頭頂標記上方；上緣離畫面頂至少留一個邊距
+        widget.top = Math.max(margin, parentSize.height / 2 - (head.y + size.height));
+        widget.updateAlignment();
     }
 
     private _bindTap(ucufId: string, handler: () => void): void {
@@ -280,7 +343,7 @@ export class LobbyHallScreenBinder {
         this._insertAfterSandbox(node);
         const crowd = node.addComponent(HallStageCrowd);
         crowd.configure(input.decor);
-        crowd.configureWander(input.wander ?? null, input.layout.canvas, (generalId) => this._showBubbleFor(crowd, generalId, input.wander?.bubbleSeconds ?? 2));
+        crowd.configureWander(input.wander ?? null, input.layout.canvas, (generalId) => this._openActorBubble(generalId, input));
         this._crowd = crowd;
         // 設計稿的示意名牌（npc-sample-N）只是版面樣本；真人群上場就關掉，免得與人群名牌疊字
         for (let i = 1; ; i++) {

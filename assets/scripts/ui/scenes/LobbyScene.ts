@@ -12,9 +12,9 @@ import { buildRivalOfficerSetup, type RivalOfficerSetupInput, type RivalSetupGen
 import { inspiredTacticName } from '../../core/systems/InspiredTacticMap';
 import { parseLimitedPoolWindows } from '../../core/systems/LimitedPoolSchedule';
 import { expandLimitedPoolRotations, parseLimitedPoolRotations } from '../../core/systems/LimitedPoolRotation';
-import { _decorator, BlockInputEvents, Button, Canvas, Color, Component, instantiate, JsonAsset, Label, Mask, Node, Sprite, UITransform, Widget, resources } from 'cc';
+import { _decorator, BlockInputEvents, Button, Canvas, Color, Component, instantiate, JsonAsset, Label, Mask, Node, Sprite, sys, UITransform, Widget, resources } from 'cc';
 import { installAdaptiveResolution } from '../core/AdaptiveResolution';
-import { LobbyHallScreenBinder, type LobbyHallDockId, type LobbyHallPanelId } from '../core/LobbyHallScreenBinder';
+import { LobbyHallScreenBinder, type HallActorTapView, type LobbyHallDockId, type LobbyHallPanelId } from '../core/LobbyHallScreenBinder';
 import { hallFestivalIdOf, mainLobbyBackdropOf, resolveHallTheme as resolveHallSceneTheme, type HallThemeConfig } from '../../core/systems/HallTheme';
 import { LobbyBackdrop } from '../core/LobbyBackdrop';
 import { sceneGambitNotice, sceneGambitPendingNotice } from '../core/HallSceneGambitText';
@@ -26,7 +26,11 @@ import { buildLobbyHallWallView } from '../../core/systems/LobbyHallWallView';
 import { buildLobbyHallAltarView } from '../core/LobbyHallAltarView';
 import { buildHallMapTurnSteps, hasHallMapFocus, type HallMapProvinceSource } from '../../core/systems/HallMapSeasonTurn';
 import type { HallStageLayout } from '../../core/systems/HallStagePlanner';
-import { parseHallWanderData } from '../../shared/lobby/wanderSupport';
+import { parseHallWanderData, spinePathFor, type HallWanderData } from '../../shared/lobby/wanderSupport';
+import { INITIAL_WALKER_STATE, planHallWalkers, type WalkerPlanState } from '../../core/systems/HallWalkerPlan';
+import { HallChatStore, parseChatBook, pickChatLine } from '../../core/systems/HallChatLines';
+import { displayTitleOf } from '../../core/systems/HallStageFeed';
+import type { HallStageCast } from '../../core/systems/HallStageDirector';
 import { UIID, LayerType } from '../../core/config/UIConfig';
 import type { GeneralConfig, GeneralDetailDefaultTab } from '../../core/models/GeneralUnit';
 import { services } from '../../core/managers/ServiceLoader';
@@ -453,6 +457,10 @@ export class LobbyScene extends Component {
     /** 大廳沒開時收到的換季聚焦序列，下次開大廳播一次 */
     private _pendingHallMapTurn: HallMapTurnStep[] | null = null;
     private _hallBoard: HallBoardPanelController | null = null;
+    /** 大廳輪替走動的當班名單狀態（60 秒換一批）與聊天台詞庫（Issue #2135） */
+    private _hallWalkerState: WalkerPlanState = INITIAL_WALKER_STATE;
+    private _hallChat: HallChatStore | null = null;
+    private readonly _hallChatLast = new Map<string, string>();
     private _mercPanelHost: UIScreenPreviewHost | null = null;
     private _mercPanel: MercenaryPanelController | null = null;
     private _govHallHost: UIScreenPreviewHost | null = null;
@@ -3534,17 +3542,24 @@ export class LobbyScene extends Component {
     }
 
     private async _mountLobbyHall(): Promise<void> {
-        const [themeConfig, fxConfig, stageLayout, stageDecor, wanderRaw, mapLayout, mapCatalog, provinceFile] = await Promise.all([
+        const [themeConfig, fxConfig, stageLayout, stageDecor, wanderRaw, chatRaw, mapLayout, mapCatalog, provinceFile] = await Promise.all([
             this._loadDataJson<HallThemeConfig>('data/hall-map/hall-theme'),
             this._loadDataJson<HallSeasonFxConfig>('data/hall-map/hall-season-fx'),
             this._loadDataJson<HallStageLayout>('data/hall-map/hall-stage-spots'),
             this._loadDataJson<HallStageDecor>('data/hall-map/hall-stage-decor'),
             this._loadDataJson<unknown>('data/hall-map/hall-wander'),
+            this._loadDataJson<unknown>('data/hall-map/hall-chat-lines'),
             this._loadDataJson<HallMapLayout>('data/hall-map/hall-map-layout'),
             this._loadDataJson<HallMapEventCatalog>('data/hall-map/hall-map-events'),
             this._loadDataJson<{ provinces: HallMapProvinceSource[] }>('data/hall-map/han13-provinces'),
         ]);
         const session = services().session;
+        const wander = parseHallWanderData(wanderRaw);
+        // 內建台詞當離線底稿，本機快取（連線時同步來的新台詞）疊在上面
+        this._hallChat = new HallChatStore(
+            parseChatBook(chatRaw) ?? { version: 0, generic: [], generals: {} },
+            { get: (key) => sys.localStorage.getItem(key), set: (key, value) => sys.localStorage.setItem(key, value) },
+        );
         const host = await this._mountPreviewScreenHost('LobbyHallHost', 'lobby-hall-screen');
         this._lobbyHallHost = host;
         // 大廳底欄與城池底欄同一套分類：點了展開城池子選單（轉蛋等入口都在裡面），不再各自直達單一功能
@@ -3570,15 +3585,16 @@ export class LobbyScene extends Component {
             },
             onDock: dock,
             onPanel: (id) => panels[id](),
-            // Q 版武將人群（UI-2-0150）；自告奮勇任務來源未定，先不給任務（不顯示「!」）
+            // Q 版武將人群（UI-2-0150）：只有毛遂自薦者與輪替的 2~3 位我方武將會在場（Issue #2135）
             stage: stageLayout && stageDecor
                 ? {
                     layout: stageLayout,
                     decor: stageDecor,
                     refreshSpots: (nowSec) => { session.refreshHallSpots(nowSec, session.randomSource); },
-                    cast: () => session.hallStageCast([]),
+                    cast: () => this._buildHallCast(wander),
                     nowSec: () => Date.now() / 1000,
-                    wander: parseHallWanderData(wanderRaw),
+                    wander,
+                    onActorTap: (generalId) => this._onHallActorTap(generalId),
                 }
                 : null,
             mapLayout,
@@ -3597,6 +3613,72 @@ export class LobbyScene extends Component {
                 }),
             );
         }
+    }
+
+    /**
+     * 大廳此刻在場的武將（Issue #2135）：有任務可毛遂自薦的（頭上掛「!」）一定在場，
+     * 其餘從我方擁有的武將輪替 2~3 位出來走動；沒有骨架（不會走）的武將排在後面。
+     */
+    private _buildHallCast(wander: HallWanderData | null): HallStageCast {
+        const session = services().session;
+        const owned = session.hallCandidates().map(c => ({
+            id: c.id,
+            favorite: c.favorite,
+            assigned: c.assigned,
+            walkable: !!wander && spinePathFor(wander, c.id) !== null,
+        }));
+        const volunteerIds = owned.filter(c => !c.assigned && this._hallBoard?.volunteerTaskFor(c.id)).map(c => c.id);
+        const plan = planHallWalkers({
+            state: this._hallWalkerState,
+            nowSec: Date.now() / 1000,
+            owned,
+            volunteerIds,
+            random: session.randomSource,
+        });
+        this._hallWalkerState = plan.state;
+        const generals: HallStageCast['generals'] = plan.ids.flatMap((id) => {
+            const profile = session.hallStageProfile(id);
+            if (!profile) return [];
+            const title = displayTitleOf(profile.title, profile.name);
+            return [title ? { id, name: profile.name, title } : { id, name: profile.name }];
+        });
+        return { generals, taskMarkIds: new Set(plan.volunteerIds) };
+    }
+
+    /**
+     * 點到大廳武將：自薦中的顯示任務提案與「交給你／再議」（交給你→打開任務牆與詳情，由玩家確認接取）；
+     * 其餘是聊天，依友誼挑一句，連點不重複同一句。
+     */
+    private _onHallActorTap(generalId: string): HallActorTapView | null {
+        const session = services().session;
+        const profile = session.hallStageProfile(generalId);
+        if (!profile) return null;
+        const volunteer = this._hallBoard?.volunteerTaskFor(generalId) ?? null;
+        if (volunteer) {
+            return {
+                name: profile.name,
+                text: `主公，「${volunteer.taskTitle}」讓我去吧！`,
+                volunteer: { onAccept: () => { this.openVolunteerTask(generalId); } },
+            };
+        }
+        const chat = this._hallChat;
+        const pick = chat ? pickChatLine(chat.book, generalId, this._hallFriendshipOf(generalId), this._hallChatLast.get(generalId) ?? null, session.randomSource) : null;
+        if (!pick) return null;
+        this._hallChatLast.set(generalId, pick.line.id);
+        return { name: profile.name, text: pick.line.text };
+    }
+
+    /** 武將友誼值：友誼系統尚未建立，暫一律 0（只會說一開始就解鎖的台詞）；日後改接真正的友誼資料 */
+    private _hallFriendshipOf(_generalId: string): number {
+        return 0;
+    }
+
+    /**
+     * 連線時同步大廳聊天台詞：fetcher 由呼叫端接伺服器（目前沒有伺服器介面，沒人呼叫）。
+     * 成功就寫入本機快取，下次離線也能用；失敗或沒有新版回傳 false，不影響現有台詞。
+     */
+    public syncHallChatLines(fetcher: (() => Promise<unknown>) | null): Promise<boolean> {
+        return this._hallChat ? this._hallChat.sync(fetcher) : Promise.resolve(false);
     }
 
     private _openLobbyHall(): void {

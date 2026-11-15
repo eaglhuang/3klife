@@ -5,7 +5,7 @@
  * 驗收對應：沒人走出地板帶、idle 2–4 秒、只有 idle 能點、點了停在原地、間距、速度＝步幅常數、面向。
  * Unity 對照：對一個不依賴 MonoBehaviour 的 AI 狀態機跑固定步長模擬。
  */
-import { HallWander, LOBBY_DESIGN, WALK_GROUND_SPEED, WANDER_ANIMS, pointAllowed, type WanderConfig } from '../assets/scripts/shared/lobby/wanderCore';
+import { HallWander, LOBBY_DESIGN, WALK_GROUND_SPEED, WANDER_ANIMS, WANDER_EXIT_MARGIN, pointAllowed, type WanderConfig } from '../assets/scripts/shared/lobby/wanderCore';
 import { TestSuite, assert } from './TestRunner';
 
 const SCALE = 0.22;
@@ -259,6 +259,67 @@ export function createLobbyWanderCoreSuite(): TestSuite {
         });
         assert.equals(0, moved);
         assert.isTrue(min > 100, `走動的人離固定的人最近只有 ${min.toFixed(1)}`);
+    });
+
+    suite.test('進場：addActor 從地板帶外側走進場內；id 重複不會加第二個', () => {
+        const w = new HallWander(config(20261113, ['a']));
+        const entry = { x: LOBBY_DESIGN.floor.x0 - WANDER_EXIT_MARGIN, y: 880 };
+        assert.isTrue(w.addActor({ id: 'n', tier: 'general', speed: SPEED, start: entry }));
+        assert.isFalse(w.addActor({ id: 'n', tier: 'general', speed: SPEED, start: entry }), '同 id 不可重複加入');
+        assert.equals(2, w.drawOrder().length);
+        let inside = false;
+        run(w, 60, () => {
+            const s = w.drawOrder().find((x) => x.id === 'n')!;
+            if (s.x >= LOBBY_DESIGN.floor.x0 && s.x <= LOBBY_DESIGN.floor.x1) inside = true;
+        });
+        assert.isTrue(inside, '進場的人要走進地板帶');
+    });
+
+    suite.test('退場：leave 後解除鎖定、朝最近的外側走、走出去後從名單消失並回報 id', () => {
+        const w = new HallWander(config(20261113, ['a', 'b']));
+        w.lockIdle('a');
+        w.leave('a');
+        const drained: string[] = [];
+        for (let i = 0; i < 30 * 120 && drained.length === 0; i++) {
+            w.step(DT);
+            drained.push(...w.drainRemoved());
+        }
+        assert.equals(1, drained.length, '120 秒內應該走出去');
+        assert.equals('a', drained[0]);
+        assert.equals(1, w.drawOrder().length);
+        assert.equals(0, w.drainRemoved().length, '取走後清空');
+    });
+
+    suite.test('退場途中不掉頭；stay 可取消退場', () => {
+        const w = new HallWander(config(20261113, ['a', 'b', 'c', 'd']));
+        w.leave('a');
+        let flips = 0;
+        let prevFacing = 0;
+        let prevState = '';
+        for (let i = 0; i < 30 * 5; i++) {
+            const a = w.step(DT).find((x) => x.id === 'a');
+            if (a && a.state === 'walk') {
+                if (prevState === 'walk' && prevFacing !== a.facing) flips++;
+                prevFacing = a.facing;
+            }
+            prevState = a ? a.state : '';
+        }
+        assert.equals(0, flips);
+        const w2 = new HallWander(config(20261113, ['a', 'b']));
+        w2.leave('a');
+        w2.stay('a');
+        const gone: string[] = [];
+        run(w2, 120, () => gone.push(...w2.drainRemoved()));
+        assert.equals(0, gone.length, 'stay 之後不該被移除');
+    });
+
+    suite.test('remove：立刻移除、不進 drainRemoved', () => {
+        const w = new HallWander(config(20261113, ['a', 'b']));
+        w.remove('a');
+        assert.equals(1, w.drawOrder().length);
+        assert.equals(0, w.drainRemoved().length);
+        w.remove('nope');
+        assert.equals(1, w.drawOrder().length);
     });
 
     return suite;
