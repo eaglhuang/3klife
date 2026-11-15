@@ -29,11 +29,12 @@ export const TURN_BASED_RUNTIME_PHASE_ORDER: readonly BattleRuntimePhaseName[] =
   'player-tile-effect',
   'player-combat-resolve',
   'player-special-resolve',
-  'enemy-deploy',
   'enemy-auto-move',
   'enemy-tile-effect',
   'enemy-combat-resolve',
   'enemy-special-resolve',
+  // 敵方部署放最後：上一回合部署的敵軍先走開讓出部署格，且本回合新部署的敵軍不會在同回合行動（PROG-2-9302）
+  'enemy-deploy',
   'auto-move',
   'tile-effect',
   'combat-resolve',

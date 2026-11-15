@@ -45,6 +45,36 @@ export function createBattleRetreatConfirmationSuite(): TestSuite {
             assert.equals(1, ended); assert.equals(1, results);
         } finally { Date.now = now; off(); bridge.unsubscribeEvents(); }
     });
+    suite.test('確認撤退時戰報與 Toast 說明我軍鳴金收兵，結算窗標記 retreated', () => {
+        services().initialize();
+        const ctrl = new BattleController();
+        const g = (id: string, faction: Faction) => new GeneralUnit({ id, name: id, faction, hp: 1000, str: 80, int: 80, lea: 80 });
+        ctrl.initBattle(g('p', Faction.Player), g('e', Faction.Enemy));
+        const ctx = createBattleSceneContext(); ctx.ctrl = ctrl;
+        let retreatedFlag: boolean | undefined;
+        ctx.resultPopup = { node: new Node('Result'), showResult: (_r: string, _d?: string, _g?: string, retreated?: boolean) => { retreatedFlag = retreated; } };
+        const bridge = new BattleUIBridge(ctx, {});
+        bridge['_settleRosterBattle'] = () => [];
+        bridge.refreshBattleViews = noop;
+        bridge.subscribeEvents({ onEndTurn: noop, onPlayerDeployed: noop, onTactics: noop,
+            onGeneralDuelRequest: noop, onReplay: noop, onBack: noop });
+        const logs: string[] = [];
+        bridge['appendLog'] = (line: string) => { logs.push(line); };
+        const toasts: string[] = [];
+        const offToast = services().event.on(EVENT_NAMES.ShowToast, (data: { text: string }) => { toasts.push(data.text); });
+        const settings = new Node('Settings').addComponent(BattleSettingsComposite);
+        const retreat = new Node('BtnRetreat');
+        settings['_onAfterBuildReady']({ getNode: (name: string) => name === 'BtnRetreat' ? retreat : null });
+        const now = Date.now; let clock = 1000; Date.now = () => clock;
+        try {
+            retreat.emit(Button.EventType.CLICK);
+            assert.equals(0, toasts.length);
+            retreat.emit(Button.EventType.CLICK);
+            assert.isTrue(logs.includes('我軍鳴金收兵，撤出戰場'));
+            assert.isTrue(toasts.includes('我軍鳴金收兵，撤出戰場'));
+            assert.equals(true, retreatedFlag);
+        } finally { Date.now = now; offToast(); bridge.unsubscribeEvents(); }
+    });
     suite.test('關閉設定就取消待確認，重新開啟不能沿用舊的確認', () => {
         const settings = new Node('Settings').addComponent(BattleSettingsComposite);
         settings['_retreatArmedAt'] = 1000;

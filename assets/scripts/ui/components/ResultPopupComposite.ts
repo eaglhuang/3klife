@@ -23,7 +23,7 @@ export interface BattleResult {
 }
 
 /** 主動撤退的結算說明（#2107-2） */
-export const RETREAT_DESCRIPTION = '我方主動撤退，保存兵力，來日再戰。';
+export const RETREAT_DESCRIPTION = '主動撤退，本場判定戰敗。';
 
 @ccclass('ResultPopupComposite')
 export class ResultPopupComposite extends CompositePanel {

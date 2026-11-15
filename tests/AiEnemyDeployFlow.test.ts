@@ -75,15 +75,15 @@ export function createAiEnemyDeployFlowSuite(): TestSuite {
         assert.equals('1,1,1,1,2,2', spawns.join(','));
     });
 
-    // 剛部署的部隊當回合不動（PROG-2-9048），下一回合部署時仍佔著部署格，五條線扣掉被佔的才是可部署數
-    suite.test('困難難度（加成 1）：第 1 回合就 2 支，第 5 回合起上限 3 支（受部署格被佔限制）', () => {
+    // 敵方部署放在回合最後（PROG-2-9302）：上一回合部署的敵軍先移動讓出部署格，部署額度不被佔格吃掉
+    suite.test('困難難度（加成 1）：第 1 回合就 2 支，第 5 回合起上限 3 支（上回合部署的先走開，不扣格）', () => {
         const spawns = enemySpawnsPerTurn(battle(1), 6);
-        assert.equals('2,2,2,2,3,2', spawns.join(','));
+        assert.equals('2,2,2,2,3,3', spawns.join(','));
     });
 
-    suite.test('地獄難度（加成 2）：每回合上限 3 支（上回合 3 支仍佔部署格時只剩 2 條線）', () => {
+    suite.test('地獄難度（加成 2）：每回合穩定 3 支（上回合部署的先走開讓出部署格）', () => {
         const spawns = enemySpawnsPerTurn(battle(2), 3);
-        assert.equals('3,2,3', spawns.join(','));
+        assert.equals('3,3,3', spawns.join(','));
     });
 
     suite.test('未傳入難度加成時預設為 0，與普通難度相同', () => {
