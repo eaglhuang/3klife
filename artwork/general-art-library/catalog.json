@@ -312,7 +312,7 @@
         ]
       },
       "battle": {
-        "activeVersion": "0001",
+        "activeVersion": "0002",
         "status": "review-pending",
         "history": [
           {
@@ -322,6 +322,16 @@
             "sha256": "6afd0911ca412b344abeabf139bcd71d9b80631ef1d2f098f834ea6c31652866",
             "canvas": "1024x1536 RGBA",
             "note": "Existing remote artwork discovered without a catalog record; kept as review candidate, not asserted as runtime-integrated."
+          },
+          {
+            "version": "0002",
+            "file": "battle/zhen_ji__甄姬__battle_0002.png",
+            "status": "review-pending",
+            "sha256": "5ac9316f899f8548f41116bf4ca12a66e158a7780d61d185b04f95b9c45e953f",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "jian",
+            "poseLabel": "斜向格擊",
+            "note": "依核定站姿製作；保留白紫服色與身形，直劍斜向格擊、眼神朝鏡頭；待使用者審看。"
           }
         ]
       },
