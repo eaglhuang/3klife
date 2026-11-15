@@ -25,11 +25,11 @@ window.__bq = (() => {
     for (let i = 1; i <= steps; i += 1) { await sleep(30); mouse('mousemove', x0 + (x1 - x0) * i / steps, y0 + (y1 - y0) * i / steps); }
     await sleep(30); mouse('mouseup', x1, y1);
   };
-  const findLabels = (text) => { const hits = []; walk(scene(), (n) => { if (textOf(n) === text && visible(n)) hits.push(n); return false; }); return hits; };
+  const findLabels = (text) => { const hits = []; if (!scene()) return hits; walk(scene(), (n) => { if (textOf(n) === text && visible(n)) hits.push(n); return false; }); return hits; };
   // pick：第幾個同名文字（負數從後面數）
   const tapLabel = (text, pick = -1) => { const h = findLabels(text); if (!h.length) return null; return tapNode(h[pick < 0 ? h.length + pick : pick]); };
   // 戰場主元件（帶 ctrl 與 unitRenderer）
-  const battle = () => { const n = walk(scene(), (m) => (m.components || []).some((c) => c.ctrl && c.unitRenderer)); return n ? n.components.find((c) => c.ctrl && c.unitRenderer) : null; };
+  const battle = () => { if (!scene()) return null; const n = walk(scene(), (m) => (m.components || []).some((c) => c.ctrl && c.unitRenderer)); return n ? n.components.find((c) => c.ctrl && c.unitRenderer) : null; };
   const waitFor = async (f, ms) => { const s = performance.now(); while (performance.now() - s < ms) { if (f()) return true; await sleep(250); } return false; };
   return { sleep, walk, scene, textOf, visible, toClient, tapWorld, tapNode, centerOf, dragWorld, findLabels, tapLabel, battle, waitFor };
 })();
@@ -40,15 +40,20 @@ window.__enterBattle = 'running';
   const mark = (s) => log.push(`${s} ${((performance.now() - t0) / 1000).toFixed(1)}s`);
   if (!b.battle()) {
     if (await b.waitFor(() => b.findLabels('開始遊戲').length > 0 || b.findLabels('出征').length > 0, 40000) && b.findLabels('開始遊戲').length) { b.tapLabel('開始遊戲'); mark('開始遊戲'); }
-    await b.waitFor(() => b.scene().name === 'LobbyScene' && b.findLabels('出征').length > 0, 60000);
+    await b.waitFor(() => !!b.scene() && b.scene().name === 'LobbyScene' && b.findLabels('出征').length > 0, 60000);
     await b.sleep(1500);
     b.tapLabel('出征', 0); mark('出征');
-    if (!(await b.waitFor(() => b.findLabels('戰場').length > 0, 5000))) { b.tapLabel('出征', -1); await b.waitFor(() => b.findLabels('戰場').length > 0, 5000); }
-    await b.sleep(500);
-    b.tapLabel('戰場', 0); mark('戰場');
-    await b.sleep(3000);
-    // 戰前偵查頁的「出征」確認鈕
-    for (let i = 0; i < 20 && !b.battle(); i += 1) { const h = b.findLabels('出征'); if (h.length) b.tapNode(h[h.length - 1]); await b.sleep(1500); }
+    await b.sleep(1500);
+    // 大廳到戰場中間的畫面會隨版本增減（城市頁「戰場」、選擇戰鬥模式「親自指揮」、兵勢劣勢「強行出征」、戰前偵查「出征」），
+    // 所以不寫死順序：每輪看畫面上有哪個就點哪個，直到進入戰場。
+    for (let i = 0; i < 40 && !b.battle(); i += 1) {
+      let hit = null;
+      for (const text of ['親自指揮', '強行出征', '戰場']) { if (b.findLabels(text).length) { b.tapLabel(text, 0); hit = text; break; } }
+      if (!hit && b.findLabels('戰前偵查').length) { const h = b.findLabels('出征'); if (h.length) { b.tapNode(h[h.length - 1]); hit = '戰前偵查出征'; } }
+      if (!hit && i === 3) { b.tapLabel('出征', -1); hit = '出征（重試）'; }
+      if (hit) mark(hit);
+      await b.sleep(1500);
+    }
     await b.waitFor(() => !!b.battle(), 30000);
   }
   mark('進入戰場');

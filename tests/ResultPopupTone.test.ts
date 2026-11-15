@@ -23,6 +23,13 @@ export function createResultPopupToneSuite(): TestSuite {
         assert.equals(t.titleColor[0], t.titleColor[2]);
     });
 
+    suite.test('失敗與平手標題用深色，在淺色卡片上讀得到（PROG-2-9308）', () => {
+        for (const type of ['defeat', 'stalemate'] as const) {
+            const [r, g, b] = resultPopupTone(type).titleColor;
+            assert.equals(true, Math.max(r, g, b) <= 100);
+        }
+    });
+
     suite.test('平手與未知值：一般外觀', () => {
         assert.equals(false, resultPopupTone('stalemate').grayscale);
         assert.equals(false, resultPopupTone('unknown' as never).celebrate);

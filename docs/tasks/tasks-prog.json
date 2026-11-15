@@ -5660,6 +5660,50 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9308",
+      "title": "戰鬥結束換場景時的未捕捉例外修正，並更新進場腳本",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-16T01:54:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "整場自動實跑三場，每場結束都出現一筆未捕捉例外「Cannot read properties of null (reading size)」：戰鬥結束換場景後，等待單位移動完成的迴圈還在跑，但元件已被引擎銷毀、欄位被清成 null。另外大廳多了「選擇戰鬥模式」步驟，進場腳本需要跟上。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: done | 驗證: 型別檢查 0 錯、單元測試全過、模組邊界通過；進場新流程同邏輯實跑成功 | 變更: 等待移動迴圈加元件存活檢查、進場腳本改為看畫面點按鈕 | 阻塞: 無；例外修正後尚未重跑整場確認該例外消失（重跑進行中）；enter-battle.js 檔案本身改完後未單獨重跑，實跑的是內容相同的貼入版本；標題改色後尚未在實機看過",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

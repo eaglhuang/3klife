@@ -20,8 +20,9 @@ export interface ResultPopupTone {
 
 const TONES: Readonly<Record<ResultPopupType, ResultPopupTone>> = {
     victory: { titleColor: [176, 48, 24], grayscale: false, celebrate: true },
-    defeat: { titleColor: [168, 168, 168], grayscale: true, celebrate: false },
-    stalemate: { titleColor: [232, 232, 232], grayscale: false, celebrate: false },
+    // 卡片底是淺色（失敗時轉成淺灰），標題要用深色才讀得到；原本淺灰字配淺灰底幾乎看不見
+    defeat: { titleColor: [64, 64, 64], grayscale: true, celebrate: false },
+    stalemate: { titleColor: [88, 72, 56], grayscale: false, celebrate: false },
 };
 
 export function resultPopupTone(type: ResultPopupType): ResultPopupTone {

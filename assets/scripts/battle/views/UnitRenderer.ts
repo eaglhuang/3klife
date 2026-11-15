@@ -25,6 +25,7 @@ import {
   Texture2D,
   primitives,
   instantiate,
+  isValid,
   assetManager,
   tween,
   Tween,
@@ -727,7 +728,8 @@ export class UnitRenderer extends Component {
 
   public async waitForMovementIdle(maxWaitMs = BATTLE_VISUAL_TIMING.movementIdleMaxWaitMs): Promise<void> {
     const startedAt = Date.now();
-    while (this.movingUnits.size > 0) {
+    // 換場景後元件被銷毀，引擎會把欄位清成 null，但這個等待迴圈可能還在跑；先確認元件還活著再讀
+    while (isValid(this, true) && this.movingUnits?.size > 0) {
       if (Date.now() - startedAt >= maxWaitMs) {
         return;
       }
@@ -741,7 +743,7 @@ export class UnitRenderer extends Component {
 
   public async waitForUnitMovementIdle(unitId: string, maxWaitMs = BATTLE_VISUAL_TIMING.movementIdleMaxWaitMs): Promise<void> {
     const startedAt = Date.now();
-    while (this.movingUnits.has(unitId)) {
+    while (isValid(this, true) && this.movingUnits?.has(unitId)) {
       if (Date.now() - startedAt >= maxWaitMs) {
         return;
       }

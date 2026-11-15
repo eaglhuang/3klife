@@ -251,6 +251,9 @@ export const _decorator: {
 };
 
 /** 引擎的類別登錄表；測試環境沒有登錄任何元件，一律回傳 null，呼叫端要能處理取不到的情況。 */
+/** 引擎的存活檢查：測試裡沒有銷毀流程，物件存在就視為有效 */
+export function isValid(value: unknown, _strict?: boolean): boolean { return value !== null && value !== undefined; }
+
 export const js = {
     getClassByName(_name: string): unknown { return null; },
 };
