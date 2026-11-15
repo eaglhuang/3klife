@@ -1012,6 +1012,25 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "displayStatus": "not-yet-verified",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/zhou_yu__周瑜__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "1774b65d7ce1c3aeb699249593e1032b77701776b72ac621effb6c42bf2e0c29",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "jian",
+            "gaze": "direct-to-camera",
+            "sourceStanding": "standing/zhou_yu__周瑜__standing_0002.png",
+            "poseLabel": "披袍轉身，斜向拔劍迎擊",
+            "note": "依已核定站姿保留周瑜紅白金衣甲與臉部辨識；等比例縮放置中，未改造人物造型。"
+          }
+        ]
       }
     },
     {
