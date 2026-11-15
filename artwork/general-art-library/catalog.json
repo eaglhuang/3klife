@@ -7547,6 +7547,23 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/cao_jie__曹節__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "f7af79c2f55d1dfa15839be87261483adbe8823ba91a060d898e85b1e3bf6d2c",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "jian",
+            "poseLabel": "前踏轉腰，斜向上格劍",
+            "sourceStanding": "standing/cao_jie__曹節__standing_0002.png",
+            "note": "沿用曹節正式站姿的臉部辨識、靛藍與象牙白服裝及冠飾；以前踏、腰肩轉動與展袖表現戰鬥瞬間。透明背景，候選待審。"
+          }
+        ]
       }
     },
     {
