@@ -787,7 +787,7 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
 
   private getDeployFailMessage(reason?: string): string {
     if (reason === 'battle-locked') return '目前流程鎖定，暫時無法部署';
-    if (reason === 'limit') return '本回合已部署，請等待下一回合';
+    if (reason === 'limit') return '本回合部署已達上限，請按結束回合';
     if (reason === 'occupied') return '目標格已有單位，請改放其他格子';
     if (reason === 'troops-short') return '⚠ 軍勢不足，無法部署';
     if (reason === 'field-limit') return '⚠ 場上部隊已滿，請先等待退場或撤回部隊';

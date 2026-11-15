@@ -505,6 +505,13 @@ export class BattleController {
     return this.tryDeployTroop(pick.troopType as TroopType, lane);
   }
 
+  /** 本回合玩家已部署數與上限（部署面板 Toast 與戰況提示用） */
+  public getPlayerDeployProgress(): { used: number; limit: number; reached: boolean } {
+    const used = this.turnManager.playerDeployCountThisTurn;
+    const limit = GAME_CONFIG.MAX_PLAYER_DEPLOY_PER_TURN;
+    return { used, limit, reached: !this.turnManager.canDeployPlayer() };
+  }
+
   /** 委任開關（PROG-2-0913）：true 依主將智力開啟，false 關閉 */
   public setDelegateEnabled(on: boolean): void {
     if (on) this.enableDelegateFromGeneral();

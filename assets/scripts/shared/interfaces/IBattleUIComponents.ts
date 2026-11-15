@@ -70,6 +70,8 @@ export interface IDeployController {
         unitName?: string,
         options?: { tally?: { cardUid: string; templateId: string } },
     ): { ok: boolean; reason?: string; suggestion?: string | null };
+    /** 本回合玩家部署數與上限；reached 為 true 時拖卡要直接擋下並提示（可選，測試替身可不實作） */
+    getPlayerDeployProgress?(): { used: number; limit: number; reached: boolean };
     /** 目前流程是否允許玩家施放技能（戰鬥流程鎖定時為 false） */
     canUsePlayerSkills(): boolean;
     /** 施放主將技能；成功回傳 true */

@@ -5420,6 +5420,182 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9303",
+      "title": "一回合可部署到上限並由玩家手動結束回合",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-16T01:54:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "部署一張卡 2 秒後程式自動結束回合，玩家一回合只能下一張、來不及看結果。規格未規定單回合一張；總PM裁決改為可部署到上限、手動結束回合。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: done | 驗證: 實機同回合部署 3/3、第四張被擋並提示、手動結束回合後才推進；單元測試 7706 通過、型別檢查 0 錯 | 變更: 部署上限 3、取消部署後自動結束回合（委任除外）、提示文字 | 阻塞: 無；部署糧草規則維持現狀（僅出征模式扣），待規格確認；docs/demo_技術架構.md 仍寫部署後自動推進，待更新",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9304",
+      "title": "部隊打主將傷害取整並走部隊同一條管線",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-16T01:54:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "部隊打主將直接扣攻擊力，出現 38.4 這種小數，且不吃防禦、地形、暴擊，與部隊互打規則不一致。總PM裁決：立即取整；規格沒寫就套部隊管線、數值放設定檔。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: done | 驗證: 單元測試 7706 通過、型別檢查 0 錯；新增四案通過 | 變更: 主將傷害取整、套部隊管線、三個設定值 | 阻塞: 無；規格查無部隊打主將的專屬條文（數值系統 E-3／F-1 只有通用公式，且用無條件捨去，本卡依裁決用四捨五入）；防禦以統率×0.3 推算與倍率 1.5 皆為暫定，全武將平均傷害約為舊值 94%，高統率主將約 57%～80%，待實測調整",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9305",
+      "title": "戰場小兵匯入工具支援指定工作樹",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-16T01:54:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM發版用乾淨工作樹，私有 Spine 素材不進版控，需要把素材匯入到指定工作樹。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: done | 驗證: 以暫存目錄實測試跑／寫入／錯誤參數三種情況 | 變更: 新增 --target 參數 | 阻塞: 無；紅槍兵與藍弓兵仍需另跑 recolor_soldier.py",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9306",
+      "title": "小兵一隊顯示 3 人並依兵力減員",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-16T01:54:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "一格只站一個小兵，看不出是部隊。總PM核准 3 人小隊，條件是同兵種共用骨架與圖集、錯開時間差，並量測效能。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: done | 驗證: 實機 4 隊（12 人）同場 60 fps、最差單幀 17 毫秒；減員顯示正確；單元測試 7706 通過 | 變更: 小隊顯示、減員、邊界修正、美術規格文件 | 阻塞: 無；總PM要求的 6 隊同場與記憶體量測尚未做（僅量到 4 隊）；手機未驗；單挑後備彈窗改動後未實機看過",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

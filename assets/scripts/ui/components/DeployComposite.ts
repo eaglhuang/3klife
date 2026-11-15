@@ -41,6 +41,9 @@ import { EnemyThinkingComposite } from './EnemyThinkingComposite';
 
 const { ccclass } = _decorator;
 
+/** 本回合部署已達上限（總PM 2026-11-16 裁決：上限 3，由玩家自己按結束回合推進） */
+const DEPLOY_LIMIT_TOAST = '本回合部署已達上限，請按結束回合';
+
 interface ToastMessageLike {
   node: Node;
   show: (message: string, duration?: number, options?: ToastOptions) => void | Promise<void>;
@@ -252,6 +255,11 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
         this.selectedUnitName = payload.data.unitName?.trim() || this.toTroopDisplayName(this.selectedType);
         this.selectedTally = tallyDeployRefOf(payload.data);
         this.updateSelectionLabels();
+        // 本回合已達部署上限就不開始拖曳，直接提示（與 tryDeployTroop 的 limit 同一判斷）
+        if (this.ctrl?.getPlayerDeployProgress?.().reached) {
+          this.showToast(DEPLOY_LIMIT_TOAST);
+          return;
+        }
         this.beginDrag(payload.ev, this.selectedType);
       },
     );
@@ -440,7 +448,7 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
 
   private getDeployFailMessage(reason?: string): string {
     if (reason === 'battle-locked') return '目前流程鎖定，暫時無法部署';
-    if (reason === 'limit') return '本回合已部署，請等待下一回合';
+    if (reason === 'limit') return DEPLOY_LIMIT_TOAST;
     if (reason === 'occupied') return '目標格已有單位，請改放其他格子';
     if (reason === 'troops-short') return '⚠ 軍勢不足，無法部署';
     if (reason === 'field-limit') return '⚠ 場上部隊已滿，請先等待退場或撤回部隊';

@@ -10,9 +10,18 @@
  * 介面與 IDuelChallengeLike 相同：node / show(...) / waitUntilReady(...)，
  * 按鈕結果以 node.emit('duelAccepted' | 'duelRejected') 回傳，與原本兩個元件的事件協定一致。
  */
-import { BlockInputEvents, Button, Color, Label, Node, tween, UIOpacity, UITransform, Widget } from 'cc';
-import { SolidBackground } from '../../ui/components/SolidBackground';
+import { BlockInputEvents, Button, Color, js, Label, Node, tween, UIOpacity, UITransform, Widget } from 'cc';
 import type { IDuelChallengeLike } from '../../shared/interfaces/IBattleUIComponents';
+
+/**
+ * 替節點鋪純色底。底色元件屬於 ui 模組，battle 模組依邊界規則不可直接引用，
+ * 所以用註冊名稱向引擎取類別（戰場 UI 一定已載入它）；萬一取不到就不鋪底，彈窗文字與按鈕仍可用。
+ */
+function paintSolid(node: Node, color: Color): void {
+  const SolidBackgroundClass = js.getClassByName('SolidBackground') as (new () => { color: Color }) | null;
+  if (!SolidBackgroundClass) return;
+  (node.addComponent(SolidBackgroundClass as never) as unknown as { color: Color }).color = color;
+}
 
 const PANEL_W = 560;
 const PANEL_H = 300;
@@ -73,7 +82,7 @@ function createButtonNode(
   node.parent = parent;
   node.setPosition(x, y, 0);
   node.addComponent(UITransform).setContentSize(BTN_W, BTN_H);
-  node.addComponent(SolidBackground).color = background;
+  paintSolid(node, background);
   node.addComponent(Button);
   node.on(Button.EventType.CLICK, onClick);
   createLabelNode(node, 'Label', BTN_W, BTN_H, text, 26, Color.WHITE, 0, 0);
@@ -106,14 +115,14 @@ export class DuelChallengeFallback implements IDuelChallengeLike {
     dim.layer = this.node.layer;
     dim.parent = this.node;
     dim.addComponent(UITransform);
-    dim.addComponent(SolidBackground).color = new Color(0, 0, 0, 160);
+    paintSolid(dim, new Color(0, 0, 0, 160));
     fillParent(dim);
 
     const card = new Node('Card');
     card.layer = this.node.layer;
     card.parent = this.node;
     card.addComponent(UITransform).setContentSize(PANEL_W, PANEL_H);
-    card.addComponent(SolidBackground).color = new Color(28, 26, 38, 240);
+    paintSolid(card, new Color(28, 26, 38, 240));
 
     this._titleLabel = createLabelNode(card, 'Title', PANEL_W - 40, 48, '', 30, Color.WHITE, 0, PANEL_H / 2 - 50);
     this._rateLabel = createLabelNode(card, 'Rate', PANEL_W - 40, 40, '', 26, new Color(255, 214, 120, 255), 0, 20);

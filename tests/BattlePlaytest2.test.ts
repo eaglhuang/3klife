@@ -2,7 +2,7 @@
 import { TestSuite, assert } from './TestRunner';
 import { BattleController } from '../assets/scripts/battle/controllers/BattleController';
 import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
-import { EVENT_NAMES, Faction } from '../assets/scripts/core/config/Constants';
+import { EVENT_NAMES, Faction, TroopType } from '../assets/scripts/core/config/Constants';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
 import { FirstBattleOperationGuide } from '../assets/scripts/core/systems/FirstBattleOperationGuide';
 // Cocos view 模組使用 CLI register-cc-test-stub；不將整個 Editor UI 型別樹引入 headless tsconfig。
@@ -30,19 +30,48 @@ export function createBattlePlaytest2Suite(): TestSuite {
             assert.equals(turn + 1, services().battle.getSnapshot().turn);
         }
     });
-    suite.test('手動結束回合會取消尚未執行的部署自動回合，避免兩次推進', () => {
+    suite.test('一般部署後不自動結束回合；委任開啟才排程自動推進，手動結束回合會取消它', () => {
         const callbacks: Array<() => void> = [];
+        const toasts: string[] = [];
         let resolves = 0;
+        let delegate = false;
         const ctx = { ctrl: { isWaitingDuelPlacement: false, canAdvanceBattleTurn: () => true,
-            resolvePlayerTurn: () => { resolves++; return 'enemy-win'; } }, isAdvancingTurn: false };
+            isDelegateEnabled: () => delegate,
+            getPlayerDeployProgress: () => ({ used: 1, limit: 3, reached: false }),
+            resolvePlayerTurn: () => { resolves++; return 'enemy-win'; } },
+            isAdvancingTurn: false, deployRuntime: { showToast: (t: string) => { toasts.push(t); } } };
         const bridge = { refreshBattleViews() {}, hideEnemyThinkingPanel() {}, playTurnBanner() {} };
         const flow = new TurnFlowManager(ctx as any, { scheduleOnce: (fn: () => void) => callbacks.push(fn) } as any, bridge as any);
+        flow.onPlayerDeployed();
+        assert.equals(0, callbacks.length, '一般模式不排程自動結束回合');
+        assert.contains(toasts[0], '已部署 1/3');
+        delegate = true;
         flow.onPlayerDeployed();
         const delayedAuto = callbacks.shift()!;
         flow.onEndTurn();
         flow.finalizeAdvance();
         delayedAuto();
         assert.equals(1, resolves);
+    });
+    suite.test('部署達上限時提示改為請按結束回合', () => {
+        const toasts: string[] = [];
+        const ctx = { ctrl: { getPlayerDeployProgress: () => ({ used: 3, limit: 3, reached: true }) },
+            isAdvancingTurn: false, deployRuntime: { showToast: (t: string) => { toasts.push(t); } } };
+        const flow = new TurnFlowManager(ctx as any, { scheduleOnce: () => {} } as any, {} as any);
+        flow.onPlayerDeployed();
+        assert.contains(toasts[0], '本回合部署已達上限，請按結束回合');
+    });
+    suite.test('同一回合可部署 3 次，第 4 次被 limit 擋下；結束回合後次數歸零', () => {
+        const c = fresh();
+        assert.isTrue(c.tryDeployTroop(TroopType.Infantry, 0).ok, '第 1 次');
+        assert.isTrue(c.tryDeployTroop(TroopType.Infantry, 1).ok, '第 2 次');
+        assert.isTrue(c.tryDeployTroop(TroopType.Infantry, 2).ok, '第 3 次');
+        assert.equals('limit', c.tryDeployTroop(TroopType.Infantry, 3).reason, '第 4 次應被上限擋下');
+        assert.equals(3, c.getPlayerDeployProgress().used);
+        assert.isTrue(c.getPlayerDeployProgress().reached);
+        c.resolvePlayerTurn(); c.resolveEnemyTurn(); c.finalizeEnemyTurn();
+        assert.equals(0, c.getPlayerDeployProgress().used, '結束回合後次數歸零');
+        assert.isTrue(c.tryDeployTroop(TroopType.Infantry, 3).ok, '新回合可再部署');
     });
     suite.test('回合演出中撤退會鎖定結果、只發一次事件，遲到 callback 不可繼續推進', () => {
         const c = fresh(); c.resolvePlayerTurn(); c.resolveEnemyTurn();
