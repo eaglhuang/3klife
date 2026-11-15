@@ -105,6 +105,9 @@ export class UltimateSelectPopup extends UIPreviewBuilder {
         if (primaryBtn && primaryBtn !== secondaryBtn) {
             primaryBtn.node.active = false;
         }
+        // 按鈕列範本固定帶第三顆按鈕，這個選單用不到；不關掉會露出未替換的「${labelCancel}」字樣
+        const tertiaryBtn = binder.getButton('btnTertiary');
+        if (tertiaryBtn) tertiaryBtn.node.active = false;
         if (secondaryBtn) {
             this._setButtonLabel(secondaryBtn, '取消');
             secondaryBtn.node.on(Button.EventType.CLICK, this.hide, this);

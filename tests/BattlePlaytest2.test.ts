@@ -2,7 +2,7 @@
 import { TestSuite, assert } from './TestRunner';
 import { BattleController } from '../assets/scripts/battle/controllers/BattleController';
 import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
-import { EVENT_NAMES, Faction, TroopType } from '../assets/scripts/core/config/Constants';
+import { EVENT_NAMES, Faction, GAME_CONFIG, TroopType } from '../assets/scripts/core/config/Constants';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
 import { FirstBattleOperationGuide } from '../assets/scripts/core/systems/FirstBattleOperationGuide';
 // Cocos view 模組使用 CLI register-cc-test-stub；不將整個 Editor UI 型別樹引入 headless tsconfig。
@@ -85,12 +85,12 @@ export function createBattlePlaytest2Suite(): TestSuite {
         assert.equals(1, services().battle.getSnapshot().turn);
         assert.equals(1, ended); off();
     });
-    suite.test('首戰方案 (b)：拿掉 12 回合強制判負時限，由第 8 回合提示接手', () => {
+    suite.test('首戰方案 (b)：不強制判負；第 8 回合提示接手，回合用盡算敵軍退兵、我方獲勝', () => {
         const c = fresh(); c.tutorialBattle = true;
-        services().battle['turn'] = 12;
+        services().battle['turn'] = GAME_CONFIG.TUTORIAL_TURN_LIMIT;
         assert.equals('ongoing', c['checkVictory']());
-        services().battle['turn'] = 13;
-        assert.equals('ongoing', c['checkVictory']());
+        services().battle['turn'] = GAME_CONFIG.TUTORIAL_TURN_LIMIT + 1;
+        assert.equals('player-win', c['checkVictory']());
         const normal = fresh(); services().battle['turn'] = 13;
         assert.equals('ongoing', normal['checkVictory']());
         const g = new FirstBattleOperationGuide();

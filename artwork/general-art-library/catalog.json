@@ -312,7 +312,7 @@
         ]
       },
       "battle": {
-        "activeVersion": "0001",
+        "activeVersion": "0002",
         "status": "review-pending",
         "history": [
           {
@@ -322,6 +322,16 @@
             "sha256": "6afd0911ca412b344abeabf139bcd71d9b80631ef1d2f098f834ea6c31652866",
             "canvas": "1024x1536 RGBA",
             "note": "Existing remote artwork discovered without a catalog record; kept as review candidate, not asserted as runtime-integrated."
+          },
+          {
+            "version": "0002",
+            "file": "battle/zhen_ji__甄姬__battle_0002.png",
+            "status": "review-pending",
+            "sha256": "5ac9316f899f8548f41116bf4ca12a66e158a7780d61d185b04f95b9c45e953f",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "jian",
+            "poseLabel": "斜向格擊",
+            "note": "依核定站姿製作；保留白紫服色與身形，直劍斜向格擊、眼神朝鏡頭；待使用者審看。"
           }
         ]
       },
@@ -1096,6 +1106,22 @@
             "qc": "No redraw or design changes; face centered, full headpiece and face kept, only shoulder tops at lower edge."
           }
         ]
+      },
+      "battle": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/liu_bei__劉備__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "01db717f2b90adcd352abc333b563d9d39c6cf2bf941ad84966927f034713dcb",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "paired-jian",
+            "poseLabel": "雙劍格反",
+            "note": "依核定站姿設計雙劍直立格反動作；全身及雙劍完整可見，待使用者審看。"
+          }
+        ]
       }
     },
     {
@@ -1753,6 +1779,22 @@
             "qc": "No redraw or design changes; full headdress, face and chin retained; face centered; shoulder tops at lower edge, no chest."
           }
         ]
+      },
+      "battle": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/lu_xun__陸遜__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "e1d61dbe7b71f8f433f0cc7f91eb324a6847c7f026b7886f176c21a7f4b22e6d",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "jian",
+            "poseLabel": "收劍定勢",
+            "note": "紅青吳將造型；一手直劍斜上格勢、另一手平衡護身，眼神朝鏡頭；待使用者審看。"
+          }
+        ]
       }
     },
     {
@@ -2207,6 +2249,22 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/zhang_he__張郃__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "fe7e6fa67f1dd61de5ca20f9aa446c6d2ef85f80c0a5b3fc69e4bc56a1fc6d9d",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "spear",
+            "poseLabel": "斜向突進",
+            "note": "依核定站姿製作的全身戰鬥候選；長槍保持直線，眼神朝向鏡頭；待使用者檢視。"
+          }
+        ]
       }
     },
     {
@@ -7222,6 +7280,23 @@
             "note": "延續樊氏灰綠長裙與端雅氣質，加入輕甲與直劍；候選待審。"
           }
         ]
+      },
+      "smallAvatar": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/fan_shi__樊氏__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "6baf3d893f4b061a2d75be95959d278447dd72d02e4217d5f6a5e3ad0cc82cdc",
+            "canvas": "1254x1254 RGBA",
+            "crop": "shoulder-line",
+            "sourceStanding": "standing/fan_shi__樊氏__standing_0002.png",
+            "cropBox": "x=214,y=20,w=131,h=131",
+            "qc": "125px preview: full hair and chin visible, head fills about 75%, face centered within tolerance, neck and shoulder edge only; pixel crop and proportional resize from approved standing, no repaint."
+          }
+        ]
       }
     },
     {
@@ -7547,6 +7622,40 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/cao_jie__曹節__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "f7af79c2f55d1dfa15839be87261483adbe8823ba91a060d898e85b1e3bf6d2c",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "jian",
+            "poseLabel": "前踏轉腰，斜向上格劍",
+            "sourceStanding": "standing/cao_jie__曹節__standing_0002.png",
+            "note": "沿用曹節正式站姿的臉部辨識、靛藍與象牙白服裝及冠飾；以前踏、腰肩轉動與展袖表現戰鬥瞬間。透明背景，候選待審。"
+          }
+        ]
+      },
+      "smallAvatar": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/cao_jie__曹節__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "d5b92855eb882136efbae1ac45f161ce8a86cfa6a6f4749627de22d2d08e2298",
+            "canvas": "1254x1254 RGBA",
+            "crop": "shoulder-line",
+            "sourceStanding": "standing/cao_jie__曹節__standing_0002.png",
+            "cropBox": "x=189,y=27,w=150,h=150",
+            "qc": "125px preview: main hair ornament and chin complete, head fills about 75%, face visually centered, shoulder top only; pixel crop and proportional resize from approved standing, no repaint."
+          }
+        ]
       }
     },
     {
