@@ -7222,6 +7222,23 @@
             "note": "延續樊氏灰綠長裙與端雅氣質，加入輕甲與直劍；候選待審。"
           }
         ]
+      },
+      "smallAvatar": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/fan_shi__樊氏__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "6baf3d893f4b061a2d75be95959d278447dd72d02e4217d5f6a5e3ad0cc82cdc",
+            "canvas": "1254x1254 RGBA",
+            "crop": "shoulder-line",
+            "sourceStanding": "standing/fan_shi__樊氏__standing_0002.png",
+            "cropBox": "x=214,y=20,w=131,h=131",
+            "qc": "125px preview: full hair and chin visible, head fills about 75%, face centered within tolerance, neck and shoulder edge only; pixel crop and proportional resize from approved standing, no repaint."
+          }
+        ]
       }
     },
     {
