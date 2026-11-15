@@ -6945,6 +6945,23 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/cai_shi__蔡氏__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "44649f910cfb50c1f949230bba888d3093a484d4d94183851f2eb6c53414d8ad",
+            "canvas": "1254x1254 RGBA",
+            "source": "standing/cai_shi__蔡氏__standing_0002.png",
+            "crop": "shoulder-line",
+            "cropBox": "x=349,y=0,w=330,h=330",
+            "qc": "125px preview: original standing-art crop only; head and chin intact, face centered, shoulder line visible; original hair ornament retained."
+          }
+        ]
       }
     },
     {
