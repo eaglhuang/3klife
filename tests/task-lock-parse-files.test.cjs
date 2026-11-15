@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-// PROG-2-9045: task-lock.js lock --files 需同時接受空白與逗號（可混用）分隔。
+// PROG-2-9101: task-lock.js lock --files 需同時接受空白與逗號（可混用）分隔。
 // 以 node:assert 直接驗證 parseFiles 與 main 傳給 adapter.lock 的檔案清單。
 
 const assert = require('assert');
@@ -11,27 +11,27 @@ const { parseFiles, main } = require(path.resolve(__dirname, '..', 'tools_node',
 const cases = [
   {
     name: '空白分隔',
-    argv: ['lock', 'PROG-2-9045', 'agent', '--files', 'a.ts', 'b.ts', 'c/d.ts'],
+    argv: ['lock', 'PROG-2-9101', 'agent', '--files', 'a.ts', 'b.ts', 'c/d.ts'],
     expected: ['a.ts', 'b.ts', 'c/d.ts'],
   },
   {
     name: '逗號分隔',
-    argv: ['lock', 'PROG-2-9045', 'agent', '--files', 'a.ts,b.ts,c/d.ts'],
+    argv: ['lock', 'PROG-2-9101', 'agent', '--files', 'a.ts,b.ts,c/d.ts'],
     expected: ['a.ts', 'b.ts', 'c/d.ts'],
   },
   {
     name: '混用（空白與逗號）',
-    argv: ['lock', 'PROG-2-9045', 'agent', '--files', 'a.ts,b.ts', 'c/d.ts', 'e.ts,f.ts'],
+    argv: ['lock', 'PROG-2-9101', 'agent', '--files', 'a.ts,b.ts', 'c/d.ts', 'e.ts,f.ts'],
     expected: ['a.ts', 'b.ts', 'c/d.ts', 'e.ts', 'f.ts'],
   },
   {
     name: '去除空白、空字串與重複',
-    argv: ['lock', 'PROG-2-9045', 'agent', '--files', ' a.ts , ,b.ts,,a.ts', ' ', 'b.ts'],
+    argv: ['lock', 'PROG-2-9101', 'agent', '--files', ' a.ts , ,b.ts,,a.ts', ' ', 'b.ts'],
     expected: ['a.ts', 'b.ts'],
   },
   {
     name: '無 --files 時回傳空陣列',
-    argv: ['lock', 'PROG-2-9045', 'agent'],
+    argv: ['lock', 'PROG-2-9101', 'agent'],
     expected: [],
   },
 ];
@@ -58,7 +58,7 @@ const fakeAdapter = {
 };
 try {
   const exitCode = main(
-    ['lock', 'PROG-2-9045', 'claude-code-haiku-5-5', '--files', 'tools_node/task-lock.js,tests/x.cjs', 'docs/y.md'],
+    ['lock', 'PROG-2-9101', 'claude-code-haiku-5-5', '--files', 'tools_node/task-lock.js,tests/x.cjs', 'docs/y.md'],
     fakeAdapter,
   );
   assert.strictEqual(exitCode, 0);
