@@ -600,13 +600,19 @@ async function main() {
             // 泡泡是 UCUF 既有節點 lobby-hall-screen.bubble，平常 active=false，點到在場武將才開
             const bubbleRe = '(^|\\.)bubble$';
             rec.detail.bubbleBefore = await page.evaluate((re) => window.__pt.activeNodeNames(re), bubbleRe);
+            const activeBefore = new Set(await page.evaluate(() => window.__pt.activeNodeNames('.*')));
             const walker = await waitUntil(() => page.evaluate((re) => window.__pt.findNodeName(re), crowdRe), 30000, '找不到走動小人（crowd-*）');
             rec.detail.walker = walker;
             const tapped = await page.evaluate((re) => window.__pt.tapNode(re), crowdRe);
             if (!tapped) throw new Error('點擊小人失敗');
             const bubbles = await waitUntil(async () => {
                 const now = await page.evaluate((re) => window.__pt.activeNodeNames(re), bubbleRe);
-                return now.length ? now : null;
+                if (now.length) return now;
+                // cc 節點名可能不含 bubble：改看點擊後新變 active 的節點（名稱含對話相關字樣者）
+                const added = (await page.evaluate(() => window.__pt.activeNodeNames('.*'))).filter((n) => !activeBefore.has(n));
+                rec.detail.newlyActive = Array.from(new Set(added)).slice(0, 30);
+                const hit = added.filter((n) => /bubble|dialog|speech|chat|talk|line|text/i.test(n));
+                return hit.length ? hit : null;
             }, 5000, '點小人後 lobby-hall-screen.bubble 沒有變為 active').catch(async (e) => {
                 const all = await page.evaluate(() => Object.keys(window.__pt.nameCounts('ubble|Dialog|Speech')));
                 const crowd = await page.evaluate(() => window.__pt.nameCounts('^crowd-'));
