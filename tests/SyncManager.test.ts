@@ -7,6 +7,8 @@ import { sys } from 'cc'; // 與被測程式共用同一份 cc stub，monkey-pat
 // ★ mock fetch 工廠函式（不在頂層執行，避免 Cocos 打包後在瀏覽器崩潰）
 function installMockFetch(): void {
     (globalThis as any).fetch = async (_url: string, _options: any) => ({
+        ok: true,
+        status: 200,
         json: async () => ({
             Success: true,
             New_Session_Secret: 'NEW_SECRET_FROM_MOCK_SERVER',
