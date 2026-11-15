@@ -23,7 +23,7 @@ const generals: Record<string, { name: string; footX: number }> = {
   guan_yu: { name: 'guan_yu', footX: 9 }, lu_bu: { name: 'lu_bu', footX: 9 },
 };
 const generalCache = new Map<string, UnitSpineConfig>();
-const soldierCache = new Map<boolean, UnitSpineConfig>();
+const soldierCache = new Map<string, UnitSpineConfig>();
 export function generalSpineConfig(id: string, templateId?: string | null): UnitSpineConfig | null {
   const template = templateId?.toLowerCase().replace(/-/g, '_');
   const key = template && generals[template] ? template : id.toLowerCase().replace(/-/g, '_');
@@ -37,13 +37,17 @@ export function generalSpineConfig(id: string, templateId?: string | null): Unit
   }
   return config;
 }
-export function soldierSpineConfig(isArcher: boolean): UnitSpineConfig {
-  const cached = soldierCache.get(isArcher);
+/**
+ * 小兵依兵種（弓／其餘）與陣營選素材：我方藍、敵方紅，戰場上一眼分得出敵我。
+ * 紅槍兵與藍弓兵由原圖集換色產生（見 tools_node/battle-chibi/），骨架與動作和原版共用。
+ */
+export function soldierSpineConfig(isArcher: boolean, isEnemy = false): UnitSpineConfig {
+  const name = `soldier_${isArcher ? 'bow' : 'spear'}_${isEnemy ? 'red' : 'blue'}`;
+  const cached = soldierCache.get(name);
   if (cached) return cached;
-  const name = isArcher ? 'soldier_bow_red' : 'soldier_spear_blue';
   const config: UnitSpineConfig = { path: `spine/soldiers/${name}/${name}`, displayScale: 0.18, labelToFoot: 110, footOffset: { x: 4, y: 0 },
     walkGroundSpeed: 100, speedMultiplier: 2, mirrorSkin: isArcher ? undefined : 'hand_mirror',
     clips: clips('soldier', isArcher ? 1.2 : 1) };
-  soldierCache.set(isArcher, config);
+  soldierCache.set(name, config);
   return config;
 }

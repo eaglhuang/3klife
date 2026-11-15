@@ -12,7 +12,7 @@ export type GachaPoolType =
   | 'limited';  // 限定池：每週輪替一位焦點武將，只收靈玉（PROG-2-9024）
 
 /**
- * 舊 poolType 相容：紅顏池早期代號 `support` 讀取時一律視為 `heroine`（PROG-2-9043）。
+ * 舊 poolType 相容：紅顏池早期代號 `support` 讀取時一律視為 `heroine`（PROG-2-9044）。
  * 其餘值原樣回傳；未寫（undefined）也原樣回傳。
  */
 export function normalizeGachaPoolType<T extends string | undefined>(raw: T): T | 'heroine' {

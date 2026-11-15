@@ -34,7 +34,7 @@ export function validateSupportPool(
     supportCards: readonly SupportCardLike[],
 ): SupportPoolIssue[] {
     const issues: SupportPoolIssue[] = [];
-    // 舊代號 support 相容為 heroine（PROG-2-9043）
+    // 舊代號 support 相容為 heroine（PROG-2-9044）
     const support = pools.find(p => normalizeGachaPoolType(p.poolType) === 'heroine');
     const hero = pools.find(p => p.poolType === 'hero');
     if (!support) return [{ path: 'pools', message: '缺少紅顏池（poolType: heroine）' }];

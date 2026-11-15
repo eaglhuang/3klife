@@ -47,7 +47,7 @@ export class GachaSystem {
         return this;
     }
 
-    /** 池設定；舊 poolType（support）讀取時已正規化為 heroine（PROG-2-9043） */
+    /** 池設定；舊 poolType（support）讀取時已正規化為 heroine（PROG-2-9044） */
     pool(poolId: string): GachaConfig | null {
         const found = this._pools().find(p => p.poolId === poolId);
         return found ? { ...found, poolType: normalizeGachaPoolType(found.poolType) } : null;

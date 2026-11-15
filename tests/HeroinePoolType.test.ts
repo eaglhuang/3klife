@@ -1,4 +1,4 @@
-// @spec-source → 紅顏池 poolType 改名 support → heroine；PROG-2-9043
+// @spec-source → 紅顏池 poolType 改名 support → heroine；PROG-2-9044
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { assert, TestSuite } from './TestRunner';
