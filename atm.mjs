@@ -485,6 +485,8 @@ async function run() {
 // Repo-local guard (tools_node/atm-actor-registry-guard.js): the framework payload
 // rewrites .atm/catalog/registry/actors.json on every actor use even when only
 // timestamps change. Restore the original bytes in that case so git stays clean.
+// TEMPORARY WORKAROUND: remove this guard once the upstream ATM fix (skip writing when only
+// timestamps differ) ships and is synced into this repo; internal-release sync overwrites atm.mjs anyway.
 const actorRegistryGuard = (() => {
   try {
     return createRequire(import.meta.url)("./tools_node/atm-actor-registry-guard.js");

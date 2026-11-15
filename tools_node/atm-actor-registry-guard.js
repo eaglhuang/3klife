@@ -18,6 +18,8 @@
  * 已在 .gitignore 內，會持續記錄 updatedAt。
  *
  * 上游問題說明見 PR 說明（writeActorRegistry 無條件寫檔）。
+ *
+ * 暫時解法：等 ATM 上游修好（寫檔前比對、忽略時間戳）並同步到本 repo 後，撤除本檔與 atm.mjs 的守衛。
  */
 
 const fs = require('fs');
