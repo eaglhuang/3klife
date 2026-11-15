@@ -68,6 +68,10 @@ function stepMoveUnit(
   zocField: ZocField,
 ): void {
   unit.chargeCells = 0;
+  // 剛部署的部隊當回合原地待命（PROG-2-9048）
+  if (context.turnManager.isUnitDeployedThisTurn(unit.id)) {
+    return;
+  }
   if (svc.buff.hasBuff(unit.id, StatusEffect.Stun)) {
     unit.isShieldWallActive = false;
     return;

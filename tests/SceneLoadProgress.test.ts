@@ -69,5 +69,36 @@ export function createSceneLoadProgressSuite(): TestSuite {
         assert.contains(battle, "SceneLoadProgress.begin('正在準備戰鬥', 7)");
         assert.isTrue(battle.indexOf('SceneLoadProgress.complete()') < battle.indexOf('this._startupOpacity.opacity = 255'));
     });
+    suite.test('背景載入從角落小條開始；正常 begin 重設為置中大條（PROG-2-9046）', () => {
+        const p = new LoadProgressState(); p.compact = true; p.begin('大廳');
+        assert.isFalse(p.compact);
+        SceneLoadProgress.beginBackground('背景', 4); SceneLoadProgress.report(2, 4);
+        assert.isTrue(sceneLoadState.compact); assert.contains(sceneLoadState.text, '50%');
+        SceneLoadProgress.complete(); SceneLoadProgress.minimize();
+        assert.isFalse(sceneLoadState.active);
+    });
+    suite.test('開場出現後縮小：保留同一階段計數、DOM 標記 data-compact', () => {
+        const g = globalThis as any; const oldDocument = g.document;
+        const elements: any[] = [];
+        g.document = { body: { appendChild() {} }, createElement(tag: string) {
+            const el: any = { tag, style: {}, attrs: {}, append() {}, appendChild() {},
+                setAttribute(k: string, v: string) { this.attrs[k] = v; },
+                removeAttribute(k: string) { delete this.attrs[k]; }, remove() {} };
+            elements.push(el); return el;
+        } };
+        try {
+            SceneLoadProgress.begin('正在準備大廳'); SceneLoadProgress.step();
+            const root = elements.find(e => e.id === 'scene-load-progress');
+            assert.equals(undefined, root.attrs['data-compact']);
+            SceneLoadProgress.minimize(); SceneLoadProgress.step();
+            assert.equals('1', root.attrs['data-compact']); assert.equals(2, sceneLoadState.completed);
+            SceneLoadProgress.begin('下一場景');
+            assert.equals(undefined, root.attrs['data-compact']);
+        } finally { SceneLoadProgress.complete(); g.document = oldDocument; }
+    });
+    suite.test('小條樣式只靠 data-compact 切換，固定在右下角', () => {
+        assert.contains(SCENE_LOAD_PROGRESS_CSS, '[data-compact="1"]');
+        assert.contains(SCENE_LOAD_PROGRESS_CSS, 'right:12px');
+    });
     return suite;
 }

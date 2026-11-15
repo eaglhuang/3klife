@@ -37,7 +37,7 @@ export function createGachaSystemSuite(): TestSuite {
         const beauty = resolveGachaPoolPresentation(byId('support-pool'));
         assert.equals('召喚券十連', gachaPoolTitle(beauty, 10));
         assert.equals('召喚券', gachaPoolTitle(beauty, 1));
-        assert.equals('tickets', beauty.currency);
+        assert.equals('gems', beauty.currency);
         const mentor = resolveGachaPoolPresentation(byId('mentor-pool'));
         assert.equals('支援券十連', gachaPoolTitle(mentor, 10));
         assert.equals('mentorTickets', mentor.currency);
@@ -56,10 +56,10 @@ export function createGachaSystemSuite(): TestSuite {
         const calls: string[] = [];
         let loaded: GachaConfig[] = [];
         const sys = new GachaSystem(() => loaded)
-            .registerType('support', fakeRule('beauty', calls))
+            .registerType('heroine', fakeRule('beauty', calls))
             .registerType('hero', fakeRule('hero', calls))
             .registerPool('GENERAL_STANDARD_01', fakeRule('standard', calls));
-        await sys.pull({ poolId: 'support-pool', drawCount: 10, generals: [], poolTypeHint: 'support' });
+        await sys.pull({ poolId: 'support-pool', drawCount: 10, generals: [], poolTypeHint: 'heroine' });
         loaded = pools;
         const out = await sys.pull({ poolId: 'hero-pool', drawCount: 1, generals: [] });
         await sys.pull({ poolId: 'GENERAL_STANDARD_01', drawCount: 10, generals: [], poolTypeHint: 'hero' });

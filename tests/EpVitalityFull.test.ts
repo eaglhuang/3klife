@@ -31,17 +31,17 @@ export function createEpVitalityFullSuite(): TestSuite {
         assert.isTrue(!isVitalityFull(general('a', '男', 10, 0)), '上限無效視為未達');
     });
 
-    suite.test('父母都在高段才 +10，計入總分', () => {
+    suite.test('父母都在高段才 +5（doc_spec_1098），計入總分', () => {
         const full = previewEp(80, 90);
         assert.equals(EP_VITALITY_FULL_BONUS, full.vitalityFull);
-        assert.equals(60, full.ep);
+        assert.equals(55, full.ep);
         const half = previewEp(80, 50);
         assert.equals(0, half.vitalityFull);
         assert.equals(50, half.ep);
     });
 
-    suite.test('預覽拆解行附加「精力 +10」', () => {
-        assert.equals('共鳴 0　異脈 0　契合 0　精力 +10', buildBreedingPreviewLines(previewEp(80, 90)).breakdownLine);
+    suite.test('預覽拆解行附加「精力 +5」', () => {
+        assert.equals('共鳴 0　異脈 0　契合 0　精力 +5', buildBreedingPreviewLines(previewEp(80, 90)).breakdownLine);
         assert.equals('共鳴 0　異脈 0　契合 0', buildBreedingPreviewLines(previewEp(10, 90)).breakdownLine);
     });
 

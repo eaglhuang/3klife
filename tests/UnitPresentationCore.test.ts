@@ -87,6 +87,10 @@ assert.equal(generalSpineConfig('zhao-yun')?.walkGroundSpeed, 93.33);
 assert.equal(generalSpineConfig('unknown'), null);
 assert.equal(soldierSpineConfig(false).walkGroundSpeed, 100);
 assert.equal(soldierSpineConfig(true).clips.attack.name, 'duel_attack');
+assert.equal(soldierSpineConfig(false).path, 'spine/soldiers/soldier_spear_blue/soldier_spear_blue');
+assert.equal(soldierSpineConfig(false, true).path, 'spine/soldiers/soldier_spear_red/soldier_spear_red');
+assert.equal(soldierSpineConfig(true, true).path, 'spine/soldiers/soldier_bow_red/soldier_bow_red');
+assert.equal(soldierSpineConfig(true, false).path, 'spine/soldiers/soldier_bow_blue/soldier_bow_blue');
 
 import { selectDuelExchanges } from '../assets/scripts/battle/shared/DuelPresentationCore';
 const rounds = Array.from({ length: 100 }, (_, i) => ({ attacker: (i % 2) as 0 | 1, dodged: i === 40 }));

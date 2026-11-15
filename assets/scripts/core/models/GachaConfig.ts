@@ -6,10 +6,18 @@ import type { HeroRarity } from './HeroBase';
 /** 抽卡池類型 */
 export type GachaPoolType =
   | 'hero'      // 名將池：可重置，抽將領
-  | 'support'   // 紅顏池：支援角色
+  | 'heroine'   // 紅顏池：女將（舊值 support 讀取時視為 heroine）
   | 'mentor'    // 支援卡池：只產生教官卡，不入名冊（PROG-2-1085）
   | 'destiny'   // 宿命池：新手開場免費十連，每輪必出一位宿命名將（PROG-2-2243）
   | 'limited';  // 限定池：每週輪替一位焦點武將，只收靈玉（PROG-2-9024）
+
+/**
+ * 舊 poolType 相容：紅顏池早期代號 `support` 讀取時一律視為 `heroine`（PROG-2-9044）。
+ * 其餘值原樣回傳；未寫（undefined）也原樣回傳。
+ */
+export function normalizeGachaPoolType<T extends string | undefined>(raw: T): T | 'heroine' {
+  return (raw === 'support' ? 'heroine' : raw) as T | 'heroine';
+}
 
 export interface GachaConfig {
   /** 唯一識別字 */
@@ -24,6 +32,10 @@ export interface GachaConfig {
   guaranteeRarity: HeroRarity;
   /** 保底閾值（累計抽數）*/
   guaranteeThreshold: number;
+  /** 大保底閾值（累計抽數，紅顏池 FEM-03 為 50 抽必得當期 UP）；沒寫則無大保底 */
+  grandPityThreshold?: number;
+  /** 抽到此池武將後的起始好感（紅顏池 FEM-03 為 60）；沒寫則為 0 */
+  initialAffection?: number;
   /** 單次操作抽取數量（1 或 10）*/
   pickCount: number;
   /** 本池候選 id 列表（引用 generals.json 或 support-cards.json 中的 id）*/

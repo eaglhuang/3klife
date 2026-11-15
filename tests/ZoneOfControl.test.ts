@@ -35,7 +35,7 @@ function context(state: BattleState, actingFaction: Faction): BattleAutoMovePhas
     return {
         state,
         actingFaction,
-        turnManager: { markUnitMoved: () => undefined } as unknown as BattleAutoMovePhaseContext['turnManager'],
+        turnManager: { markUnitMoved: () => undefined, isUnitDeployedThisTurn: () => false } as unknown as BattleAutoMovePhaseContext['turnManager'],
         consumeTileBuff: () => undefined,
         getFactionUnits: (faction) => [...state.units.values()].filter((unit) => unit.faction === faction),
         isCellMovementBlocked: () => false,

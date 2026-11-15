@@ -7,6 +7,8 @@ export class BattleTurnManager {
   public readonly movedUnitIdsThisTurn = new Set<string>();
   /** 撤退失敗的部隊：當回合不能再行動（PM 暫定），下一回合清空 */
   public readonly actionBlockedUnitIdsThisTurn = new Set<string>();
+  /** 本回合剛部署的部隊：當回合不移動、不攻擊，下一回合才行動（PROG-2-9048） */
+  public readonly deployedUnitIdsThisTurn = new Set<string>();
   public readonly generalSwapUsedThisTurn: Record<Faction, boolean> = {
     [Faction.Player]: false,
     [Faction.Enemy]: false,
@@ -20,6 +22,7 @@ export class BattleTurnManager {
     this.playerDeployCountThisTurn = 0;
     this.movedUnitIdsThisTurn.clear();
     this.actionBlockedUnitIdsThisTurn.clear();
+    this.deployedUnitIdsThisTurn.clear();
     this.generalSwapUsedThisTurn[Faction.Player] = false;
     this.generalSwapUsedThisTurn[Faction.Enemy] = false;
     this.buffConsumedSinceLastSpawn = true;
@@ -40,6 +43,7 @@ export class BattleTurnManager {
     this.playerDeployCountThisTurn = 0;
     this.movedUnitIdsThisTurn.clear();
     this.actionBlockedUnitIdsThisTurn.clear();
+    this.deployedUnitIdsThisTurn.clear();
     this.generalSwapUsedThisTurn[Faction.Player] = false;
     this.generalSwapUsedThisTurn[Faction.Enemy] = false;
   }
@@ -56,6 +60,14 @@ export class BattleTurnManager {
 
   public isUnitActionBlockedThisTurn(unitId: string): boolean {
     return this.actionBlockedUnitIdsThisTurn.has(unitId);
+  }
+
+  public markUnitDeployed(unitId: string): void {
+    this.deployedUnitIdsThisTurn.add(unitId);
+  }
+
+  public isUnitDeployedThisTurn(unitId: string): boolean {
+    return this.deployedUnitIdsThisTurn.has(unitId);
   }
 
   public hasUnitMovedThisTurn(unitId: string): boolean {

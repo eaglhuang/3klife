@@ -462,12 +462,6 @@
     "category": "other"
   },
   {
-    "id": "doc_other_0084",
-    "path": "docs/學習文件/The Anatomy of an Agent Harness.md",
-    "title": "Key Takeaways",
-    "category": "other"
-  },
-  {
     "id": "doc_other_0085",
     "path": "docs/tech/npc-brain-武將互動記憶系統.md",
     "title": "NPC Brain Memory System",
@@ -4599,12 +4593,6 @@
     "id": "doc_other_1492",
     "path": "docs/ai_atomic_framework/arxiv-paper-v1/paper.v2.md",
     "title": "採用器導向原子化：多代理 LLM 程式碼合成的並發治理框架",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_1493",
-    "path": "docs/ai_atomic_framework/arxiv-paper-v1/paper.v3.1.corrupted-backup-20260625.md",
-    "title": "ATM嚗???靘???LLM 蝔?蝣澆?????∠?典???摮???CID Broker",
     "category": "other"
   },
   {
@@ -11664,12 +11652,6 @@
     "category": "other"
   },
   {
-    "id": "doc_other_2672",
-    "path": "docs/animation-lab/spine-pipeline-v1.md",
-    "title": "Spine 2D 角色製作與 Cocos 匯入管線 v1（研究版）",
-    "category": "other"
-  },
-  {
     "id": "doc_other_2673",
     "path": "docs/art/character-palette-ledger.md",
     "title": "武將立繪配色索引",
@@ -11865,6 +11847,24 @@
     "id": "doc_other_2705",
     "path": "docs/美術-武將大招分鏡規範-03-提示詞與驗收.md",
     "title": "武將大招漫畫分鏡繪圖規範（3/3）提示詞與驗收",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2706",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0207-charter-upgrade-command-with-sync-integration-staged-enforcement-and-accurate-doctor-diagnosis.task.md",
+    "title": "TASK-AAO-0207 Charter upgrade command with sync integration, staged enforcement, and accurate doctor diagnosis",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2707",
+    "path": "docs/battle-chibi-integration.md",
+    "title": "戰場 Q 版單位演出接入",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2708",
+    "path": "docs/reports/PROG-2-2210-web-source-assets.md",
+    "title": "PROG-2-2210 網頁來源資產量測",
     "category": "other"
   }
 ]

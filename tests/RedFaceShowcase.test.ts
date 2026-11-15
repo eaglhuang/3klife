@@ -47,7 +47,7 @@ export function createRedFaceShowcaseSuite(): TestSuite {
 
     suite.test('真實資料：紅顏池 support 候選都能產生展示列，且核心三位在前', () => {
         const pools: any[] = readJson('assets/resources/data/gacha-config.json');
-        const supportPool = pools.find((p) => p.poolType === 'support');
+        const supportPool = pools.find((p) => p.poolType === 'heroine');
         const heroPool = pools.find((p) => p.poolType === 'hero');
         assert.isTrue(!!supportPool);
         const rows = buildRedFaceShowcase(

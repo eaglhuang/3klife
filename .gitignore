@@ -138,3 +138,5 @@ tmp/
 # Spine 武將美術只放私有倉庫 spine-trial，不進公開倉庫
 assets/resources/spine/generals/
 assets/resources/spine/generals.meta
+assets/resources/spine/soldiers/
+assets/resources/spine/soldiers.meta
