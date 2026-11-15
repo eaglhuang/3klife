@@ -1164,6 +1164,23 @@
             "weaponClass": "halberd"
           }
         ]
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/lu_bu__呂布__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "220b37dff7c458788abbe956c969caa5f723e48ffe402d798f4d961f45f9e0aa",
+            "canvas": "1254x1254 RGBA",
+            "source": "standing/lu_bu__呂布__standing_0002.png",
+            "crop": "shoulder-line",
+            "cropBox": "x=420,y=50,w=300,h=300",
+            "qc": "125px preview: direct crop from approved standing art; complete face and gold crown retained, face centered, head fills approximately 72%, shoulder armor edge visible."
+          }
+        ]
       }
     },
     {
