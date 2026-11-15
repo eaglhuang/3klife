@@ -782,11 +782,11 @@
         ]
       },
       "battle": {
-        "activeVersion": "0001",
-        "status": "asset-imported",
+        "activeVersion": "0002",
+        "status": "review-pending",
         "displayStatus": "not-yet-verified",
         "weaponClass": "long-polearm",
-        "poseCode": "selected-A-draft",
+        "poseCode": "selected-A-low-lunge-thrust-body-calibration",
         "history": [
           {
             "version": "0001",
@@ -794,6 +794,18 @@
             "status": "asset-imported",
             "weaponClass": "long-polearm",
             "poseCode": "selected-A-draft"
+          },
+          {
+            "version": "0002",
+            "file": "battle/ma_yun_lu__馬雲騄__battle_0002.png",
+            "status": "review-pending",
+            "sha256": "09be852a55d60ce1129c9e16fe98064d12e73512317806afef509ac5caf9353f",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "long-polearm",
+            "poseCode": "selected-A-low-lunge-thrust-body-calibration",
+            "gaze": "toward camera",
+            "sourceStanding": "standing/ma_yun_lu__馬雲騄__standing_0001.png",
+            "note": "Updated chest-armor contour and waist profile while retaining the selected low lunging long-pole thrust. Spear remains straight. Previewed at 125px/250px; awaiting owner review. v0001 remains preserved."
           }
         ]
       },
