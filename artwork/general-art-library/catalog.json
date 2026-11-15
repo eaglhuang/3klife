@@ -1506,6 +1506,23 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/lu_xun__陸遜__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "2aa8bca8f2551fdcdce6028b42d94ae5b7659d6ce125b051a3e1633817ac9fe3",
+            "canvas": "256x256 RGBA",
+            "source": "standing/lu_xun__陸遜__standing_0002.png (crop-only)",
+            "crop": "shoulder-line",
+            "cropBox": "x=347,y=0,w=330,h=320; canvas=330x330; transparent-pad y=5px",
+            "qc": "No redraw or design changes; full headdress, face and chin retained; face centered; shoulder tops at lower edge, no chest."
+          }
+        ]
       }
     },
     {
