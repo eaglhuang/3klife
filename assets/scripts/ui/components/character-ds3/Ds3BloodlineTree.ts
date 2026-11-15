@@ -13,12 +13,13 @@ import { PEDIGREE_SEAT_WEIGHTS, pedigreeRowLabel, TREE_CARD_AVATAR, TREE_CARD_KI
 import { type MilestoneStage } from '../../../core/systems/FamilyMilestone';
 import { bloodlineTreeRowVisible } from '../../../core/systems/BloodlineTreeViewMode';
 import { BloodlineTreePanel } from '../../panels/BloodlineTreePanel';
+import { DS3_BLOODLINE_LEFT_REGION_WIDTH, DS3_DESIGN_WIDTH, ds3BloodlineTreeCenterX } from './Ds3BloodlineTreeGeometry';
 import { BLOODLINE_VIEW_TOGGLE_NODE, ensureBloodlineViewToggle, refreshBloodlineViewToggle } from '../BloodlineTreeViewToggle';
 
 export const DS3_BLOODLINE_TREE_NODE_NAME = 'Ds3BloodlineTree';
 
 /** 左區佔畫面 0～1190 px；host 座標以畫面中心為原點，其餘座標相對左區中心 */
-const REGION = { x: -365, width: 1190, height: 1080 };
+const REGION = { x: -365, width: DS3_BLOODLINE_LEFT_REGION_WIDTH, height: 1080 };
 const LABEL_COLUMN_X = -405;
 const CARDS_CENTER_X = 115;
 const TITLE = { text: '家族血統樹', y: 480, width: 920, height: 40, fontSize: 26, color: '#FFE088' };
@@ -154,6 +155,8 @@ function buildTree(host: Node): Node {
 /** 取得（或建立）血統樹面板，並填入本代姓名與家族門第 */
 export function ensureDs3BloodlineTree(host: Node, subjectName: string, clanTierName: string, stage: MilestoneStage = 4): BloodlineTreePanel {
     const root = host.getChildByName(DS3_BLOODLINE_TREE_NODE_NAME) ?? buildTree(host);
+    const hostWidth = host.getComponent(UITransform)?.width ?? DS3_DESIGN_WIDTH;
+    root.setPosition(ds3BloodlineTreeCenterX(hostWidth), root.position.y, root.position.z);
     const subjectLabel = root.getChildByName('TargetPortrait')?.getChildByName('Txt')?.getComponent(Label);
     if (subjectLabel) subjectLabel.string = subjectName;
     const titleLabel = root.getChildByName('TreeTitle')?.getComponent(Label);
