@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 39,
+    "done": 42,
     "in_progress": 3,
-    "open": 83,
-    "total": 125
+    "open": 84,
+    "total": 129
   },
   "tasks": [
     {
@@ -4903,6 +4903,50 @@
         "tests/PlaytestRound4Fixes.test.ts"
       ],
       "notes": "2026-11-15 | 狀態: done | 驗證: unit tests 7681 passed / 3 skipped / 0 failed, check-test-tsc-baseline 0 errors, check-encoding-touched passed | 變更: UIScreenPreviewHost 加入非同步節點銷毀防護解決 bloodline-mirror-loading-screen children.length null 錯誤；SubMenu 依可見按鈕數動態縮放寬度避免空白底板 | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9043",
+      "title": "戰場 2D Q 版單位：小兵陣營配色與私有素材接線",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-15",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-15 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
