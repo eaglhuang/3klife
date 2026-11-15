@@ -180,6 +180,16 @@ function installPageHelpers() {
     const pt = {
         sceneName: () => (scene() ? scene().name : null),
         hasButton: (re) => Boolean(findButton(re)),
+        /** 診斷用：名稱含 Btn/Button/Return/Back 的作用中節點，附是否有 Button 元件與 interactable */
+        dumpBtnLike: () => {
+            const out = [];
+            walk(scene(), (node) => {
+                if (!node.activeInHierarchy || !/Btn|Button|Return|Back|Close/i.test(node.name)) return;
+                const b = button(node);
+                out.push(node.name + (b ? (b.interactable ? "" : "(disabled)") : "(noButton)"));
+            });
+            return Array.from(new Set(out)).slice(0, 60);
+        },
         listButtons: () => {
             const out = [];
             walk(scene(), (node) => {
@@ -228,6 +238,34 @@ function installPageHelpers() {
             return node ? node.name : null;
         },
         scenePresence: (re) => Boolean(findNode(re)),
+        /** 名稱符合 re 的可按按鈕及其底下第一個 Label 文字（子選單按鈕名稱相同時用文字分辨） */
+        buttonTexts: (re) => {
+            const out = [];
+            walk(scene(), (node) => {
+                if (!node.activeInHierarchy || !matches(node.name, re)) return;
+                const b = button(node);
+                if (!b || !b.interactable) return;
+                let text = null;
+                walk(node, (n) => { if (text === null) { const l = n.getComponent('cc.Label'); if (l && l.string) text = String(l.string); } });
+                out.push({ name: node.name, text });
+            });
+            return out;
+        },
+        /** 點名稱符合 nameRe、且文字符合 textRe 的第一顆按鈕 */
+        clickByText: (nameRe, textRe) => {
+            let hit = null;
+            walk(scene(), (node) => {
+                if (hit || !node.activeInHierarchy || !matches(node.name, nameRe)) return;
+                const b = button(node);
+                if (!b || !b.interactable) return;
+                let text = '';
+                walk(node, (n) => { const l = n.getComponent('cc.Label'); if (l && l.string) text += l.string; });
+                if (new RegExp(textRe).test(text)) hit = { node, text };
+            });
+            if (!hit) return null;
+            hit.node.emit('click', button(hit.node));
+            return hit.text;
+        },
         /** 目前畫面上 active 的 Label 文字中符合 re 的（用來讀載入進度與錯誤提示） */
         textsMatching: (re) => {
             const out = [];
@@ -385,6 +423,22 @@ async function main() {
     const scene = () => page.evaluate(() => window.__pt.sceneName());
     const clickButton = (re) => page.evaluate((r) => window.__pt.clickButton(r), re);
     const listButtons = () => page.evaluate(() => window.__pt.listButtons());
+    /** 把殘留的面板關掉，直到大廳底欄（BtnCatShop）回來；回傳是否成功 */
+    const backToLobbyBar = async () => {
+        const closers = '^(CharacterDs3Main_button_3|OpeningOfferDecline|GachaReturnToLobby|BtnBack|BtnScoutCancel|BtnNextTutorial|BtnClose\\w*)$';
+        for (let i = 0; i < 12; i++) {
+            const hit = await clickButton(closers);
+            if (!hit) break;
+            await delay(1500);
+        }
+        return page.evaluate(() => window.__pt.hasButton('^BtnCatShop$'));
+    };
+    /** 大廳底欄分類 → 子選單文字（BtnSub0..4 名稱相同，只能靠文字分辨）。回傳點到的文字或 null */
+    const openSub = async (cat, textRe) => {
+        if (!(await clickButton('^' + cat + '$'))) return null;
+        await delay(1200);
+        return page.evaluate((re) => window.__pt.clickByText('^BtnSub', re), textRe);
+    };
 
     try {
         browser = await puppeteer.launch({
@@ -421,8 +475,8 @@ async function main() {
             await waitUntil(() => page.evaluate(() => Boolean(window.cc && window.cc.director && window.cc.director.getScene())), stuckMs, '引擎未就緒');
             await page.evaluate(installPageHelpers);
             await waitUntil(async () => (await scene()) === 'LoginScene', stuckMs, '未進入 LoginScene');
-            // 進 LoginScene 後等待再點開始（預設 1 秒；--login-settle 可調，用來分辨是否為點太快造成）
-            await delay(Number(args.loginSettle || 1000));
+            // 進 LoginScene 後等待再點開始（預設 12 秒：實測 LoginScene 出現後約 1 秒內點開始會觸發開機 pageerror，見 bug 卡；--login-settle 1000 可重現）
+            await delay(Number(args.loginSettle || 12000));
             rec.detail.bootToLoginMs = Date.now() - bootT0;
 
             const startT0 = Date.now();
@@ -467,7 +521,7 @@ async function main() {
             const clicked = [];
             const outOfOrder = [];
             const done = new Set();
-            const REPEATABLE = ['BtnIntroNext', 'BtnShowcaseNext']; // 多頁「繼續」鈕，可重複點直到消失
+            const REPEATABLE = ['BtnIntroNext', 'BtnShowcaseNext', 'BtnNextTutorial']; // 多頁「繼續」鈕，可重複點直到消失
             const retries = {};
             const deadline = Date.now() + stuckMs;
             let idleSince = null;
@@ -479,9 +533,22 @@ async function main() {
                 const candidates = pending.filter((n) => visible.includes(n));
                 if (!candidates.length) {
                     if (done.size === openingSeq.length && !hasIntro) break;
-                    // 連續 20 秒沒有任何規格中的按鈕可按，視為開場結束；沒出現的步驟記為缺漏（不默默略過）
+                    // 連續 45 秒沒有任何規格中的按鈕可按，視為開場結束；沒出現的步驟記為缺漏（不默默略過）
                     if (idleSince === null) idleSince = Date.now();
-                    if (Date.now() - idleSince > 20000) {
+                    // 規格外但實際出現的收尾按鈕（抽卡結果的關閉）：先點它，並記入 extraClicked
+                    const extra = visible.find((n) => /^GachaPullResult_(close|back)$/i.test(n));
+                    if (extra && await clickButton('^' + extra + '$')) {
+                        (rec.detail.extraClicked = rec.detail.extraClicked || []).push(extra);
+                        idleSince = null;
+                        await delay(1500);
+                        continue;
+                    }
+                    // 亮相／過場等沒有按鈕、靠點畫面推進的畫面：閒置超過 5 秒就像玩家一樣點視窗中央
+                    if (Date.now() - idleSince > 5000) {
+                        await page.mouse.click(Math.round(viewport.width / 2), Math.round(viewport.height / 2));
+                        rec.detail.screenTaps = (rec.detail.screenTaps || 0) + 1;
+                    }
+                    if (Date.now() - idleSince > 45000) {
                         missing = openingSeq.filter((n) => !done.has(n) && !REPEATABLE.includes(n));
                         break;
                     }
@@ -513,6 +580,19 @@ async function main() {
             return rec.detail;
         }, { skipIfFailed: true });
 
+        // ── 2b. 大廳選單盤點：逐一點底欄分類，記錄每個分類展開後可按的按鈕（供後續步驟對名稱，不影響通過與否）──
+        await step('lobby-menu-map', async (rec) => {
+            await requireLobby();
+            const map = {};
+            for (const cat of ['BtnCatShop', 'BtnCatGenerals', 'BtnCatSortie', 'BtnCatDomestic', 'BtnCatNurture']) {
+                if (!(await clickButton('^' + cat + '$'))) { map[cat] = null; continue; }
+                await delay(1500);
+                map[cat] = await page.evaluate(() => window.__pt.buttonTexts('^BtnSub'));
+            }
+            rec.detail.menuMap = map;
+            return rec.detail;
+        }, { skipIfFailed: true });
+
         // ── 3. 大廳走動小人：點擊 → 對話泡泡 ──
         await step('lobby-walker-bubble', async (rec) => {
             await requireLobby();
@@ -531,71 +611,41 @@ async function main() {
             return rec.detail;
         }, { skipIfFailed: true });
 
-        // ── 4. 轉蛋：切每個池子一次，切一輪後右欄節點不疊加 ──
-        await step('gacha-pools', async (rec) => {
-            await requireLobby();
-            const entry = await waitUntil(() => page.evaluate(() => window.__pt.listButtons()).then((list) => list.find((n) => /gacha|轉蛋|recruit|summon/i.test(n) && !/History|Pool|Tab/i.test(n)) || null), 30000, '大廳找不到轉蛋入口按鈕');
-            rec.detail.entry = entry;
-            await clickButton(`^${entry}$`);
-            await waitUntil(() => page.evaluate(() => window.__pt.hasButton('^BtnPoolNext$')), 30000, '轉蛋畫面未出現（BtnPoolNext）');
-            await delay(1500);
-            const rightRe = '(Right|Column|Detail|Info).*';
-            const baseline = await page.evaluate((re) => window.__pt.nameCounts(re), rightRe);
-            rec.detail.rightRootFound = Object.keys(baseline).length > 0;
-            const poolCount = 4;
-            const switched = [];
-            for (let i = 0; i < poolCount; i++) {
-                await clickButton('^BtnPoolNext$');
-                await delay(1500);
-                const shot = path.join(outDir, `${String(stepIndex).padStart(2, '0')}-gacha-pool-${i + 1}.png`);
-                await page.screenshot({ path: shot });
-                switched.push(path.relative(projectRoot, shot).replace(/\\/g, '/'));
-            }
-            const after = await page.evaluate((re) => window.__pt.nameCounts(re), rightRe);
-            const stacked = Object.keys(after).filter((name) => after[name] > (baseline[name] || 0));
-            rec.detail.screenshots = switched;
-            if (stacked.length) throw new Error(`切換池子一輪後右欄節點疊加：${stacked.slice(0, 8).join(', ')}`);
-            return rec.detail;
-        }, { skipIfFailed: true });
-
         // ── 5. 人物介紹：第一位武將 → 每個分頁截圖 → 「命」分頁檢查血統樹 ──
         await step('character-intro-tabs', async (rec) => {
             // 關掉轉蛋等面板回到大廳主畫面，再開武將名冊
-            const rosterRe = /^(BtnGenerals|BtnCatGenerals|BtnOpenGeneralList|BtnRoster)$/i;
-            for (let i = 0; i < 6; i++) {
-                const list = await listButtons();
-                if (list.some((n) => rosterRe.test(n))) break;
-                const closed = await clickButton('^(BtnBack|BtnClose\\w*|BtnCloseGacha)$');
-                if (!closed) break;
-                await delay(1200);
-            }
-            const rosterBtn = await waitUntil(() => page.evaluate(() => window.__pt.listButtons()).then((list) => list.find((n) => rosterRe.test(n)) || null), 30000, '找不到武將名冊入口');
-            rec.detail.rosterEntry = rosterBtn;
-            await clickButton(`^${rosterBtn}$`);
-            await delay(1500);
-            const firstCard = await waitUntil(() => page.evaluate(() => window.__pt.listButtons()).then((list) => list.find((n) => /^(BtnGeneral\d*|BtnGeneralCard\d*|GeneralCard\d*|BtnCard0|BtnHero0)$/i.test(n)) || list.find((n) => /^BtnGeneral/i.test(n)) || null), 30000, '名冊中找不到第一位武將');
+            await backToLobbyBar();
+            await waitUntil(() => page.evaluate(() => window.__pt.hasButton('^BtnCatGenerals$')), 30000, `回大廳後沒有底欄按鈕（場景 ${await scene()}；節點 ${(await page.evaluate(() => window.__pt.dumpBtnLike())).join(', ')}）`);
+            rec.detail.rosterEntry = '底欄「武將」→「武將名冊」';
+            if (!(await openSub('BtnCatGenerals', '武將名冊'))) throw new Error(`找不到「武將 → 武將名冊」入口（可按按鈕：${(await listButtons()).join(', ')}）`);
+            await delay(2500);
+            rec.detail.buttonsAfterOpen = await listButtons();
+            const firstCard = await waitUntil(() => page.evaluate(() => window.__pt.listButtons()).then((list) => list.find((n) => n === 'Row') || list.find((n) => /^(BtnGeneral\d*|BtnGeneralCard\d*|GeneralCard\d*|BtnCard0|BtnHero0)$/i.test(n)) || null), 30000, '名冊中找不到第一位武將');
             rec.detail.firstCard = firstCard;
             await clickButton(`^${firstCard}$`);
             await waitUntil(() => page.evaluate(() => window.__pt.scenePresence('CharacterDs3|character-ds3')), 30000, '人物介紹畫面未出現');
             await delay(1200);
 
-            const tabs = await page.evaluate(() => window.__pt.listButtons());
-            const tabNames = tabs.filter((n) => /Tab/i.test(n) && !/Close|Back/i.test(n));
+            // 右側分頁鈕節點名不固定，改用鈕上文字首字（將／屬／命／技／寶／兵）辨認
+            const tabEntries = (await page.evaluate(() => window.__pt.buttonTexts('.*'))).filter((t) => t.text && /^[將屬命技寶兵]/.test(t.text.trim()));
+            const tabNames = Array.from(new Set(tabEntries.map((t) => t.text.trim().charAt(0))));
             rec.detail.tabs = tabNames;
             const shots = [];
             let bloodlineChecked = null;
+            if (!tabNames.length) throw new Error(`人物介紹畫面找不到分頁按鈕（可按按鈕：${(await listButtons()).join(', ')}）`);
             for (const tab of tabNames) {
-                await clickButton(`^${tab}$`);
+                await page.evaluate((t) => window.__pt.clickByText('.*', '^\s*' + t), tab);
                 await delay(1000);
-                const file = path.join(outDir, `${String(stepIndex).padStart(2, '0')}-tab-${tab.replace(/[^\w-]+/g, '_')}.png`);
+                const file = path.join(outDir, `${String(stepIndex).padStart(2, '0')}-tab-${tabNames.indexOf(tab) + 1}.png`);
                 await page.screenshot({ path: file });
                 shots.push(path.relative(projectRoot, file).replace(/\\/g, '/'));
-                if (/life|命|Fate/i.test(tab)) {
+                if (tab === '命') {
                     bloodlineChecked = await checkBloodlineBounds(page, viewport);
                 }
             }
             rec.detail.screenshots = shots;
             rec.detail.bloodline = bloodlineChecked;
+            rec.detail.buttonTexts = await page.evaluate(() => window.__pt.buttonTexts('^(CharacterDs3Main|btn)'));
             if (bloodlineChecked && !bloodlineChecked.ok) throw new Error(`血統樹範圍不符：${bloodlineChecked.reason}`);
             return rec.detail;
         }, { skipIfFailed: true });
@@ -604,12 +654,15 @@ async function main() {
         await step('battle-to-settlement', async (rec) => {
             // 回到大廳
             for (let i = 0; i < 6 && (await scene()) !== 'LobbyScene'; i++) {
-                await clickButton('^(BtnBack|BtnClose|BtnCloseSortie)$');
+                await clickButton('^(GachaReturnToLobby|BtnBack|BtnClose|BtnCloseSortie)$');
                 await delay(1200);
             }
             await requireLobby();
-            await waitUntil(() => page.evaluate(() => window.__pt.hasButton('^BtnBattle$')), 30000, '大廳沒有 BtnBattle');
-            await clickButton('^BtnBattle$');
+            await backToLobbyBar();
+            await waitUntil(() => page.evaluate(() => window.__pt.hasButton('^BtnCatSortie$')), 30000, `回大廳後沒有底欄按鈕（場景 ${await scene()}；節點 ${(await page.evaluate(() => window.__pt.dumpBtnLike())).join(', ')}）`);
+            if (!(await openSub('BtnCatSortie', '戰場'))) throw new Error(`大廳找不到「出征 → 戰場」入口（可按按鈕：${(await listButtons()).join(', ')}）`);
+            await delay(2500);
+            rec.detail.buttonsAfterOpen = await listButtons();
             const battleT0 = Date.now();
             const deployRe = '^(BtnSortie|BtnStartBattle|BtnDeploy|BtnConfirmDeploy|BtnConfirmSortie|BtnStart|BtnGo|BtnNextDispatchGeneral|BtnScoutSortie)$';
             // 出征面板：依序點可按的出征確認鈕，直到進入 BattleScene（每 2 秒一次，總時限 120 秒）
@@ -628,6 +681,7 @@ async function main() {
             const settled = await waitUntil(async () => {
                 if ((await scene()) === 'LobbyScene') return 'auto-lobby';
                 if (await page.evaluate(() => window.__pt.scenePresence('BattleReview'))) return 'review';
+                if ((await page.evaluate(() => window.__pt.textsMatching('^(勝利|失敗|戰敗|平手)$'))).length) return 'review';
                 await page.evaluate(() => window.__pt.clickButton('^BtnAuto$'));
                 return false;
             }, BATTLE_LIMIT_MS, `戰鬥未在 120 秒內結算（可按按鈕：${(await listButtons()).join(', ')}）`);
@@ -636,13 +690,47 @@ async function main() {
             if (settled === 'review') {
                 await waitUntil(async () => {
                     if ((await scene()) === 'LobbyScene') return true;
-                    const hit = await clickButton('^(BtnBattleReviewClose|BtnReturnLobby|BtnBackLobby|BtnReturn|BtnContinue|BtnConfirm|BtnNext|BtnClose|BtnFinish|BtnBack)$');
+                    const hit = (await page.evaluate(() => window.__pt.clickByText('.*', '返回大廳'))) || await clickButton('^(BtnBattleReviewClose|BtnReturnLobby|BtnBackLobby|BtnReturn|BtnContinue|BtnConfirm|BtnNext|BtnClose|BtnFinish|BtnBack)$');
                     if (!hit) await delay(1000);
                     return false;
                 }, 60000, `結算後無法回大廳（可按按鈕：${(await listButtons()).join(', ')}）`);
             }
             await requireLobby();
             rec.detail.returnedToLobby = true;
+            return rec.detail;
+        }, { skipIfFailed: true });
+
+        // ── 6b. 轉蛋（排最後：返回大廳後底欄是否還在，本身就是檢查項）：切每個池子一次，切一輪後右欄節點不疊加 ──
+        await step('gacha-pools', async (rec) => {
+            await requireLobby();
+            // 戰鬥返回後可能彈出開場禮包，先婉拒才不擋底欄
+            await backToLobbyBar();
+            rec.detail.entry = '底欄「商店」→「轉蛋」';
+            const hit = await openSub('BtnCatShop', '轉蛋');
+            if (!hit) throw new Error('大廳找不到「商店 → 轉蛋」入口');
+            await delay(2500);
+            rec.detail.buttonsAfterOpen = await listButtons();
+            if (!(await page.evaluate(() => window.__pt.hasButton('^BtnPoolNext$')))) throw new Error(`轉蛋畫面沒有 BtnPoolNext（場景 ${await scene()}；可按按鈕：${rec.detail.buttonsAfterOpen.join(', ')}）`);
+            const rightRe = '(Right|Column|Detail|Info).*';
+            const baseline = await page.evaluate((re) => window.__pt.nameCounts(re), rightRe);
+            rec.detail.rightRootFound = Object.keys(baseline).length > 0;
+            const poolCount = 4;
+            const switched = [];
+            for (let i = 0; i < poolCount; i++) {
+                await clickButton('^BtnPoolNext$');
+                await delay(1500);
+                const shot = path.join(outDir, `${String(stepIndex).padStart(2, '0')}-gacha-pool-${i + 1}.png`);
+                await page.screenshot({ path: shot });
+                switched.push(path.relative(projectRoot, shot).replace(/\\/g, '/'));
+            }
+            const after = await page.evaluate((re) => window.__pt.nameCounts(re), rightRe);
+            const stacked = Object.keys(after).filter((name) => after[name] > (baseline[name] || 0));
+            rec.detail.screenshots = switched;
+            if (stacked.length) throw new Error(`切換池子一輪後右欄節點疊加：${stacked.slice(0, 8).join(', ')}`);
+            await clickButton('^GachaReturnToLobby$');
+            const barBack = await waitUntil(() => page.evaluate(() => window.__pt.hasButton('^BtnCatShop$')), 15000, '').catch(() => false);
+            rec.detail.lobbyBarAfterReturn = Boolean(barBack);
+            if (!barBack) throw new Error(`轉蛋按「返回大廳」後底欄按鈕（BtnCat*）全部消失，畫面看似大廳但節點不在（場景 ${await scene()}；Btn 類節點 ${(await page.evaluate(() => window.__pt.dumpBtnLike())).join(', ')}）`);
             return rec.detail;
         }, { skipIfFailed: true });
 
@@ -673,22 +761,25 @@ async function main() {
  * 主體節點名以 CharacterDs3Main 開頭；底板節點名含 Bloodline 且含 Tree/Base/Board/Panel/Bg 其一。
  */
 async function checkBloodlineBounds(page, viewport) {
-    const bounds = await page.evaluate(() => {
-        const host = window.__pt.sizeOf('^CharacterDs3Main');
-        const tree = window.__pt.sizeOf('^Bloodline.*(Tree|Base|Board|Panel|Bg|Root).*');
-        return { host, tree };
-    });
-    if (!bounds.host || !bounds.tree) {
-        return { ok: false, reason: `找不到主體或血統樹節點（host=${JSON.stringify(bounds.host)} tree=${JSON.stringify(bounds.tree)}）`, bounds };
+    // 底板節點名稱各版不同，列出幾個候選全量一起量，任一個符合「主體寬−720 × 主體高」即通過
+    const candidates = ['^CharacterDs3MainBloodlineRoot$', '^TabBloodlineContent$', '^CharacterDs3TabBloodline$'];
+    const bounds = await page.evaluate((cands) => {
+        const host = window.__pt.sizeOf('^CharacterDs3Main$') || window.__pt.sizeOf('^CharacterDs3Main');
+        return { host, trees: cands.map((re) => ({ re, size: window.__pt.sizeOf(re) })) };
+    }, candidates);
+    const found = bounds.trees.filter((t) => t.size);
+    if (!bounds.host || !found.length) {
+        return { ok: false, reason: `找不到主體或血統樹底板節點（host=${JSON.stringify(bounds.host)}；候選 ${candidates.join('、')} 皆不存在）`, bounds };
     }
     const expectW = bounds.host.width - 720;
     const expectH = bounds.host.height;
-    const ok = Math.abs(bounds.tree.width - expectW) <= 1 && Math.abs(bounds.tree.height - expectH) <= 1;
+    const match = found.find((t) => Math.abs(t.size.width - expectW) <= 1 && Math.abs(t.size.height - expectH) <= 1);
+    const sizes = found.map((t) => `${t.size.name} ${t.size.width}×${t.size.height}`).join('；');
     return {
-        ok,
-        reason: ok ? null : `實際 ${bounds.tree.width}×${bounds.tree.height}，預期 ${expectW}×${expectH}（主體 ${bounds.host.width}×${bounds.host.height}，視窗 ${viewport.width}×${viewport.height}）`,
+        ok: Boolean(match),
+        reason: match ? null : `候選底板實際尺寸皆不符：${sizes}；預期 ${expectW}×${expectH}（主體 ${bounds.host.width}×${bounds.host.height}，視窗 ${viewport.width}×${viewport.height}）`,
         host: bounds.host,
-        tree: bounds.tree,
+        candidates: found.map((t) => t.size),
         expected: { width: expectW, height: expectH },
     };
 }
