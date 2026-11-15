@@ -5790,6 +5790,89 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "id": "PROG-2-9104",
+      "title": "線上驗收：開場宿命轉蛋步驟按鈕名稱核對",
+      "phase": "2",
+      "status": "in-progress",
+      "priority": "P1",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "created_at": "2026-11-16T12:00:00+08:00",
+      "started_at": "2026-11-16T12:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "depends_on": [
+        "PROG-2-9047"
+      ],
+      "target_files": [
+        "tools_node/playtest-online.js",
+        "docs/web-playtest-online.md",
+        "docs/agent-briefs/tasks/PROG/PROG-2-9104.md",
+        "docs/tasks/tasks-prog.json"
+      ],
+      "notes": "2026-11-16 | 狀態: in-progress"
+    },
+    {
+      "id": "PROG-2-9105",
+      "title": "線上驗收：人物介紹命分頁血統樹底板尺寸核對",
+      "phase": "2",
+      "status": "in-progress",
+      "priority": "P1",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "created_at": "2026-11-16T12:00:00+08:00",
+      "started_at": "2026-11-16T12:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "depends_on": [
+        "PROG-2-9047"
+      ],
+      "target_files": [
+        "tools_node/playtest-online.js",
+        "docs/agent-briefs/tasks/PROG/PROG-2-9105.md",
+        "docs/tasks/tasks-prog.json"
+      ],
+      "notes": "2026-11-16 | 狀態: in-progress"
+    },
+    {
+      "id": "PROG-2-9106",
+      "title": "轉蛋返回大廳後城池底欄 BtnCat* 消失",
+      "phase": "2",
+      "status": "in-progress",
+      "priority": "P1",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "created_at": "2026-11-16T12:00:00+08:00",
+      "started_at": "2026-11-16T12:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "depends_on": [
+        "PROG-2-9047"
+      ],
+      "target_files": [
+        "assets/scripts/ui/scenes/LobbyScene.ts",
+        "assets/scripts/ui/core/LobbyHallReturn.ts",
+        "tests/LobbyHallReturn.test.ts",
+        "docs/agent-briefs/tasks/PROG/PROG-2-9106.md",
+        "docs/tasks/tasks-prog.json"
+      ],
+      "notes": "2026-11-16 | 狀態: in-progress"
+    },
+    {
+      "id": "PROG-2-9107",
+      "title": "大廳點走動小人後對話泡泡未出現",
+      "phase": "2",
+      "status": "in-progress",
+      "priority": "P1",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "created_at": "2026-11-16T12:00:00+08:00",
+      "started_at": "2026-11-16T12:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "depends_on": [
+        "PROG-2-9047"
+      ],
+      "target_files": [
+        "tools_node/playtest-online.js",
+        "docs/agent-briefs/tasks/PROG/PROG-2-9107.md",
+        "docs/tasks/tasks-prog.json"
+      ],
+      "notes": "2026-11-16 | 狀態: in-progress"
     }
   ]
 }
