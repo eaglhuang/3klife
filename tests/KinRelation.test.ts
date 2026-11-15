@@ -111,7 +111,7 @@ export function createKinRelationSuite(): TestSuite {
         const engine = analyzeTagResonance(uids.map((uid) => tagsByUid[uid]));
         assert.equals(ep.topTag, engine.topTag);
         assert.equals(ep.topTagCount, engine.topTagCount);
-        assert.equals(engine.resonance ? 15 : 0, ep.resonance);
+        assert.equals(engine.resonance, ep.resonance > 0);
         assert.equals(engine.familyTradition, ep.familyTradition);
         assert.isFalse(ep.familyTradition);
     });

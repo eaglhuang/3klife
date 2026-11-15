@@ -209,7 +209,7 @@ export function createVirtualAncestorSuite(): TestSuite {
 
         const ep = service.previewEp('dad', 'mom');
         assert.equals('V_PID_dad_F', graph.getParents('dad').father);
-        assert.equals(20, ep.outcross, '28 位虛擬祖先不重複 → 異脈加成');
+        assert.equals(10, ep.outcross, '28 位虛擬祖先不重複 → 異脈加成（doc_spec_1098）');
 
         const result = service.breed('dad', 'mom');
         assert.equals('conceived', result.outcome);
