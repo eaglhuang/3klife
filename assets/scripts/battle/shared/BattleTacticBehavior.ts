@@ -298,7 +298,7 @@ function _resolveFloodCurrentDeath(
   const { lane, depth, faction, type } = unit;
   state.removeUnit(unit.id);
   svc.buff.clearUnit(unit.id);
-  svc.event.emit(EVENT_NAMES.UnitDied, { unitId: unit.id, lane, depth, faction, type });
+  svc.event.emit(EVENT_NAMES.UnitDied, { unitId: unit.id, name: unit.name, lane, depth, faction, type });
 }
 
 function applyFireAttackTerrain(state: BattleState): void {

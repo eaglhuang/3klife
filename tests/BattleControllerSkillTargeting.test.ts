@@ -6,6 +6,7 @@ import { BattleSkillTargetMode, SkillSourceType } from '../shared/skill-runtime'
 import { TestSuite, assert } from './TestRunner';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
 import { resolveBattleTacticBehavior } from '../assets/scripts/battle/shared/BattleTacticBehavior';
+import { MAX_MOVE_CELLS_PER_TURN } from '../assets/scripts/battle/runtime/phases/BattleAutoMovePhase';
 
 function createGeneral(id: string, faction: Faction, skillId: string, int = 90): GeneralUnit {
     return new GeneralUnit({
@@ -524,12 +525,45 @@ export function createBattleControllerSkillTargetingSuite(): TestSuite {
         assert.equals(0, outcome.unit!.depth);
         assert.isTrue(ctrl['turnManager'].isUnitDeployedThisTurn(outcome.unit!.id));
 
-        // 下一回合：騎兵移動力 2 + 平原加成 2（TerrainTroopRules，PROG-2-0088）= 4，從部署格 depth 0 前進到 depth 4
+        // 下一回合：騎兵移動力 2 + 平原加成 2（TerrainTroopRules，PROG-2-0088）= 4，但單回合上限 MAX_MOVE_CELLS_PER_TURN（PROG-2-9052）= 3，從部署格 depth 0 前進到 depth 3
         ctrl.resolveEnemyTurn();
         ctrl.finalizeEnemyTurn();
         assert.isFalse(ctrl['turnManager'].isUnitDeployedThisTurn(outcome.unit!.id));
         assert.equals('ongoing', ctrl.resolvePlayerTurn());
-        assert.equals(4, outcome.unit!.depth);
+        assert.equals(3, outcome.unit!.depth);
+    });
+
+    suite.test('單回合移動上限：平原騎兵加成疊加超過上限時，一回合最多前進 MAX_MOVE_CELLS_PER_TURN 格；步兵不受影響', () => {
+        services().initialize();
+        const ctrl = new BattleController();
+        const playerGeneral = createGeneral('ma-chao', Faction.Player, 'ma-chao-charge');
+        const enemyGeneral = createGeneral('cao-ren', Faction.Enemy, 'cao-ren-guard');
+        ctrl.initBattle(playerGeneral, enemyGeneral);
+        silenceEnemyDeploy(ctrl);
+
+        const cavalry = new TroopUnit('player-cavalry-cap', TroopType.Cavalry, Faction.Player, {
+            hp: 100,
+            attack: 30,
+            defense: 10,
+            moveRange: 2,
+            attackRange: 1,
+        });
+        cavalry.moveTo(2, 0);
+        ctrl.state.addUnit(cavalry);
+
+        const infantry = new TroopUnit('player-infantry-cap', TroopType.Infantry, Faction.Player, {
+            hp: 100,
+            attack: 30,
+            defense: 10,
+            moveRange: 1,
+            attackRange: 1,
+        });
+        infantry.moveTo(0, 0);
+        ctrl.state.addUnit(infantry);
+
+        assert.equals('ongoing', ctrl.resolvePlayerTurn());
+        assert.equals(MAX_MOVE_CELLS_PER_TURN, cavalry.depth);
+        assert.equals(1, infantry.depth);
     });
 
     suite.test('FloodAttack：敵軍站在 river current 上時，回合結束會先前進一格再往左推一格', () => {

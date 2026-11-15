@@ -250,7 +250,8 @@ export function createBattleAptitudeSuite(): TestSuite {
             return unit.depth;
         };
         assert.equals(2, advance('B'), 'B 級照基礎 2 格');
-        assert.equals(4, advance('S'), '平原 S +1、騎兵 S +1');
+        // S 原本可走 4 格（基礎 2 + 適性 +1 + 平原 +1），套單回合上限 MAX_MOVE_CELLS_PER_TURN（PROG-2-9052）後為 3
+        assert.equals(3, advance('S'), 'S 原為 4 格，單回合上限 3 格');
         assert.equals(1, advance('D'), 'D 級 -4 但夾在 1 格');
     });
 
