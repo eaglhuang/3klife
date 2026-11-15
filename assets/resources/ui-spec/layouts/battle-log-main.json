@@ -15,7 +15,7 @@
     "width": 344,
     "widget": {
       "right": 16,
-      "top": 184
+      "top": 340
     },
     "layout": {
       "type": "vertical",
@@ -134,7 +134,7 @@
         "name": "BattleLogPanel",
         "id": "battleLogPanel",
         "width": "100%",
-        "height": 280,
+        "height": 212,
         "skinSlot": "log.root.bg",
         "layout": {
           "type": "vertical",
@@ -170,7 +170,7 @@
             "name": "ScrollView",
             "id": "scrollView",
             "width": "100%",
-            "height": 236,
+            "height": 168,
             "children": [
               {
                 "type": "container",

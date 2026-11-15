@@ -286,6 +286,11 @@ export class LobbyHallScreenBinder {
         this._crowd.schedule(this._tickStage, STAGE_TICK_SEC);
     }
 
+    /** 場景銷毀時呼叫：只停輪換計時器，不碰正在一起被銷毀的人群節點（PROG-2-9103） */
+    stopStageTicking(): void {
+        this._crowd?.unschedule(this._tickStage);
+    }
+
     /** 離開大廳時呼叫：停止輪換並清掉人群 */
     closeStage(): void {
         if (!this._stage || !this._crowd) return;

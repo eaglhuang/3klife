@@ -1199,11 +1199,12 @@ export class BattleController {
 
   private buildEnemyTurnPhaseExecutors(): readonly BattlePhaseExecutor[] {
     return [
-      createBattlePhaseExecutor('enemy-deploy', (context) => context.executePhase('enemy-deploy')),
       createBattlePhaseExecutor('enemy-auto-move', (context) => context.executePhase('enemy-auto-move')),
       createBattlePhaseExecutor('enemy-tile-effect', (context) => context.executePhase('enemy-tile-effect')),
       createBattlePhaseExecutor('enemy-combat-resolve', (context) => context.executePhase('enemy-combat-resolve')),
       createBattlePhaseExecutor('enemy-special-resolve', (context) => context.executePhase('enemy-special-resolve')),
+      // 部署最後（PROG-2-9302）：先移動讓出部署格，部署額度才能維持每回合 F-2 的數量
+      createBattlePhaseExecutor('enemy-deploy', (context) => context.executePhase('enemy-deploy')),
       createBattlePhaseExecutor('victory-check', (context) => context.executePhase('victory-check')),
     ];
   }

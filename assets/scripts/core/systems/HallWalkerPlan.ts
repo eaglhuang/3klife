@@ -34,7 +34,8 @@ export interface WalkerPlanState {
 }
 
 export interface WalkerPlanInput {
-    state: Readonly<WalkerPlanState>;
+    /** null 視同初次排班（呼叫端已銷毀時引擎會把欄位清成 null） */
+    state: Readonly<WalkerPlanState> | null;
     nowSec: number;
     /** 我方擁有的武將（名冊）；不在名冊的 id 不會被排進來 */
     owned: readonly WalkerCandidate[];
@@ -95,6 +96,8 @@ function weightedPick(pool: WalkerCandidate[], count: number, random: () => numb
  *  - 任何時候輪替者都補到目標人數（名冊不夠就有多少放多少）。
  */
 export function planHallWalkers(input: Readonly<WalkerPlanInput>): WalkerPlan {
+    // 防呆（PROG-2-9103）：呼叫端已被銷毀時欄位會被引擎清成 null，視同初次排班，不讓整個大廳每幀丟例外
+    const state: Readonly<WalkerPlanState> = input.state ?? INITIAL_WALKER_STATE;
     const ownedById = new Map(input.owned.map(c => [c.id, c] as const));
     const volunteerIds: string[] = [];
     for (const id of input.volunteerIds) {
@@ -104,19 +107,19 @@ export function planHallWalkers(input: Readonly<WalkerPlanInput>): WalkerPlan {
     const taken = new Set(volunteerIds);
     const target = clampWalkerCount(input.walkerCount);
     const rotateSec = input.rotateSec ?? HALL_REFRESH_SECONDS;
-    const due = input.state.rotatedAtSec === null || input.nowSec - input.state.rotatedAtSec >= rotateSec;
+    const due = state.rotatedAtSec === null || input.nowSec - state.rotatedAtSec >= rotateSec;
 
     let walkerIds: string[] = [];
-    let rotatedAtSec = input.state.rotatedAtSec;
+    let rotatedAtSec = state.rotatedAtSec;
     let rotated = false;
 
     if (!due) {
         // 沿用上一批：還在名冊、沒變成自薦者的留下
-        walkerIds = input.state.walkerIds.filter(id => ownedById.has(id) && !taken.has(id)).slice(0, target);
+        walkerIds = state.walkerIds.filter(id => ownedById.has(id) && !taken.has(id)).slice(0, target);
     }
     if (walkerIds.length < target) {
         const keep = new Set(walkerIds);
-        const previous = new Set(input.state.walkerIds);
+        const previous = new Set(state.walkerIds);
         const free = input.owned.filter(c => !taken.has(c.id) && !keep.has(c.id));
         // 到期重抽：先從「上一批以外」的人挑；人不夠才回頭用上一批的人
         const fresh = due ? free.filter(c => !previous.has(c.id)) : free;

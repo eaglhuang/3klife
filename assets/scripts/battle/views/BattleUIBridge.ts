@@ -153,6 +153,8 @@ export function createBattleSceneContext(): BattleSceneContext {
 
 // ─────────────────────────────────────────────────────────────────────────────
 
+/** 主動撤退時戰報與 Toast 的共用文字（PROG-2-9300）：讓玩家知道是自己退，不是被打垮 */
+export const RETREAT_LOG_LINE = '我軍鳴金收兵，撤出戰場';
 
 export class BattleUIBridge {
   private duelCapture: {
@@ -169,6 +171,8 @@ export class BattleUIBridge {
   private _loadoutCheckedFor: string | null = null;
   private _loadoutGaps: string[] = [];
   private _lastEndedPayload: { result: string; retreated?: boolean } | null = null;
+  /** 本場是否已提示過「剛部署的部隊下回合才行動」（PROG-2-9302，只提示一次避免洗版） */
+  private _deployNextTurnHintShown = false;
   private readonly unsubs: (() => void)[] = [];
   /** 本場我方的戰場特定動作（騎兵衝鋒、背刺…），戰後交給覺醒判定 */
   private readonly specialActions = new BattleSpecialActionTracker();
@@ -484,6 +488,10 @@ export class BattleUIBridge {
     const unitName = data.unitName?.trim() || this.toTroopName(data.type);
     this.appendLog(`${side}部署 ${unitName}（路線 ${data.lane + 1}）`);
     if (data.faction === Faction.Player) {
+      if (!this._deployNextTurnHintShown) {
+        this._deployNextTurnHintShown = true;
+        this.appendLog('剛部署的部隊下回合才行動');
+      }
       c.boardRenderer?.clearDeployHint();
       c.deployRuntime?.showToast(`我方已部署 ${unitName}（路線 ${data.lane + 1}）`);
     }
@@ -891,7 +899,9 @@ export class BattleUIBridge {
       }
       return;
     }
-    this.appendLog('我方撤退，本場判定戰敗');
+    // 撤退要在戰報與 Toast 說清楚「是我方主動退」，否則玩家只看到戰敗結算會誤以為遊戲壞掉
+    this.appendLog(RETREAT_LOG_LINE);
+    services().event.emit(EVENT_NAMES.ShowToast, { text: RETREAT_LOG_LINE });
     this.ctx.ctrl?.retreatBattle();
   }
 

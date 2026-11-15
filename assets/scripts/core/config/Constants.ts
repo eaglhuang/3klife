@@ -11,6 +11,11 @@ export const GAME_CONFIG = {
   /** 技能狀態提示（閃現）顯示毫秒數；原本漏定義，HUD 用它算 scheduleOnce 延遲 */
   SKILL_STATUS_DISPLAY_MS: 2000,
   MAX_PLAYER_DEPLOY_PER_TURN: 1,
+  /**
+   * 單回合自動前進格數上限（戰場數值）。原本寫死在 BattleAutoMovePhase.ts，改由此處調整。
+   * 原因：騎兵加成疊加無上限，一回合可橫越全場，玩家看不懂也沒有應對空間。
+   */
+  maxMoveCellsPerTurn: 3,
   TURN_LIMIT: 50,
   AI_COUNTER_STRATEGY_CHANCE: 0.35,
   // 武將化身單挑：暴擊與閃躲參數（對應 E-11/E-14）
