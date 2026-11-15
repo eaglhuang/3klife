@@ -227,11 +227,15 @@ export class GachaFlowCoordinator {
 
         const opening = repull === null;
         const labels = flow.labels;
+        const backText = labels?.back ?? (opening ? '進入大廳' : '返回卡池');
+        const repullText = labels?.repull ?? (drawCount === 10 ? '再抽十連' : `再${title}一次`);
         binder.setTexts({
             ...cardTexts,
             GachaPullResult_title: `✦ ${labels?.header ?? title}結果 (${results.length}/${drawCount})${topResult ? ` · 最高 ${this._toPullResultRarityLabel(topResult.rarityTier)} ${topResult.general.name}` : ''}`,
-            GachaPullResult_back: labels?.back ?? (opening ? '進入大廳' : '返回卡池'),
-            GachaPullResult_repull: labels?.repull ?? (drawCount === 10 ? '再抽十連' : `再${title}一次`),
+            GachaPullResult_back: backText,
+            GachaPullResult_span_1: backText,
+            GachaPullResult_repull: repullText,
+            GachaPullResult_span_2: repullText,
             GachaPullResult_sum_high: `SSR ×${rarityStats.high}`,
             GachaPullResult_sum_mid: `SR ×${rarityStats.mid}`,
             GachaPullResult_sum_low: `R ×${rarityStats.low}`,
@@ -375,9 +379,13 @@ export class GachaFlowCoordinator {
      */
     /** 可按的再抽／免費重轉用亮金字；skin 的深墨字配上沒有底圖的按鈕看起來像停用（#2107） */
     private _styleRepullButton(binder: any, enabled: boolean): void {
+        if (!enabled) return;
         const node: Node | null = binder.getNode ? binder.getNode('GachaPullResult_repull') : null;
         const label = node?.getComponent(Label);
-        if (label && enabled) label.color = REPULL_ENABLED_COLOR;
+        if (label) label.color = REPULL_ENABLED_COLOR;
+        const spanNode: Node | null = binder.getNode ? binder.getNode('GachaPullResult_span_2') : null;
+        const spanLabel = spanNode?.getComponent(Label) ?? (binder.getLabel ? binder.getLabel('GachaPullResult_span_2') : null);
+        if (spanLabel) spanLabel.color = REPULL_ENABLED_COLOR;
     }
 
     private _stageHeroReveal(binder: any, hasHero: boolean, hideAfterReveal = false): void {
@@ -468,7 +476,7 @@ export class GachaFlowCoordinator {
         // 新立繪載完前先藏起來：不讓版面預設圖或上一位冒充這次的主角
         const seq = ++this._heroPortraitSeq;
         sprite.enabled = false;
-        void loadGeneralPortrait(generalId).then((frame) => {
+        void loadGeneralPortrait(generalId).then((frame) => frame ?? loadGeneralAvatar(generalId)).then((frame) => {
             if (seq !== this._heroPortraitSeq || !sprite.isValid || !frame) return;
             sprite.sizeMode = Sprite.SizeMode.CUSTOM;
             sprite.trim = false;

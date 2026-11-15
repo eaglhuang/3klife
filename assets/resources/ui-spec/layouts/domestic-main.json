@@ -445,11 +445,11 @@
                     "name": "BtnOpenJournalHubLabel",
                     "id": "btnOpenJournalHubLabel",
                     "widget": {
-                      "vCenter": true,
-                      "left": 28,
+                      "top": 12,
+                      "left": 24,
                       "right": 0
                     },
-                    "height": 40,
+                    "height": 32,
                     "text": "晨報・派遣板 ▶",
                     "styleSlot": "domestic.label.tile"
                   }
@@ -699,7 +699,7 @@
                 "name": "MagistrateLabel",
                 "id": "magistrateLabel",
                 "widget": {
-                  "top": 236,
+                  "top": 258,
                   "left": 548
                 },
                 "width": 330,
@@ -712,7 +712,7 @@
                 "name": "BtnMagistrate",
                 "id": "btnMagistrate",
                 "widget": {
-                  "top": 232,
+                  "top": 252,
                   "left": 914
                 },
                 "width": 100,

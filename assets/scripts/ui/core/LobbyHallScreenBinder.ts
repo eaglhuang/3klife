@@ -81,11 +81,26 @@ export interface LobbyHallScreenDeps {
     readonly mapLayout?: HallMapLayout | null;
 }
 
+export interface LobbyHallTopbarView {
+    gold?: number | string;
+    gems?: number | string;
+    food?: number | string;
+    troops?: number | string;
+    officerSubtitle?: string;
+    timeLabel?: string;
+}
+
 /** 節點本身或第一個子節點上的 Label 套字；找不到 Label 時不動 */
-function setText(node: Node | undefined, text: string): void {
+function setText(node: Node | null | undefined, text: string): void {
     if (!node) return;
     const label = node.getComponent(Label) ?? node.children[0]?.getComponent(Label) ?? null;
-    if (label) label.string = text;
+    if (!label) return;
+    const charMode = Label.CacheMode?.CHAR ?? 2;
+    const noneMode = Label.CacheMode?.NONE ?? 0;
+    if (label.cacheMode === charMode) {
+        label.cacheMode = noneMode;
+    }
+    label.string = text;
 }
 
 /** 綁定器自建、緊接在沙盤後面的圖層節點名稱 */
@@ -137,6 +152,42 @@ export class LobbyHallScreenBinder {
     setPanelVisible(id: LobbyHallPanelId, visible: boolean): void {
         const node = findUcufNode(this._screenRoot, `lobby-hall-screen.${id}`);
         if (node) node.active = visible;
+    }
+
+    /** 依節點名稱深度優先尋找子孫節點 */
+    private _findDescendantByName(root: Node, name: string): Node | null {
+        if (root.name === name) return root;
+        for (const child of root.children) {
+            const hit = this._findDescendantByName(child, name);
+            if (hit) return hit;
+        }
+        return null;
+    }
+
+    /** 同步幕府大廳頂列資源、官職主將與季節時辰 */
+    setTopbar(view: LobbyHallTopbarView): void {
+        const formatVal = (val: number | string | undefined): string | null => {
+            if (val === undefined) return null;
+            return typeof val === 'number'
+                ? Math.max(0, Math.floor(val)).toLocaleString('en-US')
+                : String(val);
+        };
+        const applyField = (nodeName: string, text: string | null, ucufId?: string): void => {
+            if (text === null) return;
+            const node = (ucufId ? findUcufNode(this._screenRoot, ucufId) : null)
+                ?? this._findDescendantByName(this._screenRoot, nodeName);
+            setText(node, text);
+        };
+        applyField('LobbyHallScreen_span_1', formatVal(view.gold));
+        applyField('LobbyHallScreen_span_2', formatVal(view.gems));
+        applyField('LobbyHallScreen_span_3', formatVal(view.food));
+        applyField('LobbyHallScreen_span_4', formatVal(view.troops));
+        if (view.officerSubtitle !== undefined) {
+            applyField('LobbyHallScreen_div_7', view.officerSubtitle);
+        }
+        if (view.timeLabel !== undefined) {
+            applyField('LobbyHallScreen_div_10', view.timeLabel, 'lobby-hall-screen.hall-time');
+        }
     }
 
     /**
@@ -234,6 +285,19 @@ export class LobbyHallScreenBinder {
      * 設計稿最後一列是「交給你／再議」兩顆選項（轉出來是 panel 不接點擊）：自薦任務時「交給你」呼叫 onAccept，
      * 兩顆都收起泡泡；單純聊天時整列隱藏。點泡泡本體也收起（#2107-9）；選項按鈕的觸控先處理，不會被本體吃掉。
      */
+    /** 同步泡泡分離式陰影（${bubble.name}_CssShadow）顯示與層級，避免殘留或壓住泡泡 */
+    private _syncBubbleShadow(bubble: Node, visible: boolean): void {
+        const parent = bubble.parent;
+        if (!parent) return;
+        const shadow = parent.getChildByName(`${bubble.name}_CssShadow`);
+        if (!shadow) return;
+        shadow.active = visible;
+        if (visible) {
+            shadow.setSiblingIndex(parent.children.length - 1);
+            bubble.setSiblingIndex(parent.children.length - 1);
+        }
+    }
+
     private _bindBubbleChoices(): void {
         const bubble = findUcufNode(this._screenRoot, 'lobby-hall-screen.bubble');
         if (!bubble) return;
@@ -241,6 +305,7 @@ export class LobbyHallScreenBinder {
         const choiceRow = bubble.children.filter(child => child.children.length >= 2).pop();
         // 設計稿的示範對話不該一直掛在畫面上
         bubble.active = false;
+        this._syncBubbleShadow(bubble, false);
         bubble.off(Node.EventType.TOUCH_END);
         bubble.on(Node.EventType.TOUCH_END, () => this._closeBubble());
         if (!choiceRow) return;
@@ -262,7 +327,10 @@ export class LobbyHallScreenBinder {
             this._bubbleTimer = null;
         }
         const bubble = findUcufNode(this._screenRoot, 'lobby-hall-screen.bubble');
-        if (bubble?.isValid) bubble.active = false;
+        if (bubble?.isValid) {
+            bubble.active = false;
+            this._syncBubbleShadow(bubble, false);
+        }
         const actor = this._bubbleActor;
         this._bubbleActor = null;
         this._bubbleAccept = null;
@@ -283,8 +351,9 @@ export class LobbyHallScreenBinder {
         this._bubbleAccept = content.volunteer?.onAccept ?? null;
         const seconds = content.volunteer ? VOLUNTEER_BUBBLE_SEC : (input.wander?.bubbleSeconds ?? 2);
         bubble.active = true;
-        // 設計稿的泡泡夾在勢力圖等元件之間，跟著頭頂移動後會被蓋住，開啟時拉到最上層
+        // 設計稿的泡泡夾在勢力圖等元件之間，跟著頭頂移動後會被蓋住，開啟時拉到最上層並同步陰影
         bubble.setSiblingIndex(bubble.parent ? bubble.parent.children.length - 1 : 0);
+        this._syncBubbleShadow(bubble, true);
         this._placeBubbleAbove(bubble, generalId);
         if (this._bubbleTimer) clearTimeout(this._bubbleTimer);
         this._bubbleTimer = setTimeout(() => this._closeBubble(), seconds * 1000);
@@ -300,13 +369,15 @@ export class LobbyHallScreenBinder {
         if (!widget || !head || !parentSize || !size) return;
         const margin = 12;
         const halfW = size.width / 2;
-        const hCenter = Math.max(-parentSize.width / 2 + halfW + margin, Math.min(parentSize.width / 2 - halfW - margin, head.x));
+        const maxH = parentSize.width / 2 - halfW - margin;
+        let hCenter = Math.max(-maxH, Math.min(maxH, head.x));
         // 泡泡下緣貼在頭頂標記上方；上緣離畫面頂至少留一個邊距
         let top = Math.max(margin, parentSize.height / 2 - (head.y + size.height));
 
         const sandbox = findUcufNode(this._screenRoot, 'lobby-hall-screen.sandbox');
         const sandboxTrans = sandbox?.active ? sandbox.getComponent(UITransform) : null;
         if (sandbox && sandbox.active && sandboxTrans) {
+            sandbox.getComponent(Widget)?.updateAlignment();
             let sbCenterX = sandbox.position.x;
             let sbCenterY = sandbox.position.y;
             let cur: Node | null = sandbox.parent;
@@ -320,13 +391,27 @@ export class LobbyHallScreenBinder {
             const sbScaleY = Math.abs(sandbox.scale?.y ?? 1);
             const sbHalfW = (sandboxTrans.width * sbScaleX) / 2;
             const sbHalfH = (sandboxTrans.height * sbScaleY) / 2;
-            const sbTop = parentSize.height / 2 - (sbCenterY + sbHalfH);
+            const sbTop = parentSize.height / 2 - (sbCenterY + sbHalfH) - 28;
             const sbBottom = parentSize.height / 2 - (sbCenterY - sbHalfH);
             const overlapX = Math.abs(hCenter - sbCenterX) < (halfW + sbHalfW + margin);
             const overlapY = top < (sbBottom + margin) && (top + size.height) > (sbTop - margin);
             if (overlapX && overlapY) {
                 const maxTop = Math.max(margin, parentSize.height - size.height - 120);
-                top = Math.min(maxTop, Math.max(top, sbBottom + margin));
+                const pushDownTop = sbBottom + margin;
+                if (pushDownTop <= maxTop) {
+                    // 優先維持在說話武將同欄正下方，避免橫移太遠失去指向性（Issue #2159）
+                    top = Math.max(top, pushDownTop);
+                } else {
+                    const leftCandidate = sbCenterX - sbHalfW - halfW - margin;
+                    const rightCandidate = sbCenterX + sbHalfW + halfW + margin;
+                    if (head.x <= sbCenterX && leftCandidate >= -maxH) {
+                        hCenter = leftCandidate;
+                    } else if (rightCandidate <= maxH) {
+                        hCenter = rightCandidate;
+                    } else {
+                        top = maxTop;
+                    }
+                }
             }
         }
 

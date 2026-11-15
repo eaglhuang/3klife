@@ -424,5 +424,17 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         assert.isTrue(f.hosts.get('OnboardingTutorialHost')!.node.active);
     });
 
+    suite.test('舊玩家在 lobbyReady 為 false 時不提前顯示開場信件，ready 後才打開（PROG-2-9038）', async () => {
+        const f = fixture(true, false);
+        let lobbyReady = false;
+        f.ports.lobbyReady = () => lobbyReady;
+        await f.panels.mountOpeningLetter();
+        const host = f.hosts.get('OpeningLetterHost')!;
+        assert.isFalse(host.node.active, '載入未完成前不可提前彈出開場信件');
+        lobbyReady = true;
+        f.panels.refreshOpeningLetter();
+        assert.isTrue(host.node.active, '載入完成後才顯示開場信件');
+    });
+
     return suite;
 }

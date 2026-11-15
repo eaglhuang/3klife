@@ -340,7 +340,7 @@ export class GeneralListComposite extends CompositePanel {
                 if (lbl) lbl.string = String(val);
             };
             set('Name',    g.name ?? '—');
-            set('Age',     g.age   ?? '—');
+            set('Age',     typeof g.age === 'number' ? Math.floor(g.age) : (g.age ?? '—'));
             set('Str',     g.str   ?? 0);
             set('Int',     g.int   ?? 0);
             set('Lea',     g.lea   ?? 0);
@@ -736,7 +736,7 @@ export class GeneralListComposite extends CompositePanel {
         if (listWidget) { listWidget.bottom = visible ? LIST_BOTTOM_WITH_RETIRE : LIST_BOTTOM; listWidget.updateAlignment(); }
         const controls = toolbar.getChildByName('RetirementControls');
         const targetLabel = controls?.getChildByName('RetirementTarget')?.getComponent(Label);
-        if (targetLabel) targetLabel.string = target ? `可退役：${target.name}（${target.age} 歲）` : '自有名冊沒有可退役的武將（65 歲起）';
+        if (targetLabel) targetLabel.string = target ? `可退役：${target.name}（${typeof target.age === 'number' ? Math.floor(target.age) : target.age} 歲）` : '自有名冊沒有可退役的武將（65 歲起）';
         const notice = toolbar.getChildByName('RetirementNotice')?.getComponent(Label);
         if (notice) notice.string = flow.notice;
         const confirm = controls?.getChildByName('RetirementConfirm');
