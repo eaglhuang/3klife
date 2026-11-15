@@ -6,7 +6,7 @@ export class LoadProgressState {
     public total: number | null = null;
     public active = false;
     public failed = false;
-    /** 角落小條模式（PROG-2-9044）：畫面已可操作、只剩背景載入時縮到右下角，不擋畫面但仍可觀察進度 */
+    /** 角落小條模式（PROG-2-9046）：畫面已可操作、只剩背景載入時縮到右下角，不擋畫面但仍可觀察進度 */
     public compact = false;
     begin(phase: string, total: number | null = null): void {
         this.phase = phase; this.completed = 0; this.compact = false;

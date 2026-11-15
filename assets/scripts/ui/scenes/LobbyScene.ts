@@ -184,6 +184,7 @@ import { createNewPlayerOpeningFlow, OPENING_INTRO_DONE, SHOWCASE_DONE_EVENT, sh
 import { OPENING_BEAUTY_POOL_ID, openingBeautyCandidates } from '../../core/systems/OpeningBeauty';
 import type { OpeningFlowController } from '../../core/systems/OpeningFlowController';
 import type { GachaConfig } from '../../core/models/GachaConfig';
+import { normalizeGachaPoolType } from '../../core/models/GachaConfig';
 import type { RedFaceCardLike } from '../../core/systems/RedFaceShowcase';
 import { parseRedFaceCopy, redFaceTravelCopy } from '../../core/systems/RedFaceCopy';
 import { validateSupportPool } from '../../core/systems/SupportPoolValidator';
@@ -754,7 +755,7 @@ export class LobbyScene extends Component {
         // 只在玩家點開時才用得到的彈窗／子畫面：大廳出現後再於背景掛載（PROG-2-9040）。
         // 大廳預先掛載數從 10 月的 6 個長到 60 多個，全部擋在載入遮罩前會讓進大廳越來越慢。
         this._deferredMounts = [
-            // 點開才用的選將／出陣／人物介紹／圖鑑類（PROG-2-9044）：排最前面，大廳出現後最先補齊；
+            // 點開才用的選將／出陣／人物介紹／圖鑑類（PROG-2-9046）：排最前面，大廳出現後最先補齊；
             // UIManager 控制器掛好才註冊，註冊前被點到時 open 回傳 false，不會當機
             () => this._mountDeckSelect(),
             () => this._mountLeadSelect(),
@@ -885,7 +886,7 @@ export class LobbyScene extends Component {
     private async _runDeferredMounts(): Promise<void> {
         const mounts = this._deferredMounts;
         this._deferredMounts = [];
-        // 背景載入用右下角小進度條（PROG-2-9044）；離開大廳後下一個場景會重開進度條，這裡就不再碰它
+        // 背景載入用右下角小進度條（PROG-2-9046）；離開大廳後下一個場景會重開進度條，這裡就不再碰它
         SceneLoadProgress.beginBackground(LOBBY_BACKGROUND_LOAD_PHASE, mounts.length);
         const ownsProgress = () => sceneLoadState.active && sceneLoadState.phase === LOBBY_BACKGROUND_LOAD_PHASE;
         for (let index = 0; index < mounts.length; index++) {
@@ -2924,7 +2925,7 @@ export class LobbyScene extends Component {
         const gachaConfig = await this._loadDataJson<GachaPoolConfigLike[]>('data/gacha-config');
         const supportCards = await this._loadDataJson<RedFaceCardLike[]>('data/support-cards');
         const pools = Array.isArray(gachaConfig) ? gachaConfig : [];
-        const supportPool = pools.find(pool => pool.poolType === 'support') ?? null;
+        const supportPool = pools.find(pool => normalizeGachaPoolType(pool.poolType) === 'heroine') ?? null;
         const heroPoolIds = pools
             .filter(pool => pool.poolType === 'hero')
             .flatMap(pool => pool.candidateIds ?? []);
@@ -3174,7 +3175,7 @@ export class LobbyScene extends Component {
         }
         host.node.active = true;
         this._bringNodeToFront(host.node);
-        // 開場故事已能看，大廳在背景續載；進度條縮到右下角小條，不蓋故事又能觀察（#2107-7、PROG-2-9044）
+        // 開場故事已能看，大廳在背景續載；進度條縮到右下角小條，不蓋故事又能觀察（#2107-7、PROG-2-9046）
         SceneLoadProgress.minimize();
         this._refreshIntro();
         this._scheduleIntroTick();
@@ -5817,7 +5818,7 @@ export class LobbyScene extends Component {
         services().ui.register(UIID.BloodlineMirrorAwakening, bloodlineMirrorAwakeningController);
         services().ui.register(UIID.BloodlineMirrorAscension, bloodlineMirrorAscensionController);
         services().ui.register(UIID.BloodlineMirrorUnowned, bloodlineMirrorUnownedController);
-        // 精兵圖鑑、任務詳情、排行榜、季報、沙盤的控制器在背景掛好後才註冊（PROG-2-9044）
+        // 精兵圖鑑、任務詳情、排行榜、季報、沙盤的控制器在背景掛好後才註冊（PROG-2-9046）
     }
 
     private _createEliteTroopCodexController(): IUIManagedController {
@@ -6579,7 +6580,7 @@ export class LobbyScene extends Component {
 
     private async _openCharacterDs3FromListSelection(config: GeneralConfig): Promise<void> {
         if (!this._characterDs3Host) {
-            // 人物頁改在大廳出現後背景掛載（PROG-2-9044）；剛進大廳一兩秒內點到只略過，不丟例外
+            // 人物頁改在大廳出現後背景掛載（PROG-2-9046）；剛進大廳一兩秒內點到只略過，不丟例外
             UCUFLogger.warn(LogCategory.UI, '[LobbyScene] CharacterDs3Host 仍在背景載入，暫不開啟人物頁');
             return;
         }

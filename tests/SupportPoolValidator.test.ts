@@ -45,7 +45,7 @@ export function createSupportPoolValidatorSuite(): TestSuite {
 
     suite.test('缺少核心三位時回報', () => {
         const { pools, cards } = realData();
-        const trimmed = pools.map(p => (p.poolType === 'support' ? { ...p, candidateIds: p.candidateIds.filter(id => id !== 'zhen-mi') } : p));
+        const trimmed = pools.map(p => (p.poolType === 'heroine' ? { ...p, candidateIds: p.candidateIds.filter(id => id !== 'zhen-mi') } : p));
         const issues = validateSupportPool(trimmed, cards);
         assert.isTrue(issues.some(i => i.message.includes('zhen-mi')));
     });

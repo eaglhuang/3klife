@@ -69,7 +69,7 @@ export function ticketSummonRule(service: LocalGachaService, opts: LocalGachaRul
 /** 依池類型註冊本機規則；extraHeroPoolIds 給不在設定檔裡的舊池 id（常設池 GENERAL_STANDARD_01） */
 export function registerLocalGachaRules(system: GachaSystem, service: LocalGachaService, opts: LocalGachaRuleOptions = {}, extraHeroPoolIds: readonly string[] = []): GachaSystem {
     const hero = heroPoolRule(service, opts);
-    system.registerType('hero', hero).registerType('limited', heroPoolRule(service, opts, 'LIMITED')).registerType('support', beautyPoolRule(service)).registerType('mentor', mentorPoolRule(service));
+    system.registerType('hero', hero).registerType('limited', heroPoolRule(service, opts, 'LIMITED')).registerType('heroine', beautyPoolRule(service)).registerType('mentor', mentorPoolRule(service));
     for (const id of extraHeroPoolIds) system.registerPool(id, hero);
     system.registerPool(GOLD_SUMMON_POOL_ID, goldSummonRule(service, opts), LEGACY_SUMMON_PRESENTATION[GOLD_SUMMON_POOL_ID]);
     system.registerPool(TICKET_SUMMON_POOL_ID, ticketSummonRule(service, opts), LEGACY_SUMMON_PRESENTATION[TICKET_SUMMON_POOL_ID]);

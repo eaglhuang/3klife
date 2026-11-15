@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-12",
+  "updatedAt": "2026-11-15",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -82,7 +82,40 @@
         ]
       },
       "smallAvatar": {
-        "status": "not-created"
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/sun_shang_xiang__孫尚香__small_avatar_0001.png",
+            "status": "review-pending",
+            "note": "Existing candidate; visual review not recorded."
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/sun_shang_xiang__孫尚香__small_avatar_0002.png",
+            "status": "rejected",
+            "note": "Rejected: crop includes chest armor/front torso.",
+            "sha256": "0be37edfadeae5585be35d39debb4cbff93b287f4c16665433dc929a03189d2e",
+            "removedFromLibrary": true
+          },
+          {
+            "version": "0003",
+            "file": "small_avatars/sun_shang_xiang__孫尚香__small_avatar_0003.png",
+            "status": "rejected",
+            "sha256": "a9d6a026da38fb8985aa6322fae4477f4adab5e7258958e9ceab9c478fcd50fb",
+            "note": "Rejected: face center exceeded the ±3% alignment tolerance.",
+            "removedFromLibrary": true
+          },
+          {
+            "version": "0004",
+            "file": "small_avatars/sun_shang_xiang__孫尚香__small_avatar_0004.png",
+            "status": "review-pending",
+            "sha256": "070ec597b2488fb9c27e2d1db3521e9240e5970a579fff4440163a05d1467258",
+            "canvas": "1254x1254 RGBA",
+            "note": "Shoulder-line crop; face centered; no chest/front torso."
+          }
+        ],
+        "activeVersion": "0004"
       }
     },
     {
@@ -120,7 +153,25 @@
         ]
       },
       "battle": {
-        "status": "not-created"
+        "activeVersion": "0002",
+        "status": "asset-imported",
+        "displayStatus": "not-yet-verified",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/zhuge_liang__諸葛亮__battle_0001.png",
+            "status": "superseded",
+            "note": "Checkerboard background was baked into RGB; replaced by transparent v0002."
+          },
+          {
+            "version": "0002",
+            "file": "battle/zhuge_liang__諸葛亮__battle_0002.png",
+            "status": "asset-imported",
+            "sha256": "45fd8335d2656a582349dcf3d9e80305aa29eefa3061febccca4e0cb9d258050",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "feather-fan"
+          }
+        ]
       },
       "avatar": {
         "activeVersion": "0003",
@@ -144,7 +195,26 @@
         ]
       },
       "smallAvatar": {
-        "status": "not-created"
+        "activeVersion": "0002",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/zhuge_liang__諸葛亮__small_avatar_0001.png",
+            "status": "superseded",
+            "sha256": "f4556f010523b4c9fc05fccb0cf1aeafd76487870f44098cb61c21869ad7ae61",
+            "canvas": "1254x1254 RGBA",
+            "qc": "125px preview: centered face and transparent background; angle was weaker than the new required 10–20 degree three-quarter view."
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/zhuge_liang__諸葛亮__small_avatar_0002.png",
+            "status": "review-pending",
+            "sha256": "7dc9bb469f1d93be4673fe762ec85e623a7036965282c30678d79956b60f26df",
+            "canvas": "1254x1254 RGBA",
+            "qc": "Three-quarter face angle; full crown and chin; centered face; crop ends at neck base and shoulder tops without chest; transparent background."
+          }
+        ]
       }
     },
     {
@@ -186,7 +256,18 @@
         ]
       },
       "smallAvatar": {
-        "status": "not-created"
+        "activeVersion": "0002",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/bu_lian_shi__步練師__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "5d84f404114e07c92e37d939875fcf5227f02098d9ee91e9386480de0cd6c3ac",
+            "canvas": "1254x1254 RGBA",
+            "qc": "125px and 250px preview: natural three-quarter angle, face centered, full head and ornaments visible; crop ends at shoulder line with no chest skin."
+          }
+        ]
       }
     },
     {
@@ -228,7 +309,26 @@
         ]
       },
       "smallAvatar": {
-        "status": "not-created"
+        "activeVersion": "0002",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/zhen_ji__甄姬__small_avatar_0001.png",
+            "status": "rejected",
+            "sha256": "f28dac5f5d406a84c98f75c7dcc4f13102a2fe2a27891fb5e272dc6adc6d3230",
+            "canvas": "1254x1254 RGBA",
+            "note": "Rejected after 125px crop review: lower edge extends below shoulder framing into front clothing."
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/zhen_ji__甄姬__small_avatar_0002.png",
+            "status": "review-pending",
+            "sha256": "f756d5671272cd1b20802b595313671a6010484b30f28cb61ec897784f8787f9",
+            "canvas": "1254x1254 RGBA",
+            "qc": "Transparent 1254x1254 portrait; complete head and ornaments, centered three-quarter face, cool serene expression; shoulder-line crop with no visible bust or chest front."
+          }
+        ]
       }
     },
     {
@@ -251,7 +351,19 @@
         ]
       },
       "battle": {
-        "status": "not-created"
+        "activeVersion": "0001",
+        "status": "asset-imported",
+        "displayStatus": "not-yet-verified",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/da_qiao__大喬__battle_0001.png",
+            "status": "asset-imported",
+            "sha256": "1d812b959bcd58a9afe8660b947f5af1f3df59cdb318d33e8bf09790ce825b56",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "fan"
+          }
+        ]
       },
       "avatar": {
         "activeVersion": "0002",
@@ -270,7 +382,14 @@
         ]
       },
       "smallAvatar": {
-        "status": "not-created"
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/da_qiao__大喬__small_avatar_0001.png",
+            "status": "review-pending"
+          }
+        ]
       }
     },
     {
@@ -312,7 +431,17 @@
         ]
       },
       "smallAvatar": {
-        "status": "not-created"
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/lu_ling_qi__呂玲綺__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "356dbf199bc3a3b6e62fb275dc7e5af6e4cf59419aaf855bcc784b111ad42943",
+            "canvas": "1254x1254 RGBA"
+          }
+        ]
       }
     },
     {
@@ -354,7 +483,17 @@
         ]
       },
       "smallAvatar": {
-        "status": "not-created"
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/xiao_qiao__小喬__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "f6a8b436b73dfc410ef3c4c61a9413fa0d426eaa7a141de4053f79a421ac4ac5",
+            "canvas": "1254x1254 RGBA"
+          }
+        ]
       }
     },
     {
@@ -406,7 +545,18 @@
         ]
       },
       "smallAvatar": {
-        "status": "not-created"
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/cai_wenji__蔡文姬__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "9e6c55f561d454d86165e2b410ad088eb5c279500a9cea410cb026338937baff",
+            "canvas": "1254x1254 RGBA",
+            "qc": "125px preview: face centered; head approximately 70% canvas height; crop ends at shoulder line with no chest."
+          }
+        ]
       }
     },
     {
@@ -453,7 +603,18 @@
         ]
       },
       "smallAvatar": {
-        "status": "not-created"
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/huang_yue_ying__黃月英__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "7545f5289977eb550965209a78390405877ec2b5da41a4c637fa6e97ab8493b5",
+            "canvas": "1254x1254 RGBA",
+            "qc": "125px/250px preview: actual face centered within ±3%; complete hairstyle and face; crop ends at shoulder/collar line, no bust or chest front."
+          }
+        ]
       }
     },
     {
@@ -507,7 +668,17 @@
         ]
       },
       "smallAvatar": {
-        "status": "not-created"
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/guan_yin_ping__關銀屏__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "54658338085ccc72d6a5ca663c4d9f9c43ded0823849e2f28e097b1939546cea",
+            "canvas": "1254x1254 RGBA"
+          }
+        ]
       }
     },
     {
@@ -557,7 +728,17 @@
         ]
       },
       "smallAvatar": {
-        "status": "not-created"
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/bao_san_niang__鮑三娘__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "70304094e493dd92a035605711d4e6876622ce8b2ed81939e292898e48c68e75",
+            "canvas": "1254x1254 RGBA"
+          }
+        ]
       }
     },
     {
@@ -602,7 +783,26 @@
         ]
       },
       "smallAvatar": {
-        "status": "not-created"
+        "activeVersion": "0002",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/ma_yun_lu__馬雲騄__small_avatar_0001.png",
+            "status": "rejected",
+            "sha256": "1a44ba84bb697e6b9a5b93dbb2b7e9cbcbd3a12e546f6f8abbe7391b37ecc166",
+            "removedFromLibrary": true,
+            "note": "Existing crop showed chest armor/front torso; fails shoulder-line small-avatar framing."
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/ma_yun_lu__馬雲騄__small_avatar_0002.png",
+            "status": "review-pending",
+            "sha256": "07a85eefe26839200918d43fccf210d860a2e82ab9fd0755935d9e642cd94029",
+            "canvas": "1254x1254 RGBA",
+            "note": "Reframed face toward horizontal center; shoulder caps only, transparent below neck."
+          }
+        ]
       }
     },
     {
@@ -650,7 +850,35 @@
         ]
       },
       "smallAvatar": {
-        "status": "not-created"
+        "activeVersion": "0003",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/zhu_rong_furen__祝融夫人__small_avatar_0001.png",
+            "status": "rejected",
+            "sha256": "b575fcb8c1f71ea60eb6735b45b2844e867b17d1ec59ef797a2610009e4b6384",
+            "removedFromLibrary": true,
+            "note": "Crop exposed chest armor/front torso and face was off-center."
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/zhu_rong_furen__祝融夫人__small_avatar_0002.png",
+            "status": "rejected",
+            "sha256": "66fdbcfe60ec4c1f6af28de600c97dba767abafb4f9624dd8cf00c237b4c4acf",
+            "canvas": "1254x1254 RGBA",
+            "note": "Face center remained slightly outside the ±3% tolerance after first reframing.",
+            "removedFromLibrary": true
+          },
+          {
+            "version": "0003",
+            "file": "small_avatars/zhu_rong_furen__祝融夫人__small_avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "f60bbd781587828c24da2e64b3ac33bfe6e828f6b3c186512a2efa360af6d946",
+            "canvas": "1254x1254 RGBA",
+            "note": "Centered face by proportional reframe; shoulder-line crop, no chest front."
+          }
+        ]
       }
     },
     {
@@ -677,6 +905,35 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/cao_cao__曹操__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "c1ff883e7839ef75d307620e1a6a4e5a9998922ca38b7358b6509e33682b68fe",
+            "canvas": "1254x1254 RGBA",
+            "qc": "125px preview: face centered; head/crown within target scale; full face and crown visible; only neck and shoulder edges at lower crop."
+          }
+        ]
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/cao_cao__曹操__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "e9abe2442d7cd0eab46776d0f6d605f14de28a5e0b9e5aaaa9e2c5493ab2da77",
+            "canvas": "1199x1312 RGBA",
+            "pose": "A",
+            "qc": "125px preview: A pose forward stepping diagonal sword attack; sword straight; hands and full boots visible; clean transparent background."
+          }
+        ]
       }
     },
     {
@@ -853,6 +1110,19 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/zhao_yun__趙雲__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "3d8919a59d07b9ec864ddf2a679ffcd0b2b45f5ffa3002fa0701a5a9b45b41a4",
+            "canvas": "1254x1254 RGBA"
+          }
+        ]
       }
     },
     {
@@ -879,6 +1149,21 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0002",
+        "status": "asset-imported",
+        "displayStatus": "not-yet-verified",
+        "history": [
+          {
+            "version": "0002",
+            "file": "battle/lu_bu__呂布__battle_0002.png",
+            "status": "asset-imported",
+            "sha256": "2ffad0518c17967ed8e52a03a7064f7f63cb1706c86935549d5a777ad192ec9c",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "halberd"
+          }
+        ]
       }
     },
     {
@@ -910,6 +1195,17 @@
     {
       "uid": "dian-wei",
       "name": "典韋",
+      "battle": {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/dian_wei__典韋__battle_0001.png",
+            "status": "review-pending",
+            "poseSelection": "C"
+          }
+        ]
+      },
       "standing": {
         "status": "integrated",
         "history": [
@@ -1009,6 +1305,21 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0002",
+        "status": "asset-imported",
+        "displayStatus": "not-yet-verified",
+        "history": [
+          {
+            "version": "0002",
+            "file": "battle/ma_chao__馬超__battle_0002.png",
+            "status": "asset-imported",
+            "sha256": "20cae32214b92988dbeec0490839465681312cca827b5948ed307b57cd35d3d8",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "long-polearm"
+          }
+        ]
       }
     },
     {
@@ -1144,6 +1455,17 @@
     {
       "uid": "pang-tong",
       "name": "龐統",
+      "battle": {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/pang_tong__龐統__battle_0001.png",
+            "status": "review-pending",
+            "poseSelection": "A"
+          }
+        ]
+      },
       "standing": {
         "status": "integrated",
         "history": [
@@ -1207,6 +1529,17 @@
     {
       "uid": "xun-yu",
       "name": "荀彧",
+      "battle": {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/xun_yu__荀彧__battle_0001.png",
+            "status": "review-pending",
+            "poseSelection": "B"
+          }
+        ]
+      },
       "standing": {
         "status": "integrated",
         "history": [
@@ -5893,6 +6226,36 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0003",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/diao_chan__貂蟬__small_avatar_0001.png",
+            "status": "superseded",
+            "sha256": "25805ad7bc7a768312b0c998a570a513e73f61c7fd003cd69afd43b9de0162c9",
+            "canvas": "1254x1254 RGBA",
+            "qc": "125px preview: face centered; full head and ornaments visible; crop ends at shoulder line without chest."
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/diao_chan__貂蟬__small_avatar_0002.png",
+            "status": "superseded",
+            "sha256": "eb812085ac110c1bc5bed3477c9bb8a5b731b7f62d734b761b6054159f1c1b50",
+            "canvas": "1254x1254 RGBA",
+            "qc": "125px preview: face horizontally centered; complete head and ornaments; subtle alluring smile; slight three-quarter angle; crop ends at shoulder line with no chest."
+          },
+          {
+            "version": "0003",
+            "file": "small_avatars/diao_chan__貂蟬__small_avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "483E6C329EB325CDF7CF710015D360D4C753A9163E8DA00F0E5C31770F9F68AF",
+            "canvas": "1254x1254 RGBA",
+            "qc": "Inline review: clear coquettish smile and three-quarter angle; complete head and ornaments, face centered, crop ends at shoulder tops with no chest; transparent corner alpha."
+          }
+        ]
       }
     },
     {
@@ -5919,6 +6282,20 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/cai_yan__蔡琰__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "CEDFFAA569AC315C4F2F3EA42DBA106CA6349DB534FB75A18D9635AB6FB67072",
+            "canvas": "1254x1254 RGBA",
+            "note": "Three-quarter turned face with subtle head tilt, short natural neck, shoulder-line crop, horizontally centered face; review-pending."
+          }
+        ]
       }
     },
     {
@@ -5945,6 +6322,20 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/zhang_chun_hua__張春華__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "6A731AFAF6011EF7ED42CB5135BC4F0175FC373F3240902B63DF1876B520B2A6",
+            "canvas": "1254x1254 RGBA",
+            "qc": "125px inline preview: centered three-quarter face with composed confident half-smile; full hair ornament and chin; crop at shoulder guard tops with no central chest panel; transparent corner alpha."
+          }
+        ]
       }
     },
     {
@@ -5971,6 +6362,20 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/xin_xian_ying__辛憲英__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "0c08f10748328bedbaf2fd4fa0f8f0dd2f384054002b5b053e15ef52f8f0b00f",
+            "canvas": "1254x1254 RGBA",
+            "qc": "Face recentered within ±3% while preserving the full visible hair ornament; slight three-quarter angle; crop ends at shoulder line with no chest."
+          }
+        ]
       }
     },
     {
@@ -6127,6 +6532,28 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/wang_yuan_ji__王元姬__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "6ED93B061920175F1DF26FEB54A9C23F2134ABB3CFC52F2281974C642BB37F90",
+            "canvas": "1254x1254 RGBA",
+            "qc": "Inline review: composed knowing half-smile, natural three-quarter angle; complete head/feather ornament and chin; face near center; crop at shoulder line with no chest; transparent corner alpha."
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/wang_yuan_ji__王元姬__small_avatar_0002.png",
+            "status": "review-pending",
+            "sha256": "7D64DC59A504454A3712F2CE080851F53ED426C972F842B20C5DCCE75DF8E3B1",
+            "canvas": "1254x1254 RGBA",
+            "qc": "125px review: face centered on canvas, gentle three-quarter turn and composed half-smile; full head and jade ornament visible; crop ends at upper shoulder edges with no chest."
+          }
+        ]
       }
     },
     {

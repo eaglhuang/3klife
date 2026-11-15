@@ -69,7 +69,7 @@ export function createSceneLoadProgressSuite(): TestSuite {
         assert.contains(battle, "SceneLoadProgress.begin('正在準備戰鬥', 7)");
         assert.isTrue(battle.indexOf('SceneLoadProgress.complete()') < battle.indexOf('this._startupOpacity.opacity = 255'));
     });
-    suite.test('背景載入從角落小條開始；正常 begin 重設為置中大條（PROG-2-9044）', () => {
+    suite.test('背景載入從角落小條開始；正常 begin 重設為置中大條（PROG-2-9046）', () => {
         const p = new LoadProgressState(); p.compact = true; p.begin('大廳');
         assert.isFalse(p.compact);
         SceneLoadProgress.beginBackground('背景', 4); SceneLoadProgress.report(2, 4);
