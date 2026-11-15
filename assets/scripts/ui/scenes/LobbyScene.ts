@@ -128,7 +128,7 @@ import { HALL_BOARD_TYPE_LABEL, hallAssignNoticeOf, hallMissionDialogStateOf } f
 import { hallPlayerOf, officerPromotionScriptLines, OFFICER_ERA_KEPT_LINE } from '../../core/systems/OfficerSnapshot';
 import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
 import { officerDisplayOf } from '../../core/systems/OfficerDisplay';
-import { LOBBY_CATEGORIES, LOBBY_SUB_SLOTS, actionAt, buildLobbyCityHubView, categoryButtonId, toggleCategory, type LobbyActionId, type LobbyCategoryId } from '../core/LobbyCityHubController';
+import { LOBBY_CATEGORIES, LOBBY_SUB_SLOTS, actionAt, buildLobbyCityHubView, categoryButtonId, computeSubMenuWidth, toggleCategory, type LobbyActionId, type LobbyCategoryId } from '../core/LobbyCityHubController';
 import { nurtureGraduationRows } from '../core/NurtureGraduationView';
 import { pageSliceOf } from '../core/FixedSlotPager';
 import { MentorHoldingsController } from '../core/MentorHoldingsController';
@@ -1512,8 +1512,13 @@ export class LobbyScene extends Component {
         });
         binder.setTexts(view.texts);
         binder.setActives(view.actives);
+        const subMenuNode = binder.getNode('subMenu');
+        const subMenuUi = subMenuNode?.getComponent(UITransform);
+        if (subMenuUi && view.visibleSubCount > 0) {
+            subMenuUi.setContentSize(computeSubMenuWidth(view.visibleSubCount), subMenuUi.height);
+        }
         this._refreshLobbyHallTopbar();
-        this._syncCityHubSubMenuLayer(binder.getNode('subMenu'));
+        this._syncCityHubSubMenuLayer(subMenuNode);
         if (leadId && leadId !== this._cityHubAvatarId) {
             this._cityHubAvatarId = leadId;
             const holder = binder.getNode('lordAvatarMask');
