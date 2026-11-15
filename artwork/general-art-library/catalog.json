@@ -1106,6 +1106,22 @@
             "qc": "No redraw or design changes; face centered, full headpiece and face kept, only shoulder tops at lower edge."
           }
         ]
+      },
+      "battle": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/liu_bei__劉備__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "01db717f2b90adcd352abc333b563d9d39c6cf2bf941ad84966927f034713dcb",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "paired-jian",
+            "poseLabel": "雙劍格反",
+            "note": "依核定站姿設計雙劍直立格反動作；全身及雙劍完整可見，待使用者審看。"
+          }
+        ]
       }
     },
     {
