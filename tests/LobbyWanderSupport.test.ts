@@ -10,11 +10,13 @@ import * as path from 'path';
 import { WALK_GROUND_SPEED } from '../assets/scripts/shared/lobby/wanderCore';
 import {
     actorSpeed,
+    buildWanderActor,
     buildWanderConfig,
     clampWanderDt,
     parseHallWanderData,
     spinePathFor,
     stageToWander,
+    wanderEntryPoint,
     wanderToStage,
 } from '../assets/scripts/shared/lobby/wanderSupport';
 import { TestSuite, assert } from './TestRunner';
@@ -86,6 +88,20 @@ export function createLobbyWanderSupportSuite(): TestSuite {
         assert.equals(0.016, clampWanderDt(0.016, 0.1));
         assert.equals(0, clampWanderDt(-1, 0.1));
         assert.equals(0, clampWanderDt(Number.NaN, 0.1));
+    });
+
+    suite.test('單人設定與進場起點：起點在地板帶外側、y 沿用站位、從離站位較遠的一側進來', () => {
+        const data = parseHallWanderData(loadData())!;
+        const left = wanderEntryPoint(data, -600, -332, CANVAS);
+        const right = wanderEntryPoint(data, 600, -332, CANVAS);
+        assert.isTrue(left.x < data.floor.x0, '左側站位從左邊外面進來');
+        assert.isTrue(right.x > data.floor.x1, '右側站位從右邊外面進來');
+        assert.equals(872, left.y);
+        const actor = buildWanderActor(data, { id: 'a', stageX: -320, stageY: -332 }, CANVAS, left);
+        assert.equals(left.x, actor.start.x);
+        assert.equals(actorSpeed('general', data.generalScale), actor.speed);
+        const fromSpot = buildWanderActor(data, { id: 'a', stageX: -320, stageY: -332 }, CANVAS);
+        assert.equals(640, fromSpot.start.x);
     });
 
     return suite;

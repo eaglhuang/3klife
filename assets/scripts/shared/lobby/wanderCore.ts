@@ -1,5 +1,5 @@
 // @spec-source → Issue #2135（幕府大廳 Q 版人物隨機走動）；來源 spine-trial lobby-wander-gait-v2 (856b82b) render/lobby_wander/wanderCore.ts
-// 以移植為主；3klife 只動了 tick()/blockedBy()/pickTarget() 三處（搜尋 "[3klife]"），整檔重新同步時要把這兩處帶回去，
+// 以移植為主；3klife 動了 tick()/blockedBy()/pickTarget() 三處，並新增 addActor/leave/drainRemoved（輪替進退場，只增不改原行為）（搜尋 "[3klife]"），整檔重新同步時要把這兩處帶回去，
 // 或請 spine-trial 端收進上游：被擋住時不要在走動中直接掉頭（掉頭瞬間 scaleX 翻面，站立腳會彈到另一側）；選目標時就轉向。
 /**
  * Engine-agnostic lobby-hall wander core.
@@ -201,7 +201,12 @@ interface InternalActor {
   ty: number;
   idleLeft: number;
   lockUntil: number;
+  /** [3klife] 輪替退場中：走到地板帶外就移除，不再選新目標 */
+  leaving?: boolean;
 }
+
+/** [3klife] 進退場時走到地板帶左右外側這麼遠的位置（設計像素），人在畫面外才移除／從這裡走進來 */
+export const WANDER_EXIT_MARGIN = 70;
 
 /**
  * Simulation only. The host calls `step(dt)` every frame and applies
@@ -246,7 +251,75 @@ export class HallWander {
     const t = this.t;
     for (const a of this.actors) this.tick(a, t, dt);
     this.t = t + dt;
+    this.sweepLeft();
     return this.snapshot();
+  }
+
+  /**
+   * [3klife] 新增一位走進來的人：起點通常放在地板帶外側（WANDER_EXIT_MARGIN），
+   * 下一幀就挑目標走進場內。id 已存在時不處理，回傳 false。
+   */
+  addActor(cfg: WanderActorConfig): boolean {
+    if (this.actors.some((a) => a.cfg.id === cfg.id)) return false;
+    this.actors.push({
+      cfg,
+      x: cfg.start.x,
+      y: cfg.start.y,
+      facing: cfg.facing ?? 1,
+      state: 'idle',
+      tx: cfg.start.x,
+      ty: cfg.start.y,
+      idleLeft: 0,
+      lockUntil: -1,
+    });
+    return true;
+  }
+
+  /** [3klife] 請某人退場：解除鎖定，走到最近的左右外側後自動移除（見 drainRemoved）。 */
+  leave(id: string): void {
+    const a = this.actors.find((x) => x.cfg.id === id);
+    if (!a || a.leaving) return;
+    a.leaving = true;
+    a.lockUntil = -1;
+    a.state = 'idle';
+  }
+
+  /** [3klife] 退場途中又被叫回來：取消退場，之後照常走動。 */
+  stay(id: string): void {
+    const a = this.actors.find((x) => x.cfg.id === id);
+    if (a) a.leaving = false;
+  }
+
+  /** [3klife] 立刻移除（沒有走位的靜態小人用）；不進 drainRemoved。 */
+  remove(id: string): void {
+    const i = this.actors.findIndex((x) => x.cfg.id === id);
+    if (i >= 0) this.actors.splice(i, 1);
+  }
+
+  /** [3klife] 取走已走出畫面而被移除的 id（取一次就清空）。 */
+  drainRemoved(): string[] {
+    const out = this.removed;
+    this.removed = [];
+    return out;
+  }
+
+  private removed: string[] = [];
+
+  private sweepLeft(): void {
+    const gone = this.actors.filter((a) => a.leaving && a.state === 'idle' && this.atExit(a));
+    if (gone.length === 0) return;
+    for (const a of gone) this.removed.push(a.cfg.id);
+    for (const a of gone) this.actors.splice(this.actors.indexOf(a), 1);
+  }
+
+  private exitX(a: InternalActor): number {
+    const f = this.config.floor;
+    return a.x < (f.x0 + f.x1) / 2 ? f.x0 - WANDER_EXIT_MARGIN : f.x1 + WANDER_EXIT_MARGIN;
+  }
+
+  private atExit(a: InternalActor): boolean {
+    const f = this.config.floor;
+    return a.x <= f.x0 - WANDER_EXIT_MARGIN + 0.5 || a.x >= f.x1 + WANDER_EXIT_MARGIN - 0.5;
   }
 
   /** Back-to-front: farther (smaller foot y) first. */
@@ -309,7 +382,7 @@ export class HallWander {
       const dy = a.ty - a.y;
       const dist = Math.hypot(dx, dy);
       const step = a.cfg.speed * dt;
-      if (this.blockedBy(a, a.x + (dist < 1e-6 ? 0 : (dx / dist) * step),
+      if (!a.leaving && this.blockedBy(a, a.x + (dist < 1e-6 ? 0 : (dx / dist) * step),
                           a.y + (dist < 1e-6 ? 0 : (dy / dist) * step))) {
         // [3klife] 被擋住：先站住（idle）等一下再重選目標。原版在這裡直接 pickTarget，
         // 角色會在走動中立刻反向，scaleX 翻面時站立腳會從一側彈到另一側（腳滑／跳）。
@@ -329,8 +402,20 @@ export class HallWander {
       }
       return;
     }
+    if (a.leaving) {
+      if (!this.atExit(a)) this.headForExit(a);
+      return;
+    }
     a.idleLeft -= dt;
     if (a.idleLeft <= 0) this.pickTarget(a);
+  }
+
+  /** [3klife] 退場：直接朝左右外側走，不再挑地板上的目標 */
+  private headForExit(a: InternalActor): void {
+    a.tx = this.exitX(a);
+    a.ty = a.y;
+    a.state = 'walk';
+    a.facing = a.tx < a.x ? -1 : 1;
   }
 
   private blockedBy(self: InternalActor, nx: number, ny: number): boolean {

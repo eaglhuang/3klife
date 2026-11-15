@@ -6,7 +6,7 @@
  * 「中心原點、y 向上」。這裡負責兩邊座標互換、從設定檔組出核心設定、以及 Spine 對照表查詢。
  * 速度一律由核心的 WALK_GROUND_SPEED（骨架單位／秒）乘上顯示縮放得到，不另外手調，腳才不會在地上滑。
  */
-import { WALK_GROUND_SPEED, WanderActorConfig, WanderConfig, WanderTier, Rect, Vec2 } from './wanderCore';
+import { WALK_GROUND_SPEED, WANDER_EXIT_MARGIN, WanderActorConfig, WanderConfig, WanderTier, Rect, Vec2 } from './wanderCore';
 
 export interface HallWanderData {
     seed: number;
@@ -58,13 +58,29 @@ export interface WanderRosterEntry {
     stageY: number;
 }
 
-export function buildWanderConfig(data: Readonly<HallWanderData>, roster: readonly WanderRosterEntry[], canvas: Readonly<CanvasSize>): WanderConfig {
-    const actors: WanderActorConfig[] = roster.map((entry) => ({
+/** 單一武將的核心設定；start 不給就用名冊的舞台座標。 */
+export function buildWanderActor(data: Readonly<HallWanderData>, entry: WanderRosterEntry, canvas: Readonly<CanvasSize>, start?: Readonly<Vec2>): WanderActorConfig {
+    return {
         id: entry.id,
         tier: 'general',
         speed: actorSpeed('general', data.generalScale),
-        start: stageToWander(entry.stageX, entry.stageY, canvas),
-    }));
+        start: start ? { x: start.x, y: start.y } : stageToWander(entry.stageX, entry.stageY, canvas),
+    };
+}
+
+/**
+ * 輪替進場的起點：從離站位較遠的那一側、地板帶外面走進來（左牆／右牆面板會蓋住，看起來像從門口走進來）。
+ * y 沿用站位的腳底 y。
+ */
+export function wanderEntryPoint(data: Readonly<HallWanderData>, stageX: number, stageY: number, canvas: Readonly<CanvasSize>): Vec2 {
+    const spot = stageToWander(stageX, stageY, canvas);
+    const mid = (data.floor.x0 + data.floor.x1) / 2;
+    const x = spot.x < mid ? data.floor.x0 - WANDER_EXIT_MARGIN : data.floor.x1 + WANDER_EXIT_MARGIN;
+    return { x, y: spot.y };
+}
+
+export function buildWanderConfig(data: Readonly<HallWanderData>, roster: readonly WanderRosterEntry[], canvas: Readonly<CanvasSize>): WanderConfig {
+    const actors: WanderActorConfig[] = roster.map((entry) => buildWanderActor(data, entry, canvas));
     return {
         seed: data.seed,
         floor: data.floor,
