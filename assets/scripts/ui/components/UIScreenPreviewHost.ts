@@ -9,6 +9,7 @@ import { UITemplateBinder } from '../core/UITemplateBinder';
 import { applyUIScreenRuntimeState } from '../core/UIScreenRuntimeStateRegistry';
 import type { SkinSlot, UILayoutNodeSpec, UIScreenSpec, TabRoute } from '../core/UISpecTypes';
 import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
+import { LazySlotSerialQueue } from '../core/LazySlotSerialQueue';
 
 const { ccclass, property } = _decorator;
 
@@ -85,6 +86,8 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
     private _interactionActionsBound = 0;
     private _tabRouteMap: Map<string, TabRoute> | null = null;
     private _layoutRoot: UILayoutNodeSpec | null = null;
+    /** 同一插槽的切換一次只跑一個，避免新舊片段同時掛在插槽內（PROG-2-9037） */
+    private readonly _slotSwitchQueue = new LazySlotSerialQueue<PreviewLazySlotEntry>();
 
     public get binder(): UITemplateBinder | null {
         return this._binder;
@@ -626,12 +629,18 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
         }
     }
 
-    private async _switchPreviewSlot(entry: PreviewLazySlotEntry, fragmentId: string): Promise<void> {
+    private _switchPreviewSlot(entry: PreviewLazySlotEntry, fragmentId: string): Promise<void> {
+        return this._slotSwitchQueue.run(entry, () => this._applyPreviewSlot(entry, fragmentId));
+    }
+
+    private async _applyPreviewSlot(entry: PreviewLazySlotEntry, fragmentId: string): Promise<void> {
         if (entry.currentFragmentId === fragmentId && entry.node.children.length > 0) {
             return;
         }
 
+        // 先從父節點拿掉再銷毀：銷毀是幀末才真正生效，不拿掉的話舊片段這一幀仍會畫出來
         for (const child of [...entry.node.children]) {
+            child.removeFromParent();
             child.destroy();
         }
 
