@@ -93,6 +93,8 @@
     "resetEnabled": false,
     "guaranteeRarity": "rare",
     "guaranteeThreshold": 5,
+    "grandPityThreshold": 50,
+    "initialAffection": 60,
     "pickCount": 1,
     "candidateIds": [
       "da-qiao",
@@ -103,12 +105,12 @@
     ],
     "firstPickOnly": false,
     "confirmRequired": true,
-    "currencyType": "ticket",
-    "singlePullCost": 1,
+    "currencyType": "gem",
+    "singlePullCost": 160,
     "presentation": {
       "title": "召喚券",
       "tenTitle": "召喚券十連",
-      "currency": "tickets",
+      "currency": "gems",
       "repull": "paid",
       "heroReveal": "side",
       "inventory": "roster"

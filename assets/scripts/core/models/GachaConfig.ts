@@ -24,6 +24,10 @@ export interface GachaConfig {
   guaranteeRarity: HeroRarity;
   /** 保底閾值（累計抽數）*/
   guaranteeThreshold: number;
+  /** 大保底閾值（累計抽數，紅顏池 FEM-03 為 50 抽必得當期 UP）；沒寫則無大保底 */
+  grandPityThreshold?: number;
+  /** 抽到此池武將後的起始好感（紅顏池 FEM-03 為 60）；沒寫則為 0 */
+  initialAffection?: number;
   /** 單次操作抽取數量（1 或 10）*/
   pickCount: number;
   /** 本池候選 id 列表（引用 generals.json 或 support-cards.json 中的 id）*/
