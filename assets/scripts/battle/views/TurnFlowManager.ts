@@ -17,17 +17,21 @@ import { SkillSourceType } from '../../shared/SkillRuntimeContract';
  */
 
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
-import { Color, Component } from 'cc';
+import { Color, Component, Node } from 'cc';
 import { Faction, GAME_CONFIG } from '../../core/config/Constants';
 import { geometry, Vec3 } from 'cc';
 import { BattleSceneContext } from './BattleUIBridge';
 import { BattleUIBridge } from './BattleUIBridge';
+import { DuelChallengeFallback } from './DuelChallengeFallback';
+import type { IDuelChallengeLike } from '../../shared/interfaces/IBattleUIComponents';
 import { BATTLE_TURN_FLOW_TIMING } from './BattlePresentationTiming';
 import { services } from '../../core/managers/ServiceLoader';
 import { duelLogType } from '../../core/systems/DailyNewsEngine';
 
 export class TurnFlowManager {
   private _advanceTurnGeneration = 0;
+  /** 後備單挑彈窗（僅在 duelChallengePanel 未綁定時建立，整場戰鬥重複使用） */
+  private _duelFallback: DuelChallengeFallback | null = null;
 
   constructor(
     private readonly ctx: BattleSceneContext,
@@ -290,14 +294,33 @@ export class TurnFlowManager {
     const decision = c.ctrl.evaluateDuelAcceptance(Faction.Enemy);
     const playerScore = 1.0 - decision.score;
     c.isDuelPanelActive = true;
-    if (c.duelChallengePanel) {
-      c.duelChallengePanel.show(enemyGeneralName, playerGeneralName, playerScore);
-      c.duelChallengePanel.node.once('duelAccepted', () => this._onPlayerDuelDecision(true), this.scene);
-      c.duelChallengePanel.node.once('duelRejected', () => this._onPlayerDuelDecision(false), this.scene);
-    } else {
-      UCUFLogger.warn(LogCategory.BATTLE, '[TurnFlowManager] duelChallengePanel 未綁定，自動接受單挑');
+
+    // 場景未綁定 duelChallengePanel 時（場景檔為 null）改用執行期建立的後備彈窗，
+    // 讓玩家真正選擇接受或拒絕；只有建立或顯示失敗才退回自動接受。
+    let panel: IDuelChallengeLike;
+    try {
+      panel = c.duelChallengePanel ?? this._getOrCreateDuelFallback();
+      if (!c.duelChallengePanel) panel.node.off('duelAccepted');
+      if (!c.duelChallengePanel) panel.node.off('duelRejected');
+      panel.show(enemyGeneralName, playerGeneralName, playerScore);
+    } catch (error) {
+      UCUFLogger.warn(LogCategory.BATTLE, '[TurnFlowManager] 單挑彈窗建立失敗，退回自動接受單挑', error);
       this._onPlayerDuelDecision(true);
+      return;
     }
+    panel.node.once('duelAccepted', () => this._onPlayerDuelDecision(true), this.scene);
+    panel.node.once('duelRejected', () => this._onPlayerDuelDecision(false), this.scene);
+  }
+
+  /** 取得或建立後備單挑彈窗；掛在 Canvas 之下（找不到 Canvas 則掛在 BattleScene 節點下） */
+  private _getOrCreateDuelFallback(): IDuelChallengeLike {
+    if (this._duelFallback && this._duelFallback.node.isValid) return this._duelFallback;
+    let host: Node = this.scene.node;
+    for (let n: Node | null = this.scene.node; n; n = n.parent) {
+      if (n.getComponent('cc.Canvas')) { host = n; break; }
+    }
+    this._duelFallback = new DuelChallengeFallback(host);
+    return this._duelFallback;
   }
 
   private async _onPlayerDuelDecision(accepted: boolean): Promise<void> {

@@ -17,6 +17,14 @@ const FORWARD_DIR: Record<Faction, number> = {
   [Faction.Enemy]: -1,
 };
 
+/**
+ * 單回合自動前進格數上限（具名常數，方便日後調整）。
+ * 原因：實機騎兵在平原一回合可從深度 0 衝到深度 6（基礎移動 + 地形 + 適性等加成疊加且無上限），
+ * 幾乎一回合橫越全場，玩家看不懂也沒有應對空間。上限套在所有加成算完之後，對整回合累計生效，
+ * 我方與敵方一致。被擊退、強制位移（forcedMove）、技能瞬移不計入，只限制一般自動前進。
+ */
+export const MAX_MOVE_CELLS_PER_TURN = 3;
+
 export interface BattleAutoMovePhaseContext {
   readonly state: BattleState;
   readonly actingFaction: Faction;
@@ -99,13 +107,17 @@ function stepMoveUnit(
     // 虎符地形特化（丹陽山地、吳國水域，PROG-2-1433）：站在指定地形時移動力 +2
     remainingMoveBudget += tallyTerrainMoveBonusOf(unit, cell?.terrain ?? TerrainType.Plain);
   }
+  // 所有加成算完後套單回合上限（PROG-2-9052）
+  remainingMoveBudget = Math.min(remainingMoveBudget, MAX_MOVE_CELLS_PER_TURN);
 
   if (hasGhostMove(unit)) {
     stepGhostMoveUnit(unit, remainingMoveBudget, svc, context);
     return;
   }
 
-  while (remainingMoveBudget > 0) {
+  // unit.chargeCells 為本回合已實際走過的格數（踐踏計 2、換位計 1、一般前進計 1），
+  // 地形回饋可能在途中加回移動力，因此以實際格數作為硬上限
+  while (remainingMoveBudget > 0 && unit.chargeCells < MAX_MOVE_CELLS_PER_TURN) {
     const nextDepth = unit.depth + dir;
     const nextCell = context.state.getCell(unit.lane, nextDepth);
     if (!nextCell) break;
@@ -121,7 +133,7 @@ function stepMoveUnit(
       const blocker = context.state.units.get(nextCell.occupantId)!;
 
       // 巨型踐踏（南蠻，PROG-2-1578）：越過敵方步兵，落在後一格（需空著且可通行），花 1 點移動力
-      if (canTrampleOver(unit, blocker)) {
+      if (canTrampleOver(unit, blocker) && unit.chargeCells + 2 <= MAX_MOVE_CELLS_PER_TURN) {
         const landDepth = nextDepth + dir;
         const landCell = context.state.getCell(unit.lane, landDepth);
         const landZoc = zocField.at(unit.lane, landDepth);

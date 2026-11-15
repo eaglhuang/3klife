@@ -686,7 +686,7 @@ export class BattleCombatResolver {
     this.context.state.removeUnit(unit.id);
     svc.buff.clearUnit(unit.id);
     clearMorale(unit);
-    svc.event.emit(EVENT_NAMES.UnitDied, { unitId: unit.id, lane, depth, faction, type });
+    svc.event.emit(EVENT_NAMES.UnitDied, { unitId: unit.id, name: unit.name, lane, depth, faction, type });
     // USPECIAL 死亡觸發（ULT-10，PROG-2-1979）：取出即清，每個掛勾只觸發一次
     settleDeathTriggers(this.context.state, unit.id, faction, (id) => this.context.getUltimateSpecialRule?.(id));
     // 遺計定遼（奉孝符，PROG-2-1572）：陣亡時全場敵軍混亂（暈眩）

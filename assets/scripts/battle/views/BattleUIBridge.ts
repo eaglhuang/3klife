@@ -677,12 +677,14 @@ export class BattleUIBridge {
     if (text) c.unitRenderer?.playBuffConsumeValue(data.lane, data.depth, text);
   }
 
-  private _onUnitDied(data: { unitId: string; lane: number; depth: number; faction: Faction; type: TroopType }): void {
+  private _onUnitDied(data: { unitId: string; name?: string; lane: number; depth: number; faction: Faction; type: TroopType }): void {
     if (this.duelCapture) { this.duelCapture.deaths.push(data); return; }
     const c = this.ctx;
     this.performance.observeUnitDied(data.faction);
-    const deadName = c.ctrl?.state.units.get(data.unitId)?.name ?? data.unitId;
-    this.appendLog(`單位陣亡：${deadName}`);
+    // 陣亡時單位可能已從狀態移除，名稱優先取事件帶來的
+    const side = data.faction === Faction.Player ? '我方' : '敵方';
+    const deadName = data.name ?? c.ctrl?.state.units.get(data.unitId)?.name ?? data.unitId;
+    this.appendLog(`${side}${deadName} 陣亡`);
     c.unitRenderer?.markDyingUnit?.(data.unitId);
     this._enqueueCombatVisual(`unit-death:${data.unitId}`, async () => {
       UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] death start unit=${data.unitId}`);
