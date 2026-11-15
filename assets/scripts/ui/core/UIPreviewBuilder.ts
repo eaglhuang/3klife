@@ -908,10 +908,20 @@ export class UIPreviewBuilder extends Component {
         const sprite = node.addComponent(Sprite);
         sprite.sizeMode = Sprite.SizeMode.CUSTOM;
         sprite.spriteFrame = frame;
-        const fit = coverSize(frame.originalSize.width, frame.originalSize.height, width, height);
+        // Cover the actual host size (Widget-stretched on wide windows), not only the design size
+        const hostSize = host.getComponent(UITransform);
+        const coverWidth = Math.max(width, hostSize?.width ?? 0);
+        const coverHeight = Math.max(height, hostSize?.height ?? 0);
+        const fit = coverSize(frame.originalSize.width, frame.originalSize.height, coverWidth, coverHeight);
         t.width = fit.width;
         t.height = fit.height;
         host.addChild(node);
+        // Keep centered on host; cover size is never smaller than host, so no edge is exposed
+        const centering = node.addComponent(Widget);
+        centering.isAlignHorizontalCenter = true;
+        centering.isAlignVerticalCenter = true;
+        centering.horizontalCenter = 0;
+        centering.verticalCenter = 0;
         node.setSiblingIndex(0);
         const minArea = width * height * backdrop.replaceFillCoverRatio;
         const strip = (n: Node) => {
