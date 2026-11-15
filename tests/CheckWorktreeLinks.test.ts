@@ -1,4 +1,4 @@
-// @spec-source → PROG-2-9049：工作樹不得以 junction 共用主目錄套件
+// @spec-source → PROG-2-9100：工作樹不得以 junction 共用主目錄套件
 import { assert, TestSuite } from './TestRunner';
 import * as fs from 'fs';
 import * as os from 'os';

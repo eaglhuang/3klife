@@ -1,4 +1,4 @@
-// @spec-source → PROG-2-9049：工作樹不得以 junction／symlink 共用主目錄套件。
+// @spec-source → PROG-2-9100：工作樹不得以 junction／symlink 共用主目錄套件。
 // 掃描所有 git 工作樹，列出指向本 repo 以外位置的 node_modules 連結。
 // 這種連結遇到「自動清理工作樹」（Codex app、封存 Claude session、git worktree remove --force）
 // 會被遞迴穿透，把主目錄 node_modules 整個清空（2026-11-16 實際發生）。

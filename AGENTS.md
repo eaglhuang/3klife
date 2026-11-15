@@ -159,7 +159,7 @@ node tools_node/task-lock.js unlock <task-id> <agent-name>
 
 若使用者直接提到 `$context-budget-guard`，Agent 必須優先套用對應 skill。
 
-## 工作樹套件規則（PROG-2-9049，硬規則）
+## 工作樹套件規則（PROG-2-9100，硬規則）
 
 - **禁止**在任何工作樹（Codex、Claude、手動 `git worktree add`）用 junction／symlink 把 `node_modules` 或 `extensions/cocos-mcp-server/node_modules` 連到主目錄。
 - 原因：工作樹被自動清理（Codex app 清工作樹、封存 Claude session、`git worktree remove --force`、`Remove-Item -Recurse`）時會穿透連結，把主目錄套件整個清空；2026-11-16 主目錄與 Cocos MCP 外掛套件因此被清空，編輯器 MCP 外掛無法載入。
