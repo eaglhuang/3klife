@@ -1340,6 +1340,24 @@
             "canvas": "1254x1254 RGBA"
           }
         ]
+      },
+      "battle": {
+        "status": "review-pending",
+        "activeVersion": "0003",
+        "history": [
+          {
+            "version": "0003",
+            "file": "battle/zhao_yun__趙雲__battle_0003.png",
+            "status": "review-pending",
+            "sha256": "4c9b1210e3851ea7f8d997928f5f8b8ec772b4d661929f1704a92c4e30bd28f6",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "spear",
+            "poseLabel": "斜向前突、重心下沉",
+            "gaze": "toward-camera",
+            "sourceStanding": "standing/zhao_yun__趙雲__standing_0002.png",
+            "note": "沿用使用者已選姿勢的既有候選，未另畫重複姿勢；藍白銀甲、全身與長槍完整入框，槍桿筆直。待美術整合。"
+          }
+        ]
       }
     },
     {
