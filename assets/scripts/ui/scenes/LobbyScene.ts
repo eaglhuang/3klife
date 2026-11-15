@@ -656,6 +656,8 @@ export class LobbyScene extends Component {
     private readonly _gachaCandidatesCache = new Map<string, GeneralConfig[]>();
     private _gachaPullPending = false;
     private _ready = false;
+    /** 大廳出現後才背景掛載的面板（PROG-2-9040） */
+    private _deferredMounts: Array<() => Promise<void>> = [];
     /** 回大廳不重建：去戰鬥前停放已掛的介面（Issue #2120） */
     private readonly _retention = new LobbyScreenRetention(() => services().i18n.currentLocale);
     private _offBeforeSwitch: (() => void) | null = null;
@@ -710,11 +712,32 @@ export class LobbyScene extends Component {
             () => this._mountCityHub(),
             () => this._mountOfficerHud(),
             () => this._mountNurtureFlow(),
+            () => this._mountOpeningOffer(),
+            () => this._mountSeasonChroniclePopup(),
+            () => this._mountDailyReport(),
+            () => this._mountLobbyHall(),
+            () => this._mountRedFaceShowcase(),
+            ...(openingFirst ? [] : [() => this._mountOpeningPanels()]),
+            () => this._mountDaughterRoutePopup(),
+            () => this._mountMarriageProposalPopup(),
+            () => this._mountPrisonerPopup(),
+            () => this._mountDuplicatePullPopup(),
+            () => this._mountDeckSelect(),
+            () => this._mountLeadSelect(),
+            () => this._mountSortieSetup(),
+            () => this._mountCharacterDs3Host(),
+            () => this._mountEliteTroopCodexPanel(),
+            () => this._mountLobbyMissionDetailDialogPanel(),
+            () => this._mountLobbyLeaderboardPanel(),
+            () => this._mountSeasonReportPanel(),
+            () => this._mountSandtableTerritoryPanel(),
+        ];
+        // 只在玩家點開時才用得到的彈窗／子畫面：大廳出現後再於背景掛載（PROG-2-9040）。
+        // 大廳預先掛載數從 10 月的 6 個長到 60 多個，全部擋在載入遮罩前會讓進大廳越來越慢。
+        this._deferredMounts = [
             () => this._mountGraduationRecord(),
             () => this._mountAcademyGraduation(),
             () => this._mountClanShrine(),
-            () => this._mountOpeningOffer(),
-            () => this._mountSeasonChroniclePopup(),
             () => this._mountSeasonEventPopup(),
             () => this._mountLineagePopup(),
             () => this._mountQuickSortiePopup(),
@@ -734,36 +757,19 @@ export class LobbyScene extends Component {
             () => this._mountBattleReview(),
             () => this._mountTournament(),
             () => this._mountWishAltar(),
-            () => this._mountDailyReport(),
             () => this._mountHallBoard(),
             () => this._mountExtremeTask(),
-            () => this._mountLobbyHall(),
             () => this._mountMercenaryPanel(),
             () => this._mountGovernorHall(),
             () => this._mountItemBag(),
             () => this._mountRelationGraph(),
-            () => this._mountRedFaceShowcase(),
-            ...(openingFirst ? [] : [() => this._mountOpeningPanels()]),
             () => this._mountSageOracle(),
             () => this._mountRetireReview(),
             () => this._mountSpiritCodex(),
             () => this._mountUltimateCodex(),
-            () => this._mountDaughterRoutePopup(),
-            () => this._mountMarriageProposalPopup(),
-            () => this._mountPrisonerPopup(),
-            () => this._mountDuplicatePullPopup(),
             () => this._mountScoutPanel(),
             () => this._mountDestinyShop(),
             () => this._mountYearReport(),
-            () => this._mountDeckSelect(),
-            () => this._mountLeadSelect(),
-            () => this._mountSortieSetup(),
-            () => this._mountCharacterDs3Host(),
-            () => this._mountEliteTroopCodexPanel(),
-            () => this._mountLobbyMissionDetailDialogPanel(),
-            () => this._mountLobbyLeaderboardPanel(),
-            () => this._mountSeasonReportPanel(),
-            () => this._mountSandtableTerritoryPanel(),
         ];
         for (let index = 0; index < mounts.length; index++) {
             const mount = mounts[index];
@@ -838,10 +844,27 @@ export class LobbyScene extends Component {
 
         // 核心架構合一：幕府政廳即為主大廳，登入後直接坐鎮大堂；新玩家開場走完才開（PROG-2-2222）
         if (!this._isOpeningInProgress()) this._openLobbyHall();
+        void this._runDeferredMounts();
         } catch (error) {
             SceneLoadProgress.fail();
             UCUFLogger.error(LogCategory.LIFECYCLE, '[LobbyScene] 初始化失敗', error);
         }
+    }
+
+    /** 背景掛載非必要面板（PROG-2-9040）：逐個掛、每個之間讓出一幀，失敗只記錄不中斷 */
+    private async _runDeferredMounts(): Promise<void> {
+        const mounts = this._deferredMounts;
+        this._deferredMounts = [];
+        for (let index = 0; index < mounts.length; index++) {
+            if (!this.node?.isValid) return;
+            try {
+                await mounts[index]();
+            } catch (error) {
+                UCUFLogger.error(LogCategory.UI, `[LobbyScene] 背景第 ${index} 個面板掛載失敗，已略過`, error);
+            }
+            await new Promise<void>((resolve) => this.scheduleOnce(() => resolve(), 0));
+        }
+        this._keepOpeningOnTop();
     }
 
     /** 他國逐將名冊與重算情境（E-9，PROG-2-1715）；失敗時他國照舊以兵力計軍力 */
