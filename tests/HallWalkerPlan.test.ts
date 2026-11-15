@@ -106,5 +106,13 @@ export function createHallWalkerPlanSuite(): TestSuite {
         assert.equals(snapshot, JSON.stringify(state));
     });
 
+
+    suite.test('狀態為 null（舊大廳已銷毀）視同初次排班，不丟例外（PROG-2-9103）', () => {
+        const plan = planHallWalkers({ state: null, nowSec: 50, owned: roster(8), volunteerIds: [], random: rng(7) });
+        assert.equals(3, plan.walkerIds.length);
+        assert.isTrue(plan.rotated);
+        assert.equals(50, plan.state.rotatedAtSec);
+    });
+
     return suite;
 }
