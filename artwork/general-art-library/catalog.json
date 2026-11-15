@@ -1763,6 +1763,22 @@
             "qc": "No redraw or design changes; full headdress, face and chin retained; face centered; shoulder tops at lower edge, no chest."
           }
         ]
+      },
+      "battle": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/lu_xun__陸遜__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "e1d61dbe7b71f8f433f0cc7f91eb324a6847c7f026b7886f176c21a7f4b22e6d",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "jian",
+            "poseLabel": "收劍定勢",
+            "note": "紅青吳將造型；一手直劍斜上格勢、另一手平衡護身，眼神朝鏡頭；待使用者審看。"
+          }
+        ]
       }
     },
     {
