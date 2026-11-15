@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-15T21:50:48Z",
+  "updatedAt": "2026-11-16",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -5433,6 +5433,32 @@
             "crop": "shoulder-line",
             "cropBox": "x=319,y=0,w=330,h=330",
             "qc": "125px preview: original standing-art crop only; head and chin intact, face centered, head fills approximately 75%, shoulder edge visible."
+          }
+        ]
+      },
+      "battle": {
+        "status": "review-pending",
+        "activeVersion": "0002",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/wang_yi__王異__battle_0001.png",
+            "status": "superseded",
+            "sha256": "94aea8787a6e7a661766fac55926796cdd17663a2a953091ab1d20cf40c74d92",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "long spear",
+            "note": "保留既有長槍候選；本版改用直劍，避免將史料未載明的武器視為定論。"
+          },
+          {
+            "version": "0002",
+            "file": "battle/wang_yi__王異__battle_0002.png",
+            "status": "review-pending",
+            "sha256": "59bec9a4fcfd9780674fb17f7d87aebb72ae5764c9896a70fee3b03e66d05097",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "jian",
+            "poseLabel": "斜身轉步，以直劍作控制性斜斬，另一手平衡身勢",
+            "sourceStanding": "standing/wang_yi__王異__standing_0002.png",
+            "note": "沿用王異藍鋼輕甲識別；直劍筆直，全身與兵器完整，透明背景。候選待審。"
           }
         ]
       }
