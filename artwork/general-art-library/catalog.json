@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-16",
+  "updatedAt": "2026-11-15",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -1460,6 +1460,21 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/huang_zhong__黃忠__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "ab63a29a07bd4cbf2d251085dc3fe1b9e29f274753f00d7aa94d772141407685",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "bow",
+            "note": "Existing pose A artwork registered from the library; no duplicate pose generated."
+          }
+        ]
       }
     },
     {
