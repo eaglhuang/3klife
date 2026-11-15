@@ -1065,6 +1065,23 @@
             "note": "依已核定站姿保留周瑜紅白金衣甲與臉部辨識；等比例縮放置中，未改造人物造型。"
           }
         ]
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/zhou_yu__周瑜__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "7d7155264a0f59fc5ce754e2f23c25c18b55865171be8b4680c5d207f414e32a",
+            "canvas": "256x256 RGBA",
+            "source": "standing/zhou_yu__周瑜__standing_0002.png (crop-only)",
+            "crop": "shoulder-line",
+            "cropBox": "x=352,y=0,w=320,h=320",
+            "qc": "No redraw or design changes; face centered, complete headpiece, face and chin retained; shoulder tops at lower edge."
+          }
+        ]
       }
     },
     {
