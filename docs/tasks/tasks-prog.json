@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 38,
+    "done": 39,
     "in_progress": 3,
     "open": 83,
-    "total": 124
+    "total": 125
   },
   "tasks": [
     {
@@ -4739,6 +4739,75 @@
         "tests/gacha-portrait-baseline.test.ts"
       ],
       "notes": "2026-11-15 | 狀態: in-progress | 驗證: 單元測試 ALL PASS；tsc 0 錯誤 | 變更: 量測工具＋邊界資料＋基準線換算；橫幅立繪改統一腳底與身高 | 待辦: 7456 實跑截圖比對（主目錄需同步才能看到工作樹改動）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9039",
+      "title": "線上版試玩問題修復與規格對齊（大廳頂列同步、氣泡避讓、CHAR 快取掉字、內政/商城/名冊/詳情/靜態連線）",
+      "owner": "ClaudeCode",
+      "priority": "P1",
+      "status": "done",
+      "type": "bugfix",
+      "phase": "M0",
+      "created": "2026-11-15",
+      "created_by_agent": "ClaudeCode",
+      "started_at": "2026-11-15T20:41:00+08:00",
+      "started_by_agent": "ClaudeCode",
+      "completed_at": "2026-11-15T20:52:00+08:00",
+      "completed_by_agent": "ClaudeCode",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依據 https://eaglhuang.github.io/3klife-play/ 實玩與規格書交叉查證結果，修復 UITemplateBinder/UIContentBinder 動態改字 CHAR 快取掉字、LobbyHallScreen 頂列同步與武將氣泡避讓及陰影同步、OpeningLetter 載入完成前搶先顯示、LobbyScene Toast 層級與次級彈窗切換殘留、內政第 0 季與第 6 列文字重疊、單抽結果按鈕與立繪保底、名冊浮點年齡、武將詳情洩漏 TEMPLATE 頁尾、以及靜態網頁環境下 SyncManager 連線本機失敗洗版問題。",
+      "related": [
+        "PROG-2-2226",
+        "PROG-2-2243"
+      ],
+      "depends": [],
+      "acceptance": [
+        "動態更新 Label 時關閉 CacheMode.CHAR 避免掉字；大廳頂列即時反應 GameSession 與錢包",
+        "OpeningLetter 等候 _ready 後開啟；ToastContainer 保持最上層；切換大廳功能自動收起次級覆蓋彈窗",
+        "內政首季顯示第 1 季且第 6 列文字不重疊；單抽結果頁按鈕與無全身立繪武將有正確 fallback",
+        "名冊年齡取整數；武將詳情隱藏 TEMPLATE 頁尾但不破壞視覺就緒檢查；遠端靜態網頁環境不請求 localhost:3000/sync",
+        "單元測試、check-test-tsc-baseline、npm test、encoding 與 gate:standard 全數通過"
+      ],
+      "deliverables": [
+        "assets/scripts/ui/core/UITemplateBinder.ts",
+        "assets/scripts/ui/core/UIContentBinder.ts",
+        "assets/scripts/ui/core/LobbyHallScreenBinder.ts",
+        "assets/scripts/ui/core/LobbyOpeningPanels.ts",
+        "assets/scripts/ui/scenes/LobbyScene.ts",
+        "assets/scripts/ui/core/DomesticPanelController.ts",
+        "assets/resources/ui-spec/layouts/domestic-main.json",
+        "assets/scripts/ui/core/GachaFlowCoordinator.ts",
+        "assets/scripts/ui/components/GeneralListComposite.ts",
+        "assets/scripts/ui/components/character-ds3/CharacterDs3OverviewChild.ts",
+        "assets/scripts/core/systems/SyncManager.ts",
+        "tests/LobbyOpeningPanels.test.ts",
+        "tests/LobbyHallScreenBinder.test.ts"
+      ],
+      "notes": "2026-11-15 | 狀態: done | 驗證: unit tests 0 failed, check-test-tsc-baseline 0 errors, npm test passed, check-encoding-touched passed, gate:standard 12/12 passed | 變更: 修復大廳頂列資源/官職/季夜同步、氣泡陰影與勢力圖避讓、動態文字關閉 Label.CacheMode.CHAR、書信載入遮擋、子介面殘留、太守府標題與季節顯示、商城十連按鈕與立繪 fallback、名冊年齡取整、武將詳情浮水印遮擋、靜態網頁跳過 localhost:3000 同步 | 阻塞: none",
       "brief": {
         "style": "classic",
         "label": "",

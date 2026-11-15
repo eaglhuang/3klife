@@ -428,6 +428,16 @@ export class SyncManager {
 
     private async syncNow(): Promise<void> {
         if (this.isSyncing || this.actionRecords.length === 0) return;
+        // 靜態網頁託管環境（如 github.io）沒有本機後端時，不對 localhost:3000 發送請求避免洗版 ERR_CONNECTION_REFUSED
+        const hostname = typeof window !== 'undefined' ? window.location?.hostname ?? '' : '';
+        if (
+            hostname.length > 0
+            && hostname !== 'localhost'
+            && hostname !== '127.0.0.1'
+            && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?(\/|$)/i.test(this.serverUrl)
+        ) {
+            return;
+        }
         
         this.isSyncing = true;
         this.eventSystem?.emit(EVENT_SYNCING);

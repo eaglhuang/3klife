@@ -139,9 +139,14 @@ export class UITemplateBinder {
 
     /** 批次設定 Label 文字 */
     setTexts(data: Record<string, string>): void {
+        const charMode = Label.CacheMode?.CHAR ?? 2;
+        const noneMode = Label.CacheMode?.NONE ?? 0;
         for (const [id, text] of Object.entries(data)) {
             const label = this.getLabel(id);
             if (label) {
+                if (label.cacheMode === charMode) {
+                    label.cacheMode = noneMode;
+                }
                 label.string = text;
             }
         }
@@ -149,9 +154,14 @@ export class UITemplateBinder {
 
     /** 批次以 layout 相對路徑設定 Label 文字 */
     setTextsByPath(data: Record<string, string>): void {
+        const charMode = Label.CacheMode?.CHAR ?? 2;
+        const noneMode = Label.CacheMode?.NONE ?? 0;
         for (const [path, text] of Object.entries(data)) {
             const label = this._labelPathMap.get(path);
             if (label) {
+                if (label.cacheMode === charMode) {
+                    label.cacheMode = noneMode;
+                }
                 label.string = text;
             }
         }

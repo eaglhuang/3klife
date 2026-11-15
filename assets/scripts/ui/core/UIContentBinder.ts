@@ -20,6 +20,7 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
  * ```
  */
 
+import { Label } from 'cc';
 import { services } from '../../core/managers/ServiceLoader';
 import type { ContentContractRef } from './UISpecTypes';
 import type { UITemplateBinder } from './UITemplateBinder';
@@ -201,6 +202,11 @@ export class UIContentBinder {
             if (typeof bindPath === 'string' && bindPath.trim().length > 0) {
                 const label = binder.getLabelByPath(bindPath);
                 if (label && (typeof value === 'string' || typeof value === 'number')) {
+                    const charMode = Label.CacheMode?.CHAR ?? 2;
+                    const noneMode = Label.CacheMode?.NONE ?? 0;
+                    if (label.cacheMode === charMode) {
+                        label.cacheMode = noneMode;
+                    }
                     label.string = String(value);
                     continue;
                 }
