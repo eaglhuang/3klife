@@ -15,6 +15,7 @@
 import { Label, Node, UITransform, Widget, view } from 'cc';
 import type { HallMapLayout, HallMapTurnStep } from '../../core/systems/HallMapFocusPlanner';
 import { hallBgCoverScale } from '../../core/systems/HallBackgroundFit';
+import { HallBubbleState } from '../../core/systems/HallBubbleState';
 import { HallThemeConfig, resolveHallTheme } from '../../core/systems/HallTheme';
 import type { HallSeason, HallSeasonFxConfig } from '../../core/systems/HallSeasonFx';
 import type { HallStageCast } from '../../core/systems/HallStageDirector';
@@ -130,8 +131,9 @@ export class LobbyHallScreenBinder {
     private _crowd: HallStageCrowd | null = null;
     private _stage: LobbyHallStageController | null = null;
     private _bubbleTimer: ReturnType<typeof setTimeout> | null = null;
-    /** 目前泡泡屬於誰與「交給你」要做什麼；泡泡收起時清空 */
-    private _bubbleActor: string | null = null;
+    /** 泡泡同一時間只有一個：誰開著、計時代號（連點不疊、舊計時不誤關） */
+    private readonly _bubble = new HallBubbleState();
+    /** 「交給你」要做什麼；泡泡收起時清空 */
     private _bubbleAccept: (() => void) | null = null;
     private _map: HallMapTurnPlayer | null = null;
     private readonly _tickStage = (): void => {
@@ -355,10 +357,28 @@ export class LobbyHallScreenBinder {
             bubble.active = false;
             this._syncBubbleShadow(bubble, false);
         }
-        const actor = this._bubbleActor;
-        this._bubbleActor = null;
+        const actor = this._bubble.close();
         this._bubbleAccept = null;
         if (actor) this._crowd?.releaseActor(actor);
+    }
+
+    /** 計時到期：只收起本次開啟的那個泡泡（代號對不上代表已被新泡泡取代） */
+    private _expireBubble(token: number): void {
+        this._bubbleTimer = null;
+        const actor = this._bubble.expire(token);
+        if (actor === null) return;
+        const bubble = findUcufNode(this._screenRoot, 'lobby-hall-screen.bubble');
+        if (bubble?.isValid) {
+            bubble.active = false;
+            this._syncBubbleShadow(bubble, false);
+        }
+        this._bubbleAccept = null;
+        this._crowd?.releaseActor(actor);
+    }
+
+    /** 外面要開其他面板（或子選單蓋上來）時呼叫：收起泡泡並放行武將 */
+    hideBubble(): void {
+        this._closeBubble();
     }
 
     /** 點到在場武將：依內容開泡泡並回傳該武將要停多久；沒有內容回傳 undefined（用預設停留） */
@@ -371,7 +391,9 @@ export class LobbyHallScreenBinder {
         setText(nameLabel, `${content.name}：`);
         setText(textLabel, content.text);
         if (choiceRow) choiceRow.active = !!content.volunteer;
-        this._bubbleActor = generalId;
+        // 換人：先放行被擠掉的上一位（同一人連點不放行，只刷新計時）
+        const opened = this._bubble.open(generalId);
+        if (opened.previous && opened.previous !== generalId) this._crowd?.releaseActor(opened.previous);
         this._bubbleAccept = content.volunteer?.onAccept ?? null;
         const seconds = content.volunteer ? VOLUNTEER_BUBBLE_SEC : (input.wander?.bubbleSeconds ?? 2);
         bubble.active = true;
@@ -380,7 +402,7 @@ export class LobbyHallScreenBinder {
         this._syncBubbleShadow(bubble, true);
         this._placeBubbleAbove(bubble, generalId);
         if (this._bubbleTimer) clearTimeout(this._bubbleTimer);
-        this._bubbleTimer = setTimeout(() => this._closeBubble(), seconds * 1000);
+        this._bubbleTimer = setTimeout(() => this._expireBubble(opened.token), seconds * 1000);
         return seconds;
     }
 
