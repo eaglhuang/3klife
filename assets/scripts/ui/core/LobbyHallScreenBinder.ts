@@ -169,6 +169,11 @@ export class LobbyHallScreenBinder {
         if (reaction && this._crowd) this._crowd.react(reaction);
     }
 
+    /** 人群名牌顯示開關：子選單蓋在大廳上層時暫藏 */
+    setCrowdTagsVisible(visible: boolean): void {
+        this._crowd?.setTagsVisible(visible);
+    }
+
     /** 播放換季聚焦序列；沒有地圖播放器時不動 */
     playMapTurn(steps: readonly HallMapTurnStep[]): void {
         this._map?.playTurn(steps);

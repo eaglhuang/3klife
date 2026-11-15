@@ -297,7 +297,7 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
             if (action.type !== 'tabSwitch') continue;
             const route = routeMap.get(this._normalizeRouteKey(action.target || action.smoke?.expectActiveTab || ''));
             const node = action.trigger ? this._binder?.getButton(action.trigger)?.node : null;
-            const spec = action.trigger ? this._findLayoutSpec(action.trigger) : null;
+            const spec = action.trigger ? this.findLayoutSpec(action.trigger) : null;
             if (!route || !node || !spec) continue;
             const group = groups.get(route.slotId) ?? [];
             group.push({ node, spec, fragment: route.fragment });
@@ -352,7 +352,47 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
         }
     }
 
+    /**
+     * 照樣板節點換樣式：把 template 整棵子樹的 slot 依結構位置套到 target（例如結果卡依實際稀有度
+     * 換成原稿同稀有度那張示意卡的配色）。子節點數不同時頭尾對齊，中間依序；pairs 為空即回到原配色。
+     */
+    public async restyleLike(pairs: ReadonlyArray<{ target: string; template: string }>): Promise<void> {
+        const slots: Record<string, SkinSlot> = {};
+        // 樣板沒有對應的多餘圖層（例如高稀有度卡的光暈）要藏起來；上一輪藏的先恢復
+        for (const node of this._restyleHidden) if (node.isValid) node.active = true;
+        this._restyleHidden.length = 0;
+        const hideLayer = (owner: string | undefined, layerId: string): void => {
+            const node = owner ? this._binder?.getNode(owner)?.getChildByName(`skinLayer_${layerId}`) : null;
+            if (node) { node.active = false; this._restyleHidden.push(node); }
+        };
+        const take = (targetSlot?: string, templateSlot?: string): void => {
+            if (!targetSlot || !templateSlot || targetSlot === templateSlot) return;
+            const slot = this.skinResolver.getSlot(templateSlot);
+            if (slot) slots[targetSlot] = slot;
+        };
+        const walk = (target: UILayoutNodeSpec | null | undefined, template: UILayoutNodeSpec | null | undefined): void => {
+            if (!target || !template) return;
+            take(target.skinSlot, template.skinSlot);
+            take(target.styleSlot, template.styleSlot);
+            (target.skinLayers ?? []).forEach((layer, i) => {
+                const src = template.skinLayers?.[i];
+                if (src) take(layer.slotId, src.slotId);
+                else hideLayer(target.name, layer.layerId);
+            });
+            const kids = target.children ?? [];
+            const src = template.children ?? [];
+            kids.forEach((child, i) => {
+                const j = i < kids.length / 2 ? i : src.length - (kids.length - i);
+                walk(child, src[j]);
+            });
+        };
+        for (const pair of pairs) walk(this.findLayoutSpec(pair.target), this.findLayoutSpec(pair.template));
+        await this.applySkinVariant('restyle-like', slots);
+    }
+
     private readonly _variantTouched = new Set<string>();
+    /** restyleLike 暫時藏起的圖層節點 */
+    private readonly _restyleHidden: Node[] = [];
 
     /** 最佳化併進 skinLayers 的整面背景（例如 body 底色）也要跟著換色；圖層節點名為 skinLayer_<layerId> */
     private async _restyleSkinLayers(spec: UILayoutNodeSpec, overrides: Record<string, SkinSlot>,
@@ -371,7 +411,8 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
         }
     }
 
-    private _findLayoutSpec(name: string): UILayoutNodeSpec | null {
+    /** 依節點名找目前畫面的版面規格 */
+    public findLayoutSpec(name: string): UILayoutNodeSpec | null {
         const stack = this._layoutRoot ? [this._layoutRoot] : [];
         while (stack.length > 0) {
             const spec = stack.pop()!;
