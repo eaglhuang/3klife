@@ -929,7 +929,7 @@ export class BattleUIBridge {
     }, FIELD_AUTO_BATTLE_JOURNAL[kind], pgId ? [pgId] : []);
   }
 
-  private _onBattleEnded(data: { result: string; retreated?: boolean }): void {
+  private _onBattleEnded(data: { result: string; retreated?: boolean; timeUp?: boolean }): void {
     this._lastEndedPayload = { result: data.result, retreated: data.retreated };
     if (this.duelCapture) { this.duelCapture.ended = data; return; }
     const c = this.ctx;
@@ -940,6 +940,8 @@ export class BattleUIBridge {
     this.appendLog(`戰鬥結束：${data.result}`);
     this.hideEnemyThinkingPanel();
     const details = this._settleRosterBattle(data.result as BattleResult);
+    // 回合用盡而獲勝（教學戰）：補一行說明，免得玩家不知道為什麼突然贏了
+    if (data.timeUp === true && data.result === 'player-win') details.unshift('敵軍久攻不下，鳴金退兵。');
     c.resultPopup?.showResult(data.result as any, details.length > 0 ? details.join('\n') : undefined, c.pg?.id, data.retreated === true);
     c.boardRenderer?.clearDeployHint();
     c.hud?.clearPersistentStatus();

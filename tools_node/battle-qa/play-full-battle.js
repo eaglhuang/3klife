@@ -17,6 +17,9 @@
  *   --ultimate             SP 滿時施放奧義並選第一個技能（最佳努力，尚未在遊戲實測過選技能流程）
  *   --max-turns <n>        回合上限（預設 60）
  *   --out <資料夾>          輸出資料夾（預設系統暫存目錄下 battle-qa-<時間戳>）
+ *   --fresh                開預覽前清空該來源的 localStorage／sessionStorage／IndexedDB（全新玩家），並改走真實大廳流程
+ *                          （信件「關閉」、季報「婉言謝絕」→「收起季報」、出征→戰場→戰前偵查出征）
+ *   --deploy-mode <模式>    full（預設，每回合部署到上限）｜one-per-turn（每回合 1 隊）｜first-turn-one（只第 1 回合 1 隊，之後只結束回合）
  *
  * 流程：
  *   1. 連瀏覽器、開新分頁（1920x1080）、等 cc 與場景載入。
@@ -93,7 +96,7 @@ class QaError extends Error {
 
 // ---------- 參數 ----------
 function parseArgs(argv) {
-  const o = { url: 'http://localhost:7456', browserUrl: 'http://127.0.0.1:9333', duel: 'accept', ultimate: false, maxTurns: 60, out: '' };
+  const o = { url: 'http://localhost:7456', browserUrl: 'http://127.0.0.1:9333', duel: 'accept', ultimate: false, maxTurns: 60, out: '', fresh: false, deployMode: 'full' };
   for (let i = 2; i < argv.length; i += 1) {
     const a = argv[i];
     const next = () => { i += 1; if (i >= argv.length) throw new Error(`參數 ${a} 缺少值`); return argv[i]; };
@@ -103,9 +106,12 @@ function parseArgs(argv) {
     else if (a === '--ultimate') o.ultimate = true;
     else if (a === '--max-turns') o.maxTurns = Number(next());
     else if (a === '--out') o.out = next();
+    else if (a === '--fresh') o.fresh = true;
+    else if (a === '--deploy-mode') o.deployMode = next();
     else throw new Error(`未知參數：${a}`);
   }
   if (!['accept', 'reject'].includes(o.duel)) throw new Error('--duel 只接受 accept 或 reject');
+  if (!['full', 'one-per-turn', 'first-turn-one'].includes(o.deployMode)) throw new Error('--deploy-mode 只接受 full、one-per-turn 或 first-turn-one');
   if (!Number.isFinite(o.maxTurns) || o.maxTurns < 1) throw new Error('--max-turns 必須是正整數');
   if (!o.out) {
     const ts = new Date().toISOString().replace(/[:.]/g, '-');
@@ -234,7 +240,9 @@ function pageLobbyTick() {
     return out;
   }
   // 幕府大廳的新手教學（1/3 下一步）、城市 hub 的「出征 → 戰場」，以及戰前確認的「親自指揮」
-  const order = ['下一步', '開始遊戲', '下一位', '前往宿命轉蛋', '繼續', '跳過', '收起', '關閉', '親自指揮', '出　戰', '戰場'];
+  // 全新玩家：三國季報先按「婉言謝絕」再按右上「收起季報」（致你的一封信用「關閉」）
+  // 戰前偵查若兵勢劣勢會出現「強行出征」（與 enter-battle.js 同），之後「出征」為戰前偵查的確認鈕
+  const order = ['婉言謝絕', '收起季報', '下一步', '開始遊戲', '下一位', '前往宿命轉蛋', '繼續', '跳過', '收起', '關閉', '親自指揮', '強行出征', '出　戰', '戰場'];
   for (const t of order) if (tryTap(t)) return out;
   if (tryTap('出征')) return out;
   // 新手開場的抽卡結果：只點「確定 · 全部收下」，不碰「免費重轉」
@@ -329,8 +337,50 @@ async function runStep(name, fn) {
 }
 
 // ---------- 步驟 ----------
+// --fresh：清空該來源的 localStorage / sessionStorage / IndexedDB，讓遊戲當成全新玩家
+async function clearOriginStorage(page, opt) {
+  // 先到同源的輕量網址（不載入遊戲），避免遊戲在清除前後重複載入；localStorage 與 IndexedDB 以來源為單位，清得到
+  await page.goto(new URL('/robots.txt', opt.url).href, { waitUntil: 'domcontentloaded', timeout: 60000 });
+  const clearFn = async () => {
+    const names = [];
+    try { localStorage.clear(); names.push('localStorage'); } catch (e) { /* 忽略 */ }
+    try { sessionStorage.clear(); names.push('sessionStorage'); } catch (e) { /* 忽略 */ }
+    if (indexedDB && indexedDB.databases) {
+      const dbs = await indexedDB.databases();
+      for (const d of dbs) {
+        if (!d.name) continue;
+        // 若其他分頁仍開著同一資料庫，刪除會被擋住：每個刪除最多等 3 秒就放行
+        await new Promise((r) => {
+          const q = indexedDB.deleteDatabase(d.name);
+          q.onsuccess = q.onerror = q.onblocked = () => r();
+          setTimeout(r, 3000);
+        });
+        names.push(`IndexedDB:${d.name}`);
+      }
+    }
+    return names;
+  };
+  // 評估若遇到導頁造成執行環境被銷毀，等一下重試
+  let cleared = null;
+  let lastErr = null;
+  for (let i = 0; i < 5 && cleared === null; i += 1) {
+    try { cleared = await page.evaluate(clearFn); } catch (e) { lastErr = e; await sleep(2000); }
+  }
+  if (cleared === null) throw new QaError('開啟預覽', `--fresh 清除儲存失敗：${lastErr && lastErr.message}`, []);
+  log(`--fresh：已清空 ${cleared.join('、') || '（無）'}`);
+  return cleared;
+}
+
 async function openPreview(page, opt) {
+  // 非前景分頁會被節流（rAF 停住），Cocos 大廳會卡在「正在準備大廳」或不前進；確保本分頁可見，最多重試 5 次
+  for (let i = 0; i < 5; i += 1) {
+    await Promise.race([page.bringToFront().catch(() => {}), sleep(3000)]);
+    const vis = await page.evaluate(() => document.visibilityState).catch(() => 'unknown');
+    if (vis === 'visible') break;
+    await sleep(1000);
+  }
   await page.setViewport({ width: 1920, height: 1080 });
+  if (opt.fresh) await clearOriginStorage(page, opt);
   await page.goto(opt.url, { waitUntil: 'domcontentloaded', timeout: 60000 });
   try {
     await page.waitForFunction(() => typeof cc !== 'undefined' && cc.director && cc.director.getScene(), { timeout: 120000 });
@@ -362,7 +412,7 @@ async function enterFromLobby(page) {
   let lastLog = 0;
   let lastTexts = [];
   const actions = [];
-  while (Date.now() - t0 < 180000) {
+  while (Date.now() - t0 < 300000) {
     const r = await ev(page, pageLobbyTick);
     if (r.action) actions.push(`${r.scene}:${r.action}`);
     if (r.battle) {
@@ -377,7 +427,7 @@ async function enterFromLobby(page) {
     }
     await sleep(1200);
   }
-  throw new QaError('進場', `180 秒內沒有進到戰場（最後動作：${actions.slice(-3).join(' → ')}）`, lastTexts);
+  throw new QaError('進場', `300 秒內沒有進到戰場（最後動作：${actions.slice(-3).join(' → ')}）`, lastTexts);
 }
 
 // 頁面端：包一層 ctrl.tryDeployTroop（保留原行為與回傳值），每次呼叫的結果記到 window.__bqDeployLog
@@ -445,10 +495,20 @@ const DEPLOY_MAX_CONSEC_FAIL = 2;
 
 // 回合內持續部署：直到 getPlayerDeployProgress().reached、沒有可用卡或空格、或連續失敗 2 次為止。
 // 每次挑一個尚未試過的空的最前排格（深度 0），用真實滑鼠拖曳部署；失敗原因取自 tryDeployTroop 的回傳。
-async function tryDeploy(page, s, turnRec) {
+// 部署模式：本回合允許成功部署的隊數上限
+//   full＝不限（到遊戲上限為止）；one-per-turn＝每回合 1 隊；first-turn-one＝只有第 1 回合 1 隊，之後 0 隊
+function deployAllowance(opt, turnRec) {
+  if (opt.deployMode === 'one-per-turn') return 1;
+  if (opt.deployMode === 'first-turn-one') return turnRec.isFirstTurn ? 1 : 0;
+  return Infinity;
+}
+
+async function tryDeploy(page, s, turnRec, opt) {
   const LANES = 5;
   turnRec.deployAttempts = [];
   turnRec.deployOk = 0;
+  const allow = deployAllowance(opt, turnRec);
+  if (allow === 0) { turnRec.deployStop = `部署模式 ${opt.deployMode}：本回合不部署`; turnRec.deploy = turnRec.deployStop; return; }
   const wrapped = await ev(page, pageInstallDeployWrap);
   if (!wrapped) { turnRec.deploy = '無法包裝 tryDeployTroop（戰場元件不存在）'; return; }
   const triedLanes = new Set();
@@ -456,6 +516,7 @@ async function tryDeploy(page, s, turnRec) {
   let stop = '';
   let snap = s;
   for (let k = 0; k < DEPLOY_MAX_ATTEMPTS; k += 1) {
+    if (turnRec.deployOk >= allow) { stop = `部署模式 ${opt.deployMode}：本回合已部署 ${turnRec.deployOk} 隊，停止`; break; }
     const prog = await ev(page, pageDeployProgress);
     if (prog && prog.reached) { stop = `已達單回合上限 ${prog.used}/${prog.limit}`; break; }
     if (snap.turn !== turnRec.turn) { stop = '回合已前進'; break; }
@@ -548,6 +609,11 @@ async function playBattle(page, opt) {
       await sleep(500);
       continue;
     }
+    if (rep.stage == null) {
+      // 關卡名稱：畫面上方標題（例如「虎 牢 關 之 戰」），取第一次看到戰場時符合的文字
+      rep.stage = s.texts.find((t) => /之\s*[戰役]|突\s*圍|會\s*戰/.test(t) && t.length <= 20) || '（未在畫面文字找到關卡名稱）';
+      log(`關卡名稱：${rep.stage}`);
+    }
     if (s.enemyGeneral && s.enemyGeneral.hp <= 0 && rep.zeroHp.enemy == null) rep.zeroHp.enemy = s.turn;
     if (s.playerGeneral && s.playerGeneral.hp <= 0 && rep.zeroHp.player == null) rep.zeroHp.player = s.turn;
     rep.lastGeneral = { player: s.playerGeneral, enemy: s.enemyGeneral, turn: s.turn };
@@ -579,12 +645,13 @@ async function playBattle(page, opt) {
     }
     if (s.turn != null && (!cur || cur.turn !== s.turn)) {
       if (cur && !cur.closed) { cur.after = brief(s); cur.closed = true; cur.errorsTo = rep.consoleErrors.length; }
-      cur = { turn: s.turn, before: brief(s), after: null, closed: false, endedAt: 0, endTurnTapped: false, errorsFrom: rep.consoleErrors.length, errorsTo: null, deployed: null, deployAttempts: [], deployOk: 0, deployStop: null, deploy: null, supplyStart: null, supplyEnd: null, ultimate: null };
+      cur = { turn: s.turn, isFirstTurn: rep.turns.length === 0, before: brief(s), after: null, closed: false, endedAt: 0, endTurnTapped: false, errorsFrom: rep.consoleErrors.length, errorsTo: null, deployed: null, deployAttempts: [], deployOk: 0, deployStop: null, deploy: null, supplyStart: null, supplyEnd: null, ultimate: null };
       rep.turns.push(cur);
       ctx.turn = s.turn;
       log(`第 ${s.turn} 回合：我方 ${cur.before.unitCount.我方} 單位，敵方 ${cur.before.unitCount.敵方} 單位，我方主將 HP ${s.playerGeneral && s.playerGeneral.hp}，SP ${s.playerGeneral && s.playerGeneral.sp}`);
       if (s.turn > opt.maxTurns) {
         rep.turns.pop();
+        rep.maxTurnsReached = true;
         return 'max-turns';
       }
       if (s.turn % 5 === 0) await shot(page, opt, `turn-${String(s.turn).padStart(2, '0')}`);
@@ -599,7 +666,7 @@ async function playBattle(page, opt) {
       }
       if (opt.ultimate) await maybeUltimate(page, ready, cur);
       cur.supplyStart = await ev(page, pageSupply);
-      await tryDeploy(page, ready, cur);
+      await tryDeploy(page, ready, cur, opt);
       cur.supplyEnd = await ev(page, pageSupply);
       const s2 = await ev(page, pageSnapshot);
       if (s2.turn === cur.turn && s2.texts.includes('結束回合')) {
@@ -665,7 +732,7 @@ function buildSummary() {
   const pick = (g) => (g ? { hp: g.hp, maxHp: g.maxHp } : null);
   return {
     totalTurns: turns.length,
-    result: rep.result ? rep.result.outcome : '未出現結果彈窗',
+    result: rep.result ? rep.result.outcome : (rep.maxTurnsReached ? `達回合上限未分勝負（上限 ${rep.options.maxTurns} 回合）` : '未出現結果彈窗'),
     enemyGeneralZeroAtTurn: rep.zeroHp.enemy,
     playerGeneralZeroAtTurn: rep.zeroHp.player,
     finalPlayerGeneral: pick(lg.player),
@@ -703,16 +770,19 @@ function writeReports(opt, ok) {
   const S = rep.summary;
   lines.push('# 戰場整場實跑報告', '');
   lines.push(`- 執行時間：${rep.startedAt} → ${rep.finishedAt}`);
-  lines.push(`- 參數：duel=${opt.duel}，ultimate=${opt.ultimate}，max-turns=${opt.maxTurns}`);
-  lines.push(`- 是否進戰場：${rep.entered ? `是（方式：${rep.entered}）` : '否'}`);
+  lines.push(`- 參數：duel=${opt.duel}，ultimate=${opt.ultimate}，max-turns=${opt.maxTurns}，fresh=${opt.fresh}，deploy-mode=${opt.deployMode}`);
+  lines.push(`- 關卡名稱（畫面標題）：${rep.stage || '（未進戰場）'}`);
+  lines.push(`- 是否進戰場：${rep.entered ? `是（方式：${rep.entered}）` : (rep.stage ? '是（大廳流程）' : '否')}`);
   lines.push(`- 打了幾回合：${turnsPlayed}（成功部署 ${S.totalDeployOk} 隊）`);
-  lines.push(`- 結果：${rep.result ? rep.result.outcome : '未出現結果彈窗'}`);
+  lines.push(`- 結果：${rep.result ? rep.result.outcome : (rep.maxTurnsReached ? '達回合上限未分勝負' : '未出現結果彈窗')}`);
   lines.push(`- 是否回到大廳：${rep.lobby && rep.lobby.ok ? '是' : '否'}`);
   lines.push(`- 單挑邀請：${rep.duels.length} 次；教學面板收起：${rep.tutorialDismissed} 次；奧義：${rep.ultimates.length} 次`);
   lines.push(`- 主控台 error：${rep.consoleErrors.length} 筆；未捕捉例外：${rep.pageErrors.length} 筆`);
-  lines.push(`- 結論：${ok ? '通過（整場串通並回到大廳）' : `未通過：${rep.failure ? rep.failure.message : '未知原因'}`}`, '');
+  const concl = ok ? '通過（整場串通並回到大廳）' : rep.maxTurnsReached && !rep.failure ? '非錯誤：達回合上限仍未分勝負' : `未通過：${rep.failure ? rep.failure.message : '未知原因'}`;
+  lines.push(`- 結論：${concl}`, '');
 
   lines.push('## 總結');
+  lines.push(`- 關卡：${rep.stage || '（未進戰場）'}；部署模式：${opt.deployMode}`);
   lines.push(`- 總回合數：${S.totalTurns}`);
   lines.push(`- 勝敗：${S.result}`);
   lines.push(`- 敵方主將 HP 歸零：${S.enemyGeneralZeroAtTurn != null ? `第 ${S.enemyGeneralZeroAtTurn} 回合` : '未擊倒'}`);
@@ -805,15 +875,28 @@ async function main() {
     page.on('pageerror', (e) => rep.pageErrors.push({ turn: ctx.turn, text: String(e.message || e).slice(0, 300) }));
 
     await runStep('開啟預覽', () => openPreview(page, opt));
-    await runStep('注入 enter-battle.js 進場', () => enterWithHelper(page));
-    if (!rep.entered) {
-      log('enter-battle.js 未進到戰場，改走大廳備用流程');
-      await runStep('大廳備用流程進場', () => enterFromLobby(page));
+    if (opt.fresh) {
+      // 全新玩家：不用 enter-battle.js（它直接走出征鈕），改走真實大廳流程（信件、季報、出征→戰場→出征）
+      rep.entered = '';
+      await runStep('大廳流程進場（全新玩家）', () => enterFromLobby(page));
+    } else {
+      await runStep('注入 enter-battle.js 進場', () => enterWithHelper(page));
+      if (!rep.entered) {
+        log('enter-battle.js 未進到戰場，改走大廳備用流程');
+        await runStep('大廳備用流程進場', () => enterFromLobby(page));
+      }
     }
     await shot(page, opt, 'battle-start');
-    await runStep('整場打到結束', () => playBattle(page, opt));
-    await runStep('返回大廳', () => backToLobby(page, opt));
-    ok = rep.steps.every((st) => st.ok) && !!(rep.lobby && rep.lobby.ok);
+    const outcome = await runStep('整場打到結束', () => playBattle(page, opt));
+    if (outcome === 'max-turns') {
+      // 達回合上限仍未分勝負：不是失敗，略過返回大廳（沒有結果彈窗可點）
+      await shot(page, opt, 'max-turns-reached');
+      log(`達回合上限 ${opt.maxTurns} 仍未分勝負`);
+      ok = false;
+    } else {
+      await runStep('返回大廳', () => backToLobby(page, opt));
+      ok = rep.steps.every((st) => st.ok) && !!(rep.lobby && rep.lobby.ok);
+    }
   } catch (e) {
     rep.failure = { message: e.message, step: e.step || null, texts: e.texts || [] };
     log(`失敗：${e.message}`);

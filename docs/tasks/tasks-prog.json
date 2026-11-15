@@ -5790,6 +5790,138 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9311",
+      "title": "教學戰十回合內必分勝負、一般戰鬥回合上限改三十並以撤退結算",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-16T07:14:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "全新玩家首戰（虎牢關）只部署 1 隊不操作時，實跑到第 42 回合才分勝負；總PM 的腳本跑到 49 回合。原因：戰報寫「首戰教學最多十二回合」，但 PROG-2-2215 拿掉強制判負後，教學戰沒有任何回合上限生效，只剩全域 50 回合。總PM 裁定首戰十回合內必分勝負。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: done | 驗證: 型別檢查 0 錯、單元測試 7710 項全過；實機未驗 | 變更: 每場可設回合上限與用盡勝方；教學戰 10 回合用盡判我方獲勝；一般戰鬥上限 50 改 30 並以撤退結算 | 阻塞: 無；未做到：本機預覽未重新編譯，未實機看過第 10 回合的勝利結算；教學戰用盡判勝為戰場專家提案，待總PM 確認",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9312",
+      "title": "奧義選單隱藏用不到的第三顆按鈕",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-16T07:14:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "奧義選單下方露出未替換的「${labelCancel}」字樣。按鈕列範本固定帶第三顆按鈕，這個選單只用兩顆。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: done | 驗證: 型別檢查 0 錯、單元測試全過；實機未驗 | 變更: 奧義選單關掉第三顆按鈕 | 阻塞: 無；未做到：實機未看過修正後畫面；UI 共用層根因未修",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9313",
+      "title": "整場實跑腳本支援全新玩家與三種部署模式",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-16T07:14:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 要量首戰教學戰「只部署 1 隊不操作時幾回合結束」。原腳本只能用既有存檔進一般關卡，也只有「每回合部署到上限」一種打法。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: done | 驗證: 語法檢查通過；全新玩家 first-turn-one 實跑 1 場（42 回合勝利） | 變更: 新增 --fresh 與 --deploy-mode、報告加關卡與部署模式 | 阻塞: 無；未做到：one-per-turn、full 在全新玩家流程下未實跑",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

@@ -1,9 +1,9 @@
-// @spec-source → 戰場勝負結算（BattleVictoryResolver，PROG-2-0202）；規格未寫回合上限結果，以目前程式為準並標為暫定
+// @spec-source → 戰場勝負結算（BattleVictoryResolver，PROG-2-0202）；回合上限依《戰場大回合推進狀態機》判攻方撤退（PROG-2-9311）
 /**
  * BattleVictory — 戰鬥勝負結算的 headless 驗收（PROG-2-0202）
  *
  * 驗收範圍：主將死、要塞歸零、回合上限、雙方同時敗；以及結果事件 BattleEnded 只在結束時發出。
- * 回合上限目前的判定是「玩家輸」，規格沒有寫，這裡只鎖定程式現行行為，記入待辦暫定設計。
+ * 回合上限：超過即判玩家撤退落敗；教學戰用較短的上限。
  *
  * Unity 對照：像是戰鬥結束的 Result Checker，只讀場上狀態、回傳一個結果列舉，不改場景。
  */
@@ -74,13 +74,52 @@ export function createBattleVictorySuite(): TestSuite {
         assert.equals('draw', resolveBattleVictory(ctrl.state));
     });
 
-    suite.test('回合超過上限：目前程式判玩家輸（暫定，規格未定）', () => {
+    suite.test('回合超過上限：判玩家輸，且主將城寨都還在時結算標為撤退', () => {
         const ctrl = freshBattle();
         assert.equals('ongoing', resolveBattleVictory(ctrl.state), '第 1 回合');
         services().battle['turn'] = GAME_CONFIG.TURN_LIMIT;
         assert.equals('ongoing', resolveBattleVictory(ctrl.state), '正好到上限還不算超過');
         services().battle['turn'] = GAME_CONFIG.TURN_LIMIT + 1;
+        const ended: Array<{ result: string; retreated?: boolean }> = [];
+        const onEnded = (data: { result: string; retreated?: boolean }) => ended.push(data);
+        const off = services().event.on(EVENT_NAMES.BattleEnded, onEnded);
         assert.equals('enemy-win', resolveBattleVictory(ctrl.state));
+        off();
+        assert.equals(1, ended.length, '只發一次結束事件');
+        assert.equals(true, ended[0].retreated === true, '回合用盡算撤退');
+    });
+
+    suite.test('主將陣亡的落敗不標為撤退', () => {
+        const ctrl = freshBattle();
+        const ended: Array<{ result: string; retreated?: boolean }> = [];
+        const onEnded = (data: { result: string; retreated?: boolean }) => ended.push(data);
+        const off = services().event.on(EVENT_NAMES.BattleEnded, onEnded);
+        ctrl.state.playerGeneral!.currentHp = 0;
+        assert.equals('enemy-win', resolveBattleVictory(ctrl.state));
+        off();
+        assert.equals(true, ended[0].retreated !== true);
+    });
+
+    suite.test('教學戰回合上限較短，再戰一次後仍維持；一般戰鬥用預設上限', () => {
+        const ctrl = freshBattle();
+        assert.equals(GAME_CONFIG.TURN_LIMIT, services().battle.getTurnLimit(), '一般戰鬥');
+        ctrl.tutorialBattle = true;
+        assert.equals(GAME_CONFIG.TUTORIAL_TURN_LIMIT, services().battle.getTurnLimit(), '設為教學戰');
+        services().battle['turn'] = GAME_CONFIG.TUTORIAL_TURN_LIMIT;
+        assert.equals('ongoing', resolveBattleVictory(ctrl.state), '正好到上限還不算超過');
+        services().battle['turn'] = GAME_CONFIG.TUTORIAL_TURN_LIMIT + 1;
+        const ended: Array<{ result: string; retreated?: boolean; timeUp?: boolean }> = [];
+        const off = services().event.on(EVENT_NAMES.BattleEnded, (data: { result: string; retreated?: boolean; timeUp?: boolean }) => ended.push(data));
+        assert.equals('player-win', resolveBattleVictory(ctrl.state), '教學戰回合用盡算我方獲勝');
+        off();
+        assert.equals(true, ended[0].timeUp === true && ended[0].retreated !== true, '標為回合用盡、不是撤退');
+        services().battle.beginBattle();
+        assert.equals(GAME_CONFIG.TURN_LIMIT, services().battle.getTurnLimit(), '開戰重設回預設');
+        ctrl['applyTutorialTurnLimit']();
+        assert.equals(GAME_CONFIG.TUTORIAL_TURN_LIMIT, services().battle.getTurnLimit(), '控制器重新套用');
+        assert.equals('player-win', services().battle.getTurnLimitOutcome());
+        ctrl.tutorialBattle = false;
+        services().battle.beginBattle();
     });
 
     suite.test('控制器結束流程：提交勝負後狀態機進 Finished 並鎖住結果；進行中則維持 Planning', () => {
