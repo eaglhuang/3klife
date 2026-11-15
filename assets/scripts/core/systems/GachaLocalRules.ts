@@ -24,11 +24,15 @@ export function heroPoolRule(service: LocalGachaService, opts: LocalGachaRuleOpt
     };
 }
 
-/** 紅顏池：扣召喚券，抽女性武將入名冊 */
+/** 紅顏池：設定為靈玉（gem）計價時依 singlePullCost 扣靈玉（FEM-03：每抽 160），否則維持扣召喚券；抽女性武將入名冊 */
 export function beautyPoolRule(service: LocalGachaService): GachaPoolRule {
     return {
-        async pull(req) {
+        async pull(req, pool) {
             if (req.generals.length === 0) throw new Error('紅顏池目前沒有可抽的武將');
+            if (pool?.currencyType === 'gem' && (pool.singlePullCost ?? 0) > 0) {
+                const cost = (pool.singlePullCost ?? 0) * req.drawCount;
+                return service.performLocalGacha(req.poolId, req.drawCount, cost, req.generals, {}, 'gems');
+            }
             return service.performPoolTicketSummon(req.poolId, req.drawCount, req.generals);
         },
     };
