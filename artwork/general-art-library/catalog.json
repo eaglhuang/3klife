@@ -1524,6 +1524,47 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0002",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0002",
+            "file": "battle/guo_jia__郭嘉__battle_0002.png",
+            "status": "review-pending",
+            "pose": "B",
+            "sha256": "cf78f73ab14a2b9580bebcca4c41221dc4060844d96b9df2ed1ff0dca3ec885f",
+            "canvas": "1024x1536 RGBA"
+          }
+        ]
+      },
+      "smallAvatar": {
+        "activeVersion": "0002",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/guo_jia__郭嘉__small_avatar_0001.png",
+            "status": "rejected",
+            "sha256": "ee38783e4e3edc7120851cb9e38f86e305114e936235e017ff78f1e8ffdbb22a",
+            "canvas": "1254x1254 RGBA",
+            "crop": "shoulder-line",
+            "qc": "125px preview: full crown and chin visible, face/head fills about 74%, face centered, short neck and shoulder edge only.",
+            "note": "Rejected: generated redesign changed source character appearance; replaced with crop-only avatar.",
+            "removedFromLibrary": true
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/guo_jia__郭嘉__small_avatar_0002.png",
+            "status": "review-pending",
+            "sha256": "5ab8205a434ce0c349e3a8ee4b9adec602d4b5ddc4c0d53500e6a652898726cd",
+            "canvas": "1254x1254 RGBA",
+            "crop": "shoulder-line",
+            "source": "standing/guo_jia__郭嘉__standing_0003.png",
+            "qc": "125px preview: directly cropped from standing art; full head and chin visible; head fills about 75%; shoulder edge only."
+          }
+        ]
       }
     },
     {
@@ -1589,17 +1630,27 @@
         "activeVersion": "0002"
       },
       "smallAvatar": {
-        "activeVersion": "0001",
+        "activeVersion": "0002",
         "status": "review-pending",
         "history": [
           {
             "version": "0001",
             "file": "small_avatars/jia_xu__賈詡__small_avatar_0001.png",
-            "status": "review-pending",
+            "status": "rejected",
             "sha256": "d13709edb14f36f8b150275542f8b8e3ae1b1ba6fb082979aa4e2d1444bc524c",
             "canvas": "1254x1254 RGBA",
             "faceCenter": "visually centered",
-            "crop": "shoulder-line"
+            "crop": "shoulder-line",
+            "note": "Rejected after owner clarified avatars must preserve the approved character design; file removed.",
+            "removedFromLibrary": true
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/jia_xu__賈詡__small_avatar_0002.png",
+            "status": "review-pending",
+            "sha256": "8956384df0f68eb7230086aacb44f7abbad34eef6c7d28f1c31999413d23242f",
+            "canvas": "1254x1254 RGBA",
+            "note": "User-approved image stored pixel-identically; no redesign or crop changes."
           }
         ]
       }
