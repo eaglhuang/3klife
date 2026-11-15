@@ -7006,6 +7006,23 @@
             "note": "Three-quarter turned face with subtle head tilt, short natural neck, shoulder-line crop, horizontally centered face; review-pending."
           }
         ]
+      },
+      "battle": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/cai_yan__蔡琰__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "c7cbd6fe97194a13b57d47a60e0e8afffce2e085c2eedad24be2d0c9e580f815",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "guqin",
+            "poseLabel": "側步撫弦，衣袖隨動勢展開",
+            "sourceStanding": "standing/cai_yan__蔡琰__standing_0002.png",
+            "note": "沿用蔡琰藍白服飾與古琴特色；琴體由完整四腳琴架承托且落地，候選待審。"
+          }
+        ]
       }
     },
     {
