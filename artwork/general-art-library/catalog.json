@@ -2165,6 +2165,22 @@
             "note": "User-approved image stored pixel-identically; no redesign or crop changes."
           }
         ]
+      },
+      "battle": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/jia_xu__賈詡__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "46fcdd7c965a7e7b3410d1031a1483f16ce3354197a1cff38b5c6e9e7fcd1776",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "strategy-scroll",
+            "poseLabel": "B｜轉身展卷施策",
+            "note": "使用者已選定 B 姿勢；登錄為戰鬥立繪候選，待審。"
+          }
+        ]
       }
     },
     {
