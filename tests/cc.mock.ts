@@ -4,6 +4,10 @@
 
 export class Vec3 {
     constructor(public x = 0, public y = 0, public z = 0) {}
+    static scaleAndAdd(out: Vec3, a: Vec3, b: Vec3, scale: number): Vec3 {
+        out.x = a.x + b.x * scale; out.y = a.y + b.y * scale; out.z = a.z + b.z * scale;
+        return out;
+    }
     clone(): Vec3 {
         return new Vec3(this.x, this.y, this.z);
     }
@@ -231,7 +235,7 @@ export function tween(_target: any) {
 // ─── 系統 ───────────────────────────────────────────────────────────────────
 
 export const Layers = { Enum: { DEFAULT: 1 } };
-export const geometry = {};
+export const geometry = { Ray: class { o = new Vec3(); d = new Vec3(); } };
 export const gfx = { CullMode: { NONE: 0 } };
 // 裝飾器同時支援 @x 與 @x(...) 兩種寫法，型別放寬為 any（mock 僅供型別檢查）
 export const _decorator: {

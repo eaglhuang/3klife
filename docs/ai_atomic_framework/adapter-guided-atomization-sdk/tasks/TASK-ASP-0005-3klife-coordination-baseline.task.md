@@ -8,7 +8,7 @@ blocked_by: []
 owner: 3klife-data
 related_plan: docs/ai_atomic_framework/atomic-cost-reduction-plan.md
 upstream_repo: AI-Atomic-Framework
-targetRepo: 3KLife
+targetRepo: AI-Atomic-Framework
 hostKind: adopter
 alphaGate: none
 public_tracking: true

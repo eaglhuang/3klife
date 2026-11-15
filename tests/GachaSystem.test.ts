@@ -23,10 +23,10 @@ export function createGachaSystemSuite(): TestSuite {
         }
     });
 
-    suite.test('宿命池：免費重轉、展示後收起武將、池別文案與重轉次數', () => {
+    suite.test('宿命池：免費重轉、主角留在左側（使用者 11/15）、池別文案與重轉次數', () => {
         const p = resolveGachaPoolPresentation(byId('destiny-pool'));
         assert.equals('freeReroll', p.repull);
-        assert.equals('hide', p.heroReveal);
+        assert.equals('side', p.heroReveal);
         assert.equals('免費重轉', p.labels?.repull);
         assert.equals('確定 · 全部收下', p.labels?.back);
         assert.equals('宿命轉蛋 · 十連全收', gachaPoolHeader(p, 0));

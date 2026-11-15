@@ -183,7 +183,7 @@
       "tenTitle": "宿命轉蛋",
       "currency": "gems",
       "repull": "freeReroll",
-      "heroReveal": "hide",
+      "heroReveal": "side",
       "inventory": "roster",
       "header": "宿命轉蛋 · 十連全收",
       "headerResetSuffix": "（已重轉 {n} 次）",

@@ -42,7 +42,9 @@ import { TroopUnit } from "../../core/models/TroopUnit";
 import { BattleState } from "../models/BattleState";
 import { isUnitVisibleToPlayer } from "../shared/BattleVision";
 import { BoardRenderer } from "./BoardRenderer";
-import { SpineGeneralOverlay } from "./SpineGeneralOverlay";
+import { SpineUnitOverlay } from "./SpineGeneralOverlay";
+import { generalSpineConfig, soldierSpineConfig } from '../shared/UnitPresentationConfig';
+import { DuelExchange } from '../shared/DuelPresentationCore';
 import { BATTLE_VISUAL_TIMING } from "./BattlePresentationTiming";
 import { BuffGainEffectPool } from "./effects/BuffGainEffectPool";
 import { statBonusTone, statWithBonusText, type StatBonusTone } from "../shared/StatBonusText";
@@ -204,7 +206,7 @@ export class UnitRenderer extends Component {
   // lateUpdate 每幀重用的 Vec3 暫存，避免動態分配（對照 Unity: 快取 Vector3 工具變數）
   private readonly labelWorldPosBuf = new Vec3();
   private readonly generalViews = new Map<Faction, GeneralView>();
-  private readonly spineGenerals = new SpineGeneralOverlay(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
+  private readonly spineUnits = new SpineUnitOverlay(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   private readonly tileBuffViews = new Map<string, TileBuffView>();
   private readonly troopPrefabLoads = new Map<string, Promise<Prefab | null>>();
   private readonly heroPrefabLoads = new Map<string, Promise<Prefab | null>>();
@@ -261,6 +263,7 @@ export class UnitRenderer extends Component {
       if (!activeIds.has(unitId) && !this.dyingUnits.has(unitId)) {
         view.worldNode.destroy();
         view.labelNode.destroy();
+        this.spineUnits.remove(unitId);
         this.unitViews.delete(unitId);
       }
     });
@@ -447,6 +450,7 @@ export class UnitRenderer extends Component {
     if (!view) return;
 
     this.dyingUnits.add(unitId);
+    if (this.spineUnits.play(unitId, 'fall')) this.scheduleOnce(() => this.spineUnits.remove(unitId), 1.8);
 
     // 死亡消融特效 (Tier 2 Instancing Dissolve)
     const dissolveObj = { val: 0 };
@@ -483,6 +487,7 @@ export class UnitRenderer extends Component {
   }
 
   public playAttackAnimation(attackerId: string, defenderLane: number, defenderDepth: number): void {
+    this.spineUnits.play(attackerId, 'attack');
     const attackerNode = this.resolveCombatNode(attackerId);
     if (!attackerNode) return;
 
@@ -506,6 +511,7 @@ export class UnitRenderer extends Component {
   }
 
   public playAttackGeneralAnimation(attackerId: string, defenderFaction: Faction): void {
+    this.spineUnits.play(attackerId, 'attack');
     const attackerNode = this.resolveCombatNode(attackerId);
     const defenderNode = this.generalViews.get(defenderFaction)?.worldNode ?? null;
     if (!attackerNode || !defenderNode) return;
@@ -527,6 +533,7 @@ export class UnitRenderer extends Component {
   }
 
   public playHitAnimation(defenderId: string, _attackerId: string | null): void {
+    this.spineUnits.play(defenderId, 'hit');
     const defenderView = this.unitViews.get(defenderId);
     const defenderNode = defenderView?.worldNode ?? null;
     const defenderUnit = this.findUnitById(defenderId);
@@ -545,6 +552,9 @@ export class UnitRenderer extends Component {
       }
     }, BATTLE_VISUAL_TIMING.hitRimFlashMs);
   }
+
+  public playDodgeAnimation(unitId: string): void { this.spineUnits.play(unitId, 'dodge'); }
+  public playGeneralDodge(faction: Faction): void { this.spineUnits.play(this.generalSpineId(faction), 'dodge'); }
 
   public async playHitAnimationAsync(defenderId: string, attackerId: string | null): Promise<void> {
     this.playHitAnimation(defenderId, attackerId);
@@ -845,7 +855,7 @@ export class UnitRenderer extends Component {
       .start();
   }
 
-  lateUpdate(): void {
+  lateUpdate(dt = 0): void {
     if (!this.uiRoot || !this.worldCamera) return;
 
     this.unitViews.forEach((view, unitId) => {
@@ -854,11 +864,34 @@ export class UnitRenderer extends Component {
         this.updateFloodRaft(view, unit);
       }
       this.projectWorldLabel(view.worldNode, view.labelNode, this.labelHeight);
+      if (unit) {
+        const isGeneral = this.isGeneralAvatarUnit(unit);
+        const general = isGeneral ? this.latestState?.getGeneral(unit.faction) : null;
+        const config = isGeneral ? (general ? generalSpineConfig(general.id, general.templateId) : null) : soldierSpineConfig(unit.type === TroopType.Archer);
+        if (config) {
+          const p = view.labelNode.position;
+          const foot = isGeneral ? this.generalSidelineFoot(unit.faction) : this.unitGroundFoot(view);
+          const shown = this.spineUnits.sync(unitId, config, foot?.x ?? p.x, foot?.y ?? p.y - config.labelToFoot,
+            unit.faction === Faction.Enemy ? -1 : 1, !isGeneral && this.movingUnits.has(unitId), dt, view.labelNode.active);
+          view.visualNode.active = !shown;
+        } else { this.spineUnits.remove(unitId); view.visualNode.active = true; }
+      }
     });
 
-    this.generalViews.forEach(view => {
+    this.generalViews.forEach((view, faction) => {
       this.projectClampedGeneralLabel(view);
+      const general = this.latestState?.getGeneral(faction);
+      const config = general && generalSpineConfig(general.id, general.templateId);
+      if (config) {
+        const p = view.labelNode.position;
+        const side = this.generalSidelineFoot(faction);
+        const shown = this.spineUnits.sync(`general:${faction}`, config, side?.x ?? p.x, side?.y ?? p.y - config.labelToFoot,
+          faction === Faction.Enemy ? -1 : 1, false, dt);
+        if (shown) view.modelRoot.active = false;
+        else if (view.usingHeroModel) view.modelRoot.active = true;
+      } else { this.spineUnits.remove(`general:${faction}`); if (view.usingHeroModel) view.modelRoot.active = true; }
     });
+    this.spineUnits.update(dt);
 
     this.tileBuffViews.forEach(view => {
       const pos = this.boardRenderer?.getCellWorldPosition(view.lane, view.depth, 0.12);
@@ -987,7 +1020,7 @@ export class UnitRenderer extends Component {
 
   private updateSingleGeneralView(faction: Faction, general: GeneralUnit | null): void {
     const avatarOnBoard = this.hasGeneralAvatarOnBoard(faction);
-    if (general && general.currentHp <= 0 && !avatarOnBoard && this.spineGenerals.playDeath(faction)) {
+    if (general && general.currentHp <= 0 && !avatarOnBoard && this.spineUnits.play(`general:${faction}`, 'fall')) {
       // Spine 武將留在場上演倒地，只收掉標籤
       const fallen = this.generalViews.get(faction);
       if (fallen) fallen.labelOpacity.opacity = 0;
@@ -1039,20 +1072,49 @@ export class UnitRenderer extends Component {
     const label = this.projectClampedGeneralLabel(view);
 
     // Spine 2D 武將站在標籤下方；載入完成後隱藏 3D 模型
-    if (this.spineGenerals.sync(faction, label.x, label.y - 230)) {
-      view.modelRoot.active = false;
-    }
+    const config = generalSpineConfig(general.id, general.templateId);
+    this.spineUnits.revive(`general:${faction}`);
+    const side = this.generalSidelineFoot(faction);
+    const shown = !!config && this.spineUnits.sync(`general:${faction}`, config, side?.x ?? label.x, side?.y ?? label.y - config.labelToFoot,
+      faction === Faction.Enemy ? -1 : 1, false, 0);
+    if (!config) this.spineUnits.remove(`general:${faction}`);
+    if (shown) view.modelRoot.active = false;
+    else if (view.usingHeroModel) view.modelRoot.active = true;
   }
 
   /** 武將出招：Spine 武將播一次長槍突刺 */
   public playGeneralAttackPose(faction: Faction): void {
-    this.spineGenerals.playAttack(faction);
+    this.spineUnits.play(this.generalSpineId(faction), 'attack');
   }
 
   /** 武將中招（閃避不呼叫）：Spine 武將播一次受擊後退 */
   public playGeneralKnockback(faction: Faction): void {
-    this.spineGenerals.playHit(faction);
+    this.spineUnits.play(this.generalSpineId(faction), 'hit');
   }
+
+  private generalSpineId(faction: Faction): string {
+    const side = `general:${faction}`;
+    if (this.spineUnits.exists(side)) return side;
+    const prefix = faction === Faction.Player ? 'player-general-' : 'enemy-general-';
+    for (const id of this.unitViews.keys()) if (id.startsWith(prefix) && this.spineUnits.exists(id)) return id;
+    return side;
+  }
+
+  private ensureGeneralSpineId(faction: Faction): string {
+    const id = this.generalSpineId(faction);
+    if (this.spineUnits.exists(id)) return id;
+    const general = this.latestState?.getGeneral(faction);
+    const config = general && generalSpineConfig(general.id, general.templateId);
+    const foot = this.generalSidelineFoot(faction);
+    if (config && foot) this.spineUnits.sync(id, config, foot.x, foot.y, faction === Faction.Enemy ? -1 : 1, false, 0);
+    return id;
+  }
+
+  public playDuelPresentation(winner: 0 | 1 | null, fallen: boolean, exchanges: readonly DuelExchange[]): Promise<void> {
+    return this.spineUnits.playDuel(this.ensureGeneralSpineId(Faction.Player), this.ensureGeneralSpineId(Faction.Enemy), winner, fallen, exchanges);
+  }
+
+  onDestroy(): void { this.spineUnits.clear(); }
 
   private createGeneralView(faction: Faction): GeneralView {
     this.ensureRoots();
@@ -1128,7 +1190,7 @@ export class UnitRenderer extends Component {
     const view = this.generalViews.get(faction);
     if (!view) return;
     services().material.releaseUnit(`General_${faction}`);
-    this.spineGenerals.remove(faction);
+    this.spineUnits.remove(`general:${faction}`);
     view.worldNode.destroy();
     view.labelNode.destroy();
     this.generalViews.delete(faction);
@@ -1681,20 +1743,45 @@ export class UnitRenderer extends Component {
    * 改走 worldToScreen + Canvas 相機 screenToWorld + convertToNodeSpaceAR；取不到 Canvas 相機才退回舊 API。
    */
   private projectToOverlay(worldPos: Vec3, target: Node): void {
-    if (!this.uiRoot || !this.worldCamera) return;
+    const point = typeof this.overlayPoint === 'function'
+      ? this.overlayPoint(worldPos)
+      : UnitRenderer.prototype.overlayPoint.call(this, worldPos);
+    if (point) target.setPosition(point);
+  }
+
+  private overlayPoint(worldPos: Vec3): Vec3 | null {
+    if (!this.uiRoot || !this.worldCamera) return null;
     const uiCamera = this.canvasNode?.getComponent(Canvas)?.cameraComponent;
     const rootTf = this.uiRoot.getComponent(UITransform);
     if (!uiCamera || !rootTf) {
       this.worldCamera.convertToUINode(worldPos, this.uiRoot, this.uiProjectionBuffer);
-      target.setPosition(this.uiProjectionBuffer);
-      return;
+      return this.uiProjectionBuffer;
     }
     const screen = this.worldCamera.worldToScreen(worldPos, this.screenProjectionBuffer);
     screen.z = 0;
     uiCamera.screenToWorld(screen, this.uiProjectionBuffer);
     rootTf.convertToNodeSpaceAR(this.uiProjectionBuffer, this.uiProjectionBuffer);
     this.uiProjectionBuffer.z = 0;
-    target.setPosition(this.uiProjectionBuffer);
+    return this.uiProjectionBuffer;
+  }
+
+  /** 主將待命點位於己方底線外；定位點為地面腳底。 */
+  private generalSidelineFoot(faction: Faction): { x: number; y: number } | null {
+    const lane = Math.floor(GAME_CONFIG.GRID_LANES / 2);
+    const frontDepth = faction === Faction.Player ? 0 : GAME_CONFIG.GRID_DEPTH - 1;
+    const innerDepth = faction === Faction.Player ? 1 : GAME_CONFIG.GRID_DEPTH - 2;
+    const front = this.getUnitWorldPosition(lane, frontDepth, 0);
+    const inner = this.getUnitWorldPosition(lane, innerDepth, 0);
+    if (!front || !inner) return null;
+    const p = this.overlayPoint(front.clone().subtract(inner.clone().subtract(front).multiplyScalar(1.05)));
+    return p ? { x: p.x, y: p.y } : null;
+  }
+
+  private unitGroundFoot(view: UnitView): { x: number; y: number } | null {
+    const world = view.worldNode.getWorldPosition(this.labelWorldPosBuf);
+    world.y -= this.unitHeight * 0.5;
+    const p = this.overlayPoint(world);
+    return p ? { x: p.x, y: p.y } : null;
   }
 
   private projectWorldPoint(worldPos: Vec3, targetNode: Node): void {

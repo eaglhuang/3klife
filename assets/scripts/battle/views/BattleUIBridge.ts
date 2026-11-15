@@ -64,6 +64,7 @@ import { BATTLE_TURN_FLOW_TIMING, BATTLE_VISUAL_TIMING } from './BattlePresentat
 import { buildBattleSkillUsedMessage } from '../../shared/BattleSkillPresentation';
 import { quickViewSkillLines } from '../../shared/QuickViewSkillLines';
 import { SkillSourceType } from '../../shared/SkillRuntimeContract';
+import { selectDuelExchanges } from '../shared/DuelPresentationCore';
 import {
   BATTLE_FLOW_FX,
   playBattleFlowEffectAtBoardCenter,
@@ -153,6 +154,11 @@ export function createBattleSceneContext(): BattleSceneContext {
 
 
 export class BattleUIBridge {
+  private duelCapture: {
+    hits: Array<{ faction: Faction; hp: number; damage?: number; attackerId?: string | null; isCrit?: boolean; wasDodged?: boolean }>;
+    deaths: Array<{ unitId: string; lane: number; depth: number; faction: Faction; type: TroopType }>;
+    ended: { result: string; retreated?: boolean } | null;
+  } | null = null;
   /** 已寫進戰鬥紀錄的智謀觸發次數（PROG-2-1577） */
   private _wisdomTriggersLogged = 0;
   /** 上一次寫進日誌的軍師摘要（PROG-2-1744），內容沒變就不重寫 */
@@ -171,6 +177,39 @@ export class BattleUIBridge {
   private onBoardPlacement: ((screenX: number, screenY: number) => void) | null = null;
   /** 奧義漫畫分鏡 cut-in（Issue #2139）：一場戰鬥一個，「第二次施放走重播」以單場為界 */
   private readonly ultCutin = new UltCutinDirector();
+
+  /** 結算仍同步執行；只延後其視覺事件與戰後畫面，直到單挑演出結束。 */
+  public async resolveDuelPresentation(challenger: Faction, accepted: boolean): Promise<string> {
+    const ctrl = this.ctx.ctrl;
+    if (!ctrl) return '';
+    if (!accepted) return ctrl.resolveDuelChallenge(challenger, false);
+    const capture = { hits: [] as NonNullable<BattleUIBridge['duelCapture']>['hits'],
+      deaths: [] as NonNullable<BattleUIBridge['duelCapture']>['deaths'], ended: null as { result: string; retreated?: boolean } | null };
+    this.duelCapture = capture;
+    let result: string;
+    try { result = ctrl.resolveDuelChallenge(challenger, true); }
+    finally { this.duelCapture = null; }
+    const playerDead = (ctrl.state.getGeneral(Faction.Player)?.currentHp ?? 1) <= 0;
+    const enemyDead = (ctrl.state.getGeneral(Faction.Enemy)?.currentHp ?? 1) <= 0;
+    const winner: 0 | 1 | null = playerDead === enemyDead ? null : playerDead ? 1 : 0;
+    const exchanges = selectDuelExchanges(capture.hits.map(hit => ({ attacker: (hit.faction === Faction.Player ? 1 : 0) as 0 | 1, dodged: !!hit.wasDodged })));
+    try { await (this.ctx.unitRenderer?.playDuelPresentation?.(winner, playerDead || enemyDead, exchanges) ?? Promise.resolve()); }
+    catch (error) { UCUFLogger.error(LogCategory.BATTLE, '[BattleUIBridge] 單挑演出失敗', error); }
+    if (!this.scene.isValid) return result;
+    for (const hit of capture.hits) this.commitDuelDamage(hit);
+    for (const death of capture.deaths) this._onUnitDied(death);
+    if (capture.ended) this._onBattleEnded(capture.ended);
+    return result;
+  }
+
+  private commitDuelDamage(data: NonNullable<BattleUIBridge['duelCapture']>['hits'][number]): void {
+    const target = data.faction === Faction.Player ? '我方主將' : '敵方主將';
+    const maxHp = this.ctx.ctrl?.state.getGeneral(data.faction)?.maxHp ?? 0;
+    if (!data.wasDodged) this.performance.observeGeneralDamaged(data.damage ?? 0, data.faction);
+    this.specialActions.observeGeneralHp({ faction: data.faction, hp: data.hp, maxHp });
+    this.appendLog(data.wasDodged ? `${target} 閃躲攻擊！` : `${target} ${data.isCrit ? '《暴擊》 ' : ''}受到攻擊，剩餘 HP ${Math.max(0, data.hp)}`);
+    services().event.emit(EVENT_NAMES.GeneralDamagedVisualCommitted, { faction: data.faction, hp: data.hp, maxHp });
+  }
 
   constructor(
     private readonly ctx: BattleSceneContext,
@@ -571,6 +610,7 @@ export class BattleUIBridge {
     const side = attacker.faction === Faction.Player ? '我方' : '敵方';
     this.appendLog(`${side}${attacker.name} 攻擊${target.name}落空（命中率 ${Math.round(data.hitRate * 100)}%）`);
     this._enqueueCombatVisual(`unit-miss:${data.attackerId}`, async () => {
+      c.unitRenderer?.playDodgeAnimation?.(target.id);
       await (c.unitRenderer?.playAttackAnimationAsync(data.attackerId, target.lane, target.depth) ?? Promise.resolve());
     });
   }
@@ -627,6 +667,7 @@ export class BattleUIBridge {
   }
 
   private _onUnitDied(data: { unitId: string; lane: number; depth: number; faction: Faction; type: TroopType }): void {
+    if (this.duelCapture) { this.duelCapture.deaths.push(data); return; }
     const c = this.ctx;
     this.performance.observeUnitDied(data.faction);
     this.appendLog(`單位陣亡：${data.unitId}`);
@@ -646,6 +687,7 @@ export class BattleUIBridge {
   }
 
   private _onGeneralDamaged(data: { faction: Faction; hp: number; damage?: number; attackerId?: string | null; isCrit?: boolean; wasDodged?: boolean }): void {
+    if (this.duelCapture) { this.duelCapture.hits.push(data); return; }
     const c = this.ctx;
     const target = data.faction === Faction.Player ? '我方主將' : '敵方主將';
     const maxHp = c.ctrl?.state.getGeneral(data.faction)?.maxHp ?? 0;
@@ -654,6 +696,7 @@ export class BattleUIBridge {
     if (data.wasDodged) {
       this.appendLog(`${target} 閃躲攻擊！`);
       this._enqueueCombatVisual(`general-dodge:${data.faction}`, async () => {
+        c.unitRenderer?.playGeneralDodge?.(data.faction);
         UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] general-dodge start faction=${data.faction}`);
         await c.unitRenderer?.playGeneralHitAnimationAsync(data.faction, data.attackerId || null);
         UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] hud-commit faction=${data.faction} hp=${data.hp}`);
@@ -856,6 +899,7 @@ export class BattleUIBridge {
 
   private _onBattleEnded(data: { result: string; retreated?: boolean }): void {
     this._lastEndedPayload = { result: data.result, retreated: data.retreated };
+    if (this.duelCapture) { this.duelCapture.ended = data; return; }
     const c = this.ctx;
     const effectKey = resolveBattleResultEffectKey(data.result);
     if (effectKey) {

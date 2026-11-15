@@ -1,4 +1,4 @@
-// @spec-source → Issue #2159；PROG-2-9032
+// @spec-source → Issue #2159；PROG-2-9034
 import { TestSuite, assert } from './TestRunner';
 import { EVENT_NAMES, Faction } from '../assets/scripts/core/config/Constants';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
@@ -23,11 +23,13 @@ const { BattleHUDComposite } = require('../assets/scripts/ui/components/BattleHU
 const { ActionCommandComposite } = require('../assets/scripts/ui/components/ActionCommandComposite');
 const { ResultPopupComposite } = require('../assets/scripts/ui/components/ResultPopupComposite');
 const { BattleUIBridge, createBattleSceneContext } = require('../assets/scripts/battle/views/BattleUIBridge');
+const { LobbyHallScreenBinder } = require('../assets/scripts/ui/core/LobbyHallScreenBinder');
 const fs = require('fs');
 const path = require('path');
 
 function makeRichNode(name: string, parent: any = null): any {
     const node = new Node(name);
+    node.isValid = true;
     node.parent = parent;
     node.children = [];
     node.siblingHistory = [];
@@ -330,6 +332,128 @@ export function createIssue2159BattleHudRetreatFixesSuite(): TestSuite {
         const openCallIdx = src.indexOf('this._openDailyReportIfPending();');
         assert.isTrue(completeIdx !== -1 && openCallIdx !== -1 && completeIdx < openCallIdx);
         assert.isTrue(openCallIdx - completeIdx < 300);
+    });
+
+    suite.test('LobbyHallScreenBinder.bubble 避讓天下勢力圖且 setCrowdTagsVisible(false) 一併收起泡泡', () => {
+        const root = makeRichNode('LobbyHallScreen');
+        const rootTf = root.addComponent(UITransform);
+        rootTf.setContentSize(1920, 1080);
+
+        const sandboxGroup = makeRichNode('SandboxGroup', root);
+        root.addChild(sandboxGroup);
+        sandboxGroup.position = { x: 0, y: 0, z: 0 };
+
+        const sandbox = makeRichNode('Sandbox', sandboxGroup);
+        sandboxGroup.addChild(sandbox);
+        sandbox._ucufId = 'lobby-hall-screen.sandbox';
+        sandbox.active = true;
+        sandbox.position = { x: 0, y: 185, z: 0 }; // top = 190, bottom = 520 (height = 330)
+        sandbox.scale = { x: 1, y: 1, z: 1 };
+        const sandboxTf = sandbox.addComponent(UITransform);
+        sandboxTf.setContentSize(460, 330);
+
+        const bubble = makeRichNode('Bubble', root);
+        root.addChild(bubble);
+        bubble._ucufId = 'lobby-hall-screen.bubble';
+        bubble.active = false;
+        const bubbleTf = bubble.addComponent(UITransform);
+        bubbleTf.setContentSize(300, 122);
+        const bubbleWidget = bubble.addComponent(Widget);
+        bubbleWidget.updateAlignment = () => undefined;
+
+        const binder = new LobbyHallScreenBinder(root, {
+            themeConfig: null,
+            fxConfig: null,
+            onBack: () => undefined,
+            onDock: () => undefined,
+        });
+
+        const released: string[] = [];
+        const tagVisibility: boolean[] = [];
+        binder['_crowd'] = {
+            headPositionOf: (id: string) => (id === 'g-center' ? { x: 20, y: 20 } : { x: 520, y: 20 }),
+            releaseActor: (id: string) => released.push(id),
+            setTagsVisible: (v: boolean) => tagVisibility.push(v),
+        };
+
+        // 中央區武將（x=20, y=20）原本 top=398 會撞到 sandbox（top 190..520），應下推至 >= 532
+        binder['_placeBubbleAbove'](bubble, 'g-center');
+        assert.isTrue(bubbleWidget.top >= 532, `bubbleWidget.top 應避開勢力圖下緣 (>=532)，實際 ${bubbleWidget.top}`);
+
+        // 右側不重疊區武將（x=520, y=20）應保持在頭頂（398）
+        binder['_placeBubbleAbove'](bubble, 'g-right');
+        assert.equals(398, bubbleWidget.top);
+
+        // 子選單蓋上大廳時（setCrowdTagsVisible(false)），開啟中的泡泡應一併關閉並釋放武將
+        bubble.active = true;
+        binder['_bubbleActor'] = 'g-center';
+        binder.setCrowdTagsVisible(false);
+        assert.isFalse(bubble.active);
+        assert.equals('g-center', released[0]);
+        assert.equals(false, tagVisibility[0]);
+    });
+
+    suite.test('LobbyScene._syncCityHubSubMenuLayer 立即重算 Widget 對齊，且返回大廳時維持 _lobbyHallHost 在 _cityHubHost 之上', () => {
+        const src = fs.readFileSync(path.join(__dirname, '../assets/scripts/ui/scenes/LobbyScene.ts'), 'utf8');
+        const syncIdx = src.indexOf('private _syncCityHubSubMenuLayer(menu: Node | null): void');
+        assert.isTrue(syncIdx !== -1);
+        const syncBody = src.slice(syncIdx, syncIdx + 800);
+        assert.contains(syncBody, 'menu.getComponent(Widget)?.updateAlignment();');
+        assert.contains(syncBody, 'this._lobbyHall?.setCrowdTagsVisible(!overHall);');
+
+        // 驗證 _createLobbyMainController().show() 在 _lobbyHallHost.node.active 時拉回最前並同步 subMenu
+        const ctrlIdx = src.indexOf('private _createLobbyMainController(): IUIManagedController');
+        assert.isTrue(ctrlIdx !== -1);
+        const hideIdx = src.indexOf('hide: () => {', ctrlIdx);
+        const ctrlBody = src.slice(ctrlIdx, hideIdx !== -1 ? hideIdx : ctrlIdx + 4000);
+        const cityIdx = ctrlBody.indexOf('this._bringNodeToFront(this._cityHubHost.node);');
+        const hallIdx = ctrlBody.indexOf('if (this._lobbyHallHost?.node.active) {');
+        assert.isTrue(cityIdx !== -1 && hallIdx !== -1 && hallIdx > cityIdx);
+        assert.contains(ctrlBody.slice(hallIdx, hallIdx + 260), 'this._bringNodeToFront(this._lobbyHallHost.node);');
+        assert.contains(ctrlBody.slice(hallIdx, hallIdx + 260), '_syncCityHubSubMenuLayer');
+
+        // 模擬 _syncCityHubSubMenuLayer 執行期行為（無需真實 DOM）
+        const cityRoot = makeRichNode('CityRoot');
+        const hallNode = makeRichNode('LobbyHallHost');
+        hallNode.activeInHierarchy = true;
+        const menu = makeRichNode('SubMenu', cityRoot);
+        menu.active = true;
+        cityRoot.addChild(menu);
+        let alignCount = 0;
+        const widget = menu.addComponent(Widget);
+        widget.updateAlignment = () => { alignCount++; };
+        const origGetWidget = menu.getComponent.bind(menu);
+        menu.getComponent = (cls: any) => (cls === Widget ? widget : origGetWidget(cls));
+        menu.setParent = (target: any) => {
+            if (menu.parent === target) return;
+            if (menu.parent) menu.parent.children = menu.parent.children.filter((c: any) => c !== menu);
+            menu.parent = target;
+            if (target && !target.children.includes(menu)) target.children.push(menu);
+        };
+
+        const tagsLog: boolean[] = [];
+        const fakeScene: any = {
+            _cityHubSubMenuHome: null,
+            _lobbyHallHost: { node: hallNode },
+            _lobbyHall: { setCrowdTagsVisible: (v: boolean) => tagsLog.push(v) },
+        };
+        const ccMod = require('cc');
+        const origFromHex = ccMod.Color?.prototype?.fromHEX;
+        if (ccMod.Color?.prototype && !origFromHex) {
+            ccMod.Color.prototype.fromHEX = function () { return this; };
+        }
+        try {
+            const { LobbyScene } = require('../assets/scripts/ui/scenes/LobbyScene');
+            LobbyScene.prototype._syncCityHubSubMenuLayer.call(fakeScene, menu);
+        } finally {
+            if (ccMod.Color?.prototype) {
+                if (origFromHex === undefined) delete ccMod.Color.prototype.fromHEX;
+                else ccMod.Color.prototype.fromHEX = origFromHex;
+            }
+        }
+        assert.equals(hallNode, menu.parent);
+        assert.equals(1, alignCount);
+        assert.equals(false, tagsLog[0]);
     });
 
     return suite;
