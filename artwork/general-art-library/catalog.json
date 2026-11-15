@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-16",
+  "updatedAt": "2026-11-15T21:39:08Z",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -1688,6 +1688,24 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/taishi_ci__太史慈__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "db439dbb52af89745c8165a75209b21d07db1169440e1f376c83322a8e9e0a50",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "iron-spear",
+            "pose": "low rotating advance with diagonal forward thrust",
+            "gaze": "direct to viewer",
+            "sourceStanding": "standing/taishi_ci__太史慈__standing_0002.png",
+            "note": "User-approved generated candidate. Full figure and spear are within canvas; shaft is straight; awaiting review before runtime integration."
+          }
+        ]
       }
     },
     {
