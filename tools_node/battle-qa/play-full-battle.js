@@ -297,6 +297,9 @@ const rep = {
   lobby: null,
   failure: null,
   verdict: '',
+  zeroHp: { enemy: null, player: null },
+  lastGeneral: null,
+  summary: null,
 };
 const ctx = { turn: 0 };
 
@@ -377,37 +380,120 @@ async function enterFromLobby(page) {
   throw new QaError('進場', `180 秒內沒有進到戰場（最後動作：${actions.slice(-3).join(' → ')}）`, lastTexts);
 }
 
-// 回合內：部署一張卡到最前排（深度 0）的空格；卡與路依回合輪換
+// 頁面端：包一層 ctrl.tryDeployTroop（保留原行為與回傳值），每次呼叫的結果記到 window.__bqDeployLog
+function pageInstallDeployWrap() {
+  const b = window.__bq.battle();
+  if (!b || !b.ctrl || typeof b.ctrl.tryDeployTroop !== 'function') return false;
+  if (!window.__bqDeployLog) window.__bqDeployLog = [];
+  const c = b.ctrl;
+  if (!c.__bqWrapped) {
+    const orig = c.tryDeployTroop;
+    c.tryDeployTroop = function (...args) {
+      const r = orig.apply(this, args);
+      window.__bqDeployLog.push({ type: args[0] == null ? null : String(args[0]), lane: args[1], ok: !!(r && r.ok), reason: (r && r.reason) || null, reasons: (r && r.reasons) || null, suggestion: (r && r.suggestion) || null });
+      return r;
+    };
+    c.__bqWrapped = true;
+  }
+  return true;
+}
+
+// 頁面端：本回合部署進度 { used, limit, reached }
+function pageDeployProgress() {
+  const b = window.__bq.battle();
+  if (!b || !b.ctrl || typeof b.ctrl.getPlayerDeployProgress !== 'function') return null;
+  return b.ctrl.getPlayerDeployProgress();
+}
+
+// 頁面端：糧草與軍勢狀態。軍勢帳本來自 ctrl.getSortieState()；services.battle 的糧草不掛在 window 上，
+// 只能從 ctrl 欄位（最多兩層）找出 getSnapshot() 含 playerFood 的物件，找不到就記「無法取得」。
+function pageSupply() {
+  const b = window.__bq.battle();
+  const out = { sortie: null, battleFood: '無法取得', note: '' };
+  if (!b || !b.ctrl) { out.note = '戰場元件不存在'; return out; }
+  const c = b.ctrl;
+  const st = typeof c.getSortieState === 'function' ? c.getSortieState() : null;
+  if (st) {
+    out.sortie = { food: st.food, maxFood: st.maxFood, foodSpent: st.foodSpent, poolCurrent: st.poolCurrent, poolMax: st.poolMax, militiaDeployed: st.militiaDeployed, eliteDeployed: st.eliteDeployed, tacticCurrent: st.tacticCurrent, tacticMax: st.tacticMax };
+  }
+  const seen = new Set();
+  const probe = (obj, depth) => {
+    if (!obj || typeof obj !== 'object' || seen.has(obj) || depth < 0) return null;
+    seen.add(obj);
+    for (const k of Object.keys(obj)) {
+      let v;
+      try { v = obj[k]; } catch (e) { continue; }
+      if (!v || typeof v !== 'object') continue;
+      if (typeof v.getSnapshot === 'function') {
+        try { const sn = v.getSnapshot(); if (sn && typeof sn.playerFood === 'number') return sn.playerFood; } catch (e) { /* 忽略 */ }
+      }
+      if (Object.getPrototypeOf(v) !== Object.prototype && !Array.isArray(v) && !(v instanceof Map) && !(v instanceof Set)) {
+        const r = probe(v, depth - 1);
+        if (r != null) return r;
+      }
+    }
+    return null;
+  };
+  const food = probe(c, 2);
+  if (food != null) out.battleFood = food;
+  else out.note = 'ctrl 兩層內找不到 services.battle（window 也未掛 services）；糧草請看 sortie.food';
+  return out;
+}
+
+const DEPLOY_MAX_ATTEMPTS = 12;
+const DEPLOY_MAX_CONSEC_FAIL = 2;
+
+// 回合內持續部署：直到 getPlayerDeployProgress().reached、沒有可用卡或空格、或連續失敗 2 次為止。
+// 每次挑一個尚未試過的空的最前排格（深度 0），用真實滑鼠拖曳部署；失敗原因取自 tryDeployTroop 的回傳。
 async function tryDeploy(page, s, turnRec) {
   const LANES = 5;
-  const occupied = new Set(s.units.filter((u) => u.depth === 0).map((u) => u.lane));
-  const freeLanes = [];
-  for (let k = 0; k < LANES; k += 1) {
-    const lane = (turnRec.turn + k) % LANES;
-    if (!occupied.has(lane)) freeLanes.push(lane);
-  }
-  const cards = s.cards.filter((c) => c.active && c.client);
-  if (!cards.length) { turnRec.deploy = '無可用卡片節點'; return; }
-  if (!freeLanes.length) { turnRec.deploy = '最前排已滿，略過部署'; return; }
-  let snap = s;
   turnRec.deployAttempts = [];
-  for (let k = 0; k < Math.min(2, cards.length); k += 1) {
+  turnRec.deployOk = 0;
+  const wrapped = await ev(page, pageInstallDeployWrap);
+  if (!wrapped) { turnRec.deploy = '無法包裝 tryDeployTroop（戰場元件不存在）'; return; }
+  const triedLanes = new Set();
+  let consecFail = 0;
+  let stop = '';
+  let snap = s;
+  for (let k = 0; k < DEPLOY_MAX_ATTEMPTS; k += 1) {
+    const prog = await ev(page, pageDeployProgress);
+    if (prog && prog.reached) { stop = `已達單回合上限 ${prog.used}/${prog.limit}`; break; }
+    if (snap.turn !== turnRec.turn) { stop = '回合已前進'; break; }
+    const occupied = new Set(snap.units.filter((u) => u.depth === 0).map((u) => u.lane));
+    const lane = [0, 1, 2, 3, 4].find((l) => l < LANES && !occupied.has(l) && !triedLanes.has(l));
+    if (lane === undefined) { stop = '沒有可用的空部署格'; break; }
     const usable = snap.cards.filter((c) => c.active && c.client);
-    if (!usable.length) break;
+    if (!usable.length) { stop = '無可用卡片節點'; break; }
     const card = usable[(turnRec.turn + k) % usable.length];
-    const lane = freeLanes[k % freeLanes.length];
+    triedLanes.add(lane);
     const to = await ev(page, (l, d) => window.__bqx.cellClient(l, d), lane, 0);
-    const before = snap.units.length;
+    const logFrom = await ev(page, () => (window.__bqDeployLog || []).length);
+    const unitsBefore = snap.units.length;
     await ev(page, (f, t) => window.__bqx.drag(f, t), card.client, to);
     await sleep(900);
+    const calls = await ev(page, (i) => (window.__bqDeployLog || []).slice(i), logFrom);
     snap = await ev(page, pageSnapshot);
-    const placed = snap.units.some((u) => u.side === '我方' && u.lane === lane && u.depth === 0)
-      && snap.units.length > before;
-    turnRec.deployAttempts.push({ card: card.name, lane, depth: 0, placed, unitsBefore: before, unitsAfter: snap.units.length });
-    if (placed) { turnRec.deployed = { card: card.name, lane, depth: 0 }; return; }
-    if (snap.turn !== turnRec.turn) return;
+    const placed = snap.units.some((u) => u.side === '我方' && u.lane === lane && u.depth === 0) && snap.units.length > unitsBefore;
+    const last = calls.length ? calls[calls.length - 1] : null;
+    let failReason = null;
+    if (!placed) failReason = !last ? '未觸發部署（拖曳未進入 tryDeployTroop）' : (last.ok ? '呼叫成功但單位未出現' : (last.reason || 'unknown'));
+    turnRec.deployAttempts.push({
+      n: k + 1, card: card.name, lane, depth: 0, placed, failReason,
+      call: last ? { type: last.type, ok: last.ok, reason: last.reason, reasons: last.reasons, suggestion: last.suggestion, calls: calls.length } : null,
+      unitsBefore, unitsAfter: snap.units.length,
+    });
+    if (placed) {
+      turnRec.deployOk += 1;
+      consecFail = 0;
+      if (!turnRec.deployed) turnRec.deployed = { card: card.name, lane, depth: 0 };
+    } else {
+      consecFail += 1;
+      if (consecFail >= DEPLOY_MAX_CONSEC_FAIL) { stop = `連續失敗 ${consecFail} 次`; break; }
+    }
   }
-  if (!turnRec.deployed) turnRec.deploy = '嘗試部署但單位數未增加';
+  if (!stop) stop = `達單回合嘗試上限 ${DEPLOY_MAX_ATTEMPTS} 次`;
+  turnRec.deployStop = stop;
+  if (!turnRec.deployAttempts.length) turnRec.deploy = stop;
 }
 
 async function maybeUltimate(page, s, turnRec) {
@@ -462,8 +548,11 @@ async function playBattle(page, opt) {
       await sleep(500);
       continue;
     }
+    if (s.enemyGeneral && s.enemyGeneral.hp <= 0 && rep.zeroHp.enemy == null) rep.zeroHp.enemy = s.turn;
+    if (s.playerGeneral && s.playerGeneral.hp <= 0 && rep.zeroHp.player == null) rep.zeroHp.player = s.turn;
+    rep.lastGeneral = { player: s.playerGeneral, enemy: s.enemyGeneral, turn: s.turn };
     if (isResult(s)) {
-      if (cur && !cur.closed) { cur.after = brief(s); cur.closed = true; }
+      if (cur && !cur.closed) { cur.after = brief(s); cur.closed = true; cur.errorsTo = rep.consoleErrors.length; }
       rep.result = { outcome: outcomeOf(s.texts), announced: s.ended, texts: s.texts, turnAtEnd: s.turn };
       log(`結果彈窗出現：${rep.result.outcome}（回合 ${s.turn}）`);
       return 'ended';
@@ -489,8 +578,8 @@ async function playBattle(page, opt) {
       continue;
     }
     if (s.turn != null && (!cur || cur.turn !== s.turn)) {
-      if (cur && !cur.closed) { cur.after = brief(s); cur.closed = true; }
-      cur = { turn: s.turn, before: brief(s), after: null, closed: false, endedAt: 0, endTurnTapped: false, errorsFrom: rep.consoleErrors.length, deployed: null, deployAttempts: [], deploy: null, ultimate: null };
+      if (cur && !cur.closed) { cur.after = brief(s); cur.closed = true; cur.errorsTo = rep.consoleErrors.length; }
+      cur = { turn: s.turn, before: brief(s), after: null, closed: false, endedAt: 0, endTurnTapped: false, errorsFrom: rep.consoleErrors.length, errorsTo: null, deployed: null, deployAttempts: [], deployOk: 0, deployStop: null, deploy: null, supplyStart: null, supplyEnd: null, ultimate: null };
       rep.turns.push(cur);
       ctx.turn = s.turn;
       log(`第 ${s.turn} 回合：我方 ${cur.before.unitCount.我方} 單位，敵方 ${cur.before.unitCount.敵方} 單位，我方主將 HP ${s.playerGeneral && s.playerGeneral.hp}，SP ${s.playerGeneral && s.playerGeneral.sp}`);
@@ -509,7 +598,9 @@ async function playBattle(page, opt) {
         ready = await ev(page, pageSnapshot);
       }
       if (opt.ultimate) await maybeUltimate(page, ready, cur);
+      cur.supplyStart = await ev(page, pageSupply);
       await tryDeploy(page, ready, cur);
+      cur.supplyEnd = await ev(page, pageSupply);
       const s2 = await ev(page, pageSnapshot);
       if (s2.turn === cur.turn && s2.texts.includes('結束回合')) {
         await tapText(page, '結束回合');
@@ -558,25 +649,78 @@ async function backToLobby(page, opt) {
 }
 
 // ---------- 報告 ----------
+// 報告總結：回合數、勝敗、主將歸零回合、平均部署成功數、失敗原因次數
+function buildSummary() {
+  const turns = rep.turns;
+  const totalDeployOk = turns.reduce((a, t) => a + (t.deployOk || 0), 0);
+  const failReasons = {};
+  for (const t of turns) {
+    for (const a of t.deployAttempts || []) {
+      if (a.placed) continue;
+      const key = a.failReason || 'unknown';
+      failReasons[key] = (failReasons[key] || 0) + 1;
+    }
+  }
+  const lg = rep.lastGeneral || {};
+  const pick = (g) => (g ? { hp: g.hp, maxHp: g.maxHp } : null);
+  return {
+    totalTurns: turns.length,
+    result: rep.result ? rep.result.outcome : '未出現結果彈窗',
+    enemyGeneralZeroAtTurn: rep.zeroHp.enemy,
+    playerGeneralZeroAtTurn: rep.zeroHp.player,
+    finalPlayerGeneral: pick(lg.player),
+    finalEnemyGeneral: pick(lg.enemy),
+    avgDeployOkPerTurn: turns.length ? Number((totalDeployOk / turns.length).toFixed(2)) : 0,
+    totalDeployOk,
+    failReasons,
+  };
+}
+
+function fmtGen(g) { return g ? `${g.hp}/${g.maxHp}` : '—'; }
+
+function fmtSupply(sp) {
+  if (!sp) return '—';
+  const bf = sp.battleFood === '無法取得' ? '無法取得' : sp.battleFood;
+  const sortie = sp.sortie ? `軍勢糧 ${sp.sortie.food}/${sp.sortie.maxFood}，兵池 ${sp.sortie.poolCurrent}/${sp.sortie.poolMax}，計謀 ${sp.sortie.tacticCurrent}/${sp.sortie.tacticMax}` : '無出征帳本';
+  return `${sortie}；戰場糧 ${bf}`;
+}
+
+function fmtDeployCell(t) {
+  if (!t.deployAttempts || !t.deployAttempts.length) return t.deploy || '未部署';
+  const parts = t.deployAttempts.map((a) => (a.placed ? `${a.card}→路${a.lane + 1} 成功` : `路${a.lane + 1} 失敗：${a.failReason}`));
+  return `${parts.join('；')}（停：${t.deployStop || '—'}）`;
+}
+
 function writeReports(opt, ok) {
   rep.finishedAt = new Date().toISOString();
   rep.consoleErrorCount = rep.consoleErrors.length;
   rep.pageErrorCount = rep.pageErrors.length;
+  rep.summary = buildSummary();
   fs.writeFileSync(path.join(opt.out, 'report.json'), JSON.stringify(rep, null, 2), 'utf8');
 
   const lines = [];
   const turnsPlayed = rep.turns.length;
-  const deployedCount = rep.turns.filter((t) => t.deployed).length;
+  const S = rep.summary;
   lines.push('# 戰場整場實跑報告', '');
   lines.push(`- 執行時間：${rep.startedAt} → ${rep.finishedAt}`);
   lines.push(`- 參數：duel=${opt.duel}，ultimate=${opt.ultimate}，max-turns=${opt.maxTurns}`);
   lines.push(`- 是否進戰場：${rep.entered ? `是（方式：${rep.entered}）` : '否'}`);
-  lines.push(`- 打了幾回合：${turnsPlayed}（成功部署 ${deployedCount} 次）`);
+  lines.push(`- 打了幾回合：${turnsPlayed}（成功部署 ${S.totalDeployOk} 隊）`);
   lines.push(`- 結果：${rep.result ? rep.result.outcome : '未出現結果彈窗'}`);
   lines.push(`- 是否回到大廳：${rep.lobby && rep.lobby.ok ? '是' : '否'}`);
   lines.push(`- 單挑邀請：${rep.duels.length} 次；教學面板收起：${rep.tutorialDismissed} 次；奧義：${rep.ultimates.length} 次`);
   lines.push(`- 主控台 error：${rep.consoleErrors.length} 筆；未捕捉例外：${rep.pageErrors.length} 筆`);
   lines.push(`- 結論：${ok ? '通過（整場串通並回到大廳）' : `未通過：${rep.failure ? rep.failure.message : '未知原因'}`}`, '');
+
+  lines.push('## 總結');
+  lines.push(`- 總回合數：${S.totalTurns}`);
+  lines.push(`- 勝敗：${S.result}`);
+  lines.push(`- 敵方主將 HP 歸零：${S.enemyGeneralZeroAtTurn != null ? `第 ${S.enemyGeneralZeroAtTurn} 回合` : '未擊倒'}`);
+  lines.push(`- 我方主將 HP 歸零：${S.playerGeneralZeroAtTurn != null ? `第 ${S.playerGeneralZeroAtTurn} 回合` : '未歸零'}`);
+  lines.push(`- 最後主將 HP：我方 ${fmtGen(S.finalPlayerGeneral)}；敵方 ${fmtGen(S.finalEnemyGeneral)}`);
+  lines.push(`- 每回合平均部署成功數：${S.avgDeployOkPerTurn}（總成功 ${S.totalDeployOk} 隊）`);
+  const frs = Object.entries(S.failReasons);
+  lines.push(`- 失敗原因次數：${frs.length ? frs.map(([k, v]) => `${k} × ${v}`).join('、') : '（無失敗部署）'}`, '');
 
   lines.push('## 步驟');
   lines.push('| 步驟 | 結果 | 耗時 |', '|---|---|---|');
@@ -586,15 +730,16 @@ function writeReports(opt, ok) {
   if (rep.enter) lines.push(`進場細節：enter-battle.js 回傳 \`${rep.enter.enterBattleResult}\`，戰場元件 ${rep.enter.battle ? '存在' : '不存在'}`, '');
 
   lines.push('## 逐回合');
-  lines.push('| 回合 | 我方單位 | 敵方單位 | 我方主將 HP/SP | 敵方主將 HP/SP | 要塞 我/敵 | 部署 | 本回合 error |', '|---|---|---|---|---|---|---|---|');
+  lines.push('| 回合 | 我方單位 | 敵方單位 | 我方主將 HP/SP | 敵方主將 HP/SP | 要塞 我/敵 | 部署成功數 | 部署結果／失敗原因 | 糧草／軍勢（開始 → 結束） | 本回合 error |', '|---|---|---|---|---|---|---|---|---|---|');
   for (const t of rep.turns) {
     const b = t.before;
     const pgTxt = b.playerGeneral ? `${b.playerGeneral.hp}/${b.playerGeneral.maxHp} · ${b.playerGeneral.sp}/${b.playerGeneral.maxSp}` : '—';
     const egTxt = b.enemyGeneral ? `${b.enemyGeneral.hp}/${b.enemyGeneral.maxHp} · ${b.enemyGeneral.sp}/${b.enemyGeneral.maxSp}` : '—';
     const fTxt = b.fortress ? `${b.fortress.player}/${b.fortress.enemy}` : '—';
-    const dep = t.deployed ? `${t.deployed.card} → 路${t.deployed.lane + 1}` : (t.deploy || '未部署');
-    const errs = (t.after ? rep.consoleErrors.length : rep.consoleErrors.length) - t.errorsFrom;
-    lines.push(`| ${t.turn} | ${b.unitCount.我方} | ${b.unitCount.敵方} | ${pgTxt} | ${egTxt} | ${fTxt} | ${dep} | ${errs} |`);
+    const dep = fmtDeployCell(t);
+    const supTxt = `${fmtSupply(t.supplyStart)} → ${fmtSupply(t.supplyEnd)}`;
+    const errs = (t.errorsTo != null ? t.errorsTo : rep.consoleErrors.length) - t.errorsFrom;
+    lines.push(`| ${t.turn} | ${b.unitCount.我方} | ${b.unitCount.敵方} | ${pgTxt} | ${egTxt} | ${fTxt} | ${t.deployOk || 0} | ${dep.replace(/\|/g, '/')} | ${supTxt.replace(/\|/g, '/')} | ${errs} |`);
   }
   lines.push('');
 

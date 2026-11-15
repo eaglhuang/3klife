@@ -5704,6 +5704,92 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9309",
+      "title": "整場自動實跑腳本：每回合部署到上限並記錄部署結果",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-16T01:54:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "原腳本每回合只部署 1 隊，三場都在 7～10 回合落敗，不能代表玩家；部署失敗也只寫「單位數未增加」看不出原因。規則已改為每回合可部署到上限再手動結束回合，腳本要跟上才能用來量「幾回合打倒主將」。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: done | 驗證: 語法檢查通過；實跑 3 場皆勝（21、11、19 回合）並回到大廳 | 變更: 每回合部署到上限、記錄部署結果與原因、報告加總結 | 阻塞: 無；未做到：第一場第 8 回合有 2 次拖曳沒有觸發部署，原因未查明；戰場糧草數值讀不到（三場都沒有出征帳本），所以糧草不足等失敗原因沒有被實際觸發過；單挑與奧義分支仍未觸發",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9310",
+      "title": "戰場部隊頭頂數值標籤的繪製次數優化",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "小隊 3 人上線後量測（桌機預覽 800×368）：0 隊繪製 226 次，8 隊 320 次，9～10 隊回合進行中 347～359 次、53～54 幀、最差單幀 117 毫秒。每多一隊約多 13 次繪製；試開骨骼合批只省 20 次，主要成本在每隊頭上的攻擊／生命／名稱標籤與血條。總PM 裁示目標：10 隊同場繪製次數低於 250；手機實測排在 MVP 串通之後。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: open | 驗證: pending | 變更: 開卡，尚未實作 | 阻塞: 無；量測基準為桌機預覽，手機尚未實測",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
