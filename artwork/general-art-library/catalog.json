@@ -1003,6 +1003,23 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/sun_quan__孫權__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "9dc4fed14e0e589c5ceac54f268538506fd0b5cbefb30c1576d75c463e2208c2",
+            "canvas": "256x256 RGBA",
+            "faceCenter": "visually centered",
+            "crop": "shoulder-line",
+            "source": "avatars/sun_quan__孫權__avatar_0002.png",
+            "note": "Derived by proportional crop and resize only; full crown, face and chin preserved. Tall crown limits face occupancy; shoulder-line framing avoids redesign."
+          }
+        ]
       }
     },
     {
