@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-11-09
+> 生成日期: 2026-11-15
 > 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 14/14 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -8,10 +8,6 @@
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
-| `doc_task_2306` | docs/agent-briefs/tasks/PROG/PROG-2-2089.md | PROG-2-2089 命鏡載入 Tips 四池文案擴充（LT-04） |
-| `doc_task_2307` | docs/agent-briefs/tasks/PROG/PROG-2-2090.md | PROG-2-2090 幼兒內政指派接線（SPI-13 Q51） |
-| `doc_task_2308` | docs/agent-briefs/tasks/PROG/PROG-2-2091.md | PROG-2-2091 內政面板套用幼兒效率（SPI-13 Q51） |
-| `doc_task_2309` | docs/agent-briefs/tasks/PROG/PROG-2-2092.md | PROG-2-2092 教官卡原型改依特徵分流（FORM-04） |
 | `doc_task_2310` | docs/agent-briefs/tasks/PROG/PROG-2-2093.md | PROG-2-2093 重複卡彈窗套用裁決色碼（DUP-01） |
 | `doc_task_2311` | docs/agent-briefs/tasks/PROG/PROG-2-2094.md | PROG-2-2094 開場信定稿為古典傳家書版（COPY-01） |
 | `doc_task_2312` | docs/agent-briefs/tasks/PROG/PROG-2-2095.md | PROG-2-2095 開場信還原為使用者原稿（COPY-01） |
@@ -77,3 +73,78 @@
 | `doc_task_2376` | docs/agent-briefs/tasks/PROG/PROG-2-2202.md | PROG-2-2202 出征極速決戰Auto-Resolve與武將個性單挑演算法（LOOP-02） |
 | `doc_task_2377` | docs/agent-briefs/tasks/PROG/PROG-2-2203.md | PROG-2-2203 三國季報晨報重構與市井奇遇隨機互動閉環（LOOP-03） |
 | `doc_task_2378` | docs/agent-briefs/tasks/PROG/PROG-2-2204.md | PROG-2-2204 代際傳承自然引導流與子嗣抓周入學學府閉環（LOOP-04） |
+| `doc_task_2379` | docs/agent-briefs/tasks/UI/UI-2-0172.md | [UI-2-0172] 戰鬥立繪路徑解析與戰法特寫載入 |
+| `doc_task_2380` | docs/agent-briefs/tasks/PROG/PROG-2-2205.md | PROG-2-2205 出征雙軌選擇：親自指揮／極速決戰不載入棋盤直接結算（LOOP-02 補完） |
+| `doc_task_2381` | docs/agent-briefs/tasks/PROG/PROG-2-2206.md | PROG-2-2206 三國季報歷史卷軸與古樸卷軸樣式（LOOP-03 補完） |
+| `doc_task_2382` | docs/agent-briefs/tasks/PROG/PROG-2-2207.md | PROG-2-2207 修正 master 網頁版建置被 Babel 擋下 |
+| `doc_task_2383` | docs/agent-briefs/tasks/PROG/PROG-2-2208.md | PROG-2-2208 新手開場與三國季報互斥排程修復 |
+| `doc_task_2384` | docs/agent-briefs/tasks/PROG/PROG-2-2209.md | 新手試玩顯示與時序修正 |
+| `doc_task_2385` | docs/agent-briefs/tasks/PROG/PROG-2-2210.md | 網頁測試影片隔離與來源體積量測 |
+| `doc_task_2386` | docs/agent-briefs/tasks/PROG/PROG-2-2211.md | 出征選單與戰場 HUD 分區 |
+| `doc_task_2387` | docs/agent-briefs/tasks/PROG/PROG-2-2212.md | 新手資源、戰前偵查與首戰操作第一版 |
+| `doc_task_2388` | docs/agent-briefs/tasks/PROG/PROG-2-2213.md | 幕府大廳主政廳化與武將3Q小人站堂隔離修復 |
+| `doc_task_2389` | docs/agent-briefs/tasks/PROG/PROG-2-2214.md | 集中大廳返回路由樞紐與轉蛋功能修復 |
+| `doc_task_2390` | docs/agent-briefs/tasks/PROG/PROG-2-2215.md | 首戰退場、回合與 SP 一致性 |
+| `doc_task_2391` | docs/agent-briefs/tasks/PROG/PROG-2-2216.md | Web 開始遊戲及戰場載入進度 |
+| `doc_task_2392` | docs/agent-briefs/tasks/PROG/PROG-2-2217.md | 戰場指令與戰報可讀性 |
+| `doc_task_2393` | docs/agent-briefs/tasks/PROG/PROG-2-2218.md | 主將化身棋子與首次部署名牌 |
+| `doc_task_2394` | docs/agent-briefs/tasks/PROG/PROG-2-2219.md | 大廳卡組語意與主將立繪接線（#2074） |
+| `doc_task_2395` | docs/agent-briefs/tasks/PROG/PROG-2-2220.md | 教學戰鬥限定有限敵軍波次（#2074） |
+| `doc_task_2396` | docs/agent-briefs/tasks/PROG/PROG-2-2221.md | 轉蛋系統介面重構與返回路徑統一（方案 B） |
+| `doc_task_2397` | docs/agent-briefs/tasks/PROG/PROG-2-2222.md | 新手開場順序改為「信 → 六名將登場 → 宿命轉蛋」 |
+| `doc_task_2398` | docs/agent-briefs/tasks/PROG/PROG-2-2223.md | 線上首開黑畫面縮短：開場面板優先掛載 |
+| `doc_task_2399` | docs/agent-briefs/tasks/PROG/PROG-2-2224.md | 首戰教學獨立空位、收合與可翻閱說明（#2074） |
+| `doc_task_2400` | docs/agent-briefs/tasks/PROG/PROG-2-2225.md | 戰鬥HUD靜態尺寸/遮擋審查（#2074） |
+| `doc_task_2401` | docs/agent-briefs/tasks/PROG/PROG-2-2226.md | 新手引導 1/3～3/3 被幕府大堂遮住：改指向大堂上的對應入口 |
+| `doc_task_2402` | docs/agent-briefs/tasks/PROG/PROG-2-2227.md | 修復 UIPreviewBuilder 元件工廠生命週期延遲初始化防禦（解決 bloodline-mirror-loading 掛載失敗） |
+| `doc_task_2403` | docs/agent-briefs/tasks/PROG/PROG-2-2228.md | 開場信最後一句改回使用者原稿「啟動宿命轉蛋」 |
+| `doc_task_2404` | docs/agent-briefs/tasks/PROG/PROG-2-2229.md | 標題畫面「開始遊戲」按鈕置中，隱藏「三國志・生存」版名稱文字 |
+| `doc_task_2405` | docs/agent-briefs/tasks/PROG/PROG-2-2230.md | 載入進度條改成精緻框＋漸層光棒 |
+| `doc_task_2406` | docs/agent-briefs/tasks/PROG/PROG-2-2231.md | 標題畫面中文字改用思源宋體（加粗描邊） |
+| `doc_task_2407` | docs/agent-briefs/tasks/PROG/PROG-2-2232.md | 轉蛋畫面由原稿重新轉換，Cocos 實跑對齊 HTML |
+| `doc_task_2408` | docs/agent-briefs/tasks/PROG/PROG-2-2233.md | [PROG-2-2233] 戰鬥 HUD 場景生命週期防護 |
+| `doc_task_2409` | docs/agent-briefs/tasks/PROG/PROG-2-2234.md | [PROG-2-2234] 首戰教學避讓與 HUD 數字可讀性 |
+| `doc_task_2410` | docs/agent-briefs/tasks/PROG/PROG-2-2235.md | [PROG-2-2235] 戰場逐幀投影與首次載入回饋 |
+| `doc_task_2411` | docs/agent-briefs/tasks/PROG/PROG-2-2236.md | 開場十連抽接上滿版結算畫面；六名將立繪換人時不殘留舊圖 |
+| `doc_task_2412` | docs/agent-briefs/tasks/PROG/PROG-2-2237.md | 轉蛋畫面改用原稿固定 id 綁定；紅顏展示改由轉蛋系統程式掛上；採用新轉換產出 |
+| `doc_task_2413` | docs/agent-briefs/tasks/PROG/PROG-2-2238.md | [PROG-2-2232] 修復慢速 Web 首戰撤退確認失效 |
+| `doc_task_2414` | docs/agent-briefs/tasks/PROG/PROG-2-2239.md | 虎符卡兵種名蓋住費用徽章（#2092、#2093 合併後 master 測試失敗） |
+| `doc_task_2415` | docs/agent-briefs/tasks/PROG/PROG-2-2240.md | 網頁版啟動先鋪標題底圖，不露出灰底舊標題 |
+| `doc_task_2416` | docs/agent-briefs/tasks/PROG/PROG-2-2241.md | 試玩回報 #2099 開場／大廳修正：轉蛋重試、對話泡泡、名牌重複、新手日報 |
+| `doc_task_2417` | docs/agent-briefs/tasks/PROG/PROG-2-2243.md | 宿命轉蛋改為轉蛋系統的宿命池：十連全收、單鍵確定 |
+| `doc_task_2418` | docs/agent-briefs/tasks/PROG/PROG-2-2244.md | 轉蛋抽到武將時開口講一句台詞（所有池共用） |
+| `doc_task_2419` | docs/agent-briefs/tasks/PROG/PROG-2-2245.md | 武將美術庫最新版接入正式遊戲（站立立繪、大頭像） |
+| `doc_task_2420` | docs/agent-briefs/tasks/PROG/PROG-2-2246.md | 刪除重複的舊武將圖，舊 id 改讀新圖 |
+| `doc_task_2421` | docs/agent-briefs/tasks/PROG/PROG-2-2247.md | 轉蛋結果畫面十張卡片顯示武將頭像、文字不疊字 |
+| `doc_task_2422` | docs/agent-briefs/tasks/PROG/PROG-2-2248.md | Issue #2107 歸 Claude 的開場／大廳／轉蛋項目 |
+| `doc_task_2423` | docs/agent-briefs/tasks/PROG/PROG-2-2249.md | Issue #2107 戰場剩餘五項（返回大廳卡死、撤退文案、標籤跑位、卡牌數字說明） |
+| `doc_task_2424` | docs/agent-briefs/tasks/PROG/PROG-2-2250.md | 奧義漫畫分鏡 cut-in 播放器（Issue #2139） |
+| `doc_task_2425` | docs/agent-briefs/tasks/PROG/PROG-2-2251.md | 幕府大廳 Spine 武將隨機走動、發呆、點擊對話（Issue #2135） |
+| `doc_task_2426` | docs/agent-briefs/tasks/PROG/PROG-2-9016.md | [PROG-2-9016] 返回大廳掛載成本：正式版不重抓 spec、缺檔 sidecar 不載入 |
+| `doc_task_2427` | docs/agent-briefs/tasks/PROG/PROG-2-9017.md | [PROG-2-9017] 共用 UI 保留快取與子視窗背景掛載機制 |
+| `doc_task_2428` | docs/agent-briefs/tasks/PROG/PROG-2-9018.md | [PROG-2-9018] 大廳接入介面停放：戰鬥回大廳不重建 |
+| `doc_task_2429` | docs/agent-briefs/tasks/PROG/PROG-2-9019.md | [PROG-2-9019] 新手十連：全螢幕展示後收起武將、免費重轉可按 |
+| `doc_task_2430` | docs/agent-briefs/tasks/PROG/PROG-2-9020.md | [PROG-2-9020] 統一轉蛋系統：池設定展示區塊、單一抽卡入口、結果畫面讀設定 |
+| `doc_task_2431` | docs/agent-briefs/tasks/PROG/PROG-2-9021.md | [PROG-2-9021] 統一轉蛋系統：金幣召喚、召喚券遷入 |
+| `doc_task_2432` | docs/agent-briefs/tasks/PROG/PROG-2-9022.md | [PROG-2-9022] 新手十連結果面板全螢幕滿版 |
+| `doc_task_2433` | docs/agent-briefs/tasks/PROG/PROG-2-9023.md | [PROG-2-9023] 試玩版手機橫向全螢幕與寬螢幕背景延伸 |
+| `doc_task_2434` | docs/agent-briefs/tasks/PROG/PROG-2-9024.md | [PROG-2-9024] 轉蛋標準 API、限定池每週輪替與四池主畫面 |
+| `doc_task_2435` | docs/agent-briefs/tasks/PROG/PROG-2-9025.md | [PROG-2-9025] 轉蛋四池主畫面依新版 gacha 原稿重轉 |
+| `doc_task_2436` | docs/agent-briefs/tasks/PROG/PROG-2-9026.md | [PROG-2-9026] 幕府大廳找不到轉蛋入口、武將名牌重疊輪換 |
+| `doc_task_2437` | docs/agent-briefs/tasks/PROG/PROG-2-9027.md | [PROG-2-9027] 四池轉蛋畫面對齊 HTML 原稿並實測功能 |
+| `doc_task_2438` | docs/agent-briefs/tasks/PROG/PROG-2-9028.md | [PROG-2-9028] 轉蛋頂端名條殘字與左側背景亮度對齊原稿 |
+| `doc_task_2439` | docs/agent-briefs/tasks/PROG/PROG-2-9029.md | [PROG-2-9029] 立繪換上後隱藏原稿佔位框底色 |
+| `doc_task_2440` | docs/agent-briefs/tasks/PROG/PROG-2-9030.md | [PROG-2-9030] 大廳子選單展開時不壓住武將名牌 |
+| `doc_task_2441` | docs/agent-briefs/tasks/PROG/PROG-2-9031.md | [PROG-2-9031] 轉蛋畫面第二批修正：十連卡配色、統計疊字、立繪放大、背景十字線、點擊穿透 |
+| `doc_task_2442` | docs/agent-briefs/tasks/PROG/PROG-2-9032.md | [PROG-2-9032] 十連結果改版：右半滿版十張分等級卡 |
+| `doc_task_2443` | docs/agent-briefs/tasks/PROG/PROG-2-9033.md | [PROG-2-9033] 戰場共用 Q 版單位演出與單挑流程 |
+| `doc_task_2444` | docs/agent-briefs/tasks/PROG/PROG-2-9034.md | [PROG-2-9034] 修正 Issue #2159 戰鬥 HUD、撤退結算與大廳重疊問題 |
+| `doc_task_2445` | docs/agent-briefs/tasks/PROG/PROG-2-9035.md | [PROG-2-9035] 大廳面板掛載失敗不可卡死載入遮罩 |
+| `doc_task_2446` | docs/agent-briefs/tasks/PROG/PROG-2-9036.md | [PROG-2-9036] 轉蛋規格改三池制（以紅顏天香為準） |
+| `doc_task_2447` | docs/agent-briefs/tasks/PROG/PROG-2-9037.md | [PROG-2-9037] 人物介紹命分頁血統樹遮右欄、畫面左右未滿版 |
+| `doc_task_2448` | docs/agent-briefs/tasks/PROG/PROG-2-9038.md | [PROG-2-9038] 轉蛋右側資訊面板切池／切人物後疊層 |
+| `doc_task_2449` | docs/agent-briefs/tasks/PROG/PROG-2-9040.md | [PROG-2-9040] 大廳進場變慢：非必要面板改背景掛載 |
+| `doc_task_2450` | docs/agent-briefs/tasks/PROG/PROG-2-9041.md | [PROG-2-9041] 人物介紹命分頁：血統樹左區上下左右滿版 |
+| `doc_task_2451` | docs/agent-briefs/tasks/PROG/PROG-2-9042.md | [PROG-2-9042] 轉蛋資料對齊 FEM-03：名將池男將化、紅顏池數值 |
+| `doc_task_2452` | docs/agent-briefs/tasks/PROG/PROG-2-9043.md | [PROG-2-9043] 戰場 2D Q 版單位：小兵陣營配色與私有素材接線 |
+| `doc_task_2453` | docs/agent-briefs/tasks/PROG/PROG-2-9044.md | [PROG-2-9044] 紅顏池 poolType 改名 support → heroine |

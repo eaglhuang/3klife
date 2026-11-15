@@ -64,11 +64,16 @@ export const CONCEPTION_BASE_RATE = 0.7;
 export const CONCEPTION_RATE_CAP = 0.95;
 
 export const EP_BASE = 50;
+/** 標籤共鳴最高加成（doc_spec_1098：依 14 人祖譜最高同標籤次數階梯給分 5/10/15） */
 export const EP_RESONANCE_BONUS = 15;
-export const EP_OUTCROSS_BONUS = 20;
-export const EP_AFFINITY_BONUS = 25;
-/** 精力滿載：父母結緣時精力都高於上限 50%（因子爆發系統 爆發力加分因子，PROG-2-1511） */
-export const EP_VITALITY_FULL_BONUS = 10;
+/** 完全外婚（14 格皆已知且無重複）：對齊 doc_spec_1098 §2 */
+export const EP_OUTCROSS_BONUS = 10;
+/** 史實契合（歷史情侶/夫妻配對）：對齊 doc_spec_1098 §2 */
+export const EP_AFFINITY_BONUS = 10;
+/** 滿精孕育：父母結緣時精力都高於上限 50%，對齊 doc_spec_1098 §2 */
+export const EP_VITALITY_FULL_BONUS = 5;
+/** 雙親基礎 EP 基準點：高於 65 提供正向血脈貢獻，低於 65 略為折減（doc_spec_0011 §I EP_Base） */
+export const EP_PARENT_BASELINE = 65;
 /** 14 人中同一標籤至少出現在幾位祖先身上才算共鳴 */
 export const EP_RESONANCE_MIN_COUNT = KIN_RESONANCE_MIN_COUNT;
 
@@ -329,6 +334,8 @@ export interface EpBreakdown {
     resonance: number;
     outcross: number;
     affinity: number;
+    /** 雙親基礎 EP 貢獻加成（doc_spec_0011 §I EP_Base） */
+    parentBonus?: number;
     /** 精力滿載加成（PROG-2-1511）；未達標為 0 */
     vitalityFull: number;
     /** 天命波動（PROG-2-0511）；預覽不擲骰時為 0 */
@@ -341,18 +348,40 @@ export interface EpBreakdown {
     rating: string;
 }
 
+/** 依 14 人祖譜最高同標籤次數階梯給分：3~4→+5、5~6→+10、≥7→+15（上限 EP_RESONANCE_BONUS） */
+export function computeResonanceBonus(topTagCount: number): number {
+    if (topTagCount >= 7) return EP_RESONANCE_BONUS;
+    if (topTagCount >= 5) return 10;
+    if (topTagCount >= KIN_RESONANCE_MIN_COUNT) return 5;
+    return 0;
+}
+
 /**
- * EP_MVP = 50 + [共鳴] + [異脈] + [契合]
- * - 共鳴：同一標籤（因子 id 或 core tag）出現在 ≥ 3 位祖先身上
- * - 異脈：14 個位置都已知且沒有任何重複的人
- * - 契合：史實 / 宿敵配對
- * - 精力滿載：父母結緣時精力都在高段（PROG-2-1511）
+ * 依雙親個人 EP 計算血脈貢獻加成（-10 ~ +20）。
+ * 當雙親皆未提供 ep（純測試預設資料）時回傳 0，維持基準測試不變。
+ */
+export function computeParentEpBonus(fatherEp?: number, motherEp?: number): number {
+    if (fatherEp === undefined && motherEp === undefined) return 0;
+    const f = Number.isFinite(fatherEp) ? (fatherEp as number) : EP_BASE;
+    const m = Number.isFinite(motherEp) ? (motherEp as number) : EP_BASE;
+    const avg = (f + m) / 2;
+    return Math.round(Math.max(-10, Math.min(20, (avg - EP_PARENT_BASELINE) * 0.5)));
+}
+
+/**
+ * EP = 50 + [共鳴階梯 0~15] + [異脈 0/10] + [契合 0/10] + [親代貢獻 -10~+20] + [精力滿載 0/5]
+ * - 共鳴：同一標籤（因子 id 或 core tag）在 14 人中出現 ≥3/+5、≥5/+10、≥7/+15
+ * - 異脈：14 個位置都已知且沒有任何重複的人（doc_spec_1098：+10）
+ * - 契合：史實 / 宿敵配對（doc_spec_1098：+10）
+ * - 親代：雙親基礎 EP 平均對比基準 65 之折算貢獻
+ * - 精力滿載：父母結緣時精力都在高段（doc_spec_1098：+5）
  */
 export function computeEpMvp(
     pedigree: Pedigree,
     profiles: Map<string, AncestorProfile>,
     isHistoricalPair: boolean,
     parentsVitalityFull = false,
+    parentEps?: { fatherEp?: number; motherEp?: number },
 ): EpBreakdown {
     // 標籤統計統一走 KinRelation.analyzeTagResonance（KIN-03），與相性引擎同一份計法
     const ancestorTags = PEDIGREE_SLOTS.flatMap((slot) => {
@@ -364,12 +393,13 @@ export function computeEpMvp(
     const uids = PEDIGREE_SLOTS.map((slot) => pedigree[slot]);
     const allKnown = uids.every((uid) => !!uid);
     // TODO(KIN-03 純血)：14 人全同族 +30 EP，待同族欄位資料定義後實作
-    const resonance = hasResonance ? EP_RESONANCE_BONUS : 0;
+    const resonance = hasResonance ? computeResonanceBonus(topTagCount) : 0;
     const outcross = allKnown && new Set(uids).size === PEDIGREE_SLOTS.length ? EP_OUTCROSS_BONUS : 0;
     const affinity = isHistoricalPair ? EP_AFFINITY_BONUS : 0;
     const vitalityFull = parentsVitalityFull ? EP_VITALITY_FULL_BONUS : 0;
-    const ep = EP_BASE + resonance + outcross + affinity + vitalityFull;
-    return { ep, resonance, outcross, affinity, vitalityFull, fate: 0, topTag, topTagCount, familyTradition, rating: epRatingLabel(ep) };
+    const parentBonus = computeParentEpBonus(parentEps?.fatherEp, parentEps?.motherEp);
+    const ep = EP_BASE + resonance + outcross + affinity + vitalityFull + parentBonus;
+    return { ep, resonance, outcross, affinity, parentBonus, vitalityFull, fate: 0, topTag, topTagCount, familyTradition, rating: epRatingLabel(ep) };
 }
 
 /** 天命波動小區間（PM 裁定 2026-10-14，運氣屬性加入爆發力公式）：運氣平均 > 80 → +5～+15；< 40 → -5～-10；其餘 0 */
@@ -662,7 +692,13 @@ export function previewBreedingEp(request: Omit<BreedingRequest, 'random' | 'chi
     const profiles = collectProfiles(pedigree, request);
     const historical = request.isHistoricalPair?.(request.father, request.mother) ?? false;
     const vitalityFull = isVitalityFull(request.father) && isVitalityFull(request.mother);
-    return { pedigree, ep: computeEpMvp(pedigree, profiles, historical, vitalityFull) };
+    return {
+        pedigree,
+        ep: computeEpMvp(pedigree, profiles, historical, vitalityFull, {
+            fatherEp: request.father.ep,
+            motherEp: request.mother.ep,
+        }),
+    };
 }
 
 /** 子嗣可能繼承的一個因子：至少一位祖先進池的機率（不含星等與 5 格上限） */

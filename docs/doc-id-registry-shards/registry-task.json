@@ -11514,30 +11514,6 @@
     "category": "task"
   },
   {
-    "id": "doc_task_1929",
-    "path": "docs/agent-briefs/tasks/UI/UI-2-0117.md",
-    "title": "[UI-2-0117] 修正蔡文姬與黃月英立繪辨識度",
-    "category": "task"
-  },
-  {
-    "id": "doc_task_1930",
-    "path": "docs/agent-briefs/tasks/UI/UI-2-0118.md",
-    "title": "[UI-2-0118] 簡化女角衣帶並校正黃月英與蔡文姬道具",
-    "category": "task"
-  },
-  {
-    "id": "doc_task_1931",
-    "path": "docs/agent-briefs/tasks/UI/UI-2-0119.md",
-    "title": "[UI-2-0119] 拉開五位吳將立繪五官辨識度並收束衣帶",
-    "category": "task"
-  },
-  {
-    "id": "doc_task_1932",
-    "path": "docs/agent-briefs/tasks/UI/UI-2-0120.md",
-    "title": "[UI-2-0120] 再次校正蔡文姬古琴比例與抱琴姿勢",
-    "category": "task"
-  },
-  {
     "id": "doc_task_1933",
     "path": "docs/agent-briefs/tasks/UI/UI-2-0121.md",
     "title": "[UI-2-0121] 全名冊立繪臉部特徵與色票差異盤點",
@@ -14193,6 +14169,450 @@
     "id": "doc_task_2379",
     "path": "docs/agent-briefs/tasks/UI/UI-2-0172.md",
     "title": "[UI-2-0172] 戰鬥立繪路徑解析與戰法特寫載入",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2380",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2205.md",
+    "title": "PROG-2-2205 出征雙軌選擇：親自指揮／極速決戰不載入棋盤直接結算（LOOP-02 補完）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2381",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2206.md",
+    "title": "PROG-2-2206 三國季報歷史卷軸與古樸卷軸樣式（LOOP-03 補完）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2382",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2207.md",
+    "title": "PROG-2-2207 修正 master 網頁版建置被 Babel 擋下",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2383",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2208.md",
+    "title": "PROG-2-2208 新手開場與三國季報互斥排程修復",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2384",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2209.md",
+    "title": "新手試玩顯示與時序修正",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2385",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2210.md",
+    "title": "網頁測試影片隔離與來源體積量測",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2386",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2211.md",
+    "title": "出征選單與戰場 HUD 分區",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2387",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2212.md",
+    "title": "新手資源、戰前偵查與首戰操作第一版",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2388",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2213.md",
+    "title": "幕府大廳主政廳化與武將3Q小人站堂隔離修復",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2389",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2214.md",
+    "title": "集中大廳返回路由樞紐與轉蛋功能修復",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2390",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2215.md",
+    "title": "首戰退場、回合與 SP 一致性",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2391",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2216.md",
+    "title": "Web 開始遊戲及戰場載入進度",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2392",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2217.md",
+    "title": "戰場指令與戰報可讀性",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2393",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2218.md",
+    "title": "主將化身棋子與首次部署名牌",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2394",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2219.md",
+    "title": "大廳卡組語意與主將立繪接線（#2074）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2395",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2220.md",
+    "title": "教學戰鬥限定有限敵軍波次（#2074）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2396",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2221.md",
+    "title": "轉蛋系統介面重構與返回路徑統一（方案 B）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2397",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2222.md",
+    "title": "新手開場順序改為「信 → 六名將登場 → 宿命轉蛋」",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2398",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2223.md",
+    "title": "線上首開黑畫面縮短：開場面板優先掛載",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2399",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2224.md",
+    "title": "首戰教學獨立空位、收合與可翻閱說明（#2074）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2400",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2225.md",
+    "title": "戰鬥HUD靜態尺寸/遮擋審查（#2074）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2401",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2226.md",
+    "title": "新手引導 1/3～3/3 被幕府大堂遮住：改指向大堂上的對應入口",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2402",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2227.md",
+    "title": "修復 UIPreviewBuilder 元件工廠生命週期延遲初始化防禦（解決 bloodline-mirror-loading 掛載失敗）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2403",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2228.md",
+    "title": "開場信最後一句改回使用者原稿「啟動宿命轉蛋」",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2404",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2229.md",
+    "title": "標題畫面「開始遊戲」按鈕置中，隱藏「三國志・生存」版名稱文字",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2405",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2230.md",
+    "title": "載入進度條改成精緻框＋漸層光棒",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2406",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2231.md",
+    "title": "標題畫面中文字改用思源宋體（加粗描邊）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2407",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2232.md",
+    "title": "轉蛋畫面由原稿重新轉換，Cocos 實跑對齊 HTML",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2408",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2233.md",
+    "title": "[PROG-2-2233] 戰鬥 HUD 場景生命週期防護",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2409",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2234.md",
+    "title": "[PROG-2-2234] 首戰教學避讓與 HUD 數字可讀性",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2410",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2235.md",
+    "title": "[PROG-2-2235] 戰場逐幀投影與首次載入回饋",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2411",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2236.md",
+    "title": "開場十連抽接上滿版結算畫面；六名將立繪換人時不殘留舊圖",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2412",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2237.md",
+    "title": "轉蛋畫面改用原稿固定 id 綁定；紅顏展示改由轉蛋系統程式掛上；採用新轉換產出",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2413",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2238.md",
+    "title": "[PROG-2-2232] 修復慢速 Web 首戰撤退確認失效",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2414",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2239.md",
+    "title": "虎符卡兵種名蓋住費用徽章（#2092、#2093 合併後 master 測試失敗）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2415",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2240.md",
+    "title": "網頁版啟動先鋪標題底圖，不露出灰底舊標題",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2416",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2241.md",
+    "title": "試玩回報 #2099 開場／大廳修正：轉蛋重試、對話泡泡、名牌重複、新手日報",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2417",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2243.md",
+    "title": "宿命轉蛋改為轉蛋系統的宿命池：十連全收、單鍵確定",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2418",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2244.md",
+    "title": "轉蛋抽到武將時開口講一句台詞（所有池共用）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2419",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2245.md",
+    "title": "武將美術庫最新版接入正式遊戲（站立立繪、大頭像）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2420",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2246.md",
+    "title": "刪除重複的舊武將圖，舊 id 改讀新圖",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2421",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2247.md",
+    "title": "轉蛋結果畫面十張卡片顯示武將頭像、文字不疊字",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2422",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2248.md",
+    "title": "Issue #2107 歸 Claude 的開場／大廳／轉蛋項目",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2423",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2249.md",
+    "title": "Issue #2107 戰場剩餘五項（返回大廳卡死、撤退文案、標籤跑位、卡牌數字說明）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2424",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2250.md",
+    "title": "奧義漫畫分鏡 cut-in 播放器（Issue #2139）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2425",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-2251.md",
+    "title": "幕府大廳 Spine 武將隨機走動、發呆、點擊對話（Issue #2135）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2426",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9016.md",
+    "title": "[PROG-2-9016] 返回大廳掛載成本：正式版不重抓 spec、缺檔 sidecar 不載入",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2427",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9017.md",
+    "title": "[PROG-2-9017] 共用 UI 保留快取與子視窗背景掛載機制",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2428",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9018.md",
+    "title": "[PROG-2-9018] 大廳接入介面停放：戰鬥回大廳不重建",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2429",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9019.md",
+    "title": "[PROG-2-9019] 新手十連：全螢幕展示後收起武將、免費重轉可按",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2430",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9020.md",
+    "title": "[PROG-2-9020] 統一轉蛋系統：池設定展示區塊、單一抽卡入口、結果畫面讀設定",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2431",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9021.md",
+    "title": "[PROG-2-9021] 統一轉蛋系統：金幣召喚、召喚券遷入",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2432",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9022.md",
+    "title": "[PROG-2-9022] 新手十連結果面板全螢幕滿版",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2433",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9023.md",
+    "title": "[PROG-2-9023] 試玩版手機橫向全螢幕與寬螢幕背景延伸",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2434",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9024.md",
+    "title": "[PROG-2-9024] 轉蛋標準 API、限定池每週輪替與四池主畫面",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2435",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9025.md",
+    "title": "[PROG-2-9025] 轉蛋四池主畫面依新版 gacha 原稿重轉",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2436",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9026.md",
+    "title": "[PROG-2-9026] 幕府大廳找不到轉蛋入口、武將名牌重疊輪換",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2437",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9027.md",
+    "title": "[PROG-2-9027] 四池轉蛋畫面對齊 HTML 原稿並實測功能",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2438",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9028.md",
+    "title": "[PROG-2-9028] 轉蛋頂端名條殘字與左側背景亮度對齊原稿",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2439",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9029.md",
+    "title": "[PROG-2-9029] 立繪換上後隱藏原稿佔位框底色",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2440",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9030.md",
+    "title": "[PROG-2-9030] 大廳子選單展開時不壓住武將名牌",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2441",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9031.md",
+    "title": "[PROG-2-9031] 轉蛋畫面第二批修正：十連卡配色、統計疊字、立繪放大、背景十字線、點擊穿透",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2442",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9032.md",
+    "title": "[PROG-2-9032] 十連結果改版：右半滿版十張分等級卡",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2443",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9033.md",
+    "title": "[PROG-2-9033] 戰場共用 Q 版單位演出與單挑流程",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2444",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9034.md",
+    "title": "[PROG-2-9034] 修正 Issue #2159 戰鬥 HUD、撤退結算與大廳重疊問題",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2445",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9035.md",
+    "title": "[PROG-2-9035] 大廳面板掛載失敗不可卡死載入遮罩",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2446",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9036.md",
+    "title": "[PROG-2-9036] 轉蛋規格改三池制（以紅顏天香為準）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2447",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9037.md",
+    "title": "[PROG-2-9037] 人物介紹命分頁血統樹遮右欄、畫面左右未滿版",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2448",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9038.md",
+    "title": "[PROG-2-9038] 轉蛋右側資訊面板切池／切人物後疊層",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2449",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9040.md",
+    "title": "[PROG-2-9040] 大廳進場變慢：非必要面板改背景掛載",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2450",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9041.md",
+    "title": "[PROG-2-9041] 人物介紹命分頁：血統樹左區上下左右滿版",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2451",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9042.md",
+    "title": "[PROG-2-9042] 轉蛋資料對齊 FEM-03：名將池男將化、紅顏池數值",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2452",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9043.md",
+    "title": "[PROG-2-9043] 戰場 2D Q 版單位：小兵陣營配色與私有素材接線",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2453",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9044.md",
+    "title": "[PROG-2-9044] 紅顏池 poolType 改名 support → heroine",
     "category": "task"
   }
 ]

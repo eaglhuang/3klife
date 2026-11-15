@@ -4968,6 +4968,62 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "id": "PROG-2-9045",
+      "title": "血統遺傳 EP 精算升級：對齊 doc_spec_1098 門檻、納入共鳴階梯與雙親 EP_Base 貢獻並重建 doc-id-registry",
+      "priority": "P1",
+      "phase": "M2",
+      "status": "done",
+      "owner": "ClaudeCode",
+      "category": "core-gameplay",
+      "description": "1) BreedingSystem.ts 調整常數對齊 doc_spec_1098 (EP_OUTCROSS_BONUS=10, EP_AFFINITY_BONUS=10, EP_VITALITY_FULL_BONUS=5)；2) 新增 computeResonanceBonus (3~4→+5, 5~6→+10, ≥7→+15) 與 computeParentEpBonus (雙親平均 EP 相對 65 折算 -10..+20)，使結緣切換父親時預估 EP 即時呈現差異；3) BreedingPreviewPresenter.ts 預覽明細顯示「親代 +N/-N」；4) 同步更新既有測試並新增 BondingEpFormula.test.ts；5) 執行 doc-id-registry.js 重建索引清除 7 筆失效紀錄。",
+      "acceptance": "check-test-tsc-baseline 0 errors、check-encoding-touched passed、unit tests 7695 passed / 3 skipped / 0 failed、gate:standard 12/12 通過。",
+      "doc_refs": [
+        "doc_spec_1098",
+        "doc_spec_0011",
+        "doc_spec_0028"
+      ],
+      "created_at": "2026-11-15T17:18:33.381Z",
+      "started_at": "2026-11-15T17:18:33.381Z",
+      "started_by_agent": "ClaudeCode",
+      "completed_at": "2026-11-15T17:18:33.381Z",
+      "depends_on": [
+        "PROG-2-9044"
+      ],
+      "target_files": [
+        "assets/scripts/core/systems/BreedingSystem.ts",
+        "assets/scripts/ui/core/BreedingPreviewPresenter.ts",
+        "tests/Breeding.test.ts",
+        "tests/EpVitalityFull.test.ts",
+        "tests/HistoricalPairs.test.ts",
+        "tests/KinRelation.test.ts",
+        "tests/VirtualAncestor.test.ts",
+        "tests/BondingEpFormula.test.ts",
+        "docs/tasks/tasks-prog.json"
+      ],
+      "notes": "2026-11-16 | 狀態: done | 驗證: unit tests 7695 passed / 3 skipped / 0 failed, check-test-tsc-baseline 0 errors, doc-id-registry --verify 0 errors (5908 entries) | 變更: 對齊 doc_spec_1098 門檻、新增共鳴階梯與雙親 EP_Base 貢獻並更新結緣預覽明細、重建 doc-id-registry | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

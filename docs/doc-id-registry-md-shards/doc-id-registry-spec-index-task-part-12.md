@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-11-09
+> 生成日期: 2026-11-15
 > 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 12/14 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -205,10 +205,6 @@
 | `doc_task_1926` | docs/agent-briefs/tasks/UI/UI-2-0112.md | [UI-2-0112] 補畫黃月英、蔡文姬全身立繪並補臉部標記 |
 | `doc_task_1927` | docs/agent-briefs/tasks/UI/UI-2-0115.md | [UI-2-0115] 補畫 8 位可選武將全身立繪、頭像與臉部標記 |
 | `doc_task_1928` | docs/agent-briefs/tasks/UI/UI-2-0116.md | [UI-2-0116] 補畫名士華佗、司馬徽立繪與頭像 |
-| `doc_task_1929` | docs/agent-briefs/tasks/UI/UI-2-0117.md | [UI-2-0117] 修正蔡文姬與黃月英立繪辨識度 |
-| `doc_task_1930` | docs/agent-briefs/tasks/UI/UI-2-0118.md | [UI-2-0118] 簡化女角衣帶並校正黃月英與蔡文姬道具 |
-| `doc_task_1931` | docs/agent-briefs/tasks/UI/UI-2-0119.md | [UI-2-0119] 拉開五位吳將立繪五官辨識度並收束衣帶 |
-| `doc_task_1932` | docs/agent-briefs/tasks/UI/UI-2-0120.md | [UI-2-0120] 再次校正蔡文姬古琴比例與抱琴姿勢 |
 | `doc_task_1933` | docs/agent-briefs/tasks/UI/UI-2-0121.md | [UI-2-0121] 全名冊立繪臉部特徵與色票差異盤點 |
 | `doc_task_1934` | docs/agent-briefs/tasks/UI/UI-2-0122.md | UI-2-0122 幕府大廳設計稿（HTML 原稿） |
 | `doc_task_1935` | docs/agent-briefs/tasks/UI/UI-2-0123.md | UI-2-0123 幕府大廳轉換與接線 |
@@ -295,3 +291,7 @@
 | `doc_task_2016` | docs/agent-briefs/tasks/PROG/PROG-2-1806.md | PROG-2-1806 族譜祖先卡頭像：真實祖先顯示圓形頭像 |
 | `doc_task_2017` | docs/agent-briefs/tasks/PROG/PROG-2-1807.md | PROG-2-1807 未知頭像性別：後代也要用對的男女剪影 |
 | `doc_task_2018` | docs/agent-briefs/tasks/PROG/PROG-2-1808.md | PROG-2-1808 月旦評說親篩選：結緣畫面可只看榜上人物 |
+| `doc_task_2019` | docs/agent-briefs/tasks/PROG/PROG-2-1809.md | PROG-2-1809 鄉評公開同宗同姓：結緣畫面標出父母同姓 |
+| `doc_task_2020` | docs/agent-briefs/tasks/PROG/PROG-2-1810.md | PROG-2-1810 鄉評一鍵篩路線：結緣畫面依公開傾向篩人選 |
+| `doc_task_2021` | docs/agent-briefs/tasks/PROG/PROG-2-1811.md | PROG-2-1811 天下求親：門閥升到郡望後，名門每年上門提親 |
+| `doc_task_2022` | docs/agent-briefs/tasks/PROG/PROG-2-1812.md | PROG-2-1812 世交相性 K：與聯姻名門的最近 8 名子嗣滑動窗 |

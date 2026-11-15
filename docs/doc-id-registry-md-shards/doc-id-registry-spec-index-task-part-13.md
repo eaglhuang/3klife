@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-11-09
+> 生成日期: 2026-11-15
 > 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 13/14 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -8,10 +8,6 @@
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
-| `doc_task_2019` | docs/agent-briefs/tasks/PROG/PROG-2-1809.md | PROG-2-1809 鄉評公開同宗同姓：結緣畫面標出父母同姓 |
-| `doc_task_2020` | docs/agent-briefs/tasks/PROG/PROG-2-1810.md | PROG-2-1810 鄉評一鍵篩路線：結緣畫面依公開傾向篩人選 |
-| `doc_task_2021` | docs/agent-briefs/tasks/PROG/PROG-2-1811.md | PROG-2-1811 天下求親：門閥升到郡望後，名門每年上門提親 |
-| `doc_task_2022` | docs/agent-briefs/tasks/PROG/PROG-2-1812.md | PROG-2-1812 世交相性 K：與聯姻名門的最近 8 名子嗣滑動窗 |
 | `doc_task_2023` | docs/agent-briefs/tasks/PROG/PROG-2-1813.md | PROG-2-1813 世交合譜：結緣時鎖定雙親共有因子，K 折抵成本 |
 | `doc_task_2024` | docs/agent-briefs/tasks/PROG/PROG-2-1814.md | PROG-2-1814 世交太傅伴讀：名門出身的教官依 K 提高修業效率 |
 | `doc_task_2025` | docs/agent-briefs/tasks/PROG/PROG-2-1815.md | PROG-2-1815 隔代復興：跨過平庸父母，重現祖輩高星因子並保底 2 星 |
@@ -295,3 +291,7 @@
 | `doc_task_2303` | docs/agent-briefs/tasks/PROG/PROG-2-2086.md | PROG-2-2086 雙卡結算帶入生平功業（SPI-12） |
 | `doc_task_2304` | docs/agent-briefs/tasks/PROG/PROG-2-2087.md | PROG-2-2087 教官卡四大原型分類（FORM-04） |
 | `doc_task_2305` | docs/agent-briefs/tasks/PROG/PROG-2-2088.md | PROG-2-2088 教官卡列表顯示原型標籤（FORM-04） |
+| `doc_task_2306` | docs/agent-briefs/tasks/PROG/PROG-2-2089.md | PROG-2-2089 命鏡載入 Tips 四池文案擴充（LT-04） |
+| `doc_task_2307` | docs/agent-briefs/tasks/PROG/PROG-2-2090.md | PROG-2-2090 幼兒內政指派接線（SPI-13 Q51） |
+| `doc_task_2308` | docs/agent-briefs/tasks/PROG/PROG-2-2091.md | PROG-2-2091 內政面板套用幼兒效率（SPI-13 Q51） |
+| `doc_task_2309` | docs/agent-briefs/tasks/PROG/PROG-2-2092.md | PROG-2-2092 教官卡原型改依特徵分流（FORM-04） |

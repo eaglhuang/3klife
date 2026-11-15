@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — 其它類
 
-> 生成日期: 2026-11-09
+> 生成日期: 2026-11-15
 > 這是 `doc-id-registry.md` 的「其它類」分片，第 4/7 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-other.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -8,8 +8,6 @@
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
-| `doc_other_1587` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0198-team-runtime-mode-precedence.task.md | TASK-AAO-0198 Honor CLI --runtime-mode over repo-default broker-only |
-| `doc_other_1588` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0199-task-ledger-fixture-isolation.task.md | TASK-AAO-0199 Isolate task-ledger governance validator fixtures per case |
 | `doc_other_1589` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0200-claim-broker-resolution-consumption.task.md | TASK-AAO-0200 Consume broker conflict resolution artifacts on next --claim |
 | `doc_other_1590` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0201-mixed-delivery-close-ux-hint.task.md | TASK-AAO-0201 Clarify multi-task shared historical-delivery close UX |
 | `doc_other_1591` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0202-claim-release-transition-event.task.md | TASK-AAO-0202 Emit task-event when claim release mutates ledger |
@@ -295,3 +293,5 @@
 | `doc_other_1871` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0183-durable-plan-batchrun-shadow-journal.task.md | ATM-GOV-0183 - Durable Plan BatchRun、Lane Stamping 與 Shadow Journal |
 | `doc_other_1872` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0184-real-team-wave-worker-executor.task.md | ATM-GOV-0184 - Real Team Wave Worker Executor |
 | `doc_other_1873` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0185-validator-dag-shared-cache.task.md | ATM-GOV-0185 - Validator DAG、共享結果與安全 Cache |
+| `doc_other_1874` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0186-real-shared-delivery-commit-executor.task.md | ATM-GOV-0186 - Real Shared Delivery Commit Executor |
+| `doc_other_1875` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0187-real-build-projection-runner-sync-executor.task.md | ATM-GOV-0187 - Real Build、Projection 與 Runner-Sync Executor |
