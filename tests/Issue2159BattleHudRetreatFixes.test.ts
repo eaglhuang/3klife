@@ -386,7 +386,7 @@ export function createIssue2159BattleHudRetreatFixesSuite(): TestSuite {
 
         // 子選單蓋上大廳時（setCrowdTagsVisible(false)），開啟中的泡泡應一併關閉並釋放武將
         bubble.active = true;
-        binder['_bubbleActor'] = 'g-center';
+        binder['_bubble'].open('g-center');
         binder.setCrowdTagsVisible(false);
         assert.isFalse(bubble.active);
         assert.equals('g-center', released[0]);

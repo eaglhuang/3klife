@@ -23,6 +23,10 @@ export interface ChatLine {
     text: string;
     /** 友誼至少多少才會說到；不填視為 0（一開始就會說） */
     minFriendship?: number;
+    /** 限定時段才說（morning/day/evening/night）；不填＝任何時段 */
+    periods?: string[];
+    /** 限定觸發事件（tap＝點聊天、volunteer＝自薦提案）；不填視為只有 tap */
+    events?: string[];
 }
 
 export interface ChatBook {
@@ -56,7 +60,11 @@ function parseLines(raw: unknown): ChatLine[] {
         if (seen.has(r.id)) continue;
         seen.add(r.id);
         const min = typeof r.minFriendship === 'number' && Number.isFinite(r.minFriendship) && r.minFriendship > 0 ? r.minFriendship : 0;
-        out.push(min > 0 ? { id: r.id, text: r.text, minFriendship: min } : { id: r.id, text: r.text });
+        const line: ChatLine = { id: r.id, text: r.text };
+        if (min > 0) line.minFriendship = min;
+        if (Array.isArray(r.periods)) line.periods = r.periods.filter((p): p is string => typeof p === 'string');
+        if (Array.isArray(r.events)) line.events = r.events.filter((e): e is string => typeof e === 'string');
+        out.push(line);
     }
     return out;
 }

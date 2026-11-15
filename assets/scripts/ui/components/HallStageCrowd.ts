@@ -75,6 +75,8 @@ export class HallStageCrowd extends Component {
     private _wanderData: HallWanderData | null = null;
     private _canvas: CanvasSize = { width: 1920, height: 1080 };
     private _onActorTap: ((generalId: string) => number | void) | null = null;
+    /** 每位武將最近一次點擊的計時代號：連點時只有最後一次的放行計時有效 */
+    private readonly _holdTokens = new Map<string, number>();
     private _wander: HallWander | null = null;
     private readonly _actors = new Map<string, CrowdActor>();
     /** 正在載入的人（id → 票號）；載完時票號對不上就丟棄，避免重複生成 */
@@ -465,14 +467,19 @@ export class HallStageCrowd extends Component {
         const wander = this._wander;
         const data = this._wanderData;
         if (!wander || !data || !actor.state) {
-            // 沒啟用走動：靜態小人本來就站著，點了直接通知外面
-            if (!actor.skeleton) this._onActorTap?.(generalId);
+            // 沒啟用走動：武將本來就站著，點了直接通知外面（有無骨架一律）
+            this._onActorTap?.(generalId);
             return;
         }
         wander.lockIdle(generalId);
         // 外面可回傳要停多久（自薦任務的對話框要開比較久）；沒回傳就用設定檔的泡泡秒數
         const holdSec = this._onActorTap?.(generalId);
-        this.scheduleOnce(() => this.releaseActor(generalId), typeof holdSec === 'number' && holdSec > 0 ? holdSec : data.bubbleSeconds);
+        // 連點同一位：每次點都重新計時，舊的計時到期不可提前放行
+        const token = (this._holdTokens.get(generalId) ?? 0) + 1;
+        this._holdTokens.set(generalId, token);
+        this.scheduleOnce(() => {
+            if (this._holdTokens.get(generalId) === token) this.releaseActor(generalId);
+        }, typeof holdSec === 'number' && holdSec > 0 ? holdSec : data.bubbleSeconds);
     }
 
     // ─────────────────────────── 小工具 ───────────────────────────
