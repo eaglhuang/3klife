@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-15",
+  "updatedAt": "2026-11-16",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -48,7 +48,18 @@
         ]
       },
       "battle": {
-        "status": "not-created"
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/sun_shang_xiang__孫尚香__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "fda50d25757a703658377333551578a240c459a5ed63712aba8156a2078e415a",
+            "canvas": "1024x1536 PNG",
+            "note": "Existing remote artwork discovered without a catalog record; kept as review candidate, not asserted as runtime-integrated."
+          }
+        ]
       },
       "avatar": {
         "activeVersion": "0005",
@@ -237,7 +248,18 @@
         ]
       },
       "battle": {
-        "status": "not-created"
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/bu_lian_shi__步練師__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "f0a9acca4cacd3decfe47ded9201acb05bc38e7c6851f7d33dc6d3d7319f0eab",
+            "canvas": "1024x1536 RGBA",
+            "note": "Existing remote artwork discovered without a catalog record; kept as review candidate, not asserted as runtime-integrated."
+          }
+        ]
       },
       "avatar": {
         "activeVersion": "0002",
@@ -290,7 +312,18 @@
         ]
       },
       "battle": {
-        "status": "not-created"
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/zhen_ji__甄姬__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "6afd0911ca412b344abeabf139bcd71d9b80631ef1d2f098f834ea6c31652866",
+            "canvas": "1024x1536 RGBA",
+            "note": "Existing remote artwork discovered without a catalog record; kept as review candidate, not asserted as runtime-integrated."
+          }
+        ]
       },
       "avatar": {
         "activeVersion": "0002",
@@ -547,7 +580,18 @@
         ]
       },
       "battle": {
-        "status": "not-created"
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/cai_wenji__蔡文姬__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "e6df0a98f68acfc25274f09b8797887f46172f71ebe2b236353947920280977e",
+            "canvas": "1024x1536 RGBA",
+            "note": "Existing remote artwork discovered without a catalog record; kept as review candidate, not asserted as runtime-integrated."
+          }
+        ]
       },
       "avatar": {
         "activeVersion": "0003",
@@ -6809,6 +6853,20 @@
             "qc": "Face recentered within ±3% while preserving the full visible hair ornament; slight three-quarter angle; crop ends at shoulder line with no chest."
           }
         ]
+      },
+      "battle": {
+        "activeVersion": "0003",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0003",
+            "file": "battle/xin_xian_ying__辛憲英__battle_0003.png",
+            "status": "review-pending",
+            "sha256": "02da20c878740eafb59019fba0a20b372906cd5ee8744ec22c62085842ba5a8f",
+            "canvas": "1024x1536 RGBA",
+            "note": "Existing remote artwork discovered without a catalog record; kept as review candidate, not asserted as runtime-integrated."
+          }
+        ]
       }
     },
     {
@@ -7286,6 +7344,20 @@
             "qc": "User-approved portrait; face centered with slight three-quarter angle; complete head visible; crop at shoulder line with no chest."
           }
         ]
+      },
+      "battle": {
+        "activeVersion": "0002",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0002",
+            "file": "battle/zhao_e__趙娥__battle_0002.png",
+            "status": "review-pending",
+            "sha256": "5052c3898b9e773243b7b9418cef1f8d965097c8088229a750976d54acd2e205",
+            "canvas": "1024x1536 RGBA",
+            "note": "Existing remote artwork discovered without a catalog record; kept as review candidate, not asserted as runtime-integrated."
+          }
+        ]
       }
     },
     {
@@ -7398,6 +7470,20 @@
             "crop": "shoulder-line",
             "cropBox": "x=349,y=0,w=330,h=330",
             "qc": "125px preview: original standing-art crop only; head and chin intact, face centered, shoulder line visible; original hair ornament retained."
+          }
+        ]
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/cai_shi__蔡氏__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "d4e674bf1a5e47f9a7bd1934f83786b5583b3e2f059abe71e7a66ebe36fc27a7",
+            "canvas": "1024x1536 RGBA",
+            "note": "Existing remote artwork discovered without a catalog record; kept as review candidate, not asserted as runtime-integrated."
           }
         ]
       }
