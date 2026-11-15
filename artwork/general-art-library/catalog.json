@@ -7063,6 +7063,25 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "displayStatus": "not-yet-verified",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/hua_man__花鬘__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "a3f89240c755ce1ef71a41864a17ff2b59c6690dd26c4968e1fa38702b6f0321",
+            "canvas": "1024x1536 RGBA",
+            "poseSelection": "low turning step, dual short crescent-hook blades in opposing attack and guard lines",
+            "gaze": "direct-to-camera",
+            "sourceStanding": "standing/hua_man__花鬘__standing_0002.png",
+            "weaponClass": "paired short crescent-hook blades",
+            "note": "Character and weapon design follow approved standing art. Whole transparent layer was translated 27px right for centered safe framing; no crop or stretch."
+          }
+        ]
       }
     },
     {
