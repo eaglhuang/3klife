@@ -6,9 +6,10 @@
 
 - standing：站立／介紹立繪
 - battle：戰鬥瞬間立繪
+- pose-drafts：尚待挑選的戰鬥姿勢草稿；不屬於正式戰鬥立繪
 - avatars：大頭像
 - small_avatars：小頭像
 
 ## 狀態與接入
 
-以 catalog.json 為版本索引。review-pending 代表候選稿，尚未核定、不可當成正式遊戲資源；核定後由正式整合流程複製到 assets/resources 並更新遊戲引用。新圖只從核定站立圖裁大頭像及小頭像，依 general-portrait-style 比例與水平置中規範分別製作。
+以 catalog.json 為版本索引。review-pending 代表候選稿，尚未核定；selected 代表使用者已選定版本、可供正式整合流程接入，但尚未進入遊戲；integrated 只代表已接入 assets/resources 並更新遊戲引用。新圖只從核定站立圖裁大頭像及小頭像，依 general-portrait-style 比例與水平置中規範分別製作。

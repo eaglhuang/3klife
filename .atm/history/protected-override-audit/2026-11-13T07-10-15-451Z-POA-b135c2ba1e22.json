@@ -1,0 +1,23 @@
+{
+  "schemaId": "atm.protectedOverrideAuditEvent.v1",
+  "eventId": "POA-b135c2ba1e22",
+  "recordedAt": "2026-11-13T07:10:15.451Z",
+  "actorId": "claude-code-opus-5-5",
+  "taskId": "UI-2-0172",
+  "surface": "tasks reconcile",
+  "command": "node atm.mjs tasks reconcile --task UI-2-0172 --actor claude-code-opus-5-5 --delivery-commit 54be7ef50 --json",
+  "flags": [],
+  "permission": "backend.tasks.reconcile",
+  "leaseId": "EMG-UI-2-0172-1fb08afab2",
+  "reason": "delivery merged via PR #2116 (4136fb76d)",
+  "skippedChecks": [
+    "protected-backend-surface",
+    "backend.tasks.reconcile"
+  ],
+  "touchedFiles": [],
+  "outcome": "authorized",
+  "failureCode": null,
+  "emergencyUsePath": "C:\\Users\\User\\3KLife\\.atm\\runtime\\emergency\\uses\\2026-11-13T07-10-15-449Z-EMG-UI-2-0172-1fb08afab2.json",
+  "parentEventId": null,
+  "repairCandidate": null
+}

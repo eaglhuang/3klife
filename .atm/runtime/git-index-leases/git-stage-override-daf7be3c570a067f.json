@@ -1,0 +1,28 @@
+{
+  "schemaId": "atm.gitIndexOverrideLease.v1",
+  "leaseId": "git-stage-override-daf7be3c570a067f",
+  "kind": "stage-override",
+  "permission": "git.index.stageOverride",
+  "actorId": "claude-code-opus-5-5",
+  "taskId": "UI-2-0172",
+  "paths": [
+    "docs/ui-quality-todo.json"
+  ],
+  "stagedEntries": [
+    {
+      "path": "docs/ui-quality-todo.json",
+      "stagedBlobId": "9c2ddd4f1b95a073bb2357e391201a13a6b0f305",
+      "stagedMode": "100644",
+      "stagedState": "present"
+    }
+  ],
+  "phrase": "ATM-STAGE-OVERRIDE-I-UNDERSTAND-THIS-MAY-DISRUPT-ANOTHER-ACTIVE-AGENT",
+  "chatTextAccepted": false,
+  "ttlSeconds": 900,
+  "singleUse": true,
+  "used": false,
+  "createdAt": "2026-11-13T06:10:18.404Z",
+  "expiresAt": "2026-11-13T06:25:18.404Z",
+  "reason": "Owner approved 2026-11-13 in chat: unstage UI-2-0130's ui-quality-todo.json (content kept in working tree) so UI-2-0172 card can be committed",
+  "auditRequirement": "Write stage override audit before mutating any foreign-active staged entry."
+}

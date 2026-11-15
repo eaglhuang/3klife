@@ -11,3 +11,4 @@
 {"who":"ATM CLI","when":"2026-09-01T21:12:45.941Z","action":"guidance.start","reason":"提交已完成的 ATM runner internal-release sync，使 3KLife 工作樹回復乾淨","result":"create-atom","profile":"dev","sessionId":"guidance-20260901211245-c2fba4743c"}
 {"who":"ATM CLI","when":"2026-09-01T21:23:50.651Z","action":"guidance.start","reason":"Commit the internally synchronized pinned runner metadata as the sole remaining 3KLife dirty file using governed staging.","result":"create-atom","profile":"dev","sessionId":"guidance-20260901212350-47c603fef9"}
 {"who":"ATM CLI","when":"2026-10-26T15:05:51.502Z","action":"guidance.start","reason":"建立結緣出生紀錄跨重開保存的正式任務卡 PROG-2-1146","result":"create-atom","profile":"dev","sessionId":"guidance-20261026150551-7d4339769d"}
+{"who":"ATM CLI","when":"2026-11-14T07:40:14.132Z","action":"guidance.start","reason":"盤點並修復正式美術庫中女性及高優先武將立繪缺陷，保留已選戰鬥姿勢","result":"docs-first","profile":"dev","sessionId":"guidance-20261114074014-173aacca0c"}

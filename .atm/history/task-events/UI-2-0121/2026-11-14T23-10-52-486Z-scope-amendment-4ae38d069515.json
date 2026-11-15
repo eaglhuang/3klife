@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-14T23-10-52-486Z-scope-amendment-4ae38d069515",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:083503cf5e97c3d9a4423f3bb3da0331619f60e9301239fe98951dc1cea54a35",
+  "createdAt": "2026-11-14T23:10:52.486Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-sol --add \"artwork/general-art-library/small_avatars/sun_shang_xiang__孫尚香__small_avatar_0001.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}

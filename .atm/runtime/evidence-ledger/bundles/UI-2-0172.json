@@ -1,0 +1,34 @@
+{
+  "taskId": "UI-2-0172",
+  "updatedAt": "2026-11-13T07:10:22.196Z",
+  "evidence": [
+    {
+      "evidenceKind": "validation",
+      "evidenceType": "historical-attestation",
+      "summary": "Historical reconcile attested delivery of UI-2-0172 by commit 54be7ef500b73f56e0266057e7563c7c399c0b47; no validator was executed.",
+      "artifactPaths": [
+        ".atm/history/evidence/UI-2-0172.*",
+        ".atm/history/task-events/UI-2-0172/**",
+        ".atm/history/tasks/UI-2-0172.json",
+        "assets/resources/data/general-art-paths.json",
+        "assets/scripts/core/systems/GeneralArtPaths.ts",
+        "assets/scripts/ui/components/BattleHUDComposite.ts",
+        "assets/scripts/ui/core/BattleArtController.ts",
+        "docs/agent-briefs/tasks_index.md",
+        "docs/agent-briefs/tasks/UI/UI-2-0172.md",
+        "docs/doc-id-registry-shards/registry-task.json",
+        "docs/doc-id-registry.json",
+        "docs/ui-quality-tasks/UI-2-0172.json",
+        "tests/BattleArtController.test.ts",
+        "tests/GeneralArtPaths.test.ts"
+      ],
+      "producedBy": "claude-code-opus-5-5",
+      "createdAt": "2026-11-13T07:10:22.196Z",
+      "evidenceFreshness": "historical-reference",
+      "details": {
+        "action": "reconcile",
+        "deliveryCommit": "54be7ef500b73f56e0266057e7563c7c399c0b47"
+      }
+    }
+  ]
+}

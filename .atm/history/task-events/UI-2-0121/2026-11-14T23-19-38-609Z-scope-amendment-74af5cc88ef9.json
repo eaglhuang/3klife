@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-14T23-19-38-609Z-scope-amendment-74af5cc88ef9",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:878822cb7219d28f24dd8cda4802b94c0211e9f6af28df2437f4e22432ecabfc",
+  "createdAt": "2026-11-14T23:19:38.609Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-sol --add \"artwork/general-art-library/small_avatars/da_qiao__大喬__small_avatar_0002.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}

@@ -1,6 +1,6 @@
 {
-  "port": 3000,
-  "autoStart": false,
-  "enableDebugLog": false,
+  "port": 28113,
+  "autoStart": true,
+  "debugLog": false,
   "maxConnections": 10
 }

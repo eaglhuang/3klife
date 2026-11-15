@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-12",
+  "updatedAt": "2026-11-15",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -48,7 +48,40 @@
         ]
       },
       "battle": {
-        "status": "not-created"
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/sun_shang_xiang__孫尚香__battle_0001.png",
+            "status": "rejected",
+            "pose": "B｜轉身橫斬",
+            "source": "exec-516364cc-de74-4a78-8a14-a780efb39958.png",
+            "sha256": "fda50d25757a703658377333551578a240c459a5ed63712aba8156a2078e415a",
+            "note": "舊候選背景全不透明，棋盤格烘焙在圖內，不能作透明遊戲立繪；保留歷史版本。"
+          },
+          {
+            "version": "0002",
+            "file": "battle/sun_shang_xiang__孫尚香__battle_0002.png",
+            "status": "review-pending",
+            "pose": "B｜轉身橫斬",
+            "source": "exec-edb1ce31-1644-4fd4-b991-1f743dfab099.png",
+            "sha256": "8f190f3220a0cf584d1001f67cf428653e222e974d2ca2762374096efccf422b",
+            "canvas": "1024x1536 RGBA",
+            "palette": "紅／深青綠／古金",
+            "note": "沿用使用者已選 B；橫斬劍勢收在中央安全框內，透明背景已驗證，待使用者確認圖像採用。"
+          },
+          {
+            "version": "0003",
+            "file": "battle/sun_shang_xiang__孫尚香__battle_0003.png",
+            "status": "review-pending",
+            "pose": "C｜轉身橫斬",
+            "source": "exec-d2c57347-fb5f-441a-b137-6bb0f6d5c1df.png",
+            "sha256": "7f78701d9f5c8985300e7a897804d28cd064420bd418172eaefef90f815f7fdc",
+            "canvas": "1024x1536 RGBA",
+            "palette": "紅／深青綠／古金",
+            "note": "修正沿用使用者後選 C；眼神看鏡頭、右手握劍柄， alpha>=16 主體位於安全框內；待使用者確認。"
+          }
+        ]
       },
       "avatar": {
         "activeVersion": "0005",
@@ -81,9 +114,30 @@
           }
         ]
       },
-      "smallAvatar": {
-        "status": "not-created"
+      "smallAvatar":     {
+    "status": "review-pending",
+    "history": [
+      {
+        "version": "0001",
+        "file": "small_avatars/sun_shang_xiang__孫尚香__small_avatar_0001.png",
+        "status": "review-pending",
+        "source": "exec-8ec5c65d-2e02-4e41-a71f-e8b05552dba0.png",
+        "sha256": "68ac56cd3b49a3e911e2042f5afe3f587637d78d051d01069befe00b509210d5",
+        "canvas": "1254x1254 RGBA",
+        "note": "由核定站姿延伸的小頭像；臉置中，頭部高度約 70–80%，保留肩線上緣且不含胸部；待使用者確認。"
+      },
+      {
+        "version": "0002",
+        "file": "small_avatars/sun_shang_xiang__孫尚香__small_avatar_0002.png",
+        "status": "review-pending",
+        "source": "generated:exec-3c50535c-e01e-468d-95f8-382bb3c80521.png",
+        "sha256": "0be37edfadeae5585be35d39debb4cbff93b287f4c16665433dc929a03189d2e",
+        "canvas": "1254x1254 RGBA",
+        "note": "由站姿 0005 延伸；頭至下巴約佔畫面 76%，臉水平置中，裁切止於肩線且不含胸部；透明背景。待使用者確認。"
       }
+    ],
+    "activeVersion": "0002"
+  }
     },
     {
       "uid": "zhuge-liang",
@@ -120,7 +174,17 @@
         ]
       },
       "battle": {
-        "status": "not-created"
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/zhuge_liang__諸葛亮__battle_0001.png",
+            "status": "review-pending",
+            "pose": "B｜前進指揮",
+            "source": "exec-6b5ba405-8951-4981-a931-8d29c881f6c4.png",
+            "sha256": "b3790eaf3cf09b7a90e4281fc12f9c86aae07909ff3c9a0dd3809e488bb34d17"
+          }
+        ]
       },
       "avatar": {
         "activeVersion": "0003",
@@ -144,7 +208,16 @@
         ]
       },
       "smallAvatar": {
-        "status": "not-created"
+        "status": "review-pending",
+        "history": [{
+          "version": "0001",
+          "file": "small_avatars/zhuge_liang__諸葛亮__small_avatar_0001.png",
+          "status": "review-pending",
+          "source": "exec-6fb388fe-a5ef-4579-8921-79ce6b19aeee.png",
+          "sha256": "f4556f010523b4c9fc05fccb0cf1aeafd76487870f44098cb61c21869ad7ae61",
+          "canvas": "1254x1254 RGBA",
+          "note": "由核定站姿延伸的小頭像；完整保留頭冠，臉部水平置中，取景到肩線且不含胸部；待使用者確認。"
+        }]
       }
     },
     {
@@ -166,9 +239,36 @@
           }
         ]
       },
-      "battle": {
-        "status": "not-created"
-      },
+      "battle":   {
+    "poseDrafts": [
+      {
+        "version": "0001",
+        "file": "pose-drafts/bu_lian_shi__步練師__battle-poses_0001.png",
+        "status": "selection-pending",
+        "source": "exec-d2a19a84-2987-4efd-b120-52f38a09de69.png",
+        "sha256": "3973a7288231bb72aaf4127f87741c852d2f30d417130bfa9917ce1e8d4f54f5",
+        "poses": {
+          "A": "側步圓扇護身",
+          "B": "轉身展扇牽制",
+          "C": "低步前送圓扇"
+        },
+        "note": "保留站姿中的蓮花圓扇、紅綠金配色與長裙；姿勢待使用者挑選。"
+      }
+    ],
+    "activeVersion": "0001",
+    "status": "review-pending",
+    "history": [
+      {
+        "version": "0001",
+        "file": "battle/bu_lian_shi__步練師__battle_0001.png",
+        "status": "review-pending",
+        "source": "generated:exec-a046e139-4fee-4588-9225-b3f462707ff9.png",
+        "sha256": "f0a9acca4cacd3decfe47ded9201acb05bc38e7c6851f7d33dc6d3d7319f0eab",
+        "dimensions": "1024x1536 RGBA",
+        "note": "戰術展卷、披袖指揮，保留完整古琴與琴架；背景帶有半透明氛圍光暈，待檢視是否採用。"
+      }
+    ]
+  },
       "avatar": {
         "activeVersion": "0002",
         "status": "integrated",
@@ -186,7 +286,19 @@
         ]
       },
       "smallAvatar": {
-        "status": "not-created"
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/bu_lian_shi__步練師__small_avatar_0001.png",
+            "status": "review-pending",
+            "source": "generated:exec-26e70d6a-5eaa-4383-b1a5-d7cc6131a0a7.png",
+            "sha256": "5d84f404114e07c92e37d939875fcf5227f02098d9ee91e9386480de0cd6c3ac",
+            "dimensions": "1254x1254 RGBA",
+            "note": "Face horizontally centered; full bun and jade ornament; shoulder-line crop with no visible bust."
+          }
+        ]
       }
     },
     {
@@ -209,7 +321,49 @@
         ]
       },
       "battle": {
-        "status": "not-created"
+        "status": "review-pending",
+        "poseDrafts": [
+          {
+            "version": "0001",
+            "file": "pose-drafts/zhen_ji__甄姬__battle-poses_0001.png",
+            "status": "selected",
+            "source": "exec-94804247-c8db-4f70-bd4f-02e01f05baaf.png",
+            "sha256": "a69593aa048cfcc969f8871b6263db711501d608d318792c8dd931132d308d5d",
+            "poses": {
+              "A": "側步持劍低架",
+              "B": "轉身橫向格擋",
+              "C": "前進斜刺"
+            },
+            "note": "使用者已選 C 姿勢，完成戰鬥圖 v0001。",
+            "selectedPose": "C｜前進斜刺"
+          }
+        ],
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/zhen_ji__甄姬__battle_0001.png",
+            "status": "review-pending",
+            "pose": "C｜前進斜刺",
+            "source": "exec-68e0b049-a505-45c1-a1c4-93a06b0f0488.png",
+            "sha256": "6afd0911ca412b344abeabf139bcd71d9b80631ef1d2f098f834ea6c31652866",
+            "canvas": "1024x1536 RGBA",
+            "note": "依使用者選定的 C 姿勢製作；直劍突刺，保留甄姬白／霧紫／銀金造型，透明背景；待使用者確認。"
+          },
+          {
+            "version": "0002",
+            "file": "battle/zhen_ji__甄姬__battle_0002.png",
+            "status": "review-pending",
+            "pose": "C｜前進斜刺",
+            "style": "semi-realistic illustration with anime-influenced facial features",
+            "palette": "pearl white / pale lavender / gold",
+            "weapon": "jian sword",
+            "sha256": "15d9a9cd0f0e51672f619b21f88dcb0cca893aa09dc64dc2f70a64dab3429a93",
+            "canvas": "1024x1536 RGBA",
+            "safeBox": "alpha>=16 bbox 140,268-864,1358; within central 75% width",
+            "source": "exec-3476ca81-93e0-4d25-b98b-df2d7163b60e.png",
+            "note": "按使用者指定 C 姿勢重繪；平底鞋、武器完整筆直；透明邊緣與殘光仍待使用者確認。"
+          }
+        ]
       },
       "avatar": {
         "activeVersion": "0002",
@@ -228,7 +382,18 @@
         ]
       },
       "smallAvatar": {
-        "status": "not-created"
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/zhen_ji__甄姬__small_avatar_0001.png",
+            "status": "review-pending",
+            "source": "exec-c366c1a3-6278-40cb-940b-9625cf173227.png",
+            "sha256": "f28dac5f5d406a84c98f75c7dcc4f13102a2fe2a27891fb5e272dc6adc6d3230",
+            "canvas": "1254x1254 RGBA",
+            "note": "肩線小頭像；高領遮住胸口，頭冠完整，臉部置中並佔畫面約 70–80%；待使用者確認。"
+          }
+        ]
       }
     },
     {
@@ -251,7 +416,29 @@
         ]
       },
       "battle": {
-        "status": "not-created"
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/da_qiao__大喬__battle_0001.png",
+            "status": "review-pending",
+            "pose": "B｜前進扇步攻勢",
+            "source": "exec-5e297f7e-df96-47a2-9a72-5c2732ec95d9.png",
+            "sha256": "1d812b959bcd58a9afe8660b947f5af1f3df59cdb318d33e8bf09790ce825b56",
+            "canvas": "1024x1536 RGBA",
+            "note": "採用使用者指定的粉色／銀藍羽飾服裝方向與單扇造型；先列候選，完成畫面安全邊界與最終視覺複核後再定稿。"
+          },
+          {
+            "version": "0002",
+            "file": "battle/da_qiao__大喬__battle_0002.png",
+            "status": "review-pending",
+            "pose": "B｜前進扇步攻勢",
+            "source": "exec-e8a6cce4-fb71-4c51-a800-ee7c601a5aec.png",
+            "sha256": "99b295238d0c723eb00d6ca9cac497cf8827175fced7429ae67b74e737d4c977",
+            "canvas": "1024x1536 RGBA",
+            "note": "重排後主體輪廓（alpha>=16）置於安全範圍；仍有低不透明度背景光霧，暫不採用，待清理後再審。"
+          }
+        ]
       },
       "avatar": {
         "activeVersion": "0002",
@@ -269,9 +456,30 @@
           }
         ]
       },
-      "smallAvatar": {
-        "status": "not-created"
+      "smallAvatar":   {
+    "status": "review-pending",
+    "history": [
+      {
+        "version": "0001",
+        "file": "small_avatars/da_qiao__大喬__small_avatar_0001.png",
+        "status": "review-pending",
+        "source": "exec-acc02863-7255-4386-acb7-0d1372271678.png",
+        "sha256": "9027d36142320b6d6ca9dc4ddcc027d36bc0aaf27c44f1ca5d0615dfab46b5bb",
+        "canvas": "1254x1254 RGBA",
+        "note": "頭至下巴連同髮冠約佔畫面七成；臉水平置中，僅到肩線、不含胸部；待人工視覺檢查。"
+      },
+      {
+        "version": "0002",
+        "file": "small_avatars/da_qiao__大喬__small_avatar_0002.png",
+        "status": "review-pending",
+        "source": "generated:exec-1238a12d-6079-4d2e-9b81-a0abc9cdc0f3.png",
+        "sha256": "3a2a0e7d5fd086e549bc41d062d52876767b8ecb35849d3cc85a13d47c6b86da",
+        "canvas": "1254x1254 RGBA",
+        "note": "由站姿 0002 延伸；臉置中，頭至下巴約佔畫面 77%，只見肩線與高領、不見胸部，透明背景；待使用者確認。"
       }
+    ],
+    "activeVersion": "0002"
+  }
     },
     {
       "uid": "lu-ling-qi",
@@ -293,7 +501,34 @@
         ]
       },
       "battle": {
-        "status": "not-created"
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/lu_ling_qi__呂玲綺__battle_0001.png",
+            "status": "review-pending",
+            "note": "依已選姿勢生成，最終採用版本待核對",
+            "source": "exec-f5a0f1b2-f426-4424-994e-5ef647115221.png",
+            "sha256": "10869a6b303285139876806012234b00f9fab76f57cd9efd253b88f90ddd0d16"
+          },
+          {
+            "version": "0002",
+            "file": "battle/lu_ling_qi__呂玲綺__battle_0002.png",
+            "status": "review-pending",
+            "sha256": "046050a012da94f27dcbbbe723f3630fd8cdd355ede398169212b29f293a9d65",
+            "note": "由 battle 目錄盤點補登；來源尚待追溯，未核定，暫列 review-pending。"
+          },
+          {
+            "version": "0003",
+            "file": "battle/lu_ling_qi__呂玲綺__battle_0003.png",
+            "status": "review-pending",
+            "pose": "B",
+            "source": "exec-db370e1c-d2b2-41ab-b2de-894ecf2637b8.png",
+            "sha256": "c6b6e4a8d51563825ba42a3793bfd5e12ef57765888ada262165de30f0eb8e4f",
+            "canvas": "1024x1536 RGBA",
+            "note": "依使用者指定修直長柄武器，沿用姿勢 B 並縮放置中；新候選待使用者確認。"
+          }
+        ]
       },
       "avatar": {
         "activeVersion": "0002",
@@ -312,7 +547,19 @@
         ]
       },
       "smallAvatar": {
-        "status": "not-created"
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/lu_ling_qi__呂玲綺__small_avatar_0001.png",
+            "status": "review-pending",
+            "source": "generated:exec-0f99eabf-38e7-42f8-94bd-ae0e26c0e1f4.png",
+            "sha256": "5cb01aaa135f17f02d1436df1f9ff2472e6fd70c4f35b41f74c496b1815ad780",
+            "dimensions": "1254x1254 RGBA",
+            "note": "Centered face; complete high ponytail and silver-red clasp; shoulder-line light armor crop."
+          }
+        ]
       }
     },
     {
@@ -335,7 +582,52 @@
         ]
       },
       "battle": {
-        "status": "not-created"
+        "status": "review-pending",
+        "poseDrafts": [
+          {
+            "version": "0001",
+            "file": "pose-drafts/xiao_qiao__小喬__battle-poses_0001.png",
+            "status": "superseded",
+            "source": "exec-4c5e95b7-26e3-4c73-9d4b-159512514485.png",
+            "sha256": "d745c8d8957a7b630e70356de09c4d90cf8c1bdc303a77bae7f2352050157e02",
+            "poses": {
+              "A": "雙扇交錯斜格",
+              "B": "躍步上揮側守",
+              "C": "前進雙扇迎擊"
+            },
+            "note": "沿用小喬淺藍造型與雙扇；姿勢尚待使用者挑選。"
+          },
+          {
+            "version": "0002",
+            "file": "pose-drafts/xiao_qiao__小喬__battle-poses_0002.png",
+            "status": "selected",
+            "source": "exec-226cd905-797e-4d22-a7ce-a3fb318ff424.png",
+            "sha256": "a91b79396a12f531c0f91e8830cfeca1b939bfccb39f5e3d3dfd4c0dd6d53278",
+            "canvas": "1774x887 RGB",
+            "poses": {
+              "A": "展扇前進",
+              "B": "旋身雙扇",
+              "C": "側身低步雙扇"
+            },
+            "selectedPose": "B",
+            "note": "使用者已選 B 姿勢；戰鬥圖 v0001 已完成並歸檔。"
+          }
+        ],
+        "weaponClass": "special-fans",
+        "poseCode": "selected-B",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/xiao_qiao__小喬__battle_0001.png",
+            "status": "review-pending",
+            "weaponClass": "special-fans",
+            "pose": "B｜旋身雙扇",
+            "source": "exec-4848c6a4-c5ca-4645-8814-e2951b0bfaaf.png",
+            "sha256": "d26340ff5f64dfd7b190fa8d5386eda4d94c2a05e16ca10b190659423212e996",
+            "canvas": "1024x1536 RGBA",
+            "note": "依使用者已選 B 姿勢製作；雙扇旋身，藍白清新造型；全身與雙扇位於中央安全框，透明背景；待使用者確認。"
+          }
+        ]
       },
       "avatar": {
         "activeVersion": "0002",
@@ -354,7 +646,18 @@
         ]
       },
       "smallAvatar": {
-        "status": "not-created"
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/xiao_qiao__小喬__small_avatar_0001.png",
+            "status": "review-pending",
+            "source": "exec-faa2a787-9870-4996-b430-1748be5a9504.png",
+            "sha256": "1955f8f1d1f8476be286c3d9793ef856b647f8d6397c1fdf02088fd7c5f45ccf",
+            "canvas": "1254x1254 RGBA",
+            "note": "肩線小頭像；頭部框約佔畫面 70–80%，只見頸部與肩線，臉置中；待使用者確認。"
+          }
+        ]
       }
     },
     {
@@ -382,7 +685,50 @@
         ]
       },
       "battle": {
-        "status": "not-created"
+        "status": "review-pending",
+        "poseDrafts": [
+          {
+            "version": "0001",
+            "file": "pose-drafts/cai_wenji__蔡文姬__battle-poses_0001.png",
+            "status": "superseded",
+            "source": "exec-17820b38-b4d5-4758-affb-81e1c0d79c06.png",
+            "sha256": "89a71af74bee69c9e5ebf28b9fdd3334267bedcb669662abcf7f76d534d1c2c0",
+            "poses": {
+              "A": "踏步撫弦",
+              "B": "轉身拂弦",
+              "C": "側步強音"
+            },
+            "note": "三案均完整呈現古琴與四足琴架；姿勢尚待使用者挑選。"
+          },
+          {
+            "version": "0002",
+            "file": "pose-drafts/cai_wenji__蔡文姬__battle-poses_0002.png",
+            "status": "selected",
+            "source": "exec-355b1f28-1549-4c93-8ad0-2d0e917a72ae.png",
+            "sha256": "fa66656683bbd0112ea370233f257b20f19f9eb8cf259e286916c0d71e12bca4",
+            "canvas": "1774x887 RGB",
+            "poses": {
+              "A": "坐姿撫琴",
+              "B": "站姿半轉展袖撫弦",
+              "C": "低身撫琴引韻"
+            },
+            "selectedPose": "A",
+            "note": "使用者已選姿勢 A；僅存姿勢選擇板，細畫候選另行審核。"
+          }
+        ],
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/cai_wenji__蔡文姬__battle_0001.png",
+            "status": "review-pending",
+            "pose": "A｜坐姿撫琴",
+            "selectedPose": "A",
+            "source": "exec-c90bfe38-3ae9-4c18-88e8-73366def2ab6.png",
+            "sha256": "e6df0a98f68acfc25274f09b8797887f46172f71ebe2b236353947920280977e",
+            "canvas": "1024x1536 RGBA",
+            "note": "依使用者核定姿勢 A。保留完整古琴與四足琴架；背景已去除、主體縮放置中，演奏施策氛圍待確認。"
+          }
+        ]
       },
       "avatar": {
         "activeVersion": "0003",
@@ -406,7 +752,19 @@
         ]
       },
       "smallAvatar": {
-        "status": "not-created"
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/cai_wenji__蔡文姬__small_avatar_0001.png",
+            "status": "review-pending",
+            "source": "generated:exec-3654830a-d98d-4841-8ca8-4c7546938778.png",
+            "sha256": "9e6c55f561d454d86165e2b410ad088eb5c279500a9cea410cb026338937baff",
+            "dimensions": "1254x1254 RGBA",
+            "note": "Centered serene face; full lavender flower headband; shoulder-line crop, no chest."
+          }
+        ]
       }
     },
     {
@@ -434,7 +792,43 @@
         ]
       },
       "battle": {
-        "status": "not-created"
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/huang_yue_ying__黃月英__battle_0001.png",
+            "status": "rejected",
+            "pose": "B｜機巧施策轉步",
+            "source": "exec-3765aa3f-67da-424a-9591-61b41669d3f0.png",
+            "sha256": "de4583aeea5f0d0f7226f25bddd3612710992dceb47e43314b546a24754ae34a",
+            "note": "舊候選背景全不透明，棋盤格烘焙在圖內，不能作透明遊戲立繪；保留歷史版本。"
+          },
+          {
+            "version": "0002",
+            "file": "battle/huang_yue_ying__黃月英__battle_0002.png",
+            "status": "review-pending",
+            "pose": "B｜機巧施策轉步",
+            "source": "exec-31ea7d71-67c6-4880-be17-ab4d983094ef.png",
+            "sha256": "6067dd04863fbd84505bf0fad8c17ab6fd2992bab3c20224de9cb31580dccda8",
+            "canvas": "1024x1536 RGBA",
+            "palette": "深翠綠／象牙白／古金",
+            "note": "沿用使用者已選 B 與卷圖、機巧羅盤設定；透明背景與寬度安全框已驗證，待使用者確認採用。"
+          },
+          {
+            "version": "0003",
+            "file": "battle/huang_yue_ying__黃月英__battle_0003.png",
+            "status": "review-pending",
+            "sha256": "dabccbde68b197ce60c3c0a941b6c1dc1a4d44bddfea39c6d3dc598dd8331881",
+            "note": "由 battle 目錄盤點補登；來源尚待追溯，未核定，暫列 review-pending。"
+          },
+          {
+            "version": "0004",
+            "file": "battle/huang_yue_ying__黃月英__battle_0004.png",
+            "status": "review-pending",
+            "sha256": "3c76ad09e191e34916e8d5660c1c7c305ee48294ccf1cf04c71420bb13a0cb33",
+            "note": "由 battle 目錄盤點補登；來源尚待追溯，未核定，暫列 review-pending。"
+          }
+        ]
       },
       "avatar": {
         "activeVersion": "0002",
@@ -453,10 +847,22 @@
         ]
       },
       "smallAvatar": {
-        "status": "not-created"
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/huang_yue_ying__黃月英__small_avatar_0001.png",
+            "status": "review-pending",
+            "source": "generated:exec-c4dad378-8c68-440a-932e-e2d9288da0a8.png",
+            "sha256": "7545f5289977eb550965209a78390405877ec2b5da41a4c637fa6e97ab8493b5",
+            "dimensions": "1254x1254 RGBA",
+            "note": "Face centered by framing; compact jade floral ornament; sage-and-ivory shoulder-line crop."
+          }
+        ]
       }
     },
-    {
+        {
       "uid": "guan-yin-ping",
       "name": "關銀屏",
       "standing": {
@@ -471,27 +877,20 @@
         ]
       },
       "battle": {
-        "activeVersion": "0001",
-        "status": "asset-imported",
-        "displayStatus": "not-yet-verified",
+        "status": "review-pending",
         "weaponClass": "long-polearm",
         "poseCode": "LH-035",
         "history": [
           {
             "version": "0001",
             "file": "battle/guan_yin_ping__關銀屏__battle_0001.png",
-            "status": "asset-imported",
-            "weaponClass": "long-polearm",
-            "poseCode": "LH-035"
-          },
-          {
-            "version": "0002",
-            "file": "battle/guan_yin_ping__關銀屏__battle_0002.png",
             "status": "review-pending",
+            "weaponClass": "long-polearm",
             "poseCode": "LH-035",
-            "poseLabel": "雙手蓄勢橫擊",
-            "sha256": "6042472505717aa2de73b99fdbba449b9897ecbedbe974061c2640499382e167",
-            "canvas": "1024x1536 RGBA"
+            "source": "exec-c36e0dd1-7189-4cf3-8640-5d6d4d19a99d.png",
+            "sha256": "a46121178d986a6f45de077d184016f852d2f35a9ed35b5d0817509d06116eb3",
+            "canvas": "1024x1536 RGBA",
+            "note": "依已選 LH-035 橫向雙手揮擊姿勢與綠金鳳紋造型整理；主體 alpha>=16 位於安全框，外圍仍殘留低透明光霧，尚待清理，不可作正式定稿。"
           }
         ]
       },
@@ -507,7 +906,19 @@
         ]
       },
       "smallAvatar": {
-        "status": "not-created"
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/guan_yin_ping__關銀屏__small_avatar_0001.png",
+            "status": "review-pending",
+            "source": "exec-f25f240d-e7e1-46f1-ba2d-7647fab8210e.png",
+            "sha256": "54658338085ccc72d6a5ca663c4d9f9c43ded0823849e2f28e097b1939546cea",
+            "canvas": "1254x1254 RGBA",
+            "note": "肩線小頭像：頭部比例約 70–80%，臉左右置中，保留主要髮飾，只見頸部與肩線。"
+          }
+        ],
+        "activeVersion": "0001"
       }
     },
     {
@@ -525,23 +936,18 @@
         ]
       },
       "battle": {
-        "activeVersion": "0001",
-        "status": "asset-imported",
+        "activeVersion": "0004",
+        "status": "review-pending",
         "displayStatus": "not-yet-verified",
         "weaponClass": "long-polearm",
-        "poseCode": "selected-B-draft",
+        "poseCode": "selected-C",
         "history": [
           {
-            "version": "0001",
-            "file": "battle/bao_san_niang__鮑三娘__battle_0001.png",
-            "status": "asset-imported",
+            "version": "0004",
+            "file": "battle/bao_san_niang__鮑三娘__battle_0004.png",
+            "status": "review-pending",
             "weaponClass": "long-polearm",
-            "poseCode": "selected-B-draft"
-          },
-          {
-            "version": "0003",
-            "file": "battle/bao_san_niang__鮑三娘__battle_0003.png",
-            "status": "review-pending"
+            "poseCode": "selected-C"
           }
         ]
       },
@@ -557,7 +963,19 @@
         ]
       },
       "smallAvatar": {
-        "status": "not-created"
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/bao_san_niang__鮑三娘__small_avatar_0001.png",
+            "status": "review-pending",
+            "source": "generated:exec-cda00148-501a-4e50-ae04-340a9e693bc2.png",
+            "sha256": "70304094e493dd92a035605711d4e6876622ce8b2ed81939e292898e48c68e75",
+            "dimensions": "1254x1254 RGBA",
+            "note": "Centered face; full head ornament and shoulder caps; shoulder-line small-avatar framing."
+          }
+        ]
       }
     },
     {
@@ -602,7 +1020,19 @@
         ]
       },
       "smallAvatar": {
-        "status": "not-created"
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/ma_yun_lu__馬雲騄__small_avatar_0001.png",
+            "status": "review-pending",
+            "source": "generated:exec-4b667bb4-0cda-4208-8867-6eba0eef7584.png",
+            "sha256": "1a44ba84bb697e6b9a5b93dbb2b7e9cbcbd3a12e546f6f8abbe7391b37ecc166",
+            "dimensions": "1254x1254 RGBA",
+            "note": "Face centered by framing; full ponytail and horse ornament; shoulder-line light-armor crop."
+          }
+        ]
       }
     },
     {
@@ -620,23 +1050,25 @@
         ]
       },
       "battle": {
-        "status": "review-pending",
+        "status": "selected",
         "history": [
           {
             "version": "0002",
             "file": "battle/zhu_rong_furen__祝融夫人__battle_0002.png",
-            "status": "review-pending"
+            "status": "superseded"
           },
           {
             "version": "0003",
             "file": "battle/zhu_rong_furen__祝融夫人__battle_0003.png",
-            "status": "review-pending",
+            "status": "selected",
             "poseSelection": "B",
             "gaze": "direct-to-camera",
             "sha256": "bbff2fc575ffca99b909e46c771eaec0bcb9e44879dbf6e091bc3adcb3d56ed1",
-            "canvas": "1024x1536 RGBA"
+            "canvas": "1024x1536 RGBA",
+            "userDecision": "採用這版"
           }
-        ]
+        ],
+        "selectedVersion": "0003"
       },
       "avatar": {
         "activeVersion": "0001",
@@ -650,7 +1082,19 @@
         ]
       },
       "smallAvatar": {
-        "status": "not-created"
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/zhu_rong_furen__祝融夫人__small_avatar_0001.png",
+            "status": "review-pending",
+            "source": "generated:exec-a02c0106-e503-426c-a5d3-77f823824b68.png",
+            "sha256": "b575fcb8c1f71ea60eb6735b45b2844e867b17d1ec59ef797a2610009e4b6384",
+            "dimensions": "1254x1254 RGBA",
+            "note": "Face centered by framing; complete red-gold hair ornaments; bronze shoulder armor at shoulder-line crop."
+          }
+        ]
       }
     },
     {
@@ -755,6 +1199,24 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "status": "not-created",
+        "poseDrafts": [
+          {
+            "version": "0001",
+            "file": "pose-drafts/zhou_yu__周瑜__battle-poses_0001.png",
+            "status": "selection-pending",
+            "source": "exec-d4ecffab-decb-4725-8355-e8f1c6caadab.png",
+            "sha256": "2de8d5712be011ce9cd5bb51847507b210b9d3a61afe5488863ddbd81833098f",
+            "poses": {
+              "A": "前進斜向突刺",
+              "B": "轉身斜向橫斬",
+              "C": "低身側步橫斬"
+            },
+            "note": "延續周瑜既有紅／象牙白／金色服飾與佩劍；三種戰鬥姿勢待使用者挑選。"
+          }
+        ]
       }
     },
     {
@@ -772,12 +1234,36 @@
         "activeVersion": "0002"
       },
       "battle": {
+        "activeVersion": "0005",
         "status": "review-pending",
+        "displayStatus": "not-yet-verified",
+        "weaponClass": "long-polearm",
+        "poseCode": "selected-user-reference",
         "history": [
           {
-            "version": "0002",
-            "file": "battle/guan_yu__關羽__battle_0002.png",
-            "status": "review-pending"
+            "version": "0003",
+            "file": "battle/guan_yu__關羽__battle_0003.png",
+            "status": "review-pending",
+            "weaponClass": "long-polearm",
+            "poseCode": "selected-user-reference"
+          },
+          {
+            "version": "0004",
+            "file": "battle/guan_yu__關羽__battle_0004.png",
+            "status": "rejected",
+            "weaponClass": "long-polearm",
+            "poseCode": "SWEEP-C",
+            "sha256": "091ab4977956f3f5309094457a4a2a02a03308f483db7e6391425578b6d9feb4",
+            "note": "User rejected: weapon construction incorrect and face expression too dull; source file removed."
+          },
+          {
+            "version": "0005",
+            "file": "battle/guan_yu__關羽__battle_0005.png",
+            "status": "review-pending",
+            "weaponClass": "long-polearm",
+            "poseCode": "SWEEP-C",
+            "sha256": "0b3b67b0fe084a93bfc1e9e9d98319c5715c0abcf42af46835677f9bc32f27d3",
+            "note": "Face identity follows user-selected Guan Yu reference; revised to single crescent guandao with straight shaft."
           }
         ]
       },
@@ -791,6 +1277,21 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/guan_yu__關羽__small_avatar_0001.png",
+            "status": "review-pending",
+            "source": "exec-79540066-02af-48de-9ef7-ba185794ba7b.png",
+            "sha256": "81f448b7db74160a4c2e312b21c6962f23b7edce97e4b6c992569fc917b2d8d5",
+            "canvas": "1254x1254 RGBA",
+            "note": "肩線小頭像候選；頭部含頭巾約 76%，臉左右置中，保留完整鬍鬚，只露肩甲上緣。"
+          }
+        ],
+        "activeVersion": "0001"
       }
     },
     {
@@ -814,8 +1315,22 @@
             "version": "0002",
             "file": "battle/zhang_fei__張飛__battle_0002.png",
             "status": "review-pending"
+          },
+          {
+            "version": "0003",
+            "file": "battle/zhang_fei__張飛__battle_0003.png",
+            "status": "review-pending",
+            "sha256": "18ef5b13912eb17b684ecb846557a4a117c7fd6d7dd8edf90f007b50eb2f6152"
+          },
+          {
+            "version": "0004",
+            "file": "battle/zhang_fei__張飛__battle_0004.png",
+            "status": "review-pending",
+            "sha256": "01702fe170c12125357c5ce9c6e12d6f00d8473900936e3bf7c77451ea01e5fc",
+            "note": "Face redrawn to align with approved Zhang Fei portrait style; user requested as second battle pose."
           }
-        ]
+        ],
+        "activeVersion": "0004"
       },
       "avatar": {
         "status": "integrated",
@@ -827,6 +1342,21 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/zhang_fei__張飛__small_avatar_0001.png",
+            "status": "review-pending",
+            "source": "exec-4e31e4e4-7569-474b-9c22-bbc2ec847343.png",
+            "sha256": "dbe440aa8279a79da5ebc3230fb50a4fea9ba26e29061ce5e03cb773ae23f935",
+            "canvas": "1254x1254 RGBA",
+            "note": "肩線小頭像候選；頭巾至鬍鬚完整，頭部比例約 75%，臉置中，僅露肩甲上緣。"
+          }
+        ],
+        "activeVersion": "0001"
       }
     },
     {
@@ -843,6 +1373,35 @@
         ],
         "activeVersion": "0002"
       },
+      "battle": {
+        "activeVersion": "0003",
+        "status": "review-pending",
+        "displayStatus": "not-yet-verified",
+        "weaponClass": "long-polearm",
+        "poseCode": "selected-user-reference-image2",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/zhao_yun__趙雲__battle_0001.jpg",
+            "status": "rejected",
+            "selection": "使用者確認保留作姿勢與造型參照",
+            "note": "舊版 JPG 不含透明通道；保留作參考，不作遊戲透明立繪。",
+            "sha256": "3c41e0e076794d1f37c18bc9a8c6dfecf406329ac1bcaf38dc40c8bfcc2ac92f"
+          },
+          {
+            "version": "0003",
+            "file": "battle/zhao_yun__趙雲__battle_0003.png",
+            "status": "review-pending",
+            "poseCode": "selected-user-reference-image2",
+            "weaponClass": "long-polearm",
+            "palette": "銀白／皇家藍／古金",
+            "source": "exec-2fd52eb9-2d1b-49b2-aa6b-14ced9ef27bc.png",
+            "sha256": "4c9b1210e3851ea7f8d997928f5f8b8ec772b4d661929f1704a92c4e30bd28f6",
+            "canvas": "1024x1536 RGBA",
+            "note": "沿用圖二趙雲戰鬥姿勢，套入圖一白銀皇家藍古金龍紋盔甲與長槍設計；待使用者確認採用。"
+          }
+        ]
+      },
       "avatar": {
         "status": "integrated",
         "history": [
@@ -853,6 +1412,20 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/zhao_yun__趙雲__small_avatar_0001.png",
+            "status": "review-pending",
+            "source": "exec-feb4e2d0-8ba7-4d60-b998-ee6ea1c9b647.png",
+      "sha256": "3d8919a59d07b9ec864ddf2a679ffcd0b2b45f5ffa3002fa0701a5a9b45b41a4",
+            "canvas": "1254x1254 RGBA",
+            "note": "肩線小頭像候選；頭部含頭冠約 70–80%，臉部接近左右置中，只露肩甲上緣；待與正式站姿核對人物一致性。"
+          }
+        ]
       }
     },
     {
@@ -869,6 +1442,25 @@
         ],
         "activeVersion": "0002"
       },
+      "battle": {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/lu_bu__呂布__battle_0001.png",
+            "status": "asset-imported",
+            "sha256": "cb68f2f1cfba0a0708082c185b18e8673f151c69ca73f0558ddb5dc0767a026f"
+          },
+          {
+            "version": "0002",
+            "file": "battle/lu_bu__呂布__battle_0002.png",
+            "status": "review-pending",
+            "sha256": "2ffad0518c17967ed8e52a03a7064f7f63cb1706c86935549d5a777ad192ec9c",
+            "note": "User-approved as second battle pose."
+          }
+        ],
+        "activeVersion": "0002"
+      },
       "avatar": {
         "status": "integrated",
         "history": [
@@ -881,7 +1473,7 @@
         "activeVersion": "0002"
       }
     },
-    {
+                {
       "uid": "sima-yi",
       "name": "司馬懿",
       "standing": {
@@ -905,6 +1497,58 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/sima_yi__司馬懿__battle_0001.png",
+            "status": "review-pending",
+            "source": "exec-2c141ad7-8516-42e0-aa7b-1b582b01b2a7.png",
+            "sha256": "bfd90a5e2dc12999a8a1c8e08ff4a945553e2d2fea3a046125337e061ff58027",
+            "canvas": "1024x1536 RGBA",
+            "poseCode": "B",
+            "pose": "回身展袖，雙手控扇施策",
+            "weaponClass": "feather-fan",
+            "note": "使用者已選姿勢 B；新圖已收入 battle，待立繪審看。"
+          }
+        ],
+        "activeVersion": "0001",
+        "selectedPose": {
+          "code": "B",
+          "description": "回身展袖，雙手控扇施策"
+        },
+        "poseDrafts": [
+          {
+            "version": "0001",
+            "file": "pose-drafts/sima_yi__司馬懿__battle-poses_0001.png",
+            "status": "selection-pending",
+            "source": "exec-dd0d24aa-64d7-495c-9be0-add865ae005f.png",
+            "sha256": "5f4d97be8071390022855b92b37f3a0a8b7c4d0c6b2dac0a23a8dc1aec69e9df",
+            "poses": {
+              "A": "前進斜守發令",
+              "B": "回身斜向反擊",
+              "C": "低身側步持簡牘"
+            },
+            "note": "延續司馬懿既有深靛／銀藍服飾、冠飾與成熟冷峻氣質；三種姿勢待使用者挑選。"
+          }
+        ]
+      },
+      "smallAvatar": {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/sima_yi__司馬懿__small_avatar_0001.png",
+            "status": "review-pending",
+            "source": "exec-2964a475-13c2-46e5-9e85-72e0660fa14d.png",
+            "sha256": "b6b9af5f4839235845d26d355beee3866c45aa0252ed37b7bdd654359359cbd7",
+            "canvas": "1254x1254 RGBA",
+            "note": "肩線小頭像：頭部比例約 70–80%，臉左右置中，保留主要髮飾，只見頸部與肩線。"
+          }
+        ],
+        "activeVersion": "0001"
       }
     },
     {
@@ -957,6 +1601,26 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "status": "not-created",
+        "poseDrafts": [
+          {
+            "version": "0001",
+            "file": "pose-drafts/xu_zhu__許褚__battle-poses_0001.png",
+            "status": "selection-pending",
+            "source": "exec-9ad2b679-6343-4ceb-8416-ef866acaccd1.png",
+            "sha256": "a9ed9183b7893372f9ce8eeda3d3e8ff5181f5a54ce16060f9341b5069b6e5bc",
+            "canvas": "2172x724 RGB",
+            "poses": {
+              "A": "低身蓄勢橫斬",
+              "B": "前踏斜劈",
+              "C": "沉肩橫向重斬"
+            },
+            "weapon": "長柄厚背大刀（依演義揮刀描述之美術詮釋，非原文明載刀型）",
+            "note": "三勢姿勢草稿待使用者挑選；魏藍／炭黑／古金，虎紋甲飾。"
+          }
+        ]
       }
     },
     {
@@ -973,6 +1637,19 @@
         ],
         "activeVersion": "0002"
       },
+      "battle": {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/huang_zhong__黃忠__battle_0001.png",
+            "status": "review-pending",
+            "note": "使用者選擇 A 姿勢後的構圖修訂稿，最終採用版本待核對",
+            "source": "exec-49faf60c-af82-467c-9984-c5399ed37266.png",
+            "sha256": "ab63a29a07bd4cbf2d251085dc3fe1b9e29f274753f00d7aa94d772141407685"
+          }
+        ]
+      },
       "avatar": {
         "status": "integrated",
         "history": [
@@ -983,6 +1660,21 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/huang_zhong__黃忠__small_avatar_0001.png",
+            "status": "review-pending",
+            "source": "exec-7e333604-6f50-426a-868b-b6bfdb1b2d4b.png",
+            "sha256": "da74e1743b1cae619ad32fd2cffaca0e8fa9be7332c781246941d99cc500bb79",
+            "canvas": "1254x1254 RGBA",
+            "note": "肩線小頭像候選；保留白髮白鬍與金黑頭盔，人物置中並留出鬍鬚下方透明空間。"
+          }
+        ],
+        "activeVersion": "0001"
       }
     },
     {
@@ -995,6 +1687,23 @@
             "version": "0002",
             "file": "standing/ma_chao__馬超__standing_0002.png",
             "status": "integrated"
+          }
+        ],
+        "activeVersion": "0002"
+      },
+      "battle": {
+        "status": "asset-imported",
+        "history": [
+          {
+            "version": "0002",
+            "file": "battle/ma_chao__馬超__battle_0002.png",
+            "status": "asset-imported",
+            "poseId": "LH-052",
+            "style": "anime-influenced face; semi-realistic materials",
+            "palette": "red-black-silver-gold",
+            "weapon": "spear",
+            "sha256": "20cae32214b92988dbeec0490839465681312cca827b5948ed307b57cd35d3d8",
+            "canvas": "1024x1536 RGBA"
           }
         ],
         "activeVersion": "0002"
@@ -1202,6 +1911,36 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/guo_jia__郭嘉__battle_0001.png",
+            "status": "review-pending",
+            "source": "exec-19893340-ee57-4d84-ae56-de38d1ae8797.png",
+            "sha256": "cf6670acacfa24c3d4894a10f2bcac31b611c502fad86f4320a0e4ed06c28e19",
+            "canvas": "1024x1536 RGBA",
+            "poseCode": "B",
+            "note": "郭嘉已選 B：回身揚手傳令，另一手持策簿；待使用者審核。"
+          }
+        ],
+        "poseDrafts": [
+          {
+            "version": "0001",
+            "file": "pose-drafts/guo_jia__郭嘉__battle-poses_0001.png",
+            "status": "selection-pending",
+            "source": "exec-9c1835c5-0602-4437-aeca-2a86b6ffbcf9.png",
+            "sha256": "61d576c9aa790fb7e9a76ecfbcbcb5536b77f5e60e51ad055d64eadd169a00b8",
+            "poses": {
+              "A": "踏步展策簿指揮",
+              "B": "回身揚手傳令",
+              "C": "近案執筆標策"
+            },
+            "note": "沿用魏藍／象牙白／古金造型與軍策簿；姿勢待使用者挑選。"
+          }
+        ]
       }
     },
     {
@@ -1228,6 +1967,25 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "status": "not-created",
+        "poseDrafts": [
+          {
+            "version": "0001",
+            "file": "pose-drafts/xun_yu__荀彧__battle-poses_0001.png",
+            "status": "selection-pending",
+            "source": "exec-d5ec4c1e-d549-47cf-b0e3-6ae9bfa9366f.png",
+            "sha256": "d95e33f523eea7bbc60e533bcfa74f2f4fb4cd5c812d7226a1934dea96c3e728",
+            "canvas": "1536x1024 RGB",
+            "poses": {
+              "A": "前進展卷指揮",
+              "B": "側轉抬掌截令",
+              "C": "旋步展開路線圖"
+            },
+            "note": "高智軍師首版三姿勢草稿，等使用者選擇；以荀彧的象牙白／青玉／朱紅為主色。"
+          }
+        ]
       }
     },
     {
@@ -4463,6 +5221,35 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/wang_yi__王異__battle_0001.png",
+            "status": "review-pending",
+            "source": "exec-89d451b2-6f9e-48fd-b03e-16ab789a1326.png",
+            "sha256": "94aea8787a6e7a661766fac55926796cdd17663a2a953091ab1d20cf40c74d92",
+            "canvas": "1024x1536 RGBA",
+            "note": "王異戰鬥候選；沿用站姿藍灰甲與長槍，雙手直槍向畫面左前方突刺，待使用者審核。"
+          }
+        ],
+        "poseDrafts": [
+          {
+            "version": "0001",
+            "file": "pose-drafts/wang_yi__王異__battle-poses_0001.png",
+            "status": "selection-pending",
+            "source": "exec-4188de3c-2169-49f6-86f5-9217daa38fda.png",
+            "sha256": "9dad314cbd94148a9d1790d4a7254eff5c108bdabcc7e8f3cf996f0bdd0ae5a8",
+            "poses": {
+              "A": "前進長槍直刺",
+              "B": "轉身橫向掃槍",
+              "C": "側步上段斜架"
+            },
+            "note": "沿用王異魏系藍灰輕甲與既有長槍設定；槍桿保持筆直，姿勢待使用者挑選。"
+          }
+        ]
       }
     },
     {
@@ -5883,6 +6670,19 @@
         ],
         "activeVersion": "0002"
       },
+      "battle": {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/diao_chan__貂蟬__battle_0001.png",
+            "status": "review-pending",
+            "pose": "B｜上斜揮劍",
+            "source": "exec-2d9f83c7-a771-4076-a377-4211e00f5182.png",
+            "sha256": "af89ad9286fcc1e66d2c4992a091379bdab0d7f5ee13f72ebda309fb9186e336"
+          }
+        ]
+      },
       "avatar": {
         "status": "integrated",
         "history": [
@@ -5893,6 +6693,21 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/diao_chan__貂蟬__small_avatar_0001.png",
+            "status": "review-pending",
+            "source": "generated:exec-cc80630c-2dd3-46a4-b30e-21b33f753fe1.png",
+            "sha256": "25805ad7bc7a768312b0c998a570a513e73f61c7fd003cd69afd43b9de0162c9",
+            "dimensions": "1254x1254 RGBA",
+            "note": "Centered red-haired face; symmetrical ruby floral ornaments; shoulder-line crop with no chest."
+          }
+        ]
       }
     },
     {
@@ -5971,6 +6786,42 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "status": "asset-imported",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/xin_xian_ying__辛憲英__battle_0001.png",
+            "status": "rejected",
+            "pose": "A｜前進展卷指策",
+            "sha256": "73ac8689f0cbc140e8261a1d8e626d2c5235b90450e85afadd937c131272a74f",
+            "note": "舊候選背景全不透明，不能作透明立繪使用；保留作歷史比對。"
+          },
+          {
+            "version": "0002",
+            "file": "battle/xin_xian_ying__辛憲英__battle_0002.png",
+            "status": "review-pending",
+            "pose": "A｜前進展卷指策",
+            "source": "exec-7db85969-8ca5-43e8-8e36-e4c4162650b7.png",
+            "sha256": "8c2a949f28082594c748ea597bc45cb36f4a7e0e58e6e5543f82b5074f3c6a90",
+            "canvas": "1024x1536 RGBA",
+            "palette": "藍／象牙白／銀／淡紫",
+            "note": "沿用使用者選定 A；透明背景與安全邊界已檢查，待使用者確認採用。"
+          },
+          {
+            "version": "0003",
+            "file": "battle/xin_xian_ying__辛憲英__battle_0003.png",
+            "status": "asset-imported",
+            "pose": "A｜前進展卷指策",
+            "source": "codex-clipboard-ec38491e-da17-428a-a670-1364580bb078.png",
+            "sha256": "02da20c878740eafb59019fba0a20b372906cd5ee8744ec22c62085842ba5a8f",
+            "canvas": "1024x1536 RGBA",
+            "palette": "青瓷綠／象牙白／古金",
+            "note": "使用者確認收錄；透明角落已核對。人物輪廓接近畫布邊緣（alpha bbox x=98–922, y=16–1526），正式遊戲接入前需確認實際框體裁切。"
+          }
+        ],
+        "activeVersion": "0003"
       }
     },
     {
@@ -6335,6 +7186,43 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/zhao_e__趙娥__battle_0001.png",
+            "status": "review-pending",
+            "pose": "B｜短刀低姿斬擊",
+            "source": "exec-49c565e2-ab71-4927-9275-5c1b5a790e2e.png",
+            "sha256": "c4fb3a524226101b3dbb535be56c9297c372ea91dbf30fb9fc376b0be1e202f6",
+            "canvas": "1024x1536 RGBA",
+            "note": "沿用使用者已選 B 姿勢；候選圖真透明，人物與刀勢橫向較寬，採用前需檢查遊戲顯示框。"
+          },
+          {
+            "version": "0002",
+            "file": "battle/zhao_e__趙娥__battle_0002.png",
+            "status": "review-pending",
+            "sha256": "5052c3898b9e773243b7b9418cef1f8d965097c8088229a750976d54acd2e205",
+            "note": "由 battle 目錄盤點補登；來源尚待追溯，未核定，暫列 review-pending。"
+          }
+        ]
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/zhao_e__趙娥__small_avatar_0001.png",
+            "status": "review-pending",
+            "source": "generated:exec-5eb1cd54-5da2-4a4c-ad6d-b1b4df0b8cf7.png",
+            "sha256": "0720bbb5e3e6e1a4ee41afd2faff91e00e397a0eeb41df778de87859b7d9b8e4",
+            "dimensions": "1254x1254 RGBA",
+            "note": "Centered determined face; complete tied hair and light armor collar; shoulder-line crop, no chest."
+          }
+        ]
       }
     },
     {
@@ -6402,6 +7290,22 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "displayStatus": "not-yet-verified",
+        "weaponClass": "stationery",
+        "poseCode": "selected-A-command-writing",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/cai_shi__蔡氏__battle_0001.png",
+            "status": "review-pending",
+            "weaponClass": "stationery",
+            "poseCode": "selected-A-command-writing"
+          }
+        ]
       },
       "avatar": {
         "status": "integrated",
@@ -6491,6 +7395,45 @@
           }
         ],
         "activeVersion": "0002"
+      }
+    },
+    {
+      "uid": "xin-xianying",
+      "name": "辛憲英",
+      "standing": {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "standing/xin_xian_ying__辛憲英__standing_0001.png",
+            "status": "review-pending",
+            "sha256": "3a8593526eeee038ee11944f73905831812c7ae1fd761ec1bad2b6bab086a63e"
+          }
+        ]
+      },
+      "battle": {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/xin_xian_ying__辛憲英__battle_0001.png",
+            "status": "review-pending",
+            "pose": "A｜前進展卷指策",
+            "source": "exec-4d9f3eb8-4e71-4b5c-91e8-63eb40212bff.png",
+            "sha256": "73ac8689f0cbc140e8261a1d8e626d2c5235b90450e85afadd937c131272a74f"
+          }
+        ]
+      },
+      "avatar": {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "avatars/xin_xian_ying__辛憲英__avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "50c4e35354b46cb29d0423ff56ac66903dea8a120a03f5c8459a6f7518e92234"
+          }
+        ]
       }
     }
   ]

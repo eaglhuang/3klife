@@ -1,0 +1,287 @@
+{
+  "description": "依原始繪圖提示詞整理的水彩及色鉛筆風格探索稿，含草稿與未採用版本。",
+  "entries": [
+    {
+      "file": "portraits/xiao_qiao__小喬__portrait_0001.png",
+      "source": "exec-29724e1e-01f4-43de-9ae7-9110983af2cf.png",
+      "sha256": "c68065498dea26f39ece21c46678338c9ae20909f0542876290e2542ed061099",
+      "role": "style-study",
+      "ordinal": 210097,
+      "description": "Create one polished full-body standing portrait candidate of Xiao Qiao, an adult Three Kingdoms heroine. Treat the three reference images in order: (1) use only the first image as facial-feature and expression inspiration: soft oval face, bright gentle dark eyes, refined brows, luminous fair skin an"
+    },
+    {
+      "file": "portraits/zhao_yun__趙雲__portrait_0001.png",
+      "source": "exec-eb117796-7944-442c-b561-836465c5f122.png",
+      "sha256": "0d536282cf84f3b8c1b03850638e415e765b7cc59b538098415411cc63b3d926",
+      "role": "style-study",
+      "ordinal": 210115,
+      "description": "Create a polished full-body standing portrait candidate of Zhao Yun, adult male Three Kingdoms general. Use reference image 1 ONLY for hand-drawn art style: expressive graphite/pencil contours, fine cross-hatching, visible hand-inked edges, restrained watercolor and colored-pencil wash, subtle paper"
+    },
+    {
+      "file": "portraits/sun_shang_xiang__孫尚香__portrait_0001.png",
+      "source": "exec-9448f95c-84d0-4ab4-9b91-3f83f132e32e.png",
+      "sha256": "ce5082cdaf5be04278f8e3e4995fd2dc493db4bbc13d581a24fb0722960511e1",
+      "role": "style-study",
+      "ordinal": 210210,
+      "description": "Create one polished full-body battle portrait candidate of Sun Shangxiang, adult female Three Kingdoms warrior. Treat the two reference images in order: (1) use only for the hand-drawn art style: expressive pencil/ink contours, visible fine cross-hatching, textured colored-pencil shading and restrai"
+    },
+    {
+      "file": "portraits/sun_shang_xiang__孫尚香__portrait_0002.png",
+      "source": "exec-281b0c10-1eeb-4382-a883-a8c33188a516.png",
+      "sha256": "393a297df60ebb23ff03e2071d503d852271fc53155ab5e2cd8680e520f9640b",
+      "role": "style-study",
+      "ordinal": 210238,
+      "description": "Create a polished full-body battle portrait candidate of adult Sun Shangxiang. Reference image 1 is ONLY the hand-drawn pencil/ink and watercolor concept-art style reference; reference image 2 is ONLY the identity and costume reference. Preserve her adult face, dark braided updo, red-gold hair ornam"
+    },
+    {
+      "file": "portraits/sun_shang_xiang__孫尚香__portrait_0003.png",
+      "source": "exec-e79cb894-2796-4c69-88ab-dcbcb2758b7b.png",
+      "sha256": "96f225eb9f09dcfaf2ed50e0044e671b5fa7e9985dd420ebea4ba42e8b4a49f2",
+      "role": "style-study",
+      "ordinal": 210268,
+      "description": "Refine the first reference image of Sun Shangxiang. Keep the same character identity, red-and-deep-teal light armor, head and face, hair ornament, selected C turning horizontal-slash pose, sword design, hand placement, and hand-drawn pencil/ink/watercolor style. Use reference image 2 only as a body-"
+    },
+    {
+      "file": "portraits/sun_shang_xiang__孫尚香__portrait_0004.png",
+      "source": "exec-6d3dc33e-2ee6-4251-8561-9b56701fe8c3.png",
+      "sha256": "4868e8ecda896f39591177448c5d4ecb17b6051d0b94ad212dffa5b7f9f56768",
+      "role": "style-study",
+      "ordinal": 210285,
+      "description": "Repaint the exact same Sun Shangxiang battle portrait, preserving her face, fuller mature feminine waist-to-hip silhouette, armor design, exact C turning horizontal-slash pose, straight sword, hand positions, long legs and full-body composition. Do not alter anatomy or pose. Change ONLY the color tr"
+    },
+    {
+      "file": "portraits/sun_shang_xiang__孫尚香__portrait_0005.png",
+      "source": "exec-2faaad12-4ada-4888-897a-32638734b220.png",
+      "sha256": "85b169f8ac8bfd33d6ec4346d7da43c8782619f938b8606d5e3dc2ab5a101c79",
+      "role": "style-study",
+      "ordinal": 210298,
+      "description": "Anatomy and ergonomics refinement of this exact Sun Shangxiang battle illustration. Keep her identity, face, dark braid, red-and-teal armor, mature rounded feminine waist/hip and bust proportions, long legs, vivid hand-drawn colored-pencil and watercolor style, and selected C turning horizontal-slas"
+    },
+    {
+      "file": "portraits/zhuge_liang__諸葛亮__portrait_0001.png",
+      "source": "exec-4c0ea92d-dbeb-4467-a540-04998547a663.png",
+      "sha256": "440310909e11a73597b803e5ea14409800c7c036f3eb433db232470fcd28a2d7",
+      "role": "style-study",
+      "ordinal": 210341,
+      "description": "Create one polished full-body battle portrait candidate of Zhuge Liang, adult male strategist. Reference image 1 ONLY for hand-drawn style: expressive pencil and ink contours, fine cross-hatching, visible colored-pencil and watercolor pigment, richer artistic color depth, painterly but clean; refere",
+      "source_sha256": "f4a28d14473e9dc932064eb1ce9de81f82a055bee64dda9df2c94e08faa92292",
+      "note": "像素與既有 v0001 完全相同；PNG 編碼不同。"
+    },
+    {
+      "file": "portraits/zhuge_liang__諸葛亮__portrait_0003.png",
+      "source": "exec-6c5638f9-ee25-46fe-b375-fb7fae17cf16.png",
+      "sha256": "c69fce3789659a1a80adaca2cdc766d630885f5f694e4a15f6ff10aa8185fd46",
+      "role": "style-study",
+      "ordinal": 210350,
+      "description": "Keep the exact Zhuge Liang battle portrait, his identity, B pose, feather fan, headpiece, wide sleeves, gestures, proportions, facial expression, and composition unchanged. Recolor it with delicate watercolor and colored-pencil washes while keeping the restrained black-white palette: warm ivory and "
+    },
+    {
+      "file": "portraits/zhao_e__趙娥__portrait_0001.png",
+      "source": "exec-5163ccc0-60ce-4639-ac06-24b8a27c52e5.png",
+      "sha256": "030b1b550d30986577c1ae38d9f7fa69967f72d0da1a38241165b413548c5096",
+      "role": "style-study",
+      "ordinal": 210394,
+      "description": "Create a polished full-body battle portrait candidate of Zhao E, adult female Three Kingdoms heroine. Reference 1 ONLY for the accepted hand-drawn style: pencil and ink contour lines, delicate cross-hatching, soft watercolor color washes with visible brush layering, light clear palette; reference 2 "
+    },
+    {
+      "file": "portraits/zhao_e__趙娥__portrait_0002.png",
+      "source": "exec-9d05c3d1-20c6-4ede-8da2-4be73aecc129.png",
+      "sha256": "37267c69208e070b435bdbd7189dc847e1071065967b29c15f8a83dc32491957",
+      "role": "style-study",
+      "ordinal": 210405,
+      "description": "Refine this exact Zhao E pose B battle illustration. Preserve her face, red-charcoal light armor, hair braid, mature adult proportions, forward lunge, direct-to-camera eyes, restrained elegant expression, watercolor pencil/ink rendering and overall composition. Change only the sword perspective/comp"
+    },
+    {
+      "file": "portraits/huang_yue_ying__黃月英__portrait_0001.png",
+      "source": "exec-aa318f00-fc8c-4dc7-b6d2-0b18cf8d0bd8.png",
+      "sha256": "bab5017cb77a553aafcdd04f4acf66050c70bc104489d71b1d32feb7486032e8",
+      "role": "style-study",
+      "ordinal": 210418,
+      "description": "Create a polished full-body battle portrait of Huang Yueying, adult woman strategist. Use references in order: first only for light hand-drawn watercolor pencil-and-ink style; second only for her official identity, face, green-ivory-gold clothing, hair, and established strategy implement; third only"
+    },
+    {
+      "file": "portraits/xin_xian_ying__辛憲英__portrait_0001.png",
+      "source": "exec-2f1dc9ec-feab-4dfa-9572-f30380bba244.png",
+      "sha256": "61098e8cb127b59ad78c4520ad7e53c8854c05f592bf14d8d4024b1a7586ab97",
+      "role": "style-study",
+      "ordinal": 210448,
+      "description": "Create a polished full-body battle portrait candidate of Xin Xianying, adult Wei noblewoman and high-intelligence strategist. Reference image 1 only for the light hand-drawn pencil/ink and watercolor wash style; reference image 2 only for Xin Xianying's identity, face, hairstyle and established clot"
+    },
+    {
+      "file": "portraits/xin_xian_ying__辛憲英__portrait_0002.png",
+      "source": "exec-840edc6a-0d16-4d38-805a-dea864cfd7a8.png",
+      "sha256": "00acc95dce2fe2d542112fd3f3b38f99d03d998399bdb06eb8ab6f4e5db32553",
+      "role": "style-study",
+      "ordinal": 210459,
+      "description": "Refine this exact Xin Xianying A-pose battle portrait while preserving her identity, face, hairstyle, blue/ivory/pale-jade Wei palette, fitted elegant outfit, strategy ruler, three tally slips, and light watercolor pencil/ink style. Keep pose A: a decisive forward step, her left hand holding a partl"
+    },
+    {
+      "file": "portraits/diao_chan__貂蟬__portrait_0001.png",
+      "source": "exec-d8c9c68c-013f-422f-8990-ae1805ee3ae5.png",
+      "sha256": "f3372dc0aff52da892535619c7d328ba8d86cc03465d8dbc501270f864bafb44",
+      "role": "style-study",
+      "ordinal": 210505,
+      "description": "Create a readable three-option full-body combat pose draft board for Diao Chan, an adult Three Kingdoms heroine. Reference image 1 ONLY for the hand-drawn pencil/ink and light watercolor concept-art style; reference image 2 ONLY for Diao Chan's character identity and established red hair / purple-iv"
+    },
+    {
+      "file": "portraits/guo_jia__郭嘉__portrait_0001.png",
+      "source": "exec-cfe20cff-2074-45c4-b881-cb87e9340538.png",
+      "sha256": "6691962995ef447a4958282ff687f094ed3ab4f16c0ef6ecdf7dcb8e909a8e18",
+      "role": "style-study",
+      "ordinal": 210564,
+      "description": "Create a refined full-body standing portrait candidate of Guo Jia, adult male Wei strategist. Reference image 1 ONLY for hand-drawn pencil/ink and light watercolor style; reference image 2 ONLY for Guo Jia's identity and design reference. Preserve him as a handsome younger adult male with a narrow s"
+    },
+    {
+      "file": "portraits/xiao_qiao__小喬__portrait_0002.png",
+      "source": "exec-4294e154-5824-4ac6-b003-4dd9a9694f50.png",
+      "sha256": "352677c6cff16fc9b645d4b7be238a7f30bff01d9d126e71bd5e5039512eac6b",
+      "role": "style-study",
+      "ordinal": 210690,
+      "description": "Repaint the referenced Xiao Qiao character portrait in a refined traditional watercolor and colored-pencil illustration style. Preserve her recognizable adult face, elegant dark hair with delicate small ornaments, light sky-blue and ivory Three Kingdoms attire, graceful proportions and overall pose."
+    },
+    {
+      "file": "portraits/zhao_yun__趙雲__portrait_0002.png",
+      "source": "exec-eb888b35-1745-4de7-acc7-f425b26b54ca.png",
+      "sha256": "2145d462830fc7a83215437dd3be90caafe15d35a5a159644947074622009218",
+      "role": "style-study",
+      "ordinal": 210723,
+      "description": "Create a style study by repainting this exact Zhao Yun standing portrait with a light, refined watercolor and colored-pencil technique. Preserve the character identity, face, hairstyle, silver-and-royal-blue armor, weapon, pose, proportions and composition as closely as possible. Use pale transparen"
+    },
+    {
+      "file": "portraits/guan_yin_ping__關銀屏__portrait_0001.png",
+      "source": "exec-d8b77f63-e0a5-45c9-997e-fecbe7051bf8.png",
+      "sha256": "02f6f5024c07e18ab8a8ddc842522bd069d0305937c6cecfc64707e8a1d4d00b",
+      "role": "style-study",
+      "ordinal": 210781,
+      "description": "Refine this existing Guan Yinping battle portrait as a pale watercolor-and-pencil style preview, strictly preserving its already selected LH-035 pose: two-handed charged horizontal strike. Keep her recognizable face, braid, green-and-gold palette, light armor, weapon category and the existing pose d"
+    },
+    {
+      "file": "portraits/jia_xu__賈詡__portrait_0001.png",
+      "source": "exec-3d44fa04-5435-4839-a20d-bd3d6e5bfdf2.png",
+      "sha256": "e1b01efe325c9f489b9f23879b1a40468eaf6458ae5b72b4de5048b325c3f240",
+      "role": "style-study",
+      "ordinal": 210812,
+      "description": "Create a refined watercolor style study repainting this exact Jia Xu general portrait. Preserve the identity and recognizable design as closely as possible, but improve facial distinction: an experienced older male strategist with narrow observant eyes, subtly asymmetrical brows, a composed calculat"
+    },
+    {
+      "file": "portraits/xin_xian_ying__辛憲英__portrait_0003.png",
+      "source": "exec-de6f4f46-a7cd-4c30-91e4-85ea4a784a13.png",
+      "sha256": "1ea0b745a3ea2119235304ca7ca7e9a247e3cff7ddeba3332f90cb699ca83fc5",
+      "role": "style-study",
+      "ordinal": 210845,
+      "description": "Create a watercolor battle-action preview for the same adult Three Kingdoms strategist Xin Xianying, keeping her recognizable face, hairstyle, palette and refined identity from the reference. Use her already selected pose A: stepping forward while unfolding a compact strategy scroll with one hand an"
+    },
+    {
+      "file": "portraits/xin_xian_ying__辛憲英__portrait_0004.png",
+      "source": "exec-aa3d47e4-9c06-46a9-a3f0-93d7beba9538.png",
+      "sha256": "2bfb9512d09fa3a7f4797eda4fc62058774bb35afc33f0013067067ae6933934",
+      "role": "style-study",
+      "ordinal": 210869,
+      "description": "Edit this existing Xin Xianying watercolor illustration, preserving exactly the same adult character, face, hair, forward-stepping pose, unfurled tactical scroll, pointing hand, body proportions, costume structure, and delicate pencil-and-watercolor rendering. Remove the entire landscape, tents, ban"
+    },
+    {
+      "file": "portraits/xin_xian_ying__辛憲英__portrait_0005.png",
+      "source": "exec-53c6ea45-2d6b-4a28-8bc6-cfc2202bceeb.png",
+      "sha256": "f6a745fe029e3c1d986d4389ff2ead05136b41750b56dc7db90e24ddedac349b",
+      "role": "style-study",
+      "ordinal": 210880,
+      "description": "Background removal and cleanup edit only: isolate the existing watercolor Xin Xianying character and her bamboo strategy map, preserving the face, pose, pale jade green and ivory robe, gold trim, hair, hands, map, watercolor texture and complete figure unchanged. Delete every background pixel outsid"
+    },
+    {
+      "file": "portraits/xin_xian_ying__辛憲英__portrait_0006.png",
+      "source": "exec-fc7bfb54-7b2f-4e09-a10c-7c4f783a4597.png",
+      "sha256": "129e8e09c2bc2416d24beab003b57a23a931bcb50b75851d4ec9b49fb2767d7c",
+      "role": "style-study",
+      "ordinal": 210941,
+      "description": "Generate a new standalone full-body battle illustration of Xin Xianying, using the reference only to preserve her identity, face shape, hairstyle and character design. Pose A: she steps forward, unrolls a compact bamboo strategy map in one hand, and points to a tactical mark with the other, an elega"
+    },
+    {
+      "file": "portraits/diao_chan__貂蟬__portrait_0002.png",
+      "source": "exec-5bfe8dce-fede-462b-9733-f0172b0528d8.png",
+      "sha256": "9f7858c76195824ba2d8a7fde193932441d2c95a2c0bb1b3e4a04446710e3159",
+      "role": "style-study",
+      "ordinal": 211007,
+      "description": "Create a style exploration repaint of the same adult Three Kingdoms character Diao Chan, preserving her recognizable identity and existing design while making the hair a distinctive deep copper-red auburn as requested. Elegant poised standing portrait with graceful contrapposto, refined feminine fea"
+    },
+    {
+      "file": "portraits/zhao_e__趙娥__portrait_0003.png",
+      "source": "exec-f61827a3-0470-4f0b-8af8-15b3d889c456.png",
+      "sha256": "e924f38a2146b4b6ce460abaa773775b3229bea27492165818002d9aece3b71d",
+      "role": "style-study",
+      "ordinal": 211050,
+      "description": "Paint a watercolor battle-pose concept of the same adult female general Zhao E, preserving her identity cues and costume from the reference. Use her already selected sword action B: one-hand forward thrust, the other hand balancing near the waist, shoulders and hips naturally aligned, one leg steppi"
+    },
+    {
+      "file": "portraits/sun_shang_xiang__孫尚香__portrait_0006.png",
+      "source": "exec-c407bc4b-6e3c-48d1-a674-5f35f6adf61b.png",
+      "sha256": "01131629dbc5a575c2a8d3ede815814801127c9ff9d7a5ef21a3abd4d882450e",
+      "role": "style-study",
+      "ordinal": 211083,
+      "description": "Create a hand-painted watercolor battle concept of the same adult Sun Shangxiang, preserving the face, hairstyle, accessories, and costume identity of the reference. Use her already selected pose C: a turning horizontal sword slash with torso rotation and one leg braced forward. The sword is a pract"
+    },
+    {
+      "file": "portraits/bao_san_niang__鮑三娘__portrait_0001.png",
+      "source": "exec-b0e2e758-fdd5-4f59-9618-dc0d3240c916.png",
+      "sha256": "bf4e55298c5795903d0a80d74d4d9680f5e5784ddb13c91e98d516431d3ab45b",
+      "role": "style-study",
+      "ordinal": 211123,
+      "description": "Repaint this already selected B-pose battle illustration of Baosanniang as a delicate hand-drawn watercolor concept, preserving the current pose and long-polearm weapon orientation. Keep her a distinct adult woman with an oval-soft face, bright lively eyes looking toward the camera, a confident slig"
+    },
+    {
+      "file": "portraits/lu_ling_qi__呂玲綺__portrait_0001.png",
+      "source": "exec-e79aa0c2-46a0-4088-a651-bbd91a4f935e.png",
+      "sha256": "a0c4389e65a13cfa201ab9d00ecd1653be8c88a0e06b317a6989c326b0ef9e98",
+      "role": "style-study",
+      "ordinal": 211174,
+      "description": "Create a watercolor-and-pencil style study of this same adult Lü Lingqi standing portrait. Preserve her identity and the main design cues from the reference, but strengthen her distinctive confident warrior presence: clear strong brows, slightly narrow focused eyes, graceful angular jaw, luminous cl"
+    },
+    {
+      "file": "portraits/ma_yun_lu__馬雲騄__portrait_0001.png",
+      "source": "exec-f9438094-0019-4fd5-bede-80e5662e6e29.png",
+      "sha256": "6599a624552f5a6e94b56b362ad33b211208627f4d55b86ab7c2c2c8a1947ca8",
+      "role": "style-study",
+      "ordinal": 211207,
+      "description": "Repaint this existing Ma Yunlu battle-pose illustration in a delicate watercolor and pencil style. Strictly preserve the current pose, action, weapon orientation, body silhouette and overall composition; this is pose A already chosen, so do not invent a different action. Keep the same adult female w"
+    },
+    {
+      "file": "portraits/da_qiao__大喬__portrait_0001.png",
+      "source": "exec-3ca08103-b8c2-4851-aedd-96b17cd66075.png",
+      "sha256": "49666bbc63bed6cb75ab94ef5b59c0e7146bffe318d89af76bd284a023843a1b",
+      "role": "style-study",
+      "ordinal": 211240,
+      "description": "Make a watercolor-and-colored-pencil style standing portrait study of the same adult Da Qiao, preserving her identity and existing hairstyle design while refining a unique gentle face: softly tapered heart-oval face, warm amber eyes with a serene sideways glance, subtle poised smile, bright luminous"
+    },
+    {
+      "file": "portraits/guo_jia__郭嘉__portrait_0002.png",
+      "source": "exec-365b6049-6a53-41c8-b99f-be4048be3dcf.png",
+      "sha256": "595e6aca590ec9a5af046990821634d6488652d49ce1ab3ef79d62235439cf41",
+      "role": "style-study",
+      "ordinal": 211296,
+      "description": "Create a refined watercolor-and-pencil style study repaint of the same Guo Jia portrait. Preserve his identity, outfit silhouette, pose and the object he already holds. Make him unmistakably different from Zhuge Liang and Jia Xu: a younger adult strategist with a narrower elegant face, subtly hooded"
+    },
+    {
+      "file": "portraits/sima_yi__司馬懿__portrait_0001.png",
+      "source": "exec-6d2446c3-74c3-40d4-b10f-0c9e9d80fd5f.png",
+      "sha256": "b81440f2a415a4f536358903cb9a3cb464e9a61aa825476e5f74f4badaefa252",
+      "role": "style-study",
+      "ordinal": 211327,
+      "description": "Repaint this same Sima Yi standing portrait as a refined watercolor-and-pencil study, preserving the identity, outfit silhouette, pose and all objects from the reference. Make him clearly different from younger Guo Jia: a mature adult strategist with a long lean face, defined cheekbones, calm hooded"
+    },
+    {
+      "file": "portraits/huang_zhong__黃忠__portrait_0001.png",
+      "source": "exec-23bc9401-152d-4ec8-bad6-631aa9d68b03.png",
+      "sha256": "c1b7dc92be6ddbec9ceabf86b9c20039109ccf76a19573b83c627bb851902e5f",
+      "role": "style-study",
+      "ordinal": 211369,
+      "description": "Repaint the same Huang Zhong standing portrait as a refined watercolor-and-pencil concept, preserving his existing identity, pose, costume silhouette, and exact weapon from the reference; do not add or swap weapons. Make him clearly an older veteran general in his sixties: silver hair and a neatly g"
+    },
+    {
+      "file": "storyboards/zhao_yun__趙雲__ultimate_storyboard_0001.png",
+      "source": "exec-8c0caafb-f435-496c-8039-a05dc3b4364e.png",
+      "sha256": "7c5db5fde7bb1cd5740257cd911bb12bb5b8727b65b144eb2fe069846c04dff4",
+      "role": "storyboard"
+    }
+  ],
+  "missing": [],
+  "unclassified": []
+}

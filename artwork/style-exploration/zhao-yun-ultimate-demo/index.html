@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>趙雲大招・漫畫分鏡試作</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#101721;color:#f8f5e9;font-family:system-ui,sans-serif;display:grid;min-height:100vh;place-items:center}.wrap{width:min(960px,96vw);text-align:center}h1{font-size:clamp(20px,4vw,32px);margin:.6em 0}.screen{position:relative;aspect-ratio:16/9;background:#08111d;overflow:hidden;border:1px solid #a4bfd6;border-radius:10px;box-shadow:0 8px 35px #0009}.frame{position:absolute;inset:0;opacity:0;background-image:url('zhao_yun__趙雲__storyboard_0001.png');background-repeat:no-repeat;background-size:300% 100%;transition:opacity .22s ease;transform:scale(1);}.frame.on{opacity:1;animation:push 1s ease-out both}.one{background-position:left center}.two{background-position:center center}.three{background-position:right center}@keyframes push{from{transform:scale(1)}to{transform:scale(1.045)}}.flash{position:absolute;inset:0;background:#eaf8ff;opacity:0;pointer-events:none}.flash.on{animation:burst .35s ease-out}@keyframes burst{0%{opacity:.8}100%{opacity:0}}.caption{position:absolute;left:4%;bottom:6%;padding:.3em .8em;background:#0a1523d9;border-left:3px solid #9fddff;font-weight:700;letter-spacing:.18em}.button{background:#d6eaf5;color:#172a3a;border:0;border-radius:5px;padding:.7em 2em;font-size:1rem;font-weight:700;cursor:pointer;margin:1em}.note{color:#b7c4ce;font-size:.9rem}
+</style>
+</head>
+<body><main class="wrap"><h1>趙雲・大招漫畫演出試作</h1><div class="screen"><div class="frame one"></div><div class="frame two"></div><div class="frame three"></div><div class="flash"></div><div class="caption" aria-live="polite">準備出招</div></div><button class="button" id="play">▶ 重新播放</button><p class="note">概念試作：三格分鏡搭配淡入淡出、緩慢推近與槍氣閃光。</p></main>
+<script>
+const frames=[...document.querySelectorAll('.frame')], caption=document.querySelector('.caption'),flash=document.querySelector('.flash');let timers=[];
+function play(){timers.forEach(clearTimeout);timers=[];frames.forEach(f=>f.classList.remove('on'));flash.classList.remove('on');const show=(i,label)=>{frames.forEach((f,j)=>f.classList.toggle('on',i===j));caption.textContent=label};requestAnimationFrame(()=>show(0,'蓄力'));timers.push(setTimeout(()=>show(1,'突刺'),1050));timers.push(setTimeout(()=>{show(2,'龍槍爆發');flash.classList.remove('on');void flash.offsetWidth;flash.classList.add('on')},2050))}document.getElementById('play').addEventListener('click',play);play();
+</script></body></html>
