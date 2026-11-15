@@ -7308,6 +7308,23 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/wu_guo_tai__吳國太__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "85aaf197624c1357ef26c6ad296a4460a9f27c1ee2b08fd1d2d8c092d600682b",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "jian",
+            "poseLabel": "鎮定高架防守，抬手示令",
+            "sourceStanding": "standing/wu_guo_tai__吳國太__standing_0002.png",
+            "note": "延續吳國太朱紅、深綠與金飾服制；成熟端穩的高架直劍防守姿勢，候選待審。"
+          }
+        ]
       }
     },
     {
