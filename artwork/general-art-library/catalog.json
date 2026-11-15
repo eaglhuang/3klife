@@ -960,6 +960,23 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/liu_bei__劉備__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "1acef519787d01d1676ef798f7cb26f5408675a330976e6041d2053edd6b5143",
+            "canvas": "256x256 RGBA",
+            "source": "avatars/liu_bei__劉備__avatar_0002.png (crop-only, standing-derived)",
+            "crop": "shoulder-line",
+            "cropBox": "x=26,y=3,w=204,h=204",
+            "qc": "No redraw or design changes; face centered, full headpiece and face kept, only shoulder tops at lower edge."
+          }
+        ]
       }
     },
     {
