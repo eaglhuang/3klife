@@ -7205,6 +7205,23 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/fan_shi__樊氏__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "b8cf8a5c1b7948e97595169dda2352e6ef5edeba4806814432e3b243b1967349",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "jian",
+            "poseLabel": "斜身轉步，以直劍作防守斜架",
+            "sourceStanding": "standing/fan_shi__樊氏__standing_0002.png",
+            "note": "延續樊氏灰綠長裙與端雅氣質，加入輕甲與直劍；候選待審。"
+          }
+        ]
       }
     },
     {
