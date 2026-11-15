@@ -7,6 +7,8 @@
  * Unity 對照：像 Editor 裡的 OnValidate，資料進來先檢查，不通過就列出所有問題。
  */
 
+import { normalizeGachaPoolType } from '../models/GachaConfig';
+
 export const CORE_SUPPORT_IDS = ['da-qiao', 'xiao-qiao', 'zhen-mi'] as const;
 
 export interface PoolConfigLike {
@@ -32,9 +34,10 @@ export function validateSupportPool(
     supportCards: readonly SupportCardLike[],
 ): SupportPoolIssue[] {
     const issues: SupportPoolIssue[] = [];
-    const support = pools.find(p => p.poolType === 'support');
+    // 舊代號 support 相容為 heroine（PROG-2-9043）
+    const support = pools.find(p => normalizeGachaPoolType(p.poolType) === 'heroine');
     const hero = pools.find(p => p.poolType === 'hero');
-    if (!support) return [{ path: 'pools', message: '缺少紅顏池（poolType: support）' }];
+    if (!support) return [{ path: 'pools', message: '缺少紅顏池（poolType: heroine）' }];
     if (!hero) issues.push({ path: 'pools', message: '缺少名將池（poolType: hero），無法檢查分離' });
 
     const cardById = new Map(supportCards.map(c => [c.id, c] as const));

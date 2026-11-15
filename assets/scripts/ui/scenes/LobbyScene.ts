@@ -184,6 +184,7 @@ import { createNewPlayerOpeningFlow, OPENING_INTRO_DONE, SHOWCASE_DONE_EVENT, sh
 import { OPENING_BEAUTY_POOL_ID, openingBeautyCandidates } from '../../core/systems/OpeningBeauty';
 import type { OpeningFlowController } from '../../core/systems/OpeningFlowController';
 import type { GachaConfig } from '../../core/models/GachaConfig';
+import { normalizeGachaPoolType } from '../../core/models/GachaConfig';
 import type { RedFaceCardLike } from '../../core/systems/RedFaceShowcase';
 import { parseRedFaceCopy, redFaceTravelCopy } from '../../core/systems/RedFaceCopy';
 import { validateSupportPool } from '../../core/systems/SupportPoolValidator';
@@ -2915,7 +2916,7 @@ export class LobbyScene extends Component {
         const gachaConfig = await this._loadDataJson<GachaPoolConfigLike[]>('data/gacha-config');
         const supportCards = await this._loadDataJson<RedFaceCardLike[]>('data/support-cards');
         const pools = Array.isArray(gachaConfig) ? gachaConfig : [];
-        const supportPool = pools.find(pool => pool.poolType === 'support') ?? null;
+        const supportPool = pools.find(pool => normalizeGachaPoolType(pool.poolType) === 'heroine') ?? null;
         const heroPoolIds = pools
             .filter(pool => pool.poolType === 'hero')
             .flatMap(pool => pool.candidateIds ?? []);

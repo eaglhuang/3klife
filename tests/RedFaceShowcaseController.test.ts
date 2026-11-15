@@ -108,7 +108,7 @@ export function createRedFaceShowcaseControllerSuite(): TestSuite {
 
     suite.test('讀取真實資料：紅顏池 5 位，核心三位置頂，名將池無重疊', () => {
         const gacha = readJson('assets/resources/data/gacha-config.json') as any[];
-        const supportPool = gacha.find(pool => pool.poolType === 'support');
+        const supportPool = gacha.find(pool => pool.poolType === 'heroine');
         const heroIds = gacha.filter(pool => pool.poolType === 'hero').flatMap(pool => pool.candidateIds ?? []);
         const cards = readJson('assets/resources/data/support-cards.json') as RedFaceCardLike[];
         const controller = new RedFaceShowcaseController({

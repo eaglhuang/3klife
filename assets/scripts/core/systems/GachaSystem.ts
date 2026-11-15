@@ -1,5 +1,5 @@
 // @spec-source → 轉蛋系統.md §L；PROG-2-9020 統一轉蛋入口
-import type { GachaConfig, GachaPoolPresentationConfig } from '../models/GachaConfig';
+import { normalizeGachaPoolType, type GachaConfig, type GachaPoolPresentationConfig } from '../models/GachaConfig';
 import type { GeneralConfig } from '../models/GeneralUnit';
 import type { LocalGachaResultEntry } from '../services/LocalGachaService';
 import { resolveGachaPoolPresentation, type GachaPoolPresentation } from './GachaPoolPresentation';
@@ -39,7 +39,7 @@ export class GachaSystem {
 
     constructor(private readonly _pools: () => readonly GachaConfig[]) {}
 
-    registerType(poolType: string, rule: GachaPoolRule): this { this._rulesByType.set(poolType, rule); return this; }
+    registerType(poolType: string, rule: GachaPoolRule): this { this._rulesByType.set(normalizeGachaPoolType(poolType), rule); return this; }
     /** 以 poolId 註冊規則；presentation 給不在設定檔的池當預設呈現（設定檔有寫則以設定檔為準） */
     registerPool(poolId: string, rule: GachaPoolRule, presentation?: GachaPoolPresentationConfig): this {
         this._rulesById.set(poolId, rule);
@@ -47,8 +47,10 @@ export class GachaSystem {
         return this;
     }
 
+    /** 池設定；舊 poolType（support）讀取時已正規化為 heroine（PROG-2-9043） */
     pool(poolId: string): GachaConfig | null {
-        return this._pools().find(p => p.poolId === poolId) ?? null;
+        const found = this._pools().find(p => p.poolId === poolId);
+        return found ? { ...found, poolType: normalizeGachaPoolType(found.poolType) } : null;
     }
 
     presentation(poolId: string): GachaPoolPresentation {
@@ -62,7 +64,7 @@ export class GachaSystem {
 
     async pull(request: Readonly<GachaPullRequest>): Promise<GachaPullOutcome> {
         const pool = this.pool(request.poolId);
-        const type = pool?.poolType ?? request.poolTypeHint;
+        const type = normalizeGachaPoolType(pool?.poolType ?? request.poolTypeHint);
         const rule = this._rulesById.get(request.poolId) ?? (type ? this._rulesByType.get(type) : undefined);
         if (!rule) throw new Error(`[GachaSystem] 沒有可用的抽卡規則：${request.poolId}`);
         const results = await rule.pull(request, pool);
