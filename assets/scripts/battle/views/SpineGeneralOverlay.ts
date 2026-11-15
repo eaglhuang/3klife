@@ -13,7 +13,14 @@ interface Entry {
   loading: boolean;
   ready: Array<(loaded: boolean) => void>;
   visible: boolean;
+  /** 小隊隊員（不含帶頭的那一位）；與帶頭者共用同一份骨架資料與圖集，不另外載入。 */
+  followers: Node[];
+  /** 目前要顯示的人數（含帶頭者），由呼叫端依兵力決定。 */
+  members: number;
 }
+
+/** 一次性動作（攻擊、受擊、倒地）隊員之間的最大時間差（秒）；太大會跟不上戰鬥節奏。 */
+const SQUAD_ONE_SHOT_STAGGER_SEC = 0.3;
 
 /** 武將與兵種共用的 Cocos/Spine 薄接層；素材路徑與動作皆由設定提供。 */
 export class SpineUnitOverlay {
@@ -23,16 +30,17 @@ export class SpineUnitOverlay {
   private duel: { core: DuelPresentationCore; ids: [string, string]; resolve: () => void } | null = null;
   constructor(private readonly getParent: () => Node | null, private readonly layer: () => number) {}
 
-  public sync(id: string, config: UnitSpineConfig, x: number, y: number, facing: 1 | -1, moving: boolean, dt: number, visible = true): boolean {
+  public sync(id: string, config: UnitSpineConfig, x: number, y: number, facing: 1 | -1, moving: boolean, dt: number, visible = true, members = 1): boolean {
     this.pendingRemovals.delete(id);
     let entry = this.entries.get(id);
     if (entry && entry.config.path !== config.path) { this.remove(id); entry = undefined; }
     if (!entry) {
-      entry = { config, core: new UnitPresentationCore(config, { x, y }, facing), node: null, revision: -1, facing, loading: false, ready: [], visible };
+      entry = { config, core: new UnitPresentationCore(config, { x, y }, facing), node: null, revision: -1, facing, loading: false, ready: [], visible, followers: [], members };
       this.entries.set(id, entry);
     }
     if (!entry.node && !entry.loading) this.load(id, entry);
     entry.visible = visible;
+    entry.members = members;
     if (!this.duel?.ids.includes(id)) entry.core.follow({ x, y }, moving, dt);
     return !!entry.node?.isValid;
   }
@@ -52,9 +60,15 @@ export class SpineUnitOverlay {
     for (const [id, entry] of this.entries) {
       if (!controlled?.includes(id)) this.apply(entry, entry.core.step(dt));
     }
-    const sorted = Array.from(this.entries.values()).filter(e => e.node?.isValid)
-      .sort((a, b) => b.core.snapshot().foot.y - a.core.snapshot().foot.y);
-    sorted.forEach((entry, index) => entry.node?.setSiblingIndex(index));
+    // 畫面越下方（y 越小）越靠近鏡頭，要蓋在上面；隊員各自依落腳點排序，才不會整隊被隔壁格蓋住
+    const sorted: Array<{ node: Node; y: number }> = [];
+    for (const entry of this.entries.values()) {
+      if (!entry.node?.isValid) continue;
+      const footY = entry.core.snapshot().foot.y;
+      sorted.push({ node: entry.node, y: footY });
+      entry.followers.forEach((node, i) => { if (node.isValid && node.active) sorted.push({ node, y: footY + (entry.config.squad?.[i]?.y ?? 0) }); });
+    }
+    sorted.sort((a, b) => b.y - a.y).forEach((item, index) => item.node.setSiblingIndex(index));
   }
 
   public play(id: string, action: UnitAction): boolean {
@@ -95,6 +109,7 @@ export class SpineUnitOverlay {
     const entry = this.entries.get(id);
     if (entry) this.finishLoading(entry, false);
     if (entry?.node?.isValid) entry.node.destroy();
+    entry?.followers.forEach(node => { if (node.isValid) node.destroy(); });
     this.entries.delete(id);
   }
   private waitForEntry(id: string): Promise<boolean> {
@@ -134,19 +149,40 @@ export class SpineUnitOverlay {
     node.setPosition(state.foot.x - offset.x * entry.config.displayScale * state.facing,
       state.foot.y - offset.y * entry.config.displayScale, 0);
     node.setScale(entry.config.displayScale * state.facing, entry.config.displayScale, 1);
-    if (entry.facing !== state.facing || entry.revision < 0) {
-      const skin = state.facing < 0 && entry.config.mirrorSkin && skeleton.skeletonData?.getRuntimeData()?.findSkin(entry.config.mirrorSkin)
-        ? entry.config.mirrorSkin : 'default';
-      skeleton.setSkin(skin);
-      entry.facing = state.facing;
-    }
-    if (entry.revision !== state.revision) {
-      const name = state.clip.name;
-      if (skeleton.skeletonData?.getRuntimeData()?.findAnimation(name)) skeleton.setAnimation(0, name, state.clip.loop);
+    const skinChanged = entry.facing !== state.facing || entry.revision < 0;
+    const clipChanged = entry.revision !== state.revision;
+    const runtime = skeleton.skeletonData?.getRuntimeData();
+    const skin = state.facing < 0 && entry.config.mirrorSkin && runtime?.findSkin(entry.config.mirrorSkin) ? entry.config.mirrorSkin : 'default';
+    const name = state.clip.name;
+    const hasClip = !!runtime?.findAnimation(name);
+    if (skinChanged) { skeleton.setSkin(skin); entry.facing = state.facing; }
+    if (clipChanged) {
+      if (hasClip) skeleton.setAnimation(0, name, state.clip.loop);
       else UCUFLogger.warn(LogCategory.BATTLE, `[SpineUnitOverlay] 缺少動作 ${name}: ${entry.config.path}`);
       entry.revision = state.revision;
     }
     skeleton.timeScale = state.animationSpeed;
+    // 隊員跟著帶頭者做同一個動作，只差站位與時間差，看起來才不像複製貼上
+    entry.followers.forEach((follower, i) => {
+      const slot = entry.config.squad?.[i];
+      const followerSkel = follower.getComponent(sp.Skeleton);
+      if (!slot || !follower.isValid || !followerSkel) return;
+      follower.active = node.active && i < entry.members - 1;
+      const pos = node.position;
+      // 站位以「面向的後方」為準，所以 x 要跟著朝向翻面
+      follower.setPosition(pos.x - slot.x * state.facing, pos.y + slot.y, 0);
+      follower.setScale(entry.config.displayScale * state.facing, entry.config.displayScale, 1);
+      if (skinChanged) followerSkel.setSkin(skin);
+      if (clipChanged && hasClip) {
+        const track = followerSkel.setAnimation(0, name, state.clip.loop);
+        if (track) {
+          // 循環動作錯開起始時間；一次性動作（攻擊、受擊、倒地）改用延後開始，才會依序出手
+          if (state.clip.loop) track.trackTime = slot.phase * state.clip.duration;
+          else track.delay = slot.phase * SQUAD_ONE_SHOT_STAGGER_SEC;
+        }
+      }
+      followerSkel.timeScale = state.animationSpeed;
+    });
   }
 
   private load(id: string, entry: Entry): void {
@@ -175,6 +211,14 @@ export class SpineUnitOverlay {
       const skeleton = node.addComponent(sp.Skeleton);
       skeleton.premultipliedAlpha = false; skeleton.skeletonData = data;
       entry.node = node;
+      // 隊員直接沿用同一份 data（Cocos 對同一路徑只留一份骨架與貼圖），所以多兩個人只多節點與動畫狀態
+      for (let i = 0; i < (entry.config.squad?.length ?? 0); i += 1) {
+        const follower = new Node(`SpineUnit_${id}_m${i + 1}`);
+        follower.layer = this.layer(); follower.addComponent(UITransform); parent.addChild(follower); follower.setSiblingIndex(0);
+        const followerSkel = follower.addComponent(sp.Skeleton);
+        followerSkel.premultipliedAlpha = false; followerSkel.skeletonData = data;
+        entry.followers.push(follower);
+      }
       this.apply(entry, entry.core.snapshot());
       this.finishLoading(entry, true);
     });

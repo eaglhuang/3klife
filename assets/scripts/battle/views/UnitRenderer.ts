@@ -43,7 +43,7 @@ import { BattleState } from "../models/BattleState";
 import { isUnitVisibleToPlayer } from "../shared/BattleVision";
 import { BoardRenderer } from "./BoardRenderer";
 import { SpineUnitOverlay } from "./SpineGeneralOverlay";
-import { generalSpineConfig, soldierSpineConfig } from '../shared/UnitPresentationConfig';
+import { generalSpineConfig, soldierSpineConfig, squadMemberCount } from '../shared/UnitPresentationConfig';
 import { DuelExchange } from '../shared/DuelPresentationCore';
 import { BATTLE_VISUAL_TIMING } from "./BattlePresentationTiming";
 import { BuffGainEffectPool } from "./effects/BuffGainEffectPool";
@@ -872,7 +872,8 @@ export class UnitRenderer extends Component {
           const p = view.labelNode.position;
           const foot = isGeneral ? this.generalSidelineFoot(unit.faction) : this.unitGroundFoot(view);
           const shown = this.spineUnits.sync(unitId, config, foot?.x ?? p.x, foot?.y ?? p.y - config.labelToFoot,
-            unit.faction === Faction.Enemy ? -1 : 1, !isGeneral && this.movingUnits.has(unitId), dt, view.labelNode.active);
+            unit.faction === Faction.Enemy ? -1 : 1, !isGeneral && this.movingUnits.has(unitId), dt, view.labelNode.active,
+            isGeneral ? 1 : squadMemberCount(unit.currentHp, unit.getEffectiveMaxHp()));
           view.visualNode.active = !shown;
         } else { this.spineUnits.remove(unitId); view.visualNode.active = true; }
       }

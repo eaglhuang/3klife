@@ -8,6 +8,7 @@ import { comboChanceOfPair } from '../../core/systems/ComboAttackKin';
 import type { HistoricalRelation } from '../../core/systems/KinRelation';
 import { services } from '../../core/managers/ServiceLoader';
 import type { TroopUnit } from '../../core/models/TroopUnit';
+import type { GeneralUnit } from '../../core/models/GeneralUnit';
 import { fieldTallySetMods, type TallySetMember } from '../../core/systems/TigerTallySetBonus';
 import type { BattleState } from '../models/BattleState';
 import { BattleTurnManager } from './BattleTurnManager';
@@ -217,30 +218,115 @@ export class BattleCombatResolver {
       return;
     }
 
-    const damageAdjustment = tacticBehavior.resolveDamageAdjustment({
-      kind: 'general',
-      attacker,
-      baseDamage: attacker.getEffectiveAttack(),
-      state: this.context.state,
-    });
-    const atk = damageAdjustment.damage;
-    let finalAttack = atk;
-    const actionReset = this.context.state.getActionReset(attacker.id);
-    if (actionReset?.firstHitPending) {
-      finalAttack = Math.max(1, Math.floor(finalAttack * actionReset.firstHitMultiplier));
+    let rawDamage: number;
+    let isCrit = false;
+    if (GAME_CONFIG.generalDamageUsesUnitPipeline) {
+      ({ damage: rawDamage, isCrit } = this.generalPipelineDamage(attacker, general, enemyFaction, svc));
+    } else {
+      // 舊行為：直接以攻擊力扣血，不受防禦與地形影響（設定關閉時保留對照用）
+      const damageAdjustment = tacticBehavior.resolveDamageAdjustment({
+        kind: 'general',
+        attacker,
+        baseDamage: attacker.getEffectiveAttack(),
+        state: this.context.state,
+      });
+      rawDamage = damageAdjustment.damage;
+      const actionReset = this.context.state.getActionReset(attacker.id);
+      if (actionReset?.firstHitPending) {
+        rawDamage = Math.max(1, Math.floor(rawDamage * actionReset.firstHitMultiplier));
+      }
+      if (svc.buff.hasBuff(attacker.id, StatusEffect.Weak)) {
+        rawDamage = Math.max(1, Math.floor(rawDamage * WEAK_ATTACK_MULTIPLIER));
+      }
     }
-    if (svc.buff.hasBuff(attacker.id, StatusEffect.Weak)) {
-      finalAttack = Math.max(1, Math.floor(finalAttack * WEAK_ATTACK_MULTIPLIER));
-    }
-    general.takeDamage(finalAttack);
+    // 主將 HP 以整數結算（HUD 不顯示小數）；命中至少 1 點，閃避已在上方提前返回
+    const damage = Math.max(1, Math.round(rawDamage));
+    general.takeDamage(damage);
     svc.event.emit(EVENT_NAMES.GeneralDamaged, {
       faction: enemyFaction,
       hp: general.currentHp,
-      damage: finalAttack,
+      damage,
       attackerId: attacker.id,
       wasDodged: false,
-      isCrit: false,
+      isCrit,
     });
+  }
+
+  /**
+   * 部隊打主將的傷害管線（PROG-2-9304）：與 resolveHit 同一套攻方乘數與結算順序。
+   * 差異：主將沒有兵種，兵種剋制不套（中立）；主將沒有兵種適性，防守方適性為中立；
+   * 防禦來自統率（GeneralUnit 無防禦欄位）；無盾牆、無虎符被動（主將不是部隊）。
+   * 回傳未取整的傷害，由呼叫端取整。
+   */
+  private generalPipelineDamage(
+    attacker: TroopUnit,
+    general: GeneralUnit,
+    enemyFaction: Faction,
+    svc: ReturnType<typeof services>,
+  ): { damage: number; isCrit: boolean } {
+    const tacticBehavior = resolveBattleTacticBehavior(this.context.state.battleTactic);
+    const attackerGeneral = this.context.state.getGeneral(attacker.faction);
+    const attackerBurst = this.context.state.getSelfBurst(attacker.faction);
+    const aCell = this.context.state.getCell(attacker.lane, attacker.depth);
+    // 主將站位地形：化身單位在場上取其格，不在場上視為平原
+    const generalUnitId = enemyFaction === Faction.Player
+      ? this.context.getPlayerGeneralUnitId()
+      : this.context.getEnemyGeneralUnitId();
+    const generalUnit = generalUnitId ? this.context.state.units.get(generalUnitId) : undefined;
+    const generalTerrain = (generalUnit ? this.context.state.getCell(generalUnit.lane, generalUnit.depth)?.terrain : undefined)
+      ?? TerrainType.Plain;
+    const preferredBonus = general.preferredTerrain === generalTerrain ? general.terrainDefenseBonus : 0;
+
+    // 攻方乘數同 resolveHit；generalDamageMultiplier 乘在攻方、扣防禦之前
+    let damage = svc.formula.calculateDamage({
+      attackerAttack: attacker.getEffectiveAttack() * this.getTallyAttackMod(attacker) * selfBurstAttackMultiplier(attackerBurst)
+        * teamAuraAttackMultiplier(this.context.state.getTeamAura(attacker.faction))
+        * massDebuffAttackMultiplier(this.context.state.getMassDebuff(attacker.faction))
+        * GAME_CONFIG.generalDamageMultiplier,
+      defenderDefense: general.lea * GAME_CONFIG.generalDefensePerLea,
+      // 主將無兵種：defenderType 取攻方同型，剋制查表必不命中，等同不套剋制
+      attackerType: attacker.type,
+      defenderType: attacker.type,
+      attackerTerrain: aCell?.terrain ?? TerrainType.Plain,
+      defenderTerrain: generalTerrain,
+      defenseBonus: preferredBonus,
+      attackBonus: attackerGeneral?.attackBonus,
+      attackerAptitudeMultiplier: this.getUnitAptitude(attacker).attackMultiplier,
+    });
+
+    const damageAdjustment = tacticBehavior.resolveDamageAdjustment({
+      kind: 'general',
+      attacker,
+      baseDamage: damage,
+      state: this.context.state,
+    });
+    damage = damageAdjustment.damage;
+    // 殘局倍率（破釜沉舟）與部隊路徑相同
+    if (this.context.state.lastSpurtMode && attackerGeneral) {
+      damage = lastSpurtAdjustedDamage(damage, attackerGeneral.str, 1, this.context.state.isStaminaExhausted(attacker.faction));
+    }
+    const actionReset = this.context.state.getActionReset(attacker.id);
+    if (actionReset?.firstHitPending) {
+      damage = Math.max(1, Math.floor(damage * actionReset.firstHitMultiplier));
+    }
+    if (svc.buff.hasBuff(attacker.id, StatusEffect.Weak)) {
+      damage = Math.max(1, Math.floor(damage * WEAK_ATTACK_MULTIPLIER));
+    }
+
+    // 暴擊：與部隊路徑同一組暴擊率與倍率，擲骰走戰場亂數源
+    const critRate = critRateOf((tacticBehavior.getCritBonus?.(attacker, this.context.state) ?? 0) + selfBurstCritBonus(attackerBurst)
+      + massDebuffCritDelta(this.context.state.getMassDebuff(attacker.faction)));
+    let isCrit = false;
+    if (rollCrit(critRate, this.hitRandom)) {
+      damage = critDamageOf(damage);
+      isCrit = true;
+    }
+    const generalDebuffed = generalUnitId !== null && TEAM_AURA_DEBUFF_EFFECTS.some((effect) => svc.buff.hasBuff(generalUnitId, effect));
+    damage = Math.floor(damage * teamAuraVsDebuffedMultiplier(this.context.state.getTeamAura(attacker.faction), generalDebuffed));
+    damage = Math.floor(damage * massDebuffDamageTakenMultiplier(this.context.state.getMassDebuff(enemyFaction)));
+    damage = Math.max(1, applyTeamAuraToDamage(this.context.state.getTeamAura(enemyFaction), damage, 0).hpDamage);
+    if (isCrit && attackerGeneral) svc.event.emit(EVENT_NAMES.BattleSkillNotice, critLine(attackerGeneral.name, damage));
+    return { damage, isCrit };
   }
 
   public resolveCombat(attacker: TroopUnit, defender: TroopUnit, svc: ReturnType<typeof services>): void {

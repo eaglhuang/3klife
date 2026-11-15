@@ -250,6 +250,11 @@ export const _decorator: {
     executeInEditMode: () => (_: any) => {},
 };
 
+/** 引擎的類別登錄表；測試環境沒有登錄任何元件，一律回傳 null，呼叫端要能處理取不到的情況。 */
+export const js = {
+    getClassByName(_name: string): unknown { return null; },
+};
+
 export const sys = {
     isBrowser: false,
     NetworkType: { NONE: 0, LAN: 1, WWAN: 2 },

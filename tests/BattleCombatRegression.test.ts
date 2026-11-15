@@ -1,4 +1,4 @@
-import { Faction, TroopType } from '../assets/scripts/core/config/Constants';
+import { EVENT_NAMES, Faction, GAME_CONFIG, TroopType } from '../assets/scripts/core/config/Constants';
 import { BattleController } from '../assets/scripts/battle/controllers/BattleController';
 import { BattleState } from '../assets/scripts/battle/models/BattleState';
 import { BattleCombatResolver, type BattleCombatAction } from '../assets/scripts/battle/runtime/BattleCombatResolver';
@@ -281,5 +281,110 @@ export function createBattleCombatRegressionSuite(): TestSuite {
         }
     });
 
+    suite.test('damageEnemyGeneral：對主將傷害為整數且至少 1（PROG-2-9304）', () => {
+        services().initialize();
+        const fixture = createGeneralDamageFixture(40, 92);
+        const before = fixture.general.currentHp;
+        fixture.resolver.damageEnemyGeneral(fixture.attacker, fixture.svc);
+        const damage = before - fixture.general.currentHp;
+        assert.equals(Math.round(damage), damage, '主將 HP 扣減不得有小數');
+        assert.greaterOrEqual(1, damage);
+        // 騎兵攻 40 × 管線乘數 1.5 − 主將防禦（統率 92 × 0.3 = 27.6）→ floor(32.4) = 32
+        assert.equals(32, damage);
+
+        const weak = createGeneralDamageFixture(1, 92);
+        const weakBefore = weak.general.currentHp;
+        weak.resolver.damageEnemyGeneral(weak.attacker, weak.svc);
+        assert.equals(1, weakBefore - weak.general.currentHp, '攻擊不足以破防時仍至少扣 1');
+    });
+
+    suite.test('damageEnemyGeneral：關閉管線時維持舊行為，只多了取整（PROG-2-9304）', () => {
+        services().initialize();
+        const original = GAME_CONFIG.generalDamageUsesUnitPipeline;
+        GAME_CONFIG.generalDamageUsesUnitPipeline = false;
+        try {
+            // 士氣 3 → 攻擊力 40 × 1.03 = 41.2，舊行為直接扣 41.2；取整後為 41
+            const fixture = createGeneralDamageFixture(40, 92, 3);
+            const before = fixture.general.currentHp;
+            fixture.resolver.damageEnemyGeneral(fixture.attacker, fixture.svc);
+            assert.equals(41, before - fixture.general.currentHp);
+        } finally {
+            GAME_CONFIG.generalDamageUsesUnitPipeline = original;
+        }
+    });
+
+    suite.test('damageEnemyGeneral：開啟管線時防禦高的主將受傷較低（PROG-2-9304）', () => {
+        services().initialize();
+        const tough = createGeneralDamageFixture(40, 96);
+        const frail = createGeneralDamageFixture(40, 40);
+        const toughBefore = tough.general.currentHp;
+        const frailBefore = frail.general.currentHp;
+        tough.resolver.damageEnemyGeneral(tough.attacker, tough.svc);
+        frail.resolver.damageEnemyGeneral(frail.attacker, frail.svc);
+        const toughDamage = toughBefore - tough.general.currentHp;
+        const frailDamage = frailBefore - frail.general.currentHp;
+        assert.isTrue(toughDamage < frailDamage, `統率 96 應比統率 40 受傷少（${toughDamage} vs ${frailDamage}）`);
+    });
+
+    suite.test('damageEnemyGeneral：暴擊時 GeneralDamaged 的 isCrit 為 true（PROG-2-9304）', () => {
+        services().initialize();
+        const fixture = createGeneralDamageFixture(40, 92);
+        fixture.resolver.hitRandom = () => 0;
+        const payloads: Array<{ isCrit?: boolean; damage?: number }> = [];
+        const off = services().event.on(EVENT_NAMES.GeneralDamaged, (d: unknown) => {
+            payloads.push(d as { isCrit?: boolean; damage?: number });
+        });
+        try {
+            fixture.resolver.damageEnemyGeneral(fixture.attacker, fixture.svc);
+        } finally {
+            off();
+        }
+        assert.equals(1, payloads.length);
+        assert.isTrue(payloads[0].isCrit === true, '暴擊應寫入 isCrit');
+    });
+
     return suite;
+}
+
+/** 部隊打主將的測試夾具：固定閃避不觸發、統率可指定；回傳的 svc 只覆寫 rollDodge */
+function createGeneralDamageFixture(attackerAttack: number, generalLea: number, morale = 0) {
+    const state = new BattleState();
+    const general = new GeneralUnit({
+        id: `general-lea-${generalLea}`,
+        name: `general-lea-${generalLea}`,
+        faction: Faction.Enemy,
+        hp: 1000,
+        maxSp: 100,
+        initialSp: 0,
+        str: 80,
+        int: 80,
+        lea: generalLea,
+        luk: 0,
+        skillId: 'sima-yi-shadow',
+        battlePrimarySkillId: 'sima-yi-shadow',
+    });
+    state.enemyGeneral = general;
+    const attacker = new TroopUnit(`attacker-${attackerAttack}-${morale}`, TroopType.Cavalry, Faction.Player, {
+        hp: 100,
+        attack: attackerAttack,
+        defense: 10,
+        moveRange: 0,
+        attackRange: 1,
+    });
+    attacker.morale = morale;
+    attacker.moveTo(2, 2);
+    state.addUnit(attacker);
+    const resolver = new BattleCombatResolver({
+        state,
+        getPlayerGeneralUnitId: () => null,
+        getEnemyGeneralUnitId: () => null,
+        setPlayerGeneralUnitId: () => {},
+        setEnemyGeneralUnitId: () => {},
+    });
+    resolver.hitRandom = () => 0.99;
+    const real = services();
+    const svc = Object.assign(Object.create(real), {
+        formula: Object.assign(Object.create(real.formula), { rollDodge: () => false }),
+    }) as ReturnType<typeof services>;
+    return { state, general, attacker, resolver, svc };
 }

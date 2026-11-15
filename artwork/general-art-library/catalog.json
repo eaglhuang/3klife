@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-16",
+  "updatedAt": "2026-11-15",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -464,7 +464,33 @@
         ]
       },
       "battle": {
-        "status": "not-created"
+        "activeVersion": "0002",
+        "status": "review-pending",
+        "displayStatus": "not-yet-verified",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/xiao_qiao__小喬__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "d26340ff5f64dfd7b190fa8d5386eda4d94c2a05e16ca10b190659423212e996",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "paired hand fans",
+            "sourceStanding": "standing/xiao_qiao__小喬__standing_0002.png",
+            "note": "Pre-existing remote battle artwork had no catalog entry; retained unchanged pending owner review."
+          },
+          {
+            "version": "0002",
+            "file": "battle/xiao_qiao__小喬__battle_0002.png",
+            "status": "review-pending",
+            "sha256": "1a545d996c07bb05106cfb0ce2daab9b816683d7418af49b2e9d27533d5c312a",
+            "canvas": "1024x1536 RGBA",
+            "poseSelection": "B; turning dual-fan sweep with raised guard",
+            "gaze": "toward camera",
+            "weaponClass": "paired hand fans",
+            "sourceStanding": "standing/xiao_qiao__小喬__standing_0002.png",
+            "note": "New candidate. Transparent alpha confirmed; 125px and 250px previews reviewed. Awaiting owner review; not integrated into runtime."
+          }
+        ]
       },
       "avatar": {
         "activeVersion": "0002",
@@ -756,11 +782,11 @@
         ]
       },
       "battle": {
-        "activeVersion": "0001",
-        "status": "asset-imported",
+        "activeVersion": "0002",
+        "status": "review-pending",
         "displayStatus": "not-yet-verified",
         "weaponClass": "long-polearm",
-        "poseCode": "selected-A-draft",
+        "poseCode": "selected-A-low-lunge-thrust-body-calibration",
         "history": [
           {
             "version": "0001",
@@ -768,6 +794,18 @@
             "status": "asset-imported",
             "weaponClass": "long-polearm",
             "poseCode": "selected-A-draft"
+          },
+          {
+            "version": "0002",
+            "file": "battle/ma_yun_lu__馬雲騄__battle_0002.png",
+            "status": "review-pending",
+            "sha256": "09be852a55d60ce1129c9e16fe98064d12e73512317806afef509ac5caf9353f",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "long-polearm",
+            "poseCode": "selected-A-low-lunge-thrust-body-calibration",
+            "gaze": "toward camera",
+            "sourceStanding": "standing/ma_yun_lu__馬雲騄__standing_0001.png",
+            "note": "Updated chest-armor contour and waist profile while retaining the selected low lunging long-pole thrust. Spear remains straight. Previewed at 125px/250px; awaiting owner review. v0001 remains preserved."
           }
         ]
       },
@@ -1422,6 +1460,21 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/huang_zhong__黃忠__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "ab63a29a07bd4cbf2d251085dc3fe1b9e29f274753f00d7aa94d772141407685",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "bow",
+            "note": "Existing pose A artwork registered from the library; no duplicate pose generated."
+          }
+        ]
       }
     },
     {
@@ -6586,6 +6639,35 @@
             "sha256": "483E6C329EB325CDF7CF710015D360D4C753A9163E8DA00F0E5C31770F9F68AF",
             "canvas": "1254x1254 RGBA",
             "qc": "Inline review: clear coquettish smile and three-quarter angle; complete head and ornaments, face centered, crop ends at shoulder tops with no chest; transparent corner alpha."
+          }
+        ]
+      },
+      "battle": {
+        "activeVersion": "0002",
+        "status": "review-pending",
+        "displayStatus": "not-yet-verified",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/diao_chan__貂蟬__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "af89ad9286fcc1e66d2c4992a091379bdab0d7f5ee13f72ebda309fb9186e336",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "sword/dance prop",
+            "sourceStanding": "standing/diao_chan__貂蟬__standing_0002.png",
+            "note": "Pre-existing remote artwork lacked a catalog record; retained unchanged pending owner review."
+          },
+          {
+            "version": "0002",
+            "file": "battle/diao_chan__貂蟬__battle_0002.png",
+            "status": "review-pending",
+            "sha256": "7e165f6836b5f40704adff8a553ab3f511f061e3cc6a652b0e2378aac667fa1d",
+            "canvas": "1024x1536 RGBA",
+            "poseSelection": "distinctive one-handed sword guard with graceful counterbalance",
+            "gaze": "toward camera",
+            "weaponClass": "jian sword",
+            "sourceStanding": "standing/diao_chan__貂蟬__standing_0002.png",
+            "note": "New transparent candidate; eyes corrected toward camera; previewed at 125px and 250px. Awaiting owner review; not integrated into runtime."
           }
         ]
       }

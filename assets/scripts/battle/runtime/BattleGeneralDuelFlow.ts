@@ -320,6 +320,8 @@ export class BattleGeneralDuelFlow {
         if (challengerCrit) {
           attackDmg = Math.floor(attackDmg * GAME_CONFIG.GENERAL_CRIT_DAMAGE_MULTIPLIER);
         }
+        // 部隊攻擊力可能帶小數（士氣），主將 HP 取整；命中至少 1（規則不變，只取整）
+        attackDmg = Math.max(1, Math.round(attackDmg));
         defenderGeneral.takeDamage(attackDmg);
       }
       svc.event.emit(EVENT_NAMES.GeneralDamaged, {
@@ -347,6 +349,8 @@ export class BattleGeneralDuelFlow {
         if (defenderCrit) {
           defenseDmg = Math.floor(defenseDmg * GAME_CONFIG.GENERAL_CRIT_DAMAGE_MULTIPLIER);
         }
+        // 同上：主將 HP 取整，命中至少 1
+        defenseDmg = Math.max(1, Math.round(defenseDmg));
         challengerGeneral.takeDamage(defenseDmg);
       }
       svc.event.emit(EVENT_NAMES.GeneralDamaged, {
