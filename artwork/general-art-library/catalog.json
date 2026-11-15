@@ -445,7 +445,29 @@
         ]
       },
       "battle": {
-        "status": "not-created"
+        "status": "review-pending",
+        "activeVersion": "0002",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/lu_ling_qi__呂玲綺__battle_0001.png",
+            "status": "rejected",
+            "removedFromLibrary": true,
+            "note": "Earlier candidate rejected after user noted curved weapon shaft; replaced by v0002."
+          },
+          {
+            "version": "0002",
+            "file": "battle/lu_ling_qi__呂玲綺__battle_0002.png",
+            "status": "review-pending",
+            "sha256": "046050a012da94f27dcbbbe723f3630fd8cdd355ede398169212b29f293a9d65",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "halberd",
+            "poseLabel": "跨步迴身斜向戟擊",
+            "gaze": "direct-to-camera",
+            "sourceStanding": "standing/lu_ling_qi__呂玲綺__standing_0002.png",
+            "note": "保持既有紅銀輕甲與戟形武器；長柄筆直、全身與武器完整入框。候選待審，未接入遊戲。"
+          }
+        ]
       },
       "avatar": {
         "activeVersion": "0002",
