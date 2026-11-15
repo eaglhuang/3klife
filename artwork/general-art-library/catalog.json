@@ -676,7 +676,22 @@
         ]
       },
       "battle": {
-        "status": "not-created"
+        "status": "review-pending",
+        "activeVersion": "0003",
+        "history": [
+          {
+            "version": "0003",
+            "file": "battle/huang_yue_ying__黃月英__battle_0003.png",
+            "status": "review-pending",
+            "sha256": "dabccbde68b197ce60c3c0a941b6c1dc1a4d44bddfea39c6d3dc598dd8331881",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "tactical scroll and mechanical signaling device",
+            "poseLabel": "踏步展卷指策",
+            "gaze": "direct-to-camera",
+            "sourceStanding": "standing/huang_yue_ying__黃月英__standing_0004.png",
+            "note": "延續核定綠白文士造型；以展卷與機巧器具表現戰場施策，不改配長槍。全身入框，候選待審，未接入遊戲。"
+          }
+        ]
       },
       "avatar": {
         "activeVersion": "0002",
