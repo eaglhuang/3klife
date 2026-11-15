@@ -6805,6 +6805,23 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/bian_fu_ren__卞夫人__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "4612f16483f908e3abb23e4830fc5b3053f7b745cb76f1b025a5a8e701a61ce8",
+            "canvas": "256x256 RGBA",
+            "source": "standing/bian_fu_ren__卞夫人__standing_0002.png (crop-only)",
+            "crop": "shoulder-line",
+            "cropBox": "x=186,y=0,w=140,h=140; canvas=152x152; transparent-pad=6px on each side",
+            "qc": "No redraw or design changes; full hair ornament, face and chin retained; face centered; shoulder tops at lower edge, no chest."
+          }
+        ]
       }
     },
     {
