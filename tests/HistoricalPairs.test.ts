@@ -89,7 +89,7 @@ export function createHistoricalPairsSuite(): TestSuite {
         };
 
         const couple = makeService('zhou-yu', 'xiao-qiao');
-        assert.equals(25, couple.previewEp('zhou-yu', 'xiao-qiao').affinity);
+        assert.equals(10, couple.previewEp('zhou-yu', 'xiao-qiao').affinity);
         const coupleBreed = couple.breed('zhou-yu', 'xiao-qiao');
         assert.isTrue(coupleBreed.conceptionRate > 0);
 
@@ -111,7 +111,7 @@ export function createHistoricalPairsSuite(): TestSuite {
         });
         assert.equals(0, service.previewEp('zhou-yu', 'xiao-qiao').affinity);
         table = HistoricalPairTable.load(readProvisionalTable()).table;
-        assert.equals(25, service.previewEp('zhou-yu', 'xiao-qiao').affinity);
+        assert.equals(10, service.previewEp('zhou-yu', 'xiao-qiao').affinity);
     });
 
     return suite;

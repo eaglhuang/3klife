@@ -225,7 +225,7 @@ export function createBreedingSuite(): TestSuite {
 
     // ── EP ─────────────────────────────────────────────────────────────────
 
-    suite.test('EP_MVP：基礎 50、共鳴 +15、異脈 +20、契合 +25', () => {
+    suite.test('EP_MVP：基礎 50、共鳴階梯(+5/+10/+15)、異脈 +10、契合 +10（doc_spec_1098）', () => {
         const pedigree = {} as ReturnType<BloodlineGraph['getPedigree']>;
         const profiles = new Map<string, AncestorProfile>();
         PEDIGREE_SLOTS.forEach((slot, i) => {
@@ -233,14 +233,14 @@ export function createBreedingSuite(): TestSuite {
             profiles.set(`a${i}`, { uid: `a${i}`, tags: i < 3 ? ['cavalry'] : [`t${i}`], factorIds: [] });
         });
         const full = computeEpMvp(pedigree, profiles, true);
-        assert.equals(110, full.ep);
+        assert.equals(75, full.ep, '50 + 共鳴(3位=+5) + 異脈 10 + 契合 10');
         assert.equals('cavalry', full.topTag);
-        assert.equals('天命之子', full.rating);
+        assert.equals('良才美質', full.rating);
 
         profiles.get('a2')!.tags = ['solo'];
         const plain = computeEpMvp(pedigree, profiles, false);
         assert.equals(0, plain.resonance, '只剩 2 位同標籤，不到 3 位');
-        assert.equals(70, plain.ep, '50 + 異脈 20');
+        assert.equals(60, plain.ep, '50 + 異脈 10');
     });
 
     suite.test('EP_MVP：位置重複（近親）或祖先不明時沒有異脈加成', () => {
@@ -343,9 +343,9 @@ export function createBreedingSuite(): TestSuite {
         assert.equals(0, child.age);
         assert.equals('Mystery', child.status);
         assert.equals('男', child.gender);
-        assert.equals(60, child.ep, '祖先不明：沒有共鳴與異脈；父母精力滿格 → 精力滿載 +10（PROG-2-1511）');
-        assert.equals(childBaseStat(90, 70, 60), child.str);
-        assert.equals(48, child.str);
+        assert.equals(55, child.ep, '祖先不明：沒有共鳴與異脈；父母精力滿格 → 精力滿載 +5（doc_spec_1098）');
+        assert.equals(childBaseStat(90, 70, 55), child.str);
+        assert.equals(44, child.str);
         assert.equals('f', child.fatherId);
         assert.equals(7, child.birthSeason);
         assert.equals('gene_cavalry,gene_command,gene_honor', (child.genes ?? []).map((g) => g.id).sort().join(','), '六色全開：白色 gene_honor 也繼承');
@@ -428,7 +428,7 @@ export function createBreedingSuite(): TestSuite {
         const service = new BreedingService(store, graph, { random: () => 0.01, dictionary, currentSeason: () => 3 });
 
         const preview = service.previewEp('guan-yu', 'diao-chan');
-        assert.equals(95, preview.ep, '真實祖譜 14 人不重複 → 異脈 +20，同因子 ≥ 3 → 共鳴 +15，精力滿載 +10（PROG-2-1511）');
+        assert.equals(86, preview.ep, '真實祖譜：基礎 50 + 異脈 10 + 共鳴 15 + 精力 5 + 親代 6 = 86（doc_spec_1098 + EP_Base）');
 
         const result = service.breed('guan-yu', 'diao-chan');
         assert.equals('conceived', result.outcome);
@@ -437,7 +437,7 @@ export function createBreedingSuite(): TestSuite {
         const child = roster.find((g) => g.id === 'child-guan-yu-diao-chan-1')!;
         assert.equals(0, child.age);
         // 子嗣 EP = 預覽基礎分 + 天命波動（PROG-2-0511）；波動依父母 LUK 與亂數而定
-        assert.equals(95 + result.ep!.fate, child.ep);
+        assert.equals(86 + result.ep!.fate, child.ep);
         assert.equals(14, (child.ancestor_chain ?? []).length);
 
         const pedigree = graph.getPedigree(child.id);

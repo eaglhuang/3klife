@@ -6862,5 +6862,35 @@
     "path": "docs/遊戲規格文件/系統規格書/子嗣五歲抓周揭曉與及冠入學直通學府代際傳承規格書.md",
     "title": "子嗣五歲抓周揭曉與及冠入學直通學府代際傳承規格書",
     "category": "spec"
+  },
+  {
+    "id": "doc_spec_1173",
+    "path": "docs/遊戲規格文件/系統規格書/轉蛋系統-shards/core.md",
+    "title": "轉蛋系統規格書 — A–E 系統描述、目的、商業、TA、功能清單",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1174",
+    "path": "docs/遊戲規格文件/系統規格書/轉蛋系統-shards/formula.md",
+    "title": "轉蛋系統規格書 — F–G 公式與劇本／主視覺",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1175",
+    "path": "docs/遊戲規格文件/系統規格書/轉蛋系統-shards/rulings.md",
+    "title": "轉蛋系統規格書 — L 與 MCQ 裁決紀錄",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1176",
+    "path": "docs/遊戲規格文件/系統規格書/轉蛋系統-shards/schema.md",
+    "title": "轉蛋系統規格書 — H–I 字串與 Data Schema",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1177",
+    "path": "docs/遊戲規格文件/系統規格書/轉蛋系統-shards/terms.md",
+    "title": "轉蛋系統規格書 — J–K 名詞定義與傳承邊界",
+    "category": "spec"
   }
 ]

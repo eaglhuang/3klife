@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — 其它類
 
-> 生成日期: 2026-11-09
+> 生成日期: 2026-11-15
 > 這是 `doc-id-registry.md` 的「其它類」分片，第 7/7 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-other.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -8,8 +8,6 @@
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
-| `doc_other_2450` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0257-actor-identity-continuity-across-captain-and-shared-write-lanes.task.md | ATM-GOV-0257 Actor identity continuity across captain and shared-write lanes |
-| `doc_other_2451` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0258-broker-managed-transactional-stage-commit-queue.task.md | ATM-GOV-0258 Broker-managed transactional stage commit queue |
 | `doc_other_2452` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0259-write-ticket-scope-amendment-guard-and-out-of-scope-wip-recorder.task.md | ATM-GOV-0259 Write-ticket scope amendment guard and out-of-scope WIP recorder |
 | `doc_other_2453` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0260-staged-candidate-line-budget-and-nested-commit-recovery.task.md | ATM-GOV-0260 Staged candidate line-budget and nested commit recovery |
 | `doc_other_2454` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0261-vcs-neutral-commit-candidate-isolation-and-git-adapter-fallback.task.md | ATM-GOV-0261 VCS-neutral commit candidate isolation and Git adapter fallback |
@@ -230,7 +228,6 @@
 | `doc_other_2669` | docs/ai_atomic_framework/temporary-governance/tasks/TASK-TMP-0023-rebuild-sealed-runner-after-stale-incident-reconciliation-repair.task.md | TASK-TMP-0023 Rebuild sealed runner after stale incident reconciliation repair |
 | `doc_other_2670` | docs/ai_atomic_framework/temporary-governance/tasks/TASK-TMP-0024-include-declared-ignored-artifacts-in-taskflow-close-delivery.task.md | TASK-TMP-0024 Include declared ignored artifacts in taskflow close delivery |
 | `doc_other_2671` | docs/ai_atomic_framework/temporary-governance/tasks/TASK-TMP-0028-inventory-and-quarantine-unintegrated-atm-residue.task.md | TASK-TMP-0028 Inventory and quarantine unintegrated ATM residue |
-| `doc_other_2672` | docs/animation-lab/spine-pipeline-v1.md | Spine 2D 角色製作與 Cocos 匯入管線 v1（研究版） |
 | `doc_other_2673` | docs/art/character-palette-ledger.md | 武將立繪配色索引 |
 | `doc_other_2674` | docs/data/lore-id-alignment-2026-10-14.md | Lore id 對齊對照表（PROG-2-0417，2026-10-14） |
 | `doc_other_2675` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-04.md | Doc ID Registry Markdown Index — Spec / Index / Task |
@@ -261,3 +258,9 @@
 | `doc_other_2700` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-12.md | Doc ID Registry Markdown Index — Spec / Index / Task |
 | `doc_other_2701` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-13.md | Doc ID Registry Markdown Index — Spec / Index / Task |
 | `doc_other_2702` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-14.md | Doc ID Registry Markdown Index — Spec / Index / Task |
+| `doc_other_2703` | docs/美術-武將大招分鏡規範-01-交付與連貫.md | 武將大招漫畫分鏡繪圖規範（1/3）交付與連貫 |
+| `doc_other_2704` | docs/美術-武將大招分鏡規範-02-拍點畫風與接入.md | 武將大招漫畫分鏡繪圖規範（2/3）拍點、畫風、武將表與遊戲內接入 |
+| `doc_other_2705` | docs/美術-武將大招分鏡規範-03-提示詞與驗收.md | 武將大招漫畫分鏡繪圖規範（3/3）提示詞與驗收 |
+| `doc_other_2706` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0207-charter-upgrade-command-with-sync-integration-staged-enforcement-and-accurate-doctor-diagnosis.task.md | TASK-AAO-0207 Charter upgrade command with sync integration, staged enforcement, and accurate doctor diagnosis |
+| `doc_other_2707` | docs/battle-chibi-integration.md | 戰場 Q 版單位演出接入 |
+| `doc_other_2708` | docs/reports/PROG-2-2210-web-source-assets.md | PROG-2-2210 網頁來源資產量測 |
