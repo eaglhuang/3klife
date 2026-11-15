@@ -74,6 +74,7 @@ import {
   resolveBattleUnitHitEffectKey,
 } from './BattleFlowVfx';
 import {
+  BATTLE_AUDIO_CUE,
   playBattleAudio,
   resolveBattleGeneralAttackSfxKey,
   resolveBattleGeneralHitSfxKey,
@@ -489,6 +490,7 @@ export class BattleUIBridge {
     this.refreshBattleViews();
     const unit = c.ctrl?.state.units.get(data.unitId) ?? null;
     c.unitRenderer?.playDeploy(unit);
+    playBattleAudio(BATTLE_AUDIO_CUE.unitDeploy);
   }
 
   /** 虎符劇本句走 i18n（PROG-2-1987） */
@@ -538,8 +540,12 @@ export class BattleUIBridge {
         const attackAudioPromise = data.attackerId && attackerUnit && !isRiverBoundaryDamage
           ? this._scheduleBattleAudio(resolveBattleUnitAttackSfxKey(attackerUnit.type))
           : Promise.resolve();
+        // 暴擊命中額外播 boom（與既有攻擊／受擊音效疊加）
+        const critAudioPromise = data.isCrit
+          ? this._scheduleBattleAudio(BATTLE_AUDIO_CUE.critHit)
+          : Promise.resolve();
 
-        await Promise.all([attackPromise, hitPromise, valuePromise, hitFeedbackPromise, attackAudioPromise]);
+        await Promise.all([attackPromise, hitPromise, valuePromise, hitFeedbackPromise, attackAudioPromise, critAudioPromise]);
 
         if (data.hp > 0) {
           UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] state-commit unit=${data.unitId}`);
@@ -611,6 +617,8 @@ export class BattleUIBridge {
     this.appendLog(`${side}${attacker.name} 攻擊${target.name}落空（命中率 ${Math.round(data.hitRate * 100)}%）`);
     this._enqueueCombatVisual(`unit-miss:${data.attackerId}`, async () => {
       c.unitRenderer?.playDodgeAnimation?.(target.id);
+      playBattleAudio(BATTLE_AUDIO_CUE.unitDodge);
+      playBattleAudio(resolveBattleUnitAttackSfxKey(attacker.type));
       await (c.unitRenderer?.playAttackAnimationAsync(data.attackerId, target.lane, target.depth) ?? Promise.resolve());
     });
   }
@@ -622,7 +630,9 @@ export class BattleUIBridge {
     if (unit) {
       const side = unit.faction === Faction.Player ? '我方' : '敵方';
       this.appendLog(`${side}${unit.name} 回復 ${data.amount}，目前 HP ${Math.max(0, data.hp)}`);
+      c.unitRenderer?.playValueChange(unit, data.amount, 'heal');
     }
+    playBattleAudio(BATTLE_AUDIO_CUE.unitHeal);
     this.refreshBattleViews();
   }
 
@@ -648,6 +658,7 @@ export class BattleUIBridge {
       } else if (!data.isSwapPassenger) {
         this.appendLog(`${side}${unit.name} 前進到 L${data.lane + 1} D${data.depth}`);
         c.unitRenderer?.animateMove(unit, data.fromLane, data.fromDepth, data.forcedMoveReason);
+        playBattleAudio(BATTLE_AUDIO_CUE.unitMove);
       }
       if (unit.faction === Faction.Player) this._showTerrainFeedback(unit.id, data);
     }
@@ -670,10 +681,12 @@ export class BattleUIBridge {
     if (this.duelCapture) { this.duelCapture.deaths.push(data); return; }
     const c = this.ctx;
     this.performance.observeUnitDied(data.faction);
-    this.appendLog(`單位陣亡：${data.unitId}`);
+    const deadName = c.ctrl?.state.units.get(data.unitId)?.name ?? data.unitId;
+    this.appendLog(`單位陣亡：${deadName}`);
     c.unitRenderer?.markDyingUnit?.(data.unitId);
     this._enqueueCombatVisual(`unit-death:${data.unitId}`, async () => {
       UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] death start unit=${data.unitId}`);
+      playBattleAudio(BATTLE_AUDIO_CUE.unitDie);
       playBattleFlowEffectAtCell(services().effect, c.boardRenderer, BATTLE_FLOW_FX.deathBurst, data.lane, data.depth, 1.0, 0.16);
       playBattleFlowEffectAtCell(services().effect, c.boardRenderer, BATTLE_FLOW_FX.deathSmoke, data.lane, data.depth, 1.8, 0.05);
       await c.unitRenderer?.playDeathAsync(data.unitId);
@@ -729,6 +742,12 @@ export class BattleUIBridge {
         ? this._scheduleBattleAudio(resolveBattleGeneralAttackSfxKey())
         : Promise.resolve();
       const hitAudioPromise = this._scheduleBattleAudio(resolveBattleGeneralHitSfxKey(), BATTLE_VISUAL_TIMING.recoilStartDelaySec);
+      // 主將受擊特效：照單位受擊的 battle_hit_default，位置用主將化身單位所在格
+      const generalAvatarId = data.faction === Faction.Player ? c.ctrl?.playerGeneralUnitId : c.ctrl?.enemyGeneralUnitId;
+      const generalAvatar = generalAvatarId ? c.ctrl?.state.units.get(generalAvatarId) ?? null : null;
+      if (generalAvatar) {
+        playBattleFlowEffectAtCell(services().effect, c.boardRenderer, BATTLE_FLOW_FX.hitDefault, generalAvatar.lane, generalAvatar.depth, 0.9, 0.12);
+      }
 
       await Promise.all([attackPromise, hitPromise, valuePromise, attackAudioPromise, hitAudioPromise]);
       UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] hud-commit faction=${data.faction} hp=${data.hp}`);
@@ -807,6 +826,7 @@ export class BattleUIBridge {
     const side = data.faction === Faction.Player ? '我方' : '敵方';
     this.appendLog(`${side}吃到 Buff：${data.buffText} ${deltaText}`);
     c.boardRenderer?.playBuffConsumeBurst(data.lane, data.depth);
+    playBattleAudio(BATTLE_AUDIO_CUE.buffGained);
     c.unitRenderer?.playBuffConsumeValue(data.lane, data.depth, deltaText || data.buffText);
     if (data.attackDelta !== 0 || data.hpDelta !== 0) {
       c.unitRenderer?.playBuffEffect(data.unitId, data.lane, data.depth, data.attackDelta, data.hpDelta);
@@ -1078,6 +1098,7 @@ export class BattleUIBridge {
   private _onBuffApplied(data: { unitId: string; effect: string; turns: number }): void {
     const unit = data ? this.ctx.ctrl?.state.units.get(data.unitId) : undefined;
     if (!unit || unit.isDead()) return;
+    playBattleAudio(BATTLE_AUDIO_CUE.buffGained);
     const text = statusEffectFloatText(data.effect);
     if (text) this.ctx.unitRenderer?.playBuffConsumeValue(unit.lane, unit.depth, text);
   }
@@ -1085,6 +1106,7 @@ export class BattleUIBridge {
   private _onFortressDamaged(data: { faction: Faction; hp: number }): void {
     if (!data) return;
     this.appendLog(fortressDamagedLogLine(data.faction, data.hp));
+    playBattleAudio(BATTLE_AUDIO_CUE.fortressDamaged);
   }
 
   private _onShowToast(data: { text: string; duration?: number }): void {

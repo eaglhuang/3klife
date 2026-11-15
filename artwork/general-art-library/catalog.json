@@ -1207,6 +1207,28 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "status": "review-pending",
+        "activeVersion": "0002",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/sima_yi__司馬懿__small_avatar_0001.png",
+            "status": "superseded",
+            "sha256": "b6b9af5f4839235845d26d355beee3866c45aa0252ed37b7bdd654359359cbd7",
+            "canvas": "1254x1254 RGBA",
+            "qc": "既有版本，保留為歷史版。"
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/sima_yi__司馬懿__small_avatar_0002.png",
+            "status": "review-pending",
+            "sha256": "8956384df0f68eb7230086aacb44f7abbad34eef6c7d28f1c31999413d23242f",
+            "canvas": "1254x1254 RGBA",
+            "qc": "使用者核准的生成原圖，像素原樣收錄；250px 預覽確認頭冠與下巴完整、臉部居中、肩線取景，無重繪或裁切。"
+          }
+        ]
       }
     },
     {
@@ -1244,6 +1266,23 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/dian_wei__典韋__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "59433cebe77e524e087047e63f9db3b4c5e96ce11f0bf82c51659c8a5922916a",
+            "canvas": "1254x1254 RGBA",
+            "source": "standing/dian_wei__典韋__standing_0002.png",
+            "crop": "shoulder-line",
+            "cropBox": "x=372,y=10,w=300,h=300",
+            "qc": "125px preview: direct crop from approved standing art; headband, full face and chin visible, face centered, shoulder armor edge only."
+          }
+        ]
       }
     },
     {
@@ -1521,6 +1560,23 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/pang_tong__龐統__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "05251875eaa0e0e7772bad19c47cd644afad09125918fab816b482d8ae9d4911",
+            "canvas": "1254x1254 RGBA",
+            "source": "standing/pang_tong__龐統__standing_0002.png",
+            "crop": "shoulder-line",
+            "cropBox": "x=440,y=0,w=360,h=360",
+            "qc": "125px preview: direct crop from approved standing art; full plume/crown base, face and chin visible, face centered, shoulder edge only."
+          }
+        ]
       }
     },
     {
@@ -1636,6 +1692,23 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/xun_yu__荀彧__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "365718eee03aad24529b4a94b4af4295ac54064db36ce81bdfcf8fb236d1928b",
+            "canvas": "1254x1254 RGBA",
+            "source": "standing/xun_yu__荀彧__standing_0002.png",
+            "crop": "shoulder-line",
+            "cropBox": "x=380,y=0,w=420,h=420",
+            "qc": "125px preview: direct crop from approved standing art; broad scholar hat, face and chin visible, face visually centered, shoulders at lower edge."
+          }
+        ]
       }
     },
     {
@@ -6688,6 +6761,24 @@
             "sha256": "7D64DC59A504454A3712F2CE080851F53ED426C972F842B20C5DCCE75DF8E3B1",
             "canvas": "1254x1254 RGBA",
             "qc": "125px review: face centered on canvas, gentle three-quarter turn and composed half-smile; full head and jade ornament visible; crop ends at upper shoulder edges with no chest."
+          }
+        ]
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "displayStatus": "not-yet-verified",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/wang_yuan_ji__王元姬__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "86b5fd3249eb6be5edca85a1549d923940a9894edbd2e1c54a515dc900c1dfa0",
+            "canvas": "1024x1536 RGBA",
+            "poseSelection": "distinct tactical command stance, scroll unfurled and direction gesture",
+            "gaze": "direct-to-camera",
+            "sourceStanding": "standing/wang_yuan_ji__王元姬__standing_0002.png",
+            "note": "Battlefield strategist presentation; no invented weapon; transparent cutout and complete figure verified."
           }
         ]
       }

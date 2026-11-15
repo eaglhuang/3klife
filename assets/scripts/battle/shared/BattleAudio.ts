@@ -19,13 +19,22 @@ export const BATTLE_AUDIO_CUE = {
   unitAttackCommon: 'unit-attack-common',
   generalHitCommon: 'general-hit-common',
   generalAttackCommon: 'general-attack-common',
+  unitMove: 'unit-move',
+  unitDeploy: 'unit-deploy',
+  unitDie: 'unit-die',
+  unitHeal: 'unit-heal',
+  buffGained: 'buff-gained',
+  unitDodge: 'unit-dodge',
+  critHit: 'crit-hit',
+  fortressDamaged: 'fortress-damaged',
+  shieldBlock: 'shield-block',
 } as const;
 
 export type BattleAudioCue = typeof BATTLE_AUDIO_CUE[keyof typeof BATTLE_AUDIO_CUE];
 
 // 邏輯鍵 → 具體 AudioClip 名稱。
 // 目前先以既有 audio bundle 的 clip 為主，未來若新增 hit/attack 變體，只要改這裡。
-const BATTLE_AUDIO_CLIP_MAP: Record<BattleAudioCue, string> = {
+export const BATTLE_AUDIO_CLIP_MAP: Record<BattleAudioCue, string> = {
   [BATTLE_AUDIO_CUE.unitHitPrimary]: 'hurt',
   [BATTLE_AUDIO_CUE.unitHitSecondary]: 'thunder',
   [BATTLE_AUDIO_CUE.unitHitCommon]: 'hurt',
@@ -34,6 +43,15 @@ const BATTLE_AUDIO_CLIP_MAP: Record<BattleAudioCue, string> = {
   [BATTLE_AUDIO_CUE.unitAttackCommon]: 'weapon',
   [BATTLE_AUDIO_CUE.generalHitCommon]: 'hurt',
   [BATTLE_AUDIO_CUE.generalAttackCommon]: 'weapon',
+  [BATTLE_AUDIO_CUE.unitMove]: 'footstep',
+  [BATTLE_AUDIO_CUE.unitDeploy]: 'start',
+  [BATTLE_AUDIO_CUE.unitDie]: 'die',
+  [BATTLE_AUDIO_CUE.unitHeal]: 'heal',
+  [BATTLE_AUDIO_CUE.buffGained]: 'buff',
+  [BATTLE_AUDIO_CUE.unitDodge]: 'wave',
+  [BATTLE_AUDIO_CUE.critHit]: 'boom',
+  [BATTLE_AUDIO_CUE.fortressDamaged]: 'boom',
+  [BATTLE_AUDIO_CUE.shieldBlock]: 'shield',
 };
 
 export function resolveBattleUnitAttackSfxKey(unitType: TroopType): BattleAudioCue {
