@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-15T21:46:17Z",
+  "updatedAt": "2026-11-15T21:50:48Z",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -1793,6 +1793,24 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/xu_huang__徐晃__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "538ccd1ea4cf77ee61dd49c5c16ed7028f4c479e25b14a3e8a37f7b728eaf8f5",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "long-handled axe",
+            "poseLabel": "低身寬步，雙手舉斧蓄力斜劈",
+            "gaze": "direct-to-camera",
+            "sourceStanding": "standing/xu_huang__徐晃__standing_0002.png",
+            "note": "使用者授權持續補繪；完整人物與大斧均在畫布內，斧柄保持筆直；候選待審，未接入遊戲。"
+          }
+        ]
       }
     },
     {
