@@ -449,7 +449,17 @@ export class SyncManager {
                 body: JSON.stringify(syncData)
             });
 
-            const result: SyncResponse = await response.json();
+            // 先確認對方真的是同步伺服器：非 2xx 或回應缺 Success 欄位（例如埠被其他服務占用）
+            // 都視為「同步伺服器不可用」，資料留在本機待下次重試，不當成伺服器拒絕。
+            const result = response.ok
+                ? await response.json().catch(() => null) as SyncResponse | null
+                : null;
+            if (!result || typeof result.Success !== 'boolean') {
+                this.reportServerUnavailable(`HTTP ${response.status}，回應不是同步格式`);
+                this.isSyncing = false;
+                return;
+            }
+            this.serverUnavailableWarned = false;
 
             if (result.Success) {
                 UCUFLogger.info(LogCategory.DATA, '[SyncManager] Sync OK. New Secret issued.');
@@ -465,9 +475,18 @@ export class SyncManager {
                 this.isSyncing = false;
             }
         } catch (e) {
-            UCUFLogger.error(LogCategory.DATA, '[SyncManager] API Call Failed (Network Error?).', e);
+            this.reportServerUnavailable(String((e as Error)?.message ?? e));
             this.isSyncing = false;
         }
+    }
+
+    /** 同步伺服器不可用時只警告一次（直到下次成功連上才重置），避免開發環境沒有後端時紅字洗版。 */
+    private serverUnavailableWarned = false;
+    private reportServerUnavailable(reason: string): void {
+        if (this.serverUnavailableWarned) return;
+        this.serverUnavailableWarned = true;
+        UCUFLogger.warn(LogCategory.DATA,
+            `[SyncManager] 同步伺服器不可用（${this.serverUrl}：${reason}），${this.actionRecords.length} 筆紀錄保留在本機，之後自動重試。`);
     }
 
     // ========== DC-5-0002: Delta 同步模式 ==========
