@@ -1,4 +1,4 @@
-import { SceneLoadProgress } from '../../shared/SceneLoadProgress';
+import { SceneLoadProgress, sceneLoadState } from '../../shared/SceneLoadProgress';
 import { presentLobbyLead } from '../core/LobbyLeadPresentation';
 // @spec-source → 見 docs/cross-reference-index.md
 import { openingLetterBodyWithFunLine } from '../../core/systems/FunLineLibrary';
@@ -265,6 +265,7 @@ const LIMITED_POOL_ID = 'limited-pool';
 const { ccclass } = _decorator;
 /** 開場走完、大廳還在掛載時的整備提示（PROG-2-2223） */
 const LOBBY_LOADING_HINT_TEXT = '幕府大堂整備中，請稍候……';
+const LOBBY_BACKGROUND_LOAD_PHASE = '背景載入其餘介面';
 const LOBBY_LOADING_HINT_FONT_SIZE = 36;
 const LOBBY_LOADING_HINT_SIZE = { width: 900, height: 80 };
 
@@ -750,19 +751,21 @@ export class LobbyScene extends Component {
             () => this._mountMarriageProposalPopup(),
             () => this._mountPrisonerPopup(),
             () => this._mountDuplicatePullPopup(),
-            () => this._mountDeckSelect(),
-            () => this._mountLeadSelect(),
-            () => this._mountSortieSetup(),
-            () => this._mountCharacterDs3Host(),
-            () => this._mountEliteTroopCodexPanel(),
-            () => this._mountLobbyMissionDetailDialogPanel(),
-            () => this._mountLobbyLeaderboardPanel(),
-            () => this._mountSeasonReportPanel(),
-            () => this._mountSandtableTerritoryPanel(),
         ];
         // 只在玩家點開時才用得到的彈窗／子畫面：大廳出現後再於背景掛載（PROG-2-9040）。
         // 大廳預先掛載數從 10 月的 6 個長到 60 多個，全部擋在載入遮罩前會讓進大廳越來越慢。
         this._deferredMounts = [
+            // 點開才用的選將／出陣／人物介紹／圖鑑類（PROG-2-9046）：排最前面，大廳出現後最先補齊；
+            // UIManager 控制器掛好才註冊，註冊前被點到時 open 回傳 false，不會當機
+            () => this._mountDeckSelect(),
+            () => this._mountLeadSelect(),
+            () => this._mountSortieSetup(),
+            () => this._mountCharacterDs3Host(),
+            async () => { await this._mountEliteTroopCodexPanel(); services().ui.register(UIID.EliteTroopCodex, this._createEliteTroopCodexController()); },
+            async () => { await this._mountLobbyMissionDetailDialogPanel(); services().ui.register(UIID.LobbyMissionDetailDialog, this._createLobbyMissionDetailDialogController()); },
+            async () => { await this._mountLobbyLeaderboardPanel(); services().ui.register(UIID.LobbyLeaderboard, this._createLobbyLeaderboardController()); },
+            async () => { await this._mountSeasonReportPanel(); services().ui.register(UIID.SeasonReport, this._createSeasonReportController()); },
+            async () => { await this._mountSandtableTerritoryPanel(); services().ui.register(UIID.SandtableTerritory, this._createSandtableTerritoryController()); },
             () => this._mountGraduationRecord(),
             () => this._mountAcademyGraduation(),
             () => this._mountClanShrine(),
@@ -883,6 +886,9 @@ export class LobbyScene extends Component {
     private async _runDeferredMounts(): Promise<void> {
         const mounts = this._deferredMounts;
         this._deferredMounts = [];
+        // 背景載入用右下角小進度條（PROG-2-9046）；離開大廳後下一個場景會重開進度條，這裡就不再碰它
+        SceneLoadProgress.beginBackground(LOBBY_BACKGROUND_LOAD_PHASE, mounts.length);
+        const ownsProgress = () => sceneLoadState.active && sceneLoadState.phase === LOBBY_BACKGROUND_LOAD_PHASE;
         for (let index = 0; index < mounts.length; index++) {
             if (!this.node?.isValid) return;
             try {
@@ -890,8 +896,11 @@ export class LobbyScene extends Component {
             } catch (error) {
                 UCUFLogger.error(LogCategory.UI, `[LobbyScene] 背景第 ${index} 個面板掛載失敗，已略過`, error);
             }
+            if (ownsProgress()) SceneLoadProgress.report(index + 1, mounts.length);
+            if (this._isOpeningInProgress()) this._keepOpeningOnTop();
             await new Promise<void>((resolve) => this.scheduleOnce(() => resolve(), 0));
         }
+        if (ownsProgress()) SceneLoadProgress.complete();
         this._keepOpeningOnTop();
     }
 
@@ -3166,8 +3175,8 @@ export class LobbyScene extends Component {
         }
         host.node.active = true;
         this._bringNodeToFront(host.node);
-        // 開場故事已能看，大廳在背景續載；不讓「正在準備大廳」進度條蓋在故事上（#2107-7）
-        SceneLoadProgress.complete();
+        // 開場故事已能看，大廳在背景續載；進度條縮到右下角小條，不蓋故事又能觀察（#2107-7、PROG-2-9046）
+        SceneLoadProgress.minimize();
         this._refreshIntro();
         this._scheduleIntroTick();
     }
@@ -5797,11 +5806,6 @@ export class LobbyScene extends Component {
         const bloodlineMirrorAwakeningController = this._createPreviewScreenController(this._bloodlineMirrorAwakeningHost, 'bloodline-mirror-awakening-screen');
         const bloodlineMirrorAscensionController = this._createPreviewScreenController(this._bloodlineMirrorAscensionHost, 'bloodline-mirror-ascension-screen');
         const bloodlineMirrorUnownedController = this._createPreviewScreenController(this._bloodlineMirrorUnownedHost, 'bloodline-mirror-unowned-screen');
-        const eliteTroopCodexController = this._createEliteTroopCodexController();
-        const missionDetailDialogController = this._createLobbyMissionDetailDialogController();
-        const leaderboardController = this._createLobbyLeaderboardController();
-        const seasonReportController = this._createSeasonReportController();
-        const sandtableTerritoryController = this._createSandtableTerritoryController();
 
         services().ui.register(UIID.LobbyMain, lobbyMainController);
         services().ui.register(UIID.GeneralList, generalListController);
@@ -5814,11 +5818,7 @@ export class LobbyScene extends Component {
         services().ui.register(UIID.BloodlineMirrorAwakening, bloodlineMirrorAwakeningController);
         services().ui.register(UIID.BloodlineMirrorAscension, bloodlineMirrorAscensionController);
         services().ui.register(UIID.BloodlineMirrorUnowned, bloodlineMirrorUnownedController);
-        services().ui.register(UIID.EliteTroopCodex, eliteTroopCodexController);
-        services().ui.register(UIID.LobbyMissionDetailDialog, missionDetailDialogController);
-        services().ui.register(UIID.LobbyLeaderboard, leaderboardController);
-        services().ui.register(UIID.SeasonReport, seasonReportController);
-        services().ui.register(UIID.SandtableTerritory, sandtableTerritoryController);
+        // 精兵圖鑑、任務詳情、排行榜、季報、沙盤的控制器在背景掛好後才註冊（PROG-2-9046）
     }
 
     private _createEliteTroopCodexController(): IUIManagedController {
@@ -6580,7 +6580,9 @@ export class LobbyScene extends Component {
 
     private async _openCharacterDs3FromListSelection(config: GeneralConfig): Promise<void> {
         if (!this._characterDs3Host) {
-            throw new Error('[LobbyScene] CharacterDs3Host 尚未初始化，無法開啟 DS3 人物頁');
+            // 人物頁改在大廳出現後背景掛載（PROG-2-9046）；剛進大廳一兩秒內點到只略過，不丟例外
+            UCUFLogger.warn(LogCategory.UI, '[LobbyScene] CharacterDs3Host 仍在背景載入，暫不開啟人物頁');
+            return;
         }
         this._characterDs3General = config;
         this._soulInjectArmedDeadUid = null;
