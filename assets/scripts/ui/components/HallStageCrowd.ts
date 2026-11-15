@@ -456,8 +456,8 @@ export class HallStageCrowd extends Component {
     }
 
     /**
-     * Spine 武將只有發呆中才接點擊（走動中的骨架判定框跟不上腳步）；靜態小人（通用步態）走動中也能點。
-     * 點到都是：停在原地、通知外面開對話，過一陣子自動放行繼續走。退場中的不接。
+     * 走動中、發呆中都接點擊（Spine 武將與靜態小人一致）：玩家點走路中的武將沒反應會以為功能壞了。
+     * 點到都是：停在原地（核心切回 idle，動畫由 _applyState 混接過去）、通知外面開對話，過一陣子自動放行繼續走。退場中的不接。
      */
     private _onBodyTap(generalId: string): void {
         const actor = this._actors.get(generalId);
@@ -468,10 +468,6 @@ export class HallStageCrowd extends Component {
             // 沒啟用走動：靜態小人本來就站著，點了直接通知外面
             if (!actor.skeleton) this._onActorTap?.(generalId);
             return;
-        }
-        if (actor.skeleton) {
-            const hit = wander.pickIdleAt(actor.state.x, actor.state.y, 1);
-            if (!hit || hit.id !== generalId) return;
         }
         wander.lockIdle(generalId);
         // 外面可回傳要停多久（自薦任務的對話框要開比較久）；沒回傳就用設定檔的泡泡秒數
