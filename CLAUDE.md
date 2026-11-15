@@ -60,3 +60,11 @@ node tools_node/task-lock.js lock <task-id> ClaudeCode_<model-name>
 - 協作協議：`.github/instructions/agent-collaboration.instructions.md (doc_ai_0009)`
 - 任務卡規則：`docs/agent-briefs/Readme.md (doc_ai_0023)`
 - Agent 手冊：`docs/agent-briefs/agent1-instructions.md (doc_ai_0019)`
+
+## 工作樹套件規則（PROG-2-9049，硬規則）
+
+- **禁止**在任何工作樹（Codex、Claude、手動 `git worktree add`）用 junction／symlink 把 `node_modules` 或 `extensions/cocos-mcp-server/node_modules` 連到主目錄。
+- 原因：工作樹被自動清理（Codex app 清工作樹、封存 Claude session、`git worktree remove --force`、`Remove-Item -Recurse`）時會穿透連結，把主目錄套件整個清空；2026-11-16 主目錄與 Cocos MCP 外掛套件因此被清空，編輯器 MCP 外掛無法載入。
+- 工作樹需要套件時，在工作樹內執行 `npm ci --prefer-offline`。
+- 檢查：`node tools_node/check-worktree-links.js`（發現連結會 exit 1）。拆除既有連結只能單獨執行 PowerShell `(Get-Item -LiteralPath <連結>).Delete()`，確認 `Test-Path` 為 False 後才可移除工作樹。
+- 主目錄套件被清空時：主目錄與 `extensions/cocos-mcp-server` 各跑一次 `npm ci`，再請使用者重啟 Cocos 編輯器外掛。
