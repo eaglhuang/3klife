@@ -109,5 +109,42 @@
       "trace_artifacts": [],
       "metrics_summary": []
     }
+  },
+  {
+    "doc_id": "doc_task_0361",
+    "id": "ATM-2-0057",
+    "title": "actors.json 只差時間戳不寫檔（身分使用不再弄髒主目錄）",
+    "owner": "ClaudeCode_claude-haiku-5-5",
+    "priority": "P1",
+    "status": "done",
+    "type": "governance",
+    "phase": "ATM-2",
+    "created": "2026-11-15",
+    "created_by_agent": "ClaudeCode_claude-haiku-5-5",
+    "started_at": "2026-11-15T14:30:15.976+08:00",
+    "started_by_agent": "ClaudeCode_claude-haiku-5-5",
+    "completed_at": "2026-11-15T14:35:55.740+08:00",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "ATM 框架封裝 payload 每次身分使用都重寫追蹤檔 .atm/catalog/registry/actors.json（generatedAt 與 updatedAt），內容未變卻常留未提交差異，擋住 ff-only 同步並造成多 Agent 衝突。以 repo 端守衛（atm.mjs 外包一層＋tools_node/atm-actor-registry-guard.js）在只差時間戳時還原原位元組；實質變化照常保留。上游寫檔問題於 PR 說明列出。",
+    "related": [
+      "ATM-2-0050"
+    ],
+    "depends": [],
+    "acceptance": [
+      "同一身分重複使用、內容不變時 actors.json 位元組完全不變（單元測試 AtmActorRegistryGuard 覆蓋）",
+      "實質變化（新增身分、改欄位）不被還原",
+      "通用規則，不特判任何身分",
+      "compute-gate standard 12/12、tsc -p tsconfig.test.json 0 錯、單元測試全過"
+    ],
+    "deliverables": [
+      "atm.mjs",
+      "tools_node/atm-actor-registry-guard.js",
+      "tests/AtmActorRegistryGuard.test.ts",
+      "docs/tasks/tasks-atm/tasks-atm-part-43.json",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0057.md"
+    ],
+    "notes": "2026-11-15 | 狀態: done | 驗證: compute-gate standard 12/12、tsc 0 錯、AtmActorRegistryGuard 6/6、全量單元測試 ALL PASS；控制組（原版 atm.mjs）確認 actors.json 只改兩組時間戳，守衛啟用後 git status 乾淨 | 變更: atm.mjs 外層守衛＋tools_node/atm-actor-registry-guard.js＋單元測試；上游寫檔問題見 PR 說明 | 阻塞: none"
   }
 ]
