@@ -1464,6 +1464,24 @@
             "qc": "使用者核准的生成原圖，像素原樣收錄；250px 預覽確認頭冠與下巴完整、臉部居中、肩線取景，無重繪或裁切。"
           }
         ]
+      },
+      "battle": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/sima_yi__司馬懿__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "bfd90a5e2dc12999a8a1c8e08ff4a945553e2d2fea3a046125337e061ff58027",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "feather fan",
+            "poseLabel": "轉身展袖，雙手控扇施策",
+            "poseSelection": "B",
+            "sourceStanding": "standing/sima_yi__司馬懿__standing_0002.png",
+            "note": "沿用使用者先前選定的 B 姿勢；藍紫文士服、羽扇與全身動勢完整入框。既有遠端圖檔，此次只補登 catalog。候選待審整合。"
+          }
+        ]
       }
     },
     {
