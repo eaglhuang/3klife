@@ -5069,7 +5069,12 @@ export class LobbyScene extends Component {
                 duration: 2,
             });
             if (quarterlyReports && quarterlyReports.length > 0) {
-                const payload: SeasonReportOpenPayload = { seasonLabel: seasonText(advance.current), reports: quarterlyReports };
+                // 關閉要走 UIManager，遮罩與堆疊才會一起收（PROG-2-9122）
+                const payload: SeasonReportOpenPayload = {
+                    seasonLabel: seasonText(advance.current),
+                    reports: quarterlyReports,
+                    onRequestClose: () => { void services().ui.close(UIID.SeasonReport); },
+                };
                 void services().ui.open(UIID.SeasonReport, payload);
             }
             this._openSeasonChronicle('season-advance');

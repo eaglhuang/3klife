@@ -1,4 +1,5 @@
 import { UCUFLogger, LogCategory } from '../utils/UCUFLogger';
+import { backdropIndexBelowOwner, isNodeShown, pickBackdropOwnerIndex } from './UIBackdropLayout';
 // @spec-source → 見 docs/cross-reference-index.md
 /**
  * UIManager.ts — 六層式 UI 管理器（M-1 分層架構 + M-2 快取協定）
@@ -92,7 +93,9 @@ export class UIManager {
         const controller = (layerOrController as any).show && !(layerOrController as any).node
             ? layerOrController as IUIManagedController
             : this._createLayerController(layerOrController as IUILayerLike);
-        this.registry.set(uiId, { uiId, controller, isOpen: false, wasCached: false });
+        const entry: UIEntry = { uiId, controller, isOpen: false, wasCached: false };
+        this.registry.set(uiId, entry);
+        this._watchEntryNode(entry);
     }
 
     /**
@@ -563,30 +566,57 @@ export class UIManager {
         };
     }
 
+    /**
+     * 遮罩擁有者：由低到高（主頁面 → 彈窗堆疊 → 對話框）中，最後一個「登記為開啟且節點真的顯示中」的。
+     * 只看登記狀態會被元件自己 hide() 騙到（遮罩殘留），所以一併檢查節點。
+     */
     private _getBackdropOwnerUiId(): UIID | null {
-        if (this.activeDialog) {
-            const activeDialogEntry = this.registry.get(this.activeDialog);
-            if (activeDialogEntry?.isOpen) {
-                return this.activeDialog;
+        const order: UIID[] = [];
+        if (this.currentUI) { order.push(this.currentUI); }
+        order.push(...this.popupStack);
+        if (this.activeDialog) { order.push(this.activeDialog); }
+
+        const index = pickBackdropOwnerIndex(order.map((uiId) => {
+            const entry = this.registry.get(uiId);
+            return { open: entry?.isOpen === true, shown: isNodeShown(entry?.controller.node) };
+        }));
+        return index >= 0 ? order[index] : null;
+    }
+
+    /**
+     * 登記時監看節點顯示狀態：元件自己 hide()（不經 close）時，立刻對齊登記狀態並重算遮罩。
+     * 只在節點自己的 active 被關掉時才改登記狀態；父層暫時隱藏（如換場景）不算關閉。
+     * 沒有事件系統的替身節點略過。
+     */
+    private _watchEntryNode(entry: UIEntry): void {
+        const node = entry.controller.node as Node | undefined;
+        if (!node || typeof node.on !== 'function') { return; }
+        node.on(Node.EventType.ACTIVE_IN_HIERARCHY_CHANGED, () => {
+            if (!node.isValid) { return; }
+            if (!node.active && entry.isOpen && this.registry.get(entry.uiId) === entry) {
+                this._markClosedExternally(entry);
+            }
+            this._syncUIBackdrop();
+        });
+    }
+
+    /** 節點被外部關掉：把登記狀態改成已關閉，並移出堆疊／對話框佇列，避免之後繼續當成最上層 */
+    private _markClosedExternally(entry: UIEntry): void {
+        const uiId = entry.uiId;
+        const cfg = UIConfig[uiId];
+        entry.isOpen = false;
+        entry.wasCached = cfg.cache === true;
+        const stackIndex = this.popupStack.indexOf(uiId);
+        if (stackIndex !== -1) { this.popupStack.splice(stackIndex, 1); }
+        if (this.activeDialog === uiId) {
+            this.activeDialog = null;
+            const nextId = this.dialogQueue.shift();
+            const nextEntry = nextId !== undefined ? this.registry.get(nextId) : undefined;
+            if (nextId !== undefined && nextEntry) {
+                this.activeDialog = nextId;
+                void this._showEntry(nextEntry);
             }
         }
-
-        for (let index = this.popupStack.length - 1; index >= 0; index -= 1) {
-            const popupUiId = this.popupStack[index];
-            const popupEntry = this.registry.get(popupUiId);
-            if (popupEntry?.isOpen) {
-                return popupUiId;
-            }
-        }
-
-        if (this.currentUI) {
-            const currentEntry = this.registry.get(this.currentUI);
-            if (currentEntry?.isOpen) {
-                return this.currentUI;
-            }
-        }
-
-        return null;
     }
 
     private _syncUIBackdrop(): void {
@@ -615,8 +645,8 @@ export class UIManager {
         const backdropNode = this._ensureUIBackdropNode(container);
         backdropNode.active = true;
         backdropNode.layer = container.layer;
-        backdropNode.setSiblingIndex(Math.max(0, hostNode.getSiblingIndex()));
-        hostNode.setSiblingIndex(backdropNode.getSiblingIndex() + 1);
+        // 遮罩緊貼擁有者正下方；擁有者自己不動，之後才被帶到前面的視窗仍在遮罩之上
+        backdropNode.setSiblingIndex(backdropIndexBelowOwner(hostNode.getSiblingIndex(), backdropNode.getSiblingIndex()));
 
         const backdropFill = (backdropNode.getComponent('SolidBackground') ?? backdropNode.addComponent('SolidBackground')) as any;
         backdropFill.color = new Color(0, 0, 0, 255);
