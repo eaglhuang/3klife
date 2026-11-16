@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-16T09:48:31.027Z",
+  "updatedAt": "2026-11-16T09:57:19.776Z",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -8755,6 +8755,23 @@
             "note": "New battle candidate; awaiting visual approval before runtime integration."
           }
         ]
+      },
+      "smallAvatar": {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/xu_shi__徐氏__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "8740b9c3d16ca9f60d60de82637e8c8b65ef5839976350b6e5acd2190e091963",
+            "canvas": "256x256 RGBA",
+            "sourceStanding": "standing/xu_shi__徐氏__standing_0002.png",
+            "cropBox": "x=352,y=0,w=298,h=298 (source 1024x1536)",
+            "qc": "Head occupies approximately 70% of canvas; face horizontally centered; complete hair ornament retained; crop ends at shoulder line.",
+            "note": "Crop-only proportional box-filter downscale from the approved standing portrait; awaiting visual approval."
+          }
+        ],
+        "activeVersion": "0001"
       }
     }
   ]
