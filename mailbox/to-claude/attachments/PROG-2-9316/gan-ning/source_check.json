@@ -1,0 +1,55 @@
+{
+  "schema": "chibi-rig-source-check.v1",
+  "generalId": "gan_ning",
+  "revision": "draft-03",
+  "files": {
+    "source": "work.png",
+    "weapons": [
+      {
+        "file": "weapon-near.png",
+        "hand": "near-side / image-left",
+        "gripPoint": {
+          "x": 760,
+          "y": 520,
+          "status": "visual draft anchor; pending rig-tool confirmation"
+        }
+      },
+      {
+        "file": "weapon-far.png",
+        "hand": "far-side / image-right",
+        "gripPoint": {
+          "x": 820,
+          "y": 540,
+          "status": "visual draft anchor; pending rig-tool confirmation"
+        }
+      }
+    ]
+  },
+  "sourceImage": {
+    "width": 577,
+    "height": 1250,
+    "format": "PNG RGBA",
+    "transparent": true,
+    "subjectBounds": {
+      "x": 20,
+      "y": 41,
+      "width": 537,
+      "height": 1204
+    },
+    "feetBottomRowZeroBased": 1244,
+    "pose": "neutral 3/4; both hands hold separate hand axes"
+  },
+  "weaponImages": {
+    "background": "#00FF00",
+    "type": "paired hand axes",
+    "gripAnchors": "pending rig-tool confirmation"
+  },
+  "acceptance": "NOT_RUN",
+  "failCount": null,
+  "warnings": [
+    "Project acceptance script tools/pipeline.py is absent in this checkout.",
+    "Face width, chest-to-face ratio, and lighting ratios pending formal measurement.",
+    "Grip anchor coordinates are visual draft anchors; confirm in rig tool.",
+    "Visual inspection only; no formal source acceptance claimed."
+  ]
+}
