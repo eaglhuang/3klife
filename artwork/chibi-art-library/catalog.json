@@ -200,12 +200,21 @@
       "id": "cao-cao",
       "name": "曹操",
       "source": {
-        "status": "missing",
-        "activeVersion": null,
-        "versions": []
+        "status": "source-pass",
+        "activeVersion": "0001",
+        "versions": [
+          {
+            "version": "0001",
+            "file": "source/cao-cao__曹操__chibi_0001.png",
+            "sha256": "1e99c1c889f9102a510bfe23f70ca8e9f34984530221bc3231036182d6407d8b",
+            "status": "source-pass",
+            "createdAt": "2026-11-17T02:22:18+08:00",
+            "note": "577x1250 RGBA; candidate ratio gate PASS; chin-to-boot 623px; one-hand straight sword."
+          }
+        ]
       },
       "cutout": {
-        "status": "not-started",
+        "status": "pending",
         "activeVersion": null,
         "versions": []
       }

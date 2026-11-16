@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "characterId": "cao-cao",
+  "name": "曹操",
+  "sourceVersion": "0001",
+  "sourceFile": "artwork/chibi-art-library/source/cao-cao__曹操__chibi_0001.png",
+  "sha256": "1e99c1c889f9102a510bfe23f70ca8e9f34984530221bc3231036182d6407d8b",
+  "canvas": "577x1250 RGBA",
+  "pipeline": "candidate source_check + spine-trial/tools/source_art_check.py (generic; Cao Cao character config not yet provisioned)",
+  "status": "source-pass",
+  "measurements": {
+    "faceBoxPx": [
+      264,
+      482,
+      134,
+      140
+    ],
+    "chinToBootPx": 623,
+    "chinToBootTargetPx": [
+      591,
+      653
+    ],
+    "baselineY": 1245,
+    "placement": "centered; uniform scale only; feet at y=1245",
+    "weapon": "straight sword, one hand"
+  },
+  "warnings": [
+    "Cao Cao 尚無 spine-trial characters/cao_cao/char.json，因此未能執行其角色專屬 pipeline accept-source；需先建立角色切件設定。"
+  ],
+  "visualReview": {
+    "style": "PASS — matched against Gan Ning chibi reference",
+    "identity": "PASS — matched to latest standing art reference",
+    "animationCutout": "PENDING — per-character masks/clean base not present in cutter scaffold",
+    "frameAndTransparency": "PASS — transparent 577x1250 canvas; whole figure inside safe frame",
+    "limbsAndGrip": "PASS — complete hands, feet, weapon grip and weapon"
+  },
+  "cutout": {
+    "status": "pending",
+    "reason": "曹操專屬 clean base 與切片遮罩尚未建立；劍及持握手需獨立遮罩。"
+  },
+  "createdAt": "2026-11-17T02:22:18+08:00"
+}
