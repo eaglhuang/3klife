@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-16T08:41:41.334Z",
+  "updatedAt": "2026-11-16T09:08:27.338Z",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -2638,6 +2638,21 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/deng_ai__鄧艾__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "8F0754B3CF2705F4C13F6A330E11E23C0D2D6879A23A6F543200D52244EBF54B",
+            "canvas": "1024x1536 RGBA",
+            "pose": "AI建議：低位轉身向上斜斬（長柄刀）",
+            "qc": "125px preview: full figure, face, hands, boots and blade readable; alpha silhouette fits central 75% width; clean transparent background; review candidate."
+          }
+        ]
       }
     },
     {
