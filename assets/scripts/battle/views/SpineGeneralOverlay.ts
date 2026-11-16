@@ -45,6 +45,9 @@ export class SpineUnitOverlay {
     return !!entry.node?.isValid;
   }
 
+  /** 這份素材是否已確定載不起來（缺檔或缺共用動作）；呼叫端據此改用後備素材，不讓單位退回方塊。 */
+  public hasFailed(path: string): boolean { return this.failed.has(path); }
+
   public update(dt: number): void {
     const controlled = this.duel?.ids;
     if (this.duel) {
