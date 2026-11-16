@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-16T06:13:07Z",
+  "updatedAt": "2026-11-16T06:22:28Z",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -6817,6 +6817,20 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/liu_ba__劉巴__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "0c2e9e448424b98ccf7b4fd33d4ae68991df9456e37a5163094a3868de3a9565",
+            "canvas": "1024x1536 PNG",
+            "note": "依《三國志》劉巴傳「凡諸文誥策命，皆巴所作也」記載設計；以竹簡展令、提筆定策呈現，非持兵器姿勢。候選待審。"
+          }
+        ]
       }
     },
     {
