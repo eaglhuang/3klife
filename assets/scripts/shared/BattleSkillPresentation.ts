@@ -15,6 +15,12 @@ const DEFAULT_PRESENTATION: BattleSkillPresentation = {
 };
 
 const PRESENTATION_BY_SKILL_ID: Record<string, BattleSkillPresentation> = {
+  // 通用奧義；id 與名稱要和 GAME_CONFIG.genericUltimate 一致（共用層不引用 Constants，所以這裡寫字面值）
+  'generic-all-out-charge': {
+    name: '全軍突擊',
+    categoryTag: '突擊',
+    effectStatus: '【突擊】全軍突擊：全軍齊攻，敵軍全體受創',
+  },
   'zhang-fei-roar': {
     name: '震軍怒喝',
     categoryTag: '控制',

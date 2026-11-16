@@ -1,5 +1,5 @@
 // @spec-source → 戰法系統.md (doc_spec_0038)、兵種（虎符）系統.md (doc_spec_0012)；PROG-2-1429 依建檔紀錄補標出處
-import { StatusEffect, Weather } from '../../core/config/Constants';
+import { GAME_CONFIG, StatusEffect, Weather } from '../../core/config/Constants';
 import { RULED_EXTRA_TALLY_SKILL_IDS, TIGER_TALLY_PENDING_SKILL_IDS } from '../../core/config/TigerTallySpecTactics';
 import { BattleSkillAutoAimMode, BattleSkillTargetMode, type SkillScalingStat } from '../../shared/SkillRuntimeContract';
 
@@ -92,6 +92,17 @@ export interface BattleSkillProfile {
 }
 
 const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
+  // 通用奧義「全軍突擊」：沒有專屬奧義的主將用的退路，全屏傷害、不附帶任何狀態（PROG-2-9326）
+  [GAME_CONFIG.genericUltimate.skillId]: {
+    battleSkillId: GAME_CONFIG.genericUltimate.skillId,
+    targetMode: BattleSkillTargetMode.EnemyAll,
+    manualTargeting: false,
+    autoAimMode: 'all-enemies',
+    effectKind: 'damage',
+    coefficient: GAME_CONFIG.genericUltimate.coefficient,
+    scalingStat: 'str',
+    battleLogKey: 'skill.generic_all_out_charge.hit',
+  },
   'zhang-fei-roar': {
     battleSkillId: 'zhang-fei-roar',
     targetMode: BattleSkillTargetMode.EnemyAll,

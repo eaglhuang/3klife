@@ -8,7 +8,7 @@ import { ancestorSignatureSkillOf } from '../shared/AncestralSpirit';
 import { assetManager, AudioClip } from "cc";
 import { services } from "../../core/managers/ServiceLoader";
 import { GeneralUnit, GeneralConfig } from "../../core/models/GeneralUnit";
-import { Faction } from "../../core/config/Constants";
+import { Faction, GAME_CONFIG } from "../../core/config/Constants";
 import type { UltimateEffectFamily, UltimateSpecialRuleDef } from "../../shared/SkillRuntimeContract";
 import type { CreateSortieInput } from '../../core/systems/SortieDeploy';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
@@ -576,7 +576,9 @@ export function buildUltimateSkills(general: GeneralUnit): UltimateSkillItem[] {
   }
 
   if (!general.skillId) {
-    return [];
+    // 沒有奧義槽也沒有主技能：給通用奧義，選單不再只顯示「未配置奧義」（PROG-2-9326）
+    const generic = GAME_CONFIG.genericUltimate;
+    return [{ skillId: generic.skillId, label: generic.name, costSp: general.maxSp }];
   }
   const skillDef = services().action.getSkill(general.skillId);
   return [{

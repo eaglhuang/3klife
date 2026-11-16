@@ -590,6 +590,8 @@ export class BattleController {
     // 主將自帶的戰法一定要付得起：上限不夠就墊高到該戰法的成本
     const sortieInput = this._tutorialBattle ? { ...input, tutorialPoolMin: GAME_CONFIG.tutorialSortiePoolMin } : input;
     this.sortie = ensureTacticCapCovers(createSortieState(sortieInput), getTacticTpCost(this.resolveSeedTacticId({})));
+    // 教學戰開場計謀點給滿，第一回合就放得出計謀（PROG-2-9326）；要在墊高上限之後補，才補得到墊高後的上限
+    if (this._tutorialBattle && GAME_CONFIG.tutorialStartTacticFull) this.sortie = { ...this.sortie, tacticCurrent: this.sortie.tacticMax };
     services().battle.configureFood({ initial: this.sortie.food, max: this.sortie.maxFood, perTurn: 0 });
     return this.sortie;
   }
