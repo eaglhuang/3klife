@@ -469,6 +469,7 @@ export class LobbyScene extends Component {
     /** 立繪框換人時，新圖載完前先藏舊圖（PROG-2-2236） */
     private readonly _portraitSwap = new PortraitSwapGuard();
     private _fastForwarding = false;
+    private _advancingSeason = false;
     private _recruitHost: UIScreenPreviewHost | null = null;
     private _recruit: RecruitHallController | null = null;
     private _rivalHost: UIScreenPreviewHost | null = null;
@@ -1477,7 +1478,6 @@ export class LobbyScene extends Component {
             battle: () => this.onClickEnterBattle(),
             rival: () => this._openRivalDiplomacy(),
             floodBattle: () => this.onClickFloodBattle(),
-            lobbyHall: () => this._openLobbyHall(),
             generalList: () => this.onClickGeneralList(),
             mercenary: () => this.openMercenaryPanel(),
             bonding: () => { void this._openBondingSetup(); },
@@ -3698,9 +3698,8 @@ export class LobbyScene extends Component {
         this._lobbyHall = new LobbyHallScreenBinder(host.node, {
             themeConfig,
             fxConfig,
-            onBack: () => {
-                services().event.emit('SHOW_TOAST', { message: '主公已在幕府大堂坐鎮' });
-            },
+            // 大廳不會關閉，右上角原本的「返回」沒有作用；改成換季入口（PROG-2-9116）
+            onAdvanceSeason: () => { void this._onClickAdvanceSeason(); },
             onDock: dock,
             onPanel: (id) => panels[id](),
             // Q 版武將人群（UI-2-0150）：只有毛遂自薦者與輪替的 2~3 位我方武將會在場（Issue #2135）
@@ -5015,6 +5014,9 @@ export class LobbyScene extends Component {
     }
 
     private async _onClickAdvanceSeason(): Promise<void> {
+        // 換季結算是非同步的，連點不重入（PROG-2-9116：大廳右上角也接這個入口）
+        if (this._advancingSeason) return;
+        this._advancingSeason = true;
         try {
             const { advance, agingEvents, quarterlyReports } = await this._advanceSeasonWithSalaries();
             const died = agingEvents.filter((event) => event.type === 'died').length;
@@ -5033,6 +5035,8 @@ export class LobbyScene extends Component {
         } catch (error) {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 推進季度失敗', error);
             services().event.emit('SHOW_TOAST', { message: '推進季度失敗', duration: 2 });
+        } finally {
+            this._advancingSeason = false;
         }
     }
 
