@@ -6,20 +6,24 @@ import { Faction } from '../assets/scripts/core/config/Constants';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
 
 function phase(turn: number, tutorialBattle?: boolean, difficultyBonus = 0, boss = false) {
-    let requested = -1, guards = 0;
+    let requested = -1, guards = 0, budget = -1;
     const state = { bossGuardSummoned: false,
         getGeneral: () => boss ? { id: 'lu-bu', name: '呂布', currentHp: 50, maxHp: 100, isDead: () => false } : null,
         getCell: () => null };
     executeBattleEnemyDeployPhase({ state, turn, tutorialBattle, difficultyBonus,
-        enemyAi: { decideDeploy: (_s: unknown, _f: number, count: number) => { requested = count; return []; } },
-        turnManager: { enemyFood: 1000 }, spawnEnemyUnit: () => { guards++; }, isCellMovementBlocked: () => false } as any);
-    return { requested, guards, summoned: state.bossGuardSummoned };
+        enemyAi: { decideDeploy: (_s: unknown, f: number, count: number) => { requested = count; budget = f; return []; } },
+        turnManager: { enemyFood: 30 }, spawnEnemyUnit: () => { guards++; }, isCellMovementBlocked: () => false } as any);
+    return { requested, guards, budget, summoned: state.bossGuardSummoned };
 }
 export function createTutorialBattleWavesSuite(): TestSuite {
     const suite = new TestSuite('TutorialBattleWaves');
     suite.test('教學照波次表出兵：第1回合不出，第2、3回合各2隊，第4到7回合各1隊，共8隊，之後不再增援（PROG-2-9324、PROG-2-9325、PROG-2-9330、PROG-2-9344）', () => {
         assert.equals('0,2,2,1,1,1,1,0,0,0,0,0', Array.from({ length: 12 }, (_, i) => phase(i + 1, true).requested).join(','));
         assert.equals(0, phase(50, true).requested);
+    });
+    suite.test('教學戰出兵不被敵軍糧草卡住，一般戰照糧草（PROG-2-9346）', () => {
+        assert.equals(Number.POSITIVE_INFINITY, phase(3, true).budget);
+        assert.equals(30, phase(3, false).budget);
     });
     suite.test('教學不受高難度加成增加波次', () => {
         assert.equals(0, phase(1, true, 2).requested);

@@ -59,6 +59,15 @@ export function createTacticConditionButtonSuite(): TestSuite {
         assert.equals('待風', item.shortReason ?? '');
     });
 
+    suite.test('天氣擋下火計時，按鈕照樣寫「待風」而不是「受限」（PROG-2-9347）', () => {
+        const [item] = buildTacticAvailability(
+            [{ id: 'zhou-yu-inferno', label: '火攻', tags: ['fire'], unmetCondition: { kind: 'weather', allowed: [Weather.Windy] } }],
+            { ...READY, weather: Weather.Rain });
+        assert.isFalse(item.enabled);
+        assert.equals('天氣禁用', item.reason ?? '');
+        assert.equals('待風', item.shortReason ?? '');
+    });
+
     suite.test('原因優先序：計謀點不足排在戰法條件前面', () => {
         const [item] = buildTacticAvailability(
             [{ id: 'zhou-yu-inferno', label: '火攻', tags: [], unmetCondition: { kind: 'weather', allowed: [Weather.Windy] } }],

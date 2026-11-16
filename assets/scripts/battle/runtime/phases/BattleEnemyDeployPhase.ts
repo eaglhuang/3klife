@@ -33,12 +33,14 @@ export interface BattleEnemyDeployPhaseContext {
 
 export function executeBattleEnemyDeployPhase(context: BattleEnemyDeployPhaseContext): void {
   // 教學限定：出兵數照 GAME_CONFIG.tutorialEnemyDeployByTurn 的波次表，表外的回合不再補兵。
-  // 不改兵種數值、糧草、主將、基地血量或一般戰鬥難度公式。
+  // 不改兵種數值、主將、基地血量或一般戰鬥難度公式。
   const deployCount = context.tutorialBattle
     ? (GAME_CONFIG.tutorialEnemyDeployByTurn[context.turn - 1] ?? 0)
     : getAIDeployCount({ difficultyBonus: context.difficultyBonus }, context.turn);
   const meetPlayerLane = !!context.tutorialBattle && GAME_CONFIG.tutorialEnemyMeetsPlayerLane;
-  const decisions = context.enemyAi.decideDeploy(context.state, context.turnManager.enemyFood, deployCount, { meetPlayerLane });
+  // 教學戰的波次表就是劇本：出兵數不再被敵軍糧草卡住，否則表上寫 8 隊實際只出得了 6 隊（PROG-2-9346）
+  const deployBudget = context.tutorialBattle ? Number.POSITIVE_INFINITY : context.turnManager.enemyFood;
+  const decisions = context.enemyAi.decideDeploy(context.state, deployBudget, deployCount, { meetPlayerLane });
   const spawnedLanes: number[] = [];
   const deployDepth = GAME_CONFIG.GRID_DEPTH - 1;
   if (!context.tutorialBattle) summonBossGuard(context, deployDepth);
