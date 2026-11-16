@@ -4995,6 +4995,24 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/zhang_jue__張角__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "ee1be35a38791fc09059104d46fe726f854e2f091d5898626009d0a675b80907",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "staff",
+            "sourceStanding": "standing/zhang_jue__張角__standing_0002.png",
+            "poseSelection": "斜杖防守反擊瞬間，雙腳穩固、軀幹扭轉，另一手控卷",
+            "gaze": "三分之四側臉，目光看向鏡頭",
+            "qc": "候選版；直杖與握點自然，透明通道存在；alpha>=8 輪廓量測為 x=210–769，符合中央 75% 寬度。姿勢與背景邊緣仍待人工確認。"
+          }
+        ],
+        "activeVersion": "0001",
+        "status": "review-pending"
       }
     },
     {
