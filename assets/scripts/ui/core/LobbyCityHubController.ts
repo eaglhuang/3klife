@@ -107,6 +107,31 @@ export function computeSubMenuWidth(visibleCount: number): number {
     return Math.min(900, Math.max(192, 16 + count * 160 + (count - 1) * 12 + 16));
 }
 
+/** SubMenu 內部版面常數：與 lobby-city-hub-main.json 的 BtnSub0..4 / SubMenuTitle 保持一致 */
+export const SUB_MENU_PAD = 16;
+export const SUB_MENU_BTN_W = 160;
+export const SUB_MENU_BTN_GAP = 12;
+
+export interface SubMenuLayout {
+    /** 面板寬度（等同 computeSubMenuWidth） */
+    readonly width: number;
+    /** 每顆可見按鈕左緣相對面板左緣的距離（Widget.left） */
+    readonly buttonLefts: readonly number[];
+    /** 標題左右邊距（Widget.left / right） */
+    readonly titleInset: number;
+}
+
+/**
+ * 依可見按鈕數算出 SubMenu 內部每顆按鈕的位置。按鈕群寬度 = 面板寬 - 左右邊距，
+ * 因此左右邊距對稱、間距一致；隱藏的按鈕不佔位（只回傳可見數量）。純函式，只在可見數量變動時呼叫。
+ */
+export function computeSubMenuLayout(visibleCount: number): SubMenuLayout {
+    const count = Math.max(0, Math.floor(visibleCount));
+    const buttonLefts: number[] = [];
+    for (let i = 0; i < count; i++) buttonLefts.push(SUB_MENU_PAD + i * (SUB_MENU_BTN_W + SUB_MENU_BTN_GAP));
+    return { width: computeSubMenuWidth(count), buttonLefts, titleInset: SUB_MENU_PAD };
+}
+
 function num(value: number): string {
     return Math.max(0, Math.floor(value)).toLocaleString('zh-TW');
 }
