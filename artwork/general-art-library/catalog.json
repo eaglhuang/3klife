@@ -1318,7 +1318,8 @@
             "file": "battle/zhang_fei__張飛__battle_0002.png",
             "status": "review-pending"
           }
-        ]
+        ],
+        "activeVersion": "0002"
       },
       "avatar": {
         "status": "integrated",
