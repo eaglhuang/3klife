@@ -68,9 +68,11 @@ const PAGE_EXTRA_SRC = `window.__bqx = (() => {
   };
   const mouseOn = (type, x, y) => canvasEl().dispatchEvent(new MouseEvent(type, { clientX: x, clientY: y, button: 0, buttons: type === 'mouseup' ? 0 : 1, bubbles: true, cancelable: true }));
   const click = (x, y) => { mouseOn('mousedown', x, y); mouseOn('mouseup', x, y); };
+  // 比對前把連續空白（含換行）壓成一個空白：快照的文字就是這樣正規化的，兩行字的按鈕（計謀＋點數）才點得到
+  const norm = (t) => t.split(/\\s+/).filter(Boolean).join(' ');
   const tapText = (text, pick) => {
-    const hits = [];
-    window.__bq.walk(cc.director.getScene(), (n) => { for (const c of n.components || []) { if (typeof c.string === 'string' && c.string.trim() === text && window.__bq.visible(n)) hits.push(n); } return false; });
+    const hits = []; const want = norm(text);
+    window.__bq.walk(cc.director.getScene(), (n) => { for (const c of n.components || []) { if (typeof c.string === 'string' && norm(c.string) === want && window.__bq.visible(n)) hits.push(n); } return false; });
     if (!hits.length) return false;
     const idx = pick === undefined || pick < 0 ? hits.length + (pick === undefined ? -1 : pick) : pick;
     const [x, y] = nodeClient(hits[idx]); click(x, y); return true;
@@ -617,13 +619,14 @@ async function maybeTactic(page, opt, s, turnRec) {
       points: p.current, enabled: p.enabled, pending: pend ? pend.targetMode : null };
   });
   const before = new Set(s.texts);
+  let rec0Tapped = false;
   const state0 = await probe();
-  await tapText(page, label);
+  rec0Tapped = await tapText(page, label);
   // 提示是短暫的 Toast：每 0.3 秒看一次，把出現過的新文字都收起來
   const fresh = new Set();
   for (let i = 0; i < 5; i += 1) { await sleep(300); (await ev(page, pageSnapshot)).texts.filter((t) => !before.has(t)).forEach((t) => fresh.add(t)); }
   let state1 = await probe();
-  const rec = { turn: turnRec.turn, label: label.replace(/\s+/g, ' '), newTexts: [...fresh].slice(0, 8), before: state0, afterTap: state1, target: null, after: null };
+  const rec = { turn: turnRec.turn, label: label.replace(/\s+/g, ' '), tapped: rec0Tapped, newTexts: [...fresh].slice(0, 8), before: state0, afterTap: state1, target: null, after: null };
   if (!rep.tactics.length) await shot(page, opt, 'tactic-after-tap');
   if (state1 && state1.pending) {
     // 進入選目標：敵方類點最前面的敵軍，其餘點我方第一隊
@@ -652,8 +655,8 @@ async function maybeTactic(page, opt, s, turnRec) {
         out.needsSp = c.seedTacticNeedsSp(); out.sp = pg ? pg.currentSp + '/' + pg.maxSp : null;
         out.hasSortie = !!c.sortie; out.flow = c.flowStateMachine && (c.flowStateMachine.state || c.flowStateMachine.current || null);
         out.hasTurnFlow = !!b.turnFlowManager; out.hasTargetingFlow = !!b.skillTargetingFlow;
-        const dry = c.castBattleSkill(pg.faction, { battleSkillId: d.skillId, tacticId: d.tacticId, targetMode: d.targetMode });
-        out.dry = { applied: dry.applied, blockedReason: dry.blockedReason || null, log: (dry.battleLogLines || []).slice(0, 3) };
+        // 不直接呼叫 castBattleSkill：那會真的結算一次又不扣點，等於白送玩家一招，戰況就失真了
+        out.descriptor = d ? { skillId: d.skillId, tacticId: d.tacticId, targetMode: d.targetMode } : null;
       } catch (e) { out.error = String(e && e.message || e); }
       return out;
     });

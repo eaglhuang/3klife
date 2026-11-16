@@ -76,3 +76,32 @@ export function evaluateCasterTacticConditions(
         adjacentEnemies: input.adjacentEnemies,
     });
 }
+
+const WEATHER_NEED_TEXT: Readonly<Record<string, { full: string; short: string }>> = {
+    SUNNY: { full: '晴天', short: '晴' },
+    RAINY: { full: '下雨', short: '雨' },
+    FOG: { full: '起霧', short: '霧' },
+    WINDY: { full: '起風', short: '風' },
+    NIGHT: { full: '夜晚', short: '夜' },
+    THUNDER: { full: '打雷', short: '雷' },
+};
+
+/**
+ * 把沒達成的條件寫成玩家看得懂的字（PROG-2-9333）。
+ * full 給提示訊息用；short 固定兩個字，給寬度只有兩個字的計謀鈕第二行用。
+ */
+export function describeTacticCondition(condition: TacticCondition): { full: string; short: string } {
+    switch (condition.kind) {
+        case 'weather': {
+            const names = condition.allowed.map((weather) => WEATHER_NEED_TEXT[weather]).filter((item) => !!item);
+            if (names.length === 0) return { full: '天氣不符', short: '天氣' };
+            return { full: `需要${names.map((item) => item.full).join('或')}`, short: `待${names[0].short}` };
+        }
+        case 'adjacentCount':
+            return condition.side === 'enemy'
+                ? { full: `身邊要有 ${condition.min} 隊敵軍`, short: '缺敵' }
+                : { full: `身邊要有 ${condition.min} 隊友軍`, short: '缺友' };
+        case 'troopType':
+            return { full: '兵種不符', short: '兵種' };
+    }
+}

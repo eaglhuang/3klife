@@ -25,7 +25,7 @@ import { ULTIMATE_READY_PULSE, ultimateRingState } from '../../core/systems/Ulti
 import { EVENT_NAMES, Faction } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
 import { CompositePanel } from '../core/CompositePanel';
-import { TACTIC_REASON_WEATHER } from '../core/TacticAvailabilityPresenter';
+import { TACTIC_REASON_NO_POINTS, TACTIC_REASON_WEATHER } from '../core/TacticAvailabilityPresenter';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UltimateSelectPopup, UltimateSkillItem, UNASSIGNED_ULTIMATE_SKILL_ID } from './UltimateSelectPopup';
 import { markUsedUltimates, ultimateUsageKey } from '../core/UltimateUsage';
@@ -134,12 +134,17 @@ export class ActionCommandComposite extends CompositePanel {
         this._usedUltimateSkillIds.clear();
     }
 
-    public setTacticSummary(label: string, points?: { current?: number; max?: number; enabled: boolean }, reason?: string | null): void {
+    public setTacticSummary(label: string, points?: { current?: number; max?: number; enabled: boolean }, reason?: string | null, shortReason?: string): void {
         // 不能施放時顯示原因（PROG-2-0408），否則顯示計點
         this._tacticsSummaryLabel = (label.trim() || '計謀') +
             (reason ? `\n${reason}` : points?.current !== undefined ? `\n點 ${points.current}/${points.max}` : '');
-        this._tacticsButtonCaption = reason ? '計謀\n受限'
-            : points?.current !== undefined ? `計謀\n${points.current > 99 ? '99+' : `${Math.max(0, Math.floor(points.current))}點`}` : '計謀';
+        // 有兩個字的原因就直接寫在按鈕上（例如「待風」），沒有才寫「受限」（PROG-2-9333）
+        // 點數不夠時照樣寫目前點數（灰字），玩家才看得到還差多少，不會只看到「受限」
+        const pointText = points?.current !== undefined
+            ? (points.current > 99 ? '99+' : `${Math.max(0, Math.floor(points.current))}點`) : null;
+        this._tacticsButtonCaption = reason === TACTIC_REASON_NO_POINTS && pointText ? `計謀\n${pointText}`
+            : reason ? `計謀\n${shortReason || '受限'}`
+            : pointText ? `計謀\n${pointText}` : '計謀';
         this._tacticEnabled = points?.enabled ?? true;
         // 天氣禁用：變灰但保留點擊，讓點擊後的天氣 Toast 出得來（PROG-2-0597）
         this._tacticClickable = this._tacticEnabled || reason === TACTIC_REASON_WEATHER;

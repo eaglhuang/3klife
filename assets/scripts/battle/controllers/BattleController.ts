@@ -730,6 +730,11 @@ export class BattleController {
   }
 
   /** 計謀是否還要主將 SP 滿：有出征帳本時只扣計謀點（PROG-2-9323）；沒有帳本時沒有點數可扣，照舊用 SP 把關。 */
+  /** 我方計謀目前沒達成的施放條件（例如火攻要起風）；可以施放時回 null。計謀鈕用它反灰並寫出條件（PROG-2-9333） */
+  public getPlayerSeedTacticUnmetCondition(): TacticCondition | null {
+    return this.skillDispatcher.findUnmetGeneralTacticCondition(Faction.Player, this.resolveSeedTacticId({}));
+  }
+
   public seedTacticNeedsSp(): boolean {
     return GAME_CONFIG.seedTacticRequiresFullSp || !this.sortie;
   }
