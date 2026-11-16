@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "characterId": "zhuge-liang",
+  "name": "諸葛亮",
+  "sourceVersion": "0001",
+  "sourceFile": "artwork/chibi-art-library/source/zhuge-liang__諸葛亮__chibi_0001.png",
+  "sha256": "a1d88e7c41467c0bfaca7f6210756bb9aff5b46990b74996886e0f0788c9fbd5",
+  "canvas": "577x1250 RGBA",
+  "pipeline": "C:/Users/User/spine-trial/tools/pipeline.py accept-source zhuge_liang",
+  "status": "source-pass",
+  "measurements": {
+    "faceBoxPx": [
+      225,
+      495,
+      162,
+      127
+    ],
+    "chinToBootPx": 623,
+    "chinToBootTargetPx": [
+      591,
+      653
+    ],
+    "baselineY": 1245,
+    "placement": "centered; uniform scale only; feet at y=1245",
+    "weapon": "feather fan only"
+  },
+  "warnings": [
+    "臉部轉向自動指標 WARN；依修訂規則配合候選視覺檢查與全身比例判讀。"
+  ],
+  "visualReview": {
+    "style": "PASS — matched against Gan Ning chibi reference",
+    "identity": "PASS — matched to latest standing art reference",
+    "animationCutout": "PENDING — per-character masks/clean base not present in cutter scaffold",
+    "frameAndTransparency": "PASS — transparent 577x1250 canvas; whole figure inside safe frame",
+    "limbsAndGrip": "PASS — complete hands, feet, weapon grip and weapon"
+  },
+  "cutout": {
+    "status": "pending",
+    "reason": "諸葛亮專屬羽扇、手部遮擋及袖袍切片遮罩未建立；不可套用他人遮罩。"
+  },
+  "createdAt": "2026-11-17T02:22:18+08:00"
+}

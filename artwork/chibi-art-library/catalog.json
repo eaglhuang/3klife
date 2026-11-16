@@ -23,18 +23,21 @@
       "id": "zhuge-liang",
       "name": "諸葛亮",
       "source": {
-        "status": "reference-only",
-        "activeVersion": null,
-        "versions": [],
-        "runtimeReference": {
-          "file": "references/runtime-existing/zhuge_liang__諸葛亮__chibi_runtime_0001.png",
-          "origin": "assets/resources/sprites/generals/chibi/zhuge_liang_chibi.png",
-          "sha256": "c0721db91e660ebc481ba23d5cbb841a4e17cf6e12624f2250cd9fed265798e7",
-          "note": "像素原樣複製的既有遊戲貼圖；低解析度參考，尚非核定的高解析度切割母圖。"
-        }
+        "status": "source-pass",
+        "activeVersion": "0001",
+        "versions": [
+          {
+            "version": "0001",
+            "file": "source/zhuge-liang__諸葛亮__chibi_0001.png",
+            "sha256": "a1d88e7c41467c0bfaca7f6210756bb9aff5b46990b74996886e0f0788c9fbd5",
+            "status": "source-pass",
+            "createdAt": "2026-11-17T02:22:18+08:00",
+            "note": "577x1250 RGBA; pipeline accept-source PASS; chin-to-boot 623px; feather fan."
+          }
+        ]
       },
       "cutout": {
-        "status": "not-started",
+        "status": "pending",
         "activeVersion": null,
         "versions": []
       }
