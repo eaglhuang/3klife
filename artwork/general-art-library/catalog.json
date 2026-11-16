@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-16T09:15:53.353Z",
+  "updatedAt": "2026-11-16T09:20:14.282Z",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -1989,6 +1989,27 @@
             "sourceStanding": "standing/zhang_liao__張遼__standing_0002.png",
             "poseLabel": "轉身斜斬，前踏壓陣",
             "note": "保留藍銀札甲、紅藍高馬尾與原立姿長柄偃月刃；單純等比例縮放至中央安全區。"
+          }
+        ]
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/zhang_liao__張遼__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "C9B786A53AD575111457F1D8E39E78ED7A255A3FE17961BE291485F838498AC3",
+            "canvas": "256x256 RGBA",
+            "sourceStanding": "standing/zhang_liao__張遼__standing_0002.png",
+            "crop": {
+              "x": 397,
+              "y": 127,
+              "width": 328,
+              "height": 328
+            },
+            "note": "從正式站姿等比例裁切，頭盔完整；臉部水平置中，頭部約佔畫面七成以上；僅見肩線上緣，未重畫或改造型。"
           }
         ]
       }
