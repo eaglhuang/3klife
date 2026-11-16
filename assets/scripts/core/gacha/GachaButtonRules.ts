@@ -99,7 +99,8 @@ export function syncMainPoolCosts(pools: readonly GachaMainPoolConfig[], configs
         const cfg = (configs ?? []).find((entry) => entry.poolId === pool.poolId);
         const cost = cfg?.singlePullCost ?? 0;
         if (!cfg || normalizeGachaPoolType(cfg.poolType) !== 'heroine' || cfg.currencyType !== 'gem' || !(cost > 0)) return pool;
-        return { ...pool, currencies: ['gems'], singleCost: cost, tenCost: cost * 10 };
+        // 說明文字跟著實際扣的貨幣走：資料檔寫「使用召喚券」，改靈玉計價後說明也要寫靈玉
+        return { ...pool, currencies: ['gems'], singleCost: cost, tenCost: cost * 10, brief: pool.brief.replace(/召喚券/g, '靈玉') };
     });
 }
 

@@ -48,6 +48,17 @@ function spacedName(name: string): string {
     return name.length === 2 ? `${name[0]} ${name[1]}` : name;
 }
 
+/**
+ * 橫幅主角武將：名字、立繪、說明框都從這一個函式取（PROG-2-9118）。
+ * 限定池＝本期焦點武將；其他池＝池設定的展示武將。
+ */
+export function gachaHeroIdOf(pool: GachaPoolDef, dto: GachaPoolDto): string | null {
+    return (pool.key === 'limited' ? dto.featuredGeneralIds[0] : dto.showcaseGeneralId) ?? null;
+}
+
+/** 十連鈕下方的保底小字節點（原稿 GachaDs3_div_37） */
+export const GACHA_TEN_NOTE_NODE = 'GachaDs3_div_37';
+
 export function gachaApiView(
     pool: GachaPoolDef,
     dto: GachaPoolDto,
@@ -62,7 +73,7 @@ export function gachaApiView(
     // 「我的餘額」顯示下一次單抽會扣的那種貨幣（銅錢符不夠就顯示靈玉）；全部資源在畫面頂部資源列
     const spend = pickPullCurrency(dto, 1, wallet);
     const mainCurrency = spend.ok ? spend.currency : dto.currencies[0];
-    const heroId = limited ? dto.featuredGeneralIds[0] : dto.showcaseGeneralId;
+    const heroId = gachaHeroIdOf(pool, dto);
     const heroName = heroId ? nameOf(heroId) : '';
     const [briefFirst] = dto.brief.split('\n');
 
@@ -81,6 +92,8 @@ export function gachaApiView(
         [GACHA_NODES.pullTenCost]: String(dto.tenCost),
         [GACHA_NODES.pullTenOriginalCost]: String(dto.singleCost * 10),
         [GACHA_NODES.balance]: `${GACHA_CURRENCY_LABEL[mainCurrency]} ${(wallet[mainCurrency] ?? 0).toLocaleString('zh-TW')}`,
+        // 十連鈕下方小字：只寫程式真的有的保底（累計每 N 抽必出 SR 以上；十連本身沒有額外保底，原稿「必得 SR 以上 1 名」程式沒做）
+        [GACHA_TEN_NOTE_NODE]: `每 ${dto.pity.max} 抽必得 SR 以上`,
         [GACHA_NODES.goldSummonLabel]: '×500',
         [GACHA_NODES.ticketSummonLabel]: `持有 ${(wallet.tickets ?? 0).toLocaleString('zh-TW')}`,
         [pool.eventChip]: limited
@@ -92,10 +105,15 @@ export function gachaApiView(
     };
     if (heroName) texts[pool.heroName] = spacedName(heroName);
     if (limited) texts[pool.heroTitle] = '本期限定 · 限定 SSR';
+    // 原稿稱號是示意主角的（支援卡池原稿寫「吳宮秘書」卻展示別人），沒有逐人稱號資料前改成不指名的池別稱號
+    else if (pool.key === 'support') texts[pool.heroTitle] = '培育後盾 · SSR 教官卡';
 
     const actives: Record<string, boolean> = {
         // 十連沒打折時不顯示刪除線原價
         [GACHA_NODES.pullTenOriginalCost]: dto.singleCost * 10 !== dto.tenCost,
+        // 金幣召喚、召喚券召喚只有名將池能用，其他池看得到卻按不動的鈕直接隱藏（PROG-2-9118）
+        [GACHA_NODES.goldSummon]: pool.key === 'general',
+        [GACHA_NODES.ticketSummon]: pool.key === 'general',
     };
     const rates = dto.rates.slice().sort((a, b) => RATE_ORDER.indexOf(a.rarity) - RATE_ORDER.indexOf(b.rarity));
     for (let i = 0; i < GACHA_RATE_ROWS; i++) {

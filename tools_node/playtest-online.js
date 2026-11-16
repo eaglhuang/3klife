@@ -772,6 +772,13 @@ async function main() {
                 const shot = path.join(outDir, `${String(stepIndex).padStart(2, '0')}-gacha-pool-${i + 1}.png`);
                 await page.screenshot({ path: shot });
                 switched.push(path.relative(projectRoot, shot).replace(/\\/g, '/'));
+                (rec.detail.stripOrder = rec.detail.stripOrder || []).push(await page.evaluate(() => {
+                    const find = (n, name) => { if (n.name === name) return n; for (const c of n.children) { const r = find(c, name); if (r) return r; } return null; };
+                    const chain = (n) => { const out = []; for (let c = n; c && c.parent; c = c.parent) out.unshift(`${c.name}#${c.getSiblingIndex()}`); return out.join('>'); };
+                    const root = window.cc.director.getScene();
+                    const strip = find(root, 'GachaWalletStrip'), portrait = find(root, 'GachaBannerPortrait');
+                    return { strip: strip ? chain(strip) : null, portrait: portrait ? chain(portrait) : null };
+                }));
             }
             const after = await page.evaluate((re) => window.__pt.nameCounts(re), rightRe);
             const stacked = Object.keys(after).filter((name) => after[name] > (baseline[name] || 0));
