@@ -194,6 +194,8 @@ export interface SortieState {
     units: Readonly<Record<string, SortieUnitRecord>>;
     militiaDeployed: number;
     eliteDeployed: number;
+    /** 保底補上的兵力（兵源不足時送的一隊步兵）；不是城市兵源，戰損先扣這裡 */
+    guaranteedTroops?: number;
     /** 計謀點上限（基礎 + 參謀官加成） */
     tacticMax: number;
     /** 目前計謀點 */
@@ -262,6 +264,21 @@ export function computeCommandCapacity(input: CommandCapacityInput): number {
         + nonNegInt(input.equipmentBonus)
         + nonNegInt(input.eventBonus);
     return Math.max(COMMAND_CAPACITY_FLOOR, raw);
+}
+
+/** 保底兵力門檻：出征軍勢低於一隊步兵時補到剛好一隊步兵（總PM 2026-11-16 裁決） */
+export const SORTIE_GUARANTEE_TROOPS = 500;
+
+/** 出征軍勢不足一隊步兵時要補多少兵；夠用回 0 */
+export function sortieGuaranteeOf(poolMax: number): number {
+    return Math.max(0, SORTIE_GUARANTEE_TROOPS - nonNegInt(poolMax));
+}
+
+/** 兵源不足時出征畫面的提示；夠用回空字串 */
+export function sortieShortageNotice(poolMax: number): string {
+    return sortieGuaranteeOf(poolMax) > 0
+        ? '兵源不足：本場保底派出一隊步兵（不扣城市兵源）。城市兵源每季自動補充，補滿前只能派這一隊。'
+        : '';
 }
 
 /** Sortie_Troop_Pool_Max = min(帶兵上限, 城市兵源, 關卡上限) */
@@ -407,7 +424,10 @@ export function createSortieState(input: CreateSortieInput): SortieState {
     if (!checkFormationBloodlines(input.formationBloodlineIds ?? []).ok) {
         throw new Error('[SortieDeploy] 同名武將（Bloodline_ID 重複）不可同場出征');
     }
-    const poolMax = computeSortiePoolMax(input.commandCapacity, input.cityTroops, input.stageSortieCap);
+    const rawPoolMax = computeSortiePoolMax(input.commandCapacity, input.cityTroops, input.stageSortieCap);
+    // 兵源不足一隊步兵時保底補到一隊，不讓玩家進戰場一隊都派不出去
+    const guaranteedTroops = sortieGuaranteeOf(rawPoolMax);
+    const poolMax = rawPoolMax + guaranteedTroops;
     const food = nonNegInt(input.food) + nonNegInt(input.foodBonus);
     const tacticMax = BASE_TACTIC_CAP + nonNegInt(input.strategistBonus?.maxTacticBonus);
     const tacticStart = Math.min(tacticMax, BASE_TACTIC_START + nonNegInt(input.strategistBonus?.startTacticBonus));
@@ -424,6 +444,7 @@ export function createSortieState(input: CreateSortieInput): SortieState {
         units: {},
         militiaDeployed: 0,
         eliteDeployed: 0,
+        ...(guaranteedTroops > 0 ? { guaranteedTroops } : {}),
         tacticMax,
         tacticCurrent: tacticStart,
         tacticRegenPerTurn: TACTIC_REGEN_PER_TURN,
@@ -727,7 +748,8 @@ export function finishSortie(
         foodSpent: finalState.foodSpent,
         foodRemaining: finalState.food,
         cityTroopsBefore: before,
-        cityTroopsAfter: Math.max(0, before - lostTroops),
+        // 保底兵力不是城市兵源：戰損先扣保底那一份，超過的才算城市的
+        cityTroopsAfter: Math.max(0, before - Math.max(0, lostTroops - nonNegInt(finalState.guaranteedTroops))),
         recruitRegen: regen,
         turnsToRecover: lostTroops <= 0 ? 0 : regen > 0 ? Math.ceil(lostTroops / regen) : Infinity,
         militiaDeployed: finalState.militiaDeployed,

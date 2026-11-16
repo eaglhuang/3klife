@@ -1,7 +1,7 @@
 import { EVENT_NAMES, Faction, GAME_CONFIG, TroopType } from '../assets/scripts/core/config/Constants';
 import { BattleController } from '../assets/scripts/battle/controllers/BattleController';
 import { BattleState } from '../assets/scripts/battle/models/BattleState';
-import { BattleCombatResolver, type BattleCombatAction } from '../assets/scripts/battle/runtime/BattleCombatResolver';
+import { BattleCombatResolver, generalMinDamage, type BattleCombatAction } from '../assets/scripts/battle/runtime/BattleCombatResolver';
 import { executeBattleCombatPhase } from '../assets/scripts/battle/runtime/phases/BattleCombatPhase';
 import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
@@ -296,6 +296,17 @@ export function createBattleCombatRegressionSuite(): TestSuite {
         const weakBefore = weak.general.currentHp;
         weak.resolver.damageEnemyGeneral(weak.attacker, weak.svc);
         assert.equals(1, weakBefore - weak.general.currentHp, '攻擊不足以破防時仍至少扣 1');
+    });
+
+    suite.test('damageEnemyGeneral：破防不足時保底打出攻擊力的兩成（PROG-2-9318）', () => {
+        services().initialize();
+        // 攻 20 × 1.5 − 27.6 = 2.4 → 管線只剩 2；保底 round(20 × 0.2) = 4
+        const fixture = createGeneralDamageFixture(20, 92);
+        const before = fixture.general.currentHp;
+        fixture.resolver.damageEnemyGeneral(fixture.attacker, fixture.svc);
+        assert.equals(4, before - fixture.general.currentHp);
+        assert.equals(1, generalMinDamage(2), '攻擊力很低時保底仍至少 1');
+        assert.equals(8, generalMinDamage(40));
     });
 
     suite.test('damageEnemyGeneral：關閉管線時維持舊行為，只多了取整（PROG-2-9304）', () => {
