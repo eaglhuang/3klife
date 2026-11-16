@@ -17,8 +17,8 @@ function phase(turn: number, tutorialBattle?: boolean, difficultyBonus = 0, boss
 }
 export function createTutorialBattleWavesSuite(): TestSuite {
     const suite = new TestSuite('TutorialBattleWaves');
-    suite.test('教學照波次表出兵：第1回合不出，第2回合2隊，第3～7回合各1隊，之後不再增援（PROG-2-9324）', () => {
-        assert.equals('0,2,1,1,1,1,1,0,0,0,0,0', Array.from({ length: 12 }, (_, i) => phase(i + 1, true).requested).join(','));
+    suite.test('教學照波次表出兵：第1回合不出，第2回合2隊，第3～5回合各1隊，之後不再增援（PROG-2-9324、PROG-2-9325）', () => {
+        assert.equals('0,2,1,1,1,0,0,0,0,0,0,0', Array.from({ length: 12 }, (_, i) => phase(i + 1, true).requested).join(','));
         assert.equals(0, phase(50, true).requested);
     });
     suite.test('教學不受高難度加成增加波次', () => {

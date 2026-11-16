@@ -6,7 +6,7 @@
  *
  * Unity 對照：PlayMode 測試讀 Button.interactable 的判斷來源，不按按鈕。
  */
-import { Faction, TroopType } from '../assets/scripts/core/config/Constants';
+import { Faction, GAME_CONFIG, TroopType } from '../assets/scripts/core/config/Constants';
 import { BattleController } from '../assets/scripts/battle/controllers/BattleController';
 import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
@@ -46,12 +46,15 @@ export function createDuelButtonLockSuite(): TestSuite {
         assert.equals('already-deployed', ctrl.generalDuelBlockReason());
     });
 
-    suite.test('前排有我方小兵：鎖定，原因與 startGeneralDuel 相同', () => {
+    suite.test('前排還有空格不鎖；前排全滿才鎖，原因與 startGeneralDuel 相同（PROG-2-9325）', () => {
         const ctrl = battle();
-        const unit = new TroopUnit('p1', TroopType.Infantry, Faction.Player, { hp: 100, attack: 1, defense: 1, moveRange: 1, attackRange: 1 });
-        unit.moveTo(1, 0);
-        ctrl.state.addUnit(unit);
-        ctrl.state.getCell(1, 0)!.occupantId = unit.id;
+        for (let lane = 0; lane < GAME_CONFIG.GRID_LANES; lane++) {
+            if (lane === GAME_CONFIG.GRID_LANES - 1) assert.equals(null, ctrl.generalDuelBlockReason(), '還有一格空');
+            const unit = new TroopUnit(`p${lane}`, TroopType.Infantry, Faction.Player, { hp: 100, attack: 1, defense: 1, moveRange: 1, attackRange: 1 });
+            unit.moveTo(lane, 0);
+            ctrl.state.addUnit(unit);
+            ctrl.state.getCell(lane, 0)!.occupantId = unit.id;
+        }
         assert.equals('front-blocked', ctrl.generalDuelBlockReason());
         assert.equals('front-blocked', ctrl.startGeneralDuel());
     });

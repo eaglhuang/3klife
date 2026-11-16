@@ -177,7 +177,7 @@ export class TurnFlowManager {
         c.deployRuntime?.showToast('武將已在戰場上！');
         break;
       case 'front-blocked':
-        c.deployRuntime?.showToast('前排有我方小兵，武將無法出陣！');
+        c.deployRuntime?.showToast('前排沒有空格，武將無法出陣！');
         break;
       case 'general-dead':
         c.deployRuntime?.showToast('武將已陣亡，無法出陣！');
