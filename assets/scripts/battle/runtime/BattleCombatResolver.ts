@@ -79,6 +79,11 @@ export interface BattleCombatResolverContext {
 /** 堅盾（靈感戰法，PROG-2-1600 暫定）：防禦 ×1.2 */
 export const FORTIFIED_DEFENSE_MULTIPLIER = 1.2;
 
+/** 部隊打主將的保底傷害：max(1, round(攻擊力 × 保底比例))（總PM 2026-11-16 裁決） */
+export function generalMinDamage(effectiveAttack: number): number {
+  return Math.max(1, Math.round(Math.max(0, effectiveAttack) * GAME_CONFIG.generalMinDamageRatio));
+}
+
 export class BattleCombatResolver {
   /** 命中判定用亂數；測試可換成固定序列（PROG-2-0080） */
   /** 命中與暴擊的擲骰走戰場種子亂數源（Q25），不用 Math.random */
@@ -222,6 +227,8 @@ export class BattleCombatResolver {
     let isCrit = false;
     if (GAME_CONFIG.generalDamageUsesUnitPipeline) {
       ({ damage: rawDamage, isCrit } = this.generalPipelineDamage(attacker, general, enemyFaction, svc));
+      // 保底：扣完主將防禦後至少打出攻擊力的一定比例，避免被削弱的部隊每回合只打 1 點、戰鬥拖不完
+      rawDamage = Math.max(rawDamage, generalMinDamage(attacker.getEffectiveAttack()));
     } else {
       // 舊行為：直接以攻擊力扣血，不受防禦與地形影響（設定關閉時保留對照用）
       const damageAdjustment = tacticBehavior.resolveDamageAdjustment({

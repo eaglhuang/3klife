@@ -19,6 +19,8 @@ import type { PendingSceneGambit } from '../../core/systems/HallSceneGambit';
 import { sceneGambitToggleText } from './HallSceneGambitText';
 import {
     computeSortiePoolMax,
+    sortieGuaranteeOf,
+    sortieShortageNotice,
     SORTIE_LOADOUT_ISSUE_TEXT,
     type CreateSortieInput,
     type SortieLoadoutCheck,
@@ -172,7 +174,10 @@ export class SortieSetupController {
         if (input) {
             const pool = computeSortiePoolMax(input.commandCapacity, input.cityTroops, input.stageSortieCap);
             const bonus = input.foodBonus ?? 0;
-            texts.sortieSummary = `出征軍勢上限 ${pool} · 糧草 ${input.food + bonus}${bonus > 0 ? `（後勤 +${bonus}）` : ''} · 城市兵源 ${input.cityTroops}`;
+            const shortage = sortieShortageNotice(pool);
+            texts.sortieSummary = `出征軍勢上限 ${pool + sortieGuaranteeOf(pool)} · 糧草 ${input.food + bonus}${bonus > 0 ? `（後勤 +${bonus}）` : ''} · 城市兵源 ${input.cityTroops}`
+                + (shortage ? `
+${shortage}` : '');
         }
 
         texts.sortiePredict = sortiePredictText(commander, this._deps.getEnemyGeneral?.() ?? null);

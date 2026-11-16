@@ -31,6 +31,9 @@ import {
     MILITIA_TROOP_COST,
     regenTactic,
     ensureTacticCapCovers,
+    sortieGuaranteeOf,
+    sortieShortageNotice,
+    SORTIE_GUARANTEE_TROOPS,
     retireUnit,
     spendTactic,
     DEFAULT_TACTIC_TP_COST,
@@ -278,6 +281,32 @@ export function createSortieDeploySuite(): TestSuite {
         const full = regenTactic(state);
         assert.equals(state.tacticMax, full.tacticCurrent);
         assert.equals(true, full === state, '已滿時回傳同一物件');
+    });
+
+    suite.test('兵源不足：出征軍勢補到一隊步兵，可派一隊步兵，戰損不扣城市兵源', () => {
+        const state = createSortieState({ commandCapacity: 8000, cityTroops: 120, food: 100 });
+        assert.equals(SORTIE_GUARANTEE_TROOPS, state.poolMax);
+        assert.equals(SORTIE_GUARANTEE_TROOPS - 120, state.guaranteedTroops ?? 0);
+        const check = checkDeploy(state, { troopType: TroopType.Infantry });
+        assert.equals(true, check.ok, '保底後至少派得出一隊步兵');
+        const deployed = applyDeploy(state, 'u1', { troopType: TroopType.Infantry }).state;
+        const wiped = updateUnitTroops(deployed, 'u1', 0);
+        const summary = finishSortie(wiped, 120);
+        assert.equals(500, summary.lostTroops);
+        assert.equals(0, summary.cityTroopsAfter, '城市只賠自己出的 120');
+        const half = finishSortie(updateUnitTroops(deployed, 'u1', 300), 120);
+        assert.equals(120, half.cityTroopsAfter, '戰損 200 全由保底兵力吸收');
+        assert.equals(true, sortieShortageNotice(120).length > 0);
+    });
+
+    suite.test('兵源足夠：不補保底、沒有提示、戰損照扣城市兵源', () => {
+        const state = createSortieState({ commandCapacity: 8000, cityTroops: 10000, food: 100 });
+        assert.equals(undefined, state.guaranteedTroops);
+        assert.equals(0, sortieGuaranteeOf(SORTIE_GUARANTEE_TROOPS));
+        assert.equals('', sortieShortageNotice(813));
+        const deployed = applyDeploy(state, 'u1', { troopType: TroopType.Infantry }).state;
+        const summary = finishSortie(updateUnitTroops(deployed, 'u1', 100), 10000);
+        assert.equals(9600, summary.cityTroopsAfter);
     });
 
     suite.test('計謀點上限墊高：成本高於上限時墊到剛好付得起，否則不動', () => {
