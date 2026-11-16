@@ -4282,6 +4282,20 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/liu_ye__劉曄__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "77775e14dae4a0b7b0e541c04d8bd1529cc42e35ea8b75c14b3fce23dc29a148",
+            "sourceStanding": "standing/liu_ye__劉曄__standing_0002.png",
+            "notes": "戰鬥姿勢候選：前踏轉身展開地圖卷並以筆標示路線；未配置虛構兵器。"
+          }
+        ]
       }
     },
     {
