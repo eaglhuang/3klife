@@ -7583,6 +7583,53 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9351",
+      "title": "戰場最基本規則補測：每回合走幾格、何時停、攻擊交互、傷害數值、回合階段順序",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 2026-11-16 指出：我軍敵軍每回合該走多遠、敵軍是否每回合自動前進、回合交換、攻擊交互、傷害數值，這些最基本的規則從來沒有系統性測過，實玩還看到小兵原地不走。過去只驗單一功能與線上能否通關。",
+      "related": [
+        "PROG-2-9350",
+        "PROG-2-9340"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試 7804 過；新增移動 16 則、傷害與回合順序 23 則全過 | 變更: 只新增測試，未改任何戰鬥程式與數值 | 阻塞: 4 項程式與規格不一致待使用者裁決（暴擊乘在扣防前或後、運氣是否影響暴擊率、山地步兵兩層防禦是否相乘、打主將的距離判定）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
