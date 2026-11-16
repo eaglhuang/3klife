@@ -36,6 +36,17 @@ export class EffectSystem {
     // ─────────────────────────────────────────
 
     /**
+     * PROG-2-9358：池節點取出時沒有父節點（NodePool.get 會把它從場景拔掉），
+     * 呼叫端沒指定 parent 就得掛回場景根，否則粒子照播但不在場景裡、永遠看不到。
+     */
+    private attachVfxNode(node: Node, parent?: Node): void {
+        if (parent && parent.isValid) { node.parent = parent; return; }
+        if (node.parent) return;
+        const scene = director.getScene();
+        if (scene) node.parent = scene;
+    }
+
+    /**
      * 播放指定特效 Prefab，duration 秒後自動停止粒子並回收節點。
      * duration=0 表示不自動回收，需呼叫方手動 recycleEffect()。
      *
@@ -58,7 +69,7 @@ export class EffectSystem {
         }
 
         node.active = true;
-        if (parent) node.parent = parent;
+        this.attachVfxNode(node, parent);
         node.setWorldPosition(position);
 
         this.playAllParticles(node);
@@ -330,7 +341,7 @@ export class EffectSystem {
 
         // 3. 定位
         node.active = true;
-        if (parent) node.parent = parent;
+        this.attachVfxNode(node, parent);
         node.setWorldPosition(position);
 
         // 4. 先執行 sanitize（修正 layer / 重新啟用被停用的 PS）
