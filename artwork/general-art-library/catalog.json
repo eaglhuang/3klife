@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-16",
+  "updatedAt": "2026-11-16T06:02:16Z",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -6643,6 +6643,20 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/mi_heng__禰衡__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "a6cbf75c22a4544e77f172d43907bf3a68e4be081f865fb22e09044f63003fa8",
+            "canvas": "1024x1536 PNG",
+            "note": "依《後漢書》鼓史漁陽參撾典故設計；以擊鼓動作呈現，非兵器動作。候選圖待審。"
+          }
+        ]
       }
     },
     {
