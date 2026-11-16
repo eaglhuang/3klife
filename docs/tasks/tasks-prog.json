@@ -7536,6 +7536,53 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9350",
+      "title": "單挑演出結束後回合卡死、結束回合鍵按不動",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 2026-11-17 實玩回報（首戰、主將張飛對呂布）：單挑之後敵將衝過來就卡死，結束回合鍵按不動。原因：回合推進有 20 秒安全解鎖，雙方都有 Spine 動畫時單挑演出十幾秒以上，演出一結束時限就到期，畫面被強制解鎖，但後面的敵方回合結算整段被跳過，戰鬥流程永遠停在「結算中」。敵方發起、玩家回應的單挑收尾也會直接放掉回合推進，同樣跳過敵方回合收尾。自動實測用的武將沒有 Spine 動畫，演出很短，所以沒測到。",
+      "related": [
+        "PROG-2-9335",
+        "PROG-2-9331"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；新增 4 則回合流程測試全過、單挑相關既有測試 32 則全過；戰法冒煙全過；尚未線上實跑 | 變更: 單挑演出不算在回合安全時限內；回合推進中途被放掉時補做敵方回合結算 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
