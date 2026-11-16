@@ -1,8 +1,11 @@
 // PROG-2-9353：兵種 → 攻擊特效種類。純函式、不依賴引擎，供單元測試。
 export type AttackVfxKind = 'slash' | 'arrow';
 
-/** 刀光用已有 prefab 且會被 prewarmVfxPools 預熱的 CFXR 斬擊方塊（PROG-2-9353：trail_slash_* 沒有 prefab，播不出來）。 */
-export const ATTACK_SLASH_EFFECT_ID = 'p3d_cfxr_slash_ray';
+/**
+ * 刀光用已有 prefab 且會被 prewarmVfxPools 預熱的斬擊方塊（PROG-2-9353：trail_slash_* 沒有 prefab，播不出來）。
+ * PROG-2-9361：原本用的 p3d_cfxr_slash_ray 粒子是拉伸模式但長度與速度倍率都是 0，等於沒有面積、線上看不到，改用設定正常的這一個。
+ */
+export const ATTACK_SLASH_EFFECT_ID = 'p3d_mep_charge_slash';
 
 /** 箭矢貼圖路徑（vfx_core bundle 內，對應登錄表 proj_arrow 的 texPath）。 */
 export const ATTACK_ARROW_TEXTURE_PATH = 'textures/projectile/tex_proj_arrow';

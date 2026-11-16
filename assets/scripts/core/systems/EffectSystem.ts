@@ -1,6 +1,6 @@
 import { UCUFLogger, LogCategory } from '../utils/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
-import { Animation, Camera, Color, MeshRenderer, Node, ParticleSystem, Sprite, Vec3, director, tween, v3 } from "cc";
+import { Animation, Camera, Color, Layers, MeshRenderer, Node, ParticleSystem, Sprite, Vec3, director, tween, v3 } from "cc";
 import { VfxBlockEntry, VfxEffectDef } from "../config/VfxEffectConfig";
 import { PoolSystem } from "./PoolSystem";
 import { services } from "../managers/ServiceLoader";
@@ -179,9 +179,12 @@ export class EffectSystem {
      */
     private sanitizeVfxNode(node: Node): void {
         // 1. 強制 Layer 校正：3D 特效用 DEFAULT layer 才能被 3D Camera 渲染
-        const DEFAULT_LAYER = 1 << 0;  // Layers.Enum.DEFAULT
-        const UI_LAYER = 1 << 25;
-        const needsLayerFix = node.layer >= UI_LAYER;
+        // PROG-2-9361：引擎的 DEFAULT 是 1 << 30（Layers.Enum.DEFAULT），不是 1 << 0。
+        // 原本寫成 1 << 0，會把本來正確的 prefab 改到沒有任何攝影機會畫的層，特效全部看不到。
+        const DEFAULT_LAYER = Layers.Enum.DEFAULT;
+        const UI_3D_LAYER = 1 << 23;  // Layers.Enum.UI_3D
+        const UI_2D_LAYER = 1 << 25;  // Layers.Enum.UI_2D
+        const needsLayerFix = node.layer === UI_2D_LAYER || node.layer === UI_3D_LAYER;
 
         if (needsLayerFix) {
             UCUFLogger.warn(LogCategory.DATA, `[EffectSystem:Sanitize] "${node.name}" Layer=${node.layer} 在 UI 層級，強制修正為 DEFAULT`);
