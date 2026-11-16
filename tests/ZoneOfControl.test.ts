@@ -129,7 +129,7 @@ export function createZoneOfControlSuite(): TestSuite {
         assert.equals(mover.depth, 6);
     });
 
-    suite.test('接敵：斜前方或側面有敵部隊就停下，敵軍在兩格外或開關關閉時照走（PROG-2-9322）', () => {
+    suite.test('小兵不理旁邊的敵軍：斜前方、側面有敵部隊都照走，只有同一路正面才會被擋下（PROG-2-9336）', () => {
         const run = (enemyLane: number, enemyDepth: number, enemyId = 'foe'): number => {
             services().initialize();
             const state = new BattleState();
@@ -141,12 +141,11 @@ export function createZoneOfControlSuite(): TestSuite {
             executeBattleAutoMovePhase(context(state, Faction.Player));
             return mover.depth;
         };
-        assert.equals(run(3, 2), 1, '斜前方有敵部隊：走到相鄰就停');
-        assert.equals(run(1, 0), 0, '側面有敵部隊：原地交戰');
-        assert.equals(run(4, 2), 3, '隔一路的敵軍不算相鄰');
-        const original = GAME_CONFIG.troopEngageAdjacent;
-        GAME_CONFIG.troopEngageAdjacent = false;
-        try { assert.equals(run(3, 2), 3, '開關關閉：照舊錯身而過'); } finally { GAME_CONFIG.troopEngageAdjacent = original; }
+        assert.isFalse(GAME_CONFIG.troopEngageAdjacent, '側邊接敵必須關閉（使用者裁示的設計）');
+        assert.equals(run(3, 2), 3, '斜前方有敵部隊：照走');
+        assert.equals(run(1, 0), 3, '側面有敵部隊：照走');
+        assert.equals(run(4, 2), 3, '隔一路的敵軍：照走');
+        assert.equals(run(2, 2), 1, '同一路正面有敵部隊：走到面前停下');
     });
 
     suite.test('區域內有敵軍擋路時，盾兵仍會舉盾牆', () => {
