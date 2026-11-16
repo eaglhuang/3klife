@@ -7301,6 +7301,53 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9344",
+      "title": "教學戰敵軍波次由 6 隊加到 8 隊",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "對路出兵上線後（8a24bb5d2）線上 7 場全勝、我方平均只損 0.86 隊（目標 2 到 4 隊）。敵方同場最多 2 到 4 隊對我方 7 到 9 隊，多場我方殘血存活。總PM 2026-11-17 裁決採方案 A：只加波次，不改兵種選擇、不給隱藏數值加成。",
+      "related": [
+        "PROG-2-9340",
+        "PROG-2-9330"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；單元測試 7757 全過；戰法冒煙全過；尚未線上實跑 | 變更: tutorialEnemyDeployByTurn 改為 [0,2,2,1,1,1,1] | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
