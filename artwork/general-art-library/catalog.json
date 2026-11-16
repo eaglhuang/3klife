@@ -5541,6 +5541,23 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/ju_shou__沮授__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "5A5F7323F11175B13BC9D2021DC494777E2EE4661FFBEB7D33714DDD78871082",
+            "canvas": "1024x1536 RGBA",
+            "poseLabel": "轉身踏步，開掌傳令並護持竹簡",
+            "gaze": "direct-to-camera",
+            "sourceStanding": "standing/ju_shou__沮授__standing_0002.png",
+            "note": "透明背景；可見輪廓 alpha>32 bbox=(129,183)-(861,1369)，落在中央 75% 寬度內；全身與鞋底完整。候選待使用者審閱。"
+          }
+        ]
       }
     },
     {
