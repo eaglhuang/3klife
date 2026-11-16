@@ -1548,8 +1548,18 @@
             "file": "battle/dian_wei__典韋__battle_0001.png",
             "status": "review-pending",
             "poseSelection": "C"
+          },
+          {
+            "version": "0002",
+            "file": "battle/dian_wei__典韋__battle_0002.png",
+            "status": "review-pending",
+            "poseSelection": "C",
+            "sha256": "4814152F08FFF77E229F972AADFA368C3413444EDC67C7A5E95A7CDEF2B339E5",
+            "canvas": "1024x1536 RGBA",
+            "note": "Revised C-pose candidate using integrated standing armor/colors and paired axes; compact action, pending review."
           }
-        ]
+        ],
+        "activeVersion": "0002"
       },
       "standing": {
         "status": "integrated",
