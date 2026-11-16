@@ -43,6 +43,8 @@ import { TroopUnit } from "../../core/models/TroopUnit";
 import { BattleState } from "../models/BattleState";
 import { isUnitVisibleToPlayer } from "../shared/BattleVision";
 import { BoardRenderer } from "./BoardRenderer";
+import { ArrowShotView } from "./ArrowShotView";
+import { attackVfxFor } from "../shared/AttackVfxMapping";
 import { SpineUnitOverlay } from "./SpineGeneralOverlay";
 import { generalSpineConfig, squadMemberCount, troopSpineConfigWithFallback } from '../shared/UnitPresentationConfig';
 import { DuelExchange } from '../shared/DuelPresentationCore';
@@ -207,6 +209,7 @@ export class UnitRenderer extends Component {
   // lateUpdate 每幀重用的 Vec3 暫存，避免動態分配（對照 Unity: 快取 Vector3 工具變數）
   private readonly labelWorldPosBuf = new Vec3();
   private readonly generalViews = new Map<Faction, GeneralView>();
+  private readonly arrowShots = new ArrowShotView(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   private readonly spineUnits = new SpineUnitOverlay(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   private readonly tileBuffViews = new Map<string, TileBuffView>();
   private readonly troopPrefabLoads = new Map<string, Promise<Prefab | null>>();
@@ -495,6 +498,7 @@ export class UnitRenderer extends Component {
     const attackerUnit = this.findUnitById(attackerId);
     if (!attackerUnit) return;
 
+    this.playAttackVfx(attackerNode, attackerUnit.type, this.getUnitWorldPosition(defenderLane, defenderDepth, attackerNode.worldPosition.y));
     if (attackerUnit.type === TroopType.Cavalry) {
       const targetPos = this.getUnitWorldPosition(defenderLane, defenderDepth, attackerNode.worldPosition.y);
       if (targetPos) {
@@ -520,6 +524,7 @@ export class UnitRenderer extends Component {
     const attackerUnit = this.findUnitById(attackerId);
     if (!attackerUnit) return;
 
+    this.playAttackVfx(attackerNode, attackerUnit.type, defenderNode.worldPosition);
     if (attackerUnit.type === TroopType.Cavalry) {
       this.playCavalryChargeAnimation(attackerNode, defenderNode.worldPosition);
       return;
@@ -896,6 +901,7 @@ export class UnitRenderer extends Component {
       } else { this.spineUnits.remove(`general:${faction}`); if (view.usingHeroModel) view.modelRoot.active = true; }
     });
     this.spineUnits.update(dt);
+    this.arrowShots.update(dt);
 
     this.tileBuffViews.forEach(view => {
       const pos = this.boardRenderer?.getCellWorldPosition(view.lane, view.depth, 0.12);
@@ -1089,6 +1095,31 @@ export class UnitRenderer extends Component {
   /** 武將出招：Spine 武將播一次長槍突刺 */
   public playGeneralAttackPose(faction: Faction): void {
     this.spineUnits.play(this.generalSpineId(faction), 'attack');
+    // PROG-2-9353：沒有目標位置，朝對方武將方向在自身前方播刀光；任何一方不在場就略過
+    const self = this.generalViews.get(faction)?.worldNode;
+    const foe = this.generalViews.get(faction === Faction.Player ? Faction.Enemy : Faction.Player)?.worldNode;
+    if (self && foe) this.playAttackVfx(self, 'general', foe.worldPosition, 0.2);
+  }
+
+  /**
+   * PROG-2-9353：攻擊特效。近戰播刀光（走 EffectSystem.playBlock，與受擊特效同一池）；弓兵飛箭（畫面層 Sprite 池）。
+   * 一次攻擊最多一個特效；演出失敗不可影響戰鬥流程。
+   */
+  private playAttackVfx(attackerNode: Node, troopType: string, targetPos: Vec3 | null, ratio = 0.67): void {
+    if (!targetPos) return;
+    try {
+      const vfx = attackVfxFor(troopType);
+      const from = attackerNode.worldPosition;
+      if (vfx.kind === 'arrow') {
+        const a = this.overlayPoint(from); const ax = a?.x ?? 0; const ay = a?.y ?? 0;
+        const b = this.overlayPoint(targetPos);
+        if (a && b) this.arrowShots.shoot(ax, ay, b.x, b.y);
+        return;
+      }
+      // 刀光放在攻擊者與目標之間、偏目標 1/3 處
+      const pos = new Vec3(from.x + (targetPos.x - from.x) * ratio, from.y + (targetPos.y - from.y) * ratio, from.z + (targetPos.z - from.z) * ratio);
+      services().effect.playBlock(vfx.effectId, pos, undefined, 0.6);
+    } catch (error) { console.warn('[UnitRenderer] 攻擊特效略過', error); }
   }
 
   /** 武將中招（閃避不呼叫）：Spine 武將播一次受擊後退 */
