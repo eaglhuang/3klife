@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-16T10:49:00.000Z",
+  "updatedAt": "2026-11-16",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -5295,6 +5295,22 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/pang_de__龐德__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "3ee5baae329bbc3be37447586e94cd8f0b9d0fe05130008fd90016e849aaa476",
+            "canvas": "1024x1536 RGBA",
+            "weapon": "截頭大刀（長柄刀類）",
+            "pose": "AI 建議：穩定低重心，右高左低斜向反擊；刀刃帶向左下，正面銳利注視",
+            "note": "依 standing v0002 的銀灰甲、藍灰頭巾與深青布色生成；新姿勢的姿勢庫編號與全庫唯一性尚未核定，候選待使用者確認。"
+          }
+        ]
       }
     },
     {
