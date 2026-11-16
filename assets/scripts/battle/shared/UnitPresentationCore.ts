@@ -27,6 +27,8 @@ export class UnitPresentationCore {
   private elapsed = 0;
   private revision = 0;
   private animationSpeed = 1;
+  /** 退場走回原位後要恢復的朝向（PROG-2-9366）。退場途中面向行進方向，到位後轉回面向戰場，否則主將會一直背對戰場。 */
+  private facingAfterRetreat: 1 | -1 | null = null;
   constructor(private readonly config: UnitPresentationConfig, start: FootPoint, facing: 1 | -1 = 1) {
     if (![config.walkGroundSpeed, config.displayScale, config.speedMultiplier].every(v => Number.isFinite(v) && v > 0)) throw new Error('單位步速與縮放必須為正數');
     this.foot = { ...start };
@@ -36,12 +38,14 @@ export class UnitPresentationCore {
     this.action = action;
     this.elapsed = 0;
     this.target = null;
+    this.facingAfterRetreat = null;
     this.animationSpeed = 1;
     this.revision++;
   }
   public moveTo(target: FootPoint, retreat = false, minimumSpeedMultiplier = this.config.speedMultiplier): void {
     if (!Number.isFinite(minimumSpeedMultiplier) || minimumSpeedMultiplier <= 0) throw new Error('移動倍率必須為正數');
     this.target = { ...target };
+    this.facingAfterRetreat = retreat ? (this.facingAfterRetreat ?? this.facing) : null;
     this.action = retreat ? 'retreat' : 'move';
     this.elapsed = 0;
     this.animationSpeed = minimumSpeedMultiplier;
@@ -56,6 +60,7 @@ export class UnitPresentationCore {
       if (dx !== 0) this.facing = dx < 0 ? -1 : 1;
       this.animationSpeed = Math.hypot(dx, dy) / dt / (this.config.walkGroundSpeed * this.config.displayScale);
       this.target = null;
+      this.facingAfterRetreat = null;
     } else if (!moving && this.action === 'move') {
       this.action = 'idle'; this.animationSpeed = 1; this.revision++;
     }
@@ -73,6 +78,7 @@ export class UnitPresentationCore {
       const travel = this.config.walkGroundSpeed * this.config.displayScale * this.animationSpeed * dt;
       if (distance <= travel || distance === 0) {
         this.foot = { ...this.target }; this.target = null; this.action = 'idle'; this.animationSpeed = 1; this.revision++;
+        if (this.facingAfterRetreat !== null) { this.facing = this.facingAfterRetreat; this.facingAfterRetreat = null; }
       } else {
         this.foot = { x: this.foot.x + dx / distance * travel, y: this.foot.y + dy / distance * travel };
       }
