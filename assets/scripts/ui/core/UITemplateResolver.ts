@@ -21,6 +21,24 @@ import { DEFAULT_CANVAS } from './UISpecTypes';
 
 const { ccclass } = _decorator;
 
+/**
+ * 組出 Widget 展開用的參數表：Widget 自身預設 < Template 參數 < compose item 參數（後者覆蓋前者）。
+ * 純函式，方便單元測試（PROG-2-9109）。
+ */
+export function mergeWidgetParams(
+    widgetDefs: Record<string, { default?: string | number | boolean }> | undefined,
+    inherited: Record<string, string | number | boolean>,
+    itemParams: Record<string, string | number | boolean>,
+): Record<string, string | number | boolean> {
+    const merged: Record<string, string | number | boolean> = {};
+    if (widgetDefs) {
+        for (const [key, def] of Object.entries(widgetDefs)) {
+            if (def && def.default !== undefined) merged[key] = def.default;
+        }
+    }
+    return { ...merged, ...inherited, ...itemParams };
+}
+
 @ccclass('UITemplateResolver')
 export class UITemplateResolver {
 
@@ -129,16 +147,15 @@ export class UITemplateResolver {
         // 深拷貝 widget layout（避免修改快取）
         const node = this._cloneLayoutSpec(widget.layout);
 
-        // 合併 Widget 自身參數與 compose item 傳入的參數
-        const widgetParams = { ...params };
+        // 合併順序：Widget 自身預設 < Template 參數 < compose item 傳入的參數
+        // Widget 預設不能漏，否則沒傳的參數會以「${labelCancel}」原字樣出現在畫面上（PROG-2-9109）
+        const itemParams: Record<string, string | number | boolean> = {};
         if (item.params) {
             for (const [k, v] of Object.entries(item.params)) {
-                const resolved = typeof v === 'string'
-                    ? this._resolveParamRef(v, params)
-                    : v;
-                widgetParams[k] = resolved;
+                itemParams[k] = typeof v === 'string' ? this._resolveParamRef(v, params) : v;
             }
         }
+        const widgetParams = mergeWidgetParams(widget.params, params, itemParams);
 
         // 遞迴替換節點樹中的 ${param} 佔位符
         this._applyParams(node, widgetParams);
