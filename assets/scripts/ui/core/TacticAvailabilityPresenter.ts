@@ -48,7 +48,9 @@ export function buildTacticAvailability(
         if (!state.tacticPointEnabled) return { id: tactic.id, label: tactic.label, enabled: false, reason: TACTIC_REASON_NO_POINTS };
         if (!state.generalCanUseSkill) return { id: tactic.id, label: tactic.label, enabled: false, reason: TACTIC_REASON_NO_SP };
         const weather = checkTacticWeather(tactic.tags, state.weather);
-        if (!weather.allowed) return { id: tactic.id, label: tactic.label, enabled: false, reason: TACTIC_REASON_WEATHER };
+        // 天氣擋下時，戰法自己若有兩個字的條件（例如火攻「待風」）照樣寫在按鈕上，不要只寫「受限」（PROG-2-9347）
+        if (!weather.allowed) return { id: tactic.id, label: tactic.label, enabled: false, reason: TACTIC_REASON_WEATHER,
+            shortReason: tactic.unmetCondition ? describeTacticCondition(tactic.unmetCondition).short : undefined };
         if (tactic.unmetCondition) {
             const text = describeTacticCondition(tactic.unmetCondition);
             return { id: tactic.id, label: tactic.label, enabled: false, reason: text.full, shortReason: text.short };

@@ -21,7 +21,8 @@
  *                          （信件「關閉」、季報「婉言謝絕」→「收起季報」、出征→戰場→戰前偵查出征）
  *   --general <武將 id>     指定主將，只能配 --fresh：宿命轉蛋免費重轉到抽中這位名將才收下
  *                          （zhang-fei｜wei-yan｜xiahou-dun｜zhang-he｜sun-ce｜gan-ning）；不改遊戲、不寫存檔
- *   --deploy-mode <模式>    full（預設，每回合部署到上限）｜one-per-turn（每回合 1 隊）｜first-turn-one（只第 1 回合 1 隊，之後只結束回合）
+ *   --second-battle        第一場打完回大廳後再進第二場（一般戰鬥），只截圖並記下計謀鈕文字，不打完
+ *   --deploy-mode <模式>   full（預設，每回合部署到上限）｜one-per-turn（每回合 1 隊）｜first-turn-one（只第 1 回合 1 隊，之後只結束回合）
  *
  * 流程：
  *   1. 連瀏覽器、開新分頁（1920x1080）、等 cc 與場景載入。
@@ -114,6 +115,7 @@ function parseArgs(argv) {
     else if (a === '--max-turns') o.maxTurns = Number(next());
     else if (a === '--out') o.out = next();
     else if (a === '--fresh') o.fresh = true;
+    else if (a === '--second-battle') o.secondBattle = true;
     else if (a === '--deploy-mode') o.deployMode = next();
     else if (a === '--general') o.general = next();
     else throw new Error(`未知參數：${a}`);
@@ -238,12 +240,15 @@ function pageSceneName() {
 }
 
 // 頁面端：大廳備用流程單步（在 LoginScene／LobbyScene 內推進到戰場）
-function pageLobbyTick(wantName) {
+function pageLobbyTick(wantName, skip) {
   const bq = window.__bq;
   const sn = cc.director.getScene() ? cc.director.getScene().name : '(無)';
   const out = { scene: sn, battle: !!bq.battle(), action: null };
   if (out.battle) return out;
+  // skip：連點好幾次都沒反應的字先跳過（例如畫面上殘留、點了沒作用的「關閉」），讓後面的按鈕有機會被按到（PROG-2-9339）
+  const skipped = new Set(skip || []);
   const tryTap = (t) => {
+    if (skipped.has(t)) return false;
     if (bq.findLabels(t).length) { bq.tapLabel(t); out.action = `點「${t}」`; return true; }
     return false;
   };
@@ -254,6 +259,17 @@ function pageLobbyTick(wantName) {
   // 幕府大廳的新手教學（1/3 下一步）、城市 hub 的「出征 → 戰場」，以及戰前確認的「親自指揮」
   // 全新玩家：三國季報先按「婉言謝絕」再按右上「收起季報」（致你的一封信用「關閉」）
   // 戰前偵查若兵勢劣勢會出現「強行出征」（與 enter-battle.js 同），之後「出征」為戰前偵查的確認鈕
+  // 季報裡的市井奇遇要先二選一才能收起，選項名稱每則不同：說明文字寫著「某選項：無事發生」，就點那個選項（PROG-2-9339）
+  let idle = null;
+  bq.walk(cc.director.getScene(), (n) => {
+    for (const c of n.components || []) {
+      if (typeof c.string !== 'string' || !bq.visible(n)) continue;
+      const m = c.string.match(/([^\s／/：:]+)[：:]無事發生/);
+      if (m) idle = m[1];
+    }
+    return false;
+  });
+  if (idle && tryTap(idle)) return out;
   const order = ['婉言謝絕', '收起季報', '下一步', '開始遊戲', '下一位', '前往宿命轉蛋', '繼續', '跳過', '收起', '關閉', '親自指揮', '強行出征', '出　戰', '戰場'];
   for (const t of order) if (tryTap(t)) return out;
   if (tryTap('出征')) return out;
@@ -432,8 +448,14 @@ async function enterFromLobby(page, wantName = null) {
   let lastLog = 0;
   let lastTexts = [];
   const actions = [];
+  const skipList = [];
   while (Date.now() - t0 < 300000) {
-    const r = await ev(page, pageLobbyTick, wantName);
+    // 同一個動作連做 4 次還在原地，就把那個字列入跳過（這次進場期間都不再點）
+    const tail = actions.slice(-4);
+    const stuck = tail.length === 4 && tail.every((a) => a === tail[0]) ? /點「(.+?)」/.exec(tail[0]) : null;
+    // 只對已知會空點的字生效；「下一位」這類本來就要連點很多次的不能跳過
+    if (stuck && ['關閉', '收起季報', '收起'].includes(stuck[1]) && !skipList.includes(stuck[1])) { skipList.push(stuck[1]); log(`大廳備用流程：「${stuck[1]}」連點 4 次沒反應，先跳過`); }
+    const r = await ev(page, pageLobbyTick, wantName, skipList);
     if (r.action) actions.push(`${r.scene}:${r.action}`);
     if (r.battle) {
       rep.entered = 'lobby-fallback';
@@ -1050,6 +1072,33 @@ async function main() {
     } else {
       await runStep('返回大廳', () => backToLobby(page, opt));
       ok = rep.steps.every((st) => st.ok) && !!(rep.lobby && rep.lobby.ok);
+      if (opt.secondBattle && ok) {
+        // 第二場是一般戰鬥（不是教學戰）：只進場、截圖、記下計謀鈕與教學旗標，不打完（PROG-2-9339）
+        await runStep('第二場進場（一般戰鬥）', () => enterFromLobby(page, null));
+        await sleep(4000);
+        await shot(page, opt, 'battle2-start');
+        const s2 = await ev(page, pageSnapshot);
+        const info = await ev(page, () => {
+          const b = window.__bq.battle(); const c = b && b.ctrl;
+          if (!c) return null;
+          const un = typeof c.getPlayerSeedTacticUnmetCondition === 'function' ? c.getPlayerSeedTacticUnmetCondition() : '（沒有這個函式）';
+          return { tutorial: !!(c.tutorialBattle ?? c._tutorialBattle), unmet: un, weather: c.state && c.state.weather };
+        });
+        rep.secondBattle = { stage: s2.texts.find((t) => /之\s*[戰役]|突\s*圍|會\s*戰/.test(t) && t.length <= 20) || null, tacticLabel: s2.texts.find((t) => /^計謀/.test(t)) || null, info };
+        log(`第二場：${JSON.stringify(rep.secondBattle)}`);
+        // 點數不夠時按鈕依設計先寫點數；多結束幾回合等點數夠了，才看得到「待風」這類原因
+        for (let i = 0; i < 6 && /\d+點/.test(rep.secondBattle.tacticLabel || ''); i++) {
+          const before = await ev(page, pageSnapshot);
+          if (!before.texts.includes('結束回合')) { await sleep(3000); continue; }
+          await tapText(page, '結束回合');
+          for (let w = 0; w < 20; w++) { await sleep(1000); const n = await ev(page, pageSnapshot); if (n.turn !== before.turn && n.texts.includes('結束回合')) break; }
+          const after = await ev(page, pageSnapshot);
+          rep.secondBattle.tacticLabel = after.texts.find((t) => /^計謀/.test(t)) || null;
+          rep.secondBattle.tacticLabelTurn = after.turn;
+          log(`第二場第 ${after.turn} 回合計謀鈕：${JSON.stringify(rep.secondBattle.tacticLabel)}`);
+        }
+        await shot(page, opt, 'battle2-tactic');
+      }
     }
   } catch (e) {
     rep.failure = { message: e.message, step: e.step || null, texts: e.texts || [] };
