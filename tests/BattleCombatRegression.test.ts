@@ -309,6 +309,22 @@ export function createBattleCombatRegressionSuite(): TestSuite {
         assert.equals(8, generalMinDamage(40));
     });
 
+    suite.test('造成傷害也給 SP：打主將與打部隊各給一次，打自己人不給（PROG-2-9321）', () => {
+        services().initialize();
+        const fixture = createGeneralDamageFixture(40, 92);
+        const mine = new GeneralUnit({ id: 'sp-owner', name: 'sp-owner', faction: Faction.Player, hp: 1000, maxSp: 100, initialSp: 0,
+            str: 80, int: 80, lea: 80, luk: 0, skillId: 'sima-yi-shadow', battlePrimarySkillId: 'sima-yi-shadow' });
+        (fixture.resolver as unknown as { context: { state: BattleState } }).context.state.playerGeneral = mine;
+        fixture.resolver.damageEnemyGeneral(fixture.attacker, fixture.svc);
+        assert.equals(GAME_CONFIG.spPerDamagingHit, mine.currentSp, '打主將');
+        const victim = new TroopUnit('sp-victim', TroopType.Infantry, Faction.Enemy, { hp: 100, attack: 10, defense: 0, moveRange: 0, attackRange: 1 });
+        const hit = { attackerId: fixture.attacker.id, attackerLane: 2, attackerDepth: 2, allowDamageLink: false };
+        fixture.resolver.applyUnitDamage(victim, 5, Faction.Player, hit);
+        assert.equals(GAME_CONFIG.spPerDamagingHit * 2, mine.currentSp, '打部隊');
+        fixture.resolver.applyUnitDamage(fixture.attacker, 5, Faction.Player, hit);
+        assert.equals(GAME_CONFIG.spPerDamagingHit * 2, mine.currentSp, '打到自己人不給');
+    });
+
     suite.test('damageEnemyGeneral：關閉管線時維持舊行為，只多了取整（PROG-2-9304）', () => {
         services().initialize();
         const original = GAME_CONFIG.generalDamageUsesUnitPipeline;

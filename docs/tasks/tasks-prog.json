@@ -6283,6 +6283,52 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9321",
+      "title": "首戰開場 SP 滿、軍勢補到八千、敵主將血量減半；造成傷害也給 SP",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-16T17:30:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "線上試玩版全新玩家實跑首戰（2026-11-16）：出征軍勢 3000 只夠派 5 隊，第 3 回合起無兵可派；SP 只來自擊殺，我方整場 0 SP，奧義與計謀一次都放不出來；4 隊圍攻敵主將 3 回合只打掉 130 血。總PM 裁決：讓新玩家第一場就能打、能放招、能真的打贏，一般戰鬥平衡盡量不動。",
+      "related": [
+        "PROG-2-9318"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: done | 驗證: 型別檢查 0 錯；單元測試 7718 通過；戰法冒煙測試新增案例通過 | 變更: 教學戰三項規則與傷害給 SP，數值在 GAME_CONFIG | 阻塞: 無；未做到：尚未實機驗證（等下一版線上試玩版）；計謀是否仍要求 SP 滿另待裁決（規格有衝突）；部隊接敵另開 PROG-2-9322",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

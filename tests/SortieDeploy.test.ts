@@ -299,6 +299,15 @@ export function createSortieDeploySuite(): TestSuite {
         assert.equals(true, sortieShortageNotice(120).length > 0);
     });
 
+    suite.test('教學戰軍勢下限：不足時補到下限且算保底；本來就夠則不補（PROG-2-9321）', () => {
+        const low = createSortieState({ commandCapacity: 3000, cityTroops: 10000, food: 100, tutorialPoolMin: 8000 });
+        assert.equals(8000, low.poolMax);
+        assert.equals(5000, low.guaranteedTroops ?? 0, '補上的 5000 不扣城市兵源');
+        const enough = createSortieState({ commandCapacity: 6000, cityTroops: 10000, food: 100, tutorialPoolMin: 4000 });
+        assert.equals(6000, enough.poolMax);
+        assert.equals(undefined, enough.guaranteedTroops);
+    });
+
     suite.test('兵源足夠：不補保底、沒有提示、戰損照扣城市兵源', () => {
         const state = createSortieState({ commandCapacity: 8000, cityTroops: 10000, food: 100 });
         assert.equals(undefined, state.guaranteedTroops);

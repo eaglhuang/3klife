@@ -100,6 +100,22 @@ export function createBattleVictorySuite(): TestSuite {
         assert.equals(true, ended[0].retreated !== true);
     });
 
+    suite.test('教學戰：開場我方 SP 滿、敵主將血量減半，重複套用不會再減（PROG-2-9321）', () => {
+        const ctrl = freshBattle();
+        const pg = ctrl.state.playerGeneral!;
+        const eg = ctrl.state.enemyGeneral!;
+        const fullHp = eg.maxHp;
+        assert.equals(true, pg.currentSp < pg.maxSp, '一般戰鬥開場 SP 不滿');
+        ctrl.tutorialBattle = true;
+        assert.equals(pg.maxSp, pg.currentSp);
+        const half = Math.round(fullHp * GAME_CONFIG.tutorialEnemyGeneralHpRatio);
+        assert.equals(half, eg.maxHp);
+        assert.equals(half, eg.currentHp);
+        ctrl['applyTutorialRules']();
+        assert.equals(half, eg.maxHp, '同一場只減一次');
+        ctrl.tutorialBattle = false;
+    });
+
     suite.test('教學戰回合上限較短，再戰一次後仍維持；一般戰鬥用預設上限', () => {
         const ctrl = freshBattle();
         assert.equals(GAME_CONFIG.TURN_LIMIT, services().battle.getTurnLimit(), '一般戰鬥');
@@ -115,7 +131,7 @@ export function createBattleVictorySuite(): TestSuite {
         assert.equals(true, ended[0].timeUp === true && ended[0].retreated !== true, '標為回合用盡、不是撤退');
         services().battle.beginBattle();
         assert.equals(GAME_CONFIG.TURN_LIMIT, services().battle.getTurnLimit(), '開戰重設回預設');
-        ctrl['applyTutorialTurnLimit']();
+        ctrl['applyTutorialRules']();
         assert.equals(GAME_CONFIG.TUTORIAL_TURN_LIMIT, services().battle.getTurnLimit(), '控制器重新套用');
         assert.equals('player-win', services().battle.getTurnLimitOutcome());
         ctrl.tutorialBattle = false;

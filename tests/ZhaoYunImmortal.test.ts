@@ -72,7 +72,7 @@ export function createZhaoYunImmortalSuite(): TestSuite {
         assert.isTrue(services().buff.hasBuff('zhao', StatusEffect.Invincible));
 
         // 第 1 回合：敵方攻擊趙雲，傷害歸零
-        const combat = new BattleCombatResolver({ state: { getDamageLink: () => null, units: new Map() } } as never);
+        const combat = new BattleCombatResolver({ state: { getDamageLink: () => null, getGeneral: () => null, units: new Map() } } as never);
         combat.applyUnitDamage(caster, 50, Faction.Enemy, { attackerId: 'e1', attackerLane: 2, attackerDepth: 0, allowDamageLink: false });
         assert.equals(200, caster.currentHp, '無敵期間不扣血');
 
