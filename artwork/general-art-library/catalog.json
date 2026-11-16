@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-16T06:02:16Z",
+  "updatedAt": "2026-11-16T06:13:07Z",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -6777,6 +6777,20 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/yu_ji__于吉__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "723abe708f0d9bde5963985eacf897a8dc91919d73121527f8fd701e770bcfaf",
+            "canvas": "1024x1536 PNG",
+            "note": "依《三國志》孫策傳所引《江表傳》於吉為人治病、制符水的記載設計；施符防禦動作，未增加兵器。候選待審。"
+          }
+        ]
       }
     },
     {
