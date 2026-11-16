@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-16T09:20:14.282Z",
+  "updatedAt": "2026-11-16T09:31:44.257Z",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -8528,6 +8528,24 @@
             "sourceStanding": "standing/hua_man__花鬘__standing_0002.png",
             "weaponClass": "paired short crescent-hook blades",
             "note": "Character and weapon design follow approved standing art. Whole transparent layer was translated 27px right for centered safe framing; no crop or stretch."
+          }
+        ]
+      },
+      "smallAvatar": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/hua_man__花鬘__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "c790311572b1b02d21242f62bf9e34488f3df35251c2d8b066b6b7536abea4eb",
+            "canvas": "330x330 RGBA",
+            "source": "standing/hua_man__花鬘__standing_0002.png",
+            "crop": "shoulder-line",
+            "cropBox": "x=360,y=0,w=330,h=275",
+            "transparentPadding": "bottom=55px",
+            "qc": "從核定站姿原圖裁切並加透明留白，未重繪或改造人物；本版仍待使用者視覺確認。"
           }
         ]
       }
