@@ -366,7 +366,18 @@ export class TurnFlowManager {
     c.battleLogPanel?.append(
       `${defenderName} 單挑評估分數：${decision.score.toFixed(2)}（${decision.accepted ? '接受' : '拒絕'}）`
     );
-    if (decision.accepted) c.isDuelPanelActive = true;
+    if (decision.accepted) {
+      c.isDuelPanelActive = true;
+      // 發起要有畫面：先報出雙方主將名字，再開始交鋒（PROG-2-9335）
+      const state = c.ctrl.state;
+      const playerName = state?.playerGeneral?.name ?? '我將';
+      const enemyName = state?.enemyGeneral?.name ?? '敵將';
+      const startLine = challengerFaction === Faction.Player
+        ? `單挑開始！${playerName} 對 ${enemyName}`
+        : `單挑開始！${enemyName} 對 ${playerName}`;
+      c.deployRuntime?.showToast(startLine, 2.5);
+      c.battleLogPanel?.append(startLine);
+    }
     let duelResult: string;
     try { duelResult = await this.bridge.resolveDuelPresentation(challengerFaction, decision.accepted); }
     catch (error) {
@@ -391,6 +402,13 @@ export class TurnFlowManager {
       } else if (duelResult === 'enemy-win') {
         c.deployRuntime?.showToast('單挑成立！敵方武將獲勝！', 1.3, { color: new Color(255, 110, 110, 255) });
         c.battleLogPanel?.append('單挑成立！敵方武將於單挑中獲勝！');
+      } else if (c.ctrl?.getLastDuelWinner?.() === Faction.Player) {
+        // 教學戰單挑不打死：贏了重創敵主將、戰鬥繼續（PROG-2-9335）
+        c.deployRuntime?.showToast('單挑獲勝！敵主將身負重傷，乘勝追擊！', 3, { color: new Color(90, 190, 255, 255) });
+        c.battleLogPanel?.append('單挑獲勝！敵主將身負重傷，戰鬥繼續。');
+      } else if (c.ctrl?.getLastDuelWinner?.() === Faction.Enemy) {
+        c.deployRuntime?.showToast('單挑落敗！我方主將負傷退回，戰鬥繼續！', 3, { color: new Color(255, 110, 110, 255) });
+        c.battleLogPanel?.append('單挑落敗！我方主將負傷，戰鬥繼續。');
       } else {
         c.deployRuntime?.showToast('單挑成立！雙方武將交鋒！'); c.battleLogPanel?.append('單挑成立！雙方武將正面對決！');
       }

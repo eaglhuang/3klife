@@ -6929,6 +6929,52 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9335",
+      "title": "教學戰敵將一律接受單挑；單挑打到生命三成就分勝負，不打死、不直接結束戰鬥",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "線上實跑確認：教學戰第 4 回合我方主將走到第 5 排發起單挑，敵將拒絕，玩家只看到一行提示，敵方全軍攻防還直接減半，我方平均只損 0.2 隊。而單挑一旦成立是打到一方主將倒下，贏了第 4 回合就結束、輸了直接敗戰。總PM 2026-11-17 裁決：教學戰敵將一律接受；我方落敗不判負只扣主將血；獲勝重創敵主將但不直接結束。",
+      "related": [
+        "PROG-2-9331"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；單元測試 7749 全過（新增 TutorialDuelNonLethal 6 案）；尚未線上實跑 | 變更: tutorialEnemyAlwaysAcceptsDuel、tutorialDuelHpFloorRatio=0.3；單挑結果提示；工具記錄單挑結算回合 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

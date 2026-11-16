@@ -202,6 +202,8 @@ function pageSnapshot() {
   const eg = s.enemyGeneral;
   const gen = (g) => (g ? { name: g.name, hp: g.currentHp, maxHp: g.maxHp, sp: g.currentSp, maxSp: g.maxSp } : null);
   out.playerGeneral = gen(pg);
+  // 單挑邀請是否已經發生並結算（我方發起時沒有接受／拒絕視窗，只能直接問控制器）
+  out.duelResolved = typeof ctrl.isDuelChallengeResolved === 'function' ? !!ctrl.isDuelChallengeResolved() : null;
   out.enemyGeneral = gen(eg);
   out.fortress = { player: s.playerFortressHp, enemy: s.enemyFortressHp };
   out.ended = !!s.battleEndAnnounced;
@@ -310,7 +312,7 @@ const rep = {
   enter: null,
   entered: '',
   turns: [],
-  duels: [],
+  duels: [], duelResolvedAt: null, duelTexts: [],
   ultimates: [],
   tactics: [],
   duelAttempt: null,
@@ -731,6 +733,9 @@ async function playBattle(page, opt) {
     if (s.enemyGeneral && s.enemyGeneral.hp <= 0 && rep.zeroHp.enemy == null) rep.zeroHp.enemy = s.turn;
     if (s.playerGeneral && s.playerGeneral.hp <= 0 && rep.zeroHp.player == null) rep.zeroHp.player = s.turn;
     rep.lastGeneral = { player: s.playerGeneral, enemy: s.enemyGeneral, turn: s.turn };
+    // 我方發起的單挑由敵將自動回應，畫面只閃過提示：記下第一次結算的回合與當下所有提到單挑的文字
+    if (s.duelResolved && !rep.duelResolvedAt) { rep.duelResolvedAt = s.turn; log(`單挑邀請已發生並結算：第 ${s.turn} 回合`); }
+    for (const t of s.texts) { if (/單挑/.test(t) && t.length > 5 && !rep.duelTexts.includes(t)) { rep.duelTexts.push(t); log(`單挑文字（第 ${s.turn} 回合）：${t.slice(0, 80)}`); } }
     if (isResult(s)) {
       if (cur && !cur.closed) { cur.after = brief(s); cur.closed = true; cur.errorsTo = rep.consoleErrors.length; }
       rep.result = { outcome: outcomeOf(s.texts), announced: s.ended, texts: s.texts, turnAtEnd: s.turn };
