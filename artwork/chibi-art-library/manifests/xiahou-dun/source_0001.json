@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "characterId": "xiahou-dun",
+  "name": "夏侯惇",
+  "sourceVersion": "0001",
+  "sourceFile": "artwork/chibi-art-library/source/xiahou-dun__夏侯惇__chibi_0001.png",
+  "sha256": "e18d746fabf068adb1dea4d09d588418e0cc17295ab890097579fa54c07b7733",
+  "canvas": "577x1250 RGBA",
+  "pipeline": "C:/Users/User/spine-trial/tools/pipeline.py accept-source xiahou_dun",
+  "status": "source-pass",
+  "measurements": {
+    "faceWidthPx": 166,
+    "faceScaleVsZhaoYun": 0.9,
+    "headBodyRatio": 0.482,
+    "zhaoYunHeadBodyRatio": 0.413,
+    "ratioVsReference": 1.17,
+    "lightLeftRight": 1.148,
+    "chinToBootPx": 634
+  },
+  "warnings": [
+    "style.face_turn：眼部辨識器因眼罩未量得，需人工視覺確認。",
+    "style.gaze_x：眼部辨識器因眼罩未量得，需人工視覺確認。",
+    "style.chest_w：胸寬啟發式對盔甲與鬍鬚角色偏寬，屬 WARN；非本次比例硬門檻。"
+  ],
+  "cutout": {
+    "status": "pending",
+    "reason": "xiahou_dun char.json 的 cut 設定沿用角色範本，尚未有夏侯惇專屬遮罩與遮擋清理底圖；不可直接套用以免切件錯位。"
+  },
+  "createdAt": "2026-11-16T18:08:38Z"
+}

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-16T01:25:38.038Z",
+  "updatedAt": "2026-11-16T18:08:38Z",
   "naming": "{id}__{繁體中文名}__chibi_{版本四碼}.png",
   "sourceCanvas": "2048x3072 RGBA suggested; maintain 2:3 full-body transparent canvas",
   "cutoutPolicy": "only cut from an approved source version; preserve source SHA-256 and aligned canvas coordinates",
@@ -579,9 +579,18 @@
       "id": "xiahou-dun",
       "name": "夏侯惇",
       "source": {
-        "status": "missing",
-        "activeVersion": null,
-        "versions": []
+        "status": "source-pass",
+        "activeVersion": "0001",
+        "versions": [
+          {
+            "version": "0001",
+            "file": "source/xiahou-dun__夏侯惇__chibi_0001.png",
+            "sha256": "e18d746fabf068adb1dea4d09d588418e0cc17295ab890097579fa54c07b7733",
+            "status": "source-pass",
+            "createdAt": "2026-11-16T18:08:38Z",
+            "note": "577x1250 RGBA; pipeline accept-source PASS; eye detector WARN due eyepatch; review notes in manifest."
+          }
+        ]
       },
       "cutout": {
         "status": "not-started",
