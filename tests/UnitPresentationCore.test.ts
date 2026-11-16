@@ -91,6 +91,11 @@ assert.equal(soldierSpineConfig(false).path, 'spine/soldiers/soldier_spear_blue/
 assert.equal(soldierSpineConfig(false, true).path, 'spine/soldiers/soldier_spear_red/soldier_spear_red');
 assert.equal(soldierSpineConfig(true, true).path, 'spine/soldiers/soldier_bow_red/soldier_bow_red');
 assert.equal(soldierSpineConfig(true, false).path, 'spine/soldiers/soldier_bow_blue/soldier_bow_blue');
+import { troopSpineConfig } from '../assets/scripts/battle/shared/UnitPresentationConfig';
+assert.equal(troopSpineConfig('medic', true).path, 'spine/soldiers/soldier_medic_red/soldier_medic_red');
+assert.equal(troopSpineConfig('cavalry').path, 'spine/soldiers/soldier_spear_blue/soldier_spear_blue');
+assert.equal(troopSpineConfig('infantry', false, 'tiger-tally-xian-zhen').path, 'spine/soldiers/soldier_elite_infantry_blue/soldier_elite_infantry_blue');
+assert.equal(troopSpineConfig('shield', false, 'tiger-tally-xian-zhen').path, 'spine/soldiers/soldier_shield_blue/soldier_shield_blue');
 
 import { selectDuelExchanges } from '../assets/scripts/battle/shared/DuelPresentationCore';
 const rounds = Array.from({ length: 100 }, (_, i) => ({ attacker: (i % 2) as 0 | 1, dodged: i === 40 }));
@@ -109,3 +114,12 @@ const rosterGeneral = new GeneralUnit({ id: 'roster-123', templateId: 'zhao-yun'
 assert.equal(rosterGeneral.templateId, 'zhao-yun');
 assert.equal(generalSpineConfig(rosterGeneral.id, rosterGeneral.templateId)?.path, 'spine/generals/zhao_yun/zhao_v2');
 assert.equal(generalSpineConfig('guan-yu', 'unknown')?.path, 'spine/generals/guan_yu/guan_yu');
+import { troopSpineConfigWithFallback } from '../assets/scripts/battle/shared/UnitPresentationConfig';
+// 素材載不起來時逐層退回：精銳 → 兵種 → 槍兵；全好時用精銳
+const eliteBlue = 'spine/soldiers/soldier_elite_infantry_blue/soldier_elite_infantry_blue';
+const infantryBlue = 'spine/soldiers/soldier_infantry_blue/soldier_infantry_blue';
+assert.equal(troopSpineConfigWithFallback('infantry', false, 'tiger-tally-xian-zhen', () => false).path, eliteBlue);
+assert.equal(troopSpineConfigWithFallback('infantry', false, 'tiger-tally-xian-zhen', p => p === eliteBlue).path, infantryBlue);
+assert.equal(troopSpineConfigWithFallback('infantry', false, 'tiger-tally-xian-zhen', p => p === eliteBlue || p === infantryBlue).path,
+  'spine/soldiers/soldier_spear_blue/soldier_spear_blue');
+assert.equal(troopSpineConfigWithFallback('archer', true, null, () => false).path, 'spine/soldiers/soldier_bow_red/soldier_bow_red');

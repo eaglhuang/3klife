@@ -52,17 +52,46 @@ export function generalSpineConfig(id: string, templateId?: string | null): Unit
   }
   return config;
 }
-/**
- * 小兵依兵種（弓／其餘）與陣營選素材：我方藍、敵方紅，戰場上一眼分得出敵我。
- * 紅槍兵與藍弓兵由原圖集換色產生（見 tools_node/battle-chibi/），骨架與動作和原版共用。
- */
-export function soldierSpineConfig(isArcher: boolean, isEnemy = false): UnitSpineConfig {
-  const name = `soldier_${isArcher ? 'bow' : 'spear'}_${isEnemy ? 'red' : 'blue'}`;
+/** 兵種對應的小兵素材名與交鋒動作長度（秒）。素材由 tools_node/battle-chibi/make_troop_variants.py 產出，設計見 docs/battle-chibi-troop-design.md。 */
+const SOLDIER_ART: Record<string, { name: string; attack: number; bow?: boolean }> = {
+  pikeman: { name: 'spear', attack: 1 }, archer: { name: 'bow', attack: 1.2, bow: true },
+  shield: { name: 'shield', attack: 0.9 }, infantry: { name: 'infantry', attack: 1 },
+  engineer: { name: 'engineer', attack: 1 }, medic: { name: 'medic', attack: 1 }, navy: { name: 'navy', attack: 1 },
+  elite_infantry: { name: 'elite_infantry', attack: 1 }, elite_shield: { name: 'elite_shield', attack: 1 },
+};
+/** 虎符卡目錄 id（tacticId）對應的精銳外觀；底兵種不符時不套用。 */
+const ELITE_ART: Record<string, { troop: string; art: string }> = {
+  'tiger-tally-xian-zhen': { troop: 'infantry', art: 'elite_infantry' }, 'tiger-tally-infantry-wall': { troop: 'infantry', art: 'elite_infantry' },
+  'tiger-tally-shield-line': { troop: 'shield', art: 'elite_shield' },
+};
+/** 兵種（TroopType 的字串值）選素材；騎兵、連弩手等尚無專屬素材者沿用槍兵／弓兵。 */
+export function troopSpineConfig(troop: string, isEnemy = false, tallyTemplateId?: string | null): UnitSpineConfig {
+  const elite = tallyTemplateId ? ELITE_ART[tallyTemplateId] : undefined;
+  const key = elite && elite.troop === troop ? elite.art : SOLDIER_ART[troop] ? troop : 'pikeman';
+  const art = SOLDIER_ART[key];
+  const name = `soldier_${art.name}_${isEnemy ? 'red' : 'blue'}`;
   const cached = soldierCache.get(name);
   if (cached) return cached;
   const config: UnitSpineConfig = { path: `spine/soldiers/${name}/${name}`, displayScale: 0.18, labelToFoot: 110, footOffset: { x: 4, y: 0 },
-    walkGroundSpeed: 100, speedMultiplier: 2, mirrorSkin: isArcher ? undefined : 'hand_mirror', squad: SOLDIER_SQUAD_SLOTS,
-    clips: clips('soldier', isArcher ? 1.2 : 1) };
+    walkGroundSpeed: 100, speedMultiplier: 2, mirrorSkin: art.bow ? undefined : 'hand_mirror', squad: SOLDIER_SQUAD_SLOTS,
+    clips: clips('soldier', art.attack) };
   soldierCache.set(name, config);
   return config;
+}
+/**
+ * 兵種素材載不起來時逐層退回：精銳外觀 → 兵種外觀 → 槍兵／弓兵。
+ * 原因：兵種專屬素材是私有美術、不進倉庫，沒放素材的環境不能讓單位退回方塊。
+ */
+export function troopSpineConfigWithFallback(troop: string, isEnemy: boolean, tallyTemplateId: string | null | undefined,
+  hasFailed: (path: string) => boolean): UnitSpineConfig {
+  const candidates = [troopSpineConfig(troop, isEnemy, tallyTemplateId), troopSpineConfig(troop, isEnemy),
+    troopSpineConfig(troop === 'archer' ? 'archer' : 'pikeman', isEnemy)];
+  return candidates.find(config => !hasFailed(config.path)) ?? candidates[candidates.length - 1];
+}
+/**
+ * 小兵依兵種（弓／其餘）與陣營選素材：我方藍、敵方紅，戰場上一眼分得出敵我。
+ * 紅色版由藍色圖集換色產生（見 tools_node/battle-chibi/），骨架與動作和藍色版共用。
+ */
+export function soldierSpineConfig(isArcher: boolean, isEnemy = false): UnitSpineConfig {
+  return troopSpineConfig(isArcher ? 'archer' : 'pikeman', isEnemy);
 }

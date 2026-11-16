@@ -44,7 +44,7 @@ import { BattleState } from "../models/BattleState";
 import { isUnitVisibleToPlayer } from "../shared/BattleVision";
 import { BoardRenderer } from "./BoardRenderer";
 import { SpineUnitOverlay } from "./SpineGeneralOverlay";
-import { generalSpineConfig, soldierSpineConfig, squadMemberCount } from '../shared/UnitPresentationConfig';
+import { generalSpineConfig, squadMemberCount, troopSpineConfigWithFallback } from '../shared/UnitPresentationConfig';
 import { DuelExchange } from '../shared/DuelPresentationCore';
 import { BATTLE_VISUAL_TIMING } from "./BattlePresentationTiming";
 import { BuffGainEffectPool } from "./effects/BuffGainEffectPool";
@@ -869,7 +869,8 @@ export class UnitRenderer extends Component {
       if (unit) {
         const isGeneral = this.isGeneralAvatarUnit(unit);
         const general = isGeneral ? this.latestState?.getGeneral(unit.faction) : null;
-        const config = isGeneral ? (general ? generalSpineConfig(general.id, general.templateId) : null) : soldierSpineConfig(unit.type === TroopType.Archer, unit.faction === Faction.Enemy);
+        const config = isGeneral ? (general ? generalSpineConfig(general.id, general.templateId) : null)
+          : troopSpineConfigWithFallback(unit.type, unit.faction === Faction.Enemy, unit.tallyTemplateId, path => this.spineUnits.hasFailed(path));
         if (config) {
           const p = view.labelNode.position;
           const foot = isGeneral ? this.generalSidelineFoot(unit.faction) : this.unitGroundFoot(view);

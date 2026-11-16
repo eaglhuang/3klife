@@ -1,0 +1,36 @@
+--- a/tools/soldier_rig.py	2026-11-16 09:19:30.729432700 +0800
++++ b/tools/soldier_rig.py	2026-11-16 09:19:31.534664700 +0800
+@@ -278,12 +278,22 @@
+      'shield': {'translate': TR((0, (0, 0)), (0.35, (14, 4)), (0.5, (14, 4)), (0.9, (0, 0)))},
+      'arm_n': {'rotate': R((0, 0), (0.2, -60), (0.42, 40), (0.6, 40), (0.9, 0))},
+      'foot_f': {'translate': TR((0, (0, 0)), (0.18, (6, 8)), (0.32, (18, 0)), (0.6, (18, 0)), (0.9, (0, 0)))}}},
++ # 單手短兵／長柄鈍器共用的下劈：舉過肩 -> 前劈 -> 命中頓格 -> 收勢（刀、劍、錘、槳、杖共用；刀尖世界角 150 -> -30 度）
++ 'attack_slash': {'bones': {
++     'hip': {'translate': TR((0, (0, 0)), (0.3, (-8, -4)), (0.42, (14, -8)), (0.58, (14, -8)), (1.0, (0, 0)))},
++     'torso': {'rotate': R((0, 0), (0.3, 8), (0.42, -12), (0.58, -12), (1.0, 0))},
++     'arm_n': {'rotate': R((0, 0), (0.3, 120), (0.42, 60), (0.58, 60), (1.0, 0))},
++     'weapon': {'rotate': R((0, 0), (0.3, -60), (0.42, -180), (0.58, -180), (1.0, 0))},
++     'arm_f': {'rotate': R((0, 0), (0.3, -15), (0.42, 20), (0.58, 20), (1.0, 0))},
++     'foot_f': {'translate': TR((0, (0, 0)), (0.22, (6, 8)), (0.4, (24, 0)), (0.62, (24, 0)), (0.82, (10, 8)), (1.0, (0, 0)))}}},
+  'attack_bow': BOW_ACTION(),
+ }
+ # 共用戰場語意動作。移動採既有無滑步走姿，速度倍率由接入層同步。
+ A['dash_in'] = json.loads(json.dumps(A['walk']))
+ A['retreat'] = json.loads(json.dumps(A['walk']))
+-A['duel_attack'] = json.loads(json.dumps(A['attack_bow' if SHLD == 'weapon_bow' else 'attack_spear' if WEAP else 'attack_shield']))
++# 交鋒動作依裝備類別：char.json 的 attack_class（spear 突刺／slash 下劈／shield 盾擊／bow 射擊）；不設則照舊依持械推定
++_AC = C.cfg.get('attack_class') or ('bow' if SHLD == 'weapon_bow' else 'spear' if WEAP else 'shield')
++A['duel_attack'] = json.loads(json.dumps(A['attack_' + _AC]))
+ A['hit'] = {'bones': {
+     'hip': {'translate': TR((0, (0, 0)), (0.12, (-9, -8)), (0.4, (-4, -4)), (0.9, (0, 0)))},
+     'torso': {'rotate': R((0, 0), (0.12, 12), (0.4, 4), (0.9, 0))},
+--- a/spec/standard.json	2026-11-16 09:19:30.811237300 +0800
++++ b/spec/standard.json	2026-11-16 09:19:31.661177800 +0800
+@@ -465,6 +465,7 @@
+     "idle",
+     "walk",
+     "attack_spear",
++    "attack_slash",
+     "attack_shield",
+     "attack_bow",
+     "dash_in",

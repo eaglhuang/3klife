@@ -6143,6 +6143,52 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9317",
+      "title": "小兵依兵種與虎符換 Q 版外觀；專屬素材載不起來時退回槍兵或弓兵",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-16T15:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 2026-11-16 指示：小兵要有 Q 版動畫與素材，並有兵種設計。原本所有非弓兵的小兵都畫成槍兵，戰場上分不出盾兵、步兵、工兵、醫護、水軍。",
+      "related": [
+        "PROG-2-9316"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: done | 驗證: 型別檢查 0 錯；單元測試 7716 通過；SpineUnitOverlay 測試通過 | 變更: 兵種對應素材表、精銳虎符外觀、素材缺失逐層退回；附兵種設計文件、給 Codex 的美術委託與產圖工具 | 阻塞: 新素材為私有美術不進倉庫，且本機尚無 .meta（需 Cocos 重新匯入資產）；未做到：尚未實機驗證，紅色版未逐一檢查，水軍船槳造型待改，騎兵與連弩手等 Codex 分件圖",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
