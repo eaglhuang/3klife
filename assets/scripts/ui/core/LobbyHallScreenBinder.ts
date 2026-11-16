@@ -42,6 +42,17 @@ export type LobbyHallPanelId = 'wall-left' | 'wall-right' | 'altar' | 'clan';
 
 export const LOBBY_HALL_PANEL_IDS: readonly LobbyHallPanelId[] = ['wall-left', 'wall-right', 'altar', 'clan'];
 
+/** 左右任務牆 */
+export type LobbyHallWallId = 'wall-left' | 'wall-right';
+export const LOBBY_HALL_WALL_IDS: readonly LobbyHallWallId[] = ['wall-left', 'wall-right'];
+
+/** 牆面節點結構（設計稿順序）：牆頭、任務列…、頁尾（「展開軍務牆」）；牆頭與頁尾不算任務列 */
+export function splitWallNodes(wall: Node): { head: Node | null; rows: Node[]; footer: Node | null } {
+    const [head, ...rest] = wall.children;
+    if (!head || rest.length === 0) return { head: head ?? null, rows: [], footer: null };
+    return { head, rows: rest.slice(0, rest.length - 1), footer: rest[rest.length - 1] };
+}
+
 /** 人群 tick 間隔（秒）；點位 60 秒才輪換，這裡只是檢查頻率 */
 export const STAGE_TICK_SEC = 5;
 
@@ -77,6 +88,10 @@ export interface LobbyHallScreenDeps {
     readonly onDock: (id: LobbyHallDockId) => void;
     /** 場景面板點擊；未提供時面板不接點擊 */
     readonly onPanel?: (id: LobbyHallPanelId) => void;
+    /** 點牆上第 rowIndex 張任務卡（與 setWall 的列順序一致）；未提供時只有整面牆可點（PROG-2-9123） */
+    readonly onWallRow?: (wall: LobbyHallWallId, rowIndex: number) => void;
+    /** 點牆底的「展開軍務牆／內政牆」 */
+    readonly onWallExpand?: (wall: LobbyHallWallId) => void;
     /** 人群設定；設定檔沒載到時為 null，不建人群層 */
     readonly stage?: LobbyHallStageDepsInput | null;
     /** 勢力圖三態版面；沒載到時為 null，不掛地圖播放 */
@@ -149,6 +164,7 @@ export class LobbyHallScreenBinder {
         for (const id of LOBBY_HALL_DOCK_IDS) this._bindTap(`lobby-hall-screen.dock-${id}`, () => _deps.onDock(id));
         const onPanel = _deps.onPanel;
         if (onPanel) for (const id of LOBBY_HALL_PANEL_IDS) this._bindTap(`lobby-hall-screen.${id}`, () => onPanel(id));
+        this._bindWallTargets();
         this._bindBubbleChoices();
         if (_deps.mapLayout) this._map = this._createMapPlayer(_deps.mapLayout);
         if (_deps.stage) this._createStage(_deps.stage);
@@ -232,8 +248,8 @@ export class LobbyHallScreenBinder {
     setWall(id: 'wall-left' | 'wall-right', view: LobbyHallWallView): void {
         const wall = findUcufNode(this._screenRoot, `lobby-hall-screen.${id}`);
         if (!wall || wall.children.length < 2) return;
-        const [head, ...rest] = wall.children;
-        const rowNodes = rest.slice(0, rest.length - 1);
+        const { head, rows: rowNodes } = splitWallNodes(wall);
+        if (!head) return;
         setText(head.children[1], view.countText);
         rowNodes.forEach((rowNode, i) => {
             const row = view.rows[i];
@@ -472,6 +488,29 @@ export class LobbyHallScreenBinder {
         widget.horizontalCenter = hCenter;
         widget.top = top;
         widget.updateAlignment();
+    }
+
+    /**
+     * 牆面任務卡與頁尾各自接點擊：卡片開對應任務，頁尾開整面牆。
+     * 整面牆本身也有點擊（開牆），子節點要擋掉冒泡，不然點卡片會同時觸發兩次。
+     */
+    private _bindWallTargets(): void {
+        const { onWallRow, onWallExpand } = this._deps;
+        if (!onWallRow && !onWallExpand) return;
+        for (const id of LOBBY_HALL_WALL_IDS) {
+            const wall = findUcufNode(this._screenRoot, `lobby-hall-screen.${id}`);
+            if (!wall) continue;
+            const { rows, footer } = splitWallNodes(wall);
+            const bindChild = (node: Node, handler: () => void): void => {
+                node.off(Node.EventType.TOUCH_END);
+                node.on(Node.EventType.TOUCH_END, (event?: { propagationStopped?: boolean }) => {
+                    if (event) event.propagationStopped = true;
+                    handler();
+                });
+            };
+            if (onWallRow) rows.forEach((rowNode, index) => bindChild(rowNode, () => onWallRow(id, index)));
+            if (onWallExpand && footer) bindChild(footer, () => onWallExpand(id));
+        }
     }
 
     private _bindTap(ucufId: string, handler: () => void): void {
