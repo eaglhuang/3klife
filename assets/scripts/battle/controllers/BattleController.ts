@@ -510,7 +510,7 @@ export class BattleController {
   /** 本回合玩家已部署數與上限（部署面板 Toast 與戰況提示用） */
   public getPlayerDeployProgress(): { used: number; limit: number; reached: boolean } {
     const used = this.turnManager.playerDeployCountThisTurn;
-    const limit = GAME_CONFIG.MAX_PLAYER_DEPLOY_PER_TURN;
+    const limit = this.turnManager.playerDeployLimit;
     return { used, limit, reached: !this.turnManager.canDeployPlayer() };
   }
 
@@ -1532,6 +1532,7 @@ export class BattleController {
 
   /** 開戰會把回合上限重設回預設值，所以開戰後與旗標變更時都要重新套用（含「再戰一次」） */
   private applyTutorialRules(): void {
+    this.turnManager.playerDeployLimit = this._tutorialBattle ? GAME_CONFIG.tutorialPlayerDeployPerTurn : GAME_CONFIG.MAX_PLAYER_DEPLOY_PER_TURN;
     if (!this._tutorialBattle) return;
     // 教學戰不強制判負（PROG-2-2215 方案 b）：回合用盡算敵軍退兵、玩家獲勝
     services().battle.configureTurnLimit(GAME_CONFIG.TUTORIAL_TURN_LIMIT, 'player-win');

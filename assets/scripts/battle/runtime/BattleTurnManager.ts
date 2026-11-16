@@ -30,8 +30,11 @@ export class BattleTurnManager {
     this.enemyGeneralLastAutoSkillTurn = -1;
   }
 
+  /** 玩家每回合派兵上限；教學戰會改成較小的值（PROG-2-9324）。 */
+  public playerDeployLimit: number = GAME_CONFIG.MAX_PLAYER_DEPLOY_PER_TURN;
+
   public canDeployPlayer(): boolean {
-    return this.playerDeployCountThisTurn < GAME_CONFIG.MAX_PLAYER_DEPLOY_PER_TURN;
+    return this.playerDeployCountThisTurn < this.playerDeployLimit;
   }
 
   public notePlayerDeployment(): void {
