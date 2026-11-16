@@ -5825,49 +5825,49 @@
         "activeVersion": "0002"
       }
     },
-        {
-  "uid": "jiang-wan",
-  "name": "蔣琬",
-  "standing": {
-    "status": "integrated",
-    "history": [
-      {
-        "version": "0002",
-        "file": "standing/jiang_wan__蔣琬__standing_0002.png",
-        "status": "integrated"
-      }
-    ],
-    "activeVersion": "0002"
-  },
-  "avatar": {
-    "status": "integrated",
-    "history": [
-      {
-        "version": "0002",
-        "file": "avatars/jiang_wan__蔣琬__avatar_0002.png",
-        "status": "integrated"
-      }
-    ],
-    "activeVersion": "0002"
-  },
-  "battle": {
-    "status": "review-pending",
-    "activeVersion": "0001",
-    "history": [
-      {
-        "version": "0001",
-        "file": "battle/jiang_wan__蔣琬__battle_0001.png",
+    {
+      "uid": "jiang-wan",
+      "name": "蔣琬",
+      "standing": {
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0002",
+            "file": "standing/jiang_wan__蔣琬__standing_0002.png",
+            "status": "integrated"
+          }
+        ],
+        "activeVersion": "0002"
+      },
+      "avatar": {
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0002",
+            "file": "avatars/jiang_wan__蔣琬__avatar_0002.png",
+            "status": "integrated"
+          }
+        ],
+        "activeVersion": "0002"
+      },
+      "battle": {
         "status": "review-pending",
-        "sha256": "22e0ee4d8571a86c89621995ccce795f5ed0658c43a8d30778674c4ceacadfa3",
-        "canvas": "1024x1536 RGBA",
-        "weaponClass": "command-baton",
-        "poseLabel": "側身推掌調度",
-        "sourceStanding": "standing/jiang_wan__蔣琬__standing_0002.png",
-        "note": "以蔣琬核定站姿為唯一角色造型參考；以短令杖與推掌手勢呈現謀略調度，令杖為指揮道具而非武器。透明全身候選，待使用者檢視。"
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/jiang_wan__蔣琬__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "22e0ee4d8571a86c89621995ccce795f5ed0658c43a8d30778674c4ceacadfa3",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "command-baton",
+            "poseLabel": "側身推掌調度",
+            "sourceStanding": "standing/jiang_wan__蔣琬__standing_0002.png",
+            "note": "以蔣琬核定站姿為唯一角色造型參考；以短令杖與推掌手勢呈現謀略調度，令杖為指揮道具而非武器。透明全身候選，待使用者檢視。"
+          }
+        ]
       }
-    ]
-  }
-},
+    },
     {
       "uid": "gou-fu",
       "name": "句扶",
@@ -7531,7 +7531,7 @@
         ]
       }
     },
-        {
+    {
       "uid": "guo-nu-wang",
       "name": "郭女王",
       "standing": {
@@ -7666,49 +7666,49 @@
         "activeVersion": "0002"
       }
     },
-        {
-  "uid": "xiahou-ling-nv",
-  "name": "夏侯令女",
-  "standing": {
-    "status": "integrated",
-    "history": [
-      {
-        "version": "0002",
-        "file": "standing/xiahou_ling_nv__夏侯令女__standing_0002.png",
-        "status": "integrated"
-      }
-    ],
-    "activeVersion": "0002"
-  },
-  "avatar": {
-    "status": "integrated",
-    "history": [
-      {
-        "version": "0002",
-        "file": "avatars/xiahou_ling_nv__夏侯令女__avatar_0002.png",
-        "status": "integrated"
-      }
-    ],
-    "activeVersion": "0002"
-  },
-  "battle": {
-    "status": "review-pending",
-    "activeVersion": "0001",
-    "history": [
-      {
-        "version": "0001",
-        "file": "battle/xiahou_ling_nv__夏侯令女__battle_0001.png",
+    {
+      "uid": "xiahou-ling-nv",
+      "name": "夏侯令女",
+      "standing": {
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0002",
+            "file": "standing/xiahou_ling_nv__夏侯令女__standing_0002.png",
+            "status": "integrated"
+          }
+        ],
+        "activeVersion": "0002"
+      },
+      "avatar": {
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0002",
+            "file": "avatars/xiahou_ling_nv__夏侯令女__avatar_0002.png",
+            "status": "integrated"
+          }
+        ],
+        "activeVersion": "0002"
+      },
+      "battle": {
         "status": "review-pending",
-        "sha256": "9b52bbf8a4d2aeb512002bbf699bf58acbfc6b7c20c10aa64f785e2655c0e535",
-        "canvas": "1024x1536 RGBA",
-        "weaponClass": "message-case",
-        "poseLabel": "低身護信推掌",
-        "sourceStanding": "standing/xiahou_ling_nv__夏侯令女__standing_0002.png",
-        "note": "以夏侯令女核定站姿為唯一角色造型參考；以低重心護信前踏呈現臨戰堅毅，不增添未見於身份設定的武器。透明全身候選，待使用者檢視。"
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/xiahou_ling_nv__夏侯令女__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "9b52bbf8a4d2aeb512002bbf699bf58acbfc6b7c20c10aa64f785e2655c0e535",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "message-case",
+            "poseLabel": "低身護信推掌",
+            "sourceStanding": "standing/xiahou_ling_nv__夏侯令女__standing_0002.png",
+            "note": "以夏侯令女核定站姿為唯一角色造型參考；以低重心護信前踏呈現臨戰堅毅，不增添未見於身份設定的武器。透明全身候選，待使用者檢視。"
+          }
+        ]
       }
-    ]
-  }
-},
+    },
     {
       "uid": "gan-shi",
       "name": "甘氏",
@@ -7735,49 +7735,49 @@
         "activeVersion": "0002"
       }
     },
-        {
-  "uid": "mi-shi",
-  "name": "糜氏",
-  "standing": {
-    "status": "integrated",
-    "history": [
-      {
-        "version": "0002",
-        "file": "standing/mi_shi__糜氏__standing_0002.png",
-        "status": "integrated"
-      }
-    ],
-    "activeVersion": "0002"
-  },
-  "avatar": {
-    "status": "integrated",
-    "history": [
-      {
-        "version": "0002",
-        "file": "avatars/mi_shi__糜氏__avatar_0002.png",
-        "status": "integrated"
-      }
-    ],
-    "activeVersion": "0002"
-  },
-  "battle": {
-    "status": "review-pending",
-    "activeVersion": "0001",
-    "history": [
-      {
-        "version": "0001",
-        "file": "battle/mi_shi__糜氏__battle_0001.png",
+    {
+      "uid": "mi-shi",
+      "name": "糜氏",
+      "standing": {
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0002",
+            "file": "standing/mi_shi__糜氏__standing_0002.png",
+            "status": "integrated"
+          }
+        ],
+        "activeVersion": "0002"
+      },
+      "avatar": {
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0002",
+            "file": "avatars/mi_shi__糜氏__avatar_0002.png",
+            "status": "integrated"
+          }
+        ],
+        "activeVersion": "0002"
+      },
+      "battle": {
         "status": "review-pending",
-        "sha256": "400cc7100f8b985562e76f4fa7f61c1615086041350487f6d815afd9a71928f0",
-        "canvas": "1024x1536 RGBA",
-        "weaponClass": "sealed-travel-case",
-        "poseLabel": "側身撤護持匣",
-        "sourceStanding": "standing/mi_shi__糜氏__standing_0002.png",
-        "note": "以糜氏核定站姿為唯一角色造型參考；依其非持械身份，以側身撤護、持匣回望呈現戰場動態。透明全身候選，待使用者檢視。"
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/mi_shi__糜氏__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "400cc7100f8b985562e76f4fa7f61c1615086041350487f6d815afd9a71928f0",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "sealed-travel-case",
+            "poseLabel": "側身撤護持匣",
+            "sourceStanding": "standing/mi_shi__糜氏__standing_0002.png",
+            "note": "以糜氏核定站姿為唯一角色造型參考；依其非持械身份，以側身撤護、持匣回望呈現戰場動態。透明全身候選，待使用者檢視。"
+          }
+        ]
       }
-    ]
-  }
-},
+    },
     {
       "uid": "cao-jie",
       "name": "曹節",
@@ -7985,49 +7985,49 @@
         ]
       }
     },
-        {
-  "uid": "yang-hui-yu",
-  "name": "羊徽瑜",
-  "standing": {
-    "status": "integrated",
-    "history": [
-      {
-        "version": "0002",
-        "file": "standing/yang_hui_yu__羊徽瑜__standing_0002.png",
-        "status": "integrated"
-      }
-    ],
-    "activeVersion": "0002"
-  },
-  "avatar": {
-    "status": "integrated",
-    "history": [
-      {
-        "version": "0002",
-        "file": "avatars/yang_hui_yu__羊徽瑜__avatar_0002.png",
-        "status": "integrated"
-      }
-    ],
-    "activeVersion": "0002"
-  },
-  "battle": {
-    "status": "review-pending",
-    "activeVersion": "0001",
-    "history": [
-      {
-        "version": "0001",
-        "file": "battle/yang_hui_yu__羊徽瑜__battle_0001.png",
+    {
+      "uid": "yang-hui-yu",
+      "name": "羊徽瑜",
+      "standing": {
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0002",
+            "file": "standing/yang_hui_yu__羊徽瑜__standing_0002.png",
+            "status": "integrated"
+          }
+        ],
+        "activeVersion": "0002"
+      },
+      "avatar": {
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0002",
+            "file": "avatars/yang_hui_yu__羊徽瑜__avatar_0002.png",
+            "status": "integrated"
+          }
+        ],
+        "activeVersion": "0002"
+      },
+      "battle": {
         "status": "review-pending",
-        "sha256": "e65670f107f8841af66a416eae216b1b93127a872f1069fd14faac929623ad5b",
-        "canvas": "1024x1536 RGBA",
-        "weaponClass": "court-command-token",
-        "poseLabel": "前踏揚令牌傳信",
-        "sourceStanding": "standing/yang_hui_yu__羊徽瑜__standing_0002.png",
-        "note": "以羊徽瑜核定站姿為唯一角色造型參考；依宮廷身份以令牌傳信，呈現優雅臨戰支援動作。透明全身候選，待使用者檢視。"
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/yang_hui_yu__羊徽瑜__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "e65670f107f8841af66a416eae216b1b93127a872f1069fd14faac929623ad5b",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "court-command-token",
+            "poseLabel": "前踏揚令牌傳信",
+            "sourceStanding": "standing/yang_hui_yu__羊徽瑜__standing_0002.png",
+            "note": "以羊徽瑜核定站姿為唯一角色造型參考；依宮廷身份以令牌傳信，呈現優雅臨戰支援動作。透明全身候選，待使用者檢視。"
+          }
+        ]
       }
-    ]
-  }
-},
+    },
     {
       "uid": "hua-man",
       "name": "花鬘",
@@ -8130,49 +8130,49 @@
         ]
       }
     },
-        {
-  "uid": "cao-hua",
-  "name": "曹華",
-  "standing": {
-    "status": "integrated",
-    "history": [
-      {
-        "version": "0002",
-        "file": "standing/cao_hua__曹華__standing_0002.png",
-        "status": "integrated"
-      }
-    ],
-    "activeVersion": "0002"
-  },
-  "avatar": {
-    "status": "integrated",
-    "history": [
-      {
-        "version": "0002",
-        "file": "avatars/cao_hua__曹華__avatar_0002.png",
-        "status": "integrated"
-      }
-    ],
-    "activeVersion": "0002"
-  },
-  "battle": {
-    "status": "review-pending",
-    "activeVersion": "0001",
-    "history": [
-      {
-        "version": "0001",
-        "file": "battle/cao_hua__曹華__battle_0001.png",
+    {
+      "uid": "cao-hua",
+      "name": "曹華",
+      "standing": {
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0002",
+            "file": "standing/cao_hua__曹華__standing_0002.png",
+            "status": "integrated"
+          }
+        ],
+        "activeVersion": "0002"
+      },
+      "avatar": {
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0002",
+            "file": "avatars/cao_hua__曹華__avatar_0002.png",
+            "status": "integrated"
+          }
+        ],
+        "activeVersion": "0002"
+      },
+      "battle": {
         "status": "review-pending",
-        "sha256": "2027138be1b8adbca8839acb616c5f09e0130f5806071446a8fe0c303dc601a3",
-        "canvas": "1024x1536 RGBA",
-        "weaponClass": "ceremonial-command-disc",
-        "poseLabel": "回身舉令盤指向前方",
-        "sourceStanding": "standing/cao_hua__曹華__standing_0002.png",
-        "note": "以曹華核定站姿為唯一角色造型參考；依宮廷身份以儀令圓盤與手勢傳達軍令，呈現回身調度動作。透明全身候選，待使用者檢視。"
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/cao_hua__曹華__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "2027138be1b8adbca8839acb616c5f09e0130f5806071446a8fe0c303dc601a3",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "ceremonial-command-disc",
+            "poseLabel": "回身舉令盤指向前方",
+            "sourceStanding": "standing/cao_hua__曹華__standing_0002.png",
+            "note": "以曹華核定站姿為唯一角色造型參考；依宮廷身份以儀令圓盤與手勢傳達軍令，呈現回身調度動作。透明全身候選，待使用者檢視。"
+          }
+        ]
       }
-    ]
-  }
-},
+    },
     {
       "uid": "cao-xian",
       "name": "曹憲",
@@ -8197,6 +8197,23 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/cao_xian__曹憲__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "cc08451e00fbd066621b4755c9c8953f5403628ee0f3b5be9eecc69fd529bf7f",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "sealed-command-scroll",
+            "poseLabel": "側身傳令展卷",
+            "sourceStanding": "standing/cao_xian__曹憲__standing_0002.png",
+            "note": "以核定站姿為身份與服裝參考；全身傳令動作，手持密封軍令卷並作引導手勢，已等比例縮放置中留出畫布安全邊距。透明 PNG，候選待審。"
+          }
+        ]
       }
     },
     {
