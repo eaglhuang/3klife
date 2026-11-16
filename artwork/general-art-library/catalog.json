@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-16T09:57:19.776Z",
+  "updatedAt": "2026-11-16T10:10:11.950Z",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -3008,6 +3008,25 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/lu_meng__呂蒙__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "8cc3a6a261b9e87308f9281a98c6bd6caef1a381ac86784579c9c8ae2eca8f55",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "sword-and-shield",
+            "poseLabel": "盾擋後斜劈反擊",
+            "poseSelection": "AI-selected distinct pose",
+            "gaze": "direct-to-camera",
+            "sourceStanding": "standing/lu_meng__呂蒙__standing_0002.png",
+            "note": "依核定站姿保留圓盾與單手刀，採緊湊側步、盾擋與斜向反擊。透明背景；候選待使用者視覺確認，尚未接入正式遊戲。"
+          }
+        ]
       }
     },
     {
