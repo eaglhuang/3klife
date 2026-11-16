@@ -230,6 +230,8 @@ export interface CreateSortieInput {
     fieldUnitLimit?: number;
     /** 出征整隊各武將的 Bloodline_ID（主將、參謀、後勤）；重複時拒絕建立帳本（SAME-02） */
     formationBloodlineIds?: readonly (string | undefined)[];
+    /** 首戰教學戰：出征軍勢至少補到這個數，補上的兵力算保底、不扣城市兵源；不傳或 0 表示不補 */
+    tutorialPoolMin?: number;
 }
 
 export interface SortieSummary {
@@ -426,7 +428,7 @@ export function createSortieState(input: CreateSortieInput): SortieState {
     }
     const rawPoolMax = computeSortiePoolMax(input.commandCapacity, input.cityTroops, input.stageSortieCap);
     // 兵源不足一隊步兵時保底補到一隊，不讓玩家進戰場一隊都派不出去
-    const guaranteedTroops = sortieGuaranteeOf(rawPoolMax);
+    const guaranteedTroops = Math.max(sortieGuaranteeOf(rawPoolMax), nonNegInt(input.tutorialPoolMin) - rawPoolMax, 0);
     const poolMax = rawPoolMax + guaranteedTroops;
     const food = nonNegInt(input.food) + nonNegInt(input.foodBonus);
     const tacticMax = BASE_TACTIC_CAP + nonNegInt(input.strategistBonus?.maxTacticBonus);

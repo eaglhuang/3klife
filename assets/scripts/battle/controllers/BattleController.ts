@@ -307,7 +307,7 @@ export class BattleController {
     this.sortie = null;
     services().buff.clearAll(); // 清除上一場的狀態效果
     services().battle.beginBattle();
-    this.applyTutorialTurnLimit();
+    this.applyTutorialRules();
     this.applyStartOfBattleSceneGambit();
     this.tileBuffLifecycleManager.spawnTileBuffsForTurn();
   }
@@ -588,7 +588,8 @@ export class BattleController {
 
   public configureSortie(input: CreateSortieInput): SortieState {
     // 主將自帶的戰法一定要付得起：上限不夠就墊高到該戰法的成本
-    this.sortie = ensureTacticCapCovers(createSortieState(input), getTacticTpCost(this.resolveSeedTacticId({})));
+    const sortieInput = this._tutorialBattle ? { ...input, tutorialPoolMin: GAME_CONFIG.tutorialSortiePoolMin } : input;
+    this.sortie = ensureTacticCapCovers(createSortieState(sortieInput), getTacticTpCost(this.resolveSeedTacticId({})));
     services().battle.configureFood({ initial: this.sortie.food, max: this.sortie.maxFood, perTurn: 0 });
     return this.sortie;
   }
@@ -1519,15 +1520,26 @@ export class BattleController {
   public get tutorialBattle(): boolean { return this._tutorialBattle; }
   public set tutorialBattle(value: boolean) {
     this._tutorialBattle = value;
-    this.applyTutorialTurnLimit();
+    this.applyTutorialRules();
   }
   private _tutorialBattle = false;
 
   /** 開戰會把回合上限重設回預設值，所以開戰後與旗標變更時都要重新套用（含「再戰一次」） */
-  private applyTutorialTurnLimit(): void {
+  private applyTutorialRules(): void {
+    if (!this._tutorialBattle) return;
     // 教學戰不強制判負（PROG-2-2215 方案 b）：回合用盡算敵軍退兵、玩家獲勝
-    if (this._tutorialBattle) services().battle.configureTurnLimit(GAME_CONFIG.TUTORIAL_TURN_LIMIT, 'player-win');
+    services().battle.configureTurnLimit(GAME_CONFIG.TUTORIAL_TURN_LIMIT, 'player-win');
+    // 讓新玩家第一場就能放招、能真的打贏（PROG-2-9321）：每場只套一次，以敵主將物件為記號
+    const { playerGeneral, enemyGeneral } = this.state;
+    if (!playerGeneral || !enemyGeneral || this.tutorialHandicapFor === enemyGeneral) return;
+    this.tutorialHandicapFor = enemyGeneral;
+    if (GAME_CONFIG.tutorialStartSpFull) playerGeneral.currentSp = playerGeneral.maxSp;
+    // maxHp 是唯讀欄位，教學戰是唯一需要改它的地方：連上限一起降，血條才會顯示滿格而不是半條
+    const hp = Math.max(1, Math.round(enemyGeneral.maxHp * GAME_CONFIG.tutorialEnemyGeneralHpRatio));
+    (enemyGeneral as { maxHp: number }).maxHp = hp;
+    enemyGeneral.currentHp = Math.min(enemyGeneral.currentHp, hp);
   }
+  private tutorialHandicapFor: GeneralUnit | null = null;
 
   public retreatBattle(): BattleResult {
     if (this.flowStateMachine.isFinished()) return this.flowStateMachine.result!;

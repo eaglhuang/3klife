@@ -3,7 +3,6 @@ import { TroopCounterAnnouncer } from '../../core/systems/TroopCounterScripts';
 import { calmAdjustedAura, calmReductionOf, furyModifiersOf } from '../../core/systems/WhiteFactorTraits';
 import { critLine, SP_FULL_LINE } from '../../core/systems/NumericalScriptLines';
 import { EVENT_NAMES, Faction, GAME_CONFIG, SP_PER_KILL, StatusEffect, TerrainType, WEAK_ATTACK_MULTIPLIER, Weather } from '../../core/config/Constants';
-import { aiSpGainPerKill } from '../../core/systems/AiSpCharge';
 import { comboChanceOfPair } from '../../core/systems/ComboAttackKin';
 import type { HistoricalRelation } from '../../core/systems/KinRelation';
 import { services } from '../../core/managers/ServiceLoader';
@@ -249,6 +248,7 @@ export class BattleCombatResolver {
     // 主將 HP 以整數結算（HUD 不顯示小數）；命中至少 1 點，閃避已在上方提前返回
     const damage = Math.max(1, Math.round(rawDamage));
     general.takeDamage(damage);
+    this.grantSp(attacker.faction, GAME_CONFIG.spPerDamagingHit, svc);
     svc.event.emit(EVENT_NAMES.GeneralDamaged, {
       faction: enemyFaction,
       hp: general.currentHp,
@@ -697,6 +697,7 @@ export class BattleCombatResolver {
       return;
     }
     unit.takeDamage(damage);
+    if (damage > 0 && attackerFaction !== null && attackerFaction !== unit.faction) this.grantSp(attackerFaction, GAME_CONFIG.spPerDamagingHit, svc);
     svc.event.emit(EVENT_NAMES.UnitDamaged, {
       unitId: unit.id,
       damage,
@@ -793,21 +794,22 @@ export class BattleCombatResolver {
     }
 
     if (killer) {
-      const general = this.context.state.getGeneral(killer.faction);
-      if (general) {
-        const wasFull = general.currentSp >= general.maxSp;
-        general.addSp(killer.faction === Faction.Enemy ? aiSpGainPerKill(this.context.state.aiSpGainModifier) : SP_PER_KILL);
-        // 數值系統 §G-1 SP 蓄滿（PROG-2-1782）：只有玩家能發動，跨過滿格時說一次
-        if (killer.faction === Faction.Player && !wasFull && general.currentSp >= general.maxSp) {
-          svc.event.emit(EVENT_NAMES.BattleSkillNotice, SP_FULL_LINE);
-        }
-        svc.event.emit(EVENT_NAMES.GeneralSpChanged, {
-          faction: killer.faction,
-          sp: general.currentSp,
-          maxSp: general.maxSp,
-        });
-      }
+      this.grantSp(killer.faction, SP_PER_KILL, svc);
     }
+  }
+
+  /** 主將獲得 SP：敵方乘難度表倍率（小數捨去）；玩家跨過滿格時在戰報說一次。base 為玩家拿到的量。 */
+  private grantSp(faction: Faction, base: number, svc: ReturnType<typeof services>): void {
+    const general = this.context.state.getGeneral(faction);
+    if (!general || general.isDead()) return;
+    const gain = faction === Faction.Enemy ? Math.floor(base * this.context.state.aiSpGainModifier) : base;
+    if (gain <= 0) return;
+    const before = general.currentSp;
+    general.addSp(gain);
+    if (general.currentSp === before) return;
+    // 數值系統 §G-1 SP 蓄滿（PROG-2-1782）：只有玩家能發動，跨過滿格時說一次
+    if (faction === Faction.Player && general.currentSp >= general.maxSp) svc.event.emit(EVENT_NAMES.BattleSkillNotice, SP_FULL_LINE);
+    svc.event.emit(EVENT_NAMES.GeneralSpChanged, { faction, sp: general.currentSp, maxSp: general.maxSp });
   }
 
   private findCombatTarget(
