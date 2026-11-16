@@ -8,7 +8,7 @@
  *
  * Unity 對照：像 Cutscene 的 PlayableAsset 路徑解析 + 一個「本場已播過」旗標。
  */
-import type { PlaybackMode } from './cutinCore';
+import type { CutinConfig, PlaybackMode } from './cutinCore';
 
 /** 設定清單：列出有 cut-in 的武將，避免對每位武將都去讀不存在的檔案而滿屏載入錯誤 */
 export const CUTIN_INDEX_PATH = 'data/ult-cutin/index';
@@ -131,3 +131,90 @@ export function layoutCutinText(input: CutinTextLayoutInput): CutinTextLayout {
     width: Math.max(0, input.view.width - left - right),
   };
 }
+
+// ── 暫代圖（PROG-2-9352）──────────────────────────────────────────────────────
+// 還沒畫專屬分鏡圖的武將，施放奧義時改播一張「暫代圖」，確保流程與演出時序先接通，
+// 也讓「這位武將還沒有分鏡圖」在畫面上一眼看得出來，才不會忘記替換。
+
+/** 暫代圖的 imageKey：不對應任何 resources 檔案，由播放層以純色貼圖現場產生 */
+export const PLACEHOLDER_CUTIN_IMAGE_KEY = 'ult_cutin/__placeholder__';
+
+/** 疊在暫代圖上的警示字樣（畫面層與測試共用） */
+export const PLACEHOLDER_CUTIN_TEXT = '暫代圖 待替換';
+
+/** 總開關：關掉後沒有專屬分鏡圖的武將直接接奧義特效（維持舊行為） */
+export const PLACEHOLDER_CUTIN_ENABLED = true;
+
+/** 載入設定與分鏡圖的等待上限（毫秒）：超過就當沒有專屬 cut-in，改播暫代圖 */
+export const CUTIN_LOAD_TIMEOUT_MS = 3000;
+
+/**
+ * 單次演出（含載入、播放）的真實時間硬上限（毫秒）。
+ * 超過就強制收掉疊層並恢復戰場，回合流程不會被演出卡死。完整版約 3.5 秒，留足餘裕。
+ */
+export const CUTIN_HARD_TIMEOUT_MS = 12000;
+
+/** 組出暫代圖的 cut-in 設定：單格、約 1.7 秒（完整版），重播縮成 0.8 秒；格式與專屬設定完全相同 */
+export function buildPlaceholderCutinConfig(generalId: string, generalName: string, skillName = '奧義'): CutinConfig {
+  return {
+    id: `ult_cutin.placeholder.${cutinFileKey(generalId)}`,
+    generalId,
+    generalName,
+    skillName,
+    intro: { duration: 0.25, dimTo: 0.68, letterboxIn: 0.15 },
+    panels: [
+      {
+        imageKey: PLACEHOLDER_CUTIN_IMAGE_KEY,
+        hold: 1.0,
+        zoomFrom: 1.12,
+        zoomTo: 1.02,
+        zoomEase: 'punch',
+        transition: 'cut',
+        flashFrames: 3,
+        flashColor: [1, 1, 1],
+        flashPeak: 0.9,
+        shakeAmp: 8,
+        shakeFrames: 8,
+      },
+    ],
+    textOverlays: [{ panelIndex: 0, delay: 0.1, fadeIn: 0.133, generalName, skillName }],
+    outro: { duration: 0.35, flashFrames: 3, flashColor: [0.86, 0.94, 1], burstColor: [0.47, 0.75, 1], letterboxOut: 0.2 },
+    speed: 1,
+    replay: { duration: 0.8, panelIndices: [0], playVoice: false },
+    letterboxMax: 44 / 720,
+    referenceFps: 30,
+    shakeSeed: 1,
+  };
+}
+
+/**
+ * 「仍在用暫代圖」的清單：每次有武將因沒有專屬分鏡圖而改播暫代圖，就登記一次。
+ * 全專案只有這一處；要替換時看 list() 或 console 的警告即可，替換完（放圖＋設定＋加進 index.json）就不會再出現。
+ */
+export class PlaceholderCutinRegistry {
+  private readonly used = new Map<string, { name: string; count: number }>();
+
+  /** 登記一次使用；回傳是否為本次執行第一次（呼叫端只在第一次記警告，避免洗版） */
+  note(generalId: string, generalName: string): boolean {
+    const key = cutinFileKey(generalId);
+    const entry = this.used.get(key);
+    if (entry) {
+      entry.count += 1;
+      return false;
+    }
+    this.used.set(key, { name: generalName, count: 1 });
+    return true;
+  }
+
+  /** 目前仍用暫代圖的武將（id 已正規化） */
+  list(): Array<{ generalId: string; name: string; count: number }> {
+    return Array.from(this.used.entries()).map(([generalId, v]) => ({ generalId, name: v.name, count: v.count }));
+  }
+
+  clear(): void {
+    this.used.clear();
+  }
+}
+
+/** 全域唯一的暫代圖使用紀錄 */
+export const placeholderCutinRegistry = new PlaceholderCutinRegistry();

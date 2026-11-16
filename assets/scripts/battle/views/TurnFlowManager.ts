@@ -67,7 +67,8 @@ export class TurnFlowManager {
     let duelSeen = false;
     const checkAdvanceSafety = (): void => {
       if (c.isAdvancingTurn && this._advanceTurnGeneration === gen) {
-        if (c.isDuelPanelActive) { duelSeen = true; this.scene.scheduleOnce(checkAdvanceSafety, 1); return; }
+        // 奧義 cut-in 與單挑同理：演出不算在安全時限內，演出結束後重新給一段完整時限（PROG-2-9352）
+        if (c.isDuelPanelActive || c.isUltCutinActive) { duelSeen = true; this.scene.scheduleOnce(checkAdvanceSafety, 1); return; }
         if (duelSeen) { duelSeen = false; this.scene.scheduleOnce(checkAdvanceSafety, BATTLE_TURN_FLOW_TIMING.advanceSafetyUnlockSec); return; }
         UCUFLogger.warn(LogCategory.BATTLE, '[TurnFlowManager] isAdvancingTurn safety-reset（超時 20s），強制解鎖');
         this.finalizeAdvance();
@@ -135,7 +136,7 @@ export class TurnFlowManager {
 
   private pollCombatDrain(attempts: number, onDone: () => void): void {
     const c = this.ctx;
-    if (c.isDuelPanelActive) {
+    if (c.isDuelPanelActive || c.isUltCutinActive) {
       this.scene.scheduleOnce(() => this.pollCombatDrain(attempts, onDone), BATTLE_TURN_FLOW_TIMING.combatDrainPollIntervalSec);
       return;
     }
