@@ -2,7 +2,7 @@
  * ZoneOfControl — STR 壓制產生高移動成本／不可通行區域（FORM-09，PROG-2-2130）
  */
 import { TestSuite, assert } from './TestRunner';
-import { Faction, TroopType } from '../assets/scripts/core/config/Constants';
+import { Faction, GAME_CONFIG, TroopType } from '../assets/scripts/core/config/Constants';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
 import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
 import { BattleController } from '../assets/scripts/battle/controllers/BattleController';
@@ -127,6 +127,26 @@ export function createZoneOfControlSuite(): TestSuite {
         state.addUnit(makeUnit(PLAYER_GENERAL_ID, Faction.Player, 3, 5));
         executeBattleAutoMovePhase(context(state, Faction.Enemy));
         assert.equals(mover.depth, 6);
+    });
+
+    suite.test('接敵：斜前方或側面有敵部隊就停下，敵軍在兩格外或開關關閉時照走（PROG-2-9322）', () => {
+        const run = (enemyLane: number, enemyDepth: number, enemyId = 'foe'): number => {
+            services().initialize();
+            const state = new BattleState();
+            state.playerGeneral = stats(40, 30);
+            state.enemyGeneral = stats(40, 30);
+            const mover = makeUnit('mover', Faction.Player, 2, 0);
+            state.addUnit(mover);
+            state.addUnit(makeUnit(enemyId, Faction.Enemy, enemyLane, enemyDepth));
+            executeBattleAutoMovePhase(context(state, Faction.Player));
+            return mover.depth;
+        };
+        assert.equals(run(3, 2), 1, '斜前方有敵部隊：走到相鄰就停');
+        assert.equals(run(1, 0), 0, '側面有敵部隊：原地交戰');
+        assert.equals(run(4, 2), 3, '隔一路的敵軍不算相鄰');
+        const original = GAME_CONFIG.troopEngageAdjacent;
+        GAME_CONFIG.troopEngageAdjacent = false;
+        try { assert.equals(run(3, 2), 3, '開關關閉：照舊錯身而過'); } finally { GAME_CONFIG.troopEngageAdjacent = original; }
     });
 
     suite.test('區域內有敵軍擋路時，盾兵仍會舉盾牆', () => {

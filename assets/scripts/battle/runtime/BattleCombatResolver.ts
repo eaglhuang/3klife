@@ -869,6 +869,8 @@ export class BattleCombatResolver {
       break;
     }
 
+    // 同路正前方沒有目標時，一般部隊改打斜前方或側面的敵軍，之後才輪到打主將（PROG-2-9322）
+    if (GAME_CONFIG.troopEngageAdjacent && !this.isGeneralUnit(unit.id)) return this.findAdjacentEnemy(unit);
     return null;
   }
 
@@ -887,7 +889,7 @@ export class BattleCombatResolver {
       const cell = this.context.state.getCell(unit.lane + dl, unit.depth + dd);
       if (!cell?.occupantId) continue;
       const occ = this.context.state.units.get(cell.occupantId);
-      if (occ && occ.faction !== unit.faction && !this.isHiddenFromAttacker(unit, occ)) return occ;
+      if (occ && !occ.isDead() && occ.faction !== unit.faction && !this.isHiddenFromAttacker(unit, occ)) return occ;
     }
     return null;
   }

@@ -725,6 +725,11 @@ export class BattleController {
     return !this.sortie || this.sortie.tacticCurrent >= getTacticTpCost(tacticId);
   }
 
+  /** 計謀是否還要主將 SP 滿：有出征帳本時只扣計謀點（PROG-2-9323）；沒有帳本時沒有點數可扣，照舊用 SP 把關。 */
+  public seedTacticNeedsSp(): boolean {
+    return GAME_CONFIG.seedTacticRequiresFullSp || !this.sortie;
+  }
+
   /**
    * UI 與目標選取共用目前戰法的計謀點門檻；demo 沒有帳本時免扣點。
    * 傳入 options.tacticId 時以該戰法計價，與實際施放（triggerPlayerSeedTactic）同一來源。
@@ -973,7 +978,8 @@ export class BattleController {
     if (!this.canUsePlayerSkills()) return false;
 
     const general = this.state.playerGeneral;
-    if (!general?.canUseSkill()) return false;
+    const needsSp = this.seedTacticNeedsSp();
+    if (!general || (needsSp && !general.canUseSkill())) return false;
 
     const descriptor = this.getPlayerSeedTacticDescriptor();
     const tacticId = this.resolveSeedTacticId(options);
@@ -989,7 +995,7 @@ export class BattleController {
     if (!result.applied) return false;
 
     this.trySpendTacticPoints(tpCost);
-    general.currentSp = 0;
+    if (needsSp) general.currentSp = 0;
     services().event.emit(EVENT_NAMES.GeneralSpChanged, {
       faction: Faction.Player,
       sp: general.currentSp,

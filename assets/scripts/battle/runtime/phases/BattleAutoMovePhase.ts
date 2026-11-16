@@ -119,6 +119,8 @@ function stepMoveUnit(
   // unit.chargeCells 為本回合已實際走過的格數（踐踏計 2、換位計 1、一般前進計 1），
   // 地形回饋可能在途中加回移動力，因此以實際格數作為硬上限
   while (remainingMoveBudget > 0 && unit.chargeCells < MAX_MOVE_CELLS_PER_TURN) {
+    // 旁邊有敵軍就停下來交戰（PROG-2-9322）
+    if (hasFlankingEnemy(unit, dir, context)) break;
     const nextDepth = unit.depth + dir;
     const nextCell = context.state.getCell(unit.lane, nextDepth);
     if (!nextCell) break;
@@ -236,6 +238,21 @@ function stepMoveUnit(
     // 位移受阻傷害可能讓單位陣亡：不再拿死掉的單位走下一步
     if (unit.isDead()) return;
   }
+}
+
+/** 接敵判定用的相鄰格：斜前方兩格、側面兩格（正前方由原本的擋路邏輯處理）。 */
+const FLANK_OFFSETS: ReadonlyArray<{ dl: number; forward: number }> = [{ dl: -1, forward: 1 }, { dl: 1, forward: 1 }, { dl: -1, forward: 0 }, { dl: 1, forward: 0 }];
+
+/** 一般部隊的斜前方或側面是否有看得見的敵部隊。主將化身不算：自己不受接敵限制，敵主將化身擋不擋路由壓制區（FORM-09）決定。 */
+function hasFlankingEnemy(unit: TroopUnit, dir: number, context: BattleAutoMovePhaseContext): boolean {
+  if (!GAME_CONFIG.troopEngageAdjacent || context.isGeneralUnit(unit.id)) return false;
+  const tactic = resolveBattleTacticBehavior(context.state.battleTactic);
+  return FLANK_OFFSETS.some(({ dl, forward }) => {
+    const occupantId = context.state.getCell(unit.lane + dl, unit.depth + forward * dir)?.occupantId;
+    const occupant = occupantId ? context.state.units.get(occupantId) : undefined;
+    return !!occupant && !occupant.isDead() && occupant.faction !== unit.faction && !context.isGeneralUnit(occupant.id)
+      && !tactic.isFactionHiddenFrom(unit.faction, occupant.faction, context.state);
+  });
 }
 
 /**

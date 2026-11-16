@@ -68,7 +68,7 @@ export class BattleSkillTargetingFlow {
       return;
     }
     const general = ctrl.state.playerGeneral;
-    if (!general?.canUseSkill()) {
+    if (!general || ((sourceType !== SkillSourceType.SeedTactic || ctrl.seedTacticNeedsSp()) && !general.canUseSkill())) {
       this.ctx.showToast(services().i18n.t('ui.battle.skill.charging', sourceLabel), 1.5);
       return;
     }
