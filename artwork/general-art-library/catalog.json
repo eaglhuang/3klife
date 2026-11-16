@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-16T10:10:11.950Z",
+  "updatedAt": "2026-11-16T10:17:34.000Z",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -7957,49 +7957,66 @@
         ]
       }
     },
-    {
-      "uid": "guo-nu-wang",
-      "name": "郭女王",
-      "standing": {
-        "status": "integrated",
-        "history": [
           {
-            "version": "0002",
-            "file": "standing/guo_nu_wang__郭女王__standing_0002.png",
-            "status": "integrated"
-          }
-        ],
-        "activeVersion": "0002"
+        "uid": "guo-nu-wang",
+        "name": "郭女王",
+        "standing": {
+          "status": "integrated",
+          "history": [
+            {
+              "version": "0002",
+              "file": "standing/guo_nu_wang__郭女王__standing_0002.png",
+              "status": "integrated"
+            }
+          ],
+          "activeVersion": "0002"
+        },
+        "avatar": {
+          "status": "integrated",
+          "history": [
+            {
+              "version": "0002",
+              "file": "avatars/guo_nu_wang__郭女王__avatar_0002.png",
+              "status": "integrated"
+            }
+          ],
+          "activeVersion": "0002"
+        },
+        "battle": {
+          "status": "review-pending",
+          "activeVersion": "0001",
+          "history": [
+            {
+              "version": "0001",
+              "file": "battle/guo_nu_wang__郭女王__battle_0001.png",
+              "status": "review-pending",
+              "sha256": "ada18a27f1cafae7c6cc9126b05851ba4e45394f10024e81133028a7778bb724",
+              "canvas": "1024x1536 RGBA",
+              "weaponClass": "strategy-map-brush",
+              "poseLabel": "轉身展圖點策",
+              "sourceStanding": "standing/guo_nu_wang__郭女王__standing_0002.png",
+              "note": "以郭女王核定站姿為唯一角色造型參考；依文士／謀略身份，以軍圖與筆呈現臨戰施策動作。透明全身候選，待使用者檢視。"
+            }
+          ]
+        },
+        "smallAvatar": {
+          "status": "review-pending",
+          "activeVersion": "0001",
+          "history": [
+            {
+              "version": "0001",
+              "file": "small_avatars/guo_nu_wang__郭女王__small_avatar_0001.png",
+              "status": "review-pending",
+              "sha256": "926c982496fb2b4650df92976d75833f5418e927da4c2cdb52ceedc477b954f9",
+              "canvas": "256x256 RGBA",
+              "sourceStanding": "standing/guo_nu_wang__郭女王__standing_0002.png",
+              "cropBox": "x=194,y=29,w=129,h=129 (source 512x768)",
+              "qc": "Head occupies approximately 70% of canvas; face horizontally centered; full crown retained; crop ends at shoulder line with no chest/front torso.",
+              "note": "Crop-only, proportional bilinear resize from approved standing portrait; awaiting visual approval."
+            }
+          ]
+        }
       },
-      "avatar": {
-        "status": "integrated",
-        "history": [
-          {
-            "version": "0002",
-            "file": "avatars/guo_nu_wang__郭女王__avatar_0002.png",
-            "status": "integrated"
-          }
-        ],
-        "activeVersion": "0002"
-      },
-      "battle": {
-        "status": "review-pending",
-        "activeVersion": "0001",
-        "history": [
-          {
-            "version": "0001",
-            "file": "battle/guo_nu_wang__郭女王__battle_0001.png",
-            "status": "review-pending",
-            "sha256": "ada18a27f1cafae7c6cc9126b05851ba4e45394f10024e81133028a7778bb724",
-            "canvas": "1024x1536 RGBA",
-            "weaponClass": "strategy-map-brush",
-            "poseLabel": "轉身展圖點策",
-            "sourceStanding": "standing/guo_nu_wang__郭女王__standing_0002.png",
-            "note": "以郭女王核定站姿為唯一角色造型參考；依文士／謀略身份，以軍圖與筆呈現臨戰施策動作。透明全身候選，待使用者檢視。"
-          }
-        ]
-      }
-    },
     {
       "uid": "wang-yuan-ji",
       "name": "王元姬",
