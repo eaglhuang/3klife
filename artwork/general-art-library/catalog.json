@@ -7834,6 +7834,20 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/gan_shi__甘氏__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "b5db0f04bad4870289bc7a926cb529f14fad016836f796fcd9a6797ea0b12a3e",
+            "canvas": "1024x1536 PNG",
+            "note": "沿用甘氏綠白蓮紋襦裙與玉佩；側身退步伸手護人，候選待審。"
+          }
+        ]
       }
     },
     {
