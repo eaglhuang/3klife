@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-16T12:14:02.654Z",
+  "updatedAt": "2026-11-17",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -5736,6 +5736,23 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/tian_feng__田豐__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "6298161c9c5dbf577b9f2f2e4cc15f74e7de0efa809bfaf004c482ee1ed1adb9",
+            "canvas": "1024x1536 RGBA",
+            "poseLabel": "踏步展卷指策",
+            "gaze": "near-camera",
+            "sourceStanding": "standing/tian_feng__田豐__standing_0002.png",
+            "note": "高智力謀士戰場指揮姿勢；延續核定藍灰長袍與冠帽，以軍令竹簡示策，不配近戰武器。透明背景通過棋盤縮圖檢視；候選待審，未接入遊戲。"
+          }
+        ]
       }
     },
     {
@@ -8852,4 +8869,4 @@
       }
     }
   ]
-}
+}\n
