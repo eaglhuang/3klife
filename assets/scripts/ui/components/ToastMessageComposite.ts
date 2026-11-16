@@ -6,7 +6,7 @@
 import { _decorator, Color, Label, Tween, tween, UIOpacity } from 'cc';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
-import { ToastQueue } from '../core/ToastQueue';
+import { ToastQueue, toastHoldSeconds } from '../core/ToastQueue';
 
 const { ccclass, property } = _decorator;
 
@@ -106,7 +106,8 @@ export class ToastMessageComposite extends CompositePanel {
 
         this._hideTween = tween(opacity)
             .to(0.15, { opacity: 255 })
-            .delay(Math.max(0.5, toast.duration - 0.3))
+            // 後面有人排隊時縮短停留；這句開始播之後才排進來的不影響它（PROG-2-9343）
+            .delay(Math.max(0.5, toastHoldSeconds(toast.duration, this._queue.pendingCount) - 0.3))
             .to(0.3, { opacity: 0 })
             .call(() => {
                 this._hideTween = null;

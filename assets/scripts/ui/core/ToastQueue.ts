@@ -9,6 +9,13 @@
  */
 export const MIN_READ_SECONDS = 1.5;
 export const MAX_PENDING = 6;
+/** 後面還有人排隊時，每句最多停留這麼久，免得提示落後操作太多（PROG-2-9343）。30 個字的長句約需 1.8 秒讀完。 */
+export const QUEUED_MAX_HOLD_SECONDS = 1.8;
+
+/** 這一句要停留幾秒：沒人排隊照原本的長度，有人排隊就套上限 */
+export function toastHoldSeconds(requestedSeconds: number, pendingCount: number): number {
+    return pendingCount > 0 ? Math.min(requestedSeconds, QUEUED_MAX_HOLD_SECONDS) : requestedSeconds;
+}
 
 export class ToastQueue<T extends { message: string }> {
     private _current: T | null = null;
@@ -36,6 +43,11 @@ export class ToastQueue<T extends { message: string }> {
         this._current = this._pending.shift() ?? null;
         this._shownAt = nowSeconds;
         return this._current;
+    }
+
+    /** 還在排隊、尚未顯示的句數 */
+    get pendingCount(): number {
+        return this._pending.length;
     }
 
     clear(): void {
