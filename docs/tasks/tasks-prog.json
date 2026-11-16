@@ -7953,6 +7953,53 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9361",
+      "title": "戰場特效仍看不到：特效層寫錯，且斬擊特效本身沒有面積",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "PROG-2-9358 合併後線上斬擊節點出現 188 次，但畫面上仍看不到。再查出兩個原因：一是特效系統把預設層寫成 1 << 0，引擎實際是 1 << 30，於是把本來正確的 prefab 改到沒有攝影機會畫的層，所有走這條路的特效都看不到；二是原本選的斬擊 prefab 粒子是拉伸模式但長度與速度倍率都是 0，沒有面積。",
+      "related": [
+        "PROG-2-9358",
+        "PROG-2-9353"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過；線上版攔截套用等效修正後實打，攻擊處的光圈與光環在截圖中看得到 | 變更: 特效層改用引擎的預設層；攻擊斬擊換成設定正常的特效 | 阻塞: 斬擊外觀是否合意需人眼確認",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

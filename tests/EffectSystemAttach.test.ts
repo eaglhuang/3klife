@@ -16,3 +16,9 @@ assert.ok(/director\.getScene\(\)/.test(body), '沒指定 parent 時要掛到場
 assert.ok(/if \(node\.parent\) return;/.test(body), '已有父節點的不可以被搬走');
 
 console.log('EffectSystemAttach: ok');
+
+// PROG-2-9361：特效層不可以寫死成 1 << 0。引擎的 DEFAULT 是 1 << 30，
+// 寫成 1 << 0 會把特效移到沒有攝影機會畫的層（線上實況：節點在場景裡、粒子在播，但畫面上什麼都沒有）。
+assert.ok(!/DEFAULT_LAYER\s*=\s*1\s*<<\s*0/.test(source), '特效層不可以寫死 1 << 0');
+assert.ok(/DEFAULT_LAYER\s*=\s*Layers\.Enum\.DEFAULT/.test(source), '特效層要用 Layers.Enum.DEFAULT');
+console.log('EffectSystemAttach layer: ok');
