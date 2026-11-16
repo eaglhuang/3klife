@@ -8094,6 +8094,52 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9366",
+      "title": "單挑結束後兩位主將背對戰場：退場走回場邊後恢復原本朝向",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者回報戰場上兩位主將都面向錯誤方向。查證：開場朝向正確，第 3 回合單挑結束、主將走回場邊時朝向跟著行進方向翻面，到位後沒有翻回，之後整場都背對戰場。",
+      "related": [
+        "PROG-2-9362"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（7834 過）；線上版套用修正實打一場，單挑後第 4 到 6 回合兩位主將都面向戰場 | 變更: UnitPresentationCore 退場前記下朝向、到位後恢復；補單元測試 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

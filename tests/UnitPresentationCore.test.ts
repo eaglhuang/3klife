@@ -123,3 +123,26 @@ assert.equal(troopSpineConfigWithFallback('infantry', false, 'tiger-tally-xian-z
 assert.equal(troopSpineConfigWithFallback('infantry', false, 'tiger-tally-xian-zhen', p => p === eliteBlue || p === infantryBlue).path,
   'spine/soldiers/soldier_spear_blue/soldier_spear_blue');
 assert.equal(troopSpineConfigWithFallback('archer', true, null, () => false).path, 'spine/soldiers/soldier_bow_red/soldier_bow_red');
+
+// PROG-2-9366：單挑退場走回場邊後，朝向要恢復成退場前的方向。
+// 以前退場時朝向跟著行進方向翻面後就不再翻回，單挑結束兩位主將都背對戰場。
+const home = new UnitPresentationCore(config, { x: 0, y: 0 }, 1);
+home.moveTo({ x: 40, y: 0 });
+home.step(10);
+assert.equal(home.snapshot().facing, 1);
+home.moveTo({ x: 0, y: 0 }, true);
+assert.equal(home.step(0.1).facing, -1, '退場途中面向行進方向');
+const back = home.step(10);
+assert.equal(back.action, 'idle');
+assert.equal(back.facing, 1, '我方退場到位後要轉回面向戰場');
+const foe = new UnitPresentationCore(config, { x: 100, y: 0 }, -1);
+foe.moveTo({ x: 60, y: 0 });
+foe.step(10);
+foe.moveTo({ x: 100, y: 0 }, true);
+assert.equal(foe.step(10).facing, -1, '敵方退場到位後要轉回面向戰場');
+// 一般移動（非退場）到位後維持行進方向，不受影響
+foe.moveTo({ x: 200, y: 0 });
+assert.equal(foe.step(10).facing, 1);
+// 整場單挑演完，勝者回到場邊且面向戰場
+assert.equal(result.units[0].facing, 1, '單挑結束後勝者要面向戰場');
+console.log('UnitPresentationCore retreat facing ok');
