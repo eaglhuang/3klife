@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-16",
+  "updatedAt": "2026-11-16T08:31:02.201Z",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -2650,6 +2650,24 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/huang_gai__黃蓋__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "9c398e20e7398ef9d759b3cbef0ce8a47190bacdf754aadb9b1152c787e5fe4b",
+            "canvas": "1024x1536 RGBA",
+            "weapon": "iron-whip",
+            "poseLabel": "低身扭腰向左下重擊",
+            "sourceStanding": "standing/huang_gai__黃蓋__standing_0002.png",
+            "alpha16BBox": "x=128,y=196,w=768,h=1144",
+            "note": "依《三國演義》第五回所載鐵鞭設計；使用核定站姿保持身份與紅黑吳甲，低身扭腰向左下重擊，雙手握持剛直鐵鞭。真透明背景、完整全身與武器，候選待使用者審核。"
+          }
+        ]
       }
     },
     {
