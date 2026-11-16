@@ -1,0 +1,53 @@
+{
+  "schema": "chibi-rig-source-check.v1",
+  "generalId": "zhuge_liang",
+  "revision": "draft-01",
+  "files": {
+    "source": "work.png",
+    "weapons": [
+      {
+        "file": "weapon.png",
+        "type": "white feather fan",
+        "gripPoint": {
+          "hand": "image-right",
+          "sourceImagePoint": {
+            "x": 345,
+            "y": 620
+          },
+          "weaponImagePoint": {
+            "x": 775,
+            "y": 890
+          },
+          "status": "visual draft anchor; pending rig-tool confirmation"
+        }
+      }
+    ]
+  },
+  "sourceImage": {
+    "width": 577,
+    "height": 1250,
+    "format": "PNG RGBA",
+    "transparent": true,
+    "subjectBounds": {
+      "x": 96,
+      "y": 41,
+      "width": 384,
+      "height": 1204
+    },
+    "feetBottomRowZeroBased": 1244,
+    "pose": "neutral 3/4 scholar stance, open feather fan held at chest level"
+  },
+  "weaponImage": {
+    "background": "#00FF00",
+    "type": "open white feather fan",
+    "handle": "visible and unobstructed",
+    "status": "visual draft anchor; pending rig-tool confirmation"
+  },
+  "acceptance": "NOT_RUN",
+  "failCount": null,
+  "warnings": [
+    "Project acceptance script tools/pipeline.py is absent in this checkout.",
+    "Face width, chest-to-face ratio, lighting ratios, and hand/fan grip-point alignment require formal measurement.",
+    "Grip coordinates are visual draft anchors; Claude rig review pending."
+  ]
+}
