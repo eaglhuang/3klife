@@ -138,7 +138,7 @@ import { HALL_BOARD_TYPE_LABEL, hallAssignNoticeOf, hallMissionDialogStateOf } f
 import { hallPlayerOf, officerPromotionScriptLines, OFFICER_ERA_KEPT_LINE } from '../../core/systems/OfficerSnapshot';
 import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
 import { officerDisplayOf } from '../../core/systems/OfficerDisplay';
-import { LOBBY_CATEGORIES, LOBBY_SUB_SLOTS, actionAt, buildLobbyCityHubView, categoryButtonId, computeSubMenuWidth, toggleCategory, type LobbyActionId, type LobbyCategoryId } from '../core/LobbyCityHubController';
+import { LOBBY_CATEGORIES, LOBBY_SUB_SLOTS, actionAt, buildLobbyCityHubView, categoryButtonId, computeSubMenuLayout, toggleCategory, type LobbyActionId, type SubMenuLayout, type LobbyCategoryId } from '../core/LobbyCityHubController';
 import { nurtureGraduationRows } from '../core/NurtureGraduationView';
 import { pageSliceOf } from '../core/FixedSlotPager';
 import { MentorHoldingsController } from '../core/MentorHoldingsController';
@@ -379,6 +379,19 @@ interface GachaPoolConfigLike {
     candidateIds?: string[];
 }
 
+/** 面板改尺寸後，依可見數量把按鈕 Widget.left 設好，並遞迴重新對齊所有子孫 Widget（Widget 預設只在視窗縮放時才更新） */
+function applySubMenuLayout(menu: Node, layout: SubMenuLayout): void {
+    for (let i = 0; i < layout.buttonLefts.length; i++) {
+        const widget = menu.getChildByName(`BtnSub${i}`)?.getComponent(Widget);
+        if (widget) widget.left = layout.buttonLefts[i];
+    }
+    const realign = (node: Node): void => {
+        node.getComponent(Widget)?.updateAlignment();
+        for (const child of node.children) realign(child);
+    };
+    for (const child of menu.children) realign(child);
+}
+
 function alignSubMenuToHall(
     menu: Node,
     hall: Node | undefined,
@@ -427,6 +440,9 @@ export class LobbyScene extends Component {
     private _seasonHud: SeasonHudController<UIScreenPreviewHost> | null = null;
     private _cityHubHost: UIScreenPreviewHost | null = null;
     private _cityHubCategory: LobbyCategoryId | null = null;
+    /** 上次套用子選單版面的節點與可見數量；節點或數量變動才重算 */
+    private _cityHubSubMenuAppliedCount = -1;
+    private _cityHubSubMenuAppliedNode: Node | null = null;
     /** 城池子選單的原父節點與順序（大廳開著時暫時搬到大廳上層） */
     private _cityHubSubMenuHome: { parent: Node; index: number } | null = null;
     private _cityHubAvatarId: string | null = null;
@@ -1548,7 +1564,13 @@ export class LobbyScene extends Component {
         const subMenuNode = binder.getNode('subMenu');
         const subMenuUi = subMenuNode?.getComponent(UITransform);
         if (subMenuUi && view.visibleSubCount > 0) {
-            subMenuUi.setContentSize(computeSubMenuWidth(view.visibleSubCount), subMenuUi.height);
+            if (subMenuNode && (this._cityHubSubMenuAppliedCount !== view.visibleSubCount || this._cityHubSubMenuAppliedNode !== subMenuNode)) {
+                const layout = computeSubMenuLayout(view.visibleSubCount);
+                subMenuUi.setContentSize(layout.width, subMenuUi.height);
+                applySubMenuLayout(subMenuNode, layout);
+                this._cityHubSubMenuAppliedCount = view.visibleSubCount;
+                this._cityHubSubMenuAppliedNode = subMenuNode;
+            }
         }
         this._refreshLobbyHallTopbar();
         this._syncCityHubSubMenuLayer(subMenuNode);
