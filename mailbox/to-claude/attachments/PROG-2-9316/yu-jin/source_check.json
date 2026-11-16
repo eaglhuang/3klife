@@ -1,0 +1,67 @@
+{
+  "schema": "chibi-rig-source-check.v1",
+  "generalId": "yu_jin",
+  "revision": "draft-01",
+  "files": {
+    "source": "work.png",
+    "weapons": [
+      {
+        "file": "weapon.png",
+        "type": "straight spear",
+        "gripPoints": [
+          {
+            "id": "upper",
+            "hand": "image-right/upper hand",
+            "sourceImagePoint": {
+              "x": 380,
+              "y": 531
+            },
+            "weaponImagePoint": {
+              "x": 512,
+              "y": 600
+            }
+          },
+          {
+            "id": "lower",
+            "hand": "image-right/lower hand",
+            "sourceImagePoint": {
+              "x": 380,
+              "y": 657
+            },
+            "weaponImagePoint": {
+              "x": 512,
+              "y": 790
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "sourceImage": {
+    "width": 577,
+    "height": 1250,
+    "format": "PNG RGBA",
+    "transparent": true,
+    "subjectBounds": {
+      "x": 98,
+      "y": 41,
+      "width": 380,
+      "height": 1204
+    },
+    "feetBottomRowZeroBased": 1244,
+    "pose": "upright neutral 3/4 guard, two hands on vertical spear along image-right side"
+  },
+  "weaponImage": {
+    "background": "#00FF00",
+    "orientation": "tip up",
+    "shaft": "straight, no tassel across grip",
+    "status": "visual draft anchors; pending rig-tool confirmation"
+  },
+  "acceptance": "NOT_RUN",
+  "failCount": null,
+  "warnings": [
+    "Project acceptance script tools/pipeline.py is absent in this checkout.",
+    "Face width, chest-to-face ratio, lighting ratios, and grip-point alignment require formal measurement.",
+    "Grip coordinates are visual draft anchors; Claude rig review pending."
+  ]
+}
