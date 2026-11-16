@@ -29,6 +29,8 @@ export interface BattleEnemyDeployPhaseContext {
   announce?(line: string): void;
   /** 教學引導：寫進戰報並跳畫面提示；測試替身可不實作 */
   guide?(line: string): void;
+  /** 已經提醒過「沒人守」的路線；由控制器保管，整場共用，免得同一路每回合洗版（PROG-2-9349） */
+  readonly leakHintedLanes?: Set<number>;
 }
 
 export function executeBattleEnemyDeployPhase(context: BattleEnemyDeployPhaseContext): void {
@@ -55,6 +57,30 @@ export function executeBattleEnemyDeployPhase(context: BattleEnemyDeployPhaseCon
   }
   // 教學引導：告訴新玩家敵軍從哪一路來、要在同一路正面迎擊（PROG-2-9340）
   if (context.tutorialBattle && spawnedLanes.length > 0) context.guide?.(tutorialEnemyLaneHintLine(spawnedLanes));
+  // 教學引導：敵軍所在的路上我方一隊都沒有，就提醒補防。敵軍出兵後、玩家下一次部署前就跳，還來得及攔（PROG-2-9349）
+  if (context.tutorialBattle && context.leakHintedLanes && context.state.units) {
+    const open = unguardedEnemyLanes(context.state.units.values());
+    for (const lane of [...context.leakHintedLanes]) if (!open.includes(lane)) context.leakHintedLanes.delete(lane);
+    const fresh = open.filter((lane) => !context.leakHintedLanes!.has(lane));
+    for (const lane of fresh) context.leakHintedLanes.add(lane);
+    if (fresh.length > 0) context.guide?.(tutorialUnguardedLaneHintLine(fresh));
+  }
+}
+
+/** 有敵軍、但我方一隊都沒有的路線（由小到大）。陣亡的不算；我方武將棋子站在那一路也算有人守。 */
+export function unguardedEnemyLanes(units: Iterable<{ faction: Faction; lane: number; isDead?: () => boolean }>): number[] {
+  const enemy = new Set<number>(), own = new Set<number>();
+  for (const unit of units) {
+    if (unit.isDead?.()) continue;
+    (unit.faction === Faction.Enemy ? enemy : own).add(unit.lane);
+  }
+  return [...enemy].filter((lane) => !own.has(lane)).sort((a, b) => a - b);
+}
+
+/** 教學戰空路提示。路線以 1 起算。 */
+export function tutorialUnguardedLaneHintLine(lanes: readonly number[]): string {
+  const names = [...lanes].sort((a, b) => a - b).map((lane) => `第 ${lane + 1} 路`).join('、');
+  return `${names}沒人守，敵軍正逼近主將！派兵到這一路攔截`;
 }
 
 /** 教學戰敵軍出兵提示。路線以 1 起算，由小到大列出。 */
