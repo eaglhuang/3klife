@@ -351,6 +351,7 @@
   "ui.battle.skill.cast_failed": "{0}发动失败",
   "ui.battle.skill.cast_failed_target": "{0}发动失败，请重新选择目标",
   "ui.battle.skill.cast_failed_cell": "{0}发动失败，请重新选择格位",
+  "ui.battle.skill.cast_failed_no_enemy": "场上没有敌军，{0}没有目标",
   "ui.battle.skill.pick_enemy": "请点选敌方单位作为{0}目标",
   "ui.battle.skill.aim.enemy": "请点选敌方单位施放 {0}，按 Esc 取消",
   "ui.battle.skill.aim.line": "请点选直线锚点敌军施放 {0}，按 Esc 取消",
