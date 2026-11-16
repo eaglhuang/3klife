@@ -1,0 +1,39 @@
+{
+  "schema": "chibi-rig-source-check.v1",
+  "generalId": "xiahou_dun",
+  "revision": "draft-01",
+  "files": {
+    "source": "work.png",
+    "weapon": "weapon.png"
+  },
+  "sourceImage": {
+    "width": 577,
+    "height": 1250,
+    "format": "PNG RGBA",
+    "transparentBackground": true,
+    "opaqueSubjectBounds": {"x": 20, "y": 196, "width": 537, "height": 1049},
+    "feetBottomRowZeroBased": 1244,
+    "nearGrip": "visible on spear at chest height; exact point pending tool measurement",
+    "farHand": "empty hollow grip fist, visible opening",
+    "pose": "neutral three-quarter stance; facing image-right",
+    "weaponStraight": true
+  },
+  "weaponImage": {
+    "format": "PNG RGBA",
+    "background": "solid chroma green (#00FF00)",
+    "weapon": "single straight spear matching the chibi source art",
+    "gripPoint": null,
+    "gripPointStatus": "pending formal measurement"
+  },
+  "acceptance": {
+    "status": "NOT_RUN",
+    "failCount": null,
+    "warnings": [
+      "The specified tools/pipeline.py accept-source runner is absent from this checkout; formal source acceptance was not run.",
+      "Face width target 185px ±15%: pending measurement.",
+      "Chest-width/face-width target 1.77 ±20%: pending measurement.",
+      "Left/right lighting ratio: pending numeric measurement.",
+      "Face/gaze direction visually appears aligned with the Zhao Yun reference but is not formally validated."
+    ]
+  }
+}
