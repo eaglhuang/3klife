@@ -1,6 +1,6 @@
 // @spec-source → 季度通行證軍功任務追蹤與雙軌獎勵階梯規格書.md (doc_spec_0627) §4、§5；裁決 11/09 第 12 題；PROG-2-2197
 /**
- * SeasonPassController — 通行證面板（Mock）
+ * SeasonPassController — 通行證面板（試玩版）
  *
  * 一次看一級，左右切換 1~30 級；一鍵領取走宿主注入的 session。掛載、套 view 與提示都由宿主注入。
  */
@@ -33,7 +33,7 @@ const STATUS_TEXT: Readonly<Record<SeasonPassRewardStatus, string>> = {
 function rewardLine(state: SeasonPassState, level: number, track: SeasonPassTrack): string {
     const tier = seasonPassTier(level);
     const reward = track === 'free' ? tier.free : tier.premium;
-    const note = reward.itemId === null ? '（Mock 只記錄）' : '';
+    const note = reward.itemId === null ? '（獎勵內容尚未開放發放）' : '';
     return `${track === 'free' ? '白銀' : '黃金'}：${reward.label}${note}　${STATUS_TEXT[seasonPassRewardStatus(state, level, track)]}`;
 }
 
@@ -56,12 +56,12 @@ export function seasonPassView(state: SeasonPassState, page: number): SeasonPass
             passTierTitle: `第 ${page} 級${seasonPassTier(page).isMilestone ? '・里程碑' : ''}`,
             passFree: rewardLine(state, page, 'free'),
             passPremium: rewardLine(state, page, 'premium'),
-            passMockNote: 'Mock：軍功任務與付費尚未接上，以下兩個按鈕僅供模擬',
+            passMockNote: '軍功任務與戰令購買尚未開放；以下兩個按鈕為試玩體驗用，不會扣款',
             prevPassLabel: '上一級',
             nextPassLabel: '下一級',
             claimPassLabel: '一鍵領取',
-            mockLevelLabel: '模擬升 1 級',
-            mockPremiumLabel: state.premium ? '黃金戰令已解鎖' : '模擬解鎖黃金戰令',
+            mockLevelLabel: '試玩升 1 級',
+            mockPremiumLabel: state.premium ? '黃金戰令已解鎖' : '試玩解鎖黃金戰令',
             closePassLabel: '關閉',
         },
         actives: {},

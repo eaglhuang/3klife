@@ -234,7 +234,7 @@
                   "right": 8
                 },
                 "height": 28,
-                "text": "模擬升 1 級",
+                "text": "試玩升 1 級",
                 "styleSlot": "season.pass.label.button"
               }
             ],
@@ -261,7 +261,7 @@
                   "right": 8
                 },
                 "height": 28,
-                "text": "模擬解鎖黃金戰令",
+                "text": "試玩解鎖黃金戰令",
                 "styleSlot": "season.pass.label.button"
               }
             ],
