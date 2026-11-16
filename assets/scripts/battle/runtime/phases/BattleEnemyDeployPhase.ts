@@ -60,7 +60,7 @@ export function executeBattleEnemyDeployPhase(context: BattleEnemyDeployPhaseCon
   // 教學引導：敵軍所在的路上我方一隊都沒有，就提醒補防。敵軍出兵後、玩家下一次部署前就跳，還來得及攔（PROG-2-9349）
   if (context.tutorialBattle && context.leakHintedLanes && context.state.units) {
     const open = unguardedEnemyLanes(context.state.units.values());
-    for (const lane of [...context.leakHintedLanes]) if (!open.includes(lane)) context.leakHintedLanes.delete(lane);
+    for (const lane of Array.from(context.leakHintedLanes)) if (!open.includes(lane)) context.leakHintedLanes.delete(lane);
     const fresh = open.filter((lane) => !context.leakHintedLanes!.has(lane));
     for (const lane of fresh) context.leakHintedLanes.add(lane);
     if (fresh.length > 0) context.guide?.(tutorialUnguardedLaneHintLine(fresh));
@@ -74,7 +74,7 @@ export function unguardedEnemyLanes(units: Iterable<{ faction: Faction; lane: nu
     if (unit.isDead?.()) continue;
     (unit.faction === Faction.Enemy ? enemy : own).add(unit.lane);
   }
-  return [...enemy].filter((lane) => !own.has(lane)).sort((a, b) => a - b);
+  return Array.from(enemy).filter((lane) => !own.has(lane)).sort((a, b) => a - b);
 }
 
 /** 教學戰空路提示。路線以 1 起算。 */
