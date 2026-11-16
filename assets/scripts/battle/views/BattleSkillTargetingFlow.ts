@@ -24,6 +24,17 @@ export interface PendingSkillTargeting {
 }
 
 /** BattleScene 傳入的依賴回調 */
+/** 場上是否還有活著的敵方單位 */
+export function hasEnemyOnBoard(units: Iterable<{ faction: Faction; isDead(): boolean }>): boolean {
+  for (const unit of units) if (unit.faction === Faction.Enemy && !unit.isDead()) return true;
+  return false;
+}
+
+/** 不用選目標的招式發動失敗時的提示字：場上沒有敵軍就說沒有目標，其餘維持原句 */
+export function castFailedToastKey(enemyOnBoard: boolean): string {
+  return enemyOnBoard ? 'ui.battle.skill.cast_failed' : 'ui.battle.skill.cast_failed_no_enemy';
+}
+
 export interface BattleSkillTargetingFlowContext {
   getCtrl(): BattleController | null;
   clearBoardSkillPreview(): void;
@@ -95,7 +106,8 @@ export class BattleSkillTargetingFlow {
         this.ctx.showToast(services().i18n.t('ui.battle.skill.cast_done', sourceLabel), 1.2);
         this.ctx.refreshBattleViews();
       } else {
-        this.ctx.showToast(services().i18n.t('ui.battle.skill.cast_failed', sourceLabel), 1.5);
+        // 自動瞄準的招式在場上沒有敵軍時一定打不出去（例如第 1 回合的火攻），把原因講清楚（PROG-2-9342）
+        this.ctx.showToast(services().i18n.t(castFailedToastKey(hasEnemyOnBoard(ctrl.state.units.values())), sourceLabel), 2);
       }
       return;
     }

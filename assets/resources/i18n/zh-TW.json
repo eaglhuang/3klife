@@ -364,6 +364,7 @@
   "ui.battle.skill.cast_failed": "{0}發動失敗",
   "ui.battle.skill.cast_failed_target": "{0}發動失敗，請重新選擇目標",
   "ui.battle.skill.cast_failed_cell": "{0}發動失敗，請重新選擇格位",
+  "ui.battle.skill.cast_failed_no_enemy": "場上沒有敵軍，{0}沒有目標",
   "ui.battle.skill.pick_enemy": "請點選敵方單位作為{0}目標",
   "ui.battle.skill.aim.enemy": "請點選敵方單位施放 {0}，按 Esc 取消",
   "ui.battle.skill.aim.line": "請點選直線錨點敵軍施放 {0}，按 Esc 取消",
