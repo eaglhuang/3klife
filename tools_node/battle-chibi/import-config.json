@@ -1,0 +1,9 @@
+{
+  "_comment": "匯入工具的設定。來源裡有哪些角色就匯入哪些；這裡只寫例外。generalDirs：來源名與遊戲內武將資料夾名不同時的對應。skip：不匯入的來源名。actions：併入既有武將骨架的共用戰場動作。",
+  "actions": ["dash_in", "retreat", "duel_attack", "hit", "dodge", "fall"],
+  "generalDirs": {
+    "char2": "zhang_fei",
+    "zhao_v2": "zhao_yun"
+  },
+  "skip": ["zhao"]
+}
