@@ -35,6 +35,20 @@ function pickLowest(lanes: readonly number[], score: (lane: number) => number, r
     return pickRandom(lanes.filter((lane) => score(lane) === best), random);
 }
 
+/**
+ * 教學戰對路出兵：挑「玩家部隊比己方多最多」的空線，讓雙方在同一路正面撞上（PROG-2-9340）。
+ * 所有空線上玩家都沒有兵時回傳 null，呼叫端退回一般策略。
+ */
+export function pickMeetPlayerLane(
+    freeLanes: readonly number[],
+    occupancy: LaneOccupancy,
+    random: () => number,
+): number | null {
+    const contested = freeLanes.filter((lane) => (occupancy.opponent[lane] ?? 0) > 0);
+    if (contested.length === 0) return null;
+    return pickLowest(contested, (lane) => (occupancy.own[lane] ?? 0) - (occupancy.opponent[lane] ?? 0), random);
+}
+
 /** 從可部署的空線挑一條；沒有空線回傳 null */
 export function pickDeployLane(
     strategy: AiLaneStrategy | null,

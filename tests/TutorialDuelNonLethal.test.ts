@@ -26,9 +26,9 @@ export function createTutorialDuelNonLethalSuite(): TestSuite {
     const suite = new TestSuite('TutorialDuelNonLethal (教學戰單挑必接受且不打死 PROG-2-9335)');
     const ratio = GAME_CONFIG.tutorialDuelHpFloorRatio;
 
-    suite.test('設定值：敵將必接受、生命下限三成', () => {
+    suite.test('設定值：敵將必接受、生命下限五成（PROG-2-9340）', () => {
         assert.isTrue(GAME_CONFIG.tutorialEnemyAlwaysAcceptsDuel);
-        assert.equals(0.3, ratio);
+        assert.equals(0.5, ratio);
     });
 
     suite.test('教學戰：敵主將只剩一絲血、兵力全無也照樣接受', () => {

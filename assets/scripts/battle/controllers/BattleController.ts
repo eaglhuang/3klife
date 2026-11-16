@@ -1264,6 +1264,10 @@ export class BattleController {
           },
           isCellMovementBlocked: (lane, depth) => this.combatResolver.isCellMovementBlocked(lane, depth),
           announce: (line) => services().event.emit(EVENT_NAMES.BattleSkillNotice, line),
+          guide: (line) => {
+            services().event.emit(EVENT_NAMES.BattleSkillNotice, line);
+            services().event.emit(EVENT_NAMES.ShowToast, { text: line, duration: 3 });
+          },
         });
         return {};
       case 'player-auto-move':

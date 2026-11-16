@@ -7,7 +7,7 @@ import {
   TROOP_DEPLOY_COST,
 } from "../../core/config/Constants";
 import { BattleState } from "../models/BattleState";
-import { pickDeployLane } from "../../core/systems/AiLaneStrategy";
+import { pickDeployLane, pickMeetPlayerLane } from "../../core/systems/AiLaneStrategy";
 import type { AiLaneStrategy } from "../../core/systems/AiProfiles";
 import type { AiIqLevel } from "../../core/systems/AiDifficultyTable";
 import { pickAiDeployTroop, type AiDeployPreference } from "../../core/systems/AiDeployTroopPick";
@@ -43,8 +43,14 @@ export class EnemyAI {
    * 根據當前棋盤狀態與可用糧草決定本回合部署。
    * deployCount：本回合部署數上限，由呼叫端依 getAIDeployCount（F-2）算出。
    * 策略：以計數器兵種對抗玩家最多的兵種；無對手時隨機。
+   * options.meetPlayerLane：教學戰用，先挑玩家有兵而己方還沒對上的線，沒有才照 Profile 策略（PROG-2-9340）。
    */
-  public decideDeploy(state: BattleState, availableDp: number, deployCount: number): DeployDecision[] {
+  public decideDeploy(
+    state: BattleState,
+    availableDp: number,
+    deployCount: number,
+    options: { meetPlayerLane?: boolean } = {},
+  ): DeployDecision[] {
     const decisions: DeployDecision[] = [];
     const deployDepth = GAME_CONFIG.GRID_DEPTH - 1;
     const chosenLanes = new Set<number>();
@@ -63,7 +69,8 @@ export class EnemyAI {
       if (remaining < cost) break;
       remaining -= cost;
 
-      const lane = pickDeployLane(this.laneStrategy, freeLanes, occupancy, this._random)!;
+      const lane = (options.meetPlayerLane ? pickMeetPlayerLane(freeLanes, occupancy, this._random) : null)
+        ?? pickDeployLane(this.laneStrategy, freeLanes, occupancy, this._random)!;
       chosenLanes.add(lane);
       occupancy.own[lane] += 1;
       decisions.push({ type, lane });

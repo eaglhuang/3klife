@@ -243,6 +243,34 @@ export function createBattleCombatRegressionSuite(): TestSuite {
         assert.equals('foe', targetOf(true, 3, 4), '武將棋子：斜前方的小兵會打');
     });
 
+    suite.test('buildAttackAction：小兵會主動打旁邊的敵方武將棋子（PROG-2-9340）', () => {
+        services().initialize();
+        const targetOf = (foeIsGeneral: boolean, enemyLane: number, enemyDepth: number): string | null => {
+            const state = new BattleState();
+            const resolver = new BattleCombatResolver({
+                state,
+                getPlayerGeneralUnitId: () => null,
+                getEnemyGeneralUnitId: () => (foeIsGeneral ? 'foe' : null),
+                setPlayerGeneralUnitId: () => {},
+                setEnemyGeneralUnitId: () => {},
+            });
+            const make = (id: string, faction: Faction, lane: number, depth: number): TroopUnit => {
+                const unit = new TroopUnit(id, TroopType.Infantry, faction, { hp: 100, attack: 30, defense: 10, moveRange: 0, attackRange: 1 });
+                unit.moveTo(lane, depth);
+                return unit;
+            };
+            const mover = make('mover', Faction.Player, 2, 3);
+            state.addUnit(mover);
+            state.addUnit(make('foe', Faction.Enemy, enemyLane, enemyDepth));
+            const action = resolver.buildAttackAction(mover);
+            return action && action.targetId === 'foe' ? 'foe' : null;
+        };
+        assert.equals('foe', targetOf(true, 3, 3), '側面的敵方武將：小兵主動打');
+        assert.equals('foe', targetOf(true, 3, 4), '斜前方的敵方武將：小兵主動打');
+        assert.equals(null, targetOf(true, 4, 3), '隔一路的敵方武將：打不到');
+        assert.equals(null, targetOf(false, 3, 3), '側面的敵方小兵：仍然不打');
+    });
+
     suite.test('BattleController：技能傷害打死武將化身時應清除 general unit id', () => {
         services().initialize();
         const ctrl = new BattleController();
