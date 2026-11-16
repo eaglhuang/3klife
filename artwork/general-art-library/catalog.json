@@ -7437,6 +7437,22 @@
             "qc": "No redraw or design changes; full hair ornament, face and chin retained; face centered; shoulder and collar only."
           }
         ]
+      },
+      "battle": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/dong_bai__董白__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "d99c333de331ab0a8b63c9d2e186f1438593fb049c401f30f36b7fba7045db5a",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "chain-flail",
+            "poseLabel": "側身回旋收鏈",
+            "note": "以核定站姿的黑鐵與深紫輕甲、短柄連鎖墜錘為基礎；成年董白採側身回旋、收鏈控錘的動態瞬間，待使用者審核。"
+          }
+        ]
       }
     },
     {
