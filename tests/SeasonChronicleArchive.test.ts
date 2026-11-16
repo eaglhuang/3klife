@@ -109,6 +109,7 @@ export function createSeasonChronicleArchiveSuite(): TestSuite {
         assert.equals(1, popup.page);
         view = views[views.length - 1];
         assert.isFalse(view.enabled.btnCloseChronicle, '本季未抉擇，往期頁也不能收起');
+        assert.equals('回本季抉擇', view.texts.closeChronicleLabel, '往期頁提示回本季');
         popup.close();
         assert.isTrue(popup.isOpen, '收起被擋下');
         assert.equals(null, current.encounterChoice, '翻頁不改奇遇狀態');
@@ -119,6 +120,7 @@ export function createSeasonChronicleArchiveSuite(): TestSuite {
         assert.equals(1, popup.page);
         view = views[views.length - 1];
         assert.isTrue(view.enabled.btnCloseChronicle, '抉擇後往期頁可收起');
+        assert.equals('收起季報', view.texts.closeChronicleLabel, '可收起時是原字樣');
         assert.isTrue(view.texts.chronicleTitle.startsWith('【往期】'));
         assert.isTrue(view.texts.chronicleTitle.includes('第4季'));
         assert.isFalse(view.actives.btnEncounterA, '往期不能抉擇');

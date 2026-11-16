@@ -38,6 +38,9 @@ export const CHRONICLE_HEADINGS = Object.freeze({
     noGossip: '府中一切如常，並無新鮮軼事。',
     archivePrefix: '【往期】',
     expired: '未及抉擇，機緣已逝。',
+    close: '收起季報',
+    closeNeedChoice: '請先抉擇',
+    closeBackToCurrent: '回本季抉擇',
     prev: '往期',
     next: '較新',
 });
@@ -73,6 +76,8 @@ export function seasonChronicleView(state: Readonly<SeasonChronicleState>, seaso
                 : (!archivedPage ? resultLine : null) ?? (chosenOption ? `${CHRONICLE_HEADINGS.chosenPrefix}${chosenOption.label}，${chosenOption.note}` : ''),
             encounterOptionALabel: a?.label ?? '',
             encounterOptionBLabel: b?.label ?? '',
+            // 收起鈕被鎖住時把原因寫在鈕上，否則玩家點了沒反應會以為卡住（PROG-2-9115）
+            closeChronicleLabel: pending ? CHRONICLE_HEADINGS.closeNeedChoice : paging.currentPending === true ? CHRONICLE_HEADINGS.closeBackToCurrent : CHRONICLE_HEADINGS.close,
             chroniclePrevLabel: CHRONICLE_HEADINGS.prev,
             chronicleNextLabel: CHRONICLE_HEADINGS.next,
         },
