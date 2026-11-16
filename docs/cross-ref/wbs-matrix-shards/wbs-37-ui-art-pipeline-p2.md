@@ -38,6 +38,6 @@
 | **BML-03** | M10 | 四 state 內容契約（loading/awakening/ascension/unowned-preview）與 schema | data | 2 | 📄 僅資料 | BML-01 | validate-ui-specs --check-content-contract 通過 | content/bloodline-mirror-states-v1.json；contracts/bloodline-mirror-state-content.schema.json；tests/ucuf/validateUiSpecsCli.test.ts（通用） |  |
 | **BML-04** | M10 | 升星/二轉 ascension 與 unowned-preview 獨立 screen | ui | 2 | 📄 僅資料 | BML-02 | 升星與未持有預覽可由 screen 路由進入 | 僅有 state 內容；無 ascension/unowned screen JSON |  |
 | **BML-05** | M10 | Loading 流程實際接線：場景切換顯示命鏡並輪播角色 | ui | 3 | 📄 僅資料 | BML-02 | 場景切換時顯示命鏡 Loading，可輪播含未持有角色 | core/config/UIConfig.ts UIID.BloodlineMirrorLoading 已登記；LoadingScene.ts 未使用命鏡；僅 LobbyScene 預覽 |  |
-| **BML-06** | M10 | 覺醒/升星成功過場觸發（升星、二轉、血脈卡啟動） | logic | 3 | ⚪ 未開始 | BML-04 | 升星/覺醒成功事件觸發過場並回到流程 | UIConfig 有 awakening prefab 登記；無事件觸發 |  |
+| **BML-06** | M10 | 覺醒/升星成功過場觸發（升星、二轉、血脈卡啟動） | logic | 3 | 🟢 已接線 | BML-04 | 升星/覺醒成功事件觸發過場並回到流程 | UIConfig 有 awakening prefab 登記；無事件觸發 | [2026-11-16 PROG-2-9111] 對照程式引用更正；未實機驗收 |
 | **BML-07** | M10 | 未持有角色展示規則（未結識/命格未開/尚未得其英靈 badge，不劇透數值） | ui | 2 | 📄 僅資料 | BML-04 | 未持有狀態顯示三種標示且隱藏數值 | states-v1 unowned-preview state 文案；無 runtime 驗證 |  |
 | **BML-08** | M10 | 左右雙人物大圖 production（表象面/血脈面）與中線漸層 | content | 8 | ⚪ 未開始 | - | 代表武將具備左右雙圖且中線自然滲透 | 無雙面立繪資產 |  |
