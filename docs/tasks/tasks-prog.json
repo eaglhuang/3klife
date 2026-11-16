@@ -6745,6 +6745,52 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9331",
+      "title": "教學戰我方主將棋子走到第 5 排就發起單挑邀請；單挑鈕已出陣時不再寫「鎖定」",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T00:30:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "線上實跑單挑邀請 0 次。原因：邀請只在我方主將棋子走到敵陣最後一排（第 8 排）時發起，敵主將從不下場；主將最快第 3 回合上場，教學戰第 7～9 回合就結束，來不及。總PM 2026-11-16 裁決 A：教學戰走到第 5 排就發起，門檻進設定。",
+      "related": [
+        "PROG-2-9330"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；單元測試 7735 全過（新增 TutorialDuelInvite 3 案）；尚未線上實跑 | 變更: tutorialDuelInviteRow=5；單挑鈕已出陣文字；百騎劫營描述補上傷害；實跑工具加 --general | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

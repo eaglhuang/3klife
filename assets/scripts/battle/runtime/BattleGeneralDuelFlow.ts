@@ -175,6 +175,12 @@ export class BattleGeneralDuelFlow {
     return unit.depth === frontDepth;
   }
 
+  /** 我方主將棋子是否已走到己方數來第 row 排（教學戰提早發起單挑邀請用，PROG-2-9331）；第 1 排是 depth 0 */
+  public hasPlayerGeneralReachedRow(row: number): boolean {
+    const unit = this.playerGeneralUnitId ? this.context.state.units.get(this.playerGeneralUnitId) : null;
+    return !!unit && unit.depth >= row - 1;
+  }
+
   /**
    * 處理單挑邀請結果。
    */

@@ -375,7 +375,9 @@ export class BattleUIBridge {
         { ...tacticPoints, enabled: availability?.enabled ?? tacticPoints.enabled },
         availability?.reason ?? null,
       );
-      c.battleScenePanel?.setDuelLocked?.(c.ctrl.generalDuelBlockReason() !== null);
+      // 主將已經在棋盤上時寫「已出陣」，不寫「鎖定」，免得玩家以為功能被關掉（PROG-2-9331）
+      const duelBlock = c.ctrl.generalDuelBlockReason();
+      c.battleScenePanel?.setDuelLocked?.(duelBlock !== null, duelBlock === 'already-deployed' ? '已出陣' : undefined);
     }
     // 棋盤格狀態與兵種渲染（對應原 BattleScene.refreshBattleViews）
     c.boardRenderer?.renderState(state);
