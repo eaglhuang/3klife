@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-16T09:31:44.257Z",
+  "updatedAt": "2026-11-16T09:48:31.027Z",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -4630,6 +4630,25 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "displayStatus": "not-yet-verified",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/lu_kang__陸抗__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "1adc4e85126d33a8247976a93ec65f366503d21b683435bd622cb5b7fb6c725a",
+            "canvas": "1024x1536 RGBA",
+            "poseSelection": "Grounded braced interception with upright spear; bent lead knee, direct gaze, controlled fierce expression",
+            "gaze": "direct-to-camera",
+            "sourceStanding": "standing/lu_kang__陸抗__standing_0002.png",
+            "weaponClass": "long spear-like polearm, visual interpretation of the roster long-weapon note",
+            "note": "Character identity, teal and muted-red palette, crane motif and armor design follow approved standing v0002. Generated as a review candidate. Pose code remains unmapped pending comparison against the user-provided LH pose board; actual weapon type is not asserted as historical fact."
+          }
+        ]
       }
     },
     {
