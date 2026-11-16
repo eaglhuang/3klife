@@ -110,7 +110,7 @@ export interface IBattleScenePanelLike {
     setCards(cards: any[]): void;
     setUltimateSkills(skills: any[]): void;
     /** reason：戰法不能施放時的短原因（PROG-2-0408），有值時取代計點行 */
-    setTacticSummary(summary: string, points?: { current?: number; max?: number; enabled: boolean }, reason?: string | null): void;
+    setTacticSummary(summary: string, points?: { current?: number; max?: number; enabled: boolean }, reason?: string | null, shortReason?: string): void;
     /** 單挑鈕條件不足時灰度 + 🔒（PROG-2-1873） */
     setDuelLocked?(locked: boolean, lockedText?: string): void;
     appendLog(text: string): void;

@@ -334,9 +334,9 @@ export class BattleScenePanel extends Component {
         }
     }
 
-    public setTacticSummary(label: string, points?: { current?: number; max?: number; enabled: boolean }, reason?: string | null): void {
+    public setTacticSummary(label: string, points?: { current?: number; max?: number; enabled: boolean }, reason?: string | null, shortReason?: string): void {
         if (this.actionCommandComposite) {
-            this.actionCommandComposite.setTacticSummary(label, points, reason);
+            this.actionCommandComposite.setTacticSummary(label, points, reason, shortReason);
         }
     }
 

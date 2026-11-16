@@ -490,7 +490,14 @@ export class BattleSkillDispatcher {
   }
 
   /** 施放者的兵種、天氣與鄰格數量組成 tcond 的評估輸入；施放者不在戰場上（武將）時兵種條件略過 */
-  private checkTacticConditions(request: BattleSkillRequest): TacticConditionResult {
+  /** 給 HUD 用：武將直接施放這個戰法時，第一個沒達成的條件；都達成或沒有條件時回 null（PROG-2-9333） */
+  public findUnmetGeneralTacticCondition(faction: Faction, tacticId: string | null): TacticCondition | null {
+    if (!tacticId) return null;
+    const result = this.checkTacticConditions({ ownerUid: faction, tacticId });
+    return result.ok ? null : result.failed;
+  }
+
+  private checkTacticConditions(request: Pick<BattleSkillRequest, 'ownerUid' | 'tacticId'>): TacticConditionResult {
     const conditions = request.tacticId ? this.context.getTacticConditions?.(request.tacticId) : undefined;
     if (!conditions || conditions.length === 0) return { ok: true };
     const { state } = this.context;

@@ -25,6 +25,10 @@ export function createBattleHudLayoutAuditSuite(): TestSuite {
   assert.equals('計謀\n3點',host._tacticsLabel.string);assert.contains(host._tacticsSummaryLabel,'很長的戰法名稱');
   ActionCommandComposite.prototype.setTacticSummary.call(host,'火攻',{enabled:false},'大雨');
   assert.equals('計謀\n受限',host._tacticsLabel.string);assert.isFalse(host._tacticEnabled);
+  ActionCommandComposite.prototype.setTacticSummary.call(host,'火攻',{enabled:false},'需要起風','待風');
+  assert.equals('計謀\n待風',host._tacticsLabel.string);assert.isFalse(host._tacticEnabled);
+  ActionCommandComposite.prototype.setTacticSummary.call(host,'火攻',{current:5,max:100,enabled:false},'計謀點不足');
+  assert.equals('計謀\n5點',host._tacticsLabel.string);assert.isFalse(host._tacticEnabled);
   ActionCommandComposite.prototype.setTacticSummary.call(host,'神策',{current:120,max:150,enabled:true});
   assert.equals('計謀\n99+',host._tacticsLabel.string);
  });

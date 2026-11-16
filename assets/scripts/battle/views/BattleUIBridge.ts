@@ -367,13 +367,14 @@ export class BattleUIBridge {
       const tacticPoints = c.ctrl.getPlayerTacticPointState();
       const descriptor = c.ctrl.getPlayerSeedTacticDescriptor();
       const [availability] = buildTacticAvailability(
-        descriptor ? [{ id: descriptor.skillId, label: summary, tags: resolveBattleSkillProfile(descriptor.skillId)?.tags ?? [] }] : [],
+        descriptor ? [{ id: descriptor.skillId, label: summary, tags: resolveBattleSkillProfile(descriptor.skillId)?.tags ?? [], unmetCondition: c.ctrl.getPlayerSeedTacticUnmetCondition() }] : [],
         { weather: state.weather, tacticPointEnabled: tacticPoints.enabled, generalCanUseSkill: pg.canUseSkill() || !c.ctrl.seedTacticNeedsSp() },
       );
       c.battleScenePanel?.setTacticSummary(
         summary,
         { ...tacticPoints, enabled: availability?.enabled ?? tacticPoints.enabled },
         availability?.reason ?? null,
+        availability?.shortReason,
       );
       // 主將已經在棋盤上時寫「已出陣」，不寫「鎖定」，免得玩家以為功能被關掉（PROG-2-9331）
       const duelBlock = c.ctrl.generalDuelBlockReason();
