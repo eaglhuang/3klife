@@ -30,6 +30,11 @@ import { duelLogType } from '../../core/systems/DailyNewsEngine';
 
 export class TurnFlowManager {
   private _advanceTurnGeneration = 0;
+  /**
+   * 我方回合已結算、敵方回合還沒收尾。回合推進被中途放掉（安全解鎖、單挑收尾）時要靠它把敵方回合補完，
+   * 否則戰鬥流程永遠停在「結算中」，結束回合鍵再也按不動（PROG-2-9350）。
+   */
+  private _enemyTurnPending = false;
   /** 後備單挑彈窗（僅在 duelChallengePanel 未綁定時建立，整場戰鬥重複使用） */
   private _duelFallback: DuelChallengeFallback | null = null;
 
@@ -57,9 +62,13 @@ export class TurnFlowManager {
     c.boardRenderer?.setDeployHintFaction(Faction.Player);
     this.bridge.refreshBattleViews();
     const gen = ++this._advanceTurnGeneration;
+    // 單挑演出（雙方都有動畫時十幾秒）不算在安全時限內：演出結束後重新給一段完整時限，
+    // 不然演出一結束時限就到期，後面的敵方回合整段被跳過（PROG-2-9350）
+    let duelSeen = false;
     const checkAdvanceSafety = (): void => {
       if (c.isAdvancingTurn && this._advanceTurnGeneration === gen) {
-        if (c.isDuelPanelActive) { this.scene.scheduleOnce(checkAdvanceSafety, 1); return; }
+        if (c.isDuelPanelActive) { duelSeen = true; this.scene.scheduleOnce(checkAdvanceSafety, 1); return; }
+        if (duelSeen) { duelSeen = false; this.scene.scheduleOnce(checkAdvanceSafety, BATTLE_TURN_FLOW_TIMING.advanceSafetyUnlockSec); return; }
         UCUFLogger.warn(LogCategory.BATTLE, '[TurnFlowManager] isAdvancingTurn safety-reset（超時 20s），強制解鎖');
         this.finalizeAdvance();
       }
@@ -67,6 +76,7 @@ export class TurnFlowManager {
     this.scene.scheduleOnce(checkAdvanceSafety, BATTLE_TURN_FLOW_TIMING.advanceSafetyUnlockSec);
 
     const playerResult = c.ctrl.resolvePlayerTurn();
+    this._enemyTurnPending = playerResult === 'ongoing';
     this.scene.scheduleOnce(() => this.pollCombatDrain(0, () => {
       if (!c.isAdvancingTurn || this._advanceTurnGeneration !== gen) return;
       if (playerResult !== 'ongoing') {
@@ -89,6 +99,7 @@ export class TurnFlowManager {
             this.pollCombatDrain(0, () => {
               if (!c.isAdvancingTurn || this._advanceTurnGeneration !== gen) return;
               c.ctrl?.finalizeEnemyTurn();
+              this._enemyTurnPending = false;
               this.finalizeAdvance();
             });
           }), BATTLE_TURN_FLOW_TIMING.postSubturnVisualBufferSec);
@@ -101,10 +112,25 @@ export class TurnFlowManager {
     const c = this.ctx;
     if (!c.isAdvancingTurn) return;
     c.isAdvancingTurn = false;
+    this.completePendingEnemyTurn();
     this.bridge.hideEnemyThinkingPanel();
     this.bridge.playTurnBanner(Faction.Player);
     c.boardRenderer?.setDeployHintFaction(Faction.Player);
     this.bridge.refreshBattleViews();
+  }
+
+  /**
+   * 回合推進沒有走完就被放掉時，把還沒做的敵方回合直接結算完，讓戰鬥流程回到「可下指令」。
+   * 兩個呼叫都可重複執行：已結算過的敵方回合不會再算一次。
+   */
+  private completePendingEnemyTurn(): void {
+    if (!this._enemyTurnPending) return;
+    this._enemyTurnPending = false;
+    const ctrl = this.ctx.ctrl;
+    if (!ctrl) return;
+    UCUFLogger.warn(LogCategory.BATTLE, '[TurnFlowManager] 回合推進中途結束，補做敵方回合結算');
+    ctrl.resolveEnemyTurn();
+    ctrl.finalizeEnemyTurn();
   }
 
   private pollCombatDrain(attempts: number, onDone: () => void): void {
@@ -346,12 +372,14 @@ export class TurnFlowManager {
     try { duelResult = await this.bridge.resolveDuelPresentation(Faction.Enemy, accepted); }
     catch (error) {
       UCUFLogger.error(LogCategory.BATTLE, '[TurnFlowManager] 單挑處理失敗', error);
-      c.isDuelPanelActive = false; c.isAdvancingTurn = false; return;
+      c.isDuelPanelActive = false; return;
     }
     if (!this.scene.isValid) return;
     this._showDuelResultToast(duelResult, accepted, Faction.Enemy);
+    // 只放掉單挑鎖：回合推進還在等單挑結束，接著會自己做敵方回合收尾並解鎖。
+    // 以前在這裡直接解鎖，敵方回合收尾被跳過，流程卡在「結算中」（PROG-2-9350）
     c.isDuelPanelActive = false;
-    c.isAdvancingTurn = false;
+    if (c.isAdvancingTurn) { this.bridge.refreshBattleViews(); return; }
     this.bridge.hideEnemyThinkingPanel();
     this.bridge.playTurnBanner(Faction.Player);
     c.boardRenderer?.setDeployHintFaction(Faction.Player);
