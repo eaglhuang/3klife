@@ -5558,6 +5558,23 @@
             "note": "透明背景；可見輪廓 alpha>32 bbox=(129,183)-(861,1369)，落在中央 75% 寬度內；全身與鞋底完整。候選待使用者審閱。"
           }
         ]
+      },
+      "smallAvatar": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/ju_shou__沮授__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "648B04F093BACB7278472E71AC36CBD604372B3E721BF664B28D662E7D8CDC89",
+            "canvas": "256x256 RGBA",
+            "source": "standing/ju_shou__沮授__standing_0002.png",
+            "crop": "shoulder-line",
+            "cropBox": "x=362,y=0,w=300,h=300",
+            "note": "只由核定站姿等比例裁切；頭頂至下巴約佔畫面 79%，臉部置中，底緣停在肩線且無胸甲正面。候選待使用者審閱。"
+          }
+        ]
       }
     },
     {
