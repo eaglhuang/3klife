@@ -27,7 +27,7 @@ export class SpineUnitOverlay {
   private readonly entries = new Map<string, Entry>();
   private readonly failed = new Set<string>();
   private readonly pendingRemovals = new Set<string>();
-  private duel: { core: DuelPresentationCore; ids: [string, string]; resolve: () => void } | null = null;
+  private duel: { core: DuelPresentationCore; ids: [string, string]; resolve: (played: boolean) => void } | null = null;
   constructor(private readonly getParent: () => Node | null, private readonly layer: () => number) {}
 
   public sync(id: string, config: UnitSpineConfig, x: number, y: number, facing: 1 | -1, moving: boolean, dt: number, visible = true, members = 1): boolean {
@@ -54,7 +54,7 @@ export class SpineUnitOverlay {
       if (result.phase === 'done') {
         this.duel = null;
         for (const id of duel.ids) if (this.pendingRemovals.has(id)) this.remove(id);
-        duel.resolve();
+        duel.resolve(true);
       }
     }
     for (const [id, entry] of this.entries) {
@@ -85,12 +85,13 @@ export class SpineUnitOverlay {
     if (entry && !this.duel?.ids.includes(id) && entry.core.snapshot().action === 'fall') entry.core.play('idle');
   }
 
-  public async playDuel(a: string, b: string, winner: 0 | 1 | null, fallen: boolean, exchanges: readonly DuelExchange[]): Promise<void> {
-    if (this.duel) return;
+  /** 回傳是否真的播了交鋒動畫；任一方沒有 Spine 動畫時回 false，呼叫端要自己補演出 */
+  public async playDuel(a: string, b: string, winner: 0 | 1 | null, fallen: boolean, exchanges: readonly DuelExchange[]): Promise<boolean> {
+    if (this.duel) return false;
     const loaded = await Promise.all([this.waitForEntry(a), this.waitForEntry(b)]);
-    if (!loaded.every(Boolean) || this.duel) return;
+    if (!loaded.every(Boolean) || this.duel) return false;
     const first = this.entries.get(a), second = this.entries.get(b);
-    if (!first?.node?.isValid || !second?.node?.isValid) return;
+    if (!first?.node?.isValid || !second?.node?.isValid) return false;
     const left = first.core.snapshot().foot, right = second.core.snapshot().foot;
     const midpoint = { x: (left.x + right.x) / 2, y: (left.y + right.y) / 2 };
     const dx = right.x - left.x, dy = right.y - left.y, distance = Math.hypot(dx, dy);
@@ -100,7 +101,7 @@ export class SpineUnitOverlay {
       { unit: first.core, sideline: left, arena: { x: midpoint.x - direction.x * gap, y: midpoint.y - direction.y * gap } },
       { unit: second.core, sideline: right, arena: { x: midpoint.x + direction.x * gap, y: midpoint.y + direction.y * gap } }, winner, fallen, exchanges,
     );
-    return new Promise<void>(resolve => { this.duel = { core, ids: [a, b], resolve }; });
+    return new Promise<boolean>(resolve => { this.duel = { core, ids: [a, b], resolve }; });
   }
 
   public remove(id: string): void {
@@ -136,7 +137,7 @@ export class SpineUnitOverlay {
     for (const done of entry.ready.splice(0)) done(success);
   }
   public clear(): void {
-    if (this.duel) { this.duel.resolve(); this.duel = null; }
+    if (this.duel) { this.duel.resolve(true); this.duel = null; }
     for (const id of this.entries.keys()) this.remove(id);
   }
 

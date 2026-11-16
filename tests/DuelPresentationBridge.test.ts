@@ -1,4 +1,4 @@
-import { BattleUIBridge, createBattleSceneContext } from '../assets/scripts/battle/views/BattleUIBridge';
+import { BattleUIBridge, createBattleSceneContext, duelHitGapSeconds } from '../assets/scripts/battle/views/BattleUIBridge';
 import { EVENT_NAMES, Faction } from '../assets/scripts/core/config/Constants';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
 import { TestSuite, assert } from './TestRunner';
@@ -125,6 +125,49 @@ export function createDuelPresentationBridgeSuite(): TestSuite {
     runNext();
     runNext();
     assert.equals(1, enemyTurns);
+  });
+  suite.test('沒有交鋒動畫時逐招提交傷害，最後一招停一下才出結算', async () => {
+    const ctx = createBattleSceneContext();
+    const waits: number[] = [];
+    const queue: Array<() => void> = [];
+    const scene = { isValid: true, scheduleOnce: (cb: () => void, delay: number) => { waits.push(delay); queue.push(cb); } } as any;
+    const bridge = new BattleUIBridge(ctx, scene);
+    ctx.unitRenderer = { playDuelPresentation: () => Promise.resolve(false) } as any;
+    const committed: any[] = [], ended: string[] = [];
+    const off = services().event.on(EVENT_NAMES.GeneralDamagedVisualCommitted, data => committed.push(data));
+    const internal = bridge as any;
+    const originalEnd = internal._onBattleEnded.bind(bridge);
+    internal._onBattleEnded = (data: any) => internal.duelCapture ? originalEnd(data) : ended.push(data.result);
+    ctx.ctrl = {
+      state: { getGeneral: (f: Faction) => ({ currentHp: f === Faction.Player ? 30 : 0, maxHp: 100 }) },
+      resolveDuelChallenge: () => {
+        internal._onGeneralDamaged({ faction: Faction.Enemy, hp: 60, damage: 40, wasDodged: false });
+        internal._onGeneralDamaged({ faction: Faction.Player, hp: 30, damage: 70, wasDodged: false });
+        internal._onGeneralDamaged({ faction: Faction.Enemy, hp: 0, damage: 60, wasDodged: false });
+        internal._onBattleEnded({ result: 'player-win' });
+        return 'player-win';
+      },
+    } as any;
+    const pending = bridge.resolveDuelPresentation(Faction.Player, true);
+    const flush = async (): Promise<void> => { for (let i = 0; i < 5; i++) await Promise.resolve(); };
+    await flush();
+    assert.equals(1, committed.length, '第一招立刻提交');
+    queue.shift()!(); await flush();
+    assert.equals(2, committed.length);
+    queue.shift()!(); await flush();
+    assert.equals(3, committed.length);
+    assert.equals(0, ended.length, '最後一招後還沒出結算');
+    queue.shift()!();
+    assert.equals('player-win', await pending);
+    assert.equals('player-win', ended[0]);
+    assert.equals(duelHitGapSeconds(3), waits[0]);
+    off();
+  });
+  suite.test('逐招間隔：招數少每招 0.4 秒，招數多壓縮但不低於下限', () => {
+    assert.equals(0, duelHitGapSeconds(1));
+    assert.equals(0.4, duelHitGapSeconds(3));
+    assert.equals(true, Math.abs(duelHitGapSeconds(12) - 0.2) < 1e-9);
+    assert.equals(0.06, duelHitGapSeconds(200));
   });
   return suite;
 }

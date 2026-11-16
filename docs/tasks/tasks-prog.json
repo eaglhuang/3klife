@@ -6053,6 +6053,50 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9315",
+      "title": "單挑對手沒有交鋒動畫時改為逐招跳傷害，不再按下接受就直接出結算",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-16T10:20:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "實機測試：長坂坡突圍接受敵方單挑後約 3 秒直接出結算、看不到任何交鋒。原因是交鋒動畫需要雙方主將都有 Spine 動畫，任一方沒有就整段略過，所有傷害在同一瞬間提交。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: done | 驗證: 型別檢查 0 錯；單元測試全過（新增 2 案） | 變更: 交鋒動畫沒播時逐招提交傷害並在最後一招後停 0.5 秒 | 阻塞: 無；未做到：新程式尚未在實機預覽驗證（本機預覽仍是舊編譯）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

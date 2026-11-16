@@ -156,6 +156,19 @@ export function createBattleSceneContext(): BattleSceneContext {
 /** 主動撤退時戰報與 Toast 的共用文字（PROG-2-9300）：讓玩家知道是自己退，不是被打垮 */
 export const RETREAT_LOG_LINE = '我軍鳴金收兵，撤出戰場';
 
+/** 沒有交鋒動畫時，逐招跳傷害的總時間上限（秒）與單招間隔上下限 */
+const DUEL_FALLBACK_TOTAL_SECONDS = 2.4;
+const DUEL_FALLBACK_MAX_GAP_SECONDS = 0.4;
+const DUEL_FALLBACK_MIN_GAP_SECONDS = 0.06;
+/** 最後一招後停一下再出結算，讓玩家看到最後的血量 */
+const DUEL_FALLBACK_END_HOLD_SECONDS = 0.5;
+
+/** 逐招間隔：招數少時每招 0.4 秒，招數多時壓縮到總長約 2.4 秒 */
+export function duelHitGapSeconds(hitCount: number): number {
+  if (hitCount <= 1) return 0;
+  return Math.max(DUEL_FALLBACK_MIN_GAP_SECONDS, Math.min(DUEL_FALLBACK_MAX_GAP_SECONDS, DUEL_FALLBACK_TOTAL_SECONDS / hitCount));
+}
+
 export class BattleUIBridge {
   private duelCapture: {
     hits: Array<{ faction: Faction; hp: number; damage?: number; attackerId?: string | null; isCrit?: boolean; wasDodged?: boolean }>;
@@ -198,10 +211,23 @@ export class BattleUIBridge {
     const enemyDead = (ctrl.state.getGeneral(Faction.Enemy)?.currentHp ?? 1) <= 0;
     const winner: 0 | 1 | null = playerDead === enemyDead ? null : playerDead ? 1 : 0;
     const exchanges = selectDuelExchanges(capture.hits.map(hit => ({ attacker: (hit.faction === Faction.Player ? 1 : 0) as 0 | 1, dodged: !!hit.wasDodged })));
-    try { await (this.ctx.unitRenderer?.playDuelPresentation?.(winner, playerDead || enemyDead, exchanges) ?? Promise.resolve()); }
+    let played: unknown;
+    try { played = await (this.ctx.unitRenderer?.playDuelPresentation?.(winner, playerDead || enemyDead, exchanges) ?? Promise.resolve()); }
     catch (error) { UCUFLogger.error(LogCategory.BATTLE, '[BattleUIBridge] 單挑演出失敗', error); }
     if (!this.scene.isValid) return result;
-    for (const hit of capture.hits) this.commitDuelDamage(hit);
+    // 任一方主將沒有交鋒動畫時（明確回 false），改成一招一招跳傷害，不要按下接受就直接跳結算
+    const gap = played === false && capture.hits.length > 1 ? duelHitGapSeconds(capture.hits.length) : 0;
+    for (let i = 0; i < capture.hits.length; i++) {
+      if (gap > 0 && i > 0) {
+        await new Promise<void>(resolve => this.scene.scheduleOnce(resolve, gap));
+        if (!this.scene.isValid) return result;
+      }
+      this.commitDuelDamage(capture.hits[i]);
+    }
+    if (gap > 0) {
+      await new Promise<void>(resolve => this.scene.scheduleOnce(resolve, DUEL_FALLBACK_END_HOLD_SECONDS));
+      if (!this.scene.isValid) return result;
+    }
     for (const death of capture.deaths) this._onUnitDied(death);
     if (capture.ended) this._onBattleEnded(capture.ended);
     return result;
