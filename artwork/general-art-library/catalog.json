@@ -669,7 +669,7 @@
         ]
       },
       "battle": {
-        "activeVersion": "0001",
+        "activeVersion": "0002",
         "status": "review-pending",
         "history": [
           {
@@ -679,6 +679,18 @@
             "sha256": "e6df0a98f68acfc25274f09b8797887f46172f71ebe2b236353947920280977e",
             "canvas": "1024x1536 RGBA",
             "note": "Existing remote artwork discovered without a catalog record; kept as review candidate, not asserted as runtime-integrated."
+          },
+          {
+            "version": "0002",
+            "file": "battle/cai_wenji__蔡文姬__battle_0002.png",
+            "status": "review-pending",
+            "sha256": "5b7c0beba88a262ce876296e8d8b44548e2ff8034553c83a615aa6834d24eee5",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "guqin",
+            "sourceStanding": "standing/cai_wenji__蔡文姬__standing_0003.png",
+            "poseSelection": "坐姿蓄勢演奏古琴，雙手落弦，完整木架與琴凳",
+            "gaze": "略側臉，目光朝鏡頭",
+            "qc": "候選版；完整四腳琴架與琴凳可見，透明通道存在；需人工確認背景邊緣光暈與動態表現後採用。"
           }
         ]
       },
