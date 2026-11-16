@@ -26,7 +26,9 @@ export class BattleSkillTargetSelector {
       case BattleSkillTargetMode.AllyAll:
         return context.getFactionUnits(casterFaction);
       case BattleSkillTargetMode.EnemyAll:
-        return context.getOpposingUnits(casterFaction);
+        return profile.enemyRearRowOnly
+          ? this.rearmostRow(context.getOpposingUnits(casterFaction), casterFaction)
+          : context.getOpposingUnits(casterFaction);
       case BattleSkillTargetMode.EnemySingle:
         return this.selectEnemySingleTarget(request, casterFaction, context, profile);
       case BattleSkillTargetMode.Line:
@@ -67,6 +69,18 @@ export class BattleSkillTargetSelector {
     }
 
     return context.getBoardCells();
+  }
+
+  /**
+   * 只留離施放方最遠的那一排。玩家從 depth 0 往上打，所以敵方最後排是 depth 最大的那排；敵方施放時相反。
+   * 取「有活著的敵軍的最遠一排」而不是棋盤固定的最後一排，免得那排剛好沒人時整招落空。
+   */
+  private rearmostRow(units: TroopUnit[], casterFaction: Faction): TroopUnit[] {
+    const alive = units.filter((unit) => !unit.isDead());
+    if (!alive.length) return [];
+    const depths = alive.map((unit) => unit.depth);
+    const rear = casterFaction === Faction.Player ? Math.max(...depths) : Math.min(...depths);
+    return alive.filter((unit) => unit.depth === rear);
   }
 
   private selectSelfTargets(

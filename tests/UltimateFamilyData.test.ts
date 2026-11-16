@@ -17,8 +17,8 @@ export function createUltimateFamilyDataSuite(): TestSuite {
     const suite = new TestSuite('UltimateFamilyData (奧義效果家族資料 ULT-12 PROG-2-1062)');
     const families = new Set<string>(Object.values(UltimateEffectFamily));
 
-    suite.test('65 筆奧義都有合法的效果家族', () => {
-        assert.equals(65, DEFINITIONS.data.length);
+    suite.test('70 筆奧義都有合法的效果家族', () => {
+        assert.equals(70, DEFINITIONS.data.length); // 13 位 × 5 階 ＋ 5 位初始名將第一階（PROG-2-9327）
         DEFINITIONS.data.forEach((definition) => {
             assert.isTrue(typeof definition.family === 'string' && families.has(definition.family));
         });

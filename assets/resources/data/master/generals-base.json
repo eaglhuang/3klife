@@ -2011,7 +2011,15 @@
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-zhang-he-1",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": true
+        }
+      ]
     },
     {
       "id": "yu-jin",
@@ -2206,7 +2214,15 @@
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-xiahou-dun-1",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": true
+        }
+      ]
     },
     {
       "id": "xiahou-yuan",
@@ -2336,7 +2352,15 @@
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-wei-yan-1",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": true
+        }
+      ]
     },
     {
       "id": "jiang-wei",
@@ -2791,7 +2815,15 @@
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-gan-ning-1",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": true
+        }
+      ]
     },
     {
       "id": "ling-tong",
@@ -3246,7 +3278,15 @@
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-sun-ce-1",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": true
+        }
+      ]
     },
     {
       "id": "sun-jian",
