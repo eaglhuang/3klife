@@ -2,6 +2,7 @@
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { TroopType } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
+import { attackSfxFor } from './AttackSfxMapping';
 
 
 /**
@@ -17,6 +18,7 @@ export const BATTLE_AUDIO_CUE = {
   unitAttackPrimary: 'unit-attack-primary',
   unitAttackSecondary: 'unit-attack-secondary',
   unitAttackCommon: 'unit-attack-common',
+  unitAttackBow: 'unit-attack-bow',
   generalHitCommon: 'general-hit-common',
   generalAttackCommon: 'general-attack-common',
   unitMove: 'unit-move',
@@ -28,6 +30,10 @@ export const BATTLE_AUDIO_CUE = {
   critHit: 'crit-hit',
   fortressDamaged: 'fortress-damaged',
   shieldBlock: 'shield-block',
+  turnPlayerStart: 'turn-player-start',
+  turnEnemyStart: 'turn-enemy-start',
+  battleVictory: 'battle-victory',
+  battleDefeat: 'battle-defeat',
 } as const;
 
 export type BattleAudioCue = typeof BATTLE_AUDIO_CUE[keyof typeof BATTLE_AUDIO_CUE];
@@ -38,9 +44,11 @@ export const BATTLE_AUDIO_CLIP_MAP: Record<BattleAudioCue, string> = {
   [BATTLE_AUDIO_CUE.unitHitPrimary]: 'hurt',
   [BATTLE_AUDIO_CUE.unitHitSecondary]: 'thunder',
   [BATTLE_AUDIO_CUE.unitHitCommon]: 'hurt',
-  [BATTLE_AUDIO_CUE.unitAttackPrimary]: 'weapon',
+  // PROG-2-9357：騎兵／弓兵改用不同 clip；以下 clip 皆依檔名推測，未實機聽過，不合適只改這張表
+  [BATTLE_AUDIO_CUE.unitAttackPrimary]: 'teleport',
   [BATTLE_AUDIO_CUE.unitAttackSecondary]: 'weapon',
   [BATTLE_AUDIO_CUE.unitAttackCommon]: 'weapon',
+  [BATTLE_AUDIO_CUE.unitAttackBow]: 'feijian',
   [BATTLE_AUDIO_CUE.generalHitCommon]: 'hurt',
   [BATTLE_AUDIO_CUE.generalAttackCommon]: 'weapon',
   [BATTLE_AUDIO_CUE.unitMove]: 'footstep',
@@ -52,12 +60,14 @@ export const BATTLE_AUDIO_CLIP_MAP: Record<BattleAudioCue, string> = {
   [BATTLE_AUDIO_CUE.critHit]: 'boom',
   [BATTLE_AUDIO_CUE.fortressDamaged]: 'boom',
   [BATTLE_AUDIO_CUE.shieldBlock]: 'shield',
+  [BATTLE_AUDIO_CUE.turnPlayerStart]: 'light',
+  [BATTLE_AUDIO_CUE.turnEnemyStart]: 'thunder',
+  [BATTLE_AUDIO_CUE.battleVictory]: 'skill0',
+  [BATTLE_AUDIO_CUE.battleDefeat]: 'die',
 };
 
 export function resolveBattleUnitAttackSfxKey(unitType: TroopType): BattleAudioCue {
-  return unitType === TroopType.Cavalry
-    ? BATTLE_AUDIO_CUE.unitAttackPrimary
-    : BATTLE_AUDIO_CUE.unitAttackCommon;
+  return attackSfxFor(unitType);
 }
 
 export function resolveBattleUnitHitSfxKey(damageSource?: string): BattleAudioCue {
@@ -81,5 +91,6 @@ export function playBattleAudio(cue: BattleAudioCue, volume = 1.0): void {
     return;
   }
 
-  services().audio.playSfx(clipName, volume);
+  // 音效系統未就緒或缺檔都靜音略過，不可丟例外（PROG-2-9357）
+  try { services().audio.playSfx(clipName, volume); } catch { /* 靜音 */ }
 }

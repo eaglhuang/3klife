@@ -398,6 +398,8 @@ export class BattleUIBridge {
 
   public playTurnBanner(faction: Faction): void {
     playTurnBannerOn(this.ctx.deployRuntime, faction);
+    // 回合切換音效（PROG-2-9357）：換邊時才有橫幅，音效跟著橫幅走，我方／敵方各一聲
+    playBattleAudio(faction === Faction.Player ? BATTLE_AUDIO_CUE.turnPlayerStart : BATTLE_AUDIO_CUE.turnEnemyStart, 0.6);
   }
 
   public appendLog(text: string): void {
@@ -995,6 +997,9 @@ export class BattleUIBridge {
     if (effectKey) {
       playBattleFlowEffectAtBoardCenter(services().effect, c.boardRenderer, effectKey, data.result === 'draw' ? 1.6 : 1.8);
     }
+    // 勝敗音效（PROG-2-9357）：平手不播
+    if (data.result === 'player-win') playBattleAudio(BATTLE_AUDIO_CUE.battleVictory);
+    else if (data.result === 'enemy-win') playBattleAudio(BATTLE_AUDIO_CUE.battleDefeat);
     this.appendLog(`戰鬥結束：${data.result}`);
     this.hideEnemyThinkingPanel();
     const details = this._settleRosterBattle(data.result as BattleResult);
