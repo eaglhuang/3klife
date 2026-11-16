@@ -14,7 +14,7 @@ import { parseLimitedPoolWindows } from '../../core/systems/LimitedPoolSchedule'
 import { expandLimitedPoolRotations, parseLimitedPoolRotations } from '../../core/systems/LimitedPoolRotation';
 import { _decorator, BlockInputEvents, Button, Canvas, Color, Component, instantiate, JsonAsset, Label, Mask, Node, Sprite, sys, UITransform, Widget, resources } from 'cc';
 import { installAdaptiveResolution } from '../core/AdaptiveResolution';
-import { computeSubMenuCenterX, LobbyHallScreenBinder, type HallActorTapView, type LobbyHallDockId, type LobbyHallPanelId } from '../core/LobbyHallScreenBinder';
+import { computeSubMenuCenterX, LobbyHallScreenBinder, type HallActorTapView, type LobbyHallDockId, type LobbyHallPanelId, type LobbyHallWallId } from '../core/LobbyHallScreenBinder';
 import { hallFestivalIdOf, mainLobbyBackdropOf, resolveHallTheme as resolveHallSceneTheme, type HallThemeConfig } from '../../core/systems/HallTheme';
 import { LobbyBackdrop } from '../core/LobbyBackdrop';
 import { sceneGambitNotice, sceneGambitPendingNotice } from '../core/HallSceneGambitText';
@@ -135,6 +135,7 @@ import { ultimateUnlockLines } from '../../core/systems/UltimateScriptLines';
 import { rebirthBreakthroughLine } from '../../core/systems/NumericalScriptLines';
 import { HallBoardPanelController, HALL_BOARD_MAX_ROWS } from '../core/HallBoardPanelController';
 import { HALL_BOARD_TYPE_LABEL, hallAssignNoticeOf, hallMissionDialogStateOf } from '../core/HallMissionDialogState';
+import { hallTaskDialogStateOf, planHallMissionAction } from '../core/HallMissionActionRouter';
 import { hallPlayerOf, officerPromotionScriptLines, OFFICER_ERA_KEPT_LINE } from '../../core/systems/OfficerSnapshot';
 import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
 import { officerDisplayOf } from '../../core/systems/OfficerDisplay';
@@ -2573,6 +2574,8 @@ export class LobbyScene extends Component {
             ...rowBindings,
         ]);
         this._hallBoardHost.node.active = false;
+        // 任務資料是大廳出現後才補掛載的：牆面要在這裡補套真實任務，否則一直顯示設計稿文字（PROG-2-9123）
+        this._refreshLobbyHallWalls();
     }
 
     /** 天下征鋒彈窗（PROG-2-2101）：入口在任務牆；戰後回大廳時順便發放待領獎勵 */
@@ -3518,6 +3521,18 @@ export class LobbyScene extends Component {
             return;
         }
         applyFlowView(binder, this._hallBoard.getFlowView());
+        this._refreshLobbyHallWalls();
+    }
+
+    private _hallBoardOfWall(wall: LobbyHallWallId): HallBoardKey {
+        return wall === 'wall-left' ? 'Military' : 'Domestic';
+    }
+
+    /** 大廳牆面第 rowIndex 張任務卡：開該牆並直接開出同一個任務的詳情（PROG-2-9123） */
+    private _onClickLobbyWallRow(wall: LobbyHallWallId, rowIndex: number): void {
+        if (!this._hallBoard || !this._hallBoardHost) { this._showNotOpenYet(); return; }
+        this._openHallBoard(this._hallBoardOfWall(wall));
+        this._onClickHallDetail(rowIndex);
     }
 
     private _hallDispatchToast(taskId: string, success: boolean): string {
@@ -3560,16 +3575,40 @@ export class LobbyScene extends Component {
         }
         const taskId = task.Task_ID;
         void services().ui.open(UIID.LobbyMissionDetailDialog, {
-            state: hallMissionDialogStateOf(row, HALL_BOARD_TYPE_LABEL[board.board]),
+            state: { ...hallMissionDialogStateOf(row, HALL_BOARD_TYPE_LABEL[board.board]), ...hallTaskDialogStateOf(task) },
             availableGenerals: this._buildMissionDetailGeneralOptions(),
             selectedGeneralId: services().session.leadGeneralId ?? undefined,
-            onActionSelected: (action) => this._onHallMissionAction(action, taskId),
-        } satisfies LobbyMissionDetailDialogOpenPayload);
+            onActionSelected: (action, snapshot) => this._onHallMissionAction(action, taskId, snapshot),
+        } satisfies LobbyMissionDetailDialogOpenPayload).then((opened) => { if (!opened) this._showNotOpenYet(); });
     }
 
-    /** 彈窗「委任」：由 AI 選將並寫入委任紀錄（PROG-2-1006）；其他動作仍沿用既有流程，本卡不改。 */
-    private async _onHallMissionAction(action: LobbyMissionActionKey, taskId: string): Promise<void> {
-        if (action !== 'assign') return;
+    /**
+     * 詳情彈窗四鈕（PROG-2-9123）：執行＝派遣（同任務牆「接取」）、委任＝AI 選將（PROG-2-1006）；
+     * 再探與等待規格沒有耗費與規則數值，顯示「尚未開放」。按下去一定有玩家看得到的結果。
+     */
+    private async _onHallMissionAction(action: LobbyMissionActionKey, taskId: string, snapshot: { selectedGeneralId: string | null; aiDelegateChecked: boolean }): Promise<void> {
+        const plan = planHallMissionAction(action, {
+            selectedGeneralId: snapshot.selectedGeneralId,
+            aiDelegateChecked: snapshot.aiDelegateChecked,
+            alreadyAccepted: taskId in services().session.hallAssignments,
+        });
+        if (plan.kind === 'not-open') { this._showNotOpenYet(); return; }
+        if (plan.kind === 'notice') { this._showToast(plan.text); return; }
+        if (plan.kind === 'dispatch') {
+            try {
+                const ok = await this._dispatchHallTask(taskId, plan.generalId);
+                if (!ok) this._showToast('無法執行此任務，請確認武將仍在名冊內');
+                else {
+                    if (this._hallBoard?.board === 'Expedition') services().session.startTravel(plan.generalId, EXPEDITION_TRAVEL_TURNS);
+                    void services().ui.closeCurrentUI();
+                }
+            } catch (error) {
+                UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 執行大廳任務失敗', error);
+            } finally {
+                this._refreshHallBoard();
+            }
+            return;
+        }
         const found = this._lobbyHub?.Mission_Boards
             ? Object.entries(this._lobbyHub.Mission_Boards).flatMap(([board, data]) => (data?.Tasks ?? []).map((t) => ({ board: board as HallBoardKey, task: t }))).find((entry) => entry.task.Task_ID === taskId)
             : undefined;
@@ -3603,7 +3642,7 @@ export class LobbyScene extends Component {
                 services().session.startTravel(leadId, EXPEDITION_TRAVEL_TURNS);
             }
             if (!ok) {
-                services().event.emit('SHOW_TOAST', { message: '無法接取此任務', duration: 2.5 });
+                services().event.emit('SHOW_TOAST', { message: this._hallBoard.notice ?? '無法接取此任務', duration: 2.5 });
             }
         } catch (error) {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 接取大廳任務失敗', error);
@@ -3740,6 +3779,9 @@ export class LobbyScene extends Component {
             onAdvanceSeason: () => { void this._onClickAdvanceSeason(); },
             onDock: dock,
             onPanel: (id) => panels[id](),
+            // 牆上每張任務卡開對應任務、頁尾開整面牆（PROG-2-9123）
+            onWallRow: (wall, rowIndex) => this._onClickLobbyWallRow(wall, rowIndex),
+            onWallExpand: (wall) => this._openHallBoard(this._hallBoardOfWall(wall)),
             // Q 版武將人群（UI-2-0150）：只有毛遂自薦者與輪替的 2~3 位我方武將會在場（Issue #2135）
             stage: stageLayout && stageDecor
                 ? {

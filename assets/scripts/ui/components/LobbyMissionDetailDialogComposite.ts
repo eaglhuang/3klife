@@ -27,7 +27,7 @@ const { ccclass } = _decorator;
 
 const SCREEN_ID = 'lobby-mission-detail-dialog-screen';
 const CONTENT_PATH = 'ui-spec/content/lobby-mission-detail-dialog-states-v1';
-import { resolveDetailActionStates } from '../core/HallDetailActionStates';
+import { DETAIL_ACTION_BLOCKED_TEXT, resolveDetailActionStates } from '../core/HallDetailActionStates';
 import { applyIntelConfirmChoice, IntelConfirmChoice, resolveExecutePress } from '../core/HallExecuteConfirm';
 
 const CONTENT_TAG = 'LobbyMissionDetailDialog';
@@ -572,7 +572,8 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
             }
 
             const enabled = states[action].enabled;
-            button.interactable = enabled;
+            // 停用只變暗、不關掉點擊：點了要跳出原因，不能毫無反應（PROG-2-9123）
+            button.interactable = true;
             const opacity = button.node.getComponent(UIOpacity) ?? button.node.addComponent(UIOpacity);
             opacity.opacity = enabled ? 255 : 120;
         }
@@ -828,6 +829,17 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
     private async _emitAction(action: LobbyMissionActionKey): Promise<void> {
         const snapshot = this._buildSnapshot();
         if (!snapshot) {
+            return;
+        }
+
+        const blocked = resolveDetailActionStates({
+            availableActions: snapshot.availableActions,
+            intelRevealPercent: snapshot.intelRevealPercent,
+            selectedGeneralId: snapshot.selectedGeneralId,
+            aiDelegateChecked: snapshot.aiDelegateChecked,
+        }).states[action];
+        if (!blocked.enabled) {
+            services().event.emit('SHOW_TOAST', { message: DETAIL_ACTION_BLOCKED_TEXT[blocked.reason ?? 'not-offered'], duration: 2 });
             return;
         }
 

@@ -55,14 +55,17 @@ export function createHallBoardPanelControllerSuite(): TestSuite {
         assert.equals(JSON.stringify(controller.rows()), JSON.stringify(domestic));
     });
 
-    suite.test('指派狀態覆蓋靜態資料：已接取列顯示已接取且按鈕停用', () => {
+    suite.test('指派狀態覆蓋靜態資料：已接取列顯示已接取，按鈕仍可點（點了提示已接取，PROG-2-9123）', async () => {
         const first = hub().Mission_Boards.Military.Tasks[0].Task_ID;
         const controller = new HallBoardPanelController(makeDeps({ assignments: () => ({ [first]: 'zhang-fei' }) }));
         const view = controller.getFlowView();
         const row = controller.rows().find(r => r.taskId === first)!;
         assert.isTrue(row.accepted);
         assert.equals('已接取', view.texts.hallRow0Status !== '' ? view.texts.hallRow0Status : '已接取');
-        assert.isFalse(view.enabled[`btnHallRow${controller.rows().indexOf(row)}`]);
+        const index = controller.rows().findIndex(r => r.taskId === row.taskId);
+        assert.isTrue(view.enabled[`btnHallRow${index}`]);
+        assert.isFalse(await controller.accept(index));
+        assert.equals('此任務已接取', controller.notice);
     });
 
     suite.test('沒有出戰主將時接取失敗，不呼叫指派，notice 有提示', async () => {
@@ -75,6 +78,16 @@ export function createHallBoardPanelControllerSuite(): TestSuite {
         assert.isFalse(ok);
         assert.isFalse(called);
         assert.isTrue(controller.getFlowView().texts.noticeLabel.includes('出戰主將'));
+        assert.isTrue((controller.notice ?? '').includes('出戰主將'));
+    });
+
+    suite.test('沒有出戰主將時有任務的列「接取」鈕仍可點，沒有任務的列才停用（PROG-2-9123）', () => {
+        const controller = new HallBoardPanelController(makeDeps({ leadGeneralId: () => null }));
+        const view = controller.getFlowView();
+        const count = controller.rows().length;
+        assert.isTrue(count > 0);
+        assert.isTrue(view.enabled.btnHallRow0);
+        if (count < HALL_BOARD_MAX_ROWS) assert.isFalse(view.enabled[`btnHallRow${count}`]);
     });
 
     suite.test('接取成功：把第一列任務指派給出戰主將', async () => {

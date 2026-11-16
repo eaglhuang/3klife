@@ -55,6 +55,13 @@ export interface DetailActionStates {
     needsIntelConfirm: boolean;
 }
 
+/** 停用的按鈕被點到時，給玩家看的原因（點了不能毫無反應，PROG-2-9123）。 */
+export const DETAIL_ACTION_BLOCKED_TEXT: Readonly<Record<DetailActionDisabledReason, string>> = Object.freeze({
+    'not-offered': '此任務沒有提供這個行動',
+    'full-intel': '情報已經完整，不需要再探',
+    'need-general': '請先選擇武將，或勾選 AI 委任',
+});
+
 export function isFullIntel(intelRevealPercent: number): boolean {
     // 判斷統一走 HallTaskIntel（F-5）：缺值、非數字視為預設 50，未滿 100 不算完整（PROG-2-1005）
     return canRevealFullHallTask({ Intel_Reveal_Percent: intelRevealPercent });

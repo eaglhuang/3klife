@@ -55,6 +55,7 @@ const NOTICE_TEXT: Readonly<Record<string, string>> = Object.freeze({
     'no-lead': '請先設定出戰主將，才能接取任務',
     'assign-failed': '接取失敗，請確認武將仍在名冊內',
     'no-row': '此格目前沒有任務',
+    accepted: '此任務已接取',
 });
 
 export class HallBoardPanelController {
@@ -65,6 +66,11 @@ export class HallBoardPanelController {
 
     public get board(): HallBoardKey {
         return this._board;
+    }
+
+    /** 最近一次操作失敗的原因（給玩家看的短句）；沒有時為 null。 */
+    public get notice(): string | null {
+        return this._notice;
     }
 
     public switchBoard(board: HallBoardKey): void {
@@ -123,6 +129,10 @@ export class HallBoardPanelController {
             this._notice = NOTICE_TEXT['no-row'];
             return false;
         }
+        if (row.accepted) {
+            this._notice = NOTICE_TEXT.accepted;
+            return false;
+        }
         const leadId = this._deps.leadGeneralId();
         if (!leadId) {
             this._notice = NOTICE_TEXT['no-lead'];
@@ -142,7 +152,6 @@ export class HallBoardPanelController {
     public getFlowView(): HallBoardFlowView {
         const rows = this.rows();
         const spots = this.spotRows();
-        const leadId = this._deps.leadGeneralId();
         const texts: Record<string, string> = {
             hallBoardTitle: BOARD_TITLE[this._board],
             btnHallBoardMilitaryLabel: '軍事',
@@ -163,7 +172,8 @@ export class HallBoardPanelController {
             texts[`hallRow${i}Meta`] = row ? `${row.difficultyText} · ${row.requiredRankText} · ${row.rewardText}` : '';
             texts[`hallRow${i}Status`] = row?.accepted ? '已接取' : '';
             texts[`btnHallRow${i}Label`] = row?.accepted ? '已接取' : '接取';
-            enabled[`btnHallRow${i}`] = row ? row.canAccept && leadId !== null : false;
+            // 有任務就能點：沒主將、已接取時點了會跳出原因，不再停用成毫無反應（PROG-2-9123）
+            enabled[`btnHallRow${i}`] = row !== undefined;
         }
         for (let i = 0; i < HALL_BOARD_SPOT_SLOTS; i++) {
             const spot = spots[i];
