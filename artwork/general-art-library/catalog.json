@@ -5825,32 +5825,49 @@
         "activeVersion": "0002"
       }
     },
-    {
-      "uid": "jiang-wan",
-      "name": "蔣琬",
-      "standing": {
-        "status": "integrated",
-        "history": [
-          {
-            "version": "0002",
-            "file": "standing/jiang_wan__蔣琬__standing_0002.png",
-            "status": "integrated"
-          }
-        ],
-        "activeVersion": "0002"
-      },
-      "avatar": {
-        "status": "integrated",
-        "history": [
-          {
-            "version": "0002",
-            "file": "avatars/jiang_wan__蔣琬__avatar_0002.png",
-            "status": "integrated"
-          }
-        ],
-        "activeVersion": "0002"
+        {
+  "uid": "jiang-wan",
+  "name": "蔣琬",
+  "standing": {
+    "status": "integrated",
+    "history": [
+      {
+        "version": "0002",
+        "file": "standing/jiang_wan__蔣琬__standing_0002.png",
+        "status": "integrated"
       }
-    },
+    ],
+    "activeVersion": "0002"
+  },
+  "avatar": {
+    "status": "integrated",
+    "history": [
+      {
+        "version": "0002",
+        "file": "avatars/jiang_wan__蔣琬__avatar_0002.png",
+        "status": "integrated"
+      }
+    ],
+    "activeVersion": "0002"
+  },
+  "battle": {
+    "status": "review-pending",
+    "activeVersion": "0001",
+    "history": [
+      {
+        "version": "0001",
+        "file": "battle/jiang_wan__蔣琬__battle_0001.png",
+        "status": "review-pending",
+        "sha256": "22e0ee4d8571a86c89621995ccce795f5ed0658c43a8d30778674c4ceacadfa3",
+        "canvas": "1024x1536 RGBA",
+        "weaponClass": "command-baton",
+        "poseLabel": "側身推掌調度",
+        "sourceStanding": "standing/jiang_wan__蔣琬__standing_0002.png",
+        "note": "以蔣琬核定站姿為唯一角色造型參考；以短令杖與推掌手勢呈現謀略調度，令杖為指揮道具而非武器。透明全身候選，待使用者檢視。"
+      }
+    ]
+  }
+},
     {
       "uid": "gou-fu",
       "name": "句扶",
