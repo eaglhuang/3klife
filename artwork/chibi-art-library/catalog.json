@@ -1,0 +1,3351 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-11-16T01:25:38.038Z",
+  "naming": "{id}__{繁體中文名}__chibi_{版本四碼}.png",
+  "sourceCanvas": "2048x3072 RGBA suggested; maintain 2:3 full-body transparent canvas",
+  "cutoutPolicy": "only cut from an approved source version; preserve source SHA-256 and aligned canvas coordinates",
+  "characters": [
+    {
+      "id": "sun-shang-xiang",
+      "name": "孫尚香",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhuge-liang",
+      "name": "諸葛亮",
+      "source": {
+        "status": "reference-only",
+        "activeVersion": null,
+        "versions": [],
+        "runtimeReference": {
+          "file": "references/runtime-existing/zhuge_liang__諸葛亮__chibi_runtime_0001.png",
+          "origin": "assets/resources/sprites/generals/chibi/zhuge_liang_chibi.png",
+          "sha256": "c0721db91e660ebc481ba23d5cbb841a4e17cf6e12624f2250cd9fed265798e7",
+          "note": "像素原樣複製的既有遊戲貼圖；低解析度參考，尚非核定的高解析度切割母圖。"
+        }
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "bu-lian-shi",
+      "name": "步練師",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhen-ji",
+      "name": "甄姬",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "da-qiao",
+      "name": "大喬",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "lu-ling-qi",
+      "name": "呂玲綺",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "xiao-qiao",
+      "name": "小喬",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "cai-wenji",
+      "name": "蔡文姬",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "huang-yue-ying",
+      "name": "黃月英",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "guan-yin-ping",
+      "name": "關銀屏",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "bao-san-niang",
+      "name": "鮑三娘",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "ma-yun-lu",
+      "name": "馬雲騄",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhu-rong-furen",
+      "name": "祝融夫人",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "cao-cao",
+      "name": "曹操",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "liu-bei",
+      "name": "劉備",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": [],
+        "runtimeAlias": "assets/resources/sprites/generals/chibi/generic_chibi.png",
+        "note": "遊戲目前的劉備貼圖與通用貼圖逐像素相同，未複製重複檔；需要獨立母圖。"
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "sun-quan",
+      "name": "孫權",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhou-yu",
+      "name": "周瑜",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "guan-yu",
+      "name": "關羽",
+      "source": {
+        "status": "reference-only",
+        "activeVersion": null,
+        "versions": [],
+        "runtimeReference": {
+          "file": "references/runtime-existing/guan_yu__關羽__chibi_runtime_0001.png",
+          "origin": "assets/resources/sprites/generals/chibi/guan_yu_chibi.png",
+          "sha256": "ab4706caf6601f9be39b3d1bb4c0694308d69f1d3c81750370930785cdf00241",
+          "note": "像素原樣複製的既有遊戲貼圖；低解析度參考，尚非核定的高解析度切割母圖。"
+        }
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhang-fei",
+      "name": "張飛",
+      "source": {
+        "status": "reference-only",
+        "activeVersion": null,
+        "versions": [],
+        "runtimeReference": {
+          "file": "references/runtime-existing/zhang_fei__張飛__chibi_runtime_0001.png",
+          "origin": "assets/resources/sprites/generals/chibi/zhang_fei_chibi.png",
+          "sha256": "611b8b1c5b4a10b52549449d2a7da2bb04c648d06194f7532bc660165ebc914b",
+          "note": "像素原樣複製的既有遊戲貼圖；低解析度參考，尚非核定的高解析度切割母圖。"
+        }
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhao-yun",
+      "name": "趙雲",
+      "source": {
+        "status": "approved-design-source-needed",
+        "activeVersion": null,
+        "versions": [],
+        "note": "Q 版造型已核定；既有 v4 靜態分件保留在 artifacts/art-direction/ruling98-claude-v4/parts，完整高解析度母圖尚未整理入本庫。"
+      },
+      "cutout": {
+        "status": "frozen-existing-v4-reference",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "lu-bu",
+      "name": "呂布",
+      "source": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "versions": [
+          {
+            "version": "0001",
+            "file": "source/lu_bu__呂布__chibi_0001.png",
+            "sha256": "a79a5454a369f6edb61bf38bb891c9ab76505326ce694017ba1fcef4b15ece2e",
+            "width": 1024,
+            "height": 1536,
+            "alpha": "RGBA",
+            "createdAt": "2026-11-16T01:25:38.037Z",
+            "note": "完整透明底 Q 版全身原稿候選；待使用者核可後才進入切件。"
+          }
+        ]
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "sima-yi",
+      "name": "司馬懿",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "dian-wei",
+      "name": "典韋",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "xu-zhu",
+      "name": "許褚",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "huang-zhong",
+      "name": "黃忠",
+      "source": {
+        "status": "reference-only",
+        "activeVersion": null,
+        "versions": [],
+        "runtimeReference": {
+          "file": "references/runtime-existing/huang_zhong__黃忠__chibi_runtime_0001.png",
+          "origin": "assets/resources/sprites/generals/chibi/huang_zhong_chibi.png",
+          "sha256": "8a43913aad3e07506e15311caef9698e4f3196fcce0f2e14b09af7376a9d9131",
+          "note": "像素原樣複製的既有遊戲貼圖；低解析度參考，尚非核定的高解析度切割母圖。"
+        }
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "ma-chao",
+      "name": "馬超",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "lu-xun",
+      "name": "陸遜",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "taishi-ci",
+      "name": "太史慈",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhang-liao",
+      "name": "張遼",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "xu-huang",
+      "name": "徐晃",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "cao-ren",
+      "name": "曹仁",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "pang-tong",
+      "name": "龐統",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "guo-jia",
+      "name": "郭嘉",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "xun-yu",
+      "name": "荀彧",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "jia-xu",
+      "name": "賈詡",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhang-he",
+      "name": "張郃",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "yu-jin",
+      "name": "于禁",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "cao-ang",
+      "name": "曹昂",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "xiahou-dun",
+      "name": "夏侯惇",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "xiahou-yuan",
+      "name": "夏侯淵",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "wei-yan",
+      "name": "魏延",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "jiang-wei",
+      "name": "姜維",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "deng-ai",
+      "name": "鄧艾",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhong-hui",
+      "name": "鍾會",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "huang-gai",
+      "name": "黃蓋",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "cheng-pu",
+      "name": "程普",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "han-dang",
+      "name": "韓當",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "gan-ning",
+      "name": "甘寧",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "ling-tong",
+      "name": "凌統",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhou-tai",
+      "name": "周泰",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "xu-sheng",
+      "name": "徐盛",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "ding-feng",
+      "name": "丁奉",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhang-zhao",
+      "name": "張昭",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "lu-meng",
+      "name": "呂蒙",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "sun-ce",
+      "name": "孫策",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "sun-jian",
+      "name": "孫堅",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "dong-zhuo",
+      "name": "董卓",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "yuan-shao",
+      "name": "袁紹",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "liu-biao",
+      "name": "劉表",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "ma-teng",
+      "name": "馬騰",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "gongsun-zan",
+      "name": "公孫瓚",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "tao-qian",
+      "name": "陶謙",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "liu-zhang",
+      "name": "劉璋",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhang-lu",
+      "name": "張魯",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "han-sui",
+      "name": "韓遂",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "yuan-shu",
+      "name": "袁術",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "kong-rong",
+      "name": "孔融",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "liu-yan",
+      "name": "劉焉",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "cao-pi",
+      "name": "曹丕",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "cao-xiu",
+      "name": "曹休",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "sima-zhao",
+      "name": "司馬昭",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "sima-shi",
+      "name": "司馬師",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhuge-jin",
+      "name": "諸葛瑾",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhuge-ke",
+      "name": "諸葛恪",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "bu-zhi",
+      "name": "步騭",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhu-ran",
+      "name": "朱然",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "pan-zhang",
+      "name": "潘璋",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "ma-zhong",
+      "name": "馬忠",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "liu-feng",
+      "name": "劉封",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "meng-da",
+      "name": "孟達",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "peng-yang",
+      "name": "彭羕",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "fa-zheng",
+      "name": "法正",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "huang-quan",
+      "name": "黃權",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "li-yan",
+      "name": "李嚴",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "wang-ping",
+      "name": "王平",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhang-yi",
+      "name": "張嶷",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "liao-hua",
+      "name": "廖化",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "guan-xing",
+      "name": "關興",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhang-bao",
+      "name": "張苞",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "ma-dai",
+      "name": "馬岱",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "cao-hong",
+      "name": "曹洪",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "cao-zhang",
+      "name": "曹彰",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "man-chong",
+      "name": "滿寵",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "wang-shuang",
+      "name": "王雙",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "guo-huai",
+      "name": "郭淮",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "chen-tai",
+      "name": "陳泰",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "wen-pin",
+      "name": "文聘",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "le-jin",
+      "name": "樂進",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "li-dian",
+      "name": "李典",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "chen-qun",
+      "name": "陳群",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "hua-xin",
+      "name": "華歆",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "wang-lang",
+      "name": "王朗",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "xun-you",
+      "name": "荀攸",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "cheng-yu",
+      "name": "程昱",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "liu-ye",
+      "name": "劉曄",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "sun-shao",
+      "name": "孫邵",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "gu-yong",
+      "name": "顧雍",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhu-jun",
+      "name": "朱治",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "lv-fan",
+      "name": "呂範",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "sun-huan",
+      "name": "孫桓",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "sun-jun",
+      "name": "孫峻",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "he-qi",
+      "name": "賀齊",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "lu-kang",
+      "name": "陸抗",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhu-huan",
+      "name": "朱桓",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "lu-yin",
+      "name": "陸胤",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "cheng-bing",
+      "name": "程秉",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "han-xuan",
+      "name": "韓玄",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "jin-xuan",
+      "name": "金旋",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "liu-du",
+      "name": "劉度",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhao-fan",
+      "name": "趙范",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "wen-chou",
+      "name": "文醜",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "yan-liang",
+      "name": "顏良",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhang-bao-enemy",
+      "name": "張寶",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhang-jue",
+      "name": "張角",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhang-liang-enemy",
+      "name": "張梁",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "hua-tuo",
+      "name": "華佗",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "mi-zhu",
+      "name": "麋竺",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "jian-yong",
+      "name": "簡雍",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "sun-qian",
+      "name": "孫乾",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "yin-mo",
+      "name": "尹默",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "deng-zhi",
+      "name": "鄧芝",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "yang-yi",
+      "name": "楊儀",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "fei-yi",
+      "name": "費禕",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "dong-yun",
+      "name": "董允",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "xu-shu",
+      "name": "徐庶",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "pang-de",
+      "name": "龐德",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhang-xiu",
+      "name": "張繡",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhang-xian",
+      "name": "張羨",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "liu-bao",
+      "name": "劉豹",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "ke-bi-neng",
+      "name": "軻比能",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "meng-huo",
+      "name": "孟獲",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhu-rong",
+      "name": "祝融",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "wu-tugu",
+      "name": "兀突骨",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "ahui-nan",
+      "name": "阿會喃",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "dong-tu-na",
+      "name": "董荼那",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "jin-huan-san-jie",
+      "name": "金環三結",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "yuan-tan",
+      "name": "袁譚",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "yuan-shang",
+      "name": "袁尚",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "yuan-xi",
+      "name": "袁熙",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "gao-lan",
+      "name": "高覽",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "gao-gan",
+      "name": "高幹",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "tian-feng",
+      "name": "田豐",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "ju-shou",
+      "name": "沮授",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "guo-tu",
+      "name": "郭圖",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "shen-pei",
+      "name": "審配",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "dong-zhao",
+      "name": "董昭",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "han-hao",
+      "name": "韓浩",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "wang-yi",
+      "name": "王異",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "xi-zhi-cai",
+      "name": "戲志才",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "mao-jie",
+      "name": "毛玠",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "lu-su",
+      "name": "魯肅",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "huo-yi",
+      "name": "霍弋",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "liao-li",
+      "name": "廖立",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "du-qiong",
+      "name": "杜瓊",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "fei-guan",
+      "name": "費觀",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "luo-xian",
+      "name": "羅憲",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "jiang-wan",
+      "name": "蔣琬",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "gou-fu",
+      "name": "句扶",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "liu-chen",
+      "name": "劉諶",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhu-bao",
+      "name": "朱褒",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "li-hui",
+      "name": "李恢",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "chen-zhi",
+      "name": "陳祗",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhang-yi-shu",
+      "name": "張翼（蜀）",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "fu-tong",
+      "name": "傅彤",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "ma-liang",
+      "name": "馬良",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "guan-suo",
+      "name": "關索",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "yu-fan",
+      "name": "虞翻",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "chen-wu",
+      "name": "陳武",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "sun-yi",
+      "name": "孫翊",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhu-ji",
+      "name": "朱績",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "quan-cong",
+      "name": "全琮",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "lv-dai",
+      "name": "呂岱",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "hu-zun",
+      "name": "胡遵",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "wang-ji",
+      "name": "王基",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "sun-li",
+      "name": "孫禮",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "wang-hun",
+      "name": "王渾",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "wen-qin",
+      "name": "文欽",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "gongsun-yuan",
+      "name": "公孫淵",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "mu-lu-da-wang",
+      "name": "木鹿大王",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "e-huan",
+      "name": "鄂煥",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "sha-mo-ke",
+      "name": "沙摩柯",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "mi-heng",
+      "name": "禰衡",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "tian-chou",
+      "name": "田疇",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "guan-ning",
+      "name": "管寧",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zuo-ci",
+      "name": "左慈",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "yu-ji",
+      "name": "于吉",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "liu-ba",
+      "name": "劉巴",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "qin-mi",
+      "name": "秦宓",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "yi-ji",
+      "name": "伊籍",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "fei-shi",
+      "name": "費詩",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhang-nan",
+      "name": "張南",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "fu-shou",
+      "name": "傅肜",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "sun-sheng",
+      "name": "孫盛",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "wei-zhao",
+      "name": "韋昭",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "xue-zong",
+      "name": "薛綜",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhu-yi",
+      "name": "朱異",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "pan-jun",
+      "name": "潘浚",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "cao-zhi",
+      "name": "曹植",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "lv-kai",
+      "name": "呂凱",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "chen-dao",
+      "name": "陳到",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "wu-ban",
+      "name": "吳班",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "sun-hao",
+      "name": "孫皓",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "diao-chan",
+      "name": "貂蟬",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "cai-yan",
+      "name": "蔡琰",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhang-chun-hua",
+      "name": "張春華",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "xin-xian-ying",
+      "name": "辛憲英",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "dong-bai",
+      "name": "董白",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "fan-shi",
+      "name": "樊氏",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "bian-fu-ren",
+      "name": "卞夫人",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "wu-guo-tai",
+      "name": "吳國太",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "guo-nu-wang",
+      "name": "郭女王",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "wang-yuan-ji",
+      "name": "王元姬",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "xiahou-shi",
+      "name": "夏侯氏",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "xiahou-ling-nv",
+      "name": "夏侯令女",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "gan-shi",
+      "name": "甘氏",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "mi-shi",
+      "name": "糜氏",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "cao-jie",
+      "name": "曹節",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "sun-lu-ban",
+      "name": "孫魯班",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "sun-lu-yu",
+      "name": "孫魯育",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "zhao-e",
+      "name": "趙娥",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "yang-hui-yu",
+      "name": "羊徽瑜",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "hua-man",
+      "name": "花鬘",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "cai-shi",
+      "name": "蔡氏",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "cao-hua",
+      "name": "曹華",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "cao-xian",
+      "name": "曹憲",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    },
+    {
+      "id": "xu-shi",
+      "name": "徐氏",
+      "source": {
+        "status": "missing",
+        "activeVersion": null,
+        "versions": []
+      },
+      "cutout": {
+        "status": "not-started",
+        "activeVersion": null,
+        "versions": []
+      }
+    }
+  ]
+}
