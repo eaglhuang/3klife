@@ -68,7 +68,7 @@ class DummyNode {
     }
   }
 }
-DummyNode.EventType = { NODE_DESTROYED: 'node-destroyed', SIZE_CHANGED: 'size-changed' };
+DummyNode.EventType = { NODE_DESTROYED: 'node-destroyed', SIZE_CHANGED: 'size-changed', ACTIVE_IN_HIERARCHY_CHANGED: 'active-in-hierarchy-changed' };
 
 class DummyAudioSource extends DummyComponent {
   constructor() {

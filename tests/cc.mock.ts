@@ -103,7 +103,7 @@ export class ProgressBar {
 }
 
 export class Node {
-    static readonly EventType = { NODE_DESTROYED: 'node-destroyed', SIZE_CHANGED: 'size-changed', TOUCH_END: 'touch-end', MOUSE_UP: 'mouse-up' };
+    static readonly EventType = { NODE_DESTROYED: 'node-destroyed', SIZE_CHANGED: 'size-changed', ACTIVE_IN_HIERARCHY_CHANGED: 'active-in-hierarchy-changed', TOUCH_END: 'touch-end', MOUSE_UP: 'mouse-up' };
     public children: Node[] = [];
     get components(): any[] { return this._components; }
     destroyAllChildren(): void { /* mock */ }
