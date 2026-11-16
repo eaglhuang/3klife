@@ -7735,32 +7735,49 @@
         "activeVersion": "0002"
       }
     },
-    {
-      "uid": "mi-shi",
-      "name": "糜氏",
-      "standing": {
-        "status": "integrated",
-        "history": [
-          {
-            "version": "0002",
-            "file": "standing/mi_shi__糜氏__standing_0002.png",
-            "status": "integrated"
-          }
-        ],
-        "activeVersion": "0002"
-      },
-      "avatar": {
-        "status": "integrated",
-        "history": [
-          {
-            "version": "0002",
-            "file": "avatars/mi_shi__糜氏__avatar_0002.png",
-            "status": "integrated"
-          }
-        ],
-        "activeVersion": "0002"
+        {
+  "uid": "mi-shi",
+  "name": "糜氏",
+  "standing": {
+    "status": "integrated",
+    "history": [
+      {
+        "version": "0002",
+        "file": "standing/mi_shi__糜氏__standing_0002.png",
+        "status": "integrated"
       }
-    },
+    ],
+    "activeVersion": "0002"
+  },
+  "avatar": {
+    "status": "integrated",
+    "history": [
+      {
+        "version": "0002",
+        "file": "avatars/mi_shi__糜氏__avatar_0002.png",
+        "status": "integrated"
+      }
+    ],
+    "activeVersion": "0002"
+  },
+  "battle": {
+    "status": "review-pending",
+    "activeVersion": "0001",
+    "history": [
+      {
+        "version": "0001",
+        "file": "battle/mi_shi__糜氏__battle_0001.png",
+        "status": "review-pending",
+        "sha256": "400cc7100f8b985562e76f4fa7f61c1615086041350487f6d815afd9a71928f0",
+        "canvas": "1024x1536 RGBA",
+        "weaponClass": "sealed-travel-case",
+        "poseLabel": "側身撤護持匣",
+        "sourceStanding": "standing/mi_shi__糜氏__standing_0002.png",
+        "note": "以糜氏核定站姿為唯一角色造型參考；依其非持械身份，以側身撤護、持匣回望呈現戰場動態。透明全身候選，待使用者檢視。"
+      }
+    ]
+  }
+},
     {
       "uid": "cao-jie",
       "name": "曹節",
