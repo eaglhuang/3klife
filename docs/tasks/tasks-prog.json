@@ -6329,6 +6329,98 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9322",
+      "title": "部隊遇斜前方或側面敵軍就停下交戰，不再錯身而過",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-16T19:30:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "線上試玩版實跑首戰（2026-11-16）：雙方部隊各走各的路去打主將，整場幾乎不交戰，我方拿不到擊殺 SP。總PM 裁決：路上相鄰或擋路的敵部隊要先交戰。規格（戰場大回合推進狀態機、部署、格子）沒有規定也沒有禁止相鄰交戰。",
+      "related": [
+        "PROG-2-9318"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: done | 驗證: 型別檢查 0 錯；單元測試 7720 通過 | 變更: 自動前進加接敵判定、選目標加相鄰敵部隊；開關 GAME_CONFIG.troopEngageAdjacent | 阻塞: 無；未做到：尚未實機驗證（等下一版線上試玩版）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9323",
+      "title": "計謀只扣計謀點，不再要求主將 SP 滿",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-16T19:30:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "線上試玩版實跑首戰（2026-11-16）：計謀點夠用但計謀按鈕整場顯示受限，因為程式另外要求主將 SP 滿。SPEC-BAT-STRAT01 寫計略點數「獨立於武將個人怒氣/TP之外」；DISABLED_SP 只管戰法。總PM 裁決以 SPEC-BAT-STRAT01 為準。",
+      "related": [
+        "PROG-2-9318"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: done | 驗證: 型別檢查 0 錯；單元測試 7720 通過 | 變更: 有出征帳本時計謀不查 SP、不清空 SP；開關 GAME_CONFIG.seedTacticRequiresFullSp | 阻塞: 無；未做到：尚未實機驗證（等下一版線上試玩版）；沒有出征帳本的戰鬥仍用 SP 把關",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
