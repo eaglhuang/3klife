@@ -569,12 +569,21 @@
       "id": "yu-jin",
       "name": "于禁",
       "source": {
-        "status": "missing",
-        "activeVersion": null,
-        "versions": []
+        "status": "source-pass",
+        "activeVersion": "0001",
+        "versions": [
+          {
+            "version": "0001",
+            "file": "source/yu-jin__于禁__chibi_0001.png",
+            "sha256": "ecde49080c93acf8917b38f8bbdaf8c928eff1be36426bdebf5b5cd19d8b0335",
+            "status": "source-pass",
+            "createdAt": "2026-11-17T02:22:18+08:00",
+            "note": "577x1250 RGBA; pipeline accept-source PASS; chin-to-boot 622px; straight spear."
+          }
+        ]
       },
       "cutout": {
-        "status": "not-started",
+        "status": "pending",
         "activeVersion": null,
         "versions": []
       }

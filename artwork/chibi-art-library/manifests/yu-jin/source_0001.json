@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "characterId": "yu-jin",
+  "name": "于禁",
+  "sourceVersion": "0001",
+  "sourceFile": "artwork/chibi-art-library/source/yu-jin__于禁__chibi_0001.png",
+  "sha256": "ecde49080c93acf8917b38f8bbdaf8c928eff1be36426bdebf5b5cd19d8b0335",
+  "canvas": "577x1250 RGBA",
+  "pipeline": "C:/Users/User/spine-trial/tools/pipeline.py accept-source yu_jin",
+  "status": "source-pass",
+  "measurements": {
+    "faceBoxPx": [
+      294,
+      506,
+      117,
+      117
+    ],
+    "chinToBootPx": 622,
+    "chinToBootTargetPx": [
+      591,
+      653
+    ],
+    "baselineY": 1245,
+    "placement": "centered; uniform scale only; feet at y=1245",
+    "weapon": "straight spear"
+  },
+  "warnings": [
+    "官方來源閘門有臉部尺寸、頭身比與胸寬自動指標 WARN；依修訂規則採下巴至腳底比例及人工視覺覆核。"
+  ],
+  "visualReview": {
+    "style": "PASS — matched against Gan Ning chibi reference",
+    "identity": "PASS — matched to latest standing art reference",
+    "animationCutout": "PENDING — per-character masks/clean base not present in cutter scaffold",
+    "frameAndTransparency": "PASS — transparent 577x1250 canvas; whole figure inside safe frame",
+    "limbsAndGrip": "PASS — complete hands, feet, weapon grip and weapon"
+  },
+  "cutout": {
+    "status": "pending",
+    "reason": "于禁專屬 clean base 與切片遮罩未建立。"
+  },
+  "createdAt": "2026-11-17T02:22:18+08:00"
+}
