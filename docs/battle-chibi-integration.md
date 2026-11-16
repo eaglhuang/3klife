@@ -23,6 +23,16 @@ python tools_node/battle-chibi/recolor_soldier.py soldier_spear_blue soldier_spe
 python tools_node/battle-chibi/recolor_soldier.py soldier_bow_red soldier_bow_blue 356 215 9 6 0.62
 ```
 
+匯入名單不寫在程式裡（PROG-2-9362）：來源分支的 `characters/` 底下有哪些角色就匯入哪些。名稱以 `soldier_` 開頭的整份匯入到 `spine/soldiers/<名稱>/`；其餘視為武將，遊戲內已有骨架就只併入共用動作，沒有骨架就整份匯入到 `spine/generals/<名稱>/`。例外寫在 `tools_node/battle-chibi/import-config.json`（來源名與遊戲內資料夾名不同的對應、不匯入的名單、要併入的動作）。
+
+新兵種或新武將還沒進來源分支時，可以放進本機投遞目錄再匯入，每個角色一個資料夾，內含 `<名稱>.json`、`<名稱>.atlas` 與圖集列出的每一張圖：
+
+```bash
+node tools_node/battle-chibi/import-battle-chibi.js --write --inbox <投遞目錄> --only soldier_cavalry_blue
+```
+
+不加 `--write` 是試跑，只列出會做什麼。新的小兵外觀匯入後，還要在 `assets/scripts/battle/shared/UnitPresentationConfig.ts` 的 `SOLDIER_ART` 加一行兵種對應才會上場；藍紅兩色只到一色時，用 `recolor_soldier.py` 換色補另一色。
+
 匯入工具會把六個共用戰場動作（`dash_in`／`retreat`／`duel_attack`／`hit`／`dodge`／`fall`）併入既有武將骨架；任一動作缺漏時 `SpineUnitOverlay` 會整隻退回舊 3D 模型，所以更新武將骨架後務必重跑。
 
 武將優先依名冊的 `templateId`、其次依武將 ID 選取對應素材；沒有映射或匯入失敗時保留原戰場模型。小兵依陣營配色：我方藍、敵方紅；弓兵用弓兵素材，其餘兵種暫用槍兵素材。騎兵、盾兵等專屬外型需補齊私有素材及設定。弓兵的 `hand_mirror` 受共用骨架目前的手臂限制，鏡像時維持既有左右手配置。

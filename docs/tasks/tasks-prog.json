@@ -8000,6 +8000,53 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9362",
+      "title": "戰場 Q 版角色匯入工具改成資料驅動：新兵種與新武將不用改程式",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "匯入工具把四位武將與「槍兵藍、弓兵紅」寫死在程式裡。騎兵與新武將（夏侯惇、甘寧等）到貨時要改程式才能匯入，而且只認單張圖集。",
+      "related": [
+        "PROG-2-9360",
+        "PROG-2-9043"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（7834 過）；試跑結果與改寫前名單一致；以投遞目錄放入假騎兵素材實際匯入到暫存工作樹成功 | 變更: 匯入名單改由來源與設定檔決定，新增本機投遞目錄與多頁圖集支援 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
