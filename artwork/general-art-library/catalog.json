@@ -2596,6 +2596,20 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/zhong_hui__鍾會__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "f4215b80ba9df6b22880d1f6c9661ec30559fba5c3e4e3e696d79322f0dabe97",
+            "canvas": "1024x1536 PNG",
+            "note": "沿用鍾會藏青青綠官服與直劍；前踏轉身斜向突刺，候選待審。"
+          }
+        ]
       }
     },
     {
