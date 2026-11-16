@@ -965,7 +965,8 @@
             "sha256": "bbff2fc575ffca99b909e46c771eaec0bcb9e44879dbf6e091bc3adcb3d56ed1",
             "canvas": "1024x1536 RGBA"
           }
-        ]
+        ],
+        "activeVersion": "0002"
       },
       "avatar": {
         "activeVersion": "0001",
