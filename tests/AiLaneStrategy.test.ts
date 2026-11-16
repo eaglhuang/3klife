@@ -8,9 +8,11 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { assert, TestSuite } from './TestRunner';
-import { AI_CHARGE_DEFAULT_LANE, pickDeployLane } from '../assets/scripts/core/systems/AiLaneStrategy';
+import { AI_CHARGE_DEFAULT_LANE, pickDeployLane, pickMeetPlayerLane } from '../assets/scripts/core/systems/AiLaneStrategy';
 import { laneStrategyOfGeneral, parseAiProfileTable } from '../assets/scripts/core/systems/AiProfiles';
 import { EnemyAI } from '../assets/scripts/battle/controllers/EnemyAI';
+import { BattleState } from '../assets/scripts/battle/models/BattleState';
+import { tutorialEnemyLaneHintLine } from '../assets/scripts/battle/runtime/phases/BattleEnemyDeployPhase';
 import { BattleController } from '../assets/scripts/battle/controllers/BattleController';
 import { Faction, GAME_CONFIG, TroopType, Weather } from '../assets/scripts/core/config/Constants';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
@@ -119,6 +121,40 @@ export function createAiLaneStrategySuite(): TestSuite {
         const plain = new GeneralUnit({ id: 'x', name: 'x', faction: Faction.Enemy, hp: 1000, str: 80, lea: 80 });
         ctrl.initBattle(pg, plain, undefined, Weather.Clear);
         assert.equals(null, ctrl['enemyAi'].laneStrategy);
+    });
+
+    suite.test('教學戰對路出兵：挑玩家比己方多最多的空線，玩家沒兵時回傳 null（PROG-2-9340）', () => {
+        assert.isTrue(GAME_CONFIG.tutorialEnemyMeetsPlayerLane);
+        assert.equals(3, pickMeetPlayerLane(ALL, { own: [0, 0, 0, 0, 0], opponent: [0, 1, 0, 2, 0] }, first));
+        assert.equals(1, pickMeetPlayerLane(ALL, { own: [0, 0, 0, 2, 0], opponent: [0, 1, 0, 2, 0] }, first), '已經對上的那路排後面');
+        assert.equals(1, pickMeetPlayerLane([0, 1, 2], { own: [0, 0, 0, 0, 0], opponent: [0, 1, 0, 2, 0] }, first), '只在空線裡挑');
+        assert.equals(null, pickMeetPlayerLane(ALL, { own: [1, 0, 0, 0, 0], opponent: [0, 0, 0, 0, 0] }, first));
+        assert.equals(null, pickMeetPlayerLane([0, 2], { own: [0, 0, 0, 0, 0], opponent: [0, 1, 0, 2, 0] }, first), '有兵的線都不能出：交回一般策略');
+    });
+
+    suite.test('教學戰對路出兵：EnemyAI 開啟後敵軍出在玩家有兵的線，沒開則照原策略（PROG-2-9340）', () => {
+        const stateWithPlayerOn = (lanes: number[]): BattleState => {
+            const state = new BattleState();
+            lanes.forEach((lane, index) => {
+                const unit = new TroopUnit(`p${index}`, TroopType.Infantry, Faction.Player, { hp: 100, attack: 10, defense: 10, moveRange: 1, attackRange: 1 });
+                unit.moveTo(lane, 1);
+                state.addUnit(unit);
+            });
+            return state;
+        };
+        const ai = new EnemyAI(first);
+        ai.laneStrategy = 'SPREAD_5';
+        const met = ai.decideDeploy(stateWithPlayerOn([4, 1]), 9999, 2, { meetPlayerLane: true }).map((d) => d.lane).sort();
+        assert.equals('1,4', met.join(','), '兩隊分別對上玩家的兩路');
+        const three = ai.decideDeploy(stateWithPlayerOn([4]), 9999, 2, { meetPlayerLane: true }).map((d) => d.lane);
+        assert.equals(4, three[0], '第一隊對上玩家那路');
+        assert.isTrue(three[1] !== 4, '同回合不會兩隊擠同一路');
+        const normal = ai.decideDeploy(stateWithPlayerOn([4]), 9999, 1).map((d) => d.lane);
+        assert.equals(0, normal[0], '沒開對路：照 SPREAD_5 挑己方最少的線');
+    });
+
+    suite.test('教學戰敵軍來襲提示：路線由小到大、以 1 起算（PROG-2-9340）', () => {
+        assert.equals('敵軍從第 2 路、第 5 路來襲！部隊只打同一路正面的敵人，派剋制的兵種到同一路迎擊', tutorialEnemyLaneHintLine([4, 1]));
     });
 
     return suite;

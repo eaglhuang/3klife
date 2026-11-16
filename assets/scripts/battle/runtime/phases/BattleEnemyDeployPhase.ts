@@ -27,6 +27,8 @@ export interface BattleEnemyDeployPhaseContext {
   isCellMovementBlocked(lane: number, depth: number): boolean;
   /** 戰報提示（親衛隊現身）；測試替身可不實作 */
   announce?(line: string): void;
+  /** 教學引導：寫進戰報並跳畫面提示；測試替身可不實作 */
+  guide?(line: string): void;
 }
 
 export function executeBattleEnemyDeployPhase(context: BattleEnemyDeployPhaseContext): void {
@@ -35,7 +37,9 @@ export function executeBattleEnemyDeployPhase(context: BattleEnemyDeployPhaseCon
   const deployCount = context.tutorialBattle
     ? (GAME_CONFIG.tutorialEnemyDeployByTurn[context.turn - 1] ?? 0)
     : getAIDeployCount({ difficultyBonus: context.difficultyBonus }, context.turn);
-  const decisions = context.enemyAi.decideDeploy(context.state, context.turnManager.enemyFood, deployCount);
+  const meetPlayerLane = !!context.tutorialBattle && GAME_CONFIG.tutorialEnemyMeetsPlayerLane;
+  const decisions = context.enemyAi.decideDeploy(context.state, context.turnManager.enemyFood, deployCount, { meetPlayerLane });
+  const spawnedLanes: number[] = [];
   const deployDepth = GAME_CONFIG.GRID_DEPTH - 1;
   if (!context.tutorialBattle) summonBossGuard(context, deployDepth);
 
@@ -45,7 +49,16 @@ export function executeBattleEnemyDeployPhase(context: BattleEnemyDeployPhaseCon
 
     context.spawnEnemyUnit(decision.type, decision.lane, deployDepth);
     context.turnManager.enemyFood = Math.max(0, context.turnManager.enemyFood - TROOP_DEPLOY_COST[decision.type]);
+    spawnedLanes.push(decision.lane);
   }
+  // 教學引導：告訴新玩家敵軍從哪一路來、要在同一路正面迎擊（PROG-2-9340）
+  if (context.tutorialBattle && spawnedLanes.length > 0) context.guide?.(tutorialEnemyLaneHintLine(spawnedLanes));
+}
+
+/** 教學戰敵軍出兵提示。路線以 1 起算，由小到大列出。 */
+export function tutorialEnemyLaneHintLine(lanes: readonly number[]): string {
+  const names = [...lanes].sort((a, b) => a - b).map((lane) => `第 ${lane + 1} 路`).join('、');
+  return `敵軍從${names}來襲！部隊只打同一路正面的敵人，派剋制的兵種到同一路迎擊`;
 }
 
 /**

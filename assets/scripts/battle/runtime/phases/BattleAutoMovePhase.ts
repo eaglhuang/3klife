@@ -119,7 +119,7 @@ function stepMoveUnit(
   // unit.chargeCells 為本回合已實際走過的格數（踐踏計 2、換位計 1、一般前進計 1），
   // 地形回饋可能在途中加回移動力，因此以實際格數作為硬上限
   while (remainingMoveBudget > 0 && unit.chargeCells < MAX_MOVE_CELLS_PER_TURN) {
-    // 旁邊有敵軍就停下來交戰（PROG-2-9322）
+    // 旁邊有敵方武將棋子就停下來打（PROG-2-9340）；旁邊的小兵不理（troopEngageAdjacent 已關）
     if (hasFlankingEnemy(unit, dir, context)) break;
     const nextDepth = unit.depth + dir;
     const nextCell = context.state.getCell(unit.lane, nextDepth);
@@ -243,14 +243,22 @@ function stepMoveUnit(
 /** 接敵判定用的相鄰格：斜前方兩格、側面兩格（正前方由原本的擋路邏輯處理）。 */
 const FLANK_OFFSETS: ReadonlyArray<{ dl: number; forward: number }> = [{ dl: -1, forward: 1 }, { dl: 1, forward: 1 }, { dl: -1, forward: 0 }, { dl: 1, forward: 0 }];
 
-/** 一般部隊的斜前方或側面是否有看得見的敵部隊。主將化身不算：自己不受接敵限制，敵主將化身擋不擋路由壓制區（FORM-09）決定。 */
+/**
+ * 一般部隊的斜前方或側面是否有「該停下來打」的敵軍。
+ * 設計（使用者 2026-11-17 裁示）：正旁邊（同一排左右）是敵方武將棋子 → 停下來主動打（troopEngageAdjacentGeneral）；
+ * 斜前方的武將不擋路：能不能走到它旁邊仍由壓制區（FORM-09）決定，停在斜角時攻擊階段照樣打得到它；
+ * 旁邊是敵方小兵 → 不理、照走，小兵對小兵只打同一路正面（troopEngageAdjacent 維持關閉）。
+ * 武將棋子自己不受這個限制。
+ */
 function hasFlankingEnemy(unit: TroopUnit, dir: number, context: BattleAutoMovePhaseContext): boolean {
-  if (!GAME_CONFIG.troopEngageAdjacent || context.isGeneralUnit(unit.id)) return false;
+  if (context.isGeneralUnit(unit.id)) return false;
+  if (!GAME_CONFIG.troopEngageAdjacent && !GAME_CONFIG.troopEngageAdjacentGeneral) return false;
   const tactic = resolveBattleTacticBehavior(context.state.battleTactic);
   return FLANK_OFFSETS.some(({ dl, forward }) => {
     const occupantId = context.state.getCell(unit.lane + dl, unit.depth + forward * dir)?.occupantId;
     const occupant = occupantId ? context.state.units.get(occupantId) : undefined;
-    return !!occupant && !occupant.isDead() && occupant.faction !== unit.faction && !context.isGeneralUnit(occupant.id)
+    return !!occupant && !occupant.isDead() && occupant.faction !== unit.faction
+      && (context.isGeneralUnit(occupant.id) ? GAME_CONFIG.troopEngageAdjacentGeneral && forward === 0 : GAME_CONFIG.troopEngageAdjacent)
       && !tactic.isFactionHiddenFrom(unit.faction, occupant.faction, context.state);
   });
 }

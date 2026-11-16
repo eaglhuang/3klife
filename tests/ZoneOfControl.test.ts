@@ -91,8 +91,8 @@ export function createZoneOfControlSuite(): TestSuite {
         assert.equals(buildZocField(stats(100, 0), stats(1, 1), []), EMPTY_ZOC_FIELD);
     });
 
-    suite.test('屬性接近：照常走滿 3 格', () => {
-        assert.equals(advance(stats(90, 50), stats(100, 50)).depth, 3);
+    suite.test('屬性接近：不受壓制，走到敵將正旁邊停下來打（PROG-2-9340）', () => {
+        assert.equals(advance(stats(90, 50), stats(100, 50)).depth, 2);
     });
 
     suite.test('高移動成本：進入後多扣 1 點，走 2 格就停', () => {
@@ -103,8 +103,8 @@ export function createZoneOfControlSuite(): TestSuite {
         assert.equals(advance(stats(40, 30), stats(100, 50)).depth, 1);
     });
 
-    suite.test('高智力武將不受壓制', () => {
-        assert.equals(advance(stats(30, 95), stats(100, 50)).depth, 3);
+    suite.test('高智力武將不受壓制：走到敵將正旁邊停下來打（PROG-2-9340）', () => {
+        assert.equals(advance(stats(30, 95), stats(100, 50)).depth, 2);
     });
 
     suite.test('壓制方主將陣亡後區域消失', () => {
@@ -146,6 +146,28 @@ export function createZoneOfControlSuite(): TestSuite {
         assert.equals(run(1, 0), 3, '側面有敵部隊：照走');
         assert.equals(run(4, 2), 3, '隔一路的敵軍：照走');
         assert.equals(run(2, 2), 1, '同一路正面有敵部隊：走到面前停下');
+    });
+
+    suite.test('小兵主動打旁邊的敵方武將棋子：走到武將旁邊就停下，旁邊是小兵則照走（PROG-2-9340）', () => {
+        assert.isTrue(GAME_CONFIG.troopEngageAdjacentGeneral, '小兵要主動打旁邊的武將（使用者裁示）');
+        assert.isFalse(GAME_CONFIG.troopEngageAdjacent, '小兵對小兵仍然只打同一路正面');
+        const run = (enemyId: string, enemyLane: number, enemyDepth: number): number => {
+            services().initialize();
+            const state = new BattleState();
+            // 我方武力高於敵將，敵將壓制區不生效，才量得到「接敵停步」本身
+            state.playerGeneral = stats(100, 50);
+            state.enemyGeneral = stats(40, 30);
+            const mover = makeUnit('mover', Faction.Player, 2, 0);
+            state.addUnit(mover);
+            state.addUnit(makeUnit(enemyId, Faction.Enemy, enemyLane, enemyDepth));
+            executeBattleAutoMovePhase(context(state, Faction.Player));
+            return mover.depth;
+        };
+        assert.equals(run(ENEMY_GENERAL_ID, 3, 2), 2, '敵方武將在隔壁路前方：走到它正旁邊停下');
+        assert.equals(run(ENEMY_GENERAL_ID, 1, 0), 0, '側面是敵方武將：原地停下');
+        assert.equals(run(ENEMY_GENERAL_ID, 4, 2), 3, '隔一路的敵方武將：照走');
+        assert.equals(run('foe', 3, 2), 3, '斜前方是敵方小兵：照走');
+        assert.equals(run('foe', 1, 0), 3, '側面是敵方小兵：照走');
     });
 
     suite.test('區域內有敵軍擋路時，盾兵仍會舉盾牆', () => {
