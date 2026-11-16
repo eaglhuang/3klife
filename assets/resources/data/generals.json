@@ -3898,7 +3898,15 @@
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-zhang-he-1",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": true
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -4306,7 +4314,15 @@
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-xiahou-dun-1",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": true
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -4578,7 +4594,15 @@
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-wei-yan-1",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": true
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -5530,7 +5554,15 @@
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-gan-ning-1",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": true
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "NAVY": "A",
@@ -6482,7 +6514,15 @@
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-sun-ce-1",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": true
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "NAVY": "A",

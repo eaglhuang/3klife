@@ -26,6 +26,12 @@ const PRESENTATION_BY_SKILL_ID: Record<string, BattleSkillPresentation> = {
     categoryTag: '控制',
     effectStatus: '【控制】震軍怒喝：敵軍全體暈眩，盾牆瓦解',
   },
+  // 五位初始名將的第一階專屬奧義（PROG-2-9327）；效果文字照實際效果寫
+  'wei-yan-ziwu-raid': { name: '子午奇襲', categoryTag: '貫穿', effectStatus: '【貫穿】子午奇襲：直線三連刺，逐段增傷' },
+  'xiahou-dun-eye-devour': { name: '拔矢啖睛', categoryTag: '回復', effectStatus: '【回復】拔矢啖睛：全軍兵力回復' },
+  'zhang-he-adaptive-camp': { name: '巧變連營', categoryTag: '再動', effectStatus: '【再動】巧變連營：一隊友軍立即再行動' },
+  'sun-ce-conqueror': { name: '小霸王之威', categoryTag: '橫掃', effectStatus: '【橫掃】小霸王之威：前方扇形敵軍受創' },
+  'gan-ning-night-raid': { name: '百騎劫營', categoryTag: '控制', effectStatus: '【控制】百騎劫營：敵軍最後排暈眩' },
   'cao-cao-tactics': {
     name: '兵不厭詐',
     categoryTag: '破陣',

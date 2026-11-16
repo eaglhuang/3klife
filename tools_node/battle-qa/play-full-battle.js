@@ -561,7 +561,7 @@ async function tryDeploy(page, s, turnRec, opt) {
 
 // 奧義按鈕在 SP 滿時顯示「發動」（i18n ui.ultimate.ready）；點了會開技能選單，選第一招。
 // 以施放後 SP 是否下降判定有沒有真的放出去，並記在報告裡。
-async function maybeUltimate(page, s, turnRec) {
+async function maybeUltimate(page, opt, s, turnRec) {
   const pg = s.playerGeneral;
   if (!pg || !(pg.sp >= pg.maxSp) || !s.texts.includes('發動')) return;
   const before = new Set(s.texts);
@@ -571,6 +571,8 @@ async function maybeUltimate(page, s, turnRec) {
   for (let i = 0; i < 10; i += 1) { await sleep(500); after = await ev(page, pageSnapshot); if (after.texts.includes('選擇奧義')) break; }
   const candidates = after.texts.filter((t) => !before.has(t) && t.length >= 2 && t.length <= 14 && !/^\d+$/.test(t) && !['取消', '返回', '關閉', '選擇奧義', '未配置奧義'].includes(t));
   const rec = { turn: turnRec.turn, opened: true, candidates: candidates.slice(0, 10), picked: null, cast: false };
+  // 選單滑入要 0.2 秒左右，等它定位後拍一張，用來看選單有沒有蓋到別的按鈕（每場只拍第一次）
+  if (!rep.ultimates.length) { await sleep(600); await shot(page, opt, 'ultimate-popup'); }
   if (candidates.length) {
     rec.picked = candidates[0];
     await tapText(page, candidates[0]);
@@ -588,7 +590,7 @@ async function maybeUltimate(page, s, turnRec) {
 }
 
 // 計謀按鈕文字以「計謀」開頭（後面接點數）；每回合點一次，記錄點了之後畫面多出的文字。
-async function maybeTactic(page, s, turnRec) {
+async function maybeTactic(page, opt, s, turnRec) {
   const label = s.texts.find((t) => /^計謀/.test(t));
   if (!label) return;
   const before = new Set(s.texts);
@@ -596,6 +598,7 @@ async function maybeTactic(page, s, turnRec) {
   await sleep(1500);
   const after = await ev(page, pageSnapshot);
   const fresh = after.texts.filter((t) => !before.has(t)).slice(0, 8);
+  if (!rep.tactics.length) await shot(page, opt, 'tactic-after-tap');
   rep.tactics.push({ turn: turnRec.turn, label: label.replace(/\s+/g, ' '), newTexts: fresh });
   log(`計謀：第 ${turnRec.turn} 回合點「${label.replace(/\s+/g, ' ')}」，畫面新增 ${JSON.stringify(fresh)}`);
 }
@@ -706,8 +709,8 @@ async function playBattle(page, opt) {
         await sleep(400);
         ready = await ev(page, pageSnapshot);
       }
-      if (opt.ultimate) await maybeUltimate(page, ready, cur);
-      if (opt.ultimate) await maybeTactic(page, await ev(page, pageSnapshot), cur);
+      if (opt.ultimate) await maybeUltimate(page, opt, ready, cur);
+      if (opt.ultimate) await maybeTactic(page, opt, await ev(page, pageSnapshot), cur);
       if (opt.ultimate) await maybeDuel(page, await ev(page, pageSnapshot), cur);
       cur.supplyStart = await ev(page, pageSupply);
       await tryDeploy(page, ready, cur, opt);

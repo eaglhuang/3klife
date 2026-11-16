@@ -72,6 +72,8 @@ export interface BattleSkillProfile {
   rootTurns?: number;
   /** 火計連環：結算後把每個目標及其四向相鄰格設為火場（PROG-2-0757） */
   hazardCross?: boolean;
+  /** 敵方全體類目標只取「離施放方最遠、且有敵軍的那一排」（甘寧 百騎劫營：劫的是後營） */
+  enemyRearRowOnly?: boolean;
   statusEffect?: StatusEffect;
   statusTurns?: number;
   linkShareRatio?: number;
@@ -651,6 +653,25 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     battleLogKey: 'skill.tally_hundred_steps.hit',
   },
 };
+
+// --- 五位初始名將的第一階專屬奧義（PROG-2-9327，使用者 2026-11-16 核可）---
+// 效果與數值直接沿用既有的一招（展開原 profile），只換技能 id，戰報與提示才會顯示各自的招名；
+// 數值要個別調整時改這裡，不必動被沿用的那一招。
+function reuseProfile(battleSkillId: string, baseSkillId: string, extra: Partial<BattleSkillProfile> = {}): BattleSkillProfile {
+  return { ...PROFILE_BY_SKILL_ID[baseSkillId], battleSkillId, ...extra };
+}
+Object.assign(PROFILE_BY_SKILL_ID, {
+  // 魏延 子午奇襲：沿用趙雲的直線三連刺
+  'wei-yan-ziwu-raid': reuseProfile('wei-yan-ziwu-raid', 'zhao-yun-pierce', { battleLogKey: 'skill.wei_yan_ziwu_raid.hit' }),
+  // 夏侯惇 拔矢啖睛：沿用劉備的全軍回復
+  'xiahou-dun-eye-devour': reuseProfile('xiahou-dun-eye-devour', 'liu-bei-rally', { battleLogKey: 'skill.xiahou_dun_eye_devour.heal' }),
+  // 張郃 巧變連營：沿用劉備的友軍再行動
+  'zhang-he-adaptive-camp': reuseProfile('zhang-he-adaptive-camp', 'liu-bei-reset'),
+  // 孫策 小霸王之威：沿用呂布的扇形傷害
+  'sun-ce-conqueror': reuseProfile('sun-ce-conqueror', 'lu-bu-rampage', { battleLogKey: 'skill.sun_ce_conqueror.hit' }),
+  // 甘寧 百騎劫營：沿用張飛的暈眩，但只打敵方最後排
+  'gan-ning-night-raid': reuseProfile('gan-ning-night-raid', 'zhang-fei-roar', { enemyRearRowOnly: true, battleLogKey: 'skill.gan_ning_night_raid.hit' }),
+} satisfies Record<string, BattleSkillProfile>);
 
 // --- 虎符特殊戰法殼（PROG-2-0928，TRP-15）：規格 34 條中尚未實作效果的 23 條 ---
 // coefficient 0、無效果欄位，只讓 battleSkillId 能解析進管線；效果待各戰法另卡補上，此時不造成傷害
