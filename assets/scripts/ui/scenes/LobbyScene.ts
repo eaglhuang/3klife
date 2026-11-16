@@ -888,6 +888,9 @@ export class LobbyScene extends Component {
         this._openingPanels?.refreshOpeningLetter();
         // 載入遮罩完整關閉後再視條件開啟日報，避免日報浮在 loading progress 畫面上（Issue #2159）
         this._openDailyReportIfPending();
+        // 載入遮罩收起後補檢查開場商品：載入中收到的 BattleSettled／Loaded 事件已被略過（PROG-2-9119）
+        const offerPopup = this._openingOfferPopup;
+        if (offerPopup?.host && offerPopup.tryOpen()) this._bringNodeToFront(offerPopup.host.node);
         ensureGlobalDevOverlay(this._localGachaService, undefined, () => { PlayerRosterService.clear(); }, () => {
             this._refreshWalletPreviewState();
         });
@@ -1103,6 +1106,8 @@ export class LobbyScene extends Component {
                 return ok;
             },
             now: () => Date.now(),
+            // 大廳載入完成（_ready 在 SceneLoadProgress.complete() 前設定）才允許開窗，避免黑畫面載入中跳出
+            isReady: () => this._ready,
             toast: (message) => { services().event.emit('SHOW_TOAST', { message, duration: 2.5 }); },
         });
         await popup.mount();

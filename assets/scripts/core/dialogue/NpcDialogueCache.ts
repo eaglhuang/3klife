@@ -64,7 +64,7 @@ export class NpcDialogueCache {
     /** 清快取；onlyDisposable 為 true 時保留可驗證摘要。回傳清掉幾筆。 */
     public clear(onlyDisposable = false): number {
         let removed = 0;
-        for (const [key, record] of [...this._entries]) {
+        for (const [key, record] of Array.from(this._entries)) {
             if (onlyDisposable && record.kind === 'VERIFIABLE_SUMMARY') continue;
             this._entries.delete(key);
             removed += 1;
