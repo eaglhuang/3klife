@@ -18,6 +18,13 @@ export type { BattleResult };
 export interface BattleGeneralDuelFlowContext {
   state: BattleState;
   onUnitKilled: (unit: TroopUnit, killer: TroopUnit | null, svc: ReturnType<typeof services>) => void;
+  /** 教學戰：敵將一律接受我方發起的單挑，讓新玩家看得到單挑（PROG-2-9335）。沒給視為否 */
+  isEnemyForcedToAcceptDuel?: () => boolean;
+  /**
+   * 教學戰：單挑打到一方主將生命剩這個比例就分勝負，不打死，所以不會直接結束戰鬥（PROG-2-9335）。
+   * 回 0 或沒給＝一般戰鬥，照舊打到一方倒下。
+   */
+  getDuelHpFloorRatio?: () => number;
 }
 
 export class BattleGeneralDuelFlow {
@@ -29,6 +36,8 @@ export class BattleGeneralDuelFlow {
   public isWaitingDuelPlacement = false;
   public duelRejectedFaction: Faction | null = null;
   public duelChallengeResolved = false;
+  /** 上一場成立的單挑誰贏；沒分出勝負或沒打過是 null。不打死的教學戰單挑靠它告訴畫面結果（PROG-2-9335） */
+  public lastDuelWinner: Faction | null = null;
   public generalSwapUsedThisTurn: Record<Faction, boolean> = {
     [Faction.Player]: false,
     [Faction.Enemy]:  false,
@@ -42,6 +51,7 @@ export class BattleGeneralDuelFlow {
     this.isWaitingDuelPlacement = false;
     this.duelRejectedFaction   = null;
     this.duelChallengeResolved = false;
+    this.lastDuelWinner = null;
     this.generalSwapUsedThisTurn[Faction.Player] = false;
     this.generalSwapUsedThisTurn[Faction.Enemy]  = false;
   }
@@ -254,7 +264,8 @@ export class BattleGeneralDuelFlow {
 
     const score = 0.45 * defenderHpPct + 0.35 * squadRatio + 0.2 * powerAdvantage;
     // 防守方是敵方 AI：走 E-7 接受判定（依難度閾值，含抖動）；玩家防守方沿用一般門檻
-    const accepted = defenderFaction === Faction.Enemy
+    const forced = defenderFaction === Faction.Enemy && (this.context.isEnemyForcedToAcceptDuel?.() ?? false);
+    const accepted = forced ? true : defenderFaction === Faction.Enemy
       ? decideDuelAccept(
         { hpRatio: defenderHpPct, squadRatio, powerRatio: powerAdvantage },
         services().session.randomSource(),
@@ -313,8 +324,17 @@ export class BattleGeneralDuelFlow {
     const challengerAttack = getAttack(challengerGeneral, challengerUnit);
     const defenderAttack = getAttack(defenderGeneral, defenderUnit);
 
+    // 教學戰的生命下限：打到下限就算輸，傷害不會把生命壓到下限以下
+    const floorRatio = Math.max(0, Math.min(0.9, this.context.getDuelHpFloorRatio?.() ?? 0));
+    const floorOf = (general: GeneralUnit): number => floorRatio > 0 ? Math.min(general.currentHp, Math.ceil(general.maxHp * floorRatio)) : 0;
+    const challengerFloor = floorOf(challengerGeneral);
+    const defenderFloor = floorOf(defenderGeneral);
+    const capDamage = (general: GeneralUnit, floor: number, damage: number): number =>
+      floor > 0 ? Math.min(damage, Math.max(0, general.currentHp - floor)) : damage;
+    const isBeaten = (general: GeneralUnit, floor: number): boolean => general.isDead() || (floor > 0 && general.currentHp <= floor);
+
     for (let round = 0; round < DUEL_MAX_ROUNDS; round += 1) {
-      if (challengerGeneral.isDead() || defenderGeneral.isDead()) break;
+      if (isBeaten(challengerGeneral, challengerFloor) || isBeaten(defenderGeneral, defenderFloor)) break;
       const defenderDodged = svc.formula.rollDodge(defenderGeneral.luk);
       let attackDmg = challengerAttack;
       let challengerCrit = false;
@@ -326,7 +346,7 @@ export class BattleGeneralDuelFlow {
           attackDmg = Math.floor(attackDmg * GAME_CONFIG.GENERAL_CRIT_DAMAGE_MULTIPLIER);
         }
         // 部隊攻擊力可能帶小數（士氣），主將 HP 取整；命中至少 1（規則不變，只取整）
-        attackDmg = Math.max(1, Math.round(attackDmg));
+        attackDmg = capDamage(defenderGeneral, defenderFloor, Math.max(1, Math.round(attackDmg)));
         defenderGeneral.takeDamage(attackDmg);
       }
       svc.event.emit(EVENT_NAMES.GeneralDamaged, {
@@ -342,7 +362,7 @@ export class BattleGeneralDuelFlow {
         defenderUnit.currentHp = defenderGeneral.currentHp;
       }
 
-      if (defenderGeneral.isDead()) break;
+      if (isBeaten(defenderGeneral, defenderFloor)) break;
 
       const challengerDodged = svc.formula.rollDodge(challengerGeneral.luk);
       let defenseDmg = defenderAttack;
@@ -355,7 +375,7 @@ export class BattleGeneralDuelFlow {
           defenseDmg = Math.floor(defenseDmg * GAME_CONFIG.GENERAL_CRIT_DAMAGE_MULTIPLIER);
         }
         // 同上：主將 HP 取整，命中至少 1
-        defenseDmg = Math.max(1, Math.round(defenseDmg));
+        defenseDmg = capDamage(challengerGeneral, challengerFloor, Math.max(1, Math.round(defenseDmg)));
         challengerGeneral.takeDamage(defenseDmg);
       }
       svc.event.emit(EVENT_NAMES.GeneralDamaged, {
@@ -371,6 +391,10 @@ export class BattleGeneralDuelFlow {
         challengerUnit.currentHp = challengerGeneral.currentHp;
       }
     }
+
+    const challengerBeaten = isBeaten(challengerGeneral, challengerFloor);
+    const defenderBeaten = isBeaten(defenderGeneral, defenderFloor);
+    this.lastDuelWinner = challengerBeaten === defenderBeaten ? null : challengerBeaten ? defenderFaction : challengerFaction;
 
     if (challengerGeneral.isDead() && challengerUnit) {
       this.onGeneralUnitKilled(challengerFaction);

@@ -209,6 +209,8 @@ export class BattleController {
   private readonly duelFlow = new BattleGeneralDuelFlow({
     state: this.state,
     onUnitKilled: (unit, killer, svc) => this.combatResolver.onUnitKilled(unit, killer, svc),
+    isEnemyForcedToAcceptDuel: () => this._tutorialBattle && GAME_CONFIG.tutorialEnemyAlwaysAcceptsDuel,
+    getDuelHpFloorRatio: () => this._tutorialBattle ? GAME_CONFIG.tutorialDuelHpFloorRatio : 0,
   });
   private readonly skillDispatcher = new BattleSkillDispatcher(
     {
@@ -1664,6 +1666,11 @@ export class BattleController {
 
   public isDuelChallengeResolved(): boolean {
     return this.duelFlow.isDuelChallengeResolved();
+  }
+
+  /** 上一場成立的單挑誰贏；沒分出勝負是 null（PROG-2-9335） */
+  public getLastDuelWinner(): Faction | null {
+    return this.duelFlow.lastDuelWinner;
   }
 
   /**

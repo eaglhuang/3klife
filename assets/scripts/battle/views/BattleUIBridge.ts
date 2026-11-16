@@ -209,7 +209,10 @@ export class BattleUIBridge {
     finally { this.duelCapture = null; }
     const playerDead = (ctrl.state.getGeneral(Faction.Player)?.currentHp ?? 1) <= 0;
     const enemyDead = (ctrl.state.getGeneral(Faction.Enemy)?.currentHp ?? 1) <= 0;
-    const winner: 0 | 1 | null = playerDead === enemyDead ? null : playerDead ? 1 : 0;
+    // 教學戰的單挑不打死：沒有人倒下時改看流程記下的勝方
+    const duelWinner = ctrl.getLastDuelWinner?.() ?? null;
+    const winner: 0 | 1 | null = playerDead !== enemyDead ? (playerDead ? 1 : 0)
+      : duelWinner === Faction.Player ? 0 : duelWinner === Faction.Enemy ? 1 : null;
     const exchanges = selectDuelExchanges(capture.hits.map(hit => ({ attacker: (hit.faction === Faction.Player ? 1 : 0) as 0 | 1, dodged: !!hit.wasDodged })));
     let played: unknown;
     try { played = await (this.ctx.unitRenderer?.playDuelPresentation?.(winner, playerDead || enemyDead, exchanges) ?? Promise.resolve()); }
