@@ -209,6 +209,14 @@ function installPageHelpers() {
             node.emit(window.cc.Node.EventType.TOUCH_END);
             return node.name;
         },
+        /** 依 UCUF 語意 id（節點上的 _ucufId，例如 lobby-hall-screen.bubble）列出作用中的節點名稱；轉換器產生的節點名是 div_N 流水號，不能用名稱找 */
+        activeUcufNodes: (id) => {
+            const out = [];
+            walk(scene(), (node) => {
+                if (node.activeInHierarchy && node._ucufId === id) out.push(node.name);
+            });
+            return out;
+        },
         activeNodeNames: (re) => {
             const out = [];
             walk(scene(), (node) => {
@@ -514,7 +522,10 @@ async function main() {
         };
 
         // ── 2. 新玩家開場 ──
-        const openingSeq = ['BtnIntroNext', 'BtnCloseOpeningLetter', 'BtnDestinyRoll', 'BtnDestinyConfirm', 'BtnFrame0', 'BtnShowcaseNext', 'BtnNextTutorial'];
+        // 現行開場（PROG-2-9104 核對）：介紹頁 → 信 → 六名將登場 → 宿命池 → 新手教學。
+        // 宿命轉蛋 2026-11-12 起改為轉蛋系統的一池（PROG-2-2243），用十連結果畫面 GachaPullResult 顯示、
+        // 單鍵確定（GachaPullResult_close）十位全收；舊的 BtnDestinyRoll／BtnDestinyConfirm／BtnFrame0 選將面板已不掛。
+        const openingSeq = ['BtnIntroNext', 'BtnCloseOpeningLetter', 'BtnShowcaseNext', 'GachaPullResult_close', 'BtnNextTutorial'];
         await step('new-player-opening', async (rec) => {
             // 依規格順序點；BtnIntroNext 是多頁「繼續」（實測 IntroStep 1/4…），可重複點直到消失。
             // 若目前可按的是後面的步驟（實際順序與規格不同），就先點它並記在 outOfOrder，不當成失敗。
@@ -598,14 +609,15 @@ async function main() {
             await requireLobby();
             const crowdRe = '^crowd-.*';
             // 泡泡是 UCUF 既有節點 lobby-hall-screen.bubble，平常 active=false，點到在場武將才開
-            const bubbleRe = '(^|\\.)bubble$';
-            rec.detail.bubbleBefore = await page.evaluate((re) => window.__pt.activeNodeNames(re), bubbleRe);
+            // 節點名是轉換器流水號（LobbyHallScreen_div_N），要用語意 id 找（PROG-2-9107 核對）
+            const bubbleId = 'lobby-hall-screen.bubble';
+            rec.detail.bubbleBefore = await page.evaluate((id) => window.__pt.activeUcufNodes(id), bubbleId);
             const walker = await waitUntil(() => page.evaluate((re) => window.__pt.findNodeName(re), crowdRe), 30000, '找不到走動小人（crowd-*）');
             rec.detail.walker = walker;
             const tapped = await page.evaluate((re) => window.__pt.tapNode(re), crowdRe);
             if (!tapped) throw new Error('點擊小人失敗');
             const bubbles = await waitUntil(async () => {
-                const now = await page.evaluate((re) => window.__pt.activeNodeNames(re), bubbleRe);
+                const now = await page.evaluate((id) => window.__pt.activeUcufNodes(id), bubbleId);
                 return now.length ? now : null;
             }, 5000, '點小人後 lobby-hall-screen.bubble 沒有變為 active').catch(async (e) => {
                 const all = await page.evaluate(() => Object.keys(window.__pt.nameCounts('ubble|Dialog|Speech')));
@@ -795,11 +807,12 @@ async function main() {
 
 /**
  * 「命」分頁血統樹檢查：底板寬 = 主體寬 − 720、底板高 = 主體高（PROG-2-9041 規格）。
- * 主體節點名以 CharacterDs3Main 開頭；底板節點名含 Bloodline 且含 Tree/Base/Board/Panel/Bg 其一。
+ * 主體節點名以 CharacterDs3Main 開頭；底板為 Ds3BloodlineTree。
  */
 async function checkBloodlineBounds(page, viewport) {
-    // 底板節點名稱各版不同，列出幾個候選全量一起量，任一個符合「主體寬−720 × 主體高」即通過
-    const candidates = ['^CharacterDs3MainBloodlineRoot$', '^TabBloodlineContent$', '^CharacterDs3TabBloodline$'];
+    // 血統樹左區是執行期建在主體底下的 Ds3BloodlineTree（PROG-2-9041）；
+    // TabBloodlineContent／CharacterDs3MainBloodlineRoot 是右欄 ContentSlot 的分頁內容（寬 560），不是血統樹（PROG-2-9105 核對）
+    const candidates = ['^Ds3BloodlineTree$'];
     const bounds = await page.evaluate((cands) => {
         const host = window.__pt.sizeOf('^CharacterDs3Main$') || window.__pt.sizeOf('^CharacterDs3Main');
         return { host, trees: cands.map((re) => ({ re, size: window.__pt.sizeOf(re) })) };

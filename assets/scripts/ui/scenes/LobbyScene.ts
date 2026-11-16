@@ -248,6 +248,7 @@ import { startMirrorAmbientMotion } from '../core/UIMirrorAmbientMotion';
 import { runMirrorInfusion } from '../core/UIBloodlineMirrorInfusion';
 import { buildStageAwakenedTexts, buildStageCapRaisedTexts, type MirrorStageResultTexts } from '../core/UIBloodlineMirrorStageResult';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
+import { restoreLobbyMainUi } from '../core/LobbyHallReturn';
 import { warnGeneralSchemaOnLoad } from '../../core/models/GeneralSchema';
 import { coreFieldCoverage, formatCoreFieldCoverage } from '../../core/systems/GeneralCoreFields';
 import { PortraitBounds, PortraitBoundsDoc, placePortraitOnBaseline } from '../core/GachaPortraitBaseline';
@@ -6249,6 +6250,25 @@ export class LobbyScene extends Component {
         if (this._shopMainHost) this._shopMainHost.node.active = false;
         this._closeSecondaryOverlayHosts();
         this._openLobbyHall();
+        this._restoreLobbyMainUi();
+    }
+
+    /** 進行中的「UI 堆疊回到 LobbyMain」；返回鈕同時聽 click 與 touch-end，同一次返回只跑一輪 */
+    private _lobbyMainRestore: Promise<boolean> | null = null;
+
+    /**
+     * 子畫面（轉蛋、商城…）是 UIManager 替換式打開的，開的時候收掉了 LobbyMain（城池底欄 BtnCat*、季節 HUD）。
+     * 只關宿主不關 UI 堆疊的話 LobbyMain 不會回來，UIManager 也還停在子畫面（PROG-2-9106），這裡把堆疊一路關回 LobbyMain；
+     * LobbyMain 顯示時若大堂開著，會自己把大堂拉回城池層之上。
+     */
+    private _restoreLobbyMainUi(): void {
+        if (this._lobbyMainRestore) return;
+        this._lobbyMainRestore = restoreLobbyMainUi(services().ui, UIID.LobbyMain)
+            .catch((error) => {
+                UCUFLogger.warn(LogCategory.LIFECYCLE, '[LobbyScene] 返回政廳時 UI 堆疊回不到大廳主頁', error);
+                return false;
+            })
+            .finally(() => { this._lobbyMainRestore = null; });
     }
 
     private async _goBackToLobby(): Promise<void> {
