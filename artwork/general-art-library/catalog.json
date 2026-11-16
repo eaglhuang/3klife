@@ -475,7 +475,7 @@
             "poseLabel": "跨步迴身斜向戟擊",
             "gaze": "direct-to-camera",
             "sourceStanding": "standing/lu_ling_qi__呂玲綺__standing_0002.png",
-            "note": "保持既有紅銀輕甲與戟形武器；長柄筆直、全身與武器完整入框。候選待審，未接入遊戲。"
+            "note": "保持既有紅銀輕甲與戟形武器；長柄筆直、全身與武器完整入框。候選待��，未接入遊戲。"
           }
         ]
       },
@@ -2354,6 +2354,22 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/yu_jin__于禁__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "0db6c1bcdf7e27ef5a8927ac9af85d3b7732604cd8e7e400fd0d427823c8a266",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "double-ended-spear",
+            "pose": "three-quarter advancing diagonal thrust with planted front foot and low center of gravity",
+            "qc": "Full figure and both spear ends visible; straight shaft and separated natural hand grips; clean transparent preview; review candidate only."
+          }
+        ]
       }
     },
     {
