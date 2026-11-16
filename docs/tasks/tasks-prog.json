@@ -6607,6 +6607,144 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9328",
+      "title": "奧義選單置中、不再蓋住結束回合；右側控制列下移避開敵主將",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-16T23:30:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "實跑截圖顯示奧義選單擠在右下角：「取消」疊在「結束回合」上、標題被 SP 條蓋住、沒有遮罩與底板；右側控制列貼著敵主將腳底。總PM 2026-11-16 裁決照方案修。",
+      "related": [
+        "PROG-2-9327"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: done | 驗證: 型別檢查 0 錯；單元測試 7732 全過；戰法冒煙測試通過；尚未線上實跑 | 變更: 奧義選單改掛全螢幕畫布並置中；戰報控制列 top 340→360、戰報高度 212→196 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9329",
+      "title": "教學戰免除戰法發動條件，計謀鈕不再整場按了沒反應",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-16T23:30:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "線上實跑計謀點給滿卻 8 回合都沒扣。診斷結果是遊戲問題：周瑜、劉備、張郃、夏侯惇第一格戰法是「火攻」，條件是起風天氣，教學戰整場不起風，被 condition-restricted 擋下，畫面上只在戰報寫一句。",
+      "related": [
+        "PROG-2-9327"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: done | 驗證: 型別檢查 0 錯；單元測試 7732 全過；戰法冒煙測試通過；尚未線上實跑（新增 TutorialTacticConditions 2 案） | 變更: 教學戰不檢查戰法條件；實跑工具加計謀診斷 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9330",
+      "title": "甘寧「百騎劫營」加傷害；教學戰敵方波次改 6 隊並排到第 7 回合",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-16T23:30:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 2026-11-16 裁決：百騎劫營只暈不傷，要補傷害且係數進設定；5 隊波次實跑敵方第 7 回合起 0 隊、我方 13 隊無戰損，要改成敵方到第 7 回合都還有部隊、我方有戰損、仍在第 8～10 回合打死敵主將。",
+      "related": [
+        "PROG-2-9327"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: done | 驗證: 型別檢查 0 錯；單元測試 7732 全過；戰法冒煙測試通過；尚未線上實跑 | 變更: 百騎劫營改為傷害加暈眩，係數進設定；教學波次表 [0,2,1,1,1]→[0,2,1,1,0,1,1] | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

@@ -8,7 +8,7 @@ import * as path from 'path';
 import { assert, TestSuite } from './TestRunner';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
 import { buildUltimateSkills, seedUltimateDataForHeadless } from '../assets/scripts/battle/views/BattleSceneLoader';
-import { BuffDebuffSkillResolver } from '../assets/scripts/battle/skills/resolvers/BuffDebuffSkillResolver';
+import { ProjectedDamageSkillResolver } from '../assets/scripts/battle/skills/resolvers/ProjectedDamageSkillResolver';
 import { isBattleSkillImplemented, resolveBattleSkillProfile } from '../assets/scripts/battle/skills/BattleSkillProfiles';
 import { getBattleSkillPresentation } from '../assets/scripts/shared/BattleSkillPresentation';
 import { Faction, GAME_CONFIG, StatusEffect } from '../assets/scripts/core/config/Constants';
@@ -53,10 +53,10 @@ export function createStarterGeneralUltimatesSuite(): TestSuite {
         }
     });
 
-    suite.test('效果沿用指定的那一招：除了技能 id、戰報鍵與最後排旗標，其餘數值完全相同', () => {
+    suite.test('效果沿用指定的那一招：除了技能 id、戰報鍵、最後排旗標與百騎劫營另加的傷害，其餘數值完全相同', () => {
         for (const [, skillId, baseId] of Object.values(STARTERS)) {
             const strip = (id: string) => {
-                const { battleSkillId: _id, battleLogKey: _key, enemyRearRowOnly: _rear, ...rest } = resolveBattleSkillProfile(id) ?? {} as never;
+                const { battleSkillId: _id, battleLogKey: _key, enemyRearRowOnly: _rear, effectKind: _kind, coefficient: _coef, scalingStat: _stat, ...rest } = resolveBattleSkillProfile(id) ?? {} as never;
                 return JSON.stringify(rest);
             };
             assert.equals(strip(baseId), strip(skillId), skillId);
@@ -77,18 +77,20 @@ export function createStarterGeneralUltimatesSuite(): TestSuite {
         seedUltimateDataForHeadless([], {});
     });
 
-    suite.test('百騎劫營：我方施放只暈敵軍最後排（depth 最大、且有敵軍的那排）', () => {
+    suite.test('百騎劫營：我方施放只打敵軍最後排（depth 最大、且有敵軍的那排），有傷害也有暈眩', () => {
         services().initialize();
         const caster = createTestUnit('me', Faction.Player, 0, 0);
         const front = createTestUnit('front', Faction.Enemy, 1, 3);
         const rearA = createTestUnit('rearA', Faction.Enemy, 0, 5);
         const rearB = createTestUnit('rearB', Faction.Enemy, 2, 5);
-        const { context, buffLog } = createBattleSkillTestContext({
+        const { context, buffLog, damageLog } = createBattleSkillTestContext({
             playerGeneral: createTestGeneral('pg', Faction.Player), enemyGeneral: createTestGeneral('eg', Faction.Enemy),
             units: [caster, front, rearA, rearB],
         });
-        const result = new BuffDebuffSkillResolver().execute(raidRequest('me'), context);
+        const result = new ProjectedDamageSkillResolver().execute(raidRequest('me'), context);
         assert.isTrue(result.applied);
+        assert.equals('rearA,rearB', damageLog.map((d) => d.unitId).sort().join(','), '只有最後排受傷');
+        assert.isTrue(damageLog.every((d) => d.damage > 0), '傷害大於 0');
         assert.equals('rearA,rearB', buffLog.filter((b) => b.effect === StatusEffect.Stun).map((b) => b.unitId).sort().join(','));
     });
 
@@ -101,7 +103,7 @@ export function createStarterGeneralUltimatesSuite(): TestSuite {
             playerGeneral: createTestGeneral('pg', Faction.Player), enemyGeneral: createTestGeneral('eg', Faction.Enemy),
             units: [mine0, mine2, foe],
         });
-        new BuffDebuffSkillResolver().execute(raidRequest(Faction.Enemy), context);
+        new ProjectedDamageSkillResolver().execute(raidRequest(Faction.Enemy), context);
         assert.equals('mine0', buffLog.filter((b) => b.effect === StatusEffect.Stun).map((b) => b.unitId).join(','));
     });
 
