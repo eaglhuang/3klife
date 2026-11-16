@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-16T06:45:20Z",
+  "updatedAt": "2026-11-16",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -2544,6 +2544,20 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/jiang_wei__姜維__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "7aea50a1cca1b7333854cd9377250e0dce0b3c0d733f33d7bdb087a22d102a47",
+            "canvas": "1024x1536 PNG",
+            "note": "轉身抬槍近直立格擋；雙手持直槍、抬膝轉步、視線看鏡頭。來源：standing 0002；等比例縮放並置中至中央安全區。待使用者審閱，未接入遊戲。"
+          }
+        ]
       }
     },
     {
