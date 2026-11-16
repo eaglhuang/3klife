@@ -6097,6 +6097,52 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9318",
+      "title": "部隊打主將保底傷害改為攻擊力兩成；兵源不足時保底一隊步兵並在出征畫面提示",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-16T13:40:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 2026-11-16 裁決兩項：部隊打主將保底傷害改 max(1, round(攻擊力×20%))；城市兵源不足時不可讓玩家進戰場一隊都派不出去，要給保底一隊步兵（不扣城市兵源）並在出征畫面提示。",
+      "related": [
+        "PROG-2-9304"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: done | 驗證: 型別檢查 0 錯；單元測試 7716 通過；戰法冒煙測試新增案例通過（另有 1 案既有失敗與本卡無關，未在乾淨基準上對照） | 變更: 主將保底傷害比例 0.2；出征軍勢不足 500 補到 500 且戰損先扣保底兵力；出征畫面加兵源不足提示 | 阻塞: 無；未做到：尚未在實機預覽驗證",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
