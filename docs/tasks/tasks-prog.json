@@ -6975,6 +6975,52 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9336",
+      "title": "撤回側邊接敵：小兵只跟同一路正面撞上的敵軍交戰，旁邊經過的不打",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "PROG-2-9322 讓部隊遇到斜前方或側面的敵軍就停下交戰，違反戰場設計。使用者 2026-11-17 親自裁示：旁邊經過的小兵不打是刻意設計，目的是放大兵種互剋與路線卡位；這是五路推進的格子兵種玩法；只有武將棋子經過旁邊才會跟小兵互打。總PM 要求最優先撤回。",
+      "related": [
+        "PROG-2-9322"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；單元測試 7749 全過；戰法冒煙新增 1 案通過 | 變更: troopEngageAdjacent 關閉並寫明不可再開；測試改成驗證設計意圖 | 阻塞: 教學戰前幾回合不交戰的問題要另提合乎設計的方案",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
