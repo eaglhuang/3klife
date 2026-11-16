@@ -735,7 +735,15 @@ async function playBattle(page, opt) {
     rep.lastGeneral = { player: s.playerGeneral, enemy: s.enemyGeneral, turn: s.turn };
     // 我方發起的單挑由敵將自動回應，畫面只閃過提示：記下第一次結算的回合與當下所有提到單挑的文字
     if (s.duelResolved && !rep.duelResolvedAt) { rep.duelResolvedAt = s.turn; log(`單挑邀請已發生並結算：第 ${s.turn} 回合`); }
-    for (const t of s.texts) { if (/單挑/.test(t) && t.length > 5 && !rep.duelTexts.includes(t)) { rep.duelTexts.push(t); log(`單挑文字（第 ${s.turn} 回合）：${t.slice(0, 80)}`); } }
+    for (const t of s.texts) {
+      if (/單挑/.test(t) && t.length > 5 && !rep.duelTexts.includes(t)) {
+        rep.duelTexts.push(t); log(`單挑文字（第 ${s.turn} 回合）：${t.slice(0, 80)}`);
+        // 單挑提示只停幾秒：出現新文字就截一張，才看得到發起、過程、結果的畫面（PROG-2-9337）
+        if (/單挑(開始|獲勝|落敗|成立)|拒絕單挑/.test(t)) await shot(page, opt, `duel-${rep.duelTexts.length}`);
+      }
+    }
+    // 兵池見底的提示只停留 3 秒，看到就記下來，才知道玩家有沒有被告知（PROG-2-9337）
+    for (const t of s.texts) { if (/軍勢已用盡|軍勢不足/.test(t) && !rep.duelTexts.includes(t)) { rep.duelTexts.push(t); log(`兵池提示（第 ${s.turn} 回合）：${t.slice(0, 80)}`); } }
     if (isResult(s)) {
       if (cur && !cur.closed) { cur.after = brief(s); cur.closed = true; cur.errorsTo = rep.consoleErrors.length; }
       rep.result = { outcome: outcomeOf(s.texts), announced: s.ended, texts: s.texts, turnAtEnd: s.turn };
