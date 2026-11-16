@@ -1624,16 +1624,19 @@ export class UnitRenderer extends Component {
     const tf = segmentNode.addComponent(UITransform);
     tf.setContentSize(width, height);
 
-    const bgNode = new Node("Background");
-    bgNode.layer = segmentNode.layer;
-    segmentNode.addChild(bgNode);
-    const bgTf = bgNode.addComponent(UITransform);
-    bgTf.setContentSize(width, height);
+    // 全透明的底板看不到，卻仍佔一次繪製（每個名牌三塊）；透明時不建立（PROG-2-9310）
+    if (background.a > 0) {
+      const bgNode = new Node("Background");
+      bgNode.layer = segmentNode.layer;
+      segmentNode.addChild(bgNode);
+      const bgTf = bgNode.addComponent(UITransform);
+      bgTf.setContentSize(width, height);
 
-    const graphics = bgNode.addComponent(Graphics);
-    graphics.fillColor = background;
-    graphics.roundRect(-width * 0.5, -height * 0.5, width, height, 7);
-    graphics.fill();
+      const graphics = bgNode.addComponent(Graphics);
+      graphics.fillColor = background;
+      graphics.roundRect(-width * 0.5, -height * 0.5, width, height, 7);
+      graphics.fill();
+    }
 
     const textNode = new Node("Text");
     textNode.layer = segmentNode.layer;
