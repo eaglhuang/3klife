@@ -1267,8 +1267,17 @@
             "version": "0002",
             "file": "battle/guan_yu__關羽__battle_0002.png",
             "status": "review-pending"
+          },
+          {
+            "version": "0006",
+            "file": "battle/guan_yu__關羽__battle_0006.png",
+            "status": "review-pending",
+            "sha256": "D121C9B54866383F51D0569C87D47E68C85E34FAB43C713AEBD562B5F33DE667",
+            "canvas": "1024x1536 RGBA",
+            "note": "New combat candidate based on approved standing portrait; transparent background verified. Kept for review."
           }
-        ]
+        ],
+        "activeVersion": "0006"
       },
       "avatar": {
         "status": "integrated",
