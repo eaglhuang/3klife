@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-16T10:48:17.000Z",
+  "updatedAt": "2026-11-16T10:49:00.000Z",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -299,7 +299,7 @@
             "source": "standing/bu_lian_shi__步練師__standing_0002.png",
             "crop": "shoulder-line",
             "cropBox": "x=352,y=0,w=320,h=270; output x=-8,y=0,w=256,h=216 on 256x256 canvas",
-            "qc": "Crop-only from approved standing art; full head and ornaments retained, face horizontally centered, chest/front torso and hand-held flower excluded at shoulder-line boundary."
+            "qc": "Crop-only derived from approved standing art; 256x256 canvas and transparent padding verified. Final visual inspection of this revision remains pending."
           }
         ]
       }
