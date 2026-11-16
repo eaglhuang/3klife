@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "characterId": "zhang-he",
+  "name": "張郃",
+  "sourceVersion": "0001",
+  "sourceFile": "artwork/chibi-art-library/source/zhang-he__張郃__chibi_0001.png",
+  "sha256": "2db87cabdcaa005b1fb7f80b7c9549924dd46d25f9399150d346975ad2c17391",
+  "canvas": "577x1250 RGBA",
+  "pipeline": "C:/Users/User/spine-trial/tools/pipeline.py accept-source zhang_he",
+  "status": "source-pass",
+  "measurements": {
+    "faceBoxPx": [
+      307,
+      488,
+      111,
+      135
+    ],
+    "chinToBootPx": 622,
+    "chinToBootTargetPx": [
+      591,
+      653
+    ],
+    "baselineY": 1245,
+    "placement": "centered; uniform scale only; feet at y=1245",
+    "weapon": "upright straight spear"
+  },
+  "warnings": [
+    "face-scale/head-frac automation warnings are advisory per corrected 2026-11-17 mailbox measurement policy; face detector can undercount helmet/headgear."
+  ],
+  "visualReview": {
+    "style": "PASS — matched against Gan Ning chibi reference",
+    "identity": "PASS — matched to latest standing art reference",
+    "animationCutout": "PENDING — per-character masks/clean base not present in cutter scaffold",
+    "frameAndTransparency": "PASS — transparent 577x1250 canvas; whole figure inside safe frame",
+    "limbsAndGrip": "PASS — complete hands, feet, weapon grip and weapon"
+  },
+  "cutout": {
+    "status": "pending",
+    "reason": "張郃專屬 clean base 與切片遮罩未建立；不得套用其他武將的多邊形。"
+  },
+  "createdAt": "2026-11-17T02:22:18+08:00"
+}
