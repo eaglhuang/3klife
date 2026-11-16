@@ -174,18 +174,6 @@
       "uniqueness": "unverified",
       "source": "conversation selection",
       "note": "使用者已核定 B 姿勢；battle_0003 保留該姿勢並修正眼神直視鏡頭。原始 B 草稿與正式姿勢編號尚未映射，保留 unmapped，不要求重選、不推測編號。"
-    },
-    {
-      "generalId": "pang-de",
-      "generalName": "龐德",
-      "series": "LH",
-      "poseCode": null,
-      "selection": "AI 建議：穩定低重心，右高左低斜向反擊，長柄大刀刃帶向左下",
-      "selectionLocked": false,
-      "status": "unmapped",
-      "uniqueness": "unverified",
-      "source": "AI-generated battle_0001 candidate",
-      "note": "姿勢庫編號未映射；須與 LH-001–090 姿勢板及其他角色剪影比對後才可宣稱唯一。候選待使用者確認。"
     }
   ],
   "audit": {
