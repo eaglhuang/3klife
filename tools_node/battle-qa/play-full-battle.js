@@ -312,7 +312,7 @@ const rep = {
   enter: null,
   entered: '',
   turns: [],
-  duels: [], duelResolvedAt: null, duelTexts: [],
+  duels: [], duelResolvedAt: null, duelTexts: [], toasts: [],
   ultimates: [],
   tactics: [],
   duelAttempt: null,
@@ -448,6 +448,21 @@ async function enterFromLobby(page, wantName = null) {
     await sleep(1200);
   }
   throw new QaError('進場', `300 秒內沒有進到戰場（最後動作：${actions.slice(-3).join(' → ')}）`, lastTexts);
+}
+
+// 頁面端：包一層提示函式（保留原行為），把遊戲實際跳過的每一句提示收起來，回傳上次讀取之後的新提示。
+// 提示只停幾秒，又會被下一句蓋掉，光靠定時讀畫面文字會漏（PROG-2-9338）
+function pageDrainToasts() {
+  const b = window.__bq.battle();
+  const rt = b && (b._deployPanelRuntime || b.deployRuntime);
+  if (!rt || typeof rt.showToast !== 'function') return null;
+  if (!window.__bqToasts) window.__bqToasts = [];
+  if (!rt.__bqToastWrapped) {
+    const orig = rt.showToast;
+    rt.showToast = function (...args) { window.__bqToasts.push(String(args[0])); return orig.apply(this, args); };
+    rt.__bqToastWrapped = true;
+  }
+  return window.__bqToasts.splice(0);
 }
 
 // 頁面端：包一層 ctrl.tryDeployTroop（保留原行為與回傳值），每次呼叫的結果記到 window.__bqDeployLog
@@ -742,6 +757,10 @@ async function playBattle(page, opt) {
         if (/單挑(開始|獲勝|落敗|成立)|拒絕單挑/.test(t)) await shot(page, opt, `duel-${rep.duelTexts.length}`);
       }
     }
+    // 遊戲實際跳過的提示（不靠畫面取樣）：全部寫進紀錄
+    const toasts = await ev(page, pageDrainToasts);
+    if (toasts === null && !rep.toastWrapMissing) { rep.toastWrapMissing = true; log('提示紀錄：找不到提示元件，無法記錄跳出的提示'); }
+    for (const t of toasts || []) { rep.toasts.push({ turn: s.turn, text: t }); log(`提示（第 ${s.turn} 回合）：${t.slice(0, 80)}`); }
     // 兵池見底的提示只停留 3 秒，看到就記下來，才知道玩家有沒有被告知（PROG-2-9337）
     for (const t of s.texts) { if (/軍勢已用盡|軍勢不足/.test(t) && !rep.duelTexts.includes(t)) { rep.duelTexts.push(t); log(`兵池提示（第 ${s.turn} 回合）：${t.slice(0, 80)}`); } }
     if (isResult(s)) {
