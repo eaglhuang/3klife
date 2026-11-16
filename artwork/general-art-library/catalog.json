@@ -6867,6 +6867,22 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/cao_zhi__曹植__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "ce4cdfb1916f37e2a2f0a2c21048690044ca5a1c941c7c37b08700602f72707f",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "strategy-scroll-brush",
+            "poseLabel": "展卷落筆發令",
+            "note": "以核定站姿延續曹植藍灰與 ivory 文士造型；展卷執筆標記軍令，候選待審。"
+          }
+        ]
       }
     },
     {
