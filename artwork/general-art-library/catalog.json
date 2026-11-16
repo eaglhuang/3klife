@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-16T08:35:43.293Z",
+  "updatedAt": "2026-11-16T08:38:36.361Z",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -435,16 +435,27 @@
           {
             "version": "0002",
             "file": "small_avatars/da_qiao__大喬__small_avatar_0002.png",
-            "status": "review-pending",
+            "status": "superseded",
             "sha256": "35e9a8dff3986350be8801a592dcbbd4d0f4fe6b14cca756919d101e16d85bbf",
             "canvas": "1254x1254 RGBA",
             "source": "standing/da_qiao__大喬__standing_0002.png",
             "crop": "shoulder-line",
             "cropBox": "x=356,y=4,w=287,h=287",
             "qc": "直接由已核定站姿裁切；完整頭髮與花飾，臉部置中，裁框下緣停在肩線，未納入胸部。"
+          },
+          {
+            "version": "0003",
+            "file": "small_avatars/da_qiao__大喬__small_avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "f973a7f94b528cec1f989aa19ff287bb17e0012c029c1bb54e3953f9d6f4f36b",
+            "canvas": "1254x1254 RGBA",
+            "source": "standing/da_qiao__大喬__standing_0002.png",
+            "crop": "shoulder-line",
+            "cropBox": "x=356,y=4,w=287,h=254; transparentPaddingBottom=33",
+            "qc": "直接裁切已核定站姿並加透明留白；保留完整頭髮與花飾，臉部置中；下緣停在肩線、不含胸部。v0002因下緣包含較多衣襟細節改列 superseded。"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       }
     },
     {
