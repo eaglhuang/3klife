@@ -297,6 +297,7 @@ const rep = {
   duels: [],
   ultimates: [],
   tactics: [],
+  duelAttempt: null,
   tutorialDismissed: 0,
   consoleErrors: [],
   pageErrors: [],
@@ -565,9 +566,10 @@ async function maybeUltimate(page, s, turnRec) {
   if (!pg || !(pg.sp >= pg.maxSp) || !s.texts.includes('發動')) return;
   const before = new Set(s.texts);
   await tapText(page, '發動');
-  await sleep(1200);
-  const after = await ev(page, pageSnapshot);
-  const candidates = after.texts.filter((t) => !before.has(t) && t.length >= 2 && t.length <= 14 && !['取消', '返回', '關閉'].includes(t));
+  // 選單是動態建立的，出現時間不固定：最多等 5 秒看到「選擇奧義」
+  let after = null;
+  for (let i = 0; i < 10; i += 1) { await sleep(500); after = await ev(page, pageSnapshot); if (after.texts.includes('選擇奧義')) break; }
+  const candidates = after.texts.filter((t) => !before.has(t) && t.length >= 2 && t.length <= 14 && !/^\d+$/.test(t) && !['取消', '返回', '關閉', '選擇奧義', '未配置奧義'].includes(t));
   const rec = { turn: turnRec.turn, opened: true, candidates: candidates.slice(0, 10), picked: null, cast: false };
   if (candidates.length) {
     rec.picked = candidates[0];
@@ -575,6 +577,11 @@ async function maybeUltimate(page, s, turnRec) {
     await sleep(2500);
     const done = await ev(page, pageSnapshot);
     rec.cast = !!done.playerGeneral && done.playerGeneral.sp < pg.sp;
+  } else if (after.texts.includes('取消')) {
+    // 沒有可選的奧義（例如「未配置奧義」）：關掉選單，免得擋住後面的操作
+    rec.unassigned = after.texts.includes('未配置奧義');
+    await tapText(page, '取消');
+    await sleep(600);
   }
   rep.ultimates.push(rec);
   log(`奧義：第 ${turnRec.turn} 回合，選擇 ${rec.picked || '（找不到技能選項）'}，${rec.cast ? '已施放（SP 下降）' : '未確認施放'}`);
@@ -591,6 +598,23 @@ async function maybeTactic(page, s, turnRec) {
   const fresh = after.texts.filter((t) => !before.has(t)).slice(0, 8);
   rep.tactics.push({ turn: turnRec.turn, label: label.replace(/\s+/g, ' '), newTexts: fresh });
   log(`計謀：第 ${turnRec.turn} 回合點「${label.replace(/\s+/g, ' ')}」，畫面新增 ${JSON.stringify(fresh)}`);
+}
+
+// 主動單挑：第 3 回合起，單挑鈕沒鎖時點一次，再點棋盤中路的空格把主將放上去（整場只做一次）。
+async function maybeDuel(page, s, turnRec) {
+  if (rep.duelAttempt || turnRec.turn < 3 || !s.texts.includes('單挑')) return;
+  await tapText(page, '單挑');
+  await sleep(800);
+  const taken = new Set((s.units || []).map((u) => `${u.lane},${u.depth}`));
+  let cell = null;
+  for (const depth of [1, 2, 0, 3]) { for (const lane of [2, 1, 3, 0, 4]) { if (!cell && !taken.has(`${lane},${depth}`)) cell = { lane, depth }; } }
+  if (cell) {
+    await ev(page, (l, d) => { const [x, y] = window.__bqx.cellClient(l, d); window.__bqx.click(x, y); }, cell.lane, cell.depth);
+    await sleep(1500);
+  }
+  const after = await ev(page, pageSnapshot);
+  rep.duelAttempt = { turn: turnRec.turn, cell, unitsBefore: (s.units || []).length, unitsAfter: (after.units || []).length, invite: after.texts.includes('接受') };
+  log(`主動單挑：第 ${turnRec.turn} 回合點「單挑」，放在 ${cell ? `路${cell.lane + 1} 深度${cell.depth}` : '（找不到空格）'}，單位數 ${rep.duelAttempt.unitsBefore} → ${rep.duelAttempt.unitsAfter}`);
 }
 
 function brief(s) {
@@ -684,6 +708,7 @@ async function playBattle(page, opt) {
       }
       if (opt.ultimate) await maybeUltimate(page, ready, cur);
       if (opt.ultimate) await maybeTactic(page, await ev(page, pageSnapshot), cur);
+      if (opt.ultimate) await maybeDuel(page, await ev(page, pageSnapshot), cur);
       cur.supplyStart = await ev(page, pageSupply);
       await tryDeploy(page, ready, cur, opt);
       cur.supplyEnd = await ev(page, pageSupply);
@@ -846,6 +871,7 @@ function writeReports(opt, ok) {
     for (const d of rep.duels) lines.push(`- 第 ${d.turn} 回合：點「${d.choice}」（${d.at}）`);
     lines.push('');
   }
+  if (rep.duelAttempt) lines.push(`- 主動單挑：第 ${rep.duelAttempt.turn} 回合，放置格 ${JSON.stringify(rep.duelAttempt.cell)}，單位數 ${rep.duelAttempt.unitsBefore} → ${rep.duelAttempt.unitsAfter}，是否出現邀請 ${rep.duelAttempt.invite ? '是' : '否'}`, '');
   if (rep.tactics.length) {
     lines.push('## 計謀');
     for (const t of rep.tactics) lines.push(`- 第 ${t.turn} 回合：點「${t.label}」，畫面新增 ${JSON.stringify(t.newTexts)}`);

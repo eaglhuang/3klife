@@ -72,7 +72,9 @@ export class BattleGeneralDuelFlow {
   }
 
   /**
-   * 檢查玩家武將是否可以出陣（前排 depth=0 沒有我方小兵）。
+   * 檢查玩家武將是否可以出陣：部署列（depth=0）還有空格就可以。
+   * 原本是「部署列有任何我方部隊就鎖」，玩家每回合一派兵單挑鈕就鎖住，整場按不到；
+   * 規格找不到那條依據，改成全滿才鎖（總PM 2026-11-16 裁決，PROG-2-9325）。
    */
   public canPlayerGeneralDuel(): boolean {
     if (this.playerGeneralUnitId) return false;
@@ -81,12 +83,9 @@ export class BattleGeneralDuelFlow {
 
     for (let lane = 0; lane < GAME_CONFIG.GRID_LANES; lane++) {
       const cell = this.context.state.getCell(lane, 0);
-      if (cell?.occupantId) {
-        const unit = this.context.state.units.get(cell.occupantId);
-        if (unit && unit.faction === Faction.Player) return false;
-      }
+      if (cell && !cell.occupantId) return true;
     }
-    return true;
+    return false;
   }
 
   /**
