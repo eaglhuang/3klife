@@ -14,6 +14,7 @@ import { GOLD_SUMMON_POOL_ID, TICKET_SUMMON_POOL_ID, registerLocalGachaRules } f
 import { gachaPoolHeader, gachaPoolTitle } from '../../core/systems/GachaPoolPresentation';
 import { DESTINY_POOL_ID } from '../../core/systems/DestinyPool';
 import { fitContain, pickTopGachaResult } from './GachaResultRanking';
+import { formatResultBalance } from '../../core/gacha/GachaButtonRules';
 import { loadGeneralAvatar, loadGeneralPortrait } from './GeneralAvatarLoader';
 
 export const DEFAULT_POOL_ID = 'GENERAL_STANDARD_01';
@@ -173,7 +174,7 @@ export class GachaFlowCoordinator {
         const labels = p.labels;
         await this._renderPullResult(host, results.length, results, gachaPoolTitle(p, results.length), p.currency, {
             hero, onBack: pool.onConfirm, repull: p.repull === 'none' ? null : pool.onReroll,
-            hideHeroAfterReveal: p.heroReveal === 'hide',
+            hideHeroAfterReveal: p.heroReveal === 'hide', showBalance: false,
             labels: labels ? {
                 header: gachaPoolHeader(p, pool.resets),
                 heroSub: labels.heroSub,
@@ -195,6 +196,8 @@ export class GachaFlowCoordinator {
             labels?: { header: string; heroSub: string; heroDesc: string; heroDescFallback?: string; back: string; repull: string };
             /** 點掉全螢幕展示後收起武將（只留結果面板）；預設移到面板左側 */
             hideHeroAfterReveal?: boolean;
+            /** 標題附上抽完剩餘資源；免費池（宿命池）不附 */
+            showBalance?: boolean;
         },
     ): Promise<void> {
         const topResult = flow.hero;
@@ -208,6 +211,8 @@ export class GachaFlowCoordinator {
             cardTexts[nodeMap.nameId] = entry ? entry.general.name : '未召喚';
         }
 
+        // 抽完還剩多少：玩家要決定「再抽」前看得到（PROG-2-9117）
+        const balanceText = flow.showBalance === false ? '' : `　｜　剩餘 ${formatResultBalance(currency, this._options.gachaService.getWalletSnapshot())}`;
         const rarityStats = this._buildPullResultRarityStats(results);
         // 本次主角登場台詞（PROG-2-2244）：所有池共用；沒有台詞退回原本描述
         const heroLine = topResult ? formatGachaLine(await loadGachaLines(), topResult.general.id) : null;
@@ -231,7 +236,7 @@ export class GachaFlowCoordinator {
         const repullText = labels?.repull ?? (drawCount === 10 ? '再抽十連' : `再${title}一次`);
         binder.setTexts({
             ...cardTexts,
-            GachaPullResult_title: `✦ ${labels?.header ?? title}結果 (${results.length}/${drawCount})${topResult ? ` · 最高 ${this._toPullResultRarityLabel(topResult.rarityTier)} ${topResult.general.name}` : ''}`,
+            GachaPullResult_title: `✦ ${labels?.header ?? title}結果 (${results.length}/${drawCount})${topResult ? ` · 最高 ${this._toPullResultRarityLabel(topResult.rarityTier)} ${topResult.general.name}` : ''}${balanceText}`,
             GachaPullResult_back: backText,
             GachaPullResult_span_1: backText,
             GachaPullResult_repull: repullText,

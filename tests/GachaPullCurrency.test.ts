@@ -39,9 +39,10 @@ export function createGachaPullCurrencySuite(): TestSuite {
 
     suite.test('大廳單抽／十連把次數傳給紅顏池與支援卡池；價格標示 150／1500', () => {
         const lobby = read('assets/scripts/ui/scenes/LobbyScene.ts');
-        assert.isTrue(lobby.includes('this._runLocalGacha(10), 10)'));
-        assert.isTrue(lobby.includes('this._runBeautySummon(drawCount)'));
-        assert.isTrue(lobby.includes('this._runSupportSummon(drawCount)'));
+        // 按鈕統一入口（PROG-2-9117）：次數由按鈕規劃決定，再轉給各池抽卡
+        assert.isTrue(lobby.includes('this._runLocalGacha(plan.count)'));
+        assert.isTrue(lobby.includes('this._runBeautySummon(plan.count)'));
+        assert.isTrue(lobby.includes('this._runSupportSummon(plan.count)'));
         const bar = gachaPullBarTexts();
         assert.equals('150', bar[GACHA_NODES.pullSingleCost]);
         assert.equals('1500', bar[GACHA_NODES.pullTenCost]);

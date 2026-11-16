@@ -7,6 +7,7 @@ import type { GachaHistoryRecord } from '../../core/services/ActionLogStore';
 import type { LocalGachaResultEntry, LocalGachaService } from '../../core/services/LocalGachaService';
 import { ActionLogDebugPanel } from '../panels/ActionLogDebugPanel';
 import { SolidBackground } from '../components/SolidBackground';
+import { describeGachaAction } from '../../core/gacha/GachaButtonRules';
 
 interface OverlayState {
     launcherRoot: Node | null;
@@ -60,6 +61,7 @@ const overlayState: OverlayState = {
 let gachaResultsWindow: ModalWindow | null = null;
 let gachaHistoryWindow: ModalWindow | null = null;
 let gachaErrorWindow: ModalWindow | null = null;
+let gachaInfoWindow: ModalWindow | null = null;
 let isSceneAutoMountInstalled = false;
 
 function formatTimestamp(timestamp: number): string {
@@ -251,6 +253,7 @@ function hasOpenModalWindow(windowRef: ModalWindow | null): boolean {
 function hasOpenDebugWindow(): boolean {
     return hasOpenModalWindow(gachaResultsWindow)
         || hasOpenModalWindow(gachaHistoryWindow)
+        || hasOpenModalWindow(gachaInfoWindow)
         || hasOpenModalWindow(gachaErrorWindow)
         || !!(overlayState.actionLogPanel?.node?.isValid && overlayState.actionLogPanel.node.activeInHierarchy);
 }
@@ -811,10 +814,7 @@ export async function showGachaResults(
     results: LocalGachaResultEntry[],
     onRetry?: (() => void) | undefined,
 ): Promise<void> {
-    if (!DEV) {
-        return;
-    }
-
+    // 沒有轉蛋結果畫面可用時的後備清單，正式版也要能看到結果（PROG-2-9117）
     overlayState.isPanelVisible = false;
 
     destroyWindow(gachaResultsWindow);
@@ -833,18 +833,15 @@ export async function showGachaResults(
     syncDebugChromeVisibility();
 }
 
+/** 轉蛋畫面的「紀錄」鈕：玩家功能，正式版也要開（原本被 DEV 擋掉，點了沒反應，PROG-2-9117） */
 export async function showGachaHistory(data: { total: number; records: GachaHistoryRecord[] }): Promise<void> {
-    if (!DEV) {
-        return;
-    }
-
     overlayState.isPanelVisible = false;
 
     // Expand each record into per-result rows so all drawn generals are visible individually.
     type HistoryItem = { title: string; detail: string; accent?: Color };
     const items: HistoryItem[] = [];
     for (const record of data.records) {
-        const sessionLabel = `${formatTimestamp(record.timestamp)} | ${record.actionType} | draw×${record.drawCount}`;
+        const sessionLabel = `${formatTimestamp(record.timestamp)} | ${describeGachaAction(record.actionType)} | ${record.drawCount} 抽`;
         if (record.results.length === 0) {
             items.push({
                 title: `#${record.seq} | (空)`,
@@ -862,6 +859,8 @@ export async function showGachaHistory(data: { total: number; records: GachaHist
         }
     }
 
+    if (items.length === 0) items.push({ title: '尚無召喚紀錄', detail: '抽過之後會列在這裡' });
+
     destroyWindow(gachaHistoryWindow);
     gachaHistoryWindow = buildListModal(
         'GachaHistoryWindow',
@@ -869,6 +868,14 @@ export async function showGachaHistory(data: { total: number; records: GachaHist
         `共 ${data.total} 筆，最新紀錄在最上方`,
         items,
     );
+    syncDebugChromeVisibility();
+}
+
+/** 轉蛋「詳情 ›」：列出費用、持有、機率、保底（玩家功能，不受 DEV 限制，PROG-2-9117） */
+export function showGachaInfoModal(title: string, summary: string, rows: Array<{ title: string; detail: string }>): void {
+    overlayState.isPanelVisible = false;
+    destroyWindow(gachaInfoWindow);
+    gachaInfoWindow = buildListModal('GachaInfoWindow', title, summary, rows);
     syncDebugChromeVisibility();
 }
 
