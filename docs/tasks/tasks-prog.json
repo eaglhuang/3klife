@@ -6561,6 +6561,52 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9327",
+      "title": "五位初始名將補上第一階專屬奧義；甘寧「百騎劫營」只打敵軍最後排",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-16T22:30:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "六位初始名將只有張飛有奧義，其餘五位只能用通用的全軍突擊。使用者 2026-11-16 核可五位的第一階專屬奧義，總PM 派工：每招沿用現有戰鬥效果，數值先照被沿用那招的原值，實跑後再調。",
+      "related": [
+        "PROG-2-9326"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: done | 驗證: 型別檢查 0 錯；單元測試 7730 全過（新增 StarterGeneralUltimates 5 案）；戰法冒煙測試通過 | 變更: 五個專屬技能 id 沿用既有效果；最後排選目標規則；ultimate-definitions 與 generals 資料各補五筆 | 阻塞: 無；未做到：尚未線上實跑；實際效果與原始描述有四處差異（見完整描述），已照實際效果寫描述文字；二到五階未做",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
