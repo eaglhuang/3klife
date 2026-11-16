@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-16T10:17:34.000Z",
+  "updatedAt": "2026-11-16T10:30:28.000Z",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -2880,32 +2880,49 @@
         "activeVersion": "0002"
       }
     },
-    {
-      "uid": "zhou-tai",
-      "name": "周泰",
-      "standing": {
-        "status": "integrated",
-        "history": [
           {
-            "version": "0002",
-            "file": "standing/zhou_tai__周泰__standing_0002.png",
-            "status": "integrated"
-          }
-        ],
-        "activeVersion": "0002"
+        "uid": "zhou-tai",
+        "name": "周泰",
+        "standing": {
+          "status": "integrated",
+          "history": [
+            {
+              "version": "0002",
+              "file": "standing/zhou_tai__周泰__standing_0002.png",
+              "status": "integrated"
+            }
+          ],
+          "activeVersion": "0002"
+        },
+        "avatar": {
+          "status": "integrated",
+          "history": [
+            {
+              "version": "0002",
+              "file": "avatars/zhou_tai__周泰__avatar_0002.png",
+              "status": "integrated"
+            }
+          ],
+          "activeVersion": "0002"
+        },
+        "battle": {
+          "status": "review-pending",
+          "activeVersion": "0001",
+          "history": [
+            {
+              "version": "0001",
+              "file": "battle/zhou_tai__周泰__battle_0001.png",
+              "status": "review-pending",
+              "sha256": "4ea574bc6a6e5178cd567ba39870cba6d0c1f9c321aebdb4f6a79d7edd10c8",
+              "canvas": "1024x1536 RGBA",
+              "weaponClass": "spear",
+              "poseLabel": "低身橫槊格擋，轉腰反擊",
+              "sourceStanding": "standing/zhou_tai__周泰__standing_0002.png",
+              "note": "依核定站姿保留暗鐵札甲、赤褐內襯與紅頭巾。低身橫槊架擋後轉腰反擊，槊保持筆直，單刃尖頭、鈍尾端；等比例置於中央75%寬安全區，透明背景。候選待使用者檢視，尚未接入遊戲。"
+            }
+          ]
+        }
       },
-      "avatar": {
-        "status": "integrated",
-        "history": [
-          {
-            "version": "0002",
-            "file": "avatars/zhou_tai__周泰__avatar_0002.png",
-            "status": "integrated"
-          }
-        ],
-        "activeVersion": "0002"
-      }
-    },
     {
       "uid": "xu-sheng",
       "name": "徐盛",
