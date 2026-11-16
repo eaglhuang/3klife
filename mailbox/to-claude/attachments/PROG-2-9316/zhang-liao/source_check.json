@@ -1,0 +1,67 @@
+{
+  "schema": "chibi-rig-source-check.v1",
+  "generalId": "zhang_liao",
+  "revision": "draft-01",
+  "files": {
+    "source": "work.png",
+    "weapons": [
+      {
+        "file": "weapon.png",
+        "type": "long crescent ji polearm",
+        "gripPoints": [
+          {
+            "id": "near",
+            "hand": "image-left/lower hand",
+            "sourceImagePoint": {
+              "x": 205,
+              "y": 774
+            },
+            "weaponImagePoint": {
+              "x": 512,
+              "y": 1190
+            }
+          },
+          {
+            "id": "far",
+            "hand": "image-right/upper hand",
+            "sourceImagePoint": {
+              "x": 360,
+              "y": 580
+            },
+            "weaponImagePoint": {
+              "x": 512,
+              "y": 1030
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "sourceImage": {
+    "width": 577,
+    "height": 1250,
+    "format": "PNG RGBA",
+    "transparent": true,
+    "subjectBounds": {
+      "x": 5,
+      "y": 41,
+      "width": 567,
+      "height": 1204
+    },
+    "feetBottomRowZeroBased": 1244,
+    "pose": "neutral 3/4 standing, two hands spaced on one straight polearm shaft"
+  },
+  "weaponImage": {
+    "background": "#00FF00",
+    "orientation": "tip up",
+    "shaft": "straight",
+    "status": "visual draft anchors; pending rig-tool confirmation"
+  },
+  "acceptance": "NOT_RUN",
+  "failCount": null,
+  "warnings": [
+    "Project acceptance script tools/pipeline.py is absent in this checkout.",
+    "Face width, chest-to-face ratio, lighting ratios, and grip-point alignment require formal measurement.",
+    "Grip coordinates are visual draft anchors; Claude rig review pending."
+  ]
+}
