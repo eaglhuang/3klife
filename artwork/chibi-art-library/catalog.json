@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-16T18:08:38Z",
+  "updatedAt": "2026-11-17T02:22:18+08:00",
   "naming": "{id}__{繁體中文名}__chibi_{版本四碼}.png",
   "sourceCanvas": "2048x3072 RGBA suggested; maintain 2:3 full-body transparent canvas",
   "cutoutPolicy": "only cut from an approved source version; preserve source SHA-256 and aligned canvas coordinates",
@@ -714,12 +714,21 @@
       "id": "gan-ning",
       "name": "甘寧",
       "source": {
-        "status": "missing",
-        "activeVersion": null,
-        "versions": []
+        "status": "source-pass",
+        "activeVersion": "0001",
+        "versions": [
+          {
+            "version": "0001",
+            "file": "source/gan-ning__甘寧__chibi_0001.png",
+            "sha256": "8c14d7990e6c729a7a2018bf91694ef5b59136b64746bcf32c54104c2385eba9",
+            "status": "source-pass",
+            "createdAt": "2026-11-17T00:00:00+08:00",
+            "note": "577x1250 RGBA; pipeline accept-source PASS; Zhao Yun chin-to-boot 622px criterion PASS; two hand axes and both grips retained."
+          }
+        ]
       },
       "cutout": {
-        "status": "not-started",
+        "status": "pending",
         "activeVersion": null,
         "versions": []
       }

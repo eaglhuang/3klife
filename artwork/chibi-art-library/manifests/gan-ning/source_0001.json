@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "characterId": "gan-ning",
+  "name": "甘寧",
+  "sourceVersion": "0001",
+  "sourceFile": "artwork/chibi-art-library/source/gan-ning__甘寧__chibi_0001.png",
+  "sha256": "8c14d7990e6c729a7a2018bf91694ef5b59136b64746bcf32c54104c2385eba9",
+  "canvas": "577x1250 RGBA",
+  "pipeline": "C:/Users/User/spine-trial/tools/pipeline.py accept-source gan_ning",
+  "status": "source-pass",
+  "measurements": {
+    "faceWidthPx": 125,
+    "chinToBootPx": 622,
+    "chinToBootTargetPx": [
+      591,
+      653
+    ],
+    "baselineY": 1245,
+    "sourceBoxPx": [
+      29,
+      272,
+      547,
+      1244
+    ],
+    "uniformScaleOnly": true,
+    "weapons": "two hand axes; both handles and blades inside safe frame"
+  },
+  "warnings": [
+    "舊式自動臉寬/頭身比指標低於趙雲參照；依 2026-11-17 委託更正信，以 chin-to-boot 622px ±5% 為來源硬門檻，故只記錄為 advisory。"
+  ],
+  "visualReview": {
+    "identityAndOutfit": "PASS — red-black-gold tiger armor, ponytail and facial scar; both axes visible.",
+    "limbsAndGrip": "PASS — both hands hold separate axes; both boots and legs complete.",
+    "frameAndTransparency": "PASS — complete body on transparent standard canvas with baseline at y=1244.",
+    "animationCutout": "PENDING — no Gan Ning-specific clean base/cut masks yet; do not reuse another character masks."
+  },
+  "cutout": {
+    "status": "pending",
+    "reason": "尚未製作甘寧專屬 clean base 與切片遮罩。"
+  },
+  "createdAt": "2026-11-17T02:22:18+08:00"
+}
