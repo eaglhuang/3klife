@@ -396,7 +396,7 @@ export function extraAttackHitsOf(unit: TroopUnit, adjacentToMaleGeneral: boolea
  * 己方沒有士氣的部隊獲得士氣 +teamMoraleAura（多支取最大值）。回傳受惠部隊數。
  */
 export function applyTallyTeamMoraleAura(units: Iterable<TroopUnit>, actingFaction: Faction): number {
-  const own = [...units].filter((u) => u.faction === actingFaction && !u.isDead());
+  const own = Array.from(units).filter((u) => u.faction === actingFaction && !u.isDead());
   let bonus = 0;
   for (const u of own) bonus = Math.max(bonus, passiveOf(u)?.teamMoraleAura ?? 0);
   if (bonus <= 0) return 0;
@@ -444,7 +444,7 @@ export function applyTallyDefection(
   isGeneralUnit: (unit: TroopUnit) => boolean,
   random: () => number,
 ): TroopUnit[] {
-  const all = [...units];
+  const all = Array.from(units);
   const defected: TroopUnit[] = [];
   for (const owner of all) {
     if (owner.faction !== actingFaction || owner.isDead()) continue;

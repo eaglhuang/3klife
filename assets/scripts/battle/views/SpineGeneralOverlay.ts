@@ -52,9 +52,14 @@ export class SpineUnitOverlay {
     const controlled = this.duel?.ids;
     if (this.duel) {
       const duel = this.duel;
-      const result = duel.core.step(dt);
-      duel.ids.forEach((id, i) => { const e = this.entries.get(id); if (e) this.apply(e, result.units[i]); });
-      if (result.phase === 'done') {
+      // 演出出錯也要收尾：這裡丟例外會每一格都丟，單挑永遠不結束、回合整個卡死（PROG-2-9355）
+      let phase: string = 'done';
+      try {
+        const result = duel.core.step(dt);
+        duel.ids.forEach((id, i) => { const e = this.entries.get(id); if (e) this.apply(e, result.units[i]); });
+        phase = result.phase;
+      } catch (error) { console.error('[SpineUnitOverlay] 單挑演出出錯，直接收尾', error); }
+      if (phase === 'done') {
         this.duel = null;
         for (const id of duel.ids) if (this.pendingRemovals.has(id)) this.remove(id);
         duel.resolve(true);
