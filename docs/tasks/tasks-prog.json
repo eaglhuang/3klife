@@ -6883,6 +6883,52 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9334",
+      "title": "教學戰兵池從 8000 降到 5000；軍勢用盡時跳提示；實跑工具記錄奧義打掉多少血",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "線上實跑 7 場，我方每回合派 2 隊、第 1～6 回合共 12 隊後兵池才用完，敵方全場只有 6 隊且分波進場，我方幾乎沒有戰損。總PM 2026-11-17 裁決採方案 A：教學戰兵池降到 5000，並確認兵池見底時畫面有明確提示。",
+      "related": [
+        "PROG-2-9330"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；單元測試 7743 全過（新增 TutorialSortiePool 2 案）；尚未線上實跑 | 變更: tutorialSortiePoolMin=5000；軍勢見底跳一次提示並寫戰報；派兵失敗文字改寫；工具記奧義前後敵隊損血 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
