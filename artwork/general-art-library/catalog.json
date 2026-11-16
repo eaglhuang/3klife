@@ -2168,6 +2168,16 @@
             "file": "battle/xun_yu__荀彧__battle_0001.png",
             "status": "review-pending",
             "poseSelection": "B"
+          },
+          {
+            "version": "0002",
+            "file": "battle/xun_yu__荀彧__battle_0002.png",
+            "status": "review-pending",
+            "poseSelection": "B",
+            "sha256": "78C7F74E02ABBA0910A10B0F86299E66D97803EA4D04B87139A2A2233F21D741",
+            "canvas": "1024x1536 RGBA",
+            "alpha16BBox": "x=109,y=68,w=804,h=1425",
+            "note": "B 姿勢重繪候選：三分之四側身向鏡頭，羽扇前伸施策；完整人物，透明背景，畫面寬度略收，待使用者審核。"
           }
         ]
       },
