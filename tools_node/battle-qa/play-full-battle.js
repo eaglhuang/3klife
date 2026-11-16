@@ -595,6 +595,11 @@ async function maybeUltimate(page, opt, s, turnRec) {
     await sleep(2500);
     const done = await ev(page, pageSnapshot);
     rec.cast = !!done.playerGeneral && done.playerGeneral.sp < pg.sp;
+    // 施放前後敵方各隊生命的差額：看得出這一招打了誰、打多少（暈眩之類不扣血的效果不會出現在這裡）
+    const hpBefore = new Map(s.units.filter((u) => u.side === '敵方').map((u) => [u.id, u]));
+    const hpAfter = new Map(done.units.filter((u) => u.side === '敵方').map((u) => [u.id, u.hp]));
+    rec.enemyHits = [...hpBefore.values()].map((u) => ({ name: u.name, depth: u.depth, lost: u.hp - (hpAfter.has(u.id) ? hpAfter.get(u.id) : 0), killed: !hpAfter.has(u.id) })).filter((h) => h.lost > 0);
+    rec.enemyGeneralLost = s.enemyGeneral && done.enemyGeneral ? s.enemyGeneral.hp - done.enemyGeneral.hp : 0;
   } else if (after.texts.includes('取消')) {
     // 沒有可選的奧義（例如「未配置奧義」）：關掉選單，免得擋住後面的操作
     rec.unassigned = after.texts.includes('未配置奧義');
@@ -602,7 +607,7 @@ async function maybeUltimate(page, opt, s, turnRec) {
     await sleep(600);
   }
   rep.ultimates.push(rec);
-  log(`奧義：第 ${turnRec.turn} 回合，選擇 ${rec.picked || '（找不到技能選項）'}，${rec.cast ? '已施放（SP 下降）' : '未確認施放'}`);
+  log(`奧義：第 ${turnRec.turn} 回合，選擇 ${rec.picked || '（找不到技能選項）'}，${rec.cast ? '已施放（SP 下降）' : '未確認施放'}${rec.enemyHits ? `；敵隊損血 ${rec.enemyHits.length ? rec.enemyHits.map((h) => `${h.name}@排${h.depth + 1} -${h.lost}${h.killed ? '（擊潰）' : ''}`).join('、') : '無'}；敵主將 -${rec.enemyGeneralLost}` : ''}`);
 }
 
 // 計謀按鈕文字以「計謀」開頭（後面接點數）；每回合點一次，記錄點了之後畫面多出的文字。
