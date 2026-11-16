@@ -181,9 +181,9 @@ import { RED_FACE_SHOW_MAX_ROWS, RedFaceGalleryController, RedFaceShowcaseContro
 import { GACHA_NODES, GACHA_POOL_INDEX, GACHA_POOLS, GachaPoolDef, RED_FACE_SECTION_ROW_BUTTON } from '../core/GachaScreenNodes';
 import { LocalGachaApi } from '../../core/gacha/LocalGachaApi';
 import { parseGachaMainPools, type GachaApi, type GachaMainPoolConfig } from '../../core/gacha/GachaApi';
-import { gachaApiView, gachaAutoSizeNodes } from '../core/GachaApiTexts';
+import { gachaApiView, gachaAutoSizeNodes, gachaHeroIdOf } from '../core/GachaApiTexts';
 import { buildPoolDetailRows, checkGachaAffordable, planGachaButton, syncMainPoolCosts, type GachaButtonKind } from '../../core/gacha/GachaButtonRules';
-import { bindGachaPoolDetail, updateGachaWalletStrip } from '../core/GachaScreenExtras';
+import { bindGachaPoolDetail, setGachaTexts, textLabelOf, updateGachaWalletStrip, raiseGachaWalletStrip } from '../core/GachaScreenExtras';
 import { GachaPoolSwitcher } from '../core/GachaPoolSwitcher';
 import { PORTRAIT_GALLERY_PAGE_SIZE } from '../core/PortraitGallery';
 import { FaceMarks, PORTRAIT_FRAME_SPEC, PortraitFrameSpec, SHOWCASE_PORTRAIT_SPEC, fitPortraitInFrame } from '../core/PortraitFrameFit';
@@ -7215,19 +7215,30 @@ export class LobbyScene extends Component {
         const view = gachaApiView(pool, dto, wallet, nameOf, Date.now());
         // 動態文字：依內容撐開，並關掉字元快取（CHAR 模式下原稿沒出現過的字畫不出來）
         for (const name of [...gachaAutoSizeNodes(pool), GACHA_NODES.balance]) {
-            const label = binder.getNode(name)?.getComponent(Label);
+            const node = binder.getNode(name);
+            const label = textLabelOf(node);
             if (!label) continue;
             label.cacheMode = Label.CacheMode.NONE;
-            if (name !== GACHA_NODES.balance) label.overflow = Label.Overflow.NONE;
+            // 「我的餘額」值框原稿只有約 104 寬，「靈玉 1,280」放進去會被縮到看不清；放寬到 170 並維持置中
+            if (name === GACHA_NODES.balance) {
+                const ui = label.node.getComponent(UITransform);
+                if (ui && ui.width < 170) ui.setContentSize(170, ui.height);
+                label.horizontalAlign = Label.HorizontalAlign.CENTER;
+                label.fontSize = 30;
+                label.lineHeight = 36;
+            }
+            // 外框（panel）裡的 Label 維持原稿尺寸，只有節點本身是 Label 的才依內容撐開
+            if (name !== GACHA_NODES.balance && node?.getComponent(Label) === label) label.overflow = Label.Overflow.NONE;
         }
-        binder.setTexts(view.texts);
+        setGachaTexts(binder, view.texts);
         binder.setActives(view.actives);
         // 保底條：填色寬度＝外框寬 × 進度
         const track = binder.getNode(GACHA_NODES.pityTrack)?.getComponent(UITransform);
         const fill = binder.getNode(GACHA_NODES.pityFill)?.getComponent(UITransform);
         if (track && fill) fill.setContentSize(Math.max(0, track.width * view.pityRatio), fill.height);
-        const heroId = pool.key === 'limited' ? dto.featuredGeneralIds[0] : dto.showcaseGeneralId;
+        const heroId = gachaHeroIdOf(pool, dto);
         if (heroId) this._applyGachaBannerPortrait(binder.getNode(pool.art), heroId);
+        raiseGachaWalletStrip(host.node);
     }
 
     private _gachaSkinVariants: Record<string, { slots: Record<string, SkinSlot> }> | null = null;
