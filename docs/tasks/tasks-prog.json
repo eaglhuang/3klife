@@ -7722,6 +7722,53 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9355",
+      "title": "張飛單挑後回合卡死的根因：長單挑挑招在網頁版變成空招，演出每一格都丟例外",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "線上 cc3ac66a7 用張飛重打：第 3 回合單挑後等 150 秒、補點結束回合 15 次都不前進，主控台同一個錯誤 8701 筆（startExchange 讀不到 attacker）。原因：單挑超過 4 招時，挑招程式對集合用展開語法，網頁版建置把整個集合當成一個元素，招式變成空值，演出每一格都丟例外、永遠不結束；PROG-2-9350 讓安全計時在演出期間暫停，所以變成永久卡死。打 4 招以內的武將不受影響，單元測試環境也測不到。",
+      "related": [
+        "PROG-2-9350",
+        "PROG-2-9354"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過；新增單挑演出測試；線上要等發版後用張飛重打確認 | 變更: 挑招改 Array.from、缺招直接收尾、演出 15 秒硬上限、演出出錯也收尾；符將被動兩處同類寫法一併改 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
