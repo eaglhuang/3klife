@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-16",
+  "updatedAt": "2026-11-16T12:14:02.654Z",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -7565,7 +7565,7 @@
         ]
       },
       "battle": {
-        "activeVersion": "0002",
+        "activeVersion": "0003",
         "status": "review-pending",
         "displayStatus": "not-yet-verified",
         "history": [
@@ -7590,6 +7590,18 @@
             "weaponClass": "jian sword",
             "sourceStanding": "standing/diao_chan__貂蟬__standing_0002.png",
             "note": "New transparent candidate; eyes corrected toward camera; previewed at 125px and 250px. Awaiting owner review; not integrated into runtime."
+          },
+          {
+            "version": "0003",
+            "file": "battle/diao_chan__貂蟬__battle_0003.png",
+            "status": "review-pending",
+            "sha256": "61dbb8aa3360b3fdaea4df473954cdae731e7341b9169c5967bee322527bd31b",
+            "canvas": "1024x1536 RGBA",
+            "poseSelection": "優雅前踏的斜向拔劍橫掃",
+            "gaze": "微側臉看向鏡頭",
+            "weaponClass": "jian sword (creative game design; not asserted as historical)",
+            "sourceStanding": "standing/diao_chan__貂蟬__standing_0002.png",
+            "note": "依正式站姿保留貂蟬紅棕長髮、花飾與紫白配色；成人女性、優雅戰鬥動作。透明全身候選，未核准、未接入 runtime."
           }
         ]
       }
