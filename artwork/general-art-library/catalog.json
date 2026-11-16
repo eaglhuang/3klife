@@ -7649,32 +7649,49 @@
         "activeVersion": "0002"
       }
     },
-    {
-      "uid": "xiahou-ling-nv",
-      "name": "夏侯令女",
-      "standing": {
-        "status": "integrated",
-        "history": [
-          {
-            "version": "0002",
-            "file": "standing/xiahou_ling_nv__夏侯令女__standing_0002.png",
-            "status": "integrated"
-          }
-        ],
-        "activeVersion": "0002"
-      },
-      "avatar": {
-        "status": "integrated",
-        "history": [
-          {
-            "version": "0002",
-            "file": "avatars/xiahou_ling_nv__夏侯令女__avatar_0002.png",
-            "status": "integrated"
-          }
-        ],
-        "activeVersion": "0002"
+        {
+  "uid": "xiahou-ling-nv",
+  "name": "夏侯令女",
+  "standing": {
+    "status": "integrated",
+    "history": [
+      {
+        "version": "0002",
+        "file": "standing/xiahou_ling_nv__夏侯令女__standing_0002.png",
+        "status": "integrated"
       }
-    },
+    ],
+    "activeVersion": "0002"
+  },
+  "avatar": {
+    "status": "integrated",
+    "history": [
+      {
+        "version": "0002",
+        "file": "avatars/xiahou_ling_nv__夏侯令女__avatar_0002.png",
+        "status": "integrated"
+      }
+    ],
+    "activeVersion": "0002"
+  },
+  "battle": {
+    "status": "review-pending",
+    "activeVersion": "0001",
+    "history": [
+      {
+        "version": "0001",
+        "file": "battle/xiahou_ling_nv__夏侯令女__battle_0001.png",
+        "status": "review-pending",
+        "sha256": "9b52bbf8a4d2aeb512002bbf699bf58acbfc6b7c20c10aa64f785e2655c0e535",
+        "canvas": "1024x1536 RGBA",
+        "weaponClass": "message-case",
+        "poseLabel": "低身護信推掌",
+        "sourceStanding": "standing/xiahou_ling_nv__夏侯令女__standing_0002.png",
+        "note": "以夏侯令女核定站姿為唯一角色造型參考；以低重心護信前踏呈現臨戰堅毅，不增添未見於身份設定的武器。透明全身候選，待使用者檢視。"
+      }
+    ]
+  }
+},
     {
       "uid": "gan-shi",
       "name": "甘氏",
