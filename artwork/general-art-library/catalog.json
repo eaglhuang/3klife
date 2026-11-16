@@ -6699,6 +6699,21 @@
         ],
         "activeVersion": "0002"
       },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/guan_ning__管寧__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "6de5ba476d14cbd2c14ac064e09d3e0c612d2615d6757050d90cbb1e8a302eeb",
+            "canvas": "1024x1536 RGBA PNG",
+            "poseCode": "護卷止戰",
+            "note": "依核定站姿維持管寧藍灰文士袍與頭巾；以護卷、前踏抬掌止戰呈現克制的戰場瞬間，不配置兵器。候選待審。"
+          }
+        ]
+      },
       "avatar": {
         "status": "integrated",
         "history": [
