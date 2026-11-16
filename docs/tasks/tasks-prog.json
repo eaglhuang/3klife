@@ -6189,6 +6189,52 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9319",
+      "title": "戰法冒煙測試：以自身或我方為對象的戰技不再要求填自動瞄準方式",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-16T16:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 2026-11-16 要求對照：npm run test:battle-skill-smoke 在乾淨 master 上原本就有 1 案失敗（tally-changban-root 等 9 個戰技沒填 autoAimMode）。這 9 個都是以自身或我方為對象，不需要挑落點；autoAimMode 目前也沒有執行期程式讀取。該測試不在 run-cli 與 CI 內，所以一直沒被發現。",
+      "related": [
+        "PROG-2-9318"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: done | 驗證: 戰法冒煙測試 71 案全過（修改前在乾淨 master 上 1 案失敗） | 變更: 只改測試；自身、周身、我方全體、我方單體的戰技免填 autoAimMode | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
