@@ -30,10 +30,10 @@ export interface BattleEnemyDeployPhaseContext {
 }
 
 export function executeBattleEnemyDeployPhase(context: BattleEnemyDeployPhaseContext): void {
-  // 教學限定設計假設：首回合練習部署，第2/4/6回合各一隊，之後不再補兵。
+  // 教學限定：出兵數照 GAME_CONFIG.tutorialEnemyDeployByTurn 的波次表，表外的回合不再補兵。
   // 不改兵種數值、糧草、主將、基地血量或一般戰鬥難度公式。
   const deployCount = context.tutorialBattle
-    ? ([2, 4, 6].includes(context.turn) ? 1 : 0)
+    ? (GAME_CONFIG.tutorialEnemyDeployByTurn[context.turn - 1] ?? 0)
     : getAIDeployCount({ difficultyBonus: context.difficultyBonus }, context.turn);
   const decisions = context.enemyAi.decideDeploy(context.state, context.turnManager.enemyFood, deployCount);
   const deployDepth = GAME_CONFIG.GRID_DEPTH - 1;

@@ -63,6 +63,14 @@ export const GAME_CONFIG = {
   seedTacticRequiresFullSp: false,
   /** 首戰教學戰：開場我方主將 SP 直接給滿，讓新玩家第一場就能放一次奧義（總PM 2026-11-16 裁決） */
   tutorialStartSpFull: true,
+  /**
+   * 首戰教學戰：敵方每回合出兵數，索引 = 回合數 - 1，超出陣列就不再出兵。
+   * 原因：原本只在第 2、4、6 回合各出 1 隊，實跑時敵方同時在場最多 2 隊、我方 10 隊以上，沒有壓力。
+   * 目標是敵方同時在場 4～6 隊，玩家仍能在 10 回合內打贏（總PM 2026-11-16 裁決）。第 1 回合留給玩家練習部署。
+   */
+  tutorialEnemyDeployByTurn: [0, 2, 1, 1, 1, 1, 1] as readonly number[],
+  /** 首戰教學戰：玩家每回合派兵上限。比一般戰鬥少 1 隊，讓 8000 軍勢不會在前 5 回合就派光（總PM 2026-11-16 裁決）。 */
+  tutorialPlayerDeployPerTurn: 2,
   /** 首戰教學戰：敵主將血量倍率，讓十回合內有機會真的打贏（總PM 2026-11-16 裁決） */
   tutorialEnemyGeneralHpRatio: 0.5,
   /**

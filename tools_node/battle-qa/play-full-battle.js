@@ -14,7 +14,7 @@
  *   --url <網址>           預覽網址（預設 http://localhost:7456）
  *   --browser-url <網址>   既有 Chrome 遠端除錯位址（預設 http://127.0.0.1:9333）；連不上會自行啟動 Chrome
  *   --duel accept|reject   單挑邀請回應（預設 accept）
- *   --ultimate             SP 滿時施放奧義並選第一個技能（最佳努力，尚未在遊戲實測過選技能流程）
+ *   --ultimate             SP 滿時點「發動」並選第一個技能，以 SP 是否下降判定有沒有放出去；同時每回合點一次計謀按鈕
  *   --max-turns <n>        回合上限（預設 60）
  *   --out <資料夾>          輸出資料夾（預設系統暫存目錄下 battle-qa-<時間戳>）
  *   --fresh                開預覽前清空該來源的 localStorage／sessionStorage／IndexedDB（全新玩家），並改走真實大廳流程
@@ -296,6 +296,7 @@ const rep = {
   turns: [],
   duels: [],
   ultimates: [],
+  tactics: [],
   tutorialDismissed: 0,
   consoleErrors: [],
   pageErrors: [],
@@ -557,22 +558,39 @@ async function tryDeploy(page, s, turnRec, opt) {
   if (!turnRec.deployAttempts.length) turnRec.deploy = stop;
 }
 
+// 奧義按鈕在 SP 滿時顯示「發動」（i18n ui.ultimate.ready）；點了會開技能選單，選第一招。
+// 以施放後 SP 是否下降判定有沒有真的放出去，並記在報告裡。
 async function maybeUltimate(page, s, turnRec) {
   const pg = s.playerGeneral;
-  if (!pg || !(pg.sp >= pg.maxSp) || !s.texts.includes('奧義')) return;
+  if (!pg || !(pg.sp >= pg.maxSp) || !s.texts.includes('發動')) return;
   const before = new Set(s.texts);
-  await tapText(page, '奧義');
+  await tapText(page, '發動');
   await sleep(1200);
   const after = await ev(page, pageSnapshot);
   const candidates = after.texts.filter((t) => !before.has(t) && t.length >= 2 && t.length <= 14 && !['取消', '返回', '關閉'].includes(t));
-  const rec = { turn: turnRec.turn, opened: true, candidates: candidates.slice(0, 10), picked: null };
+  const rec = { turn: turnRec.turn, opened: true, candidates: candidates.slice(0, 10), picked: null, cast: false };
   if (candidates.length) {
     rec.picked = candidates[0];
     await tapText(page, candidates[0]);
-    await sleep(800);
+    await sleep(2500);
+    const done = await ev(page, pageSnapshot);
+    rec.cast = !!done.playerGeneral && done.playerGeneral.sp < pg.sp;
   }
   rep.ultimates.push(rec);
-  log(`奧義：第 ${turnRec.turn} 回合，選擇 ${rec.picked || '（找不到技能選項）'}`);
+  log(`奧義：第 ${turnRec.turn} 回合，選擇 ${rec.picked || '（找不到技能選項）'}，${rec.cast ? '已施放（SP 下降）' : '未確認施放'}`);
+}
+
+// 計謀按鈕文字以「計謀」開頭（後面接點數）；每回合點一次，記錄點了之後畫面多出的文字。
+async function maybeTactic(page, s, turnRec) {
+  const label = s.texts.find((t) => /^計謀/.test(t));
+  if (!label) return;
+  const before = new Set(s.texts);
+  await tapText(page, label);
+  await sleep(1500);
+  const after = await ev(page, pageSnapshot);
+  const fresh = after.texts.filter((t) => !before.has(t)).slice(0, 8);
+  rep.tactics.push({ turn: turnRec.turn, label: label.replace(/\s+/g, ' '), newTexts: fresh });
+  log(`計謀：第 ${turnRec.turn} 回合點「${label.replace(/\s+/g, ' ')}」，畫面新增 ${JSON.stringify(fresh)}`);
 }
 
 function brief(s) {
@@ -665,6 +683,7 @@ async function playBattle(page, opt) {
         ready = await ev(page, pageSnapshot);
       }
       if (opt.ultimate) await maybeUltimate(page, ready, cur);
+      if (opt.ultimate) await maybeTactic(page, await ev(page, pageSnapshot), cur);
       cur.supplyStart = await ev(page, pageSupply);
       await tryDeploy(page, ready, cur, opt);
       cur.supplyEnd = await ev(page, pageSupply);
@@ -827,9 +846,14 @@ function writeReports(opt, ok) {
     for (const d of rep.duels) lines.push(`- 第 ${d.turn} 回合：點「${d.choice}」（${d.at}）`);
     lines.push('');
   }
+  if (rep.tactics.length) {
+    lines.push('## 計謀');
+    for (const t of rep.tactics) lines.push(`- 第 ${t.turn} 回合：點「${t.label}」，畫面新增 ${JSON.stringify(t.newTexts)}`);
+    lines.push('');
+  }
   if (rep.ultimates.length) {
     lines.push('## 奧義');
-    for (const u of rep.ultimates) lines.push(`- 第 ${u.turn} 回合：選項 ${JSON.stringify(u.candidates)}，選擇 ${u.picked || '無'}`);
+    for (const u of rep.ultimates) lines.push(`- 第 ${u.turn} 回合：選項 ${JSON.stringify(u.candidates)}，選擇 ${u.picked || '無'}，${u.cast ? '已施放' : '未確認施放'}`);
     lines.push('');
   }
 
