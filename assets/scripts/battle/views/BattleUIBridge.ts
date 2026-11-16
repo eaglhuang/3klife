@@ -162,8 +162,6 @@ const DUEL_FALLBACK_MAX_GAP_SECONDS = 0.4;
 const DUEL_FALLBACK_MIN_GAP_SECONDS = 0.06;
 /** 最後一招後停一下再出結算，讓玩家看到最後的血量 */
 const DUEL_FALLBACK_END_HOLD_SECONDS = 0.5;
-/** 軍勢見底提示延後幾秒才跳：要晚於換回合當下的其他提示（最長 2.5 秒），才不會被蓋掉（PROG-2-9338） */
-const POOL_NOTICE_DELAY_SECONDS = 2.8;
 
 /** 逐招間隔：招數少時每招 0.4 秒，招數多時壓縮到總長約 2.4 秒 */
 export function duelHitGapSeconds(hitCount: number): number {
@@ -498,11 +496,8 @@ export class BattleUIBridge {
     const poolEmpty = !!sortie && isSortiePoolExhausted(sortie);
     if (poolEmpty && !this._poolEmptyNoticed) {
       this.appendLog(SORTIE_POOL_EXHAUSTED_LINE);
-      // 提示一次只顯示一句、後到的會蓋掉前面的；換回合當下常同時跳「殘局爆發」等提示，
-      // 線上實跑確認這句一出現就被蓋掉。延後到那些提示播完再跳（PROG-2-9338）
-      const showPoolNotice = () => c.deployRuntime?.showToast(SORTIE_POOL_EXHAUSTED_LINE, 3);
-      if (typeof this.scene?.scheduleOnce === 'function') this.scene.scheduleOnce(showPoolNotice, POOL_NOTICE_DELAY_SECONDS);
-      else showPoolNotice();
+      // 換回合當下常同時跳「殘局爆發」等提示；提示元件會排隊依序播，不用自己延後（PROG-2-9341）
+      c.deployRuntime?.showToast(SORTIE_POOL_EXHAUSTED_LINE, 3);
     }
     this._poolEmptyNoticed = poolEmpty;
     if (state && state.wisdomTriggerCount < this._wisdomTriggersLogged) this._wisdomTriggersLogged = 0;

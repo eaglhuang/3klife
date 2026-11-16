@@ -7162,6 +7162,53 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9341",
+      "title": "戰場提示連發時排隊依序顯示，不再後一句蓋掉前一句",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "戰場換回合常同時跳兩三句提示（殘局爆發、軍勢已用盡、敵軍來襲），玩家只看得到最後一句。原因：戰場用的提示元件 ToastMessageComposite 沒有接上既有的排隊邏輯 ToastQueue（大廳版 ToastMessage 在 PROG-2-1775 就有）。PROG-2-9338 用延後 2.8 秒只救了一句，總PM 2026-11-17 裁決改成通用排隊。",
+      "related": [
+        "PROG-2-9338",
+        "PROG-2-1775"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；單元測試 7753 全過；戰法冒煙全過；尚未在畫面上目視 | 變更: ToastMessageComposite 接上 ToastQueue；拿掉軍勢提示延後 2.8 秒 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
