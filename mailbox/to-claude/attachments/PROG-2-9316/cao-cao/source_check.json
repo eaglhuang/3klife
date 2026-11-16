@@ -1,0 +1,46 @@
+{
+  "schema": "chibi-rig-source-check.v1",
+  "generalId": "cao_cao",
+  "revision": "draft-01",
+  "files": {
+    "source": "work.png",
+    "weapons": [
+      {
+        "file": "weapon.png",
+        "hand": "image-left closed grip",
+        "gripPoint": {
+          "x": 512,
+          "y": 1180,
+          "status": "visual draft anchor; pending rig-tool confirmation"
+        }
+      }
+    ]
+  },
+  "sourceImage": {
+    "width": 577,
+    "height": 1250,
+    "format": "PNG RGBA",
+    "transparent": true,
+    "subjectBounds": {
+      "x": 86,
+      "y": 41,
+      "width": 405,
+      "height": 1204
+    },
+    "feetBottomRowZeroBased": 1244,
+    "pose": "neutral 3/4 standing, image-left fist closed for sword grip, other hand relaxed"
+  },
+  "weaponImage": {
+    "background": "#00FF00",
+    "type": "straight Chinese jian",
+    "orientation": "vertical, tip up",
+    "status": "visual draft anchor; pending rig-tool confirmation"
+  },
+  "acceptance": "NOT_RUN",
+  "failCount": null,
+  "warnings": [
+    "Project acceptance script tools/pipeline.py is absent in this checkout.",
+    "Face width, chest-to-face ratio, lighting ratios, and grip alignment pending formal measurement.",
+    "This is a review candidate, not a rig-accepted source."
+  ]
+}
