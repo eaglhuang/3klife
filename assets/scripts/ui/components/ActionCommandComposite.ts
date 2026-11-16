@@ -20,7 +20,7 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
  *
  * Unity 對照：UltimateButtonController + ActionBtnGroup，但透過 CompositePanel 統一管理
  */
-import { _decorator, Button, Color, Label, Node, Sprite, Tween, tween, UITransform, Vec3 } from 'cc';
+import { _decorator, Button, Canvas, Color, Label, Node, Sprite, Tween, tween, UITransform, Vec3, Widget } from 'cc';
 import { ULTIMATE_READY_PULSE, ultimateRingState } from '../../core/systems/UltimateRingView';
 import { EVENT_NAMES, Faction } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
@@ -61,7 +61,6 @@ export class ActionCommandComposite extends CompositePanel {
     private _tacticsButtonCaption = '計謀';
     private _tacticsLabel: Label  | null = null;
     private _ultimateBtnNode: Node | null = null;
-    private _ultimatePopupHost: Node | null = null;
     private _ultimateSkills: UltimateSkillItem[] = [];
     /** 本場玩家已施放的奧義 skillId（PROG-2-1512） */
     private readonly _usedUltimateSkillIds = new Set<string>();
@@ -210,7 +209,6 @@ export class ActionCommandComposite extends CompositePanel {
         
         // 奧義大圓點擊
         this._ultimateBtnNode = binder.getNode('UltimateBtn');
-        this._ultimatePopupHost = binder.getNode('UltimatePopup');
         this._ultimateBtnNode?.on(Button.EventType.CLICK, this._onUltimateClick, this);
 
         // 結束回合、計謀、單挑
@@ -321,18 +319,33 @@ export class ActionCommandComposite extends CompositePanel {
         }
 
         if (!this.ultimateSelectPopup) {
-            const popupNode = this._ultimatePopupHost ?? new Node('UltimateSelectPopup');
-            if (!popupNode.parent) {
-                this.node.addChild(popupNode);
-            }
-            this.ultimateSelectPopup = popupNode.getComponent(UltimateSelectPopup) ?? popupNode.addComponent(UltimateSelectPopup);
+            this.ultimateSelectPopup = this._createUltimatePopupNode().addComponent(UltimateSelectPopup);
         }
 
         const skills = this._ultimateSkills.length > 0
             ? markUsedUltimates(this._ultimateSkills, this._usedUltimateSkillIds)
             : [{ skillId: UNASSIGNED_ULTIMATE_SKILL_ID, label: services().i18n.t('ui.ultimate.unassigned'), costSp: this._maxSp }];
 
-        this.ultimateSelectPopup.show(skills, this._ultimateBtnNode ?? undefined);
+        this.ultimateSelectPopup.show(skills);
+    }
+
+    /**
+     * 奧義選單要鋪滿整個畫面：掛在 Canvas 底下並四邊貼齊，遮罩與底板才有尺寸、卡片才能置中。
+     * 原本掛在操作列裡一個 220×0 的節點上，遮罩與底板高度都是 0，卡片被擠在右下角、「取消」疊在「結束回合」上（PROG-2-9328）。
+     * Unity 對照：把彈窗放到全螢幕的 Overlay Canvas，而不是塞在某個按鈕群組的 RectTransform 底下。
+     */
+    private _createUltimatePopupNode(): Node {
+        const popupNode = new Node('UltimateSelectPopup');
+        popupNode.layer = this.node.layer;
+        const canvasNode = this.node.scene?.getComponentInChildren(Canvas)?.node ?? this.node;
+        canvasNode.addChild(popupNode);
+        const canvasSize = canvasNode.getComponent(UITransform)?.contentSize;
+        const transform = popupNode.addComponent(UITransform);
+        if (canvasSize) transform.setContentSize(canvasSize.width, canvasSize.height);
+        const widget = popupNode.addComponent(Widget);
+        widget.isAlignTop = widget.isAlignBottom = widget.isAlignLeft = widget.isAlignRight = true;
+        widget.top = widget.bottom = widget.left = widget.right = 0;
+        return popupNode;
     }
 
     /** 結束回合：通知父節點（BattleScene 監聽 this.node 的 'endTurn' 事件） */

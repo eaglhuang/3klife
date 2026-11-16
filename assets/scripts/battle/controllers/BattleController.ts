@@ -216,7 +216,9 @@ export class BattleController {
       combatResolver: this.combatResolver,
       getPlayerGeneralUnitId: () => this.playerGeneralUnitId,
       getEnemyGeneralUnitId: () => this.enemyGeneralUnitId,
-      getTacticConditions: (tacticId) => this.tacticDefinitionMap.get(tacticId)?.tcond as TacticCondition[] | undefined,
+      getTacticConditions: (tacticId) => (this._tutorialBattle && GAME_CONFIG.tutorialIgnoreTacticConditions)
+        ? undefined
+        : this.tacticDefinitionMap.get(tacticId)?.tcond as TacticCondition[] | undefined,
       getUltimateVitalityCostPct: (ultimateId) => findUltimateVitalityCostPct(ultimateId),
       getUltimateDamageDef: (ultimateId) => findUltimateDamageDef(ultimateId),
       getUltimateSpecialRule: (ultimateId) => findUltimateSpecialRule(ultimateId),

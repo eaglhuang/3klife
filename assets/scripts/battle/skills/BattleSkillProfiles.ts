@@ -670,7 +670,14 @@ Object.assign(PROFILE_BY_SKILL_ID, {
   // 孫策 小霸王之威：沿用呂布的扇形傷害
   'sun-ce-conqueror': reuseProfile('sun-ce-conqueror', 'lu-bu-rampage', { battleLogKey: 'skill.sun_ce_conqueror.hit' }),
   // 甘寧 百騎劫營：沿用張飛的暈眩，但只打敵方最後排
-  'gan-ning-night-raid': reuseProfile('gan-ning-night-raid', 'zhang-fei-roar', { enemyRearRowOnly: true, battleLogKey: 'skill.gan_ning_night_raid.hit' }),
+  // 百騎劫營：沿用張飛怒吼的暈眩，改成只打最後排，並加上傷害（走傷害型結算，打完還活著的才暈）
+  'gan-ning-night-raid': reuseProfile('gan-ning-night-raid', 'zhang-fei-roar', {
+    enemyRearRowOnly: true,
+    effectKind: 'damage',
+    coefficient: GAME_CONFIG.ganNingNightRaidCoefficient,
+    scalingStat: 'str',
+    battleLogKey: 'skill.gan_ning_night_raid.hit',
+  }),
 } satisfies Record<string, BattleSkillProfile>);
 
 // --- 虎符特殊戰法殼（PROG-2-0928，TRP-15）：規格 34 條中尚未實作效果的 23 條 ---

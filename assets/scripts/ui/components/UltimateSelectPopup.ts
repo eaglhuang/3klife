@@ -55,7 +55,6 @@ export class UltimateSelectPopup extends UIPreviewBuilder {
     private _cardRestPos: Vec3 | null = null;
     private _scrollPanel: Node | null = null;
     private _scrollView: ScrollView | null = null;
-    private _anchorNode: Node | null = null;
     /** show() 在 build 完成前若被呼叫，暫存技能列表，onReady 後自動重播 */
     private _pendingSkills: UltimateSkillItem[] | null = null;
 
@@ -134,17 +133,15 @@ export class UltimateSelectPopup extends UIPreviewBuilder {
      *
      * Unity 對照：UltimateSkillSelectPopup.Show(SkillData[] skills)
      */
-    show(skills: UltimateSkillItem[], anchorNode?: Node): void {
+    show(skills: UltimateSkillItem[]): void {
         // build 尚未完成 → 暫存，onReady 後自動重播（消除 addComponent 後立即呼叫的競態）
         if (!this._binder) {
             this._pendingSkills = skills;
-            this._anchorNode = anchorNode ?? null;
             this.node.active = true;          // 觸發 Cocos 呼叫 onLoad → _build → onReady
             return;
         }
 
         this._skillItems = skills;
-        this._anchorNode = anchorNode ?? this._anchorNode;
         this._buildSkillButtons(skills);
         this._resizePopup(skills.length);
 
@@ -158,9 +155,9 @@ export class UltimateSelectPopup extends UIPreviewBuilder {
             Tween.stopAllByTarget(card);
             if (this._cardRestPos) card.setPosition(this._cardRestPos);
         }
-        this._positionAboveAnchor();
         if (card) {
-            const target = card.position.clone();
+            // 卡片固定在畫面正中：不貼著奧義鈕，才不會蓋住右下角的結束回合、計謀、單挑（PROG-2-9328）
+            const target = new Vec3(0, 0, 0);
             this._cardRestPos = target;
             card.setPosition(target.x, target.y - slidePx, target.z);
             tween(card).to(durationSec, { position: target }, { easing: 'quadOut' }).start();
@@ -276,38 +273,6 @@ export class UltimateSelectPopup extends UIPreviewBuilder {
         }
 
         this._dialogCard?.getComponent(Layout)?.updateLayout();
-    }
-
-    private _positionAboveAnchor(): void {
-        if (!this._rootNode || !this._dialogCard || !this._anchorNode) {
-            return;
-        }
-
-        const rootTransform = this._rootNode.getComponent(UITransform);
-        const anchorTransform = this._anchorNode.getComponent(UITransform);
-        const dialogTransform = this._dialogCard.getComponent(UITransform);
-        if (!rootTransform || !anchorTransform || !dialogTransform) {
-            return;
-        }
-
-        const anchorWorld = anchorTransform.convertToWorldSpaceAR(new Vec3());
-        const anchorLocal = rootTransform.convertToNodeSpaceAR(anchorWorld);
-        const buttonHeight = anchorTransform.contentSize.height;
-        const cardWidth = dialogTransform.contentSize.width;
-        const cardHeight = dialogTransform.contentSize.height;
-        const rootWidth = rootTransform.contentSize.width;
-        const rootHeight = rootTransform.contentSize.height;
-
-        const targetX = Math.max(
-            -rootWidth / 2 + cardWidth / 2 + 12,
-            Math.min(rootWidth / 2 - cardWidth / 2 - 12, anchorLocal.x),
-        );
-        const targetY = Math.max(
-            -rootHeight / 2 + cardHeight / 2 + 12,
-            Math.min(rootHeight / 2 - cardHeight / 2 - 12, anchorLocal.y + buttonHeight / 2 + cardHeight / 2 + 8),
-        );
-
-        this._dialogCard.setPosition(targetX, targetY, 0);
     }
 
     private _setButtonLabel(button: Button, text: string): void {

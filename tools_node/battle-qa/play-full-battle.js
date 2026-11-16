@@ -593,14 +593,61 @@ async function maybeUltimate(page, opt, s, turnRec) {
 async function maybeTactic(page, opt, s, turnRec) {
   const label = s.texts.find((t) => /^計謀/.test(t));
   if (!label) return;
+  // 直接讀遊戲內部狀態：主將帶的戰法、計謀點、是否正在等玩家選目標
+  const probe = () => ev(page, () => {
+    const b = window.__bq.battle(); const c = b && b.ctrl; if (!c) return null;
+    const d = c.getPlayerSeedTacticDescriptor && c.getPlayerSeedTacticDescriptor();
+    const p = c.getPlayerTacticPointState ? c.getPlayerTacticPointState() : {};
+    const pend = b.skillTargetingFlow && b.skillTargetingFlow.pendingSkillTargeting;
+    return { skillId: d ? d.skillId : null, tacticId: d ? d.tacticId : null, targetMode: d ? d.targetMode : null,
+      points: p.current, enabled: p.enabled, pending: pend ? pend.targetMode : null };
+  });
   const before = new Set(s.texts);
+  const state0 = await probe();
   await tapText(page, label);
-  await sleep(1500);
-  const after = await ev(page, pageSnapshot);
-  const fresh = after.texts.filter((t) => !before.has(t)).slice(0, 8);
+  // 提示是短暫的 Toast：每 0.3 秒看一次，把出現過的新文字都收起來
+  const fresh = new Set();
+  for (let i = 0; i < 5; i += 1) { await sleep(300); (await ev(page, pageSnapshot)).texts.filter((t) => !before.has(t)).forEach((t) => fresh.add(t)); }
+  let state1 = await probe();
+  const rec = { turn: turnRec.turn, label: label.replace(/\s+/g, ' '), newTexts: [...fresh].slice(0, 8), before: state0, afterTap: state1, target: null, after: null };
   if (!rep.tactics.length) await shot(page, opt, 'tactic-after-tap');
-  rep.tactics.push({ turn: turnRec.turn, label: label.replace(/\s+/g, ' '), newTexts: fresh });
-  log(`計謀：第 ${turnRec.turn} 回合點「${label.replace(/\s+/g, ' ')}」，畫面新增 ${JSON.stringify(fresh)}`);
+  if (state1 && state1.pending) {
+    // 進入選目標：敵方類點最前面的敵軍，其餘點我方第一隊
+    const snap = await ev(page, pageSnapshot);
+    const wantEnemy = /enemy|line|fan|tile|area|adjacent/.test(state1.pending);
+    const pool = (snap.units || []).filter((u) => (u.side === '敵方') === wantEnemy);
+    const unit = pool.sort((a, b) => a.depth - b.depth)[0];
+    if (unit) {
+      rec.target = { lane: unit.lane, depth: unit.depth, side: unit.side };
+      await ev(page, (l, d) => { const [x, y] = window.__bqx.cellClient(l, d); window.__bqx.click(x, y); }, unit.lane, unit.depth);
+      await sleep(1500);
+    }
+    state1 = await probe();
+    // 沒目標或沒放出去：再點一次計謀鈕取消瞄準，免得擋住後面的部署
+    if (state1 && state1.pending) { const l2 = (await ev(page, pageSnapshot)).texts.find((t) => /^計謀/.test(t)); if (l2) await tapText(page, l2); await sleep(400); }
+  }
+  // 診斷：點了沒放出去時，直接呼叫遊戲的施放入口，記下是哪一層擋下（只在沒放出去時做）
+  rec.after = await probe();
+  if (turnRec.turn >= 3 && state0 && rec.after && !(rec.after.points < state0.points) && !rep.tactics.some((t) => t.diag)) {
+    rec.diag = await ev(page, () => {
+      const b = window.__bq.battle(); const c = b.ctrl; const out = {};
+      try {
+        const d = c.getPlayerSeedTacticDescriptor();
+        const pg = c.state.playerGeneral;
+        out.canUsePlayerSkills = c.canUsePlayerSkills();
+        out.needsSp = c.seedTacticNeedsSp(); out.sp = pg ? pg.currentSp + '/' + pg.maxSp : null;
+        out.hasSortie = !!c.sortie; out.flow = c.flowStateMachine && (c.flowStateMachine.state || c.flowStateMachine.current || null);
+        out.hasTurnFlow = !!b.turnFlowManager; out.hasTargetingFlow = !!b.skillTargetingFlow;
+        const dry = c.castBattleSkill(pg.faction, { battleSkillId: d.skillId, tacticId: d.tacticId, targetMode: d.targetMode });
+        out.dry = { applied: dry.applied, blockedReason: dry.blockedReason || null, log: (dry.battleLogLines || []).slice(0, 3) };
+      } catch (e) { out.error = String(e && e.message || e); }
+      return out;
+    });
+    log(`計謀診斷：${JSON.stringify(rec.diag)}`);
+  }
+  rec.cast = !!(state0 && rec.after && typeof state0.points === 'number' && rec.after.points < state0.points);
+  rep.tactics.push(rec);
+  log(`計謀：第 ${turnRec.turn} 回合 ${rec.cast ? '已施放' : '未施放'}，戰法 ${state0 ? state0.skillId : '?'}，點數 ${state0 ? state0.points : '?'} → ${rec.after ? rec.after.points : '?'}，瞄準 ${rec.afterTap ? rec.afterTap.pending : '?'}，提示 ${JSON.stringify(rec.newTexts)}`);
 }
 
 // 主動單挑：第 3 回合起，單挑鈕沒鎖時點一次，再點棋盤中路的空格把主將放上去（整場只做一次）。
@@ -877,7 +924,7 @@ function writeReports(opt, ok) {
   if (rep.duelAttempt) lines.push(`- 主動單挑：第 ${rep.duelAttempt.turn} 回合，放置格 ${JSON.stringify(rep.duelAttempt.cell)}，單位數 ${rep.duelAttempt.unitsBefore} → ${rep.duelAttempt.unitsAfter}，是否出現邀請 ${rep.duelAttempt.invite ? '是' : '否'}`, '');
   if (rep.tactics.length) {
     lines.push('## 計謀');
-    for (const t of rep.tactics) lines.push(`- 第 ${t.turn} 回合：點「${t.label}」，畫面新增 ${JSON.stringify(t.newTexts)}`);
+    for (const t of rep.tactics) lines.push(`- 第 ${t.turn} 回合：點「${t.label}」，${t.cast ? '已施放' : '未施放'}；戰法 ${t.before ? t.before.skillId : '?'}，點數 ${t.before ? t.before.points : '?'} → ${t.after ? t.after.points : '?'}；瞄準 ${t.afterTap ? t.afterTap.pending : '?'}，目標 ${JSON.stringify(t.target)}；提示 ${JSON.stringify(t.newTexts)}`);
     lines.push('');
   }
   if (rep.ultimates.length) {

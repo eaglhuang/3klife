@@ -90,6 +90,12 @@ export class ProjectedDamageSkillResolver implements BattleSkillResolver {
         context.applyDamage(unit, damage, casterFaction);
         deltas.push({ unitUid: unit.id, deltaHp: -damage });
         battleLogLines.push(`${profile.battleLogKey ?? request.battleSkillId}:${unit.id}:${damage}`);
+        // 傷害招附帶狀態（百騎劫營的暈眩，PROG-2-9330）：只在第一段上、被打死的不用上
+        if (stage === 0 && profile.statusEffect && !unit.isDead() && context.applyBuff) {
+          context.applyBuff(unit, profile.statusEffect, profile.statusTurns ?? 1);
+          if (profile.statusEffect === StatusEffect.Stun) unit.isShieldWallActive = false;
+          deltas.push({ unitUid: unit.id, addBuffs: [profile.statusEffect], notes: `duration:${profile.statusTurns ?? 1}` });
+        }
         if (profile.resetSelfOnKill && unit.isDead()) {
           // 威震華夏（PROG-2-0773）：致命一擊後施放者行動重置，再行動 1 次（首擊倍率維持 1）
           const casterUnitId = context.getCasterUnitId?.(casterFaction) ?? null;
