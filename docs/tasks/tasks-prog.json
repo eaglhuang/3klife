@@ -7489,6 +7489,53 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9349",
+      "title": "教學戰空路引導：敵軍所在的路沒人守就提醒補防",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "8 隊波次真正生效後（fecc59cbc）線上 7 場 5 勝 2 敗。兩場敗都不是被打光，而是 1 隊敵騎兵從沒人守的那一路走到底，打主將一下 842 血，兩下主將就倒，當時我方還有 6 到 7 隊。總PM 2026-11-17 裁決：維持 8 隊，用引導教「每一路都要有人守」，不調數值。",
+      "related": [
+        "PROG-2-9346",
+        "PROG-2-9340"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；單元測試 7761 全過；戰法冒煙全過；尚未線上實跑 | 變更: 敵軍出兵後檢查空路並提示；實跑工具新增 --guard | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

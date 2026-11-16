@@ -1,5 +1,5 @@
 import { TestSuite, assert } from './TestRunner';
-import { executeBattleEnemyDeployPhase } from '../assets/scripts/battle/runtime/phases/BattleEnemyDeployPhase';
+import { executeBattleEnemyDeployPhase, unguardedEnemyLanes, tutorialUnguardedLaneHintLine } from '../assets/scripts/battle/runtime/phases/BattleEnemyDeployPhase';
 import { BattleController } from '../assets/scripts/battle/controllers/BattleController';
 import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
 import { Faction } from '../assets/scripts/core/config/Constants';
@@ -24,6 +24,26 @@ export function createTutorialBattleWavesSuite(): TestSuite {
     suite.test('教學戰出兵不被敵軍糧草卡住，一般戰照糧草（PROG-2-9346）', () => {
         assert.equals(Number.POSITIVE_INFINITY, phase(3, true).budget);
         assert.equals(30, phase(3, false).budget);
+    });
+    suite.test('空路引導：敵軍所在的路我方沒人就提醒一次，補防後再空才會再提醒（PROG-2-9349）', () => {
+        const u = (faction: Faction, lane: number, dead = false) => ({ faction, lane, isDead: () => dead });
+        assert.equals('1,3', unguardedEnemyLanes([u(Faction.Enemy, 1), u(Faction.Enemy, 3), u(Faction.Enemy, 2), u(Faction.Player, 2), u(Faction.Player, 3, true)]).join(','));
+        assert.equals('第 2 路、第 4 路沒人守，敵軍正逼近主將！派兵到這一路攔截', tutorialUnguardedLaneHintLine([3, 1]));
+        const units = new Map<string, any>([['e', u(Faction.Enemy, 1)]]); const hinted = new Set<number>(); const lines: string[] = [];
+        const run = (tutorialBattle: boolean) => executeBattleEnemyDeployPhase({ state: { units, getGeneral: () => null, getCell: () => null }, turn: 9, tutorialBattle,
+            difficultyBonus: 0, enemyAi: { decideDeploy: () => [] }, turnManager: { enemyFood: 0 }, spawnEnemyUnit: () => {}, isCellMovementBlocked: () => false,
+            guide: (line: string) => lines.push(line), leakHintedLanes: hinted } as any);
+        run(false); assert.equals(0, lines.length);
+        run(true); run(true); assert.equals(1, lines.length);
+        units.set('p', u(Faction.Player, 1)); run(true); assert.equals(1, lines.length);
+        units.delete('p'); run(true); assert.equals(2, lines.length);
+    });
+    suite.test('教學戰實際生出的隊數照波次表：糧草是 0 也出得滿 8 隊（PROG-2-9346 補驗）', () => {
+        let spawned = 0; const tm = { enemyFood: 0 };
+        for (let turn = 1; turn <= 12; turn++) executeBattleEnemyDeployPhase({ state: { getGeneral: () => null, getCell: () => null }, turn, tutorialBattle: true,
+            difficultyBonus: 0, turnManager: tm, spawnEnemyUnit: () => { spawned++; }, isCellMovementBlocked: () => false,
+            enemyAi: { decideDeploy: (_s: unknown, budget: number, count: number) => Array.from({ length: budget >= 15 * count ? count : 0 }, (_, i) => ({ type: 'cavalry', lane: i })) } } as any);
+        assert.equals(8, spawned);
     });
     suite.test('教學不受高難度加成增加波次', () => {
         assert.equals(0, phase(1, true, 2).requested);

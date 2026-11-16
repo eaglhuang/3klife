@@ -284,6 +284,7 @@ export class BattleController {
     aiDifficultyBonus = 0,
   ): void {
     this.state.reset(playerGeneral, enemyGeneral, terrainGrid, weather, battleTactic);
+    this.leakHintedLanes.clear();
     this.state.aiDifficulty = aiDifficulty;
     this.state.aiDuelAcceptThreshold = null;
     this.state.aiSpGainModifier = 1;
@@ -1257,6 +1258,7 @@ export class BattleController {
           turn: services().battle.getSnapshot().turn,
           difficultyBonus: this.state.aiDifficultyBonus,
           tutorialBattle: this.tutorialBattle,
+          leakHintedLanes: this.leakHintedLanes,
           spawnEnemyUnit: (type, lane, depth, unitName) => {
             const unit = this.unitSpawner.spawnUnit(type, Faction.Enemy, lane, depth, unitName);
             this.turnManager.markUnitDeployed(unit.id);
@@ -1544,6 +1546,8 @@ export class BattleController {
     this.applyTutorialRules();
   }
   private _tutorialBattle = false;
+  /** 教學戰已提醒過「沒人守」的路線（PROG-2-9349） */
+  private readonly leakHintedLanes = new Set<number>();
 
   /** 開戰會把回合上限重設回預設值，所以開戰後與旗標變更時都要重新套用（含「再戰一次」） */
   private applyTutorialRules(): void {

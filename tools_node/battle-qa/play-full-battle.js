@@ -22,6 +22,7 @@
  *   --general <武將 id>     指定主將，只能配 --fresh：宿命轉蛋免費重轉到抽中這位名將才收下
  *                          （zhang-fei｜wei-yan｜xiahou-dun｜zhang-he｜sun-ce｜gan-ning）；不改遊戲、不寫存檔
  *   --second-battle        第一場打完回大廳後再進第二場（一般戰鬥），只截圖並記下計謀鈕文字，不打完
+ *   --guard                部署時先補有敵軍而我方沒人的那一路（預設不補防，當最壞情況對照）
  *   --deploy-mode <模式>   full（預設，每回合部署到上限）｜one-per-turn（每回合 1 隊）｜first-turn-one（只第 1 回合 1 隊，之後只結束回合）
  *
  * 流程：
@@ -117,6 +118,7 @@ function parseArgs(argv) {
     else if (a === '--fresh') o.fresh = true;
     else if (a === '--second-battle') o.secondBattle = true;
     else if (a === '--deploy-mode') o.deployMode = next();
+    else if (a === '--guard') o.guard = true;
     else if (a === '--general') o.general = next();
     else throw new Error(`未知參數：${a}`);
   }
@@ -578,7 +580,16 @@ async function tryDeploy(page, s, turnRec, opt) {
     if (prog && prog.reached) { stop = `已達單回合上限 ${prog.used}/${prog.limit}`; break; }
     if (snap.turn !== turnRec.turn) { stop = '回合已前進'; break; }
     const occupied = new Set(snap.units.filter((u) => u.depth === 0).map((u) => u.lane));
-    const lane = [0, 1, 2, 3, 4].find((l) => l < LANES && !occupied.has(l) && !triedLanes.has(l));
+    // --guard：先補「有敵軍、我方一隊都沒有」的那一路（敵軍離主將越近越優先），模擬有在看來襲／空路提示的真人
+    let order = [0, 1, 2, 3, 4];
+    if (opt.guard) {
+      const own = new Set(snap.units.filter((u) => u.side === '我方').map((u) => u.lane));
+      const threat = {};
+      for (const u of snap.units) if (u.side !== '我方' && !own.has(u.lane)) threat[u.lane] = Math.min(threat[u.lane] ?? 99, u.depth);
+      const open = Object.keys(threat).map(Number).sort((x, y) => threat[x] - threat[y]);
+      order = [...open, ...order.filter((l) => !open.includes(l))];
+    }
+    const lane = order.find((l) => l < LANES && !occupied.has(l) && !triedLanes.has(l));
     if (lane === undefined) { stop = '沒有可用的空部署格'; break; }
     const usable = snap.cards.filter((c) => c.active && c.client);
     if (!usable.length) { stop = '無可用卡片節點'; break; }
