@@ -8326,6 +8326,28 @@
             "note": "以糜氏核定站姿為唯一角色造型參考；依其非持械身份，以側身撤護、持匣回望呈現戰場動態。透明全身候選，待使用者檢視。"
           }
         ]
+      },
+      "smallAvatar": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/mi_shi__糜氏__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "bb2dce2b6b445916f3399ad5c4becc4d5ec78e975cd162b3ae5a4b67df365b03",
+            "canvas": "256x256 RGBA",
+            "sourceStanding": "standing/mi_shi__糜氏__standing_0002.png",
+            "sourceStandingSha256": "86e4bde34da6e795c77073b00f368206f7b1552fb7b9966bd90710263b38cd8a",
+            "crop": {
+              "x": 189,
+              "y": 0,
+              "width": 130,
+              "height": 130
+            },
+            "qc": "Crop-only from approved standing art; estimated head height about 72% of frame; face horizontally centered; hair, face, neck and shoulder tops retained; crop ends before chest and held prop; no redraw."
+          }
+        ]
       }
     },
     {
