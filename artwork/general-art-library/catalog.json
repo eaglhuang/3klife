@@ -2954,6 +2954,20 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/sun_jian__孫堅__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "b6fbbc5fad4c003616abfeec6ae748dfdaff4f58cbe9969def34a2264e6425db",
+            "canvas": "1024x1536 PNG",
+            "note": "沿用孫堅赤幘紅銀虎紋鎧與古錠刀；前踏轉腰向左下斜劈，候選待審。"
+          }
+        ]
       }
     },
     {
