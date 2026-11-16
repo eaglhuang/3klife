@@ -2375,6 +2375,20 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/xiahou_dun__夏侯惇__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "37fe48283aa5e6c096af1b94204e1859d7902419eb411396f47db037751e8ff4",
+            "canvas": "1024x1536 RGBA",
+            "note": "以整合站姿保留獨眼、藍銀甲與長槍；側身高位斜架格擋、蓄勢反擊，待審。"
+          }
+        ]
       }
     },
     {
