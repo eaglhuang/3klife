@@ -6467,6 +6467,52 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9325",
+      "title": "單挑改成部署列全滿才鎖；教學戰敵方波次降為 5 隊",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-16T21:30:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "線上實跑：單挑鈕整場鎖定，因為程式是「部署列有任何我方部隊就鎖」，規格找不到依據，總PM 裁決改成部署列全滿才鎖。另 26610ff4f 版（敵方 7 隊波次）實跑我方被打到剩 3 隊、只靠回合上限判勝，壓力過頭。",
+      "related": [
+        "PROG-2-9318"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: done | 驗證: 型別檢查 0 錯；單元測試 7720 通過 | 變更: 單挑出陣條件、教學戰波次表、實跑工具主動單挑與奧義選單等待 | 阻塞: 無；未做到：尚未實機驗證；221 位武將沒有奧義資料與計謀開場點數不足另待總PM 裁決",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
