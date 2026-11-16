@@ -30,6 +30,7 @@ import {
     MILITIA_STAT_RATIO,
     MILITIA_TROOP_COST,
     regenTactic,
+    ensureTacticCapCovers,
     retireUnit,
     spendTactic,
     DEFAULT_TACTIC_TP_COST,
@@ -277,6 +278,26 @@ export function createSortieDeploySuite(): TestSuite {
         const full = regenTactic(state);
         assert.equals(state.tacticMax, full.tacticCurrent);
         assert.equals(true, full === state, '已滿時回傳同一物件');
+    });
+
+    suite.test('計謀點上限墊高：成本高於上限時墊到剛好付得起，否則不動', () => {
+        const state = createSortieState({ commandCapacity: 8000, cityTroops: 10000, food: 100 });
+        const raised = ensureTacticCapCovers(state, state.tacticMax + 5);
+        assert.equals(state.tacticMax + 5, raised.tacticMax);
+        assert.equals(state.tacticCurrent, raised.tacticCurrent, '目前點數不變');
+        assert.equals(true, ensureTacticCapCovers(state, state.tacticMax) === state, '付得起時回傳同一物件');
+        assert.equals(true, ensureTacticCapCovers(state, -3) === state, '負數成本視為 0');
+    });
+
+    suite.test('計謀點：沒帶參謀官時，成本最高的自帶戰法也能在回合上限內存夠', () => {
+        let state = createSortieState({ commandCapacity: 8000, cityTroops: 10000, food: 100 });
+        const cost = getTacticTpCost('tactic-fire-scheme');
+        assert.equals(true, cost > state.tacticMax, '前提：火計成本高於基礎上限');
+        state = ensureTacticCapCovers(state, cost);
+        let turns = 0;
+        while (state.tacticCurrent < cost && turns < 30) { state = regenTactic(state); turns += 1; }
+        assert.equals(true, spendTactic(state, cost).ok);
+        assert.equals(true, turns <= 6, `應在第 6 回合前存夠，實際 ${turns}`);
     });
 
     suite.test('戰鬥控制器：參謀官計謀點進帳本，花費與回合回復生效', () => {

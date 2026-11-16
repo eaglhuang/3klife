@@ -83,6 +83,7 @@ import {
   finishSortie,
   getTacticTpCost,
   regenTactic,
+  ensureTacticCapCovers,
   spendTactic,
   retireUnit,
   troopsFromHp,
@@ -586,7 +587,8 @@ export class BattleController {
   }
 
   public configureSortie(input: CreateSortieInput): SortieState {
-    this.sortie = createSortieState(input);
+    // 主將自帶的戰法一定要付得起：上限不夠就墊高到該戰法的成本
+    this.sortie = ensureTacticCapCovers(createSortieState(input), getTacticTpCost(this.resolveSeedTacticId({})));
     services().battle.configureFood({ initial: this.sortie.food, max: this.sortie.maxFood, perTurn: 0 });
     return this.sortie;
   }

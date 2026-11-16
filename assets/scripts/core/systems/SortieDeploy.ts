@@ -94,8 +94,11 @@ export const STRATEGIST_TACTIC_START_MAX = 15;
 export const BASE_TACTIC_CAP = 30;
 /** 計謀點基礎開局值（暫定：§I 範例 Current 21 − Strategist_Start_Tactic_Bonus 9 反推） */
 export const BASE_TACTIC_START = 12;
-/** 計謀點每回合回復（暫定：規格未定回復速率，先給 +2） */
-export const TACTIC_REGEN_PER_TURN = 2;
+/**
+ * 計謀點每回合回復（暫定：規格未定回復速率）。
+ * 原本 +2：開局 12 點、戰法成本 15~80，三十回合內多數戰法放不出一次；改 +5 後 30 點的戰法約第 5 回合可放。
+ */
+export const TACTIC_REGEN_PER_TURN = 5;
 export const DEPUTY_FOOD_CAP_RATE_MAX = 0.18;
 
 // ── 兵種代碼 ───────────────────────────────────────────────────────────────
@@ -520,6 +523,15 @@ export function toSpecTacticId(tacticId: string): string {
 export function getTacticTpCost(tacticId: string | null | undefined): number {
     if (!tacticId) return DEFAULT_TACTIC_TP_COST;
     return TACTIC_TP_COST_OVERRIDE[toSpecTacticId(tacticId)] ?? DEFAULT_TACTIC_TP_COST;
+}
+
+/**
+ * 計謀點上限至少要付得起指定成本，不夠就把上限墊高到剛好付得起（目前點數不變）。
+ * 原因：沒帶參謀官時上限只有 30，主將自帶的戰法成本若高於上限，整場都放不出來。
+ */
+export function ensureTacticCapCovers(state: SortieState, cost: number): SortieState {
+    const need = nonNegInt(cost);
+    return need > state.tacticMax ? { ...state, tacticMax: need } : state;
 }
 
 /** 回合開始回復計謀點，不超過上限 */
