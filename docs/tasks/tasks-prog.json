@@ -6421,6 +6421,52 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9324",
+      "title": "教學戰敵方照波次表出兵、我方每回合派兵上限 2 隊；實跑工具會點發動與計謀",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-16T20:30:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "線上試玩版 a316d9514 實跑首戰（2026-11-16）：敵方只在第 2、4、6 回合各出 1 隊（PROG-2-2220 的設計假設，非規格），同時在場最多 2 隊，我方 10 隊以上；我方兵池 8000 前 5 回合就派光。總PM 裁決：教學戰敵方同時在場 4～6 隊、仍可 10 回合內打贏，並放慢我方派兵節奏。另外實跑工具點錯奧義按鈕，奧義 0 次。",
+      "related": [
+        "PROG-2-9318"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: done | 驗證: 型別檢查 0 錯；單元測試 7720 通過 | 變更: 教學戰敵方波次表與我方派兵上限進 GAME_CONFIG；play-full-battle 改點「發動」並加點計謀 | 阻塞: 無；未做到：尚未實機驗證，波次數值是否仍能 10 回合內打贏要等下一版線上試玩版實跑；工具的新操作也尚未實跑過",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
