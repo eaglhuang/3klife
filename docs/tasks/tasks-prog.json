@@ -7630,6 +7630,52 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9352",
+      "title": "奧義發動接上漫畫式分鏡演出；沒有專屬分鏡圖的武將先播「暫代圖 待替換」",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 2026-11-16 指出：奧義功能還沒接上漫畫式的動畫播放器，沒有畫就先用一張暫代圖，這樣才會記得要替換。調查：播放器早已存在也有接線，但分鏡清單只列趙雲、分鏡圖目錄不存在，所以實際上沒有任何武將播得出來。",
+      "related": [
+        "PROG-2-9350"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試 7815 過（新增 11 則）；尚未實機目視 | 變更: 奧義演出進戰鬥動畫佇列、回合推進會等它；無專屬圖改播暫代圖並集中登記；12 秒硬上限保底 | 阻塞: 演出長度、是否每次都播、暫代圖樣式等 6 題待使用者決定",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

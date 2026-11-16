@@ -61,7 +61,7 @@ import { salvageGainItems } from '../../core/systems/StrategistHud';
 import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, IDeployRuntimeLike, IBattleScenePanelLike, IStrategistHudLike } from '../../shared/interfaces/IBattleUIComponents';
 
 import { BATTLE_TURN_FLOW_TIMING, BATTLE_VISUAL_TIMING } from './BattlePresentationTiming';
-import { buildBattleSkillUsedMessage } from '../../shared/BattleSkillPresentation';
+import { buildBattleSkillUsedMessage, getBattleSkillPresentation } from '../../shared/BattleSkillPresentation';
 import { quickViewSkillLines } from '../../shared/QuickViewSkillLines';
 import { SkillSourceType } from '../../shared/SkillRuntimeContract';
 import { selectDuelExchanges } from '../shared/DuelPresentationCore';
@@ -119,6 +119,8 @@ export interface BattleSceneContext {
   teachingSpirit:    TeachingSpiritInput | null;
   isAdvancingTurn:   boolean;
   isDuelPanelActive: boolean;
+  /** 奧義 cut-in 演出中（含載入）；回合推進與安全解鎖計時都要等它（PROG-2-9352），由 Bridge 保證一定會放掉 */
+  isUltCutinActive?: boolean;
   combatVisualQueue: CombatVisualTask[];
   isDrainingCombatVisual: boolean;
   combatVisualTaskId: number;
@@ -816,13 +818,25 @@ export class BattleUIBridge {
   }
 
   private _onGeneralSkillUsed(data: { faction: Faction; skillId?: string; skillName?: string; sourceType?: SkillSourceType; generalName?: string }): void {
-    // 奧義：先播武將的漫畫分鏡 cut-in（戰場暫停），播完才接既有的奧義特效；沒有 cut-in 的武將維持原本時序
+    // 奧義：先播武將的漫畫分鏡 cut-in（戰場暫停；沒有專屬分鏡圖的武將播「暫代圖 待替換」），播完（或玩家點擊跳過）才接奧義特效。
+    // 走戰鬥動畫佇列並插隊到最前：回合推進會等佇列清空，敵方奧義也走同一條（PROG-2-9352）
     if (data.sourceType === SkillSourceType.Ultimate) {
-      const generalId = (data.faction === Faction.Player ? this.ctx.pg : this.ctx.eg)?.id;
+      const general = data.faction === Faction.Player ? this.ctx.pg : this.ctx.eg;
+      const generalId = general?.id;
       const hud = this.ctx.hud;
       if (hud?.node?.isValid && this.ultCutin.mayPlay(generalId)) {
-        void this.ultCutin.play(generalId, hud.node.parent?.isValid ? hud.node.parent : hud.node)
-          .then(() => this._presentGeneralSkillUsed(data));
+        const parent = hud.node.parent?.isValid ? hud.node.parent : hud.node;
+        const skillId = data.skillId ?? data.skillName;
+        const skillName = skillId ? getBattleSkillPresentation(skillId).name : undefined;
+        this.ctx.isUltCutinActive = true;
+        this._enqueueCombatVisual(`ult-cutin:${generalId}`, async () => {
+          try {
+            await this.ultCutin.play(generalId, parent, { generalName: data.generalName ?? general?.name, skillName });
+          } finally {
+            this.ctx.isUltCutinActive = false;
+          }
+          this._presentGeneralSkillUsed(data);
+        }, true);
         return;
       }
     }
@@ -1200,14 +1214,16 @@ export class BattleUIBridge {
 
   // ── 戰鬥動畫佇列（委託給 TurnFlowManager 共享 ctx）────────────────────────
 
-  private _enqueueCombatVisual(label: string, action: () => Promise<void> | void): void {
+  /** front=true：插到佇列最前面（奧義 cut-in 要在同一次施放產生的傷害演出之前） */
+  private _enqueueCombatVisual(label: string, action: () => Promise<void> | void, front = false): void {
     const c = this.ctx;
     const task: CombatVisualTask = {
       id: ++c.combatVisualTaskId,
       label,
       run: action,
     };
-    c.combatVisualQueue.push(task);
+    if (front) c.combatVisualQueue.unshift(task);
+    else c.combatVisualQueue.push(task);
     UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] enqueue id=${task.id} label=${label} queue=${c.combatVisualQueue.length}`);
     if (c.isDrainingCombatVisual) return;
     c.isDrainingCombatVisual = true;

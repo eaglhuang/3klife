@@ -12,7 +12,7 @@
  */
 import { BlockInputEvents, Color, Component, Graphics, Label, Node, Sprite, SpriteFrame, UIOpacity, UITransform, Vec3, _decorator, sys, view } from 'cc';
 import { createCutinPlayer, type CutinConfig, type CutinPlayer, type CutinSample, type PlaybackMode, type Rgb } from '../../shared/cutin/cutinCore';
-import { computeSafeInsets, layoutCutinText } from '../../shared/cutin/cutinSupport';
+import { PLACEHOLDER_CUTIN_IMAGE_KEY, PLACEHOLDER_CUTIN_TEXT, computeSafeInsets, layoutCutinText } from '../../shared/cutin/cutinSupport';
 
 const { ccclass } = _decorator;
 
@@ -34,6 +34,8 @@ export interface UltCutinPlayArgs {
   onPauseRequest?: () => void;
   /** 播放結束（含跳過、被銷毀）時要求恢復戰場 */
   onResumeRequest?: () => void;
+  /** 這是暫代圖演出（該武將還沒有專屬分鏡圖）：畫面中央疊「暫代圖 待替換」警示字樣 */
+  placeholder?: boolean;
 }
 
 export type UltCutinOutcome = 'played' | 'skipped' | 'unplayable';
@@ -42,6 +44,14 @@ export type UltCutinOutcome = 'played' | 'skipped' | 'unplayable';
 let activeCount = 0;
 export function isUltCutinPlaying(): boolean {
   return activeCount > 0;
+}
+
+/** 正在播的驅動元件；逾時保底時由 abortAllUltCutins 一次收掉 */
+const activeDrivers = new Set<UltCutinDriver>();
+
+/** 強制結束所有正在播的 cut-in（疊層銷毀、戰場恢復、Promise 解決為 'skipped'）；逾時保底與換場用 */
+export function abortAllUltCutins(): void {
+  for (const driver of Array.from(activeDrivers)) driver.forceFinish();
 }
 
 /** 設計用的參考高度（cutinCore 的震動幅度、黑邊以 720p 為準） */
@@ -121,6 +131,8 @@ interface OverlayParts {
   nameLabel: Label;
   skillLabel: Label;
   textStrip: Solid;
+  /** 暫代圖警示字樣（非暫代圖演出為 null） */
+  placeholder: { node: Node; opacity: UIOpacity } | null;
   viewW: number;
   viewH: number;
   barMax: number;
@@ -149,6 +161,13 @@ export class UltCutinDriver extends Component {
     this._startedAt = nowSeconds();
     activeCount++;
     this._countedActive = true;
+    activeDrivers.add(this);
+  }
+
+  /** 逾時保底：不等播完，立刻收掉疊層並恢復戰場 */
+  public forceFinish(): void {
+    this._skipped = true;
+    this._finish();
   }
 
   /** 點一下：跳到收尾爆發（之後仍會接著播完收尾，再回到奧義特效） */
@@ -175,6 +194,7 @@ export class UltCutinDriver extends Component {
   private _finish(): void {
     if (this._finished) return;
     this._finished = true;
+    activeDrivers.delete(this);
     this._player?.stop();
     if (this._countedActive) {
       this._countedActive = false;
@@ -216,6 +236,13 @@ export class UltCutinDriver extends Component {
 
     p.dim.opacity.opacity = Math.round(Math.max(0, Math.min(1, s.dim)) * 255);
 
+    // 暫代圖警示字樣：跟著分鏡圖淡入淡出，同樣吃震動
+    if (p.placeholder) {
+      const on = s.imageKey === PLACEHOLDER_CUTIN_IMAGE_KEY;
+      p.placeholder.opacity.opacity = on ? Math.round(Math.max(0, Math.min(1, s.panelAlpha)) * 255) : 0;
+      p.placeholder.node.setPosition(ox, oy, 0);
+    }
+
     // 爆發光：從中心放大並淡出
     p.burst.paint(toColor(s.burstColor));
     p.burst.opacity.opacity = Math.round(Math.max(0, Math.min(1, s.burstAlpha)) * 255);
@@ -248,7 +275,7 @@ export class UltCutinDriver extends Component {
   }
 }
 
-function buildParts(parent: Node, config: CutinConfig, viewW: number, viewH: number): OverlayParts {
+function buildParts(parent: Node, config: CutinConfig, viewW: number, viewH: number, placeholder: boolean): OverlayParts {
   const layer = parent.layer;
   const root = makeNode(ULT_CUTIN_NODE, layer, viewW, viewH);
   // 全螢幕攔截：底下的戰場與按鈕收不到這次點擊
@@ -300,10 +327,29 @@ function buildParts(parent: Node, config: CutinConfig, viewW: number, viewH: num
   textStrip.opacity.opacity = 120;
   textRoot.insertChild(textStrip.node, 0);
 
+  // 暫代圖警示字樣：畫面中央一行大字，淡入淡出跟著分鏡圖
+  let placeholderParts: OverlayParts['placeholder'] = null;
+  if (placeholder) {
+    const size = Math.round(viewH * 0.11);
+    const node = makeNode(`${ULT_CUTIN_NODE}Placeholder`, layer, viewW, Math.round(size * 1.5));
+    const label = node.addComponent(Label);
+    label.string = PLACEHOLDER_CUTIN_TEXT;
+    label.fontSize = size;
+    label.lineHeight = Math.round(size * 1.3);
+    label.isBold = true;
+    label.horizontalAlign = Label.HorizontalAlign.CENTER;
+    label.overflow = Label.Overflow.SHRINK;
+    label.color = new Color(255, 214, 72, 255);
+    const opacity = node.addComponent(UIOpacity);
+    opacity.opacity = 0;
+    placeholderParts = { node, opacity };
+  }
+
   // 由下往上：暗幕（蓋在戰場上）→ 前一格 → 目前這格 → 爆發光 → 閃白 → 黑邊 → 文字
   root.addChild(dim.node);
   root.addChild(imagePrev.node);
   root.addChild(imageCur.node);
+  if (placeholderParts) root.addChild(placeholderParts.node);
   root.addChild(burst.node);
   root.addChild(flash.node);
   root.addChild(barTop.node);
@@ -316,6 +362,7 @@ function buildParts(parent: Node, config: CutinConfig, viewW: number, viewH: num
     burst,
     barTop: barTop.node, barBottom: barBottom.node,
     textRoot, textOpacity, nameLabel, skillLabel, textStrip,
+    placeholder: placeholderParts,
     viewW, viewH, barMax, textHeight,
   };
 }
@@ -349,7 +396,7 @@ export function playUltCutin(args: UltCutinPlayArgs): Promise<UltCutinOutcome> {
     const visible = view.getVisibleSize();
     const viewW = host?.width || visible.width || 1920;
     const viewH = host?.height || visible.height || 1080;
-    const parts = buildParts(args.parent, args.config, viewW, viewH);
+    const parts = buildParts(args.parent, args.config, viewW, viewH, !!args.placeholder);
     args.parent.addChild(parts.root);
     parts.root.setPosition(new Vec3(0, 0, 0));
 
