@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "characterId": "zhang-liao",
+  "name": "張遼",
+  "sourceVersion": "0001",
+  "sourceFile": "artwork/chibi-art-library/source/zhang-liao__張遼__chibi_0001.png",
+  "sha256": "c12c3589ecfa50f6d43012c25697fbbd02b9b5e1a04fa8186245dd2e44af1258",
+  "canvas": "577x1250 RGBA",
+  "pipeline": "C:/Users/User/spine-trial/tools/pipeline.py accept-source zhang_liao",
+  "status": "source-pass",
+  "measurements": {
+    "faceBoxPx": [
+      301,
+      522,
+      106,
+      101
+    ],
+    "chinToBootPx": 622,
+    "chinToBootTargetPx": [
+      591,
+      653
+    ],
+    "baselineY": 1245,
+    "placement": "centered; uniform scale only; feet at y=1245",
+    "weapon": "straight-shaft crescent halberd"
+  },
+  "warnings": [
+    "官方來源閘門有臉部朝向/臉框/頭身自動指標 WARN；依委託更正規則這些指標只作人工覆核參考，不推翻下巴至腳底比例與候選圖視覺檢查。"
+  ],
+  "visualReview": {
+    "style": "PASS — matched against Gan Ning chibi reference",
+    "identity": "PASS — matched to latest standing art reference",
+    "animationCutout": "PENDING — per-character masks/clean base not present in cutter scaffold",
+    "frameAndTransparency": "PASS — transparent 577x1250 canvas; whole figure inside safe frame",
+    "limbsAndGrip": "PASS — complete hands, feet, weapon grip and weapon"
+  },
+  "cutout": {
+    "status": "pending",
+    "reason": "張遼專屬 clean base 與切片遮罩未建立。"
+  },
+  "createdAt": "2026-11-17T02:22:18+08:00"
+}

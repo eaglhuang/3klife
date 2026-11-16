@@ -439,12 +439,21 @@
       "id": "zhang-liao",
       "name": "張遼",
       "source": {
-        "status": "missing",
-        "activeVersion": null,
-        "versions": []
+        "status": "source-pass",
+        "activeVersion": "0001",
+        "versions": [
+          {
+            "version": "0001",
+            "file": "source/zhang-liao__張遼__chibi_0001.png",
+            "sha256": "c12c3589ecfa50f6d43012c25697fbbd02b9b5e1a04fa8186245dd2e44af1258",
+            "status": "source-pass",
+            "createdAt": "2026-11-17T02:22:18+08:00",
+            "note": "577x1250 RGBA; pipeline accept-source PASS; chin-to-boot 622px; straight-shaft crescent halberd."
+          }
+        ]
       },
       "cutout": {
-        "status": "not-started",
+        "status": "pending",
         "activeVersion": null,
         "versions": []
       }
