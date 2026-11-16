@@ -46,7 +46,7 @@ export function normalizeUnlockHistory(raw: unknown): SandtableStageId[] {
             known.add(entry as SandtableStageId);
         }
     }
-    return [...known].sort((a, b) => STAGE_RANK[a] - STAGE_RANK[b]);
+    return Array.from(known).sort((a, b) => STAGE_RANK[a] - STAGE_RANK[b]);
 }
 
 /** 記錄一次解鎖：回傳新陣列；已存在則原樣回傳內容，絕不移除任何階段。 */

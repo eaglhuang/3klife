@@ -78,6 +78,7 @@ export function createOpeningOfferPopupSuite(): TestSuite {
 
         let state: OpeningOfferState = { ...FRESH_OPENING_OFFER_STATE };
         let now = T0;
+        let ready = false;
         const toasts: string[] = [];
         const host = { node: { active: true }, binder: null };
         const popup = new OpeningOfferPopupController({
@@ -90,11 +91,15 @@ export function createOpeningOfferPopupSuite(): TestSuite {
                 return r.ok;
             },
             now: () => now,
+            isReady: () => ready,
             toast: (m) => { toasts.push(m); },
         });
         await popup.mount();
         assert.isFalse(host.node.active);
-        assert.isTrue(popup.tryOpen());
+        assert.isFalse(popup.tryOpen(), '大廳未就緒（載入中）不開窗');
+        assert.isFalse(host.node.active);
+        ready = true;
+        assert.isTrue(popup.tryOpen(), '就緒後才開窗');
         assert.isFalse(popup.tryOpen(), '開著時不重複開');
         assert.equals(table.offers[0].id, popup.offer?.id);
         await popup.respond('declined');
@@ -107,8 +112,41 @@ export function createOpeningOfferPopupSuite(): TestSuite {
         assert.isTrue(popup.tryOpen());
         await popup.respond('purchased');
         assert.isFalse(host.node.active);
-        assert.isTrue(toasts[0].includes('模擬購買成功'));
+        assert.isFalse(toasts[0].includes('模擬'), '提示不含開發用語');
         assert.equals(table.offers[1].id, state.purchased.join(','));
+    });
+
+    suite.test('彈窗文案：沒有開發用語；主按鈕「敬請期待」只關窗、不寫存檔', async () => {
+        const table = loadTable();
+        const view = openingOfferView(table.offers[0]);
+        const all = Object.values(view.texts).join('|');
+        assert.isFalse(/Mock|模擬/.test(all), '玩家可見文字不含 Mock／模擬');
+        assert.equals('敬請期待', view.texts.offerBuyLabel);
+        assert.equals('此禮包尚未開放購買', view.texts.offerMockNote);
+        assert.equals('婉拒', view.texts.offerDeclineLabel);
+        const layout = fs.readFileSync(path.join(process.cwd(), 'assets/resources/ui-spec/layouts/opening-offer-main.json'), 'utf8');
+        assert.isFalse(/模擬購買/.test(layout), '版面預設字也不含模擬購買');
+
+        let state: OpeningOfferState = { ...FRESH_OPENING_OFFER_STATE };
+        const handlers: Record<string, () => void> = {};
+        const host = { node: { active: false }, binder: null };
+        let resolves = 0;
+        const popup = new OpeningOfferPopupController({
+            mountHost: async (bindings) => { bindings.forEach((b) => { handlers[b.buttonId] = b.handler; }); return host as never; },
+            apply: () => undefined,
+            next: (t) => nextOpeningOffer(table, state, { leadSelected: true, tutorialBlocking: false, now: t }),
+            resolve: async () => { resolves++; return true; },
+            now: () => T0,
+            isReady: () => true,
+            toast: () => undefined,
+        });
+        await popup.mount();
+        assert.isTrue(popup.tryOpen());
+        handlers.btnOfferBuy();
+        assert.isFalse(host.node.active, '敬請期待只關窗');
+        assert.equals(0, resolves, '不寫任何購買紀錄');
+        assert.isFalse(popup.tryOpen(), '同一次大廳不重彈');
+        assert.equals(0, state.purchased.length);
     });
 
     return suite;
