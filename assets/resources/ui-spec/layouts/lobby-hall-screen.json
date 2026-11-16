@@ -320,7 +320,7 @@
                       {
                         "type": "label",
                         "name": "LobbyHallScreen_span_5",
-                        "text": "返回",
+                        "text": "推進一季",
                         "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_5",
                         "width": 96,
                         "height": 52

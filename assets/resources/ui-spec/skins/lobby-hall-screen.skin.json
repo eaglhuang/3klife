@@ -509,7 +509,7 @@
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 28,
-      "letterSpacing": 4,
+      "letterSpacing": 0,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,

@@ -102,10 +102,10 @@ export function createPlaytestRound4FixesSuite(): TestSuite {
         assert.isFalse(closed.actives.subMenu);
 
         const sortie = buildLobbyCityHubView(createBaseCityHubInput('sortie'));
-        assert.equals(4, sortie.visibleSubCount);
+        assert.equals(3, sortie.visibleSubCount);
         assert.isTrue(sortie.actives.subMenu);
-        assert.isTrue(sortie.actives.btnSub3);
-        assert.isFalse(sortie.actives.btnSub4);
+        assert.isTrue(sortie.actives.btnSub2);
+        assert.isFalse(sortie.actives.btnSub3);
 
         const generals = buildLobbyCityHubView(createBaseCityHubInput('generals'));
         assert.equals(5, generals.visibleSubCount);
@@ -116,7 +116,7 @@ export function createPlaytestRound4FixesSuite(): TestSuite {
         const subMenuNode = new Node('SubMenu');
         const uit = subMenuNode.addComponent(UITransform);
         uit.setContentSize(900, 116);
-        const view = buildLobbyCityHubView(createBaseCityHubInput('sortie'));
+        const view = buildLobbyCityHubView(createBaseCityHubInput('nurture'));
         uit.setContentSize(computeSubMenuWidth(view.visibleSubCount), uit.height);
         assert.equals(708, uit.width, '4 個子按鈕時 SubMenu 寬度應從 900 收合至 708');
         assert.equals(116, uit.height, '高度應維持 116');

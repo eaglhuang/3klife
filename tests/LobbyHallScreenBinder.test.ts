@@ -39,7 +39,7 @@ export function createLobbyHallScreenBinderSuite(): TestSuite {
         const binder = new LobbyHallScreenBinder(root, {
             themeConfig: null,
             fxConfig: null,
-            onBack: () => undefined,
+            onAdvanceSeason: () => undefined,
             onDock: () => undefined,
         });
 

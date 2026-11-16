@@ -2,7 +2,7 @@
 /**
  * LobbyHallScreenBinder — 把 lobby-hall-screen 的 runtime 行為接到已建好的畫面上。
  *
- * - 以 _ucufId 找返回鈕、底部五鈕與場景面板（任務牆、祭壇、世家，UI-2-0152），點擊轉成注入的動作
+ * - 以 _ucufId 找右上角推進一季鈕、底部五鈕與場景面板（任務牆、祭壇、世家，UI-2-0152），點擊轉成注入的動作
  *   （畫面轉出的是 panel，不是 Button，所以直接聽 TOUCH_END）。
  * - 依季節序號與當地小時解析主題（HallTheme），交給 LobbyHallThemeApplier／LobbyHallThemeNodeView 套到節點。
  * - 在畫面根節點下加一層季節粒子（HallSeasonFxLayer），換季時重撒。
@@ -72,7 +72,8 @@ export interface LobbyHallStageDepsInput {
 export interface LobbyHallScreenDeps {
     readonly themeConfig: HallThemeConfig | null;
     readonly fxConfig: HallSeasonFxConfig | null;
-    readonly onBack: () => void;
+    /** 右上角「推進一季」鈕（PROG-2-9116：大廳不會關閉，原本的返回鈕沒有作用，改成換季入口） */
+    readonly onAdvanceSeason: () => void;
     readonly onDock: (id: LobbyHallDockId) => void;
     /** 場景面板點擊；未提供時面板不接點擊 */
     readonly onPanel?: (id: LobbyHallPanelId) => void;
@@ -144,7 +145,7 @@ export class LobbyHallScreenBinder {
     constructor(private readonly _screenRoot: Node, private readonly _deps: LobbyHallScreenDeps) {
         this._applier = new LobbyHallThemeApplier(new LobbyHallThemeNodeView(_screenRoot));
         this._fitBackground();
-        this._bindTap('lobby-hall-screen.back', () => _deps.onBack());
+        this._bindTap('lobby-hall-screen.back', () => _deps.onAdvanceSeason());
         for (const id of LOBBY_HALL_DOCK_IDS) this._bindTap(`lobby-hall-screen.dock-${id}`, () => _deps.onDock(id));
         const onPanel = _deps.onPanel;
         if (onPanel) for (const id of LOBBY_HALL_PANEL_IDS) this._bindTap(`lobby-hall-screen.${id}`, () => onPanel(id));
