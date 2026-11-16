@@ -6009,6 +6009,50 @@
       ],
       "notes": "2026-11-16 | 狀態: done | 結論: 腳本預期錯 | 證據: 泡泡由 LobbyHallScreenBinder 以 _ucufId 'lobby-hall-screen.bubble' 找節點，實際節點名是轉換器流水號 LobbyHallScreen_div_50，腳本用名稱 regex (^|.)bubble$ 永遠找不到；改用 _ucufId 後線上版點 crowd-gongsun-zan 237ms 內泡泡 LobbyHallScreen_div_50 變 active | 變更: playtest-online.js 新增 activeUcufNodes 依語意 id 找節點 | 另記: 開機背景第 37 個面板掛載失敗（TypeError reading 'name'）偶發 console error，與本卡無關 | 驗證: 線上版（https://eaglhuang.github.io/3klife-play/）以修正後腳本實跑 6/7 步通過（唯一失敗為 PROG-2-9106 轉蛋返回）；把 PROG-2-9106 修正邏輯注入線上版後 7/7 通過；compute-gate standard、test tsc 0、run-cli ALL PASS 7737",
       "completed_at": "2026-11-16T15:00:00+08:00"
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9314",
+      "title": "沒帶參謀官時主將自帶戰法也放得出來：計謀點上限墊高、每回合回復改 5",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-16T09:40:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "實機測試：張飛沒帶參謀官時計謀點上限 30、開局 12、每回合 +2，自帶的火計要 35 點，整場永遠放不出來；其他戰法也要到第 10 回合才放得出第一次。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-16 | 狀態: done | 驗證: 型別檢查 0 錯；單元測試全過（新增 2 案） | 變更: 計謀點每回合回復 2→5；上限不足時墊高到主將自帶戰法的成本 | 阻塞: 無；未做到：新程式尚未在實機預覽驗證（本機預覽仍是舊編譯）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
