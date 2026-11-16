@@ -6791,6 +6791,98 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9332",
+      "title": "實跑工具點得到兩行字的按鈕（計謀鈕），並移除會白送一招的診斷",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "實跑工具回報「計謀未施放」有一半是工具自己的問題：計謀鈕是兩行字（計謀＋點數），快照把換行壓成空白，工具卻用完全相同的字串去找按鈕，所以從來沒有真的點到。另外診斷段直接呼叫施放函式，會不扣點白送一招，讓戰況失真。",
+      "related": [
+        "PROG-2-9331"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 線上 fb56243f9 實跑甘寧、張郃兩場通過，計謀點 30→0、35→0 確實扣點 | 變更: tapText 比對前把空白與換行壓成一個空白；診斷不再直接施放戰法 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9333",
+      "title": "計謀鈕在戰法條件沒達成時反灰並寫出條件；點數不夠時繼續顯示目前點數",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "一般戰鬥裡火攻要起風才能放，但計謀鈕照樣亮著，按下去才跳「戰法條件未達成」，玩家不知道差什麼。總PM 2026-11-16 同意開卡：條件不成立時按鈕反灰並寫明條件。實跑另外發現點數不夠時按鈕只寫「受限」，看不到點數累積。",
+      "related": [
+        "PROG-2-9329"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；單元測試 7741 全過（新增 TacticConditionButton 6 案、BattleHudLayoutAudit 補 2 個斷言）；尚未線上目視 | 變更: 計謀鈕副標寫「待風」等兩個字的條件；點數不足顯示目前點數 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
