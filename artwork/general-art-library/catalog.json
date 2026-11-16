@@ -1096,7 +1096,7 @@
         ]
       },
       "battle": {
-        "activeVersion": "0001",
+        "activeVersion": "0002",
         "status": "review-pending",
         "history": [
           {
@@ -1107,6 +1107,15 @@
             "canvas": "1199x1312 RGBA",
             "pose": "A",
             "qc": "125px preview: A pose forward stepping diagonal sword attack; sword straight; hands and full boots visible; clean transparent background."
+          },
+          {
+            "version": "0002",
+            "file": "battle/cao_cao__曹操__battle_0002.png",
+            "status": "review-pending",
+            "sha256": "089FCCA00B97495A1FD5083934F767C726F2C2A0A49DAB200718A9CDD8C9B9DB",
+            "canvas": "1024x1536 RGBA",
+            "pose": "A",
+            "qc": "250px preview: forward low lunge with diagonal sword strike; full figure, boots and straight blade visible; silhouette proportionally fitted within central 75% width; transparent RGBA; review candidate."
           }
         ]
       }
