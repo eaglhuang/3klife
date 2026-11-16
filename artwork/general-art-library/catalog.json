@@ -4165,7 +4165,7 @@
       },
       "battle": {
         "status": "review-pending",
-        "activeVersion": "0001",
+        "activeVersion": "0002",
         "history": [
           {
             "version": "0001",
@@ -4176,6 +4176,16 @@
             "weaponClass": "strategy-board",
             "poseLabel": "旋身落子布陣",
             "note": "以核定站姿延續荀攸暗青灰文士服；轉身落下軍略棋子的施策瞬間，候選待審。"
+          },
+          {
+            "version": "0002",
+            "file": "battle/xun_you__荀攸__battle_0002.png",
+            "status": "review-pending",
+            "sha256": "5a90b2ac0a097d1d40210a88cf56f70c7ba0fa15874c278e7f29b1868bb2ca09",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "strategy-board",
+            "poseLabel": "展簡指策",
+            "note": "延續核定荀攸暗青灰文士服；收斂構圖的前進施策瞬間，一手展開軍略圖、一手指向陣線，候選待審。"
           }
         ]
       }
