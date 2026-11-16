@@ -42,6 +42,8 @@ export class LoginScene extends Component {
         try {
             await host.showScreen('title-screen');
         } catch (error) {
+            // 載入途中玩家已進大廳：場景已銷毀，不再動任何節點（PROG-2-9102）
+            if (!this.node?.isValid) { this._finishWebBoot(); return; }
             console.warn('[LoginScene] title-screen 載入失敗，改用場景內舊標題', error);
             // 備援：拿出舊標題，但預設 Button 沒有遊戲用途，只留 BtnStart 等節點
             this._setLegacyTitleActive(this.node, true);
@@ -50,6 +52,8 @@ export class LoginScene extends Component {
             this._finishWebBoot();
             return;
         }
+        // 標題載入是非同步的；回來時場景可能已被切走，對已銷毀節點綁事件會丟例外（PROG-2-9102）
+        if (!this.node?.isValid || !hostNode.isValid) { this._finishWebBoot(); return; }
         this._title = new TitleScreenBinder(hostNode, Node.EventType.TOUCH_END, { onStart: () => this.onClickStart() });
         hostNode.active = true;
         this._finishWebBoot();

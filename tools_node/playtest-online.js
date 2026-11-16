@@ -484,7 +484,7 @@ async function main() {
             await page.evaluate(installPageHelpers);
             await waitUntil(async () => (await scene()) === 'LoginScene', stuckMs, '未進入 LoginScene');
             // 進 LoginScene 後等待再點開始（預設 12 秒：實測 LoginScene 出現後約 1 秒內點開始會觸發開機 pageerror，見 bug 卡；--login-settle 1000 可重現）
-            await delay(Number(args.loginSettle || 12000));
+            await delay(Number(args['login-settle'] || 12000));
             rec.detail.bootToLoginMs = Date.now() - bootT0;
 
             const startT0 = Date.now();
