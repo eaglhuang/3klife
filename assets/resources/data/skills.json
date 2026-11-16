@@ -188,7 +188,7 @@
   {
     "id": "sow-discord",
     "label": "離間",
-    "description": "散布流言，使敵方相鄰兩隊互相攻擊一回合。（暫定資料 PROG-2-1985）",
+    "description": "散布流言，使敵方相鄰兩隊互相攻擊一回合。",
     "costSp": 60,
     "steps": [
       { "type": "animation", "clip": "Skill",        "atTime": 0 },

@@ -17,8 +17,8 @@ export const RAISE_LOCKED_TEXT = ULTIMATE_FALLBACK_ZH_TW['ui.general.ultimate.ra
 
 /** 升星素材的說明文字；持有檢查與消耗還沒接，所以按鈕仍鎖定 */
 export const STAR_UP_MATERIAL_TEXT: Record<StarUpMaterial, string> = {
-    TEMPLATE_CARD: '升星需要範本卡（持有檢查未接，暫未開放）',
-    LINEAGE_SEAL: '升星需要譜牒印記（來源待裁決，暫未開放）',
+    TEMPLATE_CARD: '升星需要範本卡（尚未開放）',
+    LINEAGE_SEAL: '升星需要譜牒印記（尚未開放）',
 };
 
 export interface UltimateActionView {

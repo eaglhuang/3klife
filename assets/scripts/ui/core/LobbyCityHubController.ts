@@ -33,6 +33,9 @@ export const LOBBY_CATEGORIES: readonly LobbyCategoryDef[] = [
     { id: 'shop', label: '商城', items: [{ id: 'gacha', label: '轉蛋' }, { id: 'shop', label: '商店' }, { id: 'warehouse', label: '倉庫' }, { id: 'itemBag', label: '背包' }, { id: 'seasonPass', label: '通行證' }] },
 ];
 
+/** 子選單項目點了卻沒有可開的畫面時顯示的提示（PROG-2-9121） */
+export const LOBBY_ACTION_NOT_OPEN_TEXT = '此功能尚未開放';
+
 /** 子功能槽位數＝最多子功能的類別 */
 export const LOBBY_SUB_SLOTS = Math.max(...LOBBY_CATEGORIES.map(c => c.items.length));
 

@@ -138,7 +138,7 @@ import { HALL_BOARD_TYPE_LABEL, hallAssignNoticeOf, hallMissionDialogStateOf } f
 import { hallPlayerOf, officerPromotionScriptLines, OFFICER_ERA_KEPT_LINE } from '../../core/systems/OfficerSnapshot';
 import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
 import { officerDisplayOf } from '../../core/systems/OfficerDisplay';
-import { LOBBY_CATEGORIES, LOBBY_SUB_SLOTS, actionAt, buildLobbyCityHubView, categoryButtonId, computeSubMenuLayout, toggleCategory, type LobbyActionId, type SubMenuLayout, type LobbyCategoryId } from '../core/LobbyCityHubController';
+import { LOBBY_ACTION_NOT_OPEN_TEXT, LOBBY_CATEGORIES, LOBBY_SUB_SLOTS, actionAt, buildLobbyCityHubView, categoryButtonId, computeSubMenuLayout, toggleCategory, type LobbyActionId, type SubMenuLayout, type LobbyCategoryId } from '../core/LobbyCityHubController';
 import { nurtureGraduationRows } from '../core/NurtureGraduationView';
 import { pageSliceOf } from '../core/FixedSlotPager';
 import { MentorHoldingsController } from '../core/MentorHoldingsController';
@@ -1320,14 +1320,14 @@ export class LobbyScene extends Component {
 
     private _openSeasonPass(): void {
         const panel = this._seasonPassPanel;
-        if (!panel?.host) return;
+        if (!panel?.host) { this._showNotOpenYet(); return; }
         panel.setOpen(true);
         this._bringNodeToFront(panel.host.node);
     }
 
     private _openClanShrine(): void {
         const shrine = this._clanShrine;
-        if (!shrine?.host) return;
+        if (!shrine?.host) { this._showNotOpenYet(); return; }
         shrine.setOpen(true);
         this._bringNodeToFront(shrine.host.node);
     }
@@ -1912,6 +1912,7 @@ export class LobbyScene extends Component {
     private _openNurtureFlow(): void {
         const host = this._nurtureFlowHost;
         if (!host) {
+            this._showNotOpenYet();
             return;
         }
         host.node.active = true;
@@ -2166,6 +2167,7 @@ export class LobbyScene extends Component {
     private _openWarehouse(): void {
         const host = this._warehouseHost;
         if (!host) {
+            this._showNotOpenYet();
             return;
         }
         host.node.active = true;
@@ -2709,6 +2711,7 @@ export class LobbyScene extends Component {
     public openGovernorHall(): void {
         const host = this._govHallHost;
         if (!host) {
+            this._showNotOpenYet();
             return;
         }
         this._territoryGoldShortage = false;
@@ -2789,6 +2792,7 @@ export class LobbyScene extends Component {
     public openItemBag(): void {
         const host = this._itemBagHost;
         if (!host) {
+            this._showNotOpenYet();
             return;
         }
         host.node.active = true;
@@ -2918,6 +2922,7 @@ export class LobbyScene extends Component {
     public openMercenaryPanel(): void {
         const host = this._mercPanelHost;
         if (!host) {
+            this._showNotOpenYet();
             return;
         }
         host.node.active = true;
@@ -3454,6 +3459,7 @@ export class LobbyScene extends Component {
         this._lobbyHall?.hideBubble();
         const host = this._hallBoardHost;
         if (!host) {
+            this._showNotOpenYet();
             return;
         }
         if (board) {
@@ -3619,6 +3625,7 @@ export class LobbyScene extends Component {
     private _openJobChange(): void {
         const host = this._jobChangeHost;
         if (!host) {
+            this._showNotOpenYet();
             return;
         }
         host.node.active = true;
@@ -3945,6 +3952,7 @@ export class LobbyScene extends Component {
     private _openRecruitHall(): void {
         const host = this._recruitHost;
         if (!host) {
+            this._showNotOpenYet();
             return;
         }
         host.node.active = true;
@@ -4125,6 +4133,7 @@ export class LobbyScene extends Component {
     private _openRivalDiplomacy(): void {
         const host = this._rivalHost;
         if (!host) {
+            this._showNotOpenYet();
             return;
         }
         host.node.active = true;
@@ -4144,6 +4153,7 @@ export class LobbyScene extends Component {
     private _openDomestic(): void {
         const host = this._domesticHost;
         if (!host) {
+            this._showNotOpenYet();
             return;
         }
         host.node.active = true;
@@ -4207,6 +4217,7 @@ export class LobbyScene extends Component {
     private async _openBondingSetup(): Promise<void> {
         const host = this._bondingHost;
         if (!host || !this._bonding) {
+            this._showNotOpenYet();
             return;
         }
         host.node.active = true;
@@ -4767,6 +4778,7 @@ export class LobbyScene extends Component {
         const host = this._spiritCodexHost;
         const binder = host?.binder;
         if (!host || !binder) {
+            this._showNotOpenYet();
             return;
         }
         const cards = (await services().legacy?.getArchiver().getAllSpiritCards()) ?? [];
@@ -5801,6 +5813,11 @@ export class LobbyScene extends Component {
         await session.setExpertView(!session.expertView);
         this._showToast(session.expertView ? EXPERT_VIEW_ON_LINE : EXPERT_VIEW_OFF_LINE);
         await this._detailPanel?.refreshDs3CurrentTab();
+    }
+
+    /** 子選單項目的畫面還沒就緒時，至少讓玩家知道不是壞掉（PROG-2-9121） */
+    private _showNotOpenYet(): void {
+        this._showToast(LOBBY_ACTION_NOT_OPEN_TEXT);
     }
 
     private _showToast(message: string): void {
@@ -7365,7 +7382,10 @@ export class LobbyScene extends Component {
     /** 「支援卡」按鈕 */
     /** 「支援」：開我的教官卡列表（ui/support-card 預製件不存在，PROG-2-1097） */
     public onClickSupportCard() {
-        this.scheduleOnce(() => { void this._mentorHoldings?.open(); }, 0);
+        this.scheduleOnce(() => {
+            if (!this._mentorHoldings) this._showNotOpenYet();
+            void this._mentorHoldings?.open();
+        }, 0);
     }
 
     public onClickSpiritFamilyOverview() {
