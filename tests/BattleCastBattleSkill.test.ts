@@ -99,6 +99,21 @@ export function createBattleCastBattleSkillSuite(): TestSuite {
         assert.equals(0, general.currentSp);
     });
 
+    suite.test('有出征帳本時計謀只扣計謀點：SP 為 0 也能放、放完 SP 不清空；點數不足不能放（PROG-2-9323）', () => {
+        const ctrl = createBattle();
+        const general = ctrl.state.playerGeneral!;
+        const ledger = { tacticCurrent: 30, tacticMax: 30 };
+        (ctrl as unknown as { sortie: typeof ledger }).sortie = ledger;
+        (ctrl as unknown as { trySpendTacticPoints: (cost: number) => void }).trySpendTacticPoints = (cost) => { ledger.tacticCurrent -= cost; };
+        spyDispatcher(ctrl, true);
+        general.currentSp = 40;
+        assert.isFalse(ctrl.seedTacticNeedsSp());
+        assert.isTrue(ctrl.triggerPlayerSeedTactic({ battleSkillId: 'skill-a' }));
+        assert.equals(40, general.currentSp, '計謀不動 SP');
+        ledger.tacticCurrent = 0;
+        assert.isFalse(ctrl.triggerPlayerSeedTactic({ battleSkillId: 'skill-a' }), '計謀點不足');
+    });
+
     suite.test('玩家既有行為不變：dispatcher 未施放（applied=false）時 SP 不變、回傳 false', () => {
         const ctrl = createBattle();
         const general = ctrl.state.playerGeneral!;

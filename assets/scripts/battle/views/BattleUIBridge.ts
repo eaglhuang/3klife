@@ -368,7 +368,7 @@ export class BattleUIBridge {
       const descriptor = c.ctrl.getPlayerSeedTacticDescriptor();
       const [availability] = buildTacticAvailability(
         descriptor ? [{ id: descriptor.skillId, label: summary, tags: resolveBattleSkillProfile(descriptor.skillId)?.tags ?? [] }] : [],
-        { weather: state.weather, tacticPointEnabled: tacticPoints.enabled, generalCanUseSkill: pg.canUseSkill() },
+        { weather: state.weather, tacticPointEnabled: tacticPoints.enabled, generalCanUseSkill: pg.canUseSkill() || !c.ctrl.seedTacticNeedsSp() },
       );
       c.battleScenePanel?.setTacticSummary(
         summary,
