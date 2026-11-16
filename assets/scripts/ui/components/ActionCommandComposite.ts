@@ -74,6 +74,8 @@ export class ActionCommandComposite extends CompositePanel {
     private _tacticsButton: Button | null = null;
     private _duelButtonNode: Node | null = null;
     private _duelLocked = false;
+    /** 鎖定時按鈕第二行的字：一般是「鎖定」，主將已在棋盤上是「已出陣」 */
+    private _duelLockedText = '鎖定';
     /** 單挑鈕原始文字（不含 🔒），第一次套鎖時記下 */
     private _duelLabelText: string | null = null;
     private _tacticsEnabledColor: Color | null = null;
@@ -154,8 +156,9 @@ export class ActionCommandComposite extends CompositePanel {
      * 單挑鈕條件不足時灰度 + 🔒（主戰場UI規格補充_v3 小按鈕 3，PROG-2-1873）。
      * 保留點擊，讓按下後的原因 Toast（前排有小兵、已上場…）照常出現。
      */
-    public setDuelLocked(locked: boolean): void {
+    public setDuelLocked(locked: boolean, lockedText = '鎖定'): void {
         this._duelLocked = locked;
+        this._duelLockedText = lockedText;
         this._applyDuelLock();
     }
 
@@ -166,7 +169,7 @@ export class ActionCommandComposite extends CompositePanel {
         const label = btn.getChildByName('DuelLabel')?.getComponent(Label) ?? null;
         if (!label) return;
         if (this._duelLabelText === null) this._duelLabelText = label.string.replace(/^🔒\s*/, '');
-        label.string = this._duelLocked ? `${this._duelLabelText}\n鎖定` : this._duelLabelText;
+        label.string = this._duelLocked ? `${this._duelLabelText}\n${this._duelLockedText}` : this._duelLabelText;
     }
 
     public waitUntilReady(timeoutMs = 5000): Promise<boolean> {

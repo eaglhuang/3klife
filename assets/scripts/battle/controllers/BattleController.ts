@@ -1633,6 +1633,10 @@ export class BattleController {
    * 判斷武將是否已到達敵將面前（可觸發單挑邀請）。
    */
   public isGeneralFacingEnemyGeneral(faction: Faction): boolean {
+    // 教學戰：我方主將棋子走到設定的那一排就算到位，不必走到敵陣最後一排（PROG-2-9331）
+    if (this._tutorialBattle && faction === Faction.Player) {
+      return this.duelFlow.hasPlayerGeneralReachedRow(GAME_CONFIG.tutorialDuelInviteRow);
+    }
     return this.duelFlow.isGeneralFacingEnemyGeneral(faction);
   }
 

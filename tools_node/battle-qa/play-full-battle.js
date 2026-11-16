@@ -19,6 +19,8 @@
  *   --out <資料夾>          輸出資料夾（預設系統暫存目錄下 battle-qa-<時間戳>）
  *   --fresh                開預覽前清空該來源的 localStorage／sessionStorage／IndexedDB（全新玩家），並改走真實大廳流程
  *                          （信件「關閉」、季報「婉言謝絕」→「收起季報」、出征→戰場→戰前偵查出征）
+ *   --general <武將 id>     指定主將，只能配 --fresh：宿命轉蛋免費重轉到抽中這位名將才收下
+ *                          （zhang-fei｜wei-yan｜xiahou-dun｜zhang-he｜sun-ce｜gan-ning）；不改遊戲、不寫存檔
  *   --deploy-mode <模式>    full（預設，每回合部署到上限）｜one-per-turn（每回合 1 隊）｜first-turn-one（只第 1 回合 1 隊，之後只結束回合）
  *
  * 流程：
@@ -95,6 +97,9 @@ class QaError extends Error {
 }
 
 // ---------- 參數 ----------
+// --general 用：六位宿命名將的 id 與畫面上顯示的名字
+const STARTER_NAMES = { 'zhang-fei': '張飛', 'wei-yan': '魏延', 'xiahou-dun': '夏侯惇', 'zhang-he': '張郃', 'sun-ce': '孫策', 'gan-ning': '甘寧' };
+
 function parseArgs(argv) {
   const o = { url: 'http://localhost:7456', browserUrl: 'http://127.0.0.1:9333', duel: 'accept', ultimate: false, maxTurns: 60, out: '', fresh: false, deployMode: 'full' };
   for (let i = 2; i < argv.length; i += 1) {
@@ -108,9 +113,12 @@ function parseArgs(argv) {
     else if (a === '--out') o.out = next();
     else if (a === '--fresh') o.fresh = true;
     else if (a === '--deploy-mode') o.deployMode = next();
+    else if (a === '--general') o.general = next();
     else throw new Error(`未知參數：${a}`);
   }
   if (!['accept', 'reject'].includes(o.duel)) throw new Error('--duel 只接受 accept 或 reject');
+  if (o.general && !STARTER_NAMES[o.general]) throw new Error(`--general 只接受 ${Object.keys(STARTER_NAMES).join('、')}`);
+  if (o.general && !o.fresh) throw new Error('--general 要配 --fresh（靠宿命轉蛋重轉選主將）');
   if (!['full', 'one-per-turn', 'first-turn-one'].includes(o.deployMode)) throw new Error('--deploy-mode 只接受 full、one-per-turn 或 first-turn-one');
   if (!Number.isFinite(o.maxTurns) || o.maxTurns < 1) throw new Error('--max-turns 必須是正整數');
   if (!o.out) {
@@ -226,7 +234,7 @@ function pageSceneName() {
 }
 
 // 頁面端：大廳備用流程單步（在 LoginScene／LobbyScene 內推進到戰場）
-function pageLobbyTick() {
+function pageLobbyTick(wantName) {
   const bq = window.__bq;
   const sn = cc.director.getScene() ? cc.director.getScene().name : '(無)';
   const out = { scene: sn, battle: !!bq.battle(), action: null };
@@ -245,14 +253,20 @@ function pageLobbyTick() {
   const order = ['婉言謝絕', '收起季報', '下一步', '開始遊戲', '下一位', '前往宿命轉蛋', '繼續', '跳過', '收起', '關閉', '親自指揮', '強行出征', '出　戰', '戰場'];
   for (const t of order) if (tryTap(t)) return out;
   if (tryTap('出征')) return out;
-  // 新手開場的抽卡結果：只點「確定 · 全部收下」，不碰「免費重轉」
+  // 新手開場的抽卡結果：只點「確定 · 全部收下」；指定主將（--general）時，畫面上沒有那位名將就先點「免費重轉」
   let collect = null;
+  let reroll = null;
+  let wanted = !wantName;
   bq.walk(cc.director.getScene(), (n) => {
     for (const c of n.components || []) {
-      if (typeof c.string === 'string' && /全部收下/.test(c.string) && bq.visible(n)) collect = n;
+      if (typeof c.string !== 'string' || !bq.visible(n)) continue;
+      if (/全部收下/.test(c.string)) collect = n;
+      if (/免費重轉/.test(c.string)) reroll = n;
+      if (wantName && c.string.includes(wantName)) wanted = true;
     }
     return false;
   });
+  if (collect && !wanted && reroll) { bq.tapNode(reroll); out.action = `點「免費重轉」（還沒抽中${wantName}）`; return out; }
   if (collect) { bq.tapNode(collect); out.action = '點「確定 · 全部收下」（抽卡結果）'; return out; }
   // 單抽演出階段還沒出現收下鈕：點畫面中央推進演出（不會落在「免費重轉」上）
   let reveal = false;
@@ -409,13 +423,13 @@ async function enterWithHelper(page) {
   return rep.enter;
 }
 
-async function enterFromLobby(page) {
+async function enterFromLobby(page, wantName = null) {
   const t0 = Date.now();
   let lastLog = 0;
   let lastTexts = [];
   const actions = [];
   while (Date.now() - t0 < 300000) {
-    const r = await ev(page, pageLobbyTick);
+    const r = await ev(page, pageLobbyTick, wantName);
     if (r.action) actions.push(`${r.scene}:${r.action}`);
     if (r.battle) {
       rep.entered = 'lobby-fallback';
@@ -978,12 +992,12 @@ async function main() {
     if (opt.fresh) {
       // 全新玩家：不用 enter-battle.js（它直接走出征鈕），改走真實大廳流程（信件、季報、出征→戰場→出征）
       rep.entered = '';
-      await runStep('大廳流程進場（全新玩家）', () => enterFromLobby(page));
+      await runStep('大廳流程進場（全新玩家）', () => enterFromLobby(page, opt.general ? STARTER_NAMES[opt.general] : null));
     } else {
       await runStep('注入 enter-battle.js 進場', () => enterWithHelper(page));
       if (!rep.entered) {
         log('enter-battle.js 未進到戰場，改走大廳備用流程');
-        await runStep('大廳備用流程進場', () => enterFromLobby(page));
+        await runStep('大廳備用流程進場', () => enterFromLobby(page, opt.general ? STARTER_NAMES[opt.general] : null));
       }
     }
     await shot(page, opt, 'battle-start');
