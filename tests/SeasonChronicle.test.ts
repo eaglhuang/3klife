@@ -237,6 +237,7 @@ export function createSeasonChronicleSuite(): TestSuite {
         assert.isTrue(view.texts.chronicleTrend.startsWith('【天下大勢】'));
         assert.isTrue(view.texts.encounterTitle.includes('西域胡商'));
         assert.isFalse(view.enabled.btnCloseChronicle);
+        assert.equals('請先抉擇', view.texts.closeChronicleLabel, '未抉擇時收起鈕寫出原因');
         const host = { node: { active: false }, binder: null };
         const toasts: string[] = [];
         let afford = false;
