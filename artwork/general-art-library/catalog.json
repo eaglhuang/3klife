@@ -1986,6 +1986,22 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/cao_ren__曹仁__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "57f856333b635fa5928e6bdf10fc6776de87c5bf9d16197d2018051d54d71cba",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "shield-jian",
+            "poseLabel": "盾格後直劍反擊",
+            "note": "以核定站姿延續藍鋼鎧甲與曹仁形象；盾牌格擋後以直劍反擊。候選待審。"
+          }
+        ]
       }
     },
     {
