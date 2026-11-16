@@ -130,7 +130,7 @@ import { DISPATCH_JOB_CATALOG, dispatchBoardRows, findDispatchJob, type Dispatch
 import { buildMercenaryPoolRows, filterPoolGeneralIds, type MercenaryPoolRow } from '../systems/MercenaryPoolPresenter';
 import { fallenOfficerOrigins } from '../systems/FallenOfficerMarket';
 import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
-import { FRESH_OPENING_LETTER, markOpeningLetterSeen, normalizeOpeningLetterState, OpeningLetterState } from '../systems/OpeningLetter';
+import { carryOpeningLetterOnNewGame, FRESH_OPENING_LETTER, markOpeningLetterSeen, normalizeOpeningLetterState, OpeningLetterState } from '../systems/OpeningLetter';
 import { remarkRandomOf } from '../systems/SageRemarks';
 import { FOOD_LOW_LINE } from '../systems/ResourceCap';
 import { ITEM_DISPLAY_NAMES } from '../systems/PlayerInventory';
@@ -2130,7 +2130,10 @@ export class GameSession {
         const coreId = options.coreGeneralId ?? STARTER_CORE_GENERAL_ID;
         const core = starters.find(general => general.id === coreId)!;
         if (!checkDeployable(core, { nurturingIds: this._nurturingIds() }).eligible) throw new Error('[GameSession] 初始核心主將不可出戰');
+        // 開場信在轉蛋前已讀完；startNewGame 會把它洗回未讀，這裡先記下再還原（PROG-2-9124）
+        const letterBeforeNewGame = carryOpeningLetterOnNewGame(this._openingLetter);
         this.startNewGame(seed);
+        this._openingLetter = letterBeforeNewGame;
         this._roster.replaceAll(normalizeRosterRoles(starters));
         if (!await this.setLeadGeneral(coreId)) throw new Error('[GameSession] 無法設定初始核心主將');
         this._emit(GAME_SESSION_EVENTS.RosterChanged, this.roster);

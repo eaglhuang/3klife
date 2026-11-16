@@ -26,6 +26,15 @@ export function markOpeningLetterSeen(state: OpeningLetterState): OpeningLetterS
     return { ...state, seen: true };
 }
 
+/**
+ * 開新局（宿命轉蛋確定）時沿用的信件狀態。
+ * 開場信在轉蛋之前讀完，開新局會把玩家狀態洗回初始；已讀旗標不屬於新局內容，必須保留，
+ * 否則重整後再進大廳會把信重彈一次（PROG-2-9124）。
+ */
+export function carryOpeningLetterOnNewGame(prev: OpeningLetterState): OpeningLetterState {
+    return prev.seen ? { seen: true } : { ...FRESH_OPENING_LETTER };
+}
+
 /** 讀存檔時使用：非物件或 seen 不是布林值時回傳未讀狀態。 */
 export function normalizeOpeningLetterState(raw: unknown): OpeningLetterState {
     if (typeof raw !== 'object' || raw === null) return { ...FRESH_OPENING_LETTER };

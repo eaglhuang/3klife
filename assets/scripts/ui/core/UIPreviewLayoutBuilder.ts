@@ -9,6 +9,12 @@ import { resolveSize, percentFraction } from './UISpecTypes';
  *   - applyWidget: 設定 Widget 對齊 (Unity: RectTransform anchors)
  *   - setupLayout: 設定 Layout 分組 (Unity: LayoutGroup)
  */
+/** 凍結容器的尺寸與上次分配時不同才需要重新分配（純判斷，便於單元測試）。 */
+export function needsRealign(last: { width: number; height: number } | undefined, width: number, height: number): boolean {
+    if (!last) return true;
+    return Math.abs(last.width - width) > 0.5 || Math.abs(last.height - height) > 0.5;
+}
+
 export class UIPreviewLayoutBuilder {
 
     private static readonly DEFAULT_GRID_CELL = 100;
@@ -179,6 +185,13 @@ export class UIPreviewLayoutBuilder {
             return;
         }
 
+        this._alignContainer(root, layout, layoutDef);
+    }
+
+    /**
+     * 排一個容器的主軸分配與交叉軸對齊；凍結容器尺寸變動時（見 _watchFrozenContainerResize）也走這裡。
+     */
+    private _alignContainer(root: Node, layout: Layout, layoutDef: NonNullable<UILayoutNodeSpec['layout']>): void {
         const parentTransform = root.getComponent(UITransform);
         if (!parentTransform) return;
 
@@ -200,7 +213,39 @@ export class UIPreviewLayoutBuilder {
         if (needsCustomFreeze) {
             layout.enabled = false;
             (root as any).__ucufLayoutFrozen = true;
+            this._watchFrozenContainerResize(root);
         }
+    }
+
+    /**
+     * 凍結容器（space-between 等自行分配的頂欄／資訊列）的位置是依「建置當下」的容器寬度算出，
+     * 之後 Widget 隨視窗大小或啟用時機改了容器尺寸，Layout 已停用不會重排，子節點就留在舊位置
+     * （重整後再進大廳頂欄右偏 150px，PROG-2-9124）。這裡在容器尺寸變動時重新分配。
+     * 以微任務合併同一輪 Widget 更新（子節點尺寸可能稍後才被更新），寬高沒變就略過。
+     * Unity 對照：ContentSizeFitter 在 RectTransform 尺寸變動時重算 LayoutGroup。
+     */
+    private _watchFrozenContainerResize(root: Node): void {
+        const marked = root as any;
+        const transform = root.getComponent(UITransform);
+        if (marked.__ucufResizeWatched === true || !transform) return;
+        marked.__ucufResizeWatched = true;
+        marked.__ucufAlignedSize = { width: transform.width, height: transform.height };
+        let queued = false;
+        root.on(Node.EventType.SIZE_CHANGED, () => {
+            if (queued) return;
+            queued = true;
+            void Promise.resolve().then(() => {
+                queued = false;
+                if (!root.isValid) return;
+                const current = root.getComponent(UITransform);
+                const layout = root.getComponent(Layout);
+                const layoutDef = marked.__ucufLayoutDef as UILayoutNodeSpec['layout'] | undefined;
+                if (!current || !layout || !layoutDef) return;
+                if (!needsRealign(marked.__ucufAlignedSize, current.width, current.height)) return;
+                marked.__ucufAlignedSize = { width: current.width, height: current.height };
+                this._alignContainer(root, layout, layoutDef);
+            });
+        });
     }
 
     private _isFlowLayoutChild(child: Node): boolean {
