@@ -63,7 +63,7 @@ import type { BloodlineStageAwakenedPayload, BloodlineStageCapRaisedPayload } fr
 import { GAME_SESSION_EVENTS, GameSession, type AddGeneralsResult, type ClanPrestigeChangedPayload, type ClanTierUpPayload, type MilestoneUpPayload, type CustomGoldFactorBornPayload, type LifeImprintedPayload, type RivalSeasonEventsPayload } from '../../core/managers/GameSession';
 import { buildSageRemarks, remarkRandomOf } from '../../core/systems/SageRemarks';
 import { SAGES } from '../../core/systems/SageDivination';
-import { seasonDisplayText, seasonStartText } from '../core/SeasonTexts';
+import { hallTimeLabelText, seasonDisplayText, seasonStartText } from '../core/SeasonTexts';
 import { SeasonHudController } from '../core/SeasonHudController';
 import { buildSandtableStatusLabel } from '../../core/systems/SandtableStatus';
 import type { YearReport } from '../../core/systems/YearReport';
@@ -1151,7 +1151,7 @@ export class LobbyScene extends Component {
                     gold: () => gacha.getCurrencyAmount('gold'),
                     spendGold: (amount) => gacha.spendCurrency('gold', amount),
                 });
-                if (result.ok) this._refreshDomestic();
+                if (result.ok) { this._refreshDomestic(); this._refreshLobbyHallTopbar(); }
                 return result;
             },
             toast: (message) => { services().event.emit('SHOW_TOAST', { message, duration: 3 }); },
@@ -1192,7 +1192,7 @@ export class LobbyScene extends Component {
                     gold: () => gacha.getCurrencyAmount('gold'),
                     spendGold: (amount) => gacha.spendCurrency('gold', amount),
                 });
-                if (result.ok) this._refreshDomestic();
+                if (result.ok) { this._refreshDomestic(); this._refreshLobbyHallTopbar(); }
                 return result;
             },
             toast: (message) => { services().event.emit('SHOW_TOAST', { message, duration: 3 }); },
@@ -2069,7 +2069,7 @@ export class LobbyScene extends Component {
         const domestic = new DomesticPanelController({
             log: () => services().session.domesticLog,
             season: () => services().session.gameTime.totalSeasonsElapsed,
-            seasonDisplay: () => `第 ${services().session.gameTime.totalSeasonsElapsed + 1} 季`,
+            seasonDisplay: () => seasonDisplayText((key, ...args) => services().i18n.t(key, ...args), services().session.gameTime),
             outputMultiplier: (taskId: DomesticTaskId) => services().session.domesticOutputMultiplier(taskId),
             eventLine: () => services().session.governanceEventNotice,
             journalPending: () => services().session.pendingMorningJournalCount + (services().session.seasonChronicleUnread ? 1 : 0),
@@ -3942,8 +3942,6 @@ export class LobbyScene extends Component {
         const wallet = this._localGachaService.getWalletSnapshot();
         const leadName = session.roster.find((g) => g.id === session.leadGeneralId)?.name ?? '張飛';
         const rankName = officerDisplayOf(session.officerState).rankName || '鄉里義士';
-        const seasonNames = ['春', '夏', '秋', '冬'] as const;
-        const seasonChar = seasonNames[Math.max(0, Math.min(3, (session.gameTime.currentSeason || 1) - 1))];
         const hour = new Date().getHours();
         const isNight = this._hallThemeConfig
             ? resolveHallSceneTheme({ seasonIndex: session.gameTime.currentSeason, hour }, this._hallThemeConfig).daypart === 'night'
@@ -3954,7 +3952,7 @@ export class LobbyScene extends Component {
             food: session.military.food,
             troops: session.military.cityTroops,
             officerSubtitle: `官職 ${rankName} · 主將 ${leadName}`,
-            timeLabel: `第 ${session.gameTime.currentYear} 年 ${seasonChar} · ${isNight ? '夜' : '晝'}`,
+            timeLabel: hallTimeLabelText((key, ...args) => services().i18n.t(key, ...args), session.gameTime, isNight),
         });
     }
 
@@ -4225,6 +4223,7 @@ export class LobbyScene extends Component {
             services().event.emit('SHOW_TOAST', { message: error instanceof Error ? error.message : '內政任務失敗', duration: 2.5 });
         } finally {
             this._refreshDomestic();
+            this._refreshLobbyHallTopbar();
         }
     }
 

@@ -5,7 +5,7 @@
  * View 只把列資料套到按鈕與文字。能否選擇沿用 runDomesticTask 的規則：同一季只能選一項。
  * 產出依指派武將屬性（§F）計算。任務名稱與資源名稱是暫定的繁中字串，正式字串表定案後改 key。
  */
-import { DOMESTIC_TASK_IDS, domesticOutputFor, DomesticResource, DomesticSeasonLog, DomesticStats, DomesticTaskId } from './DomesticTasks';
+import { DOMESTIC_TASK_IDS, domesticOutputFor, DomesticOutput, DomesticResource, DomesticSeasonLog, DomesticStats, DomesticTaskId } from './DomesticTasks';
 
 /** 任務格目前指派的武將（GOV-04）；產出依其屬性計算。 */
 export interface DomesticGovernor {
@@ -61,4 +61,14 @@ export function buildDomesticRows(
             governorName: governor?.name ?? null,
         };
     });
+}
+
+/**
+ * 選完內政任務後的提示：顯示「實際入帳」而不是預覽毛額（PROG-2-9126）。
+ * 入帳量被資源上限夾住時，註明原產出與上限，玩家才看得懂為何頂欄增加得比預覽少。
+ */
+export function domesticChosenNotice(label: string, output: Readonly<DomesticOutput>, granted: number): string {
+    const name = RESOURCE_LABEL[output.resource];
+    const base = `本季已選「${label}」：${name} +${granted}`;
+    return granted < output.amount ? `${base}（已達${name}上限，原產出 +${output.amount}）` : base;
 }

@@ -71,10 +71,22 @@ export function governanceEventLine(event: ActiveGovernanceEvent): string {
     return `${GOVERNANCE_EVENT_TUNING.cityLabel} 發生${def.name}！${TASK_LABEL[def.task]}產出本季 -${percent}%`;
 }
 
-/** 本季治理成果：糧草 +{Food}，黃金 +{Gold}…；全部掛零回傳 null */
-export function governanceReportLine(gains: Readonly<Partial<Record<DomesticResource, number>>>): string | null {
-    const parts = REPORT_ORDER
-        .filter((resource) => (gains[resource] ?? 0) > 0)
-        .map((resource) => `${RESOURCE_LABEL[resource]} +${gains[resource]}`);
-    return parts.length > 0 ? `本季治理成果：${parts.join('，')}` : null;
+/**
+ * 本季治理成果：糧草 +{Food}，黃金 +{Gold}…；全部掛零回傳 null。
+ * gains 只放「換季結算實際入帳」的淨變化（與頂欄換季前後差額一致）；
+ * alreadyBanked 是上季內政任務已在季中入帳的產出，另用括號註明，不併進 gains（PROG-2-9126）。
+ */
+export function governanceReportLine(
+    gains: Readonly<Partial<Record<DomesticResource, number>>>,
+    alreadyBanked?: Readonly<Partial<Record<DomesticResource, number>>>,
+): string | null {
+    const render = (source: Readonly<Partial<Record<DomesticResource, number>>>): string[] => REPORT_ORDER
+        .filter((resource) => (source[resource] ?? 0) > 0)
+        .map((resource) => `${RESOURCE_LABEL[resource]} +${source[resource]}`);
+    const parts = render(gains);
+    const banked = alreadyBanked ? render(alreadyBanked) : [];
+    if (parts.length === 0 && banked.length === 0) return null;
+    const bankedNote = banked.length > 0 ? `內政產出 ${banked.join('，')} 已於季中入帳` : '';
+    if (parts.length === 0) return `本季治理成果：${bankedNote}`;
+    return `本季治理成果：${parts.join('，')}${bankedNote ? `（${bankedNote}）` : ''}`;
 }
