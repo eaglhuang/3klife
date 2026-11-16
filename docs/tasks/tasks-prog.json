@@ -7068,6 +7068,53 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9338",
+      "title": "「軍勢已用盡」提示一出現就被別的提示蓋掉：延後再跳；實跑工具記下遊戲跳過的每句提示",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "線上實跑 7 場都沒看到「軍勢已用盡」提示。讓工具記下遊戲實際跳過的提示後確認：這句在第 5 回合開始時有跳，但同一瞬間被「第 5 回合・殘局爆發！破釜沉舟」蓋掉（提示一次只顯示一句），玩家看不到，不知道為什麼不能再派兵。",
+      "related": [
+        "PROG-2-9334",
+        "PROG-2-9337"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；單元測試 7749 全過；線上 f16b7f682 實跑確認原本被蓋掉；修正後尚未線上實跑 | 變更: 軍勢見底提示延後 2.8 秒；工具包一層提示函式記錄所有提示 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
