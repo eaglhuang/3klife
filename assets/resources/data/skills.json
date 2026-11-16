@@ -22,7 +22,7 @@
     "steps": [
       { "type": "audio",     "clip": "feijian",     "atTime": 0.0 },
       { "type": "animation", "clip": "Skill",        "atTime": 0.0 },
-      { "type": "vfx",       "blockId": "trails",    "target": "caster", "offsetY": 0.8, "atTime": 0.1 },
+      { "type": "vfx",       "blockId": "trail_slash_w",    "target": "caster", "offsetY": 0.8, "atTime": 0.1 },
       { "type": "vfx",       "blockId": "impact_shock", "target": "targets", "atTime": 0.45 },
       { "type": "damage",    "multiplier": 2.0, "target": "single",       "atTime": 0.5 },
       { "type": "floatText", "text": "青龍偃月！", "target": "targets", "atTime": 0.5 }
@@ -64,7 +64,7 @@
     "steps": [
       { "type": "audio",     "clip": "fireball",      "atTime": 0.0 },
       { "type": "animation", "clip": "Skill",          "atTime": 0.0 },
-      { "type": "vfx",       "blockId": "trails",      "target": "caster", "offsetY": 0.8, "atTime": 0.1 },
+      { "type": "vfx",       "blockId": "trail_slash_w",      "target": "caster", "offsetY": 0.8, "atTime": 0.1 },
       { "type": "vfx",       "blockId": "fire_burst",  "target": "caster", "atTime": 0.25 },
       { "type": "audio",     "clip": "feijian",        "atTime": 0.4 },
       { "type": "vfx",       "blockId": "impact_shock", "target": "targets", "atTime": 0.5 },
@@ -150,7 +150,7 @@
     "steps": [
       { "type": "audio",     "clip": "feijian",        "atTime": 0.0 },
       { "type": "animation", "clip": "Skill",          "atTime": 0.0 },
-      { "type": "vfx",       "blockId": "trails",       "target": "caster", "offsetY": 0.6, "atTime": 0.1 },
+      { "type": "vfx",       "blockId": "trail_slash_w",       "target": "caster", "offsetY": 0.6, "atTime": 0.1 },
       { "type": "vfx",       "blockId": "impact_shock", "target": "targets", "atTime": 0.4 },
       { "type": "damage",    "multiplier": 1.8,          "target": "single", "atTime": 0.48 },
       { "type": "floatText", "text": "鬼謀先機！",       "target": "targets", "atTime": 0.5 }

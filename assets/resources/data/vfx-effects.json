@@ -100,7 +100,7 @@
           "scale": 1.2
         },
         {
-          "blockId": "trail_bigsword",
+          "blockId": "trail_bigsword1",
           "delay": 0.1,
           "duration": 0.6
         },
@@ -136,7 +136,7 @@
           "scale": 1.3
         },
         {
-          "blockId": "trail_slash",
+          "blockId": "trail_slash_w",
           "delay": 0.1,
           "duration": 0.5
         },
@@ -178,7 +178,7 @@
           "scale": 1.8
         },
         {
-          "blockId": "energy_blast_ring",
+          "blockId": "energy_blast",
           "delay": 0.3,
           "duration": 1.5,
           "scale": 2

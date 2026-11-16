@@ -8047,6 +8047,53 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9363",
+      "title": "特效表 4 處寫錯的特效代號修正，並新增「代號必須在登錄表裡」的守門測試",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "特效表有 3 個奧義效果（張飛、關羽、呂布）與 skills.json 的 3 個步驟引用了登錄表裡不存在的特效代號，播放時只記一行警告就略過。查證後確認這些定義戰場目前沒有使用（戰場走 battle_ 開頭那組，全部有 prefab），所以不是線上看得到的缺陷，但資料是錯的，日後接上就會少一層演出。",
+      "related": [
+        "PROG-2-9361",
+        "PROG-2-9359"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（7834 過，新測試有執行） | 變更: 修正 4 處特效代號；新增 tests/VfxTableReferences.test.ts | 阻塞: 無。這 4 處都在戰場目前沒有使用的舊效果定義裡，修正後戰場畫面不變",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
