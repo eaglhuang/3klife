@@ -8232,7 +8232,7 @@
         ]
       },
       "battle": {
-        "activeVersion": "0002",
+        "activeVersion": "0003",
         "status": "review-pending",
         "history": [
           {
@@ -8242,6 +8242,16 @@
             "sha256": "5052c3898b9e773243b7b9418cef1f8d965097c8088229a750976d54acd2e205",
             "canvas": "1024x1536 RGBA",
             "note": "Existing remote artwork discovered without a catalog record; kept as review candidate, not asserted as runtime-integrated."
+          },
+          {
+            "version": "0003",
+            "file": "battle/zhao_e__趙娥__battle_0003.png",
+            "status": "review-pending",
+            "sha256": "a107f5325ba93b3764f1d5184cf0a68c7a9c6fa270f1ae9b63f0d1746b858fac",
+            "canvas": "1024x1536 RGBA PNG",
+            "poseCode": "短刀前探",
+            "sourceStanding": "standing/zhao_e__趙娥__standing_0002.png",
+            "note": "依使用者要求改為短刀；手指實握刀柄，刀刃自護手延伸，手腕與前臂自然對齊。保留趙娥赤棕戰衣、深色護甲與原有角色辨識。候選待審。"
           }
         ]
       }
