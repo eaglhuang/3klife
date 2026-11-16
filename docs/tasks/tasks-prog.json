@@ -7115,6 +7115,53 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9340",
+      "title": "教學戰敵軍對路出兵＋來襲提示；小兵走到敵方武將正旁邊會停下來打；教學戰單挑門檻改五成",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "線上 7 場教學戰我方全勝、平均只損 0.14 隊：小兵只打同一路正面（使用者定的設計），敵軍照一般策略選路時常和我方錯開。使用者 2026-11-17 裁示採「敵軍對路＋引導提示」，並裁示小兵要主動打旁邊的敵方武將；總PM 裁決教學戰單挑門檻改五成。",
+      "related": [
+        "PROG-2-9335",
+        "PROG-2-9336"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；單元測試 7753 全過；戰法冒煙全過；尚未線上實跑 | 變更: 教學戰敵軍選路、來襲提示、小兵接敵武將、單挑門檻 0.3→0.5 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
