@@ -7,6 +7,10 @@ on:
       - 'assets/scripts/ui/**'
       - 'assets/scripts/battle/**'
       - 'tests/ucuf/**'
+      - 'assets/scripts/core/**'
+      - 'assets/scripts/shared/**'
+      - 'tests/Battle*.test.ts'
+      - 'tests/run-battle-skill-smoke.ts'
       - 'tests/run-ucuf-only.ts'
       - 'tools_node/**'
       - 'package.json'
@@ -21,6 +25,10 @@ on:
       - 'assets/scripts/ui/**'
       - 'assets/scripts/battle/**'
       - 'tests/ucuf/**'
+      - 'assets/scripts/core/**'
+      - 'assets/scripts/shared/**'
+      - 'tests/Battle*.test.ts'
+      - 'tests/run-battle-skill-smoke.ts'
       - 'tests/run-ucuf-only.ts'
       - 'tools_node/**'
       - 'package.json'
@@ -52,3 +60,7 @@ jobs:
 
       - name: Run UCUF tests
         run: npm run test:ucuf
+
+      # 戰法冒煙測試不在 run-cli 內，曾壞了很久沒人發現（PROG-2-9319），所以放進 CI
+      - name: Run battle skill smoke tests
+        run: npm run test:battle-skill-smoke
