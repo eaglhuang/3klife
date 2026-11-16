@@ -10,6 +10,7 @@
  *   4. 轉蛋：切換每個池子一次，確認右欄節點切一輪後沒有疊加
  *   5. 人物介紹：開第一位武將，切每個分頁截圖；「命」分頁檢查血統樹底板 = 主體寬−720 × 主體高
  *   6. 出征打一場戰鬥到結算，回大廳（卡住超過 120 秒記為失敗）
+ *   7. 老玩家重開：同一情境重新整理再進大廳，確認底欄在、不重跑新手開場
  *
  * 每一步記錄：耗時、截圖、這一步期間的 console error 與 pageerror。
  * pageerror（未捕捉例外）視為該步失敗；console error 只記錄、不單獨判失敗。
@@ -780,6 +781,40 @@ async function main() {
             const barBack = await waitUntil(() => page.evaluate(() => window.__pt.hasButton('^BtnCatShop$')), 15000, '').catch(() => false);
             rec.detail.lobbyBarAfterReturn = Boolean(barBack);
             if (!barBack) throw new Error(`轉蛋按「返回大廳」後底欄按鈕（BtnCat*）全部消失，畫面看似大廳但節點不在（場景 ${await scene()}；Btn 類節點 ${(await page.evaluate(() => window.__pt.dumpBtnLike())).join(', ')}）`);
+            return rec.detail;
+        }, { skipIfFailed: true });
+
+        // ── 8. 老玩家重開 ──
+        // 同一瀏覽器情境重新整理：存檔還在，等同玩家第二次開遊戲。
+        // 要直接回到大廳、底欄在、不可再跑一次新手開場（PROG-2-9114）。
+        await step('returning-player-reload', async (rec) => {
+            const t0 = Date.now();
+            await page.reload({ waitUntil: 'load', timeout: stuckMs });
+            await waitUntil(() => page.evaluate(() => Boolean(window.cc && window.cc.director && window.cc.director.getScene())), stuckMs, '重開後引擎未就緒');
+            await page.evaluate(installPageHelpers);
+            await waitUntil(async () => (await scene()) === 'LoginScene', stuckMs, '重開後未進入 LoginScene');
+            await delay(Number(args['login-settle'] || 12000));
+            const clicked = await clickButton('^BtnStart$');
+            if (!clicked && !(await page.evaluate(() => window.__pt.emitLoginStart()))) throw new Error('重開後找不到開始鈕');
+            await waitUntil(async () => (await scene()) === 'LobbyScene', stuckMs, '重開後點開始未進入 LobbyScene');
+            // 以「底欄出現且載入提示消失」為準；載入提示會晚一點才掛上，只看提示消失會誤判
+            let lastTexts = [];
+            const ready = await waitUntil(async () => {
+                lastTexts = await page.evaluate((re) => window.__pt.textsMatching(re), '正在準備|載入中|Loading|啟動遇到問題');
+                return lastTexts.length === 0 && (await page.evaluate(() => window.__pt.hasButton('^BtnCatShop$')));
+            }, stuckMs, '').catch(() => false);
+            rec.detail.lastLoadingTexts = lastTexts.slice(0, 4);
+            await delay(2000);
+            rec.detail.reloadToLobbyMs = Date.now() - t0;
+            const opening = [];
+            for (const name of openingSeq) {
+                if (await page.evaluate((re) => window.__pt.hasButton(re), '^' + name + '$')) opening.push(name);
+            }
+            rec.detail.openingButtonsSeen = opening;
+            rec.detail.lobbyBar = await page.evaluate(() => window.__pt.hasButton('^BtnCatShop$'));
+            await page.screenshot({ path: path.join(outDir, '08-returning-lobby.png') });
+            if (opening.length) throw new Error('老玩家重開後又出現新手開場：' + opening.join(', '));
+            if (!ready || !rec.detail.lobbyBar) throw new Error('老玩家重開後大廳沒有準備好（底欄不在或仍在載入：' + lastTexts.slice(0, 2).join('／') + '）');
             return rec.detail;
         }, { skipIfFailed: true });
 
