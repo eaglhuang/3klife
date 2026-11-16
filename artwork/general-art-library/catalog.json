@@ -7934,32 +7934,49 @@
         ]
       }
     },
-    {
-      "uid": "yang-hui-yu",
-      "name": "羊徽瑜",
-      "standing": {
-        "status": "integrated",
-        "history": [
-          {
-            "version": "0002",
-            "file": "standing/yang_hui_yu__羊徽瑜__standing_0002.png",
-            "status": "integrated"
-          }
-        ],
-        "activeVersion": "0002"
-      },
-      "avatar": {
-        "status": "integrated",
-        "history": [
-          {
-            "version": "0002",
-            "file": "avatars/yang_hui_yu__羊徽瑜__avatar_0002.png",
-            "status": "integrated"
-          }
-        ],
-        "activeVersion": "0002"
+        {
+  "uid": "yang-hui-yu",
+  "name": "羊徽瑜",
+  "standing": {
+    "status": "integrated",
+    "history": [
+      {
+        "version": "0002",
+        "file": "standing/yang_hui_yu__羊徽瑜__standing_0002.png",
+        "status": "integrated"
       }
-    },
+    ],
+    "activeVersion": "0002"
+  },
+  "avatar": {
+    "status": "integrated",
+    "history": [
+      {
+        "version": "0002",
+        "file": "avatars/yang_hui_yu__羊徽瑜__avatar_0002.png",
+        "status": "integrated"
+      }
+    ],
+    "activeVersion": "0002"
+  },
+  "battle": {
+    "status": "review-pending",
+    "activeVersion": "0001",
+    "history": [
+      {
+        "version": "0001",
+        "file": "battle/yang_hui_yu__羊徽瑜__battle_0001.png",
+        "status": "review-pending",
+        "sha256": "e65670f107f8841af66a416eae216b1b93127a872f1069fd14faac929623ad5b",
+        "canvas": "1024x1536 RGBA",
+        "weaponClass": "court-command-token",
+        "poseLabel": "前踏揚令牌傳信",
+        "sourceStanding": "standing/yang_hui_yu__羊徽瑜__standing_0002.png",
+        "note": "以羊徽瑜核定站姿為唯一角色造型參考；依宮廷身份以令牌傳信，呈現優雅臨戰支援動作。透明全身候選，待使用者檢視。"
+      }
+    ]
+  }
+},
     {
       "uid": "hua-man",
       "name": "花鬘",
