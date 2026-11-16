@@ -272,6 +272,14 @@ export function computeCommandCapacity(input: CommandCapacityInput): number {
 export const SORTIE_GUARANTEE_TROOPS = 500;
 
 /** 出征軍勢不足一隊步兵時要補多少兵；夠用回 0 */
+/** 軍勢見底時給玩家看的提示：要讓人知道是沒兵可派，不是按鈕壞掉（PROG-2-9334） */
+export const SORTIE_POOL_EXHAUSTED_LINE = '軍勢已用盡，本場無法再派兵；靠場上部隊、計謀與奧義取勝';
+
+/** 出征軍勢是否連一隊步兵都派不出來了（PROG-2-9334） */
+export function isSortiePoolExhausted(state: Pick<SortieState, 'poolCurrent'>): boolean {
+    return nonNegInt(state.poolCurrent) < SORTIE_GUARANTEE_TROOPS;
+}
+
 export function sortieGuaranteeOf(poolMax: number): number {
     return Math.max(0, SORTIE_GUARANTEE_TROOPS - nonNegInt(poolMax));
 }

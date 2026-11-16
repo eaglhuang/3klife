@@ -789,7 +789,7 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
     if (reason === 'battle-locked') return '目前流程鎖定，暫時無法部署';
     if (reason === 'limit') return '本回合部署已達上限，請按結束回合';
     if (reason === 'occupied') return '目標格已有單位，請改放其他格子';
-    if (reason === 'troops-short') return '⚠ 軍勢不足，無法部署';
+    if (reason === 'troops-short') return '⚠ 軍勢不足，這張卡派不出去（本場兵力快用完了）';
     if (reason === 'field-limit') return '⚠ 場上部隊已滿，請先等待退場或撤回部隊';
     if (reason === 'order-refused') return '⚠ 主將忠誠不足，本回合拒絕執行命令';
     return '糧草不足，無法部署';

@@ -40,7 +40,7 @@ import { FIELD_AUTO_BATTLE_JOURNAL } from '../../core/systems/OfflineBattleSnaps
 import { services } from '../../core/managers/ServiceLoader';
 import { BattlePerformanceTracker, formatPerformance } from '../../core/systems/BattleRecordStats';
 import { milestoneAnnouncementLines } from '../../core/systems/BattleMilestoneScripts';
-import { formatSortieSummary } from '../../core/systems/SortieDeploy';
+import { formatSortieSummary, isSortiePoolExhausted, SORTIE_POOL_EXHAUSTED_LINE } from '../../core/systems/SortieDeploy';
 import { powOptionLabels } from '../../core/systems/PrisonerOfWar';
 import { cellarProtectionText } from '../../ui/core/DailySubsidyNotice';
 import { generalNameMapOf, relationEventLogLine } from '../../ui/core/RelationEventLogText';
@@ -475,6 +475,8 @@ export class BattleUIBridge {
     if (texts.length > 0) this.ctx.unitRenderer?.playLootTexts(event.lane, event.depth, texts);
   }
 
+  private _poolEmptyNoticed = false;
+
   private _onTurnPhaseChanged(snap: { turn: number; playerFood: number; phase?: TurnPhase }): void {
     const c = this.ctx;
     c.deployRuntime?.updateFood(snap.playerFood);
@@ -485,6 +487,14 @@ export class BattleUIBridge {
     this._syncDelegateButton();
     if (snap.playerFood <= 0 && !this._foodEmptyLogged) this.appendLog(FOOD_EMPTY_LINE);
     this._foodEmptyLogged = snap.playerFood <= 0;
+    // 軍勢見底：第一次發生時跳提示並寫進戰報，玩家才知道是沒兵可派（PROG-2-9334）
+    const sortie = c.ctrl?.getSortieState();
+    const poolEmpty = !!sortie && isSortiePoolExhausted(sortie);
+    if (poolEmpty && !this._poolEmptyNoticed) {
+      this.appendLog(SORTIE_POOL_EXHAUSTED_LINE);
+      c.deployRuntime?.showToast(SORTIE_POOL_EXHAUSTED_LINE, 3);
+    }
+    this._poolEmptyNoticed = poolEmpty;
     if (state && state.wisdomTriggerCount < this._wisdomTriggersLogged) this._wisdomTriggersLogged = 0;
     if (state && state.wisdomTriggerCount > this._wisdomTriggersLogged) {
       this._wisdomTriggersLogged = state.wisdomTriggerCount;
