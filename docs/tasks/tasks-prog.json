@@ -5755,7 +5755,7 @@
       "title": "戰場部隊頭頂數值標籤的繪製次數優化",
       "owner": "claude-code-fable-5-2",
       "priority": "P1",
-      "status": "open",
+      "status": "in-progress",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-16",
@@ -5768,7 +5768,7 @@
       "depends": [],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-16 | 狀態: open | 驗證: pending | 變更: 開卡，尚未實作 | 阻塞: 無；量測基準為桌機預覽，手機尚未實測",
+      "notes": "2026-11-16 | 狀態: in-progress | 驗證: 型別檢查 0 錯；尚未實機量測繪製次數 | 變更: 第一步，名牌上排三塊全透明底板不再建立，每個名牌少 3 次繪製（估計 10 隊加雙方主將共少約 36 次） | 阻塞: 本機預覽是舊編譯，量測要等下一版線上試玩版；未做到：血條與底板合併、文字合批尚未做，是否達成 10 隊同場低於 250 尚未確認",
       "brief": {
         "style": "classic",
         "label": "",
@@ -5789,7 +5789,9 @@
         "handoff_diff_status": "",
         "trace_artifacts": [],
         "metrics_summary": []
-      }
+      },
+      "started_at": "2026-11-16T16:30:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2"
     },
     {
       "doc_id": "",
