@@ -5,7 +5,7 @@
  *
  * Unity 對照：Presenter 把 DTO 轉成 View 的字串。
  */
-import type { GachaCurrencyId, GachaPoolDto, GachaWalletDto } from '../../core/gacha/GachaApi';
+import { pickPullCurrency, type GachaCurrencyId, type GachaPoolDto, type GachaWalletDto } from '../../core/gacha/GachaApi';
 import { GACHA_NODES, GACHA_RATE_NODES, GACHA_RATE_ROWS, type GachaPoolDef } from './GachaScreenNodes';
 
 export const GACHA_CURRENCY_LABEL: Readonly<Record<GachaCurrencyId, string>> = {
@@ -35,9 +35,12 @@ function percentText(value: number): string {
     return `${Math.round(value * 100) / 100}%`;
 }
 
-/** 名稱「名將召喚」→ 說明框標題「名將池說明」 */
-function briefTagOf(name: string): string {
-    return `▸ ${name.replace(/召喚$/, '池')}說明`;
+/**
+ * 名稱「名將召喚」→ 說明框標題「名將池說明」。
+ * 左上說明框同時是天命商店入口（紅顏池不累計天命值），要在框上寫明，玩家才知道可以點。
+ */
+function briefTagOf(name: string, hasDestinyShop: boolean): string {
+    return `▸ ${name.replace(/召喚$/, '池')}說明${hasDestinyShop ? ' ・ 點此開天命商店' : ''}`;
 }
 
 /** 名字拆成兩字間留空（原稿「關　羽」的排法），三字以上照原樣 */
@@ -56,14 +59,16 @@ export function gachaApiView(
     // 限定池原稿顯示「天命值」（滿額換限定 SSR）；其他池顯示距小保底的進度
     const meterCur = limited ? dto.pity.destinyCurrent : dto.pity.current;
     const meterMax = limited ? dto.pity.destinyMax : dto.pity.max;
-    const mainCurrency = dto.currencies[0];
+    // 「我的餘額」顯示下一次單抽會扣的那種貨幣（銅錢符不夠就顯示靈玉）；全部資源在畫面頂部資源列
+    const spend = pickPullCurrency(dto, 1, wallet);
+    const mainCurrency = spend.ok ? spend.currency : dto.currencies[0];
     const heroId = limited ? dto.featuredGeneralIds[0] : dto.showcaseGeneralId;
     const heroName = heroId ? nameOf(heroId) : '';
     const [briefFirst] = dto.brief.split('\n');
 
     const texts: Record<string, string> = {
         [GACHA_NODES.poolNameStrip]: dto.name,
-        [GACHA_NODES.briefTag]: briefTagOf(dto.name),
+        [GACHA_NODES.briefTag]: briefTagOf(dto.name, pool.key !== 'legendary'),
         [GACHA_NODES.briefLine]: limited && heroName ? `${briefFirst}\n本期 UP：${heroName}　機率提升` : dto.brief,
         [GACHA_NODES.rpPoolName]: dto.name,
         [GACHA_NODES.rpPoolSub]: dto.sub,

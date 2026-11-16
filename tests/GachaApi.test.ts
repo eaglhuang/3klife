@@ -95,7 +95,7 @@ export function createGachaApiSuite(): TestSuite {
         assert.equals('2.1%', view.texts.RatePct0);
         assert.equals('R', view.texts.RateRarity3);
         assert.equals('呂 布', view.texts[pool.heroName]);
-        assert.equals('▸ 限定池說明', view.texts[GACHA_NODES.briefTag]);
+        assert.equals('▸ 限定池說明 ・ 點此開天命商店', view.texts[GACHA_NODES.briefTag]);
         assert.isFalse(view.actives[GACHA_NODES.pullTenOriginalCost]);
         assert.equals(0.435, view.pityRatio);
         const fewer = gachaApiView(pool, { ...dto, rates: dto.rates.slice(0, 2) }, { gems: 0 } as any, () => '呂布', 0);

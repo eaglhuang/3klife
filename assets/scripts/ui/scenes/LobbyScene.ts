@@ -182,6 +182,8 @@ import { GACHA_NODES, GACHA_POOL_INDEX, GACHA_POOLS, GachaPoolDef, RED_FACE_SECT
 import { LocalGachaApi } from '../../core/gacha/LocalGachaApi';
 import { parseGachaMainPools, type GachaApi, type GachaMainPoolConfig } from '../../core/gacha/GachaApi';
 import { gachaApiView, gachaAutoSizeNodes } from '../core/GachaApiTexts';
+import { buildPoolDetailRows, checkGachaAffordable, planGachaButton, syncMainPoolCosts, type GachaButtonKind } from '../../core/gacha/GachaButtonRules';
+import { bindGachaPoolDetail, updateGachaWalletStrip } from '../core/GachaScreenExtras';
 import { GachaPoolSwitcher } from '../core/GachaPoolSwitcher';
 import { PORTRAIT_GALLERY_PAGE_SIZE } from '../core/PortraitGallery';
 import { FaceMarks, PORTRAIT_FRAME_SPEC, PortraitFrameSpec, SHOWCASE_PORTRAIT_SPEC, fitPortraitInFrame } from '../core/PortraitFrameFit';
@@ -259,7 +261,7 @@ import { bindGachaActions, GACHA_ACTION_NODES } from '../core/GachaActionBinding
 import { formatGeneralDisplayName } from '../../core/models/GeneralTitle';
 import { buildMissionGeneralOptions } from '../../core/systems/MissionGeneralOptions';
 import { clanPerkVisible, treeGenerationVisible } from '../../core/systems/FamilyMilestone';
-import { attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearButton, ensureGlobalDevOverlay, refreshCurrencyDisplay } from '../dev/GachaDevOverlay';
+import { attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearButton, ensureGlobalDevOverlay, refreshCurrencyDisplay, showGachaInfoModal } from '../dev/GachaDevOverlay';
 import { DailyReportController } from '../core/DailyReportController';
 import { dailySubsidyText, economySubsidyBannerText } from '../core/DailySubsidyNotice';
 import type { TabKey } from '../components/character-ds3/GeneralDetailChromePresenter';
@@ -698,6 +700,8 @@ export class LobbyScene extends Component {
     private _gachaMainPools: GachaMainPoolConfig[] = [];
     private readonly _gachaCandidatesCache = new Map<string, GeneralConfig[]>();
     private _gachaPullPending = false;
+    /** 按鈕同時聽 click 與 touch-end，同一次點擊會進來兩次；短時間內只算一次（PROG-2-9117） */
+    private _lastGachaTapMs = 0;
     private _ready = false;
     /** 大廳出現後才背景掛載的面板（PROG-2-9040） */
     private _deferredMounts: Array<() => Promise<void>> = [];
@@ -6171,14 +6175,15 @@ export class LobbyScene extends Component {
             next: () => { void switcher.step(1); },
             history: () => { void this._showGachaHistory(); },
             destiny: () => { void this._openDestinyShop(); },
-            single: () => { void this._runGachaAction(() => this._runLocalGacha(1), 1); },
-            ten: () => { void this._runGachaAction(() => this._runLocalGacha(10), 10); },
-            gold: () => { void this._runGachaAction(() => this._runGoldSummon()); },
-            ticket: () => { void this._runGachaAction(() => this._runTicketSummon()); },
+            single: () => { void this._runGachaAction('single'); },
+            ten: () => { void this._runGachaAction('ten'); },
+            gold: () => { void this._runGachaAction('gold'); },
+            ticket: () => { void this._runGachaAction('ticket'); },
         }, this, Button.EventType.CLICK);
         // 池圓點也走同一個切池流程（宿主只會換右側內容，不換橫幅與附加區塊）
         GACHA_POOLS.forEach((pool, index) => {
-            const dot = host.binder?.getNode(`PoolDot_${pool.key}`);
+            // 圓點節點名是原稿的池 id（layoutKey），不是程式用的 key：限定池是 PoolDot_legendary、紅顏池是 PoolDot_heroine
+            const dot = host.binder?.getNode(`PoolDot_${pool.layoutKey}`);
             if (!dot) return;
             dot.off(Node.EventType.TOUCH_END, undefined, this);
             dot.on(Node.EventType.TOUCH_END, () => { void switcher.show(index); }, this);
@@ -6197,6 +6202,8 @@ export class LobbyScene extends Component {
     /** 切池完成（內容已載入）：刷新天命入口、餘額，以及該池的附加區塊資料。 */
     private _onGachaPoolShown(host: UIScreenPreviewHost, pool: GachaPoolDef): void {
         this._refreshWalletPreviewState();
+        // 右側內容每次切池重新載入，「詳情 ›」要重綁
+        bindGachaPoolDetail((name) => host.binder?.getNode(name) ?? null, () => { void this._showGachaPoolDetail(); }, this);
         void this._applyGachaApiTexts(pool);
         if (pool.section && this._gachaRedFace && host.binder) {
             for (let i = 0; i < RED_FACE_SHOW_MAX_ROWS; i++) {
@@ -6217,24 +6224,52 @@ export class LobbyScene extends Component {
         if (binder && this._gachaRedFace) applyFlowView(binder, toRedFaceTabFlowView(this._gachaRedFace.getFlowView()));
     }
 
-    private async _runGachaAction(action: () => Promise<void>, drawCount = 1): Promise<void> {
+    /**
+     * 轉蛋按鈕的統一入口（PROG-2-9117）：先決定這顆鈕在目前這個池做什麼，再查餘額，
+     * 不能按或不夠付就明講原因，不再默默失敗或改扣別種貨幣。
+     */
+    private async _runGachaAction(kind: GachaButtonKind): Promise<void> {
         if (this._gachaPullPending) return;
-        // 名將池走一般轉蛋；支援卡池改抽教官卡；其他池尚未開放。
-        if (this._gachaPoolIndex === GACHA_POOL_INDEX.redFace) {
-            // 紅顏池：單抽／十連各扣 1／10 張召喚券（PROG-2-1086、PROG-2-1094）；金幣／召喚券鈕視同單抽
-            action = () => this._runBeautySummon(drawCount);
-        } else if (this._gachaPoolIndex === GACHA_POOL_INDEX.support) {
-            // 支援卡池：單抽／十連各扣 1／10 張支援券（PROG-2-1085、PROG-2-1094）
-            action = () => this._runSupportSummon(drawCount);
-        } else if (this._gachaPoolIndex === GACHA_POOL_INDEX.limited) {
-            // 限定池：只收靈玉，單抽 150／十連 1500；本期焦點武將機率提升（PROG-2-9024）
-            action = () => this._runLimitedSummon(drawCount);
-        } else if (this._gachaPoolIndex !== GACHA_POOL_INDEX.general) {
-            services().event.emit('SHOW_TOAST', { message: '此卡池尚未開放召喚，請切回名將召喚。', duration: 2.5 });
-            return;
-        }
+        const nowMs = Date.now();
+        if (nowMs - this._lastGachaTapMs < 250) return;
+        this._lastGachaTapMs = nowMs;
+        const poolIndex = this._gachaPoolIndex;
+        const pool = GACHA_POOLS[poolIndex];
+        const plan = planGachaButton(pool.key, kind);
         this._gachaPullPending = true;
-        try { await action(); } finally { this._gachaPullPending = false; }
+        try {
+            await this._loadGachaMainPools();
+            const config = this._gachaMainPools.find((entry) => entry.poolId === pool.poolId) ?? null;
+            const wallet = await this._getGachaApi().getWallet();
+            // 開發用自動補款開著時不擋，維持原本預覽行為
+            const check = plan.run === 'blocked' || !this._localGachaService.isDevAutoTopUpEnabled()
+                ? checkGachaAffordable(plan, config, wallet) : { ok: true as const };
+            if (!check.ok) {
+                this._showToast(check.message);
+                return;
+            }
+            if (plan.run === 'gold') await this._runGoldSummon();
+            else if (plan.run === 'ticket') await this._runTicketSummon();
+            else if (plan.run === 'pool') {
+                // 名將池走一般轉蛋；紅顏池扣靈玉入名冊；支援卡池抽教官卡；限定池只收靈玉（PROG-2-1086／1085／9024）
+                if (poolIndex === GACHA_POOL_INDEX.redFace) await this._runBeautySummon(plan.count);
+                else if (poolIndex === GACHA_POOL_INDEX.support) await this._runSupportSummon(plan.count);
+                else if (poolIndex === GACHA_POOL_INDEX.limited) await this._runLimitedSummon(plan.count);
+                else await this._runLocalGacha(plan.count);
+            }
+        } finally { this._gachaPullPending = false; }
+    }
+
+    /** 「詳情 ›」：列出目前這個池的費用、持有、機率、保底（PROG-2-9117） */
+    private async _showGachaPoolDetail(): Promise<void> {
+        const pool = this._gachaPoolSwitcher?.pool;
+        if (!pool) return;
+        await this._loadGachaMainPools();
+        const api = this._getGachaApi();
+        const [pools, wallet] = await Promise.all([api.listPools(), api.getWallet()]);
+        const dto = pools.find((entry) => entry.poolId === pool.poolId);
+        if (!dto) { this._showToast('這個卡池目前未開放。'); return; }
+        showGachaInfoModal(`${dto.name} 詳情`, dto.sub, buildPoolDetailRows(dto, wallet));
     }
 
     private _openUIOnNextTick(uiId: UIID): void {
@@ -6379,16 +6414,15 @@ export class LobbyScene extends Component {
         const wallet = this._localGachaService.getWalletSnapshot();
         const gemText = `玉 ${wallet.gems.toLocaleString('zh-TW')}`;
         const goldText = `金 ${wallet.gold.toLocaleString('zh-TW')}`;
-        const gachaBalanceText = `◈ ${wallet.gems.toLocaleString('zh-TW')}`;
 
         this._lobbyMainHost?.binder?.setTexts({
             ResourceGold: goldText,
             ResourceGem: gemText,
         });
 
-        this._gachaHost?.binder?.setTexts({
-            [GACHA_NODES.balance]: gachaBalanceText,
-        });
+        // 轉蛋畫面頂部資源列：全部可消耗資源；該池的「我的餘額」由 _applyGachaApiTexts 依池填（PROG-2-9117）
+        // 結果畫面共用同一個宿主，只有轉蛋主畫面（有十連鈕）才畫資源列
+        updateGachaWalletStrip(this._gachaHost?.binder?.getNode(GACHA_NODES.pullTen) ? this._gachaHost.node : null, wallet);
         this._refreshLobbyHallTopbar();
         // 抽完、回轉蛋頁都會走這裡；天命值跟著刷新（PROG-2-1158）
         this._refreshDestinyBrief();
@@ -7125,7 +7159,11 @@ export class LobbyScene extends Component {
 
     private async _loadGachaMainPools(): Promise<void> {
         if (this._gachaMainPools.length > 0) return;
-        this._gachaMainPools = parseGachaMainPools(await this._loadDataJson<unknown>('data/gacha-main-pools'));
+        // 價格以抽卡規則實際扣的為準（紅顏池靈玉計價，PROG-2-9117）
+        this._gachaMainPools = syncMainPoolCosts(
+            parseGachaMainPools(await this._loadDataJson<unknown>('data/gacha-main-pools')),
+            await this._loadDataJson<GachaConfig[]>('data/gacha-config'),
+        );
         for (const pool of this._gachaMainPools) this._gachaCandidatesCache.set(pool.poolId, await this._gachaCandidates(pool.poolId));
     }
 
