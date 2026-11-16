@@ -6529,6 +6529,22 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/zuo_ci__左慈__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "297a7ef56c2516a6348329fb5c0c2360c6825979886f52ef67118922c1a1660d",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "horsetail-whisk-gourd",
+            "poseLabel": "拂塵橫掃化勢",
+            "note": "以核定站姿延續左慈深藍道袍、拂塵與酒葫蘆；橫掃化勢動作，候選待審。"
+          }
+        ]
       }
     },
     {
