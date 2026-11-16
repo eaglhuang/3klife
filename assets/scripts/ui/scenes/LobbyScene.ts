@@ -908,7 +908,7 @@ export class LobbyScene extends Component {
             try {
                 await mounts[index]();
             } catch (error) {
-                // 玩家在背景掛載途中離開大廳（例如直接出征）時節點已銷毀、欄位讀到 null，屬正常中止不算錯誤（PROG-2-9104）
+                // 玩家在背景掛載途中離開大廳（例如直接出征）時節點已銷毀、欄位讀到 null，屬正常中止不算錯誤（PROG-2-9108）
                 if (!this.node?.isValid) return;
                 UCUFLogger.error(LogCategory.UI, `[LobbyScene] 背景第 ${index} 個面板掛載失敗，已略過`, error);
             }
