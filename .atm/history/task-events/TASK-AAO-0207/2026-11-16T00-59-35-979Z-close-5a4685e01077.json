@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-16T00-59-35-979Z-close-5a4685e01077",
+  "taskId": "TASK-AAO-0207",
+  "action": "close",
+  "actorId": "claude-code-opus-5",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0207-charter-upgrade-command-with-sync-integration-staged-enforcement-and-accurate-doctor-diagnosis.task.md",
+  "taskSha256": "sha256:6adf1875c8247b9c581c9f2ef039f4b386450e0efbbca67a560f141cb7411be8",
+  "createdAt": "2026-11-16T00:59:35.979Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-0207 --actor claude-code-opus-5"
+}

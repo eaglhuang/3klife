@@ -1,7 +1,7 @@
 ---
 task_id: TASK-AAO-0207
 title: Charter upgrade command with sync integration, staged enforcement, and accurate doctor diagnosis
-status: planned
+status: done
 owner: claude-code-opus-5
 priority: P1
 depends_on: []
@@ -50,6 +50,15 @@ errorCodes:
   - ATM_CHARTER_UPGRADE_OK
   - ATM_CHARTER_UPGRADE_CONFLICT
 createdByCommand: atm plan card create
+completed_at: "2026-11-16T00:59:35.979Z"
+completed_by_agent: "claude-code-opus-5"
+closedAt: "2026-11-16T00:59:35.979Z"
+closedByActor: "claude-code-opus-5"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-11-16T00-59-35-979Z-close-5a4685e01077"
+lastTransitionAt: "2026-11-16T00:59:35.979Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "09c2a530aa"
 ---
 
 # TASK-AAO-0207 Charter upgrade command with sync integration, staged enforcement, and accurate doctor diagnosis
