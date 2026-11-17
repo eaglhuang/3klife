@@ -6,6 +6,9 @@ import { TroopUnit, type TroopStats } from "../../core/models/TroopUnit";
 import { BattleState } from "../models/BattleState";
 import { decideDuelAccept, DUEL_ACCEPT_THRESHOLD } from "../../core/systems/AiDuelDecision";
 import { type BattleResult, BATTLE_FRONT_DEPTH } from "../BattleTypes";
+import { DUEL_FLEE_HP, DUEL_FLEE_SQUAD_LOSS_RATIO, DUEL_WINNER_BUFF_TURNS, DUEL_WINNER_CRIT_BONUS } from "../shared/DuelOutcome";
+import { duelVictoryBuffTurns } from "../shared/DuelVictoryBuff";
+import { maximizeMorale } from "../shared/Morale";
 
 /**
  * 單挑最多交手回合數（暫定，規格未定義）。達上限仍雙方存活 → 平局，單挑結束、不產生死亡、不套用懲罰。
@@ -14,6 +17,18 @@ import { type BattleResult, BATTLE_FRONT_DEPTH } from "../BattleTypes";
 export const DUEL_MAX_ROUNDS = 50;
 
 export type { BattleResult };
+
+/** 單挑勝負效果事件（PROG-2-9369）：畫面用來寫戰報與提示 */
+export interface DuelOutcomeAppliedEvent {
+  winner: Faction;
+  loser: Faction;
+  /** 敗方主將被斬 */
+  killed: boolean;
+  /** 敗方主將負傷逃走（生命歸 1、全軍兵力減半） */
+  fled: boolean;
+  /** 教學戰：只給勝方獎勵，不套敗方代價 */
+  tutorial: boolean;
+}
 
 export interface BattleGeneralDuelFlowContext {
   state: BattleState;
@@ -331,7 +346,16 @@ export class BattleGeneralDuelFlow {
     const defenderFloor = floorOf(defenderGeneral);
     const capDamage = (general: GeneralUnit, floor: number, damage: number): number =>
       floor > 0 ? Math.min(damage, Math.max(0, general.currentHp - floor)) : damage;
-    const isBeaten = (general: GeneralUnit, floor: number): boolean => general.isDead() || (floor > 0 && general.currentHp <= floor);
+    // 一般戰鬥的敗逃線（使用者 2026-11-17 裁決，PROG-2-9369）：生命掉到這條線以下就落荒而逃，不再打到死；
+    // 一擊直接打到 0 仍算斬將。進場時已低於這條線的主將至少要再挨一下才會逃
+    const fleeRatio = floorRatio > 0 ? 0 : Math.max(0, Math.min(0.9, GAME_CONFIG.duelFleeHpRatio));
+    const fleeLineOf = (general: GeneralUnit): number => fleeRatio > 0 ? Math.min(general.currentHp - 1, Math.ceil(general.maxHp * fleeRatio)) : 0;
+    const challengerFleeLine = fleeLineOf(challengerGeneral);
+    const defenderFleeLine = fleeLineOf(defenderGeneral);
+    const fleeLineFor = (general: GeneralUnit): number => general === challengerGeneral ? challengerFleeLine : defenderFleeLine;
+    const isBeaten = (general: GeneralUnit, floor: number): boolean => general.isDead()
+      || (floor > 0 && general.currentHp <= floor)
+      || (fleeLineFor(general) > 0 && general.currentHp <= fleeLineFor(general));
 
     for (let round = 0; round < DUEL_MAX_ROUNDS; round += 1) {
       if (isBeaten(challengerGeneral, challengerFloor) || isBeaten(defenderGeneral, defenderFloor)) break;
@@ -395,6 +419,9 @@ export class BattleGeneralDuelFlow {
     const challengerBeaten = isBeaten(challengerGeneral, challengerFloor);
     const defenderBeaten = isBeaten(defenderGeneral, defenderFloor);
     this.lastDuelWinner = challengerBeaten === defenderBeaten ? null : challengerBeaten ? defenderFaction : challengerFaction;
+    if (this.lastDuelWinner !== null) {
+      this.applyDuelOutcome(this.lastDuelWinner, challengerFaction, floorRatio > 0, svc);
+    }
 
     if (challengerGeneral.isDead() && challengerUnit) {
       this.onGeneralUnitKilled(challengerFaction);
@@ -406,6 +433,42 @@ export class BattleGeneralDuelFlow {
       this.context.onUnitKilled(defenderUnit, null, svc);
     }
     // 結果由 BattleController.resolveDuelChallenge() 呼叫 checkVictory() 統一處理
+  }
+
+  /**
+   * 單挑分出勝負後的效果（doc_spec_0314 §4，PROG-2-9369）。
+   * 勝方：全軍士氣拉滿、暴擊率 +15% 持續 2 回合。
+   * 敗方負傷逃走：主將生命歸 1、全軍兵力減半；教學戰不套敗方代價（使用者 2026-11-17 裁決）。
+   * 敗方被斬：戰鬥由 checkVictory 直接結束，這裡只發事件。
+   */
+  private applyDuelOutcome(winner: Faction, actingFaction: Faction, tutorial: boolean, svc: ReturnType<typeof services>): void {
+    const loser = winner === Faction.Player ? Faction.Enemy : Faction.Player;
+    const loserGeneral = this.context.state.getGeneral(loser);
+    if (!loserGeneral) return;
+    const killed = loserGeneral.isDead();
+    const loserUnitId = loser === Faction.Player ? this.playerGeneralUnitId : this.enemyGeneralUnitId;
+
+    this.context.state.units.forEach((unit) => {
+      if (unit.faction === winner && !unit.isDead()) maximizeMorale(unit);
+    });
+    this.context.state.setDuelVictoryBuff(winner, {
+      critBonus: DUEL_WINNER_CRIT_BONUS,
+      remainingTurns: duelVictoryBuffTurns(DUEL_WINNER_BUFF_TURNS, winner === actingFaction),
+    });
+
+    const fled = !killed && !tutorial;
+    if (fled) {
+      loserGeneral.currentHp = Math.min(loserGeneral.currentHp, DUEL_FLEE_HP);
+      this.context.state.units.forEach((unit) => {
+        if (unit.faction !== loser || unit.isDead()) return;
+        if (unit.id === loserUnitId) { unit.currentHp = loserGeneral.currentHp; return; }
+        // 兵力減半，至少留 1，不在這裡把部隊打死（陣亡流程不走這條路）
+        unit.currentHp = Math.max(1, Math.floor(unit.currentHp * (1 - DUEL_FLEE_SQUAD_LOSS_RATIO)));
+      });
+      svc.event.emit(EVENT_NAMES.GeneralDamaged, { faction: loser, hp: loserGeneral.currentHp, damage: 0, attackerId: null });
+    }
+    const payload: DuelOutcomeAppliedEvent = { winner, loser, killed, fled, tutorial };
+    svc.event.emit(EVENT_NAMES.DuelOutcomeApplied, payload);
   }
 
   private applyDuelPenalty(faction: Faction): void {

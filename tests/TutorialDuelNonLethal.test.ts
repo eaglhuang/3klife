@@ -63,11 +63,12 @@ export function createTutorialDuelNonLethalSuite(): TestSuite {
         assert.equals(100, ctrl.state.playerGeneral!.currentHp);
     });
 
-    suite.test('一般戰鬥不變：單挑打到一方倒下並分出勝負', () => {
+    suite.test('一般戰鬥沒有五成保護：敗方主將打到殘血逃走（生命歸 1），不是停在五成（PROG-2-9369）', () => {
         const ctrl = battle(false, 95, 20);
         const result = ctrl.resolveDuelChallenge(Faction.Player, true);
-        assert.equals('player-win', result);
-        assert.isTrue(ctrl.state.enemyGeneral!.isDead());
+        assert.equals('ongoing', result);
+        assert.equals(1, ctrl.state.enemyGeneral!.currentHp);
+        assert.equals(Faction.Player, ctrl.getLastDuelWinner());
     });
 
     return suite;

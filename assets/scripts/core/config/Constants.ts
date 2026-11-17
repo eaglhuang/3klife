@@ -95,6 +95,11 @@ export const GAME_CONFIG = {
   /** 兵種動態相剋（拒馬槍陣、縱深突襲、高地射程；doc_spec_0309 §3）總開關。首戰教學戰一律不啟用（使用者 2026-11-17 裁決，PROG-2-9368） */
   troopCounterTacticsEnabled: true,
   /**
+   * 一般戰鬥單挑：主將生命掉到這個比例以下就落荒而逃（生命歸 1、全軍兵力減半），不再打到死；
+   * 只有一擊直接把生命打到 0 才算斬將（使用者 2026-11-17 裁決，PROG-2-9369）。0＝關閉，照舊打到死。
+   */
+  duelFleeHpRatio: 0.2,
+  /**
    * 通用奧義：主將沒有可用的奧義槽、也沒有主技能時的退路，免得奧義選單只顯示「未配置奧義」。
    * 原因：235 位武將中 221 位沒有奧義資料，六位初始名將只有張飛有。專屬奧義定案後自然蓋過這個退路（總PM 2026-11-16 裁決）。
    * coefficient 取 0.6：低於專屬全屏奧義最常用的 0.72，通用招不該比專屬招強。
@@ -251,6 +256,7 @@ export const EVENT_NAMES = {
   GeneralDuelAccepted:  "general-duel-accepted",
   GeneralDuelRejected:  "general-duel-rejected",
   DuelPenaltyApplied:   "duel-penalty-applied",
+  DuelOutcomeApplied:   "duel-outcome-applied",  // payload: DuelOutcomeAppliedEvent（單挑勝負效果，PROG-2-9369）
   // 武將快覽彈窗
   /** BattleHUD 頭像點擊 → 廣播意圖（攜帶 side / isEnemy），BattleScene 負責轉換為完整資料後回灌 */
   RequestGeneralQuickView: "request-general-quickview",
