@@ -9633,6 +9633,57 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9398",
+      "title": "武將詳情頁（GeneralDetailComposite）補齊 BlockInputEvents 防止點擊穿透至幕府大廳",
+      "owner": "antigravity",
+      "priority": "P1",
+      "status": "done",
+      "type": "bugfix",
+      "phase": "M0",
+      "created": "2026-11-18",
+      "created_by_agent": "antigravity",
+      "started_at": "2026-11-18T04:03:30+08:00",
+      "started_by_agent": "antigravity",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "線上試玩發現於武將詳情頁右側頁籤區域點擊時會穿透觸發背後幕府大廳之內政／軍事任務牆導致畫面疊加卡死；於 GeneralDetailComposite.show() 確保掛載 BlockInputEvents 阻斷底層穿透。",
+      "related": [
+        "PROG-2-9396"
+      ],
+      "depends": [],
+      "acceptance": [
+        "GeneralDetailComposite 顯示時具有 BlockInputEvents",
+        "npm run gate:standard 12/12 通過"
+      ],
+      "deliverables": [
+        "GeneralDetailComposite.ts"
+      ],
+      "notes": "2026-11-18 | 狀態: done | 驗證: npm run gate:standard 12/12 通過 | 變更: GeneralDetailComposite.show() 確保掛載 BlockInputEvents",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
