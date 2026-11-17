@@ -63,3 +63,23 @@
 - [ ] 實作 `selectedCardIds` 查卡功能（目前一律走 demo 預設卡組）
 - [ ] Lobby 出戰前 UI（選將、選裝備、選卡組）→ 填入真實 `BattleEntryParams`
 - [ ] ServiceLoader 重複初始化的長期處理（雖然目前冪等，但 state 殘留風險需持續觀察）
+
+## 網頁測試用直進戰場（PROG-2-9127）
+
+網頁建置版在網址加 `?qaBattle=1`，登入場景載入後略過標題、開場、大廳，直接帶測試陣容進 BattleScene
+（與大廳出征同一個交接點 `switchScene(Battle, IBattleEntryParams)`，`entrySource = 'qa'`；特效、音效、AI、回合與結算流程照正式）。
+不讀寫玩家存檔（記憶體暫存），結算按「返回」回登入畫面；同一次頁面載入只觸發一次，重新整理才會再進。
+
+| 參數 | 說明（全部選填，代號沿用既有資料表） |
+| --- | --- |
+| `qaBattle=1` | 啟用（`true` 也可；`0`／`false` 視為沒帶） |
+| `qaEncounter=<id>` | `encounters.json` 的遭遇代號；缺省 = 新手第一場 |
+| `qaPlayer=<id>` / `qaEnemy=<id>` | 我方／敵方主將，`generals.json` 的 id；缺省 = 該遭遇的主將 |
+| `qaPlayerTroops=a,b` | 我方出陣兵種（cavalry／infantry／shield／archer／pikeman…，最多 4 個），換成對應虎符卡組 |
+| `qaEnemyTroops=a,b` | 敵軍偏好只出這些兵種（限 AI 會出的五種）；AI 既有的剋制判斷仍可能出其他兵種 |
+| `qaTutorial=0\|1` | 是否教學戰；缺省只有新手第一場是 |
+
+範例：`?qaBattle=1&qaEncounter=theme-flood-fancheng&qaEnemy=lu-bu&qaEnemyTroops=archer&qaPlayerTroops=archer,cavalry`
+
+參數不合法（不存在的代號、未知兵種、打錯字的 `qa*` 參數、與 `previewMode` 併用）時，登入畫面上方顯示紅字錯誤並停在登入畫面。
+不可與 `previewMode` 併用，否則戰場會落入 capture 模式。「再來一場」會依遭遇重建，不保留 `qaEnemyTroops` 與 `qaPlayer`／`qaEnemy` 覆蓋。

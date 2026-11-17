@@ -20,7 +20,7 @@ import { SyncManager } from "../systems/SyncManager";
 import { NpcMemoryAdapter } from "../dialogue/NpcMemoryAdapter";
 import { SceneManager } from "./SceneManager";
 import { GameManager } from "./GameManager";
-import { GameSession } from "./GameSession";
+import { GameSession, InMemoryRosterStore } from "./GameSession";
 import type { RosterStore } from "./GameSession";
 import { PlayerSaveService } from "../services/PlayerSaveService";
 import { LegacyService } from "../services/LegacyService";
@@ -68,9 +68,12 @@ export class ServiceLoader {
     public readonly session = new GameSession();
     /** 名冊後端：沿用 PlayerRosterService，供長局主迴圈與養成服務共用 */
     private readonly rosterStore: RosterStore = {
-        getAll: () => PlayerRosterService.getAll(),
-        replaceAll: (generals) => PlayerRosterService.replaceAll(generals),
+        getAll: () => (this.ephemeralStorage ? this.ephemeralRoster.getAll() : PlayerRosterService.getAll()),
+        replaceAll: (generals) => (this.ephemeralStorage ? this.ephemeralRoster.replaceAll(generals) : PlayerRosterService.replaceAll(generals)),
     };
+    /** 暫時狀態模式（QA 直進戰場，PROG-2-9127）：true 時存檔與名冊都只放記憶體，不讀寫玩家真實存檔 */
+    private ephemeralStorage = false;
+    private readonly ephemeralRoster = new InMemoryRosterStore();
     /** 宿命選擇（5 歲開獎後順應或逆天，PROG-2-0028） */
     public readonly unveiling = new UnveilingService(this.rosterStore, this.session.randomSource);
     /** 36 回合培育與教官（PROG-2-0028）；季度與模式取自 session 時鐘 */
@@ -195,11 +198,7 @@ export class ServiceLoader {
         this.session.setEventEmitter(this.event);
         this.session.setRosterStore(this.rosterStore);
         this.session.setNurtureStatePort(this.nurture);
-        const storageAdapter = this.createSaveStorageAdapter();
-        this.session.setSaveService(new PlayerSaveService(storageAdapter));
-        // 退役 / 死亡歸檔 / 季結排程與存檔共用同一個儲存後端（key 不同，不會互蓋）
-        this.legacy = new LegacyService(storageAdapter);
-        this.session.setLifecycle(this.legacy);
+        this.bindSaveStorage();
 
         // 血統圖本身不依賴 cc，person-registry.json 由 ResourceManager 讀取
         BloodlineGraph.getInstance().setRegistryLoader(
@@ -215,10 +214,31 @@ export class ServiceLoader {
         this.initialized = true;
     }
 
+    /** 存檔與退役歸檔共用同一個儲存後端（key 不同，不會互蓋）；初始化與切換暫時狀態時呼叫 */
+    private bindSaveStorage(): void {
+        const storageAdapter = this.createSaveStorageAdapter();
+        this.session.setSaveService(new PlayerSaveService(storageAdapter));
+        // 退役 / 死亡歸檔 / 季結排程與存檔共用同一個儲存後端（key 不同，不會互蓋）
+        this.legacy = new LegacyService(storageAdapter);
+        this.session.setLifecycle(this.legacy);
+    }
+
+    /**
+     * 改用暫時狀態（PROG-2-9127）：存檔後端換成記憶體、名冊不讀寫 localStorage，離開頁面即消失。
+     * 只給網頁 `?qaBattle=1` 直進戰場入口使用；初始化前後呼叫皆可，重複呼叫無副作用。
+     */
+    public useEphemeralStorage(): void {
+        if (this.ephemeralStorage) return;
+        this.ephemeralStorage = true;
+        if (this.initialized) this.bindSaveStorage();
+    }
+
     /**
      * 選擇玩家存檔後端：瀏覽器用 IndexedDB；原生 SQLite 尚未接線前先用記憶體並警告。
+     * 暫時狀態模式一律用記憶體。
      */
     private createSaveStorageAdapter(): DataStorageAdapter {
+        if (this.ephemeralStorage) return new MemoryStorageAdapter();
         if (!sys.isNative && typeof indexedDB !== "undefined") {
             return new IndexedDbAdapter();
         }

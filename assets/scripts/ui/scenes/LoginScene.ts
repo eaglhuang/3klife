@@ -1,11 +1,13 @@
 // @spec-source → 見 docs/cross-reference-index.md
-import { _decorator, Component, Node, UITransform, Widget } from 'cc';
+import { _decorator, Color, Component, Label, Node, UITransform, Widget } from 'cc';
 import { services } from '../../core/managers/ServiceLoader';
 import { SceneName } from '../../core/config/Constants';
 import { ensureGlobalDevOverlay } from '../dev/GachaDevOverlay';
 import { installAdaptiveResolution } from '../core/AdaptiveResolution';
 import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
 import { TitleScreenBinder } from '../core/TitleScreenBinder';
+import { currentSearch, runQaBattleEntry } from './QaBattleEntryRunner';
+import { formatQaBattleErrors, isQaBattleRequested } from '../../core/systems/QaBattleEntry';
 
 const { ccclass } = _decorator;
 
@@ -25,7 +27,48 @@ export class LoginScene extends Component {
     start(): void {
         installAdaptiveResolution();
         ensureGlobalDevOverlay();
-        void this._mountTitleScreen();
+        // 沒帶 ?qaBattle 參數時維持原流程，完全不經過直進入口（PROG-2-9127）
+        if (!isQaBattleRequested(currentSearch())) {
+            void this._mountTitleScreen();
+            return;
+        }
+        void this._bootWithQaBattle();
+    }
+
+    /** 網頁 QA 直進戰場（PROG-2-9127）：驗證通過直接切往戰場、不掛標題畫面；失敗則照常掛標題並在畫面顯示錯誤 */
+    private async _bootWithQaBattle(): Promise<void> {
+        const outcome = await runQaBattleEntry();
+        if (outcome.entered) {
+            this._finishWebBoot(); // 移除 HTML 啟動底圖，否則會一路蓋住戰場
+            return;
+        }
+        await this._mountTitleScreen();
+        if (outcome.errors && this.node?.isValid) this._showQaError(formatQaBattleErrors(outcome.errors));
+    }
+
+    /** 直進參數錯誤：紅字蓋在登入畫面上，並同步寫進 console，讓驗證人員一眼看到原因 */
+    private _showQaError(text: string): void {
+        console.error(`[LoginScene] ${text}`);
+        const node = new Node('QaBattleError');
+        node.layer = this.node.layer;
+        node.parent = this.node;
+        const transform = node.addComponent(UITransform);
+        transform.setContentSize(1600, 360);
+        const widget = node.addComponent(Widget);
+        widget.isAlignTop = true;
+        widget.top = 40;
+        widget.isAlignHorizontalCenter = true;
+        widget.horizontalCenter = 0;
+        const label = node.addComponent(Label);
+        label.string = text;
+        label.fontSize = 28;
+        label.lineHeight = 38;
+        label.color = new Color(255, 80, 80, 255);
+        label.overflow = Label.Overflow.RESIZE_HEIGHT;
+        label.enableWrapText = true;
+        label.horizontalAlign = Label.HorizontalAlign.LEFT;
+        label.verticalAlign = Label.VerticalAlign.TOP;
+        node.setSiblingIndex(this.node.children.length - 1);
     }
 
     /** 掛上 title-screen（UI-2-0158）：開始遊戲或點畫面任意處進入；左下公告／設定／帳號尚無功能，先隱藏 */

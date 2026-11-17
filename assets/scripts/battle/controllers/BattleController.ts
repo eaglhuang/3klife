@@ -1,5 +1,5 @@
 // @spec-source → 見 docs/cross-reference-index.md
-import { resolveAiDeployPreference } from '../../core/systems/AiDeployTroopPick';
+import { resolveAiDeployPreference, deployPreferenceForTroops } from '../../core/systems/AiDeployTroopPick';
 import {
   EVENT_NAMES,
   Faction,
@@ -579,6 +579,17 @@ export class BattleController {
     this.state.aiCanUseTactics = entry.canUseTactics;
     this.state.aiSpGainModifier = entry.spGainModifier;
     this.allocateEnemyTallies(entry.difficultyId);
+  }
+
+  /**
+   * 指定敵軍只出這些兵種（PROG-2-9127，只給 QA 直進入口用）：改寫部署偏好並清掉虎符配發（虎符優先於偏好）。
+   * 必須在 initBattle() 與 configureAiDifficulty() 之後呼叫；沒有可用兵種時不動。不碰任何戰鬥規則。
+   */
+  public overrideEnemyDeployTroops(types: readonly TroopType[]): void {
+    const preference = deployPreferenceForTroops(types);
+    if (!preference) return;
+    this.enemyAi.deployPreference = preference;
+    this.enemyAi.tallyTroopTypes = [];
   }
 
   /** AI 虎符配發（PROG-2-1337）：虎符模板全表中，只留 AI 會出的兵種，依敵將適性與難度配發 */

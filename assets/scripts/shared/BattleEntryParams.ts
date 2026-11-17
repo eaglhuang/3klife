@@ -2,7 +2,7 @@
 // [統一戰場入口] 定義從任何路徑進入 BattleScene 時的參數介面。
 // Unity 對照：BattleEntryData / BattleSessionConfig
 
-import { Weather, BattleTactic, TerrainGrid, TerrainType } from './CommonEnums';
+import { Weather, BattleTactic, TerrainGrid, TerrainType, TroopType } from './CommonEnums';
 
 /** 天氣排程單一條目（結構與 core/systems/WeatherSchedule 的 WeatherScheduleEntry 相同，shared 不引用 core） */
 export interface WeatherScheduleEntry {
@@ -62,8 +62,8 @@ export interface EncounterConfig {
  * BattleScene.start() 都透過此介面取得完整的戰鬥設定。
  */
 export interface IBattleEntryParams {
-  /** 入口來源：lobby = 大廳正式入口, preview = QA 工具 / preview target 5, replay = 再來一場 */
-  entrySource: 'lobby' | 'preview' | 'replay';
+  /** 入口來源：lobby = 大廳正式入口, preview = QA 工具 / preview target 5, replay = 再來一場, qa = 網頁 ?qaBattle=1 直進戰場（PROG-2-9127） */
+  entrySource: 'lobby' | 'preview' | 'replay' | 'qa';
 
   /** 遭遇戰 ID（對應 encounters.json） */
   encounterId: string;
@@ -95,6 +95,8 @@ export interface IBattleEntryParams {
   tutorial?: boolean;
   /** 全球征途階段 id（MVP-13）；由 GameSession.resolveCampaignStage 驗證後帶入，戰場流程尚未讀取 */
   campaignStageId?: string;
+  /** 敵軍只出這些兵種（可選，PROG-2-9127，QA 直進入口用）；沒有就照敵將 Profile／虎符配發，正式入口不帶 */
+  enemyDeployTroops?: TroopType[];
   /** 英靈夢回教學戰的傳說英靈（OPEN-13）：只有教學戰帶入，勝利時產出初始虎符；預設沒有 */
   teachingSpirit?: { spiritId: string; spiritName: string; geneIds: readonly string[] } | null;
 }
@@ -156,12 +158,14 @@ const SOURCE_TAG: Record<IBattleEntryParams['entrySource'], string> = {
   lobby: '大廳進入戰場',
   preview: 'QA工具進入戰場',
   replay: '再來一場',
+  qa: 'QA直進戰場',
 };
 
 const PARAM_TAG: Record<IBattleEntryParams['entrySource'], string> = {
   lobby: '正式參數',
   preview: '預設參數',
   replay: '重播參數',
+  qa: 'QA網址參數',
 };
 
 /**
