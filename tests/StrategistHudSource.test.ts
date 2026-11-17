@@ -40,10 +40,10 @@ export function createStrategistHudSourceSuite(): TestSuite {
         state.playerGeneral = { name: '諸葛亮', int: 99 } as unknown as GeneralUnit;
         assert.equals('', buildStrategistHudSummary(strategistHudInputOf(state)).executingTactic);
         state.battleTactic = BattleTactic.NightRaid;
-        assert.equals('諸葛亮 INT 99，正在執行：夜襲', buildStrategistHudSummary(strategistHudInputOf(state)).executingTactic);
-        assert.equals('諸葛亮 INT 99，正在執行：夜襲（情報 32 / 40）', buildStrategistHudSummary(strategistHudInputOf(state, [], 32.6)).executingTactic);
+        assert.equals('諸葛亮 智力 99，正在執行：夜襲', buildStrategistHudSummary(strategistHudInputOf(state)).executingTactic);
+        assert.equals('諸葛亮 智力 99，正在執行：夜襲（情報 32 / 40）', buildStrategistHudSummary(strategistHudInputOf(state, [], 32.6)).executingTactic);
         state.battleTactic = BattleTactic.FireAttack;
-        assert.equals('諸葛亮 INT 99，正在執行：火攻', buildStrategistHudSummary(strategistHudInputOf(state, [], 32)).executingTactic, '無情報門檻不附情報');
+        assert.equals('諸葛亮 智力 99，正在執行：火攻', buildStrategistHudSummary(strategistHudInputOf(state, [], 32)).executingTactic, '無情報門檻不附情報');
         state.playerGeneral = null;
         assert.equals(undefined, strategistHudInputOf(state).executing);
     });
