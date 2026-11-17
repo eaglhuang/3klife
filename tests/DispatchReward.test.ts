@@ -44,7 +44,7 @@ export function createDispatchRewardSuite(): TestSuite {
         assert.isTrue(session.military.food <= session.military.foodCap);
     });
 
-    suite.test('名聲入帳；金幣交呼叫端；未到期不發', () => {
+    suite.test('名聲入帳；黃金交呼叫端；未到期不發', () => {
         const fameSession = sessionWith(hero('talker', 'Scholar', { cha: 99, int: 99 }));
         const fameBefore = fameSession.fame;
         fameSession.dispatchJobById('PERSUADE', 0);

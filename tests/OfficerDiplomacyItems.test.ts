@@ -76,7 +76,7 @@ export function createOfficerDiplomacyItemsSuite(): TestSuite {
         assert.equals(true, sendGiftWithLetter(second.world, ID, GIFT_GOLD_COST, SEASON + 1).ok);
     });
 
-    suite.test('拜帖：金幣不足或宿敵拒收時不記次數', () => {
+    suite.test('拜帖：黃金不足或宿敵拒收時不記次數', () => {
         const broke = sendGiftWithLetter(createRivalWorld(), ID, 0, SEASON);
         assert.equals(false, broke.ok);
         assert.equals(undefined, nationOf(broke.world).giftLetterCount);
@@ -121,7 +121,7 @@ export function createOfficerDiplomacyItemsSuite(): TestSuite {
         assert.equals(true, session.previewRivalTradeRefresh(0, DAY1).free);
     });
 
-    suite.test('GameSession 拜帖：沒道具或送禮失敗都不扣，成功才扣道具與金幣', async () => {
+    suite.test('GameSession 拜帖：沒道具或送禮失敗都不扣，成功才扣道具與黃金', async () => {
         const session = new GameSession();
         const internals = session as any;
         let spent = 0;

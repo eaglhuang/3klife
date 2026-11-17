@@ -1,7 +1,7 @@
 /**
  * RivalDiplomacy.test.ts — 外交／出征畫面流程（PROG-2-1088）headless 測試
  *
- * 驗證：畫面 JSON 節點與控制器 key 對得上、送禮扣金幣、出征自動結算發金幣、
+ * 驗證：畫面 JSON 節點與控制器 key 對得上、送禮扣黃金、出征自動結算發黃金、
  * 存檔正規化保留勢力狀態。
  */
 import { TestSuite, assert } from './TestRunner';
@@ -57,7 +57,7 @@ export function createRivalDiplomacySuite(): TestSuite {
         assert.equals(true, hud.includes('"btnOpenRival"'));
     });
 
-    suite.test('送禮扣 1000 金幣並提升邦交；金幣不足不扣', async () => {
+    suite.test('送禮扣 1000 黃金並提升邦交；黃金不足不扣', async () => {
         const { state, controller } = harness();
         controller.select(5);
         await controller.gift();
@@ -68,7 +68,7 @@ export function createRivalDiplomacySuite(): TestSuite {
         assert.equals(10, poor.state.gold);
     });
 
-    suite.test('出征劉璋：自動結算勝利、發金幣、奪地、畫面顯示結算句與君主中文名', async () => {
+    suite.test('出征劉璋：自動結算勝利、發黃金、奪地、畫面顯示結算句與君主中文名', async () => {
         const { state, controller } = harness(0);
         controller.select(5);
         await controller.campaign();

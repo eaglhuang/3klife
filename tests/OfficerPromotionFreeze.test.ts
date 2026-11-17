@@ -11,7 +11,7 @@ export function createOfficerPromotionFreezeSuite(): TestSuite {
         assert.equals(2, titles.length);
         assert.equals(`晉升 ${OFFICER_TIER_TITLES[1]}`, titles[0]);
         assert.equals(`晉升 ${OFFICER_TIER_TITLES[2]}`, titles[1]);
-        assert.isFalse(titles[0].includes('金錢'));
+        assert.isFalse(titles[0].includes('黃金'));
     });
 
     suite.test('有階位表時用表上的官名；沒有晉升時不播', () => {

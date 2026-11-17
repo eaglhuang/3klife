@@ -51,7 +51,7 @@ export function createGachaButtonRulesSuite(): TestSuite {
 
     suite.test('資源列：七種資源全部顯示並帶數量', () => {
         const text = formatGachaWalletStrip(WALLET);
-        for (const label of ['靈玉 1,280', '銅錢符 1,500', '召喚券 12', '支援券 5', '金幣 128,450', '積分 40', '求籤令 3']) assert.contains(text, label);
+        for (const label of ['靈玉 1,280', '銅錢符 1,500', '召喚券 12', '支援券 5', '黃金 128,450', '積分 40', '求籤令 3']) assert.contains(text, label);
         assert.lengthEquals(7, GACHA_WALLET_DISPLAY_ORDER);
         assert.contains(formatGachaWalletStrip({}), '靈玉 0', '缺欄位當 0，不顯示 NaN');
     });
@@ -62,14 +62,14 @@ export function createGachaButtonRulesSuite(): TestSuite {
         assert.equals('召喚券 12', formatResultBalance('tickets', WALLET));
     });
 
-    suite.test('按鈕規劃：單抽十連各池都能按；金幣／召喚券只在名將池', () => {
+    suite.test('按鈕規劃：單抽十連各池都能按；黃金／召喚券只在名將池', () => {
         assert.equals(10, (planGachaButton('limited', 'ten') as { count: number }).count);
         assert.equals('pool', planGachaButton('support', 'single').run);
         assert.equals('gold', planGachaButton('general', 'gold').run);
         assert.equals('ticket', planGachaButton('general', 'ticket').run);
         for (const key of ['limited', 'legendary', 'support'] as const) {
             const gold = planGachaButton(key, 'gold');
-            assert.equals('blocked', gold.run, `${key} 的金幣鈕不能偷偷改扣別種貨幣`);
+            assert.equals('blocked', gold.run, `${key} 的黃金鈕不能偷偷改扣別種貨幣`);
             assert.contains((gold as { message: string }).message, '名將池');
             assert.equals('blocked', planGachaButton(key, 'ticket').run);
         }
@@ -85,9 +85,9 @@ export function createGachaButtonRulesSuite(): TestSuite {
         assert.isTrue(checkGachaAffordable(planGachaButton('general', 'single'), GENERAL, { ...WALLET, bronze: 0, gems: 150 }).ok, '銅錢符不夠時改用靈玉');
     });
 
-    suite.test('餘額檢查：金幣召喚 500、召喚券 1 張；封鎖的鈕直接帶原因', () => {
+    suite.test('餘額檢查：黃金召喚 500、召喚券 1 張；封鎖的鈕直接帶原因', () => {
         assert.isTrue(checkGachaAffordable({ run: 'gold' }, null, { gold: 500 }).ok);
-        assert.contains((checkGachaAffordable({ run: 'gold' }, null, { gold: 499 }) as { message: string }).message, '金幣不足');
+        assert.contains((checkGachaAffordable({ run: 'gold' }, null, { gold: 499 }) as { message: string }).message, '黃金不足');
         assert.isTrue(checkGachaAffordable({ run: 'ticket' }, null, { tickets: 1 }).ok);
         assert.contains((checkGachaAffordable({ run: 'ticket' }, null, { tickets: 0 }) as { message: string }).message, '召喚券不足');
         const blocked = checkGachaAffordable(planGachaButton('limited', 'gold'), null, WALLET);
@@ -120,7 +120,7 @@ export function createGachaButtonRulesSuite(): TestSuite {
     });
 
     suite.test('紀錄動作名稱：翻成玩家看得懂的字，未知代碼原樣顯示', () => {
-        assert.equals('金幣召喚', describeGachaAction('LOCAL_GOLD_SUMMON'));
+        assert.equals('黃金召喚', describeGachaAction('LOCAL_GOLD_SUMMON'));
         assert.equals('天命商店兌換', describeGachaAction('LOCAL_DESTINY_SHOP_EXCHANGE'));
         assert.equals('UNKNOWN_X', describeGachaAction('UNKNOWN_X'));
     });

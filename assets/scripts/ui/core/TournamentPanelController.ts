@@ -8,7 +8,7 @@
  *   - 顯示待領賽季獎勵，「領獎」一次領完（PROG-2-1194）
  *   - 輸出扁平 FlowView，key 與 tournament-main 版面節點 id 一一對應
  *
- * 暫定：段位與相位中文名、拒絕原因文案待企劃定版；額外參戰幣別為金錢。
+ * 暫定：段位與相位中文名、拒絕原因文案待企劃定版；額外參戰幣別為黃金。
  * Unity 對照：Presenter。
  */
 import type { RankTier, TournamentPhase } from '../../core/systems/TournamentSeason';
@@ -72,7 +72,7 @@ export const TOURNAMENT_REASON_LABEL: Record<TournamentRegisterReason | Tourname
     'not-competition': '競賽期才能參戰。',
     'no-team': '名冊沒有可出戰的武將。',
     'daily-limit': '今日參戰次數已用完。',
-    'payment-declined': '金錢不足，無法額外參戰。',
+    'payment-declined': '黃金不足，無法額外參戰。',
 };
 
 export interface TournamentPanelDeps {
@@ -243,9 +243,9 @@ export class TournamentPanelController {
     }
 }
 
-/** 獎勵清單一句話：「第 N 季 段位 金錢 X」以「、」相接 */
+/** 獎勵清單一句話：「第 N 季 段位：黃金 X」以「、」相接 */
 export function rewardsText(rewards: readonly TournamentSeasonReward[]): string {
-    return rewards.map((r) => `第 ${r.seasonIndex} 季 ${TOURNAMENT_TIER_LABEL[r.tier]} 金錢 ${r.gold}`).join('、');
+    return rewards.map((r) => `第 ${r.seasonIndex} 季 ${TOURNAMENT_TIER_LABEL[r.tier]}：黃金 ${r.gold}`).join('、');
 }
 
 /** §G 賽季落幕句（PROG-2-1747）：每筆獎勵一行，盃名依季序輪替、排名用段位名 */

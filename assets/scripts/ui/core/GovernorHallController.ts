@@ -23,7 +23,7 @@ export interface GovernorTerritoryInfo {
     maxSlots: number;
     pendingLevel: number | null;
     plan: TerritoryUpgradePlan;
-    /** 上次升級被錢包拒絕（金錢不足）；為 true 時按鈕停用並提示（PROG-2-0991）。 */
+    /** 上次升級被錢包拒絕（黃金不足）；為 true 時按鈕停用並提示（PROG-2-0991）。 */
     goldShortage?: boolean;
 }
 
@@ -36,7 +36,7 @@ const UPGRADE_REJECT_TEXT: Record<TerritoryUpgradeRejectReason, string> = {
     'max-level': '已達最高等級',
     'upgrade-pending': '已有待生效的升級',
     'insufficient-food': '糧草不足',
-    'insufficient-gold': '金錢不足',
+    'insufficient-gold': '黃金不足',
 };
 
 /** 未傳入等級資訊時的預設：Lv1、2 格、無待生效升級，升級按鈕不可按。 */

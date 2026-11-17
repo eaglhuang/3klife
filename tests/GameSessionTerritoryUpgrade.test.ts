@@ -31,7 +31,7 @@ export function createGameSessionTerritoryUpgradeSuite(): TestSuite {
         assert.isTrue(session.pendingTerritoryLevel === null);
     });
 
-    suite.test('下單即扣糧草與金錢，季結後才升級並增加格數', async () => {
+    suite.test('下單即扣糧草與黃金，季結後才升級並增加格數', async () => {
         const session = withFood(new GameSession(1), 10000);
         const foodBefore = session.military.food;
         let spent = 0;

@@ -60,7 +60,7 @@ export function createTournamentPanelControllerSuite(): TestSuite {
         assert.equals('培育期每天只能重新報名 1 次。', panel.getFlowView().texts.trnResultLabel);
     });
 
-    suite.test('競賽期：免費一次後改顯示付費，金錢不足提示', () => {
+    suite.test('競賽期：免費一次後改顯示付費，黃金不足提示', () => {
         const { panel, clock, wallet } = setup(30);
         panel.getFlowView();
         clock.now = 7 * D;
@@ -74,7 +74,7 @@ export function createTournamentPanelControllerSuite(): TestSuite {
         assert.isTrue(panel.play());
         assert.equals(0, wallet.gold);
         assert.isTrue(!panel.play());
-        assert.equals('金錢不足，無法額外參戰。', panel.message);
+        assert.equals('黃金不足，無法額外參戰。', panel.message);
         panel.reset();
         assert.equals('', panel.getFlowView().texts.trnResultLabel);
     });
@@ -101,7 +101,7 @@ export function createTournamentPanelControllerSuite(): TestSuite {
     });
 
     suite.test('獎勵清單文字', () => {
-        assert.equals('第 1 季 黃金 金錢 400、第 2 季 青銅 金錢 100', rewardsText([
+        assert.equals('第 1 季 黃金：黃金 400、第 2 季 青銅：黃金 100', rewardsText([
             { seasonIndex: 1, tier: 'GOLD', gold: 400 }, { seasonIndex: 2, tier: 'BRONZE', gold: 100 },
         ]));
     });

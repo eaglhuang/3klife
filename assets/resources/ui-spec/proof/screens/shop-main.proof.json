@@ -35,7 +35,7 @@
       "label": "貨幣顯示列（右上）",
       "family": "dark-metal",
       "bounds": { "x": 1600, "y": 0, "w": 320, "h": 80 },
-      "notes": "顯示金錢 / 元寶餘額"
+      "notes": "顯示黃金 / 元寶餘額"
     },
     {
       "id": "purchase-panel",
@@ -86,7 +86,7 @@
       "nodeHint": "label",
       "skinSlot": "shop.currency.gold",
       "bind": "player.gold",
-      "notes": "金錢餘額"
+      "notes": "黃金餘額"
     },
     {
       "zone": "currency-bar",
@@ -132,7 +132,7 @@
     { "id": "selectedCategory","type": "enum",   "placeholder": "當前分類（武器/裝備/消耗品）" },
     { "id": "items",           "type": "list",   "placeholder": "商品清單",     "minCount": 1, "maxCount": 100 },
     { "id": "selectedItem",    "type": "label",  "placeholder": "選中商品",     "optional": true },
-    { "id": "gold",            "type": "number", "placeholder": "金錢餘額" },
+    { "id": "gold",            "type": "number", "placeholder": "黃金餘額" },
     { "id": "gems",            "type": "number", "placeholder": "元寶餘額",     "optional": true },
     { "id": "canBuySelected",  "type": "bool",   "placeholder": "可購買旗標",   "optional": true },
     { "id": "cta-button",      "type": "button", "placeholder": "購買",         "family": "gold-cta" }

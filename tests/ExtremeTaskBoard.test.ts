@@ -82,7 +82,7 @@ export function createExtremeTaskBoardSuite(): TestSuite {
         }
     });
 
-    suite.test('GameSession：通關才產獎勵，領取後清空；金幣走錢包、道具進背包', async () => {
+    suite.test('GameSession：通關才產獎勵，領取後清空；黃金走錢包、道具進背包', async () => {
         const session = sessionWithLead();
         const started = await session.startExtremeTask(MONDAY_NOON);
         assert.isTrue(started.ok);
@@ -146,7 +146,7 @@ export function createExtremeTaskBoardSuite(): TestSuite {
         assert.equals('本週 BOSS：呂布', full.texts.etBossLabel);
         assert.equals(false, extremeTaskFlowView({ freeLeft: 0, orders: 0, bossName: '呂布' }, '').enabled.btnChallenge);
         assert.equals(true, extremeTaskFlowView({ freeLeft: 0, orders: 1, bossName: '呂布' }, '').enabled.btnChallenge);
-        assert.equals('金幣 300', extremeDropText({ kind: 'gold', amount: 300 }));
+        assert.equals('黃金 300', extremeDropText({ kind: 'gold', amount: 300 }));
         assert.isTrue(isExtremeStage('extreme-lu-bu'));
         assert.equals(false, isExtremeStage('encounter-001'));
     });

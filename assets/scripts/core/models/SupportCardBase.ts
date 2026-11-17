@@ -8,7 +8,7 @@ export type SupportCardCategory =
   | 'beauty'       // 紅顏：主要影響外交、商業產出
   | 'advisor'      // 軍師：提升謀略型武將戰法效果
   | 'artisan'      // 工匠：加速建設與科技研發
-  | 'merchant'     // 商人：提升金錢收入與貿易路線
+  | 'merchant'     // 商人：提升黃金收入與貿易路線
   | 'healer';      // 醫師：戰後恢復與活力補充
 
 /** 支援角色抵達路線類型 */
@@ -31,7 +31,7 @@ export interface SupportCardBase {
   routeType: SupportCardRouteType;
   /** 正常抵達所需回合數 */
   arrivalTime: number;
-  /** 急召所需金錢（0 = 不可急召）*/
+  /** 急召所需黃金（0 = 不可急召）*/
   rushPrice: number;
   /** 加成效果標籤（用於 UI 篩選與 FormulaSystem 判斷）*/
   effectTags: string[];

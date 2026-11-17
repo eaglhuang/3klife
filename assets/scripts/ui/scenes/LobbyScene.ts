@@ -122,7 +122,7 @@ import { dispatchClickMessage, dispatchSettleToast } from '../../core/systems/Di
 import { WAREHOUSE_EXPANSION_ITEM } from '../../core/managers/GameSession';
 import { warehouseExpandGemCost } from '../../core/systems/WarehouseCapacity';
 
-/** 倉庫擴容費用：規格（doc_spec_0017）只寫「付費或任務解鎖」，暫定每次 5000 金幣 */
+/** 倉庫擴容費用：規格（doc_spec_0017）只寫「付費或任務解鎖」，暫定每次 5000 黃金 */
 import type { SeasonAdvancedPayload } from '../../core/managers/GameSession';
 import { bloodlineBirthLines } from '../../core/systems/BloodlineBirthLines';
 import type { DiscoveryGain } from '../../core/systems/DiscoveryProgress';
@@ -534,7 +534,7 @@ export class LobbyScene extends Component {
     private _relationGraph: RelationGraphController | null = null;
     private _relationGraphRenderer: RelationGraphRenderer | null = null;
     private _itemBag: ItemBagController | null = null;
-    /** 太守府升級因金錢不足被拒（PROG-2-0991）；重新開啟太守府時清除。 */
+    /** 太守府升級因黃金不足被拒（PROG-2-0991）；重新開啟太守府時清除。 */
     private _territoryGoldShortage = false;
     /** 名將池武將 id（gacha-config hero-pool）；招賢館與傭兵試用招募共用 */
     private _heroPoolIds: readonly string[] = [];
@@ -2271,7 +2271,7 @@ export class LobbyScene extends Component {
         this._battleReviewHost.node.active = false;
     }
 
-    /** 名將挑戰賽彈窗（doc_spec_0007，PROG-2-1191）：入口暫放晨報派遣板；額外參戰扣錢包金錢，賽季獎勵入錢包金錢（PROG-2-1194）；成功後存檔 */
+    /** 名將挑戰賽彈窗（doc_spec_0007，PROG-2-1191）：入口暫放晨報派遣板；額外參戰扣錢包黃金，賽季獎勵入錢包黃金（PROG-2-1194）；成功後存檔 */
     private async _mountTournament(): Promise<void> {
         const gacha = this._localGachaService;
         const tournament = new TournamentPanelController({
@@ -2744,7 +2744,7 @@ export class LobbyScene extends Component {
         };
     }
 
-    /** 升級下單：金錢由錢包扣，糧草與待生效狀態由 GameSession 處理；成功才存檔。 */
+    /** 升級下單：黃金由錢包扣，糧草與待生效狀態由 GameSession 處理；成功才存檔。 */
     private _onUpgradeTerritory(): void {
         const session = services().session;
         const gacha = this._localGachaService;
@@ -3756,7 +3756,7 @@ export class LobbyScene extends Component {
 
     /**
      * 招賢館（PROG-2-1089）：以 UCUF JSON（recruit-hall-screen）執行期組裝。
-     * 名將池 20 位直接挑選、金幣招募入冊；規則在 RecruitHallController。
+     * 名將池 20 位直接挑選、黃金招募入冊；規則在 RecruitHallController。
      */
     private async _mountRecruitHall(): Promise<void> {
         const gachaConfig = await this._loadDataJson<GachaConfig[]>('data/gacha-config');

@@ -21,7 +21,7 @@ export function createTerritoryUpgradeSuite(): TestSuite {
         assert.equals(5, TERRITORY_MAX_LEVEL);
     });
 
-    suite.test('費用：升到第 n 級為金錢 1000×n²、糧草 500×n', () => {
+    suite.test('費用：升到第 n 級為黃金 1000×n²、糧草 500×n', () => {
         const cost = territoryUpgradeCost(3);
         assert.equals(9000, cost.gold);
         assert.equals(1500, cost.food);

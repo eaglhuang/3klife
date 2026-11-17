@@ -11,7 +11,7 @@
  *   - BOSS：每個杯賽帶一個季節 BOSS 與弱點標籤，攻擊標籤命中弱點 ×1.5（PROG-2-1196；BOSS 戰需伺服器，未做）。
  *   - 獎勵：有參賽（留有鏡像快照）的已結束賽季依最終段位列為待領，領取後標記已領（PROG-2-1194）。
  *
- * 暫定：對手的排名分以「我方分數 × 對手戰力比」估算；ELO 以整個系列賽算一次；獎勵先只發金錢（稀有虎符／限定外觀待企劃）。
+ * 暫定：對手的排名分以「我方分數 × 對手戰力比」估算；ELO 以整個系列賽算一次；獎勵先只發黃金（稀有虎符／限定外觀待企劃）。
  * Unity 對照：像一個存檔用的 ScriptableObject 狀態 + 純函式 reducer。
  */
 import { TerrainType, Weather } from '../../shared/CommonEnums';
@@ -130,7 +130,7 @@ export function bossWeaknessMultiplier(attackTags: readonly string[], boss: Read
     return attackTags.some((tag) => (boss.weaknessTags as readonly string[]).includes(tag)) ? BOSS_WEAKNESS_BONUS : 1;
 }
 
-/** 賽季獎勵（暫定，只發金錢）：依最終段位 */
+/** 賽季獎勵（暫定，只發黃金）：依最終段位 */
 export const TOURNAMENT_SEASON_REWARD_GOLD: Readonly<Record<RankTier, number>> = {
     BRONZE: 100,
     SILVER: 200,

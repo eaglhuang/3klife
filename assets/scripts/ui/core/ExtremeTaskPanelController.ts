@@ -29,7 +29,7 @@ const ITEM_NAMES: Readonly<Record<string, string>> = {
 };
 
 export function extremeDropText(drop: ExtremeTaskDrop): string {
-    return drop.kind === 'gold' ? `金幣 ${drop.amount}` : (ITEM_NAMES[drop.itemId] ?? drop.itemId);
+    return drop.kind === 'gold' ? `黃金 ${drop.amount}` : (ITEM_NAMES[drop.itemId] ?? drop.itemId);
 }
 
 export function extremeRewardToast(drops: readonly ExtremeTaskDrop[]): string {

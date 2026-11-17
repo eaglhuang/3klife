@@ -43,7 +43,7 @@ function fixture(failScreen = false) {
     return { coordinator, binder, calls, errors, owned, nodes, back: () => back };
 }
 
-for (const [method, currency, text] of [['runGoldSummon', 'gold', '金幣'], ['runTicketSummon', 'ticket', '召喚券'], ['runLocalGacha', 'gems', '單抽']]) {
+for (const [method, currency, text] of [['runGoldSummon', 'gold', '黃金'], ['runTicketSummon', 'ticket', '召喚券'], ['runLocalGacha', 'gems', '單抽']]) {
     test(`${currency} single result is formal and retries the same currency once`, async () => {
         const f = fixture(); await f.coordinator[method](1);
         assert.match(f.binder.texts.GachaPullResult_div_42, new RegExp(text));

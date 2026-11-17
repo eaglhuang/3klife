@@ -2,7 +2,7 @@
 /**
  * 轉蛋畫面按鈕規則與資源顯示（純邏輯，不依賴 cc）。
  *
- * - 單抽／十連／金幣召喚／召喚券各按鈕在哪個池能按、按了做什麼（planGachaButton）
+ * - 單抽／十連／黃金召喚／召喚券各按鈕在哪個池能按、按了做什麼（planGachaButton）
  * - 按下前先查餘額，不足時給出「缺哪種、要多少、現有多少」（checkGachaAffordable）
  * - 轉蛋畫面要顯示的資源列與各池餘額文字
  * - 池詳情（「詳情 ›」）要顯示的內容列
@@ -26,10 +26,10 @@ export function formatResultBalance(currency: 'gems' | 'gold' | 'tickets' | 'men
 export type GachaPoolKeyName = 'general' | 'limited' | 'legendary' | 'support';
 export type GachaButtonKind = 'single' | 'ten' | 'gold' | 'ticket';
 
-/** 金幣召喚每抽金幣數（與 LocalGachaService.performGoldSummon 的 500 相同；此處只用來預先檢查餘額） */
+/** 黃金召喚每抽黃金數（與 LocalGachaService.performGoldSummon 的 500 相同；此處只用來預先檢查餘額） */
 export const GACHA_GOLD_SUMMON_COST = 500;
 
-/** 資源列顯示順序：抽卡主力幣在前，其次券類，最後金幣與道具 */
+/** 資源列顯示順序：抽卡主力幣在前，其次券類，最後黃金與道具 */
 export const GACHA_WALLET_DISPLAY_ORDER: readonly GachaCurrencyId[] = ['gems', 'bronze', 'tickets', 'mentorTickets', 'gold', 'scorePoints', 'oracle'];
 
 export function formatCurrencyAmount(value: number): string {
@@ -55,13 +55,13 @@ export type GachaButtonPlan =
 
 /**
  * 按鈕在各池的行為。
- * 金幣召喚、召喚券召喚是名將池專屬的快捷（扣金幣／召喚券抽名將池），其他池按了不能偷偷改成扣別種貨幣，明講原因。
+ * 黃金召喚、召喚券召喚是名將池專屬的快捷（扣黃金／召喚券抽名將池），其他池按了不能偷偷改成扣別種貨幣，明講原因。
  */
 export function planGachaButton(pool: GachaPoolKeyName, kind: GachaButtonKind): GachaButtonPlan {
     if (kind === 'single') return { run: 'pool', count: 1 };
     if (kind === 'ten') return { run: 'pool', count: 10 };
     if (pool === 'general') return kind === 'gold' ? { run: 'gold' } : { run: 'ticket' };
-    return { run: 'blocked', message: `${kind === 'gold' ? '金幣召喚' : '召喚券召喚'}只能在名將池使用，請先切到名將池。` };
+    return { run: 'blocked', message: `${kind === 'gold' ? '黃金召喚' : '召喚券召喚'}只能在名將池使用，請先切到名將池。` };
 }
 
 export type GachaAffordability = { ok: true } | { ok: false; message: string };
@@ -75,7 +75,7 @@ export function checkGachaAffordable(
     if (plan.run === 'blocked') return { ok: false, message: plan.message };
     if (plan.run === 'gold') {
         const have = wallet.gold ?? 0;
-        return have >= GACHA_GOLD_SUMMON_COST ? { ok: true } : { ok: false, message: `金幣不足：金幣召喚需要 ${formatCurrencyAmount(GACHA_GOLD_SUMMON_COST)}，目前 ${formatCurrencyAmount(have)}` };
+        return have >= GACHA_GOLD_SUMMON_COST ? { ok: true } : { ok: false, message: `黃金不足：黃金召喚需要 ${formatCurrencyAmount(GACHA_GOLD_SUMMON_COST)}，目前 ${formatCurrencyAmount(have)}` };
     }
     if (plan.run === 'ticket') {
         const have = wallet.tickets ?? 0;
@@ -125,7 +125,7 @@ export function buildPoolDetailRows(dto: GachaPoolDto, wallet: Readonly<Partial<
 
 const ACTION_LABELS: Readonly<Record<string, string>> = {
     LOCAL_GACHA_PULL: '名將／限定召喚',
-    LOCAL_GOLD_SUMMON: '金幣召喚',
+    LOCAL_GOLD_SUMMON: '黃金召喚',
     LOCAL_TICKET_SUMMON: '召喚券召喚',
     LOCAL_SUPPORT_SUMMON: '支援卡召喚',
     LOCAL_DESTINY_SHOP_EXCHANGE: '天命商店兌換',

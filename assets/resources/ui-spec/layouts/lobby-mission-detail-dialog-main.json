@@ -570,7 +570,7 @@
                                 "name": "SilverNameLabel",
                                 "width": 84,
                                 "height": 18,
-                                "text": "銀兩",
+                                "text": "黃金",
                                 "styleSlot": "mission.dialog.label.cost"
                               },
                               {

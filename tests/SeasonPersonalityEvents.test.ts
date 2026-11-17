@@ -82,7 +82,7 @@ export function createSeasonPersonalityEventsSuite(): TestSuite {
         assert.equals(105, strAfterExp(105, 20), '原本超過上限不倒扣');
     });
 
-    suite.test('換季抽到軍中索酒：撥款扣 50 銅錢、忠誠 +10；銅錢不足拒絕且不動資源', async () => {
+    suite.test('換季抽到軍中索酒：撥款扣 50 黃金、忠誠 +10；黃金不足拒絕且不動資源', async () => {
         const session = setup([general('zhang-fei')]);
         session.setSeasonEventRandom(() => 0.99);
         await session.advanceSeason();
@@ -185,7 +185,7 @@ export function createSeasonPersonalityEventsSuite(): TestSuite {
             apply: () => undefined,
             next: () => queue[0] ?? null,
             resolve: async () => {
-                if (!afford) return { ok: false, reason: 'shortfall', resource: '銅錢' };
+                if (!afford) return { ok: false, reason: 'shortfall', resource: '黃金' };
                 queue.shift();
                 return { ok: true, line: 'done' };
             },
@@ -195,7 +195,7 @@ export function createSeasonPersonalityEventsSuite(): TestSuite {
         assert.isTrue(popup.tryOpen());
         await popup.respond(0);
         assert.isTrue(host.node.active);
-        assert.equals('銅錢不足，無法執行', toasts[0]);
+        assert.equals('黃金不足，無法執行', toasts[0]);
         afford = true;
         await popup.respond(0);
         assert.isTrue(host.node.active, '換上下一起');

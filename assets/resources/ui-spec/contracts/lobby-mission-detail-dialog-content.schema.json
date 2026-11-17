@@ -110,13 +110,13 @@
     "costSilverValueLabel": {
       "type": "string",
       "required": true,
-      "description": "銀兩耗費顯示文字。",
+      "description": "黃金耗費顯示文字。",
       "bindPath": "DialogCard/ScrollView/ScrollContent/ResourcePanel/SilverRow/SilverHeadRow/SilverValueLabel"
     },
     "costSilverRatio": {
       "type": "number",
       "required": true,
-      "description": "銀兩視覺條比例，0~1。",
+      "description": "黃金視覺條比例，0~1。",
       "bindPath": "DialogCard/ScrollView/ScrollContent/ResourcePanel/SilverRow/SilverBarTrack/SilverBarFill"
     },
     "costTimeValueLabel": {

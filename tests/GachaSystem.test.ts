@@ -74,7 +74,7 @@ export function createGachaSystemSuite(): TestSuite {
         assert.isTrue(message.includes('destiny-pool'));
     });
 
-    suite.test('金幣召喚、召喚券是轉蛋系統的程式池：走各自規則、帶原標題與貨幣（PROG-2-9021）', async () => {
+    suite.test('黃金召喚、召喚券是轉蛋系統的程式池：走各自規則、帶原標題與貨幣（PROG-2-9021）', async () => {
         const calls: string[] = [];
         const service = {
             async performGoldSummon(n: number, _g: unknown, o: { factionFilter?: string }) { calls.push(`gold:${n}:${o.factionFilter}`); return []; },
@@ -84,7 +84,7 @@ export function createGachaSystemSuite(): TestSuite {
         const gold = await sys.pull({ poolId: GOLD_SUMMON_POOL_ID, drawCount: 1, generals: [] });
         const ticket = await sys.pull({ poolId: TICKET_SUMMON_POOL_ID, drawCount: 1, generals: [] });
         assert.equals('gold:1:player,ticket:1:player', calls.join(','));
-        assert.equals('金幣召喚', gold.presentation.title);
+        assert.equals('黃金召喚', gold.presentation.title);
         assert.equals('gold', gold.presentation.currency);
         assert.equals('召喚券', ticket.presentation.title);
         assert.equals('tickets', ticket.presentation.currency);
