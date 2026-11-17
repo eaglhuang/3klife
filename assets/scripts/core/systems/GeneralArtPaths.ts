@@ -112,3 +112,54 @@ export function avatarPlaceholderPath(gender?: string | null): string {
     const g = gender === '女' || gender === 'f' || gender === 'female' ? 'f' : 'm';
     return _config.avatarPlaceholder.replace(/\{gender\}/g, g);
 }
+
+export interface PortraitResourceTarget {
+    id: string;
+    gender?: string | null;
+    fatherId?: string | null;
+    motherId?: string | null;
+    portraitKey?: string | null;
+}
+
+/**
+ * 解析武將詳情立繪主路徑與備援清單：
+ * 動態子嗣（child_*）若無專屬 portraitKey，直接依性別退回同性別親代或預設名將，
+ * 避免請求不存在的 child_*_portrait 造成資源錯誤與空白立繪。
+ */
+export function resolveGeneralPortraitResources(target: PortraitResourceTarget): {
+    primary: string;
+    fallbacks: string[];
+} {
+    const isFemale = target.gender === '女' || target.gender === 'f' || target.gender === 'female';
+    const defaultId = isFemale ? 'da-qiao' : 'zhang-fei';
+    const candidateIds: string[] = [];
+
+    const pushCandidateId = (raw?: string | null): void => {
+        const trimmed = raw?.trim();
+        if (!trimmed) return;
+        const normalized = generalIdFromKey(trimmed);
+        if (!candidateIds.includes(normalized)) candidateIds.push(normalized);
+    };
+
+    const isChildWithoutCustomArt = target.id.startsWith('child_') && !target.portraitKey?.trim();
+    if (target.portraitKey?.trim()) {
+        pushCandidateId(target.portraitKey);
+    } else if (!isChildWithoutCustomArt) {
+        pushCandidateId(target.id);
+    }
+
+    if (isFemale) {
+        if (target.motherId && !target.motherId.startsWith('child_')) pushCandidateId(target.motherId);
+        if (target.fatherId && !target.fatherId.startsWith('child_')) pushCandidateId(target.fatherId);
+    } else {
+        if (target.fatherId && !target.fatherId.startsWith('child_')) pushCandidateId(target.fatherId);
+        if (target.motherId && !target.motherId.startsWith('child_')) pushCandidateId(target.motherId);
+    }
+    pushCandidateId(defaultId);
+
+    const paths = candidateIds.map((id) => portraitPathOf(id));
+    return {
+        primary: paths[0],
+        fallbacks: paths.slice(1),
+    };
+}

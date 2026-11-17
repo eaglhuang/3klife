@@ -418,7 +418,7 @@ export class GeneralDetailComposite extends CompositePanel {
 
     /** DS3 左欄：立繪與立繪下方稱號隨武將更換（PROG-2-1687） */
     private _applyDs3PortraitChrome(state: UnifiedOverviewContentState): void {
-        void this._chrome.loadPortrait(state.portraitResource).catch(() => undefined);
+        void this._chrome.loadPortrait(state.portraitResource, state.portraitFallbackResources).catch(() => undefined);
         // 版型轉換時烘進去的示意立繪會疊在實際立繪後面，關掉
         const placeholder = this._gdBinder?.getSprite('PortraitImage_ImageContent');
         if (placeholder) placeholder.enabled = false;
@@ -431,7 +431,7 @@ export class GeneralDetailComposite extends CompositePanel {
 
     private _applyOverviewChrome(state: UnifiedOverviewContentState): void {
         void this._chrome.loadBackground(state.backgroundResource);
-        void this._chrome.loadPortrait(state.portraitResource);
+        void this._chrome.loadPortrait(state.portraitResource, state.portraitFallbackResources);
         void this._chrome.loadPortraitRarityBadge(state.rarityTier);
 
         // Overview visual pass — 將 Shell 時代的 sprite color / opacity / label color 套用到 Unified 節點

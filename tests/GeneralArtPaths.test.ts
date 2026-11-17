@@ -10,6 +10,7 @@ import {
     defaultGeneralArtPaths,
     portraitPathOf,
     resetGeneralArtPaths,
+    resolveGeneralPortraitResources,
 } from '../assets/scripts/core/systems/GeneralArtPaths';
 
 const JSON_PATH = path.resolve(__dirname, '../assets/resources/data/general-art-paths.json');
@@ -78,6 +79,44 @@ export function createGeneralArtPathsSuite(): TestSuite {
         const broken = (): string => { throw new Error('服務還沒就緒'); };
         assert.equals('女', firstKnownGender([broken, () => '女']) ?? '');
         assert.equals(undefined, firstKnownGender([broken]));
+    });
+
+    suite.test('動態子嗣立繪依性別退回同性別親代或預設名將，避免載入不存在的 child_*_portrait', () => {
+        resetGeneralArtPaths();
+        const daughter = resolveGeneralPortraitResources({
+            id: 'child_peng_yang_da_qiao_1',
+            gender: '女',
+            fatherId: 'peng-yang',
+            motherId: 'da-qiao',
+        });
+        assert.equals('sprites/generals/da_qiao_portrait', daughter.primary);
+        assert.equals('sprites/generals/peng_yang_portrait', daughter.fallbacks[0]);
+
+        const son = resolveGeneralPortraitResources({
+            id: 'child_peng_yang_da_qiao_2',
+            gender: '男',
+            fatherId: 'peng-yang',
+            motherId: 'da-qiao',
+        });
+        assert.equals('sprites/generals/peng_yang_portrait', son.primary);
+        assert.equals('sprites/generals/da_qiao_portrait', son.fallbacks[0]);
+
+        const grandchild = resolveGeneralPortraitResources({
+            id: 'child_child_1_child_2_1',
+            gender: '女',
+            fatherId: 'child_1',
+            motherId: 'child_2',
+        });
+        assert.equals('sprites/generals/da_qiao_portrait', grandchild.primary);
+
+        const customChild = resolveGeneralPortraitResources({
+            id: 'child_custom_1',
+            gender: '女',
+            fatherId: 'peng-yang',
+            motherId: 'da-qiao',
+            portraitKey: 'diao-chan',
+        });
+        assert.equals('sprites/generals/diao_chan_portrait', customChild.primary);
     });
 
     return suite;

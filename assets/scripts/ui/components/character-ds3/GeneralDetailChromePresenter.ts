@@ -23,6 +23,7 @@ import { Button, Color, Label, Node, Sprite, UIOpacity, UITransform } from 'cc';
 import type { GeneralConfig, GeneralDetailDefaultTab, GeneralDetailRarityTier } from '../../../core/models/GeneralUnit';
 import { services } from '../../../core/managers/ServiceLoader';
 import { branchShortcutVisible } from '../../../core/systems/FamilyOverviewHotspot';
+import { loadFirstAvailableArtCandidate } from '../../../core/systems/GeneralArtPaths';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import { applyPortraitSoftMask, fitPortraitSpriteToLogicalFrame, getOrCreatePortraitArtworkSprite } from '../portrait/PortraitSoftMask';
 
@@ -74,6 +75,7 @@ const PORTRAIT_RARITY_BADGE_PATHS: Record<GeneralDetailRarityTier, string> = {
 export class GeneralDetailChromePresenter {
     private _currentBackgroundResource: string | null = null;
     private _currentPortraitRarityBadgeResource: string | null = null;
+    private _portraitLoadSeq = 0;
 
     constructor(private readonly host: ChromeHost) {}
 
@@ -110,7 +112,8 @@ export class GeneralDetailChromePresenter {
         });
     }
 
-    public async loadPortrait(resourcePath: string): Promise<void> {
+    public async loadPortrait(resourcePath: string, fallbackPaths: readonly string[] = []): Promise<void> {
+        const seq = ++this._portraitLoadSeq;
         const normalizedPath = resourcePath.trim();
         UCUFLogger.info(LogCategory.DATA, '[GeneralDetailComposite] loadPortrait start', {
             resourcePath: normalizedPath,
@@ -122,7 +125,15 @@ export class GeneralDetailChromePresenter {
             UCUFLogger.error(LogCategory.DATA, '[GeneralDetailComposite] 無法建立 PortraitArtwork sprite');
             return;
         }
-        const frame = await services().resource.loadSpriteFrame(normalizedPath, { preferTextureFallback: true }).catch(() => null);
+        sprite.spriteFrame = null;
+        const candidates = [normalizedPath, ...fallbackPaths.map((p) => p.trim())].filter((p, idx, arr) => p.length > 0 && arr.indexOf(p) === idx);
+        const frame = await loadFirstAvailableArtCandidate(
+            candidates,
+            (path) => services().resource.loadSpriteFrame(path, { preferTextureFallback: true }).catch(() => null),
+        );
+        if (seq !== this._portraitLoadSeq || !sprite.isValid) {
+            return;
+        }
         if (!frame) {
             UCUFLogger.error(LogCategory.DATA,
                 `[GeneralDetailComposite] 載入 PortraitImage spriteFrame 失敗: ${normalizedPath}`);
