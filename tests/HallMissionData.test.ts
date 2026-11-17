@@ -54,7 +54,7 @@ export function createHallMissionDataSuite(): TestSuite {
         assert.equals(2, b.expireSeasons);
         assert.equals(50, b.reconCostGrain);
         assert.equals(100, b.difficulties.EASY.powerRequired);
-        assert.equals(700, b.difficulties.HELL.powerRequired);
+        assert.equals(400, b.difficulties.HELL.powerRequired);
         assert.equals(3, b.difficulties.HELL.durationSeasons);
         assert.equals(1000, b.difficulties.HELL.rewardGrain);
         assert.equals(20, b.energyCost.Military);

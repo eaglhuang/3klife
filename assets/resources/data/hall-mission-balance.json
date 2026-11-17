@@ -29,10 +29,10 @@
   },
   "Difficulties": {
     "EASY": { "Duration_Seasons": 1, "Power_Required": 100, "Reward_Grain": 120, "Reward_Silver": 80, "General_Exp": 40, "Cost_Grain": 40, "Cost_Troops": 50, "Cost_Silver": 30 },
-    "NORMAL": { "Duration_Seasons": 1, "Power_Required": 200, "Reward_Grain": 200, "Reward_Silver": 140, "General_Exp": 70, "Cost_Grain": 60, "Cost_Troops": 80, "Cost_Silver": 50 },
-    "ELITE": { "Duration_Seasons": 2, "Power_Required": 350, "Reward_Grain": 350, "Reward_Silver": 250, "General_Exp": 120, "Cost_Grain": 100, "Cost_Troops": 150, "Cost_Silver": 80 },
-    "ADVANCED": { "Duration_Seasons": 2, "Power_Required": 500, "Reward_Grain": 600, "Reward_Silver": 420, "General_Exp": 200, "Cost_Grain": 180, "Cost_Troops": 250, "Cost_Silver": 140 },
-    "HELL": { "Duration_Seasons": 3, "Power_Required": 700, "Reward_Grain": 1000, "Reward_Silver": 700, "General_Exp": 320, "Cost_Grain": 300, "Cost_Troops": 400, "Cost_Silver": 220 }
+    "NORMAL": { "Duration_Seasons": 1, "Power_Required": 180, "Reward_Grain": 200, "Reward_Silver": 140, "General_Exp": 70, "Cost_Grain": 60, "Cost_Troops": 80, "Cost_Silver": 50 },
+    "ELITE": { "Duration_Seasons": 2, "Power_Required": 260, "Reward_Grain": 350, "Reward_Silver": 250, "General_Exp": 120, "Cost_Grain": 100, "Cost_Troops": 150, "Cost_Silver": 80 },
+    "ADVANCED": { "Duration_Seasons": 2, "Power_Required": 330, "Reward_Grain": 600, "Reward_Silver": 420, "General_Exp": 200, "Cost_Grain": 180, "Cost_Troops": 250, "Cost_Silver": 140 },
+    "HELL": { "Duration_Seasons": 3, "Power_Required": 400, "Reward_Grain": 1000, "Reward_Silver": 700, "General_Exp": 320, "Cost_Grain": 300, "Cost_Troops": 400, "Cost_Silver": 220 }
   },
   "Wall_Rewards": {
     "Military": { "Grain": 1, "Silver": 0, "General_Exp": 1 },

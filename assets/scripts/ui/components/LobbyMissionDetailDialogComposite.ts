@@ -509,8 +509,25 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         this._suppressAiDelegateEvent = false;
 
         this._applyRatios(snapshot);
+        this._tintShortageLabels();
         this._refreshActionButtons(snapshot);
         this._setScrollContentBaseHeight();
+    }
+
+    /** 耗費不足的那一行用紅字（doc_spec_1178 §5）：文字含「不足，現有」就染紅，之後補足了再還原 */
+    private _shortageOrigColors = new WeakMap<Label, Color>();
+    private _tintShortageLabels(): void {
+        for (const label of this.node.getComponentsInChildren(Label)) {
+            const short = label.string.includes('不足，現有');
+            const orig = this._shortageOrigColors.get(label);
+            if (short) {
+                if (!orig) this._shortageOrigColors.set(label, label.color.clone());
+                label.color = new Color(255, 96, 84, 255);
+            } else if (orig) {
+                label.color = orig;
+                this._shortageOrigColors.delete(label);
+            }
+        }
     }
 
     private _buildBindingState(snapshot: LobbyMissionDetailDialogSnapshot): Record<string, unknown> {

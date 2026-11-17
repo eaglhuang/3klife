@@ -178,5 +178,26 @@ export function createHallMissionSessionSuite(): TestSuite {
         assert.equals(4, restored.hallMissionState!.boards.Domestic.length);
     });
 
+    suite.test('資料綁定後才開新局（開場流程）：任務立刻重新產生，牆不會變空', async () => {
+        const session = await newSession();
+        session.bindHallMissions(templates, balance, wallet());
+        session.startNewGame(99);
+        assert.isTrue(session.hallMissionsReady);
+        for (const w of HALL_MISSION_WALLS) assert.equals(4, session.hallMissionState!.boards[w].length, w);
+    });
+
+    suite.test('讀到沒有任務欄位的舊檔、資料已綁定：讀檔後立刻產生', async () => {
+        const adapter = new MemoryStorageAdapter();
+        const session = await newSession(adapter);
+        await session.save();
+        const restored = new GameSession();
+        restored.setRosterStore(new InMemoryRosterStore([]));
+        restored.setSaveService(new PlayerSaveService(adapter));
+        restored.bindHallMissions(templates, balance, wallet());
+        await restored.load();
+        assert.isTrue(restored.hallMissionsReady);
+        assert.equals(4, restored.hallMissionState!.boards.Military.length);
+    });
+
     return suite;
 }

@@ -71,7 +71,7 @@ export function createHallMissionGeneratorSuite(): TestSuite {
         const mil = createHallMission(byWall('Military'), balance, 'M', 0);
         assert.equals(200, mil.rewards.grain); assert.equals(0, mil.rewards.silver); assert.equals(70, mil.rewards.generalExp);
         assert.equals(60, mil.costs.grain); assert.equals(80, mil.costs.troops); assert.equals(0, mil.costs.silver);
-        assert.equals(20, mil.energyCost); assert.equals(200, mil.powerRequired); assert.equals(1, mil.durationSeasons);
+        assert.equals(20, mil.energyCost); assert.equals(180, mil.powerRequired); assert.equals(1, mil.durationSeasons);
         const dom = createHallMission(byWall('Domestic'), balance, 'D', 0);
         assert.equals(100, dom.rewards.grain); assert.equals(140, dom.rewards.silver); assert.equals(0, dom.rewards.generalExp);
         assert.equals(0, dom.costs.troops); assert.equals(50, dom.costs.silver); assert.equals(10, dom.energyCost);

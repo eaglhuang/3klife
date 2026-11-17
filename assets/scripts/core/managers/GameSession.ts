@@ -480,6 +480,8 @@ export interface HallMissionSeasonReport {
     lines: string[];
     settled: number;
     succeeded: number;
+    /** 這次結算實際入帳的總量（已截斷）；快轉合併提示與頂欄對帳用 */
+    gains: { grain: number; silver: number; generalExp: number };
 }
 
 export interface SeasonAdvancedPayload {
@@ -2059,6 +2061,8 @@ export class GameSession {
         this._favoriteGeneralIds = [];
         this._hallAssignments = {};
         this._hallMissions = null;
+        // 開場流程在大廳掛載之後才開新局：資料已綁定的話立刻重新產生，牆才不會變成空的（PROG-2-9130 建置版實測）
+        this._generateHallMissions();
         this.dynamicRelations.restore([]);
         this.relationEvents.restore([]);
         this._npcPlayerId = npcPlayerIdFromSeed(seed);
@@ -3912,7 +3916,13 @@ export class GameSession {
     public bindHallMissions(templates: readonly HallMissionTemplate[], balance: Readonly<HallMissionBalance>, wallet: HallMissionWallet): boolean {
         this._hallMissionData = { templates, balance: balance as HallMissionBalance };
         this._hallWallet = wallet;
-        if (this._hallMissions) return false;
+        return this._generateHallMissions();
+    }
+
+    /** 資料已綁定且還沒有任務狀態時產生一次；回傳是否有產生 */
+    private _generateHallMissions(): boolean {
+        if (this._hallMissions || !this._hallMissionData) return false;
+        const { templates, balance } = this._hallMissionData;
         const seed = hallSeedFromText(`hall|${this._seeded.snapshot().state}|${Date.now()}`);
         this._hallMissions = refillHallBoards(emptyHallMissionState(seed), templates, balance, this._clock.state.totalSeasonsElapsed, this.officerUnlocks.tier);
         this._hallAssignments = this._hallAssignmentsOf(this._hallMissions);
@@ -4088,7 +4098,8 @@ export class GameSession {
         this._hallMissions = next;
         this._hallAssignments = this._hallAssignmentsOf(next);
         if (settled.entries.length === 0) return undefined;
-        return { lines, settled: settled.entries.length, succeeded: settled.entries.filter((e) => e.success).length };
+        const gains = settled.entries.reduce((sum, e) => ({ grain: sum.grain + e.gains.grain, silver: sum.silver + e.gains.silver, generalExp: sum.generalExp + e.gains.generalExp }), { grain: 0, silver: 0, generalExp: 0 });
+        return { lines, settled: settled.entries.length, succeeded: settled.entries.filter((e) => e.success).length, gains };
     }
 
     /** 大廳任務指派（唯讀副本）：任務 id → 指派武將 id。 */
@@ -6039,6 +6050,7 @@ export class GameSession {
         this._hallMissions = snapshot.hallMissions !== undefined ? normalizeHallMissionState(snapshot.hallMissions) : null;
         // 有任務狀態時以進行中任務為準；沒有（舊檔）就維持舊的指派紀錄，直到 bind 產生新任務時才換成真實任務
         if (this._hallMissions) this._hallAssignments = this._hallAssignmentsOf(this._hallMissions);
+        else this._generateHallMissions();
         this._hallSpotState = EMPTY_HALL_SPOT_STATE;
         this._tallyLoyalty = normalizeTallyLoyaltyMap(snapshot.tallyLoyalty);
         this._tallyHoldings = { holders: normalizeTallyHoldingsMap(snapshot.tallyHoldings) };

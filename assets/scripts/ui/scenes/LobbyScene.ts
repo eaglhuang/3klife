@@ -2557,6 +2557,11 @@ export class LobbyScene extends Component {
         await this._bindHallMissions();
         this._hallBoard = new HallBoardPanelController({
             hub: () => this._hallMissionHub(hub),
+            statusText: (taskId) => {
+                const state = services().session.hallMissionState;
+                const mission = state ? findHallMission(state, taskId) : undefined;
+                return mission ? hallRowStatusText(mission, this._hallSeason()) : '';
+            },
             player: () => hallPlayerOf(services().session.officerUnlocks, services().session.intel),
             assignments: () => services().session.hallAssignments,
             leadGeneralId: () => services().session.leadGeneralId,
@@ -3535,8 +3540,13 @@ export class LobbyScene extends Component {
     private _onClickLobbyWallRow(wall: LobbyHallWallId, rowIndex: number): void {
         if (!this._hallBoard || !this._hallBoardHost) { this._showNotOpenYet(); return; }
         this._openHallBoard(this._hallBoardOfWall(wall));
-        this._onClickHallDetail(rowIndex);
+        // 牆上只列未接取任務，列號和任務板的列號不同：用牆上記下的任務代號開詳情
+        const missionId = this._lobbyWallOpenIds[wall]?.[rowIndex];
+        if (missionId) this._openHallDetailById(missionId); else this._onClickHallDetail(rowIndex);
     }
+
+    /** 牆上每一列對應的任務代號（_refreshLobbyHallWalls 更新） */
+    private _lobbyWallOpenIds: Partial<Record<LobbyHallWallId, string[]>> = {};
 
     /** 目前任務牆用的 hub：任務牆換成 GameSession 的真實任務（PROG-2-9130）；還沒就緒時三面牆都是空的，不顯示任何設計稿任務 */
     private _hallMissionHub(base: LobbyHub): LobbyHub {
@@ -3641,8 +3651,11 @@ export class LobbyScene extends Component {
             services().event.emit('SHOW_TOAST', { message: '此格目前沒有任務', duration: 2.5 });
             return;
         }
+        this._openHallDetailById(task.Task_ID);
+    }
+
+    private _openHallDetailById(missionId: string): void {
         const session = services().session;
-        const missionId = task.Task_ID;
         const mission = session.hallMissionState ? findHallMission(session.hallMissionState, missionId) : undefined;
         const balance = session.hallMissionBalance;
         if (!mission || !balance) {
@@ -4008,17 +4021,15 @@ export class LobbyScene extends Component {
             return;
         }
         const state = session.hallMissionState;
-        const season = this._hallSeason();
+        // 牆只有 4 列：未接取任務一定都要看得到，所以只列未接取的；進行中的收成牆頭的「進行中 N 件」，
+        // 逐件的「進行中，還有 N 季・武將名」在展開後的任務牆上看（PROG-2-9130）
         const view = (key: HallBoardKey): LobbyHallWallView => {
-            const wall = buildLobbyHallWallView(board.rowsFor(key), HALL_BOARD_MAX_ROWS);
             const rows = board.rowsFor(key);
-            return {
-                ...wall,
-                rows: wall.rows.map((row, i) => {
-                    const mission = state && rows[i] ? findHallMission(state, rows[i].taskId) : undefined;
-                    return mission?.status === 'ACTIVE' ? { ...row, meta: hallRowStatusText(mission, season) } : row;
-                }),
-            };
+            const open = rows.filter((row) => !(state && findHallMission(state, row.taskId)?.status === 'ACTIVE'));
+            const activeCount = rows.length - open.length;
+            this._lobbyWallOpenIds[key === 'Military' ? 'wall-left' : 'wall-right'] = open.map((row) => row.taskId);
+            const wall = buildLobbyHallWallView(open, HALL_BOARD_MAX_ROWS);
+            return { ...wall, countText: activeCount > 0 ? `未接取 ${open.length}・進行中 ${activeCount} 件` : `未接取 ${open.length}` };
         };
         this._lobbyHall.setWall('wall-left', view('Military'));
         this._lobbyHall.setWall('wall-right', view('Domestic'));
@@ -5141,7 +5152,16 @@ export class LobbyScene extends Component {
                 .filter((g) => g.status !== 'dead' && (g.age ?? 0) >= BREEDING_MIN_AGE)
                 .map((g) => g.id));
             let adults = adultIds();
-            const result = await fastForwardSeasons(() => this._advanceSeasonWithSalaries(), () => {
+            const hall = { settled: 0, succeeded: 0, grain: 0, silver: 0, generalExp: 0 };
+            const result = await fastForwardSeasons(async () => {
+                const payload = await this._advanceSeasonWithSalaries();
+                const report = payload.hallMissionReport;
+                if (report) {
+                    hall.settled += report.settled; hall.succeeded += report.succeeded;
+                    hall.grain += report.gains.grain; hall.silver += report.gains.silver; hall.generalExp += report.gains.generalExp;
+                }
+                return payload;
+            }, () => {
                 const now = adultIds();
                 const grew = Array.from(now).some((id) => !adults.has(id));
                 adults = now;
@@ -5152,6 +5172,20 @@ export class LobbyScene extends Component {
                 message: `快進 ${result.seasons} 季，來到${where}：${FAST_FORWARD_REASON_TEXT[result.reason]}`,
                 duration: 3,
             });
+            // 快轉沒有季度結算窗：大廳任務的成敗與入帳總額用提示補上（PROG-2-9130）
+            if (hall.settled > 0) {
+                const gained = [
+                    hall.grain > 0 ? `糧草 +${hall.grain}` : '', hall.silver > 0 ? `黃金 +${hall.silver}` : '',
+                    hall.generalExp > 0 ? `武將經驗 +${hall.generalExp}` : '',
+                ].filter((text) => text.length > 0).join('、');
+                services().event.emit('SHOW_TOAST', {
+                    message: `大廳任務回報 ${hall.settled} 件：成功 ${hall.succeeded}、失敗 ${hall.settled - hall.succeeded}${gained ? `
+入帳 ${gained}` : ''}`,
+                    duration: 3.5,
+                });
+            }
+            this._refreshLobbyHallTopbar();
+            this._refreshHallBoard();
         } finally {
             this._fastForwarding = false;
             this._refreshDomestic();
@@ -5202,19 +5236,24 @@ export class LobbyScene extends Component {
             this._refreshLobbyHallTopbar();
             this._refreshHallBoard();
             const hallLines = hallMissionReport?.lines ?? [];
+            const followUps = (): void => {
+                this._openSeasonChronicle('season-advance');
+                this._syncSeasonEventPopup();
+                this._syncLineagePopup();
+            };
             if ((quarterlyReports && quarterlyReports.length > 0) || hallLines.length > 0) {
                 // 關閉要走 UIManager，遮罩與堆疊才會一起收（PROG-2-9122）
                 const payload: SeasonReportOpenPayload = {
                     seasonLabel: seasonText(advance.current),
                     reports: quarterlyReports ?? [],
                     hallMissionLines: hallLines,
-                    onRequestClose: () => { void services().ui.close(UIID.SeasonReport); },
+                    // 季度戰報關了才輪到季報／事件／血統彈窗，兩者不會疊在一起搶點擊（建置版實測 06）
+                    onRequestClose: () => { void Promise.resolve(services().ui.close(UIID.SeasonReport)).finally(followUps); },
                 };
                 void services().ui.open(UIID.SeasonReport, payload);
+            } else {
+                followUps();
             }
-            this._openSeasonChronicle('season-advance');
-            this._syncSeasonEventPopup();
-            this._syncLineagePopup();
         } catch (error) {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 推進季度失敗', error);
             services().event.emit('SHOW_TOAST', { message: '推進季度失敗', duration: 2 });
