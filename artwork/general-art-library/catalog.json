@@ -9040,6 +9040,32 @@
             "note": "以曹華核定站姿為唯一角色造型參考；依宮廷身份以儀令圓盤與手勢傳達軍令，呈現回身調度動作。透明全身候選，待使用者檢視。"
           }
         ]
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "asset-imported",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/cao_hua__曹華__small_avatar_0001.png",
+            "status": "asset-imported",
+            "sha256": "02c2da8eb46bd69d5a1e26d94bcffd34a7960a607f4294e45c5ee1229bf9ccbf",
+            "canvas": "256x256 RGBA",
+            "cropBox": {
+              "x": 400,
+              "y": 0,
+              "width": 240,
+              "height": 250
+            },
+            "outputOffsetX": 10,
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/cao_hua__曹華__standing_0002.png",
+            "sourceSha256": "584595f403be346e7b3ea76c8461bfed7bccb7011b07ab25003ca1d5ff654b88",
+            "method": "crop-only; uniform resize; transparent padding; no redraw",
+            "qc": "125px preview: full hair and face visible, face centered, neck and upper shoulder line included; no chest.",
+            "createdAt": "2026-11-18"
+          }
+        ]
       }
     },
     {
