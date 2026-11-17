@@ -11,7 +11,7 @@
  */
 
 import { tallyLegendDeploySpec } from '../../core/systems/TallyScripts';
-import { battleDamageSourceLabel } from '../shared/BattleDamageSourceLabel';
+import { battleDamageSourceLabel, battleEndLogLine } from '../shared/BattleDamageSourceLabel';
 import { formatTallyLine, type TallyTranslate } from '../../core/systems/TallyLineSpec';
 import { aptitudeToastPayload } from '../../core/systems/AptitudeDialogue';
 import { setBattlePaused, setBattleTimeScale } from './BattleTimeScale';
@@ -1003,7 +1003,7 @@ export class BattleUIBridge {
     // 勝敗音效（PROG-2-9357）：平手不播
     if (data.result === 'player-win') playBattleAudio(BATTLE_AUDIO_CUE.battleVictory);
     else if (data.result === 'enemy-win') playBattleAudio(BATTLE_AUDIO_CUE.battleDefeat);
-    this.appendLog(`戰鬥結束：${data.result}`);
+    this.appendLog(battleEndLogLine(data.result));
     this.hideEnemyThinkingPanel();
     const details = this._settleRosterBattle(data.result as BattleResult);
     // 回合用盡而獲勝（教學戰）：補一行說明，免得玩家不知道為什麼突然贏了

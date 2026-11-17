@@ -36,3 +36,11 @@ export function battleDamageSourceLabel(damageSource?: string | null): string {
   }
   return '';
 }
+
+/** 戰鬥日誌最後一行「戰鬥結束：…」的結果說明（PROG-2-9379）；不認得的代號只寫「戰鬥結束」。 */
+export function battleEndLogLine(result?: string | null): string {
+  if (result === 'player-win') return '戰鬥結束：我方獲勝';
+  if (result === 'enemy-win') return '戰鬥結束：敵方獲勝';
+  if (result === 'draw') return '戰鬥結束：平手';
+  return '戰鬥結束';
+}
