@@ -141,7 +141,7 @@ import { HallBoardPanelController, HALL_BOARD_MAX_ROWS } from '../core/HallBoard
 import { hallPlayerOf, officerPromotionScriptLines, OFFICER_ERA_KEPT_LINE } from '../../core/systems/OfficerSnapshot';
 import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
 import { officerDisplayOf } from '../../core/systems/OfficerDisplay';
-import { LOBBY_ACTION_NOT_OPEN_TEXT, LOBBY_CATEGORIES, LOBBY_SUB_SLOTS, actionAt, buildLobbyCityHubView, categoryButtonId, computeSubMenuLayout, toggleCategory, type LobbyActionId, type SubMenuLayout, type LobbyCategoryId } from '../core/LobbyCityHubController';
+import { LOBBY_ACTION_NOT_OPEN_TEXT, LOBBY_CATEGORIES, cityMorale, cityPopulation, LOBBY_SUB_SLOTS, actionAt, buildLobbyCityHubView, categoryButtonId, computeSubMenuLayout, toggleCategory, type LobbyActionId, type SubMenuLayout, type LobbyCategoryId } from '../core/LobbyCityHubController';
 import { nurtureGraduationRows } from '../core/NurtureGraduationView';
 import { pageSliceOf } from '../core/FixedSlotPager';
 import { MentorHoldingsController } from '../core/MentorHoldingsController';
@@ -2710,7 +2710,15 @@ export class LobbyScene extends Component {
     /** 太守府（GOV-07）：隱藏掛載，由城市大廳開啟；數值來自 GameSession.governorSnapshot()。 */
     private async _mountGovernorHall(): Promise<void> {
         this._govHall = new GovernorHallController({
-            snapshot: () => services().session.governorSnapshot(),
+            // 人口與民心沿用大廳城市卡已在顯示的同一組推算值（暫定），兩個畫面數字一致
+            snapshot: () => {
+                const session = services().session;
+                return {
+                    ...session.governorSnapshot(),
+                    population: cityPopulation(session.gameTime.totalSeasonsElapsed),
+                    morale: cityMorale(session.fame),
+                };
+            },
             territory: () => this._governorTerritoryInfo(),
         });
         this._govHallHost = await this._mountPreviewScreenHost('GovernorHallHost', 'governor-hall-screen', [
@@ -2741,6 +2749,7 @@ export class LobbyScene extends Component {
             pendingLevel: session.pendingTerritoryLevel,
             plan: planTerritoryUpgrade(session.territoryLevel, session.pendingTerritoryLevel, session.military.food),
             goldShortage: this._territoryGoldShortage,
+            owned: { food: session.military.food, gold: this._localGachaService.getWalletSnapshot().gold },
         };
     }
 

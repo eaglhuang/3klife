@@ -87,5 +87,22 @@ export function createGovernorHallControllerSuite(): TestSuite {
         assert.isTrue(flow.actives.btnUpgrade);
     });
 
+    suite.test('糧草不足且有傳現有量時，提示顯示所需與現有', () => {
+        const flow = new GovernorHallController({
+            snapshot: () => snapshot(),
+            territory: () => ({ level: 1, maxSlots: 2, pendingLevel: null, plan: planTerritoryUpgrade(1, null, 300), owned: { food: 300, gold: 9000 } }),
+        }).getFlowView();
+        assert.equals('糧草不足（需 1000，現有 300）', flow.texts.btnUpgradeLabel);
+        assert.isFalse(flow.enabled.btnUpgrade);
+    });
+
+    suite.test('黃金不足且有傳現有量時，提示顯示所需與現有', () => {
+        const flow = new GovernorHallController({
+            snapshot: () => snapshot(),
+            territory: () => ({ level: 1, maxSlots: 2, pendingLevel: null, plan: planTerritoryUpgrade(1, null, 5000), goldShortage: true, owned: { food: 5000, gold: 100 } }),
+        }).getFlowView();
+        assert.equals('黃金不足（需 4000，現有 100）', flow.texts.btnUpgradeLabel);
+    });
+
     return suite;
 }
