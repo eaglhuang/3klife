@@ -134,6 +134,10 @@ import { fallenOfficerOrigins } from '../systems/FallenOfficerMarket';
 import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
 import { carryOpeningLetterOnNewGame, FRESH_OPENING_LETTER, markOpeningLetterSeen, normalizeOpeningLetterState, OpeningLetterState } from '../systems/OpeningLetter';
 import { remarkRandomOf } from '../systems/SageRemarks';
+import { OfflineGeneralMindService } from '../mind/OfflineGeneralMindService';
+import type { IGeneralMindService } from '../mind/IGeneralMindService';
+import { isEmptyGeneralMind } from '../mind/MindSave';
+import { intelLevelOfPercent, type MindContext, type MindLine, type MindOutcome } from '../mind/MindTypes';
 import { FOOD_LOW_LINE } from '../systems/ResourceCap';
 import { ITEM_DISPLAY_NAMES } from '../systems/PlayerInventory';
 import { prisonTreasureLine } from '../systems/PrisonerOfWar';
@@ -151,6 +155,7 @@ import type { HallVolunteerTask } from '../systems/HallVolunteer';
 import { createPlayerSaveSnapshot, normalizeInfusionRecords, normalizeGachaMentorJournal, normalizeHallAssignLog, type GachaMentorJournalEntry, normalizeSandtableMarkerTerritories, normalizeSortiePresets, normalizeGachaWalletSave, type GachaWalletSave, normalizeDailySubsidyRecord, type DailySubsidyRecord, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeAutoNurtureTickets, normalizeFlag, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot, normalizeClanPrestige, normalizeShrineOfferingDay } from '../services/PlayerSaveService';
 import { HALL_MISSION_WALLS, emptyHallMissionState, hallSeedFromText, normalizeHallMissionState, type HallMission, type HallMissionBalance, type HallMissionState, type HallMissionTemplate } from '../systems/HallMissionData';
 import { expireHallMissions, refillHallBoards } from '../systems/HallMissionGenerator';
+import { HALL_MISSION_DIFFICULTIES } from '../systems/HallMissionData';
 import { hallBusyGeneralIds, appendHallRecords, dispatchHallMission as dispatchHallMissionPure, findHallMission, hallSettleLine, listHallRecords, reconHallMission as reconHallMissionPure, recordOfSettlement, settleDueHallMissions, waitHallMission as waitHallMissionPure, type HallMissionDispatchResult } from '../systems/HallMissionLoop';
 import { hallShortagesOf, pickDelegateGeneral, rankHallCandidates, type HallCandidate as HallMissionCandidate, type HallGeneralBlock, type HallGeneralFacts } from '../systems/HallMissionRules';
 import { effectiveHallIntelPercent, normalizeHallIntel, normalizeHallWaitSeasons, planHallRecon, planHallWait, type HallReconPlan, type HallWaitPlan } from '../systems/HallMissionActions';
@@ -548,6 +553,9 @@ export interface BattleRecordResult extends BattleSettlement {
     captureNotices: TallyLine[];
 }
 
+/** 心智台詞引用任務牆用的短名（PROG-2-9146） */
+const MIND_BOARD_LABEL: Readonly<Record<HallBoardKey, string>> = Object.freeze({ Military: '軍務', Domestic: '內政', Expedition: '遠征' });
+
 export interface RecordBattleOptions {
     /** 在戰場完成「特定動作」的武將（覺醒機率 0.05 → 0.15，並視同滿足特殊條件），不指定是哪個動作 */
     specialActionIds?: readonly string[];
@@ -718,6 +726,8 @@ export class GameSession {
     private _lastBattleSnapshots: BattleSnapshot[] = [];
     /** 動態關係表（KIN-10）：目前只在記憶體中，存檔欄位另卡接線 */
     public readonly dynamicRelations = new DynamicRelationBook();
+    /** 武將心智（PROG-2-9146）：記憶、心情、台詞；大廳任務、戰後、換季結算點只呼叫 record／onTaskSettled／onSeasonSettle，隨存檔保存 */
+    public readonly mind: IGeneralMindService = new OfflineGeneralMindService();
     /** 關係組合事件一次性紀錄（KIN-08，PROG-2-1412）：同季同對只播一次，隨存檔保存 */
     public readonly relationEvents = new RelationEventLedger();
     /** NPC 記憶擁有者 id 與 NPC_Memory read model（NPC-09）：新局由種子決定，讀檔缺欄位時補產 */
@@ -2076,6 +2086,7 @@ export class GameSession {
         // 開場流程在大廳掛載之後才開新局：資料已綁定的話立刻重新產生，牆才不會變成空的（PROG-2-9130 建置版實測）
         this._generateHallMissions();
         this.dynamicRelations.restore([]);
+        this.mind.reset();
         this.relationEvents.restore([]);
         this._npcPlayerId = npcPlayerIdFromSeed(seed);
         this._npcMemory = createNpcMemory(this._npcPlayerId);
@@ -3874,6 +3885,7 @@ export class GameSession {
         if (sceneGambit) this._pendingSceneGambit = sceneGambit;
         this._awardGeneralFame(generalId, hallMissionFameGain(result.outcome));
         this._recordEventJournal(result.outcome.success ? 'DISPATCH_SUCCESS' : 'DISPATCH_FAIL', this._journalSubjects([generalId]));
+        this._recordMindTask({ taskId: `hall-task:${task.Task_ID}`, generalIds: [generalId], success: result.outcome.success, label: `${MIND_BOARD_LABEL[board]}差事`, tags: [board], difficulty: task.Difficulty });
         // 任務結束：同一任務若有未結算的委任紀錄，一併結清（PROG-2-1008）
         await this.settleHallAssign(task.Task_ID, result.outcome.success ? 'success' : 'failure', new Date().toISOString());
         return result;
@@ -4136,6 +4148,7 @@ export class GameSession {
                 if (gambit) this._pendingSceneGambit = gambit;
             }
             this._recordEventJournal(entry.success ? 'DISPATCH_SUCCESS' : 'DISPATCH_FAIL', this._journalSubjects([generalId]));
+            this._recordMindTask({ taskId: m.id, generalIds: [generalId], success: entry.success, label: m.title, tags: [m.wall, m.templateId], difficulty: m.difficulty, intelPercent: m.intel, delegated: m.delegated === true, volunteered: m.perfect === true });
             lines.push(hallSettleLine(entry));
             records.push(recordOfSettlement(entry, season));
         }
@@ -4227,15 +4240,80 @@ export class GameSession {
 
     /**
      * 大廳舞台用的武將檔案（UI-2-0140）：姓名、稱號、角色標籤（careerClass／role，同派遣評分）與情緒。
-     * 名冊目前沒有情緒欄位時以 NORMAL 處理，自告奮勇標記（需 EAGER）不會出現。
+     * 情緒由武將心智依近期經歷算出（EAGER 才會有自告奮勇標記）；名冊自帶 mood 欄位時以名冊為準。
      */
     public hallStageProfile(generalId: string): HallStageProfile | null {
         const general = this._roster.getAll().find((g) => g.id === generalId);
         if (!general) return null;
         const raw = general as unknown as Record<string, unknown>;
         const roleTags = [raw.careerClass, raw.role].filter((t): t is string => typeof t === 'string' && t.length > 0);
-        const mood = typeof raw.mood === 'string' && raw.mood.length > 0 ? raw.mood : 'NORMAL';
+        // 心情來自武將心智（PROG-2-9146）；名冊若自帶 mood 欄位仍以名冊為準
+        const mood = typeof raw.mood === 'string' && raw.mood.length > 0 ? raw.mood : this.mind.moodOf(generalId, this._mindContext(generalId));
         return { name: general.name, title: general.title ?? null, roleTags, mood };
+    }
+
+    /** 心智讀取用的名冊現況：目前季數、忠誠、性格視圖、搭檔姓名查詢（PROG-2-9146） */
+    private _mindContext(generalId: string): MindContext {
+        const roster = this._roster.getAll();
+        const general = roster.find((g) => g.id === generalId);
+        const loyalty = general?.loyaltyState;
+        return {
+            season: this._clock.state.totalSeasonsElapsed,
+            ...(loyalty ? { loyalty: loyalty.value, loyaltyLocked: loyalty.isLocked } : {}),
+            ...(general ? { general: general as unknown as MindContext['general'] } : {}),
+            nameOf: (id) => roster.find((g) => g.id === id)?.name,
+        };
+    }
+
+    /**
+     * 大廳小人此刻想說的一句（依心情與最近經歷，引用玩家過去的決定）；沒什麼特別想說時 text 為空字串，
+     * 呼叫端應退回一般閒聊台詞。seed 由呼叫端給（例如點擊次數），同輸入同輸出。
+     */
+    public hallMindBark(generalId: string, seed: number): MindLine {
+        return this.mind.barkFor(generalId, 'LOBBY', seed, this._mindContext(generalId));
+    }
+
+    /** 戰後寫入出戰武將的記憶：勝敗（主將加重）與單挑勝負（PROG-2-9146）；戰場內部不動，只吃戰後已有的結果 */
+    private _recordMindBattle(deployedIds: readonly string[], won: boolean, options: RecordBattleOptions): void {
+        const season = this._clock.state.totalSeasonsElapsed;
+        const roster = this._roster.getAll();
+        const ids = deployedIds.filter((id) => roster.some((g) => g.id === id));
+        ids.forEach((generalId, index) => {
+            this.mind.record({ generalId, season, kind: 'BATTLE_RESULT', outcome: won ? 'SUCCESS' : 'FAIL', tags: ['battle'], label: '出征', isLead: index === 0 });
+        });
+        for (const duel of options.duelOutcomes ?? []) {
+            if (duel.tutorial) continue;
+            if (duel.winner === Faction.Player && duel.winnerGeneralId) this.mind.record({ generalId: duel.winnerGeneralId, season, kind: 'DUEL', outcome: 'SUCCESS', tags: ['duel'], label: '單挑' });
+            if (duel.loser === Faction.Player && duel.loserGeneralId) this.mind.record({ generalId: duel.loserGeneralId, season, kind: 'DUEL', outcome: 'FAIL', tags: ['duel'], label: '單挑' });
+        }
+    }
+
+    /** 把任務結算轉成心智 DTO 並寫入記憶（PROG-2-9146）；intelPercent 不明時視為情報充足，不替失敗開脫 */
+    private _recordMindTask(args: {
+        taskId: string;
+        generalIds: readonly string[];
+        success: boolean;
+        label: string;
+        tags: readonly string[];
+        difficulty?: string;
+        intelPercent?: number;
+        delegated?: boolean;
+        volunteered?: boolean;
+    }): void {
+        const index = args.difficulty ? (HALL_MISSION_DIFFICULTIES as readonly string[]).indexOf(args.difficulty.toUpperCase()) : -1;
+        const outcome: MindOutcome = args.success ? 'SUCCESS' : 'FAIL';
+        this.mind.onTaskSettled({
+            taskId: args.taskId,
+            season: this._clock.state.totalSeasonsElapsed,
+            tags: args.tags,
+            label: args.label,
+            risk: index >= 0 ? index + 1 : 2,
+            intelLevelAtDispatch: args.intelPercent === undefined ? 3 : intelLevelOfPercent(args.intelPercent),
+            generalIds: args.generalIds,
+            delegated: args.delegated === true,
+            volunteered: args.volunteered === true,
+            outcome,
+        });
     }
 
     /** 目前點位上的在場名單與任務標記（不觸發刷新；先呼叫 refreshHallSpots）。 */
@@ -4929,6 +5007,8 @@ export class GameSession {
         // 武將性格自發事件（LOOP-01）：同樣用另一條序列，不消耗主亂數；上一季沒回應的作廢
         const personalityRandom = this._seasonEventRandom ?? remarkRandomOf(`personality|${governanceSeason}|${this._seeded.snapshot().state}`);
         this._seasonPersonality = rollSeasonPersonalityEvents(this._roster.getAll(), governanceSeason, personalityRandom);
+        // 武將心智季結算（PROG-2-9146）：冷落計數、離隊者清理；同樣用另一條序列，不消耗主亂數
+        this.mind.onSeasonSettle(governanceSeason, remarkRandomOf(`mind|${governanceSeason}|${this._seeded.snapshot().state}`), this._roster.getAll().filter((g) => g.status !== 'dead').map((g) => g.id));
         // 三國季報（LOOP-03）：同樣用另一條序列；上一季沒抉擇的奇遇作廢
         this._chronicleArchive = archiveSeasonChronicle(this._chronicleArchive, this._seasonChronicle, governanceSeason);
         this._seasonChronicle = this._synthesizeChronicle(governanceSeason);
@@ -5330,6 +5410,7 @@ export class GameSession {
         this._hallAssignLog = settled.log;
         for (const entry of settled.settled) {
             this._recordEventJournal(entry.success ? 'DISPATCH_SUCCESS' : 'DISPATCH_FAIL', this._journalSubjects([entry.generalId]));
+            this._recordMindTask({ taskId: `hall-assign:${entry.board ?? "any"}:${entry.difficulty ?? "x"}`, generalIds: [entry.generalId], success: entry.success, label: `${entry.board ? MIND_BOARD_LABEL[entry.board] : '委任'}差事`, tags: [entry.board ?? 'assign'], difficulty: entry.difficulty, delegated: true });
             if (entry.difficulty === undefined || entry.board === undefined) continue;
             this.settleHallMission({ difficulty: entry.difficulty, board: entry.board, success: entry.success });
             this._awardGeneralFame(entry.generalId, hallMissionFameGain({ difficulty: entry.difficulty, success: entry.success }));
@@ -5524,6 +5605,7 @@ export class GameSession {
         if (result === 'player-win' || result === 'enemy-win') {
             this.recordPlayerLog(result === 'player-win' ? 'BATTLE_WIN' : 'BATTLE_LOSE');
             this._recordEventJournal(result === 'player-win' ? 'BATTLE_WIN' : 'BATTLE_LOSE', this._journalSubjects(deployedIds));
+            this._recordMindBattle(deployedIds, result === 'player-win', options);
         }
         const comradeChanged = this._recordBattleComrades(result, Boolean(options.sortie));
         const mercenaryChanged = this._recordTrialMercenaryBattles(deployedIds, result);
@@ -5972,12 +6054,14 @@ export class GameSession {
         // 統一物件庫列只在非空時寫入；舊檔與空狀態不多一個欄位（PROG-2-1021）
         const withInventory = this._inventoryRecords.length > 0 ? { ...withHallMissions, inventoryRecords: normalizeInventoryRecords(this._inventoryRecords) } : withHallMissions;
         const relationEventKeys = this.relationEvents.snapshot();
+        const mindSave = this.mind.snapshot();
         return {
             ...withInventory,
             ...this.lifespanSaveFields(),
             ...(relationEventKeys.length > 0 ? { relationEventKeys } : {}),
             ...(this._npcPlayerId ? { npcPlayerId: this._npcPlayerId } : {}),
             ...(this._npcMemory ? { npcMemory: cloneNpcMemory(this._npcMemory) } : {}),
+            ...(isEmptyGeneralMind(mindSave) ? {} : { generalMind: mindSave }),
             ...(this._countdown ? { countdown: { ...this._countdown } } : {}),
         };
     }
@@ -6227,6 +6311,7 @@ export class GameSession {
         const npcIdBackfilled = savedNpcPlayerId === null;
         this._npcPlayerId = savedNpcPlayerId ?? npcPlayerIdFromSeed(Math.floor(Math.random() * 4294967296));
         this._npcMemory = normalizeNpcMemory(snapshot.npcMemory, this._npcPlayerId) ?? createNpcMemory(this._npcPlayerId);
+        this.mind.restore(snapshot.generalMind);
         this._legacyCount = normalizeLegacyCount(snapshot.legacyCount);
         this._officerState = normalizeOfficerState(snapshot.officerState);
         this._officerTrial = normalizeOfficerTrial(snapshot.officerTrial);

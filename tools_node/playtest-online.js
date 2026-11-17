@@ -36,6 +36,7 @@
  *   --viewport  視窗尺寸 WxH（預設 1920x1080；可用 1920x1475 這類高視窗）
  *   --browser   Chrome 路徑（也可用環境變數 CHROME_PATH）
  *   --stuck     單步卡住上限毫秒數（預設 120000）
+ *   --mind      選用：換季後點大廳小人讀泡泡台詞（武將心智，PROG-2-9146）
  *   --year      選用：原步驟後接一年循環（每季內政／任務牆／戰鬥／抽卡／培育／推進一季），輸出 year-report.json（PROG-2-9141）
  *   --battles-per-season  --year 時每季出征場數（預設 2）
  *
@@ -971,6 +972,42 @@ async function main() {
         }, { skipIfFailed: true });
 
         // ── 5. 人物介紹：第一位武將 → 每個分頁截圖 → 「命」分頁檢查血統樹 ──
+        // ── 武將心智（PROG-2-9146，--mind）：派任務、換季之後點大廳小人讀泡泡台詞（要引用過去的決定或說出心情），並統計自告奮勇「!」標記 ──
+        const mindBubbles = async (rec, rounds) => {
+            await requireLobby();
+            await backToLobbyBar();
+            await closeMissionLayers();
+            const bubbleId = 'lobby-hall-screen.bubble';
+            const lines = [];
+            rec.detail.marks = [];
+            for (let round = 0; round < rounds; round++) {
+                const crowd = await page.evaluate(() => Object.keys(window.__pt.nameCounts('^crowd-')));
+                const marks = await page.evaluate(() => Object.keys(window.__pt.nameCounts('^mark-')));
+                if (marks.length) {
+                    rec.detail.marks.push(...marks.filter((m) => !rec.detail.marks.includes(m)));
+                    if (!rec.detail.markShot) { rec.detail.markShot = true; await shot(rec, 'mind-volunteer-marks'); }
+                }
+                for (const name of crowd) {
+                    const tapped = await rm.tryClick({ name: '^' + name + '$' });
+                    if (!tapped) continue;
+                    const text = await waitUntil(async () => {
+                        const now = await page.evaluate((id) => window.__pt.activeUcufNodes(id), bubbleId);
+                        return now.length ? await rm.textOfUcuf(bubbleId) : null;
+                    }, 4000, '').catch(() => null);
+                    if (text && !lines.some((l) => l.who === name && l.text === text)) {
+                        lines.push({ who: name, text });
+                        if (lines.length <= 8) await shot(rec, `mind-bubble-${lines.length}`);
+                    }
+                    await delay(500);
+                }
+                await delay(3000);
+            }
+            rec.detail.lines = lines;
+            if (!lines.length) throw new Error('點大廳小人沒有讀到任何泡泡文字');
+            return rec.detail;
+        };
+        if (args.mind) await step('lobby-mind-bubbles', (rec) => mindBubbles(rec, 4), { skipIfFailed: true });
+
         await step('character-intro-tabs', async (rec) => {
             // 關掉轉蛋等面板回到大廳主畫面，再開武將名冊
             await backToLobbyBar();
@@ -1349,6 +1386,7 @@ async function main() {
                     yq.newMenuEntries = rec.detail.newMenuEntries;
                     return rec.detail;
                 });
+                if (args.mind) await ys('mind', (rec) => mindBubbles(rec, 3));
                 // 1. 內政：開「內政」面板，任選一個可按的內政任務
                 await ys('domestic', async (rec) => {
                     const opened = await openSub('BtnCatDomestic', '^內政$');

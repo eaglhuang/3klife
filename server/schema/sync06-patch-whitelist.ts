@@ -39,6 +39,7 @@ export const SYNC_PATCH_ROOT_KEYS: readonly string[] = [
     'relationEventKeys',
     'npcPlayerId',
     'npcMemory',
+    'generalMind',
     'legacyCount',
     'legendaryMentoringUsedIds',
     'officerState',
