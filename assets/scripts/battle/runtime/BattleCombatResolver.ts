@@ -58,6 +58,7 @@ import {
 import { settleDeathTriggers } from '../skills/special/SpecialRuleDispatch';
 import type { UltimateSpecialRuleDef } from '../../shared/SkillRuntimeContract';
 import { counterReflectDamage, evaluateTroopCounter, troopRangeBonus } from '../shared/TroopCounterTactics';
+import { duelVictoryCritBonus } from '../shared/DuelVictoryBuff';
 export interface BattleCombatAction {
   attackerId: string;
   targetId: string | null;
@@ -325,7 +326,9 @@ export class BattleCombatResolver {
 
     // 暴擊：與部隊路徑同一組暴擊率與倍率，擲骰走戰場亂數源
     const critRate = critRateOf((tacticBehavior.getCritBonus?.(attacker, this.context.state) ?? 0) + selfBurstCritBonus(attackerBurst)
-      + massDebuffCritDelta(this.context.state.getMassDebuff(attacker.faction)));
+      + massDebuffCritDelta(this.context.state.getMassDebuff(attacker.faction))
+      // 單挑勝方全軍暴擊加成（doc_spec_0314 §4.1，PROG-2-9369）
+      + duelVictoryCritBonus(this.context.state.getDuelVictoryBuff?.(attacker.faction)));
     let isCrit = false;
     if (rollCrit(critRate, this.hitRandom)) {
       damage = critDamageOf(damage);
@@ -468,7 +471,9 @@ export class BattleCombatResolver {
 
     // 暴擊（SCN-06）：基礎 5% + 場景加成，暴擊時傷害 ×1.5；擲骰走戰場亂數源
     const critRate = critRateOf((tacticBehavior.getCritBonus?.(attacker, this.context.state) ?? 0) + selfBurstCritBonus(attackerBurst)
-      + massDebuffCritDelta(this.context.state.getMassDebuff(attacker.faction)));
+      + massDebuffCritDelta(this.context.state.getMassDebuff(attacker.faction))
+      // 單挑勝方全軍暴擊加成（doc_spec_0314 §4.1，PROG-2-9369）
+      + duelVictoryCritBonus(this.context.state.getDuelVictoryBuff?.(attacker.faction)));
     let isCrit = false;
     if (counter?.forceCrit || rollCrit(critRate, this.hitRandom)) {
       damage = critDamageOf(damage);
