@@ -153,6 +153,7 @@ import { appendAssignRecord, autoAssignHallTask, listAssignRecords, settleLatest
 import type { HallTaskIntelInput } from '../systems/HallTaskIntel';
 import { estimateSortiePower } from '../systems/SortiePrediction';
 import { BASE_RESOURCE_CAPS, clampResource } from '../systems/ResourceCap';
+import { applyDuelAftermath, duelFallenSpec, planDuelAftermath, type DuelOutcomeRecord } from '../systems/DuelAftermath';
 import { computeDeathBattleScore, settleDeathTallies, TALLY_DEATH_SCORE_TUNING } from '../systems/TallyDeathSettlement';
 import { settleDeathSpiritCards, spiritCardNoticeSpec } from '../systems/SpiritCardDeathSettlement';
 import { buildDualCardSettlements, dualCardSettlementSpecs, type DualCardSettlementPayload } from '../systems/DualCardSettlement';
@@ -540,6 +541,8 @@ export interface RecordBattleOptions {
     stageSalvage?: Readonly<SalvageTotals>;
     /** 英靈夢回教學戰的傳說英靈；勝利時產出初始虎符（OPEN-13），沒有時不做任何事 */
     teachingSpirit?: TeachingSpiritInput | null;
+    /** 本場戰場收到的單挑勝負事件（DuelOutcomeApplied）；勝方主將名聲 +15、被斬的己方主將走陣亡結算（PROG-2-9132） */
+    duelOutcomes?: readonly DuelOutcomeRecord[];
 }
 
 export interface GeneralRankPromotedPayload {
@@ -3714,7 +3717,7 @@ export class GameSession {
         }
     }
 
-    private _recordEpitaph(general: GeneralConfig, cause: 'retire' | 'natural'): void {
+    private _recordEpitaph(general: GeneralConfig, cause: 'retire' | 'natural' | 'battle'): void {
         const entry = epitaphJournalEntry(general, cause, this._journal.entries.length + 1, seasonJournalTimestamp(this._clock.state));
         if (entry) this.recordJournal(entry);
     }
@@ -5325,6 +5328,16 @@ export class GameSession {
                 roster = roster.map((g, i) => (i === index ? rolled.general : g));
                 awakenings.push(rolled.event);
             }
+        }
+
+        // 單挑戰果（doc_spec_0314 §4，PROG-2-9132）：勝方名聲 +15；被斬的己方主將標陣亡，由下方 _settleDeaths 產虎符與英靈卡
+        const duel = applyDuelAftermath(roster, planDuelAftermath(options.duelOutcomes ?? [], new Set(roster.map((g) => g.id))));
+        roster = duel.roster;
+        duel.promotions.forEach(({ generalId, rank }) => rankPromotions.push({ generalId, rank, title: generalRankTitle(rank) }));
+        this._tallyNotices.push(...duel.fameNotices);
+        for (const dead of duel.fallen) {
+            this._tallyNotices.push(duelFallenSpec(dead.name ?? dead.id));
+            this._recordEpitaph(dead, 'battle');
         }
 
         const record: BattleRecordResult = { ...settlement, roster, discovery, awakenings, ...(options.sortie ? { military: this.military } : {}) };

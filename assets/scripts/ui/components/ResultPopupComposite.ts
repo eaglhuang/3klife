@@ -12,6 +12,7 @@ import type { AwakeningFreezeTiming } from '../../shared/interfaces/IBattleUICom
 import { resultPopupTone } from '../../shared/ResultPopupTone';
 import { bringNodeToFront } from '../core/NodeBringToFront';
 import { stretchWidgetToParent } from '../core/WidgetStretch';
+import { ResultDetailsBuffer } from '../../shared/ResultDetailsBuffer';
 
 const { ccclass } = _decorator;
 
@@ -32,6 +33,8 @@ export class ResultPopupComposite extends CompositePanel {
     private _mounting: Promise<void> | null = null;
     private _visible = false;
     private _description = '';
+    /** 結算窗掛載完成前追加的細項先存這裡，顯示後補上（PROG-2-9132） */
+    private readonly _details = new ResultDetailsBuffer();
 
     protected onDestroy(): void {
         this.unmount();
@@ -74,12 +77,14 @@ export class ResultPopupComposite extends CompositePanel {
 
         this.node.active = true;
         this._visible = true;
+        this._writeDetails(this._details.markShown());
         const opacity = this.node.getComponent(UIOpacity) ?? this.node.addComponent(UIOpacity);
         opacity.opacity = 0;
         tween(opacity).to(0.3, { opacity: 255 }).start();
     }
 
     public hide(): void {
+        this._details.reset();
         if (!this._visible) return;
         this._visible = false;
         const opacity = this.node.getComponent(UIOpacity);
@@ -124,7 +129,11 @@ export class ResultPopupComposite extends CompositePanel {
 
     /** 結算窗開著時在描述下方追加行（戰後覺醒等非同步結果，PROG-2-1133） */
     public appendDetails(lines: readonly string[]): void {
-        if (!this._visible || lines.length === 0) return;
+        this._writeDetails(this._details.push(lines));
+    }
+
+    private _writeDetails(lines: readonly string[]): void {
+        if (lines.length === 0) return;
         this._description = [this._description, ...lines].join('\n');
         this._binder?.setTexts({ DescLabel: this._description });
     }

@@ -578,6 +578,8 @@
   "SCRIPT_TALLY_LOYALTY_DROP": "{0} 對被拔除虎符一事感到不滿，忠誠度下降。",
   "SCRIPT_TALLY_BAI_MA": "白馬如雪、銀槍似霜——白馬義從，天下無敵！",
   "SCRIPT_TALLY_XIAN_ZHEN": "陷陣之志，有死無生——高順的鐵軍重現人間！",
+  "SCRIPT_DUEL_FAME": "{0} 單挑獲勝，名聲 +{1}！",
+  "SCRIPT_DUEL_FALLEN": "{0} 單挑落敗被斬，戰歿沙場。",
   "SCRIPT_TALLY_COUNTER_CAVALRY": "騎兵衝鋒弓陣——弓兵陣腳大亂！",
   "SCRIPT_TALLY_COUNTER_INFANTRY": "步兵嚴陣以待，騎兵衝鋒被長矛陣擋下！",
   "SCRIPT_TALLY_BLOODLINE_RESONANCE": "{0} 持有先祖之符——血脈共鳴，能力強化！",
