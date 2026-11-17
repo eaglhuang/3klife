@@ -1,7 +1,7 @@
 /**
  * DuelAcceptanceRules — 單挑接受判定與拒絕懲罰（WBS NUM-02，PROG-2-0922）
  *
- * 規格：score = 0.45 × 防守方主將血量（currentHP / maxHP）+ 0.35 × 防守方現存兵力占比+ 0.2 × 戰力優勢（E-7 字面），score ≥ 0.58 接受；
+ * 規格：score = 0.45 × 防守方主將血量（currentHP / maxHP）+ 0.35 × 防守方場上分隊現存兵力 / 上限 + 0.2 × 戰力優勢（E-7 字面），score ≥ 0.58 接受；
  * 拒絕則防守方全軍攻擊與最大 HP 減半、HP 減半。
  */
 import { Faction, TroopType } from '../assets/scripts/core/config/Constants';
@@ -53,7 +53,7 @@ export function createDuelAcceptanceRulesSuite(): TestSuite {
         assert.equals(Faction.Enemy, result.defenderFaction);
     });
 
-    suite.test('接受判定：防守方主將與兵力都過半 → score < 0.58 拒絕（血量項為防守方自身比例，兵力項為雙方占比）', () => {
+    suite.test('接受判定：防守方主將與兵力都過半 → score < 0.58 拒絕（血量項、兵力項都是防守方自身現存 / 上限）', () => {
         const ctrl = duelBattle(3, 3, 1, 0.5);
         for (const unit of ctrl.state.units.values()) {
             if (unit.faction === Faction.Enemy) unit.currentHp = unit.maxHp / 2;
@@ -61,6 +61,20 @@ export function createDuelAcceptanceRulesSuite(): TestSuite {
         const result = ctrl['duelFlow'].evaluateDuelAcceptance(Faction.Player);
         assert.isTrue(result.score < 0.58, `score=${result.score}`);
         assert.isFalse(result.accepted);
+    });
+
+    suite.test('兵力項只看防守方自身：防守方 1 隊滿編對挑戰方 5 隊，兵力項仍為 1 → 接受（PROG-2-9384）', () => {
+        const ctrl = duelBattle(5, 1, 1, 1);
+        const result = ctrl['duelFlow'].evaluateDuelAcceptance(Faction.Player);
+        // 0.45 × 1 + 0.35 × 1 + 0.2 × 戰力占比；舊寫法（雙方占比 1/6）會落在 0.58 以下
+        assert.isTrue(result.score >= 0.8, `score=${result.score}`);
+        assert.isTrue(result.accepted);
+    });
+
+    suite.test('兵力項：防守方場上沒有分隊時為 0', () => {
+        const withTroop = duelBattle(1, 1, 1, 1)['duelFlow'].evaluateDuelAcceptance(Faction.Player).score;
+        const noTroop = duelBattle(1, 0, 1, 1)['duelFlow'].evaluateDuelAcceptance(Faction.Player).score;
+        assert.isTrue(withTroop - noTroop >= 0.35, `with=${withTroop} no=${noTroop}`);
     });
 
     suite.test('拒絕懲罰：防守方全軍攻擊與最大 HP 減半、主將 HP 減半', () => {
