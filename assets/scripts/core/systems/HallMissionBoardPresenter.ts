@@ -7,7 +7,7 @@
  * 難度與獎勵的顯示字串是暫定的繁中字串，正式字串表定案後改用 key。
  */
 import { HallBoardKey, HallPlayerState, arrangeHallTasks, getVisibleHallTasks } from './HallMissionBoard';
-import { LobbyHub, LobbyHubIssue, HallTask, validateLobbyHub } from './LobbyHubSchema';
+import { LobbyHub, LobbyHubIssue, HallTask, applyLobbyHubDefaults, validateLobbyHub } from './LobbyHubSchema';
 
 export interface HallTaskRow {
     taskId: string;
@@ -44,7 +44,7 @@ export function loadLobbyHub(raw: unknown): LoadLobbyHubResult {
     if (!validation.ok) {
         return { ok: false, issues: validation.issues };
     }
-    return { ok: true, hub: (raw as { Lobby_Hub: LobbyHub }).Lobby_Hub, issues: [] };
+    return { ok: true, hub: (applyLobbyHubDefaults(raw) as { Lobby_Hub: LobbyHub }).Lobby_Hub, issues: [] };
 }
 
 /**

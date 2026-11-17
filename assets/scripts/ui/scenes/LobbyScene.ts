@@ -136,6 +136,7 @@ import { rebirthBreakthroughLine } from '../../core/systems/NumericalScriptLines
 import { HallBoardPanelController, HALL_BOARD_MAX_ROWS } from '../core/HallBoardPanelController';
 import { HALL_BOARD_TYPE_LABEL, hallAssignNoticeOf, hallMissionDialogStateOf } from '../core/HallMissionDialogState';
 import { hallTaskDialogStateOf, planHallMissionAction } from '../core/HallMissionActionRouter';
+import { hallReconCostGrainOf } from '../../core/systems/HallMissionActions';
 import { hallPlayerOf, officerPromotionScriptLines, OFFICER_ERA_KEPT_LINE } from '../../core/systems/OfficerSnapshot';
 import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
 import { officerDisplayOf } from '../../core/systems/OfficerDisplay';
@@ -3575,7 +3576,7 @@ export class LobbyScene extends Component {
         }
         const taskId = task.Task_ID;
         void services().ui.open(UIID.LobbyMissionDetailDialog, {
-            state: { ...hallMissionDialogStateOf(row, HALL_BOARD_TYPE_LABEL[board.board]), ...hallTaskDialogStateOf(task) },
+            state: { ...hallMissionDialogStateOf(row, HALL_BOARD_TYPE_LABEL[board.board]), ...hallTaskDialogStateOf(task, services().session.hallIntelPercentOf(task)) },
             availableGenerals: this._buildMissionDetailGeneralOptions(),
             selectedGeneralId: services().session.leadGeneralId ?? undefined,
             onActionSelected: (action, snapshot) => this._onHallMissionAction(action, taskId, snapshot),
@@ -3583,10 +3584,11 @@ export class LobbyScene extends Component {
     }
 
     /**
-     * 詳情彈窗四鈕（PROG-2-9123）：執行＝派遣（同任務牆「接取」）、委任＝AI 選將（PROG-2-1006）；
-     * 再探與等待規格沒有耗費與規則數值，顯示「尚未開放」。按下去一定有玩家看得到的結果。
+     * 詳情彈窗四鈕（PROG-2-9123／9128）：執行＝派遣（同任務牆「接取」）、委任＝AI 選將（PROG-2-1006）、
+     * 再探＝耗糧草把情報度提到 100、等待＝本季先不處理保留到下一季。按下去一定有玩家看得到的結果；
+     * 回傳 false 表示行動沒成功（再探糧不足），給「先再探再執行」流程中止用。
      */
-    private async _onHallMissionAction(action: LobbyMissionActionKey, taskId: string, snapshot: { selectedGeneralId: string | null; aiDelegateChecked: boolean }): Promise<void> {
+    private async _onHallMissionAction(action: LobbyMissionActionKey, taskId: string, snapshot: { selectedGeneralId: string | null; aiDelegateChecked: boolean }): Promise<boolean | void> {
         const plan = planHallMissionAction(action, {
             selectedGeneralId: snapshot.selectedGeneralId,
             aiDelegateChecked: snapshot.aiDelegateChecked,
@@ -3594,6 +3596,13 @@ export class LobbyScene extends Component {
         });
         if (plan.kind === 'not-open') { this._showNotOpenYet(); return; }
         if (plan.kind === 'notice') { this._showToast(plan.text); return; }
+        if (plan.kind === 'recon') return this._reconHallMission(taskId);
+        if (plan.kind === 'wait') {
+            const waited = await services().session.waitHallTask(taskId);
+            this._showToast(waited.text);
+            void services().ui.closeCurrentUI();
+            return;
+        }
         if (plan.kind === 'dispatch') {
             try {
                 const ok = await this._dispatchHallTask(taskId, plan.generalId);
@@ -3627,6 +3636,23 @@ export class LobbyScene extends Component {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 委任大廳任務失敗', error);
         } finally {
             this._refreshHallBoard();
+        }
+    }
+
+    /** 詳情窗「再探」（PROG-2-9128）：耗糧草、情報度到 100 並存檔；失敗（已滿、糧不足）只提示。 */
+    private async _reconHallMission(taskId: string): Promise<boolean> {
+        const task = Object.values(this._lobbyHub?.Mission_Boards ?? {}).flatMap((data) => data?.Tasks ?? []).find((t) => t.Task_ID === taskId);
+        if (!task) { this._showToast('此任務已不存在'); return false; }
+        try {
+            const plan = await services().session.reconHallTask(task, hallReconCostGrainOf(this._lobbyHub));
+            if (plan.kind !== 'ok') { this._showToast(plan.text); return false; }
+            this._showToast(`再探完成，情報已完整（糧草 -${plan.costGrain}）`);
+            this._missionDetailDialogPanel?.applyStatePatch({ intelRevealPercent: plan.intelAfter, intelFogVisible: false, intelHintLabel: '情報已完整' });
+            this._refreshLobbyHallTopbar();
+            return true;
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 再探大廳任務失敗', error);
+            return false;
         }
     }
 

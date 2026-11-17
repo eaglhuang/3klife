@@ -51,7 +51,22 @@ export interface HallBoard {
     Last_Refresh_At: string;
 }
 
+/** 任務欄位的預設值（PROG-2-9128）：任務沒寫的欄位用這裡，個別任務可自行覆寫。 */
+export interface HallTaskDefaults {
+    AI_Assign_Enabled?: boolean;
+    Available_Actions?: HallTaskAction[];
+}
+
+/** 再探設定（PROG-2-9128）：耗費放資料，不寫死在流程。 */
+export interface HallReconConfig {
+    Cost_Grain?: number;
+}
+
 export interface LobbyHub {
+    /** 選填：任務欄位預設值（缺省時每個任務都要自己寫齊） */
+    Task_Defaults?: HallTaskDefaults;
+    /** 選填：再探設定（缺省時用 HALL_RECON_COST_GRAIN_DEFAULT） */
+    Recon?: HallReconConfig;
     Current_Theme: {
         Theme_ID: string;
         Day_Night_Mode: (typeof HALL_DAY_NIGHT_MODES)[number];
@@ -171,13 +186,67 @@ function checkBoard(issues: LobbyHubIssue[], path: string, value: unknown): void
     if (typeof value.Last_Refresh_At !== 'string') issues.push({ path: `${path}.Last_Refresh_At`, message: '必須為字串' });
 }
 
+const TASK_DEFAULT_KEYS = ['AI_Assign_Enabled', 'Available_Actions'] as const;
+
+/**
+ * 把 Lobby_Hub.Task_Defaults 套到沒寫該欄位的任務上（預設值＋個別覆寫）；不改輸入，回傳新物件。
+ * 沒有 Task_Defaults 或結構不對時原樣回傳，交給驗證報錯。
+ */
+export function applyLobbyHubDefaults(raw: unknown): unknown {
+    if (!isRecord(raw) || !isRecord(raw.Lobby_Hub)) return raw;
+    const hub = raw.Lobby_Hub;
+    const defaults = hub.Task_Defaults;
+    if (!isRecord(defaults) || !isRecord(hub.Mission_Boards)) return raw;
+    const boards: Rec = {};
+    for (const [key, board] of Object.entries(hub.Mission_Boards)) {
+        if (!isRecord(board) || !Array.isArray(board.Tasks)) { boards[key] = board; continue; }
+        boards[key] = {
+            ...board,
+            Tasks: board.Tasks.map((task) => {
+                if (!isRecord(task)) return task;
+                const filled: Rec = { ...task };
+                for (const field of TASK_DEFAULT_KEYS) {
+                    if (filled[field] === undefined && defaults[field] !== undefined) {
+                        const value = defaults[field];
+                        filled[field] = Array.isArray(value) ? [...value] : value;
+                    }
+                }
+                return filled;
+            }),
+        };
+    }
+    return { ...raw, Lobby_Hub: { ...hub, Mission_Boards: boards } };
+}
+
 /** 驗證大廳資料；回傳所有問題，不改輸入。 */
-export function validateLobbyHub(raw: unknown): LobbyHubValidation {
+export function validateLobbyHub(input: unknown): LobbyHubValidation {
     const issues: LobbyHubIssue[] = [];
+    const raw = applyLobbyHubDefaults(input);
     if (!isRecord(raw) || !isRecord(raw.Lobby_Hub)) {
         return { ok: false, issues: [{ path: 'Lobby_Hub', message: '缺少 Lobby_Hub 物件' }] };
     }
     const hub = raw.Lobby_Hub;
+
+    if (hub.Task_Defaults !== undefined) {
+        const defaults = hub.Task_Defaults;
+        if (!isRecord(defaults)) {
+            issues.push({ path: 'Lobby_Hub.Task_Defaults', message: '必須為物件' });
+        } else {
+            if (defaults.AI_Assign_Enabled !== undefined && typeof defaults.AI_Assign_Enabled !== 'boolean') {
+                issues.push({ path: 'Lobby_Hub.Task_Defaults.AI_Assign_Enabled', message: '必須為布林值' });
+            }
+            if (defaults.Available_Actions !== undefined) {
+                if (!Array.isArray(defaults.Available_Actions)) issues.push({ path: 'Lobby_Hub.Task_Defaults.Available_Actions', message: '必須為陣列' });
+                else defaults.Available_Actions.forEach((action, index) => checkEnum(issues, `Lobby_Hub.Task_Defaults.Available_Actions[${index}]`, action, HALL_TASK_ACTIONS));
+            }
+        }
+    }
+    if (hub.Recon !== undefined) {
+        if (!isRecord(hub.Recon)) issues.push({ path: 'Lobby_Hub.Recon', message: '必須為物件' });
+        else if (hub.Recon.Cost_Grain !== undefined && !isInt(hub.Recon.Cost_Grain, 0)) {
+            issues.push({ path: 'Lobby_Hub.Recon.Cost_Grain', message: '必須為非負整數' });
+        }
+    }
 
     if (!isRecord(hub.Current_Theme)) {
         issues.push({ path: 'Lobby_Hub.Current_Theme', message: '必須為物件' });

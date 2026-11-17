@@ -48,10 +48,10 @@ export function createHallMissionActionRouterSuite(): TestSuite {
         }
     });
 
-    suite.test('委任走 AI 選將；再探與等待沒有規格數值，顯示尚未開放', () => {
+    suite.test('委任走 AI 選將；再探與等待有各自的計畫（PROG-2-9128）', () => {
         assert.equals('assign-ai', planHallMissionAction('assign', free).kind);
-        assert.equals('not-open', planHallMissionAction('re-scout', free).kind);
-        assert.equals('not-open', planHallMissionAction('wait', free).kind);
+        assert.equals('recon', planHallMissionAction('re-scout', free).kind);
+        assert.equals('wait', planHallMissionAction('wait', free).kind);
     });
 
     suite.test('任務資料決定按鈕開放項目與迷霧；停用按鈕有原因文字', () => {
@@ -71,7 +71,7 @@ export function createHallMissionActionRouterSuite(): TestSuite {
                 const state = hallTaskDialogStateOf(task);
                 assert.isTrue(state.intelRevealPercent >= 0 && state.intelRevealPercent <= 100);
                 for (const action of ['re-scout', 'execute', 'wait', 'assign'] as const) {
-                    assert.isTrue(['dispatch', 'assign-ai', 'not-open', 'notice'].includes(planHallMissionAction(action, free).kind));
+                    assert.isTrue(['dispatch', 'assign-ai', 'recon', 'wait', 'notice'].includes(planHallMissionAction(action, free).kind));
                 }
                 checked++;
             }

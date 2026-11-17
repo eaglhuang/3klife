@@ -137,7 +137,8 @@ export interface LobbyMissionDetailDialogOpenPayload {
     selectedGeneralLabel?: string;
     selectedGeneralVolunteer?: boolean;
     onRequestClose?: () => void;
-    onActionSelected?: (action: LobbyMissionActionKey, snapshot: LobbyMissionDetailDialogSnapshot) => void | Promise<void>;
+    /** 回傳 false 代表這個行動沒成功（例如再探糧不足），執行前的「先再探」流程會因此中止（PROG-2-9128）。 */
+    onActionSelected?: (action: LobbyMissionActionKey, snapshot: LobbyMissionDetailDialogSnapshot) => void | boolean | Promise<void | boolean>;
     /** 情報未滿按執行時的「是否再探一次？」選擇（PROG-2-0460）；沒有提供時沿用直接執行。 */
     onIntelConfirmRequested?: (snapshot: LobbyMissionDetailDialogSnapshot) => Promise<IntelConfirmChoice>;
     onGeneralSelected?: (general: MissionGeneralOption, snapshot: LobbyMissionDetailDialogSnapshot) => void | Promise<void>;
@@ -238,6 +239,13 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
 
         this._playEnterTransition();
         this._isVisible = true;
+    }
+
+    /** 視窗開著時更新部分欄位（例如再探後情報度到 100），不重開視窗、不動已選武將（PROG-2-9128）。 */
+    public applyStatePatch(patch: Partial<LobbyMissionDetailDialogContentState>): void {
+        const snapshot = this._buildSnapshot();
+        if (!snapshot) return;
+        this._applyRuntimeSnapshot({ ...snapshot, ...patch });
     }
 
     public hide(): void {
@@ -826,10 +834,10 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         this._setDropdownVisible(false);
     }
 
-    private async _emitAction(action: LobbyMissionActionKey): Promise<void> {
+    private async _emitAction(action: LobbyMissionActionKey): Promise<boolean> {
         const snapshot = this._buildSnapshot();
         if (!snapshot) {
-            return;
+            return false;
         }
 
         const blocked = resolveDetailActionStates({
@@ -840,7 +848,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         }).states[action];
         if (!blocked.enabled) {
             services().event.emit('SHOW_TOAST', { message: DETAIL_ACTION_BLOCKED_TEXT[blocked.reason ?? 'not-offered'], duration: 2 });
-            return;
+            return false;
         }
 
         if (action === 'execute' && resolveExecutePress(snapshot.intelRevealPercent) === 'ask-intel-confirm') {
@@ -849,23 +857,24 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
                 : 'execute-now';
             const outcome = applyIntelConfirmChoice(snapshot.intelRevealPercent, choice);
             if (!outcome.shouldExecute) {
-                return;
+                return false;
             }
-            if (outcome.shouldRescout) {
-                await this._emitAction('re-scout');
+            // 先再探：失敗（糧草不足）就中止，不帶著未揭露的情報直接執行
+            if (outcome.shouldRescout && !(await this._emitAction('re-scout'))) {
+                return false;
             }
-            await this._emitActionNow('execute', { ...snapshot, intelRevealPercent: outcome.intelRevealPercent });
-            return;
+            return this._emitActionNow('execute', { ...snapshot, intelRevealPercent: outcome.intelRevealPercent });
         }
 
-        await this._emitActionNow(action, snapshot);
+        return this._emitActionNow(action, snapshot);
     }
 
-    private async _emitActionNow(action: LobbyMissionActionKey, snapshot: LobbyMissionDetailDialogSnapshot): Promise<void> {
+    private async _emitActionNow(action: LobbyMissionActionKey, snapshot: LobbyMissionDetailDialogSnapshot): Promise<boolean> {
         this.node.emit('mission-action', { action, snapshot });
         if (this._onActionSelected) {
-            await this._onActionSelected(action, snapshot);
+            return (await this._onActionSelected(action, snapshot)) !== false;
         }
+        return true;
     }
 
     private _onAiDelegateToggleChanged(toggle: Toggle): void {
