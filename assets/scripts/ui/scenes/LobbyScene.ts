@@ -77,7 +77,8 @@ import { buildBattlefieldReconForEncounter } from '../../core/systems/Battlefiel
 import { buildEnvScoutLines } from '../core/EnvScoutPresenter';
 import { lifespanCommandForBattleKind } from '../../core/systems/LifespanWiring';
 import type { UnveilingEvent } from '../../core/systems/Unveiling';
-import { isGeneralDead, type AgingEvent } from '../../core/systems/GeneralAging';
+import { type AgingEvent } from '../../core/systems/GeneralAging';
+import { ownedLivingGenerals } from '../core/OwnedRosterSource';
 import type { NurtureAction } from '../../core/systems/NurtureSystem';
 import { TRAINING_KINDS } from '../../core/systems/NurtureSystem';
 import { MENTOR_DECK_SIZE } from '../../core/systems/MentorDeck';
@@ -2867,7 +2868,7 @@ export class LobbyScene extends Component {
     }
 
     private async _openRelationGraph(): Promise<void> {
-        const generals = services().session.roster.filter((general) => !isGeneralDead(general));
+        const generals = ownedLivingGenerals(services().session.roster);
         if (generals.length === 0) {
             services().event.emit('SHOW_TOAST', { message: '目前沒有可查看的武將', duration: 2 });
             return;
@@ -2913,7 +2914,7 @@ export class LobbyScene extends Component {
 
     /** 背包道具選對象（PROG-2-2105）：先收起背包開武將清單，選定後關清單回背包等確定。 */
     private _pickGeneralForItemBag(onPick: (target: ItemBagGeneralTarget) => void): void {
-        const generals = services().session.roster.filter((general) => !isGeneralDead(general));
+        const generals = ownedLivingGenerals(services().session.roster);
         if (generals.length === 0) {
             services().event.emit('SHOW_TOAST', { message: '目前沒有可使用的武將', duration: 2 });
             return;
@@ -6783,8 +6784,9 @@ export class LobbyScene extends Component {
                     lastPayload = nextPayload;
                 }
 
+                // 無 payload 的備援也用玩家名冊，不退回全武將圖鑑（PROG-2-9147）
                 const activePayload = lastPayload ?? {
-                    generals: this._generals,
+                    generals: ownedLivingGenerals(services().session.roster),
                     onSelectGeneral: (config: GeneralConfig) => this._openGeneralDetailDirect(config),
                     options: { factionFilter: 'all' },
                 };
@@ -6821,6 +6823,7 @@ export class LobbyScene extends Component {
         onSelectGeneral: (config: GeneralConfig) => void | Promise<void>,
         options: NonNullable<GeneralListOpenPayload['options']> = { factionFilter: 'all' },
     ): Promise<void> {
+        // smoke / 預覽專用入口：刻意顯示全武將圖鑑，不代表玩家名冊；正式入口見 onClickGeneralList
         await services().ui.open(UIID.GeneralList, {
             generals: this._generals,
             onSelectGeneral,
@@ -7044,16 +7047,24 @@ export class LobbyScene extends Component {
     }
 
     private _openGalleryFromDetail(): void {
-        const { table, owned } = galleryInputsFromGenerals(this._generals, PlayerRosterService.getAll());
+        // 玩家擁有的武將走 session.roster（見 OwnedRosterSource 說明），不直讀 PlayerRosterService
+        const { table, owned } = galleryInputsFromGenerals(this._generals, services().session.roster);
         this.openGeneralVersionGallery(table, owned);
     }
 
-    /** 「武將列表」按鈕：顯示玄家已取得武將（源自轉蛋 / PlayerRosterService） */
+    /**
+     * 「武將名冊」按鈕：顯示玩家已取得武將。
+     * 來源必須是 session.roster（與關係列表同源）；不可直讀 PlayerRosterService，
+     * 否則 QA 暫時狀態模式或兩邊不同步時會顯示舊存檔，更不可在空名冊時退回全武將圖鑑（PROG-2-9147）。
+     */
     public onClickGeneralList() {
-        const roster = PlayerRosterService.getAll();
-        const displayList = roster.length > 0 ? roster : this._generals;
+        const owned = ownedLivingGenerals(services().session.roster);
+        if (owned.length === 0) {
+            services().event.emit('SHOW_TOAST', { message: '目前沒有可查看的武將', duration: 2 });
+            return;
+        }
         void services().ui.open(UIID.GeneralList, {
-            generals: displayList,
+            generals: owned,
             onSelectGeneral: (config: GeneralConfig) => this._openGeneralDetailDirect(config),
             options: {
                 factionFilter: 'all',
