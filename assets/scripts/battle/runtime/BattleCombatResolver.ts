@@ -776,6 +776,8 @@ export class BattleCombatResolver {
       if (!linkedUnit || linkedUnit.isDead()) {
         continue;
       }
+      // 連鎖分攤也不能打到敗逃當回合的主將化身（PROG-2-9388）
+      if (attackerFaction !== linkedUnit.faction && this.isGeneralFleeImmune(linkedUnit.faction) && this.isGeneralUnit(linkedUnit.id)) continue;
       linkedUnit.takeDamage(sharedDamage);
       svc.event.emit(EVENT_NAMES.UnitDamaged, {
         unitId: linkedUnit.id,

@@ -134,6 +134,26 @@ export function createDuelFleeOutcomeSuite(): TestSuite {
         assert.isTrue(enemy.isDead(), '下回合起可被打死');
     });
 
+    suite.test('敗逃後跑完整回合：貼在敵主將面前的我方部隊當回合打不死他，下一回合才打死；戰報有提示（PROG-2-9388）', () => {
+        const w = battle(false, 95, 20);
+        services().session.setRandomSource(() => 0.99);
+        const notices: string[] = [];
+        services().event.on(EVENT_NAMES.BattleSkillNotice, (line: string) => { notices.push(line); });
+        w.ctrl.resolveDuelChallenge(Faction.Player, true);
+        assert.isTrue(notices.includes('e負傷敗逃，本回合不可被攻擊'), `notices=${notices.join('|')}`);
+        const enemy = w.ctrl.state.enemyGeneral!;
+        w.ctrl.state.removeUnit(w.theirs.id);
+        w.mine.moveTo(0, GAME_CONFIG.GRID_DEPTH - 1);
+        w.ctrl.advanceTurn();
+        const first = w.ctrl.finalizeAdvanceTurn();
+        assert.equals('ongoing', first, '敗逃當回合整輪結算後仍未分勝負');
+        assert.equals(1, enemy.currentHp, '當回合沒被打');
+        w.ctrl.advanceTurn();
+        const second = w.ctrl.finalizeAdvanceTurn();
+        assert.equals('player-win', second, '下一回合恢復可被攻擊');
+        assert.isTrue(enemy.isDead());
+    });
+
     suite.test('我方主將敗逃當回合同樣不可被攻擊；教學戰不設保護', () => {
         const w = battle(false, 5, 99, 90000);
         w.ctrl.resolveDuelChallenge(Faction.Player, true);

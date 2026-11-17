@@ -9,6 +9,7 @@ import { type BattleResult, BATTLE_FRONT_DEPTH } from "../BattleTypes";
 import { DUEL_FLEE_HP, DUEL_FLEE_SQUAD_LOSS_RATIO, DUEL_WINNER_BUFF_TURNS, DUEL_WINNER_CRIT_BONUS } from "../shared/DuelOutcome";
 import { duelVictoryBuffTurns } from "../shared/DuelVictoryBuff";
 import { maximizeMorale } from "../shared/Morale";
+import { duelFleeImmuneLine } from "../../core/systems/NumericalScriptLines";
 
 /**
  * 單挑最多交手回合數（暫定，規格未定義）。達上限仍雙方存活 → 平局，單挑結束、不產生死亡、不套用懲罰。
@@ -470,6 +471,7 @@ export class BattleGeneralDuelFlow {
     if (fled) {
       // 敗逃當回合不可被攻擊，下回合起恢復；雙方都適用（PROG-2-9386）
       this.context.state.duelFleeImmuneTurns.set(loser, svc.battle.getSnapshot().turn);
+      svc.event.emit(EVENT_NAMES.BattleSkillNotice, duelFleeImmuneLine(loserGeneral.name));
       loserGeneral.currentHp = Math.min(loserGeneral.currentHp, DUEL_FLEE_HP);
       this.context.state.units.forEach((unit) => {
         if (unit.faction !== loser || unit.isDead()) return;
