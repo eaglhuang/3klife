@@ -93,6 +93,32 @@ export function createHallMissionSessionSuite(): TestSuite {
         assert.isFalse(again.ok, '同一位武將不能同時出兩個任務');
     });
 
+    suite.test('武將佔用四條路：執行、委任、AI 委任都不會挑到忙碌武將，候選標出任務中，全員忙碌時回報原因', async () => {
+        const session = await newSession();
+        session.bindHallMissions(templates, balance, wallet());
+        const mil = session.hallMissionState!.boards.Military;
+        assert.isTrue((await session.dispatchHallMission(mil[0].id, 'zhang')).ok);
+        // 候選：zhang 出任務中、不可選
+        const cands = session.hallMissionCandidates(mil[1].id);
+        assert.equals('on-mission', cands.find((c) => c.id === 'zhang')!.block);
+        assert.equals(null, cands.find((c) => c.id === 'guan')!.block);
+        // 執行同一位：拒絕且資源不動
+        const food = session.hallMissionStock().grain;
+        const exec = await session.dispatchHallMission(mil[1].id, 'zhang');
+        assert.isFalse(exec.ok);
+        assert.equals(food, session.hallMissionStock().grain);
+        // 委任：只會挑 guan
+        const del = await session.dispatchHallMission(mil[1].id, null);
+        assert.isTrue(del.ok, del.ok ? '' : del.text);
+        if (del.ok) assert.equals('guan', del.mission.generalId);
+        // 兩位都忙：委任回報沒有可派武將，執行也被拒
+        const third = await session.dispatchHallMission(mil[2].id, null);
+        assert.isFalse(third.ok);
+        assert.isFalse((await session.dispatchHallMission(mil[2].id, 'guan')).ok);
+        // 兩筆進行中都還在任務板上（不會被當成重複而吃掉）
+        assert.equals(2, session.hallMissionState!.boards.Military.filter((m) => m.status === 'ACTIVE').length);
+    });
+
     suite.test('派出（委任）：系統自己選將並標記委任；內政任務扣黃金走錢包', async () => {
         const session = await newSession();
         const w = wallet(1000);

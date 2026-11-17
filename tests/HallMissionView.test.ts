@@ -36,6 +36,16 @@ export function createHallMissionViewSuite(): TestSuite {
     const balance = balanceOf();
     const ctx = (over: Record<string, unknown> = {}) => ({ season: 1, stock: STOCK, balance, candidates: [cand('a', 0.6)], selectedGeneralId: 'a', ...over });
 
+    suite.test('詳情視窗：可派的武將全在出任務中時，執行與委任停用並說明原因', () => {
+        const s = hallMissionDialogState(missionOf(), ctx({ candidates: [cand('a', 0.6, 'on-mission'), cand('b', 0.5, 'on-mission')], selectedGeneralId: null }));
+        assert.isTrue(!s.availableActions.includes('execute') && !s.availableActions.includes('assign'));
+        assert.isTrue((s.actionBlockedText.execute ?? '').includes('出任務中'));
+        assert.isTrue(s.generalSelectHintLabel.includes('出任務中'));
+        const ok = hallMissionDialogState(missionOf(), ctx({ candidates: [cand('a', 0.6, 'on-mission'), cand('b', 0.5)], selectedGeneralId: 'a' }));
+        assert.isTrue(ok.availableActions.includes('execute'));
+        assert.isTrue(ok.generalSelectHintLabel.includes('b'));
+    });
+
     suite.test('任務牆列：未接取為空字串，進行中顯示「進行中，還有 N 季・武將名」，委任加註', () => {
         assert.equals('', hallRowStatusText(missionOf(), 1));
         const active = missionOf({ status: 'ACTIVE', generalId: 'g', generalName: '張飛', returnSeason: 3, successRate: 0.5 });
@@ -97,8 +107,10 @@ export function createHallMissionViewSuite(): TestSuite {
         assert.isTrue(poor.costFoodValueLabel.includes('不足'));
         const none = hallMissionDialogState(missionOf({ intel: 100 }), ctx({ candidates: [cand('a', 0.6, 'on-mission')] }));
         assert.equals('情報已完整', none.actionBlockedText['re-scout']);
-        assert.equals(HALL_NO_CANDIDATE_TEXT, none.actionBlockedText.execute);
-        assert.equals(HALL_NO_CANDIDATE_TEXT, none.actionBlockedText.assign);
+        assert.isTrue((none.actionBlockedText.execute as string).includes('出任務中'));
+        assert.isTrue((none.actionBlockedText.assign as string).includes('出任務中'));
+        const empty = hallMissionDialogState(missionOf({ intel: 100 }), ctx({ candidates: [cand('a', 0.6, 'dead')] }));
+        assert.equals(HALL_NO_CANDIDATE_TEXT, empty.actionBlockedText.execute);
     });
 
     suite.test('進行中的任務：四鈕全停用，原因為任務進行中', () => {

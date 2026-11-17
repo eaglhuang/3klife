@@ -97,6 +97,9 @@ export interface HallDialogState {
     envScoutTerrainLine: string;
     envScoutWeatherLine: string;
     generalSelectHintLabel: string;
+    /** 毛遂自薦徽章：只在所選武將真的自告奮勇時顯示，不沿用設計稿的「關羽 毛遂自薦」 */
+    volunteerBadgeVisible: boolean;
+    volunteerBadgeLabel: string;
     costFoodValueLabel: string;
     costFoodRatio: number;
     costTroopValueLabel: string;
@@ -132,11 +135,14 @@ function rewardText(rewards: HallMission['rewards']): string {
 /** 詳情視窗 state（§5、§6）；沒選武將時成功率用最佳候選估算 */
 export function hallMissionDialogState(mission: Readonly<HallMission>, ctx: Readonly<HallDialogContext>): HallDialogState {
     const full = mission.intel >= HALL_INTEL_FULL_PERCENT;
+    // 可派的都在出任務時，說明原因而不是只說「沒有可派的武將」
+    const noCandidateText = !ctx.candidates.some((c) => c.block === null) && ctx.candidates.some((c) => c.block === 'on-mission')
+        ? '可派的武將都在出任務中，等回報後再派' : HALL_NO_CANDIDATE_TEXT;
     const active = mission.status === 'ACTIVE';
     const picked = ctx.candidates.find((c) => c.id === ctx.selectedGeneralId && c.block === null) ?? ctx.candidates.find((c) => c.block === null);
     const rateLine = active
         ? `成功率 ${Math.round((mission.successRate ?? 0) * 100)}%（派出時定下）`
-        : picked ? `成功率 ${hallRateText(picked.rate, mission.intel, ctx.balance)}（${picked.name}）` : HALL_NO_CANDIDATE_TEXT;
+        : picked ? `成功率 ${hallRateText(picked.rate, mission.intel, ctx.balance)}（${picked.name}）` : noCandidateText;
     const shortages = hallShortagesOf(mission.costs, ctx.stock);
     const shortText = shortages.map((s) => `${HALL_RESOURCE_NAME[s.resource]}不足（需 ${s.need}，現有 ${s.have}）`).join('、');
     const hasCandidate = ctx.candidates.some((c) => c.block === null);
@@ -152,7 +158,7 @@ export function hallMissionDialogState(mission: Readonly<HallMission>, ctx: Read
     } else {
         offer('re-scout', full ? '情報已完整' : ctx.stock.grain >= ctx.balance.reconCostGrain ? null : `糧草不足，再探需要 ${ctx.balance.reconCostGrain}（現有 ${Math.max(0, Math.floor(ctx.stock.grain))}）`);
         offer('wait', mission.waited ? '此任務已等待過' : null);
-        const runReason = !hasCandidate ? HALL_NO_CANDIDATE_TEXT : shortages.length > 0 ? shortText : null;
+        const runReason = !hasCandidate ? noCandidateText : shortages.length > 0 ? shortText : null;
         offer('execute', runReason);
         offer('assign', runReason);
     }
@@ -168,6 +174,8 @@ export function hallMissionDialogState(mission: Readonly<HallMission>, ctx: Read
         envScoutTerrainLine: mission.wall === 'Domestic' ? '本任務無敵情' : `敵方：${full ? (mission.enemyHint || '無') : HALL_MASK_TEXT}`,
         envScoutWeatherLine: `重點屬性：${HALL_STAT_NAME[mission.keyStat] ?? mission.keyStat}・${active ? `還有 ${hallRemainingSeasons(mission, ctx.season)} 季回報` : `剩餘期限 ${hallRemainingExpiry(mission, ctx.season)} 季`}`,
         generalSelectHintLabel: rateLine,
+        volunteerBadgeVisible: !active && picked?.volunteer === true,
+        volunteerBadgeLabel: !active && picked?.volunteer === true ? `${picked.name} 毛遂自薦` : '',
         costFoodValueLabel: costLabel(mission.costs.grain, ctx.stock.grain),
         costFoodRatio: ratio(mission.costs.grain, COST_SCALE.grain),
         costTroopValueLabel: costLabel(mission.costs.troops, ctx.stock.troops),
@@ -180,7 +188,7 @@ export function hallMissionDialogState(mission: Readonly<HallMission>, ctx: Read
         rewardPerfectLabel: full
             ? `基礎獎勵另加 ${Math.round(ctx.balance.perfectBonusRatio * 100)}%（自告奮勇、${HALL_STAT_NAME[mission.keyStat] ?? ''} ≥ ${ctx.balance.perfectKeyStatThreshold}，或派出前情報已完整）`
             : HALL_MASK_TEXT,
-        aiDelegateHintLabel: hasCandidate ? '委任：系統選最終成功率最高的武將' : HALL_NO_CANDIDATE_TEXT,
+        aiDelegateHintLabel: hasCandidate ? '委任：系統選最終成功率最高的武將' : noCandidateText,
         availableActions: offered,
         actionBlockedText: blocked,
     };

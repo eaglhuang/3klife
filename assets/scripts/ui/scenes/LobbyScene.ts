@@ -26,6 +26,7 @@ import { buildLobbyHallWallView, type LobbyHallWallView } from '../../core/syste
 import { parseHallMissionBalance, parseHallMissionTemplates } from '../../core/systems/HallMissionData';
 import { findHallMission } from '../../core/systems/HallMissionLoop';
 import { hallMissionDialogState, hallMissionsToHub, hallRowStatusText } from '../core/HallMissionView';
+import { HALL_BLOCK_TEXT } from '../../core/systems/HallMissionRules';
 import { buildLobbyHallAltarView } from '../core/LobbyHallAltarView';
 import { buildHallMapTurnSteps, hasHallMapFocus, type HallMapProvinceSource } from '../../core/systems/HallMapSeasonTurn';
 import type { HallStageLayout } from '../../core/systems/HallStagePlanner';
@@ -2570,7 +2571,7 @@ export class LobbyScene extends Component {
             displayName: (generalId) => services().session.roster.find((g) => g.id === generalId)?.name ?? generalId,
         });
         const rowBindings = Array.from({ length: HALL_BOARD_MAX_ROWS }, (_, i) => [
-            { buttonId: `btnHallRow${i}`, handler: () => { void this._onClickHallAccept(i); } },
+            { buttonId: `btnHallRow${i}`, handler: () => { this._onClickHallAccept(i); } },
             { buttonId: `btnHallRow${i}Detail`, handler: () => { this._onClickHallDetail(i); } },
         ]).flat();
         this._hallBoardHost = await this._mountPreviewScreenHost('HallBoardHost', 'hall-board-screen', [
@@ -3587,9 +3588,6 @@ export class LobbyScene extends Component {
         return services().session.gameTime.totalSeasonsElapsed;
     }
 
-    /** 這次派出已經給過玩家看的失敗提示（避免「接取」鈕再補一則通用提示） */
-    private _hallDispatchToasted = false;
-
     /**
      * 派出任務（執行／委任／任務牆接取共用，doc_spec_1178 §7.3、§8）：成功時顯示明確的派出提示，
      * 失敗時顯示原因並回傳 false。generalId 為 null 表示委任。
@@ -3598,7 +3596,6 @@ export class LobbyScene extends Component {
         const session = services().session;
         const result = await session.dispatchHallMission(missionId, generalId);
         if (result.ok === false) {
-            this._hallDispatchToasted = true;
             this._showToast(result.text);
             return false;
         }
@@ -3662,14 +3659,16 @@ export class LobbyScene extends Component {
             this._showToast('任務資料整理中，請稍後再試');
             return;
         }
-        const eligible = session.hallMissionCandidates(missionId).filter((c) => c.block === null);
+        // 清單：可派的在前，出任務中的武將灰掉並標「出任務中」、不可選（§7.1）；其他不可派者（未畢業、培育中…）不列
+        const candidates = session.hallMissionCandidates(missionId);
+        const eligible = candidates.filter((c) => c.block === null);
         const lead = session.leadGeneralId;
         const selected = eligible.find((c) => c.id === lead) ?? eligible[0] ?? null;
         const state = this._hallDialogStateFor(missionId, selected?.id ?? null);
         if (!state) return;
         void services().ui.open(UIID.LobbyMissionDetailDialog, {
             state,
-            availableGenerals: eligible.map((c) => ({ id: c.id, label: c.name, volunteer: c.volunteer })),
+            availableGenerals: candidates.filter((c) => c.block === null || c.block === 'on-mission').map((c) => ({ id: c.id, label: c.name, volunteer: c.volunteer, ...(c.block ? { blockedText: HALL_BLOCK_TEXT[c.block] } : {}) })),
             selectedGeneralId: selected?.id,
             onGeneralSelected: (option) => { this._refreshHallDialog(missionId, option.id); },
             onActionSelected: (action, snapshot) => this._onHallMissionAction(action, missionId, snapshot),
@@ -3715,21 +3714,23 @@ export class LobbyScene extends Component {
         }
     }
 
-    private async _onClickHallAccept(index: number): Promise<void> {
-        if (!this._hallBoard) {
+    /**
+     * 任務列「接取」：不再直接派出，改開任務詳情視窗（§5、§6）——玩家先看到耗費、成功率、選好武將，
+     * 再按「執行」或「委任」才扣資源。已在進行中的任務只提示目前狀態。
+     */
+    private _onClickHallAccept(index: number): void {
+        const task = this._hallBoard?.taskAt(index);
+        if (!task) {
+            this._showToast(this._hallBoard?.notice ?? '此格目前沒有任務');
             return;
         }
-        try {
-            this._hallDispatchToasted = false;
-            const ok = await this._hallBoard.accept(index);
-            if (!ok && !this._hallDispatchToasted) {
-                services().event.emit('SHOW_TOAST', { message: this._hallBoard.notice ?? '無法接取此任務', duration: 2.5 });
-            }
-        } catch (error) {
-            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 接取大廳任務失敗', error);
-        } finally {
-            this._refreshHallBoard();
+        const state = services().session.hallMissionState;
+        const mission = state ? findHallMission(state, task.Task_ID) : undefined;
+        if (mission?.status === 'ACTIVE') {
+            this._showToast(hallRowStatusText(mission, this._hallSeason()));
+            return;
         }
+        this._openHallDetailById(task.Task_ID);
     }
 
     private async _onClickBuyJobOrder(jobChange: JobChangeController): Promise<void> {

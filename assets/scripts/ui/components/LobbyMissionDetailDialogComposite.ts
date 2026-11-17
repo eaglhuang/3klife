@@ -79,6 +79,8 @@ export interface MissionGeneralOption {
     id: string;
     label: string;
     volunteer?: boolean;
+    /** 不可選的原因（例如「出任務中」）；有值時列為灰色、顯示原因、點了沒有反應 */
+    blockedText?: string;
 }
 
 export interface LobbyMissionDetailDialogContentState {
@@ -446,6 +448,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
                 id: (item.id?.trim() || `${item.label.trim()}-${index}`),
                 label: item.label.trim(),
                 volunteer: item.volunteer === true || (item.label.trim() === selectedLabel && volunteerVisible),
+                ...(item.blockedText ? { blockedText: item.blockedText } : {}),
             }));
 
         if (normalized.length > 0) {
@@ -473,7 +476,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
             ? options.find((item) => item.label === payloadLabel) ?? null
             : null;
         const matchedByState = options.find((item) => item.label === stateLabel) ?? null;
-        const selected = matchedById ?? matchedByLabel ?? matchedByState ?? options[0];
+        const selected = matchedById ?? matchedByLabel ?? matchedByState ?? options.find((item) => !item.blockedText) ?? options[0];
 
         return {
             id: selected?.id ?? payloadId ?? payloadLabel ?? 'general-unknown',
@@ -748,7 +751,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         const button = rowNode.addComponent(Button);
         button.transition = Button.Transition.NONE;
         button.target = rowNode;
-        button.interactable = option.id !== 'fallback-empty';
+        button.interactable = option.id !== 'fallback-empty' && !option.blockedText;
 
         const layout = rowNode.addComponent(Layout);
         layout.type = Layout.Type.HORIZONTAL;
@@ -769,21 +772,21 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
             Label.HorizontalAlign.LEFT,
         );
 
-        const badgeVisible = option.volunteer === true || (option.label === this._selectedGeneralLabel && this._selectedGeneralVolunteer);
+        const badgeVisible = !!option.blockedText || option.volunteer === true || (option.label === this._selectedGeneralLabel && this._selectedGeneralVolunteer);
         const badgeNode = this._createDropdownLabel(
             rowNode,
             `GeneralOptionBadge_${this._sanitizeNodeName(option.id)}`,
             110,
-            '毛遂自薦',
+            option.blockedText ?? '毛遂自薦',
             14,
-            new Color(250, 204, 94, 255),
+            option.blockedText ? new Color(230, 90, 80, 255) : new Color(250, 204, 94, 255),
             Label.HorizontalAlign.RIGHT,
         );
         badgeNode.active = badgeVisible;
 
         button.node.off(Button.EventType.CLICK);
         button.node.on(Button.EventType.CLICK, () => {
-            if (option.id === 'fallback-empty') {
+            if (option.id === 'fallback-empty' || option.blockedText) {
                 return;
             }
             this._selectGeneral(option);
@@ -793,7 +796,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         layout.updateLayout();
 
         const opacity = rowNode.getComponent(UIOpacity) ?? rowNode.addComponent(UIOpacity);
-        opacity.opacity = isSelected ? 255 : 230;
+        opacity.opacity = option.blockedText ? 150 : isSelected ? 255 : 230;
     }
 
     private _createDropdownLabel(

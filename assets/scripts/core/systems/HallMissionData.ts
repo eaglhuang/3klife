@@ -337,17 +337,12 @@ export function normalizeHallMissionState(raw: unknown, recordLimit = 20): HallM
     if (!isRec(raw) || !isRec(raw.boards)) return null;
     const state = emptyHallMissionState(typeof raw.seed === 'number' ? raw.seed : 1);
     const ids = new Set<string>();
-    const busyGenerals = new Set<string>();
     for (const wall of HALL_MISSION_WALLS) {
         const list = (raw.boards as Rec)[wall];
         if (!Array.isArray(list)) continue;
         for (const item of list) {
             const mission = normalizeMission(item, wall);
             if (!mission || ids.has(mission.id)) continue;
-            if (mission.status === 'ACTIVE') {
-                if (busyGenerals.has(mission.generalId as string)) continue;
-                busyGenerals.add(mission.generalId as string);
-            }
             ids.add(mission.id);
             state.boards[wall].push(mission);
         }

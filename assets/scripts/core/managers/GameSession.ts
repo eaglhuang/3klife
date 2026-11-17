@@ -3957,7 +3957,8 @@ export class GameSession {
 
     /** 正在出任務的武將 id（出征編隊顯示「出任務中」用） */
     public hallBusyGeneralIds(): string[] {
-        return this._hallMissions ? [...hallBusyGeneralIds(this._hallMissions)] : [];
+        // 用 Array.from 而不是展開 Set：建置版轉譯下 [...set] 會變成 [Set]，忙碌武將就全漏掉（建置版實測 06）
+        return this._hallMissions ? Array.from(hallBusyGeneralIds(this._hallMissions)) : [];
     }
 
     /** 所有名冊武將在大廳任務判定當下的事實（§7.1）：阻擋原因、精力、戰力、五維 */

@@ -751,7 +751,7 @@ async function main() {
                     if (!r.ok) { blockedSpec = blockedSpec || { popup, spec }; continue; }
                     await shot(rec, `${shotTag}-${popups.length + 1}-${popup.kind}`);
                     let cap = null;
-                    if (captured && popup.kind === 'season-report') { cap = { texts: await rm.textsUnder('^SeasonReportRoot$'), top: await readTopbar() }; captured.push(cap); }
+                    if (captured && popup.kind.startsWith('season-report')) { cap = { texts: await rm.textsUnder('^SeasonReportRoot$'), top: await readTopbar() }; captured.push(cap); }
                     await rm.click(spec, popup.kind);
                     // 季報一關，頂欄立刻讀一次：後續事件選項會花錢，不能拿最後的頂欄比
                     if (cap) { await delay(400); cap.topClosed = await readTopbar(); }
@@ -831,6 +831,45 @@ async function main() {
             if (cards1.some((c) => String(c.title).includes(title))) throw new Error(`執行後「${title}」仍在左牆的未接取列上`);
             if (!statusTexts.length) throw new Error('執行後任務板上看不到「進行中，還有 N 季」的列狀態文字');
             const remain = Math.min(3, Math.max(1, ...statusTexts.map((t) => Number((/還有\s*(\d+)\s*季/.exec(t) || [])[1]) || 1)));
+            // 3b. 武將佔用：派出武將 A 之後，再開另一個任務，A 不可選、顯示「出任務中」、預設人物不是 A（用真滑鼠點）
+            const busyName = ((/・([^（\s]+)/.exec(statusTexts[0]) || [])[1] || '').trim();
+            rec.detail.busyGeneral = busyName;
+            if (!busyName) throw new Error(`讀不到派出的武將名（列狀態：${statusTexts.join(' / ')}）`);
+            await closeMissionLayers();
+            await waitToastGone();
+            const second = await openFirstWallCard(rec);
+            rec.detail.secondMissionTitle = second.title;
+            const hint2 = ((await rm.textsUnder(MISSION_DIALOG)) || []).find((t) => /^成功率/.test(t)) || '';
+            const selected2 = (await rm.textOfNodeName('SelectedGeneralLabel')) || '';
+            rec.detail.secondDialogDefault = { selected: selected2, hint: hint2 };
+            if (selected2.includes(busyName) || hint2.includes(`（${busyName}）`)) throw new Error(`武將「${busyName}」還在出任務，另一任務詳情窗預設人物卻是他（人物 ${selected2}；${hint2}）`);
+            await rm.click({ name: '^GeneralSelectButton$', under: MISSION_DIALOG }, '行動人物下拉');
+            await delay(700);
+            const optionTexts = (await rm.textsUnder('^GeneralSelectDropdownPanel$')) || (await rm.textsUnder(MISSION_DIALOG)) || [];
+            rec.detail.dropdownTexts = optionTexts.slice(0, 16);
+            await shot(rec, 'loop-busy-dropdown');
+            if (!optionTexts.some((t) => t.includes(busyName)) || !optionTexts.some((t) => t.includes('出任務中'))) throw new Error(`下拉清單沒有把「${busyName}」標成「出任務中」（清單文字：${optionTexts.slice(0, 16).join(' / ')}）`);
+            // 出任務中的列排在清單最後：用滑鼠滾輪把下拉往下捲到看得見，再真點
+            let reachedBusyRow = false;
+            for (let i = 0; i < 40 && !reachedBusyRow; i++) {
+                const hit = await rm.locate({ name: '^GeneralOption_', text: busyName });
+                // 命中檢查不看捲動遮罩：列在視窗內但被詳情窗底部遮住也會回 ok，所以另外要求列的畫面座標落在下拉可視範圍（約 y 570～810）
+                if (hit && hit.found && hit.ok && hit.page && hit.page.y > 570 && hit.page.y < 810) { reachedBusyRow = true; break; }
+                await page.mouse.move(960, 600);
+                await page.mouse.wheel({ deltaY: 700 });
+                await delay(250);
+            }
+            if (!reachedBusyRow) throw new Error(`滾輪捲了 40 次，「${busyName}」那列仍沒進到下拉可視範圍`);
+            await shot(rec, 'loop-busy-row-visible');
+            await rm.click({ name: '^GeneralOption_', text: busyName }, `下拉裡出任務中的「${busyName}」`);
+            await delay(600);
+            const afterPick = (await rm.textOfNodeName('SelectedGeneralLabel')) || '';
+            rec.detail.afterPickBusy = afterPick;
+            await shot(rec, 'loop-busy-picked');
+            if (!afterPick) throw new Error('點出任務中的列後，詳情窗行動人物欄位讀不到（詳情窗被誤關？）');
+            if (afterPick.includes(busyName)) throw new Error(`點了出任務中的「${busyName}」，行動人物竟被改成他`);
+            await closeMissionLayers();
+            await closeMissionLayers();
             await closeMissionLayers();
             await waitToastGone();
             // 4. 推進到回報季；季度結算要有「大廳任務」區塊，頂欄在彈窗還開著時就已是最新

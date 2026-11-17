@@ -12,7 +12,7 @@
  * LobbyScene 只負責掛 host、載設定檔、把動作接到既有流程。
  * Unity 對照：像掛在大廳 Canvas 上的 Presenter，持有主題綁定器與粒子層，按鈕事件往外拋。
  */
-import { Label, Node, UITransform, Widget, view } from 'cc';
+import { Label, Layout, Node, UITransform, Widget, view } from 'cc';
 import type { HallMapLayout, HallMapTurnStep } from '../../core/systems/HallMapFocusPlanner';
 import { hallBgCoverScale } from '../../core/systems/HallBackgroundFit';
 import { HallBubbleState } from '../../core/systems/HallBubbleState';
@@ -32,6 +32,9 @@ import type { HallWanderData } from '../../shared/lobby/wanderSupport';
 import { LobbyHallThemeApplier } from './LobbyHallThemeApplier';
 import { LobbyHallThemeNodeView } from './LobbyHallThemeNodeView';
 import { findUcufNode } from './UcufNodeLookup';
+
+/** 任務牆牆頭計數字樣的最小寬度（容得下「未接取 4・進行中 2 件」） */
+const WALL_COUNT_MIN_WIDTH = 170;
 
 export type LobbyHallDockId = 'sortie' | 'generals' | 'domestic' | 'training' | 'shop';
 
@@ -256,6 +259,26 @@ export class LobbyHallScreenBinder {
         const { head, rows: rowNodes } = splitWallNodes(wall);
         if (!head) return;
         setText(head.children[1], view.countText);
+        // 設計稿的計數框只有 33 寬，「未接取 N・進行中 M 件」會被縮成約 9px：放寬到牆頭放得下的寬度，
+        // 字級改用卡片副標的字級（牆頭總寬 360，標題 173，計數框不能再寬，否則牆頭會被撐出面板）
+        const countNode = head.children[1];
+        const countTransform = countNode?.getComponent(UITransform);
+        const countLabel = countNode?.getComponent(Label);
+        if (countTransform && countLabel && countTransform.width < WALL_COUNT_MIN_WIDTH) {
+            const metaLabel = rowNodes[0]?.children[1]?.getComponent(Label);
+            if (metaLabel) {
+                countLabel.fontSize = metaLabel.fontSize;
+                countLabel.lineHeight = metaLabel.lineHeight;
+            }
+            // 計數框沒有 Layout 排版，加寬會以中心向兩側長：把右緣釘回原位，只往左長，才不會凸出牆面板
+            const grow = WALL_COUNT_MIN_WIDTH - countTransform.width;
+            countTransform.width = WALL_COUNT_MIN_WIDTH;
+            const pos = countNode.position;
+            countNode.setPosition(pos.x - grow * (1 - countTransform.anchorX), pos.y, pos.z);
+            countLabel.horizontalAlign = Label.HorizontalAlign.RIGHT;
+            countLabel.overflow = Label.Overflow.SHRINK;
+            head.getComponent(Layout)?.updateLayout();
+        }
         rowNodes.forEach((rowNode, i) => {
             const row = view.rows[i];
             rowNode.active = !!row;

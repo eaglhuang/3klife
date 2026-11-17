@@ -83,7 +83,7 @@ export function waitHallMission(state: Readonly<HallMissionState>, missionId: st
 
 // ── 派出 ────────────────────────────────────────────────────────────────────
 
-export type HallDispatchReason = 'no-mission' | 'not-open' | 'blocked' | 'short';
+export type HallDispatchReason = 'no-mission' | 'not-open' | 'blocked' | 'busy' | 'short';
 
 export type HallMissionDispatchResult =
     | { ok: true; state: HallMissionState; mission: HallMission; spent: HallMissionAmounts; energy: number }
@@ -103,6 +103,8 @@ export function dispatchHallMission(state: Readonly<HallMissionState>, input: Re
     const mission = findHallMission(state, input.missionId);
     if (!mission) return { ok: false, reason: 'no-mission', text: '此任務已不存在' };
     if (mission.status !== 'OPEN') return { ok: false, reason: 'not-open', text: '此任務已經派出' };
+    // 武將佔用到回報季（§7.3）：執行、委任、接取、AI 委任都走這一關，已在任務中的武將一律拒絕
+    if (hallBusyGeneralIds(state).has(input.general.id)) return { ok: false, reason: 'busy', text: `${input.general.name}${HALL_BLOCK_TEXT['on-mission']}，無法出任務` };
     const block = hallGeneralBlockOf(mission, input.general);
     if (block) return { ok: false, reason: 'blocked', text: `${input.general.name}${HALL_BLOCK_TEXT[block]}，無法出任務` };
     const shortages = hallShortagesOf(mission.costs, input.stock);

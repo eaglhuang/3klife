@@ -72,6 +72,19 @@ export function createHallMissionLoopSuite(): TestSuite {
         assert.equals('not-open', (twice as { reason: string }).reason);
     });
 
+    suite.test('武將佔用：已有進行中任務的武將再派一律拒絕（即使呼叫端沒標忙碌），別的武將照常可派', () => {
+        const first = dispatchHallMission(stateOf(missionOf('A'), missionOf('B')), { missionId: 'A', general: general('zhang'), delegated: false, season: 0, stock: STOCK }, balance);
+        assert.isTrue(first.ok);
+        if (first.ok === false) return;
+        const again = dispatchHallMission(first.state, { missionId: 'B', general: general('zhang', { block: null }), delegated: true, season: 0, stock: STOCK }, balance);
+        assert.isFalse(again.ok);
+        assert.equals('busy', (again as { reason: string }).reason);
+        assert.isTrue((again as { text: string }).text.includes('出任務中'));
+        assert.equals('OPEN', findHallMission(first.state, 'B')!.status);
+        const other = dispatchHallMission(first.state, { missionId: 'B', general: general('guan'), delegated: false, season: 0, stock: STOCK }, balance);
+        assert.isTrue(other.ok);
+    });
+
     suite.test('再探：扣糧草 50、情報到 100；已完整或糧草不足都不動', () => {
         const state = stateOf(missionOf('A'));
         const ok = reconHallMission(state, 'A', 100, balance);
