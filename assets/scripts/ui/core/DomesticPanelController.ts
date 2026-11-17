@@ -22,7 +22,7 @@ export interface MagistrateCandidate {
     name: string;
     pol: number;
 }
-import { buildDomesticRows, DomesticGovernor, DomesticTaskRow } from '../../core/systems/DomesticPresenter';
+import { buildDomesticRows, domesticChosenNotice, DomesticGovernor, DomesticTaskRow, RESOURCE_LABEL } from '../../core/systems/DomesticPresenter';
 
 /** 可指派到內政任務格的武將 */
 export interface DomesticGovernorCandidate {
@@ -122,8 +122,9 @@ export class DomesticPanelController {
             this._notice = '無法指派此武將';
             return;
         }
-        const output = domesticOutputFor(taskId, next?.stats);
-        this._notice = next ? `指派「${next.name}」：每季產出 +${output.amount}` : '已卸下武將，產出改回基本值';
+        // 與選任務時的實際產出同一套係數（縣令黃金加成、事件倍率），提示才不低估或高估
+        const output = domesticOutputFor(taskId, next?.stats, this._goldBonus(), this._deps.outputMultiplier?.(taskId) ?? 1);
+        this._notice = next ? `指派「${next.name}」：每季產出 ${RESOURCE_LABEL[output.resource]} +${output.amount}` : '已卸下武將，產出改回基本值';
     }
 
     /** 自動治理（§F）：空格依親和度補上閒置武將；已指派的格子不動。回傳新指派幾格 */
@@ -215,8 +216,9 @@ export class DomesticPanelController {
             return null;
         }
         const result = await this._deps.choose(taskId);
+        // 提示用實際入帳量（result.granted）；預覽毛額可能被上限夾住（PROG-2-9126）
         this._notice = result.ok
-            ? `本季已選「${row.label}」：${row.outputText}`
+            ? (result.output ? domesticChosenNotice(row.label, result.output, result.granted) : `本季已選「${row.label}」：${row.outputText}`)
             : (REJECT_TEXT[result.reason ?? ''] ?? '內政任務失敗');
         return result;
     }

@@ -4482,9 +4482,9 @@ export class GameSession {
             food: Math.max(0, this._military.food - before.food),
             cityTroops: Math.max(0, this._military.cityTroops - before.cityTroops),
         };
+        // 上季內政產出在選任務當下就已入帳，不屬於換季前後的差額；分開註明，提示數字才等於頂欄實際變化
         const grant = this._domesticLog.lastSeason === previousSeason ? this._domesticLog.lastGrant : undefined;
-        if (grant) gains[grant.resource] = (gains[grant.resource] ?? 0) + grant.amount;
-        return governanceReportLine(gains);
+        return governanceReportLine(gains, grant ? { [grant.resource]: grant.amount } : undefined);
     }
 
     /** epochMs 用來判斷月卡是否有效（月卡期間精力回復 ×1.2，VIT-08）；預設現在時間 */

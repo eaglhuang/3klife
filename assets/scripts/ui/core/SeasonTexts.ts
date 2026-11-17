@@ -21,6 +21,11 @@ export function seasonDisplayText(lookup: BreedTextLookup, state: Pick<GameTimeS
     return localized === SEASON_DISPLAY_KEY ? fillBreedText(SEASON_DISPLAY_FALLBACK_ZH_TW, args) : localized;
 }
 
+/** 大廳頂欄時間：「第 N 年 M 季 · 晝／夜」，季別沿用規格 UI_SEASON_DISPLAY，晝夜接在後面（PROG-2-9126） */
+export function hallTimeLabelText(lookup: BreedTextLookup, state: Pick<GameTimeState, 'currentYear' | 'currentSeason'>, isNight: boolean): string {
+    return `${seasonDisplayText(lookup, state)} · ${isNight ? '夜' : '晝'}`;
+}
+
 /** 季節主題（§H UI_SEASON_SPRING～WINTER）的 i18n key 與 zh-TW 預設，依季序 1 春～4 冬（PROG-2-1718） */
 export const SEASON_THEME_KEYS: Record<SeasonIndex, string> = {
     1: 'ui.season.spring',
