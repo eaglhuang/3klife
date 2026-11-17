@@ -83,6 +83,8 @@ export const SYNC_PATCH_ROOT_KEYS: readonly string[] = [
     'seasonPass',
     'gachaMentorJournal',
     'hallAssignLog',
+    'hallIntel',
+    'hallWaitSeasons',
     'tallyLoyalty',
     'tallyHoldings',
     'tallyCards',

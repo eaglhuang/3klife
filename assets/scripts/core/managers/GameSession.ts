@@ -147,6 +147,8 @@ import { buildHallSpotRows, EMPTY_HALL_SPOT_STATE, HallSpotRow, HallSpotState, r
 import { buildHallStageFeed, type HallStageFeed, type HallStageProfile } from '../systems/HallStageFeed';
 import type { HallVolunteerTask } from '../systems/HallVolunteer';
 import { createPlayerSaveSnapshot, normalizeInfusionRecords, normalizeGachaMentorJournal, normalizeHallAssignLog, type GachaMentorJournalEntry, normalizeSandtableMarkerTerritories, normalizeSortiePresets, normalizeGachaWalletSave, type GachaWalletSave, normalizeDailySubsidyRecord, type DailySubsidyRecord, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeAutoNurtureTickets, normalizeFlag, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot, normalizeClanPrestige, normalizeShrineOfferingDay } from '../services/PlayerSaveService';
+import { effectiveHallIntelPercent, normalizeHallIntel, normalizeHallWaitSeasons, planHallRecon, planHallWait, type HallReconPlan, type HallWaitPlan } from '../systems/HallMissionActions';
+import type { HallTask } from '../systems/LobbyHubSchema';
 import { appendAssignRecord, autoAssignHallTask, listAssignRecords, settleLatestAssign, settleOpenAssignsForSeason, type HallAssignOutcome, type HallAutoAssignRecord, type HallAutoAssignResult, type HallAutoAssignTaskInput } from '../systems/HallAutoAssign';
 import type { HallTaskIntelInput } from '../systems/HallTaskIntel';
 import { estimateSortiePower } from '../systems/SortiePrediction';
@@ -787,6 +789,10 @@ export class GameSession {
     private _gachaMentorJournal: GachaMentorJournalEntry[] = [];
     /** 大廳任務 AI 委任紀錄（PROG-2-1006） */
     private _hallAssignLog: HallAutoAssignRecord[] = [];
+    /** 大廳任務再探後的情報度：任務 id → 0~100（PROG-2-9128，存檔；缺值視為未再探） */
+    private _hallIntel: Record<string, number> = {};
+    /** 大廳任務按「等待」的季別：任務 id → totalSeasonsElapsed（PROG-2-9128，存檔） */
+    private _hallWaitSeasons: Record<string, number> = {};
     private _femaleSources: Record<string, FemaleSource> = {};
     /** 轉蛋各池保底計數（PROG-2-0337）；由轉蛋服務寫入，存檔時一併保存 */
     private _gachaPity: GachaPityBook = {};
@@ -2085,6 +2091,8 @@ export class GameSession {
         this._wishPool = null;
         this._gachaMentorJournal = [];
         this._hallAssignLog = [];
+        this._hallIntel = {};
+        this._hallWaitSeasons = {};
         // 上一局的進度不能帶進新局（PROG-2-0660）
         this._soulFragments = emptySoulFragmentLedger();
         this._clanTier = 0;
@@ -3831,6 +3839,44 @@ export class GameSession {
         return outcome;
     }
 
+    /** 任務目前情報度：任務資料底值與再探紀錄取較大者（PROG-2-9128）。 */
+    public hallIntelPercentOf(task: Readonly<Pick<HallTask, 'Task_ID' | 'Intel_Reveal_Percent'>>): number {
+        return effectiveHallIntelPercent(task, this._hallIntel[task.Task_ID]);
+    }
+
+    /**
+     * 大廳任務再探（PROG-2-9128）：情報未滿才可再探；糧草夠才扣 costGrain，並把情報度提到 100（寫進存檔）。
+     * 已滿或糧草不足時不扣、不升、不存檔，回傳 plan 供呼叫端顯示提示。
+     */
+    public async reconHallTask(task: Readonly<Pick<HallTask, 'Task_ID' | 'Intel_Reveal_Percent'>>, costGrain: number): Promise<HallReconPlan> {
+        const plan = planHallRecon(this.hallIntelPercentOf(task), this._military.food, costGrain);
+        if (plan.kind !== 'ok') return plan;
+        this._military = { ...this._military, food: this._military.food - plan.costGrain };
+        this._hallIntel = { ...this._hallIntel, [task.Task_ID]: plan.intelAfter };
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return plan;
+    }
+
+    /**
+     * 大廳任務等待（PROG-2-9128）：本季先不處理、任務保留到下一季；不耗費、不改任務。
+     * 同任務同一季只記一次；回傳 plan.kind 'kept' 表示本次是第一次記錄。
+     */
+    public async waitHallTask(taskId: string): Promise<HallWaitPlan> {
+        const season = this._clock.state.totalSeasonsElapsed;
+        const plan = planHallWait(taskId, season, this._hallWaitSeasons);
+        if (plan.kind === 'already') return plan;
+        // 只留本季的紀錄，舊季的自然清掉
+        const current: Record<string, number> = {};
+        for (const [id, at] of Object.entries(this._hallWaitSeasons)) if (at === season) current[id] = at;
+        this._hallWaitSeasons = { ...current, [taskId]: season };
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return plan;
+    }
+
     /** 大廳任務指派（唯讀副本）：任務 id → 指派武將 id。 */
     public get hallAssignments(): Readonly<Record<string, string>> {
         return { ...this._hallAssignments };
@@ -5503,7 +5549,10 @@ export class GameSession {
     private _createBaseSnapshot(now?: Date): PlayerSaveSnapshot {
         const base = createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty, this._tallyHoldings.holders, this._tallyCards, this._mercenaries, this._femaleSources, this._gachaPity, this._gachaWallet, this._favoriteGeneralIds, this._hallAssignments, this.dynamicRelations.snapshot(), this._legacyCount, this._officerState, this.sandtableMarkersPlaced, this._sandtableMarkerTerritories);
         const withJournal = this._gachaMentorJournal.length > 0 ? { ...base, gachaMentorJournal: normalizeGachaMentorJournal(this._gachaMentorJournal) } : base;
-        const withHallLog = this._hallAssignLog.length > 0 ? { ...withJournal, hallAssignLog: normalizeHallAssignLog(this._hallAssignLog) } : withJournal;
+        const withHallLogOnly = this._hallAssignLog.length > 0 ? { ...withJournal, hallAssignLog: normalizeHallAssignLog(this._hallAssignLog) } : withJournal;
+        // 再探情報度與等待季別只在非空時寫入；舊檔與空狀態不多欄位（PROG-2-9128）
+        const withHallIntel = Object.keys(this._hallIntel).length > 0 ? { ...withHallLogOnly, hallIntel: { ...this._hallIntel } } : withHallLogOnly;
+        const withHallLog = Object.keys(this._hallWaitSeasons).length > 0 ? { ...withHallIntel, hallWaitSeasons: { ...this._hallWaitSeasons } } : withHallIntel;
         // 統一物件庫列只在非空時寫入；舊檔與空狀態不多一個欄位（PROG-2-1021）
         const withInventory = this._inventoryRecords.length > 0 ? { ...withHallLog, inventoryRecords: normalizeInventoryRecords(this._inventoryRecords) } : withHallLog;
         const relationEventKeys = this.relationEvents.snapshot();
@@ -5766,6 +5815,8 @@ export class GameSession {
         this.restoreLifespanState(snapshot);
         this._gachaMentorJournal = normalizeGachaMentorJournal(snapshot.gachaMentorJournal);
         this._hallAssignLog = normalizeHallAssignLog(snapshot.hallAssignLog);
+        this._hallIntel = normalizeHallIntel(snapshot.hallIntel);
+        this._hallWaitSeasons = normalizeHallWaitSeasons(snapshot.hallWaitSeasons);
         this._hallSpotState = EMPTY_HALL_SPOT_STATE;
         this._tallyLoyalty = normalizeTallyLoyaltyMap(snapshot.tallyLoyalty);
         this._tallyHoldings = { holders: normalizeTallyHoldingsMap(snapshot.tallyHoldings) };

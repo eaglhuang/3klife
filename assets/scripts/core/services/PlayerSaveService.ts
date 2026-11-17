@@ -118,6 +118,7 @@ import { normalizeExtremeTaskState, type ExtremeTaskState } from '../systems/Ext
 import { normalizePendingSceneGambit, type PendingSceneGambit } from '../systems/HallSceneGambit';
 import { isDefaultSeasonPassState, normalizeSeasonPassState, type SeasonPassState } from '../systems/SeasonPass';
 import { normalizeSalaryLedger, type SalaryLedger } from '../systems/GeneralSalary';
+import { normalizeHallIntel, normalizeHallWaitSeasons } from '../systems/HallMissionActions';
 
 export const PLAYER_SAVE_KEY = 'player.save';
 /** 備份槽的 key 後綴（DS-14）：主檔為 `<key>`，上一份有效存檔為 `<key>.bak` */
@@ -261,6 +262,10 @@ export interface PlayerSaveSnapshot {
     gachaMentorJournal?: GachaMentorJournalEntry[];
     /** 大廳任務 AI 委任紀錄（HALL-05，PROG-2-1006）：只增不改（結算除外）；舊檔沒有時讀回空陣列 */
     hallAssignLog?: HallAssignLogEntry[];
+    /** 大廳任務再探後的情報度（PROG-2-9128）：任務 id → 0~100；舊檔沒有時視為未再探 */
+    hallIntel?: Record<string, number>;
+    /** 大廳任務按「等待」的季別（PROG-2-9128）：任務 id → totalSeasonsElapsed；舊檔沒有時讀回空物件 */
+    hallWaitSeasons?: Record<string, number>;
     /** 武將 id → 虎符忠誠度狀態（TRP-09）；後加的選填欄位，舊檔讀回補空物件 */
     tallyLoyalty?: Record<string, TallyLoyaltyState>;
     /** 虎符 uid → 持有者（null 為君主）（TRP-08）；後加的選填欄位，舊檔讀回補空物件 */
@@ -715,6 +720,8 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(!isDefaultSeasonPassState(normalizeSeasonPassState(snapshot.seasonPass)) ? { seasonPass: normalizeSeasonPassState(snapshot.seasonPass) } : {}),
         ...(snapshot.gachaMentorJournal !== undefined ? { gachaMentorJournal: normalizeGachaMentorJournal(snapshot.gachaMentorJournal) } : {}),
         ...(snapshot.hallAssignLog !== undefined ? { hallAssignLog: normalizeHallAssignLog(snapshot.hallAssignLog) } : {}),
+        ...(snapshot.hallIntel !== undefined ? { hallIntel: normalizeHallIntel(snapshot.hallIntel) } : {}),
+        ...(snapshot.hallWaitSeasons !== undefined ? { hallWaitSeasons: normalizeHallWaitSeasons(snapshot.hallWaitSeasons) } : {}),
         ...(snapshot.inventoryRecords !== undefined ? { inventoryRecords: normalizeInventoryRecords(snapshot.inventoryRecords) } : {}),
         // 編制預設（PROG-2-0791）：#538 漏掉這一欄，存檔時會被丟掉
         ...(snapshot.sortiePresets !== undefined ? { sortiePresets: normalizeSortiePresets(snapshot.sortiePresets) } : {}),

@@ -1,5 +1,12 @@
 {
   "Lobby_Hub": {
+    "Task_Defaults": {
+      "AI_Assign_Enabled": true,
+      "Available_Actions": ["RECON", "EXECUTE", "WAIT", "ASSIGN"]
+    },
+    "Recon": {
+      "Cost_Grain": 50
+    },
     "Current_Theme": {
       "Theme_ID": "DEFAULT_DAY",
       "Day_Night_Mode": "DAY",
@@ -23,10 +30,6 @@
             "Is_Accepted": false,
             "Suggested_General_UID": null,
             "Volunteer_General_UIDs": [],
-            "AI_Assign_Enabled": false,
-            "Available_Actions": [
-              "ASSIGN"
-            ],
             "Rewards": {
               "Base": [
                 {
@@ -55,10 +58,6 @@
             "Is_Accepted": false,
             "Suggested_General_UID": null,
             "Volunteer_General_UIDs": [],
-            "AI_Assign_Enabled": false,
-            "Available_Actions": [
-              "ASSIGN"
-            ],
             "Rewards": {
               "Base": [
                 {
@@ -92,10 +91,6 @@
             "Is_Accepted": false,
             "Suggested_General_UID": null,
             "Volunteer_General_UIDs": [],
-            "AI_Assign_Enabled": false,
-            "Available_Actions": [
-              "ASSIGN"
-            ],
             "Rewards": {
               "Base": [
                 {
@@ -133,10 +128,6 @@
             "Is_Accepted": false,
             "Suggested_General_UID": null,
             "Volunteer_General_UIDs": [],
-            "AI_Assign_Enabled": false,
-            "Available_Actions": [
-              "ASSIGN"
-            ],
             "Rewards": {
               "Base": [
                 {
@@ -165,10 +156,6 @@
             "Is_Accepted": false,
             "Suggested_General_UID": null,
             "Volunteer_General_UIDs": [],
-            "AI_Assign_Enabled": false,
-            "Available_Actions": [
-              "ASSIGN"
-            ],
             "Rewards": {
               "Base": [
                 {
@@ -206,10 +193,6 @@
             "Is_Accepted": false,
             "Suggested_General_UID": null,
             "Volunteer_General_UIDs": [],
-            "AI_Assign_Enabled": false,
-            "Available_Actions": [
-              "ASSIGN"
-            ],
             "Rewards": {
               "Base": [
                 {
@@ -239,10 +222,6 @@
             "Is_Accepted": false,
             "Suggested_General_UID": null,
             "Volunteer_General_UIDs": [],
-            "AI_Assign_Enabled": false,
-            "Available_Actions": [
-              "ASSIGN"
-            ],
             "Rewards": {
               "Base": [
                 {
