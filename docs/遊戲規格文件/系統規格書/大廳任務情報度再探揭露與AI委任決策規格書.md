@@ -74,3 +74,5 @@ export function getHallTaskIntelRevealPercent(task: Readonly<HallTaskIntelInput>
    - 當數值為 100 時，`canRevealFullHallTask` 必須為 `true`，`canUseReconAction` 為 `false`。
 3. **委任開關驗證**：
    - 當 `AI_Assign_Enabled` 為 `false` 或缺漏時，`isAutoAssignEnabled` 必須回傳 `false`。
+
+> 任務完整循環見 doc_spec_1178，衝突時以該文件第 11 節為準。

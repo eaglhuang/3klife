@@ -6892,5 +6892,11 @@
     "path": "docs/遊戲規格文件/系統規格書/轉蛋系統-shards/terms.md",
     "title": "轉蛋系統規格書 — J–K 名詞定義與傳承邊界",
     "category": "spec"
+  },
+  {
+    "id": "doc_spec_1178",
+    "path": "docs/遊戲規格文件/系統規格書/大廳任務完整循環規格書.md",
+    "title": "大廳任務完整循環規格書（產生、派遣、進行、結算、刷新）",
+    "category": "spec"
   }
 ]

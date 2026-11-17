@@ -616,5 +616,23 @@
     "path": ".agents/skills/general-portrait-style/SKILL.md",
     "title": "3KLife 武將立繪與頭像校準",
     "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0126",
+    "path": ".agents/skills/chibi-animation-production/SKILL.md",
+    "title": "Q 版人物動畫素材自動接續流程",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0127",
+    "path": ".agents/skills/chibi-battle-source-production/SKILL.md",
+    "title": "Q 版戰場人物來源與切片流程",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0128",
+    "path": ".github/skills/chibi-animation-production/SKILL.md",
+    "title": "Q 版人物動畫素材自動接續流程",
+    "category": "agentskill"
   }
 ]

@@ -31,7 +31,7 @@
       "name": "registry-spec",
       "title": "遊戲規格類（spec）",
       "path": "docs/doc-id-registry-shards/registry-spec.json",
-      "count": 1149
+      "count": 1150
     },
     {
       "name": "registry-index",
@@ -43,7 +43,7 @@
       "name": "registry-task",
       "title": "任務卡類（task）",
       "path": "docs/doc-id-registry-shards/registry-task.json",
-      "count": 2436
+      "count": 2530
     },
     {
       "name": "registry-ai",
@@ -55,7 +55,7 @@
       "name": "registry-agentskill",
       "title": "Agent Skill 專用（agentskill）",
       "path": "docs/doc-id-registry-shards/registry-agentskill.json",
-      "count": 103
+      "count": 106
     },
     {
       "name": "registry-server",
@@ -67,7 +67,7 @@
       "name": "registry-other",
       "title": "其它類（other）",
       "path": "docs/doc-id-registry-shards/registry-other.json",
-      "count": 1978
+      "count": 1982
     }
   ]
 }

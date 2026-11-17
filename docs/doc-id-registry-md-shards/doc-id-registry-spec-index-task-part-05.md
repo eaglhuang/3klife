@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-11-15
+> 生成日期: 2026-11-17
 > 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 5/14 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -9,6 +9,7 @@
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
 | `doc_spec_1177` | docs/遊戲規格文件/系統規格書/轉蛋系統-shards/terms.md | 轉蛋系統規格書 — J–K 名詞定義與傳承邊界 |
+| `doc_spec_1178` | docs/遊戲規格文件/系統規格書/大廳任務完整循環規格書.md | 大廳任務完整循環規格書（產生、派遣、進行、結算、刷新） |
 
 ## 索引類 (`doc_index`)
 

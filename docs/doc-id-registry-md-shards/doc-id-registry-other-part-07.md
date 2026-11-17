@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — 其它類
 
-> 生成日期: 2026-11-15
+> 生成日期: 2026-11-17
 > 這是 `doc-id-registry.md` 的「其它類」分片，第 7/7 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-other.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -264,3 +264,7 @@
 | `doc_other_2706` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0207-charter-upgrade-command-with-sync-integration-staged-enforcement-and-accurate-doctor-diagnosis.task.md | TASK-AAO-0207 Charter upgrade command with sync integration, staged enforcement, and accurate doctor diagnosis |
 | `doc_other_2707` | docs/battle-chibi-integration.md | 戰場 Q 版單位演出接入 |
 | `doc_other_2708` | docs/reports/PROG-2-2210-web-source-assets.md | PROG-2-2210 網頁來源資產量測 |
+| `doc_other_2709` | docs/battle-chibi-cavalry-shield-art-spec.md | 戰場 Q 版騎兵／盾兵美術規格（給 Codex） |
+| `doc_other_2710` | docs/battle-chibi-troop-art-commission.md | 給 Codex 的小兵美術委託（騎兵系、連弩手；盾兵／騎兵既有規格的補充） |
+| `doc_other_2711` | docs/battle-chibi-troop-design.md | 戰場 Q 版小兵兵種設計稿 |
+| `doc_other_2712` | docs/web-playtest-online.md | 線上試玩版無頭實玩驗收（playtest-online） |
