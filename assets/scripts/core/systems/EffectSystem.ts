@@ -4,7 +4,7 @@ import { Animation, Camera, Color, Layers, MeshRenderer, Node, ParticleSystem, S
 import { VfxBlockEntry, VfxEffectDef } from "../config/VfxEffectConfig";
 import { PoolSystem } from "./PoolSystem";
 import { services } from "../managers/ServiceLoader";
-import { ParticleOverride, applyParticleOverride } from "../utils/ParticleUtils";
+import { ParticleOverride, applyParticleOverride, applyParticleSizeScale } from "../utils/ParticleUtils";
 import { VFX_BLOCK_REGISTRY } from '../config/vfx-block-registry';
 
 /**
@@ -352,6 +352,8 @@ export class EffectSystem {
 
         // 5. 套用粒子動態覆寫（在 sanitize 之後，確保新啟用的 PS 也能接收到覆寫）
         const allPS = node.getComponentsInChildren(ParticleSystem);
+        // 大小倍率每次都套（含 1 倍）：物件池重用的節點要還原成 prefab 原本的大小（PROG-2-9374）
+        allPS.forEach(ps => applyParticleSizeScale(ps, override?.sizeScale ?? 1));
         if (override) {
             allPS.filter(ps => ps.enabled).forEach(ps => applyParticleOverride(ps, override));
         }
@@ -523,7 +525,7 @@ export class EffectSystem {
                 if (!entry.scale && !tintColor && !override) return undefined;
                 return {
                     ...override,
-                    ...(entry.scale !== undefined ? { startSizeX: entry.scale } : {}),
+                    ...(entry.scale !== undefined ? { sizeScale: entry.scale } : {}),
                     ...(tintColor ? { startColor: tintColor } : {}),
                 };
             })();

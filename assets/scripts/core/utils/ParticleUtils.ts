@@ -54,6 +54,11 @@ export interface ParticleOverride {
      */
     startSize?: number;
     /**
+     * Size multiplier relative to the prefab's own start size (PROG-2-9374).
+     * Works for constant, two-constants and curve size modes; 1 keeps the prefab size.
+     */
+    sizeScale?: number;
+    /**
      * 重力係數（常數模式）。
      * ⚠️ 注意：此屬性僅 CPU 渲染器支援，GPU 渲染器會忽略。
      */
@@ -94,6 +99,49 @@ export interface ParticleBurstOverride {
 // ─────────────────────────────────────────────────────────
 //  核心 API
 // ─────────────────────────────────────────────────────────
+
+/** One axis of a particle start size, as authored in the prefab. */
+interface SizeAxisBase { constant: number; constantMin: number; constantMax: number; multiplier: number }
+
+type SizeAxisLike = { constant?: number; constantMin?: number; constantMax?: number; multiplier?: number } | null | undefined;
+
+// Pooled effect nodes are reused, so the authored size is remembered once and every play scales from it.
+const particleBaseSizes = new WeakMap<object, (SizeAxisBase | null)[]>();
+
+function readSizeAxis(axis: SizeAxisLike): SizeAxisBase | null {
+    if (!axis) return null;
+    return {
+        constant: axis.constant ?? 0,
+        constantMin: axis.constantMin ?? 0,
+        constantMax: axis.constantMax ?? 0,
+        multiplier: axis.multiplier ?? 1,
+    };
+}
+
+/**
+ * Scale a particle system's start size relative to the size authored in its prefab (PROG-2-9374).
+ *
+ * Call it on every play, also with scale 1: a pooled node that was enlarged last time must go back to
+ * its authored size. All size modes are covered (constant, two constants, curve multiplier).
+ */
+export function applyParticleSizeScale(ps: ParticleSystem, scale: number): void {
+    const factor = Number.isFinite(scale) && scale > 0 ? scale : 1;
+    const target = ps as unknown as { startSizeX?: SizeAxisLike; startSizeY?: SizeAxisLike; startSizeZ?: SizeAxisLike };
+    const axes: SizeAxisLike[] = [target.startSizeX, target.startSizeY, target.startSizeZ];
+    let base = particleBaseSizes.get(ps);
+    if (!base) {
+        base = axes.map(readSizeAxis);
+        particleBaseSizes.set(ps, base);
+    }
+    axes.forEach((axis, index) => {
+        const authored = base![index];
+        if (!axis || !authored) return;
+        axis.constant = authored.constant * factor;
+        axis.constantMin = authored.constantMin * factor;
+        axis.constantMax = authored.constantMax * factor;
+        axis.multiplier = authored.multiplier * factor;
+    });
+}
 
 /**
  * 將 ParticleOverride 參數套用到指定的 ParticleSystem。
