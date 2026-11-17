@@ -9020,6 +9020,52 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9384",
+      "title": "單挑接受判定的兵力項改回規格：防守方場上分隊現存兵力 / 上限",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 2026-11-17 裁決：敵方接受單挑的兵力比改回規格「自身現存／上限」。舊寫法是雙方占比，雙方兵力相當時兵力項只有 0.5，敵方幾乎都拒絕單挑。",
+      "related": [
+        "PROG-2-1323"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（7987 過，新增 2 項）| 變更: evaluateDuelAcceptance 的兵力項由「防守方現存 /（雙方現存和）」改成「防守方場上分隊現存兵力 / 兵力上限」，場上沒有分隊時為 0 | 阻塞: 無。已陣亡的分隊不在場上、不列入分母（照規格「場上現存分隊」字面）；沒有實跑畫面，純判定邏輯；改完後敵方接受單挑的實際機率由主將被擒提案一併估",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

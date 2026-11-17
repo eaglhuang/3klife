@@ -247,7 +247,7 @@ export class BattleGeneralDuelFlow {
 
   /**
    * 單挑接受決策（由防守方視角評估）：
-   * score = 0.45 * 防守方主將血量（currentHP / maxHP）+ 0.35 * 防守方現存兵力占比 + 0.2 * 總戰力優勢（PROG-2-1323）
+   * score = 0.45 * 防守方主將血量（currentHP / maxHP）+ 0.35 * 防守方場上分隊現存兵力 / 上限 + 0.2 * 總戰力優勢（PROG-2-1323）
    */
   public evaluateDuelAcceptance(challengerFaction: Faction): {
     accepted: boolean;
@@ -267,10 +267,11 @@ export class BattleGeneralDuelFlow {
 
     const challengerUnits = this.collectFactionUnits(challengerFaction);
     const defenderUnits = this.collectFactionUnits(defenderFaction);
-    // 兵力項（雙方占比）：防守方現存兵力 /（雙方現存兵力和），暫定，待企劃確認
-    const challengerTroopHp = challengerUnits.reduce((sum, u) => sum + Math.max(0, u.currentHp), 0);
+    // 兵力項：防守方場上分隊的現存兵力 / 兵力上限（規格 SquadTroops / MaxTroops；使用者 2026-11-17 裁決改回規格，PROG-2-9384）。
+    // 已陣亡的分隊不在場上，不列入分母；場上沒有分隊時為 0。
     const defenderTroopHp = defenderUnits.reduce((sum, u) => sum + Math.max(0, u.currentHp), 0);
-    const squadRatio = defenderTroopHp / Math.max(1, challengerTroopHp + defenderTroopHp);
+    const defenderTroopMaxHp = defenderUnits.reduce((sum, u) => sum + Math.max(0, u.getEffectiveMaxHp()), 0);
+    const squadRatio = defenderTroopMaxHp > 0 ? Math.min(1, defenderTroopHp / defenderTroopMaxHp) : 0;
 
     const calcPower = (units: TroopUnit[], general: GeneralUnit | null): number => {
       const unitPower = units.reduce((sum, u) => {
