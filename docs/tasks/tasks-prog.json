@@ -8698,6 +8698,52 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9377",
+      "title": "戰報面板改版：四鈕改直排貼右緣，不擋棋盤最右兩行",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者裁示戰報面板要調，不可擋住棋盤最右兩行的演出。原本四鈕橫排加戰報橫條寬 344，蓋在敵方主將下方與右側棋格上。",
+      "related": [
+        "PROG-2-9376"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（7983 過）；戰場版面稽核 5 種視窗 0 問題；本機預覽 1920x1080 與 800x450 修正前後截圖各一張 | 變更: 戰報區由橫排四鈕加橫條改為右緣一直排五顆鈕（自動、委任、加速、設定、戰報），寬度由 344 縮為 72；日誌展開時在按鈕左側；標題與按鈕文字改走多語系表 | 阻塞: 無。線上實機待試玩站更新後補看",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
