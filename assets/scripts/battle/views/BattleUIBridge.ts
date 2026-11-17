@@ -179,6 +179,8 @@ export class BattleUIBridge {
     hits: Array<{ faction: Faction; hp: number; damage?: number; attackerId?: string | null; isCrit?: boolean; wasDodged?: boolean }>;
     deaths: Array<{ unitId: string; lane: number; depth: number; faction: Faction; type: TroopType }>;
     ended: { result: string; retreated?: boolean } | null;
+    /** 單挑結算當下發出的戰報提示：等逐招紀錄寫完才寫，順序才對（PROG-2-9389） */
+    notices: string[];
   } | null = null;
   /** 已寫進戰鬥紀錄的智謀觸發次數（PROG-2-1577） */
   private _wisdomTriggersLogged = 0;
@@ -209,7 +211,8 @@ export class BattleUIBridge {
     if (!ctrl) return '';
     if (!accepted) return ctrl.resolveDuelChallenge(challenger, false);
     const capture = { hits: [] as NonNullable<BattleUIBridge['duelCapture']>['hits'],
-      deaths: [] as NonNullable<BattleUIBridge['duelCapture']>['deaths'], ended: null as { result: string; retreated?: boolean } | null };
+      deaths: [] as NonNullable<BattleUIBridge['duelCapture']>['deaths'], ended: null as { result: string; retreated?: boolean } | null,
+      notices: [] as string[] };
     this.duelCapture = capture;
     let result: string;
     try { result = ctrl.resolveDuelChallenge(challenger, true); }
@@ -238,6 +241,7 @@ export class BattleUIBridge {
       await new Promise<void>(resolve => this.scene.scheduleOnce(resolve, DUEL_FALLBACK_END_HOLD_SECONDS));
       if (!this.scene.isValid) return result;
     }
+    for (const line of capture.notices) this.appendLog(line);
     for (const death of capture.deaths) this._onUnitDied(death);
     if (capture.ended) this._onBattleEnded(capture.ended);
     return result;
@@ -248,7 +252,7 @@ export class BattleUIBridge {
     const maxHp = this.ctx.ctrl?.state.getGeneral(data.faction)?.maxHp ?? 0;
     if (!data.wasDodged) this.performance.observeGeneralDamaged(data.damage ?? 0, data.faction);
     this.specialActions.observeGeneralHp({ faction: data.faction, hp: data.hp, maxHp });
-    this.appendLog(data.wasDodged ? `${target} 閃躲攻擊！` : `${target} ${data.isCrit ? '《暴擊》 ' : ''}受到攻擊，剩餘 HP ${Math.max(0, data.hp)}`);
+    this.appendLog(data.wasDodged ? `${target} 閃躲攻擊！` : `${target} ${data.isCrit ? '《暴擊》 ' : ''}受到攻擊，剩餘生命 ${Math.max(0, data.hp)}`);
     services().event.emit(EVENT_NAMES.GeneralDamagedVisualCommitted, { faction: data.faction, hp: data.hp, maxHp });
   }
 
@@ -323,7 +327,7 @@ export class BattleUIBridge {
       svc.event.on(EVENT_NAMES.BattleEnded,             this._onBattleEnded.bind(this)),
       svc.event.on(EVENT_NAMES.DuelOutcomeApplied,      (e: DuelOutcomeRecord) => { this.duelOutcomes.push(e); }),
       svc.event.on(EVENT_NAMES.TallyDeployed,           this._onTallyDeployed.bind(this)),
-      svc.event.on(EVENT_NAMES.BattleSkillNotice,       (line: string) => { this.appendLog(line); }),
+      svc.event.on(EVENT_NAMES.BattleSkillNotice,       (line: string) => { if (this.duelCapture) this.duelCapture.notices.push(line); else this.appendLog(line); }),
       svc.event.on(EVENT_NAMES.TroopCounterLine,        (line: string) => { this.appendLog(line); }),
       svc.event.on(EVENT_NAMES.AptitudeDialogue,        this._onAptitudeDialogue.bind(this)),
       svc.event.on(EVENT_NAMES.ShowToast,               this._onShowToast.bind(this)),
@@ -580,7 +584,7 @@ export class BattleUIBridge {
       const sourceLabel = battleDamageSourceLabel(data.damageSource);
       const suffix = sourceLabel ? `（${sourceLabel}）` : '';
       const critLabel = data.isCrit ? '《暴擊》' : '';
-      this.appendLog(`${side}${unit.name} ${critLabel}受到 ${data.damage} 傷害${suffix}，剩餘 HP ${Math.max(0, data.hp)}`);
+      this.appendLog(`${side}${unit.name} ${critLabel}受到 ${data.damage} 傷害${suffix}，剩餘生命 ${Math.max(0, data.hp)}`);
       this._enqueueCombatVisual(`unit-damage:${data.unitId}`, async () => {
         UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] unit-damage start unit=${data.unitId}`);
         const isRiverBoundaryDamage = typeof data.damageSource === 'string' && data.damageSource.startsWith('river-current:');
@@ -787,7 +791,7 @@ export class BattleUIBridge {
       return;
     }
     const critLabel = data.isCrit ? '《暴擊》 ' : '';
-    this.appendLog(`${target} ${critLabel}受到攻擊，剩餘 HP ${Math.max(0, data.hp)}`);
+    this.appendLog(`${target} ${critLabel}受到攻擊，剩餘生命 ${Math.max(0, data.hp)}`);
     this._enqueueCombatVisual(`general-damage:${data.faction}`, async () => {
       UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] general-damage start faction=${data.faction}`);
       // 血量歸零由 UnitRenderer 改播陣亡
