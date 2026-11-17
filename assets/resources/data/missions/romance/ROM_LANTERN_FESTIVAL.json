@@ -1,0 +1,979 @@
+{
+  "schema": "mission-def.v1",
+  "id": "ROM_LANTERN_FESTIVAL",
+  "version": 1,
+  "theme": "romance",
+  "difficulty": "EASY",
+  "tags": [
+    "festival",
+    "lantern",
+    "courtship"
+  ],
+  "meta": {
+    "origin": "authored",
+    "note": "手寫任務：三層情報分支、隱藏變體、巢狀結果與連鎖。"
+  },
+  "text": {
+    "title": "上元燈會",
+    "brief": "上元夜滿城燈火，有位戴著半面燈具的女子在燈謎攤前站了很久，沒人知道她在等誰。",
+    "detail": "燈市從城東排到城西，猜謎、舞龍、放燈，熱鬧得很。那位女子已在同一個燈謎攤前站了半個時辰，沒有猜任何一條謎，只是一次次回頭張望。"
+  },
+  "facts": [
+    {
+      "key": "lady",
+      "label": "佳人",
+      "levels": [
+        {
+          "minIntel": 30,
+          "text": "她始終沒有摘下面具，只是一次次回頭張望。"
+        },
+        {
+          "minIntel": 60,
+          "text": "她的指尖有墨痕，也有薄繭。"
+        },
+        {
+          "minIntel": 90,
+          "text": "她身邊的侍從，對每個靠近的人都先看腰間。"
+        }
+      ],
+      "decoy": "她不過是尋常人家的女兒，不必多想。"
+    }
+  ],
+  "requirement": {
+    "slots": 1,
+    "keyStats": {
+      "cha": 1,
+      "int": 0.5
+    },
+    "preferTags": [
+      "bookish",
+      "chivalrous"
+    ],
+    "avoidTags": []
+  },
+  "timing": {
+    "durationSeasons": 1,
+    "expireSeasons": 2
+  },
+  "variants": [
+    {
+      "id": "POET",
+      "weight": 40
+    },
+    {
+      "id": "MARTIAL",
+      "weight": 30
+    },
+    {
+      "id": "MERCHANT",
+      "weight": 30
+    }
+  ],
+  "intel": {
+    "initial": 40,
+    "jitter": 10,
+    "sources": {
+      "wait": {
+        "delta": 20
+      }
+    }
+  },
+  "branches": [
+    {
+      "id": "B_LANTERN_BLIND",
+      "when": {
+        "variant": [
+          "POET",
+          "MARTIAL",
+          "MERCHANT"
+        ],
+        "minIntel": 0,
+        "maxIntel": 29
+      },
+      "objective": {
+        "id": "stroll_the_fair",
+        "text": "逛逛燈市，看有什麼機緣"
+      },
+      "presented": {
+        "hints": [
+          "只是隨意逛逛，不知她的來歷"
+        ]
+      },
+      "modifiers": {
+        "successDelta": -0.12,
+        "rewardMul": 0.85,
+        "riskMul": 1.4
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.05,
+        "disasterRatio": 0.25,
+        "tiers": {
+          "critical": {
+            "kind": "effects",
+            "narrative": "你隨手替一個賣燈的小販解了圍，她在遠處看見了，主動走過來說了聲謝。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:lantern_maiden",
+                "delta": 20
+              },
+              {
+                "kind": "generalExp",
+                "amount": 30
+              },
+              {
+                "kind": "flag",
+                "set": "lantern_acquaintance",
+                "value": true
+              }
+            ]
+          },
+          "success": {
+            "kind": "switch",
+            "on": "variant",
+            "cases": [
+              {
+                "eq": "POET",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "你跟著人群猜了幾條謎，她站在你身後聽，悄悄笑了。",
+                  "effects": [
+                    {
+                      "kind": "relation",
+                      "target": "npc:lantern_maiden",
+                      "delta": 8
+                    },
+                    {
+                      "kind": "generalExp",
+                      "amount": 15
+                    }
+                  ]
+                }
+              },
+              {
+                "eq": "MARTIAL",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "你在擂台前看了半場，她也在，兩人沒說一句話。",
+                  "effects": [
+                    {
+                      "kind": "relation",
+                      "target": "npc:lantern_maiden",
+                      "delta": 5
+                    }
+                  ]
+                }
+              },
+              {
+                "eq": "MERCHANT",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "你替她付了一盞燈錢，她禮貌地還了你，卻記住了你的名字。",
+                  "effects": [
+                    {
+                      "kind": "relation",
+                      "target": "npc:lantern_maiden",
+                      "delta": 6
+                    },
+                    {
+                      "kind": "resource",
+                      "res": "silver",
+                      "amount": -10
+                    }
+                  ]
+                }
+              }
+            ],
+            "else": {
+              "kind": "effects",
+              "effects": []
+            }
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "燈會人潮洶湧，你連她的面都沒見到。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 5
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "人群擠踏，你撞翻了她的燈，她轉身就走。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:lantern_maiden",
+                "delta": -10
+              },
+              {
+                "kind": "fame",
+                "amount": -2
+              },
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_LANTERN_POET_MID",
+      "when": {
+        "variant": [
+          "POET"
+        ],
+        "minIntel": 30,
+        "maxIntel": 69
+      },
+      "objective": {
+        "id": "riddle_duel",
+        "text": "與她猜燈謎，一較高下",
+        "keyStats": {
+          "int": 1,
+          "cha": 0.6
+        }
+      },
+      "presented": {
+        "objectiveText": "攤前猜謎；她似乎在等一個能接得上謎的人",
+        "hints": [
+          "她在每一條謎前都停頓片刻，像是在等人"
+        ]
+      },
+      "modifiers": {
+        "successDelta": -0.02,
+        "rewardMul": 1,
+        "riskMul": 1
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.2,
+        "disasterRatio": 0.1,
+        "tiers": {
+          "critical": {
+            "kind": "effects",
+            "narrative": "你連解九謎，她摘下面具只露了一雙笑眼，說「我出一條，你可敢接」。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:lantern_maiden",
+                "delta": 28
+              },
+              {
+                "kind": "generalExp",
+                "amount": 45
+              },
+              {
+                "kind": "flag",
+                "set": "lantern_acquaintance",
+                "value": true
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "你解開了她的謎，她微微頷首，留下一個地址。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:lantern_maiden",
+                "delta": 15
+              },
+              {
+                "kind": "generalExp",
+                "amount": 30
+              },
+              {
+                "kind": "flag",
+                "set": "lantern_acquaintance",
+                "value": true
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "她的謎你答不出，她笑著說「改日再來」。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:lantern_maiden",
+                "delta": 3
+              },
+              {
+                "kind": "generalExp",
+                "amount": 10
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "你答錯了謎還強辯，圍觀的人哄笑起來。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:lantern_maiden",
+                "delta": -6
+              },
+              {
+                "kind": "fame",
+                "amount": -2
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_LANTERN_POET_HIGH",
+      "when": {
+        "variant": [
+          "POET"
+        ],
+        "minIntel": 70
+      },
+      "objective": {
+        "id": "answer_with_verse",
+        "text": "以她心儀的詩句作答",
+        "keyStats": {
+          "int": 1,
+          "cha": 0.8
+        }
+      },
+      "presented": {
+        "objectiveText": "不猜謎，改以一首她愛讀的舊詩作答",
+        "hints": [
+          "她愛讀的詩，只有少數人知道出處"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.08,
+        "rewardMul": 1.3,
+        "riskMul": 0.6
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.3,
+        "disasterRatio": 0.05,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "你吟出前半闕，她不自覺接了後半闕，兩人相視而笑。",
+                "effects": [
+                  {
+                    "kind": "relation",
+                    "target": "npc:lantern_maiden",
+                    "delta": 40
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": 65
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": 8
+                  },
+                  {
+                    "kind": "flag",
+                    "set": "lantern_acquaintance",
+                    "value": true
+                  },
+                  {
+                    "kind": "unlock",
+                    "id": "lantern_poem_bond"
+                  }
+                ]
+              },
+              {
+                "kind": "switch",
+                "on": "stat:int>=80",
+                "cases": [
+                  {
+                    "when": true,
+                    "then": {
+                      "kind": "effects",
+                      "narrative": "你當場補了一闕新詞，旁人傳抄不絕，成為這一夜的佳話。",
+                      "effects": [
+                        {
+                          "kind": "fame",
+                          "amount": 12
+                        },
+                        {
+                          "kind": "trait",
+                          "add": "poetic"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "else": {
+                  "kind": "effects",
+                  "effects": []
+                }
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "她聽你吟完詩，輕聲說了一句「原來還有人記得」。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:lantern_maiden",
+                "delta": 25
+              },
+              {
+                "kind": "generalExp",
+                "amount": 45
+              },
+              {
+                "kind": "flag",
+                "set": "lantern_acquaintance",
+                "value": true
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "你把出處記錯了，她沒有說破，只是笑著走開。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:lantern_maiden",
+                "delta": 2
+              },
+              {
+                "kind": "generalExp",
+                "amount": 10
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "你吟的詩恰是她不願提起的往事，她沉下臉離去。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:lantern_maiden",
+                "delta": -12
+              },
+              {
+                "kind": "fame",
+                "amount": -2
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_LANTERN_MARTIAL_MID",
+      "when": {
+        "variant": [
+          "MARTIAL"
+        ],
+        "minIntel": 30,
+        "maxIntel": 69
+      },
+      "objective": {
+        "id": "bout_on_stage",
+        "text": "上台與擂主過兩招，吸引她的目光",
+        "keyStats": {
+          "str": 0.9,
+          "cha": 0.6
+        }
+      },
+      "presented": {
+        "objectiveText": "擂台前的人群裡，她看得格外專注",
+        "hints": [
+          "她看擂台的眼神，像是在挑剔每一個破綻"
+        ]
+      },
+      "modifiers": {
+        "successDelta": -0.02,
+        "rewardMul": 1,
+        "riskMul": 1
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.2,
+        "disasterRatio": 0.2,
+        "tiers": {
+          "critical": {
+            "kind": "effects",
+            "narrative": "你以巧勁贏了擂主，她在台下拍了一下手，隨即又掩住了嘴。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:lantern_maiden",
+                "delta": 28
+              },
+              {
+                "kind": "generalExp",
+                "amount": 50
+              },
+              {
+                "kind": "fame",
+                "amount": 5
+              },
+              {
+                "kind": "flag",
+                "set": "lantern_acquaintance",
+                "value": true
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "你與擂主戰成平手，她遠遠點了點頭。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:lantern_maiden",
+                "delta": 14
+              },
+              {
+                "kind": "generalExp",
+                "amount": 35
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "你被擂主一腳踢下台，引來一片笑聲。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:lantern_maiden",
+                "delta": -2
+              },
+              {
+                "kind": "generalExp",
+                "amount": 10
+              },
+              {
+                "kind": "fame",
+                "amount": -1
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "擂主下手太重，你的肩膀脫了臼。",
+            "effects": [
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              },
+              {
+                "kind": "relation",
+                "target": "npc:lantern_maiden",
+                "delta": 6
+              },
+              {
+                "kind": "fame",
+                "amount": -1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_LANTERN_MARTIAL_HIGH",
+      "when": {
+        "variant": [
+          "MARTIAL"
+        ],
+        "minIntel": 70
+      },
+      "objective": {
+        "id": "yield_gracefully",
+        "text": "三招之後賣個破綻，讓她看出你的氣度",
+        "keyStats": {
+          "str": 0.7,
+          "cha": 1
+        }
+      },
+      "presented": {
+        "objectiveText": "擂台上贏下兩招、讓出一招，再向她抱拳",
+        "hints": [
+          "她挑剔的不是勝負，而是勝後的氣度"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.08,
+        "rewardMul": 1.3,
+        "riskMul": 0.6
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.3,
+        "disasterRatio": 0.06,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "你贏了兩招、讓了一招，抱拳時她終於摘下了面具，原來是位女俠。",
+                "effects": [
+                  {
+                    "kind": "relation",
+                    "target": "npc:lantern_maiden",
+                    "delta": 40
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": 70
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": 10
+                  },
+                  {
+                    "kind": "flag",
+                    "set": "lantern_acquaintance",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "kind": "effects",
+                "narrative": "她說，有機會想與你並肩上一次戰場。",
+                "effects": [
+                  {
+                    "kind": "unlock",
+                    "id": "lantern_ally"
+                  },
+                  {
+                    "kind": "trait",
+                    "add": "chivalrous"
+                  }
+                ]
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "台下喝彩如雷，她遠遠地向你舉了舉杯。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:lantern_maiden",
+                "delta": 26
+              },
+              {
+                "kind": "generalExp",
+                "amount": 50
+              },
+              {
+                "kind": "fame",
+                "amount": 6
+              },
+              {
+                "kind": "flag",
+                "set": "lantern_acquaintance",
+                "value": true
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "你的讓招被看穿，她冷冷說「虛禮」。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:lantern_maiden",
+                "delta": 2
+              },
+              {
+                "kind": "generalExp",
+                "amount": 15
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "讓招讓得太明顯，擂主覺得受辱，掀台動手。",
+            "effects": [
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              },
+              {
+                "kind": "fame",
+                "amount": -3
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_LANTERN_MERCHANT_MID",
+      "when": {
+        "variant": [
+          "MERCHANT"
+        ],
+        "minIntel": 30,
+        "maxIntel": 69
+      },
+      "objective": {
+        "id": "haggle_a_lantern",
+        "text": "替她與賣燈的小販議價，順便搭上話",
+        "keyStats": {
+          "cha": 1,
+          "pol": 0.4
+        }
+      },
+      "presented": {
+        "objectiveText": "她在一盞鑲金燈前遲遲沒有開口，似乎在權衡價錢",
+        "hints": [
+          "她盯著燈的價簽看，不是在看燈"
+        ]
+      },
+      "modifiers": {
+        "successDelta": -0.02,
+        "rewardMul": 1,
+        "riskMul": 1
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.2,
+        "disasterRatio": 0.1,
+        "tiers": {
+          "critical": {
+            "kind": "effects",
+            "narrative": "你三言兩語替她砍下一半價錢，她好奇地問你的名字。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:lantern_maiden",
+                "delta": 26
+              },
+              {
+                "kind": "generalExp",
+                "amount": 40
+              },
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 40
+              },
+              {
+                "kind": "flag",
+                "set": "lantern_acquaintance",
+                "value": true
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "你替她付了錢，她堅持要還，兩人為此多說了好幾句話。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:lantern_maiden",
+                "delta": 14
+              },
+              {
+                "kind": "generalExp",
+                "amount": 30
+              },
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": -20
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "小販認得她，一口報出了高價，你什麼也沒談成。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 10
+              },
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": -20
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "你把價砍得太狠，小販翻臉，引來一場爭吵。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:lantern_maiden",
+                "delta": -5
+              },
+              {
+                "kind": "fame",
+                "amount": -2
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_LANTERN_MERCHANT_HIGH",
+      "when": {
+        "variant": [
+          "MERCHANT"
+        ],
+        "minIntel": 70
+      },
+      "objective": {
+        "id": "fund_the_fair",
+        "text": "替燈會出一筆善款，讓她看見你的氣度",
+        "keyStats": {
+          "cha": 1,
+          "pol": 0.6
+        }
+      },
+      "presented": {
+        "objectiveText": "出銀為燈會添幾百盞燈，並讓出名額給貧戶",
+        "hints": [
+          "她父親是本城最大的商號，最看重的是品行而非財力"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.08,
+        "rewardMul": 1.4,
+        "riskMul": 0.6
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.3,
+        "disasterRatio": 0.05,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "你的善款讓貧戶孩子也提到了燈，她在人群中默默看著，悄悄託人遞來一枚玉扣。",
+                "effects": [
+                  {
+                    "kind": "relation",
+                    "target": "npc:lantern_maiden",
+                    "delta": 40
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": 60
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": 14
+                  },
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": -60
+                  },
+                  {
+                    "kind": "flag",
+                    "set": "lantern_acquaintance",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "kind": "effects",
+                "narrative": "她的父親聞訊，邀你改日到商號一敘，想請你幫忙整頓城中的市集。",
+                "effects": [
+                  {
+                    "kind": "spawn",
+                    "defId": "DOM_NORMAL_02",
+                    "intel": 60
+                  }
+                ]
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "善款贏得滿街稱讚，她遠遠地向你點了點頭。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:lantern_maiden",
+                "delta": 24
+              },
+              {
+                "kind": "generalExp",
+                "amount": 45
+              },
+              {
+                "kind": "fame",
+                "amount": 9
+              },
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": -50
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "善款被人報成了你「沽名釣譽」，她沒有表態。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:lantern_maiden",
+                "delta": 3
+              },
+              {
+                "kind": "generalExp",
+                "amount": 15
+              },
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": -60
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "善款發放時有人冒領，鬧得不可開交，你替人擋了一棍。",
+            "effects": [
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              },
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": -70
+              },
+              {
+                "kind": "fame",
+                "amount": -2
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

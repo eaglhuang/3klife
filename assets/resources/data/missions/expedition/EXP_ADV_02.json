@@ -1,0 +1,564 @@
+{
+  "schema": "mission-def.v1",
+  "id": "EXP_ADV_02",
+  "version": 1,
+  "legacyTemplateId": "EXP_ADV_02",
+  "theme": "expedition",
+  "difficulty": "ADVANCED",
+  "tags": [
+    "expedition",
+    "legacy"
+  ],
+  "meta": {
+    "origin": "converted",
+    "note": "由 tools_node/convert-hall-templates.js 從舊大廳模板機械轉出，可日後手寫補強。"
+  },
+  "text": {
+    "title": "突襲敵後糧道",
+    "brief": "繞到敵軍後方，切斷其糧道。",
+    "detail": "敵軍主力正在前線與我軍對峙，糧草全靠一條蜿蜒的山間糧道輸送。若有悍將率輕騎繞道奇襲，焚其糧倉、斷其補給，敵軍不出十日必然潰退。"
+  },
+  "facts": [
+    {
+      "key": "detail",
+      "label": "行程背景",
+      "levels": [
+        {
+          "minIntel": 30,
+          "text": "敵軍主力正在前線與我軍對峙，糧草全靠一條蜿蜒的山間糧道輸送。"
+        },
+        {
+          "minIntel": 60,
+          "text": "敵軍主力正在前線與我軍對峙，糧草全靠一條蜿蜒的山間糧道輸送。若有悍將率輕騎繞道奇襲，焚其糧倉、斷其補給，敵軍不出十日必然潰退。"
+        }
+      ],
+      "decoy": "聽說沿途太平，沒什麼好擔心的。"
+    },
+    {
+      "key": "enemy",
+      "label": "行程情報",
+      "levels": [
+        {
+          "minIntel": 40,
+          "text": "糧道沿線設有五處糧站。"
+        },
+        {
+          "minIntel": 70,
+          "text": "糧道沿線設有五處糧站，各駐兩三百人，敵軍已有防備，會不時派兵巡道。"
+        }
+      ],
+      "decoy": "聽說沿途太平，沒什麼好擔心的。"
+    }
+  ],
+  "requirement": {
+    "slots": 1,
+    "keyStats": {
+      "str": 1,
+      "lea": 0.4
+    },
+    "preferTags": [],
+    "avoidTags": []
+  },
+  "timing": {
+    "durationSeasons": 2,
+    "expireSeasons": 2
+  },
+  "variants": [
+    {
+      "id": "ONE",
+      "weight": 1
+    }
+  ],
+  "intel": {
+    "initial": 30,
+    "jitter": 10,
+    "sources": {}
+  },
+  "branches": [
+    {
+      "id": "B_BLIND",
+      "when": {
+        "minIntel": 0,
+        "maxIntel": 29
+      },
+      "objective": {
+        "id": "handle_blind",
+        "text": "照原定行程辦理「突襲敵後糧道」"
+      },
+      "presented": {
+        "hints": [
+          "路況與對方底細皆不明"
+        ]
+      },
+      "modifiers": {
+        "successDelta": -0.12,
+        "rewardMul": 0.85,
+        "riskMul": 1.5
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.05,
+        "disasterRatio": 0.35,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "「突襲敵後糧道」圓滿達成，還意外帶回了額外的見聞與人情。",
+                "effects": [
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": {
+                      "base": 630,
+                      "mulKey": "reward"
+                    }
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": {
+                      "base": 300,
+                      "mulKey": "reward"
+                    }
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": {
+                      "base": 18,
+                      "mulKey": "reward"
+                    }
+                  }
+                ]
+              },
+              {
+                "kind": "chance",
+                "p": 0.25,
+                "hit": {
+                  "kind": "effects",
+                  "narrative": "此役打通了門路，同類任務的消息也跟著靈通起來。",
+                  "effects": [
+                    {
+                      "kind": "intel",
+                      "target": {
+                        "tag": "expedition"
+                      },
+                      "delta": 15
+                    }
+                  ]
+                },
+                "miss": {
+                  "kind": "effects",
+                  "effects": []
+                }
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "「突襲敵後糧道」如期完成，不辱使命。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": {
+                  "base": 420,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "generalExp",
+                "amount": {
+                  "base": 200,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "fame",
+                "amount": {
+                  "base": 12,
+                  "mulKey": "reward"
+                }
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "「突襲敵後糧道」半途受阻，無功而返。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": {
+                  "base": 50,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "fame",
+                "amount": -1
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "chance",
+            "p": 0.25,
+            "hit": {
+              "kind": "effects",
+              "narrative": "「突襲敵後糧道」兵敗，主事者被敵人擒獲，需設法營救。",
+              "effects": [
+                {
+                  "kind": "resource",
+                  "res": "troops",
+                  "amount": {
+                    "base": -200,
+                    "mulKey": "risk"
+                  }
+                },
+                {
+                  "kind": "fame",
+                  "amount": -12
+                },
+                {
+                  "kind": "generalState",
+                  "state": "captured",
+                  "seasons": 2
+                }
+              ]
+            },
+            "miss": {
+              "kind": "effects",
+              "narrative": "「突襲敵後糧道」誤入險地，遭人截擊，隨行人員折損，主事者帶傷脫身。",
+              "effects": [
+                {
+                  "kind": "resource",
+                  "res": "troops",
+                  "amount": {
+                    "base": -200,
+                    "mulKey": "risk"
+                  }
+                },
+                {
+                  "kind": "fame",
+                  "amount": -12
+                },
+                {
+                  "kind": "generalState",
+                  "state": "injured",
+                  "seasons": 2
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "B_INFORMED",
+      "when": {
+        "minIntel": 30,
+        "maxIntel": 69
+      },
+      "objective": {
+        "id": "handle_informed",
+        "text": "「突襲敵後糧道」：依探得的情況調整行程"
+      },
+      "presented": {
+        "hints": [
+          "已探得部分路況，可避開幾處險處"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0,
+        "rewardMul": 1,
+        "riskMul": 1
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.15,
+        "disasterRatio": 0.2,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "「突襲敵後糧道」圓滿達成，還意外帶回了額外的見聞與人情。",
+                "effects": [
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": {
+                      "base": 630,
+                      "mulKey": "reward"
+                    }
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": {
+                      "base": 300,
+                      "mulKey": "reward"
+                    }
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": {
+                      "base": 18,
+                      "mulKey": "reward"
+                    }
+                  }
+                ]
+              },
+              {
+                "kind": "chance",
+                "p": 0.25,
+                "hit": {
+                  "kind": "effects",
+                  "narrative": "此役打通了門路，同類任務的消息也跟著靈通起來。",
+                  "effects": [
+                    {
+                      "kind": "intel",
+                      "target": {
+                        "tag": "expedition"
+                      },
+                      "delta": 15
+                    }
+                  ]
+                },
+                "miss": {
+                  "kind": "effects",
+                  "effects": []
+                }
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "「突襲敵後糧道」如期完成，不辱使命。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": {
+                  "base": 420,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "generalExp",
+                "amount": {
+                  "base": 200,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "fame",
+                "amount": {
+                  "base": 12,
+                  "mulKey": "reward"
+                }
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "「突襲敵後糧道」半途受阻，無功而返。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": {
+                  "base": 50,
+                  "mulKey": "reward"
+                }
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "chance",
+            "p": 0.5,
+            "hit": {
+              "kind": "effects",
+              "narrative": "「突襲敵後糧道」途中遇襲，折損部分隨從。",
+              "effects": [
+                {
+                  "kind": "resource",
+                  "res": "troops",
+                  "amount": {
+                    "base": -120,
+                    "mulKey": "risk"
+                  }
+                },
+                {
+                  "kind": "fame",
+                  "amount": -11
+                },
+                {
+                  "kind": "generalState",
+                  "state": "injured",
+                  "seasons": 2
+                }
+              ]
+            },
+            "miss": {
+              "kind": "effects",
+              "narrative": "「突襲敵後糧道」途中遇襲，折損部分隨從。",
+              "effects": [
+                {
+                  "kind": "resource",
+                  "res": "troops",
+                  "amount": {
+                    "base": -120,
+                    "mulKey": "risk"
+                  }
+                },
+                {
+                  "kind": "fame",
+                  "amount": -11
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "B_INSIGHT",
+      "when": {
+        "minIntel": 70
+      },
+      "objective": {
+        "id": "handle_insight",
+        "text": "「突襲敵後糧道」：掌握全局，擇最佳時機行事"
+      },
+      "presented": {
+        "hints": [
+          "路況與對方底細大致清楚，可從容佈置"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.1,
+        "rewardMul": 1.25,
+        "riskMul": 0.6
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.3,
+        "disasterRatio": 0.08,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "「突襲敵後糧道」圓滿達成，還意外帶回了額外的見聞與人情。",
+                "effects": [
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": {
+                      "base": 630,
+                      "mulKey": "reward"
+                    }
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": {
+                      "base": 300,
+                      "mulKey": "reward"
+                    }
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": {
+                      "base": 18,
+                      "mulKey": "reward"
+                    }
+                  }
+                ]
+              },
+              {
+                "kind": "chance",
+                "p": 0.45,
+                "hit": {
+                  "kind": "effects",
+                  "narrative": "此役打通了門路，同類任務的消息也跟著靈通起來。",
+                  "effects": [
+                    {
+                      "kind": "intel",
+                      "target": {
+                        "tag": "expedition"
+                      },
+                      "delta": 25
+                    }
+                  ]
+                },
+                "miss": {
+                  "kind": "effects",
+                  "effects": []
+                }
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "「突襲敵後糧道」如期完成，不辱使命。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": {
+                  "base": 420,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "generalExp",
+                "amount": {
+                  "base": 200,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "fame",
+                "amount": {
+                  "base": 12,
+                  "mulKey": "reward"
+                }
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "「突襲敵後糧道」半途受阻，無功而返。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": {
+                  "base": 50,
+                  "mulKey": "reward"
+                }
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "「突襲敵後糧道」雖遭小挫，已有退路，人員無大礙。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "troops",
+                "amount": {
+                  "base": -60,
+                  "mulKey": "risk"
+                }
+              },
+              {
+                "kind": "fame",
+                "amount": -10
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

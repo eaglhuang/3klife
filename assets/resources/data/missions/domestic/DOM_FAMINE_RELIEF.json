@@ -1,0 +1,1019 @@
+{
+  "schema": "mission-def.v1",
+  "id": "DOM_FAMINE_RELIEF",
+  "version": 1,
+  "legacyTemplateId": "DOM_EASY_01",
+  "theme": "domestic",
+  "difficulty": "EASY",
+  "tags": [
+    "famine",
+    "granary",
+    "relief"
+  ],
+  "meta": {
+    "origin": "authored",
+    "note": "手寫任務：三層情報分支、隱藏變體、巢狀結果與連鎖。"
+  },
+  "text": {
+    "title": "開倉賑濟貧民",
+    "brief": "去冬大雪，城中貧戶斷炊，官倉的糧冊上卻寫著滿倉。開不開倉不難，難的是倉裡到底還剩什麼。",
+    "detail": "城南貧戶聚在府衙前，求官府開倉放糧。倉吏拍胸脯說存糧足夠，卻不肯讓人進去點驗。糧價這幾日也悄悄漲了一截，不知是巧合，還是有人在背後推。"
+  },
+  "facts": [
+    {
+      "key": "granary",
+      "label": "倉廩",
+      "levels": [
+        {
+          "minIntel": 30,
+          "text": "倉吏說存糧足夠，卻不肯讓人進倉點驗。"
+        },
+        {
+          "minIntel": 60,
+          "text": "倉門的封條新舊不一。"
+        },
+        {
+          "minIntel": 90,
+          "text": "近年入倉的糧冊，筆跡出自同一個人。"
+        }
+      ],
+      "decoy": "糧冊上寫得清清楚楚，倉倉滿盈。"
+    },
+    {
+      "key": "price",
+      "label": "糧價",
+      "levels": [
+        {
+          "minIntel": 45,
+          "text": "城中糧價這幾日悄悄漲了一截，米商們都不肯多說。"
+        }
+      ]
+    }
+  ],
+  "requirement": {
+    "slots": 1,
+    "keyStats": {
+      "cha": 1,
+      "pol": 0.5
+    },
+    "preferTags": [
+      "benevolent",
+      "bookish"
+    ],
+    "avoidTags": []
+  },
+  "timing": {
+    "durationSeasons": 1,
+    "expireSeasons": 2
+  },
+  "variants": [
+    {
+      "id": "HONEST",
+      "weight": 55
+    },
+    {
+      "id": "SHORTFALL",
+      "weight": 30
+    },
+    {
+      "id": "HOARDER",
+      "weight": 15
+    }
+  ],
+  "intel": {
+    "initial": 45,
+    "jitter": 10,
+    "sources": {
+      "wait": {
+        "delta": 20
+      }
+    }
+  },
+  "branches": [
+    {
+      "id": "B_RELIEF_BLIND",
+      "when": {
+        "variant": [
+          "HONEST",
+          "SHORTFALL",
+          "HOARDER"
+        ],
+        "minIntel": 0,
+        "maxIntel": 29
+      },
+      "objective": {
+        "id": "open_by_the_book",
+        "text": "照糧冊開倉放賑"
+      },
+      "presented": {
+        "hints": [
+          "只憑糧冊辦理，不知倉裡實況"
+        ]
+      },
+      "modifiers": {
+        "successDelta": -0.15,
+        "rewardMul": 0.8,
+        "riskMul": 1.5
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.05,
+        "disasterRatio": 0.35,
+        "tiers": {
+          "critical": {
+            "kind": "switch",
+            "on": "variant",
+            "cases": [
+              {
+                "eq": "SHORTFALL",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "倉裡只剩半倉，你當機立斷向鄰郡借糧，竟反而博得了好名聲。",
+                  "effects": [
+                    {
+                      "kind": "resource",
+                      "res": "silver",
+                      "amount": 80
+                    },
+                    {
+                      "kind": "generalExp",
+                      "amount": 30
+                    },
+                    {
+                      "kind": "fame",
+                      "amount": 10
+                    }
+                  ]
+                }
+              }
+            ],
+            "else": {
+              "kind": "effects",
+              "narrative": "開倉放賑一切順遂，貧戶感激涕零。",
+              "effects": [
+                {
+                  "kind": "resource",
+                  "res": "silver",
+                  "amount": 120
+                },
+                {
+                  "kind": "generalExp",
+                  "amount": 35
+                },
+                {
+                  "kind": "fame",
+                  "amount": 9
+                }
+              ]
+            }
+          },
+          "success": {
+            "kind": "switch",
+            "on": "variant",
+            "cases": [
+              {
+                "eq": "HONEST",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "倉裡糧食如數，貧戶皆有所得。",
+                  "effects": [
+                    {
+                      "kind": "resource",
+                      "res": "silver",
+                      "amount": 90
+                    },
+                    {
+                      "kind": "fame",
+                      "amount": 6
+                    }
+                  ]
+                }
+              },
+              {
+                "eq": "SHORTFALL",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "糧食只夠一半人，後面排隊的人鬧了起來。",
+                  "effects": [
+                    {
+                      "kind": "fame",
+                      "amount": -2
+                    },
+                    {
+                      "kind": "flag",
+                      "set": "granary_shortfall_known",
+                      "value": true
+                    }
+                  ]
+                }
+              },
+              {
+                "eq": "HOARDER",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "放賑如期完成，卻沒察覺糧價已被人悄悄抬高。",
+                  "effects": [
+                    {
+                      "kind": "resource",
+                      "res": "silver",
+                      "amount": 40
+                    },
+                    {
+                      "kind": "flag",
+                      "set": "hoarder_active",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            ],
+            "else": {
+              "kind": "effects",
+              "effects": []
+            }
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "倉吏推三阻四，一整天只放出十石糧。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 10
+              },
+              {
+                "kind": "fame",
+                "amount": -1
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "switch",
+            "on": "variant",
+            "cases": [
+              {
+                "eq": "SHORTFALL",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "倉門一開，只見空倉，眾人以為你私吞了糧食，激起民變。",
+                  "effects": [
+                    {
+                      "kind": "resource",
+                      "res": "silver",
+                      "amount": -90
+                    },
+                    {
+                      "kind": "fame",
+                      "amount": -8
+                    },
+                    {
+                      "kind": "generalState",
+                      "state": "injured",
+                      "seasons": 2
+                    },
+                    {
+                      "kind": "flag",
+                      "set": "granary_riot",
+                      "value": true
+                    }
+                  ]
+                }
+              },
+              {
+                "eq": "HOARDER",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "糧價在你放賑當日飆升，豪族的家丁還混在人群裡鬧事。",
+                  "effects": [
+                    {
+                      "kind": "resource",
+                      "res": "silver",
+                      "amount": -60
+                    },
+                    {
+                      "kind": "fame",
+                      "amount": -5
+                    },
+                    {
+                      "kind": "generalState",
+                      "state": "injured",
+                      "seasons": 1
+                    },
+                    {
+                      "kind": "flag",
+                      "set": "hoarder_active",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            ],
+            "else": {
+              "kind": "effects",
+              "narrative": "放賑時有人擠踏，傷了不少百姓，你也被人推倒負傷。",
+              "effects": [
+                {
+                  "kind": "resource",
+                  "res": "silver",
+                  "amount": -40
+                },
+                {
+                  "kind": "fame",
+                  "amount": -4
+                },
+                {
+                  "kind": "generalState",
+                  "state": "injured",
+                  "seasons": 1
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "B_RELIEF_CHECK",
+      "when": {
+        "variant": [
+          "HONEST",
+          "SHORTFALL"
+        ],
+        "minIntel": 30,
+        "maxIntel": 69
+      },
+      "objective": {
+        "id": "inspect_then_open",
+        "text": "先點驗倉廩，再決定怎麼放",
+        "keyStats": {
+          "pol": 1,
+          "cha": 0.5
+        }
+      },
+      "presented": {
+        "objectiveText": "放賑；倉廩似有蹊蹺，不宜貿然開倉",
+        "hints": [
+          "倉門的封條新舊不一，值得先查一查"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0,
+        "rewardMul": 1,
+        "riskMul": 1
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.15,
+        "disasterRatio": 0.15,
+        "tiers": {
+          "critical": {
+            "kind": "switch",
+            "on": "variant",
+            "cases": [
+              {
+                "eq": "SHORTFALL",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "你點驗出虧空，一面向鄰郡調糧，一面公開帳目，百姓反倒更信你。",
+                  "effects": [
+                    {
+                      "kind": "resource",
+                      "res": "silver",
+                      "amount": 110
+                    },
+                    {
+                      "kind": "generalExp",
+                      "amount": 60
+                    },
+                    {
+                      "kind": "fame",
+                      "amount": 14
+                    },
+                    {
+                      "kind": "flag",
+                      "set": "granary_audited",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            ],
+            "else": {
+              "kind": "effects",
+              "narrative": "點驗無誤，開倉放賑，並順手把糧冊重整了一遍。",
+              "effects": [
+                {
+                  "kind": "resource",
+                  "res": "silver",
+                  "amount": 130
+                },
+                {
+                  "kind": "generalExp",
+                  "amount": 50
+                },
+                {
+                  "kind": "fame",
+                  "amount": 10
+                }
+              ]
+            }
+          },
+          "success": {
+            "kind": "switch",
+            "on": "variant",
+            "cases": [
+              {
+                "eq": "SHORTFALL",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "查出虧空，只能減量放賑，並答應日後補發。",
+                  "effects": [
+                    {
+                      "kind": "resource",
+                      "res": "silver",
+                      "amount": 40
+                    },
+                    {
+                      "kind": "generalExp",
+                      "amount": 35
+                    },
+                    {
+                      "kind": "fame",
+                      "amount": 3
+                    },
+                    {
+                      "kind": "flag",
+                      "set": "granary_audited",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            ],
+            "else": {
+              "kind": "effects",
+              "narrative": "點驗與放賑有條不紊地完成。",
+              "effects": [
+                {
+                  "kind": "resource",
+                  "res": "silver",
+                  "amount": 100
+                },
+                {
+                  "kind": "generalExp",
+                  "amount": 40
+                },
+                {
+                  "kind": "fame",
+                  "amount": 6
+                }
+              ]
+            }
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "點驗耗時太久，貧戶在府衙前多挨了兩日餓。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 15
+              },
+              {
+                "kind": "fame",
+                "amount": -3
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "倉吏被你查得急了，夜裡放火燒了糧冊，你追趕時負傷。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": -50
+              },
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              },
+              {
+                "kind": "fame",
+                "amount": -3
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_RELIEF_PRICE",
+      "when": {
+        "variant": [
+          "HOARDER"
+        ],
+        "minIntel": 30,
+        "maxIntel": 69
+      },
+      "objective": {
+        "id": "trace_grain_price",
+        "text": "查糧價為何暗漲",
+        "keyStats": {
+          "int": 1,
+          "pol": 0.5
+        }
+      },
+      "presented": {
+        "objectiveText": "放賑；先弄清楚糧價為什麼漲",
+        "hints": [
+          "米商們口徑一致，說是「進貨艱難」"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0,
+        "rewardMul": 1,
+        "riskMul": 1
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.15,
+        "disasterRatio": 0.2,
+        "tiers": {
+          "critical": {
+            "kind": "effects",
+            "narrative": "你順著米商們的供貨單，查到一戶豪族囤了大半個郡的糧。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 100
+              },
+              {
+                "kind": "generalExp",
+                "amount": 70
+              },
+              {
+                "kind": "fame",
+                "amount": 10
+              },
+              {
+                "kind": "flag",
+                "set": "hoarder_active",
+                "value": true
+              },
+              {
+                "kind": "spawn",
+                "defId": "DOM_HELL_02",
+                "intel": 40
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "你查出糧價被人操縱，先開官倉平抑了市價。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 90
+              },
+              {
+                "kind": "generalExp",
+                "amount": 55
+              },
+              {
+                "kind": "fame",
+                "amount": 7
+              },
+              {
+                "kind": "flag",
+                "set": "hoarder_active",
+                "value": true
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "米商們異口同聲，你查了三日一無所獲。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 15
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "你的追查驚動了豪族，有人夜裡把你的馬車砸了。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": -40
+              },
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              },
+              {
+                "kind": "fame",
+                "amount": -3
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_RELIEF_HONEST_SURE",
+      "when": {
+        "variant": [
+          "HONEST"
+        ],
+        "minIntel": 70
+      },
+      "objective": {
+        "id": "open_and_register",
+        "text": "開倉放賑，順手清點戶口，辦成長遠之事",
+        "keyStats": {
+          "cha": 0.8,
+          "pol": 0.8
+        }
+      },
+      "presented": {
+        "objectiveText": "放賑之餘，借機登記流離戶口",
+        "hints": [
+          "倉裡糧食足夠，趁此機會能把流民戶口一併理清"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.1,
+        "rewardMul": 1.2,
+        "riskMul": 0.6
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.3,
+        "disasterRatio": 0.05,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "放賑當日井然有序，你更趁機登記了三百戶流民，府衙從此有了完整的戶冊。",
+                "effects": [
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": 180
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": 70
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": 16
+                  }
+                ]
+              },
+              {
+                "kind": "effects",
+                "narrative": "流民聞風而來，求你為他們安排安身之處。",
+                "effects": [
+                  {
+                    "kind": "spawn",
+                    "defId": "DOM_ELITE_02",
+                    "intel": 55
+                  },
+                  {
+                    "kind": "unlock",
+                    "id": "household_register"
+                  }
+                ]
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "放賑辦得妥貼，百姓口碑極好。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 140
+              },
+              {
+                "kind": "generalExp",
+                "amount": 55
+              },
+              {
+                "kind": "fame",
+                "amount": 11
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "放賑順利，但戶口登記只做了一半。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 80
+              },
+              {
+                "kind": "generalExp",
+                "amount": 25
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "人群中有人冒領，場面一度混亂。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": -20
+              },
+              {
+                "kind": "fame",
+                "amount": -2
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_RELIEF_SHORT_SURE",
+      "when": {
+        "variant": [
+          "SHORTFALL"
+        ],
+        "minIntel": 70
+      },
+      "objective": {
+        "id": "borrow_and_audit",
+        "text": "向鄰郡調糧補缺，順勢追查虧空",
+        "keyStats": {
+          "pol": 1,
+          "int": 0.6
+        }
+      },
+      "presented": {
+        "objectiveText": "一面調糧放賑，一面追查糧倉虧空的去向",
+        "hints": [
+          "糧倉的虧空，被人用同一種手法填了好幾年"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.08,
+        "rewardMul": 1.3,
+        "riskMul": 0.6
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.3,
+        "disasterRatio": 0.06,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "你一面調糧放賑，一面把虧空的帳目查了個水落石出，貪墨的倉吏被拿下。",
+                "effects": [
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": 200
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": 85
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": 18
+                  },
+                  {
+                    "kind": "flag",
+                    "set": "granary_audited",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "kind": "effects",
+                "narrative": "追查中牽出了更大的案子。",
+                "effects": [
+                  {
+                    "kind": "spawn",
+                    "defId": "DOM_NORMAL_03",
+                    "intel": 60
+                  }
+                ]
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "調糧順利，虧空雖未追回，卻查清了癥結。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 140
+              },
+              {
+                "kind": "generalExp",
+                "amount": 60
+              },
+              {
+                "kind": "fame",
+                "amount": 10
+              },
+              {
+                "kind": "flag",
+                "set": "granary_audited",
+                "value": true
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "鄰郡糧車晚到兩日，貧戶又苦等了幾天。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 20
+              },
+              {
+                "kind": "fame",
+                "amount": -2
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "倉吏的同黨在你調糧途中設卡刁難，武將受傷。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": -30
+              },
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              },
+              {
+                "kind": "fame",
+                "amount": -2
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_RELIEF_HOARD_SURE",
+      "when": {
+        "variant": [
+          "HOARDER"
+        ],
+        "minIntel": 70
+      },
+      "objective": {
+        "id": "squeeze_the_hoarder",
+        "text": "逼豪族吐糧，以平糧價",
+        "keyStats": {
+          "cha": 0.9,
+          "int": 0.7
+        }
+      },
+      "presented": {
+        "objectiveText": "以官威加民意，迫豪族開出囤積的糧食",
+        "hints": [
+          "豪族囤的糧就藏在城外莊園的地窖裡"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.1,
+        "rewardMul": 1.5,
+        "riskMul": 0.7
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.3,
+        "disasterRatio": 0.08,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "你帶著貧戶代表與官兵同去莊園，豪族被眾人圍著，不得不開窖。",
+                "effects": [
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": 260
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": 90
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": 22
+                  }
+                ]
+              },
+              {
+                "kind": "effects",
+                "narrative": "豪族記恨在心，但你已握住他的把柄。",
+                "effects": [
+                  {
+                    "kind": "spawn",
+                    "defId": "DOM_HELL_02",
+                    "intel": 60
+                  },
+                  {
+                    "kind": "flag",
+                    "set": "hoarder_exposed",
+                    "value": true
+                  }
+                ]
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "豪族破財消災，糧價一日回落。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 190
+              },
+              {
+                "kind": "generalExp",
+                "amount": 65
+              },
+              {
+                "kind": "fame",
+                "amount": 12
+              },
+              {
+                "kind": "flag",
+                "set": "hoarder_exposed",
+                "value": true
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "豪族託人說情，只肯吐出一小半。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 70
+              },
+              {
+                "kind": "generalExp",
+                "amount": 25
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "豪族的家丁在莊園前與官兵衝突，武將負傷。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": -30
+              },
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 2
+              },
+              {
+                "kind": "fame",
+                "amount": -3
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,1013 @@
+{
+  "schema": "mission-def.v1",
+  "id": "ROM_HERMIT_DAUGHTER",
+  "version": 1,
+  "theme": "romance",
+  "difficulty": "NORMAL",
+  "tags": [
+    "hermit",
+    "courtship",
+    "bond"
+  ],
+  "meta": {
+    "origin": "authored",
+    "note": "手寫任務：三層情報分支、隱藏變體、巢狀結果與連鎖。"
+  },
+  "text": {
+    "title": "隱士之女",
+    "brief": "隱士的女兒從不見外客，卻聽說過你的名字。這一面，見得好是一段緣，見得壞只是一場尷尬。",
+    "detail": "深谷小院裡住著隱士唯一的女兒。有人說她愛讀書，有人說她夜裡練劍，也有人說她體弱不出門。誰也沒真正見過她，更沒人知道她想遇見什麼樣的人。"
+  },
+  "facts": [
+    {
+      "key": "maiden",
+      "label": "其人",
+      "levels": [
+        {
+          "minIntel": 30,
+          "text": "是個從不出門的姑娘，院中偶有琴聲。"
+        },
+        {
+          "minIntel": 60,
+          "text": "窗下常有書聲，院裡卻偶有劍風，有時整夜咳聲不斷。"
+        },
+        {
+          "minIntel": 90,
+          "text": "她最在意的，是隱士身後那座日夜不熄的藥爐。"
+        }
+      ],
+      "decoy": "聽說她愛慕虛榮，只要送上珠寶就能博得歡心。"
+    }
+  ],
+  "requirement": {
+    "slots": 1,
+    "keyStats": {
+      "cha": 1,
+      "int": 0.4
+    },
+    "preferTags": [
+      "bookish",
+      "chivalrous"
+    ],
+    "avoidTags": [
+      "brutal"
+    ]
+  },
+  "timing": {
+    "durationSeasons": 1,
+    "expireSeasons": 3
+  },
+  "variants": [
+    {
+      "id": "SHY",
+      "weight": 40
+    },
+    {
+      "id": "BOLD",
+      "weight": 35
+    },
+    {
+      "id": "SICKLY",
+      "weight": 25
+    }
+  ],
+  "intel": {
+    "initial": 30,
+    "jitter": 10,
+    "sources": {
+      "wait": {
+        "delta": 15
+      }
+    }
+  },
+  "branches": [
+    {
+      "id": "B_MAIDEN_BLIND",
+      "when": {
+        "variant": [
+          "SHY",
+          "BOLD",
+          "SICKLY"
+        ],
+        "minIntel": 0,
+        "maxIntel": 39
+      },
+      "objective": {
+        "id": "pay_a_call",
+        "text": "登門拜訪，送上禮物"
+      },
+      "presented": {
+        "hints": [
+          "只知道有位姑娘，不知她喜好"
+        ]
+      },
+      "modifiers": {
+        "successDelta": -0.15,
+        "rewardMul": 0.8,
+        "riskMul": 1.5
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.05,
+        "disasterRatio": 0.3,
+        "tiers": {
+          "critical": {
+            "kind": "effects",
+            "narrative": "你隨口說的一句話，剛好說中了她的心思，她隔著簾子輕輕笑了。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:hermit_daughter",
+                "delta": 25
+              },
+              {
+                "kind": "generalExp",
+                "amount": 40
+              },
+              {
+                "kind": "flag",
+                "set": "bond_hermit_daughter",
+                "value": true
+              }
+            ]
+          },
+          "success": {
+            "kind": "switch",
+            "on": "variant",
+            "cases": [
+              {
+                "eq": "SHY",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "她紅著臉收下了禮，卻一句話也沒說。",
+                  "effects": [
+                    {
+                      "kind": "relation",
+                      "target": "npc:hermit_daughter",
+                      "delta": 8
+                    }
+                  ]
+                }
+              },
+              {
+                "eq": "BOLD",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "她挑眉看你半晌，說「禮就收下，人還得再看」。",
+                  "effects": [
+                    {
+                      "kind": "relation",
+                      "target": "npc:hermit_daughter",
+                      "delta": 10
+                    },
+                    {
+                      "kind": "generalExp",
+                      "amount": 20
+                    }
+                  ]
+                }
+              },
+              {
+                "eq": "SICKLY",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "她病中不便見客，只讓婢女傳了一句謝。",
+                  "effects": [
+                    {
+                      "kind": "relation",
+                      "target": "npc:hermit_daughter",
+                      "delta": 5
+                    }
+                  ]
+                }
+              }
+            ],
+            "else": {
+              "kind": "effects",
+              "effects": []
+            }
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "禮物被原封不動退了回來，連簾子都沒掀。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:hermit_daughter",
+                "delta": -5
+              },
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": -20
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "switch",
+            "on": "variant",
+            "cases": [
+              {
+                "eq": "BOLD",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "你的話惹惱了她，她拔劍將你的馬鞍削成兩半，你摔下馬負傷。",
+                  "effects": [
+                    {
+                      "kind": "relation",
+                      "target": "npc:hermit_daughter",
+                      "delta": -20
+                    },
+                    {
+                      "kind": "generalState",
+                      "state": "injured",
+                      "seasons": 1
+                    },
+                    {
+                      "kind": "fame",
+                      "amount": -3
+                    }
+                  ]
+                }
+              }
+            ],
+            "else": {
+              "kind": "effects",
+              "narrative": "你的禮物犯了她的忌諱，隱士親自出來送客，臉色極冷。",
+              "effects": [
+                {
+                  "kind": "relation",
+                  "target": "npc:hermit_daughter",
+                  "delta": -20
+                },
+                {
+                  "kind": "fame",
+                  "amount": -4
+                },
+                {
+                  "kind": "flag",
+                  "set": "hermit_daughter_hurt",
+                  "value": true
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "B_SHY_MID",
+      "when": {
+        "variant": [
+          "SHY"
+        ],
+        "minIntel": 40,
+        "maxIntel": 79
+      },
+      "objective": {
+        "id": "slow_correspondence",
+        "text": "以詩箋往來，慢慢取得信任",
+        "keyStats": {
+          "cha": 0.8,
+          "int": 0.8
+        }
+      },
+      "presented": {
+        "objectiveText": "登門；她似乎更喜歡文字而不是當面交談",
+        "hints": [
+          "她的窗下放著一疊寫了又撕的詩箋"
+        ]
+      },
+      "modifiers": {
+        "successDelta": -0.02,
+        "rewardMul": 1,
+        "riskMul": 1
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.2,
+        "disasterRatio": 0.15,
+        "tiers": {
+          "critical": {
+            "kind": "effects",
+            "narrative": "三封詩箋之後，她第一次掀起了簾子。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:hermit_daughter",
+                "delta": 30
+              },
+              {
+                "kind": "generalExp",
+                "amount": 60
+              },
+              {
+                "kind": "flag",
+                "set": "bond_hermit_daughter",
+                "value": true
+              },
+              {
+                "kind": "memoryNote",
+                "tag": "heartwarming",
+                "text": "以詩箋換來一次簾後的相見"
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "她回了一封短短的信，字跡端正，末尾多了一個「謝」字。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:hermit_daughter",
+                "delta": 18
+              },
+              {
+                "kind": "generalExp",
+                "amount": 40
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "詩箋如石沉大海，再沒有回音。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 10
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "你的信被隱士截下，他語帶責備地退了回來。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:hermit",
+                "delta": -10
+              },
+              {
+                "kind": "fame",
+                "amount": -2
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_SHY_HIGH",
+      "when": {
+        "variant": [
+          "SHY"
+        ],
+        "minIntel": 80
+      },
+      "objective": {
+        "id": "quiet_garden_meeting",
+        "text": "約在她最愛的梅園，不帶隨從",
+        "keyStats": {
+          "cha": 1,
+          "int": 0.5
+        }
+      },
+      "presented": {
+        "objectiveText": "邀她於梅園一敘，不帶隨從，不說大話",
+        "hints": [
+          "她每個月初三，必獨自去後山梅園"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.1,
+        "rewardMul": 1.4,
+        "riskMul": 0.5
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.3,
+        "disasterRatio": 0.05,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "梅園裡她說了很多話，說到後來連自己都笑了，臨別時悄悄遞給你一枝梅。",
+                "effects": [
+                  {
+                    "kind": "relation",
+                    "target": "npc:hermit_daughter",
+                    "delta": 45
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": 80
+                  },
+                  {
+                    "kind": "flag",
+                    "set": "bond_hermit_daughter",
+                    "value": true
+                  },
+                  {
+                    "kind": "unlock",
+                    "id": "bond_scene_hermit"
+                  }
+                ]
+              },
+              {
+                "kind": "switch",
+                "on": "generalTag",
+                "cases": [
+                  {
+                    "when": "bookish",
+                    "then": {
+                      "kind": "effects",
+                      "narrative": "你們談起一本只在殘卷中見過的古書，她眼睛亮得像星星。",
+                      "effects": [
+                        {
+                          "kind": "relation",
+                          "target": "npc:hermit_daughter",
+                          "delta": 15
+                        },
+                        {
+                          "kind": "trait",
+                          "add": "heartfelt"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "else": {
+                  "kind": "effects",
+                  "effects": []
+                }
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "她站在梅樹下，聽你說了一個時辰，末了輕聲說「下次再來」。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:hermit_daughter",
+                "delta": 28
+              },
+              {
+                "kind": "generalExp",
+                "amount": 55
+              },
+              {
+                "kind": "flag",
+                "set": "bond_hermit_daughter",
+                "value": true
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "她遠遠看見你，轉身回了院子。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:hermit_daughter",
+                "delta": 3
+              },
+              {
+                "kind": "generalExp",
+                "amount": 15
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "梅園裡遇上了隱士，場面尷尬至極。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:hermit",
+                "delta": -8
+              },
+              {
+                "kind": "fame",
+                "amount": -2
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_BOLD_MID",
+      "when": {
+        "variant": [
+          "BOLD"
+        ],
+        "minIntel": 40,
+        "maxIntel": 79
+      },
+      "objective": {
+        "id": "sword_bout",
+        "text": "以劍會友，接她三招",
+        "keyStats": {
+          "str": 0.8,
+          "cha": 0.8
+        }
+      },
+      "presented": {
+        "objectiveText": "登門；對方似乎更看重身手而不是禮數",
+        "hints": [
+          "院牆邊靠著一柄舊劍，劍穗磨得發白"
+        ]
+      },
+      "modifiers": {
+        "successDelta": -0.02,
+        "rewardMul": 1,
+        "riskMul": 1
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.2,
+        "disasterRatio": 0.2,
+        "tiers": {
+          "critical": {
+            "kind": "effects",
+            "narrative": "你接下三招，還留了半分力，她大笑著收劍說「好，再來」。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:hermit_daughter",
+                "delta": 30
+              },
+              {
+                "kind": "generalExp",
+                "amount": 65
+              },
+              {
+                "kind": "flag",
+                "set": "bond_hermit_daughter",
+                "value": true
+              },
+              {
+                "kind": "memoryNote",
+                "tag": "heartwarming",
+                "text": "與一位女俠劍下結緣"
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "你被她逼退了兩步，她卻笑著請你喝茶。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:hermit_daughter",
+                "delta": 18
+              },
+              {
+                "kind": "generalExp",
+                "amount": 45
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "你太過謙讓，她冷冷說「看不起人」，轉身進了屋。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:hermit_daughter",
+                "delta": -3
+              },
+              {
+                "kind": "generalExp",
+                "amount": 10
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "她出手比預想的重，你被劍背擊中，臥床數日。",
+            "effects": [
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              },
+              {
+                "kind": "relation",
+                "target": "npc:hermit_daughter",
+                "delta": 5
+              },
+              {
+                "kind": "fame",
+                "amount": -2
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_BOLD_HIGH",
+      "when": {
+        "variant": [
+          "BOLD"
+        ],
+        "minIntel": 80
+      },
+      "objective": {
+        "id": "ride_together",
+        "text": "邀她策馬出山，不談兒女之事",
+        "keyStats": {
+          "cha": 0.9,
+          "lea": 0.6
+        }
+      },
+      "presented": {
+        "objectiveText": "不提婚事，只邀她同去山外策馬",
+        "hints": [
+          "她其實很想出山看看，只是從沒人敢帶她走"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.1,
+        "rewardMul": 1.4,
+        "riskMul": 0.5
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.3,
+        "disasterRatio": 0.06,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "兩人並轡越過三座山，她在山頂大喊一聲，笑出了眼淚。",
+                "effects": [
+                  {
+                    "kind": "relation",
+                    "target": "npc:hermit_daughter",
+                    "delta": 45
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": 85
+                  },
+                  {
+                    "kind": "flag",
+                    "set": "bond_hermit_daughter",
+                    "value": true
+                  },
+                  {
+                    "kind": "unlock",
+                    "id": "bond_scene_hermit"
+                  }
+                ]
+              },
+              {
+                "kind": "chance",
+                "p": 0.5,
+                "hit": {
+                  "kind": "effects",
+                  "narrative": "她回頭說，要替你看一眼山外的敵情。",
+                  "effects": [
+                    {
+                      "kind": "intel",
+                      "target": {
+                        "tag": "expedition"
+                      },
+                      "delta": 20
+                    },
+                    {
+                      "kind": "trait",
+                      "add": "chivalrous"
+                    }
+                  ]
+                },
+                "miss": {
+                  "kind": "effects",
+                  "effects": []
+                }
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "策馬一日，她的話比往日多了十倍。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:hermit_daughter",
+                "delta": 28
+              },
+              {
+                "kind": "generalExp",
+                "amount": 60
+              },
+              {
+                "kind": "flag",
+                "set": "bond_hermit_daughter",
+                "value": true
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "她半路勒馬回頭，說「今日夠了」。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:hermit_daughter",
+                "delta": 5
+              },
+              {
+                "kind": "generalExp",
+                "amount": 15
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "山路遇上落石，馬驚了，你為護她被甩下馬背。",
+            "effects": [
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              },
+              {
+                "kind": "relation",
+                "target": "npc:hermit_daughter",
+                "delta": 15
+              },
+              {
+                "kind": "fame",
+                "amount": -1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_SICK_MID",
+      "when": {
+        "variant": [
+          "SICKLY"
+        ],
+        "minIntel": 40,
+        "maxIntel": 79
+      },
+      "objective": {
+        "id": "bring_herbs",
+        "text": "送去對症的藥材",
+        "keyStats": {
+          "int": 0.9,
+          "cha": 0.8
+        }
+      },
+      "presented": {
+        "objectiveText": "登門；她似乎更需要藥而不是禮",
+        "hints": [
+          "院裡的藥渣是新的，婢女說她最近咳得更厲害了"
+        ]
+      },
+      "modifiers": {
+        "successDelta": -0.02,
+        "rewardMul": 1,
+        "riskMul": 1
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.2,
+        "disasterRatio": 0.15,
+        "tiers": {
+          "critical": {
+            "kind": "effects",
+            "narrative": "藥材送去三日，她託婢女帶來一包親手繡的香囊。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:hermit_daughter",
+                "delta": 30
+              },
+              {
+                "kind": "generalExp",
+                "amount": 60
+              },
+              {
+                "kind": "flag",
+                "set": "bond_hermit_daughter",
+                "value": true
+              },
+              {
+                "kind": "memoryNote",
+                "tag": "heartwarming",
+                "text": "以對症的藥換來一份心意"
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "藥被收下，婢女說她的氣色好了一些。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:hermit_daughter",
+                "delta": 18
+              },
+              {
+                "kind": "generalExp",
+                "amount": 40
+              },
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": -30
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "藥方不對症，婢女客氣地把藥退了回來。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 12
+              },
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": -40
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "藥性相沖，她咳得更厲害，隱士怒不可遏。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:hermit",
+                "delta": -15
+              },
+              {
+                "kind": "relation",
+                "target": "npc:hermit_daughter",
+                "delta": -10
+              },
+              {
+                "kind": "fame",
+                "amount": -3
+              },
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_SICK_HIGH",
+      "when": {
+        "variant": [
+          "SICKLY"
+        ],
+        "minIntel": 80
+      },
+      "objective": {
+        "id": "bring_physician",
+        "text": "請良醫登門診治",
+        "keyStats": {
+          "cha": 0.9,
+          "pol": 0.6
+        }
+      },
+      "presented": {
+        "objectiveText": "請來城中名醫，替她把脈開方",
+        "hints": [
+          "她的病並非絕症，只是從沒遇上真正的名醫"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.1,
+        "rewardMul": 1.5,
+        "riskMul": 0.4
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.35,
+        "disasterRatio": 0.04,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "名醫一劑藥方，三日後她竟能下床走動，在院中第一次對你笑著說了「多謝」。",
+                "effects": [
+                  {
+                    "kind": "relation",
+                    "target": "npc:hermit_daughter",
+                    "delta": 50
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": 90
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": 14
+                  },
+                  {
+                    "kind": "flag",
+                    "set": "bond_hermit_daughter",
+                    "value": true
+                  },
+                  {
+                    "kind": "unlock",
+                    "id": "bond_scene_hermit"
+                  }
+                ]
+              },
+              {
+                "kind": "effects",
+                "narrative": "隱士聞訊，當面向你長揖，從此視你為恩人。",
+                "effects": [
+                  {
+                    "kind": "relation",
+                    "target": "npc:hermit",
+                    "delta": 40
+                  },
+                  {
+                    "kind": "spawn",
+                    "defId": "DIP_HERMIT_PERSUADE",
+                    "intel": 85
+                  }
+                ]
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "名醫診治之後，她的氣色好了許多。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:hermit_daughter",
+                "delta": 30
+              },
+              {
+                "kind": "generalExp",
+                "amount": 65
+              },
+              {
+                "kind": "flag",
+                "set": "bond_hermit_daughter",
+                "value": true
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "名醫說病根深，需要長期調養，你答應常來探望。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:hermit_daughter",
+                "delta": 12
+              },
+              {
+                "kind": "generalExp",
+                "amount": 30
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "名醫路上遇到山洪，人沒到，你卻在溪邊救人時負了傷。",
+            "effects": [
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              },
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": -50
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

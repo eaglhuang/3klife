@@ -1,0 +1,829 @@
+{
+  "schema": "mission-def.v1",
+  "id": "DIP_ENVOY_ESCORT",
+  "version": 1,
+  "legacyTemplateId": "EXP_EASY_03",
+  "theme": "diplomacy",
+  "difficulty": "EASY",
+  "tags": [
+    "envoy",
+    "escort",
+    "letter"
+  ],
+  "meta": {
+    "origin": "authored",
+    "note": "手寫任務：三層情報分支、隱藏變體、巢狀結果與連鎖。"
+  },
+  "text": {
+    "title": "護送使者出境",
+    "brief": "有位使者要越過邊境替主公遞一封信。信裡寫什麼他不說，路上有誰盯著他，你也不知道。",
+    "detail": "使者年紀不大，言語謹慎，一路上把衣襟護得很緊。按規矩護送只需送到關口，但關口之外的事，誰也說不準。"
+  },
+  "facts": [
+    {
+      "key": "envoy",
+      "label": "使者",
+      "levels": [
+        {
+          "minIntel": 30,
+          "text": "使者很少開口，只反覆摸著衣襟。"
+        },
+        {
+          "minIntel": 60,
+          "text": "他衣襟裡縫著什麼，連睡覺都不離身。"
+        }
+      ],
+      "decoy": "此行不過是例行遞書，連護衛都不必多帶。"
+    },
+    {
+      "key": "road",
+      "label": "路況",
+      "levels": [
+        {
+          "minIntel": 40,
+          "text": "沿途有人遠遠跟著，不近也不遠。"
+        }
+      ]
+    }
+  ],
+  "requirement": {
+    "slots": 1,
+    "keyStats": {
+      "cha": 1,
+      "lea": 0.4
+    },
+    "preferTags": [
+      "diplomat",
+      "scout"
+    ],
+    "avoidTags": []
+  },
+  "timing": {
+    "durationSeasons": 1,
+    "expireSeasons": 2
+  },
+  "variants": [
+    {
+      "id": "PLAIN",
+      "weight": 50
+    },
+    {
+      "id": "SEALED",
+      "weight": 30
+    },
+    {
+      "id": "TARGETED",
+      "weight": 20
+    }
+  ],
+  "intel": {
+    "initial": 45,
+    "jitter": 10,
+    "sources": {
+      "wait": {
+        "delta": 20
+      }
+    }
+  },
+  "branches": [
+    {
+      "id": "B_ENVOY_BLIND",
+      "when": {
+        "variant": [
+          "PLAIN",
+          "SEALED",
+          "TARGETED"
+        ],
+        "minIntel": 0,
+        "maxIntel": 29
+      },
+      "objective": {
+        "id": "see_off",
+        "text": "平平安安送使者到關口"
+      },
+      "presented": {
+        "hints": [
+          "只當是一趟尋常的護送"
+        ]
+      },
+      "modifiers": {
+        "successDelta": -0.12,
+        "rewardMul": 0.85,
+        "riskMul": 1.5
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.05,
+        "disasterRatio": 0.3,
+        "tiers": {
+          "critical": {
+            "kind": "switch",
+            "on": "variant",
+            "cases": [
+              {
+                "eq": "SEALED",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "使者在關口握著你的手，說了一句「來日自有報答」，神色頗重。",
+                  "effects": [
+                    {
+                      "kind": "fame",
+                      "amount": 8
+                    },
+                    {
+                      "kind": "generalExp",
+                      "amount": 45
+                    },
+                    {
+                      "kind": "flag",
+                      "set": "envoy_grateful",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            ],
+            "else": {
+              "kind": "effects",
+              "narrative": "使者順利出境，對你頗為感激。",
+              "effects": [
+                {
+                  "kind": "fame",
+                  "amount": 6
+                },
+                {
+                  "kind": "generalExp",
+                  "amount": 40
+                }
+              ]
+            }
+          },
+          "success": {
+            "kind": "switch",
+            "on": "variant",
+            "cases": [
+              {
+                "eq": "TARGETED",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "路上有人遠遠尾隨，你全然不覺，所幸平安抵達。",
+                  "effects": [
+                    {
+                      "kind": "generalExp",
+                      "amount": 30
+                    },
+                    {
+                      "kind": "fame",
+                      "amount": 2
+                    }
+                  ]
+                }
+              }
+            ],
+            "else": {
+              "kind": "effects",
+              "narrative": "使者平安出境，賓主客氣道別。",
+              "effects": [
+                {
+                  "kind": "generalExp",
+                  "amount": 25
+                },
+                {
+                  "kind": "fame",
+                  "amount": 3
+                }
+              ]
+            }
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "使者在關口前嫌你護送太慢，自行改道，兩人不歡而散。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 10
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "switch",
+            "on": "variant",
+            "cases": [
+              {
+                "eq": "TARGETED",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "刺客在林道動手，武將護著使者殺出血路，自己身中一刀。",
+                  "effects": [
+                    {
+                      "kind": "generalState",
+                      "state": "injured",
+                      "seasons": 2
+                    },
+                    {
+                      "kind": "fame",
+                      "amount": -3
+                    },
+                    {
+                      "kind": "flag",
+                      "set": "envoy_attacked",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            ],
+            "else": {
+              "kind": "effects",
+              "narrative": "途中遇劫，使者受驚，你的武將為護他負了傷。",
+              "effects": [
+                {
+                  "kind": "generalState",
+                  "state": "injured",
+                  "seasons": 1
+                },
+                {
+                  "kind": "fame",
+                  "amount": -2
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "B_ENVOY_PLAIN",
+      "when": {
+        "variant": [
+          "PLAIN"
+        ],
+        "minIntel": 30
+      },
+      "objective": {
+        "id": "see_off_with_style",
+        "text": "護送之外，順便替主公打聽對方朝中虛實",
+        "keyStats": {
+          "cha": 0.8,
+          "int": 0.6
+        }
+      },
+      "presented": {
+        "hints": [
+          "一趟順遂的護送，正好留心對方朝中的動靜"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.04,
+        "rewardMul": 1.1,
+        "riskMul": 0.8
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.2,
+        "disasterRatio": 0.05,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "使者受你席間幾句點撥，在對方朝中結交了一位要人。",
+                "effects": [
+                  {
+                    "kind": "fame",
+                    "amount": 10
+                  },
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": 80
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": 60
+                  }
+                ]
+              },
+              {
+                "kind": "chance",
+                "p": 0.4,
+                "hit": {
+                  "kind": "effects",
+                  "narrative": "對方朝中的紛爭，被你一一記在心裡。",
+                  "effects": [
+                    {
+                      "kind": "intel",
+                      "target": {
+                        "defId": "DIP_ALLIANCE_NEIGHBOR"
+                      },
+                      "delta": 15
+                    }
+                  ]
+                },
+                "miss": {
+                  "kind": "effects",
+                  "effects": []
+                }
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "護送順利，使者在關口留下一份謝禮。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 50
+              },
+              {
+                "kind": "generalExp",
+                "amount": 45
+              },
+              {
+                "kind": "fame",
+                "amount": 6
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "使者一路無話，你也沒打聽到什麼。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 15
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "你打聽得太明顯，被對方關吏盯上。",
+            "effects": [
+              {
+                "kind": "fame",
+                "amount": -2
+              },
+              {
+                "kind": "resource",
+                "res": "troops",
+                "amount": -10
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_ENVOY_SEALED_MID",
+      "when": {
+        "variant": [
+          "SEALED"
+        ],
+        "minIntel": 30,
+        "maxIntel": 69
+      },
+      "objective": {
+        "id": "guard_the_letter",
+        "text": "盯緊使者與他貼身的那封信",
+        "keyStats": {
+          "cha": 0.7,
+          "lea": 0.6
+        }
+      },
+      "presented": {
+        "objectiveText": "護送使者；他似乎懷有重要之物",
+        "hints": [
+          "使者衣襟裡的東西，比他的命還重要"
+        ]
+      },
+      "modifiers": {
+        "successDelta": -0.02,
+        "rewardMul": 1,
+        "riskMul": 1
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.2,
+        "disasterRatio": 0.15,
+        "tiers": {
+          "critical": {
+            "kind": "effects",
+            "narrative": "夜宿時有賊摸進驛站偷信，被你當場擒獲，使者對你感激涕零。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 90
+              },
+              {
+                "kind": "generalExp",
+                "amount": 70
+              },
+              {
+                "kind": "fame",
+                "amount": 8
+              },
+              {
+                "kind": "flag",
+                "set": "envoy_grateful",
+                "value": true
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "信安全送出，使者讚你辦事牢靠。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 50
+              },
+              {
+                "kind": "generalExp",
+                "amount": 50
+              },
+              {
+                "kind": "fame",
+                "amount": 5
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "信被人調包的風聲傳出，你連夜守了一整路。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 20
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "驛站失火，信險些被毀，武將為護信負傷。",
+            "effects": [
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              },
+              {
+                "kind": "fame",
+                "amount": -2
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_ENVOY_SEALED_HIGH",
+      "when": {
+        "variant": [
+          "SEALED"
+        ],
+        "minIntel": 70
+      },
+      "objective": {
+        "id": "read_between_lines",
+        "text": "不拆信，卻從使者言行推出信中之事",
+        "keyStats": {
+          "int": 1,
+          "cha": 0.6
+        }
+      },
+      "presented": {
+        "objectiveText": "護信之餘，揣摩這封信會牽動誰",
+        "hints": [
+          "這封信是寫給鄰郡太守的，內容與結盟有關"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.08,
+        "rewardMul": 1.3,
+        "riskMul": 0.6
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.3,
+        "disasterRatio": 0.05,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "你推測出信的用意，順手替使者補足了談判的話術。",
+                "effects": [
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": 110
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": 90
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": 12
+                  },
+                  {
+                    "kind": "flag",
+                    "set": "knows_secret_letter",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "kind": "effects",
+                "narrative": "鄰郡之事，你因此預先有了準備。",
+                "effects": [
+                  {
+                    "kind": "intel",
+                    "target": {
+                      "defId": "DIP_ALLIANCE_NEIGHBOR"
+                    },
+                    "delta": 25
+                  }
+                ]
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "護信安然，順便對鄰郡的態度有了些底。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 70
+              },
+              {
+                "kind": "generalExp",
+                "amount": 60
+              },
+              {
+                "kind": "fame",
+                "amount": 7
+              },
+              {
+                "kind": "intel",
+                "target": {
+                  "defId": "DIP_ALLIANCE_NEIGHBOR"
+                },
+                "delta": 10
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "你想得太多，一路上對使者盤問不休，他很不自在。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 20
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "使者察覺你在揣摩信件，心生戒備，不再與你多言。",
+            "effects": [
+              {
+                "kind": "fame",
+                "amount": -2
+              },
+              {
+                "kind": "relation",
+                "target": "npc:envoy",
+                "delta": -10
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_ENVOY_TARGET_MID",
+      "when": {
+        "variant": [
+          "TARGETED"
+        ],
+        "minIntel": 30,
+        "maxIntel": 69
+      },
+      "objective": {
+        "id": "shake_off_the_tail",
+        "text": "改走小路，甩掉尾隨的人",
+        "keyStats": {
+          "lea": 1,
+          "int": 0.4
+        }
+      },
+      "presented": {
+        "objectiveText": "護送使者；沿途似有眼睛盯著",
+        "hints": [
+          "有人在遠處一路尾隨，不近也不遠"
+        ]
+      },
+      "modifiers": {
+        "successDelta": -0.04,
+        "rewardMul": 1,
+        "riskMul": 0.9
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.2,
+        "disasterRatio": 0.15,
+        "tiers": {
+          "critical": {
+            "kind": "effects",
+            "narrative": "你在岔路口設了個假轍印，尾隨的人追了半日才發覺走錯。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 80
+              },
+              {
+                "kind": "generalExp",
+                "amount": 65
+              },
+              {
+                "kind": "fame",
+                "amount": 7
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "小路難走，但總算把尾巴甩掉了。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 45
+              },
+              {
+                "kind": "generalExp",
+                "amount": 45
+              },
+              {
+                "kind": "fame",
+                "amount": 4
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "尾隨的人換了好幾撥，始終甩不脫，只能硬著頭皮走完。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 15
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "小路上遇到埋伏，武將護著使者衝出重圍，身負重傷。",
+            "effects": [
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              },
+              {
+                "kind": "fame",
+                "amount": -2
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_ENVOY_TARGET_HIGH",
+      "when": {
+        "variant": [
+          "TARGETED"
+        ],
+        "minIntel": 70
+      },
+      "objective": {
+        "id": "bait_the_assassin",
+        "text": "以替身引蛇出洞，把刺客一網打盡",
+        "keyStats": {
+          "lea": 1,
+          "cha": 0.5
+        }
+      },
+      "presented": {
+        "objectiveText": "使者走明路，替身走暗路，等刺客現身",
+        "hints": [
+          "刺客是從使者出發前就盯上的，背後另有指使的人"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.08,
+        "rewardMul": 1.4,
+        "riskMul": 0.6
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.3,
+        "disasterRatio": 0.06,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "替身走暗路，刺客果然撲空，被你預設的伏兵當場拿下。",
+                "effects": [
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": 100
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": 90
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": 12
+                  }
+                ]
+              },
+              {
+                "kind": "effects",
+                "narrative": "刺客招出，派他來的人就在你們自己營中。",
+                "effects": [
+                  {
+                    "kind": "spawn",
+                    "defId": "ESP_TRAITOR_HUNT",
+                    "intel": 55
+                  },
+                  {
+                    "kind": "flag",
+                    "set": "envoy_attacked",
+                    "value": true
+                  }
+                ]
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "刺客現身被擒，使者毫髮無傷地出了關。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 70
+              },
+              {
+                "kind": "generalExp",
+                "amount": 70
+              },
+              {
+                "kind": "fame",
+                "amount": 8
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "刺客識破替身，轉而尾隨使者本人，你連夜追趕才趕上。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 25
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "替身出了差錯，被刺客砍傷。",
+            "effects": [
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              },
+              {
+                "kind": "fame",
+                "amount": -3
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

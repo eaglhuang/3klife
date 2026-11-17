@@ -1,0 +1,51 @@
+{
+  "schema": "mission-intel-display.v1",
+  "version": 1,
+  "note": "情報度到玩家可見資訊的顯示規則。數字永遠不誤導；只有定性文字（facts 的 decoy）在低情報時可能誤導。單一任務可在自己的定義內覆寫。",
+  "stableSeedKeys": ["missionId", "intelBucket"],
+  "hiddenFactText": "？？？",
+  "decoyFactor": 0.6,
+  "intelLabels": [
+    { "min": 0, "max": 29, "id": "rumor", "text": "道聽塗說" },
+    { "min": 30, "max": 59, "id": "hearsay", "text": "略有所聞" },
+    { "min": 60, "max": 89, "id": "informed", "text": "知之甚詳" },
+    { "min": 90, "max": 100, "id": "certain", "text": "瞭若指掌" }
+  ],
+  "tierText": {
+    "critical": "大成功",
+    "success": "成功",
+    "fail": "失敗",
+    "disaster": "大失敗"
+  },
+  "bands": [
+    { "min": 0, "max": 29,
+      "successRate": { "state": "hidden", "text": "未知" },
+      "risk": { "state": "hidden", "text": "高？", "pessimistic": true },
+      "reward": { "state": "hint", "text": "？", "showKinds": true },
+      "objective": { "state": "hint", "text": "依表面目標辦理" } },
+    { "min": 30, "max": 59,
+      "successRate": { "state": "hint", "levels": ["低", "中", "高"], "cuts": [0.4, 0.7] },
+      "risk": { "state": "hint", "levels": ["低", "中", "高"], "showOneTag": true },
+      "reward": { "state": "hint", "levels": ["★", "★★", "★★★"], "showKinds": true },
+      "objective": { "state": "hint", "text": "可能另有蹊蹺", "showSuspicion": true } },
+    { "min": 60, "max": 89,
+      "successRate": { "state": "range", "margin": 0.1, "step": 0.05 },
+      "risk": { "state": "range", "listMainRisks": true },
+      "reward": { "state": "range", "margin": 0.2, "step": 5 },
+      "objective": { "state": "exact", "revealBranchObjective": true } },
+    { "min": 90, "max": 100,
+      "successRate": { "state": "exact" },
+      "risk": { "state": "exact", "listAllRisks": true },
+      "reward": { "state": "exact", "showHiddenOnlyAt": 100 },
+      "objective": { "state": "exact", "revealBranchObjective": true, "showHiddenHint": true } }
+  ],
+  "alwaysExact": ["cost", "energy", "timing"],
+  "riskTags": {
+    "injury": "可能受傷",
+    "capture": "可能被俘",
+    "troops": "可能折損兵卒",
+    "silver": "可能虧損銀兩",
+    "fame": "可能損及名聲",
+    "betrayal": "恐有內奸"
+  }
+}
