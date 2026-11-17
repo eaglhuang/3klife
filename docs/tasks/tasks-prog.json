@@ -8512,6 +8512,192 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9372",
+      "title": "張飛、關羽、呂布、曹操專屬奧義特效",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "奧義特效四位武將原本共用同一個金色光效，看不出是誰放的。總PM 指示特效不等分鏡圖先上線，順序張飛、關羽、呂布、曹操。",
+      "related": [
+        "PROG-2-9371"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（7969 過）；本機預覽逐一播放四個特效並擷取畫面，四位顏色與型態可分辨 | 變更: 奧義施放時依主將範本代號找 battle_ult_<代號> 專屬特效，找不到退回通用奧義特效；資料表新增四筆 | 阻塞: 無。已知限制：組合特效的 scale 欄位目前沒有作用（寫進不存在的 startSizeX 欄位），屬共用特效系統問題，另案處理",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9374",
+      "title": "戰場特效大小設定生效並換掉看不清的積木",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 裁示：通用奧義與一般命中特效在主將位置幾乎看不到，玩家感受不到打擊，屬可玩性問題。查到兩個原因：一是 playComposite 把 scale 寫進不存在的 startSizeX 欄位，大小設定全部無效；二是三個舊積木（common_light、star、level_up）本身只畫出偏離目標的一小團淡光。",
+      "related": [
+        "PROG-2-9372",
+        "PROG-2-9361"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（7975 過）；本機預覽 14 個戰場特效逐一拍修正前後對照（同位置、160 與 380 毫秒） | 變更: 組合特效的 scale 改成相對 prefab 原始粒子大小的倍率；13 個戰場特效換成實測看得到的積木並重調大小 | 阻塞: 無。線上實機待試玩站更新後補看",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9375",
+      "title": "戰鬥日誌不印內部代號，相剋觸發時不重複播舊剋制句",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "線上實打看到戰鬥日誌出現「受到 27 傷害（troop-counter）」；一般戰【拒馬槍陣】與舊句「步兵嚴陣以待，騎兵衝鋒被長矛陣擋下！」同回合同時出現，兩句說法互相矛盾。",
+      "related": [
+        "PROG-2-9368"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（7981 過） | 變更: 戰鬥日誌的傷害來源改顯示中文說明，不認得的不顯示；兵種動態相剋觸發時不再同時播舊的剋制戰鬥句 | 阻塞: 無。線上實機待試玩站更新後補看",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9376",
+      "title": "峽谷落石關中間三路永遠破不了石；右下「單挑」鈕改名「出陣」",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "線上實打瓦口隘一般戰 30 回合小兵零接觸。原因：中間三路落石在第 4 格、前一格鋪碎石，部隊踩碎石會被推回，永遠站不到落石旁，擊破條件永遠不成立；敵方也被同一顆落石擋住。另總PM 裁示右下「單挑」鈕實際是讓主將出陣，名稱誤導。",
+      "related": [
+        "PROG-2-1583",
+        "PROG-2-1585"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（7983 過）；重現腳本修正前中間三路落石整場不破、修正後第 4 回合全部清開 | 變更: 我方部隊相鄰的碎石格在我方回合清開（無掉落），下一回合即可站到落石旁擊破；主將出陣鈕文字由「單挑」改為「出陣」；自動實打工具同時認新舊文字 | 阻塞: 無。線上實機待試玩站更新後補看",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

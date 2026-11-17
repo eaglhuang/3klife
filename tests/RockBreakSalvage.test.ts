@@ -4,6 +4,7 @@
 import { TestSuite, assert } from './TestRunner';
 import { executeBattleTileEffectPhase, type BattleTileEffectPhaseContext } from '../assets/scripts/battle/runtime/phases/BattleTileEffectPhase';
 import { emptyStageSalvage, rollRockBreakGain, ROCK_SLIDE_TILE_NOTE } from '../assets/scripts/battle/shared/StageSalvage';
+import { ROCK_DEBRIS_TILE_NOTE } from '../assets/scripts/battle/shared/BattleTacticBehavior';
 import { Faction } from '../assets/scripts/core/config/Constants';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
 
@@ -65,6 +66,30 @@ export function createRockBreakSalvageSuite(): TestSuite {
         const { context, tiles } = buildContext([unit('e1', Faction.Enemy, 1, 5)], [[1, 4]], Faction.Enemy);
         executeBattleTileEffectPhase(context);
         assert.equals(true, tiles.has('1,4'));
+    });
+
+    suite.test('相鄰碎石只清開、不給掉落；下一回合站上去才擊破後面的落石（PROG-2-9376）', () => {
+        services().initialize();
+        // 瓦口隘中間三路的實際鋪法：碎石在 depth 3、落石在 depth 4；部隊踩碎石會被推回 depth 2
+        const { context, state, tiles } = buildContext([unit('p1', Faction.Player, 1, 2)], [[1, 4]]);
+        tiles.set('1,3', { state: 'hazard-rock', notes: ROCK_DEBRIS_TILE_NOTE, lane: 1, depth: 3 });
+        executeBattleTileEffectPhase(context);
+        assert.equals(false, tiles.has('1,3'), '碎石被清開');
+        assert.equals(true, tiles.has('1,4'), '隔一格的落石還在');
+        assert.equals(0, state.recoveredRockSlides, '清碎石不算擊破落石');
+        assert.equals(0, state.stageSalvage.stone, '清碎石沒有掉落');
+        (state.units.get('p1') as { depth: number }).depth = 3;
+        executeBattleTileEffectPhase(context);
+        assert.equals(false, tiles.has('1,4'), '站到落石旁後擊破');
+        assert.equals(1, state.recoveredRockSlides);
+    });
+
+    suite.test('敵方回合不清碎石', () => {
+        services().initialize();
+        const { context, tiles } = buildContext([unit('e1', Faction.Enemy, 1, 4)], [], Faction.Enemy);
+        tiles.set('1,3', { state: 'hazard-rock', notes: ROCK_DEBRIS_TILE_NOTE, lane: 1, depth: 3 });
+        executeBattleTileEffectPhase(context);
+        assert.equals(true, tiles.has('1,3'));
     });
 
     return suite;
