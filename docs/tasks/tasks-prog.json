@@ -9342,6 +9342,52 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9391",
+      "title": "直進戰場入口：臨時名冊與主將開場生命參數",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "直進入口不經大廳，名冊是空的，結算不會有單挑名聲、精力、功勳列，無法驗；被擒、被斬、敗逃也需要能指定主將生命才驗得到。",
+      "related": [
+        "PROG-2-9127"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: in-review | 驗證: 型別檢查 0 錯；全套單元測試通過（8054 過，新增 5 項）；本機預覽實跑：開場生命張飛 300、于禁 1 生效；帶 qaRoster=1 的一般戰單挑勝後結算出現「張飛 單挑獲勝，名聲 +15！」，截圖存共用筆記夾 battle-qa-roster-hp-9391 | 變更: 新增 qaRoster（把我方主將放進臨時名冊並設為出戰主將）、qaPlayerHp、qaEnemyHp；不帶時行為不變；名冊只在記憶體存檔，不寫玩家存檔；沒改 GameSession，只呼叫既有公開方法 | 阻塞: 無。線上版未驗",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
