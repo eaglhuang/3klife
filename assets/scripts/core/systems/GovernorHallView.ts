@@ -4,11 +4,12 @@
  *
  * - 中央儀表盤顯示人口與民心，四條流向：黃金、糧草、城市兵源上限、補兵速度。
  * - 產出卡拆成 基礎值 / 人口紅利 / 政策修正 / 總計；城市兵源卡顯示 目前 / 上限、每季補兵、距離回滿。
- * - 數值由呼叫端傳入，本模組不計算產出公式（公式屬於治理結算，另行實作）。
- * - 黃金季產出還沒有資料來源，以 null 表示並顯示「—」，不用 0 假裝有值；人口與民心由呼叫端傳入（大廳沿用城市卡的暫定推算值）。
+ * - 產出公式見 CityEconomy：黃金基礎值＝本季商業內政任務實際產出（沒選商業顯示 0）；人口紅利＝基礎值 × 紅利率；政策修正固定 +0。
+ * - 沒傳經濟資料（人口、民心、黃金基礎值）時，對應欄位以 null 表示並顯示「—」，不用 0 假裝有值。
  *
  * Unity 對照：像 Presenter，把 Model 的數字轉成 Label 的 text 與進度條的 fillAmount，畫面層不自己算。
  */
+import { populationBonusAmount } from './CityEconomy';
 import { FOOD_PER_SEASON, type MilitaryReserve } from './MilitaryReserve';
 
 export interface OutputBreakdown {
@@ -114,16 +115,25 @@ function cityTroopCard(troops: GovernorSnapshot['cityTroops']): CityTroopCardVie
     };
 }
 
+/** 太守府的經濟輸入：人口、民心與本季商業任務的黃金產出 */
+export interface GovernorEconomyInput {
+    population: number;
+    morale: number;
+    /** 本季商業內政任務的實際產出；沒選商業任務為 0 */
+    goldBase: number;
+}
+
 /**
  * 由玩家儲備組出治理快照：兵源與補兵是實際值；糧草基礎值是本季結算會入帳的固定補給（含季節倍率）。
- * 人口、民心、黃金季產出沒有來源，回 null；黃金目前只來自內政任務與事件，沒有固定季產出。
+ * 有傳 economy 時，人口、民心、黃金基礎值與人口紅利（黃金、糧草）為真值，政策修正固定 0；沒傳則人口、民心、黃金回 null。
  */
-export function buildGovernorSnapshot(military: Readonly<MilitaryReserve>, foodMultiplier = 1): GovernorSnapshot {
+export function buildGovernorSnapshot(military: Readonly<MilitaryReserve>, foodMultiplier = 1, economy?: Readonly<GovernorEconomyInput>): GovernorSnapshot {
+    const foodBase = Math.floor(FOOD_PER_SEASON * Math.max(0, foodMultiplier));
     return {
-        population: null,
-        morale: null,
-        gold: null,
-        food: { base: Math.floor(FOOD_PER_SEASON * Math.max(0, foodMultiplier)), populationBonus: 0, policyModifier: 0 },
+        population: economy ? economy.population : null,
+        morale: economy ? economy.morale : null,
+        gold: economy ? { base: economy.goldBase, populationBonus: populationBonusAmount(economy.goldBase, economy.population, economy.morale), policyModifier: 0 } : null,
+        food: { base: foodBase, populationBonus: economy ? populationBonusAmount(foodBase, economy.population, economy.morale) : 0, policyModifier: 0 },
         cityTroops: { current: military.cityTroops, cap: military.cityTroopsCap, recruitPerTurn: military.recruitRegen },
     };
 }
