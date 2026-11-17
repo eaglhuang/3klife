@@ -1,4 +1,6 @@
 // @spec-source → 見 docs/cross-reference-index.md
+import { troopCapturedLine } from "../../core/systems/NumericalScriptLines";
+import type { GeneralCaptureRecord } from "../../shared/GeneralCaptureContract";
 import { resolveAiDeployPreference, deployPreferenceForTroops } from '../../core/systems/AiDeployTroopPick';
 import {
   EVENT_NAMES,
@@ -212,6 +214,7 @@ export class BattleController {
     onUnitKilled: (unit, killer, svc) => this.combatResolver.onUnitKilled(unit, killer, svc),
     isEnemyForcedToAcceptDuel: () => this._tutorialBattle && GAME_CONFIG.tutorialEnemyAlwaysAcceptsDuel,
     getDuelHpFloorRatio: () => this._tutorialBattle ? GAME_CONFIG.tutorialDuelHpFloorRatio : 0,
+    isCaptureExempt: (faction) => this.captureExemptFactions.has(faction),
   });
   private readonly skillDispatcher = new BattleSkillDispatcher(
     {
@@ -1518,9 +1521,33 @@ export class BattleController {
   }
 
   private commitBattleResult(result: BattleResult): BattleResult {
+    if (result !== 'ongoing') this.recordTroopCaptures();
     this.flowStateMachine.commitBattleResult(result);
     return result;
   }
+
+  /**
+   * 戰鬥分出勝負時，生命歸 0 而還沒有被擒紀錄的主將，一律記為「力竭被擒」（使用者 2026-11-17 裁決 Q5 甲，PROG-2-9393）。
+   * 單挑造成的在單挑流程已經記過；教學戰不記。
+   */
+  private recordTroopCaptures(): void {
+    if (this._tutorialBattle) return;
+    const svc = services();
+    for (const faction of [Faction.Player, Faction.Enemy]) {
+      const general = this.state.getGeneral(faction);
+      if (!general || !general.isDead() || this.state.generalCaptures.has(faction) || this.captureExemptFactions.has(faction)) continue;
+      const record = this.duelFlow.recordCapture(faction, 'troop', svc);
+      if (record) svc.event.emit(EVENT_NAMES.BattleSkillNotice, troopCapturedLine(general.name));
+    }
+  }
+
+  /** 本場被擒的主將紀錄（戰後交給戰場外處置，PROG-2-9393） */
+  public getGeneralCaptures(): GeneralCaptureRecord[] {
+    return Array.from(this.state.generalCaptures.values());
+  }
+
+  /** 主將不可被擒的陣營（試用傭兵：戰敗必定安全撤退，PROG-2-9393）；開場由戰場畫面設定 */
+  public readonly captureExemptFactions = new Set<Faction>();
 
   // ─── 階段：敵方部署 ───────────────────────────────────────────────────────
 
