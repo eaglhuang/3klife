@@ -92,6 +92,8 @@ export enum StatusEffect {
     Haste = "haste",
     /** 堅盾（靈感戰法，PROG-2-1600 暫定）：防禦 ×1.2 */
     Fortified = "fortified",
+    /** 封射（縱深突襲，doc_spec_0309 §3，PROG-2-9368）：遠程部隊不能射擊 */
+    NoShoot = "no-shoot",
 }
 
 export enum SceneName {

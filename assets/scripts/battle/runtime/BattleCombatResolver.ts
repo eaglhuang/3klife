@@ -57,6 +57,7 @@ import {
 
 import { settleDeathTriggers } from '../skills/special/SpecialRuleDispatch';
 import type { UltimateSpecialRuleDef } from '../../shared/SkillRuntimeContract';
+import { counterReflectDamage, evaluateTroopCounter, troopRangeBonus } from '../shared/TroopCounterTactics';
 export interface BattleCombatAction {
   attackerId: string;
   targetId: string | null;
@@ -73,6 +74,8 @@ export interface BattleCombatResolverContext {
   relationsBetween?(attackerId: string, helperId: string): readonly HistoricalRelation[];
   /** 死亡觸發掛勾 id 對應的 USPECIAL 規則（ULT-10，PROG-2-1979）；沒提供時陣亡只清掛勾不結算 */
   getUltimateSpecialRule?(ultimateId: string): UltimateSpecialRuleDef | null | undefined;
+  /** 兵種動態相剋是否啟用（doc_spec_0309 §3，PROG-2-9368）；沒提供時視為關閉。教學戰由呼叫端回 false */
+  isTroopCounterTacticsEnabled?(): boolean;
 }
 
 /** 堅盾（靈感戰法，PROG-2-1600 暫定）：防禦 ×1.2 */
@@ -436,11 +439,38 @@ export class BattleCombatResolver {
       damage = Math.max(1, Math.floor(damage * WEAK_ATTACK_MULTIPLIER));
     }
 
+    // 兵種動態相剋（doc_spec_0309 §3，PROG-2-9368）：疊在五角剋制之上；同路才算正面，本回合有移動才算衝鋒
+    const counter = this.context.isTroopCounterTacticsEnabled?.()
+      ? evaluateTroopCounter({
+        attackerTroop: attacker.type,
+        defenderTroop: defender.type,
+        attackerTerrain: aCell?.terrain ?? TerrainType.Plain,
+        isCharge: attacker.chargeCells > 0,
+        frontal: attacker.lane === defender.lane,
+        defenderShielded: defender.isShieldWallActive,
+      })
+      : null;
+    if (counter?.mechanic === 'JUMA_PIKE_WALL') {
+      // 拒馬槍陣：這一擊打不進去，騎兵反受傷害並停滯。狀態在回合結尾遞減，所以多給 1 才會擋到下一回合
+      const reflect = Math.max(1, counterReflectDamage(damage, counter));
+      svc.event.emit(EVENT_NAMES.TroopCounterLine, `【拒馬槍陣】騎兵衝鋒被槍陣擋下，反受 ${reflect} 傷害，停滯 ${counter.attackerStalledTurns} 回合`);
+      svc.buff.applyBuff(attacker.id, StatusEffect.Rooted, counter.attackerStalledTurns + 1);
+      this.applyUnitDamage(attacker, reflect, defender.faction, {
+        attackerId: defender.id,
+        attackerLane: defender.lane,
+        attackerDepth: defender.depth,
+        damageSource: 'troop-counter',
+        allowDamageLink: false,
+      });
+      return;
+    }
+    if (counter?.mechanic) damage = Math.max(1, Math.floor(damage * counter.damagePct / 100));
+
     // 暴擊（SCN-06）：基礎 5% + 場景加成，暴擊時傷害 ×1.5；擲骰走戰場亂數源
     const critRate = critRateOf((tacticBehavior.getCritBonus?.(attacker, this.context.state) ?? 0) + selfBurstCritBonus(attackerBurst)
       + massDebuffCritDelta(this.context.state.getMassDebuff(attacker.faction)));
     let isCrit = false;
-    if (rollCrit(critRate, this.hitRandom)) {
+    if (counter?.forceCrit || rollCrit(critRate, this.hitRandom)) {
       damage = critDamageOf(damage);
       isCrit = true;
     }
@@ -463,6 +493,13 @@ export class BattleCombatResolver {
       allowDamageLink: true,
       isCrit,
     });
+    if (counter?.mechanic === 'DEEP_RAID') {
+      svc.event.emit(EVENT_NAMES.TroopCounterLine, `【縱深突襲】騎兵衝散弓兵，造成 ${damage} 傷害，弓兵下回合無法射擊`);
+      // 狀態在整輪結尾遞減：我方先動，所以敵弓的「下回合」就是同一輪稍後；敵騎打我方弓兵則要撐到下一輪
+      if (!defender.isDead()) svc.buff.applyBuff(defender.id, StatusEffect.NoShoot, counter.defenderNoShootTurns + (attacker.faction === Faction.Enemy ? 1 : 0));
+    } else if (counter?.mechanic === 'HIGH_GROUND_VOLLEY') {
+      svc.event.emit(EVENT_NAMES.TroopCounterLine, `【高地射程】弓兵居高臨下，造成 ${damage} 傷害`);
+    }
     this.resolveTallySplash(attacker, defender, damage, svc);
     this.resolveTallyIgnite(attacker, defender);
 
@@ -944,7 +981,9 @@ export class BattleCombatResolver {
     const terrain = cell?.terrain ?? TerrainType.Plain;
     // 天氣強約束（PROG-2-1460）：大風遠程射程 -2，最少留 1 格
     const weatherRange = isRangedAttack(unit.attackRange) ? weatherRangedRangeDelta(this.context.state.weather) : 0;
-    const range = Math.max(1, baseRange + getTerrainTroopEffect(unit.type, terrain).attackRangeDelta + weatherRange);
+    // 高地射程（doc_spec_0309 §3，PROG-2-9368）：弓兵站山地射程 +1
+    const highGround = this.context.isTroopCounterTacticsEnabled?.() ? troopRangeBonus(unit.type, terrain) : 0;
+    const range = Math.max(1, baseRange + getTerrainTroopEffect(unit.type, terrain).attackRangeDelta + weatherRange + highGround);
     // 林地 D 視野受限（PROG-2-0789）：射程上限 1，只打相鄰格
     const cap = terrainAttackRangeCapOf(terrain, this.getUnitAptitude(unit).terrain);
     return cap === null ? range : Math.min(range, cap);

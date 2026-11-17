@@ -76,6 +76,8 @@ function buildFactionAttackActions(
     if (unit.attackRange === 0) continue;
     if (unit.isDead()) continue;
     if (svc.buff.hasBuff(unit.id, StatusEffect.Stun)) continue;
+    // 封射（縱深突襲，PROG-2-9368）：被騎兵衝散的遠程部隊這回合不能射擊
+    if (unit.attackRange > 1 && svc.buff.hasBuff(unit.id, StatusEffect.NoShoot)) continue;
     if (context.isUnitDeployedThisTurn?.(unit.id)) continue;
     units.push(unit);
   }

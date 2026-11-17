@@ -8281,6 +8281,52 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9368",
+      "title": "兵種動態相剋接進戰鬥結算，教學戰關閉",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 2026-11-17 裁決：兵種動態相剋接上，教學戰先關閉。純邏輯模組 TroopCounterTactics 早已寫好但沒有任何呼叫端。",
+      "related": [
+        "PROG-2-1905"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（7838 過）；無頭模擬三種配兵各 40 場，開關前後勝率 85%→85%、95%→100%、80%→73%，平均多約 1 回合 | 變更: BattleCombatResolver 接上拒馬槍陣、縱深突襲、高地射程；新增封射狀態；GAME_CONFIG.troopCounterTacticsEnabled 總開關，教學戰不啟用 | 阻塞: 林地疾襲、蠻王狂嘯需要南蠻兵種，未接；線上實打待發版後補",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
