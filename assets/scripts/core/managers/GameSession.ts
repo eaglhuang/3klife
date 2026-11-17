@@ -234,8 +234,9 @@ import { services } from './ServiceLoader';
 import { type CampaignStageDef, enabledCampaignStages, getCampaignStage, isCampaignStagePlayable } from '../config/CampaignStages';
 import { phaseFactorColors, phaseForLevel, type UnlockPhase } from '../systems/UnlockPhase';
 import { protectedAfterLoss, CELLAR_PROTECTION } from '../systems/CellarProtection';
-import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
+import { applySortieResult, FOOD_PER_SEASON, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
 import { buildGovernorSnapshot, type GovernorSnapshot } from '../systems/GovernorHallView';
+import { advancePopulation, applyPopulationRout, clampMorale, commerceGoldBase, INITIAL_MORALE, INITIAL_POPULATION, MORALE_DELTA, normalizeCityEconomy, populationBonusAmount, populationCapOf, RELIEF_MISSION_TEMPLATE_ID, type CityEconomyState } from '../systems/CityEconomy';
 import { buildEraResetEvent } from '../systems/EraReset';
 import { buildQuarterlyBattleReportRows, type QuarterlyBattleReportRow } from '../systems/RetireReviewCopy';
 import { withLifeImprints } from '../systems/LifeImprint';
@@ -2107,6 +2108,7 @@ export class GameSession {
         this._autoGovernance = false;
         this._magistrateUid = null;
         this._territoryLevel = 1;
+        this._cityEconomy = { population: INITIAL_POPULATION, morale: INITIAL_MORALE };
         this._pendingTerritoryLevel = null;
         this._territories = defaultKeepTerritories();
         this._journal = createEmptyJournal();
@@ -2920,7 +2922,33 @@ export class GameSession {
 
     /** 太守府的治理快照：季節倍率取目前季節，與季結入帳一致 */
     public governorSnapshot(): GovernorSnapshot {
-        return buildGovernorSnapshot(this._military, seasonModifiersOf(this._clock.state.currentSeason).foodMultiplier);
+        return buildGovernorSnapshot(this._military, seasonModifiersOf(this._clock.state.currentSeason).foodMultiplier, {
+            population: this._cityEconomy.population,
+            morale: this._cityEconomy.morale,
+            goldBase: commerceGoldBase(this._domesticLog, this._clock.state.totalSeasonsElapsed),
+        });
+    }
+
+    /** 城市人口（PROG-2-9138） */
+    public get cityPopulation(): number {
+        return this._cityEconomy.population;
+    }
+
+    /** 城市民心 0～100（PROG-2-9138） */
+    public get cityMorale(): number {
+        return this._cityEconomy.morale;
+    }
+
+    /**
+     * 守城戰敗（PROG-2-9138）：民心 −3；'rout'（守城大敗）另扣人口 3%。
+     * 目前戰場沒有「玩家為防守方」的結算，尚無呼叫端；有守城結算時在結果確定處呼叫。
+     */
+    public async applyDefenseDefeat(kind: 'defeat' | 'rout' = 'defeat'): Promise<CityEconomyState> {
+        const morale = clampMorale(this._cityEconomy.morale + MORALE_DELTA.defenseDefeat);
+        const population = kind === 'rout' ? applyPopulationRout(this._cityEconomy.population) : this._cityEconomy.population;
+        this._cityEconomy = { population, morale };
+        if (this._autoSave && this._save) await this.save();
+        return { ...this._cityEconomy };
     }
 
     /** 最近一場出征結算被地窖保護保住的糧草（PROG-2-1341）；沒觸發為 0，不存檔 */
@@ -3166,6 +3194,8 @@ export class GameSession {
     private _governance: GovernanceAssignment[] = [];
     /** 太守府等級（GOV-08，Lv1–5） */
     private _territoryLevel = 1;
+    /** 太守府的人口與民心（PROG-2-9138）：獨立存檔值，民心不再由名聲換算 */
+    private _cityEconomy: CityEconomyState = { population: INITIAL_POPULATION, morale: INITIAL_MORALE };
     /** 已下單、等季結生效的升級目標等級（GOV-08） */
     private _pendingTerritoryLevel: number | null = null;
     private _territories: KeepTerritory[] = defaultKeepTerritories();
@@ -4080,6 +4110,10 @@ export class GameSession {
             if (entry.gains.silver > 0) this._hallWallet?.grant(entry.gains.silver);
             const outcome: HallMissionOutcome = { difficulty: m.difficulty, board: m.wall, success: entry.success };
             this.settleHallMission(outcome);
+            // 開倉賑濟貧民任務完成：民心 +15（PROG-2-9138）
+            if (entry.success && m.templateId === RELIEF_MISSION_TEMPLATE_ID) {
+                this._cityEconomy = { ...this._cityEconomy, morale: clampMorale(this._cityEconomy.morale + MORALE_DELTA.reliefMissionDone) };
+            }
             const generalId = m.generalId as string;
             if (entry.success) {
                 this._awardGeneralFame(generalId, hallMissionFameGain(outcome));
@@ -4751,6 +4785,18 @@ export class GameSession {
         return result;
     }
 
+    /**
+     * 季末民心與人口結算（PROG-2-9138）：糧草足夠 +1／糧荒 −5（沿用季末缺糧門檻），上季完成外交任務 +2；
+     * 民心夾在 0～100 後，人口依新民心成長（上限依太守府等級）。開倉賑濟 +15 已在大廳任務結算時入帳。
+     */
+    private _settleCityEconomySeason(previousSeason: number, foodShortage: boolean): void {
+        let delta = foodShortage ? MORALE_DELTA.foodShortage : MORALE_DELTA.foodEnough;
+        if (this._domesticLog.lastSeason === previousSeason && this._domesticLog.lastTask === 'diplomacy') delta += MORALE_DELTA.diplomacyDone;
+        const morale = clampMorale(this._cityEconomy.morale + delta);
+        const population = advancePopulation(this._cityEconomy.population, morale, populationCapOf(this._territoryLevel));
+        this._cityEconomy = { population, morale };
+    }
+
     /** 季度治理報告（領地治理 §G）：上一季內政入帳加上季結算增加的糧草與城市兵源 */
     private _buildGovernanceReport(before: MilitaryReserve, previousSeason: number): string | null {
         const gains: Partial<Record<'food' | 'gold' | 'fame' | 'cityTroops', number>> = {
@@ -4819,7 +4865,13 @@ export class GameSession {
         // 缺口 = 門檻 − 目前糧草（RET-05 復仇取回的基數，暫定）
         if (this._tallyFoodDiscountArmed) this.recordPlayerLog('RESOURCE_LOW', '糧草', undefined, TALLY_SHORTAGE_FOOD_THRESHOLD - this._military.food);
         const reserveBeforeSettle = this._military;
-        this._military = regenMilitaryOneSeason(this._military, 1, seasonModifiersOf(advance.previous.currentSeason).foodMultiplier);
+        const seasonFoodMultiplier = seasonModifiersOf(advance.previous.currentSeason).foodMultiplier;
+        this._military = regenMilitaryOneSeason(this._military, 1, seasonFoodMultiplier);
+        // 人口紅利（PROG-2-9138）：以結算前的人口、民心入帳，與太守府畫面顯示一致；黃金看上季商業任務，糧草看固定補給
+        const goldBonus = populationBonusAmount(commerceGoldBase(this._domesticLog, advance.previous.totalSeasonsElapsed), this._cityEconomy.population, this._cityEconomy.morale);
+        if (goldBonus > 0) this._hallWallet?.grant(goldBonus);
+        const foodBonus = populationBonusAmount(Math.floor(FOOD_PER_SEASON * Math.max(0, seasonFoodMultiplier)), this._cityEconomy.population, this._cityEconomy.morale);
+        if (foodBonus > 0) this._military = { ...this._military, food: Math.min(this._military.foodCap, this._military.food + foodBonus) };
         // 監獄產出：情報累積；資源暫定折成糧草（不超過糧草上限）
         const prisonYield = prisonYieldOneSeason(this._prison.prisoners);
         this._prison = { ...this._prison, intel: this._prison.intel + prisonYield.intel };
@@ -4827,6 +4879,7 @@ export class GameSession {
         const governanceReport = this._buildGovernanceReport(reserveBeforeSettle, advance.previous.totalSeasonsElapsed);
         // 大廳任務：到期結算 → 過期 → 補新（PROG-2-9130，§9）；頂欄資源在這裡就已更新，彈窗關閉前即可見
         const hallMissionReport = this._runHallMissionSeason(advance.current.totalSeasonsElapsed);
+        this._settleCityEconomySeason(advance.previous.totalSeasonsElapsed, this._tallyFoodDiscountArmed);
         // 無期徒刑傳家寶物掉落（EQP-09，機率暫定）
         const treasures = rollPrisonTreasureDonors(this._prison.prisoners, this._random);
         if (treasures.length > 0) {
@@ -5810,10 +5863,11 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'officerTrial' | 'paidFeatureQuota' | 'openingOffers' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay' | 'seasonPass'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'officerTrial' | 'paidFeatureQuota' | 'openingOffers' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay' | 'seasonPass'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'cityEconomy' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'officerTrial' | 'paidFeatureQuota' | 'openingOffers' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay' | 'seasonPass'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'cityEconomy' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'officerTrial' | 'paidFeatureQuota' | 'openingOffers' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay' | 'seasonPass'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
+        fields.cityEconomy = { ...this._cityEconomy };
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
         if (this._governance.length > 0) fields.governanceAssignments = this.governanceAssignments;
         if (this._autoGovernance) fields.autoGovernance = true;
@@ -5868,6 +5922,8 @@ export class GameSession {
         this._territories = normalizeKeepTerritories(snapshot.territories);
         this._journal = { entries: normalizeJournalEntries(snapshot.journalEntries) };
         this._territoryLevel = normalizeTerritoryLevel(snapshot.territoryLevel);
+        // 舊檔沒有人口、民心：民心補 60，人口用舊算法（80000 + 1500 × 季數）的當下值
+        this._cityEconomy = normalizeCityEconomy(snapshot.cityEconomy, INITIAL_POPULATION + 1500 * Math.max(0, this._clock.state.totalSeasonsElapsed));
         this._pendingTerritoryLevel = normalizePendingTerritoryLevel(snapshot.territoryUpgradePending) ?? null;
         this._farewellLetters = normalizeFarewellLetters(snapshot.farewellLetters);
         this._loginStreak = normalizeLoginStreak(snapshot.loginStreak);

@@ -41,6 +41,8 @@ export function createSeasonModifiersE2ESuite(): TestSuite {
     suite.test('糧草：春→夏、夏→秋照舊；秋→冬（秋季結束）才 ×1.5', async () => {
         setActiveSeasonModifiers(DEFAULT_SEASON_MODIFIERS);
         const session = await newSession();
+        // 人口紅利（PROG-2-9138）也會加在糧草上；人口設 0 讓紅利為 0，只驗季節倍率
+        (session as unknown as { _cityEconomy: { population: number; morale: number } })._cityEconomy = { population: 0, morale: 60 };
         const gains: number[] = [];
         for (let i = 0; i < 3; i++) gains.push(await foodGainOfNextSeason(session));
         assert.equals(FOOD_PER_SEASON, gains[0]);
