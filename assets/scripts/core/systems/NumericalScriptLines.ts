@@ -14,6 +14,11 @@
 export const SP_FULL_LINE = '技能能量蓄滿！可發動武將技能！';
 export const HIGH_EP_THRESHOLD = 100;
 
+/** 單挑敗逃的戰報提示（PROG-2-9388）：敗逃當回合不可被攻擊 */
+export function duelFleeImmuneLine(generalName: string): string {
+    return `${generalName}負傷敗逃，本回合不可被攻擊`;
+}
+
 export function critLine(generalName: string, damage: number): string {
     return `天命一擊！${generalName} 造成 ${damage} 點致命傷害！`;
 }

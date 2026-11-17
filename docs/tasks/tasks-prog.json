@@ -9202,6 +9202,52 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9388",
+      "title": "單挑敗逃保護補強：連鎖分攤也擋下、戰報加提示、整回合測試",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 審 PROG-2-9386：要逐一查戰法、奧義、地形等直接改主將生命的路徑，並加日誌提示與實跑證據。",
+      "related": [
+        "PROG-2-9386"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（8047 過，新增 1 項整回合測試：敗逃當回合貼臉部隊打不死、下一回合打死、戰報有提示）；本機預覽實跑董白對呂布（敵方全弓兵）：第 3～6 回合弓兵每回合都射到董白，第 7 回合單挑敗逃剩 1 點生命後整個敵方回合沒有任何打到她的紀錄、戰報有提示，第 8 回合被射死；頁面錯誤 0；截圖與紀錄在共用筆記夾 battle-qa-flee-immunity-9388 | 變更: 連鎖分攤傷害也不打敗逃當回合的主將化身；敗逃時戰報寫「某某負傷敗逃，本回合不可被攻擊」 | 阻塞: 無。已知小問題：敗逃提示排在單挑逐招紀錄之前，併入戰報卡處理。路徑盤點結果：主將本體只有三處扣血（部隊打主將已擋，另兩處是單挑本身）；主將化身只經 applyUnitDamage（已擋）與連鎖分攤（本卡補）；河流沖刷與另一處戰術扣血都保底留 1 不會致死；撤退是自己的操作不算被攻擊",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
