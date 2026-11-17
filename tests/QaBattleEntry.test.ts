@@ -25,6 +25,7 @@ import {
     type QaBattleCatalog,
     type QaBattleResolution,
 } from '../assets/scripts/core/systems/QaBattleEntry';
+import { executeQaBattleEntry, type QaBattleEntryDeps } from '../assets/scripts/ui/scenes/QaBattleEntryRunner';
 
 const read = (rel: string): string => readFileSync(join(__dirname, '..', rel), 'utf8');
 const encounters = (JSON.parse(read('assets/resources/data/encounters.json')) as { encounters: EncounterConfig[] }).encounters;
@@ -172,7 +173,7 @@ export function createQaBattleEntrySuite(): TestSuite {
         assert.contains(login, 'isQaBattleRequested(currentSearch())');
         const runner = read('assets/scripts/ui/scenes/QaBattleEntryRunner.ts');
         assert.contains(runner, 'services().useEphemeralStorage()');
-        assert.contains(runner, 'services().scene.switchScene(SceneName.Battle, result.params)');
+        assert.contains(runner, 'services().scene.switchScene(SceneName.Battle, params)');
         assert.contains(runner, 'let consumed = false');
         const scene = read('assets/scripts/battle/views/BattleScene.ts');
         assert.contains(scene, "entrySource === 'qa' ? SceneName.Login : SceneName.Lobby");
@@ -180,6 +181,48 @@ export function createQaBattleEntrySuite(): TestSuite {
         const loader = read('assets/scripts/core/managers/ServiceLoader.ts');
         assert.contains(loader, 'public useEphemeralStorage()');
         assert.contains(loader, 'if (this.ephemeralStorage) return new MemoryStorageAdapter();');
+    });
+
+    suite.test('直進入口順序：全域初始化（語系字串）完成後才切場景（PROG-2-9131）', async () => {
+        const calls: string[] = [];
+        const deps: QaBattleEntryDeps = {
+            loadCatalog: async () => realCatalog(),
+            resolveCampaignStageId: () => 'stage',
+            prepareBattleGlobals: async () => {
+                calls.push('prepare:start');
+                await new Promise<void>((resolve) => setTimeout(resolve, 5));
+                calls.push('prepare:end');
+            },
+            clearStalePreviewKeys: () => { calls.push('clearKeys'); },
+            useEphemeralStorage: () => { calls.push('ephemeral'); },
+            switchToBattle: () => { calls.push('switch'); },
+        };
+        const outcome = await executeQaBattleEntry('?qaBattle=1', deps);
+        assert.isTrue(outcome.entered);
+        assert.equals('clearKeys,ephemeral,prepare:start,prepare:end,switch', calls.join(','));
+    });
+
+    suite.test('直進入口：參數不合法時不做初始化也不切場景', async () => {
+        const calls: string[] = [];
+        const deps: QaBattleEntryDeps = {
+            loadCatalog: async () => realCatalog(),
+            resolveCampaignStageId: () => 'stage',
+            prepareBattleGlobals: async () => { calls.push('prepare'); },
+            clearStalePreviewKeys: () => { calls.push('clearKeys'); },
+            useEphemeralStorage: () => { calls.push('ephemeral'); },
+            switchToBattle: () => { calls.push('switch'); },
+        };
+        const outcome = await executeQaBattleEntry('?qaBattle=1&qaEncounter=nope', deps);
+        assert.isFalse(outcome.entered);
+        assert.isTrue((outcome.errors?.length ?? 0) > 0);
+        assert.equals('', calls.join(','));
+    });
+
+    suite.test('直進入口載語系的呼叫與大廳開場相同', () => {
+        const runner = read('assets/scripts/ui/scenes/QaBattleEntryRunner.ts');
+        assert.contains(runner, 'await services().i18n.setLocale(services().i18n.locale)');
+        // 與大廳開場載語系是同一個呼叫
+        assert.contains(read('assets/scripts/ui/scenes/LobbyScene.ts'), 'await services().i18n.setLocale(services().i18n.locale)');
     });
 
     return suite;

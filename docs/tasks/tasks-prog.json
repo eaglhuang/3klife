@@ -8466,6 +8466,52 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9373",
+      "title": "單挑結果事件帶上雙方主將代號",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 要在戰場外接單挑結果發名聲、虎符卡與遺書。斬將時整場隨即結束，戰場狀態可能已清，接收端不該回頭查戰場。",
+      "related": [
+        "PROG-2-9369"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（7966 過） | 變更: DuelOutcomeApplied 新增 winnerGeneralId／loserGeneralId（名冊實例代號）與 winnerTemplateId／loserTemplateId（武將範本代號） | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
