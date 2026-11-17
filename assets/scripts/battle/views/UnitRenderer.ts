@@ -2202,6 +2202,12 @@ export class UnitRenderer extends Component {
       this.loadHeroMatcap(),
       this.loadHeroRmTex(entry),
     ]);
+    // 等貼圖的期間主將節點可能已被銷毀（出陣後重建畫面、戰鬥結束換場）；
+    // 對已銷毀的節點呼叫 getComponentsInChildren 會丟「null 的 length」（PROG-2-9387）
+    if (!hero.isValid || !view.worldNode.isValid) {
+      view.heroLoading = false;
+      return;
+    }
     this.applyHeroineToonMaterial(hero, matcap, rmTex);
     hero.setPosition(0, 0, 0);
     hero.setRotationFromEuler(0, 0, 0);
@@ -2352,6 +2358,7 @@ export class UnitRenderer extends Component {
    * （Unity 對照：替換 Material.shader = Shader.Find("Custom/HeroineToon")）
    */
   private applyHeroineToonMaterial(root: Node, matcap: Texture2D | null, rmOverride?: Texture2D | null): void {
+    if (!root?.isValid) return;
     const allRenderers: (MeshRenderer | SkinnedMeshRenderer)[] = [
       ...root.getComponentsInChildren(MeshRenderer),
       ...root.getComponentsInChildren(SkinnedMeshRenderer),

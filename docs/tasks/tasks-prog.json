@@ -9158,6 +9158,50 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9387",
+      "title": "戰場主將模型載入中節點被銷毀時丟出 null 的 length 頁面錯誤",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "線上試玩版 qaBattle 張飛對于禁，第 1 回合出陣後出現頁面錯誤 Cannot read properties of null (reading length)，堆疊指到 applyHeroineToonMaterial。原因推定：載入貼圖是非同步，等待期間主將節點被銷毀，之後對已銷毀節點找子元件就丟錯。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過；本機預覽同一場（張飛對于禁，第 1 回合出陣後結束回合）沒有頁面錯誤，但修改前本機也重現不到，所以不能算驗證通過，要等線上新版再看一次 | 變更: ensureGeneralHeroModel 等完貼圖後先檢查主將模型節點與畫面節點是否還有效，已銷毀就不再套材質；applyHeroineToonMaterial 開頭也加同樣檢查 | 阻塞: 無。這是依線上錯誤堆疊（_findComponents → getComponentsInChildren → applyHeroineToonMaterial）補的防呆，沒有在本機重現過原錯誤",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
