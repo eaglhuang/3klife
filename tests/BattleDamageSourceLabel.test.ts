@@ -6,7 +6,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { assert, TestSuite } from './TestRunner';
-import { battleDamageSourceLabel } from '../assets/scripts/battle/shared/BattleDamageSourceLabel';
+import { battleDamageSourceLabel, battleEndLogLine } from '../assets/scripts/battle/shared/BattleDamageSourceLabel';
 
 function read(relative: string): string {
     return fs.readFileSync(path.join(__dirname, '..', relative), 'utf8');
@@ -64,6 +64,16 @@ export function createBattleDamageSourceLabelSuite(): TestSuite {
         const take = source.indexOf('this.counterAnnouncer.take(attacker.type, defender.type)');
         assert.isTrue(guard > 0 && take > guard, '舊剋制句要放在「沒觸發動態相剋」的判斷裡');
         assert.equals(take, source.lastIndexOf('this.counterAnnouncer.take(attacker.type, defender.type)'), '只能有一處');
+    });
+
+    suite.test('戰鬥結束那行寫中文結果，不印內部代號（PROG-2-9379）', () => {
+        assert.equals('戰鬥結束：我方獲勝', battleEndLogLine('player-win'));
+        assert.equals('戰鬥結束：敵方獲勝', battleEndLogLine('enemy-win'));
+        assert.equals('戰鬥結束：平手', battleEndLogLine('draw'));
+        assert.equals('戰鬥結束', battleEndLogLine('some-new-code'));
+        const bridge = read('assets/scripts/battle/views/BattleUIBridge.ts');
+        assert.isTrue(bridge.includes('this.appendLog(battleEndLogLine(data.result));'));
+        assert.isFalse(bridge.includes('戰鬥結束：${data.result}'));
     });
 
     return suite;
