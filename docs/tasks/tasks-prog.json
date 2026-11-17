@@ -9248,6 +9248,54 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9389",
+      "title": "戰報面板展開改到棋盤右下不擋最右兩行與敵將；剩餘 HP 改剩餘生命；敗逃提示排序",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 排序 D：戰報面板展開時擋住棋盤最右兩行與敵將；併入日誌「剩餘 HP」改「剩餘生命」、PROG-2-9383 日誌高度上限的灌爆實跑、PROG-2-9388 發現的敗逃提示排序問題。",
+      "related": [
+        "PROG-2-9377",
+        "PROG-2-9383",
+        "PROG-2-9388"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（8047 過）；本機預覽實跑：展開戰報面板時棋盤最右兩行與敵方主將都看得到；刻意灌入 300 則會換行的長日誌，文字高度 1672（上限 1920），最新一則看得到，頁面錯誤 0；截圖在共用筆記夾 battle-qa-log-panel-9389 | 變更: 面板從按鈕列左側（蓋住棋盤最右兩行）改到棋盤右下空地、奧義鈕左邊，尺寸 280x216；展開收合改成只切換顯示與淡入淡出、不再改高度（以前改高度時面板可能往上長半個高度蓋到敵將）；戰報「剩餘 HP」三處改「剩餘生命」；單挑結算當下發出的戰報提示改到逐招紀錄之後才寫 | 阻塞: 無。面板變矮，一次約看得到 4 行，其餘用捲動；敗逃提示排序與「剩餘生命」改字只有型別檢查與單元測試，未另外實跑",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
