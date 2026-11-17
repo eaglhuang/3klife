@@ -78,7 +78,10 @@ export class SyncManager {
     private readonly ACTION_LOG_STORAGE_KEY = 'sync.action-log';
     private readonly META_STORAGE_KEY = 'sync.meta';
     private readonly PLAYER_ID = 'PLAYER_TEST_01';
-    private serverUrl = 'http://localhost:3000'; // 模擬伺服器位址
+    // 同步伺服器位址。預設為空字串＝離線單機模式：不對任何位址發請求、不產生 console error。
+    // 靜態託管的試玩版沒有後端，若寫死 localhost:3000 會在每次同步洗出連線被拒錯誤。
+    // 要連後端時由環境明確指定：全域 SYNC_SERVER_URL、網址參數 ?syncServer=、或呼叫 setServerUrl()。
+    private serverUrl = SyncManager.resolveConfiguredServerUrl();
     private persistChain: Promise<void> = Promise.resolve();
 
     public getActionRecords(): ActionRecord[] {
@@ -108,9 +111,27 @@ export class SyncManager {
         };
     }
 
-    /** 切換同步伺服器位址（測試或不同環境用）。 */
+    /** 讀取環境設定的同步伺服器位址；未設定回傳空字串（離線）。 */
+    private static resolveConfiguredServerUrl(): string {
+        try {
+            const g = globalThis as { SYNC_SERVER_URL?: unknown; location?: { search?: string } };
+            if (typeof g.SYNC_SERVER_URL === 'string' && g.SYNC_SERVER_URL.trim()) {
+                return g.SYNC_SERVER_URL.trim().replace(/\/+$/, '');
+            }
+            const q = /[?&]syncServer=([^&#]+)/.exec(g.location?.search ?? '');
+            if (q) return decodeURIComponent(q[1]).replace(/\/+$/, '');
+        } catch { /* 取不到環境資訊就維持離線 */ }
+        return '';
+    }
+
+    /** 切換同步伺服器位址（測試或不同環境用）；傳空字串＝回到離線模式。 */
     public setServerUrl(url: string): void {
-        this.serverUrl = url.replace(/\/+$/, '');
+        this.serverUrl = (url ?? '').trim().replace(/\/+$/, '');
+    }
+
+    /** 是否設定了同步伺服器；false 時所有同步入口靜默略過。 */
+    public isServerConfigured(): boolean {
+        return this.serverUrl.length > 0;
     }
 
     /** 伺服器確認過的同步錨點。 */
@@ -428,16 +449,7 @@ export class SyncManager {
 
     private async syncNow(): Promise<void> {
         if (this.isSyncing || this.actionRecords.length === 0) return;
-        // 靜態網頁託管環境（如 github.io）沒有本機後端時，不對 localhost:3000 發送請求避免洗版 ERR_CONNECTION_REFUSED
-        const hostname = typeof window !== 'undefined' ? window.location?.hostname ?? '' : '';
-        if (
-            hostname.length > 0
-            && hostname !== 'localhost'
-            && hostname !== '127.0.0.1'
-            && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?(\/|$)/i.test(this.serverUrl)
-        ) {
-            return;
-        }
+        if (!this.isServerConfigured()) return; // 離線單機：資料留在本機佇列
         
         this.isSyncing = true;
         this.eventSystem?.emit(EVENT_SYNCING);
@@ -512,7 +524,7 @@ export class SyncManager {
      * @param currentSave 當前存檔物件
      */
     public async syncDelta(baseSave: object, currentSave: object): Promise<void> {
-        if (this.isSyncing) return;
+        if (this.isSyncing || !this.isServerConfigured()) return;
         if (!this.network?.isOnline) {
             UCUFLogger.info(LogCategory.DATA, '[SyncManager] offline - queuing delta patch');
             this._enqueueDeltaPatch(baseSave, currentSave);
@@ -574,7 +586,7 @@ export class SyncManager {
      * 全量同步（fallback）。完整存檔已反映所有待同步行動，成功後清空已送出的行動紀錄。
      */
     public async syncFull(saveData: object): Promise<void> {
-        if (this.isSyncing) return;
+        if (this.isSyncing || !this.isServerConfigured()) return;
         this.isSyncing = true;
         this.eventSystem?.emit(EVENT_SYNCING);
 
@@ -625,7 +637,7 @@ export class SyncManager {
      * 自動呼叫 GzipCodec，需確保 pako 已引入。
      */
     public async flushCompressedActions(): Promise<void> {
-        if (this.isSyncing || this.actionRecords.length === 0 || !this.network?.isOnline) return;
+        if (this.isSyncing || !this.isServerConfigured() || this.actionRecords.length === 0 || !this.network?.isOnline) return;
 
         this.isSyncing = true;
         try {
