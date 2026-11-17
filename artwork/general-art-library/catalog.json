@@ -2585,6 +2585,24 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/xiahou_yuan__夏侯淵__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "38EA89502EBF2BE7E860186E5F7C81D8CCD70C16F4271DC2A39E891755B16366",
+            "canvas": "1024x1536 RGBA",
+            "weapon": "弓箭",
+            "poseSelection": "緊湊三分之四架勢、側向滿弓蓄力，視線回看鏡頭",
+            "sourceStanding": "standing/xiahou_yuan__夏侯淵__standing_0002.png",
+            "weaponEvidence": "https://zh.wikisource.org/zh-hant/三國演義/%E7%AC%AC056%E5%9B%9E",
+            "note": "透明全身戰鬥候選；以核定站姿色彩與布甲辨識為參考。經等比例縮放、平移至標準安全區。待使用者審閱，未整合 runtime。"
+          }
+        ]
       }
     },
     {
