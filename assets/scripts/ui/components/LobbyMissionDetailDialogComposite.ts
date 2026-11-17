@@ -79,6 +79,8 @@ export interface MissionGeneralOption {
     id: string;
     label: string;
     volunteer?: boolean;
+    /** 不可選的原因（例如「出任務中」）；有值時列為灰色、顯示原因、點了沒有反應 */
+    blockedText?: string;
 }
 
 export interface LobbyMissionDetailDialogContentState {
@@ -110,6 +112,8 @@ export interface LobbyMissionDetailDialogContentState {
     aiDelegateChecked: boolean;
     aiDelegateHintLabel: string;
     availableActions?: LobbyMissionActionKey[];
+    /** 停用原因（大廳任務完整循環 §6）：有填的行動一律不可按，點了顯示這段文字（PROG-2-9130） */
+    actionBlockedText?: Partial<Record<LobbyMissionActionKey, string>>;
 }
 
 interface LobbyMissionDetailDialogContentFile {
@@ -444,6 +448,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
                 id: (item.id?.trim() || `${item.label.trim()}-${index}`),
                 label: item.label.trim(),
                 volunteer: item.volunteer === true || (item.label.trim() === selectedLabel && volunteerVisible),
+                ...(item.blockedText ? { blockedText: item.blockedText } : {}),
             }));
 
         if (normalized.length > 0) {
@@ -471,7 +476,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
             ? options.find((item) => item.label === payloadLabel) ?? null
             : null;
         const matchedByState = options.find((item) => item.label === stateLabel) ?? null;
-        const selected = matchedById ?? matchedByLabel ?? matchedByState ?? options[0];
+        const selected = matchedById ?? matchedByLabel ?? matchedByState ?? options.find((item) => !item.blockedText) ?? options[0];
 
         return {
             id: selected?.id ?? payloadId ?? payloadLabel ?? 'general-unknown',
@@ -507,8 +512,25 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         this._suppressAiDelegateEvent = false;
 
         this._applyRatios(snapshot);
+        this._tintShortageLabels();
         this._refreshActionButtons(snapshot);
         this._setScrollContentBaseHeight();
+    }
+
+    /** 耗費不足的那一行用紅字（doc_spec_1178 §5）：文字含「不足，現有」就染紅，之後補足了再還原 */
+    private _shortageOrigColors = new WeakMap<Label, Color>();
+    private _tintShortageLabels(): void {
+        for (const label of this.node.getComponentsInChildren(Label)) {
+            const short = label.string.includes('不足，現有');
+            const orig = this._shortageOrigColors.get(label);
+            if (short) {
+                if (!orig) this._shortageOrigColors.set(label, label.color.clone());
+                label.color = new Color(255, 96, 84, 255);
+            } else if (orig) {
+                label.color = orig;
+                this._shortageOrigColors.delete(label);
+            }
+        }
     }
 
     private _buildBindingState(snapshot: LobbyMissionDetailDialogSnapshot): Record<string, unknown> {
@@ -579,7 +601,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
                 continue;
             }
 
-            const enabled = states[action].enabled;
+            const enabled = states[action].enabled && !snapshot.actionBlockedText?.[action];
             // 停用只變暗、不關掉點擊：點了要跳出原因，不能毫無反應（PROG-2-9123）
             button.interactable = true;
             const opacity = button.node.getComponent(UIOpacity) ?? button.node.addComponent(UIOpacity);
@@ -729,7 +751,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         const button = rowNode.addComponent(Button);
         button.transition = Button.Transition.NONE;
         button.target = rowNode;
-        button.interactable = option.id !== 'fallback-empty';
+        button.interactable = option.id !== 'fallback-empty' && !option.blockedText;
 
         const layout = rowNode.addComponent(Layout);
         layout.type = Layout.Type.HORIZONTAL;
@@ -750,21 +772,21 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
             Label.HorizontalAlign.LEFT,
         );
 
-        const badgeVisible = option.volunteer === true || (option.label === this._selectedGeneralLabel && this._selectedGeneralVolunteer);
+        const badgeVisible = !!option.blockedText || option.volunteer === true || (option.label === this._selectedGeneralLabel && this._selectedGeneralVolunteer);
         const badgeNode = this._createDropdownLabel(
             rowNode,
             `GeneralOptionBadge_${this._sanitizeNodeName(option.id)}`,
             110,
-            '毛遂自薦',
+            option.blockedText ?? '毛遂自薦',
             14,
-            new Color(250, 204, 94, 255),
+            option.blockedText ? new Color(230, 90, 80, 255) : new Color(250, 204, 94, 255),
             Label.HorizontalAlign.RIGHT,
         );
         badgeNode.active = badgeVisible;
 
         button.node.off(Button.EventType.CLICK);
         button.node.on(Button.EventType.CLICK, () => {
-            if (option.id === 'fallback-empty') {
+            if (option.id === 'fallback-empty' || option.blockedText) {
                 return;
             }
             this._selectGeneral(option);
@@ -774,7 +796,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         layout.updateLayout();
 
         const opacity = rowNode.getComponent(UIOpacity) ?? rowNode.addComponent(UIOpacity);
-        opacity.opacity = isSelected ? 255 : 230;
+        opacity.opacity = option.blockedText ? 150 : isSelected ? 255 : 230;
     }
 
     private _createDropdownLabel(
@@ -846,8 +868,9 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
             selectedGeneralId: snapshot.selectedGeneralId,
             aiDelegateChecked: snapshot.aiDelegateChecked,
         }).states[action];
-        if (!blocked.enabled) {
-            services().event.emit('SHOW_TOAST', { message: DETAIL_ACTION_BLOCKED_TEXT[blocked.reason ?? 'not-offered'], duration: 2 });
+        const customBlock = snapshot.actionBlockedText?.[action];
+        if (!blocked.enabled || customBlock) {
+            services().event.emit('SHOW_TOAST', { message: customBlock ?? DETAIL_ACTION_BLOCKED_TEXT[blocked.reason ?? 'not-offered'], duration: 2 });
             return false;
         }
 

@@ -328,7 +328,14 @@ function installRealMouse() {
         return Array.from(out);
     };
 
-    window.__rm = { locate, topAtPage, backdropsOver, texts, allTexts, frame, wallCards, textOfUcuf, present, textsUnder, toastVisible };
+    /** 名稱完全等於 name 的第一個作用中節點底下所有 Label 文字串起來（找不到回傳 null） */
+    const textOfNodeName = (name) => {
+        let hit = null;
+        walkActive(scene(), (n) => { if (!hit && n.name === name) hit = n; });
+        return hit ? textUnder(hit) : null;
+    };
+
+    window.__rm = { textOfNodeName, locate, topAtPage, backdropsOver, texts, allTexts, frame, wallCards, textOfUcuf, present, textsUnder, toastVisible };
 }
 
 /**
@@ -381,6 +388,7 @@ function createRealMouse(pageOrGetter, { settleMs = 120 } = {}) {
         topAtPage: (x, y) => pg().evaluate((px, py) => window.__rm.topAtPage(px, py), x, y),
         backdropsOver: (anchorUcuf) => pg().evaluate((id) => window.__rm.backdropsOver(id), anchorUcuf),
         wallCards: (ucuf) => pg().evaluate((id) => window.__rm.wallCards(id), ucuf),
+        textOfNodeName: (name) => pg().evaluate((n) => window.__rm.textOfNodeName(n), name),
         textOfUcuf: (ucuf) => pg().evaluate((id) => window.__rm.textOfUcuf(id), ucuf),
         present: (spec) => pg().evaluate((x) => window.__rm.present(x), spec),
         textsUnder: (re) => pg().evaluate((r) => window.__rm.textsUnder(r), re),

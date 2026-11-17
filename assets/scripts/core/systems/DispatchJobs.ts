@@ -19,7 +19,7 @@ export const DISPATCH_COMPLETED_LIMIT = 20;
 /** 暫定：派遣完成寫日誌時的重要度 */
 export const DISPATCH_JOURNAL_PRIORITY: Readonly<Record<DispatchQuality, number>> = { POOR: 40, NORMAL: 50, GOOD: 60, EXCELLENT: 75 };
 
-/** 派遣獎勵可入帳的資源：糧草、金幣（交呼叫端錢包）、名聲 */
+/** 派遣獎勵可入帳的資源：糧草、黃金（交呼叫端錢包）、名聲 */
 export type DispatchRewardResource = 'food' | 'gold' | 'fame';
 
 export interface DispatchReward {

@@ -3,7 +3,7 @@
  * TallyPowerRating — 虎符綜合戰力評分與升星成本（純邏輯，不依賴 cc）
  *
  * - §1 TallyPower = floor(500 × 品質 × (1 + (星 − 1) × 0.25) × 共鳴 × 地形適性)
- * - §2 升星百分之百成功；碎片、精華、銅錢任一不足即拒絕且不扣資源。
+ * - §2 升星百分之百成功；碎片、精華、黃金任一不足即拒絕且不扣資源。
  * 既有 BattlePowerRating.calculateTallyPowerMod（每星 +8%）是戰力總評用的另一套係數，未改，取捨待裁決。
  */
 
@@ -46,6 +46,7 @@ export function computeTallyBattlePower(input: TallyPowerInput): number {
 export interface TallyStarCost {
     shards: number;
     essence: number;
+    /** 欄位名沿用 copper；對應黃金（2026-11-17 裁決併入黃金，日後接線用黃金錢包） */
     copper: number;
     unlock: string;
 }

@@ -18,7 +18,7 @@ function nationOf(world: RivalWorld, id: string) {
 export function createRivalNationResourcesSuite(): TestSuite {
     const suite = new TestSuite('RivalNationResources (他國內政資源 RAI-01、RAI-02、RAI-03 PROG-2-1502)');
 
-    suite.test('新局八國皆有初始資源，金幣與情報依暫定值', () => {
+    suite.test('新局八國皆有初始資源，黃金與情報依暫定值', () => {
         const world = createRivalWorld();
         assert.equals(8, world.nations.length);
         for (const nation of world.nations) {

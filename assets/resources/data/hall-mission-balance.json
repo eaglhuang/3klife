@@ -1,0 +1,47 @@
+{
+  "Version": 1,
+  "Wall_Target_Count": 4,
+  "Expire_Seasons": 2,
+  "Initial_Intel_Percent": 50,
+  "Recon_Cost_Grain": 50,
+  "Wait_Intel_Bonus": 25,
+  "Wait_Expire_Bonus_Seasons": 1,
+  "Perfect_Bonus_Ratio": 0.5,
+  "Perfect_Key_Stat_Threshold": 85,
+  "Record_Limit": 20,
+  "Resource_Caps": { "GRAIN": 10000, "SILVER": 5000, "TROOPS": 3000 },
+  "Energy_Cost": { "Military": 20, "Domestic": 10, "Expedition": 20 },
+  "Generate_Weights": { "Top": 3, "Minus_One": 4, "Minus_Two_Or_Lower": 2 },
+  "Success_Rate": {
+    "Base": 0.5,
+    "Power_Slope": 0.5,
+    "Base_Min": 0.05,
+    "Base_Max": 0.95,
+    "Key_Stat_Baseline": 70,
+    "Key_Stat_Per_Point": 0.003,
+    "Key_Stat_Min": -0.06,
+    "Key_Stat_Max": 0.09,
+    "Volunteer_Bonus": 0.5,
+    "Final_Min": 0.05,
+    "Final_Max": 1.0,
+    "Preview_Margin": 0.15,
+    "Preview_Step": 0.05
+  },
+  "Difficulties": {
+    "EASY": { "Duration_Seasons": 1, "Power_Required": 100, "Reward_Grain": 120, "Reward_Silver": 80, "General_Exp": 40, "Cost_Grain": 40, "Cost_Troops": 50, "Cost_Silver": 30 },
+    "NORMAL": { "Duration_Seasons": 1, "Power_Required": 180, "Reward_Grain": 200, "Reward_Silver": 140, "General_Exp": 70, "Cost_Grain": 60, "Cost_Troops": 80, "Cost_Silver": 50 },
+    "ELITE": { "Duration_Seasons": 2, "Power_Required": 260, "Reward_Grain": 350, "Reward_Silver": 250, "General_Exp": 120, "Cost_Grain": 100, "Cost_Troops": 150, "Cost_Silver": 80 },
+    "ADVANCED": { "Duration_Seasons": 2, "Power_Required": 330, "Reward_Grain": 600, "Reward_Silver": 420, "General_Exp": 200, "Cost_Grain": 180, "Cost_Troops": 250, "Cost_Silver": 140 },
+    "HELL": { "Duration_Seasons": 3, "Power_Required": 400, "Reward_Grain": 1000, "Reward_Silver": 700, "General_Exp": 320, "Cost_Grain": 300, "Cost_Troops": 400, "Cost_Silver": 220 }
+  },
+  "Wall_Rewards": {
+    "Military": { "Grain": 1, "Silver": 0, "General_Exp": 1 },
+    "Domestic": { "Grain": 0.5, "Silver": 1, "General_Exp": 0 },
+    "Expedition": { "Grain": 0, "Silver": 1, "General_Exp": 1 }
+  },
+  "Wall_Costs": {
+    "Military": { "Grain": 1, "Troops": 1, "Silver": 0 },
+    "Domestic": { "Grain": 1, "Troops": 0, "Silver": 1 },
+    "Expedition": { "Grain": 1, "Troops": 1, "Silver": 0 }
+  }
+}

@@ -17,7 +17,7 @@
 | 玩家前 24h 行為類型 (`PlayerLogType`) | 代表情境 | 派生之日報主題候選 (`DailyNewsType`) |
 | :--- | :--- | :--- |
 | **BATTLE_LOSE** | 戰場遭遇敗績、陣亡折兵 | `COMFORT` (家臣慰勉)、`REVENGE` (連夜復仇反搶) |
-| **RESOURCE_LOW** | 糧草或銅錢告急、國庫空虛 | `REVENGE` (反搶補糧)、`SHOPPING` (特價團購採購) |
+| **RESOURCE_LOW** | 糧草或黃金告急、國庫空虛 | `REVENGE` (反搶補糧)、`SHOPPING` (特價團購採購) |
 | **GACHA_FAIL** | 轉蛋多抽未出金、抽卡不順 | `COMFORT` (溫言開導)、`GOSSIP` (軍中趣聞解悶) |
 | **GACHA_SUCCESS** | 歐氣爆發抽中焦點名將 | `GOSSIP` (名震三軍奇聞) |
 | **BATTLE_WIN** | 破敵大捷、斬將奪旗 | `TRAINING` (士氣大振自主練功)、`OFFLINE_SOCIAL` (武將切磋) |

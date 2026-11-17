@@ -4,7 +4,7 @@
  * 鎖住：
  *   - 成本與成功率以目標星級為鍵：3→4 為 3000／50／80%，4→5 為 10000／200／50%，UR 各加 10%
  *   - 失敗扣一半材料、不降星；保底符必成功
- *   - 阻擋：星級不可突破、品質封頂不足、金幣或精華不足時不扣材料
+ *   - 阻擋：星級不可突破、品質封頂不足、黃金或精華不足時不扣材料
  *   - 不擲骰
  */
 import { assert, TestSuite } from './TestRunner';
@@ -42,7 +42,7 @@ export function createTigerTallyBreakthroughSuite(): TestSuite {
         assert.equals(0.6, breakthroughSuccessRate('UR', 5));
     });
 
-    suite.test('4→5 成功：升到 5★，扣 10000 金幣與 200 精華', () => {
+    suite.test('4→5 成功：升到 5★，扣 10000 黃金與 200 精華', () => {
         const result = resolveTallyBreakthrough(input({ roll: 0.49 }));
         assert.isTrue(result.ok && result.success);
         assert.equals(5, result.ok ? result.star : 0);
@@ -50,7 +50,7 @@ export function createTigerTallyBreakthroughSuite(): TestSuite {
         assert.equals(200, result.ok ? result.essenceSpent : 0);
     });
 
-    suite.test('3→4 成功：升到 4★，扣 3000 金幣與 50 精華', () => {
+    suite.test('3→4 成功：升到 4★，扣 3000 黃金與 50 精華', () => {
         const result = resolveTallyBreakthrough(input({ star: 3, roll: 0.79 }));
         assert.isTrue(result.ok && result.success);
         assert.equals(4, result.ok ? result.star : 0);
@@ -58,7 +58,7 @@ export function createTigerTallyBreakthroughSuite(): TestSuite {
         assert.equals(50, result.ok ? result.essenceSpent : 0);
     });
 
-    suite.test('失敗：不降星，4→5 扣一半（5000 金幣、100 精華），3→4 扣一半（1500、25）', () => {
+    suite.test('失敗：不降星，4→5 扣一半（5000 黃金、100 精華），3→4 扣一半（1500、25）', () => {
         const fail45 = resolveTallyBreakthrough(input({ roll: 0.5 }));
         assert.isTrue(fail45.ok && !fail45.success);
         assert.equals(4, fail45.ok ? fail45.star : 0);
@@ -84,7 +84,7 @@ export function createTigerTallyBreakthroughSuite(): TestSuite {
         assert.equals(1, result.ok ? result.guaranteeTokensSpent : 0);
     });
 
-    suite.test('阻擋：星級不可突破、品質封頂不足、金幣或精華不足時不扣材料', () => {
+    suite.test('阻擋：星級不可突破、品質封頂不足、黃金或精華不足時不扣材料', () => {
         assert.equals('NOT_BREAKTHROUGH_STAR', reasonOf(input({ star: 2 })));
         assert.equals('NOT_BREAKTHROUGH_STAR', reasonOf(input({ star: 5 })));
         assert.equals('CAP_REACHED', reasonOf(input({ quality: 'R', star: 3 })));

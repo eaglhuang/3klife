@@ -28,7 +28,7 @@ export function createGovernorHallViewSuite(): TestSuite {
         assert.equals('民心 65', view.moraleText);
     });
 
-    suite.test('四條流向：金錢、糧草、城市兵源上限、補兵速度', () => {
+    suite.test('四條流向：黃金、糧草、城市兵源上限、補兵速度', () => {
         const view = buildGovernorHallView(snapshot());
         assert.equals(4, view.flows.length);
         assert.equals('gold', view.flows[0].key);
@@ -51,10 +51,10 @@ export function createGovernorHallViewSuite(): TestSuite {
         assert.equals('人口紅利 +0', card.populationBonusText);
     });
 
-    suite.test('城市兵源卡：目前 / 上限、每回合補兵、距離回滿', () => {
+    suite.test('城市兵源卡：目前 / 上限、每季補兵、距離回滿', () => {
         const card = buildGovernorHallView(snapshot()).cityTroopCard;
         assert.equals('目前兵源 800 / 1000', card.stockText);
-        assert.equals('每回合補兵 +50', card.recruitText);
+        assert.equals('每季補兵 +50', card.recruitText);
         assert.equals('距離回滿 4 回合', card.recoverText);
     });
 

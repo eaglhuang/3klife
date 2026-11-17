@@ -35,7 +35,7 @@ export function createLobbyHallReportLoopE2ESuite(): TestSuite {
         const a = build(adapter, [person('lead', '男', 30), person('clerk', '男', 28, { pol: 90 })]);
         a.startNewGame(41);
 
-        // 第 1 天：登入生成日報；指派治理；下單升級（糧草足夠、金幣扣得起）
+        // 第 1 天：登入生成日報；指派治理；下單升級（糧草足夠、黃金扣得起）
         a.recordLoginAt(DAY0);
         const day0 = a.dailyNews.lastGeneratedDay;
         assert.isTrue(day0 !== null, '登入當天生成日報');

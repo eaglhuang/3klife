@@ -45,7 +45,7 @@ export function createGeneralSalarySuite(): TestSuite {
         assert.equals(0, salaryOfRank(-1));
     });
 
-    suite.test('金幣夠時全發，總額正確，帳本沒有欠薪', () => {
+    suite.test('黃金夠時全發，總額正確，帳本沒有欠薪', () => {
         const result = settleSalaries([payee('a', 2), payee('b', 1)], 150, createSalaryLedger(), 7, never);
         assert.equals(150, result.totalPaid);
         assert.equals(0, result.unpaid.length);
@@ -53,7 +53,7 @@ export function createGeneralSalarySuite(): TestSuite {
         assert.equals(0, Object.keys(result.ledger.arrears).length);
     });
 
-    suite.test('金幣不足時高階先發，付不起的跳過，低階照發', () => {
+    suite.test('黃金不足時高階先發，付不起的跳過，低階照發', () => {
         const result = settleSalaries([payee('low', 1), payee('high', 4), payee('mid', 3)], 200, createSalaryLedger(), 1, never);
         assert.equals(200, result.totalPaid);
         assert.equals('high', result.paid[0]);

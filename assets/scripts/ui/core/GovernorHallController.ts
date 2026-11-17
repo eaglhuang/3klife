@@ -23,8 +23,10 @@ export interface GovernorTerritoryInfo {
     maxSlots: number;
     pendingLevel: number | null;
     plan: TerritoryUpgradePlan;
-    /** 上次升級被錢包拒絕（金錢不足）；為 true 時按鈕停用並提示（PROG-2-0991）。 */
+    /** 上次升級被錢包拒絕（黃金不足）；為 true 時按鈕停用並提示（PROG-2-0991）。 */
     goldShortage?: boolean;
+    /** 目前持有的糧草與黃金；有傳才會在「不足」提示裡一併顯示所需量與現有量。 */
+    owned?: { food: number; gold: number };
 }
 
 export interface GovernorHallDeps {
@@ -36,7 +38,7 @@ const UPGRADE_REJECT_TEXT: Record<TerritoryUpgradeRejectReason, string> = {
     'max-level': '已達最高等級',
     'upgrade-pending': '已有待生效的升級',
     'insufficient-food': '糧草不足',
-    'insufficient-gold': '金錢不足',
+    'insufficient-gold': '黃金不足',
 };
 
 /** 未傳入等級資訊時的預設：Lv1、2 格、無待生效升級，升級按鈕不可按。 */
@@ -55,11 +57,20 @@ export class GovernorHallController {
         const info = this._deps.territory?.() ?? DEFAULT_TERRITORY;
         const plan = info.plan;
         const upgradeable = plan.ok && !info.goldShortage;
+        const owned = info.owned;
+        // 不足提示附上所需與現有，玩家才知道還差多少。
+        const shortageText = (reason: TerritoryUpgradeRejectReason): string => {
+            const base = UPGRADE_REJECT_TEXT[reason];
+            if (!owned) return base;
+            if (reason === 'insufficient-food') return `${base}（需 ${plan.cost.food}，現有 ${owned.food}）`;
+            if (reason === 'insufficient-gold') return `${base}（需 ${plan.cost.gold}，現有 ${owned.gold}）`;
+            return base;
+        };
         const upgradeLabel = info.goldShortage
-            ? UPGRADE_REJECT_TEXT['insufficient-gold']
+            ? shortageText('insufficient-gold')
             : plan.ok
                 ? `升級至 Lv${plan.targetLevel}（金 ${plan.cost.gold}・糧 ${plan.cost.food}）`
-                : UPGRADE_REJECT_TEXT[plan.reason ?? 'insufficient-food'];
+                : shortageText(plan.reason ?? 'insufficient-food');
         return {
             texts: {
                 govLevel: `太守府 Lv${info.level}`,

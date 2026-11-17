@@ -9,6 +9,7 @@ import { type BattleResult, BATTLE_FRONT_DEPTH } from "../BattleTypes";
 import { DUEL_FLEE_HP, DUEL_FLEE_SQUAD_LOSS_RATIO, DUEL_WINNER_BUFF_TURNS, DUEL_WINNER_CRIT_BONUS } from "../shared/DuelOutcome";
 import { duelVictoryBuffTurns } from "../shared/DuelVictoryBuff";
 import { maximizeMorale } from "../shared/Morale";
+import { duelFleeImmuneLine } from "../../core/systems/NumericalScriptLines";
 
 /**
  * 單挑最多交手回合數（暫定，規格未定義）。達上限仍雙方存活 → 平局，單挑結束、不產生死亡、不套用懲罰。
@@ -448,7 +449,7 @@ export class BattleGeneralDuelFlow {
   /**
    * 單挑分出勝負後的效果（doc_spec_0314 §4，PROG-2-9369）。
    * 勝方：全軍士氣拉滿、暴擊率 +15% 持續 2 回合。
-   * 敗方負傷逃走：主將生命歸 1、全軍兵力減半；教學戰不套敗方代價（使用者 2026-11-17 裁決）。
+   * 敗方負傷逃走：主將生命歸 1、全軍兵力減半、當回合不可被攻擊；教學戰不套敗方代價（使用者 2026-11-17 裁決）。
    * 敗方被斬：戰鬥由 checkVictory 直接結束，這裡只發事件。
    */
   private applyDuelOutcome(winner: Faction, actingFaction: Faction, tutorial: boolean, svc: ReturnType<typeof services>): void {
@@ -468,6 +469,9 @@ export class BattleGeneralDuelFlow {
 
     const fled = !killed && !tutorial;
     if (fled) {
+      // 敗逃當回合不可被攻擊，下回合起恢復；雙方都適用（PROG-2-9386）
+      this.context.state.duelFleeImmuneTurns.set(loser, svc.battle.getSnapshot().turn);
+      svc.event.emit(EVENT_NAMES.BattleSkillNotice, duelFleeImmuneLine(loserGeneral.name));
       loserGeneral.currentHp = Math.min(loserGeneral.currentHp, DUEL_FLEE_HP);
       this.context.state.units.forEach((unit) => {
         if (unit.faction !== loser || unit.isDead()) return;

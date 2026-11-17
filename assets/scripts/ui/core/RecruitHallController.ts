@@ -4,7 +4,7 @@
  *
  * 職責：
  *   - 名將池（hero-pool）一頁六框全身立繪（PortraitGallery，PROG-2-1126）；點框選人
- *   - 下方詳情列顯示五維；按「招募」→ 扣金幣、入名冊；已在名冊或金幣不足時停用並說明
+ *   - 下方詳情列顯示五維；按「招募」→ 扣黃金、入名冊；已在名冊或黃金不足時停用並說明
  *
  * 宿命池（開局六位）不動；這裡是開局後的「指名招募」，讓玩家自己挑人。
  */
@@ -41,7 +41,7 @@ interface RecruitItem extends PortraitGalleryItem {
 
 export class RecruitHallController {
     private readonly _gallery: PortraitGallery<RecruitItem>;
-    private _notice = `每位 ${RECRUIT_GOLD_COST} 金幣，招募後直接進名冊，可出征、結緣、上陣。`;
+    private _notice = `每位 ${RECRUIT_GOLD_COST} 黃金，招募後直接進名冊，可出征、結緣、上陣。`;
 
     public constructor(private readonly _deps: RecruitHallDeps) {
         this._gallery = new PortraitGallery(() => {
@@ -87,7 +87,7 @@ export class RecruitHallController {
             return false;
         }
         if (!this._deps.spendGold(RECRUIT_GOLD_COST)) {
-            this._notice = `金幣不足，招募 ${general.name} 需要 ${RECRUIT_GOLD_COST}`;
+            this._notice = `黃金不足，招募 ${general.name} 需要 ${RECRUIT_GOLD_COST}`;
             return false;
         }
         await this._deps.recruit(general);
@@ -102,7 +102,7 @@ export class RecruitHallController {
         const general = this._gallery.selected()?.general ?? null;
         const has = !!general && owned.has(general.id);
         const all = this._deps.candidates();
-        view.texts.goldLabel = `金幣 ${gold}　名將 ${all.length} 位（已招 ${all.filter((g) => owned.has(g.id)).length}）`;
+        view.texts.goldLabel = `黃金 ${gold}　名將 ${all.length} 位（已招 ${all.filter((g) => owned.has(g.id)).length}）`;
         view.texts.detailName = general?.name ?? '';
         view.texts.detailMeta = general ? statLine(general) : '';
         view.texts.btnRecruitLabel = has ? '已在名冊' : `招募（${RECRUIT_GOLD_COST} 金）`;

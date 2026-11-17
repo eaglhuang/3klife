@@ -2,10 +2,10 @@
 /**
  * GovernorHallView — 太守府治理頁的文字與數值（純邏輯，不依賴 cc）。
  *
- * - 中央儀表盤顯示人口與民心，四條流向：金錢、糧草、城市兵源上限、補兵速度。
- * - 產出卡拆成 基礎值 / 人口紅利 / 政策修正 / 總計；城市兵源卡顯示 目前 / 上限、每回合補兵、距離回滿。
+ * - 中央儀表盤顯示人口與民心，四條流向：黃金、糧草、城市兵源上限、補兵速度。
+ * - 產出卡拆成 基礎值 / 人口紅利 / 政策修正 / 總計；城市兵源卡顯示 目前 / 上限、每季補兵、距離回滿。
  * - 數值由呼叫端傳入，本模組不計算產出公式（公式屬於治理結算，另行實作）。
- * - 人口、民心與金錢季產出還沒有資料來源，以 null 表示並顯示「—」，不用 0 假裝有值。
+ * - 黃金季產出還沒有資料來源，以 null 表示並顯示「—」，不用 0 假裝有值；人口與民心由呼叫端傳入（大廳沿用城市卡的暫定推算值）。
  *
  * Unity 對照：像 Presenter，把 Model 的數字轉成 Label 的 text 與進度條的 fillAmount，畫面層不自己算。
  */
@@ -109,14 +109,14 @@ function cityTroopCard(troops: GovernorSnapshot['cityTroops']): CityTroopCardVie
     else recoverText = `距離回滿 ${turns} 回合`;
     return {
         stockText: `目前兵源 ${troops.current} / ${troops.cap}`,
-        recruitText: `每回合補兵 +${troops.recruitPerTurn}`,
+        recruitText: `每季補兵 +${troops.recruitPerTurn}`,
         recoverText,
     };
 }
 
 /**
  * 由玩家儲備組出治理快照：兵源與補兵是實際值；糧草基礎值是本季結算會入帳的固定補給（含季節倍率）。
- * 人口、民心、金錢季產出沒有來源，回 null；金錢目前只來自內政任務與事件，沒有固定季產出。
+ * 人口、民心、黃金季產出沒有來源，回 null；黃金目前只來自內政任務與事件，沒有固定季產出。
  */
 export function buildGovernorSnapshot(military: Readonly<MilitaryReserve>, foodMultiplier = 1): GovernorSnapshot {
     return {
@@ -136,12 +136,12 @@ export function buildGovernorHallView(snapshot: Readonly<GovernorSnapshot>): Gov
         populationText: `人口 ${textOrNoData(snapshot.population)}`,
         moraleText: `民心 ${textOrNoData(snapshot.morale)}`,
         flows: [
-            { key: 'gold', label: '金錢', valueText: textOrNoData(outputTotal(gold)) },
+            { key: 'gold', label: '黃金', valueText: textOrNoData(outputTotal(gold)) },
             { key: 'food', label: '糧草', valueText: textOrNoData(outputTotal(food)) },
             { key: 'cityTroopCap', label: '城市兵源上限', valueText: `${snapshot.cityTroops.cap}` },
             { key: 'recruitRegen', label: '補兵速度', valueText: `${snapshot.cityTroops.recruitPerTurn}` },
         ],
-        goldCard: outputCard('金錢', gold),
+        goldCard: outputCard('黃金', gold),
         foodCard: outputCard('糧草', food),
         cityTroopCard: cityTroopCard(snapshot.cityTroops),
     };

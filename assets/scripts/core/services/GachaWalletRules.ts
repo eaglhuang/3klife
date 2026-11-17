@@ -11,7 +11,7 @@ export type WalletCurrencyKey = 'gems' | 'gold' | 'tickets' | 'bronze' | 'oracle
 
 export const CURRENCY_LABELS: Record<WalletCurrencyKey, string> = {
     gems: '靈玉',
-    gold: '金幣',
+    gold: '黃金',
     tickets: '召喚券',
     bronze: '銅錢符',
     oracle: '求籤令',

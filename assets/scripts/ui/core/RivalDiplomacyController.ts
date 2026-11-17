@@ -59,7 +59,7 @@ export class RivalDiplomacyController {
         const gold = this._deps.gold();
         const result = sendGift(this._deps.world(), this.selectedId, gold);
         if (result.ok && !this._deps.spendGold(result.goldSpent)) {
-            this._lines = [`金幣不足（需要 ${GIFT_GOLD_COST}）`];
+            this._lines = [`黃金不足（需要 ${GIFT_GOLD_COST}）`];
             return;
         }
         if (result.ok) await this._deps.setWorld(result.world);
@@ -117,7 +117,7 @@ export class RivalDiplomacyController {
             `邦交 ${state.relation}（${RELATION_TIER_LABEL[relationTier(state)]}）${state.atWar ? '　交戰中' : ''}${state.allied ? '　同盟' : ''}`,
             `兵力 ${state.troops}　領地 ${state.territories}`,
         ].join('\n');
-        texts.goldLabel = `金幣 ${this._deps.gold()}　出征陣容：${squad.map((g) => g.name).join('、') || '無'}`;
+        texts.goldLabel = `黃金 ${this._deps.gold()}　出征陣容：${squad.map((g) => g.name).join('、') || '無'}`;
         texts.resultLabel = this._lines.join('\n');
         enabled.btnGift = !state.atWar;
         enabled.btnAlliance = !state.allied && !state.atWar;

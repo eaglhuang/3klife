@@ -915,7 +915,7 @@ export class LoadingScene extends Component {
         const raw = err instanceof Error ? err.message : String(err);
         return raw
             .replace(/^gems\b/, '🔹 鑽石')
-            .replace(/^gold\b/, '🪙 金幣')
+            .replace(/^gold\b/, '🪙 黃金')
             .replace(/^tickets\b/, '🎫 召喚券');
     }
 

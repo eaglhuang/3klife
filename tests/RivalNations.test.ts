@@ -38,7 +38,7 @@ export function createRivalNationsSuite(): TestSuite {
         assert.equals('neutral', relationTier(nation(world, 'shu')));
     });
 
-    suite.test('送禮：扣金幣、邦交上升；金幣不足或宿敵時失敗', () => {
+    suite.test('送禮：扣黃金、邦交上升；黃金不足或宿敵時失敗', () => {
         const world = createRivalWorld();
         const ok = sendGift(world, 'yuan', GIFT_GOLD_COST);
         assert.equals(true, ok.ok);

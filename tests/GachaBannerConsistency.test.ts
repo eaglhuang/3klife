@@ -115,12 +115,12 @@ export function createGachaBannerConsistencySuite(): TestSuite {
         assert.notContains(pool.brief, '召喚券');
     });
 
-    suite.test('十連鈕下方小字取程式保底（每 N 抽），金幣／召喚券快捷只在名將池顯示', () => {
+    suite.test('十連鈕下方小字取程式保底（每 N 抽），黃金／召喚券快捷只在名將池顯示', () => {
         for (let index = 0; index < GACHA_POOLS.length; index++) {
             const pool = GACHA_POOLS[index];
             const view = gachaApiView(pool, dto(pool.key, {}), WALLET, nameOf, 0);
             assert.equals('每 50 抽必得 SR 以上', view.texts[GACHA_TEN_NOTE_NODE], `${pool.key} 十連小字`);
-            assert.equals(pool.key === 'general', view.actives[GACHA_NODES.goldSummon], `${pool.key} 金幣鈕`);
+            assert.equals(pool.key === 'general', view.actives[GACHA_NODES.goldSummon], `${pool.key} 黃金鈕`);
             assert.equals(pool.key === 'general', view.actives[GACHA_NODES.ticketSummon], `${pool.key} 召喚券鈕`);
         }
     });

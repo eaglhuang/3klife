@@ -32,7 +32,7 @@ export function createGovernorHallControllerSuite(): TestSuite {
 
     suite.test('四條流向各有文字與 active 標記，節點 id 與 key 對應', () => {
         const flow = new GovernorHallController({ snapshot: () => snapshot() }).getFlowView();
-        assert.equals('金錢　115', flow.texts.govFlowGold);
+        assert.equals('黃金　115', flow.texts.govFlowGold);
         assert.equals('糧草　90', flow.texts.govFlowFood);
         assert.equals('城市兵源上限　8000', flow.texts.govFlowCityTroopCap);
         assert.equals('補兵速度　300', flow.texts.govFlowRecruitRegen);
@@ -77,14 +77,31 @@ export function createGovernorHallControllerSuite(): TestSuite {
         assert.isTrue(flow.actives.btnUpgrade);
     });
 
-    suite.test('金錢不足時升級按鈕停用並顯示金錢不足提示', () => {
+    suite.test('黃金不足時升級按鈕停用並顯示黃金不足提示', () => {
         const flow = new GovernorHallController({
             snapshot: () => snapshot(),
             territory: () => ({ level: 1, maxSlots: 2, pendingLevel: null, plan: planTerritoryUpgrade(1, null, 5000), goldShortage: true }),
         }).getFlowView();
-        assert.equals('金錢不足', flow.texts.btnUpgradeLabel);
+        assert.equals('黃金不足', flow.texts.btnUpgradeLabel);
         assert.isFalse(flow.enabled.btnUpgrade);
         assert.isTrue(flow.actives.btnUpgrade);
+    });
+
+    suite.test('糧草不足且有傳現有量時，提示顯示所需與現有', () => {
+        const flow = new GovernorHallController({
+            snapshot: () => snapshot(),
+            territory: () => ({ level: 1, maxSlots: 2, pendingLevel: null, plan: planTerritoryUpgrade(1, null, 300), owned: { food: 300, gold: 9000 } }),
+        }).getFlowView();
+        assert.equals('糧草不足（需 1000，現有 300）', flow.texts.btnUpgradeLabel);
+        assert.isFalse(flow.enabled.btnUpgrade);
+    });
+
+    suite.test('黃金不足且有傳現有量時，提示顯示所需與現有', () => {
+        const flow = new GovernorHallController({
+            snapshot: () => snapshot(),
+            territory: () => ({ level: 1, maxSlots: 2, pendingLevel: null, plan: planTerritoryUpgrade(1, null, 5000), goldShortage: true, owned: { food: 5000, gold: 100 } }),
+        }).getFlowView();
+        assert.equals('黃金不足（需 4000，現有 100）', flow.texts.btnUpgradeLabel);
     });
 
     return suite;

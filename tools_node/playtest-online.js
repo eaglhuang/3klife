@@ -8,6 +8,7 @@
  *   2. 新玩家開場（Intro → 信 → 命運抽取 → 確認 → 展示 → 教學）
  *   3. 大廳走動小人：點擊，確認對話泡泡出現
  *   3b. 任務牆（lobby-mission-wall）：點左牆第一張卡，核對詳情窗任務名，依序點 再探／等待／委任／執行
+ *   3b-2. 大廳任務循環（lobby-mission-loop）：再探 → 執行 → 推進到回報季 → 季度結算「大廳任務」區塊與頂欄對帳 → 牆上補回 4 筆
  *   3c. 推進一季（lobby-advance-season）：依序處理季報／事件／三國季報／年度總結，驗季別 +1、無殘留 __ui-backdrop、底欄可點
  *   4. 轉蛋：切換每個池子一次，確認右欄節點切一輪後沒有疊加
  *   5. 人物介紹：開第一位武將，切每個分頁截圖；「命」分頁檢查血統樹底板 = 主體寬−720 × 主體高
@@ -732,15 +733,9 @@ async function main() {
             { kind: 'chronicle-close', specs: [{ name: '^SeasonChronicleClose$', button: true }] },
             { kind: 'year-report', specs: [{ name: 'close|confirm|ok', under: '^YearReportHost$', button: true }] },
         ];
-        await step('lobby-advance-season', async (rec) => {
-            await requireLobby();
-            await backToLobbyBar();
-            await closeMissionLayers();
-            const before = await readSeason();
-            rec.detail.seasonBefore = before.text;
-            if (before.ordinal === null) throw new Error(`頂欄讀不到季別（lobby-hall-screen.hall-time 文字：${before.text || '無'}）`);
-            await rm.click({ ucuf: 'lobby-hall-screen.back' }, '右上「推進一季」');
-            const popups = (rec.detail.popups = []);
+        /** 處理換季後的彈窗直到安靜；captured 收集季度戰報彈窗開著時的畫面文字（關閉前截下，供大廳任務區塊對帳） */
+        const runSeasonPopups = async (rec, shotTag, captured) => {
+            const popups = [];
             const attempts = {};
             let quiet = 0;
             let blockedStreak = 0;
@@ -754,8 +749,12 @@ async function main() {
                     const r = await rm.locate(spec);
                     if (!r.found) continue;
                     if (!r.ok) { blockedSpec = blockedSpec || { popup, spec }; continue; }
-                    await shot(rec, `popup-${popups.length + 1}-${popup.kind}`);
+                    await shot(rec, `${shotTag}-${popups.length + 1}-${popup.kind}`);
+                    let cap = null;
+                    if (captured && popup.kind.startsWith('season-report')) { cap = { texts: await rm.textsUnder('^SeasonReportRoot$'), top: await readTopbar() }; captured.push(cap); }
                     await rm.click(spec, popup.kind);
+                    // 季報一關，頂欄立刻讀一次：後續事件選項會花錢，不能拿最後的頂欄比
+                    if (cap) { await delay(400); cap.topClosed = await readTopbar(); }
                     attempts[popup.kind] = n + 1;
                     popups.push({ kind: popup.kind, click: r.name, attempt: n + 1 });
                     handled = true;
@@ -771,6 +770,160 @@ async function main() {
                 quiet += 1;
             }
             if (quiet < 2) throw new Error(`彈窗 45 秒內沒處理完（已處理 ${popups.map((p) => p.kind).join('、') || '無'}）`);
+            return popups;
+        };
+        // ── 3b-2. 大廳任務完整循環（真滑鼠）：再探 → 選將執行 → 推進到回報季 → 季度結算「大廳任務」區塊與頂欄對帳 → 牆上補回 4 筆（PROG-2-9130）──
+        const readNum = (text) => Number(String(text || '').replace(/[^0-9]/g, '')) || 0;
+        const readTopbar = async () => ({
+            gold: readNum(await rm.textOfNodeName('LobbyHallScreen_span_1')),
+            food: readNum(await rm.textOfNodeName('LobbyHallScreen_span_3')),
+            troops: readNum(await rm.textOfNodeName('LobbyHallScreen_span_4')),
+        });
+        await step('lobby-mission-loop', async (rec) => {
+            await requireLobby();
+            await backToLobbyBar();
+            await closeMissionLayers();
+            await waitToastGone();
+            const top0 = await readTopbar();
+            rec.detail.topBefore = top0;
+            const head0 = (await rm.textOfUcuf(WALL_LEFT)) || '';
+            rec.detail.wallHeadBefore = head0;
+            if (!/未接取/.test(head0)) throw new Error(`左牆牆頭沒有「未接取 N」字樣：${head0 || '無'}`);
+            // 1. 開一筆未接取任務詳情，情報不足時敵情是 ???
+            const { title } = await openFirstWallCard(rec);
+            rec.detail.missionTitle = title;
+            const dialog0 = (await rm.textsUnder(MISSION_DIALOG)) || [];
+            const masked = dialog0.some((t) => t.includes('???'));
+            rec.detail.maskedBeforeRecon = masked;
+            await shot(rec, 'loop-detail-masked');
+            if (!masked) throw new Error(`詳情窗在情報 50% 時沒有遮蔽字樣 ???（文字：${dialog0.slice(0, 12).join(' / ')}）`);
+            // 2. 再探：糧草 -50、???遮蔽揭露
+            await rm.click({ name: '^BtnScout$', under: MISSION_DIALOG }, '再探');
+            const afterRecon = await waitUntil(async () => {
+                const top = await readTopbar();
+                return top.food === top0.food - 50 ? top : null;
+            }, 6000, '').catch(() => null);
+            const topNow = await readTopbar();
+            rec.detail.topAfterRecon = topNow;
+            await delay(600);
+            const dialog1 = (await rm.textsUnder(MISSION_DIALOG)) || [];
+            await shot(rec, 'loop-after-recon');
+            if (!afterRecon) throw new Error(`再探後頂欄糧草沒有減少 50（再探前 ${top0.food}，再探後 ${topNow.food}）`);
+            if (dialog1.some((t) => t.includes('???'))) throw new Error(`再探後詳情窗仍有遮蔽字樣 ???（文字：${dialog1.slice(0, 12).join(' / ')}）`);
+            // 3. 選將執行：頂欄糧草與兵源減少、牆上少一張、牆頭出現「進行中」
+            await waitToastGone();
+            await rm.click({ name: '^BtnExecute$', under: MISSION_DIALOG }, '執行');
+            const dispatched = await waitUntil(async () => {
+                const top = await readTopbar();
+                return top.food < topNow.food && top.troops < top0.troops ? top : null;
+            }, 6000, '').catch(() => null);
+            const top1 = await readTopbar();
+            rec.detail.topAfterDispatch = top1;
+            await delay(800);
+            const head1 = (await rm.textOfUcuf(WALL_LEFT)) || '';
+            const cards1 = (await rm.wallCards(WALL_LEFT)) || [];
+            const statusTexts = await waitUntil(async () => { const t = await rm.texts('進行中，還有 \\d+ 季'); return t.length ? t : null; }, 6000, '').catch(() => []);
+            rec.detail.wallHeadAfterDispatch = head1;
+            rec.detail.activeStatusTexts = statusTexts;
+            await shot(rec, 'loop-after-dispatch');
+            if (!dispatched) throw new Error(`執行後頂欄糧草／兵源沒有同時減少（執行前 ${JSON.stringify(topNow)}，執行後 ${JSON.stringify(top1)}）`);
+            if (!/進行中\s*\d+\s*件/.test(head1)) throw new Error(`執行後左牆牆頭沒有「進行中 N 件」：${head1}`);
+            if (cards1.some((c) => String(c.title).includes(title))) throw new Error(`執行後「${title}」仍在左牆的未接取列上`);
+            if (!statusTexts.length) throw new Error('執行後任務板上看不到「進行中，還有 N 季」的列狀態文字');
+            const remain = Math.min(3, Math.max(1, ...statusTexts.map((t) => Number((/還有\s*(\d+)\s*季/.exec(t) || [])[1]) || 1)));
+            // 3b. 武將佔用：派出武將 A 之後，再開另一個任務，A 不可選、顯示「出任務中」、預設人物不是 A（用真滑鼠點）
+            const busyName = ((/・([^（\s]+)/.exec(statusTexts[0]) || [])[1] || '').trim();
+            rec.detail.busyGeneral = busyName;
+            if (!busyName) throw new Error(`讀不到派出的武將名（列狀態：${statusTexts.join(' / ')}）`);
+            await closeMissionLayers();
+            await waitToastGone();
+            const second = await openFirstWallCard(rec);
+            rec.detail.secondMissionTitle = second.title;
+            const hint2 = ((await rm.textsUnder(MISSION_DIALOG)) || []).find((t) => /^成功率/.test(t)) || '';
+            const selected2 = (await rm.textOfNodeName('SelectedGeneralLabel')) || '';
+            rec.detail.secondDialogDefault = { selected: selected2, hint: hint2 };
+            if (selected2.includes(busyName) || hint2.includes(`（${busyName}）`)) throw new Error(`武將「${busyName}」還在出任務，另一任務詳情窗預設人物卻是他（人物 ${selected2}；${hint2}）`);
+            await rm.click({ name: '^GeneralSelectButton$', under: MISSION_DIALOG }, '行動人物下拉');
+            await delay(700);
+            const optionTexts = (await rm.textsUnder('^GeneralSelectDropdownPanel$')) || (await rm.textsUnder(MISSION_DIALOG)) || [];
+            rec.detail.dropdownTexts = optionTexts.slice(0, 16);
+            await shot(rec, 'loop-busy-dropdown');
+            if (!optionTexts.some((t) => t.includes(busyName)) || !optionTexts.some((t) => t.includes('出任務中'))) throw new Error(`下拉清單沒有把「${busyName}」標成「出任務中」（清單文字：${optionTexts.slice(0, 16).join(' / ')}）`);
+            // 出任務中的列排在清單最後：用滑鼠滾輪把下拉往下捲到看得見，再真點
+            let reachedBusyRow = false;
+            for (let i = 0; i < 40 && !reachedBusyRow; i++) {
+                const hit = await rm.locate({ name: '^GeneralOption_', text: busyName });
+                // 命中檢查不看捲動遮罩：列在視窗內但被詳情窗底部遮住也會回 ok，所以另外要求列的畫面座標落在下拉可視範圍（約 y 570～810）
+                if (hit && hit.found && hit.ok && hit.page && hit.page.y > 570 && hit.page.y < 810) { reachedBusyRow = true; break; }
+                await page.mouse.move(960, 600);
+                await page.mouse.wheel({ deltaY: 700 });
+                await delay(250);
+            }
+            if (!reachedBusyRow) throw new Error(`滾輪捲了 40 次，「${busyName}」那列仍沒進到下拉可視範圍`);
+            await shot(rec, 'loop-busy-row-visible');
+            await rm.click({ name: '^GeneralOption_', text: busyName }, `下拉裡出任務中的「${busyName}」`);
+            await delay(600);
+            const afterPick = (await rm.textOfNodeName('SelectedGeneralLabel')) || '';
+            rec.detail.afterPickBusy = afterPick;
+            await shot(rec, 'loop-busy-picked');
+            if (!afterPick) throw new Error('點出任務中的列後，詳情窗行動人物欄位讀不到（詳情窗被誤關？）');
+            if (afterPick.includes(busyName)) throw new Error(`點了出任務中的「${busyName}」，行動人物竟被改成他`);
+            await closeMissionLayers();
+            await closeMissionLayers();
+            await closeMissionLayers();
+            await waitToastGone();
+            // 4. 推進到回報季；季度結算要有「大廳任務」區塊，頂欄在彈窗還開著時就已是最新
+            const reports = [];
+            const topBeforeAdvance = await readTopbar();
+            rec.detail.advances = [];
+            for (let i = 0; i < remain; i++) {
+                await requireLobby();
+                await backToLobbyBar();
+                await closeMissionLayers();
+                await rm.click({ ucuf: 'lobby-hall-screen.back' }, '右上「推進一季」');
+                const popups = await runSeasonPopups(rec, `loop-advance${i + 1}`, reports);
+                rec.detail.advances.push(popups.map((p) => p.kind));
+            }
+            const topAfterAdvance = await readTopbar();
+            rec.detail.topBeforeAdvance = topBeforeAdvance;
+            rec.detail.topAfterAdvance = topAfterAdvance;
+            rec.detail.reportCaptures = reports.map((r) => ({ texts: r.texts, top: r.top, topClosed: r.topClosed }));
+            const hallReport = reports.find((r) => (r.texts || []).some((t) => t.includes('大廳任務')));
+            if (!hallReport) throw new Error(`推進 ${remain} 季後，季度結算彈窗沒有「大廳任務」區塊（彈窗文字：${reports.map((r) => (r.texts || []).join('/')).join(' || ') || '沒有出現季度結算彈窗'}）`);
+            const block = (hallReport.texts || []).join('\n');
+            if (!block.includes(title)) throw new Error(`「大廳任務」區塊沒有列出剛派出的任務「${title}」：${block}`);
+            // 頂欄在彈窗還開著時已是結算後的數字：與彈窗關閉後相同
+            if (hallReport.top.food !== hallReport.topClosed.food || hallReport.top.gold !== hallReport.topClosed.gold) {
+                throw new Error(`彈窗開著時頂欄（糧 ${hallReport.top.food}／金 ${hallReport.top.gold}）與季報關閉後（糧 ${hallReport.topClosed.food}／金 ${hallReport.topClosed.gold}）不同，頂欄不是在彈窗前更新`);
+            }
+            // 區塊寫成功時，糧草增加量要不少於區塊列的糧草入帳（頂欄還含每季自然回補）
+            const gainOf = (re) => (block.match(new RegExp(re, 'g')) || []).reduce((sum, m) => sum + readNum(m), 0);
+            const gainGrain = gainOf('糧草 \+[\d,]+');
+            const gainSilver = gainOf('黃金 \+[\d,]+');
+            rec.detail.reportGains = { grain: gainGrain, silver: gainSilver };
+            if (topAfterAdvance.food - topBeforeAdvance.food < gainGrain) throw new Error(`頂欄糧草增加 ${topAfterAdvance.food - topBeforeAdvance.food}，少於結算區塊的糧草入帳 ${gainGrain}`);
+            // 5. 任務從牆上消失、未接取補回 4 筆
+            await closeMissionLayers();
+            const head2 = (await rm.textOfUcuf(WALL_LEFT)) || '';
+            const cards2 = (await rm.wallCards(WALL_LEFT)) || [];
+            rec.detail.wallHeadAfterSettle = head2;
+            await shot(rec, 'loop-after-settle');
+            if (!/未接取\s*4/.test(head2)) throw new Error(`結算後左牆牆頭不是「未接取 4」：${head2}`);
+            if (cards2.length !== 4) throw new Error(`結算後左牆未接取列數 ${cards2.length}，應為 4`);
+            // 補牌可能再抽到同模板（新任務、同標題），所以不比標題；改確認牆頭已無「進行中」
+            if (/進行中/.test(head2)) throw new Error(`結算後左牆牆頭仍有進行中任務：${head2}`);
+            return rec.detail;
+        }, { skipIfFailed: true });
+
+        await step('lobby-advance-season', async (rec) => {
+            await requireLobby();
+            await backToLobbyBar();
+            await closeMissionLayers();
+            const before = await readSeason();
+            rec.detail.seasonBefore = before.text;
+            if (before.ordinal === null) throw new Error(`頂欄讀不到季別（lobby-hall-screen.hall-time 文字：${before.text || '無'}）`);
+            await rm.click({ ucuf: 'lobby-hall-screen.back' }, '右上「推進一季」');
+            const popups = (rec.detail.popups = await runSeasonPopups(rec, 'popup'));
             await delay(1000);
             // 驗證 1：頂欄季別前進一季（最多等 5 秒讓畫面刷新）
             let after = await readSeason();
@@ -926,6 +1079,10 @@ async function main() {
             await requireLobby();
             // 戰鬥返回後可能彈出開場禮包，先婉拒才不擋底欄
             await backToLobbyBar();
+            // 線上回大廳後底欄按鈕要等一會才建好：先等「商城」鈕出現再點，並記下等了多久
+            const dockT0 = Date.now();
+            await waitUntil(() => page.evaluate(() => window.__pt.hasButton('^BtnCatShop$')), 30000, '回大廳 30 秒後底欄「商城」鈕仍未出現');
+            rec.detail.dockReadyMs = Date.now() - dockT0;
             rec.detail.entry = '底欄「商店」→「轉蛋」';
             const hit = await openSub('BtnCatShop', '轉蛋');
             if (!hit) throw new Error('大廳找不到「商店 → 轉蛋」入口');

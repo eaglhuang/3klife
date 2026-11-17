@@ -8790,6 +8790,464 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9379",
+      "title": "戰鬥日誌「戰鬥結束」那行改寫中文結果，不印內部代號",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "線上實打看到戰鬥日誌最後一行是「戰鬥結束：player-win」，內部代號直接印給玩家。",
+      "related": [
+        "PROG-2-9375"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（7984 過） | 變更: 戰鬥日誌最後一行由「戰鬥結束：player-win」改為「戰鬥結束：我方獲勝／敵方獲勝／平手」，不認得的代號只寫「戰鬥結束」 | 阻塞: 無。本機與線上實機都還沒看這一行",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9380",
+      "title": "奧義選擇彈窗標題看不見、技能列疊在標題上方",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "本機打開奧義選擇彈窗：標題「選擇奧義」是黑字壓在深色底上看不見，技能列畫在標題上方。原因一：建畫面時沒載入色票，金色 token 解析不到退成透明黑。原因二：調整高度時只縮了外框，裡面的捲動區仍是 280 高，內容被推到標題上方。",
+      "related": [
+        "PROG-2-9378"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（7984 過）；本機預覽 1920x1080 修正前後截圖各一張，標題文字顏色由 000000 變為 d4af37，技能列回到標題下方 | 變更: 彈窗建畫面時一併載入色票；調整彈窗高度時連捲動區與可視框一起縮 | 阻塞: 無。只驗了一個奧義的情況，多個奧義與線上實機還沒看",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9381",
+      "title": "短按虎符卡後黃色拖曳殘影留在卡上不消失",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "本機真滑鼠短按戰場左側虎符卡，卡片上留下一塊黃色兵種名標籤不消失。原因：按下就開始拖曳，放開時游標還在卡片上，全域放開事件被卡片吃掉，拖曳狀態停在拖曳中。",
+      "related": [
+        "PROG-2-9380"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（7984 過）；本機預覽 1920x1080 真滑鼠實測四種情況（短按、按住幾乎不動再放開、拖到無效格放開、拖到第一列出陣）殘影都會銷毀，修前修後截圖各有 | 變更: 拖曳開始時直接聽來源卡片的放開事件：放在卡上就取消拖曳且不跳提示，滑出卡片外放開走原本的落點判定 | 阻塞: 無。短按仍不開任何面板（點擊行為等使用者裁決，本卡不動）；手機觸控沒有實機驗；沒有新增單元測試",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9382",
+      "title": "戰鬥日誌與軍師列的英文縮寫改中文（Buff、ATK、HP、INT）",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "線上實打看到戰鬥日誌有「吃到 Buff：攻擊 x 5 ATK +80」與「軍師：張飛 INT 52」，英文縮寫直接給玩家看。五維正式叫法依名詞定義文件：INT 為智力。",
+      "related": [
+        "PROG-2-9379"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（7984 過）；本機預覽水淹七軍實打，軍師列顯示「張飛 智力 52，正在執行：水淹」，日誌文字讀出「我方吃到增益：攻擊 x 3 攻擊 +80」 | 變更: 踩增益格的日誌由「吃到 Buff：… ATK +80 HP +…」改為「吃到增益：… 攻擊 +80 生命 +…」；軍師列與日誌的「INT」改為「智力」 | 阻塞: 無。日誌截圖只截到軍師列，增益那行在可視範圍外，以讀取節點文字為證；生命增益那行沒有實打到；日誌還有「前進到 L1 D2」這類路線深度代號，本卡沒動",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9383",
+      "title": "戰鬥日誌格子改寫第 N 路第 M 格、軍師列縮短、日誌過長時新行顯示不出來",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 審圖：日誌「前進到 L1 D2」看不懂、軍師列數字會換行；另外實跑發現日誌累積到文字高度約 4232 時，新寫入的行顯示不出來、字被放大。",
+      "related": [
+        "PROG-2-9382"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（7985 過）；本機預覽 1920x1080 實跑水淹七軍，截到軍師列兩行寫法、「前進到 第 3 路第 2 格」與「我方吃到增益：生命 x 3 生命 +200」都在日誌可視範圍，敵軍回合新行也照常出現 | 變更: 日誌格子寫法由 L1 D2 改成「第 1 路第 2 格」（共用 battleCellLabel）；軍師列改成姓名一行、「智力 N，執行：戰法」一行；日誌文字高度超過 1920 時從最舊的開始丟，避免超過貼圖上限後新行顯示不出來 | 阻塞: 無。日誌「剩餘 HP 40」仍是英文，未在本卡處理；手機沒有實機驗",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9384",
+      "title": "單挑接受判定的兵力項改回規格：防守方場上分隊現存兵力 / 上限",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 2026-11-17 裁決：敵方接受單挑的兵力比改回規格「自身現存／上限」。舊寫法是雙方占比，雙方兵力相當時兵力項只有 0.5，敵方幾乎都拒絕單挑。",
+      "related": [
+        "PROG-2-1323"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（7987 過，新增 2 項）| 變更: evaluateDuelAcceptance 的兵力項由「防守方現存 /（雙方現存和）」改成「防守方場上分隊現存兵力 / 兵力上限」，場上沒有分隊時為 0 | 阻塞: 無。已陣亡的分隊不在場上、不列入分母（照規格「場上現存分隊」字面）；沒有實跑畫面，純判定邏輯；改完後敵方接受單挑的實際機率由主將被擒提案一併估",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9385",
+      "title": "同一場單挑贏多次，名聲只算一次",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 2026-11-17 裁決：同場多次單挑勝，名聲每場只算一次（+15 一次）。",
+      "related": [
+        "PROG-2-9132"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（8040 過，新增 1 項、改寫 1 項）| 變更: planDuelAftermath 對同一位我方主將同一場只入帳一筆單挑名聲（+15），不同主將各算一次 | 阻塞: 無。目前一場只會成立一次單挑，這條是防之後放寬次數；沒有實跑畫面，純結算邏輯",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9386",
+      "title": "單挑敗逃當回合，敗逃的主將不可被攻擊",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 2026-11-17 裁決：單挑敗逃當回合，敗逃的主將不可被攻擊，下回合起恢復，雙方都適用。現況敗逃後生命歸 1，同回合被小兵補一刀就死，敗逃等於沒逃。",
+      "related": [
+        "PROG-2-9369"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（8046 過，新增 2 項）| 變更: 單挑敗逃時記下敗方陣營與當下回合數；同一回合內部隊不能選該主將（本體與棋盤上的化身）為目標、打了也不扣血；回合數加一後恢復；雙方都適用，教學戰沒有敗逃所以不設 | 阻塞: 無。沒有實跑畫面；畫面上沒有「不可被攻擊」的圖示或日誌提示；戰法、奧義若有直接改主將生命的路徑沒有逐一查",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9387",
+      "title": "戰場主將模型載入中節點被銷毀時丟出 null 的 length 頁面錯誤",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "線上試玩版 qaBattle 張飛對于禁，第 1 回合出陣後出現頁面錯誤 Cannot read properties of null (reading length)，堆疊指到 applyHeroineToonMaterial。原因推定：載入貼圖是非同步，等待期間主將節點被銷毀，之後對已銷毀節點找子元件就丟錯。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過；本機預覽同一場（張飛對于禁，第 1 回合出陣後結束回合）沒有頁面錯誤，但修改前本機也重現不到，所以不能算驗證通過，要等線上新版再看一次 | 變更: ensureGeneralHeroModel 等完貼圖後先檢查主將模型節點與畫面節點是否還有效，已銷毀就不再套材質；applyHeroineToonMaterial 開頭也加同樣檢查 | 阻塞: 無。這是依線上錯誤堆疊（_findComponents → getComponentsInChildren → applyHeroineToonMaterial）補的防呆，沒有在本機重現過原錯誤",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9388",
+      "title": "單挑敗逃保護補強：連鎖分攤也擋下、戰報加提示、整回合測試",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 審 PROG-2-9386：要逐一查戰法、奧義、地形等直接改主將生命的路徑，並加日誌提示與實跑證據。",
+      "related": [
+        "PROG-2-9386"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（8047 過，新增 1 項整回合測試：敗逃當回合貼臉部隊打不死、下一回合打死、戰報有提示）；本機預覽實跑董白對呂布（敵方全弓兵）：第 3～6 回合弓兵每回合都射到董白，第 7 回合單挑敗逃剩 1 點生命後整個敵方回合沒有任何打到她的紀錄、戰報有提示，第 8 回合被射死；頁面錯誤 0；截圖與紀錄在共用筆記夾 battle-qa-flee-immunity-9388 | 變更: 連鎖分攤傷害也不打敗逃當回合的主將化身；敗逃時戰報寫「某某負傷敗逃，本回合不可被攻擊」 | 阻塞: 無。已知小問題：敗逃提示排在單挑逐招紀錄之前，併入戰報卡處理。路徑盤點結果：主將本體只有三處扣血（部隊打主將已擋，另兩處是單挑本身）；主將化身只經 applyUnitDamage（已擋）與連鎖分攤（本卡補）；河流沖刷與另一處戰術扣血都保底留 1 不會致死；撤退是自己的操作不算被攻擊",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

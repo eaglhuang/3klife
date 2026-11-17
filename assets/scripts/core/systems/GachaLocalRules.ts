@@ -48,15 +48,15 @@ export function mentorPoolRule(service: LocalGachaService): GachaPoolRule {
     };
 }
 
-/** 不在 gacha-config 的程式池（舊金幣召喚、召喚券）：池 id 與預設呈現 */
+/** 不在 gacha-config 的程式池（舊黃金召喚、召喚券）：池 id 與預設呈現 */
 export const GOLD_SUMMON_POOL_ID = 'gold-summon';
 export const TICKET_SUMMON_POOL_ID = 'ticket-summon';
 export const LEGACY_SUMMON_PRESENTATION: Readonly<Record<string, GachaPoolPresentationConfig>> = {
-    [GOLD_SUMMON_POOL_ID]: { title: '金幣召喚', currency: 'gold' },
+    [GOLD_SUMMON_POOL_ID]: { title: '黃金召喚', currency: 'gold' },
     [TICKET_SUMMON_POOL_ID]: { title: '召喚券', currency: 'tickets' },
 };
 
-/** 金幣召喚：扣金幣抽將入名冊 */
+/** 黃金召喚：扣黃金抽將入名冊 */
 export function goldSummonRule(service: LocalGachaService, opts: LocalGachaRuleOptions = {}): GachaPoolRule {
     return { pull: (req) => service.performGoldSummon(req.drawCount, req.generals, opts.rollOptions ?? {}) };
 }

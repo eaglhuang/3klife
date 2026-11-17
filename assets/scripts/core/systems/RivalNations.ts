@@ -169,16 +169,16 @@ export interface DiplomacyResult {
     readonly world: RivalWorld;
     /** 給玩家看的結果句 */
     readonly message: string;
-    /** 這個指令花掉的金幣 */
+    /** 這個指令花掉的黃金 */
     readonly goldSpent: number;
 }
 
-/** 送禮：花金幣提升邦交；宿敵（≤ -80）拒收 */
+/** 送禮：花黃金提升邦交；宿敵（≤ -80）拒收 */
 export function sendGift(world: RivalWorld, id: string, gold: number): DiplomacyResult {
     const nation = findNation(world, id);
     const name = nationDef(id)?.name ?? id;
     if (nation.relation <= -80) return { ok: false, world, goldSpent: 0, message: `${name} 視我方為宿敵，拒收禮物` };
-    if (gold < GIFT_GOLD_COST) return { ok: false, world, goldSpent: 0, message: `金幣不足，送禮需要 ${GIFT_GOLD_COST}` };
+    if (gold < GIFT_GOLD_COST) return { ok: false, world, goldSpent: 0, message: `黃金不足，送禮需要 ${GIFT_GOLD_COST}` };
     const next = updateNation(world, id, (n) => ({ ...n, relation: clampRelation(n.relation + GIFT_RELATION_GAIN) }));
     return { ok: true, world: next, goldSpent: GIFT_GOLD_COST, message: `向 ${name} 送禮，邦交 +${GIFT_RELATION_GAIN}` };
 }
@@ -188,7 +188,7 @@ export function giftLettersUsed(nation: NationState, season: number): number {
     return nation.giftLetterSeason === season ? nation.giftLetterCount ?? 0 : 0;
 }
 
-/** 附外交拜帖錦囊送禮：一般送禮再加額外邦交；本季次數用完就整筆拒絕，不白花金幣 */
+/** 附外交拜帖錦囊送禮：一般送禮再加額外邦交；本季次數用完就整筆拒絕，不白花黃金 */
 export function sendGiftWithLetter(world: RivalWorld, id: string, gold: number, season: number): DiplomacyResult {
     const name = nationDef(id)?.name ?? id;
     const used = giftLettersUsed(findNation(world, id), season);
@@ -253,7 +253,7 @@ export interface SeasonTickResult {
     readonly events: SeasonEvent[];
 }
 
-/** 玩家的出征判定數值（RAI-05）：兵力取城防兵，金幣暫由呼叫端傳入（沒有就傳 0） */
+/** 玩家的出征判定數值（RAI-05）：兵力取城防兵，黃金暫由呼叫端傳入（沒有就傳 0） */
 export interface RivalPlayerStats {
     readonly troops: number;
     readonly food: number;
@@ -385,7 +385,7 @@ export interface AutoBattleResult {
 
 /**
  * 自動模擬戰鬥：我方等效兵力 = Σ 武將戰力 × 80 × 浮動(0.8~1.2)，敵方 = 兵力 × 浮動(0.8~1.2)。
- * 我方較高則勝：敵方損失 30% 兵力、我方得金幣、奪 1 塊領地；敗則敵方只損失 10%。
+ * 我方較高則勝：敵方損失 30% 兵力、我方得黃金、奪 1 塊領地；敗則敵方只損失 10%。
  * 開戰即視為交戰狀態（邦交 -50，最低 -100）。
  */
 export function autoResolveBattle(
@@ -414,7 +414,7 @@ export function autoResolveBattle(
     const lines = [
         `我方 ${generals.map((g) => g.name).join('、') || '無人出戰'}：等效兵力 ${playerStrength}`,
         `${name}：兵力 ${enemyStrength}`,
-        win ? `大勝！${name} 折損 ${enemyLosses} 兵，獲得金幣 ${goldReward}${territoryGained ? '，奪下一塊領地' : ''}`
+        win ? `大勝！${name} 折損 ${enemyLosses} 兵，獲得黃金 ${goldReward}${territoryGained ? '，奪下一塊領地' : ''}`
             : `敗北……${name} 僅折損 ${enemyLosses} 兵`,
     ];
     return { win, world: next, playerStrength, enemyStrength, enemyLosses, goldReward, territoryGained, lines };

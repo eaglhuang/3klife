@@ -129,7 +129,7 @@ export function createSeasonChronicleSuite(): TestSuite {
         assert.equals(1, session.seasonChronicle.season, '本季已有季報不重新合成');
     });
 
-    suite.test('TC-CHRONICLE-02：西域胡商扣 100 銅錢、主將騎兵升一階、紅點熄；當季只能抉擇一次', async () => {
+    suite.test('TC-CHRONICLE-02：西域胡商扣 100 黃金、主將騎兵升一階、紅點熄；當季只能抉擇一次', async () => {
         const session = setup([general('zhao-yun', { troopAptitude: { CAVALRY: 'A' } }), general('liu-bei')], 0);
         await session.setLeadGeneral('zhao-yun');
         await session.advanceSeason();
@@ -148,7 +148,7 @@ export function createSeasonChronicleSuite(): TestSuite {
         assert.isFalse((await session.resolveCityEncounter(0, wallet(500))).ok, '不可重複抉擇');
     });
 
-    suite.test('落魄鐵匠扣銅錢與木材、主將武力 +3；木材不足時拒絕', async () => {
+    suite.test('落魄鐵匠扣黃金與木材、主將武力 +3；木材不足時拒絕', async () => {
         const session = setup([general('guan-yu', { str: 98 })], 0.3);
         await session.advanceSeason();
         assert.equals('BLACKSMITH', session.seasonChronicle.encounterId);
@@ -249,7 +249,7 @@ export function createSeasonChronicleSuite(): TestSuite {
             seasonLabel: () => '春',
             markRead: () => { state = { ...state, read: true }; },
             resolve: async (index) => {
-                if (index === 0 && !afford) return { ok: false, reason: 'shortfall', resource: '銅錢' };
+                if (index === 0 && !afford) return { ok: false, reason: 'shortfall', resource: '黃金' };
                 state = { ...state, encounterChoice: index };
                 return { ok: true, line: 'done' };
             },
@@ -261,7 +261,7 @@ export function createSeasonChronicleSuite(): TestSuite {
         popup.close();
         assert.isTrue(host.node.active, '未抉擇不能收起');
         await popup.respond(0);
-        assert.equals('銅錢不足，無法執行', toasts[0]);
+        assert.equals('黃金不足，無法執行', toasts[0]);
         afford = true;
         await popup.respond(0);
         assert.equals(0, state.encounterChoice);
