@@ -2559,6 +2559,27 @@
             "note": "以整合站姿保留獨眼、藍銀甲與長槍；側身高位斜架格擋、蓄勢反擊，待審。"
           }
         ]
+      },
+      "smallAvatar": {
+        "status": "review-pending",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/xiahou_dun__夏侯惇__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "BF6089B9501B031C35E65F0D83FE4B3BE8A0DDE7DD9FBC4B1748CB16F9D074C5",
+            "canvas": "256x256 RGBA",
+            "sourceStanding": "standing/xiahou_dun__夏侯惇__standing_0002.png",
+            "cropSourceRect": [
+              382,
+              65,
+              662,
+              345
+            ],
+            "note": "純裁切與等比例縮放；250px 預覽估計頭頂至下巴約 74%，臉中心約在畫布中線；保留髮髻、頭飾、眼罩和下巴，畫面止於肩線，待使用者審閱。"
+          }
+        ]
       }
     },
     {
