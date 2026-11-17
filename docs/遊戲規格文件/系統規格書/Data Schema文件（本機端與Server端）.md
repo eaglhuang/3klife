@@ -43,7 +43,7 @@
 
 ### 重大架構變動：
 1. **Save_Version (存檔版號)**：任何 `Data` 內部的欄位增刪（例如增加「敏捷」屬性），都需要提升此版號。當 Client 載入舊版存檔時，需呼叫 `MigrationService` 進行欄位無痛補齊。
-2. **Action_Records (操作日誌 / 離線命令佇列)**：所有牽涉數值變動的行為（抽卡、花費金幣、升級）**不可直接修改 Data**。必須先生成一個 Action，由本地系統消化並算出結果後，才將 Action 壓入此陣列中，等候網路連線時上傳。
+2. **Action_Records (操作日誌 / 離線命令佇列)**：所有牽涉數值變動的行為（抽卡、花費黃金、升級）**不可直接修改 Data**。必須先生成一個 Action，由本地系統消化並算出結果後，才將 Action 壓入此陣列中，等候網路連線時上傳。
 
 ---
 
@@ -437,7 +437,7 @@
 | Action 代碼 | 說明 | 對應消耗貨幣 | 費用計算 |
 |---|---|---|---|
 | `LOCAL_GACHA_PULL` | 鑽石一般召喚（單抽/十連） | `gems` | 100 × drawCount |
-| `LOCAL_GOLD_SUMMON` | 金幣召喚（單抽） | `gold` | 500 × drawCount |
+| `LOCAL_GOLD_SUMMON` | 黃金召喚（單抽） | `gold` | 500 × drawCount |
 | `LOCAL_TICKET_SUMMON` | 召喚券召喚（單抽） | `tickets` | 1 × drawCount |
 
 ```typescript
@@ -471,9 +471,9 @@ $$ \text{New\_Hash} = SHA256 ( \text{Action\_Name} + \text{Payload\_JSON} + \tex
 3. **金鑰準備**：Server 從資料庫拉出該玩家的 `Session_Secret` 與上一次核銷成功的 `Last_Sync_Hash`。
 4. **雲端重演 (Event Replay)**：Server 逐一重演 `Action_Records` 內的每筆紀錄：
    * 檢查每一個 `Tx_Hash` 是否符合伺服器算出的雜湊值。
-   * **防修改器發威**：如果玩家直接擅改 Client `Data` 的金幣量為 999 萬，但他無法偽裝出具備正確 `Session_Secret` 簽章的「獲得金幣」Action Log，驗證會被立即推翻。
+   * **防修改器發威**：如果玩家直接擅改 Client `Data` 的黃金量為 999 萬，但他無法偽裝出具備正確 `Session_Secret` 簽章的「獲得黃金」Action Log，驗證會被立即推翻。
 5. **驗證全數通過**：Server 覆蓋資料庫中的 Snapshot JSON，並回傳一組**全新的** `Session_Secret` 供玩家下次離線使用，接著清空本機的 Log 陣列。
-6. **驗證失敗**：Server 拒絕同步，強迫 Client 退回 Server 上次成功的存檔進度與金錢狀態。
+6. **驗證失敗**：Server 拒絕同步，強迫 Client 退回 Server 上次成功的存檔進度與黃金狀態。
 
 ---
 
