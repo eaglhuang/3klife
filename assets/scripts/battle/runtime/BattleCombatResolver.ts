@@ -330,7 +330,9 @@ export class BattleCombatResolver {
     const critRate = critRateOf((tacticBehavior.getCritBonus?.(attacker, this.context.state) ?? 0) + selfBurstCritBonus(attackerBurst)
       + massDebuffCritDelta(this.context.state.getMassDebuff(attacker.faction))
       // 單挑勝方全軍暴擊加成（doc_spec_0314 §4.1，PROG-2-9369）
-      + duelVictoryCritBonus(this.context.state.getDuelVictoryBuff?.(attacker.faction)));
+      + duelVictoryCritBonus(this.context.state.getDuelVictoryBuff?.(attacker.faction))
+      // 戰中升階「天下無雙」全軍暴擊加成（doc_spec_0309 §4.2，PROG-2-9394）
+      + (this.context.state.ascensionCritBonus?.get(attacker.faction) ?? 0));
     let isCrit = false;
     if (rollCrit(critRate, this.hitRandom)) {
       damage = critDamageOf(damage);
@@ -478,7 +480,9 @@ export class BattleCombatResolver {
     const critRate = critRateOf((tacticBehavior.getCritBonus?.(attacker, this.context.state) ?? 0) + selfBurstCritBonus(attackerBurst)
       + massDebuffCritDelta(this.context.state.getMassDebuff(attacker.faction))
       // 單挑勝方全軍暴擊加成（doc_spec_0314 §4.1，PROG-2-9369）
-      + duelVictoryCritBonus(this.context.state.getDuelVictoryBuff?.(attacker.faction)));
+      + duelVictoryCritBonus(this.context.state.getDuelVictoryBuff?.(attacker.faction))
+      // 戰中升階「天下無雙」全軍暴擊加成（doc_spec_0309 §4.2，PROG-2-9394）
+      + (this.context.state.ascensionCritBonus?.get(attacker.faction) ?? 0));
     let isCrit = false;
     if (counter?.forceCrit || rollCrit(critRate, this.hitRandom)) {
       damage = critDamageOf(damage);

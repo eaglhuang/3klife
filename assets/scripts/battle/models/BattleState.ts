@@ -97,6 +97,11 @@ export class BattleState {
   public readonly duelVictoryBuffs = new Map<Faction, DuelVictoryBuff>();
   /** 單挑敗逃的主將當回合不可被攻擊（使用者 2026-11-17 裁決，PROG-2-9386）：陣營 → 敗逃發生的回合數；回合數一變就失效 */
   public readonly duelFleeImmuneTurns = new Map<Faction, number>();
+  /** 戰中升階（PROG-2-9394）：這一場各陣營主將的名聲與將階，不寫回存檔 */
+  public readonly generalAscension = new Map<Faction, { generalFame: number; generalRank: number }>();
+  /** 戰中升階給的全軍暴擊加成（0.2＝+20%）與全隊移動力加成，以陣營為鍵 */
+  public readonly ascensionCritBonus = new Map<Faction, number>();
+  public readonly ascensionMoveBonus = new Map<Faction, number>();
   /** 本場被擒的主將（PROG-2-9393）：陣營 → 紀錄；一個陣營最多一筆 */
   public readonly generalCaptures = new Map<Faction, GeneralCaptureRecord>();
   /** 奧義全隊增益 aura（SYS-SKILL-ULT-0002）：以施放者陣營為鍵，中途加入單位自動吃到 */
@@ -198,6 +203,9 @@ export class BattleState {
     this.duelVictoryBuffs.clear();
     this.duelFleeImmuneTurns.clear();
     this.generalCaptures.clear();
+    this.generalAscension.clear();
+    this.ascensionCritBonus.clear();
+    this.ascensionMoveBonus.clear();
     this.teamAuras.clear();
     this.massDebuffs.clear();
     this.damageLinks.clear();
@@ -271,6 +279,9 @@ export class BattleState {
   }
 
   public addUnit(unit: TroopUnit): void {
+    // 戰中升階的全隊移動力加成：之後才上場的部隊也吃得到（PROG-2-9394）
+    const ascendMove = this.ascensionMoveBonus.get(unit.faction) ?? 0;
+    if (ascendMove > 0 && !this.units.has(unit.id)) unit.applyMoveRangeDelta(ascendMove);
     this.units.set(unit.id, unit);
     const cell = this.getCell(unit.lane, unit.depth);
     if (cell) cell.occupantId = unit.id;

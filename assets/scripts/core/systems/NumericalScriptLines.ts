@@ -34,6 +34,12 @@ export function troopCapturedLine(generalName: string): string {
     return `${generalName}力竭被擒`;
 }
 
+/** 戰中升階的戰報提示（PROG-2-9394） */
+export function ascensionLine(generalName: string, rankTitle: string, surgeLabels: readonly string[]): string {
+    const surge = surgeLabels.length > 0 ? `，${surgeLabels.join('、')}` : '';
+    return `加封：${generalName}晉升「${rankTitle}」${surge}`;
+}
+
 export function critLine(generalName: string, damage: number): string {
     return `天命一擊！${generalName} 造成 ${damage} 點致命傷害！`;
 }

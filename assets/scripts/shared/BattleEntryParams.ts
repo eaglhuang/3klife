@@ -101,6 +101,8 @@ export interface IBattleEntryParams {
   qaPlayerGeneralHp?: number;
   /** 敵方主將開場生命（可選，PROG-2-9391，QA 直進入口用）；規則同上 */
   qaEnemyGeneralHp?: number;
+  /** 我方主將進場名聲（可選，PROG-2-9394，QA 直進入口用）：驗證戰中升階用，只影響這一場，不寫存檔；正式入口不帶 */
+  qaPlayerGeneralFame?: number;
   /** 英靈夢回教學戰的傳說英靈（OPEN-13）：只有教學戰帶入，勝利時產出初始虎符；預設沒有 */
   teachingSpirit?: { spiritId: string; spiritName: string; geneIds: readonly string[] } | null;
 }
