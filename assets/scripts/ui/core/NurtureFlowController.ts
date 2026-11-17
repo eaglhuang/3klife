@@ -149,6 +149,7 @@ export type AutoNurtureResult = { ok: true; logs: unknown[]; rites?: readonly Nu
 const BLOCK_REASON_TEXT: Record<NurtureBlockReason, string> = {
     'child-not-found': '名冊找不到這位子嗣',
     'child-dead': '已經離世',
+    'child-captive': '被敵國關押中',
     'child-underage': '未滿 5 歲',
     'not-unveiled': '尚未開獎',
     'fate-pending': '請先選擇宿命',

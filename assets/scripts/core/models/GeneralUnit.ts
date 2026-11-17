@@ -359,6 +359,8 @@ export interface GeneralConfig {
   maxVitality?: number;
   role?: string;
   status?: string;
+  /** 被敵國關押的紀錄（PROG-2-9140）：被哪一國關、從第幾季（totalSeasonsElapsed）開始；沒有欄位 = 沒被囚（舊檔相容） */
+  captivity?: { nationId: string; sinceSeason: number };
   currentHp?: number;
   currentSp?: number;
   source?: string;

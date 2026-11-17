@@ -15,7 +15,7 @@ import {
     type HallKeyStat, type HallMission, type HallMissionAmounts, type HallMissionBalance,
 } from './HallMissionData';
 
-export type HallGeneralBlock = 'dead' | 'retired' | 'not-graduated' | 'nurturing' | 'traveling' | 'on-mission' | 'offline-dispatch' | 'low-energy';
+export type HallGeneralBlock = 'dead' | 'retired' | 'not-graduated' | 'nurturing' | 'traveling' | 'on-mission' | 'offline-dispatch' | 'low-energy' | 'captive';
 
 export const HALL_BLOCK_TEXT: Readonly<Record<HallGeneralBlock, string>> = Object.freeze({
     dead: '已陣亡',
@@ -26,6 +26,7 @@ export const HALL_BLOCK_TEXT: Readonly<Record<HallGeneralBlock, string>> = Objec
     'on-mission': '出任務中',
     'offline-dispatch': '離線派遣中',
     'low-energy': '精力不足',
+    captive: '被囚中',
 });
 
 /** 一位武將在這個判定當下的事實（由 GameSession 從名冊與各系統狀態彙整） */

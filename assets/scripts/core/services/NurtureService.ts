@@ -66,6 +66,7 @@ export const DEFAULT_ADMISSIONS_PER_SEASON = 2;
 export type NurtureBlockReason =
     | 'child-not-found'
     | 'child-dead'
+    | 'child-captive'
     | 'child-underage'
     | 'not-unveiled'
     | 'fate-pending'
@@ -241,6 +242,7 @@ export class NurtureService {
             return { eligible: false, reasons: ['child-not-found'], lockedMentorIds: [] };
         }
         if ((child.status ?? '').toLowerCase() === GENERAL_STATUS_DEAD) reasons.push('child-dead');
+        if ((child as { captivity?: unknown }).captivity) reasons.push('child-captive');
         if ((child.age ?? 0) < UNVEILING_AGE) reasons.push('child-underage');
         if (!child.fate) reasons.push('not-unveiled');
         else if (!child.fate.choice) reasons.push('fate-pending');

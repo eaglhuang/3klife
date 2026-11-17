@@ -103,7 +103,9 @@ export type DeployBlockReason =
     | 'low-vitality'
     | 'in-nurture'
     /** 正在出大廳任務（PROG-2-9130）：任務結算前不能出征 */
-    | 'on-hall-mission';
+    | 'on-hall-mission'
+    /** 被敵國關押（PROG-2-9140）：關押期間不能出戰、不能派任務 */
+    | 'captive';
 
 export interface DeployCheck {
     eligible: boolean;
@@ -137,6 +139,7 @@ export function checkDeployable(general: GeneralConfig, options: DeployOptions =
     const g = general as BattleRosterGeneral;
     const reasons: DeployBlockReason[] = [];
     if (g.status === GENERAL_STATUS_DEAD) reasons.push('dead');
+    if (g.captivity) reasons.push('captive');
     if (g.isMentorCard) reasons.push('retired-mentor');
     if (isUngraduatedOffspring(g)) reasons.push('not-graduated');
     if (vitalityOf(g) < BATTLE_MIN_VITALITY) reasons.push('low-vitality');

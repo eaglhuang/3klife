@@ -40,7 +40,12 @@ export interface DuelAftermathPlan {
 export const DUEL_VICTORY_FAME: number = GENERAL_FAME_AWARD.duelWin;
 
 /** 事件清單 → 名聲與陣亡計畫；只認名冊內的我方主將。 */
-export function planDuelAftermath(events: readonly DuelOutcomeRecord[], rosterIds: ReadonlySet<string>): DuelAftermathPlan {
+export function planDuelAftermath(
+    events: readonly DuelOutcomeRecord[],
+    rosterIds: ReadonlySet<string>,
+    /** 這場已由「主將被擒」君主處置接手的名冊 id（PROG-2-9140）：不再依 killed 直接陣亡，只有被斬首才陣亡 */
+    captureHandledIds: ReadonlySet<string> = new Set(),
+): DuelAftermathPlan {
     const fame: DuelAftermathPlan['fame'] = [];
     const fallen = new Set<string>();
     const famed = new Set<string>();
@@ -50,7 +55,7 @@ export function planDuelAftermath(events: readonly DuelOutcomeRecord[], rosterId
             fame.push({ generalId: event.winnerGeneralId, gain: DUEL_VICTORY_FAME });
         }
         // 教學戰不會被斬（killed 本來就假），這裡再擋一次，避免上游改動後教學戰誤殺名冊武將
-        if (event.killed && !event.tutorial && event.loser === Faction.Player && event.loserGeneralId && rosterIds.has(event.loserGeneralId)) {
+        if (event.killed && !event.tutorial && event.loser === Faction.Player && event.loserGeneralId && rosterIds.has(event.loserGeneralId) && !captureHandledIds.has(event.loserGeneralId)) {
             fallen.add(event.loserGeneralId);
         }
     }

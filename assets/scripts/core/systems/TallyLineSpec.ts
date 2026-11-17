@@ -32,6 +32,12 @@ const ZH_TW_FALLBACK: Readonly<Record<string, string>> = {
     SCRIPT_TALLY_XIAN_ZHEN: '陷陣之志，有死無生——高順的鐵軍重現人間！',
     SCRIPT_DUEL_FAME: '{0} 單挑獲勝，名聲 +{1}！',
     SCRIPT_DUEL_FALLEN: '{0} 單挑落敗被斬，戰歿沙場。',
+    SCRIPT_CAPTURE_BEHEADED: '{0}被{1}擒獲，遭斬首。',
+    SCRIPT_CAPTURE_SURRENDERED: '{0}被{1}擒獲，歸降敵軍。',
+    SCRIPT_CAPTURE_IMPRISONED: '{0}被{1}擒獲，遭關押。',
+    SCRIPT_CAPTURE_RELEASED: '{0}被{1}擒獲，隨後獲釋。',
+    SCRIPT_CAPTIVE_SERVED: '{0}在{1}關滿四季，獲釋歸隊。',
+    SCRIPT_CAPTIVE_RANSOMED: '{0}經{1}同意索回，獲釋歸隊。',
 };
 
 function fill(template: string, args: readonly string[]): string {

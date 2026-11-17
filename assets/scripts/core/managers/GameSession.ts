@@ -61,7 +61,7 @@ import { buildYearReport, normalizeYearAgingEvents, YearReport } from '../system
 import { backfillTallyTroopTypes, mainTroopTypeOf } from '../systems/TigerTally';
 import { normalizeCountdownState, createCountdown, OPENING_TRAVEL_DURATION_MS, OPENING_TRAVEL_TARGET_ID, type CountdownState } from '../systems/CountdownManager';
 import { createTravelCountdown, normalizeTravelCountdown, tickTravelCountdown, type TravelCountdown } from '../systems/TravelCountdown';
-import { ageGeneralsOneSeason, AgingEvent, isGeneralDead, RandomSource, RETIREMENT_AGE } from '../systems/GeneralAging';
+import { ageGeneralsOneSeason, AgingEvent, GENERAL_STATUS_DEAD, isGeneralDead, RandomSource, RETIREMENT_AGE } from '../systems/GeneralAging';
 import { applyWarInjury } from '../systems/WarInjury';
 import { settleStageSalvage } from '../systems/StageSalvageSettlement';
 import type { SalvageTotals } from '../systems/StrategistHud';
@@ -87,7 +87,9 @@ import { advanceTrialDay } from '../systems/MercenaryTrialDay';
 import { reachedTrialDayThree, reachedTrustStage } from '../systems/MercenaryScripts';
 import { recordTrialBattle } from '../systems/MercenaryBattleRecord';
 import { settleTrialRollover, type DepartureEvent } from '../systems/MercenaryDeparture';
-import { appendFarewellLetter, createFarewellLetter, FarewellLetter, farewellJournalEntry, markFarewellLetterRead } from '../systems/FarewellLetterInbox';
+import { appendFarewellLetter, createEpitaphLetter, createFarewellLetter, FarewellLetter, farewellJournalEntry, markFarewellLetterRead } from '../systems/FarewellLetterInbox';
+import { EPITAPH_TEXT } from '../systems/ChildUnveiling';
+import { CAPTIVITY_SEASONS, canRansomCaptive, captiveFreedSpec, captureNoticeSpec, isCaptivityServed, isCaptive, normalizeRosterCaptivity, planGeneralCaptures, takeTalliesWithDefector, type GeneralCaptureRecord } from '../systems/GeneralCaptivity';
 import { EMPTY_LOGIN_STREAK, LoginStreakState, loginDayOf, recordLogin } from '../systems/LoginStreak';
 import { dailySubsidyOf, type SubsidyResourceKey } from '../systems/DailySubsidy';
 import { activateMonthlyCard, claimMonthlyCardDaily, isMonthlyCardExpiring, monthlyCardDaysLeft, monthlyCardVitalityMultiplier, normalizeMonthlyCard, type MonthlyCardState } from '../systems/MonthlyCard';
@@ -542,6 +544,8 @@ export interface BattleRecordResult extends BattleSettlement {
     awakenings: FactorAwakenedEvent[];
     /** 有出征帳本才有：寫回後的城市兵源與糧草（PROG-2-0072） */
     military?: MilitaryReserve;
+    /** 我方主將被擒、由敵君主處置的結果提示（斬首／投降／關押／釋放；PROG-2-9140）；沒有被擒時為空陣列，由戰場結算畫面顯示 */
+    captureNotices: TallyLine[];
 }
 
 export interface RecordBattleOptions {
@@ -567,6 +571,10 @@ export interface RecordBattleOptions {
     teachingSpirit?: TeachingSpiritInput | null;
     /** 本場戰場收到的單挑勝負事件（DuelOutcomeApplied）；勝方主將名聲 +15、被斬的己方主將走陣亡結算（PROG-2-9132） */
     duelOutcomes?: readonly DuelOutcomeRecord[];
+    /** 本場戰場回報的「主將被擒」紀錄（PROG-2-9140）；我方被擒者交給擒獲方君主處置，沒有這個欄位時單挑被斬維持舊行為（直接陣亡） */
+    generalCaptures?: readonly GeneralCaptureRecord[];
+    /** 這場遭遇戰的敵將（君主）武將 id；被擒紀錄的 captorTemplateId 對不到君主時的備援 */
+    encounterEnemyGeneralId?: string | null;
 }
 
 export interface GeneralRankPromotedPayload {
@@ -3429,7 +3437,7 @@ export class GameSession {
 
     /** 已陣亡或退役（導師卡）的武將不可派遣（PROG-2-0686） */
     private _isDispatchable(general: { status?: string }): boolean {
-        return general.status !== 'dead' && !(general as { isMentorCard?: boolean }).isMentorCard;
+        return general.status !== 'dead' && !(general as { isMentorCard?: boolean }).isMentorCard && !(general as { captivity?: unknown }).captivity;
     }
 
     /** 目前可派遣（不忙碌也不在冷卻）的武將，名冊順序（PROG-2-1186 選將列用） */
@@ -3595,7 +3603,7 @@ export class GameSession {
     /** 指派武將到內政任務格（GOV-04）；被拒絕時不改動狀態。 */
     public assignGovernor(task: string, generalUid: string, maxSlots: number = this.maxTaskSlots): GovernanceResult {
         const general = this._roster.getAll().find((g) => g.id === generalUid);
-        if (!general) return { ok: false, reason: 'invalid-general', assignments: this.governanceAssignments };
+        if (!general || isCaptive(general)) return { ok: false, reason: 'invalid-general', assignments: this.governanceAssignments };
         // SPI-13 Q51：未滿 15 歲只能做低效內政
         if (!domesticAssignmentFor(general.age, task).ok) return { ok: false, reason: 'child-only-low-efficiency', assignments: this.governanceAssignments };
         const result = assignGovernanceGeneral(this._governance, task, generalUid, maxSlots);
@@ -3670,7 +3678,7 @@ export class GameSession {
     private _fillAutoGovernance(): number {
         const candidates = this._roster.getAll()
             // 自動治理不派幼兒（Q51 只許低效內政，留給玩家手動指派）
-            .filter((general) => general.status !== 'dead' && !(typeof general.age === 'number' && general.age < CHILD_ASSIGNMENT_AGE))
+            .filter((general) => general.status !== 'dead' && !isCaptive(general) && !(typeof general.age === 'number' && general.age < CHILD_ASSIGNMENT_AGE))
             .map((general) => ({ id: general.id, stats: this.domesticStatsOf(general) }));
         const picks = planAutoGovernance(candidates, (task) => this._governance.find((a) => a.task === task)?.generalUid ?? null);
         let filled = 0;
@@ -4002,6 +4010,7 @@ export class GameSession {
             const reasons = checkDeployable(g, { nurturingIds: nurturing }).reasons;
             let block: HallGeneralBlock | null = null;
             if (reasons.includes('dead')) block = 'dead';
+            else if (reasons.includes('captive')) block = 'captive';
             else if (reasons.includes('retired-mentor')) block = 'retired';
             else if (reasons.includes('not-graduated')) block = 'not-graduated';
             else if (reasons.includes('in-nurture')) block = 'nurturing';
@@ -4168,7 +4177,7 @@ export class GameSession {
      * 武將不在名冊或任務 id 為空時回傳 false，不變更。
      */
     public async assignHallTask(taskId: string, generalId: string): Promise<boolean> {
-        if (taskId.length === 0 || !this._roster.getAll().some((g) => g.id === generalId)) return false;
+        if (taskId.length === 0 || !this._roster.getAll().some((g) => g.id === generalId && !isCaptive(g))) return false;
         this._hallAssignments = { ...this._hallAssignments, [taskId]: generalId };
         if (this._autoSave && this._save) {
             await this.save();
@@ -4845,6 +4854,7 @@ export class GameSession {
         this._roster.replaceAll(roster);
         this._emitLifeImprints(deathImprints.imprinted);
         this._clearLeadIfGone();
+        this._releaseServedCaptives(advance.current.totalSeasonsElapsed);
         this._releaseGearOfInactiveGenerals();
         this._settleOpenHallAssigns(formatSeasonLabel(advance.previous));
         this._settleDeaths(deathBaseline, rosterBeforeLifecycle, advance.current.totalSeasonsElapsed);
@@ -5117,7 +5127,7 @@ export class GameSession {
         const leadId = this._leadGeneralId;
         if (!leadId) return false;
         const lead = this._roster.getAll().find((g) => g.id === leadId) as (GeneralConfig & { isMentorCard?: boolean }) | undefined;
-        if (lead && !lead.isMentorCard && !isGeneralDead(lead)) return false;
+        if (lead && !lead.isMentorCard && !isGeneralDead(lead) && !isCaptive(lead)) return false;
         this._leadGeneralId = null;
         this._emit(GAME_SESSION_EVENTS.LeadGeneralChanged, null);
         return true;
@@ -5541,7 +5551,7 @@ export class GameSession {
                 await this.save();
             }
             if (firstClear) this._emit(GAME_SESSION_EVENTS.FirstBattleCleared, undefined);
-            return { ...settlement, awakenings: [] };
+            return { ...settlement, awakenings: [], captureNotices: [] };
         }
         if (options.sortie) {
             const foodBefore = this._military.food;
@@ -5612,7 +5622,11 @@ export class GameSession {
         }
 
         // 單挑戰果（doc_spec_0314 §4，PROG-2-9132）：勝方名聲 +15；被斬的己方主將標陣亡，由下方 _settleDeaths 產虎符與英靈卡
-        const duel = applyDuelAftermath(roster, planDuelAftermath(options.duelOutcomes ?? [], new Set(roster.map((g) => g.id))));
+        // 單挑被斬若有對應的主將被擒紀錄（PROG-2-9140），改走君主處置，只有斬首才陣亡；沒有紀錄時維持舊行為
+        const captureHandledIds = new Set((options.generalCaptures ?? [])
+            .filter((c) => c.capturedFaction === Faction.Player && c.cause === 'duel-slain')
+            .map((c) => c.capturedGeneralId));
+        const duel = applyDuelAftermath(roster, planDuelAftermath(options.duelOutcomes ?? [], new Set(roster.map((g) => g.id)), captureHandledIds));
         roster = duel.roster;
         duel.promotions.forEach(({ generalId, rank }) => rankPromotions.push({ generalId, rank, title: generalRankTitle(rank) }));
         this._tallyNotices.push(...duel.fameNotices);
@@ -5620,8 +5634,10 @@ export class GameSession {
             this._tallyNotices.push(duelFallenSpec(dead.name ?? dead.id));
             this._recordEpitaph(dead, 'battle');
         }
+        const captured = this._applyGeneralCaptures(roster, options);
+        roster = captured.roster;
 
-        const record: BattleRecordResult = { ...settlement, roster, discovery, awakenings, ...(options.sortie ? { military: this.military } : {}) };
+        const record: BattleRecordResult = { ...settlement, roster, discovery, awakenings, captureNotices: captured.notices, ...(options.sortie ? { military: this.military } : {}) };
         this._roster.replaceAll(roster);
         this._clearLeadIfGone();
         this._settleDeaths(beforeRoster, roster, this._clock.state.totalSeasonsElapsed);
@@ -5636,6 +5652,110 @@ export class GameSession {
         }
         rankPromotions.forEach((payload) => this._emit(GAME_SESSION_EVENTS.GeneralRankPromoted, payload));
         return record;
+    }
+
+    /**
+     * 我方主將被擒的戰場外處置（PROG-2-9140，doc_spec_0021 §L）：依擒獲方君主的性格表擲斬首 → 投降 → 釋放／關押。
+     * 斬首＝標陣亡（之後走 _settleDeaths 的虎符與英靈卡）並寫戰歿遺書進信箱；投降＝從名冊移除、虎符跟著走；
+     * 關押＝寫 captivity、卸下內政指派；釋放＝只出提示。無君主、教學戰、試用傭兵整筆忽略。
+     * 只回傳新名冊與提示列，存檔由呼叫端（recordBattle）負責。
+     */
+    private _applyGeneralCaptures(roster: GeneralConfig[], options: RecordBattleOptions): { roster: GeneralConfig[]; notices: TallyLine[] } {
+        const records = options.generalCaptures ?? [];
+        if (records.length === 0) return { roster, notices: [] };
+        const season = this._clock.state.totalSeasonsElapsed;
+        const exempt = new Set<string>(this._mercenaries.mercenaries.map((m) => m.uid));
+        for (const g of roster) if ((g as GeneralConfig & { isMercenary?: boolean }).isMercenary) exempt.add(g.id);
+        const outcomes = planGeneralCaptures({
+            records,
+            roster: roster.map((g) => ({ ...g, loyalty: g.loyaltyState?.value })),
+            nations: this._rivals.nations,
+            random: this._random,
+            encounterEnemyGeneralId: options.encounterEnemyGeneralId,
+            lordStatsOf: (leaderId) => this._lordStatsOf(leaderId),
+            lordNameOf: (leaderId) => this._generalTemplates.find((g) => g.id === leaderId)?.name,
+            exemptIds: exempt,
+        });
+        const notices: TallyLine[] = [];
+        let next = roster;
+        for (const outcome of outcomes) {
+            notices.push(captureNoticeSpec(outcome.verdict, outcome.generalName, outcome.captorName));
+            if (outcome.verdict === 'beheaded') {
+                next = next.map((g) => (g.id === outcome.generalId ? { ...g, status: GENERAL_STATUS_DEAD } : g));
+                this._farewellLetters = appendFarewellLetter(this._farewellLetters, createEpitaphLetter({
+                    generalId: outcome.generalId, generalName: outcome.generalName, season, body: EPITAPH_TEXT.BattleDeath,
+                }));
+            } else if (outcome.verdict === 'surrendered') {
+                next = next.filter((g) => g.id !== outcome.generalId);
+                const taken = takeTalliesWithDefector(this._tallyHoldings, outcome.generalId);
+                if (taken.taken.length > 0) {
+                    this._tallyHoldings = taken.state;
+                    const cards = { ...this._tallyCards };
+                    for (const uid of taken.taken) delete cards[uid];
+                    this._tallyCards = cards;
+                    this._syncInventoryRecords();
+                }
+                this._governance = this._governance.filter((a) => a.generalUid !== outcome.generalId);
+                if (this._magistrateUid === outcome.generalId) this._magistrateUid = null;
+            } else if (outcome.verdict === 'imprisoned') {
+                next = next.map((g) => (g.id === outcome.generalId ? { ...g, captivity: { nationId: outcome.nationId, sinceSeason: season } } : g));
+                this._governance = this._governance.filter((a) => a.generalUid !== outcome.generalId);
+                if (this._magistrateUid === outcome.generalId) this._magistrateUid = null;
+            }
+        }
+        return { roster: next, notices };
+    }
+
+    /** 敵君主的魅力與運氣（勸降公式鏡射用）；沒注入武將配置時回傳 null，由 GeneralCaptivity 用保守值 */
+    private _lordStatsOf(leaderId: string): { cha?: number; luk?: number } | null {
+        const lord = this._generalTemplates.find((g) => g.id === leaderId);
+        if (!lord) return null;
+        return { cha: lord.cha ?? lord.stats?.cha, luk: lord.luk ?? lord.stats?.luk };
+    }
+
+    /** 被囚武將的資訊（給畫面與索要用）；沒被囚回傳 null */
+    public captivityInfoOf(generalId: string): { nationId: string; nationName: string; sinceSeason: number; seasonsLeft: number; relation: number; canRansom: boolean } | null {
+        const general = this._roster.getAll().find((g) => g.id === generalId);
+        if (!general?.captivity) return null;
+        const { nationId, sinceSeason } = general.captivity;
+        const relation = this._rivals.nations.find((n) => n.id === nationId)?.relation ?? 0;
+        const served = this._clock.state.totalSeasonsElapsed - sinceSeason;
+        return {
+            nationId, nationName: nationDef(nationId)?.name ?? nationId, sinceSeason,
+            seasonsLeft: Math.max(0, CAPTIVITY_SEASONS - served), relation, canRansom: canRansomCaptive(relation),
+        };
+    }
+
+    /**
+     * 向關押國「索要」被囚武將（PROG-2-9140）：與該國邦交 >= 60 才可，成功立刻釋放、沒有其他處罰。
+     * 目前只有公開方法，還沒有畫面入口。
+     */
+    public async ransomCaptive(generalId: string): Promise<{ ok: true; notice: TallyLine } | { ok: false; reason: 'not-captive' | 'relation-too-low' }> {
+        const info = this.captivityInfoOf(generalId);
+        if (!info) return { ok: false, reason: 'not-captive' };
+        if (!info.canRansom) return { ok: false, reason: 'relation-too-low' };
+        const general = this._roster.getAll().find((g) => g.id === generalId)!;
+        this._freeCaptive(generalId);
+        if (this._autoSave && this._save) await this.save();
+        return { ok: true, notice: captiveFreedSpec(general.name ?? generalId, info.nationName, true) };
+    }
+
+    private _freeCaptive(generalId: string): void {
+        this._roster.replaceAll(this._roster.getAll().map((g) => {
+            if (g.id !== generalId) return g;
+            const { captivity: _gone, ...rest } = g;
+            return rest as GeneralConfig;
+        }));
+    }
+
+    /** 換季結算：關滿 4 季的被囚武將自動釋放，提示進虎符提示佇列（大廳換季時顯示） */
+    private _releaseServedCaptives(season: number): void {
+        for (const general of this._roster.getAll()) {
+            if (!general.captivity || !isCaptivityServed(general.captivity, season)) continue;
+            const nationName = nationDef(general.captivity.nationId)?.name ?? general.captivity.nationId;
+            this._freeCaptive(general.id);
+            this._tallyNotices.push(captiveFreedSpec(general.name ?? general.id, nationName, false));
+        }
     }
 
     /** 名聲入帳並依門檻升將階（PROG-2-1898）；不在名冊或沒有名聲時不動。存檔由呼叫端負責。 */
@@ -6063,7 +6183,7 @@ export class GameSession {
         this._preLifespanRoster = null;
         this._clock.restore(snapshot.gameTime);
         this._seeded.restore(snapshot.randomState ?? { algorithm: 'mulberry32-v1', state: LEGACY_RANDOM_SEED });
-        this._roster.replaceAll(normalizeRosterRoles(snapshot.roster));
+        this._roster.replaceAll(normalizeRosterCaptivity(normalizeRosterRoles(snapshot.roster)));
         this._pendingLifespanEvents = (snapshot.pendingLifespanDeaths ?? []).map((death) => ({ type: 'died', generalId: death.generalId, age: death.age }));
         // 讀檔後沒有記憶體中的季結前名冊；待季結死亡者還原為非陣亡，虎符結算才認得出「這次才死」（PROG-2-0223）
         this._preLifespanRoster = preLifespanBaseline(snapshot.roster, (snapshot.pendingLifespanDeaths ?? []).map((death) => death.generalId));
