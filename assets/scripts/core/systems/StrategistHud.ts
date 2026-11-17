@@ -61,7 +61,7 @@ export interface StrategistHudSummary {
     interactiveObjectStatus: string;
     stageSalvageSummary: string;
     recommendedLoadoutGap: string;
-    /** 參謀常駐行，例如「曹操 INT 91，正在執行：夜襲」；一般戰鬥為空字串 */
+    /** 參謀常駐行，例如「曹操 智力 91，正在執行：夜襲」；一般戰鬥為空字串 */
     executingTactic: string;
 }
 
@@ -128,11 +128,11 @@ export function strategistHudLogLine(input: StrategistHudInput): string {
     return parts.length > 0 ? `軍師：${parts.join('\n')}` : '';
 }
 
-/** 「曹操 INT 91，正在執行：夜襲（情報 30 / 40）」；情報以 目前值 / 門檻 呈現，不用百分比（§6.3） */
+/** 「曹操 智力 91，正在執行：夜襲（情報 30 / 40）」；情報以 目前值 / 門檻 呈現，不用百分比（§6.3） */
 function executingTacticOf(executing: StrategistExecution | undefined): string {
     if (!executing) return '';
     const intel = executing.intel ? `（情報 ${executing.intel.current} / ${executing.intel.required}）` : '';
-    return `${executing.name} INT ${executing.int}，正在執行：${executing.tactic}${intel}`;
+    return `${executing.name} 智力 ${executing.int}，正在執行：${executing.tactic}${intel}`;
 }
 
 /** 依物件類別列出各狀態數量，例如「營帳：存活 2、已回收 1」；沒有的類別不列。 */
