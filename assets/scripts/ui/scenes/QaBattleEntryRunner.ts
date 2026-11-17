@@ -12,7 +12,7 @@ import { sys } from 'cc';
 import { services } from '../../core/managers/ServiceLoader';
 import { SceneName } from '../../core/config/Constants';
 import { buildTallyCardCatalog } from '../../core/config/TallyCardCatalog';
-import type { EncounterConfig } from '../../shared/BattleEntryParams';
+import type { EncounterConfig, IBattleEntryParams } from '../../shared/BattleEntryParams';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { QA_MAX_PLAYER_TROOPS, isQaBattleRequested, resolveQaBattle, type QaBattleCatalog } from '../../core/systems/QaBattleEntry';
 
@@ -31,25 +31,65 @@ export function currentSearch(): string {
     return (globalThis as { window?: { location?: { search?: string } } }).window?.location?.search ?? '';
 }
 
+/** 執行端依賴（抽出來讓單元測試能驗證執行順序；正式路徑由 realDeps 提供） */
+export interface QaBattleEntryDeps {
+    loadCatalog(): Promise<QaBattleCatalog>;
+    resolveCampaignStageId(encounter: EncounterConfig): string;
+    /** 戰場依賴、但直進入口跳過大廳而沒做的全域初始化；必須在切場景前完成 */
+    prepareBattleGlobals(): Promise<void>;
+    clearStalePreviewKeys(): void;
+    useEphemeralStorage(): void;
+    switchToBattle(params: IBattleEntryParams): void;
+}
+
+/**
+ * 戰場依賴的全域初始化（PROG-2-9131）。
+ * 語系字串：正式流程由 LobbyScene._mountOpeningPanels 以同一個呼叫載入；直進入口不經大廳，
+ * 沒載入時戰場所有 t(key) 都回傳鍵名（例如奧義鈕顯示 ui.ultimate.label）。失敗只警告，與大廳一致。
+ * 其餘大廳啟動做的事（讀檔、武將模板、奧義母表、他國名冊）戰場不讀，技能／特效／季節／史實配對 BattleScene 自己載。
+ */
+export async function prepareBattleGlobals(): Promise<void> {
+    try {
+        await services().i18n.setLocale(services().i18n.locale);
+    } catch (error) {
+        UCUFLogger.warn(LogCategory.LIFECYCLE, '[QaBattleEntry] 語系字串載入失敗', error);
+    }
+}
+
+function realDeps(): QaBattleEntryDeps {
+    return {
+        loadCatalog,
+        resolveCampaignStageId: (encounter) => services().session.resolveCampaignStage(encounter.campaignStage).id,
+        prepareBattleGlobals,
+        clearStalePreviewKeys,
+        useEphemeralStorage: () => services().useEphemeralStorage(),
+        switchToBattle: (params) => services().scene.switchScene(SceneName.Battle, params),
+    };
+}
+
 /** 登入場景啟動時呼叫：沒帶參數（或已觸發過）回 { entered:false } 且不做任何事 */
 export async function runQaBattleEntry(search: string = currentSearch()): Promise<QaBattleEntryOutcome> {
     if (consumed || !isQaBattleRequested(search)) return { entered: false };
     consumed = true;
+    return executeQaBattleEntry(search, realDeps());
+}
+
+/** 驗證 → 初始化 → 切場景；初始化一定在切場景之前完成 */
+export async function executeQaBattleEntry(search: string, deps: QaBattleEntryDeps): Promise<QaBattleEntryOutcome> {
     try {
-        const catalog = await loadCatalog();
-        const result = resolveQaBattle(search, catalog, {
-            resolveCampaignStageId: (encounter) => services().session.resolveCampaignStage(encounter.campaignStage).id,
-        });
+        const catalog = await deps.loadCatalog();
+        const result = resolveQaBattle(search, catalog, { resolveCampaignStageId: deps.resolveCampaignStageId });
         if (!result.requested) return { entered: false };
         if (!result.ok) {
             UCUFLogger.warn(LogCategory.LIFECYCLE, '[QaBattleEntry] 直進戰場參數不合法', result.errors);
             return { entered: false, errors: result.errors };
         }
         // 先前本機預覽殘留的 localStorage 會讓戰場落入 capture 模式；這兩個鍵只屬預覽注入，不是玩家存檔
-        clearStalePreviewKeys();
-        services().useEphemeralStorage();
+        deps.clearStalePreviewKeys();
+        deps.useEphemeralStorage();
+        await deps.prepareBattleGlobals();
         UCUFLogger.info(LogCategory.LIFECYCLE, '[QaBattleEntry] 直進戰場', result.params);
-        services().scene.switchScene(SceneName.Battle, result.params);
+        deps.switchToBattle(result.params);
         return { entered: true };
     } catch (error) {
         UCUFLogger.error(LogCategory.LIFECYCLE, '[QaBattleEntry] 直進戰場失敗', error);
