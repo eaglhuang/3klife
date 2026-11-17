@@ -5343,6 +5343,24 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/pang_de__龐德__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "74af61db2c387382767239ec39b9a6dc09859ff607eb3ccbdc0526c914cc42be",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "截頭大刀（《三國演義》所稱大刀）",
+            "sourceStanding": "standing/pang_de__龐德__standing_0002.png",
+            "poseSelection": "前踏扭腰，雙手由右上斜劈至左下",
+            "gaze": "眼神看向鏡頭",
+            "qc": "完整全身與雙腳；寬刃直柄保持剛直；透明背景；整圖等比例縮放並置中；alpha>8 bounds=(129,225,890,1335)，符合中央75%安全寬度；125px與250px縮圖檢查；待使用者審核。"
+          }
+        ]
       }
     },
     {
