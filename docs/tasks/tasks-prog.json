@@ -8836,6 +8836,52 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9380",
+      "title": "奧義選擇彈窗標題看不見、技能列疊在標題上方",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "本機打開奧義選擇彈窗：標題「選擇奧義」是黑字壓在深色底上看不見，技能列畫在標題上方。原因一：建畫面時沒載入色票，金色 token 解析不到退成透明黑。原因二：調整高度時只縮了外框，裡面的捲動區仍是 280 高，內容被推到標題上方。",
+      "related": [
+        "PROG-2-9378"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（7984 過）；本機預覽 1920x1080 修正前後截圖各一張，標題文字顏色由 000000 變為 d4af37，技能列回到標題下方 | 變更: 彈窗建畫面時一併載入色票；調整彈窗高度時連捲動區與可視框一起縮 | 阻塞: 無。只驗了一個奧義的情況，多個奧義與線上實機還沒看",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
