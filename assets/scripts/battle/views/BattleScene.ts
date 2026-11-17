@@ -24,7 +24,7 @@ import { BoardRenderer } from "./BoardRenderer";
 import { UnitRenderer } from "./UnitRenderer";
 import { SceneBackground } from "./SceneBackground";
 import { Camera, view } from "cc";
-import { loadDamageFonts, prewarmVfxPools, prewarmBattleAudioClips, loadEncounter, loadEnemyScale, createGeneral, buildTallyCards, buildUltimateSkills, buildTacticSummary, loadBattleSkillMetadata, buildRosterSortieInput, buildOrderLoyalty, playerPowerOfGeneral } from './BattleSceneLoader';
+import { loadDamageFonts, prewarmVfxPools, prewarmBattleAudioClips, loadEncounter, loadEnemyScale, createGeneral, loadGeneralConfig, buildTallyCards, buildUltimateSkills, buildTacticSummary, loadBattleSkillMetadata, buildRosterSortieInput, buildOrderLoyalty, playerPowerOfGeneral } from './BattleSceneLoader';
 import { BattleSkillTargetingFlow } from './BattleSkillTargetingFlow';
 import { BattleSceneFlow } from './BattleSceneFlow';
 import { validateBattleStateReadModel, validateSortieLoadoutReadModel } from '../../core/systems/ReadModelValidators';
@@ -35,6 +35,7 @@ import { TurnFlowManager } from './TurnFlowManager';
 import { setupCameraForBoard, initSceneBackground, addBackgroundSwitchUI, resolveSceneBackgroundId } from './BattleSceneSetup';
 import { resolveAiDifficulty } from '../../core/systems/AiSpCharge';
 import { applyQaGeneralStartHp } from '../../core/systems/QaBattleEntry';
+import { isTrialMercenary } from '../../core/systems/PrisonerOfWar';
 import { openingAiLogLinesOf } from '../../core/systems/AiEntranceLines';
 import { ensureDeployPanelRuntime, ensureHUD, ensureBattleLogPanel, ensureStrategistHud, ensureGeneralQuickView, ensureBattleScenePanel, ensureBoardRenderer, ensureUnitRenderer } from './BattleUIInitializer';
 
@@ -253,6 +254,10 @@ export class BattleScene extends Component {
       // 夜襲視野（PROG-2-2132）：只看關卡主題；軍事任務觸發的夜襲戰法是我方優勢，不限視野
       this.ctrl.state.visionRadius = stageThemeVisionRadius(encounter?.stageThemeId);
       this.ctrl.tutorialBattle = battleParams.tutorial === true;
+      // 試用傭兵當主將：戰敗必定安全撤退，不可被擒（PROG-2-9393）
+      this.ctrl.captureExemptFactions.clear();
+      const pgConfig = await loadGeneralConfig(pgId);
+      if (pgConfig && isTrialMercenary(pgConfig)) this.ctrl.captureExemptFactions.add(Faction.Player);
       if (enemyScale) this.ctrl.configureAiDifficulty(enemyScale.difficulty);
       // QA 直進入口（PROG-2-9127）：指定敵軍兵種；正式入口不帶此欄位
       if (battleParams.enemyDeployTroops?.length) this.ctrl.overrideEnemyDeployTroops(battleParams.enemyDeployTroops);

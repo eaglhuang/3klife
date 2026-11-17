@@ -9,6 +9,7 @@ import { TroopUnit } from "../../core/models/TroopUnit";
 import type { FormationZone } from "../shared/FormationZone";
 import type { SelfBurstWindow } from "../shared/SelfBurstWindow";
 import type { DuelVictoryBuff } from '../shared/DuelVictoryBuff';
+import type { GeneralCaptureRecord } from '../../shared/GeneralCaptureContract';
 import type { TeamAura } from "../shared/TeamAura";
 import type { EnemyMassDebuff } from "../shared/EnemyMassDebuff";
 import type { UnitDot } from "../shared/UnitDot";
@@ -96,6 +97,8 @@ export class BattleState {
   public readonly duelVictoryBuffs = new Map<Faction, DuelVictoryBuff>();
   /** 單挑敗逃的主將當回合不可被攻擊（使用者 2026-11-17 裁決，PROG-2-9386）：陣營 → 敗逃發生的回合數；回合數一變就失效 */
   public readonly duelFleeImmuneTurns = new Map<Faction, number>();
+  /** 本場被擒的主將（PROG-2-9393）：陣營 → 紀錄；一個陣營最多一筆 */
+  public readonly generalCaptures = new Map<Faction, GeneralCaptureRecord>();
   /** 奧義全隊增益 aura（SYS-SKILL-ULT-0002）：以施放者陣營為鍵，中途加入單位自動吃到 */
   public readonly teamAuras = new Map<Faction, TeamAura>();
   /** 奧義敵方全體減益（SYS-SKILL-ULT-0004）：以被減益陣營為鍵 */
@@ -194,6 +197,7 @@ export class BattleState {
     this.selfBursts.clear();
     this.duelVictoryBuffs.clear();
     this.duelFleeImmuneTurns.clear();
+    this.generalCaptures.clear();
     this.teamAuras.clear();
     this.massDebuffs.clear();
     this.damageLinks.clear();
