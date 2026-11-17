@@ -144,6 +144,170 @@
         "duration": 0.24
       }
     },
+    "_comment_battle_ult": "武將專屬奧義特效（PROG-2-9372）：鍵名 battle_ult_<武將代號，連字號換底線>，打在施放奧義的主將身上；沒有專屬的武將用 battle_skill_ultimate。每一層都必須是有 prefab 的特效。",
+    "battle_ult_zhang_fei": {
+      "blockId": "p3d_cfxr_fire_circle",
+      "audio": "fireball",
+      "lifetime": 1.5,
+      "blocks": [
+        {
+          "blockId": "p3d_boss_anger",
+          "delay": 0,
+          "duration": 0.5,
+          "scale": 1.1,
+          "tintHex": "#FF5A2A"
+        },
+        {
+          "blockId": "p3d_cfxr_fire_circle",
+          "delay": 0.12,
+          "duration": 0.8,
+          "scale": 1.5,
+          "tintHex": "#FF7A1F"
+        },
+        {
+          "blockId": "p3d_mep_explosion",
+          "delay": 0.3,
+          "duration": 0.7,
+          "scale": 1.3,
+          "tintHex": "#FFB347"
+        },
+        {
+          "blockId": "p3d_cfxr_ember",
+          "delay": 0.4,
+          "duration": 1.0,
+          "scale": 1.2,
+          "tintHex": "#FFD08A"
+        }
+      ],
+      "cameraShake": {
+        "strength": 0.2,
+        "duration": 0.35
+      }
+    },
+    "battle_ult_guan_yu": {
+      "blockId": "p3d_mep_charge_slash",
+      "audio": "weapon",
+      "lifetime": 1.4,
+      "blocks": [
+        {
+          "blockId": "p3d_cfxr_aura_rays",
+          "delay": 0,
+          "duration": 0.7,
+          "scale": 1.2,
+          "tintHex": "#4FE3A1"
+        },
+        {
+          "blockId": "p3d_cfxr_fire_circle",
+          "delay": 0.1,
+          "duration": 0.8,
+          "scale": 1.5,
+          "tintHex": "#3CFF9E"
+        },
+        {
+          "blockId": "p3d_mep_charge_slash",
+          "delay": 0.2,
+          "duration": 0.6,
+          "scale": 1.6,
+          "tintHex": "#7DFFC8"
+        },
+        {
+          "blockId": "p3d_cfxr_slash_ray",
+          "delay": 0.32,
+          "duration": 0.5,
+          "scale": 1.5,
+          "tintHex": "#D9FFF0"
+        },
+        {
+          "blockId": "p3d_mep_explosion",
+          "delay": 0.42,
+          "duration": 0.7,
+          "scale": 1.3,
+          "tintHex": "#4FE3A1"
+        }
+      ],
+      "cameraShake": {
+        "strength": 0.16,
+        "duration": 0.28
+      }
+    },
+    "battle_ult_lu_bu": {
+      "blockId": "p3d_cfxr_electric_ring",
+      "audio": "thunder",
+      "lifetime": 1.6,
+      "blocks": [
+        {
+          "blockId": "p3d_cfxr_aura_rays",
+          "delay": 0,
+          "duration": 0.6,
+          "scale": 2.2,
+          "tintHex": "#9B4DFF"
+        },
+        {
+          "blockId": "p3d_cfxr_electric_ring",
+          "delay": 0.12,
+          "duration": 0.8,
+          "scale": 2.6,
+          "tintHex": "#B46CFF"
+        },
+        {
+          "blockId": "p3d_mep_electro_hit",
+          "delay": 0.28,
+          "duration": 0.6,
+          "scale": 1.2,
+          "tintHex": "#E0C2FF"
+        },
+        {
+          "blockId": "p3d_mep_explosion",
+          "delay": 0.45,
+          "duration": 0.7,
+          "scale": 1.6,
+          "tintHex": "#7A2BFF"
+        }
+      ],
+      "cameraShake": {
+        "strength": 0.24,
+        "duration": 0.4
+      }
+    },
+    "battle_ult_cao_cao": {
+      "blockId": "p3d_mep_buff_aura",
+      "audio": "buff",
+      "lifetime": 1.5,
+      "blocks": [
+        {
+          "blockId": "p3d_mep_magic_ring",
+          "delay": 0,
+          "duration": 0.9,
+          "scale": 3.0,
+          "tintHex": "#5B8CFF"
+        },
+        {
+          "blockId": "p3d_mep_buff_aura",
+          "delay": 0.12,
+          "duration": 0.9,
+          "scale": 0.7,
+          "tintHex": "#FFD766"
+        },
+        {
+          "blockId": "p3d_cfxr_aura_rays",
+          "delay": 0.2,
+          "duration": 0.7,
+          "scale": 2.0,
+          "tintHex": "#FFD766"
+        },
+        {
+          "blockId": "p3d_cfxr_star_gold",
+          "delay": 0.3,
+          "duration": 0.7,
+          "scale": 0.9,
+          "tintHex": "#FFF0B8"
+        }
+      ],
+      "cameraShake": {
+        "strength": 0.1,
+        "duration": 0.2
+      }
+    },
     "battle_win": {
       "blockId": "p3d_star",
       "audio": "buff",

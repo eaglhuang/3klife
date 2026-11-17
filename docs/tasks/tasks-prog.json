@@ -8512,6 +8512,52 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9372",
+      "title": "張飛、關羽、呂布、曹操專屬奧義特效",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "奧義特效四位武將原本共用同一個金色光效，看不出是誰放的。總PM 指示特效不等分鏡圖先上線，順序張飛、關羽、呂布、曹操。",
+      "related": [
+        "PROG-2-9371"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（7969 過）；本機預覽逐一播放四個特效並擷取畫面，四位顏色與型態可分辨 | 變更: 奧義施放時依主將範本代號找 battle_ult_<代號> 專屬特效，找不到退回通用奧義特效；資料表新增四筆 | 阻塞: 無。已知限制：組合特效的 scale 欄位目前沒有作用（寫進不存在的 startSizeX 欄位），屬共用特效系統問題，另案處理",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
