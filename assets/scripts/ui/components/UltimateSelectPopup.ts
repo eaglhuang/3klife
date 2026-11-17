@@ -68,17 +68,19 @@ export class UltimateSelectPopup extends UIPreviewBuilder {
     private async _build(): Promise<void> {
         if (this._isBuilt) return;
         try {
-            const [template, skin, i18n] = await Promise.all([
+            const [template, skin, i18n, tokens] = await Promise.all([
                 this._specLoader.loadTemplate('dialog-select'),
                 this._specLoader.loadSkin('dialog-select-default'),
                 this._specLoader.loadI18n(services().i18n.currentLocale),
+                // 色票要一起載入：少了它，標題的金色 token 解析不到會退成透明黑，深色底上看不見（PROG-2-9380）
+                this._specLoader.loadDesignTokens(),
             ]);
             const layout = await this._resolver.resolve(template, {
                 title: 'UI_ULTIMATE_TITLE',
                 width:  220,
                 height: 280,
             });
-            await this.buildScreen(layout, skin, i18n);
+            await this.buildScreen(layout, skin, i18n, tokens);
             this._isBuilt = true;
         } catch (e) {
             UCUFLogger.warn(LogCategory.UI, '[UltimateSelectPopup] Template 載入失敗，使用白模', e);
@@ -265,6 +267,20 @@ export class UltimateSelectPopup extends UIPreviewBuilder {
         const scrollTransform = this._scrollPanel?.getComponent(UITransform);
         if (scrollTransform) {
             scrollTransform.setContentSize(scrollTransform.width, listHeight);
+        }
+
+        // 捲動區與可視框也要跟著縮：只縮外框時，裡面仍是 280 高，技能列會被推到標題上方（PROG-2-9380）
+        const scrollNode = this._scrollView?.node ?? null;
+        const scrollViewTransform = scrollNode?.getComponent(UITransform);
+        if (scrollNode && scrollViewTransform) {
+            scrollViewTransform.setContentSize(scrollViewTransform.width, listHeight);
+            scrollNode.setPosition(scrollNode.position.x, 0, scrollNode.position.z);
+            const viewNode = scrollNode.getChildByName('view');
+            const viewTransform = viewNode?.getComponent(UITransform);
+            if (viewNode && viewTransform) {
+                viewTransform.setContentSize(viewTransform.width, listHeight);
+                viewNode.setPosition(viewNode.position.x, listHeight * (viewTransform.anchorY - 0.5), viewNode.position.z);
+            }
         }
 
         const dialogTransform = this._dialogCard?.getComponent(UITransform);
