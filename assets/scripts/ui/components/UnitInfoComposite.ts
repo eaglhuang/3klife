@@ -23,10 +23,13 @@ import { services } from '../../core/managers/ServiceLoader';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { TallyCardData } from './TigerTallyComposite';
+import { troopTypeGlyph } from '../../shared/TallyCardContract';
 
 const { ccclass } = _decorator;
 const UNITINFO_TYPE_ICON_FALLBACK_PATH = 'sprites/battle/battle_unit_type_underlay';
 const WHITE = new Color(255, 255, 255, 255);
+/** 兵種單字的顏色：與面板標題同一系的淡金色 */
+const TYPE_GLYPH_COLOR = new Color(240, 214, 150, 255);
 
 /** 面板內文四周留白（與版面檔一致） */
 const UNITINFO_BODY_PADDING = 12;
@@ -172,13 +175,23 @@ export class UnitInfoComposite extends CompositePanel {
     private async _applyTypeIcon(data: TallyCardData): Promise<void> {
         if (!this._typeIcon) return;
 
-        const spriteFrame = await this._loadSpriteFrameWithFallback(
-            this._buildTypeIconCandidates(data),
-            UNITINFO_TYPE_ICON_FALLBACK_PATH,
-        );
+        // 先找這個兵種自己的圖示；沒有就用圓底加一個字（圖示還沒畫，PROG-2-9392）
+        let spriteFrame: SpriteFrame | null = null;
+        for (const path of this._buildTypeIconCandidates(data)) {
+            spriteFrame = await services().resource.loadSpriteFrame(path).catch(() => null);
+            if (spriteFrame) break;
+        }
+        const hasOwnIcon = !!spriteFrame;
+        if (!spriteFrame) {
+            spriteFrame = await services().resource.loadSpriteFrame(UNITINFO_TYPE_ICON_FALLBACK_PATH).catch(() => null);
+        }
+        const glyph = hasOwnIcon ? '' : troopTypeGlyph(data.unitType);
+        this._setTypeGlyph(glyph);
 
         if (!spriteFrame) {
-            this._typeIcon.node.active = false;
+            // 連圓底都沒有：有字就留著字，沒字才整個藏起來
+            this._typeIcon.spriteFrame = null;
+            this._typeIcon.node.active = glyph.length > 0;
             return;
         }
 
@@ -187,26 +200,37 @@ export class UnitInfoComposite extends CompositePanel {
         this._typeIcon.node.active = true;
     }
 
+    /** 圓底上的兵種單字；空字串就藏起來 */
+    private _setTypeGlyph(glyph: string): void {
+        const iconNode = this._typeIcon?.node;
+        if (!iconNode) return;
+        let glyphNode = iconNode.getChildByName('TypeGlyph');
+        if (!glyphNode) {
+            if (!glyph) return;
+            glyphNode = new Node('TypeGlyph');
+            glyphNode.layer = iconNode.layer;
+            glyphNode.parent = iconNode;
+            const iconTf = iconNode.getComponent(UITransform);
+            glyphNode.addComponent(UITransform).setContentSize(iconTf?.width ?? 48, iconTf?.height ?? 48);
+            const label = glyphNode.addComponent(Label);
+            label.fontSize = 28;
+            label.lineHeight = 30;
+            label.isBold = true;
+            label.color = TYPE_GLYPH_COLOR;
+            label.horizontalAlign = Label.HorizontalAlign.CENTER;
+            label.verticalAlign = Label.VerticalAlign.CENTER;
+        }
+        const label = glyphNode.getComponent(Label);
+        if (label) label.string = glyph;
+        glyphNode.active = glyph.length > 0;
+    }
+
     private _buildTypeIconCandidates(data: TallyCardData): string[] {
         const normalizedType = this._normalizeKey(data.unitType);
         return this._uniquePaths([
             data.typeIconResource,
             normalizedType ? `sprites/battle/battle_unit_type_icon_${normalizedType}` : null,
         ]);
-    }
-
-    private async _loadSpriteFrameWithFallback(
-        preferredPaths: string[],
-        fallbackPath: string,
-    ): Promise<SpriteFrame | null> {
-        for (const path of preferredPaths) {
-            const spriteFrame = await services().resource.loadSpriteFrame(path).catch(() => null);
-            if (spriteFrame) {
-                return spriteFrame;
-            }
-        }
-
-        return services().resource.loadSpriteFrame(fallbackPath).catch(() => null);
     }
 
     private _uniquePaths(paths: Array<string | null | undefined>): string[] {

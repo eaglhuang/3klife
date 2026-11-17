@@ -73,3 +73,23 @@ export interface TallyCardData {
     typeBadgeResource?: string;
     typeIconResource?: string;
 }
+
+/**
+ * 兵種單字符號（PROG-2-9392）：各兵種的圖示還沒畫，面板先在圓底上寫一個字，免得玩家看到空格。
+ * 暫代用，等圖示交件後由 typeIconResource 接手，這張表就可以拿掉。
+ */
+export const TROOP_TYPE_GLYPH: Readonly<Record<string, string>> = {
+    cavalry: '騎',
+    infantry: '步',
+    shield: '盾',
+    archer: '弓',
+    pikeman: '槍',
+    engineer: '工',
+    medic: '醫',
+    navy: '水',
+};
+
+/** 兵種代號 → 單字符號；不認得的兵種回空字串 */
+export function troopTypeGlyph(unitType: string | undefined | null): string {
+    return TROOP_TYPE_GLYPH[(unitType ?? '').trim().toLowerCase()] ?? '';
+}

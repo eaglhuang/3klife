@@ -6,6 +6,8 @@ import {
     shouldLogDeployDragMove,
 } from '../assets/scripts/ui/components/DeployDragDebug';
 import { UCUFLogger, LogLevel } from '../assets/scripts/core/utils/UCUFLogger';
+import { troopTypeGlyph } from '../assets/scripts/shared/TallyCardContract';
+import { TroopType } from '../assets/scripts/shared/CommonEnums';
 
 /** 暫時覆蓋 console.log 並收集輸出，結束後還原。 */
 function captureConsoleLog(fn: () => void): string[] {
@@ -80,6 +82,16 @@ export function createDeployDragDebugSuite(): TestSuite {
         assert.isFalse(isCardTap(100, 200, 100 + CARD_TAP_MAX_MOVE + 1, 200));
         assert.isFalse(isCardTap(100, 200, 100, 200 - 40), '往上拖');
         assert.isFalse(isCardTap(100, 200, 400, 500), '拖到棋盤');
+    });
+
+    suite.test('troopTypeGlyph: 每個兵種都有單字符號，兵種面板圖示不會是空格（PROG-2-9392）', () => {
+        for (const type of Object.values(TroopType) as string[]) {
+            assert.equals(1, Array.from(troopTypeGlyph(type)).length, type);
+        }
+        assert.equals('騎', troopTypeGlyph('cavalry'));
+        assert.equals('槍', troopTypeGlyph(' Pikeman '), '大小寫與空白不影響');
+        assert.equals('', troopTypeGlyph('unknown'));
+        assert.equals('', troopTypeGlyph(undefined));
     });
 
     return suite;
