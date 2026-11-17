@@ -211,6 +211,8 @@ export class BattleCombatResolver {
     const enemyFaction = attacker.faction === Faction.Player ? Faction.Enemy : Faction.Player;
     const general = this.context.state.getGeneral(enemyFaction);
     if (!general || general.isDead()) return;
+    // 單挑敗逃當回合不可被攻擊（PROG-2-9386）：不扣血、不發事件
+    if (this.isGeneralFleeImmune(enemyFaction)) return;
 
     // 武將可以閃躲兵硬攻擊（對應 E-14 閃躲機率）
     const wasDodged = svc.formula.rollDodge(general.luk);
@@ -734,6 +736,8 @@ export class BattleCombatResolver {
     const svc = services();
     // 無敵（白馬銀槍·不滅，PM 裁定）：有無敵狀態的單位本次結算傷害歸零，不扣血、不發傷害事件
     if (svc.buff.hasBuff(unit.id, StatusEffect.Invincible)) return;
+    // 單挑敗逃的主將化身當回合不可被攻擊（PROG-2-9386）；自己人的效果不擋
+    if (attackerFaction !== unit.faction && this.isGeneralFleeImmune(unit.faction) && this.isGeneralUnit(unit.id)) return;
     // 代為承傷（白耳護主將 PROG-2-1529、惡來護友軍 PROG-2-1530）：改由相鄰護衛承受，護衛陣亡照常結算
     const guard = options.skipGuard ? null : tallyDamageGuardOf(unit, this.context.state.units.values(), () => this.isGeneralUnit(unit.id));
     if (guard) {
@@ -939,7 +943,14 @@ export class BattleCombatResolver {
     return null;
   }
 
+  /** faction 的主將本回合是否因單挑敗逃而不可被攻擊（PROG-2-9386） */
+  private isGeneralFleeImmune(faction: Faction): boolean {
+    // 測試用的精簡 state 可能沒有這個方法，沒有就當作沒有保護
+    return this.context.state.isGeneralFleeImmune?.(faction, services().battle.getSnapshot().turn) ?? false;
+  }
+
   private canAttackGeneral(unit: TroopUnit): boolean {
+    if (this.isGeneralFleeImmune(unit.faction === Faction.Player ? Faction.Enemy : Faction.Player)) return false;
     if (this.isFactionHiddenFrom(unit.faction, unit.faction === Faction.Player ? Faction.Enemy : Faction.Player)) {
       return false;
     }
@@ -961,6 +972,8 @@ export class BattleCombatResolver {
 
   /** 攻擊者能否鎖定目標：陣營隱蔽，或目標站在掩體格且攻擊者為遠程（GRD-04，PROG-2-0593） */
   private isHiddenFromAttacker(attacker: TroopUnit, target: TroopUnit): boolean {
+    // 敗逃當回合的主將化身不能被選為目標（PROG-2-9386）
+    if (this.isGeneralFleeImmune(target.faction) && this.isGeneralUnit(target.id)) return true;
     if (this.isUnitHiddenFrom(attacker.faction, target)) return true;
     const tileState = this.context.state.getTileEffect(target.lane, target.depth)?.state ?? null;
     return !canTargetUnderStealth(this.getEffectiveAttackRange(attacker), isHiddenOnTile(tileState));
