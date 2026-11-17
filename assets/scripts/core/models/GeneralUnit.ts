@@ -87,6 +87,9 @@ export class GeneralUnit {
   public readonly cha: number;
   /** 六色屬性：運氣（影響暴擊與閃躲機率，對應 E-11）*/
   public readonly luk: number;
+  /** 進場時的名聲與將階（戰中升階的起點，PROG-2-9394）；缺欄位視為 0 */
+  public readonly generalFame: number;
+  public readonly generalRank: number;
 
   /** 技能識別字，用於 BattleController 分派對應技能邏輯 */
   public readonly skillId: string | null;
@@ -144,6 +147,8 @@ export class GeneralUnit {
     this.pol = config.pol ?? config.stats?.pol ?? 0;
     this.cha = config.cha ?? config.stats?.cha ?? 0;
     this.luk = config.luk ?? config.stats?.luk ?? 0;
+    this.generalFame = config.generalFame ?? 0;
+    this.generalRank = config.generalRank ?? 0;
     this.attackBonus = config.attackBonus ?? 0;
     this.preferredTerrain = config.preferredTerrain ?? TerrainType.Plain;
     this.terrainDefenseBonus = config.terrainDefenseBonus ?? 0;

@@ -1,4 +1,7 @@
 // @spec-source → 見 docs/cross-reference-index.md
+import { ascensionOf, awardBattleFame, type BattleAscendedEvent } from "../runtime/BattleAscensionRuntime";
+import { BattleFameSource } from "../shared/InBattleAscension";
+import { generalRankForFame } from "../../core/systems/GeneralRankProgress";
 import { troopCapturedLine } from "../../core/systems/NumericalScriptLines";
 import type { GeneralCaptureRecord } from "../../shared/GeneralCaptureContract";
 import { resolveAiDeployPreference, deployPreferenceForTroops } from '../../core/systems/AiDeployTroopPick';
@@ -215,6 +218,7 @@ export class BattleController {
     isEnemyForcedToAcceptDuel: () => this._tutorialBattle && GAME_CONFIG.tutorialEnemyAlwaysAcceptsDuel,
     getDuelHpFloorRatio: () => this._tutorialBattle ? GAME_CONFIG.tutorialDuelHpFloorRatio : 0,
     isCaptureExempt: (faction) => this.captureExemptFactions.has(faction),
+    onDuelWon: (winner) => { this.awardBattleFame(winner, [BattleFameSource.DUEL_VICTORY]); },
   });
   private readonly skillDispatcher = new BattleSkillDispatcher(
     {
@@ -1539,6 +1543,37 @@ export class BattleController {
       const record = this.duelFlow.recordCapture(faction, 'troop', svc);
       if (record) svc.event.emit(EVENT_NAMES.BattleSkillNotice, troopCapturedLine(general.name));
     }
+  }
+
+  /**
+   * 戰中名聲入帳（doc_spec_0309 §4，PROG-2-9394）：跨過門檻就升階並套用激勵。教學戰整場跳過。
+   * 目前接上的來源只有單挑獲勝；擊破部隊等來源待裁決後再接。
+   */
+  public awardBattleFame(faction: Faction, sources: readonly BattleFameSource[]): BattleAscendedEvent | null {
+    if (this._tutorialBattle) return null;
+    return awardBattleFame({
+      state: this.state,
+      refillTroopPool: (target, amount) => this.refillSortiePool(target, amount),
+    }, faction, sources, services());
+  }
+
+  /** 這一場主將目前的名聲與將階（戰中升階，PROG-2-9394） */
+  public getBattleAscension(faction: Faction): { generalFame: number; generalRank: number } {
+    return { ...ascensionOf(this.state, faction) };
+  }
+
+  /** QA 直進入口：指定我方主將進場名聲，將階依門檻重算（PROG-2-9394）；正式入口不呼叫 */
+  public overrideBattleFame(faction: Faction, fame: number): void {
+    const value = Math.max(0, Math.floor(fame));
+    this.state.generalAscension.set(faction, { generalFame: value, generalRank: generalRankForFame(value) });
+  }
+
+  /** 升階補兵：只有我方名冊出征有兵力池；補到上限為止，回傳實際補進的數量 */
+  private refillSortiePool(faction: Faction, amount: number): number {
+    if (faction !== Faction.Player || !this.sortie) return 0;
+    const added = Math.max(0, Math.min(amount, this.sortie.poolMax - this.sortie.poolCurrent));
+    if (added > 0) this.sortie = { ...this.sortie, poolCurrent: this.sortie.poolCurrent + added };
+    return added;
   }
 
   /** 本場被擒的主將紀錄（戰後交給戰場外處置，PROG-2-9393） */
