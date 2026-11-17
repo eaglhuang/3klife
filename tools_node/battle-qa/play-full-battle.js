@@ -724,8 +724,10 @@ async function maybeTactic(page, opt, s, turnRec) {
 
 // 主動單挑：第 3 回合起，單挑鈕沒鎖時點一次，再點棋盤中路的空格把主將放上去（整場只做一次）。
 async function maybeDuel(page, s, turnRec) {
-  if (rep.duelAttempt || turnRec.turn < 3 || !s.texts.includes('單挑')) return;
-  await tapText(page, '單挑');
+  // 按鈕文字已由「單挑」改為「出陣」（PROG-2-9376）；舊版試玩站仍是「單挑」，兩個都認
+  const duelText = ['出陣', '單挑'].find((t) => s.texts.includes(t));
+  if (rep.duelAttempt || turnRec.turn < 3 || !duelText) return;
+  await tapText(page, duelText);
   await sleep(800);
   const taken = new Set((s.units || []).map((u) => `${u.lane},${u.depth}`));
   let cell = null;
@@ -736,7 +738,7 @@ async function maybeDuel(page, s, turnRec) {
   }
   const after = await ev(page, pageSnapshot);
   rep.duelAttempt = { turn: turnRec.turn, cell, unitsBefore: (s.units || []).length, unitsAfter: (after.units || []).length, invite: after.texts.includes('接受') };
-  log(`主動單挑：第 ${turnRec.turn} 回合點「單挑」，放在 ${cell ? `路${cell.lane + 1} 深度${cell.depth}` : '（找不到空格）'}，單位數 ${rep.duelAttempt.unitsBefore} → ${rep.duelAttempt.unitsAfter}`);
+  log(`主動單挑：第 ${turnRec.turn} 回合點「${duelText}」，放在 ${cell ? `路${cell.lane + 1} 深度${cell.depth}` : '（找不到空格）'}，單位數 ${rep.duelAttempt.unitsBefore} → ${rep.duelAttempt.unitsAfter}`);
 }
 
 function brief(s) {
