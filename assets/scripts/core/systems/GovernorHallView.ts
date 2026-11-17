@@ -75,12 +75,17 @@ function outputTotal(breakdown: OutputBreakdown | null): number | null {
     return breakdown === null ? null : breakdown.base + breakdown.populationBonus + breakdown.policyModifier;
 }
 
-function outputCard(title: string, breakdown: OutputBreakdown | null): OutputCardView {
+/** 黃金：商業任務選定當下入帳；人口紅利於換季入帳。 */
+const GOLD_BASE_NOTE = '（已入帳）';
+const GOLD_BONUS_NOTE = '（換季入帳）';
+
+/** baseNote／bonusNote：該列後綴（例如黃金基礎值「（已入帳）」），糧草不加。 */
+function outputCard(title: string, breakdown: OutputBreakdown | null, baseNote = '', bonusNote = ''): OutputCardView {
     if (breakdown === null) {
         return {
             title,
-            baseText: `基礎值 ${NO_DATA}`,
-            populationBonusText: `人口紅利 ${NO_DATA}`,
+            baseText: `基礎值 ${NO_DATA}${baseNote}`,
+            populationBonusText: `人口紅利 ${NO_DATA}${bonusNote}`,
             policyModifierText: `政策修正 ${NO_DATA}`,
             totalText: `總計 ${NO_DATA}`,
         };
@@ -88,8 +93,8 @@ function outputCard(title: string, breakdown: OutputBreakdown | null): OutputCar
     const total = outputTotal(breakdown);
     return {
         title,
-        baseText: `基礎值 ${breakdown.base}`,
-        populationBonusText: `人口紅利 ${signed(breakdown.populationBonus)}`,
+        baseText: `基礎值 ${breakdown.base}${baseNote}`,
+        populationBonusText: `人口紅利 ${signed(breakdown.populationBonus)}${bonusNote}`,
         policyModifierText: `政策修正 ${signed(breakdown.policyModifier)}`,
         totalText: `總計 ${total}`,
     };
@@ -151,7 +156,7 @@ export function buildGovernorHallView(snapshot: Readonly<GovernorSnapshot>): Gov
             { key: 'cityTroopCap', label: '城市兵源上限', valueText: `${snapshot.cityTroops.cap}` },
             { key: 'recruitRegen', label: '補兵速度', valueText: `${snapshot.cityTroops.recruitPerTurn}` },
         ],
-        goldCard: outputCard('黃金', gold),
+        goldCard: outputCard('黃金', gold, GOLD_BASE_NOTE, GOLD_BONUS_NOTE),
         foodCard: outputCard('糧草', food),
         cityTroopCard: cityTroopCard(snapshot.cityTroops),
     };
