@@ -98,7 +98,8 @@ export function createBattleCombatRegressionSuite(): TestSuite {
         assert.equals(0, counters.unitKilled);
     });
 
-    suite.test('executeBattleCombatPhase：擊殺後應前進一格並更新佔位', () => {
+    // 使用者 2026-11-17（PROG-2-9396）：擊殺後不踏進空出的格子，下一次行動才前進
+    suite.test('executeBattleCombatPhase：擊殺後留在原格，空出的格子不佔位', () => {
         services().initialize();
         const state = new BattleState();
         const attacker = createTroop('advance-attacker', Faction.Player, 1);
@@ -130,10 +131,10 @@ export function createBattleCombatRegressionSuite(): TestSuite {
             onUnitKilled: (unit, killer, svc) => resolver.onUnitKilled(unit, killer, svc),
         });
 
-        assert.equals(null, state.getCell(2, 2)?.occupantId ?? null);
-        assert.equals(attacker.id, state.getCell(2, 3)?.occupantId ?? null);
+        assert.equals(attacker.id, state.getCell(2, 2)?.occupantId ?? null);
+        assert.equals(null, state.getCell(2, 3)?.occupantId ?? null);
         assert.equals(2, attacker.lane);
-        assert.equals(3, attacker.depth);
+        assert.equals(2, attacker.depth);
         assert.isFalse(state.units.has(defender.id));
     });
 
