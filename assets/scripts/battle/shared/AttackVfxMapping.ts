@@ -10,6 +10,13 @@ export const ATTACK_SLASH_EFFECT_ID = 'p3d_mep_charge_slash';
 /** 箭矢貼圖路徑（vfx_core bundle 內，對應登錄表 proj_arrow 的 texPath）。 */
 export const ATTACK_ARROW_TEXTURE_PATH = 'textures/projectile/tex_proj_arrow';
 
+/**
+ * 箭矢演出的大小與飛行時間（PROG-2-9364）。
+ * 原本 64×16、0.25 秒：在 1920 寬的戰場上箭太小、飛太快，玩家幾乎看不到弓兵有射箭。
+ * 飛箭只是畫面演出、流程不等它飛完，拉長飛行時間不會拖慢回合。
+ */
+export const ATTACK_ARROW_SHOT = { width: 96, height: 24, flightSec: 0.35 } as const;
+
 export interface AttackVfx { kind: AttackVfxKind; effectId: string }
 
 /** 弓兵（含連弩手，底兵種皆為 archer）射箭，其餘與未知兵種一律刀光，避免漏播。 */
