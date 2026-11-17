@@ -509,7 +509,7 @@ export function createBattleControllerSkillTargetingSuite(): TestSuite {
         assert.equals(3, cavalry.depth);
     });
 
-    suite.test('tryDeployTroop：新部署的騎兵當回合原地待命，下一回合才以正常移動距離前進', () => {
+    suite.test('tryDeployTroop：新部署的騎兵當回合就以正常移動距離前進（先部署、後行動，PROG-2-9396）', () => {
         services().initialize();
         const ctrl = new BattleController();
         const playerGeneral = createGeneral('ma-chao', Faction.Player, 'ma-chao-charge');
@@ -520,15 +520,8 @@ export function createBattleControllerSkillTargetingSuite(): TestSuite {
         assert.isTrue(outcome.ok);
         assert.isDefined(outcome.unit);
 
-        // 部署當回合不行動（PROG-2-9048）
-        assert.equals('ongoing', ctrl.resolvePlayerTurn());
-        assert.equals(0, outcome.unit!.depth);
-        assert.isTrue(ctrl['turnManager'].isUnitDeployedThisTurn(outcome.unit!.id));
-
-        // 下一回合：騎兵移動力 2 + 平原加成 2（TerrainTroopRules，PROG-2-0088）= 4，但單回合上限 MAX_MOVE_CELLS_PER_TURN（PROG-2-9052）= 3，從部署格 depth 0 前進到 depth 3
-        ctrl.resolveEnemyTurn();
-        ctrl.finalizeEnemyTurn();
-        assert.isFalse(ctrl['turnManager'].isUnitDeployedThisTurn(outcome.unit!.id));
+        // 部署當回合就行動（使用者 2026-11-17 定案，取代 PROG-2-9048 的原地待命）：
+        // 騎兵移動力 2 + 平原加成 2（TerrainTroopRules，PROG-2-0088）= 4，但單回合上限 MAX_MOVE_CELLS_PER_TURN（PROG-2-9052）= 3，從部署格 depth 0 前進到 depth 3
         assert.equals('ongoing', ctrl.resolvePlayerTurn());
         assert.equals(3, outcome.unit!.depth);
     });

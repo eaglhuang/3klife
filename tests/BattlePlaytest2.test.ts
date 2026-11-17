@@ -53,13 +53,31 @@ export function createBattlePlaytest2Suite(): TestSuite {
         delayedAuto();
         assert.equals(1, resolves);
     });
-    suite.test('部署達上限時提示改為請按結束回合', () => {
+    suite.test('部署達上限時提示改為自動結束回合，並排程 onEndTurn；手動結束回合會取消它', () => {
         const toasts: string[] = [];
-        const ctx = { ctrl: { getPlayerDeployProgress: () => ({ used: 3, limit: 3, reached: true }) },
+        const callbacks: Array<() => void> = [];
+        let resolves = 0;
+        const ctx = { ctrl: { isWaitingDuelPlacement: false, canAdvanceBattleTurn: () => true, isDelegateEnabled: () => false,
+            getPlayerDeployProgress: () => ({ used: 3, limit: 3, reached: true }),
+            resolvePlayerTurn: () => { resolves++; return 'enemy-win'; } },
             isAdvancingTurn: false, deployRuntime: { showToast: (t: string) => { toasts.push(t); } } };
-        const flow = new TurnFlowManager(ctx as any, { scheduleOnce: () => {} } as any, {} as any);
+        const bridge = { refreshBattleViews() {}, hideEnemyThinkingPanel() {}, playTurnBanner() {} };
+        const flow = new TurnFlowManager(ctx as any, { scheduleOnce: (fn: () => void) => callbacks.push(fn) } as any, bridge as any);
         flow.onPlayerDeployed();
-        assert.contains(toasts[0], '本回合部署已達上限，請按結束回合');
+        assert.contains(toasts[0], '本回合部署已用完，自動結束回合');
+        assert.equals(1, callbacks.length, '一般模式達上限也會排程自動結束回合（PROG-2-9396）');
+        callbacks.shift()!();
+        assert.equals(1, resolves, '排程回呼觸發 onEndTurn → resolvePlayerTurn');
+    });
+    suite.test('未達部署上限且未委任時：不排程自動結束回合，只提示已部署數', () => {
+        const toasts: string[] = [];
+        const callbacks: Array<() => void> = [];
+        const ctx = { ctrl: { isDelegateEnabled: () => false, getPlayerDeployProgress: () => ({ used: 2, limit: 3, reached: false }) },
+            isAdvancingTurn: false, deployRuntime: { showToast: (t: string) => { toasts.push(t); } } };
+        const flow = new TurnFlowManager(ctx as any, { scheduleOnce: (fn: () => void) => callbacks.push(fn) } as any, {} as any);
+        flow.onPlayerDeployed();
+        assert.equals(0, callbacks.length, '未達上限一般模式不自動結束回合');
+        assert.contains(toasts[0], '已部署 2/3');
     });
     suite.test('同一回合可部署 3 次，第 4 次被 limit 擋下；結束回合後次數歸零', () => {
         const c = fresh();

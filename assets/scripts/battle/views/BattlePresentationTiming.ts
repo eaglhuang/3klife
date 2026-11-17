@@ -18,6 +18,8 @@ export const BATTLE_TURN_FLOW_TIMING = {
    * 才能先看到部署結果並可連續部署到上限。
    */
   autoAdvanceAfterDeploySec: 2.0,
+  /** 部署額度用完後，自動結束回合前的等待秒數（讓玩家看到最後一隊落地，PROG-2-9396）。 */
+  autoEndTurnAfterDeployLimitSec: 0.8,
   /** 敵方子回合開始前，保留給「敵軍思考中」提示的前置秒數。 */
   enemyThinkingLeadInSec: 2.0,
   /** 子回合邏輯跑完後，最少等待多久再開始檢查戰鬥視覺佇列。 */
@@ -49,6 +51,10 @@ export const BATTLE_VISUAL_TIMING = {
   deployAppearSec: 0.22,
   /** 一般直線移動動畫秒數。 */
   moveAdvanceSec: 2.0,
+  /** 同一回合連走多格被合併成一段滑行時，每多一格追加的秒數。 */
+  moveAdvanceExtraCellSec: 0.25,
+  /** 合併滑行最多計入幾格的追加時間；總長 = moveAdvanceSec + (格數-1) * 追加秒數，上限約等於 movementIdleMaxWaitMs。 */
+  moveAdvanceMaxCells: 3,
   /** 換位推進動畫的最短秒數。 */
   swapAdvanceMinSec: 2.0,
   /** 死亡消融動畫秒數。 */
@@ -108,3 +114,34 @@ export const BATTLE_VISUAL_TIMING = {
   /** 飄字時主物件縮放回彈秒數。 */
   unitValueScaleOutSec: 0.12,
 } as const;
+
+interface MovePoint { x: number; y: number; z: number }
+
+export interface MoveSegmentPlan {
+  /** 滑行起點：上一段還在跑就用節點目前位置，否則用事件的上一格。 */
+  start: MovePoint;
+  /** 這一段涵蓋幾格（至少 1）。 */
+  cells: number;
+  /** 滑行秒數。 */
+  durationSec: number;
+}
+
+/**
+ * 決定一段移動 tween 的起點與時間（純函式，不碰引擎節點）。
+ * 邏輯層一回合內會同步連發多個 UnitMoved（每格一個），畫面若每次都回到事件的上一格，
+ * 就會瞬移到倒數第二格只滑最後一格；單位還在移動中時改由目前畫面位置起算。
+ */
+export function planMoveSegment(
+  eventFrom: MovePoint,
+  target: MovePoint,
+  currentPos: MovePoint | null,
+  wasMoving: boolean,
+): MoveSegmentPlan {
+  const start = wasMoving && currentPos ? currentPos : eventFrom;
+  const dist = (a: MovePoint, b: MovePoint): number => Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z);
+  const stepLen = dist(eventFrom, target);
+  const cells = stepLen > 1e-4 ? Math.max(1, Math.round(dist(start, target) / stepLen)) : 1;
+  const counted = Math.min(cells, BATTLE_VISUAL_TIMING.moveAdvanceMaxCells);
+  const durationSec = BATTLE_VISUAL_TIMING.moveAdvanceSec + (counted - 1) * BATTLE_VISUAL_TIMING.moveAdvanceExtraCellSec;
+  return { start, cells, durationSec };
+}

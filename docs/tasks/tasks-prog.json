@@ -9529,6 +9529,53 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9396",
+      "title": "回合順序改為先部署後行動、部署用完自動結束回合、擊殺不進格、多格移動從原格滑行",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 2026-11-17 定案回合順序「先部署、後行動」、部署到行動力 0 自動結束回合、擊殺後下一次行動才踏格，並回報小兵移動不從原格出發。",
+      "related": [
+        "PROG-2-9302",
+        "PROG-2-9048"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: in-review | 驗證: 型別檢查 0 錯；全套單元測試 8112 過；本機預覽無頭實點連跑第 1～4 回合（拖曳部署、點結束回合），節點座標每 100ms 取樣：騎兵 D5→D6→D7 連續滑行 2.3 秒無瞬移、剛部署當回合前進、前一格攻擊、擊殺不進格、敵方先部署後前進、部署 3/3 自動結束回合 | 變更: 敵方階段順序 enemy-deploy 移到 enemy-auto-move 前（BattleController 與 TURN_BASED_RUNTIME_PHASE_ORDER）；拿掉剛部署原地待命；擊殺後不 advanceAfterKill；TurnFlowManager 部署額度用完 0.8 秒後自動結束回合；UnitRenderer 多格移動以目前畫面位置為起點、時間依格數放大上限 3 格；規格 doc_spec_0376 §2 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

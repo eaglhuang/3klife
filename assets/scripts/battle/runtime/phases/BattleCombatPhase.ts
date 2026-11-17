@@ -48,7 +48,7 @@ export function executeBattleCombatPhase(context: BattleCombatPhaseContext): voi
 
     if (didKillDefender) {
       resolveImmediateUnitDeath(context, defender, attacker, svc);
-      context.advanceAfterKill(attacker, svc);
+      // 擊殺後不踏進空出的格子：下一次行動才前進（使用者 2026-11-17，PROG-2-9396）
     }
 
     context.resolveActionResetAfterAttack(attacker, didKillDefender, actions);
@@ -78,7 +78,6 @@ function buildFactionAttackActions(
     if (svc.buff.hasBuff(unit.id, StatusEffect.Stun)) continue;
     // 封射（縱深突襲，PROG-2-9368）：被騎兵衝散的遠程部隊這回合不能射擊
     if (unit.attackRange > 1 && svc.buff.hasBuff(unit.id, StatusEffect.NoShoot)) continue;
-    if (context.isUnitDeployedThisTurn?.(unit.id)) continue;
     units.push(unit);
   }
 

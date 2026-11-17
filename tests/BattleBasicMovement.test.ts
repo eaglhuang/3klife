@@ -195,16 +195,30 @@ export function createBattleBasicMovementSuite(): TestSuite {
         assert.equals(GAME_CONFIG.GRID_DEPTH - 1, u.depth);
     });
 
-    suite.test('(a4) 本回合剛部署的小兵當回合不走，下一回合照常走', () => {
+    suite.test('(a4) 本回合剛部署的小兵當回合就走（先部署、後行動，PROG-2-9396），下一回合照常再走', () => {
         const ctrl = mkCtrl();
         const { tm } = internals(ctrl);
         const u = spawn(ctrl, Faction.Player, TroopType.Infantry, 0, 0);
         tm.markUnitDeployed(u.id);
         runMove(ctrl, Faction.Player);
-        assert.equals(0, u.depth);
+        assert.equals(1, u.depth, '剛部署當回合就前進一格');
         tm.refreshForNextTurn();
         runMove(ctrl, Faction.Player);
-        assert.equals(1, u.depth);
+        assert.equals(2, u.depth, '下一回合照常再走一格');
+    });
+
+    suite.test('(a4b) 敵方回合剛部署的敵兵當回合就前進（先部署、後行動，PROG-2-9396）', () => {
+        const ctrl = mkCtrl();
+        const { tm } = internals(ctrl);
+        tm.enemyFood = 30;
+        const before = new Set([...ctrl.state.units.values()].filter((u) => u.faction === Faction.Enemy).map((u) => u.id));
+        assert.equals('ongoing', ctrl.resolvePlayerTurn());
+        assert.equals('ongoing', ctrl.resolveEnemyTurn());
+        const fresh = [...ctrl.state.units.values()].filter((u) => u.faction === Faction.Enemy && !before.has(u.id) && tm.isUnitDeployedThisTurn(u.id));
+        assert.isTrue(fresh.length > 0, '敵方本回合有部署新兵');
+        for (const u of fresh) {
+            assert.isTrue(u.depth < GAME_CONFIG.GRID_DEPTH - 1, `剛部署的敵兵 ${u.id} 當回合已離開部署格（depth=${u.depth}）`);
+        }
     });
 
     suite.test('(a5) 暈眩、定身的小兵不走；效果過後恢復', () => {

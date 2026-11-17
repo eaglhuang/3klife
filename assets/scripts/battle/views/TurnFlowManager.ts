@@ -152,27 +152,30 @@ export class TurnFlowManager {
   }
 
   /**
-   * 玩家部署一支後呼叫。一般模式不自動結束回合：玩家可連續部署到本回合上限，
-   * 再自己按「結束回合」。只有「委任」開啟時才維持部署後自動推進，否則委任 AI
-   * 的出兵流程會卡在等玩家按結束回合（委任 AI 本身不會按）。
+   * 玩家部署一支後呼叫。還有部署額度時不自動結束回合：玩家可連續部署，或自己按「結束回合」。
+   * 部署額度用完（行動力歸 0）就自動結束回合，不用再按（使用者 2026-11-17，PROG-2-9396）。
+   * 「委任」開啟時維持每次部署後自動推進，否則委任 AI 的出兵流程會卡在等玩家按結束回合。
    * 「自動戰鬥」是直接算出勝負（AutoBattleToggled → BattleEnded），不經過這裡。
    */
   public onPlayerDeployed(): void {
     const c = this.ctx;
     const progress = c.ctrl?.getPlayerDeployProgress?.() ?? null;
+    const reached = progress?.reached === true;
     const text = !progress
       ? '部署完成，可繼續部署或按結束回合'
-      : progress.reached
-        ? '本回合部署已達上限，請按結束回合'
+      : reached
+        ? '本回合部署已用完，自動結束回合'
         : `已部署 ${progress.used}/${progress.limit}，可繼續部署或按結束回合`;
     c.deployRuntime?.showToast(text, BATTLE_TURN_FLOW_TIMING.deployCompletedToastSec);
 
-    if (c.ctrl?.isDelegateEnabled?.() !== true) return;
+    const delegate = c.ctrl?.isDelegateEnabled?.() === true;
+    if (!delegate && !reached) return;
 
     const gen = this._advanceTurnGeneration;
+    const delay = delegate ? BATTLE_TURN_FLOW_TIMING.autoAdvanceAfterDeploySec : BATTLE_TURN_FLOW_TIMING.autoEndTurnAfterDeployLimitSec;
     this.scene.scheduleOnce(() => {
       if (this._advanceTurnGeneration === gen) this.onEndTurn();
-    }, BATTLE_TURN_FLOW_TIMING.autoAdvanceAfterDeploySec);
+    }, delay);
   }
 
   public onTactics(): void {
