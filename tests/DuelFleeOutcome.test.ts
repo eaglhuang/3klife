@@ -115,6 +115,38 @@ export function createDuelFleeOutcomeSuite(): TestSuite {
         assert.equals(before, w.mine.currentHp);
     });
 
+    suite.test('敗逃當回合敵主將不可被攻擊，下回合起恢復（PROG-2-9386）', () => {
+        const w = battle(false, 95, 20);
+        w.ctrl.resolveDuelChallenge(Faction.Player, true);
+        const enemy = w.ctrl.state.enemyGeneral!;
+        const turn = services().battle.getSnapshot().turn;
+        assert.isTrue(w.ctrl.state.isGeneralFleeImmune(Faction.Enemy, turn), '敗方當回合不可被攻擊');
+        assert.isFalse(w.ctrl.state.isGeneralFleeImmune(Faction.Player, turn), '勝方不受保護');
+        // 把我方部隊放到敵主將面前直接打
+        w.mine.moveTo(0, GAME_CONFIG.GRID_DEPTH - 1);
+        w.ctrl['combatResolver'].damageEnemyGeneral(w.mine, services());
+        assert.equals(1, enemy.currentHp, '當回合打不到');
+        assert.isFalse(enemy.isDead());
+        services().battle.nextTurn();
+        assert.isFalse(w.ctrl.state.isGeneralFleeImmune(Faction.Enemy, services().battle.getSnapshot().turn), '下回合恢復');
+        services().session.setRandomSource(() => 0.99);
+        w.ctrl['combatResolver'].damageEnemyGeneral(w.mine, services());
+        assert.isTrue(enemy.isDead(), '下回合起可被打死');
+    });
+
+    suite.test('我方主將敗逃當回合同樣不可被攻擊；教學戰不設保護', () => {
+        const w = battle(false, 5, 99, 90000);
+        w.ctrl.resolveDuelChallenge(Faction.Player, true);
+        const turn = services().battle.getSnapshot().turn;
+        assert.isTrue(w.ctrl.state.isGeneralFleeImmune(Faction.Player, turn));
+        w.theirs.moveTo(4, 0);
+        w.ctrl['combatResolver'].damageEnemyGeneral(w.theirs, services());
+        assert.equals(1, w.ctrl.state.playerGeneral!.currentHp, '我方主將當回合打不到');
+        const t = battle(true, 95, 20);
+        t.ctrl.resolveDuelChallenge(Faction.Player, true);
+        assert.isFalse(t.ctrl.state.isGeneralFleeImmune(Faction.Enemy, services().battle.getSnapshot().turn), '教學戰沒有敗逃，不設保護');
+    });
+
     suite.test('暴擊加成倒數：2 回合後失效', () => {
         const start = { critBonus: 0.15, remainingTurns: duelVictoryBuffTurns(2, true) };
         const t1 = tickDuelVictoryBuff(start);

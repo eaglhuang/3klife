@@ -94,6 +94,8 @@ export class BattleState {
   public readonly selfBursts = new Map<Faction, SelfBurstWindow>();
   /** 單挑勝方的全軍暴擊加成（doc_spec_0314 §4.1，PROG-2-9369）：以勝方陣營為鍵 */
   public readonly duelVictoryBuffs = new Map<Faction, DuelVictoryBuff>();
+  /** 單挑敗逃的主將當回合不可被攻擊（使用者 2026-11-17 裁決，PROG-2-9386）：陣營 → 敗逃發生的回合數；回合數一變就失效 */
+  public readonly duelFleeImmuneTurns = new Map<Faction, number>();
   /** 奧義全隊增益 aura（SYS-SKILL-ULT-0002）：以施放者陣營為鍵，中途加入單位自動吃到 */
   public readonly teamAuras = new Map<Faction, TeamAura>();
   /** 奧義敵方全體減益（SYS-SKILL-ULT-0004）：以被減益陣營為鍵 */
@@ -191,6 +193,7 @@ export class BattleState {
     this.formationZones.clear();
     this.selfBursts.clear();
     this.duelVictoryBuffs.clear();
+    this.duelFleeImmuneTurns.clear();
     this.teamAuras.clear();
     this.massDebuffs.clear();
     this.damageLinks.clear();
@@ -374,6 +377,11 @@ export class BattleState {
   public setTeamAura(faction: Faction, aura: TeamAura | null): void {
     if (aura) this.teamAuras.set(faction, aura);
     else this.teamAuras.delete(faction);
+  }
+
+  /** faction 的主將在第 turn 回合是否因單挑敗逃而不可被攻擊；只在敗逃那一回合成立 */
+  public isGeneralFleeImmune(faction: Faction, turn: number): boolean {
+    return this.duelFleeImmuneTurns.get(faction) === turn;
   }
 
   public getDuelVictoryBuff(faction: Faction): DuelVictoryBuff | null {
