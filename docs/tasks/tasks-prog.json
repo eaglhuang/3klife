@@ -8605,6 +8605,52 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9375",
+      "title": "戰鬥日誌不印內部代號，相剋觸發時不重複播舊剋制句",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "線上實打看到戰鬥日誌出現「受到 27 傷害（troop-counter）」；一般戰【拒馬槍陣】與舊句「步兵嚴陣以待，騎兵衝鋒被長矛陣擋下！」同回合同時出現，兩句說法互相矛盾。",
+      "related": [
+        "PROG-2-9368"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（7981 過） | 變更: 戰鬥日誌的傷害來源改顯示中文說明，不認得的不顯示；兵種動態相剋觸發時不再同時播舊的剋制戰鬥句 | 阻塞: 無。線上實機待試玩站更新後補看",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
