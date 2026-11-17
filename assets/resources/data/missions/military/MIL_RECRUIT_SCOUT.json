@@ -1,0 +1,736 @@
+{
+  "schema": "mission-def.v1",
+  "id": "MIL_RECRUIT_SCOUT",
+  "version": 1,
+  "theme": "military",
+  "difficulty": "EASY",
+  "tags": [
+    "border",
+    "scout",
+    "recruit"
+  ],
+  "meta": {
+    "origin": "authored",
+    "note": "手寫任務：三層情報分支、隱藏變體、巢狀結果與連鎖。"
+  },
+  "text": {
+    "title": "收編烽燧哨探",
+    "brief": "烽燧守卒舉薦了一位耳力過人的老哨探，只是他的來歷說不清楚。收不收他，得先去見他一面。",
+    "detail": "老哨探常年獨居烽燧下的土屋，據說隔著十里就能聽出馬蹄的重量。守卒敬他、也怕他，卻沒人說得出他從哪裡來。"
+  },
+  "facts": [
+    {
+      "key": "past",
+      "label": "過往",
+      "levels": [
+        {
+          "minIntel": 30,
+          "text": "他在邊地少說二十年，沒人說得清他吃過誰家的糧。"
+        },
+        {
+          "minIntel": 60,
+          "text": "他的左手少了兩指，問起時只笑不答。"
+        }
+      ],
+      "decoy": "人人都說他是軍中老兵，忠心可靠。"
+    },
+    {
+      "key": "manner",
+      "label": "言行",
+      "levels": [
+        {
+          "minIntel": 45,
+          "text": "見到穿官服的人，他總要先看一眼對方的腰牌，再低頭。"
+        }
+      ]
+    }
+  ],
+  "requirement": {
+    "slots": 1,
+    "keyStats": {
+      "cha": 1,
+      "int": 0.5
+    },
+    "preferTags": [
+      "scout",
+      "diplomat"
+    ],
+    "avoidTags": [
+      "brutal"
+    ]
+  },
+  "timing": {
+    "durationSeasons": 1,
+    "expireSeasons": 2
+  },
+  "variants": [
+    {
+      "id": "VETERAN",
+      "weight": 60
+    },
+    {
+      "id": "DESERTER",
+      "weight": 40
+    }
+  ],
+  "intel": {
+    "initial": 40,
+    "jitter": 10,
+    "sources": {
+      "wait": {
+        "delta": 20
+      }
+    }
+  },
+  "branches": [
+    {
+      "id": "B_SCOUT_BLIND",
+      "when": {
+        "variant": [
+          "VETERAN",
+          "DESERTER"
+        ],
+        "minIntel": 0,
+        "maxIntel": 39
+      },
+      "objective": {
+        "id": "recruit",
+        "text": "招攬這位哨探"
+      },
+      "presented": {
+        "hints": [
+          "只知道他耳力過人"
+        ]
+      },
+      "modifiers": {
+        "successDelta": -0.1,
+        "rewardMul": 0.85,
+        "riskMul": 1.4
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.05,
+        "disasterRatio": 0.3,
+        "tiers": {
+          "critical": {
+            "kind": "effects",
+            "narrative": "他一口答應，連夜替你畫出了邊境十里的暗哨位置。",
+            "effects": [
+              {
+                "kind": "flag",
+                "set": "scout_post",
+                "value": true
+              },
+              {
+                "kind": "unlock",
+                "id": "scout_post"
+              },
+              {
+                "kind": "generalExp",
+                "amount": 35
+              },
+              {
+                "kind": "fame",
+                "amount": 4
+              }
+            ]
+          },
+          "success": {
+            "kind": "switch",
+            "on": "variant",
+            "cases": [
+              {
+                "eq": "VETERAN",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "老兵點頭受聘，在烽燧下設了哨所。",
+                  "effects": [
+                    {
+                      "kind": "flag",
+                      "set": "scout_post",
+                      "value": true
+                    },
+                    {
+                      "kind": "generalExp",
+                      "amount": 30
+                    }
+                  ]
+                }
+              },
+              {
+                "eq": "DESERTER",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "他受了聘，卻在第二個月帶著預支的銀兩消失了。",
+                  "effects": [
+                    {
+                      "kind": "resource",
+                      "res": "silver",
+                      "amount": -40
+                    },
+                    {
+                      "kind": "flag",
+                      "set": "scout_deserted",
+                      "value": true
+                    },
+                    {
+                      "kind": "fame",
+                      "amount": -2
+                    }
+                  ]
+                }
+              }
+            ],
+            "else": {
+              "kind": "effects",
+              "effects": []
+            }
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "他說要想一想，從此再沒回音。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 8
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "switch",
+            "on": "variant",
+            "cases": [
+              {
+                "eq": "DESERTER",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "你當眾點破他的來路，他一聲不響，夜裡拔刀傷人而去。",
+                  "effects": [
+                    {
+                      "kind": "generalState",
+                      "state": "injured",
+                      "seasons": 1
+                    },
+                    {
+                      "kind": "fame",
+                      "amount": -3
+                    }
+                  ]
+                }
+              }
+            ],
+            "else": {
+              "kind": "effects",
+              "narrative": "他嫌你出言輕慢，拂袖而去，連烽燧的守卒都冷了臉。",
+              "effects": [
+                {
+                  "kind": "fame",
+                  "amount": -2
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "B_VETERAN_KNOWN",
+      "when": {
+        "variant": [
+          "VETERAN"
+        ],
+        "minIntel": 40,
+        "maxIntel": 79
+      },
+      "objective": {
+        "id": "appoint_veteran",
+        "text": "以禮相待，請他出任哨長"
+      },
+      "presented": {
+        "hints": [
+          "他的資歷來路清白，吃軟不吃硬"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.05,
+        "rewardMul": 1.1,
+        "riskMul": 0.8
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.2,
+        "disasterRatio": 0.1,
+        "tiers": {
+          "critical": {
+            "kind": "effects",
+            "narrative": "老兵受寵若驚，把畢生的邊地見聞全數相告。",
+            "effects": [
+              {
+                "kind": "flag",
+                "set": "scout_post",
+                "value": true
+              },
+              {
+                "kind": "intel",
+                "target": {
+                  "tag": "border"
+                },
+                "delta": 20
+              },
+              {
+                "kind": "generalExp",
+                "amount": 55
+              },
+              {
+                "kind": "fame",
+                "amount": 6
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "老兵受聘為哨長，邊境耳目多了一雙。",
+            "effects": [
+              {
+                "kind": "flag",
+                "set": "scout_post",
+                "value": true
+              },
+              {
+                "kind": "generalExp",
+                "amount": 40
+              },
+              {
+                "kind": "fame",
+                "amount": 4
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "老兵婉拒了，只說自己習慣一個人。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 12
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "談得不歡，老兵一氣之下封了土屋，連烽燧守卒也受牽連。",
+            "effects": [
+              {
+                "kind": "fame",
+                "amount": -3
+              },
+              {
+                "kind": "resource",
+                "res": "troops",
+                "amount": -20
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_DESERTER_KNOWN",
+      "when": {
+        "variant": [
+          "DESERTER"
+        ],
+        "minIntel": 40,
+        "maxIntel": 79
+      },
+      "objective": {
+        "id": "sort_out_past",
+        "text": "查明他的逃兵底細，設法替他說情",
+        "keyStats": {
+          "int": 1,
+          "cha": 0.6
+        }
+      },
+      "presented": {
+        "objectiveText": "收編哨探；他似乎有些不願提起的往事",
+        "hints": [
+          "他的軍籍檔案有一段空白"
+        ]
+      },
+      "modifiers": {
+        "successDelta": -0.03,
+        "rewardMul": 1,
+        "riskMul": 1
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.2,
+        "disasterRatio": 0.15,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "你查明他是被冤枉的逃兵，替他洗清罪名，他當場跪下。",
+                "effects": [
+                  {
+                    "kind": "flag",
+                    "set": "scout_post",
+                    "value": true
+                  },
+                  {
+                    "kind": "relation",
+                    "target": "npc:old_scout",
+                    "delta": 25
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": 60
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": 6
+                  }
+                ]
+              },
+              {
+                "kind": "chance",
+                "p": 0.5,
+                "hit": {
+                  "kind": "effects",
+                  "narrative": "他為報答，把一處敵軍暗哨的位置交給了你。",
+                  "effects": [
+                    {
+                      "kind": "intel",
+                      "target": {
+                        "tag": "border"
+                      },
+                      "delta": 25
+                    },
+                    {
+                      "kind": "spawn",
+                      "defId": "MIL_NORMAL_02",
+                      "intel": 70
+                    }
+                  ]
+                },
+                "miss": {
+                  "kind": "effects",
+                  "effects": []
+                }
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "舊案查出眉目，他心結漸解，願意留下。",
+            "effects": [
+              {
+                "kind": "flag",
+                "set": "scout_post",
+                "value": true
+              },
+              {
+                "kind": "relation",
+                "target": "npc:old_scout",
+                "delta": 12
+              },
+              {
+                "kind": "generalExp",
+                "amount": 40
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "舊案線索斷了，他沉默著把行囊重新打包。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 10
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "你的追問勾起了他的舊傷，他翻臉動手。",
+            "effects": [
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              },
+              {
+                "kind": "relation",
+                "target": "npc:old_scout",
+                "delta": -15
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_VETERAN_TRUSTED",
+      "when": {
+        "variant": [
+          "VETERAN"
+        ],
+        "minIntel": 80
+      },
+      "objective": {
+        "id": "make_scout_chief",
+        "text": "委以哨長之職，讓他訓練新哨探",
+        "keyStats": {
+          "cha": 0.8,
+          "int": 0.6
+        }
+      },
+      "presented": {
+        "objectiveText": "擢他為哨長，並撥人手給他帶",
+        "hints": [
+          "他一直盼著有人信他一回"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.1,
+        "rewardMul": 1.3,
+        "riskMul": 0.6
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.3,
+        "disasterRatio": 0.05,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "老哨探親自教出三名新哨探，邊境的風吹草動再也瞞不過你。",
+                "effects": [
+                  {
+                    "kind": "flag",
+                    "set": "scout_post",
+                    "value": true
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": 80
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": 10
+                  },
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": 60
+                  }
+                ]
+              },
+              {
+                "kind": "effects",
+                "narrative": "你也學到了辨蹄聲的竅門。",
+                "effects": [
+                  {
+                    "kind": "trait",
+                    "add": "scout"
+                  },
+                  {
+                    "kind": "intel",
+                    "target": {
+                      "tag": "border"
+                    },
+                    "delta": 30
+                  }
+                ]
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "哨探隊成軍，邊境有了第一批耳目。",
+            "effects": [
+              {
+                "kind": "flag",
+                "set": "scout_post",
+                "value": true
+              },
+              {
+                "kind": "generalExp",
+                "amount": 55
+              },
+              {
+                "kind": "fame",
+                "amount": 6
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "哨長與守卒不睦，新哨探練到一半各自回營。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 15
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "哨所遭游騎夜襲，新哨探折了兩人。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "troops",
+                "amount": -25
+              },
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_DESERTER_PARDONED",
+      "when": {
+        "variant": [
+          "DESERTER"
+        ],
+        "minIntel": 80
+      },
+      "objective": {
+        "id": "pardon_deserter",
+        "text": "上書替他請赦，換他死心塌地",
+        "keyStats": {
+          "cha": 0.8,
+          "pol": 0.6
+        }
+      },
+      "presented": {
+        "objectiveText": "以一紙赦書換一位忠心的哨探",
+        "hints": [
+          "當年下令處斬他的長官，如今已不在其位"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.08,
+        "rewardMul": 1.4,
+        "riskMul": 0.6
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.3,
+        "disasterRatio": 0.06,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "赦書一到，他當場對你叩首，說這條命從此是你的。",
+                "effects": [
+                  {
+                    "kind": "flag",
+                    "set": "scout_post",
+                    "value": true
+                  },
+                  {
+                    "kind": "relation",
+                    "target": "npc:old_scout",
+                    "delta": 40
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": 75
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": 12
+                  }
+                ]
+              },
+              {
+                "kind": "effects",
+                "narrative": "他親自帶你走了一趟只有逃兵才知道的山間小路。",
+                "effects": [
+                  {
+                    "kind": "intel",
+                    "target": {
+                      "tag": "border"
+                    },
+                    "delta": 35
+                  },
+                  {
+                    "kind": "unlock",
+                    "id": "smuggler_path"
+                  }
+                ]
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "赦書批下，他願意在邊地替你效力。",
+            "effects": [
+              {
+                "kind": "flag",
+                "set": "scout_post",
+                "value": true
+              },
+              {
+                "kind": "relation",
+                "target": "npc:old_scout",
+                "delta": 20
+              },
+              {
+                "kind": "generalExp",
+                "amount": 50
+              },
+              {
+                "kind": "fame",
+                "amount": 6
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "赦書被駁回，他苦笑著說大人已盡力了。",
+            "effects": [
+              {
+                "kind": "relation",
+                "target": "npc:old_scout",
+                "delta": 5
+              },
+              {
+                "kind": "generalExp",
+                "amount": 12
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "有人認出他，在營中鬧事，局面一度失控。",
+            "effects": [
+              {
+                "kind": "fame",
+                "amount": -3
+              },
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,565 @@
+{
+  "schema": "mission-def.v1",
+  "id": "MIL_HELL_01",
+  "version": 1,
+  "legacyTemplateId": "MIL_HELL_01",
+  "theme": "military",
+  "difficulty": "HELL",
+  "tags": [
+    "military",
+    "legacy"
+  ],
+  "meta": {
+    "origin": "converted",
+    "note": "由 tools_node/convert-hall-templates.js 從舊大廳模板機械轉出，可日後手寫補強。"
+  },
+  "text": {
+    "title": "水淹敵軍大營",
+    "brief": "趁秋汛決堤，水淹屯於低地的敵軍大營。",
+    "detail": "秋汛將至，敵軍大營竟屯在河谷低地。若能事先築壩蓄水、在敵人猝不及防之際決堤放水，便可不費一兵一卒而重創大軍。此計成敗全在天時與謀算。"
+  },
+  "facts": [
+    {
+      "key": "detail",
+      "label": "軍情背景",
+      "levels": [
+        {
+          "minIntel": 30,
+          "text": "秋汛將至，敵軍大營竟屯在河谷低地。"
+        },
+        {
+          "minIntel": 60,
+          "text": "秋汛將至，敵軍大營竟屯在河谷低地。若能事先築壩蓄水、在敵人猝不及防之際決堤放水，便可不費一兵一卒而重創大軍。此計成敗全在天時與謀算。"
+        }
+      ],
+      "decoy": "傳聞敵人不成氣候，不過是些散兵游勇，不足為慮。"
+    },
+    {
+      "key": "enemy",
+      "label": "敵情",
+      "levels": [
+        {
+          "minIntel": 40,
+          "text": "敵軍號稱三萬。"
+        },
+        {
+          "minIntel": 70,
+          "text": "敵軍號稱三萬，主帥輕敵，營中諸將多半不通水性，只要水勢一起便會大亂。"
+        }
+      ],
+      "decoy": "傳聞敵人不成氣候，不過是些散兵游勇，不足為慮。"
+    }
+  ],
+  "requirement": {
+    "slots": 1,
+    "keyStats": {
+      "int": 1,
+      "lea": 0.4
+    },
+    "preferTags": [],
+    "avoidTags": []
+  },
+  "timing": {
+    "durationSeasons": 3,
+    "expireSeasons": 2
+  },
+  "variants": [
+    {
+      "id": "ONE",
+      "weight": 1
+    }
+  ],
+  "intel": {
+    "initial": 25,
+    "jitter": 10,
+    "sources": {}
+  },
+  "branches": [
+    {
+      "id": "B_BLIND",
+      "when": {
+        "minIntel": 0,
+        "maxIntel": 29
+      },
+      "objective": {
+        "id": "handle_blind",
+        "text": "依表面軍情出兵「水淹敵軍大營」"
+      },
+      "presented": {
+        "hints": [
+          "敵情不明，只能硬著頭皮上"
+        ]
+      },
+      "modifiers": {
+        "successDelta": -0.12,
+        "rewardMul": 0.85,
+        "riskMul": 1.5
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.05,
+        "disasterRatio": 0.35,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "「水淹敵軍大營」大獲全勝，士卒歡聲雷動，連敵人的馬匹糧草都截了下來。",
+                "effects": [
+                  {
+                    "kind": "resource",
+                    "res": "grain",
+                    "amount": {
+                      "base": 1500,
+                      "mulKey": "reward"
+                    }
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": {
+                      "base": 480,
+                      "mulKey": "reward"
+                    }
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": {
+                      "base": 30,
+                      "mulKey": "reward"
+                    }
+                  }
+                ]
+              },
+              {
+                "kind": "chance",
+                "p": 0.25,
+                "hit": {
+                  "kind": "effects",
+                  "narrative": "此役打通了門路，同類任務的消息也跟著靈通起來。",
+                  "effects": [
+                    {
+                      "kind": "intel",
+                      "target": {
+                        "tag": "military"
+                      },
+                      "delta": 15
+                    }
+                  ]
+                },
+                "miss": {
+                  "kind": "effects",
+                  "effects": []
+                }
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "「水淹敵軍大營」得手，部伍整肅而返。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "grain",
+                "amount": {
+                  "base": 1000,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "generalExp",
+                "amount": {
+                  "base": 320,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "fame",
+                "amount": {
+                  "base": 20,
+                  "mulKey": "reward"
+                }
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "「水淹敵軍大營」無功而返，所幸根本未損，只是白跑一趟。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": {
+                  "base": 80,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "fame",
+                "amount": -1
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "chance",
+            "p": 0.25,
+            "hit": {
+              "kind": "effects",
+              "narrative": "「水淹敵軍大營」兵敗，主事者被敵人擒獲，需設法營救。",
+              "effects": [
+                {
+                  "kind": "resource",
+                  "res": "troops",
+                  "amount": {
+                    "base": -340,
+                    "mulKey": "risk"
+                  }
+                },
+                {
+                  "kind": "fame",
+                  "amount": -20
+                },
+                {
+                  "kind": "generalState",
+                  "state": "captured",
+                  "seasons": 2
+                }
+              ]
+            },
+            "miss": {
+              "kind": "effects",
+              "narrative": "「水淹敵軍大營」不知對方底細，貿然進兵，中了埋伏，折損兵卒，主將帶傷而歸。",
+              "effects": [
+                {
+                  "kind": "resource",
+                  "res": "troops",
+                  "amount": {
+                    "base": -340,
+                    "mulKey": "risk"
+                  }
+                },
+                {
+                  "kind": "fame",
+                  "amount": -20
+                },
+                {
+                  "kind": "generalState",
+                  "state": "injured",
+                  "seasons": 2
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "B_INFORMED",
+      "when": {
+        "minIntel": 30,
+        "maxIntel": 69
+      },
+      "objective": {
+        "id": "handle_informed",
+        "text": "「水淹敵軍大營」：依已知敵情布陣"
+      },
+      "presented": {
+        "hints": [
+          "已知敵人大致動向，可有所準備"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0,
+        "rewardMul": 1,
+        "riskMul": 1
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.15,
+        "disasterRatio": 0.2,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "「水淹敵軍大營」大獲全勝，士卒歡聲雷動，連敵人的馬匹糧草都截了下來。",
+                "effects": [
+                  {
+                    "kind": "resource",
+                    "res": "grain",
+                    "amount": {
+                      "base": 1500,
+                      "mulKey": "reward"
+                    }
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": {
+                      "base": 480,
+                      "mulKey": "reward"
+                    }
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": {
+                      "base": 30,
+                      "mulKey": "reward"
+                    }
+                  }
+                ]
+              },
+              {
+                "kind": "chance",
+                "p": 0.25,
+                "hit": {
+                  "kind": "effects",
+                  "narrative": "此役打通了門路，同類任務的消息也跟著靈通起來。",
+                  "effects": [
+                    {
+                      "kind": "intel",
+                      "target": {
+                        "tag": "military"
+                      },
+                      "delta": 15
+                    }
+                  ]
+                },
+                "miss": {
+                  "kind": "effects",
+                  "effects": []
+                }
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "「水淹敵軍大營」得手，部伍整肅而返。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "grain",
+                "amount": {
+                  "base": 1000,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "generalExp",
+                "amount": {
+                  "base": 320,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "fame",
+                "amount": {
+                  "base": 20,
+                  "mulKey": "reward"
+                }
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "「水淹敵軍大營」無功而返，所幸根本未損，只是白跑一趟。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": {
+                  "base": 80,
+                  "mulKey": "reward"
+                }
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "chance",
+            "p": 0.5,
+            "hit": {
+              "kind": "effects",
+              "narrative": "「水淹敵軍大營」遇上意料之外的抵抗，折損兵卒。",
+              "effects": [
+                {
+                  "kind": "resource",
+                  "res": "troops",
+                  "amount": {
+                    "base": -204,
+                    "mulKey": "risk"
+                  }
+                },
+                {
+                  "kind": "fame",
+                  "amount": -19
+                },
+                {
+                  "kind": "generalState",
+                  "state": "injured",
+                  "seasons": 2
+                }
+              ]
+            },
+            "miss": {
+              "kind": "effects",
+              "narrative": "「水淹敵軍大營」遇上意料之外的抵抗，折損兵卒。",
+              "effects": [
+                {
+                  "kind": "resource",
+                  "res": "troops",
+                  "amount": {
+                    "base": -204,
+                    "mulKey": "risk"
+                  }
+                },
+                {
+                  "kind": "fame",
+                  "amount": -19
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "B_INSIGHT",
+      "when": {
+        "minIntel": 70
+      },
+      "objective": {
+        "id": "handle_insight",
+        "text": "「水淹敵軍大營」：先發制人，直取要害"
+      },
+      "presented": {
+        "hints": [
+          "敵人破綻已在掌握，可擇機一擊"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.1,
+        "rewardMul": 1.25,
+        "riskMul": 0.6
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.3,
+        "disasterRatio": 0.08,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "「水淹敵軍大營」大獲全勝，士卒歡聲雷動，連敵人的馬匹糧草都截了下來。",
+                "effects": [
+                  {
+                    "kind": "resource",
+                    "res": "grain",
+                    "amount": {
+                      "base": 1500,
+                      "mulKey": "reward"
+                    }
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": {
+                      "base": 480,
+                      "mulKey": "reward"
+                    }
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": {
+                      "base": 30,
+                      "mulKey": "reward"
+                    }
+                  }
+                ]
+              },
+              {
+                "kind": "chance",
+                "p": 0.45,
+                "hit": {
+                  "kind": "effects",
+                  "narrative": "此役打通了門路，同類任務的消息也跟著靈通起來。",
+                  "effects": [
+                    {
+                      "kind": "intel",
+                      "target": {
+                        "tag": "military"
+                      },
+                      "delta": 25
+                    }
+                  ]
+                },
+                "miss": {
+                  "kind": "effects",
+                  "effects": []
+                }
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "「水淹敵軍大營」得手，部伍整肅而返。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "grain",
+                "amount": {
+                  "base": 1000,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "generalExp",
+                "amount": {
+                  "base": 320,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "fame",
+                "amount": {
+                  "base": 20,
+                  "mulKey": "reward"
+                }
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "「水淹敵軍大營」無功而返，所幸根本未損，只是白跑一趟。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": {
+                  "base": 80,
+                  "mulKey": "reward"
+                }
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "「水淹敵軍大營」雖有準備，仍被敵人搶先一步，損失輕微。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "troops",
+                "amount": {
+                  "base": -102,
+                  "mulKey": "risk"
+                }
+              },
+              {
+                "kind": "fame",
+                "amount": -18
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "sceneGambit": "flood-attack"
+}

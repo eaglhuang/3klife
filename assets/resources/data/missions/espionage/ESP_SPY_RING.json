@@ -1,0 +1,889 @@
+{
+  "schema": "mission-def.v1",
+  "id": "ESP_SPY_RING",
+  "version": 1,
+  "theme": "espionage",
+  "difficulty": "ELITE",
+  "tags": [
+    "spy",
+    "network",
+    "counter_intel"
+  ],
+  "meta": {
+    "origin": "authored",
+    "note": "手寫任務：三層情報分支、隱藏變體、巢狀結果與連鎖。"
+  },
+  "text": {
+    "title": "搗毀細作網",
+    "brief": "敵國細作盤踞多時，一張網撒在兩郡之間。拔一根線容易，牽動整張網卻要看你知道多少。",
+    "detail": "細作以酒肆、驛站、渡口為聯絡點，彼此以暗號互通。這張網究竟有多大，連主將也說不準；唯一確定的是，它還在收攏更多人。"
+  },
+  "facts": [
+    {
+      "key": "net",
+      "label": "網的形貌",
+      "levels": [
+        {
+          "minIntel": 30,
+          "text": "聯絡點似乎不止一處。"
+        },
+        {
+          "minIntel": 60,
+          "text": "各處聯絡點以同一種暗號互通。"
+        },
+        {
+          "minIntel": 90,
+          "text": "暗號最終都送往一處關口後的酒肆。"
+        }
+      ],
+      "decoy": "不過幾個小蟊賊，隨便派人就能收拾。"
+    },
+    {
+      "key": "chief",
+      "label": "首腦",
+      "levels": [
+        {
+          "minIntel": 70,
+          "text": "網後頭有人發號施令，卻從不露面。"
+        }
+      ]
+    }
+  ],
+  "requirement": {
+    "slots": 1,
+    "keyStats": {
+      "int": 1,
+      "lea": 0.5
+    },
+    "preferTags": [
+      "keen_eye",
+      "spy"
+    ],
+    "avoidTags": [
+      "brutal"
+    ]
+  },
+  "timing": {
+    "durationSeasons": 2,
+    "expireSeasons": 3
+  },
+  "variants": [
+    {
+      "id": "SMALL",
+      "weight": 45
+    },
+    {
+      "id": "NETWORK",
+      "weight": 55
+    }
+  ],
+  "intel": {
+    "initial": 35,
+    "jitter": 10,
+    "sources": {
+      "recon": {
+        "increments": [
+          30,
+          25,
+          20
+        ]
+      },
+      "wait": {
+        "delta": 20
+      }
+    }
+  },
+  "branches": [
+    {
+      "id": "B_RING_BLIND",
+      "when": {
+        "variant": [
+          "SMALL",
+          "NETWORK"
+        ],
+        "minIntel": 0,
+        "maxIntel": 39
+      },
+      "objective": {
+        "id": "raid_a_den",
+        "text": "搗毀查到的那處聯絡點"
+      },
+      "presented": {
+        "hints": [
+          "只查到一處聯絡點，其餘不明"
+        ]
+      },
+      "modifiers": {
+        "successDelta": -0.15,
+        "rewardMul": 0.8,
+        "riskMul": 1.6
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.05,
+        "disasterRatio": 0.4,
+        "tiers": {
+          "critical": {
+            "kind": "effects",
+            "narrative": "這一處竟是樞紐，拔掉之後半張網失去聯絡。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 220
+              },
+              {
+                "kind": "generalExp",
+                "amount": 130
+              },
+              {
+                "kind": "fame",
+                "amount": 14
+              },
+              {
+                "kind": "intel",
+                "target": {
+                  "tag": "espionage"
+                },
+                "delta": 15
+              }
+            ]
+          },
+          "success": {
+            "kind": "switch",
+            "on": "variant",
+            "cases": [
+              {
+                "eq": "SMALL",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "一處聯絡點就是全部，細作被連根拔起。",
+                  "effects": [
+                    {
+                      "kind": "resource",
+                      "res": "silver",
+                      "amount": 200
+                    },
+                    {
+                      "kind": "generalExp",
+                      "amount": 110
+                    },
+                    {
+                      "kind": "fame",
+                      "amount": 10
+                    }
+                  ]
+                }
+              }
+            ],
+            "else": {
+              "kind": "effects",
+              "narrative": "只拔掉了一處，其餘細作聞風四散，換了暗號。",
+              "effects": [
+                {
+                  "kind": "resource",
+                  "res": "silver",
+                  "amount": 60
+                },
+                {
+                  "kind": "generalExp",
+                  "amount": 50
+                },
+                {
+                  "kind": "flag",
+                  "set": "spy_ring_alerted",
+                  "value": true
+                }
+              ]
+            }
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "撲了個空，聯絡點早已人去樓空。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 20
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "你闖入的是一處陷阱，細作放火滅口，武將受傷。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "troops",
+                "amount": -80
+              },
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 2
+              },
+              {
+                "kind": "flag",
+                "set": "spy_ring_alerted",
+                "value": true
+              },
+              {
+                "kind": "fame",
+                "amount": -5
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_RING_PARTIAL_SMALL",
+      "when": {
+        "variant": [
+          "SMALL"
+        ],
+        "minIntel": 40,
+        "maxIntel": 79
+      },
+      "objective": {
+        "id": "uproot_small_ring",
+        "text": "一網打盡這小股細作",
+        "keyStats": {
+          "int": 1,
+          "lea": 0.6
+        }
+      },
+      "presented": {
+        "hints": [
+          "人數不多，行動也沒有想像中縝密"
+        ]
+      },
+      "modifiers": {
+        "successDelta": -0.02,
+        "rewardMul": 1,
+        "riskMul": 1
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.2,
+        "disasterRatio": 0.15,
+        "tiers": {
+          "critical": {
+            "kind": "effects",
+            "narrative": "同夜收網，七名細作全數落網，連藏在米缸裡的暗號簿都被搜出。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 260
+              },
+              {
+                "kind": "generalExp",
+                "amount": 160
+              },
+              {
+                "kind": "fame",
+                "amount": 16
+              },
+              {
+                "kind": "spawn",
+                "defId": "MIL_BEACON_PATROL",
+                "intel": 55
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "主要細作落網，只跑了個小嘍囉。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 190
+              },
+              {
+                "kind": "generalExp",
+                "amount": 120
+              },
+              {
+                "kind": "fame",
+                "amount": 10
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "收網時慢了半步，細作們已先散了。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 40
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "細作反抗激烈，主事者負傷。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "troops",
+                "amount": -60
+              },
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_RING_PARTIAL_NET",
+      "when": {
+        "variant": [
+          "NETWORK"
+        ],
+        "minIntel": 40,
+        "maxIntel": 79
+      },
+      "objective": {
+        "id": "map_the_network",
+        "text": "先摸清聯絡網的脈絡，再下手",
+        "keyStats": {
+          "int": 1,
+          "lea": 0.4
+        }
+      },
+      "presented": {
+        "hints": [
+          "聯絡點之間有固定的暗號，值得細看再出手"
+        ]
+      },
+      "modifiers": {
+        "successDelta": -0.04,
+        "rewardMul": 1,
+        "riskMul": 1
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.2,
+        "disasterRatio": 0.18,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "你按暗號順序一處處摸清，把整張網畫成了一幅地圖。",
+                "effects": [
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": 240
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": 150
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": 14
+                  }
+                ]
+              },
+              {
+                "kind": "chance",
+                "p": 0.4,
+                "hit": {
+                  "kind": "effects",
+                  "narrative": "地圖指向一座關口後的酒肆，那裡才是真正的總壇。",
+                  "effects": [
+                    {
+                      "kind": "spawn",
+                      "defId": "ESP_SPY_RING",
+                      "intel": 85,
+                      "afterSeasons": 1
+                    }
+                  ]
+                },
+                "miss": {
+                  "kind": "effects",
+                  "effects": []
+                }
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "摸清了半張網，先拔掉了最外圍的幾處。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 150
+              },
+              {
+                "kind": "generalExp",
+                "amount": 100
+              },
+              {
+                "kind": "fame",
+                "amount": 8
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "暗號每三日一換，你追得氣喘吁吁。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 35
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "你被細作反跟蹤，夜裡遭人暗算。",
+            "effects": [
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              },
+              {
+                "kind": "fame",
+                "amount": -3
+              },
+              {
+                "kind": "flag",
+                "set": "spy_ring_alerted",
+                "value": true
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_RING_FULL_SMALL",
+      "when": {
+        "variant": [
+          "SMALL"
+        ],
+        "minIntel": 80
+      },
+      "objective": {
+        "id": "uproot_and_turn",
+        "text": "拔除之餘，策反其中一人",
+        "keyStats": {
+          "int": 1,
+          "cha": 0.6
+        }
+      },
+      "presented": {
+        "objectiveText": "收網的同時，留下一個願意回頭的細作",
+        "hints": [
+          "其中有個年輕細作，家人還在我方手中"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.08,
+        "rewardMul": 1.3,
+        "riskMul": 0.5
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.3,
+        "disasterRatio": 0.06,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "全網拔除，那名年輕細作痛哭認罪，願替你傳遞假情報。",
+                "effects": [
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": 300
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": 190
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": 20
+                  }
+                ]
+              },
+              {
+                "kind": "effects",
+                "narrative": "他成了你安插在敵人身邊的一枚棋子。",
+                "effects": [
+                  {
+                    "kind": "unlock",
+                    "id": "double_agent"
+                  },
+                  {
+                    "kind": "intel",
+                    "target": {
+                      "tag": "border"
+                    },
+                    "delta": 25
+                  }
+                ]
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "細作全數落網，策反未成，倒也乾淨利落。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 220
+              },
+              {
+                "kind": "generalExp",
+                "amount": 140
+              },
+              {
+                "kind": "fame",
+                "amount": 12
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "策反的人臨陣反悔，放走了同夥。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 45
+              },
+              {
+                "kind": "flag",
+                "set": "spy_ring_alerted",
+                "value": true
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "策反的細作竟是反咬一口的死士。",
+            "effects": [
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              },
+              {
+                "kind": "fame",
+                "amount": -3
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_RING_FULL_NET",
+      "when": {
+        "variant": [
+          "NETWORK"
+        ],
+        "minIntel": 80,
+        "maxIntel": 99
+      },
+      "objective": {
+        "id": "cut_at_the_wineshop",
+        "text": "直搗關口酒肆，連根拔起",
+        "keyStats": {
+          "int": 1,
+          "lea": 0.8
+        }
+      },
+      "presented": {
+        "objectiveText": "放過外圍小卒，直取關口後的總壇",
+        "hints": [
+          "暗號最終都送往一處酒肆，那裡才是樞紐"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.06,
+        "rewardMul": 1.5,
+        "riskMul": 0.6
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.3,
+        "disasterRatio": 0.08,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "總壇被端，細作名冊整本落入你手，各處聯絡點一夜之間全斷。",
+                "effects": [
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": 360
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": 230
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": 26
+                  }
+                ]
+              },
+              {
+                "kind": "switch",
+                "on": "generalTag",
+                "cases": [
+                  {
+                    "when": "keen_eye",
+                    "then": {
+                      "kind": "effects",
+                      "narrative": "你一眼看出名冊裡有幾個名字是我方的人，才沒有誤傷。",
+                      "effects": [
+                        {
+                          "kind": "fame",
+                          "amount": 10
+                        },
+                        {
+                          "kind": "relation",
+                          "target": "faction:allied_scouts",
+                          "delta": 15
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "else": {
+                  "kind": "effects",
+                  "narrative": "名冊裡牽出了鄰郡一位太守的名字。",
+                  "effects": [
+                    {
+                      "kind": "spawn",
+                      "defId": "DIP_ALLIANCE_NEIGHBOR",
+                      "intel": 65
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "端掉總壇，餘黨潰散，主要人物全數就擒。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 280
+              },
+              {
+                "kind": "generalExp",
+                "amount": 180
+              },
+              {
+                "kind": "fame",
+                "amount": 16
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "總壇的首腦先一步走脫，只留下一屋子灰燼。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 60
+              },
+              {
+                "kind": "flag",
+                "set": "spy_chief_escaped",
+                "value": true
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "酒肆被縱火，武將在火場中負傷。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "troops",
+                "amount": -70
+              },
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 2
+              },
+              {
+                "kind": "fame",
+                "amount": -4
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_RING_SECRET",
+      "when": {
+        "variant": [
+          "NETWORK"
+        ],
+        "minIntel": 100
+      },
+      "objective": {
+        "id": "turn_the_chief",
+        "text": "策反首腦，反用其網",
+        "keyStats": {
+          "int": 1,
+          "cha": 0.8
+        }
+      },
+      "presented": {
+        "objectiveText": "與網後的人面談，讓整張網改為我方所用",
+        "hints": [
+          "首腦其實是個被敵國扣了家人的降臣"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.12,
+        "rewardMul": 2,
+        "riskMul": 0.4
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.4,
+        "disasterRatio": 0.04,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "你與首腦在雨夜單獨談了一個時辰，他把整張網的線頭交到你手裡。",
+                "effects": [
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": 480
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": 300
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": 36
+                  },
+                  {
+                    "kind": "unlock",
+                    "id": "double_agent"
+                  }
+                ]
+              },
+              {
+                "kind": "effects",
+                "narrative": "這張網從此替你傳遞假消息，連敵人的下一步動向都能提前知道。",
+                "effects": [
+                  {
+                    "kind": "intel",
+                    "target": {
+                      "tag": "border"
+                    },
+                    "delta": 40
+                  },
+                  {
+                    "kind": "intel",
+                    "target": {
+                      "tag": "espionage"
+                    },
+                    "delta": 40
+                  },
+                  {
+                    "kind": "spawn",
+                    "defId": "MIL_FIRE_CAMP",
+                    "intel": 70
+                  }
+                ]
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "首腦願意合作，網的一半歸了你。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 340
+              },
+              {
+                "kind": "generalExp",
+                "amount": 220
+              },
+              {
+                "kind": "fame",
+                "amount": 22
+              },
+              {
+                "kind": "intel",
+                "target": {
+                  "tag": "espionage"
+                },
+                "delta": 25
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "首腦拒絕了你，但沒有出賣你，只是把網收了起來。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 80
+              },
+              {
+                "kind": "fame",
+                "amount": 2
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "談判破裂，首腦當場殺出重圍。",
+            "effects": [
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              },
+              {
+                "kind": "relation",
+                "target": "npc:spy_chief",
+                "delta": -30
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,537 @@
+{
+  "schema": "mission-def.v1",
+  "id": "EXP_EASY_04",
+  "version": 1,
+  "legacyTemplateId": "EXP_EASY_04",
+  "theme": "expedition",
+  "difficulty": "EASY",
+  "tags": [
+    "expedition",
+    "legacy"
+  ],
+  "meta": {
+    "origin": "converted",
+    "note": "由 tools_node/convert-hall-templates.js 從舊大廳模板機械轉出，可日後手寫補強。"
+  },
+  "text": {
+    "title": "清掃邊境哨站",
+    "brief": "邊境一座荒廢哨站被賊人佔住，需派兵驅離。",
+    "detail": "邊境上有座荒廢多年的哨站，近日被一夥賊人佔住，往來商隊都繞路而行。派一支小隊前去驅離，並順便把哨站重新插上我軍旗幟。"
+  },
+  "facts": [
+    {
+      "key": "detail",
+      "label": "行程背景",
+      "levels": [
+        {
+          "minIntel": 30,
+          "text": "邊境上有座荒廢多年的哨站，近日被一夥賊人佔住，往來商隊都繞路而行。"
+        },
+        {
+          "minIntel": 60,
+          "text": "邊境上有座荒廢多年的哨站，近日被一夥賊人佔住，往來商隊都繞路而行。派一支小隊前去驅離，並順便把哨站重新插上我軍旗幟。"
+        }
+      ],
+      "decoy": "聽說沿途太平，沒什麼好擔心的。"
+    },
+    {
+      "key": "enemy",
+      "label": "行程情報",
+      "levels": [
+        {
+          "minIntel": 40,
+          "text": "賊人約三十餘名。"
+        },
+        {
+          "minIntel": 70,
+          "text": "賊人約三十餘名，裝備簡陋，據哨站高處放箭，但缺乏補給。"
+        }
+      ],
+      "decoy": "聽說沿途太平，沒什麼好擔心的。"
+    }
+  ],
+  "requirement": {
+    "slots": 1,
+    "keyStats": {
+      "str": 1,
+      "lea": 0.4
+    },
+    "preferTags": [],
+    "avoidTags": []
+  },
+  "timing": {
+    "durationSeasons": 1,
+    "expireSeasons": 2
+  },
+  "variants": [
+    {
+      "id": "ONE",
+      "weight": 1
+    }
+  ],
+  "intel": {
+    "initial": 45,
+    "jitter": 10,
+    "sources": {}
+  },
+  "branches": [
+    {
+      "id": "B_BLIND",
+      "when": {
+        "minIntel": 0,
+        "maxIntel": 29
+      },
+      "objective": {
+        "id": "handle_blind",
+        "text": "照原定行程辦理「清掃邊境哨站」"
+      },
+      "presented": {
+        "hints": [
+          "路況與對方底細皆不明"
+        ]
+      },
+      "modifiers": {
+        "successDelta": -0.12,
+        "rewardMul": 0.85,
+        "riskMul": 1.5
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.05,
+        "disasterRatio": 0.35,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "「清掃邊境哨站」圓滿達成，還意外帶回了額外的見聞與人情。",
+                "effects": [
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": {
+                      "base": 120,
+                      "mulKey": "reward"
+                    }
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": {
+                      "base": 60,
+                      "mulKey": "reward"
+                    }
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": {
+                      "base": 5,
+                      "mulKey": "reward"
+                    }
+                  }
+                ]
+              },
+              {
+                "kind": "chance",
+                "p": 0.25,
+                "hit": {
+                  "kind": "effects",
+                  "narrative": "此役打通了門路，同類任務的消息也跟著靈通起來。",
+                  "effects": [
+                    {
+                      "kind": "intel",
+                      "target": {
+                        "tag": "expedition"
+                      },
+                      "delta": 15
+                    }
+                  ]
+                },
+                "miss": {
+                  "kind": "effects",
+                  "effects": []
+                }
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "「清掃邊境哨站」如期完成，不辱使命。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": {
+                  "base": 80,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "generalExp",
+                "amount": {
+                  "base": 40,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "fame",
+                "amount": {
+                  "base": 3,
+                  "mulKey": "reward"
+                }
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "「清掃邊境哨站」半途受阻，無功而返。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": {
+                  "base": 10,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "fame",
+                "amount": -1
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "「清掃邊境哨站」誤入險地，遭人截擊，隨行人員折損，主事者帶傷脫身。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "troops",
+                "amount": {
+                  "base": -40,
+                  "mulKey": "risk"
+                }
+              },
+              {
+                "kind": "fame",
+                "amount": -3
+              },
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_INFORMED",
+      "when": {
+        "minIntel": 30,
+        "maxIntel": 69
+      },
+      "objective": {
+        "id": "handle_informed",
+        "text": "「清掃邊境哨站」：依探得的情況調整行程"
+      },
+      "presented": {
+        "hints": [
+          "已探得部分路況，可避開幾處險處"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0,
+        "rewardMul": 1,
+        "riskMul": 1
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.15,
+        "disasterRatio": 0.2,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "「清掃邊境哨站」圓滿達成，還意外帶回了額外的見聞與人情。",
+                "effects": [
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": {
+                      "base": 120,
+                      "mulKey": "reward"
+                    }
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": {
+                      "base": 60,
+                      "mulKey": "reward"
+                    }
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": {
+                      "base": 5,
+                      "mulKey": "reward"
+                    }
+                  }
+                ]
+              },
+              {
+                "kind": "chance",
+                "p": 0.25,
+                "hit": {
+                  "kind": "effects",
+                  "narrative": "此役打通了門路，同類任務的消息也跟著靈通起來。",
+                  "effects": [
+                    {
+                      "kind": "intel",
+                      "target": {
+                        "tag": "expedition"
+                      },
+                      "delta": 15
+                    }
+                  ]
+                },
+                "miss": {
+                  "kind": "effects",
+                  "effects": []
+                }
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "「清掃邊境哨站」如期完成，不辱使命。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": {
+                  "base": 80,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "generalExp",
+                "amount": {
+                  "base": 40,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "fame",
+                "amount": {
+                  "base": 3,
+                  "mulKey": "reward"
+                }
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "「清掃邊境哨站」半途受阻，無功而返。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": {
+                  "base": 10,
+                  "mulKey": "reward"
+                }
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "chance",
+            "p": 0.5,
+            "hit": {
+              "kind": "effects",
+              "narrative": "「清掃邊境哨站」途中遇襲，折損部分隨從。",
+              "effects": [
+                {
+                  "kind": "resource",
+                  "res": "troops",
+                  "amount": {
+                    "base": -24,
+                    "mulKey": "risk"
+                  }
+                },
+                {
+                  "kind": "fame",
+                  "amount": -2
+                },
+                {
+                  "kind": "generalState",
+                  "state": "injured",
+                  "seasons": 1
+                }
+              ]
+            },
+            "miss": {
+              "kind": "effects",
+              "narrative": "「清掃邊境哨站」途中遇襲，折損部分隨從。",
+              "effects": [
+                {
+                  "kind": "resource",
+                  "res": "troops",
+                  "amount": {
+                    "base": -24,
+                    "mulKey": "risk"
+                  }
+                },
+                {
+                  "kind": "fame",
+                  "amount": -2
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "B_INSIGHT",
+      "when": {
+        "minIntel": 70
+      },
+      "objective": {
+        "id": "handle_insight",
+        "text": "「清掃邊境哨站」：掌握全局，擇最佳時機行事"
+      },
+      "presented": {
+        "hints": [
+          "路況與對方底細大致清楚，可從容佈置"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.1,
+        "rewardMul": 1.25,
+        "riskMul": 0.6
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.3,
+        "disasterRatio": 0.08,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "「清掃邊境哨站」圓滿達成，還意外帶回了額外的見聞與人情。",
+                "effects": [
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": {
+                      "base": 120,
+                      "mulKey": "reward"
+                    }
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": {
+                      "base": 60,
+                      "mulKey": "reward"
+                    }
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": {
+                      "base": 5,
+                      "mulKey": "reward"
+                    }
+                  }
+                ]
+              },
+              {
+                "kind": "chance",
+                "p": 0.45,
+                "hit": {
+                  "kind": "effects",
+                  "narrative": "此役打通了門路，同類任務的消息也跟著靈通起來。",
+                  "effects": [
+                    {
+                      "kind": "intel",
+                      "target": {
+                        "tag": "expedition"
+                      },
+                      "delta": 25
+                    }
+                  ]
+                },
+                "miss": {
+                  "kind": "effects",
+                  "effects": []
+                }
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "「清掃邊境哨站」如期完成，不辱使命。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": {
+                  "base": 80,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "generalExp",
+                "amount": {
+                  "base": 40,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "fame",
+                "amount": {
+                  "base": 3,
+                  "mulKey": "reward"
+                }
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "「清掃邊境哨站」半途受阻，無功而返。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": {
+                  "base": 10,
+                  "mulKey": "reward"
+                }
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "「清掃邊境哨站」雖遭小挫，已有退路，人員無大礙。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "troops",
+                "amount": {
+                  "base": -12,
+                  "mulKey": "risk"
+                }
+              },
+              {
+                "kind": "fame",
+                "amount": -1
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

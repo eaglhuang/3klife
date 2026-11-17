@@ -1,0 +1,66 @@
+{
+  "schema": "mission-balance.v1",
+  "version": 1,
+  "note": "通用任務全域數值。平衡先不管，這裡只放結構與初值；各任務可在自己的定義內覆寫情報來源。",
+  "intelCurve": {
+    "neutral": 50,
+    "successSlope": 0.3,
+    "disasterRatioAtZero": 1.5,
+    "disasterRatioAtFull": 0.5
+  },
+  "intel": {
+    "min": 0,
+    "max": 100,
+    "reconCap": 90,
+    "reconIncrements": [35, 25, 15],
+    "reconGrainCost": 50,
+    "scoutEnergy": 5,
+    "scoutIntBonusPerPoint": 0.1,
+    "scoutTagBonus": 5,
+    "wait": { "maxPerMission": 1, "delta": 20, "expireBonusSeasons": 1 },
+    "passivePerSeason": 5,
+    "flagBonus": { "scout_post": { "themes": ["military", "espionage"], "delta": 10 } }
+  },
+  "risk": {
+    "injury": { "tier": "disaster", "minSeasons": 1, "maxSeasons": 2 },
+    "capture": { "tier": "disaster", "minDifficulty": "ADVANCED", "minSeasons": 1, "maxSeasons": 3 }
+  },
+  "successRate": {
+    "base": 0.5,
+    "powerSlope": 0.5,
+    "baseMin": 0.05,
+    "baseMax": 0.95,
+    "keyStatBaseline": 70,
+    "keyStatPerPoint": 0.003,
+    "keyStatMin": -0.06,
+    "keyStatMax": 0.09,
+    "tagBonus": 0.04,
+    "tagBonusCap": 0.08,
+    "experiencePerWin": 0.01,
+    "experienceCap": 0.05,
+    "volunteerBonus": 0.5,
+    "finalMin": 0.05,
+    "finalMax": 1.0
+  },
+  "resourceCaps": { "grain": 10000, "silver": 5000, "troops": 3000 },
+  "recordLimit": 50,
+  "wallEnergy": { "Military": 20, "Domestic": 10, "Expedition": 20 },
+  "wallRewards": {
+    "Military": { "grain": 1, "silver": 0, "generalExp": 1 },
+    "Domestic": { "grain": 0.5, "silver": 1, "generalExp": 0 },
+    "Expedition": { "grain": 0, "silver": 1, "generalExp": 1 }
+  },
+  "wallCosts": {
+    "Military": { "grain": 1, "troops": 1, "silver": 0 },
+    "Domestic": { "grain": 1, "troops": 0, "silver": 1 },
+    "Expedition": { "grain": 1, "troops": 1, "silver": 0 }
+  },
+  "difficulties": {
+    "EASY": { "durationSeasons": 1, "powerRequired": 100, "reward": { "grain": 120, "silver": 80, "generalExp": 40 }, "cost": { "grain": 40, "troops": 50, "silver": 30 }, "fame": 3, "initialIntel": 45, "riskLoss": 40 },
+    "NORMAL": { "durationSeasons": 1, "powerRequired": 180, "reward": { "grain": 200, "silver": 140, "generalExp": 70 }, "cost": { "grain": 60, "troops": 80, "silver": 50 }, "fame": 5, "initialIntel": 40, "riskLoss": 70 },
+    "ELITE": { "durationSeasons": 2, "powerRequired": 260, "reward": { "grain": 350, "silver": 250, "generalExp": 120 }, "cost": { "grain": 100, "troops": 150, "silver": 80 }, "fame": 8, "initialIntel": 35, "riskLoss": 120 },
+    "ADVANCED": { "durationSeasons": 2, "powerRequired": 330, "reward": { "grain": 600, "silver": 420, "generalExp": 200 }, "cost": { "grain": 180, "troops": 250, "silver": 140 }, "fame": 12, "initialIntel": 30, "riskLoss": 200 },
+    "HELL": { "durationSeasons": 3, "powerRequired": 400, "reward": { "grain": 1000, "silver": 700, "generalExp": 320 }, "cost": { "grain": 300, "troops": 400, "silver": 220 }, "fame": 20, "initialIntel": 25, "riskLoss": 340 }
+  },
+  "defaults": { "expireSeasons": 2, "intelJitter": 10, "boardTargetCount": 4 }
+}
