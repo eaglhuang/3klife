@@ -14,11 +14,11 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
  *   - buildScreen() → mount('unit-info-panel-screen')
  *   - onReady(binder) → _onAfterBuildReady(binder)
  *   - 保留 show(data) / hide() / isVisible 公開 API 相同
- *   - 動態 trait 標籤與 ability 列表建立邏輯相同
+ *   - 數值、特性、能力、說明合成一段會換行的內文（PROG-2-9390）
  *
  * Unity 對照：CharacterInfoPanel，帶 SlideIn 動畫的 UGUI Panel
  */
-import { _decorator, Button, Color, Label, Node, Sprite, SpriteFrame } from 'cc';
+import { _decorator, Button, Color, Label, Node, Sprite, SpriteFrame, ScrollView, UITransform } from 'cc';
 import { services } from '../../core/managers/ServiceLoader';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
@@ -28,6 +28,37 @@ const { ccclass } = _decorator;
 const UNITINFO_TYPE_ICON_FALLBACK_PATH = 'sprites/battle/battle_unit_type_underlay';
 const WHITE = new Color(255, 255, 255, 255);
 
+/** 面板內文四周留白（與版面檔一致） */
+const UNITINFO_BODY_PADDING = 12;
+
+/** 同一張卡的判斷鍵：再按同一張卡要關面板 */
+function unitInfoKey(data: TallyCardData): string {
+    return `${data.unitType}|${data.unitName}`;
+}
+
+/**
+ * 兵種資訊面板的內文：數值兩行、特性、特殊能力、說明，全部放在同一段會自動換行的文字裡。
+ * 以前每個數值各佔一列小字，面板要很高才放得下，會蓋到棋盤（PROG-2-9390）。
+ */
+export function buildUnitInfoBody(data: TallyCardData): string {
+    const lines: string[] = [
+        `攻擊 ${data.atk}　防禦 ${data.def}　生命 ${data.hp}`,
+        `速度 ${data.spd}　糧草 ${data.cost}`,
+    ];
+    const traits = data.traitDetails?.map(detail => detail.label) ?? data.traits ?? [];
+    if (traits.length > 0) lines.push(`特性：${traits.join('、')}`);
+    const abilities = data.abilityDetails?.map(detail => detail.detail ? `${detail.name}：${detail.detail}` : detail.name)
+        ?? data.abilities ?? [];
+    for (const ability of abilities) lines.push(`・${ability}`);
+    if (data.desc) lines.push(data.desc);
+    const sourceLine = [data.source?.origin, data.source?.sourceType].filter(Boolean).join(' / ');
+    if (sourceLine) lines.push(`出處：${sourceLine}`);
+    if (data.source?.obtainHint) lines.push(`取得：${data.source.obtainHint}`);
+    const loreParts = [data.lore?.title, data.lore?.summary].filter(Boolean);
+    if (loreParts.length > 0) lines.push(`典故：${loreParts.join('｜')}`);
+    return lines.join('\n');
+}
+
 @ccclass('UnitInfoComposite')
 export class UnitInfoComposite extends CompositePanel {
 
@@ -35,14 +66,10 @@ export class UnitInfoComposite extends CompositePanel {
     private _unitName:  Label | null = null;
     private _unitSub:   Label | null = null;
     private _typeIcon:  Sprite | null = null;
-    private _atkRow:    Label | null = null;
-    private _defRow:    Label | null = null;
-    private _hpRow:     Label | null = null;
-    private _spdRow:    Label | null = null;
-    private _costRow:   Label | null = null;
-    private _traitTags: Node  | null = null;
-    private _abilityList: Node | null = null;
-    private _descText:  Label | null = null;
+    private _bodyText:  Label | null = null;
+    private _scrollView: ScrollView | null = null;
+    private _contentNode: Node | null = null;
+    private _shownKey: string | null = null;
 
     private _isMounted = false;
     private _visible = false;
@@ -66,8 +93,9 @@ export class UnitInfoComposite extends CompositePanel {
             this._isMounted = true;
         }
 
-        this._populate(data);
         this.node.active = true;
+        this._populate(data);
+        this._shownKey = unitInfoKey(data);
         this._visible = true;
         this.playEnterTransition(this.node, { enter: 'fadeIn', duration: 0.2 });
     }
@@ -78,6 +106,7 @@ export class UnitInfoComposite extends CompositePanel {
     public hide(): void {
         if (!this._visible) return;
         this._visible = false;
+        this._shownKey = null;
         this.playExitTransition(this.node, { exit: 'fadeOut', duration: 0.18 }, () => {
             this.node.active = false;
         });
@@ -86,24 +115,34 @@ export class UnitInfoComposite extends CompositePanel {
     /** 面板是否目前可見 */
     public get isVisible(): boolean { return this._visible; }
 
+    /** 面板目前是否正在顯示這張卡 */
+    public isShowing(data: TallyCardData): boolean {
+        return this._visible && this._shownKey === unitInfoKey(data);
+    }
+
     // ── CompositePanel 鉤子 ───────────────────────────────────
 
     protected override _onAfterBuildReady(binder: UITemplateBinder): void {
         this._unitName    = binder.getLabel('UnitName');
         this._unitSub     = binder.getLabel('UnitSub');
         this._typeIcon    = binder.getSprite('TypeIcon');
-        this._atkRow      = binder.getLabel('AtkRow');
-        this._defRow      = binder.getLabel('DefRow');
-        this._hpRow       = binder.getLabel('HpRow');
-        this._spdRow      = binder.getLabel('SpdRow');
-        this._costRow     = binder.getLabel('CostRow');
-        this._traitTags   = binder.getNode('TraitTags');
-        this._abilityList = binder.getNode('AbilityList');
-        this._descText    = binder.getLabel('DescText');
+        this._bodyText    = binder.getLabel('BodyText');
+        this._scrollView  = binder.getScrollView('ScrollView');
+        this._contentNode = binder.getNode('ContentNode');
+        // 內文從頂端往下排、寬度固定、高度跟著字數長：換行不會溢出面板，太長就捲動
+        const contentTf = this._contentNode?.getComponent(UITransform);
+        const bodyTf = this._bodyText?.node.getComponent(UITransform);
+        if (this._bodyText && contentTf && bodyTf) {
+            bodyTf.setAnchorPoint(0.5, 1);
+            bodyTf.setContentSize(Math.max(1, contentTf.width - UNITINFO_BODY_PADDING * 2), bodyTf.height);
+            this._bodyText.node.setPosition(0, -UNITINFO_BODY_PADDING, 0);
+            this._bodyText.overflow = Label.Overflow.RESIZE_HEIGHT;
+            this._bodyText.enableWrapText = true;
+        }
 
         binder.getNode('BtnClose')?.on(Button.EventType.CLICK, this.hide, this);
 
-        UCUFLogger.info(LogCategory.UI, `[UnitInfoComposite] 綁定完成 — name:${!!this._unitName} desc:${!!this._descText}`);
+        UCUFLogger.info(LogCategory.UI, `[UnitInfoComposite] 綁定完成 — name:${!!this._unitName} body:${!!this._bodyText}`);
     }
 
     // ── 私有：資料填充 ────────────────────────────────────────
@@ -111,64 +150,23 @@ export class UnitInfoComposite extends CompositePanel {
     private _populate(data: TallyCardData): void {
         if (this._unitName)  this._unitName.string  = data.unitName;
         if (this._unitSub)   this._unitSub.string   = data.unitSub;
-        if (this._atkRow)    this._atkRow.string     = `攻擊：${data.atk}`;
-        if (this._defRow)    this._defRow.string     = `防禦：${data.def}`;
-        if (this._hpRow)     this._hpRow.string      = `血量：${data.hp}`;
-        if (this._spdRow)    this._spdRow.string     = `速度：${data.spd}`;
-        if (this._costRow)   this._costRow.string    = `費用：${data.cost}`;
-        if (this._descText)  this._descText.string   = this._buildDetailText(data);
         void this._applyTypeIcon(data);
-
-        this._fillTraitTags(data);
-        this._fillAbilityList(data);
-    }
-
-    private _fillTraitTags(data: TallyCardData): void {
-        if (!this._traitTags) return;
-        this._traitTags.removeAllChildren();
-        const traits = data.traitDetails?.map(detail => detail.label) ?? data.traits;
-        for (const trait of traits) {
-            const tagNode = new Node(`Trait_${trait}`);
-            tagNode.parent = this._traitTags;
-            const label = tagNode.addComponent(Label);
-            label.string   = trait;
-            label.fontSize = 11;
+        if (!this._bodyText) return;
+        this._bodyText.string = buildUnitInfoBody(data);
+        this._bodyText.updateRenderData(true);
+        const contentTf = this._contentNode?.getComponent(UITransform);
+        if (contentTf) {
+            const bodyHeight = this._bodyText.node.getComponent(UITransform)?.height ?? 0;
+            const viewportHeight = this._scrollView?.node.getComponent(UITransform)?.height ?? 0;
+            contentTf.setContentSize(contentTf.width, Math.max(viewportHeight, bodyHeight + UNITINFO_BODY_PADDING * 2));
         }
-    }
-
-    private _fillAbilityList(data: TallyCardData): void {
-        if (!this._abilityList) return;
-        this._abilityList.removeAllChildren();
-        const abilityRows = data.abilityDetails?.map(detail => detail.detail ? `${detail.name}：${detail.detail}` : detail.name)
-            ?? data.abilities;
-        for (const ability of abilityRows) {
-            const rowNode = new Node(`Ability_${ability}`);
-            rowNode.parent = this._abilityList;
-            const label = rowNode.addComponent(Label);
-            label.string   = `• ${ability}`;
-            label.fontSize = 12;
+        // 換卡後回到內文開頭。直接把內文頂端對回可視區頂端，不靠捲動元件算（它在同一格改完高度後會算錯）
+        this._scrollView?.stopAutoScroll();
+        const viewTf = this._scrollView?.node.getComponent(UITransform);
+        if (viewTf && this._contentNode) {
+            const pos = this._contentNode.position;
+            this._contentNode.setPosition(pos.x, viewTf.height * (1 - viewTf.anchorY), pos.z);
         }
-    }
-
-    private _buildDetailText(data: TallyCardData): string {
-        const blocks: string[] = [];
-        if (data.desc) blocks.push(data.desc);
-
-        const sourceLine = [data.source?.origin, data.source?.sourceType].filter(Boolean).join(' / ');
-        if (sourceLine) {
-            blocks.push(`出處：${sourceLine}`);
-        }
-
-        if (data.source?.obtainHint) {
-            blocks.push(`取得：${data.source.obtainHint}`);
-        }
-
-        const loreParts = [data.lore?.title, data.lore?.summary].filter(Boolean);
-        if (loreParts.length > 0) {
-            blocks.push(`典故：${loreParts.join('｜')}`);
-        }
-
-        return blocks.join('\n');
     }
 
     private async _applyTypeIcon(data: TallyCardData): Promise<void> {

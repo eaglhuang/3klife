@@ -1,6 +1,6 @@
 {
   "id": "unit-info-panel-default",
-  "version": 1,
+  "version": 2,
   "bundle": "battle_ui",
   "atlasPolicy": "unit_info_panel",
   "_doc": "兵種資訊面板皮膚。從左滑出的小抽屜，深色水墨底板，金色分段標題線。",
@@ -15,7 +15,12 @@
       "kind": "sprite-frame",
       "path": "sprites/ui_families/common/shadow/shadow_01",
       "spriteType": "sliced",
-      "border": [20, 20, 20, 20],
+      "border": [
+        20,
+        20,
+        20,
+        20
+      ],
       "allowAutoAtlas": true
     },
     "unitinfo.header.bg": {
@@ -46,16 +51,16 @@
     },
     "unitinfo.label.name": {
       "kind": "label-style",
-      "fontSize": 16,
-      "lineHeight": 22,
+      "fontSize": 28,
+      "lineHeight": 34,
       "color": "secondaryLight",
       "horizontalAlign": "LEFT",
       "isBold": true
     },
     "unitinfo.label.sub": {
       "kind": "label-style",
-      "fontSize": 11,
-      "lineHeight": 14,
+      "fontSize": 24,
+      "lineHeight": 30,
       "color": "textSteelGray",
       "horizontalAlign": "LEFT"
     },
@@ -84,11 +89,11 @@
     },
     "unitinfo.label.desc": {
       "kind": "label-style",
-      "fontSize": 12,
-      "lineHeight": 18,
+      "fontSize": 24,
+      "lineHeight": 32,
       "color": "textSecondary",
       "horizontalAlign": "LEFT",
-      "overflow": "clampByHeight"
+      "overflow": "RESIZE_HEIGHT"
     }
   }
 }

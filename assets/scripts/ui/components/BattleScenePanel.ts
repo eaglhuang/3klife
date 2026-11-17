@@ -347,19 +347,22 @@ export class BattleScenePanel extends Component {
 
     // ── 私有事件處理 ─────────────────────────────────────────
 
-    /** 卡片選中：顯示兵種詳情面板 */
+    /**
+     * 短按虎符卡：開小型兵種資訊面板；再按同一張就關掉（使用者 2026-11-17 裁決，PROG-2-9390）。
+     * 滿版的虎符詳情只在沒有小面板時才當後備。
+     */
     private _onCardSelected(_index: number, data: TallyCardData): void {
-        if (this.unitInfoComposite?.isVisible) {
-            this.unitInfoComposite.hide();
+        if (this.unitInfoComposite) {
+            if (this.unitInfoComposite.isShowing(data)) {
+                this.unitInfoComposite.hide();
+                return;
+            }
+            void this.unitInfoComposite.show(data);
+            return;
         }
 
         if (this.tigerTallyDetailComposite) {
             void this.tigerTallyDetailComposite.show(data);
-            return;
-        }
-
-        if (this.unitInfoComposite) {
-            void this.unitInfoComposite.show(data);
         }
     }
 

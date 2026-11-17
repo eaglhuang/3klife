@@ -37,3 +37,12 @@ export function shouldLogDeployDragMove(
     return nowMs - lastLoggedMs >= Math.max(0, throttleMs);
 }
 
+/** 手指從按下到放開移動不超過這個距離（畫面座標）就算「短按」，超過算拖曳（PROG-2-9390） */
+export const CARD_TAP_MAX_MOVE = 16;
+
+/** 虎符卡：放開時是否算短按（開兵種資訊面板）而不是拖曳出陣 */
+export function isCardTap(startX: number, startY: number, endX: number, endY: number): boolean {
+    const dx = endX - startX;
+    const dy = endY - startY;
+    return dx * dx + dy * dy <= CARD_TAP_MAX_MOVE * CARD_TAP_MAX_MOVE;
+}

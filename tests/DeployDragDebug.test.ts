@@ -1,6 +1,8 @@
 import { TestSuite, assert } from './TestRunner';
 import {
+    CARD_TAP_MAX_MOVE,
     emitDeployDragDebug,
+    isCardTap,
     shouldLogDeployDragMove,
 } from '../assets/scripts/ui/components/DeployDragDebug';
 import { UCUFLogger, LogLevel } from '../assets/scripts/core/utils/UCUFLogger';
@@ -66,6 +68,18 @@ export function createDeployDragDebugSuite(): TestSuite {
         try { emitDeployDragDebug('TigerTallyComposite', 'emit-card-selected'); } catch { threw = true; }
         restore();
         assert.isFalse(threw, 'payload=undefined 不應拋出例外');
+    });
+
+    suite.test('isCardTap: 原地放開算短按，會開兵種資訊面板（PROG-2-9390）', () => {
+        assert.isTrue(isCardTap(100, 200, 100, 200));
+        assert.isTrue(isCardTap(100, 200, 100 + CARD_TAP_MAX_MOVE, 200), '剛好在門檻上仍算短按');
+        assert.isTrue(isCardTap(100, 200, 108, 190), '手指小幅晃動仍算短按');
+    });
+
+    suite.test('isCardTap: 拖出去再放開不算短按，不會誤開面板（PROG-2-9390）', () => {
+        assert.isFalse(isCardTap(100, 200, 100 + CARD_TAP_MAX_MOVE + 1, 200));
+        assert.isFalse(isCardTap(100, 200, 100, 200 - 40), '往上拖');
+        assert.isFalse(isCardTap(100, 200, 400, 500), '拖到棋盤');
     });
 
     return suite;
