@@ -16,6 +16,7 @@ import { buildTallyCardCatalog } from '../assets/scripts/core/config/TallyCardCa
 import { TALLY_HAND_SIZE } from '../assets/scripts/battle/views/BattleSceneLoader';
 import { deployPreferenceForTroops } from '../assets/scripts/core/systems/AiDeployTroopPick';
 import {
+    applyQaGeneralStartHp,
     formatQaBattleErrors,
     isQaBattleRequested,
     pickDefaultEncounter,
@@ -195,6 +196,7 @@ export function createQaBattleEntrySuite(): TestSuite {
             },
             clearStalePreviewKeys: () => { calls.push('clearKeys'); },
             useEphemeralStorage: () => { calls.push('ephemeral'); },
+            enrollTempRoster: async () => { calls.push('roster'); return null; },
             switchToBattle: () => { calls.push('switch'); },
         };
         const outcome = await executeQaBattleEntry('?qaBattle=1', deps);
@@ -210,12 +212,75 @@ export function createQaBattleEntrySuite(): TestSuite {
             prepareBattleGlobals: async () => { calls.push('prepare'); },
             clearStalePreviewKeys: () => { calls.push('clearKeys'); },
             useEphemeralStorage: () => { calls.push('ephemeral'); },
+            enrollTempRoster: async () => { calls.push('roster'); return null; },
             switchToBattle: () => { calls.push('switch'); },
         };
         const outcome = await executeQaBattleEntry('?qaBattle=1&qaEncounter=nope', deps);
         assert.isFalse(outcome.entered);
         assert.isTrue((outcome.errors?.length ?? 0) > 0);
         assert.equals('', calls.join(','));
+    });
+
+    suite.test('qaRoster／qaPlayerHp／qaEnemyHp：沒帶時維持原行為（PROG-2-9391）', () => {
+        const result = resolveQaBattle('?qaBattle=1', catalog);
+        if (!result.requested || !result.ok) throw new Error('預期合法');
+        assert.isFalse(result.tempRoster, '預設不建臨時名冊');
+        assert.isTrue(result.params.qaPlayerGeneralHp === undefined);
+        assert.isTrue(result.params.qaEnemyGeneralHp === undefined);
+    });
+
+    suite.test('qaRoster=1 與主將開場生命：帶進結果（PROG-2-9391）', () => {
+        const result = resolveQaBattle('?qaBattle=1&qaRoster=1&qaPlayerHp=1&qaEnemyHp=250', catalog);
+        if (!result.requested || !result.ok) throw new Error('預期合法');
+        assert.isTrue(result.tempRoster);
+        assert.equals(1, result.params.qaPlayerGeneralHp);
+        assert.equals(250, result.params.qaEnemyGeneralHp);
+        const off = resolveQaBattle('?qaBattle=1&qaRoster=0', catalog);
+        assert.isTrue(off.requested && off.ok && !off.tempRoster);
+    });
+
+    suite.test('qaRoster／開場生命不合法會報錯，不靜默忽略（PROG-2-9391）', () => {
+        for (const search of ['?qaBattle=1&qaRoster=yes', '?qaBattle=1&qaPlayerHp=0', '?qaBattle=1&qaPlayerHp=-5', '?qaBattle=1&qaEnemyHp=1.5', '?qaBattle=1&qaEnemyHp=abc', '?qaBattle=1&qaEnemyHp=']) {
+            assert.equals(1, expectErrors(resolveQaBattle(search, catalog)).length, search);
+        }
+    });
+
+    suite.test('開場生命只在直進入口生效；超過上限當滿血、最低 1（PROG-2-9391）', () => {
+        const player = { currentHp: 1000, maxHp: 1000 };
+        const enemy = { currentHp: 900, maxHp: 900 };
+        applyQaGeneralStartHp({ entrySource: 'lobby', qaPlayerGeneralHp: 1, qaEnemyGeneralHp: 1 }, player, enemy);
+        assert.equals(1000, player.currentHp, '正式入口不動');
+        assert.equals(900, enemy.currentHp, '正式入口不動');
+        applyQaGeneralStartHp({ entrySource: 'qa', qaPlayerGeneralHp: 1 }, player, enemy);
+        assert.equals(1, player.currentHp);
+        assert.equals(900, enemy.currentHp, '沒帶的那一方不動');
+        applyQaGeneralStartHp({ entrySource: 'qa', qaPlayerGeneralHp: 5000, qaEnemyGeneralHp: 250 }, player, enemy);
+        assert.equals(1000, player.currentHp, '超過上限當滿血');
+        assert.equals(250, enemy.currentHp);
+    });
+
+    suite.test('直進入口順序：臨時名冊在改用暫時存檔之後、切場景之前；失敗就不進場（PROG-2-9391）', async () => {
+        const calls: string[] = [];
+        const make = (reason: string | null): QaBattleEntryDeps => ({
+            loadCatalog: async () => realCatalog(),
+            resolveCampaignStageId: () => 'stage',
+            prepareBattleGlobals: async () => { calls.push('prepare'); },
+            clearStalePreviewKeys: () => { calls.push('clearKeys'); },
+            useEphemeralStorage: () => { calls.push('ephemeral'); },
+            enrollTempRoster: async (id) => { calls.push(`roster:${id}`); return reason; },
+            switchToBattle: () => { calls.push('switch'); },
+        });
+        const ok = await executeQaBattleEntry('?qaBattle=1&qaRoster=1&qaPlayer=zhang-fei', make(null));
+        assert.isTrue(ok.entered);
+        assert.equals('clearKeys,ephemeral,roster:zhang-fei,prepare,switch', calls.join(','));
+        calls.length = 0;
+        const bad = await executeQaBattleEntry('?qaBattle=1&qaRoster=1&qaPlayer=zhang-fei', make('不能出戰'));
+        assert.isFalse(bad.entered);
+        assert.equals('不能出戰', bad.errors?.[0]);
+        assert.isFalse(calls.includes('switch'));
+        calls.length = 0;
+        await executeQaBattleEntry('?qaBattle=1', make(null));
+        assert.isFalse(calls.some((c) => c.startsWith('roster')), '沒帶 qaRoster 不建名冊');
     });
 
     suite.test('直進入口載語系的呼叫與大廳開場相同', () => {

@@ -97,6 +97,10 @@ export interface IBattleEntryParams {
   campaignStageId?: string;
   /** 敵軍只出這些兵種（可選，PROG-2-9127，QA 直進入口用）；沒有就照敵將 Profile／虎符配發，正式入口不帶 */
   enemyDeployTroops?: TroopType[];
+  /** 我方主將開場生命（可選，PROG-2-9391，QA 直進入口用）；超過生命上限就當成滿血，正式入口不帶 */
+  qaPlayerGeneralHp?: number;
+  /** 敵方主將開場生命（可選，PROG-2-9391，QA 直進入口用）；規則同上 */
+  qaEnemyGeneralHp?: number;
   /** 英靈夢回教學戰的傳說英靈（OPEN-13）：只有教學戰帶入，勝利時產出初始虎符；預設沒有 */
   teachingSpirit?: { spiritId: string; spiritName: string; geneIds: readonly string[] } | null;
 }

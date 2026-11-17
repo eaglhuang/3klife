@@ -14,6 +14,11 @@
  *                                換算成對應虎符卡組，最多一手牌張數；缺省 = 既有預設卡組
  *   qaEnemyTroops=a,b            敵軍只出這些兵種（限 AI 會出的五種）；缺省 = 照敵將 Profile
  *   qaTutorial=0|1               是否為教學戰；缺省 = 只有「新手第一場」才是教學戰
+ *   qaRoster=0|1                 1 = 把我方主將放進臨時名冊並設為出戰主將（PROG-2-9391）。
+ *                                直進入口不經大廳，名冊是空的，結算就不會有單挑名聲、精力、功勳這幾列；
+ *                                要驗這些列才帶。臨時名冊只存在記憶體，不進玩家存檔。缺省 = 0（名冊維持空的）
+ *   qaPlayerHp=<正整數>           我方主將開場生命（超過上限當滿血）；驗被擒、被斬、敗逃用。缺省 = 滿血
+ *   qaEnemyHp=<正整數>            敵方主將開場生命；規則同上
  *
  * 合法性：任何一項不合法都回報完整錯誤清單，不靜默忽略；也不認得的 qa* 參數（多半是打錯字）一樣報錯。
  * 不可與 previewMode 併用，否則戰場會落入 capture 模式（行為不同於正式戰場）。
@@ -40,6 +45,9 @@ export const QA_BATTLE_QUERY = {
     playerTroops: 'qaPlayerTroops',
     enemyTroops: 'qaEnemyTroops',
     tutorial: 'qaTutorial',
+    roster: 'qaRoster',
+    playerHp: 'qaPlayerHp',
+    enemyHp: 'qaEnemyHp',
 } as const;
 
 /** 我方卡組張數上限；與戰場手牌張數 TALLY_HAND_SIZE 相同（測試鎖定兩者一致，shared 不引用 battle） */
@@ -70,7 +78,7 @@ export interface QaBattleBuildOptions {
 export type QaBattleResolution =
     | { requested: false }
     | { requested: true; ok: false; errors: string[] }
-    | { requested: true; ok: true; params: IBattleEntryParams };
+    | { requested: true; ok: true; params: IBattleEntryParams; /** 是否要把我方主將放進臨時名冊（qaRoster=1） */ tempRoster: boolean };
 
 /** 網址是否要求直進戰場（只看 qaBattle 開關；不合法的值也算「有要求」，好讓驗證報錯而非靜默忽略） */
 export function isQaBattleRequested(search: string | undefined | null): boolean {
@@ -173,6 +181,19 @@ export function resolveQaBattle(
         else errors.push(`${QA_BATTLE_QUERY.tutorial}=${tutorialRaw} 不合法，請用 0 或 1`);
     }
 
+    // 臨時名冊旗標
+    const rosterRaw = optional(query, QA_BATTLE_QUERY.roster);
+    let tempRoster = false;
+    if (rosterRaw !== null) {
+        const v = rosterRaw.toLowerCase();
+        if (v === '1' || v === 'true') tempRoster = true;
+        else if (v !== '0' && v !== 'false') errors.push(`${QA_BATTLE_QUERY.roster}=${rosterRaw} 不合法，請用 0 或 1`);
+    }
+
+    // 主將開場生命
+    const playerHp = parseStartHp(query, QA_BATTLE_QUERY.playerHp, errors);
+    const enemyHp = parseStartHp(query, QA_BATTLE_QUERY.enemyHp, errors);
+
     if (errors.length > 0 || !encounter) return { requested: true, ok: false, errors: errors.length > 0 ? errors : ['無法決定遭遇'] };
 
     // 組參數：與 LobbyScene._buildBattleEntryParams 的遭遇分支同欄位、同預設（全新存檔：無通關、無指定主將）
@@ -194,13 +215,50 @@ export function resolveQaBattle(
     const campaignStageId = options.resolveCampaignStageId?.(encounter);
     if (campaignStageId) params.campaignStageId = campaignStageId;
     if (enemyTroops.length > 0) params.enemyDeployTroops = enemyTroops;
-    return { requested: true, ok: true, params };
+    if (playerHp !== null) params.qaPlayerGeneralHp = playerHp;
+    if (enemyHp !== null) params.qaEnemyGeneralHp = enemyHp;
+    return { requested: true, ok: true, params, tempRoster };
 }
 
 /** 大廳對全新存檔挑的關卡：第一個已解鎖且未通關的（沒通關任何關 = 主鏈第一關），沒有就清單第一個 */
 export function pickDefaultEncounter(lobbyEncounters: readonly EncounterConfig[]): EncounterConfig | undefined {
     const cleared = new Set<string>();
     return lobbyEncounters.find((e) => !cleared.has(e.id) && isStageUnlocked(e.id, lobbyEncounters, cleared)) ?? lobbyEncounters[0];
+}
+
+/** 有生命值的東西（主將）；只取這裡要用的兩個欄位，不引用戰場型別 */
+export interface QaHpHolder {
+    currentHp: number;
+    readonly maxHp: number;
+}
+
+/**
+ * 套用直進入口指定的主將開場生命（PROG-2-9391）。
+ * 只有 qa 入口帶了參數才動；正式入口、預覽、再來一場一律不碰。超過上限當滿血，最低 1。
+ */
+export function applyQaGeneralStartHp(
+    params: Pick<IBattleEntryParams, 'entrySource' | 'qaPlayerGeneralHp' | 'qaEnemyGeneralHp'>,
+    player: QaHpHolder,
+    enemy: QaHpHolder,
+): void {
+    if (params.entrySource !== 'qa') return;
+    if (typeof params.qaPlayerGeneralHp === 'number') player.currentHp = clampStartHp(params.qaPlayerGeneralHp, player.maxHp);
+    if (typeof params.qaEnemyGeneralHp === 'number') enemy.currentHp = clampStartHp(params.qaEnemyGeneralHp, enemy.maxHp);
+}
+
+function clampStartHp(value: number, maxHp: number): number {
+    return Math.max(1, Math.min(maxHp, Math.floor(value)));
+}
+
+/** 開場生命參數：沒帶回 null；帶了必須是 1 以上的整數 */
+function parseStartHp(query: URLSearchParams, name: string, errors: string[]): number | null {
+    const raw = optional(query, name);
+    if (raw === null) return null;
+    if (!/^[1-9]\d{0,8}$/.test(raw)) {
+        errors.push(`${name}=${raw} 不合法，請用 1 以上的整數（超過生命上限會當成滿血）`);
+        return null;
+    }
+    return Number(raw);
 }
 
 /** 錯誤清單排成畫面上看得懂的文字 */
