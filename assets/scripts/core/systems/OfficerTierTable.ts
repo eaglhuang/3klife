@@ -20,7 +20,7 @@ export interface OfficerTierRow {
     expToReach: number;
     questCap: QuestDifficultyCap;
     unlockedFeatures: string[];
-    /** 晉升到此階的一次性獎勵金錢；資料檔省略時為 undefined */
+    /** 晉升到此階的一次性獎勵黃金；資料檔省略時為 undefined */
     promotionRewardGold?: number;
 }
 

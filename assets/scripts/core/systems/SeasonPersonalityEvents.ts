@@ -8,7 +8,7 @@
  *
  * 暫定（可逆，遊戲目前沒有對應系統）：
  * - 士氣、治安、步騎適性 +5 不結算，只寫在文案。
- * - 木材改扣等量銅錢；民心折成等量名聲；武力經驗每 10 點折 1 點武力（上限 100）。
+ * - 木材改扣等量黃金；民心折成等量名聲；武力經驗每 10 點折 1 點武力（上限 100）。
  * - 好感用忠誠度（轉蛋名將忠誠鎖定 100，不變）。
  * - 沒回應的事件下一季換季時作廢，視同第二個選項（無影響）。
  * - 抽 2 起的機率 50%；同一季同一事件只出一次。
@@ -74,7 +74,7 @@ export const SEASON_PERSONALITY_EVENTS: readonly SeasonPersonalityEventDef[] = O
         id: 'FEAST_REQUEST', archetype: 'Brave', title: '軍中索酒',
         desc: '{Name}：「主公，操演方畢，弟兄們辛苦，可否撥款犒賞全軍？」',
         options: [
-            { label: '撥款犒賞（銅錢 -50）', effect: { costGold: 50, loyalty: 10 }, note: '忠誠 +10（士氣 +15 暫不結算）' },
+            { label: '撥款犒賞（黃金 -50）', effect: { costGold: 50, loyalty: 10 }, note: '忠誠 +10（士氣 +15 暫不結算）' },
             { label: '嚴詞拒絕', effect: {}, note: '無影響（士氣 -5 暫不結算）' },
         ],
     },
@@ -82,7 +82,7 @@ export const SEASON_PERSONALITY_EVENTS: readonly SeasonPersonalityEventDef[] = O
         id: 'LEVEE_REPAIR', archetype: 'Wise', title: '預修水利',
         desc: '{Name}：「臣夜觀星象，恐有水患，請修築堤防以保收成。」',
         options: [
-            { label: '批准（銅錢 -100）', effect: { costGold: 100, farmMultiplier: 1.15, disasterImmune: true }, note: '本季免受天災，農耕產出 +15%' },
+            { label: '批准（黃金 -100）', effect: { costGold: 100, farmMultiplier: 1.15, disasterImmune: true }, note: '本季免受天災，農耕產出 +15%' },
             { label: '暫緩', effect: {}, note: '無影響' },
         ],
     },
@@ -162,7 +162,7 @@ export function seasonEventDesc(instance: SeasonEventInstance): string {
 
 /** 付不起時回傳缺的資源名；付得起回傳 null */
 export function seasonEventShortfall(effect: SeasonEventEffect, stock: { gold: number; food: number }): string | null {
-    if ((effect.costGold ?? 0) > stock.gold) return '銅錢';
+    if ((effect.costGold ?? 0) > stock.gold) return '黃金';
     if ((effect.costFood ?? 0) > stock.food) return '糧草';
     return null;
 }

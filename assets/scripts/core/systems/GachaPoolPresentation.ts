@@ -25,7 +25,7 @@ const FALLBACK: Required<Pick<GachaPoolPresentationConfig, 'title' | 'tenTitle' 
 
 export function resolveGachaPoolPresentation(
     pool: Readonly<GachaConfig> | null | undefined, poolId = pool?.poolId ?? '',
-    /** 不在設定檔的程式註冊池（金幣召喚、召喚券）用的預設呈現 */
+    /** 不在設定檔的程式註冊池（黃金召喚、召喚券）用的預設呈現 */
     fallback?: Readonly<GachaPoolPresentationConfig>,
 ): GachaPoolPresentation {
     const cfg: GachaPoolPresentationConfig = pool?.presentation ?? fallback ?? {};

@@ -2,7 +2,7 @@
  * RecruitHall.test.ts — 招賢館（PROG-2-1089）headless 測試
  *
  * 驗證：名將池 20 位都對得到 generals.json、FlowView key 都在 layout、分頁、
- * 金幣招募入冊、已在名冊與金幣不足擋下、內政畫面有入口。
+ * 黃金招募入冊、已在名冊與黃金不足擋下、內政畫面有入口。
  */
 import { TestSuite, assert } from './TestRunner';
 import { RECRUIT_GOLD_COST, RECRUIT_ROWS_PER_PAGE, RecruitHallController } from '../assets/scripts/ui/core/RecruitHallController';
@@ -65,7 +65,7 @@ export function createRecruitHallSuite(): TestSuite {
         assert.equals(true, layoutIds('assets/resources/ui-spec/layouts/domestic-main.json').has('btnOpenRecruit'));
     });
 
-    suite.test('招募：扣金幣入冊；已在名冊與金幣不足擋下；翻頁後招第 2 頁', async () => {
+    suite.test('招募：扣黃金入冊；已在名冊與黃金不足擋下；翻頁後招第 2 頁', async () => {
         const { state, controller, candidates } = harness(RECRUIT_GOLD_COST * 2, [heroPool()[1].id]);
         controller.select(1);
         assert.equals(false, controller.getFlowView().enabled.btnRecruit, '已在名冊停用');
@@ -78,8 +78,8 @@ export function createRecruitHallSuite(): TestSuite {
         assert.equals('2 / 4', controller.getFlowView().texts.pageLabel);
         assert.equals(true, await controller.recruitRow(0));
         assert.equals(true, state.owned.has(candidates[RECRUIT_ROWS_PER_PAGE].id));
-        assert.equals(false, await controller.recruitRow(1), '金幣不足');
-        assert.equals(true, controller.getFlowView().texts.noticeLabel.includes('金幣不足'));
+        assert.equals(false, await controller.recruitRow(1), '黃金不足');
+        assert.equals(true, controller.getFlowView().texts.noticeLabel.includes('黃金不足'));
     });
 
     return suite;

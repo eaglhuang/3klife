@@ -26,7 +26,7 @@
       "costSilverRatio": 0.54,
       "costTimeValueLabel": "2 小時 30 分",
       "costTimeRatio": 0.45,
-      "rewardBaseLabel": "糧草 +1,200\n銀兩 +900",
+      "rewardBaseLabel": "糧草 +1,200\n黃金 +900",
       "rewardPerfectLabel": "完美達成再加：戰功 +20\n武將好感 +8",
       "aiDelegateChecked": false,
       "aiDelegateHintLabel": "勾選後可由 AI 自動執行委任流程",
@@ -55,7 +55,7 @@
       "costTimeValueLabel": "4 日",
       "costTimeRatio": 0.78,
       "rewardBaseLabel": "糧倉安全度 +15\n民心 +10",
-      "rewardPerfectLabel": "完美達成再加：銀兩 +200\n糧損減免 +8%",
+      "rewardPerfectLabel": "完美達成再加：黃金 +200\n糧損減免 +8%",
       "aiDelegateChecked": true,
       "aiDelegateHintLabel": "勾選後可由 AI 自動執行委任流程",
       "availableActions": ["re-scout", "execute", "wait", "assign"]

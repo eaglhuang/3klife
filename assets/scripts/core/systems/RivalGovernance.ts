@@ -70,7 +70,7 @@ export interface NationResources {
     readonly intel: number;
 }
 
-/** RAI-01 初始資源（暫定）：糧同玩家新局 300；金取 AI 金幣上限 5000；名聲、情報從 0 開始 */
+/** RAI-01 初始資源（暫定）：糧同玩家新局 300；金取 AI 黃金上限 5000；名聲、情報從 0 開始 */
 export const AI_STARTING_RESOURCES: Readonly<NationResources> = Object.freeze({
     food: 300, gold: 5000, fame: 0, intel: 0,
 });

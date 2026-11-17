@@ -516,7 +516,7 @@ function ensureToolbarRoot(): Node | null {
     overlayState.addGoldButton = createButton(
         root,
         'AddGoldButton',
-        '+50,000 金幣',
+        '+50,000 黃金',
         220,
         34,
         new Color(128, 98, 42, 240),

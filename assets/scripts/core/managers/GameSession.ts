@@ -1664,7 +1664,7 @@ export class GameSession {
 
     /**
      * 虎符精華突破（TRP-11 / PROG-2-1318）：3★→4★、4★→5★，成敗由外部傳入的 roll 決定。
-     * 金幣與精華由呼叫端依回傳的 goldSpent、essenceSpent 扣款（失敗時扣一半材料，星級不變）。
+     * 黃金與精華由呼叫端依回傳的 goldSpent、essenceSpent 扣款（失敗時扣一半材料，星級不變）。
      * 只要突破判定有效（ok:true）就存檔，包含失敗扣材料的情況，避免重新載入後材料回復；
      * 成功才寫回星級。卡不存在或條件不合時回傳 null 或 ok:false，不改動資料。
      */
@@ -2401,7 +2401,7 @@ export class GameSession {
         return result;
     }
 
-    /** 附外交拜帖錦囊送禮（OFC-12）：沒有道具或本季次數用完時不扣金幣也不扣道具 */
+    /** 附外交拜帖錦囊送禮（OFC-12）：沒有道具或本季次數用完時不扣黃金也不扣道具 */
     public async sendRivalGiftWithLetter(nationId: string, wallet: { gold: number; spend: (n: number) => void }): Promise<{ ok: boolean; message: string }> {
         const inventory = consumeItem(this._inventory, ITEM_DIPLOMACY_LETTER);
         if (!inventory) return { ok: false, message: '沒有外交拜帖錦囊' };
@@ -2482,7 +2482,7 @@ export class GameSession {
 
     private _tickRivals(): AutoBattleResult[] {
         this._rivals = dropOwnedRivalOfficers(this._rivals, this._permanentlyOwnedGeneralIds());
-        // 玩家金幣不在 GameSession 內（錢包由呼叫端持有），RAI-05 暫傳 0（暫定）
+        // 玩家黃金不在 GameSession 內（錢包由呼叫端持有），RAI-05 暫傳 0（暫定）
         const holdersOf = (w: typeof this._rivals) => [...w.nations.map((n) => ({ id: n.id, territories: n.territories })), { id: 'player', territories: this._territories.length }];
         const beforeHolders = holdersOf(this._rivals);
         const tick = advanceRivalSeason(this._rivals, this._random, { troops: this._military.cityTroops, food: this._military.food, gold: 0, territories: this._territories.length }, this._rivalOfficers?.context);
@@ -2559,7 +2559,7 @@ export class GameSession {
         return pendingTournamentRewards(this._tournamentAt(nowMs));
     }
 
-    /** 領取賽季獎勵：每季金錢交給 grant 入帳；不自動存檔 */
+    /** 領取賽季獎勵：每季黃金交給 grant 入帳；不自動存檔 */
     public claimTournamentRewards(nowMs: number, grant: (gold: number) => void): TournamentSeasonReward[] {
         const claimed = claimTournamentRewards(this._tournamentAt(nowMs));
         if (claimed.rewards.length === 0) return [];
@@ -2713,7 +2713,7 @@ export class GameSession {
 
     /**
      * 回應本季第一起性格事件（0 = 第一個選項，1 = 第二個）。付不起時拒絕且不變動任何資源。
-     * 銅錢走傳入的錢包（LocalGachaService），糧草、名聲、忠誠、武力在 session 內結算；成功時自動存檔。
+     * 黃金走傳入的錢包（LocalGachaService），糧草、名聲、忠誠、武力在 session 內結算；成功時自動存檔。
      */
     public async resolveSeasonEvent(
         optionIndex: 0 | 1, wallet: { gold: () => number; spendGold: (amount: number) => boolean },
@@ -2725,7 +2725,7 @@ export class GameSession {
         const effect = option.effect;
         const missing = seasonEventShortfall(effect, { gold: wallet.gold(), food: this._military.food });
         if (missing) return { ok: false, reason: 'shortfall', resource: missing };
-        if ((effect.costGold ?? 0) > 0 && !wallet.spendGold(effect.costGold ?? 0)) return { ok: false, reason: 'shortfall', resource: '銅錢' };
+        if ((effect.costGold ?? 0) > 0 && !wallet.spendGold(effect.costGold ?? 0)) return { ok: false, reason: 'shortfall', resource: '黃金' };
         if (effect.costFood) this._military = { ...this._military, food: this._military.food - effect.costFood };
         if (effect.fame) this._fame = Math.min(BASE_RESOURCE_CAPS.fame, this._fame + effect.fame);
         const general = this._roster.getAll().find((g) => g.id === instance.generalId);
@@ -2824,7 +2824,7 @@ export class GameSession {
 
     /**
      * 市井奇遇抉擇（0 = 積極行動，1 = 放棄）；當季只能一次，付不起時拒絕且不變動資源。
-     * 銅錢走傳入的錢包，糧草、木材、名聲與名冊在 session 內結算；成功時自動存檔。
+     * 黃金走傳入的錢包，糧草、木材、名聲與名冊在 session 內結算；成功時自動存檔。
      */
     public async resolveCityEncounter(
         optionIndex: 0 | 1, wallet: { gold: () => number; spendGold: (amount: number) => boolean },
@@ -2841,7 +2841,7 @@ export class GameSession {
         if (cityEncounterNeedsLead(effect) && !leadId) return { ok: false, reason: 'no-target' };
         const missing = cityEncounterShortfall(effect, { gold: wallet.gold(), food: this._military.food, wood: itemCount(this._inventory, ITEM_WOOD) });
         if (missing) return { ok: false, reason: 'shortfall', resource: missing };
-        if ((effect.costGold ?? 0) > 0 && !wallet.spendGold(effect.costGold ?? 0)) return { ok: false, reason: 'shortfall', resource: '銅錢' };
+        if ((effect.costGold ?? 0) > 0 && !wallet.spendGold(effect.costGold ?? 0)) return { ok: false, reason: 'shortfall', resource: '黃金' };
         if (effect.costFood) this._military = { ...this._military, food: this._military.food - effect.costFood };
         if (effect.costWood) {
             this._inventory = consumeItem(this._inventory, ITEM_WOOD, effect.costWood) ?? this._inventory;
@@ -3458,7 +3458,7 @@ export class GameSession {
         return settled.completed;
     }
 
-    /** 派遣完成發獎（PROG-2-1182）：糧草、名聲有上限直接入帳；金幣交呼叫端錢包（同內政任務）。 */
+    /** 派遣完成發獎（PROG-2-1182）：糧草、名聲有上限直接入帳；黃金交呼叫端錢包（同內政任務）。 */
     private _grantDispatchReward(job: CompletedDispatchJob, grantGold: (amount: number) => void): void {
         const reward = findDispatchJob(job.jobId)?.reward;
         if (!reward) return;
@@ -3674,7 +3674,7 @@ export class GameSession {
     }
 
     /**
-     * 太守府升級下單（GOV-08）：先檢查等級、待生效與糧草，再請呼叫端錢包扣金錢；
+     * 太守府升級下單（GOV-08）：先檢查等級、待生效與糧草，再請呼叫端錢包扣黃金；
      * 全部成功才扣糧草並記為待生效，季結時升級。被拒絕時不改動狀態。
      */
     public orderTerritoryUpgrade(spendGold: (amount: number) => boolean): TerritoryUpgradePlan {
@@ -4946,7 +4946,7 @@ export class GameSession {
         return { ok: true, stageId: result.stageId, usedOrder: result.usedOrder };
     }
 
-    /** 領走待領獎勵：金幣交給呼叫端的錢包，道具進背包；回傳領到的內容。 */
+    /** 領走待領獎勵：黃金交給呼叫端的錢包，道具進背包；回傳領到的內容。 */
     public async claimExtremeTaskRewards(grantGold: (amount: number) => void): Promise<ExtremeTaskDrop[]> {
         const drops = this._extremeTask.rewards;
         if (drops.length === 0) return [];

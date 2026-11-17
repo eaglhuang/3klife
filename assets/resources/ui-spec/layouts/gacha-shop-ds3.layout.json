@@ -3539,7 +3539,7 @@
                             "name": "GachaShopDs3_span_11",
                             "width": 61,
                             "height": 15,
-                            "text": "合計金幣：",
+                            "text": "合計黃金：",
                             "styleSlot": "auto.gacha-shop-ds3.gachashopds3_span_11"
                           },
                           {
@@ -3699,7 +3699,7 @@
                               {
                                 "type": "label",
                                 "name": "GachaShopDs3_strong_2",
-                                "text": "1,280 金幣",
+                                "text": "1,280 黃金",
                                 "styleSlot": "auto.gacha-shop-ds3.gachashopds3_strong_2"
                               }
                             ]
@@ -5519,7 +5519,7 @@
                         "name": "GachaShopDs3_div_417",
                         "width": 468,
                         "height": 43,
-                        "text": "🎁 首招特典 · 召喚石 ×20 + 金幣 ×5,000",
+                        "text": "🎁 首招特典 · 召喚石 ×20 + 黃金 ×5,000",
                         "styleSlot": "auto.gacha-shop-ds3.gachashopds3_div_417"
                       },
                       {

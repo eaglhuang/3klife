@@ -1,7 +1,7 @@
 /**
  * TerritoryUpgradeWalletSaveE2E.test.ts — 太守府升級下單接 LobbyScene 錢包路徑的存讀檔複查（PROG-2-0674）
  *
- * Unity 對照：像在 PlayMode 按下升級鈕，錢包扣款與 GameSession 扣糧同時發生，確認存檔三者（金錢、糧草、待生效等級）一起落地。
+ * Unity 對照：像在 PlayMode 按下升級鈕，錢包扣款與 GameSession 扣糧同時發生，確認存檔三者（黃金、糧草、待生效等級）一起落地。
  */
 import { assert, TestSuite } from './TestRunner';
 import { LocalGachaService } from '../assets/scripts/core/services/LocalGachaService';
@@ -44,7 +44,7 @@ function upgrade(session: GameSession, gacha: LocalGachaService, saves: Promise<
 export function createTerritoryUpgradeWalletSaveE2ESuite(): TestSuite {
     const suite = new TestSuite('TerritoryUpgradeWalletSaveE2E (PROG-2-0674 太守府升級錢包存檔)');
 
-    suite.test('下單後存檔：金錢、糧草、待生效等級讀回一致，季結後升級', async () => {
+    suite.test('下單後存檔：黃金、糧草、待生效等級讀回一致，季結後升級', async () => {
         services().initialize();
         sys.localStorage.removeItem('CLIENT_DEVICE_ID');
         const adapter = new MemoryStorageAdapter();
@@ -68,7 +68,7 @@ export function createTerritoryUpgradeWalletSaveE2ESuite(): TestSuite {
         assert.equals(3, b.maxTaskSlots);
     });
 
-    suite.test('金錢不足：整筆不成立，存檔裡糧草與待生效不變', async () => {
+    suite.test('黃金不足：整筆不成立，存檔裡糧草與待生效不變', async () => {
         services().initialize();
         sys.localStorage.removeItem('CLIENT_DEVICE_ID');
         const adapter = new MemoryStorageAdapter();

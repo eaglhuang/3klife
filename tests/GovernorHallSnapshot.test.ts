@@ -17,7 +17,7 @@ export function createGovernorHallSnapshotSuite(): TestSuite {
     suite.test('兵源卡顯示實際儲備', () => {
         const card = buildGovernorHallView(buildGovernorSnapshot(MILITARY)).cityTroopCard;
         assert.equals('目前兵源 1200 / 8000', card.stockText);
-        assert.equals('每回合補兵 +300', card.recruitText);
+        assert.equals('每季補兵 +300', card.recruitText);
         assert.equals('距離回滿 23 回合', card.recoverText);
     });
 
@@ -26,7 +26,7 @@ export function createGovernorHallSnapshotSuite(): TestSuite {
         assert.equals(Math.floor(FOOD_PER_SEASON * 1.5), buildGovernorSnapshot(MILITARY, 1.5).food.base);
     });
 
-    suite.test('人口、民心、金錢沒有來源時顯示「—」，不顯示 0', () => {
+    suite.test('人口、民心、黃金沒有來源時顯示「—」，不顯示 0', () => {
         const view = buildGovernorHallView(buildGovernorSnapshot(MILITARY));
         assert.equals('人口 —', view.populationText);
         assert.equals('民心 —', view.moraleText);

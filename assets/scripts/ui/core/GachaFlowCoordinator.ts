@@ -123,9 +123,9 @@ export class GachaFlowCoordinator {
         }
     }
 
-    /** 金幣召喚、召喚券也是轉蛋系統的一池（PROG-2-9021） */
+    /** 黃金召喚、召喚券也是轉蛋系統的一池（PROG-2-9021） */
     public async runGoldSummon(): Promise<void> {
-        await this._runPool(GOLD_SUMMON_POOL_ID, 1, this._options.getGenerals(), 'gold', () => this.runGoldSummon(), '金幣召喚失敗');
+        await this._runPool(GOLD_SUMMON_POOL_ID, 1, this._options.getGenerals(), 'gold', () => this.runGoldSummon(), '黃金召喚失敗');
     }
 
     public async runTicketSummon(): Promise<void> {

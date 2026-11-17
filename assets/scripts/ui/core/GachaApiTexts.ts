@@ -9,7 +9,7 @@ import { pickPullCurrency, type GachaCurrencyId, type GachaPoolDto, type GachaWa
 import { GACHA_NODES, GACHA_RATE_NODES, GACHA_RATE_ROWS, type GachaPoolDef } from './GachaScreenNodes';
 
 export const GACHA_CURRENCY_LABEL: Readonly<Record<GachaCurrencyId, string>> = {
-    gems: '靈玉', gold: '金幣', tickets: '召喚券', bronze: '銅錢符', oracle: '求籤令', mentorTickets: '支援券', scorePoints: '積分',
+    gems: '靈玉', gold: '黃金', tickets: '召喚券', bronze: '銅錢符', oracle: '求籤令', mentorTickets: '支援券', scorePoints: '積分',
 };
 
 const HOUR_MS = 60 * 60 * 1000;
@@ -111,7 +111,7 @@ export function gachaApiView(
     const actives: Record<string, boolean> = {
         // 十連沒打折時不顯示刪除線原價
         [GACHA_NODES.pullTenOriginalCost]: dto.singleCost * 10 !== dto.tenCost,
-        // 金幣召喚、召喚券召喚只有名將池能用，其他池看得到卻按不動的鈕直接隱藏（PROG-2-9118）
+        // 黃金召喚、召喚券召喚只有名將池能用，其他池看得到卻按不動的鈕直接隱藏（PROG-2-9118）
         [GACHA_NODES.goldSummon]: pool.key === 'general',
         [GACHA_NODES.ticketSummon]: pool.key === 'general',
     };

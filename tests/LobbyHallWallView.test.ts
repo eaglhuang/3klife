@@ -8,7 +8,7 @@ import { buildLobbyHallWallView, LOBBY_HALL_WALL_ROWS } from '../assets/scripts/
 function row(id: string, over: Partial<HallTaskRow> = {}): HallTaskRow {
     return {
         taskId: id, title: `任務${id}`, brief: '', difficultyText: '中',
-        requiredRankText: '官階 2 以上', rewardText: '金錢 +100',
+        requiredRankText: '官階 2 以上', rewardText: '黃金 +100',
         accepted: false, canAccept: true, ...over,
     };
 }
@@ -26,7 +26,7 @@ export function createLobbyHallWallViewSuite(): TestSuite {
 
     suite.test('沒有獎勵時改顯示官階需求；已接取標成置頂', () => {
         const view = buildLobbyHallWallView([row('1', { accepted: true }), row('2', { rewardText: '' })], 8);
-        assert.equals(view.rows[0].meta, '金錢 +100');
+        assert.equals(view.rows[0].meta, '黃金 +100');
         assert.isTrue(view.rows[0].pinned);
         assert.equals(view.rows[1].meta, '官階 2 以上');
         assert.isTrue(!view.rows[1].pinned);

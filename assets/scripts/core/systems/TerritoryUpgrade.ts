@@ -3,7 +3,7 @@
  * TerritoryUpgrade — 太守府（領地）升級的等級、格數與費用（純邏輯，不依賴 cc）。
  *
  * - 等級 1–5；每級的內政任務格數由 SLOTS_BY_LEVEL 決定，改表即可調整。
- * - 升到第 n 級的費用：金錢 1000×n²、糧草 500×n（PM 暫定）。
+ * - 升到第 n 級的費用：黃金 1000×n²、糧草 500×n（PM 暫定）。
  * - 本模組只規劃結果，不扣任何資源；扣款與生效時機由 GameSession 決定。
  *
  * Unity 對照：像 ScriptableObject 表加一個純函式的計算器，UI 只讀結果、不自己算費用。
@@ -28,7 +28,7 @@ export interface TerritoryUpgradeCost {
     food: number;
 }
 
-/** 升到第 targetLevel 級的費用（暫定：金錢 1000×n²、糧草 500×n）。 */
+/** 升到第 targetLevel 級的費用（暫定：黃金 1000×n²、糧草 500×n）。 */
 export function territoryUpgradeCost(targetLevel: number): TerritoryUpgradeCost {
     const n = clampTerritoryLevel(targetLevel);
     return { gold: 1000 * n * n, food: 500 * n };
@@ -46,7 +46,7 @@ export interface TerritoryUpgradePlan {
 
 /**
  * 規劃一次升級：等級已滿、已有待生效的升級、或糧草不足時拒絕。
- * 金錢由呼叫端錢包判斷，不在這裡檢查。
+ * 黃金由呼叫端錢包判斷，不在這裡檢查。
  */
 export function planTerritoryUpgrade(level: number, pendingLevel: number | null, food: number): TerritoryUpgradePlan {
     const current = clampTerritoryLevel(level);

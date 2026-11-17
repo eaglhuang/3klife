@@ -285,7 +285,7 @@ export interface PlayerSaveSnapshot {
     yearAgingEvents?: AgingEvent[];
     /** 轉蛋各池保底計數（poolId → 累計抽數）；後加的選填欄位，舊檔讀回為空（從 0 開始）（PROG-2-0337） */
     gachaPity?: GachaPityBook;
-    /** 轉蛋錢包（玉／金幣／召喚券）；後加的選填欄位，舊檔讀回為 undefined（由轉蛋服務改讀舊 localStorage 一次）（PROG-2-0338） */
+    /** 轉蛋錢包（玉／黃金／召喚券）；後加的選填欄位，舊檔讀回為 undefined（由轉蛋服務改讀舊 localStorage 一次）（PROG-2-0338） */
     gachaWallet?: GachaWalletSave;
     /** 名聲等非軍備資源（暫定）；後加的選填欄位，舊檔讀回補 0 */
     resources?: { fame: number; scorePoints?: number; autoNurtureTickets?: number; mainlineNurtureClearedOnce?: boolean; firstBattleCleared?: boolean; openingRedFaceShown?: boolean };

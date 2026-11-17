@@ -68,7 +68,7 @@ export const CITY_ENCOUNTERS: readonly CityEncounterDef[] = Object.freeze([
         id: 'HU_MERCHANT', title: '西域胡商',
         desc: '西域胡商牽引一匹汗血寶馬進城，馬蹄如雷，索要重金。',
         options: [
-            { label: '重金購買', effect: { costGold: 100, leadCavalryGrades: 1 }, note: '消耗 100 銅錢，主將騎兵適性升一階' },
+            { label: '重金購買', effect: { costGold: 100, leadCavalryGrades: 1 }, note: '消耗 100 黃金，主將騎兵適性升一階' },
             { label: '婉言謝絕', effect: {}, note: NOTHING },
         ],
     },
@@ -76,7 +76,7 @@ export const CITY_ENCOUNTERS: readonly CityEncounterDef[] = Object.freeze([
         id: 'BLACKSMITH', title: '落魄鐵匠',
         desc: '落魄鐵匠自稱歐冶子後裔，攜半截古劍登門，請求資助重鑄。',
         options: [
-            { label: '出資重鑄', effect: { costGold: 50, costWood: 50, leadStr: 3 }, note: '消耗 50 銅錢、50 木材，主將武力 +3' },
+            { label: '出資重鑄', effect: { costGold: 50, costWood: 50, leadStr: 3 }, note: '消耗 50 黃金、50 木材，主將武力 +3' },
             { label: '打發離去', effect: {}, note: NOTHING },
         ],
     },
@@ -92,7 +92,7 @@ export const CITY_ENCOUNTERS: readonly CityEncounterDef[] = Object.freeze([
         id: 'TAOIST', title: '避世道人',
         desc: '終南山道者過府，願指點府中風水陰陽。',
         options: [
-            { label: '奉茶請教', effect: { costGold: 20, fame: 30 }, note: '消耗 20 銅錢，世家聲望 +30，家族氣運提升' },
+            { label: '奉茶請教', effect: { costGold: 20, fame: 30 }, note: '消耗 20 黃金，世家聲望 +30，家族氣運提升' },
             { label: '斥為荒謬', effect: {}, note: NOTHING },
         ],
     },
@@ -214,7 +214,7 @@ export function chronicleShouldOpen(state: Readonly<SeasonChronicleState>, curre
 
 /** 付不起時回傳缺少的資源名稱，付得起回傳 null */
 export function cityEncounterShortfall(effect: CityEncounterEffect, stock: { gold: number; food: number; wood: number }): string | null {
-    if ((effect.costGold ?? 0) > stock.gold) return '銅錢';
+    if ((effect.costGold ?? 0) > stock.gold) return '黃金';
     if ((effect.costWood ?? 0) > stock.wood) return '木材';
     if ((effect.costFood ?? 0) > stock.food) return '糧草';
     return null;
