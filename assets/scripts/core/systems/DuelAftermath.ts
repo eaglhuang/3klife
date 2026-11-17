@@ -3,7 +3,7 @@
  * DuelAftermath — 單挑戰果在戰場外的養成／傳承結算（純邏輯，不依賴 cc）。
  *
  * 戰場在單挑分出勝負時發 DuelOutcomeApplied 事件（BattleGeneralDuelFlow），戰後由 recordBattle 一次收進來：
- * - 勝方是我方主將：名聲 +15（BattleFameSource.DUEL_VICTORY；教學戰勝方照領，§4 教學戰註記）。
+ * - 勝方是我方主將：名聲 +15，同一場只算一次（BattleFameSource.DUEL_VICTORY；教學戰勝方照領，§4 教學戰註記）。
  * - 敗方是我方主將且被斬（killed）：標陣亡，之後由 GameSession._settleDeaths 走既有的虎符＋英靈卡陣亡結算，
  *   並寫戰歿遺書（doc_spec_0312 §5.2）。負傷敗逃（fled）不產卡、不寫遺書。
  * - 敵方主將不在存檔名冊（俘虜另走待處置清單），敵方贏的名聲與敵將被斬都不入帳。
@@ -30,7 +30,7 @@ export interface DuelOutcomeRecord {
 }
 
 export interface DuelAftermathPlan {
-    /** 我方主將單挑勝出的名聲入帳（同一人多次單挑會有多筆） */
+    /** 我方主將單挑勝出的名聲入帳；同一場同一人贏幾次都只有一筆（使用者 2026-11-17 裁決，PROG-2-9385） */
     fame: Array<{ generalId: string; gain: number }>;
     /** 我方主將被斬的名冊代號（去重） */
     fallenIds: string[];
@@ -43,8 +43,10 @@ export const DUEL_VICTORY_FAME: number = GENERAL_FAME_AWARD.duelWin;
 export function planDuelAftermath(events: readonly DuelOutcomeRecord[], rosterIds: ReadonlySet<string>): DuelAftermathPlan {
     const fame: DuelAftermathPlan['fame'] = [];
     const fallen = new Set<string>();
+    const famed = new Set<string>();
     for (const event of events) {
-        if (event.winner === Faction.Player && event.winnerGeneralId && rosterIds.has(event.winnerGeneralId)) {
+        if (event.winner === Faction.Player && event.winnerGeneralId && rosterIds.has(event.winnerGeneralId) && !famed.has(event.winnerGeneralId)) {
+            famed.add(event.winnerGeneralId);
             fame.push({ generalId: event.winnerGeneralId, gain: DUEL_VICTORY_FAME });
         }
         // 教學戰不會被斬（killed 本來就假），這裡再擋一次，避免上游改動後教學戰誤殺名冊武將

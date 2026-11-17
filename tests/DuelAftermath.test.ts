@@ -27,10 +27,21 @@ export function createDuelAftermathSuite(): TestSuite {
     const ids = new Set(['g-1', 'g-2']);
 
     suite.test('我方主將單挑勝：名聲 +15；教學戰勝方照領', () => {
-        const plan = planDuelAftermath([duel({}), duel({ tutorial: true, fled: false })], ids);
-        assert.equals(2, plan.fame.length);
-        assert.isTrue(plan.fame.every((f) => f.generalId === 'g-1' && f.gain === 15 && f.gain === DUEL_VICTORY_FAME));
-        assert.equals(0, plan.fallenIds.length);
+        for (const event of [duel({}), duel({ tutorial: true, fled: false })]) {
+            const plan = planDuelAftermath([event], ids);
+            assert.equals(1, plan.fame.length);
+            assert.isTrue(plan.fame.every((f) => f.generalId === 'g-1' && f.gain === 15 && f.gain === DUEL_VICTORY_FAME));
+            assert.equals(0, plan.fallenIds.length);
+        }
+    });
+
+    suite.test('同一場同一人單挑贏多次：名聲只算一次；不同人各算一次（PROG-2-9385）', () => {
+        const same = planDuelAftermath([duel({}), duel({}), duel({ tutorial: true, fled: false })], ids);
+        assert.equals(1, same.fame.length);
+        assert.equals('g-1', same.fame[0].generalId);
+        const two = planDuelAftermath([duel({}), duel({ winnerGeneralId: 'g-2' }), duel({})], ids);
+        assert.equals(2, two.fame.length);
+        assert.equals('g-1,g-2', two.fame.map((f) => f.generalId).join(','));
     });
 
     suite.test('敵方贏：我方不得名聲；敵將不在名冊也不入帳', () => {
