@@ -30,7 +30,7 @@ export function createStrategistHudLogSuite(): TestSuite {
             missingCounters: [],
             executing: { name: '曹操', int: 91, tactic: '火攻' },
         });
-        assert.equals('軍師：曹操 智力 91，正在執行：火攻\n危害 火場延燒', line);
+        assert.equals('軍師：曹操\n智力 91，執行：火攻\n危害 火場延燒', line);
     });
 
     return suite;

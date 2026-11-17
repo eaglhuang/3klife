@@ -8974,6 +8974,52 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9383",
+      "title": "戰鬥日誌格子改寫第 N 路第 M 格、軍師列縮短、日誌過長時新行顯示不出來",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 審圖：日誌「前進到 L1 D2」看不懂、軍師列數字會換行；另外實跑發現日誌累積到文字高度約 4232 時，新寫入的行顯示不出來、字被放大。",
+      "related": [
+        "PROG-2-9382"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（7985 過）；本機預覽 1920x1080 實跑水淹七軍，截到軍師列兩行寫法、「前進到 第 3 路第 2 格」與「我方吃到增益：生命 x 3 生命 +200」都在日誌可視範圍，敵軍回合新行也照常出現 | 變更: 日誌格子寫法由 L1 D2 改成「第 1 路第 2 格」（共用 battleCellLabel）；軍師列改成姓名一行、「智力 N，執行：戰法」一行；日誌文字高度超過 1920 時從最舊的開始丟，避免超過貼圖上限後新行顯示不出來 | 阻塞: 無。日誌「剩餘 HP 40」仍是英文，未在本卡處理；手機沒有實機驗",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
