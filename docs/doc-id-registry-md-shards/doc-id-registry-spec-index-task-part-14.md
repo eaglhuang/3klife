@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-11-15
+> 生成日期: 2026-11-17
 > 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 14/14 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -148,3 +148,97 @@
 | `doc_task_2451` | docs/agent-briefs/tasks/PROG/PROG-2-9042.md | [PROG-2-9042] 轉蛋資料對齊 FEM-03：名將池男將化、紅顏池數值 |
 | `doc_task_2452` | docs/agent-briefs/tasks/PROG/PROG-2-9043.md | [PROG-2-9043] 戰場 2D Q 版單位：小兵陣營配色與私有素材接線 |
 | `doc_task_2453` | docs/agent-briefs/tasks/PROG/PROG-2-9044.md | [PROG-2-9044] 紅顏池 poolType 改名 support → heroine |
+| `doc_task_2454` | docs/agent-briefs/tasks/PROG/PROG-2-2252.md | 幕府大廳走動小人點擊對話穩定化＋統一台詞接口（LobbyDialogueProvider） |
+| `doc_task_2455` | docs/agent-briefs/tasks/PROG/PROG-2-9046.md | [PROG-2-9046] 進大廳只等必要介面，其餘背景掛載並以角落小進度條顯示 |
+| `doc_task_2456` | docs/agent-briefs/tasks/PROG/PROG-2-9047.md | [PROG-2-9047] 無頭線上試玩全流程驗收腳本 playtest-online |
+| `doc_task_2457` | docs/agent-briefs/tasks/PROG/PROG-2-9048.md | [PROG-2-9048] 部署當回合不得行動 |
+| `doc_task_2458` | docs/agent-briefs/tasks/PROG/PROG-2-9049.md | [PROG-2-9049] 戰場音效與受擊反應補齊 |
+| `doc_task_2459` | docs/agent-briefs/tasks/PROG/PROG-2-9050.md | [PROG-2-9050] 戰場按鈕回饋缺口修正 |
+| `doc_task_2460` | docs/agent-briefs/tasks/PROG/PROG-2-9051.md | [PROG-2-9051] 敵方單挑邀請彈窗 |
+| `doc_task_2461` | docs/agent-briefs/tasks/PROG/PROG-2-9052.md | [PROG-2-9052] 單回合移動上限 3 格 |
+| `doc_task_2462` | docs/agent-briefs/tasks/PROG/PROG-2-9100.md | [PROG-2-9100] 禁止工作樹以 junction 共用主目錄套件 |
+| `doc_task_2463` | docs/agent-briefs/tasks/PROG/PROG-2-9101.md | [PROG-2-9101] task-lock.js lock 指令 --files 支援空白與逗號混用分隔 |
+| `doc_task_2464` | docs/agent-briefs/tasks/PROG/PROG-2-9102.md | [PROG-2-9102] 開機過快點「開始遊戲」→ TypeError reading 'off'，大廳卡在「啟動遇到問題」 |
+| `doc_task_2465` | docs/agent-briefs/tasks/PROG/PROG-2-9103.md | 問題 |
+| `doc_task_2466` | docs/agent-briefs/tasks/PROG/PROG-2-9104.md | [PROG-2-9104] 線上驗收：開場宿命轉蛋步驟按鈕名稱核對 |
+| `doc_task_2467` | docs/agent-briefs/tasks/PROG/PROG-2-9105.md | [PROG-2-9105] 線上驗收：人物介紹命分頁血統樹底板尺寸核對 |
+| `doc_task_2468` | docs/agent-briefs/tasks/PROG/PROG-2-9106.md | [PROG-2-9106] 轉蛋返回大廳後城池底欄 BtnCat* 消失 |
+| `doc_task_2469` | docs/agent-briefs/tasks/PROG/PROG-2-9107.md | [PROG-2-9107] 大廳點走動小人後對話泡泡未出現 |
+| `doc_task_2470` | docs/agent-briefs/tasks/PROG/PROG-2-9108.md | 問題 |
+| `doc_task_2471` | docs/agent-briefs/tasks/PROG/PROG-2-9109.md | 問題 |
+| `doc_task_2472` | docs/agent-briefs/tasks/PROG/PROG-2-9110.md | 問題 |
+| `doc_task_2473` | docs/agent-briefs/tasks/PROG/PROG-2-9111.md | 問題 |
+| `doc_task_2474` | docs/agent-briefs/tasks/PROG/PROG-2-9112.md | 問題 |
+| `doc_task_2475` | docs/agent-briefs/tasks/PROG/PROG-2-9113.md | 問題 |
+| `doc_task_2476` | docs/agent-briefs/tasks/PROG/PROG-2-9114.md | 問題 |
+| `doc_task_2477` | docs/agent-briefs/tasks/PROG/PROG-2-9115.md | 問題 |
+| `doc_task_2478` | docs/agent-briefs/tasks/PROG/PROG-2-9116.md | 問題（使用者實玩回報） |
+| `doc_task_2479` | docs/agent-briefs/tasks/PROG/PROG-2-9117.md | 問題 |
+| `doc_task_2480` | docs/agent-briefs/tasks/PROG/PROG-2-9118.md | 問題 |
+| `doc_task_2481` | docs/agent-briefs/tasks/PROG/PROG-2-9119.md | 問題 |
+| `doc_task_2482` | docs/agent-briefs/tasks/PROG/PROG-2-9120.md | 問題 |
+| `doc_task_2483` | docs/agent-briefs/tasks/PROG/PROG-2-9121.md | 問題 |
+| `doc_task_2484` | docs/agent-briefs/tasks/PROG/PROG-2-9122.md | 問題 |
+| `doc_task_2485` | docs/agent-briefs/tasks/PROG/PROG-2-9123.md | 問題 |
+| `doc_task_2486` | docs/agent-briefs/tasks/PROG/PROG-2-9124.md | 問題 |
+| `doc_task_2487` | docs/agent-briefs/tasks/PROG/PROG-2-9129.md | 範圍 |
+| `doc_task_2488` | docs/agent-briefs/tasks/PROG/PROG-2-9300.md | [PROG-2-9300] 撤退結算要看得出是撤退 |
+| `doc_task_2489` | docs/agent-briefs/tasks/PROG/PROG-2-9301.md | [PROG-2-9301] 敵將不被右上控制列遮住 |
+| `doc_task_2490` | docs/agent-briefs/tasks/PROG/PROG-2-9302.md | [PROG-2-9302] 敵方先移動攻擊再部署、移動上限設定化 |
+| `doc_task_2491` | docs/agent-briefs/tasks/PROG/PROG-2-9303.md | [PROG-2-9303] 一回合可部署到上限並由玩家手動結束回合 |
+| `doc_task_2492` | docs/agent-briefs/tasks/PROG/PROG-2-9304.md | [PROG-2-9304] 部隊打主將傷害取整並走部隊同一條管線 |
+| `doc_task_2493` | docs/agent-briefs/tasks/PROG/PROG-2-9305.md | [PROG-2-9305] 戰場小兵匯入工具支援指定工作樹 |
+| `doc_task_2494` | docs/agent-briefs/tasks/PROG/PROG-2-9306.md | [PROG-2-9306] 小兵一隊顯示 3 人並依兵力減員 |
+| `doc_task_2495` | docs/agent-briefs/tasks/PROG/PROG-2-9307.md | [PROG-2-9307] 結算窗點暗幕不再關閉，並提供整場自動實跑腳本 |
+| `doc_task_2496` | docs/agent-briefs/tasks/PROG/PROG-2-9308.md | [PROG-2-9308] 戰鬥結束換場景時的未捕捉例外修正，並更新進場腳本 |
+| `doc_task_2497` | docs/agent-briefs/tasks/PROG/PROG-2-9309.md | [PROG-2-9309] 整場自動實跑腳本：每回合部署到上限並記錄部署結果 |
+| `doc_task_2498` | docs/agent-briefs/tasks/PROG/PROG-2-9310.md | [PROG-2-9310] 戰場部隊頭頂數值標籤的繪製次數優化 |
+| `doc_task_2499` | docs/agent-briefs/tasks/PROG/PROG-2-9311.md | [PROG-2-9311] 教學戰十回合內必分勝負、一般戰鬥回合上限改三十並以撤退結算 |
+| `doc_task_2500` | docs/agent-briefs/tasks/PROG/PROG-2-9312.md | [PROG-2-9312] 奧義選單隱藏用不到的第三顆按鈕 |
+| `doc_task_2501` | docs/agent-briefs/tasks/PROG/PROG-2-9313.md | [PROG-2-9313] 整場實跑腳本支援全新玩家與三種部署模式 |
+| `doc_task_2502` | docs/agent-briefs/tasks/PROG/PROG-2-9314.md | [PROG-2-9314] 沒帶參謀官時主將自帶戰法也放得出來：計謀點上限墊高、每回合回復改 5 |
+| `doc_task_2503` | docs/agent-briefs/tasks/PROG/PROG-2-9315.md | [PROG-2-9315] 單挑對手沒有交鋒動畫時改為逐招跳傷害，不再按下接受就直接出結算 |
+| `doc_task_2504` | docs/agent-briefs/tasks/PROG/PROG-2-9317.md | [PROG-2-9317] 小兵依兵種與虎符換 Q 版外觀；專屬素材載不起來時退回槍兵或弓兵 |
+| `doc_task_2505` | docs/agent-briefs/tasks/PROG/PROG-2-9318.md | [PROG-2-9318] 部隊打主將保底傷害改為攻擊力兩成；兵源不足時保底一隊步兵並在出征畫面提示 |
+| `doc_task_2506` | docs/agent-briefs/tasks/PROG/PROG-2-9319.md | [PROG-2-9319] 戰法冒煙測試：以自身或我方為對象的戰技不再要求填自動瞄準方式 |
+| `doc_task_2507` | docs/agent-briefs/tasks/PROG/PROG-2-9320.md | [PROG-2-9320] 戰法冒煙測試接進 CI |
+| `doc_task_2508` | docs/agent-briefs/tasks/PROG/PROG-2-9321.md | [PROG-2-9321] 首戰開場 SP 滿、軍勢補到八千、敵主將血量減半；造成傷害也給 SP |
+| `doc_task_2509` | docs/agent-briefs/tasks/PROG/PROG-2-9322.md | [PROG-2-9322] 部隊遇斜前方或側面敵軍就停下交戰，不再錯身而過 |
+| `doc_task_2510` | docs/agent-briefs/tasks/PROG/PROG-2-9323.md | [PROG-2-9323] 計謀只扣計謀點，不再要求主將 SP 滿 |
+| `doc_task_2511` | docs/agent-briefs/tasks/PROG/PROG-2-9324.md | [PROG-2-9324] 教學戰敵方照波次表出兵、我方每回合派兵上限 2 隊；實跑工具會點發動與計謀 |
+| `doc_task_2512` | docs/agent-briefs/tasks/PROG/PROG-2-9325.md | [PROG-2-9325] 單挑改成部署列全滿才鎖；教學戰敵方波次降為 5 隊 |
+| `doc_task_2513` | docs/agent-briefs/tasks/PROG/PROG-2-9326.md | [PROG-2-9326] 沒有專屬奧義的主將改給通用奧義「全軍突擊」；教學戰開場計謀點給滿 |
+| `doc_task_2514` | docs/agent-briefs/tasks/PROG/PROG-2-9327.md | [PROG-2-9327] 五位初始名將補上第一階專屬奧義；甘寧「百騎劫營」只打敵軍最後排 |
+| `doc_task_2515` | docs/agent-briefs/tasks/PROG/PROG-2-9328.md | [PROG-2-9328] 奧義選單置中、不再蓋住結束回合；右側控制列下移避開敵主將 |
+| `doc_task_2516` | docs/agent-briefs/tasks/PROG/PROG-2-9329.md | [PROG-2-9329] 教學戰免除戰法發動條件，計謀鈕不再整場按了沒反應 |
+| `doc_task_2517` | docs/agent-briefs/tasks/PROG/PROG-2-9330.md | [PROG-2-9330] 甘寧「百騎劫營」加傷害；教學戰敵方波次改 6 隊並排到第 7 回合 |
+| `doc_task_2518` | docs/agent-briefs/tasks/PROG/PROG-2-9331.md | [PROG-2-9331] 教學戰我方主將棋子走到第 5 排就發起單挑邀請；單挑鈕已出陣時不再寫「鎖定」 |
+| `doc_task_2519` | docs/agent-briefs/tasks/PROG/PROG-2-9332.md | [PROG-2-9332] 實跑工具點得到兩行字的按鈕（計謀鈕），並移除會白送一招的診斷 |
+| `doc_task_2520` | docs/agent-briefs/tasks/PROG/PROG-2-9333.md | [PROG-2-9333] 計謀鈕在戰法條件沒達成時反灰並寫出條件；點數不夠時繼續顯示目前點數 |
+| `doc_task_2521` | docs/agent-briefs/tasks/PROG/PROG-2-9334.md | [PROG-2-9334] 教學戰兵池從 8000 降到 5000；軍勢用盡時跳提示；實跑工具記錄奧義打掉多少血 |
+| `doc_task_2522` | docs/agent-briefs/tasks/PROG/PROG-2-9335.md | [PROG-2-9335] 教學戰敵將一律接受單挑；單挑打到生命三成就分勝負，不打死、不直接結束戰鬥 |
+| `doc_task_2523` | docs/agent-briefs/tasks/PROG/PROG-2-9336.md | [PROG-2-9336] 撤回側邊接敵：小兵只跟同一路正面撞上的敵軍交戰，旁邊經過的不打 |
+| `doc_task_2524` | docs/agent-briefs/tasks/PROG/PROG-2-9337.md | [PROG-2-9337] 實跑工具：單挑提示出現時自動截圖，並記下兵池見底的提示 |
+| `doc_task_2525` | docs/agent-briefs/tasks/PROG/PROG-2-9338.md | [PROG-2-9338] 「軍勢已用盡」提示一出現就被別的提示蓋掉：延後再跳；實跑工具記下遊戲跳過的每句提示 |
+| `doc_task_2526` | docs/agent-briefs/tasks/PROG/PROG-2-9339.md | [PROG-2-9339] 實跑工具可接著打第二場一般戰鬥並記下計謀鈕文字 |
+| `doc_task_2527` | docs/agent-briefs/tasks/PROG/PROG-2-9340.md | [PROG-2-9340] 教學戰敵軍對路出兵＋來襲提示；小兵走到敵方武將正旁邊會停下來打；教學戰單挑門檻改五成 |
+| `doc_task_2528` | docs/agent-briefs/tasks/PROG/PROG-2-9341.md | [PROG-2-9341] 戰場提示連發時排隊依序顯示，不再後一句蓋掉前一句 |
+| `doc_task_2529` | docs/agent-briefs/tasks/PROG/PROG-2-9342.md | [PROG-2-9342] 場上沒有敵軍時計謀打不出去，提示改成說明原因 |
+| `doc_task_2530` | docs/agent-briefs/tasks/PROG/PROG-2-9343.md | [PROG-2-9343] 戰場提示排隊時每句最多停留 1.8 秒 |
+| `doc_task_2531` | docs/agent-briefs/tasks/PROG/PROG-2-9344.md | [PROG-2-9344] 教學戰敵軍波次由 6 隊加到 8 隊 |
+| `doc_task_2532` | docs/agent-briefs/tasks/PROG/PROG-2-9346.md | [PROG-2-9346] 教學戰敵軍照波次表出兵，不再被敵軍糧草卡住 |
+| `doc_task_2533` | docs/agent-briefs/tasks/PROG/PROG-2-9347.md | [PROG-2-9347] 天氣擋下火計時計謀鈕寫「待風」而不是「受限」 |
+| `doc_task_2534` | docs/agent-briefs/tasks/PROG/PROG-2-9349.md | [PROG-2-9349] 教學戰空路引導：敵軍所在的路沒人守就提醒補防 |
+| `doc_task_2535` | docs/agent-briefs/tasks/PROG/PROG-2-9350.md | [PROG-2-9350] 單挑演出結束後回合卡死、結束回合鍵按不動 |
+| `doc_task_2536` | docs/agent-briefs/tasks/PROG/PROG-2-9351.md | [PROG-2-9351] 戰場最基本規則補測：每回合走幾格、何時停、攻擊交互、傷害數值、回合階段順序 |
+| `doc_task_2537` | docs/agent-briefs/tasks/PROG/PROG-2-9352.md | [PROG-2-9352] 奧義發動接上漫畫式分鏡演出；沒有專屬分鏡圖的武將先播「暫代圖 待替換」 |
+| `doc_task_2538` | docs/agent-briefs/tasks/PROG/PROG-2-9353.md | [PROG-2-9353] 小兵與武將攻擊接上特效：近戰刀光、弓兵飛箭 |
+| `doc_task_2539` | docs/agent-briefs/tasks/PROG/PROG-2-9354.md | [PROG-2-9354] 教學戰空路提示在線上顯示成「第 [object Set]1 路」 |
+| `doc_task_2540` | docs/agent-briefs/tasks/PROG/PROG-2-9355.md | [PROG-2-9355] 張飛單挑後回合卡死的根因：長單挑挑招在網頁版變成空招，演出每一格都丟例外 |
+| `doc_task_2541` | docs/agent-briefs/tasks/PROG/PROG-2-9357.md | [PROG-2-9357] 攻擊音效分近戰、弓、騎三類，加上回合切換與勝敗音效 |
+| `doc_task_2542` | docs/agent-briefs/tasks/PROG/PROG-2-9358.md | [PROG-2-9358] 戰場特效看不到：物件池取出的特效節點沒掛進場景 |
+| `doc_task_2543` | docs/agent-briefs/tasks/PROG/PROG-2-9359.md | [PROG-2-9359] 奧義效果稽核測試：鎖住四位武將奧義的現況行為 |
+| `doc_task_2544` | docs/agent-briefs/tasks/PROG/PROG-2-9361.md | [PROG-2-9361] 戰場特效仍看不到：特效層寫錯，且斬擊特效本身沒有面積 |
+| `doc_task_2545` | docs/agent-briefs/tasks/PROG/PROG-2-9362.md | [PROG-2-9362] 戰場 Q 版角色匯入工具改成資料驅動：新兵種與新武將不用改程式 |
+| `doc_task_2546` | docs/agent-briefs/tasks/PROG/PROG-2-9363.md | [PROG-2-9363] 特效表 4 處寫錯的特效代號修正，並新增「代號必須在登錄表裡」的守門測試 |
+| `doc_task_2547` | docs/agent-briefs/tasks/PROG/PROG-2-9366.md | [PROG-2-9366] 單挑結束後兩位主將背對戰場：退場走回場邊後恢復原本朝向 |

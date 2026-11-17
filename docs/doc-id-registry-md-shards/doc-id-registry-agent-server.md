@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — AI / AgentSkill / Server
 
-> 生成日期: 2026-11-15
+> 生成日期: 2026-11-17
 > 這是 `doc-id-registry.md` 的「AI / AgentSkill / Server」分片。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -159,6 +159,9 @@
 | `doc_agentskill_0123` | .github/skills/atm-captain-dispatch-standard/references/dispatch-template.md | ATM Captain Dispatch Templates (派工單範例模板) |
 | `doc_agentskill_0124` | .github/skills/atm-captain-dispatch-standard/SKILL.md | ATM Captain Dispatch Standard (派工規範手冊) |
 | `doc_agentskill_0125` | .agents/skills/general-portrait-style/SKILL.md | 3KLife 武將立繪與頭像校準 |
+| `doc_agentskill_0126` | .agents/skills/chibi-animation-production/SKILL.md | Q 版人物動畫素材自動接續流程 |
+| `doc_agentskill_0127` | .agents/skills/chibi-battle-source-production/SKILL.md | Q 版戰場人物來源與切片流程 |
+| `doc_agentskill_0128` | .github/skills/chibi-animation-production/SKILL.md | Q 版人物動畫素材自動接續流程 |
 
 ## Server 文件類 (`doc_server_<subtype>`)
 
