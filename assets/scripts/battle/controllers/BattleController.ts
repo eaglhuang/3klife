@@ -197,6 +197,7 @@ export class BattleController {
     turnManager: this.turnManager,
     relationsBetween: (attackerId, helperId) => this.relationsBetweenUnits(attackerId, helperId),
     getUltimateSpecialRule: (ultimateId) => findUltimateSpecialRule(ultimateId),
+    isTroopCounterTacticsEnabled: () => GAME_CONFIG.troopCounterTacticsEnabled && !this._tutorialBattle,
     getPlayerGeneralUnitId: () => this.playerGeneralUnitId,
     getEnemyGeneralUnitId: () => this.enemyGeneralUnitId,
     setPlayerGeneralUnitId: (unitId) => {
