@@ -11,7 +11,7 @@
  */
 
 import { tallyLegendDeploySpec } from '../../core/systems/TallyScripts';
-import { battleDamageSourceLabel, battleEndLogLine } from '../shared/BattleDamageSourceLabel';
+import { battleCellLabel, battleDamageSourceLabel, battleEndLogLine } from '../shared/BattleDamageSourceLabel';
 import { formatTallyLine, type TallyTranslate } from '../../core/systems/TallyLineSpec';
 import { aptitudeToastPayload } from '../../core/systems/AptitudeDialogue';
 import { setBattlePaused, setBattleTimeScale } from './BattleTimeScale';
@@ -704,15 +704,15 @@ export class BattleUIBridge {
     if (unit) {
       const side = unit.faction === Faction.Player ? '我方' : '敵方';
       if (data.swapWithUnitId) {
-        this.appendLog(`${side}${unit.name} 與友軍換位後推進到 L${data.lane + 1} D${data.depth}`);
+        this.appendLog(`${side}${unit.name} 與友軍換位後推進到 ${battleCellLabel(data.lane, data.depth)}`);
         c.unitRenderer?.playSwapAdvanceAnimation(unit, data.swapWithUnitId, data.fromLane, data.fromDepth, data.swapDuration ?? BATTLE_VISUAL_TIMING.swapAdvanceMinSec,
           data.swapPassengerFromLane, data.swapPassengerFromDepth, data.swapPassengerToLane, data.swapPassengerToDepth);
       } else if (data.forcedMove) {
-        this.appendLog(`${side}${unit.name} 受地格影響位移到 L${data.lane + 1} D${data.depth}`);
+        this.appendLog(`${side}${unit.name} 受地格影響位移到 ${battleCellLabel(data.lane, data.depth)}`);
         c.unitRenderer?.animateMove(unit, data.fromLane, data.fromDepth, data.forcedMoveReason);
         playBattleFlowEffectAtCell(services().effect, c.boardRenderer, BATTLE_FLOW_FX.forcedMove, data.lane, data.depth, 0.95, 0.1);
       } else if (!data.isSwapPassenger) {
-        this.appendLog(`${side}${unit.name} 前進到 L${data.lane + 1} D${data.depth}`);
+        this.appendLog(`${side}${unit.name} 前進到 ${battleCellLabel(data.lane, data.depth)}`);
         c.unitRenderer?.animateMove(unit, data.fromLane, data.fromDepth, data.forcedMoveReason);
         playBattleAudio(BATTLE_AUDIO_CUE.unitMove);
       }
