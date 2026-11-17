@@ -1810,15 +1810,29 @@ export class UnitRenderer extends Component {
     return this.uiProjectionBuffer;
   }
 
-  /** 主將待命點位於己方底線外；定位點為地面腳底。 */
-  private generalSidelineFoot(faction: Faction): { x: number; y: number } | null {
+  /** 主將待命點的世界座標（己方底線外、中路），抬到身體高度；主將技能光效打在這裡（PROG-2-9365）。棋盤還沒建好時回傳 null。 */
+  public getGeneralSidelineWorldPosition(faction: Faction): Vec3 | null {
+    const ground = this.generalSidelineWorld(faction);
+    if (!ground) return null;
+    ground.y += this.unitHeight * 0.5;
+    return ground;
+  }
+
+  private generalSidelineWorld(faction: Faction): Vec3 | null {
     const lane = Math.floor(GAME_CONFIG.GRID_LANES / 2);
     const frontDepth = faction === Faction.Player ? 0 : GAME_CONFIG.GRID_DEPTH - 1;
     const innerDepth = faction === Faction.Player ? 1 : GAME_CONFIG.GRID_DEPTH - 2;
     const front = this.getUnitWorldPosition(lane, frontDepth, 0);
     const inner = this.getUnitWorldPosition(lane, innerDepth, 0);
     if (!front || !inner) return null;
-    const p = this.overlayPoint(front.clone().subtract(inner.clone().subtract(front).multiplyScalar(1.05)));
+    return front.clone().subtract(inner.clone().subtract(front).multiplyScalar(1.05));
+  }
+
+  /** 主將待命點位於己方底線外；定位點為地面腳底。 */
+  private generalSidelineFoot(faction: Faction): { x: number; y: number } | null {
+    const world = this.generalSidelineWorld(faction);
+    if (!world) return null;
+    const p = this.overlayPoint(world);
     return p ? { x: p.x, y: p.y } : null;
   }
 
