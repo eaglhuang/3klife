@@ -7,7 +7,7 @@
  *
  * Unity 對照：像戰鬥結束時交給 MetaGame 的 BattleReport 裡的一個 DTO。
  */
-import { Faction } from '../core/config/Constants';
+import { Faction } from './CommonEnums';
 
 /** 怎麼被擒的 */
 export type GeneralCaptureCause =

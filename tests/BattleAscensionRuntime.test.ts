@@ -135,6 +135,42 @@ export function createBattleAscensionRuntimeSuite(): TestSuite {
         assert.equals(90, w.ctrl.getBattleAscension(Faction.Player).generalFame);
     });
 
+    suite.test('擊破敵部隊 +15 名聲，一場只算一次（裁決 52，PROG-2-9395）', () => {
+        const w = battle(90, 0);
+        w.ctrl['combatResolver'].onUnitKilled(w.theirs, w.mine, services());
+        assert.equals(105, w.ctrl.getBattleAscension(Faction.Player).generalFame);
+        assert.equals(1, w.events.length, '跨過 100 升將階一');
+        const second = troop(w.ctrl, Faction.Enemy, 3, 6);
+        w.ctrl['combatResolver'].onUnitKilled(second, w.mine, services());
+        assert.equals(105, w.ctrl.getBattleAscension(Faction.Player).generalFame, '第二支不再給');
+        assert.equals(0, w.ctrl.getBattleAscension(Faction.Enemy).generalFame, '敵方沒擊破我方部隊，不給');
+    });
+
+    suite.test('敵方擊破我方部隊：敵方主將也入帳，各算各的一次', () => {
+        const w = battle(0, 0);
+        w.ctrl['combatResolver'].onUnitKilled(w.mine, w.theirs, services());
+        assert.equals(15, w.ctrl.getBattleAscension(Faction.Enemy).generalFame);
+        assert.equals(0, w.ctrl.getBattleAscension(Faction.Player).generalFame);
+    });
+
+    suite.test('教學戰擊破部隊不入帳', () => {
+        const w = battle(90, 0, true);
+        w.ctrl['combatResolver'].onUnitKilled(w.theirs, w.mine, services());
+        assert.equals(90, w.ctrl.getBattleAscension(Faction.Player).generalFame);
+        assert.equals(0, w.ctrl.getInBattleFameForRecord(Faction.Player));
+    });
+
+    suite.test('戰後要寫回的戰中名聲：單挑那筆不算（裁決 53 去重）', () => {
+        const w = battle(0, 0);
+        assert.equals(0, w.ctrl.getInBattleFameForRecord(Faction.Player));
+        w.ctrl.resolveDuelChallenge(Faction.Player, true);
+        assert.equals(15, w.ctrl.getBattleAscension(Faction.Player).generalFame, '戰中有入帳');
+        assert.equals(0, w.ctrl.getInBattleFameForRecord(Faction.Player), '寫回時去重');
+        w.ctrl['combatResolver'].onUnitKilled(w.theirs, w.mine, services());
+        assert.equals(15, w.ctrl.getInBattleFameForRecord(Faction.Player));
+        assert.equals(30, w.ctrl.getBattleAscension(Faction.Player).generalFame);
+    });
+
     suite.test('直進入口 qaPlayerFame：只有 qa 入口生效，不合法會報錯', () => {
         assert.equals(90, qaPlayerStartFame({ entrySource: 'qa', qaPlayerGeneralFame: 90 }));
         assert.equals(null, qaPlayerStartFame({ entrySource: 'lobby', qaPlayerGeneralFame: 90 } as unknown as Parameters<typeof qaPlayerStartFame>[0]));
