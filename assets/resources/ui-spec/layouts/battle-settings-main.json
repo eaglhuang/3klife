@@ -25,7 +25,7 @@
             "height": 52,
             "skinSlot": "settings.header.bg",
             "children": [
-              { "type": "label", "name": "TitleLabel", "text": "設定", "widget": { "left": 16, "right": 16 }, "height": 40, "styleSlot": "settings.label.title" }
+              { "type": "label", "name": "TitleLabel", "textKey": "battle.settings.title", "text": "設定", "widget": { "left": 16, "right": 16 }, "height": 40, "styleSlot": "settings.label.title" }
             ]
           },
           {
@@ -37,7 +37,7 @@
               { "type": "button", "name": "BtnBgm", "width": 360, "height": 52, "skinSlot": "settings.btn.toggle", "children": [ { "type": "label", "name": "Label", "text": "音樂：開", "styleSlot": "settings.label.btn" } ] },
               { "type": "button", "name": "BtnSfx", "width": 360, "height": 52, "skinSlot": "settings.btn.toggle", "children": [ { "type": "label", "name": "Label", "text": "音效：開", "styleSlot": "settings.label.btn" } ] },
               { "type": "button", "name": "BtnRetreat", "width": 360, "height": 52, "skinSlot": "settings.btn.danger", "children": [ { "type": "label", "name": "Label", "text": "撤退（判定戰敗）", "styleSlot": "settings.label.btn" } ] },
-              { "type": "button", "name": "BtnResume", "width": 360, "height": 52, "skinSlot": "settings.btn.primary", "children": [ { "type": "label", "name": "Label", "text": "繼續戰鬥", "styleSlot": "settings.label.btn" } ] }
+              { "type": "button", "name": "BtnResume", "width": 360, "height": 52, "skinSlot": "settings.btn.primary", "children": [ { "type": "label", "name": "Label", "textKey": "battle.settings.resume", "text": "繼續戰鬥", "styleSlot": "settings.label.btn" } ] }
             ]
           }
         ]

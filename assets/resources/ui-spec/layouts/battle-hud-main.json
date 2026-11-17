@@ -255,6 +255,7 @@
           {
             "type": "label",
             "name": "PlayerFortressTitle",
+            "textKey": "battle.hud.player_fortress",
             "text": "我軍陣地",
             "width": "11%",
             "height": 34,
@@ -285,6 +286,7 @@
           {
             "type": "label",
             "name": "EnemyFortressTitle",
+            "textKey": "battle.hud.enemy_fortress",
             "text": "敵軍陣地",
             "width": "11%",
             "height": 34,
@@ -310,6 +312,7 @@
             "widget": { "top": 12, "left": 18 },
             "width": 148,
             "height": 20,
+            "textKey": "battle.hud.strategist_summary",
             "text": "軍師摘要",
             "styleSlot": "hud.label.summaryTitle"
           },
@@ -326,6 +329,7 @@
             "widget": { "top": 12, "right": 298 },
             "width": 120,
             "height": 20,
+            "textKey": "battle.hud.stage_salvage",
             "text": "戰後回收",
             "styleSlot": "hud.label.summaryTitle"
           },
