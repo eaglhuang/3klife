@@ -5247,6 +5247,24 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/fei_yi__費禕__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "f19344e58d0656cd94c5c73d80463e1a6513167f8617f78de1dd071f21845d54",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "military scroll and writing brush",
+            "sourceStanding": "standing/fei_yi__費禕__standing_0002.png",
+            "poseSelection": "轉身前踏、展令落筆傳策",
+            "gaze": "眼神看向鏡頭",
+            "qc": "完整全身與雙腳；透明背景；等比例縮放並置中；alpha>8 bounds=(128,203,888,1364)，符合中央75%安全寬度；125px與250px縮圖檢查；待使用者審核。"
+          }
+        ]
       }
     },
     {
