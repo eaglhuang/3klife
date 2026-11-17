@@ -203,6 +203,7 @@ export class BattleController {
     relationsBetween: (attackerId, helperId) => this.relationsBetweenUnits(attackerId, helperId),
     getUltimateSpecialRule: (ultimateId) => findUltimateSpecialRule(ultimateId),
     isTroopCounterTacticsEnabled: () => GAME_CONFIG.troopCounterTacticsEnabled && !this._tutorialBattle,
+    onTroopDefeated: (defeated) => this.awardTroopDefeatFame(defeated.unitId, defeated.faction),
     getPlayerGeneralUnitId: () => this.playerGeneralUnitId,
     getEnemyGeneralUnitId: () => this.enemyGeneralUnitId,
     setPlayerGeneralUnitId: (unitId) => {
@@ -1547,7 +1548,7 @@ export class BattleController {
 
   /**
    * 戰中名聲入帳（doc_spec_0309 §4，PROG-2-9394）：跨過門檻就升階並套用激勵。教學戰整場跳過。
-   * 目前接上的來源只有單挑獲勝；擊破部隊等來源待裁決後再接。
+   * 來源：單挑獲勝、擊破敵部隊（一場一次）。
    */
   public awardBattleFame(faction: Faction, sources: readonly BattleFameSource[]): BattleAscendedEvent | null {
     if (this._tutorialBattle) return null;
@@ -1555,6 +1556,29 @@ export class BattleController {
       state: this.state,
       refillTroopPool: (target, amount) => this.refillSortiePool(target, amount),
     }, faction, sources, services());
+  }
+
+  /**
+   * 擊破敵部隊 +15 名聲，一場每個陣營只算一次（使用者 2026-11-17 裁決 52）。
+   * 被擊破的是主將本人不算（那是勝負，不是擊破部隊）。
+   */
+  private awardTroopDefeatFame(defeatedUnitId: string, defeatedFaction: Faction): void {
+    if (this._tutorialBattle) return;
+    if (defeatedUnitId === this.playerGeneralUnitId || defeatedUnitId === this.enemyGeneralUnitId) return;
+    const winner = defeatedFaction === Faction.Player ? Faction.Enemy : Faction.Player;
+    if (this.state.troopDefeatFameAwarded.has(winner)) return;
+    this.state.troopDefeatFameAwarded.add(winner);
+    this.awardBattleFame(winner, [BattleFameSource.VICTORY]);
+  }
+
+  /**
+   * 這一場某陣營戰中入帳、戰後要寫回存檔的名聲（PROG-2-9395）。
+   * 單挑獲勝那筆不算在內：戰後結算本來就會給單挑名聲（使用者 2026-11-17 裁決 53，去重）。
+   */
+  public getInBattleFameForRecord(faction: Faction): number {
+    const ledger = this.state.battleFameLedger.get(faction);
+    if (!ledger) return 0;
+    return Object.keys(ledger).reduce((sum, source) => source === BattleFameSource.DUEL_VICTORY ? sum : sum + ledger[source], 0);
   }
 
   /** 這一場主將目前的名聲與將階（戰中升階，PROG-2-9394） */
@@ -1655,6 +1679,8 @@ export class BattleController {
   }
 
   private checkVictory(): BattleResult {
+    // 主將生命歸 0 就先記被擒，「力竭被擒」才會排在「戰鬥結束」那行之前（PROG-2-9395）
+    this.recordTroopCaptures();
     return resolveBattleVictory(this.state);
   }
 

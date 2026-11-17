@@ -4,14 +4,14 @@
  *
  * 名聲入帳與門檻判定沿用 InBattleAscension（純邏輯）；這裡負責把結果套到戰場狀態：
  * 將階一 補兵、將階二 全軍士氣拉滿、將階三 全隊移動力 +1、將階四 敵全體士氣 −15、將階五 全軍暴擊 +20%。
- * 戰中的名聲與將階只存在這一場，不寫回存檔（戰後名聲仍由 recordBattle 結算）。
+ * 戰中入帳的名聲記在帳本（battleFameLedger），戰後由畫面層帶進 recordBattle；單挑那筆戰後已有，不重複帶。
  *
  * Unity 對照：像戰鬥中的 LevelUp 事件處理器，把升級獎勵套到場上所有單位。
  */
 import { EVENT_NAMES, Faction } from '../../core/config/Constants';
 import type { services } from '../../core/managers/ServiceLoader';
 import type { BattleState } from '../models/BattleState';
-import { applyBattleFame, mergeAscendSurges, type BattleFameSource, type IBattleAscendEvent } from '../shared/InBattleAscension';
+import { applyBattleFame, mergeAscendSurges, BATTLE_FAME_SOURCE_GAIN, type BattleFameSource, type IBattleAscendEvent } from '../shared/InBattleAscension';
 import { maximizeMorale, shiftMorale } from '../shared/Morale';
 import { ascensionLine } from '../../core/systems/NumericalScriptLines';
 
@@ -49,6 +49,9 @@ export function awardBattleFame(
   const general = state.getGeneral(faction);
   if (!general || sources.length === 0) return null;
   const current = ascensionOf(state, faction);
+  const ledger = state.battleFameLedger.get(faction) ?? {};
+  for (const source of sources) ledger[source] = (ledger[source] ?? 0) + BATTLE_FAME_SOURCE_GAIN[source];
+  state.battleFameLedger.set(faction, ledger);
   const result = applyBattleFame({ uid: general.id, name: general.name, generalFame: current.generalFame, generalRank: current.generalRank }, sources);
   state.generalAscension.set(faction, { generalFame: result.general.generalFame ?? 0, generalRank: result.general.generalRank ?? 0 });
   if (!result.event) return null;
