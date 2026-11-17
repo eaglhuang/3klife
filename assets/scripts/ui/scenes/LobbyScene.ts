@@ -3937,7 +3937,8 @@ export class LobbyScene extends Component {
             assigned: c.assigned,
             walkable: !!wander && spinePathFor(wander, c.id) !== null,
         }));
-        const volunteerIds = owned.filter(c => !c.assigned && this._hallBoard?.volunteerTaskFor(c.id)).map(c => c.id);
+        // 自告奮勇：任務資料指名的自薦者，加上武將心智算出心情 EAGER、想找差事做的人（PROG-2-9146）
+        const volunteerIds = owned.filter(c => !c.assigned && (this._hallBoard?.volunteerTaskFor(c.id) || session.hallStageProfile(c.id)?.mood === 'EAGER')).map(c => c.id);
         const plan = planHallWalkers({
             state: this._hallWalkerState,
             nowSec: Date.now() / 1000,
@@ -3973,9 +3974,15 @@ export class LobbyScene extends Component {
                 volunteer: { onAccept: () => { this.openVolunteerTask(generalId); } },
             };
         }
+        // 武將心智（PROG-2-9146）：有可說的記憶或心情就先說，引用玩家過去的決定；沒什麼特別想說才走一般閒聊
+        const bark = session.hallMindBark(generalId, this._mindBarkTaps++);
+        if (bark.text) return { name: profile.name, text: bark.text };
         const text = this._speakLobby(generalId, 'tap', {});
         return text === null ? null : { name: profile.name, text };
     }
+
+    /** 點擊大廳武將的累計次數，當武將心智台詞的 seed（換句用，同次序同結果） */
+    private _mindBarkTaps = 0;
 
     /**
      * 從台詞接口取一句（連點避開上一句）。台詞文字內可用 {key} 佔位，由 vars 代入。

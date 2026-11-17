@@ -121,6 +121,8 @@ import { isDefaultSeasonPassState, normalizeSeasonPassState, type SeasonPassStat
 import { normalizeSalaryLedger, type SalaryLedger } from '../systems/GeneralSalary';
 import { normalizeHallIntel, normalizeHallWaitSeasons } from '../systems/HallMissionActions';
 import { normalizeHallMissionState, type HallMissionState } from '../systems/HallMissionData';
+import { isEmptyGeneralMind, normalizeGeneralMind } from '../mind/MindSave';
+import type { GeneralMindSave } from '../mind/MindTypes';
 
 export const PLAYER_SAVE_KEY = 'player.save';
 /** 備份槽的 key 後綴（DS-14）：主檔為 `<key>`，上一份有效存檔為 `<key>.bak` */
@@ -176,6 +178,8 @@ export interface PlayerSaveSnapshot {
     npcPlayerId?: string;
     /** NPC_Memory 本地 read model（NPC-09）；只保存與 npcPlayerId 相符的記憶，版號不升 */
     npcMemory?: NpcMemoryRecord;
+    /** 武將心智（PROG-2-9146）：事件流與累計器；選填欄位，舊檔缺值讀回為空心智，版號不升（自帶 v） */
+    generalMind?: GeneralMindSave;
     /** Legacy_Count（跨世代成就次數，RET-07）；後加的選填欄位，舊檔讀回為 0 */
     legacyCount?: number;
     /** 已傳道過的名將 id（MENT-15 一生一次）；後加的選填欄位，舊檔讀回為空陣列 */
@@ -650,6 +654,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.governanceEvent ? { governanceEvent: normalizeGovernanceEvent(snapshot.governanceEvent) } : {}),
         ...(snapshot.governanceBoosts ? { governanceBoosts: normalizeGovernanceBoosts(snapshot.governanceBoosts) } : {}),
         ...(snapshot.seasonPersonality ? { seasonPersonality: normalizeSeasonPersonalityState(snapshot.seasonPersonality) } : {}),
+        ...(snapshot.generalMind && !isEmptyGeneralMind(normalizeGeneralMind(snapshot.generalMind)) ? { generalMind: normalizeGeneralMind(snapshot.generalMind) } : {}),
         ...(snapshot.seasonChronicle ? { seasonChronicle: normalizeSeasonChronicle(snapshot.seasonChronicle) } : {}),
         ...(snapshot.seasonChronicleArchive ? { seasonChronicleArchive: normalizeChronicleArchive(snapshot.seasonChronicleArchive) } : {}),
         ...(snapshot.lineageQueue ? { lineageQueue: normalizeLineageQueue(snapshot.lineageQueue) } : {}),
