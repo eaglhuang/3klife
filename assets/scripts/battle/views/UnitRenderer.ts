@@ -44,6 +44,7 @@ import { BattleState } from "../models/BattleState";
 import { isUnitVisibleToPlayer } from "../shared/BattleVision";
 import { BoardRenderer } from "./BoardRenderer";
 import { ArrowShotView } from "./ArrowShotView";
+import { SlashShotView } from "./SlashShotView";
 import { attackVfxFor } from "../shared/AttackVfxMapping";
 import { SpineUnitOverlay } from "./SpineGeneralOverlay";
 import { generalSpineConfig, squadMemberCount, troopSpineConfigWithFallback } from '../shared/UnitPresentationConfig';
@@ -210,6 +211,7 @@ export class UnitRenderer extends Component {
   private readonly labelWorldPosBuf = new Vec3();
   private readonly generalViews = new Map<Faction, GeneralView>();
   private readonly arrowShots = new ArrowShotView(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
+  private readonly slashShots = new SlashShotView(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   private readonly spineUnits = new SpineUnitOverlay(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   private readonly tileBuffViews = new Map<string, TileBuffView>();
   private readonly troopPrefabLoads = new Map<string, Promise<Prefab | null>>();
@@ -902,6 +904,7 @@ export class UnitRenderer extends Component {
     });
     this.spineUnits.update(dt);
     this.arrowShots.update(dt);
+    this.slashShots.update(dt);
 
     this.tileBuffViews.forEach(view => {
       const pos = this.boardRenderer?.getCellWorldPosition(view.lane, view.depth, 0.12);
@@ -1118,6 +1121,10 @@ export class UnitRenderer extends Component {
       }
       // 刀光放在攻擊者與目標之間、偏目標 1/3 處
       const pos = new Vec3(from.x + (targetPos.x - from.x) * ratio, from.y + (targetPos.y - from.y) * ratio, from.z + (targetPos.z - from.z) * ratio);
+      // PROG-2-9367：刀光改畫在畫面層（月牙貼圖）；貼圖還沒載好的那一刀退回原本的粒子特效，不漏播
+      const a = this.overlayPoint(from); const ax = a?.x ?? 0; const ay = a?.y ?? 0;
+      const b = this.overlayPoint(pos);
+      if (a && b && this.slashShots.play(ax, ay, b.x, b.y)) return;
       services().effect.playBlock(vfx.effectId, pos, undefined, 0.6);
     } catch (error) { console.warn('[UnitRenderer] 攻擊特效略過', error); }
   }

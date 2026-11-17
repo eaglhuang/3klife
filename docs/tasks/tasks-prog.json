@@ -8140,6 +8140,53 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9367",
+      "title": "近戰刀光換成月牙貼圖，朝被打的一方掃過去",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者裁決斬擊外觀要換掉。原本的粒子特效看起來是一團光，不像一刀；刀光貼圖沒有 prefab、進不了特效池，所以比照飛箭改在畫面層直接畫貼圖。",
+      "related": [
+        "PROG-2-9361",
+        "PROG-2-9353"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（7834 過）；線上版注入同一邏輯實打一場，月牙刀光播出 25 次、0 報錯，截圖可見 | 變更: 新增 AttackSlashShot 設定與 SlashShotView 畫面元件，UnitRenderer 攻擊演出改播月牙刀光 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
