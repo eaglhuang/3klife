@@ -50,8 +50,6 @@ export class BattleLogComposite extends CompositePanel {
     private _contentNode: Node | null = null;
     private _collapsed = true;
     private _logPanelNode: Node | null = null;
-    private _collapsedHeight = 0;
-    private _expandedHeight = 410;
     private _isMounted = false;
     private readonly _readyWaiters: Array<(ready: boolean) => void> = [];
     // 控制列狀態
@@ -160,10 +158,6 @@ export class BattleLogComposite extends CompositePanel {
 
         // 可折疊的日誌面板節點
         this._logPanelNode = binder.getNode('BattleLogPanel');
-        const tf = this._logPanelNode?.getComponent(UITransform);
-        if (tf) {
-            this._expandedHeight = tf.height;
-        }
 
         // ── 控制列按鈕（BtnAuto / BtnSpeed / BtnSetting）────────────────────
         this._btnAuto  = binder.getNode('BtnAuto');
@@ -284,30 +278,29 @@ export class BattleLogComposite extends CompositePanel {
         this._applyCollapsedState(this._collapsed, true);
     }
 
+    /**
+     * 展開／收合只切換顯示與淡入淡出，不改面板高度。
+     * 以前用改高度做動畫：面板錨點在中央，收合狀態下若版面重新對齊，展開時整塊會往上長半個面板高，
+     * 蓋到敵方主將與棋盤最右兩行（PROG-2-9389）。
+     */
     private _applyCollapsedState(collapsed: boolean, animated: boolean): void {
         const panelNode = this._logPanelNode;
         if (!panelNode) return;
-
-        const tf = panelNode.getComponent(UITransform);
-        if (!tf) return;
-
-        const targetH = collapsed ? this._collapsedHeight : this._expandedHeight;
-
-        if (!collapsed) {
-            panelNode.active = true;
-        }
-
+        const op = panelNode.getComponent(UIOpacity) ?? panelNode.addComponent(UIOpacity);
+        tween(op).stop();
         if (!animated) {
-            tf.height = targetH;
+            op.opacity = collapsed ? 0 : 255;
             panelNode.active = !collapsed;
             return;
         }
-
-        tween(tf)
-            .to(0.3, { height: targetH } as any, { easing: 'quadOut' })
-            .call(() => {
-                if (panelNode && collapsed) panelNode.active = false;
-            })
+        if (!collapsed) {
+            panelNode.active = true;
+            op.opacity = 0;
+            this.scrollView?.scrollToBottom(0);
+        }
+        tween(op)
+            .to(0.2, { opacity: collapsed ? 0 : 255 }, { easing: 'quadOut' })
+            .call(() => { if (collapsed && panelNode.isValid) panelNode.active = false; })
             .start();
     }
 

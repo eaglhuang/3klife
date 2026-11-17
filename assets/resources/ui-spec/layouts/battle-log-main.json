@@ -1,6 +1,6 @@
 {
   "id": "battle-log-main",
-  "version": 4,
+  "version": 5,
   "canvas": {
     "fitWidth": true,
     "fitHeight": true,
@@ -159,8 +159,8 @@
         "type": "panel",
         "name": "BattleLogPanel",
         "id": "battleLogPanel",
-        "width": 300,
-        "height": 392,
+        "width": 280,
+        "height": 216,
         "skinSlot": "log.root.bg",
         "layout": {
           "type": "vertical",
@@ -197,21 +197,21 @@
             "name": "ScrollView",
             "id": "scrollView",
             "width": "100%",
-            "height": 348,
+            "height": 172,
             "children": [
               {
                 "type": "container",
                 "name": "ContentNode",
                 "id": "contentNode",
                 "width": "100%",
-                "height": 340,
+                "height": 164,
                 "children": [
                   {
                     "type": "label",
                     "name": "LogLabel",
                     "id": "logLabel",
                     "width": "100%",
-                    "height": 340,
+                    "height": 164,
                     "styleSlot": "log.label.content",
                     "bind": "battleLog.message"
                   }
@@ -221,12 +221,12 @@
           }
         ],
         "widget": {
-          "right": 80,
-          "top": 0
+          "right": 352,
+          "top": 534
         }
       }
     ],
     "height": 392,
-    "_comment": "PROG-2-9377: 5 buttons stacked on the right edge; the log body opens to the left of the column so the two right-most board columns stay visible while collapsed."
+    "_comment": "PROG-2-9377: 5 buttons stacked on the right edge; the log body opens to the left of the column so the two right-most board columns stay visible while collapsed. PROG-2-9389: the log body now opens below the board (bottom-right gap, left of the SP panel) so it never covers the enemy general or the two right-most board columns."
   }
 }
