@@ -24,21 +24,9 @@ import type { TallyLine } from './TallyLineSpec';
 
 // ── 戰場回報介面（與戰場專家的約定相容；core 不 import battle） ─────────────────
 
-export type GeneralCaptureCause = 'duel-escape-failed' | 'duel-slain' | 'troop';
-
-/** 戰場上「主將被擒」的紀錄；一場最多每個陣營一筆 */
-export interface GeneralCaptureRecord {
-    capturedFaction: Faction;
-    capturedGeneralId: string;
-    capturedTemplateId: string | null;
-    captorGeneralId: string | null;
-    captorTemplateId: string | null;
-    cause: GeneralCaptureCause;
-    tutorial: boolean;
-    turn: number;
-    /** 這場的遭遇戰代號（選填；對不到君主時只當一般戰敗） */
-    encounterId?: string;
-}
+// 型別以戰場端共用約定為唯一來源（PROG-2-9393），這裡只轉出，避免兩份定義走樣
+import type { GeneralCaptureRecord } from '../../shared/GeneralCaptureContract';
+export type { GeneralCaptureCause, GeneralCaptureRecord } from '../../shared/GeneralCaptureContract';
 
 // ── 具名常數（裁決值；暫定者標註） ───────────────────────────────────────────
 
