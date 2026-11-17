@@ -24,7 +24,7 @@ import { VFX_BLOCK_REGISTRY } from '../config/vfx-block-registry';
  */
 export class EffectSystem {
     private poolSystem: PoolSystem | null = null;
-    /** vfx-effects.json 的快取表（key = 效果 key，如 'hit_enemy'）*/
+    /** vfx-effects.json 的快取表（key = 效果 key，如 'battle_hit_default'）*/
     private effectTable = new Map<string, VfxEffectDef>();
 
     public setup(poolSystem: PoolSystem): void {
@@ -455,8 +455,8 @@ export class EffectSystem {
      *         否則沿用 v1 的單 blockId 行為，保持完全向下相容。
      *
      * 使用範例：
-     *   services().effect.playFullEffect('hit_enemy', targetWorldPos);
-     *   services().effect.playFullEffect('skill_zhang_fei', casterPos);
+     *   services().effect.playFullEffect('battle_hit_default', targetWorldPos);
+     *   services().effect.playFullEffect('battle_skill_ultimate', casterPos);
      *
      * @param key       vfx-effects.json 中的效果鍵名
      * @param position  世界座標

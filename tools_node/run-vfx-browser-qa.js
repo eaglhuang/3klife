@@ -617,7 +617,7 @@ Options:
 
 Examples:
   node tools_node/run-vfx-browser-qa.js --scope blocks --runId VFX-QA-2026-04-16
-  node tools_node/run-vfx-browser-qa.js --scope combos --case skill_zhang_fei,skill_lu_bu
+  node tools_node/run-vfx-browser-qa.js --scope combos --case battle_skill_ultimate,battle_win
   node tools_node/run-vfx-browser-qa.js --scope all --limit 20 --dryRun true
 `.trim());
     console.log('Additional two-layer gate options:');

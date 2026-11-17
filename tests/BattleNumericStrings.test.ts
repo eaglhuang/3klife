@@ -6,7 +6,6 @@
  */
 import * as fs from 'fs';
 import * as path from 'path';
-import { DEFAULT_VFX_EFFECTS } from '../assets/scripts/core/config/VfxEffectConfig';
 import { assert, TestSuite } from './TestRunner';
 
 const I18N_DIR = path.join(__dirname, '..', 'assets', 'resources', 'i18n');
@@ -51,14 +50,11 @@ export function createBattleNumericStringsSuite(): TestSuite {
         assert.equals('Counter', en.LABEL_COUNTER);
     });
 
-    suite.test('戰場飄字的暴擊與未命中改用 i18n key，且繁中可解析', () => {
+    // 原本這裡經由舊特效定義 crit_hit／hit_miss 的飄字設定取 key；那兩個定義沒有人呼叫，已於 PROG-2-9371 移除，改成直接驗語系表。
+    suite.test('戰場飄字的暴擊與未命中 key 繁中可解析', () => {
         const zhTW = loadLocale('zh-TW');
-        const crit = DEFAULT_VFX_EFFECTS.crit_hit.notify?.textKey ?? '';
-        const miss = DEFAULT_VFX_EFFECTS.hit_miss.notify?.textKey ?? '';
-        assert.equals('POPUP_CRIT', crit);
-        assert.equals('POPUP_MISS', miss);
-        assert.equals('暴擊！', zhTW[crit]);
-        assert.equals('未命中', zhTW[miss]);
+        assert.equals('暴擊！', zhTW.POPUP_CRIT);
+        assert.equals('未命中', zhTW.POPUP_MISS);
     });
 
     suite.test('既有 key 不被覆寫', () => {
