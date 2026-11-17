@@ -8327,6 +8327,53 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9369",
+      "title": "單挑殘血敗逃與勝方士氣暴擊獎勵",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 2026-11-17 裁決：單挑戰果照規格全部加；一般戰「打到殘血就逃」；教學戰「只給勝方獎勵」。原本單挑只有打到一方倒下，沒有任何勝負效果。",
+      "related": [
+        "PROG-2-9335",
+        "PROG-2-9368"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（7958 過）；新增 tests/DuelFleeOutcome.test.ts 8 項 | 變更: 一般戰主將生命掉到兩成以下敗逃（生命歸 1、全軍兵力減半），一擊打到 0 才算斬將；勝方全軍士氣拉滿、暴擊 +15% 兩回合；教學戰只給勝方獎勵 | 阻塞: 名聲 +15、虎符卡、遺書在戰場內沒有落點，只發出 DuelOutcomeApplied 事件；線上實打待發版後補",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
