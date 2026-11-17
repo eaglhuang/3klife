@@ -509,7 +509,7 @@ export function createBattleControllerSkillTargetingSuite(): TestSuite {
         assert.equals(3, cavalry.depth);
     });
 
-    suite.test('tryDeployTroop：新部署的騎兵當回合就以正常移動距離前進（先部署、後行動，PROG-2-9396）', () => {
+    suite.test('tryDeployTroop：新部署的騎兵當回合就以正常移動距離前進（先部署、後行動，PROG-2-9397）', () => {
         services().initialize();
         const ctrl = new BattleController();
         const playerGeneral = createGeneral('ma-chao', Faction.Player, 'ma-chao-charge');

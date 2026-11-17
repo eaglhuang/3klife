@@ -65,7 +65,7 @@ export function createBattlePlaytest2Suite(): TestSuite {
         const flow = new TurnFlowManager(ctx as any, { scheduleOnce: (fn: () => void) => callbacks.push(fn) } as any, bridge as any);
         flow.onPlayerDeployed();
         assert.contains(toasts[0], '本回合部署已用完，自動結束回合');
-        assert.equals(1, callbacks.length, '一般模式達上限也會排程自動結束回合（PROG-2-9396）');
+        assert.equals(1, callbacks.length, '一般模式達上限也會排程自動結束回合（PROG-2-9397）');
         callbacks.shift()!();
         assert.equals(1, resolves, '排程回呼觸發 onEndTurn → resolvePlayerTurn');
     });

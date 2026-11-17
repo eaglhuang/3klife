@@ -77,7 +77,7 @@ function stepMoveUnit(
   zocField: ZocField,
 ): void {
   unit.chargeCells = 0;
-  // 剛部署的部隊當回合就行動（使用者 2026-11-17 定案「先部署、後行動」，PROG-2-9396 取代 PROG-2-9048 的原地待命）
+  // 剛部署的部隊當回合就行動（使用者 2026-11-17 定案「先部署、後行動」，PROG-2-9397 取代 PROG-2-9048 的原地待命）
   if (svc.buff.hasBuff(unit.id, StatusEffect.Stun)) {
     unit.isShieldWallActive = false;
     return;

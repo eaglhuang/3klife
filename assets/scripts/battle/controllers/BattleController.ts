@@ -1248,7 +1248,7 @@ export class BattleController {
 
   private buildEnemyTurnPhaseExecutors(): readonly BattlePhaseExecutor[] {
     return [
-      // 先部署、後行動（使用者 2026-11-17 定案，PROG-2-9396）：與我方相同，剛部署的部隊當回合就前進或攻擊
+      // 先部署、後行動（使用者 2026-11-17 定案，PROG-2-9397）：與我方相同，剛部署的部隊當回合就前進或攻擊
       createBattlePhaseExecutor('enemy-deploy', (context) => context.executePhase('enemy-deploy')),
       createBattlePhaseExecutor('enemy-auto-move', (context) => context.executePhase('enemy-auto-move')),
       createBattlePhaseExecutor('enemy-tile-effect', (context) => context.executePhase('enemy-tile-effect')),

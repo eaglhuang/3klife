@@ -98,7 +98,7 @@ export function createBattleCombatRegressionSuite(): TestSuite {
         assert.equals(0, counters.unitKilled);
     });
 
-    // 使用者 2026-11-17（PROG-2-9396）：擊殺後不踏進空出的格子，下一次行動才前進
+    // 使用者 2026-11-17（PROG-2-9397）：擊殺後不踏進空出的格子，下一次行動才前進
     suite.test('executeBattleCombatPhase：擊殺後留在原格，空出的格子不佔位', () => {
         services().initialize();
         const state = new BattleState();

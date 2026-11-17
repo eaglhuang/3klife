@@ -11,7 +11,7 @@ import type {
 } from '../../core/models/GeneralUnit';
 import { getUIRarityMarkLabel, normalizeUIRarityMarkLabel } from '../core/UIRarityMark';
 import { personalityBadgeOf, type PersonalityBadgeView } from '../core/UIPersonalityBadge';
-import { portraitPathOf } from '../../core/systems/GeneralArtPaths';
+import { resolveGeneralPortraitResources } from '../../core/systems/GeneralArtPaths';
 import { isLukVisible } from '../../core/systems/LuckVisibility';
 import { careerTagLabelOf } from '../../core/systems/CareerTag';
 import type { FemaleSource } from '../../core/systems/FemaleSource';
@@ -138,6 +138,7 @@ export interface GeneralDetailOverviewContentState {
         graduationTags: string[];
     };
     portraitResource: string;
+    portraitFallbackResources?: readonly string[];
 }
 
 const OVERVIEW_STAT_KEYS: Array<keyof GeneralStatsConfig> = ['str', 'int', 'lea', 'pol', 'cha', 'luk'];
@@ -357,7 +358,8 @@ export function buildGeneralDetailOverviewContentState(
         readModel,
         commandPanelRows,
         identity: buildGeneralDetailIdentity(config, readModel.generalFame.state === 'VALUE' ? readModel.generalFame.value : null),
-        portraitResource: portraitPathOf(config.id),
+        portraitResource: resolveGeneralPortraitResources(config).primary,
+        portraitFallbackResources: resolveGeneralPortraitResources(config).fallbacks,
         tallySlot: equippedTalismanSlot(views, config.id),
         tallySummary: buildGeneralTallySummary(equippedTalismanSlot(views, config.id), battleRecord ?? battleRecordOf(config)),
         gearSlots,

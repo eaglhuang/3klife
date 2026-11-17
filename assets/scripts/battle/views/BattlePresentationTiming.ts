@@ -18,7 +18,7 @@ export const BATTLE_TURN_FLOW_TIMING = {
    * 才能先看到部署結果並可連續部署到上限。
    */
   autoAdvanceAfterDeploySec: 2.0,
-  /** 部署額度用完後，自動結束回合前的等待秒數（讓玩家看到最後一隊落地，PROG-2-9396）。 */
+  /** 部署額度用完後，自動結束回合前的等待秒數（讓玩家看到最後一隊落地，PROG-2-9397）。 */
   autoEndTurnAfterDeployLimitSec: 0.8,
   /** 敵方子回合開始前，保留給「敵軍思考中」提示的前置秒數。 */
   enemyThinkingLeadInSec: 2.0,

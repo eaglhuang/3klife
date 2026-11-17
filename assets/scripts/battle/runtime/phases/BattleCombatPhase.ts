@@ -48,7 +48,7 @@ export function executeBattleCombatPhase(context: BattleCombatPhaseContext): voi
 
     if (didKillDefender) {
       resolveImmediateUnitDeath(context, defender, attacker, svc);
-      // 擊殺後不踏進空出的格子：下一次行動才前進（使用者 2026-11-17，PROG-2-9396）
+      // 擊殺後不踏進空出的格子：下一次行動才前進（使用者 2026-11-17，PROG-2-9397）
     }
 
     context.resolveActionResetAfterAttack(attacker, didKillDefender, actions);

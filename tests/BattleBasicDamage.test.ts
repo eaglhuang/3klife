@@ -316,7 +316,7 @@ export function createBattleBasicDamageSuite(): TestSuite {
         assert.equals(100, p.currentHp, '死者不還手，我方滿血');
     });
 
-    suite.test('(c) 擊殺後攻擊者位置不變：不踏進死者的格子，格子保持空著（PROG-2-9396）', () => {
+    suite.test('(c) 擊殺後攻擊者位置不變：不踏進死者的格子，格子保持空著（PROG-2-9397）', () => {
         const w = makeWorld();
         const p = makeTroop(TroopType.Cavalry, Faction.Player, 2, 3);
         const e = makeTroop(TroopType.Infantry, Faction.Enemy, 2, 4);
@@ -447,7 +447,7 @@ export function createBattleBasicDamageSuite(): TestSuite {
         const ei = makeTroop(TroopType.Infantry, Faction.Enemy, 2, 5);
         ctrl.state.addUnit(pc);
         ctrl.state.addUnit(ei);
-        // 本回合我方新部署一隻（先部署、後行動：當回合就移動，PROG-2-9396）
+        // 本回合我方新部署一隻（先部署、後行動：當回合就移動，PROG-2-9397）
         const fresh = ctrl.deployTroop(TroopType.Archer, 0);
         assert.isTrue(!!fresh, '玩家可部署');
 
@@ -514,7 +514,7 @@ export function createBattleBasicDamageSuite(): TestSuite {
         assert.equals(11, arc.currentHp, 'T1 弓 60−49（縱深突襲）');
         assert.equals(100, cav.currentHp, 'T1 弓兵被封射，騎兵不扣血');
         assert.equals(3, inf.depth, 'T1 步兵跟進 1 格（被騎兵擋在後面）');
-        // 第 2 回合：我方先手 49 ≥ 11 → 弓陣亡，不能還手；擊殺後騎兵不踏進死者格（使用者 2026-11-17，PROG-2-9396），原地不動
+        // 第 2 回合：我方先手 49 ≥ 11 → 弓陣亡，不能還手；擊殺後騎兵不踏進死者格（使用者 2026-11-17，PROG-2-9397），原地不動
         const arcCell = { lane: arc.lane, depth: arc.depth };
         playFullTurn(ctrl);
         snap('T2');

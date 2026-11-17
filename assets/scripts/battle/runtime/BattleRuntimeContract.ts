@@ -29,7 +29,7 @@ export const TURN_BASED_RUNTIME_PHASE_ORDER: readonly BattleRuntimePhaseName[] =
   'player-tile-effect',
   'player-combat-resolve',
   'player-special-resolve',
-  // 敵方先部署、後行動（使用者 2026-11-17 定案，PROG-2-9396，取代 PROG-2-9302 的「部署放最後」）：剛部署的敵軍當回合就行動
+  // 敵方先部署、後行動（使用者 2026-11-17 定案，PROG-2-9397，取代 PROG-2-9302 的「部署放最後」）：剛部署的敵軍當回合就行動
   'enemy-deploy',
   'enemy-auto-move',
   'enemy-tile-effect',

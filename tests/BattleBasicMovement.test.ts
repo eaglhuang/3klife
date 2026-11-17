@@ -195,7 +195,7 @@ export function createBattleBasicMovementSuite(): TestSuite {
         assert.equals(GAME_CONFIG.GRID_DEPTH - 1, u.depth);
     });
 
-    suite.test('(a4) 本回合剛部署的小兵當回合就走（先部署、後行動，PROG-2-9396），下一回合照常再走', () => {
+    suite.test('(a4) 本回合剛部署的小兵當回合就走（先部署、後行動，PROG-2-9397），下一回合照常再走', () => {
         const ctrl = mkCtrl();
         const { tm } = internals(ctrl);
         const u = spawn(ctrl, Faction.Player, TroopType.Infantry, 0, 0);
@@ -207,7 +207,7 @@ export function createBattleBasicMovementSuite(): TestSuite {
         assert.equals(2, u.depth, '下一回合照常再走一格');
     });
 
-    suite.test('(a4b) 敵方回合剛部署的敵兵當回合就前進（先部署、後行動，PROG-2-9396）', () => {
+    suite.test('(a4b) 敵方回合剛部署的敵兵當回合就前進（先部署、後行動，PROG-2-9397）', () => {
         const ctrl = mkCtrl();
         const { tm } = internals(ctrl);
         tm.enemyFood = 30;
