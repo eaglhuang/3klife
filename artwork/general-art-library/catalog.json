@@ -2493,6 +2493,27 @@
             "qc": "Full figure and both spear ends visible; straight shaft and separated natural hand grips; clean transparent preview; review candidate only."
           }
         ]
+      },
+      "smallAvatar": {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/yu_jin__于禁__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "2708960e99b0b947f83ac3b01dafc59b8c5dc5a2d826a2eb6cf0dd8f9122a60a",
+            "canvas": "256x256 RGBA",
+            "source": "standing/yu_jin__于禁__standing_0002.png",
+            "cropRect": [
+              379,
+              72,
+              771,
+              385
+            ],
+            "note": "Crop-only reframing from approved standing art; helmet and face retained, face centered, shoulder line visible, chest excluded."
+          }
+        ],
+        "activeVersion": "0001"
       }
     },
     {
