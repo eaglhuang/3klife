@@ -499,6 +499,8 @@ export class LobbyScene extends Component {
     private _generalJournal: GeneralJournalController | null = null;
     private _generalJournalHost: UIScreenPreviewHost | null = null;
     private _battleReview: BattleReviewController | null = null;
+    /** 子面板是從晨報派遣板開的：晨報板已先收起，子面板關閉時要接回（PROG-2-9136） */
+    private _journalHubReturn = false;
     private _battleReviewHost: UIScreenPreviewHost | null = null;
     private _tournament: TournamentPanelController | null = null;
     private _wishAltar: WishAltarController | null = null;
@@ -2202,15 +2204,35 @@ export class LobbyScene extends Component {
         });
         this._journalHubHost = await this._mountPreviewScreenHost('JournalHubHost', 'journal-hub-screen', [
             { buttonId: 'btnClose', handler: () => { if (this._journalHubHost) this._journalHubHost.node.active = false; } },
-            { buttonId: 'btnOpenGeneralJournal', handler: () => { this.openGeneralJournal(); } },
-            { buttonId: 'btnOpenBattleReview', handler: () => { this._openBattleReview(); } },
-            { buttonId: 'btnOpenTournament', handler: () => { this._openTournament(); } },
-            { buttonId: 'btnOpenWishAltar', handler: () => { this._openWishAltar(); } },
+            { buttonId: 'btnOpenGeneralJournal', handler: () => { this._openFromJournalHub(() => this.openGeneralJournal(), this._generalJournalHost); } },
+            { buttonId: 'btnOpenBattleReview', handler: () => { this._openFromJournalHub(() => this._openBattleReview(), this._battleReviewHost); } },
+            { buttonId: 'btnOpenTournament', handler: () => { this._openFromJournalHub(() => this._openTournament(), this._tournamentHost); } },
+            { buttonId: 'btnOpenWishAltar', handler: () => { this._openFromJournalHub(() => this._openWishAltar(), this._wishAltarHost); } },
             { buttonId: 'btnPrevDispatchGeneral', handler: () => { this._journalHub?.cyclePick(-1); this._openJournalHub(); } },
             { buttonId: 'btnNextDispatchGeneral', handler: () => { this._journalHub?.cyclePick(1); this._openJournalHub(); } },
             ...Array.from({ length: DISPATCH_MAX_ROWS }, (_, i) => ({ buttonId: `dispatchRow${i}`, handler: () => { this._onClickDispatchRow(i); } })),
         ]);
         this._journalHubHost.node.active = false;
+    }
+
+    /**
+     * 從晨報派遣板開子面板：子面板卡片比晨報板矮，疊著會露出底下的標題，所以沿用內政頁開子面板的做法先收起父層，
+     * 子面板關閉時再接回（PROG-2-9136）。子面板沒開成功時不動晨報板。
+     */
+    private _openFromJournalHub(open: () => void, child: UIScreenPreviewHost | null): void {
+        open();
+        const hub = this._journalHubHost;
+        if (!hub || !child?.node.active) return;
+        hub.node.active = false;
+        this._journalHubReturn = true;
+    }
+
+    /** 關閉晨報板的子面板；若是從晨報板開的就回到晨報板（其他入口開的照舊只關自己） */
+    private _closeJournalHubChild(child: UIScreenPreviewHost | null): void {
+        if (child) child.node.active = false;
+        if (!this._journalHubReturn) return;
+        this._journalHubReturn = false;
+        if (this._journalHubHost) this._journalHubHost.node.active = true;
     }
 
     /** 點派遣列：派出選將列指定的武將，未指定時自動挑最適合的（PROG-2-1181／1186），提示結果並刷新面板。 */
@@ -2236,7 +2258,7 @@ export class LobbyScene extends Component {
         });
         this._generalJournal = journal;
         this._generalJournalHost = await this._mountPreviewScreenHost('GeneralJournalHost', 'general-journal-screen', [
-            { buttonId: 'btnClose', handler: () => { if (this._generalJournalHost) this._generalJournalHost.node.active = false; } },
+            { buttonId: 'btnClose', handler: () => { this._closeJournalHubChild(this._generalJournalHost); } },
             { buttonId: 'btnPrevGeneral', handler: () => { journal.prev(); this._refreshGeneralJournal(); } },
             { buttonId: 'btnNextGeneral', handler: () => { journal.next(); this._refreshGeneralJournal(); } },
         ]);
@@ -2264,7 +2286,7 @@ export class LobbyScene extends Component {
         });
         this._battleReview = review;
         this._battleReviewHost = await this._mountPreviewScreenHost('BattleReviewHost', 'battle-review-screen', [
-            { buttonId: 'btnClose', handler: () => { if (this._battleReviewHost) this._battleReviewHost.node.active = false; } },
+            { buttonId: 'btnClose', handler: () => { this._closeJournalHubChild(this._battleReviewHost); } },
             { buttonId: 'btnPrevPage', handler: () => { review.prevPage(); this._refreshBattleReview(); } },
             { buttonId: 'btnNextPage', handler: () => { review.nextPage(); this._refreshBattleReview(); } },
         ]);
@@ -2292,7 +2314,7 @@ export class LobbyScene extends Component {
             this._refreshTournament();
         };
         this._tournamentHost = await this._mountPreviewScreenHost('TournamentHost', 'tournament-screen', [
-            { buttonId: 'btnClose', handler: () => { if (this._tournamentHost) this._tournamentHost.node.active = false; } },
+            { buttonId: 'btnClose', handler: () => { this._closeJournalHubChild(this._tournamentHost); } },
             { buttonId: 'btnRegister', handler: () => { afterAction(tournament.register()); } },
             { buttonId: 'btnPlay', handler: () => { afterAction(tournament.play()); } },
             { buttonId: 'btnClaim', handler: () => { afterAction(tournament.claim()); } },
@@ -2355,7 +2377,7 @@ export class LobbyScene extends Component {
         };
         const slotHandlers = Array.from({ length: WISH_ALTAR_SLOTS }, (_, i) => ({ buttonId: `waSlot${i}`, handler: () => { afterAction(altar.tapSlot(i)); } }));
         this._wishAltarHost = await this._mountPreviewScreenHost('WishAltarHost', 'wish-altar-screen', [
-            { buttonId: 'btnClose', handler: () => { if (this._wishAltarHost) this._wishAltarHost.node.active = false; } },
+            { buttonId: 'btnClose', handler: () => { this._closeJournalHubChild(this._wishAltarHost); } },
             { buttonId: 'btnPrevItem', handler: () => { altar.prevItem(); this._refreshWishAltar(); } },
             { buttonId: 'btnNextItem', handler: () => { altar.nextItem(); this._refreshWishAltar(); } },
             { buttonId: 'btnWish', handler: () => { afterAction(altar.wish()); } },
@@ -2453,6 +2475,7 @@ export class LobbyScene extends Component {
             services().event.emit('SHOW_TOAST', { message, duration: 2 });
             void session.save().catch(() => undefined);
         }
+        this._journalHubReturn = false;
         host.node.active = true;
         this._bringNodeToFront(host.node);
         if (host.binder) {
@@ -4094,6 +4117,7 @@ export class LobbyScene extends Component {
         for (const host of secondaryHosts) {
             if (host?.node?.isValid) host.node.active = false;
         }
+        this._journalHubReturn = false;
         this._seasonPassPanel?.setOpen(false);
         this._clanShrine?.setOpen(false);
         this._ultimateCodex?.close();
