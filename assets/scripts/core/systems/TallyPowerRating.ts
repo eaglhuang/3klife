@@ -46,6 +46,7 @@ export function computeTallyBattlePower(input: TallyPowerInput): number {
 export interface TallyStarCost {
     shards: number;
     essence: number;
+    /** 欄位名沿用 copper；對應黃金（2026-11-17 裁決併入黃金，日後接線用黃金錢包） */
     copper: number;
     unlock: string;
 }
