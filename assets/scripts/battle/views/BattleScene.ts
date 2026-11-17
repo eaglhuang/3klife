@@ -251,6 +251,8 @@ export class BattleScene extends Component {
       this.ctrl.state.visionRadius = stageThemeVisionRadius(encounter?.stageThemeId);
       this.ctrl.tutorialBattle = battleParams.tutorial === true;
       if (enemyScale) this.ctrl.configureAiDifficulty(enemyScale.difficulty);
+      // QA 直進入口（PROG-2-9127）：指定敵軍兵種；正式入口不帶此欄位
+      if (battleParams.enemyDeployTroops?.length) this.ctrl.overrideEnemyDeployTroops(battleParams.enemyDeployTroops);
       // 天氣排程（PROG-2-0401）：入口參數優先，沒有才用 encounter 設定
       const weatherSchedule = battleParams.weatherSchedule ?? encounter?.weatherSchedule;
       if (weatherSchedule) this.ctrl.setWeatherSchedule(weatherSchedule);
@@ -605,7 +607,8 @@ export class BattleScene extends Component {
   /** 戰鬥結果彈窗「返回」：回大廳，讓結緣→培育→戰場→傳承循環能接續。 */
   private _onBackToLobby(): void {
     UCUFLogger.info(LogCategory.LIFECYCLE, "[BattleScene] 結果彈窗返回大廳");
-    services().scene.switchScene(SceneName.Lobby);
+    // QA 直進入口（PROG-2-9127）沒有走大廳，結算後回登入畫面
+    services().scene.switchScene(this._battleParams?.entrySource === 'qa' ? SceneName.Login : SceneName.Lobby);
   }
 
   private onReplay(): void {

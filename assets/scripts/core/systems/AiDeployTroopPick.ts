@@ -89,3 +89,12 @@ export function resolveAiDeployPreference(profile: AiDeployPreference | null | u
     if (profile) return profile;
     return (battleTactic ? SCENE_DEPLOY_PREFERENCE[battleTactic] : undefined) ?? null;
 }
+
+/**
+ * 指定敵軍只出某幾種兵（PROG-2-9127，QA 直進入口）：把戰場兵種轉回 AI 兵種代碼，組成不剋制的偏好。
+ * AI 不會出的兵種（工兵、醫護、水軍）略過；沒有任何可用兵種回傳 null（呼叫端應先驗證）。
+ */
+export function deployPreferenceForTroops(types: readonly TroopType[]): AiDeployPreference | null {
+    const codes = (Object.keys(AI_TROOP_CODE_TO_TYPE) as AiTroopCode[]).filter(code => types.includes(AI_TROOP_CODE_TO_TYPE[code]!));
+    return codes.length > 0 ? { preferredTroops: codes, preferCounter: false } : null;
+}
