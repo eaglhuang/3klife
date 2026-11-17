@@ -27,6 +27,7 @@ export function createSyncManagerSuite() {
         const ev = new EventSystem();
         const net = new NetworkService();
         const sync = new SyncManager();
+        sync.setServerUrl('http://mock-sync.test'); // 預設離線，測試需明確指定伺服器
         
         net.setup(ev);
         sync.setup(ev, net);
@@ -111,6 +112,31 @@ export function createSyncManagerSuite() {
         
         const success = sync.pushAction("HACK_ATTEMPT", {});
         assert.isFalse(success, "裝置 ID 不符應阻斷 Action");
+    });
+
+    suite.test("未設定同步伺服器（預設離線）時不發任何請求、不丟錯", async () => {
+        const calls: string[] = [];
+        (globalThis as any).fetch = async (url: string) => { calls.push(String(url)); throw new Error('不該被呼叫'); };
+        sys.localStorage.clear();
+        const ev = new EventSystem();
+        const net = new NetworkService();
+        const sync = new SyncManager();
+        net.setup(ev);
+        sync.setup(ev, net);
+
+        assert.isFalse(sync.isServerConfigured(), "預設應為離線模式");
+        assert.isTrue(sync.pushAction("BATTLE_WIN", { gold: 1 }, SyncActionType.DEFERRABLE), "離線仍可記錄行動");
+        await (sync as any).syncNow();
+        await sync.syncDelta({}, { a: 1 });
+        await sync.syncFull({ a: 1 });
+        await sync.flushCompressedActions();
+        assert.lengthEquals(0, calls, "離線模式不得呼叫 fetch");
+        assert.equals(1, sync.getActionRecordCount(), "行動紀錄保留在本機佇列");
+
+        sync.setServerUrl('http://mock-sync.test/');
+        assert.isTrue(sync.isServerConfigured(), "指定位址後啟用同步");
+        sync.setServerUrl('');
+        assert.isFalse(sync.isServerConfigured(), "空字串回到離線");
     });
 
     return suite;

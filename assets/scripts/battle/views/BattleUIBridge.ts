@@ -1075,9 +1075,16 @@ export class BattleUIBridge {
     const vitalityAfterBattle = battleVitality !== undefined ? { [pgId]: battleVitality } : undefined;
     const pgUnit = this.ctx.ctrl?.state.playerGeneral;
     const hpRatioAfterBattle = pgUnit && pgUnit.maxHp > 0 ? { [pgId]: pgUnit.currentHp / pgUnit.maxHp } : undefined;
-    // generalCaptures：戰場外接好之前 recordBattle 不認這一欄，先用變數帶過去（不是新的物件字面量，型別檢查不會擋）
-    const battleOptions = { specialActions, sortie, performance: { [pgId]: performance }, stageId, deployedTallyIds, vitalityAfterBattle, hpRatioAfterBattle, stageSalvage: this.ctx.ctrl?.state.stageSalvage, teachingSpirit: this.ctx.teachingSpirit, duelOutcomes: this.duelOutcomes, generalCaptures: this.generalCaptures };
+    // inBattleFame：戰中入帳的名聲（不含單挑，戰後結算已有）；戰場外接好之前 recordBattle 不認這一欄，先用變數帶過去（PROG-2-9395）
+    const inBattleFameGain = this.ctx.ctrl?.getInBattleFameForRecord(Faction.Player) ?? 0;
+    const inBattleFame = inBattleFameGain > 0 ? { [pgId]: inBattleFameGain } : undefined;
+    // encounterEnemyGeneralId：敵方君主（這一場的敵主將），被擒處置用他的數值（PROG-2-9140）
+    const battleOptions = { specialActions, sortie, performance: { [pgId]: performance }, stageId, deployedTallyIds, vitalityAfterBattle, hpRatioAfterBattle, stageSalvage: this.ctx.ctrl?.state.stageSalvage, teachingSpirit: this.ctx.teachingSpirit, duelOutcomes: this.duelOutcomes, generalCaptures: this.generalCaptures, encounterEnemyGeneralId: this.ctx.eg?.id ?? null, inBattleFame };
     void services().session.recordBattle([pgId], result, battleOptions).then((settlement) => {
+      // 主將被擒的君主處置結果（PROG-2-9140）：寫進戰報並加進結算細項
+      const captureLines = (settlement.captureNotices ?? []).map((line) => formatTallyLine(line, this._tallyTranslate));
+      for (const line of captureLines) this.appendLog(line);
+      if (captureLines.length > 0) this.ctx.resultPopup?.appendDetails?.(captureLines);
       const entry = settlement.entries[0];
       if (entry) {
         this.appendLog(`${this.ctx.pg?.name ?? pgId} 精力 ${entry.vitalityBefore}→${entry.vitalityAfter}，功勳 +${entry.meritGained}${entry.epGained > 0 ? `，EP +${entry.epGained}` : ''}`);

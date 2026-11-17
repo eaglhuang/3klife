@@ -77,6 +77,8 @@ export interface BattleCombatResolverContext {
   getUltimateSpecialRule?(ultimateId: string): UltimateSpecialRuleDef | null | undefined;
   /** 兵種動態相剋是否啟用（doc_spec_0309 §3，PROG-2-9368）；沒提供時視為關閉。教學戰由呼叫端回 false */
   isTroopCounterTacticsEnabled?(): boolean;
+  /** 一支部隊被擊破、移出戰場後呼叫（戰中名聲入帳用，PROG-2-9395） */
+  onTroopDefeated?(defeated: { unitId: string; faction: Faction }): void;
 }
 
 /** 堅盾（靈感戰法，PROG-2-1600 暫定）：防禦 ×1.2 */
@@ -836,6 +838,7 @@ export class BattleCombatResolver {
     svc.buff.clearUnit(unit.id);
     clearMorale(unit);
     svc.event.emit(EVENT_NAMES.UnitDied, { unitId: unit.id, name: unit.name, lane, depth, faction, type });
+    this.context.onTroopDefeated?.({ unitId: unit.id, faction });
     // USPECIAL 死亡觸發（ULT-10，PROG-2-1979）：取出即清，每個掛勾只觸發一次
     settleDeathTriggers(this.context.state, unit.id, faction, (id) => this.context.getUltimateSpecialRule?.(id));
     // 遺計定遼（奉孝符，PROG-2-1572）：陣亡時全場敵軍混亂（暈眩）

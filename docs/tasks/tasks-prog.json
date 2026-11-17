@@ -9532,6 +9532,54 @@
     },
     {
       "doc_id": "",
+      "id": "PROG-2-9395",
+      "title": "擊破部隊名聲一場一次、戰中名聲帶進戰後結算、被擒處置提示與敵君主代號",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 2026-11-17 裁決 52～55 與 PROG-2-9140 整合說明。",
+      "related": [
+        "PROG-2-9394",
+        "PROG-2-9393",
+        "PROG-2-9140"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: in-review | 驗證: 型別檢查 0 錯；全套單元測試 8111 過（新增 4 項、補 1 項順序斷言）；本機預覽實跑兩場（敵將于禁、曹操），紀錄存共用筆記夾 battle-qa-capture-notice-9395 | 變更: 擊破敵部隊 +15 名聲每陣營一場一次（裁決 52）；戰中名聲記帳，戰後以 inBattleFame 帶進 recordBattle，單挑那筆不帶（裁決 53）；recordBattle 帶 encounterEnemyGeneralId、結算與戰報顯示 captureNotices；「力竭被擒」改排在「戰鬥結束」之前；GeneralCaptureContract 改從 shared 取 Faction | 阻塞: inBattleFame 欄位要等戰場外（GameSession）接上才會寫回存檔",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
       "id": "PROG-2-9396",
       "title": "回合順序改為先部署後行動、部署用完自動結束回合、擊殺不進格、多格移動從原格滑行",
       "owner": "claude-code-fable-5-2",
