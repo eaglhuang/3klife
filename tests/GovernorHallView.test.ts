@@ -40,8 +40,8 @@ export function createGovernorHallViewSuite(): TestSuite {
 
     suite.test('產出卡拆成 基礎值 / 人口紅利 / 政策修正 / 總計，正負號明確', () => {
         const card = buildGovernorHallView(snapshot()).goldCard;
-        assert.equals('基礎值 100', card.baseText);
-        assert.equals('人口紅利 +20', card.populationBonusText);
+        assert.equals('基礎值 100（已入帳）', card.baseText);
+        assert.equals('人口紅利 +20（換季入帳）', card.populationBonusText);
         assert.equals('政策修正 -5', card.policyModifierText);
         assert.equals('總計 115', card.totalText);
     });

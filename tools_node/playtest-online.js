@@ -589,6 +589,16 @@ async function main() {
                 map[cat] = await page.evaluate(() => window.__pt.buttonTexts('^BtnSub'));
             }
             rec.detail.menuMap = map;
+            // 太守府：開啟後截一張（人口、民心、黃金與糧草產出列），再關回大廳；開不了只記錄不算失敗
+            try {
+                const opened = await openSub('BtnCatDomestic', '太守府');
+                rec.detail.governorHallOpened = Boolean(opened);
+                if (opened) {
+                    await delay(2500);
+                    await page.screenshot({ path: path.join(outDir, '03-governor-hall.png') });
+                    await backToLobbyBar();
+                }
+            } catch (e) { rec.detail.governorHallError = String(e && e.message || e); }
             return rec.detail;
         }, { skipIfFailed: true });
 
