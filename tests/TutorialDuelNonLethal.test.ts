@@ -65,6 +65,8 @@ export function createTutorialDuelNonLethalSuite(): TestSuite {
 
     suite.test('一般戰鬥沒有五成保護：敗方主將打到殘血逃走（生命歸 1），不是停在五成（PROG-2-9369）', () => {
         const ctrl = battle(false, 95, 20);
+        // 固定亂數：不閃避不暴擊，敗逃的脫逃判定逃得掉（PROG-2-9393）
+        services().session.setRandomSource(() => 0.5);
         const result = ctrl.resolveDuelChallenge(Faction.Player, true);
         assert.equals('ongoing', result);
         assert.equals(1, ctrl.state.enemyGeneral!.currentHp);

@@ -257,6 +257,7 @@ export const EVENT_NAMES = {
   GeneralDuelRejected:  "general-duel-rejected",
   DuelPenaltyApplied:   "duel-penalty-applied",
   DuelOutcomeApplied:   "duel-outcome-applied",  // payload: DuelOutcomeAppliedEvent（單挑勝負效果，PROG-2-9369）
+  GeneralCaptured:      "general-captured",      // payload: GeneralCaptureRecord（主將被擒，PROG-2-9393）
   // 武將快覽彈窗
   /** BattleHUD 頭像點擊 → 廣播意圖（攜帶 side / isEnemy），BattleScene 負責轉換為完整資料後回灌 */
   RequestGeneralQuickView: "request-general-quickview",

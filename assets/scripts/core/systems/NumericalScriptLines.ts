@@ -19,6 +19,21 @@ export function duelFleeImmuneLine(generalName: string): string {
     return `${generalName}負傷敗逃，本回合不可被攻擊`;
 }
 
+/** 主將被擒的戰報提示（PROG-2-9393）：單挑敗逃沒逃掉 */
+export function duelEscapeFailedLine(generalName: string, captorName: string | null): string {
+    return captorName ? `${generalName}敗逃不及，被${captorName}生擒` : `${generalName}敗逃不及，被生擒`;
+}
+
+/** 主將被擒的戰報提示（PROG-2-9393）：單挑一擊落敗 */
+export function duelSlainCapturedLine(generalName: string, captorName: string | null): string {
+    return captorName ? `${generalName}被${captorName}一擊打落馬下，束手就擒` : `${generalName}被一擊打落馬下，束手就擒`;
+}
+
+/** 主將被擒的戰報提示（PROG-2-9393）：單挑以外被打到生命 0 */
+export function troopCapturedLine(generalName: string): string {
+    return `${generalName}力竭被擒`;
+}
+
 export function critLine(generalName: string, damage: number): string {
     return `天命一擊！${generalName} 造成 ${damage} 點致命傷害！`;
 }

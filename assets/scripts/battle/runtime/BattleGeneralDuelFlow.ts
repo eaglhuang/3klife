@@ -9,7 +9,8 @@ import { type BattleResult, BATTLE_FRONT_DEPTH } from "../BattleTypes";
 import { DUEL_FLEE_HP, DUEL_FLEE_SQUAD_LOSS_RATIO, DUEL_WINNER_BUFF_TURNS, DUEL_WINNER_CRIT_BONUS } from "../shared/DuelOutcome";
 import { duelVictoryBuffTurns } from "../shared/DuelVictoryBuff";
 import { maximizeMorale } from "../shared/Morale";
-import { duelFleeImmuneLine } from "../../core/systems/NumericalScriptLines";
+import { duelEscapeFailedLine, duelFleeImmuneLine, duelSlainCapturedLine } from "../../core/systems/NumericalScriptLines";
+import { rollDuelEscape, type GeneralCaptureCause, type GeneralCaptureRecord } from "../../shared/GeneralCaptureContract";
 
 /**
  * 單挑最多交手回合數（暫定，規格未定義）。達上限仍雙方存活 → 平局，單挑結束、不產生死亡、不套用懲罰。
@@ -50,6 +51,8 @@ export interface BattleGeneralDuelFlowContext {
    * 回 0 或沒給＝一般戰鬥，照舊打到一方倒下。
    */
   getDuelHpFloorRatio?: () => number;
+  /** 這個陣營的主將不可被擒（試用傭兵，戰敗必定安全撤退）；沒給視為可被擒（PROG-2-9393） */
+  isCaptureExempt?: (faction: Faction) => boolean;
 }
 
 export class BattleGeneralDuelFlow {
@@ -468,7 +471,18 @@ export class BattleGeneralDuelFlow {
     });
 
     const fled = !killed && !tutorial;
-    if (fled) {
+    const winnerGeneral = this.context.state.getGeneral(winner);
+    // 敗逃要過脫逃判定（使用者 2026-11-17 裁決 Q1 甲，PROG-2-9393）：沒逃掉就被擒，主將離場、該方戰敗
+    const captureExempt = this.context.isCaptureExempt?.(loser) === true;
+    const escaped = fled && (captureExempt || rollDuelEscape(loserGeneral.luk, winnerGeneral?.luk ?? 0, svc.session.randomSource()));
+    if (fled && !escaped) {
+      svc.event.emit(EVENT_NAMES.BattleSkillNotice, duelEscapeFailedLine(loserGeneral.name, winnerGeneral?.name ?? null));
+      loserGeneral.takeDamage(loserGeneral.currentHp);
+      const loserUnit = loserUnitId ? this.context.state.units.get(loserUnitId) ?? null : null;
+      if (loserUnit) loserUnit.currentHp = 0;
+      svc.event.emit(EVENT_NAMES.GeneralDamaged, { faction: loser, hp: 0, damage: 0, attackerId: null });
+      this.recordCapture(loser, 'duel-escape-failed', svc);
+    } else if (fled) {
       // 敗逃當回合不可被攻擊，下回合起恢復；雙方都適用（PROG-2-9386）
       this.context.state.duelFleeImmuneTurns.set(loser, svc.battle.getSnapshot().turn);
       svc.event.emit(EVENT_NAMES.BattleSkillNotice, duelFleeImmuneLine(loserGeneral.name));
@@ -481,7 +495,10 @@ export class BattleGeneralDuelFlow {
       });
       svc.event.emit(EVENT_NAMES.GeneralDamaged, { faction: loser, hp: loserGeneral.currentHp, damage: 0, attackerId: null });
     }
-    const winnerGeneral = this.context.state.getGeneral(winner);
+    if (killed && !tutorial && !captureExempt) {
+      svc.event.emit(EVENT_NAMES.BattleSkillNotice, duelSlainCapturedLine(loserGeneral.name, winnerGeneral?.name ?? null));
+      this.recordCapture(loser, 'duel-slain', svc);
+    }
     const payload: DuelOutcomeAppliedEvent = {
       winner, loser,
       winnerGeneralId: winnerGeneral?.id ?? null,
@@ -491,6 +508,27 @@ export class BattleGeneralDuelFlow {
       killed, fled, tutorial,
     };
     svc.event.emit(EVENT_NAMES.DuelOutcomeApplied, payload);
+  }
+
+  /** 記下主將被擒並發事件（PROG-2-9393）；同一陣營一場只記一筆，先發生的為準 */
+  public recordCapture(captured: Faction, cause: GeneralCaptureCause, svc: ReturnType<typeof services>, tutorial = false): GeneralCaptureRecord | null {
+    const state = this.context.state;
+    if (state.generalCaptures.has(captured)) return null;
+    const capturedGeneral = state.getGeneral(captured);
+    if (!capturedGeneral) return null;
+    const captorGeneral = state.getGeneral(captured === Faction.Player ? Faction.Enemy : Faction.Player);
+    const record: GeneralCaptureRecord = {
+      capturedFaction: captured,
+      capturedGeneralId: capturedGeneral.id,
+      capturedTemplateId: capturedGeneral.templateId ?? null,
+      captorGeneralId: captorGeneral?.id ?? null,
+      captorTemplateId: captorGeneral?.templateId ?? null,
+      cause, tutorial,
+      turn: svc.battle.getSnapshot().turn,
+    };
+    state.generalCaptures.set(captured, record);
+    svc.event.emit(EVENT_NAMES.GeneralCaptured, record);
+    return record;
   }
 
   private applyDuelPenalty(faction: Faction): void {

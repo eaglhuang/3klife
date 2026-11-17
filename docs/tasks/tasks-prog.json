@@ -9388,6 +9388,100 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9392",
+      "title": "兵種資訊面板圖示空格：沒有圖示時在圓底寫兵種單字",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 驗收 PROG-2-9390 時指示另開卡：玩家一開面板就看到空格。",
+      "related": [
+        "PROG-2-9390"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: in-review | 驗證: 型別檢查 0 錯；全套單元測試通過（新增 1 項：八個兵種都有單字）；本機預覽實跑：虎豹騎顯示「騎」、連弩手顯示「弓」，截圖存共用筆記夾 battle-qa-unit-info-9390 的 06、07 | 變更: 專案沒有各兵種圖示圖檔，只有一張圓底，所以面板左上角是空格；改成找不到兵種圖示時在圓底上寫單字（騎、步、盾、弓、槍、工、醫、水） | 阻塞: 無。單字是暫代，等各兵種圖示交件後由 typeIconResource 接手",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9393",
+      "title": "主將被擒（戰場內）：單挑敗逃加脫逃判定、被打到 0 改判被擒，戰後回報 generalCaptures",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 2026-11-17 被擒八題裁決（Q1 甲、Q5 甲）：主將落敗不是直接陣亡，而是被擒後看對方君主處置。",
+      "related": [
+        "PROG-2-9369",
+        "PROG-2-9386",
+        "PROG-2-9140"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: in-review | 驗證: 型別檢查 0 錯；全套單元測試 8075 過（新增 8 項：脫逃機率、逃掉、敵我雙方沒逃掉被擒、一擊歸零、被部隊打到 0、試用傭兵、教學戰）；本機預覽實跑三種情況（力竭被擒、敗逃不及被生擒、敗逃逃掉），紀錄存共用筆記夾 battle-qa-capture-9393 | 變更: 單挑敗逃時擲脫逃判定（0.6＋運氣差/200，夾 0.3～0.9），沒逃掉就被擒、主將離場、該方戰敗；單挑一擊歸零與單挑以外被打到 0 也記為被擒；教學戰與試用傭兵不被擒；戰後把紀錄（含關卡代號）隨 recordBattle 帶出去 | 阻塞: 無。戰場外的君主處置與結算提示（captureNotices）由 PROG-2-9140 接手，本卡不改 GameSession",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
