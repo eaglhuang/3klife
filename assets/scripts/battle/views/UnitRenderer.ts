@@ -49,7 +49,7 @@ import { attackVfxFor } from "../shared/AttackVfxMapping";
 import { SpineUnitOverlay } from "./SpineGeneralOverlay";
 import { generalSpineConfig, squadMemberCount, troopSpineConfigWithFallback } from '../shared/UnitPresentationConfig';
 import { DuelExchange } from '../shared/DuelPresentationCore';
-import { BATTLE_VISUAL_TIMING } from "./BattlePresentationTiming";
+import { BATTLE_VISUAL_TIMING, planMoveSegment } from "./BattlePresentationTiming";
 import { BuffGainEffectPool } from "./effects/BuffGainEffectPool";
 import { statBonusTone, statWithBonusText, type StatBonusTone } from "../shared/StatBonusText";
 import { unitHpBarState, type UnitHpBarState } from "../shared/UnitHpBar";
@@ -358,10 +358,17 @@ export class UnitRenderer extends Component {
       this.unitViews.set(unit.id, view);
     }
 
+    // 必須在 updateUnitView 之前記下：還在移動中代表同一瞬間剛收到前一格事件（或上一段 tween 未結束），
+    // 這時節點的畫面位置才是正確起點；事件的 from 格只是最後一步的起點，會造成瞬移。
+    const wasMoving = this.movingUnits.has(unit.id);
+    const livePos = wasMoving ? view.worldNode.worldPosition.clone() : null;
+
     this.updateUnitView(view, unit);
-  const fromPos = this.getUnitWorldPosition(fromLane, fromDepth);
-  const toPos = this.getUnitWorldPosition(unit.lane, unit.depth);
-    if (!fromPos || !toPos) return;
+    const eventFromPos = this.getUnitWorldPosition(fromLane, fromDepth);
+    const toPos = this.getUnitWorldPosition(unit.lane, unit.depth);
+    if (!eventFromPos || !toPos) return;
+    const plan = planMoveSegment(eventFromPos, toPos, livePos, wasMoving);
+    const fromPos = wasMoving && livePos ? livePos : eventFromPos;
 
     // 停止該節點上一切進行中的 tween，避免多回合快速推進時舊 tween 的 .call() 把單位定位到前一回合的目標格
     Tween.stopAllByTarget(view.worldNode);
@@ -374,7 +381,7 @@ export class UnitRenderer extends Component {
     }
 
     tween(view.worldNode)
-      .to(BATTLE_VISUAL_TIMING.moveAdvanceSec, { worldPosition: toPos })
+      .to(plan.durationSec, { worldPosition: toPos })
       .call(() => {
         this.movingUnits.delete(unit.id);
         view?.worldNode.setWorldPosition(toPos);
@@ -403,15 +410,18 @@ export class UnitRenderer extends Component {
     }
 
     const passengerView = this.unitViews.get(swapWithUnitId);
-    const moverFrom = this.getUnitWorldPosition(fromLane, fromDepth);
+    // 同一回合先走了幾格再換位時，節點還在上一段 tween 上；從目前畫面位置起算，避免瞬移
+    const moverLive = this.movingUnits.has(unit.id) ? moverView.worldNode.worldPosition.clone() : null;
+    const passengerLive = passengerView && this.movingUnits.has(swapWithUnitId) ? passengerView.worldNode.worldPosition.clone() : null;
+    const moverFrom = moverLive ?? this.getUnitWorldPosition(fromLane, fromDepth);
     const moverTo = this.getUnitWorldPosition(unit.lane, unit.depth);
     const passengerUnit = this.findUnitById(swapWithUnitId);
     const passengerTo = (swapPassengerToLane !== undefined && swapPassengerToDepth !== undefined)
       ? this.getUnitWorldPosition(swapPassengerToLane, swapPassengerToDepth)
       : (passengerUnit ? this.getUnitWorldPosition(passengerUnit.lane, passengerUnit.depth) : null);
-    const passengerFrom = (swapPassengerFromLane !== undefined && swapPassengerFromDepth !== undefined)
+    const passengerFrom = passengerLive ?? ((swapPassengerFromLane !== undefined && swapPassengerFromDepth !== undefined)
       ? this.getUnitWorldPosition(swapPassengerFromLane, swapPassengerFromDepth)
-      : (passengerView ? passengerView.worldNode.worldPosition.clone() : null);
+      : (passengerView ? passengerView.worldNode.worldPosition.clone() : null));
 
     if (!moverFrom || !moverTo) return;
 
