@@ -22,6 +22,15 @@ export type { BattleResult };
 export interface DuelOutcomeAppliedEvent {
   winner: Faction;
   loser: Faction;
+  /**
+   * 雙方主將的名冊實例代號（GeneralUnit.id，與存檔名冊同一個值），戰場外的接收端直接用，不必回頭查戰場狀態——
+   * 斬將時整場隨即結束，戰場狀態可能已清（PROG-2-9373）。
+   */
+  winnerGeneralId: string | null;
+  loserGeneralId: string | null;
+  /** 雙方主將的武將範本代號（GeneralUnit.templateId，例如 zhang-fei）；不是從名冊來的主將為 null。 */
+  winnerTemplateId: string | null;
+  loserTemplateId: string | null;
   /** 敗方主將被斬 */
   killed: boolean;
   /** 敗方主將負傷逃走（生命歸 1、全軍兵力減半） */
@@ -467,7 +476,15 @@ export class BattleGeneralDuelFlow {
       });
       svc.event.emit(EVENT_NAMES.GeneralDamaged, { faction: loser, hp: loserGeneral.currentHp, damage: 0, attackerId: null });
     }
-    const payload: DuelOutcomeAppliedEvent = { winner, loser, killed, fled, tutorial };
+    const winnerGeneral = this.context.state.getGeneral(winner);
+    const payload: DuelOutcomeAppliedEvent = {
+      winner, loser,
+      winnerGeneralId: winnerGeneral?.id ?? null,
+      loserGeneralId: loserGeneral.id,
+      winnerTemplateId: winnerGeneral?.templateId ?? null,
+      loserTemplateId: loserGeneral.templateId ?? null,
+      killed, fled, tutorial,
+    };
     svc.event.emit(EVENT_NAMES.DuelOutcomeApplied, payload);
   }
 

@@ -59,6 +59,8 @@ export function createDuelFleeOutcomeSuite(): TestSuite {
         assert.equals(Faction.Player, w.ctrl.getLastDuelWinner());
         const last = w.events[w.events.length - 1];
         assert.isTrue(last.fled && !last.killed && !last.tutorial, '事件標為敗逃');
+        assert.equals('p', last.winnerGeneralId, '事件帶勝方主將代號');
+        assert.equals('e', last.loserGeneralId, '事件帶敗方主將代號');
     });
 
     suite.test('一般戰勝方獎勵：我方全軍士氣拉滿、暴擊 +15% 兩回合；敗方沒有', () => {
@@ -90,6 +92,7 @@ export function createDuelFleeOutcomeSuite(): TestSuite {
         assert.isTrue(w.ctrl.state.enemyGeneral!.isDead());
         const last = w.events[w.events.length - 1];
         assert.isTrue(last.killed && !last.fled, '事件標為斬將');
+        assert.equals('e', last.loserGeneralId, '斬將事件帶被斬主將代號，戰場外發虎符卡與遺書用');
     });
 
     suite.test('教學戰：贏了有勝方獎勵，敗方不套代價（停在五成、兵力不減）', () => {
