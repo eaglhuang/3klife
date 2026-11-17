@@ -303,6 +303,26 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
     label.color = new Color(20, 20, 20, 255);
 
     this.moveGhostToTouch(ev);
+    this._watchDragSourceRelease(ev);
+  }
+
+  /**
+   * 放開時游標還在來源卡片上，全域放開事件會被卡片吃掉，殘影就留在畫面上。
+   * 這裡直接聽來源卡片：放在卡上＝取消拖曳（不跳提示）；滑出卡片外放開＝走原本的落點判定。
+   */
+  private _watchDragSourceRelease(ev: EventTouch): void {
+    const source = ev.target as Node | null;
+    if (!source?.isValid) return;
+    source.off(Node.EventType.TOUCH_END, this._onDragSourceTouchEnd, this);
+    source.off(Node.EventType.TOUCH_CANCEL, this.onGlobalTouchEnd, this);
+    source.once(Node.EventType.TOUCH_END, this._onDragSourceTouchEnd, this);
+    source.once(Node.EventType.TOUCH_CANCEL, this.onGlobalTouchEnd, this);
+  }
+
+  private _onDragSourceTouchEnd(): void {
+    if (this._dragState !== DeployDragState.Dragging) return;
+    emitDeployDragDebug('DeployComposite', 'drag-released-on-source');
+    this.endDrag();
   }
 
   private moveGhostToTouch(ev: EventTouch): void {
