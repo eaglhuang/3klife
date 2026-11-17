@@ -316,6 +316,21 @@ export function createBattleBasicDamageSuite(): TestSuite {
         assert.equals(100, p.currentHp, '死者不還手，我方滿血');
     });
 
+    suite.test('(c) 擊殺後攻擊者位置不變：不踏進死者的格子，格子保持空著（PROG-2-9397）', () => {
+        const w = makeWorld();
+        const p = makeTroop(TroopType.Cavalry, Faction.Player, 2, 3);
+        const e = makeTroop(TroopType.Infantry, Faction.Enemy, 2, 4);
+        e.currentHp = 5;
+        w.state.addUnit(p);
+        w.state.addUnit(e);
+        runCombatPhase(w, Faction.Player);
+        assert.isFalse(w.state.units.has(e.id), '敵方陣亡');
+        assert.equals(3, p.depth, '攻擊者原地不動');
+        assert.equals(2, p.lane, '攻擊者路線不變');
+        assert.equals(null, w.state.getCell(2, 4)?.occupantId ?? null, '死者的格子保持空著');
+        assert.equals(p.id, w.state.getCell(2, 3)?.occupantId ?? null, '攻擊者仍佔原格');
+    });
+
     suite.test('(c) 被動反擊戰法（counterReaction）：發動率過關才反擊，傷害 = floor(守方攻×比例×剋制−攻方防)', () => {
         const w = makeWorld();
         // 敵方主將 int=100 → 發動率 1−90/100=0.1
@@ -411,7 +426,7 @@ export function createBattleBasicDamageSuite(): TestSuite {
     });
 
     // (e) 一整個回合的階段順序
-    suite.test('(e) 一整回合階段順序：我方移動→地塊→戰鬥→特殊→勝負；敵方移動→地塊→戰鬥→特殊→部署→勝負', () => {
+    suite.test('(e) 一整回合階段順序：我方移動→地塊→戰鬥→特殊→勝負；敵方部署→移動→地塊→戰鬥→特殊→勝負（先部署、後行動）', () => {
         const { ctrl } = newController();
         // 敵方有糧草才會在 enemy-deploy 出兵
         (ctrl as unknown as { turnManager: { enemyFood: number } }).turnManager.enemyFood = 30;
@@ -432,7 +447,7 @@ export function createBattleBasicDamageSuite(): TestSuite {
         const ei = makeTroop(TroopType.Infantry, Faction.Enemy, 2, 5);
         ctrl.state.addUnit(pc);
         ctrl.state.addUnit(ei);
-        // 本回合我方新部署一隻（不該移動也不該攻擊）
+        // 本回合我方新部署一隻（先部署、後行動：當回合就移動，PROG-2-9397）
         const fresh = ctrl.deployTroop(TroopType.Archer, 0);
         assert.isTrue(!!fresh, '玩家可部署');
 
@@ -442,7 +457,7 @@ export function createBattleBasicDamageSuite(): TestSuite {
         assert.equals(
             [
                 'player-auto-move', 'player-tile-effect', 'player-combat-resolve', 'player-special-resolve', 'victory-check',
-                'enemy-auto-move', 'enemy-tile-effect', 'enemy-combat-resolve', 'enemy-special-resolve', 'enemy-deploy', 'victory-check',
+                'enemy-deploy', 'enemy-auto-move', 'enemy-tile-effect', 'enemy-combat-resolve', 'enemy-special-resolve', 'victory-check',
             ].join(' > '),
             phases.join(' > '),
             '階段順序',
@@ -451,9 +466,9 @@ export function createBattleBasicDamageSuite(): TestSuite {
         assert.isTrue(trace.some((t) => t === 'player-auto-move:' + EVENT_NAMES.UnitMoved), '我方移動事件在 player-auto-move');
         assert.isTrue(trace.some((t) => t === 'player-combat-resolve:' + EVENT_NAMES.UnitDamaged), '我方傷害在 player-combat-resolve');
         assert.isTrue(trace.some((t) => t === 'enemy-combat-resolve:' + EVENT_NAMES.UnitDamaged), '敵方還手傷害在 enemy-combat-resolve');
-        assert.isTrue(trace.some((t) => t === 'enemy-deploy:' + EVENT_NAMES.UnitDeployed), '敵方出兵在 enemy-deploy（最後）');
-        // 當回合部署的我方弓兵：不移動
-        assert.equals(0, fresh!.depth, '本回合新部署的我方部隊當回合不移動');
+        assert.isTrue(trace.some((t) => t === 'enemy-deploy:' + EVENT_NAMES.UnitDeployed), '敵方出兵在 enemy-deploy（敵方階段最前）');
+        // 當回合部署的我方弓兵：當回合就移動（取代 PROG-2-9048 原地待命）
+        assert.isTrue(fresh!.depth > 0, '本回合新部署的我方部隊當回合就移動');
         assert.equals(fresh!.maxHp, fresh!.currentHp, '新部署部隊沒被打');
         // 我方先動先打：事件序列裡第一個傷害屬於我方戰鬥階段，早於敵方戰鬥階段
         const firstPlayerHit = trace.findIndex((t) => t.startsWith('player-combat-resolve:' + EVENT_NAMES.UnitDamaged));
@@ -499,19 +514,22 @@ export function createBattleBasicDamageSuite(): TestSuite {
         assert.equals(11, arc.currentHp, 'T1 弓 60−49（縱深突襲）');
         assert.equals(100, cav.currentHp, 'T1 弓兵被封射，騎兵不扣血');
         assert.equals(3, inf.depth, 'T1 步兵跟進 1 格（被騎兵擋在後面）');
-        // 第 2 回合：我方先手 49 ≥ 11 → 弓陣亡，不能還手；騎兵擊殺後前進一格佔掉原敵格
+        // 第 2 回合：我方先手 49 ≥ 11 → 弓陣亡，不能還手；擊殺後騎兵不踏進死者格（使用者 2026-11-17，PROG-2-9397），原地不動
         const arcCell = { lane: arc.lane, depth: arc.depth };
         playFullTurn(ctrl);
         snap('T2');
         assert.isFalse(ctrl.state.units.has(arc.id), 'T2 敵弓陣亡且移出 units');
         assert.equals(100, cav.currentHp, 'T2 死者不還手，騎兵血量不變');
         assert.equals(null, ctrl.state.getCell(arcCell.lane, arcCell.depth)?.occupantId === arc.id ? arc.id : null, '陣亡者不再佔格');
-        assert.equals(cav.id, ctrl.state.getCell(arcCell.lane, arcCell.depth)?.occupantId ?? null, '擊殺後騎兵前進一格進入死者格');
-        assert.equals(null, ctrl.state.getCell(2, 4)?.occupantId ?? null, '騎兵原本的格子已清空');
-        // 清空的格子讓後面的步兵能往前：T3 步兵繼續前進
+        assert.equals(4, cav.depth, '擊殺後騎兵不進入死者格，位置不變');
+        assert.equals(null, ctrl.state.getCell(arcCell.lane, arcCell.depth)?.occupantId ?? null, '死者格保持空著');
+        assert.equals(cav.id, ctrl.state.getCell(2, 4)?.occupantId ?? null, '騎兵仍佔原本的格子');
+        assert.equals(3, inf.depth, 'T2 步兵仍被騎兵擋在後面');
+        // 下一次行動才前進：T3 騎兵走進空格並繼續前進，步兵跟進
         const infBefore = inf.depth;
         playFullTurn(ctrl);
         snap('T3');
+        assert.isTrue(cav.depth > 4, 'T3 騎兵下一次行動才前進');
         assert.isTrue(inf.depth > infBefore, '死者清空後後排步兵可以前進');
         printTable('(f) 對打血量表（先手方我方；T3 為後排前進確認）', rows);
     });
