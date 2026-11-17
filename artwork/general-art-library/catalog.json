@@ -8366,6 +8366,23 @@
             "note": "沿用甘氏綠白蓮紋襦裙與玉佩；側身退步伸手護人，候選待審。"
           }
         ]
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/gan_shi__甘氏__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "3de881ed8ef7cf711390bf6b700234a1188dd23884e07c6d59d063887aca6333",
+            "canvas": "256x256 RGBA",
+            "source": "standing/gan_shi__甘氏__standing_0002.png",
+            "crop": "shoulder-line; crop-only; uniform scale",
+            "cropBox": "x=177,y=0,w=170,h=170",
+            "qc": "125px preview: full hair and chin visible, face centered; shoulder tops reach lower edge without chest. Candidate remains review-pending."
+          }
+        ]
       }
     },
     {
