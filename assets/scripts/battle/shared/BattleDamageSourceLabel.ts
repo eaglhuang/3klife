@@ -44,3 +44,8 @@ export function battleEndLogLine(result?: string | null): string {
   if (result === 'draw') return '戰鬥結束：平手';
   return '戰鬥結束';
 }
+
+/** 日誌用的格子寫法：「第 1 路第 2 格」；lane 從 0 起算，depth 照原值 */
+export function battleCellLabel(lane: number, depth: number): string {
+  return `第 ${lane + 1} 路第 ${depth} 格`;
+}

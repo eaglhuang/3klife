@@ -6,7 +6,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { assert, TestSuite } from './TestRunner';
-import { battleDamageSourceLabel, battleEndLogLine } from '../assets/scripts/battle/shared/BattleDamageSourceLabel';
+import { battleDamageSourceLabel, battleEndLogLine, battleCellLabel } from '../assets/scripts/battle/shared/BattleDamageSourceLabel';
 
 function read(relative: string): string {
     return fs.readFileSync(path.join(__dirname, '..', relative), 'utf8');
@@ -74,6 +74,13 @@ export function createBattleDamageSourceLabelSuite(): TestSuite {
         const bridge = read('assets/scripts/battle/views/BattleUIBridge.ts');
         assert.isTrue(bridge.includes('this.appendLog(battleEndLogLine(data.result));'));
         assert.isFalse(bridge.includes('戰鬥結束：${data.result}'));
+    });
+
+    suite.test('日誌的格子寫成「第 N 路第 M 格」，不印 L／D 代號（PROG-2-9383）', () => {
+        assert.equals('第 1 路第 2 格', battleCellLabel(0, 2));
+        assert.equals('第 5 路第 0 格', battleCellLabel(4, 0));
+        const bridge = read('assets/scripts/battle/views/BattleUIBridge.ts');
+        assert.isFalse(bridge.includes('L${data.lane + 1} D${data.depth}'));
     });
 
     return suite;

@@ -29,6 +29,8 @@ const { ccclass, property } = _decorator;
 
 /** 自動鈕二次確認的時間窗（毫秒） */
 const AUTO_CONFIRM_WINDOW_MS = 3000;
+/** 日誌文字節點的高度上限（像素）；再高就超過文字貼圖能畫的範圍 */
+const BATTLE_LOG_MAX_LABEL_HEIGHT = 1920;
 
 @ccclass("BattleLogComposite")
 export class BattleLogComposite extends CompositePanel {
@@ -191,6 +193,14 @@ export class BattleLogComposite extends CompositePanel {
         if (!this.logLabel) return;
         this.logLabel.string = this._lines.join('\n');
         this.logLabel.updateRenderData(true);
+        // 一則日誌可能含多行又會自動換行，只限制則數不夠：文字高度超過貼圖上限時整塊會被壓縮、
+        // 新的行顯示不出來。這裡依實際高度再裁掉最舊的幾則。
+        const labelTf = this.logLabel.node.getComponent(UITransform);
+        while (labelTf && labelTf.height > BATTLE_LOG_MAX_LABEL_HEIGHT && this._lines.length > 1) {
+            this._lines.splice(0, Math.max(1, Math.ceil(this._lines.length * 0.1)));
+            this.logLabel.string = this._lines.join('\n');
+            this.logLabel.updateRenderData(true);
+        }
 
         const contentTf = this._contentNode?.getComponent(UITransform);
         if (contentTf) {

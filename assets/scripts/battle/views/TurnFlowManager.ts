@@ -1,4 +1,5 @@
 import { SkillSourceType } from '../../shared/SkillRuntimeContract';
+import { battleCellLabel } from '../shared/BattleDamageSourceLabel';
 
 /**
  * TurnFlowManager.ts — 回合推進與交互流程管理器
@@ -254,7 +255,7 @@ export class TurnFlowManager {
       const unit = c.ctrl.placeGeneralOnBoard(cell.lane, cell.depth);
       if (unit) {
         c.deployRuntime?.showToast('武將出陣！全軍攻擊力加倍！');
-        c.battleLogPanel?.append(`我方武將出陣至 L${cell.lane + 1} D${cell.depth}`);
+        c.battleLogPanel?.append(`我方武將出陣至 ${battleCellLabel(cell.lane, cell.depth)}`);
         this.bridge.refreshBattleViews();
         c.unitRenderer?.playDeploy(unit);
       }
