@@ -13,6 +13,7 @@ import { services } from '../../core/managers/ServiceLoader';
 import { SceneName } from '../../core/config/Constants';
 import { buildTallyCardCatalog } from '../../core/config/TallyCardCatalog';
 import type { EncounterConfig, IBattleEntryParams } from '../../shared/BattleEntryParams';
+import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { QA_MAX_PLAYER_TROOPS, isQaBattleRequested, resolveQaBattle, type QaBattleCatalog } from '../../core/systems/QaBattleEntry';
 
@@ -39,6 +40,11 @@ export interface QaBattleEntryDeps {
     prepareBattleGlobals(): Promise<void>;
     clearStalePreviewKeys(): void;
     useEphemeralStorage(): void;
+    /**
+     * 把我方主將放進臨時名冊並設為出戰主將（qaRoster=1 才呼叫，PROG-2-9391）。
+     * 必須在改用暫時存檔之後呼叫；成功回 null，失敗回原因。
+     */
+    enrollTempRoster(generalId: string): Promise<string | null>;
     switchToBattle(params: IBattleEntryParams): void;
 }
 
@@ -63,6 +69,7 @@ function realDeps(): QaBattleEntryDeps {
         prepareBattleGlobals,
         clearStalePreviewKeys,
         useEphemeralStorage: () => services().useEphemeralStorage(),
+        enrollTempRoster,
         switchToBattle: (params) => services().scene.switchScene(SceneName.Battle, params),
     };
 }
@@ -87,6 +94,13 @@ export async function executeQaBattleEntry(search: string, deps: QaBattleEntryDe
         // 先前本機預覽殘留的 localStorage 會讓戰場落入 capture 模式；這兩個鍵只屬預覽注入，不是玩家存檔
         deps.clearStalePreviewKeys();
         deps.useEphemeralStorage();
+        if (result.tempRoster) {
+            const reason = await deps.enrollTempRoster(result.params.playerGeneralId);
+            if (reason) {
+                UCUFLogger.warn(LogCategory.LIFECYCLE, '[QaBattleEntry] 臨時名冊建立失敗', reason);
+                return { entered: false, errors: [reason] };
+            }
+        }
         await deps.prepareBattleGlobals();
         UCUFLogger.info(LogCategory.LIFECYCLE, '[QaBattleEntry] 直進戰場', result.params);
         deps.switchToBattle(result.params);
@@ -112,6 +126,23 @@ async function loadCatalog(): Promise<QaBattleCatalog> {
         tallyCardByTroop,
         maxPlayerTroops: QA_MAX_PLAYER_TROOPS,
     };
+}
+
+/**
+ * 臨時名冊（PROG-2-9391）：用 generals.json 的原始設定入冊，再設為出戰主將。
+ * 走 session 既有的公開方法，規則與轉蛋入冊相同；此時存檔後端已是記憶體，不會寫進玩家存檔。
+ */
+async function enrollTempRoster(generalId: string): Promise<string | null> {
+    const generals = await services().resource.loadJson<GeneralConfig[]>('data/generals', { tags: ['QaBattleEntry'] });
+    const config = generals.find((general) => general.id === generalId);
+    if (!config) return `qaRoster：generals.json 找不到 ${generalId}`;
+    const session = services().session;
+    session.enrollGenerals([{ ...config }]);
+    if (!await session.setLeadGeneral(generalId)) {
+        const reasons = session.checkDeployable(generalId).reasons.join('、');
+        return `qaRoster：${generalId} 放進臨時名冊後不能出戰${reasons ? `（${reasons}）` : ''}，請換一位我方主將或拿掉 qaRoster`;
+    }
+    return null;
 }
 
 function clearStalePreviewKeys(): void {

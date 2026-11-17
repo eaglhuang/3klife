@@ -34,6 +34,7 @@ import { BattleUIBridge, createBattleSceneContext } from './BattleUIBridge';
 import { TurnFlowManager } from './TurnFlowManager';
 import { setupCameraForBoard, initSceneBackground, addBackgroundSwitchUI, resolveSceneBackgroundId } from './BattleSceneSetup';
 import { resolveAiDifficulty } from '../../core/systems/AiSpCharge';
+import { applyQaGeneralStartHp } from '../../core/systems/QaBattleEntry';
 import { openingAiLogLinesOf } from '../../core/systems/AiEntranceLines';
 import { ensureDeployPanelRuntime, ensureHUD, ensureBattleLogPanel, ensureStrategistHud, ensureGeneralQuickView, ensureBattleScenePanel, ensureBoardRenderer, ensureUnitRenderer } from './BattleUIInitializer';
 
@@ -247,6 +248,8 @@ export class BattleScene extends Component {
         difficulty,
         enemyScale?.difficulty.difficultyBonus ?? 0,
       );
+      // QA 直進入口可指定主將開場生命（PROG-2-9391）；正式入口不帶參數，這行不會動任何東西
+      applyQaGeneralStartHp(battleParams, pg, eg);
       // 夜襲視野（PROG-2-2132）：只看關卡主題；軍事任務觸發的夜襲戰法是我方優勢，不限視野
       this.ctrl.state.visionRadius = stageThemeVisionRadius(encounter?.stageThemeId);
       this.ctrl.tutorialBattle = battleParams.tutorial === true;
