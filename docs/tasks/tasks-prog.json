@@ -8420,6 +8420,52 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9371",
+      "title": "移除 12 個沒人呼叫、戰場播不出來的舊特效定義",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "特效表裡 hit_enemy、crit_hit、skill_zhang_fei 等 12 個舊定義用的是只有貼圖、沒有 prefab 的特效，進不了物件池，戰場播不出來；全專案也沒有任何程式呼叫。留著容易被誤接。總PM 同意清理。",
+      "related": [
+        "PROG-2-9363"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（7960 過）；tests/VfxTableReferences.test.ts 通過 | 變更: vfx-effects.json 刪 12 個舊定義；DEFAULT_VFX_EFFECTS 只留 battle_hit_default；新增守門測試（特效表每一層都要有 prefab、舊鍵不得回來） | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
