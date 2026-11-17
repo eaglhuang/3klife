@@ -231,7 +231,9 @@ export function createDuelFleeOutcomeSuite(): TestSuite {
     suite.test('單挑以外被部隊打到 0：記為力竭被擒（troop），一場一筆（PROG-2-9393）', () => {
         const w = battle(false, 95, 20, 900, 0.99);
         const notices: string[] = [];
-        services().event.on(EVENT_NAMES.BattleSkillNotice, (line: string) => { notices.push(line); });
+        const order: string[] = [];
+        services().event.on(EVENT_NAMES.BattleSkillNotice, (line: string) => { notices.push(line); if (line.includes('力竭被擒')) order.push('captured'); });
+        services().event.on(EVENT_NAMES.BattleEnded, () => { order.push('ended'); });
         const enemy = w.ctrl.state.enemyGeneral!;
         enemy.takeDamage(enemy.currentHp - 1);
         w.ctrl.state.removeUnit(w.theirs.id);
@@ -242,6 +244,7 @@ export function createDuelFleeOutcomeSuite(): TestSuite {
         assert.equals('troop', w.captures[0].cause);
         assert.equals(Faction.Enemy, w.captures[0].capturedFaction);
         assert.isTrue(notices.includes('e力竭被擒'), `notices=${notices.join('|')}`);
+        assert.equals('captured,ended', order.join(','), '「力竭被擒」排在戰鬥結束之前（PROG-2-9395）');
     });
 
     suite.test('試用傭兵當主將：敗逃一定逃得掉，不產生被擒紀錄（PROG-2-9393）', () => {

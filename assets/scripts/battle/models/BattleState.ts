@@ -101,6 +101,10 @@ export class BattleState {
   public readonly generalAscension = new Map<Faction, { generalFame: number; generalRank: number }>();
   /** 戰中升階給的全軍暴擊加成（0.2＝+20%）與全隊移動力加成，以陣營為鍵 */
   public readonly ascensionCritBonus = new Map<Faction, number>();
+  /** 戰中名聲帳本：各陣營這一場從各來源入帳的名聲（戰後寫回存檔時單挑那筆要去重，PROG-2-9395） */
+  public readonly battleFameLedger = new Map<Faction, Record<string, number>>();
+  /** 「擊破敵部隊」名聲一場只算一次：已領過的陣營（使用者 2026-11-17 裁決 52） */
+  public readonly troopDefeatFameAwarded = new Set<Faction>();
   public readonly ascensionMoveBonus = new Map<Faction, number>();
   /** 本場被擒的主將（PROG-2-9393）：陣營 → 紀錄；一個陣營最多一筆 */
   public readonly generalCaptures = new Map<Faction, GeneralCaptureRecord>();
@@ -205,6 +209,8 @@ export class BattleState {
     this.generalCaptures.clear();
     this.generalAscension.clear();
     this.ascensionCritBonus.clear();
+    this.battleFameLedger.clear();
+    this.troopDefeatFameAwarded.clear();
     this.ascensionMoveBonus.clear();
     this.teamAuras.clear();
     this.massDebuffs.clear();
