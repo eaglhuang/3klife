@@ -15,7 +15,7 @@ import { services } from '../../core/managers/ServiceLoader';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UI_EVENTS } from '../core/UIEvents';
-import { emitDeployDragDebug } from './DeployDragDebug';
+import { emitDeployDragDebug, isCardTap } from './DeployDragDebug';
 import { logBattleUIPosition } from './BattleUIDiag';
 
 const { ccclass } = _decorator;
@@ -119,6 +119,8 @@ export class TigerTallyComposite extends CompositePanel {
     private _cardNodes: Node[] = [];
     private _isMounted = false;
     private readonly _cardLoadSeq = [0, 0, 0, 0];
+    /** 各卡的短按判定監聽，重畫卡片時要先拔掉舊的（PROG-2-9390） */
+    private readonly _cardTapHandlers: Array<((ev: EventTouch) => void) | null> = [null, null, null, null];
     private readonly _warnedFallbacks = new Set<string>();
 
     async onLoad(): Promise<void> {
@@ -236,14 +238,23 @@ export class TigerTallyComposite extends CompositePanel {
             const disabledMask = this._templateBinder.getNode(`DisabledMask${slot}`);
             if (disabledMask) { disabledMask.active = data.isDisabled ?? false; }
 
+            // 短按（按下到放開幾乎沒移動）→ 開兵種資訊面板。
+            // 不能靠按鈕的點擊事件：下面為了重綁拖曳會把這張卡的按下監聽整批拔掉，按鈕就收不到點擊了（PROG-2-9390）。
             cardNode.off(Button.EventType.CLICK);
-            cardNode.on(Button.EventType.CLICK, () => {
+            const prevTap = this._cardTapHandlers[i];
+            if (prevTap) cardNode.off(Node.EventType.TOUCH_END, prevTap, this);
+            const onTapEnd = (ev: EventTouch) => {
+                const start = ev.getUIStartLocation();
+                const end = ev.getUILocation();
+                if (!isCardTap(start.x, start.y, end.x, end.y)) return;
                 emitDeployDragDebug('TigerTallyComposite', 'emit-card-selected', {
                     index: i,
                     unitType: data.unitType,
                 });
                 services().event.emit(UI_EVENTS.CardSelected, { index: i, data });
-            }, this);
+            };
+            this._cardTapHandlers[i] = onTapEnd;
+            cardNode.on(Node.EventType.TOUCH_END, onTapEnd, this);
 
             // 長按拖曳 → emit CardDragStart，由 DeployComposite 接收啟動 ghost drag
             cardNode.off(Node.EventType.TOUCH_START);
