@@ -50,6 +50,7 @@ export const SYNC_PATCH_ROOT_KEYS: readonly string[] = [
     'territories',
     'journalEntries',
     'territoryLevel',
+    'cityEconomy',
     'territoryUpgradePending',
     'farewellLetters',
     'loginStreak',

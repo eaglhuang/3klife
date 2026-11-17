@@ -56,8 +56,8 @@ export function actionAt(open: LobbyCategoryId | null, slot: number): LobbyActio
 }
 
 /**
- * 玩家主城。暫定：治理系統尚未存城市人口與民心，先以主城基數推算；
- * 接上治理存檔後改讀真值。
+ * 玩家主城。人口與民心已改讀 GameSession 存檔值（PROG-2-9138）；
+ * cityPopulation／cityMorale 只剩呼叫端沒給實際值時的退路與舊存檔人口補值的算法。
  */
 export const PLAYER_HOME_CITY = {
     name: '新野',
@@ -90,6 +90,9 @@ export interface LobbyCityHubInput {
     readonly cityTroopsCap: number;
     readonly totalSeasonsElapsed: number;
     readonly fame: number;
+    /** 實際人口與民心（GameSession，PROG-2-9138）；沒給時退回暫定推算值 */
+    readonly population?: number;
+    readonly morale?: number;
     readonly territoryCount: number;
     readonly rivals: RivalWorld;
     readonly openCategory: LobbyCategoryId | null;
@@ -165,8 +168,8 @@ export function buildLobbyCityHubView(input: LobbyCityHubInput): LobbyCityHubFlo
         resTroops: `兵 ${num(input.cityTroops)}`,
         cityName: PLAYER_HOME_CITY.name,
         cityRegion: `${PLAYER_HOME_CITY.region}・主城　領地 ${input.territoryCount}`,
-        cityPopulation: `人口 ${populationText(cityPopulation(input.totalSeasonsElapsed))}`,
-        cityMorale: `民心 ${cityMorale(input.fame)}`,
+        cityPopulation: `人口 ${populationText(input.population ?? cityPopulation(input.totalSeasonsElapsed))}`,
+        cityMorale: `民心 ${input.morale ?? cityMorale(input.fame)}`,
         cityGarrison: `守軍 ${num(input.cityTroops)} / ${num(input.cityTroopsCap)}`,
         cityFaction: `陣營　${PLAYER_HOME_CITY.faction}`,
         cityRivals: rivalSummaryText(input.rivals),

@@ -11,6 +11,7 @@ import type { BreedingBirthRecord } from '../systems/BreedingBirthRecord';
 import { normalizeBreedingBirthRecords } from '../systems/BreedingBirthRecordSave';
 import { normalizeTravelCountdown, type TravelCountdown } from '../systems/TravelCountdown';
 import { readCardStarState } from '../systems/TigerTallyStar';
+import { normalizeCityEconomy } from '../systems/CityEconomy';
 import { normalizeDomesticLog, type DomesticSeasonLog } from '../systems/DomesticTasks';
 import { normalizeGovernanceEvent, type ActiveGovernanceEvent } from '../systems/GovernanceEvents';
 import { normalizeRivalWorld, type RivalWorld } from '../systems/RivalNations';
@@ -197,6 +198,8 @@ export interface PlayerSaveSnapshot {
     journalEntries?: JournalEntry[];
     /** 太守府等級（PROG-2-0983）；只在高於 Lv1 時寫入，舊檔沒有時讀回 Lv1；版號不升 */
     territoryLevel?: number;
+    /** 城市人口與民心（PROG-2-9138）；舊檔沒有時民心補 60、人口用舊算法當下值；版號不升 */
+    cityEconomy?: { population: number; morale: number };
     /** 待生效的太守府升級目標等級（PROG-2-0983）；季結後生效，舊檔沒有時沒有待生效升級；版號不升 */
     territoryUpgradePending?: number;
     /** 傭兵告別信收件匣（PROG-2-0985）；舊檔沒有時讀回空陣列；版號不升 */
@@ -687,6 +690,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(typeof snapshot.magistrateUid === 'string' && snapshot.magistrateUid ? { magistrateUid: snapshot.magistrateUid } : {}),
         ...(snapshot.territories !== undefined ? { territories: normalizeKeepTerritories(snapshot.territories) } : {}),
         ...(snapshot.journalEntries !== undefined ? { journalEntries: normalizeJournalEntries(snapshot.journalEntries) } : {}),
+        ...(snapshot.cityEconomy !== undefined ? { cityEconomy: normalizeCityEconomy(snapshot.cityEconomy, 0) } : {}),
         ...(snapshot.territoryLevel !== undefined ? { territoryLevel: normalizeTerritoryLevel(snapshot.territoryLevel) } : {}),
         ...(snapshot.territoryUpgradePending !== undefined && normalizePendingTerritoryLevel(snapshot.territoryUpgradePending) !== undefined
             ? { territoryUpgradePending: normalizePendingTerritoryLevel(snapshot.territoryUpgradePending) }
