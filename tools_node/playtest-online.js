@@ -1079,6 +1079,10 @@ async function main() {
             await requireLobby();
             // 戰鬥返回後可能彈出開場禮包，先婉拒才不擋底欄
             await backToLobbyBar();
+            // 線上回大廳後底欄按鈕要等一會才建好：先等「商城」鈕出現再點，並記下等了多久
+            const dockT0 = Date.now();
+            await waitUntil(() => page.evaluate(() => window.__pt.hasButton('^BtnCatShop$')), 30000, '回大廳 30 秒後底欄「商城」鈕仍未出現');
+            rec.detail.dockReadyMs = Date.now() - dockT0;
             rec.detail.entry = '底欄「商店」→「轉蛋」';
             const hit = await openSub('BtnCatShop', '轉蛋');
             if (!hit) throw new Error('大廳找不到「商店 → 轉蛋」入口');
