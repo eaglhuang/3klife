@@ -9482,6 +9482,53 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9394",
+      "title": "戰中升階接進戰場：單挑獲勝入帳名聲、五階激勵效果、QA 進場名聲參數",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "doc_spec_0309 §4 戰中升階的純邏輯已有但沒接進戰場；使用者要第 1 季就讓玩家看到升階。",
+      "related": [
+        "PROG-2-9393",
+        "PROG-2-9369"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: in-review | 驗證: 型別檢查 0 錯；全套單元測試 8107 過（新增 11 項）；本機預覽實跑（張飛對于禁，qaPlayerFame=90）：單挑獲勝後名聲 90→105、升將階一，戰報出現「加封：張飛晉升「裨將校尉」，士氣高昂」1 次，頁面錯誤 0，紀錄存共用筆記夾 battle-qa-ascension-9394 | 變更: 名聲跨門檻就升階並套用激勵（一 補兵、二 我方士氣拉滿、三 我方移動力 +1 含之後上場、四 敵方士氣 −15、五 我方暴擊 +20%）；敵方主將同樣只套效果；教學戰整場跳過；直進入口加 qaPlayerFame | 阻塞: 無。名聲來源本卡只接單挑獲勝；擊破部隊等來源、寫回存檔、我方定格演出另卡",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
