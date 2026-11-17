@@ -68,6 +68,7 @@ import { selectDuelExchanges } from '../shared/DuelPresentationCore';
 import {
   BATTLE_FLOW_FX,
   playBattleFlowEffectAtBoardCenter,
+  playBattleGeneralSkillEffect,
   playBattleFlowEffectAtCell,
   resolveBattleGeneralSkillEffectKey,
   resolveBattleResultEffectKey,
@@ -853,7 +854,8 @@ export class BattleUIBridge {
     this.appendLog(buildBattleSkillUsedMessage(skillId, data.faction, data.sourceType, data.generalName));
 
     const effectKey = resolveBattleGeneralSkillEffectKey(data.sourceType);
-    playBattleFlowEffectAtBoardCenter(services().effect, this.ctx.boardRenderer, effectKey, 1.35);
+    playBattleGeneralSkillEffect(services().effect, this.ctx.boardRenderer,
+      this.ctx.unitRenderer?.getGeneralSidelineWorldPosition(data.faction) ?? null, effectKey, 1.35);
 
     // SSR／UR 戰法：施放方主將半身立繪閃現（戰法系統 §H-2，PROG-2-1861）
     const flash = tacticFlashOf(skillId, data.faction === Faction.Player ? 'player' : 'enemy');
