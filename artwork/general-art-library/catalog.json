@@ -532,7 +532,7 @@
             "poseLabel": "跨步迴身斜向戟擊",
             "gaze": "direct-to-camera",
             "sourceStanding": "standing/lu_ling_qi__呂玲綺__standing_0002.png",
-            "note": "保持既有紅銀輕甲與戟形武器；長柄筆直、全身與武器完整入框。候選待���，未接入遊戲。"
+            "note": "保持既有紅銀輕甲與戟形武器；長柄筆直、全身與武器完整入框。候選待審，未接入遊戲。"
           }
         ]
       },
@@ -691,6 +691,18 @@
             "poseSelection": "坐姿蓄勢演奏古琴，雙手落弦，完整木架與琴凳",
             "gaze": "略側臉，目光朝鏡頭",
             "qc": "候選版；完整四腳琴架與琴凳可見，透明通道存在；需人工確認背景邊緣光暈與動態表現後採用。"
+          },
+          {
+            "version": "0003",
+            "file": "battle/cai_wenji__蔡文姬__battle_0003.png",
+            "status": "review-pending",
+            "sha256": "48eb25bd73d4c0666a906d4046d4a575ecda777598c11b93bcadcbdea07b2d6b",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "guqin",
+            "sourceStanding": "standing/cai_wenji__蔡文姬__standing_0003.png",
+            "poseSelection": "側身踏步低勢，雙手掃弦施展音攻",
+            "gaze": "目光看向鏡頭",
+            "qc": "候選版；琴與完整琴架、人物手足均在畫面內；移除外圍光暈後確認透明邊界留白；待使用者審核。"
           }
         ]
       },
