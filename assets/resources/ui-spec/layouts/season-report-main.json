@@ -139,6 +139,14 @@
                     "text": ""
                   },
                   {
+                    "type": "label",
+                    "name": "HallMissionLabel",
+                    "width": "100%",
+                    "height": 200,
+                    "styleSlot": "season-report.text.secondary",
+                    "text": ""
+                  },
+                  {
                     "type": "panel",
                     "name": "Row0",
                     "width": "100%",

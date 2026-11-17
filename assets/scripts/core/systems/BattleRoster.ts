@@ -101,7 +101,9 @@ export type DeployBlockReason =
     | 'retired-mentor'
     | 'not-graduated'
     | 'low-vitality'
-    | 'in-nurture';
+    | 'in-nurture'
+    /** 正在出大廳任務（PROG-2-9130）：任務結算前不能出征 */
+    | 'on-hall-mission';
 
 export interface DeployCheck {
     eligible: boolean;
@@ -111,6 +113,8 @@ export interface DeployCheck {
 export interface DeployOptions {
     /** 正在培育中的子嗣 id（培育期間不能出戰） */
     nurturingIds?: readonly string[];
+    /** 正在出大廳任務的武將 id（PROG-2-9130） */
+    busyIds?: readonly string[];
 }
 
 // ── 資格 ───────────────────────────────────────────────────────────────────
@@ -137,6 +141,7 @@ export function checkDeployable(general: GeneralConfig, options: DeployOptions =
     if (isUngraduatedOffspring(g)) reasons.push('not-graduated');
     if (vitalityOf(g) < BATTLE_MIN_VITALITY) reasons.push('low-vitality');
     if (options.nurturingIds?.includes(g.id)) reasons.push('in-nurture');
+    if (options.busyIds?.includes(g.id)) reasons.push('on-hall-mission');
     return { eligible: reasons.length === 0, reasons };
 }
 

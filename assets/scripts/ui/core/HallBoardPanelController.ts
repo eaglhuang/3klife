@@ -43,6 +43,8 @@ export interface HallBoardPanelDeps {
     refreshSpots: () => HallSpotRow[];
     /** 點位顯示名稱：武將 id → 顯示名（找不到時顯示 id） */
     displayName: (generalId: string) => string;
+    /** 已接取任務的狀態文字（例如「進行中，還有 2 季・張飛」）；沒提供或回傳空字串時顯示「已接取」 */
+    statusText?: (taskId: string) => string;
 }
 
 const BOARD_TITLE: Readonly<Record<HallBoardKey, string>> = Object.freeze({
@@ -170,7 +172,7 @@ export class HallBoardPanelController {
             actives[`hallRow${i}`] = row !== undefined;
             texts[`hallRow${i}Title`] = row?.title ?? '';
             texts[`hallRow${i}Meta`] = row ? `${row.difficultyText} · ${row.requiredRankText} · ${row.rewardText}` : '';
-            texts[`hallRow${i}Status`] = row?.accepted ? '已接取' : '';
+            texts[`hallRow${i}Status`] = row?.accepted ? (this._deps.statusText?.(row.taskId) || '已接取') : '';
             texts[`btnHallRow${i}Label`] = row?.accepted ? '已接取' : '接取';
             // 有任務就能點：沒主將、已接取時點了會跳出原因，不再停用成毫無反應（PROG-2-9123）
             enabled[`btnHallRow${i}`] = row !== undefined;

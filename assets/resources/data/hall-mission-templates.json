@@ -1,0 +1,388 @@
+{
+  "Version": 1,
+  "Templates": [
+    {
+      "Template_ID": "MIL_EASY_01",
+      "Wall": "MILITARY",
+      "Difficulty": "EASY",
+      "Task_Title": "清剿山道流寇",
+      "Task_Brief": "城外山道有流寇劫掠商旅，速去剿滅。",
+      "Task_Detail": "近日城東山道常有商旅被劫，鄉老聯名來告。流寇不過數十人，仗著地勢熟悉出沒無常，只要派一員得力武將率兵守住兩端隘口，便可一舉擒獲。",
+      "Key_Stat": "str",
+      "Enemy_Hint": "流寇約五十人，多為逃兵與流民，無像樣的甲冑，夜間才會下山。"
+    },
+    {
+      "Template_ID": "MIL_EASY_02",
+      "Wall": "MILITARY",
+      "Difficulty": "EASY",
+      "Task_Title": "巡查烽燧",
+      "Task_Brief": "邊境烽燧久未修整，需派人巡查並加派哨兵。",
+      "Task_Detail": "邊境三座烽燧年久失修，守卒懈怠，若敵騎來襲恐怕無法及時示警。請武將前往巡查，整飭軍紀、補足狼煙柴薪，並重新編排輪值。",
+      "Key_Stat": "lea",
+      "Enemy_Hint": "暫無敵蹤，唯有零星游騎在邊界窺探，應是來探虛實。"
+    },
+    {
+      "Template_ID": "MIL_EASY_03",
+      "Wall": "MILITARY",
+      "Difficulty": "EASY",
+      "Task_Title": "護送軍糧車隊",
+      "Task_Brief": "一批軍糧要運往前線營地，沿途須有人護衛。",
+      "Task_Detail": "前線營地存糧見底，糧車隊今夜就要出城。沿途雖是官道，卻有小股盜匪覬覦糧車，須有勇將壓陣，確保一粒米也不少地送到。",
+      "Key_Stat": "str",
+      "Enemy_Hint": "官道上有一夥盜匪盯上車隊，人數不多，但熟悉岔路與渡口。"
+    },
+    {
+      "Template_ID": "MIL_NORMAL_01",
+      "Wall": "MILITARY",
+      "Difficulty": "NORMAL",
+      "Task_Title": "夜襲敵軍前哨",
+      "Task_Brief": "趁夜色摸進敵軍前哨營，燒其糧草。",
+      "Task_Detail": "敵軍前哨營紮在一處小丘之後，夜間守備鬆懈。若能挑選精銳悄悄潛入、縱火焚糧，不僅挫其銳氣，也能為接下來的戰事爭取先機。",
+      "Key_Stat": "int",
+      "Enemy_Hint": "前哨營約三百人，夜間僅留少數哨兵，營中糧倉靠近東側柵欄。",
+      "Scene_Gambit": "night-raid"
+    },
+    {
+      "Template_ID": "MIL_NORMAL_02",
+      "Wall": "MILITARY",
+      "Difficulty": "NORMAL",
+      "Task_Title": "驅逐越境游騎",
+      "Task_Brief": "敵方游騎屢次越境騷擾村落，需設法驅離。",
+      "Task_Detail": "這幾日敵方輕騎成群越過界河，搶糧擄牲口，村民已不敢外出耕作。需有一員猛將率騎兵迎擊，打疼對方，讓他們不敢再來。",
+      "Key_Stat": "str",
+      "Enemy_Hint": "游騎共約兩百，來去如風，慣於避開正面交鋒，專挑落單的村落下手。"
+    },
+    {
+      "Template_ID": "MIL_NORMAL_03",
+      "Wall": "MILITARY",
+      "Difficulty": "NORMAL",
+      "Task_Title": "固守北面隘口",
+      "Task_Brief": "敵軍有意試探北面隘口，須有名將坐鎮。",
+      "Task_Detail": "北面隘口地勢險要，是通往城下的咽喉。探馬回報敵軍正在集結，不日將來試探。須有善於布陣的武將前往督守，修築柵欄、安排弓弩，穩穩頂住第一波攻勢。",
+      "Key_Stat": "lea",
+      "Enemy_Hint": "敵軍先鋒約四百人，攜帶雲梯與盾車，預計三日內抵達隘口。"
+    },
+    {
+      "Template_ID": "MIL_ELITE_01",
+      "Wall": "MILITARY",
+      "Difficulty": "ELITE",
+      "Task_Title": "伏擊敵軍輜重",
+      "Task_Brief": "敵軍輜重隊將經山谷，可設伏截擊。",
+      "Task_Detail": "斥候查得敵軍輜重隊三日後將穿過青石谷，護衛不過一營。谷中林木茂密，正宜設伏。若能一擊得手，敵軍前線便將斷糧，不戰自亂。",
+      "Key_Stat": "int",
+      "Enemy_Hint": "輜重隊約八百人，護衛一營，領軍的是個謹慎的老將，會先派探馬清路。",
+      "Scene_Gambit": "ambush-attack"
+    },
+    {
+      "Template_ID": "MIL_ELITE_02",
+      "Wall": "MILITARY",
+      "Difficulty": "ELITE",
+      "Task_Title": "突圍解救被困友軍",
+      "Task_Brief": "一支友軍被圍在孤城，須殺出血路接應。",
+      "Task_Detail": "友軍一部被敵人圍在孤城已逾十日，城中存糧將盡。須有勇冠三軍之將率精兵強行突破外圍，與城中守軍裡應外合，把人完整帶回來。",
+      "Key_Stat": "str",
+      "Enemy_Hint": "圍城敵軍約一千五百人，外圍多是新募之兵，真正的精銳都壓在南門。"
+    },
+    {
+      "Template_ID": "MIL_ADV_01",
+      "Wall": "MILITARY",
+      "Difficulty": "ADVANCED",
+      "Task_Title": "強攻敵軍關隘",
+      "Task_Brief": "奪下敵軍關隘，打通進軍要道。",
+      "Task_Detail": "此關是敵境門戶，兩側絕壁、正面築有三重壁壘。須統御得力的大將調度攻城器械與步騎，輪番強攻，務求在敵援軍到達之前拿下關隘。",
+      "Key_Stat": "lea",
+      "Enemy_Hint": "關上守軍三千，備有滾木礌石與強弩，守將是久經沙場的宿將。",
+      "Scene_Gambit": "siege"
+    },
+    {
+      "Template_ID": "MIL_ADV_02",
+      "Wall": "MILITARY",
+      "Difficulty": "ADVANCED",
+      "Task_Title": "火燒連營",
+      "Task_Brief": "敵軍紮營連綿，正是火攻良機。",
+      "Task_Detail": "敵軍為避暑氣，將營寨沿林木連綿紮下，營間以木柵相連。若風向合宜，一把火便能燒得他首尾難顧。需智謀之士看準風向，把握時機。",
+      "Key_Stat": "int",
+      "Enemy_Hint": "連營共七座，駐軍近四千，各營以木柵相連，營門外堆有大量柴草。",
+      "Scene_Gambit": "fire-attack"
+    },
+    {
+      "Template_ID": "MIL_HELL_01",
+      "Wall": "MILITARY",
+      "Difficulty": "HELL",
+      "Task_Title": "水淹敵軍大營",
+      "Task_Brief": "趁秋汛決堤，水淹屯於低地的敵軍大營。",
+      "Task_Detail": "秋汛將至，敵軍大營竟屯在河谷低地。若能事先築壩蓄水、在敵人猝不及防之際決堤放水，便可不費一兵一卒而重創大軍。此計成敗全在天時與謀算。",
+      "Key_Stat": "int",
+      "Enemy_Hint": "敵軍號稱三萬，主帥輕敵，營中諸將多半不通水性，只要水勢一起便會大亂。",
+      "Scene_Gambit": "flood-attack"
+    },
+    {
+      "Template_ID": "MIL_HELL_02",
+      "Wall": "MILITARY",
+      "Difficulty": "HELL",
+      "Task_Title": "單騎闖陣斬將",
+      "Task_Brief": "於萬軍之中直取敵將首級，一戰定勝負。",
+      "Task_Detail": "兩軍對峙已久，士氣膠著。敵方主將仗著重兵，終日不肯出戰。若有絕世猛將單騎衝陣、直取其首，便能一舉扭轉戰局，讓三軍士氣大振。",
+      "Key_Stat": "str",
+      "Enemy_Hint": "敵將身邊有八名親衛死士，皆是以一當十的好手，陣前布有三層長槍陣。"
+    },
+    {
+      "Template_ID": "DOM_EASY_01",
+      "Wall": "DOMESTIC",
+      "Difficulty": "EASY",
+      "Task_Title": "開倉賑濟貧民",
+      "Task_Brief": "城中貧民缺糧，開倉施粥以安民心。",
+      "Task_Detail": "入冬以來，城南貧民斷炊者日增。請官員出面登記戶口、開倉施粥，並安排人手維持秩序，避免有人冒領或趁亂鬧事。",
+      "Key_Stat": "cha"
+    },
+    {
+      "Template_ID": "DOM_EASY_02",
+      "Wall": "DOMESTIC",
+      "Difficulty": "EASY",
+      "Task_Title": "修繕城牆",
+      "Task_Brief": "雨後城牆多處坍塌，需徵工修補。",
+      "Task_Detail": "連日大雨沖垮了西城牆數丈，若不及時修補，守城全無屏障。請有條理的官員統籌徵工，調度磚石，務必在下一場雨前完工。",
+      "Key_Stat": "pol"
+    },
+    {
+      "Template_ID": "DOM_EASY_03",
+      "Wall": "DOMESTIC",
+      "Difficulty": "EASY",
+      "Task_Title": "勸課農桑",
+      "Task_Brief": "春耕在即，需下鄉督促農戶播種。",
+      "Task_Detail": "春耕不等人，不少農戶缺少種子與耕牛，田地荒著。請官員下鄉巡視，借貸種子、調配耕牛，鼓勵農戶及時播種，秋天才有好收成。",
+      "Key_Stat": "pol"
+    },
+    {
+      "Template_ID": "DOM_NORMAL_01",
+      "Wall": "DOMESTIC",
+      "Difficulty": "NORMAL",
+      "Task_Title": "疏浚水渠",
+      "Task_Brief": "灌溉水渠淤塞，田地缺水，須徵夫疏通。",
+      "Task_Detail": "城北灌溉水渠淤泥堆積，下游數百畝農田已經缺水。須測量水勢、規劃清淤路線，並在不誤農時的前提下徵調民夫，限期疏通。",
+      "Key_Stat": "pol"
+    },
+    {
+      "Template_ID": "DOM_NORMAL_02",
+      "Wall": "DOMESTIC",
+      "Difficulty": "NORMAL",
+      "Task_Title": "整頓集市",
+      "Task_Brief": "市集秩序混亂，奸商短斤缺兩，需加以整頓。",
+      "Task_Detail": "近來集市上奸商橫行，度量衡被私自改動，百姓怨聲載道。請能言善道的官員會同商會頒布新規、設立公秤，並當眾懲處幾個為首的奸商以儆效尤。",
+      "Key_Stat": "cha"
+    },
+    {
+      "Template_ID": "DOM_NORMAL_03",
+      "Wall": "DOMESTIC",
+      "Difficulty": "NORMAL",
+      "Task_Title": "清查戶籍田冊",
+      "Task_Brief": "戶籍田冊混亂，須逐戶核對以便徵稅。",
+      "Task_Detail": "多年戰亂，戶籍與田冊早已與實際不符，有人隱匿田畝、有人憑空多報。須聰慧細心之人逐鄉核對，造出一份可信的新冊，作為日後徵糧徵役的依據。",
+      "Key_Stat": "int"
+    },
+    {
+      "Template_ID": "DOM_ELITE_01",
+      "Wall": "DOMESTIC",
+      "Difficulty": "ELITE",
+      "Task_Title": "興辦屯田",
+      "Task_Brief": "招募士卒與流民開墾荒地，自給軍糧。",
+      "Task_Detail": "城西有大片荒地可墾。若能招募士卒與流民，分給耕牛農具，按軍法編組屯田，三年之後便可自給自足，不必再仰賴遠方運糧。",
+      "Key_Stat": "pol"
+    },
+    {
+      "Template_ID": "DOM_ELITE_02",
+      "Wall": "DOMESTIC",
+      "Difficulty": "ELITE",
+      "Task_Title": "招撫流民",
+      "Task_Brief": "大批流民湧入境內，須安置並收為編戶。",
+      "Task_Detail": "北方戰火不斷，成百上千的流民拖家帶口湧入境內，若處置失當恐生民變。請以仁德之名出面安撫，劃地安置、發放口糧，讓他們願意在此落戶。",
+      "Key_Stat": "cha"
+    },
+    {
+      "Template_ID": "DOM_ADV_01",
+      "Wall": "DOMESTIC",
+      "Difficulty": "ADVANCED",
+      "Task_Title": "鑄造新錢",
+      "Task_Brief": "錢幣短缺市面蕭條，須重鑄足值錢幣。",
+      "Task_Detail": "舊錢被私鑄敗壞，商賈拒收，市面幾乎停擺。須精通算術的能臣主持開爐，核定銅料配比，頒行足值新錢，並嚴辦私鑄者以重建信用。",
+      "Key_Stat": "int"
+    },
+    {
+      "Template_ID": "DOM_ADV_02",
+      "Wall": "DOMESTIC",
+      "Difficulty": "ADVANCED",
+      "Task_Title": "籌措大軍糧餉",
+      "Task_Brief": "大軍將出，須在短期內徵集足夠的糧餉。",
+      "Task_Detail": "主公有意興兵，三軍糧餉須在兩月內備齊。請老練的官員統籌各郡徵調，既要足額，又不能竭澤而漁讓百姓逃亡，其中分寸最考驗為政手腕。",
+      "Key_Stat": "pol"
+    },
+    {
+      "Template_ID": "DOM_HELL_01",
+      "Wall": "DOMESTIC",
+      "Difficulty": "HELL",
+      "Task_Title": "撲滅大疫",
+      "Task_Brief": "瘟疫蔓延數郡，須設法隔離防治，安定人心。",
+      "Task_Detail": "一場大疫自災區蔓延，已有數郡閉門自守。須聰明果決之人主持，延請名醫、隔離病區、焚燒穢物，同時嚴防謠言與搶糧之亂，方能在疫情擴大之前控制局面。",
+      "Key_Stat": "int"
+    },
+    {
+      "Template_ID": "DOM_HELL_02",
+      "Wall": "DOMESTIC",
+      "Difficulty": "HELL",
+      "Task_Title": "折服地方豪強",
+      "Task_Brief": "豪強坐擁私兵田莊，不聽號令，須恩威並施。",
+      "Task_Detail": "本地豪強坐擁千頃良田與數千部曲，連官府的徵調也敢抗命。強攻必生大亂，不如親赴田莊曉以利害，既讓他們看見好處，也讓他們明白朝廷並非軟弱可欺。",
+      "Key_Stat": "cha"
+    },
+    {
+      "Template_ID": "EXP_EASY_01",
+      "Wall": "EXPEDITION",
+      "Difficulty": "EASY",
+      "Task_Title": "打探商路行情",
+      "Task_Brief": "走訪鄰郡商路，打聽糧價與關卡虛實。",
+      "Task_Detail": "天下沙盤上，商路是消息與財貨的血脈。請善於交際的武將扮作商旅走一趟鄰郡，記下沿途關卡、物價與各路諸侯的動向，帶回來作為日後出兵的參考。",
+      "Key_Stat": "cha",
+      "Enemy_Hint": "沿途關卡守軍不多，但有地方豪強私設關卡，專收買路錢。"
+    },
+    {
+      "Template_ID": "EXP_EASY_02",
+      "Wall": "EXPEDITION",
+      "Difficulty": "EASY",
+      "Task_Title": "勘察行軍地形",
+      "Task_Brief": "勘查通往鄰郡的山路，繪製行軍輿圖。",
+      "Task_Detail": "我軍對通往鄰郡的幾條山路所知甚少。請武將帶少量斥候前往勘察，標明水源、隘口與可紮營之處，繪成輿圖，日後大軍行進才不致迷路斷糧。",
+      "Key_Stat": "lea",
+      "Enemy_Hint": "山中偶有猛獸與零星山民，並無大股敵軍，但天氣多變，須防迷路。"
+    },
+    {
+      "Template_ID": "EXP_EASY_03",
+      "Wall": "EXPEDITION",
+      "Difficulty": "EASY",
+      "Task_Title": "護送使者出境",
+      "Task_Brief": "護送使者前往鄰近勢力遞交書信。",
+      "Task_Detail": "主公有親筆書信要送往鄰近勢力，內容事關結盟。使者文弱，須一位穩重的武將隨行護衛，並在對方朝堂上為我方說幾句好話，免得使者受了冷落。",
+      "Key_Stat": "cha",
+      "Enemy_Hint": "路上並不太平，聽說有盜匪專劫外交使節，也有人暗中不願兩家結盟。"
+    },
+    {
+      "Template_ID": "EXP_NORMAL_01",
+      "Wall": "EXPEDITION",
+      "Difficulty": "NORMAL",
+      "Task_Title": "招降山寨",
+      "Task_Brief": "山寨聚眾數百，若能招降便可添一支人馬。",
+      "Task_Detail": "鄰郡山寨聚眾數百，寨主雖名為賊，卻頗講義氣。若能親赴山寨好言勸降，許以官職，既除一害又添一軍，勝過強攻十倍。談不攏時，也須有本事全身而退。",
+      "Key_Stat": "cha",
+      "Enemy_Hint": "山寨依山而建，寨牆堅固，寨主脾氣暴躁，手下有幾員頗為驍勇的頭目。"
+    },
+    {
+      "Template_ID": "EXP_NORMAL_02",
+      "Wall": "EXPEDITION",
+      "Difficulty": "NORMAL",
+      "Task_Title": "輸送前線物資",
+      "Task_Brief": "將一批軍械運往沙盤前線的據點。",
+      "Task_Detail": "前線據點急需補充弓箭與甲冑，這批軍械須穿越敵我交錯的地帶。請統兵之將挑選穩妥的路線，分批運送，遇到敵軍巡邏時寧可繞路也不可硬拼。",
+      "Key_Stat": "lea",
+      "Enemy_Hint": "沿途有敵軍巡邏隊往來，約兩三百人，輜重一旦被劫便難以追回。"
+    },
+    {
+      "Template_ID": "EXP_NORMAL_03",
+      "Wall": "EXPEDITION",
+      "Difficulty": "NORMAL",
+      "Task_Title": "尋訪隱居高士",
+      "Task_Brief": "聽聞深山有高士隱居，前往拜訪。",
+      "Task_Detail": "傳聞深山之中隱居著一位通曉兵法天文的高士，連幾位諸侯都請不動。請博學的武將攜帶薄禮親自登門，以誠相見，哪怕只是求得一兩句指點，也大有裨益。",
+      "Key_Stat": "int",
+      "Enemy_Hint": "山路險峻，並無敵軍，但隱士性情古怪，慣於以難題試探來客。"
+    },
+    {
+      "Template_ID": "EXP_ELITE_01",
+      "Wall": "EXPEDITION",
+      "Difficulty": "ELITE",
+      "Task_Title": "遠征南蠻部落",
+      "Task_Brief": "深入南方蠻地，震懾不服的部落。",
+      "Task_Detail": "南方蠻族部落屢次襲擾邊郡。須勇猛之將率軍深入蠻地，穿過毒瘴與密林，擊潰其主力，再留下善待降者的名聲，讓各部落知道歸附比對抗划算。",
+      "Key_Stat": "str",
+      "Enemy_Hint": "蠻兵悍勇，擅長以藤甲與象兵衝陣，林中遍布毒瘴與陷坑。"
+    },
+    {
+      "Template_ID": "EXP_ELITE_02",
+      "Wall": "EXPEDITION",
+      "Difficulty": "ELITE",
+      "Task_Title": "說服鄰郡結盟",
+      "Task_Brief": "遊說鄰郡太守出兵相助，共抗強敵。",
+      "Task_Detail": "強敵壓境，單憑我軍難以抵擋。鄰郡太守態度曖昧，兩邊都在觀望。請有口才與威望的武將前往遊說，既要打動他的心，也要讓他看見結盟之利。",
+      "Key_Stat": "cha",
+      "Enemy_Hint": "鄰郡朝中有親敵派從中作梗，太守身邊的謀士一心想把我方使者拒之門外。"
+    },
+    {
+      "Template_ID": "EXP_ADV_01",
+      "Wall": "EXPEDITION",
+      "Difficulty": "ADVANCED",
+      "Task_Title": "威懾西北羌氐",
+      "Task_Brief": "率騎兵出塞，震懾蠢蠢欲動的羌氐部族。",
+      "Task_Detail": "西北羌氐部族勾結外敵，頻頻襲擾關隘。須統兵老練的大將率騎兵出塞，以威壓為主、以招撫為輔，打幾場漂亮的仗，讓各部明白誰才是這片草原真正的主人。",
+      "Key_Stat": "lea",
+      "Enemy_Hint": "羌氐騎兵合計近三千，來去如風，擅長誘敵深入再兩面夾擊。"
+    },
+    {
+      "Template_ID": "EXP_ADV_02",
+      "Wall": "EXPEDITION",
+      "Difficulty": "ADVANCED",
+      "Task_Title": "突襲敵後糧道",
+      "Task_Brief": "繞到敵軍後方，切斷其糧道。",
+      "Task_Detail": "敵軍主力正在前線與我軍對峙，糧草全靠一條蜿蜒的山間糧道輸送。若有悍將率輕騎繞道奇襲，焚其糧倉、斷其補給，敵軍不出十日必然潰退。",
+      "Key_Stat": "str",
+      "Enemy_Hint": "糧道沿線設有五處糧站，各駐兩三百人，敵軍已有防備，會不時派兵巡道。"
+    },
+    {
+      "Template_ID": "EXP_HELL_01",
+      "Wall": "EXPEDITION",
+      "Difficulty": "HELL",
+      "Task_Title": "傾國北伐中原",
+      "Task_Brief": "統領大軍北上，與中原強權決一死戰。",
+      "Task_Detail": "天下大勢，勝負在此一舉。須最出色的統帥率領大軍北上，穿越敵方層層防線，與中原強權主力會戰。此戰若勝，天下形勢將為之改寫；若敗，也要為日後留下一線生機。",
+      "Key_Stat": "lea",
+      "Enemy_Hint": "敵軍主力逾五萬，沿河布防，各城守將皆是百戰之將，並有堅城與連弩作後盾。"
+    },
+    {
+      "Template_ID": "EXP_HELL_02",
+      "Wall": "EXPEDITION",
+      "Difficulty": "HELL",
+      "Task_Title": "出使東吳離間盟約",
+      "Task_Brief": "只身入東吳朝堂，拆散敵方的同盟。",
+      "Task_Detail": "敵軍與東吳結盟，聲勢大盛。須有雄辯機敏之士只身入吳，在朝堂之上陳說利害、反覆離間，讓吳主對盟友起疑，最終撤兵觀望，這是真正的刀尖上的口舌之戰。",
+      "Key_Stat": "int",
+      "Enemy_Hint": "吳主身邊的謀臣個個精明，且對方使者也在朝堂，隨時會當面反駁。"
+    },
+    {
+      "Template_ID": "MIL_EASY_04",
+      "Wall": "MILITARY",
+      "Difficulty": "EASY",
+      "Task_Title": "護送輜重糧車",
+      "Task_Brief": "一批糧車要運往前線營寨，沿途需人押送。",
+      "Task_Detail": "前線營寨的糧草將盡，城中備好了十餘輛糧車，沿途雖有舊官道可走，但偶有潰兵出沒。請派一員武將帶兵隨行押運，務必在糧盡之前把車隊送到。",
+      "Key_Stat": "lea",
+      "Enemy_Hint": "沿途只有零星潰兵，人數不多，見到整齊隊伍多半不敢靠近。"
+    },
+    {
+      "Template_ID": "DOM_EASY_04",
+      "Wall": "DOMESTIC",
+      "Difficulty": "EASY",
+      "Task_Title": "修繕城西水渠",
+      "Task_Brief": "城西水渠年久失修，春灌在即，需有人督工。",
+      "Task_Detail": "城西的灌溉水渠有數處坍塌，眼看春耕就要用水。工匠與民夫都已召齊，只缺一位肯盯著工期、能調度人手的武將，替百姓把這件事辦妥。",
+      "Key_Stat": "pol",
+      "Enemy_Hint": ""
+    },
+    {
+      "Template_ID": "EXP_EASY_04",
+      "Wall": "EXPEDITION",
+      "Difficulty": "EASY",
+      "Task_Title": "清掃邊境哨站",
+      "Task_Brief": "邊境一座荒廢哨站被賊人佔住，需派兵驅離。",
+      "Task_Detail": "邊境上有座荒廢多年的哨站，近日被一夥賊人佔住，往來商隊都繞路而行。派一支小隊前去驅離，並順便把哨站重新插上我軍旗幟。",
+      "Key_Stat": "str",
+      "Enemy_Hint": "賊人約三十餘名，裝備簡陋，據哨站高處放箭，但缺乏補給。"
+    }
+  ]
+}

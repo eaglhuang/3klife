@@ -119,6 +119,7 @@ import { normalizePendingSceneGambit, type PendingSceneGambit } from '../systems
 import { isDefaultSeasonPassState, normalizeSeasonPassState, type SeasonPassState } from '../systems/SeasonPass';
 import { normalizeSalaryLedger, type SalaryLedger } from '../systems/GeneralSalary';
 import { normalizeHallIntel, normalizeHallWaitSeasons } from '../systems/HallMissionActions';
+import { normalizeHallMissionState, type HallMissionState } from '../systems/HallMissionData';
 
 export const PLAYER_SAVE_KEY = 'player.save';
 /** 備份槽的 key 後綴（DS-14）：主檔為 `<key>`，上一份有效存檔為 `<key>.bak` */
@@ -266,6 +267,8 @@ export interface PlayerSaveSnapshot {
     hallIntel?: Record<string, number>;
     /** 大廳任務按「等待」的季別（PROG-2-9128）：任務 id → totalSeasonsElapsed；舊檔沒有時讀回空物件 */
     hallWaitSeasons?: Record<string, number>;
+    /** 大廳任務完整循環（PROG-2-9130 / doc_spec_1178 §10）：三面牆任務、進行中任務、委任紀錄與亂數種子；舊檔沒有時由 GameSession 立即產生 */
+    hallMissions?: HallMissionState;
     /** 武將 id → 虎符忠誠度狀態（TRP-09）；後加的選填欄位，舊檔讀回補空物件 */
     tallyLoyalty?: Record<string, TallyLoyaltyState>;
     /** 虎符 uid → 持有者（null 為君主）（TRP-08）；後加的選填欄位，舊檔讀回補空物件 */
@@ -722,6 +725,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.hallAssignLog !== undefined ? { hallAssignLog: normalizeHallAssignLog(snapshot.hallAssignLog) } : {}),
         ...(snapshot.hallIntel !== undefined ? { hallIntel: normalizeHallIntel(snapshot.hallIntel) } : {}),
         ...(snapshot.hallWaitSeasons !== undefined ? { hallWaitSeasons: normalizeHallWaitSeasons(snapshot.hallWaitSeasons) } : {}),
+        ...(normalizeHallMissionState(snapshot.hallMissions) ? { hallMissions: normalizeHallMissionState(snapshot.hallMissions)! } : {}),
         ...(snapshot.inventoryRecords !== undefined ? { inventoryRecords: normalizeInventoryRecords(snapshot.inventoryRecords) } : {}),
         // 編制預設（PROG-2-0791）：#538 漏掉這一欄，存檔時會被丟掉
         ...(snapshot.sortiePresets !== undefined ? { sortiePresets: normalizeSortiePresets(snapshot.sortiePresets) } : {}),

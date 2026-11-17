@@ -307,6 +307,7 @@
         "type": "panel",
         "name": "SubMenu",
         "id": "subMenu",
+        "active": false,
         "widget": {
           "bottom": 156,
           "hCenter": true

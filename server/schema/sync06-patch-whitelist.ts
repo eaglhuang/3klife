@@ -85,6 +85,7 @@ export const SYNC_PATCH_ROOT_KEYS: readonly string[] = [
     'hallAssignLog',
     'hallIntel',
     'hallWaitSeasons',
+    'hallMissions',
     'tallyLoyalty',
     'tallyHoldings',
     'tallyCards',

@@ -12,6 +12,9 @@ import type { QuarterlyBattleReportRow } from './RetireReviewCopy';
 /** 彈窗最多列出的武將數（與 layouts/season-report-main.json 的列數一致） */
 export const SEASON_REPORT_PANEL_ROWS = 6;
 
+/** 大廳任務區塊的文字節點路徑 */
+export const SEASON_REPORT_HALL_LABEL_PATH = 'DialogCard/ScrollView/ScrollContent/HallMissionLabel';
+
 /** 空列占位文字，與排行榜一致 */
 const EMPTY_ROW_TEXT = '—';
 
@@ -38,13 +41,16 @@ export function buildSeasonReportPanelRows(
 export function buildSeasonReportPanelTexts(
     seasonLabel: string,
     reports: readonly QuarterlyBattleReportRow[],
+    hallMissionLines: readonly string[] = [],
 ): Record<string, string> {
     const rows = buildSeasonReportPanelRows(reports);
     const hidden = Math.max(0, reports.length - rows.length);
     const texts: Record<string, string> = {
         'DialogCard/HeaderBar/TitleLabel': '季度戰報',
         'DialogCard/HeaderBar/SeasonLabel': seasonLabel,
-        'DialogCard/ScrollView/ScrollContent/EmptyHintLabel': reports.length === 0 ? '本季沒有可回報的武將' : '',
+        'DialogCard/ScrollView/ScrollContent/EmptyHintLabel': reports.length === 0 && hallMissionLines.length === 0 ? '本季沒有可回報的武將' : '',
+        // 大廳任務區塊（doc_spec_1178 §9 步驟 4）：沒有任務結算時為空字串，由畫面層隱藏
+        [SEASON_REPORT_HALL_LABEL_PATH]: hallMissionLines.length > 0 ? ['大廳任務', ...hallMissionLines].join('\n') : '',
         'DialogCard/FooterBar/HintLabel': hidden > 0
             ? `另有 ${hidden} 位武將未列出 ・ ${BOND_THRESHOLD_HINT}`
             : BOND_THRESHOLD_HINT,
