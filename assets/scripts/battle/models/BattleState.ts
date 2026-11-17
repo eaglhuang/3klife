@@ -8,6 +8,7 @@ import { GeneralUnit } from "../../core/models/GeneralUnit";
 import { TroopUnit } from "../../core/models/TroopUnit";
 import type { FormationZone } from "../shared/FormationZone";
 import type { SelfBurstWindow } from "../shared/SelfBurstWindow";
+import type { DuelVictoryBuff } from '../shared/DuelVictoryBuff';
 import type { TeamAura } from "../shared/TeamAura";
 import type { EnemyMassDebuff } from "../shared/EnemyMassDebuff";
 import type { UnitDot } from "../shared/UnitDot";
@@ -91,6 +92,8 @@ export class BattleState {
   public readonly formationZones = new Map<string, FormationZone>();
   /** 奧義自身爆發窗口（SYS-SKILL-ULT-0001）：以施放者陣營為鍵，整支軍隊共用（PM 暫定） */
   public readonly selfBursts = new Map<Faction, SelfBurstWindow>();
+  /** 單挑勝方的全軍暴擊加成（doc_spec_0314 §4.1，PROG-2-9369）：以勝方陣營為鍵 */
+  public readonly duelVictoryBuffs = new Map<Faction, DuelVictoryBuff>();
   /** 奧義全隊增益 aura（SYS-SKILL-ULT-0002）：以施放者陣營為鍵，中途加入單位自動吃到 */
   public readonly teamAuras = new Map<Faction, TeamAura>();
   /** 奧義敵方全體減益（SYS-SKILL-ULT-0004）：以被減益陣營為鍵 */
@@ -187,6 +190,7 @@ export class BattleState {
     this.unitDots.clear();
     this.formationZones.clear();
     this.selfBursts.clear();
+    this.duelVictoryBuffs.clear();
     this.teamAuras.clear();
     this.massDebuffs.clear();
     this.damageLinks.clear();
@@ -370,6 +374,15 @@ export class BattleState {
   public setTeamAura(faction: Faction, aura: TeamAura | null): void {
     if (aura) this.teamAuras.set(faction, aura);
     else this.teamAuras.delete(faction);
+  }
+
+  public getDuelVictoryBuff(faction: Faction): DuelVictoryBuff | null {
+    return this.duelVictoryBuffs.get(faction) ?? null;
+  }
+
+  public setDuelVictoryBuff(faction: Faction, buff: DuelVictoryBuff | null): void {
+    if (buff) this.duelVictoryBuffs.set(faction, buff);
+    else this.duelVictoryBuffs.delete(faction);
   }
 
   public getSelfBurst(faction: Faction): SelfBurstWindow | null {

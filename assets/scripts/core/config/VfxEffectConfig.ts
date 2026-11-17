@@ -57,78 +57,16 @@ export interface VfxEffectTable {
 
 export const CURRENT_VFX_EFFECT_TABLE_VERSION = 2;
 
+/**
+ * 內建備援：特效表缺欄位、或版本比客戶端新而讀不懂時，用這裡的值補上。
+ * 只放戰場現行、有 prefab 的效果。舊的 12 個通用與武將技能定義（hit_enemy、skill_zhang_fei…）
+ * 用的是只有貼圖、沒有 prefab 的特效，戰場上播不出來也沒有人呼叫，已於 PROG-2-9371 移除；
+ * 這張表會併進正式特效表，留著等於刪不掉。
+ */
 export const DEFAULT_VFX_EFFECTS: Record<string, VfxEffectDef> = {
-    hit_enemy: {
-        blockId: 'impact_shock',
-        audio: 'hurt',
-        notify: { type: 'floatText', textKey: '⚔', color: '#FF4444' },
-        lifetime: 1.5,
-    },
-    hit_miss: {
-        blockId: 'impact_sparkle',
-        audio: 'feijian',
-        notify: { type: 'floatText', textKey: 'POPUP_MISS', color: '#AAAAAA' },
-        lifetime: 1.5,
-    },
-    crit_hit: {
-        blockId: 'fire_burst',
-        audio: 'boom',
-        notify: { type: 'floatText', textKey: 'POPUP_CRIT', color: '#FF8800' },
-        lifetime: 2.0,
-    },
-    buff_gain_atk: {
-        blockId: 'ring_addatk',
-        audio: 'buff',
-        notify: { type: 'floatText', textKey: '攻擊力提升！', color: '#FF6B35' },
-        lifetime: 2.5,
-    },
-    buff_gain_def: {
-        blockId: 'ring_addlife',
-        audio: 'heal',
-        notify: { type: 'floatText', textKey: '防禦力提升！', color: '#55AAFF' },
-        lifetime: 2.5,
-    },
-    unit_death: {
-        blockId: 'impact_ring',
-        audio: 'boom',
-        notify: { type: 'floatText', textKey: '戰敗！', color: '#FF2222' },
-        lifetime: 2.0,
-    },
-    heal: {
-        blockId: 'glow_soft',
-        audio: 'heal',
-        notify: { type: 'floatText', textKey: '回復！', color: '#00FF88' },
-        lifetime: 2.0,
-    },
-    stun_apply: {
-        blockId: 'lightning_purple',
-        audio: 'thunder',
-        notify: { type: 'floatText', textKey: '暈眩！', color: '#CCAAFF' },
-        lifetime: 2.0,
-    },
-    skill_zhang_fei: {
-        blockId: 'fire_burst',
-        audio: 'fireball',
-        notify: { type: 'floatText', textKey: '虎嘯！', color: '#FF6600' },
-        lifetime: 2.5,
-    },
-    skill_guan_yu: {
-        blockId: 'impact_shock',
-        audio: 'feijian',
-        notify: { type: 'floatText', textKey: '青龍偃月！', color: '#00AAFF' },
-        lifetime: 2.5,
-    },
-    skill_lu_bu: {
-        blockId: 'fire_ringwave',
-        audio: 'boom',
-        notify: { type: 'floatText', textKey: '天下無雙！', color: '#FF2200' },
-        lifetime: 3.0,
-    },
-    skill_cao_cao: {
-        blockId: 'ring_addatk',
-        audio: 'buff',
-        notify: { type: 'floatText', textKey: '奇謀佈陣！', color: '#FFDD00' },
-        lifetime: 3.0,
+    battle_hit_default: {
+        blockId: 'p3d_common_light',
+        lifetime: 0.7,
     },
 };
 

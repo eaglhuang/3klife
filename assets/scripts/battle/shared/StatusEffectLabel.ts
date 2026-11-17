@@ -15,6 +15,7 @@ export const STATUS_EFFECT_LABEL: Readonly<Record<StatusEffect, string>> = {
   [StatusEffect.Invincible]: '無敵',
   [StatusEffect.Haste]: '疾行',
   [StatusEffect.Fortified]: '堅盾',
+  [StatusEffect.NoShoot]: '封射',
 };
 
 /** 單位頭頂飄字；未知狀態回空字串（不飄） */

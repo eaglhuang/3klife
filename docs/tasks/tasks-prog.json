@@ -8187,6 +8187,285 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9365",
+      "title": "主將技能光效改打在施放技能的主將身上",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者裁決：主將放技能時光效要出現在施放的主將身上，原本打在棋盤中央那版直接換掉、不留開關。",
+      "related": [
+        "PROG-2-9361",
+        "PROG-2-9367"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（7834 過）；線上版注入同一邏輯實打一場，奧義與戰法各一次，光效位置記錄為我方主將站位，截圖可見光效在張飛身上 | 變更: UnitRenderer 提供主將站位世界座標；BattleFlowVfx 新增 playBattleGeneralSkillEffect；BattleUIBridge 技能演出改用它 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9364",
+      "title": "弓兵飛箭放大並放慢，戰場上看得清楚",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "戰場上弓兵的箭太小太快，幾乎看不到。",
+      "related": [
+        "PROG-2-9361",
+        "PROG-2-9127"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過；用直進戰場入口（雙方弓兵）線上實打修改前、後各一場，兩場都有射箭並截圖，修改後的箭明顯較大 | 變更: 飛箭 64x16 改 96x24、飛行 0.25 秒改 0.35 秒，數值移到 ATTACK_ARROW_SHOT 設定 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9368",
+      "title": "兵種動態相剋接進戰鬥結算，教學戰關閉",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 2026-11-17 裁決：兵種動態相剋接上，教學戰先關閉。純邏輯模組 TroopCounterTactics 早已寫好但沒有任何呼叫端。",
+      "related": [
+        "PROG-2-1905"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（7838 過）；無頭模擬三種配兵各 40 場，開關前後勝率 85%→85%、95%→100%、80%→73%，平均多約 1 回合 | 變更: BattleCombatResolver 接上拒馬槍陣、縱深突襲、高地射程；新增封射狀態；GAME_CONFIG.troopCounterTacticsEnabled 總開關，教學戰不啟用 | 阻塞: 林地疾襲、蠻王狂嘯需要南蠻兵種，未接；線上實打待發版後補",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9369",
+      "title": "單挑殘血敗逃與勝方士氣暴擊獎勵",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 2026-11-17 裁決：單挑戰果照規格全部加；一般戰「打到殘血就逃」；教學戰「只給勝方獎勵」。原本單挑只有打到一方倒下，沒有任何勝負效果。",
+      "related": [
+        "PROG-2-9335",
+        "PROG-2-9368"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（7958 過）；新增 tests/DuelFleeOutcome.test.ts 8 項 | 變更: 一般戰主將生命掉到兩成以下敗逃（生命歸 1、全軍兵力減半），一擊打到 0 才算斬將；勝方全軍士氣拉滿、暴擊 +15% 兩回合；教學戰只給勝方獎勵 | 阻塞: 名聲 +15、虎符卡、遺書在戰場內沒有落點，只發出 DuelOutcomeApplied 事件；線上實打待發版後補",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9370",
+      "title": "單挑規格書改成現況：拒絕懲罰整場有效、殘血敗逃",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "缺口清單 G04：規格寫攻防減半持續 2 回合，程式是攻擊與生命減半且整場有效。使用者 2026-11-17 裁決維持程式現況，改規格。",
+      "related": [
+        "PROG-2-9369"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 純文件修改，逐條對照 BattleGeneralDuelFlow.applyDuelPenalty 與 PROG-2-9369 的行為 | 變更: doc_spec_0314 §3 拒絕懲罰改為攻擊與生命減半、整場有效；§4 寫明不限回合、一般戰兩成敗逃、教學戰五成保護；單挑 AI 數值規格書 §2.3 同步 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9371",
+      "title": "移除 12 個沒人呼叫、戰場播不出來的舊特效定義",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "特效表裡 hit_enemy、crit_hit、skill_zhang_fei 等 12 個舊定義用的是只有貼圖、沒有 prefab 的特效，進不了物件池，戰場播不出來；全專案也沒有任何程式呼叫。留著容易被誤接。總PM 同意清理。",
+      "related": [
+        "PROG-2-9363"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（7960 過）；tests/VfxTableReferences.test.ts 通過 | 變更: vfx-effects.json 刪 12 個舊定義；DEFAULT_VFX_EFFECTS 只留 battle_hit_default；新增守門測試（特效表每一層都要有 prefab、舊鍵不得回來） | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

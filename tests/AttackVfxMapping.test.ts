@@ -46,3 +46,15 @@ for (const blockId of attackBlockIds) {
   }
 }
 console.log('AttackVfxMapping prefab visibility ok');
+
+// PROG-2-9364：箭矢大小與飛行時間放在設定資料，不可寫死在演出流程裡；也不可調回看不見的大小。
+import { ATTACK_ARROW_SHOT } from '../assets/scripts/battle/shared/AttackVfxMapping';
+{
+  const view = readFileSync(join(__dirname, '../assets/scripts/battle/views/ArrowShotView.ts'), 'utf8');
+  assert.ok(!/new Size\(\s*\d/.test(view), '箭矢大小不可寫死在 ArrowShotView');
+  assert.ok(!/FLIGHT_SEC\s*=\s*[\d.]/.test(view), '飛行時間不可寫死在 ArrowShotView');
+  assert.ok(/ATTACK_ARROW_SHOT\.flightSec/.test(view) && /ATTACK_ARROW_SHOT\.width/.test(view), '箭矢演出要讀設定');
+  assert.ok(ATTACK_ARROW_SHOT.width >= 80 && ATTACK_ARROW_SHOT.height >= 20, '箭矢太小在戰場上看不到');
+  assert.ok(ATTACK_ARROW_SHOT.flightSec >= 0.3 && ATTACK_ARROW_SHOT.flightSec <= 0.6, '飛行時間太短看不到、太長會拖沓');
+  console.log('AttackVfxMapping arrow config ok');
+}

@@ -475,7 +475,7 @@ export function createBattleBasicDamageSuite(): TestSuite {
     });
 
     // (f) 連續 3 回合我方一隊對敵方一隊
-    suite.test('(f) 連續 3 回合：我方騎兵+後面步兵 vs 敵方弓兵（60 血）；逐回合血量表、先死者、格子清空、後排前進', () => {
+    suite.test('(f) 連續 3 回合：我方騎兵+後面步兵 vs 敵方弓兵（60 血，縱深突襲）；逐回合血量表、先死者、格子清空、後排前進', () => {
         const { ctrl } = newController();
         const cav = makeTroop(TroopType.Cavalry, Faction.Player, 2, 3);
         const inf = makeTroop(TroopType.Infantry, Faction.Player, 2, 2);
@@ -491,33 +491,29 @@ export function createBattleBasicDamageSuite(): TestSuite {
         };
         snap('開局');
 
-        // 第 1 回合：騎兵(移動2) 走到 d4 貼住弓兵 d5；我方先打 40−15=25 → 弓 35；敵弓還手 30−20=10 → 騎 90
+        // 一般戰鬥啟用兵種動態相剋（doc_spec_0309 §3，PROG-2-9368）：騎兵打弓兵＝縱深突襲，傷害 ×1.35 再必暴 ×1.5，弓兵下回合不能射擊
+        // 第 1 回合：騎兵(移動2) 走到 d4 貼住弓兵 d5；我方先打 floor(floor(25×1.35)×1.5)=49 → 弓 11；弓兵被封射不能還手 → 騎 100
         playFullTurn(ctrl);
         snap('T1');
         assert.equals(4, cav.depth, 'T1 騎兵前進到貼敵');
-        assert.equals(35, arc.currentHp, 'T1 弓 60−25');
-        assert.equals(90, cav.currentHp, 'T1 騎 100−10');
+        assert.equals(11, arc.currentHp, 'T1 弓 60−49（縱深突襲）');
+        assert.equals(100, cav.currentHp, 'T1 弓兵被封射，騎兵不扣血');
         assert.equals(3, inf.depth, 'T1 步兵跟進 1 格（被騎兵擋在後面）');
-        // 第 2 回合：弓 35−25=10；騎 90−10=80
-        playFullTurn(ctrl);
-        snap('T2');
-        assert.equals(10, arc.currentHp, 'T2 弓 35−25');
-        assert.equals(80, cav.currentHp, 'T2 騎 90−10');
-        // 第 3 回合：我方先手 25 ≥ 10 → 弓陣亡，不能還手；騎兵擊殺後前進一格佔掉原敵格
+        // 第 2 回合：我方先手 49 ≥ 11 → 弓陣亡，不能還手；騎兵擊殺後前進一格佔掉原敵格
         const arcCell = { lane: arc.lane, depth: arc.depth };
         playFullTurn(ctrl);
-        snap('T3');
-        assert.isFalse(ctrl.state.units.has(arc.id), 'T3 敵弓陣亡且移出 units');
-        assert.equals(80, cav.currentHp, 'T3 死者不還手，騎兵血量不變');
+        snap('T2');
+        assert.isFalse(ctrl.state.units.has(arc.id), 'T2 敵弓陣亡且移出 units');
+        assert.equals(100, cav.currentHp, 'T2 死者不還手，騎兵血量不變');
         assert.equals(null, ctrl.state.getCell(arcCell.lane, arcCell.depth)?.occupantId === arc.id ? arc.id : null, '陣亡者不再佔格');
         assert.equals(cav.id, ctrl.state.getCell(arcCell.lane, arcCell.depth)?.occupantId ?? null, '擊殺後騎兵前進一格進入死者格');
         assert.equals(null, ctrl.state.getCell(2, 4)?.occupantId ?? null, '騎兵原本的格子已清空');
-        // 清空的格子讓後面的步兵能往前：T4 步兵繼續前進
+        // 清空的格子讓後面的步兵能往前：T3 步兵繼續前進
         const infBefore = inf.depth;
         playFullTurn(ctrl);
-        snap('T4');
+        snap('T3');
         assert.isTrue(inf.depth > infBefore, '死者清空後後排步兵可以前進');
-        printTable('(f) 3 回合對打血量表（先手方我方；T4 為後排前進確認）', rows);
+        printTable('(f) 對打血量表（先手方我方；T3 為後排前進確認）', rows);
     });
 
     // (g) 走到底後打主將、主將歸零後結束

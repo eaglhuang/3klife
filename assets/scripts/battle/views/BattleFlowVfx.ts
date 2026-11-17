@@ -92,3 +92,25 @@ export function playBattleFlowEffectAtBoardCenter(
 
   effectSystem.playBlock(effectKey, center, undefined, duration);
 }
+
+/**
+ * 主將技能光效：打在施放技能的那位主將身上，玩家看得出是誰放的（PROG-2-9365，使用者裁決）。
+ * 以前固定打在棋盤正中央，和施放者沒有關聯。拿不到主將位置時（棋盤還沒建好）退回棋盤中央，光效不漏播。
+ */
+export function playBattleGeneralSkillEffect(
+  effectSystem: BattleFlowEffectSystem,
+  boardRenderer: BattleFlowBoardRenderer | null | undefined,
+  casterPosition: Vec3 | null | undefined,
+  effectKey: string,
+  duration = 1.5,
+): void {
+  if (!casterPosition) {
+    playBattleFlowEffectAtBoardCenter(effectSystem, boardRenderer, effectKey, duration);
+    return;
+  }
+  if (effectSystem.getEffectDef(effectKey)) {
+    effectSystem.playFullEffect(effectKey, casterPosition);
+    return;
+  }
+  effectSystem.playBlock(effectKey, casterPosition, undefined, duration);
+}
