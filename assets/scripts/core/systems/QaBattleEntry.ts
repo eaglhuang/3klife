@@ -48,6 +48,7 @@ export const QA_BATTLE_QUERY = {
     roster: 'qaRoster',
     playerHp: 'qaPlayerHp',
     enemyHp: 'qaEnemyHp',
+    playerFame: 'qaPlayerFame',
 } as const;
 
 /** 我方卡組張數上限；與戰場手牌張數 TALLY_HAND_SIZE 相同（測試鎖定兩者一致，shared 不引用 battle） */
@@ -193,6 +194,8 @@ export function resolveQaBattle(
     // 主將開場生命
     const playerHp = parseStartHp(query, QA_BATTLE_QUERY.playerHp, errors);
     const enemyHp = parseStartHp(query, QA_BATTLE_QUERY.enemyHp, errors);
+    // 我方主將進場名聲（驗證戰中升階）
+    const playerFame = parseFame(query, QA_BATTLE_QUERY.playerFame, errors);
 
     if (errors.length > 0 || !encounter) return { requested: true, ok: false, errors: errors.length > 0 ? errors : ['無法決定遭遇'] };
 
@@ -217,6 +220,7 @@ export function resolveQaBattle(
     if (enemyTroops.length > 0) params.enemyDeployTroops = enemyTroops;
     if (playerHp !== null) params.qaPlayerGeneralHp = playerHp;
     if (enemyHp !== null) params.qaEnemyGeneralHp = enemyHp;
+    if (playerFame !== null) params.qaPlayerGeneralFame = playerFame;
     return { requested: true, ok: true, params, tempRoster };
 }
 
@@ -248,6 +252,23 @@ export function applyQaGeneralStartHp(
 
 function clampStartHp(value: number, maxHp: number): number {
     return Math.max(1, Math.min(maxHp, Math.floor(value)));
+}
+
+/** 進場名聲參數：沒帶回 null；帶了必須是 0 以上的整數 */
+function parseFame(query: URLSearchParams, name: string, errors: string[]): number | null {
+    const raw = optional(query, name);
+    if (raw === null) return null;
+    if (!/^\d{1,6}$/.test(raw)) {
+        errors.push(`${name}=${raw} 不合法，請用 0 以上的整數`);
+        return null;
+    }
+    return Number(raw);
+}
+
+/** 直進入口指定的我方主將進場名聲（PROG-2-9394）；只有 qa 入口帶了參數才回數字，其餘回 null */
+export function qaPlayerStartFame(params: Pick<IBattleEntryParams, 'entrySource' | 'qaPlayerGeneralFame'>): number | null {
+    if (params.entrySource !== 'qa' || typeof params.qaPlayerGeneralFame !== 'number') return null;
+    return Math.max(0, Math.floor(params.qaPlayerGeneralFame));
 }
 
 /** 開場生命參數：沒帶回 null；帶了必須是 1 以上的整數 */

@@ -37,6 +37,14 @@ export function castMorale(unit: MoraleCarrier, bonus: number): void {
   unit.moraleTurns = MORALE_DURATION_TURNS;
 }
 
+/**
+ * 士氣增減（戰中升階「敵全體士氣 −15」，PROG-2-9394）：在目前士氣上加減，夾在正負士氣上限之間，並重新計時。
+ */
+export function shiftMorale(unit: MoraleCarrier, delta: number): void {
+  unit.morale = Math.max(-MORALE_MAX, Math.min(MORALE_MAX, unit.morale + delta));
+  unit.moraleTurns = MORALE_DURATION_TURNS;
+}
+
 /** 單位回合頭遞減；歸零時士氣清為 0。回傳遞減後是否仍有效。 */
 export function advanceMorale(unit: MoraleCarrier): boolean {
   if (unit.moraleTurns <= 0) {

@@ -51,6 +51,8 @@ export interface BattleGeneralDuelFlowContext {
    * 回 0 或沒給＝一般戰鬥，照舊打到一方倒下。
    */
   getDuelHpFloorRatio?: () => number;
+  /** 單挑分出勝負後通知（戰中升階入帳名聲用，PROG-2-9394）；教學戰不呼叫 */
+  onDuelWon?: (winner: Faction) => void;
   /** 這個陣營的主將不可被擒（試用傭兵，戰敗必定安全撤退）；沒給視為可被擒（PROG-2-9393） */
   isCaptureExempt?: (faction: Faction) => boolean;
 }
@@ -508,6 +510,7 @@ export class BattleGeneralDuelFlow {
       killed, fled, tutorial,
     };
     svc.event.emit(EVENT_NAMES.DuelOutcomeApplied, payload);
+    if (!tutorial) this.context.onDuelWon?.(winner);
   }
 
   /** 記下主將被擒並發事件（PROG-2-9393）；同一陣營一場只記一筆，先發生的為準 */
