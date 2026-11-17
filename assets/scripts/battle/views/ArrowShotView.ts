@@ -1,12 +1,11 @@
 // PROG-2-9353：弓兵箭矢——畫面層小 Sprite 池，不動 core 層；proj_arrow 沒有 prefab，無法走 EffectSystem。
 import { assetManager, ImageAsset, Node, Sprite, SpriteFrame, Texture2D, UITransform, Rect, Size } from 'cc';
-import { ATTACK_ARROW_TEXTURE_PATH } from '../shared/AttackVfxMapping';
+import { ATTACK_ARROW_SHOT, ATTACK_ARROW_TEXTURE_PATH } from '../shared/AttackVfxMapping';
 
 interface Shot { node: Node; t: number; fromX: number; fromY: number; toX: number; toY: number; active: boolean }
 
 export class ArrowShotView {
   private static readonly MAX = 6;
-  private static readonly FLIGHT_SEC = 0.25;
   private readonly shots: Shot[] = [];
   private frame: SpriteFrame | null = null;
   /** 載入只試一次：失敗就永遠安靜略過，不刷錯誤。 */
@@ -30,7 +29,7 @@ export class ArrowShotView {
         const sprite = node.addComponent(Sprite);
         sprite.spriteFrame = this.frame;
         sprite.sizeMode = Sprite.SizeMode.CUSTOM;
-        node.getComponent(UITransform)?.setContentSize(new Size(64, 16));
+        node.getComponent(UITransform)?.setContentSize(new Size(ATTACK_ARROW_SHOT.width, ATTACK_ARROW_SHOT.height));
         shot = { node, t: 0, fromX, fromY, toX, toY, active: false };
         this.shots.push(shot);
       }
@@ -45,7 +44,7 @@ export class ArrowShotView {
   public update(dt: number): void {
     for (const s of this.shots) {
       if (!s.active) continue;
-      s.t += dt / ArrowShotView.FLIGHT_SEC;
+      s.t += dt / ATTACK_ARROW_SHOT.flightSec;
       if (s.t >= 1 || !s.node.isValid) { s.active = false; if (s.node.isValid) s.node.active = false; continue; }
       s.node.setPosition(s.fromX + (s.toX - s.fromX) * s.t, s.fromY + (s.toY - s.fromY) * s.t, 0);
     }
