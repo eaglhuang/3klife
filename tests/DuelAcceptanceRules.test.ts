@@ -83,12 +83,13 @@ export function createDuelAcceptanceRulesSuite(): TestSuite {
     suite.test('接受後不套用懲罰：防守方攻擊與最大 HP 維持原值', () => {
         const ctrl = duelBattle(0, 3, 0.1, 1);
         const enemyTroop = [...ctrl.state.units.values()].find(unit => unit.faction === Faction.Enemy)!;
-        const attackBefore = enemyTroop.getEffectiveAttack();
+        // 看懲罰寫入的欄位（attackBonus），不看含士氣的有效攻擊：單挑勝方會全軍士氣拉滿（PROG-2-9369）
+        const attackBefore = enemyTroop.attackBonus;
         const maxHpBefore = enemyTroop.getEffectiveMaxHp();
 
         ctrl.resolveDuelChallenge(Faction.Player, true);
 
-        assert.equals(attackBefore, enemyTroop.getEffectiveAttack());
+        assert.equals(attackBefore, enemyTroop.attackBonus);
         assert.equals(maxHpBefore, enemyTroop.getEffectiveMaxHp());
     });
 

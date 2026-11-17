@@ -433,11 +433,14 @@ export class TurnFlowManager {
         c.battleLogPanel?.append('單挑成立！敵方武將於單挑中獲勝！');
       } else if (c.ctrl?.getLastDuelWinner?.() === Faction.Player) {
         // 教學戰單挑不打死：贏了重創敵主將、戰鬥繼續（PROG-2-9335）
-        c.deployRuntime?.showToast('單挑獲勝！敵主將身負重傷，乘勝追擊！', 3, { color: new Color(90, 190, 255, 255) });
-        c.battleLogPanel?.append('單挑獲勝！敵主將身負重傷，戰鬥繼續。');
+        // 一般戰鬥：敵主將落荒而逃、敵軍兵力減半；教學戰只給我方獎勵（PROG-2-9369）
+        const fled = !c.ctrl?.tutorialBattle;
+        c.deployRuntime?.showToast(fled ? '單挑獲勝！敵主將落荒而逃，敵軍兵力折半！我軍士氣大振！' : '單挑獲勝！敵主將身負重傷，我軍士氣大振！', 3, { color: new Color(90, 190, 255, 255) });
+        c.battleLogPanel?.append(fled ? '單挑獲勝！敵主將負傷逃走（生命剩 1），敵全軍兵力減半；我方全軍士氣拉滿、暴擊率 +15% 持續 2 回合。' : '單挑獲勝！敵主將身負重傷；我方全軍士氣拉滿、暴擊率 +15% 持續 2 回合。');
       } else if (c.ctrl?.getLastDuelWinner?.() === Faction.Enemy) {
-        c.deployRuntime?.showToast('單挑落敗！我方主將負傷退回，戰鬥繼續！', 3, { color: new Color(255, 110, 110, 255) });
-        c.battleLogPanel?.append('單挑落敗！我方主將負傷，戰鬥繼續。');
+        const fled = !c.ctrl?.tutorialBattle;
+        c.deployRuntime?.showToast(fled ? '單挑落敗！我方主將負傷逃回，我軍兵力折半！' : '單挑落敗！我方主將負傷退回，戰鬥繼續！', 3, { color: new Color(255, 110, 110, 255) });
+        c.battleLogPanel?.append(fled ? '單挑落敗！我方主將負傷逃回（生命剩 1），我方全軍兵力減半；敵方全軍士氣拉滿、暴擊率 +15% 持續 2 回合。' : '單挑落敗！我方主將負傷；敵方全軍士氣拉滿、暴擊率 +15% 持續 2 回合。');
       } else {
         c.deployRuntime?.showToast('單挑成立！雙方武將交鋒！'); c.battleLogPanel?.append('單挑成立！雙方武將正面對決！');
       }

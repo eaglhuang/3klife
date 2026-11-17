@@ -14,6 +14,7 @@ import { tileStateRuleOf } from '../../shared/TileStateRules';
 import { AMBUSH_TRAP_ROOT_TURNS, AMBUSH_TRAP_TILE_NOTE, sceneFireDamageTakenOf } from '../../shared/BattleTacticBehavior';
 import { applyTallyDefection, applyTallyTeamMoraleAura } from '../../shared/TallyPassive';
 import type { StageSalvageGainedEvent } from '../../shared/StageSalvage';
+import { tickDuelVictoryBuff } from '../../shared/DuelVictoryBuff';
 import { addStageSalvage, FIRE_RAID_TILE_NOTE, FLOODGATE_TILE_NOTE, floodgateCaptureGain, hazardDamageTakenOf, luckSalvageMultiplierOf, ROCK_SLIDE_TILE_NOTE, rollFirePlunderGain, rollRockBreakGain, scaleSalvageGain } from '../../shared/StageSalvage';
 
 export interface BattleTileEffectPhaseContext {
@@ -48,6 +49,10 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
     return !!caster && !caster.isDead();
   });
   advanceMoraleOf(context.state.units.values(), context.actingFaction);
+  // 單挑勝方暴擊加成在勝方自己的回合頭倒數（PROG-2-9369）；測試用的精簡 state 沒有時略過
+  if (context.state.getDuelVictoryBuff) {
+    context.state.setDuelVictoryBuff(context.actingFaction, tickDuelVictoryBuff(context.state.getDuelVictoryBuff(context.actingFaction)));
+  }
   // 自身爆發窗口在施放陣營自己的回合倒數（SYS-SKILL-ULT-0001）
   // 測試用的精簡 state 沒有爆發窗口時略過
   if (context.state.getSelfBurst) {
