@@ -11,7 +11,7 @@ import { massDebuffDotDamage, tickEnemyMassDebuff } from '../../shared/EnemyMass
 import { advanceMoraleOf } from '../../shared/Morale';
 import { advanceUnitDot, dotTickAmount } from '../../shared/UnitDot';
 import { tileStateRuleOf } from '../../shared/TileStateRules';
-import { AMBUSH_TRAP_ROOT_TURNS, AMBUSH_TRAP_TILE_NOTE, sceneFireDamageTakenOf } from '../../shared/BattleTacticBehavior';
+import { AMBUSH_TRAP_ROOT_TURNS, AMBUSH_TRAP_TILE_NOTE, ROCK_DEBRIS_TILE_NOTE, sceneFireDamageTakenOf } from '../../shared/BattleTacticBehavior';
 import { applyTallyDefection, applyTallyTeamMoraleAura } from '../../shared/TallyPassive';
 import type { StageSalvageGainedEvent } from '../../shared/StageSalvage';
 import { tickDuelVictoryBuff } from '../../shared/DuelVictoryBuff';
@@ -204,7 +204,7 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
  */
 /**
  * 擊破落石（峽谷落石戰，PROG-2-1583 暫定）：我方回合開始，我方部隊同列前後相鄰的落石格被擊破，
- * 移除封鎖並把掉落寫入 Stage_Salvage。
+ * 移除封鎖並把掉落寫入 Stage_Salvage；相鄰的碎石格則只清開、沒有掉落（PROG-2-9376）。
  */
 function breakRockSlideTiles(context: BattleTileEffectPhaseContext, svc: ReturnType<typeof services>): void {
   if (context.actingFaction !== Faction.Player) return;
@@ -213,7 +213,11 @@ function breakRockSlideTiles(context: BattleTileEffectPhaseContext, svc: ReturnT
     if (unit.faction !== Faction.Player || unit.isDead()) continue;
     for (const depth of [unit.depth - 1, unit.depth + 1]) {
       const effect = context.state.getTileEffect(unit.lane, depth);
-      if (effect?.state !== 'hazard-rock' || effect.notes !== ROCK_SLIDE_TILE_NOTE) continue;
+      if (effect?.state !== 'hazard-rock') continue;
+      // 碎石先清開、不給掉落（PROG-2-9376）：碎石鋪在落石前一格且一踩就被推回，
+      // 不清掉的話部隊永遠站不到落石旁，中間三路整場破不了石、雙方打不到
+      if (effect.notes === ROCK_DEBRIS_TILE_NOTE) { context.state.removeTileEffect(unit.lane, depth); continue; }
+      if (effect.notes !== ROCK_SLIDE_TILE_NOTE) continue;
       context.state.removeTileEffect(unit.lane, depth);
       context.state.recoveredRockSlides += 1;
       gainSalvage(context, svc, { lane: unit.lane, depth, source: 'rock-slide', gain: scaleSalvageGain(rollRockBreakGain(random), playerLuckMultiplier(context)) });
