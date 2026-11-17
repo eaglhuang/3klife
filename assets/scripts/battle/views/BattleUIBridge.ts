@@ -11,6 +11,7 @@
  */
 
 import { tallyLegendDeploySpec } from '../../core/systems/TallyScripts';
+import { battleDamageSourceLabel } from '../shared/BattleDamageSourceLabel';
 import { formatTallyLine, type TallyTranslate } from '../../core/systems/TallyLineSpec';
 import { aptitudeToastPayload } from '../../core/systems/AptitudeDialogue';
 import { setBattlePaused, setBattleTimeScale } from './BattleTimeScale';
@@ -570,11 +571,9 @@ export class BattleUIBridge {
     this.performance.observeUnitDamaged(data.damage, data.attackerFaction, unit?.faction ?? null);
     if (unit) {
       const side = unit.faction === Faction.Player ? '我方' : '敵方';
-      const suffix = data.damageSource === 'night-raid-opening-strike'
-        ? '（夜襲先制）'
-        : data.damageSource
-          ? `（${data.damageSource}）`
-          : '';
+      // 內部傷害來源代號換成中文說明，不認得的不顯示（PROG-2-9375）
+      const sourceLabel = battleDamageSourceLabel(data.damageSource);
+      const suffix = sourceLabel ? `（${sourceLabel}）` : '';
       const critLabel = data.isCrit ? '《暴擊》' : '';
       this.appendLog(`${side}${unit.name} ${critLabel}受到 ${data.damage} 傷害${suffix}，剩餘 HP ${Math.max(0, data.hp)}`);
       this._enqueueCombatVisual(`unit-damage:${data.unitId}`, async () => {
@@ -853,7 +852,9 @@ export class BattleUIBridge {
     if (!skillId) return;
     this.appendLog(buildBattleSkillUsedMessage(skillId, data.faction, data.sourceType, data.generalName));
 
-    const effectKey = resolveBattleGeneralSkillEffectKey(data.sourceType);
+    const caster = data.faction === Faction.Player ? this.ctx.pg : this.ctx.eg;
+    const effectKey = resolveBattleGeneralSkillEffectKey(data.sourceType, [caster?.templateId, caster?.id],
+      key => !!services().effect.getEffectDef(key));
     playBattleGeneralSkillEffect(services().effect, this.ctx.boardRenderer,
       this.ctx.unitRenderer?.getGeneralSidelineWorldPosition(data.faction) ?? null, effectKey, 1.35);
 
