@@ -9577,6 +9577,62 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9396",
+      "title": "動態子嗣立繪退回同性別親代或預設立繪（修復 GeneralDetailComposite 載入失敗與舊圖殘留）",
+      "owner": "antigravity",
+      "priority": "P1",
+      "status": "done",
+      "type": "bugfix",
+      "phase": "M0",
+      "created": "2026-11-18",
+      "created_by_agent": "antigravity",
+      "started_at": "2026-11-18T00:08:30+08:00",
+      "started_by_agent": "antigravity",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "修復動態結緣子嗣（child_*）於武將詳情頁載入 PortraitImage 失敗（ConsoleError + 空白／殘留舊圖）之缺陷：子嗣優先依性別退回同性別親代或預設名將立繪，並於載入流程加入競態防護與 fallback 鏈。",
+      "related": [
+        "PROG-2-1107"
+      ],
+      "depends": [],
+      "acceptance": [
+        "子嗣武將詳情不噴 PortraitImage spriteFrame 失敗錯誤",
+        "快速切換武將不殘留上一位武將立繪",
+        "單元測試與 gate:standard 全數通過"
+      ],
+      "deliverables": [
+        "GeneralArtPaths.ts",
+        "GeneralDetailOverviewMapper.ts",
+        "GeneralDetailComposite.ts",
+        "GeneralDetailChromePresenter.ts",
+        "GeneralArtPaths.test.ts"
+      ],
+      "notes": "2026-11-18 | 狀態: done | 驗證: GeneralArtPaths.test.ts 新增子嗣立繪退回測試 + npm run gate:standard 12/12 通過 | 變更: GeneralArtPaths 新增 resolveGeneralPortraitResources，動態子嗣依性別退回同性別親代或預設名將立繪；GeneralDetailChromePresenter.loadPortrait 支援候補路徑與 _portraitLoadSeq 競態防護，避免殘留舊立繪與 SpriteFrame 載入失敗",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
