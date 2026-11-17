@@ -17,12 +17,15 @@ import { installAdaptiveResolution } from '../core/AdaptiveResolution';
 import { computeSubMenuCenterX, LobbyHallScreenBinder, type HallActorTapView, type LobbyHallDockId, type LobbyHallPanelId, type LobbyHallWallId } from '../core/LobbyHallScreenBinder';
 import { hallFestivalIdOf, mainLobbyBackdropOf, resolveHallTheme as resolveHallSceneTheme, type HallThemeConfig } from '../../core/systems/HallTheme';
 import { LobbyBackdrop } from '../core/LobbyBackdrop';
-import { sceneGambitNotice, sceneGambitPendingNotice } from '../core/HallSceneGambitText';
+import { sceneGambitNotice } from '../core/HallSceneGambitText';
 import type { HallSeasonFxConfig } from '../../core/systems/HallSeasonFx';
 import type { HallStageDecor } from '../../core/systems/HallStageCrowdPose';
 import type { HallMapEventCatalog } from '../../core/systems/HallMapEventMapper';
 import type { HallMapLayout, HallMapTurnStep } from '../../core/systems/HallMapFocusPlanner';
-import { buildLobbyHallWallView } from '../../core/systems/LobbyHallWallView';
+import { buildLobbyHallWallView, type LobbyHallWallView } from '../../core/systems/LobbyHallWallView';
+import { parseHallMissionBalance, parseHallMissionTemplates } from '../../core/systems/HallMissionData';
+import { findHallMission } from '../../core/systems/HallMissionLoop';
+import { hallMissionDialogState, hallMissionsToHub, hallRowStatusText } from '../core/HallMissionView';
 import { buildLobbyHallAltarView } from '../core/LobbyHallAltarView';
 import { buildHallMapTurnSteps, hasHallMapFocus, type HallMapProvinceSource } from '../../core/systems/HallMapSeasonTurn';
 import type { HallStageLayout } from '../../core/systems/HallStagePlanner';
@@ -134,9 +137,6 @@ import { MarriageProposalPopupController } from '../core/MarriageProposalPopupCo
 import { ultimateUnlockLines } from '../../core/systems/UltimateScriptLines';
 import { rebirthBreakthroughLine } from '../../core/systems/NumericalScriptLines';
 import { HallBoardPanelController, HALL_BOARD_MAX_ROWS } from '../core/HallBoardPanelController';
-import { HALL_BOARD_TYPE_LABEL, hallAssignNoticeOf, hallMissionDialogStateOf } from '../core/HallMissionDialogState';
-import { hallTaskDialogStateOf, planHallMissionAction } from '../core/HallMissionActionRouter';
-import { hallReconCostGrainOf } from '../../core/systems/HallMissionActions';
 import { hallPlayerOf, officerPromotionScriptLines, OFFICER_ERA_KEPT_LINE } from '../../core/systems/OfficerSnapshot';
 import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
 import { officerDisplayOf } from '../../core/systems/OfficerDisplay';
@@ -167,7 +167,6 @@ import { installSageProgressTable } from '../../core/systems/SageFavor';
 import { installSandtableTerritories } from '../../core/systems/SandtableTerritories';
 import { OFFICER_PROMOTION_FREEZE_TIMING, officerPromotionFreezeTitles, officerPromotionNoticeOf, officerPromotionRewardTotal } from '../../core/systems/HallMissionSettlement';
 import { playTitleFreeze } from '../core/TitleFreezeOverlay';
-import { estimateSortiePower } from '../../core/systems/SortiePrediction';
 import type { LobbyHub } from '../../core/systems/LobbyHubSchema';
 import { HALL_EMPTY_THEME_CATALOG, resolveHallTheme, type HallThemeFrame } from '../../core/systems/LobbyThemeResolver';
 import type { HallBoardKey } from '../../core/systems/HallMissionBoard';
@@ -178,7 +177,6 @@ import { BAG_CATEGORY_TABS, BAG_ROW_SLOTS, ItemBagController, type ItemBagGenera
 import { planTerritoryUpgrade } from '../../core/systems/TerritoryUpgrade';
 import { rarityOfTemplate } from '../../core/systems/MercenaryRoster';
 import { mercBondedLine, mercDayThreeLine, mercFarewellLine, mercTrustLine } from '../../core/systems/MercenaryScripts';
-import { EXPEDITION_TRAVEL_TURNS } from '../../core/systems/TravelCountdown';
 import { RED_FACE_SHOW_MAX_ROWS, RedFaceGalleryController, RedFaceShowcaseController, RedFaceShowcaseDeps, toRedFaceTabFlowView } from '../core/RedFaceShowcaseController';
 import { GACHA_NODES, GACHA_POOL_INDEX, GACHA_POOLS, GachaPoolDef, RED_FACE_SECTION_ROW_BUTTON } from '../core/GachaScreenNodes';
 import { LocalGachaApi } from '../../core/gacha/LocalGachaApi';
@@ -782,6 +780,10 @@ export class LobbyScene extends Component {
             () => this._mountSeasonChroniclePopup(),
             () => this._mountDailyReport(),
             () => this._mountLobbyHall(),
+            // 任務牆與詳情窗跟著大廳一起掛（PROG-2-9130）：資料是小 json，不必排在 40 多個背景介面之後，
+            // 否則玩家進大廳時牆上沒有真任務、點了也開不出詳情
+            () => this._mountHallBoard(),
+            async () => { await this._mountLobbyMissionDetailDialogPanel(); services().ui.register(UIID.LobbyMissionDetailDialog, this._createLobbyMissionDetailDialogController()); },
             () => this._mountRedFaceShowcase(),
             ...(openingFirst ? [] : [() => this._mountOpeningPanels()]),
             () => this._mountDaughterRoutePopup(),
@@ -799,7 +801,6 @@ export class LobbyScene extends Component {
             () => this._mountSortieSetup(),
             () => this._mountCharacterDs3Host(),
             async () => { await this._mountEliteTroopCodexPanel(); services().ui.register(UIID.EliteTroopCodex, this._createEliteTroopCodexController()); },
-            async () => { await this._mountLobbyMissionDetailDialogPanel(); services().ui.register(UIID.LobbyMissionDetailDialog, this._createLobbyMissionDetailDialogController()); },
             async () => { await this._mountLobbyLeaderboardPanel(); services().ui.register(UIID.LobbyLeaderboard, this._createLobbyLeaderboardController()); },
             async () => { await this._mountSeasonReportPanel(); services().ui.register(UIID.SeasonReport, this._createSeasonReportController()); },
             async () => { await this._mountSandtableTerritoryPanel(); services().ui.register(UIID.SandtableTerritory, this._createSandtableTerritoryController()); },
@@ -825,7 +826,6 @@ export class LobbyScene extends Component {
             () => this._mountBattleReview(),
             () => this._mountTournament(),
             () => this._mountWishAltar(),
-            () => this._mountHallBoard(),
             () => this._mountExtremeTask(),
             () => this._mountMercenaryPanel(),
             () => this._mountGovernorHall(),
@@ -2553,8 +2553,10 @@ export class LobbyScene extends Component {
         }
         this._lobbyHub = hub;
         this._applyHallThemeFrame(resolveHallTheme(hub.Current_Theme, HALL_EMPTY_THEME_CATALOG));
+        // 真實任務：模板與數值表綁進 GameSession（新局在此產生），牆與詳情都讀 GameSession 的任務（PROG-2-9130）
+        await this._bindHallMissions();
         this._hallBoard = new HallBoardPanelController({
-            hub: () => hub,
+            hub: () => this._hallMissionHub(hub),
             player: () => hallPlayerOf(services().session.officerUnlocks, services().session.intel),
             assignments: () => services().session.hallAssignments,
             leadGeneralId: () => services().session.leadGeneralId,
@@ -3536,123 +3538,167 @@ export class LobbyScene extends Component {
         this._onClickHallDetail(rowIndex);
     }
 
-    private _hallDispatchToast(taskId: string, success: boolean): string {
-        if (!success) return '任務失敗';
-        const pending = services().session.pendingSceneGambit;
-        return pending?.taskId === taskId ? `任務成功\n${sceneGambitPendingNotice(pending.tactic)}` : '任務成功';
+    /** 目前任務牆用的 hub：任務牆換成 GameSession 的真實任務（PROG-2-9130）；還沒就緒時三面牆都是空的，不顯示任何設計稿任務 */
+    private _hallMissionHub(base: LobbyHub): LobbyHub {
+        const state = services().session.hallMissionState;
+        if (state) return hallMissionsToHub(base, state);
+        const empty = { Tasks: [], Last_Refresh_At: '' };
+        return { ...base, Mission_Boards: { Military: empty, Domestic: empty, Expedition: empty } };
     }
 
-    /** 大廳任務派遣：找出目前牆面的任務，交給 GameSession 判定並結算。 */
-    private async _dispatchHallTask(taskId: string, generalId: string): Promise<boolean> {
-        const board = this._hallBoard?.board;
-        const hub = this._lobbyHub;
-        if (!board || !hub) {
+    /** 載入任務模板與數值表並綁定到 GameSession；新局或舊檔會在這裡立即產生一次任務（§3.2-5、§10） */
+    private async _bindHallMissions(): Promise<boolean> {
+        const [rawTemplates, rawBalance] = await Promise.all([
+            this._loadDataJson<unknown>('data/hall-mission-templates'),
+            this._loadDataJson<unknown>('data/hall-mission-balance'),
+        ]);
+        const templates = parseHallMissionTemplates(rawTemplates);
+        const balance = parseHallMissionBalance(rawBalance);
+        if (!templates.ok || !balance.ok) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 大廳任務資料載入或驗證失敗', templates.ok ? balance.issues : templates.issues);
             return false;
         }
-        const task = hub.Mission_Boards[board as keyof typeof hub.Mission_Boards]?.Tasks.find((t) => t.Task_ID === taskId);
-        if (!task) {
-            return false;
+        const gacha = this._localGachaService;
+        const generated = services().session.bindHallMissions(templates.value, balance.value, {
+            gold: () => gacha.getCurrencyAmount('gold'),
+            spend: (amount) => gacha.spendCurrency('gold', amount),
+            grant: (amount) => { gacha.grantCurrency('gold', amount); },
+        });
+        if (generated) {
+            services().session.save().catch((error: unknown) => {
+                UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 大廳任務初次產生後存檔失敗', error);
+            });
         }
-        const session = services().session;
-        const general = session.roster.find((g) => g.id === generalId);
-        const power = general ? estimateSortiePower(general) : 0;
-        const result = await session.dispatchHallTask(task, board, hallPlayerOf(session.officerUnlocks, session.intel), generalId, power);
-        if (!result.ok) {
-            return false;
-        }
-        this._lobbyHall?.reactToDispatch(task.Difficulty);
-        services().event.emit('SHOW_TOAST', { message: this._hallDispatchToast(taskId, result.outcome.success), duration: 2.5 });
         return true;
     }
 
-    /** 任務列「詳情」：開啟任務詳情彈窗（PROG-2-1007）。 */
+    /** 任務牆目前可見資料的目前季（totalSeasonsElapsed） */
+    private _hallSeason(): number {
+        return services().session.gameTime.totalSeasonsElapsed;
+    }
+
+    /** 這次派出已經給過玩家看的失敗提示（避免「接取」鈕再補一則通用提示） */
+    private _hallDispatchToasted = false;
+
+    /**
+     * 派出任務（執行／委任／任務牆接取共用，doc_spec_1178 §7.3、§8）：成功時顯示明確的派出提示，
+     * 失敗時顯示原因並回傳 false。generalId 為 null 表示委任。
+     */
+    private async _dispatchHallMission(missionId: string, generalId: string | null): Promise<boolean> {
+        const session = services().session;
+        const result = await session.dispatchHallMission(missionId, generalId);
+        if (result.ok === false) {
+            this._hallDispatchToasted = true;
+            this._showToast(result.text);
+            return false;
+        }
+        const m = result.mission;
+        const spent = [
+            result.spent.grain > 0 ? `糧草 -${result.spent.grain}` : '',
+            result.spent.troops > 0 ? `兵源 -${result.spent.troops}` : '',
+            result.spent.silver > 0 ? `黃金 -${result.spent.silver}` : '',
+        ].filter((text) => text.length > 0).join('、');
+        services().event.emit('SHOW_TOAST', {
+            message: `已派出${m.delegated ? '（委任）' : ''}${m.generalName}執行「${m.title}」，${m.durationSeasons} 季後回報\n${spent}`,
+            duration: 3,
+        });
+        this._lobbyHall?.reactToDispatch(m.difficulty);
+        this._refreshLobbyHallTopbar();
+        return true;
+    }
+
+    /** 任務牆「接取」：用出戰主將派出（HallBoardPanelController.assign） */
+    private _dispatchHallTask(taskId: string, generalId: string): Promise<boolean> {
+        return this._dispatchHallMission(taskId, generalId);
+    }
+
+    /** 組詳情視窗用的 state（§5、§6）；沒有該任務時回傳 null */
+    private _hallDialogStateFor(missionId: string, selectedGeneralId: string | null): ReturnType<typeof hallMissionDialogState> | null {
+        const session = services().session;
+        const state = session.hallMissionState;
+        const balance = session.hallMissionBalance;
+        const mission = state ? findHallMission(state, missionId) : undefined;
+        if (!mission || !balance) return null;
+        return hallMissionDialogState(mission, {
+            season: this._hallSeason(),
+            stock: session.hallMissionStock(),
+            balance,
+            candidates: session.hallMissionCandidates(missionId),
+            selectedGeneralId,
+        });
+    }
+
+    /** 動作之後把詳情視窗重新套上最新的任務資料（情報度、成功率、按鈕可用與原因） */
+    private _refreshHallDialog(missionId: string, selectedGeneralId: string | null): void {
+        const next = this._hallDialogStateFor(missionId, selectedGeneralId);
+        if (next) this._missionDetailDialogPanel?.applyStatePatch(next);
+    }
+
+    /** 任務列「詳情」：開啟任務詳情視窗，內容全部來自該筆任務（PROG-2-1007、PROG-2-9130）。 */
     private _onClickHallDetail(index: number): void {
-        const board = this._hallBoard;
-        const row = board?.rows()[index];
-        const task = board?.taskAt(index);
-        if (!board || !row || !task) {
+        const task = this._hallBoard?.taskAt(index);
+        if (!task) {
             services().event.emit('SHOW_TOAST', { message: '此格目前沒有任務', duration: 2.5 });
             return;
         }
-        const taskId = task.Task_ID;
+        const session = services().session;
+        const missionId = task.Task_ID;
+        const mission = session.hallMissionState ? findHallMission(session.hallMissionState, missionId) : undefined;
+        const balance = session.hallMissionBalance;
+        if (!mission || !balance) {
+            this._showToast('任務資料整理中，請稍後再試');
+            return;
+        }
+        const eligible = session.hallMissionCandidates(missionId).filter((c) => c.block === null);
+        const lead = session.leadGeneralId;
+        const selected = eligible.find((c) => c.id === lead) ?? eligible[0] ?? null;
+        const state = this._hallDialogStateFor(missionId, selected?.id ?? null);
+        if (!state) return;
         void services().ui.open(UIID.LobbyMissionDetailDialog, {
-            state: { ...hallMissionDialogStateOf(row, HALL_BOARD_TYPE_LABEL[board.board]), ...hallTaskDialogStateOf(task, services().session.hallIntelPercentOf(task)) },
-            availableGenerals: this._buildMissionDetailGeneralOptions(),
-            selectedGeneralId: services().session.leadGeneralId ?? undefined,
-            onActionSelected: (action, snapshot) => this._onHallMissionAction(action, taskId, snapshot),
+            state,
+            availableGenerals: eligible.map((c) => ({ id: c.id, label: c.name, volunteer: c.volunteer })),
+            selectedGeneralId: selected?.id,
+            onGeneralSelected: (option) => { this._refreshHallDialog(missionId, option.id); },
+            onActionSelected: (action, snapshot) => this._onHallMissionAction(action, missionId, snapshot),
         } satisfies LobbyMissionDetailDialogOpenPayload).then((opened) => { if (!opened) this._showNotOpenYet(); });
     }
 
     /**
-     * 詳情彈窗四鈕（PROG-2-9123／9128）：執行＝派遣（同任務牆「接取」）、委任＝AI 選將（PROG-2-1006）、
-     * 再探＝耗糧草把情報度提到 100、等待＝本季先不處理保留到下一季。按下去一定有玩家看得到的結果；
-     * 回傳 false 表示行動沒成功（再探糧不足），給「先再探再執行」流程中止用。
+     * 詳情視窗四鈕（doc_spec_1178 §6）：再探＝扣糧草 50、情報到 100；等待＝期限 +1 季、情報 +25；
+     * 執行＝用所選武將派出；委任＝系統選將派出。結果一律以提示呈現；回傳 false 表示行動沒成功（先再探後執行流程用）。
      */
-    private async _onHallMissionAction(action: LobbyMissionActionKey, taskId: string, snapshot: { selectedGeneralId: string | null; aiDelegateChecked: boolean }): Promise<boolean | void> {
-        const plan = planHallMissionAction(action, {
-            selectedGeneralId: snapshot.selectedGeneralId,
-            aiDelegateChecked: snapshot.aiDelegateChecked,
-            alreadyAccepted: taskId in services().session.hallAssignments,
-        });
-        if (plan.kind === 'not-open') { this._showNotOpenYet(); return; }
-        if (plan.kind === 'notice') { this._showToast(plan.text); return; }
-        if (plan.kind === 'recon') return this._reconHallMission(taskId);
-        if (plan.kind === 'wait') {
-            const waited = await services().session.waitHallTask(taskId);
-            this._showToast(waited.text);
-            void services().ui.closeCurrentUI();
-            return;
-        }
-        if (plan.kind === 'dispatch') {
-            try {
-                const ok = await this._dispatchHallTask(taskId, plan.generalId);
-                if (!ok) this._showToast('無法執行此任務，請確認武將仍在名冊內');
-                else {
-                    if (this._hallBoard?.board === 'Expedition') services().session.startTravel(plan.generalId, EXPEDITION_TRAVEL_TURNS);
-                    void services().ui.closeCurrentUI();
-                }
-            } catch (error) {
-                UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 執行大廳任務失敗', error);
-            } finally {
-                this._refreshHallBoard();
-            }
-            return;
-        }
-        const found = this._lobbyHub?.Mission_Boards
-            ? Object.entries(this._lobbyHub.Mission_Boards).flatMap(([board, data]) => (data?.Tasks ?? []).map((t) => ({ board: board as HallBoardKey, task: t }))).find((entry) => entry.task.Task_ID === taskId)
-            : undefined;
-        if (!found) {
-            services().event.emit('SHOW_TOAST', { message: '此任務已不存在', duration: 2.5 });
-            return;
-        }
-        const { task, board } = found;
+    private async _onHallMissionAction(action: LobbyMissionActionKey, missionId: string, snapshot: { selectedGeneralId: string | null; aiDelegateChecked: boolean }): Promise<boolean | void> {
+        const session = services().session;
+        const mission = session.hallMissionState ? findHallMission(session.hallMissionState, missionId) : undefined;
+        if (!mission) { this._showToast('此任務已不存在'); return false; }
+        if (mission.status === 'ACTIVE') { this._showToast(hallRowStatusText(mission, this._hallSeason())); return false; }
         try {
-            const result = await services().session.autoAssignHallMission(
-                { taskId, Intel_Reveal_Percent: task.Intel_Reveal_Percent, AI_Assign_Enabled: task.AI_Assign_Enabled, Difficulty: task.Difficulty, board },
-                new Date().toISOString(),
-            );
-            services().event.emit('SHOW_TOAST', { message: hallAssignNoticeOf(result), duration: 2.5 });
+            if (action === 're-scout') {
+                const result = await session.reconHallMission(missionId);
+                if (result.ok === false) { this._showToast(result.text); return false; }
+                this._showToast(`再探完成，情報已完整（糧草 -${result.costGrain}）`);
+                this._refreshHallDialog(missionId, snapshot.selectedGeneralId);
+                return true;
+            }
+            if (action === 'wait') {
+                const result = await session.waitHallMission(missionId);
+                if (result.ok === false) { this._showToast(result.text); return false; }
+                this._showToast(`等待一季：期限延長 1 季，情報度 ${result.intel}%`);
+                this._refreshHallDialog(missionId, snapshot.selectedGeneralId);
+                return true;
+            }
+            const delegate = action === 'assign' || snapshot.aiDelegateChecked;
+            const ok = await this._dispatchHallMission(missionId, delegate ? null : snapshot.selectedGeneralId);
+            if (ok) void services().ui.closeCurrentUI();
+            else this._refreshHallDialog(missionId, snapshot.selectedGeneralId);
+            return ok;
         } catch (error) {
-            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 委任大廳任務失敗', error);
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 大廳任務行動失敗', error);
+            this._showToast('任務行動失敗，請稍後再試');
+            return false;
         } finally {
             this._refreshHallBoard();
-        }
-    }
-
-    /** 詳情窗「再探」（PROG-2-9128）：耗糧草、情報度到 100 並存檔；失敗（已滿、糧不足）只提示。 */
-    private async _reconHallMission(taskId: string): Promise<boolean> {
-        const task = Object.values(this._lobbyHub?.Mission_Boards ?? {}).flatMap((data) => data?.Tasks ?? []).find((t) => t.Task_ID === taskId);
-        if (!task) { this._showToast('此任務已不存在'); return false; }
-        try {
-            const plan = await services().session.reconHallTask(task, hallReconCostGrainOf(this._lobbyHub));
-            if (plan.kind !== 'ok') { this._showToast(plan.text); return false; }
-            this._showToast(`再探完成，情報已完整（糧草 -${plan.costGrain}）`);
-            this._missionDetailDialogPanel?.applyStatePatch({ intelRevealPercent: plan.intelAfter, intelFogVisible: false, intelHintLabel: '情報已完整' });
             this._refreshLobbyHallTopbar();
-            return true;
-        } catch (error) {
-            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 再探大廳任務失敗', error);
-            return false;
         }
     }
 
@@ -3661,13 +3707,9 @@ export class LobbyScene extends Component {
             return;
         }
         try {
-            const onExpedition = this._hallBoard.board === 'Expedition';
+            this._hallDispatchToasted = false;
             const ok = await this._hallBoard.accept(index);
-            const leadId = services().session.leadGeneralId;
-            if (ok && onExpedition && leadId) {
-                services().session.startTravel(leadId, EXPEDITION_TRAVEL_TURNS);
-            }
-            if (!ok) {
+            if (!ok && !this._hallDispatchToasted) {
                 services().event.emit('SHOW_TOAST', { message: this._hallBoard.notice ?? '無法接取此任務', duration: 2.5 });
             }
         } catch (error) {
@@ -3823,6 +3865,8 @@ export class LobbyScene extends Component {
             mapLayout,
         });
         host.node.active = false;
+        // 頂欄先用真資料，不讓設計稿的年季文字閃一下（PROG-2-9130）
+        this._refreshLobbyHallTopbar();
         // 換季勢力圖聚焦（UI-2-0151）：大廳開著就播，沒開就留到下次開大廳播一次
         if (mapLayout && mapCatalog && provinceFile?.provinces) {
             const config = { layout: mapLayout, catalog: mapCatalog, provinces: provinceFile.provinces, nationName: (id: string) => nationDef(id)?.name };
@@ -3957,8 +4001,27 @@ export class LobbyScene extends Component {
     private _refreshLobbyHallWalls(): void {
         const board = this._hallBoard;
         if (!board || !this._lobbyHall) return;
-        this._lobbyHall.setWall('wall-left', buildLobbyHallWallView(board.rowsFor('Military'), HALL_BOARD_MAX_ROWS));
-        this._lobbyHall.setWall('wall-right', buildLobbyHallWallView(board.rowsFor('Domestic'), HALL_BOARD_MAX_ROWS));
+        const session = services().session;
+        if (!session.hallMissionsReady) {
+            // 資料沒載到：寧可顯示失敗字樣，也不讓設計稿的假任務出現在牆上
+            for (const id of ['wall-left', 'wall-right'] as const) this._lobbyHall.setWall(id, { countText: '任務資料載入失敗', rows: [] });
+            return;
+        }
+        const state = session.hallMissionState;
+        const season = this._hallSeason();
+        const view = (key: HallBoardKey): LobbyHallWallView => {
+            const wall = buildLobbyHallWallView(board.rowsFor(key), HALL_BOARD_MAX_ROWS);
+            const rows = board.rowsFor(key);
+            return {
+                ...wall,
+                rows: wall.rows.map((row, i) => {
+                    const mission = state && rows[i] ? findHallMission(state, rows[i].taskId) : undefined;
+                    return mission?.status === 'ACTIVE' ? { ...row, meta: hallRowStatusText(mission, season) } : row;
+                }),
+            };
+        };
+        this._lobbyHall.setWall('wall-left', view('Military'));
+        this._lobbyHall.setWall('wall-right', view('Domestic'));
     }
 
     /** 同步幕府大廳頂列的資源數、官職主將與年季晝夜 */
@@ -5128,18 +5191,23 @@ export class LobbyScene extends Component {
         if (this._advancingSeason) return;
         this._advancingSeason = true;
         try {
-            const { advance, agingEvents, quarterlyReports } = await this._advanceSeasonWithSalaries();
+            const { advance, agingEvents, quarterlyReports, hallMissionReport } = await this._advanceSeasonWithSalaries();
             const died = agingEvents.filter((event) => event.type === 'died').length;
             const suffix = died > 0 ? `（${died} 位武將離世）` : '';
             services().event.emit('SHOW_TOAST', {
                 message: `進入${seasonText(advance.current)}${suffix}`,
                 duration: 2,
             });
-            if (quarterlyReports && quarterlyReports.length > 0) {
+            // 大廳任務結算已在換季時入帳：頂欄資源先更新，彈窗一出現數字就是最新的（doc_spec_1178 §9）
+            this._refreshLobbyHallTopbar();
+            this._refreshHallBoard();
+            const hallLines = hallMissionReport?.lines ?? [];
+            if ((quarterlyReports && quarterlyReports.length > 0) || hallLines.length > 0) {
                 // 關閉要走 UIManager，遮罩與堆疊才會一起收（PROG-2-9122）
                 const payload: SeasonReportOpenPayload = {
                     seasonLabel: seasonText(advance.current),
-                    reports: quarterlyReports,
+                    reports: quarterlyReports ?? [],
+                    hallMissionLines: hallLines,
                     onRequestClose: () => { void services().ui.close(UIID.SeasonReport); },
                 };
                 void services().ui.open(UIID.SeasonReport, payload);

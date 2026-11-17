@@ -110,6 +110,8 @@ export interface LobbyMissionDetailDialogContentState {
     aiDelegateChecked: boolean;
     aiDelegateHintLabel: string;
     availableActions?: LobbyMissionActionKey[];
+    /** 停用原因（大廳任務完整循環 §6）：有填的行動一律不可按，點了顯示這段文字（PROG-2-9130） */
+    actionBlockedText?: Partial<Record<LobbyMissionActionKey, string>>;
 }
 
 interface LobbyMissionDetailDialogContentFile {
@@ -579,7 +581,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
                 continue;
             }
 
-            const enabled = states[action].enabled;
+            const enabled = states[action].enabled && !snapshot.actionBlockedText?.[action];
             // 停用只變暗、不關掉點擊：點了要跳出原因，不能毫無反應（PROG-2-9123）
             button.interactable = true;
             const opacity = button.node.getComponent(UIOpacity) ?? button.node.addComponent(UIOpacity);
@@ -846,8 +848,9 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
             selectedGeneralId: snapshot.selectedGeneralId,
             aiDelegateChecked: snapshot.aiDelegateChecked,
         }).states[action];
-        if (!blocked.enabled) {
-            services().event.emit('SHOW_TOAST', { message: DETAIL_ACTION_BLOCKED_TEXT[blocked.reason ?? 'not-offered'], duration: 2 });
+        const customBlock = snapshot.actionBlockedText?.[action];
+        if (!blocked.enabled || customBlock) {
+            services().event.emit('SHOW_TOAST', { message: customBlock ?? DETAIL_ACTION_BLOCKED_TEXT[blocked.reason ?? 'not-offered'], duration: 2 });
             return false;
         }
 

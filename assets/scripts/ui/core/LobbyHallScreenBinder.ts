@@ -120,6 +120,9 @@ function setText(node: Node | null | undefined, text: string): void {
     label.string = text;
 }
 
+/** 任務資料還沒就緒時牆頭計數處顯示的字樣 */
+export const HALL_WALL_LOADING_TEXT = '整理軍情中…';
+
 /** 綁定器自建、緊接在沙盤後面的圖層節點名稱 */
 const LAYER_NAMES: readonly string[] = ['HallStageCrowd', 'HallSeasonFx'];
 
@@ -165,6 +168,8 @@ export class LobbyHallScreenBinder {
         const onPanel = _deps.onPanel;
         if (onPanel) for (const id of LOBBY_HALL_PANEL_IDS) this._bindTap(`lobby-hall-screen.${id}`, () => onPanel(id));
         this._bindWallTargets();
+        // 設計稿牆上寫死的範例任務不可被玩家看到或點到：真任務資料到之前先收成載入狀態（PROG-2-9130）
+        this.setWallsLoading();
         this._bindBubbleChoices();
         if (_deps.mapLayout) this._map = this._createMapPlayer(_deps.mapLayout);
         if (_deps.stage) this._createStage(_deps.stage);
@@ -265,6 +270,11 @@ export class LobbyHallScreenBinder {
                 if (row.pinned) setText(pin, LOBBY_HALL_WALL_PIN_TEXT);
             }
         });
+    }
+
+    /** 任務資料就緒前的牆面：隱藏所有任務列（含設計稿的範例列），計數處顯示載入字樣 */
+    setWallsLoading(): void {
+        for (const id of ['wall-left', 'wall-right'] as const) this.setWall(id, { countText: HALL_WALL_LOADING_TEXT, rows: [] });
     }
 
     /** 派遣任務後呼叫：高難任務讓在場武將集體反應（大廳 §E-5，PROG-2-1740）；其他難度或沒有人群時不動 */
