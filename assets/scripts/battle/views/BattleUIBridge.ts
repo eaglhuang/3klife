@@ -39,6 +39,7 @@ import { applyOpeningWinGuarantee, quickResolveOutcome } from '../runtime/Battle
 import { FIELD_AUTO_BATTLE_JOURNAL } from '../../core/systems/OfflineBattleSnapshot';
 import { services } from '../../core/managers/ServiceLoader';
 import { BattlePerformanceTracker, formatPerformance } from '../../core/systems/BattleRecordStats';
+import type { DuelOutcomeRecord } from '../../core/systems/DuelAftermath';
 import { milestoneAnnouncementLines } from '../../core/systems/BattleMilestoneScripts';
 import { formatSortieSummary, isSortiePoolExhausted, SORTIE_POOL_EXHAUSTED_LINE } from '../../core/systems/SortieDeploy';
 import { powOptionLabels } from '../../core/systems/PrisonerOfWar';
@@ -194,6 +195,8 @@ export class BattleUIBridge {
   private readonly specialActions = new BattleSpecialActionTracker();
   /** 我方主將帶隊的單場表現（擊殺 / 傷害 / 承傷 / 治療），戰後寫進戰績（PROG-2-0072） */
   private readonly performance = new BattlePerformanceTracker(Faction.Player);
+  /** 本場收到的單挑勝負事件，戰後交給 recordBattle 結算名聲與斬將傳承（PROG-2-9132） */
+  private duelOutcomes: DuelOutcomeRecord[] = [];
   private readonly terrainFeedback = new TerrainFeedbackTracker();
   private onBoardPlacement: ((screenX: number, screenY: number) => void) | null = null;
   /** 奧義漫畫分鏡 cut-in（Issue #2139）：一場戰鬥一個，「第二次施放走重播」以單場為界 */
@@ -277,6 +280,7 @@ export class BattleUIBridge {
     this.onBoardPlacement = externalHandlers.onBoardPlacement ?? null;
     this.specialActions.reset();
     this.performance.reset();
+    this.duelOutcomes = [];
     this.ultCutin.resetBattle();
     this.ultCutin.prefetch(this.ctx.pg?.id);
     this.ultCutin.prefetch(this.ctx.eg?.id);
@@ -316,6 +320,7 @@ export class BattleUIBridge {
       svc.event.on(EVENT_NAMES.TileBuffSpawned,         this._onTileBuffSpawned.bind(this)),
       svc.event.on(EVENT_NAMES.TileBuffConsumed,        this._onTileBuffConsumed.bind(this)),
       svc.event.on(EVENT_NAMES.BattleEnded,             this._onBattleEnded.bind(this)),
+      svc.event.on(EVENT_NAMES.DuelOutcomeApplied,      (e: DuelOutcomeRecord) => { this.duelOutcomes.push(e); }),
       svc.event.on(EVENT_NAMES.TallyDeployed,           this._onTallyDeployed.bind(this)),
       svc.event.on(EVENT_NAMES.BattleSkillNotice,       (line: string) => { this.appendLog(line); }),
       svc.event.on(EVENT_NAMES.TroopCounterLine,        (line: string) => { this.appendLog(line); }),
@@ -1060,7 +1065,7 @@ export class BattleUIBridge {
     const vitalityAfterBattle = battleVitality !== undefined ? { [pgId]: battleVitality } : undefined;
     const pgUnit = this.ctx.ctrl?.state.playerGeneral;
     const hpRatioAfterBattle = pgUnit && pgUnit.maxHp > 0 ? { [pgId]: pgUnit.currentHp / pgUnit.maxHp } : undefined;
-    void services().session.recordBattle([pgId], result, { specialActions, sortie, performance: { [pgId]: performance }, stageId, deployedTallyIds, vitalityAfterBattle, hpRatioAfterBattle, stageSalvage: this.ctx.ctrl?.state.stageSalvage, teachingSpirit: this.ctx.teachingSpirit }).then((settlement) => {
+    void services().session.recordBattle([pgId], result, { specialActions, sortie, performance: { [pgId]: performance }, stageId, deployedTallyIds, vitalityAfterBattle, hpRatioAfterBattle, stageSalvage: this.ctx.ctrl?.state.stageSalvage, teachingSpirit: this.ctx.teachingSpirit, duelOutcomes: this.duelOutcomes }).then((settlement) => {
       const entry = settlement.entries[0];
       if (entry) {
         this.appendLog(`${this.ctx.pg?.name ?? pgId} 精力 ${entry.vitalityBefore}→${entry.vitalityAfter}，功勳 +${entry.meritGained}${entry.epGained > 0 ? `，EP +${entry.epGained}` : ''}`);
