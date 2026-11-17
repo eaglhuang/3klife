@@ -35,7 +35,7 @@ export function normalizeFarewellLetters(raw: unknown): FarewellLetter[] {
         if (typeof affection !== 'number' || !Number.isInteger(affection) || affection < 0) continue;
         if (tier !== 'normal' && tier !== 'moving') continue;
         if (typeof body !== 'string' || !Number.isInteger(day) || (day as number) < 0 || typeof read !== 'boolean') continue;
-        inbox = appendFarewellLetter(inbox, { id, uid, generalName, affection, tier: tier as FarewellTier, body, day: day as number, read });
+        inbox = appendFarewellLetter(inbox, { id, uid, generalName, affection, tier: tier as FarewellTier, body, day: day as number, read, ...(item.kind === 'epitaph' ? { kind: 'epitaph' as const } : {}) });
     }
     return inbox;
 }

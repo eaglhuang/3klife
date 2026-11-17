@@ -29,6 +29,8 @@ export interface FarewellLetter {
     body: string;
     day: number;
     read: boolean;
+    /** 信件種類；缺欄位 = 傭兵告別信。epitaph = 武將戰歿遺書（PROG-2-9140，被擒遭斬首） */
+    kind?: 'epitaph';
 }
 
 /** 好感不足時回傳 null（不寫信）。 */
@@ -50,6 +52,24 @@ export function createFarewellLetter(input: { uid: string; generalName: string; 
         body: `主公，短短六日，如夢似幻。願主公前程似錦——${input.generalName} 敬上`,
         day: input.day,
         read: false,
+    };
+}
+
+/**
+ * 戰歿遺書（PROG-2-9140）：我方主將被擒遭斬首時寫進信箱。ID 由武將與季序號組成，同一人同一季只有一封；
+ * uid 放武將 id；好感用不到，固定 0、等級用 moving 只是滿足欄位（kind = epitaph 為準）。
+ */
+export function createEpitaphLetter(input: { generalId: string; generalName: string; season: number; body: string }): FarewellLetter {
+    return {
+        id: `EL-${input.generalId}-${input.season}`,
+        uid: input.generalId,
+        generalName: input.generalName,
+        affection: 0,
+        tier: 'moving',
+        body: input.body,
+        day: input.season,
+        read: false,
+        kind: 'epitaph',
     };
 }
 
