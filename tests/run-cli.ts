@@ -36,7 +36,7 @@ if (typeof window === 'undefined') {
         'ucuf/specVersionDegradation', 'ucuf/validateTaskCardCli',
     ]);
     const discovered: string[] = [];
-    for (const dir of ['', 'ucuf']) {
+    for (const dir of ['', 'ucuf', 'mission']) {
         const abs = path.join(__dirname, dir);
         for (const f of fs.readdirSync(abs).sort()) {
             if (!f.endsWith('.test.ts')) continue;
