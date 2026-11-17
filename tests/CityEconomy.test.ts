@@ -93,8 +93,8 @@ export function createCityEconomySuite(): TestSuite {
         const view = buildGovernorHallView(session.governorSnapshot());
         assert.equals('人口 80000', view.populationText);
         assert.equals('民心 60', view.moraleText);
-        assert.equals('基礎值 0', view.goldCard.baseText);
-        assert.equals('人口紅利 +0', view.goldCard.populationBonusText);
+        assert.equals('基礎值 0（已入帳）', view.goldCard.baseText);
+        assert.equals('人口紅利 +0（換季入帳）', view.goldCard.populationBonusText);
         assert.equals('政策修正 +0', view.goldCard.policyModifierText);
         assert.equals('政策修正 +0', view.foodCard.policyModifierText);
         const foodBase = Math.floor(FOOD_PER_SEASON * seasonModifiersOf(session.gameTime.currentSeason).foodMultiplier);
@@ -108,8 +108,8 @@ export function createCityEconomySuite(): TestSuite {
         const result = await session.chooseDomesticTask('commerce');
         assert.isTrue(result.ok);
         const view = buildGovernorHallView(session.governorSnapshot());
-        assert.equals('基礎值 200', view.goldCard.baseText);
-        assert.equals('人口紅利 +40', view.goldCard.populationBonusText);
+        assert.equals('基礎值 200（已入帳）', view.goldCard.baseText);
+        assert.equals('人口紅利 +40（換季入帳）', view.goldCard.populationBonusText);
         assert.equals('總計 240', view.goldCard.totalText);
     });
 
