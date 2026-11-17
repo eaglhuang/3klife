@@ -39,6 +39,7 @@
             "id": "reviewTitle",
             "width": 944,
             "height": 48,
+            "textKey": "battle.review.title",
             "text": "戰報",
             "styleSlot": "br.label.title"
           },
@@ -63,6 +64,7 @@
                     "id": "btnPrevPageLabel",
                     "width": 160,
                     "height": 40,
+                    "textKey": "battle.review.prev",
                     "text": "◀ 上一頁",
                     "styleSlot": "br.label.body"
                   }
@@ -99,6 +101,7 @@
                     "id": "btnNextPageLabel",
                     "width": 160,
                     "height": 40,
+                    "textKey": "battle.review.next",
                     "text": "下一頁 ▶",
                     "styleSlot": "br.label.body"
                   }
@@ -196,6 +199,7 @@
                 "id": "btnCloseLabel",
                 "width": 200,
                 "height": 40,
+                "textKey": "battle.review.close",
                 "text": "關閉",
                 "styleSlot": "br.label.body"
               }

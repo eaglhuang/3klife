@@ -70,6 +70,7 @@
             },
             "width": 154,
             "height": 48,
+            "textKey": "battle.end_turn",
             "text": "結束回合",
             "styleSlot": "action.util.endturn.label"
           }
@@ -212,6 +213,7 @@
             },
             "width": 66,
             "height": 56,
+            "textKey": "battle.sortie",
             "text": "出陣",
             "styleSlot": "action.util.label"
           }
