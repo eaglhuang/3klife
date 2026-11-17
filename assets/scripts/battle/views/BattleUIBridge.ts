@@ -853,7 +853,9 @@ export class BattleUIBridge {
     if (!skillId) return;
     this.appendLog(buildBattleSkillUsedMessage(skillId, data.faction, data.sourceType, data.generalName));
 
-    const effectKey = resolveBattleGeneralSkillEffectKey(data.sourceType);
+    const caster = data.faction === Faction.Player ? this.ctx.pg : this.ctx.eg;
+    const effectKey = resolveBattleGeneralSkillEffectKey(data.sourceType, [caster?.templateId, caster?.id],
+      key => !!services().effect.getEffectDef(key));
     playBattleGeneralSkillEffect(services().effect, this.ctx.boardRenderer,
       this.ctx.unitRenderer?.getGeneralSidelineWorldPosition(data.faction) ?? null, effectKey, 1.35);
 

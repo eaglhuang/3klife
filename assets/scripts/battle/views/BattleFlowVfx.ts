@@ -32,10 +32,32 @@ export function resolveBattleUnitHitEffectKey(damageSource?: string): string {
     : BATTLE_FLOW_FX.hitDefault;
 }
 
-export function resolveBattleGeneralSkillEffectKey(sourceType?: SkillSourceType): string {
-  return sourceType === SkillSourceType.Ultimate
-    ? BATTLE_FLOW_FX.skillUltimate
-    : BATTLE_FLOW_FX.skillSeed;
+/** 武將專屬奧義特效在特效表裡的鍵：`battle_ult_` 加武將代號（連字號換底線），例如 zhang-fei → battle_ult_zhang_fei。 */
+export function ultimateEffectKeyOf(generalId: string): string {
+  return `battle_ult_${generalId.replace(/-/g, '_')}`;
+}
+
+/**
+ * 主將技能要播哪個特效。
+ * 奧義：特效表（vfx-effects.json）有這位武將的專屬效果就用專屬的，沒有就用通用奧義特效（PROG-2-9372）。
+ * 新增武將的專屬奧義特效只要在特效表加一筆 `battle_ult_<代號>`，不用改程式。
+ * generalIds 依序比對（名冊範本代號優先，其次武將代號）。
+ * Unity 對照：像用角色 ID 去 Addressables 查專屬 prefab，查不到就用預設 prefab。
+ */
+export function resolveBattleGeneralSkillEffectKey(
+  sourceType?: SkillSourceType,
+  generalIds: ReadonlyArray<string | null | undefined> = [],
+  hasEffect?: (effectKey: string) => boolean,
+): string {
+  if (sourceType !== SkillSourceType.Ultimate) return BATTLE_FLOW_FX.skillSeed;
+  if (hasEffect) {
+    for (const id of generalIds) {
+      if (!id) continue;
+      const key = ultimateEffectKeyOf(id);
+      if (hasEffect(key)) return key;
+    }
+  }
+  return BATTLE_FLOW_FX.skillUltimate;
 }
 
 export function resolveBattleResultEffectKey(result: string): string | null {
