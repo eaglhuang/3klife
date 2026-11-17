@@ -8928,6 +8928,52 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9382",
+      "title": "戰鬥日誌與軍師列的英文縮寫改中文（Buff、ATK、HP、INT）",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "線上實打看到戰鬥日誌有「吃到 Buff：攻擊 x 5 ATK +80」與「軍師：張飛 INT 52」，英文縮寫直接給玩家看。五維正式叫法依名詞定義文件：INT 為智力。",
+      "related": [
+        "PROG-2-9379"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（7984 過）；本機預覽水淹七軍實打，軍師列顯示「張飛 智力 52，正在執行：水淹」，日誌文字讀出「我方吃到增益：攻擊 x 3 攻擊 +80」 | 變更: 踩增益格的日誌由「吃到 Buff：… ATK +80 HP +…」改為「吃到增益：… 攻擊 +80 生命 +…」；軍師列與日誌的「INT」改為「智力」 | 阻塞: 無。日誌截圖只截到軍師列，增益那行在可視範圍外，以讀取節點文字為證；生命增益那行沒有實打到；日誌還有「前進到 L1 D2」這類路線深度代號，本卡沒動",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

@@ -898,11 +898,11 @@ export class BattleUIBridge {
   private _onTileBuffConsumed(data: { unitId: string; faction: Faction; lane: number; depth: number; buffText: string; attackDelta: number; hpDelta: number }): void {
     const c = this.ctx;
     const deltaText = [
-      data.attackDelta !== 0 ? `ATK ${data.attackDelta > 0 ? '+' : ''}${data.attackDelta}` : '',
-      data.hpDelta !== 0 ? `HP ${data.hpDelta > 0 ? '+' : ''}${data.hpDelta}` : '',
+      data.attackDelta !== 0 ? `攻擊 ${data.attackDelta > 0 ? '+' : ''}${data.attackDelta}` : '',
+      data.hpDelta !== 0 ? `生命 ${data.hpDelta > 0 ? '+' : ''}${data.hpDelta}` : '',
     ].filter(Boolean).join(' ');
     const side = data.faction === Faction.Player ? '我方' : '敵方';
-    this.appendLog(`${side}吃到 Buff：${data.buffText} ${deltaText}`);
+    this.appendLog(`${side}吃到增益：${data.buffText} ${deltaText}`);
     c.boardRenderer?.playBuffConsumeBurst(data.lane, data.depth);
     playBattleAudio(BATTLE_AUDIO_CUE.buffGained);
     c.unitRenderer?.playBuffConsumeValue(data.lane, data.depth, deltaText || data.buffText);
