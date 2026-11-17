@@ -8371,6 +8371,27 @@
             "note": "沿用夏侯氏灰綠玫瑰襦裙與托盤提燈；轉身後撤伸手引導，候選待審。"
           }
         ]
+      },
+      "smallAvatar": {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/xiahou_shi__夏侯氏__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "cf438b08d1d66c96aeadd345238f877da0ce4a27918c61dd87d87f5cbb581502",
+            "canvas": "256x256 RGBA",
+            "sourceStanding": "standing/xiahou_shi__夏侯氏__standing_0002.png",
+            "cropRect": {
+              "x": 186,
+              "y": 58,
+              "width": 122,
+              "height": 122
+            },
+            "note": "Crop-only from approved standing art; face centered at a three-quarter angle, original hair and shoulder line preserved, chest excluded."
+          }
+        ],
+        "activeVersion": "0001"
       }
     },
     {
