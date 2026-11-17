@@ -8,6 +8,7 @@ import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 import {
     applyDuelAftermath, DUEL_VICTORY_FAME, planDuelAftermath, type DuelOutcomeRecord,
 } from '../assets/scripts/core/systems/DuelAftermath';
+import { ResultDetailsBuffer } from '../assets/scripts/shared/ResultDetailsBuffer';
 import { EPITAPH_TEXT } from '../assets/scripts/core/systems/ChildUnveiling';
 
 function duel(over: Partial<DuelOutcomeRecord>): DuelOutcomeRecord {
@@ -88,6 +89,22 @@ export function createDuelAftermathSuite(): TestSuite {
         calm.setRosterStore(new InMemoryRosterStore([makeGeneral('g-1')]));
         await calm.recordBattle(['g-1'], 'enemy-win', { stageId: 's1' });
         assert.isFalse((calm.roster.find((g) => g.id === 'g-1') as unknown as { status?: string }).status === 'dead');
+    });
+
+    suite.test('結算窗還沒掛載完成時收到單挑名聲列：先暫存，顯示後補上，不丟失', async () => {
+        const session = new GameSession(3);
+        session.setRosterStore(new InMemoryRosterStore([makeGeneral('g-1')]));
+        await session.recordBattle(['g-1'], 'player-win', { stageId: 's1', duelOutcomes: [duel({})] });
+        const buffer = new ResultDetailsBuffer();
+        // 戰後結算早於結算窗 show() 完成：此時追加不可立刻寫入、也不可丟
+        assert.equals(0, buffer.push(session.consumeTallyNotices()).length);
+        const flushed = buffer.markShown();
+        assert.isTrue(flushed.some((l) => l.includes('單挑獲勝，名聲 +15')));
+        assert.equals(0, buffer.markShown().length);
+        // 顯示後再追加：立刻可寫入
+        assert.equals(1, buffer.push(['x']).length);
+        buffer.reset();
+        assert.equals(0, buffer.push(['y']).length);
     });
 
     return suite;
