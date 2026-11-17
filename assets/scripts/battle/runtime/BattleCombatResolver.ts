@@ -397,9 +397,6 @@ export class BattleCombatResolver {
       return;
     }
 
-    // 剋制戰鬥句（兵種 §G，PROG-2-1772）：命中才算，同一場每組一次
-    const counterLine = this.counterAnnouncer.take(attacker.type, defender.type);
-    if (counterLine) svc.event.emit(EVENT_NAMES.TroopCounterLine, counterLine);
 
     // 盾牆：防禦力加倍
     const effectiveDef = defender.getEffectiveDefense() * (defender.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(defender) * this.getTallyDefenseMod(defender) * (1 - tallyDefensePenetrationOf(attacker))
@@ -453,6 +450,12 @@ export class BattleCombatResolver {
         defenderShielded: defender.isShieldWallActive,
       })
       : null;
+    // 剋制戰鬥句（兵種 §G，PROG-2-1772）：命中才算，同一場每組一次。
+    // 這一擊已觸發兵種動態相剋時改由相剋自己的句子說明，兩句同時出現會互相矛盾（PROG-2-9375）
+    if (!counter?.mechanic) {
+      const counterLine = this.counterAnnouncer.take(attacker.type, defender.type);
+      if (counterLine) svc.event.emit(EVENT_NAMES.TroopCounterLine, counterLine);
+    }
     if (counter?.mechanic === 'JUMA_PIKE_WALL') {
       // 拒馬槍陣：這一擊打不進去，騎兵反受傷害並停滯。狀態在回合結尾遞減，所以多給 1 才會擋到下一回合
       const reflect = Math.max(1, counterReflectDamage(damage, counter));
