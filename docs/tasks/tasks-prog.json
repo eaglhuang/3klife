@@ -8744,6 +8744,52 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9378",
+      "title": "戰場固定標題與按鈕文字改走多語系表（26 處）",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-17T02:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "戰場版面檔有固定標題與按鈕文字直接寫死中文，切換語系不會變。總PM 裁示先做確認不是佔位字的固定標題與按鈕。",
+      "related": [
+        "PROG-2-9377"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-17 | 狀態: done | 驗證: 型別檢查 0 錯；全套單元測試通過（7983 過）；戰場版面稽核 0 問題；本機預覽讀出結束回合、出陣、教學提示四鈕、戰法標題等節點實際顯示文字與原本相同 | 變更: 9 個戰場版面檔共 26 個固定文字節點加上 textKey；四個語系檔各新增 23 個鍵 | 阻塞: 無。設定面板、戰報回顧、兵種資訊、虎符詳情、奧義選擇面板本次沒有逐一打開看；線上實機待試玩站更新後補看",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

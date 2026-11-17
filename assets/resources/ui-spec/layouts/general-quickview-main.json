@@ -87,7 +87,7 @@
         "skinSlot": "quickview.section.bg",
         "layout": { "type": "vertical", "spacing": 4, "paddingLeft": 12, "paddingRight": 12, "paddingTop": 8, "paddingBottom": 8 },
         "children": [
-          { "type": "label", "name": "GQSkillsTitle", "width": "100%", "height": 18, "text": "戰法:", "styleSlot": "quickview.label.section" },
+          { "type": "label", "name": "GQSkillsTitle", "width": "100%", "height": 18, "textKey": "battle.quickview.skills", "text": "戰法:", "styleSlot": "quickview.label.section" },
           { "type": "label", "name": "GQSkill1", "id": "gqSkill1", "width": "100%", "height": 20, "styleSlot": "quickview.label.skill" },
           { "type": "label", "name": "GQSkill2", "id": "gqSkill2", "width": "100%", "height": 20, "styleSlot": "quickview.label.skill" },
           { "type": "label", "name": "GQSkill3", "id": "gqSkill3", "width": "100%", "height": 20, "styleSlot": "quickview.label.skill" },

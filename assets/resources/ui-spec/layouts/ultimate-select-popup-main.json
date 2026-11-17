@@ -49,6 +49,7 @@
                 "id": "titleLabel",
                 "width": 268,
                 "height": 44,
+                "textKey": "battle.ultimate.select_title",
                 "text": "選擇奧義",
                 "styleSlot": "popup.label.title"
               },

@@ -148,6 +148,7 @@
                     "name": "SectionTitle1",
                     "width": "100%",
                     "height": 14,
+                    "textKey": "battle.unit_info.base_stats",
                     "text": "基礎數值",
                     "styleSlot": "unitinfo.label.section"
                   },
@@ -218,6 +219,7 @@
                     "name": "SectionTitle2",
                     "width": "100%",
                     "height": 14,
+                    "textKey": "battle.unit_info.traits",
                     "text": "兵種特性",
                     "styleSlot": "unitinfo.label.section"
                   },
@@ -254,6 +256,7 @@
                     "name": "SectionTitle3",
                     "width": "100%",
                     "height": 14,
+                    "textKey": "battle.unit_info.special",
                     "text": "特殊能力",
                     "styleSlot": "unitinfo.label.section"
                   },
@@ -290,6 +293,7 @@
                     "name": "SectionTitle4",
                     "width": "100%",
                     "height": 14,
+                    "textKey": "battle.unit_info.desc",
                     "text": "兵種描述",
                     "styleSlot": "unitinfo.label.section"
                   },
