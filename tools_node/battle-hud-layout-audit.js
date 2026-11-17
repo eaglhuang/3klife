@@ -26,7 +26,8 @@ function auditBattleHud(options={}) {
   const active=docs.map(d=>visible(d.root));const hud=active[0],commands=active[1],cards=active[2],log=active[3];
   const top=get(hud,'BattleHudScreen_div_1'),sp=get(hud,'BattleHudScreen_div_122');
   const cardRect=rect(docs[2].root,w,h),logRect=rect(docs[3].root,w,h);
-  logRect.height=(docs[3].root.children||[]).filter(n=>n.active!==false).reduce((s,n)=>s+len(n.height,h),0);
+  // 戰報面板改成右緣直排後根節點自帶高度、不再靠直向排版加總（PROG-2-9377）
+  logRect.height=docs[3].root.layout?.type==='vertical'?(docs[3].root.children||[]).filter(n=>n.active!==false).reduce((s,n)=>s+len(n.height,h),0):len(docs[3].root.height,h);
   const groups={top:rect(top,w,h),cards:cardRect,log:logRect,commands:rect(docs[1].root,w,h)};
   if(sp)groups.sp=rect(sp,w,h);
   for(const n of docs[4].root.children) if(n.active!==false) groups[n.name]=rect(n,w,h);
@@ -36,7 +37,9 @@ function auditBattleHud(options={}) {
   const pairs=Object.entries(groups);for(let i=0;i<pairs.length;i++)for(let j=i+1;j<pairs.length;j++)if(overlap(pairs[i][1],pairs[j][1]))add(key,'group-overlap',`${pairs[i][0]} / ${pairs[j][0]}`,'active HUD groups intersect');
   if(get(hud,'BattleHudScreen_button_1'))add(key,'duplicate-endturn','BattleHudScreen_button_1','HTML sample end-turn overlaps authoritative ActionCommand');
   const row=(get(log,'ControlBar'));const padding=(row.layout?.paddingLeft||0)+(row.layout?.paddingRight||0);
-  const rowWidth=row.children.filter(n=>n.active!==false).reduce((s,n)=>s+len(n.width,logRect.width),0)+(row.layout?.spacing||0)*3+padding;
+  const rowKids=row.children.filter(n=>n.active!==false);
+  // 直排時每顆鈕各佔一列，只要最寬的那顆不超出；橫排維持原本的加總
+  const rowWidth=(row.layout?.type==='vertical'?Math.max(0,...rowKids.map(n=>len(n.width,logRect.width))):rowKids.reduce((s,n)=>s+len(n.width,logRect.width),0)+(row.layout?.spacing||0)*Math.max(0,rowKids.length-1))+padding;
   if(rowWidth>logRect.width+.1)add(key,'row-overflow','ControlBar',{rowWidth,available:logRect.width});
   const mainWidth=top.widget?.left!==undefined&&top.widget?.right!==undefined?w:len(top.width,w);
   const parts=top.children.filter(n=>n.active!==false);const topWidth=parts.reduce((s,n)=>s+len(n.width,mainWidth),0)+(top.layout?.paddingLeft||0)+(top.layout?.paddingRight||0);
