@@ -917,6 +917,8 @@ export class BattleUIBridge {
     c.unitRenderer?.playBuffConsumeValue(data.lane, data.depth, deltaText || data.buffText);
     if (data.attackDelta !== 0 || data.hpDelta !== 0) {
       c.unitRenderer?.playBuffEffect(data.unitId, data.lane, data.depth, data.attackDelta, data.hpDelta);
+      // 頭頂狀態小圖示：吃到格子 buff 也要彈出＋腳下光環（PROG-2-9399）；兩項都沒有增益且有減損才算減益
+      c.unitRenderer?.playStatusGain(data.unitId, data.attackDelta <= 0 && data.hpDelta <= 0);
     }
     this.refreshBattleViews();
   }
