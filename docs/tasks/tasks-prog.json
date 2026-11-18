@@ -9779,6 +9779,54 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9400",
+      "title": "普攻依兵種分開：槍刺、盾擊、劈砍、射箭、騎兵衝撞各有動作、特效與音效",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-18T06:47:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 2026-11-17 選定普攻依兵種分開（基礎戰鬥手感最優先項目之一），原本所有兵種共用同一個攻擊動作與刀光，看不出差異。",
+      "related": [
+        "PROG-2-9367",
+        "PROG-2-9399",
+        "PROG-2-9401"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-18 | 狀態: in-review | 驗證: 型別檢查 0 錯；全套單元測試 8118 過；技能冒煙與 UCUF 冒煙全過；本機預覽無頭實點連跑 4 回合，攻擊呼叫紀錄確認騎兵播 charge＋塵土、步兵播 slash、弓兵播 bow＋命中閃光，骨架內 attack_spear/shield/slash/bow 動作都存在；截圖可見陷陣營揮刀、連弩手持弓放箭 | 變更: 新增 AttackStyle（兵種→普攻風格）、AttackShotStyle（各風格畫面層特效）；AttackVfxMapping／AttackSfxMapping／BattleAudio 依風格；UnitPresentationCore.play 可指定動作片段；SpineGeneralOverlay 缺分動作時退回通用攻擊；SlashShotView 改為通用閃光池 playShots；UnitRenderer 三處攻擊接上 | 阻塞: 缺專用音效（槍刺、盾擊悶響、馬蹄衝撞、弓弦、刀劈），暫用現有音效，清單已交總PM 轉 Codex",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
