@@ -4,7 +4,7 @@ import type { MissionDetailView, Revealable } from '../../assets/scripts/core/mi
 import type { CandidateView, IMissionService, MissionCardView, MissionResult } from '../../assets/scripts/core/mission/service/IMissionService';
 import {
     MISSION_PERFECT_REVEAL_NOTE, buildMissionDialogState, candidateOptions, intelGainFloatText, labeled, lockedStatusText,
-    perfectRewardLabel, seasonCodeLabel, stripLabel,
+    perfectRewardLabel, returnSeasonText, seasonCodeLabel, stripLabel,
 } from '../../assets/scripts/ui/mission/MissionDetailPresenter';
 
 const ok = <T>(value: T): MissionResult<T> => ({ ok: true, value, revision: 1, ledger: [], events: [] });
@@ -123,12 +123,10 @@ export function createMissionDetailPresenterSuite(): TestSuite {
         assert.isTrue(s.locked);
         assert.equals(0, s.availableActions.length);
         for (const k of ['re-scout', 'wait', 'execute', 'assign'] as const) assert.equals('任務進行中', s.actionBlockedText[k]);
-        assert.isTrue(s.intelHintLabel.includes('鎖定'));
-        assert.isTrue(s.intelHintLabel.includes('78%'));
-        assert.isTrue(s.intelHintLabel.includes('第 2 年 2 季回報'), s.intelHintLabel);
-        assert.isTrue(s.intelHintLabel.includes('還有 3 季'));
+        assert.equals('已鎖定・情報 78%，分支與成功率已凍結', s.intelHintLabel);
+        assert.isTrue(s.intelFogVisible, '鎖定中提示列要顯示（鎖定文字在那裡）');
+        assert.isTrue(s.envScoutWeatherLine.includes('預計第 2 年 2 季回報（還有 3 季）'), s.envScoutWeatherLine);
         assert.equals('成功率 約 60～80%（派出時定下）・張飛出任務中', s.generalSelectHintLabel);
-        assert.isTrue(s.envScoutWeatherLine.includes('進行中'));
         assert.isFalse(s.volunteerBadgeVisible);
     });
 
@@ -136,7 +134,9 @@ export function createMissionDetailPresenterSuite(): TestSuite {
         assert.equals('第 1 年 1 季', seasonCodeLabel(0));
         assert.equals('第 1 年 4 季', seasonCodeLabel(3));
         assert.equals('第 2 年 1 季', seasonCodeLabel(4));
-        assert.equals('已派出・鎖定：情報 50%、分支與成功率已凍結', lockedStatusText({ intel: 50 }, undefined, 1));
+        assert.equals('已鎖定・情報 50%，分支與成功率已凍結', lockedStatusText({ intel: 50 }));
+        assert.equals('', returnSeasonText(undefined, 1));
+        assert.equals('預計第 1 年 3 季回報（還有 2 季）', returnSeasonText(card({ returnSeason: 2 }), 0));
     });
 
     suite.test('四鈕：沒有可派武將、糧草不足、已等待過都有明確原因；名冊為空另有文字', () => {

@@ -542,7 +542,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
     /** 鎖定中的情報提示列用金色，一眼看出這張任務已派出、內容不會再變（PROG-2-9152） */
     private _lockedHintOrigColor: Color | null = null;
     private _tintLockedHint(locked: boolean): void {
-        const label = this._templateBinder?.getNode('intelHintLabel')?.getComponent(Label);
+        const label = this._templateBinder?.getLabelByPath('DialogCard/ScrollView/ScrollContent/IntelPanel/IntelFogMask/IntelFogLabel');
         if (!label) return;
         if (!this._lockedHintOrigColor) this._lockedHintOrigColor = label.color.clone();
         label.color = locked ? new Color(250, 204, 94, 255) : this._lockedHintOrigColor;

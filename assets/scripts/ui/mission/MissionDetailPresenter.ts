@@ -133,11 +133,15 @@ export function perfectRewardLabel(d: Pick<MissionDetailView, 'intel' | 'hiddenR
     return `${MISSION_MASK_TEXT}\n${MISSION_PERFECT_REVEAL_NOTE}`;
 }
 
-/** 鎖定文字：派出後情報、分支、成功率都已定下，並顯示預計回報季 */
-export function lockedStatusText(d: Pick<MissionDetailView, 'intel'>, card: Readonly<MissionCardView> | undefined, season: number): string {
+/** 鎖定文字（顯示在情報區的提示列）：派出後情報、分支、成功率都已定下 */
+export function lockedStatusText(d: Pick<MissionDetailView, 'intel'>): string {
+    return `已鎖定・情報 ${d.intel}%，分支與成功率已凍結`;
+}
+
+/** 預計回報季：「第 1 年 2 季回報（還有 1 季）」；沒有回報季時回空字串 */
+export function returnSeasonText(card: Readonly<MissionCardView> | undefined, season: number): string {
     const ret = card?.returnSeason;
-    const when = ret === undefined ? '' : `，${card?.executorName ?? '武將'}預計${seasonCodeLabel(ret)}回報（還有 ${Math.max(0, ret - season)} 季）`;
-    return `已派出・鎖定：情報 ${d.intel}%、分支與成功率已凍結${when}`;
+    return ret === undefined ? '' : `預計${seasonCodeLabel(ret)}回報（還有 ${Math.max(0, ret - season)} 季）`;
 }
 
 /** 詳情視窗 state（情報遮蔽、成功率投影、耗費不足標示、四鈕可用與原因）；沒有該任務回傳 null */
@@ -183,11 +187,12 @@ export function buildMissionDialogState(service: IMissionService, missionId: str
         ? `${labeled('成功率', d.rate.text, ' ')}（派出時定下）`
         : picked ? `${labeled('成功率', picked.rate.text, ' ')}（${picked.name}）`
             : free.length > 0 ? labeled('成功率', d.rate.text, ' ') : noCandidateText;
-    const factsLine = d.facts.filter((f) => f.state !== 'hidden').map((f) => `${f.label}：${f.text}`).join('；');
+    // 事實一條一行（長事實由視窗換行，不縮成小字）
+    const factsLine = d.facts.filter((f) => f.state !== 'hidden').map((f) => `${f.label}：${f.text}`).join('\n');
     const periodText = active
-        ? (card?.returnSeason === undefined ? '進行中' : `進行中，${seasonCodeLabel(card.returnSeason)}回報`)
+        ? (returnSeasonText(card, ctx.season) || '進行中')
         : `剩餘期限 ${left} 季`;
-    const intelHint = active ? lockedStatusText(d, card, ctx.season)
+    const intelHint = active ? lockedStatusText(d)
         : d.intel >= revealIntel ? '情報已完整'
             : fullBand ? `情報 ${d.intel}%，已達再探上限；100% 才會揭曉完美獎勵`
                 : `情報 ${d.intel}%，再探或等待可提高`;
@@ -198,7 +203,8 @@ export function buildMissionDialogState(service: IMissionService, missionId: str
         missionBrief: d.brief,
         intelRevealPercent: d.intel,
         intelBody: [d.objective.text, ...d.hints].filter((s) => s.length > 0).join('\n'),
-        intelFogVisible: !fullBand,
+        // 鎖定中也要顯示提示列（鎖定文字放在這裡），所以不因情報高而隱藏
+        intelFogVisible: !fullBand || active,
         intelHintLabel: intelHint,
         envScoutTerrainLine: factsLine || '尚未探得敵情',
         envScoutWeatherLine: `${labeled('風險', d.risk.text)}・${periodText}`,
