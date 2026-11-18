@@ -9731,6 +9731,54 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9399",
+      "title": "戰場頭頂狀態小圖示：血條上方顯示增益／減益圖示並在獲得時閃光",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-18T06:47:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 2026-11-17 選定 buff 圖示放在頭頂血條旁小圖示（基礎戰鬥手感最優先項目之一），玩家要一眼看出哪支部隊身上有增益或減益。",
+      "related": [
+        "PROG-2-9395",
+        "PROG-2-9400",
+        "PROG-2-9401"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-18 | 狀態: in-review | 驗證: 型別檢查 0 錯；全套單元測試 8130 過；技能冒煙與 UCUF 冒煙全過；本機預覽無頭實點連跑 3 回合截圖，敵弓兵與我方大戟士名牌左上方出現紫色「攻」減益圖示 | 變更: 新增 UnitStatusIcons（狀態分類純函式）、UnitStatusIconBar（圖示列與閃光池）；UnitRenderer 名牌上方掛圖示列（36px、從名牌左緣起排 4 格），buff 格拾取時 playStatusGain 閃光；BattleUIBridge 接上 buff 消耗事件 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

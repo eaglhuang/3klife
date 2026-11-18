@@ -54,6 +54,8 @@ import { BuffGainEffectPool } from "./effects/BuffGainEffectPool";
 import { statBonusTone, statWithBonusText, type StatBonusTone } from "../shared/StatBonusText";
 import { unitHpBarState, type UnitHpBarState } from "../shared/UnitHpBar";
 import { unitValueFloatType } from "../shared/DamageFloatType";
+import { UnitStatusIconBar, StatusHaloPool } from "./UnitStatusIconBar";
+import { buildUnitStatusContext, computeUnitStatusIcons, gainedTones, newlyGainedKinds, type StatusIconKind } from "../shared/UnitStatusIcons";
 import { services } from "../../core/managers/ServiceLoader";
 import { FloatTextType } from "../../core/systems/FloatTextSystem";
 import { vitalityRingView, type VitalityRingView } from "../../core/systems/VitalityBarView";
@@ -88,6 +90,12 @@ interface UnitView {
   bottomNameLabel: Label | null;
   /** 頭頂血條（主戰場UI規格書 §3.1，PROG-2-1874） */
   hpBar: Graphics;
+  /** 頭頂狀態小圖示列（buff／debuff，PROG-2-9399） */
+  statusBar: UnitStatusIconBar;
+  /** 上一次盤點的狀態種類；null 代表還沒畫過（出陣時不彈出） */
+  statusKinds: StatusIconKind[] | null;
+  /** 外部（如踩到地形 buff 格）要求下一次刷新時補播彈出＋光環：'buff' | 'debuff' */
+  pendingStatusPulse: 'buff' | 'debuff' | null;
   troopType: TroopType;
   usingTroopFormation: boolean;
   usingGeneralPawn?: boolean;
@@ -140,6 +148,10 @@ const LOOT_TEXT_STAGGER_SEC = 0.5;
 
 /** 頭頂血條尺寸（名牌座標，名牌本身縮 0.7；PROG-2-1874） */
 const HP_BAR_WIDTH = 150;
+/** 頭頂狀態小圖示列：排在血條正上方，從名牌底板（寬 180）左緣開始，4 格不超出名牌寬度、不擠到隔壁路 */
+const STATUS_ICON_START_X = -90;
+/** 圖示列中心 y：名牌半高 39 + 血條（間距 4、高 8）+ 間距 4 + 圖示半高 18 */
+const STATUS_ICON_Y = 73;
 const HP_BAR_HEIGHT = 8;
 const HP_BAR_COLOR = {
   player: new Color(70, 150, 255, 255),
@@ -210,6 +222,8 @@ export class UnitRenderer extends Component {
   // lateUpdate 每幀重用的 Vec3 暫存，避免動態分配（對照 Unity: 快取 Vector3 工具變數）
   private readonly labelWorldPosBuf = new Vec3();
   private readonly generalViews = new Map<Faction, GeneralView>();
+  /** 腳下光環節點池（PROG-2-9399），第一次需要時才建立 */
+  private statusHalos: StatusHaloPool | null = null;
   private readonly arrowShots = new ArrowShotView(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   private readonly slashShots = new SlashShotView(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   private readonly spineUnits = new SpineUnitOverlay(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
@@ -1387,6 +1401,9 @@ export class UnitRenderer extends Component {
       labelOpacity: badge.opacity,
       bottomNameLabel: badge.bottomNameLabel,
       hpBar,
+      statusBar: new UnitStatusIconBar(labelNode, STATUS_ICON_START_X, STATUS_ICON_Y),
+      statusKinds: null,
+      pendingStatusPulse: null,
       troopType: unit.type,
       usingTroopFormation: false,
     };
@@ -1437,6 +1454,7 @@ export class UnitRenderer extends Component {
     view.troopType = unit.type;
     view.labelOpacity.opacity = 255;
     this.drawHpBar(view.hpBar, unitHpBarState(unit.currentHp, unit.getEffectiveMaxHp(), unit.faction === Faction.Player));
+    this.refreshStatusIcons(view, unit);
 
     // 更新下排兵種名稱（小兵顯示完整對應名稱，將軍化身則顯示「將」）
     if (view.bottomNameLabel) {
@@ -1452,6 +1470,49 @@ export class UnitRenderer extends Component {
     // formationRoot 不再負責旋轉，各 soldier 以 0° local rotation 繼承 worldNode 方向
     this.alignNodeToFactionFacing(view.worldNode, unit.faction);
     this.projectWorldLabel(view.worldNode, view.labelNode, this.labelHeight);
+  }
+
+  /**
+   * 盤點單位狀態並更新頭頂小圖示（PROG-2-9399）。
+   * updateUnitView 只在狀態刷新事件時呼叫；簽名沒變不重畫。新增狀態時圖示彈出＋腳下光環。
+   */
+  private refreshStatusIcons(view: UnitView, unit: TroopUnit): void {
+    const ctx = buildUnitStatusContext(unit, this.latestState, services().buff.getBuffs(unit.id));
+    const list = computeUnitStatusIcons(unit, ctx);
+    const { changed } = view.statusBar.apply(list);
+    const gained = changed ? newlyGainedKinds(view.statusKinds, list.allKinds) : [];
+    if (changed) view.statusKinds = list.allKinds;
+    const pending = view.pendingStatusPulse;
+    view.pendingStatusPulse = null;
+    if (gained.length === 0 && !pending) return;
+
+    const tones = gainedTones(gained);
+    if (gained.length > 0) view.statusBar.pop(gained);
+    else view.statusBar.pop(null); // 只有外部要求（吃到格子 buff）時，整排輕彈一次
+    if (!view.labelNode.active) return;
+    // 同時有增益與減益時各放一圈；外部要求的色別補在沒有的那一邊
+    const wantBuff = tones.buff || pending === 'buff';
+    const wantDebuff = tones.debuff || pending === 'debuff';
+    this.playStatusHalo(view, wantBuff, wantDebuff);
+  }
+
+  private playStatusHalo(view: UnitView, buff: boolean, debuff: boolean): void {
+    if (!this.uiRoot) return;
+    if (!this.statusHalos) this.statusHalos = new StatusHaloPool(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
+    const foot = this.unitGroundFoot(view);
+    if (!foot) return;
+    if (buff) this.statusHalos.play(foot.x, foot.y, false);
+    if (debuff) this.statusHalos.play(foot.x, foot.y, true);
+  }
+
+  /**
+   * 單位踩到地形 buff 格拿到效果時呼叫（BattleUIBridge）：下一次刷新補播圖示彈出與腳下光環。
+   * 若同一次刷新已因新增圖示而播過，不會重複（pending 只在沒有新增時才補播）。
+   */
+  public playStatusGain(unitId: string, isDebuff: boolean): void {
+    const view = this.unitViews.get(unitId);
+    if (!view) return;
+    view.pendingStatusPulse = isDebuff ? 'debuff' : 'buff';
   }
 
   /** 頭頂血條節點：放在名牌上緣之上（主戰場UI規格書 §3.1，PROG-2-1874） */
