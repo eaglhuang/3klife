@@ -19,6 +19,7 @@
  *                                要驗這些列才帶。臨時名冊只存在記憶體，不進玩家存檔。缺省 = 0（名冊維持空的）
  *   qaPlayerHp=<正整數>           我方主將開場生命（超過上限當滿血）；驗被擒、被斬、敗逃用。缺省 = 滿血
  *   qaEnemyHp=<正整數>            敵方主將開場生命；規則同上
+ *   qaSlow=<倍率>／qaTime=1       慢動作與 window.__qaTime（解析見 QaTimeScale.ts，PROG-2-9405）
  *
  * 合法性：任何一項不合法都回報完整錯誤清單，不靜默忽略；也不認得的 qa* 參數（多半是打錯字）一樣報錯。
  * 不可與 previewMode 併用，否則戰場會落入 capture 模式（行為不同於正式戰場）。
@@ -34,6 +35,7 @@ import {
 } from '../../shared/BattleEntryParams';
 import { AI_TROOP_CODE_TO_TYPE } from './AiDeployTroopPick';
 import { isStageUnlocked } from './StageChainProgress';
+import { QA_TIME_QUERY } from './QaTimeScale';
 import { provisionalTeachingSpirit } from './TeachingSpiritProvisional';
 
 /** 網址參數名稱（單一出處，文件與測試共用） */
@@ -49,6 +51,9 @@ export const QA_BATTLE_QUERY = {
     playerHp: 'qaPlayerHp',
     enemyHp: 'qaEnemyHp',
     playerFame: 'qaPlayerFame',
+    // 以下兩項由 QaTimeScale 處理（PROG-2-9405），列在這裡只是不被「不認得的參數」擋下
+    slow: QA_TIME_QUERY.slow,
+    time: QA_TIME_QUERY.time,
 } as const;
 
 /** 我方卡組張數上限；與戰場手牌張數 TALLY_HAND_SIZE 相同（測試鎖定兩者一致，shared 不引用 battle） */

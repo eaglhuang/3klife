@@ -7,6 +7,7 @@ import { installAdaptiveResolution } from '../core/AdaptiveResolution';
 import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
 import { TitleScreenBinder } from '../core/TitleScreenBinder';
 import { currentSearch, runQaBattleEntry } from './QaBattleEntryRunner';
+import { installQaTime } from '../../battle/views/QaTimeController';
 import { formatQaBattleErrors, isQaBattleRequested } from '../../core/systems/QaBattleEntry';
 
 const { ccclass } = _decorator;
@@ -27,6 +28,8 @@ export class LoginScene extends Component {
     start(): void {
         installAdaptiveResolution();
         ensureGlobalDevOverlay();
+        // QA 慢動作／定格（PROG-2-9405）：沒有 qa* 參數時直接回傳，不改任何全域
+        installQaTime(currentSearch());
         // 沒帶 ?qaBattle 參數時維持原流程，完全不經過直進入口（PROG-2-9127）
         if (!isQaBattleRequested(currentSearch())) {
             void this._mountTitleScreen();

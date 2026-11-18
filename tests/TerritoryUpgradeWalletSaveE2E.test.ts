@@ -52,6 +52,8 @@ export function createTerritoryUpgradeWalletSaveE2ESuite(): TestSuite {
         (a as unknown as { _military: { food: number } })._military.food = 10000;
         const saves: Promise<unknown>[] = [];
         const gacha = lobbyGacha(a, saves);
+        // 正式開局黃金 1000（PROG-2-9149），升級要 4000：先補到夠付再下單
+        gacha.grantCurrency('gold', 4000);
         const goldBefore = gacha.getCurrencyAmount('gold');
 
         assert.isTrue(upgrade(a, gacha, saves).ok);

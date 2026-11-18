@@ -22,7 +22,8 @@ export const CURRENCY_LABELS: Record<WalletCurrencyKey, string> = {
 /** 新檔的起始錢包（原為 LocalGachaService 私有常數，數值不變）；存檔為 null 時的入帳基底 */
 export const STARTER_GACHA_WALLET: Readonly<Record<WalletCurrencyKey, number>> = {
     gems: 1280,
-    gold: 128450,
+    /** 正式開局黃金 1000（規格 CP-01；PROG-2-9149）；原 128,450 只留在 QA_STARTER_GACHA_WALLET */
+    gold: 1000,
     tickets: 12,
     /** 開局送一次十連份的銅錢符（1500），規格十連漲到 1500 後新玩家仍抽得起（PROG-2-1094） */
     bronze: 1500,
@@ -31,6 +32,12 @@ export const STARTER_GACHA_WALLET: Readonly<Record<WalletCurrencyKey, number>> =
     mentorTickets: 5,
     scorePoints: 0,
 };
+
+/** QA／測試種子錢包：黃金 128,450（舊開局值）；只有開啟 QA 開關（localStorage ucuf.qa.rich-wallet）或測試明確引用時才使用，正式開局一律用 STARTER_GACHA_WALLET */
+export const QA_STARTER_GACHA_WALLET: Readonly<Record<WalletCurrencyKey, number>> = Object.freeze({
+    ...STARTER_GACHA_WALLET,
+    gold: 128450,
+});
 
 export interface WalletCheckResult {
     ok: boolean;
