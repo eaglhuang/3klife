@@ -10,7 +10,7 @@ function usage() {
   node tools_node/small-avatar-crop-guide.js compare --out <board.png> <image.png>...
   node tools_node/small-avatar-crop-guide.js crop --input <image.png> --out <crop.png>
        --head x,y,width,height --face x,y,width,height
-       [--shoulders leftX,leftY,rightX,rightY] [--target 0.78]
+       [--shoulders leftX,leftY,rightX,rightY] [--target 0.78] [--size 256]
 
 Boxes use source-image pixel coordinates. --head spans the main hair/helmet top to chin;
 --face spans forehead to chin and both cheek/jaw edges. --shoulders optionally marks one
@@ -100,7 +100,9 @@ function main() {
     const src = readPng(a.input), head = parseBox(a.head, '--head'), face = parseBox(a.face, '--face');
     const shoulders = a.shoulders ? parseShoulderPoints(a.shoulders) : null;
     const target = a.target == null ? 0.78 : Number(a.target);
+    const outputSize = a.size == null ? 256 : Number(a.size);
     if (!(target >= 0.70 && target <= 0.80)) throw new Error('--target must be between 0.70 and 0.80');
+    if (!Number.isInteger(outputSize) || outputSize < 64 || outputSize > 2048) throw new Error('--size must be an integer between 64 and 2048');
     const centerX = face.x + face.width / 2;
     let side = head.height / target;
     if (shoulders) {
@@ -117,7 +119,7 @@ function main() {
     const shoulderContained = shoulders ? shoulders.map(p => p.x >= crop.x && p.x <= crop.x + side && p.y >= crop.y && p.y <= crop.y + side) : null;
     const shoulderOnArtwork = shoulders ? shoulders.map(p => foregroundNear(src, p)) : null;
     const passesHeadRatio = headRatio >= 0.70 && headRatio <= 0.80;
-    const out = new PNG({ width: 256, height: 256 });
+    const out = new PNG({ width: outputSize, height: outputSize });
     for (let y = 0; y < out.height; y++) for (let x = 0; x < out.width; x++) {
       const sx = crop.x + (x + 0.5) * side / out.width - 0.5;
       const sy = crop.y + (y + 0.5) * side / out.height - 0.5;
@@ -125,7 +127,7 @@ function main() {
     }
     fs.mkdirSync(path.dirname(path.resolve(a.out)), { recursive: true });
     fs.writeFileSync(a.out, PNG.sync.write(out));
-    console.log(JSON.stringify({ input: path.resolve(a.input), output: path.resolve(a.out), source: `${src.width}x${src.height}`, cropPixels: { x: +crop.x.toFixed(2), y: +crop.y.toFixed(2), side: +side.toFixed(2) }, headHeightRatio: +(headRatio * 100).toFixed(1), targetHeadHeightRatio: +(target * 100).toFixed(1), passesHeadRatio, headContained, faceCenterX: +(faceCenterX * 100).toFixed(1), passesFaceCenter: Math.abs(faceCenterX - 0.5) <= 0.03, faceContained, shoulders: shoulders ? { contourPoints: shoulders, contained: shoulderContained, onVisiblePixelsWithin5px: shoulderOnArtwork } : '未提供量測點', note: '最後仍須目視確認頭飾完整、兩側肩膀形狀可辨；肩部標記需落在原圖可見人物像素附近。工具只裁切／等比縮放，不會修正原圖五官。' }, null, 2));
+    console.log(JSON.stringify({ input: path.resolve(a.input), output: path.resolve(a.out), source: `${src.width}x${src.height}`, outputSize: `${outputSize}x${outputSize}`, cropPixels: { x: +crop.x.toFixed(2), y: +crop.y.toFixed(2), side: +side.toFixed(2) }, headHeightRatio: +(headRatio * 100).toFixed(1), targetHeadHeightRatio: +(target * 100).toFixed(1), passesHeadRatio, headContained, faceCenterX: +(faceCenterX * 100).toFixed(1), passesFaceCenter: Math.abs(faceCenterX - 0.5) <= 0.03, faceContained, shoulders: shoulders ? { contourPoints: shoulders, contained: shoulderContained, onVisiblePixelsWithin5px: shoulderOnArtwork } : '未提供量測點', note: '最後仍須目視確認頭飾完整、兩側肩膀形狀可辨；肩部標記需落在原圖可見人物像素附近。工具只裁切／等比縮放，不會修正原圖五官。' }, null, 2));
     return;
   }
   usage(); process.exitCode = 2;
