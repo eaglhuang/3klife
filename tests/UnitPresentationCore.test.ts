@@ -82,11 +82,25 @@ assert.equal(returned.phase, 'done');
 assert.equal(returned.units[0].foot.x, 0);
 assert.equal(returned.units[1].foot.x, 100);
 
-import { generalSpineConfig, soldierSpineConfig } from '../assets/scripts/battle/shared/UnitPresentationConfig';
+import { MAX_WALK_ANIMATION_SPEED, generalSpineConfig, soldierSpineConfig } from '../assets/scripts/battle/shared/UnitPresentationConfig';
+import { resolveClipName } from '../assets/scripts/battle/shared/UnitPresentationCore';
 assert.equal(generalSpineConfig('zhao-yun')?.walkGroundSpeed, 93.33);
 assert.equal(generalSpineConfig('unknown'), null);
 assert.equal(soldierSpineConfig(false).walkGroundSpeed, 100);
 assert.equal(soldierSpineConfig(true).clips.attack.name, 'duel_attack');
+// PROG-2-9407：小兵前進播 walk，缺 walk 的骨架退回 dash_in；武將骨架只有 dash_in 維持原狀
+assert.equal(soldierSpineConfig(false).clips.move.name, 'walk');
+assert.equal(soldierSpineConfig(false).clips.move.fallback, 'dash_in');
+assert.equal(generalSpineConfig('zhao-yun')?.clips.move.name, 'dash_in');
+assert.equal(resolveClipName(soldierSpineConfig(false).clips.move, name => name === 'walk' || name === 'dash_in'), 'walk');
+assert.equal(resolveClipName(soldierSpineConfig(false).clips.move, name => name === 'dash_in'), 'dash_in');
+assert.equal(resolveClipName(soldierSpineConfig(false).clips.move, () => false), 'walk');
+// 步態倍率封頂：一格 144 像素在 2 秒內走完，倍率原本高達 4，封頂後不超過 MOVE_GAIT_TUNING.maxAnimationSpeed（2.2）
+const soldierCore = new UnitPresentationCore(soldierSpineConfig(false), { x: 0, y: 0 });
+soldierCore.follow({ x: 72, y: 0 }, true, 1);
+assert.equal(soldierCore.snapshot().animationSpeed, MAX_WALK_ANIMATION_SPEED);
+soldierCore.follow({ x: 72 + 18 * 0.5, y: 0 }, true, 1);
+assert.equal(soldierCore.snapshot().animationSpeed, 0.5);
 assert.equal(soldierSpineConfig(false).path, 'spine/soldiers/soldier_spear_blue/soldier_spear_blue');
 assert.equal(soldierSpineConfig(false, true).path, 'spine/soldiers/soldier_spear_red/soldier_spear_red');
 assert.equal(soldierSpineConfig(true, true).path, 'spine/soldiers/soldier_bow_red/soldier_bow_red');

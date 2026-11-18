@@ -48,7 +48,9 @@ import { ArrowShotView } from "./ArrowShotView";
 import { SlashShotView } from "./SlashShotView";
 import { attackVfxFor } from "../shared/AttackVfxMapping";
 import { attackStyleFor } from "../shared/AttackStyle";
-import { moveDustFor, type MoveDustSpec } from "../shared/MoveFeedback";
+import { createMoveSfxThrottleState, moveBeatFor, tryAcquireMoveSfx } from "../shared/MoveFeedback";
+import { playBattleAudio } from "../shared/BattleAudio";
+import { MoveDustEmitter } from "./MoveDustEmitter";
 import { SpineUnitOverlay } from "./SpineGeneralOverlay";
 import { GeneralPortraitStandee, STANDEE_HEIGHT_PX, needsStandeeFallback } from "./GeneralPortraitStandee";
 import { generalSpineConfig, squadMemberCount, troopSpineConfigWithFallback } from '../shared/UnitPresentationConfig';
@@ -220,11 +222,6 @@ export class UnitRenderer extends Component {
   private hpLossPool:  BuffGainEffectPool | null = null;
   private readonly unitViews = new Map<string, UnitView>();
   private readonly movingUnits = new Set<string>();
-  // PROG-2-9406：移動揚塵的節點池與共用材質（手機記憶體優先：重用節點、不逐次 new）
-  private readonly dustPool: Node[] = [];
-  private readonly dustBusy = new Set<Node>();
-  private dustMaterial: Material | null = null;
-  private static readonly DUST_POOL_MAX = 24;
   private readonly dyingUnits = new Set<string>();
   private readonly uiProjectionBuffer = new Vec3();
   private readonly screenProjectionBuffer = new Vec3();
@@ -235,7 +232,11 @@ export class UnitRenderer extends Component {
   private statusHalos: StatusHaloPool | null = null;
   private readonly arrowShots = new ArrowShotView(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   private readonly slashShots = new SlashShotView(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
-  private readonly spineUnits = new SpineUnitOverlay(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
+  /** PROG-2-9407：落腳揚塵粒子，畫在 2D 疊層、單位後面（粒子池有上限，見 MoveDustEmitter） */
+  private readonly moveSfxThrottle = createMoveSfxThrottleState();
+  private readonly moveDust = new MoveDustEmitter(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
+  private readonly spineUnits = new SpineUnitOverlay(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D,
+    (id, x, y, facing, isLeader) => this.emitFootfallDust(id, x, y, facing, isLeader));
   /** 沒有 Spine 的主將改用立繪站牌，不退回藍色通用棋子（issue #2238） */
   private readonly generalStandees = new GeneralPortraitStandee(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   private readonly tileBuffViews = new Map<string, TileBuffView>();
@@ -405,9 +406,7 @@ export class UnitRenderer extends Component {
       this.playRiverCurrentMoveTween(view, unit, fromPos, toPos);
       return;
     }
-    // 強制位移也出塵；河流格與水軍由 moveDustFor 判定不出
-    this.spawnMoveDust(view, unit, plan.durationSec);
-
+    // 揚塵改由步態落腳時發（SpineUnitOverlay 的落腳通知 → emitFootfallDust），強制位移走路也一樣會出塵
     tween(view.worldNode)
       .to(plan.durationSec, { worldPosition: toPos })
       .call(() => {
@@ -418,73 +417,20 @@ export class UnitRenderer extends Component {
   }
 
   /**
-   * PROG-2-9406：移動期間在單位腳下生出中等揚塵（只改表現，不影響位移）。
-   * 自寫輕量版：沒有現成的「腳下塵土」積木（vfx-block-registry 的煙霧都是大型 3D 粒子），
-   * 這裡用池化的扁圓盤（共用一份半透明土色材質），放大後縮回 0，不逐次建立節點。
-   * 圓盤貼地、在單位本體下方，不會擋住單位與跳字。
+   * PROG-2-9407：小兵每次落腳（walk 步態每 0.4 動畫秒一次）同時出腳步聲與揚塵，兩者共用 moveBeatFor 的同一個拍點。
+   * 只改表現，不影響位移。兵種與腳下地形決定塵量；河流格、水軍不出塵。聲音只由帶頭者出，避免小隊三倍音量。
    */
-  private spawnMoveDust(view: UnitView, unit: TroopUnit, moveSec: number): void {
-    const terrain = this.latestState?.getCell(unit.lane, unit.depth)?.terrain;
-    const spec: MoveDustSpec = moveDustFor(unit.type, terrain);
-    if (spec.kind === 'none' || spec.puffCount <= 0) return;
-    const mesh = this.discMesh ?? this.cubeMesh;
-    if (!mesh || !this.worldRoot) return;
-
-    const growSec = 0.55;
-    const fadeSec = 0.3;
-    const radius = 0.72 * spec.scale; // 實機看 0.62／alpha 105 太淡，未達裁決的「中等」
-    for (let i = 0; i < spec.puffCount; i++) {
-      const puff = this.acquireDustNode(mesh);
-      if (!puff) return;
-      // 把各團均分在移動時間前 70%，從單位當下位置落在腳邊
-      const delaySec = (moveSec * 0.7 * i) / Math.max(1, spec.puffCount);
-      const side = i % 2 === 0 ? 1 : -1;
-      puff.setScale(0.001, 1, 0.001);
-      // 先啟用再排 tween：引擎不推進「節點未啟用」的 tween，若等 delay 後才 active，會永遠卡在 delay（縮到 0.001 時看不見）
-      puff.active = true;
-      tween(puff)
-        .delay(delaySec)
-        .call(() => {
-          if (!puff.isValid || !view.worldNode.isValid) return;
-          const p = view.worldNode.worldPosition;
-          puff.setWorldPosition(p.x + side * 0.12 * spec.scale, p.y - this.unitHeight * 0.5 + 0.04, p.z);
-        })
-        .to(growSec, { scale: new Vec3(radius, 1, radius) })
-        .to(fadeSec, { scale: new Vec3(0.001, 1, 0.001) })
-        .call(() => { if (puff.isValid) puff.active = false; this.dustBusy.delete(puff); })
-        .start();
+  private emitFootfallDust(id: string, x: number, y: number, facing: 1 | -1, isLeader: boolean): void {
+    const unit = this.latestState?.units.get(id);
+    if (!unit) return;
+    const beat = moveBeatFor(unit.type, this.latestState?.getCell(unit.lane, unit.depth)?.terrain);
+    if (beat.dust.kind !== 'none') this.moveDust.emit(x, y, facing, beat.dust, isLeader);
+    if (!isLeader) return;
+    const { footstep } = beat;
+    for (let i = 0; i < footstep.beats; i++) {
+      const play = (): void => { if (tryAcquireMoveSfx(this.moveSfxThrottle, Date.now())) playBattleAudio(footstep.cue, footstep.volume); };
+      if (i === 0) play(); else setTimeout(play, i * footstep.intervalMs);
     }
-  }
-
-  /** 從池取一個閒置揚塵節點；池滿且全在用就回 null（直接略過這團，不堆節點）。 */
-  private acquireDustNode(mesh: Mesh): Node | null {
-    for (const n of this.dustPool) {
-      if (n.isValid && !this.dustBusy.has(n)) { this.dustBusy.add(n); return n; }
-    }
-    if (this.dustPool.length >= UnitRenderer.DUST_POOL_MAX || !this.worldRoot) return null;
-    const node = new Node('MoveDust');
-    node.layer = Layers.Enum.DEFAULT;
-    node.active = false;
-    this.worldRoot.addChild(node);
-    const mr = node.addComponent(MeshRenderer);
-    mr.mesh = mesh;
-    mr.setSharedMaterial(this.getDustMaterial(), 0);
-    this.dustPool.push(node);
-    this.dustBusy.add(node);
-    return node;
-  }
-
-  private getDustMaterial(): Material {
-    if (this.dustMaterial) return this.dustMaterial;
-    const mat = new Material();
-    mat.initialize({
-      effectName: 'builtin-unlit',
-      technique: 1,
-      states: { rasterizerState: { cullMode: gfx.CullMode.NONE } },
-    });
-    mat.setProperty('mainColor', new Color(176, 156, 124, 160));
-    this.dustMaterial = mat;
-    return mat;
   }
 
   public playSwapAdvanceAnimation(
@@ -1112,6 +1058,7 @@ export class UnitRenderer extends Component {
       } else { this.spineUnits.remove(`general:${faction}`); if (view.usingHeroModel) view.modelRoot.active = true; }
     });
     this.spineUnits.update(dt);
+    this.moveDust.update(dt);
     this.arrowShots.update(dt);
     this.slashShots.update(dt);
 
@@ -1371,7 +1318,7 @@ export class UnitRenderer extends Component {
     this.spineUnits.abortDuel();
   }
 
-  onDestroy(): void { this.spineUnits.clear(); this.generalStandees.clear(); }
+  onDestroy(): void { this.spineUnits.clear(); this.generalStandees.clear(); this.moveDust.destroy(); }
 
   private createGeneralView(faction: Faction): GeneralView {
     this.ensureRoots();
