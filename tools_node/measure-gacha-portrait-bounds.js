@@ -15,6 +15,9 @@
  *   top    = 第一列有不透明像素的 y（頭頂）
  *   bottom = 最後一列有不透明像素的 y + 1（腳底的下緣）
  *   cx     = 不透明像素的水平中心（x）
+ *   headTop = 頭頂（含頭冠）第一列：只看躯幹中軸左右各 14% 圖寬的帶狀範圍、且連續不透明寬度 >= 4% 圖寬，
+ *             所以舉在身旁、超過頭頂的長槍／戟尖不會被當成頭頂（PROG-2-9156，招賢館頭頂齊平用）
+ *   headCx  = 頭頂往下 5% 身高內的不透明水平中心（頭的中線，不受兵器影響）
  */
 const fs = require('fs');
 const path = require('path');
@@ -57,7 +60,60 @@ function measure(file) {
         }
     }
     if (top < 0) return null;
-    return { w: width, h: height, top, bottom, cx: Math.round(((left + right + 1) / 2) * 10) / 10 };
+    const head = measureHead(png, top, bottom);
+    return { w: width, h: height, top, bottom, cx: Math.round(((left + right + 1) / 2) * 10) / 10, ...head };
+}
+
+const HEAD_BAND_RATIO = 0.14;
+const HEAD_MIN_RUN_RATIO = 0.04;
+const HEAD_CX_DEPTH_RATIO = 0.05;
+
+function opaqueRange(png, y, x0, x1) {
+    let first = -1;
+    let last = -1;
+    for (let x = x0; x < x1; x++) {
+        if (png.data[(y * png.width + x) * 4 + 3] <= ALPHA_THRESHOLD) continue;
+        if (first < 0) first = x;
+        last = x;
+    }
+    return first < 0 ? null : [first, last];
+}
+
+function longestRun(png, y, x0, x1) {
+    let best = 0;
+    let cur = 0;
+    for (let x = x0; x < x1; x++) {
+        if (png.data[(y * png.width + x) * 4 + 3] > ALPHA_THRESHOLD) { cur++; if (cur > best) best = cur; } else cur = 0;
+    }
+    return best;
+}
+
+/** 頭頂與頭中線；找不到時退回整體 top 與整體 cx（呼叫端不用另外處理） */
+function measureHead(png, top, bottom) {
+    const { width } = png;
+    const body = bottom - top;
+    const centers = [];
+    for (let y = top + Math.floor(body * 0.30); y < top + Math.floor(body * 0.45); y++) {
+        const r = opaqueRange(png, y, 0, width);
+        if (r) centers.push((r[0] + r[1]) / 2);
+    }
+    centers.sort((a, b) => a - b);
+    const torso = centers.length ? centers[Math.floor(centers.length / 2)] : width / 2;
+    const x0 = Math.max(0, Math.floor(torso - width * HEAD_BAND_RATIO));
+    const x1 = Math.min(width, Math.ceil(torso + width * HEAD_BAND_RATIO));
+    let headTop = top;
+    for (let y = top; y < bottom; y++) {
+        if (longestRun(png, y, x0, x1) >= width * HEAD_MIN_RUN_RATIO) { headTop = y; break; }
+    }
+    let lo = width;
+    let hi = -1;
+    const depth = headTop + Math.max(1, Math.floor(body * HEAD_CX_DEPTH_RATIO));
+    for (let y = headTop; y < depth && y < bottom; y++) {
+        const r = opaqueRange(png, y, x0, x1);
+        if (r) { lo = Math.min(lo, r[0]); hi = Math.max(hi, r[1]); }
+    }
+    const headCx = hi >= 0 ? Math.round(((lo + hi + 1) / 2) * 10) / 10 : torso;
+    return { headTop, headCx };
 }
 
 function build() {
