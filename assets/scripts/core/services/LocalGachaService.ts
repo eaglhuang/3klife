@@ -7,7 +7,7 @@ import { SyncActionType } from '../systems/SyncManager';
 import { buildGachaSyncRecord } from '../systems/GachaSyncRecord';
 import { featuredGeneralsOf, isLimitedPoolOpen, limitedPoolAcceptsCurrency, type LimitedPoolWindow } from '../systems/LimitedPoolSchedule';
 import type { GachaCurrencyType } from '../systems/GachaCurrency';
-import { checkWalletBalance, formatInsufficientMessage, STARTER_GACHA_WALLET } from './GachaWalletRules';
+import { checkWalletBalance, formatInsufficientMessage, QA_STARTER_GACHA_WALLET, STARTER_GACHA_WALLET } from './GachaWalletRules';
 import { GACHA_MENTOR_RARITY_RATES, GACHA_RARITY_RATES, drawGeneralOnce, normalizeGachaPity, resolveGachaPityBook, type GachaPityBook, type GachaPool } from '../systems/GachaDraw';
 import { destinyShopCredits, exchangeDestinyShop, pullsToNextDestinyCredit, type DestinyShopBlockReason } from '../systems/DestinyShop';
 import { ActionLogStore, type GachaActionType, type GachaCurrencyKey, type GachaHistoryRecord } from './ActionLogStore';
@@ -66,7 +66,14 @@ const SINGLE_PLAYER_MODE_KEY = 'ucuf.gacha.single-player-mode';
 const DEV_AUTO_TOPUP_KEY = 'ucuf.gacha.dev-auto-topup';
 const WALLET_STORAGE_KEY = 'ucuf.gacha.wallet.v1';
 const PITY_STORAGE_KEY = 'ucuf.gacha.pity.v1';
-const DEFAULT_WALLET: LocalGachaWalletSnapshot = { ...STARTER_GACHA_WALLET };
+/** QA 種子開關：localStorage 設為 'true' 時，新檔起始錢包改用 QA_STARTER_GACHA_WALLET（黃金 128,450）；正式環境不設（PROG-2-9149） */
+export const QA_RICH_WALLET_KEY = 'ucuf.qa.rich-wallet';
+
+function defaultWallet(): LocalGachaWalletSnapshot {
+    let qa = false;
+    try { qa = sys.localStorage.getItem(QA_RICH_WALLET_KEY) === 'true'; } catch { qa = false; }
+    return { ...(qa ? QA_STARTER_GACHA_WALLET : STARTER_GACHA_WALLET) };
+}
 
 function cloneGeneral(general: GeneralConfig): GeneralConfig {
     try {
@@ -95,6 +102,7 @@ function normalizeWalletValue(value: unknown, fallback: number): number {
 
 /** 錢包欄位缺漏或壞掉時用預設值補齊 */
 function normalizeWalletSnapshot(value: Partial<LocalGachaWalletSnapshot>): LocalGachaWalletSnapshot {
+    const DEFAULT_WALLET = defaultWallet();
     return {
         gems: normalizeWalletValue(value.gems, DEFAULT_WALLET.gems),
         gold: normalizeWalletValue(value.gold, DEFAULT_WALLET.gold),
@@ -565,7 +573,7 @@ export class LocalGachaService {
             this._walletOf()[currencyKey],
             cost,
             this.isDevAutoTopUpEnabled(),
-            DEFAULT_WALLET[currencyKey],
+            defaultWallet()[currencyKey],
         );
         if (!check.ok) {
             throw new Error(formatInsufficientMessage(currencyKey, check.shortfall));
@@ -650,7 +658,7 @@ export class LocalGachaService {
 
     /** 讀取錢包：存檔優先；存檔沒有、舊 localStorage 有時一次性遷移（PROG-2-0338） */
     private _loadWalletSnapshot(): LocalGachaWalletSnapshot {
-        if (!this._saveStore) return { ...DEFAULT_WALLET };
+        if (!this._saveStore) return defaultWallet();
         const saved = this._saveStore.readWallet();
         if (saved) return normalizeWalletSnapshot(saved);
         const legacy = this._readLegacyWallet();
@@ -660,7 +668,7 @@ export class LocalGachaService {
             this._clearLegacyWallet();
             return migrated;
         }
-        return { ...DEFAULT_WALLET };
+        return defaultWallet();
     }
 
     /** 舊版把錢包存在 localStorage；只用於一次性遷移 */

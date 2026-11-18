@@ -117,6 +117,7 @@ import { BattleReviewController } from '../core/BattleReviewController';
 import { TournamentPanelController, tournamentSeasonCardLines } from '../core/TournamentPanelController';
 import { extremeRewardToast, extremeTaskFlowView } from '../core/ExtremeTaskPanelController';
 import { WishAltarController, WISH_ALTAR_SLOTS } from '../core/WishAltarController';
+import { SPEED_CARD_PRICE } from '../../core/systems/WishPool';
 import { dispatchClickMessage, dispatchSettleToast } from '../../core/systems/DispatchCatalog';
 import { WAREHOUSE_EXPANSION_ITEM } from '../../core/managers/GameSession';
 import { warehouseExpandGemCost } from '../../core/systems/WarehouseCapacity';
@@ -1287,10 +1288,13 @@ export class LobbyScene extends Component {
         }, FIELD_AUTO_BATTLE_JOURNAL[kind], pgId ? [pgId] : []);
         const details: string[] = [];
         if (pgId) {
-            const settlement = await session.recordBattle([pgId], resolution.result, { stageId: encounter.id });
+            const settlement = await session.recordBattle([pgId], resolution.result, { stageId: encounter.id, offBoard: true });
             const entry = settlement.entries[0];
             if (entry) details.push(`${player?.name ?? pgId} 精力 ${entry.vitalityBefore}→${entry.vitalityAfter}，功勳 +${entry.meritGained}${entry.epGained > 0 ? `，EP +${entry.epGained}` : ''}`);
             details.push(...settlement.awakenings.flatMap(factorAwakeningLines));
+            // 戰後獎懲（糧草／黃金／武將經驗／戰利品／兵源回扣／民心）一併列在結算（PROG-2-9149）
+            details.push(...settlement.aftermathLines);
+            this._refreshWalletPreviewState();
         }
         return { resolution, details };
     }
@@ -2367,6 +2371,14 @@ export class LobbyScene extends Component {
             speedCards: () => services().session.itemCount(ITEM_WISH_SPEED_CARD),
             startWish: (itemId, nowMs) => services().session.startWish(itemId, nowMs),
             speedUp: (wishId, cards, nowMs) => services().session.speedUpWish(wishId, cards, nowMs),
+            // 加速卡可用玉買（SPEED_CARD_PRICE 玉／張）；addItem 在第一個 await 前就改好背包，接著 speedUp 馬上看得到卡
+            gems: () => this._localGachaService.getCurrencyAmount('gems'),
+            buyCard: () => {
+                if (!this._localGachaService.spendCurrency('gems', SPEED_CARD_PRICE)) return false;
+                void services().session.addItem(ITEM_WISH_SPEED_CARD, 1, 'SHOP');
+                this._refreshWalletPreviewState();
+                return true;
+            },
             claim: (nowMs) => services().session.claimWishes(nowMs),
             subsidyBanner: (nowMs) => economySubsidyBannerText(services().session.dailySubsidy, nowMs),
         });
