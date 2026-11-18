@@ -2826,6 +2826,24 @@
         ],
         "activeVersion": "0002"
       },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/jiang_wei__姜維__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "3e42fe57efd66f8204b9b3daa659e584370b362855e61a805f4af82e77a0a81d",
+            "canvas": "1254x1254 RGBA",
+            "source": "standing/jiang_wei__姜維__standing_0002.png",
+            "sourceSha256": "9f668bf9cbe865b83de41cc33e1c0c07e1b56f8c34df60f5e09d68e793851e8f",
+            "crop": "shoulder-line",
+            "cropBox": "x=375,y=42,w=275,h=275",
+            "qc": "125px preview: face centered within 3%; full head approx. 70% of frame; both shoulder outlines visible; original three-quarter angle preserved; crop ends at shoulder line."
+          }
+        ]
+      },
       "battle": {
         "activeVersion": "0001",
         "status": "review-pending",
