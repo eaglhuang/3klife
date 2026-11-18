@@ -105,15 +105,15 @@ function main() {
     if (!(target >= 0.70 && target <= 0.82)) throw new Error('--target must be between 0.70 and 0.82');
     if (!Number.isInteger(outputSize) || outputSize < 64 || outputSize > 2048) throw new Error('--size must be an integer between 64 and 2048');
     const centerX = face.x + face.width / 2;
-    let side = head.height / target;
-    if (shoulders) {
-      const required = Math.max(
-        ...shoulders.map(p => Math.abs(p.x - centerX) * 2),
-        ...shoulders.map(p => Math.max(0, p.y - head.y) / 0.92)
-      );
-      side = Math.max(side, required);
-    }
-    const crop = { x: centerX - side / 2, y: head.y - side * 0.05, width: side, height: side };
+    const horizontalMin = Math.min(head.x, face.x, ...shoulders.map(p => p.x));
+    const horizontalMax = Math.max(head.x + head.width, face.x + face.width, ...shoulders.map(p => p.x));
+    const requiredHorizontal = Math.max((centerX - horizontalMin) / 0.53, (horizontalMax - centerX) / 0.53);
+    const requiredVertical = Math.max(...shoulders.map(p => Math.max(0, p.y - head.y) / 0.92));
+    const side = Math.max(head.height / target, requiredHorizontal, requiredVertical);
+    const cropCenterMin = Math.max(horizontalMax - side / 2, centerX - side * 0.03);
+    const cropCenterMax = Math.min(horizontalMin + side / 2, centerX + side * 0.03);
+    const cropCenterX = Math.min(cropCenterMax, Math.max(cropCenterMin, centerX));
+    const crop = { x: cropCenterX - side / 2, y: head.y - side * 0.05, width: side, height: side };
     const faceCenterX = (centerX - crop.x) / side, headRatio = head.height / side;
     const headContained = head.x >= crop.x && head.x + head.width <= crop.x + side && head.y >= crop.y && head.y + head.height <= crop.y + side;
     const headWithinSource = head.x >= 0 && head.y >= 0 && head.x + head.width <= src.width && head.y + head.height <= src.height;
