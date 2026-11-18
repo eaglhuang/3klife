@@ -7620,6 +7620,23 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/qin_mi__秦宓__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "bd20253f6ee7151b9552867486d14a8ccce1d753624461493e7af3298995112b",
+            "canvas": "1024x1536 RGBA PNG",
+            "weaponClass": "bamboo scroll",
+            "poseLabel": "側身急停、護簡喝止",
+            "sourceStanding": "standing/qin_mi__秦宓__standing_0002.png",
+            "note": "保留核定立繪的金色小冠、綠袍、赭紅中襟與竹簡；側身踏步護簡，以前掌喝止呈現臨戰施策，與董昭令簡遠指姿勢區分。透明全身候選，待使用者審看。"
+          }
+        ]
       }
     },
     {
