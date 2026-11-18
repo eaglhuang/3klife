@@ -7889,6 +7889,24 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/xue_zong__薛綜__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "c17de01350b0d7f88e4c62fcc3a340209e78c0c176d63051c62fb29b5c03a9d3",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "bamboo book",
+            "poseLabel": "側步疾退、護住軍書",
+            "gaze": "toward camera",
+            "sourceStanding": "standing/xue_zong__薛綜__standing_0002.png",
+            "note": "保留薛綜紅袍、淺青綠金繡披袍與竹冊；側步疾退，雙手護住軍書。alpha≥16 主體範圍 x=132–878、y=150–1430；125/250px 縮圖已檢查，透明背景，候選待使用者審核，未接入遊戲。"
+          }
+        ]
       }
     },
     {
