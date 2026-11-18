@@ -6867,6 +6867,22 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/ma_liang__馬良__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "303d7ccfd5d3639053f6faf4d10fe547b6f0091edba2cdddad4e1ca1eeee717f",
+            "canvas": "1024x1536 RGBA PNG",
+            "pose": "轉身踏步展開戰術地圖，以令杖指揮側翼",
+            "source": "standing/ma_liang__馬良__standing_0002.png",
+            "note": "Generated from the approved standing portrait, retaining Ma Liang’s green robe, pale brows, tactical map and command baton; pending visual approval, not asserted as runtime-integrated."
+          }
+        ]
       }
     },
     {
