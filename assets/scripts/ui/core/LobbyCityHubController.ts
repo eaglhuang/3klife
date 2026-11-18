@@ -9,6 +9,7 @@
  */
 
 import { RELATION_TIER_LABEL, relationTier, type RivalWorld } from '../../core/systems/RivalNations';
+import { lobbyActionLock, lockedActionLabel } from '../../core/systems/OfficerFeatureUnlocks';
 
 export type LobbyCategoryId = 'sortie' | 'generals' | 'domestic' | 'nurture' | 'shop';
 
@@ -32,6 +33,11 @@ export const LOBBY_CATEGORIES: readonly LobbyCategoryDef[] = [
     { id: 'nurture', label: '培育', items: [{ id: 'nurture', label: '開獎・培育' }, { id: 'supportCard', label: '支援卡' }, { id: 'shrine', label: '祠堂' }, { id: 'relationGraph', label: '關係圖鑑' }] },
     { id: 'shop', label: '商城', items: [{ id: 'gacha', label: '轉蛋' }, { id: 'shop', label: '商店' }, { id: 'warehouse', label: '倉庫' }, { id: 'itemBag', label: '背包' }, { id: 'seasonPass', label: '通行證' }] },
 ];
+
+/** 子功能的原始顯示名稱（不含鎖頭字樣） */
+export function lobbyActionName(action: LobbyActionId): string {
+    return LOBBY_CATEGORIES.flatMap(c => c.items).find(i => i.id === action)?.label ?? action;
+}
 
 /** 子選單項目點了卻沒有可開的畫面時顯示的提示（PROG-2-9121） */
 export const LOBBY_ACTION_NOT_OPEN_TEXT = '此功能尚未開放';
@@ -98,6 +104,8 @@ export interface LobbyCityHubInput {
     readonly openCategory: LobbyCategoryId | null;
     /** 子功能的動態文字（例如天下沙盤的開放狀態），沒給就用預設名稱 */
     readonly actionLabels?: Partial<Record<LobbyActionId, string>>;
+    /** 官職階位（PROG-2-9151）：沒給就不鎖任何按鈕；有給時未達門檻的子功能顯示「🔒名稱・X開放」 */
+    readonly officerTier?: number;
 }
 
 export interface LobbyCityHubFlowView {
@@ -182,7 +190,9 @@ export function buildLobbyCityHubView(input: LobbyCityHubInput): LobbyCityHubFlo
         const item = open?.items[i];
         actives[`btnSub${i}`] = !!item;
         if (item) visibleSubCount++;
-        texts[`sub${i}Label`] = item ? (input.actionLabels?.[item.id] ?? item.label) : '';
+        const name = item ? (input.actionLabels?.[item.id] ?? item.label) : '';
+        const lock = item && input.officerTier !== undefined ? lobbyActionLock(item.id, input.officerTier) : null;
+        texts[`sub${i}Label`] = lock?.locked ? lockedActionLabel(item!.label, lock) : name;
     }
     for (const c of LOBBY_CATEGORIES) {
         texts[`${categoryButtonId(c.id)}Label`] = c.id === input.openCategory ? `▲ ${c.label}` : c.label;

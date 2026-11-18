@@ -13,7 +13,7 @@ import {
     OFFICER_COMMERCE_CONFIG,
 } from '../assets/scripts/core/systems/OfficerCommerce';
 import { parseOfficerTierTable, installOfficerTierTable } from '../assets/scripts/core/systems/OfficerTierTable';
-import { initialOfficerState } from '../assets/scripts/core/systems/OfficerState';
+import { initialOfficerState, OFFICER_EXP_TUNING } from '../assets/scripts/core/systems/OfficerState';
 import { GameSession } from '../assets/scripts/core/managers/GameSession';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -46,6 +46,7 @@ export function createOfficerCommerceSuite(): TestSuite {
             assert.equals(1.5, OFFICER_COMMERCE_CONFIG.monthlyCardExpMultiplier);
         } finally {
             OFFICER_COMMERCE_CONFIG.monthlyCardExpMultiplier = before;
+            OFFICER_EXP_TUNING.gainMultiplier = 1; // 安裝資料檔會一併覆寫官職經驗倍率，還原避免影響後面的測試
         }
     });
 

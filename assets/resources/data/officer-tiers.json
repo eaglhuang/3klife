@@ -1,5 +1,7 @@
 {
   "version": 1,
+  "_expGainMultiplier": "官職經驗倍率（PROG-2-9151 暫定）：量測一年實玩每季約 30~60 經驗，3.2 倍讓階位2約第1年末、階位3約第3季、階位4約第4季末、階位5留到第二年；只調這個數字即可改節奏",
+  "expGainMultiplier": 3.2,
   "commerce": { "monthlyCardExpMultiplier": 1.15, "trialHours": 24 },
   "tiers": [
     {
