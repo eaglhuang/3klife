@@ -10244,6 +10244,53 @@
         "metrics_summary": []
       },
       "completed_at": "2026-11-19"
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9410",
+      "title": "放招手感：武將出招前蓄力 0.4 秒、畫面中央招式名橫幅",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-19",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-19T05:24:04+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 排定的戰場手感順序：移動 → 部署落地 → 放招 → buff 格統一。11/18 使用者裁決：放招蓄力停頓 0.4 秒；招式名改在畫面中央橫幅（不是頭頂小字），約 0.8～1 秒，連續放招排隊或合併，不擋命中特效，避開右側戰報面板。現況出招當下直接播特效，沒有蓄力也沒有中央招式名。",
+      "related": [
+        "PROG-2-9407",
+        "PROG-2-9409"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-19 | 狀態: done | 驗證: 單元測試 8389 通過（新增 SkillCastPresentation 8 項）、tsc 0、compute-gate quick、battle-skill-smoke、ucuf 全過；主目錄實跑逐格截圖確認 0 秒橫幅淡入、0.4 秒後才出招式特效、約 0.9 秒橫幅淡出，橫幅在中央偏上不碰右側戰報 | 變更: 新增 SkillCastPresentation（蓄力時間、橫幅排隊合併純邏輯）與 SkillNameBanner（單一重用節點）；BattleUIBridge 放招改走戰鬥演出佇列最前面先蓄力再出招；Spine 武將蓄力時微膨脹加抖動；有漫畫分鏡的奧義不加；SSR／UR 戰法只蓄力不疊橫幅 | 阻塞: 無；已知限制：補血跳字不走演出佇列，會在蓄力期間先跳出；非 Spine 武將沒有蓄力姿勢",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

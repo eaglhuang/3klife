@@ -2,6 +2,7 @@ import { Color, Node, UITransform, resources, sp } from 'cc';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { UnitAction, UnitPresentationCore, UnitPresentationState, resolveClipName } from '../shared/UnitPresentationCore';
 import { dustBeatsFor, stepBobOffset } from '../shared/MoveFeedback';
+import { sampleChargePose } from '../shared/SkillCastPresentation';
 import { DeployLandingSample, deployLandingTotalSec, landingCrossed, memberDeployDelay, sampleDeployLanding } from '../shared/DeployLanding';
 import { UnitSpineConfig } from '../shared/UnitPresentationConfig';
 import { AttackStyle, pickAttackClip } from '../shared/AttackStyle';
@@ -29,6 +30,8 @@ interface Entry {
   stepClock: number;
   /** 部署落地演出進行中的時鐘（秒，PROG-2-9409）；素材載好才開始走，結束後為 null。 */
   deploy: { t: number } | null;
+  /** 放招蓄力進行中的時鐘（秒，PROG-2-9410）；結束後為 null。 */
+  charge: { t: number; dur: number } | null;
 }
 
 /** 落腳通知：腳點（與單位節點同一座標系）、面向、是否為帶頭者。 */
@@ -61,7 +64,7 @@ export class SpineUnitOverlay {
     let entry = this.entries.get(id);
     if (entry && entry.config.path !== config.path) { this.remove(id); entry = undefined; }
     if (!entry) {
-      entry = { config, core: new UnitPresentationCore(config, { x, y }, facing), node: null, revision: -1, facing, loading: false, ready: [], visible, followers: [], members, hit: null, flashPainted: 0, stepClock: 0, deploy: null };
+      entry = { config, core: new UnitPresentationCore(config, { x, y }, facing), node: null, revision: -1, facing, loading: false, ready: [], visible, followers: [], members, hit: null, flashPainted: 0, stepClock: 0, deploy: null, charge: null };
       this.entries.set(id, entry);
       if (this.pendingDeploys.delete(id)) entry.deploy = { t: 0 };
     }
@@ -79,6 +82,14 @@ export class SpineUnitOverlay {
    * 部署落地演出（PROG-2-9409）：整隊從上方依序落下、落地壓扁回彈，每名士兵落地時通知 onLanding。
    * 疊層還沒建立就先記著，建立時再開始；素材還在載入時時鐘不走，載好才落，玩家才看得到。
    */
+  /** 放招蓄力（PROG-2-9410）：durationSec 內慢慢膨脹、越抖越快，時間到自動回原狀。沒有這個單位回 false。 */
+  public charge(id: string, durationSec: number): boolean {
+    const entry = this.entries.get(id);
+    if (!entry?.node?.isValid || !(durationSec > 0)) return false;
+    entry.charge = { t: 0, dur: durationSec };
+    return true;
+  }
+
   public deploy(id: string): void {
     const entry = this.entries.get(id);
     if (entry) entry.deploy = { t: 0 };
@@ -104,6 +115,7 @@ export class SpineUnitOverlay {
     }
     for (const [id, entry] of this.entries) {
       if (entry.hit) entry.hit.elapsed += dt;
+      if (entry.charge) { entry.charge.t += Math.max(0, dt); if (entry.charge.t >= entry.charge.dur) entry.charge = null; }
       const landingPrev = this.advanceDeploy(entry, dt);
       if (!controlled?.includes(id)) {
         const state = entry.core.step(dt);
@@ -229,7 +241,8 @@ export class SpineUnitOverlay {
     const offset = entry.config.footOffset;
     // 受擊回饋：抖動位移與閃色強度（結束後歸零並清掉狀態）
     const hit = entry.hit;
-    const shakeX = hit ? sampleHitShake(hit.elapsed, hit.amplitude) : 0;
+    const chargePose = entry.charge ? sampleChargePose(entry.charge.t, entry.charge.dur) : { scale: 1, shakeX: 0 };
+    const shakeX = (hit ? sampleHitShake(hit.elapsed, hit.amplitude) : 0) + chargePose.shakeX;
     const flash = hit?.flash ? hitFlashStrength(hit.elapsed) : 0;
     if (hit && hit.elapsed >= Math.max(BATTLE_VISUAL_TIMING.hitShakeSec, BATTLE_VISUAL_TIMING.hitFlashSec)) entry.hit = null;
     const flashChanged = this.paintFlash(skeleton, entry, flash);
@@ -241,7 +254,7 @@ export class SpineUnitOverlay {
     const landing = this.landingSample(entry, 0);
     node.setPosition(state.foot.x - offset.x * entry.config.displayScale * state.facing + shakeX,
       state.foot.y - offset.y * entry.config.displayScale + leaderBob + landing.dy, 0);
-    node.setScale(entry.config.displayScale * state.facing * landing.scaleX, entry.config.displayScale * landing.scaleY, 1);
+    node.setScale(entry.config.displayScale * state.facing * landing.scaleX * chargePose.scale, entry.config.displayScale * landing.scaleY * chargePose.scale, 1);
     const skinChanged = entry.facing !== state.facing || entry.revision < 0;
     const clipChanged = entry.revision !== state.revision;
     const runtime = skeleton.skeletonData?.getRuntimeData();
