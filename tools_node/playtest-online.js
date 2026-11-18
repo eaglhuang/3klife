@@ -1082,7 +1082,11 @@ async function main() {
             await backToLobbyBar();
             await closeMissionLayers();
             const opened = await rm.tryClick({ name: '^BtnMindMailbox$', button: true });
-            if (!opened) { rec.detail.mailbox = '大廳沒有信箱入口（本季沒有任何武將來信）'; return rec.detail; }
+            if (!opened) {
+                rec.detail.state = await page.evaluate(() => { let r = null; const walk = (node) => { for (const c of node.components) if (c && c.qaMindState) r = c.qaMindState(); for (const ch of node.children) walk(ch); }; walk(window.cc.director.getScene()); return r; });
+                rec.detail.mailbox = '大廳沒有信箱入口（本季沒有任何武將來信）';
+                return rec.detail;
+            }
             await delay(600);
             const texts = (await rm.allTexts()).filter((t) => /・(求封|請戰|雪恥|請罪|訴苦|進言|抗命信)/.test(t) || /第\d+年/.test(t));
             rec.detail.requestTexts = texts.slice(0, 8);

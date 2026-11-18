@@ -1204,6 +1204,13 @@ export class LobbyScene extends Component {
         return n;
     }
 
+    /** 玩家視角驗收用：回報信箱現況（封數、入口是否顯示），自動試玩找不到入口時用來判斷是沒信還是被擋 */
+    public qaMindState(): { mailbox: number; pending: number; entryActive: boolean; entryInHierarchy: boolean } {
+        const box = services().session.mindMailbox();
+        const entry = this._mindPanel?.entry;
+        return { mailbox: box.length, pending: box.filter((r) => r.status === 'PENDING').length, entryActive: Boolean(entry?.active), entryInHierarchy: Boolean(entry?.activeInHierarchy) };
+    }
+
     private _syncSeasonEventPopup(): void {
         this._mindPanel?.refresh();
         const popup = this._seasonEventPopup;
