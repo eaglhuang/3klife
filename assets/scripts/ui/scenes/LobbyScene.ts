@@ -12,7 +12,7 @@ import { buildRivalOfficerSetup, type RivalOfficerSetupInput, type RivalSetupGen
 import { inspiredTacticName } from '../../core/systems/InspiredTacticMap';
 import { parseLimitedPoolWindows } from '../../core/systems/LimitedPoolSchedule';
 import { expandLimitedPoolRotations, parseLimitedPoolRotations } from '../../core/systems/LimitedPoolRotation';
-import { _decorator, BlockInputEvents, Button, Canvas, Color, Component, instantiate, JsonAsset, Label, Mask, Node, Sprite, sys, UITransform, Widget, resources } from 'cc';
+import { _decorator, BlockInputEvents, Button, Canvas, Color, Component, director, instantiate, JsonAsset, Label, Mask, Node, Sprite, sys, UITransform, Widget, resources } from 'cc';
 import { MindRequestPanel } from '../components/mind/MindRequestPanel';
 import { installAdaptiveResolution } from '../core/AdaptiveResolution';
 import { computeSubMenuCenterX, LobbyHallScreenBinder, type HallActorTapView, type LobbyHallDockId, type LobbyHallPanelId, type LobbyHallWallId } from '../core/LobbyHallScreenBinder';
@@ -1439,6 +1439,10 @@ export class LobbyScene extends Component {
             select: (row) => this._selectBorrowedMentor(row),
             openRecord: () => this._setGraduationOpen(true),
             bringToFront: (host) => this._bringNodeToFront(host.node),
+            ensureLoaded: async () => {
+                if (services().session.npcFriendMentors.length === 0) await services().loadNpcFriendMentors();
+            },
+            notifyEmpty: () => services().event.emit('SHOW_TOAST', { message: '目前沒有可借用的好友教官', duration: 2 }),
         });
         await this._mentorBorrow.mount();
     }
@@ -1464,7 +1468,7 @@ export class LobbyScene extends Component {
             this._refreshNurtureFlow();
             return;
         }
-        this._mentorBorrow?.open();
+        void this._mentorBorrow?.open();
     }
 
     /** 目前的借將列表（全部好友，依借用檢查結果標示）；每次刷新都重算，避免打開後狀態過期 */
@@ -6564,7 +6568,7 @@ ${spent}`,
             ten: () => { void this._runGachaAction('ten'); },
             gold: () => { void this._runGachaAction('gold'); },
             ticket: () => { void this._runGachaAction('ticket'); },
-        }, this, Button.EventType.CLICK);
+        }, this, Button.EventType.CLICK, { stamp: () => director.getTotalFrames(), window: 1 });
         // 池圓點也走同一個切池流程（宿主只會換右側內容，不換橫幅與附加區塊）
         GACHA_POOLS.forEach((pool, index) => {
             // 圓點節點名是原稿的池 id（layoutKey），不是程式用的 key：限定池是 PoolDot_legendary、紅顏池是 PoolDot_heroine

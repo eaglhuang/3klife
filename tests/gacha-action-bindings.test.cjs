@@ -65,10 +65,25 @@ test('the same wrapper is reused so rebinding does not stack listeners', () => {
 });
 test('two taps further apart than the dedupe window both run', () => {
     let clock = 1000, runs = 0;
-    const tap = onceForTap(() => { runs++; }, () => clock);
+    const tap = onceForTap(() => { runs++; }, { stamp: () => clock, window: GACHA_TAP_DEDUPE_MS });
     tap(); tap();
     assert.equal(runs, 1);
     clock += GACHA_TAP_DEDUPE_MS + 1;
     tap();
+    assert.equal(runs, 2);
+});
+test('frame clock: click and touch-end in the same frame run once even when the frame is slow, next frame runs again', () => {
+    let frame = 7, runs = 0;
+    const f = fixture();
+    const slow = { stamp: () => frame, window: 1 };
+    const actions = {};
+    for (const key of Object.keys(GACHA_ACTION_NODES)) actions[key] = () => {};
+    actions.next = () => { runs++; };
+    bindGachaActions(n => f.nodes.get(n), n => { n.button = true; }, actions, f.owner, 'click', slow);
+    const next = f.nodes.get(GACHA_ACTION_NODES.next);
+    next.fire('touch-end'); next.fire('click');
+    assert.equal(runs, 1);
+    frame += 1;
+    next.fire('touch-end'); next.fire('click');
     assert.equal(runs, 2);
 });
