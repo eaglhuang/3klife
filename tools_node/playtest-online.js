@@ -1085,6 +1085,8 @@ async function main() {
             const opened = await rm.tryClick({ name: '^BtnMindMailbox$', button: true });
             if (!opened) {
                 rec.detail.state = await page.evaluate(() => { let r = null; const walk = (node) => { for (const c of node.components) if (c && c.qaMindState) r = c.qaMindState(); for (const ch of node.children) walk(ch); }; walk(window.cc.director.getScene()); return r; });
+                rec.detail.locate = await rm.locate({ name: '^BtnMindMailbox$', button: true }).catch((e) => String(e));
+                await shot(rec, `mind-mailbox-${tag}-missing`);
                 rec.detail.mailbox = '大廳沒有信箱入口（本季沒有任何武將來信）';
                 return rec.detail;
             }

@@ -58,6 +58,12 @@ function makeButton(parent: Node, name: string, text: string, w: number, h: numb
     return node;
 }
 
+/** 程式碼建的節點預設不在 UI 相機的圖層上，要整串跟著父節點的圖層才畫得出來 */
+function applyLayer(node: Node, layer: number): void {
+    node.layer = layer;
+    for (const child of node.children) applyLayer(child, layer);
+}
+
 export class MindRequestPanel {
     public readonly entry: Node;
     public readonly panel: Node;
@@ -65,6 +71,9 @@ export class MindRequestPanel {
     private readonly _list: Node;
     private _open = false;
     private _busy = false;
+    /** 剛回應的那封信：重畫時排到最上面，讓玩家看到武將的反應句 */
+    private _lastAnswered = '';
+    private _layer = 0;
 
     public constructor(private readonly _host: MindRequestPanelHost, parent: Node) {
         this.entry = new Node('BtnMindMailbox');
@@ -98,6 +107,9 @@ export class MindRequestPanel {
         this._list = new Node('List');
         sheet.addChild(this._list);
         this.panel.active = false;
+        this._layer = parent.layer;
+        applyLayer(this.entry, this._layer);
+        applyLayer(this.panel, this._layer);
         this.refresh();
     }
 
@@ -113,6 +125,7 @@ export class MindRequestPanel {
 
     public close(): void {
         this._open = false;
+        this._lastAnswered = '';
         this.panel.active = false;
         this.refresh();
     }
@@ -123,15 +136,19 @@ export class MindRequestPanel {
 
     /** 換季、讀檔、回應之後重畫：徽章數字與列表 */
     public refresh(): void {
-        const requests = this._host.mailbox();
-        const pending = requests.filter((r) => r.status === 'PENDING').length;
+        const all = this._host.mailbox();
+        const requests = this._lastAnswered ? [...all.filter((r) => r.id === this._lastAnswered), ...all.filter((r) => r.id !== this._lastAnswered)] : all;
+        const pending = all.filter((r) => r.status === 'PENDING').length;
         this._badge.string = mindBadgeText(pending);
-        this.entry.active = requests.length > 0;
+        const show = requests.length > 0;
+        if (show && !this.entry.active) this._host.bringToFront?.(this.entry);
+        this.entry.active = show;
         if (!this._open) return;
         for (const r of requests.slice(0, MAX_ROWS)) if (r.status === 'PENDING' && !r.read) this._host.markRead(r.id);
         const rows = buildMindRequestRows(requests.slice(0, MAX_ROWS), this._host.nameOf);
         this._list.removeAllChildren();
         rows.forEach((row, i) => this._drawRow(row, i));
+        applyLayer(this._list, this._layer);
     }
 
     private _drawRow(row: MindRequestRowView, index: number): void {
@@ -142,15 +159,15 @@ export class MindRequestPanel {
         node.addComponent(UITransform).setContentSize(PANEL_W - 40, ROW_H - 10);
         fillRect(node, PANEL_W - 40, ROW_H - 10, row.pending ? new Color(86, 62, 40, 255) : new Color(62, 50, 40, 255));
         const head = row.major ? `${row.kindLabel}（重大）` : row.kindLabel;
-        makeLabel(node, 'Head', `${head}　${row.statusLabel}`, 26, row.major ? new Color(255, 200, 90, 255) : new Color(230, 210, 170, 255), 700, 34, -60, ROW_H / 2 - 28);
-        makeLabel(node, 'Body', row.text, 24, new Color(245, 240, 230, 255), PANEL_W - 80, 60, 0, 8);
+        makeLabel(node, 'Head', `${head}　${row.statusLabel}`, 26, row.major ? new Color(255, 200, 90, 255) : new Color(230, 210, 170, 255), 700, 34, -60, ROW_H / 2 - 22);
+        makeLabel(node, 'Body', row.text, 24, new Color(245, 240, 230, 255), PANEL_W - 80, 56, 0, 6);
         if (row.pending) {
             row.buttons.forEach((b, bi) => {
-                makeButton(node, `BtnMindReply-${index}-${b.accept ? 'yes' : 'no'}`, b.label, 120, 44, (PANEL_W - 40) / 2 - 80 - bi * 140, -ROW_H / 2 + 30,
+                makeButton(node, `BtnMindReply-${index}-${b.accept ? 'yes' : 'no'}`, b.label, 120, 44, (PANEL_W - 40) / 2 - 80 - bi * 140, -ROW_H / 2 + 28,
                     b.accept ? new Color(60, 120, 70, 255) : new Color(130, 60, 50, 255), () => { void this._answer(row.id, b.accept); });
             });
         } else if (row.reply) {
-            makeLabel(node, 'Reply', `「${row.reply}」`, 24, new Color(180, 230, 190, 255), PANEL_W - 80, 40, 0, -ROW_H / 2 + 30);
+            makeLabel(node, 'Reply', `「${row.reply}」`, 24, new Color(180, 230, 190, 255), PANEL_W - 80, 40, 0, -ROW_H / 2 + 26);
         }
     }
 
@@ -158,7 +175,8 @@ export class MindRequestPanel {
         if (this._busy) return;
         this._busy = true;
         try {
-            await this._host.resolve(id, accept);
+            const result = await this._host.resolve(id, accept);
+            if (result.ok) this._lastAnswered = id;
         } finally {
             this._busy = false;
             this.refresh();
