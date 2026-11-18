@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-18",
+  "updatedAt": "2026-11-19",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -1466,7 +1466,15 @@
             "status": "review-pending",
             "sha256": "dbe440aa8279a79da5ebc3230fb50a4fea9ba26e29061ce5e03cb773ae23f935",
             "canvas": "1254x1254 RGBA",
-            "note": "Existing remote small-avatar file discovered without catalog record. Visual thumbnail is centered and shoulder-up; crop provenance remains to be confirmed."
+            "note": "User-removed after avatar crop failed the head-size/shoulder quality gate; do not restore."
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/zhang_fei__張飛__small_avatar_0002.png",
+            "status": "review-pending",
+            "sha256": "E3108CB9FCD81C1854EEDFC686CEE24BAC53933D48C6A69B4B5B18BC2A862072",
+            "canvas": "256x256 RGBA",
+            "note": "Cropped and resized from official avatar_0002; head height 76.0%, face center 53.0%, bilateral shoulder points visible with at least 10% crop clearance; visually compared with seven user-approved small-avatar references."
           }
         ]
       }
