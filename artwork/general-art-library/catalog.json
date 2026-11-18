@@ -8165,6 +8165,25 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/chen_dao__陳到__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "33fe910812f3f65bbc3547dd9388b15c48ef7218866d3cb8f88964f04c4639eb",
+            "canvas": "1024x1536 PNG",
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/chen_dao__陳到__standing_0002.png",
+            "pose": "低位盾格後反手斬擊",
+            "weaponClass": "short sword and rectangular shield",
+            "qc": "125px與250px白底合成預覽：頭盔、盾、劍、雙手與雙靴完整；透明輪廓乾淨。",
+            "createdAt": "2026-11-18"
+          }
+        ]
       }
     },
     {
