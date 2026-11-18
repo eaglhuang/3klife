@@ -771,7 +771,8 @@ async function main() {
                         popupLog.push({ kind: popup.kind, texts: ((await rm.textsUnder(host)) || []).slice(0, 30) });
                     }
                     if (captured && popup.kind.startsWith('season-report')) { cap = { texts: await rm.textsUnder('^SeasonReportRoot$'), top: await readTopbar() }; captured.push(cap); }
-                    await rm.click(spec, popup.kind);
+                    // 低幀率（合併後季事件與季報疊開時約 3 FPS）下，定位後彈窗可能剛好播完關閉動畫，找不到就當已關
+                    try { await rm.click(spec, popup.kind); } catch (e) { if (!/找不到可點的節點/.test(String(e && e.message))) throw e; }
                     // 季報一關，頂欄立刻讀一次：後續事件選項會花錢，不能拿最後的頂欄比
                     if (cap) { await delay(400); cap.topClosed = await readTopbar(); }
                     attempts[popup.kind] = n + 1;
