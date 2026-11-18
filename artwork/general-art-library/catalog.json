@@ -6639,6 +6639,25 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/liao_li__廖立__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "94c58e1b505e56deeca7d1b48e13d9221e1efa068872fc0ec247c8215369f9b4",
+            "canvas": "1024x1536 PNG",
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/liao_li__廖立__standing_0002.png",
+            "pose": "三分之四轉身展卷，單手伸出傳令",
+            "weaponClass": "none; bamboo document",
+            "qc": "125px與250px白底預覽：帽冠、雙手、竹簡與雙鞋完整；透明輪廓乾淨。",
+            "createdAt": "2026-11-18"
+          }
+        ]
       }
     },
     {
