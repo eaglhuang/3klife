@@ -432,7 +432,7 @@ export class UnitRenderer extends Component {
 
     const growSec = 0.55;
     const fadeSec = 0.3;
-    const radius = 0.62 * spec.scale;
+    const radius = 0.72 * spec.scale; // 實機看 0.62／alpha 105 太淡，未達裁決的「中等」
     for (let i = 0; i < spec.puffCount; i++) {
       const puff = this.acquireDustNode(mesh);
       if (!puff) return;
@@ -440,13 +440,14 @@ export class UnitRenderer extends Component {
       const delaySec = (moveSec * 0.7 * i) / Math.max(1, spec.puffCount);
       const side = i % 2 === 0 ? 1 : -1;
       puff.setScale(0.001, 1, 0.001);
+      // 先啟用再排 tween：引擎不推進「節點未啟用」的 tween，若等 delay 後才 active，會永遠卡在 delay（縮到 0.001 時看不見）
+      puff.active = true;
       tween(puff)
         .delay(delaySec)
         .call(() => {
           if (!puff.isValid || !view.worldNode.isValid) return;
           const p = view.worldNode.worldPosition;
           puff.setWorldPosition(p.x + side * 0.12 * spec.scale, p.y - this.unitHeight * 0.5 + 0.04, p.z);
-          puff.active = true;
         })
         .to(growSec, { scale: new Vec3(radius, 1, radius) })
         .to(fadeSec, { scale: new Vec3(0.001, 1, 0.001) })
@@ -481,7 +482,7 @@ export class UnitRenderer extends Component {
       technique: 1,
       states: { rasterizerState: { cullMode: gfx.CullMode.NONE } },
     });
-    mat.setProperty('mainColor', new Color(176, 156, 124, 105));
+    mat.setProperty('mainColor', new Color(176, 156, 124, 160));
     this.dustMaterial = mat;
     return mat;
   }
