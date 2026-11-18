@@ -1654,14 +1654,30 @@
           {
             "version": "0002",
             "file": "battle/dian_wei__典韋__battle_0002.png",
-            "status": "review-pending",
+            "status": "rejected",
             "poseSelection": "C",
             "sha256": "4814152F08FFF77E229F972AADFA368C3413444EDC67C7A5E95A7CDEF2B339E5",
             "canvas": "1024x1536 RGBA",
-            "note": "Revised C-pose candidate using integrated standing armor/colors and paired axes; compact action, pending review."
+            "note": "使用者已移除不合格版本，僅保留歷史紀錄。",
+            "rejectionReason": "使用者刪除舊圖並要求重畫。"
+          },
+          {
+            "version": "0003",
+            "file": "battle/dian_wei__典韋__battle_0003.png",
+            "status": "review-pending",
+            "sha256": "cb2e5e7595e0164f9ba10ea2f06fb4755d0de884f7ea9e35faf699ac4507da90",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "paired-axes",
+            "poseLabel": "收步雙斧高低架勢",
+            "sourcePortraitFile": "assets/resources/sprites/generals/dian_wei_portrait.png",
+            "sourceSha256": "60aba602261c183c2811915d8ab4576222922593f079aa00bfd7386e64578099",
+            "method": "Image generation using official portrait identity reference and imported battle-art style reference; uniformly scaled 0.91 onto transparent canvas.",
+            "qc": "125px preview checked: complete figure, both axes and hands visible; transparent background; alpha bbox x=140..882, y=81..1452 within central 75% width; no visible halo.",
+            "createdAt": "2026-11-18",
+            "note": "New battle candidate; user review pending."
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "standing": {
         "status": "integrated",
