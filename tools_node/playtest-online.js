@@ -1336,18 +1336,24 @@ async function main() {
                 await closeMissionLayers();
                 await waitToastGone();
                 rec.detail.menus = {};
+                let lockedPick = null;
                 for (const cat of ['BtnCatDomestic', 'BtnCatNurture', 'BtnCatSortie']) {
                     if (!(await clickButton('^' + cat + '$'))) throw new Error(`找不到底欄 ${cat}`);
                     await delay(1200);
                     rec.detail.menus[cat] = (await page.evaluate(() => window.__pt.buttonTexts('^BtnSub'))).map((b) => b.text);
                     await shot(rec, `rank-unlock-menu-${cat}`);
+                    // 走完前面步驟後玩家可能已自然升官：挑目前還鎖著的第一個項目來點
+                    const lockedText = rec.detail.menus[cat].find((t) => /🔒/.test(t));
+                    if (lockedText && !lockedPick) lockedPick = { cat, name: lockedText.split('\n')[0].replace('🔒', '') };
                 }
+                if (!lockedPick) throw new Error('目前官職階位下沒有任何鎖著的選單項目');
+                rec.detail.lockedPick = lockedPick;
                 // 點鎖頭：提示出現、選單不收起、功能沒有被打開
-                if (!(await clickButton('^BtnCatDomestic$'))) throw new Error('找不到底欄「內政」');
+                if (!(await clickButton('^' + lockedPick.cat + '$'))) throw new Error(`找不到底欄 ${lockedPick.cat}`);
                 await delay(800);
                 const before = new Set(await rm.allTexts());
-                const clicked = await clickByText('^BtnSub', '招賢館');
-                if (!clicked) throw new Error('找不到鎖著的「招賢館」子選單按鈕');
+                const clicked = await clickByText('^BtnSub', lockedPick.name);
+                if (!clicked) throw new Error(`找不到鎖著的「${lockedPick.name}」子選單按鈕`);
                 await delay(900);
                 rec.detail.lockToastTexts = (await rm.allTexts()).filter((t) => !before.has(t) && /開放/.test(t));
                 rec.detail.menuStillOpen = Boolean(await page.evaluate(() => window.__pt.buttonTexts('^BtnSub')).then((b) => b.length));

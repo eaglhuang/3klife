@@ -1059,7 +1059,10 @@ export class LobbyScene extends Component {
                 // 提示（朝議已定…）會蓋住彈窗標題，等提示播完才跳彈窗
                 void this._playOfficerPromotionFreeze(payload.tiers)
                     .then(() => new Promise<void>((resolve) => setTimeout(resolve, Math.max(0, toastsEndAt - Date.now()))))
-                    .then(() => this._showRankUnlockPopup(payload.tiers));
+                    .then(() => {
+                        services().event.emit('HIDE_TOAST'); // 還沒播完的提示直接收掉，避免蓋住彈窗標題
+                        this._showRankUnlockPopup(payload.tiers);
+                    });
             }),
             services().event.on(GAME_SESSION_EVENTS.SeasonAdvanced, () => {
                 const session = services().session;
