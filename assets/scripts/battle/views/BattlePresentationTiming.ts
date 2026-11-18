@@ -79,8 +79,20 @@ export const BATTLE_VISUAL_TIMING = {
   movementIdleMaxWaitMs: 2500,
   /** 等待移動動畫排空時，輪詢間隔（毫秒）。 */
   movementIdlePollMs: 50,
-  /** 受擊 Rim Flash 持續時間（毫秒）。 */
-  hitRimFlashMs: 200,
+  /** 受擊 Rim Flash 持續時間（毫秒）。PROG-2-9401：改為白閃，時間與 hitFlashSec 一致。 */
+  hitRimFlashMs: 80,
+  /** 受擊閃白持續秒數（全身一次，線性衰減）。PROG-2-9401。 */
+  hitFlashSec: 0.08,
+  /** 受擊左右抖動總秒數（約兩個來回，結束必回原位）。 */
+  hitShakeSec: 0.15,
+  /** 受擊抖動幅度，佔格寬的比例（4～6% 之間取中）。 */
+  hitShakeAmplitudeRatio: 0.05,
+  /** 重擊／爆擊的畫面震動總秒數。 */
+  hitScreenShakeSec: 0.12,
+  /** 重擊／爆擊的畫面震動幅度（世界單位；一格約 1.0，所以 0.05 只有一格的 5%，刻意很小）。 */
+  hitScreenShakeStrength: 0.05,
+  /** 單次傷害達到目標最大血量的這個比例就算「重擊」（爆擊一律算重擊）。 */
+  heavyHitMaxHpRatio: 0.2,
   /** 傷害數字延後跳出的時間（毫秒），讓飄字對齊撞擊點。 */
   valuePopupDelayMs: 80,
   /** 一般攻擊前衝秒數。 */
@@ -114,6 +126,69 @@ export const BATTLE_VISUAL_TIMING = {
   /** 飄字時主物件縮放回彈秒數。 */
   unitValueScaleOutSec: 0.12,
 } as const;
+
+/** 抖動的關鍵位移倍率：右、左、小右、小左、歸零（兩個來回，幅度遞減，最後一步回到原位）。 */
+const HIT_SHAKE_KEYS: ReadonlyArray<number> = [1, -1, 0.6, -0.6, 0];
+
+export interface HitShakeStep {
+  /** 這一步的秒數。 */
+  durationSec: number;
+  /** 這一步結束時相對原位的水平位移（單位與 amplitude 相同）。 */
+  offsetX: number;
+}
+
+/**
+ * 受擊抖動的分段位移（純函式，給 tween 用）。總長 = totalSec；最後一步一定是 0，所以不會改變格子位置。
+ * @param amplitude 最大位移，通常是格寬 * hitShakeAmplitudeRatio
+ */
+export function buildHitShakeSteps(amplitude: number, totalSec: number = BATTLE_VISUAL_TIMING.hitShakeSec): HitShakeStep[] {
+  const durationSec = totalSec / HIT_SHAKE_KEYS.length;
+  return HIT_SHAKE_KEYS.map(k => ({ durationSec, offsetX: amplitude * k }));
+}
+
+/**
+ * 在抖動的第 elapsedSec 秒時的水平位移（純函式，不配置物件，給逐幀更新的 Spine 疊層用）。
+ * 與 buildHitShakeSteps 同一組關鍵點，各步之間線性內插；超出範圍回 0。
+ */
+export function sampleHitShake(elapsedSec: number, amplitude: number, totalSec: number = BATTLE_VISUAL_TIMING.hitShakeSec): number {
+  if (!(amplitude > 0) || !(elapsedSec > 0) || elapsedSec >= totalSec) return 0;
+  const stepSec = totalSec / HIT_SHAKE_KEYS.length;
+  const index = Math.min(HIT_SHAKE_KEYS.length - 1, Math.floor(elapsedSec / stepSec));
+  const from = index === 0 ? 0 : HIT_SHAKE_KEYS[index - 1];
+  const to = HIT_SHAKE_KEYS[index];
+  const t = (elapsedSec - index * stepSec) / stepSec;
+  return amplitude * (from + (to - from) * t);
+}
+
+/** 受擊閃白強度（1 = 最亮，線性衰減到 0）。純函式。 */
+export function hitFlashStrength(elapsedSec: number, durationSec: number = BATTLE_VISUAL_TIMING.hitFlashSec): number {
+  if (!(durationSec > 0) || elapsedSec < 0 || elapsedSec >= durationSec) return 0;
+  return 1 - elapsedSec / durationSec;
+}
+
+/** 這一下是不是「重擊」：爆擊，或單次傷害達目標最大血量的 heavyHitMaxHpRatio。 */
+export function isHeavyHit(damage: number, maxHp: number, isCrit: boolean): boolean {
+  if (isCrit) return true;
+  return maxHp > 0 && damage >= maxHp * BATTLE_VISUAL_TIMING.heavyHitMaxHpRatio;
+}
+
+export interface HitFeedbackPlan {
+  /** 全身閃白。 */
+  flash: boolean;
+  /** 左右抖動。 */
+  shake: boolean;
+  /** 畫面震動。 */
+  screenShake: boolean;
+}
+
+/**
+ * 決定這次受擊要播哪些回饋（純函式）。
+ * 致命一擊只閃白：接下來會播倒地（fall）與 boom，抖動與畫面震動會跟它們疊在一起變混亂。
+ */
+export function planHitFeedback(lethal: boolean, heavy: boolean): HitFeedbackPlan {
+  if (lethal) return { flash: true, shake: false, screenShake: false };
+  return { flash: true, shake: true, screenShake: heavy };
+}
 
 interface MovePoint { x: number; y: number; z: number }
 

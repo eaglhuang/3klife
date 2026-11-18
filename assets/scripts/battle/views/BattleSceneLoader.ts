@@ -115,20 +115,19 @@ let battleSkillMetadataPromise: Promise<void> | null = null;
 export async function loadDamageFonts(): Promise<void> {
   try {
     const res = services().resource;
-    const [fontBao, fontJia, fontMiss, fontPu] = await Promise.all([
-      res.loadFont("dmgFont/bmfont/bao"),
+    // PROG-2-9401：爆擊改用銀白的 pu 字型再染金色（bao 貼圖本身是橘色，染金後會變暗橘）；
+    // 閃避要顯示中文「閃避」，miss 字型只有 i/m/s 三個字母，所以閃避不註冊 BMFont、改走系統字型描邊。
+    const [fontJia, fontPu] = await Promise.all([
       res.loadFont("dmgFont/bmfont/jia"),
-      res.loadFont("dmgFont/bmfont/miss"),
       res.loadFont("dmgFont/bmfont/pu"),
     ]);
 
     const floatText = services().floatText;
     if (floatText) {
-      floatText.registerFont('dmg_crit', fontBao);
+      floatText.registerFont('dmg_crit', fontPu);
       floatText.registerFont('heal', fontJia);
       floatText.registerFont('dmg_player', fontPu);
       floatText.registerFont('dmg_enemy', fontPu);
-      floatText.registerFont('dmg_miss', fontMiss);
     }
     UCUFLogger.info(LogCategory.BATTLE, "[BattleSceneLoader] BMFonts 載入並註冊完成");
   } catch (e) {

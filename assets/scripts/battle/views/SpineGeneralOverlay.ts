@@ -1,9 +1,10 @@
-import { Node, UITransform, resources, sp } from 'cc';
+import { Color, Node, UITransform, resources, sp } from 'cc';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { UnitAction, UnitPresentationCore, UnitPresentationState } from '../shared/UnitPresentationCore';
 import { UnitSpineConfig } from '../shared/UnitPresentationConfig';
 import { AttackStyle, pickAttackClip } from '../shared/AttackStyle';
 import { DuelExchange, DuelPresentationCore } from '../shared/DuelPresentationCore';
+import { BATTLE_VISUAL_TIMING, hitFlashStrength, sampleHitShake } from './BattlePresentationTiming';
 
 interface Entry {
   config: UnitSpineConfig;
@@ -18,7 +19,17 @@ interface Entry {
   followers: Node[];
   /** 目前要顯示的人數（含帶頭者），由呼叫端依兵力決定。 */
   members: number;
+  /** 受擊回饋進行中的狀態（PROG-2-9401）；結束後為 null。只疊加在畫面位置與顏色上，不碰移動與動作狀態。 */
+  hit: { elapsed: number; amplitude: number; flash: boolean } | null;
+  /** 目前畫在骨架上的閃白強度（0 = 正常色）；只在數值改變時才寫 color，省得每幀弄髒渲染資料。 */
+  flashPainted: number;
 }
+
+/**
+ * 受擊閃色：Spine 骨架的 color 是「相乘」，沒辦法相乘出純白；
+ * 真正的全身閃白要用雙色染色（two-color tint）著色器，這裡先用相乘可行的暖色提亮脈衝當閃色。
+ */
+const HIT_FLASH_TINT = { r: 255, g: 120, b: 110 };
 
 /** 一次性動作（攻擊、受擊、倒地）隊員之間的最大時間差（秒）；太大會跟不上戰鬥節奏。 */
 const SQUAD_ONE_SHOT_STAGGER_SEC = 0.3;
@@ -36,7 +47,7 @@ export class SpineUnitOverlay {
     let entry = this.entries.get(id);
     if (entry && entry.config.path !== config.path) { this.remove(id); entry = undefined; }
     if (!entry) {
-      entry = { config, core: new UnitPresentationCore(config, { x, y }, facing), node: null, revision: -1, facing, loading: false, ready: [], visible, followers: [], members };
+      entry = { config, core: new UnitPresentationCore(config, { x, y }, facing), node: null, revision: -1, facing, loading: false, ready: [], visible, followers: [], members, hit: null, flashPainted: 0 };
       this.entries.set(id, entry);
     }
     if (!entry.node && !entry.loading) this.load(id, entry);
@@ -67,6 +78,7 @@ export class SpineUnitOverlay {
       }
     }
     for (const [id, entry] of this.entries) {
+      if (entry.hit) entry.hit.elapsed += dt;
       if (!controlled?.includes(id)) this.apply(entry, entry.core.step(dt));
     }
     // 畫面越下方（y 越小）越靠近鏡頭，要蓋在上面；隊員各自依落腳點排序，才不會整隊被隔壁格蓋住
@@ -89,6 +101,20 @@ export class SpineUnitOverlay {
     const clip = action === 'attack' && attackStyle
       ? pickAttackClip(attackStyle, entry.config.clips.attack, name => !!runtime.findAnimation(name)) : undefined;
     if (action !== 'fall' || entry.core.snapshot().action !== 'fall') entry.core.play(action, clip);
+    // 倒地時不再抖動閃色，避免和 fall、boom 疊在一起（下一次 apply 會把顏色刷回正常）
+    if (action === 'fall') entry.hit = null;
+    return true;
+  }
+
+  /**
+   * 受擊回饋：閃色 + 左右抖動（PROG-2-9401）。抖動是畫面位置上的暫時偏移，每幀由 apply 疊加在移動位置上，
+   * 所以不會打斷移動、也不會把單位拉回舊位置；結束時偏移自然歸零。
+   * @param amplitudePx 抖動最大位移（畫面像素），0 表示只閃色不抖
+   */
+  public hit(id: string, amplitudePx: number, flash = true): boolean {
+    const entry = this.entries.get(id);
+    if (!entry?.node?.isValid) return false;
+    entry.hit = { elapsed: 0, amplitude: Math.max(0, amplitudePx), flash };
     return true;
   }
   public exists(id: string): boolean { return this.entries.has(id); }
@@ -159,7 +185,13 @@ export class SpineUnitOverlay {
     if (!node?.isValid || !skeleton) return;
     node.active = entry.visible || !!this.duel?.ids.some(id => this.entries.get(id) === entry);
     const offset = entry.config.footOffset;
-    node.setPosition(state.foot.x - offset.x * entry.config.displayScale * state.facing,
+    // 受擊回饋：抖動位移與閃色強度（結束後歸零並清掉狀態）
+    const hit = entry.hit;
+    const shakeX = hit ? sampleHitShake(hit.elapsed, hit.amplitude) : 0;
+    const flash = hit?.flash ? hitFlashStrength(hit.elapsed) : 0;
+    if (hit && hit.elapsed >= Math.max(BATTLE_VISUAL_TIMING.hitShakeSec, BATTLE_VISUAL_TIMING.hitFlashSec)) entry.hit = null;
+    const flashChanged = this.paintFlash(skeleton, entry, flash);
+    node.setPosition(state.foot.x - offset.x * entry.config.displayScale * state.facing + shakeX,
       state.foot.y - offset.y * entry.config.displayScale, 0);
     node.setScale(entry.config.displayScale * state.facing, entry.config.displayScale, 1);
     const skinChanged = entry.facing !== state.facing || entry.revision < 0;
@@ -183,7 +215,8 @@ export class SpineUnitOverlay {
       follower.active = node.active && i < entry.members - 1;
       const pos = node.position;
       // 站位以「面向的後方」為準，所以 x 要跟著朝向翻面
-      follower.setPosition(pos.x - slot.x * state.facing, pos.y + slot.y, 0);
+      follower.setPosition(pos.x - slot.x * state.facing, pos.y + slot.y, 0); // pos 已含抖動偏移，隊員跟著一起抖
+      if (flashChanged) this.setSkeletonFlash(followerSkel, flash);
       follower.setScale(entry.config.displayScale * state.facing, entry.config.displayScale, 1);
       if (skinChanged) followerSkel.setSkin(skin);
       if (clipChanged && hasClip) {
@@ -196,6 +229,22 @@ export class SpineUnitOverlay {
       }
       followerSkel.timeScale = state.animationSpeed;
     });
+  }
+
+  private readonly flashColor = new Color();
+
+  /** 把閃色強度畫到帶頭者骨架上；強度沒變就不動。回傳是否有變，讓 apply 的隊員迴圈跟著畫。 */
+  private paintFlash(skeleton: sp.Skeleton, entry: Entry, strength: number): boolean {
+    if (strength === entry.flashPainted) return false;
+    this.setSkeletonFlash(skeleton, strength);
+    entry.flashPainted = strength;
+    return true;
+  }
+
+  private setSkeletonFlash(skeleton: sp.Skeleton, strength: number): void {
+    const t = HIT_FLASH_TINT;
+    this.flashColor.set(255 - (255 - t.r) * strength, 255 - (255 - t.g) * strength, 255 - (255 - t.b) * strength, 255);
+    skeleton.color = this.flashColor;
   }
 
   private load(id: string, entry: Entry): void {
