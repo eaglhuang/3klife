@@ -5,7 +5,7 @@
 ## 目錄
 - `mailbox/to-codex/`：Claude 寄給 Codex 的信（工單、回覆、問題）。
 - `mailbox/to-claude/`：Codex／Antigravity 寄給 Claude 的信（完成通知、疑問、阻塞回報）。
-- `mailbox/to-antigravity/`：寄給 Antigravity 的信（工單、回覆）。入隊說明見 `ANTIGRAVITY-使用說明.md`。
+- `mailbox/to-antigravity/`：寄給 Antigravity 的信（工單、回覆）。企劃角色說明見 `ANTIGRAVITY-企劃說明.md`（新版，取代 `ANTIGRAVITY-使用說明.md`）；Antigravity 寄給 Claude 寫在 `mailbox/from-antigravity/`。
 - `mailbox/to-codex/archive/`、`mailbox/to-claude/archive/`：已讀的信移到這裡。
 
 ## 檔名
