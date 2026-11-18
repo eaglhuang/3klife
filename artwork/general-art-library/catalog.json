@@ -6052,6 +6052,22 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/gao_lan__高覽__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "5c87c7e771c71addfbdaa708fa82d8b6b344019af5a2ea18c9adb74c11b0021c",
+            "canvas": "1024x1536 RGBA PNG",
+            "pose": "寬步轉腰單手橫向斬擊",
+            "source": "standing/gao_lan__高覽__standing_0002.png",
+            "note": "New candidate based on Gao Lan’s approved steel-blue and bronze armor with his hip sword; pending visual approval, not asserted as runtime-integrated."
+          }
+        ]
       }
     },
     {
