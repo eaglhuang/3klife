@@ -51,6 +51,7 @@ import { forceFatherTacticCopy } from './LuckTacticCopy';
 import { applyFateInheritance } from './LuckFateInheritance';
 import { applyBloodlineMutation } from './LuckBloodlineMutation';
 import { PINK_TERRAIN_FACTOR_KEYS } from './BattleAptitude';
+import { inheritChildAptitudes } from './ChildAptitudeInheritance';
 
 export const BREEDING_MIN_AGE = 20;
 export const FATHER_VIGOR_COST = 50;
@@ -565,6 +566,7 @@ export function createChild(input: CreateChildInput): BreedingGeneral {
     const inbred = isSameBloodline(father, mother);
     const maxVitality = Math.round(((maxVigorOf(father) + maxVigorOf(mother)) / 2) * (inbred ? INBREEDING_VITALITY_MULTIPLIER : 1));
     const hp = Math.max(1, Math.round(((father.hp + mother.hp) / 2) * (ep.ep / 100)));
+    const inheritedAptitudes = inheritChildAptitudes(father, mother);
 
     return {
         id: input.id,
@@ -577,6 +579,7 @@ export function createChild(input: CreateChildInput): BreedingGeneral {
         currentHp: hp,
         ...stats,
         stats,
+        ...inheritedAptitudes,
         vitality: maxVitality,
         maxVitality,
         ep: ep.ep,
