@@ -8,6 +8,7 @@ import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { LocalGachaService, type LocalGachaResultEntry } from '../../core/services/LocalGachaService';
 import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
+import { awaitWithTimeout } from '../../core/utils/AwaitGuard';
 import { showGachaHistory, showGachaResults } from '../dev/GachaDevOverlay';
 import type { GachaConfig } from '../../core/models/GachaConfig';
 import { GachaSystem, type GachaPullOutcome } from '../../core/systems/GachaSystem';
@@ -56,6 +57,13 @@ export interface GachaFlowCoordinatorOptions {
     onClearBanner?: () => void;
 }
 
+/**
+ * 轉蛋流程各個「等資源」步驟的上限（毫秒，PROG-2-9404，issue #2223）：
+ * 卡池清單、台詞表、結果畫面規格、卡面換皮任何一個下載卡住，結果畫面就一直停在底層遮罩、玩家沒有按鈕可按。
+ * 逾時就略過（台詞、換皮）或回報失敗（結果畫面），讓流程繼續或給出錯誤提示。
+ */
+const GACHA_LOAD_MAX_MS = 10000;
+
 export class GachaFlowCoordinator {
     private _heroPortraitSeq = 0;
     private _cardPortraitSeq = 0;
@@ -92,7 +100,8 @@ export class GachaFlowCoordinator {
         if (!this._poolsLoaded) {
             const load = this._options.loadPools;
             this._poolsLoaded = load
-                ? load().then((pools) => { this._pools = Array.isArray(pools) ? pools : []; }).catch(() => undefined)
+                ? awaitWithTimeout(load().then((pools) => { this._pools = Array.isArray(pools) ? pools : []; }).catch(() => undefined),
+                    GACHA_LOAD_MAX_MS, undefined, { label: 'gacha:load-pools' })
                 : Promise.resolve();
         }
         return this._poolsLoaded;
@@ -229,11 +238,12 @@ export class GachaFlowCoordinator {
         const balanceText = flow.showBalance === false ? '' : `　｜　剩餘 ${formatResultBalance(currency, this._options.gachaService.getWalletSnapshot())}`;
         const rarityStats = this._buildPullResultRarityStats(results);
         // 本次主角登場台詞（PROG-2-2244）：所有池共用；沒有台詞退回原本描述
-        const lineTable = await loadGachaLines();
+        const lineTable = await awaitWithTimeout<GachaLineTable>(loadGachaLines(), GACHA_LOAD_MAX_MS, {}, { label: 'gacha:load-lines' });
         const heroLine = topResult ? formatGachaLine(lineTable, topResult.general.id) : null;
 
-        try { await host.showScreen(GACHA_PULL_RESULT_SCREEN_ID); }
-        catch { throw new Error('召喚已完成並入冊，但結果畫面載入失敗。'); }
+        const screenShown = await awaitWithTimeout(host.showScreen(GACHA_PULL_RESULT_SCREEN_ID).then(() => true, () => false),
+            GACHA_LOAD_MAX_MS * 2, false, { label: 'gacha:show-result-screen' });
+        if (!screenShown) throw new Error('召喚已完成並入冊，但結果畫面載入失敗。');
         const binder = host.binder;
         if (!binder) {
             throw new Error('召喚已完成並入冊，但結果畫面 binder 缺失。');
@@ -266,7 +276,7 @@ export class GachaFlowCoordinator {
             ...(labels ? { GachaPullResult_hero_desc: labels.heroDesc || heroLine || labels.heroDescFallback || '' } : {}),
         });
 
-        await this._restyleCardsByRarity(host, cards, results);
+        await awaitWithTimeout(this._restyleCardsByRarity(host, cards, results), GACHA_LOAD_MAX_MS, undefined, { label: 'gacha:restyle-cards' });
         // 逐字快取（CHAR）配英文 TTF 時中文畫不出來，換字後也會疊字；結果畫面整片改不快取
         disableCharCache(host.node);
         this._updateCardPortraits(binder, cards, results);

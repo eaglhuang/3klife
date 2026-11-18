@@ -48,7 +48,7 @@ export function createGachaLinesSuite(): TestSuite {
 
     suite.test('共用結果畫面主角下方顯示台詞（所有池共用）', () => {
         const flow = read('assets/scripts/ui/core/GachaFlowCoordinator.ts');
-        assert.isTrue(flow.includes('formatGachaLine(lineTable, topResult.general.id)') && flow.includes('await loadGachaLines()'));
+        assert.isTrue(flow.includes('formatGachaLine(lineTable, topResult.general.id)') && flow.includes('loadGachaLines()'));
         assert.isTrue(flow.includes('GachaPullResult_hero_desc: heroLine ??'));
     });
 
