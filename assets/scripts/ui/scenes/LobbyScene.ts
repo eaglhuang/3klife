@@ -1048,12 +1048,17 @@ export class LobbyScene extends Component {
                 // 晉升一次性獎勵（PROG-2-1197）：同一階只會發一次晉升事件
                 const gold = officerPromotionRewardTotal(payload.tiers);
                 if (gold > 0) this._localGachaService.grantCurrency('gold', gold);
-                for (const message of [...officerPromotionNoticeOf(payload.tiers), ...officerPromotionScriptLines(payload.tiers)]) {
+                const promotionToasts = [...officerPromotionNoticeOf(payload.tiers), ...officerPromotionScriptLines(payload.tiers)];
+                for (const message of promotionToasts) {
                     services().event.emit('SHOW_TOAST', { message, duration: 2 });
                 }
+                const toastsEndAt = Date.now() + promotionToasts.length * 2200;
                 // 升官動畫（官職系統 E-6，PROG-2-1859）：每升一階播一次大字定格
                 // 晉升解鎖彈窗（PROG-2-9151）：定格動畫播完再列出這次新開放的功能
-                void this._playOfficerPromotionFreeze(payload.tiers).then(() => this._showRankUnlockPopup(payload.tiers));
+                // 提示（朝議已定…）會蓋住彈窗標題，等提示播完才跳彈窗
+                void this._playOfficerPromotionFreeze(payload.tiers)
+                    .then(() => new Promise<void>((resolve) => setTimeout(resolve, Math.max(0, toastsEndAt - Date.now()))))
+                    .then(() => this._showRankUnlockPopup(payload.tiers));
             }),
             services().event.on(GAME_SESSION_EVENTS.SeasonAdvanced, () => {
                 const session = services().session;

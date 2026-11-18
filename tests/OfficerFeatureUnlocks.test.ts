@@ -32,7 +32,7 @@ function ids(node: SpecNode, out = new Set<string>()): Set<string> {
     return out;
 }
 
-const CORE_ACTIONS = ['battle', 'hallBoard', 'gacha', 'generalList'];
+const CORE_ACTIONS = ['battle', 'hallBoard', 'gacha', 'generalList', 'bonding'];
 
 export function createOfficerFeatureUnlocksSuite(): TestSuite {
     const suite = new TestSuite('OfficerFeatureUnlocks (官職晉升解鎖節奏 PROG-2-9151)');
@@ -53,7 +53,7 @@ export function createOfficerFeatureUnlocksSuite(): TestSuite {
         for (const action of actions) assert.isTrue(parsed.features.some((f) => f.lobbyAction === action), `選單項目 ${action} 沒有登記解鎖階位`);
     });
 
-    suite.test('核心功能（任務、轉蛋、武將名冊、出戰）開局階位 1 就開放', () => {
+    suite.test('核心功能（任務、轉蛋、武將名冊、出戰、結緣）開局階位 1 就開放', () => {
         load();
         for (const action of CORE_ACTIONS) assert.isTrue(isLobbyActionUnlocked(action, 1), `${action} 應開局開放`);
         assert.isTrue(isFeatureUnlocked('CORE_BATTLE', 1));
@@ -99,7 +99,7 @@ export function createOfficerFeatureUnlocksSuite(): TestSuite {
 
     suite.test('newlyUnlocked：單階、連升多階、沒晉升', () => {
         load();
-        assert.equals('RECRUIT_HALL,NURTURE_FLOW,SUPPORT_CARD,MERCENARY,SEASON_PASS,BONDING,SHRINE,QUEST_NORMAL', newlyUnlocked(1, 2).map((f) => f.id).join(','));
+        assert.equals('RECRUIT_HALL,NURTURE_FLOW,SUPPORT_CARD,MERCENARY,SEASON_PASS,SHRINE,QUEST_NORMAL', newlyUnlocked(1, 2).map((f) => f.id).join(','));
         const multi = newlyUnlocked(1, 3).map((f) => f.id);
         assert.isTrue(multi.includes('NURTURE_FLOW') && multi.includes('SANDTABLE'), '連升兩階兩階的功能都列出');
         assert.equals(0, newlyUnlocked(3, 3).length);

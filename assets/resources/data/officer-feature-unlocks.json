@@ -52,6 +52,12 @@
           "name": "背包",
           "description": "使用與管理道具。",
           "lobbyAction": "itemBag"
+        },
+        {
+          "id": "BONDING",
+          "name": "結緣",
+          "description": "讓武將締結姻緣、孕育後代。",
+          "lobbyAction": "bonding"
         }
       ]
     },
@@ -87,12 +93,6 @@
           "name": "通行證",
           "description": "每季的成長獎勵軌道。",
           "lobbyAction": "seasonPass"
-        },
-        {
-          "id": "BONDING",
-          "name": "結緣",
-          "description": "讓武將締結姻緣、孕育後代。",
-          "lobbyAction": "bonding"
         },
         {
           "id": "SHRINE",

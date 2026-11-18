@@ -1414,6 +1414,11 @@ async function main() {
             let stalled = 0;
             let prevButtons = new Set();
             yearReport.startSeason = (await readSeason()).text;
+            yearReport.startOfficer = await page.evaluate(async () => {
+                const loader = await window.System.import('chunks:///_virtual/ServiceLoader.ts');
+                const o = loader.services().session.officerState;
+                return { tier: o.currentTier, exp: o.officerExp };
+            }).catch(() => null);
             // 原 11 步裡已推進過的季（任務循環、推進一季）一併列入，湊成完整一年
             const stepByName = (n) => report.steps.find((x) => x.name === n);
             const loopStep = stepByName('lobby-mission-loop');
@@ -1604,6 +1609,12 @@ async function main() {
                     if (cur.ordinal !== null && after.ordinal !== cur.ordinal + 1) throw new Error(`季別沒有前進：「${cur.text}」→「${after.text || '讀不到'}」`);
                     return rec.detail;
                 });
+                // 官職階位與經驗（PROG-2-9151）：量測每季升階節奏
+                yq.officer = await page.evaluate(async () => {
+                    const loader = await window.System.import('chunks:///_virtual/ServiceLoader.ts');
+                    const o = loader.services().session.officerState;
+                    return { tier: o.currentTier, exp: o.officerExp };
+                }).catch(() => null);
                 writeYearReport();
                 console.log(`[playtest] 年循環 ${yq.season} → ${yq.seasonAfter || '?'}：戰鬥 ${yq.battles.map((b) => b.result || (b.ok ? '?' : '失敗')).join('/') || '無'}；錯誤 ${yq.errors.length}`);
             }
