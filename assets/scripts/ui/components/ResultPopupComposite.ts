@@ -3,7 +3,7 @@
  * ResultPopupComposite — 戰鬥結果彈窗（Composite 版）
  * Wave 2 migration from ResultPopup - shows victory/defeat/stalemate results
  */
-import { _decorator, BlockInputEvents, Button, Color, Mask, Node, Sprite, Tween, tween, UIOpacity, UITransform, Vec3, Widget } from 'cc';
+import { _decorator, BlockInputEvents, Button, Color, Label, Mask, Node, Sprite, Tween, tween, UIOpacity, UITransform, Vec3, Widget } from 'cc';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { loadGeneralAvatar } from '../core/GeneralAvatarLoader';
@@ -13,6 +13,11 @@ import { resultPopupTone } from '../../shared/ResultPopupTone';
 import { bringNodeToFront } from '../core/NodeBringToFront';
 import { stretchWidgetToParent } from '../core/WidgetStretch';
 import { ResultDetailsBuffer } from '../../shared/ResultDetailsBuffer';
+import { awaitWithTimeout } from '../../core/utils/AwaitGuard';
+import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
+
+/** 結算畫面規格掛載的等待上限（毫秒，PROG-2-9404）：畫面規格或皮膚下載 404／卡住時不能讓玩家永遠看不到結果 */
+const RESULT_MOUNT_MAX_MS = 15000;
 
 const { ccclass } = _decorator;
 
@@ -54,12 +59,16 @@ export class ResultPopupComposite extends CompositePanel {
 
         if (!this._isMounted) {
             if (!this._mounting) {
-                this._mounting = this.mount('result-popup-screen').then(() => { this._isMounted = true; });
+                // 掛載失敗或逾時：不丟錯、不標記已掛載（下次顯示會重試），改走下方的保底結果卡
+                this._mounting = awaitWithTimeout(this.mount('result-popup-screen').then(() => true), RESULT_MOUNT_MAX_MS, false,
+                    { label: 'result-popup:mount', warn: (m, e) => UCUFLogger.warn(LogCategory.BATTLE, m, e) })
+                    .then((ok) => { this._isMounted = ok; });
             }
             try { await this._mounting; } finally { this._mounting = null; }
         }
 
         this._description = result.description;
+        if (!this._isMounted) { this._showEmergencyCard(result); return; }
         this._binder?.setTexts({
             TitleLabel: result.title,
             DescLabel: result.description,
@@ -83,8 +92,37 @@ export class ResultPopupComposite extends CompositePanel {
         tween(opacity).to(0.3, { opacity: 255 }).start();
     }
 
+    /**
+     * 保底結果卡（PROG-2-9404）：畫面規格掛載失敗時，用一個 Label 按鈕顯示勝負並可返回大廳，
+     * 玩家才不會卡在沒有結果、沒有出口的戰場。
+     */
+    private _showEmergencyCard(result: BattleResult): void {
+        UCUFLogger.warn(LogCategory.BATTLE, '[ResultPopupComposite] 結算畫面掛載失敗，改顯示保底結果卡');
+        let card = this.node.getChildByName('EmergencyResult');
+        if (!card) {
+            card = new Node('EmergencyResult');
+            card.layer = this.node.layer;
+            card.addComponent(UITransform).setContentSize(900, 300);
+            card.addComponent(Label);
+            card.addComponent(BlockInputEvents);
+            this.node.addChild(card);
+            card.addComponent(Button).node.on(Button.EventType.CLICK, this._onClickBack, this);
+        }
+        const label = card.getComponent(Label)!;
+        label.fontSize = 44;
+        label.lineHeight = 60;
+        label.string = `${result.title}
+${result.description}
+（點此返回大廳）`;
+        card.active = true;
+        this.node.active = true;
+        this._visible = true;
+    }
+
     public hide(): void {
         this._details.reset();
+        const emergency = this.node.getChildByName?.('EmergencyResult');
+        if (emergency) emergency.active = false;
         if (!this._visible) return;
         this._visible = false;
         const opacity = this.node.getComponent(UIOpacity);

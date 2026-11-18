@@ -30,6 +30,12 @@ export const BATTLE_TURN_FLOW_TIMING = {
   combatDrainMaxPollAttempts: 12,
   /** 回合推進安全解鎖秒數；超時後會強制回到可操作狀態。 */
   advanceSafetyUnlockSec: 20,
+  /**
+   * 單挑／奧義 cut-in 演出旗標連續亮著的上限秒數（PROG-2-9404）。
+   * 演出不算在 advanceSafetyUnlockSec 內，但演出自己卡死（旗標永不放掉）時，超過這個秒數就強制放掉旗標並解鎖，
+   * 否則安全解鎖與戰鬥動畫輪詢都會無限等下去。等玩家決定單挑接不接的時間不計入。
+   */
+  presentationMaxWaitSec: 45,
   /** 回合開始 Banner 的去抖毫秒，避免短時間重複跳出。 */
   turnBannerDebounceMs: 2500,
   /** 回合開始 Banner 的 Toast 顯示秒數（舊版部署面板沒有橫幅時的退路）。 */
@@ -77,6 +83,15 @@ export const BATTLE_VISUAL_TIMING = {
   unitValueAwaitSec: 0.24,
   /** 等待移動動畫排空時，最多等待多久（毫秒）。 */
   movementIdleMaxWaitMs: 2500,
+  /**
+   * 戰鬥動畫佇列單一任務的真實時間上限（毫秒，PROG-2-9404）。任務內的 await 若永不回來（資源載入失敗、節點被銷毀），
+   * 超過就記 warn 並略過，佇列才會繼續；否則排在後面的奧義 cut-in 永遠不會播、回合推進也一直等。
+   */
+  combatVisualTaskMaxMs: 20000,
+  /** 單挑演出（含載入 Spine 骨架與交鋒動畫）的真實時間上限（毫秒）；超過就強制收尾，單挑旗標才會放掉。 */
+  duelPresentationMaxMs: 40000,
+  /** 戰鬥單位／主將 3D 模型載入的等待上限（毫秒）；超過就改用戰術棋子，不再等。 */
+  modelLoadMaxMs: 15000,
   /** 等待移動動畫排空時，輪詢間隔（毫秒）。 */
   movementIdlePollMs: 50,
   /** 受擊 Rim Flash 持續時間（毫秒）。PROG-2-9401：改為白閃，時間與 hitFlashSec 一致。 */

@@ -31,6 +31,7 @@ import { AWAKENING_FREEZE_TIMING, awakeningFreezeTitles, formatAwakeningReveal }
 import { discoveryPhaseUnlockLines } from '../../core/systems/DiscoveryProgress';
 import { factorAwakeningLines } from '../../core/systems/FactorAwakening';
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
+import { awaitWithTimeout } from "../../core/utils/AwaitGuard";
 import type { TeachingSpiritInput } from '../../core/systems/TeachingSpiritTalisman';
 import { Component, EventKeyboard, EventMouse, EventTouch, Input, KeyCode, Node, input } from 'cc';
 import { EVENT_NAMES, Faction, SP_PER_KILL, TroopType, TurnPhase } from '../../core/config/Constants';
@@ -228,7 +229,13 @@ export class BattleUIBridge {
       : duelWinner === Faction.Player ? 0 : duelWinner === Faction.Enemy ? 1 : null;
     const exchanges = selectDuelExchanges(capture.hits.map(hit => ({ attacker: (hit.faction === Faction.Player ? 1 : 0) as 0 | 1, dodged: !!hit.wasDodged })));
     let played: unknown;
-    try { played = await (this.ctx.unitRenderer?.playDuelPresentation?.(winner, playerDead || enemyDead, exchanges) ?? Promise.resolve()); }
+    // 演出有真實時間上限（PROG-2-9404）：Spine 載入或交鋒動畫沒回來時強制收尾，改走逐招跳傷害，
+    // 單挑旗標（isDuelPanelActive）才會放掉，回合推進與結果彈窗才不會被單挑卡住。
+    try {
+      played = await awaitWithTimeout<unknown>(this.ctx.unitRenderer?.playDuelPresentation?.(winner, playerDead || enemyDead, exchanges) ?? Promise.resolve(),
+        BATTLE_VISUAL_TIMING.duelPresentationMaxMs, false,
+        { label: 'duel-presentation', onFail: () => this.ctx.unitRenderer?.abortDuelPresentation?.() });
+    }
     catch (error) { UCUFLogger.error(LogCategory.BATTLE, '[BattleUIBridge] 單挑演出失敗', error); }
     if (!this.scene.isValid) return result;
     // 任一方主將沒有交鋒動畫時（明確回 false），改成一招一招跳傷害，不要按下接受就直接跳結算
@@ -1024,10 +1031,14 @@ export class BattleUIBridge {
     else if (data.result === 'enemy-win') playBattleAudio(BATTLE_AUDIO_CUE.battleDefeat);
     this.appendLog(battleEndLogLine(data.result));
     this.hideEnemyThinkingPanel();
-    const details = this._settleRosterBattle(data.result as BattleResult);
+    // 結算寫回與結果彈窗互相隔離（PROG-2-9404）：寫回名冊丟錯、或彈窗掛載失敗（畫面規格下載 404）都不能讓玩家看不到結果
+    let details: string[] = [];
+    try { details = this._settleRosterBattle(data.result as BattleResult); }
+    catch (error) { UCUFLogger.error(LogCategory.BATTLE, '[BattleUIBridge] 戰後結算寫回失敗，仍顯示結果彈窗', error); }
     // 回合用盡而獲勝（教學戰）：補一行說明，免得玩家不知道為什麼突然贏了
     if (data.timeUp === true && data.result === 'player-win') details.unshift('敵軍久攻不下，鳴金退兵。');
-    c.resultPopup?.showResult(data.result as any, details.length > 0 ? details.join('\n') : undefined, c.pg?.id, data.retreated === true);
+    void Promise.resolve(c.resultPopup?.showResult(data.result as any, details.length > 0 ? details.join('\n') : undefined, c.pg?.id, data.retreated === true))
+      .catch((error) => UCUFLogger.error(LogCategory.BATTLE, '[BattleUIBridge] 結果彈窗顯示失敗', error));
     c.boardRenderer?.clearDeployHint();
     c.hud?.clearPersistentStatus();
     c.hud?.clearSceneGambitBadge();
@@ -1272,7 +1283,10 @@ export class BattleUIBridge {
   private async _drainCombatVisualQueue(): Promise<void> {
     const c = this.ctx;
     UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] drain-start queue=${c.combatVisualQueue.length}`);
-    await (c.unitRenderer?.waitForMovementIdle?.(BATTLE_VISUAL_TIMING.movementIdleMaxWaitMs) ?? Promise.resolve());
+    // 佇列的每一個 await 都加真實時間上限（PROG-2-9404）：任何一個演出的 Promise 永不回來，
+    // 佇列就停在那裡，後面排隊的奧義 cut-in 永遠不播、isUltCutinActive 永遠不放，回合推進跟著卡死。
+    await awaitWithTimeout(c.unitRenderer?.waitForMovementIdle?.(BATTLE_VISUAL_TIMING.movementIdleMaxWaitMs) ?? Promise.resolve(),
+      BATTLE_VISUAL_TIMING.movementIdleMaxWaitMs + 1000, undefined, { label: 'combat-visual:movement-idle' });
 
     while (c.combatVisualQueue.length > 0) {
       const task = c.combatVisualQueue.shift();
@@ -1282,7 +1296,9 @@ export class BattleUIBridge {
 
       UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] action-start id=${task.id} label=${task.label}`);
       try {
-        await Promise.resolve(task.run());
+        // new Promise 讓 task.run 同步執行（維持原本時序），同步丟錯也會被接住
+        await awaitWithTimeout(new Promise<void>((resolve) => resolve(task.run())), BATTLE_VISUAL_TIMING.combatVisualTaskMaxMs, undefined,
+          { label: `combat-visual:${task.label}` });
       } catch (error) {
         UCUFLogger.error(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] action-failed id=${task.id} label=${task.label}`, error);
       }
@@ -1290,6 +1306,8 @@ export class BattleUIBridge {
     }
 
     c.isDrainingCombatVisual = false;
+    // 佇列已清空：不會再有排隊中的奧義 cut-in。任務逾時被略過時它的 finally 可能沒跑，旗標在這裡保底放掉。
+    c.isUltCutinActive = false;
     UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] drain-end`);
   }
 

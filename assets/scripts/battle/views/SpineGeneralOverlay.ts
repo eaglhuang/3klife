@@ -142,6 +142,15 @@ export class SpineUnitOverlay {
     return new Promise<boolean>(resolve => { this.duel = { core, ids: [a, b], resolve }; });
   }
 
+  /** 強制收掉進行中的單挑演出（逾時保底，PROG-2-9404）：以「沒播完」回報，呼叫端會補逐招跳傷害 */
+  public abortDuel(): void {
+    const duel = this.duel;
+    if (!duel) return;
+    this.duel = null;
+    for (const id of duel.ids) if (this.pendingRemovals.has(id)) this.remove(id);
+    duel.resolve(false);
+  }
+
   public remove(id: string): void {
     if (this.duel?.ids.includes(id)) { this.pendingRemovals.add(id); return; }
     this.pendingRemovals.delete(id);
