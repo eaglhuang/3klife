@@ -2508,6 +2508,31 @@
             "note": "依核定站姿製作的全身戰鬥候選；長槍保持直線，眼神朝向鏡頭；待使用者檢視。"
           }
         ]
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "asset-imported",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/zhang_he__張郃__small_avatar_0001.png",
+            "status": "asset-imported",
+            "sha256": "17825ca4ca708ad4d164cf42cc3536f892cd4cc4673d92dd1eed9aac3fbea05c",
+            "canvas": "256x256 RGBA",
+            "cropBox": {
+              "x": 438,
+              "y": 0,
+              "width": 280,
+              "height": 280
+            },
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/zhang_he__張郃__standing_0002.png",
+            "sourceSha256": "c6a3caebdf8f1a673cf77f9f2a803e032f46b253431945c5a837b9dd1e016c9e",
+            "method": "crop-only; uniform resize; no redraw",
+            "qc": "125px preview: head ornament and face complete; facial center 51.6% of canvas width; upper shoulder line visible; no weapon enters crop; head-to-canvas estimate 78%.",
+            "createdAt": "2026-11-18"
+          }
+        ]
       }
     },
     {
