@@ -1,6 +1,7 @@
 
 // @spec-source → 見 docs/cross-reference-index.md
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
+import { awaitWithTimeout } from "../../core/utils/AwaitGuard";
 import {
   _decorator,
   ImageAsset,
@@ -1287,6 +1288,11 @@ export class UnitRenderer extends Component {
     return this.spineUnits.playDuel(this.ensureGeneralSpineId(Faction.Player), this.ensureGeneralSpineId(Faction.Enemy), winner, fallen, exchanges);
   }
 
+  /** 單挑演出逾時保底（PROG-2-9404）：強制收掉進行中的交鋒動畫，讓雙方回到正常跟隨 */
+  public abortDuelPresentation(): void {
+    this.spineUnits.abortDuel();
+  }
+
   onDestroy(): void { this.spineUnits.clear(); this.generalStandees.clear(); }
 
   private createGeneralView(faction: Faction): GeneralView {
@@ -2192,7 +2198,8 @@ export class UnitRenderer extends Component {
     if (view.bottomNameLabel) view.bottomNameLabel.string = `${unit.name}（模型載入中）`;
     view.formationLoad = (async () => {
       try {
-        const prefab = await this.loadTroopPrefab(unit.type, entry, subFaction);
+        // 模型載入逾時就放棄、改用戰術棋子（PROG-2-9404）；否則下載卡住時 formationLoading 永遠不放
+        const prefab = await awaitWithTimeout<Prefab | null>(this.loadTroopPrefab(unit.type, entry, subFaction), BATTLE_VISUAL_TIMING.modelLoadMaxMs, null, { label: `troop-prefab:${unit.type}` });
         if (!view.worldNode.isValid) return;
         if (prefab && view.formationRoot.children.length === 0) this.buildTroopFormation(view, prefab, unit, entry);
       } finally {
@@ -2361,7 +2368,7 @@ export class UnitRenderer extends Component {
       return;
     }
 
-    const prefab = await this.loadHeroPrefab(heroId, entry);
+    const prefab = await awaitWithTimeout<Prefab | null>(this.loadHeroPrefab(heroId, entry), BATTLE_VISUAL_TIMING.modelLoadMaxMs, null, { label: `hero-prefab:${heroId}` });
     if (!prefab || !view.worldNode.isValid || view.modelRoot.children.length > 0) {
       view.heroLoading = false;
       view.bodyNode.active = false;
@@ -2376,10 +2383,10 @@ export class UnitRenderer extends Component {
     this.applyDefaultLayerRecursively(hero);
     // 武將保持原色（不染色），陣營由 HUD 標籤顏色區別
     // 並行載入 MatCap 貼圖與 RM 貼圖，再套用 heroine-toon 著色器
-    const [matcap, rmTex] = await Promise.all([
+    const [matcap, rmTex] = await awaitWithTimeout<[Texture2D | null, Texture2D | null]>(Promise.all([
       this.loadHeroMatcap(),
       this.loadHeroRmTex(entry),
-    ]);
+    ]), BATTLE_VISUAL_TIMING.modelLoadMaxMs, [null, null], { label: `hero-textures:${heroId}` });
     // 等貼圖的期間主將節點可能已被銷毀（出陣後重建畫面、戰鬥結束換場）；
     // 對已銷毀的節點呼叫 getComponentsInChildren 會丟「null 的 length」（PROG-2-9387）
     if (!hero.isValid || !view.worldNode.isValid) {

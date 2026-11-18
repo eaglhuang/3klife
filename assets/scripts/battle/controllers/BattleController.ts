@@ -49,6 +49,7 @@ import { BattleTileBuffLifecycleManager, DEFAULT_BATTLE_TILE_BUFF_CONFIG, type B
 import { resolveBattleVictory, resolveCampCapture } from '../runtime/BattleVictoryResolver';
 import { refreshFloodAttackTerrain, resolveBattleTacticBehavior } from '../shared/BattleTacticBehavior';
 import { services } from "../../core/managers/ServiceLoader";
+import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import type { BattleRuntimeContext } from '../runtime/BattleRuntimeContext';
 import type { BattleRuntimePhaseName, BattleRuntimePhaseOutcome } from '../runtime/BattleRuntimeContract';
 import { createBattlePhaseExecutor, type BattlePhaseExecutor } from '../runtime/phases/BattlePhaseExecutor';
@@ -1172,9 +1173,24 @@ export class BattleController {
 
     this.pendingEnemyTurnResult = null;
     if (result === 'ongoing') {
-      this.finalizeRuntimeTurnCycle();
+      this.finalizeRuntimeTurnCycleSafely();
     }
     return this.commitBattleResult(result);
+  }
+
+  /**
+   * 回合收尾丟錯時仍要讓流程回到可下指令、且回合數照樣前進（PROG-2-9404）：
+   * 收尾裡任一步（buff 結算、天氣、地格 buff…）出錯，不能讓狀態機卡在「結算中」或回合數原地不動。
+   */
+  private finalizeRuntimeTurnCycleSafely(): void {
+    const battle = services().battle;
+    const turnBefore = battle.getSnapshot().turn;
+    try {
+      this.finalizeRuntimeTurnCycle();
+    } catch (error) {
+      UCUFLogger.error(LogCategory.BATTLE, '[BattleController] 回合收尾失敗，強制推進回合並回到可下指令', error);
+      if (battle.getSnapshot().turn === turnBefore) battle.nextTurn();
+    }
   }
 
   public finalizeAdvanceTurn(): BattleResult {

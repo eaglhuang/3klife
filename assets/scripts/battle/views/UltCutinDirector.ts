@@ -23,16 +23,7 @@ import { abortAllUltCutins, playUltCutin, type CutinCuePlayer, type UltCutinOutc
 import { setBattlePaused } from './BattleTimeScale';
 import { services } from '../../core/managers/ServiceLoader';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
-
-function withTimeout<T>(task: Promise<T>, fallback: T, ms: number): Promise<T> {
-  return new Promise<T>((resolve) => {
-    const timer = setTimeout(() => resolve(fallback), ms);
-    task.then(
-      (value) => { clearTimeout(timer); resolve(value); },
-      () => { clearTimeout(timer); resolve(fallback); },
-    );
-  });
-}
+import { awaitWithTimeout } from '../../core/utils/AwaitGuard';
 
 /** 播放時的額外資訊：暫代圖要用的武將名與奧義名（專屬 cut-in 用自己的設定檔，不看這個） */
 export interface UltCutinPlayOptions {
@@ -132,17 +123,24 @@ export class UltCutinDirector {
         token.cancelled = true;
         this.warn(`[UltCutin] 演出超過 ${hardMs}ms，強制結束：${generalId}`);
         try { (this.deps.abort ?? abortAllUltCutins)(); } catch { /* 保底路徑不可再丟例外 */ }
+        // 戰場暫停時 director 的 dt 幾乎為 0，scheduleOnce 形同凍結（回合安全解鎖計時也會停）；保底路徑一定要恢復（PROG-2-9404）
+        try { (this.deps.setPaused ?? setBattlePaused)(false); } catch { /* 同上 */ }
         resolve('skipped');
       }, hardMs);
       this.playNow(generalId, parent, opts, token).then(
         (outcome) => { clearTimeout(timer); resolve(outcome); },
-        () => { clearTimeout(timer); resolve('unplayable'); },
+        () => {
+          clearTimeout(timer);
+          try { (this.deps.setPaused ?? setBattlePaused)(false); } catch { /* 播放丟錯也要恢復戰場 */ }
+          resolve('unplayable');
+        },
       );
     });
   }
 
   private async playNow(generalId: string, parent: Node, opts: UltCutinPlayOptions, token: { cancelled: boolean }): Promise<UltCutinOutcome> {
-    const config = await withTimeout(this.ensureLoaded(generalId), null, this.deps.loadTimeoutMs ?? CUTIN_LOAD_TIMEOUT_MS);
+    const config = await awaitWithTimeout<CutinConfig | null>(this.ensureLoaded(generalId), this.deps.loadTimeoutMs ?? CUTIN_LOAD_TIMEOUT_MS, null,
+      { label: `ult-cutin:load:${generalId}`, warn: (m) => this.warn(m) });
     if (token.cancelled || !parent.isValid) return 'unplayable';
     const mode = this.tracker.consume(generalId);
     const play = this.deps.play ?? playUltCutin;

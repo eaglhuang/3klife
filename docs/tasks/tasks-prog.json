@@ -10012,6 +10012,52 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9404",
+      "title": "結束回合不可因資源或特效載入失敗而永久卡住（issue 2319）",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "in-review",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-18T06:47:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "試玩 issue 2319：甘寧戰第 7 回合按結束回合後超過 20 秒不前進，同時有 6 個資源 JSON 404 與 vfx_core png 503（偶發）。",
+      "related": [
+        "PROG-2-9403"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-18 | 狀態: in-review | 驗證: run-cli 全綠、tsc 0 錯、battle-skill-smoke、ucuf、encoding 檢查（結果見回報）| 變更: 新增共用 core/utils/AwaitGuard.awaitWithTimeout；戰鬥動畫佇列單任務逾時＋佇列排空放奧義旗標；單挑演出逾時中止；TurnFlowManager 演出旗標上限 45s 強制放掉；回合階段/收尾/結算丟錯隔離；模型載入、結果彈窗掛載（含保底結果卡）、轉蛋結果流程逾時；UltCutin 保底恢復暫停；新增 tests/TurnAdvanceNeverStuck.test.ts | 阻塞: 404 uuid 根因為多數 json 資源 .meta 未入版控、建置時 uuid 每次重生（見 issue 回報），不改建置流程，待另開卡",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
