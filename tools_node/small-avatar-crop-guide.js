@@ -131,15 +131,17 @@ function main() {
     if (!(target >= 0.70 && target <= 0.82)) throw new Error('--target must be between 0.70 and 0.82');
     if (!Number.isInteger(outputSize) || outputSize < 64 || outputSize > 2048) throw new Error('--size must be an integer between 64 and 2048');
     const centerX = face.x + face.width / 2;
+    const extentPaddingRatio = 0.03;
     const horizontalMin = Math.min(head.x, extent.x, face.x, ...shoulders.map(p => p.x));
     const horizontalMax = Math.max(head.x + head.width, extent.x + extent.width, face.x + face.width, ...shoulders.map(p => p.x));
     const requiredVertical = Math.max(...shoulders.map(p => Math.max(0, (p.y - head.y) / 0.92, (p.y - extent.y) / 0.97)));
-    const minimumSide = Math.max(head.height / target, extent.height, Math.max(0, (extent.y + extent.height - head.y) / 0.95), Math.max(0, (face.y + face.height - head.y) / 0.95), requiredVertical, horizontalMax - horizontalMin);
+    const minimumSide = Math.max(head.height / target, extent.height / (1 - 2 * extentPaddingRatio), Math.max(0, (extent.y + extent.height - head.y) / (0.95 - extentPaddingRatio)), Math.max(0, (face.y + face.height - head.y) / 0.95), requiredVertical, (horizontalMax - horizontalMin) / (1 - 2 * extentPaddingRatio));
     const feasibleLeftRange = side => {
       // The square must contain the complete head/face/shoulder span while
       // keeping the face center inside the accepted 47–53% horizontal band.
-      const left = Math.max(horizontalMax - side, centerX - side * 0.53);
-      const right = Math.min(horizontalMin, centerX - side * 0.47);
+      const pad = side * extentPaddingRatio;
+      const left = Math.max(horizontalMax + pad - side, centerX - side * 0.53);
+      const right = Math.min(horizontalMin - pad, centerX - side * 0.47);
       return left <= right ? [left, right] : null;
     };
     let side = minimumSide;
@@ -158,10 +160,11 @@ function main() {
     }
     const centeredLeft = centerX - side / 2;
     const cropLeft = Math.min(leftRange[1], Math.max(leftRange[0], centeredLeft));
-    const crop = { x: cropLeft, y: Math.min(head.y - side * 0.05, extent.y), width: side, height: side };
+    const crop = { x: cropLeft, y: Math.min(head.y - side * 0.05, extent.y - side * extentPaddingRatio), width: side, height: side };
     const faceCenterX = (centerX - crop.x) / side, headRatio = head.height / side;
     const headContained = head.x >= crop.x && head.x + head.width <= crop.x + side && head.y >= crop.y && head.y + head.height <= crop.y + side;
-    const extentContained = extent.x >= crop.x && extent.x + extent.width <= crop.x + side && extent.y >= crop.y && extent.y + extent.height <= crop.y + side;
+    const extentPadding = Math.min(extent.x - crop.x, crop.x + side - (extent.x + extent.width), extent.y - crop.y, crop.y + side - (extent.y + extent.height));
+    const extentContained = extentPadding >= side * extentPaddingRatio - 1e-9;
     const headWithinSource = head.x >= 0 && head.y >= 0 && head.x + head.width <= src.width && head.y + head.height <= src.height;
     const extentWithinSource = extent.x >= 0 && extent.y >= 0 && extent.x + extent.width <= src.width && extent.y + extent.height <= src.height;
     const faceContained = face.x >= crop.x && face.x + face.width <= crop.x + side && face.y >= crop.y && face.y + face.height <= crop.y + side;
@@ -206,7 +209,7 @@ function main() {
         '先確認標記覆蓋原圖的真實頭臉和肩部輪廓，再檢查候選裁圖；數值通過不等於視覺驗收通過。'
       ].join('\n') + '\n', 'utf8');
     }
-    const result = { input: path.resolve(a.input), output: path.resolve(a.out), source: `${src.width}x${src.height}`, outputSize: `${outputSize}x${outputSize}`, cropPixels: { x: +crop.x.toFixed(2), y: +crop.y.toFixed(2), side: +side.toFixed(2) }, headHeightRatio: +(headRatio * 100).toFixed(1), targetHeadHeightRatio: +(target * 100).toFixed(1), passesHeadRatio, headContained, headWithinSource, extentContained, extentWithinSource, faceCenterX: +(faceCenterX * 100).toFixed(1), passesFaceCenter, faceContained, faceWithinSource, shoulders: { contourPoints: shoulders, contained: shoulderContained, onVisiblePixelsWithin5px: shoulderOnArtwork, clearanceBelow: shoulderClearanceBelow.map(value => +value.toFixed(2)), passesClearanceBelow: passesShoulderClearance, passesShoulders }, passesAllHardChecks: passesHeadRatio && headContained && headWithinSource && extentContained && extentWithinSource && faceContained && faceWithinSource && passesFaceCenter && passesShoulders, note: '頭部比例只量顱部髮型／盔體，不將高聳頭冠或羽飾冒充頭部；綠框內的頭飾與髮型仍須完整保留。肩點下方須保留裁框高度3%的影像；最後仍須目視確認頭臉、完整頭飾與雙肩。工具只裁切／等比縮放，不會修正原圖五官。' };
+    const result = { input: path.resolve(a.input), output: path.resolve(a.out), source: `${src.width}x${src.height}`, outputSize: `${outputSize}x${outputSize}`, cropPixels: { x: +crop.x.toFixed(2), y: +crop.y.toFixed(2), side: +side.toFixed(2) }, headHeightRatio: +(headRatio * 100).toFixed(1), targetHeadHeightRatio: +(target * 100).toFixed(1), passesHeadRatio, headContained, headWithinSource, extentContained, extentPadding: +extentPadding.toFixed(2), extentWithinSource, faceCenterX: +(faceCenterX * 100).toFixed(1), passesFaceCenter, faceContained, faceWithinSource, shoulders: { contourPoints: shoulders, contained: shoulderContained, onVisiblePixelsWithin5px: shoulderOnArtwork, clearanceBelow: shoulderClearanceBelow.map(value => +value.toFixed(2)), passesClearanceBelow: passesShoulderClearance, passesShoulders }, passesAllHardChecks: passesHeadRatio && headContained && headWithinSource && extentContained && extentWithinSource && faceContained && faceWithinSource && passesFaceCenter && passesShoulders, note: '頭部比例只量顱部髮型／盔體，不將高聳頭冠或羽飾冒充頭部；綠框內的主要髮型與頭飾四邊至少保留裁框3%邊距，空間不足即判退。肩點下方須保留裁框高度3%的影像；最後仍須目視確認頭臉、完整頭飾與雙肩。工具只裁切／等比縮放，不會修正原圖五官。' };
     console.log(JSON.stringify(result, null, 2));
     if (!result.passesAllHardChecks) { process.exitCode = 3; return; }
     fs.mkdirSync(path.dirname(path.resolve(a.out)), { recursive: true });
