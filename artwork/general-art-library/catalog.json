@@ -6629,6 +6629,24 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/du_qiong__杜瓊__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "189959061c0f2d8a8304d902a95deb5f125e7fb691641ce71265c107b18ba880",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "open tactical book",
+            "poseLabel": "低身屈膝轉身展書阻勢",
+            "gaze": "toward camera",
+            "sourceStanding": "standing/du_qiong__杜瓊__standing_0002.png",
+            "note": "依正式站姿保留年長面容、墨綠繡袍與典籍；屈膝轉身，以展開的書本護身並抬掌止勢。alpha≥16 主體範圍 x=150–893、y=328–1275；透明底縮圖已檢查。候選待使用者審核，未接入遊戲。"
+          }
+        ]
       }
     },
     {
