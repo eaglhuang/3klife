@@ -10,7 +10,7 @@ function usage() {
   node tools_node/small-avatar-crop-guide.js compare --out <board.png> <image.png>...
   node tools_node/small-avatar-crop-guide.js crop --input <image.png> --out <crop.png>
        --head x,y,width,height --face x,y,width,height
-       --shoulders leftX,leftY,rightX,rightY [--target 0.76] [--size 256]
+       --shoulders leftX,leftY,rightX,rightY [--target 0.76] [--size 256] [--guide-out <guide.png>]
 
 Boxes use source-image pixel coordinates. --head spans the main hair/helmet top to chin;
 --face spans forehead to chin and both cheek/jaw edges. --shoulders marks one visible
@@ -43,6 +43,29 @@ function readPng(file) { return PNG.sync.read(fs.readFileSync(file)); }
 function putPixel(dst, width, x, y, rgba) {
   const i = (y * width + x) * 4;
   dst[i] = rgba[0]; dst[i + 1] = rgba[1]; dst[i + 2] = rgba[2]; dst[i + 3] = rgba[3];
+}
+function drawRect(dst, box, rgba) {
+  const x0 = Math.floor(box.x), y0 = Math.floor(box.y);
+  const x1 = Math.ceil(box.x + box.width) - 1, y1 = Math.ceil(box.y + box.height) - 1;
+  for (let x = x0; x <= x1; x++) {
+    if (x >= 0 && x < dst.width) {
+      if (y0 >= 0 && y0 < dst.height) putPixel(dst.data, dst.width, x, y0, rgba);
+      if (y1 >= 0 && y1 < dst.height) putPixel(dst.data, dst.width, x, y1, rgba);
+    }
+  }
+  for (let y = y0; y <= y1; y++) {
+    if (y >= 0 && y < dst.height) {
+      if (x0 >= 0 && x0 < dst.width) putPixel(dst.data, dst.width, x0, y, rgba);
+      if (x1 >= 0 && x1 < dst.width) putPixel(dst.data, dst.width, x1, y, rgba);
+    }
+  }
+}
+function drawCrosshair(dst, point, rgba, radius = 6) {
+  const cx = Math.round(point.x), cy = Math.round(point.y);
+  for (let d = -radius; d <= radius; d++) {
+    if (cx + d >= 0 && cx + d < dst.width && cy >= 0 && cy < dst.height) putPixel(dst.data, dst.width, cx + d, cy, rgba);
+    if (cx >= 0 && cx < dst.width && cy + d >= 0 && cy + d < dst.height) putPixel(dst.data, dst.width, cx, cy + d, rgba);
+  }
 }
 function sampleBilinear(src, x, y) {
   const x0 = Math.floor(x), y0 = Math.floor(y), fx = x - x0, fy = y - y0;
@@ -143,13 +166,38 @@ function main() {
     const shoulderClearanceBelow = shoulders.map(p => crop.y + side - p.y);
     const passesShoulderClearance = shoulderClearanceBelow.every(clearance => clearance >= side * 0.03);
     const passesHeadRatio = headRatio >= 0.70 && headRatio <= 0.82;
-    const passesFaceCenter = Math.abs(faceCenterX - 0.5) <= 0.03;
+    const passesFaceCenter = Math.abs(faceCenterX - 0.5) <= 0.03 + 1e-9;
     const passesShoulders = shoulderContained.every(Boolean) && shoulderOnArtwork.every(Boolean) && passesShoulderClearance;
     const out = new PNG({ width: outputSize, height: outputSize });
     for (let y = 0; y < out.height; y++) for (let x = 0; x < out.width; x++) {
       const sx = crop.x + (x + 0.5) * side / out.width - 0.5;
       const sy = crop.y + (y + 0.5) * side / out.height - 0.5;
       putPixel(out.data, out.width, x, y, sampleBilinear(src, sx, sy));
+    }
+    if (a['guide-out']) {
+      const guidePath = path.resolve(a['guide-out']);
+      const guide = new PNG({ width: src.width, height: src.height });
+      for (let i = 0; i < src.data.length; i += 4) {
+        const alpha = src.data[i + 3] / 255;
+        guide.data[i] = Math.round(src.data[i] * alpha + 255 * (1 - alpha));
+        guide.data[i + 1] = Math.round(src.data[i + 1] * alpha + 255 * (1 - alpha));
+        guide.data[i + 2] = Math.round(src.data[i + 2] * alpha + 255 * (1 - alpha));
+        guide.data[i + 3] = 255;
+      }
+      drawRect(guide, head, [0, 210, 255, 255]);
+      drawRect(guide, face, [255, 55, 55, 255]);
+      drawRect(guide, crop, [255, 0, 255, 255]);
+      shoulders.forEach(point => drawCrosshair(guide, point, [255, 220, 0, 255]));
+      fs.mkdirSync(path.dirname(guidePath), { recursive: true });
+      fs.writeFileSync(guidePath, PNG.sync.write(guide));
+      fs.writeFileSync(`${guidePath}.txt`, [
+        '青色框：手動標記的頭部範圍（主要髮型／頭盔頂至下巴）',
+        '紅色框：手動標記的臉部範圍（額際至下巴、兩側臉頰／下顎）',
+        '黃色十字：手動標記的左、右肩外輪廓點',
+        '洋紅框：計算後的正方形裁框',
+        `量測結果：head=${(headRatio * 100).toFixed(1)}%, faceCenterX=${(faceCenterX * 100).toFixed(1)}%, hardChecks=${passesHeadRatio && headContained && headWithinSource && faceContained && faceWithinSource && passesFaceCenter && passesShoulders}`,
+        '先確認標記覆蓋原圖的真實頭臉和肩部輪廓，再檢查候選裁圖；數值通過不等於視覺驗收通過。'
+      ].join('\n') + '\n', 'utf8');
     }
     const result = { input: path.resolve(a.input), output: path.resolve(a.out), source: `${src.width}x${src.height}`, outputSize: `${outputSize}x${outputSize}`, cropPixels: { x: +crop.x.toFixed(2), y: +crop.y.toFixed(2), side: +side.toFixed(2) }, headHeightRatio: +(headRatio * 100).toFixed(1), targetHeadHeightRatio: +(target * 100).toFixed(1), passesHeadRatio, headContained, headWithinSource, faceCenterX: +(faceCenterX * 100).toFixed(1), passesFaceCenter, faceContained, faceWithinSource, shoulders: { contourPoints: shoulders, contained: shoulderContained, onVisiblePixelsWithin5px: shoulderOnArtwork, clearanceBelow: shoulderClearanceBelow.map(value => +value.toFixed(2)), passesClearanceBelow: passesShoulderClearance, passesShoulders }, passesAllHardChecks: passesHeadRatio && headContained && headWithinSource && faceContained && faceWithinSource && passesFaceCenter && passesShoulders, note: '頭部框需完整落在來源圖內；若原圖可見頭飾被切斷，目視判退來源。左右肩點下方須各保留裁框高度3%的可見空間；最後仍須目視確認頭飾完整、兩側肩膀形狀可辨。工具只裁切／等比縮放，不會修正原圖五官。' };
     console.log(JSON.stringify(result, null, 2));
