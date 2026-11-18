@@ -36,11 +36,11 @@ function setup(opts: { gold?: number; food?: number; troops?: number; level?: nu
     session.setRandomSource(() => opts.random ?? 0.99);
     const wallet: FakeWallet = { gold: opts.gold ?? 1000 };
     const internal = session as unknown as {
-        _hallWallet: { gold(): number; spend(n: number): boolean; grant(n: number): void };
+        _missionWallet: { gold(): number; spend(n: number): boolean; grant(n: number): void };
         _military: { food: number; foodCap: number; cityTroops: number; cityTroopsCap: number };
         _territoryLevel: number;
     };
-    internal._hallWallet = {
+    internal._missionWallet = {
         gold: () => wallet.gold,
         spend: (n) => { if (wallet.gold < n) return false; wallet.gold -= n; return true; },
         grant: (n) => { wallet.gold += n; },

@@ -1,45 +1,11 @@
 // @spec-source → 見 docs/cross-reference-index.md
 import { Camera, Color, Font, Label, Node, Tween, tween, UIOpacity, UITransform, Vec3 } from "cc";
+import {
+    FLOAT_MISS_TEXT, FLOAT_TEXT_STYLES, FloatStaggerTracker, floatEffectiveHeight,
+    type FloatTextStyle, type FloatTextType,
+} from "./FloatTextStyle";
 
-/**
- * 飄字類型 — 決定外觀（顏色/大小/動畫速度）。
- *
- * 擴充方式：在此新增類型名稱，並在 FLOAT_CONFIGS 加入對應設定，無需修改任何其他程式碼。
- */
-export type FloatTextType =
-    | 'dmg_player'  // 我方單位受傷（紅）
-    | 'dmg_enemy'   // 敵方單位受傷（藍）
-    | 'dmg_crit'    // 暴擊傷害（橙紅，大字）
-    | 'dmg_miss'    // 閃避/Miss（灰）
-    | 'heal'        // 治療量（綠）
-    | 'status'      // 狀態效果（中毒/暈眩/Buff，水藍）
-    | 'hint'        // 場景提示 / Debug 用（半透明白）
-    | 'loot';       // 掠奪資源（金色，戰法系統 §H-3）
-
-interface FloatConfig {
-    color: Color;
-    fontSize: number;
-    isBold: boolean;
-    durationMs: number;    // 飄字存在總時長（毫秒）
-    risePixels: number;    // 向上飄動的像素距離
-    scalePop: number;      // 出現時的初始縮放（> 1 = 彈跳感）
-    maxConcurrent: number; // 同類型同時存在上限；超過時強制回收最舊節點
-    randomOffsetX: number; // ±隨機水平偏移（避免連擊飄字堆疊）
-}
-
-/**
- * 各類型外觀設定一覽 — 視覺調整只需改這裡，程式邏輯不要動
- */
-const FLOAT_CONFIGS: Record<FloatTextType, FloatConfig> = {
-    dmg_player: { color: new Color(255, 90,  90,  255), fontSize: 44, isBold: true,  durationMs: 900,  risePixels: 90,  scalePop: 1.2, maxConcurrent: 12, randomOffsetX: 40 },
-    dmg_enemy:  { color: new Color(110, 180, 255, 255), fontSize: 44, isBold: true,  durationMs: 900,  risePixels: 90,  scalePop: 1.2, maxConcurrent: 12, randomOffsetX: 40 },
-    dmg_crit:   { color: new Color(255, 60,  0,   255), fontSize: 60, isBold: true,  durationMs: 1000, risePixels: 120, scalePop: 1.6, maxConcurrent: 8,  randomOffsetX: 50 },
-    dmg_miss:   { color: new Color(160, 160, 160, 255), fontSize: 34, isBold: false, durationMs: 800,  risePixels: 70,  scalePop: 1.0, maxConcurrent: 8,  randomOffsetX: 30 },
-    heal:       { color: new Color(150, 255, 140, 255), fontSize: 40, isBold: false, durationMs: 1000, risePixels: 85,  scalePop: 1.1, maxConcurrent: 10, randomOffsetX: 30 },
-    status:     { color: new Color(100, 220, 255, 255), fontSize: 30, isBold: false, durationMs: 1200, risePixels: 80,  scalePop: 1.0, maxConcurrent: 10, randomOffsetX: 20 },
-    loot:       { color: new Color(255, 215, 0,   255), fontSize: 32, isBold: true,  durationMs: 1400, risePixels: 100, scalePop: 1.2, maxConcurrent: 10, randomOffsetX: 12 },
-    hint:       { color: new Color(255, 255, 200, 150), fontSize: 22, isBold: false, durationMs: 2000, risePixels: 40,  scalePop: 1.0, maxConcurrent: 6,  randomOffsetX: 0  },
-};
+export type { FloatTextType } from './FloatTextStyle';
 
 interface PoolEntry {
     node: Node;
@@ -51,7 +17,7 @@ interface PoolEntry {
  * 動態飄字系統 — 統一管理所有浮動文字
  *
  * 設計特性：
- *   1. 型別驅動：外觀設定（顏色/大小/動畫）集中在 FLOAT_CONFIGS，一目了然
+ *   1. 型別驅動：外觀設定（顏色/大小/動畫）集中在 FLOAT_TEXT_STYLES（FloatTextStyle.ts），一目了然
  *   2. 物件池：每種類型維護獨立閒置池，避免 GC 卡頓
  *   3. maxConcurrent 硬上限：連擊時同類型超量則強制回收最舊節點，不讓飄字爆炸
  *   4. BMFont 支援：registerFont() 可替換系統字型（Phase 3 使用）
@@ -85,6 +51,10 @@ export class FloatTextSystem {
     private activeList = new Map<FloatTextType, PoolEntry[]>();
     /** 類型 → 自訂字型（BMFont 或語系字型），未設定則使用系統字型 */
     private customFonts = new Map<FloatTextType, Font>();
+    /** 同一單位連續跳字的錯開序號記錄 */
+    private readonly stagger = new FloatStaggerTracker();
+    /** 設定 Label 顏色時共用的暫存色，避免每次跳字 new Color */
+    private readonly tmpColor = new Color();
 
     // ─────────────────────────────────────────
     //  初始化
@@ -122,45 +92,64 @@ export class FloatTextSystem {
      * @param type     文字類型，決定顏色/大小/動畫
      * @param text     顯示內容（傷害數字、狀態名稱、提示文字…）
      * @param worldPos 3D 世界座標，自動轉換為 Canvas UI 座標
+     * @param anchorKey 錨點（通常是單位 id）；同一錨點短時間連續跳字會依序錯開位置，不傳則只有隨機水平偏移
      */
-    show(type: FloatTextType, text: string, worldPos: Vec3): void {
+    show(type: FloatTextType, text: string, worldPos: Vec3, anchorKey?: string): void {
         if (!this.uiRoot || !this.worldCamera || !this.canvasNode) return;
 
-        const config = FLOAT_CONFIGS[type];
+        const config = FLOAT_TEXT_STYLES[type];
         const uiPos = this.toUiPosition(worldPos);
         const entry = this.acquireEntry(type, config);
 
-        // ── 設定外觀 ──
+        // ── 設定外觀（重用 tmpColor，避免每次跳字配置 Color） ──
         const font = this.customFonts.get(type) ?? null;
         if (font) entry.label.font = font;
         entry.label.fontSize = config.fontSize;
         entry.label.isBold = config.isBold;
         entry.label.string = text;
         // alpha = 255 固定在 label.color，整體淡出由 UIOpacity 控制（避免相互干擾）
-        entry.label.color = new Color(config.color.r, config.color.g, config.color.b, 255);
+        this.tmpColor.set(config.color.r, config.color.g, config.color.b, 255);
+        entry.label.color = this.tmpColor;
+        // 描邊：讓數字在亂糟糟的戰場上看得清楚（BMFont 的描邊已烘進貼圖，這段只對系統字型生效）
+        entry.label.enableOutline = config.outlineWidth > 0;
+        if (config.outlineWidth > 0) {
+            this.tmpColor.set(config.outlineColor.r, config.outlineColor.g, config.outlineColor.b, config.outlineColor.a);
+            entry.label.outlineColor = this.tmpColor;
+            entry.label.outlineWidth = config.outlineWidth;
+        }
         entry.opacity.opacity = 255;
 
         // ── 加入場景，設定初始位置與縮放 ──
         entry.node.parent = this.uiRoot;
         entry.node.layer = this.canvasNode.layer;
 
-        // 隨機水平偏移：連擊時避免多個飄字完全重疊
-        const offsetX = (Math.random() - 0.5) * 2 * config.randomOffsetX;
+        // 錯開：同一錨點連續跳字依序往旁邊、往上排開；再加一點隨機，避免不同單位的字完全重疊
+        // PROG-2-9402：依前一個字的存活時間與大小錯開，爆擊大字還在畫面上時後面的字不會疊上去
+        const stagger = anchorKey
+            ? this.stagger.place(anchorKey, Date.now(), config.durationMs, floatEffectiveHeight(config))
+            : { x: 0, y: 0 };
+        const offsetX = (Math.random() - 0.5) * 2 * config.randomOffsetX + stagger.x;
         const startX = uiPos.x + offsetX;
-        const startY = uiPos.y;
+        const startY = uiPos.y + stagger.y;
         entry.node.setPosition(startX, startY, 0);
-        entry.node.setScale(config.scalePop, config.scalePop, 1);
+        entry.node.setScale(config.startScale, config.startScale, 1);
 
         const duration = config.durationMs / 1000;
 
-        // ── Tween 1：scale pop 縮回正常比例，再向上飄動 ──
+        // ── Tween 1：向上飄動（只動 position，結束時回收節點） ──
         tween(entry.node)
-            .to(0.15, { scale: new Vec3(1, 1, 1) })
-            .to(duration - 0.15, { position: new Vec3(startX, startY + config.risePixels, 0) }, { easing: 'quadOut' })
+            .to(duration, { position: new Vec3(startX, startY + config.risePixels, 0) }, { easing: 'quadOut' })
             .call(() => this.releaseEntry(type, entry))
             .start();
 
-        // ── Tween 2（獨立）：前半段不透明，後半段淡出 ──
+        // ── Tween 2（獨立）：彈出 → 回彈（只動 scale）。爆擊放大到峰值後用 backOut 回彈到 1 ──
+        const scaleTween = tween(entry.node);
+        if (config.popInSec > 0) {
+            scaleTween.to(config.popInSec, { scale: new Vec3(config.peakScale, config.peakScale, 1) }, { easing: 'quadOut' });
+        }
+        scaleTween.to(config.settleSec, { scale: new Vec3(1, 1, 1) }, { easing: config.popInSec > 0 ? 'backOut' : 'linear' }).start();
+
+        // ── Tween 3（獨立）：前半段不透明，後半段淡出 ──
         tween(entry.opacity)
             .delay(duration * 0.5)
             .to(duration * 0.5, { opacity: 0 })
@@ -172,13 +161,13 @@ export class FloatTextSystem {
     // ─────────────────────────────────────────
 
     /** 顯示傷害數字（isCrit 為 true 時使用暴擊外觀） */
-    showDamage(value: number, worldPos: Vec3, isCrit = false): void {
-        this.show(isCrit ? 'dmg_crit' : 'dmg_player', `${value}`, worldPos);
+    showDamage(value: number, worldPos: Vec3, isCrit = false, anchorKey?: string): void {
+        this.show(isCrit ? 'dmg_crit' : 'dmg_player', `${value}`, worldPos, anchorKey);
     }
 
-    /** 顯示閃避/Miss */
-    showMiss(worldPos: Vec3): void {
-        this.show('dmg_miss', 'Miss', worldPos);
+    /** 顯示閃避（灰字「閃避」） */
+    showMiss(worldPos: Vec3, anchorKey?: string): void {
+        this.show('dmg_miss', FLOAT_MISS_TEXT, worldPos, anchorKey);
     }
 
     /**
@@ -198,7 +187,7 @@ export class FloatTextSystem {
     //  私有：物件池管理
     // ─────────────────────────────────────────
 
-    private acquireEntry(type: FloatTextType, config: FloatConfig): PoolEntry {
+    private acquireEntry(type: FloatTextType, config: FloatTextStyle): PoolEntry {
         // 優先取閒置節點（動畫已結束的）
         const idle = this.getIdle(type);
         if (idle.length > 0) {

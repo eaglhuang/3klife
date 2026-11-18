@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-17",
+  "updatedAt": "2026-11-18",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -278,7 +278,7 @@
         ]
       },
       "smallAvatar": {
-        "activeVersion": "0002",
+        "activeVersion": "0003",
         "status": "review-pending",
         "history": [
           {
@@ -293,13 +293,34 @@
           {
             "version": "0002",
             "file": "small_avatars/bu_lian_shi__步練師__small_avatar_0002.png",
-            "status": "review-pending",
+            "status": "rejected",
             "sha256": "38ec209555d36d2035f7438e2076b16e99e267a306ed8f3d4c64e3d3fa5c1dd7",
             "canvas": "256x256 RGBA",
             "source": "standing/bu_lian_shi__步練師__standing_0002.png",
             "crop": "shoulder-line",
             "cropBox": "x=352,y=0,w=320,h=270; output x=-8,y=0,w=256,h=216 on 256x256 canvas",
-            "qc": "Crop-only derived from approved standing art; 256x256 canvas and transparent padding verified. Final visual inspection of this revision remains pending."
+            "qc": "Crop-only derived from approved standing art; 256x256 canvas and transparent padding verified. Final visual inspection of this revision remains pending.",
+            "note": "使用者移除不合格裁切，已由新的等比例裁切候選取代。"
+          },
+          {
+            "version": "0003",
+            "file": "small_avatars/bu_lian_shi__步練師__small_avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "345a9a41af0666aaae498e6cea562add724f6445236456d75b38d6e31caa65cf",
+            "canvas": "1254x1254 RGBA",
+            "cropBox": {
+              "x": 352,
+              "y": 0,
+              "width": 320,
+              "height": 270
+            },
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/bu_lian_shi__步練師__standing_0002.png",
+            "sourceSha256": "00b7d30fd3d655859fcc908246db32c6dd116381ef657a8d7ca439ad654e6283",
+            "method": "crop-only; uniform resize; transparent padding; no redraw",
+            "qc": "核定站姿原圖直接裁切；輸出尺寸與透明邊界已確認，縮圖已檢視；候選維持 review-pending。",
+            "note": "依使用者要求重做小頭像，未重畫人物。",
+            "createdAt": "2026-11-18"
           }
         ]
       }
@@ -532,7 +553,7 @@
             "poseLabel": "跨步迴身斜向戟擊",
             "gaze": "direct-to-camera",
             "sourceStanding": "standing/lu_ling_qi__呂玲綺__standing_0002.png",
-            "note": "保持既有紅銀輕甲與戟形武器；長柄筆直、全身與武器完整入框。候選待���，未接入遊戲。"
+            "note": "保持既有紅銀輕甲與戟形武器；長柄筆直、全身與武器完整入框。候選待審，未接入遊戲。"
           }
         ]
       },
@@ -981,7 +1002,7 @@
         ]
       },
       "smallAvatar": {
-        "activeVersion": "0002",
+        "activeVersion": "0003",
         "status": "review-pending",
         "history": [
           {
@@ -995,10 +1016,30 @@
           {
             "version": "0002",
             "file": "small_avatars/ma_yun_lu__馬雲騄__small_avatar_0002.png",
-            "status": "review-pending",
+            "status": "rejected",
             "sha256": "07a85eefe26839200918d43fccf210d860a2e82ab9fd0755935d9e642cd94029",
             "canvas": "1254x1254 RGBA",
-            "note": "Reframed face toward horizontal center; shoulder caps only, transparent below neck."
+            "note": "使用者移除不合格裁切，已由新的等比例裁切候選取代。"
+          },
+          {
+            "version": "0003",
+            "file": "small_avatars/ma_yun_lu__馬雲騄__small_avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "12289f8ec3f42e3d2a767ef657b98a2d6b0cc5494847cb3e8c4004f03986a11a",
+            "canvas": "1254x1254 RGBA",
+            "cropBox": {
+              "x": 375,
+              "y": 45,
+              "width": 300,
+              "height": 300
+            },
+            "sourceStandingVersion": "0001",
+            "sourceStandingFile": "standing/ma_yun_lu__馬雲騄__standing_0001.png",
+            "sourceSha256": "54bae1d7c6f97b3205ffa8a2869cf221b3ad35110e0d50d6c4cc4f4848e18ed5",
+            "method": "crop-only; uniform resize; transparent padding; no redraw",
+            "qc": "核定站姿原圖直接裁切；輸出尺寸與透明邊界已確認，縮圖已檢視；候選維持 review-pending。",
+            "note": "依使用者要求重做小頭像，未重畫人物。",
+            "createdAt": "2026-11-18"
           }
         ]
       }
@@ -1781,16 +1822,36 @@
         ]
       },
       "smallAvatar": {
-        "activeVersion": "0001",
+        "activeVersion": "0002",
         "status": "review-pending",
         "history": [
           {
             "version": "0001",
             "file": "small_avatars/huang_zhong__黃忠__small_avatar_0001.png",
-            "status": "review-pending",
+            "status": "rejected",
             "sha256": "da74e1743b1cae619ad32fd2cffaca0e8fa9be7332c781246941d99cc500bb79",
             "canvas": "1254x1254 RGBA",
-            "note": "Existing remote small-avatar file discovered without a catalog record; crop provenance remains to be confirmed before approval."
+            "note": "使用者移除不合格裁切，已由新的等比例裁切候選取代。"
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/huang_zhong__黃忠__small_avatar_0002.png",
+            "status": "review-pending",
+            "sha256": "2a845dcf6706b20319c05fbf76fd190529290ab670e75e737c7407d417eea83d",
+            "canvas": "1254x1254 RGBA",
+            "cropBox": {
+              "x": 145,
+              "y": 0,
+              "width": 230,
+              "height": 230
+            },
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/huang_zhong__黃忠__standing_0002.png",
+            "sourceSha256": "f2b0a1ae9e72e3fe275890226e6168b0f742543a79de17f089f987477ee28caa",
+            "method": "crop-only; uniform resize; transparent padding; no redraw",
+            "qc": "核定站姿原圖直接裁切；輸出尺寸與透明邊界已確認，縮圖已檢視；候選維持 review-pending。",
+            "note": "依使用者要求重做小頭像，未重畫人物。",
+            "createdAt": "2026-11-18"
           }
         ]
       }
@@ -1836,19 +1897,40 @@
         ]
       },
       "smallAvatar": {
-        "activeVersion": "0001",
+        "activeVersion": "0002",
         "status": "review-pending",
         "history": [
           {
             "version": "0001",
             "file": "small_avatars/ma_chao__馬超__small_avatar_0001.png",
-            "status": "review-pending",
+            "status": "rejected",
             "sha256": "ae5846a33758798f1a99a40a7c0176b9bef2d156b6731982250c0bddb1096e03",
             "canvas": "1254x1254 RGBA",
             "source": "standing/ma_chao__馬超__standing_0002.png",
             "crop": "shoulder-line",
             "cropBox": "x=395,y=0,w=360,h=360",
-            "qc": "125px preview: direct crop from approved standing art; full silver head ornament, face and chin visible, face centered, shoulders at lower edge."
+            "qc": "125px preview: direct crop from approved standing art; full silver head ornament, face and chin visible, face centered, shoulders at lower edge.",
+            "note": "使用者移除不合格裁切，已由新的等比例裁切候選取代。"
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/ma_chao__馬超__small_avatar_0002.png",
+            "status": "review-pending",
+            "sha256": "b6d063440f8cc07c66dfa42d337a991cf5f0288eb5437099dd119b423200504d",
+            "canvas": "1254x1254 RGBA",
+            "cropBox": {
+              "x": 415,
+              "y": 0,
+              "width": 320,
+              "height": 320
+            },
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/ma_chao__馬超__standing_0002.png",
+            "sourceSha256": "931b1aee26d3ed33ba8796bcf03043ba839266d3a04c5dbe460a3b88a97160e4",
+            "method": "crop-only; uniform resize; transparent padding; no redraw",
+            "qc": "核定站姿原圖直接裁切；輸出尺寸與透明邊界已確認，縮圖已檢視；候選維持 review-pending。",
+            "note": "依使用者要求重做小頭像，未重畫人物。",
+            "createdAt": "2026-11-18"
           }
         ]
       }
@@ -1956,18 +2038,39 @@
         ]
       },
       "smallAvatar": {
-        "activeVersion": "0001",
+        "activeVersion": "0002",
         "status": "review-pending",
         "history": [
           {
             "version": "0001",
             "file": "small_avatars/taishi_ci__太史慈__small_avatar_0001.png",
-            "status": "review-pending",
+            "status": "rejected",
             "sha256": "48ce1022d712f90a42fc17ce701e90df785d13fbe560c91fb7a651a45be2455b",
             "canvas": "1254x1254 RGBA",
             "sourceStanding": "standing/taishi_ci__太史慈__standing_0002.png",
             "cropBox": "x=396,y=48,w=320,h=320",
-            "qc": "Direct crop and proportional resize only; no generative edits. Full helmet/head and face retained, face visually centered, crop ends at upper shoulder line; review-pending."
+            "qc": "Direct crop and proportional resize only; no generative edits. Full helmet/head and face retained, face visually centered, crop ends at upper shoulder line; review-pending.",
+            "note": "使用者移除不合格裁切，已由新的等比例裁切候選取代。"
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/taishi_ci__太史慈__small_avatar_0002.png",
+            "status": "review-pending",
+            "sha256": "9e4e38c9fafdc0376f4568785c6e0f1b1d5617f59ed30a8888233d12e0713d33",
+            "canvas": "1254x1254 RGBA",
+            "cropBox": {
+              "x": 370,
+              "y": 0,
+              "width": 360,
+              "height": 360
+            },
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/taishi_ci__太史慈__standing_0002.png",
+            "sourceSha256": "537ded24dda50457a0045e936b4c87fcc98e162fdbcb3d1bcdf37b7fdf93e600",
+            "method": "crop-only; uniform resize; transparent padding; no redraw",
+            "qc": "核定站姿原圖直接裁切；輸出尺寸與透明邊界已確認，縮圖已檢視；候選維持 review-pending。",
+            "note": "依使用者要求重做小頭像，未重畫人物。",
+            "createdAt": "2026-11-18"
           }
         ]
       }
@@ -2161,19 +2264,40 @@
         "activeVersion": "0002"
       },
       "smallAvatar": {
-        "activeVersion": "0001",
+        "activeVersion": "0002",
         "status": "review-pending",
         "history": [
           {
             "version": "0001",
             "file": "small_avatars/pang_tong__龐統__small_avatar_0001.png",
-            "status": "review-pending",
+            "status": "rejected",
             "sha256": "05251875eaa0e0e7772bad19c47cd644afad09125918fab816b482d8ae9d4911",
             "canvas": "1254x1254 RGBA",
             "source": "standing/pang_tong__龐統__standing_0002.png",
             "crop": "shoulder-line",
             "cropBox": "x=440,y=0,w=360,h=360",
-            "qc": "125px preview: direct crop from approved standing art; full plume/crown base, face and chin visible, face centered, shoulder edge only."
+            "qc": "125px preview: direct crop from approved standing art; full plume/crown base, face and chin visible, face centered, shoulder edge only.",
+            "note": "使用者移除不合格裁切，已由新的等比例裁切候選取代。"
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/pang_tong__龐統__small_avatar_0002.png",
+            "status": "review-pending",
+            "sha256": "51f81e28678bc231459bee78efbdc4bb482300e7717731b448128f0ca4a45be5",
+            "canvas": "1254x1254 RGBA",
+            "cropBox": {
+              "x": 485,
+              "y": 0,
+              "width": 270,
+              "height": 270
+            },
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/pang_tong__龐統__standing_0002.png",
+            "sourceSha256": "74a7277372a6050af60d8f6520209114562685f9c6af168ef222c9d17da45dec",
+            "method": "crop-only; uniform resize; transparent padding; no redraw",
+            "qc": "核定站姿原圖直接裁切；輸出尺寸與透明邊界已確認，縮圖已檢視；候選維持 review-pending。",
+            "note": "依使用者要求重做小頭像，未重畫人物。",
+            "createdAt": "2026-11-18"
           }
         ]
       }
@@ -7624,10 +7748,11 @@
           {
             "version": "0001",
             "file": "small_avatars/diao_chan__貂蟬__small_avatar_0001.png",
-            "status": "superseded",
+            "status": "rejected",
             "sha256": "25805ad7bc7a768312b0c998a570a513e73f61c7fd003cd69afd43b9de0162c9",
             "canvas": "1254x1254 RGBA",
-            "qc": "125px preview: face centered; full head and ornaments visible; crop ends at shoulder line without chest."
+            "qc": "125px preview: face centered; full head and ornaments visible; crop ends at shoulder line without chest.",
+            "note": "使用者移除此舊版小頭像；採用版 0003 保持不變。"
           },
           {
             "version": "0002",
@@ -7885,19 +8010,40 @@
         "activeVersion": "0002"
       },
       "smallAvatar": {
-        "activeVersion": "0001",
+        "activeVersion": "0002",
         "status": "review-pending",
         "history": [
           {
             "version": "0001",
             "file": "small_avatars/dong_bai__董白__small_avatar_0001.png",
-            "status": "review-pending",
+            "status": "rejected",
             "sha256": "c78639c2e09b896ecacbbe144d4f38df2aef2a7f0e51b83211f2902231cff046",
             "canvas": "256x256 RGBA",
             "source": "standing/dong_bai__董白__standing_0002.png (crop-only)",
             "crop": "shoulder-line",
             "cropBox": "x=205,y=15,w=160,h=160",
-            "qc": "No redraw or design changes; full hair ornament, face and chin retained; face centered; shoulder and collar only."
+            "qc": "No redraw or design changes; full hair ornament, face and chin retained; face centered; shoulder and collar only.",
+            "note": "使用者移除不合格裁切，已由新的等比例裁切候選取代。"
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/dong_bai__董白__small_avatar_0002.png",
+            "status": "review-pending",
+            "sha256": "d415dad31dcf201ce5b3fa8479411ffbaf4e4eb6ac76eff23fcd6f98dcfe532c",
+            "canvas": "1254x1254 RGBA",
+            "cropBox": {
+              "x": 190,
+              "y": 0,
+              "width": 190,
+              "height": 190
+            },
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/dong_bai__董白__standing_0002.png",
+            "sourceSha256": "b2615b94ce43b8fdd5540789ea273addfdc59c1d443e28d9349aeeb5d0d93a30",
+            "method": "crop-only; uniform resize; transparent padding; no redraw",
+            "qc": "核定站姿原圖直接裁切；輸出尺寸與透明邊界已確認，縮圖已檢視；候選維持 review-pending。",
+            "note": "依使用者要求重做小頭像，未重畫人物。",
+            "createdAt": "2026-11-18"
           }
         ]
       },
@@ -7962,18 +8108,39 @@
       },
       "smallAvatar": {
         "status": "review-pending",
-        "activeVersion": "0001",
+        "activeVersion": "0002",
         "history": [
           {
             "version": "0001",
             "file": "small_avatars/fan_shi__樊氏__small_avatar_0001.png",
-            "status": "review-pending",
+            "status": "rejected",
             "sha256": "6baf3d893f4b061a2d75be95959d278447dd72d02e4217d5f6a5e3ad0cc82cdc",
             "canvas": "1254x1254 RGBA",
             "crop": "shoulder-line",
             "sourceStanding": "standing/fan_shi__樊氏__standing_0002.png",
             "cropBox": "x=214,y=20,w=131,h=131",
-            "qc": "125px preview: full hair and chin visible, head fills about 75%, face centered within tolerance, neck and shoulder edge only; pixel crop and proportional resize from approved standing, no repaint."
+            "qc": "125px preview: full hair and chin visible, head fills about 75%, face centered within tolerance, neck and shoulder edge only; pixel crop and proportional resize from approved standing, no repaint.",
+            "note": "使用者移除不合格裁切，已由新的等比例裁切候選取代。"
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/fan_shi__樊氏__small_avatar_0002.png",
+            "status": "review-pending",
+            "sha256": "8e515166e18724626e90afe794c4b9f4658c6805d0db553c4e73e409cd1cee39",
+            "canvas": "1254x1254 RGBA",
+            "cropBox": {
+              "x": 185,
+              "y": 0,
+              "width": 170,
+              "height": 155
+            },
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/fan_shi__樊氏__standing_0002.png",
+            "sourceSha256": "10942ca00ca1db31d2a9547ee0c930768167e9097ed80a6de9e5ea6a0bf2ce32",
+            "method": "crop-only; uniform resize; transparent padding; no redraw",
+            "qc": "核定站姿原圖直接裁切；輸出尺寸與透明邊界已確認，縮圖已檢視；候選維持 review-pending。",
+            "note": "依使用者要求重做小頭像，未重畫人物。",
+            "createdAt": "2026-11-18"
           }
         ]
       }
@@ -8429,12 +8596,12 @@
       },
       "smallAvatar": {
         "status": "review-pending",
-        "activeVersion": "0001",
+        "activeVersion": "0002",
         "history": [
           {
             "version": "0001",
             "file": "small_avatars/mi_shi__糜氏__small_avatar_0001.png",
-            "status": "review-pending",
+            "status": "rejected",
             "sha256": "bb2dce2b6b445916f3399ad5c4becc4d5ec78e975cd162b3ae5a4b67df365b03",
             "canvas": "256x256 RGBA",
             "sourceStanding": "standing/mi_shi__糜氏__standing_0002.png",
@@ -8445,7 +8612,28 @@
               "width": 130,
               "height": 130
             },
-            "qc": "Crop-only from approved standing art; estimated head height about 72% of frame; face horizontally centered; hair, face, neck and shoulder tops retained; crop ends before chest and held prop; no redraw."
+            "qc": "Crop-only from approved standing art; estimated head height about 72% of frame; face horizontally centered; hair, face, neck and shoulder tops retained; crop ends before chest and held prop; no redraw.",
+            "note": "使用者移除不合格裁切，已由新的等比例裁切候選取代。"
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/mi_shi__糜氏__small_avatar_0002.png",
+            "status": "review-pending",
+            "sha256": "5d2023c577ec2f5d7ef9607c0a206faffb8a5ae0ce8c7b07f2f80ac721b28c24",
+            "canvas": "1254x1254 RGBA",
+            "cropBox": {
+              "x": 169,
+              "y": 0,
+              "width": 170,
+              "height": 170
+            },
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/mi_shi__糜氏__standing_0002.png",
+            "sourceSha256": "86e4bde34da6e795c77073b00f368206f7b1552fb7b9966bd90710263b38cd8a",
+            "method": "crop-only; uniform resize; transparent padding; no redraw",
+            "qc": "核定站姿原圖直接裁切；輸出尺寸與透明邊界已確認，縮圖已檢視；候選維持 review-pending。",
+            "note": "依使用者要求重做小頭像，未重畫人物。",
+            "createdAt": "2026-11-18"
           }
         ]
       }
@@ -8552,19 +8740,40 @@
         ]
       },
       "smallAvatar": {
-        "activeVersion": "0001",
+        "activeVersion": "0002",
         "status": "review-pending",
         "history": [
           {
             "version": "0001",
             "file": "small_avatars/sun_lu_ban__孫魯班__small_avatar_0001.png",
-            "status": "review-pending",
+            "status": "rejected",
             "sha256": "720aae3a2101a51070452daa023b079bf1d7f5a264e153af07a26b388e328997",
             "canvas": "256x256 RGBA",
             "source": "standing/sun_lu_ban__孫魯班__standing_0002.png (crop-only)",
             "crop": "shoulder-line",
             "cropBox": "x=402,y=0,w=400,h=345; transparent-pad bottom=55",
-            "qc": "Crop-only; complete hair ornament, face and chin retained; facial features centered; shoulder tops at lower edge; no exposed chest."
+            "qc": "Crop-only; complete hair ornament, face and chin retained; facial features centered; shoulder tops at lower edge; no exposed chest.",
+            "note": "使用者移除不合格裁切，已由新的等比例裁切候選取代。"
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/sun_lu_ban__孫魯班__small_avatar_0002.png",
+            "status": "review-pending",
+            "sha256": "f367cb48ffb63774e64780caca703224303c00df03d43efa5c4d3d1b7bd057aa",
+            "canvas": "1254x1254 RGBA",
+            "cropBox": {
+              "x": 315,
+              "y": 0,
+              "width": 400,
+              "height": 350
+            },
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/sun_lu_ban__孫魯班__standing_0002.png",
+            "sourceSha256": "940f3448b5c64f8e60c27944f36419f6e9fe8eb45dab08b08958b7ddab8eced9",
+            "method": "crop-only; uniform resize; transparent padding; no redraw",
+            "qc": "核定站姿原圖直接裁切；輸出尺寸與透明邊界已確認，縮圖已檢視；候選維持 review-pending。",
+            "note": "依使用者要求重做小頭像，未重畫人物。",
+            "createdAt": "2026-11-18"
           }
         ]
       }
@@ -8741,6 +8950,32 @@
             "note": "以羊徽瑜核定站姿為唯一角色造型參考；依宮廷身份以令牌傳信，呈現優雅臨戰支援動作。透明全身候選，待使用者檢視。"
           }
         ]
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/yang_hui_yu__羊徽瑜__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "97a3a18f6e319bf5af78312eff1758de5ce313939afa02c7af7edd52afb38cdf",
+            "canvas": "1254x1254 RGBA",
+            "cropBox": {
+              "x": 156,
+              "y": 0,
+              "width": 200,
+              "height": 200
+            },
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/yang_hui_yu__羊徽瑜__standing_0002.png",
+            "sourceSha256": "ebe83044ea34be491a3d7e32c50903a9b46f07267c87746235ecf3a904d87792",
+            "method": "crop-only; uniform resize; transparent padding; no redraw",
+            "qc": "核定站姿原圖直接裁切；輸出尺寸與透明邊界已確認，縮圖已檢視；候選維持 review-pending。",
+            "note": "依使用者要求重做小頭像，未重畫人物。",
+            "createdAt": "2026-11-18"
+          }
+        ]
       }
     },
     {
@@ -8789,19 +9024,40 @@
       },
       "smallAvatar": {
         "status": "review-pending",
-        "activeVersion": "0001",
+        "activeVersion": "0002",
         "history": [
           {
             "version": "0001",
             "file": "small_avatars/hua_man__花鬘__small_avatar_0001.png",
-            "status": "review-pending",
+            "status": "rejected",
             "sha256": "c790311572b1b02d21242f62bf9e34488f3df35251c2d8b066b6b7536abea4eb",
             "canvas": "330x330 RGBA",
             "source": "standing/hua_man__花鬘__standing_0002.png",
             "crop": "shoulder-line",
             "cropBox": "x=360,y=0,w=330,h=275",
             "transparentPadding": "bottom=55px",
-            "qc": "從核定站姿原圖裁切並加透明留白，未重繪或改造人物；本版仍待使用者視覺確認。"
+            "qc": "從核定站姿原圖裁切並加透明留白，未重繪或改造人物；本版仍待使用者視覺確認。",
+            "note": "使用者移除不合格裁切，已由新的等比例裁切候選取代。"
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/hua_man__花鬘__small_avatar_0002.png",
+            "status": "review-pending",
+            "sha256": "c56b415c1363c2a6c0e1220d216dd1d523cbdff03f85dffacc406acdfc986eb2",
+            "canvas": "1254x1254 RGBA",
+            "cropBox": {
+              "x": 360,
+              "y": 0,
+              "width": 330,
+              "height": 275
+            },
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/hua_man__花鬘__standing_0002.png",
+            "sourceSha256": "2d0f4b9586c0d8e19379e2483197a6fd1cd8f00793ab01da19200f957663cce9",
+            "method": "crop-only; uniform resize; transparent padding; no redraw",
+            "qc": "核定站姿原圖直接裁切；輸出尺寸與透明邊界已確認，縮圖已檢視；候選維持 review-pending。",
+            "note": "依使用者要求重做小頭像，未重畫人物。",
+            "createdAt": "2026-11-18"
           }
         ]
       }

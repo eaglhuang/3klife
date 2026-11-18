@@ -158,7 +158,7 @@ export function parseMissionDefinition(raw: unknown, opts: ParseOptions = {}): M
                 if (typeof n.on !== 'string' || !SWITCH_ON.test(n.on)) bad(`${path}.on`, `不合法的 on：${String(n.on)}`);
                 if (!Array.isArray(n.cases) || n.cases.length === 0) bad(`${path}.cases`, '至少一個 case');
                 else n.cases.forEach((c, i) => {
-                    if (!isObj(c) || (c.when === undefined && !isNum(c.gte))) bad(`${path}.cases[${i}]`, 'case 需要 when 或 gte');
+                    if (!isObj(c) || (c.when === undefined && c.eq === undefined && !isNum(c.gte))) bad(`${path}.cases[${i}]`, 'case 需要 when 或 gte');
                     else checkNode(c.then, `${path}.cases[${i}].then`);
                 });
                 if (n.else !== undefined) checkNode(n.else, `${path}.else`);

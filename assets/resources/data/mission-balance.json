@@ -1,29 +1,53 @@
 {
   "schema": "mission-balance.v1",
-  "version": 1,
+  "version": 2,
   "note": "通用任務全域數值。平衡先不管，這裡只放結構與初值；各任務可在自己的定義內覆寫情報來源。",
   "intelCurve": {
-    "neutral": 50,
-    "successSlope": 0.3,
-    "disasterRatioAtZero": 1.5,
-    "disasterRatioAtFull": 0.5
+    "successSlope": 0.2,
+    "disasterFactorAtZero": 1.5,
+    "disasterFactorAtFull": 0.5
   },
   "intel": {
     "min": 0,
     "max": 100,
     "reconCap": 90,
-    "reconIncrements": [35, 25, 15],
+    "reconIncrements": [
+      35,
+      25,
+      15
+    ],
     "reconGrainCost": 50,
     "scoutEnergy": 5,
     "scoutIntBonusPerPoint": 0.1,
     "scoutTagBonus": 5,
-    "wait": { "maxPerMission": 1, "delta": 20, "expireBonusSeasons": 1 },
+    "wait": {
+      "maxPerMission": 1,
+      "delta": 20,
+      "expireBonusSeasons": 1
+    },
     "passivePerSeason": 5,
-    "flagBonus": { "scout_post": { "themes": ["military", "espionage"], "delta": 10 } }
+    "flagBonus": {
+      "scout_post": {
+        "themes": [
+          "military",
+          "espionage"
+        ],
+        "delta": 10
+      }
+    }
   },
   "risk": {
-    "injury": { "tier": "disaster", "minSeasons": 1, "maxSeasons": 2 },
-    "capture": { "tier": "disaster", "minDifficulty": "ADVANCED", "minSeasons": 1, "maxSeasons": 3 }
+    "injury": {
+      "tier": "disaster",
+      "minSeasons": 1,
+      "maxSeasons": 2
+    },
+    "capture": {
+      "tier": "disaster",
+      "minDifficulty": "ADVANCED",
+      "minSeasons": 1,
+      "maxSeasons": 3
+    }
   },
   "successRate": {
     "base": 0.5,
@@ -40,27 +64,232 @@
     "experienceCap": 0.05,
     "volunteerBonus": 0.5,
     "finalMin": 0.05,
-    "finalMax": 1.0
+    "finalMax": 1
   },
-  "resourceCaps": { "grain": 10000, "silver": 5000, "troops": 3000 },
+  "resourceCaps": {
+    "grain": 10000,
+    "silver": 5000,
+    "troops": 3000
+  },
   "recordLimit": 50,
-  "wallEnergy": { "Military": 20, "Domestic": 10, "Expedition": 20 },
+  "wallEnergy": {
+    "Military": 20,
+    "Domestic": 10,
+    "Expedition": 20
+  },
   "wallRewards": {
-    "Military": { "grain": 1, "silver": 0, "generalExp": 1 },
-    "Domestic": { "grain": 0.5, "silver": 1, "generalExp": 0 },
-    "Expedition": { "grain": 0, "silver": 1, "generalExp": 1 }
+    "Military": {
+      "grain": 1,
+      "silver": 0,
+      "generalExp": 1
+    },
+    "Domestic": {
+      "grain": 0.5,
+      "silver": 1,
+      "generalExp": 0
+    },
+    "Expedition": {
+      "grain": 0,
+      "silver": 1,
+      "generalExp": 1
+    }
   },
   "wallCosts": {
-    "Military": { "grain": 1, "troops": 1, "silver": 0 },
-    "Domestic": { "grain": 1, "troops": 0, "silver": 1 },
-    "Expedition": { "grain": 1, "troops": 1, "silver": 0 }
+    "Military": {
+      "grain": 1,
+      "troops": 1,
+      "silver": 0
+    },
+    "Domestic": {
+      "grain": 1,
+      "troops": 0,
+      "silver": 1
+    },
+    "Expedition": {
+      "grain": 1,
+      "troops": 1,
+      "silver": 0
+    }
   },
   "difficulties": {
-    "EASY": { "durationSeasons": 1, "powerRequired": 100, "reward": { "grain": 120, "silver": 80, "generalExp": 40 }, "cost": { "grain": 40, "troops": 50, "silver": 30 }, "fame": 3, "initialIntel": 45, "riskLoss": 40 },
-    "NORMAL": { "durationSeasons": 1, "powerRequired": 180, "reward": { "grain": 200, "silver": 140, "generalExp": 70 }, "cost": { "grain": 60, "troops": 80, "silver": 50 }, "fame": 5, "initialIntel": 40, "riskLoss": 70 },
-    "ELITE": { "durationSeasons": 2, "powerRequired": 260, "reward": { "grain": 350, "silver": 250, "generalExp": 120 }, "cost": { "grain": 100, "troops": 150, "silver": 80 }, "fame": 8, "initialIntel": 35, "riskLoss": 120 },
-    "ADVANCED": { "durationSeasons": 2, "powerRequired": 330, "reward": { "grain": 600, "silver": 420, "generalExp": 200 }, "cost": { "grain": 180, "troops": 250, "silver": 140 }, "fame": 12, "initialIntel": 30, "riskLoss": 200 },
-    "HELL": { "durationSeasons": 3, "powerRequired": 400, "reward": { "grain": 1000, "silver": 700, "generalExp": 320 }, "cost": { "grain": 300, "troops": 400, "silver": 220 }, "fame": 20, "initialIntel": 25, "riskLoss": 340 }
+    "EASY": {
+      "durationSeasons": 1,
+      "powerRequired": 100,
+      "reward": {
+        "grain": 120,
+        "silver": 80,
+        "generalExp": 40
+      },
+      "cost": {
+        "grain": 40,
+        "troops": 50,
+        "silver": 30
+      },
+      "fame": 3,
+      "initialIntel": 45,
+      "riskLoss": 40,
+      "needPower": 100,
+      "energy": 10
+    },
+    "NORMAL": {
+      "durationSeasons": 1,
+      "powerRequired": 180,
+      "reward": {
+        "grain": 200,
+        "silver": 140,
+        "generalExp": 70
+      },
+      "cost": {
+        "grain": 60,
+        "troops": 80,
+        "silver": 50
+      },
+      "fame": 5,
+      "initialIntel": 40,
+      "riskLoss": 70,
+      "needPower": 180,
+      "energy": 10
+    },
+    "ELITE": {
+      "durationSeasons": 2,
+      "powerRequired": 260,
+      "reward": {
+        "grain": 350,
+        "silver": 250,
+        "generalExp": 120
+      },
+      "cost": {
+        "grain": 100,
+        "troops": 150,
+        "silver": 80
+      },
+      "fame": 8,
+      "initialIntel": 35,
+      "riskLoss": 120,
+      "needPower": 260,
+      "energy": 15
+    },
+    "ADVANCED": {
+      "durationSeasons": 2,
+      "powerRequired": 330,
+      "reward": {
+        "grain": 600,
+        "silver": 420,
+        "generalExp": 200
+      },
+      "cost": {
+        "grain": 180,
+        "troops": 250,
+        "silver": 140
+      },
+      "fame": 12,
+      "initialIntel": 30,
+      "riskLoss": 200,
+      "needPower": 330,
+      "energy": 15
+    },
+    "HELL": {
+      "durationSeasons": 3,
+      "powerRequired": 400,
+      "reward": {
+        "grain": 1000,
+        "silver": 700,
+        "generalExp": 320
+      },
+      "cost": {
+        "grain": 300,
+        "troops": 400,
+        "silver": 220
+      },
+      "fame": 20,
+      "initialIntel": 25,
+      "riskLoss": 340,
+      "needPower": 400,
+      "energy": 20
+    }
   },
-  "defaults": { "expireSeasons": 2, "intelJitter": 10, "boardTargetCount": 4 }
+  "defaults": {
+    "expireSeasons": 2,
+    "intelJitter": 10,
+    "boardTargetCount": 4
+  },
+  "intelBands": {
+    "vague": 30,
+    "clear": 60,
+    "full": 90
+  },
+  "hiddenRevealIntel": 100,
+  "recon": {
+    "steps": [
+      35,
+      25,
+      15
+    ],
+    "cap": 90,
+    "scoutBonusMax": 8,
+    "scoutStatKey": "int",
+    "scoutStatBaseline": 60,
+    "scoutStatPerPoint": 0.2,
+    "scoutTags": [
+      "scout",
+      "spy"
+    ],
+    "scoutTagBonus": 3,
+    "grainCost": 50,
+    "scoutEnergy": 5
+  },
+  "wait": {
+    "delta": 22,
+    "expireBonusSeasons": 1,
+    "cap": 100
+  },
+  "fitness": {
+    "base": 0.5,
+    "powerSlope": 0.5,
+    "baseMin": 0.05,
+    "baseMax": 0.95,
+    "statBaseline": 70,
+    "statPerPoint": 0.003,
+    "statMin": -0.06,
+    "statMax": 0.09,
+    "tagStep": 0.04,
+    "tagCap": 0.08,
+    "affinityMax": 0.05,
+    "volunteerBonus": 0.5,
+    "finalMin": 0.05,
+    "finalMax": 0.95,
+    "finalMaxVolunteer": 1
+  },
+  "penalty": {
+    "harmTiers": [
+      "disaster"
+    ],
+    "injuryMinSeasons": 1,
+    "injuryMaxSeasons": 2,
+    "captureMinDifficulty": "ADVANCED"
+  },
+  "projection": {
+    "rateHigh": 0.65,
+    "rateMid": 0.4,
+    "rangeHalfWidth": 10,
+    "rangeStep": 5,
+    "decoyMaxIntel": 50,
+    "decoyFactor": 1,
+    "rewardStarCuts": [
+      150,
+      350
+    ],
+    "rewardRangePct": 0.2,
+    "rewardRangeStep": 5,
+    "rewardWeights": {
+      "grain": 1,
+      "silver": 1.5,
+      "troops": 1,
+      "generalExp": 1.5,
+      "officerExp": 1.5,
+      "fame": 5
+    },
+    "riskLow": 0.1,
+    "riskMid": 0.25
+  }
 }

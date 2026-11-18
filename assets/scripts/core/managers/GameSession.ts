@@ -153,12 +153,20 @@ import { buildHallSpotRows, EMPTY_HALL_SPOT_STATE, HallSpotRow, HallSpotState, r
 import { buildHallStageFeed, type HallStageFeed, type HallStageProfile } from '../systems/HallStageFeed';
 import type { HallVolunteerTask } from '../systems/HallVolunteer';
 import { createPlayerSaveSnapshot, normalizeInfusionRecords, normalizeGachaMentorJournal, normalizeHallAssignLog, type GachaMentorJournalEntry, normalizeSandtableMarkerTerritories, normalizeSortiePresets, normalizeGachaWalletSave, type GachaWalletSave, normalizeDailySubsidyRecord, type DailySubsidyRecord, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeAutoNurtureTickets, normalizeFlag, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot, normalizeClanPrestige, normalizeShrineOfferingDay } from '../services/PlayerSaveService';
-import { HALL_MISSION_WALLS, emptyHallMissionState, hallSeedFromText, normalizeHallMissionState, type HallMission, type HallMissionBalance, type HallMissionState, type HallMissionTemplate } from '../systems/HallMissionData';
-import { expireHallMissions, refillHallBoards } from '../systems/HallMissionGenerator';
 import { HALL_MISSION_DIFFICULTIES } from '../systems/HallMissionData';
-import { hallBusyGeneralIds, appendHallRecords, dispatchHallMission as dispatchHallMissionPure, findHallMission, hallSettleLine, listHallRecords, reconHallMission as reconHallMissionPure, recordOfSettlement, settleDueHallMissions, waitHallMission as waitHallMissionPure, type HallMissionDispatchResult } from '../systems/HallMissionLoop';
-import { hallShortagesOf, pickDelegateGeneral, rankHallCandidates, type HallCandidate as HallMissionCandidate, type HallGeneralBlock, type HallGeneralFacts } from '../systems/HallMissionRules';
-import { effectiveHallIntelPercent, normalizeHallIntel, normalizeHallWaitSeasons, planHallRecon, planHallWait, type HallReconPlan, type HallWaitPlan } from '../systems/HallMissionActions';
+import { HALL_DIFFICULTY_MIN_RANK } from '../systems/HallMissionBoard';
+import { shouldShowVolunteerEvent } from '../systems/HallVolunteer';
+import { MISSION_DIFFICULTIES } from '../mission/MissionBalance';
+import { MISSION_TIER_TEXT, type MissionBlock, type MissionGeneralFacts, type MissionLedgerEntry, type MissionStatKey } from '../mission/MissionTypes';
+import { hashText } from '../mission/MissionRng';
+import { affinityFromLedger, memoryHintFromLedger, type MemoryLedgerLike } from '../mission/MissionMemory';
+import { migrateLegacyHallMissions, normalizeMissionSave } from '../mission/MissionSave';
+import type { MissionSaveV2 } from '../mission/MissionTypes';
+import type { MissionDataBundle } from '../mission/MissionLoader';
+import type { IMissionService } from '../mission/service/IMissionService';
+import type { MissionHostPort, MissionSettlementInfo } from '../mission/service/MissionPorts';
+import { OfflineMissionService } from '../mission/service/OfflineMissionService';
+import type { GeneralMindSave } from '../mind/MindTypes';
 import type { HallTask } from '../systems/LobbyHubSchema';
 import { appendAssignRecord, autoAssignHallTask, listAssignRecords, settleLatestAssign, settleOpenAssignsForSeason, type HallAssignOutcome, type HallAutoAssignRecord, type HallAutoAssignResult, type HallAutoAssignTaskInput } from '../systems/HallAutoAssign';
 import type { HallTaskIntelInput } from '../systems/HallTaskIntel';
@@ -814,10 +822,6 @@ export class GameSession {
     private _favoriteGeneralIds: string[] = [];
     /** 大廳任務指派：任務 id → 指派武將 id（HALL-07 已派任務權重，PROG-2-0453） */
     private _hallAssignments: Record<string, string> = {};
-    /** 大廳任務完整循環（PROG-2-9130）：null 表示尚未產生（新局或舊檔），bind 時產生一次 */
-    private _hallMissions: HallMissionState | null = null;
-    private _hallMissionData: { templates: readonly HallMissionTemplate[]; balance: HallMissionBalance } | null = null;
-    private _hallWallet: HallMissionWallet | null = null;
     /** 大廳武將點位的目前狀態（HALL-07，不存檔：讀檔後重新抽） */
     private _hallSpotState: HallSpotState = EMPTY_HALL_SPOT_STATE;
     /** 武將 id → 虎符忠誠度狀態（TRP-09） */
@@ -845,10 +849,6 @@ export class GameSession {
     private _gachaMentorJournal: GachaMentorJournalEntry[] = [];
     /** 大廳任務 AI 委任紀錄（PROG-2-1006） */
     private _hallAssignLog: HallAutoAssignRecord[] = [];
-    /** 大廳任務再探後的情報度：任務 id → 0~100（PROG-2-9128，存檔；缺值視為未再探） */
-    private _hallIntel: Record<string, number> = {};
-    /** 大廳任務按「等待」的季別：任務 id → totalSeasonsElapsed（PROG-2-9128，存檔） */
-    private _hallWaitSeasons: Record<string, number> = {};
     private _femaleSources: Record<string, FemaleSource> = {};
     /** 轉蛋各池保底計數（PROG-2-0337）；由轉蛋服務寫入，存檔時一併保存 */
     private _gachaPity: GachaPityBook = {};
@@ -2089,11 +2089,12 @@ export class GameSession {
         this._clearedStageIds = [];
         this._favoriteGeneralIds = [];
         this._hallAssignments = {};
-        this._hallMissions = null;
-        // 開場流程在大廳掛載之後才開新局：資料已綁定的話立刻重新產生，牆才不會變成空的（PROG-2-9130 建置版實測）
-        this._generateHallMissions();
+        // 開場流程在大廳掛載之後才開新局：資料已綁定的話立刻重建任務服務與任務板，牆才不會變成空的（PROG-2-9130 建置版實測）
+        this._missionPending = null;
+        this._missionService = null;
+        this._installMissionService();
         this.dynamicRelations.restore([]);
-        this.mind.reset();
+        this._mindWrite().reset();
         this.relationEvents.restore([]);
         this._npcPlayerId = npcPlayerIdFromSeed(seed);
         this._npcMemory = createNpcMemory(this._npcPlayerId);
@@ -2152,8 +2153,6 @@ export class GameSession {
         this._wishPool = null;
         this._gachaMentorJournal = [];
         this._hallAssignLog = [];
-        this._hallIntel = {};
-        this._hallWaitSeasons = {};
         // 上一局的進度不能帶進新局（PROG-2-0660）
         this._soulFragments = emptySoulFragmentLedger();
         this._clanTier = 0;
@@ -3929,114 +3928,122 @@ export class GameSession {
         return outcome;
     }
 
-    /** 任務目前情報度：任務資料底值與再探紀錄取較大者（PROG-2-9128）。 */
-    public hallIntelPercentOf(task: Readonly<Pick<HallTask, 'Task_ID' | 'Intel_Reveal_Percent'>>): number {
-        return effectiveHallIntelPercent(task, this._hallIntel[task.Task_ID]);
+    // ── 大廳任務（PROG-2-9148）：規則與狀態都在 OfflineMissionService，GameSession 只當「宿主」────────
+    // 宿主提供：真實名冊（含不可派原因）、錢包與糧草兵源、武將記憶、帳本入帳（資源／經驗／名聲／民心／場景戰法）、心智與日誌。
+
+    /** 任務資料包（資料表、定義、板子規則）；LobbyScene／ServiceLoader 載入後綁定 */
+    private _missionData: MissionDataBundle | null = null;
+    private _missionService: OfflineMissionService | null = null;
+    private _missionWallet: HallMissionWallet | null = null;
+    /** 讀檔進來、等資料綁定後才能還原或遷移的存檔：v2 直接用；舊檔（hallMissions／hallIntel／hallWaitSeasons）綁定時遷移，進行中任務不遺失 */
+    private _missionPending: { save: unknown; legacy: { hallMissions: unknown; hallIntel: unknown; hallWaitSeasons: unknown } | null } | null = null;
+    /** 換季結算期間累積的實際入帳量（已截斷）與每筆任務的入帳；結算結束清空 */
+    private _missionSettleGains = { grain: 0, silver: 0, generalExp: 0 };
+    private _missionSettleByMission = new Map<string, { grain: number; silver: number; generalExp: number; fame: number }>();
+    private _missionLedgerSeen = { fame: false, morale: false, sceneGambit: false };
+    private _missionMindCache: GeneralMindSave['ledger'] | null = null;
+    private _missionRequestSeq = 0;
+
+    /** 任務服務（資料尚未綁定時為 null）；UI 與測試一律經這個接口 */
+    public get missionService(): IMissionService | null {
+        return this._missionService;
     }
 
-    /**
-     * 大廳任務再探（PROG-2-9128）：情報未滿才可再探；糧草夠才扣 costGrain，並把情報度提到 100（寫進存檔）。
-     * 已滿或糧草不足時不扣、不升、不存檔，回傳 plan 供呼叫端顯示提示。
-     */
-    public async reconHallTask(task: Readonly<Pick<HallTask, 'Task_ID' | 'Intel_Reveal_Percent'>>, costGrain: number): Promise<HallReconPlan> {
-        const plan = planHallRecon(this.hallIntelPercentOf(task), this._military.food, costGrain);
-        if (plan.kind !== 'ok') return plan;
-        this._military = { ...this._military, food: this._military.food - plan.costGrain };
-        this._hallIntel = { ...this._hallIntel, [task.Task_ID]: plan.intelAfter };
-        if (this._autoSave && this._save) {
-            await this.save();
-        }
-        return plan;
+    /** 任務資料包（含牆別／主題標籤），給 UI 轉接用 */
+    public get missionData(): Readonly<MissionDataBundle> | null {
+        return this._missionData;
     }
 
-    /**
-     * 大廳任務等待（PROG-2-9128）：本季先不處理、任務保留到下一季；不耗費、不改任務。
-     * 同任務同一季只記一次；回傳 plan.kind 'kept' 表示本次是第一次記錄。
-     */
-    public async waitHallTask(taskId: string): Promise<HallWaitPlan> {
-        const season = this._clock.state.totalSeasonsElapsed;
-        const plan = planHallWait(taskId, season, this._hallWaitSeasons);
-        if (plan.kind === 'already') return plan;
-        // 只留本季的紀錄，舊季的自然清掉
-        const current: Record<string, number> = {};
-        for (const [id, at] of Object.entries(this._hallWaitSeasons)) if (at === season) current[id] = at;
-        this._hallWaitSeasons = { ...current, [taskId]: season };
-        if (this._autoSave && this._save) {
-            await this.save();
-        }
-        return plan;
-    }
-
-    // ── 大廳任務完整循環（PROG-2-9130，doc_spec_1178）────────────────────────────
-
-    /**
-     * 綁定任務模板、數值表與黃金錢包；任務狀態不存在（新局或舊檔）時立即產生一次（§3.2-5、§10）。
-     * 回傳 true 表示這次有產生新任務（呼叫端可順便存檔）。
-     */
-    public bindHallMissions(templates: readonly HallMissionTemplate[], balance: Readonly<HallMissionBalance>, wallet: HallMissionWallet): boolean {
-        this._hallMissionData = { templates, balance: balance as HallMissionBalance };
-        this._hallWallet = wallet;
-        return this._generateHallMissions();
-    }
-
-    /** 資料已綁定且還沒有任務狀態時產生一次；回傳是否有產生 */
-    private _generateHallMissions(): boolean {
-        if (this._hallMissions || !this._hallMissionData) return false;
-        const { templates, balance } = this._hallMissionData;
-        const seed = hallSeedFromText(`hall|${this._seeded.snapshot().state}|${Date.now()}`);
-        this._hallMissions = refillHallBoards(emptyHallMissionState(seed), templates, balance, this._clock.state.totalSeasonsElapsed, this.officerUnlocks.tier);
-        this._hallAssignments = this._hallAssignmentsOf(this._hallMissions);
-        return true;
-    }
-
-    /** 大廳任務是否已可用（資料已綁定且狀態已產生） */
+    /** 大廳任務是否已可用（資料已綁定且服務已建立） */
     public get hallMissionsReady(): boolean {
-        return this._hallMissions !== null && this._hallMissionData !== null;
+        return this._missionService !== null;
     }
 
-    /** 大廳任務狀態（唯讀副本）；尚未產生時為 null */
-    public get hallMissionState(): Readonly<HallMissionState> | null {
-        return this._hallMissions ? normalizeHallMissionState(this._hallMissions, this._hallMissionData?.balance.recordLimit) : null;
+    /** 產生一個新的請求代號（冪等鍵）：同一次操作用同一個代號重送不會重複扣款 */
+    public nextMissionRequestId(prefix = 'm'): string {
+        this._missionRequestSeq += 1;
+        return `${prefix}-${this._clock.state.totalSeasonsElapsed}-${this._missionRequestSeq}-${Math.floor(this._random() * 1e9)}`;
     }
 
-    public get hallMissionBalance(): Readonly<HallMissionBalance> | null {
-        return this._hallMissionData?.balance ?? null;
+    /**
+     * 綁定任務資料包與黃金錢包，建立任務服務並還原存檔（v2 直接用、舊檔遷移、新局產生）；
+     * 回傳 true 表示這次有產生或遷移任務（呼叫端可順便存檔）。重複呼叫只更新錢包。
+     */
+    public bindMissionData(bundle: MissionDataBundle, wallet: HallMissionWallet): boolean {
+        this._missionData = bundle;
+        this._missionWallet = wallet;
+        if (this._missionService) return false;
+        return this._installMissionService();
+    }
+
+    /** 以目前的待還原存檔建立服務；沒有存檔就是新局 */
+    private _installMissionService(): boolean {
+        const data = this._missionData;
+        if (!data) return false;
+        const season = this._clock.state.totalSeasonsElapsed;
+        const pending = this._missionPending;
+        this._missionPending = null;
+        let snapshot: MissionSaveV2 | null = pending ? normalizeMissionSave(pending.save, data.balance.recordLimit) : null;
+        let changed = false;
+        if (!snapshot && pending?.legacy) {
+            const migrated = migrateLegacyHallMissions({
+                ...pending.legacy, season, fallbackSeed: this._missionSeedNow(), legacyIndex: data.legacyIndex, defs: data.defs,
+                recordLimit: data.balance.recordLimit,
+            });
+            snapshot = migrated.save;
+            changed = true;
+            // 舊的指派鏡像：進行中任務改由服務持有，鏡像條目清掉，結算後才不會殘留
+            const mirrored = new Set(migrated.save.missions.map((m) => m.id));
+            const kept: Record<string, string> = {};
+            for (const [taskId, generalId] of Object.entries(this._hallAssignments)) if (!mirrored.has(taskId)) kept[taskId] = generalId;
+            this._hallAssignments = kept;
+        }
+        const service = new OfflineMissionService(data, this._missionHost(), snapshot, this._missionSeedNow());
+        this._missionService = service;
+        if (service.ensureBoards()) changed = true;
+        return changed || !snapshot;
+    }
+
+    private _missionSeedNow(): number {
+        return hashText(`mission|${this._seeded.snapshot().state}|${this._clock.state.totalSeasonsElapsed}`) >>> 0;
     }
 
     /** 任務可動用的資源庫存：糧草、城市兵源（軍備帳）與黃金（錢包） */
     public hallMissionStock(): { grain: number; silver: number; troops: number } {
-        return { grain: this._military.food, silver: this._hallWallet?.gold() ?? 0, troops: this._military.cityTroops };
+        return { grain: this._military.food, silver: this._missionWallet?.gold() ?? 0, troops: this._military.cityTroops };
     }
 
-    /** 進行中任務鏡像成「任務 id → 武將 id」，舊的忙碌顯示（已派任務）沿用 */
-    private _hallAssignmentsOf(state: Readonly<HallMissionState>): Record<string, string> {
-        const out: Record<string, string> = {};
-        for (const wall of HALL_MISSION_WALLS) for (const m of state.boards[wall]) if (m.status === 'ACTIVE' && m.generalId) out[m.id] = m.generalId;
-        return out;
+    /** 武將記憶累計（任務心智累計器）的快取：心智有寫入時清掉，同一次畫面查詢不重複複製整份心智 */
+    private _mindWrite(): IGeneralMindService {
+        this._missionMindCache = null;
+        return this.mind;
+    }
+
+    private _missionLedgerOf(generalId: string): MemoryLedgerLike | undefined {
+        if (!this._missionMindCache) this._missionMindCache = this.mind.snapshot().ledger;
+        return this._missionMindCache[generalId] as MemoryLedgerLike | undefined;
     }
 
     /** 正在出任務的武將 id（出征編隊顯示「出任務中」用） */
     public hallBusyGeneralIds(): string[] {
-        // 用 Array.from 而不是展開 Set：建置版轉譯下 [...set] 會變成 [Set]，忙碌武將就全漏掉（建置版實測 06）
-        return this._hallMissions ? Array.from(hallBusyGeneralIds(this._hallMissions)) : [];
+        return this._missionService ? this._missionService.busyGeneralIds() : [];
     }
 
-    /** 所有名冊武將在大廳任務判定當下的事實（§7.1）：阻擋原因、精力、戰力、五維 */
-    public hallGeneralFacts(volunteerIds: ReadonlySet<string> = new Set()): HallGeneralFacts[] {
-        const busy = new Set(this.hallBusyGeneralIds());
+    /** 所有名冊武將在任務判定當下的事實：全員，不可派者附全部原因（任務中、培育中、未畢業、被囚、受傷…） */
+    public missionGeneralFacts(): MissionGeneralFacts[] {
         const nurturing = this._nurturingIds();
         return this._roster.getAll().map((g) => {
             const reasons = checkDeployable(g, { nurturingIds: nurturing }).reasons;
-            let block: HallGeneralBlock | null = null;
-            if (reasons.includes('dead')) block = 'dead';
-            else if (reasons.includes('captive')) block = 'captive';
-            else if (reasons.includes('retired-mentor')) block = 'retired';
-            else if (reasons.includes('not-graduated')) block = 'not-graduated';
-            else if (reasons.includes('in-nurture')) block = 'nurturing';
-            else if (this._travel?.targetId === g.id) block = 'traveling';
-            else if (busy.has(g.id)) block = 'on-mission';
-            const stat = (key: 'str' | 'lea' | 'int' | 'pol' | 'cha'): number | undefined => {
-                const value = (g as unknown as Record<string, unknown>)[key] ?? g.stats?.[key];
+            const block: MissionBlock[] = [];
+            if (reasons.includes('dead')) block.push('dead');
+            if (reasons.includes('captive')) block.push('captive');
+            if (reasons.includes('retired-mentor')) block.push('retired');
+            if (reasons.includes('not-graduated')) block.push('not-graduated');
+            if (reasons.includes('in-nurture')) block.push('nurturing');
+            if (this._travel?.targetId === g.id) block.push('traveling');
+            const raw = g as unknown as Record<string, unknown>;
+            const stat = (key: MissionStatKey): number | undefined => {
+                const value = raw[key] ?? g.stats?.[key];
                 return typeof value === 'number' ? value : undefined;
             };
             return {
@@ -4045,133 +4052,193 @@ export class GameSession {
                 power: estimateSortiePower(g),
                 vitality: g.vitality ?? g.maxVitality ?? baseVitalityMaxOf(g.gender),
                 stats: { str: stat('str'), lea: stat('lea'), int: stat('int'), pol: stat('pol'), cha: stat('cha') },
+                tags: [raw.careerClass, raw.role].filter((t): t is string => typeof t === 'string' && t.length > 0),
                 block,
-                ...(volunteerIds.has(g.id) ? { volunteer: true } : {}),
             };
         });
     }
 
-    /** 某任務的候選武將排序（可派者在前，§7.1） */
-    public hallMissionCandidates(missionId: string): HallMissionCandidate[] {
-        const mission = this._hallMissions ? findHallMission(this._hallMissions, missionId) : undefined;
-        if (!mission || !this._hallMissionData) return [];
-        return rankHallCandidates(mission, this.hallGeneralFacts(), this._hallMissionData.balance);
+    /** 實作任務服務需要的宿主能力（離線：直接用 GameSession 的名冊、錢包、心智） */
+    private _missionHost(): MissionHostPort {
+        const themeLabel = (theme: string): string => this._missionData?.themes.get(theme)?.label ?? theme;
+        const wallOfTheme = (theme: string): string | null => this._missionData?.themes.get(theme)?.wall ?? null;
+        return {
+            season: () => this._clock.state.totalSeasonsElapsed,
+            rankTier: () => this.officerUnlocks.tier,
+            visibleDifficulties: (tier) => MISSION_DIFFICULTIES.filter((d) => (HALL_DIFFICULTY_MIN_RANK[d as keyof typeof HALL_DIFFICULTY_MIN_RANK] ?? 1) <= Math.max(1, tier)),
+            fame: () => this._fame,
+            generals: () => this.missionGeneralFacts(),
+            volunteerIdsFor: (def) => {
+                const out = new Set<string>();
+                for (const g of this._roster.getAll()) {
+                    const profile = this.hallStageProfile(g.id);
+                    if (!profile) continue;
+                    if (shouldShowVolunteerEvent({ id: def.id, tags: def.tags, flags: [] }, { id: g.id, roleTags: profile.roleTags, mood: profile.mood })) out.add(g.id);
+                }
+                return out;
+            },
+            stock: () => this.hallMissionStock(),
+            spend: (cost) => {
+                const have = this.hallMissionStock();
+                if (have.grain < cost.grain || have.troops < cost.troops || have.silver < cost.silver) return false;
+                if (cost.silver > 0 && !this._missionWallet?.spend(cost.silver)) return false;
+                this._military = { ...this._military, food: this._military.food - cost.grain, cityTroops: this._military.cityTroops - cost.troops };
+                return true;
+            },
+            drainEnergy: (generalId, amount) => {
+                if (amount <= 0) return;
+                this._roster.replaceAll(this._roster.getAll().map((g) => (g.id === generalId
+                    ? { ...g, vitality: Math.max(0, (g.vitality ?? g.maxVitality ?? baseVitalityMaxOf(g.gender)) - amount) } : g)));
+            },
+            affinityOf: (generalId, def) => {
+                const mood = this.mind.moodOf(generalId, this._mindContext(generalId));
+                return affinityFromLedger(this._missionLedgerOf(generalId), def.theme, wallOfTheme(def.theme), mood);
+            },
+            memoryHintOf: (generalId, def) => memoryHintFromLedger(this._missionLedgerOf(generalId), def.theme, themeLabel(def.theme)),
+            applyLedger: (entries, info) => this._applyMissionLedger(entries, info),
+            onSettled: (info) => this._onMissionSettled(info),
+            persist: () => {
+                if (this._autoSave && this._save) {
+                    this.save().catch((error: unknown) => { UCUFLogger.warn(LogCategory.DATA, '[GameSession] 任務狀態存檔失敗', error); });
+                }
+            },
+        };
     }
 
-    /** 委任紀錄回看（最近 N 筆，新到舊） */
-    public hallMissionRecords(): ReturnType<typeof listHallRecords> {
-        return this._hallMissions ? listHallRecords(this._hallMissions) : [];
+    /** 帳本入帳：資源截斷在這裡（糧草以軍備帳上限為準）；旗標、連鎖、情報、解鎖、受傷、被俘由服務自己處理 */
+    private _applyMissionLedger(entries: readonly MissionLedgerEntry[], info: MissionSettlementInfo): void {
+        const caps = this._missionData?.balance.resourceCaps ?? { grain: 10000, silver: 5000, troops: 3000 };
+        const mine = { grain: 0, silver: 0, generalExp: 0, fame: 0 };
+        this._missionLedgerSeen = { fame: false, morale: false, sceneGambit: false };
+        for (const e of entries) {
+            switch (e.kind) {
+                case 'resource': {
+                    if (e.res === 'grain') {
+                        const next = Math.max(0, Math.min(Math.min(caps.grain, this._military.foodCap), this._military.food + e.amount));
+                        mine.grain += next - this._military.food;
+                        this._military = { ...this._military, food: next };
+                    } else if (e.res === 'silver') {
+                        if (e.amount > 0) { this._missionWallet?.grant(e.amount); mine.silver += e.amount; }
+                        else if (e.amount < 0) { const lost = Math.min(-e.amount, this._missionWallet?.gold() ?? 0); if (lost > 0 && this._missionWallet?.spend(lost)) mine.silver -= lost; }
+                    } else {
+                        const next = Math.max(0, Math.min(caps.troops, this._military.cityTroops + e.amount));
+                        this._military = { ...this._military, cityTroops: next };
+                    }
+                    break;
+                }
+                case 'generalExp': {
+                    // 武將經驗：名冊目前只有生平功業 EP，每 40 點任務經驗折 1 點 EP（暫定）
+                    const ep = Math.floor(e.amount / 40);
+                    mine.generalExp += e.amount;
+                    if (ep > 0 && e.generalId) {
+                        const all = this._roster.getAll();
+                        if (all.some((g) => g.id === e.generalId)) this._roster.replaceAll(all.map((g) => (g.id === e.generalId ? withCareerEp(g, ep).general : g)));
+                    }
+                    break;
+                }
+                case 'fame':
+                    this._missionLedgerSeen.fame = true;
+                    mine.fame += e.amount;
+                    if (e.generalId) this._awardGeneralFame(e.generalId, e.amount);
+                    break;
+                case 'morale':
+                    this._missionLedgerSeen.morale = true;
+                    this._cityEconomy = { ...this._cityEconomy, morale: clampMorale(this._cityEconomy.morale + e.delta) };
+                    break;
+                case 'sceneGambit': {
+                    this._missionLedgerSeen.sceneGambit = true;
+                    const gambit = pendingSceneGambitOfTask({ Task_ID: e.missionId, Scene_Gambit: e.id });
+                    if (gambit) this._pendingSceneGambit = gambit;
+                    break;
+                }
+                case 'generalState':
+                    // 受傷與被俘由服務記狀態（受傷季數）；精力耗盡直接扣武將精力
+                    if (e.state === 'exhausted' && e.generalId) {
+                        this._roster.replaceAll(this._roster.getAll().map((g) => (g.id === e.generalId ? { ...g, vitality: Math.max(0, Math.floor((g.vitality ?? 0) / 2)) } : g)));
+                    }
+                    break;
+                default:
+                    // officerExp 由 _onMissionSettled 依難度統一入帳（避免重複）；relation／trait／memoryNote 尚無宿主 handler
+                    break;
+            }
+        }
+        this._missionSettleByMission.set(info.missionId, mine);
+        this._missionSettleGains = {
+            grain: this._missionSettleGains.grain + mine.grain,
+            silver: this._missionSettleGains.silver + mine.silver,
+            generalExp: this._missionSettleGains.generalExp + mine.generalExp,
+        };
     }
 
-    private _hallMissionsReadyOrThrow(): { state: HallMissionState; data: { templates: readonly HallMissionTemplate[]; balance: HallMissionBalance } } {
-        if (!this._hallMissions || !this._hallMissionData) throw new Error('[GameSession] 大廳任務尚未就緒（bindHallMissions）');
-        return { state: this._hallMissions, data: this._hallMissionData };
-    }
-
-    private async _persistHallMissions(): Promise<void> {
-        if (this._autoSave && this._save) await this.save();
+    /** 每筆任務結算後：官職經驗、預設名聲、民心特例、場景戰法、日誌、武將心智（任務 id、分支、成敗等級） */
+    private _onMissionSettled(info: MissionSettlementInfo): void {
+        const success = info.tier === 'critical' || info.tier === 'success';
+        const board = (info.wall ?? 'Domestic') as HallBoardKey;
+        this.settleHallMission({ difficulty: info.difficulty, board, success });
+        if (!this._missionLedgerSeen.fame) this._awardGeneralFame(info.generalId, hallMissionFameGain({ difficulty: info.difficulty, success }));
+        // 開倉賑濟貧民任務完成：民心 +15（PROG-2-9138）；定義自己帶 morale 效果時不重複加
+        if (success && info.legacyTemplateId === RELIEF_MISSION_TEMPLATE_ID && !this._missionLedgerSeen.morale) {
+            this._cityEconomy = { ...this._cityEconomy, morale: clampMorale(this._cityEconomy.morale + MORALE_DELTA.reliefMissionDone) };
+        }
+        if (success && info.sceneGambit && !this._missionLedgerSeen.sceneGambit) {
+            const gambit = pendingSceneGambitOfTask({ Task_ID: info.missionId, Scene_Gambit: info.sceneGambit });
+            if (gambit) this._pendingSceneGambit = gambit;
+        }
+        this._recordEventJournal(success ? 'DISPATCH_SUCCESS' : 'DISPATCH_FAIL', this._journalSubjects([info.generalId]));
+        const index = (HALL_MISSION_DIFFICULTIES as readonly string[]).indexOf(info.difficulty);
+        this._mindWrite().onTaskSettled({
+            taskId: info.missionId,
+            season: info.season,
+            // 心智標籤最多 4 個：主題、牆別、分支、成敗等級（記憶與委任適合度吃前兩個）
+            tags: [info.theme, ...(info.wall ? [info.wall] : []), `b:${info.branchId}`, `t:${info.tier}`].slice(0, 4),
+            label: info.title,
+            risk: index >= 0 ? index + 1 : 2,
+            intelLevelAtDispatch: intelLevelOfPercent(info.intelAtDispatch),
+            generalIds: [info.generalId],
+            delegated: info.delegated,
+            volunteered: info.volunteered,
+            outcome: success ? 'SUCCESS' : 'FAIL',
+            ...(info.injuredSeasons > 0 ? { injuries: { [info.generalId]: info.injuredSeasons >= 2 ? 'SERIOUS' as const : 'LIGHT' as const } } : {}),
+        });
     }
 
     /**
-     * 派出任務（§7.3、§8）：generalId 為 null 表示委任，由系統選最終成功率最高者。
-     * 扣糧草／兵源／黃金與精力、佔用武將、記回報季；沒有可派武將或付不起時不動。
-     */
-    public async dispatchHallMission(missionId: string, generalId: string | null): Promise<HallMissionDispatchResult> {
-        const { state, data } = this._hallMissionsReadyOrThrow();
-        const mission = findHallMission(state, missionId);
-        if (!mission) return { ok: false, reason: 'no-mission', text: '此任務已不存在' };
-        const delegated = generalId === null;
-        const facts = this.hallGeneralFacts();
-        const pickedId = delegated ? pickDelegateGeneral(mission, facts, data.balance) : generalId;
-        const general = facts.find((f) => f.id === pickedId);
-        if (!general) return { ok: false, reason: 'blocked', text: '目前沒有可派的武將' };
-        const result = dispatchHallMissionPure(state, {
-            missionId, general, delegated, season: this._clock.state.totalSeasonsElapsed, stock: this.hallMissionStock(),
-        }, data.balance);
-        if (!result.ok) return result;
-        if (result.spent.silver > 0 && !(this._hallWallet?.spend(result.spent.silver))) return { ok: false, reason: 'short', text: '黃金不足' };
-        this._military = { ...this._military, food: this._military.food - result.spent.grain, cityTroops: this._military.cityTroops - result.spent.troops };
-        this._roster.replaceAll(this._roster.getAll().map((g) => (g.id === general.id ? { ...g, vitality: Math.max(0, general.vitality - result.energy) } : g)));
-        this._hallMissions = result.state;
-        this._hallAssignments = this._hallAssignmentsOf(result.state);
-        await this._persistHallMissions();
-        return result;
-    }
-
-    /** 再探（§6）：扣糧草 50、情報度到 100、存檔 */
-    public async reconHallMission(missionId: string): Promise<{ ok: true; costGrain: number } | { ok: false; text: string }> {
-        const { state, data } = this._hallMissionsReadyOrThrow();
-        const result = reconHallMissionPure(state, missionId, this._military.food, data.balance);
-        if (result.ok === false) return { ok: false, text: result.text };
-        this._military = { ...this._military, food: this._military.food - result.costGrain };
-        this._hallMissions = result.state;
-        await this._persistHallMissions();
-        return { ok: true, costGrain: result.costGrain };
-    }
-
-    /** 等待（§6）：到期季 +1、情報度 +25，每筆一次 */
-    public async waitHallMission(missionId: string): Promise<{ ok: true; expireSeason: number; intel: number } | { ok: false; text: string }> {
-        const { state, data } = this._hallMissionsReadyOrThrow();
-        const result = waitHallMissionPure(state, missionId, data.balance);
-        if (result.ok === false) return { ok: false, text: result.text };
-        this._hallMissions = result.state;
-        await this._persistHallMissions();
-        return { ok: true, expireSeason: result.expireSeason, intel: result.intel };
-    }
-
-    /**
-     * 換季的大廳任務流程（§9）：到期結算 → 過期 → 補新。資源、經驗、名聲、場景戰法當場入帳，
+     * 換季的任務流程：到期結算 → 過期 → 連鎖 → 補板。資源、經驗、名聲、場景戰法當場入帳，
      * 回傳給季度結算彈窗的回報；沒有任務結算時回傳 undefined。資料未綁定時什麼都不做。
      */
-    private _runHallMissionSeason(season: number): HallMissionSeasonReport | undefined {
-        if (!this._hallMissions || !this._hallMissionData) return undefined;
-        const { templates, balance } = this._hallMissionData;
-        // 糧草上限以軍備帳為準（與規格資源上限取較小者），截斷才不會超過頂欄顯示
-        const capped: HallMissionBalance = { ...balance, caps: { ...balance.caps, grain: Math.min(balance.caps.grain, this._military.foodCap), silver: Math.max(balance.caps.silver, goldCapOfLevel(this._territoryLevel)) } };
-        const settled = settleDueHallMissions(this._hallMissions, season, this.hallMissionStock(), capped);
-        let next = settled.state;
-        const lines: string[] = [];
-        const records: ReturnType<typeof recordOfSettlement>[] = [];
-        for (const entry of settled.entries) {
-            const m = entry.mission;
-            if (entry.gains.grain > 0) this._military = { ...this._military, food: Math.min(this._military.foodCap, this._military.food + entry.gains.grain) };
-            if (entry.gains.silver > 0) this._hallWallet?.grant(entry.gains.silver);
-            const outcome: HallMissionOutcome = { difficulty: m.difficulty, board: m.wall, success: entry.success };
-            this.settleHallMission(outcome);
-            // 開倉賑濟貧民任務完成：民心 +15（PROG-2-9138）
-            if (entry.success && m.templateId === RELIEF_MISSION_TEMPLATE_ID) {
-                this._cityEconomy = { ...this._cityEconomy, morale: clampMorale(this._cityEconomy.morale + MORALE_DELTA.reliefMissionDone) };
-            }
-            const generalId = m.generalId as string;
-            if (entry.success) {
-                this._awardGeneralFame(generalId, hallMissionFameGain(outcome));
-                // 武將經驗：名冊目前只有生平功業 EP，每 40 點任務經驗折 1 點 EP（暫定）
-                const epGain = Math.floor(entry.gains.generalExp / 40);
-                if (epGain > 0) {
-                    const all = this._roster.getAll();
-                    if (all.some((g) => g.id === generalId)) this._roster.replaceAll(all.map((g) => (g.id === generalId ? withCareerEp(g, epGain).general : g)));
-                }
-                const gambit = m.sceneGambit ? pendingSceneGambitOfTask({ Task_ID: m.id, Scene_Gambit: m.sceneGambit }) : null;
-                if (gambit) this._pendingSceneGambit = gambit;
-            }
-            this._recordEventJournal(entry.success ? 'DISPATCH_SUCCESS' : 'DISPATCH_FAIL', this._journalSubjects([generalId]));
-            this._recordMindTask({ taskId: m.id, generalIds: [generalId], success: entry.success, label: m.title, tags: [m.wall, m.templateId], difficulty: m.difficulty, intelPercent: m.intel, delegated: m.delegated === true, volunteered: m.perfect === true });
-            lines.push(hallSettleLine(entry));
-            records.push(recordOfSettlement(entry, season));
+    private async _runMissionSeason(): Promise<HallMissionSeasonReport | undefined> {
+        const service = this._missionService;
+        if (!service) return undefined;
+        this._missionSettleGains = { grain: 0, silver: 0, generalExp: 0 };
+        this._missionSettleByMission.clear();
+        const result = await service.advanceSeason({ requestId: this.nextMissionRequestId('season') });
+        if (result.ok === false) {
+            UCUFLogger.warn(LogCategory.DATA, '[GameSession] 換季任務結算失敗', result.text);
+            return undefined;
         }
-        next = appendHallRecords(next, records, balance.recordLimit);
-        next = expireHallMissions(next, season);
-        next = refillHallBoards(next, templates, balance, season, this.officerUnlocks.tier);
-        this._hallMissions = next;
-        this._hallAssignments = this._hallAssignmentsOf(next);
-        if (settled.entries.length === 0) return undefined;
-        const gains = settled.entries.reduce((sum, e) => ({ grain: sum.grain + e.gains.grain, silver: sum.silver + e.gains.silver, generalExp: sum.generalExp + e.gains.generalExp }), { grain: 0, silver: 0, generalExp: 0 });
-        return { lines, settled: settled.entries.length, succeeded: settled.entries.filter((e) => e.success).length, gains };
+        const settled = result.value.settled;
+        if (settled.length === 0) return undefined;
+        const lines = settled.map((s) => {
+            const mine = this._missionSettleByMission.get(s.missionId);
+            const gained = mine ? [
+                mine.grain !== 0 ? `糧草 ${mine.grain > 0 ? '+' : ''}${mine.grain}` : '',
+                mine.silver !== 0 ? `黃金 ${mine.silver > 0 ? '+' : ''}${mine.silver}` : '',
+                mine.generalExp > 0 ? `武將經驗 +${mine.generalExp}` : '',
+            ].filter((t) => t.length > 0).join('、') : '';
+            const tail = s.narratives.length > 0 ? `　${s.narratives[s.narratives.length - 1]}` : '';
+            return `${s.generalName}完成「${s.title}」：${MISSION_TIER_TEXT[s.tier]}${gained ? `（${gained}）` : ''}${tail}`;
+        });
+        return {
+            lines,
+            settled: settled.length,
+            succeeded: settled.filter((s) => s.tier === 'critical' || s.tier === 'success').length,
+            gains: { ...this._missionSettleGains },
+        };
     }
 
-    /** 大廳任務指派（唯讀副本）：任務 id → 指派武將 id。 */
+    /** 大廳任務指派（唯讀副本）：任務 id → 指派武將 id；含服務持有的進行中任務與舊式即時派遣的指派 */
     public get hallAssignments(): Readonly<Record<string, string>> {
-        return { ...this._hallAssignments };
+        return { ...this._hallAssignments, ...(this._missionService ? this._missionService.activeAssignments() : {}) };
     }
 
     /**
@@ -4286,12 +4353,12 @@ export class GameSession {
         const roster = this._roster.getAll();
         const ids = deployedIds.filter((id) => roster.some((g) => g.id === id));
         ids.forEach((generalId, index) => {
-            this.mind.record({ generalId, season, kind: 'BATTLE_RESULT', outcome: won ? 'SUCCESS' : 'FAIL', tags: ['battle'], label: '出征', isLead: index === 0 });
+            this._mindWrite().record({ generalId, season, kind: 'BATTLE_RESULT', outcome: won ? 'SUCCESS' : 'FAIL', tags: ['battle'], label: '出征', isLead: index === 0 });
         });
         for (const duel of options.duelOutcomes ?? []) {
             if (duel.tutorial) continue;
-            if (duel.winner === Faction.Player && duel.winnerGeneralId) this.mind.record({ generalId: duel.winnerGeneralId, season, kind: 'DUEL', outcome: 'SUCCESS', tags: ['duel'], label: '單挑' });
-            if (duel.loser === Faction.Player && duel.loserGeneralId) this.mind.record({ generalId: duel.loserGeneralId, season, kind: 'DUEL', outcome: 'FAIL', tags: ['duel'], label: '單挑' });
+            if (duel.winner === Faction.Player && duel.winnerGeneralId) this._mindWrite().record({ generalId: duel.winnerGeneralId, season, kind: 'DUEL', outcome: 'SUCCESS', tags: ['duel'], label: '單挑' });
+            if (duel.loser === Faction.Player && duel.loserGeneralId) this._mindWrite().record({ generalId: duel.loserGeneralId, season, kind: 'DUEL', outcome: 'FAIL', tags: ['duel'], label: '單挑' });
         }
     }
 
@@ -4309,7 +4376,7 @@ export class GameSession {
     }): void {
         const index = args.difficulty ? (HALL_MISSION_DIFFICULTIES as readonly string[]).indexOf(args.difficulty.toUpperCase()) : -1;
         const outcome: MindOutcome = args.success ? 'SUCCESS' : 'FAIL';
-        this.mind.onTaskSettled({
+        this._mindWrite().onTaskSettled({
             taskId: args.taskId,
             season: this._clock.state.totalSeasonsElapsed,
             tags: args.tags,
@@ -4964,7 +5031,7 @@ export class GameSession {
         this._military = regenMilitaryOneSeason(this._military, 1, seasonFoodMultiplier);
         // 人口紅利（PROG-2-9138）：以結算前的人口、民心入帳，與太守府畫面顯示一致；黃金看上季商業任務，糧草看固定補給
         const goldBonus = populationBonusAmount(commerceGoldBase(this._domesticLog, advance.previous.totalSeasonsElapsed), this._cityEconomy.population, this._cityEconomy.morale);
-        if (goldBonus > 0) this._hallWallet?.grant(goldBonus);
+        if (goldBonus > 0) this._missionWallet?.grant(goldBonus);
         const foodBonus = populationBonusAmount(Math.floor(FOOD_PER_SEASON * Math.max(0, seasonFoodMultiplier)), this._cityEconomy.population, this._cityEconomy.morale);
         if (foodBonus > 0) this._military = { ...this._military, food: Math.min(this._military.foodCap, this._military.food + foodBonus) };
         // 監獄產出：情報累積；資源暫定折成糧草（不超過糧草上限）
@@ -4973,7 +5040,7 @@ export class GameSession {
         this._military = { ...this._military, food: Math.min(this._military.foodCap, this._military.food + prisonYield.resource) };
         const governanceReport = this._buildGovernanceReport(reserveBeforeSettle, advance.previous.totalSeasonsElapsed);
         // 大廳任務：到期結算 → 過期 → 補新（PROG-2-9130，§9）；頂欄資源在這裡就已更新，彈窗關閉前即可見
-        const hallMissionReport = this._runHallMissionSeason(advance.current.totalSeasonsElapsed);
+        const hallMissionReport = await this._runMissionSeason();
         this._settleCityEconomySeason(advance.previous.totalSeasonsElapsed, this._tallyFoodDiscountArmed);
         // 無期徒刑傳家寶物掉落（EQP-09，機率暫定）
         const treasures = rollPrisonTreasureDonors(this._prison.prisoners, this._random);
@@ -5015,7 +5082,7 @@ export class GameSession {
         const personalityRandom = this._seasonEventRandom ?? remarkRandomOf(`personality|${governanceSeason}|${this._seeded.snapshot().state}`);
         this._seasonPersonality = rollSeasonPersonalityEvents(this._roster.getAll(), governanceSeason, personalityRandom);
         // 武將心智季結算（PROG-2-9146）：冷落計數、離隊者清理；同樣用另一條序列，不消耗主亂數
-        this.mind.onSeasonSettle(governanceSeason, remarkRandomOf(`mind|${governanceSeason}|${this._seeded.snapshot().state}`), this._roster.getAll().filter((g) => g.status !== 'dead').map((g) => g.id));
+        this._mindWrite().onSeasonSettle(governanceSeason, remarkRandomOf(`mind|${governanceSeason}|${this._seeded.snapshot().state}`), this._roster.getAll().filter((g) => g.status !== 'dead').map((g) => g.id));
         // 三國季報（LOOP-03）：同樣用另一條序列；上一季沒抉擇的奇遇作廢
         this._chronicleArchive = archiveSeasonChronicle(this._chronicleArchive, this._seasonChronicle, governanceSeason);
         this._seasonChronicle = this._synthesizeChronicle(governanceSeason);
@@ -5770,7 +5837,7 @@ export class GameSession {
      * 戰利品進背包、失敗扣民心；回傳帳本給結算畫面。錢包尚未綁定（沒進過大廳）時黃金不入帳也不提示。
      */
     private _applyBattleAftermath(outcome: 'win' | 'draw' | 'loss', lostTroops: number): BattleAftermathLedger {
-        const wallet = this._hallWallet;
+        const wallet = this._missionWallet;
         const ledger = planBattleAftermath(outcome, {
             food: this._military.food,
             foodCap: this._military.foodCap,
@@ -6101,11 +6168,13 @@ export class GameSession {
         const base = createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty, this._tallyHoldings.holders, this._tallyCards, this._mercenaries, this._femaleSources, this._gachaPity, this._gachaWallet, this._favoriteGeneralIds, this._hallAssignments, this.dynamicRelations.snapshot(), this._legacyCount, this._officerState, this.sandtableMarkersPlaced, this._sandtableMarkerTerritories);
         const withJournal = this._gachaMentorJournal.length > 0 ? { ...base, gachaMentorJournal: normalizeGachaMentorJournal(this._gachaMentorJournal) } : base;
         const withHallLogOnly = this._hallAssignLog.length > 0 ? { ...withJournal, hallAssignLog: normalizeHallAssignLog(this._hallAssignLog) } : withJournal;
-        // 再探情報度與等待季別只在非空時寫入；舊檔與空狀態不多欄位（PROG-2-9128）
-        const withHallIntel = Object.keys(this._hallIntel).length > 0 ? { ...withHallLogOnly, hallIntel: { ...this._hallIntel } } : withHallLogOnly;
-        const withHallLog = Object.keys(this._hallWaitSeasons).length > 0 ? { ...withHallIntel, hallWaitSeasons: { ...this._hallWaitSeasons } } : withHallIntel;
-        // 大廳任務完整循環（PROG-2-9130）：整份狀態存檔，沒產生過時不多欄位
-        const withHallMissions = this._hallMissions ? { ...withHallLog, hallMissions: normalizeHallMissionState(this._hallMissions) ?? undefined } : withHallLog;
+        // 任務服務存檔 v2（PROG-2-9148）：服務已建立就寫 v2；資料還沒綁定時，把讀進來的存檔原樣寫回（v2 或舊檔欄位），不遺失進行中任務
+        const missionSave = this._missionService ? this._missionService.getSnapshot() : null;
+        const pendingLegacy = this._missionPending?.legacy ?? null;
+        const withHallMissions = missionSave ? { ...withHallLogOnly, missionSave }
+            : this._missionPending?.save ? { ...withHallLogOnly, missionSave: this._missionPending.save as MissionSaveV2 }
+            : pendingLegacy ? { ...withHallLogOnly, hallMissions: pendingLegacy.hallMissions as PlayerSaveSnapshot['hallMissions'], hallIntel: pendingLegacy.hallIntel as PlayerSaveSnapshot['hallIntel'], hallWaitSeasons: pendingLegacy.hallWaitSeasons as PlayerSaveSnapshot['hallWaitSeasons'] }
+            : withHallLogOnly;
         // 統一物件庫列只在非空時寫入；舊檔與空狀態不多一個欄位（PROG-2-1021）
         const withInventory = this._inventoryRecords.length > 0 ? { ...withHallMissions, inventoryRecords: normalizeInventoryRecords(this._inventoryRecords) } : withHallMissions;
         const relationEventKeys = this.relationEvents.snapshot();
@@ -6366,7 +6435,7 @@ export class GameSession {
         const npcIdBackfilled = savedNpcPlayerId === null;
         this._npcPlayerId = savedNpcPlayerId ?? npcPlayerIdFromSeed(Math.floor(Math.random() * 4294967296));
         this._npcMemory = normalizeNpcMemory(snapshot.npcMemory, this._npcPlayerId) ?? createNpcMemory(this._npcPlayerId);
-        this.mind.restore(snapshot.generalMind);
+        this._mindWrite().restore(snapshot.generalMind);
         this._legacyCount = normalizeLegacyCount(snapshot.legacyCount);
         this._officerState = normalizeOfficerState(snapshot.officerState);
         this._officerTrial = normalizeOfficerTrial(snapshot.officerTrial);
@@ -6374,13 +6443,12 @@ export class GameSession {
         this.restoreLifespanState(snapshot);
         this._gachaMentorJournal = normalizeGachaMentorJournal(snapshot.gachaMentorJournal);
         this._hallAssignLog = normalizeHallAssignLog(snapshot.hallAssignLog);
-        this._hallIntel = normalizeHallIntel(snapshot.hallIntel);
-        this._hallWaitSeasons = normalizeHallWaitSeasons(snapshot.hallWaitSeasons);
-        // 舊檔沒有大廳任務欄位：視為空任務板，bind 時立即產生；舊的指派紀錄於 bind 產生新任務時清除（§10）
-        this._hallMissions = snapshot.hallMissions !== undefined ? normalizeHallMissionState(snapshot.hallMissions) : null;
-        // 有任務狀態時以進行中任務為準；沒有（舊檔）就維持舊的指派紀錄，直到 bind 產生新任務時才換成真實任務
-        if (this._hallMissions) this._hallAssignments = this._hallAssignmentsOf(this._hallMissions);
-        else this._generateHallMissions();
+        // 任務存檔：v2 直接還原；舊檔（hallMissions／hallIntel／hallWaitSeasons）等資料綁定時遷移；都沒有就是新局（PROG-2-9148）
+        this._missionService = null;
+        this._missionPending = snapshot.missionSave !== undefined || snapshot.hallMissions !== undefined || snapshot.hallIntel !== undefined || snapshot.hallWaitSeasons !== undefined
+            ? { save: snapshot.missionSave ?? null, legacy: snapshot.missionSave === undefined ? { hallMissions: snapshot.hallMissions, hallIntel: snapshot.hallIntel, hallWaitSeasons: snapshot.hallWaitSeasons } : null }
+            : null;
+        this._installMissionService();
         this._hallSpotState = EMPTY_HALL_SPOT_STATE;
         this._tallyLoyalty = normalizeTallyLoyaltyMap(snapshot.tallyLoyalty);
         this._tallyHoldings = { holders: normalizeTallyHoldingsMap(snapshot.tallyHoldings) };

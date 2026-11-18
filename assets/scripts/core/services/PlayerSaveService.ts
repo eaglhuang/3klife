@@ -1,3 +1,5 @@
+import { normalizeMissionSave } from '../mission/MissionSave';
+import type { MissionSaveV2 } from '../mission/MissionTypes';
 import { normalizeGovernanceBoosts, type ActiveGovernanceBoost } from '../systems/GovernanceEfficiencyItem';
 import { normalizeSeasonPersonalityState, type SeasonPersonalityState } from '../systems/SeasonPersonalityEvents';
 import { normalizeChronicleArchive, normalizeSeasonChronicle, type SeasonChronicleState } from '../systems/SeasonChronicle';
@@ -276,6 +278,8 @@ export interface PlayerSaveSnapshot {
     hallWaitSeasons?: Record<string, number>;
     /** 大廳任務完整循環（PROG-2-9130 / doc_spec_1178 §10）：三面牆任務、進行中任務、委任紀錄與亂數種子；舊檔沒有時由 GameSession 立即產生 */
     hallMissions?: HallMissionState;
+    /** 通用任務服務存檔 v2（PROG-2-9148）：任務板、進行中、歷史、旗標、種子；取代上面三個 hall* 舊欄位（舊欄位只讀、遷移後不再寫） */
+    missionSave?: MissionSaveV2;
     /** 武將 id → 虎符忠誠度狀態（TRP-09）；後加的選填欄位，舊檔讀回補空物件 */
     tallyLoyalty?: Record<string, TallyLoyaltyState>;
     /** 虎符 uid → 持有者（null 為君主）（TRP-08）；後加的選填欄位，舊檔讀回補空物件 */
@@ -735,6 +739,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.hallIntel !== undefined ? { hallIntel: normalizeHallIntel(snapshot.hallIntel) } : {}),
         ...(snapshot.hallWaitSeasons !== undefined ? { hallWaitSeasons: normalizeHallWaitSeasons(snapshot.hallWaitSeasons) } : {}),
         ...(normalizeHallMissionState(snapshot.hallMissions) ? { hallMissions: normalizeHallMissionState(snapshot.hallMissions)! } : {}),
+        ...(normalizeMissionSave(snapshot.missionSave) ? { missionSave: normalizeMissionSave(snapshot.missionSave)! } : {}),
         ...(snapshot.inventoryRecords !== undefined ? { inventoryRecords: normalizeInventoryRecords(snapshot.inventoryRecords) } : {}),
         // 編制預設（PROG-2-0791）：#538 漏掉這一欄，存檔時會被丟掉
         ...(snapshot.sortiePresets !== undefined ? { sortiePresets: normalizeSortiePresets(snapshot.sortiePresets) } : {}),
