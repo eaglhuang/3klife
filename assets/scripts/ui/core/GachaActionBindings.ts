@@ -14,6 +14,46 @@ export const GACHA_ACTION_NODES = {
 } as const;
 
 type Action = keyof typeof GACHA_ACTION_NODES;
+
+/**
+ * 判斷「同一次點擊」的時鐘：stamp() 差距小於 window 就視為同一次。
+ * 預設用毫秒；畫面端傳影格計數（window=1）更準：Button 在同一次觸控派發裡同步送出 CLICK，
+ * 兩個事件一定在同一影格，慢機器上換影格時間卻可能拖到上百毫秒，單用毫秒會漏掉。
+ */
+export interface TapClock {
+    stamp(): number;
+    window: number;
+}
+
+/** 沒給影格計數時的後備：這個間隔（毫秒）內的第二次呼叫視為同一次點擊 */
+export const GACHA_TAP_DEDUPE_MS = 400;
+const DEFAULT_TAP_CLOCK: TapClock = { stamp: () => Date.now(), window: GACHA_TAP_DEDUPE_MS };
+
+/**
+ * 把動作包成「同一次點擊只執行一次」（PROG-2-9158）。
+ * 轉蛋鈕同時掛 CLICK 與 TOUCH_END 備用事件，真實點擊兩個都會到，
+ * 左右箭頭因此一次跳兩個池（四個池只輪到兩個，教官池永遠點不到）。
+ */
+export function onceForTap(handler: () => void, clock: TapClock = DEFAULT_TAP_CLOCK): () => void {
+    let last = -Infinity;
+    return () => {
+        const at = clock.stamp();
+        if (at - last < clock.window) return;
+        last = at;
+        handler();
+    };
+}
+
+/** 同一個動作函式永遠拿到同一個包裝，重綁時 off 才拆得掉上一次掛的監聽 */
+const tapWrappers = new WeakMap<() => void, () => void>();
+function wrapOnce(action: () => void, clock?: TapClock): () => void {
+    let wrapped = tapWrappers.get(action);
+    if (!wrapped) {
+        wrapped = onceForTap(action, clock);
+        tapWrappers.set(action, wrapped);
+    }
+    return wrapped;
+}
 interface ActionNode {
     off(event: string, callback?: any, owner?: object): void;
     on(event: string, callback: (...args: any[]) => void, owner?: object): void;
@@ -23,14 +63,17 @@ export function bindGachaActions<T extends ActionNode>(
     getNode: (name: string) => T | null,
     prepareButton: (node: T) => void,
     actions: Record<Action, () => void>, owner: object, event: string,
+    clock?: TapClock,
 ): void {
     for (const action of Object.keys(GACHA_ACTION_NODES) as Action[]) {
         const name = GACHA_ACTION_NODES[action];
         const node = getNode(name);
         if (!node) continue;
         prepareButton(node);
-        const handler = actions[action];
-        if (!handler) continue;
+        const action0 = actions[action];
+        if (!action0) continue;
+        // 兩個事件共用同一個包裝，才能分辨「同一次點擊」
+        const handler = wrapOnce(action0, clock);
         node.off(event, handler, owner);
         node.on(event, handler, owner);
         // 增加 TOUCH_END 備用事件監聽，確保滑鼠與觸控直接點擊時 100% 觸發
