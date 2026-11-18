@@ -5984,6 +5984,22 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/yuan_shang__袁尚__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "190b897fde33aa71d2ecc749bb23fdee2053d43ebf5a864f8c5f38e37b6a9709",
+            "canvas": "1024x1536 RGBA PNG",
+            "pose": "低身側步拔刀反斬",
+            "source": "standing/yuan_shang__袁尚__standing_0002.png",
+            "note": "New candidate based on Yuan Shang’s approved dark teal lamellar portrait and hip scabbard; pending visual approval, not asserted as runtime-integrated."
+          }
+        ]
       }
     },
     {
