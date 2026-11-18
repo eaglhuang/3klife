@@ -14,7 +14,8 @@ import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 import { emptyHallMissionState, parseHallMissionBalance, parseHallMissionTemplates } from '../assets/scripts/core/systems/HallMissionData';
 import { refillHallBoards } from '../assets/scripts/core/systems/HallMissionGenerator';
 import { dispatchHallMission as dispatchLegacy } from '../assets/scripts/core/systems/HallMissionLoop';
-import { candidateOptions, dialogStateFromService, boardToHub, HALL_ADAPTER_NO_CANDIDATE_TEXT } from '../assets/scripts/core/mission/adapter/LegacyHallUiAdapter';
+import { boardToHub } from '../assets/scripts/ui/mission/MissionBoardPresenter';
+import { buildMissionDialogState, candidateOptions, MISSION_NO_CANDIDATE_TEXT } from '../assets/scripts/ui/mission/MissionDetailPresenter';
 import type { MissionCardView } from '../assets/scripts/core/mission/service/IMissionService';
 import { realBundle } from './mission/missionTestKit';
 
@@ -119,14 +120,14 @@ export function createHallMissionSessionSuite(): TestSuite {
         if (!c.ok) throw new Error('cands');
         assert.equals(0, c.value.length);
         assert.equals(0, candidateOptions(c.value).length);
-        const state = dialogStateFromService(session.missionService!, id, wallOfTheme, {
+        const state = buildMissionDialogState(session.missionService!, id, wallOfTheme, {
             season: 1, stock: session.hallMissionStock(), reconGrainCost: 50, selectedGeneralId: null,
         });
         assert.isTrue(state !== null);
         if (!state) return;
-        assert.equals(HALL_ADAPTER_NO_CANDIDATE_TEXT, state.generalSelectHintLabel);
+        assert.equals(MISSION_NO_CANDIDATE_TEXT, state.generalSelectHintLabel);
         assert.isFalse(state.availableActions.includes('execute'));
-        assert.equals(HALL_ADAPTER_NO_CANDIDATE_TEXT, state.actionBlockedText.execute);
+        assert.equals(MISSION_NO_CANDIDATE_TEXT, state.actionBlockedText.execute);
     });
 
     suite.test('舊式 hub 轉接：三面牆都有任務，耗費是明牌', async () => {

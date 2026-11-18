@@ -852,7 +852,8 @@ async function main() {
             rec.detail.dialogAfterRecon = dialogNow.slice(0, 16);
             if (!(intelSeries[1] > intelSeries[0])) throw new Error(`再探後情報沒有增加（${intelSeries.join(' → ')}）`);
             if (!(intelSeries[intelSeries.length - 1] >= 90)) throw new Error(`連續再探 ${rec.detail.reconClicks} 次後情報沒有到上限 90（${intelSeries.join(' → ')}）`);
-            const fogLeft = dialogNow.filter((t) => t.includes('???') && t.trim() !== '???');
+            // 完美獎勵那格永遠是 ???，旁邊附「情報 100 才會揭曉」說明（PROG-2-9152），不算遮蔽殘留
+            const fogLeft = dialogNow.filter((t) => t.includes('???') && t.trim() !== '???' && !t.includes('情報 100 才會揭曉'));
             if (fogLeft.length) throw new Error(`情報到上限後敵情仍有遮蔽字樣 ???（${fogLeft.slice(0, 3).join(' / ')}）`);
             topNow = await readTopbar();
             // 3. 選將執行：頂欄糧草與兵源減少、牆上少一張、牆頭出現「進行中」
@@ -896,15 +897,15 @@ async function main() {
             if (!optionTexts.some((t) => t.includes(busyName)) || !optionTexts.some((t) => t.includes('出任務中'))) throw new Error(`下拉清單沒有把「${busyName}」標成「出任務中」（清單文字：${optionTexts.slice(0, 16).join(' / ')}）`);
             // 出任務中的列排在清單最後：用滑鼠滾輪把下拉往下捲到看得見，再真點
             let reachedBusyRow = false;
-            for (let i = 0; i < 40 && !reachedBusyRow; i++) {
+            for (let i = 0; i < 80 && !reachedBusyRow; i++) {
                 const hit = await rm.locate({ name: '^GeneralOption_', text: busyName });
-                // 命中檢查不看捲動遮罩：列在視窗內但被詳情窗底部遮住也會回 ok，所以另外要求列的畫面座標落在下拉可視範圍（約 y 570～810）
-                if (hit && hit.found && hit.ok && hit.page && hit.page.y > 570 && hit.page.y < 810) { reachedBusyRow = true; break; }
+                // 命中檢查不看捲動遮罩：列在視窗內但被詳情窗底部遮住也會回 ok，所以另外要求列的畫面座標落在下拉可視範圍（約 y 200～800）
+                if (hit && hit.found && hit.ok && hit.page && hit.page.y > 200 && hit.page.y < 800) { reachedBusyRow = true; break; }
                 await page.mouse.move(960, 600);
-                await page.mouse.wheel({ deltaY: 700 });
+                await page.mouse.wheel({ deltaY: 160 });
                 await delay(250);
             }
-            if (!reachedBusyRow) throw new Error(`滾輪捲了 40 次，「${busyName}」那列仍沒進到下拉可視範圍`);
+            if (!reachedBusyRow) throw new Error(`滾輪捲了 80 次，「${busyName}」那列仍沒進到下拉可視範圍`);
             await shot(rec, 'loop-busy-row-visible');
             await rm.click({ name: '^GeneralOption_', text: busyName }, `下拉裡出任務中的「${busyName}」`);
             await delay(600);
