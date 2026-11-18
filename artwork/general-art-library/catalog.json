@@ -3657,6 +3657,25 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/yuan_shu__袁術__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "ceb77d4eb4c1337a62c3637db71312874e3813dc035312a30b2c8e5d5ea0a20b",
+            "canvas": "1024x1536 PNG",
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/yuan_shu__袁術__standing_0002.png",
+            "pose": "厚重踏步轉身，揮權杖發令",
+            "weaponClass": "ceremonial command scepter and jade token",
+            "qc": "125px與250px白底合成預覽：冠冕、玉物、權杖與雙靴完整；透明輪廓乾淨。",
+            "createdAt": "2026-11-18"
+          }
+        ]
       }
     },
     {
