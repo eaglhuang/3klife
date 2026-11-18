@@ -5487,6 +5487,24 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/yin_mo__尹默__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "53b0c3c7622c7f281f3caf369a7ec3d4a73c065ecddead6fce2eddfed8279629",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "bamboo book and calligraphy brush",
+            "poseLabel": "低身側步，護書執筆施策",
+            "gaze": "toward camera",
+            "sourceStanding": "standing/yin_mo__尹默__standing_0002.png",
+            "note": "以暫存候選收入；完整人物與雙鞋入框，alpha≥16 主體範圍 x=148–865、y=240–1315。125/250px 縮圖確認透明背景與人物可讀；250px 衣襬有少量細小彩色雜邊，列待審候選，未接入遊戲。"
+          }
+        ]
       }
     },
     {
