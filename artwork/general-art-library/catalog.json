@@ -5819,6 +5819,25 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/ke_bi_neng__軻比能__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "9e15da7f7d4f4440158fc51480c4bab35a0a1a2e087b5a101c95610d49535c75",
+            "canvas": "1024x1536 PNG",
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/ke_bi_neng__軻比能__standing_0002.png",
+            "pose": "跨步張弓，箭矢引弦待發",
+            "weaponClass": "recurved bow and arrow",
+            "qc": "125px與250px白底合成預覽：頭髻、弓、箭矢、雙手及雙靴完整；透明輪廓乾淨。",
+            "createdAt": "2026-11-18"
+          }
+        ]
       }
     },
     {
