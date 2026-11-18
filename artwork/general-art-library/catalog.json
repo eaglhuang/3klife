@@ -4607,6 +4607,35 @@
             "note": "延續核定荀攸暗青灰文士服；收斂構圖的前進施策瞬間，一手展開軍略圖、一手指向陣線，候選待審。"
           }
         ]
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "asset-imported",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/xun_you__荀攸__small_avatar_0001.png",
+            "status": "asset-imported",
+            "sha256": "27a15d8dd691e0d08b07a08b1a6f737bb9058f06c1bac71306ef24f083248899",
+            "canvas": "256x256 RGBA",
+            "cropBox": {
+              "x": 445,
+              "y": 185,
+              "width": 215,
+              "height": 215
+            },
+            "outputPadding": {
+              "left": 5,
+              "bottom": 10
+            },
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/xun_you__荀攸__standing_0002.png",
+            "sourceSha256": "a449e920d1beabeb1bfec9f904d9025a9dc13f6d3cca56d46e6fa35c170cc1e5",
+            "method": "crop-only; uniform resize; transparent padding; no redraw",
+            "qc": "125px preview: full hair ornament and face complete; face centered; neck and upper shoulder line included; nearby hand-held scroll excluded cleanly; head-to-canvas estimate 71%.",
+            "createdAt": "2026-11-18"
+          }
+        ]
       }
     },
     {
