@@ -2208,13 +2208,13 @@
         ]
       },
       "smallAvatar": {
-        "activeVersion": "0001",
-        "status": "asset-imported",
+        "activeVersion": "0002",
+        "status": "review-pending",
         "history": [
           {
             "version": "0001",
             "file": "small_avatars/cao_ren__曹仁__small_avatar_0001.png",
-            "status": "asset-imported",
+            "status": "rejected",
             "sha256": "f164d30303f35320d350a6ed68baf4424432a1f75e7f76abb55fc5125f589b35",
             "canvas": "256x256 RGBA",
             "cropBox": {
@@ -2230,6 +2230,25 @@
             "method": "crop-only; uniform resize; transparent padding; no redraw",
             "qc": "125px preview: full helmet and face retained, face centered; upper shoulder armor visible without weapon or torso detail. Head-to-canvas estimate 77%.",
             "createdAt": "2026-11-18"
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/cao_ren__曹仁__small_avatar_0002.png",
+            "status": "review-pending",
+            "sha256": "013736d9f004d5a683b037c0bff2833f65e594125f6d47c3e2abaf0b7e939ee6",
+            "canvas": "256x256 RGBA",
+            "cropBox": {
+              "x": 390.43,
+              "y": -15.96,
+              "width": 319.15,
+              "height": 319.15
+            },
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/cao_ren__曹仁__standing_0002.png",
+            "sourceSha256": "baa14320d39a93dca6f05b16a19b2300dd579d2dd8d576dac24df1c61912b98d",
+            "method": "crop-only; uniform resize; transparent padding; no redraw",
+            "qc": "七張核准參考並排檢視；頭高72.1%，臉部中心49.2%，頭盔完整，雙肩輪廓點均落在可見像素且保留下方空間。男性頭盔武將採典韋核准基準62.1%作最低門檻；本圖通過硬性檢查，待使用者最終確認。",
+            "createdAt": "2026-11-19"
           }
         ]
       }
