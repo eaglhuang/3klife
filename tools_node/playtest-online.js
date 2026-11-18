@@ -595,6 +595,14 @@ async function main() {
             rec.detail.menuMap = map;
             // 太守府：開啟後截一張（人口、民心、黃金與糧草產出列），再關回大廳；開不了只記錄不算失敗
             try {
+                // 官職晉升解鎖（PROG-2-9151）：新玩家的太守府是鎖頭按鈕，點了只會出現提示；鎖著就不開，並把最後展開的選單收起
+                const hallLocked = (map.BtnCatDomestic || []).some((b) => /太守府/.test(b.text) && /🔒/.test(b.text));
+                rec.detail.governorHallLocked = hallLocked;
+                if (hallLocked) {
+                    await clickButton('^BtnCatNurture$');
+                    await delay(800);
+                    return rec.detail;
+                }
                 const opened = await openSub('BtnCatDomestic', '太守府');
                 rec.detail.governorHallOpened = Boolean(opened);
                 if (opened) {
