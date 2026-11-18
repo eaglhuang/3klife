@@ -382,6 +382,7 @@ export function computeEpMvp(
     isHistoricalPair: boolean,
     parentsVitalityFull = false,
     parentEps?: { fatherEp?: number; motherEp?: number },
+    familyCompatibilityK = 0,
 ): EpBreakdown {
     // 標籤統計統一走 KinRelation.analyzeTagResonance（KIN-03），與相性引擎同一份計法
     const ancestorTags = PEDIGREE_SLOTS.flatMap((slot) => {
@@ -395,7 +396,8 @@ export function computeEpMvp(
     // TODO(KIN-03 純血)：14 人全同族 +30 EP，待同族欄位資料定義後實作
     const resonance = hasResonance ? computeResonanceBonus(topTagCount) : 0;
     const outcross = allKnown && new Set(uids).size === PEDIGREE_SLOTS.length ? EP_OUTCROSS_BONUS : 0;
-    const affinity = isHistoricalPair ? EP_AFFINITY_BONUS : 0;
+    const clampedK = Math.max(0, Math.min(15, Math.round(familyCompatibilityK)));
+    const affinity = isHistoricalPair ? Math.max(EP_AFFINITY_BONUS, clampedK) : clampedK;
     const vitalityFull = parentsVitalityFull ? EP_VITALITY_FULL_BONUS : 0;
     const parentBonus = computeParentEpBonus(parentEps?.fatherEp, parentEps?.motherEp);
     const ep = EP_BASE + resonance + outcross + affinity + vitalityFull + parentBonus;
