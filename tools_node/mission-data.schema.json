@@ -229,16 +229,18 @@
               "allowedEffects": { "type": "array", "minItems": 1, "items": { "enum": ["resource", "generalExp", "fame", "officerExp", "relation", "generalState", "trait", "flag", "spawn", "intel", "unlock", "sceneGambit", "morale", "memoryNote"] } } } } } }
     },
     "balance": {
-      "type": "object", "required": ["schema", "version", "intelCurve", "intel", "risk", "successRate", "difficulties", "wallRewards", "wallCosts", "wallEnergy", "resourceCaps"],
+      "type": "object", "required": ["schema", "version", "intelBands", "recon", "wait", "intelCurve", "fitness", "penalty", "projection", "resourceCaps", "recordLimit", "difficulties"],
       "properties": {
         "schema": { "const": "mission-balance.v1" },
-        "intel": { "type": "object", "required": ["reconCap", "reconIncrements", "wait"],
+        "recon": { "type": "object", "required": ["steps", "cap", "grainCost"],
           "properties": {
-            "reconCap": { "type": "integer", "maximum": 100 },
-            "reconIncrements": { "type": "array", "minItems": 1, "items": { "type": "integer", "minimum": 0 } },
-            "wait": { "type": "object", "required": ["maxPerMission", "delta"], "properties": { "maxPerMission": { "type": "integer", "minimum": 1 }, "delta": { "type": "integer" } } } } },
+            "cap": { "type": "integer", "maximum": 100 },
+            "steps": { "type": "array", "minItems": 1, "items": { "type": "integer", "minimum": 0 } },
+            "grainCost": { "type": "integer", "minimum": 0 } } },
+        "wait": { "type": "object", "required": ["delta"], "properties": { "delta": { "type": "integer" } } },
+        "penalty": { "type": "object", "required": ["harmTiers", "captureMinDifficulty"] },
         "difficulties": { "type": "object", "required": ["EASY", "NORMAL", "ELITE", "ADVANCED", "HELL"],
-          "additionalProperties": { "type": "object", "required": ["durationSeasons", "powerRequired", "reward", "cost", "fame", "initialIntel", "riskLoss"] } }
+          "additionalProperties": { "type": "object", "required": ["needPower", "cost", "energy"] } }
       }
     },
     "display": {

@@ -78,6 +78,8 @@ export interface MissionChanceNode extends MissionNodeBase { kind: 'chance'; p: 
 export interface MissionSwitchCase {
     /** 與 on 的值比對（字串／布林／數字）；on=generalTag 時為特質名 */
     when?: string | boolean | number;
+    /** when 的同義寫法（資料檔裡兩種都有，以 when 為準） */
+    eq?: string | boolean | number;
     /** 數值比較：on 的值 >= gte */
     gte?: number;
     then: MissionNode;
@@ -136,7 +138,9 @@ export interface MissionDefinition {
     theme: string;
     difficulty: MissionDifficulty;
     tags: string[];
-    text: { title: string; brief: string };
+    text: { title: string; brief: string; detail?: string };
+    /** 任務成功後等下一場戰鬥判定的場景戰法（SCN-04），沿用舊任務欄位 */
+    sceneGambit?: string;
     facts?: MissionFactDef[];
     requirement: {
         /** 首版固定 1；格式預留多人隊伍 */
@@ -165,6 +169,9 @@ export const MISSION_BLOCKS = [
     'on-sortie', 'traveling', 'on-mission', 'offline-dispatch', 'low-energy',
 ] as const;
 export type MissionBlock = (typeof MISSION_BLOCKS)[number];
+
+/** 成敗等級的顯示文字 */
+export const MISSION_TIER_TEXT: Record<MissionTier, string> = { critical: '大成功', success: '成功', fail: '失敗', disaster: '大失敗' };
 
 export const MISSION_BLOCK_TEXT: Record<MissionBlock, string> = {
     dead: '已亡故', retired: '已退役', 'not-graduated': '尚未畢業', nurturing: '培育中', captive: '被囚',
@@ -212,6 +219,33 @@ export interface MissionInstance {
     status: 'OPEN' | 'ACTIVE';
     dispatch?: MissionDispatchLock;
     chainFrom?: string;
+    /** 舊存檔（v1）進行中任務遷移而來：結算走「依舊成功率、舊固定獎勵」的相容分支，不重擲新結果樹 */
+    legacy?: MissionLegacyFlat;
+}
+
+/** v1 進行中任務的固定結算資料（branchId 為 LEGACY_FLAT_BRANCH_ID） */
+export interface MissionLegacyFlat {
+    title: string;
+    wall: string;
+    difficulty: MissionDifficulty;
+    rewards: { grain: number; silver: number; generalExp: number };
+    fame: number;
+}
+export const LEGACY_FLAT_BRANCH_ID = 'legacy-flat';
+
+/** 延後產生的連鎖任務（spawn.afterSeasons） */
+export interface MissionPendingSpawn {
+    defId: string;
+    atSeason: number;
+    intel?: number;
+    expireSeasons?: number;
+    chainFrom?: string;
+}
+
+/** 武將被任務結果影響的狀態：到該季之前不可派 */
+export interface MissionGeneralState {
+    injuredUntil?: number;
+    capturedUntil?: number;
 }
 
 /** 全量同步快照（server 為權威、client 快取；UI 暫態不在內） */
@@ -223,7 +257,15 @@ export interface MissionSyncSnapshot {
     missions: MissionInstance[];
     history: MissionRecord[];
     flags: Record<string, number | boolean>;
+    /** 延後的連鎖任務 */
+    pending?: MissionPendingSpawn[];
+    /** 武將受傷／被俘狀態（generalId → 結束季） */
+    generalStates?: Record<string, MissionGeneralState>;
+    /** 已解鎖的機緣 id（unlock 效果） */
+    unlocks?: string[];
 }
+/** 存檔 v2 格式＝同步快照（server 為權威時 client 只快取同一份） */
+export type MissionSaveV2 = MissionSyncSnapshot;
 
 // ───────────────────────── 結算輸出 ─────────────────────────
 
