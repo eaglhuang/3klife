@@ -44,7 +44,7 @@ import { EMPTY_AI_ADAPTIVE_STREAK, nextAiAdaptiveStreak, normalizeAiAdaptiveStre
 import { effectiveSandtableStage, normalizeUnlockHistory, recordSandtableUnlock, sandtableShortCodeOf, sandtableStageIdOf, type SandtableStageId } from '../systems/SandtableProgress';
 import { isSandtableTerritory } from '../systems/SandtableTerritories';
 import { hallMissionToOfficerTask, type HallMissionOutcome } from '../systems/HallMissionSettlement';
-import { battleFameGain, gainGeneralFame, generalRankTitle, hallMissionFameGain } from '../systems/GeneralRankProgress';
+import { battleFameGain, gainGeneralFame, generalRankTitle, hallMissionFameGain, nextGeneralRankFame } from '../systems/GeneralRankProgress';
 import { resolveHallDispatch, type HallDispatchResult } from '../systems/HallMissionDispatch';
 import type { HallBoardKey, HallGateTask, HallPlayerState } from '../systems/HallMissionBoard';
 import { battleIntelligenceOf, outcomeOf } from '../systems/BattleRoster';
@@ -137,7 +137,9 @@ import { remarkRandomOf } from '../systems/SageRemarks';
 import { OfflineGeneralMindService } from '../mind/OfflineGeneralMindService';
 import type { IGeneralMindService } from '../mind/IGeneralMindService';
 import { isEmptyGeneralMind } from '../mind/MindSave';
-import { intelLevelOfPercent, type MindContext, type MindLine, type MindOutcome } from '../mind/MindTypes';
+import { intelLevelOfPercent, type MindContext, type MindLine, type MindOpinion, type MindOutcome, type MindRequest, type MindResolveResult, type MindTaskProfile } from '../mind/MindTypes';
+import { personalityTypeOf } from '../mind/MindRules';
+import { citeOf } from '../mind/MindLineTemplates';
 import { FOOD_LOW_LINE } from '../systems/ResourceCap';
 import { ITEM_DISPLAY_NAMES } from '../systems/PlayerInventory';
 import { prisonTreasureLine } from '../systems/PrisonerOfWar';
@@ -3822,7 +3824,7 @@ export class GameSession {
         const input = buildJournalEvent(kind, subjects, seq, seasonJournalTimestamp(this._clock.state));
         if (!input) return;
         // 日誌反應（JRN-04，PROG-2-1404）：以第一位相關武將的名字與條目序號決定台詞，失敗時回退
-        const reaction = journalReactionLine(input, subjects[0].name ?? '', seq);
+        const reaction = journalReactionLine(input, subjects[0].name ?? '', seq, this._journalMindHint(subjects[0].uid));
         this.recordJournal({ ...input, reaction });
     }
 
@@ -4257,12 +4259,23 @@ export class GameSession {
         const roster = this._roster.getAll();
         const general = roster.find((g) => g.id === generalId);
         const loyalty = general?.loyaltyState;
+        const rank = general?.generalRank ?? 0;
+        const next = nextGeneralRankFame(rank);
         return {
             season: this._clock.state.totalSeasonsElapsed,
             ...(loyalty ? { loyalty: loyalty.value, loyaltyLocked: loyalty.isLocked } : {}),
             ...(general ? { general: general as unknown as MindContext['general'] } : {}),
-            nameOf: (id) => roster.find((g) => g.id === id)?.name,
+            ...(general ? { fame: { rank, fame: general.generalFame ?? 0, nextFame: next, nextTitle: next === null ? undefined : generalRankTitle(rank + 1) } } : {}),
+            nameOf: (id) => roster.find((g) => g.id === id)?.name ?? this._generalTemplates.find((g) => g.id === id)?.name,
+            seasonLabel: (season) => this._mindSeasonLabel(season),
         };
+    }
+
+    /** 把季序號換成玩家看得懂的「第N年夏」（請求與台詞引用過去用，PROG-2-9150） */
+    private _mindSeasonLabel(season: number): string {
+        const now = this._clock.state;
+        const index = now.currentYear * 4 + (now.currentSeason - 1) - (now.totalSeasonsElapsed - season);
+        return `第${Math.floor(index / 4)}年${['春', '夏', '秋', '冬'][((index % 4) + 4) % 4]}`;
     }
 
     /**
@@ -4271,6 +4284,46 @@ export class GameSession {
      */
     public hallMindBark(generalId: string, seed: number): MindLine {
         return this.mind.barkFor(generalId, 'LOBBY', seed, this._mindContext(generalId));
+    }
+
+    /** 武將信箱（主動請求、請罪、進言、抗命信）：未回應在前；PROG-2-9150 */
+    public mindMailbox(): MindRequest[] {
+        return this.mind.mailbox();
+    }
+
+    /** 信箱顯示用的武將名（在隊武將優先，退回模板） */
+    public mindNameOf(generalId: string): string {
+        return this._mindContext(generalId).nameOf?.(generalId) ?? generalId;
+    }
+
+    public mindUnreadCount(): number {
+        return this.mind.unreadRequestCount();
+    }
+
+    public markMindRequestRead(id: string): void {
+        this.mind.markRequestRead(id);
+    }
+
+    /** 玩家答應／拒絕武將請求：結果回寫心智事件，成功時自動存檔；回傳武將的反應句 */
+    public async resolveMindRequest(id: string, accept: boolean): Promise<MindResolveResult> {
+        const req = this.mind.mailbox().find((r) => r.id === id);
+        if (!req) return { ok: false, reply: '', events: [] };
+        const result = this.mind.resolveRequest(id, accept, this._mindContext(req.generalId));
+        if (result.ok && this._autoSave && this._save) await this.save();
+        return result;
+    }
+
+    /** 選將時的意見（只勸阻不抗命：successDelta 為小幅下修，由呼叫端決定要不要套進成功率）；MIND-3 的選將 UI 使用 */
+    public mindOpinion(generalId: string, profile: MindTaskProfile, partnerIds?: readonly string[]): MindOpinion {
+        return this.mind.queryOpinion(generalId, profile, this._mindContext(generalId), { partnerIds });
+    }
+
+    /** 日誌反應的個人化提示：該武將最近一次可引用的任務／出戰經歷；沒有則 undefined（PROG-2-9150） */
+    private _journalMindHint(generalId: string): { type: ReturnType<typeof personalityTypeOf>; cite: string; outcome: 'SUCCESS' | 'FAIL' } | undefined {
+        const memory = this.mind.recentMemories(generalId, 6).find((m) => m.label && m.outcome && m.outcome !== 'PARTIAL' && (m.kind === 'TASK_DONE' || m.kind === 'BATTLE_RESULT'));
+        if (!memory) return undefined;
+        const ctx = this._mindContext(generalId);
+        return { type: personalityTypeOf(ctx.general), cite: citeOf(memory.label, memory.season, ctx.seasonLabel), outcome: memory.outcome === 'SUCCESS' ? 'SUCCESS' : 'FAIL' };
     }
 
     /** 戰後寫入出戰武將的記憶：勝敗（主將加重）與單挑勝負（PROG-2-9146）；戰場內部不動，只吃戰後已有的結果 */
@@ -4284,7 +4337,7 @@ export class GameSession {
         for (const duel of options.duelOutcomes ?? []) {
             if (duel.tutorial) continue;
             if (duel.winner === Faction.Player && duel.winnerGeneralId) this.mind.record({ generalId: duel.winnerGeneralId, season, kind: 'DUEL', outcome: 'SUCCESS', tags: ['duel'], label: '單挑' });
-            if (duel.loser === Faction.Player && duel.loserGeneralId) this.mind.record({ generalId: duel.loserGeneralId, season, kind: 'DUEL', outcome: 'FAIL', tags: ['duel'], label: '單挑' });
+            if (duel.loser === Faction.Player && duel.loserGeneralId) this.mind.record({ generalId: duel.loserGeneralId, season, kind: 'DUEL', outcome: 'FAIL', tags: ['duel'], label: '單挑', ...(duel.winnerGeneralId ? { partnerId: duel.winnerGeneralId } : {}) });
         }
     }
 
@@ -5006,9 +5059,9 @@ export class GameSession {
         this._governanceEvent = rollGovernanceEvent(governanceSeason, governanceRandom);
         // 武將性格自發事件（LOOP-01）：同樣用另一條序列，不消耗主亂數；上一季沒回應的作廢
         const personalityRandom = this._seasonEventRandom ?? remarkRandomOf(`personality|${governanceSeason}|${this._seeded.snapshot().state}`);
-        this._seasonPersonality = rollSeasonPersonalityEvents(this._roster.getAll(), governanceSeason, personalityRandom);
+        this._seasonPersonality = rollSeasonPersonalityEvents(this._roster.getAll(), governanceSeason, personalityRandom, this.mind.experienceWeights(this._roster.getAll().map((g) => g.id), governanceSeason));
         // 武將心智季結算（PROG-2-9146）：冷落計數、離隊者清理；同樣用另一條序列，不消耗主亂數
-        this.mind.onSeasonSettle(governanceSeason, remarkRandomOf(`mind|${governanceSeason}|${this._seeded.snapshot().state}`), this._roster.getAll().filter((g) => g.status !== 'dead').map((g) => g.id));
+        this.mind.onSeasonSettle(governanceSeason, remarkRandomOf(`mind|${governanceSeason}|${this._seeded.snapshot().state}`), this._roster.getAll().filter((g) => g.status !== 'dead').map((g) => g.id), (id) => this._mindContext(id));
         // 三國季報（LOOP-03）：同樣用另一條序列；上一季沒抉擇的奇遇作廢
         this._chronicleArchive = archiveSeasonChronicle(this._chronicleArchive, this._seasonChronicle, governanceSeason);
         this._seasonChronicle = this._synthesizeChronicle(governanceSeason);

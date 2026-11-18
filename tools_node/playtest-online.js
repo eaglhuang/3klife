@@ -973,8 +973,20 @@ async function main() {
 
         // ── 5. 人物介紹：第一位武將 → 每個分頁截圖 → 「命」分頁檢查血統樹 ──
         // ── 武將心智（PROG-2-9146，--mind）：派任務、換季之後點大廳小人讀泡泡台詞（要引用過去的決定或說出心情），並統計自告奮勇「!」標記 ──
+        // 第一次進來時補經歷（呼叫大廳的 qaInjectMindHistory，PROG-2-9150）：小人泡泡會引用那次任務，下一次換季武將來信
+        const injectMindQa = async (rec) => {
+            if (await page.evaluate(() => window.__mindQaDone)) return;
+            rec.detail.injected = await page.evaluate(() => {
+                window.__mindQaDone = true;
+                let n = -1;
+                const walk = (node) => { for (const c of node.components) if (c && c.qaInjectMindHistory) n = c.qaInjectMindHistory(); for (const ch of node.children) walk(ch); };
+                walk(window.cc.director.getScene());
+                return n;
+            });
+        };
         const mindBubbles = async (rec, rounds) => {
             await requireLobby();
+            await injectMindQa(rec);
             await backToLobbyBar();
             await closeMissionLayers();
             const bubbleId = 'lobby-hall-screen.bubble';
@@ -1003,10 +1015,35 @@ async function main() {
                 await delay(3000);
             }
             rec.detail.lines = lines;
+            rec.detail.citingLines = lines.filter((l) => /第\d+年|上回|上次|那次/.test(l.text));
             if (!lines.length) throw new Error('點大廳小人沒有讀到任何泡泡文字');
             return rec.detail;
         };
         if (args.mind) await step('lobby-mind-bubbles', (rec) => mindBubbles(rec, 4), { skipIfFailed: true });
+
+        // ── 武將信箱（PROG-2-9150，--mind）：開右上「信箱」→ 截圖請求內容 → 真滑鼠按第一封的「准／寬慰／採納」→ 截圖武將反應句 → 關閉 ──
+        const mindMailbox = async (rec, tag) => {
+            await requireLobby();
+            await injectMindQa(rec);
+            await backToLobbyBar();
+            await closeMissionLayers();
+            const opened = await rm.tryClick({ name: '^BtnMindMailbox$', button: true });
+            if (!opened) { rec.detail.mailbox = '大廳沒有信箱入口（本季沒有任何武將來信）'; return rec.detail; }
+            await delay(600);
+            const texts = (await rm.allTexts()).filter((t) => /・(求封|請戰|雪恥|請罪|訴苦|進言|抗命信)/.test(t) || /第\d+年/.test(t));
+            rec.detail.requestTexts = texts.slice(0, 8);
+            await shot(rec, `mind-mailbox-${tag}`);
+            const answered = await rm.tryClick({ name: '^BtnMindReply-0-yes$', button: true }) || await rm.tryClick({ name: '^BtnMindReply-0-no$', button: true });
+            rec.detail.answered = Boolean(answered);
+            if (answered) {
+                await delay(800);
+                rec.detail.afterTexts = (await rm.allTexts()).filter((t) => /^「/.test(t.trim()) || /已准|已駁|已閱/.test(t)).slice(0, 6);
+                await shot(rec, `mind-mailbox-${tag}-reply`);
+            }
+            await rm.tryClick({ name: '^BtnMindClose$', button: true });
+            return rec.detail;
+        };
+        if (args.mind) await step('lobby-mind-mailbox', (rec) => mindMailbox(rec, 'lobby'), { skipIfFailed: true });
 
         await step('character-intro-tabs', async (rec) => {
             // 關掉轉蛋等面板回到大廳主畫面，再開武將名冊
@@ -1387,6 +1424,7 @@ async function main() {
                     return rec.detail;
                 });
                 if (args.mind) await ys('mind', (rec) => mindBubbles(rec, 3));
+                if (args.mind) await ys('mind-mailbox', (rec) => mindMailbox(rec, `year-${Date.now() % 100000}`));
                 // 1. 內政：開「內政」面板，任選一個可按的內政任務
                 await ys('domestic', async (rec) => {
                     const opened = await openSub('BtnCatDomestic', '^內政$');

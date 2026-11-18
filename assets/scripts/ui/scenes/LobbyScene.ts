@@ -13,6 +13,7 @@ import { inspiredTacticName } from '../../core/systems/InspiredTacticMap';
 import { parseLimitedPoolWindows } from '../../core/systems/LimitedPoolSchedule';
 import { expandLimitedPoolRotations, parseLimitedPoolRotations } from '../../core/systems/LimitedPoolRotation';
 import { _decorator, BlockInputEvents, Button, Canvas, Color, Component, instantiate, JsonAsset, Label, Mask, Node, Sprite, sys, UITransform, Widget, resources } from 'cc';
+import { MindRequestPanel } from '../components/mind/MindRequestPanel';
 import { installAdaptiveResolution } from '../core/AdaptiveResolution';
 import { computeSubMenuCenterX, LobbyHallScreenBinder, type HallActorTapView, type LobbyHallDockId, type LobbyHallPanelId, type LobbyHallWallId } from '../core/LobbyHallScreenBinder';
 import { hallFestivalIdOf, mainLobbyBackdropOf, resolveHallTheme as resolveHallSceneTheme, type HallThemeConfig } from '../../core/systems/HallTheme';
@@ -457,6 +458,8 @@ export class LobbyScene extends Component {
     private _clanShrine: ClanShrineController<UIScreenPreviewHost> | null = null;
     private _openingOfferPopup: OpeningOfferPopupController<UIScreenPreviewHost> | null = null;
     private _seasonEventPopup: SeasonEventPopupController<UIScreenPreviewHost> | null = null;
+    /** 武將信箱面板（PROG-2-9150）：右上角入口＋請求列表 */
+    private _mindPanel: MindRequestPanel | null = null;
     private _seasonChroniclePopup: SeasonChroniclePopupController<UIScreenPreviewHost> | null = null;
     private _lineagePopup: LineageMilestonePopupController<UIScreenPreviewHost> | null = null;
     private _quickSortiePopup: QuickSortiePopupController<UIScreenPreviewHost> | null = null;
@@ -811,6 +814,7 @@ export class LobbyScene extends Component {
             () => this._mountAcademyGraduation(),
             () => this._mountClanShrine(),
             () => this._mountSeasonEventPopup(),
+            () => this._mountMindMailbox(),
             () => this._mountLineagePopup(),
             () => this._mountQuickSortiePopup(),
             () => this._mountSeasonPass(),
@@ -1166,7 +1170,42 @@ export class LobbyScene extends Component {
         this._syncSeasonEventPopup();
     }
 
+    /** 武將信箱（PROG-2-9150）：程式碼建節點，換季與讀檔後重畫入口數字 */
+    private _mountMindMailbox(): void {
+        const session = services().session;
+        this._mindPanel = new MindRequestPanel({
+            mailbox: () => session.mindMailbox(),
+            nameOf: (id) => session.mindNameOf(id),
+            markRead: (id) => session.markMindRequestRead(id),
+            resolve: (id, accept) => session.resolveMindRequest(id, accept),
+            bringToFront: (node) => this._bringNodeToFront(node),
+        }, this.node);
+        this._sessionEventUnsubscribers.push(services().event.on(GAME_SESSION_EVENTS.Loaded, () => { this._mindPanel?.refresh(); }));
+    }
+
+    /**
+     * 玩家視角驗收用的測試入口（自動試玩從頁面呼叫，正常遊玩不會用到）：替在隊武將補上幾筆任務經歷，
+     * 讓試玩能看到「引用過去任務的泡泡」與換季後的武將來信；來信的產生、措辭、回應仍全走正式程式。回傳補了幾筆。
+     */
+    public qaInjectMindHistory(): number {
+        const session = services().session;
+        const season = session.gameTime.totalSeasonsElapsed;
+        let n = 0;
+        session.roster.forEach((general, index) => {
+            const failed = index % 2 === 0;
+            for (let i = 0; i < (failed ? 3 : 1); i++) {
+                session.mind.record({
+                    generalId: general.id, season, kind: 'TASK_DONE', outcome: failed ? 'FAIL' : 'SUCCESS',
+                    tags: ['hebei'], label: '河北押運', id: `qa-mind:${season}:${general.id}:${i}`,
+                });
+                n += 1;
+            }
+        });
+        return n;
+    }
+
     private _syncSeasonEventPopup(): void {
+        this._mindPanel?.refresh();
         const popup = this._seasonEventPopup;
         if (popup?.host && popup.tryOpen()) this._bringNodeToFront(popup.host.node);
     }

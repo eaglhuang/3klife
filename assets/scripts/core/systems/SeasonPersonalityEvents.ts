@@ -136,9 +136,25 @@ export function seasonEventArchetypeOf(general: SeasonEventCandidate): SeasonEve
     return ARCHETYPE_OF_PERSONALITY[offlinePersonalityOf(general)];
 }
 
+/** 抽一位候選：沒有（或全等）經歷權重時等同均勻抽法；有權重時照比例，最近有重大經歷、連敗、被冷落者較容易被抽到 */
+function pickCandidateIndex(ids: readonly string[], random: () => number, weights?: Readonly<Record<string, number>>): number {
+    const w = ids.map((id) => Math.max(0, weights?.[id] ?? 1));
+    const uniform = w.every((x) => x === w[0]);
+    if (!weights || uniform) return Math.min(ids.length - 1, Math.floor(random() * ids.length));
+    const total = w.reduce((a, b) => a + b, 0);
+    let roll = random() * total;
+    for (let i = 0; i < w.length; i++) {
+        roll -= w[i];
+        if (roll < 0) return i;
+    }
+    return ids.length - 1;
+}
+
 /** 換季抽事件：在役、成年、非教官卡、有對應事件的武將才可被抽；同一季同一事件只出一次 */
 export function rollSeasonPersonalityEvents(
     generals: readonly SeasonEventCandidate[], season: number, random: () => number,
+    /** 與經歷相關的抽選權重（武將心智 MIND-2）：generalId → 權重，缺值為 1；全為 1 或不給時走原本的均勻抽法 */
+    experienceWeights?: Readonly<Record<string, number>>,
 ): SeasonPersonalityState {
     const pool = generals
         .filter((g) => g.status !== 'dead' && !g.isMentorCard && (g.age ?? SEASON_PERSONALITY_TUNING.minAge) >= SEASON_PERSONALITY_TUNING.minAge)
@@ -148,8 +164,7 @@ export function rollSeasonPersonalityEvents(
     const pending: SeasonEventInstance[] = [];
     let candidates = pool;
     while (pending.length < wanted && candidates.length > 0) {
-        const index = Math.min(candidates.length - 1, Math.floor(random() * candidates.length));
-        const picked = candidates[index];
+        const picked = candidates[pickCandidateIndex(candidates.map((entry) => entry.general.id), random, experienceWeights)];
         pending.push({ eventId: picked.def.id, generalId: picked.general.id, generalName: picked.general.name ?? picked.general.id });
         candidates = candidates.filter((entry) => entry.def.id !== picked.def.id);
     }
