@@ -195,7 +195,7 @@ export interface SwitchEnv {
 export function pickSwitchCase(node: Pick<MissionSwitchNode, 'on' | 'cases'>, env: SwitchEnv): number {
     const v = switchValue(node.on, env);
     for (let i = 0; i < node.cases.length; i += 1) {
-        if (caseMatches(node.cases[i].when, node.cases[i].gte, v)) return i;
+        if (caseMatches(node.cases[i].when ?? node.cases[i].eq, node.cases[i].gte, v)) return i;
     }
     return -1;
 }
