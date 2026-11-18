@@ -43,6 +43,7 @@ export function createDeployedUnitPresentationSuite(): TestSuite {
      updateUnitView:(_v:any,u:any)=>{ if(!fake.movingUnits.has(u.id)) node.worldPosition=cellPos(u.depth); },
      getUnitWorldPosition:(_l:number,d:number)=>cellPos(d),
      playRiverCurrentMoveTween:()=>{},
+     spawnMoveDust:()=>{}, // PROG-2-9406：揚塵不在此測試範圍
    };
    // 邏輯層先把單位走到第 3 格，再同步連發三個事件
    unit.depth=3;
