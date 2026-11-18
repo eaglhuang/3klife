@@ -107,13 +107,32 @@ function main() {
     const centerX = face.x + face.width / 2;
     const horizontalMin = Math.min(head.x, face.x, ...shoulders.map(p => p.x));
     const horizontalMax = Math.max(head.x + head.width, face.x + face.width, ...shoulders.map(p => p.x));
-    const requiredHorizontal = Math.max((centerX - horizontalMin) / 0.53, (horizontalMax - centerX) / 0.53);
     const requiredVertical = Math.max(...shoulders.map(p => Math.max(0, p.y - head.y) / 0.92));
-    const side = Math.max(head.height / target, requiredHorizontal, requiredVertical);
-    const cropCenterMin = Math.max(horizontalMax - side / 2, centerX - side * 0.03);
-    const cropCenterMax = Math.min(horizontalMin + side / 2, centerX + side * 0.03);
-    const cropCenterX = Math.min(cropCenterMax, Math.max(cropCenterMin, centerX));
-    const crop = { x: cropCenterX - side / 2, y: head.y - side * 0.05, width: side, height: side };
+    const minimumSide = Math.max(head.height / target, requiredVertical, horizontalMax - horizontalMin);
+    const feasibleLeftRange = side => {
+      // The square must contain the complete head/face/shoulder span while
+      // keeping the face center inside the accepted 47–53% horizontal band.
+      const left = Math.max(horizontalMax - side, centerX - side * 0.53);
+      const right = Math.min(horizontalMin, centerX - side * 0.47);
+      return left <= right ? [left, right] : null;
+    };
+    let side = minimumSide;
+    let leftRange = feasibleLeftRange(side);
+    if (!leftRange) {
+      let high = Math.max(side * 2, src.width, src.height, 1);
+      while (!feasibleLeftRange(high)) high *= 2;
+      let low = side;
+      for (let i = 0; i < 60; i++) {
+        const mid = (low + high) / 2;
+        if (feasibleLeftRange(mid)) high = mid;
+        else low = mid;
+      }
+      side = high;
+      leftRange = feasibleLeftRange(side);
+    }
+    const centeredLeft = centerX - side / 2;
+    const cropLeft = Math.min(leftRange[1], Math.max(leftRange[0], centeredLeft));
+    const crop = { x: cropLeft, y: head.y - side * 0.05, width: side, height: side };
     const faceCenterX = (centerX - crop.x) / side, headRatio = head.height / side;
     const headContained = head.x >= crop.x && head.x + head.width <= crop.x + side && head.y >= crop.y && head.y + head.height <= crop.y + side;
     const headWithinSource = head.x >= 0 && head.y >= 0 && head.x + head.width <= src.width && head.y + head.height <= src.height;
