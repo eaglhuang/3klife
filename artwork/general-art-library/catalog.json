@@ -7331,6 +7331,23 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/sha_mo_ke__沙摩柯__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "b872c4311e27aee2894ce041f9cd4cc9833bd56893ad8ef12e145dea9fe01239",
+            "canvas": "1024x1536 RGBA PNG",
+            "weaponClass": "bronze spiked mace with back-carried recurved bow",
+            "poseLabel": "雙手斜向下劈",
+            "sourceStanding": "standing/sha_mo_ke__沙摩柯__standing_0002.png",
+            "note": "保留核定立繪的粗獷編髮、古銅札甲、青綠內袍與赭紅甲裙；雙手揮動帶刺重錘斜向下劈，步幅收斂並保留背弓。透明全身候選，待使用者審看。"
+          }
+        ]
       }
     },
     {
