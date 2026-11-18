@@ -213,7 +213,8 @@ export class SpineUnitOverlay {
     const flashChanged = this.paintFlash(skeleton, entry, flash);
     // 走路起伏：落腳最低、兩步中間最高，避免整隊像在地上滑
     const walking = state.action === 'move';
-    const leaderBob = walking ? stepBobOffset(entry.stepClock) : 0;
+    const gait = entry.config;
+    const leaderBob = walking ? stepBobOffset(entry.stepClock, 0, gait.bobPx, gait.footfallIntervalSec) : 0;
     node.setPosition(state.foot.x - offset.x * entry.config.displayScale * state.facing + shakeX,
       state.foot.y - offset.y * entry.config.displayScale + leaderBob, 0);
     node.setScale(entry.config.displayScale * state.facing, entry.config.displayScale, 1);
@@ -239,7 +240,7 @@ export class SpineUnitOverlay {
       const pos = node.position;
       // 站位以「面向的後方」為準，所以 x 要跟著朝向翻面
       // pos 已含抖動偏移與帶頭者起伏；起伏換成隊員自己相位的，才是錯開的集體走路
-      const followerBob = walking ? stepBobOffset(entry.stepClock, slot.phase * state.clip.duration) - leaderBob : 0;
+      const followerBob = walking ? stepBobOffset(entry.stepClock, slot.phase * state.clip.duration, gait.bobPx, gait.footfallIntervalSec) - leaderBob : 0;
       follower.setPosition(pos.x - slot.x * state.facing, pos.y + slot.y + followerBob, 0);
       if (flashChanged) this.setSkeletonFlash(followerSkel, flash);
       follower.setScale(entry.config.displayScale * state.facing, entry.config.displayScale, 1);
@@ -266,11 +267,12 @@ export class SpineUnitOverlay {
     const prev = entry.stepClock;
     entry.stepClock = prev + dt * state.animationSpeed;
     const { x, y } = state.foot;
-    if (dustBeatsFor(prev, state.animationSpeed, dt) > 0) this.onFootfall(id, x, y, state.facing, true);
+    const interval = entry.config.footfallIntervalSec;
+    if (dustBeatsFor(prev, state.animationSpeed, dt, 0, interval) > 0) this.onFootfall(id, x, y, state.facing, true);
     entry.followers.forEach((follower, i) => {
       const slot = entry.config.squad?.[i];
       if (!slot || !follower.isValid || !follower.active) return;
-      if (dustBeatsFor(prev, state.animationSpeed, dt, slot.phase * state.clip.duration) > 0) {
+      if (dustBeatsFor(prev, state.animationSpeed, dt, slot.phase * state.clip.duration, interval) > 0) {
         this.onFootfall?.(id, x - slot.x * state.facing, y + slot.y, state.facing, false);
       }
     });

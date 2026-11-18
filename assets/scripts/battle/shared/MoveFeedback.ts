@@ -105,10 +105,10 @@ export const FOOTFALL_INTERVAL_SEC = 0.4;
 export const MOVE_GAIT_TUNING = { maxAnimationSpeed: 2.2, bobPx: 3.5 } as const;
 
 /** 依步態時鐘算上下起伏位移：落腳時 0，兩次落腳中間到頂 bobPx。offset 給小隊隊員錯開相位。 */
-export function stepBobOffset(clock: number, offset = 0, bobPx: number = MOVE_GAIT_TUNING.bobPx): number {
-  if (!Number.isFinite(clock) || clock < 0) return 0;
-  const t = (clock + offset) % FOOTFALL_INTERVAL_SEC;
-  return bobPx * Math.sin(Math.PI * (t / FOOTFALL_INTERVAL_SEC));
+export function stepBobOffset(clock: number, offset = 0, bobPx: number = MOVE_GAIT_TUNING.bobPx, interval = FOOTFALL_INTERVAL_SEC): number {
+  if (!Number.isFinite(clock) || clock < 0 || !(interval > 0) || bobPx === 0) return 0;
+  const t = (clock + offset) % interval;
+  return bobPx * Math.sin(Math.PI * (t / interval));
 }
 /** 小隊隊員每次落腳的塵粒數是帶頭者的這個比例（至少 2 顆）：三人同時揚塵量太大，也吃粒子池。 */
 export const SQUAD_MEMBER_DUST_RATIO = 0.5;
@@ -119,11 +119,12 @@ export const SQUAD_MEMBER_DUST_RATIO = 0.5;
  * @param animationSpeed 這一幀的動畫倍率
  * @param dt 這一幀的真實秒數
  * @param offset 這位隊員的相位偏移（動畫秒）；帶頭者為 0，隊員 = 相位 × walk 週期，才會和骨架錯開的腳步對得上
+ * @param interval 兩次落腳間隔（動畫秒）；預設小兵 walk 一步，騎兵 trot 由兵種設定傳入（PROG-2-9408）
  */
-export function dustBeatsFor(prevClock: number, animationSpeed: number, dt: number, offset = 0): number {
-  if (!(animationSpeed > 0) || !(dt > 0) || !(prevClock >= 0)) return 0;
+export function dustBeatsFor(prevClock: number, animationSpeed: number, dt: number, offset = 0, interval = FOOTFALL_INTERVAL_SEC): number {
+  if (!(animationSpeed > 0) || !(dt > 0) || !(prevClock >= 0) || !(interval > 0)) return 0;
   const next = prevClock + animationSpeed * dt;
-  return Math.floor((next + offset) / FOOTFALL_INTERVAL_SEC) - Math.floor((prevClock + offset) / FOOTFALL_INTERVAL_SEC);
+  return Math.floor((next + offset) / interval) - Math.floor((prevClock + offset) / interval);
 }
 
 /** 帶頭者這次落腳要揚幾顆；隊員（isLeader=false）取比例並至少 2 顆。rand 為 [0,1) 亂數，由呼叫端注入以利測試。 */
