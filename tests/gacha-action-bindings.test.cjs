@@ -12,7 +12,7 @@ const fakeRequire = (id) => {
     throw new Error(`unexpected require ${id}`);
 };
 new Function('module', 'exports', 'require', compiled)(loaded, loaded.exports, fakeRequire);
-const { GACHA_ACTION_NODES, bindGachaActions } = loaded.exports;
+const { GACHA_ACTION_NODES, GACHA_TAP_DEDUPE_MS, bindGachaActions, onceForTap } = loaded.exports;
 
 function fixture() {
     const counts = {}, nodes = new Map(), owner = {};
@@ -25,6 +25,7 @@ function fixture() {
             off(event, callback, target) { this.handlers = this.handlers.filter(h => h.event !== event || h.owner !== target); },
             on(event, callback, target) { this.handlers.push({ event, callback, owner: target }); },
             click() { for (const h of this.handlers) if (h.event === 'click') h.callback(); },
+            fire(event) { for (const h of [...this.handlers]) if (h.event === event) h.callback(); },
         });
     }
     const bind = () => bindGachaActions(n => nodes.get(n), n => { n.button = true; }, actions, owner, 'click');
@@ -48,4 +49,41 @@ test('a missing node is skipped and the other actions still bind', () => {
     f.bind();
     for (const node of f.nodes.values()) node.click();
     assert.equal(f.counts.gold, 0); assert.equal(f.counts.single, 1);
+});
+
+test('one physical tap fires click and touch-end but runs the action once (PROG-2-9158)', () => {
+    const f = fixture(); f.bind();
+    const next = f.nodes.get(GACHA_ACTION_NODES.next);
+    // 真實點擊：Cocos 先送 TOUCH_END，Button 再送 CLICK；兩個事件都掛了同一個動作
+    next.fire('touch-end'); next.fire('click');
+    assert.equal(f.counts.next, 1);
+});
+test('the same wrapper is reused so rebinding does not stack listeners', () => {
+    const f = fixture(); f.bind(); f.bind();
+    const prev = f.nodes.get(GACHA_ACTION_NODES.previous);
+    assert.equal(prev.handlers.filter(h => h.event === 'touch-end').length, 1);
+});
+test('two taps further apart than the dedupe window both run', () => {
+    let clock = 1000, runs = 0;
+    const tap = onceForTap(() => { runs++; }, { stamp: () => clock, window: GACHA_TAP_DEDUPE_MS });
+    tap(); tap();
+    assert.equal(runs, 1);
+    clock += GACHA_TAP_DEDUPE_MS + 1;
+    tap();
+    assert.equal(runs, 2);
+});
+test('frame clock: click and touch-end in the same frame run once even when the frame is slow, next frame runs again', () => {
+    let frame = 7, runs = 0;
+    const f = fixture();
+    const slow = { stamp: () => frame, window: 1 };
+    const actions = {};
+    for (const key of Object.keys(GACHA_ACTION_NODES)) actions[key] = () => {};
+    actions.next = () => { runs++; };
+    bindGachaActions(n => f.nodes.get(n), n => { n.button = true; }, actions, f.owner, 'click', slow);
+    const next = f.nodes.get(GACHA_ACTION_NODES.next);
+    next.fire('touch-end'); next.fire('click');
+    assert.equal(runs, 1);
+    frame += 1;
+    next.fire('touch-end'); next.fire('click');
+    assert.equal(runs, 2);
 });

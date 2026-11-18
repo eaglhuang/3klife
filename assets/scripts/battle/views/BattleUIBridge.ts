@@ -68,8 +68,9 @@ import { isHeavyHit, BATTLE_TURN_FLOW_TIMING, BATTLE_VISUAL_TIMING } from './Bat
 import { buildBattleSkillUsedMessage, getBattleSkillPresentation } from '../../shared/BattleSkillPresentation';
 import { quickViewSkillLines } from '../../shared/QuickViewSkillLines';
 import { SkillSourceType } from '../../shared/SkillRuntimeContract';
+import { planSkillCast } from '../shared/SkillCastPresentation';
+import { SkillNameBanner } from './SkillNameBanner';
 import { selectDuelExchanges } from '../shared/DuelPresentationCore';
-import { createMoveSfxThrottleState, moveFootstepFor, tryAcquireMoveSfx } from '../shared/MoveFeedback';
 import {
   BATTLE_FLOW_FX,
   playBattleFlowEffectAtBoardCenter,
@@ -209,6 +210,11 @@ export class BattleUIBridge {
   private onBoardPlacement: ((screenX: number, screenY: number) => void) | null = null;
   /** 奧義漫畫分鏡 cut-in（Issue #2139）：一場戰鬥一個，「第二次施放走重播」以單場為界 */
   private readonly ultCutin = new UltCutinDirector();
+  /** PROG-2-9410：放招時畫面中央的招式名橫幅（排隊／合併見 SkillBannerQueue） */
+  private readonly skillBanner = new SkillNameBanner(() => {
+    const hud = this.ctx.hud?.node;
+    return hud?.isValid ? (hud.parent?.isValid ? hud.parent : hud) : null;
+  });
 
   /** 結算仍同步執行；只延後其視覺事件與戰後畫面，直到單挑演出結束。 */
   public async resolveDuelPresentation(challenger: Faction, accepted: boolean): Promise<string> {
@@ -299,6 +305,7 @@ export class BattleUIBridge {
     this.duelOutcomes = [];
     this.generalCaptures = [];
     this.ultCutin.resetBattle();
+    this.skillBanner.destroy();
     this.ultCutin.prefetch(this.ctx.pg?.id);
     this.ultCutin.prefetch(this.ctx.eg?.id);
     const svc = services();
@@ -737,26 +744,10 @@ export class BattleUIBridge {
       } else if (!data.isSwapPassenger) {
         this.appendLog(`${side}${unit.name} 前進到 ${battleCellLabel(data.lane, data.depth)}`);
         c.unitRenderer?.animateMove(unit, data.fromLane, data.fromDepth, data.forcedMoveReason);
-        this.playMoveFootsteps(unit.type);
       }
       if (unit.faction === Faction.Player) this._showTerrainFeedback(unit.id, data);
     }
     this.refreshBattleViews();
-  }
-
-  // PROG-2-9406：腳步聲節流狀態（多單位同時移動時合併，避免疊爆）
-  private readonly _moveSfxThrottle = createMoveSfxThrottleState();
-
-  /** 依兵種播小聲多拍腳步；第一拍立即，其餘用 setTimeout 排拍，每拍都過節流。 */
-  private playMoveFootsteps(troopType: string): void {
-    const spec = moveFootstepFor(troopType);
-    for (let i = 0; i < spec.beats; i++) {
-      const playBeat = (): void => {
-        if (tryAcquireMoveSfx(this._moveSfxThrottle, Date.now())) playBattleAudio(spec.cue, spec.volume);
-      };
-      if (i === 0) playBeat();
-      else setTimeout(playBeat, i * spec.intervalMs);
-    }
   }
 
   /** 我方部隊踏上主將適性 S、A 或 D 的地形時飄字（戰場適性 §E-10，PROG-2-1850） */
@@ -882,7 +873,31 @@ export class BattleUIBridge {
         return;
       }
     }
-    this._presentGeneralSkillUsed(data);
+    this._castGeneralSkill(data);
+  }
+
+  /**
+   * PROG-2-9410：沒有漫畫分鏡的放招（戰法、沒有分鏡圖的奧義）先蓄力 0.4 秒再出招。
+   * 事件到這裡時，同一次施放的命中與傷害演出已經在戰鬥動畫佇列裡了，所以蓄力也插到佇列最前面，
+   * 命中與跳字才會等出招特效之後才播（和奧義分鏡同一個做法）。招式名橫幅在蓄力開始時出現。
+   * SSR／UR 戰法已有立繪閃現帶招式名，不再疊橫幅。
+   */
+  private _castGeneralSkill(data: { faction: Faction; skillId?: string; skillName?: string; sourceType?: SkillSourceType; generalName?: string }): void {
+    const skillId = data.skillId ?? data.skillName ?? null;
+    if (!skillId) { this._presentGeneralSkillUsed(data); return; }
+    const side = data.faction === Faction.Player ? 'player' : 'enemy';
+    const plan = planSkillCast({ ultCutin: false, tacticFlash: !!tacticFlashOf(skillId, side) });
+    const caster = data.faction === Faction.Player ? this.ctx.pg : this.ctx.eg;
+    this._enqueueCombatVisual(`skill-cast:${skillId}`, async () => {
+      if (plan.banner) {
+        this.skillBanner.push({ side, caster: data.generalName ?? caster?.name ?? '', names: [getBattleSkillPresentation(skillId).name] });
+      }
+      if (plan.chargeSec > 0) {
+        this.ctx.unitRenderer?.playGeneralCharge(data.faction, plan.chargeSec);
+        await new Promise<void>(resolve => this.scene.scheduleOnce(() => resolve(), plan.chargeSec));
+      }
+      this._presentGeneralSkillUsed(data);
+    }, true);
   }
 
   private _presentGeneralSkillUsed(data: { faction: Faction; skillId?: string; skillName?: string; sourceType?: SkillSourceType; generalName?: string }): void {

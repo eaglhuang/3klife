@@ -1,4 +1,5 @@
 import { ActionClip, UnitAction, UnitPresentationConfig } from './UnitPresentationCore';
+import { MOVE_GAIT_TUNING } from './MoveFeedback';
 
 /** 資源存於私有素材包；遊戲端只保存載入路徑與共用動畫映射。 */
 export interface UnitSpineConfig extends UnitPresentationConfig {
@@ -12,6 +13,10 @@ export interface UnitSpineConfig extends UnitPresentationConfig {
    * 不設就是單人。隊員共用帶頭者的骨架與圖集。
    */
   squad?: ReadonlyArray<{ x: number; y: number; phase: number }>;
+  /** 兩次落腳間隔（動畫秒），揚塵與腳步／蹄聲依此同拍；不設 = 小兵 walk 一步 0.4 秒。 */
+  footfallIntervalSec?: number;
+  /** 整隊走路起伏（畫面像素）；不設 = MOVE_GAIT_TUNING.bobPx。骨架自己有起伏的（騎兵的馬）設 0。 */
+  bobPx?: number;
 }
 /** 小兵一隊最多 3 人：帶頭者在前，兩名隊員在後方上下錯開。站位以 0.18 顯示縮放（人寬約 58 像素）、格寬約 144 像素抓：要看得出是三個人，又不能站出自己的格子。 */
 export const SOLDIER_SQUAD_SLOTS: ReadonlyArray<{ x: number; y: number; phase: number }> = [
@@ -23,11 +28,19 @@ export function squadMemberCount(currentHp: number, maxHp: number, squadSize = S
   if (!(maxHp > 0) || !(currentHp > 0)) return 1;
   return Math.max(1, Math.min(squadSize, Math.ceil(currentHp / maxHp * squadSize)));
 }
-const clip = (name: string, duration: number, loop = false): ActionClip => ({ name, duration, loop });
+const clip = (name: string, duration: number, loop = false, fallback?: string): ActionClip => ({ name, duration, loop, ...(fallback ? { fallback } : {}) });
+/**
+ * 步態倍率上限（PROG-2-9407）。倍率 1 時 walk 一個週期 0.8 秒、左右腳各一步；
+ * 1.6 倍時約每 0.25 秒落一腳，是肉眼還讀得出「走路」的上限，再快就像快轉。
+ * 位移時間（BattlePresentationTiming）固定為 2 秒起跳、總長不能超過 2.5 秒（movementIdleMaxWaitMs），
+ * 所以多格合併時不靠加快步伐追位移：步頻封頂，位移照時間走完。
+ */
+export const MAX_WALK_ANIMATION_SPEED = MOVE_GAIT_TUNING.maxAnimationSpeed;
 function clips(tier: 'general' | 'soldier', attackDuration: number): Record<UnitAction, ActionClip> {
   return {
     idle: clip('idle', tier === 'general' ? 2 : 1.6, true),
-    move: clip('dash_in', tier === 'general' ? 1.2 : 0.8, true),
+    // 小兵前進播 walk（有高低起伏的行走），缺 walk 的骨架退回 dash_in；武將骨架目前只有 dash_in，維持原狀
+    move: tier === 'general' ? clip('dash_in', 1.2, true) : clip('walk', 0.8, true, 'dash_in'),
     retreat: clip('retreat', tier === 'general' ? 1.2 : 0.8, true),
     attack: clip('duel_attack', attackDuration), hit: clip('hit', 0.9),
     dodge: clip('dodge', 0.6), fall: clip('fall', 1.8),
@@ -47,7 +60,7 @@ export function generalSpineConfig(id: string, templateId?: string | null): Unit
   let config = generalCache.get(key);
   if (!config) {
     config = { path: `spine/generals/${key}/${art.name}`, displayScale: 0.22, labelToFoot: 230, footOffset: { x: art.footX, y: 0 },
-      walkGroundSpeed: 93.33, speedMultiplier: 2, mirrorSkin: 'hand_mirror', clips: clips('general', 1.6) };
+      walkGroundSpeed: 93.33, speedMultiplier: 2, maxAnimationSpeed: MAX_WALK_ANIMATION_SPEED, mirrorSkin: 'hand_mirror', clips: clips('general', 1.6) };
     generalCache.set(key, config);
   }
   return config;
@@ -64,8 +77,38 @@ const ELITE_ART: Record<string, { troop: string; art: string }> = {
   'tiger-tally-xian-zhen': { troop: 'infantry', art: 'elite_infantry' }, 'tiger-tally-infantry-wall': { troop: 'infantry', art: 'elite_infantry' },
   'tiger-tally-shield-line': { troop: 'shield', art: 'elite_shield' },
 };
-/** 兵種（TroopType 的字串值）選素材；騎兵、連弩手等尚無專屬素材者沿用槍兵／弓兵。 */
+/**
+ * 騎兵（PROG-2-9408）：spine-trial 的騎手＋馬合成骨架（soldier_cavalry_blue × horse_sheet），私有素材。
+ * - 前進播 gallop：實機量到騎兵一回合常跑 2 格以上、約 144 疊層單位/秒；gallop 地速 1251 × 0.1 = 125，倍率約 1.15 蹄不滑。
+ *   trot（地速 533 → 53）要 2.7 倍、被步態上限 2.2 卡住會滑步；walk 更慢。
+ * - 縮放 0.10：實機對照（11/19）0.12 時騎手頭比步兵大一圈；0.10 時騎手頭與步兵相同，馬身約 90 像素、比一格窄。
+ * - 隊形比步兵拉開：馬身寬，用步兵站位三匹馬會疊成一團。
+ * - gallop 週期 0.567 秒（橫向襲步：後遠→後近→前遠→前近→騰空），揚塵與蹄聲取每半週期一拍（每拍兩聲蹄響）；馬骨架本身有起伏，不再加整隊起伏。
+ * - 合成骨架沒有 dodge／fall／retreat：retreat 用 gallop、dodge／fall 用 hit 代替，待 spine-trial 補動作。
+ * - 只有藍色版：敵方騎兵沿用紅色槍兵，待換色版。
+ */
+const CAVALRY_GALLOP_PERIOD_SEC = 0.5667;
+const CAVALRY_NAME = 'soldier_cavalry_blue';
+const CAVALRY_SQUAD_SLOTS: ReadonlyArray<{ x: number; y: number; phase: number }> = [
+  { x: 30, y: 24, phase: 0.35 },
+  { x: 48, y: -22, phase: 0.7 },
+];
+function cavalrySpineConfig(): UnitSpineConfig {
+  const cached = soldierCache.get(CAVALRY_NAME);
+  if (cached) return cached;
+  const config: UnitSpineConfig = { path: `spine/soldiers/${CAVALRY_NAME}/${CAVALRY_NAME}`, displayScale: 0.1, labelToFoot: 150, footOffset: { x: 0, y: 0 },
+    walkGroundSpeed: 1251.14, speedMultiplier: 2, maxAnimationSpeed: MAX_WALK_ANIMATION_SPEED, mirrorSkin: 'hand_mirror', squad: CAVALRY_SQUAD_SLOTS,
+    footfallIntervalSec: CAVALRY_GALLOP_PERIOD_SEC / 2, bobPx: 0,
+    clips: {
+      idle: clip('idle', 1.6, true), move: clip('gallop', CAVALRY_GALLOP_PERIOD_SEC, true, 'trot'), retreat: clip('gallop', CAVALRY_GALLOP_PERIOD_SEC, true, 'trot'),
+      attack: clip('thrust', 1), hit: clip('hit', 0.8), dodge: clip('hit', 0.8), fall: clip('hit', 0.8),
+    } };
+  soldierCache.set(CAVALRY_NAME, config);
+  return config;
+}
+/** 兵種（TroopType 的字串值）選素材；連弩手等尚無專屬素材者沿用槍兵／弓兵；騎兵目前只有我方藍色版。 */
 export function troopSpineConfig(troop: string, isEnemy = false, tallyTemplateId?: string | null): UnitSpineConfig {
+  if (troop === 'cavalry' && !isEnemy) return cavalrySpineConfig();
   const elite = tallyTemplateId ? ELITE_ART[tallyTemplateId] : undefined;
   const key = elite && elite.troop === troop ? elite.art : SOLDIER_ART[troop] ? troop : 'pikeman';
   const art = SOLDIER_ART[key];
@@ -73,7 +116,9 @@ export function troopSpineConfig(troop: string, isEnemy = false, tallyTemplateId
   const cached = soldierCache.get(name);
   if (cached) return cached;
   const config: UnitSpineConfig = { path: `spine/soldiers/${name}/${name}`, displayScale: 0.18, labelToFoot: 110, footOffset: { x: 4, y: 0 },
-    walkGroundSpeed: 100, speedMultiplier: 2, mirrorSkin: art.bow ? undefined : 'hand_mirror', squad: SOLDIER_SQUAD_SLOTS,
+    // walkGroundSpeed 由 walk 骨架估算：踩地腳 foot_f 在 0～0.4 秒、foot_n 在 0.4～0.8 秒各向後掃 40 骨架單位，
+    // 身體每步前進 40 單位 / 0.4 秒 = 100 單位/秒，與原值相同，不需調整。
+    walkGroundSpeed: 100, speedMultiplier: 2, maxAnimationSpeed: MAX_WALK_ANIMATION_SPEED, mirrorSkin: art.bow ? undefined : 'hand_mirror', squad: SOLDIER_SQUAD_SLOTS,
     clips: clips('soldier', art.attack) };
   soldierCache.set(name, config);
   return config;

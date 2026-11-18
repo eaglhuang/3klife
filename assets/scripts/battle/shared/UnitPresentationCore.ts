@@ -1,13 +1,26 @@
 /** 戰場單位演出核心；座標為場景腳底點，與引擎及角色種類無關。 */
 export type UnitAction = 'idle' | 'move' | 'attack' | 'hit' | 'dodge' | 'fall' | 'retreat';
 export interface FootPoint { x: number; y: number }
-export interface ActionClip { name: string; loop: boolean; duration: number }
+export interface ActionClip {
+  name: string; loop: boolean; duration: number;
+  /** 骨架沒有 name 這個動作時改播的後備動作（PROG-2-9407：小兵走路缺 walk 時退回 dash_in）。 */
+  fallback?: string;
+}
+/** 依骨架實際有的動作決定要播哪個；主動作與後備都沒有時回傳主動作名（由呼叫端記錄缺動作）。 */
+export function resolveClipName(clip: ActionClip, has: (name: string) => boolean): string {
+  return !has(clip.name) && clip.fallback && has(clip.fallback) ? clip.fallback : clip.name;
+}
 export interface UnitPresentationConfig {
   clips: Record<UnitAction, ActionClip>;
   /** 與 spine-trial 的 walk_ground_speed 同單位。 */
   walkGroundSpeed: number;
   displayScale: number;
   speedMultiplier: number;
+  /**
+   * follow() 依實際位移算出的步態倍率上限（PROG-2-9407）。不設就不限。
+   * 位移時間固定、距離又長時，倍率會高到像快轉，腳步反而看起來在滑；封頂後寧可腳步略慢於位移，也不讓步頻失真。
+   */
+  maxAnimationSpeed?: number;
 }
 export interface UnitPresentationState {
   foot: FootPoint;
@@ -61,7 +74,8 @@ export class UnitPresentationCore {
     if (moving && dt > 0 && Math.hypot(dx, dy) > 0.001) {
       if (this.action !== 'move') { this.action = 'move'; this.revision++; }
       if (dx !== 0) this.facing = dx < 0 ? -1 : 1;
-      this.animationSpeed = Math.hypot(dx, dy) / dt / (this.config.walkGroundSpeed * this.config.displayScale);
+      const speed = Math.hypot(dx, dy) / dt / (this.config.walkGroundSpeed * this.config.displayScale);
+      this.animationSpeed = Math.min(speed, this.config.maxAnimationSpeed ?? Infinity);
       this.target = null;
       this.facingAfterRetreat = null;
     } else if (!moving && this.action === 'move') {
