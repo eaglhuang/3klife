@@ -116,7 +116,9 @@ function main() {
     const crop = { x: centerX - side / 2, y: head.y - side * 0.08, width: side, height: side };
     const faceCenterX = (centerX - crop.x) / side, headRatio = head.height / side;
     const headContained = head.x >= crop.x && head.x + head.width <= crop.x + side && head.y >= crop.y && head.y + head.height <= crop.y + side;
+    const headWithinSource = head.x >= 0 && head.y >= 2 && head.x + head.width <= src.width && head.y + head.height <= src.height;
     const faceContained = face.x >= crop.x && face.x + face.width <= crop.x + side && face.y >= crop.y && face.y + face.height <= crop.y + side;
+    const faceWithinSource = face.x >= 0 && face.y >= 0 && face.x + face.width <= src.width && face.y + face.height <= src.height;
     const shoulderContained = shoulders.map(p => p.x >= crop.x && p.x <= crop.x + side && p.y >= crop.y && p.y <= crop.y + side);
     const shoulderOnArtwork = shoulders.map(p => foregroundNear(src, p));
     const passesHeadRatio = headRatio >= 0.75 && headRatio <= 0.88;
@@ -128,9 +130,11 @@ function main() {
       const sy = crop.y + (y + 0.5) * side / out.height - 0.5;
       putPixel(out.data, out.width, x, y, sampleBilinear(src, sx, sy));
     }
+    const result = { input: path.resolve(a.input), output: path.resolve(a.out), source: `${src.width}x${src.height}`, outputSize: `${outputSize}x${outputSize}`, cropPixels: { x: +crop.x.toFixed(2), y: +crop.y.toFixed(2), side: +side.toFixed(2) }, headHeightRatio: +(headRatio * 100).toFixed(1), targetHeadHeightRatio: +(target * 100).toFixed(1), passesHeadRatio, headContained, headWithinSource, faceCenterX: +(faceCenterX * 100).toFixed(1), passesFaceCenter, faceContained, faceWithinSource, shoulders: { contourPoints: shoulders, contained: shoulderContained, onVisiblePixelsWithin5px: shoulderOnArtwork, passesShoulders }, passesAllHardChecks: passesHeadRatio && headContained && headWithinSource && faceContained && faceWithinSource && passesFaceCenter && passesShoulders, note: '頭部框需完整落在來源圖內並與頂邊至少保留2px；最後仍須目視確認頭飾完整、兩側肩膀形狀可辨。工具只裁切／等比縮放，不會修正原圖五官。' };
+    console.log(JSON.stringify(result, null, 2));
+    if (!result.passesAllHardChecks) { process.exitCode = 3; return; }
     fs.mkdirSync(path.dirname(path.resolve(a.out)), { recursive: true });
     fs.writeFileSync(a.out, PNG.sync.write(out));
-    console.log(JSON.stringify({ input: path.resolve(a.input), output: path.resolve(a.out), source: `${src.width}x${src.height}`, outputSize: `${outputSize}x${outputSize}`, cropPixels: { x: +crop.x.toFixed(2), y: +crop.y.toFixed(2), side: +side.toFixed(2) }, headHeightRatio: +(headRatio * 100).toFixed(1), targetHeadHeightRatio: +(target * 100).toFixed(1), passesHeadRatio, headContained, faceCenterX: +(faceCenterX * 100).toFixed(1), passesFaceCenter, faceContained, shoulders: { contourPoints: shoulders, contained: shoulderContained, onVisiblePixelsWithin5px: shoulderOnArtwork, passesShoulders }, passesAllHardChecks: passesHeadRatio && headContained && faceContained && passesFaceCenter && passesShoulders, note: '最後仍須目視確認頭飾完整、兩側肩膀形狀可辨；肩部標記需落在原圖可見人物像素附近。工具只裁切／等比縮放，不會修正原圖五官。' }, null, 2));
     return;
   }
   usage(); process.exitCode = 2;
