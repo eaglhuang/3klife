@@ -90,14 +90,28 @@ export const FLOAT_TEXT_STYLES: Readonly<Record<FloatTextType, FloatTextStyle>> 
 /** 閃避飄字文案。miss 的 BMFont 只有小寫 i/m/s 三個字，裝不下中文，所以閃避改走系統字型（見 BattleSceneLoader）。 */
 export const FLOAT_MISS_TEXT = '閃避';
 
-/** 同一錨點（單位）在這個視窗內連續跳字視為「連續」，要錯開位置。 */
+/** 同一錨點（單位）在這個視窗內連續跳字視為「連續」，要錯開位置（舊式後備：未提供存活時間時使用）。 */
 export const FLOAT_STAGGER_WINDOW_MS = 450;
-/** 錯開位移循環長度：超過就回到第一格，避免一路往上堆到畫面外。 */
+/**
+ * PROG-2-9402：前一個字存活時間的這個比例內，視為「仍佔位」，新字必須錯開。
+ * 原本只看固定 450 毫秒，爆擊字存在 1100 毫秒，晚 450 毫秒以上的閃避字就疊在大字上。
+ * 70% 之後字已在淡出（後半段淡出），可以回到原位。
+ */
+export const FLOAT_STAGGER_OCCUPY_RATIO = 0.7;
+/** 錯開位移循環長度：超過就回到第一格，避免一路往下堆到畫面外。 */
 const FLOAT_STAGGER_CYCLE = 5;
 /** 第 N 個連續飄字的水平位移（像素）：中、右、左、小右、小左，左右交錯不重疊。 */
 const FLOAT_STAGGER_X: ReadonlyArray<number> = [0, 26, -26, 13, -13];
-/** 每多一個連續飄字往上抬的像素。 */
+/** 每多一個連續飄字的最小垂直間距（像素，新字往下）。 */
 const FLOAT_STAGGER_STEP_Y = 30;
+/**
+ * PROG-2-9402：相鄰兩字的垂直間距 = 兩字「有效高度」平均 * 此係數，並不小於 FLOAT_STAGGER_STEP_Y。
+ * 有效高度 = fontSize * (1 + (peakScale - 1) / 2)；峰值放大只持續約 0.25 秒就回彈到 1，
+ * 所以取峰值與 1 倍的中間值。爆擊(78px, 峰值 2 倍)有效高度 117，接閃避(40px)間距約 47 像素。
+ */
+const FLOAT_STAGGER_GAP_RATIO = 0.6;
+/** 垂直位移上限（像素，往下為負，絕對值不超過此值）：與舊版 4 格 * 30 相同，再大就會飄出單位頭頂太遠。 */
+const FLOAT_STAGGER_MAX_Y = 160;
 
 /**
  * 第 index 個（0 起算）連續飄字的位移。index 0 = 不位移。純函式。
@@ -107,28 +121,55 @@ export function floatStaggerOffset(index: number): { x: number; y: number } {
     return { x: FLOAT_STAGGER_X[slot], y: slot * FLOAT_STAGGER_STEP_Y };
 }
 
+/** 飄字的有效高度（像素），用來估算與相鄰字的垂直間距。純函式。 */
+export function floatEffectiveHeight(style: Pick<FloatTextStyle, 'fontSize' | 'peakScale'>): number {
+    return style.fontSize * (1 + (Math.max(1, style.peakScale) - 1) / 2);
+}
+
 /**
- * 記錄各錨點（通常是單位 id）最近一次跳字時間，回報「這是視窗內第幾個」。
- * 只存一個時間與計數，不配置節點；過期的鍵會在數量偏多時順便清掉。
+ * 記錄各錨點（通常是單位 id）目前被哪些飄字佔位，回報「這個字要放第幾格、位移多少」。
+ * PROG-2-9402：佔位時間依「前一個字的存活時間」判斷，而不是固定視窗。
+ * 只存少量數字，不配置節點；過期的鍵會在數量偏多時順便清掉。
  */
 export class FloatStaggerTracker {
-    private readonly records = new Map<string, { lastMs: number; count: number }>();
+    private readonly records = new Map<string, { busyUntilMs: number; count: number; lastY: number; lastHeight: number }>();
 
+    /** @param windowMs 未提供 lifeMs 時的佔位時間（毫秒）。 */
     constructor(private readonly windowMs = FLOAT_STAGGER_WINDOW_MS) {}
 
-    /** 回傳這次飄字的連續序號（0 = 視窗內第一個）。 */
-    next(key: string, nowMs: number): number {
+    /**
+     * 安排一個新飄字。
+     * @param lifeMs   這個字的存活時間（毫秒）；省略則用 windowMs
+     * @param heightPx 這個字的有效高度（見 floatEffectiveHeight）；省略則只用最小間距
+     */
+    place(key: string, nowMs: number, lifeMs?: number, heightPx = 0): { index: number; x: number; y: number } {
         const rec = this.records.get(key);
-        let index = 0;
-        if (rec && nowMs - rec.lastMs <= this.windowMs) index = rec.count;
-        this.records.set(key, { lastMs: nowMs, count: index + 1 });
+        const occupied = !!rec && nowMs <= rec.busyUntilMs;
+        // 循環上限：滿 FLOAT_STAGGER_CYCLE 格就回到第一格，不會一路堆出畫面
+        const index = occupied ? rec!.count % FLOAT_STAGGER_CYCLE : 0;
+        let y = 0;
+        if (occupied && index > 0) {
+            // PROG-2-9402：往「下」錯開（y 為負）。舊字會繼續往上飄，兩者只會越離越遠；
+            // 若往上錯開，新字剛好落在舊字已飄高的位置而疊字。間距依兩字大小決定，大字（爆擊）後面的字壓得更低
+            const gap = Math.max(FLOAT_STAGGER_STEP_Y, (rec!.lastHeight + heightPx) / 2 * FLOAT_STAGGER_GAP_RATIO);
+            y = Math.max(rec!.lastY - gap, -FLOAT_STAGGER_MAX_Y);
+        }
+        const holdMs = (lifeMs ?? this.windowMs / FLOAT_STAGGER_OCCUPY_RATIO) * FLOAT_STAGGER_OCCUPY_RATIO;
+        // 佔位到所有仍在畫面上的字都淡出為止
+        const busyUntilMs = Math.max(nowMs + holdMs, occupied ? rec!.busyUntilMs : 0);
+        this.records.set(key, { busyUntilMs, count: (occupied ? rec!.count : 0) + 1, lastY: y, lastHeight: heightPx });
         if (this.records.size > 64) this.prune(nowMs);
-        return index;
+        return { index, x: FLOAT_STAGGER_X[index], y };
+    }
+
+    /** 回傳這次飄字的連續序號（0 = 第一格）。相容舊介面。 */
+    next(key: string, nowMs: number, lifeMs?: number): number {
+        return this.place(key, nowMs, lifeMs).index;
     }
 
     private prune(nowMs: number): void {
         for (const [key, rec] of this.records) {
-            if (nowMs - rec.lastMs > this.windowMs) this.records.delete(key);
+            if (nowMs > rec.busyUntilMs) this.records.delete(key);
         }
     }
 }
