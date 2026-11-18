@@ -37,6 +37,7 @@
  *   --browser   Chrome 路徑（也可用環境變數 CHROME_PATH）
  *   --stuck     單步卡住上限毫秒數（預設 120000）
  *   --mind      選用：換季後點大廳小人讀泡泡台詞（武將心智，PROG-2-9146）
+ *   --rank-unlock  選用：官職晉升解鎖節奏（PROG-2-9151）：鎖頭按鈕、點鎖頭提示、晉升彈窗與晉升後解鎖
  *   --year      選用：原步驟後接一年循環（每季內政／任務牆／戰鬥／抽卡／培育／推進一季），輸出 year-report.json（PROG-2-9141）
  *   --battles-per-season  --year 時每季出征場數（預設 2）
  *
@@ -1255,6 +1256,64 @@ async function main() {
             if (problems.length) throw new Error(problems.join('；'));
             return rec.detail;
         }, { skipIfFailed: true });
+
+        // ── 官職晉升解鎖節奏（PROG-2-9151，--rank-unlock）：新玩家大廳的鎖頭按鈕、點鎖頭的提示、晉升彈窗 ──
+        if (args['rank-unlock']) {
+            await step('rank-unlock', async (rec) => {
+                await requireLobby();
+                await backToLobbyBar();
+                await closeMissionLayers();
+                await waitToastGone();
+                rec.detail.menus = {};
+                for (const cat of ['BtnCatDomestic', 'BtnCatNurture', 'BtnCatSortie']) {
+                    if (!(await clickButton('^' + cat + '$'))) throw new Error(`找不到底欄 ${cat}`);
+                    await delay(1200);
+                    rec.detail.menus[cat] = (await page.evaluate(() => window.__pt.buttonTexts('^BtnSub'))).map((b) => b.text);
+                    await shot(rec, `rank-unlock-menu-${cat}`);
+                }
+                // 點鎖頭：提示出現、選單不收起、功能沒有被打開
+                if (!(await clickButton('^BtnCatDomestic$'))) throw new Error('找不到底欄「內政」');
+                await delay(800);
+                const before = new Set(await rm.allTexts());
+                const clicked = await clickByText('^BtnSub', '招賢館');
+                if (!clicked) throw new Error('找不到鎖著的「招賢館」子選單按鈕');
+                await delay(900);
+                rec.detail.lockToastTexts = (await rm.allTexts()).filter((t) => !before.has(t) && /開放/.test(t));
+                rec.detail.menuStillOpen = Boolean(await page.evaluate(() => window.__pt.buttonTexts('^BtnSub')).then((b) => b.length));
+                await shot(rec, 'rank-unlock-locked-click-toast');
+                if (!rec.detail.lockToastTexts.length) throw new Error('點鎖著的按鈕沒有出現「X 官職開放」提示');
+                await waitToastGone();
+                await backToLobbyBar();
+                // 晉升：直接給官職經驗並發出晉升事件，驗晉升彈窗內容與官職更新後解鎖
+                const promoted = await page.evaluate(async () => {
+                    const loader = await window.System.import('chunks:///_virtual/ServiceLoader.ts');
+                    const session = loader.services().session;
+                    const tiers = session.gainOfficerExp({ difficulty: 'HELL', boardType: 'MILITARY', success: true })
+                        .concat(session.gainOfficerExp({ difficulty: 'HELL', boardType: 'MILITARY', success: true }));
+                    loader.services().event.emit('game-session-officer-promoted', { tiers });
+                    return { tiers, tier: session.officerState.currentTier };
+                });
+                rec.detail.promoted = promoted;
+                if (!promoted.tiers.length) throw new Error('給官職經驗後沒有晉升');
+                const popup = await waitUntil(async () => {
+                    const texts = await rm.allTexts();
+                    return texts.some((t) => /^晉升「/.test(t)) ? texts.filter((t) => /^晉升「|新開放|：|下一官職/.test(t)) : null;
+                }, 20000, '晉升後 20 秒內沒有出現晉升彈窗').catch((e) => { throw e; });
+                rec.detail.popupTexts = popup;
+                await delay(600);
+                await shot(rec, 'rank-unlock-promotion-popup');
+                const ok = await clickByText('^BtnRankUnlockOk$', '.*') || await clickButton('^BtnRankUnlockOk$');
+                rec.detail.popupClosed = Boolean(ok);
+                await delay(800);
+                // 晉升後原本鎖著的按鈕解鎖
+                if (!(await clickButton('^BtnCatDomestic$'))) throw new Error('晉升後找不到底欄「內政」');
+                await delay(1200);
+                rec.detail.menuAfterPromotion = (await page.evaluate(() => window.__pt.buttonTexts('^BtnSub'))).map((b) => b.text);
+                await shot(rec, 'rank-unlock-menu-after-promotion');
+                await backToLobbyBar();
+                return rec.detail;
+            }, { skipIfFailed: true });
+        }
 
         // ── 9. 一年循環（--year，選用）：從目前季節起每季內政＋任務牆派將＋出征戰鬥＋抽卡／培育＋推進一季，直到第 1 年第 4 季結束（PROG-2-9141）──
         if (args.year) {
