@@ -186,7 +186,7 @@ import { buildPoolDetailRows, checkGachaAffordable, planGachaButton, syncMainPoo
 import { bindGachaPoolDetail, setGachaTexts, textLabelOf, updateGachaWalletStrip, raiseGachaWalletStrip } from '../core/GachaScreenExtras';
 import { GachaPoolSwitcher } from '../core/GachaPoolSwitcher';
 import { PORTRAIT_GALLERY_PAGE_SIZE } from '../core/PortraitGallery';
-import { FaceMarks, PORTRAIT_FRAME_SPEC, PortraitFrameSpec, SHOWCASE_PORTRAIT_SPEC, fitPortraitInFrame } from '../core/PortraitFrameFit';
+import { FaceMarks, PORTRAIT_FRAME_SPEC, PortraitFrameSpec, SHOWCASE_PORTRAIT_SPEC, buildPortraitHeadReference, fitPortraitByHead, fitPortraitInFrame } from '../core/PortraitFrameFit';
 import { LobbyOpeningPanels } from '../core/LobbyOpeningPanels';
 import { INTRO_TICK_SEC, OpeningIntroController } from '../core/OpeningIntroController';
 import { InitialShowcaseController } from '../core/InitialShowcaseController';
@@ -4320,7 +4320,7 @@ ${spent}`,
             }
             void (async () => {
                 const id = key.replace(/_portrait$/, '').replace(/_/g, '-');
-                const [portrait, marks] = await Promise.all([loadGeneralPortrait(key), this._loadFaceMarks()]);
+                const [portrait, marks, bounds] = await Promise.all([loadGeneralPortrait(key), this._loadFaceMarks(), this._loadPortraitBounds()]);
                 const frame = portrait ?? await loadGeneralAvatar(key);
                 if (seq !== this._avatarSeq.get(prefix) || !sprite.isValid) return;
                 // 真的沒有任何圖：才露出版面預設的剪影
@@ -4330,8 +4330,11 @@ ${spent}`,
                 sprite.spriteFrame = frame;
                 const size = frame.originalSize;
                 // 沒立繪：剪影頭像放在頭部位置，不拉成全身比例
+                // 優先用頭頂量測資料：每位頭頂同高、身高同比例（PROG-2-9156）；沒量測才退回臉部標記
+                const headRef = portrait ? buildPortraitHeadReference(bounds, spec) : null;
+                const headFit = headRef && bounds[id] ? fitPortraitByHead(bounds[id], headRef, spec) : null;
                 const place = portrait
-                    ? fitPortraitInFrame(size.width, size.height, marks[id], spec)
+                    ? headFit ?? fitPortraitInFrame(size.width, size.height, marks[id], spec)
                     : { width: 200, height: 200, x: 0, y: spec.frameHeight / 2 - 40 - 100 };
                 sprite.node.getComponent(UITransform)?.setContentSize(place.width, place.height);
                 sprite.node.setPosition(place.x, place.y);

@@ -78,3 +78,68 @@ export function fitPortraitInFrame(
         y: spec.frameHeight / 2 - spec.eyeFromTop - (imageHeight / 2 - marks.eyeY) * scale,
     };
 }
+
+/** 立繪量測（data/general-portrait-bounds.json，原圖像素、y 向下）；headTop／headCx 由 measure-gacha-portrait-bounds.js 產出 */
+export interface PortraitHeadBounds {
+    w: number;
+    h: number;
+    bottom: number;
+    headTop?: number;
+    headCx?: number;
+    top: number;
+    cx: number;
+}
+
+/**
+ * 頭頂齊平基準（PROG-2-9156）：以「標準人物」（曹操、劉備）在框內的頭頂位置與頭頂到腳底的身高當標準，
+ * 其他武將一律縮放到同樣身高、頭頂放在同一個 y。標準人物自己的擺位沿用 estimateFaceMarks（使用者認可的樣子）。
+ */
+export const PORTRAIT_REFERENCE_IDS: readonly string[] = ['cao-cao', 'liu-bei'];
+
+export interface PortraitHeadReference {
+    /** 頭頂距框頂的像素 */
+    headTopFromFrameTop: number;
+    /** 頭頂到腳底在框內的像素高 */
+    bodyHeight: number;
+}
+
+function headTopOf(b: Readonly<PortraitHeadBounds>): number {
+    return b.headTop ?? b.top;
+}
+
+/** 由標準人物算出基準；量測資料缺任何一位標準人物就回傳 null（呼叫端退回臉部標記擺位） */
+export function buildPortraitHeadReference(
+    bounds: Readonly<Record<string, PortraitHeadBounds>>,
+    spec: Readonly<PortraitFrameSpec> = PORTRAIT_FRAME_SPEC,
+): PortraitHeadReference | null {
+    let top = 0;
+    let body = 0;
+    for (const id of PORTRAIT_REFERENCE_IDS) {
+        const b = bounds[id];
+        if (!b || !(b.bottom > headTopOf(b))) return null;
+        const marks = estimateFaceMarks(b.w, b.h);
+        const scale = spec.faceHeight / (marks.chin - marks.top);
+        top += spec.eyeFromTop - (marks.eyeY - headTopOf(b)) * scale;
+        body += (b.bottom - headTopOf(b)) * scale;
+    }
+    const n = PORTRAIT_REFERENCE_IDS.length;
+    return { headTopFromFrameTop: top / n, bodyHeight: body / n };
+}
+
+/** 頭頂齊平擺位：身高統一、頭頂同高、頭中線對齊框中線；回傳格式同 fitPortraitInFrame */
+export function fitPortraitByHead(
+    b: Readonly<PortraitHeadBounds>,
+    ref: Readonly<PortraitHeadReference>,
+    spec: Readonly<PortraitFrameSpec> = PORTRAIT_FRAME_SPEC,
+): PortraitPlacement | null {
+    const headTop = headTopOf(b);
+    if (!(b.bottom > headTop) || !(b.w > 0) || !(b.h > 0)) return null;
+    const scale = ref.bodyHeight / (b.bottom - headTop);
+    const cx = b.headCx ?? b.cx;
+    return {
+        width: b.w * scale,
+        height: b.h * scale,
+        x: (b.w / 2 - cx) * scale,
+        y: spec.frameHeight / 2 - ref.headTopFromFrameTop + (headTop - b.h / 2) * scale,
+    };
+}

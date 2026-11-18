@@ -2,7 +2,7 @@
  * PortraitFrameFit.test.ts — 立繪依臉部標記擺進框（PROG-2-1126 規格；UI-2-0160 名將登場框）
  */
 import { assert, TestSuite } from './TestRunner';
-import { PORTRAIT_FRAME_SPEC, SHOWCASE_PORTRAIT_SPEC, fitPortraitInFrame } from '../assets/scripts/ui/core/PortraitFrameFit';
+import { PORTRAIT_FRAME_SPEC, SHOWCASE_PORTRAIT_SPEC, buildPortraitHeadReference, fitPortraitByHead, fitPortraitInFrame } from '../assets/scripts/ui/core/PortraitFrameFit';
 
 const FACE = { top: 100, chin: 200, eyeY: 150, cx: 400 };
 
@@ -18,6 +18,28 @@ export function createPortraitFrameFitSuite(): TestSuite {
         // 眼睛的框內座標（框中心為原點，y 向上）
         const eyeY = place.y + (1600 / 2 - FACE.eyeY) * scale;
         assert.equals(eyeY, spec.frameHeight / 2 - spec.eyeFromTop, '眼睛高度');
+    });
+
+    suite.test('頭頂齊平：不同大小、不同頭頂位置的立繪，頭頂同 y、身高同高、頭中線在框中線', () => {
+        const bounds = {
+            'cao-cao': { w: 1024, h: 1536, top: 9, bottom: 1517, cx: 513, headTop: 11, headCx: 518 },
+            'liu-bei': { w: 1024, h: 1536, top: 18, bottom: 1517, cx: 520, headTop: 21, headCx: 492 },
+        };
+        const ref = buildPortraitHeadReference(bounds)!;
+        const small = { w: 512, h: 768, top: 5, bottom: 700, cx: 240, headTop: 60, headCx: 200 };
+        const big = { w: 1024, h: 1536, top: 0, bottom: 1400, cx: 500, headTop: 250, headCx: 520 };
+        for (const b of [bounds['cao-cao'], small, big]) {
+            const p = fitPortraitByHead(b, ref)!;
+            const scale = p.height / b.h;
+            const headY = p.y + (b.h / 2 - b.headTop) * scale; // 框中心為原點、y 向上
+            assert.equals(Math.abs(headY - (PORTRAIT_FRAME_SPEC.frameHeight / 2 - ref.headTopFromFrameTop)) < 1e-6, true, '頭頂同高');
+            assert.equals(Math.abs((b.bottom - b.headTop) * scale - ref.bodyHeight) < 1e-6, true, '身高同高');
+            assert.equals(Math.abs(p.x + (b.headCx - b.w / 2) * scale) < 1e-6, true, '頭中線置中');
+        }
+    });
+
+    suite.test('缺標準人物量測時沒有基準（呼叫端退回臉部標記）', () => {
+        assert.equals(buildPortraitHeadReference({}), null, '無基準');
     });
 
     suite.test('名將登場框的臉比六框大，框也較寬', () => {
