@@ -830,8 +830,8 @@
         ]
       },
       "battle": {
-        "activeVersion": "0001",
-        "status": "asset-imported",
+        "activeVersion": "0003",
+        "status": "review-pending",
         "displayStatus": "not-yet-verified",
         "weaponClass": "long-polearm",
         "poseCode": "LH-035",
@@ -851,6 +851,19 @@
             "poseLabel": "雙手蓄勢橫擊",
             "sha256": "6042472505717aa2de73b99fdbba449b9897ecbedbe974061c2640499382e167",
             "canvas": "1024x1536 RGBA"
+          },
+          {
+            "version": "0003",
+            "file": "battle/guan_yin_ping__關銀屏__battle_0003.png",
+            "status": "review-pending",
+            "sha256": "b83b27614cb801187a9e6a96005e92c2646e81865a568709402123de33a06c63",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "long-polearm",
+            "poseCode": "LH-035",
+            "poseLabel": "雙手蓄勢橫擊",
+            "gaze": "toward camera",
+            "sourceStanding": "standing/guan_yin_ping__關銀屏__standing_0001.png",
+            "note": "依核定站姿重畫戰鬥候選；保留關銀屏綠銀甲、長辮綠寶石髮飾與同款月牙長柄武器。雙手分握、斜向蓄勢橫擊，正面目光。alpha>16 主體範圍 x=140–889、y=148–1452，透明背景；125px 縮圖檢查完整輪廓。候選待使用者審核，尚未接入遊戲。"
           }
         ]
       },
