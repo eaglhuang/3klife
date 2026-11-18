@@ -2177,6 +2177,32 @@
             "note": "以核定站姿延續藍鋼鎧甲與曹仁形象；盾牌格擋後以直劍反擊。候選待審。"
           }
         ]
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "asset-imported",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/cao_ren__曹仁__small_avatar_0001.png",
+            "status": "asset-imported",
+            "sha256": "f164d30303f35320d350a6ed68baf4424432a1f75e7f76abb55fc5125f589b35",
+            "canvas": "256x256 RGBA",
+            "cropBox": {
+              "x": 400,
+              "y": 0,
+              "width": 300,
+              "height": 270
+            },
+            "transparentPaddingBottom": 30,
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/cao_ren__曹仁__standing_0002.png",
+            "sourceSha256": "baa14320d39a93dca6f05b16a19b2300dd579d2dd8d576dac24df1c61912b98d",
+            "method": "crop-only; uniform resize; transparent padding; no redraw",
+            "qc": "125px preview: full helmet and face retained, face centered; upper shoulder armor visible without weapon or torso detail. Head-to-canvas estimate 77%.",
+            "createdAt": "2026-11-18"
+          }
+        ]
       }
     },
     {
