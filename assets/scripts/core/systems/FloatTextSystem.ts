@@ -1,7 +1,7 @@
 // @spec-source → 見 docs/cross-reference-index.md
 import { Camera, Color, Font, Label, Node, Tween, tween, UIOpacity, UITransform, Vec3 } from "cc";
 import {
-    FLOAT_MISS_TEXT, FLOAT_TEXT_STYLES, FloatStaggerTracker, floatStaggerOffset,
+    FLOAT_MISS_TEXT, FLOAT_TEXT_STYLES, FloatStaggerTracker, floatEffectiveHeight,
     type FloatTextStyle, type FloatTextType,
 } from "./FloatTextStyle";
 
@@ -124,7 +124,10 @@ export class FloatTextSystem {
         entry.node.layer = this.canvasNode.layer;
 
         // 錯開：同一錨點連續跳字依序往旁邊、往上排開；再加一點隨機，避免不同單位的字完全重疊
-        const stagger = anchorKey ? floatStaggerOffset(this.stagger.next(anchorKey, Date.now())) : { x: 0, y: 0 };
+        // PROG-2-9402：依前一個字的存活時間與大小錯開，爆擊大字還在畫面上時後面的字不會疊上去
+        const stagger = anchorKey
+            ? this.stagger.place(anchorKey, Date.now(), config.durationMs, floatEffectiveHeight(config))
+            : { x: 0, y: 0 };
         const offsetX = (Math.random() - 0.5) * 2 * config.randomOffsetX + stagger.x;
         const startX = uiPos.x + offsetX;
         const startY = uiPos.y + stagger.y;

@@ -14,7 +14,7 @@ import {
     BATTLE_VISUAL_TIMING, buildHitShakeSteps, hitFlashStrength, isHeavyHit, planHitFeedback, sampleHitShake,
 } from '../assets/scripts/battle/views/BattlePresentationTiming';
 import {
-    FLOAT_MISS_TEXT, FLOAT_STAGGER_WINDOW_MS, FLOAT_TEXT_STYLES, FloatStaggerTracker, floatStaggerOffset,
+    FLOAT_MISS_TEXT, FLOAT_STAGGER_WINDOW_MS, FLOAT_TEXT_STYLES, FloatStaggerTracker, floatEffectiveHeight, floatStaggerOffset,
     type FloatRgba, type FloatTextType,
 } from '../assets/scripts/core/systems/FloatTextStyle';
 
@@ -137,6 +137,42 @@ export function createBattleHitFeedbackSuite(): TestSuite {
         assert.equals(2, tracker.next('u1', 1100 + FLOAT_STAGGER_WINDOW_MS));
         assert.equals(0, tracker.next('u2', 1200), '另一單位從頭算');
         assert.equals(0, tracker.next('u1', 1100 + FLOAT_STAGGER_WINDOW_MS + FLOAT_STAGGER_WINDOW_MS + 1), '超過視窗重新計');
+    });
+
+    suite.test('PROG-2-9402 爆擊後 600 毫秒出閃避要錯開，且往下（y 為負）、間距比一般大', () => {
+        const crit = FLOAT_TEXT_STYLES.dmg_crit;
+        const miss = FLOAT_TEXT_STYLES.dmg_miss;
+        const tracker = new FloatStaggerTracker();
+        const a = tracker.place('g:1', 1000, crit.durationMs, floatEffectiveHeight(crit));
+        assert.equals(0, a.index);
+        const b = tracker.place('g:1', 1600, miss.durationMs, floatEffectiveHeight(miss));
+        assert.equals(1, b.index, '爆擊還在畫面上（1100 毫秒 * 70% = 770）要錯開');
+        assert.isTrue(b.y < -30 && b.x !== a.x, `y=${b.y} 要往下且超過最小間距 30`);
+        // 舊字 600 毫秒已往上飄約 60 像素，新字在下方，兩者距離只會變大
+        assert.isTrue(b.y < 0, '爆擊 600 毫秒後的閃避 y 偏移為負');
+    });
+
+    suite.test('PROG-2-9402 前一個字佔位時間過了才回第一格', () => {
+        const crit = FLOAT_TEXT_STYLES.dmg_crit;
+        const tracker = new FloatStaggerTracker();
+        tracker.place('g:1', 1000, crit.durationMs, floatEffectiveHeight(crit));
+        const late = tracker.place('g:1', 1000 + crit.durationMs * 0.7 + 1, FLOAT_TEXT_STYLES.dmg_miss.durationMs, 40);
+        assert.equals(0, late.index);
+        same({ x: 0, y: 0 }, { x: late.x, y: late.y });
+    });
+
+    suite.test('PROG-2-9402 連續長壽命字滿五格回第一格，垂直位移不超過上限', () => {
+        const crit = FLOAT_TEXT_STYLES.dmg_crit;
+        const tracker = new FloatStaggerTracker();
+        const idx: number[] = [];
+        let maxY = 0, minY = 0;
+        for (let i = 0; i < 12; i++) {
+            const p = tracker.place('g:1', 1000 + i * 50, crit.durationMs, floatEffectiveHeight(crit));
+            idx.push(p.index);
+            maxY = Math.max(maxY, p.y); minY = Math.min(minY, p.y);
+        }
+        same([0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1], idx);
+        assert.isTrue(minY >= -160 && maxY <= 0, `minY=${minY} maxY=${maxY}`);
     });
 
     suite.test('錯開追蹤：大量過期單位會被清理，不無限成長', () => {
