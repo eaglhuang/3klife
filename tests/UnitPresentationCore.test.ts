@@ -95,7 +95,7 @@ assert.equal(generalSpineConfig('zhao-yun')?.clips.move.name, 'dash_in');
 assert.equal(resolveClipName(soldierSpineConfig(false).clips.move, name => name === 'walk' || name === 'dash_in'), 'walk');
 assert.equal(resolveClipName(soldierSpineConfig(false).clips.move, name => name === 'dash_in'), 'dash_in');
 assert.equal(resolveClipName(soldierSpineConfig(false).clips.move, () => false), 'walk');
-// 步態倍率封頂：一格 144 像素在 2 秒內走完，倍率原本高達 4，封頂後不超過 1.6
+// 步態倍率封頂：一格 144 像素在 2 秒內走完，倍率原本高達 4，封頂後不超過 MOVE_GAIT_TUNING.maxAnimationSpeed（2.2）
 const soldierCore = new UnitPresentationCore(soldierSpineConfig(false), { x: 0, y: 0 });
 soldierCore.follow({ x: 72, y: 0 }, true, 1);
 assert.equal(soldierCore.snapshot().animationSpeed, MAX_WALK_ANIMATION_SPEED);

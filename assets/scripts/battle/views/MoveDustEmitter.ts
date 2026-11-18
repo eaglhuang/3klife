@@ -6,12 +6,11 @@ import { Color, Layers, Node, Sprite, SpriteFrame, Texture2D, UITransform } from
 import { DUST_START_ALPHA, MoveDustSpec, dustCountFor, rollDustParticle } from '../shared/MoveFeedback';
 
 /**
- * 粒子池上限。估法：每次落腳最壞帶頭者 7 顆（步兵；騎兵 10、沙漠騎兵 13）＋兩名隊員各 4 顆（沙漠騎兵各 7），
- * 一般約 5.5＋3＋3 ≈ 11.5 顆；步態倍率封頂 1.6 時每 0.25 秒落一腳、塵粒壽命最長 0.8 秒，同時存活約 3 次落腳，
- * 單隊約 30 顆，4 隊同時走路 120 顆。再多的就略過（缺幾顆塵看不出來，節點不再增加）。
+ * 粒子池上限。估法：每次落腳帶頭者 4～7 顆（騎兵 7～10、沙漠再 ×1.25）＋兩名隊員減量，一般約 11 顆；
+ * 步態倍率封頂 2.2 時約每 0.18 秒落一腳、塵粒壽命最長 0.9 秒，單隊同時存活約 50 顆。
+ * 實機三隊同走時 120 顆會滿（11/19 量到 116），放寬到 160；再多的就略過（缺幾顆塵看不出來，節點不再增加）。
  */
-export const DUST_PARTICLE_POOL_MAX = 120;
-export const DUST_PARTICLE_POOL_MAX = 80;
+export const DUST_PARTICLE_POOL_MAX = 160;
 /** 貼圖邊長（像素）。小粒子不需要大圖，32×32 RGBA 只有 4KB。 */
 const DOT_TEXTURE_SIZE = 32;
 
@@ -109,7 +108,7 @@ export class MoveDustEmitter {
       const s = p.s0 + (p.s1 - p.s0) * u;
       p.node.setPosition(p.x0 + p.dx * e, p.y0 + p.dy * e, 0);
       p.node.setScale(s, s, 1);
-      p.color.a = Math.round(DUST_START_ALPHA * 255 * (1 - u));
+      p.color.a = Math.round(DUST_START_ALPHA * 255 * (1 - u * u)); // 前段維持濃度、後段才淡出，塵團看得清楚
       p.sprite.color = p.color;
     }
     // 單位疊層每幀重排 sibling index，容器要跟著送回最底

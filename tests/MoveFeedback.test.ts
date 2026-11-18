@@ -6,6 +6,7 @@ import {
     FOOTFALL_INTERVAL_SEC,
     MOVE_FOOTSTEP_MAX_VOLUME,
     MOVE_FOOTSTEP_TABLE,
+    MOVE_GAIT_TUNING,
     createMoveSfxThrottleState,
     dustBeatsFor,
     dustCountFor,
@@ -13,6 +14,7 @@ import {
     moveBeatFor,
     moveFootstepFor,
     rollDustParticle,
+    stepBobOffset,
     tryAcquireMoveSfx,
 } from '../assets/scripts/battle/shared/MoveFeedback';
 import { TestSuite, assert } from './TestRunner';
@@ -110,11 +112,11 @@ export function createMoveFeedbackSuite(): TestSuite {
         const spec = moveDustFor(TroopType.Infantry, TerrainType.Plain);
         for (const r of [0, 0.25, 0.5, 0.75, 0.999]) {
             const p = rollDustParticle(spec, () => r);
-            assert.isTrue(p.startSize >= 6 && p.startSize <= 10, `粒徑 ${p.startSize}`);
+            assert.isTrue(p.startSize >= 16 && p.startSize <= 24, `粒徑 ${p.startSize}`);
             assert.isTrue(p.endScale >= 1.8 && p.endScale <= 2.5);
-            assert.isTrue(p.rise >= 15 && p.rise <= 30);
-            assert.isTrue(p.drift >= 10 && p.drift <= 28);
-            assert.isTrue(p.lifeSec >= 0.5 && p.lifeSec <= 0.8);
+            assert.isTrue(p.rise >= 25 && p.rise <= 45);
+            assert.isTrue(p.drift >= 15 && p.drift <= 40);
+            assert.isTrue(p.lifeSec >= 0.6 && p.lifeSec <= 0.9);
             assert.isTrue(p.color.r <= DUST_COLOR_LIGHT.r && p.color.r >= DUST_COLOR_DARK.r);
             assert.isTrue(p.color.g <= DUST_COLOR_LIGHT.g && p.color.g >= DUST_COLOR_DARK.g);
             assert.isTrue(p.color.b <= DUST_COLOR_LIGHT.b && p.color.b >= DUST_COLOR_DARK.b);
@@ -142,6 +144,20 @@ export function createMoveFeedbackSuite(): TestSuite {
         assert.isFalse(tryAcquireMoveSfx(st, 1030, 120, 3));
         assert.isFalse(tryAcquireMoveSfx(st, 1119, 120, 3));
         assert.isTrue(tryAcquireMoveSfx(st, 1120, 120, 3));
+    });
+
+    suite.test('走路起伏：落腳時 0、兩步中間到頂、隊員錯開相位', () => {
+        const half = FOOTFALL_INTERVAL_SEC / 2;
+        assert.isTrue(Math.abs(stepBobOffset(0)) < 1e-9);
+        assert.isTrue(Math.abs(stepBobOffset(FOOTFALL_INTERVAL_SEC)) < 1e-9);
+        assert.isTrue(Math.abs(stepBobOffset(half) - MOVE_GAIT_TUNING.bobPx) < 1e-9);
+        assert.isTrue(Math.abs(stepBobOffset(0, half) - MOVE_GAIT_TUNING.bobPx) < 1e-9);
+        assert.isTrue(MOVE_GAIT_TUNING.bobPx >= 3 && MOVE_GAIT_TUNING.bobPx <= 4);
+        assert.isTrue(stepBobOffset(-1) === 0 && stepBobOffset(NaN) === 0);
+    });
+
+    suite.test('步態倍率上限 2.2（總PM 定案，不到 2.5）', () => {
+        assert.isTrue(MOVE_GAIT_TUNING.maxAnimationSpeed === 2.2);
     });
 
     return suite;

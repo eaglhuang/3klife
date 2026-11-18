@@ -1,4 +1,5 @@
 import { ActionClip, UnitAction, UnitPresentationConfig } from './UnitPresentationCore';
+import { MOVE_GAIT_TUNING } from './MoveFeedback';
 
 /** 資源存於私有素材包；遊戲端只保存載入路徑與共用動畫映射。 */
 export interface UnitSpineConfig extends UnitPresentationConfig {
@@ -30,7 +31,7 @@ const clip = (name: string, duration: number, loop = false, fallback?: string): 
  * 位移時間（BattlePresentationTiming）固定為 2 秒起跳、總長不能超過 2.5 秒（movementIdleMaxWaitMs），
  * 所以多格合併時不靠加快步伐追位移：步頻封頂，位移照時間走完。
  */
-export const MAX_WALK_ANIMATION_SPEED = 1.6;
+export const MAX_WALK_ANIMATION_SPEED = MOVE_GAIT_TUNING.maxAnimationSpeed;
 function clips(tier: 'general' | 'soldier', attackDuration: number): Record<UnitAction, ActionClip> {
   return {
     idle: clip('idle', tier === 'general' ? 2 : 1.6, true),

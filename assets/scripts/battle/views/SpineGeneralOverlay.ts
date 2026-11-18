@@ -1,7 +1,7 @@
 import { Color, Node, UITransform, resources, sp } from 'cc';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { UnitAction, UnitPresentationCore, UnitPresentationState, resolveClipName } from '../shared/UnitPresentationCore';
-import { dustBeatsFor } from '../shared/MoveFeedback';
+import { dustBeatsFor, stepBobOffset } from '../shared/MoveFeedback';
 import { UnitSpineConfig } from '../shared/UnitPresentationConfig';
 import { AttackStyle, pickAttackClip } from '../shared/AttackStyle';
 import { DuelExchange, DuelPresentationCore } from '../shared/DuelPresentationCore';
@@ -211,8 +211,11 @@ export class SpineUnitOverlay {
     const flash = hit?.flash ? hitFlashStrength(hit.elapsed) : 0;
     if (hit && hit.elapsed >= Math.max(BATTLE_VISUAL_TIMING.hitShakeSec, BATTLE_VISUAL_TIMING.hitFlashSec)) entry.hit = null;
     const flashChanged = this.paintFlash(skeleton, entry, flash);
+    // 走路起伏：落腳最低、兩步中間最高，避免整隊像在地上滑
+    const walking = state.action === 'move';
+    const leaderBob = walking ? stepBobOffset(entry.stepClock) : 0;
     node.setPosition(state.foot.x - offset.x * entry.config.displayScale * state.facing + shakeX,
-      state.foot.y - offset.y * entry.config.displayScale, 0);
+      state.foot.y - offset.y * entry.config.displayScale + leaderBob, 0);
     node.setScale(entry.config.displayScale * state.facing, entry.config.displayScale, 1);
     const skinChanged = entry.facing !== state.facing || entry.revision < 0;
     const clipChanged = entry.revision !== state.revision;
@@ -235,7 +238,9 @@ export class SpineUnitOverlay {
       follower.active = node.active && i < entry.members - 1;
       const pos = node.position;
       // 站位以「面向的後方」為準，所以 x 要跟著朝向翻面
-      follower.setPosition(pos.x - slot.x * state.facing, pos.y + slot.y, 0); // pos 已含抖動偏移，隊員跟著一起抖
+      // pos 已含抖動偏移與帶頭者起伏；起伏換成隊員自己相位的，才是錯開的集體走路
+      const followerBob = walking ? stepBobOffset(entry.stepClock, slot.phase * state.clip.duration) - leaderBob : 0;
+      follower.setPosition(pos.x - slot.x * state.facing, pos.y + slot.y + followerBob, 0);
       if (flashChanged) this.setSkeletonFlash(followerSkel, flash);
       follower.setScale(entry.config.displayScale * state.facing, entry.config.displayScale, 1);
       if (skinChanged) followerSkel.setSkin(skin);

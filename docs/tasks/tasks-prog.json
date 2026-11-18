@@ -10128,7 +10128,7 @@
       "depends": [],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-18 | 狀態: in-progress | 驗證: pending | 變更: 待做 | 阻塞: 無",
+      "notes": "2026-11-19 | 狀態: done | 驗證: 單元測試全過、tsc 0、閘門與冒煙通過、主目錄實機定格逐幀截圖 | 變更: 揚塵改土黃粒子池（上限 160，落腳同拍、往身後上飄放大淡出）；小兵前進改 walk（缺則退回 dash_in，武將仍用 dash_in）；步態倍率上限 2.2 與整隊起伏 3.5px 寫進 MOVE_GAIT_TUNING，隊員依站位錯開相位；腳步聲改每次落腳由帶頭者發聲 | 阻塞: 需要真的 walk clip（步幅較大、含抬腳過渡），目前 walk 與 dash_in 關鍵影格相同，位移仍比步伐快，靠起伏與 2.2 倍步速緩解",
       "brief": {
         "style": "classic",
         "label": "",

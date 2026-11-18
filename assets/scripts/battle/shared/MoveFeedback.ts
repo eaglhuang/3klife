@@ -95,6 +95,21 @@ export function moveDustFor(troopType: TroopType | string | null | undefined, te
 
 /** 走路一步（落腳到下一次落腳）的動畫秒數：walk 一個週期 0.8 秒、左右腳各一步，落腳在 0.4 與 0.8 秒。 */
 export const FOOTFALL_INTERVAL_SEC = 0.4;
+
+/**
+ * 走路手感可調參數（PROG-2-9407，總PM 11/18 定案）。
+ * - maxAnimationSpeed：步態倍率上限 2.2（2.5 腿會抖得像快轉）。
+ * - bobPx：整隊依落腳上下起伏的幅度（畫面像素），落腳瞬間最低、兩步之間最高。
+ * 根本解是素材：小兵 walk 與 dash_in 關鍵影格相同、步幅太小，位移比步伐快；換成真正的 walk clip 後可調回。
+ */
+export const MOVE_GAIT_TUNING = { maxAnimationSpeed: 2.2, bobPx: 3.5 } as const;
+
+/** 依步態時鐘算上下起伏位移：落腳時 0，兩次落腳中間到頂 bobPx。offset 給小隊隊員錯開相位。 */
+export function stepBobOffset(clock: number, offset = 0, bobPx: number = MOVE_GAIT_TUNING.bobPx): number {
+  if (!Number.isFinite(clock) || clock < 0) return 0;
+  const t = (clock + offset) % FOOTFALL_INTERVAL_SEC;
+  return bobPx * Math.sin(Math.PI * (t / FOOTFALL_INTERVAL_SEC));
+}
 /** 小隊隊員每次落腳的塵粒數是帶頭者的這個比例（至少 2 顆）：三人同時揚塵量太大，也吃粒子池。 */
 export const SQUAD_MEMBER_DUST_RATIO = 0.5;
 
@@ -147,13 +162,14 @@ export function rollDustParticle(spec: MoveDustSpec, rand: () => number = Math.r
   const t = rand();
   const lerp = (a: number, b: number): number => Math.round(a + (b - a) * t);
   return {
-    startSize: between(6, 10) * spec.scale,
+    // 實機量測（11/19）：疊層根節點縮放約 0.6，6～10 只剩 4～6 螢幕像素，看不到；放大到 16～24（約 10～15 螢幕像素）
+    startSize: between(16, 24) * spec.scale,
     endScale: between(1.8, 2.5),
-    rise: between(15, 30),
-    drift: between(10, 28),
-    jitterX: between(-6, 6),
-    jitterY: between(-3, 3),
-    lifeSec: between(0.5, 0.8),
+    rise: between(25, 45),
+    drift: between(15, 40),
+    jitterX: between(-10, 10),
+    jitterY: between(-4, 4),
+    lifeSec: between(0.6, 0.9),
     color: { r: lerp(DUST_COLOR_LIGHT.r, DUST_COLOR_DARK.r), g: lerp(DUST_COLOR_LIGHT.g, DUST_COLOR_DARK.g), b: lerp(DUST_COLOR_LIGHT.b, DUST_COLOR_DARK.b) },
   };
 }
