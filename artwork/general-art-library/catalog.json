@@ -6951,6 +6951,22 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/yu_fan__虞翻__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "d21eca1dfa4b2a5ef3adbdc127e27d3ea5d704cd9fce9eac6114534979a576c7",
+            "canvas": "1024x1536 RGBA PNG",
+            "pose": "踏步展卷執筆急書戰術",
+            "source": "standing/yu_fan__虞翻__standing_0002.png",
+            "note": "New candidate based on Yu Fan’s approved rust-red robe, dark teal mantle, scroll and brush; pending visual approval, not asserted as runtime-integrated."
+          }
+        ]
       }
     },
     {
