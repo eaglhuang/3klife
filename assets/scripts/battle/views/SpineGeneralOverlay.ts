@@ -1,6 +1,7 @@
 import { Color, Node, UITransform, resources, sp } from 'cc';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
-import { UnitAction, UnitPresentationCore, UnitPresentationState } from '../shared/UnitPresentationCore';
+import { UnitAction, UnitPresentationCore, UnitPresentationState, resolveClipName } from '../shared/UnitPresentationCore';
+import { dustBeatsFor } from '../shared/MoveFeedback';
 import { UnitSpineConfig } from '../shared/UnitPresentationConfig';
 import { AttackStyle, pickAttackClip } from '../shared/AttackStyle';
 import { DuelExchange, DuelPresentationCore } from '../shared/DuelPresentationCore';
@@ -23,7 +24,12 @@ interface Entry {
   hit: { elapsed: number; amplitude: number; flash: boolean } | null;
   /** 目前畫在骨架上的閃白強度（0 = 正常色）；只在數值改變時才寫 color，省得每幀弄髒渲染資料。 */
   flashPainted: number;
+  /** 步態時鐘（動畫秒）：從 move 動作開始累加，用來判斷落腳時機；離開 move 歸零。 */
+  stepClock: number;
 }
+
+/** 落腳通知：腳點（與單位節點同一座標系）、面向、是否為帶頭者。 */
+export type FootfallListener = (id: string, x: number, y: number, facing: 1 | -1, isLeader: boolean) => void;
 
 /**
  * 受擊閃色：Spine 骨架的 color 是「相乘」，沒辦法相乘出純白；
@@ -40,14 +46,14 @@ export class SpineUnitOverlay {
   private readonly failed = new Set<string>();
   private readonly pendingRemovals = new Set<string>();
   private duel: { core: DuelPresentationCore; ids: [string, string]; resolve: (played: boolean) => void } | null = null;
-  constructor(private readonly getParent: () => Node | null, private readonly layer: () => number) {}
+  constructor(private readonly getParent: () => Node | null, private readonly layer: () => number, private readonly onFootfall?: FootfallListener) {}
 
   public sync(id: string, config: UnitSpineConfig, x: number, y: number, facing: 1 | -1, moving: boolean, dt: number, visible = true, members = 1): boolean {
     this.pendingRemovals.delete(id);
     let entry = this.entries.get(id);
     if (entry && entry.config.path !== config.path) { this.remove(id); entry = undefined; }
     if (!entry) {
-      entry = { config, core: new UnitPresentationCore(config, { x, y }, facing), node: null, revision: -1, facing, loading: false, ready: [], visible, followers: [], members, hit: null, flashPainted: 0 };
+      entry = { config, core: new UnitPresentationCore(config, { x, y }, facing), node: null, revision: -1, facing, loading: false, ready: [], visible, followers: [], members, hit: null, flashPainted: 0, stepClock: 0 };
       this.entries.set(id, entry);
     }
     if (!entry.node && !entry.loading) this.load(id, entry);
@@ -79,7 +85,11 @@ export class SpineUnitOverlay {
     }
     for (const [id, entry] of this.entries) {
       if (entry.hit) entry.hit.elapsed += dt;
-      if (!controlled?.includes(id)) this.apply(entry, entry.core.step(dt));
+      if (!controlled?.includes(id)) {
+        const state = entry.core.step(dt);
+        this.apply(entry, state);
+        this.emitFootfalls(id, entry, state, dt);
+      }
     }
     // 畫面越下方（y 越小）越靠近鏡頭，要蓋在上面；隊員各自依落腳點排序，才不會整隊被隔壁格蓋住
     const sorted: Array<{ node: Node; y: number }> = [];
@@ -97,7 +107,8 @@ export class SpineUnitOverlay {
     const entry = this.entries.get(id);
     if (!entry?.node?.isValid) return false;
     const runtime = entry.node.getComponent(sp.Skeleton)?.skeletonData?.getRuntimeData();
-    if (!runtime?.findAnimation(entry.config.clips[action].name)) return false;
+    const has = (name: string): boolean => !!runtime?.findAnimation(name);
+    if (!has(resolveClipName(entry.config.clips[action], has))) return false;
     const clip = action === 'attack' && attackStyle
       ? pickAttackClip(attackStyle, entry.config.clips.attack, name => !!runtime.findAnimation(name)) : undefined;
     if (action !== 'fall' || entry.core.snapshot().action !== 'fall') entry.core.play(action, clip);
@@ -207,7 +218,7 @@ export class SpineUnitOverlay {
     const clipChanged = entry.revision !== state.revision;
     const runtime = skeleton.skeletonData?.getRuntimeData();
     const skin = state.facing < 0 && entry.config.mirrorSkin && runtime?.findSkin(entry.config.mirrorSkin) ? entry.config.mirrorSkin : 'default';
-    const name = state.clip.name;
+    const name = resolveClipName(state.clip, n => !!runtime?.findAnimation(n));
     const hasClip = !!runtime?.findAnimation(name);
     if (skinChanged) { skeleton.setSkin(skin); entry.facing = state.facing; }
     if (clipChanged) {
@@ -237,6 +248,26 @@ export class SpineUnitOverlay {
         }
       }
       followerSkel.timeScale = state.animationSpeed;
+    });
+  }
+
+  /**
+   * 落腳揚塵時機（PROG-2-9407）：依步態倍率累積時鐘，每 0.4 動畫秒（walk 一步）通知一次；
+   * 小隊隊員用各自的相位偏移，腳步和骨架上錯開的動作對得上，看起來是集體走路而不是同步複製。
+   */
+  private emitFootfalls(id: string, entry: Entry, state: UnitPresentationState, dt: number): void {
+    if (!this.onFootfall) return;
+    if (state.action !== 'move' || !entry.visible || !entry.node?.active) { entry.stepClock = 0; return; }
+    const prev = entry.stepClock;
+    entry.stepClock = prev + dt * state.animationSpeed;
+    const { x, y } = state.foot;
+    if (dustBeatsFor(prev, state.animationSpeed, dt) > 0) this.onFootfall(id, x, y, state.facing, true);
+    entry.followers.forEach((follower, i) => {
+      const slot = entry.config.squad?.[i];
+      if (!slot || !follower.isValid || !follower.active) return;
+      if (dustBeatsFor(prev, state.animationSpeed, dt, slot.phase * state.clip.duration) > 0) {
+        this.onFootfall?.(id, x - slot.x * state.facing, y + slot.y, state.facing, false);
+      }
     });
   }
 
@@ -270,7 +301,8 @@ export class SpineUnitOverlay {
         return;
       }
       const runtime = data.getRuntimeData();
-      const missing = Object.values(entry.config.clips).map(clip => clip.name).find(name => !runtime?.findAnimation(name));
+      const has = (name: string): boolean => !!runtime?.findAnimation(name);
+      const missing = Object.values(entry.config.clips).map(clip => resolveClipName(clip, has)).find(name => !has(name));
       if (missing) {
         this.failed.add(entry.config.path);
         UCUFLogger.warn(LogCategory.BATTLE, `[SpineUnitOverlay] 素材缺少共用動作 ${missing}: ${entry.config.path}`);

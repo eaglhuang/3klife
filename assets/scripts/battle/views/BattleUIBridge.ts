@@ -69,7 +69,6 @@ import { buildBattleSkillUsedMessage, getBattleSkillPresentation } from '../../s
 import { quickViewSkillLines } from '../../shared/QuickViewSkillLines';
 import { SkillSourceType } from '../../shared/SkillRuntimeContract';
 import { selectDuelExchanges } from '../shared/DuelPresentationCore';
-import { createMoveSfxThrottleState, moveFootstepFor, tryAcquireMoveSfx } from '../shared/MoveFeedback';
 import {
   BATTLE_FLOW_FX,
   playBattleFlowEffectAtBoardCenter,
@@ -737,26 +736,10 @@ export class BattleUIBridge {
       } else if (!data.isSwapPassenger) {
         this.appendLog(`${side}${unit.name} 前進到 ${battleCellLabel(data.lane, data.depth)}`);
         c.unitRenderer?.animateMove(unit, data.fromLane, data.fromDepth, data.forcedMoveReason);
-        this.playMoveFootsteps(unit.type);
       }
       if (unit.faction === Faction.Player) this._showTerrainFeedback(unit.id, data);
     }
     this.refreshBattleViews();
-  }
-
-  // PROG-2-9406：腳步聲節流狀態（多單位同時移動時合併，避免疊爆）
-  private readonly _moveSfxThrottle = createMoveSfxThrottleState();
-
-  /** 依兵種播小聲多拍腳步；第一拍立即，其餘用 setTimeout 排拍，每拍都過節流。 */
-  private playMoveFootsteps(troopType: string): void {
-    const spec = moveFootstepFor(troopType);
-    for (let i = 0; i < spec.beats; i++) {
-      const playBeat = (): void => {
-        if (tryAcquireMoveSfx(this._moveSfxThrottle, Date.now())) playBattleAudio(spec.cue, spec.volume);
-      };
-      if (i === 0) playBeat();
-      else setTimeout(playBeat, i * spec.intervalMs);
-    }
   }
 
   /** 我方部隊踏上主將適性 S、A 或 D 的地形時飄字（戰場適性 §E-10，PROG-2-1850） */

@@ -23,11 +23,19 @@ export function squadMemberCount(currentHp: number, maxHp: number, squadSize = S
   if (!(maxHp > 0) || !(currentHp > 0)) return 1;
   return Math.max(1, Math.min(squadSize, Math.ceil(currentHp / maxHp * squadSize)));
 }
-const clip = (name: string, duration: number, loop = false): ActionClip => ({ name, duration, loop });
+const clip = (name: string, duration: number, loop = false, fallback?: string): ActionClip => ({ name, duration, loop, ...(fallback ? { fallback } : {}) });
+/**
+ * 步態倍率上限（PROG-2-9407）。倍率 1 時 walk 一個週期 0.8 秒、左右腳各一步；
+ * 1.6 倍時約每 0.25 秒落一腳，是肉眼還讀得出「走路」的上限，再快就像快轉。
+ * 位移時間（BattlePresentationTiming）固定為 2 秒起跳、總長不能超過 2.5 秒（movementIdleMaxWaitMs），
+ * 所以多格合併時不靠加快步伐追位移：步頻封頂，位移照時間走完。
+ */
+export const MAX_WALK_ANIMATION_SPEED = 1.6;
 function clips(tier: 'general' | 'soldier', attackDuration: number): Record<UnitAction, ActionClip> {
   return {
     idle: clip('idle', tier === 'general' ? 2 : 1.6, true),
-    move: clip('dash_in', tier === 'general' ? 1.2 : 0.8, true),
+    // 小兵前進播 walk（有高低起伏的行走），缺 walk 的骨架退回 dash_in；武將骨架目前只有 dash_in，維持原狀
+    move: tier === 'general' ? clip('dash_in', 1.2, true) : clip('walk', 0.8, true, 'dash_in'),
     retreat: clip('retreat', tier === 'general' ? 1.2 : 0.8, true),
     attack: clip('duel_attack', attackDuration), hit: clip('hit', 0.9),
     dodge: clip('dodge', 0.6), fall: clip('fall', 1.8),
@@ -47,7 +55,7 @@ export function generalSpineConfig(id: string, templateId?: string | null): Unit
   let config = generalCache.get(key);
   if (!config) {
     config = { path: `spine/generals/${key}/${art.name}`, displayScale: 0.22, labelToFoot: 230, footOffset: { x: art.footX, y: 0 },
-      walkGroundSpeed: 93.33, speedMultiplier: 2, mirrorSkin: 'hand_mirror', clips: clips('general', 1.6) };
+      walkGroundSpeed: 93.33, speedMultiplier: 2, maxAnimationSpeed: MAX_WALK_ANIMATION_SPEED, mirrorSkin: 'hand_mirror', clips: clips('general', 1.6) };
     generalCache.set(key, config);
   }
   return config;
@@ -73,7 +81,9 @@ export function troopSpineConfig(troop: string, isEnemy = false, tallyTemplateId
   const cached = soldierCache.get(name);
   if (cached) return cached;
   const config: UnitSpineConfig = { path: `spine/soldiers/${name}/${name}`, displayScale: 0.18, labelToFoot: 110, footOffset: { x: 4, y: 0 },
-    walkGroundSpeed: 100, speedMultiplier: 2, mirrorSkin: art.bow ? undefined : 'hand_mirror', squad: SOLDIER_SQUAD_SLOTS,
+    // walkGroundSpeed 由 walk 骨架估算：踩地腳 foot_f 在 0～0.4 秒、foot_n 在 0.4～0.8 秒各向後掃 40 骨架單位，
+    // 身體每步前進 40 單位 / 0.4 秒 = 100 單位/秒，與原值相同，不需調整。
+    walkGroundSpeed: 100, speedMultiplier: 2, maxAnimationSpeed: MAX_WALK_ANIMATION_SPEED, mirrorSkin: art.bow ? undefined : 'hand_mirror', squad: SOLDIER_SQUAD_SLOTS,
     clips: clips('soldier', art.attack) };
   soldierCache.set(name, config);
   return config;
