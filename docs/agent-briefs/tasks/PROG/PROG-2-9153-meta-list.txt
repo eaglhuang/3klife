@@ -1012,3 +1012,4 @@ copied	assets/scripts/battle/skills/special
 copied	assets/scripts/core/mission
 copied	assets/scripts/core/systems/nurture
 copied	assets/scripts/ui/mission
+copied	assets/resources/spine.meta

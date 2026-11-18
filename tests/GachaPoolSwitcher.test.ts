@@ -120,6 +120,39 @@ export function createGachaPoolSwitcherSuite(): TestSuite {
         assert.equals('limited-pool', limited.poolId);
     });
 
+    suite.test('資源載入永遠不回應：逾時後照樣寫字、通知，不卡住（PROG-2-9153）', async () => {
+        const rec = recorder();
+        const never = (): Promise<never> => new Promise<never>(() => { /* 永不 resolve，模擬 404／無回應 */ });
+        rec.switchLazySlot = () => never();
+        rec.applyTabRegionsForFragment = () => never();
+        rec.mountSection = () => never();
+        const shown: string[] = [];
+        const switcher = new GachaPoolSwitcher(rec, GACHA_POOLS, (pool) => shown.push(pool.key), 30);
+        const originalWarn = console.warn;
+        console.warn = () => { /* 逾時 warn 預期會出現，測試輸出不顯示 */ };
+        try {
+            const started = Date.now();
+            await switcher.show(GACHA_POOL_INDEX.redFace);
+            assert.isTrue(Date.now() - started < 2000, '應在逾時內放棄等待');
+        } finally {
+            console.warn = originalWarn;
+        }
+        assert.equals(GACHA_POOLS[GACHA_POOL_INDEX.redFace].key, shown.join(','));
+        assert.isTrue(rec.log.includes('texts') || Object.keys(rec.texts).length > 0, '逾時後仍要寫字');
+    });
+
+    suite.test('資源載入丟錯：照樣走完切池', async () => {
+        const rec = recorder();
+        rec.switchLazySlot = () => Promise.reject(new Error('404'));
+        const shown: string[] = [];
+        const switcher = new GachaPoolSwitcher(rec, GACHA_POOLS, (pool) => shown.push(pool.key), 30);
+        const originalWarn = console.warn;
+        console.warn = () => { /* 預期的失敗 warn */ };
+        try { await switcher.show(0); } finally { console.warn = originalWarn; }
+        assert.equals(1, shown.length);
+        assert.isTrue(Object.keys(rec.texts).length > 0);
+    });
+
     suite.test('固定節點名都登記在 gacha-ds3 綁定表（重轉不會變回流水號）', () => {
         const bound = new Set<string>(readJson('tools_node/data/ui-bind-maps/gacha-ds3.json').bindings.map((b: { name: string }) => b.name));
         // 這些名字原稿本身就有 data-name（PROG-2-9025 起右側面板與抽卡列也直接標在原稿）
