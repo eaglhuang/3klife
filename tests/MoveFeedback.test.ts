@@ -156,6 +156,15 @@ export function createMoveFeedbackSuite(): TestSuite {
         assert.isTrue(stepBobOffset(-1) === 0 && stepBobOffset(NaN) === 0);
     });
 
+    suite.test('落腳間隔可依兵種設定（騎兵 trot 半週期）、起伏可關掉', () => {
+        let beats = 0; let clock = 0;
+        for (let i = 0; i < 20; i++) { clock = i * 0.05; beats += dustBeatsFor(clock + 0.001, 1, 0.05, 0, 0.3); }
+        assert.isTrue(beats === 3, `拍數 ${beats}`);
+        assert.isTrue(stepBobOffset(0.15, 0, 0, 0.3) === 0);
+        assert.isTrue(Math.abs(stepBobOffset(0.15, 0, 4, 0.3) - 4) < 1e-9);
+        assert.isTrue(dustBeatsFor(0, 1, 0.5, 0, 0) === 0);
+    });
+
     suite.test('步態倍率上限 2.2（總PM 定案，不到 2.5）', () => {
         assert.isTrue(MOVE_GAIT_TUNING.maxAnimationSpeed === 2.2);
     });

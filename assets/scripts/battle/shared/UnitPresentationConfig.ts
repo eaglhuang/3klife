@@ -13,6 +13,10 @@ export interface UnitSpineConfig extends UnitPresentationConfig {
    * 不設就是單人。隊員共用帶頭者的骨架與圖集。
    */
   squad?: ReadonlyArray<{ x: number; y: number; phase: number }>;
+  /** 兩次落腳間隔（動畫秒），揚塵與腳步／蹄聲依此同拍；不設 = 小兵 walk 一步 0.4 秒。 */
+  footfallIntervalSec?: number;
+  /** 整隊走路起伏（畫面像素）；不設 = MOVE_GAIT_TUNING.bobPx。骨架自己有起伏的（騎兵的馬）設 0。 */
+  bobPx?: number;
 }
 /** 小兵一隊最多 3 人：帶頭者在前，兩名隊員在後方上下錯開。站位以 0.18 顯示縮放（人寬約 58 像素）、格寬約 144 像素抓：要看得出是三個人，又不能站出自己的格子。 */
 export const SOLDIER_SQUAD_SLOTS: ReadonlyArray<{ x: number; y: number; phase: number }> = [
@@ -73,8 +77,38 @@ const ELITE_ART: Record<string, { troop: string; art: string }> = {
   'tiger-tally-xian-zhen': { troop: 'infantry', art: 'elite_infantry' }, 'tiger-tally-infantry-wall': { troop: 'infantry', art: 'elite_infantry' },
   'tiger-tally-shield-line': { troop: 'shield', art: 'elite_shield' },
 };
-/** 兵種（TroopType 的字串值）選素材；騎兵、連弩手等尚無專屬素材者沿用槍兵／弓兵。 */
+/**
+ * 騎兵（PROG-2-9408）：spine-trial 的騎手＋馬合成骨架（soldier_cavalry_blue × horse_sheet），私有素材。
+ * - 前進播 gallop：實機量到騎兵一回合常跑 2 格以上、約 144 疊層單位/秒；gallop 地速 1251 × 0.1 = 125，倍率約 1.15 蹄不滑。
+ *   trot（地速 533 → 53）要 2.7 倍、被步態上限 2.2 卡住會滑步；walk 更慢。
+ * - 縮放 0.10：實機對照（11/19）0.12 時騎手頭比步兵大一圈；0.10 時騎手頭與步兵相同，馬身約 90 像素、比一格窄。
+ * - 隊形比步兵拉開：馬身寬，用步兵站位三匹馬會疊成一團。
+ * - gallop 週期 0.567 秒（橫向襲步：後遠→後近→前遠→前近→騰空），揚塵與蹄聲取每半週期一拍（每拍兩聲蹄響）；馬骨架本身有起伏，不再加整隊起伏。
+ * - 合成骨架沒有 dodge／fall／retreat：retreat 用 gallop、dodge／fall 用 hit 代替，待 spine-trial 補動作。
+ * - 只有藍色版：敵方騎兵沿用紅色槍兵，待換色版。
+ */
+const CAVALRY_GALLOP_PERIOD_SEC = 0.5667;
+const CAVALRY_NAME = 'soldier_cavalry_blue';
+const CAVALRY_SQUAD_SLOTS: ReadonlyArray<{ x: number; y: number; phase: number }> = [
+  { x: 30, y: 24, phase: 0.35 },
+  { x: 48, y: -22, phase: 0.7 },
+];
+function cavalrySpineConfig(): UnitSpineConfig {
+  const cached = soldierCache.get(CAVALRY_NAME);
+  if (cached) return cached;
+  const config: UnitSpineConfig = { path: `spine/soldiers/${CAVALRY_NAME}/${CAVALRY_NAME}`, displayScale: 0.1, labelToFoot: 150, footOffset: { x: 0, y: 0 },
+    walkGroundSpeed: 1251.14, speedMultiplier: 2, maxAnimationSpeed: MAX_WALK_ANIMATION_SPEED, mirrorSkin: 'hand_mirror', squad: CAVALRY_SQUAD_SLOTS,
+    footfallIntervalSec: CAVALRY_GALLOP_PERIOD_SEC / 2, bobPx: 0,
+    clips: {
+      idle: clip('idle', 1.6, true), move: clip('gallop', CAVALRY_GALLOP_PERIOD_SEC, true, 'trot'), retreat: clip('gallop', CAVALRY_GALLOP_PERIOD_SEC, true, 'trot'),
+      attack: clip('thrust', 1), hit: clip('hit', 0.8), dodge: clip('hit', 0.8), fall: clip('hit', 0.8),
+    } };
+  soldierCache.set(CAVALRY_NAME, config);
+  return config;
+}
+/** 兵種（TroopType 的字串值）選素材；連弩手等尚無專屬素材者沿用槍兵／弓兵；騎兵目前只有我方藍色版。 */
 export function troopSpineConfig(troop: string, isEnemy = false, tallyTemplateId?: string | null): UnitSpineConfig {
+  if (troop === 'cavalry' && !isEnemy) return cavalrySpineConfig();
   const elite = tallyTemplateId ? ELITE_ART[tallyTemplateId] : undefined;
   const key = elite && elite.troop === troop ? elite.art : SOLDIER_ART[troop] ? troop : 'pikeman';
   const art = SOLDIER_ART[key];

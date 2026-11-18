@@ -107,7 +107,19 @@ assert.equal(soldierSpineConfig(true, true).path, 'spine/soldiers/soldier_bow_re
 assert.equal(soldierSpineConfig(true, false).path, 'spine/soldiers/soldier_bow_blue/soldier_bow_blue');
 import { troopSpineConfig } from '../assets/scripts/battle/shared/UnitPresentationConfig';
 assert.equal(troopSpineConfig('medic', true).path, 'spine/soldiers/soldier_medic_red/soldier_medic_red');
-assert.equal(troopSpineConfig('cavalry').path, 'spine/soldiers/soldier_spear_blue/soldier_spear_blue');
+// PROG-2-9408：我方騎兵改用騎手＋馬合成骨架；前進播 gallop、蹄聲依 gallop 半週期同拍；敵方暫時沿用紅色槍兵
+const cavalry = troopSpineConfig('cavalry');
+assert.equal(cavalry.path, 'spine/soldiers/soldier_cavalry_blue/soldier_cavalry_blue');
+assert.equal(cavalry.clips.move.name, 'gallop');
+assert.equal(cavalry.clips.attack.name, 'thrust');
+assert.equal(cavalry.bobPx, 0);
+assert.ok(Math.abs((cavalry.footfallIntervalSec ?? 0) - cavalry.clips.move.duration / 2) < 1e-6);
+assert.ok(cavalry.displayScale > 0 && cavalry.displayScale < troopSpineConfig('infantry').displayScale); // 合成骨架騎手已放大 1.54 倍
+assert.equal(troopSpineConfig('cavalry', true).path, 'spine/soldiers/soldier_spear_red/soldier_spear_red');
+// 實機量到兩格多、每秒約 144 單位：gallop 倍率約 1.15，不會撞到 2.2 上限而打滑
+const cavalryCore = new UnitPresentationCore(cavalry, { x: 0, y: 0 });
+cavalryCore.follow({ x: 144, y: 0 }, true, 1);
+assert.ok(cavalryCore.snapshot().animationSpeed < MAX_WALK_ANIMATION_SPEED);
 assert.equal(troopSpineConfig('infantry', false, 'tiger-tally-xian-zhen').path, 'spine/soldiers/soldier_elite_infantry_blue/soldier_elite_infantry_blue');
 assert.equal(troopSpineConfig('shield', false, 'tiger-tally-xian-zhen').path, 'spine/soldiers/soldier_shield_blue/soldier_shield_blue');
 

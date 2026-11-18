@@ -10150,6 +10150,52 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9408",
+      "title": "騎兵 Spine 接入：騎手＋馬合成骨架上戰場試看",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-19",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-19T01:40:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者授權：spine-trial main 每有新騎兵動畫就由戰場專家接進遊戲試看效果。spine-trial PR #7（Mount v2）與 #8（騎乘動作 v3）已合併，產出騎手與馬的合成骨架。",
+      "related": [
+        "PROG-2-9407"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-19 | 狀態: done | 驗證: 單元測試全過、tsc 0、閘門與冒煙通過、主目錄實機截待機／奔馳／攻擊 | 變更: 我方騎兵改用 spine-trial main b53c0c0 的騎手＋馬合成骨架（私有素材，三頁 512 圖集合併）；縮放 0.10 使騎手頭與步兵同大、隊形拉開；前進改 gallop（實測約 144 單位/秒，倍率約 1.15 蹄不滑；trot 會被 2.2 上限卡住滑步）；揚塵與蹄聲依 gallop 半週期同拍，馬不加整隊起伏 | 阻塞: 敵方紅色騎兵無素材暫用紅槍兵；合成骨架缺 dodge／fall／retreat 暫用 hit／gallop 代替；圖集三頁 PNG 約 1.3MB、解壓約 3MB，手機要換 ASTC",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
