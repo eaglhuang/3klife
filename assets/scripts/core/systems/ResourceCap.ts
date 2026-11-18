@@ -25,6 +25,17 @@ const RESOURCE_NAMES: Readonly<Record<BaseResourceKey, string>> = Object.freeze(
     fame: '名聲',
 });
 
+/**
+ * 黃金上限隨太守府等級提高（PROG-2-9149，暫定）：與人口上限同型——基礎 5000，每升一級 +2500。
+ * 初始上限仍是 BASE_RESOURCE_CAPS.gold；等級小於 1 或非有限數視為 1 級。
+ */
+export const GOLD_CAP_PER_GOVERNOR_LEVEL = 2500;
+
+export function goldCapOfLevel(territoryLevel: number): number {
+    const level = Number.isFinite(territoryLevel) && territoryLevel >= 1 ? Math.floor(territoryLevel) : 1;
+    return BASE_RESOURCE_CAPS.gold + GOLD_CAP_PER_GOVERNOR_LEVEL * (level - 1);
+}
+
 /** 夾制到 [0, 上限]；非有限數視為 0。 */
 export function clampResource(key: BaseResourceKey, amount: number): number {
     if (!Number.isFinite(amount) || amount < 0) return 0;

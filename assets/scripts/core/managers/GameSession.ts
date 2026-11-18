@@ -164,7 +164,8 @@ import { appendAssignRecord, autoAssignHallTask, listAssignRecords, settleLatest
 import type { HallTaskIntelInput } from '../systems/HallTaskIntel';
 import { estimateSortiePower } from '../systems/SortiePrediction';
 import { withCareerEp } from '../systems/CareerEp';
-import { BASE_RESOURCE_CAPS, clampResource } from '../systems/ResourceCap';
+import { BASE_RESOURCE_CAPS, clampResource, goldCapOfLevel } from '../systems/ResourceCap';
+import { aftermathOutcomeOf, formatAftermathLines, planBattleAftermath, quickSortieCost, type BattleAftermathLedger } from '../systems/BattleAftermath';
 import { applyDuelAftermath, duelFallenSpec, planDuelAftermath, type DuelOutcomeRecord } from '../systems/DuelAftermath';
 import { computeDeathBattleScore, settleDeathTallies, TALLY_DEATH_SCORE_TUNING } from '../systems/TallyDeathSettlement';
 import { settleDeathSpiritCards, spiritCardNoticeSpec } from '../systems/SpiritCardDeathSettlement';
@@ -551,6 +552,10 @@ export interface BattleRecordResult extends BattleSettlement {
     military?: MilitaryReserve;
     /** 我方主將被擒、由敵君主處置的結果提示（斬首／投降／關押／釋放；PROG-2-9140）；沒有被擒時為空陣列，由戰場結算畫面顯示 */
     captureNotices: TallyLine[];
+    /** 戰後獎懲帳（糧草／黃金／武將經驗／戰利品／民心／戰損回扣；PROG-2-9149）；ongoing、教學戰、名冊沒人出戰時省略 */
+    aftermath?: BattleAftermathLedger;
+    /** 結算畫面用的獎懲文字列（由 aftermath 轉出）；沒有帳本時為空陣列 */
+    aftermathLines: string[];
 }
 
 /** 心智台詞引用任務牆用的短名（PROG-2-9146） */
@@ -583,6 +588,8 @@ export interface RecordBattleOptions {
     generalCaptures?: readonly GeneralCaptureRecord[];
     /** 這場遭遇戰的敵將（君主）武將 id；被擒紀錄的 captorTemplateId 對不到君主時的備援 */
     encounterEnemyGeneralId?: string | null;
+    /** 極速決戰（不進戰場、沒有出征帳本）：戰損與糧耗改由 BattleAftermath 常數表推估並回扣城市兵源（PROG-2-9149） */
+    offBoard?: boolean;
 }
 
 export interface GeneralRankPromotedPayload {
@@ -4120,7 +4127,7 @@ export class GameSession {
         if (!this._hallMissions || !this._hallMissionData) return undefined;
         const { templates, balance } = this._hallMissionData;
         // 糧草上限以軍備帳為準（與規格資源上限取較小者），截斷才不會超過頂欄顯示
-        const capped: HallMissionBalance = { ...balance, caps: { ...balance.caps, grain: Math.min(balance.caps.grain, this._military.foodCap) } };
+        const capped: HallMissionBalance = { ...balance, caps: { ...balance.caps, grain: Math.min(balance.caps.grain, this._military.foodCap), silver: Math.max(balance.caps.silver, goldCapOfLevel(this._territoryLevel)) } };
         const settled = settleDueHallMissions(this._hallMissions, season, this.hallMissionStock(), capped);
         let next = settled.state;
         const lines: string[] = [];
@@ -5633,11 +5640,15 @@ export class GameSession {
                 await this.save();
             }
             if (firstClear) this._emit(GAME_SESSION_EVENTS.FirstBattleCleared, undefined);
-            return { ...settlement, awakenings: [], captureNotices: [] };
+            return { ...settlement, awakenings: [], captureNotices: [], aftermathLines: [] };
         }
-        if (options.sortie) {
+        // 戰損一律回扣城市兵源（領地治理系統 2026-04-26 裁定第 2 點）：戰場有出征帳本用帳本，極速決戰用常數表推估
+        const outcomeKind = aftermathOutcomeOf(result);
+        const sortieCost = options.sortie ?? (options.offBoard && outcomeKind ? quickSortieCost(outcomeKind, this._military.cityTroops) : null);
+        const lostTroopsApplied = sortieCost ? Math.min(this._military.cityTroops, Math.max(0, Math.floor(sortieCost.lostTroops))) : 0;
+        if (sortieCost) {
             const foodBefore = this._military.food;
-            this._military = applySortieResult(this._military, options.sortie);
+            this._military = applySortieResult(this._military, sortieCost);
             // 地窖保護（ECO-06，PROG-2-1341）：戰敗時糧草不扣到 min(戰前, 保底) 以下
             this._lastCellarProtectedFood = 0;
             if (result === 'enemy-win' && CELLAR_PROTECTION.triggerAfterFailedDefense) {
@@ -5656,6 +5667,9 @@ export class GameSession {
             this._inventory = salvage.inventory;
             this._recordGain(beforeSalvage, 'TASK');
         }
+
+        // 戰後獎懲（PROG-2-9149）：糧草、黃金、戰利品入帳，失敗扣民心；教學戰不結算
+        const aftermath = outcomeKind && !options.teachingSpirit ? this._applyBattleAftermath(outcomeKind, lostTroopsApplied) : undefined;
 
         const source = battleExpSource(result);
         const discovery = source ? this._applyDiscoveryExp(source) : undefined;
@@ -5684,6 +5698,11 @@ export class GameSession {
                 gained.promotedRanks.forEach((rank) => rankPromotions.push({ generalId: g.id, rank, title: generalRankTitle(rank) }));
                 return gained.general;
             });
+        }
+        // 出戰武將經驗（PROG-2-9149）：名冊的經驗只有生平功業 EP，依常數表把戰後武將經驗折成 EP
+        const epBonus = aftermath?.epPerGeneral ?? 0;
+        if (epBonus > 0) {
+            roster = roster.map((g) => (settlement.entries.some((e) => e.generalId === g.id) ? withCareerEp(g, epBonus).general : g));
         }
         for (const entry of settlement.entries) {
             // Q52：單場戰鬥最多覺醒 1 個因子（PROG-2-1991）；額度用完後不再擲，也不消耗亂數
@@ -5719,7 +5738,7 @@ export class GameSession {
         const captured = this._applyGeneralCaptures(roster, options);
         roster = captured.roster;
 
-        const record: BattleRecordResult = { ...settlement, roster, discovery, awakenings, captureNotices: captured.notices, ...(options.sortie ? { military: this.military } : {}) };
+        const record: BattleRecordResult = { ...settlement, roster, discovery, awakenings, captureNotices: captured.notices, aftermath, aftermathLines: aftermath ? formatAftermathLines(aftermath) : [], ...(sortieCost ? { military: this.military } : {}) };
         this._roster.replaceAll(roster);
         this._clearLeadIfGone();
         this._settleDeaths(beforeRoster, roster, this._clock.state.totalSeasonsElapsed);
@@ -5734,6 +5753,32 @@ export class GameSession {
         }
         rankPromotions.forEach((payload) => this._emit(GAME_SESSION_EVENTS.GeneralRankPromoted, payload));
         return record;
+    }
+
+    /**
+     * 戰後獎懲入帳（PROG-2-9149）：糧草（不超過軍備上限）、黃金（走錢包、不超過太守府等級上限）、
+     * 戰利品進背包、失敗扣民心；回傳帳本給結算畫面。錢包尚未綁定（沒進過大廳）時黃金不入帳也不提示。
+     */
+    private _applyBattleAftermath(outcome: 'win' | 'draw' | 'loss', lostTroops: number): BattleAftermathLedger {
+        const wallet = this._hallWallet;
+        const ledger = planBattleAftermath(outcome, {
+            food: this._military.food,
+            foodCap: this._military.foodCap,
+            gold: wallet?.gold() ?? 0,
+            goldCap: wallet ? goldCapOfLevel(this._territoryLevel) : 0,
+            random: this._random,
+        });
+        if (!wallet) { ledger.gold = 0; ledger.goldTruncated = 0; }
+        ledger.lostTroops = lostTroops;
+        if (ledger.food > 0) this._military = { ...this._military, food: this._military.food + ledger.food };
+        if (ledger.gold > 0) wallet?.grant(ledger.gold);
+        if (ledger.morale !== 0) this._cityEconomy = { ...this._cityEconomy, morale: clampMorale(this._cityEconomy.morale + ledger.morale) };
+        if (ledger.loot.length > 0) {
+            const beforeLoot = this._inventory;
+            for (const drop of ledger.loot) this._inventory = addItem(this._inventory, drop.itemId, drop.quantity);
+            this._recordGain(beforeLoot, 'DROP');
+        }
+        return ledger;
     }
 
     /**

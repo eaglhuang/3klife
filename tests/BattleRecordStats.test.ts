@@ -3,6 +3,7 @@
  *
  * Unity 對照：EditMode Test，驗證 StatsTracker 累加、戰後 SaveData 寫回與讀檔。
  */
+import { BATTLE_AFTERMATH_TUNING } from '../assets/scripts/core/systems/BattleAftermath';
 import { TestSuite, assert } from './TestRunner';
 import {
     BattlePerformanceTracker,
@@ -165,7 +166,7 @@ export function createBattleRecordStatsSuite(): TestSuite {
             performance: { g: { kills: 4, damageDealt: 210, damageTaken: 90, healingDone: 0 } },
         });
         assert.equals(STARTER_MILITARY.cityTroops - 1200, settled.military!.cityTroops);
-        assert.equals(STARTER_MILITARY.food - 30, session.military.food);
+        assert.equals(STARTER_MILITARY.food - 30 + BATTLE_AFTERMATH_TUNING.rewards.win.food, session.military.food, '糧耗扣掉、勝利獎賞糧草入帳（PROG-2-9149）');
 
         const restored = new GameSession(7);
         restored.setRosterStore(new InMemoryRosterStore());

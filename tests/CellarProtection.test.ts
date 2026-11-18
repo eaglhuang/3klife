@@ -3,6 +3,7 @@
  */
 import { assert, TestSuite } from './TestRunner';
 import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
+import { BATTLE_AFTERMATH_TUNING } from '../assets/scripts/core/systems/BattleAftermath';
 import { CELLAR_PROTECTION, protectedAfterLoss } from '../assets/scripts/core/systems/CellarProtection';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 
@@ -60,7 +61,8 @@ export function createCellarProtectionSuite(): TestSuite {
     suite.test('勝利出征照常扣糧，不觸發保底', async () => {
         const session = sessionWithFood(2000);
         await session.recordBattle(['lead-1'], 'player-win', { sortie: { lostTroops: 0, foodSpent: 1800 } });
-        assert.equals(200, session.military.food);
+        // 糧耗 1800 後剩 200，再加勝利獎賞糧草（PROG-2-9149）
+        assert.equals(200 + BATTLE_AFTERMATH_TUNING.rewards.win.food, session.military.food);
         assert.equals(0, session.lastCellarProtectedFood);
     });
 

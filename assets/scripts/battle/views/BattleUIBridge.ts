@@ -1093,6 +1093,9 @@ export class BattleUIBridge {
         for (const line of milestoneLines) this.appendLog(line);
         if (milestoneLines.length > 0) this.ctx.resultPopup?.appendDetails?.(milestoneLines);
       }
+      // 戰後獎懲（PROG-2-9149）：糧草／黃金／武將經驗／戰利品／兵源回扣／民心，寫日誌並加進結算細項
+      for (const line of settlement.aftermathLines ?? []) this.appendLog(line);
+      if ((settlement.aftermathLines ?? []).length > 0) this.ctx.resultPopup?.appendDetails?.(settlement.aftermathLines);
       // 因子爆發系統 §G 覺醒提示（PROG-2-1783）
       const awakeningLines = settlement.awakenings.flatMap(factorAwakeningLines);
       for (const line of awakeningLines) this.appendLog(line);
