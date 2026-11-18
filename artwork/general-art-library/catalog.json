@@ -7742,6 +7742,26 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/wei_zhao__韋昭__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "1702f653fd886e02d5b19b74e920c2cfd72ee8a9b0fb572c18a5f6ad27a1ac31",
+            "canvas": "1024x1536 RGBA PNG",
+            "poseLabel": "前踏傳令、揮筆調度",
+            "sourceStanding": "standing/wei_zhao__韋昭__standing_0002.png",
+            "props": [
+              "竹簡",
+              "書筆"
+            ],
+            "note": "依韋昭核定站姿保留黑袍、紅色內襯與方冠；以踏步前令和揮筆呈現軍師戰場施策。完整透明全身候選，待使用者審看。"
+          }
+        ]
       }
     },
     {
