@@ -48,6 +48,7 @@ import { ArrowShotView } from "./ArrowShotView";
 import { SlashShotView } from "./SlashShotView";
 import { attackVfxFor } from "../shared/AttackVfxMapping";
 import { attackStyleFor } from "../shared/AttackStyle";
+import { moveDustFor, type MoveDustSpec } from "../shared/MoveFeedback";
 import { SpineUnitOverlay } from "./SpineGeneralOverlay";
 import { GeneralPortraitStandee, STANDEE_HEIGHT_PX, needsStandeeFallback } from "./GeneralPortraitStandee";
 import { generalSpineConfig, squadMemberCount, troopSpineConfigWithFallback } from '../shared/UnitPresentationConfig';
@@ -219,6 +220,11 @@ export class UnitRenderer extends Component {
   private hpLossPool:  BuffGainEffectPool | null = null;
   private readonly unitViews = new Map<string, UnitView>();
   private readonly movingUnits = new Set<string>();
+  // PROG-2-9406：移動揚塵的節點池與共用材質（手機記憶體優先：重用節點、不逐次 new）
+  private readonly dustPool: Node[] = [];
+  private readonly dustBusy = new Set<Node>();
+  private dustMaterial: Material | null = null;
+  private static readonly DUST_POOL_MAX = 24;
   private readonly dyingUnits = new Set<string>();
   private readonly uiProjectionBuffer = new Vec3();
   private readonly screenProjectionBuffer = new Vec3();
@@ -399,6 +405,8 @@ export class UnitRenderer extends Component {
       this.playRiverCurrentMoveTween(view, unit, fromPos, toPos);
       return;
     }
+    // 強制位移也出塵；河流格與水軍由 moveDustFor 判定不出
+    this.spawnMoveDust(view, unit, plan.durationSec);
 
     tween(view.worldNode)
       .to(plan.durationSec, { worldPosition: toPos })
@@ -407,6 +415,75 @@ export class UnitRenderer extends Component {
         view?.worldNode.setWorldPosition(toPos);
       })
       .start();
+  }
+
+  /**
+   * PROG-2-9406：移動期間在單位腳下生出中等揚塵（只改表現，不影響位移）。
+   * 自寫輕量版：沒有現成的「腳下塵土」積木（vfx-block-registry 的煙霧都是大型 3D 粒子），
+   * 這裡用池化的扁圓盤（共用一份半透明土色材質），放大後縮回 0，不逐次建立節點。
+   * 圓盤貼地、在單位本體下方，不會擋住單位與跳字。
+   */
+  private spawnMoveDust(view: UnitView, unit: TroopUnit, moveSec: number): void {
+    const terrain = this.latestState?.getCell(unit.lane, unit.depth)?.terrain;
+    const spec: MoveDustSpec = moveDustFor(unit.type, terrain);
+    if (spec.kind === 'none' || spec.puffCount <= 0) return;
+    const mesh = this.discMesh ?? this.cubeMesh;
+    if (!mesh || !this.worldRoot) return;
+
+    const growSec = 0.55;
+    const fadeSec = 0.3;
+    const radius = 0.62 * spec.scale;
+    for (let i = 0; i < spec.puffCount; i++) {
+      const puff = this.acquireDustNode(mesh);
+      if (!puff) return;
+      // 把各團均分在移動時間前 70%，從單位當下位置落在腳邊
+      const delaySec = (moveSec * 0.7 * i) / Math.max(1, spec.puffCount);
+      const side = i % 2 === 0 ? 1 : -1;
+      puff.setScale(0.001, 1, 0.001);
+      tween(puff)
+        .delay(delaySec)
+        .call(() => {
+          if (!puff.isValid || !view.worldNode.isValid) return;
+          const p = view.worldNode.worldPosition;
+          puff.setWorldPosition(p.x + side * 0.12 * spec.scale, p.y - this.unitHeight * 0.5 + 0.04, p.z);
+          puff.active = true;
+        })
+        .to(growSec, { scale: new Vec3(radius, 1, radius) })
+        .to(fadeSec, { scale: new Vec3(0.001, 1, 0.001) })
+        .call(() => { if (puff.isValid) puff.active = false; this.dustBusy.delete(puff); })
+        .start();
+    }
+  }
+
+  /** 從池取一個閒置揚塵節點；池滿且全在用就回 null（直接略過這團，不堆節點）。 */
+  private acquireDustNode(mesh: Mesh): Node | null {
+    for (const n of this.dustPool) {
+      if (n.isValid && !this.dustBusy.has(n)) { this.dustBusy.add(n); return n; }
+    }
+    if (this.dustPool.length >= UnitRenderer.DUST_POOL_MAX || !this.worldRoot) return null;
+    const node = new Node('MoveDust');
+    node.layer = Layers.Enum.DEFAULT;
+    node.active = false;
+    this.worldRoot.addChild(node);
+    const mr = node.addComponent(MeshRenderer);
+    mr.mesh = mesh;
+    mr.setSharedMaterial(this.getDustMaterial(), 0);
+    this.dustPool.push(node);
+    this.dustBusy.add(node);
+    return node;
+  }
+
+  private getDustMaterial(): Material {
+    if (this.dustMaterial) return this.dustMaterial;
+    const mat = new Material();
+    mat.initialize({
+      effectName: 'builtin-unlit',
+      technique: 1,
+      states: { rasterizerState: { cullMode: gfx.CullMode.NONE } },
+    });
+    mat.setProperty('mainColor', new Color(176, 156, 124, 105));
+    this.dustMaterial = mat;
+    return mat;
   }
 
   public playSwapAdvanceAnimation(
