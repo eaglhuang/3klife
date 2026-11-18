@@ -1013,3 +1013,8 @@ copied	assets/scripts/core/mission
 copied	assets/scripts/core/systems/nurture
 copied	assets/scripts/ui/mission
 copied	assets/resources/spine.meta
+generated	assets/resources/data/officer-feature-unlocks.json
+generated	assets/resources/ui-spec/layouts/rank-unlock-popup-main.json
+generated	assets/resources/ui-spec/screens/rank-unlock-popup-screen.json
+generated	assets/resources/ui-spec/skins/rank-unlock-popup-screen.skin.json
+generated	assets/scripts/core/systems/OfficerFeatureUnlocks.ts
