@@ -549,6 +549,9 @@ export class EffectSystem {
         }
     }
 
+    /** 目前這段鏡頭震動預計結束的時間（毫秒時戳），用來擋掉重疊的震動。 */
+    private cameraShakeEndMs = 0;
+
     /**
      * 鏡頭震動（v2）。
      *
@@ -568,6 +571,11 @@ export class EffectSystem {
             UCUFLogger.warn(LogCategory.DATA, '[EffectSystem] playCameraShake: 找不到主 Camera 節點，跳過震動');
             return;
         }
+
+        // 重疊保護（PROG-2-9401）：上一段還在震時不再疊新的，否則新一段會把「震到一半的位置」當原點，鏡頭就漂走了
+        const nowMs = Date.now();
+        if (nowMs < this.cameraShakeEndMs) return;
+        this.cameraShakeEndMs = nowMs + duration * 1000;
 
         const origin = cameraNode.position.clone();
         const stepDuration = duration / 8;

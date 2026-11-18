@@ -822,13 +822,35 @@ async function main() {
                 const top = await readTopbar();
                 return top.food === top0.food - 50 ? top : null;
             }, 6000, '').catch(() => null);
-            const topNow = await readTopbar();
+            let topNow = await readTopbar();
             rec.detail.topAfterRecon = topNow;
             await delay(600);
             const dialog1 = (await rm.textsUnder(MISSION_DIALOG)) || [];
             await shot(rec, 'loop-after-recon');
             if (!afterRecon) throw new Error(`再探後頂欄糧草沒有減少 50（再探前 ${top0.food}，再探後 ${topNow.food}）`);
-            if (dialog1.some((t) => t.includes('???'))) throw new Error(`再探後詳情窗仍有遮蔽字樣 ???（文字：${dialog1.slice(0, 12).join(' / ')}）`);
+            // 再探每次只加 35／25／15（上限 90，PROG-2-9148 使用者裁決）：一次揭不完，最多再探 3 次到上限 90；
+            // 敵情與事實的「???」會逐層揭開，只剩「完美獎勵」那格維持 ???（隱藏獎勵要情報 100 才揭，再探到不了）
+            const intelOf = (texts) => { const k = texts.indexOf('%'); return k > 0 ? Number(texts[k - 1]) : NaN; };
+            let dialogNow = dialog1;
+            const intelSeries = [intelOf(dialog0), intelOf(dialog1)];
+            rec.detail.reconClicks = 1;
+            for (let extra = 0; extra < 3 && !(intelSeries[intelSeries.length - 1] >= 90); extra++) {
+                await waitToastGone();
+                const foodBefore = (await readTopbar()).food;
+                await rm.click({ name: '^BtnScout$', under: MISSION_DIALOG }, '再探');
+                await waitUntil(async () => ((await readTopbar()).food === foodBefore - 50 ? true : null), 6000, '').catch(() => null);
+                await delay(600);
+                dialogNow = (await rm.textsUnder(MISSION_DIALOG)) || [];
+                intelSeries.push(intelOf(dialogNow));
+                rec.detail.reconClicks += 1;
+            }
+            rec.detail.intelSeries = intelSeries;
+            rec.detail.dialogAfterRecon = dialogNow.slice(0, 16);
+            if (!(intelSeries[1] > intelSeries[0])) throw new Error(`再探後情報沒有增加（${intelSeries.join(' → ')}）`);
+            if (!(intelSeries[intelSeries.length - 1] >= 90)) throw new Error(`連續再探 ${rec.detail.reconClicks} 次後情報沒有到上限 90（${intelSeries.join(' → ')}）`);
+            const fogLeft = dialogNow.filter((t) => t.includes('???') && t.trim() !== '???');
+            if (fogLeft.length) throw new Error(`情報到上限後敵情仍有遮蔽字樣 ???（${fogLeft.slice(0, 3).join(' / ')}）`);
+            topNow = await readTopbar();
             // 3. 選將執行：頂欄糧草與兵源減少、牆上少一張、牆頭出現「進行中」
             await waitToastGone();
             await rm.click({ name: '^BtnExecute$', under: MISSION_DIALOG }, '執行');

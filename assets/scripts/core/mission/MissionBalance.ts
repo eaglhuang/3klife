@@ -33,6 +33,10 @@ export interface MissionBalance {
         scoutStatPerPoint: number;
         scoutTags: string[];
         scoutTagBonus: number;
+        /** 每次再探耗糧草 */
+        grainCost: number;
+        /** 指派斥候時，斥候耗費的精力 */
+        scoutEnergy: number;
     };
     wait: {
         /** 等待情報增量（使用者裁決 +20～25，定義可覆寫） */
@@ -94,6 +98,10 @@ export interface MissionBalance {
         riskLow: number;
         riskMid: number;
     };
+    /** 資源入帳上限（宿主套用帳本時截斷，糧草另取軍備帳上限較小者） */
+    resourceCaps: { grain: number; silver: number; troops: number };
+    /** 歷史紀錄保留筆數 */
+    recordLimit: number;
     difficulties: Record<MissionDifficulty, MissionDifficultyBalance>;
 }
 
@@ -103,7 +111,7 @@ export const DEFAULT_MISSION_BALANCE: MissionBalance = {
     recon: {
         steps: [35, 25, 15], cap: 90,
         scoutBonusMax: 8, scoutStatKey: 'int', scoutStatBaseline: 60, scoutStatPerPoint: 0.2,
-        scoutTags: ['scout', 'spy'], scoutTagBonus: 3,
+        scoutTags: ['scout', 'spy'], scoutTagBonus: 3, grainCost: 50, scoutEnergy: 5,
     },
     wait: { delta: 22, expireBonusSeasons: 1, cap: 100 },
     intelCurve: { successSlope: 0.2, disasterFactorAtZero: 1.5, disasterFactorAtFull: 0.5 },
@@ -121,6 +129,8 @@ export const DEFAULT_MISSION_BALANCE: MissionBalance = {
         rewardWeights: { grain: 1, silver: 1.5, troops: 1, generalExp: 1.5, officerExp: 1.5, fame: 5 },
         riskLow: 0.1, riskMid: 0.25,
     },
+    resourceCaps: { grain: 10000, silver: 5000, troops: 3000 },
+    recordLimit: 50,
     difficulties: {
         EASY: { needPower: 100, cost: { grain: 40, troops: 50, silver: 30 }, energy: 10 },
         NORMAL: { needPower: 180, cost: { grain: 60, troops: 80, silver: 50 }, energy: 10 },

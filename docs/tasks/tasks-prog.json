@@ -9827,6 +9827,99 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9401",
+      "title": "受擊白閃加小抖動、跳字大字彈出與爆擊放大、閃避灰字",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-18T06:47:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 2026-11-17 選定受擊為白閃加小抖動、跳字為大字彈出且爆擊放大（基礎戰鬥手感最優先項目之一）。",
+      "related": [
+        "PROG-2-9399",
+        "PROG-2-9400"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-18 | 狀態: in-review | 驗證: 型別檢查 0 錯；全套單元測試 8131 過；技能冒煙與 UCUF 冒煙全過；本機預覽無頭實點連跑 3 回合，受擊呼叫紀錄確認擊殺標為重擊、一般受擊標為輕擊；截圖可見擊殺時白閃加金色大字 -114、一般受傷白色描邊 -2 彈出 | 變更: 新增 FloatTextStyle（樣式表與同目標錯開位移）；FloatTextSystem 描邊、彈出回彈、錯開；UnitRenderer 受擊白閃＋抖動，重擊加畫面小震；新增 playMissFloat／playGeneralMissFloat 並由 BattleUIBridge 接上閃避；EffectSystem 震動重疊保護；BattlePresentationTiming 受擊時長常數 | 阻塞: Spine 武將只能用 skeleton.color 相乘做淡紅脈衝，做不出純白閃，待雙色染色另議",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9402",
+      "title": "同一單位連續跳字錯開改依前字存活時間、往下錯開，修正閃避與爆擊大字疊字",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-18T06:47:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "PROG-2-9401 合併後實跑發現主將身上「閃避」與前一個爆擊大字「-148」疊在一起：錯開視窗只有 450 毫秒，爆擊字卻存在 1100 毫秒。",
+      "related": [
+        "PROG-2-9401"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-18 | 狀態: in-review | 驗證: 型別檢查 0 錯；全套單元測試 8244 過；技能冒煙 74 過、UCUF 冒煙 300 過；本機預覽無頭實跑，主將先爆擊 -148、0.6 秒後閃避，截圖兩字上下分開不重疊 | 變更: FloatStaggerTracker 改依前一字存活時間×0.7 判斷佔位，佔位期間新字往下錯開（間距依兩字有效高度，上限 160 像素、5 格循環）；FloatTextSystem.show 改用 place()；新增 3 個單元測試 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

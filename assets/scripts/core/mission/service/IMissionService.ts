@@ -89,6 +89,11 @@ export interface SettledMissionView {
     missionId: string;
     title: string;
     generalId: string;
+    generalName: string;
+    /** 成功率投影前的真相不給；這裡只給結果（已發生，不再是隱藏資訊） */
+    branchId: string;
+    /** 本筆實際產生的收穫總量（資源、經驗、名聲；上限截斷前的帳本量） */
+    gains: Record<string, number>;
     tier: MissionTier;
     narratives: string[];
     /** 結算過程（查看過程／稽核用） */
@@ -107,7 +112,8 @@ export type MissionUnsubscribe = () => void;
 export interface IMissionService {
     // 查詢（全部為投影後資料）
     getBoard(q?: BoardQuery): MissionResult<MissionBoardView>;
-    getDetail(missionId: string): MissionResult<MissionDetailView>;
+    /** generalId：預覽用執行者（成功率依該武將算）；不給時用目前最適合的可派武將，沒有可派者用中性預估 */
+    getDetail(missionId: string, opts?: { generalId?: string }): MissionResult<MissionDetailView>;
     getCandidates(missionId: string): MissionResult<CandidateView[]>;
     getHistory(q?: { limit?: number }): MissionResult<MissionRecordView[]>;
 

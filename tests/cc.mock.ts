@@ -15,6 +15,7 @@ export class Vec3 {
 export class Color {
     constructor(public r = 255, public g = 255, public b = 255, public a = 255) {}
     declare static WHITE: Color;
+    set(r: number, g: number, b: number, a = 255): this { this.r = r; this.g = g; this.b = b; this.a = a; return this; }
 }
 
 // ─── 基礎 UI 類型 (必須在 Node 之前) ──────────────────────────────────────────
@@ -38,6 +39,7 @@ export class Label {
     declare spacingX: number;
     declare cacheMode: number;
     declare outlineColor: Color;
+    declare enableOutline: boolean;
     declare outlineWidth: number;
     declare enableShadow: boolean;
     declare shadowColor: Color;

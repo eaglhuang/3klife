@@ -148,11 +148,11 @@ function validateAll(options) {
     const themes = new Map(((loaded.themes && loaded.themes.themes) || []).map((t) => [t.id, t]));
     const balance = loaded.balance;
     if (balance) {
-        const inc = balance.intel.reconIncrements;
+        const inc = balance.recon.steps;
         if (inc.join(',') !== '35,25,15') err('mission-balance.json', `再探增量應為 35,25,15（使用者裁決），目前 ${inc.join(',')}`);
-        if (balance.intel.reconCap !== 90) err('mission-balance.json', `再探上限應為 90，目前 ${balance.intel.reconCap}`);
-        if (balance.intel.wait.maxPerMission !== 1) err('mission-balance.json', '等待應為每任務一次');
-        if (balance.risk.capture.minDifficulty !== 'ADVANCED') err('mission-balance.json', '被俘只在 ADVANCED 以上');
+        if (balance.recon.cap !== 90) err('mission-balance.json', `再探上限應為 90，目前 ${balance.recon.cap}`);
+        if (balance.penalty.captureMinDifficulty !== 'ADVANCED') err('mission-balance.json', '被俘只在 ADVANCED 以上');
+        if (balance.penalty.harmTiers.join(',') !== 'disaster') err('mission-balance.json', '只有大失敗（disaster）可能受傷／被俘');
     }
     if (loaded.display) {
         const bands = loaded.display.bands.slice().sort((a, b) => a.min - b.min);

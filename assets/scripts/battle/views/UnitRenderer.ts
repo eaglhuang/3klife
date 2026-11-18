@@ -50,7 +50,7 @@ import { attackStyleFor } from "../shared/AttackStyle";
 import { SpineUnitOverlay } from "./SpineGeneralOverlay";
 import { generalSpineConfig, squadMemberCount, troopSpineConfigWithFallback } from '../shared/UnitPresentationConfig';
 import { DuelExchange } from '../shared/DuelPresentationCore';
-import { BATTLE_VISUAL_TIMING, planMoveSegment } from "./BattlePresentationTiming";
+import { BATTLE_VISUAL_TIMING, buildHitShakeSteps, planHitFeedback, planMoveSegment } from "./BattlePresentationTiming";
 import { BuffGainEffectPool } from "./effects/BuffGainEffectPool";
 import { statBonusTone, statWithBonusText, type StatBonusTone } from "../shared/StatBonusText";
 import { unitHpBarState, type UnitHpBarState } from "../shared/UnitHpBar";
@@ -58,7 +58,7 @@ import { unitValueFloatType } from "../shared/DamageFloatType";
 import { UnitStatusIconBar, StatusHaloPool } from "./UnitStatusIconBar";
 import { buildUnitStatusContext, computeUnitStatusIcons, gainedTones, newlyGainedKinds, type StatusIconKind } from "../shared/UnitStatusIcons";
 import { services } from "../../core/managers/ServiceLoader";
-import { FloatTextType } from "../../core/systems/FloatTextSystem";
+import { FLOAT_MISS_TEXT, FloatTextType } from "../../core/systems/FloatTextStyle";
 import { vitalityRingView, type VitalityRingView } from "../../core/systems/VitalityBarView";
 import {
   DEFAULT_ENEMY_HERO_ASSET_ID,
@@ -564,32 +564,92 @@ export class UnitRenderer extends Component {
     await this.waitSeconds(attackerUnit?.type === TroopType.Cavalry ? BATTLE_VISUAL_TIMING.cavalryAttackAwaitSec : BATTLE_VISUAL_TIMING.attackAwaitSec);
   }
 
-  public playHitAnimation(defenderId: string, _attackerId: string | null): void {
+  /**
+   * 受擊表現（PROG-2-9401）：全身閃白 + 左右小抖動；重擊／爆擊再加輕微畫面震動。
+   * 致命一擊只閃白，不抖也不震畫面（接著要播倒地與 boom，疊起來會亂）。
+   * 抖動只作用在 Spine 疊層的畫面偏移與 Visual 子節點，不動 worldNode 的移動 tween。
+   */
+  public playHitAnimation(defenderId: string, _attackerId: string | null, opts?: { heavy?: boolean; lethal?: boolean }): void {
     this.spineUnits.play(defenderId, 'hit');
     const defenderView = this.unitViews.get(defenderId);
     const defenderNode = defenderView?.worldNode ?? null;
     const defenderUnit = this.findUnitById(defenderId);
     if (!defenderNode || !defenderUnit) return;
 
+    const plan = planHitFeedback(opts?.lethal === true, opts?.heavy === true);
+    // 先打一次 Spine 疊層（小兵與武將化身都走這裡）；沒有 Spine 的單位走下面的 3D 後備
+    const spineHit = this.spineUnits.hit(defenderId, plan.shake ? this.hitShakeAmplitudePx(defenderUnit.lane, defenderUnit.depth) : 0, plan.flash);
+    if (!spineHit && plan.shake) this.shakeVisualChildren(defenderView!);
+
     this.recoilNode(defenderNode, defenderUnit.faction);
 
-    // Rim Color 受擊閃爍（Tier 2 Instancing）
-    services().material.setRim(`${defenderId}_body`, "unit-base", new Color(255, 80, 0, 200));
-    services().material.setRim(`${defenderId}_accent`, "unit-base", new Color(255, 80, 0, 200));
-    setTimeout(() => {
-      // 確保仍存在才清空（可能已經死亡被銷毀）
-      if (this.unitViews.has(defenderId)) {
-        services().material.clearRim(`${defenderId}_body`, "unit-base");
-        services().material.clearRim(`${defenderId}_accent`, "unit-base");
+    // 閃白：3D 後備用白色邊緣光（Tier 2 Instancing）；Spine 疊層已在 hit() 內處理
+    if (plan.flash && !spineHit) {
+      services().material.setRim(`${defenderId}_body`, "unit-base", new Color(255, 255, 255, 255));
+      services().material.setRim(`${defenderId}_accent`, "unit-base", new Color(255, 255, 255, 255));
+      setTimeout(() => {
+        // 確保仍存在才清空（可能已經死亡被銷毀）
+        if (this.unitViews.has(defenderId)) {
+          services().material.clearRim(`${defenderId}_body`, "unit-base");
+          services().material.clearRim(`${defenderId}_accent`, "unit-base");
+        }
+      }, BATTLE_VISUAL_TIMING.hitRimFlashMs);
+    }
+    if (plan.screenShake) this.playHitScreenShake();
+  }
+
+  /** 一格在畫面上的寬度（像素），受擊抖動幅度以它為基準；算不出來就用 100。 */
+  private hitShakeAmplitudePx(lane: number, depth: number): number {
+    let cellPx = 100;
+    const a = this.getUnitWorldPosition(lane, depth);
+    const b = this.getUnitWorldPosition(lane, depth + 1);
+    if (a && b) {
+      // overlayPoint 回傳共用緩衝，必須先把第一點取出來再算第二點
+      const pa = this.overlayPoint(a);
+      const ax = pa?.x ?? 0; const ay = pa?.y ?? 0;
+      const pb = this.overlayPoint(b);
+      if (pa && pb) {
+        const dist = Math.hypot(pb.x - ax, pb.y - ay);
+        if (dist > 20 && dist < 400) cellPx = dist;
       }
-    }, BATTLE_VISUAL_TIMING.hitRimFlashMs);
+    }
+    return cellPx * BATTLE_VISUAL_TIMING.hitShakeAmplitudeRatio;
+  }
+
+  /** 重擊／爆擊的輕微畫面震動；EffectSystem 內有重疊保護，連續重擊不會讓鏡頭漂移。 */
+  private playHitScreenShake(): void {
+    try {
+      services().effect.playCameraShake(BATTLE_VISUAL_TIMING.hitScreenShakeStrength, BATTLE_VISUAL_TIMING.hitScreenShakeSec);
+    } catch (error) { console.warn('[UnitRenderer] 畫面震動略過', error); }
+  }
+
+  /** 各 3D 後備節點抖動前的原位；只在第一次（沒有進行中的抖動）記錄，被打斷時下一次仍以它為準，不會漂移。 */
+  private readonly shakeBase = new Map<Node, Vec3>();
+
+  /** 沒有 Spine 的 3D 單位：抖動 Visual 底下的兵陣與本體（不動 visualNode，那是受擊後退 tween 的目標）。 */
+  private shakeVisualChildren(view: UnitView): void {
+    const cellWorld = this.boardRenderer?.cellSize ?? 1;
+    const amplitudeWorld = cellWorld * BATTLE_VISUAL_TIMING.hitShakeAmplitudeRatio;
+    const ws = view.worldNode.worldScale.x || 1;
+    const amplitude = amplitudeWorld / ws;
+    [view.formationRoot, view.bodyNode].forEach(node => { if (node?.isValid && node.activeInHierarchy) this.shakeLocalNode(node, amplitude); });
+  }
+
+  private shakeLocalNode(node: Node, amplitude: number): void {
+    let base = this.shakeBase.get(node);
+    if (!base) { base = node.position.clone(); this.shakeBase.set(node, base); }
+    const home = base;
+    Tween.stopAllByTarget(node);
+    const seq = tween(node);
+    buildHitShakeSteps(amplitude).forEach(step => seq.to(step.durationSec, { position: new Vec3(home.x + step.offsetX, home.y, home.z) }));
+    seq.call(() => { node.setPosition(home); this.shakeBase.delete(node); }).start();
   }
 
   public playDodgeAnimation(unitId: string): void { this.spineUnits.play(unitId, 'dodge'); }
   public playGeneralDodge(faction: Faction): void { this.spineUnits.play(this.generalSpineId(faction), 'dodge'); }
 
-  public async playHitAnimationAsync(defenderId: string, attackerId: string | null): Promise<void> {
-    this.playHitAnimation(defenderId, attackerId);
+  public async playHitAnimationAsync(defenderId: string, attackerId: string | null, opts?: { heavy?: boolean; lethal?: boolean }): Promise<void> {
+    this.playHitAnimation(defenderId, attackerId, opts);
     await this.waitSeconds(BATTLE_VISUAL_TIMING.hitAwaitSec);
   }
 
@@ -671,15 +731,31 @@ export class UnitRenderer extends Component {
       .start();
   }
 
-  public playGeneralHitAnimation(defenderFaction: Faction, _attackerId: string | null): void {
-    const defenderNode = this.generalViews.get(defenderFaction)?.worldNode ?? null;
-    if (!defenderNode) return;
+  /**
+   * 主將受擊。recoil 一律播（閃避時橋接層也呼叫它當等待節奏）；
+   * 閃白與抖動只在真的受傷時播（silent = true 表示閃避，略過）。PROG-2-9401。
+   */
+  public playGeneralHitAnimation(defenderFaction: Faction, _attackerId: string | null, opts?: { heavy?: boolean; lethal?: boolean; silent?: boolean }): void {
+    const generalView = this.generalViews.get(defenderFaction);
+    const defenderNode = generalView?.worldNode ?? null;
+    if (!generalView || !defenderNode) return;
 
     this.recoilNode(defenderNode, defenderFaction);
+    if (opts?.silent) return;
+
+    const plan = planHitFeedback(opts?.lethal === true, opts?.heavy === true);
+    const amplitudePx = plan.shake ? this.hitShakeAmplitudePx(2, 2) : 0;
+    if (!this.spineUnits.hit(this.generalSpineId(defenderFaction), amplitudePx, plan.flash) && plan.shake) {
+      // 沒有 Spine 的 3D 武將模型：抖動模型根節點（recoil 動的是 worldNode，兩者不衝突）
+      const cellWorld = this.boardRenderer?.cellSize ?? 1;
+      const amplitude = cellWorld * BATTLE_VISUAL_TIMING.hitShakeAmplitudeRatio / (generalView.worldNode.worldScale.x || 1);
+      if (generalView.modelRoot?.isValid && generalView.modelRoot.activeInHierarchy) this.shakeLocalNode(generalView.modelRoot, amplitude);
+    }
+    if (plan.screenShake) this.playHitScreenShake();
   }
 
-  public async playGeneralHitAnimationAsync(defenderFaction: Faction, attackerId: string | null): Promise<void> {
-    this.playGeneralHitAnimation(defenderFaction, attackerId);
+  public async playGeneralHitAnimationAsync(defenderFaction: Faction, attackerId: string | null, opts?: { heavy?: boolean; lethal?: boolean; silent?: boolean }): Promise<void> {
+    this.playGeneralHitAnimation(defenderFaction, attackerId, opts);
     await this.waitSeconds(BATTLE_VISUAL_TIMING.hitAwaitSec);
   }
 
@@ -693,7 +769,24 @@ export class UnitRenderer extends Component {
     // 暴擊時使用 dmg_crit 字體，否則依陣營選色
     const isPlayerSide = defenderFaction === Faction.Player;
     const floatType = isCrit ? 'dmg_crit' : (isPlayerSide ? 'dmg_player' : 'dmg_enemy');
-    this.spawnFloatText(`-${value}`, floatType, worldPos);
+    this.spawnFloatText(`-${value}`, floatType, worldPos, `general:${defenderFaction}`);
+  }
+
+  /** 閃避飄字（灰字「閃避」）：小兵被攻擊落空時，在被攻擊的單位頭上跳。PROG-2-9401。 */
+  public playMissFloat(unit: TroopUnit | null): void {
+    if (!unit || !this.uiRoot || !this.worldCamera || !this.canvasNode) return;
+    const worldPos = this.getUnitWorldPosition(unit.lane, unit.depth);
+    if (!worldPos) return;
+    this.spawnFloatText(FLOAT_MISS_TEXT, 'dmg_miss', worldPos, unit.id);
+  }
+
+  /** 主將閃避飄字。 */
+  public playGeneralMissFloat(faction: Faction): void {
+    const generalView = this.generalViews.get(faction);
+    if (!generalView) return;
+    const worldPos = generalView.worldNode.worldPosition.clone();
+    worldPos.y += this.unitHeight * 0.5;
+    this.spawnFloatText(FLOAT_MISS_TEXT, 'dmg_miss', worldPos, `general:${faction}`);
   }
 
   public async playGeneralValueChangeAsync(defenderFaction: Faction, value: number, isCrit = false): Promise<void> {
@@ -725,7 +818,7 @@ export class UnitRenderer extends Component {
       const sign = kind === "heal" ? "+" : "-";
       // 主戰場UI規格書 §3.2：暴擊用橘金放大字（PROG-2-1875）
       const dmgType: FloatTextType = unitValueFloatType(kind, unit.faction === Faction.Player, isCrit);
-      this.spawnFloatText(`${sign}${value}`, dmgType, worldPos!);
+      this.spawnFloatText(`${sign}${value}`, dmgType, worldPos!, unit.id);
 
       const currentView = this.unitViews.get(unit.id);
       if (currentView) {
@@ -786,8 +879,9 @@ export class UnitRenderer extends Component {
    * 飄字委托至 FloatTextSystem，由其統一管理物件池、動畫、maxConcurrent
    * 外觀設定請修改 FloatTextSystem.ts 中的 FLOAT_CONFIGS
    */
-  private spawnFloatText(text: string, type: FloatTextType, worldPos: Vec3): void {
-    services().floatText.show(type, text, worldPos);
+  /** anchorKey：同一單位短時間連續跳字會依序錯開（FloatTextSystem 內處理）。 */
+  private spawnFloatText(text: string, type: FloatTextType, worldPos: Vec3, anchorKey?: string): void {
+    services().floatText.show(type, text, worldPos, anchorKey);
   }
 
   private waitSeconds(seconds: number): Promise<void> {

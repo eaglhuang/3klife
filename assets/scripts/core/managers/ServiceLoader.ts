@@ -21,7 +21,9 @@ import { NpcMemoryAdapter } from "../dialogue/NpcMemoryAdapter";
 import { SceneManager } from "./SceneManager";
 import { GameManager } from "./GameManager";
 import { GameSession, InMemoryRosterStore } from "./GameSession";
-import type { RosterStore } from "./GameSession";
+import type { RosterStore, HallMissionWallet } from "./GameSession";
+import { loadMissionDataBundle } from "../mission/MissionLoader";
+import type { IMissionService } from "../mission/service/IMissionService";
 import { PlayerSaveService } from "../services/PlayerSaveService";
 import { LegacyService } from "../services/LegacyService";
 import { PlayerRosterService } from "../services/PlayerRosterService";
@@ -348,6 +350,23 @@ export class ServiceLoader {
         } catch (e) {
             UCUFLogger.warn(LogCategory.DATA, '[ServiceLoader] season-modifiers.json 載入失敗，使用預設四季修正:', e);
         }
+    }
+
+    /**
+     * 載入通用任務資料包並建立任務服務（PROG-2-9148）：資料包驗證失敗回傳 null（任務牆維持載入失敗字樣，不退回假資料）。
+     * 服務由 GameSession 持有，UI 一律走 session.missionService。
+     */
+    public async bindMissionData(wallet: HallMissionWallet): Promise<IMissionService | null> {
+        const loaded = await loadMissionDataBundle((path) => this.resource.loadJson<unknown>(path));
+        if (!loaded.ok) {
+            UCUFLogger.warn(LogCategory.DATA, '[ServiceLoader] 通用任務資料載入或驗證失敗:', loaded.issues);
+            return null;
+        }
+        const generated = this.session.bindMissionData(loaded.bundle, wallet);
+        if (generated) {
+            this.session.save().catch((error: unknown) => UCUFLogger.warn(LogCategory.DATA, '[ServiceLoader] 任務初次產生後存檔失敗', error));
+        }
+        return this.session.missionService;
     }
 
     public async loadVfxEffects(): Promise<void> {

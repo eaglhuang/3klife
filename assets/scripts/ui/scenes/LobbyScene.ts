@@ -23,10 +23,8 @@ import type { HallStageDecor } from '../../core/systems/HallStageCrowdPose';
 import type { HallMapEventCatalog } from '../../core/systems/HallMapEventMapper';
 import type { HallMapLayout, HallMapTurnStep } from '../../core/systems/HallMapFocusPlanner';
 import { buildLobbyHallWallView, type LobbyHallWallView } from '../../core/systems/LobbyHallWallView';
-import { parseHallMissionBalance, parseHallMissionTemplates } from '../../core/systems/HallMissionData';
-import { findHallMission } from '../../core/systems/HallMissionLoop';
-import { hallMissionDialogState, hallMissionsToHub, hallRowStatusText } from '../core/HallMissionView';
-import { HALL_BLOCK_TEXT } from '../../core/systems/HallMissionRules';
+import { boardToHub, candidateOptions, dialogStateFromService, findCard, missionRowStatusText, type WallOfTheme } from '../../core/mission/adapter/LegacyHallUiAdapter';
+import type { HallDialogState } from '../core/HallMissionView';
 import { buildLobbyHallAltarView } from '../core/LobbyHallAltarView';
 import { buildHallMapTurnSteps, hasHallMapFocus, type HallMapProvinceSource } from '../../core/systems/HallMapSeasonTurn';
 import type { HallStageLayout } from '../../core/systems/HallStagePlanner';
@@ -2595,11 +2593,7 @@ export class LobbyScene extends Component {
         await this._bindHallMissions();
         this._hallBoard = new HallBoardPanelController({
             hub: () => this._hallMissionHub(hub),
-            statusText: (taskId) => {
-                const state = services().session.hallMissionState;
-                const mission = state ? findHallMission(state, taskId) : undefined;
-                return mission ? hallRowStatusText(mission, this._hallSeason()) : '';
-            },
+            statusText: (taskId) => this._hallRowStatus(taskId),
             player: () => hallPlayerOf(services().session.officerUnlocks, services().session.intel),
             assignments: () => services().session.hallAssignments,
             leadGeneralId: () => services().session.leadGeneralId,
@@ -3622,38 +3616,37 @@ export class LobbyScene extends Component {
     /** 牆上每一列對應的任務代號（_refreshLobbyHallWalls 更新） */
     private _lobbyWallOpenIds: Partial<Record<LobbyHallWallId, string[]>> = {};
 
-    /** 目前任務牆用的 hub：任務牆換成 GameSession 的真實任務（PROG-2-9130）；還沒就緒時三面牆都是空的，不顯示任何設計稿任務 */
+    /** 目前任務牆用的 hub：任務牆換成任務服務的真實任務（PROG-2-9148）；還沒就緒時三面牆都是空的，不顯示任何設計稿任務 */
     private _hallMissionHub(base: LobbyHub): LobbyHub {
-        const state = services().session.hallMissionState;
-        if (state) return hallMissionsToHub(base, state);
+        const service = services().session.missionService;
+        if (service) return boardToHub(base, service, this._wallOfTheme());
         const empty = { Tasks: [], Last_Refresh_At: '' };
         return { ...base, Mission_Boards: { Military: empty, Domestic: empty, Expedition: empty } };
     }
 
-    /** 載入任務模板與數值表並綁定到 GameSession；新局或舊檔會在這裡立即產生一次任務（§3.2-5、§10） */
+    /** 主題 → 牆別（資料包的主題登錄）；沒登錄的主題歸內政 */
+    private _wallOfTheme(): WallOfTheme {
+        const themes = services().session.missionData?.themes;
+        return (theme) => (themes?.get(theme)?.wall as HallBoardKey | undefined) ?? 'Domestic';
+    }
+
+    /** 任務列狀態文字：進行中為「進行中，還有 N 季・武將名」，未接取為空 */
+    private _hallRowStatus(missionId: string): string {
+        const service = services().session.missionService;
+        const board = service?.getBoard();
+        const card = board && board.ok ? findCard(board.value, missionId) : undefined;
+        return card ? missionRowStatusText(card, this._hallSeason()) : '';
+    }
+
+    /** 載入通用任務資料包並綁定到 GameSession；新局或舊檔會在這裡立即產生或遷移任務 */
     private async _bindHallMissions(): Promise<boolean> {
-        const [rawTemplates, rawBalance] = await Promise.all([
-            this._loadDataJson<unknown>('data/hall-mission-templates'),
-            this._loadDataJson<unknown>('data/hall-mission-balance'),
-        ]);
-        const templates = parseHallMissionTemplates(rawTemplates);
-        const balance = parseHallMissionBalance(rawBalance);
-        if (!templates.ok || !balance.ok) {
-            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 大廳任務資料載入或驗證失敗', templates.ok ? balance.issues : templates.issues);
-            return false;
-        }
         const gacha = this._localGachaService;
-        const generated = services().session.bindHallMissions(templates.value, balance.value, {
+        const service = await services().bindMissionData({
             gold: () => gacha.getCurrencyAmount('gold'),
             spend: (amount) => gacha.spendCurrency('gold', amount),
             grant: (amount) => { gacha.grantCurrency('gold', amount); },
         });
-        if (generated) {
-            services().session.save().catch((error: unknown) => {
-                UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 大廳任務初次產生後存檔失敗', error);
-            });
-        }
-        return true;
+        return service !== null;
     }
 
     /** 任務牆目前可見資料的目前季（totalSeasonsElapsed） */
@@ -3662,27 +3655,38 @@ export class LobbyScene extends Component {
     }
 
     /**
-     * 派出任務（執行／委任／任務牆接取共用，doc_spec_1178 §7.3、§8）：成功時顯示明確的派出提示，
-     * 失敗時顯示原因並回傳 false。generalId 為 null 表示委任。
+     * 派出任務（執行／委任／任務牆接取共用）：成功時顯示明確的派出提示，失敗時顯示原因並回傳 false。
+     * generalId 為 null 表示委任（系統依武將記憶選人）。
      */
     private async _dispatchHallMission(missionId: string, generalId: string | null): Promise<boolean> {
         const session = services().session;
-        const result = await session.dispatchHallMission(missionId, generalId);
+        const service = session.missionService;
+        if (!service) { this._showToast('任務資料整理中，請稍後再試'); return false; }
+        const result = await service.dispatch({
+            requestId: session.nextMissionRequestId('dispatch'),
+            missionId,
+            generalIds: generalId === null ? 'delegate' : [generalId],
+        });
         if (result.ok === false) {
             this._showToast(result.text);
             return false;
         }
-        const m = result.mission;
+        const v = result.value;
+        const board = service.getBoard();
+        const card = board.ok ? findCard(board.value, missionId) : undefined;
+        const name = session.roster.find((g) => g.id === v.generalIds[0])?.name ?? v.generalIds[0];
         const spent = [
-            result.spent.grain > 0 ? `糧草 -${result.spent.grain}` : '',
-            result.spent.troops > 0 ? `兵源 -${result.spent.troops}` : '',
-            result.spent.silver > 0 ? `黃金 -${result.spent.silver}` : '',
+            v.cost.grain > 0 ? `糧草 -${v.cost.grain}` : '',
+            v.cost.troops > 0 ? `兵源 -${v.cost.troops}` : '',
+            v.cost.silver > 0 ? `黃金 -${v.cost.silver}` : '',
         ].filter((text) => text.length > 0).join('、');
+        const duration = Math.max(1, v.returnSeason - this._hallSeason());
         services().event.emit('SHOW_TOAST', {
-            message: `已派出${m.delegated ? '（委任）' : ''}${m.generalName}執行「${m.title}」，${m.durationSeasons} 季後回報\n${spent}`,
+            message: `已派出${v.delegated ? '（委任）' : ''}${name}執行「${card?.title ?? missionId}」，${duration} 季後回報
+${spent}`,
             duration: 3,
         });
-        this._lobbyHall?.reactToDispatch(m.difficulty);
+        this._lobbyHall?.reactToDispatch((card?.difficulty ?? 'EASY') as Parameters<NonNullable<typeof this._lobbyHall>['reactToDispatch']>[0]);
         this._refreshLobbyHallTopbar();
         return true;
     }
@@ -3693,17 +3697,15 @@ export class LobbyScene extends Component {
     }
 
     /** 組詳情視窗用的 state（§5、§6）；沒有該任務時回傳 null */
-    private _hallDialogStateFor(missionId: string, selectedGeneralId: string | null): ReturnType<typeof hallMissionDialogState> | null {
+    private _hallDialogStateFor(missionId: string, selectedGeneralId: string | null): HallDialogState | null {
         const session = services().session;
-        const state = session.hallMissionState;
-        const balance = session.hallMissionBalance;
-        const mission = state ? findHallMission(state, missionId) : undefined;
-        if (!mission || !balance) return null;
-        return hallMissionDialogState(mission, {
+        const service = session.missionService;
+        const data = session.missionData;
+        if (!service || !data) return null;
+        return dialogStateFromService(service, missionId, this._wallOfTheme(), {
             season: this._hallSeason(),
             stock: session.hallMissionStock(),
-            balance,
-            candidates: session.hallMissionCandidates(missionId),
+            reconGrainCost: data.balance.recon.grainCost,
             selectedGeneralId,
         });
     }
@@ -3726,23 +3728,24 @@ export class LobbyScene extends Component {
 
     private _openHallDetailById(missionId: string): void {
         const session = services().session;
-        const mission = session.hallMissionState ? findHallMission(session.hallMissionState, missionId) : undefined;
-        const balance = session.hallMissionBalance;
-        if (!mission || !balance) {
+        const service = session.missionService;
+        if (!service) {
             this._showToast('任務資料整理中，請稍後再試');
             return;
         }
-        // 清單：可派的在前，出任務中的武將灰掉並標「出任務中」、不可選（§7.1）；其他不可派者（未畢業、培育中…）不列
-        const candidates = session.hallMissionCandidates(missionId);
-        const eligible = candidates.filter((c) => c.block === null);
+        // 清單＝真實名冊全員：可派的在前；不可派者（出任務中、受傷、被囚、未畢業…）灰掉並附原因（PROG-2-9148）
+        const cands = service.getCandidates(missionId);
+        if (!cands.ok) { this._showToast('此任務已不存在'); return; }
+        const candidates = cands.value;
+        const eligible = candidates.filter((c) => c.block.length === 0);
         const lead = session.leadGeneralId;
-        const selected = eligible.find((c) => c.id === lead) ?? eligible[0] ?? null;
-        const state = this._hallDialogStateFor(missionId, selected?.id ?? null);
+        const selected = eligible.find((c) => c.generalId === lead) ?? eligible[0] ?? null;
+        const state = this._hallDialogStateFor(missionId, selected?.generalId ?? null);
         if (!state) return;
         void services().ui.open(UIID.LobbyMissionDetailDialog, {
             state,
-            availableGenerals: candidates.filter((c) => c.block === null || c.block === 'on-mission').map((c) => ({ id: c.id, label: c.name, volunteer: c.volunteer, ...(c.block ? { blockedText: HALL_BLOCK_TEXT[c.block] } : {}) })),
-            selectedGeneralId: selected?.id,
+            availableGenerals: candidateOptions(candidates),
+            selectedGeneralId: selected?.generalId,
             onGeneralSelected: (option) => { this._refreshHallDialog(missionId, option.id); },
             onActionSelected: (action, snapshot) => this._onHallMissionAction(action, missionId, snapshot),
         } satisfies LobbyMissionDetailDialogOpenPayload).then((opened) => { if (!opened) this._showNotOpenYet(); });
@@ -3754,21 +3757,23 @@ export class LobbyScene extends Component {
      */
     private async _onHallMissionAction(action: LobbyMissionActionKey, missionId: string, snapshot: { selectedGeneralId: string | null; aiDelegateChecked: boolean }): Promise<boolean | void> {
         const session = services().session;
-        const mission = session.hallMissionState ? findHallMission(session.hallMissionState, missionId) : undefined;
-        if (!mission) { this._showToast('此任務已不存在'); return false; }
-        if (mission.status === 'ACTIVE') { this._showToast(hallRowStatusText(mission, this._hallSeason())); return false; }
+        const service = session.missionService;
+        const board = service?.getBoard();
+        const card = board && board.ok ? findCard(board.value, missionId) : undefined;
+        if (!service || !card) { this._showToast('此任務已不存在'); return false; }
+        if (card.status === 'ACTIVE') { this._showToast(missionRowStatusText(card, this._hallSeason())); return false; }
         try {
             if (action === 're-scout') {
-                const result = await session.reconHallMission(missionId);
+                const result = await service.recon({ requestId: session.nextMissionRequestId('recon'), missionId });
                 if (result.ok === false) { this._showToast(result.text); return false; }
-                this._showToast(`再探完成，情報已完整（糧草 -${result.costGrain}）`);
+                this._showToast(`再探完成，情報 +${result.value.gained}，目前 ${result.value.intel}%`);
                 this._refreshHallDialog(missionId, snapshot.selectedGeneralId);
                 return true;
             }
             if (action === 'wait') {
-                const result = await session.waitHallMission(missionId);
+                const result = await service.wait({ requestId: session.nextMissionRequestId('wait'), missionId });
                 if (result.ok === false) { this._showToast(result.text); return false; }
-                this._showToast(`等待一季：期限延長 1 季，情報度 ${result.intel}%`);
+                this._showToast(`等待一季：期限延長，情報 +${result.value.gained}，目前 ${result.value.intel}%`);
                 this._refreshHallDialog(missionId, snapshot.selectedGeneralId);
                 return true;
             }
@@ -3797,10 +3802,9 @@ export class LobbyScene extends Component {
             this._showToast(this._hallBoard?.notice ?? '此格目前沒有任務');
             return;
         }
-        const state = services().session.hallMissionState;
-        const mission = state ? findHallMission(state, task.Task_ID) : undefined;
-        if (mission?.status === 'ACTIVE') {
-            this._showToast(hallRowStatusText(mission, this._hallSeason()));
+        const status = this._hallRowStatus(task.Task_ID);
+        if (status.length > 0) {
+            this._showToast(status);
             return;
         }
         this._openHallDetailById(task.Task_ID);
@@ -4101,12 +4105,11 @@ export class LobbyScene extends Component {
             for (const id of ['wall-left', 'wall-right'] as const) this._lobbyHall.setWall(id, { countText: '任務資料載入失敗', rows: [] });
             return;
         }
-        const state = session.hallMissionState;
         // 牆只有 4 列：未接取任務一定都要看得到，所以只列未接取的；進行中的收成牆頭的「進行中 N 件」，
         // 逐件的「進行中，還有 N 季・武將名」在展開後的任務牆上看（PROG-2-9130）
         const view = (key: HallBoardKey): LobbyHallWallView => {
             const rows = board.rowsFor(key);
-            const open = rows.filter((row) => !(state && findHallMission(state, row.taskId)?.status === 'ACTIVE'));
+            const open = rows.filter((row) => this._hallRowStatus(row.taskId).length === 0);
             const activeCount = rows.length - open.length;
             this._lobbyWallOpenIds[key === 'Military' ? 'wall-left' : 'wall-right'] = open.map((row) => row.taskId);
             const wall = buildLobbyHallWallView(open, HALL_BOARD_MAX_ROWS);

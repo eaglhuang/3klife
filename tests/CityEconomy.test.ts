@@ -14,7 +14,7 @@ import {
     populationBonusAmount, populationBonusRate, populationCapOf, populationGrowthRate,
 } from '../assets/scripts/core/systems/CityEconomy';
 import { buildGovernorHallView } from '../assets/scripts/core/systems/GovernorHallView';
-import { parseHallMissionBalance, parseHallMissionTemplates } from '../assets/scripts/core/systems/HallMissionData';
+import { realBundle } from './mission/missionTestKit';
 import { seasonModifiersOf } from '../assets/scripts/core/systems/SeasonModifiers';
 import { FOOD_PER_SEASON } from '../assets/scripts/core/systems/MilitaryReserve';
 
@@ -134,11 +134,8 @@ export function createCityEconomySuite(): TestSuite {
 
     suite.test('季結：人口紅利以結算前數值入帳到黃金（上季商業任務）與糧草', async () => {
         const session = newSession();
-        const t = parseHallMissionTemplates(readData('hall-mission-templates.json'));
-        const b = parseHallMissionBalance(readData('hall-mission-balance.json'));
-        if (t.ok === false || b.ok === false) throw new Error('資料檔驗證失敗');
         const w = wallet();
-        session.bindHallMissions(t.value, b.value, w);
+        session.bindMissionData(realBundle(), w);
         session.assignGovernor('commerce', 'zhang');
         await session.chooseDomesticTask('commerce');
         const foodBefore = session.military.food;
