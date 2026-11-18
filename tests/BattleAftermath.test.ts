@@ -193,6 +193,15 @@ export function createBattleAftermathSuite(): TestSuite {
         assert.equals(500 - cost.foodSpent + REWARD.win.food, session.military.food);
     });
 
+    suite.test('出戰武將不在名冊（沒有可結算的武將）：戰損與獎賞照樣入帳', async () => {
+        const { session } = setup({ troops: 2000, food: 500 });
+        const cost = quickSortieCost('win', 2000);
+        const result = await session.recordBattle(['not-in-roster'], 'player-win', { offBoard: true });
+        assert.equals(2000 - cost.lostTroops, session.military.cityTroops);
+        assert.equals(500 - cost.foodSpent + REWARD.win.food, session.military.food);
+        assert.isTrue(result.aftermathLines.length > 0);
+    });
+
     suite.test('沒有 offBoard 也沒有帳本：兵源不變（舊行為）', async () => {
         const { session } = setup({ troops: 2000 });
         await session.recordBattle(['lead-1'], 'player-win', {});

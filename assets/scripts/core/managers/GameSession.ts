@@ -5640,23 +5640,14 @@ export class GameSession {
                 await this.save();
             }
             if (firstClear) this._emit(GAME_SESSION_EVENTS.FirstBattleCleared, undefined);
-            return { ...settlement, awakenings: [], captureNotices: [], aftermathLines: [] };
+            // 沒有可結算的出戰武將（名冊裡找不到主將）時，戰損與戰後獎懲仍要入帳（PROG-2-9149）
+            const early = this._applySortieCost(result, options);
+            const earlyAftermath = early.outcomeKind && !options.teachingSpirit ? this._applyBattleAftermath(early.outcomeKind, early.lostTroopsApplied) : undefined;
+            if ((earlyAftermath || early.sortieCost) && this._autoSave && this._save) await this.save();
+            return { ...settlement, awakenings: [], captureNotices: [], aftermath: earlyAftermath, aftermathLines: earlyAftermath ? formatAftermathLines(earlyAftermath) : [], ...(early.sortieCost ? { military: this.military } : {}) };
         }
         // 戰損一律回扣城市兵源（領地治理系統 2026-04-26 裁定第 2 點）：戰場有出征帳本用帳本，極速決戰用常數表推估
-        const outcomeKind = aftermathOutcomeOf(result);
-        const sortieCost = options.sortie ?? (options.offBoard && outcomeKind ? quickSortieCost(outcomeKind, this._military.cityTroops) : null);
-        const lostTroopsApplied = sortieCost ? Math.min(this._military.cityTroops, Math.max(0, Math.floor(sortieCost.lostTroops))) : 0;
-        if (sortieCost) {
-            const foodBefore = this._military.food;
-            this._military = applySortieResult(this._military, sortieCost);
-            // 地窖保護（ECO-06，PROG-2-1341）：戰敗時糧草不扣到 min(戰前, 保底) 以下
-            this._lastCellarProtectedFood = 0;
-            if (result === 'enemy-win' && CELLAR_PROTECTION.triggerAfterFailedDefense) {
-                const kept = protectedAfterLoss(foodBefore, this._military.food, CELLAR_PROTECTION.foodFloor);
-                this._military = { ...this._military, food: kept.after };
-                this._lastCellarProtectedFood = kept.saved;
-            }
-        }
+        const { outcomeKind, sortieCost, lostTroopsApplied } = this._applySortieCost(result, options);
 
         // 戰場撿拾戰後入帳（關卡設計 §I-2，PROG-2-1571）：補給轉糧草、其餘轉背包材料，戰敗不入帳
         if (options.stageSalvage) {
@@ -5753,6 +5744,25 @@ export class GameSession {
         }
         rankPromotions.forEach((payload) => this._emit(GAME_SESSION_EVENTS.GeneralRankPromoted, payload));
         return record;
+    }
+
+    /** 戰損回扣城市兵源（極速決戰用常數表推估）；地窖保護只在戰敗時生效。回傳本次實際扣掉的兵數 */
+    private _applySortieCost(result: BattleResult, options: RecordBattleOptions): { outcomeKind: ReturnType<typeof aftermathOutcomeOf>; sortieCost: Pick<SortieSummary, 'lostTroops' | 'foodSpent'> | null; lostTroopsApplied: number } {
+        const outcomeKind = aftermathOutcomeOf(result);
+        const sortieCost = options.sortie ?? (options.offBoard && outcomeKind ? quickSortieCost(outcomeKind, this._military.cityTroops) : null);
+        const lostTroopsApplied = sortieCost ? Math.min(this._military.cityTroops, Math.max(0, Math.floor(sortieCost.lostTroops))) : 0;
+        if (sortieCost) {
+            const foodBefore = this._military.food;
+            this._military = applySortieResult(this._military, sortieCost);
+            // 地窖保護（ECO-06，PROG-2-1341）：戰敗時糧草不扣到 min(戰前, 保底) 以下
+            this._lastCellarProtectedFood = 0;
+            if (result === 'enemy-win' && CELLAR_PROTECTION.triggerAfterFailedDefense) {
+                const kept = protectedAfterLoss(foodBefore, this._military.food, CELLAR_PROTECTION.foodFloor);
+                this._military = { ...this._military, food: kept.after };
+                this._lastCellarProtectedFood = kept.saved;
+            }
+        }
+        return { outcomeKind, sortieCost, lostTroopsApplied };
     }
 
     /**
