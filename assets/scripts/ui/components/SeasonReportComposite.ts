@@ -24,6 +24,8 @@ export interface SeasonReportOpenPayload {
     reports: readonly QuarterlyBattleReportRow[];
     /** 本季大廳任務結算的逐筆文字（payload.hallMissionReport.lines）；沒有時不顯示該區塊 */
     hallMissionLines?: readonly string[];
+    /** 下一官職會開什麼的預告一行（PROG-2-9151）；沒有時不顯示 */
+    rankPreviewLine?: string;
     onRequestClose?: () => void;
 }
 
@@ -65,7 +67,7 @@ export class SeasonReportComposite extends CompositePanel {
         const payload = this._payload;
         if (!payload) return;
         const hallLines = payload.hallMissionLines ?? [];
-        this._templateBinder?.setTextsByPath(buildSeasonReportPanelTexts(payload.seasonLabel, payload.reports, hallLines));
+        this._templateBinder?.setTextsByPath(buildSeasonReportPanelTexts(payload.seasonLabel, payload.reports, hallLines, payload.rankPreviewLine ?? ''));
         const hallNode = this._templateBinder?.getNodeByPath(SEASON_REPORT_HALL_LABEL_PATH);
         if (hallNode) hallNode.active = hallLines.length > 0;
     }

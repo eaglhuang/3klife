@@ -1,0 +1,17 @@
+{
+  "id": "rank-unlock-popup-screen",
+  "version": 1,
+  "uiId": "RankUnlockPopup",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "rank-unlock-popup-main",
+  "skin": "rank-unlock-popup-screen.skin",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}

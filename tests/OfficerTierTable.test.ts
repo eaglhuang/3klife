@@ -8,7 +8,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { assert, TestSuite } from './TestRunner';
 import { installOfficerTierTable, parseOfficerTierTable } from '../assets/scripts/core/systems/OfficerTierTable';
-import { OFFICER_PROMOTION_REWARD_GOLD, OFFICER_TIER_EXP_THRESHOLDS, tierForExp } from '../assets/scripts/core/systems/OfficerState';
+import { calcOfficerExpGain, OFFICER_EXP_TUNING, OFFICER_PROMOTION_REWARD_GOLD, OFFICER_TIER_EXP_THRESHOLDS, tierForExp } from '../assets/scripts/core/systems/OfficerState';
 
 const DATA_PATH = path.resolve(__dirname, '..', 'assets/resources/data/officer-tiers.json');
 const readTable = (): unknown => JSON.parse(fs.readFileSync(DATA_PATH, 'utf8'));
@@ -16,6 +16,7 @@ const BUILT_IN = { 2: 100, 3: 260, 4: 520, 5: 920 };
 const BUILT_IN_REWARD = { 2: 200, 3: 400, 4: 800, 5: 1500 };
 
 function restoreBuiltIn(): void {
+    OFFICER_EXP_TUNING.gainMultiplier = 1;
     for (const [tier, exp] of Object.entries(BUILT_IN)) {
         OFFICER_TIER_EXP_THRESHOLDS[Number(tier)] = exp;
     }
@@ -94,6 +95,25 @@ export function createOfficerTierTableSuite(): TestSuite {
             restoreBuiltIn();
         }
         assert.equals(1, tierForExp(50));
+    });
+
+    suite.test('官職經驗倍率（PROG-2-9151）：資料檔寫入後經驗照倍率放大，非法值被擋、省略回 1', () => {
+        const table = readTable() as { expGainMultiplier?: unknown };
+        const task = { difficulty: 'NORMAL', boardType: 'MILITARY', success: true } as const;
+        try {
+            assert.equals(19, calcOfficerExpGain(task));
+            assert.isTrue(installOfficerTierTable(table).ok);
+            assert.isTrue(OFFICER_EXP_TUNING.gainMultiplier > 1, '資料檔應加成官職經驗');
+            assert.equals(Math.floor(19.8 * OFFICER_EXP_TUNING.gainMultiplier), calcOfficerExpGain(task));
+            assert.isFalse(parseOfficerTierTable({ ...table as object, expGainMultiplier: 0.5 }).ok);
+            assert.isFalse(parseOfficerTierTable({ ...table as object, expGainMultiplier: 'x' }).ok);
+            const omitted = { ...(table as object) } as { expGainMultiplier?: unknown };
+            delete omitted.expGainMultiplier;
+            assert.isTrue(installOfficerTierTable(omitted).ok);
+            assert.equals(1, OFFICER_EXP_TUNING.gainMultiplier);
+        } finally {
+            restoreBuiltIn();
+        }
     });
 
     return suite;

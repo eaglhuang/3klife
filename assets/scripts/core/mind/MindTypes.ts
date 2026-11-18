@@ -104,6 +104,51 @@ export interface MindLedger {
     idleSeasons: number;
     byTag: Record<string, MindTagStat>;
     partners: Record<string, MindPartnerStat>;
+    /** 敗給的對手 id（≤3，新的在後）；MIND-2 */
+    grudges: string[];
+    /** 玩家答應過「請再戰」的任務類型；之後同類成功會加倍並寫里程碑（雪恥）；MIND-2 */
+    redeemTag?: string;
+    /** 最近一次抗命的季數；MIND-2 */
+    defiedSeason?: number;
+    /** 最近一次被稱讚／安撫的季數；MIND-2 */
+    lastPraiseSeason: number;
+}
+
+/** 主動請求的種類（MIND-2）：求封、請戰為重大事件 */
+export type MindRequestKind = 'ASK_PROMOTE' | 'ASK_BATTLE' | 'REDEEM' | 'APOLOGIZE' | 'COMPLAIN_IDLE' | 'ADVISE' | 'DEFY_LETTER';
+
+export const MIND_REQUEST_KINDS: readonly MindRequestKind[] = ['ASK_PROMOTE', 'ASK_BATTLE', 'REDEEM', 'APOLOGIZE', 'COMPLAIN_IDLE', 'ADVISE', 'DEFY_LETTER'];
+
+export type MindRequestStatus = 'PENDING' | 'GRANTED' | 'DENIED' | 'EXPIRED' | 'ACKED';
+
+/** 請求引用的真實過去（任務名、對手、季數），玩家看了知道「他記得」 */
+export interface MindRequestRef {
+    label?: string;
+    partnerId?: string;
+    season?: number;
+    eventId?: string;
+}
+
+/** 信箱裡的一則請求或來信；text 在生成當下就定稿，之後讀檔也不會變 */
+export interface MindRequest {
+    id: string;
+    generalId: string;
+    kind: MindRequestKind;
+    /** 提出的季數 */
+    season: number;
+    /** 超過這一季仍未回應就作廢（寫 PASSED_OVER） */
+    expiresSeason: number;
+    status: MindRequestStatus;
+    /** 求封、請戰＝重大事件 */
+    major: boolean;
+    text: string;
+    reasonCodes: string[];
+    ref?: MindRequestRef;
+    /** 玩家回應後武將的一句反應 */
+    reply?: string;
+    read: boolean;
+    /** 已被准許的請戰是否已被戰場取用 */
+    consumed?: boolean;
 }
 
 export interface GeneralMindSave {
@@ -111,6 +156,21 @@ export interface GeneralMindSave {
     events: Record<string, MindEvent[]>;
     ledger: Record<string, MindLedger>;
     lastSeasonSettled: number;
+    /** 信箱：未回應與近期已回應的請求（有上限）；MIND-2 */
+    requests: MindRequest[];
+    /** generalId → 請求種類 → 最早可再提的季數；MIND-2 */
+    cooldowns: Record<string, Record<string, number>>;
+}
+
+/** 呼叫端提供的將階與名聲現況（求封、請戰判斷用）；沒給就不會提出這兩類請求 */
+export interface MindFameFacts {
+    rank: number;
+    fame: number;
+    /** 下一階需要的名聲；已最高階為 null */
+    nextFame: number | null;
+    nextTitle?: string;
+    /** 突破瓶頸的缺項；系統沒提供時由性格決定走求封或請戰 */
+    bottleneck?: 'BESTOW' | 'KILL' | 'DUEL';
 }
 
 export interface MindRecordResult {
@@ -160,6 +220,10 @@ export interface MindContext {
     wounded?: boolean;
     general?: MindGeneralView;
     nameOf?: (generalId: string) => string | undefined;
+    /** MIND-2：將階與名聲現況 */
+    fame?: MindFameFacts;
+    /** MIND-2：季數顯示文字（例「第3年夏」）；不給用「第N季」 */
+    seasonLabel?: (season: number) => string;
 }
 
 export interface SeasonMindReport {
@@ -167,6 +231,40 @@ export interface SeasonMindReport {
     moodChanges: Array<{ generalId: string; from: MindMood; to: MindMood }>;
     /** 本季被冷落（連續 ≥ 門檻季數無事件）的武將 */
     idleGeneralIds: string[];
+    /** MIND-2：本季新提出的請求 */
+    newRequests: MindRequest[];
+    /** MIND-2：本季因無人回應而作廢的請求 */
+    expiredRequests: MindRequest[];
+}
+
+/** 任務詳情選將時查詢意見用的任務輪廓（任務系統只要填這幾欄） */
+export interface MindTaskProfile {
+    tags: readonly string[];
+    label?: string;
+    /** 派遣當下的情報度 0~3；不知道就不填（視為 3） */
+    intelLevel?: number;
+}
+
+export type MindOpinionStance = 'WILLING' | 'OK' | 'CAUTIOUS' | 'DISSUADE';
+
+/** 意見只勸阻不抗命：DISSUADE 仍可派遣，成功率小幅下修（successDelta ≤ 0） */
+export interface MindOpinion {
+    stance: MindOpinionStance;
+    willingness: number;
+    line: string;
+    reasonCodes: string[];
+    /** 給任務結算的成功率修正（0 或小幅負值） */
+    successDelta: number;
+}
+
+export interface MindResolveResult {
+    ok: boolean;
+    request?: MindRequest;
+    /** 武將對玩家決定的反應 */
+    reply: string;
+    events: MindEvent[];
+    /** 交給呼叫端的遊戲效果提示（賜封、請戰、雪恥獲准）；心智本身不動名冊 */
+    hook?: 'PROMOTE_GRANTED' | 'BATTLE_GRANTED' | 'REDEEM_GRANTED';
 }
 
 /** 任務情報度百分比（0~100）→ 派遣情報等級 0~3；25 以下 0、50 以下 1、75 以下 2、其餘 3 */
@@ -217,5 +315,47 @@ export const MIND_CONFIG = {
     request: {
         maxPerSeasonTeam: 6,
         sameKindCooldownSeasons: 1,
+        /** 被駁回後同類冷卻倍數 */
+        deniedCooldownFactor: 2,
+        /** 每將每季最多幾則（含重大） */
+        maxPerGeneralPerSeason: 2,
+        /** 請求幾季內未回應就作廢 */
+        expireAfterSeasons: 2,
+        /** 信箱容量（未回應＋近期已回應） */
+        mailboxCap: 30,
+        /** 未回應請求達此數就不再提一般請求（重大請求仍可） */
+        pendingSoftCap: 12,
+        /** 名聲達下一階門檻的幾成就會求封／請戰 */
+        fameAskRatio: 0.8,
+        /** 提出機率 = clamp(base + perScore × 分數) */
+        chanceBase: 0.5,
+        chancePerScore: 0.12,
+        chanceMax: 0.95,
+    },
+    /** 意願與勸阻 */
+    opinion: {
+        dissuadeBelow: 0.3,
+        cautiousBelow: 0.45,
+        willingFrom: 0.7,
+        /** 勸阻時成功率下修（小幅） */
+        dissuadeSuccessDelta: -0.05,
+        cautiousSuccessDelta: -0.02,
+        /** 謹慎狀態下要情報度達此級才願意 */
+        cautionNeedsIntel: 2,
+    },
+    /** 抗命：忠誠低於此值且近 insultWindow 季內受辱 ≥ insultNeeded 次，才抗命一次 */
+    defiance: {
+        loyaltyBelow: 30,
+        insultNeeded: 3,
+        insultWindowSeasons: 3,
+    },
+    /** 回應後的心智事件價值已在 MIND_EVENT_RULES；這裡只放請求之外的學習參數 */
+    learning: {
+        /** 近幾季的事件在信心計算中多算一次（×2） */
+        recentSeasons: 3,
+        /** 連敗幾回進入謹慎／雪恥 */
+        streakLossForStance: 2,
+        redeemWinValenceMultiplier: 2,
+        grudgeCap: 3,
     },
 } as const;

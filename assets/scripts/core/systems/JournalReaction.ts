@@ -10,6 +10,7 @@
  * Unity 對照：像 Localization 的 Template 表加 Fallback 字串，取不到就顯示預設句，不讓 UI 空白。
  */
 import type { JournalCategory, JournalEntry } from './JournalLog';
+import type { GeneralPersonalityType } from '../models/GeneralUnit';
 
 export const JOURNAL_REACTION_MIN_CHARS = 20;
 export const JOURNAL_REACTION_MAX_CHARS = 60;
@@ -38,7 +39,51 @@ export const JOURNAL_REACTION_TEMPLATES: Readonly<Record<JournalCategory, readon
     ],
 });
 
-export type JournalReactionSource = 'TEMPLATE' | 'FALLBACK';
+export type JournalReactionSource = 'TEMPLATE' | 'PERSONAL' | 'FALLBACK';
+
+/**
+ * 個人化提示（武將心智 MIND-2，PROG-2-9150）：武將最近一次可引用的經歷。
+ * 有提示且類別是戰報／派遣時，反應改引用這段過去（「{cite}」是第3年夏的河北押運這類短語），沒有就維持原模板。
+ */
+export interface JournalReactionPersonal {
+    type: GeneralPersonalityType;
+    /** 引用短語，例「第3年夏的河北押運」 */
+    cite: string;
+    /** 那次的結果：失手帶教訓口吻，得手帶乘勢口吻 */
+    outcome: 'SUCCESS' | 'FAIL';
+}
+
+type PersonalTable = Readonly<Record<GeneralPersonalityType, readonly string[]>>;
+
+const PERSONAL_BATTLE_FAIL: PersonalTable = {
+    Brave: ['{name}：{cite}那一敗我還記著，這一仗得失已記下，下回必勝。'],
+    Wise: ['{name}：{cite}之失猶在心，這一仗的得失我已逐條記下。'],
+    Loyal: ['{name}：{cite}辜負了主公，這一仗的結果請主公過目，我再不敢鬆懈。'],
+    Playful: ['{name}：{cite}栽過一回，這仗可不能再栽了，戰報請主公過目。'],
+};
+const PERSONAL_BATTLE_WIN: PersonalTable = {
+    Brave: ['{name}：自{cite}得手，這一仗打得更痛快，戰報已記入案頭。'],
+    Wise: ['{name}：{cite}之後算得更準了，這一仗的得失已記入案頭。'],
+    Loyal: ['{name}：{cite}承主公信任，這一仗也不敢怠慢，戰報請過目。'],
+    Playful: ['{name}：{cite}贏得漂亮，這仗也不賴，戰報請主公過目。'],
+};
+const PERSONAL_DISPATCH_FAIL: PersonalTable = {
+    Brave: ['{name}：差事辦完了。{cite}的虧某沒忘，下回還要再戰。'],
+    Wise: ['{name}：差事已回報。{cite}的教訓在前，我這回處處留心。'],
+    Loyal: ['{name}：差事回報主公。{cite}未能成事，我格外謹慎，願主公過目。'],
+    Playful: ['{name}：差事回來啦。{cite}那回搞砸了，這回可小心多了。'],
+};
+const PERSONAL_DISPATCH_WIN: PersonalTable = {
+    Brave: ['{name}：差事辦妥。{cite}之後越戰越勇，主公儘管再派。'],
+    Wise: ['{name}：差事已回。沿用{cite}的路數，果然穩妥，請主公過目。'],
+    Loyal: ['{name}：差事回報主公。承{cite}的信任，這回也幸不辱命。'],
+    Playful: ['{name}：差事搞定！{cite}之後手感正好，主公還有嗎？'],
+};
+
+export const JOURNAL_REACTION_PERSONAL: Readonly<Record<'BATTLE' | 'DISPATCH', { FAIL: PersonalTable; SUCCESS: PersonalTable }>> = Object.freeze({
+    BATTLE: { FAIL: PERSONAL_BATTLE_FAIL, SUCCESS: PERSONAL_BATTLE_WIN },
+    DISPATCH: { FAIL: PERSONAL_DISPATCH_FAIL, SUCCESS: PERSONAL_DISPATCH_WIN },
+});
 
 export interface JournalReaction {
     text: string;
@@ -71,8 +116,14 @@ export function journalReactionLine(
     entry: Readonly<Pick<JournalEntry, 'category'>>,
     generalName: string,
     pick: number,
+    personal?: Readonly<JournalReactionPersonal>,
 ): JournalReaction {
     const name = generalName.trim();
+    if (personal && name.length > 0 && (entry.category === 'BATTLE' || entry.category === 'DISPATCH')) {
+        const list = JOURNAL_REACTION_PERSONAL[entry.category][personal.outcome][personal.type];
+        const line = list[templateIndex(pick, list.length)].split('{name}').join(name).split('{cite}').join(personal.cite);
+        if (canAcceptReactionLine(line)) return { text: line, source: 'PERSONAL' };
+    }
     const templates = JOURNAL_REACTION_TEMPLATES[entry.category];
     if (name.length === 0 || !templates) return { text: JOURNAL_REACTION_FALLBACK, source: 'FALLBACK' };
     const text = templates[templateIndex(pick, templates.length)].split('{name}').join(name);

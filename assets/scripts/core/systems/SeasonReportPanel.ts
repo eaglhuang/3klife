@@ -42,13 +42,18 @@ export function buildSeasonReportPanelTexts(
     seasonLabel: string,
     reports: readonly QuarterlyBattleReportRow[],
     hallMissionLines: readonly string[] = [],
+    rankPreviewLine: string = '',
 ): Record<string, string> {
     const rows = buildSeasonReportPanelRows(reports);
     const hidden = Math.max(0, reports.length - rows.length);
     const texts: Record<string, string> = {
         'DialogCard/HeaderBar/TitleLabel': '季度戰報',
         'DialogCard/HeaderBar/SeasonLabel': seasonLabel,
-        'DialogCard/ScrollView/ScrollContent/EmptyHintLabel': reports.length === 0 && hallMissionLines.length === 0 ? '本季沒有可回報的武將' : '',
+        // 官職預告（PROG-2-9151）：下一官職會開什麼，借用這個本來多半空白的提示列，不動版面
+        'DialogCard/ScrollView/ScrollContent/EmptyHintLabel': [
+            reports.length === 0 && hallMissionLines.length === 0 ? '本季沒有可回報的武將' : '',
+            rankPreviewLine,
+        ].filter((line) => line.length > 0).join('\n'),
         // 大廳任務區塊（doc_spec_1178 §9 步驟 4）：沒有任務結算時為空字串，由畫面層隱藏
         [SEASON_REPORT_HALL_LABEL_PATH]: hallMissionLines.length > 0 ? ['大廳任務', ...hallMissionLines].join('\n') : '',
         'DialogCard/FooterBar/HintLabel': hidden > 0

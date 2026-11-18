@@ -10,7 +10,7 @@
  * 格式錯就不套用，沿用上一版預設值。
  */
 import { isValidOfficerExpMultiplier, isValidOfficerTrialHours, OFFICER_COMMERCE_CONFIG } from './OfficerCommerce';
-import { OFFICER_PROMOTION_REWARD_GOLD, OFFICER_TIER_EXP_THRESHOLDS, OFFICER_TIER_MAX, OFFICER_TIER_MIN } from './OfficerState';
+import { OFFICER_EXP_TUNING, OFFICER_PROMOTION_REWARD_GOLD, OFFICER_TIER_EXP_THRESHOLDS, OFFICER_TIER_MAX, OFFICER_TIER_MIN } from './OfficerState';
 import type { QuestDifficultyCap } from './OfficerSnapshot';
 
 export interface OfficerTierRow {
@@ -76,6 +76,8 @@ export function parseOfficerTierTable(raw: unknown): ParseOfficerTierResult {
             ...(typeof reward === 'number' ? { promotionRewardGold: reward } : {}),
         });
     });
+    const gainMultiplier = (raw as { expGainMultiplier?: unknown }).expGainMultiplier;
+    if (gainMultiplier !== undefined && !isValidGainMultiplier(gainMultiplier)) issues.push('expGainMultiplier 必須是 1~10 的數字');
     const commerce = commerceOf(raw);
     if (commerce.monthlyCardExpMultiplier !== undefined && !isValidOfficerExpMultiplier(commerce.monthlyCardExpMultiplier)) {
         issues.push('commerce.monthlyCardExpMultiplier 必須是不小於 1 的數字');
@@ -84,6 +86,10 @@ export function parseOfficerTierTable(raw: unknown): ParseOfficerTierResult {
         issues.push('commerce.trialHours 必須是正數');
     }
     return issues.length === 0 ? { ok: true, rows } : { ok: false, issues };
+}
+
+function isValidGainMultiplier(value: unknown): value is number {
+    return typeof value === 'number' && Number.isFinite(value) && value >= 1 && value <= 10;
 }
 
 /** 商業設定（OFC-12）可省略；省略時沿用內建值 */
@@ -95,6 +101,8 @@ function commerceOf(raw: unknown): { monthlyCardExpMultiplier?: unknown; trialHo
 export function installOfficerTierTable(raw: unknown): ParseOfficerTierResult {
     const result = parseOfficerTierTable(raw);
     if (result.ok) {
+        const gainMultiplier = (raw as { expGainMultiplier?: unknown }).expGainMultiplier;
+        OFFICER_EXP_TUNING.gainMultiplier = isValidGainMultiplier(gainMultiplier) ? gainMultiplier : 1;
         const commerce = commerceOf(raw);
         if (isValidOfficerExpMultiplier(commerce.monthlyCardExpMultiplier)) OFFICER_COMMERCE_CONFIG.monthlyCardExpMultiplier = commerce.monthlyCardExpMultiplier;
         if (isValidOfficerTrialHours(commerce.trialHours)) OFFICER_COMMERCE_CONFIG.trialHours = commerce.trialHours;
