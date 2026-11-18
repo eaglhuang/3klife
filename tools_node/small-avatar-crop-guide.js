@@ -9,10 +9,12 @@ function usage() {
   console.log(`Usage:
   node tools_node/small-avatar-crop-guide.js compare --out <board.png> <image.png>...
   node tools_node/small-avatar-crop-guide.js crop --input <image.png> --out <crop.png>
-       --head x,y,width,height --face x,y,width,height
+       --head x,y,width,height --face x,y,width,height [--extent x,y,width,height]
        --shoulders leftX,leftY,rightX,rightY [--target 0.76] [--size 256] [--guide-out <guide.png>]
 
-Boxes use source-image pixel coordinates. --head spans the main hair/helmet top to chin;
+Boxes use source-image pixel coordinates. --head spans the cranial hair/helmet mass to chin,
+excluding tall ornamental crowns/plumes; --extent optionally marks the complete headwear
+silhouette that must remain inside the crop;
 --face spans forehead to chin and both cheek/jaw edges. --shoulders marks one visible
 outer-contour point on each shoulder and is required for crop acceptance. Target head
 height defaults to 76%, and acceptance requires 70–82%.
@@ -122,16 +124,17 @@ function main() {
   if (command === 'crop') {
     if (!a.input || !a.out || !a.head || !a.face || !a.shoulders) { usage(); process.exitCode = 2; return; }
     const src = readPng(a.input), head = parseBox(a.head, '--head'), face = parseBox(a.face, '--face');
+    const extent = a.extent ? parseBox(a.extent, '--extent') : head;
     const shoulders = parseShoulderPoints(a.shoulders);
     const target = a.target == null ? 0.76 : Number(a.target);
     const outputSize = a.size == null ? 256 : Number(a.size);
     if (!(target >= 0.70 && target <= 0.82)) throw new Error('--target must be between 0.70 and 0.82');
     if (!Number.isInteger(outputSize) || outputSize < 64 || outputSize > 2048) throw new Error('--size must be an integer between 64 and 2048');
     const centerX = face.x + face.width / 2;
-    const horizontalMin = Math.min(head.x, face.x, ...shoulders.map(p => p.x));
-    const horizontalMax = Math.max(head.x + head.width, face.x + face.width, ...shoulders.map(p => p.x));
-    const requiredVertical = Math.max(...shoulders.map(p => Math.max(0, p.y - head.y) / 0.92));
-    const minimumSide = Math.max(head.height / target, requiredVertical, horizontalMax - horizontalMin);
+    const horizontalMin = Math.min(head.x, extent.x, face.x, ...shoulders.map(p => p.x));
+    const horizontalMax = Math.max(head.x + head.width, extent.x + extent.width, face.x + face.width, ...shoulders.map(p => p.x));
+    const requiredVertical = Math.max(...shoulders.map(p => Math.max(0, (p.y - head.y) / 0.92, (p.y - extent.y) / 0.97)));
+    const minimumSide = Math.max(head.height / target, extent.height, Math.max(0, (extent.y + extent.height - head.y) / 0.95), Math.max(0, (face.y + face.height - head.y) / 0.95), requiredVertical, horizontalMax - horizontalMin);
     const feasibleLeftRange = side => {
       // The square must contain the complete head/face/shoulder span while
       // keeping the face center inside the accepted 47–53% horizontal band.
@@ -155,16 +158,18 @@ function main() {
     }
     const centeredLeft = centerX - side / 2;
     const cropLeft = Math.min(leftRange[1], Math.max(leftRange[0], centeredLeft));
-    const crop = { x: cropLeft, y: head.y - side * 0.05, width: side, height: side };
+    const crop = { x: cropLeft, y: Math.min(head.y - side * 0.05, extent.y), width: side, height: side };
     const faceCenterX = (centerX - crop.x) / side, headRatio = head.height / side;
     const headContained = head.x >= crop.x && head.x + head.width <= crop.x + side && head.y >= crop.y && head.y + head.height <= crop.y + side;
+    const extentContained = extent.x >= crop.x && extent.x + extent.width <= crop.x + side && extent.y >= crop.y && extent.y + extent.height <= crop.y + side;
     const headWithinSource = head.x >= 0 && head.y >= 0 && head.x + head.width <= src.width && head.y + head.height <= src.height;
+    const extentWithinSource = extent.x >= 0 && extent.y >= 0 && extent.x + extent.width <= src.width && extent.y + extent.height <= src.height;
     const faceContained = face.x >= crop.x && face.x + face.width <= crop.x + side && face.y >= crop.y && face.y + face.height <= crop.y + side;
     const faceWithinSource = face.x >= 0 && face.y >= 0 && face.x + face.width <= src.width && face.y + face.height <= src.height;
     const shoulderContained = shoulders.map(p => p.x >= crop.x && p.x <= crop.x + side && p.y >= crop.y && p.y <= crop.y + side);
     const shoulderOnArtwork = shoulders.map(p => foregroundNear(src, p));
     const shoulderClearanceBelow = shoulders.map(p => crop.y + side - p.y);
-    const passesShoulderClearance = shoulderClearanceBelow.every(clearance => clearance >= side * 0.03);
+    const passesShoulderClearance = shoulderClearanceBelow.every(clearance => clearance >= side * 0.03 - 1e-9);
     const passesHeadRatio = headRatio >= 0.70 && headRatio <= 0.82;
     const passesFaceCenter = Math.abs(faceCenterX - 0.5) <= 0.03 + 1e-9;
     const passesShoulders = shoulderContained.every(Boolean) && shoulderOnArtwork.every(Boolean) && passesShoulderClearance;
@@ -184,6 +189,7 @@ function main() {
         guide.data[i + 2] = Math.round(src.data[i + 2] * alpha + 255 * (1 - alpha));
         guide.data[i + 3] = 255;
       }
+      drawRect(guide, extent, [0, 180, 80, 255]);
       drawRect(guide, head, [0, 210, 255, 255]);
       drawRect(guide, face, [255, 55, 55, 255]);
       drawRect(guide, crop, [255, 0, 255, 255]);
@@ -191,7 +197,8 @@ function main() {
       fs.mkdirSync(path.dirname(guidePath), { recursive: true });
       fs.writeFileSync(guidePath, PNG.sync.write(guide));
       fs.writeFileSync(`${guidePath}.txt`, [
-        '青色框：手動標記的頭部範圍（主要髮型／頭盔頂至下巴）',
+        '綠色框：需完整保留的頭飾／頭髮範圍',
+        '青色框：頭部比例量測範圍（顱部髮型／盔體頂至下巴，不含高聳頭冠／羽飾）',
         '紅色框：手動標記的臉部範圍（額際至下巴、兩側臉頰／下顎）',
         '黃色十字：手動標記的左、右肩外輪廓點',
         '洋紅框：計算後的正方形裁框',
@@ -199,7 +206,7 @@ function main() {
         '先確認標記覆蓋原圖的真實頭臉和肩部輪廓，再檢查候選裁圖；數值通過不等於視覺驗收通過。'
       ].join('\n') + '\n', 'utf8');
     }
-    const result = { input: path.resolve(a.input), output: path.resolve(a.out), source: `${src.width}x${src.height}`, outputSize: `${outputSize}x${outputSize}`, cropPixels: { x: +crop.x.toFixed(2), y: +crop.y.toFixed(2), side: +side.toFixed(2) }, headHeightRatio: +(headRatio * 100).toFixed(1), targetHeadHeightRatio: +(target * 100).toFixed(1), passesHeadRatio, headContained, headWithinSource, faceCenterX: +(faceCenterX * 100).toFixed(1), passesFaceCenter, faceContained, faceWithinSource, shoulders: { contourPoints: shoulders, contained: shoulderContained, onVisiblePixelsWithin5px: shoulderOnArtwork, clearanceBelow: shoulderClearanceBelow.map(value => +value.toFixed(2)), passesClearanceBelow: passesShoulderClearance, passesShoulders }, passesAllHardChecks: passesHeadRatio && headContained && headWithinSource && faceContained && faceWithinSource && passesFaceCenter && passesShoulders, note: '頭部框需完整落在來源圖內；若原圖可見頭飾被切斷，目視判退來源。左右肩點下方須各保留裁框高度3%的可見空間；最後仍須目視確認頭飾完整、兩側肩膀形狀可辨。工具只裁切／等比縮放，不會修正原圖五官。' };
+    const result = { input: path.resolve(a.input), output: path.resolve(a.out), source: `${src.width}x${src.height}`, outputSize: `${outputSize}x${outputSize}`, cropPixels: { x: +crop.x.toFixed(2), y: +crop.y.toFixed(2), side: +side.toFixed(2) }, headHeightRatio: +(headRatio * 100).toFixed(1), targetHeadHeightRatio: +(target * 100).toFixed(1), passesHeadRatio, headContained, headWithinSource, extentContained, extentWithinSource, faceCenterX: +(faceCenterX * 100).toFixed(1), passesFaceCenter, faceContained, faceWithinSource, shoulders: { contourPoints: shoulders, contained: shoulderContained, onVisiblePixelsWithin5px: shoulderOnArtwork, clearanceBelow: shoulderClearanceBelow.map(value => +value.toFixed(2)), passesClearanceBelow: passesShoulderClearance, passesShoulders }, passesAllHardChecks: passesHeadRatio && headContained && headWithinSource && extentContained && extentWithinSource && faceContained && faceWithinSource && passesFaceCenter && passesShoulders, note: '頭部比例只量顱部髮型／盔體，不將高聳頭冠或羽飾冒充頭部；綠框內的頭飾與髮型仍須完整保留。肩點下方須保留裁框高度3%的影像；最後仍須目視確認頭臉、完整頭飾與雙肩。工具只裁切／等比縮放，不會修正原圖五官。' };
     console.log(JSON.stringify(result, null, 2));
     if (!result.passesAllHardChecks) { process.exitCode = 3; return; }
     fs.mkdirSync(path.dirname(path.resolve(a.out)), { recursive: true });
