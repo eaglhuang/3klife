@@ -56,6 +56,18 @@ export function spiritRelicsNewestFirst(cards: readonly SpiritCard[]): SpiritCar
         .sort((a, b) => (b.archivedAt ?? 0) - (a.archivedAt ?? 0));
 }
 
+/** 列上「詳情」按鈕的顯示與可點狀態：沒有對應英靈卡的列整顆隱藏（「英靈 0 位」不該還畫出 6 顆按鈕） */
+export function spiritCodexDetailButtonStates(shownCount: number): { actives: Record<string, boolean>; enabled: Record<string, boolean> } {
+    const actives: Record<string, boolean> = {};
+    const enabled: Record<string, boolean> = {};
+    for (let index = 0; index < SPIRIT_CODEX_MAX_ROWS; index += 1) {
+        const has = index < shownCount;
+        actives[`btnSpiritDetail${index}`] = has;
+        enabled[`btnSpiritDetail${index}`] = has;
+    }
+    return { actives, enabled };
+}
+
 /** 英靈圖鑑面板的全部文字，key 等於 spirit-codex-main.json 的節點 id */
 export function buildSpiritCodexTexts(
     cards: readonly SpiritCard[],

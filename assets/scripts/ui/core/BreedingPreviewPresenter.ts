@@ -8,6 +8,7 @@
  * Unity 對照：Presenter 把計算結果轉成 Label 字串，View 只負責 SetText。
  */
 import type { EpBreakdown } from '../../core/systems/BreedingSystem';
+import { UNNAMED_FACTOR, looksLikeInternalId } from '../../core/utils/PlayerFacingText';
 
 export interface BreedingPreviewLines {
     /** 「預計爆發力 EP 128 · 優良」 */
@@ -32,8 +33,15 @@ export function buildBreedingPreviewLines(ep: EpBreakdown, tagName?: (tag: strin
     return {
         epLine: `預計爆發力 EP ${ep.ep} · ${ep.rating}`,
         breakdownLine: breakdownParts.join('　'),
-        tagLine: ep.topTag ? `最多共鳴標籤：${tagName?.(ep.topTag) ?? ep.topTag} ×${ep.topTagCount}` : '無共鳴標籤',
+        tagLine: ep.topTag ? `最多共鳴標籤：${tagDisplay(ep.topTag, tagName)} ×${ep.topTagCount}` : '無共鳴標籤',
     };
+}
+
+/** 標籤顯示名：查得到用名稱；查不到且像內部代號（gene_destiny）就用佔位，中文標籤原樣 */
+export function tagDisplay(tag: string, tagName?: (tag: string) => string | null | undefined): string {
+    const named = tagName?.(tag);
+    if (named && !looksLikeInternalId(named)) return named;
+    return looksLikeInternalId(tag) ? UNNAMED_FACTOR : tag;
 }
 
 function signed(value: number): string {

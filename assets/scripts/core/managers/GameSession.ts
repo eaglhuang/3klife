@@ -129,6 +129,7 @@ import {
 } from '../systems/TournamentLocal';
 import { playMonthlyScenario, type MonthlyScenarioHistoryEntry, type MonthlyScenarioPlayResult } from '../systems/MonthlyScenarioCup';
 import { DISPATCH_JOB_CATALOG, dispatchBoardRows, findDispatchJob, type DispatchCatalogRow, type DispatchPreview } from '../systems/DispatchCatalog';
+import { registerBloodlineNames } from '../utils/PlayerFacingText';
 import { buildMercenaryPoolRows, filterPoolGeneralIds, type MercenaryPoolRow } from '../systems/MercenaryPoolPresenter';
 import { fallenOfficerOrigins } from '../systems/FallenOfficerMarket';
 import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
@@ -1161,8 +1162,8 @@ export class GameSession {
     }
 
     /** 傭兵列表的顯示列（倒數、結義進度、按鈕可否）；由目前存檔包推導，不改狀態。 */
-    public mercenaryPoolRows(): MercenaryPoolRow[] {
-        return buildMercenaryPoolRows(this._mercenaries);
+    public mercenaryPoolRows(nameOf?: (generalId: string) => string | undefined): MercenaryPoolRow[] {
+        return buildMercenaryPoolRows(this._mercenaries, (generalId) => this._roster.getAll().find((g) => g.id === generalId)?.name ?? nameOf?.(generalId));
     }
 
     /** 以校正後的副本取代傭兵存檔包；不寫存檔，由呼叫端決定何時 save。 */
@@ -2379,6 +2380,7 @@ export class GameSession {
     /** 注入武將配置（generals.json），供俘虜來投時依 uid 重建武將 */
     public setGeneralTemplates(generals: readonly GeneralConfig[]): void {
         this._generalTemplates = generals;
+        registerBloodlineNames(generals);
     }
 
     /** 城市兵源與糧草儲備（PROG-2-0072） */

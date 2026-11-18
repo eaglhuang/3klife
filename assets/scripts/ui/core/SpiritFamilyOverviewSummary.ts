@@ -58,6 +58,21 @@ export function buildSpiritFamilyOverviewRows(
     });
 }
 
+/**
+ * 大廳主頁「世家總覽」卡片的兩行字（取代設計稿的示意文字「張氏一門・名聲 340」）。
+ * 家族名聲與深度目前沒有存檔資料，不顯示數字，避免和祠堂的家族聲望對不上。
+ */
+export function lobbyClanCardTexts(rows: readonly SpiritFamilyOverviewRow[]): { subtitle: string; line: string } {
+    const t = SPIRIT_FAMILY_SUMMARY_TEXTS;
+    const head = rows[0];
+    return {
+        subtitle: `管理麾下世家與英靈 · 已成家族 ${rows.length}`,
+        line: head
+            ? t.row.replace('{family}', head.familyName).replace('{main}', head.mainName ?? t.noMain).replace('{destiny}', String(head.destinyCount)).replace('{relic}', String(head.relicCount))
+            : t.empty,
+    };
+}
+
 /** 大廳版世家總覽要覆寫的文字（節點 id → 文字） */
 export function spiritFamilyOverviewSummaryTexts(rows: readonly SpiritFamilyOverviewRow[]): Record<string, string> {
     const t = SPIRIT_FAMILY_SUMMARY_TEXTS;

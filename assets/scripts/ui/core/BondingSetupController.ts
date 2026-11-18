@@ -25,6 +25,7 @@ import { OMEN_LABEL, pickOmen, type OmenKind, type SageRemark } from '../../core
 import { buildBreedingBirthRecord, type BreedingBirthRecord } from '../../core/systems/BreedingBirthRecord';
 import type { FactorColor } from '../../core/systems/FactorInheritance';
 import { buildBreedingPreviewLines } from './BreedingPreviewPresenter';
+import { bondingModeChipText } from '../../core/utils/PlayerFacingText';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { factorMaskView } from '../../core/systems/FactorMask';
 import { factorStageText } from '../../core/systems/FactorVisibility';
@@ -480,9 +481,6 @@ export class BondingSetupController {
         Object.assign(texts, parentTexts('father', father, level, stage, yuedan), parentTexts('mother', mother, level, stage, yuedan));
 
         const mode: BondingMode = (father.age ?? 0) >= RETIREMENT_AGE || (mother.age ?? 0) >= RETIREMENT_AGE ? 'Peace_Lineage' : 'Standard';
-        texts.modeChip = mode === 'Peace_Lineage'
-            ? '模式：和平血統線（保種）· 退役年齡仍可親傳，轉為教官後即失去資格'
-            : '模式：一般結緣 · 雙方仍具親傳資格';
 
         Object.assign(texts, this._seatTexts('fatherTree', father.id), this._seatTexts('motherTree', mother.id));
         if (kinshipScanVisible(stage)) {
@@ -491,6 +489,7 @@ export class BondingSetupController {
         }
 
         const eligibility = this._deps.breeding.checkEligibility(father.id, mother.id);
+        texts.modeChip = bondingModeChipText(mode === 'Peace_Lineage', eligibility.reasons);
         const ep = this._deps.breeding.previewEp(father.id, mother.id);
         texts.epEstimate = this._t('ui.breed.ep_display', String(ep.ep), ep.rating);
         const preview = buildBreedingPreviewLines(ep, this._deps.tagName);

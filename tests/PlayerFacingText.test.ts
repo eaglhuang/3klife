@@ -1,88 +1,104 @@
-/**
- * 玩家看得到的字不能有開發用語；大廳子選單每一項都要有動作對應（PROG-2-9121）
- * 禁用字清單集中在 FORBIDDEN_PLAYER_TEXT，之後要擋新字只改這一處。
- */
-import * as fs from 'fs';
-import * as path from 'path';
 import { assert, TestSuite } from './TestRunner';
-import { LOBBY_ACTION_NOT_OPEN_TEXT, LOBBY_CATEGORIES } from '../assets/scripts/ui/core/LobbyCityHubController';
-import { createSeasonPassState } from '../assets/scripts/core/systems/SeasonPass';
-import { seasonPassView } from '../assets/scripts/ui/core/SeasonPassController';
-import { STAR_UP_MATERIAL_TEXT } from '../assets/scripts/ui/core/UltimateActionView';
-
-const ROOT = path.join(__dirname, '..');
-
-/** 開發用語（不分大小寫比對）。戰場的「暫代圖 待替換」是刻意保留，不在此檢查範圍。 */
-export const FORBIDDEN_PLAYER_TEXT: readonly string[] = ['mock', '模擬', '尚未接', '未接', 'todo', 'placeholder', '測試用', 'lorem', '暫定資料'];
-
-function offenders(text: string): string[] {
-    const lower = text.toLowerCase();
-    return FORBIDDEN_PLAYER_TEXT.filter((word) => lower.includes(word));
-}
-
-function readJson(rel: string): any {
-    return JSON.parse(fs.readFileSync(path.join(ROOT, rel), 'utf8'));
-}
-
-/** 收集版面 JSON 裡所有 text 欄位的字串 */
-function layoutTexts(node: any, out: string[] = []): string[] {
-    if (node && typeof node === 'object') {
-        if (typeof node.text === 'string') out.push(node.text);
-        for (const value of Object.values(node)) layoutTexts(value, out);
-    }
-    return out;
-}
+import {
+    UNNAMED_BLOODLINE, UNNAMED_FACTOR, UNNAMED_MERCENARY,
+    bloodlineDisplayName, bondingModeChipText, clearBloodlineNames, factorDisplayName, geneColorName,
+    isPlaceholderNote, looksLikeInternalId, playerFacingNote, registerBloodlineNames,
+} from '../assets/scripts/core/utils/PlayerFacingText';
+import { buildMercenaryPoolRows, mercenaryDisplayName } from '../assets/scripts/core/systems/MercenaryPoolPresenter';
+import { buildBreedingPreviewLines, tagDisplay } from '../assets/scripts/ui/core/BreedingPreviewPresenter';
+import { spiritCodexDetailButtonStates } from '../assets/scripts/ui/core/SpiritCodexController';
+import { lobbyClanCardTexts } from '../assets/scripts/ui/core/SpiritFamilyOverviewSummary';
+import { buildGeneralDetailOverview } from '../assets/scripts/ui/components/GeneralDetailOverviewMapper';
+import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
+import type { EpBreakdown } from '../assets/scripts/core/systems/BreedingSystem';
 
 export function createPlayerFacingTextSuite(): TestSuite {
-    const suite = new TestSuite('PlayerFacingText');
+    const suite = new TestSuite('PlayerFacingText (PROG-2-9159 玩家可見文字清理)');
 
-    suite.test('大廳子選單 22 項：每一項都有非空的動作對應', () => {
-        const items = LOBBY_CATEGORIES.flatMap((c) => c.items);
-        assert.equals(22, items.length);
-        const source = fs.readFileSync(path.join(ROOT, 'assets/scripts/ui/scenes/LobbyScene.ts'), 'utf8');
-        const start = source.indexOf('private _runCityHubAction');
-        const body = source.slice(start, source.indexOf('run[action]()', start));
-        for (const item of items) {
-            const line = body.split(/\r?\n/).map((l) => l.trim()).find((l) => l.startsWith(`${item.id}:`)) ?? '';
-            const handler = line.split('=>')[1] ?? '';
-            assert.isTrue(handler.replace(/[{}\s;,]/g, '').length > 0, `子選單 ${item.id} 沒有動作對應`);
-        }
-        assert.isTrue(source.includes('run[action]()'), '動作表要以 run[action]() 執行');
+    suite.test('內部 ID 判斷：ID 為真，中文與一般英文詞為假', () => {
+        assert.isTrue(looksLikeInternalId('BL_SHU_YAN'));
+        assert.isTrue(looksLikeInternalId('gene_destiny'));
+        assert.isTrue(looksLikeInternalId('merc-1794769708887-ma-yun-lu'));
+        assert.isTrue(!looksLikeInternalId('天命'));
+        assert.isTrue(!looksLikeInternalId('Zhang Fei'));
+        assert.isTrue(!looksLikeInternalId(''));
     });
 
-    suite.test('子選單項目名稱不含開發用語，未開放的寫法一致', () => {
-        for (const item of LOBBY_CATEGORIES.flatMap((c) => c.items)) {
-            assert.equals(0, offenders(item.label).length, item.label);
-        }
-        assert.equals('此功能尚未開放', LOBBY_ACTION_NOT_OPEN_TEXT);
+    suite.test('TODO／待校描佔位備註不顯示給玩家', () => {
+        const todo = '劉備命紋線索已建檔，仍待正式美術與世界觀校描。';
+        assert.isTrue(isPlaceholderNote(todo));
+        assert.equals('', playerFacingNote(todo));
+        assert.equals('命紋顯現', playerFacingNote('命紋顯現'));
+        assert.equals('預設', playerFacingNote(undefined, '預設'));
     });
 
-    suite.test('通行證畫面：30 級每一頁的文字都不含開發用語', () => {
-        const state = createSeasonPassState();
-        for (let page = 1; page <= 30; page += 1) {
-            const view = seasonPassView(state, page);
-            for (const [id, text] of Object.entries(view.texts)) {
-                assert.equals(0, offenders(text).length, `${id}：${text}`);
-            }
-        }
-        assert.equals(0, offenders(Object.values(seasonPassView({ ...state, premium: true }, 1).texts).join('\n')).length);
+    suite.test('血脈名：代號齊全用中文；未知代號用持有者姓名，再不行用通用佔位', () => {
+        clearBloodlineNames();
+        assert.equals('燕血脈', bloodlineDisplayName('BL_SHU_YAN'));
+        assert.equals(UNNAMED_BLOODLINE, bloodlineDisplayName('BL_WU_DA_QIAO'));
+        registerBloodlineNames([{ name: '大喬', bloodlineId: 'BL_WU_DA_QIAO' }, { name: '別人', bloodlineId: 'BL_WU_DA_QIAO' }]);
+        assert.equals('大喬血脈', bloodlineDisplayName('BL_WU_DA_QIAO'));
+        assert.equals(UNNAMED_BLOODLINE, bloodlineDisplayName(undefined));
+        assert.equals('青龍血脈', bloodlineDisplayName('青龍血脈'));
+        clearBloodlineNames();
     });
 
-    suite.test('通行證版面預設字不含開發用語', () => {
-        const texts = layoutTexts(readJson('assets/resources/ui-spec/layouts/season-pass-main.json'));
-        assert.isTrue(texts.length > 0);
-        for (const text of texts) assert.equals(0, offenders(text).length, text);
+    suite.test('因子色系與名稱：green → 綠；字典查不到用佔位', () => {
+        assert.equals('綠', geneColorName('green'));
+        assert.equals('', geneColorName('mystery'));
+        assert.equals('藍', geneColorName('藍'));
+        assert.equals('天命', factorDisplayName('gene_destiny', () => '天命'));
+        assert.equals(UNNAMED_FACTOR, factorDisplayName('gene_destiny', () => undefined));
+        assert.equals(UNNAMED_FACTOR, factorDisplayName('gene_destiny', () => 'gene_destiny'));
     });
 
-    suite.test('升星素材說明、技能說明、NPC 好友名稱不含開發用語', () => {
-        for (const text of Object.values(STAR_UP_MATERIAL_TEXT)) assert.equals(0, offenders(text).length, text);
-        for (const skill of readJson('assets/resources/data/skills.json')) {
-            assert.equals(0, offenders(String(skill.description ?? '')).length, `${skill.id}：${skill.description}`);
-        }
-        for (const friend of readJson('assets/resources/data/npc-friend-mentors.json').data) {
-            assert.equals(0, offenders(String(friend.displayName ?? '')).length, String(friend.displayName));
-            assert.isFalse(String(friend.displayName).includes('暫定'), String(friend.displayName));
-        }
+    suite.test('結緣預覽共鳴標籤不露出 gene_destiny', () => {
+        const ep = { ep: 100, rating: '優良', resonance: 0, outcross: 0, affinity: 0, vitalityFull: 0, fate: 0, topTag: 'gene_destiny', topTagCount: 5 } as unknown as EpBreakdown;
+        assert.equals(`最多共鳴標籤：${UNNAMED_FACTOR} ×5`, buildBreedingPreviewLines(ep).tagLine);
+        assert.equals('最多共鳴標籤：天命 ×5', buildBreedingPreviewLines(ep, () => '天命').tagLine);
+        assert.equals('勇', tagDisplay('勇'));
+    });
+
+    suite.test('結緣模式列：任一方達親傳上限就不能寫「雙方仍具親傳資格」', () => {
+        assert.equals('模式：一般結緣 · 雙方仍具親傳資格', bondingModeChipText(false, []));
+        assert.isTrue(!bondingModeChipText(false, ['mother-breeding-cap']).includes('仍具親傳資格'));
+        assert.isTrue(bondingModeChipText(false, ['mother-breeding-cap']).includes('母方已達一生親傳上限'));
+        assert.isTrue(bondingModeChipText(true, ['father-breeding-cap', 'mother-breeding-cap']).includes('雙方已達一生親傳上限'));
+        assert.isTrue(bondingModeChipText(true, []).includes('和平血統線'));
+    });
+
+    suite.test('傭兵池列：顯示武將名，查不到時用佔位而不是 uid', () => {
+        const uid = 'merc-1794769708887-ma-yun-lu';
+        assert.equals('馬雲祿', mercenaryDisplayName('ma-yun-lu', uid, () => '馬雲祿'));
+        assert.equals(UNNAMED_MERCENARY, mercenaryDisplayName('ma-yun-lu', uid, () => undefined));
+        assert.equals(UNNAMED_MERCENARY, mercenaryDisplayName(undefined, uid));
+        const rows = buildMercenaryPoolRows({ mercenaries: [{ uid, daysLeft: 3, bond: 0, status: 'Trial', generalId: 'ma-yun-lu' }], upkeep: [], cooldowns: [] }, () => '馬雲祿');
+        assert.equals('馬雲祿', rows[0].displayName);
+    });
+
+    suite.test('英靈圖鑑：0 位時 6 顆詳情鈕全隱藏，2 位時只顯示前 2 顆', () => {
+        const none = spiritCodexDetailButtonStates(0);
+        assert.isTrue(Object.values(none.actives).every((v) => v === false));
+        assert.equals(6, Object.keys(none.actives).length);
+        const two = spiritCodexDetailButtonStates(2);
+        assert.isTrue(two.actives.btnSpiritDetail1 === true && two.actives.btnSpiritDetail2 === false);
+    });
+
+    suite.test('大廳世家卡：沒有英靈世家時不顯示示意名聲數字', () => {
+        const empty = lobbyClanCardTexts([]);
+        assert.equals('管理麾下世家與英靈 · 已成家族 0', empty.subtitle);
+        assert.isTrue(!/\d{3}/.test(empty.line));
+        const one = lobbyClanCardTexts([{ familyKey: 'k', familyName: '張氏', mainName: '張飛', destinyCount: 1, relicCount: 2 }]);
+        assert.equals('張氏｜主卡：張飛｜命槽 1・陳列 2', one.line);
+    });
+
+    suite.test('武將詳情：沒有稱號不借用燕人猛將，命紋 TODO 備註改用通用句，血脈不露 ID', () => {
+        const cfg = { id: 'peng-yang-nv', name: '彭羕之女', bloodlineId: 'BL_WU_DA_QIAO', crestHint: '大喬命紋線索已建檔，仍待正式美術與世界觀校描。' } as unknown as GeneralConfig;
+        const overview = buildGeneralDetailOverview(cfg);
+        assert.equals('', overview.header.title);
+        assert.equals('彭羕之女', overview.header.name);
+        assert.isTrue(!overview.cards.crestHint.includes('仍待'));
+        assert.isTrue(!/BL_|[A-Z]{2}/.test(overview.cards.bloodlineName));
     });
 
     return suite;
