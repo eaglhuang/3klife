@@ -672,15 +672,18 @@ async function main() {
             // 輪詢等詳情窗；同時收集點擊後新出現過的文字（提示、錯誤訊息一閃而過也要留下）
             const newTexts = new Set();
             let opened = false;
-            const openDeadline = Date.now() + 8000;
+            // 詳情窗是非同步載入：機器忙或幀率低時實測會超過 8 秒才開（PROG-2-9154），上限放寬到 30 秒並記下實際等了多久
+            const openT0 = Date.now();
+            const openDeadline = openT0 + 30000;
             while (!opened && Date.now() < openDeadline) {
                 for (const t of await rm.allTexts()) if (!textsBefore.has(t)) newTexts.add(t);
                 opened = await rm.present({ name: MISSION_DIALOG });
                 if (!opened) await delay(300);
             }
+            rec.detail.detailOpenMs = Date.now() - openT0;
             if (!opened) {
                 const board = await rm.present({ name: '^HallBoardHost$' });
-                throw new Error(`點左牆第一張任務卡「${title}」（${card.meta || '無副標'}；點擊 ${Math.round(clickedCard.page.x)},${Math.round(clickedCard.page.y)} 命中 ${clickedCard.name}）後 8 秒內沒有開出任務詳情窗；任務牆面板${board ? '有' : '沒有'}開；點擊後新出現的文字：${Array.from(newTexts).slice(0, 8).join(' / ') || '無'}`);
+                throw new Error(`點左牆第一張任務卡「${title}」（${card.meta || '無副標'}；點擊 ${Math.round(clickedCard.page.x)},${Math.round(clickedCard.page.y)} 命中 ${clickedCard.name}）後 30 秒內沒有開出任務詳情窗；任務牆面板${board ? '有' : '沒有'}開；點擊後新出現的文字：${Array.from(newTexts).slice(0, 8).join(' / ') || '無'}`);
             }
             await delay(800);
             const dialogTexts = (await rm.textsUnder(MISSION_DIALOG)) || [];
