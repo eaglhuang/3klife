@@ -17,6 +17,9 @@ const originals = new WeakMap<Tickable, (dt: number) => void>();
 let currentScale = 1;
 let userScale = 1;
 let paused = false;
+// QA 專用（PROG-2-9405）：與玩家 x2 倍率相乘、與奧義暫停各自獨立；預設 1／false = 正式流程完全不受影響
+let qaMultiplier = 1;
+let qaFrozen = false;
 
 /** 暫停時不能用 0（setTimeScale 會把 0 當成不合法而還原成 1），改用極小值讓 tween 與 scheduleOnce 等同凍結 */
 export const BATTLE_PAUSE_SCALE = 0.0001;
@@ -39,7 +42,38 @@ export function setTimeScale(target: Tickable, scale: number): number {
 }
 
 function applyBattleScale(): void {
-    currentScale = setTimeScale(director as unknown as Tickable, paused ? BATTLE_PAUSE_SCALE : userScale);
+    const frozen = paused || qaFrozen;
+    currentScale = setTimeScale(director as unknown as Tickable, frozen ? BATTLE_PAUSE_SCALE : userScale * qaMultiplier);
+}
+
+/** QA 慢動作倍率（0.05～1，呼叫端已夾值）；離開戰場呼叫 setBattleTimeScale(1) 也不會清掉，QA 倍率全程有效 */
+export function setQaTimeMultiplier(multiplier: number): void {
+    qaMultiplier = Number.isFinite(multiplier) && multiplier > 0 ? multiplier : 1;
+    applyBattleScale();
+}
+
+export function qaTimeMultiplier(): number {
+    return qaMultiplier;
+}
+
+/** QA 定格／解除定格：和奧義暫停同機制（dt 乘極小值），畫面仍會照常繪製 */
+export function setQaTimeFrozen(next: boolean): void {
+    qaFrozen = next;
+    applyBattleScale();
+}
+
+export function isQaTimeFrozen(): boolean {
+    return qaFrozen;
+}
+
+/** 繞過倍率直接推進 target 一個 dt（QA step 用）；沒掛倍率時等同原本的 tick */
+export function tickUnscaled(target: Tickable, dt: number): void {
+    (originals.get(target) ?? target.tick).call(target, dt);
+}
+
+/** 對引擎 director 推進 dt 秒清單（不吃倍率與定格）；清單由 QaTimeScale.planStepSlices 算出 */
+export function stepDirector(slices: readonly number[]): void {
+    for (const dt of slices) tickUnscaled(director as unknown as Tickable, dt);
 }
 
 /** 戰場加速：作用在引擎 director 上；暫停中只記下倍率，恢復時才生效 */

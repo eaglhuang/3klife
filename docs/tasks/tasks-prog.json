@@ -9920,6 +9920,52 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9405",
+      "title": "QA 慢動作與定格參數：網址參數放慢戰場時間，方便截到騎兵衝撞等瞬間",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-18T06:47:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "手感驗收時騎兵衝撞、命中頓格等瞬間截圖截不到；總PM 已同意排在 issue 2238 之前。",
+      "related": [
+        "PROG-2-9402"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-18 | 狀態: in-review | 驗證: 單元測試 8273 通過 0 失敗、tsc 0 錯、test:battle-skill-smoke 74 通過、test:ucuf 300 通過、編碼檢查通過；尚未實機截圖 | 變更: 新增 core/systems/QaTimeScale.ts（純函式）、battle/views/QaTimeController.ts（window.__qaTime）、BattleTimeScale 加 QA 倍率/定格/step、LoginScene 掛載、QaBattleEntry 認得 qaSlow/qaTime、tests/QaTimeScale.test.ts | 阻塞: 無（setTimeout 類計時器慢動作時補償、定格時不凍結，屬已知限制）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
