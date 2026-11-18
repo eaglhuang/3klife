@@ -167,7 +167,7 @@ export function createOfficerFeatureUnlocksSuite(): TestSuite {
         const withLine = buildSeasonReportPanelTexts('第 1 年 春季', [], ['任務'], '下一官職「郡守」將開放：天下沙盤');
         assert.equals('下一官職「郡守」將開放：天下沙盤', withLine['DialogCard/ScrollView/ScrollContent/EmptyHintLabel']);
         const emptyBoth = buildSeasonReportPanelTexts('第 1 年 春季', [], [], '預告');
-        assert.equals('本季沒有可回報的武將\n預告', emptyBoth['DialogCard/ScrollView/ScrollContent/EmptyHintLabel']);
+        assert.equals('本季風平浪靜，無事可報。\n預告', emptyBoth['DialogCard/ScrollView/ScrollContent/EmptyHintLabel']);
     });
 
     return suite;

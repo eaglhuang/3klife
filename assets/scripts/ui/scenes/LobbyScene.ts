@@ -5403,7 +5403,7 @@ ${spent}`,
         if (this._advancingSeason) return;
         this._advancingSeason = true;
         try {
-            const { advance, agingEvents, quarterlyReports, hallMissionReport } = await this._advanceSeasonWithSalaries();
+            const { advance, agingEvents, quarterlyReports, hallMissionReport, seasonReportSections } = await this._advanceSeasonWithSalaries();
             const died = agingEvents.filter((event) => event.type === 'died').length;
             const suffix = died > 0 ? `（${died} 位武將離世）` : '';
             services().event.emit('SHOW_TOAST', {
@@ -5419,20 +5419,18 @@ ${spent}`,
                 this._syncSeasonEventPopup();
                 this._syncLineagePopup();
             };
-            if ((quarterlyReports && quarterlyReports.length > 0) || hallLines.length > 0) {
-                // 關閉要走 UIManager，遮罩與堆疊才會一起收（PROG-2-9122）
-                const payload: SeasonReportOpenPayload = {
-                    seasonLabel: seasonText(advance.current),
-                    reports: quarterlyReports ?? [],
-                    hallMissionLines: hallLines,
-                    rankPreviewLine: nextRankPreviewLine(services().session.officerState.currentTier),
-                    // 季度戰報關了才輪到季報／事件／血統彈窗，兩者不會疊在一起搶點擊（建置版實測 06）
-                    onRequestClose: () => { void Promise.resolve(services().ui.close(UIID.SeasonReport)).finally(followUps); },
-                };
-                void services().ui.open(UIID.SeasonReport, payload);
-            } else {
-                followUps();
-            }
+            // 季報每季都開（PROG-2-9155）：沒事的季也顯示簡短一句，官職預告才不會漏
+            // 關閉要走 UIManager，遮罩與堆疊才會一起收（PROG-2-9122）
+            const payload: SeasonReportOpenPayload = {
+                seasonLabel: seasonText(advance.current),
+                reports: quarterlyReports ?? [],
+                hallMissionLines: hallLines,
+                sections: seasonReportSections ?? [],
+                rankPreviewLine: nextRankPreviewLine(services().session.officerState.currentTier),
+                // 季度戰報關了才輪到季報／事件／血統彈窗，兩者不會疊在一起搶點擊（建置版實測 06）
+                onRequestClose: () => { void Promise.resolve(services().ui.close(UIID.SeasonReport)).finally(followUps); },
+            };
+            void services().ui.open(UIID.SeasonReport, payload);
         } catch (error) {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 推進季度失敗', error);
             services().event.emit('SHOW_TOAST', { message: '推進季度失敗', duration: 2 });

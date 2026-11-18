@@ -140,6 +140,30 @@
                   },
                   {
                     "type": "label",
+                    "name": "ActionsLabel",
+                    "width": "100%",
+                    "height": 56,
+                    "styleSlot": "season-report.text.secondary",
+                    "text": ""
+                  },
+                  {
+                    "type": "label",
+                    "name": "PopulationLabel",
+                    "width": "100%",
+                    "height": 56,
+                    "styleSlot": "season-report.text.secondary",
+                    "text": ""
+                  },
+                  {
+                    "type": "label",
+                    "name": "VoicesLabel",
+                    "width": "100%",
+                    "height": 56,
+                    "styleSlot": "season-report.text.secondary",
+                    "text": ""
+                  },
+                  {
+                    "type": "label",
                     "name": "HallMissionLabel",
                     "width": "100%",
                     "height": 200,
