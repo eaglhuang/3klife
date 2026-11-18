@@ -1,0 +1,72 @@
+{
+  "id": "rank-unlock-popup-screen.skin",
+  "version": 1,
+  "bundle": "lobby_ui",
+  "atlasPolicy": "lobby_ui",
+  "slots": {
+    "rank-unlock.backdrop.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 200
+    },
+    "rank-unlock.card.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 246
+    },
+    "rank-unlock.button.ok": {
+      "kind": "color-rect",
+      "color": "primary",
+      "alpha": 220
+    },
+    "rank-unlock.label.title": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 36,
+      "lineHeight": 42,
+      "color": "secondaryLight",
+      "isBold": true,
+      "overflow": "CLAMP",
+      "horizontalAlign": "CENTER"
+    },
+    "rank-unlock.label.sub": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 22,
+      "lineHeight": 28,
+      "color": "secondaryLight",
+      "isBold": false,
+      "overflow": "CLAMP",
+      "horizontalAlign": "CENTER"
+    },
+    "rank-unlock.label.line": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 26,
+      "lineHeight": 32,
+      "color": "secondaryLight",
+      "isBold": true,
+      "overflow": "CLAMP"
+    },
+    "rank-unlock.label.next": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 22,
+      "lineHeight": 28,
+      "color": "secondaryLight",
+      "isBold": false,
+      "overflow": "CLAMP",
+      "horizontalAlign": "CENTER"
+    },
+    "rank-unlock.label.button": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 26,
+      "lineHeight": 32,
+      "color": "secondaryLight",
+      "isBold": true,
+      "overflow": "CLAMP",
+      "horizontalAlign": "CENTER"
+    }
+  }
+}

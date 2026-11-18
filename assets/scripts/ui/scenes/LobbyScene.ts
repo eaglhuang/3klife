@@ -138,7 +138,7 @@ import { HallBoardPanelController, HALL_BOARD_MAX_ROWS } from '../core/HallBoard
 import { hallPlayerOf, officerPromotionScriptLines, OFFICER_ERA_KEPT_LINE } from '../../core/systems/OfficerSnapshot';
 import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
 import { officerDisplayOf } from '../../core/systems/OfficerDisplay';
-import { LOBBY_ACTION_NOT_OPEN_TEXT, LOBBY_CATEGORIES, LOBBY_SUB_SLOTS, actionAt, buildLobbyCityHubView, categoryButtonId, computeSubMenuLayout, toggleCategory, type LobbyActionId, type SubMenuLayout, type LobbyCategoryId } from '../core/LobbyCityHubController';
+import { LOBBY_ACTION_NOT_OPEN_TEXT, LOBBY_CATEGORIES, LOBBY_SUB_SLOTS, actionAt, lobbyActionName, buildLobbyCityHubView, categoryButtonId, computeSubMenuLayout, toggleCategory, type LobbyActionId, type SubMenuLayout, type LobbyCategoryId } from '../core/LobbyCityHubController';
 import { nurtureGraduationRows } from '../core/NurtureGraduationView';
 import { pageSliceOf } from '../core/FixedSlotPager';
 import { MentorHoldingsController } from '../core/MentorHoldingsController';
@@ -161,6 +161,7 @@ import { mentorBorrowRows, type MentorBorrowRow } from '../core/MentorBorrowView
 import { OfficerPanelsController } from '../core/OfficerPanelsController';
 import { BLOODLINE_VIGNETTE_CELL_COUNT, bloodlineVignetteOpenLabel, bloodlineVignetteViewOf } from '../core/BloodlineVignetteText';
 import { installOfficerTierTable, type OfficerTierRow } from '../../core/systems/OfficerTierTable';
+import { buildRankUnlockPopupView, installOfficerFeatureUnlocks, lobbyActionLock, lockedActionToast, nextRankPreviewLine } from '../../core/systems/OfficerFeatureUnlocks';
 import { installSageProgressTable } from '../../core/systems/SageFavor';
 import { installSandtableTerritories } from '../../core/systems/SandtableTerritories';
 import { OFFICER_PROMOTION_FREEZE_TIMING, officerPromotionFreezeTitles, officerPromotionNoticeOf, officerPromotionRewardTotal } from '../../core/systems/HallMissionSettlement';
@@ -572,6 +573,8 @@ export class LobbyScene extends Component {
     private _yearReport: YearReportController<UIScreenPreviewHost> | null = null;
     private _prisoner: PrisonerPopupController | null = null;
     private _duplicatePullHost: UIScreenPreviewHost | null = null;
+    /** 官職晉升解鎖彈窗（PROG-2-9151）：晉升後列出新開放的功能與下一階預告 */
+    private _rankUnlockHost: UIScreenPreviewHost | null = null;
     private readonly _duplicatePull = new DuplicatePullPopupController();
     private _scoutPanelHost: UIScreenPreviewHost | null = null;
     private readonly _scoutPanel = new ScoutPanelController();
@@ -798,6 +801,7 @@ export class LobbyScene extends Component {
         this._deferredMounts = [
             // 點開才用的選將／出陣／人物介紹／圖鑑類（PROG-2-9046）：排最前面，大廳出現後最先補齊；
             // UIManager 控制器掛好才註冊，註冊前被點到時 open 回傳 false，不會當機
+            () => this._mountRankUnlockPopup(),
             () => this._mountDeckSelect(),
             () => this._mountLeadSelect(),
             () => this._mountSortieSetup(),
@@ -1045,11 +1049,20 @@ export class LobbyScene extends Component {
                 // 晉升一次性獎勵（PROG-2-1197）：同一階只會發一次晉升事件
                 const gold = officerPromotionRewardTotal(payload.tiers);
                 if (gold > 0) this._localGachaService.grantCurrency('gold', gold);
-                for (const message of [...officerPromotionNoticeOf(payload.tiers), ...officerPromotionScriptLines(payload.tiers)]) {
+                const promotionToasts = [...officerPromotionNoticeOf(payload.tiers), ...officerPromotionScriptLines(payload.tiers)];
+                for (const message of promotionToasts) {
                     services().event.emit('SHOW_TOAST', { message, duration: 2 });
                 }
+                const toastsEndAt = Date.now() + promotionToasts.length * 2200;
                 // 升官動畫（官職系統 E-6，PROG-2-1859）：每升一階播一次大字定格
-                void this._playOfficerPromotionFreeze(payload.tiers);
+                // 晉升解鎖彈窗（PROG-2-9151）：定格動畫播完再列出這次新開放的功能
+                // 提示（朝議已定…）會蓋住彈窗標題，等提示播完才跳彈窗
+                void this._playOfficerPromotionFreeze(payload.tiers)
+                    .then(() => new Promise<void>((resolve) => setTimeout(resolve, Math.max(0, toastsEndAt - Date.now()))))
+                    .then(() => {
+                        services().event.emit('HIDE_TOAST'); // 還沒播完的提示直接收掉，避免蓋住彈窗標題
+                        this._showRankUnlockPopup(payload.tiers);
+                    });
             }),
             services().event.on(GAME_SESSION_EVENTS.SeasonAdvanced, () => {
                 const session = services().session;
@@ -1488,6 +1501,12 @@ export class LobbyScene extends Component {
             } })),
             ...Array.from({ length: LOBBY_SUB_SLOTS }, (_, i) => ({ buttonId: `btnSub${i}`, handler: () => {
                 const action = actionAt(this._cityHubCategory, i);
+                // 未解鎖的功能只給提示、不關選單，讓玩家看得到目標（PROG-2-9151）
+                const lock = action ? lobbyActionLock(action, services().session.officerState.currentTier) : null;
+                if (action && lock?.locked) {
+                    this._showToast(lockedActionToast(lobbyActionName(action), lock));
+                    return;
+                }
                 this._cityHubCategory = null;
                 this._refreshCityHub();
                 if (action) this._runCityHubAction(action);
@@ -1572,6 +1591,7 @@ export class LobbyScene extends Component {
             rivals: session.rivals,
             openCategory: this._cityHubCategory,
             actionLabels: { sandtable: buildSandtableStatusLabel(session.sandtableStage, session.sandtableMarkersPlaced) },
+            officerTier: session.officerState.currentTier,
         });
         binder.setTexts(view.texts);
         binder.setActives(view.actives);
@@ -3432,7 +3452,41 @@ export class LobbyScene extends Component {
                 }
                 resolve();
             });
+        }).then(() => this._loadOfficerFeatureUnlocks());
+    }
+
+    /** 官職功能解鎖表（PROG-2-9151）：載入或驗證失敗時所有功能視為已開放，不把玩家鎖在外面。 */
+    private _loadOfficerFeatureUnlocks(): Promise<void> {
+        return new Promise((resolve) => {
+            resources.load<JsonAsset>('data/officer-feature-unlocks', JsonAsset, (err, asset) => {
+                if (err || !asset) {
+                    UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 官職功能解鎖表載入失敗，功能全部開放', err);
+                } else {
+                    const result = installOfficerFeatureUnlocks(asset.json);
+                    if (!result.ok) UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 官職功能解鎖表驗證失敗，功能全部開放', (result as { ok: false; issues: string[] }).issues);
+                }
+                this._refreshCityHub();
+                resolve();
+            });
         });
+    }
+
+    /** 官職晉升解鎖彈窗（PROG-2-9151）：內容由 OfficerFeatureUnlocks 算好，這裡只掛畫面與顯示。 */
+    private async _mountRankUnlockPopup(): Promise<void> {
+        this._rankUnlockHost = await this._mountPreviewScreenHost('RankUnlockPopupHost', 'rank-unlock-popup-screen', [
+            { buttonId: 'btnRankUnlockOk', handler: () => { if (this._rankUnlockHost) this._rankUnlockHost.node.active = false; } },
+        ]);
+    }
+
+    private _showRankUnlockPopup(tiers: readonly number[]): void {
+        if (tiers.length === 0) return;
+        const view = buildRankUnlockPopupView(Math.min(...tiers) - 1, Math.max(...tiers));
+        const host = this._rankUnlockHost;
+        if (!view || !host?.binder) return;
+        host.binder.setTexts(view.texts);
+        host.binder.setActives(view.actives);
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
     }
 
     /** 名士好感與劇情解鎖資料檔（PROG-2-1951）：驗證通過才覆寫；失敗沿用內建暫定值並記 log。 */
@@ -5321,6 +5375,7 @@ ${spent}`,
                     seasonLabel: seasonText(advance.current),
                     reports: quarterlyReports ?? [],
                     hallMissionLines: hallLines,
+                    rankPreviewLine: nextRankPreviewLine(services().session.officerState.currentTier),
                     // 季度戰報關了才輪到季報／事件／血統彈窗，兩者不會疊在一起搶點擊（建置版實測 06）
                     onRequestClose: () => { void Promise.resolve(services().ui.close(UIID.SeasonReport)).finally(followUps); },
                 };

@@ -37,6 +37,7 @@
  *   --browser   Chrome 路徑（也可用環境變數 CHROME_PATH）
  *   --stuck     單步卡住上限毫秒數（預設 120000）
  *   --mind      選用：換季後點大廳小人讀泡泡台詞（武將心智，PROG-2-9146）
+ *   --rank-unlock  選用：官職晉升解鎖節奏（PROG-2-9151）：鎖頭按鈕、點鎖頭提示、晉升彈窗與晉升後解鎖
  *   --jade      選用：玉的用途（商店看玉、許願祭壇用玉買加速卡，PROG-2-9149）
  *   --year      選用：原步驟後接一年循環（每季內政／任務牆／戰鬥／抽卡／培育／推進一季），輸出 year-report.json（PROG-2-9141）
  *   --battles-per-season  --year 時每季出征場數（預設 2）
@@ -432,7 +433,7 @@ async function main() {
     const listButtons = () => page.evaluate(() => window.__pt.listButtons());
     /** 把殘留的面板關掉，直到大廳底欄（BtnCatShop）回來；回傳是否成功 */
     const backToLobbyBar = async () => {
-        const closers = '^(CharacterDs3Main_button_3|OpeningOfferDecline|GachaReturnToLobby|BtnBack|BtnScoutCancel|BtnNextTutorial|BtnClose\\w*)$';
+        const closers = '^(CharacterDs3Main_button_3|OpeningOfferDecline|GachaReturnToLobby|BtnBack|BtnScoutCancel|BtnNextTutorial|BtnRankUnlockOk|BtnClose\\w*)$';
         for (let i = 0; i < 12; i++) {
             const hit = await clickButton(closers);
             if (!hit) break;
@@ -595,6 +596,14 @@ async function main() {
             rec.detail.menuMap = map;
             // 太守府：開啟後截一張（人口、民心、黃金與糧草產出列），再關回大廳；開不了只記錄不算失敗
             try {
+                // 官職晉升解鎖（PROG-2-9151）：新玩家的太守府是鎖頭按鈕，點了只會出現提示；鎖著就不開，並把最後展開的選單收起
+                const hallLocked = (map.BtnCatDomestic || []).some((b) => /太守府/.test(b.text) && /🔒/.test(b.text));
+                rec.detail.governorHallLocked = hallLocked;
+                if (hallLocked) {
+                    await clickButton('^BtnCatNurture$');
+                    await delay(800);
+                    return rec.detail;
+                }
                 const opened = await openSub('BtnCatDomestic', '太守府');
                 rec.detail.governorHallOpened = Boolean(opened);
                 if (opened) {
@@ -741,6 +750,8 @@ async function main() {
         };
         /** 換季後可能出現的彈窗，一個 kind 對應一組點擊規格；同一 kind 重複出現時依序換下一組規格（例如三國季報第一個選項資源不足，改選第二個） */
         const SEASON_POPUPS = [
+            // 官職晉升解鎖彈窗（PROG-2-9151）：升官時蓋住整個大廳，要先按「知道了」
+            { kind: 'rank-unlock', specs: [{ name: '^BtnRankUnlockOk$' }] },
             { kind: 'season-report', specs: [{ name: '^BtnClose$', under: '^SeasonReportComposite$' }] },
             { kind: 'season-report-x', specs: [{ name: '.*', text: '^\\s*[Xx×]\\s*$', under: '^SeasonReportRoot$', button: true }] },
             { kind: 'season-event', specs: [{ name: '^SeasonEventOptionA$' }] },
@@ -1317,6 +1328,70 @@ async function main() {
             return rec.detail;
         }, { skipIfFailed: true });
 
+        // ── 官職晉升解鎖節奏（PROG-2-9151，--rank-unlock）：新玩家大廳的鎖頭按鈕、點鎖頭的提示、晉升彈窗 ──
+        if (args['rank-unlock']) {
+            await step('rank-unlock', async (rec) => {
+                await requireLobby();
+                await backToLobbyBar();
+                await closeMissionLayers();
+                await waitToastGone();
+                rec.detail.menus = {};
+                let lockedPick = null;
+                for (const cat of ['BtnCatDomestic', 'BtnCatNurture', 'BtnCatSortie']) {
+                    if (!(await clickButton('^' + cat + '$'))) throw new Error(`找不到底欄 ${cat}`);
+                    await delay(1200);
+                    rec.detail.menus[cat] = (await page.evaluate(() => window.__pt.buttonTexts('^BtnSub'))).map((b) => b.text);
+                    await shot(rec, `rank-unlock-menu-${cat}`);
+                    // 走完前面步驟後玩家可能已自然升官：挑目前還鎖著的第一個項目來點
+                    const lockedText = rec.detail.menus[cat].find((t) => /🔒/.test(t));
+                    if (lockedText && !lockedPick) lockedPick = { cat, name: lockedText.split('\n')[0].replace('🔒', '') };
+                }
+                if (!lockedPick) throw new Error('目前官職階位下沒有任何鎖著的選單項目');
+                rec.detail.lockedPick = lockedPick;
+                // 點鎖頭：提示出現、選單不收起、功能沒有被打開
+                if (!(await clickButton('^' + lockedPick.cat + '$'))) throw new Error(`找不到底欄 ${lockedPick.cat}`);
+                await delay(800);
+                const before = new Set(await rm.allTexts());
+                const clicked = await clickByText('^BtnSub', lockedPick.name);
+                if (!clicked) throw new Error(`找不到鎖著的「${lockedPick.name}」子選單按鈕`);
+                await delay(900);
+                rec.detail.lockToastTexts = (await rm.allTexts()).filter((t) => !before.has(t) && /開放/.test(t));
+                rec.detail.menuStillOpen = Boolean(await page.evaluate(() => window.__pt.buttonTexts('^BtnSub')).then((b) => b.length));
+                await shot(rec, 'rank-unlock-locked-click-toast');
+                if (!rec.detail.lockToastTexts.length) throw new Error('點鎖著的按鈕沒有出現「X 官職開放」提示');
+                await waitToastGone();
+                await backToLobbyBar();
+                // 晉升：直接給官職經驗並發出晉升事件，驗晉升彈窗內容與官職更新後解鎖
+                const promoted = await page.evaluate(async () => {
+                    const loader = await window.System.import('chunks:///_virtual/ServiceLoader.ts');
+                    const session = loader.services().session;
+                    const tiers = session.gainOfficerExp({ difficulty: 'HELL', boardType: 'MILITARY', success: true })
+                        .concat(session.gainOfficerExp({ difficulty: 'HELL', boardType: 'MILITARY', success: true }));
+                    loader.services().event.emit('game-session-officer-promoted', { tiers });
+                    return { tiers, tier: session.officerState.currentTier };
+                });
+                rec.detail.promoted = promoted;
+                if (!promoted.tiers.length) throw new Error('給官職經驗後沒有晉升');
+                const popup = await waitUntil(async () => {
+                    const texts = await rm.allTexts();
+                    return texts.some((t) => /^晉升「/.test(t)) ? texts.filter((t) => /^晉升「|新開放|：|下一官職/.test(t)) : null;
+                }, 20000, '晉升後 20 秒內沒有出現晉升彈窗').catch((e) => { throw e; });
+                rec.detail.popupTexts = popup;
+                await delay(600);
+                await shot(rec, 'rank-unlock-promotion-popup');
+                const ok = await clickByText('^BtnRankUnlockOk$', '.*') || await clickButton('^BtnRankUnlockOk$');
+                rec.detail.popupClosed = Boolean(ok);
+                await delay(800);
+                // 晉升後原本鎖著的按鈕解鎖
+                if (!(await clickButton('^BtnCatDomestic$'))) throw new Error('晉升後找不到底欄「內政」');
+                await delay(1200);
+                rec.detail.menuAfterPromotion = (await page.evaluate(() => window.__pt.buttonTexts('^BtnSub'))).map((b) => b.text);
+                await shot(rec, 'rank-unlock-menu-after-promotion');
+                await backToLobbyBar();
+                return rec.detail;
+            }, { skipIfFailed: true });
+        }
+
         // ── 9. 一年循環（--year，選用）：從目前季節起每季內政＋任務牆派將＋出征戰鬥＋抽卡／培育＋推進一季，直到第 1 年第 4 季結束（PROG-2-9141）──
         if (args.year) {
             const battlesPerSeason = Number(args['battles-per-season'] || 2);
@@ -1386,6 +1461,11 @@ async function main() {
             let stalled = 0;
             let prevButtons = new Set();
             yearReport.startSeason = (await readSeason()).text;
+            yearReport.startOfficer = await page.evaluate(async () => {
+                const loader = await window.System.import('chunks:///_virtual/ServiceLoader.ts');
+                const o = loader.services().session.officerState;
+                return { tier: o.currentTier, exp: o.officerExp };
+            }).catch(() => null);
             // 原 11 步裡已推進過的季（任務循環、推進一季）一併列入，湊成完整一年
             const stepByName = (n) => report.steps.find((x) => x.name === n);
             const loopStep = stepByName('lobby-mission-loop');
@@ -1578,6 +1658,12 @@ async function main() {
                     if (cur.ordinal !== null && after.ordinal !== cur.ordinal + 1) throw new Error(`季別沒有前進：「${cur.text}」→「${after.text || '讀不到'}」`);
                     return rec.detail;
                 });
+                // 官職階位與經驗（PROG-2-9151）：量測每季升階節奏
+                yq.officer = await page.evaluate(async () => {
+                    const loader = await window.System.import('chunks:///_virtual/ServiceLoader.ts');
+                    const o = loader.services().session.officerState;
+                    return { tier: o.currentTier, exp: o.officerExp };
+                }).catch(() => null);
                 writeYearReport();
                 console.log(`[playtest] 年循環 ${yq.season} → ${yq.seasonAfter || '?'}：戰鬥 ${yq.battles.map((b) => b.result || (b.ok ? '?' : '失敗')).join('/') || '無'}；錯誤 ${yq.errors.length}`);
             }
