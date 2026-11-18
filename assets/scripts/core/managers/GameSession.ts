@@ -257,6 +257,9 @@ import { buildGovernorSnapshot, type GovernorSnapshot } from '../systems/Governo
 import { advancePopulation, applyPopulationRout, clampMorale, commerceGoldBase, INITIAL_MORALE, INITIAL_POPULATION, MORALE_DELTA, normalizeCityEconomy, populationBonusAmount, populationCapOf, RELIEF_MISSION_TEMPLATE_ID, type CityEconomyState } from '../systems/CityEconomy';
 import { buildEraResetEvent } from '../systems/EraReset';
 import { buildQuarterlyBattleReportRows, type QuarterlyBattleReportRow } from '../systems/RetireReviewCopy';
+import { RESOURCE_LABEL, TASK_LABEL } from '../systems/DomesticPresenter';
+import { buildSeasonReportSections, emptySeasonActivity, type MindVoiceCandidate, type SeasonActivityLog, type SeasonReportSection } from '../systems/SeasonReportSections';
+import { rankTitleOf } from '../systems/OfficerFeatureUnlocks';
 import { withLifeImprints } from '../systems/LifeImprint';
 import { clanMembersOf, clanStatsOf, clanTierOf, normalizeClanTier, type ClanTier } from '../systems/ClanTier';
 import { displayMilestoneStage, kinMilestoneLine, kinMilestoneStage, milestoneStageOfClan, milestoneUnlockLines, normalizeMilestoneStage, type MilestoneStage } from '../systems/FamilyMilestone';
@@ -535,6 +538,8 @@ export interface SeasonAdvancedPayload {
     yearReport?: YearReport;
     /** 本季每位名冊武將的季度戰報（REC-08）；沒有精力資料的武將不列 */
     quarterlyReports?: QuarterlyBattleReportRow[];
+    /** 季報區段：本季行動／人口與民心／武將心聲（PROG-2-9155）；沒內容的區段不在陣列內 */
+    seasonReportSections?: SeasonReportSection[];
     /** 本季他國 AI 來犯、以名冊前 3 強自動迎戰的結算（PROG-2-1088） */
     rivalBattles?: AutoBattleResult[];
     /** 本季（＝傭兵一日，MVP 定案）試用期滿未結義而離隊的傭兵 uid（PROG-2-1154） */
@@ -3223,6 +3228,10 @@ export class GameSession {
     private _territoryLevel = 1;
     /** 太守府的人口與民心（PROG-2-9138）：獨立存檔值，民心不再由名聲換算 */
     private _cityEconomy: CityEconomyState = { population: INITIAL_POPULATION, morale: INITIAL_MORALE };
+    /** 季內行動累計（季報用，PROG-2-9155）；只放記憶體，換季後清空，讀檔後從空白重新累計 */
+    private _seasonActivity: SeasonActivityLog = emptySeasonActivity();
+    /** 上一次季結後的人口民心基準（季報算變化用）；沒有時以本次換季開頭的數值為基準，不存檔 */
+    private _seasonEconomyBase: CityEconomyState | null = null;
     /** 已下單、等季結生效的升級目標等級（GOV-08） */
     private _pendingTerritoryLevel: number | null = null;
     private _territories: KeepTerritory[] = defaultKeepTerritories();
@@ -3855,6 +3864,7 @@ export class GameSession {
         const result = addOfficerExp(this._officerState, boostedOfficerExp(calcOfficerExpGain(task), monthlyCardActive));
         this._officerState = result.state;
         this._recordSandtableUnlockReached();
+        for (const tier of result.promotedTiers) this._seasonActivity.officerPromotions.push(rankTitleOf(tier));
         return result.promotedTiers;
     }
 
@@ -5011,6 +5021,33 @@ export class GameSession {
         this._cityEconomy = { population, morale };
     }
 
+    /**
+     * 季報區段（PROG-2-9155，使用者裁決 69）：本季行動來自季內累計與內政紀錄，人口民心取季前後值，
+     * 武將心聲取心智離線台詞（優先強烈心情或本季剛發生事件的武將，最多 3 則）。結果由純函式組出。
+     */
+    private _buildSeasonReportSections(season: number, economyBase: CityEconomyState, hallMissionReport: HallMissionSeasonReport | undefined): SeasonReportSection[] {
+        const previous = season - 1;
+        const domesticLog = this._domesticLog;
+        const task = domesticLog.lastSeason === previous ? domesticLog.lastTask : null;
+        const grant = domesticLog.lastSeason === previous ? domesticLog.lastGrant : undefined;
+        const voices: MindVoiceCandidate[] = this._roster.getAll()
+            .filter((g) => g.status !== 'dead' && !(g as { isMentorCard?: boolean }).isMentorCard)
+            .map((g) => {
+                const ctx = this._mindContext(g.id);
+                const line = this.mind.barkFor(g.id, 'MORNING', season, ctx);
+                const justHappened = this.mind.recentMemories(g.id, 3).some((m) => m.season >= previous);
+                return { generalId: g.id, name: g.name, mood: this.mind.moodOf(g.id, ctx), text: line.text, source: line.source, justHappened };
+            });
+        return buildSeasonReportSections({
+            activity: this._seasonActivity,
+            domestic: task ? { taskName: TASK_LABEL[task], ...(grant ? { gainText: `${RESOURCE_LABEL[grant.resource]} +${grant.amount}` } : {}) } : null,
+            hallMissions: hallMissionReport ? { settled: hallMissionReport.settled, succeeded: hallMissionReport.succeeded } : null,
+            population: { before: economyBase.population, after: this._cityEconomy.population },
+            morale: { before: economyBase.morale, after: this._cityEconomy.morale },
+            voices,
+        });
+    }
+
     /** 季度治理報告（領地治理 §G）：上一季內政入帳加上季結算增加的糧草與城市兵源 */
     private _buildGovernanceReport(before: MilitaryReserve, previousSeason: number): string | null {
         const gains: Partial<Record<'food' | 'gold' | 'fame' | 'cityTroops', number>> = {
@@ -5024,6 +5061,7 @@ export class GameSession {
 
     /** epochMs 用來判斷月卡是否有效（月卡期間精力回復 ×1.2，VIT-08）；預設現在時間 */
     public async advanceSeason(epochMs: number = Date.now()): Promise<SeasonAdvancedPayload> {
+        const economyBase = this._seasonEconomyBase ?? { ...this._cityEconomy };
         const advance = this._clock.advanceSeason();
         this._tickTravel();
         // 動態關係每季衰退（KIN-10）：親密度歸 0 只是加成歸零，關係保留
@@ -5154,7 +5192,10 @@ export class GameSession {
             this._familySynergy = finalizeAdultChildren(this._familySynergy, this._roster.getAll());
             this._marriageProposal = rollMarriageProposal(this._roster.getAll(), this._clanTier, `suitor-${governanceSeason}`, remarkRandomOf(`marriage|${governanceSeason}|${this._seeded.snapshot().state}`), this._familySynergy);
         }
-        const payload: SeasonAdvancedPayload = { ...(forcedRetirements.length > 0 ? { forcedRetirements, forcedRetirementNames: forcedRetirements.map((id) => rosterBeforeLifecycle.find((general) => general.id === id)?.name ?? id) } : {}), ...(yuedanLines.length > 0 ? { yuedanLines } : {}), ...(omenLines.length > 0 ? { omenLines } : {}), ...(this._tallyFoodDiscountArmed ? { foodLowLine: FOOD_LOW_LINE } : {}), ...(treasures.length > 0 ? { prisonTreasureLines: treasures.map((entry) => prisonTreasureLine(entry.targetName, ITEM_DISPLAY_NAMES[ITEM_TREASURE])) } : {}), ...(governanceReport ? { governanceReport } : {}), ...(eventNotice ? { governanceEventLine: eventNotice } : {}), advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(hallMissionReport ? { hallMissionReport } : {}), ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids } : {}), ...(mercenaryDay.dayThreeUids.length > 0 ? { mercenaryDayThree: mercenaryDay.dayThreeUids } : {}), ...(mercenaryDay.trustUids.length > 0 ? { mercenaryTrust: mercenaryDay.trustUids } : {}) };
+        const seasonReportSections = this._buildSeasonReportSections(governanceSeason, economyBase, hallMissionReport);
+        this._seasonActivity = emptySeasonActivity();
+        this._seasonEconomyBase = { ...this._cityEconomy };
+        const payload: SeasonAdvancedPayload = { seasonReportSections, ...(forcedRetirements.length > 0 ? { forcedRetirements, forcedRetirementNames: forcedRetirements.map((id) => rosterBeforeLifecycle.find((general) => general.id === id)?.name ?? id) } : {}), ...(yuedanLines.length > 0 ? { yuedanLines } : {}), ...(omenLines.length > 0 ? { omenLines } : {}), ...(this._tallyFoodDiscountArmed ? { foodLowLine: FOOD_LOW_LINE } : {}), ...(treasures.length > 0 ? { prisonTreasureLines: treasures.map((entry) => prisonTreasureLine(entry.targetName, ITEM_DISPLAY_NAMES[ITEM_TREASURE])) } : {}), ...(governanceReport ? { governanceReport } : {}), ...(eventNotice ? { governanceEventLine: eventNotice } : {}), advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(hallMissionReport ? { hallMissionReport } : {}), ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids } : {}), ...(mercenaryDay.dayThreeUids.length > 0 ? { mercenaryDayThree: mercenaryDay.dayThreeUids } : {}), ...(mercenaryDay.trustUids.length > 0 ? { mercenaryTrust: mercenaryDay.trustUids } : {}) };
         if (this._autoSave && this._save) {
             await this.save();
         }
@@ -5651,6 +5692,7 @@ export class GameSession {
         }
         if (added.length > 0) {
             this._roster.replaceAll([...this._roster.getAll(), ...added]);
+            this._seasonActivity.recruits.push(...added.map((general) => general.name ?? general.id));
         }
         if (added.length > 0) {
             this._emit(GAME_SESSION_EVENTS.RosterChanged, added);
@@ -5731,6 +5773,7 @@ export class GameSession {
         }
         if (result === 'player-win' || result === 'enemy-win') {
             this.recordPlayerLog(result === 'player-win' ? 'BATTLE_WIN' : 'BATTLE_LOSE');
+            if (result === 'player-win') this._seasonActivity.battlesWon += 1; else this._seasonActivity.battlesLost += 1;
             this._recordEventJournal(result === 'player-win' ? 'BATTLE_WIN' : 'BATTLE_LOSE', this._journalSubjects(deployedIds));
             this._recordMindBattle(deployedIds, result === 'player-win', options);
         }
@@ -5862,7 +5905,10 @@ export class GameSession {
         for (const event of awakenings) {
             this._emit(GAME_SESSION_EVENTS.FactorAwakened, event);
         }
-        rankPromotions.forEach((payload) => this._emit(GAME_SESSION_EVENTS.GeneralRankPromoted, payload));
+        rankPromotions.forEach((payload) => {
+            this._seasonActivity.rankUps.push({ name: this._roster.getAll().find((g) => g.id === payload.generalId)?.name ?? payload.generalId, title: payload.title });
+            this._emit(GAME_SESSION_EVENTS.GeneralRankPromoted, payload);
+        });
         return record;
     }
 
