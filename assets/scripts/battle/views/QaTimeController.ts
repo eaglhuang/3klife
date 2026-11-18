@@ -86,7 +86,7 @@ export function installQaTime(search: string | undefined | null): boolean {
     if (params.scale !== 1) {
         api.setScale(params.scale);
         patchSetTimeout(host);
-        console.log(`[QaTime] qaSlow 已啟用，倍率 ${params.scale}（範圍 ${QA_TIME_SCALE_MIN}～${QA_TIME_SCALE_MAX}）`);
+        console.warn(`[QaTime] qaSlow 已啟用，倍率 ${params.scale}（範圍 ${QA_TIME_SCALE_MIN}～${QA_TIME_SCALE_MAX}）`);
     } else {
         // 之後才用 setScale 放慢時也要讓 setTimeout 跟上，所以 QA 模式一律先裝
         patchSetTimeout(host);

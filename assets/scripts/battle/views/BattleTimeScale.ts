@@ -14,7 +14,6 @@ export interface Tickable {
 }
 
 const originals = new WeakMap<Tickable, (dt: number) => void>();
-let currentScale = 1;
 let userScale = 1;
 let paused = false;
 // QA 專用（PROG-2-9405）：與玩家 x2 倍率相乘、與奧義暫停各自獨立；預設 1／false = 正式流程完全不受影響
@@ -43,7 +42,7 @@ export function setTimeScale(target: Tickable, scale: number): number {
 
 function applyBattleScale(): void {
     const frozen = paused || qaFrozen;
-    currentScale = setTimeScale(director as unknown as Tickable, frozen ? BATTLE_PAUSE_SCALE : userScale * qaMultiplier);
+    setTimeScale(director as unknown as Tickable, frozen ? BATTLE_PAUSE_SCALE : userScale * qaMultiplier);
 }
 
 /** QA 慢動作倍率（0.05～1，呼叫端已夾值）；離開戰場呼叫 setBattleTimeScale(1) 也不會清掉，QA 倍率全程有效 */
