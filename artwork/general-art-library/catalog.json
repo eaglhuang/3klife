@@ -5073,6 +5073,23 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/cheng_bing__程秉__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "dab320d25c8c01a305cd2f39d2b9f1c9640e264e59f29ce6cc6de0ed419c6d49",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "strategy scroll",
+            "poseLabel": "低身屈膝斜展軍略卷軸",
+            "sourceStanding": "standing/cheng_bing__程秉__standing_0002.png",
+            "note": "透明背景已確認；保留程秉紅袍、黑色官帽與白鬚形象，採低身屈膝展卷施策姿勢。依安全區等比例縮小並置中，待使用者審核，尚未接入遊戲。"
+          }
+        ]
       }
     },
     {
