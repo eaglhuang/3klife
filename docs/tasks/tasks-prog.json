@@ -9966,6 +9966,52 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9403",
+      "title": "奧義面板第一次打開就要有技能；戰場主將不可顯示藍色佔位圖（issue 2238）",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-18T06:47:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "試玩 issue 2238：孫策戰第 1、2 回合打開奧義面板是空的，第 3 回合才有技能；主將只顯示藍色圓點佔位。",
+      "related": [
+        "PROG-2-9401"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-18 | 狀態: in-review | 驗證: run-cli 8272 過 0 失敗；tsc 0 錯；battle-skill-smoke 74 過；ucuf 300 過；encoding 通過；預覽實跑待主控 | 變更: (a) UltimateSelectPopup 建置完成前 show() 不再先顯示空面板（暫存技能、onReady 後才淡入），失敗時 toast；ActionCommandComposite 載入技能時預先建小窗；QA 腳本等技能文字出現才算開啟 (b) 新增 GeneralPortraitStandee，無 Spine 或 Spine 載入失敗的主將改畫立繪站牌（戰鬥圖→立繪→頭像），不再退回藍色通用棋子；UnitRenderer 接線；新測試 Issue2238UltimatePopupAndStandee | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

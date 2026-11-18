@@ -48,6 +48,7 @@ import { SlashShotView } from "./SlashShotView";
 import { attackVfxFor } from "../shared/AttackVfxMapping";
 import { attackStyleFor } from "../shared/AttackStyle";
 import { SpineUnitOverlay } from "./SpineGeneralOverlay";
+import { GeneralPortraitStandee, STANDEE_HEIGHT_PX, needsStandeeFallback } from "./GeneralPortraitStandee";
 import { generalSpineConfig, squadMemberCount, troopSpineConfigWithFallback } from '../shared/UnitPresentationConfig';
 import { DuelExchange } from '../shared/DuelPresentationCore';
 import { BATTLE_VISUAL_TIMING, buildHitShakeSteps, planHitFeedback, planMoveSegment } from "./BattlePresentationTiming";
@@ -228,6 +229,8 @@ export class UnitRenderer extends Component {
   private readonly arrowShots = new ArrowShotView(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   private readonly slashShots = new SlashShotView(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   private readonly spineUnits = new SpineUnitOverlay(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
+  /** 沒有 Spine 的主將改用立繪站牌，不退回藍色通用棋子（issue #2238） */
+  private readonly generalStandees = new GeneralPortraitStandee(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   private readonly tileBuffViews = new Map<string, TileBuffView>();
   private readonly troopPrefabLoads = new Map<string, Promise<Prefab | null>>();
   private readonly heroPrefabLoads = new Map<string, Promise<Prefab | null>>();
@@ -285,6 +288,7 @@ export class UnitRenderer extends Component {
         view.worldNode.destroy();
         view.labelNode.destroy();
         this.spineUnits.remove(unitId);
+        this.generalStandees.remove(unitId);
         this.unitViews.delete(unitId);
       }
     });
@@ -996,7 +1000,15 @@ export class UnitRenderer extends Component {
         const general = isGeneral ? this.latestState?.getGeneral(unit.faction) : null;
         const config = isGeneral ? (general ? generalSpineConfig(general.id, general.templateId) : null)
           : troopSpineConfigWithFallback(unit.type, unit.faction === Faction.Enemy, unit.tallyTemplateId, path => this.spineUnits.hasFailed(path));
-        if (config) {
+        // 主將沒有 Spine（或素材載不起來）：改畫立繪站牌，站位與 Spine 主將相同；站牌也載不到才留 3D 棋子（issue #2238）
+        if (isGeneral && general && needsStandeeFallback(config?.path, path => this.spineUnits.hasFailed(path))) {
+          this.spineUnits.remove(unitId);
+          const side = this.generalSidelineFoot(unit.faction);
+          const shownStandee = this.generalStandees.sync(unitId, general.id, side?.x ?? view.labelNode.position.x,
+            side?.y ?? view.labelNode.position.y - STANDEE_HEIGHT_PX, view.labelNode.active);
+          view.visualNode.active = !shownStandee;
+        } else if (config) {
+          this.generalStandees.remove(unitId);
           const p = view.labelNode.position;
           const foot = isGeneral ? this.generalSidelineFoot(unit.faction) : this.unitGroundFoot(view);
           const shown = this.spineUnits.sync(unitId, config, foot?.x ?? p.x, foot?.y ?? p.y - config.labelToFoot,
@@ -1275,7 +1287,7 @@ export class UnitRenderer extends Component {
     return this.spineUnits.playDuel(this.ensureGeneralSpineId(Faction.Player), this.ensureGeneralSpineId(Faction.Enemy), winner, fallen, exchanges);
   }
 
-  onDestroy(): void { this.spineUnits.clear(); }
+  onDestroy(): void { this.spineUnits.clear(); this.generalStandees.clear(); }
 
   private createGeneralView(faction: Faction): GeneralView {
     this.ensureRoots();
