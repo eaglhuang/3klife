@@ -19,6 +19,11 @@ export interface MentorBorrowDeps<H extends MentorHoldingsHostLike> {
     select(row: MentorBorrowRow): Promise<boolean>;
     /** 「借用紀錄」按鈕：清單關閉後開結業紀錄 */
     openRecord(): void;
+    /**
+     * 打開清單時把宿主節點搬到最上層。清單是大廳啟動時掛上的，層級排在培育畫面等後開的全螢幕畫面之下；
+     * 不搬到前面，玩家點「好友借用」只會看到沒反應（PROG-2-9158）。
+     */
+    bringToFront?(host: H): void;
 }
 
 export class MentorBorrowController<H extends MentorHoldingsHostLike> {
@@ -50,7 +55,10 @@ export class MentorBorrowController<H extends MentorHoldingsHostLike> {
 
     public setOpen(open: boolean): void {
         if (open) this.refresh();
-        if (this._host) this._host.node.active = open;
+        if (this._host) {
+            this._host.node.active = open;
+            if (open) this._deps.bringToFront?.(this._host);
+        }
     }
 
     public turnPage(delta: number): void {

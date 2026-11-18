@@ -14,6 +14,35 @@ export const GACHA_ACTION_NODES = {
 } as const;
 
 type Action = keyof typeof GACHA_ACTION_NODES;
+
+/** 同一次點擊會先後觸發 CLICK 與 TOUCH_END；這個間隔（毫秒）內的第二次呼叫視為同一次點擊 */
+export const GACHA_TAP_DEDUPE_MS = 120;
+
+/**
+ * 把動作包成「同一次點擊只執行一次」（PROG-2-9158）。
+ * 轉蛋鈕同時掛 CLICK 與 TOUCH_END 備用事件，真實點擊兩個都會到，
+ * 左右箭頭因此一次跳兩個池（四個池只輪到兩個，教官池永遠點不到）。
+ */
+export function onceForTap(handler: () => void, now: () => number = Date.now): () => void {
+    let last = -Infinity;
+    return () => {
+        const at = now();
+        if (at - last < GACHA_TAP_DEDUPE_MS) return;
+        last = at;
+        handler();
+    };
+}
+
+/** 同一個動作函式永遠拿到同一個包裝，重綁時 off 才拆得掉上一次掛的監聽 */
+const tapWrappers = new WeakMap<() => void, () => void>();
+function wrapOnce(action: () => void): () => void {
+    let wrapped = tapWrappers.get(action);
+    if (!wrapped) {
+        wrapped = onceForTap(action);
+        tapWrappers.set(action, wrapped);
+    }
+    return wrapped;
+}
 interface ActionNode {
     off(event: string, callback?: any, owner?: object): void;
     on(event: string, callback: (...args: any[]) => void, owner?: object): void;
@@ -29,8 +58,10 @@ export function bindGachaActions<T extends ActionNode>(
         const node = getNode(name);
         if (!node) continue;
         prepareButton(node);
-        const handler = actions[action];
-        if (!handler) continue;
+        const action0 = actions[action];
+        if (!action0) continue;
+        // 兩個事件共用同一個包裝，才能分辨「同一次點擊」
+        const handler = wrapOnce(action0);
         node.off(event, handler, owner);
         node.on(event, handler, owner);
         // 增加 TOUCH_END 備用事件監聽，確保滑鼠與觸控直接點擊時 100% 觸發

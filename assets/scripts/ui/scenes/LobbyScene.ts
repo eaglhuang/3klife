@@ -1438,6 +1438,7 @@ export class LobbyScene extends Component {
             rows: () => this._mentorBorrowRowsNow(),
             select: (row) => this._selectBorrowedMentor(row),
             openRecord: () => this._setGraduationOpen(true),
+            bringToFront: (host) => this._bringNodeToFront(host.node),
         });
         await this._mentorBorrow.mount();
     }

@@ -11,7 +11,7 @@ function row(i: number, enabled = true): MentorBorrowRow {
 }
 
 function harness(rows: MentorBorrowRow[], selectResult = true) {
-    const log = { selected: [] as string[], records: 0, texts: {} as Record<string, string>, actives: {} as Record<string, boolean> };
+    const log = { selected: [] as string[], records: 0, fronted: 0, texts: {} as Record<string, string>, actives: {} as Record<string, boolean> };
     let bindings: MentorHoldingsButtonBinding[] = [];
     const host = {
         node: { active: true },
@@ -25,6 +25,7 @@ function harness(rows: MentorBorrowRow[], selectResult = true) {
         rows: () => rows,
         select: async (r) => { log.selected.push(r.friendId); return selectResult; },
         openRecord: () => { log.records++; },
+        bringToFront: () => { log.fronted++; },
     });
     const click = (id: string) => bindings.find((b) => b.buttonId === id)?.handler();
     return { ctrl, host, log, click };
@@ -46,6 +47,16 @@ export function createMentorBorrowControllerSuite(): TestSuite {
         h.click('btnBorrowNext');
         assert.equals('2 / 2', h.log.texts.borrowPage);
         assert.isFalse(h.log.actives.borrowRow1Box);
+    });
+
+    suite.test('打開時把清單搬到最上層，關閉時不搬（否則好友借用開在培育畫面底下看不到，PROG-2-9158）', async () => {
+        const h = harness([row(0)]);
+        await h.ctrl.mount();
+        assert.equals(0, h.log.fronted);
+        h.ctrl.open();
+        assert.equals(1, h.log.fronted);
+        h.ctrl.setOpen(false);
+        assert.equals(1, h.log.fronted);
     });
 
     suite.test('選不可借的列不動作；選可借的列成功後關閉', async () => {
