@@ -38,6 +38,7 @@
  *   --stuck     單步卡住上限毫秒數（預設 120000）
  *   --mind      選用：換季後點大廳小人讀泡泡台詞（武將心智，PROG-2-9146）
  *   --rank-unlock  選用：官職晉升解鎖節奏（PROG-2-9151）：鎖頭按鈕、點鎖頭提示、晉升彈窗與晉升後解鎖
+ *   --jade      選用：玉的用途（商店看玉、許願祭壇用玉買加速卡，PROG-2-9149）
  *   --year      選用：原步驟後接一年循環（每季內政／任務牆／戰鬥／抽卡／培育／推進一季），輸出 year-report.json（PROG-2-9141）
  *   --battles-per-season  --year 時每季出征場數（預設 2）
  *
@@ -432,7 +433,7 @@ async function main() {
     const listButtons = () => page.evaluate(() => window.__pt.listButtons());
     /** 把殘留的面板關掉，直到大廳底欄（BtnCatShop）回來；回傳是否成功 */
     const backToLobbyBar = async () => {
-        const closers = '^(CharacterDs3Main_button_3|OpeningOfferDecline|GachaReturnToLobby|BtnBack|BtnScoutCancel|BtnNextTutorial|BtnClose\\w*)$';
+        const closers = '^(CharacterDs3Main_button_3|OpeningOfferDecline|GachaReturnToLobby|BtnBack|BtnScoutCancel|BtnNextTutorial|BtnRankUnlockOk|BtnClose\\w*)$';
         for (let i = 0; i < 12; i++) {
             const hit = await clickButton(closers);
             if (!hit) break;
@@ -749,6 +750,8 @@ async function main() {
         };
         /** 換季後可能出現的彈窗，一個 kind 對應一組點擊規格；同一 kind 重複出現時依序換下一組規格（例如三國季報第一個選項資源不足，改選第二個） */
         const SEASON_POPUPS = [
+            // 官職晉升解鎖彈窗（PROG-2-9151）：升官時蓋住整個大廳，要先按「知道了」
+            { kind: 'rank-unlock', specs: [{ name: '^BtnRankUnlockOk$' }] },
             { kind: 'season-report', specs: [{ name: '^BtnClose$', under: '^SeasonReportComposite$' }] },
             { kind: 'season-report-x', specs: [{ name: '.*', text: '^\\s*[Xx×]\\s*$', under: '^SeasonReportRoot$', button: true }] },
             { kind: 'season-event', specs: [{ name: '^SeasonEventOptionA$' }] },
@@ -779,7 +782,8 @@ async function main() {
                         popupLog.push({ kind: popup.kind, texts: ((await rm.textsUnder(host)) || []).slice(0, 30) });
                     }
                     if (captured && popup.kind.startsWith('season-report')) { cap = { texts: await rm.textsUnder('^SeasonReportRoot$'), top: await readTopbar() }; captured.push(cap); }
-                    await rm.click(spec, popup.kind);
+                    // 低幀率（合併後季事件與季報疊開時約 3 FPS）下，定位後彈窗可能剛好播完關閉動畫，找不到就當已關
+                    try { await rm.click(spec, popup.kind); } catch (e) { if (!/找不到可點的節點/.test(String(e && e.message))) throw e; }
                     // 季報一關，頂欄立刻讀一次：後續事件選項會花錢，不能拿最後的頂欄比
                     if (cap) { await delay(400); cap.topClosed = await readTopbar(); }
                     attempts[popup.kind] = n + 1;
@@ -1037,6 +1041,33 @@ async function main() {
             if (!lines.length) throw new Error('點大廳小人沒有讀到任何泡泡文字');
             return rec.detail;
         };
+        // ── 玉的一年內用途（PROG-2-9149，--jade）：商店看玉餘額，許願祭壇許願後點進行中插槽，用玉買加速卡縮短時間 ──
+        if (args.jade) {
+            await step('jade-use', async (rec) => {
+                rec.detail.topBefore = await readTopbar();
+                rec.detail.gemTextsBefore = (await rm.allTexts()).filter((t) => /^[0-9,]{3,7}$/.test(t)).slice(0, 8);
+                const shopOpened = await openSub('BtnCatShop', '^商店$');
+                rec.detail.shopOpened = Boolean(shopOpened);
+                await delay(2500);
+                await shot(rec, 'jade-shop');
+                await backToLobbyBar();
+                await delay(800);
+                const altar = await rm.tryClick({ ucuf: 'lobby-hall-screen.altar' });
+                rec.detail.altarOpened = Boolean(altar);
+                await delay(2000);
+                rec.detail.altarButtons = await listButtons();
+                await shot(rec, 'jade-altar-open');
+                rec.detail.wished = await clickButton('^btnWish$');
+                await delay(1200);
+                rec.detail.slotTapped = await clickButton('^waSlot0$');
+                await delay(1200);
+                rec.detail.altarTexts = (await rm.allTexts()).filter((t) => /玉|加速|縮短|許願|剩/.test(t)).slice(0, 20);
+                await shot(rec, 'jade-altar-speedup');
+                rec.detail.gemTextsAfter = (await rm.allTexts()).filter((t) => /^[0-9,]{3,7}$/.test(t)).slice(0, 8);
+                if (!rec.detail.altarOpened) throw new Error(`找不到許願祭壇入口（可按按鈕：${(await listButtons()).join(', ')}）`);
+                return rec.detail;
+            }, { skipIfFailed: true });
+        }
         if (args.mind) await step('lobby-mind-bubbles', (rec) => mindBubbles(rec, 4), { skipIfFailed: true });
 
         await step('character-intro-tabs', async (rec) => {
@@ -1177,7 +1208,9 @@ async function main() {
             rec.detail.battleMs = Date.now() - battleT0;
             if (settled === 'review') {
                 rec.detail.result = (await page.evaluate(() => window.__pt.textsMatching('^(勝利|失敗|戰敗|平手)$')))[0] || null;
-                rec.detail.reviewTexts = await page.evaluate(() => window.__pt.textsMatching('.{2,}')).then((t) => t.slice(0, 40)).catch(() => []);
+                // 戰後獎懲（PROG-2-9149）在 recordBattle 存檔後才補進結算框，要等一下才看得到
+                if (opts.shotTag) await delay(3000);
+                rec.detail.reviewTexts = await page.evaluate(() => window.__pt.textsMatching('.{2,}')).then((t) => t.slice(0, 60)).catch(() => []);
                 if (opts.shotTag) await shot(rec, opts.shotTag);
                 await waitUntil(async () => {
                     if ((await scene()) === 'LobbyScene') return true;
@@ -1190,7 +1223,14 @@ async function main() {
             rec.detail.returnedToLobby = true;
             return rec.detail;
         };
-        await step('battle-to-settlement', (rec) => runBattle(rec), { skipIfFailed: true });
+        await step('battle-to-settlement', async (rec) => {
+            // 戰後獎懲（PROG-2-9149）：記戰前頂欄、結算畫面截圖，回大廳後再記頂欄，看糧／金／兵源的變化
+            rec.detail.topBefore = await readTopbar();
+            const d = await runBattle(rec, { shotTag: 'battle-settle' });
+            await delay(2500);
+            rec.detail.topAfter = await readTopbar();
+            return d;
+        }, { skipIfFailed: true });
 
         // ── 6b. 轉蛋（排最後：返回大廳後底欄是否還在，本身就是檢查項）：切每個池子一次，切一輪後右欄節點不疊加 ──
         await step('gacha-pools', async (rec) => {
@@ -1559,6 +1599,8 @@ async function main() {
                     // 單抽結果畫面（GachaPullResult_stage）沒有關閉鈕，是「點畫面任一處」收掉：沒有鈕時點視窗中央
                     for (let i = 0; i < 8; i++) {
                         if (await clickButton('^BtnDupStarUp$')) { rec.detail.duplicateChoice = 'starUp'; await delay(1500); continue; }
+                        // 升星後進「命鏡升星」結果頁，要按「繼續」才收掉；沒收會用全螢幕擋住後面所有步驟（抽到重複武將的結果會依亂數出現，PROG-2-9149）
+                        if (await clickByText('.*', '^\\s*繼續\\s*$')) { rec.detail.duplicateContinue = (rec.detail.duplicateContinue || 0) + 1; await delay(1500); continue; }
                         if (await clickButton('^GachaPullResult_(close|back)$')) { await delay(1500); continue; }
                         if (!(await page.evaluate(() => window.__pt.scenePresence('^GachaPullResult_stage$')))) break;
                         await page.mouse.click(Math.round(viewport.width / 2), Math.round(viewport.height / 2));

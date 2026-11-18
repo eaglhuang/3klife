@@ -13,7 +13,7 @@
  * Unity 對照：Presenter。
  */
 import {
-    isWishReady, wishAmountOf, wishesLeftThisRound, wishItemName, wishRoundOf, SPEED_CARD_HOURS, WISH_ITEMS, WISH_POOL_CONFIG,
+    isWishReady, wishAmountOf, wishesLeftThisRound, wishItemName, wishRoundOf, SPEED_CARD_HOURS, SPEED_CARD_PRICE, WISH_ITEMS, WISH_POOL_CONFIG,
     type ActiveWish, type WishPoolState, type WishStartReason,
 } from '../../core/systems/WishPool';
 
@@ -32,6 +32,10 @@ export interface WishAltarDeps {
     speedCards: () => number;
     startWish: (itemId: string, nowMs: number) => { ok: boolean; reason?: WishStartReason; wish?: ActiveWish };
     speedUp: (wishId: string, cards: number, nowMs: number) => number;
+    /** 玉餘額（PROG-2-9149）；沒給時不提供「以玉買加速卡」 */
+    gems?: () => number;
+    /** 扣 SPEED_CARD_PRICE 玉並發 1 張加速卡進背包；玉不足回 false 且不扣（PROG-2-9149） */
+    buyCard?: () => boolean;
     claim: (nowMs: number) => ActiveWish[];
     /** 經濟補貼提示條（PROG-2-1343）；沒給或回空字串時隱藏 */
     subsidyBanner?: (nowMs: number) => string;
@@ -79,9 +83,17 @@ export class WishAltarController {
         const wish = this._deps.pool().activeWishes[index];
         if (!wish) return false;
         if (isWishReady(wish, nowMs)) return this.claim();
+        // 沒有加速卡時用玉買一張（精元 5 購買 1 張，經濟系統 ECO-04；PROG-2-9149）
+        let bought = false;
+        if (this._deps.speedCards() <= 0) {
+            if (!this._deps.buyCard) { this._message = '沒有加速卡。'; return false; }
+            if (!this._deps.buyCard()) { this._message = `沒有加速卡，玉不足（每張 ${SPEED_CARD_PRICE} 玉）。`; return false; }
+            bought = true;
+        }
         const used = this._deps.speedUp(wish.wishId, 1, nowMs);
-        this._message = used > 0 ? `使用加速卡，${wishItemName(wish.itemId)} 縮短 ${SPEED_CARD_HOURS} 小時。` : '沒有加速卡。';
-        return used > 0;
+        const paid = bought ? `花 ${SPEED_CARD_PRICE} 玉買加速卡，` : '使用加速卡，';
+        this._message = used > 0 ? `${paid}${wishItemName(wish.itemId)} 縮短 ${SPEED_CARD_HOURS} 小時。` : '沒有加速卡。';
+        return used > 0 || bought;
     }
 
     public claim(): boolean {
@@ -109,7 +121,7 @@ export class WishAltarController {
         const texts: Record<string, string> = {
             waTitle: '許願祭壇',
             waRoundLabel: `許願池——第 ${round} 巡（${String(startHour).padStart(2, '0')}:00）｜本巡剩 ${left} 項`,
-            waStatusLabel: `進行中 ${active}/${WISH_ALTAR_SLOTS}｜加速卡 ×${cards}（每張 -${SPEED_CARD_HOURS} 小時）`,
+            waStatusLabel: `進行中 ${active}/${WISH_ALTAR_SLOTS}｜加速卡 ×${cards}（每張 -${SPEED_CARD_HOURS} 小時）${this._deps.buyCard ? `｜玉 ${this._deps.gems?.() ?? 0}（無卡時 ${SPEED_CARD_PRICE} 玉 1 張）` : ''}`,
             waPickLabel: `${wishItemName(def.itemId)} ×${wishAmountOf(def)}｜${def.redemptionHours} 小時`,
             waResultLabel: this._message,
             btnPrevItemLabel: '◀',
@@ -128,7 +140,8 @@ export class WishAltarController {
         for (let i = 0; i < WISH_ALTAR_SLOTS; i++) {
             const wish = pool.activeWishes[i];
             texts[`waSlotLabel${i}`] = wish ? slotText(wish, nowMs) : '空位';
-            enabled[`waSlot${i}`] = !!wish && (isWishReady(wish, nowMs) || cards > 0);
+            const canBuyCard = !!this._deps.buyCard && (this._deps.gems?.() ?? 0) >= SPEED_CARD_PRICE;
+            enabled[`waSlot${i}`] = !!wish && (isWishReady(wish, nowMs) || cards > 0 || canBuyCard);
         }
         const banner = this._deps.subsidyBanner?.(nowMs) ?? '';
         texts.waSubsidyLabel = banner;
