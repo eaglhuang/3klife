@@ -32,6 +32,25 @@ const DEBUFF_FILL = new Color(60, 24, 70, 235);
 const DEBUFF_EDGE = new Color(200, 60, 80, 255);
 const DEBUFF_TEXT = new Color(255, 170, 200, 255);
 
+/**
+ * 畫一個狀態圖示的圓底（增益金邊、減益紅紫邊）。頭頂圖示列與棋盤 buff 格（PROG-2-9411）共用，
+ * 兩邊看起來才是同一套圖示。
+ */
+export function drawStatusIconDisc(g: Graphics, radius: number, isDebuff: boolean): void {
+  g.fillColor = isDebuff ? DEBUFF_FILL : BUFF_FILL;
+  g.circle(0, 0, radius - 1);
+  g.fill();
+  g.lineWidth = 2;
+  g.strokeColor = isDebuff ? DEBUFF_EDGE : BUFF_EDGE;
+  g.circle(0, 0, radius - 1);
+  g.stroke();
+}
+
+/** 圖示中央字的顏色 */
+export function statusIconTextColor(isDebuff: boolean): Color {
+  return isDebuff ? DEBUFF_TEXT : BUFF_TEXT;
+}
+
 /** 光環顏色：增益金、減益紫 */
 export const STATUS_HALO_BUFF = new Color(255, 214, 90, 255);
 export const STATUS_HALO_DEBUFF = new Color(176, 80, 230, 255);
@@ -173,18 +192,10 @@ export class UnitStatusIconBar {
     const key = `${entry.kind}`;
     if (slot.drawnKey === key) return;
     slot.drawnKey = key;
-    const r = ICON_SIZE / 2;
-    const g = slot.graphics;
-    g.clear();
-    g.fillColor = entry.isDebuff ? DEBUFF_FILL : BUFF_FILL;
-    g.circle(0, 0, r - 1);
-    g.fill();
-    g.lineWidth = 2;
-    g.strokeColor = entry.isDebuff ? DEBUFF_EDGE : BUFF_EDGE;
-    g.circle(0, 0, r - 1);
-    g.stroke();
+    slot.graphics.clear();
+    drawStatusIconDisc(slot.graphics, ICON_SIZE / 2, entry.isDebuff);
     slot.label.string = entry.glyph;
-    slot.label.color = entry.isDebuff ? DEBUFF_TEXT : BUFF_TEXT;
+    slot.label.color = statusIconTextColor(entry.isDebuff);
   }
 }
 

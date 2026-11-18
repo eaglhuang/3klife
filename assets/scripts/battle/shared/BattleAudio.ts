@@ -28,6 +28,8 @@ export const BATTLE_AUDIO_CUE = {
   unitDie: 'unit-die',
   unitHeal: 'unit-heal',
   buffGained: 'buff-gained',
+  /** 吃到減益格（PROG-2-9411）；暫用 teleport，待專用音效 */
+  debuffGained: 'debuff-gained',
   unitDodge: 'unit-dodge',
   critHit: 'crit-hit',
   fortressDamaged: 'fortress-damaged',
@@ -61,6 +63,7 @@ export const BATTLE_AUDIO_CLIP_MAP: Record<BattleAudioCue, string> = {
   [BATTLE_AUDIO_CUE.unitDie]: 'die',
   [BATTLE_AUDIO_CUE.unitHeal]: 'heal',
   [BATTLE_AUDIO_CUE.buffGained]: 'buff',
+  [BATTLE_AUDIO_CUE.debuffGained]: 'teleport',
   [BATTLE_AUDIO_CUE.unitDodge]: 'wave',
   [BATTLE_AUDIO_CUE.critHit]: 'boom',
   [BATTLE_AUDIO_CUE.fortressDamaged]: 'boom',

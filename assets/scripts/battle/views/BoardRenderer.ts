@@ -1247,8 +1247,9 @@ export class BoardRenderer extends Component {
         });
     }
 
-    public playBuffConsumeBurst(lane: number, depth: number): void {
-        this.playCellImpact(lane, depth, new Color(110, 255, 140, 220));
+    /** 吃到 buff 格時格子閃一下：增益綠、減益紫（PROG-2-9411，與頭頂光環同色系） */
+    public playBuffConsumeBurst(lane: number, depth: number, isDebuff = false): void {
+        this.playCellImpact(lane, depth, isDebuff ? new Color(176, 80, 230, 220) : new Color(110, 255, 140, 220));
     }
 
     public playSceneGambitPulse(state: BattleState, battleTactic: BattleTactic): void {
