@@ -4144,13 +4144,13 @@
         "activeVersion": "0002"
       },
       "smallAvatar": {
-        "activeVersion": "0001",
-        "status": "asset-imported",
+        "activeVersion": "0002",
+        "status": "review-pending",
         "history": [
           {
             "version": "0001",
             "file": "small_avatars/fa_zheng__法正__small_avatar_0001.png",
-            "status": "asset-imported",
+            "status": "rejected",
             "sha256": "0ec9924b3e39c34bf1553413890ebf04e2d41a08a8c3e320d6bc033047d0d6df",
             "canvas": "256x256 RGBA",
             "cropBox": {
@@ -4165,6 +4165,25 @@
             "method": "crop-only; uniform resize; no redraw",
             "qc": "125px preview: head ornament, face and upper shoulder/collar complete; face centered; crop ends at shoulder line; head-to-canvas estimate 71%.",
             "createdAt": "2026-11-18"
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/fa_zheng__法正__small_avatar_0002.png",
+            "status": "review-pending",
+            "sha256": "2cba07c5bf8389cf6cf961d67d9bf91d17c5cec0f192260393ca622b4527bb2e",
+            "canvas": "256x256 RGBA",
+            "cropBox": {
+              "x": 371.05,
+              "y": -4.14,
+              "width": 282.89,
+              "height": 282.89
+            },
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/fa_zheng__法正__standing_0002.png",
+            "sourceSha256": "de9554a2010f182bed9e813b1166b3af763ba81da12ea82f5c1098617714bbd0",
+            "method": "crop-only; uniform resize; transparent padding; no redraw",
+            "qc": "與七張核准參考並排；頭高76.0%，臉部中心50.0%，頭冠完整，肩部左右輪廓點通過可見像素檢查並保留下緣。半側臉角度、表情與原圖一致。通過硬性檢查，待使用者最終確認。",
+            "createdAt": "2026-11-19"
           }
         ]
       }
