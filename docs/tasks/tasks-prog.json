@@ -10291,6 +10291,53 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9411",
+      "title": "buff 格統一：棋盤 buff 格改用頭頂狀態圖示同一套圓底一字，加地面光板與拾取飛入",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-19",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-19T06:39:37+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 排定的戰場手感順序最後一張：移動 → 部署落地 → 放招 → buff 格統一。使用者 11/17 指示上 buff、戰場上的 buff 格的特效音效要優先補到滿意。現況棋盤 buff 格只有一行浮動文字（綠「攻擊 x 3」、紅「★ 攻擊 / 5」），格子本身沒有標記，與頭頂狀態圖示（PROG-2-9399 圓底＋一字）是兩套視覺語言；吃到減益格時戰報仍寫「吃到增益」、播增益音效。",
+      "related": [
+        "PROG-2-9399",
+        "PROG-2-9410"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-19 | 狀態: in-progress | 驗證: pending | 變更: 待做 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
