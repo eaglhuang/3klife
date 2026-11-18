@@ -10196,6 +10196,53 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9409",
+      "title": "部署落地手感：小隊從上方落下、落地壓縮回彈、揚塵與落地聲",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-19",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-19T03:58:10+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 排定的戰場手感順序：移動 → 部署落地 → 放招 → buff 格統一。現況部署只把 3D 節點從地下 0.45 往上縮放 0.22 秒，Spine 小隊直接從地下冒出、沒有落地感，也沒有塵與聲。",
+      "related": [
+        "PROG-2-9407",
+        "PROG-2-9408"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-19 | 狀態: in-progress | 驗證: pending | 變更: 待做 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
