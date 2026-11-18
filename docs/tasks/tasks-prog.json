@@ -10298,7 +10298,7 @@
       "title": "buff 格統一：棋盤 buff 格改用頭頂狀態圖示同一套圓底一字，加地面光板與拾取飛入",
       "owner": "claude-code-fable-5-2",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-19",
@@ -10316,7 +10316,7 @@
       "depends": [],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-19 | 狀態: in-progress | 驗證: pending | 變更: 待做 | 阻塞: 無",
+      "notes": "2026-11-19 | 狀態: done | 驗證: tsc 0、單元測試 8397 全過（新增 TileBuffBadge 8 項）、compute-gate quick、battle-skill-smoke、ucuf 全過；主目錄 7456 實跑：五種格子標記（金邊增益／紫邊減益／稀有金圈）與拾取飛入頭頂截圖於 docs/test-reports/2026-11-19-battle/9411-buff-tiles.png，主控台 0 錯誤 | 變更: 新增 TileBuffBadge（純邏輯）、TileBuffMarkers（格子光板＋圓底一字＋倍數、待機浮動、拾取飛入物件池）；UnitRenderer 改用標記並新增 playTileBuffPickup；吃到減益格戰報改寫「吃到減益」、紫色爆光、獨立 debuffGained 音效代號；UnitStatusIconBar 匯出共用圓底畫法 | 阻塞: 無；已知限制：減益音效暫借 teleport 音檔待正式音效、飛行圖示只帶字不帶倍數、格子在單位移動開始時即被吃（既有邏輯，未改）",
       "brief": {
         "style": "classic",
         "label": "",
