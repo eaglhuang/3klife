@@ -2,13 +2,17 @@ import { strict as assert } from 'assert';
 import { attackVfxFor, ATTACK_SLASH_EFFECT_ID } from '../assets/scripts/battle/shared/AttackVfxMapping';
 import { TroopType } from '../assets/scripts/shared/CommonEnums';
 
-// PROG-2-9353：弓兵射箭，其餘近戰與未知兵種刀光
+// PROG-2-9353：弓兵射箭，其餘近戰與未知兵種刀光；PROG-2-9400：槍兵刺光、盾兵衝擊圈、騎兵衝撞
 assert.equal(attackVfxFor(TroopType.Archer).kind, 'arrow');
 assert.equal(attackVfxFor(TroopType.Archer).effectId, 'proj_arrow');
+assert.equal(attackVfxFor(TroopType.Pikeman).kind, 'thrust');
+assert.equal(attackVfxFor(TroopType.Shield).kind, 'bash');
+assert.equal(attackVfxFor(TroopType.Cavalry).kind, 'charge');
+// 非弓兵的後備粒子刀光一律是同一個（貼圖沒載好時用）
 for (const t of [TroopType.Infantry, TroopType.Pikeman, TroopType.Shield, TroopType.Cavalry, TroopType.Engineer, TroopType.Navy, TroopType.Medic, 'elite_infantry', 'general']) {
-  assert.equal(attackVfxFor(t).kind, 'slash', String(t));
   assert.equal(attackVfxFor(t).effectId, ATTACK_SLASH_EFFECT_ID);
 }
+for (const t of [TroopType.Infantry, TroopType.Engineer, TroopType.Navy, TroopType.Medic, 'elite_infantry', 'general']) assert.equal(attackVfxFor(t).kind, 'slash', String(t));
 assert.equal(attackVfxFor('unknown-troop').kind, 'slash');
 assert.equal(attackVfxFor(undefined).kind, 'slash');
 assert.equal(attackVfxFor(null).kind, 'slash');
@@ -24,7 +28,7 @@ import { VFX_BLOCK_REGISTRY } from '../assets/scripts/core/config/vfx-block-regi
 const STRETCHED_BILLBOARD = 1;
 const attackBlockIds = Array.from(new Set(
   [TroopType.Infantry, TroopType.Pikeman, TroopType.Shield, TroopType.Cavalry, TroopType.Archer, 'general']
-    .map(t => attackVfxFor(t)).filter(v => v.kind === 'slash').map(v => v.effectId),
+    .map(t => attackVfxFor(t)).filter(v => v.kind !== 'arrow').map(v => v.effectId),
 ));
 assert.ok(attackBlockIds.length > 0);
 for (const blockId of attackBlockIds) {

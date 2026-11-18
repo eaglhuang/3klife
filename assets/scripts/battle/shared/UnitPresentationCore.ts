@@ -29,12 +29,15 @@ export class UnitPresentationCore {
   private animationSpeed = 1;
   /** 退場走回原位後要恢復的朝向（PROG-2-9366）。退場途中面向行進方向，到位後轉回面向戰場，否則主將會一直背對戰場。 */
   private facingAfterRetreat: 1 | -1 | null = null;
+  /** 這次動作指定的動作片段（PROG-2-9400：依兵種選攻擊分動作）；只對指定它的那個 action 有效，換動作自動失效。 */
+  private clipOverride: { action: UnitAction; clip: ActionClip } | null = null;
   constructor(private readonly config: UnitPresentationConfig, start: FootPoint, facing: 1 | -1 = 1) {
     if (![config.walkGroundSpeed, config.displayScale, config.speedMultiplier].every(v => Number.isFinite(v) && v > 0)) throw new Error('單位步速與縮放必須為正數');
     this.foot = { ...start };
     this.facing = facing;
   }
-  public play(action: UnitAction): void {
+  public play(action: UnitAction, clip?: ActionClip): void {
+    this.clipOverride = clip ? { action, clip } : null;
     this.action = action;
     this.elapsed = 0;
     this.target = null;
@@ -66,8 +69,11 @@ export class UnitPresentationCore {
     }
     this.foot = { ...foot };
   }
+  private currentClip(): ActionClip {
+    return this.clipOverride?.action === this.action ? this.clipOverride.clip : this.config.clips[this.action];
+  }
   public snapshot(): UnitPresentationState {
-    return { foot: { ...this.foot }, facing: this.facing, action: this.action, clip: this.config.clips[this.action], animationSpeed: this.animationSpeed, revision: this.revision };
+    return { foot: { ...this.foot }, facing: this.facing, action: this.action, clip: this.currentClip(), animationSpeed: this.animationSpeed, revision: this.revision };
   }
   public step(dt: number): UnitPresentationState {
     if (!Number.isFinite(dt) || dt < 0) throw new Error('dt 必須為有限非負數');
@@ -84,7 +90,7 @@ export class UnitPresentationCore {
       }
     } else if (this.action !== 'fall') {
       this.elapsed += dt;
-      const clip = this.config.clips[this.action];
+      const clip = this.currentClip();
       if (!clip.loop && this.elapsed >= clip.duration) { this.action = 'idle'; this.revision++; }
     }
     return this.snapshot();

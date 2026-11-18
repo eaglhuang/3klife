@@ -488,5 +488,21 @@ export function createMindRequestsSuite(): TestSuite {
         assert.equals('信箱', mindBadgeText(0));
     });
 
+    suite.test('PROG-2-9148 的任務標籤（主題、牆別、b:分支、t:等級）：學習規則讀得到分支連敗，等級標籤不當對象', () => {
+        const svc = new OfflineGeneralMindService();
+        for (let i = 0; i < 3; i++) {
+            svc.onTaskSettled({
+                taskId: `m${i}`, season: i + 1, tags: ['escort', 'military', 'b:ambush', 't:2'], label: '河北押運', risk: 2,
+                intelLevelAtDispatch: 2, generalIds: ['zhang-fei'], delegated: false, volunteered: false, outcome: 'FAIL',
+            });
+        }
+        const ledger = svc.snapshot().ledger['zhang-fei'];
+        const learned = learnedTags(ledger, svc.snapshot().events['zhang-fei'] ?? [], 'Brave', personalityVector(VIEWS['zhang-fei']));
+        const tags = learned.map((t) => t.tag);
+        assert.isTrue(tags.includes('b:ambush') && tags.includes('escort'), '分支與主題標籤要被學到');
+        assert.isTrue(!tags.some((t) => t.startsWith('t:')), '等級標籤不當謹慎／雪恥對象');
+        assert.equals('河北押運', learned[0].label);
+    });
+
     return suite;
 }

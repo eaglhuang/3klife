@@ -71,6 +71,8 @@ export function learnedTags(ledger: Readonly<MindLedger> | undefined, events: re
     if (!ledger) return [];
     const out: LearnedTag[] = [];
     for (const [tag, stat] of Object.entries(ledger.byTag)) {
+        // t: 是任務成敗等級標籤（PROG-2-9148），只是難度分組，不當成「某類事屢敗」的謹慎／雪恥對象
+        if (tag.startsWith('t:')) continue;
         const stance = stanceOfStat(stat, type, vector);
         if (stance === 'NONE') continue;
         const ref = latestEventWithTag(events, tag);

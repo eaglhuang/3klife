@@ -63,7 +63,7 @@ import type { StageSalvageGainedEvent } from '../shared/StageSalvage';
 import { salvageGainItems } from '../../core/systems/StrategistHud';
 import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, IDeployRuntimeLike, IBattleScenePanelLike, IStrategistHudLike } from '../../shared/interfaces/IBattleUIComponents';
 
-import { BATTLE_TURN_FLOW_TIMING, BATTLE_VISUAL_TIMING } from './BattlePresentationTiming';
+import { isHeavyHit, BATTLE_TURN_FLOW_TIMING, BATTLE_VISUAL_TIMING } from './BattlePresentationTiming';
 import { buildBattleSkillUsedMessage, getBattleSkillPresentation } from '../../shared/BattleSkillPresentation';
 import { quickViewSkillLines } from '../../shared/QuickViewSkillLines';
 import { SkillSourceType } from '../../shared/SkillRuntimeContract';
@@ -600,7 +600,7 @@ export class BattleUIBridge {
 
         const hitPromise = isRiverBoundaryDamage
           ? (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] boundary-spin unit=${data.unitId}`), c.unitRenderer?.playBoundaryDamageSpinAsync(data.unitId) ?? Promise.resolve())
-          : (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] defender-hit unit=${data.unitId}`), c.unitRenderer?.playHitAnimationAsync(data.unitId, data.attackerId) ?? Promise.resolve());
+          : (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] defender-hit unit=${data.unitId}`), c.unitRenderer?.playHitAnimationAsync(data.unitId, data.attackerId, { heavy: isHeavyHit(data.damage, unit.getEffectiveMaxHp(), data.isCrit ?? false), lethal: data.hp <= 0 }) ?? Promise.resolve());
 
         const valuePromise = (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] damage-float unit=${data.unitId} hp=${data.hp}`), c.unitRenderer?.playValueChangeAsync(unit, data.damage, 'damage', data.isCrit ?? false) ?? Promise.resolve());
 
@@ -687,6 +687,7 @@ export class BattleUIBridge {
     this.appendLog(`${side}${attacker.name} 攻擊${target.name}落空（命中率 ${Math.round(data.hitRate * 100)}%）`);
     this._enqueueCombatVisual(`unit-miss:${data.attackerId}`, async () => {
       c.unitRenderer?.playDodgeAnimation?.(target.id);
+      c.unitRenderer?.playMissFloat?.(target);
       playBattleAudio(BATTLE_AUDIO_CUE.unitDodge);
       playBattleAudio(resolveBattleUnitAttackSfxKey(attacker.type));
       await (c.unitRenderer?.playAttackAnimationAsync(data.attackerId, target.lane, target.depth) ?? Promise.resolve());
@@ -782,8 +783,10 @@ export class BattleUIBridge {
       this.appendLog(`${target} 閃躲攻擊！`);
       this._enqueueCombatVisual(`general-dodge:${data.faction}`, async () => {
         c.unitRenderer?.playGeneralDodge?.(data.faction);
+        c.unitRenderer?.playGeneralMissFloat?.(data.faction);
         UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] general-dodge start faction=${data.faction}`);
-        await c.unitRenderer?.playGeneralHitAnimationAsync(data.faction, data.attackerId || null);
+        // 閃避：只借 recoil 的等待節奏，不閃白、不抖
+        await c.unitRenderer?.playGeneralHitAnimationAsync(data.faction, data.attackerId || null, { silent: true });
         UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] hud-commit faction=${data.faction} hp=${data.hp}`);
         services().event.emit(EVENT_NAMES.GeneralDamagedVisualCommitted, {
           faction: data.faction,
@@ -805,7 +808,7 @@ export class BattleUIBridge {
       const attackPromise = data.attackerId
         ? (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] attacker-lunge-general attacker=${data.attackerId} targetFaction=${data.faction}`), c.unitRenderer?.playAttackGeneralAnimationAsync(data.attackerId, data.faction) ?? Promise.resolve())
         : Promise.resolve();
-      const hitPromise = (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] general-hit faction=${data.faction}`), c.unitRenderer?.playGeneralHitAnimationAsync(data.faction, data.attackerId || null) ?? Promise.resolve());
+      const hitPromise = (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] general-hit faction=${data.faction}`), c.unitRenderer?.playGeneralHitAnimationAsync(data.faction, data.attackerId || null, { heavy: isHeavyHit(data.damage ?? 0, maxHp, data.isCrit ?? false), lethal: data.hp <= 0 }) ?? Promise.resolve());
       const valuePromise = data.damage && data.damage > 0
         ? (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] general-damage-float faction=${data.faction} hp=${data.hp}`), c.unitRenderer?.playGeneralValueChangeAsync(data.faction, data.damage, data.isCrit ?? false) ?? Promise.resolve())
         : Promise.resolve();
@@ -917,6 +920,8 @@ export class BattleUIBridge {
     c.unitRenderer?.playBuffConsumeValue(data.lane, data.depth, deltaText || data.buffText);
     if (data.attackDelta !== 0 || data.hpDelta !== 0) {
       c.unitRenderer?.playBuffEffect(data.unitId, data.lane, data.depth, data.attackDelta, data.hpDelta);
+      // 頭頂狀態小圖示：吃到格子 buff 也要彈出＋腳下光環（PROG-2-9399）；兩項都沒有增益且有減損才算減益
+      c.unitRenderer?.playStatusGain(data.unitId, data.attackDelta <= 0 && data.hpDelta <= 0);
     }
     this.refreshBattleViews();
   }

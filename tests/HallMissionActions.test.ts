@@ -4,14 +4,9 @@
 import { assert, TestSuite } from './TestRunner';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { sys } from 'cc';
-import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
-import { services } from '../assets/scripts/core/managers/ServiceLoader';
-import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
-import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
 import {
-    HALL_RECON_COST_GRAIN_DEFAULT, effectiveHallIntelPercent, hallCostBarStateOf, hallReconCostGrainOf,
-    normalizeHallIntel, planHallRecon, planHallWait,
+    HALL_RECON_COST_GRAIN_DEFAULT, hallCostBarStateOf, hallReconCostGrainOf,
+    planHallRecon, planHallWait,
 } from '../assets/scripts/core/systems/HallMissionActions';
 import { applyLobbyHubDefaults, validateLobbyHub } from '../assets/scripts/core/systems/LobbyHubSchema';
 import { loadLobbyHub } from '../assets/scripts/core/systems/HallMissionBoardPresenter';
@@ -20,25 +15,6 @@ import { resolveDetailActionStates } from '../assets/scripts/ui/core/HallDetailA
 
 const TASK = { Task_ID: 'M-T1', Intel_Reveal_Percent: 0 };
 const ctx = { selectedGeneralId: 'g1', aiDelegateChecked: false, alreadyAccepted: false };
-
-async function newSession(adapter = new MemoryStorageAdapter()): Promise<GameSession> {
-    services().initialize();
-    sys.localStorage.removeItem('CLIENT_DEVICE_ID');
-    const session = new GameSession();
-    session.setRosterStore(new InMemoryRosterStore([]));
-    session.setSaveService(new PlayerSaveService(adapter));
-    session.setAutoSave(true);
-    session.startNewGame(7);
-    return session;
-}
-
-async function reload(adapter: MemoryStorageAdapter): Promise<GameSession> {
-    const restored = new GameSession();
-    restored.setRosterStore(new InMemoryRosterStore([]));
-    restored.setSaveService(new PlayerSaveService(adapter));
-    await restored.load();
-    return restored;
-}
 
 function readHub(): unknown {
     return JSON.parse(readFileSync(join(__dirname, '..', 'assets/resources/data/lobby-hub.json'), 'utf8'));
@@ -64,54 +40,7 @@ export function createHallMissionActionsSuite(): TestSuite {
         assert.equals(50, loaded.ok ? hallReconCostGrainOf(loaded.hub) : -1);
     });
 
-    suite.test('Session 再探：扣糧 50、情報度存檔後仍在；糧不足與已滿不動', async () => {
-        const adapter = new MemoryStorageAdapter();
-        const session = await newSession(adapter);
-        const before = session.military.food;
-        assert.isTrue(before >= 50, '新遊戲起始糧草要夠再探，測試前提');
-        const plan = await session.reconHallTask(TASK, 50);
-        assert.equals('ok', plan.kind);
-        assert.equals(before - 50, session.military.food);
-        assert.equals(100, session.hallIntelPercentOf(TASK));
-        const again = await session.reconHallTask(TASK, 50);
-        assert.equals('full', again.kind);
-        assert.equals(before - 50, session.military.food, '已滿不再扣糧');
-        const restored = await reload(adapter);
-        assert.equals(100, restored.hallIntelPercentOf(TASK), '重整（讀檔）後保留');
-
-        const poor = await newSession();
-        const food = poor.military.food;
-        const other = { Task_ID: 'M-T2', Intel_Reveal_Percent: 0 };
-        const refused = await poor.reconHallTask(other, food + 1);
-        assert.equals('insufficient', refused.kind);
-        assert.equals(food, poor.military.food);
-        assert.equals(0, poor.hallIntelPercentOf(other));
-    });
-
-    suite.test('舊存檔缺 hallIntel／hallWaitSeasons 視為未再探', async () => {
-        const adapter = new MemoryStorageAdapter();
-        const session = await newSession(adapter);
-        await session.save();
-        const restored = await reload(adapter);
-        assert.equals(0, restored.hallIntelPercentOf(TASK));
-        assert.equals('kept', (await restored.waitHallTask('M-T1')).kind);
-        assert.equals(0, Object.keys(normalizeHallIntel(undefined)).length);
-        assert.equals(80, effectiveHallIntelPercent({ Intel_Reveal_Percent: 80 }, 30), '存檔低於底值時取底值');
-    });
-
-    suite.test('等待：同任務同季重複按不重複計；不耗糧；存檔還原後仍是同季', async () => {
-        const adapter = new MemoryStorageAdapter();
-        const session = await newSession(adapter);
-        const food = session.military.food;
-        assert.equals('kept', (await session.waitHallTask('M-T1')).kind);
-        assert.equals('already', (await session.waitHallTask('M-T1')).kind);
-        assert.equals('kept', (await session.waitHallTask('M-T2')).kind, '不同任務各算各的');
-        assert.equals(food, session.military.food, '等待不耗費');
-        const restored = await reload(adapter);
-        assert.equals('already', (await restored.waitHallTask('M-T1')).kind);
-        assert.equals('already', planHallWait('a', 3, { a: 3 }).kind);
-        assert.equals('kept', planHallWait('a', 4, { a: 3 }).kind, '下一季可再按');
-    });
+    // Session 再探／等待的整合測試（舊 reconHallTask／waitHallTask）已由任務服務取代，見 tests/mission/MissionService.test.ts（PROG-2-9148）
 
     suite.test('路由：再探與等待有各自的計畫；執行與委任仍走既有路徑', () => {
         assert.equals('recon', planHallMissionAction('re-scout', ctx).kind);

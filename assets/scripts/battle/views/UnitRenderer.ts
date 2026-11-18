@@ -46,16 +46,19 @@ import { BoardRenderer } from "./BoardRenderer";
 import { ArrowShotView } from "./ArrowShotView";
 import { SlashShotView } from "./SlashShotView";
 import { attackVfxFor } from "../shared/AttackVfxMapping";
+import { attackStyleFor } from "../shared/AttackStyle";
 import { SpineUnitOverlay } from "./SpineGeneralOverlay";
 import { generalSpineConfig, squadMemberCount, troopSpineConfigWithFallback } from '../shared/UnitPresentationConfig';
 import { DuelExchange } from '../shared/DuelPresentationCore';
-import { BATTLE_VISUAL_TIMING, planMoveSegment } from "./BattlePresentationTiming";
+import { BATTLE_VISUAL_TIMING, buildHitShakeSteps, planHitFeedback, planMoveSegment } from "./BattlePresentationTiming";
 import { BuffGainEffectPool } from "./effects/BuffGainEffectPool";
 import { statBonusTone, statWithBonusText, type StatBonusTone } from "../shared/StatBonusText";
 import { unitHpBarState, type UnitHpBarState } from "../shared/UnitHpBar";
 import { unitValueFloatType } from "../shared/DamageFloatType";
+import { UnitStatusIconBar, StatusHaloPool } from "./UnitStatusIconBar";
+import { buildUnitStatusContext, computeUnitStatusIcons, gainedTones, newlyGainedKinds, type StatusIconKind } from "../shared/UnitStatusIcons";
 import { services } from "../../core/managers/ServiceLoader";
-import { FloatTextType } from "../../core/systems/FloatTextSystem";
+import { FLOAT_MISS_TEXT, FloatTextType } from "../../core/systems/FloatTextStyle";
 import { vitalityRingView, type VitalityRingView } from "../../core/systems/VitalityBarView";
 import {
   DEFAULT_ENEMY_HERO_ASSET_ID,
@@ -88,6 +91,12 @@ interface UnitView {
   bottomNameLabel: Label | null;
   /** 頭頂血條（主戰場UI規格書 §3.1，PROG-2-1874） */
   hpBar: Graphics;
+  /** 頭頂狀態小圖示列（buff／debuff，PROG-2-9399） */
+  statusBar: UnitStatusIconBar;
+  /** 上一次盤點的狀態種類；null 代表還沒畫過（出陣時不彈出） */
+  statusKinds: StatusIconKind[] | null;
+  /** 外部（如踩到地形 buff 格）要求下一次刷新時補播彈出＋光環：'buff' | 'debuff' */
+  pendingStatusPulse: 'buff' | 'debuff' | null;
   troopType: TroopType;
   usingTroopFormation: boolean;
   usingGeneralPawn?: boolean;
@@ -140,6 +149,10 @@ const LOOT_TEXT_STAGGER_SEC = 0.5;
 
 /** 頭頂血條尺寸（名牌座標，名牌本身縮 0.7；PROG-2-1874） */
 const HP_BAR_WIDTH = 150;
+/** 頭頂狀態小圖示列：排在血條正上方，從名牌底板（寬 180）左緣開始，4 格不超出名牌寬度、不擠到隔壁路 */
+const STATUS_ICON_START_X = -90;
+/** 圖示列中心 y：名牌半高 39 + 血條（間距 4、高 8）+ 間距 4 + 圖示半高 18 */
+const STATUS_ICON_Y = 73;
 const HP_BAR_HEIGHT = 8;
 const HP_BAR_COLOR = {
   player: new Color(70, 150, 255, 255),
@@ -210,6 +223,8 @@ export class UnitRenderer extends Component {
   // lateUpdate 每幀重用的 Vec3 暫存，避免動態分配（對照 Unity: 快取 Vector3 工具變數）
   private readonly labelWorldPosBuf = new Vec3();
   private readonly generalViews = new Map<Faction, GeneralView>();
+  /** 腳下光環節點池（PROG-2-9399），第一次需要時才建立 */
+  private statusHalos: StatusHaloPool | null = null;
   private readonly arrowShots = new ArrowShotView(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   private readonly slashShots = new SlashShotView(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   private readonly spineUnits = new SpineUnitOverlay(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
@@ -503,11 +518,11 @@ export class UnitRenderer extends Component {
   }
 
   public playAttackAnimation(attackerId: string, defenderLane: number, defenderDepth: number): void {
-    this.spineUnits.play(attackerId, 'attack');
+    const attackerUnit = this.findUnitById(attackerId);
+    // PROG-2-9400：依兵種播突刺／盾擊／劈砍／射箭分動作，缺動作時退回通用攻擊
+    this.spineUnits.play(attackerId, 'attack', attackStyleFor(attackerUnit?.type));
     const attackerNode = this.resolveCombatNode(attackerId);
     if (!attackerNode) return;
-
-    const attackerUnit = this.findUnitById(attackerId);
     if (!attackerUnit) return;
 
     this.playAttackVfx(attackerNode, attackerUnit.type, this.getUnitWorldPosition(defenderLane, defenderDepth, attackerNode.worldPosition.y));
@@ -528,12 +543,11 @@ export class UnitRenderer extends Component {
   }
 
   public playAttackGeneralAnimation(attackerId: string, defenderFaction: Faction): void {
-    this.spineUnits.play(attackerId, 'attack');
+    const attackerUnit = this.findUnitById(attackerId);
+    this.spineUnits.play(attackerId, 'attack', attackStyleFor(attackerUnit?.type));
     const attackerNode = this.resolveCombatNode(attackerId);
     const defenderNode = this.generalViews.get(defenderFaction)?.worldNode ?? null;
     if (!attackerNode || !defenderNode) return;
-
-    const attackerUnit = this.findUnitById(attackerId);
     if (!attackerUnit) return;
 
     this.playAttackVfx(attackerNode, attackerUnit.type, defenderNode.worldPosition);
@@ -550,32 +564,92 @@ export class UnitRenderer extends Component {
     await this.waitSeconds(attackerUnit?.type === TroopType.Cavalry ? BATTLE_VISUAL_TIMING.cavalryAttackAwaitSec : BATTLE_VISUAL_TIMING.attackAwaitSec);
   }
 
-  public playHitAnimation(defenderId: string, _attackerId: string | null): void {
+  /**
+   * 受擊表現（PROG-2-9401）：全身閃白 + 左右小抖動；重擊／爆擊再加輕微畫面震動。
+   * 致命一擊只閃白，不抖也不震畫面（接著要播倒地與 boom，疊起來會亂）。
+   * 抖動只作用在 Spine 疊層的畫面偏移與 Visual 子節點，不動 worldNode 的移動 tween。
+   */
+  public playHitAnimation(defenderId: string, _attackerId: string | null, opts?: { heavy?: boolean; lethal?: boolean }): void {
     this.spineUnits.play(defenderId, 'hit');
     const defenderView = this.unitViews.get(defenderId);
     const defenderNode = defenderView?.worldNode ?? null;
     const defenderUnit = this.findUnitById(defenderId);
     if (!defenderNode || !defenderUnit) return;
 
+    const plan = planHitFeedback(opts?.lethal === true, opts?.heavy === true);
+    // 先打一次 Spine 疊層（小兵與武將化身都走這裡）；沒有 Spine 的單位走下面的 3D 後備
+    const spineHit = this.spineUnits.hit(defenderId, plan.shake ? this.hitShakeAmplitudePx(defenderUnit.lane, defenderUnit.depth) : 0, plan.flash);
+    if (!spineHit && plan.shake) this.shakeVisualChildren(defenderView!);
+
     this.recoilNode(defenderNode, defenderUnit.faction);
 
-    // Rim Color 受擊閃爍（Tier 2 Instancing）
-    services().material.setRim(`${defenderId}_body`, "unit-base", new Color(255, 80, 0, 200));
-    services().material.setRim(`${defenderId}_accent`, "unit-base", new Color(255, 80, 0, 200));
-    setTimeout(() => {
-      // 確保仍存在才清空（可能已經死亡被銷毀）
-      if (this.unitViews.has(defenderId)) {
-        services().material.clearRim(`${defenderId}_body`, "unit-base");
-        services().material.clearRim(`${defenderId}_accent`, "unit-base");
+    // 閃白：3D 後備用白色邊緣光（Tier 2 Instancing）；Spine 疊層已在 hit() 內處理
+    if (plan.flash && !spineHit) {
+      services().material.setRim(`${defenderId}_body`, "unit-base", new Color(255, 255, 255, 255));
+      services().material.setRim(`${defenderId}_accent`, "unit-base", new Color(255, 255, 255, 255));
+      setTimeout(() => {
+        // 確保仍存在才清空（可能已經死亡被銷毀）
+        if (this.unitViews.has(defenderId)) {
+          services().material.clearRim(`${defenderId}_body`, "unit-base");
+          services().material.clearRim(`${defenderId}_accent`, "unit-base");
+        }
+      }, BATTLE_VISUAL_TIMING.hitRimFlashMs);
+    }
+    if (plan.screenShake) this.playHitScreenShake();
+  }
+
+  /** 一格在畫面上的寬度（像素），受擊抖動幅度以它為基準；算不出來就用 100。 */
+  private hitShakeAmplitudePx(lane: number, depth: number): number {
+    let cellPx = 100;
+    const a = this.getUnitWorldPosition(lane, depth);
+    const b = this.getUnitWorldPosition(lane, depth + 1);
+    if (a && b) {
+      // overlayPoint 回傳共用緩衝，必須先把第一點取出來再算第二點
+      const pa = this.overlayPoint(a);
+      const ax = pa?.x ?? 0; const ay = pa?.y ?? 0;
+      const pb = this.overlayPoint(b);
+      if (pa && pb) {
+        const dist = Math.hypot(pb.x - ax, pb.y - ay);
+        if (dist > 20 && dist < 400) cellPx = dist;
       }
-    }, BATTLE_VISUAL_TIMING.hitRimFlashMs);
+    }
+    return cellPx * BATTLE_VISUAL_TIMING.hitShakeAmplitudeRatio;
+  }
+
+  /** 重擊／爆擊的輕微畫面震動；EffectSystem 內有重疊保護，連續重擊不會讓鏡頭漂移。 */
+  private playHitScreenShake(): void {
+    try {
+      services().effect.playCameraShake(BATTLE_VISUAL_TIMING.hitScreenShakeStrength, BATTLE_VISUAL_TIMING.hitScreenShakeSec);
+    } catch (error) { console.warn('[UnitRenderer] 畫面震動略過', error); }
+  }
+
+  /** 各 3D 後備節點抖動前的原位；只在第一次（沒有進行中的抖動）記錄，被打斷時下一次仍以它為準，不會漂移。 */
+  private readonly shakeBase = new Map<Node, Vec3>();
+
+  /** 沒有 Spine 的 3D 單位：抖動 Visual 底下的兵陣與本體（不動 visualNode，那是受擊後退 tween 的目標）。 */
+  private shakeVisualChildren(view: UnitView): void {
+    const cellWorld = this.boardRenderer?.cellSize ?? 1;
+    const amplitudeWorld = cellWorld * BATTLE_VISUAL_TIMING.hitShakeAmplitudeRatio;
+    const ws = view.worldNode.worldScale.x || 1;
+    const amplitude = amplitudeWorld / ws;
+    [view.formationRoot, view.bodyNode].forEach(node => { if (node?.isValid && node.activeInHierarchy) this.shakeLocalNode(node, amplitude); });
+  }
+
+  private shakeLocalNode(node: Node, amplitude: number): void {
+    let base = this.shakeBase.get(node);
+    if (!base) { base = node.position.clone(); this.shakeBase.set(node, base); }
+    const home = base;
+    Tween.stopAllByTarget(node);
+    const seq = tween(node);
+    buildHitShakeSteps(amplitude).forEach(step => seq.to(step.durationSec, { position: new Vec3(home.x + step.offsetX, home.y, home.z) }));
+    seq.call(() => { node.setPosition(home); this.shakeBase.delete(node); }).start();
   }
 
   public playDodgeAnimation(unitId: string): void { this.spineUnits.play(unitId, 'dodge'); }
   public playGeneralDodge(faction: Faction): void { this.spineUnits.play(this.generalSpineId(faction), 'dodge'); }
 
-  public async playHitAnimationAsync(defenderId: string, attackerId: string | null): Promise<void> {
-    this.playHitAnimation(defenderId, attackerId);
+  public async playHitAnimationAsync(defenderId: string, attackerId: string | null, opts?: { heavy?: boolean; lethal?: boolean }): Promise<void> {
+    this.playHitAnimation(defenderId, attackerId, opts);
     await this.waitSeconds(BATTLE_VISUAL_TIMING.hitAwaitSec);
   }
 
@@ -657,15 +731,31 @@ export class UnitRenderer extends Component {
       .start();
   }
 
-  public playGeneralHitAnimation(defenderFaction: Faction, _attackerId: string | null): void {
-    const defenderNode = this.generalViews.get(defenderFaction)?.worldNode ?? null;
-    if (!defenderNode) return;
+  /**
+   * 主將受擊。recoil 一律播（閃避時橋接層也呼叫它當等待節奏）；
+   * 閃白與抖動只在真的受傷時播（silent = true 表示閃避，略過）。PROG-2-9401。
+   */
+  public playGeneralHitAnimation(defenderFaction: Faction, _attackerId: string | null, opts?: { heavy?: boolean; lethal?: boolean; silent?: boolean }): void {
+    const generalView = this.generalViews.get(defenderFaction);
+    const defenderNode = generalView?.worldNode ?? null;
+    if (!generalView || !defenderNode) return;
 
     this.recoilNode(defenderNode, defenderFaction);
+    if (opts?.silent) return;
+
+    const plan = planHitFeedback(opts?.lethal === true, opts?.heavy === true);
+    const amplitudePx = plan.shake ? this.hitShakeAmplitudePx(2, 2) : 0;
+    if (!this.spineUnits.hit(this.generalSpineId(defenderFaction), amplitudePx, plan.flash) && plan.shake) {
+      // 沒有 Spine 的 3D 武將模型：抖動模型根節點（recoil 動的是 worldNode，兩者不衝突）
+      const cellWorld = this.boardRenderer?.cellSize ?? 1;
+      const amplitude = cellWorld * BATTLE_VISUAL_TIMING.hitShakeAmplitudeRatio / (generalView.worldNode.worldScale.x || 1);
+      if (generalView.modelRoot?.isValid && generalView.modelRoot.activeInHierarchy) this.shakeLocalNode(generalView.modelRoot, amplitude);
+    }
+    if (plan.screenShake) this.playHitScreenShake();
   }
 
-  public async playGeneralHitAnimationAsync(defenderFaction: Faction, attackerId: string | null): Promise<void> {
-    this.playGeneralHitAnimation(defenderFaction, attackerId);
+  public async playGeneralHitAnimationAsync(defenderFaction: Faction, attackerId: string | null, opts?: { heavy?: boolean; lethal?: boolean; silent?: boolean }): Promise<void> {
+    this.playGeneralHitAnimation(defenderFaction, attackerId, opts);
     await this.waitSeconds(BATTLE_VISUAL_TIMING.hitAwaitSec);
   }
 
@@ -679,7 +769,24 @@ export class UnitRenderer extends Component {
     // 暴擊時使用 dmg_crit 字體，否則依陣營選色
     const isPlayerSide = defenderFaction === Faction.Player;
     const floatType = isCrit ? 'dmg_crit' : (isPlayerSide ? 'dmg_player' : 'dmg_enemy');
-    this.spawnFloatText(`-${value}`, floatType, worldPos);
+    this.spawnFloatText(`-${value}`, floatType, worldPos, `general:${defenderFaction}`);
+  }
+
+  /** 閃避飄字（灰字「閃避」）：小兵被攻擊落空時，在被攻擊的單位頭上跳。PROG-2-9401。 */
+  public playMissFloat(unit: TroopUnit | null): void {
+    if (!unit || !this.uiRoot || !this.worldCamera || !this.canvasNode) return;
+    const worldPos = this.getUnitWorldPosition(unit.lane, unit.depth);
+    if (!worldPos) return;
+    this.spawnFloatText(FLOAT_MISS_TEXT, 'dmg_miss', worldPos, unit.id);
+  }
+
+  /** 主將閃避飄字。 */
+  public playGeneralMissFloat(faction: Faction): void {
+    const generalView = this.generalViews.get(faction);
+    if (!generalView) return;
+    const worldPos = generalView.worldNode.worldPosition.clone();
+    worldPos.y += this.unitHeight * 0.5;
+    this.spawnFloatText(FLOAT_MISS_TEXT, 'dmg_miss', worldPos, `general:${faction}`);
   }
 
   public async playGeneralValueChangeAsync(defenderFaction: Faction, value: number, isCrit = false): Promise<void> {
@@ -711,7 +818,7 @@ export class UnitRenderer extends Component {
       const sign = kind === "heal" ? "+" : "-";
       // 主戰場UI規格書 §3.2：暴擊用橘金放大字（PROG-2-1875）
       const dmgType: FloatTextType = unitValueFloatType(kind, unit.faction === Faction.Player, isCrit);
-      this.spawnFloatText(`${sign}${value}`, dmgType, worldPos!);
+      this.spawnFloatText(`${sign}${value}`, dmgType, worldPos!, unit.id);
 
       const currentView = this.unitViews.get(unit.id);
       if (currentView) {
@@ -772,8 +879,9 @@ export class UnitRenderer extends Component {
    * 飄字委托至 FloatTextSystem，由其統一管理物件池、動畫、maxConcurrent
    * 外觀設定請修改 FloatTextSystem.ts 中的 FLOAT_CONFIGS
    */
-  private spawnFloatText(text: string, type: FloatTextType, worldPos: Vec3): void {
-    services().floatText.show(type, text, worldPos);
+  /** anchorKey：同一單位短時間連續跳字會依序錯開（FloatTextSystem 內處理）。 */
+  private spawnFloatText(text: string, type: FloatTextType, worldPos: Vec3, anchorKey?: string): void {
+    services().floatText.show(type, text, worldPos, anchorKey);
   }
 
   private waitSeconds(seconds: number): Promise<void> {
@@ -1123,18 +1231,19 @@ export class UnitRenderer extends Component {
     try {
       const vfx = attackVfxFor(troopType);
       const from = attackerNode.worldPosition;
+      const a = this.overlayPoint(from); const ax = a?.x ?? 0; const ay = a?.y ?? 0;
+      const target = this.overlayPoint(targetPos);
       if (vfx.kind === 'arrow') {
-        const a = this.overlayPoint(from); const ax = a?.x ?? 0; const ay = a?.y ?? 0;
-        const b = this.overlayPoint(targetPos);
-        if (a && b) this.arrowShots.shoot(ax, ay, b.x, b.y);
+        if (a && target) {
+          this.arrowShots.shoot(ax, ay, target.x, target.y);
+          // PROG-2-9400：箭飛到才在命中點小爆一下
+          this.slashShots.playShots(vfx.shots, ax, ay, target.x, target.y, ratio);
+        }
         return;
       }
-      // 刀光放在攻擊者與目標之間、偏目標 1/3 處
+      // PROG-2-9367/9400：依兵種畫在畫面層（刺光、衝擊圈、月牙、塵土）；貼圖還沒載好的那一下退回原本的粒子刀光，不漏播
+      if (a && target && this.slashShots.playShots(vfx.shots, ax, ay, target.x, target.y, ratio)) return;
       const pos = new Vec3(from.x + (targetPos.x - from.x) * ratio, from.y + (targetPos.y - from.y) * ratio, from.z + (targetPos.z - from.z) * ratio);
-      // PROG-2-9367：刀光改畫在畫面層（月牙貼圖）；貼圖還沒載好的那一刀退回原本的粒子特效，不漏播
-      const a = this.overlayPoint(from); const ax = a?.x ?? 0; const ay = a?.y ?? 0;
-      const b = this.overlayPoint(pos);
-      if (a && b && this.slashShots.play(ax, ay, b.x, b.y)) return;
       services().effect.playBlock(vfx.effectId, pos, undefined, 0.6);
     } catch (error) { console.warn('[UnitRenderer] 攻擊特效略過', error); }
   }
@@ -1387,6 +1496,9 @@ export class UnitRenderer extends Component {
       labelOpacity: badge.opacity,
       bottomNameLabel: badge.bottomNameLabel,
       hpBar,
+      statusBar: new UnitStatusIconBar(labelNode, STATUS_ICON_START_X, STATUS_ICON_Y),
+      statusKinds: null,
+      pendingStatusPulse: null,
       troopType: unit.type,
       usingTroopFormation: false,
     };
@@ -1437,6 +1549,7 @@ export class UnitRenderer extends Component {
     view.troopType = unit.type;
     view.labelOpacity.opacity = 255;
     this.drawHpBar(view.hpBar, unitHpBarState(unit.currentHp, unit.getEffectiveMaxHp(), unit.faction === Faction.Player));
+    this.refreshStatusIcons(view, unit);
 
     // 更新下排兵種名稱（小兵顯示完整對應名稱，將軍化身則顯示「將」）
     if (view.bottomNameLabel) {
@@ -1452,6 +1565,49 @@ export class UnitRenderer extends Component {
     // formationRoot 不再負責旋轉，各 soldier 以 0° local rotation 繼承 worldNode 方向
     this.alignNodeToFactionFacing(view.worldNode, unit.faction);
     this.projectWorldLabel(view.worldNode, view.labelNode, this.labelHeight);
+  }
+
+  /**
+   * 盤點單位狀態並更新頭頂小圖示（PROG-2-9399）。
+   * updateUnitView 只在狀態刷新事件時呼叫；簽名沒變不重畫。新增狀態時圖示彈出＋腳下光環。
+   */
+  private refreshStatusIcons(view: UnitView, unit: TroopUnit): void {
+    const ctx = buildUnitStatusContext(unit, this.latestState, services().buff.getBuffs(unit.id));
+    const list = computeUnitStatusIcons(unit, ctx);
+    const { changed } = view.statusBar.apply(list);
+    const gained = changed ? newlyGainedKinds(view.statusKinds, list.allKinds) : [];
+    if (changed) view.statusKinds = list.allKinds;
+    const pending = view.pendingStatusPulse;
+    view.pendingStatusPulse = null;
+    if (gained.length === 0 && !pending) return;
+
+    const tones = gainedTones(gained);
+    if (gained.length > 0) view.statusBar.pop(gained);
+    else view.statusBar.pop(null); // 只有外部要求（吃到格子 buff）時，整排輕彈一次
+    if (!view.labelNode.active) return;
+    // 同時有增益與減益時各放一圈；外部要求的色別補在沒有的那一邊
+    const wantBuff = tones.buff || pending === 'buff';
+    const wantDebuff = tones.debuff || pending === 'debuff';
+    this.playStatusHalo(view, wantBuff, wantDebuff);
+  }
+
+  private playStatusHalo(view: UnitView, buff: boolean, debuff: boolean): void {
+    if (!this.uiRoot) return;
+    if (!this.statusHalos) this.statusHalos = new StatusHaloPool(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
+    const foot = this.unitGroundFoot(view);
+    if (!foot) return;
+    if (buff) this.statusHalos.play(foot.x, foot.y, false);
+    if (debuff) this.statusHalos.play(foot.x, foot.y, true);
+  }
+
+  /**
+   * 單位踩到地形 buff 格拿到效果時呼叫（BattleUIBridge）：下一次刷新補播圖示彈出與腳下光環。
+   * 若同一次刷新已因新增圖示而播過，不會重複（pending 只在沒有新增時才補播）。
+   */
+  public playStatusGain(unitId: string, isDebuff: boolean): void {
+    const view = this.unitViews.get(unitId);
+    if (!view) return;
+    view.pendingStatusPulse = isDebuff ? 'debuff' : 'buff';
   }
 
   /** 頭頂血條節點：放在名牌上緣之上（主戰場UI規格書 §3.1，PROG-2-1874） */
