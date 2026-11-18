@@ -2225,13 +2225,28 @@
       "uid": "pang-tong",
       "name": "龐統",
       "battle": {
+        "activeVersion": "0002",
         "status": "review-pending",
         "history": [
           {
             "version": "0001",
             "file": "battle/pang_tong__龐統__battle_0001.png",
+            "status": "rejected",
+            "poseSelection": "A",
+            "removedFromLibrary": true,
+            "note": "舊候選檔已由使用者移除；保留版本紀錄，新候選另存為 0002。"
+          },
+          {
+            "version": "0002",
+            "file": "battle/pang_tong__龐統__battle_0002.png",
             "status": "review-pending",
-            "poseSelection": "A"
+            "sha256": "4e0bea48e9177b91429e5692fc65ba0e2559a882fe8db68eaecd21270e404d15",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "strategy scroll",
+            "poseSelection": "A：站穩展卷指揮",
+            "gaze": "toward camera",
+            "sourceStanding": "standing/pang_tong__龐統__standing_0002.png",
+            "note": "完整人物與兩鞋入框；α≥16 主體範圍 x=192–827、y=127–1443，透明背景縮圖已檢查。候選待使用者審核，未接入遊戲。"
           }
         ]
       },
