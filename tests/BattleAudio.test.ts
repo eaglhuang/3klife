@@ -13,8 +13,10 @@ export function createBattleAudioSuite(): TestSuite {
         assert.equals('hurt', BATTLE_AUDIO_CLIP_MAP[BATTLE_AUDIO_CUE.unitHitCommon]);
         assert.equals('thunder', BATTLE_AUDIO_CLIP_MAP[BATTLE_AUDIO_CUE.unitHitSecondary]);
         assert.equals('weapon', BATTLE_AUDIO_CLIP_MAP[BATTLE_AUDIO_CUE.unitAttackCommon]);
-        // PROG-2-9357：騎兵攻擊改用 teleport（推測的衝鋒聲）
-        assert.equals('teleport', BATTLE_AUDIO_CLIP_MAP[BATTLE_AUDIO_CUE.unitAttackPrimary]);
+        // PROG-2-9400：騎兵攻擊改用 footstep（馬蹄的最近似，待補專屬衝撞聲）；槍兵突刺 bite、盾兵盾擊 shield
+        assert.equals('footstep', BATTLE_AUDIO_CLIP_MAP[BATTLE_AUDIO_CUE.unitAttackPrimary]);
+        assert.equals('bite', BATTLE_AUDIO_CLIP_MAP[BATTLE_AUDIO_CUE.unitAttackThrust]);
+        assert.equals('shield', BATTLE_AUDIO_CLIP_MAP[BATTLE_AUDIO_CUE.unitAttackShield]);
     });
 
     suite.test('新 cue 對到正確音檔', () => {
@@ -38,6 +40,8 @@ export function createBattleAudioSuite(): TestSuite {
     suite.test('騎兵攻擊走 primary，其餘兵種走 common（見 AttackSfxMapping.test）', () => {
         assert.equals(BATTLE_AUDIO_CUE.unitAttackPrimary, resolveBattleUnitAttackSfxKey(TroopType.Cavalry));
         assert.equals(BATTLE_AUDIO_CUE.unitAttackCommon, resolveBattleUnitAttackSfxKey(TroopType.Infantry));
+        assert.equals(BATTLE_AUDIO_CUE.unitAttackThrust, resolveBattleUnitAttackSfxKey(TroopType.Pikeman));
+        assert.equals(BATTLE_AUDIO_CUE.unitAttackShield, resolveBattleUnitAttackSfxKey(TroopType.Shield));
     });
 
     return suite;

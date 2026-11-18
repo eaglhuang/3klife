@@ -36,8 +36,11 @@ assert.ok(ATTACK_SLASH_SHOT.durationSec >= 0.18 && ATTACK_SLASH_SHOT.durationSec
 // 大小與時間只能來自設定，演出元件不可寫死；攻擊演出要真的呼叫刀光元件
 const view = readFileSync(join(__dirname, '../assets/scripts/battle/views/SlashShotView.ts'), 'utf8');
 assert.ok(!/new Size\(\s*\d/.test(view), '刀光大小不可寫死在 SlashShotView');
-assert.ok(/ATTACK_SLASH_SHOT\.durationSec/.test(view) && /ATTACK_SLASH_SHOT\.size/.test(view));
+// PROG-2-9400：演出元件改讀各風格的設定（AttackShotSpec），劈砍的設定仍來自 ATTACK_SLASH_SHOT
+assert.ok(/spec\.durationSec|shotTotalSec/.test(view) && /spec\.width/.test(view), '閃光大小與時間要讀設定');
+const shotStyle = readFileSync(join(__dirname, '../assets/scripts/battle/shared/AttackShotStyle.ts'), 'utf8');
+assert.ok(/ATTACK_SLASH_SHOT\.durationSec/.test(shotStyle) && /ATTACK_SLASH_SHOT\.size/.test(shotStyle), '劈砍閃光要沿用 ATTACK_SLASH_SHOT');
 const renderer = readFileSync(join(__dirname, '../assets/scripts/battle/views/UnitRenderer.ts'), 'utf8');
-assert.ok(/this\.slashShots\.play\(/.test(renderer) && /this\.slashShots\.update\(dt\)/.test(renderer), '攻擊演出要播刀光並每幀更新');
+assert.ok(/this\.slashShots\.playShots\(/.test(renderer) && /this\.slashShots\.update\(dt\)/.test(renderer), '攻擊演出要播刀光並每幀更新');
 
 console.log('AttackSlashShot: ok');

@@ -46,6 +46,7 @@ import { BoardRenderer } from "./BoardRenderer";
 import { ArrowShotView } from "./ArrowShotView";
 import { SlashShotView } from "./SlashShotView";
 import { attackVfxFor } from "../shared/AttackVfxMapping";
+import { attackStyleFor } from "../shared/AttackStyle";
 import { SpineUnitOverlay } from "./SpineGeneralOverlay";
 import { generalSpineConfig, squadMemberCount, troopSpineConfigWithFallback } from '../shared/UnitPresentationConfig';
 import { DuelExchange } from '../shared/DuelPresentationCore';
@@ -503,11 +504,11 @@ export class UnitRenderer extends Component {
   }
 
   public playAttackAnimation(attackerId: string, defenderLane: number, defenderDepth: number): void {
-    this.spineUnits.play(attackerId, 'attack');
+    const attackerUnit = this.findUnitById(attackerId);
+    // PROG-2-9400：依兵種播突刺／盾擊／劈砍／射箭分動作，缺動作時退回通用攻擊
+    this.spineUnits.play(attackerId, 'attack', attackStyleFor(attackerUnit?.type));
     const attackerNode = this.resolveCombatNode(attackerId);
     if (!attackerNode) return;
-
-    const attackerUnit = this.findUnitById(attackerId);
     if (!attackerUnit) return;
 
     this.playAttackVfx(attackerNode, attackerUnit.type, this.getUnitWorldPosition(defenderLane, defenderDepth, attackerNode.worldPosition.y));
@@ -528,12 +529,11 @@ export class UnitRenderer extends Component {
   }
 
   public playAttackGeneralAnimation(attackerId: string, defenderFaction: Faction): void {
-    this.spineUnits.play(attackerId, 'attack');
+    const attackerUnit = this.findUnitById(attackerId);
+    this.spineUnits.play(attackerId, 'attack', attackStyleFor(attackerUnit?.type));
     const attackerNode = this.resolveCombatNode(attackerId);
     const defenderNode = this.generalViews.get(defenderFaction)?.worldNode ?? null;
     if (!attackerNode || !defenderNode) return;
-
-    const attackerUnit = this.findUnitById(attackerId);
     if (!attackerUnit) return;
 
     this.playAttackVfx(attackerNode, attackerUnit.type, defenderNode.worldPosition);
@@ -1123,18 +1123,19 @@ export class UnitRenderer extends Component {
     try {
       const vfx = attackVfxFor(troopType);
       const from = attackerNode.worldPosition;
+      const a = this.overlayPoint(from); const ax = a?.x ?? 0; const ay = a?.y ?? 0;
+      const target = this.overlayPoint(targetPos);
       if (vfx.kind === 'arrow') {
-        const a = this.overlayPoint(from); const ax = a?.x ?? 0; const ay = a?.y ?? 0;
-        const b = this.overlayPoint(targetPos);
-        if (a && b) this.arrowShots.shoot(ax, ay, b.x, b.y);
+        if (a && target) {
+          this.arrowShots.shoot(ax, ay, target.x, target.y);
+          // PROG-2-9400：箭飛到才在命中點小爆一下
+          this.slashShots.playShots(vfx.shots, ax, ay, target.x, target.y, ratio);
+        }
         return;
       }
-      // 刀光放在攻擊者與目標之間、偏目標 1/3 處
+      // PROG-2-9367/9400：依兵種畫在畫面層（刺光、衝擊圈、月牙、塵土）；貼圖還沒載好的那一下退回原本的粒子刀光，不漏播
+      if (a && target && this.slashShots.playShots(vfx.shots, ax, ay, target.x, target.y, ratio)) return;
       const pos = new Vec3(from.x + (targetPos.x - from.x) * ratio, from.y + (targetPos.y - from.y) * ratio, from.z + (targetPos.z - from.z) * ratio);
-      // PROG-2-9367：刀光改畫在畫面層（月牙貼圖）；貼圖還沒載好的那一刀退回原本的粒子特效，不漏播
-      const a = this.overlayPoint(from); const ax = a?.x ?? 0; const ay = a?.y ?? 0;
-      const b = this.overlayPoint(pos);
-      if (a && b && this.slashShots.play(ax, ay, b.x, b.y)) return;
       services().effect.playBlock(vfx.effectId, pos, undefined, 0.6);
     } catch (error) { console.warn('[UnitRenderer] 攻擊特效略過', error); }
   }
