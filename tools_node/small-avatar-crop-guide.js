@@ -10,14 +10,16 @@ function usage() {
   node tools_node/small-avatar-crop-guide.js compare --out <board.png> <image.png>...
   node tools_node/small-avatar-crop-guide.js crop --input <image.png> --out <crop.png>
        --head x,y,width,height --face x,y,width,height [--extent x,y,width,height]
-       --shoulders leftX,leftY,rightX,rightY [--target 0.76] [--size 256] [--guide-out <guide.png>]
+       --shoulders leftX,leftY,rightX,rightY [--target 0.82] [--min-head-ratio 0.70] [--size 256] [--guide-out <guide.png>]
 
 Boxes use source-image pixel coordinates. --head spans the cranial hair/helmet mass to chin,
 excluding tall ornamental crowns/plumes; --extent optionally marks the complete headwear
 silhouette that must remain inside the crop;
 --face spans forehead to chin and both cheek/jaw edges. --shoulders marks one visible
 outer-contour point on each shoulder and is required for crop acceptance. Target head
-height defaults to 76%, and acceptance requires 70–82%.
+height defaults to 82%, and the default geometric range is 70–82%. Use --min-head-ratio
+only when a same-class, user-approved reference measures below 70%; set it to that
+measured reference ratio and retain side-by-side visual review.
 `);
 }
 function argsOf(list) {
@@ -126,15 +128,18 @@ function main() {
     const src = readPng(a.input), head = parseBox(a.head, '--head'), face = parseBox(a.face, '--face');
     const extent = a.extent ? parseBox(a.extent, '--extent') : head;
     const shoulders = parseShoulderPoints(a.shoulders);
-    const target = a.target == null ? 0.76 : Number(a.target);
+    const target = a.target == null ? 0.82 : Number(a.target);
+    const minHeadRatio = a['min-head-ratio'] == null ? 0.70 : Number(a['min-head-ratio']);
     const outputSize = a.size == null ? 256 : Number(a.size);
-    if (!(target >= 0.70 && target <= 0.82)) throw new Error('--target must be between 0.70 and 0.82');
+    if (!(minHeadRatio >= 0.50 && minHeadRatio <= 0.82)) throw new Error('--min-head-ratio must be between 0.50 and 0.82');
+    if (!(target >= minHeadRatio && target <= 0.82)) throw new Error('--target must be between --min-head-ratio and 0.82');
     if (!Number.isInteger(outputSize) || outputSize < 64 || outputSize > 2048) throw new Error('--size must be an integer between 64 and 2048');
     const centerX = face.x + face.width / 2;
     const extentPaddingRatio = 0.03;
     const horizontalMin = Math.min(head.x, extent.x, face.x, ...shoulders.map(p => p.x));
     const horizontalMax = Math.max(head.x + head.width, extent.x + extent.width, face.x + face.width, ...shoulders.map(p => p.x));
-    const requiredVertical = Math.max(...shoulders.map(p => Math.max(0, (p.y - head.y) / 0.92, (p.y - extent.y) / 0.97)));
+    const shoulderClearanceRatio = 0.10;
+    const requiredVertical = Math.max(...shoulders.map(p => Math.max(0, (p.y - head.y) / 0.92, (p.y - extent.y) / (1 - extentPaddingRatio - shoulderClearanceRatio))));
     const minimumSide = Math.max(head.height / target, extent.height / (1 - 2 * extentPaddingRatio), Math.max(0, (extent.y + extent.height - head.y) / (0.95 - extentPaddingRatio)), Math.max(0, (face.y + face.height - head.y) / 0.95), requiredVertical, (horizontalMax - horizontalMin) / (1 - 2 * extentPaddingRatio));
     const feasibleLeftRange = side => {
       // The square must contain the complete head/face/shoulder span while
@@ -172,8 +177,8 @@ function main() {
     const shoulderContained = shoulders.map(p => p.x >= crop.x && p.x <= crop.x + side && p.y >= crop.y && p.y <= crop.y + side);
     const shoulderOnArtwork = shoulders.map(p => foregroundNear(src, p));
     const shoulderClearanceBelow = shoulders.map(p => crop.y + side - p.y);
-    const passesShoulderClearance = shoulderClearanceBelow.every(clearance => clearance >= side * 0.03 - 1e-9);
-    const passesHeadRatio = headRatio >= 0.70 && headRatio <= 0.82;
+    const passesShoulderClearance = shoulderClearanceBelow.every(clearance => clearance >= side * shoulderClearanceRatio - 1e-9);
+    const passesHeadRatio = headRatio >= minHeadRatio && headRatio <= 0.82;
     const passesFaceCenter = Math.abs(faceCenterX - 0.5) <= 0.03 + 1e-9;
     const passesShoulders = shoulderContained.every(Boolean) && shoulderOnArtwork.every(Boolean) && passesShoulderClearance;
     const out = new PNG({ width: outputSize, height: outputSize });
@@ -209,7 +214,7 @@ function main() {
         '先確認標記覆蓋原圖的真實頭臉和肩部輪廓，再檢查候選裁圖；數值通過不等於視覺驗收通過。'
       ].join('\n') + '\n', 'utf8');
     }
-    const result = { input: path.resolve(a.input), output: path.resolve(a.out), source: `${src.width}x${src.height}`, outputSize: `${outputSize}x${outputSize}`, cropPixels: { x: +crop.x.toFixed(2), y: +crop.y.toFixed(2), side: +side.toFixed(2) }, headHeightRatio: +(headRatio * 100).toFixed(1), targetHeadHeightRatio: +(target * 100).toFixed(1), passesHeadRatio, headContained, headWithinSource, extentContained, extentPadding: +extentPadding.toFixed(2), extentWithinSource, faceCenterX: +(faceCenterX * 100).toFixed(1), passesFaceCenter, faceContained, faceWithinSource, shoulders: { contourPoints: shoulders, contained: shoulderContained, onVisiblePixelsWithin5px: shoulderOnArtwork, clearanceBelow: shoulderClearanceBelow.map(value => +value.toFixed(2)), passesClearanceBelow: passesShoulderClearance, passesShoulders }, passesAllHardChecks: passesHeadRatio && headContained && headWithinSource && extentContained && extentWithinSource && faceContained && faceWithinSource && passesFaceCenter && passesShoulders, note: '頭部比例只量顱部髮型／盔體，不將高聳頭冠或羽飾冒充頭部；綠框內的主要髮型與頭飾四邊至少保留裁框3%邊距，空間不足即判退。肩點下方須保留裁框高度3%的影像；最後仍須目視確認頭臉、完整頭飾與雙肩。工具只裁切／等比縮放，不會修正原圖五官。' };
+    const result = { acceptanceStatus: (passesHeadRatio && headContained && headWithinSource && extentContained && extentWithinSource && faceContained && faceWithinSource && passesFaceCenter && passesShoulders) ? 'geometry-pass-needs-visual-review' : 'geometry-fail', visualReviewRequired: true, input: path.resolve(a.input), output: path.resolve(a.out), source: `${src.width}x${src.height}`, outputSize: `${outputSize}x${outputSize}`, cropPixels: { x: +crop.x.toFixed(2), y: +crop.y.toFixed(2), side: +side.toFixed(2) }, headHeightRatio: +(headRatio * 100).toFixed(1), targetHeadHeightRatio: +(target * 100).toFixed(1), acceptedHeadHeightRange: `${(minHeadRatio * 100).toFixed(1)}–82.0%`, passesHeadRatio, headContained, headWithinSource, extentContained, extentPadding: +extentPadding.toFixed(2), extentWithinSource, faceCenterX: +(faceCenterX * 100).toFixed(1), passesFaceCenter, faceContained, faceWithinSource, shoulders: { contourPoints: shoulders, contained: shoulderContained, onVisiblePixelsWithin5px: shoulderOnArtwork, clearanceBelow: shoulderClearanceBelow.map(value => +value.toFixed(2)), passesClearanceBelow: passesShoulderClearance, passesShoulders }, passesAllHardChecks: passesHeadRatio && headContained && headWithinSource && extentContained && extentWithinSource && faceContained && faceWithinSource && passesFaceCenter && passesShoulders, note: '頭部比例只量顱部髮型／盔體，不將高聳頭冠或羽飾冒充頭部；綠框內的主要髮型與頭飾四邊至少保留裁框3%邊距，空間不足即判退。一般最低門檻為70%；只有相同類型的核可基準經量測低於70%時，才可用 --min-head-ratio 指定該基準比例，並須保留七張基準並排目視驗收，不得為了放行候選任意降低。肩點下方須保留裁框高度10%的影像，避免只有肩點或肩甲邊緣露出；工具只裁切／等比縮放，不會修正原圖五官。' };
     console.log(JSON.stringify(result, null, 2));
     if (!result.passesAllHardChecks) { process.exitCode = 3; return; }
     fs.mkdirSync(path.dirname(path.resolve(a.out)), { recursive: true });
