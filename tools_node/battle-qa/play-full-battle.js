@@ -633,9 +633,11 @@ async function maybeUltimate(page, opt, s, turnRec) {
   const before = new Set(s.texts);
   await tapText(page, '發動');
   // 選單是動態建立的，出現時間不固定：最多等 5 秒看到「選擇奧義」
+  // 標題比技能列早出現，不能看到標題就算數；要等到技能文字也出現（issue #2238：第一次開面板曾被誤判為空）
   let after = null;
-  for (let i = 0; i < 10; i += 1) { await sleep(500); after = await ev(page, pageSnapshot); if (after.texts.includes('選擇奧義')) break; }
-  const candidates = after.texts.filter((t) => !before.has(t) && t.length >= 2 && t.length <= 14 && !/^\d+$/.test(t) && !['取消', '返回', '關閉', '選擇奧義', '未配置奧義'].includes(t));
+  const pickCandidates = (snap) => snap.texts.filter((t) => !before.has(t) && t.length >= 2 && t.length <= 14 && !/^\d+$/.test(t) && !['取消', '返回', '關閉', '選擇奧義', '未配置奧義'].includes(t));
+  for (let i = 0; i < 10; i += 1) { await sleep(500); after = await ev(page, pageSnapshot); if (after.texts.includes('選擇奧義') && (pickCandidates(after).length || after.texts.includes('未配置奧義'))) break; }
+  const candidates = pickCandidates(after);
   const rec = { turn: turnRec.turn, opened: true, candidates: candidates.slice(0, 10), picked: null, cast: false };
   // 選單滑入要 0.2 秒左右，等它定位後拍一張，用來看選單有沒有蓋到別的按鈕（每場只拍第一次）
   if (!rep.ultimates.length) { await sleep(600); await shot(page, opt, 'ultimate-popup'); }
