@@ -132,6 +132,8 @@ export class ActionCommandComposite extends CompositePanel {
     public setUltimateSkills(skills: UltimateSkillItem[]): void {
         this._ultimateSkills = [...skills];
         this._usedUltimateSkillIds.clear();
+        // 預先建好奧義小窗：範本載入要好幾幀，等到玩家第一次點「發動」才建，面板會空著一陣子（issue #2238）
+        if (this.node.scene) this._ensureUltimatePopup();
     }
 
     public setTacticSummary(label: string, points?: { current?: number; max?: number; enabled: boolean }, reason?: string | null, shortReason?: string): void {
@@ -326,15 +328,20 @@ export class ActionCommandComposite extends CompositePanel {
             return;
         }
 
-        if (!this.ultimateSelectPopup) {
-            this.ultimateSelectPopup = this._createUltimatePopupNode().addComponent(UltimateSelectPopup);
-        }
+        this._ensureUltimatePopup();
 
         const skills = this._ultimateSkills.length > 0
             ? markUsedUltimates(this._ultimateSkills, this._usedUltimateSkillIds)
             : [{ skillId: UNASSIGNED_ULTIMATE_SKILL_ID, label: services().i18n.t('ui.ultimate.unassigned'), costSp: this._maxSp }];
 
-        this.ultimateSelectPopup.show(skills);
+        this.ultimateSelectPopup!.show(skills);
+    }
+
+    /** 懶建立奧義小窗（已綁定或建過就沿用）；小窗建好前不會顯示，見 UltimateSelectPopup.show */
+    private _ensureUltimatePopup(): void {
+        if (!this.ultimateSelectPopup) {
+            this.ultimateSelectPopup = this._createUltimatePopupNode().addComponent(UltimateSelectPopup);
+        }
     }
 
     /**
