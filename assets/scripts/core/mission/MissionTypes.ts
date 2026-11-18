@@ -175,7 +175,7 @@ export const MISSION_TIER_TEXT: Record<MissionTier, string> = { critical: '大�
 
 export const MISSION_BLOCK_TEXT: Record<MissionBlock, string> = {
     dead: '已亡故', retired: '已退役', 'not-graduated': '尚未畢業', nurturing: '培育中', captive: '被囚',
-    injured: '受傷休養中', 'on-sortie': '出征中', traveling: '遠行中', 'on-mission': '任務中',
+    injured: '受傷休養中', 'on-sortie': '出征中', traveling: '遠行中', 'on-mission': '出任務中',
     'offline-dispatch': '離線派遣中', 'low-energy': '精力不足',
 };
 

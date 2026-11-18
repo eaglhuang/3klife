@@ -451,16 +451,8 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
                 ...(item.blockedText ? { blockedText: item.blockedText } : {}),
             }));
 
-        if (normalized.length > 0) {
-            return normalized;
-        }
-
-        const fallbackLabel = selectedLabel.trim() || '未指定武將';
-        return [{
-            id: `fallback-${fallbackLabel}`,
-            label: fallbackLabel,
-            volunteer: volunteerVisible,
-        }];
+        // 名冊裡沒有武將就回空清單，由下拉面板顯示「目前沒有可選武將」；不再憑空補一位設計稿的武將（PROG-2-9148）
+        return normalized;
     }
 
     private _resolveSelectedGeneral(
@@ -478,6 +470,10 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         const matchedByState = options.find((item) => item.label === stateLabel) ?? null;
         const selected = matchedById ?? matchedByLabel ?? matchedByState ?? options.find((item) => !item.blockedText) ?? options[0];
 
+        // 名冊沒有任何武將時不沿用設計稿預設的武將名，顯示空狀態文字
+        if (options.length === 0) {
+            return { id: 'fallback-empty', label: '目前沒有可選武將', volunteer: false };
+        }
         return {
             id: selected?.id ?? payloadId ?? payloadLabel ?? 'general-unknown',
             label: payloadLabel || selected?.label || stateLabel || '未指定武將',
