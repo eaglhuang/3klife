@@ -4010,6 +4010,31 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "asset-imported",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/fa_zheng__法正__small_avatar_0001.png",
+            "status": "asset-imported",
+            "sha256": "0ec9924b3e39c34bf1553413890ebf04e2d41a08a8c3e320d6bc033047d0d6df",
+            "canvas": "256x256 RGBA",
+            "cropBox": {
+              "x": 400,
+              "y": 0,
+              "width": 290,
+              "height": 290
+            },
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/fa_zheng__法正__standing_0002.png",
+            "sourceSha256": "de9554a2010f182bed9e813b1166b3af763ba81da12ea82f5c1098617714bbd0",
+            "method": "crop-only; uniform resize; no redraw",
+            "qc": "125px preview: head ornament, face and upper shoulder/collar complete; face centered; crop ends at shoulder line; head-to-canvas estimate 71%.",
+            "createdAt": "2026-11-18"
+          }
+        ]
       }
     },
     {
