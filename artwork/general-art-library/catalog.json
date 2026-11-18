@@ -6430,6 +6430,32 @@
             "note": "沿用魯肅紅袍青綠腰帶與竹簡；前踏轉身揮手調度，候選待審。"
           }
         ]
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "asset-imported",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/lu_su__魯肅__small_avatar_0001.png",
+            "status": "asset-imported",
+            "sha256": "eb629f3c21f48b0dac003f2d20b3c0f253aece93a313d8dbeecc73ac39157ea4",
+            "canvas": "256x256 RGBA",
+            "cropBox": {
+              "x": 382,
+              "y": 0,
+              "width": 300,
+              "height": 280
+            },
+            "transparentPaddingBottom": 20,
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/lu_su__魯肅__standing_0002.png",
+            "sourceSha256": "35416e71e2502206f927d0080b8e50f7b768ac3f155eab7f3d6a376a80eb4cbe",
+            "method": "crop-only; uniform resize; transparent padding; no redraw",
+            "qc": "125px preview: complete topknot and face; face centered; upper shoulders visible, hand scroll excluded; head-to-canvas estimate 79%.",
+            "createdAt": "2026-11-18"
+          }
+        ]
       }
     },
     {
@@ -9345,4 +9371,17 @@
       }
     }
   ]
-}
+}      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/yuan_shao__袁紹__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "3ab480ef21ef0571bd2250a24d7e0a15550ba194f631fa36fad96e99938415b5",
+            "canvas": "1024x1536 RGBA PNG",
+            "note": "New candidate generated from the approved Yuan Shao standing portrait; pending visual approval, not asserted as runtime-integrated."
+          }
+        ]
