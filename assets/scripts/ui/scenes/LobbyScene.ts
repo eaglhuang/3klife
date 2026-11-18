@@ -23,8 +23,8 @@ import type { HallStageDecor } from '../../core/systems/HallStageCrowdPose';
 import type { HallMapEventCatalog } from '../../core/systems/HallMapEventMapper';
 import type { HallMapLayout, HallMapTurnStep } from '../../core/systems/HallMapFocusPlanner';
 import { buildLobbyHallWallView, type LobbyHallWallView } from '../../core/systems/LobbyHallWallView';
-import { boardToHub, candidateOptions, dialogStateFromService, findCard, missionRowStatusText, type WallOfTheme } from '../../core/mission/adapter/LegacyHallUiAdapter';
-import type { HallDialogState } from '../core/HallMissionView';
+import { boardToHub, findCard, missionRowStatusText, type WallOfTheme } from '../mission/MissionBoardPresenter';
+import { buildMissionDialogState, candidateOptions, intelGainFloatText, type MissionDialogState } from '../mission/MissionDetailPresenter';
 import { buildLobbyHallAltarView } from '../core/LobbyHallAltarView';
 import { buildHallMapTurnSteps, hasHallMapFocus, type HallMapProvinceSource } from '../../core/systems/HallMapSeasonTurn';
 import type { HallStageLayout } from '../../core/systems/HallStagePlanner';
@@ -3650,24 +3650,40 @@ ${spent}`,
         return this._dispatchHallMission(taskId, generalId);
     }
 
-    /** 組詳情視窗用的 state（§5、§6）；沒有該任務時回傳 null */
-    private _hallDialogStateFor(missionId: string, selectedGeneralId: string | null): HallDialogState | null {
+    /** 組詳情視窗用的 state（§5、§6）：直接讀任務服務的投影（PROG-2-9152）；沒有該任務時回傳 null */
+    private _hallDialogStateFor(missionId: string, selectedGeneralId: string | null): MissionDialogState | null {
         const session = services().session;
         const service = session.missionService;
         const data = session.missionData;
         if (!service || !data) return null;
-        return dialogStateFromService(service, missionId, this._wallOfTheme(), {
+        return buildMissionDialogState(service, missionId, this._wallOfTheme(), {
             season: this._hallSeason(),
             stock: session.hallMissionStock(),
             reconGrainCost: data.balance.recon.grainCost,
+            reconCap: data.balance.recon.cap,
+            hiddenRevealIntel: data.balance.hiddenRevealIntel,
             selectedGeneralId,
         });
     }
 
-    /** 動作之後把詳情視窗重新套上最新的任務資料（情報度、成功率、按鈕可用與原因） */
+    /**
+     * 動作之後把詳情視窗重新套上最新的任務資料（情報度、成功率、按鈕可用與原因、候選分組）。
+     * 已派出的任務：已選武將顯示為執行者，內容鎖定。
+     */
     private _refreshHallDialog(missionId: string, selectedGeneralId: string | null): void {
+        const panel = this._missionDetailDialogPanel;
+        const service = services().session.missionService;
         const next = this._hallDialogStateFor(missionId, selectedGeneralId);
-        if (next) this._missionDetailDialogPanel?.applyStatePatch(next);
+        if (!panel || !service || !next) return;
+        const cands = service.getCandidates(missionId);
+        const board = service.getBoard();
+        const card = board.ok ? findCard(board.value, missionId) : undefined;
+        const patch: Parameters<LobbyMissionDetailDialogComposite['applyStatePatch']>[0] = {
+            ...next,
+            ...(cands.ok ? { availableGenerals: candidateOptions(cands.value) } : {}),
+        };
+        if (next.locked && card?.executorName) patch.selectedGeneralLabel = card.executorName;
+        panel.applyStatePatch(patch);
     }
 
     /** 任務列「詳情」：開啟任務詳情視窗，內容全部來自該筆任務（PROG-2-1007、PROG-2-9130）。 */
@@ -3696,10 +3712,15 @@ ${spent}`,
         const selected = eligible.find((c) => c.generalId === lead) ?? eligible[0] ?? null;
         const state = this._hallDialogStateFor(missionId, selected?.generalId ?? null);
         if (!state) return;
+        // 已派出的任務：視窗顯示鎖定內容，選取欄顯示執行者
+        const board = service.getBoard();
+        const openCard = board.ok ? findCard(board.value, missionId) : undefined;
+        const lockedExecutor = state.locked ? openCard?.executorName : undefined;
         void services().ui.open(UIID.LobbyMissionDetailDialog, {
             state,
             availableGenerals: candidateOptions(candidates),
-            selectedGeneralId: selected?.generalId,
+            selectedGeneralId: lockedExecutor ? undefined : selected?.generalId,
+            ...(lockedExecutor ? { selectedGeneralLabel: lockedExecutor } : {}),
             onGeneralSelected: (option) => { this._refreshHallDialog(missionId, option.id); },
             onActionSelected: (action, snapshot) => this._onHallMissionAction(action, missionId, snapshot),
         } satisfies LobbyMissionDetailDialogOpenPayload).then((opened) => { if (!opened) this._showNotOpenYet(); });
@@ -3722,6 +3743,7 @@ ${spent}`,
                 if (result.ok === false) { this._showToast(result.text); return false; }
                 this._showToast(`再探完成，情報 +${result.value.gained}，目前 ${result.value.intel}%`);
                 this._refreshHallDialog(missionId, snapshot.selectedGeneralId);
+                this._missionDetailDialogPanel?.showIntelGain(intelGainFloatText(result.value.gained, result.value.intel));
                 return true;
             }
             if (action === 'wait') {
@@ -3729,12 +3751,13 @@ ${spent}`,
                 if (result.ok === false) { this._showToast(result.text); return false; }
                 this._showToast(`等待一季：期限延長，情報 +${result.value.gained}，目前 ${result.value.intel}%`);
                 this._refreshHallDialog(missionId, snapshot.selectedGeneralId);
+                this._missionDetailDialogPanel?.showIntelGain(intelGainFloatText(result.value.gained, result.value.intel));
                 return true;
             }
             const delegate = action === 'assign' || snapshot.aiDelegateChecked;
             const ok = await this._dispatchHallMission(missionId, delegate ? null : snapshot.selectedGeneralId);
-            if (ok) void services().ui.closeCurrentUI();
-            else this._refreshHallDialog(missionId, snapshot.selectedGeneralId);
+            // 派出後視窗不關：切到鎖定狀態（情報、分支、成功率凍結，顯示預計回報季），玩家自己關閉
+            this._refreshHallDialog(missionId, snapshot.selectedGeneralId);
             return ok;
         } catch (error) {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 大廳任務行動失敗', error);

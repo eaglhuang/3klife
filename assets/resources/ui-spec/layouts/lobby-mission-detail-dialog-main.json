@@ -163,7 +163,7 @@
                 "name": "ScrollContent",
                 "id": "scrollContent",
                 "width": "100%",
-                "height": 1120,
+                "height": 1150,
                 "layout": {
                   "type": "vertical",
                   "spacing": 16,
@@ -220,7 +220,7 @@
                     "type": "panel",
                     "name": "IntelPanel",
                     "width": "100%",
-                    "height": 300,
+                    "height": 330,
                     "skinSlot": "mission.dialog.section.bg",
                     "layout": {
                       "type": "vertical",
@@ -247,6 +247,16 @@
                         "height": 110,
                         "styleSlot": "mission.dialog.label.body",
                         "bind": "intelBody"
+                      },
+                      {
+                        "type": "label",
+                        "name": "IntelHintLabel",
+                        "id": "intelHintLabel",
+                        "width": "100%",
+                        "height": 20,
+                        "styleSlot": "mission.dialog.label.muted",
+                        "_doc": "情報度提示與派遣後的鎖定狀態（PROG-2-9152）：情報、分支、成功率凍結與預計回報季。",
+                        "bind": "intelHintLabel"
                       },
                       {
                         "type": "panel",

@@ -847,7 +847,8 @@ async function main() {
             rec.detail.dialogAfterRecon = dialogNow.slice(0, 16);
             if (!(intelSeries[1] > intelSeries[0])) throw new Error(`再探後情報沒有增加（${intelSeries.join(' → ')}）`);
             if (!(intelSeries[intelSeries.length - 1] >= 90)) throw new Error(`連續再探 ${rec.detail.reconClicks} 次後情報沒有到上限 90（${intelSeries.join(' → ')}）`);
-            const fogLeft = dialogNow.filter((t) => t.includes('???') && t.trim() !== '???');
+            // 完美獎勵那格永遠是 ???，旁邊附「情報 100 才會揭曉」說明（PROG-2-9152），不算遮蔽殘留
+            const fogLeft = dialogNow.filter((t) => t.includes('???') && t.trim() !== '???' && !t.includes('情報 100 才會揭曉'));
             if (fogLeft.length) throw new Error(`情報到上限後敵情仍有遮蔽字樣 ???（${fogLeft.slice(0, 3).join(' / ')}）`);
             topNow = await readTopbar();
             // 3. 選將執行：頂欄糧草與兵源減少、牆上少一張、牆頭出現「進行中」

@@ -11,6 +11,7 @@ import {
     Layout,
     Node,
     Toggle,
+    Tween,
     UIOpacity,
     UITransform,
     Vec3,
@@ -81,6 +82,10 @@ export interface MissionGeneralOption {
     volunteer?: boolean;
     /** 不可選的原因（例如「出任務中」）；有值時列為灰色、顯示原因、點了沒有反應 */
     blockedText?: string;
+    /** 可派者的記憶提示（例「曾 3 次勝任軍事」），顯示在名字旁 */
+    memoryHint?: string;
+    /** 分組：有填時下拉清單分「可派／不可派」兩組並加組標題（PROG-2-9152） */
+    group?: 'available' | 'unavailable';
 }
 
 export interface LobbyMissionDetailDialogContentState {
@@ -114,6 +119,8 @@ export interface LobbyMissionDetailDialogContentState {
     availableActions?: LobbyMissionActionKey[];
     /** 停用原因（大廳任務完整循環 §6）：有填的行動一律不可按，點了顯示這段文字（PROG-2-9130） */
     actionBlockedText?: Partial<Record<LobbyMissionActionKey, string>>;
+    /** 派遣後鎖定中：情報提示列以金色顯示（PROG-2-9152） */
+    locked?: boolean;
 }
 
 interface LobbyMissionDetailDialogContentFile {
@@ -246,7 +253,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
     }
 
     /** 視窗開著時更新部分欄位（例如再探後情報度到 100），不重開視窗、不動已選武將（PROG-2-9128）。 */
-    public applyStatePatch(patch: Partial<LobbyMissionDetailDialogContentState>): void {
+    public applyStatePatch(patch: Partial<LobbyMissionDetailDialogSnapshot>): void {
         const snapshot = this._buildSnapshot();
         if (!snapshot) return;
         this._applyRuntimeSnapshot({ ...snapshot, ...patch });
@@ -449,6 +456,8 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
                 label: item.label.trim(),
                 volunteer: item.volunteer === true || (item.label.trim() === selectedLabel && volunteerVisible),
                 ...(item.blockedText ? { blockedText: item.blockedText } : {}),
+                ...(item.memoryHint ? { memoryHint: item.memoryHint } : {}),
+                ...(item.group ? { group: item.group } : {}),
             }));
 
         // 名冊裡沒有武將就回空清單，由下拉面板顯示「目前沒有可選武將」；不再憑空補一位設計稿的武將（PROG-2-9148）
@@ -508,6 +517,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         this._suppressAiDelegateEvent = false;
 
         this._applyRatios(snapshot);
+        this._tintLockedHint(snapshot.locked === true);
         this._tintShortageLabels();
         this._refreshActionButtons(snapshot);
         this._setScrollContentBaseHeight();
@@ -527,6 +537,68 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
                 this._shortageOrigColors.delete(label);
             }
         }
+    }
+
+    /** 鎖定中的情報提示列用金色，一眼看出這張任務已派出、內容不會再變（PROG-2-9152） */
+    private _lockedHintOrigColor: Color | null = null;
+    private _tintLockedHint(locked: boolean): void {
+        const label = this._templateBinder?.getNode('intelHintLabel')?.getComponent(Label);
+        if (!label) return;
+        if (!this._lockedHintOrigColor) this._lockedHintOrigColor = label.color.clone();
+        label.color = locked ? new Color(250, 204, 94, 255) : this._lockedHintOrigColor;
+    }
+
+    /**
+     * 再探／等待後在情報百分比旁飄出一行浮字（例「情報 +25 → 78%」），約 1.3 秒淡出。
+     * 只重用一個節點，連按時重播，不累積節點。
+     */
+    private _intelGainNode: Node | null = null;
+    public showIntelGain(text: string): void {
+        const card = this._dialogCard;
+        if (!card || !text) return;
+        if (!this._intelGainNode?.isValid) {
+            const created = new Node('IntelGainFloat');
+            created.layer = card.layer;
+            created.parent = card;
+            created.addComponent(UITransform).setContentSize(360, 36);
+            const label = created.addComponent(Label);
+            label.fontSize = 26;
+            label.lineHeight = 32;
+            label.color = new Color(255, 214, 102, 255);
+            label.enableOutline = true;
+            label.outlineColor = new Color(30, 20, 0, 255);
+            label.outlineWidth = 3;
+            label.horizontalAlign = Label.HorizontalAlign.CENTER;
+            label.verticalAlign = Label.VerticalAlign.CENTER;
+            label.overflow = Label.Overflow.CLAMP;
+            created.addComponent(UIOpacity);
+            this._intelGainNode = created;
+        }
+        const node = this._intelGainNode;
+        const chip = this._templateBinder?.getNode('intelPercentValue');
+        const cardTransform = card.getComponent(UITransform);
+        const start = chip && cardTransform
+            ? cardTransform.convertToNodeSpaceAR(chip.worldPosition)
+            : new Vec3(0, 0, 0);
+        const opacity = node.getComponent(UIOpacity)!;
+        Tween.stopAllByTarget(node);
+        Tween.stopAllByTarget(opacity);
+        node.getComponent(Label)!.string = text;
+        node.setPosition(start.x + 20, start.y - 30, 0);
+        node.setScale(new Vec3(0.8, 0.8, 1));
+        node.active = true;
+        node.setSiblingIndex(card.children.length - 1);
+        opacity.opacity = 255;
+        tween(node)
+            .to(0.18, { scale: new Vec3(1.15, 1.15, 1) }, { easing: 'backOut' })
+            .to(0.12, { scale: new Vec3(1, 1, 1) })
+            .to(0.9, { position: new Vec3(start.x + 20, start.y - 30 + 56, 0) }, { easing: 'quadOut' })
+            .start();
+        tween(opacity)
+            .delay(0.7)
+            .to(0.5, { opacity: 0 })
+            .call(() => { node.active = false; })
+            .start();
     }
 
     private _buildBindingState(snapshot: LobbyMissionDetailDialogSnapshot): Record<string, unknown> {
@@ -682,17 +754,34 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         const scrollWidth = this._scrollContentTransform?.width ?? 760;
         const panelWidth = Math.max(520, Math.floor(scrollWidth - ROW_PADDING * 2));
         const rowWidth = Math.max(360, panelWidth - ROW_PADDING * 2);
-        const rows = this._availableGenerals.length > 0
+        const rows: MissionGeneralOption[] = this._availableGenerals.length > 0
             ? [...this._availableGenerals]
             : [{ id: 'fallback-empty', label: '目前沒有可選武將', volunteer: false }];
 
-        this._createDropdownHeader(dropdown, panelWidth);
-        for (const option of rows) {
-            this._createDropdownRow(dropdown, option, rowWidth);
+        // 有分組資訊時分「可派／不可派（附原因）」兩組，各加組標題（PROG-2-9152）；否則沿用單一標題
+        const grouped = rows.some((r) => r.group !== undefined);
+        const availableRows = rows.filter((r) => r.group === 'available');
+        const unavailableRows = rows.filter((r) => r.group === 'unavailable');
+        const sections: { title: string; items: MissionGeneralOption[] }[] = grouped
+            ? [{ title: `可派武將（${availableRows.length}）`, items: availableRows }]
+            : [{ title: '可選武將', items: rows }];
+        if (grouped && unavailableRows.length > 0) {
+            sections.push({ title: `不可派武將（${unavailableRows.length}，附原因）`, items: unavailableRows });
         }
 
-        const rowBlockHeight = rows.length * ROW_HEIGHT + Math.max(0, rows.length - 1) * ROW_SPACING;
-        const panelHeight = DROPDOWN_TITLE_HEIGHT + DROPDOWN_TITLE_GAP + rowBlockHeight + ROW_PADDING * 2;
+        let nodeCount = 0;
+        let blockHeight = 0;
+        for (const sec of sections) {
+            this._createDropdownHeader(dropdown, panelWidth, sec.title);
+            blockHeight += DROPDOWN_TITLE_HEIGHT;
+            nodeCount += 1;
+            for (const option of sec.items) {
+                this._createDropdownRow(dropdown, option, rowWidth);
+                blockHeight += ROW_HEIGHT;
+                nodeCount += 1;
+            }
+        }
+        const panelHeight = blockHeight + Math.max(0, nodeCount - 1) * ROW_SPACING + ROW_PADDING * 2 + (grouped ? 0 : DROPDOWN_TITLE_GAP);
         if (panelTransform) {
             panelTransform.setContentSize(panelWidth, panelHeight);
         }
@@ -712,7 +801,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         this._scrollContentLayout?.updateLayout();
     }
 
-    private _createDropdownHeader(parent: Node, panelWidth: number): Node {
+    private _createDropdownHeader(parent: Node, panelWidth: number, title = '可選武將'): Node {
         const titleNode = new Node('DropdownTitle');
         titleNode.layer = parent.layer;
         titleNode.parent = parent;
@@ -721,7 +810,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         transform.setContentSize(panelWidth - ROW_PADDING * 2, DROPDOWN_TITLE_HEIGHT);
 
         const label = titleNode.addComponent(Label);
-        label.string = '可選武將';
+        label.string = title;
         label.fontSize = 18;
         label.color = new Color(239, 228, 201, 255);
         label.horizontalAlign = Label.HorizontalAlign.LEFT;
@@ -758,21 +847,35 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         layout.paddingBottom = 8;
         layout.resizeMode = Layout.ResizeMode.NONE;
 
+        const hasHint = !!option.memoryHint;
+        const nameWidth = hasHint ? 120 : Math.max(220, rowWidth - 150);
         this._createDropdownLabel(
             rowNode,
             `GeneralOptionName_${this._sanitizeNodeName(option.id)}`,
-            Math.max(220, rowWidth - 150),
+            nameWidth,
             option.label,
             16,
             new Color(236, 239, 244, 255),
             Label.HorizontalAlign.LEFT,
         );
+        if (hasHint) {
+            // 記憶提示（例「曾 3 次勝任軍事」）：名字旁的小字，可派者才有
+            this._createDropdownLabel(
+                rowNode,
+                `GeneralOptionHint_${this._sanitizeNodeName(option.id)}`,
+                Math.max(120, rowWidth - nameWidth - 150 - 44),
+                option.memoryHint ?? '',
+                14,
+                new Color(150, 196, 226, 255),
+                Label.HorizontalAlign.LEFT,
+            );
+        }
 
         const badgeVisible = !!option.blockedText || option.volunteer === true || (option.label === this._selectedGeneralLabel && this._selectedGeneralVolunteer);
         const badgeNode = this._createDropdownLabel(
             rowNode,
             `GeneralOptionBadge_${this._sanitizeNodeName(option.id)}`,
-            110,
+            option.blockedText ? 150 : 110,
             option.blockedText ?? '毛遂自薦',
             14,
             option.blockedText ? new Color(230, 90, 80, 255) : new Color(250, 204, 94, 255),
