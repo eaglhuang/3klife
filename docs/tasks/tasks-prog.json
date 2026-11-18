@@ -10251,7 +10251,7 @@
       "title": "放招手感：武將出招前蓄力 0.4 秒、畫面中央招式名橫幅",
       "owner": "claude-code-fable-5-2",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-19",
@@ -10269,7 +10269,7 @@
       "depends": [],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-19 | 狀態: in-progress | 驗證: pending | 變更: 待做 | 阻塞: 無",
+      "notes": "2026-11-19 | 狀態: done | 驗證: 單元測試 8389 通過（新增 SkillCastPresentation 8 項）、tsc 0、compute-gate quick、battle-skill-smoke、ucuf 全過；主目錄實跑逐格截圖確認 0 秒橫幅淡入、0.4 秒後才出招式特效、約 0.9 秒橫幅淡出，橫幅在中央偏上不碰右側戰報 | 變更: 新增 SkillCastPresentation（蓄力時間、橫幅排隊合併純邏輯）與 SkillNameBanner（單一重用節點）；BattleUIBridge 放招改走戰鬥演出佇列最前面先蓄力再出招；Spine 武將蓄力時微膨脹加抖動；有漫畫分鏡的奧義不加；SSR／UR 戰法只蓄力不疊橫幅 | 阻塞: 無；已知限制：補血跳字不走演出佇列，會在蓄力期間先跳出；非 Spine 武將沒有蓄力姿勢",
       "brief": {
         "style": "classic",
         "label": "",

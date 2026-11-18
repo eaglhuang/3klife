@@ -1272,6 +1272,11 @@ export class UnitRenderer extends Component {
   }
 
   /** 武將出招：Spine 武將播一次長槍突刺 */
+  /** PROG-2-9410：武將放招前蓄力（Spine 主將聚氣膨脹＋顫動）；沒有 Spine 主將時回 false，不影響流程。 */
+  public playGeneralCharge(faction: Faction, durationSec: number): boolean {
+    return this.spineUnits.charge(this.generalSpineId(faction), durationSec);
+  }
+
   public playGeneralAttackPose(faction: Faction): void {
     this.spineUnits.play(this.generalSpineId(faction), 'attack');
     // PROG-2-9353：沒有目標位置，朝對方武將方向在自身前方播刀光；任何一方不在場就略過
