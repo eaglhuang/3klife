@@ -2,6 +2,7 @@ import { Node, UITransform, resources, sp } from 'cc';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { UnitAction, UnitPresentationCore, UnitPresentationState } from '../shared/UnitPresentationCore';
 import { UnitSpineConfig } from '../shared/UnitPresentationConfig';
+import { AttackStyle, pickAttackClip } from '../shared/AttackStyle';
 import { DuelExchange, DuelPresentationCore } from '../shared/DuelPresentationCore';
 
 interface Entry {
@@ -79,12 +80,15 @@ export class SpineUnitOverlay {
     sorted.sort((a, b) => b.y - a.y).forEach((item, index) => item.node.setSiblingIndex(index));
   }
 
-  public play(id: string, action: UnitAction): boolean {
+  /** attackStyle 只對 'attack' 有效：依兵種風格播分動作，缺動作時退回通用攻擊動作（PROG-2-9400）。 */
+  public play(id: string, action: UnitAction, attackStyle?: AttackStyle): boolean {
     const entry = this.entries.get(id);
     if (!entry?.node?.isValid) return false;
-    const skel = entry.node.getComponent(sp.Skeleton);
-    if (!skel?.skeletonData?.getRuntimeData()?.findAnimation(entry.config.clips[action].name)) return false;
-    if (action !== 'fall' || entry.core.snapshot().action !== 'fall') entry.core.play(action);
+    const runtime = entry.node.getComponent(sp.Skeleton)?.skeletonData?.getRuntimeData();
+    if (!runtime?.findAnimation(entry.config.clips[action].name)) return false;
+    const clip = action === 'attack' && attackStyle
+      ? pickAttackClip(attackStyle, entry.config.clips.attack, name => !!runtime.findAnimation(name)) : undefined;
+    if (action !== 'fall' || entry.core.snapshot().action !== 'fall') entry.core.play(action, clip);
     return true;
   }
   public exists(id: string): boolean { return this.entries.has(id); }
