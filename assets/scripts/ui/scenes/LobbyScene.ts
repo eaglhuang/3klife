@@ -1189,12 +1189,13 @@ export class LobbyScene extends Component {
         const session = services().session;
         const season = session.gameTime.totalSeasonsElapsed;
         let n = 0;
+        // 走正式的任務結算入口（不是直接寫事件），學習表才會更新，之後換季才會產生請求
         session.roster.forEach((general, index) => {
             const failed = index % 2 === 0;
-            for (let i = 0; i < (failed ? 3 : 1); i++) {
-                session.mind.record({
-                    generalId: general.id, season, kind: 'TASK_DONE', outcome: failed ? 'FAIL' : 'SUCCESS',
-                    tags: ['hebei'], label: '河北押運', id: `qa-mind:${season}:${general.id}:${i}`,
+            for (let i = 0; i < 3; i++) {
+                session.mind.onTaskSettled({
+                    taskId: `qa-mind:${general.id}:${i}`, season: Math.max(0, season - 2 + i), tags: ['hebei'], label: '河北押運', risk: 3, intelLevelAtDispatch: 3,
+                    generalIds: [general.id], delegated: false, volunteered: false, outcome: failed ? 'FAIL' : 'SUCCESS',
                 });
                 n += 1;
             }

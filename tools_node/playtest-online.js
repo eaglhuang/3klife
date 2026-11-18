@@ -753,6 +753,7 @@ async function main() {
             const attempts = {};
             let quiet = 0;
             let blockedStreak = 0;
+            const startedAt = Date.now();
             for (let i = 0; i < 30 && quiet < 2; i++) {
                 await delay(1500);
                 let handled = false;
@@ -785,6 +786,8 @@ async function main() {
                     continue;
                 }
                 blockedStreak = 0;
+                // 換季後季報最慢要等幾秒才出：一個彈窗都還沒處理前，15 秒內不算安靜（機器忙時避免提早收工）
+                if (popups.length === 0 && Date.now() - startedAt < 15000) continue;
                 quiet += 1;
             }
             if (quiet < 2) throw new Error(`彈窗 45 秒內沒處理完（已處理 ${popups.map((p) => p.kind).join('、') || '無'}）`);
