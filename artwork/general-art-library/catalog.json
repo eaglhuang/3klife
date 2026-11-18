@@ -4584,6 +4584,24 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "battle": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/chen_qun__陳群__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "0666137cc4c52aa16753277d3850ca84da6f4ee11c386ba0997dc70e36a96b47",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "none; command gesture",
+            "poseLabel": "轉步傳令，單手伸掌示令",
+            "gaze": "toward camera",
+            "sourceStanding": "standing/chen_qun__陳群__standing_0002.png",
+            "note": "保留陳群黑色官帽、藍灰長袍與原始無兵器設定；轉步伸掌傳令、另一手收袍。alpha≥16 主體範圍 x=147–834、y=173–1418；125/250px 縮圖檢查完整、透明且無明顯光暈。候選待使用者審核，未接入遊戲。"
+          }
+        ]
       }
     },
     {
