@@ -9235,6 +9235,20 @@
             "version": "0002",
             "file": "standing/cao_xian__曹憲__standing_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "standing/cao_xian__曹憲__standing_0003.png",
+            "status": "review-pending",
+            "sha256": "aeff3e851f39bf8b4f43f78cb603f81af4a789f6674e324ae02ba419a57d8d1e",
+            "canvas": "1024x1536 RGBA",
+            "source": "standing/cao_xian__曹憲__standing_0002.png",
+            "sourceSha256": "52a295a8f16166a5544b472df573f587736a6b4dd801fdd3f292204f15f29e72",
+            "method": "Image generation using the approved Cao Xian standing portrait as identity reference; uniform scale 0.90 centered on transparent 1024x1536 canvas.",
+            "palette": "navy, ivory, gold",
+            "weapon": "folding fan",
+            "qc": "Alpha pixels <=8/255 outside the figure were cleared; 125px preview candidate and full silhouette retained with transparent edge margins.",
+            "note": "Review-pending candidate only; active standing version remains 0002 until user approval."
           }
         ],
         "activeVersion": "0002"
