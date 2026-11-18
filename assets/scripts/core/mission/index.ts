@@ -1,0 +1,12 @@
+/** 通用任務核心（卡 A）對外匯出；引擎中立，不 import 'cc'。 */
+export * from './MissionBalance';
+export * from './MissionTypes';
+export * from './MissionRng';
+export * from './MissionBranch';
+export * from './MissionIntel';
+export * from './MissionFitness';
+export * from './MissionSpawn';
+export * from './MissionResolver';
+export * from './MissionProjection';
+export * from './MissionDefinitionParser';
+export * from './service/IMissionService';

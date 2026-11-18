@@ -77,7 +77,8 @@ import { buildBattlefieldReconForEncounter } from '../../core/systems/Battlefiel
 import { buildEnvScoutLines } from '../core/EnvScoutPresenter';
 import { lifespanCommandForBattleKind } from '../../core/systems/LifespanWiring';
 import type { UnveilingEvent } from '../../core/systems/Unveiling';
-import { isGeneralDead, type AgingEvent } from '../../core/systems/GeneralAging';
+import { type AgingEvent } from '../../core/systems/GeneralAging';
+import { ownedLivingGenerals } from '../core/OwnedRosterSource';
 import type { NurtureAction } from '../../core/systems/NurtureSystem';
 import { TRAINING_KINDS } from '../../core/systems/NurtureSystem';
 import { MENTOR_DECK_SIZE } from '../../core/systems/MentorDeck';
@@ -128,15 +129,12 @@ import { bloodlineBirthLines } from '../../core/systems/BloodlineBirthLines';
 import type { DiscoveryGain } from '../../core/systems/DiscoveryProgress';
 import { discoveryPhaseUnlockLines } from '../../core/systems/DiscoveryProgress';
 import { factorAwakeningLines, type FactorAwakenedEvent } from '../../core/systems/FactorAwakening';
-import { famousClanLines } from '../../core/systems/FamousClan';
-import { rebirthVoiceLines } from '../../core/systems/Rebirth';
-import { femaleSourcePresentationOf, gachaFemaleLines } from '../../core/systems/FemaleSourcePresenter';
+import { GACHA_SHOWCASE_TOAST_KEY, showcaseBannerLines } from '../core/GachaShowcaseBanner';
+import { femaleSourcePresentationOf } from '../../core/systems/FemaleSourcePresenter';
 import { rescueRefreshLine, rescueResultLines } from '../../core/systems/DungeonRescue';
 import { daughterComingOfAgeToast, type DaughterRoute } from '../../core/systems/DaughterComingOfAge';
 import { DaughterRoutePopupController } from '../core/DaughterRoutePopupController';
 import { MarriageProposalPopupController } from '../core/MarriageProposalPopupController';
-import { ultimateUnlockLines } from '../../core/systems/UltimateScriptLines';
-import { rebirthBreakthroughLine } from '../../core/systems/NumericalScriptLines';
 import { HallBoardPanelController, HALL_BOARD_MAX_ROWS } from '../core/HallBoardPanelController';
 import { hallPlayerOf, officerPromotionScriptLines, OFFICER_ERA_KEPT_LINE } from '../../core/systems/OfficerSnapshot';
 import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
@@ -647,6 +645,8 @@ export class LobbyScene extends Component {
     }, () => services().session.randomSource());
     /** 最近一次抽卡的入冊結果（由 enroll 寫入，_onGachaPullSuccess 讀取做提示） */
     private _gachaEnrollResult: AddGeneralsResult | null = null;
+    /** 最近一次抽卡入冊＋重複分流是否做完（結果畫面的提示橫幅要等它） */
+    private _gachaPullSettled: Promise<void> = Promise.resolve();
     private _gachaSaveBatching = false;
 
     /** DUP-05: duplicates already owned before this pull wait for the route popup; the rest enroll as before. */
@@ -2868,7 +2868,7 @@ export class LobbyScene extends Component {
     }
 
     private async _openRelationGraph(): Promise<void> {
-        const generals = services().session.roster.filter((general) => !isGeneralDead(general));
+        const generals = ownedLivingGenerals(services().session.roster);
         if (generals.length === 0) {
             services().event.emit('SHOW_TOAST', { message: '目前沒有可查看的武將', duration: 2 });
             return;
@@ -2914,7 +2914,7 @@ export class LobbyScene extends Component {
 
     /** 背包道具選對象（PROG-2-2105）：先收起背包開武將清單，選定後關清單回背包等確定。 */
     private _pickGeneralForItemBag(onPick: (target: ItemBagGeneralTarget) => void): void {
-        const generals = services().session.roster.filter((general) => !isGeneralDead(general));
+        const generals = ownedLivingGenerals(services().session.roster);
         if (generals.length === 0) {
             services().event.emit('SHOW_TOAST', { message: '目前沒有可使用的武將', duration: 2 });
             return;
@@ -3937,7 +3937,8 @@ export class LobbyScene extends Component {
             assigned: c.assigned,
             walkable: !!wander && spinePathFor(wander, c.id) !== null,
         }));
-        const volunteerIds = owned.filter(c => !c.assigned && this._hallBoard?.volunteerTaskFor(c.id)).map(c => c.id);
+        // 自告奮勇：任務資料指名的自薦者，加上武將心智算出心情 EAGER、想找差事做的人（PROG-2-9146）
+        const volunteerIds = owned.filter(c => !c.assigned && (this._hallBoard?.volunteerTaskFor(c.id) || session.hallStageProfile(c.id)?.mood === 'EAGER')).map(c => c.id);
         const plan = planHallWalkers({
             state: this._hallWalkerState,
             nowSec: Date.now() / 1000,
@@ -3973,9 +3974,15 @@ export class LobbyScene extends Component {
                 volunteer: { onAccept: () => { this.openVolunteerTask(generalId); } },
             };
         }
+        // 武將心智（PROG-2-9146）：有可說的記憶或心情就先說，引用玩家過去的決定；沒什麼特別想說才走一般閒聊
+        const bark = session.hallMindBark(generalId, this._mindBarkTaps++);
+        if (bark.text) return { name: profile.name, text: bark.text };
         const text = this._speakLobby(generalId, 'tap', {});
         return text === null ? null : { name: profile.name, text };
     }
+
+    /** 點擊大廳武將的累計次數，當武將心智台詞的 seed（換句用，同次序同結果） */
+    private _mindBarkTaps = 0;
 
     /**
      * 從台詞接口取一句（連點避開上一句）。台詞文字內可用 {key} 佔位，由 vars 代入。
@@ -5352,29 +5359,9 @@ export class LobbyScene extends Component {
             if (parts.length > 0) {
                 services().event.emit('SHOW_TOAST', { message: parts.join('，'), duration: 2.2 });
             }
-            const nameOf = (id: string) => duplicates.find((general) => general.id === id)?.name;
-            for (const message of rebirthVoiceLines(rebirths, nameOf)) {
-                services().event.emit('SHOW_TOAST', { message, duration: 3 });
-            }
-            // 可結緣女性來源系統 §G 轉蛋抽到女將（PROG-2-1786）
-            for (const message of gachaFemaleLines(added)) {
-                services().event.emit('SHOW_TOAST', { message, duration: 3 });
-            }
-            // 血統理論系統 §G 史實名門（PROG-2-1791）
-            for (const message of famousClanLines(added)) {
-                services().event.emit('SHOW_TOAST', { message, duration: 3 });
-            }
-            // 數值系統 §G-1 轉生突破（PROG-2-1782）
-            const breakthrough = rebirthBreakthroughLine(rebirths);
-            if (breakthrough) services().event.emit('SHOW_TOAST', { message: breakthrough, duration: 3 });
-            // 奧義系統 §G 奧義解鎖（PROG-2-1780）；奧義母表平常只在結緣前載入
-            if (rebirths.length > 0) {
-                await services().loadUltimateDefinitions();
-                const generalOf = (id: string) => duplicates.find((general) => general.id === id);
-                for (const message of ultimateUnlockLines(rebirths, generalOf, (id) => services().ultimateNameOf(id))) {
-                    services().event.emit('SHOW_TOAST', { message, duration: 3 });
-                }
-            }
+            // 與武將綁定的提示（女將登場／史實名門／轉生台詞／轉生突破／奧義覺醒）不在這裡整批丟 toast，
+            // 改在結果畫面展示該武將時才跳（bannerLinesOf，PROG-2-9143）；這裡只先載好奧義母表供它取名
+            if (rebirths.length > 0) await services().loadUltimateDefinitions();
         } catch (error) {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 抽卡結果寫入名冊 / 存檔失敗', error);
             services().event.emit('SHOW_TOAST', { message: '武將存檔失敗，請稍後再試', duration: 2.5 });
@@ -6804,8 +6791,9 @@ export class LobbyScene extends Component {
                     lastPayload = nextPayload;
                 }
 
+                // 無 payload 的備援也用玩家名冊，不退回全武將圖鑑（PROG-2-9147）
                 const activePayload = lastPayload ?? {
-                    generals: this._generals,
+                    generals: ownedLivingGenerals(services().session.roster),
                     onSelectGeneral: (config: GeneralConfig) => this._openGeneralDetailDirect(config),
                     options: { factionFilter: 'all' },
                 };
@@ -6842,6 +6830,7 @@ export class LobbyScene extends Component {
         onSelectGeneral: (config: GeneralConfig) => void | Promise<void>,
         options: NonNullable<GeneralListOpenPayload['options']> = { factionFilter: 'all' },
     ): Promise<void> {
+        // smoke / 預覽專用入口：刻意顯示全武將圖鑑，不代表玩家名冊；正式入口見 onClickGeneralList
         await services().ui.open(UIID.GeneralList, {
             generals: this._generals,
             onSelectGeneral,
@@ -7065,16 +7054,24 @@ export class LobbyScene extends Component {
     }
 
     private _openGalleryFromDetail(): void {
-        const { table, owned } = galleryInputsFromGenerals(this._generals, PlayerRosterService.getAll());
+        // 玩家擁有的武將走 session.roster（見 OwnedRosterSource 說明），不直讀 PlayerRosterService
+        const { table, owned } = galleryInputsFromGenerals(this._generals, services().session.roster);
         this.openGeneralVersionGallery(table, owned);
     }
 
-    /** 「武將列表」按鈕：顯示玄家已取得武將（源自轉蛋 / PlayerRosterService） */
+    /**
+     * 「武將名冊」按鈕：顯示玩家已取得武將。
+     * 來源必須是 session.roster（與關係列表同源）；不可直讀 PlayerRosterService，
+     * 否則 QA 暫時狀態模式或兩邊不同步時會顯示舊存檔，更不可在空名冊時退回全武將圖鑑（PROG-2-9147）。
+     */
     public onClickGeneralList() {
-        const roster = PlayerRosterService.getAll();
-        const displayList = roster.length > 0 ? roster : this._generals;
+        const owned = ownedLivingGenerals(services().session.roster);
+        if (owned.length === 0) {
+            services().event.emit('SHOW_TOAST', { message: '目前沒有可查看的武將', duration: 2 });
+            return;
+        }
         void services().ui.open(UIID.GeneralList, {
-            generals: displayList,
+            generals: owned,
             onSelectGeneral: (config: GeneralConfig) => this._openGeneralDetailDirect(config),
             options: {
                 factionFilter: 'all',
@@ -7567,7 +7564,24 @@ export class LobbyScene extends Component {
             tenPullHeaderText: '本地轉蛋結果 · 十連抽',
             // 各池呈現（標題、貨幣、再抽方式）讀池設定，所有抽卡走轉蛋系統（PROG-2-9020）
             loadPools: () => this._loadDataJson<GachaConfig[]>('data/gacha-config'),
-            onAfterPullSuccess: (results) => { void this._onGachaPullSuccess(results); },
+            onAfterPullSuccess: (results) => { this._gachaPullSettled = this._onGachaPullSuccess(results); },
+            // 展示到哪位武將才跳哪位的提示（PROG-2-9143）；等入冊與重複分流都做完才算得出轉生結果
+            bannerLinesOf: async (generalId) => {
+                await this._gachaPullSettled;
+                const result = this._gachaEnrollResult;
+                if (!result) return [];
+                const known = [...result.added, ...result.duplicates];
+                const general = known.find((item) => item.id === generalId);
+                if (!general) return [];
+                return showcaseBannerLines(general, {
+                    addedIds: new Set(result.added.map((item) => item.id)),
+                    rebirths: result.rebirths,
+                    generalOf: (id) => known.find((item) => item.id === id),
+                    ultimateNameOf: (id) => services().ultimateNameOf(id),
+                });
+            },
+            onShowBanner: (message) => services().event.emit('SHOW_TOAST', { message, duration: 3, key: GACHA_SHOWCASE_TOAST_KEY }),
+            onClearBanner: () => services().event.emit('HIDE_TOAST', { key: GACHA_SHOWCASE_TOAST_KEY }),
             onWalletChanged: () => {
                 this._refreshSinglePlayerModeToggleVisuals();
                 this._refreshWalletPreviewState();

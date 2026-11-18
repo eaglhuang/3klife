@@ -1,0 +1,1151 @@
+{
+  "schema": "mission-def.v1",
+  "id": "DIP_ALLIANCE_NEIGHBOR",
+  "version": 1,
+  "legacyTemplateId": "EXP_ELITE_02",
+  "theme": "diplomacy",
+  "difficulty": "ELITE",
+  "tags": [
+    "alliance",
+    "governor",
+    "persuasion"
+  ],
+  "meta": {
+    "origin": "authored",
+    "note": "手寫任務：三層情報分支、隱藏變體、巢狀結果與連鎖。"
+  },
+  "text": {
+    "title": "說服鄰郡結盟",
+    "brief": "鄰郡太守首鼠兩端，既怕強鄰又貪厚利。說得動，兩郡連成一氣；說不動，只怕他轉身便投了別家。",
+    "detail": "鄰郡地當要衝，太守素有「風吹兩邊倒」的名聲。近來他宴請的賓客越來越雜，是搖擺、被買通、還是另有野心，外人看不真切。"
+  },
+  "facts": [
+    {
+      "key": "governor",
+      "label": "太守",
+      "levels": [
+        {
+          "minIntel": 30,
+          "text": "太守三天兩頭換說法，今日親近你，明日又與別人宴飲。"
+        },
+        {
+          "minIntel": 60,
+          "text": "他的座上賓裡，多了幾張生面孔。"
+        },
+        {
+          "minIntel": 90,
+          "text": "那些生面孔腰間掛著別國的魚符。"
+        }
+      ],
+      "decoy": "太守已有結盟之意，只缺一份像樣的禮單。"
+    },
+    {
+      "key": "advisors",
+      "label": "幕僚",
+      "levels": [
+        {
+          "minIntel": 50,
+          "text": "他身邊的謀士，有人主和，有人主戰，吵得很兇。"
+        }
+      ]
+    }
+  ],
+  "requirement": {
+    "slots": 1,
+    "keyStats": {
+      "cha": 1,
+      "int": 0.6
+    },
+    "preferTags": [
+      "diplomat",
+      "bookish"
+    ],
+    "avoidTags": [
+      "brutal"
+    ]
+  },
+  "timing": {
+    "durationSeasons": 2,
+    "expireSeasons": 3
+  },
+  "variants": [
+    {
+      "id": "WAVERING",
+      "weight": 40
+    },
+    {
+      "id": "BOUGHT",
+      "weight": 35
+    },
+    {
+      "id": "HAWK",
+      "weight": 25
+    }
+  ],
+  "intel": {
+    "initial": 35,
+    "jitter": 10,
+    "sources": {
+      "wait": {
+        "delta": 20
+      }
+    }
+  },
+  "branches": [
+    {
+      "id": "B_ALLY_BLIND",
+      "when": {
+        "variant": [
+          "WAVERING",
+          "BOUGHT",
+          "HAWK"
+        ],
+        "minIntel": 0,
+        "maxIntel": 34
+      },
+      "objective": {
+        "id": "court_the_governor",
+        "text": "備禮登門，勸太守結盟"
+      },
+      "presented": {
+        "hints": [
+          "只備了一份厚禮，不知太守真意"
+        ]
+      },
+      "modifiers": {
+        "successDelta": -0.16,
+        "rewardMul": 0.75,
+        "riskMul": 1.5
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.05,
+        "disasterRatio": 0.35,
+        "tiers": {
+          "critical": {
+            "kind": "switch",
+            "on": "variant",
+            "cases": [
+              {
+                "eq": "HAWK",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "太守在席上大笑，連聲說要與你「同取天下」，竟當場簽了盟約。",
+                  "effects": [
+                    {
+                      "kind": "fame",
+                      "amount": 18
+                    },
+                    {
+                      "kind": "resource",
+                      "res": "silver",
+                      "amount": 120
+                    },
+                    {
+                      "kind": "flag",
+                      "set": "alliance_pact",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            ],
+            "else": {
+              "kind": "effects",
+              "narrative": "太守大喜過望，當場簽下盟約，連你自己都覺得運氣太好。",
+              "effects": [
+                {
+                  "kind": "fame",
+                  "amount": 14
+                },
+                {
+                  "kind": "resource",
+                  "res": "silver",
+                  "amount": 100
+                },
+                {
+                  "kind": "flag",
+                  "set": "alliance_pact",
+                  "value": true
+                }
+              ]
+            }
+          },
+          "success": {
+            "kind": "switch",
+            "on": "variant",
+            "cases": [
+              {
+                "eq": "WAVERING",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "太守收了禮，點頭答應，但盟約只簽了一半。",
+                  "effects": [
+                    {
+                      "kind": "fame",
+                      "amount": 5
+                    },
+                    {
+                      "kind": "flag",
+                      "set": "alliance_shaky",
+                      "value": true
+                    }
+                  ]
+                }
+              },
+              {
+                "eq": "BOUGHT",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "太守收下重禮，回頭便把你的來意轉告了敵人。",
+                  "effects": [
+                    {
+                      "kind": "fame",
+                      "amount": -5
+                    },
+                    {
+                      "kind": "flag",
+                      "set": "alliance_leaked",
+                      "value": true
+                    }
+                  ]
+                }
+              },
+              {
+                "eq": "HAWK",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "太守笑著收了禮，卻順口要你的郡每年納貢。",
+                  "effects": [
+                    {
+                      "kind": "resource",
+                      "res": "silver",
+                      "amount": -60
+                    },
+                    {
+                      "kind": "fame",
+                      "amount": -3
+                    }
+                  ]
+                }
+              }
+            ],
+            "else": {
+              "kind": "effects",
+              "effects": []
+            }
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "宴飲三日，太守每回都轉開了話題。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 20
+              },
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": -40
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "switch",
+            "on": "variant",
+            "cases": [
+              {
+                "eq": "HAWK",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "席上有人暗藏刀兵，武將負傷突圍。",
+                  "effects": [
+                    {
+                      "kind": "generalState",
+                      "state": "injured",
+                      "seasons": 1
+                    },
+                    {
+                      "kind": "fame",
+                      "amount": -6
+                    },
+                    {
+                      "kind": "relation",
+                      "target": "faction:neighbor_county",
+                      "delta": -25
+                    }
+                  ]
+                }
+              }
+            ],
+            "else": {
+              "kind": "effects",
+              "narrative": "太守當眾翻臉，指你是來窺探虛實的細作。",
+              "effects": [
+                {
+                  "kind": "fame",
+                  "amount": -8
+                },
+                {
+                  "kind": "relation",
+                  "target": "faction:neighbor_county",
+                  "delta": -20
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "B_ALLY_WAVER_MID",
+      "when": {
+        "variant": [
+          "WAVERING"
+        ],
+        "minIntel": 35,
+        "maxIntel": 69
+      },
+      "objective": {
+        "id": "bind_with_interest",
+        "text": "陳說唇亡齒寒，替太守算清兩家利害",
+        "keyStats": {
+          "cha": 0.8,
+          "int": 0.8
+        }
+      },
+      "presented": {
+        "hints": [
+          "太守怕的是被兩邊吞併，並非不想結盟"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0,
+        "rewardMul": 1,
+        "riskMul": 1
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.2,
+        "disasterRatio": 0.15,
+        "tiers": {
+          "critical": {
+            "kind": "effects",
+            "narrative": "你在沙盤上為他推演了三種結局，太守拍案決斷。",
+            "effects": [
+              {
+                "kind": "fame",
+                "amount": 16
+              },
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 160
+              },
+              {
+                "kind": "generalExp",
+                "amount": 110
+              },
+              {
+                "kind": "flag",
+                "set": "alliance_pact",
+                "value": true
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "太守被說動，簽下了互不侵犯之約。",
+            "effects": [
+              {
+                "kind": "fame",
+                "amount": 10
+              },
+              {
+                "kind": "generalExp",
+                "amount": 80
+              },
+              {
+                "kind": "flag",
+                "set": "alliance_pact",
+                "value": true
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "太守說要與幕僚再議，三日後送來了客氣的拒書。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 25
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "你的利害算得太直白，太守覺得被威脅，反而疏遠。",
+            "effects": [
+              {
+                "kind": "fame",
+                "amount": -4
+              },
+              {
+                "kind": "relation",
+                "target": "faction:neighbor_county",
+                "delta": -10
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_ALLY_WAVER_HIGH",
+      "when": {
+        "variant": [
+          "WAVERING"
+        ],
+        "minIntel": 70
+      },
+      "objective": {
+        "id": "seal_the_pact",
+        "text": "趁他搖擺之際當場歃血為盟",
+        "keyStats": {
+          "cha": 1,
+          "lea": 0.4
+        }
+      },
+      "presented": {
+        "objectiveText": "算準他最怕孤立的時辰，當場結盟",
+        "hints": [
+          "敵國使者明日抵達，今夜是最後的窗口"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.08,
+        "rewardMul": 1.4,
+        "riskMul": 0.6
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.3,
+        "disasterRatio": 0.06,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "歃血為盟，兩郡連成一氣，敵國使者次日到了，只好空手而回。",
+                "effects": [
+                  {
+                    "kind": "fame",
+                    "amount": 24
+                  },
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": 240
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": 150
+                  },
+                  {
+                    "kind": "flag",
+                    "set": "alliance_pact",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "kind": "effects",
+                "narrative": "太守還主動開放了兩郡之間的商道。",
+                "effects": [
+                  {
+                    "kind": "unlock",
+                    "id": "joint_trade_route"
+                  },
+                  {
+                    "kind": "intel",
+                    "target": {
+                      "tag": "expedition"
+                    },
+                    "delta": 20
+                  }
+                ]
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "盟約簽訂，太守甚至請你代為挑選一位駐守的將領。",
+            "effects": [
+              {
+                "kind": "fame",
+                "amount": 14
+              },
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 150
+              },
+              {
+                "kind": "generalExp",
+                "amount": 110
+              },
+              {
+                "kind": "flag",
+                "set": "alliance_pact",
+                "value": true
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "時辰晚了一步，敵國使者先到，太守又搖了回去。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 40
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "歃血時有人高呼不可，場面失控。",
+            "effects": [
+              {
+                "kind": "fame",
+                "amount": -4
+              },
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_ALLY_BOUGHT_MID",
+      "when": {
+        "variant": [
+          "BOUGHT"
+        ],
+        "minIntel": 35,
+        "maxIntel": 69
+      },
+      "objective": {
+        "id": "read_the_guests",
+        "text": "留意座上賓客，試探太守心意",
+        "keyStats": {
+          "int": 1,
+          "cha": 0.6
+        }
+      },
+      "presented": {
+        "objectiveText": "登門議盟；席間似有他人替太守說話",
+        "hints": [
+          "座上有幾張生面孔，言辭很是殷勤"
+        ]
+      },
+      "modifiers": {
+        "successDelta": -0.04,
+        "rewardMul": 1,
+        "riskMul": 1
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.2,
+        "disasterRatio": 0.2,
+        "tiers": {
+          "critical": {
+            "kind": "effects",
+            "narrative": "你在席上故意提起一個敏感的名字，生面孔變了臉色，真相呼之欲出。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 110
+              },
+              {
+                "kind": "fame",
+                "amount": 10
+              },
+              {
+                "kind": "spawn",
+                "defId": "ESP_SPY_RING",
+                "intel": 50
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "你察覺太守已不是真心，婉轉告辭，沒有洩露任何底牌。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 70
+              },
+              {
+                "kind": "fame",
+                "amount": 4
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "席間氣氛微妙，你什麼也沒看出來。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 20
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "你的試探被生面孔記下，回去後敵人加緊了戒備。",
+            "effects": [
+              {
+                "kind": "fame",
+                "amount": -4
+              },
+              {
+                "kind": "flag",
+                "set": "alliance_leaked",
+                "value": true
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_ALLY_BOUGHT_HIGH",
+      "when": {
+        "variant": [
+          "BOUGHT"
+        ],
+        "minIntel": 70,
+        "maxIntel": 99
+      },
+      "objective": {
+        "id": "expose_the_bribe",
+        "text": "以證據點破收買之事，逼太守表態",
+        "keyStats": {
+          "cha": 0.9,
+          "int": 0.9
+        }
+      },
+      "presented": {
+        "objectiveText": "拿出證據，當面問太守到底站哪一邊",
+        "hints": [
+          "生面孔的魚符與敵國使節的一模一樣"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.06,
+        "rewardMul": 1.5,
+        "riskMul": 0.6
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.3,
+        "disasterRatio": 0.08,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "證據擺在案上，太守冷汗直流，當場趕走了敵國使者，改簽盟約。",
+                "effects": [
+                  {
+                    "kind": "fame",
+                    "amount": 22
+                  },
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": 200
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": 140
+                  },
+                  {
+                    "kind": "flag",
+                    "set": "alliance_pact",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "kind": "effects",
+                "narrative": "他還交出了敵方在郡中安插的細作名單。",
+                "effects": [
+                  {
+                    "kind": "spawn",
+                    "defId": "ESP_SPY_RING",
+                    "intel": 65
+                  },
+                  {
+                    "kind": "unlock",
+                    "id": "neighbor_intel"
+                  }
+                ]
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "太守表了態，雖不情願，卻站到了你這邊。",
+            "effects": [
+              {
+                "kind": "fame",
+                "amount": 14
+              },
+              {
+                "kind": "generalExp",
+                "amount": 100
+              },
+              {
+                "kind": "flag",
+                "set": "alliance_pact",
+                "value": true
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "太守矢口否認，你只能留下證據離去。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 40
+              },
+              {
+                "kind": "flag",
+                "set": "alliance_leaked",
+                "value": true
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "敵國使者惱羞成怒，在歸程上設伏。",
+            "effects": [
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              },
+              {
+                "kind": "resource",
+                "res": "troops",
+                "amount": -50
+              },
+              {
+                "kind": "fame",
+                "amount": -3
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_ALLY_BOUGHT_SECRET",
+      "when": {
+        "variant": [
+          "BOUGHT"
+        ],
+        "minIntel": 100
+      },
+      "objective": {
+        "id": "turn_the_bribe",
+        "text": "讓太守「出賣」一份假情報，借敵人之手布局",
+        "keyStats": {
+          "int": 1,
+          "cha": 0.8
+        }
+      },
+      "presented": {
+        "objectiveText": "不拆穿收買，反請太守替我方向敵人傳遞假消息",
+        "hints": [
+          "太守其實也怕敵國，只是無人替他撐腰"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.12,
+        "rewardMul": 2,
+        "riskMul": 0.4
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.4,
+        "disasterRatio": 0.04,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "太守被你說得熱血上湧，答應做你的暗線，把假情報一句句遞給了敵國使者。",
+                "effects": [
+                  {
+                    "kind": "fame",
+                    "amount": 30
+                  },
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": 300
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": 200
+                  },
+                  {
+                    "kind": "flag",
+                    "set": "alliance_pact",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "kind": "effects",
+                "narrative": "敵國因此判斷錯誤，調動了本該守邊的兵馬。",
+                "effects": [
+                  {
+                    "kind": "intel",
+                    "target": {
+                      "tag": "border"
+                    },
+                    "delta": 35
+                  },
+                  {
+                    "kind": "unlock",
+                    "id": "false_intel_channel"
+                  }
+                ]
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "太守願意兩頭做戲，盟約與假情報雙雙到手。",
+            "effects": [
+              {
+                "kind": "fame",
+                "amount": 18
+              },
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 180
+              },
+              {
+                "kind": "generalExp",
+                "amount": 140
+              },
+              {
+                "kind": "flag",
+                "set": "alliance_pact",
+                "value": true
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "太守膽怯，把此事一字不差轉告了敵人。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 40
+              },
+              {
+                "kind": "flag",
+                "set": "alliance_leaked",
+                "value": true
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "假情報被敵人識破，使者離郡時沿途設了卡。",
+            "effects": [
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              },
+              {
+                "kind": "fame",
+                "amount": -2
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_ALLY_HAWK_MID",
+      "when": {
+        "variant": [
+          "HAWK"
+        ],
+        "minIntel": 35,
+        "maxIntel": 69
+      },
+      "objective": {
+        "id": "blunt_the_hawk",
+        "text": "陳說強鄰之勢，壓一壓他的野心",
+        "keyStats": {
+          "cha": 0.8,
+          "lea": 0.7
+        }
+      },
+      "presented": {
+        "objectiveText": "議盟；太守似乎另有算盤",
+        "hints": [
+          "太守私下操練兵馬的動靜比想像中大"
+        ]
+      },
+      "modifiers": {
+        "successDelta": -0.04,
+        "rewardMul": 1,
+        "riskMul": 1
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.15,
+        "disasterRatio": 0.2,
+        "tiers": {
+          "critical": {
+            "kind": "effects",
+            "narrative": "你不卑不亢地亮出己方的實力，太守這才收起了輕視。",
+            "effects": [
+              {
+                "kind": "fame",
+                "amount": 14
+              },
+              {
+                "kind": "generalExp",
+                "amount": 110
+              },
+              {
+                "kind": "flag",
+                "set": "alliance_pact",
+                "value": true
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "太守衡量利害，勉強簽下限制條款重重的盟約。",
+            "effects": [
+              {
+                "kind": "fame",
+                "amount": 7
+              },
+              {
+                "kind": "generalExp",
+                "amount": 70
+              },
+              {
+                "kind": "flag",
+                "set": "alliance_shaky",
+                "value": true
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "太守認定你們不過如此，把盟約擱在一邊。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 20
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "你的口氣重了些，太守的親衛當場拔刀。",
+            "effects": [
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              },
+              {
+                "kind": "fame",
+                "amount": -5
+              },
+              {
+                "kind": "relation",
+                "target": "faction:neighbor_county",
+                "delta": -15
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_ALLY_HAWK_HIGH",
+      "when": {
+        "variant": [
+          "HAWK"
+        ],
+        "minIntel": 70
+      },
+      "objective": {
+        "id": "split_the_war_party",
+        "text": "拉攏主和派謀士，孤立太守的野心",
+        "keyStats": {
+          "cha": 1,
+          "int": 0.8
+        }
+      },
+      "presented": {
+        "objectiveText": "不與太守爭，轉而說動他身邊的主和謀士",
+        "hints": [
+          "謀士中有人私下也怕戰事，只缺一個替他們出頭的人"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.1,
+        "rewardMul": 1.5,
+        "riskMul": 0.5
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.3,
+        "disasterRatio": 0.07,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "主和派謀士聯名勸諫，太守被迫改弦更張，簽下對你有利的盟約。",
+                "effects": [
+                  {
+                    "kind": "fame",
+                    "amount": 24
+                  },
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": 220
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": 150
+                  },
+                  {
+                    "kind": "flag",
+                    "set": "alliance_pact",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "kind": "switch",
+                "on": "generalTag",
+                "cases": [
+                  {
+                    "when": "diplomat",
+                    "then": {
+                      "kind": "effects",
+                      "narrative": "你在謀士之間穿梭的手腕被傳為佳話。",
+                      "effects": [
+                        {
+                          "kind": "fame",
+                          "amount": 10
+                        },
+                        {
+                          "kind": "trait",
+                          "add": "silver_tongue"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "else": {
+                  "kind": "effects",
+                  "effects": []
+                }
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "謀士們暗中配合，太守不得不讓步。",
+            "effects": [
+              {
+                "kind": "fame",
+                "amount": 14
+              },
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 140
+              },
+              {
+                "kind": "generalExp",
+                "amount": 110
+              },
+              {
+                "kind": "flag",
+                "set": "alliance_pact",
+                "value": true
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "主戰派察覺你的動作，把消息捅到了太守耳邊。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 35
+              },
+              {
+                "kind": "relation",
+                "target": "faction:neighbor_county",
+                "delta": -8
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "一名主和謀士因此被革職，你背上了一筆人情債。",
+            "effects": [
+              {
+                "kind": "fame",
+                "amount": -3
+              },
+              {
+                "kind": "relation",
+                "target": "npc:advisor_wei",
+                "delta": -15
+              },
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

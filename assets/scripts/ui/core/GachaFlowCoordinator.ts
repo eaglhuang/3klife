@@ -1,8 +1,9 @@
 // @spec-source → 轉蛋系統.md (doc_spec_0042)；PROG-2-1429 依建檔紀錄補標出處
-import { Button, Color, Label, Node, Sprite, UITransform, Widget } from 'cc';
+import { Button, Color, Label, Node, Sprite, UIOpacity, UITransform, Widget, tween } from 'cc';
 import { fullScreenPanelScale } from './GachaFullScreenPanel';
 import { disableCharCache } from './LabelCjkCache';
-import { formatGachaLine, loadGachaLines } from './GachaLines';
+import { formatGachaLine, loadGachaLines, type GachaLineTable } from './GachaLines';
+import { shouldSwitchShowcase, showcaseDesc } from './GachaShowcaseBanner';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { LocalGachaService, type LocalGachaResultEntry } from '../../core/services/LocalGachaService';
 import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
@@ -47,6 +48,12 @@ export interface GachaFlowCoordinatorOptions {
     formatError?: (error: unknown, fallbackMessage: string) => string;
     /** 讀池設定（data/gacha-config）；沒給時各池用 poolType 預設呈現 */
     loadPools?: () => Promise<GachaConfig[] | null>;
+    /** 某位武將被展示時要跳的提示橫幅（只該武將的）；由外層依入冊結果提供（PROG-2-9143） */
+    bannerLinesOf?: (generalId: string) => string[] | Promise<string[]>;
+    /** 顯示提示橫幅 */
+    onShowBanner?: (message: string) => void;
+    /** 換人時先收掉上一位還沒播完的提示橫幅，避免它跟著新人物出現 */
+    onClearBanner?: () => void;
 }
 
 export class GachaFlowCoordinator {
@@ -56,6 +63,13 @@ export class GachaFlowCoordinator {
     private _resultBackAction: (() => void | Promise<void>) | null = null;
     private _resultRepullAction: (() => void | Promise<void>) | null = null;
     private _resultRepullPending = false;
+    /** 展示區目前顯示的武將 id（切換才換畫面／跳提示）與本輪結果、台詞表（PROG-2-9143） */
+    private _showcaseId: string | null = null;
+    private _showcaseResults: LocalGachaResultEntry[] = [];
+    private _showcaseBinder: any = null;
+    private _showcaseLines: GachaLineTable = {};
+    /** 十張卡的點選處理（只建一次，重轉時重用，不重複建立） */
+    private _cardTapHandlers: Array<() => void> = [];
 
     private _pools: GachaConfig[] = [];
     private _poolsLoaded: Promise<void> | null = null;
@@ -215,7 +229,8 @@ export class GachaFlowCoordinator {
         const balanceText = flow.showBalance === false ? '' : `　｜　剩餘 ${formatResultBalance(currency, this._options.gachaService.getWalletSnapshot())}`;
         const rarityStats = this._buildPullResultRarityStats(results);
         // 本次主角登場台詞（PROG-2-2244）：所有池共用；沒有台詞退回原本描述
-        const heroLine = topResult ? formatGachaLine(await loadGachaLines(), topResult.general.id) : null;
+        const lineTable = await loadGachaLines();
+        const heroLine = topResult ? formatGachaLine(lineTable, topResult.general.id) : null;
 
         try { await host.showScreen(GACHA_PULL_RESULT_SCREEN_ID); }
         catch { throw new Error('召喚已完成並入冊，但結果畫面載入失敗。'); }
@@ -261,6 +276,13 @@ export class GachaFlowCoordinator {
         }
         this._stageHeroReveal(binder, topResult !== null, flow.hideHeroAfterReveal === true);
         this._styleRepullButton(binder, repull !== null);
+        // 展示區跟著「目前顯示的武將」走：初始是主角，點結果卡換人；提示橫幅與台詞此時才出現（PROG-2-9143）
+        this._showcaseId = topResult ? topResult.general.id : null;
+        this._showcaseResults = results;
+        this._showcaseBinder = binder;
+        this._showcaseLines = lineTable;
+        this._bindCardTaps(binder, results.length, flow.hideHeroAfterReveal === true);
+        if (topResult) this._announceShowcase(binder, topResult.general.id, false);
 
         this._resultBackAction = flow.onBack;
         this._resultRepullAction = repull;
@@ -285,6 +307,55 @@ export class GachaFlowCoordinator {
             repullNode.off(Button.EventType.CLICK, this._onResultRepullTen, this);
             repullNode.on(Button.EventType.CLICK, this._onResultRepullTen, this);
         }
+    }
+
+    /** 展示這位武將時才跳他的提示橫幅，下方台詞同時淡入（不是整批一次丟出） */
+    private _announceShowcase(binder: any, generalId: string, refreshTexts: boolean): void {
+        void this._showcaseTexts(binder, generalId, refreshTexts);
+    }
+
+    private async _showcaseTexts(binder: any, generalId: string, refreshTexts: boolean): Promise<void> {
+        const entry = this._showcaseResults.find((item) => item.general.id === generalId);
+        if (!entry) return;
+        if (refreshTexts) {
+            binder.setTexts({
+                GachaPullResult_hero_rarity: `✦ ${this._toPullResultRarityLabel(entry.rarityTier)} · 絕世登場 ✦`,
+                GachaPullResult_hero_name: `${entry.general.name}${entry.general.courtesyName ? ` · ${entry.general.courtesyName}` : ''}`,
+                GachaPullResult_hero_desc: showcaseDesc(entry.general, this._showcaseLines),
+            });
+            this._updateHeroPortrait(binder, entry.general.id);
+        }
+        // 台詞淡入：重用同一個 UIOpacity，不每次新建節點
+        const descNode: Node | null = binder.getNode ? binder.getNode('GachaPullResult_hero_desc') : null;
+        if (descNode) {
+            const opacity = descNode.getComponent(UIOpacity) ?? descNode.addComponent(UIOpacity);
+            opacity.opacity = 0;
+            tween(opacity).to(0.45, { opacity: 255 }).start();
+        }
+        const lines = await this._options.bannerLinesOf?.(generalId) ?? [];
+        // 等資料的空檔玩家可能已點去看別人：不是目前展示的這位就不跳（提示只跟著畫面上的人）
+        if (this._showcaseId !== generalId) return;
+        for (const message of lines) this._options.onShowBanner?.(message);
+    }
+
+    /** 點結果卡 → 展示區換成那位武將（提示與台詞跟著換）；展示區會收起的池（宿命池等）沒有人在展示，不綁 */
+    private _bindCardTaps(binder: any, count: number, showcaseHides: boolean): void {
+        for (let index = 0; index < GACHA_PULL_RESULT_CARDS.length; index += 1) {
+            const card: Node | null = binder.getNode ? binder.getNode(GACHA_PULL_RESULT_CARDS[index]) : null;
+            if (!card) continue;
+            this._cardTapHandlers[index] ??= () => this._onCardTap(index);
+            card.off(Node.EventType.TOUCH_END, this._cardTapHandlers[index], this);
+            if (!showcaseHides && index < count) card.on(Node.EventType.TOUCH_END, this._cardTapHandlers[index], this);
+        }
+    }
+
+    private _onCardTap(index: number): void {
+        const entry = this._showcaseResults[index];
+        const binder = this._showcaseBinder;
+        if (!entry || !binder || !shouldSwitchShowcase(this._showcaseId, entry.general.id)) return;
+        this._showcaseId = entry.general.id;
+        this._options.onClearBanner?.();
+        this._announceShowcase(binder, entry.general.id, true);
     }
 
     private _notifyPullSuccess(results: LocalGachaResultEntry[]): void {
