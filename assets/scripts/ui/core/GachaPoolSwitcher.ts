@@ -8,6 +8,7 @@
  *
  * Unity 對照：TabController.Select(index)，內容區換 SubView prefab 後再交給 Presenter 填資料。
  */
+import { awaitWithTimeout } from '../../core/utils/AwaitGuard';
 import { GACHA_CONTENT_SLOT, GACHA_POOLS, GachaPoolDef, gachaPoolBannerTexts, gachaPullBarTexts } from './GachaScreenNodes';
 
 export interface GachaPoolHostPort {
@@ -18,6 +19,9 @@ export interface GachaPoolHostPort {
     mountSection(anchor: string, fragmentId: string, replaceContent: boolean): Promise<unknown>;
 }
 
+/** 切池每個載入步驟最多等多久（毫秒）；超過就當載入失敗，用後備往下走（PROG-2-9153） */
+export const GACHA_POOL_STEP_TIMEOUT_MS = 8000;
+
 export class GachaPoolSwitcher {
     private _index = 0;
     private _seq = 0;
@@ -27,6 +31,8 @@ export class GachaPoolSwitcher {
         private readonly _pools: readonly GachaPoolDef[] = GACHA_POOLS,
         /** 切池完成（內容都載好）後呼叫，供畫面填該池的動態資料 */
         private readonly _onShown?: (pool: GachaPoolDef, index: number) => void,
+        /** 每個載入步驟的逾時（毫秒），測試可縮短 */
+        private readonly _stepTimeoutMs: number = GACHA_POOL_STEP_TIMEOUT_MS,
     ) {}
 
     public get index(): number {
@@ -69,12 +75,15 @@ export class GachaPoolSwitcher {
         for (const each of this._pools) actives[each.banner] = each.banner === pool.banner;
         this._port.setActives(actives);
 
-        await this._port.switchLazySlot(GACHA_CONTENT_SLOT, pool.contentFragment);
+        // 資源下載 404／無回應時，每一步最多等 _stepTimeoutMs；逾時當失敗，後備是照樣把文字與橫幅寫完，轉蛋不會卡住
+        const guard = <T>(task: Promise<T>, fallback: T, step: string): Promise<T> =>
+            awaitWithTimeout(task, this._stepTimeoutMs, fallback, { label: `gacha-pool:${pool.key}:${step}` });
+        await guard(this._port.switchLazySlot(GACHA_CONTENT_SLOT, pool.contentFragment), false, 'slot');
         if (seq !== this._seq) return;
-        await this._port.applyTabRegionsForFragment(pool.contentFragment);
+        await guard(this._port.applyTabRegionsForFragment(pool.contentFragment), undefined, 'regions');
         if (seq !== this._seq) return;
         if (pool.section) {
-            await this._port.mountSection(pool.section.anchor, pool.section.fragment, pool.section.replaceContent);
+            await guard(this._port.mountSection(pool.section.anchor, pool.section.fragment, pool.section.replaceContent), null, 'section');
             if (seq !== this._seq) return;
         }
         this._port.setTexts({ ...gachaPullBarTexts(), ...gachaPoolBannerTexts(pool) });
