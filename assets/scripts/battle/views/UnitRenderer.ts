@@ -49,6 +49,7 @@ import { SlashShotView } from "./SlashShotView";
 import { attackVfxFor } from "../shared/AttackVfxMapping";
 import { attackStyleFor } from "../shared/AttackStyle";
 import { createMoveSfxThrottleState, moveBeatFor, tryAcquireMoveSfx } from "../shared/MoveFeedback";
+import { DEPLOY_LANDING_PUFFS, deployLandingDust, deployLandingThud } from "../shared/DeployLanding";
 import { playBattleAudio } from "../shared/BattleAudio";
 import { MoveDustEmitter } from "./MoveDustEmitter";
 import { SpineUnitOverlay } from "./SpineGeneralOverlay";
@@ -236,7 +237,8 @@ export class UnitRenderer extends Component {
   private readonly moveSfxThrottle = createMoveSfxThrottleState();
   private readonly moveDust = new MoveDustEmitter(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   private readonly spineUnits = new SpineUnitOverlay(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D,
-    (id, x, y, facing, isLeader) => this.emitFootfallDust(id, x, y, facing, isLeader));
+    (id, x, y, facing, isLeader) => this.emitFootfallDust(id, x, y, facing, isLeader),
+    (id, x, y, isLeader) => this.emitDeployLanding(id, x, y, isLeader));
   /** 沒有 Spine 的主將改用立繪站牌，不退回藍色通用棋子（issue #2238） */
   private readonly generalStandees = new GeneralPortraitStandee(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   private readonly tileBuffViews = new Map<string, TileBuffView>();
@@ -365,14 +367,15 @@ export class UnitRenderer extends Component {
     // 以正確狀態（formation 已就緒）更新視圖，取得最終尺寸與面向
     this.updateUnitView(view, unit);
 
+    // PROG-2-9409：Spine 小隊由疊層演從上方落下（spineUnits.deploy）。3D 節點只縮放登場、不再從地下升起，
+    // 否則名牌與 Spine 腳點會跟著往上滑，和下落方向相反；沒有 Spine 的單位照舊靠 3D 縮放登場。
+    this.spineUnits.deploy(unit.id);
     const targetScale = view.worldNode.scale.clone();
     view.worldNode.setScale(new Vec3(targetScale.x * 0.01, targetScale.y * 0.01, targetScale.z * 0.01));
-    const pos = view.worldNode.position.clone();
-    view.worldNode.setPosition(new Vec3(pos.x, pos.y - 0.45, pos.z));
     this.updateFloodRaft(view, unit);
 
     tween(view.worldNode)
-      .to(BATTLE_VISUAL_TIMING.deployAppearSec, { scale: targetScale, position: pos })
+      .to(BATTLE_VISUAL_TIMING.deployAppearSec, { scale: targetScale })
       .start();
   }
 
@@ -430,6 +433,23 @@ export class UnitRenderer extends Component {
     for (let i = 0; i < footstep.beats; i++) {
       const play = (): void => { if (tryAcquireMoveSfx(this.moveSfxThrottle, Date.now())) playBattleAudio(footstep.cue, footstep.volume); };
       if (i === 0) play(); else setTimeout(play, i * footstep.intervalMs);
+    }
+  }
+
+  /**
+   * PROG-2-9409：部署落地瞬間一圈塵團往兩側吹開（粒子比走路大），帶頭者出落地聲。河流格、水軍不出塵，規則同走路。
+   */
+  private emitDeployLanding(id: string, x: number, y: number, isLeader: boolean): void {
+    const unit = this.latestState?.units.get(id);
+    if (!unit) return;
+    const beat = moveBeatFor(unit.type, this.latestState?.getCell(unit.lane, unit.depth)?.terrain);
+    const dust = deployLandingDust(beat.dust);
+    if (dust.kind !== 'none') for (const puff of DEPLOY_LANDING_PUFFS) this.moveDust.emit(x + puff.dx, y, puff.driftFacing, dust, isLeader);
+    if (!isLeader) return;
+    const thud = deployLandingThud(beat.footstep, unit.type);
+    for (let i = 0; i < thud.beats; i++) {
+      const play = (): void => { if (tryAcquireMoveSfx(this.moveSfxThrottle, Date.now())) playBattleAudio(thud.cue, thud.volume); };
+      if (i === 0) play(); else setTimeout(play, i * thud.intervalMs);
     }
   }
 

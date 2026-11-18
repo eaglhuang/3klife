@@ -2,6 +2,7 @@ import { Color, Node, UITransform, resources, sp } from 'cc';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { UnitAction, UnitPresentationCore, UnitPresentationState, resolveClipName } from '../shared/UnitPresentationCore';
 import { dustBeatsFor, stepBobOffset } from '../shared/MoveFeedback';
+import { DeployLandingSample, deployLandingTotalSec, landingCrossed, memberDeployDelay, sampleDeployLanding } from '../shared/DeployLanding';
 import { UnitSpineConfig } from '../shared/UnitPresentationConfig';
 import { AttackStyle, pickAttackClip } from '../shared/AttackStyle';
 import { DuelExchange, DuelPresentationCore } from '../shared/DuelPresentationCore';
@@ -26,10 +27,14 @@ interface Entry {
   flashPainted: number;
   /** 步態時鐘（動畫秒）：從 move 動作開始累加，用來判斷落腳時機；離開 move 歸零。 */
   stepClock: number;
+  /** 部署落地演出進行中的時鐘（秒，PROG-2-9409）；素材載好才開始走，結束後為 null。 */
+  deploy: { t: number } | null;
 }
 
 /** 落腳通知：腳點（與單位節點同一座標系）、面向、是否為帶頭者。 */
 export type FootfallListener = (id: string, x: number, y: number, facing: 1 | -1, isLeader: boolean) => void;
+/** 部署落地通知（PROG-2-9409）：某名士兵剛落地的腳點、是否為帶頭者。 */
+export type LandingListener = (id: string, x: number, y: number, isLeader: boolean) => void;
 
 /**
  * 受擊閃色：Spine 骨架的 color 是「相乘」，沒辦法相乘出純白；
@@ -45,16 +50,20 @@ export class SpineUnitOverlay {
   private readonly entries = new Map<string, Entry>();
   private readonly failed = new Set<string>();
   private readonly pendingRemovals = new Set<string>();
+  /** 已要求落地但疊層還沒建立的單位（playDeploy 可能早於第一次 sync） */
+  private readonly pendingDeploys = new Set<string>();
   private duel: { core: DuelPresentationCore; ids: [string, string]; resolve: (played: boolean) => void } | null = null;
-  constructor(private readonly getParent: () => Node | null, private readonly layer: () => number, private readonly onFootfall?: FootfallListener) {}
+  constructor(private readonly getParent: () => Node | null, private readonly layer: () => number, private readonly onFootfall?: FootfallListener,
+    private readonly onLanding?: LandingListener) {}
 
   public sync(id: string, config: UnitSpineConfig, x: number, y: number, facing: 1 | -1, moving: boolean, dt: number, visible = true, members = 1): boolean {
     this.pendingRemovals.delete(id);
     let entry = this.entries.get(id);
     if (entry && entry.config.path !== config.path) { this.remove(id); entry = undefined; }
     if (!entry) {
-      entry = { config, core: new UnitPresentationCore(config, { x, y }, facing), node: null, revision: -1, facing, loading: false, ready: [], visible, followers: [], members, hit: null, flashPainted: 0, stepClock: 0 };
+      entry = { config, core: new UnitPresentationCore(config, { x, y }, facing), node: null, revision: -1, facing, loading: false, ready: [], visible, followers: [], members, hit: null, flashPainted: 0, stepClock: 0, deploy: null };
       this.entries.set(id, entry);
+      if (this.pendingDeploys.delete(id)) entry.deploy = { t: 0 };
     }
     if (!entry.node && !entry.loading) this.load(id, entry);
     entry.visible = visible;
@@ -65,6 +74,16 @@ export class SpineUnitOverlay {
 
   /** 這份素材是否已確定載不起來（缺檔或缺共用動作）；呼叫端據此改用後備素材，不讓單位退回方塊。 */
   public hasFailed(path: string): boolean { return this.failed.has(path); }
+
+  /**
+   * 部署落地演出（PROG-2-9409）：整隊從上方依序落下、落地壓扁回彈，每名士兵落地時通知 onLanding。
+   * 疊層還沒建立就先記著，建立時再開始；素材還在載入時時鐘不走，載好才落，玩家才看得到。
+   */
+  public deploy(id: string): void {
+    const entry = this.entries.get(id);
+    if (entry) entry.deploy = { t: 0 };
+    else this.pendingDeploys.add(id);
+  }
 
   public update(dt: number): void {
     const controlled = this.duel?.ids;
@@ -85,10 +104,12 @@ export class SpineUnitOverlay {
     }
     for (const [id, entry] of this.entries) {
       if (entry.hit) entry.hit.elapsed += dt;
+      const landingPrev = this.advanceDeploy(entry, dt);
       if (!controlled?.includes(id)) {
         const state = entry.core.step(dt);
         this.apply(entry, state);
         this.emitFootfalls(id, entry, state, dt);
+        if (landingPrev !== null) this.emitLandings(id, entry, state, landingPrev);
       }
     }
     // 畫面越下方（y 越小）越靠近鏡頭，要蓋在上面；隊員各自依落腳點排序，才不會整隊被隔壁格蓋住
@@ -165,6 +186,7 @@ export class SpineUnitOverlay {
   public remove(id: string): void {
     if (this.duel?.ids.includes(id)) { this.pendingRemovals.add(id); return; }
     this.pendingRemovals.delete(id);
+    this.pendingDeploys.delete(id);
     const entry = this.entries.get(id);
     if (entry) this.finishLoading(entry, false);
     if (entry?.node?.isValid) entry.node.destroy();
@@ -215,9 +237,11 @@ export class SpineUnitOverlay {
     const walking = state.action === 'move';
     const gait = entry.config;
     const leaderBob = walking ? stepBobOffset(entry.stepClock, 0, gait.bobPx, gait.footfallIntervalSec) : 0;
+    // 部署落地：往上的位移與壓扁縮放（腳點為骨架原點，縮放不會讓腳離地）
+    const landing = this.landingSample(entry, 0);
     node.setPosition(state.foot.x - offset.x * entry.config.displayScale * state.facing + shakeX,
-      state.foot.y - offset.y * entry.config.displayScale + leaderBob, 0);
-    node.setScale(entry.config.displayScale * state.facing, entry.config.displayScale, 1);
+      state.foot.y - offset.y * entry.config.displayScale + leaderBob + landing.dy, 0);
+    node.setScale(entry.config.displayScale * state.facing * landing.scaleX, entry.config.displayScale * landing.scaleY, 1);
     const skinChanged = entry.facing !== state.facing || entry.revision < 0;
     const clipChanged = entry.revision !== state.revision;
     const runtime = skeleton.skeletonData?.getRuntimeData();
@@ -236,14 +260,15 @@ export class SpineUnitOverlay {
       const slot = entry.config.squad?.[i];
       const followerSkel = follower.getComponent(sp.Skeleton);
       if (!slot || !follower.isValid || !followerSkel) return;
-      follower.active = node.active && i < entry.members - 1;
+      const memberLanding = this.landingSample(entry, i + 1);
+      follower.active = node.active && i < entry.members - 1 && memberLanding.visible;
       const pos = node.position;
       // 站位以「面向的後方」為準，所以 x 要跟著朝向翻面
       // pos 已含抖動偏移與帶頭者起伏；起伏換成隊員自己相位的，才是錯開的集體走路
       const followerBob = walking ? stepBobOffset(entry.stepClock, slot.phase * state.clip.duration, gait.bobPx, gait.footfallIntervalSec) - leaderBob : 0;
-      follower.setPosition(pos.x - slot.x * state.facing, pos.y + slot.y + followerBob, 0);
+      follower.setPosition(pos.x - slot.x * state.facing, pos.y + slot.y + followerBob - landing.dy + memberLanding.dy, 0);
       if (flashChanged) this.setSkeletonFlash(followerSkel, flash);
-      follower.setScale(entry.config.displayScale * state.facing, entry.config.displayScale, 1);
+      follower.setScale(entry.config.displayScale * state.facing * memberLanding.scaleX, entry.config.displayScale * memberLanding.scaleY, 1);
       if (skinChanged) followerSkel.setSkin(skin);
       if (clipChanged && hasClip) {
         const track = followerSkel.setAnimation(0, name, state.clip.loop);
@@ -254,6 +279,35 @@ export class SpineUnitOverlay {
         }
       }
       followerSkel.timeScale = state.animationSpeed;
+    });
+  }
+
+  /** 第 member 名士兵（0 = 帶頭者）目前的落地姿態；沒有落地演出時是正常站姿。 */
+  private landingSample(entry: Entry, member: number): DeployLandingSample {
+    return entry.deploy ? sampleDeployLanding(entry.deploy.t - memberDeployDelay(member)) : sampleDeployLanding(Infinity);
+  }
+
+  /** 推進落地時鐘；回傳推進前的時間（沒有落地演出或素材未載好時回 null）。整隊落完就清掉。 */
+  private advanceDeploy(entry: Entry, dt: number): number | null {
+    const deploy = entry.deploy;
+    if (!deploy || !entry.node?.isValid) return null;
+    const prev = deploy.t;
+    deploy.t += Math.max(0, dt);
+    if (deploy.t >= deployLandingTotalSec(Math.max(1, Math.min(entry.members, entry.followers.length + 1)))) entry.deploy = null;
+    return prev;
+  }
+
+  /** 每名士兵跨過落地瞬間時通知一次（揚塵、落地聲由呼叫端決定）；藏起來的隊員不通知。 */
+  private emitLandings(id: string, entry: Entry, state: UnitPresentationState, prev: number): void {
+    if (!this.onLanding || !entry.visible) return;
+    const now = entry.deploy ? entry.deploy.t : Infinity;
+    const { x, y } = state.foot;
+    if (landingCrossed(prev, now)) this.onLanding(id, x, y, true);
+    entry.followers.forEach((follower, i) => {
+      const slot = entry.config.squad?.[i];
+      if (!slot || i >= entry.members - 1) return;
+      const delay = memberDeployDelay(i + 1);
+      if (landingCrossed(prev - delay, now - delay)) this.onLanding?.(id, x - slot.x * state.facing, y + slot.y, false);
     });
   }
 

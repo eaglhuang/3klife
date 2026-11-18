@@ -10203,7 +10203,7 @@
       "title": "部署落地手感：小隊從上方落下、落地壓縮回彈、揚塵與落地聲",
       "owner": "claude-code-fable-5-2",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-19",
@@ -10221,7 +10221,7 @@
       "depends": [],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-19 | 狀態: in-progress | 驗證: pending | 變更: 待做 | 阻塞: 無",
+      "notes": "2026-11-19 | 狀態: done | 驗證: 單元測試 8381 通過（新增 DeployLanding 8 項）、tsc 0、compute-gate quick、battle-skill-smoke、ucuf 冒煙通過；主目錄 7456 qaSlow 定格截步兵與騎兵部署六連幀 | 變更: 新增 shared/DeployLanding.ts（落下等加速＋拉長、落地壓扁回彈、隊員每 0.07 秒依序落、落地塵團與落地聲）；SpineUnitOverlay 加 deploy() 與落地通知，素材載好才開始落；UnitRenderer 部署時呼叫 deploy，3D 節點只縮放不再從地下升起，落地時四團塵往兩側吹開、帶頭者出落地聲（騎兵兩聲） | 阻塞: 無；首版塵只在腳下一團、藍地格上看不到，改成四團往兩側吹開後才明顯；騎兵連馬一起從上方落下，若覺得不自然可改成騎兵從側邊衝入（待使用者看）",
       "brief": {
         "style": "classic",
         "label": "",
@@ -10242,7 +10242,8 @@
         "handoff_diff_status": "",
         "trace_artifacts": [],
         "metrics_summary": []
-      }
+      },
+      "completed_at": "2026-11-19"
     }
   ]
 }
