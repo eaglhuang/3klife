@@ -14,10 +14,14 @@ parser.add_argument("--vertical-anchor", "--nose", dest="vertical_anchor", nargs
 parser.add_argument("--extent", nargs=4, type=float, metavar=("LEFT","TOP","RIGHT","BOTTOM"))
 parser.add_argument("--shoulders", nargs=4, type=float, metavar=("LX","LY","RX","RY"))
 parser.add_argument("--detect-only", action="store_true")
+parser.add_argument("--face-height-target", type=float, default=0.44,
+                    help="Face height as a fraction of the 256px crop (approved range: 0.38–0.50)")
 parser.add_argument("--yunet-model", type=Path,
                     default=Path(__file__).resolve().parent / "models" / "face_detection_yunet_2023mar.onnx",
                     help="YuNet ONNX model used for automatic face detection")
 args = parser.parse_args()
+if not 0.38 <= args.face_height_target <= 0.50:
+    parser.error("--face-height-target must be between 0.38 and 0.50")
 # Manual cheek and hairline/chin marks on 125px da_qiao small_avatar_0001.
 reference_side = 125
 reference_box = (55, 39, 97, 94)
@@ -75,7 +79,7 @@ rh = reference_box[3] - reference_box[1]
 # Match face height to the approved reference. Area matching makes square Haar
 # detections produce visibly undersized faces, so horizontal scale is verified
 # separately against the calibrated width window below.
-side = reference_side * (bottom-top) / rh
+side = (bottom-top) / args.face_height_target
 if args.extent:
     ex1, ey1, ex2, ey2 = args.extent
     side = max(side, 2*max(abs(ex1-face_mid_x), abs(ex2-face_mid_x))/.94,
@@ -143,7 +147,8 @@ height = (bottom-top)/side
 width=(right-left)/side
 axis_difference = abs(cx-face_axis)
 report = dict(status="needs_visual_review", faceMethod="yunet" if automatic else "supplied",
-              faceConfidence=face_confidence, referenceBoxAt125=reference_box,
+              faceConfidence=face_confidence, faceHeightTargetPercent=round(args.face_height_target*100, 1),
+              referenceBoxAt125=reference_box,
               sourceImageSize=source_size, sourceFace=args.face, sourceExtent=args.extent,
               sourceCoveragePercent=round(source_coverage, 2),
               cropExtendsBeyondSource=source_coverage < 99.99,
@@ -158,7 +163,9 @@ report = dict(status="needs_visual_review", faceMethod="yunet" if automatic else
               passesFaceCenter=axis_difference<=1,
               passesHeadwearExtent=extent_inside,
               passesShoulderAnchors=shoulders_inside,
-              passesReferenceScale=abs(height-.44)<=.06 and abs(width-.336)<=.06 and axis_difference<=1,
+              passesReferenceScale=(0.38-1e-9 <= height <= 0.50+1e-9 and
+                                    0.276-1e-9 <= width <= 0.396+1e-9 and
+                                    axis_difference<=1),
               faceCenterTolerancePixels=1, faceCenterTolerancePercent=round(100/256,3))
 args.output.with_suffix(".json").write_text(json.dumps(report,indent=2),encoding="utf-8")
 print(report)
