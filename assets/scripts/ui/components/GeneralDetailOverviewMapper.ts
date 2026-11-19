@@ -172,6 +172,8 @@ const ROLE_DISPLAY: Record<string, string> = {
     Combat: '先鋒',
     Support: '支援',
     Hybrid: '全能',
+    // CanonicalRole 的 Mentor（教官型武將）；沒對到時會直接漏出英文
+    Mentor: '教官',
 };
 
 const STATUS_DISPLAY: Record<string, string> = {

@@ -49,5 +49,10 @@ export function createCareerTagSuite(): TestSuite {
         assert.equals('蜀．先鋒', buildGeneralDetailOverview(general({ age: 2, careerClass: 'Warrior' })).header.meta);
     });
 
+    suite.test('教官型武將（role=Mentor）副標顯示「教官」，不漏英文', () => {
+        const meta = buildGeneralDetailOverview(general({ age: 32, role: 'Mentor', careerClass: 'Warrior' })).header.meta;
+        assert.equals('蜀．教官．武官', meta);
+    });
+
     return suite;
 }
