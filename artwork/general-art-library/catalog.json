@@ -6447,6 +6447,31 @@
             "note": "只由核定站姿等比例裁切；頭頂至下巴約佔畫面 79%，臉部置中，底緣停在肩線且無胸甲正面。候選待使用者審閱。"
           }
         ]
+      },
+      "smallAvatar":       {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/yuan_shang__袁尚__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "e86a98fb692c3042cfe277ef411763be3ac87ffd3dbad9c30f8e53054a252979",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/yuan_shang__袁尚__avatar_0002.png",
+            "sourceSha256": "6b7d6c27f990caf8c5ccb491a6b107f07b94e998109ddbf8f5550fa9be900b04",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "x": 40.33,
+              "y": 12.8,
+              "width": 173.33,
+              "height": 173.33
+            },
+            "qc": "頭高比例75.0%；臉部中心x=50.0%；髮飾完整，雙肩可見；125px檢視與250px並排基準比較通過；等待使用者確認。",
+            "createdAt": "2026-11-19"
+          }
+        ],
+        "activeVersion": "0001"
       }
     },
     {
