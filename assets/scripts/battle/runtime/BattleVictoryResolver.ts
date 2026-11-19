@@ -4,6 +4,36 @@ import { services } from '../../core/managers/ServiceLoader';
 import type { BattleState } from '../models/BattleState';
 import type { BattleResult } from './BattleRuntimeContract';
 
+/**
+ * 戰鬥怎麼結束的（PROG-2-9414）：結算窗依此挑文案。
+ * general＝敗方主將倒下／fortress＝敗方城寨被破／time-up＝回合用盡／camp＝夜襲、埋伏佔領營帳。
+ */
+export type BattleEndCause = 'general' | 'fortress' | 'time-up' | 'camp';
+
+export interface BattleEndedPayload {
+  result: BattleResult;
+  cause?: BattleEndCause;
+  retreated?: boolean;
+  timeUp?: boolean;
+  salvage?: BattleState['stageSalvage'];
+}
+
+/**
+ * 對外宣告戰鬥結束：同一局只發一次 BattleEnded（PROG-2-0207），帶關卡回收快照（PROG-2-1462）。
+ * 所有「分出勝負」的路徑都要經過這裡，否則結算窗不會出現、玩家卡在戰場（PROG-2-9414：營帳佔領漏發）。
+ */
+export function announceBattleEnd(
+  state: BattleState,
+  result: BattleResult,
+  extra: Omit<BattleEndedPayload, 'result' | 'salvage'> = {},
+): boolean {
+  if (result === 'ongoing' || state.battleEndAnnounced) return false;
+  state.battleEndAnnounced = true;
+  const payload: BattleEndedPayload = { result, salvage: { ...state.stageSalvage }, ...extra };
+  services().event.emit(EVENT_NAMES.BattleEnded, payload);
+  return true;
+}
+
 export function resolveBattleVictory(state: BattleState): BattleResult {
   const svc = services();
   const playerGeneral = state.playerGeneral;
@@ -23,15 +53,15 @@ export function resolveBattleVictory(state: BattleState): BattleResult {
   else if (playerLost) result = 'enemy-win';
   else if (enemyLost) result = 'player-win';
 
-  // 勝負一經分出就鎖定：同一局重複判定只發一次 BattleEnded（PROG-2-0207）
-  if (result !== 'ongoing' && !state.battleEndAnnounced) {
-    state.battleEndAnnounced = true;
-    // 關卡級回收（PROG-2-1462）：戰後摘要依此結算，帶快照避免後續改動
+  if (result !== 'ongoing') {
     // 只因回合用盡而落敗時，主將與城寨都還在：結算文案要說撤退，不說「敵方突破防線」
     const retreated = timeUp && result === 'enemy-win';
-    svc.event.emit(EVENT_NAMES.BattleEnded, {
-      result,
-      salvage: { ...state.stageSalvage },
+    const cause: BattleEndCause = timeUp
+      ? 'time-up'
+      : (result === 'enemy-win' ? (playerGeneral?.isDead() ? 'general' : 'fortress')
+        : result === 'player-win' ? (enemyGeneral?.isDead() ? 'general' : 'fortress') : 'general');
+    announceBattleEnd(state, result, {
+      cause,
       ...(retreated ? { retreated: true } : {}),
       ...(timeUp ? { timeUp: true } : {}),
     });

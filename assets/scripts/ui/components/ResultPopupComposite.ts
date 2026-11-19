@@ -31,6 +31,17 @@ export interface BattleResult {
 /** 主動撤退的結算說明（#2107-2） */
 export const RETREAT_DESCRIPTION = '主動撤退，本場判定戰敗。';
 
+/**
+ * 依結束原因改寫說明第一行（PROG-2-9414）：主將倒下、回合用盡、奪營都不是「敵方突破防線」。
+ * 沒對應的原因就用勝敗預設文案。cause 對應 BattleVictoryResolver 的 BattleEndCause。
+ */
+export const RESULT_CAUSE_DESCRIPTION: Readonly<Record<string, Partial<Record<BattleResult['resultType'], string>>>> = {
+    general: { defeat: '主將倒下，我軍潰敗，再接再厲！' },
+    fortress: { victory: '我軍攻破敵方城寨，取得大勝！' },
+    'time-up': { defeat: '時限已到仍未破敵，我軍鳴金撤兵。' },
+    camp: { victory: '我軍奪下敵營，敵軍不戰自潰！' },
+};
+
 @ccclass('ResultPopupComposite')
 export class ResultPopupComposite extends CompositePanel {
     private _binder: UITemplateBinder | null = null;
@@ -137,7 +148,7 @@ ${result.description}
 
     /** BattleScene 使用的結果 key 相容入口。 */
     /** generalId：我方主將（kebab id），結算窗上方顯示其頭像（PROG-2-1128）；沒有則留剪影 */
-    public async showResult(result: string, details?: string, generalId?: string, retreated = false): Promise<void> {
+    public async showResult(result: string, details?: string, generalId?: string, retreated = false, cause?: string): Promise<void> {
         const typeMap: Record<string, BattleResult['resultType']> = {
             'player-win': 'victory', 'victory': 'victory',
             'enemy-win': 'defeat',   'defeat': 'defeat',
@@ -156,7 +167,9 @@ ${result.description}
         const resultType = typeMap[result] ?? 'stalemate';
         // 主動撤退也判戰敗，但標題與文案要說撤退（#2107-2）
         const retreat = retreated && resultType === 'defeat';
-        const desc = retreat ? RETREAT_DESCRIPTION : descMap[resultType];
+        // 回合用盡也帶 retreated（標題仍是「撤退」），但說明要講時限到，不是玩家主動撤退
+        const causeDesc = cause ? RESULT_CAUSE_DESCRIPTION[cause]?.[resultType] : undefined;
+        const desc = causeDesc ?? (retreat ? RETREAT_DESCRIPTION : descMap[resultType]);
         await this.show({
             resultType,
             title: retreat ? '撤退' : titleMap[resultType],

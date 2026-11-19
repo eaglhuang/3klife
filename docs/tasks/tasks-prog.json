@@ -10439,7 +10439,7 @@
       "title": "六關試玩驗收（主線 2 關＋主題 4 關，每關結算截圖）",
       "owner": "claude-code-fable-5-2",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-20",
@@ -10456,8 +10456,10 @@
       ],
       "depends": [],
       "acceptance": [],
-      "deliverables": [],
-      "notes": "2026-11-20 | 狀態: in-progress | 驗證: pending | 變更: 待做 | 阻塞: 無",
+      "deliverables": [
+        "artifacts/playtest-checklist/prog-2-9414/（本機結算截圖）"
+      ],
+      "notes": "2026-11-20 | 狀態: done | 驗證: 六關全打到結算＋單元測試 8459 過／tsc 0／compute-gate quick 3/3／battle-skill-smoke 74 過 | 變更: 營帳佔領補發 BattleEnded（修夜劫營、博望坡卡死）；BattleEnded 帶 cause，結算說明依主將倒下／攻破城寨／時限已到／奪下敵營分別顯示；時限到達改在敵方回合結束當下判定，不再多出一個打不了的回合；敵方回合中分出勝負時還原 1.5 倍速 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
