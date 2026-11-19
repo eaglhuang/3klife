@@ -355,12 +355,12 @@ export class NurtureService {
             sessionRoundsDone: session.resonanceRoundsDone,
         });
         if (!res) return null;
-        // 培育期間名冊本體五維不變，屬性跳升改寫入 session.prowess，畢業時再統一寫回實力層
+        // 培育期間名冊本體（stats / genes / troopAptitude）不變；只把首次鎖定結果表存於名冊防重修刷黃金，
+        // 屬性加成寫進 session.prowess，因子與適性突破存進 session.resonancePending，畢業時才一併寫回名冊。
         const rosterChild: UnveilingGeneral = {
             ...child,
-            genes: res.general.genes,
-            troopAptitude: res.general.troopAptitude,
             bloodlineResonanceRoundsDone: res.general.bloodlineResonanceRoundsDone,
+            bloodlineResonanceOutcomes: res.general.bloodlineResonanceOutcomes,
         };
         this._roster.replaceAll(roster.map((g) => (g.id === childId ? rosterChild : g)));
         const nextProwess = { ...session.prowess };
@@ -370,8 +370,16 @@ export class NurtureService {
                 nextProwess[key] += delta;
             }
         }
+        const nextPending = res.triggered
+            ? [...(session.resonancePending ?? []), res.lockedOutcome]
+            : (session.resonancePending ?? []);
         const nextRounds = Array.from(new Set([...(session.resonanceRoundsDone ?? []), res.round]));
-        this._replace({ ...session, prowess: nextProwess, resonanceRoundsDone: nextRounds });
+        this._replace({
+            ...session,
+            prowess: nextProwess,
+            resonanceRoundsDone: nextRounds,
+            ...(nextPending.length > 0 ? { resonancePending: nextPending } : {}),
+        });
         return res;
     }
 

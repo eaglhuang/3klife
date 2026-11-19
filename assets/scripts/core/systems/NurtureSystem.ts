@@ -28,6 +28,7 @@ import { rollNurtureRoundEvents } from './NurtureEvents';
 import { FactorDictionary, resolveFactorColor } from './FactorInheritance';
 import { burstRateAtStar, MENTOR_STAR_TABLE, mentorStarPerks } from './MentorBreakthrough';
 import { inspireEventsFromSupport, InspireEvent } from './MentorInspiration';
+import { applyResonanceOutcomeToGeneral, type BloodlineResonanceLockedOutcome } from './BloodlineResonance';
 import { surnameOf } from './VirtualAncestorGenerator';
 import { findTriggeredSynergy, synergyTpBonus } from './MentorSynergy';
 import { trainingGainBreakdown } from './TrainingGainFormula';
@@ -163,6 +164,8 @@ export interface NurtureSession {
     ritesDone?: Array<'enrollment' | 'capping'>;
     /** 這次培育已檢定過的中段血脈共鳴回合（PROG-2-9170） */
     resonanceRoundsDone?: number[];
+    /** 這次培育中已觸發但尚未套用到名冊的共鳴結果（畢業時才正式寫入，放棄則不留在本體，PROG-2-9170） */
+    resonancePending?: BloodlineResonanceLockedOutcome[];
     vigor: number;
     /** 鏡像快照：進入培育時的資質層，之後不再改變 */
     talent: Record<TrainingKind, number>;
@@ -695,7 +698,12 @@ export function graduate(
     });
     if (awakening.title) general.awakeningTitle = awakening.title;
 
-    return { general, rating, ratingScore, tags };
+    let finalGeneral: UnveilingGeneral = general;
+    for (const outcome of session.resonancePending ?? []) {
+        finalGeneral = applyResonanceOutcomeToGeneral(finalGeneral, outcome) as UnveilingGeneral;
+    }
+
+    return { general: finalGeneral, rating, ratingScore, tags };
 }
 
 // ── 退役教官卡 → 培育教官 ───────────────────────────────────────────────────

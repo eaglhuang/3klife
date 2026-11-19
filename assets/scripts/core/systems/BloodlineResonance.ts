@@ -350,6 +350,7 @@ export interface BloodlineResonanceFactorOutcome {
     displayName: string;
     level: number;
     upgraded: boolean;
+    geneTemplate?: GeneralGeneConfig;
 }
 
 export interface BloodlineResonanceBreakthrough {
@@ -357,6 +358,20 @@ export interface BloodlineResonanceBreakthrough {
     label: string;
     from: string;
     to: string;
+}
+
+/** 鎖在名冊上的單回合首次檢定結果：防止放棄培育後重練刷黃金（總 PM 自決 101） */
+export interface BloodlineResonanceLockedOutcome {
+    round: number;
+    triggered: boolean;
+    tier?: BloodlineResonanceTier;
+    triggerRate: number;
+    goldRate: number;
+    compatibilityK: number;
+    origin?: { relation: AncestorRelation; ancestorName: string };
+    statGains?: Partial<Record<ResonanceStatKey, number>>;
+    factorOutcome?: BloodlineResonanceFactorOutcome;
+    aptitudeBreakthrough?: BloodlineResonanceBreakthrough;
 }
 
 export interface BloodlineResonanceResult {
@@ -371,6 +386,7 @@ export interface BloodlineResonanceResult {
     statGains?: Partial<Record<ResonanceStatKey, number>>;
     factorOutcome?: BloodlineResonanceFactorOutcome;
     aptitudeBreakthrough?: BloodlineResonanceBreakthrough;
+    lockedOutcome: BloodlineResonanceLockedOutcome;
 }
 
 export interface BloodlineResonanceContext {
@@ -408,14 +424,73 @@ export function resonanceNoticeLine(result: BloodlineResonanceResult): string {
     return `${prefix}${ancestorText}${parts.join('、')}`;
 }
 
-/** 執行單一節點之血脈共鳴檢定；非觸發回合或已檢定過回傳 null */
+/** 將鎖定的共鳴因子與兵種適性突破套用到武將本體（於畢業結算 graduate() 時呼叫） */
+export function applyResonanceOutcomeToGeneral(
+    general: GeneralConfig,
+    outcome: BloodlineResonanceLockedOutcome,
+): GeneralConfig {
+    if (!outcome.triggered) return general;
+    let next: GeneralConfig = general;
+    if (outcome.factorOutcome) {
+        const fo = outcome.factorOutcome;
+        const genes = [...(next.genes ?? [])];
+        const existingIdx = genes.findIndex((g) => g.id === fo.factorId);
+        if (existingIdx >= 0) {
+            genes[existingIdx] = {
+                ...genes[existingIdx],
+                level: Math.min(_rules.factorMaxLevel, Math.max(genes[existingIdx].level ?? 1, fo.level)),
+                isLocked: false,
+            };
+        } else {
+            genes.push(
+                fo.geneTemplate
+                    ? { ...fo.geneTemplate, level: fo.level, isLocked: false }
+                    : { id: fo.factorId, displayName: fo.displayName, level: fo.level, isLocked: false },
+            );
+        }
+        next = { ...next, genes };
+    }
+    if (outcome.aptitudeBreakthrough) {
+        next = {
+            ...next,
+            troopAptitude: {
+                ...(next.troopAptitude ?? {}),
+                [outcome.aptitudeBreakthrough.troop]: outcome.aptitudeBreakthrough.to,
+            },
+        };
+    }
+    return next;
+}
+
+/** 執行單一節點之血脈共鳴檢定；已鎖定於名冊的回合直接重播結果（不重骰），非節點或本 session 已檢定過回傳 null */
 export function performBloodlineResonance(
     child: GeneralConfig,
     round: number,
     context: BloodlineResonanceContext,
 ): BloodlineResonanceResult | null {
-    const due = dueResonanceRound(round, context.sessionRoundsDone, child.bloodlineResonanceRoundsDone);
+    const due = dueResonanceRound(round, context.sessionRoundsDone, undefined);
     if (due === null) return null;
+
+    // 重修時若名冊已鎖定該回合第一次檢定結果，直接重播，防止放棄重練刷黃金
+    const locked = child.bloodlineResonanceOutcomes?.[due];
+    if (locked) {
+        let replayedGeneral: GeneralConfig = child;
+        if (locked.triggered) {
+            if (locked.statGains) {
+                const keys = Object.keys(locked.statGains) as ResonanceStatKey[];
+                for (const key of keys) {
+                    const delta = locked.statGains[key] ?? 0;
+                    if (delta > 0) replayedGeneral = applyStatGains(replayedGeneral, [key], delta).general;
+                }
+            }
+            replayedGeneral = applyResonanceOutcomeToGeneral(replayedGeneral, locked);
+        }
+        return {
+            ...locked,
+            general: replayedGeneral,
+            lockedOutcome: locked,
+        };
+    }
 
     const ancestors = riteAncestorsOf(child, context.lookup);
     const tagMatches = countResonanceTagMatches(child, ancestors, context.dictionary);
@@ -423,32 +498,40 @@ export function performBloodlineResonance(
     const { triggerRate, goldRate } = computeBloodlineResonanceRates(context.compatibilityK, tagMatches, eliteCount);
 
     const nextRoundsDone = Array.from(new Set([...(child.bloodlineResonanceRoundsDone ?? []), due]));
-    let nextGeneral: GeneralConfig = {
-        ...child,
-        bloodlineResonanceRoundsDone: nextRoundsDone,
-    };
 
     if (context.random() >= triggerRate) {
-        return {
+        const lockedMiss: BloodlineResonanceLockedOutcome = {
             round: due,
             triggered: false,
             triggerRate,
             goldRate,
             compatibilityK: context.compatibilityK,
+        };
+        const nextGeneral: GeneralConfig = {
+            ...child,
+            bloodlineResonanceRoundsDone: nextRoundsDone,
+            bloodlineResonanceOutcomes: {
+                ...(child.bloodlineResonanceOutcomes ?? {}),
+                [due]: lockedMiss,
+            },
+        };
+        return {
+            ...lockedMiss,
             general: nextGeneral,
+            lockedOutcome: lockedMiss,
         };
     }
 
     const isGold = context.random() < goldRate;
     const tier: BloodlineResonanceTier = isGold ? 'gold' : 'normal';
     const leadAncestor = ancestors[0];
-    const statSource = leadAncestor?.general ?? nextGeneral;
+    const statSource = leadAncestor?.general ?? child;
     const rankedStats = rankedStatKeysOf(statSource);
     const statKeys = isGold ? rankedStats.slice(0, 2) : rankedStats.slice(0, 1);
     const bonus = computeResonanceStatBonus(context.compatibilityK, isGold);
 
-    const appliedStats = applyStatGains(nextGeneral, statKeys, bonus);
-    nextGeneral = appliedStats.general;
+    const appliedStats = applyStatGains(child, statKeys, bonus);
+    let nextGeneral = appliedStats.general;
 
     let origin: { relation: AncestorRelation; ancestorName: string } | undefined = leadAncestor
         ? { relation: leadAncestor.relation, ancestorName: leadAncestor.general.name }
@@ -457,52 +540,43 @@ export function performBloodlineResonance(
     let factorOutcome: BloodlineResonanceFactorOutcome | undefined;
     const pickedFactor = pickResonanceFactor(nextGeneral, ancestors, context.dictionary);
     if (pickedFactor) {
-        const genes = [...(nextGeneral.genes ?? [])];
-        if (pickedFactor.upgraded) {
-            nextGeneral = {
-                ...nextGeneral,
-                genes: genes.map((g) => (g.id === pickedFactor.gene.id ? pickedFactor.gene : g)),
-            };
-        } else {
-            nextGeneral = {
-                ...nextGeneral,
-                genes: [...genes, pickedFactor.gene],
-            };
-        }
         factorOutcome = {
             factorId: pickedFactor.gene.id ?? '',
             displayName: pickedFactor.gene.displayName ?? pickedFactor.gene.id ?? '',
             level: pickedFactor.gene.level ?? 1,
             upgraded: pickedFactor.upgraded,
+            geneTemplate: { ...pickedFactor.gene },
         };
         if (pickedFactor.origin) origin = pickedFactor.origin;
     }
 
-    let aptitudeBreakthrough: BloodlineResonanceBreakthrough | undefined;
-    if (isGold) {
-        aptitudeBreakthrough = pickAptitudeBreakthrough(nextGeneral, ancestors);
-        if (aptitudeBreakthrough) {
-            nextGeneral = {
-                ...nextGeneral,
-                troopAptitude: {
-                    ...(nextGeneral.troopAptitude ?? {}),
-                    [aptitudeBreakthrough.troop]: aptitudeBreakthrough.to,
-                },
-            };
-        }
-    }
-
-    return {
+    const aptitudeBreakthrough = isGold ? pickAptitudeBreakthrough(nextGeneral, ancestors) : undefined;
+    const lockedHit: BloodlineResonanceLockedOutcome = {
         round: due,
         triggered: true,
         tier,
         triggerRate,
         goldRate,
         compatibilityK: context.compatibilityK,
-        general: nextGeneral,
         origin,
         statGains: appliedStats.statGains,
         factorOutcome,
         aptitudeBreakthrough,
+    };
+
+    nextGeneral = applyResonanceOutcomeToGeneral(nextGeneral, lockedHit);
+    nextGeneral = {
+        ...nextGeneral,
+        bloodlineResonanceRoundsDone: nextRoundsDone,
+        bloodlineResonanceOutcomes: {
+            ...(child.bloodlineResonanceOutcomes ?? {}),
+            [due]: lockedHit,
+        },
+    };
+
+    return {
+        ...lockedHit,
+        general: nextGeneral,
+        lockedOutcome: lockedHit,
     };
 }

@@ -146,65 +146,96 @@ export function createBloodlineResonanceSuite(): TestSuite {
         assert.equals('S', goldAtS!.general.troopAptitude!.cavalry);
     });
 
-    suite.test('每位子嗣最多觸發 2 次（R12/R24）且讀檔 / 重修不重複觸發', () => {
+    suite.test('放棄培育本體不變、重修重播首次鎖定結果（防刷）、讀檔一致、畢業才寫回名冊', () => {
         assert.equals(null, dueResonanceRound(11, undefined, undefined));
         assert.equals(12, dueResonanceRound(12, undefined, undefined));
         assert.equals(null, dueResonanceRound(12, [12], undefined));
-        assert.equals(null, dueResonanceRound(12, undefined, [12]));
         assert.equals(null, dueResonanceRound(24, [12, 24], undefined));
 
-        const father = makeGeneral('f_persist', { name: '張飛', str: 96, stats: { str: 96 } });
-        const child = makeUnveiledChild('c_persist', { fatherId: 'f_persist' });
+        const father = makeGeneral('f_persist', {
+            name: '張飛',
+            str: 96,
+            lea: 92,
+            stats: { str: 96, lea: 92 },
+            troopAptitude: { cavalry: 'S', infantry: 'A' },
+            genes: [{ id: 'gene_zhang_str', displayName: '萬人敵', type: '戰鬥', level: 2, isLocked: false }],
+        });
+        const child = makeUnveiledChild('c_persist', {
+            fatherId: 'f_persist',
+            troopAptitude: { cavalry: 'B', infantry: 'C' },
+            genes: [],
+        });
         const roster = new InMemoryRosterStore([father, child]);
+
+        // 使用可切換的 RNG：0.08 高於開蒙禮形成率(0.0591)避免開蒙禮干擾，同時低於共鳴黃金率(0.50)必出黃金共鳴
+        let rngValue = 0.08;
         const service = new NurtureService(roster, {
-            random: () => 0.01,
+            random: () => rngValue,
             currentSeason: () => 1,
             currentMode: () => GameTimeMode.Nurture,
             requireNurtureMode: false,
-            compatibilityBonusForChild: () => 10,
+            compatibilityBonusForChild: () => 15,
         });
         service.start('c_persist', []);
 
-        let r12Count = 0;
+        let r12FirstHit: string | undefined;
         for (let i = 0; i < 12; i++) {
             const res = service.train('c_persist', i % 4 === 3 ? 'rest' : 'str');
-            if (res.bloodlineResonance?.triggered) r12Count++;
+            if (res.bloodlineResonance?.triggered) r12FirstHit = res.bloodlineResonance.tier;
         }
-        assert.equals(1, r12Count, 'R12 應精準觸發 1 次血脈共鳴');
+        assert.equals('gold', r12FirstHit, '第 1 場 R12 應觸發黃金共鳴');
+
+        // 驗證培育期間名冊本體共鳴因子與適性尚未被寫入（開蒙禮因子不在共鳴檢查範圍，精準檢查 gene_zhang_str）
+        const duringNurture = roster.getAll().find((g) => g.id === 'c_persist')!;
+        assert.equals(false, (duringNurture.genes ?? []).some((g) => g.id === 'gene_zhang_str'), '培育期間名冊不應提前寫入共鳴因子 gene_zhang_str');
+        assert.equals('B', duringNurture.troopAptitude?.cavalry, '培育期間名冊 troopAptitude.cavalry 不應提前寫入');
+        assert.equals('C', duringNurture.troopAptitude?.infantry, '培育期間名冊 troopAptitude.infantry 不應提前寫入');
 
         // 模擬存讀檔還原 NurtureService 與名冊
         const savedState = service.getState();
         const savedRoster = roster.getAll();
         const restoredRoster = new InMemoryRosterStore(savedRoster);
         const restoredService = new NurtureService(restoredRoster, {
-            random: () => 0.01,
+            random: () => rngValue,
             currentSeason: () => 1,
             currentMode: () => GameTimeMode.Nurture,
             requireNurtureMode: false,
-            compatibilityBonusForChild: () => 10,
+            compatibilityBonusForChild: () => 15,
         });
         restoredService.restoreState(savedState);
 
-        // 驗證再次直接呼叫 performDueBloodlineResonance 於 R12 不會重複觸發
+        // 讀檔後於同回合不重複觸發
         assert.equals(null, restoredService.performDueBloodlineResonance('c_persist'));
 
-        // 繼續推進至 R24，僅 R24 再觸發第 2 次
-        let r24Count = 0;
-        for (let i = 0; i < 12; i++) {
-            const res = restoredService.train('c_persist', i % 4 === 3 ? 'rest' : 'str');
-            if (res.bloodlineResonance?.triggered) r24Count++;
-        }
-        assert.equals(1, r24Count, '讀檔後推進至 R24 應僅觸發第 2 次');
-
-        // 放棄重修也不能再刷 R12 / R24
+        // 放棄培育：名冊本體不殘留共鳴因子、troopAptitude、stats 必須維持原狀
         restoredService.abandon('c_persist');
+        const afterAbandon = restoredRoster.getAll().find((g) => g.id === 'c_persist')!;
+        assert.equals(false, (afterAbandon.genes ?? []).some((g) => g.id === 'gene_zhang_str'), '放棄培育後名冊不應殘留共鳴因子 gene_zhang_str');
+        assert.equals('B', afterAbandon.troopAptitude?.cavalry, '放棄培育後名冊 troopAptitude.cavalry 應維持不變');
+        assert.equals('C', afterAbandon.troopAptitude?.infantry, '放棄培育後名冊 troopAptitude.infantry 應維持不變');
+        assert.equals(72, afterAbandon.stats?.str, '放棄培育後名冊 stats.str 應維持不變');
+
+        // 切換 rngValue = 0.99（正常必 miss）後重新培育，測試 R12 是否重播第一次鎖定的黃金結果（防刷）
+        rngValue = 0.99;
         restoredService.start('c_persist', []);
-        let replayCount = 0;
-        for (let i = 0; i < 24; i++) {
+        let replayR12Tier: string | undefined;
+        let r24Triggered = false;
+        for (let i = 0; i < 36; i++) {
             const res = restoredService.train('c_persist', i % 4 === 3 ? 'rest' : 'str');
-            if (res.bloodlineResonance?.triggered) replayCount++;
+            if (res.session.round === 12 && res.bloodlineResonance?.triggered) {
+                replayR12Tier = res.bloodlineResonance.tier;
+            }
+            if (res.session.round === 24 && res.bloodlineResonance?.triggered) {
+                r24Triggered = true;
+            }
         }
-        assert.equals(0, replayCount, '放棄重修後同一子嗣不應重複觸發 R12 / R24 共鳴');
+        assert.equals('gold', replayR12Tier, '重修到達 R12 應重播首次鎖定的黃金共鳴結果，不重新擲骰');
+        assert.equals(false, r24Triggered, '首次未檢定過的 R24 依新亂數 0.99 應不觸發');
+
+        // 畢業後，R12 鎖定的共鳴因子與兵種適性突破才正式寫回名冊！（father cavalry=S vs child B gap=2，先突破 cavalry B->A）
+        const grad = restoredService.graduate('c_persist');
+        assert.isTrue((grad.general.genes ?? []).some((g) => g.id === 'gene_zhang_str'), '畢業後應將共鳴因子寫回名冊');
+        assert.equals('A', grad.general.troopAptitude?.cavalry, '畢業後應將黃金共鳴適性突破寫回名冊');
     });
 
     suite.test('NurtureFlowController 沿用既有 showToast 與 _notice 呈現血脈共鳴', async () => {
@@ -248,6 +279,13 @@ export function createBloodlineResonanceSuite(): TestSuite {
             goldRate: 0.1,
             compatibilityK: 0,
             general: child,
+            lockedOutcome: {
+                round: 12,
+                triggered: false,
+                triggerRate: 0.5,
+                goldRate: 0.1,
+                compatibilityK: 0,
+            },
         }));
     });
 
