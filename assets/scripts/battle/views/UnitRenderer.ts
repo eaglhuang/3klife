@@ -279,6 +279,8 @@ export class UnitRenderer extends Component {
     // FloatTextSystem 共用 3D→UI 座標轉換逻輯，需在 ensureRoots() 後設定
     if (this.uiRoot && this.worldCamera && this.canvasNode) {
       services().floatText.setup(this.uiRoot, this.worldCamera, this.canvasNode);
+      // 跳字避開棋盤 buff 格的圖示與倍數（PROG-2-9415）
+      services().floatText.setAvoidProvider(() => this.tileBuffMarkers.avoidRectsForFloatText());
     }
     // fire-and-forget: 特效 Pool 初始化是非同步（需載入資源），不阻塞主流程
     void this.setupAllEffectPools();
@@ -1354,7 +1356,7 @@ export class UnitRenderer extends Component {
     this.spineUnits.abortDuel();
   }
 
-  onDestroy(): void { this.spineUnits.clear(); this.generalStandees.clear(); this.moveDust.destroy(); }
+  onDestroy(): void { this.spineUnits.clear(); this.generalStandees.clear(); this.moveDust.destroy(); services().floatText?.setAvoidProvider(null); }
 
   private createGeneralView(faction: Faction): GeneralView {
     this.ensureRoots();
