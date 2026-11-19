@@ -6323,6 +6323,60 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/yuan_tan__袁譚__small_avatar_0001.png",
+            "status": "integrated",
+            "sha256": "c87e9086b01ce989f78b18647aeef7fd8e9c535890cdf611f9e5b6ae74b485ac",
+            "canvas": "256x256 RGBA",
+            "method": "crop-only; uniform resize; no redraw",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/yuan_tan__袁譚__avatar_0002.png",
+            "sourceSha256": "83070327fe66d0e6b1f29b7e108189053c189f633a38a14b607f617bac5f5bea",
+            "cropBox": {
+              "x": 34.45,
+              "y": 8.45,
+              "width": 185.11,
+              "height": 185.11
+            },
+            "faceBox": [
+              96,
+              67,
+              62,
+              76
+            ],
+            "headBox": [
+              78,
+              15,
+              100,
+              132
+            ],
+            "headwearExtent": [
+              76,
+              14,
+              108,
+              135
+            ],
+            "shoulderAnchors": [
+              45,
+              184,
+              170,
+              188
+            ],
+            "headHeightPercent": 71.3,
+            "faceHeightPercent": 41.1,
+            "faceWidthPercent": 33.5,
+            "faceCenterXPercent": 50,
+            "centerAxisDifferencePx": 0.0,
+            "qc": "與七張核准基準並排目視檢查通過；臉框中心線與畫布中線重合，頭部高度71.3%、臉高41.1%、臉寬33.5%，髮髻完整且雙肩可見；僅裁切與等比縮放。",
+            "createdAt": "2026-11-20"
+          }
+        ]
       }
     },
     {
