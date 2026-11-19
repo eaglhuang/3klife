@@ -11,6 +11,16 @@
   ],
   "avatarPlaceholder": "sprites/ui_avatars/unknown_avatar_{gender}",
   "croppedAvatarDir": "sprites/ui_avatars/cropped",
+  "portraitFallbacks": {
+    "female": {
+      "default": "da-qiao",
+      "ageBands": []
+    },
+    "male": {
+      "default": "zhang-fei",
+      "ageBands": []
+    }
+  },
   "aliases": {
     "huang-yueying": "huang-yue-ying",
     "cai-wenji": "cai-yan",

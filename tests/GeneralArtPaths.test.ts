@@ -90,7 +90,7 @@ export function createGeneralArtPathsSuite(): TestSuite {
             motherId: 'da-qiao',
         });
         assert.equals('sprites/generals/da_qiao_portrait', daughter.primary);
-        assert.equals('sprites/generals/peng_yang_portrait', daughter.fallbacks[0]);
+        assert.equals(0, daughter.fallbacks.length, '女子嗣絕不應退回父親男性立繪');
 
         const son = resolveGeneralPortraitResources({
             id: 'child_peng_yang_da_qiao_2',
@@ -99,7 +99,7 @@ export function createGeneralArtPathsSuite(): TestSuite {
             motherId: 'da-qiao',
         });
         assert.equals('sprites/generals/peng_yang_portrait', son.primary);
-        assert.equals('sprites/generals/da_qiao_portrait', son.fallbacks[0]);
+        assert.equals('sprites/generals/zhang_fei_portrait', son.fallbacks[0], '男子嗣應退回男性預設立繪而非母親女性立繪');
 
         const grandchild = resolveGeneralPortraitResources({
             id: 'child_child_1_child_2_1',

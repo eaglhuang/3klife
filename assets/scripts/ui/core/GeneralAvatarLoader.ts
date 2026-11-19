@@ -13,7 +13,8 @@ import {
     configureGeneralArtPaths,
     firstKnownGender,
     generalIdFromKey,
-    portraitCandidates,
+    resolveGeneralPortraitCandidates,
+    type PortraitResourceTarget,
 } from '../../core/systems/GeneralArtPaths';
 
 let _configReady: Promise<void> | null = null;
@@ -68,8 +69,23 @@ export async function loadSharedAncestorIcon(id: string): Promise<SpriteFrame | 
     return firstLoadable([avatarPlaceholderPath(await genderOf(generalIdFromKey(id)))]);
 }
 
-/** 立繪：依標準路徑規則。 */
-export async function loadGeneralPortrait(idOrPortraitKey: string): Promise<SpriteFrame | null> {
+/** 立繪：統一走 GeneralArtPaths.resolveGeneralPortraitResources（依性別／年齡退回，不跨性別）。 */
+export async function loadGeneralPortrait(idOrTarget: string | PortraitResourceTarget): Promise<SpriteFrame | null> {
     await ensureConfig();
-    return firstLoadable(portraitCandidates(idOrPortraitKey));
+    if (typeof idOrTarget !== 'string') {
+        return firstLoadable(resolveGeneralPortraitCandidates(idOrTarget));
+    }
+    const id = generalIdFromKey(idOrTarget);
+    const rosterMatch = services().session.roster.find((g) => g.id === id) as (PortraitResourceTarget & { fatherId?: string; motherId?: string }) | undefined;
+    const bloodlineMatch = BloodlineGraph.getInstance().getPerson(id);
+    const gender = rosterMatch?.gender ?? bloodlineMatch?.gender ?? (await genderOf(id));
+    const target: PortraitResourceTarget = {
+        id: rosterMatch?.id ?? id,
+        gender,
+        age: rosterMatch?.age ?? null,
+        fatherId: rosterMatch?.fatherId ?? null,
+        motherId: rosterMatch?.motherId ?? null,
+        portraitKey: rosterMatch?.portraitKey ?? (idOrTarget.includes('/') ? idOrTarget : null),
+    };
+    return firstLoadable(resolveGeneralPortraitCandidates(target));
 }

@@ -6,11 +6,25 @@
  * 這裡的預設值只在 JSON 還沒載入時墊底，內容與 JSON 相同（測試會比對）。
  */
 
+export interface PortraitAgeBandFallback {
+    maxAge: number;
+    id: string;
+}
+
+export interface PortraitGenderFallback {
+    default: string;
+    ageBands?: readonly PortraitAgeBandFallback[];
+}
+
 export interface GeneralArtPathConfig {
     portrait: readonly string[];
     battle: readonly string[];
     avatar: readonly string[];
     avatarPlaceholder: string;
+    portraitFallbacks?: {
+        female: PortraitGenderFallback;
+        male: PortraitGenderFallback;
+    };
     /** 舊 id → 名冊 id（PROG-2-2246）：同一人舊檔名已刪，支援卡等舊 id 改讀新圖 */
     aliases: Readonly<Record<string, string>>;
 }
@@ -22,6 +36,10 @@ const DEFAULT_CONFIG: GeneralArtPathConfig = {
     battle: ['sprites/generals/{file}_battle'],
     avatar: ['sprites/generals/avatars/{file}_avatar', 'sprites/ui_avatars/cropped/{file}_avatar'],
     avatarPlaceholder: 'sprites/ui_avatars/unknown_avatar_{gender}',
+    portraitFallbacks: {
+        female: { default: 'da-qiao', ageBands: [] },
+        male: { default: 'zhang-fei', ageBands: [] },
+    },
     aliases: { 'huang-yueying': 'huang-yue-ying', 'cai-wenji': 'cai-yan', 'zhen-mi': 'zhen-ji' },
 };
 
@@ -39,6 +57,7 @@ export function configureGeneralArtPaths(raw: Partial<GeneralArtPathConfig> | nu
         battle: Array.isArray(raw.battle) && raw.battle.length ? raw.battle : DEFAULT_CONFIG.battle,
         avatar: Array.isArray(raw.avatar) && raw.avatar.length ? raw.avatar : DEFAULT_CONFIG.avatar,
         avatarPlaceholder: typeof raw.avatarPlaceholder === 'string' ? raw.avatarPlaceholder : DEFAULT_CONFIG.avatarPlaceholder,
+        portraitFallbacks: raw.portraitFallbacks ?? DEFAULT_CONFIG.portraitFallbacks,
         aliases: raw.aliases && typeof raw.aliases === 'object' ? raw.aliases : DEFAULT_CONFIG.aliases,
     };
 }
@@ -116,22 +135,37 @@ export function avatarPlaceholderPath(gender?: string | null): string {
 export interface PortraitResourceTarget {
     id: string;
     gender?: string | null;
+    age?: number | null;
     fatherId?: string | null;
     motherId?: string | null;
     portraitKey?: string | null;
 }
 
+function isFemaleGender(gender?: string | null): boolean {
+    return gender === '女' || gender === 'f' || gender === 'female';
+}
+
+function pickAgeBandFallback(rule: PortraitGenderFallback, age?: number | null): string | undefined {
+    if (typeof age !== 'number' || !Number.isFinite(age) || !rule.ageBands?.length) return undefined;
+    const sorted = [...rule.ageBands].sort((a, b) => a.maxAge - b.maxAge);
+    return sorted.find((band) => age <= band.maxAge)?.id;
+}
+
 /**
- * 解析武將詳情立繪主路徑與備援清單：
- * 動態子嗣（child_*）若無專屬 portraitKey，直接依性別退回同性別親代或預設名將，
- * 避免請求不存在的 child_*_portrait 造成資源錯誤與空白立繪。
+ * 統一立繪解析器（PROG-2-9178）：
+ * 1. 有專屬 portraitKey 或非動態子嗣（非 child_ 開頭）先嘗試專屬圖；
+ * 2. 退回候選嚴格依性別挑選：只試同性別親代（非 child_）、資料檔同性別年齡段圖（若有）與同性別預設立繪，
+ *    絕不跨性別退回異性親代（避免女子嗣誤用男性蓄鬍立繪）。
  */
 export function resolveGeneralPortraitResources(target: PortraitResourceTarget): {
     primary: string;
     fallbacks: string[];
 } {
-    const isFemale = target.gender === '女' || target.gender === 'f' || target.gender === 'female';
-    const defaultId = isFemale ? 'da-qiao' : 'zhang-fei';
+    const isFemale = isFemaleGender(target.gender);
+    const fallbackRules = _config.portraitFallbacks ?? DEFAULT_CONFIG.portraitFallbacks!;
+    const genderRule = isFemale ? fallbackRules.female : fallbackRules.male;
+    const ageBandId = pickAgeBandFallback(genderRule, target.age);
+    const defaultId = genderRule.default;
     const candidateIds: string[] = [];
 
     const pushCandidateId = (raw?: string | null): void => {
@@ -148,13 +182,13 @@ export function resolveGeneralPortraitResources(target: PortraitResourceTarget):
         pushCandidateId(target.id);
     }
 
+    // 僅允許退回同性別親代；嚴禁跨性別退回
     if (isFemale) {
         if (target.motherId && !target.motherId.startsWith('child_')) pushCandidateId(target.motherId);
-        if (target.fatherId && !target.fatherId.startsWith('child_')) pushCandidateId(target.fatherId);
     } else {
         if (target.fatherId && !target.fatherId.startsWith('child_')) pushCandidateId(target.fatherId);
-        if (target.motherId && !target.motherId.startsWith('child_')) pushCandidateId(target.motherId);
     }
+    if (ageBandId) pushCandidateId(ageBandId);
     pushCandidateId(defaultId);
 
     const paths = candidateIds.map((id) => portraitPathOf(id));
@@ -162,4 +196,10 @@ export function resolveGeneralPortraitResources(target: PortraitResourceTarget):
         primary: paths[0],
         fallbacks: paths.slice(1),
     };
+}
+
+/** 回傳完整立繪載入候選清單 [primary, ...fallbacks]，供非同步載入器直接遍歷。 */
+export function resolveGeneralPortraitCandidates(target: PortraitResourceTarget): string[] {
+    const resolved = resolveGeneralPortraitResources(target);
+    return [resolved.primary, ...resolved.fallbacks];
 }
