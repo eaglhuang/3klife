@@ -10481,6 +10481,54 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9415",
+      "title": "跳字避開棋盤 buff 格標記",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T03:10:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "PROG-2-9412 驗收列出「重擊跳字壓到地格標示」，當時延後；總PM 11/19 指示六關驗收（PROG-2-9414）完成後再做。棋盤 buff 格的圓形圖示＋倍數（攻×4、命÷3）與單位頭頂跳字疊在一起時，兩者都看不清。",
+      "related": [
+        "PROG-2-9411",
+        "PROG-2-9412",
+        "PROG-2-9414"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: in-progress | 驗證: pending | 變更: 待做 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
