@@ -22,6 +22,7 @@ import { RandomSource } from './GeneralAging';
 import { applyPassiveSave, passiveSavingsOfSupport, totalVitalitySave, type MentorPassiveSavings } from './MentorPassiveSavings';
 import type { UnveilingGeneral } from './Unveiling';
 import { effectiveGrowthModifier } from './Unveiling';
+import { earlyEnthusiasmRoundsLimit } from '../mind/MindMarriage';
 import { HybridSkillSource, rollHybridTrigger } from './HybridSkill';
 import { rollNurtureRoundEvents } from './NurtureEvents';
 import { FactorDictionary, resolveFactorColor } from './FactorInheritance';
@@ -179,6 +180,8 @@ export interface NurtureSession {
     clanTraditionKind?: TrainingKind;
     /** 世交太傅伴讀的修業效率加成（G3 §F-2），入學時定值。舊存檔沒有此欄位 */
     synergyTutorBonus?: number;
+    /** 雙親結緣當下心情帶動之開蒙前 4 回合幹勁倍率（PROG-2-9165） */
+    earlyEnthusiasmMultiplier?: number;
     /** 混種戰法觸發的回合；尚未觸發為 undefined */
     hybridRound?: number;
     /** 累積好感次數（舊存檔可能沒有此欄位，視為 0） */
@@ -337,6 +340,7 @@ export function createNurtureSession(input: CreateNurtureSessionInput): NurtureS
         hybridSources: input.hybridSources ? { ...input.hybridSources } : undefined,
         clanTraditionKind: input.clanTraditionKind,
         synergyTutorBonus: input.synergyTutorBonus,
+        earlyEnthusiasmMultiplier: (input.child as { earlyEnthusiasmMultiplier?: number }).earlyEnthusiasmMultiplier,
         mentorSlots: rollMentorSlots(mentors, input.random),
         negativeFactors: [],
         negativeTraitRateBonus: Math.max(0, (input.child as { negativeTraitRateBonus?: number }).negativeTraitRateBonus ?? 0),
@@ -362,7 +366,7 @@ export interface GainBreakdown {
 
 /** 純公式：給定本回合基礎值與教官站位，算屬性獲得量（不擲骰） */
 export function computeStatGain(
-    session: Pick<NurtureSession, 'mentors' | 'mentorSlots' | 'growthModifier' | 'clanTraditionKind' | 'synergyTutorBonus'>,
+    session: Pick<NurtureSession, 'mentors' | 'mentorSlots' | 'growthModifier' | 'clanTraditionKind' | 'synergyTutorBonus' | 'earlyEnthusiasmMultiplier'> & { round?: number },
     kind: TrainingKind,
     base: number,
 ): GainBreakdown {
@@ -370,12 +374,15 @@ export function computeStatGain(
     const onSlot = session.mentors.filter((mentor) => session.mentorSlots[mentor.id] === kind);
     const synergyBonus = Math.max(0, onSlot.length - 1) * SYNERGY_BONUS_PER_EXTRA_MENTOR;
     const burst = onSlot.some((mentor) => mentor.specialty === kind);
+    const earlyBonus = (session.round ?? 0) < earlyEnthusiasmRoundsLimit()
+        ? Math.max(0, (session.earlyEnthusiasmMultiplier ?? 1) - 1)
+        : 0;
     // 走 FORM-01 總公式（TrainingGainFormula）：教官加值進加法區、資質即 growthModifier、
     // 同格協力走陪伴乘區、傾囊相授走傾囊乘區；運勢與人數補正尚無來源，以中性值帶入。
     const breakdown = trainingGainBreakdown({
         base,
         cardBonuses: session.mentors.map((mentor) => base * mentorBonusFor(mentor, kind)),
-        generalGrowth: session.growthModifier - 1,
+        generalGrowth: session.growthModifier - 1 + earlyBonus,
         baseMorale: 0,
         moraleBoosts: [],
         trainingBoosts: [

@@ -46,7 +46,7 @@ import type { HistoricalRelation } from '../../core/systems/KinRelation';
 import { BattleCombatResolver } from '../runtime/BattleCombatResolver';
 import { BattleGeneralDuelFlow } from '../runtime/BattleGeneralDuelFlow';
 import { BattleTileBuffLifecycleManager, DEFAULT_BATTLE_TILE_BUFF_CONFIG, type BattleTileBuffConfig } from '../runtime/BattleTileBuffLifecycleManager';
-import { resolveBattleVictory, resolveCampCapture } from '../runtime/BattleVictoryResolver';
+import { announceBattleEnd, resolveBattleVictory, resolveCampCapture } from '../runtime/BattleVictoryResolver';
 import { refreshFloodAttackTerrain, resolveBattleTacticBehavior } from '../shared/BattleTacticBehavior';
 import { services } from "../../core/managers/ServiceLoader";
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
@@ -1148,7 +1148,10 @@ export class BattleController {
     // 營帳佔領（PM 暫定）：我方單位回合結束時站在營帳格上即勝利
     const campResult = resolveCampCapture(this.state);
     if (campResult) {
-      return this.commitBattleResult(campResult);
+      this.commitBattleResult(campResult);
+      // 營帳佔領也要對外宣告結束，否則結算窗不出現、玩家卡在戰場（PROG-2-9414）
+      announceBattleEnd(this.state, campResult, { cause: 'camp' });
+      return campResult;
     }
     return result;
   }
@@ -1174,6 +1177,10 @@ export class BattleController {
     this.pendingEnemyTurnResult = null;
     if (result === 'ongoing') {
       this.finalizeRuntimeTurnCycleSafely();
+      // 回合數剛前進到超過上限：當下就判定（PROG-2-9414），不要讓玩家多看一個打不了的回合、再按一次結束才出結算
+      if (services().battle.isTurnLimitReached()) {
+        return this.commitBattleResult(this.checkVictory());
+      }
     }
     return this.commitBattleResult(result);
   }
@@ -1202,6 +1209,10 @@ export class BattleController {
     this.pendingAdvanceTurnResult = null;
     if (result === 'ongoing') {
       this.finalizeRuntimeTurnCycle();
+      // 同 finalizeEnemyTurn：回合數超過上限當下就判定（PROG-2-9414）
+      if (services().battle.isTurnLimitReached()) {
+        return this.commitBattleResult(this.checkVictory());
+      }
     }
     return this.commitBattleResult(result);
   }

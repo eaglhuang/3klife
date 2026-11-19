@@ -312,6 +312,8 @@
   "ui.year_report.intro": "一年が暮れ、今年を振り返る……",
   "ui.year_report.deaths": "今年の死去：{0} 人",
   "ui.year_report.retirements": "今年の退役候補：{0} 人",
+  "ui.year_report.unwed": "今年の未婚適齢：{0} 人（{1}）仲人さん、出番ですよ！",
+  "ui.year_report.unwed_none": "今年の未婚適齢：0 人、みんな相手がいて仲人さんは暇そう",
   "ui.year_report.close": "閉じる",
   "ui.spirit_codex.title": "英霊図鑑",
   "ui.spirit_codex.close": "閉じる",

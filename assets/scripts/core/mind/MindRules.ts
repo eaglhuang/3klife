@@ -4,6 +4,7 @@
  */
 import { offlinePersonalityOf } from '../systems/OfflinePersonalityBehavior';
 import type { GeneralPersonalityType } from '../models/GeneralUnit';
+import { marriageMoodEventOverride } from './MindMarriage';
 import {
     MIND_CONFIG,
     type MindContext,
@@ -43,7 +44,7 @@ export const MIND_EVENT_RULES: Readonly<Record<MindEventKind, RuleBase>> = {
 
 /** 對心情有「正面加成」資格的事件（EAGER 要近期有這類事件） */
 const POSITIVE_KINDS: ReadonlySet<MindEventKind> = new Set<MindEventKind>([
-    'TASK_DONE', 'BATTLE_RESULT', 'DUEL', 'KILL_GENERAL', 'RESCUED', 'PROMOTED', 'PRAISED', 'GIFTED', 'REQUEST_GRANTED',
+    'TASK_DONE', 'BATTLE_RESULT', 'DUEL', 'KILL_GENERAL', 'RESCUED', 'PROMOTED', 'PRAISED', 'GIFTED', 'REQUEST_GRANTED', 'BOND_FORMED',
 ]);
 
 function clampValence(n: number): MindValence {
@@ -59,6 +60,10 @@ function clampWeight(n: number): MindWeight {
  * 情報度 ≤1 仍失敗不全是他的錯（降一級）；自請而敗更想雪恥（加重）；被委任而敗記原因碼。
  */
 export function ruleFor(input: Readonly<MindEventInput>): { valence: MindValence; weight: MindWeight; reason?: string } {
+    const marriageOverride = marriageMoodEventOverride(input.kind, input.tags ?? []);
+    if (marriageOverride) {
+        return { valence: marriageOverride.valence, weight: marriageOverride.weight, ...(input.reason ? { reason: input.reason } : {}) };
+    }
     const base = MIND_EVENT_RULES[input.kind];
     let valence: number = base.valence;
     let weight: number = base.weight;

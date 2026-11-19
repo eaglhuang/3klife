@@ -185,7 +185,7 @@ export class BattleUIBridge {
   private duelCapture: {
     hits: Array<{ faction: Faction; hp: number; damage?: number; attackerId?: string | null; isCrit?: boolean; wasDodged?: boolean }>;
     deaths: Array<{ unitId: string; lane: number; depth: number; faction: Faction; type: TroopType }>;
-    ended: { result: string; retreated?: boolean } | null;
+    ended: { result: string; retreated?: boolean; timeUp?: boolean; cause?: string } | null;
     /** 單挑結算當下發出的戰報提示：等逐招紀錄寫完才寫，順序才對（PROG-2-9389） */
     notices: string[];
   } | null = null;
@@ -197,7 +197,7 @@ export class BattleUIBridge {
   /** 推薦戰法檢核（PROG-2-1763）：每個關卡只查一次；缺口帶進軍師 HUD 的對策缺口欄 */
   private _loadoutCheckedFor: string | null = null;
   private _loadoutGaps: string[] = [];
-  private _lastEndedPayload: { result: string; retreated?: boolean } | null = null;
+  private _lastEndedPayload: { result: string; retreated?: boolean; cause?: string } | null = null;
   /** 本場是否已提示過「剛部署的部隊下回合才行動」（PROG-2-9302，只提示一次避免洗版） */
   private _deployNextTurnHintShown = false;
   private readonly unsubs: (() => void)[] = [];
@@ -1026,7 +1026,7 @@ export class BattleUIBridge {
       const popup = this.ctx.resultPopup;
       if (popup && !popup.node.active) {
         const last = this._lastEndedPayload ?? { result: 'enemy-win', retreated: true };
-        void popup.showResult(last.result, undefined, this.ctx.pg?.id, last.retreated === true);
+        void popup.showResult(last.result, undefined, this.ctx.pg?.id, last.retreated === true, last.cause);
       }
       return;
     }
@@ -1060,8 +1060,8 @@ export class BattleUIBridge {
     }, FIELD_AUTO_BATTLE_JOURNAL[kind], pgId ? [pgId] : []);
   }
 
-  private _onBattleEnded(data: { result: string; retreated?: boolean; timeUp?: boolean }): void {
-    this._lastEndedPayload = { result: data.result, retreated: data.retreated };
+  private _onBattleEnded(data: { result: string; retreated?: boolean; timeUp?: boolean; cause?: string }): void {
+    this._lastEndedPayload = { result: data.result, retreated: data.retreated, cause: data.cause };
     if (this.duelCapture) { this.duelCapture.ended = data; return; }
     const c = this.ctx;
     const effectKey = resolveBattleResultEffectKey(data.result);
@@ -1079,7 +1079,7 @@ export class BattleUIBridge {
     catch (error) { UCUFLogger.error(LogCategory.BATTLE, '[BattleUIBridge] 戰後結算寫回失敗，仍顯示結果彈窗', error); }
     // 回合用盡而獲勝（教學戰）：補一行說明，免得玩家不知道為什麼突然贏了
     if (data.timeUp === true && data.result === 'player-win') details.unshift('敵軍久攻不下，鳴金退兵。');
-    void Promise.resolve(c.resultPopup?.showResult(data.result as any, details.length > 0 ? details.join('\n') : undefined, c.pg?.id, data.retreated === true))
+    void Promise.resolve(c.resultPopup?.showResult(data.result as any, details.length > 0 ? details.join('\n') : undefined, c.pg?.id, data.retreated === true, data.cause))
       .catch((error) => UCUFLogger.error(LogCategory.BATTLE, '[BattleUIBridge] 結果彈窗顯示失敗', error));
     c.boardRenderer?.clearDeployHint();
     c.hud?.clearPersistentStatus();
@@ -1088,6 +1088,8 @@ export class BattleUIBridge {
     c.combatVisualQueue.length = 0;
     c.isDrainingCombatVisual = false;
     c.isAdvancingTurn = false;
+    // 敵方回合中分出勝負時 finalizeAdvance 會因 isAdvancingTurn=false 提早返回，這裡要自己還原 1.5 倍速（PROG-2-9414）
+    setEnemyTurnPlayback(false);
     c.isDuelPanelActive = false;
     if (c.deployRuntime) c.deployRuntime.node.active = false;
   }

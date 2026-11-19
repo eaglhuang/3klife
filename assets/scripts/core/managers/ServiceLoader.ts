@@ -49,8 +49,10 @@ import { normalizeSeasonModifiers, seasonModifiersOf, setActiveSeasonModifiers }
 import { CHILD_APTITUDE_RULES_JSON, configureChildAptitudeRules, type ChildAptitudeRulesConfig } from "../systems/ChildAptitudeInheritance";
 import { configureFamilyCompatibilityRules, computeFamilyCompatibilityK, FAMILY_COMPATIBILITY_RULES_JSON, type FamilyCompatibilityRulesConfig } from "../systems/FamilyCompatibility";
 import { BLOODLINE_RESONANCE_RULES_JSON, configureBloodlineResonanceRules, type BloodlineResonanceRulesConfig } from "../systems/BloodlineResonance";
+import { configureFamilyMilestoneRules, FAMILY_MILESTONE_RULES_JSON, type FamilyMilestoneRulesConfig } from "../systems/FamilyMilestone";
 import { familyPairKey } from "../systems/FamilySynergy";
 import { configureWhiteFactorAchievements, WHITE_FACTOR_ACHIEVEMENTS_JSON, type WhiteFactorAchievementsConfig } from "../systems/WhiteFactorTraits";
+import { configureMindMarriageRules, MIND_MARRIAGE_RULES_JSON, type MindMarriageRulesConfig } from "../mind/MindMarriage";
 
 export class ServiceLoader {
     private static instance: ServiceLoader | null = null;
@@ -132,6 +134,8 @@ export class ServiceLoader {
         clanPrestigeTier: () => this.session.clanPrestigeTier,
         relationLedger: this.session.relationEvents,
         getFamilySynergy: () => this.session.familySynergy,
+        getParentMood: (id) => this.session.mind.moodOf(id),
+        onMarriageConceived: (ctx) => this.session.onMarriageConceived(ctx),
     });
     private bloodlineRulesLoaded = false;
     /** 退役教官卡 / 英靈卡來源；init() 之後才有（共用存檔後端）。培育畫面用它挑教官 */
@@ -343,6 +347,8 @@ export class ServiceLoader {
             loadSafe<Partial<FamilyCompatibilityRulesConfig>>(FAMILY_COMPATIBILITY_RULES_JSON, configureFamilyCompatibilityRules),
             loadSafe<Partial<WhiteFactorAchievementsConfig>>(WHITE_FACTOR_ACHIEVEMENTS_JSON, configureWhiteFactorAchievements),
             loadSafe<Partial<BloodlineResonanceRulesConfig>>(BLOODLINE_RESONANCE_RULES_JSON, configureBloodlineResonanceRules),
+            loadSafe<Partial<FamilyMilestoneRulesConfig>>(FAMILY_MILESTONE_RULES_JSON, configureFamilyMilestoneRules),
+            loadSafe<Partial<MindMarriageRulesConfig>>(MIND_MARRIAGE_RULES_JSON, configureMindMarriageRules),
         ]);
         this.bloodlineRulesLoaded = true;
     }

@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { BattleTactic, Faction, TroopType } from '../assets/scripts/core/config/Constants';
+import { BattleTactic, EVENT_NAMES, Faction, TroopType } from '../assets/scripts/core/config/Constants';
 import { BattleController } from '../assets/scripts/battle/controllers/BattleController';
 import { resolveCampCapture } from '../assets/scripts/battle/runtime/BattleVictoryResolver';
 import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
@@ -89,6 +89,23 @@ export function createSceneCampSuite(): TestSuite {
         const source = fs.readFileSync(path.join(__dirname, '..', 'assets/scripts/battle/controllers/BattleController.ts'), 'utf8');
         assert.isTrue(source.includes('this.state.getGeneral(this.state.sceneCaster)?.genes'), '施放者沒有接 sceneCaster');
         assert.isFalse(source.includes("this.state.getGeneral(Faction.Player)?.genes ?? [],\n    });"), '施放者仍寫死為玩家主將');
+    });
+
+    suite.test('回合結束佔領營帳：發出一次 BattleEnded（cause=camp），結算窗才會出現（PROG-2-9414）', () => {
+        const ctrl = startBattle(BattleTactic.NightRaid);
+        const player = new TroopUnit('player-raider', TroopType.Infantry, Faction.Player, { hp: 100, attack: 10, defense: 5, moveRange: 0, attackRange: 1 });
+        player.moveTo(3, 7);
+        ctrl.state.addUnit(player);
+        const ended: Array<{ result: string; cause?: string }> = [];
+        const off = services().event.on(EVENT_NAMES.BattleEnded, (data: { result: string; cause?: string }) => ended.push(data));
+        const result = ctrl.resolvePlayerTurn();
+        ctrl.resolvePlayerTurn();
+        off();
+        assert.equals('player-win', result);
+        assert.equals(1, ended.length, '只發一次');
+        assert.equals('player-win', ended[0].result);
+        assert.equals('camp', ended[0].cause);
+        assert.isTrue(ctrl.state.battleEndAnnounced);
     });
 
     suite.test('回合結束判定接上營帳佔領', () => {
