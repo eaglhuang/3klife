@@ -38,8 +38,8 @@
         "type": "panel",
         "name": "Card",
         "id": "card",
-        "width": 640,
-        "height": 600,
+        "width": 800,
+        "height": 880,
         "skinSlot": "popup.card.bg",
         "layout": {
           "type": "vertical",
@@ -95,7 +95,7 @@
             "name": "DescLabel",
             "id": "descLabel",
             "width": "100%",
-            "height": 150,
+            "height": 420,
             "textKey": "ui.result.title",
             "styleSlot": "popup.label.desc"
           },
