@@ -11,7 +11,12 @@ description: 為 3KLife 生成、重繪及校準三國武將全身立繪與頭�
 
     python tools_node/fit-avatar-reference.py "<核可來源.png>" "artwork/temp/<角色>-fit.png"
 
-工具估測單一臉框，以大喬基準按面積等比縮放，將臉框左右中心對齊畫布垂直中線。輸出 PNG、同名 JSON 和 -center.png。青色實線為畫布中線，洋紅虛線為臉框中線，黃框應貼合臉頰；兩線必須重疊，256px 輸出最多容許 1px 差異（約 0.39%）。臉寬高以大喬基準約 33.6% × 44% 比對，寬高容差各 ±6 個百分點。65% 臉高不是小頭像標準。核對完整頭飾和雙肩；任一不符就留在 temp。自動框只作估測，零張、多張或誤框時，以原圖像素加上 --face 左 上 右 下 重跑。選填 --nose X Y 只影響垂直取景。每次用新的輸出名稱，以本次成功輸出為準。
+工具估測單一臉框，以大喬基準等比縮放；臉框左右界中點必須對準畫布垂直中線，256px 輸出最多容許 1px 差異。臉寬高目標約 33.6% × 44%，寬高容差各 ±6 個百分點；65% 臉高不是小頭像標準。自動框只作估測，零張、多張或誤框時以原圖像素加上 `--face LEFT TOP RIGHT BOTTOM` 重跑。另標完整頭髮／主頭飾 `--extent LEFT TOP RIGHT BOTTOM` 與雙肩表面錨點 `--shoulders LX LY RX RY`；工具會依臉、頭飾及肩點計算方形裁框，垂直方向優先保留接近大喬的臉部位置。若三者無可行裁框，工具會拒絕產生可用候選。輸出 PNG、同名 JSON 和 `-center.png`；青色線是畫布中線、洋紅虛線是臉框中線、黃色框是臉、綠框是頭飾範圍、黃紅點是雙肩錨點。先核對原圖標記確實正確，再確認完整頭飾及雙肩；任一不符就留在 temp。選填 `--vertical-anchor X Y` 只調整垂直構圖，不改變以臉框中點計算的水平中心（舊參數 `--nose` 仍相容）。同名 JSON 會記錄臉框、extent、肩點、裁框和通過旗標；幾何通過仍須目視驗收。每次使用新的輸出名稱。
+
+若系統 Python 的 OpenCV 缺少 `CascadeClassifier`，用專用環境安裝指定版本，勿改動專案或系統 Python：
+
+    py -3.13 -m venv artwork/temp/avatar-crop-venv
+    artwork/temp/avatar-crop-venv/Scripts/python.exe -m pip install Pillow numpy opencv-python-headless==4.12.0.88
 
 ## 核定畫風
 
