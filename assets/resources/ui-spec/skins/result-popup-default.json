@@ -70,18 +70,19 @@
     },
     "popup.label.title": {
       "kind": "label-style",
-      "fontSize": 42,
-      "lineHeight": 52,
+      "fontSize": 50,
+      "lineHeight": 60,
       "color": "secondary",
       "horizontalAlign": "CENTER",
       "overflow": "SHRINK"
     },
     "popup.label.desc": {
       "kind": "label-style",
-      "fontSize": 22,
+      "fontSize": 24,
       "lineHeight": 30,
       "color": "#4A2E14",
       "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
       "overflow": "SHRINK"
     },
     "ui-common-metal.equipment.primary": {
