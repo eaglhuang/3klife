@@ -7,6 +7,7 @@
  * 後備規則是規格沒寫的暫定判斷：5 歲宿命只對新生子嗣有效，名冊上的既有武將沒有宿命紀錄。
  */
 import type { GeneralConfig } from '../models/GeneralUnit';
+import { recommendChildCareerRole } from './ChildAptitudeInheritance';
 import { applyJobChange, JobChangeResult, JobClass } from './JobChange';
 
 export type JobWiringGeneral = GeneralConfig & {
@@ -37,7 +38,16 @@ export function primaryAbilityOf(general: JobWiringGeneral, primaryClass: JobCla
 export function resolvePrimaryClass(general: JobWiringGeneral): JobClass {
     if (general.primaryClass) return general.primaryClass;
     if (general.careerClass) return general.careerClass;
-    return primaryAbilityOf(general, 'Warrior') > primaryAbilityOf(general, 'Scholar') ? 'Warrior' : 'Scholar';
+    return recommendChildCareerRole(
+        {
+            str: general.str ?? general.stats?.str ?? 0,
+            int: general.int ?? general.stats?.int ?? 0,
+            lea: general.lea ?? general.stats?.lea ?? 0,
+            pol: general.pol ?? general.stats?.pol ?? 0,
+            cha: general.cha ?? general.stats?.cha,
+        },
+        general.genes,
+    ).fateClass;
 }
 
 /**

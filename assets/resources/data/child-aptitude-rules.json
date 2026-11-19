@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "aptitudeInheritance": {
+    "gradeOrder": ["D", "C", "B", "A", "S"],
+    "defaultParentGrade": "B",
+    "childStepDelta": -1,
+    "birthMaxGrade": "A",
+    "birthMinGrade": "C",
+    "defaultTroopKeys": ["CAVALRY", "INFANTRY", "ARCHER", "SIEGE"]
+  },
+  "careerRecommendation": {
+    "factorWeightPerLevel": 3,
+    "warriorWeights": { "str": 1.3, "lea": 0.7 },
+    "scholarWeights": { "int": 0.9, "pol": 0.8, "cha": 0.3 },
+    "commanderWeights": { "lea": 1.2, "cha": 0.5, "str": 0.3 }
+  }
+}
