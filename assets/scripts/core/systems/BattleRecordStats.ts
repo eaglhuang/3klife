@@ -32,6 +32,9 @@ export interface BattleRecordLike {
     kills?: number;
     totalDamage?: number;
     guardianPower?: number;
+    duelsWon?: number;
+    governanceSeasons?: number;
+    diplomacyCount?: number;
     milestones?: readonly string[];
     season?: SeasonStats | null;
 }

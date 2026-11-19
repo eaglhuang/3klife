@@ -15,6 +15,7 @@
  */
 import type { GeneralConfig, GeneralDualLayerStatConfig, GeneralGeneConfig, GeneralStatsConfig } from '../models/GeneralUnit';
 import { BreedingGeneral, CHILD_STATUS_MYSTERY } from './BreedingSystem';
+import { recommendChildCareerRole } from './ChildAptitudeInheritance';
 import { FactorDictionary, FactorDefinition } from './FactorInheritance';
 import { GENERAL_STATUS_DEAD, RandomSource } from './GeneralAging';
 
@@ -103,24 +104,23 @@ function statValue(general: GeneralConfig, key: keyof GeneralStatsConfig): numbe
  * 分數打平時看五維（武力 + 統率 vs 智力 + 政治）；仍打平依規格 else 分支給文官。
  */
 export function recommendFate(general: GeneralConfig, dictionary?: FactorDictionary): FateRecommendation {
-    let martialScore = 0;
-    let civilScore = 0;
-    for (const gene of general.genes ?? []) {
-        if (!gene.id) continue;
-        const leaning = classifyFactorLeaning(dictionary?.get(gene.id));
-        const level = gene.level ?? 1;
-        if (leaning === 'martial') martialScore += level;
-        else if (leaning === 'civil') civilScore += level;
-    }
-    if (martialScore !== civilScore) {
-        return { recommended: martialScore > civilScore ? 'Warrior' : 'Scholar', martialScore, civilScore, source: 'factors' };
-    }
-    const martialStats = statValue(general, 'str') + statValue(general, 'lea');
-    const civilStats = statValue(general, 'int') + statValue(general, 'pol');
+    const rawCha = (general as unknown as Record<string, unknown>).cha;
+    const cha = typeof rawCha === 'number' ? rawCha : general.stats?.cha;
+    const recommendation = recommendChildCareerRole(
+        {
+            str: statValue(general, 'str'),
+            int: statValue(general, 'int'),
+            lea: statValue(general, 'lea'),
+            pol: statValue(general, 'pol'),
+            cha,
+        },
+        general.genes,
+        dictionary,
+    );
     return {
-        recommended: martialStats > civilStats ? 'Warrior' : 'Scholar',
-        martialScore: martialStats,
-        civilScore: civilStats,
+        recommended: recommendation.fateClass,
+        martialScore: recommendation.warriorScore,
+        civilScore: recommendation.scholarScore,
         source: 'stats',
     };
 }

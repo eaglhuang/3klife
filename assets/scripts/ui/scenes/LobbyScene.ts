@@ -99,6 +99,8 @@ import { BondingSetupController } from '../core/BondingSetupController';
 import { withBreedFallback, type BreedTextLookup } from '../core/BreedingTexts';
 import { BloodlineTreePanel } from '../panels/BloodlineTreePanel';
 import { JobChangeController } from '../core/JobChangeController';
+import { jobChangeEntryState, JOB_CHANGE_ENTRY_LABEL } from '../../core/systems/JobChangeEntry';
+import type { JobWiringGeneral } from '../../core/systems/JobChangeWiring';
 import { OverlayCandidate, pickTopOverlay } from '../core/OverlayStack';
 import { DomesticPanelController } from '../core/DomesticPanelController';
 import { FAST_FORWARD_REASON_TEXT, fastForwardSeasons } from '../../core/systems/SeasonFastForward';
@@ -163,6 +165,7 @@ import { mentorBorrowRows, type MentorBorrowRow } from '../core/MentorBorrowView
 import { OfficerPanelsController } from '../core/OfficerPanelsController';
 import { BLOODLINE_VIGNETTE_CELL_COUNT, bloodlineVignetteOpenLabel, bloodlineVignetteViewOf } from '../core/BloodlineVignetteText';
 import { installOfficerTierTable, type OfficerTierRow } from '../../core/systems/OfficerTierTable';
+import { shouldShowMentorUnlockPrompt } from '../../core/systems/MentorGuidance';
 import { buildRankUnlockPopupView, installOfficerFeatureUnlocks, lobbyActionLock, lockedActionToast, nextRankPreviewLine } from '../../core/systems/OfficerFeatureUnlocks';
 import { installSageProgressTable } from '../../core/systems/SageFavor';
 import { installSandtableTerritories } from '../../core/systems/SandtableTerritories';
@@ -292,7 +295,8 @@ const FACTOR_HEX_POSITION = { x: 90, y: -260 };
 
 /** 圖鑑入口的暫定位置（PROVISIONAL：畫面沒有預留節點，程式掛在 CharacterDs3Host 下，待 Codex 實機微調） */
 const GALLERY_ENTRY_NODE_NAME = 'GeneralVersionGalleryEntry';
-const CHARACTER_DS3_SIDE_ACTION_INDEX = { journal: 0, soulInject: 1, gallery: 2, totalTp: 3, expertView: 4, volunteer: 5 };
+const CHARACTER_DS3_SIDE_ACTION_INDEX = { journal: 0, soulInject: 1, gallery: 2, totalTp: 3, expertView: 4, volunteer: 5, jobChange: 6 };
+const JOB_CHANGE_ENTRY_NODE_NAME = 'btnGeneralJobChange';
 const VOLUNTEER_TASK_NODE_NAME = 'btnVolunteerTask';
 const JOURNAL_PEEK_NODE_NAME = 'JournalPeekBubble';
 const EXPERT_VIEW_NODE_NAME = 'btnExpertView';
@@ -3547,14 +3551,19 @@ export class LobbyScene extends Component {
     private async _mountRankUnlockPopup(): Promise<void> {
         this._rankUnlockHost = await this._mountPreviewScreenHost('RankUnlockPopupHost', 'rank-unlock-popup-screen', [
             { buttonId: 'btnRankUnlockOk', handler: () => { if (this._rankUnlockHost) this._rankUnlockHost.node.active = false; } },
+            // 培育解鎖提示的按鈕（PROG-2-9167）：關彈窗，直接開轉蛋並切到教官池
+            { buttonId: 'btnRankUnlockMentor', handler: () => { if (this._rankUnlockHost) this._rankUnlockHost.node.active = false; this._openGachaAtMentorPool(); } },
         ]);
     }
 
     private _showRankUnlockPopup(tiers: readonly number[]): void {
         if (tiers.length === 0) return;
-        const view = buildRankUnlockPopupView(Math.min(...tiers) - 1, Math.max(...tiers));
+        // 晉升縣府佐官（培育解鎖）那一次，彈窗多一句提示與去教官池的按鈕；旗標記住只跳一次（PROG-2-9167）
+        const mentorPrompt = shouldShowMentorUnlockPrompt(tiers, services().session.mentorUnlockPromptShown);
+        const view = buildRankUnlockPopupView(Math.min(...tiers) - 1, Math.max(...tiers), mentorPrompt);
         const host = this._rankUnlockHost;
         if (!view || !host?.binder) return;
+        if (mentorPrompt) void services().session.markMentorUnlockPromptShown();
         host.binder.setTexts(view.texts);
         host.binder.setActives(view.actives);
         host.node.active = true;
@@ -3935,12 +3944,14 @@ ${spent}`,
         }
     }
 
-    private _openJobChange(): void {
+    /** focusGeneralId 有值＝從武將詳情頁進來，只轉該武將；沒值＝成人禮名單 */
+    private _openJobChange(focusGeneralId: string | null = null): void {
         const host = this._jobChangeHost;
-        if (!host) {
+        if (!host || !this._jobChange) {
             this._showNotOpenYet();
             return;
         }
+        this._jobChange.focusGeneral(focusGeneralId);
         host.node.active = true;
         this._bringNodeToFront(host.node);
         this._refreshJobChange();
@@ -4568,6 +4579,8 @@ ${spent}`,
         if (this._jobChangeHost) {
             this._jobChangeHost.node.active = false;
         }
+        this._jobChange?.focusGeneral(null);
+        this._refreshCharacterDs3JobChange();
     }
 
     private _refreshJobChange(): void {
@@ -4589,6 +4602,7 @@ ${spent}`,
             services().event.emit('SHOW_TOAST', { message: error instanceof Error ? error.message : '轉職失敗', duration: 2.5 });
         } finally {
             this._refreshJobChange();
+            this._refreshCharacterDs3JobChange();
         }
     }
 
@@ -6082,6 +6096,43 @@ ${spent}`,
         button.node.on(Button.EventType.CLICK, this._onCharacterDs3VolunteerClick, this);
     }
 
+    /**
+     * 人物頁「轉職」鈕（PROG-2-9166，裁決 89）：現成武將滿 20 歲、尚無副職即可用轉職令轉職；
+     * 未滿 20 歲或已陣亡不顯示，已有副職顯示為灰階。開的是成人禮同一個轉職畫面。
+     */
+    private _bindCharacterDs3JobChange(): void {
+        const host = this._characterDs3Surface()?.node;
+        if (!host) return;
+        const button = host.getChildByName(JOB_CHANGE_ENTRY_NODE_NAME)?.getComponent(Button)
+            ?? ensureDs3SideAction(host, JOB_CHANGE_ENTRY_NODE_NAME, JOB_CHANGE_ENTRY_LABEL, CHARACTER_DS3_SIDE_ACTION_INDEX.jobChange);
+        button.node.off(Button.EventType.CLICK, this._onCharacterDs3JobChangeClick, this);
+        button.node.on(Button.EventType.CLICK, this._onCharacterDs3JobChangeClick, this);
+        this._refreshCharacterDs3JobChange();
+    }
+
+    private _refreshCharacterDs3JobChange(): void {
+        const host = this._characterDs3Surface()?.node;
+        const button = host?.getChildByName(JOB_CHANGE_ENTRY_NODE_NAME)?.getComponent(Button);
+        if (!button) return;
+        const current = this._characterDs3General;
+        const fresh = current ? services().session.roster.find((g) => g.id === current.id) ?? current : null;
+        if (fresh) this._characterDs3General = fresh;
+        const state = fresh ? jobChangeEntryState(fresh as JobWiringGeneral) : { visible: false, enabled: false, hint: null };
+        button.node.active = state.visible;
+        setDs3SideActionEnabled(button, state.enabled);
+    }
+
+    private readonly _onCharacterDs3JobChangeClick = (): void => {
+        const general = this._characterDs3General;
+        if (!general) return;
+        const state = jobChangeEntryState(general as JobWiringGeneral);
+        if (!state.enabled) {
+            if (state.hint) this._showToast(state.hint);
+            return;
+        }
+        this._openJobChange(general.id);
+    };
+
     private _onCharacterDs3VolunteerClick(): void {
         const general = this._characterDs3General;
         if (general) this.openVolunteerTask(general.id);
@@ -6100,6 +6151,7 @@ ${spent}`,
     /** 寄宿戰魂按鈕：綁定點按，並依可否寄宿設定灰階（PROG-2-1058） */
     private _bindCharacterDs3SoulInject(): void {
         this._bindCharacterDs3Volunteer();
+        this._bindCharacterDs3JobChange();
         this._refreshCharacterDs3JournalPeek();
         const button = this._characterDs3SoulInjectButton();
         if (!button) {
@@ -6183,7 +6235,7 @@ ${spent}`,
         panel.onCardPeek = (view) => this._showToast(`${view.title}：${view.tendency}`);
         panel.node.active = true;
         this._refreshCharacterDs3ExpertView(hostNode);
-        for (const name of [FACTOR_HEX_NODE_NAME, 'btnGeneralJournal', 'btnSoulInject', GALLERY_ENTRY_NODE_NAME, TOTAL_TP_NODE_NAME, EXPERT_VIEW_NODE_NAME]) {
+        for (const name of [FACTOR_HEX_NODE_NAME, 'btnGeneralJournal', 'btnSoulInject', JOB_CHANGE_ENTRY_NODE_NAME, GALLERY_ENTRY_NODE_NAME, TOTAL_TP_NODE_NAME, EXPERT_VIEW_NODE_NAME]) {
             hostNode.getChildByName(name)?.setSiblingIndex(hostNode.children.length - 1);
         }
         void panel.loadForGeneral(general.id);

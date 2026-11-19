@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "starDiscounts": {
+    "1": 0.15,
+    "2": 0.2,
+    "3": 0.25
+  },
+  "maxDiscountRate": 0.25,
+  "minDiscountedCost": 1,
+  "achievements": [
+    {
+      "geneId": "gene_white_baoma",
+      "name": "白馬從義",
+      "category": "battle",
+      "targetTags": ["騎兵", "突擊", "先鋒"],
+      "criteria": { "minBattles": 5, "minWinRate": 0.6, "minStr": 75 },
+      "starThresholds": { "2": 10, "3": 18 }
+    },
+    {
+      "geneId": "gene_white_xiandeng",
+      "name": "百戰先登",
+      "category": "battle",
+      "targetTags": ["破陣", "步兵", "攻城"],
+      "criteria": { "minBattles": 6, "minWinRate": 0.55, "minStr": 70 },
+      "starThresholds": { "2": 12, "3": 20 }
+    },
+    {
+      "geneId": "gene_white_shoucheng",
+      "name": "守城如鐵",
+      "category": "battle",
+      "targetTags": ["盾兵", "防禦", "堅守"],
+      "criteria": { "minBattles": 4, "minWinRate": 0.5, "minLea": 75 },
+      "starThresholds": { "2": 8, "3": 15 }
+    },
+    {
+      "geneId": "gene_white_jiuzhu",
+      "name": "單騎救主",
+      "category": "battle",
+      "targetTags": ["突圍", "護衛", "騎兵"],
+      "criteria": { "minDuelsWon": 2, "minStr": 80 },
+      "starThresholds": { "2": 4, "3": 7 }
+    },
+    {
+      "geneId": "gene_white_weimo",
+      "name": "運籌帷幄",
+      "category": "strategy",
+      "targetTags": ["謀略", "計策", "火攻"],
+      "criteria": { "minBattles": 4, "minInt": 80 },
+      "starThresholds": { "2": 8, "3": 14 }
+    },
+    {
+      "geneId": "gene_white_tuntian",
+      "name": "安民屯田",
+      "category": "governance",
+      "targetTags": ["內政", "糧草", "治安"],
+      "criteria": { "minGovernanceSeasons": 6, "minPol": 75 },
+      "starThresholds": { "2": 12, "3": 20 }
+    },
+    {
+      "geneId": "gene_white_lianzong",
+      "name": "合縱連橫",
+      "category": "diplomacy",
+      "targetTags": ["外交", "名望", "說服"],
+      "criteria": { "minDiplomacyCount": 3, "minCha": 78 },
+      "starThresholds": { "2": 6, "3": 10 }
+    },
+    {
+      "geneId": "gene_white_zhishi",
+      "name": "治世能臣",
+      "category": "governance",
+      "targetTags": ["內政", "人事", "政令"],
+      "criteria": { "minGovernanceSeasons": 8, "minPol": 82 },
+      "starThresholds": { "2": 14, "3": 24 }
+    }
+  ]
+}
