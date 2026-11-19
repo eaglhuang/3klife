@@ -152,7 +152,13 @@ export function createOfficerFeatureUnlocksSuite(): TestSuite {
         assert.equals('', view.texts.rankUnlockMore);
         const multi = buildRankUnlockPopupView(1, 4);
         assert.isTrue((multi?.texts.rankUnlockMore ?? '').startsWith('…另有'), '連升多階超過列數時標示剩餘');
-        assert.equals(RANK_UNLOCK_POPUP_ROWS, Object.keys(multi!.actives).length);
+        // 列數 + 培育解鎖提示的兩個節點（PROG-2-9167）
+        assert.equals(RANK_UNLOCK_POPUP_ROWS + 2, Object.keys(multi!.actives).length);
+        assert.isFalse(multi!.actives.btnRankUnlockMentor);
+        assert.equals('', multi!.texts.rankUnlockMentorHint);
+        const prompt = buildRankUnlockPopupView(1, 2, true);
+        assert.isTrue(prompt!.actives.btnRankUnlockMentor && prompt!.actives.rankUnlockMentorHint);
+        assert.equals('培育已開放，先去教官池抽教官', prompt!.texts.rankUnlockMentorHint);
         const layout = readJson<{ root: SpecNode }>(path.join(UI_SPEC, 'layouts/rank-unlock-popup-main.json'));
         const layoutIds = ids(layout.root);
         for (const key of [...Object.keys(view.texts), ...Object.keys(view.actives), 'btnRankUnlockOk']) assert.isTrue(layoutIds.has(key), `畫面規格缺節點 ${key}`);

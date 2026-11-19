@@ -129,5 +129,28 @@ export function createFirstBattleClearedSuite(): TestSuite {
         assert.isFalse(loaded.mentorGuideDone);
     });
 
+    suite.test('培育解鎖提示旗標：標記後存檔讀回；舊檔缺欄位視為未跳過（PROG-2-9167）', async () => {
+        const adapter = new MemoryStorageAdapter();
+        const session = await freshSession(adapter);
+        assert.isFalse(session.mentorUnlockPromptShown);
+        await session.markMentorUnlockPromptShown();
+        assert.isTrue(session.mentorUnlockPromptShown);
+        const restored = new GameSession(3);
+        restored.setRosterStore(new InMemoryRosterStore([]));
+        restored.setSaveService(new PlayerSaveService(adapter));
+        assert.isTrue(await restored.load());
+        assert.isTrue(restored.mentorUnlockPromptShown);
+
+        const old = JSON.parse(JSON.stringify(session.createSnapshot()));
+        delete old.resources.mentorUnlockPromptShown;
+        const oldSave = new PlayerSaveService(new MemoryStorageAdapter());
+        await oldSave.save(old);
+        const loaded = new GameSession(3);
+        loaded.setRosterStore(new InMemoryRosterStore([]));
+        loaded.setSaveService(oldSave);
+        assert.isTrue(await loaded.load());
+        assert.isFalse(loaded.mentorUnlockPromptShown);
+    });
+
     return suite;
 }
