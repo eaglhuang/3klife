@@ -5780,6 +5780,54 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/yang_yi__楊儀__small_avatar_0001.png",
+            "status": "integrated",
+            "sha256": "eea21e483e6b2aec73baa90c326df74140f67c649fece58672788ae31ae430ad",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/yang_yi__楊儀__avatar_0002.png",
+            "sourceSha256": "9bd73f9db4214fd3ae6c5f566403aa6cea928a12f793407972165211f9cbffbd",
+            "cropBox": {
+              "x": 22.85,
+              "y": 8.85,
+              "width": 238.3,
+              "height": 238.3
+            },
+            "faceBox": [
+              102,
+              102,
+              182,
+              198
+            ],
+            "headwearExtent": [
+              74,
+              16,
+              192,
+              199
+            ],
+            "shoulderAnchors": [
+              90,
+              230,
+              194,
+              240
+            ],
+            "method": "crop-only; 6px temporary transparent canvas padding on right; uniform resize; no redraw",
+            "headHeightPercent": 70.1,
+            "faceHeightPercent": 40.3,
+            "faceWidthPercent": 33.6,
+            "faceCenterXPercent": 50,
+            "centerAxisDifferencePx": 0,
+            "qc": "7張核可基準並排檢視；頭冠完整含安全邊、臉框中線置中、雙肩可辨認；頭高70.1%、臉高40.3%；只等比裁切縮放，未重畫或改造型。",
+            "createdAt": "2026-11-20"
+          }
+        ]
       }
     },
     {
