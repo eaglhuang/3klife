@@ -5876,6 +5876,54 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/xu_shu__徐庶__small_avatar_0001.png",
+            "status": "integrated",
+            "sha256": "a4d43b64da5d5a7d7db405ec4c17591b35abea69a94b5f07df87a77ba4bd64c3",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/xu_shu__徐庶__avatar_0002.png",
+            "sourceSha256": "a3f20176e43fc6a310edfece09728d6fd8fa4a5cfbefb9f070dc42cb6f97fd17",
+            "cropBox": {
+              "x": 49.07,
+              "y": 16.57,
+              "width": 180.85,
+              "height": 180.85
+            },
+            "faceBox": [
+              105,
+              74,
+              174,
+              143
+            ],
+            "headwearExtent": [
+              74,
+              22,
+              179,
+              144
+            ],
+            "shoulderAnchors": [
+              67,
+              173,
+              184,
+              192
+            ],
+            "method": "crop-only; uniform resize; no redraw",
+            "headHeightPercent": 66.9,
+            "faceHeightPercent": 38.2,
+            "faceWidthPercent": 38.2,
+            "faceCenterXPercent": 50,
+            "centerAxisDifferencePx": 0,
+            "qc": "與七張核可基準同尺度並排檢查；頭部達65%最低值、臉框中線對齊、髮飾完整，雙肩肩面可辨。只裁切與等比縮放。",
+            "createdAt": "2026-11-20"
+          }
+        ]
       }
     },
     {
