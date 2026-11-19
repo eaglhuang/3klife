@@ -6,7 +6,7 @@ Run from the repository root:
 
 Copy an existing manifest, such as artwork/temp/avatar-batch-gao-gan.json when available. The manifest contains references (seven approved PNG paths) and entries (character id and ordered sources). Each source has file, head, extent, face and shoulders. Mark boxes in original PNG pixels as [x,y,width,height]. Measure face from hairline to chin, excluding hat and hair, and retain the complete headwear in extent. Mark shoulders as [leftX,leftY,rightX,rightY] on the visible shoulder surfaces. For large avatars from standing art, also provide chest as [topY,bottomY].
 
-For small avatars, keep the two measurements distinct: `smallHeadCalibration` defaults to `{ "minimum": 0.70, "target": 0.75 }`, while `smallFaceCalibration` defaults to `{ "minimum": 0.38, "target": 0.44 }`. The first measures cranial hair/helmet mass to chin; the second measures forehead to chin. These defaults reflect the approved comparison set. Do not apply the head-height target to the face box.
+For small avatars, keep the two measurements distinct: `smallHeadCalibration` defaults to `{ "minimum": 0.70, "target": 0.75 }`, while `smallFaceCalibration` defaults to `{ "minimum": 0.38, "target": 0.44 }`. The first measures cranial hair/helmet mass to chin; the second measures forehead to chin. These defaults reflect the approved comparison set. Do not apply the head-height target to the face box. The midpoint of the face box must overlap the canvas vertical centerline within one output pixel (0.39% at 256×256); reject sources where complete headwear and shoulders force the face off center.
 
 Read artwork/temp/avatar-batch-<new-run-name>/report.json:
 
