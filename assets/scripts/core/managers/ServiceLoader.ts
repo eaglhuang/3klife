@@ -311,10 +311,6 @@ export class ServiceLoader {
         }
     }
 
-    /**
-     * 結緣畫面開啟前呼叫：載入因子字典與 person-registry.json，再把名冊裡已出生的子嗣補回血統圖。
-     * 讀檔時已由 session 的讀檔後處理補過一次；這裡再同步是給新局（沒有讀檔）的初代武將補虛擬祖先，重複呼叫不會重複登記。
-     */
     /** 載入血統規則資料表（適性繼承、門風契合 K、生平閱歷白因子，PROG-2-9168）；單表失敗時退回預設值 */
     public async loadBloodlineRuleTables(force = false): Promise<void> {
         if (this.bloodlineRulesLoaded && !force) return;
@@ -334,6 +330,10 @@ export class ServiceLoader {
         this.bloodlineRulesLoaded = true;
     }
 
+    /**
+     * 結緣畫面開啟前呼叫：載入因子字典與 person-registry.json，再把名冊裡已出生的子嗣補回血統圖。
+     * 讀檔時已由 session 的讀檔後處理補過一次；這裡再同步是給新局（沒有讀檔）的初代武將補虛擬祖先，重複呼叫不會重複登記。
+     */
     public async prepareBreeding(): Promise<void> {
         await this.loadBloodlineRuleTables();
         if (!this.factorDictionary) {
