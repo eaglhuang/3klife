@@ -179,3 +179,74 @@ export class FloatStaggerTracker {
         }
     }
 }
+
+// ─────────────────────────────────────────
+//  避讓棋盤標記（PROG-2-9415）
+// ─────────────────────────────────────────
+
+/** 跳字要避開的矩形（UI 座標，中心＋半寬半高）。例如棋盤 buff 格的圖示與倍數。 */
+export interface FloatAvoidRect { x: number; y: number; halfW: number; halfH: number }
+
+/** 跳字與標記之間至少留的空隙（像素） */
+export const FLOAT_AVOID_MARGIN = 6;
+/** 最多水平挪動多少像素；再遠字就離開受擊單位，寧可維持原位 */
+export const FLOAT_AVOID_MAX_SHIFT = 140;
+/**
+ * 大字（爆擊）光半寬就接近上限，正對標記時一定挪不開；上限至少放寬到「字的半寬＋這個距離」，
+ * 讓字靠近單位的那一側邊緣最多離原中心這麼遠，字仍貼在受擊單位旁。
+ */
+export const FLOAT_AVOID_EDGE_REACH = 70;
+
+/**
+ * 估算跳字的半寬（像素）。數字與英文約 0.6 字寬，中日韓字約 1 字寬。純函式。
+ * 用回彈後的大小（縮放 1）計算：彈出峰值只維持不到 0.1 秒、且還在起點，往上飄的大半段都是縮放 1。
+ */
+export function floatHalfWidth(text: string, style: Pick<FloatTextStyle, 'fontSize'>): number {
+    let units = 0;
+    for (const ch of text) units += ch.charCodeAt(0) > 0x2e7f ? 1 : 0.6;
+    return (units * style.fontSize) / 2;
+}
+
+/**
+ * 跳字往上飄的整條路徑若會蓋到任何標記，回傳最小的水平挪動量（左負右正）；不重疊或挪不開都回傳 0。純函式。
+ * 挪動上限＝max(maxShift, 半寬＋FLOAT_AVOID_EDGE_REACH)。
+ *
+ * 路徑視為一根直立長條：x ∈ [startX ± halfW]、y 從 startY − halfH 到 startY + rise + halfH。
+ * 候選位置＝每個重疊標記的左右緊貼位置；依挪動距離由小到大試，第一個完全不重疊的就用它。
+ * 只用區域變數與傳入陣列，不配置物件（每次跳字呼叫一次，量很小）。
+ *
+ * Unity 對照：DamagePopup 生成前對 HUD 標記做一次 1D 掃描避讓。
+ */
+export function floatAvoidShift(
+    startX: number, startY: number, halfW: number, halfH: number, rise: number,
+    rects: readonly FloatAvoidRect[], margin = FLOAT_AVOID_MARGIN, maxShift = FLOAT_AVOID_MAX_SHIFT,
+): number {
+    const cap = Math.max(maxShift, halfW + FLOAT_AVOID_EDGE_REACH);
+    const bottom = startY - halfH;
+    const top = startY + rise + halfH;
+    const blocked = (dx: number): boolean => {
+        const left = startX + dx - halfW;
+        const right = startX + dx + halfW;
+        for (const r of rects) {
+            if (top <= r.y - r.halfH - margin || bottom >= r.y + r.halfH + margin) continue;
+            if (right <= r.x - r.halfW - margin || left >= r.x + r.halfW + margin) continue;
+            return true;
+        }
+        return false;
+    };
+    if (!blocked(0)) return 0;
+    let best = 0;
+    let bestAbs = Infinity;
+    for (const r of rects) {
+        // 多 0.5 像素，避免浮點誤差剛好落在邊界上被判成重疊
+        const toLeft = (r.x - r.halfW - margin - halfW - 0.5) - startX;
+        const toRight = (r.x + r.halfW + margin + halfW + 0.5) - startX;
+        for (let side = 0; side < 2; side++) {
+            const dx = side === 0 ? toLeft : toRight;
+            const abs = Math.abs(dx);
+            if (abs >= bestAbs || abs > cap) continue;
+            if (!blocked(dx)) { best = dx; bestAbs = abs; }
+        }
+    }
+    return best;
+}
