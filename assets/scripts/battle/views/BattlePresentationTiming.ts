@@ -102,6 +102,13 @@ export const BATTLE_VISUAL_TIMING = {
   hitShakeSec: 0.15,
   /** 受擊抖動幅度，佔格寬的比例（4～6% 之間取中）。 */
   hitShakeAmplitudeRatio: 0.05,
+  /**
+   * 受擊後退距離，佔格寬的比例（PROG-2-9412）。Spine 單位以前的後退只動到 3D 子節點、畫面上的小兵沒動，
+   * 改由 Spine 疊層自己往後推；12% 約一格的八分之一，看得出被打退又不會退出格子。
+   */
+  hitRecoilRatio: 0.12,
+  /** 命中頓格秒數（PROG-2-9412）：打中那一刻攻守雙方的骨架動畫定格，打擊才有「卡一下」的重量感。 */
+  hitStopSec: 0.06,
   /** 重擊／爆擊的畫面震動總秒數。 */
   hitScreenShakeSec: 0.12,
   /** 重擊／爆擊的畫面震動幅度（世界單位；一格約 1.0，所以 0.05 只有一格的 5%，刻意很小）。 */
@@ -173,6 +180,25 @@ export function sampleHitShake(elapsedSec: number, amplitude: number, totalSec: 
   const to = HIT_SHAKE_KEYS[index];
   const t = (elapsedSec - index * stepSec) / stepSec;
   return amplitude * (from + (to - from) * t);
+}
+
+/**
+ * 受擊後退位移比例（0～1，PROG-2-9412）：先快速推出（recoilPushSec，減速）、停住（recoilHitStopSec）、
+ * 再收回原位（recoilRecoverSec，加速）。乘上後退距離就是畫面位移。純函式。
+ */
+export function sampleHitRecoil(elapsedSec: number): number {
+  const push = BATTLE_VISUAL_TIMING.recoilPushSec, hold = BATTLE_VISUAL_TIMING.recoilHitStopSec, back = BATTLE_VISUAL_TIMING.recoilRecoverSec;
+  if (!(elapsedSec > 0)) return 0;
+  if (elapsedSec < push) { const t = elapsedSec / push; return 1 - (1 - t) * (1 - t); }
+  if (elapsedSec < push + hold) return 1;
+  if (elapsedSec < push + hold + back) { const t = (elapsedSec - push - hold) / back; return 1 - t * t; }
+  return 0;
+}
+
+/** 一次受擊回饋（閃白、抖動、後退）全部播完的秒數。 */
+export function hitFeedbackTotalSec(): number {
+  const t = BATTLE_VISUAL_TIMING;
+  return Math.max(t.hitShakeSec, t.hitFlashSec, t.recoilPushSec + t.recoilHitStopSec + t.recoilRecoverSec);
 }
 
 /** 受擊閃白強度（1 = 最亮，線性衰減到 0）。純函式。 */

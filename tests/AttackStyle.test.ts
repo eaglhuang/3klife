@@ -4,11 +4,12 @@ import { existsSync, readdirSync } from 'fs';
 import { join } from 'path';
 import { TroopType } from '../assets/scripts/shared/CommonEnums';
 import { ATTACK_SPINE_CLIP, AttackStyle, attackStyleFor, pickAttackClip } from '../assets/scripts/battle/shared/AttackStyle';
-import { ATTACK_SHOTS, ARROW_HIT_DELAY_SEC, shotPoseAt, shotTotalSec } from '../assets/scripts/battle/shared/AttackShotStyle';
+import { ATTACK_IMPACT_SEC, ATTACK_SHOTS, ARROW_HIT_DELAY_SEC, shotPoseAt, shotTotalSec } from '../assets/scripts/battle/shared/AttackShotStyle';
 import { ATTACK_SLASH_SHOT, slashPoseAt } from '../assets/scripts/battle/shared/AttackSlashShot';
 import { ATTACK_ARROW_SHOT, ATTACK_SLASH_EFFECT_ID, attackVfxFor } from '../assets/scripts/battle/shared/AttackVfxMapping';
 import { ATTACK_SFX_KEY, attackSfxFor } from '../assets/scripts/battle/shared/AttackSfxMapping';
 import { BATTLE_AUDIO_CLIP_MAP } from '../assets/scripts/battle/shared/BattleAudio';
+import { BATTLE_VISUAL_TIMING } from '../assets/scripts/battle/views/BattlePresentationTiming';
 import { soldierSpineConfig } from '../assets/scripts/battle/shared/UnitPresentationConfig';
 import { UnitPresentationCore } from '../assets/scripts/battle/shared/UnitPresentationCore';
 
@@ -79,11 +80,11 @@ for (const [style, shots] of Object.entries(ATTACK_SHOTS)) {
 }
 // 刺光朝目標：貼圖長軸（artDeg）轉完要落在攻擊方向；有滑行
 const thrust = ATTACK_SHOTS.thrust[0];
-assert.equal(shotPoseAt(thrust, 0.1, 0).angle + thrust.artDeg, 0);
-assert.equal(shotPoseAt(thrust, 0.1, 90).angle + thrust.artDeg, 90);
-assert.ok(shotPoseAt(thrust, thrust.durationSec, 0).slide > 0);
+assert.equal(shotPoseAt(thrust, thrust.delaySec + 0.1, 0).angle + thrust.artDeg, 0);
+assert.equal(shotPoseAt(thrust, thrust.delaySec + 0.1, 90).angle + thrust.artDeg, 90);
+assert.ok(shotPoseAt(thrust, thrust.delaySec + thrust.durationSec, 0).slide > 0);
 // 圓形與星芒不旋轉
-assert.equal(shotPoseAt(ATTACK_SHOTS.shield[0], 0.1, 77).angle, 0);
+assert.equal(shotPoseAt(ATTACK_SHOTS.shield[0], ATTACK_SHOTS.shield[0].delaySec + 0.1, 77).angle, 0);
 // 弓箭命中小爆要等箭飛到；延遲與飛行時間同步
 assert.equal(ARROW_HIT_DELAY_SEC, ATTACK_ARROW_SHOT.flightSec);
 assert.equal(ATTACK_SHOTS.bow[0].delaySec, ATTACK_ARROW_SHOT.flightSec);
@@ -92,10 +93,18 @@ assert.equal(shotPoseAt(ATTACK_SHOTS.bow[0], 0.1, 0).visible, false);
 assert.deepEqual(ATTACK_SHOTS.charge.map(s => s.anchor), [0, 1]);
 // 劈砍沿用原本的月牙姿態，不改變既有外觀
 for (const t of [0, 0.3, 0.75, 1]) {
-  const old = slashPoseAt(t, 33), neu = shotPoseAt(ATTACK_SHOTS.slash[0], t * ATTACK_SLASH_SHOT.durationSec, 33);
+  const old = slashPoseAt(t, 33), neu = shotPoseAt(ATTACK_SHOTS.slash[0], ATTACK_SHOTS.slash[0].delaySec + t * ATTACK_SLASH_SHOT.durationSec, 33);
   assert.ok(Math.abs(old.angle - neu.angle) < 1e-9 && Math.abs(old.scale - neu.scale) < 1e-9 && Math.abs(old.opacity - neu.opacity) <= 1, `slash t=${t}`);
 }
 // 用到的音效 clip 都真的在 audio bundle 裡
 const clips = new Set(readdirSync(join(__dirname, '../assets/bundles/audio/clips')).filter(f => f.endsWith('.mp3')).map(f => f.replace(/\.mp3$/, '')));
 for (const key of Object.values(ATTACK_SFX_KEY)) assert.ok(clips.has(BATTLE_AUDIO_CLIP_MAP[key]), `${key} 的 clip 檔不存在`);
+// PROG-2-9412：命中時間——閃光要在命中前出現、命中前後還亮著；弓箭以箭飛到為準、騎兵以撞上為準
+assert.equal(ATTACK_IMPACT_SEC.bow, ARROW_HIT_DELAY_SEC);
+assert.ok(Math.abs(ATTACK_IMPACT_SEC.charge - (BATTLE_VISUAL_TIMING.cavalryLiftSec + BATTLE_VISUAL_TIMING.cavalryImpactSec)) < 1e-9);
+for (const style of ['thrust', 'shield', 'slash'] as const) {
+  const shot = ATTACK_SHOTS[style][0];
+  assert.ok(shot.delaySec < ATTACK_IMPACT_SEC[style], `${style} 閃光要在命中前出現`);
+  assert.ok(shotTotalSec(shot) > ATTACK_IMPACT_SEC[style], `${style} 閃光要亮到命中之後`);
+}
 console.log('AttackStyle tests passed');

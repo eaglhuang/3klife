@@ -102,6 +102,17 @@ export function createBattleHitFeedbackSuite(): TestSuite {
         assert.isTrue(crit.durationMs >= normal.durationMs);
     });
 
+    suite.test('PROG-2-9412：重擊跳字介於一般與爆擊之間，顏色避開爆擊金與地形適性綠藍紅', () => {
+        const heavy = FLOAT_TEXT_STYLES.dmg_heavy;
+        const normal = FLOAT_TEXT_STYLES.dmg_player;
+        const crit = FLOAT_TEXT_STYLES.dmg_crit;
+        assert.isTrue(heavy.fontSize > normal.fontSize && heavy.fontSize < crit.fontSize, '字級介於中間');
+        assert.isTrue(heavy.peakScale > normal.peakScale && heavy.peakScale < crit.peakScale, '彈出幅度介於中間');
+        assert.isTrue(heavy.color.r > 240 && heavy.color.g < crit.color.g - 30 && heavy.color.b < 80, '橘色、明顯比爆擊金偏紅');
+        const far = (c: FloatRgba, hex: number) => Math.abs(c.r - (hex >> 16)) + Math.abs(c.g - ((hex >> 8) & 255)) + Math.abs(c.b - (hex & 255)) > 120;
+        [0x48C774, 0x3273DC, 0xF14668].forEach(hex => assert.isTrue(far(heavy.color, hex), `避開地形適性色 ${hex.toString(16)}`));
+    });
+
     suite.test('飄字樣式：治療綠、閃避灰', () => {
         const heal = FLOAT_TEXT_STYLES.heal.color;
         assert.isTrue(heal.g > heal.r && heal.g > heal.b, '綠色為主');

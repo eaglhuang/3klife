@@ -71,6 +71,10 @@ export class UnitPresentationCore {
   public follow(foot: FootPoint, moving: boolean, dt: number): void {
     if (![foot.x, foot.y, dt].every(Number.isFinite) || dt < 0) throw new Error('腳點與 dt 必須為有限數字');
     const dx = foot.x - this.foot.x, dy = foot.y - this.foot.y;
+    // PROG-2-9412：出手／受擊／閃避這類一次性動作還沒播完時，位置照跟但不改成走路；
+    // 騎兵衝鋒是「邊移動邊出手」，以前會被覆蓋成整隊走路、看不到突刺
+    const oneShotPlaying = (this.action === 'attack' || this.action === 'hit' || this.action === 'dodge') && this.elapsed < this.currentClip().duration;
+    if (moving && oneShotPlaying) { this.foot = { ...foot }; return; }
     if (moving && dt > 0 && Math.hypot(dx, dy) > 0.001) {
       if (this.action !== 'move') { this.action = 'move'; this.revision++; }
       if (dx !== 0) this.facing = dx < 0 ? -1 : 1;
