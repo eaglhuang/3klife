@@ -1,8 +1,8 @@
 // @spec-source → 見 docs/cross-reference-index.md
 import { Camera, Color, Font, Label, Node, Tween, tween, UIOpacity, UITransform, Vec3 } from "cc";
 import {
-    FLOAT_MISS_TEXT, FLOAT_TEXT_STYLES, FloatStaggerTracker, floatEffectiveHeight,
-    type FloatTextStyle, type FloatTextType,
+    FLOAT_MISS_TEXT, FLOAT_TEXT_STYLES, FloatStaggerTracker, floatAvoidShift, floatEffectiveHeight, floatHalfWidth,
+    type FloatAvoidRect, type FloatTextStyle, type FloatTextType,
 } from "./FloatTextStyle";
 
 export type { FloatTextType } from './FloatTextStyle';
@@ -55,6 +55,8 @@ export class FloatTextSystem {
     private readonly stagger = new FloatStaggerTracker();
     /** 設定 Label 顏色時共用的暫存色，避免每次跳字 new Color */
     private readonly tmpColor = new Color();
+    /** 跳字要避開的標記（例如棋盤 buff 格圖示）；由戰場註冊，離開戰場時清掉（PROG-2-9415） */
+    private avoidProvider: (() => readonly FloatAvoidRect[]) | null = null;
 
     // ─────────────────────────────────────────
     //  初始化
@@ -80,6 +82,14 @@ export class FloatTextSystem {
      */
     registerFont(type: FloatTextType, font: Font): void {
         this.customFonts.set(type, font);
+    }
+
+    /**
+     * 註冊跳字要避開的標記（UI 座標，與 setup 的 uiRoot 同一層）。傳 null 取消。
+     * 每次跳字只呼叫一次 provider；provider 應回傳重用的陣列，不要每次配置。
+     */
+    setAvoidProvider(provider: (() => readonly FloatAvoidRect[]) | null): void {
+        this.avoidProvider = provider;
     }
 
     // ─────────────────────────────────────────
@@ -129,8 +139,13 @@ export class FloatTextSystem {
             ? this.stagger.place(anchorKey, Date.now(), config.durationMs, floatEffectiveHeight(config))
             : { x: 0, y: 0 };
         const offsetX = (Math.random() - 0.5) * 2 * config.randomOffsetX + stagger.x;
-        const startX = uiPos.x + offsetX;
+        let startX = uiPos.x + offsetX;
         const startY = uiPos.y + stagger.y;
+        // PROG-2-9415：往上飄的路徑會蓋到棋盤 buff 格的圖示與倍數時，水平挪到旁邊，兩邊都看得清楚
+        const avoid = this.avoidProvider?.();
+        if (avoid && avoid.length > 0) {
+            startX += floatAvoidShift(startX, startY, floatHalfWidth(text, config), floatEffectiveHeight(config) / 2, config.risePixels, avoid);
+        }
         entry.node.setPosition(startX, startY, 0);
         entry.node.setScale(config.startScale, config.startScale, 1);
 

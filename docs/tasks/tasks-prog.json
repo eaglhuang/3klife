@@ -10481,6 +10481,54 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9415",
+      "title": "跳字避開棋盤 buff 格標記",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T03:10:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "PROG-2-9412 驗收列出「重擊跳字壓到地格標示」，當時延後；總PM 11/19 指示六關驗收（PROG-2-9414）完成後再做。棋盤 buff 格的圓形圖示＋倍數（攻×4、命÷3）與單位頭頂跳字疊在一起時，兩者都看不清。",
+      "related": [
+        "PROG-2-9411",
+        "PROG-2-9412",
+        "PROG-2-9414"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: done | 驗證: 單元測試 8478 過（新增 FloatAvoid 8 項）、tsc 0、compute-gate quick 3/3、battle-skill-smoke 74 過；主目錄博望坡實跑：跳字從標記格起飄，開避讓前爆擊／一般／重擊字都蓋在命÷5 圖示上，開後往旁挪開；正常打 8 回合 console 錯誤 0 | 變更: FloatTextStyle 新增 floatAvoidShift／floatHalfWidth 純函式（整條上飄路徑對標記矩形做左右最小挪動，上限 max(140, 字半寬+70)）；FloatTextSystem 新增 setAvoidProvider；TileBuffMarkers 提供圖示＋倍數矩形（物件重用）；UnitRenderer 註冊與離場清除 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

@@ -21,6 +21,7 @@ import {
   type TileBuffSource,
 } from '../shared/TileBuffBadge';
 import { drawStatusIconDisc, statusIconTextColor } from './UnitStatusIconBar';
+import type { FloatAvoidRect } from '../../core/systems/FloatTextStyle';
 
 /** 圖示比頭頂的（36）大一點：棋盤上是要讓玩家「找得到」的目標 */
 const ICON_RADIUS = 22;
@@ -30,6 +31,8 @@ const PLATE_RX = 60;
 const PLATE_RY = 22;
 const AMOUNT_GAP = 6;
 const FLY_POOL_MAX = 4;
+/** 倍數字（×3、÷5）每個字約佔的寬度（字級 26 粗體），給跳字避讓估算用 */
+const AMOUNT_EST_WIDTH_PER_CHAR = 17;
 
 const PLATE_BUFF = new Color(255, 214, 90, 255);
 const PLATE_DEBUFF = new Color(176, 80, 230, 255);
@@ -75,6 +78,9 @@ export class TileBuffMarkers {
   private readonly flies: FlyView[] = [];
   private time = 0;
   private readonly flyPos = new Vec3();
+  /** 給跳字避讓用的矩形；物件重用，不每次配置（PROG-2-9415） */
+  private readonly avoidRects: FloatAvoidRect[] = [];
+  private readonly avoidPool: FloatAvoidRect[] = [];
 
   /**
    * @param getRoot 標記掛載的 UI 根節點（單位名牌同一層）
@@ -120,6 +126,31 @@ export class TileBuffMarkers {
     if (!view || !view.root.active) return null;
     const p = view.root.position;
     return out.set(p.x, p.y + view.icon.position.y, 0);
+  }
+
+  /**
+   * 目前每個標記「圖示＋倍數」所佔的矩形（UI 座標，與標記同一層），給跳字避開用（PROG-2-9415）。
+   * 回傳的陣列與其中物件都會被下一次呼叫覆寫，呼叫端不要保存。
+   */
+  public avoidRectsForFloatText(): readonly FloatAvoidRect[] {
+    const out = this.avoidRects;
+    out.length = 0;
+    this.markers.forEach(view => {
+      if (!view.root.active) return;
+      const p = view.root.position;
+      const iconY = p.y + view.icon.position.y;
+      const scale = Math.max(1, view.icon.scale.x);
+      const amountW = view.amount.string ? AMOUNT_EST_WIDTH_PER_CHAR * view.amount.string.length : 0;
+      const left = p.x - RARE_RING_RADIUS * scale;
+      const right = p.x + (RARE_RING_RADIUS + (amountW > 0 ? AMOUNT_GAP + amountW : 0)) * scale;
+      const rect = this.avoidPool[out.length] ?? (this.avoidPool[out.length] = { x: 0, y: 0, halfW: 0, halfH: 0 });
+      rect.x = (left + right) / 2;
+      rect.y = iconY;
+      rect.halfW = (right - left) / 2;
+      rect.halfH = RARE_RING_RADIUS * scale;
+      out.push(rect);
+    });
+    return out;
   }
 
   /**
