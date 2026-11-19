@@ -53,6 +53,7 @@ import { GENERAL_STATUS_DEAD } from '../../core/systems/GeneralAging';
 import { inspiredTacticIds, mentorFromCard } from '../../core/systems/NurtureSystem';
 import type { NurtureInspiration } from '../../core/services/NurtureService';
 import { DEFAULT_SYNERGY_GROUPS } from '../../core/systems/MentorSynergy';
+import { evaluateMentorGuidance, mentorGuidanceHint } from '../../core/systems/MentorGuidance';
 import {
     cycleMentorDeckSlot,
     defaultMentorDeck,
@@ -210,6 +211,11 @@ export interface NurtureFlowDeps {
      * 未提供時開始頁不顯示「好友借用」。回傳 ok=false 時 message 為擋下原因文案。
      */
     commitFriendBorrow?: (friendId: string, sessionId: string) => Promise<{ ok: boolean; message?: string }>;
+    /**
+     * 新玩家缺教官引導（PROG-2-9160）：未提供時不顯示引導。
+     * isDone＝存檔旗標；markDone＝玩家第一次擁有教官時記旗標；tickets＝目前支援券張數。
+     */
+    mentorGuide?: { isDone: () => boolean; markDone: () => void; tickets: () => number };
     /** 結業兌換戰法：正式環境接 GameSession.learnTactic；清單為本場靈感觸發的戰法（PROG-2-1134） */
     learnTactic?: (childId: string, tacticId: string) => Promise<TacticLearnCheck>;
     /** 家學研習（G2 §E #4）；正式環境接 NurtureService，未提供時按鈕不可用 */
@@ -338,6 +344,8 @@ export class NurtureFlowController {
         this._deckCandidates = owned.length > 0
             ? ancestorMentorsFirst(owned, this._ancestorsOf(childId, owned))
             : childId && childId === this._guestChildId ? [guestScholarMentorCard(childId)] : [];
+        const guide = this._deps.mentorGuide;
+        if (guide && evaluateMentorGuidance({ ownedMentorCount: owned.length, hasBorrowed: false, guideDone: guide.isDone() }).markDone) guide.markDone();
         this._deck = this._deck === null ? defaultMentorDeck(this._deckCandidates) : sanitizeMentorDeck(this._deck, this._deckCandidates);
         if (this._deck.every((uid) => uid === null) && this._deckCandidates.length > 0) this._deck = defaultMentorDeck(this._deckCandidates);
     }
@@ -686,6 +694,8 @@ export class NurtureFlowController {
         enabled.btnFamilyStudy = false;
         enabled.btnNextStudyFactor = false;
         enabled.btnStartBorrow = false;
+        actives.btnMentorGuide = false;
+        enabled.btnMentorGuide = false;
         actives.tacticBlock = false;
         enabled.btnPrevTactic = false;
         enabled.btnNextTactic = false;
@@ -725,14 +735,19 @@ export class NurtureFlowController {
             const hasMentor = this.deck.some((uid) => uid !== null) || borrowed !== null;
             enabled.btnStartNurture = check.eligible && hasMentor;
             enabled.btnStartBorrow = !!this._deps.commitFriendBorrow;
+            const guide = this._deps.mentorGuide;
+            const showGuide = !!guide && evaluateMentorGuidance({ ownedMentorCount: this._deckCandidates.length, hasBorrowed: borrowed !== null, guideDone: guide.isDone() }).show;
+            actives.btnMentorGuide = showGuide;
+            enabled.btnMentorGuide = showGuide;
             texts.startBorrowLabel = borrowed ? `好友：${borrowed.name} ★${borrowed.stars ?? 0}（點擊取消）` : '＋ 好友借用';
             texts.startHint = !check.eligible
                 ? check.reasons.map((r) => BLOCK_REASON_TEXT[r]).join('、')
                 : hasMentor
                     ? `入學將消耗 1 張入學令（本季剩 ${this._deps.nurture.admissionsLeft()} 張），帶上下方編成的教官（自有最多 ${MENTOR_DECK_SIZE} 位＋好友借用 1 位）`
-                    : NO_MENTOR_HINT;
+                    : showGuide ? mentorGuidanceHint(guide!.tickets()) : NO_MENTOR_HINT;
             const lookup = this._deps.text ?? fallbackBreedText;
             Object.assign(texts, buildDeckTexts(this.deck, this._deckCandidates, lookup, this._ancestorUids()));
+            if (showGuide) texts.deckHint = '沒有可用教官：點「去教官池抽教官」，或讓武將 65 歲退役轉教官';
             for (let i = 0; i < MENTOR_DECK_SIZE; i++) enabled[`btnDeckSlot${i}`] = this._deckCandidates.length > 0;
             Object.assign(texts, buildSlotTexts(child, null, lookup));
             return { mode: 'start', childId: child.id, texts, actives, enabled };
@@ -923,7 +938,7 @@ function buildDeckTexts(deck: MentorDeck, candidates: readonly MentorCard[], t: 
     }
     texts.deckHint = candidates.length > 0
         ? `教官編成 ${filled} / ${MENTOR_DECK_SIZE}：點格子輪換（可用教官 ${candidates.length} 位）`
-        : '沒有可用教官：到轉蛋「支援卡池」用支援券抽教官，或讓武將 65 歲退役轉教官';
+        : '沒有可用教官：到轉蛋「教官池」用支援券抽教官，或讓武將 65 歲退役轉教官';
     return texts;
 }
 
