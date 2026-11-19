@@ -109,12 +109,14 @@ for (const entry of manifest.entries) {
             '--target', String(headCalibration.target),
             '--min-face-ratio', String(faceCalibration.minimum),
             '--target-face-ratio', String(faceCalibration.target));
+          const minimumWidth = source.minFaceWidthRatio ?? faceCalibration.minimumWidth ?? 0.276;
+          args.push('--min-face-width-ratio', String(minimumWidth));
           const result = runGuide(args);
           if (result.stdout.trim()) geometry = JSON.parse(result.stdout);
           if (result.status === 0 && geometry) {
             const faceHeight = geometry.faceHeightRatio;
             const faceWidth = geometry.faceWidthRatio;
-            if (faceHeight < 38 || faceHeight > 50 || faceWidth < 27.6 || faceWidth > 39.6) {
+            if (faceHeight < 38 || faceHeight > 50 || faceWidth > 39.6) {
               attempts.push({
                 source: source.file,
                 reason: 'Face scale falls outside the approved Da Qiao reference window (height 38–50%, width 27.6–39.6%).',

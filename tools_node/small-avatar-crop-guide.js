@@ -141,8 +141,9 @@ function main() {
     const minHeadRatio = a['min-head-ratio'] == null ? 0.70 : Number(a['min-head-ratio']);
     // Face ratios use the hairline-to-chin box, independently of headwear.
     const minFaceRatio = a['min-face-ratio'] == null ? null : Number(a['min-face-ratio']);
+    const minFaceWidthRatio = a['min-face-width-ratio'] == null ? null : Number(a['min-face-width-ratio']);
     const targetFaceRatio = a['target-face-ratio'] == null ? null : Number(a['target-face-ratio']);
-    for (const [name, value] of [['min-face-ratio', minFaceRatio], ['target-face-ratio', targetFaceRatio]]) {
+    for (const [name, value] of [['min-face-ratio', minFaceRatio], ['target-face-ratio', targetFaceRatio], ['min-face-width-ratio', minFaceWidthRatio]]) {
       if (value !== null && !(value > 0 && value < 1)) throw new Error(`--${name} must be between 0 and 1`);
     }
     if (targetFaceRatio !== null && (minFaceRatio === null || targetFaceRatio < minFaceRatio)) {
@@ -234,19 +235,28 @@ function main() {
     result.faceCenterTolerancePixels = 1;
     result.faceCenterTolerancePercent = +(100 / outputSize).toFixed(3);
     result.minFaceHeightRatio = minFaceRatio === null ? null : minFaceRatio * 100;
-    result.passesFaceSize = passesFaceSize;
+    result.minFaceWidthPercent = minFaceWidthRatio === null ? null : minFaceWidthRatio * 100;
+    const passesFaceWidth = minFaceWidthRatio === null ? null : face.width / side >= minFaceWidthRatio;
+    result.passesFaceWidth = passesFaceWidth;
+    result.passesFaceSize = passesFaceSize === false || passesFaceWidth === false ? false : passesFaceSize;
     result.centerAnchor = 'face-box';
     result.noseCenterX = noseX === null ? null : +((noseX - crop.x) / side * 100).toFixed(1);
-    if (minFaceRatio !== null) {
+    if (minFaceRatio !== null || minFaceWidthRatio !== null) {
+      const maximumSide = Math.min(
+        minFaceRatio === null ? Infinity : face.height / minFaceRatio,
+        minFaceWidthRatio === null ? Infinity : face.width / minFaceWidthRatio,
+      );
       result.faceScaleAdvice = {
-        minimumUniformZoom: Math.ceil(Math.max(1, minFaceRatio / faceHeightRatio) * 1000) / 1000,
-        maximumCropSidePixels: Math.floor(face.height / minFaceRatio * 100) / 100,
+        minimumUniformZoom: Math.ceil(Math.max(1, side / maximumSide) * 1000) / 1000,
+        maximumCropSidePixels: Math.floor(maximumSide * 100) / 100,
+        maximumSideForHeadAndFacePixels: Math.floor(Math.min(maximumSide, head.height / minHeadRatio) * 100) / 100,
+        canFitMarkedFeaturesAtRequiredScale: Math.max(horizontalSide, requiredVertical) <= Math.min(maximumSide, head.height / minHeadRatio),
       };
     }
     if (passesFaceSize === null && result.passesAllHardChecks) {
       result.acceptanceStatus = 'geometry-pass-face-scale-uncalibrated';
     }
-    if (passesFaceSize === false) {
+    if (result.passesFaceSize === false) {
       result.acceptanceStatus = 'geometry-fail';
       result.passesAllHardChecks = false;
       result.faceSizeFailure = 'The crop produces a face smaller than the configured minimum.';

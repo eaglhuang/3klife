@@ -151,3 +151,9 @@ node tools_node/generate-general-avatars.js new-general
 6. 左右肩標記須落在看得出來的肩面上，超出各自臉緣至少裁框寬 `5%`。扇子、武器或袖子蓋住肩面時，不能把遮擋物當肩膀；改用另一張來源。頭頂、冠飾及主要髮飾都要完整保留，左右肩面也都要在畫面內。
 7. 每張候選必須在七張核可基準的同尺度對照圖中檢視。自動偵測只用來提出位置；`scale_pass_review` 仍須人工核對，不能直接收入。臉框中心中線誤差最多輸出 `1px`；頭高、臉高／寬、完整頭飾與兩肩都通過才可入庫。125px 足以判讀時停在125；不夠才依序放大至250、500。
 8. 候選先留在 `artwork/temp/avatar-batch-<run-name>/`。未通過或無法目視確認的版本不可寫入正式目錄或 catalog。通過後另存為下一個版本號、更新該武將 `smallAvatar` 歷程與量測／來源資訊，並只提交本輪新增圖檔與對應 catalog 變更。
+
+### 臉寬與頭冠複核
+
+- 臉高與臉寬分開檢查。同角度核可圖若有量測值，可用 `--min-face-width-ratio` 或批次來源的 `minFaceWidthRatio` 設定臉寬下限。批次全域欄位為 `smallFaceCalibration.minimumWidth`。
+- `faceScaleAdvice.minimumUniformZoom` 回報兩項門檻所需的最小等比放大倍率。若必要裁框容不下完整頭冠與兩肩，改用其他正式來源。
+- 高帽與帽翼只標在完整外框。並排時另看髮際到下巴的臉高與兩頰寬度，避免將高冠計入頭高而放過小臉。
