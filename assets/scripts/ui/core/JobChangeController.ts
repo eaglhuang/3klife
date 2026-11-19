@@ -14,6 +14,7 @@
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { GENERAL_STATUS_DEAD } from '../../core/systems/GeneralAging';
 import { isDescendant } from '../../core/systems/ChildMagistrate';
+import { isJobChangeCandidate } from '../../core/systems/JobChangeEntry';
 import {
     buildJobChangeChoices,
     checkJobChange,
@@ -73,6 +74,8 @@ export class JobChangeController {
     private _generalId: string | null = null;
     private _subClass: JobClass | null = null;
     private _notice: string | null = null;
+    /** 詳情頁入口聚焦的武將；非 null 時名單只剩這一位（PROG-2-9166） */
+    private _focusId: string | null = null;
 
     constructor(private readonly _deps: JobChangeDeps) {}
 
@@ -81,6 +84,11 @@ export class JobChangeController {
      * 2026-11-19 使用者裁決：現成武將（無父母欄位）不列入成人禮；目前現成武將沒有其他轉職入口。
      */
     public eligibleGenerals(): JobWiringGeneral[] {
+        if (this._focusId !== null) {
+            return this._deps.roster.getAll()
+                .filter((general): general is JobWiringGeneral => general.id === this._focusId
+                    && isJobChangeCandidate(general as JobWiringGeneral));
+        }
         return this._deps.roster.getAll()
             .filter((general): general is JobWiringGeneral => {
                 const wiring = general as JobWiringGeneral;
@@ -90,6 +98,17 @@ export class JobChangeController {
                     && wiring.age >= JOB_CHANGE_MIN_AGE
                     && (wiring.subClass ?? null) === null;
             });
+    }
+
+    /**
+     * 武將詳情頁入口：名單只列這一位（現成武將也可，不要求本家子嗣），其餘流程與成人禮相同。
+     * 傳 null 回到成人禮名單。
+     */
+    public focusGeneral(generalId: string | null): void {
+        this._focusId = generalId;
+        this._generalId = generalId;
+        this._subClass = null;
+        this._notice = null;
     }
 
     public selectGeneral(generalId: string): void {
