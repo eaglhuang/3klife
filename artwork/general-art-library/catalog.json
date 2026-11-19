@@ -9747,20 +9747,65 @@
         ]
       },
       "smallAvatar": {
-        "status": "review-pending",
-        "activeVersion": "0001",
+        "status": "integrated",
+        "activeVersion": "0003",
         "history": [
           {
             "version": "0001",
             "file": "small_avatars/hua_man__花鬘__small_avatar_0001.png",
-            "status": "review-pending",
+            "status": "rejected",
             "sha256": "c790311572b1b02d21242f62bf9e34488f3df35251c2d8b066b6b7536abea4eb",
             "canvas": "330x330 RGBA",
             "source": "standing/hua_man__花鬘__standing_0002.png",
             "crop": "shoulder-line",
             "cropBox": "x=360,y=0,w=330,h=275",
             "transparentPadding": "bottom=55px",
-            "qc": "從核定站姿原圖裁切並加透明留白，未重繪或改造人物；本版仍待使用者視覺確認。"
+            "qc": "從核定站姿原圖裁切並加透明留白，未重繪或改造人物；本版仍待使用者視覺確認。",
+            "note": "使用者已移除不合格小頭像，已由新裁切候選取代。"
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/hua_man__花鬘__small_avatar_0002.png",
+            "status": "rejected",
+            "sha256": "c56b415c1363c2a6c0e1220d216dd1d523cbdff03f85dffacc406acdfc986eb2",
+            "canvas": "1254x1254 RGBA",
+            "cropBox": {
+              "x": 360,
+              "y": 0,
+              "width": 330,
+              "height": 275
+            },
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/hua_man__花鬘__standing_0002.png",
+            "sourceSha256": "2d0f4b9586c0d8e19379e2483197a6fd1cd8f00793ab01da19200f957663cce9",
+            "method": "crop-only; uniform resize; transparent padding; no redraw",
+            "qc": "裁切自核定站姿原圖；輸出尺寸與 alpha 已確認；比例與肩線候選已縮圖檢視，保留 review-pending。",
+            "note": "檔案由使用者清理；由 0003 等比例重裁版本取代。",
+            "createdAt": "2026-11-18"
+          },
+          {
+            "version": "0003",
+            "file": "small_avatars/hua_man__花鬘__small_avatar_0003.png",
+            "status": "integrated",
+            "sha256": "8c7452b88d785345d2d06df3dac788dea1237202479423cce79c8de733635ba8",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/hua_man__花鬘__avatar_0002.png",
+            "sourceSha256": "6f9aed6ad971b19524cf66e2dae0c9a059ccd2c69939063d3a2dac2fa29fcc96",
+            "cropBox": {
+              "x": 19.62,
+              "y": -4.88,
+              "width": 162.77,
+              "height": 162.77
+            },
+            "method": "crop-only; uniform resize; no redraw",
+            "headHeightPercent": 71.9,
+            "faceHeightPercent": 39.9,
+            "faceWidthPercent": 31.9,
+            "faceCenterXPercent": 50.0,
+            "qc": "與七張核准參考比較；臉框中線對齊畫布中線；頭部與臉部比例通過；頭飾保留，肩部可辨。只裁切與等比縮放。",
+            "note": "重裁版本；未重繪人物。",
+            "createdAt": "2026-11-20"
           }
         ]
       }
