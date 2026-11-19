@@ -41,3 +41,18 @@ export function mentorGuidanceHint(mentorTickets: number): string {
         ? `入學要帶至少 1 位教官：開局贈送的支援券可抽教官，你現有 ${mentorTickets} 張，點下方按鈕到「教官池」抽`
         : '入學要帶至少 1 位教官：支援券已用完，可到「教官池」補券，或讓武將 65 歲退役轉教官';
 }
+
+/** 官階晉升到此階（縣府佐官）才解鎖培育；與 officer-feature-unlocks.json 的「開獎培育」階位一致（PROG-2-9151） */
+export const NURTURE_UNLOCK_RANK = 2;
+
+/** 解鎖提示的按鈕與文案（PROG-2-9167，使用者裁決 91） */
+export const MENTOR_UNLOCK_PROMPT_TEXT = '培育已開放，先去教官池抽教官';
+export const MENTOR_UNLOCK_PROMPT_BUTTON_LABEL = '去教官池抽教官';
+
+/**
+ * 晉升事件的階位清單裡包含「縣府佐官」且提示尚未跳過時，才要跳一次培育解鎖提示。
+ * tiers 是這次晉升走過的所有階位（一次可能連升多階）。
+ */
+export function shouldShowMentorUnlockPrompt(tiers: readonly number[], alreadyShown: boolean): boolean {
+    return !alreadyShown && tiers.includes(NURTURE_UNLOCK_RANK);
+}

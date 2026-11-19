@@ -2,7 +2,7 @@
  * MentorGuidance.test.ts — 新玩家缺教官引導的判斷與文案（PROG-2-9160）
  */
 import { TestSuite, assert } from './TestRunner';
-import { evaluateMentorGuidance, mentorGuidanceHint } from '../assets/scripts/core/systems/MentorGuidance';
+import { evaluateMentorGuidance, mentorGuidanceHint, shouldShowMentorUnlockPrompt, NURTURE_UNLOCK_RANK } from '../assets/scripts/core/systems/MentorGuidance';
 import { STARTER_GACHA_WALLET } from '../assets/scripts/core/services/GachaWalletRules';
 
 export function createMentorGuidanceSuite(): TestSuite {
@@ -12,6 +12,15 @@ export function createMentorGuidanceSuite(): TestSuite {
         const r = evaluateMentorGuidance({ ownedMentorCount: 0, hasBorrowed: false, guideDone: false });
         assert.isTrue(r.show);
         assert.isFalse(r.markDone);
+    });
+
+    suite.test('培育解鎖提示：晉升到縣府佐官（階 2）且未跳過才跳；連升多階也算（PROG-2-9167）', () => {
+        assert.isTrue(shouldShowMentorUnlockPrompt([2], false));
+        assert.isTrue(shouldShowMentorUnlockPrompt([2, 3], false));
+        assert.equals(2, NURTURE_UNLOCK_RANK);
+        assert.isFalse(shouldShowMentorUnlockPrompt([3], false));
+        assert.isFalse(shouldShowMentorUnlockPrompt([2], true));
+        assert.isFalse(shouldShowMentorUnlockPrompt([], false));
     });
 
     suite.test('已選好友借用：不顯示引導（本來就能入學）', () => {

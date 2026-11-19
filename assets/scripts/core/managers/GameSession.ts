@@ -53,6 +53,7 @@ import { hasMatchingGreenFactor, learnTacticInto, type TacticLearnCheck } from '
 import { canStartAutoNurture, consumeAutoNurtureTicket, isAutoNurtureUnlocked, resolveAutoSchedule, runAutoNurtureSeason, type AutoNurtureBlockReason } from '../systems/AutoNurture';
 import { inspiredTacticIds, type NurtureAction, type NurtureRoundLog } from '../systems/NurtureSystem';
 import { learnTpCost } from '../systems/FactorTacticLinkage';
+import { computeDiscountedTpCost, tacticTagsOf } from '../systems/WhiteFactorTraits';
 import { applyPassiveSave, totalTacticTpDiscount } from '../systems/MentorPassiveSavings';
 import type { GeneralConfig } from '../models/GeneralUnit';
 import { advanceDaughtersOneYear, assignDaughterRoute, daughtersAwaitingRoute, type AssignDaughterResult, type DaughterRecord, type DaughterRoute } from '../systems/DaughterComingOfAge';
@@ -921,6 +922,8 @@ export class GameSession {
     private _openingRedFaceShown = false;
     /** 新玩家「去教官池抽教官」引導已結束（玩家第一次擁有教官後記下，PROG-2-9160）；存於 resources.mentorGuideDone */
     private _mentorGuideDone = false;
+    /** 晉升縣府佐官「培育已開放，先去抽教官」提示已跳過（PROG-2-9167）；存於 resources.mentorUnlockPromptShown，舊存檔缺欄位視為未跳過 */
+    private _mentorUnlockPromptShown = false;
     /** 內政本季紀錄：同季只能選一項 */
     private _domesticLog: DomesticSeasonLog = { ...EMPTY_DOMESTIC_LOG };
     /** 治理事件（PROG-2-1773）：只在發生那一季有效 */
@@ -2191,6 +2194,7 @@ export class GameSession {
         this._firstBattleCleared = false;
         this._openingRedFaceShown = false;
         this._mentorGuideDone = false;
+        this._mentorUnlockPromptShown = false;
         this._domesticLog = { ...EMPTY_DOMESTIC_LOG };
         this._governanceEvent = null;
         this._governanceBoosts = [];
@@ -4425,7 +4429,10 @@ export class GameSession {
         });
         for (const duel of options.duelOutcomes ?? []) {
             if (duel.tutorial) continue;
-            if (duel.winner === Faction.Player && duel.winnerGeneralId) this._mindWrite().record({ generalId: duel.winnerGeneralId, season, kind: 'DUEL', outcome: 'SUCCESS', tags: ['duel'], label: '單挑' });
+            if (duel.winner === Faction.Player && duel.winnerGeneralId) {
+                this._mindWrite().record({ generalId: duel.winnerGeneralId, season, kind: 'DUEL', outcome: 'SUCCESS', tags: ['duel'], label: '單挑' });
+                this._incrementCareerStat(duel.winnerGeneralId, 'duelsWon', 1);
+            }
             if (duel.loser === Faction.Player && duel.loserGeneralId) this._mindWrite().record({ generalId: duel.loserGeneralId, season, kind: 'DUEL', outcome: 'FAIL', tags: ['duel'], label: '單挑', ...(duel.winnerGeneralId ? { partnerId: duel.winnerGeneralId } : {}) });
         }
     }
@@ -4477,8 +4484,11 @@ export class GameSession {
         if (session.status !== 'completed') return { ok: false, blocked: 'NOT_GRADUATING', learned: [...(general.learnedTactics ?? [])] };
         if (!inspiredTacticIds(session).includes(tacticId)) return { ok: false, blocked: 'NOT_INSPIRED', learned: [...(general.learnedTactics ?? [])] };
         const green = hasMatchingGreenFactor(general.genes, tacticId);
-        // 教官卡 TP_Bonus：帶著的教官戰法 TP 消耗減免相加（封頂），乘算後進位（PROG-2-1999，暫定）
-        const tpCost = Math.ceil(applyPassiveSave(learnTpCost(getTacticTpCost(tacticId), green), totalTacticTpDiscount(session.mentors)));
+        // 教官卡 TP_Bonus + 生平閱歷白因子折扣（PROG-2-1999、PROG-2-9162）
+        const rawTpCost = Math.ceil(applyPassiveSave(learnTpCost(getTacticTpCost(tacticId), green), totalTacticTpDiscount(session.mentors)));
+        const tpCost = rawTpCost > 0
+            ? computeDiscountedTpCost(rawTpCost, general.genes, tacticTagsOf(tacticId)).finalCost
+            : 0;
         const check = learnTacticInto(general.learnedTactics ?? [], tacticId, battleIntelligenceOf(general), session.tp, tpCost);
         if (!check.ok) return check;
         this._nurture!.restoreState({
@@ -5584,10 +5594,21 @@ export class GameSession {
         for (const entry of settled.settled) {
             this._recordEventJournal(entry.success ? 'DISPATCH_SUCCESS' : 'DISPATCH_FAIL', this._journalSubjects([entry.generalId]));
             this._recordMindTask({ taskId: `hall-assign:${entry.board ?? "any"}:${entry.difficulty ?? "x"}`, generalIds: [entry.generalId], success: entry.success, label: `${entry.board ? MIND_BOARD_LABEL[entry.board] : '委任'}差事`, tags: [entry.board ?? 'assign'], difficulty: entry.difficulty, delegated: true });
+            this._incrementCareerStat(entry.generalId, entry.board === 'Expedition' ? 'diplomacyCount' : 'governanceSeasons', 1);
             if (entry.difficulty === undefined || entry.board === undefined) continue;
             this.settleHallMission({ difficulty: entry.difficulty, board: entry.board, success: entry.success });
             this._awardGeneralFame(entry.generalId, hallMissionFameGain({ difficulty: entry.difficulty, success: entry.success }));
         }
+    }
+
+    private _incrementCareerStat(generalId: string, field: 'duelsWon' | 'governanceSeasons' | 'diplomacyCount', delta: number): void {
+        if (delta <= 0) return;
+        this._roster.replaceAll(this._roster.getAll().map((g) => {
+            if (g.id !== generalId) return g;
+            const prev = (g as { battleRecord?: BattleRecordLike }).battleRecord ?? { wins: 0, losses: 0 };
+            const cur = prev[field] ?? 0;
+            return { ...g, battleRecord: { ...prev, [field]: cur + delta } } as GeneralConfig;
+        }));
     }
 
     /** 結算同一任務最新一筆未結算的委任紀錄（結算結果由戰後系統傳入）；沒有未結算紀錄時回傳 false。 */
@@ -6122,6 +6143,20 @@ export class GameSession {
         return this._mentorGuideDone;
     }
 
+    /** 培育解鎖提示是否已跳過 */
+    public get mentorUnlockPromptShown(): boolean {
+        return this._mentorUnlockPromptShown;
+    }
+
+    /** 培育解鎖提示已跳出：記下並存檔，之後不再跳 */
+    public async markMentorUnlockPromptShown(): Promise<void> {
+        if (this._mentorUnlockPromptShown) return;
+        this._mentorUnlockPromptShown = true;
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+    }
+
     /** 玩家已擁有過教官：記下並存檔，培育入學畫面不再顯示引導 */
     public async markMentorGuideDone(): Promise<void> {
         if (this._mentorGuideDone) return;
@@ -6249,6 +6284,7 @@ export class GameSession {
                 firstBattleCleared: this._firstBattleCleared,
                 openingRedFaceShown: this._openingRedFaceShown,
                 mentorGuideDone: this._mentorGuideDone,
+                mentorUnlockPromptShown: this._mentorUnlockPromptShown,
             },
             domestic: { ...this._domesticLog },
             ...(this._governanceEvent ? { governanceEvent: { ...this._governanceEvent } } : {}),
@@ -6594,6 +6630,7 @@ export class GameSession {
         this._openingRedFaceShown = normalizeFlag(snapshot.resources?.openingRedFaceShown)
             || (snapshot.resources?.firstBattleCleared === undefined && this._clearedStageIds.length > 0);
         this._mentorGuideDone = normalizeFlag(snapshot.resources?.mentorGuideDone);
+        this._mentorUnlockPromptShown = normalizeFlag(snapshot.resources?.mentorUnlockPromptShown);
         this._domesticLog = normalizeDomesticLog(snapshot.domestic);
         this._governanceEvent = normalizeGovernanceEvent(snapshot.governanceEvent);
         this._governanceBoosts = normalizeGovernanceBoosts(snapshot.governanceBoosts);
