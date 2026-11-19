@@ -12,6 +12,7 @@
  * Unity 對照：像 ScriptableObject 的功能解鎖表加一個 static helper，UI 只問 IsUnlocked(id, rank)。
  */
 import { OFFICER_TIER_TITLES } from './OfficerDisplay';
+import { OFFICER_TIER_EXP_THRESHOLDS } from './OfficerState';
 import { MENTOR_UNLOCK_PROMPT_BUTTON_LABEL, MENTOR_UNLOCK_PROMPT_TEXT } from './MentorGuidance';
 
 export const OFFICER_FEATURE_TIER_MIN = 1;
@@ -127,9 +128,20 @@ export function lockedActionLabel(name: string, lock: LobbyActionLock): string {
     return lock.locked ? `🔒${name}\n${lock.requiredTitle}開放` : name;
 }
 
-/** 點未解鎖按鈕的提示：「天下沙盤要升到「郡守」才開放」 */
-export function lockedActionToast(name: string, lock: LobbyActionLock): string {
-    return `${name}要升到「${lock.requiredTitle}」才開放`;
+/** 升到某階位需要的累積官職經驗；查不到（或階位 1）回 0。數值來自 officer-tiers.json 安裝後的門檻表，不寫死 */
+export function expRequiredForTier(tier: number): number {
+    return OFFICER_TIER_EXP_THRESHOLDS[clampRank(tier)] ?? 0;
+}
+
+/**
+ * 點未解鎖按鈕的提示：「天下沙盤要升到「郡守」才開放」；
+ * 傳入目前官職經驗時補上條件與進度：「…才開放（需要官職經驗 260，目前 30）」（PROG-2-9176）。
+ */
+export function lockedActionToast(name: string, lock: LobbyActionLock, currentExp?: number): string {
+    const base = `${name}要升到「${lock.requiredTitle}」才開放`;
+    const need = expRequiredForTier(lock.requiredTier);
+    if (currentExp === undefined || need <= 0) return base;
+    return `${base}（需要官職經驗 ${need}，目前 ${Math.max(0, Math.floor(currentExp))}）`;
 }
 
 /** 從 prevRank 晉升到 nextRank（含 next 不含 prev）新解鎖的功能；沒晉升回空陣列。依階位、資料順序排列 */

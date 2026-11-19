@@ -5,6 +5,7 @@
  * 將 legacy GeneralDetail runtime 的私有格式化工具提取為共用函式，
  * 供各 ChildPanel 類別直接導入使用。
  */
+import { factorLabelOf } from '../../../core/systems/FactorDisplayName';
 import type { GeneralConfig, GeneralGeneConfig } from '../../../core/models/GeneralUnit';
 import { factorMaskView } from '../../../core/systems/FactorMask';
 
@@ -26,6 +27,8 @@ export const STATUS_DISPLAY: Record<string, string> = {
     'Young': '未成年',
     'Retired': '隱居',
     'Injured': '重傷',
+    'Mystery': '幼年未開蒙',
+    'Unveiled': '已開蒙',
 };
 
 export const TERRAIN_DISPLAY: Record<string, string> = {
@@ -124,10 +127,10 @@ export function formatGene(slotIndex: number, gene?: GeneralGeneConfig, playerLe
     }
     if (gene.isLocked) {
         const dl = gene.discoveryLevel !== undefined ? `（發現等級 ${gene.discoveryLevel}）` : '';
-        return `因子槽 ${slotIndex}：🔒 ${gene.displayName ?? gene.id ?? '未知因子'}${dl}`;
+        return `因子槽 ${slotIndex}：🔒 ${factorLabelOf(gene)}${dl}`;
     }
     const parts = [
-        gene.displayName ?? gene.id ?? `因子 ${slotIndex}`,
+        factorLabelOf(gene),
         gene.type ? `[${gene.type}]` : '',
         gene.level !== undefined ? `★${gene.level}` : '',
         gene.description ?? '',

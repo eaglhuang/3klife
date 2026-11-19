@@ -9,7 +9,7 @@
  */
 import { isOnboardingComplete, type OnboardingState } from '../../core/systems/OnboardingTutorial';
 import { shouldShowOpeningLetter, type OpeningLetterState } from '../../core/systems/OpeningLetter';
-import { cityEncounterDef, type SeasonChronicleState } from '../../core/systems/SeasonChronicle';
+import { cityEncounterDef, encounterStockLine, type SeasonChronicleState } from '../../core/systems/SeasonChronicle';
 import type { MentorHoldingsButtonBinding, MentorHoldingsHostLike } from './MentorHoldingsController';
 
 /** 開場 FSM、信件與三段教學全部退場後，才放行季報；掛載途中也必須保持關閉。 */
@@ -54,7 +54,13 @@ export interface ChroniclePaging {
     currentPending?: boolean;
 }
 
-export function seasonChronicleView(state: Readonly<SeasonChronicleState>, seasonLabel: string, resultLine: string | null, paging: ChroniclePaging = { page: 0, archived: 0 }): SeasonChronicleView {
+export function seasonChronicleView(
+    state: Readonly<SeasonChronicleState>,
+    seasonLabel: string,
+    resultLine: string | null,
+    paging: ChroniclePaging = { page: 0, archived: 0 },
+    stock?: { gold: number; food: number; wood: number },
+): SeasonChronicleView {
     const def = cityEncounterDef(state.encounterId);
     const chosen = state.encounterChoice;
     const archivedPage = paging.page > 0;
@@ -62,6 +68,7 @@ export function seasonChronicleView(state: Readonly<SeasonChronicleState>, seaso
     const expired = archivedPage && def !== undefined && chosen === null;
     const [a, b] = def ? def.options : [undefined, undefined];
     const chosenOption = def && chosen !== null ? def.options[chosen] : undefined;
+    const stockLine = pending && def && stock ? encounterStockLine(def.options, stock) : '';
     const gossip = state.gossip.length > 0 ? state.gossip : [CHRONICLE_HEADINGS.noGossip];
     return {
         texts: {
@@ -71,7 +78,8 @@ export function seasonChronicleView(state: Readonly<SeasonChronicleState>, seaso
             encounterTitle: def ? `${CHRONICLE_HEADINGS.encounter}${def.title}` : CHRONICLE_HEADINGS.encounter,
             encounterDesc: def?.desc ?? '',
             encounterNote: pending
-                ? `${a?.label}：${a?.note}　／　${b?.label}：${b?.note}`
+                ? `${a?.label}：${a?.note}　／　${b?.label}：${b?.note}${stockLine ? `
+${stockLine}` : ''}`
                 : expired ? CHRONICLE_HEADINGS.expired
                 : (!archivedPage ? resultLine : null) ?? (chosenOption ? `${CHRONICLE_HEADINGS.chosenPrefix}${chosenOption.label}，${chosenOption.note}` : ''),
             encounterOptionALabel: a?.label ?? '',
@@ -103,6 +111,8 @@ export interface SeasonChroniclePopupDeps<H extends MentorHoldingsHostLike> {
     /** 該季（totalSeasonsElapsed）的年份季節文字 */
     seasonLabel(season: number): string;
     markRead(): void;
+    /** 目前持有的黃金／糧草／木材，寫在待抉擇的奇遇選項旁 */
+    stock?(): { gold: number; food: number; wood: number };
     resolve(optionIndex: 0 | 1): Promise<CityEncounterResolveResult>;
     toast(message: string): void;
     /** 所有開窗入口共用的守衛；不允許時合併為一筆待開請求，不標記已讀。 */
@@ -219,6 +229,6 @@ export class SeasonChroniclePopupController<H extends MentorHoldingsHostLike> {
         const current = this._deps.state();
         const state = this._page === 0 ? current : archive[this._page - 1];
         const currentPending = current.encounterId !== null && current.encounterChoice === null;
-        this._deps.apply(this._host, seasonChronicleView(state, this._deps.seasonLabel(state.season), this._resultLine, { page: this._page, archived: archive.length, currentPending }));
+        this._deps.apply(this._host, seasonChronicleView(state, this._deps.seasonLabel(state.season), this._resultLine, { page: this._page, archived: archive.length, currentPending }, this._deps.stock?.()));
     }
 }

@@ -184,8 +184,8 @@ import { mercBondedLine, mercDayThreeLine, mercFarewellLine, mercTrustLine } fro
 import { RED_FACE_SHOW_MAX_ROWS, RedFaceGalleryController, RedFaceShowcaseController, RedFaceShowcaseDeps, toRedFaceTabFlowView } from '../core/RedFaceShowcaseController';
 import { GACHA_NODES, GACHA_POOL_INDEX, GACHA_POOLS, GachaPoolDef, RED_FACE_SECTION_ROW_BUTTON } from '../core/GachaScreenNodes';
 import { LocalGachaApi } from '../../core/gacha/LocalGachaApi';
-import { parseGachaMainPools, type GachaApi, type GachaMainPoolConfig } from '../../core/gacha/GachaApi';
-import { gachaApiView, gachaAutoSizeNodes, gachaHeroIdOf } from '../core/GachaApiTexts';
+import { parseGachaMainPools, type GachaApi, type GachaCurrencyId, type GachaMainPoolConfig } from '../../core/gacha/GachaApi';
+import { gachaApiView, gachaAutoSizeNodes, gachaHeroIdOf, gachaWalletLabelTexts } from '../core/GachaApiTexts';
 import { buildPoolDetailRows, checkGachaAffordable, planGachaButton, syncMainPoolCosts, type GachaButtonKind } from '../../core/gacha/GachaButtonRules';
 import { bindGachaPoolDetail, setGachaTexts, textLabelOf, updateGachaWalletStrip, raiseGachaWalletStrip } from '../core/GachaScreenExtras';
 import { GachaPoolSwitcher } from '../core/GachaPoolSwitcher';
@@ -208,7 +208,7 @@ import type { DomesticTaskId } from '../../core/systems/DomesticTasks';
 import { domesticAssignmentFor } from '../../core/systems/SpiritMcqRules';
 import { isDescendant } from '../../core/systems/ChildMagistrate';
 import { ITEM_JOB_CHANGE_ORDER, ITEM_TRIAL_TICKET, ITEM_WISH_SPEED_CARD } from '../../core/systems/PlayerInventory';
-import { ITEM_LONGEVITY_PILL, ITEM_ORACLE_TOKEN } from '../../core/systems/ItemDef';
+import { ITEM_LONGEVITY_PILL, ITEM_ORACLE_TOKEN, ITEM_WOOD } from '../../core/systems/ItemDef';
 import { ITEM_SHOP_OFFERS, JOB_CHANGE_ORDER_OFFER } from '../../core/systems/ItemShopPricing';
 import { ShopMainController } from '../core/ShopMainController';
 import { PrisonerPopupController } from '../core/PrisonerPopupController';
@@ -1260,6 +1260,7 @@ export class LobbyScene extends Component {
             state: () => services().session.seasonChronicle,
             archive: () => services().session.chronicleArchive,
             seasonLabel: (season) => seasonText(seasonClockOf(services().session.gameTime, season)),
+            stock: () => ({ gold: gacha.getCurrencyAmount('gold'), food: services().session.military.food, wood: services().session.itemCount(ITEM_WOOD) }),
             markRead: () => { void services().session.markSeasonChronicleRead().catch(() => undefined); this._refreshDomestic(); },
             resolve: async (optionIndex) => {
                 const result = await services().session.resolveCityEncounter(optionIndex, {
@@ -1574,7 +1575,7 @@ export class LobbyScene extends Component {
                 // 未解鎖的功能只給提示、不關選單，讓玩家看得到目標（PROG-2-9151）
                 const lock = action ? lobbyActionLock(action, services().session.officerState.currentTier) : null;
                 if (action && lock?.locked) {
-                    this._showToast(lockedActionToast(lobbyActionName(action), lock));
+                    this._showToast(lockedActionToast(lobbyActionName(action), lock, services().session.officerState.officerExp));
                     return;
                 }
                 this._cityHubCategory = null;
@@ -6920,6 +6921,10 @@ ${spent}`,
         // 轉蛋畫面頂部資源列：全部可消耗資源；該池的「我的餘額」由 _applyGachaApiTexts 依池填（PROG-2-9117）
         // 結果畫面共用同一個宿主，只有轉蛋主畫面（有十連鈕）才畫資源列
         updateGachaWalletStrip(this._gachaHost?.binder?.getNode(GACHA_NODES.pullTen) ? this._gachaHost.node : null, wallet);
+        // 同一份快照也刷新「持有 N」與「我的餘額」，避免只有資源列變、這兩處停在舊值（PROG-2-9176）
+        if (this._gachaHost?.binder?.getNode(GACHA_NODES.pullTen) && this._gachaBalanceCurrency) {
+            setGachaTexts(this._gachaHost.binder, gachaWalletLabelTexts(wallet, this._gachaBalanceCurrency));
+        }
         this._refreshLobbyHallTopbar();
         // 抽完、回轉蛋頁都會走這裡；天命值跟著刷新（PROG-2-1158）
         this._refreshDestinyBrief();
@@ -7706,6 +7711,7 @@ ${spent}`,
             // 外框（panel）裡的 Label 維持原稿尺寸，只有節點本身是 Label 的才依內容撐開
             if (name !== GACHA_NODES.balance && node?.getComponent(Label) === label) label.overflow = Label.Overflow.NONE;
         }
+        this._gachaBalanceCurrency = view.mainCurrency;
         setGachaTexts(binder, view.texts);
         binder.setActives(view.actives);
         // 保底條：填色寬度＝外框寬 × 進度
@@ -7716,6 +7722,9 @@ ${spent}`,
         if (heroId) this._applyGachaBannerPortrait(binder.getNode(pool.art), heroId);
         raiseGachaWalletStrip(host.node);
     }
+
+    /** 轉蛋畫面「我的餘額」目前顯示的貨幣；抽完後輕量刷新用（PROG-2-9176） */
+    private _gachaBalanceCurrency: GachaCurrencyId | null = null;
 
     private _gachaSkinVariants: Record<string, { slots: Record<string, SkinSlot> }> | null = null;
 

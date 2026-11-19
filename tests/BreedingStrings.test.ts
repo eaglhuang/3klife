@@ -55,7 +55,7 @@ export function createBreedingStringsSuite(): TestSuite {
 
     suite.test('待產與誕下字串代入後與規格一致', () => {
         const table = readZhTw();
-        assert.equals('小喬 已進入待產期，預計 4 季後誕下子嗣', fill(table['ui.breed.preg_status'], ['小喬', '4']));
+        assert.equals('小喬 需調養待產 4 季（期間精力凍結、不能再結緣）；襁褓幼子已入宗族名冊', fill(table['ui.breed.preg_status'], ['小喬', '4']));
         assert.equals('恭喜主公！周瑜 與 小喬 喜獲 男！', fill(table['ui.breed.child_born'], ['周瑜', '小喬', '男']));
     });
 

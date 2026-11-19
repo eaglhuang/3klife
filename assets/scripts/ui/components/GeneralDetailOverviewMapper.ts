@@ -181,6 +181,8 @@ const STATUS_DISPLAY: Record<string, string> = {
     Young: '少壯',
     Retired: '退隱',
     Injured: '負傷',
+    Mystery: '幼年未開蒙',
+    Unveiled: '已開蒙',
 };
 
 const TERRAIN_DISPLAY: Record<string, string> = {

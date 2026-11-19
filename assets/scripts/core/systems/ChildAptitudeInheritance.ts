@@ -208,3 +208,46 @@ export function recommendChildCareerRole(
         commanderScore,
     };
 }
+
+// ── 舊存檔補齊（PROG-2-9176）─────────────────────────────────────────────
+
+interface AptitudeBackfillGeneral extends ParentAptitudeSource {
+    id: string;
+    fatherId?: string;
+    motherId?: string;
+}
+
+function isEmptyMap(map: Readonly<Record<string, string>> | undefined): boolean {
+    return !map || Object.keys(map).length === 0;
+}
+
+/**
+ * 舊存檔的子嗣（有父或母 id）可能沒有兵種／地形／天氣適性，畫面全顯示「—」。
+ * 讀檔時依 inheritChildAptitudes 補齊：只補空的那一組、不覆蓋既有資料；
+ * 父母已不在名冊時以預設親代等級（defaultParentGrade）計算。
+ * 計算全程沒有亂數（同一份存檔每次讀檔結果相同），因此不需要種子；未變動時回傳原陣列。
+ */
+export function backfillRosterChildAptitudes<T extends AptitudeBackfillGeneral>(roster: readonly T[]): T[] {
+    const byId = new Map<string, T>();
+    for (const g of roster) byId.set(g.id, g);
+    let changed = false;
+    const next = roster.map((g) => {
+        if (!g.fatherId && !g.motherId) return g;
+        const needTroop = isEmptyMap(g.troopAptitude);
+        const needTerrain = isEmptyMap(g.terrainAptitude);
+        const needWeather = isEmptyMap(g.weatherAptitude);
+        if (!needTroop && !needTerrain && !needWeather) return g;
+        const inherited = inheritChildAptitudes(
+            (g.fatherId ? byId.get(g.fatherId) : undefined) ?? {},
+            (g.motherId ? byId.get(g.motherId) : undefined) ?? {},
+        );
+        changed = true;
+        return {
+            ...g,
+            ...(needTroop ? { troopAptitude: inherited.troopAptitude } : {}),
+            ...(needTerrain ? { terrainAptitude: inherited.terrainAptitude } : {}),
+            ...(needWeather ? { weatherAptitude: inherited.weatherAptitude } : {}),
+        };
+    });
+    return changed ? next : (roster as T[]);
+}

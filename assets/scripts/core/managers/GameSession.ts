@@ -236,6 +236,8 @@ import { emptySoulFragmentLedger, injectFromLedger, normalizeSoulFragmentLedger,
 import { apparitionForDivination } from '../systems/SageApparitionLineage';
 import { divineFactor, getSage, predictOffspring, ProphecyKeywordSource, ProphecyResult, SageDivinationResult } from '../systems/SageDivination';
 import type { FactorPoolEntry } from '../systems/BreedingSystem';
+import { readableFactorName } from '../systems/FactorDisplayName';
+import { backfillRosterChildAptitudes } from '../systems/ChildAptitudeInheritance';
 import { planBloodlineMergeForGenerals, type BloodlineMergeRejectReason } from '../systems/BloodlineMerge';
 import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_ADMISSION_TOKEN, ITEM_BAMBOO_SLIP, ITEM_FERTILITY_ARMED, ITEM_JOB_CHANGE_ORDER, ITEM_LEGENDARY_MENTORING_TICKET, ITEM_MERGE_TOKEN, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, ITEM_TREASURE, ITEM_WISH_SPEED_CARD, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
 import { useItem as useItemFlow, type ItemUseResult } from '../systems/ItemUseFlow';
@@ -4838,6 +4840,8 @@ export class GameSession {
         }
         const roster = this._roster.getAll();
         const result = divineFactor(roster.find((g) => g.id === generalId), sageId, this._discoveryLevel, this._random);
+        // 字典沒載入時事件名稱會退回因子 id；換成中文名，查不到留空（畫面端不顯示 id）
+        if (result.event) result.event = { ...result.event, displayName: readableFactorName(result.event.factorId, result.event.displayName, this._factorDictionary) };
         if (result.outcome === 'awakened' && result.general) {
             const general = result.general;
             this._roster.replaceAll(roster.map((g) => (g.id === generalId ? general : g)));
@@ -4867,6 +4871,10 @@ export class GameSession {
             return { sageId, outcome: 'no-token', consumed: false };
         }
         const result = predictOffspring(pool, sageId, this._random, this._prophecyKeywordSources());
+        if (result.prophecy) {
+            const keyword = readableFactorName(result.prophecy.factorId, result.prophecy.keyword, this._factorDictionary);
+            result.prophecy = { ...result.prophecy, keyword: keyword === '' ? null : keyword };
+        }
         if (result.consumed) {
             await this._spendOracleToken();
         }
@@ -6584,7 +6592,7 @@ export class GameSession {
         this._preLifespanRoster = null;
         this._clock.restore(snapshot.gameTime);
         this._seeded.restore(snapshot.randomState ?? { algorithm: 'mulberry32-v1', state: LEGACY_RANDOM_SEED });
-        this._roster.replaceAll(normalizeRosterCaptivity(normalizeRosterRoles(snapshot.roster)));
+        this._roster.replaceAll(backfillRosterChildAptitudes(normalizeRosterCaptivity(normalizeRosterRoles(snapshot.roster))));
         this._pendingLifespanEvents = (snapshot.pendingLifespanDeaths ?? []).map((death) => ({ type: 'died', generalId: death.generalId, age: death.age }));
         // 讀檔後沒有記憶體中的季結前名冊；待季結死亡者還原為非陣亡，虎符結算才認得出「這次才死」（PROG-2-0223）
         this._preLifespanRoster = preLifespanBaseline(snapshot.roster, (snapshot.pendingLifespanDeaths ?? []).map((death) => death.generalId));

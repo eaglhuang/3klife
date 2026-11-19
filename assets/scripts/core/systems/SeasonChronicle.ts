@@ -220,6 +220,22 @@ export function cityEncounterShortfall(effect: CityEncounterEffect, stock: { gol
     return null;
 }
 
+/**
+ * 奇遇選項消耗的資源，在選項旁寫出玩家目前持有量（PROG-2-9176：消耗木材卻看不到木材量）。
+ * 只列選項真的會用到的資源；兩個選項都不耗資源時回傳空字串。
+ */
+export function encounterStockLine(
+    options: ReadonlyArray<{ effect: CityEncounterEffect }>,
+    stock: { gold: number; food: number; wood: number },
+): string {
+    const uses = (key: 'costGold' | 'costFood' | 'costWood'): boolean => options.some((o) => (o.effect[key] ?? 0) > 0);
+    const parts: string[] = [];
+    if (uses('costGold')) parts.push(`黃金 ${stock.gold}`);
+    if (uses('costFood')) parts.push(`糧草 ${stock.food}`);
+    if (uses('costWood')) parts.push(`木材 ${stock.wood}`);
+    return parts.length > 0 ? `目前持有：${parts.join('、')}` : '';
+}
+
 const APTITUDE_RANK = ['S', 'A', 'B', 'C', 'D'];
 
 /** 適性升階（S 為頂）；不認得或缺值時視為 C */

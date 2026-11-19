@@ -273,7 +273,7 @@
   "ui.style_check.lorem": "Visual clash between Ink & Parchment and cold Steel: a 2.5D Three Kingdoms battle interface built on 3.8.8.",
   "_comment_ui_breed": "結緣字串（草稿翻譯，待語系審閱）",
   "ui.breed.confirm": "Spend {0} vigor {1} and {2} vigor {3}. Confirm the union?",
-  "ui.breed.preg_status": "{0} has entered the expecting period; the child will be born in {1} seasons.",
+  "ui.breed.preg_status": "{0} has entered the expecting period; her vigor is frozen for {1} seasons and she cannot bond again; the child is already on the roster.",
   "ui.breed.child_born": "Congratulations, my lord! {0} and {1} have been blessed with a {2}!",
   "ui.breed.unveil_5": "Destiny unveiled! Five-stat results for {0}:",
   "ui.breed.daqi": "A scholar sighs: this child is a dragon hidden in the deep; heaven's secrets must not be revealed.",
