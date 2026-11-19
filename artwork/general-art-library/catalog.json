@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-19",
+  "updatedAt": "2026-11-20",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -9394,19 +9394,66 @@
         ]
       },
       "smallAvatar": {
-        "activeVersion": "0001",
-        "status": "review-pending",
+        "activeVersion": "0002",
+        "status": "integrated",
         "history": [
           {
             "version": "0001",
             "file": "small_avatars/gan_shi__甘氏__small_avatar_0001.png",
-            "status": "review-pending",
+            "status": "superseded",
             "sha256": "3de881ed8ef7cf711390bf6b700234a1188dd23884e07c6d59d063887aca6333",
             "canvas": "256x256 RGBA",
             "source": "standing/gan_shi__甘氏__standing_0002.png",
             "crop": "shoulder-line; crop-only; uniform scale",
             "cropBox": "x=177,y=0,w=170,h=170",
             "qc": "125px preview: full hair and chin visible, face centered; shoulder tops reach lower edge without chest. Candidate remains review-pending."
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/gan_shi__甘氏__small_avatar_0002.png",
+            "status": "integrated",
+            "sha256": "8e1ebb400268f472a825fd9b44bfdec3906729ae6944355fa978f9ee6345f9cb",
+            "canvas": "256x256 RGBA",
+            "method": "crop-only; uniform resize; no redraw",
+            "sourceFile": "standing/gan_shi__甘氏__standing_0002.png",
+            "sourceSha256": "c022dddf785c9a7f78729644ad47840d0dcdb0be361f9cc486596c4b3363633d",
+            "cropBox": {
+              "x": 169,
+              "y": 23.2,
+              "width": 160,
+              "height": 160
+            },
+            "faceBox": [
+              218,
+              62,
+              62,
+              72
+            ],
+            "headBox": [
+              198,
+              30,
+              104,
+              112
+            ],
+            "headwearExtent": [
+              178,
+              28,
+              122,
+              128
+            ],
+            "shoulderAnchors": [
+              180,
+              170,
+              326,
+              170
+            ],
+            "headHeightPercent": 70,
+            "faceHeightPercent": 45,
+            "faceWidthPercent": 38.8,
+            "faceCenterXPercent": 50,
+            "centerAxisDifferencePx": 0.0,
+            "qc": "並排七張核准基準目視檢查通過；臉框中心線與畫布中線重合，頭部高度70%、臉高45%，頭髮完整且雙肩可見；僅裁切與等比縮放。",
+            "createdAt": "2026-11-20"
           }
         ]
       }

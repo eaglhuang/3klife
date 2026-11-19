@@ -22,7 +22,7 @@ point must sit at least 5% of the crop side beyond its corresponding face edge; 
 mark the neck, hair, collar, or chest center. The crop may trim outer shoulder edges,
 but both shoulder surfaces must remain visibly present.
 Target head
-height defaults to 75%, and the default geometric range is 70–90%. Use --min-head-ratio
+height defaults to 75% (use --min-face-ratio and optionally --target-face-ratio for calibrated face scale), and the default geometric range is 70–90%. Use --min-head-ratio
 only when a same-class, user-approved reference measures below 70%; set it to that
 measured reference ratio and retain side-by-side visual review.
 To maximize the head within that standard, keep only 2% clearance above the head and
@@ -139,46 +139,42 @@ function main() {
     const shoulders = parseShoulderPoints(a.shoulders);
     const target = a.target == null ? 0.75 : Number(a.target);
     const minHeadRatio = a['min-head-ratio'] == null ? 0.70 : Number(a['min-head-ratio']);
+    // Face ratios use the hairline-to-chin box, independently of headwear.
+    const minFaceRatio = a['min-face-ratio'] == null ? null : Number(a['min-face-ratio']);
+    const targetFaceRatio = a['target-face-ratio'] == null ? null : Number(a['target-face-ratio']);
+    for (const [name, value] of [['min-face-ratio', minFaceRatio], ['target-face-ratio', targetFaceRatio]]) {
+      if (value !== null && !(value > 0 && value < 1)) throw new Error(`--${name} must be between 0 and 1`);
+    }
+    if (targetFaceRatio !== null && (minFaceRatio === null || targetFaceRatio < minFaceRatio)) {
+      throw new Error('--target-face-ratio requires --min-face-ratio and must be at least as large');
+    }
     const verticalShift = a['vertical-shift'] == null ? 0 : Number(a['vertical-shift']);
     const outputSize = a.size == null ? 256 : Number(a.size);
     if (!(minHeadRatio >= 0.50 && minHeadRatio <= 0.90)) throw new Error('--min-head-ratio must be between 0.50 and 0.90');
     if (!(target >= minHeadRatio && target <= 0.90)) throw new Error('--target must be between --min-head-ratio and 0.90');
     if (!Number.isFinite(verticalShift)) throw new Error('--vertical-shift must be a finite number of source pixels');
     if (!Number.isInteger(outputSize) || outputSize < 64 || outputSize > 2048) throw new Error('--size must be an integer between 64 and 2048');
+    const noseX = a['nose-x'] == null ? null : Number(a['nose-x']);
+    if (noseX !== null && !(noseX >= face.x && noseX <= face.x + face.width)) {
+      throw new Error('--nose-x must be a source pixel coordinate inside the face box');
+    }
     const centerX = face.x + face.width / 2;
     const extentPaddingRatio = 0.03;
-    const horizontalMin = Math.min(head.x, extent.x, face.x, ...shoulders.map(p => p.x));
-    const horizontalMax = Math.max(head.x + head.width, extent.x + extent.width, face.x + face.width, ...shoulders.map(p => p.x));
+    const horizontalSideForBox = box =>
+      Math.max(centerX - box.x, box.x + box.width - centerX) / (0.5 - extentPaddingRatio);
+    const horizontalSide = Math.max(
+      horizontalSideForBox(head), horizontalSideForBox(extent), horizontalSideForBox(face),
+      ...shoulders.map(point => Math.abs(point.x - centerX) * 2),
+    );
     const shoulderClearanceRatio = 0.03;
     const headTopMarginRatio = 0.02;
     const requiredVertical = Math.max(...shoulders.map(p => Math.max(0, (p.y - head.y) / (1 - headTopMarginRatio - shoulderClearanceRatio), (p.y - extent.y) / (1 - extentPaddingRatio - shoulderClearanceRatio))));
-    const minimumSide = Math.max(head.height / target, extent.height / (1 - 2 * extentPaddingRatio), Math.max(0, (extent.y + extent.height - head.y) / (1 - headTopMarginRatio - extentPaddingRatio)), Math.max(0, (face.y + face.height - head.y) / (1 - headTopMarginRatio)), requiredVertical, (horizontalMax - horizontalMin) / (1 - 2 * extentPaddingRatio));
-    const feasibleLeftRange = side => {
-      // The square must contain the complete head/face/shoulder span while
-      // keeping the face center inside the accepted 47–53% horizontal band.
-      const pad = side * extentPaddingRatio;
-      const left = Math.max(horizontalMax + pad - side, centerX - side * 0.53);
-      const right = Math.min(horizontalMin - pad, centerX - side * 0.47);
-      return left <= right ? [left, right] : null;
-    };
-    let side = minimumSide;
-    let leftRange = feasibleLeftRange(side);
-    if (!leftRange) {
-      let high = Math.max(side * 2, src.width, src.height, 1);
-      while (!feasibleLeftRange(high)) high *= 2;
-      let low = side;
-      for (let i = 0; i < 60; i++) {
-        const mid = (low + high) / 2;
-        if (feasibleLeftRange(mid)) high = mid;
-        else low = mid;
-      }
-      side = high;
-      leftRange = feasibleLeftRange(side);
-    }
-    const centeredLeft = centerX - side / 2;
-    const cropLeft = Math.min(leftRange[1], Math.max(leftRange[0], centeredLeft));
+    const side = Math.max(head.height / (targetFaceRatio === null ? target : 0.90), targetFaceRatio === null ? 0 : Math.min(face.height / targetFaceRatio, head.height / minHeadRatio), extent.height / (1 - 2 * extentPaddingRatio), Math.max(0, (extent.y + extent.height - head.y) / (1 - headTopMarginRatio - extentPaddingRatio)), Math.max(0, (face.y + face.height - head.y) / (1 - headTopMarginRatio)), requiredVertical, horizontalSide);
+    const cropLeft = centerX - side / 2;
     const crop = { x: cropLeft, y: Math.min(head.y - side * headTopMarginRatio, extent.y - side * extentPaddingRatio) + verticalShift, width: side, height: side };
     const faceCenterX = (centerX - crop.x) / side, headRatio = head.height / side;
+    const faceHeightRatio = face.height / side;
+    const passesFaceSize = minFaceRatio === null ? null : faceHeightRatio + 1e-9 >= minFaceRatio;
     const headTopClearance = head.y - crop.y;
     const headContained = head.x >= crop.x && head.x + head.width <= crop.x + side && head.y >= crop.y && head.y + head.height <= crop.y + side;
     const extentPadding = Math.min(extent.x - crop.x, crop.x + side - (extent.x + extent.width), extent.y - crop.y, crop.y + side - (extent.y + extent.height));
@@ -187,6 +183,7 @@ function main() {
     const extentWithinSource = extent.x >= 0 && extent.y >= 0 && extent.x + extent.width <= src.width && extent.y + extent.height <= src.height;
     const faceContained = face.x >= crop.x && face.x + face.width <= crop.x + side && face.y >= crop.y && face.y + face.height <= crop.y + side;
     const faceWithinSource = face.x >= 0 && face.y >= 0 && face.x + face.width <= src.width && face.y + face.height <= src.height;
+    const cropWithinSource = crop.x >= 0 && crop.y >= 0 && crop.x + side <= src.width && crop.y + side <= src.height;
     const shoulderContained = shoulders.map(p => p.x >= crop.x && p.x <= crop.x + side && p.y >= crop.y && p.y <= crop.y + side);
     const shoulderOnArtwork = shoulders.map(p => foregroundNear(src, p));
     const shoulderOutsideFace = shoulders.map((p, index) => index === 0
@@ -195,7 +192,8 @@ function main() {
     const shoulderClearanceBelow = shoulders.map(p => crop.y + side - p.y);
     const passesShoulderClearance = shoulderClearanceBelow.every(clearance => clearance >= side * shoulderClearanceRatio - 1e-9);
     const passesHeadRatio = headRatio >= minHeadRatio && headRatio <= 0.90;
-    const passesFaceCenter = Math.abs(faceCenterX - 0.5) <= 0.03 + 1e-9;
+    const faceCenterTolerance = 1 / outputSize;
+    const passesFaceCenter = Math.abs(faceCenterX - 0.5) <= faceCenterTolerance + 1e-9;
     const passesShoulders = shoulderContained.every(Boolean) && shoulderOnArtwork.every(Boolean) && shoulderOutsideFace.every(Boolean) && passesShoulderClearance;
     const out = new PNG({ width: outputSize, height: outputSize });
     for (let y = 0; y < out.height; y++) for (let x = 0; x < out.width; x++) {
@@ -230,7 +228,29 @@ function main() {
         '先確認標記覆蓋原圖的真實頭臉和肩部輪廓，再檢查候選裁圖；數值通過不等於視覺驗收通過。'
       ].join('\n') + '\n', 'utf8');
     }
-    const result = { acceptanceStatus: (passesHeadRatio && headContained && headWithinSource && extentContained && extentWithinSource && faceContained && faceWithinSource && passesFaceCenter && passesShoulders) ? 'geometry-pass-needs-visual-review' : 'geometry-fail', visualReviewRequired: true, input: path.resolve(a.input), output: path.resolve(a.out), source: `${src.width}x${src.height}`, outputSize: `${outputSize}x${outputSize}`, cropPixels: { x: +crop.x.toFixed(2), y: +crop.y.toFixed(2), side: +side.toFixed(2) }, verticalShift: +verticalShift.toFixed(2), headTopClearance: +headTopClearance.toFixed(2), headHeightRatio: +(headRatio * 100).toFixed(1), targetHeadHeightRatio: +(target * 100).toFixed(1), acceptedHeadHeightRange: `${(minHeadRatio * 100).toFixed(1)}–90.0%`, passesHeadRatio, headContained, headWithinSource, extentContained, extentPadding: +extentPadding.toFixed(2), extentWithinSource, faceCenterX: +(faceCenterX * 100).toFixed(1), passesFaceCenter, faceContained, faceWithinSource, shoulders: { shoulderAnchors: shoulders, contained: shoulderContained, onVisiblePixelsWithin5px: shoulderOnArtwork, outsideFaceByAtLeast5Percent: shoulderOutsideFace, clearanceBelow: shoulderClearanceBelow.map(value => +value.toFixed(2)), passesClearanceBelow: passesShoulderClearance, passesShoulders }, passesAllHardChecks: passesHeadRatio && headContained && headWithinSource && extentContained && extentWithinSource && faceContained && faceWithinSource && passesFaceCenter && passesShoulders, note: '頭部比例只量顱部髮型／盔體，不將高聳頭冠或羽飾冒充頭部；綠框內的主要髮型與頭飾四邊至少保留裁框3%邊距，頭頂至少保留頭部高度2%的空間。預設目標75%，幾何範圍70–90%；只有相同類型的核可基準量測低於70%時，才可用 --min-head-ratio 指定並排目視校準。垂直位移只改裁框位置，位移後仍須通過頭飾、臉框及雙肩所有檢查。肩部標記應放在臉框兩側外、清楚可見的肩面內側，且各超出相應臉緣至少裁框寬度5%；允許裁框修去肩膀最外緣，但不得使任何一側肩面消失。頸部、髮束、領口或胸口上的點不能代替肩膀。肩點下方至少保留裁框高度3%的影像；工具只裁切／等比縮放，不會修正原圖五官。' };
+    const result = { acceptanceStatus: (passesHeadRatio && headContained && headWithinSource && extentContained && extentWithinSource && faceContained && faceWithinSource && cropWithinSource && passesFaceCenter && passesShoulders) ? 'geometry-pass-needs-visual-review' : 'geometry-fail', visualReviewRequired: true, input: path.resolve(a.input), output: path.resolve(a.out), source: `${src.width}x${src.height}`, outputSize: `${outputSize}x${outputSize}`, cropPixels: { x: +crop.x.toFixed(2), y: +crop.y.toFixed(2), side: +side.toFixed(2) }, verticalShift: +verticalShift.toFixed(2), headTopClearance: +headTopClearance.toFixed(2), headHeightRatio: +(headRatio * 100).toFixed(1), targetHeadHeightRatio: +(target * 100).toFixed(1), acceptedHeadHeightRange: `${(minHeadRatio * 100).toFixed(1)}–90.0%`, passesHeadRatio, headContained, headWithinSource, extentContained, cropWithinSource, extentPadding: +extentPadding.toFixed(2), extentWithinSource, faceCenterX: +((face.x + face.width / 2 - crop.x) / side * 100).toFixed(1), passesFaceCenter, faceContained, faceWithinSource, shoulders: { shoulderAnchors: shoulders, contained: shoulderContained, onVisiblePixelsWithin5px: shoulderOnArtwork, outsideFaceByAtLeast5Percent: shoulderOutsideFace, clearanceBelow: shoulderClearanceBelow.map(value => +value.toFixed(2)), passesClearanceBelow: passesShoulderClearance, passesShoulders }, passesAllHardChecks: passesHeadRatio && headContained && headWithinSource && extentContained && extentWithinSource && faceContained && faceWithinSource && cropWithinSource && passesFaceCenter && passesShoulders, note: '頭部比例只量顱部髮型／盔體，不將高聳頭冠或羽飾冒充頭部；綠框內的主要髮型與頭飾四邊至少保留裁框3%邊距，頭頂至少保留頭部高度2%的空間。預設目標75%，幾何範圍70–90%；只有相同類型的核可基準量測低於70%時，才可用 --min-head-ratio 指定並排目視校準。垂直位移只改裁框位置，位移後仍須通過頭飾、臉框及雙肩所有檢查。肩部標記應放在臉框兩側外、清楚可見的肩面內側，且各超出相應臉緣至少裁框寬度5%；允許裁框修去肩膀最外緣，但不得使任何一側肩面消失。頸部、髮束、領口或胸口上的點不能代替肩膀。肩點下方至少保留裁框高度3%的影像；工具只裁切／等比縮放，不會修正原圖五官。' };
+    result.faceHeightRatio = +(faceHeightRatio * 100).toFixed(1);
+    result.faceWidthRatio = +(face.width / side * 100).toFixed(1);
+    result.faceCenterTolerancePixels = 1;
+    result.faceCenterTolerancePercent = +(100 / outputSize).toFixed(3);
+    result.minFaceHeightRatio = minFaceRatio === null ? null : minFaceRatio * 100;
+    result.passesFaceSize = passesFaceSize;
+    result.centerAnchor = 'face-box';
+    result.noseCenterX = noseX === null ? null : +((noseX - crop.x) / side * 100).toFixed(1);
+    if (minFaceRatio !== null) {
+      result.faceScaleAdvice = {
+        minimumUniformZoom: Math.ceil(Math.max(1, minFaceRatio / faceHeightRatio) * 1000) / 1000,
+        maximumCropSidePixels: Math.floor(face.height / minFaceRatio * 100) / 100,
+      };
+    }
+    if (passesFaceSize === null && result.passesAllHardChecks) {
+      result.acceptanceStatus = 'geometry-pass-face-scale-uncalibrated';
+    }
+    if (passesFaceSize === false) {
+      result.acceptanceStatus = 'geometry-fail';
+      result.passesAllHardChecks = false;
+      result.faceSizeFailure = 'The crop produces a face smaller than the configured minimum.';
+    }
     console.log(JSON.stringify(result, null, 2));
     if (!result.passesAllHardChecks) { process.exitCode = 3; return; }
     fs.mkdirSync(path.dirname(path.resolve(a.out)), { recursive: true });
