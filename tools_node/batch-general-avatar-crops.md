@@ -8,6 +8,8 @@ Copy an existing manifest, such as artwork/temp/avatar-batch-gao-gan.json when a
 
 For small avatars, keep the two measurements distinct: use `smallHeadCalibration` with a minimum of `0.65` and target of `0.75`, while `smallFaceCalibration` defaults to `{ "minimum": 0.38, "target": 0.44 }`. The first measures cranial hair/helmet mass to chin; the second measures forehead to chin. Do not apply the head-height target to the face box. The midpoint of the face box must overlap the canvas vertical centerline within one output pixel (0.39% at 256×256); reject sources where complete headwear and shoulders force the face off center.
 
+Automatic detection uses the bundled YuNet model at `tools_node/models/face_detection_yunet_2023mar.onnx`; install its Python dependencies with `python -m pip install -r tools_node/requirements-avatar-crop.txt`. YuNet proposes a face box only. Scale to the reference face-height target (44%) and validate width separately; area-based scaling can make square detections visibly undersized. Inspect all headwear, the 65% minimum head height, and both shoulder surfaces before accepting a candidate.
+
 Read artwork/temp/avatar-batch-<new-run-name>/report.json:
 
 - no-candidate: read attempts.reason and attempts.geometry. Correct inaccurate marks or use another approved source.

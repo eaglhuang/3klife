@@ -14,37 +14,51 @@ parser.add_argument("--vertical-anchor", "--nose", dest="vertical_anchor", nargs
 parser.add_argument("--extent", nargs=4, type=float, metavar=("LEFT","TOP","RIGHT","BOTTOM"))
 parser.add_argument("--shoulders", nargs=4, type=float, metavar=("LX","LY","RX","RY"))
 parser.add_argument("--detect-only", action="store_true")
+parser.add_argument("--yunet-model", type=Path,
+                    default=Path(__file__).resolve().parent / "models" / "face_detection_yunet_2023mar.onnx",
+                    help="YuNet ONNX model used for automatic face detection")
 args = parser.parse_args()
 # Manual cheek and hairline/chin marks on 125px da_qiao small_avatar_0001.
 reference_side = 125
 reference_box = (55, 39, 97, 94)
 automatic = args.face is None
+face_confidence = None
 if automatic:
     import cv2
     import numpy as np
     with Image.open(args.source) as original:
         rgba = original.convert("RGBA")
         background = Image.new("RGBA", rgba.size, "white")
-        gray = np.asarray(Image.alpha_composite(background, rgba).convert("L"))
-    detector = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
-    faces = detector.detectMultiScale(gray, scaleFactor=1.05, minNeighbors=8, minSize=(20, 20))
-    faces = [r for r in faces if r[1] + r[3]/2 <= gray.shape[0]*0.65]
+        bgr = np.asarray(Image.alpha_composite(background, rgba).convert("RGB"))[:, :, ::-1].copy()
+    if not args.yunet_model.is_file():
+        parser.error(f"YuNet model not found: {args.yunet_model}")
+    if not hasattr(cv2, "FaceDetectorYN_create"):
+        parser.error("This OpenCV build lacks FaceDetectorYN; install a compatible OpenCV 4.x/5.x build.")
+    detector = cv2.FaceDetectorYN_create(
+        str(args.yunet_model), "", (bgr.shape[1], bgr.shape[0]), 0.5, 0.3, 5000
+    )
+    _, detected = detector.detect(bgr)
+    faces = [] if detected is None else [row for row in detected if row[1] + row[3] / 2 <= bgr.shape[0] * 0.75]
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with Image.open(args.source) as original:
         marked = original.convert("RGBA")
     draw = ImageDraw.Draw(marked)
     boxes = []
-    for index, (x, y, w, h) in enumerate(faces, start=1):
+    for index, row in enumerate(faces, start=1):
+        x, y, w, h = row[:4]
         draw.rectangle((x, y, x+w, y+h), outline="yellow", width=2)
         draw.text((x+2, y+2), str(index), fill="red", stroke_width=1, stroke_fill="white")
-        boxes.append({"id": index, "face": [int(x), int(y), int(x+w), int(y+h)]})
+        boxes.append({"id": index, "face": [round(float(x), 2), round(float(y), 2),
+                                               round(float(x+w), 2), round(float(y+h), 2)],
+                      "score": round(float(row[14]), 4)})
     marked.save(args.output.with_name(args.output.stem + "-detections.png"))
     args.output.with_suffix(".detections.json").write_text(json.dumps(boxes, indent=2), encoding="utf-8")
     if args.detect_only or len(faces) != 1:
         print(json.dumps({"status": "needs_face_selection", "count": len(faces), "candidates": boxes}, indent=2))
         raise SystemExit(4 if len(faces) else 3)
-    x, y, w, h = map(int, faces[0])
-    args.face = [x, y, x+w, y+h]
+    x, y, w, h = faces[0][:4]
+    face_confidence = round(float(faces[0][14]), 4)
+    args.face = [float(x), float(y), float(x+w), float(y+h)]
 args.output.parent.mkdir(parents=True, exist_ok=True)
 left, top, right, bottom = args.face
 face_mid_x = (left + right) / 2
@@ -57,10 +71,11 @@ else:
     anchor_x, anchor_y = face_mid_x, face_mid_y
 if args.source.resolve() == args.output.resolve():
     parser.error("Use a separate output file.")
-rw = reference_box[2] - reference_box[0]
 rh = reference_box[3] - reference_box[1]
-# Match face area when the candidate and reference have different aspect ratios.
-side = reference_side * math.sqrt((right-left)*(bottom-top)/(rw*rh))
+# Match face height to the approved reference. Area matching makes square Haar
+# detections produce visibly undersized faces, so horizontal scale is verified
+# separately against the calibrated width window below.
+side = reference_side * (bottom-top) / rh
 if args.extent:
     ex1, ey1, ex2, ey2 = args.extent
     side = max(side, 2*max(abs(ex1-face_mid_x), abs(ex2-face_mid_x))/.94,
@@ -71,10 +86,10 @@ if args.shoulders:
                (max(ly,ry)-top)/.88)
 with Image.open(args.source) as im:
     source_size = [im.width, im.height]
-    if side > im.width or side > im.height:
-        parser.error("No square crop of this size fits the source image.")
     crop_margin = side * .03
-    min_y, max_y = 0.0, im.height-side
+    # Allow transparent padding when framing needs space beyond the source edge.
+    # This preserves every source pixel and never invents missing headwear/body.
+    min_y, max_y = bottom-side, top
     if args.extent:
         min_y = max(min_y, ey2 + crop_margin - side)
         max_y = min(max_y, ey1 - crop_margin)
@@ -90,9 +105,12 @@ with Image.open(args.source) as im:
     crop_y = min(max(desired_y, min_y), max_y)
     crop_x = face_mid_x-side/2
     box = (crop_x, crop_y, crop_x+side, crop_y+side)
-    if not (0 <= box[0] and 0 <= box[1] and box[2] <= im.width and box[3] <= im.height):
-        parser.error("The requested crop exceeds the source.")
-    crop = im.convert("RGBA").resize((256,256), Image.Resampling.LANCZOS, box=box)
+    source_width = max(0, min(box[2], im.width)-max(box[0], 0))
+    source_height = max(0, min(box[3], im.height)-max(box[1], 0))
+    source_coverage = source_width*source_height/(side*side)*100
+    crop = im.convert("RGBA").transform((256,256), Image.Transform.EXTENT, box,
+                                         resample=Image.Resampling.BICUBIC,
+                                         fillcolor=(0,0,0,0))
     crop.save(args.output)
     guide = crop.copy()
     draw = ImageDraw.Draw(guide)
@@ -124,8 +142,11 @@ with Image.open(args.source) as im:
 height = (bottom-top)/side
 width=(right-left)/side
 axis_difference = abs(cx-face_axis)
-report = dict(status="needs_visual_review", faceMethod="opencv_estimate" if automatic else "supplied", referenceBoxAt125=reference_box,
+report = dict(status="needs_visual_review", faceMethod="yunet" if automatic else "supplied",
+              faceConfidence=face_confidence, referenceBoxAt125=reference_box,
               sourceImageSize=source_size, sourceFace=args.face, sourceExtent=args.extent,
+              sourceCoveragePercent=round(source_coverage, 2),
+              cropExtendsBeyondSource=source_coverage < 99.99,
               sourceShoulders=args.shoulders, sourceVerticalAnchorXY=args.vertical_anchor,
               verticalAnchorOutputXY=([round((anchor_x-box[0])*256/side,2), round((anchor_y-box[1])*256/side,2)] if args.vertical_anchor else None),
               faceCenterXPercent=round((face_mid_x-box[0])/side*100,2),
