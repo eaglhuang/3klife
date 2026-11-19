@@ -14,6 +14,8 @@ import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
 import { BattleFlowState } from '../assets/scripts/battle/controllers/BattleFlowStateMachine';
 import { EVENT_NAMES, Faction, GAME_CONFIG, Weather } from '../assets/scripts/core/config/Constants';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
+// eslint-disable-next-line @typescript-eslint/no-var-requires -- 用 require 避開元件型別對 cc 測試替身的型別檢查（同 Issue2159 測試）
+const { ResultPopupComposite } = require('../assets/scripts/ui/components/ResultPopupComposite');
 
 function general(id: string, faction: Faction): GeneralUnit {
     return new GeneralUnit({ id, name: id, faction, hp: 1000, maxSp: 100, initialSp: 100, str: 80, int: 80, lea: 80 });
@@ -87,6 +89,46 @@ export function createBattleVictorySuite(): TestSuite {
         off();
         assert.equals(1, ended.length, '只發一次結束事件');
         assert.equals(true, ended[0].retreated === true, '回合用盡算撤退');
+    });
+
+    suite.test('BattleEnded 帶結束原因：主將倒下 general、城寨被破 fortress、回合用盡 time-up（PROG-2-9414）', () => {
+        const causeOf = (setup: (ctrl: BattleController) => void): string | undefined => {
+            const ctrl = freshBattle();
+            let cause: string | undefined;
+            const off = services().event.on(EVENT_NAMES.BattleEnded, (data: { cause?: string }) => { cause = data.cause; });
+            setup(ctrl);
+            resolveBattleVictory(ctrl.state);
+            off();
+            services().battle.beginBattle();
+            return cause;
+        };
+        assert.equals('general', causeOf((c) => { c.state.playerGeneral!.currentHp = 0; }));
+        assert.equals('fortress', causeOf((c) => { c.state.playerFortressHp = 0; }));
+        assert.equals('general', causeOf((c) => { c.state.enemyGeneral!.currentHp = 0; }));
+        assert.equals('fortress', causeOf((c) => { c.state.enemyFortressHp = 0; }));
+        assert.equals('time-up', causeOf(() => { services().battle['turn'] = GAME_CONFIG.TURN_LIMIT + 1; }));
+    });
+
+    suite.test('結算窗說明依結束原因改寫；沒帶原因維持舊文案（PROG-2-9414）', async () => {
+        const shown: Array<{ title: string; description: string }> = [];
+        const popup = new ResultPopupComposite() as unknown as {
+            show: (r: { title: string; description: string }) => Promise<void>;
+            _applyGeneralAvatar: () => Promise<void>;
+            showResult: (result: string, details?: string, generalId?: string, retreated?: boolean, cause?: string) => Promise<void>;
+        };
+        popup.show = async (r) => { shown.push(r); };
+        popup._applyGeneralAvatar = async () => undefined;
+        await popup.showResult('enemy-win', undefined, undefined, false, 'general');
+        await popup.showResult('enemy-win', undefined, undefined, true, 'time-up');
+        await popup.showResult('enemy-win', undefined, undefined, true);
+        await popup.showResult('player-win', undefined, undefined, false, 'camp');
+        await popup.showResult('enemy-win', undefined, undefined, false, 'fortress');
+        assert.equals('主將倒下，我軍潰敗，再接再厲！', shown[0].description);
+        assert.equals('撤退', shown[1].title, '回合用盡標題仍是撤退');
+        assert.equals('時限已到仍未破敵，我軍鳴金撤兵。', shown[1].description);
+        assert.equals('主動撤退，本場判定戰敗。', shown[2].description, '玩家主動撤退');
+        assert.equals('我軍奪下敵營，敵軍不戰自潰！', shown[3].description);
+        assert.equals('敵方突破防線，再接再厲！', shown[4].description);
     });
 
     suite.test('主將陣亡的落敗不標為撤退', () => {

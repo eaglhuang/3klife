@@ -10432,6 +10432,55 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9414",
+      "title": "六關試玩驗收（主線 2 關＋主題 4 關，每關結算截圖）",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T00:30:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 11/19 指示：9412／9413 合併後，以玩家視角把六關各打一遍，確認可正常遊玩到結算，每關附結算截圖；發現壞掉就修。",
+      "related": [
+        "PROG-2-9412",
+        "PROG-2-9413"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "artifacts/playtest-checklist/prog-2-9414/（本機結算截圖）"
+      ],
+      "notes": "2026-11-20 | 狀態: done | 驗證: 六關全打到結算＋單元測試 8459 過／tsc 0／compute-gate quick 3/3／battle-skill-smoke 74 過 | 變更: 營帳佔領補發 BattleEnded（修夜劫營、博望坡卡死）；BattleEnded 帶 cause，結算說明依主將倒下／攻破城寨／時限已到／奪下敵營分別顯示；時限到達改在敵方回合結束當下判定，不再多出一個打不了的回合；敵方回合中分出勝負時還原 1.5 倍速 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
