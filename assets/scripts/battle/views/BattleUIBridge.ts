@@ -15,7 +15,7 @@ import { tallyLegendDeploySpec } from '../../core/systems/TallyScripts';
 import { battleCellLabel, battleDamageSourceLabel, battleEndLogLine } from '../shared/BattleDamageSourceLabel';
 import { formatTallyLine, type TallyTranslate } from '../../core/systems/TallyLineSpec';
 import { aptitudeToastPayload } from '../../core/systems/AptitudeDialogue';
-import { setBattlePaused, setBattleTimeScale } from './BattleTimeScale';
+import { setBattlePaused, setBattleTimeScale, setEnemyTurnPlayback } from './BattleTimeScale';
 import { UltCutinDirector } from './UltCutinDirector';
 import { isUltCutinPlaying } from '../../ui/core/UltCutinOverlay';
 import { statusEffectFloatText } from '../shared/StatusEffectLabel';
@@ -387,6 +387,7 @@ export class BattleUIBridge {
 
   public unsubscribeEvents(): void {
     setBattlePaused(false);
+    setEnemyTurnPlayback(false);
     setBattleTimeScale(1);
     this.unsubs.forEach(fn => fn());
     this.unsubs.length = 0;

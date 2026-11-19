@@ -40,9 +40,42 @@ export function setTimeScale(target: Tickable, scale: number): number {
     return next;
 }
 
+/**
+ * 敵方回合播放倍率（PROG-2-9413，使用者 11/19 選定 1.5）：只加快敵方行動的播放，與玩家 x2、QA 倍率相乘。
+ * 單挑等需要看清楚的演出期間由 phaseSuspended 暫時停用（回到玩家倍率）。
+ */
+export const ENEMY_TURN_PLAYBACK_SCALE = 1.5;
+let phaseScale = 1;
+let phaseSuspended: (() => boolean) | null = null;
+
+/** 當幀實際倍率：暫停／定格 > 玩家倍率 × QA 倍率 ×（敵方回合且沒被演出暫停時的 1.5） */
+export function effectiveBattleScale(): number {
+    if (paused || qaFrozen) return BATTLE_PAUSE_SCALE;
+    const phase = phaseScale !== 1 && !(phaseSuspended?.() ?? false) ? phaseScale : 1;
+    return userScale * qaMultiplier * phase;
+}
+
 function applyBattleScale(): void {
-    const frozen = paused || qaFrozen;
-    setTimeScale(director as unknown as Tickable, frozen ? BATTLE_PAUSE_SCALE : userScale * qaMultiplier);
+    const target = director as unknown as Tickable;
+    if (paused || qaFrozen || phaseScale === 1) {
+        setTimeScale(target, effectiveBattleScale());
+        return;
+    }
+    // 敵方回合：每幀重新判斷（單挑面板開關不必另外通知）
+    const base = originals.get(target) ?? target.tick;
+    if (!originals.has(target)) originals.set(target, base);
+    target.tick = (dt: number) => base.call(target, dt * effectiveBattleScale());
+}
+
+/** 進入／離開敵方回合（PROG-2-9413）。suspendWhile 回傳 true 的幀（例如單挑面板開著）不加速。 */
+export function setEnemyTurnPlayback(active: boolean, suspendWhile: (() => boolean) | null = null): void {
+    phaseScale = active ? ENEMY_TURN_PLAYBACK_SCALE : 1;
+    phaseSuspended = active ? suspendWhile : null;
+    applyBattleScale();
+}
+
+export function isEnemyTurnPlaybackActive(): boolean {
+    return phaseScale !== 1;
 }
 
 /** QA 慢動作倍率（0.05～1，呼叫端已夾值）；離開戰場呼叫 setBattleTimeScale(1) 也不會清掉，QA 倍率全程有效 */
