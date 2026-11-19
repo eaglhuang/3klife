@@ -49,14 +49,14 @@ export function createFamilyMilestoneSuite(): TestSuite {
         assert.equals(4, milestoneStageOfClan(clanStatsOf(line)));
     });
 
-    suite.test('4 代但 EP 不足 3 人仍是 G2', () => {
+    suite.test('4 代但 EP 不足 3 人升至 G3（不到 G4）', () => {
         const line = [member('a', [], 80), member('b', ['a'], 80), member('c', ['b'], 10), member('d', ['c'], 10)];
-        assert.equals(2, milestoneStageOfClan(clanStatsOf(line)));
+        assert.equals(3, milestoneStageOfClan(clanStatsOf(line)));
     });
 
-    suite.test('3 人 EP 足夠但只有 3 代不到 G4', () => {
+    suite.test('3 人 EP 足夠但只有 3 代升至 G3（不到 G4）', () => {
         const line = [member('a', [], 80), member('b', ['a'], 80), member('c', ['b'], 80)];
-        assert.equals(2, milestoneStageOfClan(clanStatsOf(line)));
+        assert.equals(3, milestoneStageOfClan(clanStatsOf(line)));
     });
 
     suite.test('存檔值不合法時回到 G1', () => {
@@ -65,12 +65,13 @@ export function createFamilyMilestoneSuite(): TestSuite {
         assert.equals(3, normalizeMilestoneStage(3));
     });
 
-    suite.test('跳階時跨過的每一階都出句，G3 沒有表親資料只出解鎖句', () => {
+    suite.test('跳階時跨過的每一階都出句，G3 沒有表親資料出預設三代譜牒句與解鎖句', () => {
         const lines = milestoneUnlockLines(1, 4);
-        assert.lengthEquals(5, lines);
+        assert.lengthEquals(6, lines);
         assert.isTrue(lines[0].indexOf('家乘譜牒') >= 0);
-        assert.isTrue(lines[2].indexOf('血脈清濁燈號') >= 0);
-        assert.isTrue(lines[3].indexOf('天下郡望') >= 0);
+        assert.isTrue(lines[2].indexOf('世交合譜') >= 0);
+        assert.isTrue(lines[3].indexOf('血脈清濁燈號') >= 0);
+        assert.isTrue(lines[4].indexOf('天下郡望') >= 0);
     });
 
     suite.test('Session：季度檢定升 G2 並發事件，不重複發', async () => {

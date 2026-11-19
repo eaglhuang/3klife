@@ -48,6 +48,7 @@ import { normalizeVfxEffectTable } from "../config/VfxEffectConfig";
 import { normalizeSeasonModifiers, seasonModifiersOf, setActiveSeasonModifiers } from "../systems/SeasonModifiers";
 import { CHILD_APTITUDE_RULES_JSON, configureChildAptitudeRules, type ChildAptitudeRulesConfig } from "../systems/ChildAptitudeInheritance";
 import { configureFamilyCompatibilityRules, FAMILY_COMPATIBILITY_RULES_JSON, type FamilyCompatibilityRulesConfig } from "../systems/FamilyCompatibility";
+import { configureFamilyMilestoneRules, FAMILY_MILESTONE_RULES_JSON, type FamilyMilestoneRulesConfig } from "../systems/FamilyMilestone";
 import { configureWhiteFactorAchievements, WHITE_FACTOR_ACHIEVEMENTS_JSON, type WhiteFactorAchievementsConfig } from "../systems/WhiteFactorTraits";
 import { configureMindMarriageRules, MIND_MARRIAGE_RULES_JSON, type MindMarriageRulesConfig } from "../mind/MindMarriage";
 
@@ -329,6 +330,7 @@ export class ServiceLoader {
             loadSafe<Partial<ChildAptitudeRulesConfig>>(CHILD_APTITUDE_RULES_JSON, configureChildAptitudeRules),
             loadSafe<Partial<FamilyCompatibilityRulesConfig>>(FAMILY_COMPATIBILITY_RULES_JSON, configureFamilyCompatibilityRules),
             loadSafe<Partial<WhiteFactorAchievementsConfig>>(WHITE_FACTOR_ACHIEVEMENTS_JSON, configureWhiteFactorAchievements),
+            loadSafe<Partial<FamilyMilestoneRulesConfig>>(FAMILY_MILESTONE_RULES_JSON, configureFamilyMilestoneRules),
             loadSafe<Partial<MindMarriageRulesConfig>>(MIND_MARRIAGE_RULES_JSON, configureMindMarriageRules),
         ]);
         this.bloodlineRulesLoaded = true;

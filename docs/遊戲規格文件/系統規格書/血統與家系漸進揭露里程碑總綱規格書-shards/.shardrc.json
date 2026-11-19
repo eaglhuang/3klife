@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "source": "../血統與家系漸進揭露里程碑總綱規格書.md",
+  "indexTitle": "血統與家系漸進揭露里程碑總綱規格書（分片索引）",
+  "indexPath": "docs/遊戲規格文件/系統規格書/血統與家系漸進揭露里程碑總綱規格書.md",
+  "type": "markdown-h2",
+  "preambleShard": "shard-a",
+  "defaultShard": "shard-c",
+  "shards": [
+    {
+      "name": "shard-a",
+      "title": "A–E 系統描述／目的／套路／TA／功能清單",
+      "pattern": "^[A-E]\\."
+    },
+    {
+      "name": "shard-b",
+      "title": "F–J 公式／劇本／字串／Data Schema／名詞",
+      "pattern": "^[F-J]\\."
+    },
+    {
+      "name": "shard-c",
+      "title": "K 四階段揭露與後續分冊對應索引",
+      "pattern": "."
+    }
+  ]
+}

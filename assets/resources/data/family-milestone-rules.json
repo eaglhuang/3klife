@@ -1,0 +1,8 @@
+{
+  "version": "1.0.0",
+  "spec": "PROG-2-9172",
+  "g2MinAdultDescendants": 1,
+  "g3MinGenerations": 3,
+  "g4MinGenerations": 4,
+  "g4MinEp75": 3
+}
