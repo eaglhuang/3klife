@@ -6419,6 +6419,31 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/gao_gan__高幹__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "37011d5002ddb82331511c7101e8cb08f701a96ba06e5ad526bae06beabf5572",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/gao_gan__高幹__avatar_0002.png",
+            "sourceSha256": "03da1ae2472706cacec862d5272f0377a93b5d5804f3e35f8d8b341e9b1240c2",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "x": 34.67,
+              "y": 11.16,
+              "width": 194.67,
+              "height": 194.67
+            },
+            "qc": "頭高比例75.0%；臉部中心x=50.0%；方帽完整，雙肩可見；125px檢視與250px並排基準比較通過；等待使用者確認。",
+            "createdAt": "2026-11-19"
+          }
+        ],
+        "activeVersion": "0001"
       }
     },
     {
