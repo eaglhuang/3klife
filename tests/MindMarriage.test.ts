@@ -12,6 +12,7 @@ import {
     computeEarlyEnthusiasmMultiplier,
     configureMindMarriageRules,
     defaultMindMarriageRules,
+    listUnwedEligible,
     processUnwedMarriageReminders,
     recordBondFormedMindEvents,
     recordMarriageRejectedMindEvent,
@@ -201,6 +202,18 @@ export function createMindMarriageSuite(): TestSuite {
             resetMindMarriageRules();
             configureMindMarriageRules(defaultMindMarriageRules());
         }
+    });
+
+    suite.test('listUnwedEligible：24 歲以上未婚才入列，已歿／教官／有子嗣／待產者排除（PROG-2-9173）', () => {
+        const roster = [
+            makeGeneral('ok', '男', { age: 26 }),
+            makeGeneral('young', '男', { age: 20 }),
+            makeGeneral('dead', '男', { age: 30, status: 'dead' } as Partial<GeneralConfig>),
+            makeGeneral('mentor', '男', { age: 40, role: 'Mentor' } as Partial<GeneralConfig>),
+            makeGeneral('father', '男', { age: 30, breedingCount: 1 } as Partial<GeneralConfig>),
+            makeGeneral('mother', '女', { age: 30, pregnancySeasonsLeft: 2 } as Partial<GeneralConfig>),
+        ];
+        assert.equals('ok', listUnwedEligible(roster).map((g) => g.id).join(','));
     });
 
     return suite;
