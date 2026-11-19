@@ -417,6 +417,9 @@ export class BondingSetupController {
         const father = fathers.find((g) => g.id === this._fatherId) ?? null;
         const mother = mothers.find((g) => g.id === this._motherId) ?? null;
 
+        const emptyHint = mothers.length === 0
+            ? this._t('ui.breed.no_mother_hint')
+            : this._t('ui.breed.no_father_hint', String(BREEDING_MIN_AGE));
         const texts: Record<string, string> = {
             bondTitle: '結緣配置',
             yuedanFilterLabel: this._yuedanOnly ? '顯示全部' : '只看月旦評',
@@ -424,7 +427,8 @@ export class BondingSetupController {
             compactLabel: this._slotLabel(),
             potentialLabel: this._potentialOpen ? '收起潛力' : '潛力條',
             bondNotice: this._notice,
-            bondEmptyHint: `名冊中需要至少一位滿 ${BREEDING_MIN_AGE} 歲的男性與女性武將才能結緣。可先到轉蛋招募，或推進季度讓子嗣長大。`,
+            bondEmptyHint: emptyHint,
+            btnGoBeautyGachaLabel: this._t('ui.breed.go_beauty_gacha'),
             fatherPager: pagerText(fathers, father),
             motherPager: pagerText(mothers, mother),
         };
@@ -432,6 +436,7 @@ export class BondingSetupController {
         const actives: Record<string, boolean> = {
             bondPanel: false,
             bondEmptyHint: false,
+            btnGoBeautyGacha: false,
             potentialPanel: false,
             estimateBox: !this._potentialOpen || !factorDetailVisible(stage),
             statProbeLine: !this._potentialOpen || !factorDetailVisible(stage),
@@ -449,6 +454,7 @@ export class BondingSetupController {
         }
         const enabled: Record<string, boolean> = {
             btnCloseBond: true,
+            btnGoBeautyGacha: mothers.length === 0,
             btnYuedanFilter: this._yuedanIds().length > 0,
             btnRumorRoute: this._parents().length > 0,
             btnCompact: this._slotOptions().length > 0,
@@ -469,6 +475,7 @@ export class BondingSetupController {
 
         if (!father || !mother) {
             actives.bondEmptyHint = true;
+            actives.btnGoBeautyGacha = mothers.length === 0;
             Object.assign(texts, parentTexts('father', father, level, stage, yuedan), parentTexts('mother', mother, level, stage, yuedan));
             return { fatherId: father?.id ?? null, motherId: mother?.id ?? null, mode: null, sageIds: [], texts, fills: {}, actives, enabled };
         }
@@ -548,7 +555,11 @@ export class BondingSetupController {
         texts.costLabel = this._t('ui.breed.confirm', father.name, String(FATHER_VIGOR_COST), mother.name, String(MOTHER_VIGOR_COST));
         texts.eligibilityLabel = eligibility.ok
             ? `${father.name} 與 ${mother.name} 良緣天成，可以結緣`
-            : `無法結緣：${eligibility.reasons.map((r) => BLOCK_REASON_TEXT[r]).join('、')}`;
+            : `無法結緣：${eligibility.reasons.map((r) => (
+                r === 'mother-pregnant'
+                    ? this._t('ui.breed.preg_wait_hint', mother.name, String(mother.pregnancySeasonsLeft ?? 0))
+                    : BLOCK_REASON_TEXT[r]
+            )).join('、')}`;
         const inbred = isSameBloodline(father, mother);
         texts.inbreedingLabel = eligibility.commonAncestorDistance !== null
             ? `近親警告：${eligibility.commonAncestorDistance} 代內有共同祖先`

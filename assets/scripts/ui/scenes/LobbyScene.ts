@@ -1478,6 +1478,13 @@ export class LobbyScene extends Component {
         this.onClickGachaMain();
     }
 
+    /** 結緣無可用女將引導（PROG-2-9177）：關閉結緣視窗並直接開轉蛋切到紅顏天香池 */
+    private _openGachaAtBeautyPool(): void {
+        this._closeBondingSetup();
+        this._gachaOpenAtPoolIndex = GACHA_POOL_INDEX.redFace;
+        this.onClickGachaMain();
+    }
+
     /** 入學前的好友借用（§L-2，PROG-2-1138）：已選時再點一次取消，否則開借將清單 */
     private _onClickStartBorrow(): void {
         const flow = this._nurtureFlow;
@@ -2097,6 +2104,7 @@ export class LobbyScene extends Component {
 
         this._bondingHost = await this._mountPreviewScreenHost('BondingSetupHost', 'bonding-setup-screen', [
             { buttonId: 'btnCloseBond', handler: () => { this._closeBondingSetup(); } },
+            { buttonId: 'btnGoBeautyGacha', handler: () => { this._openGachaAtBeautyPool(); } },
             { buttonId: 'btnYuedanFilter', handler: () => { bonding.toggleYuedanFilter(); this._refreshBondingSetup(); } },
             { buttonId: 'btnRumorRoute', handler: () => { bonding.cycleRumorRoute(); this._refreshBondingSetup(); } },
             { buttonId: 'btnCompact', handler: () => { bonding.cycleCompact(); this._refreshBondingSetup(); } },
