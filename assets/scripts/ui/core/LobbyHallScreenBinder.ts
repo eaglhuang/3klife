@@ -108,6 +108,9 @@ export interface LobbyHallTopbarView {
     troops?: number | string;
     officerSubtitle?: string;
     timeLabel?: string;
+    /** 世家總覽卡片兩行字（取代設計稿示意文字） */
+    clanSubtitle?: string;
+    clanLine?: string;
 }
 
 /** 節點本身或第一個子節點上的 Label 套字；找不到 Label 時不動 */
@@ -225,6 +228,8 @@ export class LobbyHallScreenBinder {
         if (view.officerSubtitle !== undefined) {
             applyField('LobbyHallScreen_div_7', view.officerSubtitle);
         }
+        if (view.clanSubtitle !== undefined) applyField('LobbyHallScreen_div_70', view.clanSubtitle);
+        if (view.clanLine !== undefined) applyField('LobbyHallScreen_div_71', view.clanLine);
         if (view.timeLabel !== undefined) {
             applyField('LobbyHallScreen_div_10', view.timeLabel, 'lobby-hall-screen.hall-time');
         }

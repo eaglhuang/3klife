@@ -218,7 +218,7 @@ import type { PowDecision } from '../../core/systems/PrisonerOfWar';
 import { OracleCouple, SageOracleController } from '../core/SageOracleController';
 import { buildRetireReviewTexts, RETIRE_REVIEW_OPEN_EVENT, withRetireReviewFallback, type RetireReviewOpenPayload } from '../core/RetireReviewController';
 import { formatDeathNotice, formatForcedRetirementNotice } from '../core/LifeVitalityPresenter';
-import { buildSpiritCodexTexts, spiritRelicsNewestFirst, SPIRIT_CODEX_MAX_ROWS, withSpiritCodexFallback } from '../core/SpiritCodexController';
+import { buildSpiritCodexTexts, spiritCodexDetailButtonStates, spiritRelicsNewestFirst, SPIRIT_CODEX_MAX_ROWS, withSpiritCodexFallback } from '../core/SpiritCodexController';
 import { UltimateCodexController } from '../core/UltimateCodexController';
 import { withSpiritCardDetailFallback } from '../core/SpiritCardDetailTexts';
 import { SPIRIT_TALLY_DETAIL_SCREEN_ID } from '../core/SpiritTallyDetailView';
@@ -240,7 +240,7 @@ import { SolidBackground } from '../components/SolidBackground';
 import { ToastMessage } from '../components/ToastMessage';
 import { applyUIPreviewBinderState } from '../core/UIPreviewStateApplicator';
 import { buildSpiritFamilyOverviewDisplayModel, type SpiritFamilyOverviewOpenPayload, type SpiritFamilyOverviewStoryCell } from '../core/SpiritFamilyOverviewRoute';
-import { buildSpiritFamilyOverviewRows, spiritFamilyOverviewSummaryTexts } from '../core/SpiritFamilyOverviewSummary';
+import { buildSpiritFamilyOverviewRows, lobbyClanCardTexts, spiritFamilyOverviewSummaryTexts } from '../core/SpiritFamilyOverviewSummary';
 import { buildMirrorFateStrip } from '../../core/systems/MirrorFateStrip';
 import { familyOverviewHotspotVisible } from '../../core/systems/FamilyOverviewHotspot';
 import { BLOODLINE_MIRROR_LOADING_TIPS_PATH, LoadingTipsContent, pickLoadingTips } from '../../core/systems/LoadingTips';
@@ -4233,18 +4233,21 @@ ${spent}`,
         if (!this._lobbyHall) return;
         const session = services().session;
         const wallet = this._localGachaService.getWalletSnapshot();
-        const leadName = session.roster.find((g) => g.id === session.leadGeneralId)?.name ?? '張飛';
+        const leadName = session.roster.find((g) => g.id === session.leadGeneralId)?.name ?? '未定';
         const rankName = officerDisplayOf(session.officerState).rankName || '鄉里義士';
         const hour = new Date().getHours();
         const isNight = this._hallThemeConfig
             ? resolveHallSceneTheme({ seasonIndex: session.gameTime.currentSeason, hour }, this._hallThemeConfig).daypart === 'night'
             : (hour >= 18 || hour < 6);
+        const clanCard = lobbyClanCardTexts(buildSpiritFamilyOverviewRows(Object.values(session.inventoryViews.spiritCards), (templateId) => this._generals.find((g) => g.id === templateId)?.name));
         this._lobbyHall.setTopbar({
             gold: wallet.gold,
             gems: wallet.gems,
             food: session.military.food,
             troops: session.military.cityTroops,
             officerSubtitle: `官職 ${rankName} · 主將 ${leadName}`,
+            clanSubtitle: clanCard.subtitle,
+            clanLine: clanCard.line,
             timeLabel: hallTimeLabelText((key, ...args) => services().i18n.t(key, ...args), session.gameTime, isNight),
         });
     }
@@ -5122,11 +5125,8 @@ ${spent}`,
         const cards = (await services().legacy?.getArchiver().getAllSpiritCards()) ?? [];
         const lookup = withSpiritCodexFallback((key, ...args) => services().i18n.t(key, ...args));
         this._spiritCodexShown = spiritRelicsNewestFirst(cards).slice(0, SPIRIT_CODEX_MAX_ROWS);
-        const enabled: Record<string, boolean> = {};
-        for (let index = 0; index < SPIRIT_CODEX_MAX_ROWS; index += 1) {
-            enabled[`btnSpiritDetail${index}`] = index < this._spiritCodexShown.length;
-        }
-        applyFlowView(binder, { texts: buildSpiritCodexTexts(cards, lookup), actives: {}, enabled });
+        const { actives, enabled } = spiritCodexDetailButtonStates(this._spiritCodexShown.length);
+        applyFlowView(binder, { texts: buildSpiritCodexTexts(cards, lookup), actives, enabled });
         host.node.active = true;
         this._bringNodeToFront(host.node);
     }
@@ -6494,10 +6494,10 @@ ${spent}`,
                 back.getChildByName('Label')!.getComponent(Label)!.string = '返回轉蛋';
                 back.on(Button.EventType.CLICK, () => { panel!.active = false; }, this);
             }
-            const rows = services().session.mercenaryPoolRows();
+            const rows = services().session.mercenaryPoolRows((id) => this._generals.find((g) => g.id === id)?.name);
             const label = panel.getChildByName('MercenaryPoolText')!.getComponent(Label)!;
             label.string = rows.length === 0 ? '傭兵池\n\n目前沒有傭兵' : '傭兵池\n\n' + rows.map(row =>
-                `${row.uid}　${row.statusText}\n${row.daysLeftText}　結義進度 ${Math.round(row.bondProgress * 100)}%`).join('\n');
+                `${row.displayName}　${row.statusText}\n${row.daysLeftText}　結義進度 ${Math.round(row.bondProgress * 100)}%`).join('\n');
             panel.active = true;
             panel.setSiblingIndex(host.node.children.length - 1);
         }, this);

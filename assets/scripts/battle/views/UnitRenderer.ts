@@ -62,6 +62,8 @@ import { statBonusTone, statWithBonusText, type StatBonusTone } from "../shared/
 import { unitHpBarState, type UnitHpBarState } from "../shared/UnitHpBar";
 import { unitValueFloatType } from "../shared/DamageFloatType";
 import { UnitStatusIconBar, StatusHaloPool } from "./UnitStatusIconBar";
+import { TileBuffMarkers } from "./TileBuffMarkers";
+import type { TileBuffBadge } from "../shared/TileBuffBadge";
 import { buildUnitStatusContext, computeUnitStatusIcons, gainedTones, newlyGainedKinds, type StatusIconKind } from "../shared/UnitStatusIcons";
 import { services } from "../../core/managers/ServiceLoader";
 import { FLOAT_MISS_TEXT, FloatTextType } from "../../core/systems/FloatTextStyle";
@@ -141,13 +143,6 @@ interface BadgeView {
   hpLabel: Label;
   opacity: UIOpacity;
   bottomNameLabel: Label | null;  // 下排兵種名稱（將軍無用）
-}
-
-interface TileBuffView {
-  node: Node;
-  label: Label;
-  lane: number;
-  depth: number;
 }
 
 /** 掠奪飄字每行間隔（秒） */
@@ -241,7 +236,16 @@ export class UnitRenderer extends Component {
     (id, x, y, isLeader) => this.emitDeployLanding(id, x, y, isLeader));
   /** 沒有 Spine 的主將改用立繪站牌，不退回藍色通用棋子（issue #2238） */
   private readonly generalStandees = new GeneralPortraitStandee(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
-  private readonly tileBuffViews = new Map<string, TileBuffView>();
+  /** 棋盤 buff 格標記（PROG-2-9411）：與頭頂狀態圖示同款，節點重用 */
+  private readonly tileBuffMarkers = new TileBuffMarkers(
+    () => this.uiRoot,
+    (cell, node) => {
+      const pos = this.boardRenderer?.getCellWorldPosition(cell.lane, cell.depth, 0);
+      if (pos) this.projectWorldPoint(pos, node);
+    },
+  );
+  private readonly tileBuffFlyFrom = new Vec3();
+  private readonly tileBuffFlyTo = new Vec3();
   private readonly troopPrefabLoads = new Map<string, Promise<Prefab | null>>();
   private readonly heroPrefabLoads = new Map<string, Promise<Prefab | null>>();
   private readonly troopTypeIconLoads = new Map<string, Promise<SpriteFrame | null>>();
@@ -1082,11 +1086,7 @@ export class UnitRenderer extends Component {
     this.arrowShots.update(dt);
     this.slashShots.update(dt);
 
-    this.tileBuffViews.forEach(view => {
-      const pos = this.boardRenderer?.getCellWorldPosition(view.lane, view.depth, 0.12);
-      if (!pos) return;
-      this.projectWorldPoint(pos, view.node);
-    });
+    this.tileBuffMarkers.update(dt);
   }
 
   /** 數值帶增減量時字串變長，單行縮字塞進徽章（PROG-2-1870） */
@@ -1678,6 +1678,28 @@ export class UnitRenderer extends Component {
     view.pendingStatusPulse = isDebuff ? 'debuff' : 'buff';
   }
 
+  /**
+   * 吃到 buff 格（PROG-2-9411）：格子上的圖示飛到單位頭頂圖示列，抵達時頭頂整排彈一下、腳下亮光環。
+   * 要在刷新畫面（標記被收起）之前呼叫；那格沒有標記或單位已不在畫面上時，退回原本的刷新時補播。
+   */
+  public playTileBuffPickup(unitId: string, lane: number, depth: number, badge: TileBuffBadge): void {
+    const view = this.unitViews.get(unitId);
+    const from = this.tileBuffMarkers.iconPositionOf({ lane, depth }, this.tileBuffFlyFrom);
+    if (!view || !from || !view.labelNode.active) { this.playStatusGain(unitId, badge.isDebuff); return; }
+    const target = (): Vec3 | null => {
+      const label = view.labelNode;
+      if (!isValid(label)) return null;
+      const k = label.scale.x || 1;
+      const p = label.position;
+      return this.tileBuffFlyTo.set(p.x + (STATUS_ICON_START_X + 18) * k, p.y + STATUS_ICON_Y * k, 0);
+    };
+    this.tileBuffMarkers.flyPickup(from, badge, target, () => {
+      if (!isValid(view.labelNode)) return;
+      view.statusBar.pop(null);
+      this.playStatusHalo(view, !badge.isDebuff, badge.isDebuff);
+    });
+  }
+
   /** 頭頂血條節點：放在名牌上緣之上（主戰場UI規格書 §3.1，PROG-2-1874） */
   private buildHpBar(labelNode: Node, badgeHalfHeight: number): Graphics {
     const barNode = new Node("HpBar");
@@ -1966,54 +1988,7 @@ export class UnitRenderer extends Component {
   }
 
   private syncTileBuffViews(state: BattleState): void {
-    if (!this.uiRoot) return;
-
-    const activeKeys = new Set<string>();
-    state.tileBuffs.forEach(buff => {
-      const key = `${buff.lane},${buff.depth}`;
-      activeKeys.add(key);
-      let view = this.tileBuffViews.get(key);
-      if (!view) {
-        const node = new Node(`TileBuff_${key}`);
-        node.layer = this.canvasNode?.layer ?? Layers.Enum.UI_2D;
-        this.uiRoot.addChild(node);
-        const tf = node.addComponent(UITransform);
-        tf.setContentSize(180, 32);
-        const label = node.addComponent(Label);
-        label.fontSize = 20;
-        label.lineHeight = 22;
-        label.isBold = true;
-        label.color = new Color(245, 255, 130, 255);
-        label.horizontalAlign = HorizontalTextAlignment.CENTER;
-        label.verticalAlign = VerticalTextAlignment.CENTER;
-
-        node.setScale(new Vec3(1, 1, 1));
-        tween(node)
-          .to(0.45, { scale: new Vec3(1.25, 1.25, 1) }, { easing: "quadOut" })
-          .to(0.55, { scale: new Vec3(0.95, 0.95, 1) }, { easing: "quadIn" })
-          .union()
-          .repeatForever()
-          .start();
-
-        view = { node, label, lane: buff.lane, depth: buff.depth };
-        this.tileBuffViews.set(key, view);
-      }
-      view.label.string = buff.rarity === "rare" ? `★ ${buff.text}` : buff.text;
-
-      let color;
-      if (buff.op === "div") {
-        color = buff.rarity === "rare" ? new Color(255, 90, 90, 255) : new Color(255, 130, 130, 255);
-      } else {
-        color = buff.rarity === "rare" ? new Color(255, 225, 110, 255) : new Color(170, 255, 170, 255);
-      }
-      view.label.color = color;
-    });
-
-    this.tileBuffViews.forEach((view, key) => {
-      if (activeKeys.has(key)) return;
-      view.node.destroy();
-      this.tileBuffViews.delete(key);
-    });
+    this.tileBuffMarkers.sync(state.tileBuffs.values());
   }
 
   /**
