@@ -570,6 +570,39 @@ export function createNurtureFlowSuite(): TestSuite {
         assert.isFalse(bare.flow.getView().enabled.btnStartBorrow);
     });
 
+    suite.test('缺教官引導：顯示按鈕與教官池提示，借用後消失，第一次有教官記旗標（PROG-2-9160）', async () => {
+        let done = false;
+        const guide = { isDone: () => done, markDone: () => { done = true; }, tickets: () => 5 };
+        const rig = makeRig([unveiled('alpha')], { mode: GameTimeMode.Nurture, cards: [], extra: { mentorGuide: guide } });
+        await rig.flow.chooseFate('accept');
+        await rig.flow.loadDeck();
+        let view = rig.flow.getView();
+        assert.isTrue(view.actives.btnMentorGuide && view.enabled.btnMentorGuide, '沒有教官時顯示引導按鈕');
+        assert.isTrue(view.texts.startHint.includes('教官池') && view.texts.startHint.includes('5 張'));
+        assert.isFalse(view.texts.deckHint.includes('支援卡池'), '提示改用畫面上的名稱「教官池」');
+        assert.isFalse(done, '還沒有教官不記旗標');
+        rig.flow.setBorrowedMentor('f', card('zhao'));
+        assert.isFalse(rig.flow.getView().actives.btnMentorGuide, '選了好友借用就不再引導');
+        rig.flow.setBorrowedMentor(null);
+
+        const withCard = makeRig([unveiled('beta')], { mode: GameTimeMode.Nurture, cards: [card('guan')], extra: { mentorGuide: guide } });
+        await withCard.flow.chooseFate('accept');
+        await withCard.flow.loadDeck();
+        view = withCard.flow.getView();
+        assert.isFalse(view.actives.btnMentorGuide, '已有教官不顯示引導');
+        assert.isTrue(done, '第一次擁有教官記下旗標');
+
+        const afterDone = makeRig([unveiled('gamma')], { mode: GameTimeMode.Nurture, cards: [], extra: { mentorGuide: guide } });
+        await afterDone.flow.chooseFate('accept');
+        await afterDone.flow.loadDeck();
+        assert.isFalse(afterDone.flow.getView().actives.btnMentorGuide, '旗標已記，教官用完也不再引導');
+
+        const bare = makeRig([unveiled('delta')], { mode: GameTimeMode.Nurture, cards: [] });
+        await bare.flow.chooseFate('accept');
+        await bare.flow.loadDeck();
+        assert.isFalse(bare.flow.getView().actives.btnMentorGuide, '沒接引導依賴時不顯示');
+    });
+
     suite.test('戰法列只在結業顯示，清單為本場靈感觸發的戰法（PROG-2-1134）', async () => {
         const calls: string[] = [];
         const names: Record<string, string> = { 'tactic-a': '甲計', 'tactic-b': '乙計' };

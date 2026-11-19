@@ -106,5 +106,28 @@ export function createFirstBattleClearedSuite(): TestSuite {
         assert.isFalse(loaded.shouldShowOpeningRedFace);
     });
 
+    suite.test('教官引導旗標：標記後存檔讀回仍是完成；舊檔缺欄位視為未完成（PROG-2-9160）', async () => {
+        const adapter = new MemoryStorageAdapter();
+        const session = await freshSession(adapter);
+        assert.isFalse(session.mentorGuideDone);
+        await session.markMentorGuideDone();
+        assert.isTrue(session.mentorGuideDone);
+        const restored = new GameSession(3);
+        restored.setRosterStore(new InMemoryRosterStore([]));
+        restored.setSaveService(new PlayerSaveService(adapter));
+        assert.isTrue(await restored.load());
+        assert.isTrue(restored.mentorGuideDone);
+
+        const old = JSON.parse(JSON.stringify(session.createSnapshot()));
+        delete old.resources.mentorGuideDone;
+        const oldSave = new PlayerSaveService(new MemoryStorageAdapter());
+        await oldSave.save(old);
+        const loaded = new GameSession(3);
+        loaded.setRosterStore(new InMemoryRosterStore([]));
+        loaded.setSaveService(oldSave);
+        assert.isTrue(await loaded.load());
+        assert.isFalse(loaded.mentorGuideDone);
+    });
+
     return suite;
 }
