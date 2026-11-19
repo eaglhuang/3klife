@@ -45,6 +45,23 @@ export interface HallSeasonParticle {
     phaseSec: number;
 }
 
+/** 手機同時存在的粒子上限：Graphics 每幀由 CPU 重新切三角形，數量直接決定單幀成本（PROG-2-9175，手機記憶體／效能優先） */
+export const HALL_FX_MOBILE_MAX_COUNT = 36;
+/** 粒子模擬與重畫的最短間隔（約 30 次／秒）；飄落是慢動作，不需要每幀重畫，成本直接減半 */
+export const HALL_FX_REDRAW_INTERVAL_SEC = 1 / 30;
+/** 光暈外圈每顆多畫一個橢圓；只有夏螢這種大光暈才畫，春櫻／冬雪的 2~4px 光暈肉眼看不出來，省掉一半橢圓 */
+export const HALL_FX_MIN_GLOW_PX = 6;
+
+/** 這個裝置實際要撒的粒子數：桌機照設計稿，手機封頂 */
+export function hallSeasonParticleCount(config: Readonly<HallSeasonFxConfig>, isMobile: boolean): number {
+    return isMobile ? Math.min(config.count, HALL_FX_MOBILE_MAX_COUNT) : config.count;
+}
+
+/** 這個季節要不要多畫光暈外圈 */
+export function hallSeasonDrawsGlow(style: Readonly<HallSeasonStyle>): boolean {
+    return style.glowPx >= HALL_FX_MIN_GLOW_PX;
+}
+
 /** 與設計稿相同的偽亂數：sin(k * 12.9898) * 43758.5453 取小數。 */
 function designRandom(seed: number): () => number {
     let k = Math.floor(seed * 1000);
@@ -54,13 +71,14 @@ function designRandom(seed: number): () => number {
     };
 }
 
-export function spawnHallSeasonParticles(config: Readonly<HallSeasonFxConfig>, season: HallSeason): HallSeasonParticle[] {
+export function spawnHallSeasonParticles(config: Readonly<HallSeasonFxConfig>, season: HallSeason, count: number = config.count): HallSeasonParticle[] {
     const rnd = designRandom(config.seed);
     const style = config.seasons[season];
     const { width: W, height: H } = config.canvas;
     const period = style.swayPeriodSec > 0 ? style.swayPeriodSec : 1;
     const out: HallSeasonParticle[] = [];
-    for (let i = 0; i < config.count; i++) {
+    const total = Math.max(0, Math.min(count, config.count));
+    for (let i = 0; i < total; i++) {
         const z = config.size.min + rnd() * (config.size.max - config.size.min);
         const x = rnd() * W - W / 2;
         const y = H / 2 - rnd() * H;
@@ -74,7 +92,7 @@ export function spawnHallSeasonParticles(config: Readonly<HallSeasonFxConfig>, s
             height: fixed ?? z * config.size.aspect,
             rotationDeg,
             opacity,
-            phaseSec: (i / Math.max(1, config.count)) * period,
+            phaseSec: (i / Math.max(1, total)) * period,
         });
     }
     return out;
