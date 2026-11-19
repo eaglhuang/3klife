@@ -10338,6 +10338,53 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9412",
+      "title": "受擊手感打磨：受擊對齊攻擊命中瞬間、閃白、後退抖動、命中火花、血條殘影、重擊跳字",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-19",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-19T19:34:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 11/19 質疑受擊手感是否已打磨到最好。長板坡實跑逐格檢查發現：受擊閃色、跳字、血條在攻擊方揮刀前 320～480ms 就先出現（因果顛倒）；紅方單位閃色變整片紅剪影；後退與抖動幾乎看不出；接觸點沒有火花；血條瞬間掉完沒有殘影；重擊跳字與一般相同且壓到地格標示。",
+      "related": [
+        "PROG-2-9401",
+        "PROG-2-9411"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-19 | 狀態: in-progress | 驗證: pending | 變更: 待做 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
