@@ -10338,6 +10338,53 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9412",
+      "title": "受擊手感打磨：受擊對齊攻擊命中瞬間、閃白、後退抖動、命中火花、血條殘影、重擊跳字",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-19",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-19T19:34:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 11/19 質疑受擊手感是否已打磨到最好。長板坡實跑逐格檢查發現：受擊閃色、跳字、血條在攻擊方揮刀前 320～480ms 就先出現（因果顛倒）；紅方單位閃色變整片紅剪影；後退與抖動幾乎看不出；接觸點沒有火花；血條瞬間掉完沒有殘影；重擊跳字與一般相同且壓到地格標示。",
+      "related": [
+        "PROG-2-9401",
+        "PROG-2-9411"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-19 | 狀態: done | 驗證: 單元測試 8422 過、冒煙 74+300 過、型別 0 錯、閘門過、長板坡無頭預覽 60ms 逐格（劈砍 420ms 命中同時閃白＋火花＋跳字、騎兵衝鋒、重擊橘字、殘影血條、後退頓格三版對照） | 變更: 受擊表現延到攻擊命中瞬間（依兵種）、Spine 閃白材質、Spine 疊圖後退＋頓格、近戰命中火花＋貼圖預載、血條殘影、重擊 dmg_heavy 橘字；小兵全隊同步出手（錯開 0.12 秒、跟隨者播完再回待機、衝鋒不被走路覆蓋） | 阻塞: 無；後退／頓格強度三版待總PM選（目前用中版）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

@@ -35,12 +35,36 @@ export interface AttackShotSpec {
 /** 弓兵放箭後，箭矢飛到目標才爆的延遲（與 ATTACK_ARROW_SHOT.flightSec 一致，測試會檢查）。 */
 export const ARROW_HIT_DELAY_SEC = 0.35;
 
+/**
+ * PROG-2-9412：各風格「打中」的秒數（從出手動作開始算）。受擊閃白、傷害跳字、受擊音效都等到這一刻才出現，
+ * 才不會刀還沒揮下去對方就先閃、先掉血。數值取自小兵 Spine 攻擊動作的關鍵影格：
+ * 劈砍 attack_slash 刀在 0.42 秒揮到底、突刺 attack_spear 0.40 秒刺到底、盾擊 attack_shield 0.35 秒推到底；
+ * 弓箭以箭矢飛到為準；騎兵以衝撞位移撞上為準（起跳 0.11 + 前衝 0.08，與 BATTLE_VISUAL_TIMING 一致，測試會檢查）。
+ * generic（武將與未知兵種）沿用刀光，取 0.3 秒。
+ */
+export const ATTACK_IMPACT_SEC: Readonly<Record<AttackStyle, number>> = {
+  thrust: 0.4,
+  shield: 0.35,
+  slash: 0.42,
+  bow: ARROW_HIT_DELAY_SEC,
+  charge: 0.19,
+  generic: 0.3,
+};
+
 const WHITE = { r: 255, g: 255, b: 255 };
+
+/**
+ * PROG-2-9412：揮砍類閃光在武器開始往前揮的那一刻出現（關鍵影格：劈砍 0.30、突刺 0.25、盾擊 0.20 秒），
+ * 光跡掃完正好到命中點；以前是出手瞬間就亮，刀還舉在後面光就先出來。
+ */
+const SWING_SHOT_DELAY_SEC = 0.3;
+const THRUST_SHOT_DELAY_SEC = 0.25;
+const BASH_SHOT_DELAY_SEC = 0.2;
 
 /** 劈砍：弧形刀光（沿用 PROG-2-9367 的月牙）。 */
 const SLASH_SHOT: AttackShotSpec = {
   key: 'slash', texturePath: ATTACK_SLASH_SHOT.texturePath, artDeg: ATTACK_SLASH_SHOT.artBulgeDeg, orient: true,
-  width: ATTACK_SLASH_SHOT.size, height: ATTACK_SLASH_SHOT.size, durationSec: ATTACK_SLASH_SHOT.durationSec, delaySec: 0,
+  width: ATTACK_SLASH_SHOT.size, height: ATTACK_SLASH_SHOT.size, durationSec: ATTACK_SLASH_SHOT.durationSec, delaySec: SWING_SHOT_DELAY_SEC,
   startScale: ATTACK_SLASH_SHOT.startScale, endScale: ATTACK_SLASH_SHOT.endScale, sweepDeg: ATTACK_SLASH_SHOT.sweepDeg,
   slidePx: 0, holdFrac: 0.35, color: ATTACK_SLASH_SHOT.color,
 };
@@ -48,14 +72,14 @@ const SLASH_SHOT: AttackShotSpec = {
 /** 突刺：一道細長的直線刺光（貼圖長軸為垂直），沿攻擊方向往前竄一小段。 */
 const THRUST_SHOT: AttackShotSpec = {
   key: 'thrust', texturePath: 'textures/impact/tex_impact_flying', artDeg: 90, orient: true,
-  width: 26, height: 170, durationSec: 0.2, delaySec: 0, startScale: 0.6, endScale: 1.1, sweepDeg: 0,
+  width: 26, height: 170, durationSec: 0.2, delaySec: THRUST_SHOT_DELAY_SEC, startScale: 0.6, endScale: 1.1, sweepDeg: 0,
   anchor: 0.7, slidePx: 46, holdFrac: 0.4, color: WHITE,
 };
 
 /** 盾擊：短促的衝擊圈，由小迅速擴大。 */
 const BASH_SHOT: AttackShotSpec = {
   key: 'bash', texturePath: 'textures/impact/tex_impact_ring', artDeg: 0, orient: false,
-  width: 120, height: 120, durationSec: 0.22, delaySec: 0, startScale: 0.35, endScale: 1.35, sweepDeg: 0,
+  width: 120, height: 120, durationSec: 0.22, delaySec: BASH_SHOT_DELAY_SEC, startScale: 0.35, endScale: 1.35, sweepDeg: 0,
   anchor: 0.85, slidePx: 0, holdFrac: 0.3, color: WHITE,
 };
 
@@ -76,18 +100,30 @@ const CHARGE_DUST_SHOT: AttackShotSpec = {
 /** 衝撞：命中點的衝擊（星芒，比弓箭大），略晚於衝出。 */
 const CHARGE_IMPACT_SHOT: AttackShotSpec = {
   key: 'charge-impact', texturePath: 'textures/impact/tex_impact_sparkle', artDeg: 0, orient: false,
-  width: 120, height: 120, durationSec: 0.24, delaySec: 0.12, startScale: 0.6, endScale: 1.5, sweepDeg: 0,
+  width: 120, height: 120, durationSec: 0.24, delaySec: 0.17, startScale: 0.6, endScale: 1.5, sweepDeg: 0,
   anchor: 1, slidePx: 0, holdFrac: 0.3, color: { r: 255, g: 230, b: 170 },
 };
 
+/**
+ * 近戰命中火花（PROG-2-9412）：命中瞬間在目標身上爆一個暖白星芒，交代「打到了」。
+ * 與弓箭命中共用同一張貼圖與快取鍵，不多載資源；比命中早 0.02 秒出現，火花最亮時正好對上受擊閃白。
+ */
+function meleeHitSpark(style: AttackStyle): AttackShotSpec {
+  return {
+    key: 'bow-hit', texturePath: 'textures/impact/tex_impact_sparkle', artDeg: 0, orient: false,
+    width: 84, height: 84, durationSec: 0.18, delaySec: Math.max(0, ATTACK_IMPACT_SEC[style] - 0.02), startScale: 0.5, endScale: 1.35, sweepDeg: 0,
+    anchor: 0.92, slidePx: 0, holdFrac: 0.25, color: { r: 255, g: 240, b: 205 },
+  };
+}
+
 /** 各風格的畫面層特效清單；arrow 的箭矢本體由 ArrowShotView 負責，這裡只放命中小爆。generic 沿用刀光。 */
 export const ATTACK_SHOTS: Readonly<Record<AttackStyle, readonly AttackShotSpec[]>> = {
-  thrust: [THRUST_SHOT],
-  shield: [BASH_SHOT],
-  slash: [SLASH_SHOT],
+  thrust: [THRUST_SHOT, meleeHitSpark('thrust')],
+  shield: [BASH_SHOT, meleeHitSpark('shield')],
+  slash: [SLASH_SHOT, meleeHitSpark('slash')],
   bow: [BOW_HIT_SHOT],
   charge: [CHARGE_DUST_SHOT, CHARGE_IMPACT_SHOT],
-  generic: [SLASH_SHOT],
+  generic: [SLASH_SHOT, meleeHitSpark('generic')],
 };
 
 export interface ShotPose { angle: number; scale: number; opacity: number; /** 已滑行距離（畫面像素） */ slide: number; visible: boolean }

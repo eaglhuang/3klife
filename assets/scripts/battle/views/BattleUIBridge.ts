@@ -65,6 +65,8 @@ import { salvageGainItems } from '../../core/systems/StrategistHud';
 import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, IDeployRuntimeLike, IBattleScenePanelLike, IStrategistHudLike } from '../../shared/interfaces/IBattleUIComponents';
 
 import { isHeavyHit, BATTLE_TURN_FLOW_TIMING, BATTLE_VISUAL_TIMING } from './BattlePresentationTiming';
+import { ATTACK_IMPACT_SEC } from '../shared/AttackShotStyle';
+import { attackStyleFor } from '../shared/AttackStyle';
 import { buildBattleSkillUsedMessage, getBattleSkillPresentation } from '../../shared/BattleSkillPresentation';
 import { quickViewSkillLines } from '../../shared/QuickViewSkillLines';
 import { SkillSourceType } from '../../shared/SkillRuntimeContract';
@@ -466,23 +468,21 @@ export class BattleUIBridge {
     });
   }
 
-  private _scheduleBattleUnitHitFeedback(lane: number, depth: number, damageSource?: string): Promise<void> {
+  /**
+   * 受擊音效＋受擊特效。delaySec 預設沿用 recoilStartDelaySec（舊路徑：等攻擊方撞過來）；
+   * PROG-2-9412 命中路徑已經等到命中瞬間才呼叫，傳 0 不再多等。
+   */
+  private _scheduleBattleUnitHitFeedback(lane: number, depth: number, damageSource?: string, delaySec: number = BATTLE_VISUAL_TIMING.recoilStartDelaySec): Promise<void> {
     const hitAudioKey = resolveBattleUnitHitSfxKey(damageSource);
     const hitEffectKey = resolveBattleUnitHitEffectKey(damageSource);
+    const play = () => {
+      playBattleAudio(hitAudioKey);
+      playBattleFlowEffectAtCell(services().effect, this.ctx.boardRenderer, hitEffectKey, lane, depth, 0.9, 0.12);
+    };
 
     return new Promise((resolve) => {
-      if (BATTLE_VISUAL_TIMING.recoilStartDelaySec <= 0) {
-        playBattleAudio(hitAudioKey);
-        playBattleFlowEffectAtCell(services().effect, this.ctx.boardRenderer, hitEffectKey, lane, depth, 0.9, 0.12);
-        resolve();
-        return;
-      }
-
-      this.scene.scheduleOnce(() => {
-        playBattleAudio(hitAudioKey);
-        playBattleFlowEffectAtCell(services().effect, this.ctx.boardRenderer, hitEffectKey, lane, depth, 0.9, 0.12);
-        resolve();
-      }, BATTLE_VISUAL_TIMING.recoilStartDelaySec);
+      if (delaySec <= 0) { play(); resolve(); return; }
+      this.scene.scheduleOnce(() => { play(); resolve(); }, delaySec);
     });
   }
 
@@ -614,24 +614,33 @@ export class BattleUIBridge {
           ? (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] attacker-lunge attacker=${data.attackerId} target=${data.unitId}`), c.unitRenderer?.playAttackAnimationAsync(data.attackerId, data.defenderLane, data.defenderDepth) ?? Promise.resolve())
           : Promise.resolve();
 
-        const hitPromise = isRiverBoundaryDamage
-          ? (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] boundary-spin unit=${data.unitId}`), c.unitRenderer?.playBoundaryDamageSpinAsync(data.unitId) ?? Promise.resolve())
-          : (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] defender-hit unit=${data.unitId}`), c.unitRenderer?.playHitAnimationAsync(data.unitId, data.attackerId, { heavy: isHeavyHit(data.damage, unit.getEffectiveMaxHp(), data.isCrit ?? false), lethal: data.hp <= 0 }) ?? Promise.resolve());
-
-        const valuePromise = (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] damage-float unit=${data.unitId} hp=${data.hp}`), c.unitRenderer?.playValueChangeAsync(unit, data.damage, 'damage', data.isCrit ?? false) ?? Promise.resolve());
-
-        const hitLane = data.defenderLane ?? unit.lane;
-        const hitDepth = data.defenderDepth ?? unit.depth;
-        const hitFeedbackPromise = this._scheduleBattleUnitHitFeedback(hitLane, hitDepth, data.damageSource);
+        // PROG-2-9412：受擊閃白、傷害跳字、受擊音效與暴擊聲等攻擊方「打中」的那一刻才出現（依兵種命中秒數），
+        // 揮刀聲維持在出手當下。沒有攻擊動作（河流邊界扣血等）就立刻播。
+        const attackPlayed = !!data.attackerId && data.defenderLane !== null && data.defenderDepth !== null && !isRiverBoundaryDamage;
+        const impactSec = attackPlayed && attackerUnit ? ATTACK_IMPACT_SEC[attackStyleFor(attackerUnit.type)] : 0;
         const attackAudioPromise = data.attackerId && attackerUnit && !isRiverBoundaryDamage
           ? this._scheduleBattleAudio(resolveBattleUnitAttackSfxKey(attackerUnit.type))
           : Promise.resolve();
-        // 暴擊命中額外播 boom（與既有攻擊／受擊音效疊加）
-        const critAudioPromise = data.isCrit
-          ? this._scheduleBattleAudio(BATTLE_AUDIO_CUE.critHit)
-          : Promise.resolve();
+        const heavy = isHeavyHit(data.damage, unit.getEffectiveMaxHp(), data.isCrit ?? false);
+        const impactPromise = (async () => {
+          if (impactSec > 0) await new Promise<void>(resolve => this.scene.scheduleOnce(() => resolve(), impactSec));
+          const hitPromise = isRiverBoundaryDamage
+            ? (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] boundary-spin unit=${data.unitId}`), c.unitRenderer?.playBoundaryDamageSpinAsync(data.unitId) ?? Promise.resolve())
+            : (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] defender-hit unit=${data.unitId}`), c.unitRenderer?.playHitAnimationAsync(data.unitId, data.attackerId, { heavy: heavy, lethal: data.hp <= 0 }) ?? Promise.resolve());
 
-        await Promise.all([attackPromise, hitPromise, valuePromise, hitFeedbackPromise, attackAudioPromise, critAudioPromise]);
+          const valuePromise = (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] damage-float unit=${data.unitId} hp=${data.hp}`), c.unitRenderer?.playValueChangeAsync(unit, data.damage, 'damage', data.isCrit ?? false, heavy) ?? Promise.resolve());
+
+          const hitLane = data.defenderLane ?? unit.lane;
+          const hitDepth = data.defenderDepth ?? unit.depth;
+          const hitFeedbackPromise = this._scheduleBattleUnitHitFeedback(hitLane, hitDepth, data.damageSource, impactSec > 0 ? 0 : undefined);
+          // 暴擊命中額外播 boom（與既有攻擊／受擊音效疊加）
+          const critAudioPromise = data.isCrit
+            ? this._scheduleBattleAudio(BATTLE_AUDIO_CUE.critHit)
+            : Promise.resolve();
+          await Promise.all([hitPromise, valuePromise, hitFeedbackPromise, critAudioPromise]);
+        })();
+
+        await Promise.all([attackPromise, impactPromise, attackAudioPromise]);
 
         if (data.hp > 0) {
           UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] state-commit unit=${data.unitId}`);

@@ -125,6 +125,7 @@ export async function loadDamageFonts(): Promise<void> {
     const floatText = services().floatText;
     if (floatText) {
       floatText.registerFont('dmg_crit', fontPu);
+      floatText.registerFont('dmg_heavy', fontPu);
       floatText.registerFont('heal', fontJia);
       floatText.registerFont('dmg_player', fontPu);
       floatText.registerFont('dmg_enemy', fontPu);

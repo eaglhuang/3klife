@@ -54,6 +54,15 @@ assert.equal(follower.snapshot().facing, -1);
 assert.equal(follower.snapshot().animationSpeed, 0.5);
 follower.follow({ x: 25, y: 0 }, false, 0.1);
 assert.equal(follower.snapshot().action, 'idle');
+// PROG-2-9412：出手中被拖著移動（騎兵衝鋒）仍維持攻擊動作，播完才可改走路
+const charger = new UnitPresentationCore(config, { x: 0, y: 0 });
+charger.play('attack');
+charger.follow({ x: 30, y: 0 }, true, 0.1);
+assert.equal(charger.snapshot().action, 'attack');
+assert.equal(charger.snapshot().foot.x, 30);
+charger.step(1);
+charger.follow({ x: 60, y: 0 }, true, 0.1);
+assert.equal(charger.snapshot().action, 'move');
 follower.moveToWithin({ x: 425, y: 0 }, 2);
 assert.equal(follower.snapshot().animationSpeed, 2);
 assert.equal(follower.step(1).foot.x, 225);
