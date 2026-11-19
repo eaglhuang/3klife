@@ -38,6 +38,8 @@ import {
 } from '../systems/BreedingSystem';
 import type { KinPurificationTarget } from '../systems/KinPurification';
 import type { FactorColor, FactorDictionary } from '../systems/FactorInheritance';
+import { compactFamilyOf } from '../systems/FamilyCompact';
+import { familyPairKey, PLAYER_FAMILY_UID, type FamilyPairRecord, type FamilySynergyLedger } from '../systems/FamilySynergy';
 import { failedConceptionVitalityRefund } from '../systems/BreedingAuxItems';
 import { femaleSourceConceptionMod, type FemaleSource } from '../systems/FemaleSource';
 import { affinityResolverOf, conceptionModBetween, type HistoricalPairTable } from '../systems/HistoricalPairs';
@@ -78,6 +80,8 @@ export interface BreedingServiceOptions {
     childIdFactory?: (father: GeneralConfig, mother: GeneralConfig, existingIds: Set<string>) => string;
     /** 依武將 uid 取母體來源（FEM-02 受孕率倍率）；沒有來源回傳 null */
     getFemaleSource?: (uid: string) => FemaleSource | null;
+    /** 世交滑動窗帳本（PROG-2-9168）：供預覽與結緣計算世交契合加成 */
+    getFamilySynergy?: () => FamilySynergyLedger | undefined;
 }
 
 export class BreedingError extends Error {}
@@ -226,6 +230,7 @@ export class BreedingService {
             pedigree: this._graph,
             isHistoricalPair: this._historicalResolver(),
             rosterLookup: this._rosterLookup(),
+            pairRecord: this._pairRecordFor(father, mother),
         }).ep;
     }
 
@@ -274,6 +279,7 @@ export class BreedingService {
             maxFactors: this._options.maxFactors,
             isHistoricalPair: this._historicalResolver(),
             rosterLookup: this._rosterLookup(roster),
+            pairRecord: this._pairRecordFor(father, mother),
             motherConceptionMod: femaleSourceConceptionMod(this._options.getFemaleSource?.(mother.id) ?? null),
             historicalConceptionMod: historicalPairs ? conceptionModBetween(historicalPairs, father.id, mother.id) : undefined,
             seasonConceptionMod: this._options.seasonConceptionMod?.(),
@@ -320,6 +326,15 @@ export class BreedingService {
             this._roster.replaceAll(generals);
         }
         return pregnancyEnded;
+    }
+
+    private _pairRecordFor(father: GeneralConfig, mother: GeneralConfig): FamilyPairRecord | undefined {
+        const family = compactFamilyOf(
+            father as { id?: string; familyUid?: string },
+            mother as { id?: string; familyUid?: string },
+        );
+        if (!family) return undefined;
+        return this._options.getFamilySynergy?.()?.pairs[familyPairKey(PLAYER_FAMILY_UID, family)];
     }
 
     private _historicalResolver(): AffinityResolver | undefined {

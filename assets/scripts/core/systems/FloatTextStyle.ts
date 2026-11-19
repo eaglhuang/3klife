@@ -20,6 +20,7 @@ export type FloatTextType =
     | 'dmg_player'  // 我方單位受傷（白）
     | 'dmg_enemy'   // 敵方單位受傷（白）
     | 'dmg_crit'    // 暴擊傷害（金色大字，放大後回彈）
+    | 'dmg_heavy'   // 重擊（非暴擊但一下打掉大量兵力；橘色中大字，PROG-2-9412）
     | 'dmg_miss'    // 閃避（灰）
     | 'heal'        // 治療量（綠）
     | 'status'      // 狀態效果（中毒/暈眩/Buff，水藍）
@@ -72,6 +73,11 @@ export const FLOAT_TEXT_STYLES: Readonly<Record<FloatTextType, FloatTextStyle>> 
     dmg_crit: { color: { r: 255, g: 210, b: 40, a: 255 }, fontSize: 78, isBold: true, durationMs: 1100, risePixels: 120,
         startScale: 0.5, peakScale: 2.0, popInSec: 0.09, settleSec: 0.16, maxConcurrent: 8, randomOffsetX: 10,
         outlineColor: { r: 110, g: 45, b: 0, a: 255 }, outlineWidth: 4 },
+    // 重擊（PROG-2-9412）：橘色、比一般大、比爆擊小，玩家一眼分得出「這下打得重」。
+    // 避開地形適性飄字的綠 #48C774／藍 #3273DC／紅 #F14668，也不和爆擊金撞色。
+    dmg_heavy: { color: { r: 255, g: 150, b: 40, a: 255 }, fontSize: 64, isBold: true, durationMs: 1000, risePixels: 105,
+        startScale: 0.55, peakScale: 1.65, popInSec: 0.08, settleSec: 0.13, maxConcurrent: 10, randomOffsetX: 9,
+        outlineColor: { r: 95, g: 30, b: 0, a: 255 }, outlineWidth: 4 },
     // 閃避：灰字，不彈出
     dmg_miss: { color: { r: 175, g: 175, b: 175, a: 255 }, fontSize: 40, isBold: false, durationMs: 800, risePixels: 70,
         ...legacyPop(1.0), maxConcurrent: 8, randomOffsetX: 6, outlineColor: OUTLINE_DARK, outlineWidth: 2 },

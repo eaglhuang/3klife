@@ -1,7 +1,7 @@
 // PROG-2-9367：近戰刀光——畫面層小 Sprite 池，寫法比照 ArrowShotView。刀光貼圖沒有 prefab，無法走 EffectSystem。
 // PROG-2-9400：改為通用「普攻閃光」池，依 AttackShotSpec 畫刀光、刺光、衝擊圈、命中小爆、塵土；貼圖各自載入、各自快取。
 import { assetManager, Color, ImageAsset, Node, Sprite, SpriteFrame, Texture2D, UITransform, Rect, Size } from 'cc';
-import { AttackShotSpec, ShotPose, shotPoseAt, shotTotalSec } from '../shared/AttackShotStyle';
+import { ATTACK_SHOTS, AttackShotSpec, ShotPose, shotPoseAt, shotTotalSec } from '../shared/AttackShotStyle';
 
 interface Shot { node: Node; sprite: Sprite; spec: AttackShotSpec; t: number; dirDeg: number; baseX: number; baseY: number; active: boolean }
 type LoadState = 'loading' | 'ready' | 'failed';
@@ -58,7 +58,14 @@ export class SlashShotView {
     } catch (error) { console.warn('[SlashShotView] 普攻閃光略過', error); return false; }
   }
 
+  /** PROG-2-9412：貼圖第一次用到才載，會讓開戰第一刀的火花／刀光整個不出現；bundle 一就緒就先把全部普攻貼圖載好。 */
+  private warmed = false;
+
   public update(dt: number): void {
+    if (!this.warmed && assetManager.getBundle('vfx_core')) {
+      this.warmed = true;
+      for (const specs of Object.values(ATTACK_SHOTS)) for (const spec of specs) this.frameFor(spec);
+    }
     for (const s of this.shots) {
       if (!s.active) continue;
       s.t += dt;

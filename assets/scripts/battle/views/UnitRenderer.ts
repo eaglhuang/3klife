@@ -59,7 +59,7 @@ import { DuelExchange } from '../shared/DuelPresentationCore';
 import { BATTLE_VISUAL_TIMING, buildHitShakeSteps, planHitFeedback, planMoveSegment } from "./BattlePresentationTiming";
 import { BuffGainEffectPool } from "./effects/BuffGainEffectPool";
 import { statBonusTone, statWithBonusText, type StatBonusTone } from "../shared/StatBonusText";
-import { unitHpBarState, type UnitHpBarState } from "../shared/UnitHpBar";
+import { hpChipOnChange, stepHpChip, unitHpBarState, type HpChipState, type UnitHpBarState } from "../shared/UnitHpBar";
 import { unitValueFloatType } from "../shared/DamageFloatType";
 import { UnitStatusIconBar, StatusHaloPool } from "./UnitStatusIconBar";
 import { TileBuffMarkers } from "./TileBuffMarkers";
@@ -99,6 +99,9 @@ interface UnitView {
   bottomNameLabel: Label | null;
   /** 頭頂血條（主戰場UI規格書 §3.1，PROG-2-1874） */
   hpBar: Graphics;
+  /** 上一次畫的血條狀態與掉血殘影（PROG-2-9412）；殘影由每幀 update 推進。 */
+  hpState?: UnitHpBarState;
+  hpChip?: HpChipState | null;
   /** 頭頂狀態小圖示列（buff／debuff，PROG-2-9399） */
   statusBar: UnitStatusIconBar;
   /** 上一次盤點的狀態種類；null 代表還沒畫過（出陣時不彈出） */
@@ -155,6 +158,8 @@ const STATUS_ICON_START_X = -90;
 /** 圖示列中心 y：名牌半高 39 + 血條（間距 4、高 8）+ 間距 4 + 圖示半高 18 */
 const STATUS_ICON_Y = 73;
 const HP_BAR_HEIGHT = 8;
+/** 掉血殘影色：暖白偏金，在藍、紅血條上都看得清楚（PROG-2-9412）。 */
+const HP_BAR_CHIP_COLOR = new Color(255, 232, 190, 235);
 const HP_BAR_COLOR = {
   player: new Color(70, 150, 255, 255),
   enemy: new Color(230, 70, 60, 255),
@@ -631,7 +636,12 @@ export class UnitRenderer extends Component {
 
     const plan = planHitFeedback(opts?.lethal === true, opts?.heavy === true);
     // 先打一次 Spine 疊層（小兵與武將化身都走這裡）；沒有 Spine 的單位走下面的 3D 後備
-    const spineHit = this.spineUnits.hit(defenderId, plan.shake ? this.hitShakeAmplitudePx(defenderUnit.lane, defenderUnit.depth) : 0, plan.flash);
+    // PROG-2-9412：Spine 單位另外往後推（以前的後退只動 3D 子節點，畫面上的小兵沒動），並與攻擊方一起頓格
+    const shakePx = this.hitShakeAmplitudePx(defenderUnit.lane, defenderUnit.depth);
+    const pushPx = plan.shake ? shakePx / BATTLE_VISUAL_TIMING.hitShakeAmplitudeRatio * BATTLE_VISUAL_TIMING.hitRecoilRatio : 0;
+    const spineHit = this.spineUnits.hit(defenderId, plan.shake ? shakePx : 0, plan.flash, pushPx);
+    this.spineUnits.hitStop(defenderId, BATTLE_VISUAL_TIMING.hitStopSec);
+    if (_attackerId) this.spineUnits.hitStop(_attackerId, BATTLE_VISUAL_TIMING.hitStopSec);
     if (!spineHit && plan.shake) this.shakeVisualChildren(defenderView!);
 
     this.recoilNode(defenderNode, defenderUnit.faction);
@@ -847,7 +857,7 @@ export class UnitRenderer extends Component {
     await this.waitSeconds(BATTLE_VISUAL_TIMING.generalValueAwaitSec);
   }
 
-  public playValueChange(unit: TroopUnit | null, value: number, kind: "damage" | "heal", isCrit = false): void {
+  public playValueChange(unit: TroopUnit | null, value: number, kind: "damage" | "heal", isCrit = false, heavy = false): void {
     if (!unit || !this.uiRoot || !this.worldCamera || !this.canvasNode) return;
 
     let worldPos = this.getUnitWorldPosition(unit.lane, unit.depth);
@@ -870,7 +880,7 @@ export class UnitRenderer extends Component {
     setTimeout(() => {
       const sign = kind === "heal" ? "+" : "-";
       // 主戰場UI規格書 §3.2：暴擊用橘金放大字（PROG-2-1875）
-      const dmgType: FloatTextType = unitValueFloatType(kind, unit.faction === Faction.Player, isCrit);
+      const dmgType: FloatTextType = unitValueFloatType(kind, unit.faction === Faction.Player, isCrit, heavy);
       this.spawnFloatText(`${sign}${value}`, dmgType, worldPos!, unit.id);
 
       const currentView = this.unitViews.get(unit.id);
@@ -898,8 +908,8 @@ export class UnitRenderer extends Component {
     }, BATTLE_VISUAL_TIMING.valuePopupDelayMs);
   }
 
-  public async playValueChangeAsync(unit: TroopUnit | null, value: number, kind: "damage" | "heal", isCrit = false): Promise<void> {
-    this.playValueChange(unit, value, kind, isCrit);
+  public async playValueChangeAsync(unit: TroopUnit | null, value: number, kind: "damage" | "heal", isCrit = false, heavy = false): Promise<void> {
+    this.playValueChange(unit, value, kind, isCrit, heavy);
     await this.waitSeconds(BATTLE_VISUAL_TIMING.unitValueAwaitSec);
   }
 
@@ -1082,6 +1092,7 @@ export class UnitRenderer extends Component {
       } else { this.spineUnits.remove(`general:${faction}`); if (view.usingHeroModel) view.modelRoot.active = true; }
     });
     this.spineUnits.update(dt);
+    this.stepHpChips(dt);
     this.moveDust.update(dt);
     this.arrowShots.update(dt);
     this.slashShots.update(dt);
@@ -1616,7 +1627,10 @@ export class UnitRenderer extends Component {
     view.hpLabel.color = this.statToneColor(statBonusTone(hpBonus));
     view.troopType = unit.type;
     view.labelOpacity.opacity = 255;
-    this.drawHpBar(view.hpBar, unitHpBarState(unit.currentHp, unit.getEffectiveMaxHp(), unit.faction === Faction.Player));
+    const hpState = unitHpBarState(unit.currentHp, unit.getEffectiveMaxHp(), unit.faction === Faction.Player);
+    if (view.hpState) view.hpChip = hpChipOnChange(view.hpChip ?? null, view.hpState.ratio, hpState.ratio);
+    view.hpState = hpState;
+    this.drawHpBar(view.hpBar, hpState, view.hpChip?.lag);
     this.refreshStatusIcons(view, unit);
 
     // 更新下排兵種名稱（小兵顯示完整對應名稱，將軍化身則顯示「將」）
@@ -1711,8 +1725,17 @@ export class UnitRenderer extends Component {
     return barNode.addComponent(Graphics);
   }
 
-  /** 受傷才顯示；我方藍、敵方紅 */
-  private drawHpBar(g: Graphics, state: UnitHpBarState): void {
+  /** 推進各單位的掉血殘影並重畫（PROG-2-9412）；沒有殘影的單位不動。 */
+  private stepHpChips(dt: number): void {
+    for (const view of this.unitViews.values()) {
+      if (!view.hpChip || !view.hpState) continue;
+      view.hpChip = stepHpChip(view.hpChip, view.hpState.ratio, dt);
+      if (view.hpBar?.isValid) this.drawHpBar(view.hpBar, view.hpState, view.hpChip?.lag);
+    }
+  }
+
+  /** 受傷才顯示；我方藍、敵方紅。chipRatio：掉血殘影右端（PROG-2-9412），畫在主血條後面的淺色段。 */
+  private drawHpBar(g: Graphics, state: UnitHpBarState, chipRatio?: number): void {
     g.node.active = state.visible;
     if (!state.visible) return;
     const x = -HP_BAR_WIDTH / 2;
@@ -1721,6 +1744,11 @@ export class UnitRenderer extends Component {
     g.fillColor = new Color(0, 0, 0, 180);
     g.roundRect(x - 2, y - 2, HP_BAR_WIDTH + 4, HP_BAR_HEIGHT + 4, 3);
     g.fill();
+    if (chipRatio !== undefined && chipRatio > state.ratio) {
+      g.fillColor = HP_BAR_CHIP_COLOR;
+      g.rect(x, y, HP_BAR_WIDTH * Math.min(1, chipRatio), HP_BAR_HEIGHT);
+      g.fill();
+    }
     g.fillColor = HP_BAR_COLOR[state.tone];
     g.rect(x, y, HP_BAR_WIDTH * state.ratio, HP_BAR_HEIGHT);
     g.fill();

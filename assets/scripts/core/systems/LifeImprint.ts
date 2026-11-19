@@ -47,7 +47,7 @@ export function withLifeImprints(general: GeneralConfig): { general: GeneralConf
     const addedNames: string[] = fresh.map((def) => def.displayName);
     const nextGenes: GeneralGeneConfig[] = [
         ...ownedGenes,
-        ...fresh.map((def): GeneralGeneConfig => ({ id: def.id, displayName: def.displayName, type: 'white', level: 1, description: def.description })),
+        ...fresh.map((def): GeneralGeneConfig => ({ id: def.id, displayName: def.displayName, type: 'white', level: 1, discoveryLevel: 0, description: def.description })),
     ];
 
     const condensed = condenseLifeWhiteFactors(
@@ -76,6 +76,7 @@ export function withLifeImprints(general: GeneralConfig): { general: GeneralConf
                 displayName: white.name,
                 type: 'white',
                 level: white.level,
+                discoveryLevel: 0,
                 description: '生平閱歷凝練之白因子，傳承後可折抵對應戰法或政令消耗。',
             });
             addedNames.push(white.name);
