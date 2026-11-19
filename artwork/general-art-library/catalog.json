@@ -2896,6 +2896,30 @@
             "note": "沿用松綠、炭黑、古銅甲色及原立姿單刃長柄彎刀；等比例縮放置入中央安全區。"
           }
         ]
+      },
+      "smallAvatar": {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/wei_yan__魏延__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "b7c773a5039934230284a07970c6632d6c4777b9ab7b76122aaa042066b39437",
+            "canvas": "256x256 RGBA",
+            "method": "crop-only; uniform resize; no redraw",
+            "sourceAvatarVersion": "generated-v2",
+            "sourceAvatarFile": "artwork/temp/wei-yan-avatar-source-v2.png",
+            "cropBox": {
+              "x": 146.28,
+              "y": 116.78,
+              "width": 960.43,
+              "height": 960.43
+            },
+            "qc": "大喬基準比例；臉高42.9%、臉寬34.5%、水平置中；頭飾完整、雙肩可見。",
+            "createdAt": "2026-11-20"
+          }
+        ],
+        "activeVersion": "0001"
       }
     },
     {
