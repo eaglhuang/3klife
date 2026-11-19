@@ -2816,6 +2816,30 @@
             "note": "透明全身戰鬥候選；以核定站姿色彩與布甲辨識為參考。經等比例縮放、平移至標準安全區。待使用者審閱，未整合 runtime。"
           }
         ]
+      },
+      "smallAvatar": {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/xiahou_yuan__夏侯淵__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "46169018f3147df160d1aeffb8389af449941e5985452d4e30a3927d4fed9d71",
+            "canvas": "256x256 RGBA",
+            "method": "crop-only; uniform resize; no redraw",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/xiahou_yuan__夏侯淵__avatar_0002.png",
+            "cropBox": {
+              "x": 70.02,
+              "y": 36.52,
+              "width": 145.97,
+              "height": 145.97
+            },
+            "qc": "大喬基準比例；臉高43.2%、臉寬34.3%、水平置中；目視確認雙肩可見。",
+            "createdAt": "2026-11-20"
+          }
+        ],
+        "activeVersion": "0001"
       }
     },
     {
