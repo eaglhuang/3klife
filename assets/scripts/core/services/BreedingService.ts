@@ -40,6 +40,8 @@ import type { KinPurificationTarget } from '../systems/KinPurification';
 import type { FactorColor, FactorDictionary } from '../systems/FactorInheritance';
 import { compactFamilyOf } from '../systems/FamilyCompact';
 import { familyPairKey, PLAYER_FAMILY_UID, type FamilyPairRecord, type FamilySynergyLedger } from '../systems/FamilySynergy';
+import { computeEarlyEnthusiasmMultiplier } from '../mind/MindMarriage';
+import type { MindMood } from '../mind/MindTypes';
 import { failedConceptionVitalityRefund } from '../systems/BreedingAuxItems';
 import { femaleSourceConceptionMod, type FemaleSource } from '../systems/FemaleSource';
 import { affinityResolverOf, conceptionModBetween, type HistoricalPairTable } from '../systems/HistoricalPairs';
@@ -82,6 +84,10 @@ export interface BreedingServiceOptions {
     getFemaleSource?: (uid: string) => FemaleSource | null;
     /** 世交滑動窗帳本（PROG-2-9168）：供預覽與結緣計算世交契合加成 */
     getFamilySynergy?: () => FamilySynergyLedger | undefined;
+    /** 雙親心智心情（PROG-2-9165）：帶動子嗣開蒙初期幹勁 */
+    getParentMood?: (generalId: string) => MindMood;
+    /** 結緣成親後通知心智系統寫入雙親記憶（PROG-2-9165） */
+    onMarriageConceived?: (ctx: { fatherId: string; motherId: string; childId: string; compatibilityK: number; isHistoricalPair: boolean }) => void;
 }
 
 export class BreedingError extends Error {}
@@ -312,6 +318,22 @@ export class BreedingService {
                 const dictionary = this._options.getDictionary?.() ?? this._options.dictionary;
                 result.child = ensurePurpleFactor(result.child, dictionary, this._options.random ?? Math.random) as typeof result.child;
             }
+            if (this._options.getParentMood) {
+                const mult = computeEarlyEnthusiasmMultiplier(
+                    this._options.getParentMood(father.id),
+                    this._options.getParentMood(mother.id),
+                );
+                if (mult > 1) {
+                    (result.child as BreedingGeneral & { earlyEnthusiasmMultiplier?: number }).earlyEnthusiasmMultiplier = mult;
+                }
+            }
+            this._options.onMarriageConceived?.({
+                fatherId: father.id,
+                motherId: mother.id,
+                childId: result.child.id,
+                compatibilityK: result.ep?.affinity ?? 0,
+                isHistoricalPair: !!(this._historicalResolver()?.(father, mother)),
+            });
             next.push(normalizeRosterRoles([result.child])[0]);
             this._graph.registerChild(toPersonRecord(result.child), father.id, mother.id);
         }
