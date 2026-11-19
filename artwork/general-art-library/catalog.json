@@ -6354,6 +6354,31 @@
             "version": "0001",
             "file": "battle/tian_feng__田豐__battle_0001.png",
             "status": "review-pending",
+      },
+      "smallAvatar":       {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/jin_huan_san_jie__金環三結__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "111fcf2039077ecc3b494ee9d41301825ce6a3cf1310ee6e4e00d4bb114e527d",
+            "canvas": "256x256 RGBA",
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/jin_huan_san_jie__金環三結__standing_0002.png",
+            "sourceSha256": "974f5ee03439ffaf9b144d2b1d71a8abd870e05f7b9877288c263e2756818ce1",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "x": 407,
+              "y": 16.6,
+              "width": 280,
+              "height": 280
+            },
+            "qc": "頭高比例75.0%；臉部中心x=50.0%；頭髮完整，雙肩可見；250px並排比較通過；等待使用者確認。",
+            "createdAt": "2026-11-19"
+          }
+        ],
+        "activeVersion": "0001"
             "sha256": "6298161c9c5dbf577b9f2f2e4cc15f74e7de0efa809bfaf004c482ee1ed1adb9",
             "canvas": "1024x1536 RGBA",
             "poseLabel": "踏步展卷指策",
