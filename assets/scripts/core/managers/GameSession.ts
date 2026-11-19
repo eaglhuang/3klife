@@ -137,6 +137,7 @@ import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingStat
 import { carryOpeningLetterOnNewGame, FRESH_OPENING_LETTER, markOpeningLetterSeen, normalizeOpeningLetterState, OpeningLetterState } from '../systems/OpeningLetter';
 import { remarkRandomOf } from '../systems/SageRemarks';
 import { OfflineGeneralMindService } from '../mind/OfflineGeneralMindService';
+import { processUnwedMarriageReminders, recordBondFormedMindEvents, recordMarriageRejectedMindEvent } from '../mind/MindMarriage';
 import type { IGeneralMindService } from '../mind/IGeneralMindService';
 import { isEmptyGeneralMind } from '../mind/MindSave';
 import { intelLevelOfPercent, type MindContext, type MindLine, type MindOpinion, type MindOutcome, type MindRequest, type MindResolveResult, type MindTaskProfile } from '../mind/MindTypes';
@@ -1884,6 +1885,35 @@ export class GameSession {
         this._familySystemUnlockedFlag = true;
         this.recordPlayerLog('GENERAL_BORN');
         this._recordEventJournal('GENERAL_BORN', this._journalSubjects([record.session.Father_UID, record.session.Mother_UID]));
+    }
+
+    /** 結緣成功時寫入雙親心智記憶（PROG-2-9165，不扣忠誠或資源） */
+    public onMarriageConceived(ctx: {
+        fatherId: string;
+        motherId: string;
+        childId: string;
+        compatibilityK: number;
+        isHistoricalPair: boolean;
+    }): void {
+        recordBondFormedMindEvents({
+            mind: this._mindWrite(),
+            fatherId: ctx.fatherId,
+            motherId: ctx.motherId,
+            season: this._clock.state.totalSeasonsElapsed,
+            compatibilityK: ctx.compatibilityK,
+            isHistoricalPair: ctx.isHistoricalPair,
+            childId: ctx.childId,
+        });
+    }
+
+    /** 求親遭拒或冷落時寫入心智記憶（裁決 66：不扣忠誠或資源） */
+    public recordMarriageRejected(generalId: string, partnerId?: string): void {
+        recordMarriageRejectedMindEvent({
+            mind: this._mindWrite(),
+            generalId,
+            partnerId,
+            season: this._clock.state.totalSeasonsElapsed,
+        });
     }
 
     /** 世家系統是否已解鎖：第一位子嗣誕生後為真；讀取舊檔時有出生紀錄也視為已解鎖。 */
@@ -5189,6 +5219,11 @@ export class GameSession {
         this._seasonPersonality = rollSeasonPersonalityEvents(this._roster.getAll(), governanceSeason, personalityRandom, this.mind.experienceWeights(this._roster.getAll().map((g) => g.id), governanceSeason));
         // 武將心智季結算（PROG-2-9146）：冷落計數、離隊者清理；同樣用另一條序列，不消耗主亂數
         this._mindWrite().onSeasonSettle(governanceSeason, remarkRandomOf(`mind|${governanceSeason}|${this._seeded.snapshot().state}`), this._roster.getAll().filter((g) => g.status !== 'dead').map((g) => g.id), (id) => this._mindContext(id));
+        processUnwedMarriageReminders({
+            mind: this._mindWrite(),
+            roster: this._roster.getAll(),
+            season: governanceSeason,
+        });
         // 三國季報（LOOP-03）：同樣用另一條序列；上一季沒抉擇的奇遇作廢
         this._chronicleArchive = archiveSeasonChronicle(this._chronicleArchive, this._seasonChronicle, governanceSeason);
         this._seasonChronicle = this._synthesizeChronicle(governanceSeason);
