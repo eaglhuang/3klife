@@ -6254,6 +6254,29 @@
         "status": "integrated",
         "history": [
           {
+      },
+      "smallAvatar": {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/ahui_nan__阿會喃__small_avatar_0001.png",
+            "status": "review-pending",
+            "canvas": "256x256 RGBA",
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/ahui_nan__阿會喃__standing_0002.png",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "x": 166.33,
+              "y": 3.96,
+              "width": 201.33,
+              "height": 201.33
+            },
+            "qc": "頭高比例75.0%；臉部中心x=50.0%；頭髮完整，雙肩可見；縮圖目視通過；等待使用者確認。",
+            "createdAt": "2026-11-19"
+          }
+        ],
+        "activeVersion": "0001"
             "version": "0002",
             "file": "standing/gao_gan__高幹__standing_0002.png",
             "status": "integrated"
