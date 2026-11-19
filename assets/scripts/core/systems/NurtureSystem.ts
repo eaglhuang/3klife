@@ -160,6 +160,8 @@ export interface NurtureSession {
     round: number;
     /** 這次培育已辦過的開蒙禮、加冠禮（PROG-2-1821） */
     ritesDone?: Array<'enrollment' | 'capping'>;
+    /** 這次培育已檢定過的中段血脈共鳴回合（PROG-2-9170） */
+    resonanceRoundsDone?: number[];
     vigor: number;
     /** 鏡像快照：進入培育時的資質層，之後不再改變 */
     talent: Record<TrainingKind, number>;

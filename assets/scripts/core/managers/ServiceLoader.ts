@@ -47,7 +47,9 @@ import { UCUFLogger, LogCategory } from "../utils/UCUFLogger";
 import { normalizeVfxEffectTable } from "../config/VfxEffectConfig";
 import { normalizeSeasonModifiers, seasonModifiersOf, setActiveSeasonModifiers } from "../systems/SeasonModifiers";
 import { CHILD_APTITUDE_RULES_JSON, configureChildAptitudeRules, type ChildAptitudeRulesConfig } from "../systems/ChildAptitudeInheritance";
-import { configureFamilyCompatibilityRules, FAMILY_COMPATIBILITY_RULES_JSON, type FamilyCompatibilityRulesConfig } from "../systems/FamilyCompatibility";
+import { configureFamilyCompatibilityRules, computeFamilyCompatibilityK, FAMILY_COMPATIBILITY_RULES_JSON, type FamilyCompatibilityRulesConfig } from "../systems/FamilyCompatibility";
+import { BLOODLINE_RESONANCE_RULES_JSON, configureBloodlineResonanceRules, type BloodlineResonanceRulesConfig } from "../systems/BloodlineResonance";
+import { familyPairKey } from "../systems/FamilySynergy";
 import { configureWhiteFactorAchievements, WHITE_FACTOR_ACHIEVEMENTS_JSON, type WhiteFactorAchievementsConfig } from "../systems/WhiteFactorTraits";
 
 export class ServiceLoader {
@@ -94,6 +96,20 @@ export class ServiceLoader {
         childUltimate: { definitions: () => this.ultimateDefinitions },
         clanTraditionKind: () => this.session.clanTradition?.kind,
         synergyTutorBonus: (mentors) => synergyTutorBonusOf(mentors, this.session.familySynergy),
+        compatibilityBonusForChild: (child, roster) => {
+            const father = child.fatherId ? roster.find((g) => g.id === child.fatherId) : undefined;
+            const mother = child.motherId ? roster.find((g) => g.id === child.motherId) : undefined;
+            if (!father || !mother) return 0;
+            const fatherFamily = (father as { familyUid?: string }).familyUid;
+            const motherFamily = (mother as { familyUid?: string }).familyUid;
+            const pairKey = fatherFamily && motherFamily ? familyPairKey(fatherFamily, motherFamily) : undefined;
+            const pairRecord = pairKey ? this.session.familySynergy.pairs[pairKey] : undefined;
+            return computeFamilyCompatibilityK({
+                fatherStats: father.stats,
+                motherStats: mother.stats,
+                pairRecord,
+            }).totalK;
+        },
     });
     /** loadUltimateDefinitions() 載入後的奧義母表（只留 id 與繼承基因）；子嗣奧義覺醒用 */
     private ultimateDefinitions: ChildUltimateDefinition[] = [];
@@ -326,6 +342,7 @@ export class ServiceLoader {
             loadSafe<Partial<ChildAptitudeRulesConfig>>(CHILD_APTITUDE_RULES_JSON, configureChildAptitudeRules),
             loadSafe<Partial<FamilyCompatibilityRulesConfig>>(FAMILY_COMPATIBILITY_RULES_JSON, configureFamilyCompatibilityRules),
             loadSafe<Partial<WhiteFactorAchievementsConfig>>(WHITE_FACTOR_ACHIEVEMENTS_JSON, configureWhiteFactorAchievements),
+            loadSafe<Partial<BloodlineResonanceRulesConfig>>(BLOODLINE_RESONANCE_RULES_JSON, configureBloodlineResonanceRules),
         ]);
         this.bloodlineRulesLoaded = true;
     }
