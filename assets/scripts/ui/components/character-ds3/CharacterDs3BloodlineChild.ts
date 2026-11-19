@@ -85,8 +85,15 @@ export function buildDs3BloodlineView(cfg: GeneralConfig, stage: MilestoneStage 
     const showStars = factorDetailVisible(stage);
     const ep = Number.isFinite(cfg.ep) ? Number(cfg.ep) : 0;
     const cards = buildGeneralDetailOverview(cfg).cards;
-    const genes = (Array.isArray(cfg.genes) ? cfg.genes : []) as GeneLike[];
-    const factors = genes.slice(0, FACTOR_SLOT_COUNT).map((g) => {
+    const rawGenes = (Array.isArray(cfg.genes) ? cfg.genes : []) as GeneLike[];
+    const isLifeWhite = (g: GeneLike): boolean => {
+        const id = (g as GeneralGeneConfig).id;
+        return typeof id === 'string' && (id.startsWith('gene_white_') || id.startsWith('imprint_'));
+    };
+    const lifeWhiteGenes = rawGenes.filter(isLifeWhite);
+    const otherGenes = rawGenes.filter((g) => !isLifeWhite(g));
+    const orderedGenes = [...lifeWhiteGenes, ...otherGenes];
+    const factors = orderedGenes.slice(0, FACTOR_SLOT_COUNT).map((g) => {
         const gene = g as GeneralGeneConfig;
         const mask = factorMaskView(gene, playerLevel);
         const tint = factorLabelTint(gene, playerLevel);
