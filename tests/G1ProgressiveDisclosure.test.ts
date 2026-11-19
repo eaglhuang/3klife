@@ -9,8 +9,8 @@ import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/manager
 import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
 import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
 import { Faction } from '../assets/scripts/core/config/Constants';
-import { CHILD_STATUS_MYSTERY, type BreedingGeneral } from '../assets/scripts/core/systems/BreedingSystem';
-import { G1_EP_DETAIL_MASK, G1_FACTOR_TEXT } from '../assets/scripts/core/systems/FamilyMilestone';
+import { CHILD_STATUS_MYSTERY, epGradeLetter, type BreedingGeneral } from '../assets/scripts/core/systems/BreedingSystem';
+import { G1_EP_DETAIL_MASK, G1_FACTOR_TEXT, g1EpEstimateText } from '../assets/scripts/core/systems/FamilyMilestone';
 
 function makeGeneral(id: string, gender: '男' | '女', extra: Partial<BreedingGeneral> = {}): BreedingGeneral {
     return {
@@ -55,6 +55,7 @@ export function createG1ProgressiveDisclosureSuite(): TestSuite {
         const g1View = controller.getView();
         assert.isTrue(g1View.texts.epEstimate.startsWith('良緣評語：'), 'G1 僅顯示良緣評語，不顯示 EP 數字');
         assert.isFalse(/\d/.test(g1View.texts.epEstimate), 'G1 epEstimate 不含數字');
+        assert.isTrue(/（爆發力 [SABCDEF]）$/.test(g1View.texts.epEstimate), 'G1 epEstimate 附爆發力字母等級（PROG-2-9171）');
         assert.equals(G1_EP_DETAIL_MASK, g1View.texts.epDetail);
         assert.isFalse(g1View.texts.epDetail.includes('基礎 50'), 'G1 隱藏公式明細');
         assert.isFalse(g1View.texts.conceptionLabel.includes('雙親生平功業'), 'G1 隱藏雙親 EP 算式');
@@ -112,6 +113,12 @@ export function createG1ProgressiveDisclosureSuite(): TestSuite {
         assert.isTrue(unveiled, '推進 1 年後應觸發首位子嗣開蒙');
         assert.isTrue(session.milestoneStage >= 2, '第一位子嗣開蒙後應解鎖至階段 2 以上');
         assert.isTrue(session.displayStage >= 2);
+    });
+
+    suite.test('爆發力字母等級每 10 分一級，與四段評語對齊（PROG-2-9171）', () => {
+        const cases: Array<[number, string]> = [[100, 'S'], [90, 'S'], [89, 'A'], [80, 'A'], [79, 'B'], [70, 'B'], [69, 'C'], [60, 'C'], [59, 'D'], [50, 'D'], [49, 'E'], [40, 'E'], [39, 'F'], [0, 'F']];
+        for (const [ep, grade] of cases) assert.equals(grade, epGradeLetter(ep), `EP ${ep} 應為 ${grade}`);
+        assert.equals('良緣評語：良才美質（爆發力 B）', g1EpEstimateText('良才美質', 'B'));
     });
 
     return suite;
