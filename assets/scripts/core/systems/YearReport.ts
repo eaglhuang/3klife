@@ -16,6 +16,8 @@ export interface YearReport {
     readonly seasons: number;
     readonly deaths: number;
     readonly retirementCandidates: number;
+    /** 年末仍適婚未結緣的武將名字（PROG-2-9173）；舊資料沒有這欄時視為空 */
+    readonly unwedNames?: readonly string[];
 }
 
 /** 這一季結束後是否為年末（第 4 季結束時觸發年報） */
@@ -41,14 +43,14 @@ export function isYearEndSeason(season: number): boolean {
 }
 
 /** 從一年內的老化事件計數出年報（事件可含多季，重複事件以事件數計） */
-export function buildYearReport(year: number, events: readonly AgingEvent[]): YearReport {
+export function buildYearReport(year: number, events: readonly AgingEvent[], unwedNames: readonly string[] = []): YearReport {
     let deaths = 0;
     let retirementCandidates = 0;
     for (const event of events) {
         if (event.type === 'died') deaths++;
         else if (event.type === 'reached-retirement-age') retirementCandidates++;
     }
-    return { year, seasons: SEASONS_PER_YEAR, deaths, retirementCandidates };
+    return { year, seasons: SEASONS_PER_YEAR, deaths, retirementCandidates, unwedNames: [...unwedNames] };
 }
 
 export type YearReportTextLookup = (key: string, ...args: string[]) => string;
@@ -59,6 +61,8 @@ export const YEAR_REPORT_TEXT_FALLBACK_ZH_TW: Readonly<Record<string, string>> =
     'ui.year_report.intro': '一年將盡，回首今年……',
     'ui.year_report.deaths': '本年歿：{0} 人',
     'ui.year_report.retirements': '本年屆齡退役候選：{0} 人',
+    'ui.year_report.unwed': '本年適婚未結緣：{0} 人（{1}）媒人快登門啦～',
+    'ui.year_report.unwed_none': '本年適婚未結緣：0 人，個個名花有主，媒人都閒到打瞌睡了',
     'ui.year_report.close': '關閉',
 };
 
@@ -80,6 +84,15 @@ export function withYearReportFallback(lookup: YearReportTextLookup): YearReport
 }
 
 /** 年報面板的全部文字，key 為面板節點 id 的候選名稱；數值以占位參數傳入 */
+/** 年報最多列出幾個名字，其餘以「等」收尾，避免一行爆版 */
+export const YEAR_REPORT_UNWED_NAME_LIMIT = 4;
+
+export function buildUnwedLine(names: readonly string[], lookup: YearReportTextLookup): string {
+    if (names.length === 0) return lookup('ui.year_report.unwed_none');
+    const shown = names.slice(0, YEAR_REPORT_UNWED_NAME_LIMIT).join('、');
+    return lookup('ui.year_report.unwed', String(names.length), names.length > YEAR_REPORT_UNWED_NAME_LIMIT ? `${shown} 等` : shown);
+}
+
 export function buildYearReportTexts(report: YearReport, lookup: YearReportTextLookup = fallbackYearReportText): Record<string, string> {
     return {
         yearReportTitle: lookup('ui.year_report.title', String(report.year)),
@@ -87,6 +100,7 @@ export function buildYearReportTexts(report: YearReport, lookup: YearReportTextL
         yearReportIntro: lookup('ui.year_report.intro'),
         yearReportDeaths: lookup('ui.year_report.deaths', String(report.deaths)),
         yearReportRetirements: lookup('ui.year_report.retirements', String(report.retirementCandidates)),
+        yearReportUnwed: buildUnwedLine(report.unwedNames ?? [], lookup),
         closeYearReportLabel: lookup('ui.year_report.close'),
     };
 }

@@ -169,6 +169,22 @@ export function recordMarriageRejectedMindEvent(params: {
 }
 
 /**
+ * 適婚未結緣名單（24 歲起、未歿、非教官、尚無子嗣且未待產）。
+ * 提醒事件與年度總結共用同一個條件，避免兩邊對「適婚未結緣」的說法不一致（PROG-2-9173）。
+ */
+export function listUnwedEligible(roster: readonly GeneralConfig[]): GeneralConfig[] {
+    const { minAge } = _rules.unwedReminder;
+    return roster.filter((general) => {
+        if (!general.id) return false;
+        if (general.status === 'dead' || general.role === 'Mentor') return false;
+        if (Math.floor(general.age ?? 0) < minAge) return false;
+        const breedingCount = (general as { breedingCount?: number }).breedingCount ?? 0;
+        const pregnant = ((general as { pregnancySeasonsLeft?: number }).pregnancySeasonsLeft ?? 0) > 0;
+        return breedingCount <= 0 && !pregnant;
+    });
+}
+
+/**
  * 適婚名將久未結緣提醒（24 歲起、每 4 季一次）；
  * 僅寫入心智記憶（PASSED_OVER, V=-1, W=2），不扣忠誠或資源。
  */
@@ -177,19 +193,11 @@ export function processUnwedMarriageReminders(params: {
     roster: readonly GeneralConfig[];
     season: number;
 }): string[] {
-    const { minAge, cooldownSeasons } = _rules.unwedReminder;
+    const { cooldownSeasons } = _rules.unwedReminder;
     if (params.season <= 0) return [];
     const triggered: string[] = [];
 
-    for (const general of params.roster) {
-        if (!general.id) continue;
-        if (general.status === 'dead' || general.role === 'Mentor') continue;
-        const age = Math.floor(general.age ?? 0);
-        if (age < minAge) continue;
-        const breedingCount = (general as { breedingCount?: number }).breedingCount ?? 0;
-        const pregnant = ((general as { pregnancySeasonsLeft?: number }).pregnancySeasonsLeft ?? 0) > 0;
-        if (breedingCount > 0 || pregnant) continue;
-
+    for (const general of listUnwedEligible(params.roster)) {
         const bucket = Math.floor((params.season - 1) / Math.max(1, cooldownSeasons));
         const res = params.mind.record({
             generalId: general.id,

@@ -137,7 +137,7 @@ import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingStat
 import { carryOpeningLetterOnNewGame, FRESH_OPENING_LETTER, markOpeningLetterSeen, normalizeOpeningLetterState, OpeningLetterState } from '../systems/OpeningLetter';
 import { remarkRandomOf } from '../systems/SageRemarks';
 import { OfflineGeneralMindService } from '../mind/OfflineGeneralMindService';
-import { processUnwedMarriageReminders, recordBondFormedMindEvents, recordMarriageRejectedMindEvent } from '../mind/MindMarriage';
+import { listUnwedEligible, processUnwedMarriageReminders, recordBondFormedMindEvents, recordMarriageRejectedMindEvent } from '../mind/MindMarriage';
 import type { IGeneralMindService } from '../mind/IGeneralMindService';
 import { isEmptyGeneralMind } from '../mind/MindSave';
 import { intelLevelOfPercent, type MindContext, type MindLine, type MindOpinion, type MindOutcome, type MindRequest, type MindResolveResult, type MindTaskProfile } from '../mind/MindTypes';
@@ -5202,7 +5202,7 @@ export class GameSession {
         this._yearAgingEvents.push(...agingEvents);
         let yearReport: YearReport | undefined;
         if (advance.yearEnded) {
-            yearReport = buildYearReport(advance.previous.currentYear, this._yearAgingEvents);
+            yearReport = buildYearReport(advance.previous.currentYear, this._yearAgingEvents, listUnwedEligible(this._roster.getAll()).map((general) => general.name || general.id));
             this._yearAgingEvents = [];
         }
         const comingOfAge = advance.yearEnded ? this._liveDaughters(this._tickDaughtersOneYear()) : [];

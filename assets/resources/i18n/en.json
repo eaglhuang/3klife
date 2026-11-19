@@ -312,6 +312,8 @@
   "ui.year_report.intro": "The year draws to a close. Looking back on this year…",
   "ui.year_report.deaths": "Deaths this year: {0}",
   "ui.year_report.retirements": "Retirement candidates this year: {0}",
+  "ui.year_report.unwed": "Unwed and eligible this year: {0} ({1}) - time to call the matchmaker!",
+  "ui.year_report.unwed_none": "Unwed and eligible this year: 0 - everyone is taken, the matchmaker is bored",
   "ui.year_report.close": "Close",
   "ui.spirit_codex.title": "Spirit Codex",
   "ui.spirit_codex.close": "Close",

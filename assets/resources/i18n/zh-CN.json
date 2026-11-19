@@ -312,6 +312,8 @@
   "ui.year_report.intro": "一年将尽，回首今年……",
   "ui.year_report.deaths": "本年殁：{0} 人",
   "ui.year_report.retirements": "本年届龄退役候选：{0} 人",
+  "ui.year_report.unwed": "本年适婚未结缘：{0} 人（{1}）媒人快登门啦～",
+  "ui.year_report.unwed_none": "本年适婚未结缘：0 人，个个名花有主，媒人都闲到打瞌睡了",
   "ui.year_report.close": "关闭",
   "ui.spirit_codex.title": "英灵图鉴",
   "ui.spirit_codex.close": "关闭",
