@@ -12,6 +12,7 @@
  * Unity 對照：像 ScriptableObject 的功能解鎖表加一個 static helper，UI 只問 IsUnlocked(id, rank)。
  */
 import { OFFICER_TIER_TITLES } from './OfficerDisplay';
+import { MENTOR_UNLOCK_PROMPT_BUTTON_LABEL, MENTOR_UNLOCK_PROMPT_TEXT } from './MentorGuidance';
 
 export const OFFICER_FEATURE_TIER_MIN = 1;
 export const OFFICER_FEATURE_TIER_MAX = 5;
@@ -172,7 +173,7 @@ export interface RankUnlockPopupView {
 }
 
 /** 晉升彈窗內容；key 等於 rank-unlock-popup-main.json 的節點 id。沒有新解鎖功能回 null（不彈窗） */
-export function buildRankUnlockPopupView(prevRank: number, nextRank: number): RankUnlockPopupView | null {
+export function buildRankUnlockPopupView(prevRank: number, nextRank: number, mentorPrompt = false): RankUnlockPopupView | null {
     const features = newlyUnlocked(prevRank, nextRank);
     if (features.length === 0) return null;
     const texts: Record<string, string> = {
@@ -181,8 +182,11 @@ export function buildRankUnlockPopupView(prevRank: number, nextRank: number): Ra
         rankUnlockMore: features.length > RANK_UNLOCK_POPUP_ROWS ? `…另有 ${features.length - RANK_UNLOCK_POPUP_ROWS} 項，可在選單中查看` : '',
         rankUnlockNext: nextRankPreviewLine(nextRank),
         rankUnlockOkLabel: '知道了',
+        // 培育解鎖提示（PROG-2-9167）：只在晉升縣府佐官的那一次顯示，帶一顆去教官池的按鈕
+        rankUnlockMentorHint: mentorPrompt ? MENTOR_UNLOCK_PROMPT_TEXT : '',
+        rankUnlockMentorLabel: MENTOR_UNLOCK_PROMPT_BUTTON_LABEL,
     };
-    const actives: Record<string, boolean> = {};
+    const actives: Record<string, boolean> = { rankUnlockMentorHint: mentorPrompt, btnRankUnlockMentor: mentorPrompt };
     for (let i = 0; i < RANK_UNLOCK_POPUP_ROWS; i++) {
         const f = features[i];
         texts[`rankUnlockLine${i}`] = f ? `${f.name}：${f.description}` : '';

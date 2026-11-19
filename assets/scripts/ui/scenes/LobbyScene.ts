@@ -163,6 +163,7 @@ import { mentorBorrowRows, type MentorBorrowRow } from '../core/MentorBorrowView
 import { OfficerPanelsController } from '../core/OfficerPanelsController';
 import { BLOODLINE_VIGNETTE_CELL_COUNT, bloodlineVignetteOpenLabel, bloodlineVignetteViewOf } from '../core/BloodlineVignetteText';
 import { installOfficerTierTable, type OfficerTierRow } from '../../core/systems/OfficerTierTable';
+import { shouldShowMentorUnlockPrompt } from '../../core/systems/MentorGuidance';
 import { buildRankUnlockPopupView, installOfficerFeatureUnlocks, lobbyActionLock, lockedActionToast, nextRankPreviewLine } from '../../core/systems/OfficerFeatureUnlocks';
 import { installSageProgressTable } from '../../core/systems/SageFavor';
 import { installSandtableTerritories } from '../../core/systems/SandtableTerritories';
@@ -3547,14 +3548,19 @@ export class LobbyScene extends Component {
     private async _mountRankUnlockPopup(): Promise<void> {
         this._rankUnlockHost = await this._mountPreviewScreenHost('RankUnlockPopupHost', 'rank-unlock-popup-screen', [
             { buttonId: 'btnRankUnlockOk', handler: () => { if (this._rankUnlockHost) this._rankUnlockHost.node.active = false; } },
+            // 培育解鎖提示的按鈕（PROG-2-9167）：關彈窗，直接開轉蛋並切到教官池
+            { buttonId: 'btnRankUnlockMentor', handler: () => { if (this._rankUnlockHost) this._rankUnlockHost.node.active = false; this._openGachaAtMentorPool(); } },
         ]);
     }
 
     private _showRankUnlockPopup(tiers: readonly number[]): void {
         if (tiers.length === 0) return;
-        const view = buildRankUnlockPopupView(Math.min(...tiers) - 1, Math.max(...tiers));
+        // 晉升縣府佐官（培育解鎖）那一次，彈窗多一句提示與去教官池的按鈕；旗標記住只跳一次（PROG-2-9167）
+        const mentorPrompt = shouldShowMentorUnlockPrompt(tiers, services().session.mentorUnlockPromptShown);
+        const view = buildRankUnlockPopupView(Math.min(...tiers) - 1, Math.max(...tiers), mentorPrompt);
         const host = this._rankUnlockHost;
         if (!view || !host?.binder) return;
+        if (mentorPrompt) void services().session.markMentorUnlockPromptShown();
         host.binder.setTexts(view.texts);
         host.binder.setActives(view.actives);
         host.node.active = true;

@@ -39,7 +39,7 @@
           "vCenter": true
         },
         "width": 960,
-        "height": 700,
+        "height": 800,
         "skinSlot": "rank-unlock.card.bg",
         "children": [
           {
@@ -197,6 +197,46 @@
             "height": 36,
             "text": "",
             "styleSlot": "rank-unlock.label.next"
+          },
+          {
+            "type": "label",
+            "name": "RankUnlockMentorHint",
+            "id": "rankUnlockMentorHint",
+            "widget": {
+              "top": 594,
+              "left": 48,
+              "right": 48
+            },
+            "height": 34,
+            "text": "",
+            "styleSlot": "rank-unlock.label.next"
+          },
+          {
+            "type": "button",
+            "name": "BtnRankUnlockMentor",
+            "id": "btnRankUnlockMentor",
+            "widget": {
+              "bottom": 104,
+              "hCenter": true
+            },
+            "width": 380,
+            "height": 60,
+            "skinSlot": "rank-unlock.button.ok",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnRankUnlockMentorLabel",
+                "id": "rankUnlockMentorLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 36,
+                "text": "去教官池抽教官",
+                "styleSlot": "rank-unlock.label.button"
+              }
+            ]
           },
           {
             "type": "button",
