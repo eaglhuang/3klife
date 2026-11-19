@@ -77,5 +77,37 @@ export function createJobChangeEntrySuite(): TestSuite {
         assert.isFalse(controller.getView().confirmEnabled);
     });
 
+    suite.test('標題：成人禮入口「成人禮・轉職」，詳情頁聚焦入口「轉職」', () => {
+        const controller = new JobChangeController({
+            roster: { getAll: () => [general('gongsun')] as unknown as GeneralConfig[] },
+            ordersOwned: () => 1,
+            changeJob: async () => null,
+        });
+        assert.equals('成人禮・轉職', controller.getFlowView().texts.jobTitle);
+        controller.focusGeneral('gongsun');
+        assert.equals('轉職', controller.getFlowView().texts.jobTitle);
+        controller.focusGeneral(null);
+        assert.equals('成人禮・轉職', controller.getFlowView().texts.jobTitle);
+    });
+
+    suite.test('聚焦轉職成功後中央顯示「已完成轉職」；不合資格仍是「目前沒有可轉職的武將」', async () => {
+        const roster = [general('gongsun'), general('kid', { age: 15 })];
+        const controller = new JobChangeController({
+            roster: { getAll: () => roster as unknown as GeneralConfig[] },
+            ordersOwned: () => 1,
+            changeJob: async (id, sub) => {
+                roster[0] = { ...roster[0], subClass: sub } as JobWiringGeneral;
+                return { ok: true, subAbility: 42 } as never;
+            },
+        });
+        controller.focusGeneral('gongsun');
+        controller.selectSubClass('Scholar');
+        await controller.confirm();
+        assert.equals('已完成轉職', controller.getFlowView().texts.emptyHint);
+        assert.equals('gongsun 已追加副職：文官', controller.getFlowView().texts.noticeLabel);
+        controller.focusGeneral('kid');
+        assert.equals('目前沒有可轉職的武將', controller.getFlowView().texts.emptyHint);
+    });
+
     return suite;
 }

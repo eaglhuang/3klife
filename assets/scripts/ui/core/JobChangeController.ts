@@ -27,6 +27,11 @@ import {
 import { primaryAbilityOf, JobWiringGeneral, resolvePrimaryClass } from '../../core/systems/JobChangeWiring';
 import { canAffordOffer, JOB_CHANGE_ORDER_OFFER } from '../../core/systems/ItemShopPricing';
 
+/** 轉職畫面標題：成人禮入口與詳情頁入口各一個 */
+export const JOB_CHANGE_TITLE_CEREMONY = '成人禮・轉職';
+export const JOB_CHANGE_TITLE_FOCUSED = '轉職';
+export const JOB_CHANGE_DONE_TEXT = '已完成轉職';
+
 export const JOB_CHANGE_REJECT_TEXT: Record<JobChangeRejectReason, string> = {
     'too-young': `未滿 ${JOB_CHANGE_MIN_AGE} 歲，尚不能轉職`,
     'no-order': '轉職令不足',
@@ -155,7 +160,7 @@ export class JobChangeController {
         if (!general) {
             return {
                 generalId: null, subClass: null, choices: [], orders: this._deps.ordersOwned(),
-                blockedText: '目前沒有可轉職的武將', notice: this._notice, confirmEnabled: false,
+                blockedText: this._emptyText(), notice: this._notice, confirmEnabled: false,
             };
         }
         const choices = buildJobChangeChoices(this._candidateOf(general));
@@ -192,6 +197,15 @@ export class JobChangeController {
         return ok;
     }
 
+    /** 名單為空時中央說明；詳情頁聚焦的武將已有副職（剛轉完）顯示「已完成轉職」 */
+    private _emptyText(): string {
+        if (this._focusId !== null) {
+            const focused = this._deps.roster.getAll().find((g) => g.id === this._focusId) as JobWiringGeneral | undefined;
+            if (focused && (focused.subClass ?? null) !== null) return JOB_CHANGE_DONE_TEXT;
+        }
+        return '目前沒有可轉職的武將';
+    }
+
     public getFlowView(): JobChangeFlowView {
         const view = this.getView();
         const general = this._current();
@@ -201,6 +215,7 @@ export class JobChangeController {
             `${view.subClass === subClass ? '✓ ' : ''}${label}`;
         return {
             texts: {
+                jobTitle: this._focusId !== null ? JOB_CHANGE_TITLE_FOCUSED : JOB_CHANGE_TITLE_CEREMONY,
                 generalName: general ? general.name : '－',
                 generalInfo: general ? `${general.age} 歲　主職：${resolvePrimaryClass(general) === 'Warrior' ? '武官' : '文官'}` : '',
                 pager: `${this.eligibleGenerals().findIndex((item) => item.id === general?.id) + 1} / ${this.eligibleGenerals().length}`,
