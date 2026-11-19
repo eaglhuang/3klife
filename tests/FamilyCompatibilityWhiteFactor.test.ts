@@ -22,8 +22,11 @@ import {
     resetWhiteFactorAchievements,
     whiteFactorDiscountRate,
 } from '../assets/scripts/core/systems/WhiteFactorTraits';
-import { computeEpMvp } from '../assets/scripts/core/systems/BreedingSystem';
-import { createEmptyPedigree } from '../assets/scripts/core/services/BloodlineGraph';
+import { computeEpMvp, previewBreedingEp, type BreedingGeneral } from '../assets/scripts/core/systems/BreedingSystem';
+import { withLifeImprints } from '../assets/scripts/core/systems/LifeImprint';
+import { tacticTagsOf } from '../assets/scripts/core/systems/WhiteFactorTraits';
+import { Faction } from '../assets/scripts/core/config/Constants';
+import { BloodlineGraph, createEmptyPedigree } from '../assets/scripts/core/services/BloodlineGraph';
 
 export function createFamilyCompatibilityWhiteFactorSuite(): TestSuite {
     const suite = new TestSuite('FamilyCompatibility & WhiteFactorTraits (PROG-2-9162)');
@@ -172,6 +175,86 @@ export function createFamilyCompatibilityWhiteFactorSuite(): TestSuite {
         resetFamilyCompatibilityRules();
         resetWhiteFactorAchievements();
         assert.equals(0.25, whiteFactorDiscountRate(3));
+    });
+
+    suite.test('接線測試：previewBreedingEp 預覽會計算門風契合 K，使契合不為 0', () => {
+        const father: BreedingGeneral = {
+            id: 'f_compat',
+            name: '猛將父',
+            faction: Faction.Player,
+            gender: '男',
+            age: 26,
+            status: 'Unveiled',
+            hp: 1000,
+            currentHp: 1000,
+            str: 90,
+            lea: 85,
+            int: 40,
+            pol: 40,
+            cha: 60,
+            luk: 50,
+            ep: 80,
+            vitality: 100,
+            maxVitality: 100,
+            role: 'Combat',
+        };
+        const mother: BreedingGeneral = {
+            id: 'm_compat',
+            name: '才女母',
+            faction: Faction.Player,
+            gender: '女',
+            age: 24,
+            status: 'Unveiled',
+            hp: 900,
+            currentHp: 900,
+            str: 35,
+            lea: 42,
+            int: 88,
+            pol: 86,
+            cha: 82,
+            luk: 50,
+            ep: 78,
+            vitality: 100,
+            maxVitality: 100,
+            role: 'Combat',
+        };
+        const preview = previewBreedingEp({
+            father,
+            mother,
+            pedigree: new BloodlineGraph(),
+            qualifiedMarriagesInWindow: 1,
+        });
+        // 文武互補 +5 且 1 次世交 +2 → affinity = 7
+        assert.equals(7, preview.ep.affinity);
+        assert.isTrue(preview.ep.affinity > 0);
+    });
+
+    suite.test('接線測試：withLifeImprints 凝練生平白因子並與 tacticTagsOf 折抵 TP', () => {
+        const veteran = {
+            id: 'vet_1',
+            name: '老將',
+            faction: Faction.Player,
+            gender: '男' as const,
+            age: 62,
+            status: 'Unveiled' as const,
+            hp: 1000,
+            str: 90,
+            int: 60,
+            lea: 82,
+            pol: 78,
+            cha: 80,
+            luk: 50,
+            genes: [],
+            battleRecord: { wins: 15, losses: 3, duelsWon: 4, governanceSeasons: 12 },
+        };
+        const imprinted = withLifeImprints(veteran);
+        const baoma = imprinted.general.genes?.find((g) => g.id === 'gene_white_baoma');
+        assert.isDefined(baoma, '應凝練出白馬從義');
+        assert.equals(3, baoma!.level ?? 0);
+        assert.isTrue(imprinted.added.includes('白馬從義'));
+
+        const tp = computeDiscountedTpCost(100, imprinted.general.genes, tacticTagsOf('tiger-charge'));
+        assert.equals(75, tp.finalCost, '3★ 白馬從義折抵虎豹突擊戰法 25% TP');
     });
 
     return suite;

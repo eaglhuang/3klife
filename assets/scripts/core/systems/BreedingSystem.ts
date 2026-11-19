@@ -18,6 +18,8 @@ import { clanMarriageBlock } from './ClanMarriageRule';
 import { diversityOfPair } from './DiversityFactor';
 import { applyEpBonus, parentLegacyEp, rollEpBonus } from './EpLegacyBonus';
 import { applyCompactLock, applyHeritageLock } from './FamilyCompact';
+import { computeFamilyCompatibilityK } from './FamilyCompatibility';
+import type { FamilyPairRecord } from './FamilySynergy';
 import { applyLineageSynergy } from './LineageSynergy';
 import { applyKinPurification, kinPurificationTargetsOf, type KinPurificationOutcome, type KinPurificationTarget } from './KinPurification';
 import { atavismSeedsOf, peakFactorsOf } from './Atavism';
@@ -630,6 +632,10 @@ export interface BreedingRequest {
     enabledColors?: readonly FactorColor[];
     maxFactors?: number;
     isHistoricalPair?: AffinityResolver;
+    /** 選填：兩族近 6 名已成材子代滑動窗內通婚次數（門風契合 K 用） */
+    qualifiedMarriagesInWindow?: number;
+    /** 選填：世交紀錄（門風契合 K 自動換算滑動窗） */
+    pairRecord?: FamilyPairRecord;
     /** 用來取名冊裡武將的 genes（父母本人、或曾在名冊出生的祖先） */
     rosterLookup?: (uid: string) => GeneralConfig | undefined;
 }
@@ -694,12 +700,30 @@ export function previewBreedingEp(request: Omit<BreedingRequest, 'random' | 'chi
     const profiles = collectProfiles(pedigree, request);
     const historical = request.isHistoricalPair?.(request.father, request.mother) ?? false;
     const vitalityFull = isVitalityFull(request.father) && isVitalityFull(request.mother);
+    const compatibility = computeFamilyCompatibilityK({
+        fatherStats: {
+            str: statOf(request.father, 'str'),
+            int: statOf(request.father, 'int'),
+            lea: statOf(request.father, 'lea'),
+            pol: statOf(request.father, 'pol'),
+            cha: statOf(request.father, 'cha'),
+        },
+        motherStats: {
+            str: statOf(request.mother, 'str'),
+            int: statOf(request.mother, 'int'),
+            lea: statOf(request.mother, 'lea'),
+            pol: statOf(request.mother, 'pol'),
+            cha: statOf(request.mother, 'cha'),
+        },
+        qualifiedMarriagesInWindow: request.qualifiedMarriagesInWindow,
+        pairRecord: request.pairRecord,
+    });
     return {
         pedigree,
         ep: computeEpMvp(pedigree, profiles, historical, vitalityFull, {
             fatherEp: request.father.ep,
             motherEp: request.mother.ep,
-        }),
+        }, compatibility.totalK),
     };
 }
 

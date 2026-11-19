@@ -21,7 +21,7 @@ function readProvisionalTable(): unknown {
 function parent(id: string, sex: '男' | '女'): BreedingGeneral {
     return {
         id, name: id, faction: 'shu', gender: sex, age: 30, hp: 1000, vitality: 200, maxVitality: 200,
-        str: 80, int: 60, lea: 70, pol: 50, cha: 60, luk: 0,
+        str: 70, int: 70, lea: 70, pol: 70, cha: 70, luk: 0,
     } as unknown as BreedingGeneral;
 }
 

@@ -53,6 +53,7 @@ import { hasMatchingGreenFactor, learnTacticInto, type TacticLearnCheck } from '
 import { canStartAutoNurture, consumeAutoNurtureTicket, isAutoNurtureUnlocked, resolveAutoSchedule, runAutoNurtureSeason, type AutoNurtureBlockReason } from '../systems/AutoNurture';
 import { inspiredTacticIds, type NurtureAction, type NurtureRoundLog } from '../systems/NurtureSystem';
 import { learnTpCost } from '../systems/FactorTacticLinkage';
+import { computeDiscountedTpCost, tacticTagsOf } from '../systems/WhiteFactorTraits';
 import { applyPassiveSave, totalTacticTpDiscount } from '../systems/MentorPassiveSavings';
 import type { GeneralConfig } from '../models/GeneralUnit';
 import { advanceDaughtersOneYear, assignDaughterRoute, daughtersAwaitingRoute, type AssignDaughterResult, type DaughterRecord, type DaughterRoute } from '../systems/DaughterComingOfAge';
@@ -4420,7 +4421,10 @@ export class GameSession {
         });
         for (const duel of options.duelOutcomes ?? []) {
             if (duel.tutorial) continue;
-            if (duel.winner === Faction.Player && duel.winnerGeneralId) this._mindWrite().record({ generalId: duel.winnerGeneralId, season, kind: 'DUEL', outcome: 'SUCCESS', tags: ['duel'], label: '單挑' });
+            if (duel.winner === Faction.Player && duel.winnerGeneralId) {
+                this._mindWrite().record({ generalId: duel.winnerGeneralId, season, kind: 'DUEL', outcome: 'SUCCESS', tags: ['duel'], label: '單挑' });
+                this._incrementCareerStat(duel.winnerGeneralId, 'duelsWon', 1);
+            }
             if (duel.loser === Faction.Player && duel.loserGeneralId) this._mindWrite().record({ generalId: duel.loserGeneralId, season, kind: 'DUEL', outcome: 'FAIL', tags: ['duel'], label: '單挑', ...(duel.winnerGeneralId ? { partnerId: duel.winnerGeneralId } : {}) });
         }
     }
@@ -4472,8 +4476,11 @@ export class GameSession {
         if (session.status !== 'completed') return { ok: false, blocked: 'NOT_GRADUATING', learned: [...(general.learnedTactics ?? [])] };
         if (!inspiredTacticIds(session).includes(tacticId)) return { ok: false, blocked: 'NOT_INSPIRED', learned: [...(general.learnedTactics ?? [])] };
         const green = hasMatchingGreenFactor(general.genes, tacticId);
-        // 教官卡 TP_Bonus：帶著的教官戰法 TP 消耗減免相加（封頂），乘算後進位（PROG-2-1999，暫定）
-        const tpCost = Math.ceil(applyPassiveSave(learnTpCost(getTacticTpCost(tacticId), green), totalTacticTpDiscount(session.mentors)));
+        // 教官卡 TP_Bonus + 生平閱歷白因子折扣（PROG-2-1999、PROG-2-9162）
+        const rawTpCost = Math.ceil(applyPassiveSave(learnTpCost(getTacticTpCost(tacticId), green), totalTacticTpDiscount(session.mentors)));
+        const tpCost = rawTpCost > 0
+            ? computeDiscountedTpCost(rawTpCost, general.genes, tacticTagsOf(tacticId)).finalCost
+            : 0;
         const check = learnTacticInto(general.learnedTactics ?? [], tacticId, battleIntelligenceOf(general), session.tp, tpCost);
         if (!check.ok) return check;
         this._nurture!.restoreState({
@@ -5579,10 +5586,21 @@ export class GameSession {
         for (const entry of settled.settled) {
             this._recordEventJournal(entry.success ? 'DISPATCH_SUCCESS' : 'DISPATCH_FAIL', this._journalSubjects([entry.generalId]));
             this._recordMindTask({ taskId: `hall-assign:${entry.board ?? "any"}:${entry.difficulty ?? "x"}`, generalIds: [entry.generalId], success: entry.success, label: `${entry.board ? MIND_BOARD_LABEL[entry.board] : '委任'}差事`, tags: [entry.board ?? 'assign'], difficulty: entry.difficulty, delegated: true });
+            this._incrementCareerStat(entry.generalId, entry.board === 'Expedition' ? 'diplomacyCount' : 'governanceSeasons', 1);
             if (entry.difficulty === undefined || entry.board === undefined) continue;
             this.settleHallMission({ difficulty: entry.difficulty, board: entry.board, success: entry.success });
             this._awardGeneralFame(entry.generalId, hallMissionFameGain({ difficulty: entry.difficulty, success: entry.success }));
         }
+    }
+
+    private _incrementCareerStat(generalId: string, field: 'duelsWon' | 'governanceSeasons' | 'diplomacyCount', delta: number): void {
+        if (delta <= 0) return;
+        this._roster.replaceAll(this._roster.getAll().map((g) => {
+            if (g.id !== generalId) return g;
+            const prev = (g as { battleRecord?: BattleRecordLike }).battleRecord ?? { wins: 0, losses: 0 };
+            const cur = prev[field] ?? 0;
+            return { ...g, battleRecord: { ...prev, [field]: cur + delta } } as GeneralConfig;
+        }));
     }
 
     /** 結算同一任務最新一筆未結算的委任紀錄（結算結果由戰後系統傳入）；沒有未結算紀錄時回傳 false。 */

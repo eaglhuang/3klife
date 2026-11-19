@@ -289,3 +289,23 @@ export function computeDiscountedTpCost(
     matchedLevel: bestLevel,
   };
 }
+
+const TACTIC_TAG_MAP: Readonly<Record<string, readonly string[]>> = {
+  'tiger-charge': ['騎兵', '突擊', '先鋒'],
+  'shield-wall-slam': ['盾兵', '防禦', '堅守'],
+  'fortress-line': ['盾兵', '防禦', '堅守'],
+  'volley-barrage': ['破陣', '步兵', '攻城'],
+  'fire-strategy': ['謀略', '計策', '火攻'],
+};
+
+/** 依戰法 id 推導可用於匹配生平閱歷白因子折扣的標籤 */
+export function tacticTagsOf(tacticId: string): readonly string[] {
+  const mapped = TACTIC_TAG_MAP[tacticId];
+  if (mapped) return mapped;
+  const lower = tacticId.toLowerCase();
+  if (lower.includes('cavalry') || lower.includes('charge')) return ['騎兵', '突擊', '先鋒'];
+  if (lower.includes('shield') || lower.includes('fort') || lower.includes('guard')) return ['盾兵', '防禦', '堅守'];
+  if (lower.includes('fire') || lower.includes('scheme') || lower.includes('strategy')) return ['謀略', '計策', '火攻'];
+  if (lower.includes('siege') || lower.includes('infantry') || lower.includes('break')) return ['破陣', '步兵', '攻城'];
+  return [];
+}
