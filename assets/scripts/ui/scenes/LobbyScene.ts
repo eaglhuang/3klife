@@ -612,6 +612,8 @@ export class LobbyScene extends Component {
     private _isCharacterDs3TabSwitching = false;
     /** 轉蛋畫面切池（各池共用同一畫面，PROG-2-2237） */
     private _gachaPoolSwitcher: GachaPoolSwitcher | null = null;
+    /** 下次進轉蛋要停在哪個池（教官引導用）；用過即清（PROG-2-9160） */
+    private _gachaOpenAtPoolIndex: number | null = null;
     /** 目前 switcher 綁定的畫面 binder；畫面重建後 binder 會換新，才需要重綁按鈕（PROG-2-9037） */
     private _gachaCarouselBinder: object | null = null;
     /** 轉蛋紅顏池的五列展示（掛在紅顏池橫幅上） */
@@ -1459,6 +1461,12 @@ export class LobbyScene extends Component {
         await this._mentorHoldings.mount();
     }
 
+    /** 新玩家缺教官引導（PROG-2-9160）：直接開轉蛋並切到教官池；抽完回到入學畫面時由 _runSupportSummon 重讀教官 */
+    private _openGachaAtMentorPool(): void {
+        this._gachaOpenAtPoolIndex = GACHA_POOL_INDEX.support;
+        this.onClickGachaMain();
+    }
+
     /** 入學前的好友借用（§L-2，PROG-2-1138）：已選時再點一次取消，否則開借將清單 */
     private _onClickStartBorrow(): void {
         const flow = this._nurtureFlow;
@@ -1731,6 +1739,11 @@ export class LobbyScene extends Component {
             tacticName: (id) => tacticNames.get(id) ?? inspiredTacticName(id),
             learnTactic: (childId, tacticId) => services().session.learnTactic(childId, tacticId),
             commitFriendBorrow: (friendId, sessionId) => this._commitFriendBorrow(friendId, sessionId),
+            mentorGuide: {
+                isDone: () => services().session.mentorGuideDone,
+                markDone: () => { void services().session.markMentorGuideDone(); },
+                tickets: () => this._localGachaService.getWalletSnapshot().mentorTickets,
+            },
         });
         this._nurtureFlow = flow;
 
@@ -1767,6 +1780,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnLegendaryCard', handler: act(() => flow.cycleLegendaryCard()) },
             { buttonId: 'btnLegendaryMentor', handler: act(() => flow.legendaryMentor()) },
             { buttonId: 'btnStartBorrow', handler: () => { this._onClickStartBorrow(); } },
+            { buttonId: 'btnMentorGuide', handler: () => { this._openGachaAtMentorPool(); } },
             { buttonId: 'btnRest', handler: act(() => flow.train('rest')) },
             { buttonId: 'btnUsePill', handler: () => { void this._usePillOnNurtureChild(flow); } },
             { buttonId: 'btnFamilyStudy', handler: act(() => flow.familyStudy()) },
@@ -6530,7 +6544,8 @@ ${spent}`,
             return;
         }
         // 從結果頁回來會重建畫面，保留原本所在的池（PROG-2-9024）
-        const keepIndex = this._gachaPoolSwitcher?.index ?? GACHA_POOL_INDEX.general;
+        const keepIndex = this._gachaOpenAtPoolIndex ?? this._gachaPoolSwitcher?.index ?? GACHA_POOL_INDEX.general;
+        this._gachaOpenAtPoolIndex = null;
         // 同一畫面再次進入：重用既有 switcher 與已綁定的按鈕，只切回原池。
         // 每次都重綁會疊加監聽器，一次點擊同時驅動多個舊 switcher，右側面板就會疊成兩層（PROG-2-9037）
         const binder = host.binder;
@@ -7677,6 +7692,8 @@ ${spent}`,
 
     private async _runSupportSummon(drawCount = 1): Promise<void> {
         await this._getGachaFlowCoordinator().runSupportSummon(MENTOR_POOL_ID, await this._supportPoolGenerals(), drawCount);
+        // 抽到的教官要能直接帶入培育入學（PROG-2-9160）
+        void this._nurtureFlow?.loadDeck().then(() => { this._refreshNurtureFlow(); });
     }
 
     /** 支援卡池候選：池設定 candidateIds 且在教官卡目錄內（抽卡與天命商店共用） */

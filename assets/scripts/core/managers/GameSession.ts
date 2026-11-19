@@ -918,6 +918,8 @@ export class GameSession {
     private _firstBattleCleared = false;
     /** 新手開場第四幕（紅顏登場）已展示過；舊檔已有通關紀錄者視為看過，不補彈。存於 resources.openingRedFaceShown */
     private _openingRedFaceShown = false;
+    /** 新玩家「去教官池抽教官」引導已結束（玩家第一次擁有教官後記下，PROG-2-9160）；存於 resources.mentorGuideDone */
+    private _mentorGuideDone = false;
     /** 內政本季紀錄：同季只能選一項 */
     private _domesticLog: DomesticSeasonLog = { ...EMPTY_DOMESTIC_LOG };
     /** 治理事件（PROG-2-1773）：只在發生那一季有效 */
@@ -2187,6 +2189,7 @@ export class GameSession {
         this._mainlineNurtureClearedOnce = false;
         this._firstBattleCleared = false;
         this._openingRedFaceShown = false;
+        this._mentorGuideDone = false;
         this._domesticLog = { ...EMPTY_DOMESTIC_LOG };
         this._governanceEvent = null;
         this._governanceBoosts = [];
@@ -6112,6 +6115,20 @@ export class GameSession {
         return this._firstBattleCleared && !this._openingRedFaceShown;
     }
 
+    /** 教官引導是否已結束 */
+    public get mentorGuideDone(): boolean {
+        return this._mentorGuideDone;
+    }
+
+    /** 玩家已擁有過教官：記下並存檔，培育入學畫面不再顯示引導 */
+    public async markMentorGuideDone(): Promise<void> {
+        if (this._mentorGuideDone) return;
+        this._mentorGuideDone = true;
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+    }
+
     /** 第四幕紅顏已展示：記下並存檔，之後不再自動彈出 */
     public async markOpeningRedFaceShown(now: number = Date.now()): Promise<void> {
         if (this._openingRedFaceShown) return;
@@ -6229,6 +6246,7 @@ export class GameSession {
                 mainlineNurtureClearedOnce: this._mainlineNurtureClearedOnce,
                 firstBattleCleared: this._firstBattleCleared,
                 openingRedFaceShown: this._openingRedFaceShown,
+                mentorGuideDone: this._mentorGuideDone,
             },
             domestic: { ...this._domesticLog },
             ...(this._governanceEvent ? { governanceEvent: { ...this._governanceEvent } } : {}),
@@ -6573,6 +6591,7 @@ export class GameSession {
         this._firstBattleCleared = normalizeFlag(snapshot.resources?.firstBattleCleared) || this._clearedStageIds.length > 0;
         this._openingRedFaceShown = normalizeFlag(snapshot.resources?.openingRedFaceShown)
             || (snapshot.resources?.firstBattleCleared === undefined && this._clearedStageIds.length > 0);
+        this._mentorGuideDone = normalizeFlag(snapshot.resources?.mentorGuideDone);
         this._domesticLog = normalizeDomesticLog(snapshot.domestic);
         this._governanceEvent = normalizeGovernanceEvent(snapshot.governanceEvent);
         this._governanceBoosts = normalizeGovernanceBoosts(snapshot.governanceBoosts);
