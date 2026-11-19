@@ -8,7 +8,7 @@
  * Unity 對照：像 Presenter 的一個小 helper，把 Model 的數值轉成 Label 的字串。
  */
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
-import { deriveGeneralStage, GeneralStage } from '../../core/systems/GeneralStage';
+import { deriveGeneralStage, GENERAL_STAGE_START_AGE, GeneralStage } from '../../core/systems/GeneralStage';
 import { AgingGeneral, GENERAL_STATUS_DEAD } from '../../core/systems/GeneralAging';
 import { MONTHS_PER_YEAR, remainingLifespanMonths } from '../../core/systems/LifespanWiring';
 
@@ -30,7 +30,9 @@ export interface LifecycleView {
     remainingMonths: number | null;
     /** 「剩餘 12 年 3 月」；沒有資料為佔位文字 */
     remainingText: string;
-    /** 「成年 · 剩餘 12 年 3 月」，給一行空間放的摘要 */
+    /** 未滿成年時「距成年（20 歲）還有 N 年」；成年後為 null */
+    adultCountdownText: string | null;
+    /** 「成年 · 剩餘 12 年 3 月」，給一行空間放的摘要；未成年改放距成年年數（2026-11-19 裁決） */
     summary: string;
 }
 
@@ -40,22 +42,31 @@ export function formatRemainingMonths(months: number): string {
     return `剩餘 ${years} 年 ${rest} 月`;
 }
 
+/** 距成年還有幾年（無條件進位）；已成年回傳 null */
+export function adultCountdownText(age: number): string | null {
+    const adultAge = GENERAL_STAGE_START_AGE.adult;
+    if (age >= adultAge) return null;
+    return `距成年（${adultAge} 歲）還有 ${Math.ceil(adultAge - age)} 年`;
+}
+
 export function describeLifecycle(general: GeneralConfig): LifecycleView {
     const dead = (general.status ?? '').toLowerCase() === GENERAL_STATUS_DEAD;
     if (dead) {
-        return { stage: null, stageLabel: '已故', remainingMonths: null, remainingText: '已故', summary: '已故' };
+        return { stage: null, stageLabel: '已故', remainingMonths: null, remainingText: '已故', adultCountdownText: null, summary: '已故' };
     }
     if (typeof general.age !== 'number' || !Number.isFinite(general.age) || general.age < 0) {
-        return { stage: null, stageLabel: LIFECYCLE_PLACEHOLDER, remainingMonths: null, remainingText: LIFECYCLE_PLACEHOLDER, summary: LIFECYCLE_PLACEHOLDER };
+        return { stage: null, stageLabel: LIFECYCLE_PLACEHOLDER, remainingMonths: null, remainingText: LIFECYCLE_PLACEHOLDER, adultCountdownText: null, summary: LIFECYCLE_PLACEHOLDER };
     }
     const stage = deriveGeneralStage(general.age);
     const months = remainingLifespanMonths(general as AgingGeneral);
     const remainingText = formatRemainingMonths(months);
+    const countdown = adultCountdownText(general.age);
     return {
         stage,
         stageLabel: GENERAL_STAGE_LABELS[stage],
         remainingMonths: months,
         remainingText,
-        summary: `${GENERAL_STAGE_LABELS[stage]} · ${remainingText}`,
+        adultCountdownText: countdown,
+        summary: `${GENERAL_STAGE_LABELS[stage]} · ${countdown ?? remainingText}`,
     };
 }

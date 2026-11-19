@@ -13,6 +13,7 @@
  */
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { GENERAL_STATUS_DEAD } from '../../core/systems/GeneralAging';
+import { isDescendant } from '../../core/systems/ChildMagistrate';
 import {
     buildJobChangeChoices,
     checkJobChange,
@@ -75,12 +76,16 @@ export class JobChangeController {
 
     constructor(private readonly _deps: JobChangeDeps) {}
 
-    /** 可轉職的武將：存活、滿 20 歲、有主職、尚無副職 */
+    /**
+     * 成人禮名單：存活、滿 20 歲、尚無副職，且是本家子嗣（有 fatherId／motherId，與 isDescendant 同源）。
+     * 2026-11-19 使用者裁決：現成武將（無父母欄位）不列入成人禮；目前現成武將沒有其他轉職入口。
+     */
     public eligibleGenerals(): JobWiringGeneral[] {
         return this._deps.roster.getAll()
             .filter((general): general is JobWiringGeneral => {
                 const wiring = general as JobWiringGeneral;
                 return wiring.status !== GENERAL_STATUS_DEAD
+                    && isDescendant(wiring as { fatherId?: string; motherId?: string })
                     && typeof wiring.age === 'number'
                     && wiring.age >= JOB_CHANGE_MIN_AGE
                     && (wiring.subClass ?? null) === null;

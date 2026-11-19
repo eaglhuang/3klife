@@ -12,7 +12,7 @@ import { buildRivalOfficerSetup, type RivalOfficerSetupInput, type RivalSetupGen
 import { inspiredTacticName } from '../../core/systems/InspiredTacticMap';
 import { parseLimitedPoolWindows } from '../../core/systems/LimitedPoolSchedule';
 import { expandLimitedPoolRotations, parseLimitedPoolRotations } from '../../core/systems/LimitedPoolRotation';
-import { _decorator, BlockInputEvents, Button, Canvas, Color, Component, director, instantiate, JsonAsset, Label, Mask, Node, Sprite, sys, UITransform, Widget, resources } from 'cc';
+import { _decorator, BlockInputEvents, Button, Canvas, Color, Component, director, instantiate, JsonAsset, Label, Mask, Node, Sprite, sys, UITransform, Widget, resources, input, Input, EventKeyboard, KeyCode } from 'cc';
 import { MindRequestPanel } from '../components/mind/MindRequestPanel';
 import { installAdaptiveResolution } from '../core/AdaptiveResolution';
 import { computeSubMenuCenterX, LobbyHallScreenBinder, type HallActorTapView, type LobbyHallDockId, type LobbyHallPanelId, type LobbyHallWallId } from '../core/LobbyHallScreenBinder';
@@ -99,6 +99,7 @@ import { BondingSetupController } from '../core/BondingSetupController';
 import { withBreedFallback, type BreedTextLookup } from '../core/BreedingTexts';
 import { BloodlineTreePanel } from '../panels/BloodlineTreePanel';
 import { JobChangeController } from '../core/JobChangeController';
+import { OverlayCandidate, pickTopOverlay } from '../core/OverlayStack';
 import { DomesticPanelController } from '../core/DomesticPanelController';
 import { FAST_FORWARD_REASON_TEXT, fastForwardSeasons } from '../../core/systems/SeasonFastForward';
 import { BREEDING_MIN_AGE } from '../../core/systems/BreedingSystem';
@@ -750,6 +751,7 @@ export class LobbyScene extends Component {
         // 讀存檔前先備妥服務（存檔後端、名冊、生命週期）；否則 load() 因未設定存檔服務而失敗，每次重開都被當成新玩家
         services().initialize(this.node);
         this._offBeforeSwitch = services().scene.onBeforeSwitch((target) => this._retention.onBeforeSwitch(target));
+        input.on(Input.EventType.KEY_UP, this._onEscapeKeyUp, this);
         void this._loadLimitedPoolSchedule();
         // 為 LobbyScene 大背板生成穩定的組件背景
         const bgNode = this.node.getChildByName('Background');
@@ -985,6 +987,7 @@ export class LobbyScene extends Component {
         this._lobbyHall = null;
         this._offBeforeSwitch?.();
         this._offBeforeSwitch = null;
+        input.off(Input.EventType.KEY_UP, this._onEscapeKeyUp, this);
         for (const unsubscribe of this._sessionEventUnsubscribers) {
             unsubscribe();
         }
@@ -4238,9 +4241,9 @@ ${spent}`,
         });
     }
 
-    /** 切換功能頁面或回到主政廳前，統一收起所有大廳次級覆蓋彈窗，避免遮擋或攔截點擊 */
-    private _closeSecondaryOverlayHosts(): void {
-        const secondaryHosts: Array<UIScreenPreviewHost | null> = [
+    /** 大廳次級覆蓋彈窗清單（切頁收起與 ESC 關閉共用） */
+    private _secondaryOverlayHosts(): Array<UIScreenPreviewHost | null> {
+        return [
             this._hallBoardHost,
             this._wishAltarHost,
             this._rivalHost,
@@ -4263,7 +4266,38 @@ ${spent}`,
             this._scoutPanelHost,
             this._destinyShopHost,
         ];
-        for (const host of secondaryHosts) {
+    }
+
+    /**
+     * ESC 關最上層彈窗（PROG-2-9164，使用者 2026-11-19 裁決）：一次一層，沒有彈窗開著時不做事。
+     * 彈窗清單 = 次級覆蓋彈窗 + 圖鑑／教官卡等可自行關閉的面板；最上層由節點階層順序判定（OverlayStack）。
+     */
+    private _onEscapeKeyUp(event: EventKeyboard): void {
+        if (event.keyCode !== KeyCode.ESCAPE) return;
+        const hosts = [
+            ...this._secondaryOverlayHosts(),
+            this._mentorCardHost,
+            this._generalGalleryHost,
+            this._spiritCardDetailHost,
+            this._spiritFamilyOverviewHost,
+        ];
+        const byId = new Map<string, UIScreenPreviewHost>();
+        const candidates: OverlayCandidate[] = [];
+        for (const host of hosts) {
+            const node = host?.node;
+            if (!host || !node?.isValid) continue;
+            const order: number[] = [];
+            for (let cur: Node | null = node; cur?.parent; cur = cur.parent) order.unshift(cur.getSiblingIndex());
+            byId.set(node.uuid, host);
+            candidates.push({ id: node.uuid, active: node.activeInHierarchy, order });
+        }
+        const top = pickTopOverlay(candidates);
+        if (top) byId.get(top.id)!.node.active = false;
+    }
+
+    /** 切換功能頁面或回到主政廳前，統一收起所有大廳次級覆蓋彈窗，避免遮擋或攔截點擊 */
+    private _closeSecondaryOverlayHosts(): void {
+        for (const host of this._secondaryOverlayHosts()) {
             if (host?.node?.isValid) host.node.active = false;
         }
         this._journalHubReturn = false;
