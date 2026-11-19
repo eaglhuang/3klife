@@ -321,13 +321,13 @@
         ]
       },
       "smallAvatar": {
-        "activeVersion": "0002",
-        "status": "review-pending",
+        "activeVersion": "0001",
+        "status": "integrated",
         "history": [
           {
             "version": "0001",
             "file": "small_avatars/bu_lian_shi__步練師__small_avatar_0001.png",
-            "status": "rejected",
+            "status": "integrated",
             "sha256": "5d84f404114e07c92e37d939875fcf5227f02098d9ee91e9386480de0cd6c3ac",
             "canvas": "1254x1254 RGBA",
             "qc": "125px and 250px preview: natural three-quarter angle, face centered, full head and ornaments visible; crop ends at shoulder line with no chest skin.",
@@ -480,12 +480,12 @@
         ]
       },
       "smallAvatar": {
-        "status": "review-pending",
+        "status": "integrated",
         "history": [
           {
             "version": "0001",
             "file": "small_avatars/da_qiao__大喬__small_avatar_0001.png",
-            "status": "review-pending"
+            "status": "integrated"
           },
           {
             "version": "0002",
@@ -532,7 +532,7 @@
             "qc": "直接裁切已核定站姿；保留完整頭髮與花飾，臉置中；下緣控制於肩線，不帶胸部衣襟。v0004下緣略低，改列 superseded。"
           }
         ],
-        "activeVersion": "0005"
+        "activeVersion": "0001"
       }
     },
     {
