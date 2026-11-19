@@ -15,7 +15,7 @@
  * 畫面層拿 GetView() 的 ViewModel 一次刷新 Text 與 Button.interactable。
  */
 import { kinshipLampLine, outcrossRecoveryLine } from '../../core/systems/BloodFatigue';
-import { ancestorSeatVisible, diversityVisible, factorDetailVisible, G1_FACTOR_TEXT, KIN_TEXT_WARNING, kinshipScanVisible, MILESTONE_G1_HINT, type MilestoneStage } from '../../core/systems/FamilyMilestone';
+import { ancestorSeatVisible, diversityVisible, factorDetailVisible, formulaDetailVisible, G1_EP_DETAIL_MASK, g1EpEstimateText, G1_FACTOR_TEXT, KIN_TEXT_WARNING, kinshipScanVisible, MILESTONE_G1_HINT, type MilestoneStage } from '../../core/systems/FamilyMilestone';
 import { PEDIGREE_SLOTS } from '../../core/services/BloodlineGraph';
 import { DIVERSITY_HINT } from '../../core/systems/DiversityFactor';
 import { POTENTIAL_ROW_KINDS, potentialFill, potentialHeadLine, potentialValueLine, rosterAncestorsOf, type PotentialGeneral } from '../../core/systems/PotentialBar';
@@ -60,6 +60,7 @@ import {
     PREGNANCY_LOCK_SEASONS,
     statOf,
     EP_BASE,
+    epGradeLetter,
 } from '../../core/systems/BreedingSystem';
 import { GENERAL_STATUS_DEAD, RETIREMENT_AGE } from '../../core/systems/GeneralAging';
 
@@ -483,6 +484,11 @@ export class BondingSetupController {
         const mode: BondingMode = (father.age ?? 0) >= RETIREMENT_AGE || (mother.age ?? 0) >= RETIREMENT_AGE ? 'Peace_Lineage' : 'Standard';
 
         Object.assign(texts, this._seatTexts('fatherTree', father.id), this._seatTexts('motherTree', mother.id));
+        for (let i = 0; i < ANCESTOR_SEAT_COUNT; i++) {
+            const seatVisible = ancestorSeatVisible(stage, i);
+            actives[`fatherTree${i}`] = seatVisible;
+            actives[`motherTree${i}`] = seatVisible;
+        }
         if (kinshipScanVisible(stage)) {
             this._deps.breeding.commonAncestorSeats?.(father.id, mother.id).forEach((shared, i) => { actives[`fatherTreeFrame${i}`] = shared; });
             this._deps.breeding.commonAncestorSeats?.(mother.id, father.id).forEach((shared, i) => { actives[`motherTreeFrame${i}`] = shared; });
@@ -491,16 +497,23 @@ export class BondingSetupController {
         const eligibility = this._deps.breeding.checkEligibility(father.id, mother.id);
         texts.modeChip = bondingModeChipText(mode === 'Peace_Lineage', eligibility.reasons);
         const ep = this._deps.breeding.previewEp(father.id, mother.id);
-        texts.epEstimate = this._t('ui.breed.ep_display', String(ep.ep), ep.rating);
-        const preview = buildBreedingPreviewLines(ep, this._deps.tagName);
-        // 只揭露玩家已看得到的因子，同血脈走近親純化不算連攜
-        const synergyHint = isSameBloodline(father, mother) || !factorDetailVisible(stage) ? null : lineageSynergyHint(sharedBlueGenesOf(father, mother, this._deps.factorDictionary?.()).filter((gene) => (gene.discoveryLevel ?? 1) <= level));
-        texts.epDetail = ['基礎 50', preview.breakdownLine, preview.tagLine, ...(synergyHint ? [synergyHint] : [])].join(' · ');
+        if (formulaDetailVisible(stage)) {
+            texts.epEstimate = this._t('ui.breed.ep_display', String(ep.ep), ep.rating);
+            const preview = buildBreedingPreviewLines(ep, this._deps.tagName);
+            // 只揭露玩家已看得到的因子，同血脈走近親純化不算連攜
+            const synergyHint = isSameBloodline(father, mother) || !factorDetailVisible(stage) ? null : lineageSynergyHint(sharedBlueGenesOf(father, mother, this._deps.factorDictionary?.()).filter((gene) => (gene.discoveryLevel ?? 1) <= level));
+            texts.epDetail = ['基礎 50', preview.breakdownLine, preview.tagLine, ...(synergyHint ? [synergyHint] : [])].join(' · ');
+        } else {
+            texts.epEstimate = g1EpEstimateText(ep.rating, epGradeLetter(ep.ep));
+            texts.epDetail = G1_EP_DETAIL_MASK;
+        }
         texts.conceptionLabel = `受孕率 ${Math.round(conceptionRate(father, mother) * 100)}%`;
         const ledger = this._deps.familySynergy?.();
         const synergyLine = ledger && kinshipScanVisible(stage) ? synergyWindowLine(father as { familyUid?: string }, mother as { familyUid?: string }, ledger) : null;
         if (synergyLine) texts.conceptionLabel += `｜${synergyLine}`;
-        texts.conceptionLabel += `｜${epContribLine(father.ep ?? EP_BASE, mother.ep ?? EP_BASE)}`;
+        if (formulaDetailVisible(stage)) {
+            texts.conceptionLabel += `｜${epContribLine(father.ep ?? EP_BASE, mother.ep ?? EP_BASE)}`;
+        }
         const sage = this._sageRemarks(father.id, mother.id);
         texts.sageRemarkLines = sage.hint;
         sage.lines.forEach((line, i) => { texts[`sageLine${i}`] = line; actives[`sageRow${i}`] = true; });

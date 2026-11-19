@@ -26,6 +26,7 @@ import { BattleUIBridge } from './BattleUIBridge';
 import { DuelChallengeFallback } from './DuelChallengeFallback';
 import type { IDuelChallengeLike } from '../../shared/interfaces/IBattleUIComponents';
 import { BATTLE_TURN_FLOW_TIMING } from './BattlePresentationTiming';
+import { setEnemyTurnPlayback } from './BattleTimeScale';
 import { services } from '../../core/managers/ServiceLoader';
 import { duelLogType } from '../../core/systems/DailyNewsEngine';
 import type { BattleResult } from '../BattleTypes';
@@ -112,6 +113,8 @@ export class TurnFlowManager {
       this.pollCombatDrain(0, () => {
         if (!c.isAdvancingTurn || this._advanceTurnGeneration !== gen) return;
         c.boardRenderer?.setDeployHintFaction(Faction.Enemy);
+        // PROG-2-9413：敵方回合播放 1.5 倍速（單挑面板開著時回到原速），finalizeAdvance 還原
+        setEnemyTurnPlayback(true, () => c.isDuelPanelActive);
         this.bridge.playTurnBanner(Faction.Enemy);
         this.bridge.showEnemyThinkingPanel();
         this.scene.scheduleOnce(() => {
@@ -136,6 +139,7 @@ export class TurnFlowManager {
     const c = this.ctx;
     if (!c.isAdvancingTurn) return;
     c.isAdvancingTurn = false;
+    setEnemyTurnPlayback(false);
     this.completePendingEnemyTurn();
     this.bridge.hideEnemyThinkingPanel();
     this.bridge.playTurnBanner(Faction.Player);

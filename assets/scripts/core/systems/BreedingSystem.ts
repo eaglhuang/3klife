@@ -449,6 +449,24 @@ export function epRatingLabel(ep: number): string {
     return '命途多舛';
 }
 
+/**
+ * 爆發力字母等級（PROG-2-9171）：第一代結緣不給數字，只給 S～F 讓玩家有比較基準。
+ * 門檻每 10 分一級，與 epRatingLabel 四段評語對齊（S＝天命之子、A/B＝良才美質、C/D＝中規中矩、E/F＝命途多舛）。
+ */
+export const EP_GRADE_THRESHOLDS: ReadonlyArray<{ readonly min: number; readonly grade: string }> = [
+    { min: 90, grade: 'S' },
+    { min: 80, grade: 'A' },
+    { min: 70, grade: 'B' },
+    { min: 60, grade: 'C' },
+    { min: 50, grade: 'D' },
+    { min: 40, grade: 'E' },
+];
+export const EP_GRADE_FLOOR = 'F';
+
+export function epGradeLetter(ep: number): string {
+    return EP_GRADE_THRESHOLDS.find((tier) => ep >= tier.min)?.grade ?? EP_GRADE_FLOOR;
+}
+
 /** 依祖譜位置組出因子來源（G1 → G3） */
 export function buildFactorSources(pedigree: Pedigree, profiles: Map<string, AncestorProfile>): AncestorFactorSource[] {
     const sources: AncestorFactorSource[] = [];
