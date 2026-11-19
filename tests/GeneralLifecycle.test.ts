@@ -22,6 +22,16 @@ export function createGeneralLifecycleSuite(): TestSuite {
         assert.equals('成年 · 剩餘 50 年 0 月', view.summary);
     });
 
+    suite.test('未滿 20 歲摘要改顯示距成年年數，成年後仍顯示剩餘壽命（2026-11-19 裁決）', () => {
+        const baby = describeLifecycle(general({ age: 5 }));
+        assert.equals('距成年（20 歲）還有 15 年', baby.adultCountdownText!);
+        assert.equals('待開獎 · 距成年（20 歲）還有 15 年', baby.summary);
+        assert.equals('距成年（20 歲）還有 1 年', describeLifecycle(general({ age: 19 })).adultCountdownText!);
+        const adult = describeLifecycle(general({ age: 20 }));
+        assert.isTrue(adult.adultCountdownText === null);
+        assert.equals('成年 · 剩餘 60 年 0 月', adult.summary);
+    });
+
     suite.test('剩餘月數換算：整年與餘月分開顯示', () => {
         assert.equals('剩餘 1 年 3 月', formatRemainingMonths(15));
         assert.equals('剩餘 0 年 0 月', formatRemainingMonths(0));
