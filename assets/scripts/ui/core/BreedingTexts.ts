@@ -12,7 +12,7 @@ export type BreedTextLookup = (key: string, ...args: string[]) => string;
 /** zh-TW 預設文案；與 resources/i18n/zh-TW.json 的 ui.breed.* 同步（測試會比對） */
 export const BREED_TEXT_FALLBACK_ZH_TW: Readonly<Record<string, string>> = {
     'ui.breed.confirm': '消耗 {0} 精力 {1} 與 {2} 精力 {3}，確認結緣？',
-    'ui.breed.preg_status': '{0} 已進入待產期，預計 {1} 季後誕下子嗣',
+    'ui.breed.preg_status': '{0} 需調養待產 {1} 季（期間精力凍結、不能再結緣）；襁褓幼子已入宗族名冊',
     'ui.breed.child_born': '恭喜主公！{0} 與 {1} 喜獲 {2}！',
     'ui.breed.unveil_5': '天命開獎！{0} 五維資質揭曉：',
     'ui.breed.daqi': '名士嘆：此子潛龍在淵，天機不可洩漏。',

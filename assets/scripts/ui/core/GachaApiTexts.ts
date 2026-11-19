@@ -26,6 +26,8 @@ export interface GachaApiView {
     texts: Record<string, string>;
     actives: Record<string, boolean>;
     pityRatio: number;
+    /** 「我的餘額」顯示的貨幣；抽完後輕量刷新用 */
+    mainCurrency: GachaCurrencyId;
 }
 
 /** 稀有度顯示順序：UP 最前，再由高到低（對齊原稿機率格） */
@@ -59,6 +61,17 @@ export function gachaHeroIdOf(pool: GachaPoolDef, dto: GachaPoolDto): string | n
 /** 十連鈕下方的保底小字節點（原稿 GachaDs3_div_37） */
 export const GACHA_TEN_NOTE_NODE = 'GachaDs3_div_37';
 
+/**
+ * 召喚券持有數與「我的餘額」兩處文字共用的來源：同一份錢包快照（PROG-2-9176）。
+ * 抽完後只刷新這兩處（不重套整頁），避免畫面上「持有 N」與餘額各讀各的而數字不一致。
+ */
+export function gachaWalletLabelTexts(wallet: Readonly<Partial<GachaWalletDto>>, mainCurrency: GachaCurrencyId): Record<string, string> {
+    return {
+        [GACHA_NODES.balance]: `${GACHA_CURRENCY_LABEL[mainCurrency]} ${(wallet[mainCurrency] ?? 0).toLocaleString('zh-TW')}`,
+        [GACHA_NODES.ticketSummonLabel]: `持有 ${(wallet.tickets ?? 0).toLocaleString('zh-TW')}`,
+    };
+}
+
 export function gachaApiView(
     pool: GachaPoolDef,
     dto: GachaPoolDto,
@@ -91,11 +104,10 @@ export function gachaApiView(
         [GACHA_NODES.pullSingleCost]: String(dto.singleCost),
         [GACHA_NODES.pullTenCost]: String(dto.tenCost),
         [GACHA_NODES.pullTenOriginalCost]: String(dto.singleCost * 10),
-        [GACHA_NODES.balance]: `${GACHA_CURRENCY_LABEL[mainCurrency]} ${(wallet[mainCurrency] ?? 0).toLocaleString('zh-TW')}`,
+        ...gachaWalletLabelTexts(wallet, mainCurrency),
         // 十連鈕下方小字：只寫程式真的有的保底（累計每 N 抽必出 SR 以上；十連本身沒有額外保底，原稿「必得 SR 以上 1 名」程式沒做）
         [GACHA_TEN_NOTE_NODE]: `每 ${dto.pity.max} 抽必得 SR 以上`,
         [GACHA_NODES.goldSummonLabel]: '×500',
-        [GACHA_NODES.ticketSummonLabel]: `持有 ${(wallet.tickets ?? 0).toLocaleString('zh-TW')}`,
         [pool.eventChip]: limited
             ? `★ 本期限定 · ${dto.endsAtMs ? formatRemaining(dto.endsAtMs, nowMs) : '期間限定'}`
             : dto.series,
@@ -124,7 +136,7 @@ export function gachaApiView(
         texts[nodes.rarity] = rate.rarity;
         texts[nodes.pct] = percentText(rate.percent);
     }
-    return { texts, actives, pityRatio: meterMax > 0 ? Math.min(1, meterCur / meterMax) : 0 };
+    return { texts, actives, pityRatio: meterMax > 0 ? Math.min(1, meterCur / meterMax) : 0, mainCurrency };
 }
 
 /** 相容舊呼叫：只要文字 */

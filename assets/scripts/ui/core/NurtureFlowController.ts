@@ -14,6 +14,7 @@
  * Unity 對照：像 MVP 裡的 Presenter。View（UCUF 組出來的節點）只負責顯示，
  * Presenter 讀 Model（名冊 / NurtureService）後吐出 ViewModel，按鈕 onClick 只轉呼叫 Presenter 的方法。
  */
+import { factorLabelOf } from '../../core/systems/FactorDisplayName';
 import { RITE_CEREMONY_LINE, riteNoticeLines, type NurtureRiteResult } from '../../core/systems/EnrollmentRites';
 import { clanTraditionEffectText } from '../../core/systems/ClanTradition';
 import { synergyTutorLine } from '../../core/systems/FamilySynergy';
@@ -865,7 +866,7 @@ function buildFateTexts(child: UnveilingGeneral, t: BreedTextLookup): Record<str
         fateAge: `${child.age ?? 5} 歲 · ${describeLifecycle(child).summary} · 開獎於第 ${(child.unveiledSeason ?? 0) + 1} 季`,
         fateStats: UNVEILED_STAT_KEYS.map((key) => `${statLabelOf(t, key)} ${statOf(child, key)}`).join('　'),
         fateFactors: factors.length > 0
-            ? `初始因子：${factors.map((gene) => gene.displayName ?? gene.id ?? '？').join('、')}`
+            ? `初始因子：${factors.map((gene) => factorLabelOf(gene)).join('、')}`
             : '初始因子：尚未顯現',
         fateRecommend: fateText(t, 'ui.fate.reveal', careerLabelOf(t, recommended, '')),
         // 武將系統 §G：開獎先播一句天象異變，再接天命指引（PROG-2-1737）
