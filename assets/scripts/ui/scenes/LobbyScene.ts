@@ -614,6 +614,8 @@ export class LobbyScene extends Component {
     private _gachaPoolSwitcher: GachaPoolSwitcher | null = null;
     /** 下次進轉蛋要停在哪個池（教官引導用）；用過即清（PROG-2-9160） */
     private _gachaOpenAtPoolIndex: number | null = null;
+    /** 從教官引導進轉蛋：返回大廳後把培育入學畫面再開回來，抽到的教官直接帶入（PROG-2-9160） */
+    private _reopenNurtureAfterGacha = false;
     /** 目前 switcher 綁定的畫面 binder；畫面重建後 binder 會換新，才需要重綁按鈕（PROG-2-9037） */
     private _gachaCarouselBinder: object | null = null;
     /** 轉蛋紅顏池的五列展示（掛在紅顏池橫幅上） */
@@ -1464,6 +1466,7 @@ export class LobbyScene extends Component {
     /** 新玩家缺教官引導（PROG-2-9160）：直接開轉蛋並切到教官池；抽完回到入學畫面時由 _runSupportSummon 重讀教官 */
     private _openGachaAtMentorPool(): void {
         this._gachaOpenAtPoolIndex = GACHA_POOL_INDEX.support;
+        this._reopenNurtureAfterGacha = true;
         this.onClickGachaMain();
     }
 
@@ -6692,6 +6695,10 @@ ${spent}`,
         this._closeSecondaryOverlayHosts();
         this._openLobbyHall();
         this._restoreLobbyMainUi();
+        if (this._reopenNurtureAfterGacha) {
+            this._reopenNurtureAfterGacha = false;
+            void (this._lobbyMainRestore ?? Promise.resolve(true)).then(() => { this._openNurtureFlow(); });
+        }
     }
 
     /** 進行中的「UI 堆疊回到 LobbyMain」；返回鈕同時聽 click 與 touch-end，同一次返回只跑一輪 */
