@@ -206,8 +206,8 @@
         ]
       },
       "smallAvatar": {
-        "activeVersion": "0002",
-        "status": "review-pending",
+        "activeVersion": "0003",
+        "status": "integrated",
         "history": [
           {
             "version": "0001",
@@ -220,10 +220,53 @@
           {
             "version": "0002",
             "file": "small_avatars/zhuge_liang__諸葛亮__small_avatar_0002.png",
-            "status": "review-pending",
+            "status": "superseded",
             "sha256": "7dc9bb469f1d93be4673fe762ec85e623a7036965282c30678d79956b60f26df",
             "canvas": "1254x1254 RGBA",
             "qc": "Three-quarter face angle; full crown and chin; centered face; crop ends at neck base and shoulder tops without chest; transparent background."
+          },
+          {
+            "version": "0003",
+            "file": "small_avatars/zhuge_liang__諸葛亮__small_avatar_0003.png",
+            "status": "integrated",
+            "sha256": "b0245039c91cc9ea2460b320533789c9561f6f9a06a83009ae973a5fe0fe6f2d",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0003",
+            "sourceAvatarFile": "avatars/zhuge_liang__諸葛亮__avatar_0003.png",
+            "sourceSha256": "2b9b019c3373eeb57cf8ed95f00f9b54394c6dee8ce5f98f5547e2b0ea4f919b",
+            "cropBox": {
+              "x": 40.181,
+              "y": 4.581,
+              "width": 180.637,
+              "height": 180.637
+            },
+            "faceBox": [
+              97.0,
+              73.0,
+              164.0,
+              145.0
+            ],
+            "headwearExtent": [
+              53.0,
+              10.0,
+              184.0,
+              145.0
+            ],
+            "shoulderAnchors": [
+              60.0,
+              178.0,
+              175.0,
+              178.0
+            ],
+            "method": "crop-only; uniform resize; no redraw",
+            "headHeightPercent": 74.7,
+            "faceHeightPercent": 39.9,
+            "faceWidthPercent": 37.1,
+            "faceCenterXPercent": 50.0,
+            "centerAxisDifferencePx": 0.0,
+            "qc": "與七張核可小頭像及原核定大頭來源並排檢查；主頭冠及兩側飾件完整，雙肩可辨；臉框中線與畫布中線重合。只裁切與等比縮放。",
+            "note": "正式站姿的高冠在參考臉部尺度下無法同時保留頭冠與肩部，改用已整合大頭來源裁切。",
+            "createdAt": "2026-11-20"
           }
         ]
       }
