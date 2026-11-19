@@ -60,6 +60,7 @@ import {
     PREGNANCY_LOCK_SEASONS,
     statOf,
     EP_BASE,
+    epGradeLetter,
 } from '../../core/systems/BreedingSystem';
 import { GENERAL_STATUS_DEAD, RETIREMENT_AGE } from '../../core/systems/GeneralAging';
 
@@ -503,7 +504,7 @@ export class BondingSetupController {
             const synergyHint = isSameBloodline(father, mother) || !factorDetailVisible(stage) ? null : lineageSynergyHint(sharedBlueGenesOf(father, mother, this._deps.factorDictionary?.()).filter((gene) => (gene.discoveryLevel ?? 1) <= level));
             texts.epDetail = ['基礎 50', preview.breakdownLine, preview.tagLine, ...(synergyHint ? [synergyHint] : [])].join(' · ');
         } else {
-            texts.epEstimate = g1EpEstimateText(ep.rating);
+            texts.epEstimate = g1EpEstimateText(ep.rating, epGradeLetter(ep.ep));
             texts.epDetail = G1_EP_DETAIL_MASK;
         }
         texts.conceptionLabel = `受孕率 ${Math.round(conceptionRate(father, mother) * 100)}%`;

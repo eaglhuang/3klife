@@ -36,8 +36,9 @@ export const KIN_TEXT_WARNING = '親緣過近，恐損氣血';
 export const G1_FACTOR_TEXT = '因子：開蒙、加冠時揭曉';
 /** G1 隱藏公式明細，只顯示良緣評語 */
 export const G1_EP_DETAIL_MASK = '良緣初結：僅觀門風鄉評，第一位子嗣開蒙後解鎖詳細血脈與公式';
-export function g1EpEstimateText(rating: string): string {
-    return `良緣評語：${rating}`;
+/** G1 只給評語與爆發力字母等級，具體數字等 G2 公式解鎖後才顯示 */
+export function g1EpEstimateText(rating: string, grade: string): string {
+    return `良緣評語：${rating}（爆發力 ${grade}）`;
 }
 /** 公式明細從 G2（第一位子嗣開蒙後）開始顯示 */
 export function formulaDetailVisible(stage: MilestoneStage): boolean {
