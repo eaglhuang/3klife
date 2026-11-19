@@ -10,7 +10,7 @@ function usage() {
   node tools_node/small-avatar-crop-guide.js compare --out <board.png> <image.png>...
   node tools_node/small-avatar-crop-guide.js crop --input <image.png> --out <crop.png>
        --head x,y,width,height --face x,y,width,height [--extent x,y,width,height]
-       --shoulders leftX,leftY,rightX,rightY [--target 0.86] [--min-head-ratio 0.70]
+       --shoulders leftX,leftY,rightX,rightY [--target 0.75] [--min-head-ratio 0.70]
        [--vertical-shift <source-pixels>] [--size 256] [--guide-out <guide.png>]
 
 Boxes use source-image pixel coordinates. --head spans the cranial hair/helmet mass to chin,
@@ -21,7 +21,7 @@ contour of the left and right shoulder. Each point must sit at least 5% of the c
 side beyond its corresponding face edge; do not mark the neck, hair, collar, or chest
 center as a shoulder. Both points must be visible in the crop for geometry acceptance.
 Target head
-height defaults to 86%, and the default geometric range is 70–90%. Use --min-head-ratio
+height defaults to 75%, and the default geometric range is 70–90%. Use --min-head-ratio
 only when a same-class, user-approved reference measures below 70%; set it to that
 measured reference ratio and retain side-by-side visual review.
 To maximize the head within that standard, keep only 2% clearance above the head and
@@ -136,7 +136,7 @@ function main() {
     const src = readPng(a.input), head = parseBox(a.head, '--head'), face = parseBox(a.face, '--face');
     const extent = a.extent ? parseBox(a.extent, '--extent') : head;
     const shoulders = parseShoulderPoints(a.shoulders);
-    const target = a.target == null ? 0.86 : Number(a.target);
+    const target = a.target == null ? 0.75 : Number(a.target);
     const minHeadRatio = a['min-head-ratio'] == null ? 0.70 : Number(a['min-head-ratio']);
     const verticalShift = a['vertical-shift'] == null ? 0 : Number(a['vertical-shift']);
     const outputSize = a.size == null ? 256 : Number(a.size);
