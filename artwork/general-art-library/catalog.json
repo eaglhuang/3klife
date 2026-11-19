@@ -5754,6 +5754,56 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/deng_zhi__鄧芝__small_avatar_0001.png",
+            "status": "integrated",
+            "sha256": "d81dd1974e474c38e02c0d458d4bc63828ea14222958d43f0efbe16338514ffe",
+            "canvas": "256x256 RGBA",
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/deng_zhi__鄧芝__standing_0002.png",
+            "sourceSha256": "fc67f83e1adecfe6910c57358dc167507cb2ac48c613e0bd1fe0cb8e7075eae8",
+            "sourceCanvas": "1024x1536",
+            "processingCanvas": "512x768",
+            "cropBox": {
+              "x": 321.14,
+              "y": 1.14,
+              "width": 361.7,
+              "height": 361.7
+            },
+            "faceBox": [
+              438,
+              120,
+              566,
+              260
+            ],
+            "headwearExtent": [
+              332,
+              12,
+              632,
+              152
+            ],
+            "shoulderAnchors": [
+              376,
+              320,
+              620,
+              320
+            ],
+            "method": "crop-only; uniform resize from 512x768 processing raster; no redraw",
+            "headHeightPercent": 68.6,
+            "faceHeightPercent": 38.7,
+            "faceWidthPercent": 35.4,
+            "faceCenterXPercent": 50,
+            "centerAxisDifferencePx": 0,
+            "qc": "與七張核可基準並排及單圖檢查通過；方冠帽翼完整留邊、臉框中線置中、雙肩清楚可辨；頭高68.6%、臉高38.7%；只裁切與等比縮放。",
+            "createdAt": "2026-11-20"
+          }
+        ]
       }
     },
     {
