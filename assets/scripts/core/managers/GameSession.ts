@@ -5092,6 +5092,9 @@ export class GameSession {
             season: advance.current.totalSeasonsElapsed,
             dictionary: this._factorDictionary,
         });
+        if (unveil.events.length > 0) {
+            this._raiseMilestone(2);
+        }
         const recovered = recoverVitalityOneSeason(unveil.roster, advance.current.totalSeasonsElapsed - 1,
             monthlyCardVitalityMultiplier(this._monthlyCard, epochMs));
         let roster: GeneralConfig[] = advanceBreedingSeason(holdPregnancyVigor(unveil.roster, recovered)).generals;

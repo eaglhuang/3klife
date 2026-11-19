@@ -29,11 +29,20 @@ const UNLOCK_LINE: Partial<Record<MilestoneStage, string>> = {
 };
 
 /** §H UI_MILESTONE_G1_HINT */
-export const MILESTONE_G1_HINT = '【初創家業】目前僅顯示鄉評風聞與基礎開蒙，待子嗣成材修纂族譜後將解鎖深層血脈資訊。';
+export const MILESTONE_G1_HINT = '【初創家業】目前僅顯示鄉評風聞與基礎開蒙，待首位子嗣開蒙後將解鎖深層血脈資訊。';
 /** M_stage 表：G2 近婚只給這句文字警告 */
 export const KIN_TEXT_WARNING = '親緣過近，恐損氣血';
 /** M_stage 表：G1 隱藏星數，開蒙、加冠時才演出 */
 export const G1_FACTOR_TEXT = '因子：開蒙、加冠時揭曉';
+/** G1 隱藏公式明細，只顯示良緣評語 */
+export const G1_EP_DETAIL_MASK = '良緣初結：僅觀門風鄉評，第一位子嗣開蒙後解鎖詳細血脈與公式';
+export function g1EpEstimateText(rating: string): string {
+    return `良緣評語：${rating}`;
+}
+/** 公式明細從 G2（第一位子嗣開蒙後）開始顯示 */
+export function formulaDetailVisible(stage: MilestoneStage): boolean {
+    return stage >= 2;
+}
 /** G1 只看得到父母兩席 */
 const G1_VISIBLE_SEATS = 2;
 
