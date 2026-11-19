@@ -16,6 +16,8 @@ import {
 import { createChild, type BreedingGeneral } from '../assets/scripts/core/systems/BreedingSystem';
 import { buildFactorDictionary, type FactorDefinition, type FactorDictionary } from '../assets/scripts/core/systems/FactorInheritance';
 import { recommendFate } from '../assets/scripts/core/systems/Unveiling';
+import { resolvePrimaryClass } from '../assets/scripts/core/systems/JobChangeWiring';
+import { buildDs3AptitudeGrades } from '../assets/scripts/ui/components/character-ds3/CharacterDs3AptitudeChild';
 import { createEmptyPedigree } from '../assets/scripts/core/services/BloodlineGraph';
 
 function makeTestDictionary(): FactorDictionary {
@@ -188,27 +190,61 @@ export function createChildAptitudeInheritanceSuite(): TestSuite {
         assert.equals('C', child.troopAptitude?.SIEGE);
     });
 
-    suite.test('recommendChildCareerRole：1★ 文官因子不再蓋過高武力差異', () => {
+    suite.test('recommendFate 與 JobChangeWiring 接線：彭羕之女（高智政帶 1★ 武勇因子）仍判文官 Scholar', () => {
         const dict = makeTestDictionary();
-        const rec = recommendChildCareerRole(
-            { str: 88, lea: 76, int: 42, pol: 40, cha: 55 },
-            [{ id: 'FAC_SOC_1', level: 1, isLocked: false }],
-            dict,
-        );
-        assert.equals('Warrior', rec.fateClass);
-        assert.isTrue(rec.warriorScore > rec.scholarScore);
-        // 且與既有 Unveiling.recommendFate 相容不破壞舊合約
-        const martialChild = makeParent({
-            id: 'c_martial',
-            name: '小武將',
-            str: 88,
-            lea: 76,
-            int: 42,
-            pol: 40,
-            cha: 55,
-            genes: [],
+        const pengYangDaughter = makeParent({
+            id: 'c_peng_daughter',
+            name: '彭羕之女',
+            gender: '女',
+            str: 42,
+            lea: 48,
+            int: 86,
+            pol: 84,
+            cha: 78,
+            genes: [{ id: 'FAC_STR_1', level: 1, isLocked: false }],
         });
-        assert.equals('Warrior', recommendFate(martialChild, dict).recommended);
+        const fate = recommendFate(pengYangDaughter, dict);
+        assert.equals('Scholar', fate.recommended, 'Unveiling.recommendFate 應推薦文官 Scholar');
+        assert.isTrue(fate.civilScore > fate.martialScore);
+        assert.equals('Scholar', resolvePrimaryClass(pengYangDaughter), 'JobChangeWiring 後備比較應一致判為 Scholar');
+    });
+
+    suite.test('兵 ARMY 頁接線：createChild 寫入之適性可直接由 buildDs3AptitudeGrades 讀出非「—」階級', () => {
+        const dict = makeTestDictionary();
+        const father = makeParent({
+            id: 'f_army',
+            name: '名將父',
+            troopAptitude: { CAVALRY: 'S', INFANTRY: 'A', ARCHER: 'B', SIEGE: 'C' },
+            terrainAptitude: { PLAIN: 'A', MOUNTAIN: 'B', WATER: 'C', FOREST: 'B' },
+            weatherAptitude: { SUNNY: 'S', RAIN: 'B', FOG: 'C', NIGHT: 'C' },
+        });
+        const mother = makeParent({
+            id: 'm_army',
+            name: '名門母',
+            gender: '女',
+            troopAptitude: { CAVALRY: 'B', INFANTRY: 'B', ARCHER: 'C', SIEGE: 'C' },
+        });
+        const pedigree = createEmptyPedigree();
+        pedigree.F = father.id;
+        pedigree.M = mother.id;
+
+        const child = createChild({
+            id: 'child_army',
+            father,
+            mother,
+            pedigree,
+            factors: [],
+            ep: { ep: 100, rating: 'B' } as never,
+            birthSeason: 1,
+            dictionary: dict,
+            random: () => 0.4,
+        });
+
+        const uiGrades = buildDs3AptitudeGrades(child);
+        assert.equals('A', uiGrades.Aptitude_CAVALRY_grade);
+        assert.equals('B', uiGrades.Aptitude_INFANTRY_grade);
+        assert.equals('C', uiGrades.Aptitude_ARCHER_grade);
+        assert.equals('C', uiGrades.Aptitude_SIEGE_grade);
     });
 
     suite.test('configureChildAptitudeRules / resetChildAptitudeRules 可安全覆寫與還原', () => {

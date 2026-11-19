@@ -207,17 +207,16 @@ export function createNurtureSuite(): TestSuite {
         assert.isTrue(classifyFactorLeaning(undefined) === null);
     });
 
-    suite.test('宿命建議：因子星等和比大小；打平看五維；全打平給文官', () => {
+    suite.test('宿命建議：五維加權與因子微調比大小；打平看五維；全打平給文官', () => {
         const martial = makeChild('m', { genes: [
             { id: 'gene_bravery', level: 3 }, { id: 'gene_politics', level: 2 },
         ] });
         const r1 = recommendFate(martial, dictionary);
         assert.equals('Warrior', r1.recommended);
-        assert.equals('factors', r1.source);
-        assert.equals(3, r1.martialScore);
-        assert.equals(2, r1.civilScore);
+        assert.equals('stats', r1.source);
+        assert.isTrue(r1.martialScore > r1.civilScore);
 
-        const civil = makeChild('c', { genes: [
+        const civil = makeChild('c', { str: 50, lea: 50, int: 50, pol: 50, cha: 50, genes: [
             { id: 'gene_politics', level: 4 }, { id: 'gene_bravery', level: 3 },
         ] });
         assert.equals('Scholar', recommendFate(civil, dictionary).recommended);
@@ -228,7 +227,7 @@ export function createNurtureSuite(): TestSuite {
         assert.equals('stats', r2.source);
         assert.equals('Warrior', r2.recommended);
         assert.equals('Scholar', recommendFate(makeChild('t2', { str: 40, lea: 40, int: 80, pol: 70 }), dictionary).recommended);
-        assert.equals('Scholar', recommendFate(makeChild('t3', { str: 50, lea: 50, int: 50, pol: 50 }), dictionary).recommended);
+        assert.equals('Scholar', recommendFate(makeChild('t3', { str: 50, lea: 50, int: 50, pol: 50, cha: 50 }), dictionary).recommended);
     });
 
     suite.test('宿命選擇：順應 = 建議職能 ×1.0；逆天 = 反向職能 ×0.8；只能選一次', () => {

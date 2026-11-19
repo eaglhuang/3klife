@@ -135,9 +135,9 @@ export function promoteAptitudeByPinkFactor(grade: string | undefined, steps = 1
     return rankToGrade(nextRank);
 }
 
-const CIVIL_CATEGORIES = new Set(['social', 'attribute-int', 'attribute-pol', 'attribute-cha']);
-const MARTIAL_CATEGORIES = new Set(['attribute-str', 'attribute-lea', 'special']);
-const CIVIL_TAGS = new Set(['權謀', '仁德', '政治', '魅力', '智力', '內政', '外交', '文官']);
+const CIVIL_CATEGORIES = new Set(['social', 'governance', 'attribute-int', 'attribute-pol', 'attribute-cha']);
+const MARTIAL_CATEGORIES = new Set(['attribute', 'leadership', 'weapon-proficiency', 'aptitude', 'mobility', 'terrain', 'attribute-str', 'attribute-lea', 'special']);
+const CIVIL_TAGS = new Set(['權謀', '仁德', '政治', '魅力', '智力', '內政', '外交', '文官', 'politics', 'scheme', 'resource', 'stability']);
 
 function classifyFactorLeaning(def?: FactorDefinition): 'martial' | 'civil' | null {
     if (!def) return null;
@@ -181,7 +181,8 @@ export function recommendChildCareerRole(
     const int = stats?.int ?? 0;
     const lea = stats?.lea ?? 0;
     const pol = stats?.pol ?? 0;
-    const cha = stats?.cha ?? 0;
+    // 未提供 cha（例如純四維測試資料）時，以智政平均推估，維持武/文總權重 2.0 對稱打平
+    const cha = stats?.cha ?? ((int + pol) / 2);
 
     const cfg = _rules.careerRecommendation;
     const warriorScore = Number((cfg.warriorWeights.str * str + cfg.warriorWeights.lea * lea + cfg.factorWeightPerLevel * martialFactorLevels).toFixed(2));
