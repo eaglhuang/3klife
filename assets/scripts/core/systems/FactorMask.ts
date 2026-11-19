@@ -27,8 +27,11 @@ export interface FactorMaskView {
     label: string;
 }
 
-/** 因子的發現門檻：與 FactorVisibility 共用同一條規則（PROG-2-0513），不在這裡重複判斷 */
+/** 因子的發現門檻：與 FactorVisibility 共用同一條規則（PROG-2-0513）；生平凝練白因子一律立即可見（PROG-2-9168） */
 export function factorRequiredLevel(gene: GeneralGeneConfig): number {
+    if (gene.id && (gene.id.startsWith('gene_white_') || gene.id.startsWith('imprint_'))) {
+        return 0;
+    }
     return requiredDiscoveryLevel(gene);
 }
 

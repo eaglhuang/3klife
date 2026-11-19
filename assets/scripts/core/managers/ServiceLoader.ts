@@ -46,6 +46,9 @@ import { ITEM_FERTILITY_ARMED } from "../systems/PlayerInventory";
 import { UCUFLogger, LogCategory } from "../utils/UCUFLogger";
 import { normalizeVfxEffectTable } from "../config/VfxEffectConfig";
 import { normalizeSeasonModifiers, seasonModifiersOf, setActiveSeasonModifiers } from "../systems/SeasonModifiers";
+import { CHILD_APTITUDE_RULES_JSON, configureChildAptitudeRules, type ChildAptitudeRulesConfig } from "../systems/ChildAptitudeInheritance";
+import { configureFamilyCompatibilityRules, FAMILY_COMPATIBILITY_RULES_JSON, type FamilyCompatibilityRulesConfig } from "../systems/FamilyCompatibility";
+import { configureWhiteFactorAchievements, WHITE_FACTOR_ACHIEVEMENTS_JSON, type WhiteFactorAchievementsConfig } from "../systems/WhiteFactorTraits";
 
 export class ServiceLoader {
     private static instance: ServiceLoader | null = null;
@@ -112,7 +115,9 @@ export class ServiceLoader {
         onBreedPerformed: () => this.session.clearFertilityArm(),
         clanPrestigeTier: () => this.session.clanPrestigeTier,
         relationLedger: this.session.relationEvents,
+        getFamilySynergy: () => this.session.familySynergy,
     });
+    private bloodlineRulesLoaded = false;
     /** 退役教官卡 / 英靈卡來源；init() 之後才有（共用存檔後端）。培育畫面用它挑教官 */
     public legacy: LegacyService | null = null;
     public readonly ui = new UIManager();
@@ -310,7 +315,27 @@ export class ServiceLoader {
      * 結緣畫面開啟前呼叫：載入因子字典與 person-registry.json，再把名冊裡已出生的子嗣補回血統圖。
      * 讀檔時已由 session 的讀檔後處理補過一次；這裡再同步是給新局（沒有讀檔）的初代武將補虛擬祖先，重複呼叫不會重複登記。
      */
+    /** 載入血統規則資料表（適性繼承、門風契合 K、生平閱歷白因子，PROG-2-9168）；單表失敗時退回預設值 */
+    public async loadBloodlineRuleTables(force = false): Promise<void> {
+        if (this.bloodlineRulesLoaded && !force) return;
+        const loadSafe = async <T>(path: string, apply: (raw: T) => void): Promise<void> => {
+            try {
+                const raw = await this.resource.loadJson<T>(path);
+                if (raw) apply(raw);
+            } catch (e) {
+                UCUFLogger.warn(LogCategory.DATA, `[ServiceLoader] ${path}.json 載入失敗，退回內建預設:`, e);
+            }
+        };
+        await Promise.all([
+            loadSafe<Partial<ChildAptitudeRulesConfig>>(CHILD_APTITUDE_RULES_JSON, configureChildAptitudeRules),
+            loadSafe<Partial<FamilyCompatibilityRulesConfig>>(FAMILY_COMPATIBILITY_RULES_JSON, configureFamilyCompatibilityRules),
+            loadSafe<Partial<WhiteFactorAchievementsConfig>>(WHITE_FACTOR_ACHIEVEMENTS_JSON, configureWhiteFactorAchievements),
+        ]);
+        this.bloodlineRulesLoaded = true;
+    }
+
     public async prepareBreeding(): Promise<void> {
+        await this.loadBloodlineRuleTables();
         if (!this.factorDictionary) {
             await this.loadFactorDictionary();
         }
