@@ -231,6 +231,33 @@
             "styleSlot": "bonding.label.body"
           },
           {
+            "type": "button",
+            "name": "BtnGoBeautyGacha",
+            "id": "btnGoBeautyGacha",
+            "widget": {
+              "top": 300,
+              "hCenter": true
+            },
+            "width": 280,
+            "height": 52,
+            "skinSlot": "bonding.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnGoBeautyGachaLabel",
+                "id": "btnGoBeautyGachaLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 40,
+                "text": "前往【紅顏天香】延攬",
+                "styleSlot": "bonding.label.button"
+              }
+            ]
+          },
+          {
             "type": "container",
             "name": "BondPanel",
             "id": "bondPanel",

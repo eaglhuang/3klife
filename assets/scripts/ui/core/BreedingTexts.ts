@@ -17,6 +17,10 @@ export const BREED_TEXT_FALLBACK_ZH_TW: Readonly<Record<string, string>> = {
     'ui.breed.unveil_5': '天命開獎！{0} 五維資質揭曉：',
     'ui.breed.daqi': '名士嘆：此子潛龍在淵，天機不可洩漏。',
     'ui.breed.ep_display': '預估爆發力：{0}（{1}）',
+    'ui.breed.no_mother_hint': '目前沒有可結緣的女將～ 前往【紅顏天香】延攬新夥伴吧！',
+    'ui.breed.no_father_hint': '目前還沒有年滿 {0} 歲的男將～ 先推進幾季讓少主長大吧！',
+    'ui.breed.preg_wait_hint': '{0}（母方待產中），還要 {1} 季才能再結緣～ 可先到【紅顏天香】再延攬新紅顏！',
+    'ui.breed.go_beauty_gacha': '前往【紅顏天香】延攬',
 };
 
 /**
