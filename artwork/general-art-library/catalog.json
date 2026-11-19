@@ -2861,28 +2861,52 @@
         ]
       },
       "smallAvatar": {
-        "status": "review-pending",
+        "activeVersion": "0002",
+        "status": "integrated",
         "history": [
           {
-            "version": "0001",
-            "file": "small_avatars/xiahou_yuan__夏侯淵__small_avatar_0001.png",
-            "status": "review-pending",
-            "sha256": "46169018f3147df160d1aeffb8389af449941e5985452d4e30a3927d4fed9d71",
+            "version": "0002",
+            "file": "small_avatars/xiahou_yuan__夏侯淵__small_avatar_0002.png",
+            "status": "integrated",
+            "sha256": "d4130001983e1af9315425efd5fe8c3d764f3d997e4b591c4cea951b65527f01",
             "canvas": "256x256 RGBA",
-            "method": "crop-only; uniform resize; no redraw",
             "sourceAvatarVersion": "0002",
             "sourceAvatarFile": "avatars/xiahou_yuan__夏侯淵__avatar_0002.png",
+            "sourceSha256": "ba4c17e839d600fc3fa696fe361c0c45c03948430cd41d0fd590a72656bb4145",
             "cropBox": {
-              "x": 70.02,
-              "y": 36.52,
-              "width": 145.97,
-              "height": 145.97
+              "x": 59.351,
+              "y": 0.805,
+              "width": 173.299,
+              "height": 173.299
             },
-            "qc": "大喬基準比例；臉高43.2%、臉寬34.3%、水平置中；目視確認雙肩可見。",
+            "faceBox": [
+              116,
+              56,
+              176,
+              130
+            ],
+            "headwearExtent": [
+              75,
+              8,
+              222,
+              130
+            ],
+            "shoulderAnchors": [
+              80,
+              150,
+              218,
+              150
+            ],
+            "method": "crop-only; uniform resize; no redraw",
+            "headHeightPercent": 70.4,
+            "faceHeightPercent": 42.7,
+            "faceWidthPercent": 34.6,
+            "faceCenterXPercent": 50.0,
+            "centerAxisDifferencePx": 0.0,
+            "qc": "與七張核准小頭像並排比較：頭髮與額帶完整，臉部置中且大小接近參考，兩側肩部／衣料可辨；裁切並等比縮放，未重繪。",
             "createdAt": "2026-11-20"
           }
-        ],
-        "activeVersion": "0001"
+        ]
       }
     },
     {
