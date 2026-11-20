@@ -22,7 +22,10 @@ export function createLobbyMountGuardSuite(): TestSuite {
         const completeIdx = src.indexOf('SceneLoadProgress.complete();');
         assert.isTrue(src.indexOf('void this._runDeferredMounts();') > completeIdx, '背景掛載要在載入遮罩收起之後才開始');
         const run = src.slice(src.indexOf('private async _runDeferredMounts'), src.indexOf('private async _setupRivalOfficers'));
-        assert.isTrue(/try \{\s*await mounts\[index\]\(\);\s*\} catch/.test(run), '背景掛載要逐項 try/catch');
+        // 逐項防護改由排程器負責（PROG-2-9196）：runAll 內逐項 try/catch，失敗交 onError 記錄
+        assert.isTrue(/scheduler\.runAll\(\(id, error\) => \{[\s\S]*UCUFLogger\.error/.test(run), '背景掛載失敗要記錄錯誤');
+        const sched = fs.readFileSync(path.join(__dirname, '../assets/scripts/ui/core/LobbyMountScheduler.ts'), 'utf-8');
+        assert.isTrue(/try \{\s*await this\._start\(entry\);\s*\} catch/.test(sched), '排程器要逐項 try/catch');
     });
     return suite;
 }

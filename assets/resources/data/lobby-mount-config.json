@@ -1,0 +1,9 @@
+{
+  "_comment": "PROG-2-9196 大廳背景面板排程設定。hotIds 先建（底欄常用）；其餘等玩家閒置 inputPauseMs 且上一幀小於 startWhenFrameMsBelow 才建，兩項間隔 gapBetweenMountsMs，最久等 maxDeferMs。showBackgroundProgress=false 預載期間不顯示進度條（不遮右下角信箱）。",
+  "hotIds": ["DeckSelect", "LeadSelect", "SortieSetup", "CharacterDs3Host", "Domestic"],
+  "inputPauseMs": 1200,
+  "gapBetweenMountsMs": 250,
+  "startWhenFrameMsBelow": 24,
+  "maxDeferMs": 6000,
+  "showBackgroundProgress": false
+}
