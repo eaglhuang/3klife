@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 42,
-    "in_progress": 3,
-    "open": 84,
-    "total": 129
+    "done": 176,
+    "in_progress": 5,
+    "open": 85,
+    "total": 266
   },
   "tasks": [
     {
@@ -11132,6 +11132,50 @@
       "acceptance": [],
       "deliverables": [],
       "notes": "2026-11-20 | 狀態: done | 驗證: 單元 8622 全過、tsc 0、模擬 4000 場×策略：中高智力剋制兵對上同路由約 20% 升到約 84%（低智力維持盲出）、7456 實機呂布（MEDIUM／騎兵衝鋒）對我方第 5 路盾兵：改前騎兵出中央第 3 路錯開，改後出第 5 路正面相對，證據 artifacts/playtest-checklist/prog-2-9428 | 變更: 新增 pickCounterLane，EnemyAI 中高智力剋制兵優先派到被剋兵種所在空線；規格 §3.3 補規則 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9213",
+      "title": "一年循環 MVP 切分（doc_spec_1182 第 12 章）與學府人源缺口方案（doc_spec_1179）",
+      "owner": "ClaudeCode_sonnet-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "2026-11-21T00:52:21+08:00",
+      "started_by_agent": "codex-gpt-5.4-mini",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
