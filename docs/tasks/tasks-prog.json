@@ -11153,6 +11153,54 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9429",
+      "title": "守城張力：敵方工兵每回合投石扣城寨 15、來攻主將駐守本陣、每回合補派 1 隊工兵到我方最少的路",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-21T00:40:07+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 11/21 裁決守城三題（經總PM）：Q1 A 工兵活著就遠程投石扣城寨每回合 15，一檔開局 3 隊、二三檔遞增，數值放 JSON；Q2 A 來攻主將留在後方本陣不前進，玩家仍可打過去擊殺提早獲勝；Q3 敵方每回合補派最多 1 隊工兵，派到我方兵最少的路。一般關卡城寨先不動。完成附三檔模擬數據與截圖。另補 doc_spec_0376 §3 結算演出時序（總PM 裁定 9427 停頓 1.3 秒不違規）。",
+      "related": [
+        "PROG-2-9425",
+        "PROG-2-9426",
+        "PROG-2-9427"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8627 全過、tsc 0、7456 實跑三檔截圖、三檔模擬 | 變更: 工兵投石每隊 15（JSON）、守城敵將不前進、每回合補派 1 隊工兵到我方最少的路、一二三檔開局 3/4/5 工兵、doc_spec_0376 §3 補結算演出時序 | 阻塞: 無；另發現 HUD 沒有我方城寨血條，只有戰報文字，待總PM 裁定",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
