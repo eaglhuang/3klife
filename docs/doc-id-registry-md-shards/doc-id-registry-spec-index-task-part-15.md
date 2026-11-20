@@ -89,7 +89,8 @@
 | `doc_task_2679` | docs/agent-briefs/tasks/PROG/PROG-2-9210.md | PROG-2-9210：學府規格追加共用框架依賴章與實作卡拆分建議 |
 | `doc_task_2680` | docs/agent-briefs/tasks/PROG/PROG-2-9213.md | [PROG-2-9213] 一年循環 MVP 切分（doc_spec_1182 第 12 章）與學府人源缺口方案（doc_spec_1179 第 12 章） |
 | `doc_task_2681` | docs/agent-briefs/tasks/PROG/PROG-2-9428.md | [PROG-2-9428] AI 剋制兵種派到被剋兵種那一路 |
-| `doc_task_2682` | docs/agent-briefs/tasks/PROG/PROG-2-9196.md | [PROG-2-9196] 大廳背景預載動態加載優化（分幀限時、按需建構、不遮信箱、換場取消） |
-| `doc_task_2683` | docs/agent-briefs/tasks/PROG/PROG-2-9201.md | [PROG-2-9201] B0：共通 API 層＋本機伺服器 adapter＋存檔走 API＋防繞過自動檢查 |
-| `doc_task_2684` | docs/agent-briefs/tasks/PROG/PROG-2-9429.md | [PROG-2-9429] 守城張力：工兵投石、主將駐守、每回合補派工兵 |
-| `doc_task_2685` | docs/agent-briefs/tasks/PROG/PROG-2-9430.md | [PROG-2-9430] 守城戰我方城寨血條＋年終守城正式規格書 |
+| `doc_task_2682` | docs/agent-briefs/tasks/PROG/PROG-2-9212.md | [PROG-2-9212] 清除過時規格（5 歲抓周入學、待產 3/4 季、舊培育、首子加速、4 歲幼苗）並補首子與少年名將開場流程規格 |
+| `doc_task_2683` | docs/agent-briefs/tasks/PROG/PROG-2-9196.md | [PROG-2-9196] 大廳背景預載動態加載優化（分幀限時、按需建構、不遮信箱、換場取消） |
+| `doc_task_2684` | docs/agent-briefs/tasks/PROG/PROG-2-9201.md | [PROG-2-9201] B0：共通 API 層＋本機伺服器 adapter＋存檔走 API＋防繞過自動檢查 |
+| `doc_task_2685` | docs/agent-briefs/tasks/PROG/PROG-2-9429.md | [PROG-2-9429] 守城張力：工兵投石、主將駐守、每回合補派工兵 |
+| `doc_task_2686` | docs/agent-briefs/tasks/PROG/PROG-2-9430.md | [PROG-2-9430] 守城戰我方城寨血條＋年終守城正式規格書 |

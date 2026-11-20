@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "source": "../首子誕生與少年名將開場流程規格書.md",
+  "indexTitle": "首子誕生與少年名將開場流程規格書（分片索引）",
+  "indexPath": "docs/遊戲規格文件/系統規格書/首子誕生與少年名將開場流程規格書.md",
+  "type": "markdown-h2",
+  "preambleShard": "shard-a",
+  "defaultShard": "shard-b",
+  "shards": [
+    {
+      "name": "shard-a",
+      "title": "0–4 結論、開場總順序、少年名將挑選、首子與貂蟬結緣的關係、首子流程時間點",
+      "pattern": "^(0|1|2|3|4)[.] "
+    },
+    {
+      "name": "shard-b",
+      "title": "5–10 取名與綽號、出生禮（共用框架對應）、周歲抓周、存檔與 API、驗收、衝突與待決",
+      "pattern": "^(5|6|7|8|9|10)[.] "
+    }
+  ]
+}

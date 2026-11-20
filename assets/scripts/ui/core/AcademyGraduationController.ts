@@ -31,6 +31,10 @@ export class AcademyGraduationController<H extends MentorHoldingsHostLike> {
         this.setOpen(false);
     }
 
+    public get host(): H | null {
+        return this._host;
+    }
+
     public setOpen(open: boolean): void {
         if (this._host) this._host.node.active = open;
     }

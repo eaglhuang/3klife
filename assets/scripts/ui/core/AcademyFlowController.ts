@@ -116,7 +116,7 @@ export interface AcademyFlowDeps<H extends AcademyHostLike> {
     onChanged?(): void;
     /** PROG-2-9190 接手打斷點彈窗；回傳 true 表示已接手 */
     openInterrupt?(snapshot: Readonly<AcademyStateSnapshot>): boolean;
-    /** PROG-2-9191 接手結業結算 */
+    /** 結業結算（PROG-2-9211 暫行，PROG-2-9191 取代）：LobbyScene 接 showAcademyGraduation */
     onGraduated?(snapshot: Readonly<AcademyStateSnapshot>): void;
 }
 
@@ -530,6 +530,18 @@ export class AcademyFlowController<H extends AcademyHostLike> {
         if (!snap) return;
         if (this._mode === 'graduated') this._deps.onGraduated?.(snap);
         else this._notifyInterrupt();
+    }
+
+    /**
+     * 補結業（PROG-2-9211）：紀錄已是 graduated 卻沒結算（舊存檔、或結業彈窗前就關掉遊戲）時，
+     * 重新交給 onGraduated 結算。沒有這種紀錄回傳 false。
+     */
+    public settlePendingGraduation(): boolean {
+        const snap = this._snapshot();
+        if (!snap || !snap.graduated) return false;
+        this._mode = 'graduated';
+        this._deps.onGraduated?.(snap);
+        return true;
     }
 
     /** 結算畫面的「確認」：確認紀錄後回到可操作狀態；已結業則關閉修業畫面 */

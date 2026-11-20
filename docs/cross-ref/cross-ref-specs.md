@@ -74,7 +74,7 @@
 | doc_spec_0041 |—|doc_spec_0010、doc_spec_0038、doc_data_0001|
 | doc_spec_0038 |doc_spec_0041、doc_spec_0039（格子戰法定義）、doc_spec_0016、doc_ui_0012、doc_ui_0001、doc_spec_0040|doc_spec_0010、doc_spec_0026、doc_spec_0027、doc_spec_0016|
 | doc_spec_0019 |doc_spec_0040|doc_spec_0042|
-| doc_spec_1233（年終守城戰） |—|doc_spec_0049、doc_spec_0376、doc_spec_0525、doc_spec_1182、doc_spec_1184、doc_spec_1186|
+| doc_spec_1236（年終守城戰） |—|doc_spec_0049、doc_spec_0376、doc_spec_0525、doc_spec_1182、doc_spec_1184、doc_spec_1186|
 | doc_data_0002 |—|doc_data_0001、doc_spec_0040|
 | doc_spec_0007 |doc_spec_0002、doc_ui_0027|doc_spec_0040、doc_spec_0044、doc_spec_0012、doc_spec_0041、doc_spec_0032|
 | doc_spec_0020 |doc_spec_0002、doc_spec_0039|doc_spec_0032、doc_spec_0037、doc_spec_0014、doc_spec_0022、doc_spec_0018|
@@ -239,3 +239,11 @@
 | HTTPS 強制與 PII 遮蔽 | doc_spec_0683 | doc_spec_1182 5.11 |
 | 官職權限快照 API | doc_spec_0591 | 權限檢查範例 |
 | SYNC-06 補丁白名單（server/schema/sync06-patch-whitelist.ts） | 見 PROG-2-1396 | doc_spec_1182 5.7（clientOwned／critical 拆分） |
+
+### 首子與開場流程（PROG-2-9212）
+
+| doc_id | 規格書 | 說明 |
+|---|---|---|
+| doc_spec_1233 | 首子誕生與少年名將開場流程規格書.md | 開場總順序、少年名將三選一、首子與貂蟬結緣關係、取名、出生禮、周歲抓周、存檔與 API（上游：doc_spec_1180、1172、0470、0031、0618、1182；已回寫註記：0031、0470、0618、0003、1180 shard-b） |
+
+> 「依 11/20 裁決修訂」清掃（PROG-2-9212）：doc_spec_1168、0308、1130、1172、0182、0580、0033、0260、1181（shard-e／i）。
