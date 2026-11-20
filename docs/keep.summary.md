@@ -92,6 +92,7 @@
 - 六份系統規格書：商店 doc_spec_1183、庫存 doc_spec_1184、任務 doc_spec_1185、獎勵 doc_spec_1186、技能 doc_spec_1187、劇情（演出）doc_spec_1188；各書第 11 章為伺服器 API。
 - 新增框架判準：兩處以上出現類似功能就提案（總綱第 3 章、第 11 章候選）。實作卡第一張一律是 API 層（總綱第 9 章）。
 - 雙向索引：`docs/cross-ref/cross-ref-specs.md`「共用 base 框架」節（規格↔規格）、`docs/cross-ref/cross-ref-code.md` B-2（框架↔程式檔）。
+- 一年循環 MVP（PROG-2-9213）：總綱第 12 章（`共用框架總綱規格書-shards/shard-e.md`）切出「玩滿第 1 年＋第 2 年學府」最小框架子集與重排實作卡清單，商店與季結算管線延後；執行細節題已分流為企劃建議自決。學府人源缺口方案與待決題 Q13 見 `學府修業畫面與接線設計-shards/shard-g.md`（第 12 章）。
 
 ## §M. keep-memory 記憶索引
 > 事實粒度記憶筆記層（沉澱層）。契約見 `docs/keep-memory/README.md (doc_index_keep_memory)`；本段由 memory-manager rebuild-index 維護，預算 30 行。

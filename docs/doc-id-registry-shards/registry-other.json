@@ -11890,5 +11890,11 @@
     "path": "docs/web-playtest-online.md",
     "title": "線上試玩版無頭實玩驗收（playtest-online）",
     "category": "other"
+  },
+  {
+    "id": "doc_other_2713",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-15.md",
+    "title": "Doc ID Registry Markdown Index — Spec / Index / Task",
+    "category": "other"
   }
 ]

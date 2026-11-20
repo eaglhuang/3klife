@@ -5,7 +5,7 @@
   "indexPath": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計.md",
   "type": "markdown-h2",
   "preambleShard": "shard-a",
-  "defaultShard": "shard-f",
+  "defaultShard": "shard-g",
   "shards": [
     {
       "name": "shard-a",
@@ -35,6 +35,11 @@
     {
       "name": "shard-f",
       "title": "10–11 學府實作卡拆分建議、待決選擇題",
+      "pattern": "^1[0-1][.] "
+    },
+    {
+      "name": "shard-g",
+      "title": "12 學府人源缺口方案（待決選擇題 Q13）",
       "pattern": "."
     }
   ]
