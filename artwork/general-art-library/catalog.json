@@ -6761,8 +6761,8 @@
           {
             "version": "0002",
             "file": "small_avatars/gao_gan__高幹__small_avatar_0002.png",
-            "status": "superseded",,
-            "note": "臉框中線未對準；由0003修正版取代。"
+            "status": "superseded",
+            "note": "臉框中線未對準；由0003修正版取代。",
             "sha256": "e06ba43f5a047b41114227876711b8e51c4dea61ec73e34eb8c2a3c8aedea998",
             "canvas": "256x256 RGBA",
             "sourceAvatarVersion": "0002",
