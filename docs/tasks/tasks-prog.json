@@ -10816,6 +10816,54 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9422",
+      "title": "高倍率攻擊視覺提示：≥2 倍金字、≥4 倍紅字＋脈動光環（Q-C1 選 A）",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T12:05:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "Q-C1：地格「攻擊×N」buff 乘算疊加，單一單位可能一擊秒殺主將。使用者 11/20 裁決維持乘算、不改疊加規則；總PM 裁決加視覺提示選 A：攻擊倍率 ≥2 倍時頭頂攻擊數字變金，≥4 倍變紅並加慢速脈動光環，敵我都適用，門檻抽 JSON。讓玩家一眼看出哪個單位已經疊到危險倍率，可以提前應對。",
+      "related": [
+        "PROG-2-1870",
+        "PROG-2-9411",
+        "PROG-2-9420"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: in-progress | 驗證: pending | 變更: 待做 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
