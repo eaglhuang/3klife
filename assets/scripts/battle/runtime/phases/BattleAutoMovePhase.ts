@@ -85,6 +85,10 @@ function stepMoveUnit(
   if (svc.buff.hasBuff(unit.id, StatusEffect.Rooted)) {
     return;
   }
+  // 守城戰來攻主將駐守後方本陣不前進（PROG-2-9429）；玩家仍可打過去擊殺
+  if (context.state.siegeDefender === Faction.Player && unit.faction === Faction.Enemy && context.isGeneralUnit(unit.id)) {
+    return;
+  }
 
   const dir = FORWARD_DIR[unit.faction];
   const slowPenalty = svc.buff.hasBuff(unit.id, StatusEffect.Slow) ? 1 : 0;
