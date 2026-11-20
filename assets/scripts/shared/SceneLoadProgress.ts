@@ -51,8 +51,10 @@ export const SCENE_LOAD_PROGRESS_CSS = `
 #scene-load-progress[data-mode="failed"] .slp-fill{width:100%;background:#8A2A1E;box-shadow:none}
 #scene-load-progress button{pointer-events:auto;align-self:center;margin-top:2px;padding:4px 18px;font:inherit;
   color:#2D1E00;background:linear-gradient(180deg,#FFE088,#D4AF37);border:1px solid #FFF3C4;border-radius:3px;cursor:pointer}
-#scene-load-progress[data-compact="1"]{left:auto;right:12px;bottom:12px;transform:none;width:200px;
-  padding:4px 8px 6px;gap:4px;font-size:11px;letter-spacing:1px;opacity:.8}
+/* 角落小條（PROG-2-9196）：只剩 3px 細線貼在左下角，不放文字；右下角留給信箱，且整條不接收點擊 */
+#scene-load-progress[data-compact="1"]{left:8px;right:auto;bottom:4px;transform:none;width:160px;
+  padding:0;gap:0;background:none;border:0;box-shadow:none;opacity:.7;pointer-events:none}
+#scene-load-progress[data-compact="1"] .slp-label{display:none}
 #scene-load-progress[data-compact="1"] .slp-track{height:3px}
 @keyframes slp-sweep{to{left:100%}}
 @keyframes slp-flow{0%{left:-32%}100%{left:100%}}

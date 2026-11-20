@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 42,
-    "in_progress": 3,
-    "open": 84,
-    "total": 129
+    "done": 176,
+    "in_progress": 5,
+    "open": 85,
+    "total": 266
   },
   "tasks": [
     {
@@ -11060,6 +11060,50 @@
     },
     {
       "doc_id": "",
+      "id": "PROG-2-9196",
+      "title": "大廳背景預載動態加載優化（分幀限時、按需建構、不遮信箱、換場取消）",
+      "owner": "claude-code-sonnet-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0 錯、單元測試通過、compute-gate 通過、playtest 11/11 | 變更: 大廳背景面板動態加載、不遮信箱、換場景取消 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
       "id": "PROG-2-9427",
       "title": "勝敗結算演出打磨：分出勝負先打勝利／敗北橫幅停一拍再開結算窗、結算窗卡片彈入、主將頭像預載不閃問號",
       "owner": "claude-code-fable-5-2",
@@ -11180,6 +11224,58 @@
       "acceptance": [],
       "deliverables": [],
       "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8627 全過、tsc 0、7456 實跑三檔截圖、三檔模擬 | 變更: 工兵投石每隊 15（JSON）、守城敵將不前進、每回合補派 1 隊工兵到我方最少的路、一二三檔開局 3/4/5 工兵、doc_spec_0376 §3 補結算演出時序 | 阻塞: 無；另發現 HUD 沒有我方城寨血條，只有戰報文字，待總PM 裁定",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9213",
+      "title": "一年循環 MVP 切分（doc_spec_1182 第 12 章）與學府人源缺口方案（doc_spec_1179）",
+      "owner": "ClaudeCode_sonnet-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-sonnet-5-5",
+      "started_at": "2026-11-21T00:52:21+08:00",
+      "started_by_agent": "ClaudeCode_sonnet-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "一年循環 MVP 切分（1182 第 12 章）與學府人源缺口方案（1179 第 12 章）；只寫建議不開卡",
+      "related": [
+        "PROG-2-9190",
+        "PROG-2-9191",
+        "PROG-2-9192",
+        "PROG-2-9189"
+      ],
+      "depends": [
+        "PROG-2-9200",
+        "PROG-2-9210"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: compute-gate standard 12/13 通過（1 警告為既有項）；shard-manager validate 通過；僅文件，未改程式 | 變更: doc_spec_1182 新增第 12 章（一年循環 MVP 切分、重排實作卡 0～10、待決題分流與 MVP-Q1、Q2），總綱拆為 5 分片；doc_spec_1179 新增第 12 章（shard-g，學府人源 4 方案、推薦 A 少年名將持續來投、待決 Q13）；doc-id 登錄新增 1225～1232；keep.summary 加一行 | 阻塞: Q2、Q-B、MVP-Q1、MVP-Q2、Q13 待使用者裁決",
       "brief": {
         "style": "classic",
         "label": "",

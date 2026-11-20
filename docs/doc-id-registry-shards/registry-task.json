@@ -15964,5 +15964,23 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9427.md",
     "title": "[PROG-2-9427] 勝敗結算演出打磨：勝敗橫幅停一拍、結算窗彈入、頭像預載",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2679",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9210.md",
+    "title": "PROG-2-9210：學府規格追加共用框架依賴章與實作卡拆分建議",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2680",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9213.md",
+    "title": "[PROG-2-9213] 一年循環 MVP 切分（doc_spec_1182 第 12 章）與學府人源缺口方案（doc_spec_1179）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2681",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9428.md",
+    "title": "[PROG-2-9428] AI 剋制兵種派到被剋兵種那一路",
+    "category": "task"
   }
 ]

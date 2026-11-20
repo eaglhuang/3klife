@@ -1,4 +1,5 @@
 import { SceneLoadProgress, sceneLoadState } from '../../shared/SceneLoadProgress';
+import { LobbyMountScheduler, normalizeLobbyMountConfig, type LobbyMountConfig, type LobbyMountEntry, type LobbyMountEnv } from '../core/LobbyMountScheduler';
 import { presentLobbyLead } from '../core/LobbyLeadPresentation';
 // @spec-source → 見 docs/cross-reference-index.md
 import { openingLetterBodyWithFunLine } from '../../core/systems/FunLineLibrary';
@@ -288,6 +289,16 @@ const { ccclass } = _decorator;
 /** 開場走完、大廳還在掛載時的整備提示（PROG-2-2223） */
 const LOBBY_LOADING_HINT_TEXT = '幕府大堂整備中，請稍候……';
 const LOBBY_BACKGROUND_LOAD_PHASE = '背景載入其餘介面';
+/** 直接開面板的入口 → 背景排程項目 id（PROG-2-9196）：入口被呼叫時若該面板還沒建好，先補建再開 */
+const LOBBY_OPENER_MOUNT_IDS: ReadonlyArray<readonly [string, string]> = [
+    ['_openClanShrine', 'ClanShrine'], ['_openSeasonPass', 'SeasonPass'], ['_openWarehouse', 'Warehouse'],
+    ['_openJournalHub', 'JournalHub'], ['_openBattleReview', 'BattleReview'], ['_openTournament', 'Tournament'],
+    ['_openWishAltar', 'WishAltar'], ['_openExtremeTask', 'ExtremeTask'], ['_openRelationGraph', 'RelationGraph'],
+    ['_openJobChange', 'JobChange'], ['_openRecruitHall', 'RecruitHall'], ['_openRivalDiplomacy', 'RivalDiplomacy'],
+    ['_openDomestic', 'Domestic'], ['_openBondingSetup', 'BondingSetup'], ['_openDestinyShop', 'DestinyShop'],
+    ['_openRetireReview', 'RetireReview'], ['_openUltimateCodex', 'UltimateCodex'], ['_openSpiritCodex', 'SpiritCodex'],
+    ['_openSageOracle', 'SageOracle'], ['_openSortieSetup', 'SortieSetup'], ['_openEliteTroopCodex', 'EliteTroopCodex'], ['_openAcademyFlow', 'AcademyFlow'],
+];
 const LOBBY_LOADING_HINT_FONT_SIZE = 36;
 const LOBBY_LOADING_HINT_SIZE = { width: 900, height: 80 };
 
@@ -750,7 +761,12 @@ export class LobbyScene extends Component {
     private _lastGachaTapMs = 0;
     private _ready = false;
     /** 大廳出現後才背景掛載的面板（PROG-2-9040） */
-    private _deferredMounts: Array<() => Promise<void>> = [];
+    private _deferredMounts: LobbyMountEntry[] = [];
+    /** 背景面板排程器（PROG-2-9196）：換場景時 cancel，點到未建好的介面時 demand */
+    private _mountScheduler: LobbyMountScheduler | null = null;
+    /** 玩家最後一次操作時間（毫秒，performance.now 時間軸），排程器用來判斷閒置 */
+    private _lastInputAt = 0;
+    private _mountInputTouch: (() => void) | null = null;
     /** 回大廳不重建：去戰鬥前停放已掛的介面（Issue #2120） */
     private readonly _retention = new LobbyScreenRetention(() => services().i18n.currentLocale);
     private _offBeforeSwitch: (() => void) | null = null;
@@ -770,7 +786,7 @@ export class LobbyScene extends Component {
         installAdaptiveResolution();
         // 讀存檔前先備妥服務（存檔後端、名冊、生命週期）；否則 load() 因未設定存檔服務而失敗，每次重開都被當成新玩家
         services().initialize(this.node);
-        this._offBeforeSwitch = services().scene.onBeforeSwitch((target) => this._retention.onBeforeSwitch(target));
+        this._offBeforeSwitch = services().scene.onBeforeSwitch((target) => { this._cancelMountScheduler(); this._retention.onBeforeSwitch(target); });
         input.on(Input.EventType.KEY_UP, this._onEscapeKeyUp, this);
         void this._loadLimitedPoolSchedule();
         // 為 LobbyScene 大背板生成穩定的組件背景
@@ -791,12 +807,14 @@ export class LobbyScene extends Component {
         this._ensureWidget(detailNode);
 
         this._isNewPlayer = !(await this._loadPlayerSave());
+        if (!this.node?.isValid) return; // PROG-2-9196: scene already destroyed (switched away), stop quietly
         // 開場優先（PROG-2-2223）：新玩家或讀檔接回開場時先掛開場面板、立刻顯示旁白，其餘面板之後再掛；
         // 後掛的面板一律放在最上層，所以每掛一個就把開場面板拉回最上層。舊玩家照原順序。
         const openingFirst = shouldMountOpeningFirst(this._isNewPlayer, services().session.openingPhase);
         if (openingFirst) {
             void this._loadGenerals().catch(() => undefined);
             await this._mountOpeningPanels();
+            if (!this.node?.isValid) return;
         }
         const mounts: Array<() => Promise<void>> = [
             () => this._mountLobbyMainHub(),
@@ -826,51 +844,51 @@ export class LobbyScene extends Component {
         this._deferredMounts = [
             // 點開才用的選將／出陣／人物介紹／圖鑑類（PROG-2-9046）：排最前面，大廳出現後最先補齊；
             // UIManager 控制器掛好才註冊，註冊前被點到時 open 回傳 false，不會當機
-            () => this._mountRankUnlockPopup(),
-            () => this._mountDeckSelect(),
-            () => this._mountLeadSelect(),
-            () => this._mountSortieSetup(),
-            () => this._mountCharacterDs3Host(),
-            async () => { await this._mountEliteTroopCodexPanel(); services().ui.register(UIID.EliteTroopCodex, this._createEliteTroopCodexController()); },
-            async () => { await this._mountLobbyLeaderboardPanel(); services().ui.register(UIID.LobbyLeaderboard, this._createLobbyLeaderboardController()); },
-            async () => { await this._mountSeasonReportPanel(); services().ui.register(UIID.SeasonReport, this._createSeasonReportController()); },
-            async () => { await this._mountSandtableTerritoryPanel(); services().ui.register(UIID.SandtableTerritory, this._createSandtableTerritoryController()); },
-            () => this._mountGraduationRecord(),
-            () => this._mountAcademyGraduation(),
-            () => this._mountAcademyFlow(),
-            () => this._mountClanShrine(),
-            () => this._mountSeasonEventPopup(),
-            () => this._mountMindMailbox(),
-            () => this._mountLineagePopup(),
-            () => this._mountQuickSortiePopup(),
-            () => this._mountSeasonPass(),
-            () => this._mountMentorBorrow(),
-            () => this._mountMentorHoldings(),
-            () => this._mountMentorCardDetail(),
-            () => this._mountGeneralVersionGallery(),
-            () => this._mountBondingSetup(),
-            () => this._mountJobChange(),
-            () => this._mountDomestic(),
-            () => this._mountRecruitHall(),
-            () => this._mountRivalDiplomacy(),
-            () => this._mountWarehouse(),
-            () => this._mountJournalHub(),
-            () => this._mountGeneralJournal(),
-            () => this._mountBattleReview(),
-            () => this._mountTournament(),
-            () => this._mountWishAltar(),
-            () => this._mountExtremeTask(),
-            () => this._mountMercenaryPanel(),
-            () => this._mountGovernorHall(),
-            () => this._mountItemBag(),
-            () => this._mountRelationGraph(),
-            () => this._mountSageOracle(),
-            () => this._mountRetireReview(),
-            () => this._mountSpiritCodex(),
-            () => this._mountUltimateCodex(),
-            () => this._mountScoutPanel(),
-            () => this._mountDestinyShop(),
-            () => this._mountYearReport(),
+            { id: 'RankUnlockPopup', run: () => this._mountRankUnlockPopup() },
+            { id: 'DeckSelect', run: () => this._mountDeckSelect() },
+            { id: 'LeadSelect', run: () => this._mountLeadSelect() },
+            { id: 'SortieSetup', run: () => this._mountSortieSetup() },
+            { id: 'CharacterDs3Host', run: () => this._mountCharacterDs3Host() },
+            { id: 'EliteTroopCodex', uiId: UIID.EliteTroopCodex, run: async () => { await this._mountEliteTroopCodexPanel(); services().ui.register(UIID.EliteTroopCodex, this._createEliteTroopCodexController()); } },
+            { id: 'LobbyLeaderboard', uiId: UIID.LobbyLeaderboard, run: async () => { await this._mountLobbyLeaderboardPanel(); services().ui.register(UIID.LobbyLeaderboard, this._createLobbyLeaderboardController()); } },
+            { id: 'SeasonReport', uiId: UIID.SeasonReport, run: async () => { await this._mountSeasonReportPanel(); services().ui.register(UIID.SeasonReport, this._createSeasonReportController()); } },
+            { id: 'SandtableTerritory', uiId: UIID.SandtableTerritory, run: async () => { await this._mountSandtableTerritoryPanel(); services().ui.register(UIID.SandtableTerritory, this._createSandtableTerritoryController()); } },
+            { id: 'GraduationRecord', run: () => this._mountGraduationRecord() },
+            { id: 'AcademyGraduation', run: () => this._mountAcademyGraduation() },
+            { id: 'AcademyFlow', run: () => this._mountAcademyFlow() },
+            { id: 'ClanShrine', run: () => this._mountClanShrine() },
+            { id: 'SeasonEventPopup', run: () => this._mountSeasonEventPopup() },
+            { id: 'MindMailbox', run: () => this._mountMindMailbox() },
+            { id: 'LineagePopup', run: () => this._mountLineagePopup() },
+            { id: 'QuickSortiePopup', run: () => this._mountQuickSortiePopup() },
+            { id: 'SeasonPass', run: () => this._mountSeasonPass() },
+            { id: 'MentorBorrow', run: () => this._mountMentorBorrow() },
+            { id: 'MentorHoldings', run: () => this._mountMentorHoldings() },
+            { id: 'MentorCardDetail', run: () => this._mountMentorCardDetail() },
+            { id: 'GeneralVersionGallery', run: () => this._mountGeneralVersionGallery() },
+            { id: 'BondingSetup', run: () => this._mountBondingSetup() },
+            { id: 'JobChange', run: () => this._mountJobChange() },
+            { id: 'Domestic', run: () => this._mountDomestic() },
+            { id: 'RecruitHall', run: () => this._mountRecruitHall() },
+            { id: 'RivalDiplomacy', run: () => this._mountRivalDiplomacy() },
+            { id: 'Warehouse', run: () => this._mountWarehouse() },
+            { id: 'JournalHub', run: () => this._mountJournalHub() },
+            { id: 'GeneralJournal', run: () => this._mountGeneralJournal() },
+            { id: 'BattleReview', run: () => this._mountBattleReview() },
+            { id: 'Tournament', run: () => this._mountTournament() },
+            { id: 'WishAltar', run: () => this._mountWishAltar() },
+            { id: 'ExtremeTask', run: () => this._mountExtremeTask() },
+            { id: 'MercenaryPanel', run: () => this._mountMercenaryPanel() },
+            { id: 'GovernorHall', run: () => this._mountGovernorHall() },
+            { id: 'ItemBag', run: () => this._mountItemBag() },
+            { id: 'RelationGraph', run: () => this._mountRelationGraph() },
+            { id: 'SageOracle', run: () => this._mountSageOracle() },
+            { id: 'RetireReview', run: () => this._mountRetireReview() },
+            { id: 'SpiritCodex', run: () => this._mountSpiritCodex() },
+            { id: 'UltimateCodex', run: () => this._mountUltimateCodex() },
+            { id: 'ScoutPanel', run: () => this._mountScoutPanel() },
+            { id: 'DestinyShop', run: () => this._mountDestinyShop() },
+            { id: 'YearReport', run: () => this._mountYearReport() },
         ];
         for (let index = 0; index < mounts.length; index++) {
             const mount = mounts[index];
@@ -879,12 +897,17 @@ export class LobbyScene extends Component {
             try {
                 await mount();
             } catch (error) {
+                // PROG-2-9196: scene destroyed mid-mount is a normal abort, not a mount failure
+                if (!this.node?.isValid) return;
                 UCUFLogger.error(LogCategory.UI, `[LobbyScene] 第 ${index} 個面板掛載失敗，已略過`, error);
             }
+            if (!this.node?.isValid) return;
             if (openingFirst) this._keepOpeningOnTop();
         }
+        if (!this.node?.isValid) return;
         this._registerUIControllers();
         await services().ui.open(UIID.LobbyMain);
+        if (!this.node?.isValid) return; // PROG-2-9196: scene already destroyed (switched away), stop quietly
         this._openingUiReady = true;
         // 開場優先掛載（PROG-2-2223）：大廳掛完才收起整備提示、顯示新手引導（引導要指向大廳按鈕）
         this._lobbyLoadingHint?.destroy();
@@ -946,9 +969,12 @@ export class LobbyScene extends Component {
                 UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 季節關卡排程載入失敗，改為不設季節閘門', scheduleError);
             }
         } catch (error) {
+            if (!this.node?.isValid) return;
             UCUFLogger.error(LogCategory.DATA, '[LobbyScene] 載入資料失敗:', error);
         }
+        if (!this.node?.isValid) return;
         await this._setupRivalOfficers();
+        if (!this.node?.isValid) return; // PROG-2-9196: scene already destroyed (switched away), stop quietly
 
         this._ready = true;
         SceneLoadProgress.complete();
@@ -972,31 +998,99 @@ export class LobbyScene extends Component {
         }
     }
 
-    /** 背景掛載非必要面板（PROG-2-9040）：逐個掛、每個之間讓出一幀，失敗只記錄不中斷 */
+    /**
+     * 背景掛載非必要面板（PROG-2-9040、PROG-2-9196）：
+     * 熱門項目先建、其餘等玩家閒置且畫面不卡才建、玩家點到就立刻補建、換場景立刻取消。
+     * 清單與預算在 data/lobby-mount-config.json。
+     */
     private async _runDeferredMounts(): Promise<void> {
-        const mounts = this._deferredMounts;
+        const entries = this._deferredMounts;
         this._deferredMounts = [];
-        // 背景載入用右下角小進度條（PROG-2-9046）；離開大廳後下一個場景會重開進度條，這裡就不再碰它
-        SceneLoadProgress.beginBackground(LOBBY_BACKGROUND_LOAD_PHASE, mounts.length);
-        const ownsProgress = () => sceneLoadState.active && sceneLoadState.phase === LOBBY_BACKGROUND_LOAD_PHASE;
-        for (let index = 0; index < mounts.length; index++) {
-            if (!this.node?.isValid) return;
-            try {
-                await mounts[index]();
-            } catch (error) {
-                // 玩家在背景掛載途中離開大廳（例如直接出征）時節點已銷毀、欄位讀到 null，屬正常中止不算錯誤（PROG-2-9108）
-                if (!this.node?.isValid) return;
-                UCUFLogger.error(LogCategory.UI, `[LobbyScene] 背景第 ${index} 個面板掛載失敗，已略過`, error);
-            }
-            if (ownsProgress()) SceneLoadProgress.report(index + 1, mounts.length);
+        const config = await this._loadLobbyMountConfig();
+        if (!this.node?.isValid) return;
+        const showProgress = config.showBackgroundProgress;
+        // 預設不顯示右下角進度條，免得遮到信箱；設定檔打開才顯示
+        if (showProgress) SceneLoadProgress.beginBackground(LOBBY_BACKGROUND_LOAD_PHASE, entries.length);
+        const ownsProgress = () => showProgress && sceneLoadState.active && sceneLoadState.phase === LOBBY_BACKGROUND_LOAD_PHASE;
+        const scheduler = new LobbyMountScheduler(entries, config, this._createMountEnv(), (done, total) => {
+            if (ownsProgress()) SceneLoadProgress.report(done, total);
             if (this._isOpeningInProgress()) this._keepOpeningOnTop();
-            await new Promise<void>((resolve) => this.scheduleOnce(() => resolve(), 0));
-        }
+        });
+        this._mountScheduler = scheduler;
+        this._installMountDemandHooks(scheduler);
+        await scheduler.runAll((id, error) => {
+            // 玩家在背景掛載途中離開大廳（例如直接出征）時節點已銷毀、欄位讀到 null，屬正常中止不算錯誤（PROG-2-9108）
+            if (!this.node?.isValid) return;
+            UCUFLogger.error(LogCategory.UI, `[LobbyScene] 背景面板 ${id} 掛載失敗，已略過`, error);
+        });
+        if (scheduler.cancelled || !this.node?.isValid) return;
         if (ownsProgress()) SceneLoadProgress.complete();
         this._keepOpeningOnTop();
         // 年終守城打完回到大廳（PROG-2-9426）：季報窗等背景面板掛好了才自動換年
         void this._resumeYearEndRollover();
     }
+
+    private async _loadLobbyMountConfig(): Promise<LobbyMountConfig> {
+        try {
+            return normalizeLobbyMountConfig(await services().resource.loadJson<unknown>('data/lobby-mount-config', { tags: ['LobbyScene'] }));
+        } catch {
+            return normalizeLobbyMountConfig(null);
+        }
+    }
+
+    private _createMountEnv(): LobbyMountEnv {
+        const now = () => (typeof performance !== 'undefined' ? performance.now() : Date.now());
+        this._lastInputAt = now();
+        const touch = () => { this._lastInputAt = now(); };
+        this._mountInputTouch = touch;
+        input.on(Input.EventType.TOUCH_START, touch, this);
+        input.on(Input.EventType.MOUSE_DOWN, touch, this);
+        input.on(Input.EventType.MOUSE_MOVE, touch, this);
+        input.on(Input.EventType.KEY_DOWN, touch, this);
+        const sleep = (sec: number) => new Promise<void>((resolve) => this.scheduleOnce(() => resolve(), sec));
+        // 新玩家開場進行中維持原本逐幀掛載：開場旁白期間不節流，掛載也不跨進宿命轉蛋與少年挑選畫面（開場面板每次掛載後會被拉回最上層）
+        const opening = () => this._isOpeningInProgress();
+        return {
+            now,
+            nextFrame: () => sleep(0),
+            wait: (ms) => sleep(opening() ? 0 : ms / 1000),
+            lastFrameMs: () => (opening() ? 0 : director.getDeltaTime() * 1000),
+            lastInputAt: () => (opening() ? -1e9 : this._lastInputAt),
+        };
+    }
+
+    /** 玩家點到尚未建好的介面：UIManager 走補建，直接開面板的入口先補建再開 */
+    private _installMountDemandHooks(scheduler: LobbyMountScheduler): void {
+        services().ui.setMissingResolver(async (uiId) => {
+            const id = scheduler.idForUi(uiId);
+            if (id) await scheduler.demand(id);
+        });
+        for (const [method, id] of LOBBY_OPENER_MOUNT_IDS) {
+            const self = this as unknown as Record<string, unknown>;
+            const original = self[method];
+            if (typeof original !== 'function') continue;
+            const call = (args: unknown[]) => (original as (...a: unknown[]) => unknown).apply(this, args);
+            self[method] = (...args: unknown[]) => {
+                if (scheduler.isMounted(id) || scheduler.cancelled) return call(args);
+                return scheduler.demand(id).then(() => call(args));
+            };
+        }
+    }
+
+    /** 取消背景建構並拆掉輸入監聽（換場景、onDestroy 呼叫） */
+    private _cancelMountScheduler(): void {
+        this._mountScheduler?.cancel();
+        this._mountScheduler = null;
+        services().ui.setMissingResolver(null);
+        if (this._mountInputTouch) {
+            input.off(Input.EventType.TOUCH_START, this._mountInputTouch, this);
+            input.off(Input.EventType.MOUSE_DOWN, this._mountInputTouch, this);
+            input.off(Input.EventType.MOUSE_MOVE, this._mountInputTouch, this);
+            input.off(Input.EventType.KEY_DOWN, this._mountInputTouch, this);
+            this._mountInputTouch = null;
+        }
+    }
+
 
     /** 他國逐將名冊與重算情境（E-9，PROG-2-1715）；失敗時他國照舊以兵力計軍力 */
     private async _setupRivalOfficers(): Promise<void> {
@@ -1022,6 +1116,7 @@ export class LobbyScene extends Component {
     }
 
     protected onDestroy(): void {
+        this._cancelMountScheduler();
         // 離開大廳（例如進戰場）要停掉站位輪換計時器，否則回大廳時舊場景的計時器仍在跑，讀到已銷毀的欄位（PROG-2-9103）
         this._lobbyHall?.stopStageTicking();
         this._lobbyHall = null;
