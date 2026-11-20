@@ -918,7 +918,8 @@ export class LobbyScene extends Component {
                 'data/encounters', { tags: ['LobbyScene'] }
             );
             const allEncounters = encounterEnvelope.encounters ?? [];
-            this._encounters = allEncounters.filter((e) => !e.extreme);
+            // 守城戰（PROG-2-9425）由年終流程開打，不進大廳開戰清單
+            this._encounters = allEncounters.filter((e) => !e.extreme && e.battleKind !== 'defense');
             this._extremeEncounters = allEncounters.filter((e) => e.extreme);
             // 季節關卡排程（PROG-2-9421）：讀不到就不設季節閘門，不擋大廳
             try {

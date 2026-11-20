@@ -300,11 +300,11 @@ export function createCrossSystemIntegrationSuite(): TestSuite {
         assert.equals(1, Object.keys(b.tallyCards).filter((uid) => uid !== 't1').length, '再過一季不重複產卡');
     });
 
-    suite.test('關卡資料：battleKind 只能是 field 或 siege，且第一關（虎牢關）標為攻城', () => {
+    suite.test('關卡資料：battleKind 只能是 field、siege 或 defense（守城，PROG-2-9425），且第一關（虎牢關）標為攻城', () => {
         // eslint-disable-next-line @typescript-eslint/no-require-imports
         const data = JSON.parse(require('fs').readFileSync('assets/resources/data/encounters.json', 'utf8')) as { encounters: Array<{ id: string; battleKind?: string }> };
         for (const encounter of data.encounters) {
-            assert.isTrue(encounter.battleKind === undefined || encounter.battleKind === 'field' || encounter.battleKind === 'siege', `${encounter.id} battleKind 不合法：${encounter.battleKind}`);
+            assert.isTrue(encounter.battleKind === undefined || encounter.battleKind === 'field' || encounter.battleKind === 'siege' || encounter.battleKind === 'defense', `${encounter.id} battleKind 不合法：${encounter.battleKind}`);
         }
         assert.isTrue(data.encounters.some((e) => e.battleKind === 'siege'), '至少一關標為攻城');
     });

@@ -20,9 +20,9 @@ function loadEncounters(): EncounterRow[] {
 export function createEncounterBattleKindSuite(): TestSuite {
     const suite = new TestSuite('EncounterBattleKind (關卡戰場類型 PROG-2-0238)');
 
-    suite.test('每一關都有明確的 battleKind（field 或 siege），不留空', () => {
+    suite.test('每一關都有明確的 battleKind（field、siege 或 defense），不留空', () => {
         for (const e of loadEncounters()) {
-            assert.isTrue(e.battleKind === 'field' || e.battleKind === 'siege', `${e.id} 缺 battleKind`);
+            assert.isTrue(e.battleKind === 'field' || e.battleKind === 'siege' || e.battleKind === 'defense', `${e.id} 缺 battleKind`);
         }
     });
 

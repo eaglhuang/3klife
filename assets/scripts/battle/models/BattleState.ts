@@ -133,6 +133,8 @@ export class BattleState {
   public sceneFlags: SceneBattleFlags = { stealthOpenTurns: 0, nightRaid: false, nightRaidOpenTurns: 0 };
   /** 場景戰法的施放方（落石等）：天命取此陣營主將的基因，沒有主將時天命為 0；預設敵方（PM 暫定） */
   public sceneCaster: Faction = Faction.Enemy;
+  /** 攻城戰法的守方（PROG-2-9425）：一般攻城是敵方守；守城戰（battleKind 'defense'）是玩家守。開戰前由戰場畫面設定，reset 不動 */
+  public siegeDefender: Faction = Faction.Enemy;
   /** 營帳格座標覆寫（夜襲／埋伏）；null 時用預設：敵方後排中央（PM 暫定） */
   public sceneCampPosition: { lane: number; depth: number } | null = null;
   /** 玩家視野半徑（夜襲主題關，PROG-2-2132）；null 為不限。只影響畫面 */

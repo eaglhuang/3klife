@@ -84,6 +84,9 @@ export const SIEGE_CATAPULT_DAMAGE = 10;
 /** 護城河：城牆區前一列（PROG-2-1598 暫定），站上去的部隊移動力 -1，不擋路、不推移 */
 export const SIEGE_MOAT_DEPTH = SIEGE_WALL_MIN_DEPTH - 1;
 export const SIEGE_MOAT_MOVE_DELTA = -1;
+/** 守城戰（玩家守，PROG-2-9425）：攻城場景鏡像，城牆區是我方前兩列（depth 0～1），護城河在其前一列 */
+export const DEFENSE_WALL_MAX_DEPTH = GAME_CONFIG.GRID_DEPTH - 1 - SIEGE_WALL_MIN_DEPTH;
+export const DEFENSE_MOAT_DEPTH = DEFENSE_WALL_MAX_DEPTH + 1;
 export const SIEGE_MOAT_TILE_NOTE = 'scene-gambit:siege-moat';
 export const SIEGE_WALL_DEFENSE_MULTIPLIER = 1.5;
 export const SIEGE_RAM_MULTIPLIER = 2;
@@ -173,12 +176,18 @@ function placeFloodgate(state: BattleState, shallow: ReadonlyArray<{ lane: numbe
   state.setTileEffect({ id: `floodgate-${gate.lane}-${gate.depth}`, lane: gate.lane, depth: gate.depth, state: 'scene-floodgate', notes: FLOODGATE_TILE_NOTE });
 }
 
+/** 護城河所在列：一般攻城在敵方城牆前；守城戰鏡像到我方城牆前（PROG-2-9425） */
+export function siegeMoatDepthOf(state: BattleState): number {
+  return state.siegeDefender === Faction.Player ? DEFENSE_MOAT_DEPTH : SIEGE_MOAT_DEPTH;
+}
+
 function applySiegeMoat(state: BattleState): void {
+  const depth = siegeMoatDepthOf(state);
   for (let lane = 0; lane < GAME_CONFIG.GRID_LANES; lane++) {
     state.setTileEffect({
-      id: `siege-moat-${lane}-${SIEGE_MOAT_DEPTH}`,
+      id: `siege-moat-${lane}-${depth}`,
       lane,
-      depth: SIEGE_MOAT_DEPTH,
+      depth,
       state: 'river-current',
       moveRangeDelta: SIEGE_MOAT_MOVE_DELTA,
       notes: SIEGE_MOAT_TILE_NOTE,
@@ -482,19 +491,20 @@ export const BATTLE_TACTIC_BEHAVIOR_REGISTRY: Readonly<Record<BattleSceneMode, B
       && state.sceneFlags.stealthOpenTurns > 0
     ),
   },
-  // 攻城戰最小版（PROG-2-1589，暫定）：敵方守城（城牆區 depth ≥ 6）防禦 ×1.5、我方工兵衝車攻城 ×2、投石機 AOE（PROG-2-1596）。
-  // 城牆不阻擋移動：敵方由城牆區出兵，阻擋格會讓守軍也無法出城而卡死
+  // 攻城戰最小版（PROG-2-1589，暫定）：守方城牆區防禦 ×1.5、射程 +1；攻方工兵衝車攻城 ×2、投石機 AOE（PROG-2-1596）。
+  // 守方由 state.siegeDefender 決定（PROG-2-9425）：一般攻城敵方守（城牆區 depth ≥ 6），守城戰玩家守（城牆區 depth ≤ 1）。
+  // 城牆不阻擋移動：守方由城牆區出兵，阻擋格會讓守軍也無法出城而卡死
   siege: {
     ...DEFAULT_BATTLE_TACTIC_BEHAVIOR,
     applyStartOfBattle: applySiegeMoat,
-    getDefenseMultiplier: (unit: TroopUnit) => (
-      isSiegeWallDefender(unit) ? SIEGE_WALL_DEFENSE_MULTIPLIER : 1
+    getDefenseMultiplier: (unit: TroopUnit, state: BattleState) => (
+      isSiegeWallDefender(unit, state) ? SIEGE_WALL_DEFENSE_MULTIPLIER : 1
     ),
-    getEffectiveAttackRange: (unit: TroopUnit) => (
-      isSiegeWallDefender(unit) ? unit.attackRange + SIEGE_WALL_RANGE_BONUS : unit.attackRange
+    getEffectiveAttackRange: (unit: TroopUnit, state: BattleState) => (
+      isSiegeWallDefender(unit, state) ? unit.attackRange + SIEGE_WALL_RANGE_BONUS : unit.attackRange
     ),
-    getSiegeDamageMultiplier: (unit: TroopUnit) => (unit.faction === Faction.Player ? SIEGE_RAM_MULTIPLIER : 1),
-    getCatapultDamage: (unit: TroopUnit) => (unit.faction === Faction.Player ? SIEGE_CATAPULT_DAMAGE : 0),
+    getSiegeDamageMultiplier: (unit: TroopUnit, state: BattleState) => (isSiegeAttacker(unit, state) ? SIEGE_RAM_MULTIPLIER : 1),
+    getCatapultDamage: (unit: TroopUnit, state: BattleState) => (isSiegeAttacker(unit, state) ? SIEGE_CATAPULT_DAMAGE : 0),
   },
   night: {
     ...DEFAULT_BATTLE_TACTIC_BEHAVIOR,
@@ -539,13 +549,23 @@ export function sceneSiegeDamageMultiplierOf(unit: TroopUnit, state: BattleState
   return resolveBattleTacticBehavior(state.battleTactic).getSiegeDamageMultiplier?.(unit, state) ?? 1;
 }
 
-/** 攻城戰城牆區的守軍（敵方、在最後兩列） */
-export function isSiegeWallDefender(unit: TroopUnit): boolean {
-  return unit.faction === Faction.Enemy && unit.depth >= SIEGE_WALL_MIN_DEPTH;
+/**
+ * 攻城戰城牆區的守軍：守方陣營、站在自家城牆區。
+ * 一般攻城（敵方守）是敵軍在最後兩列；守城戰（玩家守，PROG-2-9425）是我軍在前兩列。沒給 state 時當一般攻城。
+ */
+export function isSiegeWallDefender(unit: TroopUnit, state?: BattleState): boolean {
+  const defender = state?.siegeDefender ?? Faction.Enemy;
+  if (unit.faction !== defender) return false;
+  return defender === Faction.Enemy ? unit.depth >= SIEGE_WALL_MIN_DEPTH : unit.depth <= DEFENSE_WALL_MAX_DEPTH;
+}
+
+/** 攻城戰的攻方部隊（不是守方陣營）：衝車、投石機、雲梯只給攻方 */
+export function isSiegeAttacker(unit: TroopUnit, state: BattleState): boolean {
+  return unit.faction !== (state.siegeDefender ?? Faction.Enemy);
 }
 
 /**
- * 投石機（攻城戰，PROG-2-1596 暫定）：工兵每回合對所有城牆區敵軍造成固定傷害，最少留 1 血（不致死，陣亡結算交給一般戰鬥）。
+ * 投石機（攻城戰，PROG-2-1596 暫定）：攻方工兵每回合對所有城牆區守軍造成固定傷害，最少留 1 血（不致死，陣亡結算交給一般戰鬥）。
  * 回傳受擊部隊 id。
  */
 export function applySceneCatapult(engineer: TroopUnit, state: BattleState): string[] {
@@ -553,7 +573,7 @@ export function applySceneCatapult(engineer: TroopUnit, state: BattleState): str
   if (damage <= 0) return [];
   const hit: string[] = [];
   for (const unit of state.units.values()) {
-    if (unit.isDead() || !isSiegeWallDefender(unit)) continue;
+    if (unit.isDead() || !isSiegeWallDefender(unit, state)) continue;
     unit.currentHp = Math.max(1, unit.currentHp - damage);
     hit.push(unit.id);
   }
@@ -561,12 +581,12 @@ export function applySceneCatapult(engineer: TroopUnit, state: BattleState): str
 }
 
 /**
- * 雲梯（攻城戰，PROG-2-1597 暫定）：我方步兵攀城，普攻城牆區守軍時抵銷城牆地利。
+ * 雲梯（攻城戰，PROG-2-1597 暫定）：攻方步兵攀城，普攻城牆區守軍時抵銷城牆地利（守城戰時攻方是敵軍，PROG-2-9425）。
  * 回傳乘在守方防禦上的倍率；不適用時為 1。
  */
 export function sceneLadderDefenseBypassOf(attacker: TroopUnit, defender: TroopUnit, state: BattleState): number {
-  if (attacker.faction !== Faction.Player || attacker.type !== TroopType.Infantry) return 1;
-  if (!isSiegeWallDefender(defender)) return 1;
+  if (!isSiegeAttacker(attacker, state) || attacker.type !== TroopType.Infantry) return 1;
+  if (!isSiegeWallDefender(defender, state)) return 1;
   const wall = sceneDefenseMultiplierOf(defender, state);
   return wall > 0 ? 1 / wall : 1;
 }

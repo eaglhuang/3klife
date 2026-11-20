@@ -1142,7 +1142,11 @@ export class BattleUIBridge {
     const inBattleFameGain = this.ctx.ctrl?.getInBattleFameForRecord(Faction.Player) ?? 0;
     const inBattleFame = inBattleFameGain > 0 ? { [pgId]: inBattleFameGain } : undefined;
     // encounterEnemyGeneralId：敵方君主（這一場的敵主將），被擒處置用他的數值（PROG-2-9140）
-    const battleOptions = { specialActions, sortie, performance: { [pgId]: performance }, stageId, deployedTallyIds, vitalityAfterBattle, hpRatioAfterBattle, stageSalvage: this.ctx.ctrl?.state.stageSalvage, teachingSpirit: this.ctx.teachingSpirit, duelOutcomes: this.duelOutcomes, generalCaptures: this.generalCaptures, encounterEnemyGeneralId: this.ctx.eg?.id ?? null, inBattleFame };
+    // 守城戰（PROG-2-9425）：守方是玩家時，勝利另加民心、失敗走守城戰敗；我方主將倒下視為武將全滅（大敗）
+    const defense = this.ctx.ctrl?.state.siegeDefender === Faction.Player
+      ? { moraleOnVictory: this.ctx.ctrl.defenseBattle.moraleOnVictory, playerGeneralsDown: pgUnit?.isDead() ?? false }
+      : null;
+    const battleOptions = { specialActions, sortie, performance: { [pgId]: performance }, stageId, deployedTallyIds, vitalityAfterBattle, hpRatioAfterBattle, stageSalvage: this.ctx.ctrl?.state.stageSalvage, teachingSpirit: this.ctx.teachingSpirit, duelOutcomes: this.duelOutcomes, generalCaptures: this.generalCaptures, encounterEnemyGeneralId: this.ctx.eg?.id ?? null, inBattleFame, defense };
     void services().session.recordBattle([pgId], result, battleOptions).then((settlement) => {
       // 主將被擒的君主處置結果（PROG-2-9140）：寫進戰報並加進結算細項
       const captureLines = (settlement.captureNotices ?? []).map((line) => formatTallyLine(line, this._tallyTranslate));
