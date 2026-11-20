@@ -48,3 +48,25 @@ export function vitalityRingView(current: number, max: number): VitalityRingView
     const band = vitalityBandOf(Number.isFinite(current) ? current : 0, Number.isFinite(max) && max > 0 ? max : 1);
     return { ratio, band, text: `${Math.round(ratio * 100)}%`, color: VITALITY_RING_COLORS[band] };
 }
+
+// ── HUD 精力條（PROG-2-9432）──
+
+/** HUD 精力條顯示資料：比例、區段色、百分比文字、底板是否灰化；三段門檻與能量環一致（50%／10%，武將壽命系統 doc_spec_0018） */
+export interface VitalityHudBarView extends VitalityRingView {
+    grayed: boolean;
+}
+
+export function vitalityHudBarView(current: number, max: number): VitalityHudBarView {
+    return { ...vitalityRingView(current, max), grayed: isVitalityBarGrayed(current) };
+}
+
+/**
+ * 精力變化的跳字文字：扣減「-30」、回復「+20」；變化為 0 或無效時回傳空字串（不演出）。
+ * 只取整數，避免出現小數點。
+ */
+export function vitalityDeltaText(before: number, after: number): string {
+    if (!Number.isFinite(before) || !Number.isFinite(after)) return '';
+    const delta = Math.round(after - before);
+    if (delta === 0) return '';
+    return delta > 0 ? `+${delta}` : `${delta}`;
+}
