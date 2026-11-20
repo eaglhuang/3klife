@@ -16072,5 +16072,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9214.md",
     "title": "[PROG-2-9214] 開場少年挑選被宿命轉蛋結果面板蓋住（9196 回歸修正）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2697",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9433.md",
+    "title": "[PROG-2-9433] 手機結算彈窗字級：小螢幕最小可讀字級",
+    "category": "task"
   }
 ]
