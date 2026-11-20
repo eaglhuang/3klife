@@ -16,6 +16,12 @@ export type AcademyGrade = 'S' | 'A' | 'B' | 'C';
 /** 評級門檻：五維總和（暫定，規格未給） */
 export const ACADEMY_GRADE_TOTAL_MIN: Readonly<Record<Exclude<AcademyGrade, 'C'>, number>> = { S: 900, A: 700, B: 500 };
 
+export interface AptitudeBoostOutcome {
+    target: string;
+    from: string;
+    to: string;
+}
+
 export interface AcademyGraduationResult {
     general: GeneralConfig;
     grade: AcademyGrade;
@@ -26,6 +32,34 @@ export interface AcademyGraduationResult {
     traits: string[];
     /** 這次結業凝練之生平白因子印記（PROG-2-9182） */
     careerMark?: CareerMarkRecord | null;
+    /** 這次結業套用的雙年適性升階結果（PROG-2-9185） */
+    aptitudeBoosts?: AptitudeBoostOutcome[];
+}
+
+const APTITUDE_RANK_ORDER: readonly string[] = ['D', 'C', 'B', 'A', 'S'];
+const TERRAIN_KEYS = new Set(['PLAIN', 'FOREST', 'MOUNTAIN', 'WATER', 'CITY', 'DESERT']);
+const WEATHER_KEYS = new Set(['SUNNY', 'RAIN', 'WIND', 'SNOW', 'FOG']);
+
+function boostSingleAptitude(next: GeneralConfig, rawTarget: string): AptitudeBoostOutcome | null {
+    const trimmed = rawTarget.trim();
+    if (!trimmed) return null;
+    const [prefix, rest] = trimmed.includes(':') ? trimmed.split(':', 2) : ['', trimmed];
+    const key = (rest || trimmed).trim().toUpperCase();
+    let bucket: 'troopAptitude' | 'terrainAptitude' | 'weatherAptitude' = 'troopAptitude';
+    if (prefix.toLowerCase() === 'terrain' || (!prefix && (TERRAIN_KEYS.has(key) || (next.terrainAptitude && key in next.terrainAptitude)))) {
+        bucket = 'terrainAptitude';
+    } else if (prefix.toLowerCase() === 'weather' || (!prefix && (WEATHER_KEYS.has(key) || (next.weatherAptitude && key in next.weatherAptitude)))) {
+        bucket = 'weatherAptitude';
+    }
+    const map = { ...(next[bucket] ?? {}) };
+    const current = String(map[key] ?? 'C').toUpperCase();
+    const idx = APTITUDE_RANK_ORDER.indexOf(current);
+    const nextRank = idx >= 0
+        ? APTITUDE_RANK_ORDER[Math.min(APTITUDE_RANK_ORDER.length - 1, idx + 1)]
+        : 'B';
+    map[key] = nextRank;
+    next[bucket] = map;
+    return { target: key, from: current, to: nextRank };
 }
 
 export class AcademyGraduationError extends Error {}
@@ -58,5 +92,10 @@ export function applyAcademyGraduation(general: Readonly<GeneralConfig>, snapsho
     if (careerMark) {
         next.careerMarks = [...(next.careerMarks ?? []), { id: careerMark.id, stars: careerMark.stars }];
     }
-    return { general: next, grade: academyGradeOf(statTotal), statTotal, newTactics, traits, careerMark };
+    const aptitudeBoosts: AptitudeBoostOutcome[] = [];
+    for (const target of snapshot.pendingAptitudeBoosts ?? []) {
+        const outcome = boostSingleAptitude(next, target);
+        if (outcome) aptitudeBoosts.push(outcome);
+    }
+    return { general: next, grade: academyGradeOf(statTotal), statTotal, newTactics, traits, careerMark, aptitudeBoosts };
 }

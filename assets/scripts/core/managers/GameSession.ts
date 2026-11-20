@@ -52,7 +52,7 @@ import { pvpSeasonIdOf } from '../systems/BattleSeasonStats';
 import { hasMatchingGreenFactor, learnTacticInto, type TacticLearnCheck } from '../systems/TacticLearning';
 import { canStartAutoNurture, consumeAutoNurtureTicket, isAutoNurtureUnlocked, resolveAutoSchedule, runAutoNurtureSeason, type AutoNurtureBlockReason } from '../systems/AutoNurture';
 import { inspiredTacticIds, type NurtureAction, type NurtureRoundLog } from '../systems/NurtureSystem';
-import { learnTpCost } from '../systems/FactorTacticLinkage';
+import { applyCareerMarkTpDiscountToCost } from '../systems/nurture/AcademyInheritAndMarks';
 import { computeDiscountedTpCost, tacticTagsOf } from '../systems/WhiteFactorTraits';
 import { applyPassiveSave, totalTacticTpDiscount } from '../systems/MentorPassiveSavings';
 import type { GeneralConfig } from '../models/GeneralUnit';
@@ -4529,8 +4529,14 @@ export class GameSession {
         if (session.status !== 'completed') return { ok: false, blocked: 'NOT_GRADUATING', learned: [...(general.learnedTactics ?? [])] };
         if (!inspiredTacticIds(session).includes(tacticId)) return { ok: false, blocked: 'NOT_INSPIRED', learned: [...(general.learnedTactics ?? [])] };
         const green = hasMatchingGreenFactor(general.genes, tacticId);
-        // 教官卡 TP_Bonus + 生平閱歷白因子折扣（PROG-2-1999、PROG-2-9162）
-        const rawTpCost = Math.ceil(applyPassiveSave(learnTpCost(getTacticTpCost(tacticId), green), totalTacticTpDiscount(session.mentors)));
+        // 教官卡 TP_Bonus + 生平白因子印記折扣（5%/★，上限 15%，與綠因子合計上限 60%）+ 生平閱歷白因子折扣（PROG-2-1999、PROG-2-9162、PROG-2-9185）
+        const baseMarkedCost = applyCareerMarkTpDiscountToCost(
+            getTacticTpCost(tacticId),
+            general.careerMarks,
+            tacticTagsOf(tacticId),
+            green,
+        ).finalCost;
+        const rawTpCost = Math.ceil(applyPassiveSave(baseMarkedCost, totalTacticTpDiscount(session.mentors)));
         const tpCost = rawTpCost > 0
             ? computeDiscountedTpCost(rawTpCost, general.genes, tacticTagsOf(tacticId)).finalCost
             : 0;

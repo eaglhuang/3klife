@@ -55,6 +55,7 @@ import { applyBloodlineMutation } from './LuckBloodlineMutation';
 import { PINK_TERRAIN_FACTOR_KEYS } from './BattleAptitude';
 import { inheritChildAptitudes } from './ChildAptitudeInheritance';
 import { evaluateMarriageVitality, type MarriageVitalityResult } from './MarriageVitality';
+import { inheritCareerMarks } from './nurture/AcademyInheritAndMarks';
 
 export interface BreedingRulesConfig {
     /** 受孕後母方待產凍結季數（2026-11-20 裁決：2 季） */
@@ -969,6 +970,10 @@ function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMo
         child.marriageEpithets = marriageVitality.epithets.map((e) => e.id);
         if (marriageVitality.bonusTp > 0) child.initialBonusTp = marriageVitality.bonusTp;
         if (marriageVitality.awakenRateBonus > 0) child.earlyAwakenBonusPct = marriageVitality.awakenRateBonus;
+    }
+    const inheritedMarks = inheritCareerMarks(request.father.careerMarks, request.mother.careerMarks, request.random);
+    if (inheritedMarks.length > 0) {
+        child.careerMarks = inheritedMarks;
     }
 
     return {
