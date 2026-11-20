@@ -65,6 +65,37 @@ export const DEFAULT_STARTER_CHILD_CONFIG: StarterChildConfig = {
     ],
 };
 
+export const STARTER_CHILD_CONFIG_JSON = 'data/starter-child-config';
+
+let activeStarterChildConfig: StarterChildConfig = DEFAULT_STARTER_CHILD_CONFIG;
+
+/** 套用 starter-child-config.json（缺欄位退回內建預設；範圍必須是數字）。 */
+export function configureStarterChild(raw: Partial<StarterChildConfig> | null | undefined): void {
+    if (!raw || typeof raw !== 'object') {
+        activeStarterChildConfig = DEFAULT_STARTER_CHILD_CONFIG;
+        return;
+    }
+    const d = DEFAULT_STARTER_CHILD_CONFIG;
+    const range = (v: StarterChildRange | undefined, f: StarterChildRange): StarterChildRange =>
+        v && Number.isFinite(v.min) && Number.isFinite(v.max) ? { min: v.min, max: v.max } : f;
+    activeStarterChildConfig = {
+        ...d,
+        ...raw,
+        childId: raw.childId || d.childId,
+        age: Number.isFinite(raw.age) ? Number(raw.age) : d.age,
+        nameByGender: { ...d.nameByGender, ...(raw.nameByGender ?? {}) },
+        statRange: range(raw.statRange, d.statRange),
+        lukRange: range(raw.lukRange, d.lukRange),
+        epRange: range(raw.epRange, d.epRange),
+        fallbackGenes: Array.isArray(raw.fallbackGenes) ? raw.fallbackGenes : d.fallbackGenes,
+    };
+}
+
+/** 目前生效的開局幼苗設定（JSON 載入後即為 JSON 值）。 */
+export function getStarterChildConfig(): StarterChildConfig {
+    return activeStarterChildConfig;
+}
+
 export interface BuildStarterChildOptions {
     coreGeneralId?: string;
     beautyGeneralId?: string;
@@ -120,7 +151,7 @@ export function buildStarterChild(
     starters: readonly GeneralConfig[],
     options: BuildStarterChildOptions = {},
 ): BreedingGeneral {
-    const config = options.config ?? DEFAULT_STARTER_CHILD_CONFIG;
+    const config = options.config ?? activeStarterChildConfig;
     const random = options.random ?? Math.random;
     const coreId = options.coreGeneralId ?? STARTER_CORE_GENERAL_ID;
     const father = starters.find((g) => g.id === coreId)

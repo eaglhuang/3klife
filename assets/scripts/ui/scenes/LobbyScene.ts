@@ -902,7 +902,8 @@ export class LobbyScene extends Component {
             await Promise.all([
                 services().loadSkills(),
                 services().loadVfxEffects(),
-                services().loadSeasonModifiers()
+                services().loadSeasonModifiers(),
+                services().loadStarterChildConfig()
             ]);
             
             this._generals = await this._loadGenerals();

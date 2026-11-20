@@ -10,7 +10,7 @@ import { destinyLockedEvent } from '../../core/systems/DestinyOpening';
 import { DESTINY_POOL_ID } from '../../core/systems/DestinyPool';
 import { shouldShowOpeningLetter } from '../../core/systems/OpeningLetter';
 import { OPENING_BEAUTY_POOL_ID, rollOpeningBeauty } from '../../core/systems/OpeningBeauty';
-import { DEFAULT_STARTER_CHILD_CONFIG } from '../../core/services/StarterChildService';
+import { getStarterChildConfig } from '../../core/services/StarterChildService';
 import { applyFlowView } from './NurtureFlowViewApplier';
 
 /** Scene supplies the existing Cocos host; tests need only these used capabilities. */
@@ -189,7 +189,7 @@ export class LobbyOpeningPanels {
                 if (beautyName) {
                     this._pendingBeauty = beautyName;
                 }
-                const starterChild = session.roster.find(g => g.id === DEFAULT_STARTER_CHILD_CONFIG.childId);
+                const starterChild = session.roster.find(g => g.id === getStarterChildConfig().childId);
                 if (starterChild) {
                     this._pendingStarterChild = starterChild.name;
                 }
