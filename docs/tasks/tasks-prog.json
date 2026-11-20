@@ -10626,6 +10626,54 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9418",
+      "title": "戰場提示條移到中央偏上、改透明黑底金邊，不再擋住交戰",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T07:55:03+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "基礎戰鬥手感打磨（總PM B(2)）逐格連拍長板坡 3 回合時發現：戰場提示條（800×112 不透明褐底）落在畫面中央偏下（距頂約 625px），交戰期間正好蓋住第 3～5 路的部隊與命中演出。原因是 toast-message-main 的 widget top:120 是以部署面板內 400×60 的小容器計算，不是以整個畫面計算。規格（地形適性飄字反饋與戰況台詞管線規格書 §66）寫的是「畫面中央偏上方浮現透明黑底金邊對話條」。",
+      "related": [
+        "PROG-2-9416",
+        "PROG-2-9412",
+        "PROG-2-9414"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: in-progress | 驗證: pending | 變更: 待做 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

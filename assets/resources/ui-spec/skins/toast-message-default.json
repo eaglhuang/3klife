@@ -6,7 +6,10 @@
   "slots": {
     "toast.bg": {
       "kind": "color-rect",
-      "color": "#403C30"
+      "color": "#0A0806B8",
+      "cornerRadius": 10,
+      "borderWidth": 2,
+      "borderColor": "#C9A24A"
     },
     "toast.label": {
       "kind": "label-style",
