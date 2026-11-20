@@ -288,6 +288,8 @@ export class ServiceLoader {
         // 技能命令（PROG-2-9204）：持有與學習權威由 GameSession 提供，結業戰法經 skill.grant 寫入
         this.localApi.setSkillHost(this.session.skillHost);
         this.session.setSkillApi(this.localApi.api);
+        // 人員占用（PROG-2-9207）：登記表（academy／mentorAssign）＋六處唯讀轉接器由 GameSession 提供，寫入走 occupancy.* 命令
+        this.localApi.setOccupancyHost(this.session.occupancyHost);
         // 物品庫存（PROG-2-9203）：家庭倉庫＝玩家庫存表；季結的定期發放與入學／退還都走 item.* 命令
         this.localApi.setItemConfig(this.itemConfig);
         this.localApi.setItemAuthority(this.session.itemAuthority());
