@@ -161,6 +161,9 @@ import type { HallVolunteerTask } from '../systems/HallVolunteer';
 import type { SessionSaveService } from '../api/localserver/ApiSaveGateway';
 import type { SkillHost } from '../api/localserver/SkillCommands';
 import { SkillService } from '../../shared/skill/SkillService';
+import type { OccupancyHost } from '../api/localserver/OccupancyCommands';
+import { OccupancyService } from '../../shared/occupancy/OccupancyService';
+import type { OccupancyRecord } from '../../shared/occupancy/OccupancyTypes';
 import type { SkillLearnAuthority } from '../../shared/skill/SkillTypes';
 import { GeneralSkillStore } from '../systems/skill/GeneralSkillStore';
 import { defaultSkillRegistry } from '../systems/skill/SkillCatalog';
@@ -1222,6 +1225,7 @@ export class GameSession implements AcademyRecordPort {
     /** 試用招募池：名將池加滅亡國殘餘武將，扣掉已擁有、已是傭兵與冷卻中的武將（PROG-2-1848） */
     public trialHirePoolIds(heroPoolIds: readonly string[]): string[] {
         const taken = new Set<string>(this._mercenaries.mercenaries.map((m) => m.generalId).filter((id): id is string => !!id));
+        this._occupancy.registeredIds().forEach((id) => taken.add(id));
         for (const general of this._roster.getAll()) {
             taken.add(general.id);
             if (general.templateId) taken.add(general.templateId);
@@ -1324,7 +1328,7 @@ export class GameSession implements AcademyRecordPort {
         const general = this._roster.getAll().find((g) => g.id === generalId);
         if (!general) {
             if (ownsRecord) {
-                this._academyRecord = null;
+                this._setAcademyRecord(null);
                 if (this._autoSave && this._save) await this.save();
             }
             return null;
@@ -1344,11 +1348,61 @@ export class GameSession implements AcademyRecordPort {
         } as GeneralConfig;
         const result: AcademyGraduationResult = { ...applied, general: stamped };
         this._roster.replaceAll(this._roster.getAll().map((g) => (g.id === generalId ? stamped : g)));
-        if (ownsRecord) this._academyRecord = null;
+        if (ownsRecord) this._setAcademyRecord(null);
         if (this._autoSave && this._save) {
             await this.save();
         }
         return result;
+    }
+
+    /**
+     * 人員占用登記（PROG-2-9207 OCC-M 中立版）：登記表只存 academy／mentorAssign；
+     * 太守府、大廳任務、派遣、傭兵、歷練、待產重傷六處以唯讀轉接器查詢，狀態仍由各系統自己保管。
+     */
+    private readonly _occupancy: OccupancyService = new OccupancyService({
+        readers: {
+            governance: () => this._governance.map((a) => this._adaptedOccupancy(a.generalUid, a.task)),
+            hallMission: () => this.hallBusyGeneralIds().map((id) => this._adaptedOccupancy(id, 'hallMission')),
+            dispatch: () => this._dispatch.active.map((a) => this._adaptedOccupancy(a.generalId, a.jobId, a.startedAtMs, a.dueAtMs)),
+            mercenary: () => this._mercenaries.mercenaries.filter((m) => !!m.generalId).map((m) => this._adaptedOccupancy(m.generalId as string, m.uid)),
+            // TODO(第二版)：歷練（doc_spec_1180）尚未實作，轉接器先回空
+            expedition: () => [],
+            // 待產（pregnancySeasonsLeft）；TODO(第二版)：重傷旗標待傷勢系統落地後併入
+            medical: () => this._roster.getAll().filter((g) => ((g as { pregnancySeasonsLeft?: number }).pregnancySeasonsLeft ?? 0) > 0).map((g) => this._adaptedOccupancy(g.id, 'pregnancy')),
+        },
+    });
+
+    private _adaptedOccupancy(personId: string, refId: string, since = 0, until: number | null = null): OccupancyRecord {
+        return { personId, kind: 'governance', refId, since, until };
+    }
+
+    /** 人員占用宿主：ServiceLoader 把它掛到本機 API 的 occupancy.* 命令 */
+    public get occupancyHost(): OccupancyHost {
+        return { service: this._occupancy };
+    }
+
+    /** 登記表中被占用的武將 id（academy／mentorAssign）；任務牆、派遣、傭兵候選清單用它排除 */
+    public occupiedGeneralIds(): Set<string> {
+        return this._occupancy.registeredIds();
+    }
+
+    /**
+     * 學府紀錄的唯一寫入口：同步把「修業中」對帳到占用登記表（進行中且未結業＝academy 占用，其餘釋放）。
+     * 紀錄本身是修業權威，登記表只是投影，所以這裡在宿主內直接對帳；衝突（那人已被別處占用）只略過、不擋修業。
+     * TODO(PROG-2-9191)：入學入口改接 task 後，由 occupancy.acquire 命令擋下已忙碌者。
+     */
+    private _setAcademyRecord(record: PersistedAcademyRecord | null): void {
+        this._academyRecord = record;
+        const childId = isAcademyRecordActive(record) ? record!.committed.childId : null;
+        for (const held of this._occupancy.recordsOfKind('academy')) {
+            if (held.personId !== childId) this._occupancy.release({ personId: held.personId, kind: 'academy', refId: held.refId });
+        }
+        if (!childId) return;
+        try {
+            this._occupancy.acquire({ personId: childId, kind: 'academy', refId: `academy:${childId}`, since: this._clock.state.totalSeasonsElapsed });
+        } catch (error) {
+            console.warn('[GameSession] 學府占用登記略過', error instanceof Error ? error.message : error);
+        }
     }
 
     /** 技能宿主：持有存在武將名冊、學習權威由場景綁定；ServiceLoader 把它掛到本機 API 的 skill.* 命令 */
@@ -2405,7 +2459,7 @@ export class GameSession implements AcademyRecordPort {
         this._pendingSceneGambit = null;
         this._shrineOfferingDay = null;
         this._seasonPass = createSeasonPassState();
-        this._academyRecord = null;
+        this._setAcademyRecord(null);
         this._sevenDayJourney = createSevenDayJourneyState();
         this._officerState = initialOfficerState();
         this._officerTrial = null;
@@ -3419,7 +3473,7 @@ export class GameSession implements AcademyRecordPort {
     }
 
     public setAcademyRecord(record: PersistedAcademyRecord | null): void {
-        this._academyRecord = record;
+        this._setAcademyRecord(record);
     }
 
     /** 有未結業的學府修業：外界時間凍結、大廳「下一季」被擋 */
@@ -3787,8 +3841,8 @@ export class GameSession implements AcademyRecordPort {
     }
 
     /** 已陣亡或退役（導師卡）的武將不可派遣（PROG-2-0686） */
-    private _isDispatchable(general: { status?: string }): boolean {
-        return general.status !== 'dead' && !(general as { isMentorCard?: boolean }).isMentorCard && !(general as { captivity?: unknown }).captivity;
+    private _isDispatchable(general: { id?: string; status?: string }): boolean {
+        return general.status !== 'dead' && !(general.id && this._occupancy.isRegistered(general.id)) && !(general as { isMentorCard?: boolean }).isMentorCard && !(general as { captivity?: unknown }).captivity;
     }
 
     /** 目前可派遣（不忙碌也不在冷卻）的武將，名冊順序（PROG-2-1186 選將列用） */
@@ -4375,6 +4429,7 @@ export class GameSession implements AcademyRecordPort {
             if (reasons.includes('retired-mentor')) block.push('retired');
             if (reasons.includes('not-graduated')) block.push('not-graduated');
             if (reasons.includes('in-nurture')) block.push('nurturing');
+            if (this._occupancy.isRegistered(g.id)) block.push('occupied');
             if (this._travel?.targetId === g.id) block.push('traveling');
             const raw = g as unknown as Record<string, unknown>;
             const stat = (key: MissionStatKey): number | undefined => {
@@ -6706,6 +6761,7 @@ export class GameSession implements AcademyRecordPort {
             ...(isEmptyGeneralMind(mindSave) ? {} : { generalMind: mindSave }),
             ...(this._countdown ? { countdown: { ...this._countdown } } : {}),
             ...(this._academyRecord ? { academy: JSON.parse(JSON.stringify(this._academyRecord)) as PersistedAcademyRecord } : {}),
+            ...(this._occupancy.snapshot().length > 0 ? { occupancy: this._occupancy.snapshot() } : {}),
         };
     }
 
@@ -6910,7 +6966,8 @@ export class GameSession implements AcademyRecordPort {
         this._preLifespanRoster = null;
         this._clock.restore(snapshot.gameTime);
         // 學府修業進行中：外界時鐘以入學當下的快照為準，防止修業期間被改存檔刷季（PROG-2-9189）
-        this._academyRecord = normalizeAcademyRecord(snapshot.academy, snapshot.gameTime);
+        this._occupancy.restore(snapshot.occupancy);
+        this._setAcademyRecord(normalizeAcademyRecord(snapshot.academy, snapshot.gameTime));
         if (this._academyRecord && !this._academyRecord.committed.graduated) this._clock.restore({ ...this._academyRecord.frozenGameTime });
         this._seeded.restore(snapshot.randomState ?? { algorithm: 'mulberry32-v1', state: LEGACY_RANDOM_SEED });
         this._roster.replaceAll(clampRosterPregnancySeasons(backfillRosterChildAptitudes(normalizeRosterCaptivity(normalizeRosterRoles(snapshot.roster)))));

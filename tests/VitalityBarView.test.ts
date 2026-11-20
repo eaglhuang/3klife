@@ -6,7 +6,7 @@
  * Unity 對照：像測 Slider 的 fillAmount 計算，不需要場景或 UI。
  */
 import { assert, TestSuite } from './TestRunner';
-import { isVitalityBarGrayed, vitalityBarRatio } from '../assets/scripts/core/systems/VitalityBarView';
+import { isVitalityBarGrayed, vitalityBarRatio, vitalityDeltaText, vitalityHudBarView, VITALITY_RING_COLORS } from '../assets/scripts/core/systems/VitalityBarView';
 
 export function createVitalityBarViewSuite(): TestSuite {
     const suite = new TestSuite('VitalityBarView (戰場體力條顯示數值 FORM-11)');
@@ -36,6 +36,28 @@ export function createVitalityBarViewSuite(): TestSuite {
 
     suite.test('無效精力視為歸零並變灰（不猜測）', () => {
         assert.isTrue(isVitalityBarGrayed(Number.NaN));
+    });
+
+    suite.test('HUD 精力條三段：>50% 紫、10%~50% 琥珀、<10% 灰（門檻同武將壽命系統）', () => {
+        assert.equals('high', vitalityHudBarView(51, 100).band);
+        assert.equals('mid', vitalityHudBarView(50, 100).band);
+        assert.equals('mid', vitalityHudBarView(10, 100).band);
+        assert.equals('exhausted', vitalityHudBarView(9, 100).band);
+        assert.equals(VITALITY_RING_COLORS.mid, vitalityHudBarView(30, 100).color);
+    });
+
+    suite.test('HUD 精力條文字為百分比，歸零時底板變灰', () => {
+        const v = vitalityHudBarView(72, 100);
+        assert.equals('72%', v.text);
+        assert.isFalse(v.grayed);
+        assert.isTrue(vitalityHudBarView(0, 100).grayed);
+    });
+
+    suite.test('精力變化跳字：扣減帶負號、回復帶正號、無變化或無效不演出', () => {
+        assert.equals('-30', vitalityDeltaText(100, 70));
+        assert.equals('+20', vitalityDeltaText(60, 80));
+        assert.equals('', vitalityDeltaText(50, 50));
+        assert.equals('', vitalityDeltaText(Number.NaN, 50));
     });
 
     return suite;

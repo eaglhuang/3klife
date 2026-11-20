@@ -48,6 +48,10 @@ export const API_COMMANDS = Object.freeze({
     'skill.upgrade': { kind: 'cmd', revGuard: false },
     'skill.applyModifier': { kind: 'cmd', revGuard: false },
     'skill.removeModifier': { kind: 'cmd', revGuard: false },
+    // 人員占用（共用框架總綱 §10／§12 OCC-M 中立版）
+    'occupancy.query': { kind: 'query', revGuard: false },
+    'occupancy.acquire': { kind: 'cmd', revGuard: false },
+    'occupancy.release': { kind: 'cmd', revGuard: false },
 } satisfies Record<string, ApiCommandMeta>);
 
 export type ApiCommandName = keyof typeof API_COMMANDS;
@@ -423,4 +427,50 @@ export interface SkillRemoveModifierArgs {
 export interface SkillModifierChangeResult {
     changed: boolean;
     modifiers: SkillModifierResult[];
+}
+
+/** 占用紀錄（人員占用登記，OCC-M） */
+export interface OccupancyRecordResult {
+    personId: string;
+    kind: string;
+    refId: string;
+    since: number;
+    until: number | null;
+}
+
+/** occupancy.query：personId 省略＝全部（登記表加六處唯讀轉接器） */
+export interface OccupancyQueryArgs {
+    personId?: string;
+}
+
+export interface OccupancyQueryResult {
+    records: OccupancyRecordResult[];
+    /** 有任何占用的人員 id（去重） */
+    occupiedIds: string[];
+}
+
+/** occupancy.acquire：只送意圖；kind 只能是 academy／mentorAssign，其餘由原系統管理（E333）。同一筆重送冪等 */
+export interface OccupancyAcquireArgs {
+    personId: string;
+    kind: 'academy' | 'mentorAssign';
+    refId: string;
+    since?: number;
+    until?: number | null;
+}
+
+export interface OccupancyAcquireResult {
+    /** false＝這筆早已登記（冪等重送） */
+    acquired: boolean;
+    record: OccupancyRecordResult;
+}
+
+export interface OccupancyReleaseArgs {
+    personId: string;
+    kind: 'academy' | 'mentorAssign';
+    refId: string;
+}
+
+export interface OccupancyReleaseResult {
+    /** false＝本來就沒有（冪等重送） */
+    released: boolean;
 }

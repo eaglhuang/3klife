@@ -16039,6 +16039,48 @@
   },
   {
     "id": "doc_task_2691",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9432.md",
+    "title": "[PROG-2-9432] 新版 HUD 雙方精力條＋扣減演出、規格門檻統一",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2692",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9207.md",
+    "title": "[PROG-2-9207] OCC-M：人員占用精簡版（中立版，academy／mentorAssign 登記、六處唯讀轉接、occupancy.* 端點）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2693",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9202.md",
+    "title": "[PROG-2-9202] FND-M：共通底層工具層（確定性亂數、加權表、條件評估、時鐘）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2694",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9204.md",
+    "title": "[PROG-2-9204] SKL-M：技能 base 最小版（skill-def、grant/learn/upgrade、modifier、skill.* 端點、結業戰法寫回遷移）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2695",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9211.md",
+    "title": "PROG-2-9211：學府結業接線",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2696",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9214.md",
+    "title": "[PROG-2-9214] 開場少年挑選被宿命轉蛋結果面板蓋住（9196 回歸修正）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2697",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9433.md",
+    "title": "[PROG-2-9433] 手機結算彈窗字級：小螢幕最小可讀字級",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2698",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9208.md",
     "title": "[PROG-2-9208] STY-M 劇情（演出）base 最小版：事件定義、選項、條件、打斷佇列與 story.trigger/choose/seen",
     "category": "task"

@@ -166,7 +166,7 @@ export interface MissionDefinition {
 
 export const MISSION_BLOCKS = [
     'dead', 'retired', 'not-graduated', 'nurturing', 'captive', 'injured',
-    'on-sortie', 'traveling', 'on-mission', 'offline-dispatch', 'low-energy',
+    'on-sortie', 'traveling', 'on-mission', 'offline-dispatch', 'low-energy', 'occupied',
 ] as const;
 export type MissionBlock = (typeof MISSION_BLOCKS)[number];
 
@@ -177,6 +177,7 @@ export const MISSION_BLOCK_TEXT: Record<MissionBlock, string> = {
     dead: '已亡故', retired: '已退役', 'not-graduated': '尚未畢業', nurturing: '培育中', captive: '被囚',
     injured: '受傷休養中', 'on-sortie': '出征中', traveling: '遠行中', 'on-mission': '出任務中',
     'offline-dispatch': '離線派遣中', 'low-energy': '精力不足',
+    occupied: '修業或指派中',
 };
 
 /** 引擎看到的武將事實（宿主依真實名冊組出，引擎不讀名冊） */

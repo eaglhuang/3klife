@@ -26,8 +26,8 @@
   "summary": {
     "done": 186,
     "in_progress": 4,
-    "open": 86,
-    "total": 276
+    "open": 76,
+    "total": 275
   },
   "tasks": [
     {
@@ -11349,6 +11349,105 @@
     },
     {
       "doc_id": "",
+      "id": "PROG-2-9432",
+      "title": "新版 HUD 雙方精力條：4px、三段色與百分比、即時刷新與扣減演出；規格門檻統一為 50／10%",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-21T04:38:10+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 11/21 裁定：新版 HUD 精力條改 4px 並補敵方條，依 50／10% 門檻（武將壽命系統 doc_spec_0018）三段變色並顯示百分比，放招／回復／地形效果即時刷新，扣精力時有短暫數值變化演出；doc_spec_0397 §3 原寫 60／20% 改為 50／10%。",
+      "related": [
+        "PROG-2-9431",
+        "PROG-2-0429",
+        "PROG-2-1853"
+      ],
+      "depends": [
+        "PROG-2-9431"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8716 通過、tsc 兩組 0 錯、7456 實跑截圖（三段色、歸零灰化、張飛奧義 96%→86% 前後對照） | 變更: 新版 HUD 頂欄無主將血條，精力細條改掛武將名牌血量列正下方（GeneralVitalityStrip），雙方各一條；GeneralVitalityChanged 事件即時刷新；扣減閃白＋殘影＋脈動＋右側跳字；規格 §3 門檻改 50／10%、新增 §4 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9433",
+      "title": "手機結算彈窗字級：小螢幕最小可讀字級（812×375 至少 12 CSS px）",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-21T09:30:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 11/21 指派：手機 812×375 時結算彈窗明細 26px 只剩約 9 CSS px。新增共用 shared/ReadableFontSize 與 ui/core/ReadableText，縮放後低於 12 CSS px 才放大；結算明細、區段標題、勝負說明套用，桌機維持網頁原稿字級。",
+      "related": [
+        "PROG-2-9424",
+        "PROG-2-1626"
+      ],
+      "depends": [
+        "PROG-2-9424"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8749 通過、tsc 0 錯、7456 手機 812×375 前後截圖（35px≈12.2 CSS px）、桌機字級不變 | 變更: 共用小螢幕最小可讀字級；結算彈窗套用 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
       "id": "PROG-2-9213",
       "title": "一年循環 MVP 切分（doc_spec_1182 第 12 章）與學府人源缺口方案（doc_spec_1179）",
       "owner": "ClaudeCode_sonnet-5-5",
@@ -11655,6 +11754,70 @@
         "tests/RewardBase.test.ts"
       ],
       "notes": "2026-11-21 | 狀態: done | 驗證: tsc test 0、單元 8727 全過（新增 RewardBase 20 條）、compute-gate standard 通過（僅 LoginScene 既有警告）、web-desktop 建置後 playtest 11/11 console error 0、棘輪 134→133 | 變更: shared/reward/{RewardConfig,RewardRules,RewardPresentation}.ts、core/api/localserver/RewardCommands.ts（reward.roll/claim 命令、reward.pools/pity 查詢）、LocalApiAdapter.invoke（命令層互叫，不經佇列）、resources/data/reward-config.json、GameSession.rewardAuthority()（存檔欄位 rewardMeta：伺服器私有亂數會話、保底計數、最近 200 筆發放紀錄做冪等）、E320~E328、遷移示範：戰後里程碑戰法筆記改走 reward.claim（MilestoneRewards.grantTacticNotes 移除，棘輪 -1） | 阻塞: 無 | 備註: 規格命令名 reward.draw 實作為 reward.roll、錯誤碼規格 E5xx 改 E32x（依任務指示）。入帳道具走 item.grant、貨幣走錢包 port，宿主種類用 registerRewardEffect（SKL 合併後掛 tacticLearn）。失敗整筆撤銷並回 E325，亂數與保底不前進。演出只做 adapter 介面與 instant/chest 模組（sink 抽象），尚未接場景彈窗。grantKey 冪等視窗為最近 200 筆。轉蛋建議：採規格 Q1-A，GachaDraw 引擎改讀 reward-pool（雙重保底以 pity 擴充 soft 欄位、同名轉換與 UP 佔比用 effect handler/插件），扣款走 wallet.spend，演出用 gachaReveal，GachaApi 先維持並行，待使用者裁決 Q1 再動。待決：①E32x 與規格 E5xx 對照由總 PM 裁決 ②reward.pools 機率公開方式（Q5）③soft pity 未做 ④連線版 reward.roll 的憑證核對（source 現僅做種類白名單）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9207",
+      "title": "OCC-M 人員占用精簡版（中立版）：登記表、academy／mentorAssign、六處唯讀轉接、occupancy.* 端點",
+      "owner": "ClaudeCode_sonnet-5-5",
+      "priority": "P0",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "ClaudeCode_sonnet-5-5",
+      "started_at": "2026-11-21T05:39:40+08:00",
+      "started_by_agent": "ClaudeCode_sonnet-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "共用框架總綱 doc_spec_1182 第 12 章 2c：登記表、academy／mentorAssign 兩種占用、其他六處唯讀轉接器、occupancy.acquire/release/query（E33x）；修業中武將從任務牆、派遣、傭兵候選排除；check-api-bypass 加 skill-write 規則",
+      "related": [
+        "PROG-2-9200",
+        "PROG-2-9204",
+        "PROG-2-9205"
+      ],
+      "depends": [
+        "PROG-2-9201",
+        "PROG-2-9202"
+      ],
+      "acceptance": [
+        "修業中武將從任務牆、派遣、傭兵候選清單排除",
+        "互斥規則契約測試",
+        "occupancy.* 冪等與 E33x 測試",
+        "棘輪基準只減不增（含 skill-write 新規則）",
+        "tsc 0",
+        "compute-gate standard 通過",
+        "網頁 playtest 11/11"
+      ],
+      "deliverables": [
+        "shared/occupancy/{OccupancyTypes,OccupancyService}.ts",
+        "core/api/localserver/OccupancyCommands.ts",
+        "tests/OccupancyBase.test.ts",
+        "tools_node/check-api-bypass.js skill-write 規則"
+      ],
+      "notes": "2026-11-21 | 狀態: done | 驗證: tsc test 0、單元 8749 全過（新增 OccupancyBase 8 條）、compute-gate standard 通過、web-desktop 建置後 playtest 11/11 console error 0、棘輪 132→132（新增 skill-write 規則計 1 處＝AcademyGraduation 結業備援 learnedTactics 賦值，同時 PlayerInventory.grantSeasonalOracleTokens 內部不再呼叫 addItem 而改直接組表，inventory-write 34→33，淨持平） | 變更: shared/occupancy/{OccupancyTypes,OccupancyService}.ts（登記表、互斥、冪等 acquire/release、轉接器、filterFree、存檔正規化）、core/api/localserver/OccupancyCommands.ts（occupancy.query/acquire/release）、ApiCommands／ApiErrors E330~E334、createLocalApi.setOccupancyHost、GameSession（occupancyHost、學府紀錄唯一寫入口 _setAcademyRecord 對帳 academy 占用、六處轉接器、存檔欄位 occupancy、任務牆 MissionBlock occupied／派遣／傭兵候選排除）、PlayerSaveService 與 sync06 白名單加 occupancy、check-api-bypass 新增 skill-write 規則（學府修業中的 state 快照不算） | 阻塞: 無 | 備註: 六處唯讀轉接點＝governance（太守府指派）、hallMission（大廳任務 busyGeneralIds）、dispatch（派遣進行中）、mercenary（傭兵名冊武將）、expedition（歷練，尚未實作回空）、medical（待產；重傷旗標待傷勢系統）。互斥矩陣預設全互斥，家業第 10 章矩陣定案後只改 OccupancyCompatibility 資料。mentorAssign 登記表與命令已備好，尚無呼叫端（教官指派占用待 6b 接入）。學府入學入口尚未用 occupancy.acquire 擋已忙碌者（待 9191 入口改接）。中立版：介面可原封不動併入 QST-M 或獨立成框架。待決：①Q-B 是否升格第七框架 ②E33x 段落是否沿用（規格原未編號）③skill-write 新規則是否要把 AcademyGraduation 備援寫法也遷到 skill.grant（目前計 1）",
       "brief": {
         "style": "classic",
         "label": "",
