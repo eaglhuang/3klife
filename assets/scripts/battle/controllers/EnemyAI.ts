@@ -7,7 +7,7 @@ import {
   TROOP_DEPLOY_COST,
 } from "../../core/config/Constants";
 import { BattleState } from "../models/BattleState";
-import { pickDeployLane, pickMeetPlayerLane } from "../../core/systems/AiLaneStrategy";
+import { pickCounterLane, pickDeployLane, pickMeetPlayerLane } from "../../core/systems/AiLaneStrategy";
 import type { AiLaneStrategy } from "../../core/systems/AiProfiles";
 import type { AiIqLevel } from "../../core/systems/AiDifficultyTable";
 import { pickAiDeployTroop, type AiDeployPreference } from "../../core/systems/AiDeployTroopPick";
@@ -44,6 +44,7 @@ export class EnemyAI {
    * deployCount：本回合部署數上限，由呼叫端依 getAIDeployCount（F-2）算出。
    * 策略：以計數器兵種對抗玩家最多的兵種；無對手時隨機。
    * options.meetPlayerLane：教學戰用，先挑玩家有兵而己方還沒對上的線，沒有才照 Profile 策略（PROG-2-9340）。
+   * 剋制兵對路（PROG-2-9428）：IQ 非 LOW 時，這支兵剋得到玩家場上某兵種，就派到該兵種所在的線；沒有才照 Profile 策略。
    */
   public decideDeploy(
     state: BattleState,
@@ -70,6 +71,7 @@ export class EnemyAI {
       remaining -= cost;
 
       const lane = (options.meetPlayerLane ? pickMeetPlayerLane(freeLanes, occupancy, this._random) : null)
+        ?? (this.iq !== 'LOW' ? pickCounterLane(freeLanes, this.getPreyByLane(state, type), occupancy.own, this._random) : null)
         ?? pickDeployLane(this.laneStrategy, freeLanes, occupancy, this._random)!;
       chosenLanes.add(lane);
       occupancy.own[lane] += 1;
@@ -113,6 +115,18 @@ export class EnemyAI {
       counterChance: GAME_CONFIG.AI_COUNTER_STRATEGY_CHANCE,
       random: this._random,
     });
+  }
+
+  /** 各線上玩家「被 type 剋」的兵種數量；type 不剋任何兵種時全為 0 */
+  private getPreyByLane(state: BattleState, type: TroopType): number[] {
+    const preyByLane = new Array<number>(GAME_CONFIG.GRID_LANES).fill(0);
+    const prey = TROOP_COUNTER_MAP[type];
+    if (!prey) return preyByLane;
+    state.units.forEach((unit) => {
+      if (unit.faction !== Faction.Player || unit.type !== prey || unit.isDead()) return;
+      if (unit.lane >= 0 && unit.lane < GAME_CONFIG.GRID_LANES) preyByLane[unit.lane] += 1;
+    });
+    return preyByLane;
   }
 
   /** 各線部隊數（AI 己方 / 玩家），同回合已決定的部署會再累加到 own */

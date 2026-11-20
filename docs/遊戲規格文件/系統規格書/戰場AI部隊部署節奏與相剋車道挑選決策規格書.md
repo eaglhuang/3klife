@@ -52,6 +52,13 @@ $$\text{DeployCount} = \min(3, 1 + \text{turnBonus} + \text{difficultyBonus})$$
 - **水淹七軍（FloodAttack）**：偏好水戰與步弓兵種（`INFANTRY`、`SHIELD`、`ARCHER`），避開低適性騎兵。
 - **火燒偷襲（FireAttack）**：偏好高速穿插兵種（`CAVALRY`、`ARCHER`）。
 
+### 3.3 剋制兵對路（PROG-2-9428）
+五路對撞下小兵只打同路正面，剋制兵必須派到被剋兵種所在的車道才有效果，因此剋制判定與車道指派要串起來：
+1. **NORMAL 及以上 IQ**：本支出陣兵種若能剋制玩家場上某兵種（`counterMap[type]`），優先從空車道中挑**被剋兵種數量最多**之車道；同數挑**己方部隊最少**，再同分隨機。此規則優先於 §4 路線策略（包含 `SCOUT_WEAK`）。
+2. 沒有任何空車道上有被剋兵種時，回退 §4 路線策略。
+3. **LOW IQ** 不看玩家兵種位置，直接走 §4。
+4. 教學戰「對路出兵」（`meetPlayerLane`）仍最優先。
+
 ---
 
 ## 4. 車道戰略指派矩陣（`AiLaneStrategy`）
