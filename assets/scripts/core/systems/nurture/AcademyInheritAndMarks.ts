@@ -14,6 +14,7 @@
  */
 import type { AcademyGrade } from './AcademyGraduation';
 import type { AcademyId, AcademyStatKey, IDeterministicRng } from './AcademyTypes';
+import { GREEN_FACTOR_TP_MULTIPLIER } from '../FactorTacticLinkage';
 
 export interface CareerMarkRecord {
     id: string;
@@ -58,6 +59,8 @@ export interface AcademyInheritMarksConfig {
     };
 }
 
+export const ACADEMY_INHERIT_MARKS_JSON = 'data/academy-inherit-marks';
+
 export const DEFAULT_ACADEMY_INHERIT_MARKS_CONFIG: Readonly<AcademyInheritMarksConfig> = {
     doubleInheritance: {
         blueStarsCap: 70,
@@ -92,6 +95,30 @@ export const DEFAULT_ACADEMY_INHERIT_MARKS_CONFIG: Readonly<AcademyInheritMarksC
         },
     },
 };
+
+let _config: AcademyInheritMarksConfig = DEFAULT_ACADEMY_INHERIT_MARKS_CONFIG;
+
+export function getAcademyInheritMarksConfig(): AcademyInheritMarksConfig {
+    return _config;
+}
+
+export function configureAcademyInheritMarks(raw: Partial<AcademyInheritMarksConfig> | null | undefined): void {
+    if (!raw) return;
+    _config = {
+        doubleInheritance: { ...DEFAULT_ACADEMY_INHERIT_MARKS_CONFIG.doubleInheritance, ...(raw.doubleInheritance ?? {}) },
+        careerMarks: {
+            ...DEFAULT_ACADEMY_INHERIT_MARKS_CONFIG.careerMarks,
+            ...(raw.careerMarks ?? {}),
+            gradeBaseProb: { ...DEFAULT_ACADEMY_INHERIT_MARKS_CONFIG.careerMarks.gradeBaseProb, ...(raw.careerMarks?.gradeBaseProb ?? {}) },
+            gradeStars: { ...DEFAULT_ACADEMY_INHERIT_MARKS_CONFIG.careerMarks.gradeStars, ...(raw.careerMarks?.gradeStars ?? {}) },
+            markIdByAcademy: { ...DEFAULT_ACADEMY_INHERIT_MARKS_CONFIG.careerMarks.markIdByAcademy, ...(raw.careerMarks?.markIdByAcademy ?? {}) },
+        },
+    };
+}
+
+export function resetAcademyInheritMarks(): void {
+    _config = DEFAULT_ACADEMY_INHERIT_MARKS_CONFIG;
+}
 
 function clamp(value: number, min: number, max: number): number {
     return Math.max(min, Math.min(max, value));
@@ -215,7 +242,7 @@ export function careerMarkTpDiscount(
     marks: readonly CareerMarkRecord[] | undefined,
     matchingMarkId: string,
     greenFactorDiscount = 0,
-    config: AcademyInheritMarksConfig = DEFAULT_ACADEMY_INHERIT_MARKS_CONFIG,
+    config: AcademyInheritMarksConfig = _config,
 ): number {
     const cm = config.careerMarks;
     const matched = topCareerMarksForBreeding(marks, cm.maxBreedingSampleMarks).find((m) => m.id === matchingMarkId);
@@ -223,4 +250,77 @@ export function careerMarkTpDiscount(
         ? Math.min(cm.maxSingleMarkDiscount, matched.stars * cm.tpDiscountPerStar)
         : 0;
     return Number(Math.min(cm.maxTotalTpDiscount, Math.max(0, greenFactorDiscount) + singleDiscount).toFixed(4));
+}
+
+const MARK_TAG_PATTERNS: ReadonlyArray<{ markId: string; keywords: readonly string[] }> = [
+    { markId: 'mark_youzhou_cavalry', keywords: ['cavalry', '騎兵', '騎術', '突擊', 'mark_youzhou_cavalry'] },
+    { markId: 'mark_jiangdong_navy', keywords: ['navy', 'water', '水戰', '水軍', '水師', 'mark_jiangdong_navy'] },
+    { markId: 'mark_longzhong_strategy', keywords: ['strategy', 'tactic', '計謀', '奇策', '軍師', '火攻', 'mark_longzhong_strategy'] },
+    { markId: 'mark_yingchuan_scholar', keywords: ['scholar', 'politics', '內政', '經學', '治國', 'mark_yingchuan_scholar'] },
+    { markId: 'mark_luoyang_court', keywords: ['court', 'diplomacy', 'command', '朝政', '外交', '統率', 'mark_luoyang_court'] },
+];
+
+/** 依戰法標籤比對同流派的生平白因子印記 ID（沒有相符則回傳 null） */
+export function matchingCareerMarkIdForTags(
+    tags: readonly string[],
+    marks?: readonly CareerMarkRecord[],
+): string | null {
+    if (!tags || tags.length === 0) return null;
+    const normalized = tags.map((t) => t.toLowerCase());
+    for (const entry of MARK_TAG_PATTERNS) {
+        if (entry.keywords.some((kw) => normalized.some((t) => t.includes(kw.toLowerCase())))) {
+            if (!marks || marks.some((m) => m.id === entry.markId)) {
+                return entry.markId;
+            }
+        }
+    }
+    return null;
+}
+
+/**
+ * 結合綠因子基礎折扣與同流派印記折扣計算學習戰法最終 TP 成本（總折扣上限 60%）。
+ */
+export function applyCareerMarkTpDiscountToCost(
+    baseCost: number,
+    marks: readonly CareerMarkRecord[] | undefined,
+    tacticTags: readonly string[],
+    hasGreenFactor: boolean,
+    config: AcademyInheritMarksConfig = _config,
+): { finalCost: number; totalDiscount: number; matchedMarkId: string | null } {
+    const greenDiscount = hasGreenFactor ? 1 - GREEN_FACTOR_TP_MULTIPLIER : 0;
+    const matchedMarkId = matchingCareerMarkIdForTags(tacticTags, marks);
+    const totalDiscount = matchedMarkId
+        ? careerMarkTpDiscount(marks, matchedMarkId, greenDiscount, config)
+        : Math.min(config.careerMarks.maxTotalTpDiscount, greenDiscount);
+    const finalCost = baseCost <= 0 ? 0 : Math.max(1, Math.ceil(baseCost * (1 - totalDiscount)));
+    return { finalCost, totalDiscount, matchedMarkId };
+}
+
+/**
+ * 配種抽樣雙親生平白因子印記（只取父母各自最高星前 maxBreedingSampleMarks 枚參與抽樣）。
+ * 為避免影響既有測試的亂數序列，父母皆無印記時不消耗 random()。
+ */
+export function inheritCareerMarks(
+    fatherMarks: readonly CareerMarkRecord[] | undefined,
+    motherMarks: readonly CareerMarkRecord[] | undefined,
+    random: () => number,
+    config: AcademyInheritMarksConfig = _config,
+): CareerMarkRecord[] {
+    const limit = config.careerMarks.maxBreedingSampleMarks;
+    const pool = [
+        ...topCareerMarksForBreeding(fatherMarks, limit),
+        ...topCareerMarksForBreeding(motherMarks, limit),
+    ];
+    if (pool.length === 0) return [];
+    const byId = new Map<string, CareerMarkRecord>();
+    for (const mark of pool) {
+        const prob = Math.min(0.6, Math.max(0.1, mark.stars * 0.15));
+        if (random() < prob) {
+            const existing = byId.get(mark.id);
+            if (!existing || mark.stars > existing.stars) {
+                byId.set(mark.id, { id: mark.id, stars: mark.stars });
+            }
+        }
+    }
+    return Array.from(byId.values());
 }

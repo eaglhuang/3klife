@@ -55,6 +55,7 @@ import { configureFamilyMilestoneRules, FAMILY_MILESTONE_RULES_JSON, type Family
 import { familyPairKey } from "../systems/FamilySynergy";
 import { configureWhiteFactorAchievements, WHITE_FACTOR_ACHIEVEMENTS_JSON, type WhiteFactorAchievementsConfig } from "../systems/WhiteFactorTraits";
 import { configureMindMarriageRules, MIND_MARRIAGE_RULES_JSON, type MindMarriageRulesConfig } from "../mind/MindMarriage";
+import { ACADEMY_INHERIT_MARKS_JSON, configureAcademyInheritMarks, type AcademyInheritMarksConfig } from "../systems/nurture/AcademyInheritAndMarks";
 
 export class ServiceLoader {
     private static instance: ServiceLoader | null = null;
@@ -357,6 +358,7 @@ export class ServiceLoader {
             loadSafe<Partial<BloodlineResonanceRulesConfig>>(BLOODLINE_RESONANCE_RULES_JSON, configureBloodlineResonanceRules),
             loadSafe<Partial<FamilyMilestoneRulesConfig>>(FAMILY_MILESTONE_RULES_JSON, configureFamilyMilestoneRules),
             loadSafe<Partial<MindMarriageRulesConfig>>(MIND_MARRIAGE_RULES_JSON, configureMindMarriageRules),
+            loadSafe<Partial<AcademyInheritMarksConfig>>(ACADEMY_INHERIT_MARKS_JSON, configureAcademyInheritMarks),
             loadSafe<Partial<MarriageVitalityRulesConfig>>(MARRIAGE_VITALITY_RULES_JSON, configureMarriageVitalityRules),
         ]);
         this.bloodlineRulesLoaded = true;
