@@ -103,7 +103,7 @@ export const ACADEMY_FLOW_FALLBACK_ZH_TW: Readonly<Record<string, string>> = {
     "ui.academy.flow.int.kind.RESONANCE": "重大共鳴",
     "ui.academy.flow.int.kind.GRADUATION": "結業確認",
     "ui.academy.flow.int.continue": "以預設選項繼續",
-    "ui.academy.flow.graduated": "修業圓滿！結業結算由後續版本接手。",
+    "ui.academy.flow.graduated": "修業圓滿！結業結算已寫回武將。",
     "ui.academy.flow.lobby.resume_toast": "學府修業進行中，請回到學府繼續",
     "ui.academy.flow.lobby.frozen_toast": "學府修業中，外界時間靜止",
     "ui.academy.flow.lobby.menu": "學府",

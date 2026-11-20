@@ -880,7 +880,7 @@
   "ui.academy.flow.int.kind.RESONANCE": "重大共鸣",
   "ui.academy.flow.int.kind.GRADUATION": "结业确认",
   "ui.academy.flow.int.continue": "以默认选项继续",
-  "ui.academy.flow.graduated": "修业圆满！结业结算由后续版本接手。",
+  "ui.academy.flow.graduated": "修业圆满！结业结算已写回武将。",
   "ui.academy.flow.lobby.resume_toast": "学府修业进行中，请回到学府继续",
   "ui.academy.flow.lobby.frozen_toast": "学府修业中，外界时间静止",
   "ui.academy.flow.lobby.menu": "学府",

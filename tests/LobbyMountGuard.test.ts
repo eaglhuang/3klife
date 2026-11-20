@@ -40,5 +40,13 @@ export function createLobbyMountGuardSuite(): TestSuite {
         const destroyAt = src.indexOf('protected onDestroy(): void {');
         assert.isTrue(src.slice(destroyAt, destroyAt + 120).includes('this._cancelMountScheduler();'), 'onDestroy 取消背景排程');
     });
+    suite.test('開場面板拉回最上層時，少年挑選排在宿命池之後，不被結果面板蓋住（PROG-2-9214）', () => {
+        const src = fs.readFileSync(path.join(__dirname, '../assets/scripts/ui/scenes/LobbyScene.ts'), 'utf-8');
+        const fn = src.slice(src.indexOf('private _keepOpeningOnTop(): void {'));
+        const line = fn.slice(0, fn.indexOf('for (const node of nodes)'));
+        const destinyAt = line.indexOf('activeHostNodes()');
+        const youthAt = line.indexOf('this._youthPickHost?.node');
+        assert.isTrue(destinyAt >= 0 && youthAt > destinyAt, '少年挑選宿主必須排在宿命池節點之後（最後拉到最上層）');
+    });
     return suite;
 }
