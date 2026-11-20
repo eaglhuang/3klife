@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 176,
-    "in_progress": 5,
-    "open": 85,
-    "total": 266
+    "done": 178,
+    "in_progress": 4,
+    "open": 86,
+    "total": 268
   },
   "tasks": [
     {
@@ -11228,6 +11228,50 @@
       "acceptance": [],
       "deliverables": [],
       "notes": "2026-11-21 | 狀態: done | 驗證: compute-gate standard 12/13 通過（1 警告為既有項）；shard-manager validate 通過；僅文件，未改程式 | 變更: doc_spec_1182 新增第 12 章（一年循環 MVP 切分、重排實作卡 0～10、待決題分流與 MVP-Q1、Q2），總綱拆為 5 分片；doc_spec_1179 新增第 12 章（shard-g，學府人源 4 方案、推薦 A 少年名將持續來投、待決 Q13）；doc-id 登錄新增 1225～1232；keep.summary 加一行 | 阻塞: Q2、Q-B、MVP-Q1、MVP-Q2、Q13 待使用者裁決",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9214",
+      "title": "開場少年挑選被宿命轉蛋結果面板蓋住（9196 回歸修正）",
+      "owner": "claude-code-sonnet-5-5",
+      "priority": "P0",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-sonnet-5-5",
+      "started_at": "2026-11-21T01:30:00+08:00",
+      "started_by_agent": "ClaudeCode_sonnet-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "背景面板掛載後 _keepOpeningOnTop 把宿命池節點拉回最上層，蓋住少年挑選畫面，造成 playtest 02 步卡死。修正：_keepOpeningOnTop 最後把顯示中的少年挑選宿主拉到最上層，並加測試。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
