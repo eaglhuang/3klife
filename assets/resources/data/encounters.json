@@ -67,6 +67,8 @@
       "stageThemeId": "Canyon",
       "requiredLoadout": ["突破"],
       "highlyRecommendedLoadout": ["鼓舞"],
+      "turnLimit": 15,
+      "timeUpRule": "by-damage",
       "battleKind": "field",
       "playerGeneralId": "zhang-fei",
       "enemyGeneralId": "zhang-he",
