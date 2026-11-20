@@ -120,6 +120,7 @@ import { normalizeAiAdaptiveStreak, type AiAdaptiveStreak } from '../systems/AiA
 import { normalizeExtremeTaskState, type ExtremeTaskState } from '../systems/ExtremeTaskBoard';
 import { normalizePendingSceneGambit, type PendingSceneGambit } from '../systems/HallSceneGambit';
 import { isDefaultSeasonPassState, normalizeSeasonPassState, type SeasonPassState } from '../systems/SeasonPass';
+import { normalizeAcademyRecord, type PersistedAcademyRecord } from './GameAcademySaveStore';
 import { normalizeSalaryLedger, type SalaryLedger } from '../systems/GeneralSalary';
 import { normalizeHallIntel, normalizeHallWaitSeasons } from '../systems/HallMissionActions';
 import { normalizeHallMissionState, type HallMissionState } from '../systems/HallMissionData';
@@ -268,6 +269,8 @@ export interface PlayerSaveSnapshot {
     shrineOfferingDay?: string;
     /** 季度通行證 Mock（ECO-13）；全新狀態不寫入 */
     seasonPass?: SeasonPassState;
+    /** 進行中的學府修業紀錄（PROG-2-9189）：含入學當下的外界時鐘；缺值代表沒有進行中的修業（舊存檔相容），版號不升 */
+    academy?: PersistedAcademyRecord;
     /** 抽卡待補教官卡日誌（PROG-2-1004）：與扣款、入冊同批存檔，教官卡寫入後移除；舊檔沒有時讀回空陣列 */
     gachaMentorJournal?: GachaMentorJournalEntry[];
     /** 大廳任務 AI 委任紀錄（HALL-05，PROG-2-1006）：只增不改（結算除外）；舊檔沒有時讀回空陣列 */
@@ -734,6 +737,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(normalizeClanPrestige(snapshot.clanPrestige) > 0 ? { clanPrestige: normalizeClanPrestige(snapshot.clanPrestige) } : {}),
         ...(normalizeShrineOfferingDay(snapshot.shrineOfferingDay) !== null ? { shrineOfferingDay: normalizeShrineOfferingDay(snapshot.shrineOfferingDay)! } : {}),
         ...(!isDefaultSeasonPassState(normalizeSeasonPassState(snapshot.seasonPass)) ? { seasonPass: normalizeSeasonPassState(snapshot.seasonPass) } : {}),
+        ...(normalizeAcademyRecord(snapshot.academy, snapshot.gameTime) ? { academy: normalizeAcademyRecord(snapshot.academy, snapshot.gameTime)! } : {}),
         ...(snapshot.gachaMentorJournal !== undefined ? { gachaMentorJournal: normalizeGachaMentorJournal(snapshot.gachaMentorJournal) } : {}),
         ...(snapshot.hallAssignLog !== undefined ? { hallAssignLog: normalizeHallAssignLog(snapshot.hallAssignLog) } : {}),
         ...(snapshot.hallIntel !== undefined ? { hallIntel: normalizeHallIntel(snapshot.hallIntel) } : {}),

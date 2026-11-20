@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 174,
-    "in_progress": 4,
-    "open": 86,
-    "total": 264
+    "done": 42,
+    "in_progress": 3,
+    "open": 84,
+    "total": 129
   },
   "tasks": [
     {
@@ -11080,6 +11080,102 @@
       "acceptance": [],
       "deliverables": [],
       "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0 錯、單元測試通過、compute-gate 通過、playtest 11/11 | 變更: 大廳背景面板動態加載、不遮信箱、換場景取消 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9427",
+      "title": "勝敗結算演出打磨：分出勝負先打勝利／敗北橫幅停一拍再開結算窗、結算窗卡片彈入、主將頭像預載不閃問號",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T21:58:36+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 11/20 指示 (c) 勝敗結算演出打磨。實機逐格截圖發現：敵將倒下後戰場沒有勝利提示，結算窗直接蓋上（只有棋盤中央 1 秒光環）；結算窗頭像先顯示問號剪影約 0.75 秒才換成主將。本卡：分出勝負時先打全畫面勝利／敗北／平手橫幅並停約 1.3 秒再開結算窗（主動撤退維持立即開窗）；結算窗卡片加縮放彈入；主將頭像在停頓期間預載，載入前不顯示剪影。",
+      "related": [
+        "PROG-2-9426",
+        "PROG-2-9424",
+        "PROG-2-1888"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: done | 驗證: 單元 8588 全過、tsc 0、compute-gate 12/13（既有 LoginScene 警告）、7456 實機逐格截圖勝利與敗北兩路：勝金／敗紅橫幅撐到結算窗淡入、敵將或我將倒地在橫幅下播完、頭像直接顯示主將不閃剪影，證據 artifacts/playtest-checklist/prog-2-9427 | 變更: 勝敗橫幅停一拍再開結算窗（主動撤退立即開）、結算窗卡片彈入、頭像預載；實測首次掛載約 0.5 秒，橫幅拉長到 2.4 秒避免空檔 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9428",
+      "title": "AI 剋制兵種派到被剋兵種那一路：剋制兵不再隨策略亂丟車道（五路對撞下才真的對上）",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T23:31:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "BAT-19 AI 反制部署檢查（doc_spec_0389）。§2 部署數量、§3 兵種剋制、§4 車道矩陣程式都照規格。但實測：AI 選出剋制兵後車道仍照 Profile 策略挑，完全不看被剋兵種在哪一路；五路對撞下小兵只打同路正面，模擬 2 萬次剋制兵落到正確車道只約 20%（等於隨機），SCOUT_WEAK 為 0%（專挑玩家少的路）。本卡：IQ 非 LOW 時，出陣兵種若剋制玩家場上某兵種，優先派到該兵種所在且可部署的車道（被剋數量最多、己方最少）；沒有這種車道才回退 §4 策略。LOW IQ 照舊盲出。教學戰 meetPlayerLane 優先順序不變。",
+      "related": [
+        "PROG-2-1468",
+        "PROG-2-9340",
+        "PROG-2-0343"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: done | 驗證: 單元 8622 全過、tsc 0、模擬 4000 場×策略：中高智力剋制兵對上同路由約 20% 升到約 84%（低智力維持盲出）、7456 實機呂布（MEDIUM／騎兵衝鋒）對我方第 5 路盾兵：改前騎兵出中央第 3 路錯開，改後出第 5 路正面相對，證據 artifacts/playtest-checklist/prog-2-9428 | 變更: 新增 pickCounterLane，EnemyAI 中高智力剋制兵優先派到被剋兵種所在空線；規格 §3.3 補規則 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",

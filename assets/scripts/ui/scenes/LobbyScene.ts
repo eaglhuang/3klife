@@ -152,6 +152,8 @@ import { MentorHoldingsController } from '../core/MentorHoldingsController';
 import { MentorBorrowController } from '../core/MentorBorrowController';
 import { GraduationRecordController } from '../core/GraduationRecordController';
 import { AcademyGraduationController } from '../core/AcademyGraduationController';
+import { AcademyFlowController } from '../core/AcademyFlowController';
+import { GameAcademySaveStore } from '../../core/services/GameAcademySaveStore';
 import { ancestralInheritToastText, newAncestralInheritViews } from '../core/AcademyInheritView';
 import { ClanShrineController } from '../core/ClanShrineController';
 import { OpeningOfferPopupController } from '../core/OpeningOfferPopupController';
@@ -295,7 +297,7 @@ const LOBBY_OPENER_MOUNT_IDS: ReadonlyArray<readonly [string, string]> = [
     ['_openJobChange', 'JobChange'], ['_openRecruitHall', 'RecruitHall'], ['_openRivalDiplomacy', 'RivalDiplomacy'],
     ['_openDomestic', 'Domestic'], ['_openBondingSetup', 'BondingSetup'], ['_openDestinyShop', 'DestinyShop'],
     ['_openRetireReview', 'RetireReview'], ['_openUltimateCodex', 'UltimateCodex'], ['_openSpiritCodex', 'SpiritCodex'],
-    ['_openSageOracle', 'SageOracle'], ['_openSortieSetup', 'SortieSetup'], ['_openEliteTroopCodex', 'EliteTroopCodex'],
+    ['_openSageOracle', 'SageOracle'], ['_openSortieSetup', 'SortieSetup'], ['_openEliteTroopCodex', 'EliteTroopCodex'], ['_openAcademyFlow', 'AcademyFlow'],
 ];
 const LOBBY_LOADING_HINT_FONT_SIZE = 36;
 const LOBBY_LOADING_HINT_SIZE = { width: 900, height: 80 };
@@ -478,6 +480,8 @@ export class LobbyScene extends Component {
     /** 學府結業結算彈窗（PROG-2-1956） */
     private _academyGraduation: AcademyGraduationController<UIScreenPreviewHost> | null = null;
     private _academyTacticNames: ReadonlyMap<string, string> | null = null;
+    /** 學府入學與 36 回合修業畫面（PROG-2-9189） */
+    private _academyFlow: AcademyFlowController<UIScreenPreviewHost> | null = null;
     /** 祠堂聲望畫面（PROG-2-1958） */
     private _clanShrine: ClanShrineController<UIScreenPreviewHost> | null = null;
     private _openingOfferPopup: OpeningOfferPopupController<UIScreenPreviewHost> | null = null;
@@ -851,6 +855,7 @@ export class LobbyScene extends Component {
             { id: 'SandtableTerritory', uiId: UIID.SandtableTerritory, run: async () => { await this._mountSandtableTerritoryPanel(); services().ui.register(UIID.SandtableTerritory, this._createSandtableTerritoryController()); } },
             { id: 'GraduationRecord', run: () => this._mountGraduationRecord() },
             { id: 'AcademyGraduation', run: () => this._mountAcademyGraduation() },
+            { id: 'AcademyFlow', run: () => this._mountAcademyFlow() },
             { id: 'ClanShrine', run: () => this._mountClanShrine() },
             { id: 'SeasonEventPopup', run: () => this._mountSeasonEventPopup() },
             { id: 'MindMailbox', run: () => this._mountMindMailbox() },
@@ -1550,6 +1555,60 @@ export class LobbyScene extends Component {
         await this._academyGraduation.mount();
     }
 
+    /** 學府修業的語系文字；語系缺鍵時用傳入的 zh-TW 預設 */
+    private _academyText(key: string, fallback: string): string {
+        const text = services().i18n.t(key);
+        return text === key ? fallback : text;
+    }
+
+    /** 學府修業中外界時間凍結：擋下「下一季」與快進，提示玩家回學府（PROG-2-9189） */
+    private _blockedByAcademy(): boolean {
+        if (!services().session.isAcademyActive) return false;
+        services().event.emit('SHOW_TOAST', { message: this._academyText('ui.academy.flow.lobby.frozen_toast', '學府修業中，外界時間靜止'), duration: 2.5 });
+        return true;
+    }
+
+    /** 學府入學與修業畫面（PROG-2-9189）：入口在培育類別的「學府」 */
+    private async _mountAcademyFlow(): Promise<void> {
+        const session = services().session;
+        const store = new GameAcademySaveStore(session);
+        this._academyFlow = new AcademyFlowController<UIScreenPreviewHost>({
+            mountEnrollHost: (bindings) => this._mountPreviewScreenHost('AcademyEnrollHost', 'academy-enroll-screen', bindings),
+            mountSessionHost: (bindings) => this._mountPreviewScreenHost('AcademySessionHost', 'academy-session-screen', bindings),
+            apply: (host, view) => { if (host.binder) applyFlowView(host.binder, view); },
+            bringToFront: (host) => this._bringNodeToFront(host.node),
+            lookup: () => (key: string): string => services().i18n.t(key),
+            toast: (message) => { services().event.emit('SHOW_TOAST', { message, duration: 2.5 }); },
+            roster: () => session.roster,
+            nurtureBlockReasons: (childId) => services().nurture.checkStart(childId).reasons,
+            loadMentorCards: async () => attachSupportToCards((await services().legacy?.getMentorCards()) ?? [], await this._loadSupportCatalog()),
+            lockedMentorIds: () => services().nurture.lockedMentorIds(),
+            tokensLeft: () => services().nurture.admissionsLeft(),
+            consumeToken: () => services().nurture.consumeAdmissionToken(),
+            refundToken: () => services().nurture.refundAdmissionToken(),
+            clanUuid: () => session.clanUuid,
+            clanPrestigeTier: () => session.clanPrestigeTier,
+            admissionTurn: () => session.gameTime.totalSeasonsElapsed,
+            worldSeed: () => `3klife-world|${session.clanUuid}`,
+            store,
+            persist: async () => {
+                if (session.hasSaveService) await session.save();
+            },
+            isActive: () => session.isAcademyActive,
+            onChanged: () => { this._refreshCityHub(); },
+        });
+        await this._academyFlow.mount();
+        if (session.isAcademyActive) {
+            services().event.emit('SHOW_TOAST', { message: this._academyText('ui.academy.flow.lobby.resume_toast', '學府修業進行中，請回到學府繼續'), duration: 3 });
+        }
+    }
+
+    private _openAcademyFlow(): void {
+        const flow = this._academyFlow;
+        if (!flow?.enrollHost) { this._showNotOpenYet(); return; }
+        void flow.openFromMenu();
+    }
+
     /**
      * 學府結業入口（PROG-2-1956）：寫回武將並彈出結算；結業失敗回傳 null。
      * 學府修業畫面在快照 graduated 時呼叫本方法。
@@ -1761,6 +1820,7 @@ export class LobbyScene extends Component {
             hallBoard: () => this._openHallBoard(),
             sandtable: () => this._onClickOpenSandtable(),
             nurture: () => this._openNurtureFlow(),
+            academy: () => this._openAcademyFlow(),
             supportCard: () => this.onClickSupportCard(),
             shrine: () => this._openClanShrine(),
             seasonPass: () => this._openSeasonPass(),
@@ -1809,7 +1869,11 @@ export class LobbyScene extends Component {
             territoryCount: session.territories.length,
             rivals: session.rivals,
             openCategory: this._cityHubCategory,
-            actionLabels: { sandtable: buildSandtableStatusLabel(session.sandtableStage, session.sandtableMarkersPlaced) },
+            actionLabels: {
+                sandtable: buildSandtableStatusLabel(session.sandtableStage, session.sandtableMarkersPlaced),
+                academy: session.isAcademyActive ? this._academyText('ui.academy.flow.lobby.menu_resume', '學府修業中') : this._academyText('ui.academy.flow.lobby.menu', '學府'),
+            },
+            categoryBadges: session.isAcademyActive ? { nurture: ' ●' } : undefined,
             officerTier: session.officerState.currentTier,
         });
         binder.setTexts(view.texts);
@@ -5593,6 +5657,7 @@ ${spent}`,
      */
     private async _onClickFastForward(): Promise<void> {
         if (this._fastForwarding) return;
+        if (this._blockedByAcademy()) return;
         // 年終守城還沒打時不能跨年（PROG-2-9426）：一季都還沒推就被擋，直接開打守城
         if (this._isYearEndDefenseDue()) {
             await this._startYearEndDefense();
@@ -5713,6 +5778,7 @@ ${spent}`,
     private async _onClickAdvanceSeason(): Promise<void> {
         // 換季結算是非同步的，連點不重入（PROG-2-9116：大廳右上角也接這個入口）
         if (this._advancingSeason) return;
+        if (this._blockedByAcademy()) return;
         // 第 4 季結束時今年還沒守城：先打年終守城，打完回大廳再換年（PROG-2-9426）
         if (this._isYearEndDefenseDue()) {
             await this._startYearEndDefense();

@@ -5,26 +5,36 @@
   "indexPath": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計.md",
   "type": "markdown-h2",
   "preambleShard": "shard-a",
-  "defaultShard": "shard-d",
+  "defaultShard": "shard-f",
   "shards": [
     {
       "name": "shard-a",
       "title": "0–1 結論、新舊分工、舊存檔遷移",
-      "pattern": "^[0-1]."
+      "pattern": "^[0-1][.] "
     },
     {
       "name": "shard-b",
       "title": "2–3 引擎 API 速查、畫面總覽與記憶體限制",
-      "pattern": "^[2-3]."
+      "pattern": "^[2-3][.] "
     },
     {
       "name": "shard-c",
       "title": "4 入學、修業主畫面、打斷宿主、結業串接",
-      "pattern": "^4."
+      "pattern": "^4[.] "
     },
     {
       "name": "shard-d",
       "title": "5–8 外界凍結、驗收、任務拆分、未決事項",
+      "pattern": "^[5-8][.] "
+    },
+    {
+      "name": "shard-e",
+      "title": "9 依賴的共用框架與共通 API",
+      "pattern": "^9[.] "
+    },
+    {
+      "name": "shard-f",
+      "title": "10–11 學府實作卡拆分建議、待決選擇題",
       "pattern": "."
     }
   ]
