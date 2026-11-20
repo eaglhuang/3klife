@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "source": "../子嗣十歲歷練四路大富翁與職業屬性規格書.md",
+  "indexTitle": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引）",
+  "indexPath": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書.md",
+  "type": "markdown-h2",
+  "preambleShard": "shard-a",
+  "defaultShard": "shard-i",
+  "shards": [
+    {
+      "name": "shard-a",
+      "title": "0–1 結論、定位與三節點因果、新玩家節奏",
+      "pattern": "^(0|1)[.] "
+    },
+    {
+      "name": "shard-b",
+      "title": "2 首子誕生驚喜流程、命名與綽號、出生禮",
+      "pattern": "^2[.] "
+    },
+    {
+      "name": "shard-c",
+      "title": "3–4 新玩家時間線與加速、觸發與外界時間與防重讀",
+      "pattern": "^(3|4)[.] "
+    },
+    {
+      "name": "shard-d",
+      "title": "5 選路、心願路線、職業屬性與專長",
+      "pattern": "^5[.] "
+    },
+    {
+      "name": "shard-e",
+      "title": "6 大富翁盤面",
+      "pattern": "^6[.] "
+    },
+    {
+      "name": "shard-f",
+      "title": "7 產出、稀有度、寶物與道具清單、因子印記互動",
+      "pattern": "^7[.] "
+    },
+    {
+      "name": "shard-g",
+      "title": "8–9 對抓周與學府的回寫、少年名將適用性",
+      "pattern": "^(8|9)[.] "
+    },
+    {
+      "name": "shard-h",
+      "title": "10–11 畫面演出與資產、資料結構",
+      "pattern": "^(10|11)[.] "
+    },
+    {
+      "name": "shard-i",
+      "title": "12–13 衝突與待裁決選擇題、實作卡拆分",
+      "pattern": "."
+    }
+  ]
+}
