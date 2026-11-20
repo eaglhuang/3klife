@@ -902,7 +902,8 @@ export class LobbyScene extends Component {
             await Promise.all([
                 services().loadSkills(),
                 services().loadVfxEffects(),
-                services().loadSeasonModifiers()
+                services().loadSeasonModifiers(),
+                services().loadStarterChildConfig()
             ]);
             
             this._generals = await this._loadGenerals();
@@ -2643,6 +2644,7 @@ export class LobbyScene extends Component {
                     openingLetter: services().session.openingLetter,
                 }),
                 notifyBeauty: name => services().event.emit('SHOW_TOAST', { message: `紅顏 ${name} 前來相會，已加入名冊，可到「結緣」配對`, duration: 4 }),
+                notifyStarterChild: name => services().event.emit('SHOW_TOAST', { message: services().i18n.t('ui.opening.starter_child_hint', name), duration: 4 }),
                 advanceOpening: event => { this._advanceOpening(event); },
                 presentDestinyPool: (view, actions) => this._presentDestinyPool(view, actions),
                 closeDestinyPool: () => { if (this._destinyPoolHost) this._destinyPoolHost.node.active = false; },

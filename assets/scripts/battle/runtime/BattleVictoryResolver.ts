@@ -3,6 +3,8 @@ import { EVENT_NAMES, Faction } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
 import type { BattleState } from '../models/BattleState';
 import type { BattleResult } from './BattleRuntimeContract';
+import { FORTRESS_MAX_HP } from '../../core/systems/FortressBarView';
+import { judgeTimeUp, type TimeUpVerdict, type TimeUpWinner } from '../../core/systems/TimeUpJudgement';
 
 /**
  * 戰鬥怎麼結束的（PROG-2-9414）：結算窗依此挑文案。
@@ -15,6 +17,8 @@ export interface BattleEndedPayload {
   cause?: BattleEndCause;
   retreated?: boolean;
   timeUp?: boolean;
+  /** 依戰果判定時的雙方分數（PROG-2-9423），結算帶出說明 */
+  timeUpVerdict?: TimeUpVerdict;
   salvage?: BattleState['stageSalvage'];
 }
 
@@ -34,6 +38,28 @@ export function announceBattleEnd(
   return true;
 }
 
+/**
+ * 回合用盡時誰贏（PROG-2-9423）：固定勝方直接回傳；'by-damage' 依雙方城寨與主將失血比例判定。
+ * 戰場主流程與單挑流程都用這個，判定才會一致。
+ */
+export function resolveTimeUpWinner(state: BattleState): { winner: TimeUpWinner; verdict?: TimeUpVerdict } {
+  const battle = services().battle;
+  const outcome = battle.getTurnLimitOutcome();
+  if (outcome !== 'by-damage') return { winner: outcome };
+  const pg = state.playerGeneral;
+  const eg = state.enemyGeneral;
+  const verdict = judgeTimeUp({
+    playerFortressHp: state.playerFortressHp,
+    enemyFortressHp: state.enemyFortressHp,
+    fortressMaxHp: FORTRESS_MAX_HP,
+    playerGeneralHp: pg?.currentHp ?? 0,
+    playerGeneralMaxHp: pg?.maxHp ?? 0,
+    enemyGeneralHp: eg?.currentHp ?? 0,
+    enemyGeneralMaxHp: eg?.maxHp ?? 0,
+  }, battle.getTimeUpJudgement());
+  return { winner: verdict.winner, verdict };
+}
+
 export function resolveBattleVictory(state: BattleState): BattleResult {
   const svc = services();
   const playerGeneral = state.playerGeneral;
@@ -43,7 +69,8 @@ export function resolveBattleVictory(state: BattleState): BattleResult {
   const enemyBroken = (enemyGeneral?.isDead() ?? false) || state.enemyFortressHp <= 0;
   // 回合用盡：一般戰鬥判攻方（玩家）撤退落敗；教學戰判敵軍退兵、玩家獲勝。已有一方被打垮時不看回合
   const timeUp = svc.battle.isTurnLimitReached() && !playerBroken && !enemyBroken;
-  const timeUpWinner = svc.battle.getTurnLimitOutcome();
+  const timeUpJudged = timeUp ? resolveTimeUpWinner(state) : null;
+  const timeUpWinner = timeUpJudged?.winner;
 
   const playerLost = playerBroken || (timeUp && timeUpWinner === 'enemy-win');
   const enemyLost = enemyBroken || (timeUp && timeUpWinner === 'player-win');
@@ -64,6 +91,7 @@ export function resolveBattleVictory(state: BattleState): BattleResult {
       cause,
       ...(retreated ? { retreated: true } : {}),
       ...(timeUp ? { timeUp: true } : {}),
+      ...(timeUpJudged?.verdict ? { timeUpVerdict: timeUpJudged.verdict } : {}),
     });
   }
 

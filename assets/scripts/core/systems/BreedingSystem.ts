@@ -6,7 +6,7 @@
  *   1. checkBreedingEligibility：年齡 ≥ 20、男女配對、存活且未卡片化、精力足夠、
  *      未達一生生育上限、母方不在待產期、3 代內無共同祖先
  *   2. 扣精力（父 -50 / 母 -100；確認結緣即扣，與受孕成敗無關）
- *   3. 擲受孕率；成功則母方進入待產（4 季）、雙方生育次數 +1
+ *   3. 擲受孕率；成功則母方進入待產（2 季，見 PREGNANCY_LOCK_SEASONS）、雙方生育次數 +1
  *   4. 由雙方祖譜組出子嗣的 14 人祖譜，算 EP_MVP、繼承因子、產生 0 歲子嗣
  *
  * EP_MVP = 50 + [共鳴 15] + [異脈 20] + [契合 25]；天命波動延後到 P1。
@@ -54,12 +54,22 @@ import { applyFateInheritance } from './LuckFateInheritance';
 import { applyBloodlineMutation } from './LuckBloodlineMutation';
 import { PINK_TERRAIN_FACTOR_KEYS } from './BattleAptitude';
 import { inheritChildAptitudes } from './ChildAptitudeInheritance';
+import { evaluateMarriageVitality, type MarriageVitalityResult } from './MarriageVitality';
+
+export interface BreedingRulesConfig {
+    /** 受孕後母方待產凍結季數（2026-11-20 裁決：2 季） */
+    pregnancyLockSeasons: number;
+}
+
+export const DEFAULT_BREEDING_RULES: Readonly<BreedingRulesConfig> = {
+    pregnancyLockSeasons: 2,
+};
 
 export const BREEDING_MIN_AGE = 20;
 export const FATHER_VIGOR_COST = 50;
 export const MOTHER_VIGOR_COST = 100;
-/** MCQ Q43：受孕後待產 4 回合（1 年） */
-export const PREGNANCY_LOCK_SEASONS = 4;
+/** 2026-11-20 裁決（PROG-2-9180）：受孕後待產 2 季（原 4 季，對應 breeding-rules.json） */
+export const PREGNANCY_LOCK_SEASONS = DEFAULT_BREEDING_RULES.pregnancyLockSeasons;
 /** §K Inbreeding.BlockGenerations */
 export const INBREEDING_BLOCK_GENERATIONS = 3;
 
@@ -106,6 +116,14 @@ export type BreedingGeneral = GeneralConfig & {
     pregnancySeasonsLeft?: number;
     /** 已轉為教官 / 支援卡，不再是親傳父母來源 */
     isMentorCard?: boolean;
+    /** 寒門新血前 6 回合訓練加成（PROG-2-9181） */
+    earlyTrainingBonus?: number;
+    /** 佳話聯姻「文武並濟」初始 TP 加成（PROG-2-9181） */
+    initialBonusTp?: number;
+    /** 佳話聯姻「雙星輝映」前 12 回合覺醒率加成（PROG-2-9181） */
+    earlyAwakenBonusPct?: number;
+    /** 佳話聯姻觸發稱號 ID 列表（PROG-2-9181） */
+    marriageEpithets?: string[];
     /** 出生時的 totalSeasonsElapsed */
     birthSeason?: number;
     /** 負面特質出現率加成（近親子嗣 +0.5，其餘 0） */
@@ -659,6 +677,8 @@ export interface BreedingRequest {
     pairRecord?: FamilyPairRecord;
     /** 用來取名冊裡武將的 genes（父母本人、或曾在名冊出生的祖先） */
     rosterLookup?: (uid: string) => GeneralConfig | undefined;
+    /** 選填：當前家族名冊（寒門新血判斷稀少姓氏用，PROG-2-9181） */
+    roster?: readonly GeneralConfig[];
 }
 
 export type BreedingOutcome = 'blocked' | 'failed' | 'conceived';
@@ -672,6 +692,8 @@ export interface BreedingResult {
     lineageSynergyFactorId?: string;
     /** 外戚血脈純化升星的結果（PROG-2-1819） */
     kinPurification?: KinPurificationOutcome;
+    /** 寒門新血 × 佳話聯姻結算結果（PROG-2-9181） */
+    marriageVitality?: MarriageVitalityResult;
     outcome: BreedingOutcome;
     /** 用了受孕道具仍失敗時，父母各返還的慰問精力（doc_spec_0315 §4，PROG-2-2109） */
     vitalityRefund?: { father: number; mother: number };
@@ -933,9 +955,25 @@ function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMo
         child.hiddenFlags = [...(child.hiddenFlags ?? []), FRAIL_BIRTH_FLAG];
     }
     const bloodFatigue: BloodFatigueOutcome = { before: Math.max(fatherFatigue, motherFatigue), after: childFatigue, inbred: fatigueInbred, frail };
+    const marriageVitality = evaluateMarriageVitality({
+        father: request.father,
+        mother: request.mother,
+        hasCommonAncestor: fatigueInbred,
+        roster: request.roster,
+    });
+    if (marriageVitality.freshBlood.active) {
+        child.bloodFatigue = Math.max(0, childFatigue - marriageVitality.freshBlood.extraFatigueRecovery);
+        child.earlyTrainingBonus = marriageVitality.freshBlood.earlyTrainingBonus;
+    }
+    if (marriageVitality.epithets.length > 0) {
+        child.marriageEpithets = marriageVitality.epithets.map((e) => e.id);
+        if (marriageVitality.bonusTp > 0) child.initialBonusTp = marriageVitality.bonusTp;
+        if (marriageVitality.awakenRateBonus > 0) child.earlyAwakenBonusPct = marriageVitality.awakenRateBonus;
+    }
 
     return {
         bloodFatigue,
+        marriageVitality,
         compactRescued: !heritageLocked && lockedFactors !== fatedFactors,
         heritageRescued: heritageLocked && lockedFactors !== fatedFactors,
         lineageSynergyFactorId: synergy.risen?.id,
@@ -971,6 +1009,23 @@ export function holdPregnancyVigor(before: readonly BreedingGeneral[], after: re
     }
     if (held.size === 0) return [...after];
     return after.map((general) => (held.has(general.id) ? { ...general, vitality: held.get(general.id) } : general));
+}
+
+/**
+ * 舊存檔遷移（PROG-2-9180）：剩餘待產季數若超過新版上限（2 季），載入時夾到上限。
+ */
+export function clampRosterPregnancySeasons<T extends BreedingGeneral>(
+    roster: readonly T[],
+    maxSeasons: number = PREGNANCY_LOCK_SEASONS,
+): T[] {
+    const cap = Math.max(0, Math.floor(maxSeasons));
+    return roster.map((general) => {
+        const left = general.pregnancySeasonsLeft;
+        if (typeof left === 'number' && left > cap) {
+            return { ...general, pregnancySeasonsLeft: cap };
+        }
+        return general;
+    });
 }
 
 /** 給 BloodlineGraph.registerChild 用的輕量人物記錄 */

@@ -16,6 +16,7 @@
  */
 import { factorLabelOf, readableFactorName } from '../../core/systems/FactorDisplayName';
 import { kinshipLampLine, outcrossRecoveryLine } from '../../core/systems/BloodFatigue';
+import { evaluateMarriageVitality, marriageVitalityBadgeLine } from '../../core/systems/MarriageVitality';
 import { ancestorSeatVisible, diversityVisible, factorDetailVisible, formulaDetailVisible, G1_EP_DETAIL_MASK, g1EpEstimateText, G1_FACTOR_TEXT, KIN_TEXT_WARNING, kinshipScanVisible, MILESTONE_G1_HINT, type MilestoneStage } from '../../core/systems/FamilyMilestone';
 import { PEDIGREE_SLOTS } from '../../core/services/BloodlineGraph';
 import { DIVERSITY_HINT } from '../../core/systems/DiversityFactor';
@@ -521,6 +522,15 @@ export class BondingSetupController {
         if (synergyLine) texts.conceptionLabel += `｜${synergyLine}`;
         if (formulaDetailVisible(stage)) {
             texts.conceptionLabel += `｜${epContribLine(father.ep ?? EP_BASE, mother.ep ?? EP_BASE)}`;
+        }
+        const vitalityBadge = marriageVitalityBadgeLine(evaluateMarriageVitality({
+            father,
+            mother,
+            hasCommonAncestor: (this._deps.breeding.commonAncestorSeats?.(father.id, mother.id) ?? []).some(Boolean),
+            roster: this._deps.roster.getAll(),
+        }), (key, ...args) => this._t(key, ...args));
+        if (vitalityBadge) {
+            texts.conceptionLabel += `｜${vitalityBadge}`;
         }
         const sage = this._sageRemarks(father.id, mother.id);
         texts.sageRemarkLines = sage.hint;

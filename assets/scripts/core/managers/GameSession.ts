@@ -216,6 +216,7 @@ import {
 } from '../systems/DiscoveryProgress';
 import type { NurtureAwakeningHooks } from '../services/NurtureService';
 import { buildStarterRoster, STARTER_CORE_GENERAL_ID, StarterRosterOptions } from '../services/StarterRosterService';
+import { buildStarterChild } from '../services/StarterChildService';
 import { resolveFactorColor } from '../systems/FactorInheritance';
 import { insertSpiritCard, replaceSpiritCard, setPrimarySpiritCard, unequipSpiritCard, type SpiritSlotFlowResult } from '../systems/SpiritSlotFlow';
 import type { FactorColor, FactorDefinition, FactorDictionary } from '../systems/FactorInheritance';
@@ -294,7 +295,7 @@ import { isRescueRefreshDue, rollDungeonRescue, type RescueOutcome, buildRescued
 import { giftToFemale, normalizeFemaleSystemState, type FemaleSystemState } from '../systems/FemaleSystemState';
 import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral, UNVEILING_AGE, GENERAL_STATUS_UNVEILED } from '../systems/Unveiling';
 import { injectCatalystFactor, markCatalystUsed, type CatalystGeneral } from '../systems/GeneCatalyst';
-import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
+import { advanceBreedingSeason, clampRosterPregnancySeasons, holdPregnancyVigor } from '../systems/BreedingSystem';
 import { DynamicRelationBook, battleComradePairs, type DynamicRelationResult } from '../systems/KinDynamicRelations';
 import { claimAllSeasonPass, createSeasonPassState, isDefaultSeasonPassState, mockSeasonPassLevelUp, normalizeSeasonPassState, type SeasonPassReward, type SeasonPassState } from '../systems/SeasonPass';
 import { normalizePendingSceneGambit, pendingSceneGambitOfTask, resolveSceneGambit, type PendingSceneGambit, type SceneGambitOutcome } from '../systems/HallSceneGambit';
@@ -2249,7 +2250,19 @@ export class GameSession {
         const letterBeforeNewGame = carryOpeningLetterOnNewGame(this._openingLetter);
         this.startNewGame(seed);
         this._openingLetter = letterBeforeNewGame;
-        this._roster.replaceAll(normalizeRosterRoles(starters));
+        const initialRoster = [...starters];
+        if (options.includeStarterChild !== false) {
+            const child = buildStarterChild(initialRoster, {
+                coreGeneralId: coreId,
+                beautyGeneralId: options.beautyGeneralId,
+                config: options.starterChildConfig,
+                random: this._random,
+            });
+            if (!initialRoster.some(g => g.id === child.id)) {
+                initialRoster.push(child);
+            }
+        }
+        this._roster.replaceAll(normalizeRosterRoles(initialRoster));
         if (!await this.setLeadGeneral(coreId)) throw new Error('[GameSession] 無法設定初始核心主將');
         this._emit(GAME_SESSION_EVENTS.RosterChanged, this.roster);
     }
@@ -6592,7 +6605,7 @@ export class GameSession {
         this._preLifespanRoster = null;
         this._clock.restore(snapshot.gameTime);
         this._seeded.restore(snapshot.randomState ?? { algorithm: 'mulberry32-v1', state: LEGACY_RANDOM_SEED });
-        this._roster.replaceAll(backfillRosterChildAptitudes(normalizeRosterCaptivity(normalizeRosterRoles(snapshot.roster))));
+        this._roster.replaceAll(clampRosterPregnancySeasons(backfillRosterChildAptitudes(normalizeRosterCaptivity(normalizeRosterRoles(snapshot.roster)))));
         this._pendingLifespanEvents = (snapshot.pendingLifespanDeaths ?? []).map((death) => ({ type: 'died', generalId: death.generalId, age: death.age }));
         // 讀檔後沒有記憶體中的季結前名冊；待季結死亡者還原為非陣亡，虎符結算才認得出「這次才死」（PROG-2-0223）
         this._preLifespanRoster = preLifespanBaseline(snapshot.roster, (snapshot.pendingLifespanDeaths ?? []).map((death) => death.generalId));

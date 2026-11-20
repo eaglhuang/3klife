@@ -56,6 +56,10 @@ export interface EncounterConfig {
   riskTags?: string[];
   /** 敵軍開場布陣（PROG-2-9420）：開戰時在敵方後排生成；type 是 TroopType 字串，lane 從 0 起算 */
   enemyInitialDeployment?: { type: string; lane: number }[];
+  /** 關卡回合上限（PROG-2-9423）；不設定就用全域上限 */
+  turnLimit?: number;
+  /** 回合用盡時的判定（PROG-2-9423）：'by-damage' 依戰果、'enemy-win'／'player-win' 固定勝方；預設 'enemy-win' */
+  timeUpRule?: 'by-damage' | 'enemy-win' | 'player-win';
 }
 
 /**

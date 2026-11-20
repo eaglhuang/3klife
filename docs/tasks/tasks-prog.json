@@ -10816,6 +10816,102 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9422",
+      "title": "高倍率攻擊視覺提示：≥2 倍金字、≥4 倍紅字＋脈動光環（Q-C1 選 A）",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T12:05:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "Q-C1：地格「攻擊×N」buff 乘算疊加，單一單位可能一擊秒殺主將。使用者 11/20 裁決維持乘算、不改疊加規則；總PM 裁決加視覺提示選 A：攻擊倍率 ≥2 倍時頭頂攻擊數字變金，≥4 倍變紅並加慢速脈動光環，敵我都適用，門檻抽 JSON。讓玩家一眼看出哪個單位已經疊到危險倍率，可以提前應對。",
+      "related": [
+        "PROG-2-1870",
+        "PROG-2-9411",
+        "PROG-2-9420"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: done | 驗證: 單元測試 8526 通過、tsc 0、compute-gate 12/13、7456 實機截圖、六關回歸 0 錯誤 | 變更: 攻擊 ≥2 倍金字、≥4 倍紅字＋呼吸光環，門檻抽 data/attack-surge-highlight.json | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9423",
+      "title": "瓦口隘 15 回合時限：時限到依戰果判勝負",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T13:18:55+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 11/20 裁決：瓦口隘加 15 回合時限，時限到依戰果判定勝負。總PM 尚未回覆『戰果』定義，先照戰場專家建議 A 實作：比雙方城寨＋主將的失血比例，打得重的一方勝，相同判我方敗；權重與平手歸屬抽 JSON，之後改 B／C 只需調整。目前關卡只有全域 30 回合上限，回合用盡一律判玩家撤退，瓦口隘這種峽谷消耗戰沒有節奏壓力。",
+      "related": [
+        "PROG-2-9414",
+        "PROG-2-9420",
+        "PROG-2-9422"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: done | 驗證: 單元 8536 全過、tsc 0、compute-gate 12/13（既有 LoginScene 警告）、實機瓦口隘 HUD 第 N/15、開戰說明、時限結算 15%/0% 判勝截圖、六關回歸 0 錯 | 變更: 關卡 turnLimit/timeUpRule、戰果判定 JSON、結算文案、HUD 分母 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
