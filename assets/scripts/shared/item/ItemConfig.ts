@@ -1,0 +1,166 @@
+// @spec-source → 物品庫存系統 Base 框架規格書 (doc_spec_1184) §3 共用資料結構；共用框架總綱 (doc_spec_1182) §12 ITM-M；PROG-2-9203
+/**
+ * ItemConfig — 物品庫存 base 的設定型別與預設值（零依賴純函式庫，不 import cc）。
+ *
+ * 一個庫存空間由「持有者（Holder）＋容器（Container）」決定：持有者種類只是名稱不同
+ * （武將＝背包、家＝庫房、幕府＝公庫、家族＝倉庫），邏輯共用一套。MVP 只開家庭倉庫（household/main）。
+ * 數值寫在 assets/resources/data/item-config.json，這裡的 DEFAULT_ITEM_CONFIG 是 JSON 缺檔時的後備，
+ * 兩者內容必須一致（測試鎖定）。
+ *
+ * Unity 對照：像 ScriptableObject 的 ItemDefDatabase＋ContainerRule，執行期只讀、不存檔。
+ */
+
+export type HolderKind = 'player' | 'general' | 'household' | 'shogunate' | 'clan';
+export const HOLDER_KINDS: readonly HolderKind[] = Object.freeze(['player', 'general', 'household', 'shogunate', 'clan']);
+
+export interface HolderRef {
+    kind: HolderKind;
+    id: string;
+}
+
+/** token＝令牌類（入學令、求籤令）；mentorCard／equipment／treasure／card 為後續卡預留，MVP 只做可疊加的數量型 */
+export type ItemKind = 'token' | 'consumable' | 'material' | 'special' | 'currency' | 'equipment' | 'treasure' | 'card' | 'mentorCard';
+export const ITEM_KINDS: readonly ItemKind[] = Object.freeze([
+    'token', 'consumable', 'material', 'special', 'currency', 'equipment', 'treasure', 'card', 'mentorCard',
+]);
+
+/** general＝只能放在武將身上；household＝只能放在家（傳家寶）；其餘不限制持有者 */
+export type ItemBind = 'none' | 'onAcquire' | 'onEquip' | 'general' | 'household';
+export const ITEM_BINDS: readonly ItemBind[] = Object.freeze(['none', 'onAcquire', 'onEquip', 'general', 'household']);
+
+/** 超過堆疊上限的部分折成貨幣（每溢出 1 個折 amount） */
+export interface ItemOverflow {
+    toCurrency: string;
+    amount: number;
+}
+
+export interface ItemDefV1 {
+    id: string;
+    kind: ItemKind;
+    /** MVP 只支援可疊加；max=null 無上限 */
+    stack: { mode: 'stackable'; max: number | null };
+    bind: ItemBind;
+    /** null＝超過上限整筆拒收（ITEM_FULL） */
+    overflow: ItemOverflow | null;
+}
+
+export interface ContainerRuleV1 {
+    id: string;
+    accepts: ItemKind[];
+    /** 容器可放的物品種類數上限；null＝不限（沿用既有倉庫「種類數」算法，擴容規則留給後續卡） */
+    capacity: number | null;
+}
+
+export interface HolderRuleV1 {
+    kind: HolderKind;
+    /** 玩家看到的名稱 key（背包／庫房／公庫／倉庫），只影響文案 */
+    aliasKey: string;
+    containers: ContainerRuleV1[];
+}
+
+/** 定期發放：每滿 everySeasons 季發 count 個（FND-M periodsDue 算期數；封頂與溢出由物品定義決定） */
+export interface PeriodicGrantV1 {
+    id: string;
+    holder: HolderRef;
+    container: string;
+    itemId: string;
+    everySeasons: number;
+    count: number;
+}
+
+export interface ItemConfigV1 {
+    schema: 'item-config.v1';
+    items: ItemDefV1[];
+    holders: HolderRuleV1[];
+    periodicGrants: PeriodicGrantV1[];
+}
+
+export const ITEM_CONFIG_JSON = 'data/item-config';
+export const HOUSEHOLD_HOLDER: HolderRef = Object.freeze({ kind: 'household', id: 'home' }) as HolderRef;
+export const DEFAULT_CONTAINER_ID = 'main';
+/** 入學令（沿用既有 ItemDef 的 id，存檔裡的舊數量原樣沿用） */
+export const ADMISSION_TOKEN_ID = 'ITEM_ADMISSION_TOKEN';
+export const ADMISSION_SEASON_RULE_ID = 'academy_admission_season';
+
+/** 設定檔未出現的物品（舊存檔裡的其他道具）視為無上限的消耗品，行為與改造前一致 */
+export function legacyItemDef(id: string): ItemDefV1 {
+    return { id, kind: 'consumable', stack: { mode: 'stackable', max: null }, bind: 'none', overflow: null };
+}
+
+export const DEFAULT_ITEM_CONFIG: ItemConfigV1 = Object.freeze({
+    schema: 'item-config.v1',
+    items: [
+        { id: ADMISSION_TOKEN_ID, kind: 'token', stack: { mode: 'stackable', max: 3 }, bind: 'none', overflow: { toCurrency: 'gold', amount: 5000 } },
+    ],
+    holders: [
+        {
+            kind: 'household', aliasKey: 'holder.household.name',
+            containers: [{ id: DEFAULT_CONTAINER_ID, accepts: ['token', 'consumable', 'material', 'special', 'currency', 'treasure'], capacity: null }],
+        },
+    ],
+    periodicGrants: [
+        { id: ADMISSION_SEASON_RULE_ID, holder: { kind: 'household', id: 'home' }, container: DEFAULT_CONTAINER_ID, itemId: ADMISSION_TOKEN_ID, everySeasons: 1, count: 1 },
+    ],
+}) as ItemConfigV1;
+
+function isPosInt(v: unknown): v is number {
+    return typeof v === 'number' && Number.isInteger(v) && v > 0;
+}
+
+function isHolderKind(v: unknown): v is HolderKind {
+    return typeof v === 'string' && (HOLDER_KINDS as readonly string[]).indexOf(v) >= 0;
+}
+
+function isItemKind(v: unknown): v is ItemKind {
+    return typeof v === 'string' && (ITEM_KINDS as readonly string[]).indexOf(v) >= 0;
+}
+
+/**
+ * 讀進來的 JSON 逐欄檢查；壞掉的條目丟掉，整份不是物件時回預設。
+ * 不丟例外：設定壞了不能讓遊戲開不起來（比照其他 configure* 的做法）。
+ */
+export function normalizeItemConfig(raw: unknown): ItemConfigV1 {
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return DEFAULT_ITEM_CONFIG;
+    const src = raw as Record<string, unknown>;
+    const items: ItemDefV1[] = [];
+    for (const entry of Array.isArray(src.items) ? src.items : []) {
+        const e = entry as Record<string, unknown> | null;
+        if (!e || typeof e.id !== 'string' || e.id.length === 0 || !isItemKind(e.kind)) continue;
+        const stack = (e.stack ?? {}) as Record<string, unknown>;
+        const max = stack.max === null || stack.max === undefined ? null : (isPosInt(stack.max) ? stack.max : null);
+        const bind = typeof e.bind === 'string' && (ITEM_BINDS as readonly string[]).indexOf(e.bind) >= 0 ? (e.bind as ItemBind) : 'none';
+        const ov = e.overflow as Record<string, unknown> | null | undefined;
+        const overflow = ov && typeof ov.toCurrency === 'string' && ov.toCurrency.length > 0 && isPosInt(ov.amount)
+            ? { toCurrency: ov.toCurrency, amount: ov.amount } : null;
+        items.push({ id: e.id, kind: e.kind, stack: { mode: 'stackable', max }, bind, overflow });
+    }
+    const holders: HolderRuleV1[] = [];
+    for (const entry of Array.isArray(src.holders) ? src.holders : []) {
+        const e = entry as Record<string, unknown> | null;
+        if (!e || !isHolderKind(e.kind) || !Array.isArray(e.containers)) continue;
+        const containers: ContainerRuleV1[] = [];
+        for (const c of e.containers) {
+            const cc = c as Record<string, unknown> | null;
+            if (!cc || typeof cc.id !== 'string' || cc.id.length === 0 || !Array.isArray(cc.accepts)) continue;
+            containers.push({
+                id: cc.id,
+                accepts: cc.accepts.filter(isItemKind),
+                capacity: isPosInt(cc.capacity) ? cc.capacity : null,
+            });
+        }
+        if (containers.length > 0) holders.push({ kind: e.kind, aliasKey: typeof e.aliasKey === 'string' ? e.aliasKey : `holder.${e.kind}.name`, containers });
+    }
+    const periodicGrants: PeriodicGrantV1[] = [];
+    for (const entry of Array.isArray(src.periodicGrants) ? src.periodicGrants : []) {
+        const e = entry as Record<string, unknown> | null;
+        const h = (e?.holder ?? null) as Record<string, unknown> | null;
+        if (!e || typeof e.id !== 'string' || typeof e.itemId !== 'string' || !h || !isHolderKind(h.kind) || typeof h.id !== 'string') continue;
+        if (!isPosInt(e.everySeasons) || !isPosInt(e.count)) continue;
+        periodicGrants.push({
+            id: e.id, holder: { kind: h.kind, id: h.id }, container: typeof e.container === 'string' ? e.container : DEFAULT_CONTAINER_ID,
+            itemId: e.itemId, everySeasons: e.everySeasons, count: e.count,
+        });
+    }
+    if (holders.length === 0) return DEFAULT_ITEM_CONFIG;
+    return { schema: 'item-config.v1', items, holders, periodicGrants };
+}

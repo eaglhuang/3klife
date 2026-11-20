@@ -16,6 +16,8 @@ export interface WalletAuthority {
     /** 餘額不足回 false 且不扣；扣成功時由 port 負責持久化 */
     spend(currency: string, amount: number): boolean;
     snapshot(): Record<string, number>;
+    /** 入帳（物品庫存溢出折金等系統來源）；沒實作代表此權威不接受入帳，呼叫端須先預檢 */
+    credit?(currency: string, amount: number): void;
 }
 
 export function registerWalletCommands(adapter: LocalApiAdapter, getWallet: () => WalletAuthority | null): void {
