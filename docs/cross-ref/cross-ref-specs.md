@@ -195,3 +195,46 @@
 | doc_spec_0308 | MVP核心循環貫通與遊玩動線功能規格書.md | docs/遊戲規格文件/系統規格書/MVP核心循環貫通與遊玩動線功能規格書.md | MVP 核心循環貫通與遊玩動線功能規格書（5階段狀態機、潁川賽馬娘培育、斬將即時晉升、老將教官傳承） |
 | doc_spec_0309 | 戰場策略相剋與即時將階晉升功能規格書.md | docs/遊戲規格文件/系統規格書/戰場策略相剋與即時將階晉升功能規格書.md | 戰場策略相剋與即時將階晉升功能規格書（兵種動態相剋、Ghost Preview、斬將即時升階特寫、全軍士氣拉滿） |
 | doc_spec_0310 | 世代功業傳承與退役教官轉化功能規格書.md | docs/遊戲規格文件/系統規格書/世代功業傳承與退役教官轉化功能規格書.md | 世代功業傳承與退役教官轉化功能規格書（老將60歲退役轉教官卡、門閥家族祠堂聲望、雙柱血脈跨代雙奧義共鳴） |
+
+### 共用 base 框架（PROG-2-9200，總綱 ↔ 系統規格書 ↔ 既有規格 ↔ 伺服器文件）
+
+> 總綱 doc_spec_1182；六份系統規格書 doc_spec_1183～1188。「既有規格」＝將降為該框架「包裝差異設定」的規格；「上游」＝該框架要引用的既有規格與伺服器文件。
+
+#### 總綱 ↔ 系統規格書（雙向）
+
+| 規格書 | 被依賴（下游） | 依賴（上游） |
+|---|---|---|
+| doc_spec_1182（共用框架總綱） | doc_spec_1183、doc_spec_1184、doc_spec_1185、doc_spec_1186、doc_spec_1187、doc_spec_1188 | doc_spec_1181、doc_spec_1180、doc_spec_1179、doc_spec_0655、doc_tech_0010、doc_tech_0013、doc_spec_0334、doc_spec_0469、doc_spec_0656、doc_spec_0683、doc_spec_0662 |
+| doc_spec_1183（買賣商店） | doc_spec_1186 | doc_spec_1182、doc_spec_1184、doc_spec_1186 |
+| doc_spec_1184（物品庫存） | doc_spec_1183、doc_spec_1185、doc_spec_1186、doc_spec_1187、doc_spec_1188 | doc_spec_1182 |
+| doc_spec_1185（任務） | doc_spec_1186、doc_spec_1188 | doc_spec_1182、doc_spec_1184、doc_spec_1186、doc_spec_1188 |
+| doc_spec_1186（獎勵） | doc_spec_1183、doc_spec_1185、doc_spec_1187、doc_spec_1188 | doc_spec_1182、doc_spec_1184、doc_spec_1188 |
+| doc_spec_1187（技能） | doc_spec_1186、doc_spec_1188 | doc_spec_1182、doc_spec_1184、doc_spec_1186 |
+| doc_spec_1188（劇情演出） | doc_spec_1185、doc_spec_1186、doc_spec_1187 | doc_spec_1182、doc_spec_1185、doc_spec_1186 |
+
+#### 各框架 ↔ 依賴它的既有規格（框架 → 既有規格）
+
+| 框架 | 既有規格（將降為包裝差異設定，細節見各框架書「現有程式盤點與遷移」章） |
+|---|---|
+| doc_spec_1183（商店） | doc_spec_0420（百寶閣）、doc_spec_0628（玉璧定價）、doc_spec_0407（精元定價）、doc_spec_0410（加速卡定價）、doc_spec_0463／0466（天命商店）、doc_spec_0635（太守府商業化）、doc_spec_0634（官職俸祿）、doc_spec_0629（背包擴容）、doc_spec_0644（天命重置卷）、doc_spec_0042（轉蛋扣款）、doc_spec_1181（家業商店） |
+| doc_spec_1184（庫存） | doc_spec_0421（InventoryService）、doc_spec_0438（DisplayBucket）、doc_spec_0412（ItemDef）、doc_spec_0413（五大分類）、doc_spec_0414（使用效果引擎）、doc_spec_0417（限時過期）、doc_spec_0431（主城倉庫）、doc_spec_0017（武將背包）、doc_spec_0423（六槽裝備）、doc_spec_0427（退役回庫）、doc_spec_0432（鎖定分解）、doc_spec_0433（寶物圖鑑）、doc_spec_0036（道具系統）、doc_spec_0631（英靈卡虎符庫存）、doc_spec_0439（伺服端裝備記錄表）、doc_spec_1181（家業庫房／公庫）、doc_spec_1180（歷練寶物道具） |
+| doc_spec_1185（任務） | doc_spec_1178（大廳任務完整循環）、doc_spec_0453（雙牆任務板）、doc_spec_0454（情報度與 AI 委任）、doc_spec_0668（任務適合度）、doc_spec_0500（領地治理任務）、doc_spec_0415（極限任務）、doc_spec_0627（季度通行證）、doc_spec_0582（戰鬥里程碑成就）、doc_spec_0478（世代成就）、doc_spec_1179（學府）、doc_spec_1180（歷練格子事件）、doc_spec_1181（家業） |
+| doc_spec_1186（獎勵） | doc_spec_0042（轉蛋系統）、doc_spec_0462（抽取引擎）、doc_spec_0463（雙重保底）、doc_spec_0467（同名轉換）、doc_spec_0645（紅顏天香池）、doc_spec_0471（開場宿命轉蛋）、doc_spec_0603（戰場戰利品）、doc_spec_0429（俘虜搜繳）、doc_spec_0415（極限任務掉落）、doc_spec_0478（傳承獎）、doc_spec_0481（日報獎勵結算）、doc_spec_1180（寶路、擲骰）、doc_spec_1181（家業季產出） |
+| doc_spec_1187（技能） | doc_spec_0038（戰法系統）、doc_spec_0614（四類技能原型）、doc_spec_0368（場景戰法）、doc_spec_0365（虎符戰法）、doc_spec_0318（教官被動）、doc_spec_0558（戰法學習 TP）、doc_spec_0344（戰法 TP 消耗）、doc_spec_0360（天賦自動施放）、doc_spec_0367（AI 選技）、doc_spec_0569（好友教官借用）、doc_spec_1179（學府戰法習得）、doc_spec_1180（職業屬性專長）、doc_spec_1181（家業專長家風） |
+| doc_spec_1188（劇情演出） | doc_spec_0031（新手開場）、doc_spec_0470（開場引導流程）、doc_spec_0471（開場宿命轉蛋）、doc_spec_0618（開場資料契約）、doc_spec_0176（NPC 人性化）、doc_spec_0480／0481（日報）、doc_spec_1171（季報市井奇遇）、doc_spec_0584（傭兵羈絆）、doc_spec_0678（五格命運故事帶）、doc_spec_1179（學府打斷彈窗）、doc_spec_1180（生日事件、抓周）、doc_other_2703（大招分鏡規範） |
+
+#### 共通網路協定層 ↔ 既有伺服器規格（總綱第 5 章；各系統規格書第 11 章）
+
+| 既有伺服器文件 | doc_id | 對應的新規格 |
+|---|---|---|
+| 同步 API 規格書（/sync/delta、/sync/full） | doc_tech_0010 | doc_spec_1182 5.7；各書第 11 章 |
+| 同步 API 契約型別與錯誤碼 E001～E099 | doc_spec_0655 | doc_spec_1182 5.3（E1xx～E7xx 分段，需回寫該文件） |
+| Data Schema（本機與 Server） | doc_tech_0013 | 各框架 schema 草案（第 3 章） |
+| 伺服端存檔快照與靜態配置同步 | doc_spec_0334 | `save.load`；doc_spec_1182 5.7 |
+| 伺服端裝備記錄表與客端同步協議 | doc_spec_0439 | doc_spec_1184 第 11 章 |
+| 伺服端數值配表熱更新下發 | doc_spec_0662 | 獎池、貨架、任務定義以配表下發（doc_spec_1182 5.12） |
+| 抽卡伺服端同步記錄與離線防回撥 | doc_spec_0469 | doc_spec_1186 第 11 章；doc_spec_1182 5.11 |
+| 同步限流 429／5MB 413 | doc_spec_0656 | doc_spec_1182 5.3、5.11 |
+| HTTPS 強制與 PII 遮蔽 | doc_spec_0683 | doc_spec_1182 5.11 |
+| 官職權限快照 API | doc_spec_0591 | 權限檢查範例 |
+| SYNC-06 補丁白名單（server/schema/sync06-patch-whitelist.ts） | 見 PROG-2-1396 | doc_spec_1182 5.7（clientOwned／critical 拆分） |
