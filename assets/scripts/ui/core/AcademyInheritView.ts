@@ -13,7 +13,7 @@ import {
     careerMarkTpDiscount,
     topCareerMarksForBreeding,
 } from '../../core/systems/nurture/AcademyInheritAndMarks';
-import type { AcademyStatKey } from '../../core/systems/nurture/AcademyTypes';
+import type { AcademyStateSnapshot, AcademyStatKey } from '../../core/systems/nurture/AcademyTypes';
 
 export type AcademyInheritTextLookup = (key: string) => string;
 
@@ -119,6 +119,33 @@ export function buildAncestralInheritView(
         pityHint,
         triggered: record.triggered,
     };
+}
+
+/**
+ * 比對打斷點前後的學府快照，取出「這一步新產生」的第 12／24 回合開獎紀錄並轉成顯示模型。
+ * 第 24 回合若期中（第 12 回合）沒中，標示保底感應生效。宿主在 MIDTERM／COMING_OF_AGE 打斷點
+ * 結算後呼叫，沒有新開獎時回傳空陣列。
+ */
+export function newAncestralInheritViews(
+    before: Readonly<AcademyStateSnapshot> | null,
+    after: Readonly<AcademyStateSnapshot>,
+    options: { ancestorName?: string; lookup?: AcademyInheritTextLookup } = {},
+): AncestralInheritViewModel[] {
+    const history = after.ancestralInheritHistory ?? [];
+    const seen = new Set((before?.ancestralInheritHistory ?? []).map((r) => r.turn));
+    return history
+        .filter((record) => !seen.has(record.turn))
+        .map((record) => buildAncestralInheritView(record, {
+            ancestorName: options.ancestorName,
+            lookup: options.lookup,
+            pityActive: record.turn === 24 && history.some((r) => r.turn === 12 && !r.triggered),
+        }));
+}
+
+/** 開獎演出文字（重用既有 toast 節點）：標題一行、內文一行 */
+export function ancestralInheritToastText(view: Readonly<AncestralInheritViewModel>): string {
+    return `${view.title}
+${view.body}`;
 }
 
 export function formatCareerMarkBadge(

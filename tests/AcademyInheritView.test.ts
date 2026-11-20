@@ -3,7 +3,9 @@
  */
 import { assert, TestSuite } from './TestRunner';
 import {
+    ancestralInheritToastText,
     buildAncestralInheritView,
+    newAncestralInheritViews,
     careerMarkDisplayName,
     formatRosterCareerMarksLine,
 } from '../assets/scripts/ui/core/AcademyInheritView';
@@ -155,6 +157,26 @@ export function createAcademyInheritViewSuite(): TestSuite {
         const view = controller.getView();
         assert.isTrue(view.texts.fatherFactors.includes('幽州鐵騎印記 3★'));
         assert.isTrue(view.texts.fatherFactors.includes('遺傳採計最高 2 枚'));
+    });
+
+    suite.test('打斷點前後快照比對：只取新開獎、第 24 回合期中未中帶保底提示（接線入口）', () => {
+        const base = createAcademySnapshot({
+            worldSeed: '1', clanUuid: 'c', childId: 'k', academyId: AcademyId.LONGZHONG,
+            controlMode: AcademyControlMode.AUTO, initialStats: makeStats(100), admissionTurn: 1,
+        });
+        const miss12 = { turn: 12 as const, triggered: false, probability: 0.2, targetStat: 'str' as const, statDelta: 0 };
+        const hit24 = { turn: 24 as const, triggered: true, probability: 0.3, targetStat: 'int' as const, statDelta: 6, aptitudeBoostTarget: 'cavalry' };
+        const s12 = { ...base, ancestralInheritHistory: [miss12] };
+        const s24 = { ...base, ancestralInheritHistory: [miss12, hit24] };
+        const v12 = newAncestralInheritViews(base, s12, { ancestorName: '張飛' });
+        assert.equals(1, v12.length);
+        assert.isTrue(v12[0].body.includes('尚未顯靈'));
+        const v24 = newAncestralInheritViews(s12, s24, { ancestorName: '張飛' });
+        assert.equals(1, v24.length, '第 12 回合已顯示過不重播');
+        assert.isTrue(v24[0].body.includes('智力 +6') && v24[0].body.includes('騎兵'));
+        assert.isTrue(v24[0].body.includes('保底感應 +10%'));
+        assert.equals(0, newAncestralInheritViews(s24, s24).length);
+        assert.isTrue(ancestralInheritToastText(v24[0]).includes('弱冠'));
     });
 
     return suite;

@@ -150,6 +150,7 @@ import { MentorHoldingsController } from '../core/MentorHoldingsController';
 import { MentorBorrowController } from '../core/MentorBorrowController';
 import { GraduationRecordController } from '../core/GraduationRecordController';
 import { AcademyGraduationController } from '../core/AcademyGraduationController';
+import { ancestralInheritToastText, newAncestralInheritViews } from '../core/AcademyInheritView';
 import { ClanShrineController } from '../core/ClanShrineController';
 import { OpeningOfferPopupController } from '../core/OpeningOfferPopupController';
 import { SeasonEventPopupController } from '../core/SeasonEventPopupController';
@@ -1455,6 +1456,22 @@ export class LobbyScene extends Component {
             this._academyTacticNames = names;
         }
         return (await this._academyGraduation?.show(generalId, snapshot)) ?? null;
+    }
+
+    /**
+     * 學府雙年先祖遺風開獎演出（PROG-2-9183）：學府修業畫面在第 12 回合期中／第 24 回合弱冠打斷點結算後呼叫，
+     * 傳入結算前後快照；有新開獎就用既有 toast 節點顯示先祖名、觸發與否、五維加值、適性升階，
+     * 未觸發顯示安慰句、第 24 回合保底生效顯示提示。回傳顯示過的筆數。
+     */
+    public showAcademyInheritDraw(before: Readonly<AcademyStateSnapshot> | null, after: Readonly<AcademyStateSnapshot>, ancestorName?: string): number {
+        const views = newAncestralInheritViews(before, after, {
+            ancestorName,
+            lookup: (key: string): string => services().i18n.t(key),
+        });
+        for (const view of views) {
+            services().event.emit('SHOW_TOAST', { message: ancestralInheritToastText(view), duration: 4 });
+        }
+        return views.length;
     }
 
     /** 借將畫面（PROG-2-0726，PM 裁定採 A）：從養成流程的借將按鈕打開，固定 5 列加分頁；選列後呼叫 borrowFriendMentor */
