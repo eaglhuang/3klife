@@ -17,6 +17,7 @@ import type { GeneralUnit } from '../../core/models/GeneralUnit';
 import type { BoardRenderer } from './BoardRenderer';
 import { resolveAiDifficulty } from '../../core/systems/AiSpCharge';
 import { openingAiLogLinesOf } from '../../core/systems/AiEntranceLines';
+import { resolveDefenseTurnLimit, siegeDefenderOf } from '../../core/systems/DefenseBattle';
 
 export interface BattleSceneFlowContext {
   getCtrl(): BattleController | null;
@@ -77,6 +78,8 @@ export class BattleSceneFlow {
     this.ctx.setPlayerGeneral(pg);
     this.ctx.setEnemyGeneral(eg);
 
+    // 守城戰（PROG-2-9425）：再戰一次也要把守方設回玩家
+    ctrl.configureSiegeDefender(siegeDefenderOf(encounter?.battleKind));
     ctrl.initBattle(
       pg,
       eg,
@@ -90,7 +93,8 @@ export class BattleSceneFlow {
     // 敵軍開場布陣（PROG-2-9420）：再戰一次也要擺回關卡預設的敵陣
     if (!battleParams?.enemyDeployTroops?.length) ctrl.applyEnemyInitialDeployment(encounter?.enemyInitialDeployment);
     // 關卡回合時限（PROG-2-9423）：再戰一次也要重新套用（判定設定在第一次開戰時已讀好）
-    ctrl.configureEncounterTurnLimit(encounter?.turnLimit, encounter?.timeUpRule);
+    const turnLimitRule = resolveDefenseTurnLimit(encounter, ctrl.defenseBattle);
+    ctrl.configureEncounterTurnLimit(turnLimitRule.turnLimit, turnLimitRule.timeUpRule);
     // 天氣排程（PROG-2-0401）：入口參數優先，沒有才用 encounter 設定
     const weatherSchedule = battleParams?.weatherSchedule ?? encounter?.weatherSchedule;
     if (weatherSchedule) ctrl.setWeatherSchedule(weatherSchedule);

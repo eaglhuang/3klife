@@ -6,6 +6,7 @@
  * 戰法／特質名稱由宿主注入，查不到時退回 id；文案缺 key 時退回 zh-TW 預設。
  */
 import type { AcademyGraduationResult } from '../../core/systems/nurture/AcademyGraduation';
+import { formatCareerMarkBadge } from './AcademyInheritView';
 
 export const ACADEMY_GRADUATION_FALLBACK_ZH_TW: Readonly<Record<string, string>> = {
     'ui.academy.graduation.title': '學府結業',
@@ -15,6 +16,8 @@ export const ACADEMY_GRADUATION_FALLBACK_ZH_TW: Readonly<Record<string, string>>
     'ui.academy.graduation.tactics_none': '新學戰法：無',
     'ui.academy.graduation.traits': '新解鎖特質：{0}',
     'ui.academy.graduation.traits_none': '新解鎖特質：無',
+    'ui.academy.graduation.career_mark': '生平印記：{0}',
+    'ui.academy.graduation.career_mark_none': '生平印記：本輪尚無凝練印記',
     'ui.academy.graduation.failed': '結業失敗，請確認學府修業已完成',
 };
 
@@ -47,6 +50,7 @@ export interface AcademyGraduationViewTexts {
     academyGradStatTotal: string;
     academyGradTactics: string;
     academyGradTraits: string;
+    academyGradCareerMark: string;
 }
 
 function namesText(ids: readonly string[], nameOf: AcademyGraduationNameLookup | undefined): string {
@@ -66,6 +70,9 @@ export function academyGraduationTexts(result: Readonly<AcademyGraduationResult>
         academyGradTraits: result.traits.length > 0
             ? textOf(lookup, 'ui.academy.graduation.traits', namesText(result.traits, deps.traitName))
             : textOf(lookup, 'ui.academy.graduation.traits_none'),
+        academyGradCareerMark: result.careerMark
+            ? textOf(lookup, 'ui.academy.graduation.career_mark', formatCareerMarkBadge(result.careerMark, lookup))
+            : textOf(lookup, 'ui.academy.graduation.career_mark_none'),
     };
 }
 

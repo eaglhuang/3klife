@@ -119,6 +119,7 @@ import type { TacticAiSituation } from '../shared/TacticAiRules';
 import { estimateHealValue, hasChokePointLane, hasDenseArea } from '../shared/EnemyTacticBoard';
 import { resolveEnemyInitialDeployment, type EnemyInitialDeploymentEntry } from '../shared/EnemyInitialDeployment';
 import { DEFAULT_TIME_UP_JUDGEMENT, isTimeUpRule, parseTimeUpJudgementConfig, type TimeUpJudgementConfig, type TimeUpRule } from "../../core/systems/TimeUpJudgement";
+import { DEFAULT_DEFENSE_BATTLE, parseDefenseBattleConfig, type DefenseBattleConfig } from "../../core/systems/DefenseBattle";
 
 /**
  * [P2-N3] 部署失敗原因：food = 糧草不足（原 dp）。
@@ -646,6 +647,26 @@ export class BattleController {
   }
   private timeUpJudgement: TimeUpJudgementConfig = { ...DEFAULT_TIME_UP_JUDGEMENT };
   private timeUpJudgementLoaded = false;
+
+  /** 讀守城戰設定（data/defense-battle，PROG-2-9425）；只讀一次，讀不到用預設 */
+  public async loadDefenseBattleConfig(): Promise<DefenseBattleConfig> {
+    if (this.defenseBattleConfigLoaded) return this.defenseBattleConfig;
+    this.defenseBattleConfigLoaded = true;
+    try {
+      const raw = await services().resource.loadJson<unknown>('data/defense-battle', { tags: ['battle'] });
+      this.defenseBattleConfig = parseDefenseBattleConfig(raw);
+    } catch {
+      this.defenseBattleConfig = { ...DEFAULT_DEFENSE_BATTLE };
+    }
+    return this.defenseBattleConfig;
+  }
+
+  /** 守城戰設定（回合上限、勝利民心）；未讀取前是預設值 */
+  public get defenseBattle(): Readonly<DefenseBattleConfig> {
+    return this.defenseBattleConfig;
+  }
+  private defenseBattleConfig: DefenseBattleConfig = { ...DEFAULT_DEFENSE_BATTLE };
+  private defenseBattleConfigLoaded = false;
 
   /** AI 虎符配發（PROG-2-1337）：虎符模板全表中，只留 AI 會出的兵種，依敵將適性與難度配發 */
   private allocateEnemyTallies(difficulty: AiDifficulty): void {
@@ -1687,6 +1708,14 @@ export class BattleController {
    */
   public configureSceneCamp(position: { lane: number; depth: number } | null): void {
     this.state.sceneCampPosition = position;
+  }
+
+  /**
+   * 攻城戰法的守方（PROG-2-9425）：守城戰傳 Faction.Player，其餘傳 Faction.Enemy。
+   * 需在 initBattle() 之前呼叫，開戰時護城河才會擺在守方城牆前。
+   */
+  public configureSiegeDefender(faction: Faction): void {
+    this.state.siegeDefender = faction;
   }
 
   private applyStartOfBattleSceneGambit(): void {

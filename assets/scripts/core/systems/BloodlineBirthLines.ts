@@ -14,7 +14,8 @@ import { bloodFatigueBirthLines, normalizeBloodFatigue, type BloodFatigueOutcome
 import { outcrossMedicLine, synergyWeddingLine } from './BondingStoryLines';
 import { highEpLine } from './NumericalScriptLines';
 import type { InheritedFactor } from './FactorInheritance';
-import type { MarriageVitalityResult } from './MarriageVitality';
+import { getMarriageVitalityRules, type MarriageVitalityResult } from './MarriageVitality';
+import { withBreedFallback, type BreedTextLookup } from '../../ui/core/BreedingTexts';
 
 export const BLOODLINE_RESONANCE_LINE = '雙方祖先血脈相通，血脈共鳴已達極致！';
 export const WILD_GENE_LINE = '血脈中蘊含未知的基因突變！';
@@ -58,7 +59,9 @@ function medicLine(outcome: BloodFatigueOutcome | undefined, father: BirthParent
 export function bloodlineBirthLines(
     result: { ep?: { resonance: number; ep?: number }; factors?: readonly InheritedFactor[]; child?: { name: string }; bloodFatigue?: BloodFatigueOutcome; father?: BirthParent; mother?: BirthParent; lineageSynergyFactorId?: string; marriageVitality?: MarriageVitalityResult },
     nameOf: (uid: string) => string | null,
+    textLookup?: BreedTextLookup,
 ): string[] {
+    const t = textLookup ? withBreedFallback(textLookup) : withBreedFallback((key) => key);
     const factors = result.factors ?? [];
     const lines: string[] = [];
     const ancestor = farthestAncestor(factors, nameOf);
@@ -78,10 +81,13 @@ export function bloodlineBirthLines(
     if (result.bloodFatigue) lines.push(...bloodFatigueBirthLines(result.bloodFatigue));
     if (result.marriageVitality?.freshBlood.active) {
         const pct = Math.round(result.marriageVitality.freshBlood.earlyTrainingBonus * 100);
-        lines.push(`寒門新血 V${result.marriageVitality.freshBlood.level}！外家奇才注活血脈，子嗣前 6 季修業效率 +${pct}%！`);
+        const turns = getMarriageVitalityRules().vitalityRules.earlyTrainingTurns;
+        lines.push(t('ui.breed.birth.fresh_blood', String(result.marriageVitality.freshBlood.level), String(turns), String(pct)));
     }
     for (const ep of result.marriageVitality?.epithets ?? []) {
-        lines.push(`佳話聯姻【${ep.title}】！${ep.summary}`);
+        const title = t(ep.titleKey);
+        const summary = ep.summaryKey ? t(ep.summaryKey, ...(ep.summaryArgs ?? [])) : ep.summary;
+        lines.push(t('ui.breed.birth.epithet', title, summary));
     }
     return lines;
 }

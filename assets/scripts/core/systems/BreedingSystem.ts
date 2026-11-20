@@ -744,6 +744,13 @@ export function previewBreedingEp(request: Omit<BreedingRequest, 'random' | 'chi
     const profiles = collectProfiles(pedigree, request);
     const historical = request.isHistoricalPair?.(request.father, request.mother) ?? false;
     const vitalityFull = isVitalityFull(request.father) && isVitalityFull(request.mother);
+    const hasCommonAncestor = isInbredPair(request.father, request.mother, request.pedigree);
+    const marriageVitality = evaluateMarriageVitality({
+        father: request.father,
+        mother: request.mother,
+        hasCommonAncestor,
+        roster: request.roster,
+    });
     const compatibility = computeFamilyCompatibilityK({
         fatherStats: {
             str: statOf(request.father, 'str'),
@@ -761,6 +768,7 @@ export function previewBreedingEp(request: Omit<BreedingRequest, 'random' | 'chi
         },
         qualifiedMarriagesInWindow: request.qualifiedMarriagesInWindow,
         pairRecord: request.pairRecord,
+        epithetSynergyBonus: marriageVitality.synergyBonus,
     });
     return {
         pedigree,

@@ -49,6 +49,7 @@ import { STARTER_CHILD_CONFIG_JSON, configureStarterChild, type StarterChildConf
 import { normalizeSeasonModifiers, seasonModifiersOf, setActiveSeasonModifiers } from "../systems/SeasonModifiers";
 import { CHILD_APTITUDE_RULES_JSON, configureChildAptitudeRules, type ChildAptitudeRulesConfig } from "../systems/ChildAptitudeInheritance";
 import { configureFamilyCompatibilityRules, computeFamilyCompatibilityK, FAMILY_COMPATIBILITY_RULES_JSON, type FamilyCompatibilityRulesConfig } from "../systems/FamilyCompatibility";
+import { configureMarriageVitalityRules, evaluateMarriageVitality, MARRIAGE_VITALITY_RULES_JSON, type MarriageVitalityRulesConfig } from "../systems/MarriageVitality";
 import { BLOODLINE_RESONANCE_RULES_JSON, configureBloodlineResonanceRules, type BloodlineResonanceRulesConfig } from "../systems/BloodlineResonance";
 import { configureFamilyMilestoneRules, FAMILY_MILESTONE_RULES_JSON, type FamilyMilestoneRulesConfig } from "../systems/FamilyMilestone";
 import { familyPairKey } from "../systems/FamilySynergy";
@@ -108,10 +109,16 @@ export class ServiceLoader {
             const motherFamily = (mother as { familyUid?: string }).familyUid;
             const pairKey = fatherFamily && motherFamily ? familyPairKey(fatherFamily, motherFamily) : undefined;
             const pairRecord = pairKey ? this.session.familySynergy.pairs[pairKey] : undefined;
+            const epithetSynergyBonus = evaluateMarriageVitality({
+                father,
+                mother,
+                hasCommonAncestor: false,
+            }).synergyBonus;
             return computeFamilyCompatibilityK({
                 fatherStats: father.stats,
                 motherStats: mother.stats,
                 pairRecord,
+                epithetSynergyBonus,
             }).totalK;
         },
     });
@@ -352,6 +359,7 @@ export class ServiceLoader {
             loadSafe<Partial<FamilyMilestoneRulesConfig>>(FAMILY_MILESTONE_RULES_JSON, configureFamilyMilestoneRules),
             loadSafe<Partial<MindMarriageRulesConfig>>(MIND_MARRIAGE_RULES_JSON, configureMindMarriageRules),
             loadSafe<Partial<AcademyInheritMarksConfig>>(ACADEMY_INHERIT_MARKS_JSON, configureAcademyInheritMarks),
+            loadSafe<Partial<MarriageVitalityRulesConfig>>(MARRIAGE_VITALITY_RULES_JSON, configureMarriageVitalityRules),
         ]);
         this.bloodlineRulesLoaded = true;
     }

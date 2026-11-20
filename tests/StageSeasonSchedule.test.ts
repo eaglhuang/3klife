@@ -25,7 +25,7 @@ function loadSchedule() {
     return schedule;
 }
 
-function loadEncounters(): { id: string; chainId?: string; order?: number; extreme?: boolean }[] {
+function loadEncounters(): { id: string; chainId?: string; order?: number; extreme?: boolean; battleKind?: string }[] {
     const raw = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'encounters.json'), 'utf8'));
     return raw.encounters;
 }
@@ -89,7 +89,8 @@ export function createStageSeasonScheduleSuite(): TestSuite {
 
     suite.test('大廳挑關：春季打完兩關後，下一關（瓦口隘）被季節鎖住，連環破前置已滿足', () => {
         const schedule = loadSchedule();
-        const stages = loadEncounters().filter((e) => !e.extreme);
+        // 與大廳同一套過濾：極限關與守城關（PROG-2-9425，年終流程開打）不進開戰清單
+        const stages = loadEncounters().filter((e) => !e.extreme && e.battleKind !== 'defense');
         const cleared = new Set(['encounter-001', 'encounter-002']);
         const pick = (season: number) => stages.find((e) => !cleared.has(e.id)
             && isStageUnlocked(e.id, stages, cleared) && isStageSeasonOpen(schedule, e.id, season))?.id ?? null;
