@@ -81,6 +81,10 @@ const DETAIL_STYLE = {
 @ccclass('ResultPopupComposite')
 export class ResultPopupComposite extends CompositePanel {
     private _binder: UITemplateBinder | null = null;
+    /** 「再戰一次」是否可用（年終守城不可重打，PROG-2-9426） */
+    private _replayAllowed = true;
+    /** 返回大廳鈕原本的寬度（藏起再戰鈕時拉寬，恢復時還原） */
+    private _backBaseWidth = 0;
     private _isMounted = false;
     private _mounting: Promise<void> | null = null;
     private _visible = false;
@@ -218,7 +222,28 @@ ${result.description}
             title: retreat ? '撤退' : titleMap[resultType],
             description: details ? `${desc}\n${details}` : desc,
         });
+        this._applyReplayVisibility();
         void this._applyGeneralAvatar(generalId);
+    }
+
+    /** 設定下一次結算窗要不要顯示「再戰一次」；不可重打時返回大廳鈕佔滿整列 */
+    public setReplayAllowed(allowed: boolean): void {
+        this._replayAllowed = allowed;
+        this._applyReplayVisibility();
+    }
+
+    private _applyReplayVisibility(): void {
+        // 一直都可重打時不碰按鈕（預設版面就是兩顆並排）
+        if (this._replayAllowed && this._backBaseWidth <= 0) return;
+        const replay = this._binder?.getButton('BtnReplay')?.node;
+        const back = this._binder?.getButton('BtnBack')?.node.getComponent(UITransform);
+        const row = this._binder?.getNode('ButtonRow')?.getComponent(UITransform);
+        if (!replay || !back) return;
+        if (this._backBaseWidth <= 0) this._backBaseWidth = back.contentSize.width;
+        replay.active = this._replayAllowed;
+        const width = this._replayAllowed ? this._backBaseWidth : (row?.contentSize.width ?? this._backBaseWidth);
+        back.setContentSize(width, back.contentSize.height);
+        this._binder?.getNode('ButtonRow')?.getComponent(Layout)?.updateLayout();
     }
 
     /** 結算窗開著時在描述下方追加行（戰後覺醒等非同步結果，PROG-2-1133） */
@@ -389,6 +414,7 @@ ${result.description}
         this._binder = binder;
         binder.getButton('BtnBack')?.node.on(Button.EventType.CLICK, this._onClickBack, this);
         binder.getButton('BtnReplay')?.node.on(Button.EventType.CLICK, this._onClickReplay, this);
+        this._applyReplayVisibility();
         // 點暗幕不關閉結算窗：戰鬥已結束、棋盤不能再操作，關掉後玩家沒有任何出口會卡在戰場（PROG-2-9307）。
         // 只能從「返回大廳」或「再戰一次」離開；暗幕只負責擋住底下的點擊。
         const overlay = binder.getNode('Overlay');

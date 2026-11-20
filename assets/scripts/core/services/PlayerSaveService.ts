@@ -302,7 +302,7 @@ export interface PlayerSaveSnapshot {
     /** 轉蛋錢包（玉／黃金／召喚券）；後加的選填欄位，舊檔讀回為 undefined（由轉蛋服務改讀舊 localStorage 一次）（PROG-2-0338） */
     gachaWallet?: GachaWalletSave;
     /** 名聲等非軍備資源（暫定）；後加的選填欄位，舊檔讀回補 0 */
-    resources?: { fame: number; scorePoints?: number; autoNurtureTickets?: number; mainlineNurtureClearedOnce?: boolean; firstBattleCleared?: boolean; openingRedFaceShown?: boolean; mentorGuideDone?: boolean; mentorUnlockPromptShown?: boolean };
+    resources?: { fame: number; scorePoints?: number; autoNurtureTickets?: number; mainlineNurtureClearedOnce?: boolean; firstBattleCleared?: boolean; openingRedFaceShown?: boolean; mentorGuideDone?: boolean; mentorUnlockPromptShown?: boolean; yearEndDefenseYear?: number };
     /** 內政本季紀錄（同季只能選一項）；後加的選填欄位，舊檔讀回為空紀錄 */
     domestic?: DomesticSeasonLog;
     /** 本季治理事件；後加的選填欄位，舊檔讀回視為沒有事件（PROG-2-1773） */
@@ -656,7 +656,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         femaleSources: normalizeFemaleSourcesMap(snapshot.femaleSources),
         pendingLifespanDeaths: normalizePendingLifespanDeaths(snapshot.pendingLifespanDeaths),
         yearAgingEvents: normalizeYearAgingEvents(snapshot.yearAgingEvents),
-        ...(snapshot.resources !== undefined && snapshot.resources !== null ? { resources: { fame: normalizeFame((snapshot.resources as { fame?: unknown }).fame), scorePoints: normalizeScorePoints((snapshot.resources as { scorePoints?: unknown }).scorePoints), autoNurtureTickets: normalizeAutoNurtureTickets((snapshot.resources as { autoNurtureTickets?: unknown }).autoNurtureTickets), mainlineNurtureClearedOnce: normalizeFlag((snapshot.resources as { mainlineNurtureClearedOnce?: unknown }).mainlineNurtureClearedOnce), ...optionalFlag((snapshot.resources as { firstBattleCleared?: unknown }).firstBattleCleared, 'firstBattleCleared'), ...optionalFlag((snapshot.resources as { openingRedFaceShown?: unknown }).openingRedFaceShown, 'openingRedFaceShown'), ...optionalFlag((snapshot.resources as { mentorGuideDone?: unknown }).mentorGuideDone, 'mentorGuideDone'), ...optionalFlag((snapshot.resources as { mentorUnlockPromptShown?: unknown }).mentorUnlockPromptShown, 'mentorUnlockPromptShown') } } : {}),
+        ...(snapshot.resources !== undefined && snapshot.resources !== null ? { resources: { fame: normalizeFame((snapshot.resources as { fame?: unknown }).fame), scorePoints: normalizeScorePoints((snapshot.resources as { scorePoints?: unknown }).scorePoints), autoNurtureTickets: normalizeAutoNurtureTickets((snapshot.resources as { autoNurtureTickets?: unknown }).autoNurtureTickets), mainlineNurtureClearedOnce: normalizeFlag((snapshot.resources as { mainlineNurtureClearedOnce?: unknown }).mainlineNurtureClearedOnce), ...optionalFlag((snapshot.resources as { firstBattleCleared?: unknown }).firstBattleCleared, 'firstBattleCleared'), ...optionalFlag((snapshot.resources as { openingRedFaceShown?: unknown }).openingRedFaceShown, 'openingRedFaceShown'), ...optionalFlag((snapshot.resources as { mentorGuideDone?: unknown }).mentorGuideDone, 'mentorGuideDone'), ...optionalFlag((snapshot.resources as { mentorUnlockPromptShown?: unknown }).mentorUnlockPromptShown, 'mentorUnlockPromptShown'), ...(normalizeYearEndDefenseYear((snapshot.resources as { yearEndDefenseYear?: unknown }).yearEndDefenseYear) > 0 ? { yearEndDefenseYear: normalizeYearEndDefenseYear((snapshot.resources as { yearEndDefenseYear?: unknown }).yearEndDefenseYear) } : {}) } } : {}),
         ...(snapshot.domestic !== undefined ? { domestic: normalizeDomesticLog(snapshot.domestic) } : {}),
         ...(snapshot.governanceEvent ? { governanceEvent: normalizeGovernanceEvent(snapshot.governanceEvent) } : {}),
         ...(snapshot.governanceBoosts ? { governanceBoosts: normalizeGovernanceBoosts(snapshot.governanceBoosts) } : {}),
@@ -794,6 +794,11 @@ export function normalizeAutoNurtureTickets(value: unknown): number {
 /** 後加的旗標：舊檔沒有欄位時保持缺席（讀檔端據此推算），有值才保留 */
 function optionalFlag<K extends string>(value: unknown, key: K): Partial<Record<K, boolean>> {
     return typeof value === 'boolean' ? { [key]: value } as Record<K, boolean> : {};
+}
+
+/** 最近一次打完年終守城的年份（PROG-2-9426）：正整數才算，其餘當作沒打過（0） */
+export function normalizeYearEndDefenseYear(value: unknown): number {
+    return typeof value === 'number' && Number.isInteger(value) && value > 0 ? value : 0;
 }
 
 export function normalizeFlag(value: unknown): boolean {

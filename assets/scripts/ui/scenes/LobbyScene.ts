@@ -72,6 +72,7 @@ import { buildSandtableStatusLabel } from '../../core/systems/SandtableStatus';
 import type { YearReport } from '../../core/systems/YearReport';
 import { YearReportController } from '../core/YearReportController';
 import { isStageUnlocked } from '../../core/systems/StageChainProgress';
+import { DEFAULT_YEAR_END_DEFENSE, isYearEndDefenseDue, isYearEndRolloverPending, parseYearEndDefenseConfig, strongestInvader, yearEndDefenseTierFor, type YearEndDefenseConfig } from '../../core/systems/YearEndDefense';
 import { isStageSeasonOpen, parseStageSeasonSchedule, seasonLockedHint, stageOpenSeason, type StageSeasonSchedule } from '../../core/systems/StageSeasonSchedule';
 import { buildBattlefieldReconForEncounter } from '../../core/systems/BattlefieldRecon';
 import { buildEnvScoutLines } from '../core/EnvScoutPresenter';
@@ -104,7 +105,7 @@ import { jobChangeEntryState, JOB_CHANGE_ENTRY_LABEL } from '../../core/systems/
 import type { JobWiringGeneral } from '../../core/systems/JobChangeWiring';
 import { OverlayCandidate, pickTopOverlay } from '../core/OverlayStack';
 import { DomesticPanelController } from '../core/DomesticPanelController';
-import { FAST_FORWARD_REASON_TEXT, fastForwardSeasons } from '../../core/systems/SeasonFastForward';
+import { FAST_FORWARD_MAX_SEASONS, FAST_FORWARD_REASON_TEXT, fastForwardSeasons } from '../../core/systems/SeasonFastForward';
 import { BREEDING_MIN_AGE } from '../../core/systems/BreedingSystem';
 import { RECRUIT_ROWS_PER_PAGE, RecruitHallController } from '../core/RecruitHallController';
 import { loadGeneralAvatar, loadGeneralPortrait } from '../core/GeneralAvatarLoader';
@@ -264,7 +265,7 @@ import { coreFieldCoverage, formatCoreFieldCoverage } from '../../core/systems/G
 import { PortraitBounds, PortraitBoundsDoc, placePortraitOnBaseline } from '../core/GachaPortraitBaseline';
 import { DEFAULT_POOL_ID as GACHA_GENERAL_POOL_ID, GachaFlowCoordinator, GACHA_PULL_RESULT_SCREEN_ID, GACHA_SCREEN_ID } from '../core/GachaFlowCoordinator';
 import { buildDestinyOpeningResults } from '../core/DestinyOpeningResult';
-import type { DestinyPoolView } from '../core/DestinyOpeningController';
+import type { DestinyPoolView, StarterYouthOption } from '../core/DestinyOpeningController';
 import { bindGachaActions, GACHA_ACTION_NODES } from '../core/GachaActionBindings';
 import { formatGeneralDisplayName } from '../../core/models/GeneralTitle';
 import { buildMissionGeneralOptions } from '../../core/systems/MissionGeneralOptions';
@@ -440,6 +441,9 @@ export class LobbyScene extends Component {
     private _stageSeasonSchedule: StageSeasonSchedule | null = null;
     /** 天下征鋒的 BOSS 關（PROG-2-2101）；不混進連環破與大廳開戰關卡 */
     private _extremeEncounters: EncounterConfig[] = [];
+    /** 年終守城遭遇（PROG-2-9426）：不進開戰清單，第 4 季結束時依年度選一檔 */
+    private _defenseEncounters: EncounterConfig[] = [];
+    private _yearEndDefense: YearEndDefenseConfig = DEFAULT_YEAR_END_DEFENSE;
     private _extremeTaskHost: UIScreenPreviewHost | null = null;
     private _extremeTaskMessage = '';
     private _listPanel: GeneralListComposite | null = null;
@@ -909,7 +913,7 @@ export class LobbyScene extends Component {
                 services().loadSkills(),
                 services().loadVfxEffects(),
                 services().loadSeasonModifiers(),
-                services().loadStarterChildConfig()
+                services().loadStarterYouthConfig()
             ]);
             
             this._generals = await this._loadGenerals();
@@ -926,6 +930,14 @@ export class LobbyScene extends Component {
             // 守城戰（PROG-2-9425）由年終流程開打，不進大廳開戰清單
             this._encounters = allEncounters.filter((e) => !e.extreme && e.battleKind !== 'defense');
             this._extremeEncounters = allEncounters.filter((e) => e.extreme);
+            this._defenseEncounters = allEncounters.filter((e) => e.battleKind === 'defense');
+            // 年終守城三檔（PROG-2-9426）：讀不到用預設檔位
+            try {
+                this._yearEndDefense = parseYearEndDefenseConfig(await services().resource.loadJson<unknown>('data/year-end-defense', { tags: ['LobbyScene'] }));
+            } catch (defenseError) {
+                this._yearEndDefense = DEFAULT_YEAR_END_DEFENSE;
+                UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 年終守城設定載入失敗，改用預設檔位', defenseError);
+            }
             // 季節關卡排程（PROG-2-9421）：讀不到就不設季節閘門，不擋大廳
             try {
                 this._stageSeasonSchedule = parseStageSeasonSchedule(await services().resource.loadJson<unknown>('data/stage-season-schedule', { tags: ['LobbyScene'] }));
@@ -982,6 +994,8 @@ export class LobbyScene extends Component {
         }
         if (ownsProgress()) SceneLoadProgress.complete();
         this._keepOpeningOnTop();
+        // 年終守城打完回到大廳（PROG-2-9426）：季報窗等背景面板掛好了才自動換年
+        void this._resumeYearEndRollover();
     }
 
     /** 他國逐將名冊與重算情境（E-9，PROG-2-1715）；失敗時他國照舊以兵力計軍力 */
@@ -2726,7 +2740,8 @@ export class LobbyScene extends Component {
                     openingLetter: services().session.openingLetter,
                 }),
                 notifyBeauty: name => services().event.emit('SHOW_TOAST', { message: `紅顏 ${name} 前來相會，已加入名冊，可到「結緣」配對`, duration: 4 }),
-                notifyStarterChild: name => services().event.emit('SHOW_TOAST', { message: services().i18n.t('ui.opening.starter_child_hint', name), duration: 4 }),
+                notifyStarterYouth: name => services().event.emit('SHOW_TOAST', { message: services().i18n.t('ui.opening.starter_child_hint', name), duration: 6 }),
+                pickStarterYouth: options => this._pickStarterYouth(options),
                 advanceOpening: event => { this._advanceOpening(event); },
                 presentDestinyPool: (view, actions) => this._presentDestinyPool(view, actions),
                 closeDestinyPool: () => { if (this._destinyPoolHost) this._destinyPoolHost.node.active = false; },
@@ -2767,6 +2782,50 @@ export class LobbyScene extends Component {
         });
         host.node.active = true;
         return host.node;
+    }
+
+    /** 少年名將三選一畫面的宿主與目前選項（PROG-2-9194） */
+    private _youthPickHost: UIScreenPreviewHost | null = null;
+    private _youthPickOptions: readonly StarterYouthOption[] = [];
+    private _youthPickResolve: ((id: string) => void) | null = null;
+
+    /** 宿命池按確定後、開新局前：三位 14 歲少年名將挑一位（重用開場信件同款面板版型）。 */
+    private async _pickStarterYouth(options: readonly StarterYouthOption[]): Promise<string> {
+        this._youthPickOptions = options;
+        const host = this._youthPickHost ?? await this._mountPreviewScreenHost(
+            'YouthPickHost', 'youth-pick-screen',
+            [0, 1, 2, 3, 4].map(i => ({ buttonId: `btnYouthPick${i}`, handler: () => { this._resolveYouthPick(i); } })),
+            false,
+        );
+        this._youthPickHost = host;
+        const i18n = services().i18n;
+        const texts: Record<string, string> = {
+            youthPickTitle: i18n.t('ui.opening.youth_pick.title'),
+            youthPickSubtitle: i18n.t('ui.opening.youth_pick.subtitle'),
+        };
+        [0, 1, 2, 3, 4].forEach(i => {
+            const option = options[i];
+            // 名單可由 JSON 換人：有寫趣味介紹就用，沒有就顯示「姓名＋稱號」
+            const blurbKey = option ? `ui.opening.youth_pick.card.${option.id}` : '';
+            const blurb = option ? i18n.t(blurbKey) : '';
+            const intro = option && blurb !== blurbKey ? blurb : option ? `${option.name} ${option.title}` : '';
+            texts[`youthPickLabel${i}`] = option ? `【${i18n.t(`ui.opening.youth_pick.career.${option.career}`)}】${intro}\n${i18n.t('ui.opening.youth_pick.btn')}` : '';
+            const button = host.binder?.getNode(`btnYouthPick${i}`);
+            if (button) button.active = !!option;
+        });
+        host.binder?.setTexts(texts);
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        return await new Promise<string>(resolve => { this._youthPickResolve = resolve; });
+    }
+
+    private _resolveYouthPick(index: number): void {
+        const option = this._youthPickOptions[index];
+        const resolve = this._youthPickResolve;
+        if (!option || !resolve) return;
+        this._youthPickResolve = null;
+        if (this._youthPickHost) this._youthPickHost.node.active = false;
+        resolve(option.id);
     }
 
     private async _mountOnboardingTutorial(): Promise<void> {
@@ -5504,6 +5563,11 @@ ${spent}`,
     private async _onClickFastForward(): Promise<void> {
         if (this._fastForwarding) return;
         if (this._blockedByAcademy()) return;
+        // 年終守城還沒打時不能跨年（PROG-2-9426）：一季都還沒推就被擋，直接開打守城
+        if (this._isYearEndDefenseDue()) {
+            await this._startYearEndDefense();
+            return;
+        }
         this._fastForwarding = true;
         try {
             const session = services().session;
@@ -5525,7 +5589,7 @@ ${spent}`,
                 const grew = Array.from(now).some((id) => !adults.has(id));
                 adults = now;
                 return grew;
-            });
+            }, FAST_FORWARD_MAX_SEASONS, () => this._isYearEndDefenseDue());
             const where = result.last ? seasonText(result.last.advance.current) : seasonText(session.gameTime);
             services().event.emit('SHOW_TOAST', {
                 message: `快進 ${result.seasons} 季，來到${where}：${FAST_FORWARD_REASON_TEXT[result.reason]}`,
@@ -5579,10 +5643,52 @@ ${spent}`,
         return payload;
     }
 
+    /** 今年的年終守城還沒打、而且守城遭遇資料有讀到（讀不到時不擋換季，PROG-2-9426） */
+    private _isYearEndDefenseDue(): boolean {
+        const session = services().session;
+        return this._defenseEncounters.length > 0 && isYearEndDefenseDue(session.gameTime, session.yearEndDefenseYear);
+    }
+
+    /**
+     * 年終守城開打（PROG-2-9426，使用者 11/20 裁決）：依年度選檔，最強鄰國的君主來攻；
+     * 我方主將與牌組沿用大廳出戰設定（同一般出征）。來犯主將不在武將資料裡時沿用遭遇預設的敵將。
+     */
+    private async _startYearEndDefense(): Promise<void> {
+        const session = services().session;
+        const tier = yearEndDefenseTierFor(session.gameTime.currentYear, this._yearEndDefense);
+        const encounter = this._defenseEncounters.find((e) => e.id === tier.encounterId) ?? this._defenseEncounters[0];
+        if (!encounter) return;
+        const invader = strongestInvader(session.rivals, session.rivalRulerIds);
+        const knownInvader = invader && this._generals.some((g) => g.id === invader.generalId) ? invader : null;
+        services().event.emit('SHOW_TOAST', {
+            message: `年終將至，${knownInvader ? `${knownInvader.nationName}大軍` : '敵軍'}壓境！全城備戰守城`,
+            duration: 3,
+        });
+        const params = this._buildBattleEntryParams(undefined, encounter);
+        services().scene.switchScene(SceneName.Battle, {
+            ...params,
+            ...(knownInvader ? { enemyGeneralId: knownInvader.generalId } : {}),
+            tutorial: false,
+            teachingSpirit: null,
+        });
+    }
+
+    /** 年終守城打完回到大廳時還停在第 4 季：自動換到下一年（勝敗都換，PROG-2-9426） */
+    private async _resumeYearEndRollover(): Promise<void> {
+        const session = services().session;
+        if (!this.node?.isValid || !isYearEndRolloverPending(session.gameTime, session.yearEndDefenseYear)) return;
+        await this._onClickAdvanceSeason();
+    }
+
     private async _onClickAdvanceSeason(): Promise<void> {
         // 換季結算是非同步的，連點不重入（PROG-2-9116：大廳右上角也接這個入口）
         if (this._advancingSeason) return;
         if (this._blockedByAcademy()) return;
+        // 第 4 季結束時今年還沒守城：先打年終守城，打完回大廳再換年（PROG-2-9426）
+        if (this._isYearEndDefenseDue()) {
+            await this._startYearEndDefense();
+            return;
+        }
         this._advancingSeason = true;
         try {
             const { advance, agingEvents, quarterlyReports, hallMissionReport, seasonReportSections } = await this._advanceSeasonWithSalaries();
