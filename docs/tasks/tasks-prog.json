@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 179,
+    "done": 181,
     "in_progress": 4,
     "open": 86,
-    "total": 269
+    "total": 271
   },
   "tasks": [
     {
@@ -11379,6 +11379,50 @@
         "AcademyRng 改為 DeterministicRngSession 子類示範替換"
       ],
       "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0、單元 8683 全過（新增 Foundation 20 條）、compute-gate standard 通過（僅 LoginScene 既有警告）、棘輪基準維持 163 | 變更: shared/foundation/{Sha256,DeterministicRng,WeightedTable,Condition,GameClock}.ts；SyncHash 雜湊本體搬到 Sha256（原路徑轉出）；AcademyRng 改為 DeterministicRngSession 子類（金標準測試證明與舊實作逐位元相同）；cross-ref-code B-2 補一列 | 阻塞: 無 | 備註: 給後續卡的接點：RWD 的 reward.roll 用 weightedPick＋伺服器側 DeterministicRngSession（rngSession 存伺服器存檔，不下發客戶端），保底計數由 RWD 自管；ITM 入學令季發用 periodsDue／nextGrantIndex 取期數、stackCap 封頂與溢出折金由 ITM 做；QST／STY／SKL／SHP 條件一律 createConditionEvaluator().register(自訂 kind)，載入時用 validate；OCC 的 since／until 用 toSeasonIndex；SKL status-effect 與凍結期用 Countdown。未做（範圍外）：Ladder、日／週重置、保底、rng 命令端點（待 RWD-M 於 ApiCommands 註冊 reward.roll）。未跑網頁 playtest：只有 AcademyRng 與 SyncHash 兩處執行路徑以等價重構改接，單元與金標準覆蓋。",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9204",
+      "title": "SKL-M：技能 base 最小版（skill-def、grant/learn/upgrade、modifier、skill.* 端點、結業戰法寫回遷移）",
+      "owner": "ClaudeCode_sonnet-5-5",
+      "priority": "P0",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "共用框架總綱 doc_spec_1182 第 12 章 SKL-M、技能 base doc_spec_1187：shared/skill 純邏輯、skill.* 端點、學府結業新學戰法改走 skill.grant、戰法中文名。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
