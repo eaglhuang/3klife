@@ -1,0 +1,104 @@
+{
+  "$comment": "防繞過共通 API 的基準棘輪（check-api-bypass.js；總綱 doc_spec_1182 §5.10）。只能往下調（遷移完成後用 --update），不得往上調；新增繞過點即 exit 1。exemptions 為 clientOwned 豁免清單，需總 PM 審核才能新增。",
+  "total": 163,
+  "perRule": {
+    "inventory-write": 36,
+    "local-storage": 39,
+    "protected-assign": 53,
+    "save-write": 4,
+    "currency-write": 31
+  },
+  "exemptions": [
+    {
+      "file": "core/systems/AudioSystem.ts",
+      "rules": [
+        "local-storage"
+      ],
+      "reason": "clientOwned：音量與靜音偏好（總綱 5.9 P3）"
+    },
+    {
+      "file": "core/systems/BattleSettingsView.ts",
+      "rules": [
+        "local-storage"
+      ],
+      "reason": "clientOwned：戰場設定偏好（總綱 5.9 P3）"
+    },
+    {
+      "file": "core/systems/HallChatLines.ts",
+      "rules": [
+        "local-storage"
+      ],
+      "reason": "clientOwned：大廳閒聊已讀緩存（總綱 5.9 P3）"
+    }
+  ],
+  "perFile": {
+    "battle/controllers/WeatherItemUseFlow.ts": {
+      "inventory-write": 1
+    },
+    "battle/views/BattleScene.ts": {
+      "local-storage": 3
+    },
+    "battle/views/BattleSceneCapture.ts": {
+      "local-storage": 3
+    },
+    "core/managers/GameSession.ts": {
+      "protected-assign": 53,
+      "inventory-write": 22
+    },
+    "core/managers/ServiceLoader.ts": {
+      "save-write": 2
+    },
+    "core/services/LocalGachaService.ts": {
+      "local-storage": 9
+    },
+    "core/services/PlayerRosterService.ts": {
+      "local-storage": 2
+    },
+    "core/systems/EffectSystem.ts": {
+      "local-storage": 1
+    },
+    "core/systems/GearLockDecompose.ts": {
+      "inventory-write": 1
+    },
+    "core/systems/ItemUseFlow.ts": {
+      "inventory-write": 3
+    },
+    "core/systems/LongevityPill.ts": {
+      "inventory-write": 1
+    },
+    "core/systems/MilestoneRewards.ts": {
+      "inventory-write": 1
+    },
+    "core/systems/PlayerInventory.ts": {
+      "inventory-write": 1
+    },
+    "core/systems/StageSalvageSettlement.ts": {
+      "inventory-write": 1
+    },
+    "core/systems/SyncManager.ts": {
+      "local-storage": 7
+    },
+    "core/systems/VitalityPill.ts": {
+      "inventory-write": 1
+    },
+    "ui/core/UIVariantRouter.ts": {
+      "local-storage": 1
+    },
+    "ui/dev/GachaDevOverlay.ts": {
+      "currency-write": 3
+    },
+    "ui/scenes/LoadingScene.ts": {
+      "local-storage": 9,
+      "save-write": 1
+    },
+    "ui/scenes/LobbyScene.ts": {
+      "currency-write": 28,
+      "inventory-write": 4,
+      "local-storage": 2,
+      "save-write": 1
+    },
+    "ui/scenes/QaBattleEntryRunner.ts": {
+      "local-storage": 2
+    }
+  }
+}

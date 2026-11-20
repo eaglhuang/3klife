@@ -1,0 +1,101 @@
+// @spec-source → 共用框架總綱規格書 (doc_spec_1182) §5.3 命令路由、§5.5 權威原則、§5.7 存檔即 API；PROG-2-9201
+/**
+ * ApiCommands — 共通命令表與各命令的 args／result 型別（零依賴）。
+ *
+ * 命令分兩種：cmd（會改狀態，必帶 idemKey）與 query（唯讀）。
+ * 各框架卡在此處追加自己的命令；命令名稱＝網路路徑名稱（POST /api/v1/cmd、GET /api/v1/q/<name>）。
+ */
+
+/** 命令種類 */
+export type ApiCommandKind = 'cmd' | 'query';
+
+export interface ApiCommandMeta {
+    kind: ApiCommandKind;
+    /** 是否做 saveRev 衝突檢查（落後即 E102）；意圖型命令由權威端驗證，不檢查 */
+    revGuard: boolean;
+}
+
+/** 共通命令表 */
+export const API_COMMANDS = Object.freeze({
+    'wallet.spend': { kind: 'cmd', revGuard: false },
+    'wallet.balance': { kind: 'query', revGuard: false },
+    'save.load': { kind: 'query', revGuard: false },
+    'save.rev': { kind: 'query', revGuard: false },
+    'save.commit': { kind: 'cmd', revGuard: true },
+    'save.full': { kind: 'cmd', revGuard: false },
+} satisfies Record<string, ApiCommandMeta>);
+
+export type ApiCommandName = keyof typeof API_COMMANDS;
+
+/**
+ * 客戶端不得在命令中夾帶的權威欄位（價格、結果、獎勵內容、時間）→ E103。
+ * 各命令自己的「意圖欄位」白名單由處理器宣告，這裡只列通用的權威欄位名。
+ */
+export const FORBIDDEN_AUTHORITY_FIELDS: readonly string[] = Object.freeze([
+    'balance', 'newBalance', 'result', 'reward', 'rewards', 'grant', 'serverTime', 'price', 'unitPrice',
+    'discount', 'roll', 'seed', 'pity', 'saveRev',
+]);
+
+/** 錢包幣別：沿用 GachaWalletRules 的 WalletCurrencyKey */
+export const WALLET_CURRENCIES: readonly string[] = Object.freeze([
+    'gems', 'gold', 'tickets', 'bronze', 'oracle', 'mentorTickets', 'scorePoints',
+]);
+
+/** wallet.spend：扣款意圖。amount 為正整數；餘額不足回 E301 且不扣 */
+export interface WalletSpendArgs {
+    currency: string;
+    amount: number;
+    /** 用途標籤（記帳與稽核用），例如 JOB_CHANGE_ORDER */
+    reason: string;
+}
+
+export interface WalletSpendResult {
+    currency: string;
+    spent: number;
+    balance: number;
+}
+
+export interface WalletBalanceArgs {
+    currency?: string;
+}
+
+export type WalletBalanceResult = Record<string, number>;
+
+/** save.load：回完整快照；快照型別沿用 PlayerSaveSnapshot，契約層不依賴它所以為 unknown */
+export interface SaveLoadResult {
+    /** null 代表沒有存檔 */
+    snapshot: unknown | null;
+    hash: string | null;
+    recoveredFromBackup: boolean;
+}
+
+export interface SaveRevResult {
+    saveRev: number;
+    hash: string | null;
+}
+
+/** save.commit：玩家端非權威欄位的增量補丁（RFC 6902 子集，路徑白名單） */
+export interface SaveCommitArgs {
+    baseHash: string;
+    patch: Array<{ op: 'add' | 'replace' | 'remove'; path: string; value?: unknown }>;
+}
+
+export interface SaveCommitResult {
+    hash: string;
+    applied: number;
+}
+
+/** save.full：全量上傳（換機、首次連線、E011 fallback、單機階段 0 的存檔寫入） */
+export interface SaveFullArgs {
+    snapshot: unknown;
+}
+
+export interface SaveFullResult {
+    /** 單機階段 0 為省效能不計算（null）；需要對帳用 save.rev */
+    hash: string | null;
+}
+
+/** 存檔補丁白名單（總綱 §5.7）：clientOwned 可寫，其餘一律 E002。擴充清單要經總 PM 審核 */
+export const SAVE_CLIENT_OWNED_ROOTS: readonly string[] = Object.freeze([
+    'favoriteGeneralIds', 'sortiePresets', 'leadGeneralId', 'deck',
+]);

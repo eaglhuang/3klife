@@ -1,6 +1,8 @@
 <!-- doc_id: doc_spec_0308 -->
 # MVP 核心循環貫通與遊玩動線功能規格書 (Playable Core Loop Vertical Slice)
 
+> 依 11/20 裁決修訂（PROG-2-9212）：子嗣成長節點為 1 歲周歲抓周、5 歲開蒙揭曉（開獎）、10 歲歷練、15 歲入學；首子由系統安排成婚、立刻結緣、馬上產子（doc_spec_1233），玩家手動「尋訪結緣」從第二個孩子起（待產 2 季）。下文「5 歲開獎」一律指 5 歲開蒙揭曉，抓周另在 1 歲。
+
 > **所屬分類**：系統規格書 (System Spec)  
 > **關聯總目錄**：[`docs/cross-ref/cross-ref-進度.md (doc_index_0017)`](file:///c:/Users/User/3KLife/docs/cross-ref/cross-ref-進度.md)、[`docs/cross-ref/wbs-progress-inventory-matrix.md (doc_index_1054)`](file:///c:/Users/User/3KLife/docs/cross-ref/wbs-progress-inventory-matrix.md)  
 > **關聯母規格**：[`MVP遊戲驗證規格書.md (doc_spec_0045)`](file:///c:/Users/User/3KLife/docs/遊戲規格文件/系統規格書/MVP遊戲驗證規格書.md)、[`培育系統.md (doc_spec_0026)`](file:///c:/Users/User/3KLife/docs/遊戲規格文件/系統規格書/培育系統.md)、[`官職系統.md (doc_spec_0014)`](file:///c:/Users/User/3KLife/docs/遊戲規格文件/系統規格書/官職系統.md)、[`戰場部署系統.md (doc_spec_0040)`](file:///c:/Users/User/3KLife/docs/遊戲規格文件/系統規格書/戰場部署系統.md)、[`ACAD_01_潁川書院_名士清談與策論牌組規格書.md (doc_spec_0303)`](file:///c:/Users/User/3KLife/docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_01_潁川書院_名士清談與策論牌組規格書.md)  
@@ -26,7 +28,7 @@
 stateDiagram-v2
     [*] --> Phase0_Lobby_Setup: 開局建立幕府
     Phase0_Lobby_Setup --> Phase1_Bonding: 尋訪結緣
-    Phase1_Bonding --> Phase1_ChildBirth: 血脈融合與 5 歲開獎
+    Phase1_Bonding --> Phase1_ChildBirth: 血脈融合與 1 歲抓周、5 歲開蒙開獎
     Phase1_ChildBirth --> Phase2_Academy_Nurture: 進入第一期學府 (潁川書院)
     Phase2_Academy_Nurture --> Phase2_Graduation: 36回合策論牌組畢業考
     Phase2_Graduation --> Phase3_Battle_Deploy: 授銜出征 (戰前部署)
@@ -55,11 +57,11 @@ stateDiagram-v2
   1. **尋訪名媛**：消耗精力點數（體力散）前往探訪世家女性（如樊氏、糜貞或士族名媛）。
   2. **天命與血脈契合（EP 計算）**：
      $$EP = 50 + \text{血統共鳴} + \text{異脈因子} + \text{相性加成}$$
-  3. **子嗣誕生與 5 歲開獎**：
+  3. **子嗣誕生、1 歲抓周與 5 歲開蒙開獎**：
      - 生成 14 人血統矩陣（若無前代則由虛擬祖先自動補齊）。
      - 揭曉基礎五維（武力、智力、統率、政治、魅力）。
      - 顯化基礎天賦因子（藍/粉/綠初階因子）。
-  4. **入學資格**：獲發【潁川書院入學金券】，准予送入第一期賽季學府。
+  4. **入學資格**：獲發【潁川書院入學金券】；子嗣滿 15 歲才可入學第一期賽季學府（開局少年名將 15 歲先入學，見 doc_spec_1233）。
 
 ---
 
@@ -130,7 +132,7 @@ stateDiagram-v2
 |:---|:---|:---|:---|:---|
 | **CP-01** | 幕府開局 | 進入 LobbyScene，點擊領取開局資源 | 黃金 1000、糧草 2000、步騎兵符入庫 | 資源未初始或 UI 報錯 |
 | **CP-02** | 尋訪結緣 | 點擊尋訪，選定第一位世家名媛結緣 | 消耗精力，成功觸發結緣動畫 | 精力扣除異常或死循環 |
-| **CP-03** | 五歲開獎 | 畫面彈出子嗣 5 歲開獎面板 | 顯示五維雷達圖、14人樹狀圖、初始因子 | 祖先缺失未補虛擬祖先 |
+| **CP-03** | 五歲開蒙開獎 | 畫面彈出子嗣 5 歲開蒙揭曉面板 | 顯示五維雷達圖、14人樹狀圖、初始因子 | 祖先缺失未補虛擬祖先 |
 | **CP-04** | 學府入學 | 選擇【潁川書院】，載入 36 回合培育 | 成功生成鏡像快照，PRNG 種子固定 | 破壞本體數據或種子未固化 |
 | **CP-05** | 策論手牌 | 執行訓練抽取天/地/人策論卡 | 手牌庫正常累加（上限 5 張） | 抽卡為空或類型溢出 |
 | **CP-06** | 清談辯難 | 第 6 回合清談大會，出 3 張牌判定 | 成功識別【同氣相求】或【天人合一】爆發 | Combo 判斷錯誤 |
