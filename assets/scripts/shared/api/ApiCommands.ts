@@ -6,6 +6,8 @@
  * 各框架卡在此處追加自己的命令；命令名稱＝網路路徑名稱（POST /api/v1/cmd、GET /api/v1/q/<name>）。
  */
 
+import type { QuestInstanceView } from '../quest/QuestTypes';
+
 /** 命令種類 */
 export type ApiCommandKind = 'cmd' | 'query';
 
@@ -45,6 +47,16 @@ export const API_COMMANDS = Object.freeze({
     'occupancy.query': { kind: 'query', revGuard: false },
     'occupancy.acquire': { kind: 'cmd', revGuard: false },
     'occupancy.release': { kind: 'cmd', revGuard: false },
+    // 任務（任務 Base 規格 §11；QST-M 最小版，只有 taskKind=academy）
+    'task.query': { kind: 'query', revGuard: false },
+    'task.accept': { kind: 'cmd', revGuard: false },
+    'task.advance': { kind: 'cmd', revGuard: false },
+    'task.clearGate': { kind: 'cmd', revGuard: false },
+    'task.pause': { kind: 'cmd', revGuard: false },
+    'task.resume': { kind: 'cmd', revGuard: false },
+    'task.settle': { kind: 'cmd', revGuard: false },
+    'task.abandon': { kind: 'cmd', revGuard: false },
+    'task.tick': { kind: 'cmd', revGuard: false },
 } satisfies Record<string, ApiCommandMeta>);
 
 export type ApiCommandName = keyof typeof API_COMMANDS;
@@ -381,4 +393,87 @@ export interface OccupancyReleaseArgs {
 export interface OccupancyReleaseResult {
     /** false＝本來就沒有（冪等重送） */
     released: boolean;
+}
+
+/**
+ * 任務命令（任務 Base 規格 doc_spec_1185 §11；QST-M 最小版）。
+ * 任務實例、進度、成敗等級、獎勵內容一律由權威端決定；客戶端只送意圖（接哪個定義、推進到哪一步、清哪個閘門），
+ * 不得帶 tier／progress／result（E103 或多餘欄位）。結算時獎勵走 reward.claim，執行者忙碌走 occupancy.*。
+ */
+export type TaskInstanceView = QuestInstanceView;
+
+export interface TaskQueryArgs {
+    qid?: string;
+    actor?: string;
+    state?: string;
+    taskKind?: string;
+}
+
+export interface TaskQueryResult {
+    tasks: TaskInstanceView[];
+}
+
+/** task.accept：acceptKey 是呼叫端去重鍵，同鍵重送回同一張（created=false） */
+export interface TaskAcceptArgs {
+    defId: string;
+    actors: string[];
+    acceptKey: string;
+}
+
+export interface TaskAcceptResult {
+    created: boolean;
+    task: TaskInstanceView;
+}
+
+/** task.advance：fromStep＝呼叫端以為的目前步數；已超過的重送回 advanced=false（冪等） */
+export interface TaskAdvanceArgs {
+    qid: string;
+    fromStep: number;
+    steps?: number;
+}
+
+export interface TaskAdvanceResult {
+    advanced: boolean;
+    stepsDone: number;
+    gateReached: string | null;
+    task: TaskInstanceView;
+}
+
+export interface TaskClearGateArgs {
+    qid: string;
+    gateId: string;
+}
+
+export interface TaskPauseArgs {
+    qid: string;
+    reason?: string;
+}
+
+export interface TaskQidArgs {
+    qid: string;
+}
+
+/** clearGate／pause／resume／abandon 共用：changed=false＝早已是目標狀態（冪等重送） */
+export interface TaskChangeResult {
+    changed: boolean;
+    task: TaskInstanceView;
+}
+
+/** task.settle：重送回原結果（replayed=true），不重複呼叫獎勵 */
+export interface TaskSettleResult {
+    tier: string;
+    bundleId: string | null;
+    grantId: string | null;
+    replayed: boolean;
+    task: TaskInstanceView;
+}
+
+export interface TaskTickArgs {
+    /** 目前季序（GameTimeState.totalSeasonsElapsed）；高水位冪等 */
+    nowIndex: number;
+}
+
+export interface TaskTickResult {
+    delta: number;
+    expired: string[];
 }

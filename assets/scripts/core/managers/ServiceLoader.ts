@@ -60,6 +60,9 @@ import { familyPairKey } from "../systems/FamilySynergy";
 import { configureWhiteFactorAchievements, WHITE_FACTOR_ACHIEVEMENTS_JSON, type WhiteFactorAchievementsConfig } from "../systems/WhiteFactorTraits";
 import { configureMindMarriageRules, MIND_MARRIAGE_RULES_JSON, type MindMarriageRulesConfig } from "../mind/MindMarriage";
 import { ACADEMY_ENROLL_RULES_JSON, configureAcademyEnrollRules, type AcademyEnrollRulesConfig } from "../systems/nurture/AcademyEnrollRules";
+import { createAcademyQuestAdapter } from "../../shared/quest/AcademyQuest";
+import { DEFAULT_QUEST_CONFIG, normalizeQuestConfig } from "../../shared/quest/QuestConfig";
+import { QUEST_CONFIG_JSON, type QuestConfigV1 } from "../../shared/quest/QuestTypes";
 import { DEFAULT_REWARD_CONFIG, normalizeRewardConfig, REWARD_CONFIG_JSON, type RewardConfigV1 } from "../../shared/reward/RewardConfig";
 import { ITEM_CONFIG_JSON, normalizeItemConfig, DEFAULT_ITEM_CONFIG, type ItemConfigV1 } from "../../shared/item/ItemConfig";
 import { ACADEMY_INHERIT_MARKS_JSON, configureAcademyInheritMarks, type AcademyInheritMarksConfig } from "../systems/nurture/AcademyInheritAndMarks";
@@ -264,6 +267,7 @@ export class ServiceLoader {
     private itemConfig: ItemConfigV1 = DEFAULT_ITEM_CONFIG;
     /** 獎勵設定（reward-config.json，PROG-2-9205）；載入前用空設定，API 重建時沿用 */
     private rewardConfig: RewardConfigV1 = DEFAULT_REWARD_CONFIG;
+    private questConfig: QuestConfigV1 = DEFAULT_QUEST_CONFIG;
     /** 場景綁定的權威錢包；API 重建時沿用 */
     private walletAuthority: WalletAuthority | null = null;
 
@@ -298,6 +302,10 @@ export class ServiceLoader {
         this.localApi.setRewardConfig(this.rewardConfig);
         this.localApi.setRewardAuthority(this.session.rewardAuthority());
         this.session.setRewardApi(this.localApi.api);
+        // 任務 base（PROG-2-9209 QST-M）：定義與實例狀態；academy 種類 adapter 先掛預設（A0 接學府結業評級時再換），結算走 reward.claim、占用走 occupancy.*
+        this.localApi.setQuestConfig(this.questConfig);
+        this.localApi.setQuestAuthority(this.session.questAuthority());
+        this.localApi.registerQuestKind(createAcademyQuestAdapter());
         this.session.setSaveService(new ApiSaveGateway(this.localApi.api));
         // 退役 / 死亡歸檔 / 季結排程與存檔共用同一個儲存後端（key 不同，不會互蓋）
         this.legacy = new LegacyService(storageAdapter);
@@ -406,6 +414,7 @@ export class ServiceLoader {
             loadSafe<Partial<AcademyInheritMarksConfig>>(ACADEMY_INHERIT_MARKS_JSON, configureAcademyInheritMarks),
             loadSafe<Partial<AcademyEnrollRulesConfig>>(ACADEMY_ENROLL_RULES_JSON, configureAcademyEnrollRules),
             loadSafe<unknown>(REWARD_CONFIG_JSON, (raw) => { this.rewardConfig = normalizeRewardConfig(raw); this.localApi?.setRewardConfig(this.rewardConfig); }),
+            loadSafe<unknown>(QUEST_CONFIG_JSON, (raw) => { this.questConfig = normalizeQuestConfig(raw); this.localApi?.setQuestConfig(this.questConfig); }),
             loadSafe<unknown>(ITEM_CONFIG_JSON, (raw) => { this.itemConfig = normalizeItemConfig(raw); this.localApi?.setItemConfig(this.itemConfig); }),
             loadSafe<Partial<MarriageVitalityRulesConfig>>(MARRIAGE_VITALITY_RULES_JSON, configureMarriageVitalityRules),
         ]);
