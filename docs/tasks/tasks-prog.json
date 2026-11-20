@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 42,
-    "in_progress": 3,
-    "open": 84,
-    "total": 129
+    "done": 174,
+    "in_progress": 4,
+    "open": 86,
+    "total": 264
   },
   "tasks": [
     {
@@ -11036,6 +11036,50 @@
       "acceptance": [],
       "deliverables": [],
       "notes": "2026-11-20 | 狀態: done | 驗證: 單元 8576 全過、tsc 0、compute-gate 12/13（既有 LoginScene 警告）、7456 實機大廳第 4 季結束→曹操來攻年終守城・初→撐滿 12 回合勝利結算無再戰鈕（民心 +2）→返回大廳自動換到第 2 年 1 季截圖、六關回歸 0 錯 | 變更: YearEndDefense 觸發／選檔／最強鄰國、year-end-defense.json、守城二三檔遭遇、存檔記年終守城年份、快進停在年末、結算窗守城隱藏再戰 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9196",
+      "title": "大廳背景預載動態加載優化（分幀限時、按需建構、不遮信箱、換場取消）",
+      "owner": "claude-code-sonnet-5-5",
+      "priority": "P1",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
