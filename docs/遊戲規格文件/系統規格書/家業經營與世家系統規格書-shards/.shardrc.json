@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "source": "../家業經營與世家系統規格書.md",
+  "indexTitle": "家業經營與世家系統規格書（分片索引）",
+  "indexPath": "docs/遊戲規格文件/系統規格書/家業經營與世家系統規格書.md",
+  "type": "markdown-h2",
+  "preambleShard": "shard-a",
+  "defaultShard": "shard-i",
+  "shards": [
+    {"name": "shard-a", "title": "0–2 結論、定位與節奏、與既有系統分界", "pattern": "^(0|1|2)[.] "},
+    {"name": "shard-b", "title": "3 依賴的共用框架（六套 base 對照與候選）", "pattern": "^3[.] "},
+    {"name": "shard-c", "title": "4–5 幕府等級與解鎖、家業通則", "pattern": "^(4|5)[.] "},
+    {"name": "shard-d", "title": "6 六大家業逐項", "pattern": "^6[.] "},
+    {"name": "shard-e", "title": "7 廚房與菜色產出（成長膳，接 9198）", "pattern": "^7[.] "},
+    {"name": "shard-f", "title": "8–9 出海貿易、世家包裝與郡望連動", "pattern": "^(8|9)[.] "},
+    {"name": "shard-g", "title": "10–11 人力取捨與退役、畫面與美術需求", "pattern": "^(10|11)[.] "},
+    {"name": "shard-h", "title": "12 資料結構", "pattern": "^12[.] "},
+    {"name": "shard-i", "title": "13–14 衝突與待裁決選擇題、實作卡拆分", "pattern": "."}
+  ]
+}
