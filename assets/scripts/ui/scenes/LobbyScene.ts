@@ -1043,12 +1043,14 @@ export class LobbyScene extends Component {
         input.on(Input.EventType.MOUSE_MOVE, touch, this);
         input.on(Input.EventType.KEY_DOWN, touch, this);
         const sleep = (sec: number) => new Promise<void>((resolve) => this.scheduleOnce(() => resolve(), sec));
+        // 新玩家開場進行中維持原本逐幀掛載：開場旁白期間不節流，掛載也不跨進宿命轉蛋與少年挑選畫面（開場面板每次掛載後會被拉回最上層）
+        const opening = () => this._isOpeningInProgress();
         return {
             now,
             nextFrame: () => sleep(0),
-            wait: (ms) => sleep(ms / 1000),
-            lastFrameMs: () => director.getDeltaTime() * 1000,
-            lastInputAt: () => this._lastInputAt,
+            wait: (ms) => sleep(opening() ? 0 : ms / 1000),
+            lastFrameMs: () => (opening() ? 0 : director.getDeltaTime() * 1000),
+            lastInputAt: () => (opening() ? -1e9 : this._lastInputAt),
         };
     }
 

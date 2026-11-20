@@ -36,10 +36,10 @@ export interface LobbyMountConfig {
 
 export const DEFAULT_LOBBY_MOUNT_CONFIG: LobbyMountConfig = {
     hotIds: [],
-    inputPauseMs: 1200,
-    gapBetweenMountsMs: 250,
+    inputPauseMs: 500,
+    gapBetweenMountsMs: 100,
     startWhenFrameMsBelow: 24,
-    maxDeferMs: 6000,
+    maxDeferMs: 1200,
     showBackgroundProgress: false,
 };
 
