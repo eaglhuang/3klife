@@ -1,0 +1,12 @@
+{
+  "_comment": "一年六關按季開放（關卡設計系統 §C-3 裁決 86，PROG-2-9421）。seasonQuota 是春夏秋冬各開放幾關；stageOrder 是六關正式順序，依序開放、不可跳關。不在 stageOrder 的關卡不受季節限制。",
+  "seasonQuota": [2, 2, 1, 1],
+  "stageOrder": [
+    "encounter-001",
+    "encounter-002",
+    "theme-canyon-wakou",
+    "theme-flood-fancheng",
+    "theme-night-ruxu",
+    "theme-ambush-bowang"
+  ]
+}

@@ -10769,6 +10769,53 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9421",
+      "title": "一年六關按季開放（2/2/1/1）：季節關卡解鎖",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T11:21:07+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "關卡設計系統 §C-3 裁決 86：一年六關分四季開放，春 2、夏 2、秋 1、冬 1，依連環破主鏈順序開放、不可跳關。使用者 11/20 同意拆成三張卡（季節解鎖、守城模式、年終流程），本卡是第一張。目前程式沒有季節閘門，六關只看連環破前置，一季內就能把一年的關卡打完。",
+      "related": [
+        "PROG-2-0215",
+        "PROG-2-9420"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: done | 驗證: 單元測試 8521 全過（新增 StageSeasonSchedule 7 項）、tsc 0、compute-gate 12/13（僅既有 LoginScene 警告）、7456 大廳實機挑關六種季節組合＋提示截圖 | 變更: 一年六關按季開放 2/2/1/1 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
