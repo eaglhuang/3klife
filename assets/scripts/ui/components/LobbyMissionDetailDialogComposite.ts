@@ -836,7 +836,9 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         const button = rowNode.addComponent(Button);
         button.transition = Button.Transition.NONE;
         button.target = rowNode;
-        button.interactable = option.id !== 'fallback-empty' && !option.blockedText;
+        // 不可派的列也要能點：點了收起下拉、保留原選擇，不能留下一個擋住標題列的開啟下拉（PROG-2-9186）
+        button.interactable = option.id !== 'fallback-empty';
+        this._clipRowHitToScrollView(rowTransform);
 
         const layout = rowNode.addComponent(Layout);
         layout.type = Layout.Type.HORIZONTAL;
@@ -885,7 +887,11 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
 
         button.node.off(Button.EventType.CLICK);
         button.node.on(Button.EventType.CLICK, () => {
-            if (option.id === 'fallback-empty' || option.blockedText) {
+            if (option.id === 'fallback-empty') {
+                return;
+            }
+            if (option.blockedText) {
+                this._setDropdownVisible(false);
                 return;
             }
             this._selectGeneral(option);
@@ -896,6 +902,25 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
 
         const opacity = rowNode.getComponent(UIOpacity) ?? rowNode.addComponent(UIOpacity);
         opacity.opacity = option.blockedText ? 150 : isSelected ? 255 : 230;
+    }
+
+    /**
+     * 引擎的 Mask 只裁畫面、不裁輸入：捲出可視範圍的列照樣接收點擊，會蓋住標題列的關閉鈕。
+     * 這裡讓列的命中檢查同時要求點在捲動區可視範圍內（PROG-2-9186）。
+     */
+    private _clipRowHitToScrollView(rowTransform: UITransform): void {
+        let viewNode: Node | null = this._scrollContent?.parent ?? null;
+        while (viewNode && viewNode.name !== 'ScrollView') {
+            viewNode = viewNode.parent;
+        }
+        const viewTransform = viewNode?.getComponent(UITransform);
+        if (!viewTransform) {
+            return;
+        }
+        const baseHitTest = rowTransform.hitTest.bind(rowTransform) as (p: unknown, w?: number) => boolean;
+        const viewHitTest = viewTransform.hitTest.bind(viewTransform) as (p: unknown, w?: number) => boolean;
+        (rowTransform as unknown as { hitTest: (p: unknown, w?: number) => boolean }).hitTest =
+            (point: unknown, windowId?: number) => baseHitTest(point, windowId) && viewHitTest(point, windowId);
     }
 
     private _createDropdownLabel(
