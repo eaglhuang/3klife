@@ -18,6 +18,28 @@ export interface YearReport {
     readonly retirementCandidates: number;
     /** 年末仍適婚未結緣的武將名字（PROG-2-9173）；舊資料沒有這欄時視為空 */
     readonly unwedNames?: readonly string[];
+    /** 今年年終守城的結果（PROG-2-9431：守城 → 年報 → 換年，年報要反映守城結果）；今年沒打為 undefined */
+    readonly defense?: YearEndDefenseResult;
+}
+
+/** 年終守城結果：哪一年、勝敗、民心與人口變動（存於 resources.yearEndDefenseResult） */
+export interface YearEndDefenseResult {
+    readonly year: number;
+    readonly outcome: 'victory' | 'defeat' | 'rout' | 'draw';
+    readonly moraleDelta: number;
+    readonly populationLost: number;
+}
+
+const DEFENSE_OUTCOMES: readonly YearEndDefenseResult['outcome'][] = ['victory', 'defeat', 'rout', 'draw'];
+
+/** 讀檔還原年終守城結果；壞值回 null */
+export function normalizeYearEndDefenseResult(raw: unknown): YearEndDefenseResult | null {
+    if (!raw || typeof raw !== 'object') return null;
+    const src = raw as Partial<Record<keyof YearEndDefenseResult, unknown>>;
+    const int = (value: unknown): number | null => typeof value === 'number' && Number.isFinite(value) ? Math.round(value) : null;
+    const year = int(src.year);
+    if (year === null || year <= 0 || !DEFENSE_OUTCOMES.includes(src.outcome as YearEndDefenseResult['outcome'])) return null;
+    return { year, outcome: src.outcome as YearEndDefenseResult['outcome'], moraleDelta: int(src.moraleDelta) ?? 0, populationLost: Math.max(0, int(src.populationLost) ?? 0) };
 }
 
 /** 這一季結束後是否為年末（第 4 季結束時觸發年報） */
@@ -43,14 +65,14 @@ export function isYearEndSeason(season: number): boolean {
 }
 
 /** 從一年內的老化事件計數出年報（事件可含多季，重複事件以事件數計） */
-export function buildYearReport(year: number, events: readonly AgingEvent[], unwedNames: readonly string[] = []): YearReport {
+export function buildYearReport(year: number, events: readonly AgingEvent[], unwedNames: readonly string[] = [], defense: YearEndDefenseResult | null = null): YearReport {
     let deaths = 0;
     let retirementCandidates = 0;
     for (const event of events) {
         if (event.type === 'died') deaths++;
         else if (event.type === 'reached-retirement-age') retirementCandidates++;
     }
-    return { year, seasons: SEASONS_PER_YEAR, deaths, retirementCandidates, unwedNames: [...unwedNames] };
+    return { year, seasons: SEASONS_PER_YEAR, deaths, retirementCandidates, unwedNames: [...unwedNames], ...(defense && defense.year === year ? { defense: { ...defense } } : {}) };
 }
 
 export type YearReportTextLookup = (key: string, ...args: string[]) => string;
@@ -64,7 +86,21 @@ export const YEAR_REPORT_TEXT_FALLBACK_ZH_TW: Readonly<Record<string, string>> =
     'ui.year_report.unwed': '本年適婚未結緣：{0} 人（{1}）媒人快登門啦～',
     'ui.year_report.unwed_none': '本年適婚未結緣：0 人，個個名花有主，媒人都閒到打瞌睡了',
     'ui.year_report.close': '關閉',
+    'ui.year_report.defense_victory': '年終守城：守住城寨，民心 {0}',
+    'ui.year_report.defense_defeat': '年終守城：城寨失守，民心 {0}',
+    'ui.year_report.defense_rout': '年終守城：大敗，民心 {0}、人口 −{1}',
+    'ui.year_report.defense_draw': '年終守城：雙方罷兵',
 };
+
+function signed(value: number): string {
+    return value > 0 ? `+${value}` : value < 0 ? `−${Math.abs(value)}` : '±0';
+}
+
+/** 年報守城結果那一行（PROG-2-9431）；今年沒打回空字串 */
+export function buildDefenseLine(defense: YearEndDefenseResult | undefined, lookup: YearReportTextLookup): string {
+    if (!defense) return '';
+    return lookup(`ui.year_report.defense_${defense.outcome}`, signed(defense.moraleDelta), String(defense.populationLost));
+}
 
 function fillYearReportText(template: string, args: readonly string[]): string {
     return template.replace(/\{(\d+)\}/g, (match, index: string) => args[Number(index)] ?? match);
@@ -101,6 +137,7 @@ export function buildYearReportTexts(report: YearReport, lookup: YearReportTextL
         yearReportDeaths: lookup('ui.year_report.deaths', String(report.deaths)),
         yearReportRetirements: lookup('ui.year_report.retirements', String(report.retirementCandidates)),
         yearReportUnwed: buildUnwedLine(report.unwedNames ?? [], lookup),
+        yearReportDefense: buildDefenseLine(report.defense, lookup),
         closeYearReportLabel: lookup('ui.year_report.close'),
     };
 }

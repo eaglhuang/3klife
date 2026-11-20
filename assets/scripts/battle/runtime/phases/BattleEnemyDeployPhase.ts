@@ -89,6 +89,7 @@ function reinforceDefenseEngineers(context: BattleEnemyDeployPhaseContext, deplo
     const lane = pickDefenseReinforceLane(open, playerCount, context.random ?? (() => 0));
     if (lane === null) return;
     context.spawnEnemyUnit(TroopType.Engineer, lane, deployDepth);
+    context.state.defenseEngineersReinforced += 1;
   }
 }
 

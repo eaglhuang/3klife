@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 184,
+    "done": 185,
     "in_progress": 4,
     "open": 76,
-    "total": 273
+    "total": 274
   },
   "tasks": [
     {
@@ -11274,6 +11274,57 @@
       "acceptance": [],
       "deliverables": [],
       "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試全過、tsc 0、7456 實跑守城開場滿條／掉血 455／剩 125 轉警示紅／一般關卡無血條 | 變更: 守城戰頂欄下方執行期建我方城寨血條（掉血輕震、三成以下轉紅）；新增年終守城戰規格書 doc_spec_1236 並登錄 doc-id 與 cross-ref | 阻塞: 無；規格第 11 節列 6 項待裁決（大敗定義、數值未入 JSON、年報位置、失守懲罰細項、補派上限、平手）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9431",
+      "title": "年終守城 §11 裁決落地：失守懲罰與城寨數值入 JSON、補派工兵總量上限、年報反映守城結果、規格書更新",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-21T03:16:33+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 11/21 依年終守城戰規格書 doc_spec_1236 §11 裁決：(b) 失守民心 −3、大敗人口 −3%、城寨 500 照現值放進 data/defense-battle.json；(c) 順序為守城 → 年報 → 換年，年報要列出守城結果；(e) 敵方補派工兵加總量上限，由戰場專家模擬後自訂並寫進 JSON 與規格。(a) 大敗定義、(d) 失守懲罰結構、(f) 平手屬戰場核心規則，規格先寫建議版並標待決，由總PM 轉使用者裁決。",
+      "related": [
+        "PROG-2-9425",
+        "PROG-2-9426",
+        "PROG-2-9429",
+        "PROG-2-9430"
+      ],
+      "depends": [
+        "PROG-2-9430"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8697 全過、tsc 0、真實 BattleController 模擬三檔 × 每回合清 0／1／2 隊工兵 × 補派上限（不設／6／5／4），並在 7456 實跑守城 | 變更: defense-battle.json 新增 engineerReinforceMax 5、fortressMaxHp 500、defeatMoraleDelta −3、routPopulationLossRatio 0.03，程式改讀設定；守城開場套用城寨上限、血條同步；補派到整場上限即停；年報多一行年終守城結果，存檔保留；規格書第 4、5、6、9、11 節更新，(a)(d)(f) 寫建議版並標待決 | 阻塞: 無；大敗定義、失守懲罰結構、平手待使用者裁決",
       "brief": {
         "style": "classic",
         "label": "",

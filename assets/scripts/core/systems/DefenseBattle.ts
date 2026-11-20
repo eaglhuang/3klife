@@ -19,6 +19,8 @@
  */
 
 import { Faction } from '../../shared/CommonEnums';
+import { DEFENSE_ROUT_POPULATION_LOSS, MORALE_DELTA } from './CityEconomy';
+import { FORTRESS_MAX_HP } from './FortressBarView';
 
 export interface DefenseBattleConfig {
     /** 撐滿幾回合即勝 */
@@ -29,6 +31,14 @@ export interface DefenseBattleConfig {
     engineerBombardDamage: number;
     /** 敵方每回合補派工兵隊數上限（PROG-2-9429） */
     engineerReinforcePerTurn: number;
+    /** 整場補派工兵的總隊數上限；補滿就不再補（PROG-2-9431，總PM 授權戰場專家依模擬自訂） */
+    engineerReinforceMax: number;
+    /** 我方城寨上限（PROG-2-9431，總PM 11/21 裁決照現值 500 放進 JSON） */
+    fortressMaxHp: number;
+    /** 失守民心變動（負數；PROG-2-9431） */
+    defeatMoraleDelta: number;
+    /** 大敗人口損失比例（0～1；PROG-2-9431） */
+    routPopulationLossRatio: number;
 }
 
 export const DEFAULT_DEFENSE_BATTLE: Readonly<DefenseBattleConfig> = Object.freeze({
@@ -36,6 +46,10 @@ export const DEFAULT_DEFENSE_BATTLE: Readonly<DefenseBattleConfig> = Object.free
     moraleOnVictory: 2,
     engineerBombardDamage: 15,
     engineerReinforcePerTurn: 1,
+    engineerReinforceMax: 5,
+    fortressMaxHp: FORTRESS_MAX_HP,
+    defeatMoraleDelta: MORALE_DELTA.defenseDefeat,
+    routPopulationLossRatio: DEFENSE_ROUT_POPULATION_LOSS,
 });
 
 function positiveInt(value: unknown): number | null {
@@ -46,6 +60,20 @@ function nonNegativeInt(value: unknown): number | null {
     return typeof value === 'number' && Number.isInteger(value) && value >= 0 ? value : null;
 }
 
+function nonPositiveInt(value: unknown): number | null {
+    return typeof value === 'number' && Number.isInteger(value) && value <= 0 ? value : null;
+}
+
+function unitRatio(value: unknown): number | null {
+    return typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 1 ? value : null;
+}
+
+/** 這一回合還能補派幾隊工兵：每回合上限與整場剩餘額度取小（PROG-2-9431） */
+export function defenseReinforceAllowance(config: Pick<DefenseBattleConfig, 'engineerReinforcePerTurn' | 'engineerReinforceMax'>, reinforcedSoFar: number): number {
+    const left = config.engineerReinforceMax - Math.max(0, Math.floor(reinforcedSoFar));
+    return Math.max(0, Math.min(config.engineerReinforcePerTurn, left));
+}
+
 /** 解析設定檔；缺欄位或不合法的欄位用預設 */
 export function parseDefenseBattleConfig(raw: unknown): DefenseBattleConfig {
     const src = (raw && typeof raw === 'object') ? raw as Record<string, unknown> : {};
@@ -54,6 +82,10 @@ export function parseDefenseBattleConfig(raw: unknown): DefenseBattleConfig {
         moraleOnVictory: nonNegativeInt(src.moraleOnVictory) ?? DEFAULT_DEFENSE_BATTLE.moraleOnVictory,
         engineerBombardDamage: nonNegativeInt(src.engineerBombardDamage) ?? DEFAULT_DEFENSE_BATTLE.engineerBombardDamage,
         engineerReinforcePerTurn: nonNegativeInt(src.engineerReinforcePerTurn) ?? DEFAULT_DEFENSE_BATTLE.engineerReinforcePerTurn,
+        engineerReinforceMax: nonNegativeInt(src.engineerReinforceMax) ?? DEFAULT_DEFENSE_BATTLE.engineerReinforceMax,
+        fortressMaxHp: positiveInt(src.fortressMaxHp) ?? DEFAULT_DEFENSE_BATTLE.fortressMaxHp,
+        defeatMoraleDelta: nonPositiveInt(src.defeatMoraleDelta) ?? DEFAULT_DEFENSE_BATTLE.defeatMoraleDelta,
+        routPopulationLossRatio: unitRatio(src.routPopulationLossRatio) ?? DEFAULT_DEFENSE_BATTLE.routPopulationLossRatio,
     };
 }
 

@@ -1192,7 +1192,7 @@ export class BattleUIBridge {
     // encounterEnemyGeneralId：敵方君主（這一場的敵主將），被擒處置用他的數值（PROG-2-9140）
     // 守城戰（PROG-2-9425）：守方是玩家時，勝利另加民心、失敗走守城戰敗；我方主將倒下視為武將全滅（大敗）
     const defense = this.ctx.ctrl?.state.siegeDefender === Faction.Player
-      ? { moraleOnVictory: this.ctx.ctrl.defenseBattle.moraleOnVictory, playerGeneralsDown: pgUnit?.isDead() ?? false }
+      ? { moraleOnVictory: this.ctx.ctrl.defenseBattle.moraleOnVictory, playerGeneralsDown: pgUnit?.isDead() ?? false, defeatMoraleDelta: this.ctx.ctrl.defenseBattle.defeatMoraleDelta, routPopulationLossRatio: this.ctx.ctrl.defenseBattle.routPopulationLossRatio }
       : null;
     const battleOptions = { specialActions, sortie, performance: { [pgId]: performance }, stageId, deployedTallyIds, vitalityAfterBattle, hpRatioAfterBattle, stageSalvage: this.ctx.ctrl?.state.stageSalvage, teachingSpirit: this.ctx.teachingSpirit, duelOutcomes: this.duelOutcomes, generalCaptures: this.generalCaptures, encounterEnemyGeneralId: this.ctx.eg?.id ?? null, inBattleFame, defense };
     void services().session.recordBattle([pgId], result, battleOptions).then((settlement) => {
