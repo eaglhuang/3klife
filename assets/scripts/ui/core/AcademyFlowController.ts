@@ -99,8 +99,10 @@ export interface AcademyFlowDeps<H extends AcademyHostLike> {
     loadMentorCards(): Promise<MentorCard[]>;
     lockedMentorIds(): readonly string[];
     tokensLeft(): number;
-    consumeToken(): boolean;
-    refundToken(): void;
+    /** 扣 1 張入學令（走物品庫存 item.consume，PROG-2-9203）；不足回 false 且不扣 */
+    consumeToken(): boolean | Promise<boolean>;
+    /** 退回剛扣的 1 張（落盤失敗時用） */
+    refundToken(): void | Promise<void>;
     clanUuid(): string;
     clanPrestigeTier(): number;
     /** 入學當下已過幾季，進亂數種子（同一存檔固定） */
@@ -356,16 +358,20 @@ export class AcademyFlowController<H extends AcademyHostLike> {
         if (elig.blocked) { this._failEnroll(this._t('enroll.err.failed', this._deps.nurtureBlockReasons(child.id).join(','))); return false; }
         const cards = this._chosenMentors();
         if (cards.length === 0) { this._failEnroll(this._t('enroll.err.no_mentor')); return false; }
-        if (!this._deps.consumeToken()) { this._failEnroll(this._t('enroll.err.no_token')); return false; }
+        // 先佔住 busy 再等扣令（扣令是非同步命令），避免連點重複入學
         this._busy = true;
+        let tokenTaken = false;
         try {
+            if (!(await this._deps.consumeToken())) { this._failEnroll(this._t('enroll.err.no_token')); return false; }
+            tokenTaken = true;
             const snapshot = this._buildSnapshot(child, cards);
             this._manager.begin(snapshot);
             try {
                 await this._deps.persist();
             } catch {
                 this._deps.store.restore(null);
-                this._deps.refundToken();
+                await this._deps.refundToken();
+                tokenTaken = false;
                 this._failEnroll(this._t('enroll.err.save'));
                 return false;
             }
@@ -377,7 +383,7 @@ export class AcademyFlowController<H extends AcademyHostLike> {
             this._deps.onChanged?.();
         } catch (err) {
             this._deps.store.restore(null);
-            this._deps.refundToken();
+            if (tokenTaken) await this._deps.refundToken();
             this._failEnroll(this._t('enroll.err.failed', (err as Error)?.message ?? String(err)));
             return false;
         } finally {

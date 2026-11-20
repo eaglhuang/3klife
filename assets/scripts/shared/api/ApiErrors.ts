@@ -36,6 +36,14 @@ export const API_ERRORS = Object.freeze({
     INSUFFICIENT_BALANCE: def('E301', 'INSUFFICIENT_BALANCE'),
     CURRENCY_UNKNOWN: def('E302', 'CURRENCY_UNKNOWN'),
     WALLET_UNAVAILABLE: def('E303', 'WALLET_UNAVAILABLE', true),
+    // 物品庫存（E31x；E301～E303 已被錢包使用，規格 doc_spec_1184 §11.4 的 E301～E309 因此順延，待總 PM 裁決）
+    ITEM_HOLDER_UNKNOWN: def('E310', 'HOLDER_UNKNOWN'),
+    ITEM_NOT_ACCEPTED: def('E311', 'NOT_ACCEPTED'),
+    ITEM_BOUND: def('E312', 'BOUND'),
+    ITEM_FULL: def('E313', 'FULL'),
+    ITEM_INSUFFICIENT: def('E314', 'INSUFFICIENT'),
+    ITEM_SOURCE_INVALID: def('E315', 'SOURCE_INVALID'),
+    ITEM_RULE_UNKNOWN: def('E316', 'RULE_UNKNOWN'),
     // 存檔（沿用 E0xx 之外的本機存檔失敗）
     SAVE_FAILED: def('E190', 'SAVE_FAILED', true),
     SAVE_NOT_FOUND: def('E191', 'SAVE_NOT_FOUND'),

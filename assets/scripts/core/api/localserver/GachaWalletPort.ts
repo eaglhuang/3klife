@@ -12,6 +12,7 @@ export interface GachaWalletLike {
     getWalletSnapshot(): object;
     getCurrencyAmount(currencyKey: never): number;
     spendCurrency(currencyKey: never, amount: number): boolean;
+    grantCurrency(currencyKey: never, amount: number): number;
 }
 
 export class GachaWalletPort implements WalletAuthority {
@@ -23,6 +24,10 @@ export class GachaWalletPort implements WalletAuthority {
 
     public spend(currency: string, amount: number): boolean {
         return this._service.spendCurrency(currency as never, amount);
+    }
+
+    public credit(currency: string, amount: number): void {
+        this._service.grantCurrency(currency as never, amount);
     }
 
     public snapshot(): Record<string, number> {

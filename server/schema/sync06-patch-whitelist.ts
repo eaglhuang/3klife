@@ -43,6 +43,7 @@ export const SYNC_PATCH_ROOT_KEYS: readonly string[] = [
     'generalMind',
     'legacyCount',
     'legendaryMentoringUsedIds',
+    'itemMeta',
     'officerState',
     'sandtableMarkersPlaced',
     'sandtableMarkerTerritories',
