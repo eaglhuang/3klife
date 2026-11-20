@@ -38,7 +38,7 @@ export const RETREAT_DESCRIPTION = '主動撤退，本場判定戰敗。';
 export const RESULT_CAUSE_DESCRIPTION: Readonly<Record<string, Partial<Record<BattleResult['resultType'], string>>>> = {
     general: { defeat: '主將倒下，我軍潰敗，再接再厲！' },
     fortress: { victory: '我軍攻破敵方城寨，取得大勝！' },
-    'time-up': { defeat: '時限已到仍未破敵，我軍鳴金撤兵。' },
+    'time-up': { defeat: '時限已到仍未破敵，我軍鳴金撤兵。', victory: '時限已到，敵軍鳴金退兵，我方獲勝！' },
     camp: { victory: '我軍奪下敵營，敵軍不戰自潰！' },
 };
 

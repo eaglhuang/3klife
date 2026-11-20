@@ -290,6 +290,7 @@
   "ui.breed.epithet.civil_martial": "文武並濟",
   "ui.breed.epithet.foes_to_allies": "化干戈為玉帛",
   "ui.breed.epithet.twin_stars": "雙星輝映",
+  "ui.opening.starter_child_hint": "宗室幼苗「{0}」已入宗族名冊～ 明年滿五歲就能入學府開蒙培育囉！",
   "ui.breed.confirm": "消耗 {0} 精力 {1} 與 {2} 精力 {3}，確認結緣？",
   "ui.breed.preg_status": "{0} 需調養待產 {1} 季（期間精力凍結、不能再結緣）；襁褓幼子已入宗族名冊",
   "ui.breed.child_born": "恭喜主公！{0} 與 {1} 喜獲 {2}！",

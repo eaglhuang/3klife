@@ -68,7 +68,7 @@ export function createBondingEmptyAndPregnantHintSuite(): TestSuite {
 
     suite.test('待產中的女將在結緣頁顯示剩餘季數與輕鬆引導（不與 preg_status 重複）', () => {
         const father = makeGeneral('zhang-fei', '男', { name: '張飛' });
-        const pregnantMother = makeGeneral('diao-chan', '女', { name: '貂蟬', pregnancySeasonsLeft: 3 });
+        const pregnantMother = makeGeneral('diao-chan', '女', { name: '貂蟬', pregnancySeasonsLeft: 2 });
         const roster = new InMemoryRosterStore([father, pregnantMother]);
         const graph = BloodlineGraph.getInstance();
         graph.clear();
@@ -82,7 +82,7 @@ export function createBondingEmptyAndPregnantHintSuite(): TestSuite {
         assert.equals(false, view.enabled.btnConfirmBond);
         assert.equals(false, view.actives.btnGoBeautyGacha, '非空清單時不應顯示空清單按鈕');
         assert.isTrue(view.texts.eligibilityLabel.includes('母方待產中'), 'eligibilityLabel 應保留母方待產中字樣');
-        assert.isTrue(view.texts.eligibilityLabel.includes('貂蟬') && view.texts.eligibilityLabel.includes('3 季'), `應顯示待產剩餘 3 季，實際：${view.texts.eligibilityLabel}`);
+        assert.isTrue(view.texts.eligibilityLabel.includes('貂蟬') && view.texts.eligibilityLabel.includes('2 季'), `應顯示待產剩餘 2 季，實際：${view.texts.eligibilityLabel}`);
         assert.isTrue(view.texts.eligibilityLabel.includes('紅顏天香'), '應提示可先到紅顏天香再延攬新紅顏');
         assert.equals(false, view.texts.eligibilityLabel.includes('襁褓幼子'), '不應與結緣成功之 preg_status 文案重複');
 

@@ -276,6 +276,7 @@
   "ui.breed.epithet.civil_martial": "Pen & Sword",
   "ui.breed.epithet.foes_to_allies": "Rivals Reconciled",
   "ui.breed.epithet.twin_stars": "Twin Stars",
+  "ui.opening.starter_child_hint": "Young scion {0} has joined your clan~ They'll be ready for the Academy next year at age 5!",
   "ui.breed.confirm": "Spend {0} vigor {1} and {2} vigor {3}. Confirm the union?",
   "ui.breed.preg_status": "{0} has entered the expecting period; her vigor is frozen for {1} seasons and she cannot bond again; the child is already on the roster.",
   "ui.breed.child_born": "Congratulations, my lord! {0} and {1} have been blessed with a {2}!",
