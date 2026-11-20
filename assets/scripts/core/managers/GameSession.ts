@@ -159,6 +159,11 @@ import { buildHallSpotRows, EMPTY_HALL_SPOT_STATE, HallSpotRow, HallSpotState, r
 import { buildHallStageFeed, type HallStageFeed, type HallStageProfile } from '../systems/HallStageFeed';
 import type { HallVolunteerTask } from '../systems/HallVolunteer';
 import type { SessionSaveService } from '../api/localserver/ApiSaveGateway';
+import type { SkillHost } from '../api/localserver/SkillCommands';
+import { SkillService } from '../../shared/skill/SkillService';
+import type { SkillLearnAuthority } from '../../shared/skill/SkillTypes';
+import { GeneralSkillStore } from '../systems/skill/GeneralSkillStore';
+import { defaultSkillRegistry } from '../systems/skill/SkillCatalog';
 import type { ItemAuthority, StockTable } from '../api/localserver/ItemCommands';
 import type { IApiClient } from '../../shared/api/IApiClient';
 import { isApiFail } from '../../shared/api/ApiProtocol';
@@ -947,6 +952,10 @@ export class GameSession implements AcademyRecordPort {
     private _seasonPass: SeasonPassState = createSeasonPassState();
     /** 進行中的學府修業紀錄（PROG-2-9189）；有值且未結業時外界時間凍結 */
     private _academyRecord: PersistedAcademyRecord | null = null;
+    private _skillApi: IApiClient | null = null;
+    private _skillService: SkillService | null = null;
+    private _skillHost: SkillHost | null = null;
+    private _skillAuthority: SkillLearnAuthority | null = null;
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
     private _prison: PrisonState<GeneralConfig> = createPrisonState<GeneralConfig>();
     /** 來投時依 uid 查回的武將配置（generals.json）；大廳載入後由 setGeneralTemplates 注入 */
@@ -1295,7 +1304,9 @@ export class GameSession implements AcademyRecordPort {
      * - 同步蓋上 graduationRating／graduatedSeason：沒有評級的子嗣不能出戰、也會一直出現在入學名單。
      * - 結業的就是進行中的學府紀錄時一併清掉（名冊與清檔同一次存檔），外界時間凍結解除。
      * - 查無武將但紀錄屬於他時，只清紀錄（孤兒紀錄不留）。
-     * TODO(PROG-2-9201 共通 API 層合併後)：名冊寫回與清紀錄改走 B0 的共通寫入 API，不再直接改 _academyRecord／replaceAll。
+     * PROG-2-9204（SKL-M）：新學戰法改經技能 API `skill.grant` 寫入持有（單一權威、可冪等重送）；
+     * 五維、特質、評級與清紀錄仍在本方法一次存檔，等 9191-a 的 task.settle／time API 就緒再整併。
+     * TODO(PROG-2-9191)：名冊其餘欄位與清紀錄改走 task.settle，不再直接改 _academyRecord／replaceAll。
      */
     public async graduateFromAcademy(generalId: string, snapshot: Readonly<AcademyStateSnapshot>): Promise<AcademyGraduationResult | null> {
         const record = this._academyRecord;
@@ -1308,8 +1319,19 @@ export class GameSession implements AcademyRecordPort {
             }
             return null;
         }
-        const applied = applyAcademyGraduation(general, snapshot);
-        const stamped = { ...applied.general, graduationRating: applied.grade, graduatedSeason: this._clock.state.totalSeasonsElapsed } as GeneralConfig;
+        const applied = applyAcademyGraduation(general, snapshot, { tacticsGrantedBySkillApi: true });
+        // 先授予戰法：失敗就整個結業不前進（名冊、紀錄都沒動）
+        await this._grantSkills(generalId, applied.newTactics, 'academy', `skill.grant:academy:${generalId}:${applied.newTactics.join('|')}`);
+        const granted = this._roster.getAll().find((g) => g.id === generalId) ?? general;
+        const stamped = {
+            ...applied.general,
+            learnedTactics: granted.learnedTactics,
+            skillMeta: granted.skillMeta,
+            // 結業時清掉「持續到結業」的調整值（期中方針 policy:*）
+            skillModifiers: (granted.skillModifiers ?? []).filter((m) => m.until !== 'graduation'),
+            graduationRating: applied.grade,
+            graduatedSeason: this._clock.state.totalSeasonsElapsed,
+        } as GeneralConfig;
         const result: AcademyGraduationResult = { ...applied, general: stamped };
         this._roster.replaceAll(this._roster.getAll().map((g) => (g.id === generalId ? stamped : g)));
         if (ownsRecord) this._academyRecord = null;
@@ -1317,6 +1339,49 @@ export class GameSession implements AcademyRecordPort {
             await this.save();
         }
         return result;
+    }
+
+    /** 技能宿主：持有存在武將名冊、學習權威由場景綁定；ServiceLoader 把它掛到本機 API 的 skill.* 命令 */
+    public get skillHost(): SkillHost {
+        if (!this._skillHost) {
+            // 穩定物件：換學習權威時重建服務，但已掛到 API 的 host 不會過期
+            const ensure = (): SkillService => this._ensureSkillService();
+            this._skillHost = { get service(): SkillService { return ensure(); } };
+        }
+        return this._skillHost;
+    }
+
+    private _ensureSkillService(): SkillService {
+        if (!this._skillService) {
+            const store = new GeneralSkillStore({
+                find: (id) => this._roster.getAll().find((g) => g.id === id),
+                replace: (general) => this._roster.replaceAll(this._roster.getAll().map((g) => (g.id === general.id ? general : g))),
+            });
+            this._skillService = new SkillService({ registry: defaultSkillRegistry(), store, authority: this._skillAuthority });
+        }
+        return this._skillService;
+    }
+
+    /** 綁定共通 API 入口（ServiceLoader 建好本機 API 後呼叫）；沒綁定時（純單元測試）退回直接呼叫同一個技能服務 */
+    public setSkillApi(client: IApiClient | null): void {
+        this._skillApi = client;
+    }
+
+    /** 學習權威（TP、槽位）；尚未接培育 TP 前為 null，skill.learn 回 E611（見卡 notes） */
+    public setSkillLearnAuthority(authority: SkillLearnAuthority | null): void {
+        this._skillAuthority = authority;
+        this._skillService = null;
+    }
+
+    private async _grantSkills(generalId: string, skillIds: readonly string[], source: string, idemKey: string): Promise<void> {
+        if (skillIds.length === 0) return;
+        const holder = { kind: 'general' as const, id: generalId };
+        if (!this._skillApi) {
+            this._ensureSkillService().grant(holder, skillIds, source);
+            return;
+        }
+        const res = await this._skillApi.cmd('skill.grant', { holder, skillIds: [...skillIds], source }, { idemKey });
+        if (isApiFail(res)) throw new Error(`[GameSession] skill.grant 失敗 ${res.errorCode} ${res.reason}：${res.message}`);
     }
 
     /** 對武將使用延壽丹（E-6，PROG-2-1347）：壽命上限 +3 與已服顆數寫回名冊並自動存檔；不成立時不扣道具 */
