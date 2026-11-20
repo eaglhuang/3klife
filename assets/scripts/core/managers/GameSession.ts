@@ -157,7 +157,7 @@ import type { HallCandidate } from '../systems/HallCharacterRoll';
 import { buildHallSpotRows, EMPTY_HALL_SPOT_STATE, HallSpotRow, HallSpotState, refreshHallCharacterSpots } from '../systems/HallCharacterPresenter';
 import { buildHallStageFeed, type HallStageFeed, type HallStageProfile } from '../systems/HallStageFeed';
 import type { HallVolunteerTask } from '../systems/HallVolunteer';
-import { createPlayerSaveSnapshot, normalizeInfusionRecords, normalizeGachaMentorJournal, normalizeHallAssignLog, type GachaMentorJournalEntry, normalizeSandtableMarkerTerritories, normalizeSortiePresets, normalizeGachaWalletSave, type GachaWalletSave, normalizeDailySubsidyRecord, type DailySubsidyRecord, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeAutoNurtureTickets, normalizeFlag, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot, normalizeClanPrestige, normalizeShrineOfferingDay } from '../services/PlayerSaveService';
+import { createPlayerSaveSnapshot, normalizeInfusionRecords, normalizeGachaMentorJournal, normalizeHallAssignLog, type GachaMentorJournalEntry, normalizeSandtableMarkerTerritories, normalizeSortiePresets, normalizeGachaWalletSave, type GachaWalletSave, normalizeDailySubsidyRecord, type DailySubsidyRecord, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeAutoNurtureTickets, normalizeFlag, normalizeYearEndDefenseYear, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot, normalizeClanPrestige, normalizeShrineOfferingDay } from '../services/PlayerSaveService';
 import { HALL_MISSION_DIFFICULTIES } from '../systems/HallMissionData';
 import { HALL_DIFFICULTY_MIN_RANK } from '../systems/HallMissionBoard';
 import { shouldShowVolunteerEvent } from '../systems/HallVolunteer';
@@ -928,6 +928,8 @@ export class GameSession {
     private _mainlineNurtureClearedOnce = false;
     /** 第一次打贏戰鬥後為 true（新手開場第四幕觸發）；舊檔依既有通關紀錄推算，存於 resources.firstBattleCleared */
     private _firstBattleCleared = false;
+    /** 最近一次打完年終守城的年份（PROG-2-9426）；沒打過為 0，存於 resources.yearEndDefenseYear */
+    private _yearEndDefenseYear = 0;
     /** 新手開場第四幕（紅顏登場）已展示過；舊檔已有通關紀錄者視為看過，不補彈。存於 resources.openingRedFaceShown */
     private _openingRedFaceShown = false;
     /** 新玩家「去教官池抽教官」引導已結束（玩家第一次擁有教官後記下，PROG-2-9160）；存於 resources.mentorGuideDone */
@@ -2231,6 +2233,7 @@ export class GameSession {
         this._autoNurtureTickets = 0;
         this._mainlineNurtureClearedOnce = false;
         this._firstBattleCleared = false;
+        this._yearEndDefenseYear = 0;
         this._openingRedFaceShown = false;
         this._mentorGuideDone = false;
         this._mentorUnlockPromptShown = false;
@@ -2444,6 +2447,11 @@ export class GameSession {
     /** 城市兵源與糧草儲備（PROG-2-0072） */
     public get fame(): number {
         return this._fame;
+    }
+
+    /** 他國現任君主（勢力 id → 武將 id）；年終守城挑來犯主將用（PROG-2-9426） */
+    public get rivalRulerIds(): Readonly<Record<string, string>> {
+        return this._rivalRulerIds;
     }
 
     /** 他國 AI 勢力（邦交、兵力、領地）；外交畫面讀這份（PROG-2-1088） */
@@ -5859,6 +5867,9 @@ export class GameSession {
         if (result === 'player-win' && options.teachingSpirit) this.completeTeachingBattle(options.teachingSpirit);
         const firstClear = result === 'player-win' && !this._firstBattleCleared;
         if (firstClear) this._firstBattleCleared = true;
+        // 年終守城打完（勝敗平都算）記下年份：不可重打，回到大廳後自動換年（PROG-2-9426）
+        const defenseFought = Boolean(options.defense) && (result === 'player-win' || result === 'enemy-win' || result === 'draw');
+        if (defenseFought) this._yearEndDefenseYear = this._clock.state.currentYear;
         const tallyChanged = this._settleTallyBattleExp(options.deployedTallyIds ?? [], result);
         // 戰功入帳官職經驗（官職系統 E-2，PROG-2-1619 暫定）：正式勝敗以「一般難度軍事任務」計，勝 19、敗 7
         let officerChanged = false;
@@ -5895,7 +5906,7 @@ export class GameSession {
         this._inventory = grantTacticNotes(this._inventory, milestoneRewards);
         this._recordGain(beforeMilestone, 'TASK');
         if (settlement.entries.length === 0) {
-            if ((clearChanged || firstClear || tallyChanged || comradeChanged || mercenaryChanged || officerChanged) && this._autoSave && this._save) {
+            if ((clearChanged || firstClear || defenseFought || tallyChanged || comradeChanged || mercenaryChanged || officerChanged) && this._autoSave && this._save) {
                 await this.save();
             }
             if (firstClear) this._emit(GAME_SESSION_EVENTS.FirstBattleCleared, undefined);
@@ -6213,6 +6224,11 @@ export class GameSession {
     }
 
     /** 第一次打贏戰鬥後為 true，之後不會再變回 false */
+    /** 最近一次打完年終守城的年份；沒打過為 0（PROG-2-9426） */
+    public get yearEndDefenseYear(): number {
+        return this._yearEndDefenseYear;
+    }
+
     public get firstBattleCleared(): boolean {
         return this._firstBattleCleared;
     }
@@ -6366,6 +6382,7 @@ export class GameSession {
                 autoNurtureTickets: this._autoNurtureTickets,
                 mainlineNurtureClearedOnce: this._mainlineNurtureClearedOnce,
                 firstBattleCleared: this._firstBattleCleared,
+                ...(this._yearEndDefenseYear > 0 ? { yearEndDefenseYear: this._yearEndDefenseYear } : {}),
                 openingRedFaceShown: this._openingRedFaceShown,
                 mentorGuideDone: this._mentorGuideDone,
                 mentorUnlockPromptShown: this._mentorUnlockPromptShown,
@@ -6714,6 +6731,7 @@ export class GameSession {
         this._openingRedFaceShown = normalizeFlag(snapshot.resources?.openingRedFaceShown)
             || (snapshot.resources?.firstBattleCleared === undefined && this._clearedStageIds.length > 0);
         this._mentorGuideDone = normalizeFlag(snapshot.resources?.mentorGuideDone);
+        this._yearEndDefenseYear = normalizeYearEndDefenseYear(snapshot.resources?.yearEndDefenseYear);
         this._mentorUnlockPromptShown = normalizeFlag(snapshot.resources?.mentorUnlockPromptShown);
         this._domesticLog = normalizeDomesticLog(snapshot.domestic);
         this._governanceEvent = normalizeGovernanceEvent(snapshot.governanceEvent);

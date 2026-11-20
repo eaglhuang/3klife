@@ -11016,7 +11016,7 @@
       "title": "年終守城流程：結束第 4 季強制開打、三檔敵軍依年度切換、最強鄰國主將來攻、不可重打",
       "owner": "claude-code-fable-5-2",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-20",
@@ -11035,7 +11035,7 @@
       "depends": [],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-20 | 狀態: in-progress | 驗證: pending | 變更: 待做 | 阻塞: 無",
+      "notes": "2026-11-20 | 狀態: done | 驗證: 單元 8576 全過、tsc 0、compute-gate 12/13（既有 LoginScene 警告）、7456 實機大廳第 4 季結束→曹操來攻年終守城・初→撐滿 12 回合勝利結算無再戰鈕（民心 +2）→返回大廳自動換到第 2 年 1 季截圖、六關回歸 0 錯 | 變更: YearEndDefense 觸發／選檔／最強鄰國、year-end-defense.json、守城二三檔遭遇、存檔記年終守城年份、快進停在年末、結算窗守城隱藏再戰 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",

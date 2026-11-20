@@ -1082,6 +1082,8 @@ export class BattleUIBridge {
     // 依戰果判定（PROG-2-9423）：寫出雙方戰果百分比，玩家才知道差多少
     if (data.timeUpVerdict) details.unshift(timeUpVerdictLine(data.timeUpVerdict, services().battle.getTimeUpJudgement()));
     else if (data.timeUp === true && data.result === 'player-win') details.unshift('敵軍久攻不下，鳴金退兵。');
+    // 年終守城不可重打（PROG-2-9426）：守方是玩家時藏起「再戰一次」
+    c.resultPopup?.setReplayAllowed?.(this.ctx.ctrl?.state.siegeDefender !== Faction.Player);
     void Promise.resolve(c.resultPopup?.showResult(data.result as any, details.length > 0 ? details.join('\n') : undefined, c.pg?.id, data.retreated === true, data.cause))
       .catch((error) => UCUFLogger.error(LogCategory.BATTLE, '[BattleUIBridge] 結果彈窗顯示失敗', error));
     c.boardRenderer?.clearDeployHint();
