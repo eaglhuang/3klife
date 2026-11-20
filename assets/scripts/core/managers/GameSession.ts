@@ -158,7 +158,8 @@ import type { HallCandidate } from '../systems/HallCharacterRoll';
 import { buildHallSpotRows, EMPTY_HALL_SPOT_STATE, HallSpotRow, HallSpotState, refreshHallCharacterSpots } from '../systems/HallCharacterPresenter';
 import { buildHallStageFeed, type HallStageFeed, type HallStageProfile } from '../systems/HallStageFeed';
 import type { HallVolunteerTask } from '../systems/HallVolunteer';
-import { createPlayerSaveSnapshot, normalizeInfusionRecords, normalizeGachaMentorJournal, normalizeHallAssignLog, type GachaMentorJournalEntry, normalizeSandtableMarkerTerritories, normalizeSortiePresets, normalizeGachaWalletSave, type GachaWalletSave, normalizeDailySubsidyRecord, type DailySubsidyRecord, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeAutoNurtureTickets, normalizeFlag, normalizeYearEndDefenseYear, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot, normalizeClanPrestige, normalizeShrineOfferingDay } from '../services/PlayerSaveService';
+import type { SessionSaveService } from '../api/localserver/ApiSaveGateway';
+import { createPlayerSaveSnapshot, normalizeInfusionRecords, normalizeGachaMentorJournal, normalizeHallAssignLog, type GachaMentorJournalEntry, normalizeSandtableMarkerTerritories, normalizeSortiePresets, normalizeGachaWalletSave, type GachaWalletSave, normalizeDailySubsidyRecord, type DailySubsidyRecord, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeAutoNurtureTickets, normalizeFlag, normalizeYearEndDefenseYear, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveSnapshot, normalizeClanPrestige, normalizeShrineOfferingDay } from '../services/PlayerSaveService';
 import { HALL_MISSION_DIFFICULTIES } from '../systems/HallMissionData';
 import { HALL_DIFFICULTY_MIN_RANK } from '../systems/HallMissionBoard';
 import { shouldShowVolunteerEvent } from '../systems/HallVolunteer';
@@ -788,7 +789,7 @@ export class GameSession implements AcademyRecordPort {
         return this._npcMemory;
     }
     private _roster: RosterStore = new InMemoryRosterStore();
-    private _save: PlayerSaveService | null = null;
+    private _save: SessionSaveService | null = null;
     private _events: SessionEventEmitter | null = null;
     private _lifecycle: SeasonLifecycle | null = null;
     private _seeded: SeededRandom;
@@ -2026,7 +2027,7 @@ export class GameSession implements AcademyRecordPort {
         this._postLoadHook = hook;
     }
 
-    public setSaveService(service: PlayerSaveService | null): void {
+    public setSaveService(service: SessionSaveService | null): void {
         this._save = service;
     }
 
@@ -6834,7 +6835,7 @@ export class GameSession implements AcademyRecordPort {
         return (this._nurture?.getState().sessions ?? []).map((session) => session.childId);
     }
 
-    private _requireSave(): PlayerSaveService {
+    private _requireSave(): SessionSaveService {
         if (!this._save) {
             throw new Error('[GameSession] 尚未設定存檔服務（setSaveService）');
         }
