@@ -275,6 +275,8 @@ export class BattleScene extends Component {
       // 守城戰（PROG-2-9425）：沒設回合上限時用 data/defense-battle 的上限，時限到判我方勝
       const turnLimitRule = resolveDefenseTurnLimit(encounter, await this.ctrl.loadDefenseBattleConfig());
       this.ctrl.configureEncounterTurnLimit(turnLimitRule.turnLimit, turnLimitRule.timeUpRule);
+      // 守城戰我方城寨上限讀 data/defense-battle（PROG-2-9431）
+      this.ctrl.applyDefenseFortress();
       // 天氣排程（PROG-2-0401）：入口參數優先，沒有才用 encounter 設定
       const weatherSchedule = battleParams.weatherSchedule ?? encounter?.weatherSchedule;
       if (weatherSchedule) this.ctrl.setWeatherSchedule(weatherSchedule);
@@ -415,7 +417,8 @@ export class BattleScene extends Component {
       this.hud?.setEnemyName(eg.name);
       this.hud?.setStageTitle(formatBattleStageTitle(encounter?.name));
       // 守城戰顯示我方城寨血條（PROG-2-9430）
-      this.hud?.setDefenseFortressBarVisible?.(this.ctrl.state.siegeDefender === Faction.Player);
+      this.hud?.setDefenseFortressBarVisible?.(this.ctrl.state.siegeDefender === Faction.Player, this.ctrl.state.playerFortressMaxHp);
+      this.hud?.setFortressHp(Faction.Player, this.ctrl.state.playerFortressHp);
       this.hud?.refresh(
         snap.turn,
         snap.playerFood,

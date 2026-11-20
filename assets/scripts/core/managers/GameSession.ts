@@ -38,7 +38,7 @@ import { activeOfficerTrial, boostedOfficerExp, effectiveOfficerState, grantOffi
 import { canPlaceSandtableMarker, remainingSandtableMarkers } from '../systems/SandtableMarkers';
 import { buildStartingSpiritTalisman, normalizeStartingTalisman, type StartingSpiritTalisman, type TeachingSpiritInput } from '../systems/TeachingSpiritTalisman';
 import { normalizeOpeningPhaseId } from '../systems/OpeningProgress';
-import { dailyFreeEnrollCount, isNewEnrollGrantDay, normalizeEnrollGrantDay } from '../systems/DailyFreeEnroll';
+import { isNewEnrollGrantDay, normalizeEnrollGrantDay } from '../systems/DailyFreeEnroll';
 import { appendAcquisitions, diffAcquisitions, normalizeAcquisitionLog, queryAcquisitions, type ItemAcquisitionQuery, type ItemAcquisitionRecord, type ItemSource } from '../systems/ItemAcquisitionLog';
 import { EMPTY_AI_ADAPTIVE_STREAK, nextAiAdaptiveStreak, normalizeAiAdaptiveStreak, type AiAdaptiveStreak } from '../systems/AiAdaptiveDifficulty';
 import { effectiveSandtableStage, normalizeUnlockHistory, recordSandtableUnlock, sandtableShortCodeOf, sandtableStageIdOf, type SandtableStageId } from '../systems/SandtableProgress';
@@ -59,7 +59,7 @@ import type { GeneralConfig } from '../models/GeneralUnit';
 import { advanceDaughtersOneYear, assignDaughterRoute, daughtersAwaitingRoute, type AssignDaughterResult, type DaughterRecord, type DaughterRoute } from '../systems/DaughterComingOfAge';
 import { isAcademyRecordActive, normalizeAcademyRecord, type AcademyRecordPort, type PersistedAcademyRecord } from '../services/GameAcademySaveStore';
 import { formatSeasonLabel, GameClock, GameTimeState, SeasonAdvanceResult, SEASONS_PER_YEAR } from '../systems/GameClock';
-import { buildYearReport, normalizeYearAgingEvents, YearReport } from '../systems/YearReport';
+import { buildYearReport, normalizeYearAgingEvents, normalizeYearEndDefenseResult, YearReport, type YearEndDefenseResult } from '../systems/YearReport';
 import { backfillTallyTroopTypes, mainTroopTypeOf } from '../systems/TigerTally';
 import { normalizeCountdownState, createCountdown, OPENING_TRAVEL_DURATION_MS, OPENING_TRAVEL_TARGET_ID, type CountdownState } from '../systems/CountdownManager';
 import { createTravelCountdown, normalizeTravelCountdown, tickTravelCountdown, type TravelCountdown } from '../systems/TravelCountdown';
@@ -252,7 +252,7 @@ import type { FactorPoolEntry } from '../systems/BreedingSystem';
 import { readableFactorName } from '../systems/FactorDisplayName';
 import { backfillRosterChildAptitudes } from '../systems/ChildAptitudeInheritance';
 import { planBloodlineMergeForGenerals, type BloodlineMergeRejectReason } from '../systems/BloodlineMerge';
-import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_ADMISSION_TOKEN, ITEM_BAMBOO_SLIP, ITEM_FERTILITY_ARMED, ITEM_JOB_CHANGE_ORDER, ITEM_LEGENDARY_MENTORING_TICKET, ITEM_MERGE_TOKEN, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, ITEM_TREASURE, ITEM_WISH_SPEED_CARD, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
+import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_BAMBOO_SLIP, ITEM_FERTILITY_ARMED, ITEM_JOB_CHANGE_ORDER, ITEM_LEGENDARY_MENTORING_TICKET, ITEM_MERGE_TOKEN, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, ITEM_TREASURE, ITEM_WISH_SPEED_CARD, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
 import { useItem as useItemFlow, type ItemUseResult } from '../systems/ItemUseFlow';
 import { equipGear as equipGearFlow, unequipGear as unequipGearFlow, transferGearToHeir, type GearEquipResult } from '../systems/GearEquipFlow';
 import { decomposeGearRecord, setRecordLocked, type GearDecomposeResult } from '../systems/GearLockDecompose';
@@ -601,6 +601,12 @@ export interface BattleRecordResult extends BattleSettlement {
 /** 心智台詞引用任務牆用的短名（PROG-2-9146） */
 const MIND_BOARD_LABEL: Readonly<Record<HallBoardKey, string>> = Object.freeze({ Military: '軍務', Domestic: '內政', Expedition: '遠征' });
 
+/** 守城失守懲罰的數值（讀 data/defense-battle，PROG-2-9431）；沒帶的欄位用 CityEconomy 預設 */
+export interface DefenseDefeatPenalty {
+    readonly defeatMoraleDelta?: number;
+    readonly routPopulationLossRatio?: number;
+}
+
 export interface RecordBattleOptions {
     /** 在戰場完成「特定動作」的武將（覺醒機率 0.05 → 0.15，並視同滿足特殊條件），不指定是哪個動作 */
     specialActionIds?: readonly string[];
@@ -626,7 +632,7 @@ export interface RecordBattleOptions {
      * 守城戰（PROG-2-9425）：勝利另加民心；失敗改扣守城戰敗民心（applyDefenseDefeat），我方武將全滅再判大敗扣人口。
      * 沒有時照一般戰鬥結算。
      */
-    defense?: { moraleOnVictory: number; playerGeneralsDown: boolean } | null;
+    defense?: { moraleOnVictory: number; playerGeneralsDown: boolean; defeatMoraleDelta?: number; routPopulationLossRatio?: number } | null;
     /** 本場戰場收到的單挑勝負事件（DuelOutcomeApplied）；勝方主將名聲 +15、被斬的己方主將走陣亡結算（PROG-2-9132） */
     duelOutcomes?: readonly DuelOutcomeRecord[];
     /** 本場戰場回報的「主將被擒」紀錄（PROG-2-9140）；我方被擒者交給擒獲方君主處置，沒有這個欄位時單挑被斬維持舊行為（直接陣亡） */
@@ -919,7 +925,7 @@ export class GameSession implements AcademyRecordPort {
     private _openingPhase: string | null = null;
     /** 開場商業序列的回應紀錄（OPEN-12）；存檔欄位 openingOffers */
     private _openingOffers: OpeningOfferState = { ...FRESH_OPENING_OFFER_STATE };
-    /** 已發放免費入學令的最大登入日（YYYY-MM-DD，高水位）；從未發過為 null（PROG-2-1374 修正，PM 裁定） */
+    /** 已處理的最大登入日（YYYY-MM-DD，高水位）；從未記過為 null。舊稱「免費入學令已發放日」，入學令每日發放已於 PROG-2-9206 退場，欄位沿用以相容舊存檔 */
     private _enrollGrantDay: string | null = null;
     // ---- 道具取得來源紀錄（ITM-05，PROG-2-1383）：與數量分開存放，隨 lifespanSaveFields 存檔 ----
     private _itemAcquisitionLog: ItemAcquisitionRecord[] = [];
@@ -971,6 +977,8 @@ export class GameSession implements AcademyRecordPort {
     private _firstBattleCleared = false;
     /** 最近一次打完年終守城的年份（PROG-2-9426）；沒打過為 0，存於 resources.yearEndDefenseYear */
     private _yearEndDefenseYear = 0;
+    /** 最近一次年終守城的結果，給年報用（PROG-2-9431）；存於 resources.yearEndDefenseResult */
+    private _yearEndDefenseResult: YearEndDefenseResult | null = null;
     /** 新手開場第四幕（紅顏登場）已展示過；舊檔已有通關紀錄者視為看過，不補彈。存於 resources.openingRedFaceShown */
     private _openingRedFaceShown = false;
     /** 新玩家「去教官池抽教官」引導已結束（玩家第一次擁有教官後記下，PROG-2-9160）；存於 resources.mentorGuideDone */
@@ -2398,6 +2406,7 @@ export class GameSession implements AcademyRecordPort {
         this._mainlineNurtureClearedOnce = false;
         this._firstBattleCleared = false;
         this._yearEndDefenseYear = 0;
+        this._yearEndDefenseResult = null;
         this._openingRedFaceShown = false;
         this._mentorGuideDone = false;
         this._mentorUnlockPromptShown = false;
@@ -3205,16 +3214,18 @@ export class GameSession implements AcademyRecordPort {
      * 守城戰敗（PROG-2-9138）：民心 −3；'rout'（守城大敗）另扣人口 3%。
      * 守城戰的戰後結算（recordBattle 帶 defense，PROG-2-9425）會走同一套變動；這支給戰場外的守城結果用。
      */
-    public async applyDefenseDefeat(kind: 'defeat' | 'rout' = 'defeat'): Promise<CityEconomyState> {
-        this._applyDefenseDefeatEconomy(kind);
+    public async applyDefenseDefeat(kind: 'defeat' | 'rout' = 'defeat', penalty?: DefenseDefeatPenalty): Promise<CityEconomyState> {
+        this._applyDefenseDefeatEconomy(kind, penalty);
         if (this._autoSave && this._save) await this.save();
         return { ...this._cityEconomy };
     }
 
     /** 守城戰敗的民心與人口變動（不存檔）；守城戰的戰後結算與 applyDefenseDefeat 共用（PROG-2-9425） */
-    private _applyDefenseDefeatEconomy(kind: 'defeat' | 'rout'): void {
-        const morale = clampMorale(this._cityEconomy.morale + MORALE_DELTA.defenseDefeat);
-        const population = kind === 'rout' ? applyPopulationRout(this._cityEconomy.population) : this._cityEconomy.population;
+    private _applyDefenseDefeatEconomy(kind: 'defeat' | 'rout', penalty?: DefenseDefeatPenalty): void {
+        // 數值讀 data/defense-battle（PROG-2-9431）；呼叫端沒帶時用 CityEconomy 的預設
+        const moraleDelta = Number.isFinite(penalty?.defeatMoraleDelta) ? Math.min(0, Math.round(penalty!.defeatMoraleDelta!)) : MORALE_DELTA.defenseDefeat;
+        const morale = clampMorale(this._cityEconomy.morale + moraleDelta);
+        const population = kind === 'rout' ? applyPopulationRout(this._cityEconomy.population, penalty?.routPopulationLossRatio) : this._cityEconomy.population;
         this._cityEconomy = { population, morale };
     }
 
@@ -3616,7 +3627,7 @@ export class GameSession implements AcademyRecordPort {
     /** 記錄一次登入（UTC+8 切日）；同日重複登入不增加天數。 */
     public recordLoginAt(epochMs: number, grantGold: (amount: number) => void = () => {}): void {
         this._loginStreak = recordLogin(this._loginStreak, epochMs);
-        // 掛機產出：今天的登入日超過已發放的最大日才發一次免費入學令（PROG-2-1374，張數依太守府等級；高水位防止回撥時鐘重領）
+        // 每日免費入學令已退場（PROG-2-9206）：入學令只由季結的 item.settlePeriodic 發放；登入日高水位仍保留給離線行為判斷與舊存檔相容
         const today = loginDayOf(epochMs);
         // 三國季報：換日首登才算（晨報一天只產生一次，用它的產生日判斷）；本季還沒有季報（新局、舊檔）時補合成
         this._loginStartedNewDay = this._morningReport.day !== today;
@@ -3624,12 +3635,9 @@ export class GameSession implements AcademyRecordPort {
             this._chronicleArchive = archiveSeasonChronicle(this._chronicleArchive, this._seasonChronicle, this._clock.state.totalSeasonsElapsed);
             this._seasonChronicle = this._synthesizeChronicle(this._clock.state.totalSeasonsElapsed);
         }
-        // 性格離線行為（HUM-03）：隔天第一次登入才有「昨晚」可寫；沿用入學令的切日高水位，回撥時鐘不會重發
+        // 性格離線行為（HUM-03）：隔天第一次登入才有「昨晚」可寫；沿用登入日高水位（enrollGrantDay），回撥時鐘不會重發
         const offlineBehaviorDue = this._enrollGrantDay !== null && isNewEnrollGrantDay(this._enrollGrantDay, today);
         if (isNewEnrollGrantDay(this._enrollGrantDay, today)) {
-            const beforeEnroll = this._inventory;
-            this._setInventory(addItem(this._inventory, ITEM_ADMISSION_TOKEN, dailyFreeEnrollCount(this._territoryLevel)));
-            this._recordGain(beforeEnroll, 'TASK');
             this._enrollGrantDay = today;
         }
         // 限時道具：登入切日時回收已過期的物件庫列（PROG-2-1364）
@@ -5437,7 +5445,7 @@ export class GameSession implements AcademyRecordPort {
         this._yearAgingEvents.push(...agingEvents);
         let yearReport: YearReport | undefined;
         if (advance.yearEnded) {
-            yearReport = buildYearReport(advance.previous.currentYear, this._yearAgingEvents, listUnwedEligible(this._roster.getAll()).map((general) => general.name || general.id));
+            yearReport = buildYearReport(advance.previous.currentYear, this._yearAgingEvents, listUnwedEligible(this._roster.getAll()).map((general) => general.name || general.id), this._yearEndDefenseResult);
             this._yearAgingEvents = [];
         }
         const comingOfAge = advance.yearEnded ? this._liveDaughters(this._tickDaughtersOneYear()) : [];
@@ -6254,7 +6262,7 @@ export class GameSession implements AcademyRecordPort {
         const defenseOutcome = defense ? defenseOutcomeOf(outcome === 'win' ? 'player-win' : outcome === 'loss' ? 'enemy-win' : 'draw', defense.playerGeneralsDown) : null;
         if (defenseOutcome === 'defeat' || defenseOutcome === 'rout') {
             const before = this._cityEconomy;
-            this._applyDefenseDefeatEconomy(defenseOutcome === 'rout' ? 'rout' : 'defeat');
+            this._applyDefenseDefeatEconomy(defenseOutcome === 'rout' ? 'rout' : 'defeat', defense ?? undefined);
             ledger.morale = this._cityEconomy.morale - before.morale;
             ledger.populationLost = before.population - this._cityEconomy.population;
         } else {
@@ -6265,6 +6273,8 @@ export class GameSession implements AcademyRecordPort {
                 if (defenseOutcome === 'victory') ledger.morale = this._cityEconomy.morale - before;
             }
         }
+        // 年報要列出今年守城結果（PROG-2-9431）
+        if (defenseOutcome) this._yearEndDefenseResult = { year: this._clock.state.currentYear, outcome: defenseOutcome, moraleDelta: ledger.morale, populationLost: ledger.populationLost ?? 0 };
         if (ledger.loot.length > 0) {
             const beforeLoot = this._inventory;
             for (const drop of ledger.loot) this._setInventory(addItem(this._inventory, drop.itemId, drop.quantity));
@@ -6579,6 +6589,7 @@ export class GameSession implements AcademyRecordPort {
                 mainlineNurtureClearedOnce: this._mainlineNurtureClearedOnce,
                 firstBattleCleared: this._firstBattleCleared,
                 ...(this._yearEndDefenseYear > 0 ? { yearEndDefenseYear: this._yearEndDefenseYear } : {}),
+                ...(this._yearEndDefenseResult ? { yearEndDefenseResult: { ...this._yearEndDefenseResult } } : {}),
                 openingRedFaceShown: this._openingRedFaceShown,
                 mentorGuideDone: this._mentorGuideDone,
                 mentorUnlockPromptShown: this._mentorUnlockPromptShown,
@@ -6933,6 +6944,7 @@ export class GameSession implements AcademyRecordPort {
             || (snapshot.resources?.firstBattleCleared === undefined && this._clearedStageIds.length > 0);
         this._mentorGuideDone = normalizeFlag(snapshot.resources?.mentorGuideDone);
         this._yearEndDefenseYear = normalizeYearEndDefenseYear(snapshot.resources?.yearEndDefenseYear);
+        this._yearEndDefenseResult = normalizeYearEndDefenseResult(snapshot.resources?.yearEndDefenseResult);
         this._mentorUnlockPromptShown = normalizeFlag(snapshot.resources?.mentorUnlockPromptShown);
         this._domesticLog = normalizeDomesticLog(snapshot.domestic);
         this._governanceEvent = normalizeGovernanceEvent(snapshot.governanceEvent);
