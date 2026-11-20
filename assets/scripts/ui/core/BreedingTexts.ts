@@ -12,6 +12,10 @@ export type BreedTextLookup = (key: string, ...args: string[]) => string;
 /** zh-TW 預設文案；與 resources/i18n/zh-TW.json 的 ui.breed.* 同步（測試會比對） */
 export const BREED_TEXT_FALLBACK_ZH_TW: Readonly<Record<string, string>> = {
     'ui.breed.confirm': '消耗 {0} 精力 {1} 與 {2} 精力 {3}，確認結緣？',
+    'ui.breed.fresh_blood': '寒門新血 V{0}（前 6 季修業 +{1}%）',
+    'ui.breed.epithet.civil_martial': '文武並濟',
+    'ui.breed.epithet.foes_to_allies': '化干戈為玉帛',
+    'ui.breed.epithet.twin_stars': '雙星輝映',
     'ui.breed.preg_status': '{0} 需調養待產 {1} 季（期間精力凍結、不能再結緣）；襁褓幼子已入宗族名冊',
     'ui.breed.child_born': '恭喜主公！{0} 與 {1} 喜獲 {2}！',
     'ui.breed.unveil_5': '天命開獎！{0} 五維資質揭曉：',

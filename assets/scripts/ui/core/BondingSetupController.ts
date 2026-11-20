@@ -528,7 +528,7 @@ export class BondingSetupController {
             mother,
             hasCommonAncestor: (this._deps.breeding.commonAncestorSeats?.(father.id, mother.id) ?? []).some(Boolean),
             roster: this._deps.roster.getAll(),
-        }));
+        }), (key, ...args) => this._t(key, ...args));
         if (vitalityBadge) {
             texts.conceptionLabel += `｜${vitalityBadge}`;
         }

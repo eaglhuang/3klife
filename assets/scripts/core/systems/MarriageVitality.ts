@@ -245,14 +245,22 @@ export function evaluateMarriageVitality(input: MarriageVitalityInput): Marriage
     return { freshBlood, epithets, bonusTp, synergyBonus, awakenRateBonus };
 }
 
-export function marriageVitalityBadgeLine(result: MarriageVitalityResult): string {
+/**
+ * 結緣預覽標籤；傳入 t（i18n 取字）時走四語系字串，未傳則用內建繁中（單元測試與無 i18n 環境）。
+ */
+export function marriageVitalityBadgeLine(
+    result: MarriageVitalityResult,
+    t?: (key: string, ...args: string[]) => string,
+): string {
     const badges: string[] = [];
     if (result.freshBlood.active) {
         const pct = Math.round(result.freshBlood.earlyTrainingBonus * 100);
-        badges.push(`寒門新血 V${result.freshBlood.level}（前6季訓練+${pct}%）`);
+        badges.push(t
+            ? t('ui.breed.fresh_blood', String(result.freshBlood.level), String(pct))
+            : `寒門新血 V${result.freshBlood.level}（前6季訓練+${pct}%）`);
     }
     for (const ep of result.epithets) {
-        badges.push(`${ep.title}（${ep.summary}）`);
+        badges.push(`${t ? t(ep.titleKey) : ep.title}（${ep.summary}）`);
     }
     return badges.join(' · ');
 }
