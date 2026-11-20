@@ -10776,7 +10776,7 @@
       "title": "一年六關按季開放（2/2/1/1）：季節關卡解鎖",
       "owner": "claude-code-fable-5-2",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-20",
@@ -10794,7 +10794,7 @@
       "depends": [],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-20 | 狀態: in-progress | 驗證: pending | 變更: 待做 | 阻塞: 無",
+      "notes": "2026-11-20 | 狀態: done | 驗證: 單元測試 8521 全過（新增 StageSeasonSchedule 7 項）、tsc 0、compute-gate 12/13（僅既有 LoginScene 警告）、7456 大廳實機挑關六種季節組合＋提示截圖 | 變更: 一年六關按季開放 2/2/1/1 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
