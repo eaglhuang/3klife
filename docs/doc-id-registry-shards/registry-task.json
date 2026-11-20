@@ -15964,5 +15964,23 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9427.md",
     "title": "[PROG-2-9427] 勝敗結算演出打磨：勝敗橫幅停一拍、結算窗彈入、頭像預載",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2679",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9212.md",
+    "title": "[PROG-2-9212] 清除過時規格（5 歲抓周入學、待產 3/4 季、舊培育、首子加速、4 歲幼苗）並補首子與少年名將開場流程規格",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2680",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9210.md",
+    "title": "PROG-2-9210：學府規格追加共用框架依賴章與實作卡拆分建議",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2681",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9428.md",
+    "title": "[PROG-2-9428] AI 剋制兵種派到被剋兵種那一路",
+    "category": "task"
   }
 ]
