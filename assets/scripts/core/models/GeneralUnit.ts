@@ -314,6 +314,10 @@ export interface GeneralConfig {
   familyStudyUsed?: boolean;
   /** 已用過母門擇承（每胎限 1 次，與家學研習名額分開） */
   maternalStudyUsed?: boolean;
+  /** 已檢定過培育中段血脈共鳴事件的回合（R12 / R24，PROG-2-9170） */
+  bloodlineResonanceRoundsDone?: number[];
+  /** 鎖定的首次共鳴檢定結果（依回合記錄，放棄重修時重播不重新擲骰，PROG-2-9170） */
+  bloodlineResonanceOutcomes?: Record<number, import('../systems/BloodlineResonance').BloodlineResonanceLockedOutcome>;
   maternalLine?: MaternalLine;
   /** 出生時記下的雙親 3★ 以上因子，供下一代判斷隔代復興；祖先冷存檔後查不到星數 */
   peakFactors?: AncestralPeak[];

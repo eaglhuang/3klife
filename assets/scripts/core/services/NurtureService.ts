@@ -15,6 +15,7 @@
  * 並從 session 讀取目前回合、精力與教官站位來更新畫面。
  */
 import { performNurtureRite, ritesDue, type NurtureRiteResult } from '../systems/EnrollmentRites';
+import { performBloodlineResonance, type BloodlineResonanceResult } from '../systems/BloodlineResonance';
 import type { MentorCard } from '../models/MentorCard';
 import type { RosterStore } from '../managers/GameSession';
 import { GameTimeMode } from '../systems/GameClock';
@@ -124,6 +125,8 @@ export interface NurtureServiceOptions {
     clanTraditionKind?: () => TrainingKind | undefined;
     /** 世交太傅伴讀（G3 §F-2）；未提供時沒有加成 */
     synergyTutorBonus?: (mentors: readonly TrainingMentor[]) => number;
+    /** 雙親門風契合度 K ∈ [0, 15]（PROG-2-9170）；未提供時視為 0 */
+    compatibilityBonusForChild?: (child: UnveilingGeneral, roster: readonly UnveilingGeneral[]) => number;
 }
 
 export interface NurtureAwakeningHooks {
@@ -156,6 +159,8 @@ export interface NurtureTrainResult {
     childUltimates?: NurtureChildUltimate[];
     /** 本回合辦的開蒙禮、加冠禮；沒有則省略（PROG-2-1821） */
     rites?: NurtureRiteResult[];
+    /** 本回合觸發的血脈共鳴事件（PROG-2-9170）；沒觸發或非節點則省略 */
+    bloodlineResonance?: BloodlineResonanceResult;
     /** 本回合新觸發的戰法靈感；沒有則省略 */
     inspirations?: NurtureInspiration[];
     /** 教學邊界違規（MENT-11）：教官加成回寫了子嗣因子；正常情況省略 */
@@ -325,7 +330,57 @@ export class NurtureService {
             result.rites = rites;
             result.session = this._requireSession(childId);
         }
+        const resonance = this.performDueBloodlineResonance(childId);
+        if (resonance?.triggered) {
+            result.bloodlineResonance = resonance;
+        }
+        if (resonance) {
+            result.session = this._requireSession(childId);
+        }
         return result;
+    }
+
+    /** 第 12 / 24 回合血脈共鳴檢定（PROG-2-9170）；讀檔或重修不重複觸發 */
+    performDueBloodlineResonance(childId: string, random: () => number = this._rng()): BloodlineResonanceResult | null {
+        const session = this._requireSession(childId);
+        const child = this._find(childId);
+        if (!child) return null;
+        const roster = this._roster.getAll();
+        const compatibilityK = this._options.compatibilityBonusForChild?.(child, roster) ?? 0;
+        const res = performBloodlineResonance(child, session.round, {
+            lookup: (id) => roster.find((g) => g.id === id),
+            compatibilityK,
+            dictionary: this._options.factorDictionary,
+            random,
+            sessionRoundsDone: session.resonanceRoundsDone,
+        });
+        if (!res) return null;
+        // 培育期間名冊本體（stats / genes / troopAptitude）不變；只把首次鎖定結果表存於名冊防重修刷黃金，
+        // 屬性加成寫進 session.prowess，因子與適性突破存進 session.resonancePending，畢業時才一併寫回名冊。
+        const rosterChild: UnveilingGeneral = {
+            ...child,
+            bloodlineResonanceRoundsDone: res.general.bloodlineResonanceRoundsDone,
+            bloodlineResonanceOutcomes: res.general.bloodlineResonanceOutcomes,
+        };
+        this._roster.replaceAll(roster.map((g) => (g.id === childId ? rosterChild : g)));
+        const nextProwess = { ...session.prowess };
+        for (const [statKey, delta] of Object.entries(res.statGains ?? {})) {
+            if (typeof delta === 'number' && delta > 0 && statKey in nextProwess) {
+                const key = statKey as TrainingKind;
+                nextProwess[key] += delta;
+            }
+        }
+        const nextPending = res.triggered
+            ? [...(session.resonancePending ?? []), res.lockedOutcome]
+            : (session.resonancePending ?? []);
+        const nextRounds = Array.from(new Set([...(session.resonanceRoundsDone ?? []), res.round]));
+        this._replace({
+            ...session,
+            prowess: nextProwess,
+            resonanceRoundsDone: nextRounds,
+            ...(nextPending.length > 0 ? { resonancePending: nextPending } : {}),
+        });
+        return res;
     }
 
     /** 補上到期的開蒙禮、加冠禮（G1 §E #3、#5）；親手培育與太傅代管共用，亂數接在回合之後 */

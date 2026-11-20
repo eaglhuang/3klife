@@ -16,6 +16,7 @@
  */
 import { factorLabelOf } from '../../core/systems/FactorDisplayName';
 import { RITE_CEREMONY_LINE, riteNoticeLines, type NurtureRiteResult } from '../../core/systems/EnrollmentRites';
+import { RESONANCE_TOAST_LINE, resonanceNoticeLine, type BloodlineResonanceResult } from '../../core/systems/BloodlineResonance';
 import { clanTraditionEffectText } from '../../core/systems/ClanTradition';
 import { synergyTutorLine } from '../../core/systems/FamilySynergy';
 import { FAMILY_STUDY_BLOCK_TEXT } from '../../core/systems/FamilyStudy';
@@ -476,9 +477,17 @@ export class NurtureFlowController {
         }
     }
 
+    /** 第 12 / 24 回合血脈共鳴事件（PROG-2-9170）：沿用 showToast 與 _notice */
+    private _announceBloodlineResonance(resonance: BloodlineResonanceResult | undefined): void {
+        if (!resonance?.triggered || !resonance.tier) return;
+        this._deps.showToast?.(RESONANCE_TOAST_LINE[resonance.tier]);
+        const line = resonanceNoticeLine(resonance);
+        if (line) this._notice += `　${line}`;
+    }
+
     async train(action: NurtureAction): Promise<NurtureRoundLog> {
         const child = this._requireSelected();
-        const { log, awakening, inspirations, session, childUltimates, peekHint, rites } = this._deps.nurture.train(child.id, action);
+        const { log, awakening, inspirations, session, childUltimates, peekHint, rites, bloodlineResonance } = this._deps.nurture.train(child.id, action);
         // 因子解鎖系統 §H UI_AWAKENING：「【覺醒】{GeneName}！」
         const lookup = this._deps.text ?? fallbackBreedText;
         this._notice = awakening ? `${describeRound(log, lookup)}　【覺醒】${awakening.displayName}！` : describeRound(log, lookup);
@@ -489,6 +498,7 @@ export class NurtureFlowController {
         // 奧義系統 §G 子嗣覺醒（PROG-2-1780）；一回合覺醒多個也只說一句
         if (childUltimates?.length) this._notice += `　${childUltimateAwakenLine(child.name, childUltimates[0].fromFather)}`;
         this._announceRites(child.name, rites);
+        this._announceBloodlineResonance(bloodlineResonance);
         if (log.vigorAfter === 0) {
             this._deps.showToast?.(vitalityScriptText(this._t.bind(this), VITALITY_SCRIPT_KEYS.exhausted, child.name));
         }
