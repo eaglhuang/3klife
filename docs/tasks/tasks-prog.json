@@ -10871,7 +10871,7 @@
       "title": "瓦口隘 15 回合時限：時限到依戰果判勝負",
       "owner": "claude-code-fable-5-2",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-20",
@@ -10890,7 +10890,7 @@
       "depends": [],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-20 | 狀態: in-progress | 驗證: pending | 變更: 待做 | 阻塞: 無",
+      "notes": "2026-11-20 | 狀態: done | 驗證: 單元 8536 全過、tsc 0、compute-gate 12/13（既有 LoginScene 警告）、實機瓦口隘 HUD 第 N/15、開戰說明、時限結算 15%/0% 判勝截圖、六關回歸 0 錯 | 變更: 關卡 turnLimit/timeUpRule、戰果判定 JSON、結算文案、HUD 分母 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
