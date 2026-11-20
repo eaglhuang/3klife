@@ -119,7 +119,7 @@ import type { TacticAiSituation } from '../shared/TacticAiRules';
 import { estimateHealValue, hasChokePointLane, hasDenseArea } from '../shared/EnemyTacticBoard';
 import { resolveEnemyInitialDeployment, type EnemyInitialDeploymentEntry } from '../shared/EnemyInitialDeployment';
 import { DEFAULT_TIME_UP_JUDGEMENT, isTimeUpRule, parseTimeUpJudgementConfig, type TimeUpJudgementConfig, type TimeUpRule } from "../../core/systems/TimeUpJudgement";
-import { DEFAULT_DEFENSE_BATTLE, parseDefenseBattleConfig, type DefenseBattleConfig } from "../../core/systems/DefenseBattle";
+import { DEFAULT_DEFENSE_BATTLE, defenseReinforceAllowance, parseDefenseBattleConfig, type DefenseBattleConfig } from "../../core/systems/DefenseBattle";
 
 /**
  * [P2-N3] 部署失敗原因：food = 糧草不足（原 dp）。
@@ -667,6 +667,14 @@ export class BattleController {
   }
   private defenseBattleConfig: DefenseBattleConfig = { ...DEFAULT_DEFENSE_BATTLE };
   private defenseBattleConfigLoaded = false;
+
+  /** 守城戰開場：我方城寨上限與血量改用設定檔（PROG-2-9431）；非守城不動。要在 initBattle 之後呼叫 */
+  public applyDefenseFortress(): void {
+    if (this.state.siegeDefender !== Faction.Player) return;
+    const max = this.defenseBattleConfig.fortressMaxHp;
+    this.state.playerFortressMaxHp = max;
+    this.state.playerFortressHp = max;
+  }
 
   /** AI 虎符配發（PROG-2-1337）：虎符模板全表中，只留 AI 會出的兵種，依敵將適性與難度配發 */
   private allocateEnemyTallies(difficulty: AiDifficulty): void {
@@ -1372,7 +1380,7 @@ export class BattleController {
           difficultyBonus: this.state.aiDifficultyBonus,
           tutorialBattle: this.tutorialBattle,
           leakHintedLanes: this.leakHintedLanes,
-          defenseEngineerReinforce: this.state.siegeDefender === Faction.Player ? this.defenseBattleConfig.engineerReinforcePerTurn : 0,
+          defenseEngineerReinforce: this.state.siegeDefender === Faction.Player ? defenseReinforceAllowance(this.defenseBattleConfig, this.state.defenseEngineersReinforced) : 0,
           random: () => services().session.randomSource(),
           spawnEnemyUnit: (type, lane, depth, unitName) => {
             const unit = this.unitSpawner.spawnUnit(type, Faction.Enemy, lane, depth, unitName);
