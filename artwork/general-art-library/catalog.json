@@ -2267,8 +2267,8 @@
         ]
       },
       "smallAvatar": {
-        "activeVersion": "0002",
-        "status": "review-pending",
+        "activeVersion": "0003",
+        "status": "integrated",
         "history": [
           {
             "version": "0001",
@@ -2308,6 +2308,24 @@
             "method": "crop-only; uniform resize; transparent padding; no redraw",
             "qc": "七張核准參考並排檢視；頭高72.1%，臉部中心49.2%，頭盔完整，雙肩輪廓點均落在可見像素且保留下方空間。男性頭盔武將採典韋核准基準62.1%作最低門檻；本圖通過硬性檢查，待使用者最終確認。",
             "createdAt": "2026-11-19"
+          },
+          {
+            "version": "0003",
+            "file": "small_avatars/cao_ren__曹仁__small_avatar_0003.png",
+            "status": "integrated",
+            "sha256": "2f925298c8fe788d598f574be2edaca573309513d29f63ced71710513ac441e9",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/cao_ren__曹仁__avatar_0002.png",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "x": 36.83,
+              "y": 0.73,
+              "width": 213.33,
+              "height": 213.33
+            },
+            "qc": "Head and helmet complete; cranial head height 75%; face height 44.1%; manually reviewed 125px candidate and centerline; face-box center separation 0.5px; both shoulder anchors visible.",
+            "createdAt": "2026-11-20"
           }
         ]
       }
@@ -6800,7 +6818,7 @@
             "version": "0004",
             "file": "small_avatars/gao_gan__高幹__small_avatar_0004.png",
             "status": "integrated",
-            "sha256": "22a80bdc35b16651fa8762e95d627bf0b22edc1e63d00a95e1dfd6a3e83e21ca",
+            "sha256": "af443109260d36e566f8c49efac9a73c84dcedb24913c304ce2efc039ed8c408",
             "canvas": "256x256 RGBA",
             "sourceAvatarVersion": "0002",
             "sourceAvatarFile": "avatars/gao_gan__高幹__avatar_0002.png",
