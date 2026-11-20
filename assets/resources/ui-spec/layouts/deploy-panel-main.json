@@ -57,7 +57,7 @@
         "name": "Toast",
         "id": "toastContainer",
         "widget": {
-          "top": -60,
+          "top": -320,
           "horizontalCenter": 0
         },
         "width": 400,
