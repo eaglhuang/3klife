@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 176,
-    "in_progress": 5,
-    "open": 85,
-    "total": 266
+    "done": 179,
+    "in_progress": 4,
+    "open": 86,
+    "total": 269
   },
   "tasks": [
     {
@@ -11276,6 +11276,70 @@
       "acceptance": [],
       "deliverables": [],
       "notes": "2026-11-21 | 狀態: done | 驗證: compute-gate standard 12/13 通過（1 警告為既有項）；shard-manager validate 通過；僅文件，未改程式 | 變更: doc_spec_1182 新增第 12 章（一年循環 MVP 切分、重排實作卡 0～10、待決題分流與 MVP-Q1、Q2），總綱拆為 5 分片；doc_spec_1179 新增第 12 章（shard-g，學府人源 4 方案、推薦 A 少年名將持續來投、待決 Q13）；doc-id 登錄新增 1225～1232；keep.summary 加一行 | 阻塞: Q2、Q-B、MVP-Q1、MVP-Q2、Q13 待使用者裁決",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9202",
+      "title": "FND-M：共通底層工具層（確定性亂數、加權表、條件評估、時鐘）",
+      "owner": "ClaudeCode_sonnet-5-5",
+      "priority": "P0",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "ClaudeCode_sonnet-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "共用框架總綱 doc_spec_1182 第 12 章 FND-M：assets/scripts/shared/foundation/ 零依賴純函式庫，供 ITM／SKL／OCC／RWD／QST／STY 共用。",
+      "related": [
+        "PROG-2-9200"
+      ],
+      "depends": [
+        "PROG-2-9201"
+      ],
+      "acceptance": [
+        "純函式單元測試",
+        "同 (seedHex",
+        "stepIndex) 同結果",
+        "不 import 引擎或 UI",
+        "tsc 0",
+        "compute-gate standard 通過",
+        "棘輪基準不增"
+      ],
+      "deliverables": [
+        "shared/foundation/{Sha256",
+        "DeterministicRng",
+        "WeightedTable",
+        "Condition",
+        "GameClock}.ts",
+        "tests/Foundation.test.ts",
+        "AcademyRng 改為 DeterministicRngSession 子類示範替換"
+      ],
+      "notes": "2026-11-20 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
