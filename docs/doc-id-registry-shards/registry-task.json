@@ -15967,20 +15967,32 @@
   },
   {
     "id": "doc_task_2679",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9212.md",
-    "title": "[PROG-2-9212] 清除過時規格（5 歲抓周入學、待產 3/4 季、舊培育、首子加速、4 歲幼苗）並補首子與少年名將開場流程規格",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9210.md",
+    "title": "PROG-2-9210：學府規格追加共用框架依賴章與實作卡拆分建議",
     "category": "task"
   },
   {
     "id": "doc_task_2680",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9210.md",
-    "title": "PROG-2-9210：學府規格追加共用框架依賴章與實作卡拆分建議",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9213.md",
+    "title": "[PROG-2-9213] 一年循環 MVP 切分（doc_spec_1182 第 12 章）與學府人源缺口方案（doc_spec_1179 第 12 章）",
     "category": "task"
   },
   {
     "id": "doc_task_2681",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9428.md",
     "title": "[PROG-2-9428] AI 剋制兵種派到被剋兵種那一路",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2682",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9212.md",
+    "title": "[PROG-2-9212] 清除過時規格（5 歲抓周入學、待產 3/4 季、舊培育、首子加速、4 歲幼苗）並補首子與少年名將開場流程規格",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2683",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9196.md",
+    "title": "[PROG-2-9196] 大廳背景預載動態加載優化（分幀限時、按需建構、不遮信箱、換場取消）",
     "category": "task"
   }
 ]

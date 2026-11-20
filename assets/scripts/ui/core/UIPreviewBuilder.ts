@@ -18,6 +18,7 @@ import { resolveSize, widgetStretchSize, DEFAULT_TRANSITION } from './UISpecType
 import type { UILayoutNodeSpec, UILayoutSpec, UISkinManifest, TransitionDef,
                SkinLayerDef } from './UISpecTypes';
 import { UIPreviewDiagnostics } from './UIPreviewDiagnostics';
+import { isBuildHostAlive } from './UIBuildHostGuard';
 import { UIPreviewStyleBuilder, ButtonVisualState } from './UIPreviewStyleBuilder';
 // TODO: UIPreviewShadowManager 已移至 _pending-delete/，待所有面板遷移至 CompositePanel 後可一併刪除
 import { UIPreviewShadowManager } from './_pending-delete/UIPreviewShadowManager';
@@ -119,6 +120,8 @@ export class UIPreviewBuilder extends Component {
             UCUFLogger.error(LogCategory.UI, err.message, layout);
             throw err;
         }
+        // PROG-2-9196: host null or destroyed (scene switch) -> abort quietly, no error overlay
+        if (!isBuildHostAlive(host)) return this._abortedBuild(layout);
         UCUFLogger.info(LogCategory.UI, `[UIPreviewBuilder] buildScreen 開始 layout="${layout.id ?? '?'}" skin="${skin?.id ?? 'null'}" node="${this.node?.name ?? 'null'}"`);
 
         this.shadowManager?.clearDetachedShadows();
@@ -129,6 +132,7 @@ export class UIPreviewBuilder extends Component {
             // G3: 並行預載所有 sprite slot，避免 buildScreen 內逐一等待（160ms → 30ms）
             // Unity 對照：Resources.LoadAll<Sprite>() 批載
             await this.skinResolver.preloadSlots(Object.keys(skin.slots));
+            if (!isBuildHostAlive(host)) return this._abortedBuild(layout);
         }
         if (i18n)   { this.i18nStrings = i18n; }
         if (tokens) { this.tokens = tokens; if (this.shadowManager) this.shadowManager.tokens = tokens; }
@@ -148,9 +152,12 @@ export class UIPreviewBuilder extends Component {
         try {
             rootNode = await this._buildNode(layout.root, host, designWidth, designHeight);
         } catch (e) {
+            // PROG-2-9196: host destroyed mid-build is a normal abort
+            if (!isBuildHostAlive(host)) return this._abortedBuild(layout);
             UIPreviewDiagnostics.buildScreenError(layout.id ?? '?', e as Error);
             throw e;
         }
+        if (!isBuildHostAlive(host)) return this._abortedBuild(layout);
 
         // ─── Post-build Widget realignment pass ──────────────────────────────
         // 整棵節點樹建完後，統一重算所有 Widget 的對齊位置。
@@ -164,6 +171,7 @@ export class UIPreviewBuilder extends Component {
         this._postBuildPass(rootNode);
         this._dedupeTabSwitchNodes(rootNode);
         await this._applyScreenBackdrop(layout.id, host, rootNode, designWidth, designHeight);
+        if (!isBuildHostAlive(host)) return this._abortedBuild(layout);
         UCUFLogger.perfEnd('UIPreviewBuilder.buildScreen', _tBuildScreen);
 
         // 通用佔位符清除：所有 UIPreviewBuilder 子類在 onBuildComplete 鉤子前
@@ -188,6 +196,12 @@ export class UIPreviewBuilder extends Component {
 
         UIPreviewDiagnostics.buildScreenSuccess(layout.id ?? '?', rootNode.children.length);
         return rootNode;
+    }
+
+    /** Detached empty node returned when host is gone: callers get a Node, nothing joins the scene. */
+    private _abortedBuild(layout: UILayoutSpec): Node {
+        UCUFLogger.debug(LogCategory.UI, `[UIPreviewBuilder] buildScreen aborted (host destroyed) layout="${layout?.id ?? '?'}"`);
+        return new Node('__aborted-build');
     }
 
     protected lateUpdate(): void {

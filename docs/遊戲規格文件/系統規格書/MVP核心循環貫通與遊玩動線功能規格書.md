@@ -1,7 +1,7 @@
 <!-- doc_id: doc_spec_0308 -->
 # MVP 核心循環貫通與遊玩動線功能規格書 (Playable Core Loop Vertical Slice)
 
-> 依 11/20 裁決修訂（PROG-2-9212）：子嗣成長節點為 1 歲周歲抓周、5 歲開蒙揭曉（開獎）、10 歲歷練、15 歲入學；首子由系統安排成婚、立刻結緣、馬上產子（doc_spec_1227），玩家手動「尋訪結緣」從第二個孩子起（待產 2 季）。下文「5 歲開獎」一律指 5 歲開蒙揭曉，抓周另在 1 歲。
+> 依 11/20 裁決修訂（PROG-2-9212）：子嗣成長節點為 1 歲周歲抓周、5 歲開蒙揭曉（開獎）、10 歲歷練、15 歲入學；首子由系統安排成婚、立刻結緣、馬上產子（doc_spec_1233），玩家手動「尋訪結緣」從第二個孩子起（待產 2 季）。下文「5 歲開獎」一律指 5 歲開蒙揭曉，抓周另在 1 歲。
 
 > **所屬分類**：系統規格書 (System Spec)  
 > **關聯總目錄**：[`docs/cross-ref/cross-ref-進度.md (doc_index_0017)`](file:///c:/Users/User/3KLife/docs/cross-ref/cross-ref-進度.md)、[`docs/cross-ref/wbs-progress-inventory-matrix.md (doc_index_1054)`](file:///c:/Users/User/3KLife/docs/cross-ref/wbs-progress-inventory-matrix.md)  
@@ -61,7 +61,7 @@ stateDiagram-v2
      - 生成 14 人血統矩陣（若無前代則由虛擬祖先自動補齊）。
      - 揭曉基礎五維（武力、智力、統率、政治、魅力）。
      - 顯化基礎天賦因子（藍/粉/綠初階因子）。
-  4. **入學資格**：獲發【潁川書院入學金券】；子嗣滿 15 歲才可入學第一期賽季學府（開局少年名將 15 歲先入學，見 doc_spec_1227）。
+  4. **入學資格**：獲發【潁川書院入學金券】；子嗣滿 15 歲才可入學第一期賽季學府（開局少年名將 15 歲先入學，見 doc_spec_1233）。
 
 ---
 

@@ -6920,7 +6920,7 @@
   {
     "id": "doc_spec_1182",
     "path": "docs/遊戲規格文件/系統規格書/共用框架總綱規格書.md",
-    "title": "共用框架總綱規格書",
+    "title": "共用框架總綱規格書（分片索引）",
     "category": "spec"
   },
   {
@@ -6963,6 +6963,12 @@
     "id": "doc_spec_1189",
     "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-a.md",
     "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 0–1 結論、定位與三節點因果、新玩家節奏",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1190",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-b.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 2 首子誕生驚喜流程、命名與綽號、出生禮",
     "category": "spec"
   },
   {
@@ -7171,36 +7177,66 @@
   },
   {
     "id": "doc_spec_1225",
+    "path": "docs/遊戲規格文件/系統規格書/共用框架總綱規格書-shards/shard-a.md",
+    "title": "共用框架總綱規格書（分片索引） — 1–4 原則、框架清單、新增判準、框架 × 系統對照",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1226",
+    "path": "docs/遊戲規格文件/系統規格書/共用框架總綱規格書-shards/shard-b.md",
+    "title": "共用框架總綱規格書（分片索引） — 5 共通網路協定層（核心原則）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1227",
+    "path": "docs/遊戲規格文件/系統規格書/共用框架總綱規格書-shards/shard-c.md",
+    "title": "共用框架總綱規格書（分片索引） — 6–8 依賴關係、文件連結、檢查清單",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1228",
+    "path": "docs/遊戲規格文件/系統規格書/共用框架總綱規格書-shards/shard-d.md",
+    "title": "共用框架總綱規格書（分片索引） — 9–11 實作卡總順序、待決大方向、新增框架候選",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1229",
+    "path": "docs/遊戲規格文件/系統規格書/共用框架總綱規格書-shards/shard-e.md",
+    "title": "共用框架總綱規格書（分片索引） — 12 一年循環 MVP 切分（PROG-2-9213）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1230",
     "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-e.md",
     "title": "學府修業畫面與接線設計（分片索引） — 9 依賴的共用框架與共通 API",
     "category": "spec"
   },
   {
-    "id": "doc_spec_1226",
+    "id": "doc_spec_1231",
     "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-f.md",
     "title": "學府修業畫面與接線設計（分片索引） — 10 學府實作卡拆分建議（依共用框架）、11 待決選擇題",
     "category": "spec"
   },
   {
-    "id": "doc_spec_1227",
+    "id": "doc_spec_1232",
+    "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-g.md",
+    "title": "學府修業畫面與接線設計（分片索引） — 12 學府人源缺口方案（待決選擇題 Q13）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1233",
     "path": "docs/遊戲規格文件/系統規格書/首子誕生與少年名將開場流程規格書.md",
     "title": "首子誕生與少年名將開場流程規格書（分片索引）",
     "category": "spec"
   },
   {
-    "id": "doc_spec_1228",
-    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-b.md",
-    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 2 首子誕生驚喜流程、命名與綽號、出生禮",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1229",
+    "id": "doc_spec_1234",
     "path": "docs/遊戲規格文件/系統規格書/首子誕生與少年名將開場流程規格書-shards/shard-a.md",
     "title": "首子誕生與少年名將開場流程規格書（分片索引） — 0 結論、1 開場總順序、2 少年名將挑選、3 首子與貂蟬結緣的關係、4 首子流程時間點",
     "category": "spec"
   },
   {
-    "id": "doc_spec_1230",
+    "id": "doc_spec_1235",
     "path": "docs/遊戲規格文件/系統規格書/首子誕生與少年名將開場流程規格書-shards/shard-b.md",
     "title": "首子誕生與少年名將開場流程規格書（分片索引） — 5 取名與綽號、6 出生禮（共用框架對應）、7 周歲抓周、8 存檔與 API、9 驗收、10 衝突與待決",
     "category": "spec"
