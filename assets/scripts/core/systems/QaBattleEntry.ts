@@ -127,7 +127,7 @@ export function resolveQaBattle(
         errors.push('qaBattle 不可與 previewMode 併用（previewMode 會讓戰場進入 capture 模式）。請拿掉 previewMode 參數');
     }
 
-    const lobbyList = catalog.lobbyEncounters ?? catalog.encounters.filter((e) => !e.extreme);
+    const lobbyList = catalog.lobbyEncounters ?? catalog.encounters.filter((e) => !e.extreme && e.battleKind !== 'defense');
     const defaultEncounter = pickDefaultEncounter(lobbyList);
 
     // 遭遇

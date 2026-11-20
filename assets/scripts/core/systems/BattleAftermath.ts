@@ -85,6 +85,8 @@ export interface BattleAftermathLedger {
     loot: LootDrop[];
     /** 本場戰損已從城市兵源扣除的兵數（由呼叫端填入，供結算畫面顯示） */
     lostTroops: number;
+    /** 守城大敗流失的人口（PROG-2-9425，由呼叫端填入）；沒有時不顯示 */
+    populationLost?: number;
 }
 
 /** 戰場結果換成帳本用的勝敗；ongoing 回 null（不結算） */
@@ -154,5 +156,6 @@ export function formatAftermathLines(ledger: Readonly<BattleAftermathLedger>): s
         lines.push(`戰利品：${ledger.loot.map((d) => `${ITEM_DISPLAY_NAMES[d.itemId] ?? d.itemId} ×${d.quantity}`).join('、')}`);
     }
     if (ledger.morale !== 0) lines.push(`民心 ${ledger.morale > 0 ? '+' : ''}${ledger.morale}`);
+    if ((ledger.populationLost ?? 0) > 0) lines.push(`人口 -${ledger.populationLost}（守城大敗，百姓流離）`);
     return lines;
 }

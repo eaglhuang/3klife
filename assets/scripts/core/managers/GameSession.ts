@@ -260,6 +260,7 @@ import { phaseFactorColors, phaseForLevel, type UnlockPhase } from '../systems/U
 import { protectedAfterLoss, CELLAR_PROTECTION } from '../systems/CellarProtection';
 import { applySortieResult, FOOD_PER_SEASON, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
 import { buildGovernorSnapshot, type GovernorSnapshot } from '../systems/GovernorHallView';
+import { defenseOutcomeOf } from '../systems/DefenseBattle';
 import { advancePopulation, applyPopulationRout, clampMorale, commerceGoldBase, INITIAL_MORALE, INITIAL_POPULATION, MORALE_DELTA, normalizeCityEconomy, populationBonusAmount, populationCapOf, RELIEF_MISSION_TEMPLATE_ID, type CityEconomyState } from '../systems/CityEconomy';
 import { buildEraResetEvent } from '../systems/EraReset';
 import { buildQuarterlyBattleReportRows, type QuarterlyBattleReportRow } from '../systems/RetireReviewCopy';
@@ -603,6 +604,11 @@ export interface RecordBattleOptions {
     stageSalvage?: Readonly<SalvageTotals>;
     /** 英靈夢回教學戰的傳說英靈；勝利時產出初始虎符（OPEN-13），沒有時不做任何事 */
     teachingSpirit?: TeachingSpiritInput | null;
+    /**
+     * 守城戰（PROG-2-9425）：勝利另加民心；失敗改扣守城戰敗民心（applyDefenseDefeat），我方武將全滅再判大敗扣人口。
+     * 沒有時照一般戰鬥結算。
+     */
+    defense?: { moraleOnVictory: number; playerGeneralsDown: boolean } | null;
     /** 本場戰場收到的單挑勝負事件（DuelOutcomeApplied）；勝方主將名聲 +15、被斬的己方主將走陣亡結算（PROG-2-9132） */
     duelOutcomes?: readonly DuelOutcomeRecord[];
     /** 本場戰場回報的「主將被擒」紀錄（PROG-2-9140）；我方被擒者交給擒獲方君主處置，沒有這個欄位時單挑被斬維持舊行為（直接陣亡） */
@@ -3027,14 +3033,19 @@ export class GameSession {
 
     /**
      * 守城戰敗（PROG-2-9138）：民心 −3；'rout'（守城大敗）另扣人口 3%。
-     * 目前戰場沒有「玩家為防守方」的結算，尚無呼叫端；有守城結算時在結果確定處呼叫。
+     * 守城戰的戰後結算（recordBattle 帶 defense，PROG-2-9425）會走同一套變動；這支給戰場外的守城結果用。
      */
     public async applyDefenseDefeat(kind: 'defeat' | 'rout' = 'defeat'): Promise<CityEconomyState> {
+        this._applyDefenseDefeatEconomy(kind);
+        if (this._autoSave && this._save) await this.save();
+        return { ...this._cityEconomy };
+    }
+
+    /** 守城戰敗的民心與人口變動（不存檔）；守城戰的戰後結算與 applyDefenseDefeat 共用（PROG-2-9425） */
+    private _applyDefenseDefeatEconomy(kind: 'defeat' | 'rout'): void {
         const morale = clampMorale(this._cityEconomy.morale + MORALE_DELTA.defenseDefeat);
         const population = kind === 'rout' ? applyPopulationRout(this._cityEconomy.population) : this._cityEconomy.population;
         this._cityEconomy = { population, morale };
-        if (this._autoSave && this._save) await this.save();
-        return { ...this._cityEconomy };
     }
 
     /** 最近一場出征結算被地窖保護保住的糧草（PROG-2-1341）；沒觸發為 0，不存檔 */
@@ -5890,7 +5901,7 @@ export class GameSession {
             if (firstClear) this._emit(GAME_SESSION_EVENTS.FirstBattleCleared, undefined);
             // 沒有可結算的出戰武將（名冊裡找不到主將）時，戰損與戰後獎懲仍要入帳（PROG-2-9149）
             const early = this._applySortieCost(result, options);
-            const earlyAftermath = early.outcomeKind && !options.teachingSpirit ? this._applyBattleAftermath(early.outcomeKind, early.lostTroopsApplied) : undefined;
+            const earlyAftermath = early.outcomeKind && !options.teachingSpirit ? this._applyBattleAftermath(early.outcomeKind, early.lostTroopsApplied, options.defense) : undefined;
             if ((earlyAftermath || early.sortieCost) && this._autoSave && this._save) await this.save();
             return { ...settlement, awakenings: [], captureNotices: [], aftermath: earlyAftermath, aftermathLines: earlyAftermath ? formatAftermathLines(earlyAftermath) : [], ...(early.sortieCost ? { military: this.military } : {}) };
         }
@@ -5908,7 +5919,7 @@ export class GameSession {
         }
 
         // 戰後獎懲（PROG-2-9149）：糧草、黃金、戰利品入帳，失敗扣民心；教學戰不結算
-        const aftermath = outcomeKind && !options.teachingSpirit ? this._applyBattleAftermath(outcomeKind, lostTroopsApplied) : undefined;
+        const aftermath = outcomeKind && !options.teachingSpirit ? this._applyBattleAftermath(outcomeKind, lostTroopsApplied, options.defense) : undefined;
 
         const source = battleExpSource(result);
         const discovery = source ? this._applyDiscoveryExp(source) : undefined;
@@ -6020,7 +6031,7 @@ export class GameSession {
      * 戰後獎懲入帳（PROG-2-9149）：糧草（不超過軍備上限）、黃金（走錢包、不超過太守府等級上限）、
      * 戰利品進背包、失敗扣民心；回傳帳本給結算畫面。錢包尚未綁定（沒進過大廳）時黃金不入帳也不提示。
      */
-    private _applyBattleAftermath(outcome: 'win' | 'draw' | 'loss', lostTroops: number): BattleAftermathLedger {
+    private _applyBattleAftermath(outcome: 'win' | 'draw' | 'loss', lostTroops: number, defense?: RecordBattleOptions['defense']): BattleAftermathLedger {
         const wallet = this._missionWallet;
         const ledger = planBattleAftermath(outcome, {
             food: this._military.food,
@@ -6033,7 +6044,21 @@ export class GameSession {
         ledger.lostTroops = lostTroops;
         if (ledger.food > 0) this._military = { ...this._military, food: this._military.food + ledger.food };
         if (ledger.gold > 0) wallet?.grant(ledger.gold);
-        if (ledger.morale !== 0) this._cityEconomy = { ...this._cityEconomy, morale: clampMorale(this._cityEconomy.morale + ledger.morale) };
+        // 守城戰（PROG-2-9425）：失敗改走守城戰敗（民心 −3，全滅再扣人口），不疊一般戰敗民心；勝利另加民心
+        const defenseOutcome = defense ? defenseOutcomeOf(outcome === 'win' ? 'player-win' : outcome === 'loss' ? 'enemy-win' : 'draw', defense.playerGeneralsDown) : null;
+        if (defenseOutcome === 'defeat' || defenseOutcome === 'rout') {
+            const before = this._cityEconomy;
+            this._applyDefenseDefeatEconomy(defenseOutcome === 'rout' ? 'rout' : 'defeat');
+            ledger.morale = this._cityEconomy.morale - before.morale;
+            ledger.populationLost = before.population - this._cityEconomy.population;
+        } else {
+            if (defenseOutcome === 'victory') ledger.morale += Math.max(0, Math.floor(defense?.moraleOnVictory ?? 0));
+            if (ledger.morale !== 0) {
+                const before = this._cityEconomy.morale;
+                this._cityEconomy = { ...this._cityEconomy, morale: clampMorale(before + ledger.morale) };
+                if (defenseOutcome === 'victory') ledger.morale = this._cityEconomy.morale - before;
+            }
+        }
         if (ledger.loot.length > 0) {
             const beforeLoot = this._inventory;
             for (const drop of ledger.loot) this._inventory = addItem(this._inventory, drop.itemId, drop.quantity);
