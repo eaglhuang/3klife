@@ -99,3 +99,4 @@
 | `doc_task_2689` | docs/agent-briefs/tasks/PROG/PROG-2-9206.md | [PROG-2-9206] 每日免費入學令退場，入學令只走季發（ITM-M 收尾） |
 | `doc_task_2690` | docs/agent-briefs/tasks/PROG/PROG-2-9205.md | [PROG-2-9205] RWD-M 獎勵 base 最小版：獎池保底帳本與 reward.roll/claim |
 | `doc_task_2691` | docs/agent-briefs/tasks/PROG/PROG-2-9432.md | [PROG-2-9432] 新版 HUD 雙方精力條＋扣減演出、規格門檻統一 |
+| `doc_task_2692` | docs/agent-briefs/tasks/PROG/PROG-2-9433.md | [PROG-2-9433] 手機結算彈窗字級：小螢幕最小可讀字級 |
