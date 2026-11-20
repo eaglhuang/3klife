@@ -39,6 +39,7 @@ import { isTrialMercenary } from '../../core/systems/PrisonerOfWar';
 import { openingAiLogLinesOf } from '../../core/systems/AiEntranceLines';
 import { ensureDeployPanelRuntime, ensureHUD, ensureBattleLogPanel, ensureStrategistHud, ensureGeneralQuickView, ensureBattleScenePanel, ensureBoardRenderer, ensureUnitRenderer } from './BattleUIInitializer';
 import { turnLimitIntroLine } from "../../core/systems/TimeUpJudgement";
+import { resolveDefenseTurnLimit, siegeDefenderOf } from "../../core/systems/DefenseBattle";
 
 const { ccclass, property } = _decorator;
 
@@ -241,6 +242,8 @@ export class BattleScene extends Component {
       // 5. 開始第一場戰鬥（含地形、天氣、戰法）
       // 戰場關係事件帳本（PROG-2-1415）：同一關只觸發一次，已播紀錄隨存檔保存
       this.ctrl.bindRelationEvents(`battle:${this.currentEncounterId}`, services().session.relationEvents);
+      // 守城戰（PROG-2-9425）：攻城戰法的守方換成玩家，護城河與城牆加成鏡像到我方
+      this.ctrl.configureSiegeDefender(siegeDefenderOf(encounter?.battleKind));
       this.ctrl.initBattle(
         pg,
         eg,
@@ -269,7 +272,9 @@ export class BattleScene extends Component {
       if (!battleParams.enemyDeployTroops?.length) this.ctrl.applyEnemyInitialDeployment(encounter?.enemyInitialDeployment);
       // 關卡回合時限（PROG-2-9423）：瓦口隘 15 回合，時限到依戰果判定
       await this.ctrl.loadTimeUpJudgement();
-      this.ctrl.configureEncounterTurnLimit(encounter?.turnLimit, encounter?.timeUpRule);
+      // 守城戰（PROG-2-9425）：沒設回合上限時用 data/defense-battle 的上限，時限到判我方勝
+      const turnLimitRule = resolveDefenseTurnLimit(encounter, await this.ctrl.loadDefenseBattleConfig());
+      this.ctrl.configureEncounterTurnLimit(turnLimitRule.turnLimit, turnLimitRule.timeUpRule);
       // 天氣排程（PROG-2-0401）：入口參數優先，沒有才用 encounter 設定
       const weatherSchedule = battleParams.weatherSchedule ?? encounter?.weatherSchedule;
       if (weatherSchedule) this.ctrl.setWeatherSchedule(weatherSchedule);
@@ -454,7 +459,7 @@ export class BattleScene extends Component {
       UCUFLogger.info(LogCategory.BATTLE, `[BattleScene] HUD 已刷新: ${!!this.hud}`);
       this.battleLogPanel?.clear();
       this.battleLogPanel?.append(`第 ${snap.turn} 回合開始，糧草 ${snap.playerFood}`);
-      const turnLimitLine = battleParams.tutorial ? null : turnLimitIntroLine(encounter?.turnLimit, encounter?.timeUpRule);
+      const turnLimitLine = battleParams.tutorial ? null : turnLimitIntroLine(turnLimitRule.turnLimit, turnLimitRule.timeUpRule);
       if (turnLimitLine) this.battleLogPanel?.append(turnLimitLine);
       if (battleParams.tutorial) this.battleLogPanel?.append(`首戰教學最多 ${GAME_CONFIG.TUTORIAL_TURN_LIMIT} 回合；守到最後敵軍會自行退兵，算我方獲勝。也可隨時從「退」確認撤退。`);
       const deputyLine = deputySupportLine(support.deputy?.name, support.deputyBonus.foodCapBonus);

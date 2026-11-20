@@ -10967,7 +10967,7 @@
       "title": "守城戰場模式：城牆加成依陣營鏡像、撐滿 12 回合即勝、失守接 applyDefenseDefeat",
       "owner": "claude-code-fable-5-2",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-20",
@@ -10987,7 +10987,7 @@
       "depends": [],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-20 | 狀態: in-progress | 驗證: pending | 變更: 待做 | 阻塞: 無",
+      "notes": "2026-11-20 | 狀態: done | 驗證: 單元 8565 全過、tsc 0、compute-gate 12/13（既有 LoginScene 警告）、7456 實機守城開場／擊敗主將勝利／撐滿 12 回合勝利（民心 +2）／城寨失守（民心 -3）／大敗（人口 -3%）截圖、六關回歸 0 錯 | 變更: defense 戰場類別、攻城鏡像依守方陣營、defense-battle.json、守城第一檔遭遇、結算接 applyDefenseDefeat | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",

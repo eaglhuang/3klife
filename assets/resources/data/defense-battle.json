@@ -1,0 +1,5 @@
+{
+  "_comment": "PROG-2-9425：守城戰（遭遇 battleKind='defense'，玩家是守方）。撐滿 turnLimit 回合即勝（遭遇自己設了 turnLimit 時以遭遇為準）；勝利照一般勝利給戰利品，另加 moraleOnVictory 民心。敗只扣民心、大敗再扣人口，數值在 CityEconomy（applyDefenseDefeat）。使用者 11/20 裁決。",
+  "turnLimit": 12,
+  "moraleOnVictory": 2
+}
