@@ -1,5 +1,6 @@
 import { assert, TestSuite } from './TestRunner';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
+import { buildStarterChild, configureStarterChild, getStarterChildConfig, DEFAULT_STARTER_CHILD_CONFIG } from '../assets/scripts/core/services/StarterChildService';
 import { buildStarterRoster, STARTER_CORE_GENERAL_ID, STARTER_GENERAL_IDS } from '../assets/scripts/core/services/StarterRosterService';
 import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
 import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
@@ -52,11 +53,11 @@ export function createStarterRosterSuite(): TestSuite {
         session.setRandomSource(() => 0.99);
         await session.advanceSeason();
         await session.startNewGameWithStarters(2, data());
-        assert.equals(6, session.roster.length);
+        assert.equals(7, session.roster.length);
         assert.equals(STARTER_CORE_GENERAL_ID, session.leadGeneralId);
         assert.equals(JSON.stringify(new GameSession(2).gameTime), JSON.stringify(session.gameTime));
         const snapshot = await save.load();
-        assert.equals(6, snapshot!.roster.length);
+        assert.equals(7, snapshot!.roster.length);
         assert.equals(STARTER_CORE_GENERAL_ID, snapshot!.leadGeneralId);
     });
     suite.test('既有 startNewGame 保留名冊，仍清除主將與時鐘', async () => {
@@ -80,6 +81,21 @@ export function createStarterRosterSuite(): TestSuite {
         assert.isTrue(failed);
         assert.equals(roster, JSON.stringify(session.roster));
         assert.equals(time, JSON.stringify(session.gameTime));
+    });
+    suite.test('開局幼苗設定來自 JSON：configure 後生效，缺欄位退回預設', () => {
+        const raw = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../assets/resources/data/starter-child-config.json'), 'utf8'));
+        try {
+            configureStarterChild({ ...raw, age: 4, epRange: { min: 70, max: 70 }, genderStrategy: 'female' });
+            assert.equals(70, getStarterChildConfig().epRange.min);
+            const child = buildStarterChild(buildStarterRoster(data()), { random: () => 0.1 });
+            assert.equals(70, child.ep);
+            assert.equals('女', child.gender);
+            assert.equals(4, child.age);
+            configureStarterChild({ childId: 'x' });
+            assert.equals(DEFAULT_STARTER_CHILD_CONFIG.statRange.min, getStarterChildConfig().statRange.min);
+        } finally {
+            configureStarterChild(null);
+        }
     });
     return suite;
 }

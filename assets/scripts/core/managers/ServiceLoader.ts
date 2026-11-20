@@ -45,6 +45,7 @@ import { fertilityConceptionMod } from "../systems/FertilityBoost";
 import { ITEM_FERTILITY_ARMED } from "../systems/PlayerInventory";
 import { UCUFLogger, LogCategory } from "../utils/UCUFLogger";
 import { normalizeVfxEffectTable } from "../config/VfxEffectConfig";
+import { STARTER_CHILD_CONFIG_JSON, configureStarterChild, type StarterChildConfig } from "../services/StarterChildService";
 import { normalizeSeasonModifiers, seasonModifiersOf, setActiveSeasonModifiers } from "../systems/SeasonModifiers";
 import { CHILD_APTITUDE_RULES_JSON, configureChildAptitudeRules, type ChildAptitudeRulesConfig } from "../systems/ChildAptitudeInheritance";
 import { configureFamilyCompatibilityRules, computeFamilyCompatibilityK, FAMILY_COMPATIBILITY_RULES_JSON, type FamilyCompatibilityRulesConfig } from "../systems/FamilyCompatibility";
@@ -390,6 +391,16 @@ export class ServiceLoader {
      * 非同步載入 vfx-effects.json 並批量注冊至 EffectSystem。
      * 建議在 BattleScene.start() 中與 loadSkills() 一起 await。
      */
+    /** 載入開局宗室幼苗設定（PROG-2-9179）；失敗時退回內建預設 */
+    public async loadStarterChildConfig(): Promise<void> {
+        try {
+            const raw = await this.resource.loadJson<Partial<StarterChildConfig>>(STARTER_CHILD_CONFIG_JSON);
+            configureStarterChild(raw);
+        } catch (e) {
+            UCUFLogger.warn(LogCategory.DATA, '[ServiceLoader] starter-child-config.json 載入失敗，使用內建預設:', e);
+        }
+    }
+
     /** 載入四季特色修正表（TIME-08）；失敗時退回程式內建預設，遊戲照常進行 */
     public async loadSeasonModifiers(): Promise<void> {
         try {

@@ -1,6 +1,7 @@
 // @spec-source → 見 docs/cross-reference-index.md
 import { EVENT_NAMES, GAME_CONFIG, TurnPhase } from "../config/Constants";
 import { EventSystem } from "./EventSystem";
+import { DEFAULT_TIME_UP_JUDGEMENT, type TimeUpJudgementConfig } from "./TimeUpJudgement";
 
 /** [P2-N2] TurnSnapshot 介面：playerDp 已更名為 playerFood，與 UI 層語意統一 */
 export interface TurnSnapshot {
@@ -9,8 +10,8 @@ export interface TurnSnapshot {
   playerFood: number;
 }
 
-/** 回合用盡時的勝方 */
-export type TurnLimitOutcome = 'enemy-win' | 'player-win';
+/** 回合用盡時的勝方；'by-damage' 依雙方戰果判定（PROG-2-9423，瓦口隘） */
+export type TurnLimitOutcome = 'enemy-win' | 'player-win' | 'by-damage';
 
 export interface BattleFoodConfig {
   initial: number;
@@ -36,6 +37,10 @@ export class BattleSystem {
   private turnLimit: number = GAME_CONFIG.TURN_LIMIT;
   /** 回合用盡時誰贏：一般戰鬥是攻方（玩家）撤退落敗；教學戰改成敵軍退兵、玩家獲勝 */
   private turnLimitOutcome: TurnLimitOutcome = 'enemy-win';
+  /** 'by-damage' 判定用的權重與平手歸屬 */
+  private timeUpJudgement: TimeUpJudgementConfig = { ...DEFAULT_TIME_UP_JUDGEMENT };
+  /** 本場是否套用了關卡自訂時限（HUD 才顯示「第 N/上限 回合」） */
+  private customTurnLimit = false;
 
   /** 由 ServiceLoader 或外部注入 EventSystem */
   public setEventSystem(eventSystem: EventSystem): void {
@@ -49,14 +54,27 @@ export class BattleSystem {
     this.playerFood = this.foodConfig.initial;
     this.turnLimit = GAME_CONFIG.TURN_LIMIT;
     this.turnLimitOutcome = 'enemy-win';
+    this.timeUpJudgement = { ...DEFAULT_TIME_UP_JUDGEMENT };
+    this.customTurnLimit = false;
     this.emitPhaseChange();
   }
 
   /** 改用指定的回合上限與用盡時的勝方；上限不是正整數就整個忽略。beginBattle() 會恢復預設 */
-  public configureTurnLimit(limit: number, outcome: TurnLimitOutcome = 'enemy-win'): void {
+  public configureTurnLimit(limit: number, outcome: TurnLimitOutcome = 'enemy-win', options: { judgement?: TimeUpJudgementConfig; showLimit?: boolean } = {}): void {
     if (!Number.isInteger(limit) || limit <= 0) return;
     this.turnLimit = limit;
     this.turnLimitOutcome = outcome;
+    if (options.judgement) this.timeUpJudgement = { ...options.judgement };
+    this.customTurnLimit = options.showLimit === true;
+  }
+
+  public getTimeUpJudgement(): TimeUpJudgementConfig {
+    return this.timeUpJudgement;
+  }
+
+  /** HUD 要顯示的回合分母；沒有關卡自訂時限時回傳 null（只顯示「第 N 回合」） */
+  public getDisplayTurnLimit(): number | null {
+    return this.customTurnLimit ? this.turnLimit : null;
   }
 
   public getTurnLimitOutcome(): TurnLimitOutcome {

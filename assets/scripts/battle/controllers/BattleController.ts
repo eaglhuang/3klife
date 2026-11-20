@@ -118,6 +118,7 @@ import { estimateTacticDamage } from '../shared/TacticDamageEstimate';
 import type { TacticAiSituation } from '../shared/TacticAiRules';
 import { estimateHealValue, hasChokePointLane, hasDenseArea } from '../shared/EnemyTacticBoard';
 import { resolveEnemyInitialDeployment, type EnemyInitialDeploymentEntry } from '../shared/EnemyInitialDeployment';
+import { DEFAULT_TIME_UP_JUDGEMENT, isTimeUpRule, parseTimeUpJudgementConfig, type TimeUpJudgementConfig, type TimeUpRule } from "../../core/systems/TimeUpJudgement";
 
 /**
  * [P2-N3] 部署失敗原因：food = 糧草不足（原 dp）。
@@ -620,6 +621,31 @@ export class BattleController {
     }
     return spawned;
   }
+
+  /**
+   * 關卡回合時限（PROG-2-9423，瓦口隘 15 回合）：必須在 initBattle() 之後呼叫（開戰會把上限重設回預設）。
+   * 教學戰維持教學規則；上限不是正整數就不動。HUD 會顯示「第 N/上限 回合」。
+   */
+  public configureEncounterTurnLimit(limit: number | undefined, rule: TimeUpRule | undefined): void {
+    if (this._tutorialBattle) return;
+    if (typeof limit !== 'number' || !Number.isInteger(limit) || limit <= 0) return;
+    const outcome: TimeUpRule = isTimeUpRule(rule) ? rule : 'enemy-win';
+    services().battle.configureTurnLimit(limit, outcome, { judgement: this.timeUpJudgement, showLimit: true });
+  }
+
+  /** 讀戰果判定設定（data/time-up-judgement）；只讀一次，讀不到用預設 */
+  public async loadTimeUpJudgement(): Promise<void> {
+    if (this.timeUpJudgementLoaded) return;
+    this.timeUpJudgementLoaded = true;
+    try {
+      const raw = await services().resource.loadJson<unknown>('data/time-up-judgement', { tags: ['battle'] });
+      this.timeUpJudgement = parseTimeUpJudgementConfig(raw);
+    } catch {
+      this.timeUpJudgement = { ...DEFAULT_TIME_UP_JUDGEMENT };
+    }
+  }
+  private timeUpJudgement: TimeUpJudgementConfig = { ...DEFAULT_TIME_UP_JUDGEMENT };
+  private timeUpJudgementLoaded = false;
 
   /** AI 虎符配發（PROG-2-1337）：虎符模板全表中，只留 AI 會出的兵種，依敵將適性與難度配發 */
   private allocateEnemyTallies(difficulty: AiDifficulty): void {

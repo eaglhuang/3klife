@@ -216,6 +216,7 @@ import {
 } from '../systems/DiscoveryProgress';
 import type { NurtureAwakeningHooks } from '../services/NurtureService';
 import { buildStarterRoster, STARTER_CORE_GENERAL_ID, StarterRosterOptions } from '../services/StarterRosterService';
+import { buildStarterChild } from '../services/StarterChildService';
 import { resolveFactorColor } from '../systems/FactorInheritance';
 import { insertSpiritCard, replaceSpiritCard, setPrimarySpiritCard, unequipSpiritCard, type SpiritSlotFlowResult } from '../systems/SpiritSlotFlow';
 import type { FactorColor, FactorDefinition, FactorDictionary } from '../systems/FactorInheritance';
@@ -2249,7 +2250,19 @@ export class GameSession {
         const letterBeforeNewGame = carryOpeningLetterOnNewGame(this._openingLetter);
         this.startNewGame(seed);
         this._openingLetter = letterBeforeNewGame;
-        this._roster.replaceAll(normalizeRosterRoles(starters));
+        const initialRoster = [...starters];
+        if (options.includeStarterChild !== false) {
+            const child = buildStarterChild(initialRoster, {
+                coreGeneralId: coreId,
+                beautyGeneralId: options.beautyGeneralId,
+                config: options.starterChildConfig,
+                random: this._random,
+            });
+            if (!initialRoster.some(g => g.id === child.id)) {
+                initialRoster.push(child);
+            }
+        }
+        this._roster.replaceAll(normalizeRosterRoles(initialRoster));
         if (!await this.setLeadGeneral(coreId)) throw new Error('[GameSession] 無法設定初始核心主將');
         this._emit(GAME_SESSION_EVENTS.RosterChanged, this.roster);
     }

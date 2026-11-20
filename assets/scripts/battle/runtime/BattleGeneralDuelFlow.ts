@@ -9,6 +9,7 @@ import { type BattleResult, BATTLE_FRONT_DEPTH } from "../BattleTypes";
 import { DUEL_FLEE_HP, DUEL_FLEE_SQUAD_LOSS_RATIO, DUEL_WINNER_BUFF_TURNS, DUEL_WINNER_CRIT_BONUS } from "../shared/DuelOutcome";
 import { duelVictoryBuffTurns } from "../shared/DuelVictoryBuff";
 import { maximizeMorale } from "../shared/Morale";
+import { resolveTimeUpWinner } from "./BattleVictoryResolver";
 import { duelEscapeFailedLine, duelFleeImmuneLine, duelSlainCapturedLine } from "../../core/systems/NumericalScriptLines";
 import { rollDuelEscape, type GeneralCaptureCause, type GeneralCaptureRecord } from "../../shared/GeneralCaptureContract";
 
@@ -561,8 +562,10 @@ export class BattleGeneralDuelFlow {
 
     // 回合用盡的勝方與 resolveBattleVictory 一致（教學戰是玩家勝）
     const timeUp = svc.battle.isTurnLimitReached() && !(pg?.isDead() ?? false) && !(eg?.isDead() ?? false);
-    const playerLost = (pg?.isDead() ?? false) || (timeUp && svc.battle.getTurnLimitOutcome() === 'enemy-win');
-    const enemyLost = (eg?.isDead() ?? false) || (timeUp && svc.battle.getTurnLimitOutcome() === 'player-win');
+    // 依戰果判定（PROG-2-9423）與主流程共用 resolveTimeUpWinner
+    const timeUpWinner = timeUp ? resolveTimeUpWinner(this.context.state).winner : null;
+    const playerLost = (pg?.isDead() ?? false) || timeUpWinner === 'enemy-win';
+    const enemyLost = (eg?.isDead() ?? false) || timeUpWinner === 'player-win';
 
     let result: BattleResult = "ongoing";
     if (playerLost && enemyLost) result = "draw";

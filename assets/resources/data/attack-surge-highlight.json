@@ -1,0 +1,6 @@
+{
+  "_comment": "PROG-2-9422（Q-C1 選 A）：頭頂攻擊數字依『目前攻擊 ÷ 基礎攻擊』變色。goldRatio 以上金字，redRatio 以上紅字並加慢速脈動光環；pulsePeriodSec 是光環一次放大縮回的秒數。敵我都適用，只影響畫面，不改戰鬥數值。",
+  "goldRatio": 2,
+  "redRatio": 4,
+  "pulsePeriodSec": 1.6
+}

@@ -10,6 +10,7 @@ import { destinyLockedEvent } from '../../core/systems/DestinyOpening';
 import { DESTINY_POOL_ID } from '../../core/systems/DestinyPool';
 import { shouldShowOpeningLetter } from '../../core/systems/OpeningLetter';
 import { OPENING_BEAUTY_POOL_ID, rollOpeningBeauty } from '../../core/systems/OpeningBeauty';
+import { getStarterChildConfig } from '../../core/services/StarterChildService';
 import { applyFlowView } from './NurtureFlowViewApplier';
 
 /** Scene supplies the existing Cocos host; tests need only these used capabilities. */
@@ -30,6 +31,7 @@ export interface LobbyOpeningPanelPorts {
     bringToFront: (node: Node) => void;
     refreshSeasonHud: () => void;
     notifyBeauty: (name: string) => void;
+    notifyStarterChild?: (name: string) => void;
     canNotifyBeauty?: () => boolean;
     advanceOpening: (event: OpeningFlowEvent) => void;
     /**
@@ -56,6 +58,7 @@ export class LobbyOpeningPanels {
     /** 宿命池畫面節點（轉蛋結果畫面的宿主） */
     private _destinyNode: Node | null = null;
     private _pendingBeauty: string | null = null;
+    private _pendingStarterChild: string | null = null;
     /** 宿命池開局後已推進開場；只推進一次 */
     private _destinyAdvanced = false;
 
@@ -86,10 +89,17 @@ export class LobbyOpeningPanels {
 
     /** 與季報共用宿主的開場守衛；出場介紹或教學未結束時保留通知。 */
     public flushPendingBeauty(): void {
-        if (!this._pendingBeauty || this._ports.canNotifyBeauty?.() === false) return;
-        const name = this._pendingBeauty;
-        this._pendingBeauty = null;
-        this._ports.notifyBeauty(name);
+        if (this._ports.canNotifyBeauty?.() === false) return;
+        if (this._pendingBeauty) {
+            const name = this._pendingBeauty;
+            this._pendingBeauty = null;
+            this._ports.notifyBeauty(name);
+        }
+        if (this._pendingStarterChild) {
+            const childName = this._pendingStarterChild;
+            this._pendingStarterChild = null;
+            this._ports.notifyStarterChild?.(childName);
+        }
     }
 
     public refreshOnboarding(): void {
@@ -178,8 +188,12 @@ export class LobbyOpeningPanels {
                 const beautyName = beautyId ? this._ports.generals().find(g => g.id === beautyId)?.name : null;
                 if (beautyName) {
                     this._pendingBeauty = beautyName;
-                    this.flushPendingBeauty();
                 }
+                const starterChild = session.roster.find(g => g.id === getStarterChildConfig().childId);
+                if (starterChild) {
+                    this._pendingStarterChild = starterChild.name;
+                }
+                this.flushPendingBeauty();
                 this._ports.refreshSeasonHud();
             },
         });

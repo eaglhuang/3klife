@@ -72,6 +72,7 @@ import { buildSandtableStatusLabel } from '../../core/systems/SandtableStatus';
 import type { YearReport } from '../../core/systems/YearReport';
 import { YearReportController } from '../core/YearReportController';
 import { isStageUnlocked } from '../../core/systems/StageChainProgress';
+import { isStageSeasonOpen, parseStageSeasonSchedule, seasonLockedHint, stageOpenSeason, type StageSeasonSchedule } from '../../core/systems/StageSeasonSchedule';
 import { buildBattlefieldReconForEncounter } from '../../core/systems/BattlefieldRecon';
 import { buildEnvScoutLines } from '../core/EnvScoutPresenter';
 import { lifespanCommandForBattleKind } from '../../core/systems/LifespanWiring';
@@ -432,6 +433,8 @@ export class LobbyScene extends Component {
     private _generalsLoad: Promise<GeneralConfig[]> | null = null;
     private _lobbyLoadingHint: Node | null = null;
     private _encounters: EncounterConfig[] = [];
+    /** 一年六關按季開放的排程（PROG-2-9421）；載入失敗時為 null，代表不設季節閘門 */
+    private _stageSeasonSchedule: StageSeasonSchedule | null = null;
     /** 天下征鋒的 BOSS 關（PROG-2-2101）；不混進連環破與大廳開戰關卡 */
     private _extremeEncounters: EncounterConfig[] = [];
     private _extremeTaskHost: UIScreenPreviewHost | null = null;
@@ -899,7 +902,8 @@ export class LobbyScene extends Component {
             await Promise.all([
                 services().loadSkills(),
                 services().loadVfxEffects(),
-                services().loadSeasonModifiers()
+                services().loadSeasonModifiers(),
+                services().loadStarterChildConfig()
             ]);
             
             this._generals = await this._loadGenerals();
@@ -915,6 +919,13 @@ export class LobbyScene extends Component {
             const allEncounters = encounterEnvelope.encounters ?? [];
             this._encounters = allEncounters.filter((e) => !e.extreme);
             this._extremeEncounters = allEncounters.filter((e) => e.extreme);
+            // 季節關卡排程（PROG-2-9421）：讀不到就不設季節閘門，不擋大廳
+            try {
+                this._stageSeasonSchedule = parseStageSeasonSchedule(await services().resource.loadJson<unknown>('data/stage-season-schedule', { tags: ['LobbyScene'] }));
+            } catch (scheduleError) {
+                this._stageSeasonSchedule = null;
+                UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 季節關卡排程載入失敗，改為不設季節閘門', scheduleError);
+            }
         } catch (error) {
             UCUFLogger.error(LogCategory.DATA, '[LobbyScene] 載入資料失敗:', error);
         }
@@ -1314,6 +1325,9 @@ export class LobbyScene extends Component {
     /** 出戰：新手教學戰或沒有關卡資料時照舊直接進戰場，其餘先彈出模式選擇 */
     private _chooseSortieMode(): void {
         const encounter = this._currentEncounter();
+        // 本季關卡都打完、下一關要等下一季（PROG-2-9421）：提示玩家，這次出戰是重打已通關的關卡
+        const lockedHint = this._seasonLockedNextHint();
+        if (lockedHint) services().event.emit('SHOW_TOAST', { message: `${lockedHint}；本季可重打已通關的關卡`, duration: 3 });
         const popup = this._quickSortiePopup;
         if (!encounter || !popup?.host || isTutorialBattle(services().session.clearedStageIds)) {
             void this._enterBattle();
@@ -2630,6 +2644,7 @@ export class LobbyScene extends Component {
                     openingLetter: services().session.openingLetter,
                 }),
                 notifyBeauty: name => services().event.emit('SHOW_TOAST', { message: `紅顏 ${name} 前來相會，已加入名冊，可到「結緣」配對`, duration: 4 }),
+                notifyStarterChild: name => services().event.emit('SHOW_TOAST', { message: services().i18n.t('ui.opening.starter_child_hint', name), duration: 4 }),
                 advanceOpening: event => { this._advanceOpening(event); },
                 presentDestinyPool: (view, actions) => this._presentDestinyPool(view, actions),
                 closeDestinyPool: () => { if (this._destinyPoolHost) this._destinyPoolHost.node.active = false; },
@@ -8112,8 +8127,23 @@ ${spent}`,
      */
     private _currentEncounter(): EncounterConfig | undefined {
         const cleared = new Set(services().session.clearedStageIds);
-        const pending = this._encounters.find((e) => !cleared.has(e.id) && isStageUnlocked(e.id, this._encounters, cleared));
+        const season = services().session.gameTime.currentSeason;
+        // 一年六關按季開放（PROG-2-9421）：連環破前置與季節都要過；本季都打完時照舊回到清單第一關（可重打）
+        const pending = this._encounters.find((e) => !cleared.has(e.id)
+            && isStageUnlocked(e.id, this._encounters, cleared)
+            && isStageSeasonOpen(this._stageSeasonSchedule, e.id, season));
         return pending ?? this._encounters[0];
+    }
+
+    /** 下一關被季節鎖住時的提示（PROG-2-9421）；沒有被季節鎖住的下一關時回傳 null */
+    private _seasonLockedNextHint(): string | null {
+        const schedule = this._stageSeasonSchedule;
+        if (!schedule) return null;
+        const cleared = new Set(services().session.clearedStageIds);
+        const season = services().session.gameTime.currentSeason;
+        const next = this._encounters.find((e) => !cleared.has(e.id) && isStageUnlocked(e.id, this._encounters, cleared));
+        if (!next || isStageSeasonOpen(schedule, next.id, season)) return null;
+        return seasonLockedHint(next.name, stageOpenSeason(schedule, next.id) ?? 5);
     }
 
     /** 軍事任務帶來的場景戰法（SCN-04）：教學戰不判定；只有發動成功才回傳戰法 */

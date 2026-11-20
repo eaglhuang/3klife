@@ -286,6 +286,7 @@
   "ui.style_check.parchment": "宣紙風按鈕",
   "ui.style_check.lorem": "水墨宣紙 (Ink & Parchment) 與 冷冽金屬 (Steel) 的視覺衝突：建構於 3.8.8 的 2.5D 三國戰場介面。",
   "_comment_ui_breed": "結緣字串（規格：結緣系統（配種）§H）。佔位符依規格出現順序為 {0}、{1}…",
+  "ui.opening.starter_child_hint": "宗室幼苗「{0}」已入宗族名冊～ 明年滿五歲就能入學府開蒙培育囉！",
   "ui.breed.confirm": "消耗 {0} 精力 {1} 與 {2} 精力 {3}，確認結緣？",
   "ui.breed.preg_status": "{0} 需調養待產 {1} 季（期間精力凍結、不能再結緣）；襁褓幼子已入宗族名冊",
   "ui.breed.child_born": "恭喜主公！{0} 與 {1} 喜獲 {2}！",

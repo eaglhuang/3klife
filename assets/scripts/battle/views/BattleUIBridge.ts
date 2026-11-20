@@ -74,6 +74,7 @@ import { planSkillCast } from '../shared/SkillCastPresentation';
 import { tileBuffBadgeOf, tileBuffDeltaText, tileBuffPickupIsDebuff, tileBuffPickupLogLine, tileBuffSourceFromDelta } from '../shared/TileBuffBadge';
 import { SkillNameBanner } from './SkillNameBanner';
 import { selectDuelExchanges } from '../shared/DuelPresentationCore';
+import { timeUpVerdictLine, type TimeUpVerdict } from "../../core/systems/TimeUpJudgement";
 import {
   BATTLE_FLOW_FX,
   playBattleFlowEffectAtBoardCenter,
@@ -1060,7 +1061,7 @@ export class BattleUIBridge {
     }, FIELD_AUTO_BATTLE_JOURNAL[kind], pgId ? [pgId] : []);
   }
 
-  private _onBattleEnded(data: { result: string; retreated?: boolean; timeUp?: boolean; cause?: string }): void {
+  private _onBattleEnded(data: { result: string; retreated?: boolean; timeUp?: boolean; cause?: string; timeUpVerdict?: TimeUpVerdict }): void {
     this._lastEndedPayload = { result: data.result, retreated: data.retreated, cause: data.cause };
     if (this.duelCapture) { this.duelCapture.ended = data; return; }
     const c = this.ctx;
@@ -1078,7 +1079,9 @@ export class BattleUIBridge {
     try { details = this._settleRosterBattle(data.result as BattleResult); }
     catch (error) { UCUFLogger.error(LogCategory.BATTLE, '[BattleUIBridge] 戰後結算寫回失敗，仍顯示結果彈窗', error); }
     // 回合用盡而獲勝（教學戰）：補一行說明，免得玩家不知道為什麼突然贏了
-    if (data.timeUp === true && data.result === 'player-win') details.unshift('敵軍久攻不下，鳴金退兵。');
+    // 依戰果判定（PROG-2-9423）：寫出雙方戰果百分比，玩家才知道差多少
+    if (data.timeUpVerdict) details.unshift(timeUpVerdictLine(data.timeUpVerdict, services().battle.getTimeUpJudgement()));
+    else if (data.timeUp === true && data.result === 'player-win') details.unshift('敵軍久攻不下，鳴金退兵。');
     void Promise.resolve(c.resultPopup?.showResult(data.result as any, details.length > 0 ? details.join('\n') : undefined, c.pg?.id, data.retreated === true, data.cause))
       .catch((error) => UCUFLogger.error(LogCategory.BATTLE, '[BattleUIBridge] 結果彈窗顯示失敗', error));
     c.boardRenderer?.clearDeployHint();

@@ -107,7 +107,9 @@ export function createDestinyPoolSuite(): TestSuite {
         const session = newSession();
         assert.equals(core, await startNewGameFromDestiny(session, 20261109, generals, state));
         assert.equals(core, session.leadGeneralId);
-        assert.equals([...state.rolled].sort().join(','), session.roster.map((g) => g.id).sort().join(','));
+        const adultIds = session.roster.filter((g) => g.id !== 'starter-royal-child').map((g) => g.id).sort().join(',');
+        assert.equals([...state.rolled].sort().join(','), adultIds);
+        assert.isTrue(session.roster.some((g) => g.id === 'starter-royal-child'));
     });
 
     suite.test('每位一般武將的資料都開得了局', async () => {
@@ -115,7 +117,7 @@ export function createDestinyPoolSuite(): TestSuite {
         const fillers = destinyFillerIds(generals);
         const session = newSession();
         await session.startNewGameWithStarters(1, generals, { coreGeneralId: 'zhang-fei', rosterIds: ['zhang-fei', ...fillers] });
-        assert.equals(fillers.length + 1, session.roster.length);
+        assert.equals(fillers.length + 2, session.roster.length);
     });
 
     suite.test('尚未鎖定不能開新局，名冊不被動到', async () => {
