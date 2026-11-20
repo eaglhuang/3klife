@@ -54,6 +54,8 @@ export interface EncounterConfig {
   theme?: string;
   /** 致命威脅標籤（例如騎兵衝擊）；戰前偵查面板的風險標籤（PROG-2-2076） */
   riskTags?: string[];
+  /** 敵軍開場布陣（PROG-2-9420）：開戰時在敵方後排生成；type 是 TroopType 字串，lane 從 0 起算 */
+  enemyInitialDeployment?: { type: string; lane: number }[];
 }
 
 /**

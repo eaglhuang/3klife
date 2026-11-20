@@ -87,6 +87,8 @@ export class BattleSceneFlow {
       enemyScale?.difficulty.difficultyBonus ?? 0,
     );
     if (enemyScale) ctrl.configureAiDifficulty(enemyScale.difficulty);
+    // 敵軍開場布陣（PROG-2-9420）：再戰一次也要擺回關卡預設的敵陣
+    if (!battleParams?.enemyDeployTroops?.length) ctrl.applyEnemyInitialDeployment(encounter?.enemyInitialDeployment);
     // 天氣排程（PROG-2-0401）：入口參數優先，沒有才用 encounter 設定
     const weatherSchedule = battleParams?.weatherSchedule ?? encounter?.weatherSchedule;
     if (weatherSchedule) ctrl.setWeatherSchedule(weatherSchedule);
