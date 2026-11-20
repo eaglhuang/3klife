@@ -10864,6 +10864,54 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9423",
+      "title": "瓦口隘 15 回合時限：時限到依戰果判勝負",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T13:18:55+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 11/20 裁決：瓦口隘加 15 回合時限，時限到依戰果判定勝負。總PM 尚未回覆『戰果』定義，先照戰場專家建議 A 實作：比雙方城寨＋主將的失血比例，打得重的一方勝，相同判我方敗；權重與平手歸屬抽 JSON，之後改 B／C 只需調整。目前關卡只有全域 30 回合上限，回合用盡一律判玩家撤退，瓦口隘這種峽谷消耗戰沒有節奏壓力。",
+      "related": [
+        "PROG-2-9414",
+        "PROG-2-9420",
+        "PROG-2-9422"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: in-progress | 驗證: pending | 變更: 待做 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
