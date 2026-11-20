@@ -458,7 +458,11 @@ export class BattleSkillDispatcher {
     if (pct === undefined) return;
     const general = this.resolveCasterGeneral(request);
     if (!general) return;
+    const before = general.vitality;
     general.vitality = spendUltimateVitality(general.vitality, general.maxVitality, pct);
+    if (general.vitality !== before) {
+      services().event.emit(EVENT_NAMES.GeneralVitalityChanged, { faction: general.faction, vitality: general.vitality, maxVitality: general.maxVitality, before });
+    }
   }
 
   /** 解析施放者所屬武將：有施放者單位用單位陣營；否則 ownerUid 本身即陣營（直接派發） */
@@ -543,7 +547,11 @@ export class BattleSkillDispatcher {
         // 對酒當歌（ULT-08 補缺）：精力回復取整數，封頂精力上限
         const general = state.getGeneral(faction);
         if (!general) return false;
+        const before = general.vitality;
         general.vitality = Math.min(general.maxVitality, general.vitality + Math.round(general.maxVitality * ratio));
+        if (general.vitality !== before) {
+          services().event.emit(EVENT_NAMES.GeneralVitalityChanged, { faction, vitality: general.vitality, maxVitality: general.maxVitality, before });
+        }
         return true;
       },
       getTerrain: (lane: number, depth: number) => state.getCell(lane, depth)?.terrain ?? TerrainType.Plain,

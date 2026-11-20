@@ -16024,5 +16024,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9431.md",
     "title": "[PROG-2-9431] 年終守城 §11 裁決落地",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2689",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9432.md",
+    "title": "[PROG-2-9432] 新版 HUD 雙方精力條＋扣減演出、規格門檻統一",
+    "category": "task"
   }
 ]

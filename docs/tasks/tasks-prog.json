@@ -11349,6 +11349,56 @@
     },
     {
       "doc_id": "",
+      "id": "PROG-2-9432",
+      "title": "新版 HUD 雙方精力條：4px、三段色與百分比、即時刷新與扣減演出；規格門檻統一為 50／10%",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-21T04:38:10+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 11/21 裁定：新版 HUD 精力條改 4px 並補敵方條，依 50／10% 門檻（武將壽命系統 doc_spec_0018）三段變色並顯示百分比，放招／回復／地形效果即時刷新，扣精力時有短暫數值變化演出；doc_spec_0397 §3 原寫 60／20% 改為 50／10%。",
+      "related": [
+        "PROG-2-9431",
+        "PROG-2-0429",
+        "PROG-2-1853"
+      ],
+      "depends": [
+        "PROG-2-9431"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8716 通過、tsc 兩組 0 錯、7456 實跑截圖（三段色、歸零灰化、張飛奧義 96%→86% 前後對照） | 變更: 新版 HUD 頂欄無主將血條，精力細條改掛武將名牌血量列正下方（GeneralVitalityStrip），雙方各一條；GeneralVitalityChanged 事件即時刷新；扣減閃白＋殘影＋脈動＋右側跳字；規格 §3 門檻改 50／10%、新增 §4 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
       "id": "PROG-2-9213",
       "title": "一年循環 MVP 切分（doc_spec_1182 第 12 章）與學府人源缺口方案（doc_spec_1179）",
       "owner": "ClaudeCode_sonnet-5-5",

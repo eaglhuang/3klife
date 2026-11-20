@@ -185,7 +185,11 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
   }
   const actingGeneral = context.state.getGeneral(context.actingFaction);
   if (actingGeneral && desertDrain > 0) {
+    const before = actingGeneral.vitality;
     actingGeneral.vitality = Math.max(0, actingGeneral.vitality - desertDrain);
+    if (actingGeneral.vitality !== before) {
+      svc.event.emit(EVENT_NAMES.GeneralVitalityChanged, { faction: context.actingFaction, vitality: actingGeneral.vitality, maxVitality: actingGeneral.maxVitality, before });
+    }
   }
 
   for (const dead of killed) {

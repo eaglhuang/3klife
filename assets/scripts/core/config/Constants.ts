@@ -230,6 +230,8 @@ export const EVENT_NAMES = {
   GeneralDamaged:    "general-damaged",
   GeneralDamagedVisualCommitted: "general-damaged-visual-committed",
   GeneralSpChanged:  "general-sp-changed",
+  /** 主將精力變化（PROG-2-9432）：payload { faction, vitality, maxVitality, before }，HUD 即時刷新精力條 */
+  GeneralVitalityChanged: "general-vitality-changed",
   GeneralSkillUsed:  "general-skill-used",
   LastSpurtEntered: "last-spurt-entered",
   StaminaExhausted: "stamina-exhausted",

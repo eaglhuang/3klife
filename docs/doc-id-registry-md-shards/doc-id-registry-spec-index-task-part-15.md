@@ -96,3 +96,4 @@
 | `doc_task_2686` | docs/agent-briefs/tasks/PROG/PROG-2-9430.md | [PROG-2-9430] 守城戰我方城寨血條＋年終守城正式規格書 |
 | `doc_task_2687` | docs/agent-briefs/tasks/PROG/PROG-2-9203.md | [PROG-2-9203] ITM-M 物品庫存 base 最小版：家庭倉庫與入學令 |
 | `doc_task_2688` | docs/agent-briefs/tasks/PROG/PROG-2-9431.md | [PROG-2-9431] 年終守城 §11 裁決落地 |
+| `doc_task_2689` | docs/agent-briefs/tasks/PROG/PROG-2-9432.md | [PROG-2-9432] 新版 HUD 雙方精力條＋扣減演出、規格門檻統一 |
