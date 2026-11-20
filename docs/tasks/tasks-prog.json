@@ -11057,6 +11057,54 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9427",
+      "title": "勝敗結算演出打磨：分出勝負先打勝利／敗北橫幅停一拍再開結算窗、結算窗卡片彈入、主將頭像預載不閃問號",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P2",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T21:58:36+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 11/20 指示 (c) 勝敗結算演出打磨。實機逐格截圖發現：敵將倒下後戰場沒有勝利提示，結算窗直接蓋上（只有棋盤中央 1 秒光環）；結算窗頭像先顯示問號剪影約 0.75 秒才換成主將。本卡：分出勝負時先打全畫面勝利／敗北／平手橫幅並停約 1.3 秒再開結算窗（主動撤退維持立即開窗）；結算窗卡片加縮放彈入；主將頭像在停頓期間預載，載入前不顯示剪影。",
+      "related": [
+        "PROG-2-9426",
+        "PROG-2-9424",
+        "PROG-2-1888"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: in-progress | 驗證: pending | 變更: 開卡 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
