@@ -104,6 +104,21 @@ export function addAcademyStatCapped(stats: AcademyStats, key: AcademyStatKey, d
     return applied;
 }
 
+/**
+ * 雙年開獎／結業印記專用種子（PROG-2-9182）：由入學根種子單向派生，與訓練路徑無關，
+ * 所以同一入學重修（即使訓練選擇不同）也重播同一份開獎骰值，無法靠換打法刷結果。
+ */
+function deriveInheritSeedHex(rootSeedHex: string): string {
+    const rng = new AcademyRng(rootSeedHex);
+    rng.nextUint32('inherit-marks-root');
+    return rng.seedHex;
+}
+
+/** 開獎專用 RNG：有 inheritSeedHex 時以事件鍵（回合）定位固定骰流；舊快照退回路徑種子鏈 */
+function inheritRngFor(state: AcademyStateSnapshot, eventKey: number, fallback: IDeterministicRng): IDeterministicRng {
+    return state.inheritSeedHex ? new AcademyRng(state.inheritSeedHex, eventKey) : fallback;
+}
+
 export function createAcademySnapshot(admission: AcademyAdmission, gimmick?: IAcademyGimmickHandler): AcademyStateSnapshot {
     const seed = deriveAcademyRootSeed(admission.worldSeed, admission.clanUuid, admission.childId, admission.academyId, admission.admissionTurn);
     return {
@@ -116,6 +131,7 @@ export function createAcademySnapshot(admission: AcademyAdmission, gimmick?: IAc
         controlMode: admission.controlMode ?? AcademyControlMode.MANUAL,
         prngSeedHex: seed,
         stepIndex: 0,
+        inheritSeedHex: deriveInheritSeedHex(seed),
         sessionCrashCounter: 0,
         stats: clampAcademyStats(admission.initialStats),
         learnedTactics: [],
@@ -307,7 +323,7 @@ function applyAncestralInheritAtTurn(state: AcademyStateSnapshot, turn: 12 | 24,
         midtermMissedBonus: missedMidterm,
         pinkStars: legacy.pinkStars ?? 0,
         pinkAptitudeTarget: legacy.pinkAptitudeTarget,
-    }, rng);
+    }, inheritRngFor(state, turn, rng));
     state.ancestralInheritHistory = [...history, record];
     if (!record.triggered) return;
     addAcademyStatCapped(state.stats, record.targetStat, record.statDelta);
@@ -348,7 +364,7 @@ function resolveInterrupt(state: AcademyStateSnapshot, optionId: string | undefi
                 academyId: state.academyId,
                 grade,
                 resonanceHits: state.resonanceHitCount ?? 0,
-            }, rng);
+            }, inheritRngFor(state, ACADEMY_TOTAL_TURNS, rng));
             if (state.graduatedCareerMark) {
                 state.chronicles.push({
                     turn: state.currentTurn,

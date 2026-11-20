@@ -81,6 +81,8 @@ export interface AcademyStateSnapshot {
     controlMode: AcademyControlMode;
     prngSeedHex: string;
     stepIndex: number;
+    /** 雙年開獎／結業印記專用種子（與訓練路徑無關，防重修刷結果，PROG-2-9182）；舊快照沒有此欄位 */
+    inheritSeedHex?: string;
     sessionCrashCounter: number;
     stats: AcademyStats;
     learnedTactics: string[];

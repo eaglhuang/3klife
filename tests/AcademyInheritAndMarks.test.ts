@@ -154,5 +154,33 @@ export function createAcademyInheritAndMarksSuite(): TestSuite {
         }
     });
 
+    suite.test('防刷：同一入學重修即使訓練打法不同，期中開獎與結業印記骰值相同', () => {
+        const run = (childId: string, stat: 'str' | 'int') => {
+            let state = createAcademySnapshot({
+                worldSeed: '20261120', clanUuid: 'clan-test', childId, academyId: AcademyId.LONGZHONG,
+                controlMode: AcademyControlMode.AUTO, initialStats: makeStats(140), admissionTurn: 1,
+            });
+            state.legacySupport = { statBonusPct: {}, traitSeeds: [], weightedBlueStars: 30, primaryStat: 'str' };
+            let safety = 0;
+            while (!state.graduated && safety < 200) {
+                safety += 1;
+                if (state.pendingInterrupt) {
+                    state = resolveAcademyAction(state, { actionType: 'RESOLVE_INTERRUPT', selectedOptionId: state.interruptOptions[0] });
+                } else if (state.energy >= 20) {
+                    state = resolveAcademyAction(state, { actionType: 'TRAIN', targetStat: stat });
+                } else {
+                    state = resolveAcademyAction(state, { actionType: 'REST' });
+                }
+            }
+            const first = state.ancestralInheritHistory![0];
+            return { first: JSON.stringify(first), hasMark: !!state.graduatedCareerMark };
+        };
+        for (let i = 0; i < 8; i++) {
+            const a = run(`retake-${i}`, 'str');
+            const b = run(`retake-${i}`, 'int');
+            assert.equals(a.first, b.first, `第 12 回合開獎結果應與打法無關 (child ${i})`);
+        }
+    });
+
     return suite;
 }
