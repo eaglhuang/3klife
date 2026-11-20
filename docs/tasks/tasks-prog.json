@@ -11248,6 +11248,56 @@
     },
     {
       "doc_id": "",
+      "id": "PROG-2-9430",
+      "title": "守城戰我方城寨血條（頂欄下方置中、掉血輕震、低血警示）＋年終守城正式規格書",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-21T02:12:27+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "PROG-2-9429 實跑發現新版 HUD 沒有城寨血條，守城威脅只能看戰報。總PM 11/21 核准：守城戰在頂欄下方顯示我方城寨血條（一般關卡不顯示），執行期建立、跟 FortressDamaged 更新。另補年終守城正式規格書（三檔敵軍、工兵投石、主將駐守、補派、折損扣兵源、失守懲罰、守城→年報→換年），登錄 doc-id 與索引，標明獎勵系統／物品庫存共用框架（doc_spec_1182）。",
+      "related": [
+        "PROG-2-9425",
+        "PROG-2-9426",
+        "PROG-2-9427"
+      ],
+      "depends": [
+        "PROG-2-9429"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試全過、tsc 0、7456 實跑守城開場滿條／掉血 455／剩 125 轉警示紅／一般關卡無血條 | 變更: 守城戰頂欄下方執行期建我方城寨血條（掉血輕震、三成以下轉紅）；新增年終守城戰規格書 doc_spec_1233 並登錄 doc-id 與 cross-ref | 阻塞: 無；規格第 11 節列 6 項待裁決（大敗定義、數值未入 JSON、年報位置、失守懲罰細項、補派上限、平手）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
       "id": "PROG-2-9213",
       "title": "一年循環 MVP 切分（doc_spec_1182 第 12 章）與學府人源缺口方案（doc_spec_1179）",
       "owner": "ClaudeCode_sonnet-5-5",

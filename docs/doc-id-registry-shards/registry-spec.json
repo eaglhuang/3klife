@@ -7222,5 +7222,11 @@
     "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-g.md",
     "title": "學府修業畫面與接線設計（分片索引） — 12 學府人源缺口方案（待決選擇題 Q13）",
     "category": "spec"
+  },
+  {
+    "id": "doc_spec_1233",
+    "path": "docs/遊戲規格文件/系統規格書/年終守城戰規格書.md",
+    "title": "年終守城戰規格書",
+    "category": "spec"
   }
 ]

@@ -87,5 +87,9 @@
 | `doc_task_2677` | docs/agent-briefs/tasks/PROG/PROG-2-9426.md | [PROG-2-9426] 年終守城流程：結束第 4 季強制開打、三檔敵軍依年度切換、最強鄰國主將來攻、不可重打 |
 | `doc_task_2678` | docs/agent-briefs/tasks/PROG/PROG-2-9427.md | [PROG-2-9427] 勝敗結算演出打磨：勝敗橫幅停一拍、結算窗彈入、頭像預載 |
 | `doc_task_2679` | docs/agent-briefs/tasks/PROG/PROG-2-9210.md | PROG-2-9210：學府規格追加共用框架依賴章與實作卡拆分建議 |
-| `doc_task_2680` | docs/agent-briefs/tasks/PROG/PROG-2-9213.md | [PROG-2-9213] 一年循環 MVP 切分（doc_spec_1182 第 12 章）與學府人源缺口方案（doc_spec_1179） |
+| `doc_task_2680` | docs/agent-briefs/tasks/PROG/PROG-2-9213.md | [PROG-2-9213] 一年循環 MVP 切分（doc_spec_1182 第 12 章）與學府人源缺口方案（doc_spec_1179 第 12 章） |
 | `doc_task_2681` | docs/agent-briefs/tasks/PROG/PROG-2-9428.md | [PROG-2-9428] AI 剋制兵種派到被剋兵種那一路 |
+| `doc_task_2682` | docs/agent-briefs/tasks/PROG/PROG-2-9196.md | [PROG-2-9196] 大廳背景預載動態加載優化（分幀限時、按需建構、不遮信箱、換場取消） |
+| `doc_task_2683` | docs/agent-briefs/tasks/PROG/PROG-2-9201.md | [PROG-2-9201] B0：共通 API 層＋本機伺服器 adapter＋存檔走 API＋防繞過自動檢查 |
+| `doc_task_2684` | docs/agent-briefs/tasks/PROG/PROG-2-9429.md | [PROG-2-9429] 守城張力：工兵投石、主將駐守、每回合補派工兵 |
+| `doc_task_2685` | docs/agent-briefs/tasks/PROG/PROG-2-9430.md | [PROG-2-9430] 守城戰我方城寨血條＋年終守城正式規格書 |
