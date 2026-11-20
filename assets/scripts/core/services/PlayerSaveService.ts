@@ -252,7 +252,7 @@ export interface PlayerSaveSnapshot {
     familySystemUnlocked?: boolean;
     /** 新玩家開場進行中的幕 id（PROG-2-1371）：讀檔後從該幕接續；開場結束或舊檔沒有時不寫入；版號不升 */
     openingPhase?: string;
-    /** 免費入學令已發放的最大登入日（YYYY-MM-DD，ITM-06 高水位）：只在有發過時寫入；回撥時鐘不重領（PROG-2-1374 修正） */
+    /** 已處理的最大登入日（YYYY-MM-DD 高水位）：舊稱免費入學令已發放日；入學令每日發放已退場（PROG-2-9206），欄位保留以相容舊存檔並供離線行為判斷 */
     enrollGrantDay?: string;
     /** 道具取得來源紀錄（ITM-05）；選填，舊檔沒有此欄位時來源視為 UNKNOWN，版號不升 */
     itemAcquisitionLog?: ItemAcquisitionRecord[];

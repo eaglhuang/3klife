@@ -16018,5 +16018,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9203.md",
     "title": "[PROG-2-9203] ITM-M 物品庫存 base 最小版：家庭倉庫與入學令",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2688",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9206.md",
+    "title": "[PROG-2-9206] 每日免費入學令退場，入學令只走季發（ITM-M 收尾）",
+    "category": "task"
   }
 ]
