@@ -29,6 +29,13 @@ export const API_COMMANDS = Object.freeze({
     'reward.claim': { kind: 'cmd', revGuard: false },
     'reward.pools': { kind: 'query', revGuard: false },
     'reward.pity': { kind: 'query', revGuard: false },
+    // 劇情（劇情演出 Base 規格 §11；STY-M 最小版）
+    'story.trigger': { kind: 'cmd', revGuard: false },
+    'story.choose': { kind: 'cmd', revGuard: false },
+    'story.available': { kind: 'query', revGuard: false },
+    'story.pending': { kind: 'query', revGuard: false },
+    'story.seen': { kind: 'query', revGuard: false },
+    'story.flags': { kind: 'query', revGuard: false },
     'save.load': { kind: 'query', revGuard: false },
     'save.rev': { kind: 'query', revGuard: false },
     'save.commit': { kind: 'cmd', revGuard: true },
@@ -197,6 +204,91 @@ export interface RewardPoolView {
 
 export interface RewardPoolsResult {
     pools: RewardPoolView[];
+}
+
+/**
+ * 劇情命令（規格 doc_spec_1188 §11；STY-M 最小版：trigger 合併了規格的 start，章節完成隨最後一次 choose／無選項劇本隨 trigger 結算）。
+ * 後果（獎勵、旗標）由權威端依劇本計算並先結算；客戶端只送「觸發哪份劇本、選了哪個選項」，不得帶 effects／flags／next。
+ * refId 是呼叫端的實例去重鍵（例如學府第 12 回合打斷＝`academy:Y1:12`）：同實例重送回原狀態、不再重算。
+ */
+export interface StoryTriggerArgs {
+    storyId: string;
+    refId?: string;
+    /** 宿主自訂選項 id（劇本的 choice 節點標 hostOptions 時用，例如弱冠禮的三選一戰法） */
+    options?: string[];
+}
+
+export interface StoryChooseArgs {
+    storyId: string;
+    refId?: string;
+    choiceId: string;
+    optionId: string;
+}
+
+export interface StoryCueView {
+    cue: string;
+    [field: string]: unknown;
+}
+
+export interface StoryOptionView {
+    id: string;
+    textKey: string | null;
+}
+
+/** 目前這一段要播的內容：cues 播完若 choice 非 null 就要玩家選 */
+export interface StoryStepView {
+    storyId: string;
+    instanceId: string;
+    cues: StoryCueView[];
+    choice: { choiceId: string; options: StoryOptionView[] } | null;
+    skippable: boolean;
+}
+
+export interface StoryTriggerResult extends StoryStepView {
+    /** completed＝無需選擇，已一次走完；active＝佇列第一個、可直接作答；queued＝排在更優先的劇本後面 */
+    status: 'completed' | 'active' | 'queued';
+    queuePosition: number;
+    /** 同實例重送回的是原狀態 */
+    replayed: boolean;
+}
+
+export interface StoryEffectResult {
+    kind: string;
+    nodeId: string;
+    detail: Record<string, unknown>;
+}
+
+export interface StoryChooseResult {
+    storyId: string;
+    instanceId: string;
+    choiceId: string;
+    /** 就是玩家送的 optionId */
+    selectedOptionId: string;
+    completed: boolean;
+    /** 還有下一段選擇時回下一段；completed 時為 null */
+    next: StoryStepView | null;
+    effects: StoryEffectResult[];
+    replayed: boolean;
+}
+
+export interface StoryAvailableEntry {
+    storyId: string;
+    kind: string;
+    priority: number;
+    interrupt: boolean;
+}
+
+export interface StoryPendingResult {
+    /** 依優先序排好；第 0 個是目前該處理的 */
+    queue: Array<StoryStepView & { priority: number; interrupt: boolean }>;
+}
+
+export interface StorySeenResult {
+    storyId: string;
+    seen: boolean;
+    count: number;
+    lastChoice: string | null;
+    at: number;
 }
 
 /** save.load：回完整快照；快照型別沿用 PlayerSaveSnapshot，契約層不依賴它所以為 unknown */

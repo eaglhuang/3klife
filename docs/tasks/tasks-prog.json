@@ -11887,6 +11887,75 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9208",
+      "title": "STY-M 劇情（演出）base 最小版：事件定義、選項、條件、打斷佇列與 story.trigger/choose/seen",
+      "owner": "ClaudeCode_sonnet-5-5",
+      "priority": "P0",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "ClaudeCode_sonnet-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "共用框架總綱 doc_spec_1182 第 12 章 STY-M／劇情演出規格 doc_spec_1188：事件定義 JSON、選項、條件(FND-M Condition)、已看紀錄與旗標、單一優先序打斷佇列、story.* 端點、選項後果走 reward.claim、最簡 popup/instant 演出 adapter；E34x 錯誤碼；學府打斷與結業文案改讀資料；另回寫 E31x/E32x/E33x/E34x 錯誤碼分段到 1182/1184/1186/1188 規格",
+      "related": [
+        "PROG-2-9200",
+        "PROG-2-9205"
+      ],
+      "depends": [
+        "PROG-2-9201",
+        "PROG-2-9202",
+        "PROG-2-9205"
+      ],
+      "acceptance": [
+        "story.trigger/choose/seen 契約與冪等測試",
+        "單一優先序打斷佇列測試",
+        "選項後果走 reward.claim",
+        "學府打斷與結業文案改讀 story-config.json",
+        "選項 id 即 selectedOptionId",
+        "tsc 0",
+        "compute-gate standard 通過",
+        "棘輪基準只減不增",
+        "網頁 playtest 11/11",
+        "錯誤碼分段回寫規格"
+      ],
+      "deliverables": [
+        "shared/story/{StoryConfig",
+        "StoryRules",
+        "StoryPresentation}.ts",
+        "core/api/localserver/StoryCommands.ts",
+        "assets/resources/data/story-config.json",
+        "tests/StoryBase.test.ts"
+      ],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 單元 8771 全綠、tsc test 0、playtest 11/11 console error 0、棘輪 132 不增 | 變更: story.trigger/choose/seen+available/pending/flags、E340~E348、story-config 資料、學府打斷與結業文案資料化、E31x~E34x 寫回 1182/1184/1186/1188（三份分片）| 阻塞: 無；學府畫面截圖待 9192 qaAcademy",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
