@@ -59,6 +59,15 @@ import { DuelExchange } from '../shared/DuelPresentationCore';
 import { BATTLE_VISUAL_TIMING, buildHitShakeSteps, planHitFeedback, planMoveSegment } from "./BattlePresentationTiming";
 import { BuffGainEffectPool } from "./effects/BuffGainEffectPool";
 import { statBonusTone, statWithBonusText, type StatBonusTone } from "../shared/StatBonusText";
+import {
+  ATTACK_SURGE_GOLD,
+  ATTACK_SURGE_RED,
+  DEFAULT_ATTACK_SURGE_CONFIG,
+  attackSurgeTier,
+  parseAttackSurgeConfig,
+  type AttackSurgeConfig,
+  type AttackSurgeTier,
+} from "../shared/AttackSurgeHighlight";
 import { hpChipOnChange, stepHpChip, unitHpBarState, type HpChipState, type UnitHpBarState } from "../shared/UnitHpBar";
 import { unitValueFloatType } from "../shared/DamageFloatType";
 import { UnitStatusIconBar, StatusHaloPool } from "./UnitStatusIconBar";
@@ -108,6 +117,8 @@ interface UnitView {
   statusKinds: StatusIconKind[] | null;
   /** 外部（如踩到地形 buff 格）要求下一次刷新時補播彈出＋光環：'buff' | 'debuff' */
   pendingStatusPulse: 'buff' | 'debuff' | null;
+  /** 攻擊 ≥ 紅色門檻時，攻擊數字後方的脈動光環（PROG-2-9422）；第一次需要時才建立，之後重用 */
+  surgeGlow?: Node;
   troopType: TroopType;
   usingTroopFormation: boolean;
   usingGeneralPawn?: boolean;
@@ -231,6 +242,10 @@ export class UnitRenderer extends Component {
   private readonly generalViews = new Map<Faction, GeneralView>();
   /** 腳下光環節點池（PROG-2-9399），第一次需要時才建立 */
   private statusHalos: StatusHaloPool | null = null;
+  /** 高倍率攻擊提示門檻（PROG-2-9422）；載入 data/attack-surge-highlight 前先用預設 */
+  private attackSurgeConfig: AttackSurgeConfig = { ...DEFAULT_ATTACK_SURGE_CONFIG };
+  private readonly attackSurgeGoldColor = new Color(ATTACK_SURGE_GOLD.r, ATTACK_SURGE_GOLD.g, ATTACK_SURGE_GOLD.b, ATTACK_SURGE_GOLD.a);
+  private readonly attackSurgeRedColor = new Color(ATTACK_SURGE_RED.r, ATTACK_SURGE_RED.g, ATTACK_SURGE_RED.b, ATTACK_SURGE_RED.a);
   private readonly arrowShots = new ArrowShotView(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   private readonly slashShots = new SlashShotView(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   /** PROG-2-9407：落腳揚塵粒子，畫在 2D 疊層、單位後面（粒子池有上限，見 MoveDustEmitter） */
@@ -284,6 +299,7 @@ export class UnitRenderer extends Component {
     }
     // fire-and-forget: 特效 Pool 初始化是非同步（需載入資源），不阻塞主流程
     void this.setupAllEffectPools();
+    void this.loadAttackSurgeConfig();
   }
 
   public renderState(state: BattleState): void {
@@ -306,6 +322,7 @@ export class UnitRenderer extends Component {
 
     this.unitViews.forEach((view, unitId) => {
       if (!activeIds.has(unitId) && !this.dyingUnits.has(unitId)) {
+        if (view.surgeGlow) this.stopAttackSurgeGlow(view.surgeGlow);
         view.worldNode.destroy();
         view.labelNode.destroy();
         this.spineUnits.remove(unitId);
@@ -555,6 +572,7 @@ export class UnitRenderer extends Component {
       .call(() => {
         services().material.releaseUnit(`${unitId}_body`);
         services().material.releaseUnit(`${unitId}_accent`);
+        if (view.surgeGlow) this.stopAttackSurgeGlow(view.surgeGlow);
         view.worldNode.destroy();
         view.labelNode.destroy();
         this.unitViews.delete(unitId);
@@ -1108,6 +1126,88 @@ export class UnitRenderer extends Component {
     label.overflow = Label.Overflow.SHRINK;
   }
 
+  /** 讀高倍率攻擊提示門檻；讀不到就沿用預設（不影響戰鬥） */
+  private async loadAttackSurgeConfig(): Promise<void> {
+    try {
+      const raw = await services().resource.loadJson<unknown>("data/attack-surge-highlight", { tags: ["battle"] });
+      this.attackSurgeConfig = parseAttackSurgeConfig(raw);
+    } catch {
+      this.attackSurgeConfig = { ...DEFAULT_ATTACK_SURGE_CONFIG };
+    }
+  }
+
+  private attackSurgeColor(tier: Exclude<AttackSurgeTier, "none">): Color {
+    return tier === "red" ? this.attackSurgeRedColor : this.attackSurgeGoldColor;
+  }
+
+  /**
+   * 紅色門檻的脈動光環：數字後方一圈紅色柔光，慢速放大縮回並明暗呼吸。
+   * 只在開／關切換時動 tween，同一狀態重複刷新不重建。
+   */
+  private applyAttackSurgeGlow(view: UnitView, on: boolean): void {
+    const existing = view.surgeGlow;
+    if (!on) {
+      if (existing && existing.active) this.stopAttackSurgeGlow(existing);
+      return;
+    }
+    if (existing && existing.active) return;
+    const glow = existing ?? this.createAttackSurgeGlow(view);
+    if (!glow) return;
+    const opacity = glow.getComponent(UIOpacity) ?? glow.addComponent(UIOpacity);
+    glow.active = true;
+    glow.setScale(1, 1, 1);
+    opacity.opacity = 210;
+    const half = Math.max(0.2, this.attackSurgeConfig.pulsePeriodSec / 2);
+    tween(glow)
+      .repeatForever(tween(glow)
+        .to(half, { scale: new Vec3(1.22, 1.22, 1) }, { easing: "sineInOut" })
+        .to(half, { scale: new Vec3(0.96, 0.96, 1) }, { easing: "sineInOut" }))
+      .start();
+    tween(opacity)
+      .repeatForever(tween(opacity)
+        .to(half, { opacity: 70 }, { easing: "sineInOut" })
+        .to(half, { opacity: 210 }, { easing: "sineInOut" }))
+      .start();
+  }
+
+  private stopAttackSurgeGlow(glow: Node): void {
+    Tween.stopAllByTarget(glow);
+    const opacity = glow.getComponent(UIOpacity);
+    if (opacity) Tween.stopAllByTarget(opacity);
+    glow.active = false;
+  }
+
+  /**
+   * 光環畫在攻擊數字那一格的最底層：內部深色底讓紅字看得清楚，外圈三道由內而外漸淡的紅邊，
+   * 呼吸時像一圈往外擴散的紅光。（實機發現整片紅色柔光會把紅字吃掉，所以內部不鋪紅）
+   */
+  private createAttackSurgeGlow(view: UnitView): Node | null {
+    const segment = view.attackLabel.node.parent;
+    if (!segment || !isValid(segment)) return null;
+    const tf = segment.getComponent(UITransform);
+    const w = tf?.width ?? 60;
+    const h = tf?.height ?? 28;
+    const node = new Node("AttackSurgeGlow");
+    node.layer = segment.layer;
+    segment.insertChild(node, 0);
+    node.addComponent(UITransform).setContentSize(w + 20, h + 16);
+    const g = node.addComponent(Graphics);
+    g.fillColor = new Color(24, 8, 8, 200);
+    g.roundRect(-w / 2 - 2, -h / 2 - 2, w + 4, h + 4, (h / 2 + 2) * 0.85);
+    g.fill();
+    const rings: ReadonlyArray<readonly [number, number]> = [[3, 240], [7, 130], [11, 60]];
+    for (const [pad, alpha] of rings) {
+      g.lineWidth = 3;
+      g.strokeColor = new Color(255, 70, 60, alpha);
+      // 圓角半徑略小於半高：剛好等於半高時兩端描邊會冒出尖角
+      g.roundRect(-w / 2 - pad, -h / 2 - pad, w + pad * 2, h + pad * 2, (h / 2 + pad) * 0.85);
+      g.stroke();
+    }
+    node.addComponent(UIOpacity);
+    view.surgeGlow = node;
+    return node;
+  }
+
   private statToneColor(tone: StatBonusTone): Color {
     if (tone === "up") return new Color(110, 255, 120, 255);
     if (tone === "down") return new Color(255, 120, 110, 255);
@@ -1625,7 +1725,10 @@ export class UnitRenderer extends Component {
     view.attackLabel.string = statWithBonusText(unit.getEffectiveAttack(), attackBonus, isGeneral ? "攻 " : "");
     view.typeLabel.string = isGeneral ? "將" : this.toTroopShortName(unit.type);
     view.hpLabel.string = statWithBonusText(Math.max(0, unit.currentHp), hpBonus, isGeneral ? "命 " : "");
-    view.attackLabel.color = this.statToneColor(statBonusTone(attackBonus));
+    // PROG-2-9422（Q-C1 選 A）：攻擊疊到 2 倍以上變金、4 倍以上變紅加脈動光環，敵我都適用
+    const surgeTier = attackSurgeTier(unit.getEffectiveAttack(), unit.attack, this.attackSurgeConfig);
+    view.attackLabel.color = surgeTier === "none" ? this.statToneColor(statBonusTone(attackBonus)) : this.attackSurgeColor(surgeTier);
+    this.applyAttackSurgeGlow(view, surgeTier === "red");
     view.hpLabel.color = this.statToneColor(statBonusTone(hpBonus));
     view.troopType = unit.type;
     view.labelOpacity.opacity = 255;

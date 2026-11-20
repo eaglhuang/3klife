@@ -10823,7 +10823,7 @@
       "title": "高倍率攻擊視覺提示：≥2 倍金字、≥4 倍紅字＋脈動光環（Q-C1 選 A）",
       "owner": "claude-code-fable-5-2",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-20",
@@ -10842,7 +10842,7 @@
       "depends": [],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-20 | 狀態: in-progress | 驗證: pending | 變更: 待做 | 阻塞: 無",
+      "notes": "2026-11-20 | 狀態: done | 驗證: 單元測試 8526 通過、tsc 0、compute-gate 12/13、7456 實機截圖、六關回歸 0 錯誤 | 變更: 攻擊 ≥2 倍金字、≥4 倍紅字＋呼吸光環，門檻抽 data/attack-surge-highlight.json | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
