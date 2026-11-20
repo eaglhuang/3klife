@@ -11,6 +11,7 @@ import type { SkinSlot } from '../core/UISpecTypes';
 import type { RivalRostersConfig } from '../../core/systems/RivalOfficers';
 import { buildRivalOfficerSetup, type RivalOfficerSetupInput, type RivalSetupGeneral } from '../../core/systems/RivalOfficerSetup';
 import { inspiredTacticName } from '../../core/systems/InspiredTacticMap';
+import { skillNameOf } from '../../core/systems/skill/SkillCatalog';
 import { parseLimitedPoolWindows } from '../../core/systems/LimitedPoolSchedule';
 import { expandLimitedPoolRotations, parseLimitedPoolRotations } from '../../core/systems/LimitedPoolRotation';
 import { _decorator, BlockInputEvents, Button, Canvas, Color, Component, director, instantiate, JsonAsset, Label, Mask, Node, Sprite, sys, UITransform, Widget, resources, input, Input, EventKeyboard, KeyCode } from 'cc';
@@ -1553,7 +1554,7 @@ export class LobbyScene extends Component {
             graduate: (generalId, snapshot) => services().session.graduateFromAcademy(generalId, snapshot),
             view: () => ({
                 lookup: (key: string): string => services().i18n.t(key),
-                tacticName: (id) => this._academyTacticNames?.get(id) ?? inspiredTacticName(id),
+                tacticName: (id) => skillNameOf(id) ?? this._academyTacticNames?.get(id) ?? inspiredTacticName(id),
             }),
             toast: (message) => { services().event.emit('SHOW_TOAST', { message, duration: 2.5 }); },
         });
@@ -1614,7 +1615,8 @@ export class LobbyScene extends Component {
     /**
      * 修業結業後結算（PROG-2-9211，暫行，PROG-2-9191 取代）：寫回武將、清修業紀錄（graduateFromAcademy 內一次存檔），
      * 開結業結算彈窗。失敗時保留紀錄（不凍結外界時間），下次進大廳會再補一次。
-     * TODO(PROG-2-9201 共通 API 層合併後)：結算改走共通 API。
+     * 新學戰法已改走 skill.grant（PROG-2-9204，在 GameSession.graduateFromAcademy 內）；戰法顯示名取自技能定義庫。
+     * TODO(PROG-2-9191)：整段結算改走 task.settle → reward.grant → skill.grant 單一交易。
      */
     private async _settleAcademyGraduation(snapshot: Readonly<AcademyStateSnapshot>): Promise<void> {
         if (this._academyGraduating) return;

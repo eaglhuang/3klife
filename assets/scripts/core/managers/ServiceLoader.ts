@@ -279,6 +279,9 @@ export class ServiceLoader {
         // 共通 API（PROG-2-9201）：存檔寫入與讀取都走本機伺服器 adapter 的 save.* 命令；GameSession 不直接碰存檔後端
         this.localApi = createLocalApi(new PlayerSaveService(storageAdapter));
         this.localApi.setWallet(this.walletAuthority);
+        // 技能命令（PROG-2-9204）：持有與學習權威由 GameSession 提供，結業戰法經 skill.grant 寫入
+        this.localApi.setSkillHost(this.session.skillHost);
+        this.session.setSkillApi(this.localApi.api);
         this.session.setSaveService(new ApiSaveGateway(this.localApi.api));
         // 退役 / 死亡歸檔 / 季結排程與存檔共用同一個儲存後端（key 不同，不會互蓋）
         this.legacy = new LegacyService(storageAdapter);

@@ -72,7 +72,12 @@ export function academyGradeOf(statTotal: number): AcademyGrade {
 }
 
 /** 結業寫回；快照未結業或不屬於該武將時拋錯，輸入物件不會被改動 */
-export function applyAcademyGraduation(general: Readonly<GeneralConfig>, snapshot: Readonly<AcademyStateSnapshot>): AcademyGraduationResult {
+export function applyAcademyGraduation(
+    general: Readonly<GeneralConfig>,
+    snapshot: Readonly<AcademyStateSnapshot>,
+    /** tacticsGrantedBySkillApi：戰法由技能 API（skill.grant）寫入持有，這裡只算 newTactics、不改 learnedTactics（PROG-2-9204） */
+    options: { tacticsGrantedBySkillApi?: boolean } = {},
+): AcademyGraduationResult {
     if (!snapshot.graduated) throw new AcademyGraduationError('學府尚未結業');
     if (snapshot.childId !== general.id) throw new AcademyGraduationError(`快照屬於 ${snapshot.childId}，不是 ${general.id}`);
     const next = JSON.parse(JSON.stringify(general)) as GeneralConfig;
@@ -84,7 +89,7 @@ export function applyAcademyGraduation(general: Readonly<GeneralConfig>, snapsho
     }
     const known = next.learnedTactics ?? [];
     const newTactics = snapshot.learnedTactics.filter((t, i, arr) => arr.indexOf(t) === i && known.indexOf(t) < 0);
-    next.learnedTactics = [...known, ...newTactics];
+    if (!options.tacticsGrantedBySkillApi) next.learnedTactics = [...known, ...newTactics];
     const knownTraits = next.learnedTraits ?? [];
     const traits = snapshot.learnedTraits.filter((t, i, arr) => arr.indexOf(t) === i && knownTraits.indexOf(t) < 0);
     next.learnedTraits = [...knownTraits, ...traits];
