@@ -16018,5 +16018,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9203.md",
     "title": "[PROG-2-9203] ITM-M 物品庫存 base 最小版：家庭倉庫與入學令",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2688",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9431.md",
+    "title": "[PROG-2-9431] 年終守城 §11 裁決落地",
+    "category": "task"
   }
 ]

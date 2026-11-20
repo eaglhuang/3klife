@@ -53,7 +53,7 @@
 | 時限判定 | 撐滿回合上限，一律判守方（玩家）勝（`timeUpRule = player-win`）。 | PROG-2-9425 |
 | 勝 | 撐滿 12 回合；或玩家打過去擊殺來攻主將（提早獲勝）。 | PROG-2-9425；PROG-2-9429 Q2 |
 | 敗（失守） | 我方城寨血量歸 0。 | PROG-2-9425 |
-| 大敗 | 失守且我方主將倒下（`defenseOutcomeOf` → `rout`）。 | PROG-2-9425（待總PM確認，見第 11 節） |
+| 大敗 | 失守且我方主將倒下（`defenseOutcomeOf` → `rout`）。 | PROG-2-9425（待使用者裁決，建議版見第 11 節） |
 | 結果分級 | `victory`／`draw`／`defeat`／`rout`；`draw` 只在非守城時限規則的遭遇可能出現。 | DefenseBattle.ts |
 | 一般關卡 | 城寨血量不動。 | PROG-2-9429 |
 

@@ -1,7 +1,11 @@
 {
-  "_comment": "PROG-2-9425：守城戰（遭遇 battleKind='defense'，玩家是守方）。撐滿 turnLimit 回合即勝（遭遇自己設了 turnLimit 時以遭遇為準）；勝利照一般勝利給戰利品，另加 moraleOnVictory 民心。敗只扣民心、大敗再扣人口，數值在 CityEconomy（applyDefenseDefeat）。使用者 11/20 裁決。 PROG-2-9429（使用者 11/21 裁決）：守城敵方工兵每隊每回合投石扣城寨 engineerBombardDamage；敵方每回合補派 engineerReinforcePerTurn 隊工兵到我方部隊最少的路。開局工兵數在 encounters.json（一檔 3、二檔 4、三檔 5）。",
+  "_comment": "PROG-2-9425：守城戰（遭遇 battleKind='defense'，玩家是守方）。撐滿 turnLimit 回合即勝（遭遇自己設了 turnLimit 時以遭遇為準）；勝利照一般勝利給戰利品，另加 moraleOnVictory 民心。敗只扣民心、大敗再扣人口，數值在 CityEconomy（applyDefenseDefeat）。使用者 11/20 裁決。 PROG-2-9429（使用者 11/21 裁決）：守城敵方工兵每隊每回合投石扣城寨 engineerBombardDamage；敵方每回合補派 engineerReinforcePerTurn 隊工兵到我方部隊最少的路。開局工兵數在 encounters.json（一檔 3、二檔 4、三檔 5）。 PROG-2-9431（總PM 11/21 裁決）：engineerReinforceMax 整場補派工兵總隊數上限（模擬選 5：一檔每回合清 1 隊可守住、二三檔要清 2 隊）；fortressMaxHp 我方城寨上限；defeatMoraleDelta 失守民心；routPopulationLossRatio 大敗人口損失比例。",
   "turnLimit": 12,
   "moraleOnVictory": 2,
   "engineerBombardDamage": 15,
-  "engineerReinforcePerTurn": 1
+  "engineerReinforcePerTurn": 1,
+  "engineerReinforceMax": 5,
+  "fortressMaxHp": 500,
+  "defeatMoraleDelta": -3,
+  "routPopulationLossRatio": 0.03
 }

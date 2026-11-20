@@ -17,7 +17,7 @@ export interface IBattleHUDLike {
     /** 玩家精力條（FORM-11）；舊 HUD 不實作 */
     setPlayerVitality?(vitality: number, maxVitality: number): void;
     /** 守城戰我方城寨血條（PROG-2-9430）；只有玩家是守方時開啟；舊 HUD 不實作 */
-    setDefenseFortressBarVisible?(visible: boolean): void;
+    setDefenseFortressBarVisible?(visible: boolean, maxHp?: number): void;
     setEnemyName(name: string): void;
     refresh(turn: number, food: number, maxFood: number, playerHp: number, playerMaxHp: number, enemyHp: number, enemyMaxHp: number): void;
     waitUntilReady(timeoutMs?: number): Promise<boolean>;

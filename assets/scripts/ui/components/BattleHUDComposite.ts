@@ -61,6 +61,7 @@ export class BattleHUDComposite extends CompositePanel {
     private _buildCompleted = false;
     private _rootNode: Node | null = null;
     private _defenseBarVisible = false;
+    private _defenseBarMaxHp = FORTRESS_MAX_HP;
     private _defenseBarNode: Node | null = null;
     private _defenseBarFill: Node | null = null;
     private _defenseBarLabel: Label | null = null;
@@ -292,8 +293,10 @@ export class BattleHUDComposite extends CompositePanel {
      * 一般關卡不顯示。畫面未建好前只記旗標，建好後補畫。
      * Unity 對照：依關卡模式 SetActive 一條 Slider。
      */
-    public setDefenseFortressBarVisible(visible: boolean): void {
+    public setDefenseFortressBarVisible(visible: boolean, maxHp?: number): void {
         this._defenseBarVisible = visible;
+        // 守城城寨上限讀 data/defense-battle（PROG-2-9431）；沒給用預設 500
+        this._defenseBarMaxHp = maxHp !== undefined && Number.isFinite(maxHp) && maxHp > 0 ? maxHp : FORTRESS_MAX_HP;
         this._renderDefenseFortressBar(false);
     }
 
@@ -660,11 +663,11 @@ export class BattleHUDComposite extends CompositePanel {
         const node = this._defenseBarNode!;
         node.active = true;
         bringNodeToFront(node);
-        const ratio = fortressBarRatio(this._playerFortressHp);
+        const ratio = fortressBarRatio(this._playerFortressHp, this._defenseBarMaxHp);
         this._setBarFillRatio(this._defenseBarFill, DEFENSE_BAR_WIDTH, ratio);
         const fillBg = this._defenseBarFill?.getComponent(SolidBackground);
         if (fillBg) fillBg.color = ratio <= DEFENSE_FORTRESS_WARN_RATIO ? DEFENSE_BAR_WARN_COLOR : PLAYER_FORTRESS_FILL_COLOR;
-        if (this._defenseBarLabel) this._defenseBarLabel.string = defenseFortressBarText(this._playerFortressHp);
+        if (this._defenseBarLabel) this._defenseBarLabel.string = defenseFortressBarText(this._playerFortressHp, this._defenseBarMaxHp);
         if (dropped) {
             Tween.stopAllByTarget(node);
             node.setScale(1.08, 1.08, 1);

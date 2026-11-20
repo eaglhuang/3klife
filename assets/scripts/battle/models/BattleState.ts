@@ -122,6 +122,10 @@ export class BattleState {
   public enemyGeneral: GeneralUnit | null = null;
   public playerFortressHp = FORTRESS_MAX_HP;
   public enemyFortressHp = FORTRESS_MAX_HP;
+  /** 我方城寨上限；守城戰改讀 data/defense-battle 的 fortressMaxHp（PROG-2-9431） */
+  public playerFortressMaxHp = FORTRESS_MAX_HP;
+  /** 守城戰本場已補派的工兵隊數，用來卡整場上限（PROG-2-9431） */
+  public defenseEngineersReinforced = 0;
   /** 水攻淹沒前各格的原地形（key = "lane,depth"），重算範圍時用來還原（PROG-2-0407） */
   public readonly floodOriginalTerrain = new Map<string, TerrainType>();
   /** 營曜天氣（影響戰場修正預留欄位） */
@@ -230,6 +234,8 @@ export class BattleState {
     this.enemyGeneral  = enemyGeneral;
     this.playerFortressHp = FORTRESS_MAX_HP;
     this.enemyFortressHp  = FORTRESS_MAX_HP;
+    this.playerFortressMaxHp = FORTRESS_MAX_HP;
+    this.defenseEngineersReinforced = 0;
     this.weather     = weather     ?? Weather.Clear;
     this.weatherSchedule = [];
     this.battleTactic = battleTactic ?? BattleTactic.Normal;
