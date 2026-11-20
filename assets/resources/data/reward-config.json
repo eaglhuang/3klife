@@ -1,0 +1,20 @@
+{
+  "schema": "reward-config.v1",
+  "pools": [],
+  "bundles": [
+    {
+      "id": "BUNDLE_MILESTONE_KILL_100",
+      "kind": "reward",
+      "effects": [{ "kind": "item", "itemId": "ITEM_BATTLE_NOTE", "qty": 1, "itemSource": "TASK" }],
+      "sources": ["milestone"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_MILESTONE_KILL_1000",
+      "kind": "reward",
+      "effects": [{ "kind": "item", "itemId": "ITEM_BATTLE_NOTE", "qty": 3, "itemSource": "TASK" }],
+      "sources": ["milestone"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    }
+  ]
+}

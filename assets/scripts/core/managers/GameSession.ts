@@ -160,6 +160,8 @@ import { buildHallStageFeed, type HallStageFeed, type HallStageProfile } from '.
 import type { HallVolunteerTask } from '../systems/HallVolunteer';
 import type { SessionSaveService } from '../api/localserver/ApiSaveGateway';
 import type { ItemAuthority, StockTable } from '../api/localserver/ItemCommands';
+import type { RewardAuthority } from '../api/localserver/RewardCommands';
+import { emptyRewardMeta, isEmptyRewardMeta, normalizeRewardMeta, type RewardMeta } from '../../shared/reward/RewardRules';
 import type { IApiClient } from '../../shared/api/IApiClient';
 import { isApiFail } from '../../shared/api/ApiProtocol';
 import { ADMISSION_SEASON_RULE_ID, DEFAULT_CONTAINER_ID, type HolderRef } from '../../shared/item/ItemConfig';
@@ -291,7 +293,7 @@ import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, getTact
 import { EMPTY_PERFORMANCE, type BattlePerformance, type BattleRecordLike } from '../systems/BattleRecordStats';
 import { buildBattleSnapshot, type BattleSnapshot } from '../systems/BattleSnapshot';
 import { leaderboardEntryOf, rankLeaderboard, type LeaderboardMetric, type LeaderboardEntry } from '../systems/BattleLeaderboard';
-import { grantTacticNotes, rewardsForMilestones } from '../systems/MilestoneRewards';
+import { hasTacticNoteReward, milestoneBundleId } from '../systems/MilestoneRewards';
 import { awakenHiddenFactors } from '../systems/HiddenFactorAwakening';
 import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonCapacityOf, prisonYieldOneSeason, resolvePowDecision, rollFutureReturns, rollPrisonTreasureDonors, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
 import { createFemaleSource, normalizeFemaleSource, normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
@@ -905,6 +907,10 @@ export class GameSession implements AcademyRecordPort {
     private _itemMeta: ItemMeta = emptyItemMeta();
     /** 共通 API 入口（PROG-2-9203）：季結的入學令發放走 item.settlePeriodic；沒綁（純邏輯測試）就不發 */
     private _itemApi: IApiClient | null = null;
+    /** 獎勵 base 的持久化狀態（亂數會話、保底計數、發放紀錄，PROG-2-9205）；舊檔缺值為空 */
+    private _rewardMeta: RewardMeta = emptyRewardMeta();
+    /** 共通 API 入口（PROG-2-9205）：戰後里程碑獎勵走 reward.claim；沒綁（純邏輯測試）就退回不發 */
+    private _rewardApi: IApiClient | null = null;
     /** 結緣成功的本機端紀錄（BRD-12）；隨既有玩家存檔保存（PROG-2-1146） */
     private _breedingBirthRecords: BreedingBirthRecord[] = [];
     /** 世家系統解鎖旗標（PM 暫定）：第一位子嗣誕生時寫入；舊檔以出生紀錄推導。 */
@@ -2033,6 +2039,29 @@ export class GameSession implements AcademyRecordPort {
     }
 
     /**
+     * 戰後里程碑的戰法筆記（PROG-2-9205 遷移示範）：每個「武將×里程碑」領一次獎勵套件，經 reward.claim 入帳。
+     * grantKey 讓重送冪等；API 失敗只記警告不擋戰後結算（里程碑已寫進戰績，不會再次觸發，屬可接受的極端情況，列入待決）。
+     */
+    private async _claimMilestoneNotes(entries: ReadonlyArray<{ generalId: string; newMilestones: readonly string[] }>): Promise<void> {
+        if (!this._rewardApi) return;
+        for (const entry of entries) {
+            for (const milestoneId of entry.newMilestones) {
+                if (!hasTacticNoteReward(milestoneId)) continue;
+                try {
+                    const res = await this._rewardApi.cmd('reward.claim', {
+                        bundleId: milestoneBundleId(milestoneId),
+                        grantKey: `milestone:${entry.generalId}:${milestoneId}`,
+                        source: { kind: 'milestone', ref: milestoneId },
+                    });
+                    if (isApiFail(res)) console.warn(`[GameSession] 里程碑獎勵領取失敗 ${milestoneId} ${res.errorCode} ${res.message}`);
+                } catch (error) {
+                    console.warn('[GameSession] 里程碑獎勵領取例外', error);
+                }
+            }
+        }
+    }
+
+    /**
      * 玩家庫存表的唯一寫入口（PROG-2-9203）：舊玩法路徑與物品庫存 base 的家庭倉庫 port 共用，
      * 之後要掛稽核或事件只改這一處。傳入的表要是新物件（PlayerInventory 不可變）。
      */
@@ -2088,6 +2117,19 @@ export class GameSession implements AcademyRecordPort {
     /** 綁共通 API（PROG-2-9203）：季結的定期物品發放經它走 item.settlePeriodic */
     public setItemApi(api: IApiClient | null): void {
         this._itemApi = api;
+    }
+
+    /** 綁共通 API（PROG-2-9205）：戰後里程碑獎勵經它走 reward.claim */
+    public setRewardApi(api: IApiClient | null): void {
+        this._rewardApi = api;
+    }
+
+    /** 獎勵 base 的權威狀態 port（PROG-2-9205）：亂數會話、保底、發放紀錄隨存檔 rewardMeta 保存 */
+    public rewardAuthority(): RewardAuthority {
+        return {
+            meta: () => this._rewardMeta,
+            setMeta: (meta) => { this._rewardMeta = meta; },
+        };
     }
 
     /**
@@ -2262,6 +2304,7 @@ export class GameSession implements AcademyRecordPort {
         this._legacyCount = 0;
         this._legendaryMentoringUsedIds = [];
         this._itemMeta = emptyItemMeta();
+        this._rewardMeta = emptyRewardMeta();
         this._breedingBirthRecords = [];
         this._familySystemUnlockedFlag = false;
         this._openingPhase = null;
@@ -6025,16 +6068,13 @@ export class GameSession implements AcademyRecordPort {
             vitalityAfterBattle: options.vitalityAfterBattle,
         });
         // 新達成的里程碑發獎勵（千人斬等戰法筆記，GEN-13 / PROG-2-0817）；每個里程碑只在首次達成時發
-        const milestoneRewards = settlement.entries.flatMap((entry) => rewardsForMilestones(entry.newMilestones));
-        if (settlement.entries.length > 0) {
+                if (settlement.entries.length > 0) {
             const battleId = `B${++this._battleSerial}`;
             const battleDate = `${this.gameTime.currentYear}Q${this.gameTime.currentSeason}`;
             this._lastBattleSnapshots = settlement.entries.map((entry) =>
                 buildBattleSnapshot(battleId, entry.generalId, entry.performance ?? EMPTY_PERFORMANCE, entry.outcome === 'win', battleDate));
         }
-        const beforeMilestone = this._inventory;
-        this._setInventory(grantTacticNotes(this._inventory, milestoneRewards));
-        this._recordGain(beforeMilestone, 'TASK');
+        await this._claimMilestoneNotes(settlement.entries);
         if (settlement.entries.length === 0) {
             if ((clearChanged || firstClear || defenseFought || tallyChanged || comradeChanged || mercenaryChanged || officerChanged) && this._autoSave && this._save) {
                 await this.save();
@@ -6504,6 +6544,7 @@ export class GameSession implements AcademyRecordPort {
         return {
             ...this._createBaseSnapshot(now),
             ...(this._legendaryMentoringUsedIds.length > 0 ? { legendaryMentoringUsedIds: [...this._legendaryMentoringUsedIds] } : {}),
+            ...(isEmptyRewardMeta(this._rewardMeta) ? {} : { rewardMeta: normalizeRewardMeta(this._rewardMeta) }),
             ...(this._itemMeta.seq > 0 || Object.keys(this._itemMeta.periodic).length > 0 ? { itemMeta: normalizeItemMeta(this._itemMeta) } : {}),
             military: this.military,
             yearAgingEvents: this._yearAgingEvents.map((event) => ({ ...event })),
@@ -6816,6 +6857,7 @@ export class GameSession implements AcademyRecordPort {
         this._setInventory(normalizeInventory(snapshot.inventory));
         this._legendaryMentoringUsedIds = (snapshot.legendaryMentoringUsedIds ?? []).filter((id) => typeof id === 'string');
         this._itemMeta = normalizeItemMeta(snapshot.itemMeta);
+        this._rewardMeta = normalizeRewardMeta(snapshot.rewardMeta);
         this._oracleCount = snapshot.oracleCount ?? 0;
         this._clearedStageIds = normalizeClearedStageIds(snapshot.clearedStageIds);
         this._favoriteGeneralIds = normalizeFavoriteGeneralIds(snapshot.favoriteGeneralIds);

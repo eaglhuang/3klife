@@ -25,6 +25,10 @@ export const API_COMMANDS = Object.freeze({
     'item.count': { kind: 'query', revGuard: false },
     'item.list': { kind: 'query', revGuard: false },
     'item.ledger': { kind: 'query', revGuard: false },
+    'reward.roll': { kind: 'cmd', revGuard: false },
+    'reward.claim': { kind: 'cmd', revGuard: false },
+    'reward.pools': { kind: 'query', revGuard: false },
+    'reward.pity': { kind: 'query', revGuard: false },
     'save.load': { kind: 'query', revGuard: false },
     'save.rev': { kind: 'query', revGuard: false },
     'save.commit': { kind: 'cmd', revGuard: true },
@@ -129,6 +133,58 @@ export interface ItemListResult {
     container: string;
     aliasKey: string;
     rows: ItemRowView[];
+}
+
+/**
+ * 獎勵命令（規格 doc_spec_1186 §11；規格的 reward.draw 在此命名為 reward.roll）。
+ * 結果由權威端擲骰、結算、入帳；客戶端只送「抽哪個池／領哪個套件、憑什麼」，不得帶結果欄位。
+ * grantKey 是呼叫端的業務去重鍵（例如 `quest:EXTREME_LU_BU:2026Q1`）：同鍵重送回原結果、不再推進亂數與保底。
+ */
+export interface RewardRollArgs {
+    poolId: string;
+    count?: number;
+    grantKey: string;
+    source: { kind: string; ref?: string };
+}
+
+export interface RewardClaimArgs {
+    bundleId: string;
+    grantKey: string;
+    source: { kind: string; ref?: string };
+}
+
+export interface RewardPlanLine {
+    entryId: string;
+    tier: string;
+    effect: Record<string, unknown>;
+    /** 實際入帳的效果（懲罰截斷、倍率縮放後）；與 effect 相同代表沒有調整 */
+    applied: Record<string, unknown>;
+    trace: string[];
+}
+
+export interface RewardGrantResult {
+    grantId: string;
+    grantKey: string;
+    kind: 'pool' | 'bundle';
+    refId: string;
+    plan: RewardPlanLine[];
+    settled: true;
+    overflow: Array<{ itemId: string; units: number; currency: string; amount: number }>;
+    presentation: { type: string; args: Record<string, unknown>; skippable: boolean };
+    pity: { counterKey: string; count: number; hardAt: number } | null;
+    /** 同 grantKey 重送回的是原結果 */
+    replayed: boolean;
+}
+
+export interface RewardPoolView {
+    poolId: string;
+    open: boolean;
+    tiers: Array<{ tier: string; probability: number }>;
+    pity: { counterKey: string; count: number; hardAt: number } | null;
+}
+
+export interface RewardPoolsResult {
+    pools: RewardPoolView[];
 }
 
 /** save.load：回完整快照；快照型別沿用 PlayerSaveSnapshot，契約層不依賴它所以為 unknown */

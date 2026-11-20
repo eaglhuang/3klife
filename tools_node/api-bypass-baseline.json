@@ -1,8 +1,8 @@
 {
   "$comment": "防繞過共通 API 的基準棘輪（check-api-bypass.js；總綱 doc_spec_1182 §5.10）。只能往下調（遷移完成後用 --update），不得往上調；新增繞過點即 exit 1。exemptions 為 clientOwned 豁免清單，需總 PM 審核才能新增。",
-  "total": 134,
+  "total": 133,
   "perRule": {
-    "inventory-write": 36,
+    "inventory-write": 35,
     "local-storage": 39,
     "protected-assign": 24,
     "save-write": 4,
@@ -64,9 +64,6 @@
       "inventory-write": 3
     },
     "core/systems/LongevityPill.ts": {
-      "inventory-write": 1
-    },
-    "core/systems/MilestoneRewards.ts": {
       "inventory-write": 1
     },
     "core/systems/PlayerInventory.ts": {
