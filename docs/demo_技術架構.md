@@ -562,7 +562,7 @@ assets/resources/data/
 | EffectSystem | 只有呼叫入口，`showDamageText()` 為空 | 接入 Prefab + Tween + PoolSystem |
 | BattleView | 以文字棋盤 Debug 佔位 | 棋盤格子與單位的 2.5D 節點渲染 |
 | UIManager | 已實作但未被 BattleScene 使用 | 正式版整合 UI 堆疊管理 |
-| 遭遇初始敵軍 | encounters.json 有定義但未被程式讀取 | 讀取 `enemyInitialDeployment` 並在開局部署 |
+| 遭遇初始敵軍 | ✅ 已接上（PROG-2-9420）：開戰時 `BattleController.applyEnemyInitialDeployment` 讀 `enemyInitialDeployment` 在敵方後排生成；教學戰不布陣 | — |
 | SceneAutoBuilder | 已被編輯器擴展取代 | 可考慮移除或歸檔 |
 | 推進模式 | 僅保留 GameMode 定義 | 待實作 |
 

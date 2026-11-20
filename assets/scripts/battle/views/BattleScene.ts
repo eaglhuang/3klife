@@ -264,6 +264,8 @@ export class BattleScene extends Component {
       if (enemyScale) this.ctrl.configureAiDifficulty(enemyScale.difficulty);
       // QA 直進入口（PROG-2-9127）：指定敵軍兵種；正式入口不帶此欄位
       if (battleParams.enemyDeployTroops?.length) this.ctrl.overrideEnemyDeployTroops(battleParams.enemyDeployTroops);
+      // 敵軍開場布陣（PROG-2-9420）：QA 指定敵兵種時不布陣，維持該入口只出指定兵種
+      if (!battleParams.enemyDeployTroops?.length) this.ctrl.applyEnemyInitialDeployment(encounter?.enemyInitialDeployment);
       // 天氣排程（PROG-2-0401）：入口參數優先，沒有才用 encounter 設定
       const weatherSchedule = battleParams.weatherSchedule ?? encounter?.weatherSchedule;
       if (weatherSchedule) this.ctrl.setWeatherSchedule(weatherSchedule);

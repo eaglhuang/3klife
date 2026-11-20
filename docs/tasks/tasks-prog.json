@@ -10722,6 +10722,53 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9420",
+      "title": "遭遇戰敵軍開場布陣：讀 encounters.json 的 enemyInitialDeployment",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T10:02:39+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 11/20 裁決 Q-C2「接上讀取」：encounters.json 每關都有 enemyInitialDeployment（初始敵軍），但程式從未讀取（docs/demo_技術架構.md §10 也列為待辦），開場敵方棋盤空無一兵，要等敵方第一回合才出兵。接上後敵方開場就有部隊，玩家第一回合就能看到敵陣做剋制部署。",
+      "related": [
+        "PROG-2-9127",
+        "PROG-2-9346"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: done | 驗證: 單元測試 8514 全過、tsc 0、compute-gate 12/13（僅既有 LoginScene 警告）、7456 六關開場實跑 | 變更: 敵軍開場依 enemyInitialDeployment 在後排布陣 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
