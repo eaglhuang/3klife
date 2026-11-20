@@ -46,6 +46,8 @@ import { GameClock, GameTimeState } from '../systems/GameClock';
 import type { NurtureState } from './NurtureService';
 import { normalizeItemMeta, type ItemMeta } from '../../shared/item/ItemRules';
 import { normalizeRewardMeta, type RewardMeta } from '../../shared/reward/RewardRules';
+import { normalizeOccupancyRecords } from '../../shared/occupancy/OccupancyService';
+import type { OccupancyRecord } from '../../shared/occupancy/OccupancyTypes';
 import { normalizeDeck } from './PlayerDeckRules';
 import { RandomState, validateRandomState } from '../systems/SeededRandom';
 import { createTallyLoyaltyState, type TallyLoyaltyState } from '../systems/TigerTallyLoyalty';
@@ -193,6 +195,8 @@ export interface PlayerSaveSnapshot {
     itemMeta?: ItemMeta;
     /** 獎勵 base 中繼資料（PROG-2-9205）：伺服器私有亂數會話、保底計數、發放紀錄（冪等）；選填，舊檔缺值讀回為空，版號不升（自帶 v） */
     rewardMeta?: RewardMeta;
+    /** 人員占用登記表（PROG-2-9207 OCC-M；只存 academy／mentorAssign），空表不寫；舊檔缺值讀回為空，學府占用由學府紀錄對帳重建 */
+    occupancy?: OccupancyRecord[];
     /** 官職狀態（OFC-03）：階位、經驗、解鎖歷史；舊檔沒有此欄位時讀回為階位 1；版號不升（扁平欄位） */
     officerState?: OfficerState;
     /** 世界沙盤已放置標記數（OFC-06）；扁平選填欄位，舊檔沒有時讀回 0；版號不升 */
@@ -755,6 +759,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.sortiePresets !== undefined ? { sortiePresets: normalizeSortiePresets(snapshot.sortiePresets) } : {}),
         ...(snapshot.itemMeta !== undefined ? { itemMeta: normalizeItemMeta(snapshot.itemMeta) } : {}),
         ...(snapshot.rewardMeta !== undefined ? { rewardMeta: normalizeRewardMeta(snapshot.rewardMeta) } : {}),
+        ...(normalizeOccupancyRecords(snapshot.occupancy).length > 0 ? { occupancy: normalizeOccupancyRecords(snapshot.occupancy) } : {}),
         ...(snapshot.legendaryMentoringUsedIds !== undefined ? { legendaryMentoringUsedIds: normalizeLegendaryMentoringUsedIds(snapshot.legendaryMentoringUsedIds) } : {}),
     };
 }

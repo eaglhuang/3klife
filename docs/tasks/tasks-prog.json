@@ -11676,6 +11676,70 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9207",
+      "title": "OCC-M 人員占用精簡版（中立版）：登記表、academy／mentorAssign、六處唯讀轉接、occupancy.* 端點",
+      "owner": "ClaudeCode_sonnet-5-5",
+      "priority": "P0",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "ClaudeCode_sonnet-5-5",
+      "started_at": "2026-11-21T05:39:40+08:00",
+      "started_by_agent": "ClaudeCode_sonnet-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "共用框架總綱 doc_spec_1182 第 12 章 2c：登記表、academy／mentorAssign 兩種占用、其他六處唯讀轉接器、occupancy.acquire/release/query（E33x）；修業中武將從任務牆、派遣、傭兵候選排除；check-api-bypass 加 skill-write 規則",
+      "related": [
+        "PROG-2-9200",
+        "PROG-2-9204",
+        "PROG-2-9205"
+      ],
+      "depends": [
+        "PROG-2-9201",
+        "PROG-2-9202"
+      ],
+      "acceptance": [
+        "修業中武將從任務牆、派遣、傭兵候選清單排除",
+        "互斥規則契約測試",
+        "occupancy.* 冪等與 E33x 測試",
+        "棘輪基準只減不增（含 skill-write 新規則）",
+        "tsc 0",
+        "compute-gate standard 通過",
+        "網頁 playtest 11/11"
+      ],
+      "deliverables": [
+        "shared/occupancy/{OccupancyTypes,OccupancyService}.ts",
+        "core/api/localserver/OccupancyCommands.ts",
+        "tests/OccupancyBase.test.ts",
+        "tools_node/check-api-bypass.js skill-write 規則"
+      ],
+      "notes": "2026-11-21 | 狀態: done | 驗證: tsc test 0、單元 8749 全過（新增 OccupancyBase 8 條）、compute-gate standard 通過、web-desktop 建置後 playtest 11/11 console error 0、棘輪 132→132（新增 skill-write 規則計 1 處＝AcademyGraduation 結業備援 learnedTactics 賦值，同時 PlayerInventory.grantSeasonalOracleTokens 內部不再呼叫 addItem 而改直接組表，inventory-write 34→33，淨持平） | 變更: shared/occupancy/{OccupancyTypes,OccupancyService}.ts（登記表、互斥、冪等 acquire/release、轉接器、filterFree、存檔正規化）、core/api/localserver/OccupancyCommands.ts（occupancy.query/acquire/release）、ApiCommands／ApiErrors E330~E334、createLocalApi.setOccupancyHost、GameSession（occupancyHost、學府紀錄唯一寫入口 _setAcademyRecord 對帳 academy 占用、六處轉接器、存檔欄位 occupancy、任務牆 MissionBlock occupied／派遣／傭兵候選排除）、PlayerSaveService 與 sync06 白名單加 occupancy、check-api-bypass 新增 skill-write 規則（學府修業中的 state 快照不算） | 阻塞: 無 | 備註: 六處唯讀轉接點＝governance（太守府指派）、hallMission（大廳任務 busyGeneralIds）、dispatch（派遣進行中）、mercenary（傭兵名冊武將）、expedition（歷練，尚未實作回空）、medical（待產；重傷旗標待傷勢系統）。互斥矩陣預設全互斥，家業第 10 章矩陣定案後只改 OccupancyCompatibility 資料。mentorAssign 登記表與命令已備好，尚無呼叫端（教官指派占用待 6b 接入）。學府入學入口尚未用 occupancy.acquire 擋已忙碌者（待 9191 入口改接）。中立版：介面可原封不動併入 QST-M 或獨立成框架。待決：①Q-B 是否升格第七框架 ②E33x 段落是否沿用（規格原未編號）③skill-write 新規則是否要把 AcademyGraduation 備援寫法也遷到 skill.grant（目前計 1）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
