@@ -27,7 +27,7 @@
           "vCenter": true
         },
         "width": 720,
-        "height": 480,
+        "height": 568,
         "skinSlot": "academy.graduation.card.bg",
         "children": [
           {
@@ -116,6 +116,32 @@
                   "right": 12
                 },
                 "height": 68,
+                "text": "",
+                "styleSlot": "academy.graduation.label.body"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "AcademyGraduationCareerMarkBox",
+            "widget": {
+              "top": 400,
+              "left": 24,
+              "right": 24
+            },
+            "height": 76,
+            "skinSlot": "academy.graduation.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "AcademyGraduationCareerMarkLabel",
+                "id": "academyGradCareerMark",
+                "widget": {
+                  "top": 8,
+                  "left": 12,
+                  "right": 12
+                },
+                "height": 60,
                 "text": "",
                 "styleSlot": "academy.graduation.label.body"
               }
