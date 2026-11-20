@@ -107,12 +107,12 @@ export function createProg9176DisplayFixesSuite(): TestSuite {
     suite.test('官職鎖定提示：寫出條件與目前進度，門檻讀官職規則資料', () => {
         const root = path.join(__dirname, '..', 'assets/resources/data/officer-feature-unlocks.json');
         installOfficerFeatureUnlocks(JSON.parse(fs.readFileSync(root, 'utf8')));
-        const lock = lobbyActionLock('nurture', 1);
+        const lock = lobbyActionLock('supportCard', 1);
         assert.isTrue(lock.locked);
         const need = expRequiredForTier(lock.requiredTier);
         assert.isTrue(need > 0);
-        assert.equals(`培育要升到「縣府佐官」才開放（需要官職經驗 ${need}，目前 30）`, lockedActionToast('培育', lock, 30));
-        assert.equals('培育要升到「縣府佐官」才開放', lockedActionToast('培育', lock));
+        assert.equals(`支援卡要升到「縣府佐官」才開放（需要官職經驗 ${need}，目前 30）`, lockedActionToast('支援卡', lock, 30));
+        assert.equals('支援卡要升到「縣府佐官」才開放', lockedActionToast('支援卡', lock));
         resetOfficerFeatureUnlocks();
     });
 
