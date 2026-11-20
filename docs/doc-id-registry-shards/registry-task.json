@@ -16018,5 +16018,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9203.md",
     "title": "[PROG-2-9203] ITM-M 物品庫存 base 最小版：家庭倉庫與入學令",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2688",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9205.md",
+    "title": "[PROG-2-9205] RWD-M 獎勵 base 最小版：獎池保底帳本與 reward.roll/claim",
+    "category": "task"
   }
 ]
