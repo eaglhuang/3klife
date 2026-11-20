@@ -287,6 +287,8 @@
   "ui.breed.epithet.summary.twin_stars": "Awakening +{0}%",
   "ui.breed.birth.fresh_blood": "Fresh Blood V{0}! Outsider talent revitalizes the lineage—+{2}% training efficiency for the first {1} seasons!",
   "ui.breed.birth.epithet": "Fabled Union [{0}]! {1}",
+  "ui.breed.tradition_seed": "Clan Tradition shines! Child guaranteed [{0}] {1}★ lineage factor!",
+  "ui.breed.high_clan_proposal": "High-Clan Proposal: EP≥{0} | ≥{1}★ Factor | Synergy+{2} | Gift+{3}%",
   "ui.opening.starter_child_hint": "Young scion {0} has joined your clan~ They'll be ready for the Academy next year at age 5!",
   "ui.breed.confirm": "Spend {0} vigor {1} and {2} vigor {3}. Confirm the union?",
   "ui.breed.preg_status": "{0} has entered the expecting period; her vigor is frozen for {1} seasons and she cannot bond again; the child is already on the roster.",

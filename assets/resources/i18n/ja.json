@@ -287,6 +287,8 @@
   "ui.breed.epithet.summary.twin_stars": "覚醒率 +{0}%",
   "ui.breed.birth.fresh_blood": "寒門新血 V{0}！外家の奇才が血脈を活性化し、子の序盤 {1} 季の修業効率 +{2}%！",
   "ui.breed.birth.epithet": "佳話婚姻【{0}】！{1}",
+  "ui.breed.tradition_seed": "郡望宗脈の顕現！子に一族の特質【{0}】{1}★が保証継承！",
+  "ui.breed.high_clan_proposal": "天下高門の縁談：EP≥{0}｜≥{1}★家学｜相性+{2}｜結納+{3}%",
   "ui.opening.starter_child_hint": "宗室の幼子「{0}」が名簿に加わりました～ 来年5歳になれば学府で開蒙できますよ！",
   "ui.breed.confirm": "{0} の気力 {1} と {2} の気力 {3} を消費し、結縁しますか？",
   "ui.breed.preg_status": "{0} は懐妊期に入りました。{1} 季の間は精力が凍結され再び結縁できません。子はすでに名簿に登録されました。",

@@ -55,6 +55,7 @@ import { configureFamilyMilestoneRules, FAMILY_MILESTONE_RULES_JSON, type Family
 import { familyPairKey } from "../systems/FamilySynergy";
 import { configureWhiteFactorAchievements, WHITE_FACTOR_ACHIEVEMENTS_JSON, type WhiteFactorAchievementsConfig } from "../systems/WhiteFactorTraits";
 import { configureMindMarriageRules, MIND_MARRIAGE_RULES_JSON, type MindMarriageRulesConfig } from "../mind/MindMarriage";
+import { CLAN_LINEAGE_RULES_JSON, configureClanLineageRules, type ClanLineageRulesConfig } from "../systems/ClanTradition";
 
 export class ServiceLoader {
     private static instance: ServiceLoader | null = null;
@@ -144,6 +145,7 @@ export class ServiceLoader {
         getFamilySynergy: () => this.session.familySynergy,
         getParentMood: (id) => this.session.mind.moodOf(id),
         onMarriageConceived: (ctx) => this.session.onMarriageConceived(ctx),
+        getClanTradition: () => this.session.clanTradition,
     });
     private bloodlineRulesLoaded = false;
     /** 退役教官卡 / 英靈卡來源；init() 之後才有（共用存檔後端）。培育畫面用它挑教官 */
@@ -358,6 +360,7 @@ export class ServiceLoader {
             loadSafe<Partial<FamilyMilestoneRulesConfig>>(FAMILY_MILESTONE_RULES_JSON, configureFamilyMilestoneRules),
             loadSafe<Partial<MindMarriageRulesConfig>>(MIND_MARRIAGE_RULES_JSON, configureMindMarriageRules),
             loadSafe<Partial<MarriageVitalityRulesConfig>>(MARRIAGE_VITALITY_RULES_JSON, configureMarriageVitalityRules),
+            loadSafe<Partial<ClanLineageRulesConfig>>(CLAN_LINEAGE_RULES_JSON, configureClanLineageRules),
         ]);
         this.bloodlineRulesLoaded = true;
     }

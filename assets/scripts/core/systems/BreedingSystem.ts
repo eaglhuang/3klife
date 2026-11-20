@@ -55,6 +55,7 @@ import { applyBloodlineMutation } from './LuckBloodlineMutation';
 import { PINK_TERRAIN_FACTOR_KEYS } from './BattleAptitude';
 import { inheritChildAptitudes } from './ChildAptitudeInheritance';
 import { evaluateMarriageVitality, type MarriageVitalityResult } from './MarriageVitality';
+import { applyClanTraditionSeed, getClanLineageRules, type ClanTradition } from './ClanTradition';
 
 export interface BreedingRulesConfig {
     /** 受孕後母方待產凍結季數（2026-11-20 裁決：2 季） */
@@ -679,6 +680,8 @@ export interface BreedingRequest {
     rosterLookup?: (uid: string) => GeneralConfig | undefined;
     /** 選填：當前家族名冊（寒門新血判斷稀少姓氏用，PROG-2-9181） */
     roster?: readonly GeneralConfig[];
+    /** 選填：Tier 2 以上已確立的郡望家風（PROG-2-9193 宗脈常駐保底 1★ 種子用） */
+    clanTradition?: ClanTradition | null;
 }
 
 export type BreedingOutcome = 'blocked' | 'failed' | 'conceived';
@@ -694,6 +697,8 @@ export interface BreedingResult {
     kinPurification?: KinPurificationOutcome;
     /** 寒門新血 × 佳話聯姻結算結果（PROG-2-9181） */
     marriageVitality?: MarriageVitalityResult;
+    /** Tier 2 宗脈常駐保底附帶的家風種子（PROG-2-9193） */
+    clanTraditionSeeded?: { factorId: string; displayName: string; stars: number };
     outcome: BreedingOutcome;
     /** 用了受孕道具仍失敗時，父母各返還的慰問精力（doc_spec_0315 §4，PROG-2-2109） */
     vitalityRefund?: { father: number; mother: number };
@@ -750,6 +755,9 @@ export function previewBreedingEp(request: Omit<BreedingRequest, 'random' | 'chi
         hasCommonAncestor,
         roster: request.roster,
     });
+    const highProposalBonus = (request.father.fromHighClanProposal || request.mother.fromHighClanProposal)
+        ? getClanLineageRules().highClanProposal.synergyBonus
+        : 0;
     const compatibility = computeFamilyCompatibilityK({
         fatherStats: {
             str: statOf(request.father, 'str'),
@@ -767,7 +775,7 @@ export function previewBreedingEp(request: Omit<BreedingRequest, 'random' | 'chi
         },
         qualifiedMarriagesInWindow: request.qualifiedMarriagesInWindow,
         pairRecord: request.pairRecord,
-        epithetSynergyBonus: marriageVitality.synergyBonus,
+        epithetSynergyBonus: marriageVitality.synergyBonus + highProposalBonus,
     });
     return {
         pedigree,
@@ -933,7 +941,18 @@ function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMo
     const synergy = inbred || kin.outcome
         ? { factors: kin.factors, risen: null }
         : applyLineageSynergy(kin.factors, request.father, request.mother, { random: request.random, dictionary: request.dictionary, priorityId: request.lockedFactorId });
-    const childFactors = synergy.factors;
+    const traditionSeedResult = applyClanTraditionSeed(
+        synergy.factors,
+        request.clanTradition,
+        (factorId, stars): InheritedFactor => ({
+            id: factorId,
+            color: 'blue',
+            level: Math.min(3, Math.max(1, Math.round(stars))) as 1 | 2 | 3,
+            generation: 1,
+            sourceUids: [request.father.id],
+        }),
+    );
+    const childFactors = traditionSeedResult.factors;
     const child = createChild({
         id: request.childId,
         father: request.father,
@@ -982,6 +1001,13 @@ function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMo
     return {
         bloodFatigue,
         marriageVitality,
+        ...(traditionSeedResult.seeded && request.clanTradition ? {
+            clanTraditionSeeded: {
+                factorId: request.clanTradition.factorId,
+                displayName: request.clanTradition.displayName,
+                stars: getClanLineageRules().tradition.seedStarLevel,
+            },
+        } : {}),
         compactRescued: !heritageLocked && lockedFactors !== fatedFactors,
         heritageRescued: heritageLocked && lockedFactors !== fatedFactors,
         lineageSynergyFactorId: synergy.risen?.id,
