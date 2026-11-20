@@ -11064,7 +11064,7 @@
       "title": "勝敗結算演出打磨：分出勝負先打勝利／敗北橫幅停一拍再開結算窗、結算窗卡片彈入、主將頭像預載不閃問號",
       "owner": "claude-code-fable-5-2",
       "priority": "P2",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-20",
@@ -11083,7 +11083,7 @@
       "depends": [],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-20 | 狀態: in-progress | 驗證: pending | 變更: 開卡 | 阻塞: 無",
+      "notes": "2026-11-20 | 狀態: done | 驗證: 單元 8588 全過、tsc 0、compute-gate 12/13（既有 LoginScene 警告）、7456 實機逐格截圖勝利與敗北兩路：勝金／敗紅橫幅撐到結算窗淡入、敵將或我將倒地在橫幅下播完、頭像直接顯示主將不閃剪影，證據 artifacts/playtest-checklist/prog-2-9427 | 變更: 勝敗橫幅停一拍再開結算窗（主動撤退立即開）、結算窗卡片彈入、頭像預載；實測首次掛載約 0.5 秒，橫幅拉長到 2.4 秒避免空檔 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",

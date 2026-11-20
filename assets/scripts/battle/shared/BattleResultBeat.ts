@@ -28,8 +28,8 @@ export function battleResultBannerOf(result: string, retreated = false): BattleR
 }
 
 export const BATTLE_RESULT_BEAT = Object.freeze({
-    /** 橫幅總長（含淡入淡出），比開窗延遲略長，結算窗淡入時橫幅剛好淡出 */
-    bannerSec: 1.6,
+    /** 橫幅總長（含淡入淡出）：要撐過結算窗第一次掛載畫面（約 0.5 秒），結算窗淡入蓋在橫幅上，中間不留空檔 */
+    bannerSec: 2.4,
     /** 分出勝負到開結算窗的停頓 */
     popupDelayMs: 1300,
 });
