@@ -10960,6 +10960,55 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9425",
+      "title": "守城戰場模式：城牆加成依陣營鏡像、撐滿 12 回合即勝、失守接 applyDefenseDefeat",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T16:05:19+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 11/20 裁決年終守城十一題（全採建議 A）：撐滿 12 回合即勝、失守為敗、失守且武將全滅為大敗；沿用攻城鏡像＋城寨血條，城門留第二版；不丟城，只扣民心人口（applyDefenseDefeat）；新增 defense 類別不扣壽命；勝利給戰利品＋民心 +2；數值抽 JSON。現況攻城戰法把城牆加成寫死給敵方，戰場沒有『玩家防守』模式，applyDefenseDefeat 也沒有呼叫端。本卡只做戰場本體與結算；年終觸發、三檔敵軍依年度切換、最強鄰國主將、不可重打另開年終流程卡。",
+      "related": [
+        "PROG-2-9138",
+        "PROG-2-1589",
+        "PROG-2-9423",
+        "PROG-2-9424"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: in-progress | 驗證: pending | 變更: 待做 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
