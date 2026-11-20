@@ -10912,6 +10912,54 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9424",
+      "title": "結算視窗分區排版：字級放大、戰況／兵力／獎勵分區、可捲動",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T15:20:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 11/20 看瓦口隘結算截圖回饋：『這字也太小，也沒有 UI 套用排版設計』。現況結算視窗把勝負說明、時限戰果、兵力、各兵種、戰績、獎勵、戰利品等十多行全塞進同一個 420 高的標籤，靠自動縮字擠進去，字只剩約 12px，也沒有分區。總PM 另要求結算頁『時限到、我方勝』文案補四語系。",
+      "related": [
+        "PROG-2-9423",
+        "PROG-2-9404",
+        "PROG-2-1877"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: done | 驗證: 單元 8542 全過、tsc 0、compute-gate 12/13（既有 LoginScene 警告）、實機時限勝利／時限撤退／攻城勝利／城寨被破四種結算截圖、六關回歸 0 錯 | 變更: 結算視窗加寬、大字勝負說明、明細分區捲動、四語系 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
