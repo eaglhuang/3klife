@@ -8,6 +8,7 @@
  * Unity 對照：像副本結束時把暫存角色資料 Commit 回存檔角色。
  */
 import type { GeneralConfig } from '../../models/GeneralUnit';
+import type { CareerMarkRecord } from './AcademyInheritAndMarks';
 import { ACADEMY_STAT_KEYS, type AcademyStateSnapshot } from './AcademyTypes';
 
 export type AcademyGrade = 'S' | 'A' | 'B' | 'C';
@@ -23,6 +24,8 @@ export interface AcademyGraduationResult {
     newTactics: string[];
     /** 這次新解鎖的特質 */
     traits: string[];
+    /** 這次結業凝練之生平白因子印記（PROG-2-9182） */
+    careerMark?: CareerMarkRecord | null;
 }
 
 export class AcademyGraduationError extends Error {}
@@ -51,5 +54,9 @@ export function applyAcademyGraduation(general: Readonly<GeneralConfig>, snapsho
     const knownTraits = next.learnedTraits ?? [];
     const traits = snapshot.learnedTraits.filter((t, i, arr) => arr.indexOf(t) === i && knownTraits.indexOf(t) < 0);
     next.learnedTraits = [...knownTraits, ...traits];
-    return { general: next, grade: academyGradeOf(statTotal), statTotal, newTactics, traits };
+    const careerMark = snapshot.graduatedCareerMark ?? null;
+    if (careerMark) {
+        next.careerMarks = [...(next.careerMarks ?? []), { id: careerMark.id, stars: careerMark.stars }];
+    }
+    return { general: next, grade: academyGradeOf(statTotal), statTotal, newTactics, traits, careerMark };
 }

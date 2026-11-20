@@ -318,6 +318,8 @@ export interface GeneralConfig {
   bloodlineResonanceRoundsDone?: number[];
   /** 鎖定的首次共鳴檢定結果（依回合記錄，放棄重修時重播不重新擲骰，PROG-2-9170） */
   bloodlineResonanceOutcomes?: Record<number, import('../systems/BloodlineResonance').BloodlineResonanceLockedOutcome>;
+  /** 學府結業凝練之生平白因子印記（無限累積，配種取最高星 2 枚，PROG-2-9182） */
+  careerMarks?: Array<{ id: string; stars: 1 | 2 | 3 }>;
   maternalLine?: MaternalLine;
   /** 出生時記下的雙親 3★ 以上因子，供下一代判斷隔代復興；祖先冷存檔後查不到星數 */
   peakFactors?: AncestralPeak[];
