@@ -191,11 +191,11 @@ export function nurturePeekChance(mentorRank: number): number {
 /** 培育回合覺醒：藍粉 = 培育窺探；綠白 = 教官觸發（需有教官站在所選訓練格） */
 export function rollNurtureAwakening(
     general: GeneralConfig | undefined,
-    input: { discoveryLevel: number; mentorRank: number; mentorOnSlot: boolean; luk?: number; random: () => number },
+    input: { discoveryLevel: number; mentorRank: number; mentorOnSlot: boolean; luk?: number; extraAwakenChance?: number; random: () => number },
 ): AwakeningResult | null {
     const triggers: AwakeningTrigger[] = input.mentorOnSlot ? ['nurture-peek', 'mentor'] : ['nurture-peek'];
     const candidates = listAwakeningCandidates(general, triggers, input.discoveryLevel);
-    const chance = nurtureAwakeningChance(input.mentorRank, input.luk ?? 0);
+    const chance = Math.min(1, Math.max(0, nurtureAwakeningChance(input.mentorRank, input.luk ?? 0) + (input.extraAwakenChance ?? 0)));
     return rollAwakening(general, candidates, chance, input.discoveryLevel, input.random);
 }
 

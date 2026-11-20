@@ -8,7 +8,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { assert, TestSuite } from './TestRunner';
-import { AI_CHARGE_DEFAULT_LANE, pickDeployLane, pickMeetPlayerLane } from '../assets/scripts/core/systems/AiLaneStrategy';
+import { AI_CHARGE_DEFAULT_LANE, pickCounterLane, pickDeployLane, pickMeetPlayerLane } from '../assets/scripts/core/systems/AiLaneStrategy';
 import { laneStrategyOfGeneral, parseAiProfileTable } from '../assets/scripts/core/systems/AiProfiles';
 import { EnemyAI } from '../assets/scripts/battle/controllers/EnemyAI';
 import { BattleState } from '../assets/scripts/battle/models/BattleState';
@@ -101,6 +101,7 @@ export function createAiLaneStrategySuite(): TestSuite {
         assert.equals(AI_CHARGE_DEFAULT_LANE, charge[0].lane);
 
         ai.laneStrategy = 'SCOUT_WEAK';
+        ai.iq = 'LOW'; // 純看路線策略；高智力出剋制兵會改派到被剋兵種那路（PROG-2-9428）
         for (let lane = 0; lane < GAME_CONFIG.GRID_LANES; lane++) {
             if (lane === 4) continue;
             const unit = new TroopUnit(`p-${lane}`, TroopType.Infantry, Faction.Player, { hp: 100, attack: 10, defense: 10, moveRange: 1, attackRange: 1 });
@@ -149,8 +150,43 @@ export function createAiLaneStrategySuite(): TestSuite {
         const three = ai.decideDeploy(stateWithPlayerOn([4]), 9999, 2, { meetPlayerLane: true }).map((d) => d.lane);
         assert.equals(4, three[0], '第一隊對上玩家那路');
         assert.isTrue(three[1] !== 4, '同回合不會兩隊擠同一路');
-        const normal = ai.decideDeploy(stateWithPlayerOn([4]), 9999, 1).map((d) => d.lane);
-        assert.equals(0, normal[0], '沒開對路：照 SPREAD_5 挑己方最少的線');
+        const blind = new EnemyAI(first);
+        blind.laneStrategy = 'SPREAD_5';
+        blind.iq = 'LOW';
+        const normal = blind.decideDeploy(stateWithPlayerOn([4]), 9999, 1).map((d) => d.lane);
+        assert.equals(0, normal[0], '沒開對路（低智力不追剋制線）：照 SPREAD_5 挑己方最少的線');
+    });
+
+    suite.test('剋制兵對路：挑被剋兵種最多的空線，同數挑己方最少；空線上都沒有被剋兵種回 null（PROG-2-9428）', () => {
+        assert.equals(3, pickCounterLane(ALL, [0, 1, 0, 2, 0], [0, 0, 0, 0, 0], first), '被剋最多的線');
+        assert.equals(3, pickCounterLane(ALL, [0, 1, 0, 1, 0], [0, 2, 0, 0, 0], first), '同數挑己方最少');
+        assert.equals(1, pickCounterLane([0, 1, 2], [0, 1, 0, 3, 0], [0, 0, 0, 0, 0], first), '被剋最多那線滿了：挑其他有被剋兵種的空線');
+        assert.equals(null, pickCounterLane([0, 2, 4], [0, 1, 0, 1, 0], [0, 0, 0, 0, 0], first), '有被剋兵種的線都不能出');
+    });
+
+    suite.test('剋制兵對路：EnemyAI 出槍兵剋玩家騎兵時派到騎兵那路，即使策略是 SCOUT_WEAK；低智力照策略（PROG-2-9428）', () => {
+        const state = new BattleState();
+        const addPlayer = (id: string, type: TroopType, lane: number) => {
+            const unit = new TroopUnit(id, type, Faction.Player, { hp: 100, attack: 10, defense: 10, moveRange: 1, attackRange: 1 });
+            unit.moveTo(lane, 1);
+            state.addUnit(unit);
+        };
+        addPlayer('c1', TroopType.Cavalry, 3);
+        addPlayer('c2', TroopType.Cavalry, 3);
+        addPlayer('i1', TroopType.Infantry, 1);
+        const smart = new EnemyAI(first);
+        smart.laneStrategy = 'SCOUT_WEAK';
+        smart.iq = 'HIGH';
+        const [pick] = smart.decideDeploy(state, 9999, 1);
+        assert.equals(TroopType.Pikeman, pick.type, '高智力剋玩家主力騎兵出槍兵');
+        assert.equals(3, pick.lane, '槍兵派到騎兵那一路正面迎擊');
+        const blind = new EnemyAI(first);
+        blind.laneStrategy = 'SCOUT_WEAK';
+        blind.iq = 'LOW';
+        blind.deployPreference = { preferredTroops: ['PIKE'], preferCounter: false };
+        const [blindPick] = blind.decideDeploy(state, 9999, 1);
+        assert.equals(TroopType.Pikeman, blindPick.type);
+        assert.equals(0, blindPick.lane, '低智力不看玩家兵種位置：照 SCOUT_WEAK 挑玩家最少的線');
     });
 
     suite.test('教學戰敵軍來襲提示：路線由小到大、以 1 起算（PROG-2-9340）', () => {

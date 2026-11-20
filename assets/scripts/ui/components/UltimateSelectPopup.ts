@@ -48,6 +48,8 @@ export class UltimateSelectPopup extends UIPreviewBuilder {
     private readonly _resolver    = new UITemplateResolver();
     private _binder: UITemplateBinder | null = null;
     private _isBuilt   = false;
+    /** 建置只跑一次；show() 與 onLoad 都可能觸發，共用同一個 Promise 避免重複建置 */
+    private _buildPromise: Promise<void> | null = null;
     private _skillItems: UltimateSkillItem[] = [];
     private _rootNode: Node | null = null;
     private _dialogCard: Node | null = null;
@@ -65,7 +67,12 @@ export class UltimateSelectPopup extends UIPreviewBuilder {
         await this._build();
     }
 
-    private async _build(): Promise<void> {
+    private _build(): Promise<void> {
+        this._buildPromise ??= this._doBuild();
+        return this._buildPromise;
+    }
+
+    private async _doBuild(): Promise<void> {
         if (this._isBuilt) return;
         try {
             const [template, skin, i18n, tokens] = await Promise.all([
@@ -136,10 +143,18 @@ export class UltimateSelectPopup extends UIPreviewBuilder {
      * Unity 對照：UltimateSkillSelectPopup.Show(SkillData[] skills)
      */
     show(skills: UltimateSkillItem[]): void {
-        // build 尚未完成 → 暫存，onReady 後自動重播（消除 addComponent 後立即呼叫的競態）
+        // build 尚未完成 → 暫存，onReady 後自動重播（消除 addComponent 後立即呼叫的競態）。
+        // 此時「不能」把節點設成顯示：範本載入要等好幾幀，若先顯示，玩家（與 QA 腳本）會先看到
+        // 只有標題與關閉鈕、沒有技能列的空面板，第一次開奧義就像沒有技能（issue #2238）。
+        // 面板留在隱藏狀態，等 onReady 重播 show() 時技能列已建好才淡入。
         if (!this._binder) {
+            if (this._isBuilt) {
+                // 範本載入失敗（_build 的 catch 路徑）：不會再有 onReady，別讓玩家點了毫無反應
+                services().event.emit(EVENT_NAMES.ShowToast, { text: '奧義選單載入失敗，請稍後再試' });
+                return;
+            }
             this._pendingSkills = skills;
-            this.node.active = true;          // 觸發 Cocos 呼叫 onLoad → _build → onReady
+            void this._build();               // 節點若是停用狀態不會自動 onLoad，這裡明確觸發（共用同一個 Promise）
             return;
         }
 

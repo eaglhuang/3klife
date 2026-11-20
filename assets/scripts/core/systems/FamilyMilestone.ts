@@ -12,12 +12,43 @@ import type { ClanStats } from './ClanTier';
 
 export type MilestoneStage = 1 | 2 | 3 | 4;
 
-const G4_MIN_GENERATIONS = 4;
-const G4_MIN_EP75 = 3;
+export const FAMILY_MILESTONE_RULES_JSON = 'data/family-milestone-rules';
+
+export interface FamilyMilestoneRulesConfig {
+    g2MinAdultDescendants: number;
+    g3MinGenerations: number;
+    g4MinGenerations: number;
+    g4MinEp75: number;
+}
+
+const DEFAULT_MILESTONE_RULES: FamilyMilestoneRulesConfig = {
+    g2MinAdultDescendants: 1,
+    g3MinGenerations: 3,
+    g4MinGenerations: 4,
+    g4MinEp75: 3,
+};
+
+let _milestoneRules: FamilyMilestoneRulesConfig = DEFAULT_MILESTONE_RULES;
+
+export function configureFamilyMilestoneRules(raw: Partial<FamilyMilestoneRulesConfig> | null | undefined): void {
+    if (!raw) return;
+    _milestoneRules = {
+        g2MinAdultDescendants: raw.g2MinAdultDescendants ?? DEFAULT_MILESTONE_RULES.g2MinAdultDescendants,
+        g3MinGenerations: raw.g3MinGenerations ?? DEFAULT_MILESTONE_RULES.g3MinGenerations,
+        g4MinGenerations: raw.g4MinGenerations ?? DEFAULT_MILESTONE_RULES.g4MinGenerations,
+        g4MinEp75: raw.g4MinEp75 ?? DEFAULT_MILESTONE_RULES.g4MinEp75,
+    };
+}
+
+export function resetFamilyMilestoneRules(): void {
+    _milestoneRules = DEFAULT_MILESTONE_RULES;
+}
+
 const KIN_STAGE: MilestoneStage = 3;
 
 const STORY_LINE: Partial<Record<MilestoneStage, string>> = {
     2: '史官呈上《家乘譜牒》：「主公半生戎馬，功業（EP）彪炳，已載入宗祠。自今日起，可翻閱【三代十四席族譜】，觀門風之延續！」',
+    3: '宗祠譜牒官進言：「我族已歷三代，枝繁葉茂，可編纂【世交合譜】並查驗【血脈清濁燈號】，慎衡遠交與純化之道！」',
     4: '朝廷詔書／天下名士共尊：「汝族累世公卿，文武輩出，今尊為【天下郡望】！凡我族血胤，皆得宗脈庇佑！」',
 };
 
@@ -29,11 +60,21 @@ const UNLOCK_LINE: Partial<Record<MilestoneStage, string>> = {
 };
 
 /** §H UI_MILESTONE_G1_HINT */
-export const MILESTONE_G1_HINT = '【初創家業】目前僅顯示鄉評風聞與基礎開蒙，待子嗣成材修纂族譜後將解鎖深層血脈資訊。';
+export const MILESTONE_G1_HINT = '【初創家業】目前僅顯示鄉評風聞與基礎開蒙，待首位子嗣開蒙後將解鎖深層血脈資訊。';
 /** M_stage 表：G2 近婚只給這句文字警告 */
 export const KIN_TEXT_WARNING = '親緣過近，恐損氣血';
 /** M_stage 表：G1 隱藏星數，開蒙、加冠時才演出 */
 export const G1_FACTOR_TEXT = '因子：開蒙、加冠時揭曉';
+/** G1 隱藏公式明細，只顯示良緣評語 */
+export const G1_EP_DETAIL_MASK = '良緣初結：僅觀門風鄉評，第一位子嗣開蒙後解鎖詳細血脈與公式';
+/** G1 只給評語與爆發力字母等級，具體數字等 G2 公式解鎖後才顯示 */
+export function g1EpEstimateText(rating: string, grade: string): string {
+    return `良緣評語：${rating}（爆發力 ${grade}）`;
+}
+/** 公式明細從 G2（第一位子嗣開蒙後）開始顯示 */
+export function formulaDetailVisible(stage: MilestoneStage): boolean {
+    return stage >= 2;
+}
 /** G1 只看得到父母兩席 */
 const G1_VISIBLE_SEATS = 2;
 
@@ -75,10 +116,11 @@ export function normalizeMilestoneStage(value: unknown): MilestoneStage {
     return value === 2 || value === 3 || value === 4 ? value : 1;
 }
 
-/** 由家族統計能達到的階段；G3 不看統計，所以這裡只會回 1、2、4 */
+/** 由家族統計能達到的階段：3 代以上升 G3（免純外婚跳階），4 代且 3 位 EP>=75 升 G4（PROG-2-9172） */
 export function milestoneStageOfClan(stats: Pick<ClanStats, 'adultDescendants' | 'generations' | 'ep75'>): MilestoneStage {
-    if (stats.generations >= G4_MIN_GENERATIONS && stats.ep75 >= G4_MIN_EP75) return 4;
-    return stats.adultDescendants >= 1 ? 2 : 1;
+    if (stats.generations >= _milestoneRules.g4MinGenerations && stats.ep75 >= _milestoneRules.g4MinEp75) return 4;
+    if (stats.generations >= _milestoneRules.g3MinGenerations) return 3;
+    return stats.adultDescendants >= _milestoneRules.g2MinAdultDescendants ? 2 : 1;
 }
 
 export function kinMilestoneStage(): MilestoneStage {
@@ -94,7 +136,7 @@ export function milestoneUnlockLines(oldStage: MilestoneStage, newStage: Milesto
     const lines: string[] = [];
     for (let stage = oldStage + 1; stage <= newStage; stage++) {
         const key = stage as MilestoneStage;
-        const story = key === KIN_STAGE ? kinLine : STORY_LINE[key];
+        const story = key === KIN_STAGE ? (kinLine || STORY_LINE[key]) : STORY_LINE[key];
         if (story) lines.push(story);
         const unlock = UNLOCK_LINE[key];
         if (unlock) lines.push(unlock);

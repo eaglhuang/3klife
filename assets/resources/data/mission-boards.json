@@ -1,0 +1,26 @@
+{
+  "schema": "mission-boards.v1",
+  "version": 1,
+  "note": "任務板規則。牆別是 UI 分組，主題以 wall 欄位掛到牆上；候選權重 = 難度權重 x 主題權重 x 覆寫倍率。難度先依玩家官階取相對層級（rankRelativeWeights），再套絕對權重。",
+  "walls": {
+    "Military": { "targetCount": 4, "themes": ["military"] },
+    "Domestic": { "targetCount": 4, "themes": ["domestic", "romance"] },
+    "Expedition": { "targetCount": 4, "themes": ["expedition", "diplomacy", "espionage"] }
+  },
+  "rankRelativeWeights": { "top": 3, "minusOne": 4, "minusTwoOrLower": 2 },
+  "difficultyWeights": { "EASY": 10, "NORMAL": 8, "ELITE": 6, "ADVANCED": 4, "HELL": 2 },
+  "themeWeights": { "military": 10, "domestic": 10, "expedition": 10, "diplomacy": 6, "espionage": 5, "romance": 4 },
+  "overrides": [
+    { "defId": "MIL_BEACON_PATROL", "weight": 3, "note": "手寫主打任務，簡單、有內奸變體，連鎖最長" },
+    { "defId": "MIL_FIRE_CAMP", "weight": 2, "note": "手寫：三種天時、目標隨情報而變" },
+    { "defId": "DOM_FAMINE_RELIEF", "weight": 3, "note": "手寫：虧空與囤糧變體" },
+    { "defId": "DIP_HERMIT_PERSUADE", "weight": 3, "note": "手寫：外交帶結緣的入口" },
+    { "defId": "DIP_ALLIANCE_NEIGHBOR", "weight": 2, "note": "手寫：三種太守心態" },
+    { "defId": "DIP_ENVOY_ESCORT", "weight": 3, "note": "手寫：使者懷信、被盯的變體" },
+    { "defId": "ROM_LANTERN_FESTIVAL", "weight": 3, "note": "手寫：結緣的日常入口" },
+    { "defId": "MIL_RECRUIT_SCOUT", "chainOnly": true, "note": "由巡查烽燧連鎖產生" },
+    { "defId": "ESP_TRAITOR_HUNT", "chainOnly": true, "note": "由烽燧、使者護送等任務連鎖產生" },
+    { "defId": "ESP_SPY_RING", "chainOnly": true, "note": "由清查內奸等任務連鎖產生" },
+    { "defId": "ROM_HERMIT_DAUGHTER", "chainOnly": true, "note": "由遊說隱士出山、請醫之後連鎖產生" }
+  ]
+}

@@ -1,4 +1,4 @@
-import { _decorator, Button, Label, Node, UIOpacity } from 'cc';
+import { _decorator, BlockInputEvents, Button, Label, Node, UIOpacity } from 'cc';
 import { CompositePanel } from '../core/CompositePanel';
 import type { UITemplateBinder } from '../core/UITemplateBinder';
 import type { ChildPanelBase } from '../core/ChildPanelBase';
@@ -115,6 +115,11 @@ export class GeneralDetailComposite extends CompositePanel {
         const parent = this.node.parent;
         if (parent) {
             this.node.setSiblingIndex(parent.children.length - 1);
+        }
+
+        // 全螢幕武將詳情必須攔截觸控，避免右側頁籤或空白區點擊穿透到底層大廳任務牆（PROG-2-9398）
+        if (BlockInputEvents && !this.node.getComponent(BlockInputEvents)) {
+            this.node.addComponent(BlockInputEvents);
         }
 
         // 必須在 mount/buildScreen 之前啟用節點，確保 Widget 計算時父容器尺寸正確

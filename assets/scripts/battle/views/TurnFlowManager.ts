@@ -26,8 +26,10 @@ import { BattleUIBridge } from './BattleUIBridge';
 import { DuelChallengeFallback } from './DuelChallengeFallback';
 import type { IDuelChallengeLike } from '../../shared/interfaces/IBattleUIComponents';
 import { BATTLE_TURN_FLOW_TIMING } from './BattlePresentationTiming';
+import { setEnemyTurnPlayback } from './BattleTimeScale';
 import { services } from '../../core/managers/ServiceLoader';
 import { duelLogType } from '../../core/systems/DailyNewsEngine';
+import type { BattleResult } from '../BattleTypes';
 
 export class TurnFlowManager {
   private _advanceTurnGeneration = 0;
@@ -38,6 +40,8 @@ export class TurnFlowManager {
   private _enemyTurnPending = false;
   /** 後備單挑彈窗（僅在 duelChallengePanel 未綁定時建立，整場戰鬥重複使用） */
   private _duelFallback: DuelChallengeFallback | null = null;
+  /** 單挑彈窗正等玩家決定接不接：這段是等人，不算演出卡死（PROG-2-9404） */
+  private _duelDecisionPending = false;
 
   constructor(
     private readonly ctx: BattleSceneContext,
@@ -66,10 +70,22 @@ export class TurnFlowManager {
     // 單挑演出（雙方都有動畫時十幾秒）不算在安全時限內：演出結束後重新給一段完整時限，
     // 不然演出一結束時限就到期，後面的敵方回合整段被跳過（PROG-2-9350）
     let duelSeen = false;
+    let presentationWaitedSec = 0;
     const checkAdvanceSafety = (): void => {
       if (c.isAdvancingTurn && this._advanceTurnGeneration === gen) {
         // 奧義 cut-in 與單挑同理：演出不算在安全時限內，演出結束後重新給一段完整時限（PROG-2-9352）
-        if (c.isDuelPanelActive || c.isUltCutinActive) { duelSeen = true; this.scene.scheduleOnce(checkAdvanceSafety, 1); return; }
+        if (c.isDuelPanelActive || c.isUltCutinActive) {
+          if (!this._duelDecisionPending) presentationWaitedSec += 1;
+          // 演出旗標自己卡死（演出的 Promise 永不回來）時不能無限等：超過上限就強制放掉旗標並解鎖（PROG-2-9404）
+          if (presentationWaitedSec >= BATTLE_TURN_FLOW_TIMING.presentationMaxWaitSec) {
+            UCUFLogger.warn(LogCategory.BATTLE, `[TurnFlowManager] 單挑／奧義演出超過 ${BATTLE_TURN_FLOW_TIMING.presentationMaxWaitSec}s 仍未結束，強制放掉演出旗標並解鎖`);
+            c.isDuelPanelActive = false;
+            c.isUltCutinActive = false;
+            this.finalizeAdvance();
+            return;
+          }
+          duelSeen = true; this.scene.scheduleOnce(checkAdvanceSafety, 1); return;
+        }
         if (duelSeen) { duelSeen = false; this.scene.scheduleOnce(checkAdvanceSafety, BATTLE_TURN_FLOW_TIMING.advanceSafetyUnlockSec); return; }
         UCUFLogger.warn(LogCategory.BATTLE, '[TurnFlowManager] isAdvancingTurn safety-reset（超時 20s），強制解鎖');
         this.finalizeAdvance();
@@ -77,7 +93,14 @@ export class TurnFlowManager {
     };
     this.scene.scheduleOnce(checkAdvanceSafety, BATTLE_TURN_FLOW_TIMING.advanceSafetyUnlockSec);
 
-    const playerResult = c.ctrl.resolvePlayerTurn();
+    let playerResult: BattleResult;
+    try { playerResult = c.ctrl.resolvePlayerTurn(); }
+    catch (error) {
+      // 我方回合結算丟錯：不能讓畫面停在「推進中」，記錯誤後放掉鎖（PROG-2-9404）
+      UCUFLogger.error(LogCategory.BATTLE, '[TurnFlowManager] 我方回合結算失敗，放掉回合推進鎖', error);
+      this.finalizeAdvance();
+      return;
+    }
     this._enemyTurnPending = playerResult === 'ongoing';
     this.scene.scheduleOnce(() => this.pollCombatDrain(0, () => {
       if (!c.isAdvancingTurn || this._advanceTurnGeneration !== gen) return;
@@ -90,17 +113,19 @@ export class TurnFlowManager {
       this.pollCombatDrain(0, () => {
         if (!c.isAdvancingTurn || this._advanceTurnGeneration !== gen) return;
         c.boardRenderer?.setDeployHintFaction(Faction.Enemy);
+        // PROG-2-9413：敵方回合播放 1.5 倍速（單挑面板開著時回到原速），finalizeAdvance 還原
+        setEnemyTurnPlayback(true, () => c.isDuelPanelActive);
         this.bridge.playTurnBanner(Faction.Enemy);
         this.bridge.showEnemyThinkingPanel();
         this.scene.scheduleOnce(() => {
           if (!c.isAdvancingTurn || this._advanceTurnGeneration !== gen) return;
-          c.ctrl?.resolveEnemyTurn();
+          this._guardTurnStep('敵方回合結算', () => c.ctrl?.resolveEnemyTurn());
           this.scene.scheduleOnce(() => this.pollCombatDrain(0, () => {
             if (!c.isAdvancingTurn || this._advanceTurnGeneration !== gen) return;
             this.checkDuelChallenge();
             this.pollCombatDrain(0, () => {
               if (!c.isAdvancingTurn || this._advanceTurnGeneration !== gen) return;
-              c.ctrl?.finalizeEnemyTurn();
+              this._guardTurnStep('敵方回合收尾', () => c.ctrl?.finalizeEnemyTurn());
               this._enemyTurnPending = false;
               this.finalizeAdvance();
             });
@@ -114,6 +139,7 @@ export class TurnFlowManager {
     const c = this.ctx;
     if (!c.isAdvancingTurn) return;
     c.isAdvancingTurn = false;
+    setEnemyTurnPlayback(false);
     this.completePendingEnemyTurn();
     this.bridge.hideEnemyThinkingPanel();
     this.bridge.playTurnBanner(Faction.Player);
@@ -131,8 +157,14 @@ export class TurnFlowManager {
     const ctrl = this.ctx.ctrl;
     if (!ctrl) return;
     UCUFLogger.warn(LogCategory.BATTLE, '[TurnFlowManager] 回合推進中途結束，補做敵方回合結算');
-    ctrl.resolveEnemyTurn();
-    ctrl.finalizeEnemyTurn();
+    this._guardTurnStep('補做敵方回合結算', () => ctrl.resolveEnemyTurn());
+    this._guardTurnStep('補做敵方回合收尾', () => ctrl.finalizeEnemyTurn());
+  }
+
+  /** 回合結算步驟丟錯時只記錯誤、不中斷後面的收尾與解鎖（PROG-2-9404）；否則一個例外就讓回合流程永久停住 */
+  private _guardTurnStep(label: string, step: () => unknown): void {
+    try { step(); }
+    catch (error) { UCUFLogger.error(LogCategory.BATTLE, `[TurnFlowManager] ${label}失敗，略過並繼續回合流程`, error); }
   }
 
   private pollCombatDrain(attempts: number, onDone: () => void): void {
@@ -355,6 +387,7 @@ export class TurnFlowManager {
       this._onPlayerDuelDecision(true);
       return;
     }
+    this._duelDecisionPending = true;
     panel.node.once('duelAccepted', () => this._onPlayerDuelDecision(true), this.scene);
     panel.node.once('duelRejected', () => this._onPlayerDuelDecision(false), this.scene);
   }
@@ -372,6 +405,7 @@ export class TurnFlowManager {
 
   private async _onPlayerDuelDecision(accepted: boolean): Promise<void> {
     const c = this.ctx;
+    this._duelDecisionPending = false;
     if (!c.ctrl) return;
     let duelResult: string;
     try { duelResult = await this.bridge.resolveDuelPresentation(Faction.Enemy, accepted); }

@@ -25,6 +25,7 @@ import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import { services } from '../../../core/managers/ServiceLoader';
 import { factorDetailVisible } from '../../../core/systems/FamilyMilestone';
 import { spiritSlotActions, type SpiritSlotAction } from '../../../core/systems/BloodlineRightPanelLayout';
+import { bloodlineDisplayName } from '../../../core/utils/PlayerFacingText';
 import { spiritSlotViewOf } from '../../../core/systems/SpiritSlotState';
 import { spiritPickerPage, spiritPickerRows, SPIRIT_PICKER_PAGE_SIZE, type SpiritPickerRow } from '../../../core/systems/SpiritSlotFlow';
 import {
@@ -138,7 +139,7 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
         this._set(this._lEpRating,
             `${this.t('ui.general.bloodline.ep_rating')}${cfg.ep !== undefined ? `${cfg.ep}${cfg.epRating ? ` · ${cfg.epRating}` : ''}` : this.t('ui.general.bloodline.ep_locked')}`
         );
-        this._set(this._lBloodline, `${this.t('ui.general.bloodline.id')}${mask(cfg.bloodlineId)}`);
+        this._set(this._lBloodline, `${this.t('ui.general.bloodline.id')}${cfg.bloodlineId ? bloodlineDisplayName(cfg.bloodlineId) : mask(cfg.bloodlineId)}`);
         this._set(this._lParents,   `${this.t('ui.general.bloodline.parents')}${mask(cfg.parentsSummary, this.t('ui.general.bloodline.parents_collapsed'))}`);
         this._set(this._lAncestors, `${this.t('ui.general.bloodline.ancestors')}${mask(cfg.ancestorsSummary, this.t('ui.general.bloodline.ancestors_hint'))}`);
 

@@ -314,6 +314,12 @@ export interface GeneralConfig {
   familyStudyUsed?: boolean;
   /** 已用過母門擇承（每胎限 1 次，與家學研習名額分開） */
   maternalStudyUsed?: boolean;
+  /** 已檢定過培育中段血脈共鳴事件的回合（R12 / R24，PROG-2-9170） */
+  bloodlineResonanceRoundsDone?: number[];
+  /** 鎖定的首次共鳴檢定結果（依回合記錄，放棄重修時重播不重新擲骰，PROG-2-9170） */
+  bloodlineResonanceOutcomes?: Record<number, import('../systems/BloodlineResonance').BloodlineResonanceLockedOutcome>;
+  /** 學府結業凝練之生平白因子印記（無限累積，配種取最高星 2 枚，PROG-2-9182） */
+  careerMarks?: Array<{ id: string; stars: 1 | 2 | 3 }>;
   maternalLine?: MaternalLine;
   /** 出生時記下的雙親 3★ 以上因子，供下一代判斷隔代復興；祖先冷存檔後查不到星數 */
   peakFactors?: AncestralPeak[];
@@ -428,6 +434,15 @@ export interface GeneralConfig {
   terrainAptitude?: Record<string, string>;
   weatherAptitude?: Record<string, string>;
   ancestor_chain?: string[];
+
+  /** 寒門新血前 6 回合訓練加成（小數 0.04~0.12，PROG-2-9181/9184） */
+  earlyTrainingBonus?: number;
+  /** 佳話聯姻「文武並濟」入學額外 TP（PROG-2-9181/9184） */
+  initialBonusTp?: number;
+  /** 佳話聯姻「雙星輝映」前 12 回合覺醒率加成（PROG-2-9181/9184） */
+  earlyAwakenBonusPct?: number;
+  /** 佳話聯姻觸發稱號 ID 列表（PROG-2-9181） */
+  marriageEpithets?: string[];
 
   stats?: GeneralStatsConfig;
   pol?: number;

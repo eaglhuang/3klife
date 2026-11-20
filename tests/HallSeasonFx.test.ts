@@ -3,7 +3,11 @@
  */
 import { assert, TestSuite } from './TestRunner';
 import {
+    HALL_FX_MOBILE_MAX_COUNT,
+    HALL_FX_REDRAW_INTERVAL_SEC,
     HallSeasonFxConfig,
+    hallSeasonDrawsGlow,
+    hallSeasonParticleCount,
     hallSeasonParticleX,
     spawnHallSeasonParticles,
     stepHallSeasonParticles,
@@ -66,6 +70,35 @@ export function createHallSeasonFxSuite(): TestSuite {
         for (const p of ps) {
             assert.inRange(p.y, -540 - p.height * 2, 540 + p.height * 2, 'y 循環');
             assert.inRange(hallSeasonParticleX(p, style), -960 - p.width * 2 - style.swayPx * 3, 960 + p.width * 2 + style.swayPx * 3, 'x 循環');
+        }
+    });
+
+    suite.test('手機粒子數封頂、桌機照設計稿（PROG-2-9175）', () => {
+        assert.equals(CONFIG.count, hallSeasonParticleCount(CONFIG, false));
+        assert.equals(Math.min(CONFIG.count, HALL_FX_MOBILE_MAX_COUNT), hallSeasonParticleCount(CONFIG, true));
+        assert.isTrue(hallSeasonParticleCount(CONFIG, true) < CONFIG.count, '手機粒子數要比桌機少');
+        const mobile = spawnHallSeasonParticles(CONFIG, 'winter', hallSeasonParticleCount(CONFIG, true));
+        assert.equals(HALL_FX_MOBILE_MAX_COUNT, mobile.length);
+        assert.equals(CONFIG.count, spawnHallSeasonParticles(CONFIG, 'winter').length);
+        // 要求數量超過設定時不超撒
+        assert.equals(CONFIG.count, spawnHallSeasonParticles(CONFIG, 'winter', CONFIG.count + 500).length);
+    });
+
+    suite.test('只有夏螢大光暈才多畫光暈橢圓；冬雪不畫（PROG-2-9175）', () => {
+        assert.isTrue(hallSeasonDrawsGlow(CONFIG.seasons.summer));
+        assert.isTrue(!hallSeasonDrawsGlow(CONFIG.seasons.winter));
+        assert.isTrue(!hallSeasonDrawsGlow(CONFIG.seasons.spring));
+        assert.isTrue(!hallSeasonDrawsGlow(CONFIG.seasons.autumn));
+    });
+
+    suite.test('降頻重畫間隔約 30Hz；累積時間推進的位移與逐幀推進相同（PROG-2-9175）', () => {
+        assert.isTrue(HALL_FX_REDRAW_INTERVAL_SEC > 1 / 61 && HALL_FX_REDRAW_INTERVAL_SEC < 1 / 20);
+        const a = spawnHallSeasonParticles(CONFIG, 'winter');
+        const b = spawnHallSeasonParticles(CONFIG, 'winter');
+        for (let i = 0; i < 10; i++) stepHallSeasonParticles(a, CONFIG, 'winter', 1 / 60);
+        stepHallSeasonParticles(b, CONFIG, 'winter', 10 / 60);
+        for (let i = 0; i < a.length; i++) {
+            assert.isTrue(Math.abs(a[i].y - b[i].y) < 1e-6, '落下位移一致');
         }
     });
 

@@ -37,6 +37,7 @@ import { emitDeployDragDebug, shouldLogDeployDragMove } from './DeployDragDebug'
 import { tallyDeployRefOf, type TallyDeployRef } from '../../core/config/TallyCardCatalog';
 import { UCUFLogger, LogLevel } from '../../core/utils/UCUFLogger';
 import { TurnBannerComposite } from './TurnBannerComposite';
+import { turnBannerVisibleSeconds } from '../core/TurnBannerTiming';
 import { EnemyThinkingComposite } from './EnemyThinkingComposite';
 
 const { ccclass } = _decorator;
@@ -48,6 +49,8 @@ interface ToastMessageLike {
   node: Node;
   show: (message: string, duration?: number, options?: ToastOptions) => void | Promise<void>;
   hide?: (key?: string) => void;
+  /** 回合橫幅期間暫停顯示（PROG-2-9416）；舊版 ToastMessage 沒有這個方法 */
+  holdFor?: (seconds: number) => void;
 }
 
 export enum DeployDragState {
@@ -147,6 +150,8 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
       this.turnBanner = bannerNode.getComponent(TurnBannerComposite) ?? bannerNode.addComponent(TurnBannerComposite);
     }
     this.turnBanner.node.setSiblingIndex(this.turnBanner.node.parent!.children.length - 1);
+    // 橫幅與提示框都在畫面中央：橫幅期間提示先暫停，收掉後再依序播，不疊字（PROG-2-9416）
+    this.toast?.holdFor?.(turnBannerVisibleSeconds(durationSec));
     void this.turnBanner.show(text, color, durationSec);
   }
 

@@ -10,11 +10,9 @@
 import { _decorator, Color, Label, Tween, tween, UIOpacity } from 'cc';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
+import { TURN_BANNER_FADE_IN_SEC as FADE_IN_SEC, TURN_BANNER_FADE_OUT_SEC as FADE_OUT_SEC, TURN_BANNER_MIN_HOLD_SEC } from '../core/TurnBannerTiming';
 
 const { ccclass } = _decorator;
-
-const FADE_IN_SEC = 0.2;
-const FADE_OUT_SEC = 0.3;
 
 @ccclass('TurnBannerComposite')
 export class TurnBannerComposite extends CompositePanel {
@@ -45,7 +43,7 @@ export class TurnBannerComposite extends CompositePanel {
         opacity.opacity = 0;
         this._tween = tween(opacity)
             .to(FADE_IN_SEC, { opacity: 255 })
-            .delay(Math.max(0.3, durationSec - FADE_IN_SEC - FADE_OUT_SEC))
+            .delay(Math.max(TURN_BANNER_MIN_HOLD_SEC, durationSec - FADE_IN_SEC - FADE_OUT_SEC))
             .to(FADE_OUT_SEC, { opacity: 0 })
             .call(() => {
                 this._tween = null;

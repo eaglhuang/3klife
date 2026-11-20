@@ -15,7 +15,8 @@ import { epRatingLabel } from '../../../core/systems/BreedingSystem';
 import { factorMaskView } from '../../../core/systems/FactorMask';
 import { parseHexRgb } from '../../../core/systems/FactorTagTokens';
 import { FactorMaskPresenter, factorLabelTint } from '../../../core/systems/FactorMaskState';
-import { buildGeneralDetailOverview } from '../GeneralDetailOverviewMapper';
+import { buildGeneralDetailOverview, formatBloodlineDisplayName } from '../GeneralDetailOverviewMapper';
+import { UNNAMED_BLOODLINE, factorDisplayName, geneColorName } from '../../../core/utils/PlayerFacingText';
 
 export interface Ds3FactorRow {
     icon: string;
@@ -84,20 +85,27 @@ export function buildDs3BloodlineView(cfg: GeneralConfig, stage: MilestoneStage 
     const showStars = factorDetailVisible(stage);
     const ep = Number.isFinite(cfg.ep) ? Number(cfg.ep) : 0;
     const cards = buildGeneralDetailOverview(cfg).cards;
-    const genes = (Array.isArray(cfg.genes) ? cfg.genes : []) as GeneLike[];
-    const factors = genes.slice(0, FACTOR_SLOT_COUNT).map((g) => {
+    const rawGenes = (Array.isArray(cfg.genes) ? cfg.genes : []) as GeneLike[];
+    const isLifeWhite = (g: GeneLike): boolean => {
+        const id = (g as GeneralGeneConfig).id;
+        return typeof id === 'string' && (id.startsWith('gene_white_') || id.startsWith('imprint_'));
+    };
+    const lifeWhiteGenes = rawGenes.filter(isLifeWhite);
+    const otherGenes = rawGenes.filter((g) => !isLifeWhite(g));
+    const orderedGenes = [...lifeWhiteGenes, ...otherGenes];
+    const factors = orderedGenes.slice(0, FACTOR_SLOT_COUNT).map((g) => {
         const gene = g as GeneralGeneConfig;
         const mask = factorMaskView(gene, playerLevel);
         const tint = factorLabelTint(gene, playerLevel);
         // 名稱欄只有 56 寬，放完整遮罩字會被縮到看不清；解鎖等級改放較寬的說明欄
         if (!mask.revealed) return { icon: MASKED_ICON, name: MASKED_NAME, tag: '', desc: `Lv${mask.requiredLevel + 1} 解鎖`, tint };
-        const name = g.displayName ?? '';
+        const name = g.displayName || factorDisplayName(gene.id, (id) => services().session.factorDictionary?.get(id)?.displayName);
         if (g.isLocked) {
             const lv = g.discoveryLevel;
             return { icon: LOCKED_ICON, name, tag: showStars ? '★?🔒' : '🔒', desc: lv ? `等級 ${lv} 時發現` : '待覺醒', tint };
         }
         const type = g.type ?? '';
-        return { icon: FACTOR_ICON[type] ?? LOCKED_ICON, name, tag: showStars ? `${type}★${g.level ?? 0}` : type, desc: g.description ?? '', tint };
+        return { icon: FACTOR_ICON[type] ?? LOCKED_ICON, name, tag: showStars ? `${geneColorName(type) || type}★${g.level ?? 0}` : (geneColorName(type) || type), desc: g.description ?? '', tint };
     });
     const beast = beastForGeneral(cfg.id);
     const parents = (cfg.parentsSummary ?? '').split('/').map((part) => part.trim()).filter((part) => part.length > 0);
@@ -107,10 +115,10 @@ export function buildDs3BloodlineView(cfg: GeneralConfig, stage: MilestoneStage 
         bloodlineName: cards.bloodlineName,
         awakeningProgress: clampPercent(cards.awakeningProgress),
         factors,
-        serial: cfg.bloodlineId ?? '—',
+        serial: cfg.bloodlineId ? formatBloodlineDisplayName(cfg.bloodlineId, UNNAMED_BLOODLINE) : '—',
         stateText: CREST_STATE_TEXT[String((cfg as { crestState?: string }).crestState)] ?? '—',
         ultimateName: (cfg as { awakeningTitle?: string }).awakeningTitle ?? '—',
-        ultimateDesc: (cfg as { crestHint?: string }).crestHint ?? '',
+        ultimateDesc: cards.crestHint,
         father: parents[0] ?? '父：—',
         mother: parents[1] ?? '母：—',
         beast: {

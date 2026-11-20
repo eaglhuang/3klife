@@ -22,14 +22,17 @@ import { RandomSource } from './GeneralAging';
 import { applyPassiveSave, passiveSavingsOfSupport, totalVitalitySave, type MentorPassiveSavings } from './MentorPassiveSavings';
 import type { UnveilingGeneral } from './Unveiling';
 import { effectiveGrowthModifier } from './Unveiling';
+import { earlyEnthusiasmRoundsLimit } from '../mind/MindMarriage';
 import { HybridSkillSource, rollHybridTrigger } from './HybridSkill';
 import { rollNurtureRoundEvents } from './NurtureEvents';
 import { FactorDictionary, resolveFactorColor } from './FactorInheritance';
 import { burstRateAtStar, MENTOR_STAR_TABLE, mentorStarPerks } from './MentorBreakthrough';
 import { inspireEventsFromSupport, InspireEvent } from './MentorInspiration';
+import { applyResonanceOutcomeToGeneral, type BloodlineResonanceLockedOutcome } from './BloodlineResonance';
 import { surnameOf } from './VirtualAncestorGenerator';
 import { findTriggeredSynergy, synergyTpBonus } from './MentorSynergy';
 import { trainingGainBreakdown } from './TrainingGainFormula';
+import { getMarriageVitalityRules } from './MarriageVitality';
 
 export const NURTURE_TOTAL_ROUNDS = 36;
 /** MCQ Q48：固定 6 教官槽，入學快照鎖定 */
@@ -160,6 +163,10 @@ export interface NurtureSession {
     round: number;
     /** 這次培育已辦過的開蒙禮、加冠禮（PROG-2-1821） */
     ritesDone?: Array<'enrollment' | 'capping'>;
+    /** 這次培育已檢定過的中段血脈共鳴回合（PROG-2-9170） */
+    resonanceRoundsDone?: number[];
+    /** 這次培育中已觸發但尚未套用到名冊的共鳴結果（畢業時才正式寫入，放棄則不留在本體，PROG-2-9170） */
+    resonancePending?: BloodlineResonanceLockedOutcome[];
     vigor: number;
     /** 鏡像快照：進入培育時的資質層，之後不再改變 */
     talent: Record<TrainingKind, number>;
@@ -177,6 +184,12 @@ export interface NurtureSession {
     clanTraditionKind?: TrainingKind;
     /** 世交太傅伴讀的修業效率加成（G3 §F-2），入學時定值。舊存檔沒有此欄位 */
     synergyTutorBonus?: number;
+    /** 雙親結緣當下心情帶動之開蒙前 4 回合幹勁倍率（PROG-2-9165） */
+    earlyEnthusiasmMultiplier?: number;
+    /** 寒門新血前 6 回合訓練加成（小數，PROG-2-9184） */
+    earlyTrainingBonus?: number;
+    /** 佳話聯姻「雙星輝映」前 12 回合覺醒率加成（小數，PROG-2-9184） */
+    earlyAwakenBonusPct?: number;
     /** 混種戰法觸發的回合；尚未觸發為 undefined */
     hybridRound?: number;
     /** 累積好感次數（舊存檔可能沒有此欄位，視為 0） */
@@ -321,6 +334,9 @@ export function createNurtureSession(input: CreateNurtureSessionInput): NurtureS
     const talent = emptyStatRecord();
     for (const kind of TRAINING_KINDS) talent[kind] = statOf(input.child, kind);
     const mentors = input.mentors.map((mentor) => ({ ...mentor, statBonus: mentor.statBonus ? { ...mentor.statBonus } : undefined }));
+    const initialBonusTp = Math.max(0, Math.round((input.child as { initialBonusTp?: number }).initialBonusTp ?? 0));
+    const earlyTrainingBonus = Math.max(0, (input.child as { earlyTrainingBonus?: number }).earlyTrainingBonus ?? 0);
+    const earlyAwakenBonusPct = Math.max(0, (input.child as { earlyAwakenBonusPct?: number }).earlyAwakenBonusPct ?? 0);
     return {
         sessionId: input.sessionId,
         childId: input.child.id,
@@ -329,12 +345,15 @@ export function createNurtureSession(input: CreateNurtureSessionInput): NurtureS
         vigor: VIGOR_MAX,
         talent,
         prowess: emptyStatRecord(),
-        tp: 0,
+        tp: initialBonusTp,
         growthModifier: effectiveGrowthModifier(input.child),
         mentors,
         hybridSources: input.hybridSources ? { ...input.hybridSources } : undefined,
         clanTraditionKind: input.clanTraditionKind,
         synergyTutorBonus: input.synergyTutorBonus,
+        earlyEnthusiasmMultiplier: (input.child as { earlyEnthusiasmMultiplier?: number }).earlyEnthusiasmMultiplier,
+        earlyTrainingBonus: earlyTrainingBonus > 0 ? earlyTrainingBonus : undefined,
+        earlyAwakenBonusPct: earlyAwakenBonusPct > 0 ? earlyAwakenBonusPct : undefined,
         mentorSlots: rollMentorSlots(mentors, input.random),
         negativeFactors: [],
         negativeTraitRateBonus: Math.max(0, (input.child as { negativeTraitRateBonus?: number }).negativeTraitRateBonus ?? 0),
@@ -360,7 +379,7 @@ export interface GainBreakdown {
 
 /** 純公式：給定本回合基礎值與教官站位，算屬性獲得量（不擲骰） */
 export function computeStatGain(
-    session: Pick<NurtureSession, 'mentors' | 'mentorSlots' | 'growthModifier' | 'clanTraditionKind' | 'synergyTutorBonus'>,
+    session: Pick<NurtureSession, 'mentors' | 'mentorSlots' | 'growthModifier' | 'clanTraditionKind' | 'synergyTutorBonus' | 'earlyEnthusiasmMultiplier' | 'earlyTrainingBonus'> & { round?: number },
     kind: TrainingKind,
     base: number,
 ): GainBreakdown {
@@ -368,18 +387,25 @@ export function computeStatGain(
     const onSlot = session.mentors.filter((mentor) => session.mentorSlots[mentor.id] === kind);
     const synergyBonus = Math.max(0, onSlot.length - 1) * SYNERGY_BONUS_PER_EXTRA_MENTOR;
     const burst = onSlot.some((mentor) => mentor.specialty === kind);
+    const earlyBonus = (session.round ?? 0) < earlyEnthusiasmRoundsLimit()
+        ? Math.max(0, (session.earlyEnthusiasmMultiplier ?? 1) - 1)
+        : 0;
+    const freshBloodBonus = (session.round ?? 0) < getMarriageVitalityRules().vitalityRules.earlyTrainingTurns
+        ? Math.max(0, session.earlyTrainingBonus ?? 0)
+        : 0;
     // 走 FORM-01 總公式（TrainingGainFormula）：教官加值進加法區、資質即 growthModifier、
     // 同格協力走陪伴乘區、傾囊相授走傾囊乘區；運勢與人數補正尚無來源，以中性值帶入。
     const breakdown = trainingGainBreakdown({
         base,
         cardBonuses: session.mentors.map((mentor) => base * mentorBonusFor(mentor, kind)),
-        generalGrowth: session.growthModifier - 1,
+        generalGrowth: session.growthModifier - 1 + earlyBonus,
         baseMorale: 0,
         moraleBoosts: [],
         trainingBoosts: [
             synergyBonus,
             session.clanTraditionKind === kind ? CLAN_TRADITION_TRAINING_BONUS : 0,
             session.synergyTutorBonus ?? 0,
+            freshBloodBonus,
             ...onSlot.map((mentor) => mentor.trainingRate ?? 0),
         ],
         friendshipBursts: burst ? [MENTOR_BURST_MULTIPLIER - 1] : [],
@@ -686,7 +712,12 @@ export function graduate(
     });
     if (awakening.title) general.awakeningTitle = awakening.title;
 
-    return { general, rating, ratingScore, tags };
+    let finalGeneral: UnveilingGeneral = general;
+    for (const outcome of session.resonancePending ?? []) {
+        finalGeneral = applyResonanceOutcomeToGeneral(finalGeneral, outcome) as UnveilingGeneral;
+    }
+
+    return { general: finalGeneral, rating, ratingScore, tags };
 }
 
 // ── 退役教官卡 → 培育教官 ───────────────────────────────────────────────────

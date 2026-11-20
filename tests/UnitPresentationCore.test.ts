@@ -54,6 +54,15 @@ assert.equal(follower.snapshot().facing, -1);
 assert.equal(follower.snapshot().animationSpeed, 0.5);
 follower.follow({ x: 25, y: 0 }, false, 0.1);
 assert.equal(follower.snapshot().action, 'idle');
+// PROG-2-9412：出手中被拖著移動（騎兵衝鋒）仍維持攻擊動作，播完才可改走路
+const charger = new UnitPresentationCore(config, { x: 0, y: 0 });
+charger.play('attack');
+charger.follow({ x: 30, y: 0 }, true, 0.1);
+assert.equal(charger.snapshot().action, 'attack');
+assert.equal(charger.snapshot().foot.x, 30);
+charger.step(1);
+charger.follow({ x: 60, y: 0 }, true, 0.1);
+assert.equal(charger.snapshot().action, 'move');
 follower.moveToWithin({ x: 425, y: 0 }, 2);
 assert.equal(follower.snapshot().animationSpeed, 2);
 assert.equal(follower.step(1).foot.x, 225);
@@ -82,18 +91,44 @@ assert.equal(returned.phase, 'done');
 assert.equal(returned.units[0].foot.x, 0);
 assert.equal(returned.units[1].foot.x, 100);
 
-import { generalSpineConfig, soldierSpineConfig } from '../assets/scripts/battle/shared/UnitPresentationConfig';
+import { MAX_WALK_ANIMATION_SPEED, generalSpineConfig, soldierSpineConfig } from '../assets/scripts/battle/shared/UnitPresentationConfig';
+import { resolveClipName } from '../assets/scripts/battle/shared/UnitPresentationCore';
 assert.equal(generalSpineConfig('zhao-yun')?.walkGroundSpeed, 93.33);
 assert.equal(generalSpineConfig('unknown'), null);
 assert.equal(soldierSpineConfig(false).walkGroundSpeed, 100);
 assert.equal(soldierSpineConfig(true).clips.attack.name, 'duel_attack');
+// PROG-2-9407：小兵前進播 walk，缺 walk 的骨架退回 dash_in；武將骨架只有 dash_in 維持原狀
+assert.equal(soldierSpineConfig(false).clips.move.name, 'walk');
+assert.equal(soldierSpineConfig(false).clips.move.fallback, 'dash_in');
+assert.equal(generalSpineConfig('zhao-yun')?.clips.move.name, 'dash_in');
+assert.equal(resolveClipName(soldierSpineConfig(false).clips.move, name => name === 'walk' || name === 'dash_in'), 'walk');
+assert.equal(resolveClipName(soldierSpineConfig(false).clips.move, name => name === 'dash_in'), 'dash_in');
+assert.equal(resolveClipName(soldierSpineConfig(false).clips.move, () => false), 'walk');
+// 步態倍率封頂：一格 144 像素在 2 秒內走完，倍率原本高達 4，封頂後不超過 MOVE_GAIT_TUNING.maxAnimationSpeed（2.2）
+const soldierCore = new UnitPresentationCore(soldierSpineConfig(false), { x: 0, y: 0 });
+soldierCore.follow({ x: 72, y: 0 }, true, 1);
+assert.equal(soldierCore.snapshot().animationSpeed, MAX_WALK_ANIMATION_SPEED);
+soldierCore.follow({ x: 72 + 18 * 0.5, y: 0 }, true, 1);
+assert.equal(soldierCore.snapshot().animationSpeed, 0.5);
 assert.equal(soldierSpineConfig(false).path, 'spine/soldiers/soldier_spear_blue/soldier_spear_blue');
 assert.equal(soldierSpineConfig(false, true).path, 'spine/soldiers/soldier_spear_red/soldier_spear_red');
 assert.equal(soldierSpineConfig(true, true).path, 'spine/soldiers/soldier_bow_red/soldier_bow_red');
 assert.equal(soldierSpineConfig(true, false).path, 'spine/soldiers/soldier_bow_blue/soldier_bow_blue');
 import { troopSpineConfig } from '../assets/scripts/battle/shared/UnitPresentationConfig';
 assert.equal(troopSpineConfig('medic', true).path, 'spine/soldiers/soldier_medic_red/soldier_medic_red');
-assert.equal(troopSpineConfig('cavalry').path, 'spine/soldiers/soldier_spear_blue/soldier_spear_blue');
+// PROG-2-9408：我方騎兵改用騎手＋馬合成骨架；前進播 gallop、蹄聲依 gallop 半週期同拍；敵方暫時沿用紅色槍兵
+const cavalry = troopSpineConfig('cavalry');
+assert.equal(cavalry.path, 'spine/soldiers/soldier_cavalry_blue/soldier_cavalry_blue');
+assert.equal(cavalry.clips.move.name, 'gallop');
+assert.equal(cavalry.clips.attack.name, 'thrust');
+assert.equal(cavalry.bobPx, 0);
+assert.ok(Math.abs((cavalry.footfallIntervalSec ?? 0) - cavalry.clips.move.duration / 2) < 1e-6);
+assert.ok(cavalry.displayScale > 0 && cavalry.displayScale < troopSpineConfig('infantry').displayScale); // 合成骨架騎手已放大 1.54 倍
+assert.equal(troopSpineConfig('cavalry', true).path, 'spine/soldiers/soldier_spear_red/soldier_spear_red');
+// 實機量到兩格多、每秒約 144 單位：gallop 倍率約 1.15，不會撞到 2.2 上限而打滑
+const cavalryCore = new UnitPresentationCore(cavalry, { x: 0, y: 0 });
+cavalryCore.follow({ x: 144, y: 0 }, true, 1);
+assert.ok(cavalryCore.snapshot().animationSpeed < MAX_WALK_ANIMATION_SPEED);
 assert.equal(troopSpineConfig('infantry', false, 'tiger-tally-xian-zhen').path, 'spine/soldiers/soldier_elite_infantry_blue/soldier_elite_infantry_blue');
 assert.equal(troopSpineConfig('shield', false, 'tiger-tally-xian-zhen').path, 'spine/soldiers/soldier_shield_blue/soldier_shield_blue');
 

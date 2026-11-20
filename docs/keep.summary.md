@@ -86,6 +86,13 @@
 - §13.3 Publishing Director Mode → `docs/keep-shards/keep-workflow.md` §13.3；觸發：寫文章 / 技術文章 / 部落格 / 英文版 / 預覽 / 出版
 - §13.4 Role Skill Model → `docs/keep-shards/keep-workflow.md` §13.4；本機人類召喚入口：`C:\Users\User\.codex\skills\ai-role-router\SKILL.md`
 
+## §14. 共用 base 框架（PROG-2-9200）
+- 原則：同本質系統一律共用 base，玩法只做包裝與差異 JSON，不准各寫一套；至少六套：**買賣商店、物品庫存、任務、獎勵、技能、劇情（演出）**，之後會增加。入口：`docs/遊戲規格文件/系統規格書/共用框架總綱規格書.md (doc_spec_1182)`。
+- 硬規則（總綱第 5 章「共通網路協定層」）：重要數值與結果（貨幣、庫存、獎勵、任務結算、技能等級、劇情旗標）與存檔，一律走共用 API；單機由「本機伺服器 adapter」實作，日後只換網路 adapter；玩法與 UI 不准直接改數值或寫存檔（`check-api-bypass` 檢查）。
+- 六份系統規格書：商店 doc_spec_1183、庫存 doc_spec_1184、任務 doc_spec_1185、獎勵 doc_spec_1186、技能 doc_spec_1187、劇情（演出）doc_spec_1188；各書第 11 章為伺服器 API。
+- 新增框架判準：兩處以上出現類似功能就提案（總綱第 3 章、第 11 章候選）。實作卡第一張一律是 API 層（總綱第 9 章）。
+- 雙向索引：`docs/cross-ref/cross-ref-specs.md`「共用 base 框架」節（規格↔規格）、`docs/cross-ref/cross-ref-code.md` B-2（框架↔程式檔）。
+
 ## §M. keep-memory 記憶索引
 > 事實粒度記憶筆記層（沉澱層）。契約見 `docs/keep-memory/README.md (doc_index_keep_memory)`；本段由 memory-manager rebuild-index 維護，預算 30 行。
 <!-- keep-memory-index:start -->

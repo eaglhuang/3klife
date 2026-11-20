@@ -35,7 +35,7 @@ function layoutIds(): Set<string> {
 function youth(id: string, extra: Partial<JobWiringGeneral> = {}): GeneralConfig {
     return {
         id, name: id, faction: 'shu', gender: '男', age: 20, hp: 1000,
-        str: 80, lea: 60, int: 50, pol: 70, primaryClass: 'Warrior', ...extra,
+        str: 80, lea: 60, int: 50, pol: 70, primaryClass: 'Warrior', fatherId: 'dad', ...extra,
     } as unknown as GeneralConfig;
 }
 
@@ -63,6 +63,15 @@ export function createJobChangeControllerSuite(): TestSuite {
             youth('hasSub', { subClass: 'Scholar' }),
         ], 1);
         assert.equals('ok', controller.eligibleGenerals().map((general) => general.id).join(','));
+    });
+
+    suite.test('成人禮只列本家子嗣：沒有父母欄位的現成武將（公孫淵、簡雍）不列入（2026-11-19 裁決）', async () => {
+        const { controller } = await makeRig([
+            youth('gongsun', { age: 30, fatherId: undefined, motherId: undefined } as Partial<JobWiringGeneral>),
+            youth('child'),
+            youth('motherOnly', { fatherId: undefined, motherId: 'mom' } as Partial<JobWiringGeneral>),
+        ], 1);
+        assert.equals('child,motherOnly', controller.eligibleGenerals().map((general) => general.id).join(','));
     });
 
     suite.test('沒有主職資料的既有武將也會進名單，主職由後備規則解析（PROG-2-0228）', async () => {

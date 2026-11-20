@@ -1,0 +1,24 @@
+{
+  "schema": "mission-themes.v1",
+  "version": 1,
+  "themes": [
+    { "id": "military", "wall": "Military", "label": "軍事", "icon": "icon_mission_military",
+      "defaultKeyStats": { "lea": 0.4, "str": 0.3 }, "defaultTags": ["military"], "boardWeight": 10,
+      "allowedEffects": ["resource", "generalExp", "fame", "officerExp", "relation", "generalState", "trait", "flag", "spawn", "intel", "unlock", "sceneGambit", "morale", "memoryNote"] },
+    { "id": "domestic", "wall": "Domestic", "label": "內政", "icon": "icon_mission_domestic",
+      "defaultKeyStats": { "pol": 0.4, "cha": 0.3 }, "defaultTags": ["domestic"], "boardWeight": 10,
+      "allowedEffects": ["resource", "generalExp", "fame", "officerExp", "relation", "generalState", "trait", "flag", "spawn", "intel", "unlock", "memoryNote"] },
+    { "id": "expedition", "wall": "Expedition", "label": "遠征", "icon": "icon_mission_expedition",
+      "defaultKeyStats": { "lea": 0.4, "str": 0.3 }, "defaultTags": ["expedition"], "boardWeight": 10,
+      "allowedEffects": ["resource", "generalExp", "fame", "officerExp", "relation", "generalState", "trait", "flag", "spawn", "intel", "unlock", "sceneGambit", "morale", "memoryNote"] },
+    { "id": "diplomacy", "wall": "Expedition", "label": "外交", "icon": "icon_mission_diplomacy",
+      "defaultKeyStats": { "cha": 0.5, "int": 0.3 }, "defaultTags": ["diplomacy"], "boardWeight": 6,
+      "allowedEffects": ["resource", "generalExp", "fame", "officerExp", "relation", "generalState", "trait", "flag", "spawn", "intel", "unlock", "memoryNote"] },
+    { "id": "espionage", "wall": "Expedition", "label": "諜報", "icon": "icon_mission_espionage",
+      "defaultKeyStats": { "int": 0.5, "lea": 0.3 }, "defaultTags": ["espionage"], "boardWeight": 5,
+      "allowedEffects": ["resource", "generalExp", "fame", "officerExp", "relation", "generalState", "trait", "flag", "spawn", "intel", "unlock", "sceneGambit", "morale", "memoryNote"] },
+    { "id": "romance", "wall": "Domestic", "label": "結緣", "icon": "icon_mission_romance",
+      "defaultKeyStats": { "cha": 0.5, "int": 0.3 }, "defaultTags": ["romance"], "boardWeight": 4,
+      "allowedEffects": ["resource", "generalExp", "fame", "relation", "generalState", "trait", "flag", "spawn", "intel", "unlock", "memoryNote"] }
+  ]
+}

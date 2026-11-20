@@ -1,0 +1,283 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://3klife.local/schemas/mission-data.schema.json",
+  "title": "通用任務資料檔 Schema（PROG-2-9145）",
+  "description": "definitions.def 檢查 data/missions/**/*.json；其餘 definitions 檢查 mission-*.json 的根物件。",
+  "definitions": {
+    "id": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,63}$" },
+    "key": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,47}$" },
+    "stat": { "enum": ["str", "int", "lea", "pol", "cha"] },
+    "difficulty": { "enum": ["EASY", "NORMAL", "ELITE", "ADVANCED", "HELL"] },
+    "intelValue": { "type": "integer", "minimum": 0, "maximum": 100 },
+    "text": { "type": "string", "minLength": 1 },
+    "keyStats": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "$ref": "#/definitions/stat" },
+      "additionalProperties": { "type": "number", "exclusiveMinimum": 0, "maximum": 2 }
+    },
+    "amount": {
+      "oneOf": [
+        { "type": "number" },
+        {
+          "type": "object",
+          "required": ["base", "mulKey"],
+          "additionalProperties": false,
+          "properties": {
+            "base": { "type": "number" },
+            "mulKey": { "enum": ["reward", "risk", "cost"] }
+          }
+        }
+      ]
+    },
+    "effect": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": { "enum": ["resource", "generalExp", "fame", "officerExp", "relation", "generalState", "trait", "flag", "spawn", "intel", "unlock", "sceneGambit", "morale", "memoryNote"] }
+      },
+      "allOf": [
+        { "if": { "properties": { "kind": { "const": "resource" } } },
+          "then": { "required": ["res", "amount"], "additionalProperties": false,
+            "properties": { "kind": {}, "res": { "enum": ["grain", "troops", "silver"] }, "amount": { "$ref": "#/definitions/amount" } } } },
+        { "if": { "properties": { "kind": { "enum": ["generalExp", "fame", "officerExp"] } } },
+          "then": { "required": ["amount"], "additionalProperties": false,
+            "properties": { "kind": {}, "amount": { "$ref": "#/definitions/amount" } } } },
+        { "if": { "properties": { "kind": { "const": "relation" } } },
+          "then": { "required": ["target", "delta"], "additionalProperties": false,
+            "properties": { "kind": {}, "target": { "type": "string", "pattern": "^(npc|faction|general):[a-z0-9_]+$" }, "delta": { "type": "number" } } } },
+        { "if": { "properties": { "kind": { "const": "generalState" } } },
+          "then": { "required": ["state", "seasons"], "additionalProperties": false,
+            "properties": { "kind": {}, "state": { "enum": ["injured", "captured", "exhausted"] }, "seasons": { "type": "integer", "minimum": 1, "maximum": 3 } } } },
+        { "if": { "properties": { "kind": { "const": "trait" } } },
+          "then": { "additionalProperties": false, "oneOf": [{ "required": ["add"] }, { "required": ["remove"] }],
+            "properties": { "kind": {}, "add": { "$ref": "#/definitions/key" }, "remove": { "$ref": "#/definitions/key" } } } },
+        { "if": { "properties": { "kind": { "const": "flag" } } },
+          "then": { "additionalProperties": false, "oneOf": [{ "required": ["set", "value"] }, { "required": ["inc"] }],
+            "properties": { "kind": {}, "set": { "$ref": "#/definitions/key" }, "inc": { "$ref": "#/definitions/key" }, "value": { "type": ["boolean", "number"] } } } },
+        { "if": { "properties": { "kind": { "const": "spawn" } } },
+          "then": { "required": ["defId"], "additionalProperties": false,
+            "properties": { "kind": {}, "defId": { "$ref": "#/definitions/id" }, "intel": { "$ref": "#/definitions/intelValue" },
+              "afterSeasons": { "type": "integer", "minimum": 0, "maximum": 8 }, "expireSeasons": { "type": "integer", "minimum": 1, "maximum": 8 } } } },
+        { "if": { "properties": { "kind": { "const": "intel" } } },
+          "then": { "required": ["target", "delta"], "additionalProperties": false,
+            "properties": { "kind": {}, "delta": { "type": "number", "minimum": -100, "maximum": 100 },
+              "target": { "type": "object", "minProperties": 1, "maxProperties": 1, "additionalProperties": false,
+                "properties": { "defId": { "$ref": "#/definitions/id" }, "tag": { "$ref": "#/definitions/key" }, "nextSpawn": { "type": "boolean" } } } } } },
+        { "if": { "properties": { "kind": { "const": "unlock" } } },
+          "then": { "required": ["id"], "additionalProperties": false, "properties": { "kind": {}, "id": { "$ref": "#/definitions/key" } } } },
+        { "if": { "properties": { "kind": { "const": "sceneGambit" } } },
+          "then": { "required": ["id"], "additionalProperties": false, "properties": { "kind": {}, "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" } } } },
+        { "if": { "properties": { "kind": { "const": "morale" } } },
+          "then": { "required": ["delta"], "additionalProperties": false, "properties": { "kind": {}, "delta": { "type": "number" } } } },
+        { "if": { "properties": { "kind": { "const": "memoryNote" } } },
+          "then": { "required": ["tag", "text"], "additionalProperties": false,
+            "properties": { "kind": {}, "tag": { "$ref": "#/definitions/key" }, "text": { "$ref": "#/definitions/text" } } } }
+      ]
+    },
+    "node": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": { "enum": ["roll", "chance", "switch", "effects", "seq"] },
+        "narrative": { "$ref": "#/definitions/text" }
+      },
+      "allOf": [
+        { "if": { "properties": { "kind": { "const": "roll" } } },
+          "then": { "required": ["critRatio", "disasterRatio", "tiers"], "additionalProperties": false,
+            "properties": {
+              "kind": {}, "narrative": {},
+              "p": { "type": "number", "minimum": 0, "maximum": 1 },
+              "critRatio": { "type": "number", "minimum": 0, "maximum": 1 },
+              "disasterRatio": { "type": "number", "minimum": 0, "maximum": 1 },
+              "tiers": { "type": "object", "required": ["critical", "success", "fail", "disaster"], "additionalProperties": false,
+                "properties": {
+                  "critical": { "$ref": "#/definitions/node" }, "success": { "$ref": "#/definitions/node" },
+                  "fail": { "$ref": "#/definitions/node" }, "disaster": { "$ref": "#/definitions/node" } } } } } },
+        { "if": { "properties": { "kind": { "const": "chance" } } },
+          "then": { "required": ["p", "hit", "miss"], "additionalProperties": false,
+            "properties": { "kind": {}, "narrative": {}, "p": { "type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 1 },
+              "hit": { "$ref": "#/definitions/node" }, "miss": { "$ref": "#/definitions/node" } } } },
+        { "if": { "properties": { "kind": { "const": "switch" } } },
+          "then": { "required": ["on", "cases", "else"], "additionalProperties": false,
+            "properties": { "kind": {}, "narrative": {},
+              "on": { "type": "string", "pattern": "^(variant|generalTag|fact:[a-z_]+|flag:[a-z_]+|stat:(str|int|lea|pol|cha)>=[0-9]{1,3})$" },
+              "cases": { "type": "array", "minItems": 1,
+                "items": { "type": "object", "required": ["then"], "additionalProperties": false,
+                  "anyOf": [{ "required": ["when"] }, { "required": ["eq"] }, { "required": ["gte"] }],
+                  "properties": { "when": { "type": ["string", "boolean"] }, "eq": { "type": ["string", "number", "boolean"] }, "gte": { "type": "number" },
+                    "then": { "$ref": "#/definitions/node" } } } },
+              "else": { "$ref": "#/definitions/node" } } } },
+        { "if": { "properties": { "kind": { "const": "effects" } } },
+          "then": { "required": ["effects"], "additionalProperties": false,
+            "properties": { "kind": {}, "narrative": {}, "effects": { "type": "array", "items": { "$ref": "#/definitions/effect" } } } } },
+        { "if": { "properties": { "kind": { "const": "seq" } } },
+          "then": { "required": ["nodes"], "additionalProperties": false,
+            "properties": { "kind": {}, "narrative": {}, "nodes": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/node" } } } } }
+      ]
+    },
+    "branch": {
+      "type": "object",
+      "required": ["id", "when", "objective", "presented", "modifiers", "outcome"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/definitions/id" },
+        "when": {
+          "type": "object", "required": ["minIntel"], "additionalProperties": false,
+          "properties": {
+            "variant": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/id" } },
+            "minIntel": { "$ref": "#/definitions/intelValue" },
+            "maxIntel": { "$ref": "#/definitions/intelValue" },
+            "flagsAll": { "type": "array", "items": { "$ref": "#/definitions/key" } },
+            "generalTagsAny": { "type": "array", "items": { "$ref": "#/definitions/key" } }
+          }
+        },
+        "objective": {
+          "type": "object", "required": ["id", "text"], "additionalProperties": false,
+          "properties": { "id": { "$ref": "#/definitions/key" }, "text": { "$ref": "#/definitions/text" }, "keyStats": { "$ref": "#/definitions/keyStats" } }
+        },
+        "presented": {
+          "type": "object", "required": ["hints"], "additionalProperties": false,
+          "properties": { "objectiveText": { "$ref": "#/definitions/text" }, "hints": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/text" } } }
+        },
+        "modifiers": {
+          "type": "object", "required": ["successDelta", "rewardMul", "riskMul"], "additionalProperties": false,
+          "properties": {
+            "successDelta": { "type": "number", "minimum": -0.5, "maximum": 0.5 },
+            "rewardMul": { "type": "number", "exclusiveMinimum": 0, "maximum": 4 },
+            "riskMul": { "type": "number", "exclusiveMinimum": 0, "maximum": 4 },
+            "costMul": { "type": "number", "exclusiveMinimum": 0, "maximum": 4 },
+            "durationDelta": { "type": "integer", "minimum": -2, "maximum": 2 }
+          }
+        },
+        "outcome": { "$ref": "#/definitions/node" }
+      }
+    },
+    "fact": {
+      "type": "object", "required": ["key", "label", "levels"], "additionalProperties": false,
+      "properties": {
+        "key": { "$ref": "#/definitions/key" },
+        "label": { "$ref": "#/definitions/text" },
+        "levels": { "type": "array", "minItems": 1,
+          "items": { "type": "object", "required": ["minIntel", "text"], "additionalProperties": false,
+            "properties": { "minIntel": { "$ref": "#/definitions/intelValue" }, "text": { "$ref": "#/definitions/text" } } } },
+        "decoy": { "$ref": "#/definitions/text" }
+      }
+    },
+    "def": {
+      "type": "object",
+      "required": ["schema", "id", "version", "theme", "difficulty", "tags", "meta", "text", "requirement", "timing", "variants", "intel", "facts", "branches"],
+      "additionalProperties": false,
+      "properties": {
+        "schema": { "const": "mission-def.v1" },
+        "id": { "$ref": "#/definitions/id" },
+        "version": { "type": "integer", "minimum": 1 },
+        "legacyTemplateId": { "$ref": "#/definitions/id" },
+        "theme": { "$ref": "#/definitions/key" },
+        "difficulty": { "$ref": "#/definitions/difficulty" },
+        "tags": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/definitions/key" } },
+        "meta": { "type": "object", "required": ["origin"], "additionalProperties": false,
+          "properties": { "origin": { "enum": ["converted", "authored"] }, "note": { "$ref": "#/definitions/text" } } },
+        "sceneGambit": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+        "text": { "type": "object", "required": ["title", "brief"], "additionalProperties": false,
+          "properties": { "title": { "$ref": "#/definitions/text" }, "brief": { "$ref": "#/definitions/text" }, "detail": { "$ref": "#/definitions/text" } } },
+        "facts": { "type": "array", "items": { "$ref": "#/definitions/fact" } },
+        "requirement": { "type": "object", "required": ["slots", "keyStats"], "additionalProperties": false,
+          "properties": {
+            "slots": { "type": "integer", "minimum": 1, "maximum": 3 },
+            "keyStats": { "$ref": "#/definitions/keyStats" },
+            "preferTags": { "type": "array", "items": { "$ref": "#/definitions/key" } },
+            "avoidTags": { "type": "array", "items": { "$ref": "#/definitions/key" } },
+            "roleAnyOf": { "type": "array", "items": { "$ref": "#/definitions/key" } } } },
+        "timing": { "type": "object", "required": ["durationSeasons", "expireSeasons"], "additionalProperties": false,
+          "properties": { "durationSeasons": { "type": "integer", "minimum": 1, "maximum": 4 }, "expireSeasons": { "type": "integer", "minimum": 1, "maximum": 6 } } },
+        "cost": { "type": "object", "additionalProperties": false,
+          "properties": { "grain": { "type": "number", "minimum": 0 }, "troops": { "type": "number", "minimum": 0 }, "silver": { "type": "number", "minimum": 0 } } },
+        "energy": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "variants": { "type": "array", "minItems": 1,
+          "items": { "type": "object", "required": ["id", "weight"], "additionalProperties": false,
+            "properties": { "id": { "$ref": "#/definitions/id" }, "weight": { "type": "number", "exclusiveMinimum": 0 } } } },
+        "intel": { "type": "object", "required": ["initial", "jitter", "sources"], "additionalProperties": false,
+          "properties": {
+            "initial": { "$ref": "#/definitions/intelValue" },
+            "jitter": { "type": "integer", "minimum": 0, "maximum": 30 },
+            "sources": { "type": "object", "additionalProperties": false,
+              "properties": {
+                "recon": { "type": "object", "additionalProperties": false,
+                  "properties": { "base": { "type": "integer", "minimum": 0, "maximum": 100 },
+                    "increments": { "type": "array", "minItems": 1, "items": { "type": "integer", "minimum": 0, "maximum": 100 } } } },
+                "wait": { "type": "object", "required": ["delta"], "additionalProperties": false, "properties": { "delta": { "type": "integer", "minimum": 0, "maximum": 100 } } },
+                "passive": { "type": "object", "required": ["delta"], "additionalProperties": false, "properties": { "delta": { "type": "integer", "minimum": 0, "maximum": 100 } } }
+              } } } },
+        "branches": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/branch" } }
+      }
+    },
+    "themes": {
+      "type": "object", "required": ["schema", "version", "themes"],
+      "properties": {
+        "schema": { "const": "mission-themes.v1" }, "version": { "type": "integer" },
+        "themes": { "type": "array", "minItems": 1,
+          "items": { "type": "object", "required": ["id", "wall", "label", "icon", "defaultKeyStats", "defaultTags", "boardWeight", "allowedEffects"], "additionalProperties": false,
+            "properties": {
+              "id": { "$ref": "#/definitions/key" },
+              "wall": { "enum": ["Military", "Domestic", "Expedition"] },
+              "label": { "$ref": "#/definitions/text" }, "icon": { "type": "string" },
+              "defaultKeyStats": { "$ref": "#/definitions/keyStats" },
+              "defaultTags": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/key" } },
+              "boardWeight": { "type": "number", "minimum": 0 },
+              "unlock": { "type": "string" },
+              "allowedEffects": { "type": "array", "minItems": 1, "items": { "enum": ["resource", "generalExp", "fame", "officerExp", "relation", "generalState", "trait", "flag", "spawn", "intel", "unlock", "sceneGambit", "morale", "memoryNote"] } } } } } }
+    },
+    "balance": {
+      "type": "object", "required": ["schema", "version", "intelBands", "recon", "wait", "intelCurve", "fitness", "penalty", "projection", "resourceCaps", "recordLimit", "difficulties"],
+      "properties": {
+        "schema": { "const": "mission-balance.v1" },
+        "recon": { "type": "object", "required": ["steps", "cap", "grainCost"],
+          "properties": {
+            "cap": { "type": "integer", "maximum": 100 },
+            "steps": { "type": "array", "minItems": 1, "items": { "type": "integer", "minimum": 0 } },
+            "grainCost": { "type": "integer", "minimum": 0 } } },
+        "wait": { "type": "object", "required": ["delta"], "properties": { "delta": { "type": "integer" } } },
+        "penalty": { "type": "object", "required": ["harmTiers", "captureMinDifficulty"] },
+        "difficulties": { "type": "object", "required": ["EASY", "NORMAL", "ELITE", "ADVANCED", "HELL"],
+          "additionalProperties": { "type": "object", "required": ["needPower", "cost", "energy"] } }
+      }
+    },
+    "display": {
+      "type": "object", "required": ["schema", "version", "bands", "intelLabels", "tierText", "hiddenFactText"],
+      "properties": {
+        "schema": { "const": "mission-intel-display.v1" },
+        "bands": { "type": "array", "minItems": 1,
+          "items": { "type": "object", "required": ["min", "max", "successRate", "risk", "reward", "objective"],
+            "properties": { "min": { "$ref": "#/definitions/intelValue" }, "max": { "$ref": "#/definitions/intelValue" } } } }
+      }
+    },
+    "boards": {
+      "type": "object", "required": ["schema", "version", "walls", "difficultyWeights", "themeWeights", "overrides"],
+      "properties": {
+        "schema": { "const": "mission-boards.v1" },
+        "walls": { "type": "object", "minProperties": 1,
+          "additionalProperties": { "type": "object", "required": ["targetCount", "themes"], "additionalProperties": false,
+            "properties": { "targetCount": { "type": "integer", "minimum": 1 }, "themes": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/key" } } } } },
+        "difficultyWeights": { "type": "object", "required": ["EASY", "NORMAL", "ELITE", "ADVANCED", "HELL"], "additionalProperties": { "type": "number", "minimum": 0 } },
+        "themeWeights": { "type": "object", "additionalProperties": { "type": "number", "minimum": 0 } },
+        "overrides": { "type": "array",
+          "items": { "type": "object", "required": ["defId"], "additionalProperties": false,
+            "properties": {
+              "defId": { "$ref": "#/definitions/id" }, "weight": { "type": "number", "minimum": 0 },
+              "chainOnly": { "type": "boolean" },
+              "requiresFlags": { "type": "array", "items": { "$ref": "#/definitions/key" } },
+              "minFame": { "type": "integer", "minimum": 0 }, "note": { "type": "string" } } } }
+      }
+    },
+    "index": {
+      "type": "object", "required": ["schema", "version", "defs"],
+      "properties": {
+        "schema": { "const": "mission-index.v1" }, "version": { "type": "integer" },
+        "defs": { "type": "array", "minItems": 1,
+          "items": { "type": "object", "required": ["id", "theme", "difficulty", "path", "origin"], "additionalProperties": false,
+            "properties": { "id": { "$ref": "#/definitions/id" }, "theme": { "$ref": "#/definitions/key" }, "difficulty": { "$ref": "#/definitions/difficulty" },
+              "path": { "type": "string" }, "origin": { "enum": ["converted", "authored"] }, "legacyTemplateId": { "$ref": "#/definitions/id" } } } } }
+    }
+  }
+}

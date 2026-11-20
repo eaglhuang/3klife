@@ -21,7 +21,9 @@ import { NpcMemoryAdapter } from "../dialogue/NpcMemoryAdapter";
 import { SceneManager } from "./SceneManager";
 import { GameManager } from "./GameManager";
 import { GameSession, InMemoryRosterStore } from "./GameSession";
-import type { RosterStore } from "./GameSession";
+import type { RosterStore, HallMissionWallet } from "./GameSession";
+import { loadMissionDataBundle } from "../mission/MissionLoader";
+import type { IMissionService } from "../mission/service/IMissionService";
 import { PlayerSaveService } from "../services/PlayerSaveService";
 import { LegacyService } from "../services/LegacyService";
 import { PlayerRosterService } from "../services/PlayerRosterService";
@@ -43,7 +45,18 @@ import { fertilityConceptionMod } from "../systems/FertilityBoost";
 import { ITEM_FERTILITY_ARMED } from "../systems/PlayerInventory";
 import { UCUFLogger, LogCategory } from "../utils/UCUFLogger";
 import { normalizeVfxEffectTable } from "../config/VfxEffectConfig";
+import { STARTER_YOUTH_CONFIG_JSON, configureStarterYouth, type StarterYouthConfig } from "../services/StarterYouthService";
 import { normalizeSeasonModifiers, seasonModifiersOf, setActiveSeasonModifiers } from "../systems/SeasonModifiers";
+import { CHILD_APTITUDE_RULES_JSON, configureChildAptitudeRules, type ChildAptitudeRulesConfig } from "../systems/ChildAptitudeInheritance";
+import { configureFamilyCompatibilityRules, computeFamilyCompatibilityK, FAMILY_COMPATIBILITY_RULES_JSON, type FamilyCompatibilityRulesConfig } from "../systems/FamilyCompatibility";
+import { configureMarriageVitalityRules, evaluateMarriageVitality, MARRIAGE_VITALITY_RULES_JSON, type MarriageVitalityRulesConfig } from "../systems/MarriageVitality";
+import { BLOODLINE_RESONANCE_RULES_JSON, configureBloodlineResonanceRules, type BloodlineResonanceRulesConfig } from "../systems/BloodlineResonance";
+import { configureFamilyMilestoneRules, FAMILY_MILESTONE_RULES_JSON, type FamilyMilestoneRulesConfig } from "../systems/FamilyMilestone";
+import { familyPairKey } from "../systems/FamilySynergy";
+import { configureWhiteFactorAchievements, WHITE_FACTOR_ACHIEVEMENTS_JSON, type WhiteFactorAchievementsConfig } from "../systems/WhiteFactorTraits";
+import { configureMindMarriageRules, MIND_MARRIAGE_RULES_JSON, type MindMarriageRulesConfig } from "../mind/MindMarriage";
+import { ACADEMY_ENROLL_RULES_JSON, configureAcademyEnrollRules, type AcademyEnrollRulesConfig } from "../systems/nurture/AcademyEnrollRules";
+import { ACADEMY_INHERIT_MARKS_JSON, configureAcademyInheritMarks, type AcademyInheritMarksConfig } from "../systems/nurture/AcademyInheritAndMarks";
 
 export class ServiceLoader {
     private static instance: ServiceLoader | null = null;
@@ -84,11 +97,32 @@ export class ServiceLoader {
         seasonTrainingVigorMod: () => seasonModifiersOf(this.session.gameTime.currentSeason).trainingStaminaMultiplier,
         // 因子覺醒（PROG-2-0044）：訓練回合擲培育窺探 / 教官覺醒；畢業給 discoveryLevel 經驗
         awakening: this.session.nurtureAwakeningHooks(),
+        adultTemplateOf: (generalId) => this.session.adultTemplateOf(generalId),
         onGraduated: () => { void this.session.gainDiscoveryExp('nurture-graduate'); },
         // 子嗣奧義覺醒（ULT-15）：奧義母表在 prepareBreeding() 載入
         childUltimate: { definitions: () => this.ultimateDefinitions },
         clanTraditionKind: () => this.session.clanTradition?.kind,
         synergyTutorBonus: (mentors) => synergyTutorBonusOf(mentors, this.session.familySynergy),
+        compatibilityBonusForChild: (child, roster) => {
+            const father = child.fatherId ? roster.find((g) => g.id === child.fatherId) : undefined;
+            const mother = child.motherId ? roster.find((g) => g.id === child.motherId) : undefined;
+            if (!father || !mother) return 0;
+            const fatherFamily = (father as { familyUid?: string }).familyUid;
+            const motherFamily = (mother as { familyUid?: string }).familyUid;
+            const pairKey = fatherFamily && motherFamily ? familyPairKey(fatherFamily, motherFamily) : undefined;
+            const pairRecord = pairKey ? this.session.familySynergy.pairs[pairKey] : undefined;
+            const epithetSynergyBonus = evaluateMarriageVitality({
+                father,
+                mother,
+                hasCommonAncestor: false,
+            }).synergyBonus;
+            return computeFamilyCompatibilityK({
+                fatherStats: father.stats,
+                motherStats: mother.stats,
+                pairRecord,
+                epithetSynergyBonus,
+            }).totalK;
+        },
     });
     /** loadUltimateDefinitions() 載入後的奧義母表（只留 id 與繼承基因）；子嗣奧義覺醒用 */
     private ultimateDefinitions: ChildUltimateDefinition[] = [];
@@ -110,7 +144,11 @@ export class ServiceLoader {
         onBreedPerformed: () => this.session.clearFertilityArm(),
         clanPrestigeTier: () => this.session.clanPrestigeTier,
         relationLedger: this.session.relationEvents,
+        getFamilySynergy: () => this.session.familySynergy,
+        getParentMood: (id) => this.session.mind.moodOf(id),
+        onMarriageConceived: (ctx) => this.session.onMarriageConceived(ctx),
     });
+    private bloodlineRulesLoaded = false;
     /** 退役教官卡 / 英靈卡來源；init() 之後才有（共用存檔後端）。培育畫面用它挑教官 */
     public legacy: LegacyService | null = null;
     public readonly ui = new UIManager();
@@ -304,11 +342,37 @@ export class ServiceLoader {
         }
     }
 
+    /** 載入血統規則資料表（適性繼承、門風契合 K、生平閱歷白因子，PROG-2-9168）；單表失敗時退回預設值 */
+    public async loadBloodlineRuleTables(force = false): Promise<void> {
+        if (this.bloodlineRulesLoaded && !force) return;
+        const loadSafe = async <T>(path: string, apply: (raw: T) => void): Promise<void> => {
+            try {
+                const raw = await this.resource.loadJson<T>(path);
+                if (raw) apply(raw);
+            } catch (e) {
+                UCUFLogger.warn(LogCategory.DATA, `[ServiceLoader] ${path}.json 載入失敗，退回內建預設:`, e);
+            }
+        };
+        await Promise.all([
+            loadSafe<Partial<ChildAptitudeRulesConfig>>(CHILD_APTITUDE_RULES_JSON, configureChildAptitudeRules),
+            loadSafe<Partial<FamilyCompatibilityRulesConfig>>(FAMILY_COMPATIBILITY_RULES_JSON, configureFamilyCompatibilityRules),
+            loadSafe<Partial<WhiteFactorAchievementsConfig>>(WHITE_FACTOR_ACHIEVEMENTS_JSON, configureWhiteFactorAchievements),
+            loadSafe<Partial<BloodlineResonanceRulesConfig>>(BLOODLINE_RESONANCE_RULES_JSON, configureBloodlineResonanceRules),
+            loadSafe<Partial<FamilyMilestoneRulesConfig>>(FAMILY_MILESTONE_RULES_JSON, configureFamilyMilestoneRules),
+            loadSafe<Partial<MindMarriageRulesConfig>>(MIND_MARRIAGE_RULES_JSON, configureMindMarriageRules),
+            loadSafe<Partial<AcademyInheritMarksConfig>>(ACADEMY_INHERIT_MARKS_JSON, configureAcademyInheritMarks),
+            loadSafe<Partial<AcademyEnrollRulesConfig>>(ACADEMY_ENROLL_RULES_JSON, configureAcademyEnrollRules),
+            loadSafe<Partial<MarriageVitalityRulesConfig>>(MARRIAGE_VITALITY_RULES_JSON, configureMarriageVitalityRules),
+        ]);
+        this.bloodlineRulesLoaded = true;
+    }
+
     /**
      * 結緣畫面開啟前呼叫：載入因子字典與 person-registry.json，再把名冊裡已出生的子嗣補回血統圖。
      * 讀檔時已由 session 的讀檔後處理補過一次；這裡再同步是給新局（沒有讀檔）的初代武將補虛擬祖先，重複呼叫不會重複登記。
      */
     public async prepareBreeding(): Promise<void> {
+        await this.loadBloodlineRuleTables();
         if (!this.factorDictionary) {
             await this.loadFactorDictionary();
         }
@@ -340,6 +404,16 @@ export class ServiceLoader {
      * 非同步載入 vfx-effects.json 並批量注冊至 EffectSystem。
      * 建議在 BattleScene.start() 中與 loadSkills() 一起 await。
      */
+    /** 載入開局少年名將設定（PROG-2-9194）；失敗時退回內建預設 */
+    public async loadStarterYouthConfig(): Promise<void> {
+        try {
+            const raw = await this.resource.loadJson<Partial<StarterYouthConfig>>(STARTER_YOUTH_CONFIG_JSON);
+            configureStarterYouth(raw);
+        } catch (e) {
+            UCUFLogger.warn(LogCategory.DATA, '[ServiceLoader] starter-youth-config.json 載入失敗，使用內建預設:', e);
+        }
+    }
+
     /** 載入四季特色修正表（TIME-08）；失敗時退回程式內建預設，遊戲照常進行 */
     public async loadSeasonModifiers(): Promise<void> {
         try {
@@ -348,6 +422,23 @@ export class ServiceLoader {
         } catch (e) {
             UCUFLogger.warn(LogCategory.DATA, '[ServiceLoader] season-modifiers.json 載入失敗，使用預設四季修正:', e);
         }
+    }
+
+    /**
+     * 載入通用任務資料包並建立任務服務（PROG-2-9148）：資料包驗證失敗回傳 null（任務牆維持載入失敗字樣，不退回假資料）。
+     * 服務由 GameSession 持有，UI 一律走 session.missionService。
+     */
+    public async bindMissionData(wallet: HallMissionWallet): Promise<IMissionService | null> {
+        const loaded = await loadMissionDataBundle((path) => this.resource.loadJson<unknown>(path));
+        if (!loaded.ok) {
+            UCUFLogger.warn(LogCategory.DATA, '[ServiceLoader] 通用任務資料載入或驗證失敗:', loaded.issues);
+            return null;
+        }
+        const generated = this.session.bindMissionData(loaded.bundle, wallet);
+        if (generated) {
+            this.session.save().catch((error: unknown) => UCUFLogger.warn(LogCategory.DATA, '[ServiceLoader] 任務初次產生後存檔失敗', error));
+        }
+        return this.session.missionService;
     }
 
     public async loadVfxEffects(): Promise<void> {

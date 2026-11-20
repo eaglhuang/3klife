@@ -10,8 +10,8 @@ function row(i: number, enabled = true): MentorBorrowRow {
     return { friendId: `f${i}`, name: `友${i}`, rankText: `★${i}`, enabled, statusText: enabled ? '可借用' : '今日已借' };
 }
 
-function harness(rows: MentorBorrowRow[], selectResult = true) {
-    const log = { selected: [] as string[], records: 0, texts: {} as Record<string, string>, actives: {} as Record<string, boolean> };
+function harness(rows: MentorBorrowRow[], selectResult = true, extra: { ensureLoaded?: () => Promise<void>; notifyEmpty?: () => void } = {}) {
+    const log = { selected: [] as string[], records: 0, fronted: 0, texts: {} as Record<string, string>, actives: {} as Record<string, boolean> };
     let bindings: MentorHoldingsButtonBinding[] = [];
     const host = {
         node: { active: true },
@@ -25,6 +25,8 @@ function harness(rows: MentorBorrowRow[], selectResult = true) {
         rows: () => rows,
         select: async (r) => { log.selected.push(r.friendId); return selectResult; },
         openRecord: () => { log.records++; },
+        bringToFront: () => { log.fronted++; },
+        ...extra,
     });
     const click = (id: string) => bindings.find((b) => b.buttonId === id)?.handler();
     return { ctrl, host, log, click };
@@ -46,6 +48,37 @@ export function createMentorBorrowControllerSuite(): TestSuite {
         h.click('btnBorrowNext');
         assert.equals('2 / 2', h.log.texts.borrowPage);
         assert.isFalse(h.log.actives.borrowRow1Box);
+    });
+
+    suite.test('打開時把清單搬到最上層，關閉時不搬（否則好友借用開在培育畫面底下看不到，PROG-2-9158）', async () => {
+        const h = harness([row(0)]);
+        await h.ctrl.mount();
+        assert.equals(0, h.log.fronted);
+        h.ctrl.open();
+        assert.equals(1, h.log.fronted);
+        h.ctrl.setOpen(false);
+        assert.equals(1, h.log.fronted);
+    });
+
+    suite.test('打開前先載好友清單：載入後有列才開（直接進培育畫面也能借，PROG-2-9158）', async () => {
+        const rows: MentorBorrowRow[] = [];
+        let loaded = 0;
+        const h = harness(rows, true, { ensureLoaded: async () => { loaded++; rows.push(row(0)); } });
+        await h.ctrl.mount();
+        await h.ctrl.open();
+        assert.equals(1, loaded);
+        assert.isTrue(h.host.node.active);
+        assert.equals('友0　★0\n可借用', h.log.texts.borrowRow0);
+    });
+
+    suite.test('好友清單是空的：只提示，不開空清單', async () => {
+        let notified = 0;
+        const h = harness([], true, { notifyEmpty: () => { notified++; } });
+        await h.ctrl.mount();
+        await h.ctrl.open();
+        assert.equals(1, notified);
+        assert.isFalse(h.host.node.active);
+        assert.equals(0, h.log.fronted);
     });
 
     suite.test('選不可借的列不動作；選可借的列成功後關閉', async () => {

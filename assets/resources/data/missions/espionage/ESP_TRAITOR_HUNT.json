@@ -1,0 +1,995 @@
+{
+  "schema": "mission-def.v1",
+  "id": "ESP_TRAITOR_HUNT",
+  "version": 1,
+  "theme": "espionage",
+  "difficulty": "NORMAL",
+  "tags": [
+    "traitor",
+    "counter_intel",
+    "investigation"
+  ],
+  "meta": {
+    "origin": "authored",
+    "note": "手寫任務：三層情報分支、隱藏變體、巢狀結果與連鎖。"
+  },
+  "text": {
+    "title": "清查內奸",
+    "brief": "軍中有人與敵暗通款曲，烽燧失守只是頭一樁。誰是那隻老鼠須暗中查個水落石出，又不能冤枉了好人。",
+    "detail": "近來軍情屢屢外洩，換防時刻、糧車路線，敵人都知道得一清二楚。營中人人自危，主將下令暗查，嚴禁聲張。"
+  },
+  "facts": [
+    {
+      "key": "clue",
+      "label": "線索",
+      "levels": [
+        {
+          "minIntel": 30,
+          "text": "營中有人夜半出入，守夜的人只說看錯了。"
+        },
+        {
+          "minIntel": 65,
+          "text": "出入之人每回都帶著同一只酒囊。"
+        },
+        {
+          "minIntel": 90,
+          "text": "那只酒囊的夾層，縫著一道不屬於本軍的暗記。"
+        }
+      ],
+      "decoy": "已有人供出內奸姓名，只待拿人。"
+    },
+    {
+      "key": "circle",
+      "label": "嫌疑圈",
+      "levels": [
+        {
+          "minIntel": 50,
+          "text": "嫌疑落在幾位受信任的人身上，連主將左右都不算清白。"
+        }
+      ]
+    }
+  ],
+  "requirement": {
+    "slots": 1,
+    "keyStats": {
+      "int": 1,
+      "cha": 0.4
+    },
+    "preferTags": [
+      "keen_eye",
+      "scout"
+    ],
+    "avoidTags": [
+      "brutal"
+    ]
+  },
+  "timing": {
+    "durationSeasons": 1,
+    "expireSeasons": 3
+  },
+  "variants": [
+    {
+      "id": "SERGEANT",
+      "weight": 45
+    },
+    {
+      "id": "ADJUTANT",
+      "weight": 35
+    },
+    {
+      "id": "DECOY",
+      "weight": 20
+    }
+  ],
+  "intel": {
+    "initial": 40,
+    "jitter": 10,
+    "sources": {
+      "wait": {
+        "delta": 20
+      }
+    }
+  },
+  "branches": [
+    {
+      "id": "B_HUNT_BLIND",
+      "when": {
+        "variant": [
+          "SERGEANT",
+          "ADJUTANT",
+          "DECOY"
+        ],
+        "minIntel": 0,
+        "maxIntel": 39
+      },
+      "objective": {
+        "id": "quiet_probe",
+        "text": "暗中查訪可疑之人"
+      },
+      "presented": {
+        "hints": [
+          "線索雜亂，只能憑直覺查"
+        ]
+      },
+      "modifiers": {
+        "successDelta": -0.14,
+        "rewardMul": 0.8,
+        "riskMul": 1.6
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.05,
+        "disasterRatio": 0.4,
+        "tiers": {
+          "critical": {
+            "kind": "switch",
+            "on": "variant",
+            "cases": [
+              {
+                "eq": "SERGEANT",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "運氣極好，夜裡正撞見什長與生人接頭。",
+                  "effects": [
+                    {
+                      "kind": "resource",
+                      "res": "silver",
+                      "amount": 80
+                    },
+                    {
+                      "kind": "generalExp",
+                      "amount": 70
+                    },
+                    {
+                      "kind": "fame",
+                      "amount": 8
+                    },
+                    {
+                      "kind": "spawn",
+                      "defId": "ESP_SPY_RING",
+                      "intel": 45
+                    }
+                  ]
+                }
+              },
+              {
+                "eq": "DECOY",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "你覺得這條線索乾淨得過了頭，暗暗留了心眼。",
+                  "effects": [
+                    {
+                      "kind": "generalExp",
+                      "amount": 60
+                    },
+                    {
+                      "kind": "flag",
+                      "set": "decoy_suspected",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            ],
+            "else": {
+              "kind": "effects",
+              "narrative": "抓到了一個傳遞消息的小卒，順藤摸瓜隱約摸到更大的人物。",
+              "effects": [
+                {
+                  "kind": "generalExp",
+                  "amount": 55
+                },
+                {
+                  "kind": "flag",
+                  "set": "adjutant_suspected",
+                  "value": true
+                }
+              ]
+            }
+          },
+          "success": {
+            "kind": "switch",
+            "on": "variant",
+            "cases": [
+              {
+                "eq": "SERGEANT",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "拿下一名可疑的伙夫，雖非主謀，卻問出了什長的名字。",
+                  "effects": [
+                    {
+                      "kind": "generalExp",
+                      "amount": 40
+                    },
+                    {
+                      "kind": "spawn",
+                      "defId": "ESP_TRAITOR_HUNT",
+                      "intel": 60,
+                      "afterSeasons": 1
+                    }
+                  ]
+                }
+              },
+              {
+                "eq": "ADJUTANT",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "抓到的是替人跑腿的小卒，真正的主使躲得更深，你卻當作已結案。",
+                  "effects": [
+                    {
+                      "kind": "generalExp",
+                      "amount": 25
+                    },
+                    {
+                      "kind": "fame",
+                      "amount": -5
+                    },
+                    {
+                      "kind": "flag",
+                      "set": "wrongly_accused",
+                      "value": true
+                    }
+                  ]
+                }
+              },
+              {
+                "eq": "DECOY",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "你信了那條「現成」的線索，冤枉了一個老實的帳房。",
+                  "effects": [
+                    {
+                      "kind": "fame",
+                      "amount": -6
+                    },
+                    {
+                      "kind": "relation",
+                      "target": "npc:accused_clerk",
+                      "delta": -20
+                    },
+                    {
+                      "kind": "flag",
+                      "set": "wrongly_accused",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            ],
+            "else": {
+              "kind": "effects",
+              "effects": []
+            }
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "查了半個月，只換來滿營的白眼。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 10
+              },
+              {
+                "kind": "fame",
+                "amount": -1
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "switch",
+            "on": "variant",
+            "cases": [
+              {
+                "eq": "ADJUTANT",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "主使反過來暗算你，你在回營路上遭人伏擊。",
+                  "effects": [
+                    {
+                      "kind": "generalState",
+                      "state": "injured",
+                      "seasons": 2
+                    },
+                    {
+                      "kind": "flag",
+                      "set": "traitor_alert",
+                      "value": true
+                    },
+                    {
+                      "kind": "fame",
+                      "amount": -3
+                    }
+                  ]
+                }
+              }
+            ],
+            "else": {
+              "kind": "effects",
+              "narrative": "打草驚蛇，嫌疑人連夜銷毀證據，你還被人倒打一耙。",
+              "effects": [
+                {
+                  "kind": "generalState",
+                  "state": "injured",
+                  "seasons": 1
+                },
+                {
+                  "kind": "flag",
+                  "set": "traitor_alert",
+                  "value": true
+                },
+                {
+                  "kind": "fame",
+                  "amount": -4
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "B_HUNT_TRAIL",
+      "when": {
+        "variant": [
+          "SERGEANT",
+          "ADJUTANT"
+        ],
+        "minIntel": 40,
+        "maxIntel": 74
+      },
+      "objective": {
+        "id": "follow_trail",
+        "text": "順藤摸瓜，盯住酒囊的主人",
+        "keyStats": {
+          "int": 1,
+          "lea": 0.3
+        }
+      },
+      "presented": {
+        "hints": [
+          "酒囊的線索可以追，但誰在酒囊另一頭還不確定"
+        ]
+      },
+      "modifiers": {
+        "successDelta": -0.04,
+        "rewardMul": 1,
+        "riskMul": 1
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.2,
+        "disasterRatio": 0.2,
+        "tiers": {
+          "critical": {
+            "kind": "effects",
+            "narrative": "你在酒肆後巷截住了接頭人，截得一封未送出的信。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 100
+              },
+              {
+                "kind": "generalExp",
+                "amount": 90
+              },
+              {
+                "kind": "fame",
+                "amount": 8
+              },
+              {
+                "kind": "spawn",
+                "defId": "ESP_SPY_RING",
+                "intel": 55
+              }
+            ]
+          },
+          "success": {
+            "kind": "switch",
+            "on": "variant",
+            "cases": [
+              {
+                "eq": "SERGEANT",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "接頭人被捕，供出了什長。",
+                  "effects": [
+                    {
+                      "kind": "generalExp",
+                      "amount": 60
+                    },
+                    {
+                      "kind": "resource",
+                      "res": "silver",
+                      "amount": 60
+                    },
+                    {
+                      "kind": "spawn",
+                      "defId": "ESP_SPY_RING",
+                      "intel": 40
+                    }
+                  ]
+                }
+              },
+              {
+                "eq": "ADJUTANT",
+                "then": {
+                  "kind": "effects",
+                  "narrative": "抓到的是替人跑腿的什長，真正的主使藏得更深。",
+                  "effects": [
+                    {
+                      "kind": "generalExp",
+                      "amount": 50
+                    },
+                    {
+                      "kind": "spawn",
+                      "defId": "ESP_SPY_RING",
+                      "intel": 40
+                    },
+                    {
+                      "kind": "flag",
+                      "set": "adjutant_suspected",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            ],
+            "else": {
+              "kind": "effects",
+              "effects": []
+            }
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "酒囊的主人在半路換了人，線索斷了。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 15
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "你被人認出，夜裡有人在你的水囊裡下了藥。",
+            "effects": [
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              },
+              {
+                "kind": "fame",
+                "amount": -2
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_HUNT_SMELL",
+      "when": {
+        "variant": [
+          "DECOY"
+        ],
+        "minIntel": 40,
+        "maxIntel": 74
+      },
+      "objective": {
+        "id": "weigh_evidence",
+        "text": "查驗證據的真偽，防人栽贓",
+        "keyStats": {
+          "int": 1,
+          "cha": 0.3
+        }
+      },
+      "presented": {
+        "objectiveText": "追查內奸；證據似乎來得太容易",
+        "hints": [
+          "線索乾淨得不像真的，有人想讓你查到某個人"
+        ]
+      },
+      "modifiers": {
+        "successDelta": -0.04,
+        "rewardMul": 1,
+        "riskMul": 1
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.2,
+        "disasterRatio": 0.15,
+        "tiers": {
+          "critical": {
+            "kind": "effects",
+            "narrative": "你識破了這是敵人故意留下的假線索，沒有冤枉任何人。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 90
+              },
+              {
+                "kind": "fame",
+                "amount": 10
+              },
+              {
+                "kind": "intel",
+                "target": {
+                  "tag": "espionage"
+                },
+                "delta": 20
+              },
+              {
+                "kind": "flag",
+                "set": "decoy_exposed",
+                "value": true
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "你把證據擱置待查，避免了一場冤案。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 55
+              },
+              {
+                "kind": "fame",
+                "amount": 5
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "證據真偽難辨，只得先不聲張。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 15
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "你被假線索牽著走，反被人告了一狀。",
+            "effects": [
+              {
+                "kind": "fame",
+                "amount": -4
+              },
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_HUNT_SGT_EXPOSED",
+      "when": {
+        "variant": [
+          "SERGEANT"
+        ],
+        "minIntel": 75
+      },
+      "objective": {
+        "id": "arrest_sergeant",
+        "text": "人贓並獲，拿下三號烽燧什長",
+        "keyStats": {
+          "int": 0.8,
+          "lea": 0.6
+        }
+      },
+      "presented": {
+        "objectiveText": "證據確鑿，可當場拿人",
+        "hints": [
+          "酒囊夾層的暗記與什長腰間的信物一模一樣"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.08,
+        "rewardMul": 1.3,
+        "riskMul": 0.5
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.3,
+        "disasterRatio": 0.1,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "人贓俱獲，什長當場癱軟，把接頭的人與日期全數供出。",
+                "effects": [
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": 140
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": 110
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": 14
+                  }
+                ]
+              },
+              {
+                "kind": "chance",
+                "p": 0.5,
+                "hit": {
+                  "kind": "effects",
+                  "narrative": "他還交出了敵方聯絡人手上的一半信物。",
+                  "effects": [
+                    {
+                      "kind": "spawn",
+                      "defId": "ESP_SPY_RING",
+                      "intel": 70
+                    },
+                    {
+                      "kind": "unlock",
+                      "id": "enemy_token"
+                    }
+                  ]
+                },
+                "miss": {
+                  "kind": "effects",
+                  "effects": []
+                }
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "什長伏法，營中軍情外洩的缺口終於堵住。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 90
+              },
+              {
+                "kind": "generalExp",
+                "amount": 80
+              },
+              {
+                "kind": "fame",
+                "amount": 9
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "什長察覺風聲，先一步逃往敵境。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 30
+              },
+              {
+                "kind": "flag",
+                "set": "traitor_at_large",
+                "value": true
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "什長拔刀拒捕，誤傷了你的人。",
+            "effects": [
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              },
+              {
+                "kind": "flag",
+                "set": "traitor_at_large",
+                "value": true
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_HUNT_ADJ_EXPOSED",
+      "when": {
+        "variant": [
+          "ADJUTANT"
+        ],
+        "minIntel": 75
+      },
+      "objective": {
+        "id": "trap_adjutant",
+        "text": "佯裝不知，設局逼參軍現形",
+        "keyStats": {
+          "int": 1,
+          "cha": 0.5
+        }
+      },
+      "presented": {
+        "objectiveText": "設局引蛇出洞；對象是主將身邊最親近的人",
+        "hints": [
+          "酒囊的主人，竟是日日在主將帳中伺候的參軍"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.04,
+        "rewardMul": 1.7,
+        "riskMul": 0.8
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.25,
+        "disasterRatio": 0.12,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "你在軍議上故意放出假的換防時刻，參軍果然當夜派人送信，被你當場拿下。",
+                "effects": [
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": 200
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": 150
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": 22
+                  },
+                  {
+                    "kind": "trait",
+                    "add": "keen_eye"
+                  }
+                ]
+              },
+              {
+                "kind": "switch",
+                "on": "stat:int>=80",
+                "cases": [
+                  {
+                    "when": true,
+                    "then": {
+                      "kind": "effects",
+                      "narrative": "你反過來利用他的聯絡人，往敵營送出了一份假情報。",
+                      "effects": [
+                        {
+                          "kind": "intel",
+                          "target": {
+                            "tag": "espionage"
+                          },
+                          "delta": 30
+                        },
+                        {
+                          "kind": "spawn",
+                          "defId": "ESP_SPY_RING",
+                          "intel": 80
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "else": {
+                  "kind": "effects",
+                  "narrative": "參軍嘴硬到底，只肯承認其中一條線。",
+                  "effects": [
+                    {
+                      "kind": "spawn",
+                      "defId": "ESP_SPY_RING",
+                      "intel": 60
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "參軍被拆穿，主將震怒，連夜下令徹查。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 120
+              },
+              {
+                "kind": "generalExp",
+                "amount": 100
+              },
+              {
+                "kind": "fame",
+                "amount": 12
+              },
+              {
+                "kind": "spawn",
+                "defId": "ESP_SPY_RING",
+                "intel": 55
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "參軍反過來指你誣陷，營中一時議論紛紛。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 25
+              },
+              {
+                "kind": "fame",
+                "amount": -3
+              },
+              {
+                "kind": "flag",
+                "set": "adjutant_suspected",
+                "value": true
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "參軍狗急跳牆，與你的武將動了手，人也跑了。",
+            "effects": [
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 2
+              },
+              {
+                "kind": "flag",
+                "set": "traitor_at_large",
+                "value": true
+              },
+              {
+                "kind": "relation",
+                "target": "npc:adjutant",
+                "delta": -30
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_HUNT_DECOY_EXPOSED",
+      "when": {
+        "variant": [
+          "DECOY"
+        ],
+        "minIntel": 75
+      },
+      "objective": {
+        "id": "turn_the_ruse",
+        "text": "識破反間計，將計就計",
+        "keyStats": {
+          "int": 1,
+          "cha": 0.4
+        }
+      },
+      "presented": {
+        "objectiveText": "假意相信敵人的栽贓，順著他們的局反過去演",
+        "hints": [
+          "整套「內奸」的證據出自同一個細作的手筆"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.1,
+        "rewardMul": 1.5,
+        "riskMul": 0.5
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.35,
+        "disasterRatio": 0.08,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "你配合敵人演了一場「抓內奸」的好戲，敵人以為得計，暴露了真正的聯絡點。",
+                "effects": [
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": 180
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": 130
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": 18
+                  },
+                  {
+                    "kind": "unlock",
+                    "id": "counter_intel"
+                  }
+                ]
+              },
+              {
+                "kind": "effects",
+                "narrative": "營中因此多了一條反探的耳目。",
+                "effects": [
+                  {
+                    "kind": "intel",
+                    "target": {
+                      "tag": "border"
+                    },
+                    "delta": 25
+                  },
+                  {
+                    "kind": "spawn",
+                    "defId": "ESP_SPY_RING",
+                    "intel": 75
+                  }
+                ]
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "敵人的反間計被你拆解，順便揪出了送假證據的細作。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 110
+              },
+              {
+                "kind": "generalExp",
+                "amount": 90
+              },
+              {
+                "kind": "fame",
+                "amount": 11
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "敵人察覺你已識破，立刻收網，什麼也沒留下。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 30
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "你配合演戲時漏了破綻，被敵人反將一軍。",
+            "effects": [
+              {
+                "kind": "fame",
+                "amount": -3
+              },
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

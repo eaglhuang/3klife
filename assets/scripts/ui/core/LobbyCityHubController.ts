@@ -9,6 +9,7 @@
  */
 
 import { RELATION_TIER_LABEL, relationTier, type RivalWorld } from '../../core/systems/RivalNations';
+import { lobbyActionLock, lockedActionLabel } from '../../core/systems/OfficerFeatureUnlocks';
 
 export type LobbyCategoryId = 'sortie' | 'generals' | 'domestic' | 'nurture' | 'shop';
 
@@ -16,7 +17,7 @@ export type LobbyActionId =
     | 'battle' | 'rival' | 'floodBattle'
     | 'generalList' | 'mercenary' | 'bonding' | 'jobChange' | 'spiritCodex'
     | 'domestic' | 'recruitHall' | 'hallBoard' | 'sandtable' | 'governorHall' | 'itemBag'
-    | 'nurture' | 'supportCard' | 'shrine' | 'relationGraph'
+    | 'nurture' | 'academy' | 'supportCard' | 'shrine' | 'relationGraph'
     | 'gacha' | 'shop' | 'warehouse' | 'seasonPass';
 
 export interface LobbyCategoryDef {
@@ -29,9 +30,14 @@ export const LOBBY_CATEGORIES: readonly LobbyCategoryDef[] = [
     { id: 'sortie', label: '出征', items: [{ id: 'battle', label: '戰場' }, { id: 'rival', label: '外交・征伐' }, { id: 'floodBattle', label: '洪戰' }] },
     { id: 'generals', label: '武將', items: [{ id: 'generalList', label: '武將名冊' }, { id: 'mercenary', label: '傭兵結義' }, { id: 'bonding', label: '結緣' }, { id: 'jobChange', label: '成人禮' }, { id: 'spiritCodex', label: '英靈' }] },
     { id: 'domestic', label: '內政', items: [{ id: 'domestic', label: '內政' }, { id: 'recruitHall', label: '招賢館' }, { id: 'hallBoard', label: '任務牆' }, { id: 'sandtable', label: '天下沙盤' }, { id: 'governorHall', label: '太守府' }] },
-    { id: 'nurture', label: '培育', items: [{ id: 'nurture', label: '開獎・培育' }, { id: 'supportCard', label: '支援卡' }, { id: 'shrine', label: '祠堂' }, { id: 'relationGraph', label: '關係圖鑑' }] },
+    { id: 'nurture', label: '培育', items: [{ id: 'nurture', label: '開獎・培育' }, { id: 'academy', label: '學府' }, { id: 'supportCard', label: '支援卡' }, { id: 'shrine', label: '祠堂' }, { id: 'relationGraph', label: '關係圖鑑' }] },
     { id: 'shop', label: '商城', items: [{ id: 'gacha', label: '轉蛋' }, { id: 'shop', label: '商店' }, { id: 'warehouse', label: '倉庫' }, { id: 'itemBag', label: '背包' }, { id: 'seasonPass', label: '通行證' }] },
 ];
+
+/** 子功能的原始顯示名稱（不含鎖頭字樣） */
+export function lobbyActionName(action: LobbyActionId): string {
+    return LOBBY_CATEGORIES.flatMap(c => c.items).find(i => i.id === action)?.label ?? action;
+}
 
 /** 子選單項目點了卻沒有可開的畫面時顯示的提示（PROG-2-9121） */
 export const LOBBY_ACTION_NOT_OPEN_TEXT = '此功能尚未開放';
@@ -98,6 +104,10 @@ export interface LobbyCityHubInput {
     readonly openCategory: LobbyCategoryId | null;
     /** 子功能的動態文字（例如天下沙盤的開放狀態），沒給就用預設名稱 */
     readonly actionLabels?: Partial<Record<LobbyActionId, string>>;
+    /** 類別按鈕的提示記號（例如學府修業進行中時培育類別加 ●），讓玩家一眼看到有未完成的事（PROG-2-9189） */
+    readonly categoryBadges?: Partial<Record<LobbyCategoryId, string>>;
+    /** 官職階位（PROG-2-9151）：沒給就不鎖任何按鈕；有給時未達門檻的子功能顯示「🔒名稱・X開放」 */
+    readonly officerTier?: number;
 }
 
 export interface LobbyCityHubFlowView {
@@ -182,10 +192,13 @@ export function buildLobbyCityHubView(input: LobbyCityHubInput): LobbyCityHubFlo
         const item = open?.items[i];
         actives[`btnSub${i}`] = !!item;
         if (item) visibleSubCount++;
-        texts[`sub${i}Label`] = item ? (input.actionLabels?.[item.id] ?? item.label) : '';
+        const name = item ? (input.actionLabels?.[item.id] ?? item.label) : '';
+        const lock = item && input.officerTier !== undefined ? lobbyActionLock(item.id, input.officerTier) : null;
+        texts[`sub${i}Label`] = lock?.locked ? lockedActionLabel(item!.label, lock) : name;
     }
     for (const c of LOBBY_CATEGORIES) {
-        texts[`${categoryButtonId(c.id)}Label`] = c.id === input.openCategory ? `▲ ${c.label}` : c.label;
+        const badge = input.categoryBadges?.[c.id] ?? '';
+        texts[`${categoryButtonId(c.id)}Label`] = c.id === input.openCategory ? `▲ ${c.label}${badge}` : `${c.label}${badge}`;
     }
     return { texts, actives, visibleSubCount };
 }

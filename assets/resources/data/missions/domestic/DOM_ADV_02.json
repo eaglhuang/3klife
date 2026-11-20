@@ -1,0 +1,496 @@
+{
+  "schema": "mission-def.v1",
+  "id": "DOM_ADV_02",
+  "version": 1,
+  "legacyTemplateId": "DOM_ADV_02",
+  "theme": "domestic",
+  "difficulty": "ADVANCED",
+  "tags": [
+    "domestic",
+    "legacy"
+  ],
+  "meta": {
+    "origin": "converted",
+    "note": "由 tools_node/convert-hall-templates.js 從舊大廳模板機械轉出，可日後手寫補強。"
+  },
+  "text": {
+    "title": "籌措大軍糧餉",
+    "brief": "大軍將出，須在短期內徵集足夠的糧餉。",
+    "detail": "主公有意興兵，三軍糧餉須在兩月內備齊。請老練的官員統籌各郡徵調，既要足額，又不能竭澤而漁讓百姓逃亡，其中分寸最考驗為政手腕。"
+  },
+  "facts": [
+    {
+      "key": "detail",
+      "label": "內情",
+      "levels": [
+        {
+          "minIntel": 30,
+          "text": "主公有意興兵，三軍糧餉須在兩月內備齊。"
+        },
+        {
+          "minIntel": 60,
+          "text": "主公有意興兵，三軍糧餉須在兩月內備齊。請老練的官員統籌各郡徵調，既要足額，又不能竭澤而漁讓百姓逃亡，其中分寸最考驗為政手腕。"
+        }
+      ],
+      "decoy": "地方官員回報一切妥當，無須多慮。"
+    }
+  ],
+  "requirement": {
+    "slots": 1,
+    "keyStats": {
+      "pol": 1,
+      "cha": 0.3
+    },
+    "preferTags": [],
+    "avoidTags": []
+  },
+  "timing": {
+    "durationSeasons": 2,
+    "expireSeasons": 2
+  },
+  "variants": [
+    {
+      "id": "ONE",
+      "weight": 1
+    }
+  ],
+  "intel": {
+    "initial": 30,
+    "jitter": 10,
+    "sources": {}
+  },
+  "branches": [
+    {
+      "id": "B_BLIND",
+      "when": {
+        "minIntel": 0,
+        "maxIntel": 29
+      },
+      "objective": {
+        "id": "handle_blind",
+        "text": "照官府文書辦理「籌措大軍糧餉」"
+      },
+      "presented": {
+        "hints": [
+          "只憑官府文書，不知實情"
+        ]
+      },
+      "modifiers": {
+        "successDelta": -0.12,
+        "rewardMul": 0.85,
+        "riskMul": 1.5
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.05,
+        "disasterRatio": 0.35,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "「籌措大軍糧餉」辦得漂亮，百姓夾道稱頌，連鄰郡都來打聽章程。",
+                "effects": [
+                  {
+                    "kind": "resource",
+                    "res": "grain",
+                    "amount": {
+                      "base": 450,
+                      "mulKey": "reward"
+                    }
+                  },
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": {
+                      "base": 630,
+                      "mulKey": "reward"
+                    }
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": {
+                      "base": 18,
+                      "mulKey": "reward"
+                    }
+                  }
+                ]
+              },
+              {
+                "kind": "chance",
+                "p": 0.25,
+                "hit": {
+                  "kind": "effects",
+                  "narrative": "此役打通了門路，同類任務的消息也跟著靈通起來。",
+                  "effects": [
+                    {
+                      "kind": "intel",
+                      "target": {
+                        "tag": "domestic"
+                      },
+                      "delta": 15
+                    }
+                  ]
+                },
+                "miss": {
+                  "kind": "effects",
+                  "effects": []
+                }
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "「籌措大軍糧餉」順利辦妥，府庫與民心皆有所得。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "grain",
+                "amount": {
+                  "base": 300,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": {
+                  "base": 420,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "fame",
+                "amount": {
+                  "base": 12,
+                  "mulKey": "reward"
+                }
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "「籌措大軍糧餉」雷聲大雨點小，錢糧花了，成效有限。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": {
+                  "base": 5,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "fame",
+                "amount": -1
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "「籌措大軍糧餉」只照文書行事，反而激起民怨，銀兩虧損，名聲受累。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": {
+                  "base": -200,
+                  "mulKey": "risk"
+                }
+              },
+              {
+                "kind": "fame",
+                "amount": -12
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_INFORMED",
+      "when": {
+        "minIntel": 30,
+        "maxIntel": 69
+      },
+      "objective": {
+        "id": "handle_informed",
+        "text": "「籌措大軍糧餉」：對照實情逐項辦理"
+      },
+      "presented": {
+        "hints": [
+          "已知幾處關節，可對症下藥"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0,
+        "rewardMul": 1,
+        "riskMul": 1
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.15,
+        "disasterRatio": 0.2,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "「籌措大軍糧餉」辦得漂亮，百姓夾道稱頌，連鄰郡都來打聽章程。",
+                "effects": [
+                  {
+                    "kind": "resource",
+                    "res": "grain",
+                    "amount": {
+                      "base": 450,
+                      "mulKey": "reward"
+                    }
+                  },
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": {
+                      "base": 630,
+                      "mulKey": "reward"
+                    }
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": {
+                      "base": 18,
+                      "mulKey": "reward"
+                    }
+                  }
+                ]
+              },
+              {
+                "kind": "chance",
+                "p": 0.25,
+                "hit": {
+                  "kind": "effects",
+                  "narrative": "此役打通了門路，同類任務的消息也跟著靈通起來。",
+                  "effects": [
+                    {
+                      "kind": "intel",
+                      "target": {
+                        "tag": "domestic"
+                      },
+                      "delta": 15
+                    }
+                  ]
+                },
+                "miss": {
+                  "kind": "effects",
+                  "effects": []
+                }
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "「籌措大軍糧餉」順利辦妥，府庫與民心皆有所得。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "grain",
+                "amount": {
+                  "base": 300,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": {
+                  "base": 420,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "fame",
+                "amount": {
+                  "base": 12,
+                  "mulKey": "reward"
+                }
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "「籌措大軍糧餉」雷聲大雨點小，錢糧花了，成效有限。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": {
+                  "base": 5,
+                  "mulKey": "reward"
+                }
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "「籌措大軍糧餉」辦到一半出了岔子，白白折了些銀兩。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": {
+                  "base": -120,
+                  "mulKey": "risk"
+                }
+              },
+              {
+                "kind": "fame",
+                "amount": -11
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_INSIGHT",
+      "when": {
+        "minIntel": 70
+      },
+      "objective": {
+        "id": "handle_insight",
+        "text": "「籌措大軍糧餉」：直指癥結，一次辦妥"
+      },
+      "presented": {
+        "hints": [
+          "癥結所在已了然，可以一次辦妥"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.1,
+        "rewardMul": 1.25,
+        "riskMul": 0.6
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.3,
+        "disasterRatio": 0.08,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "「籌措大軍糧餉」辦得漂亮，百姓夾道稱頌，連鄰郡都來打聽章程。",
+                "effects": [
+                  {
+                    "kind": "resource",
+                    "res": "grain",
+                    "amount": {
+                      "base": 450,
+                      "mulKey": "reward"
+                    }
+                  },
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": {
+                      "base": 630,
+                      "mulKey": "reward"
+                    }
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": {
+                      "base": 18,
+                      "mulKey": "reward"
+                    }
+                  }
+                ]
+              },
+              {
+                "kind": "chance",
+                "p": 0.45,
+                "hit": {
+                  "kind": "effects",
+                  "narrative": "此役打通了門路，同類任務的消息也跟著靈通起來。",
+                  "effects": [
+                    {
+                      "kind": "intel",
+                      "target": {
+                        "tag": "domestic"
+                      },
+                      "delta": 25
+                    }
+                  ]
+                },
+                "miss": {
+                  "kind": "effects",
+                  "effects": []
+                }
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "「籌措大軍糧餉」順利辦妥，府庫與民心皆有所得。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "grain",
+                "amount": {
+                  "base": 300,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": {
+                  "base": 420,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "fame",
+                "amount": {
+                  "base": 12,
+                  "mulKey": "reward"
+                }
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "「籌措大軍糧餉」雷聲大雨點小，錢糧花了，成效有限。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": {
+                  "base": 5,
+                  "mulKey": "reward"
+                }
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "「籌措大軍糧餉」仍有小小波折，所幸早有預備，損失不大。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": {
+                  "base": -60,
+                  "mulKey": "risk"
+                }
+              },
+              {
+                "kind": "fame",
+                "amount": -10
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

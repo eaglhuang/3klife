@@ -1,0 +1,6 @@
+{
+  "_comment": "PROG-2-9423：關卡設 timeUpRule='by-damage' 時，回合用盡依戰果判勝負。雙方各自的戰果＝對手城寨失血比例×fortressWeight＋對手主將失血比例×generalWeight；分數較高者勝，相同時判 tieWinner。只影響有設定的關卡（目前是瓦口隘）。",
+  "fortressWeight": 1,
+  "generalWeight": 1,
+  "tieWinner": "enemy-win"
+}

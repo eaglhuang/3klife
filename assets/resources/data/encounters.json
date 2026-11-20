@@ -67,6 +67,8 @@
       "stageThemeId": "Canyon",
       "requiredLoadout": ["突破"],
       "highlyRecommendedLoadout": ["鼓舞"],
+      "turnLimit": 15,
+      "timeUpRule": "by-damage",
       "battleKind": "field",
       "playerGeneralId": "zhang-fei",
       "enemyGeneralId": "zhang-he",
@@ -248,6 +250,84 @@
         { "type": "archer",   "lane": 0 },
         { "type": "infantry", "lane": 2 },
         { "type": "archer",   "lane": 4 }
+      ]
+    },
+    {
+      "id": "defense-tier-1",
+      "name": "年終守城・初",
+      "theme": "守城",
+      "battleKind": "defense",
+      "playerGeneralId": "zhang-fei",
+      "enemyGeneralId": "xiahou-dun",
+      "backgroundId": "bg_normal_day",
+      "weather": "SUNNY",
+      "battleTactic": "siege",
+      "playerEquipment": [],
+      "enemyEquipment": [],
+      "terrain": [
+        ["plain", "plain", "plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain", "plain", "plain"]
+      ],
+      "enemyInitialDeployment": [
+        { "type": "engineer", "lane": 2 },
+        { "type": "infantry", "lane": 1 },
+        { "type": "shield",   "lane": 3 }
+      ]
+    },
+    {
+      "id": "defense-tier-2",
+      "name": "年終守城・中",
+      "theme": "守城",
+      "battleKind": "defense",
+      "playerGeneralId": "zhang-fei",
+      "enemyGeneralId": "xiahou-dun",
+      "backgroundId": "bg_normal_day",
+      "weather": "SUNNY",
+      "battleTactic": "siege",
+      "playerEquipment": [],
+      "enemyEquipment": [],
+      "terrain": [
+        ["plain", "plain", "plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain", "plain", "plain"]
+      ],
+      "enemyInitialDeployment": [
+        { "type": "engineer", "lane": 1 },
+        { "type": "engineer", "lane": 3 },
+        { "type": "infantry", "lane": 2 },
+        { "type": "shield", "lane": 0 }
+      ]
+    },
+    {
+      "id": "defense-tier-3",
+      "name": "年終守城・終",
+      "theme": "守城",
+      "battleKind": "defense",
+      "playerGeneralId": "zhang-fei",
+      "enemyGeneralId": "xiahou-dun",
+      "backgroundId": "bg_normal_day",
+      "weather": "SUNNY",
+      "battleTactic": "siege",
+      "playerEquipment": [],
+      "enemyEquipment": [],
+      "terrain": [
+        ["plain", "plain", "plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain", "plain", "plain"]
+      ],
+      "enemyInitialDeployment": [
+        { "type": "engineer", "lane": 1 },
+        { "type": "engineer", "lane": 2 },
+        { "type": "engineer", "lane": 3 },
+        { "type": "shield", "lane": 0 },
+        { "type": "archer", "lane": 4 }
       ]
     }
   ]

@@ -10,6 +10,7 @@ import {
     YEAR_REPORT_TEXT_FALLBACK_ZH_TW,
     buildYearReport,
     buildYearReportTexts,
+    buildUnwedLine,
     isYearEndSeason,
     withYearReportFallback,
 } from '../assets/scripts/core/systems/YearReport';
@@ -51,6 +52,27 @@ export function createYearReportSuite(): TestSuite {
         for (const key of Object.keys(YEAR_REPORT_TEXT_FALLBACK_ZH_TW)) {
             assert.equals(YEAR_REPORT_TEXT_FALLBACK_ZH_TW[key], table[key], key);
         }
+    });
+
+    suite.test('適婚未結緣：年報帶名單，人多時最多列 4 人並以「等」收尾，沒人時有輕鬆的空名單句', () => {
+        const none = buildYearReport(1, []);
+        assert.equals(0, (none.unwedNames ?? []).length);
+        assert.isTrue(buildYearReportTexts(none).yearReportUnwed.includes('0 人'));
+
+        const some = buildYearReport(1, [], ['甲', '乙']);
+        const text = buildYearReportTexts(some).yearReportUnwed;
+        assert.isTrue(text.includes('2 人') && text.includes('甲、乙'));
+
+        const many = buildUnwedLine(['a', 'b', 'c', 'd', 'e', 'f'], (key, ...args) => `${key}|${args.join('|')}`);
+        assert.equals('ui.year_report.unwed|6|a、b、c、d 等', many);
+    });
+
+    suite.test('適婚未結緣：zh-TW 語系表有 unwed 兩個 key，版面有 yearReportUnwed 標籤', () => {
+        const zh = JSON.parse(fs.readFileSync('assets/resources/i18n/zh-TW.json', 'utf8')) as Record<string, string>;
+        assert.equals(YEAR_REPORT_TEXT_FALLBACK_ZH_TW['ui.year_report.unwed'], zh['ui.year_report.unwed']);
+        assert.equals(YEAR_REPORT_TEXT_FALLBACK_ZH_TW['ui.year_report.unwed_none'], zh['ui.year_report.unwed_none']);
+        const layout = fs.readFileSync('assets/resources/ui-spec/layouts/year-report-main.json', 'utf8');
+        assert.isTrue(layout.includes('"id": "yearReportUnwed"'));
     });
 
     return suite;

@@ -19,6 +19,17 @@ export interface MentorBorrowDeps<H extends MentorHoldingsHostLike> {
     select(row: MentorBorrowRow): Promise<boolean>;
     /** 「借用紀錄」按鈕：清單關閉後開結業紀錄 */
     openRecord(): void;
+    /**
+     * 打開清單時把宿主節點搬到最上層。清單是大廳啟動時掛上的，層級排在培育畫面等後開的全螢幕畫面之下；
+     * 不搬到前面，玩家點「好友借用」只會看到沒反應（PROG-2-9158）。
+     */
+    bringToFront?(host: H): void;
+    /**
+     * 打開前確保好友清單已載入。好友清單原本只在開結緣畫面時才讀，直接進培育畫面按「好友借用」會是空清單（PROG-2-9158）。
+     */
+    ensureLoaded?(): Promise<void>;
+    /** 好友清單是空的時提示玩家，而不是打開一個什麼都沒有的清單 */
+    notifyEmpty?(): void;
 }
 
 export class MentorBorrowController<H extends MentorHoldingsHostLike> {
@@ -42,15 +53,23 @@ export class MentorBorrowController<H extends MentorHoldingsHostLike> {
         this.setOpen(false);
     }
 
-    /** 從第一頁打開 */
-    public open(): void {
+    /** 從第一頁打開；清單是空的就只提示，不開空畫面 */
+    public async open(): Promise<void> {
         this._page = 0;
+        if (this._deps.ensureLoaded) await this._deps.ensureLoaded();
+        if (this._deps.rows().length === 0) {
+            this._deps.notifyEmpty?.();
+            return;
+        }
         this.setOpen(true);
     }
 
     public setOpen(open: boolean): void {
         if (open) this.refresh();
-        if (this._host) this._host.node.active = open;
+        if (this._host) {
+            this._host.node.active = open;
+            if (open) this._deps.bringToFront?.(this._host);
+        }
     }
 
     public turnPage(delta: number): void {

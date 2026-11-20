@@ -19,6 +19,15 @@ import {
     type DestinyNewGameTarget,
 } from '../../core/systems/DestinyPool';
 import type { StarterGeneralId } from '../../core/services/StarterRosterService';
+import { getStarterYouthConfig, type YouthCareer } from '../../core/services/StarterYouthService';
+
+/** 少年名將三選一的一個選項（PROG-2-9194） */
+export interface StarterYouthOption {
+    id: string;
+    name: string;
+    title: string;
+    career: YouthCareer;
+}
 
 /** 六位初始名將的稱號與登場台詞（新手開場規格書 §6 建議稱號、§5.2 登場台詞） */
 export const DESTINY_INTRO: Readonly<Record<StarterGeneralId, { title: string; quote: string }>> = {
@@ -55,6 +64,8 @@ export interface DestinyOpeningDeps {
     seed: () => number;
     /** 開局紅顏（紅顏池抽 1 位的武將 id）；沒有時回 null。 */
     beauty?: () => string | null;
+    /** 開局前挑一位 14 歲少年名將（三選一）；沒提供時用設定的預設人選。回傳選中的成年版武將 id */
+    pickYouth?: (options: readonly StarterYouthOption[]) => Promise<string>;
     /** 鎖定並開局後呼叫，通常是存檔。 */
     onStarted: (coreId: StarterGeneralId) => Promise<void> | void;
 }
@@ -101,6 +112,16 @@ export class DestinyOpeningController {
         return this.roll();
     }
 
+    /** 少年名將三選一的選項（名單與預設在 starter-youth-config.json；查不到武將資料的略過） */
+    public youthOptions(): StarterYouthOption[] {
+        const options: StarterYouthOption[] = [];
+        for (const { id, career } of getStarterYouthConfig().candidates) {
+            const general = this._deps.generals().find(g => g.id === id);
+            if (general) options.push({ id, name: general.name, title: general.title ?? '', career });
+        }
+        return options;
+    }
+
     /** 確定：十位全收，本輪的宿命名將當核心並開新局。 */
     public async confirm(): Promise<boolean> {
         if (this._busy) return false;
@@ -114,7 +135,9 @@ export class DestinyOpeningController {
         this._busy = true;
         try {
             const beautyId = this._deps.beauty?.() ?? null;
-            const coreId = await startNewGameFromDestiny(this._deps.session, this._deps.seed(), this._deps.generals(), this._state, beautyId);
+            const options = this.youthOptions();
+            const youthId = this._deps.pickYouth && options.length > 0 ? await this._deps.pickYouth(options) : null;
+            const coreId = await startNewGameFromDestiny(this._deps.session, this._deps.seed(), this._deps.generals(), this._state, beautyId, youthId);
             this._startedId = coreId;
             this._beautyId = beautyId;
             this._lastMessage = beautyId ? `紅顏 ${this._nameOf(beautyId)} 前來相會，已加入名冊，可到「結緣」配對` : '';

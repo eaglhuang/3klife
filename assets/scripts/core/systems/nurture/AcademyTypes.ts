@@ -9,6 +9,8 @@
  * Unity 對照：像一組 ScriptableObject 定義檔 + enum，Engine 與各學府 Gimmick 共用。
  */
 
+import type { AncestralInheritEventRecord, CareerMarkRecord } from './AcademyInheritAndMarks';
+
 export enum AcademyId {
     YINGCHUAN = 'ACAD_YINGCHUAN',
     YOUZHOU = 'ACAD_YOUZHOU',
@@ -79,6 +81,8 @@ export interface AcademyStateSnapshot {
     controlMode: AcademyControlMode;
     prngSeedHex: string;
     stepIndex: number;
+    /** 雙年開獎／結業印記專用種子（與訓練路徑無關，防重修刷結果，PROG-2-9182）；舊快照沒有此欄位 */
+    inheritSeedHex?: string;
     sessionCrashCounter: number;
     stats: AcademyStats;
     learnedTactics: string[];
@@ -95,6 +99,14 @@ export interface AcademyStateSnapshot {
     graduated: boolean;
     /** 先祖傳奇教官的傳承支援（PROG-2-1908）；舊快照沒有此欄位 */
     legacySupport?: AcademyLegacySupport;
+    /** 雙年先祖遺風開獎紀錄（第 12 / 24 回合，防刷重播用，PROG-2-9182） */
+    ancestralInheritHistory?: AncestralInheritEventRecord[];
+    /** 學府期間重大共鳴次數（計算畢業白因子印記機率用，PROG-2-9182） */
+    resonanceHitCount?: number;
+    /** 結業時於 session 內鎖定的生平白因子印記（畢業寫回名冊前保存，PROG-2-9182） */
+    graduatedCareerMark?: CareerMarkRecord | null;
+    /** 雙年開獎獲得之適性升階目標清單（PROG-2-9182） */
+    pendingAptitudeBoosts?: string[];
 }
 
 /** 先祖教官傳承支援：訓練加成與弱冠禮特質種子（doc_spec_0310 §2.1） */
@@ -103,6 +115,14 @@ export interface AcademyLegacySupport {
     statBonusPct: Partial<Record<AcademyStatKey, number>>;
     /** 門風特質種子：弱冠禮時各自擲機率列入候選 */
     traitSeeds: string[];
+    /** 14 祖位加權藍因子總星數（0~70，PROG-2-9182） */
+    weightedBlueStars?: number;
+    /** 先祖主修五維（未提供時依學府Bias最高者，PROG-2-9182） */
+    primaryStat?: AcademyStatKey;
+    /** 父母與祖父母最高粉因子星數（0~3，PROG-2-9182） */
+    pinkStars?: number;
+    /** 粉因子適性升階目標（如 cavalry / navy，PROG-2-9182） */
+    pinkAptitudeTarget?: string;
 }
 
 export type AcademyActionType = 'TRAIN' | 'REST' | 'GIMMICK_INTERACT' | 'RESOLVE_INTERRUPT';

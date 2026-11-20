@@ -15,6 +15,7 @@
  * 並從 session 讀取目前回合、精力與教官站位來更新畫面。
  */
 import { performNurtureRite, ritesDue, type NurtureRiteResult } from '../systems/EnrollmentRites';
+import { performBloodlineResonance, type BloodlineResonanceResult } from '../systems/BloodlineResonance';
 import type { MentorCard } from '../models/MentorCard';
 import type { RosterStore } from '../managers/GameSession';
 import { GameTimeMode } from '../systems/GameClock';
@@ -38,6 +39,8 @@ import {
 } from '../systems/NurtureSystem';
 import { buildNurtureRecordRow, revelationLevelOf, type NurtureRecordDraft } from '../systems/NurtureRecordRow';
 import { UNVEILING_AGE, UnveilingGeneral } from '../systems/Unveiling';
+import type { GeneralConfig } from '../models/GeneralUnit';
+import { isYouthGeneral, promoteYouthToAdult, youthCanEnroll } from './StarterYouthService';
 import {
     childUltimateCandidates,
     childUltimateAwakenProbability,
@@ -50,6 +53,7 @@ import { INSPIRE_BURST_RATE_BONUS, InspireContext, rollInspireRound } from '../s
 import { isBloodlineGuaranteedRound, isBloodlineMatch } from '../systems/BloodlineGuarantee';
 import { GENERAL_STATUS_DEAD } from '../systems/GeneralAging';
 import { FactorAwakenedEvent, nurturePeekChance, rollNurtureAwakening } from '../systems/FactorAwakening';
+import { getMarriageVitalityRules } from '../systems/MarriageVitality';
 import { mentorPeekLine, previewLockedFactorDirections } from '../systems/SageFactorPreview';
 import type { FactorDictionary, InheritedFactor } from '../systems/FactorInheritance';
 import { hybridSourcesFromParents } from '../systems/HybridSkill';
@@ -116,6 +120,8 @@ export interface NurtureServiceOptions {
     awakening?: NurtureAwakeningHooks;
     /** 子嗣奧義覺醒（ULT-15）：訓練回合依父方奧義與子嗣綠色因子擲覺醒；沒提供就不擲骰 */
     childUltimate?: { definitions: () => readonly ChildUltimateDefinition[] };
+    /** 少年名將結業還原用：回傳該名將的成年版史實資料（PROG-2-9194）；沒提供就不還原 */
+    adultTemplateOf?: (generalId: string) => GeneralConfig | undefined;
     /** 畢業後通知（例如給玩家 discoveryLevel 經驗） */
     onGraduated?: (result: GraduationResult) => void;
     /** 因子字典；用來推導混種戰法領域（defaultTags），沒提供則退回因子 id */
@@ -124,6 +130,8 @@ export interface NurtureServiceOptions {
     clanTraditionKind?: () => TrainingKind | undefined;
     /** 世交太傅伴讀（G3 §F-2）；未提供時沒有加成 */
     synergyTutorBonus?: (mentors: readonly TrainingMentor[]) => number;
+    /** 雙親門風契合度 K ∈ [0, 15]（PROG-2-9170）；未提供時視為 0 */
+    compatibilityBonusForChild?: (child: UnveilingGeneral, roster: readonly UnveilingGeneral[]) => number;
 }
 
 export interface NurtureAwakeningHooks {
@@ -156,6 +164,8 @@ export interface NurtureTrainResult {
     childUltimates?: NurtureChildUltimate[];
     /** 本回合辦的開蒙禮、加冠禮；沒有則省略（PROG-2-1821） */
     rites?: NurtureRiteResult[];
+    /** 本回合觸發的血脈共鳴事件（PROG-2-9170）；沒觸發或非節點則省略 */
+    bloodlineResonance?: BloodlineResonanceResult;
     /** 本回合新觸發的戰法靈感；沒有則省略 */
     inspirations?: NurtureInspiration[];
     /** 教學邊界違規（MENT-11）：教官加成回寫了子嗣因子；正常情況省略 */
@@ -235,6 +245,25 @@ export class NurtureService {
         return Math.max(0, (this._options.admissionsPerSeason ?? DEFAULT_ADMISSIONS_PER_SEASON) - used);
     }
 
+    /**
+     * 學府入學消耗 1 張入學令（PROG-2-9189，沿用舊入學令來源、不限季節）。
+     * 當季沒有剩餘時回傳 false、不扣；成功回傳 true。落盤失敗時呼叫 refundAdmissionToken 退回。
+     */
+    consumeAdmissionToken(): boolean {
+        if (this.admissionsLeft() <= 0) return false;
+        const season = this._season();
+        const used = this._state.admission.season === season ? this._state.admission.used : 0;
+        this._state.admission = { season, used: used + 1 };
+        return true;
+    }
+
+    /** 退回最近一張入學令（學府入學落盤失敗時用）；本季沒有已用的令時無事 */
+    refundAdmissionToken(): void {
+        const season = this._season();
+        if (this._state.admission.season !== season || this._state.admission.used <= 0) return;
+        this._state.admission = { season, used: this._state.admission.used - 1 };
+    }
+
     checkStart(childId: string, mentors: readonly TrainingMentor[] = []): NurtureEligibility {
         const reasons: NurtureBlockReason[] = [];
         const child = this._find(childId);
@@ -243,9 +272,14 @@ export class NurtureService {
         }
         if ((child.status ?? '').toLowerCase() === GENERAL_STATUS_DEAD) reasons.push('child-dead');
         if ((child as { captivity?: unknown }).captivity) reasons.push('child-captive');
-        if ((child.age ?? 0) < UNVEILING_AGE) reasons.push('child-underage');
-        if (!child.fate) reasons.push('not-unveiled');
-        else if (!child.fate.choice) reasons.push('fate-pending');
+        if (isYouthGeneral(child)) {
+            // 投靠少年名將（PROG-2-9194）：不走抓周開獎與宿命，只看年滿可入學年齡
+            if (!youthCanEnroll(child)) reasons.push('child-underage');
+        } else {
+            if ((child.age ?? 0) < UNVEILING_AGE) reasons.push('child-underage');
+            if (!child.fate) reasons.push('not-unveiled');
+            else if (!child.fate.choice) reasons.push('fate-pending');
+        }
         if ((child as { graduationRating?: string }).graduationRating) reasons.push('already-graduated');
         if (this.getSession(childId)) reasons.push('already-nurturing');
 
@@ -325,7 +359,57 @@ export class NurtureService {
             result.rites = rites;
             result.session = this._requireSession(childId);
         }
+        const resonance = this.performDueBloodlineResonance(childId);
+        if (resonance?.triggered) {
+            result.bloodlineResonance = resonance;
+        }
+        if (resonance) {
+            result.session = this._requireSession(childId);
+        }
         return result;
+    }
+
+    /** 第 12 / 24 回合血脈共鳴檢定（PROG-2-9170）；讀檔或重修不重複觸發 */
+    performDueBloodlineResonance(childId: string, random: () => number = this._rng()): BloodlineResonanceResult | null {
+        const session = this._requireSession(childId);
+        const child = this._find(childId);
+        if (!child) return null;
+        const roster = this._roster.getAll();
+        const compatibilityK = this._options.compatibilityBonusForChild?.(child, roster) ?? 0;
+        const res = performBloodlineResonance(child, session.round, {
+            lookup: (id) => roster.find((g) => g.id === id),
+            compatibilityK,
+            dictionary: this._options.factorDictionary,
+            random,
+            sessionRoundsDone: session.resonanceRoundsDone,
+        });
+        if (!res) return null;
+        // 培育期間名冊本體（stats / genes / troopAptitude）不變；只把首次鎖定結果表存於名冊防重修刷黃金，
+        // 屬性加成寫進 session.prowess，因子與適性突破存進 session.resonancePending，畢業時才一併寫回名冊。
+        const rosterChild: UnveilingGeneral = {
+            ...child,
+            bloodlineResonanceRoundsDone: res.general.bloodlineResonanceRoundsDone,
+            bloodlineResonanceOutcomes: res.general.bloodlineResonanceOutcomes,
+        };
+        this._roster.replaceAll(roster.map((g) => (g.id === childId ? rosterChild : g)));
+        const nextProwess = { ...session.prowess };
+        for (const [statKey, delta] of Object.entries(res.statGains ?? {})) {
+            if (typeof delta === 'number' && delta > 0 && statKey in nextProwess) {
+                const key = statKey as TrainingKind;
+                nextProwess[key] += delta;
+            }
+        }
+        const nextPending = res.triggered
+            ? [...(session.resonancePending ?? []), res.lockedOutcome]
+            : (session.resonancePending ?? []);
+        const nextRounds = Array.from(new Set([...(session.resonanceRoundsDone ?? []), res.round]));
+        this._replace({
+            ...session,
+            prowess: nextProwess,
+            resonanceRoundsDone: nextRounds,
+            ...(nextPending.length > 0 ? { resonancePending: nextPending } : {}),
+        });
+        return res;
     }
 
     /** 補上到期的開蒙禮、加冠禮（G1 §E #3、#5）；親手培育與太傅代管共用，亂數接在回合之後 */
@@ -384,6 +468,13 @@ export class NurtureService {
         return candidate;
     }
 
+    /** 少年名將定型時還原成年完整值（沒有成年版資料時維持原樣） */
+    private _promoteIfYouth<T extends GeneralConfig>(before: GeneralConfig, graduated: T): T {
+        if (!isYouthGeneral(before)) return graduated;
+        const adult = this._options.adultTemplateOf?.(before.id);
+        return adult ? promoteYouthToAdult(graduated, before, adult) as T : graduated;
+    }
+
     /** 畢業結算：實力層寫回名冊、會話移除（教官同時解鎖） */
     graduate(childId: string): GraduationResult {
         const session = this._requireSession(childId);
@@ -391,6 +482,7 @@ export class NurtureService {
         const index = roster.findIndex((g) => g.id === childId);
         if (index < 0) throw new NurtureError(`名冊中找不到 ${childId}`);
         const result = graduateSession(session, roster[index], this._season());
+        result.general = this._promoteIfYouth(roster[index], result.general);
         const next = [...roster];
         next[index] = result.general;
         this._roster.replaceAll(next);
@@ -438,6 +530,7 @@ export class NurtureService {
         const roster = this._roster.getAll() as UnveilingGeneral[];
         const rosterIndex = roster.findIndex((g) => g.id === childId);
         if (rosterIndex < 0) throw new NurtureError(`名冊中找不到 ${childId}`);
+        card.general = this._promoteIfYouth(roster[rosterIndex], card.general);
         const next = [...roster];
         next[rosterIndex] = card.general;
         this._roster.replaceAll(next);
@@ -506,11 +599,14 @@ export class NurtureService {
         const index = roster.findIndex((g) => g.id === childId);
         if (index < 0) return undefined;
         const mentorRank = session.mentors.reduce((max, m) => Math.max(max, m.stars ?? 0), 0);
+        const earlyAwakenTurns = getMarriageVitalityRules().epithets.twin_stars.earlyAwakenTurns;
+        const extraAwakenChance = session.round <= earlyAwakenTurns ? (session.earlyAwakenBonusPct ?? 0) : 0;
         const result = rollNurtureAwakening(roster[index], {
             discoveryLevel: hooks.discoveryLevel(),
             mentorRank,
             mentorOnSlot: log.mentorsOnSlot.length > 0,
             luk: lukOf(roster[index]),
+            extraAwakenChance,
             random: this._rng(),
         });
         if (!result?.ok) return undefined;

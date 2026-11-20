@@ -1,0 +1,671 @@
+{
+  "schema": "mission-def.v1",
+  "id": "MIL_BEACON_PATROL",
+  "version": 1,
+  "legacyTemplateId": "MIL_EASY_02",
+  "theme": "military",
+  "difficulty": "EASY",
+  "tags": [
+    "border",
+    "beacon",
+    "inspection"
+  ],
+  "text": {
+    "title": "巡查烽燧",
+    "brief": "邊境烽燧久未修整，需派人巡查並加派哨兵。"
+  },
+  "requirement": {
+    "slots": 1,
+    "keyStats": {
+      "lea": 1,
+      "int": 0.4
+    },
+    "preferTags": [
+      "scout",
+      "garrison"
+    ],
+    "avoidTags": []
+  },
+  "timing": {
+    "durationSeasons": 1,
+    "expireSeasons": 2
+  },
+  "variants": [
+    {
+      "id": "ROUTINE",
+      "weight": 60
+    },
+    {
+      "id": "TRAITOR",
+      "weight": 40
+    }
+  ],
+  "intel": {
+    "initial": 45,
+    "jitter": 10,
+    "sources": {
+      "recon": {
+        "base": 35
+      },
+      "wait": {
+        "delta": 20
+      }
+    }
+  },
+  "facts": [
+    {
+      "key": "enemy",
+      "label": "敵方動向",
+      "levels": [
+        {
+          "minIntel": 30,
+          "text": "邊界附近有零星游騎出沒。"
+        },
+        {
+          "minIntel": 70,
+          "text": "游騎行動很有規律，像是有人替他們掌握了輪值時間。"
+        }
+      ],
+      "decoy": "暫無敵蹤，一切如常。"
+    },
+    {
+      "key": "garrison",
+      "label": "守卒狀況",
+      "levels": [
+        {
+          "minIntel": 50,
+          "text": "守卒士氣低落，有人私下議論軍餉。"
+        },
+        {
+          "minIntel": 85,
+          "text": "三號烽燧的什長近日突然闊綽，出手不像守卒。"
+        }
+      ]
+    }
+  ],
+  "branches": [
+    {
+      "id": "B_ROUTINE",
+      "when": {
+        "variant": [
+          "ROUTINE"
+        ],
+        "minIntel": 0
+      },
+      "objective": {
+        "id": "inspect",
+        "text": "巡查並整飭烽燧"
+      },
+      "presented": {
+        "hints": [
+          "看起來是一般的巡查"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0,
+        "rewardMul": 1,
+        "riskMul": 1
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.2,
+        "disasterRatio": 0.1,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "烽燧整飭一新，守卒士氣大振。",
+                "effects": [
+                  {
+                    "kind": "resource",
+                    "res": "grain",
+                    "amount": 150
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": 60
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": 10
+                  }
+                ]
+              },
+              {
+                "kind": "chance",
+                "p": 0.3,
+                "hit": {
+                  "kind": "effects",
+                  "narrative": "守卒推薦了一位可造之材。",
+                  "effects": [
+                    {
+                      "kind": "spawn",
+                      "defId": "MIL_RECRUIT_SCOUT",
+                      "intel": 60
+                    }
+                  ]
+                },
+                "miss": {
+                  "kind": "effects",
+                  "effects": []
+                }
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "巡查順利，哨兵重新編排。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "grain",
+                "amount": 100
+              },
+              {
+                "kind": "generalExp",
+                "amount": 40
+              },
+              {
+                "kind": "fame",
+                "amount": 5
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "走了一趟冤枉路，什麼也沒整頓好。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 10
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "途中遇游騎襲擾，折損隨行兵卒。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "troops",
+                "amount": -30
+              },
+              {
+                "kind": "memoryNote",
+                "tag": "ambushed",
+                "text": "巡邊時遭游騎伏擊"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_ROUTINE_SHARP",
+      "when": {
+        "variant": [
+          "ROUTINE"
+        ],
+        "minIntel": 70
+      },
+      "objective": {
+        "id": "inspect_efficient",
+        "text": "避開游騎路線，高效整飭烽燧"
+      },
+      "presented": {
+        "hints": [
+          "已掌握游騎出沒時段，可避開"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.12,
+        "rewardMul": 1.2,
+        "riskMul": 0.4
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.3,
+        "disasterRatio": 0.05,
+        "tiers": {
+          "critical": {
+            "kind": "effects",
+            "narrative": "避開游騎，提前完成並順手擒獲探子。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "grain",
+                "amount": 200
+              },
+              {
+                "kind": "generalExp",
+                "amount": 80
+              },
+              {
+                "kind": "fame",
+                "amount": 15
+              },
+              {
+                "kind": "intel",
+                "target": {
+                  "tag": "border"
+                },
+                "delta": 20
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "grain",
+                "amount": 130
+              },
+              {
+                "kind": "generalExp",
+                "amount": 50
+              },
+              {
+                "kind": "fame",
+                "amount": 6
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 15
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 5
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_TRAITOR_BLIND",
+      "when": {
+        "variant": [
+          "TRAITOR"
+        ],
+        "minIntel": 0,
+        "maxIntel": 29
+      },
+      "objective": {
+        "id": "inspect",
+        "text": "巡查並整飭烽燧"
+      },
+      "presented": {
+        "hints": [
+          "看起來是一般的巡查"
+        ]
+      },
+      "modifiers": {
+        "successDelta": -0.15,
+        "rewardMul": 0.8,
+        "riskMul": 1.6
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.05,
+        "disasterRatio": 0.4,
+        "tiers": {
+          "critical": {
+            "kind": "effects",
+            "narrative": "巡查圓滿，但你隱約覺得某處不對勁。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "grain",
+                "amount": 100
+              },
+              {
+                "kind": "flag",
+                "set": "beacon_suspicion",
+                "value": true
+              },
+              {
+                "kind": "spawn",
+                "defId": "ESP_TRAITOR_HUNT",
+                "intel": 40
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "巡查完畢，卻沒察覺烽燧柴薪被人動過手腳。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "grain",
+                "amount": 70
+              },
+              {
+                "kind": "generalExp",
+                "amount": 30
+              },
+              {
+                "kind": "flag",
+                "set": "traitor_unnoticed",
+                "value": true
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "狼煙在關鍵時刻失靈，游騎長驅直入。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "troops",
+                "amount": -50
+              },
+              {
+                "kind": "fame",
+                "amount": -5
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "內奸趁亂縱火，武將受傷，烽燧被毀。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "troops",
+                "amount": -90
+              },
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 2
+              },
+              {
+                "kind": "flag",
+                "set": "traitor_at_large",
+                "value": true
+              },
+              {
+                "kind": "spawn",
+                "defId": "ESP_TRAITOR_HUNT",
+                "intel": 20,
+                "afterSeasons": 1
+              },
+              {
+                "kind": "memoryNote",
+                "tag": "betrayed",
+                "text": "巡邊時被守卒出賣"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_TRAITOR_SUSPECT",
+      "when": {
+        "variant": [
+          "TRAITOR"
+        ],
+        "minIntel": 30,
+        "maxIntel": 69
+      },
+      "objective": {
+        "id": "inspect_and_probe",
+        "text": "巡查烽燧，並查明可疑之處",
+        "keyStats": {
+          "int": 1,
+          "lea": 0.5
+        }
+      },
+      "presented": {
+        "objectiveText": "巡查烽燧；似有蹊蹺",
+        "hints": [
+          "守卒言行有些閃爍"
+        ]
+      },
+      "modifiers": {
+        "successDelta": -0.03,
+        "rewardMul": 1,
+        "riskMul": 1
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.2,
+        "disasterRatio": 0.2,
+        "tiers": {
+          "critical": {
+            "kind": "effects",
+            "narrative": "當場察覺異狀，鎖定嫌疑人。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "grain",
+                "amount": 120
+              },
+              {
+                "kind": "generalExp",
+                "amount": 60
+              },
+              {
+                "kind": "spawn",
+                "defId": "ESP_TRAITOR_HUNT",
+                "intel": 70
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "確認守卒中有可疑之人，但尚無證據。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "grain",
+                "amount": 90
+              },
+              {
+                "kind": "generalExp",
+                "amount": 40
+              },
+              {
+                "kind": "spawn",
+                "defId": "ESP_TRAITOR_HUNT",
+                "intel": 45
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 15
+              },
+              {
+                "kind": "flag",
+                "set": "beacon_suspicion",
+                "value": true
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "打草驚蛇，嫌疑人連夜逃走。",
+            "effects": [
+              {
+                "kind": "flag",
+                "set": "traitor_at_large",
+                "value": true
+              },
+              {
+                "kind": "fame",
+                "amount": -3
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_TRAITOR_EXPOSED",
+      "when": {
+        "variant": [
+          "TRAITOR"
+        ],
+        "minIntel": 70
+      },
+      "objective": {
+        "id": "catch_traitor",
+        "text": "揪出烽燧中的內奸",
+        "keyStats": {
+          "int": 1,
+          "lea": 0.6
+        }
+      },
+      "presented": {
+        "objectiveText": "揪出收了敵方銀兩的什長",
+        "hints": [
+          "證據指向三號烽燧什長"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.08,
+        "rewardMul": 1.6,
+        "riskMul": 0.5
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.3,
+        "disasterRatio": 0.1,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "人贓俱獲，內奸供出整個細作網。",
+                "effects": [
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": 150
+                  },
+                  {
+                    "kind": "generalExp",
+                    "amount": 120
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": 20
+                  },
+                  {
+                    "kind": "trait",
+                    "add": "keen_eye"
+                  },
+                  {
+                    "kind": "spawn",
+                    "defId": "ESP_SPY_RING",
+                    "intel": 70
+                  }
+                ]
+              },
+              {
+                "kind": "switch",
+                "on": "stat:int>=80",
+                "cases": [
+                  {
+                    "when": true,
+                    "then": {
+                      "kind": "effects",
+                      "narrative": "你以智謀反向設局，順便策反了對方聯絡人。",
+                      "effects": [
+                        {
+                          "kind": "intel",
+                          "target": {
+                            "tag": "border"
+                          },
+                          "delta": 30
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "else": {
+                  "kind": "effects",
+                  "effects": []
+                }
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "內奸伏法，烽燧防務重整。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "grain",
+                "amount": 160
+              },
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": 60
+              },
+              {
+                "kind": "generalExp",
+                "amount": 80
+              },
+              {
+                "kind": "fame",
+                "amount": 10
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "內奸跑了，但烽燧已整頓。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": 30
+              },
+              {
+                "kind": "flag",
+                "set": "traitor_at_large",
+                "value": true
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "內奸狗急跳牆，與你的武將動手。",
+            "effects": [
+              {
+                "kind": "generalState",
+                "state": "injured",
+                "seasons": 1
+              },
+              {
+                "kind": "flag",
+                "set": "traitor_at_large",
+                "value": true
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

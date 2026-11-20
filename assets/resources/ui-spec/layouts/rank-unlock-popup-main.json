@@ -1,0 +1,272 @@
+{
+  "id": "rank-unlock-popup-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "RankUnlockPopupRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "RankUnlockBackdrop",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "skinSlot": "rank-unlock.backdrop.bg"
+      },
+      {
+        "type": "panel",
+        "name": "RankUnlockCard",
+        "id": "rankUnlockCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 960,
+        "height": 800,
+        "skinSlot": "rank-unlock.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "RankUnlockTitle",
+            "id": "rankUnlockTitle",
+            "widget": {
+              "top": 26,
+              "left": 48,
+              "right": 48
+            },
+            "height": 48,
+            "text": "晉升",
+            "styleSlot": "rank-unlock.label.title"
+          },
+          {
+            "type": "label",
+            "name": "RankUnlockSub",
+            "id": "rankUnlockSub",
+            "widget": {
+              "top": 84,
+              "left": 48,
+              "right": 48
+            },
+            "height": 32,
+            "text": "",
+            "styleSlot": "rank-unlock.label.sub"
+          },
+          {
+            "type": "label",
+            "name": "RankUnlockLine0",
+            "id": "rankUnlockLine0",
+            "widget": {
+              "top": 132,
+              "left": 48,
+              "right": 48
+            },
+            "height": 40,
+            "text": "",
+            "styleSlot": "rank-unlock.label.line"
+          },
+          {
+            "type": "label",
+            "name": "RankUnlockLine1",
+            "id": "rankUnlockLine1",
+            "widget": {
+              "top": 178,
+              "left": 48,
+              "right": 48
+            },
+            "height": 40,
+            "text": "",
+            "styleSlot": "rank-unlock.label.line"
+          },
+          {
+            "type": "label",
+            "name": "RankUnlockLine2",
+            "id": "rankUnlockLine2",
+            "widget": {
+              "top": 224,
+              "left": 48,
+              "right": 48
+            },
+            "height": 40,
+            "text": "",
+            "styleSlot": "rank-unlock.label.line"
+          },
+          {
+            "type": "label",
+            "name": "RankUnlockLine3",
+            "id": "rankUnlockLine3",
+            "widget": {
+              "top": 270,
+              "left": 48,
+              "right": 48
+            },
+            "height": 40,
+            "text": "",
+            "styleSlot": "rank-unlock.label.line"
+          },
+          {
+            "type": "label",
+            "name": "RankUnlockLine4",
+            "id": "rankUnlockLine4",
+            "widget": {
+              "top": 316,
+              "left": 48,
+              "right": 48
+            },
+            "height": 40,
+            "text": "",
+            "styleSlot": "rank-unlock.label.line"
+          },
+          {
+            "type": "label",
+            "name": "RankUnlockLine5",
+            "id": "rankUnlockLine5",
+            "widget": {
+              "top": 362,
+              "left": 48,
+              "right": 48
+            },
+            "height": 40,
+            "text": "",
+            "styleSlot": "rank-unlock.label.line"
+          },
+          {
+            "type": "label",
+            "name": "RankUnlockLine6",
+            "id": "rankUnlockLine6",
+            "widget": {
+              "top": 408,
+              "left": 48,
+              "right": 48
+            },
+            "height": 40,
+            "text": "",
+            "styleSlot": "rank-unlock.label.line"
+          },
+          {
+            "type": "label",
+            "name": "RankUnlockLine7",
+            "id": "rankUnlockLine7",
+            "widget": {
+              "top": 454,
+              "left": 48,
+              "right": 48
+            },
+            "height": 40,
+            "text": "",
+            "styleSlot": "rank-unlock.label.line"
+          },
+          {
+            "type": "label",
+            "name": "RankUnlockMore",
+            "id": "rankUnlockMore",
+            "widget": {
+              "top": 508,
+              "left": 48,
+              "right": 48
+            },
+            "height": 30,
+            "text": "",
+            "styleSlot": "rank-unlock.label.sub"
+          },
+          {
+            "type": "label",
+            "name": "RankUnlockNext",
+            "id": "rankUnlockNext",
+            "widget": {
+              "top": 550,
+              "left": 48,
+              "right": 48
+            },
+            "height": 36,
+            "text": "",
+            "styleSlot": "rank-unlock.label.next"
+          },
+          {
+            "type": "label",
+            "name": "RankUnlockMentorHint",
+            "id": "rankUnlockMentorHint",
+            "widget": {
+              "top": 594,
+              "left": 48,
+              "right": 48
+            },
+            "height": 34,
+            "text": "",
+            "styleSlot": "rank-unlock.label.next"
+          },
+          {
+            "type": "button",
+            "name": "BtnRankUnlockMentor",
+            "id": "btnRankUnlockMentor",
+            "widget": {
+              "bottom": 104,
+              "hCenter": true
+            },
+            "width": 380,
+            "height": 60,
+            "skinSlot": "rank-unlock.button.ok",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnRankUnlockMentorLabel",
+                "id": "rankUnlockMentorLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 36,
+                "text": "去教官池抽教官",
+                "styleSlot": "rank-unlock.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnRankUnlockOk",
+            "id": "btnRankUnlockOk",
+            "widget": {
+              "bottom": 28,
+              "hCenter": true
+            },
+            "width": 280,
+            "height": 60,
+            "skinSlot": "rank-unlock.button.ok",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnRankUnlockOkLabel",
+                "id": "rankUnlockOkLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 36,
+                "text": "知道了",
+                "styleSlot": "rank-unlock.label.button"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

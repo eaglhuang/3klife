@@ -128,7 +128,7 @@ export function findJournalEntriesByActionSeq(state: Readonly<JournalState>, seq
 /** 反應只保留合法的文字與來源；不合法時整段省略。 */
 function validReaction(reaction: JournalReaction | undefined): JournalReaction | undefined {
     if (!reaction || typeof reaction.text !== 'string' || !canAcceptReactionLine(reaction.text)) return undefined;
-    if (reaction.source !== 'TEMPLATE' && reaction.source !== 'FALLBACK') return undefined;
+    if (reaction.source !== 'TEMPLATE' && reaction.source !== 'FALLBACK' && reaction.source !== 'PERSONAL') return undefined;
     return { text: reaction.text, source: reaction.source };
 }
 

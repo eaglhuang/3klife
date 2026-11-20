@@ -30,6 +30,7 @@ import { buildHeirloomCardView, type HeirloomCardView } from '../../core/systems
 import type { PlayerInventory } from '../../core/systems/PlayerInventory';
 import { resolveRarityTier } from '../../core/utils/RarityResolver';
 import { resolveCommercialBand } from '../../core/utils/CommercialRarityBand';
+import { UNNAMED_BLOODLINE, bloodlineDisplayName, playerFacingNote } from '../../core/utils/PlayerFacingText';
 
 /** 年齡加上器局巔峰曲線（培育武將才有，PROG-2-1822）；格子窄，只放曲線名 */
 function ageWithPeakCurve(config: { age?: number }): string {
@@ -171,6 +172,8 @@ const ROLE_DISPLAY: Record<string, string> = {
     Combat: '先鋒',
     Support: '支援',
     Hybrid: '全能',
+    // CanonicalRole 的 Mentor（教官型武將）；沒對到時會直接漏出英文
+    Mentor: '教官',
 };
 
 const STATUS_DISPLAY: Record<string, string> = {
@@ -178,6 +181,8 @@ const STATUS_DISPLAY: Record<string, string> = {
     Young: '少壯',
     Retired: '退隱',
     Injured: '負傷',
+    Mystery: '幼年未開蒙',
+    Unveiled: '已開蒙',
 };
 
 const TERRAIN_DISPLAY: Record<string, string> = {
@@ -210,8 +215,9 @@ export function buildGeneralDetailOverview(config: GeneralConfig, femaleSource: 
 
     return {
         header: {
-            title: mask(config.title, '燕人猛將'),
-            name: mask(config.name, '張飛'),
+            // 沒有稱號就留空，不可借用特定武將的稱號當預設（彭羕之女曾因此顯示「燕人猛將」）
+            title: mask(config.title, ''),
+            name: mask(config.name, '無名武將'),
             meta: buildHeaderMeta(config, femaleSource),
         },
         summary: {
@@ -234,7 +240,7 @@ export function buildGeneralDetailOverview(config: GeneralConfig, femaleSource: 
             roleSummary: buildRoleSummary(str, int, lea),
             traitSummary: buildTraitSummary(config, currentSp, maxSp),
                 bloodlineTitle: '祖紋',
-            bloodlineName: formatBloodlineDisplayName(config.bloodlineId, '震雷先鋒'),
+            bloodlineName: formatBloodlineDisplayName(config.bloodlineId, UNNAMED_BLOODLINE),
             awakeningLabel: '覺醒傾向',
             awakeningProgress: resolveAwakeningProgress(config.ep),
             personalityValue: buildPersonalitySummary(config),
@@ -627,8 +633,9 @@ function resolveCrestState(config: GeneralConfig): GeneralDetailCrestState {
 }
 
 function buildCrestHint(config: GeneralConfig, crestState: GeneralDetailCrestState): string {
-    if (config.crestHint) {
-        return shortenText(config.crestHint, 26);
+    const hint = playerFacingNote(config.crestHint);
+    if (hint) {
+        return shortenText(hint, 26);
     }
 
     switch (crestState) {
@@ -738,42 +745,21 @@ function shortenText(value: string | undefined, maxLength: number): string {
 function buildCrestGlyphPrimary(config: GeneralConfig): string {
     const tokens = extractBloodlineTokens(config);
     const token = tokens.length > 0 ? tokens[tokens.length - 1] : undefined;
-    return token ? translateBloodlineToken(token) : config.name.slice(0, 1);
+    return (token ? translateBloodlineToken(token) : '') || config.name.slice(0, 1);
 }
 
 function buildCrestGlyphSecondary(config: GeneralConfig): string {
-    const tokens = extractBloodlineTokens(config).map((token) => translateBloodlineToken(token));
+    const tokens = extractBloodlineTokens(config).map((token) => translateBloodlineToken(token)).filter((glyph) => glyph !== '');
     if (tokens.length === 0) {
         return '血脈命紋';
     }
     return `${tokens.join('')}命紋`;
 }
 
-function formatBloodlineDisplayName(value: string | undefined, fallback: string): string {
-    if (!value) {
-        return fallback;
-    }
-
-    if (!/[A-Za-z]/.test(value)) {
-        return shortenText(value, 8) || fallback;
-    }
-
-    const tokens = value
-        .split(/[_-]+/)
-        .map((token) => token.trim().toUpperCase())
-        .filter((token) => token !== '' && token !== 'BL');
-
-    if (tokens.length === 0) {
-        return fallback;
-    }
-
-    const meaningfulTokens = tokens.length > 1 ? tokens.slice(1) : tokens;
-    const translated = meaningfulTokens.map((token) => translateBloodlineToken(token)).join('');
-    if (translated === '') {
-        return fallback;
-    }
-
-    return translated.endsWith('血脈') ? translated : `${translated}血脈`;
+/** 血脈 id 的玩家可見名稱（內部 ID 不外露；查不到名稱用通用佔位） */
+export function formatBloodlineDisplayName(value: string | undefined, fallback: string): string {
+    const name = bloodlineDisplayName(value, fallback);
+    return /[A-Za-z]/.test(value ?? '') ? name : (shortenText(value, 8) || fallback);
 }
 
 function extractBloodlineTokens(config: GeneralConfig): string[] {
@@ -801,7 +787,8 @@ function translateBloodlineToken(token: string): string {
         CHU: '楚',
         ZHAO: '昭',
     };
-    return table[token] ?? token.slice(0, 1);
+    // 查不到就回空字串，不用拉丁字母頂替（命紋字樣不可露出內部代號）
+    return table[token] ?? '';
 }
 
 // @spec-source → 武將人物介面規格書 §10 Data Read Model（顯示頁欄）、§12 NO_DATA；WBS GDUI-13（PROG-2-1025 併入）

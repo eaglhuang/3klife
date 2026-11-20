@@ -25,6 +25,9 @@ export interface PortraitBounds {
     bottom: number;
     /** 不透明像素水平中心 */
     cx: number;
+    /** 頭頂（含頭冠，排除兵器尖端）與頭的水平中線；招賢館頭頂齊平用（PROG-2-9156），舊資料可能沒有 */
+    headTop?: number;
+    headCx?: number;
     /** 身高比例，預設 1；比 1 大代表此人比標準身高高 */
     heightRatio?: number;
 }

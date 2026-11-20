@@ -29,6 +29,7 @@ import { SolidBackground } from './SolidBackground';
 import { isVitalityBarGrayed, vitalityBarRatio } from '../../core/systems/VitalityBarView';
 import { FORTRESS_MAX_HP, fortressBarRatio } from '../../core/systems/FortressBarView';
 import { foodLabelText } from '../../core/systems/FoodLabelText';
+import { turnLabelText } from '../../core/systems/TimeUpJudgement';
 const { ccclass } = _decorator;
 /** 精力條（FORM-11）在血條正下方的高度與間距 */
 const VITALITY_BAR_HEIGHT = 6;
@@ -562,7 +563,8 @@ export class BattleHUDComposite extends CompositePanel {
     // ── 內部更新 ─────────────────────────────────────────────
 
     private _setTurn(turn: number): void {
-        if (this._turnLabel) this._turnLabel.string = `第 ${turn} 回合`;
+        // 關卡自訂時限時顯示分母「第 3/15 回合」（PROG-2-9423）
+        if (this._turnLabel) this._turnLabel.string = turnLabelText(turn, services().battle?.getDisplayTurnLimit?.() ?? null);
     }
 
     private _setFood(food: number, maxFood: number): void {

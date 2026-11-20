@@ -38,77 +38,123 @@
         "type": "panel",
         "name": "Card",
         "id": "card",
-        "width": 640,
-        "height": 600,
+        "width": 1120,
+        "height": 880,
         "skinSlot": "popup.card.bg",
         "layout": {
           "type": "vertical",
-          "spacing": 16,
-          "paddingTop": 40,
+          "spacing": 12,
+          "paddingTop": 36,
           "paddingBottom": 32,
-          "paddingLeft": 48,
-          "paddingRight": 48
+          "paddingLeft": 56,
+          "paddingRight": 56
         },
         "children": [
           {
-            "type": "panel",
-            "name": "AvatarRing",
-            "id": "avatarRing",
-            "width": 168,
-            "height": 168,
-            "skinSlot": "popup.avatar.ring",
+            "type": "container",
+            "name": "HeaderRow",
+            "id": "headerRow",
+            "width": "100%",
+            "height": 176,
+            "layout": {
+              "type": "horizontal",
+              "spacing": 32
+            },
             "children": [
               {
-                "type": "container",
-                "name": "AvatarMask",
-                "id": "avatarMask",
-                "widget": {
-                  "hCenter": true,
-                  "vCenter": true
-                },
-                "width": 156,
-                "height": 156,
+                "type": "panel",
+                "name": "AvatarRing",
+                "id": "avatarRing",
+                "width": 168,
+                "height": 168,
+                "skinSlot": "popup.avatar.ring",
                 "children": [
                   {
-                    "type": "image",
-                    "name": "Avatar",
-                    "id": "avatar",
+                    "type": "container",
+                    "name": "AvatarMask",
+                    "id": "avatarMask",
+                    "widget": {
+                      "hCenter": true,
+                      "vCenter": true
+                    },
                     "width": 156,
                     "height": 156,
-                    "skinSlot": "popup.avatar"
+                    "children": [
+                      {
+                        "type": "image",
+                        "name": "Avatar",
+                        "id": "avatar",
+                        "width": 156,
+                        "height": 156,
+                        "skinSlot": "popup.avatar"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "container",
+                "name": "HeaderText",
+                "id": "headerText",
+                "width": 808,
+                "height": 176,
+                "layout": {
+                  "type": "vertical",
+                  "spacing": 4,
+                  "paddingTop": 4
+                },
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "TitleLabel",
+                    "id": "titleLabel",
+                    "width": "100%",
+                    "height": 72,
+                    "textKey": "ui.result.victory",
+                    "styleSlot": "popup.label.title"
+                  },
+                  {
+                    "type": "label",
+                    "name": "DescLabel",
+                    "id": "descLabel",
+                    "width": "100%",
+                    "height": 96,
+                    "textKey": "ui.result.title",
+                    "styleSlot": "popup.label.verdict"
                   }
                 ]
               }
             ]
           },
           {
-            "type": "label",
-            "name": "TitleLabel",
-            "id": "titleLabel",
+            "type": "scroll-view",
+            "name": "DetailScroll",
+            "id": "detailScroll",
             "width": "100%",
-            "height": 64,
-            "textKey": "ui.result.victory",
-            "styleSlot": "popup.label.title"
+            "height": 520,
+            "layout": {
+              "type": "vertical",
+              "spacing": 6,
+              "paddingTop": 4,
+              "paddingBottom": 12
+            },
+            "_comment": "結算明細分區列（PROG-2-9424）：ResultPopupComposite 依 ResultDetailSections 動態產生區段標題與鍵值列",
+            "skinSlot": "popup.detail.bg",
+            "scrollbar": {
+              "width": 10,
+              "right": 6,
+              "top": 12,
+              "bottom": 12,
+              "trackSkinSlot": "popup.scrollbar.track",
+              "thumbSkinSlot": "popup.scrollbar.thumb",
+              "autoHide": false
+            }
           },
           {
-            "type": "label",
-            "name": "DescLabel",
-            "id": "descLabel",
-            "width": "100%",
-            "height": 150,
-            "textKey": "ui.result.title",
-            "styleSlot": "popup.label.desc"
-          },
-          {
-            "type": "spacer",
-            "name": "Spacer",
-            "height": 16
-          },
-          {
-            "type": "panel",
+            "type": "container",
             "name": "ButtonRow",
             "width": "100%",
-            "height": 56,
+            "height": 72,
             "layout": {
               "type": "horizontal",
               "spacing": 16
@@ -119,7 +165,7 @@
                 "name": "BtnBack",
                 "id": "btnBack",
                 "width": "48%",
-                "height": 56,
+                "height": 72,
                 "skinSlot": "common.button.secondary",
                 "textKey": "ui.result.back_to_lobby",
                 "onClick": "onClickBack"
@@ -129,7 +175,7 @@
                 "name": "BtnReplay",
                 "id": "btnReplay",
                 "width": "48%",
-                "height": 56,
+                "height": 72,
                 "skinSlot": "common.button.primary",
                 "textKey": "ui.result.retry",
                 "onClick": "onClickReplay"

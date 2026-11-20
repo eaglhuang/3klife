@@ -54,4 +54,23 @@ export class ToastQueue<T extends { message: string }> {
         this._current = null;
         this._pending = [];
     }
+
+    /** 取出目前這句（可能還沒讀完）與排隊中的全部，依顯示順序回傳並清空（PROG-2-9416：回合橫幅期間先收起） */
+    drain(): T[] {
+        const out = this._current ? [this._current, ...this._pending] : [...this._pending];
+        this.clear();
+        return out;
+    }
+}
+
+/**
+ * 回合橫幅期間暫停的提示：把「被收起的（較早）」與「暫停期間新來的」依先後合併，
+ * 同一句只留第一次，最多保留 MAX_PENDING 句（丟掉最舊的）。純函式（PROG-2-9416）。
+ */
+export function mergeHeldToasts<T extends { message: string }>(earlier: readonly T[], later: readonly T[]): T[] {
+    const out: T[] = [];
+    for (const toast of [...earlier, ...later]) {
+        if (!out.some((item) => item.message === toast.message)) out.push(toast);
+    }
+    return out.length > MAX_PENDING ? out.slice(out.length - MAX_PENDING) : out;
 }

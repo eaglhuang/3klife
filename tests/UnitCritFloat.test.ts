@@ -32,6 +32,13 @@ export function createUnitCritFloatSuite(): TestSuite {
         assert.equals('dmg_enemy', unitValueFloatType('damage', false, false));
     });
 
+    suite.test('PROG-2-9412：重擊用 dmg_heavy；爆擊仍優先、治療不受影響', () => {
+        assert.equals('dmg_heavy', unitValueFloatType('damage', true, false, true));
+        assert.equals('dmg_heavy', unitValueFloatType('damage', false, false, true));
+        assert.equals('dmg_crit', unitValueFloatType('damage', false, true, true));
+        assert.equals('heal', unitValueFloatType('heal', true, false, true));
+    });
+
     suite.test('applyUnitDamage 帶 isCrit → UnitDamaged 事件帶出；未帶時為 false', () => {
         services().initialize();
         const ctrl = new BattleController();

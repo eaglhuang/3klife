@@ -62,7 +62,7 @@ export function createSeasonReportPanelSuite(): TestSuite {
 
     suite.test('空名冊：空白提示有字，所有列為占位「—」', () => {
         const texts = buildSeasonReportPanelTexts('第 2 年 春季', []);
-        assert.equals('本季沒有可回報的武將', texts['DialogCard/ScrollView/ScrollContent/EmptyHintLabel']);
+        assert.equals('本季風平浪靜，無事可報。', texts['DialogCard/ScrollView/ScrollContent/EmptyHintLabel']);
         assert.equals('—', texts['DialogCard/ScrollView/ScrollContent/Row0/LineLabel']);
         assert.equals('—', texts['DialogCard/ScrollView/ScrollContent/Row0/RankLabel']);
     });

@@ -12,6 +12,8 @@
 /** 只用到 UIManager 的這幾個方法，方便單元測試換成假物件 */
 export interface LobbyUiStack<Id extends string> {
     getCurrentUI(): Id | null;
+    /** 彈窗層（PopUp）堆疊頂端；世家總覽、命鏡升星結果等都走彈窗層，返回政廳時要一併關掉（PROG-2-9175） */
+    peekPopup?(): Id | null;
     close(uiId: Id): Promise<boolean>;
     open(uiId: Id): Promise<boolean>;
 }
@@ -24,6 +26,7 @@ export const LOBBY_RETURN_MAX_CLOSES = 12;
  * 目前已是 lobbyMain 時什麼都不做（不重新 show，避免多餘的版面重建）。
  */
 export async function restoreLobbyMainUi<Id extends string>(ui: LobbyUiStack<Id>, lobbyMain: Id): Promise<boolean> {
+    await closeOpenPopups(ui);
     for (let i = 0; i < LOBBY_RETURN_MAX_CLOSES; i++) {
         const current = ui.getCurrentUI();
         if (current === lobbyMain) return true;
@@ -35,4 +38,20 @@ export async function restoreLobbyMainUi<Id extends string>(ui: LobbyUiStack<Id>
     if (ui.getCurrentUI() === lobbyMain) return true;
     await ui.open(lobbyMain);
     return ui.getCurrentUI() === lobbyMain;
+}
+
+/**
+ * 先把彈窗層全部關掉（頂端往下）。
+ * 彈窗（世家總覽、命鏡升星結果…）只靠 returnToLobbyHall 把宿主節點關掉的話，UIManager 的彈窗堆疊與全螢幕擋輸入遮罩
+ * 都還留著：畫面看起來回到大廳，點擊卻被殘留遮罩吃掉（線上回報的「按繼續後凍結」，PROG-2-9175）。
+ * close 失敗或關完頂端沒變就停，避免無限迴圈。
+ */
+async function closeOpenPopups<Id extends string>(ui: LobbyUiStack<Id>): Promise<void> {
+    if (!ui.peekPopup) return;
+    for (let i = 0; i < LOBBY_RETURN_MAX_CLOSES; i++) {
+        const top = ui.peekPopup();
+        if (top === null) return;
+        const closed = await ui.close(top);
+        if (!closed || ui.peekPopup() === top) return;
+    }
 }

@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "source": "../關卡設計系統.md",
+  "indexTitle": "關卡設計系統規格（分片索引）",
+  "indexPath": "docs/遊戲規格文件/系統規格書/關卡設計系統.md",
+  "type": "markdown-h2",
+  "preambleShard": "shard-a",
+  "defaultShard": "shard-c",
+  "shards": [
+    {
+      "name": "shard-a",
+      "title": "A–E 系統描述／目的／關卡結構／戰前偵查／戰法槽位",
+      "pattern": "^[A-E]\\."
+    },
+    {
+      "name": "shard-b",
+      "title": "F–J 視覺分層／主題關卡／攝影機／互動物件／共識摘要",
+      "pattern": "^[F-J]\\."
+    },
+    {
+      "name": "shard-c",
+      "title": "MCQ 決策記錄／Boss AI 與特殊挑戰機制",
+      "pattern": "."
+    }
+  ]
+}

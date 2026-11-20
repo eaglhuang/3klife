@@ -19,6 +19,8 @@ export const BATTLE_AUDIO_CUE = {
   unitAttackSecondary: 'unit-attack-secondary',
   unitAttackCommon: 'unit-attack-common',
   unitAttackBow: 'unit-attack-bow',
+  unitAttackThrust: 'unit-attack-thrust',
+  unitAttackShield: 'unit-attack-shield',
   generalHitCommon: 'general-hit-common',
   generalAttackCommon: 'general-attack-common',
   unitMove: 'unit-move',
@@ -26,6 +28,8 @@ export const BATTLE_AUDIO_CUE = {
   unitDie: 'unit-die',
   unitHeal: 'unit-heal',
   buffGained: 'buff-gained',
+  /** 吃到減益格（PROG-2-9411）；暫用 teleport，待專用音效 */
+  debuffGained: 'debuff-gained',
   unitDodge: 'unit-dodge',
   critHit: 'crit-hit',
   fortressDamaged: 'fortress-damaged',
@@ -45,7 +49,10 @@ export const BATTLE_AUDIO_CLIP_MAP: Record<BattleAudioCue, string> = {
   [BATTLE_AUDIO_CUE.unitHitSecondary]: 'thunder',
   [BATTLE_AUDIO_CUE.unitHitCommon]: 'hurt',
   // PROG-2-9357：騎兵／弓兵改用不同 clip；以下 clip 皆依檔名推測，未實機聽過，不合適只改這張表
-  [BATTLE_AUDIO_CUE.unitAttackPrimary]: 'teleport',
+  // PROG-2-9400：騎兵改用腳步類（馬蹄的最近似，待補專屬馬蹄衝撞聲）、槍兵突刺用 bite、盾兵盾擊用 shield（原本沒被使用）
+  [BATTLE_AUDIO_CUE.unitAttackPrimary]: 'footstep',
+  [BATTLE_AUDIO_CUE.unitAttackThrust]: 'bite',
+  [BATTLE_AUDIO_CUE.unitAttackShield]: 'shield',
   [BATTLE_AUDIO_CUE.unitAttackSecondary]: 'weapon',
   [BATTLE_AUDIO_CUE.unitAttackCommon]: 'weapon',
   [BATTLE_AUDIO_CUE.unitAttackBow]: 'feijian',
@@ -56,6 +63,7 @@ export const BATTLE_AUDIO_CLIP_MAP: Record<BattleAudioCue, string> = {
   [BATTLE_AUDIO_CUE.unitDie]: 'die',
   [BATTLE_AUDIO_CUE.unitHeal]: 'heal',
   [BATTLE_AUDIO_CUE.buffGained]: 'buff',
+  [BATTLE_AUDIO_CUE.debuffGained]: 'teleport',
   [BATTLE_AUDIO_CUE.unitDodge]: 'wave',
   [BATTLE_AUDIO_CUE.critHit]: 'boom',
   [BATTLE_AUDIO_CUE.fortressDamaged]: 'boom',

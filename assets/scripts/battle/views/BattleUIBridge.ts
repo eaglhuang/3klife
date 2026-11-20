@@ -15,7 +15,7 @@ import { tallyLegendDeploySpec } from '../../core/systems/TallyScripts';
 import { battleCellLabel, battleDamageSourceLabel, battleEndLogLine } from '../shared/BattleDamageSourceLabel';
 import { formatTallyLine, type TallyTranslate } from '../../core/systems/TallyLineSpec';
 import { aptitudeToastPayload } from '../../core/systems/AptitudeDialogue';
-import { setBattlePaused, setBattleTimeScale } from './BattleTimeScale';
+import { setBattlePaused, setBattleTimeScale, setEnemyTurnPlayback } from './BattleTimeScale';
 import { UltCutinDirector } from './UltCutinDirector';
 import { isUltCutinPlaying } from '../../ui/core/UltCutinOverlay';
 import { statusEffectFloatText } from '../shared/StatusEffectLabel';
@@ -31,8 +31,9 @@ import { AWAKENING_FREEZE_TIMING, awakeningFreezeTitles, formatAwakeningReveal }
 import { discoveryPhaseUnlockLines } from '../../core/systems/DiscoveryProgress';
 import { factorAwakeningLines } from '../../core/systems/FactorAwakening';
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
+import { awaitWithTimeout } from "../../core/utils/AwaitGuard";
 import type { TeachingSpiritInput } from '../../core/systems/TeachingSpiritTalisman';
-import { Component, EventKeyboard, EventMouse, EventTouch, Input, KeyCode, Node, input } from 'cc';
+import { Color, Component, EventKeyboard, EventMouse, EventTouch, Input, KeyCode, Node, input } from 'cc';
 import { EVENT_NAMES, Faction, SP_PER_KILL, TroopType, TurnPhase } from '../../core/config/Constants';
 import { battleAptitudeProfileOf, terrainGradeOf } from '../../core/systems/BattleAptitude';
 import { TerrainFeedbackTracker } from '../../core/systems/TerrainAptitudeFeedback';
@@ -55,6 +56,7 @@ import { resolveBattleSkillProfile } from '../skills/BattleSkillProfiles';
 import { GeneralUnit } from '../../core/models/GeneralUnit';
 import { BattleController } from '../controllers/BattleController';
 import { playTurnBannerOn } from './TurnBannerPresenter';
+import { BATTLE_RESULT_BEAT, battleResultBannerOf, shouldHoldBeforeResult } from '../shared/BattleResultBeat';
 import type { BattleResult } from '../BattleTypes';
 import { BattleSpecialActionTracker, specialActionDisplayName, toUnitHitObservation, type UnitDamagedPayload } from '../../core/systems/BattleSpecialActions';
 import { strategistHudViewOf } from '../shared/StrategistHudView';
@@ -63,11 +65,17 @@ import type { StageSalvageGainedEvent } from '../shared/StageSalvage';
 import { salvageGainItems } from '../../core/systems/StrategistHud';
 import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, IDeployRuntimeLike, IBattleScenePanelLike, IStrategistHudLike } from '../../shared/interfaces/IBattleUIComponents';
 
-import { BATTLE_TURN_FLOW_TIMING, BATTLE_VISUAL_TIMING } from './BattlePresentationTiming';
+import { isHeavyHit, BATTLE_TURN_FLOW_TIMING, BATTLE_VISUAL_TIMING } from './BattlePresentationTiming';
+import { ATTACK_IMPACT_SEC } from '../shared/AttackShotStyle';
+import { attackStyleFor } from '../shared/AttackStyle';
 import { buildBattleSkillUsedMessage, getBattleSkillPresentation } from '../../shared/BattleSkillPresentation';
 import { quickViewSkillLines } from '../../shared/QuickViewSkillLines';
 import { SkillSourceType } from '../../shared/SkillRuntimeContract';
+import { planSkillCast } from '../shared/SkillCastPresentation';
+import { tileBuffBadgeOf, tileBuffDeltaText, tileBuffPickupIsDebuff, tileBuffPickupLogLine, tileBuffSourceFromDelta } from '../shared/TileBuffBadge';
+import { SkillNameBanner } from './SkillNameBanner';
 import { selectDuelExchanges } from '../shared/DuelPresentationCore';
+import { timeUpVerdictLine, type TimeUpVerdict } from "../../core/systems/TimeUpJudgement";
 import {
   BATTLE_FLOW_FX,
   playBattleFlowEffectAtBoardCenter,
@@ -179,7 +187,7 @@ export class BattleUIBridge {
   private duelCapture: {
     hits: Array<{ faction: Faction; hp: number; damage?: number; attackerId?: string | null; isCrit?: boolean; wasDodged?: boolean }>;
     deaths: Array<{ unitId: string; lane: number; depth: number; faction: Faction; type: TroopType }>;
-    ended: { result: string; retreated?: boolean } | null;
+    ended: { result: string; retreated?: boolean; timeUp?: boolean; cause?: string } | null;
     /** 單挑結算當下發出的戰報提示：等逐招紀錄寫完才寫，順序才對（PROG-2-9389） */
     notices: string[];
   } | null = null;
@@ -191,7 +199,7 @@ export class BattleUIBridge {
   /** 推薦戰法檢核（PROG-2-1763）：每個關卡只查一次；缺口帶進軍師 HUD 的對策缺口欄 */
   private _loadoutCheckedFor: string | null = null;
   private _loadoutGaps: string[] = [];
-  private _lastEndedPayload: { result: string; retreated?: boolean } | null = null;
+  private _lastEndedPayload: { result: string; retreated?: boolean; cause?: string } | null = null;
   /** 本場是否已提示過「剛部署的部隊下回合才行動」（PROG-2-9302，只提示一次避免洗版） */
   private _deployNextTurnHintShown = false;
   private readonly unsubs: (() => void)[] = [];
@@ -207,6 +215,14 @@ export class BattleUIBridge {
   private onBoardPlacement: ((screenX: number, screenY: number) => void) | null = null;
   /** 奧義漫畫分鏡 cut-in（Issue #2139）：一場戰鬥一個，「第二次施放走重播」以單場為界 */
   private readonly ultCutin = new UltCutinDirector();
+  /** PROG-2-9410：放招時畫面中央的招式名橫幅（排隊／合併見 SkillBannerQueue） */
+  /** 勝敗停頓計時與待開的結算窗（PROG-2-9427） */
+  private _resultBeatTimer: ReturnType<typeof setTimeout> | null = null;
+  private _pendingResultShow: (() => void) | null = null;
+  private readonly skillBanner = new SkillNameBanner(() => {
+    const hud = this.ctx.hud?.node;
+    return hud?.isValid ? (hud.parent?.isValid ? hud.parent : hud) : null;
+  });
 
   /** 結算仍同步執行；只延後其視覺事件與戰後畫面，直到單挑演出結束。 */
   public async resolveDuelPresentation(challenger: Faction, accepted: boolean): Promise<string> {
@@ -228,7 +244,13 @@ export class BattleUIBridge {
       : duelWinner === Faction.Player ? 0 : duelWinner === Faction.Enemy ? 1 : null;
     const exchanges = selectDuelExchanges(capture.hits.map(hit => ({ attacker: (hit.faction === Faction.Player ? 1 : 0) as 0 | 1, dodged: !!hit.wasDodged })));
     let played: unknown;
-    try { played = await (this.ctx.unitRenderer?.playDuelPresentation?.(winner, playerDead || enemyDead, exchanges) ?? Promise.resolve()); }
+    // 演出有真實時間上限（PROG-2-9404）：Spine 載入或交鋒動畫沒回來時強制收尾，改走逐招跳傷害，
+    // 單挑旗標（isDuelPanelActive）才會放掉，回合推進與結果彈窗才不會被單挑卡住。
+    try {
+      played = await awaitWithTimeout<unknown>(this.ctx.unitRenderer?.playDuelPresentation?.(winner, playerDead || enemyDead, exchanges) ?? Promise.resolve(),
+        BATTLE_VISUAL_TIMING.duelPresentationMaxMs, false,
+        { label: 'duel-presentation', onFail: () => this.ctx.unitRenderer?.abortDuelPresentation?.() });
+    }
     catch (error) { UCUFLogger.error(LogCategory.BATTLE, '[BattleUIBridge] 單挑演出失敗', error); }
     if (!this.scene.isValid) return result;
     // 任一方主將沒有交鋒動畫時（明確回 false），改成一招一招跳傷害，不要按下接受就直接跳結算
@@ -291,6 +313,7 @@ export class BattleUIBridge {
     this.duelOutcomes = [];
     this.generalCaptures = [];
     this.ultCutin.resetBattle();
+    this.skillBanner.destroy();
     this.ultCutin.prefetch(this.ctx.pg?.id);
     this.ultCutin.prefetch(this.ctx.eg?.id);
     const svc = services();
@@ -368,7 +391,10 @@ export class BattleUIBridge {
   }
 
   public unsubscribeEvents(): void {
+    // 離開戰場時勝敗停頓還沒走完：不再開結算窗（PROG-2-9427）
+    this._cancelResultBeat();
     setBattlePaused(false);
+    setEnemyTurnPlayback(false);
     setBattleTimeScale(1);
     this.unsubs.forEach(fn => fn());
     this.unsubs.length = 0;
@@ -450,23 +476,21 @@ export class BattleUIBridge {
     });
   }
 
-  private _scheduleBattleUnitHitFeedback(lane: number, depth: number, damageSource?: string): Promise<void> {
+  /**
+   * 受擊音效＋受擊特效。delaySec 預設沿用 recoilStartDelaySec（舊路徑：等攻擊方撞過來）；
+   * PROG-2-9412 命中路徑已經等到命中瞬間才呼叫，傳 0 不再多等。
+   */
+  private _scheduleBattleUnitHitFeedback(lane: number, depth: number, damageSource?: string, delaySec: number = BATTLE_VISUAL_TIMING.recoilStartDelaySec): Promise<void> {
     const hitAudioKey = resolveBattleUnitHitSfxKey(damageSource);
     const hitEffectKey = resolveBattleUnitHitEffectKey(damageSource);
+    const play = () => {
+      playBattleAudio(hitAudioKey);
+      playBattleFlowEffectAtCell(services().effect, this.ctx.boardRenderer, hitEffectKey, lane, depth, 0.9, 0.12);
+    };
 
     return new Promise((resolve) => {
-      if (BATTLE_VISUAL_TIMING.recoilStartDelaySec <= 0) {
-        playBattleAudio(hitAudioKey);
-        playBattleFlowEffectAtCell(services().effect, this.ctx.boardRenderer, hitEffectKey, lane, depth, 0.9, 0.12);
-        resolve();
-        return;
-      }
-
-      this.scene.scheduleOnce(() => {
-        playBattleAudio(hitAudioKey);
-        playBattleFlowEffectAtCell(services().effect, this.ctx.boardRenderer, hitEffectKey, lane, depth, 0.9, 0.12);
-        resolve();
-      }, BATTLE_VISUAL_TIMING.recoilStartDelaySec);
+      if (delaySec <= 0) { play(); resolve(); return; }
+      this.scene.scheduleOnce(() => { play(); resolve(); }, delaySec);
     });
   }
 
@@ -598,24 +622,33 @@ export class BattleUIBridge {
           ? (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] attacker-lunge attacker=${data.attackerId} target=${data.unitId}`), c.unitRenderer?.playAttackAnimationAsync(data.attackerId, data.defenderLane, data.defenderDepth) ?? Promise.resolve())
           : Promise.resolve();
 
-        const hitPromise = isRiverBoundaryDamage
-          ? (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] boundary-spin unit=${data.unitId}`), c.unitRenderer?.playBoundaryDamageSpinAsync(data.unitId) ?? Promise.resolve())
-          : (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] defender-hit unit=${data.unitId}`), c.unitRenderer?.playHitAnimationAsync(data.unitId, data.attackerId) ?? Promise.resolve());
-
-        const valuePromise = (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] damage-float unit=${data.unitId} hp=${data.hp}`), c.unitRenderer?.playValueChangeAsync(unit, data.damage, 'damage', data.isCrit ?? false) ?? Promise.resolve());
-
-        const hitLane = data.defenderLane ?? unit.lane;
-        const hitDepth = data.defenderDepth ?? unit.depth;
-        const hitFeedbackPromise = this._scheduleBattleUnitHitFeedback(hitLane, hitDepth, data.damageSource);
+        // PROG-2-9412：受擊閃白、傷害跳字、受擊音效與暴擊聲等攻擊方「打中」的那一刻才出現（依兵種命中秒數），
+        // 揮刀聲維持在出手當下。沒有攻擊動作（河流邊界扣血等）就立刻播。
+        const attackPlayed = !!data.attackerId && data.defenderLane !== null && data.defenderDepth !== null && !isRiverBoundaryDamage;
+        const impactSec = attackPlayed && attackerUnit ? ATTACK_IMPACT_SEC[attackStyleFor(attackerUnit.type)] : 0;
         const attackAudioPromise = data.attackerId && attackerUnit && !isRiverBoundaryDamage
           ? this._scheduleBattleAudio(resolveBattleUnitAttackSfxKey(attackerUnit.type))
           : Promise.resolve();
-        // 暴擊命中額外播 boom（與既有攻擊／受擊音效疊加）
-        const critAudioPromise = data.isCrit
-          ? this._scheduleBattleAudio(BATTLE_AUDIO_CUE.critHit)
-          : Promise.resolve();
+        const heavy = isHeavyHit(data.damage, unit.getEffectiveMaxHp(), data.isCrit ?? false);
+        const impactPromise = (async () => {
+          if (impactSec > 0) await new Promise<void>(resolve => this.scene.scheduleOnce(() => resolve(), impactSec));
+          const hitPromise = isRiverBoundaryDamage
+            ? (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] boundary-spin unit=${data.unitId}`), c.unitRenderer?.playBoundaryDamageSpinAsync(data.unitId) ?? Promise.resolve())
+            : (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] defender-hit unit=${data.unitId}`), c.unitRenderer?.playHitAnimationAsync(data.unitId, data.attackerId, { heavy: heavy, lethal: data.hp <= 0 }) ?? Promise.resolve());
 
-        await Promise.all([attackPromise, hitPromise, valuePromise, hitFeedbackPromise, attackAudioPromise, critAudioPromise]);
+          const valuePromise = (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] damage-float unit=${data.unitId} hp=${data.hp}`), c.unitRenderer?.playValueChangeAsync(unit, data.damage, 'damage', data.isCrit ?? false, heavy) ?? Promise.resolve());
+
+          const hitLane = data.defenderLane ?? unit.lane;
+          const hitDepth = data.defenderDepth ?? unit.depth;
+          const hitFeedbackPromise = this._scheduleBattleUnitHitFeedback(hitLane, hitDepth, data.damageSource, impactSec > 0 ? 0 : undefined);
+          // 暴擊命中額外播 boom（與既有攻擊／受擊音效疊加）
+          const critAudioPromise = data.isCrit
+            ? this._scheduleBattleAudio(BATTLE_AUDIO_CUE.critHit)
+            : Promise.resolve();
+          await Promise.all([hitPromise, valuePromise, hitFeedbackPromise, critAudioPromise]);
+        })();
+
+        await Promise.all([attackPromise, impactPromise, attackAudioPromise]);
 
         if (data.hp > 0) {
           UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] state-commit unit=${data.unitId}`);
@@ -687,6 +720,7 @@ export class BattleUIBridge {
     this.appendLog(`${side}${attacker.name} 攻擊${target.name}落空（命中率 ${Math.round(data.hitRate * 100)}%）`);
     this._enqueueCombatVisual(`unit-miss:${data.attackerId}`, async () => {
       c.unitRenderer?.playDodgeAnimation?.(target.id);
+      c.unitRenderer?.playMissFloat?.(target);
       playBattleAudio(BATTLE_AUDIO_CUE.unitDodge);
       playBattleAudio(resolveBattleUnitAttackSfxKey(attacker.type));
       await (c.unitRenderer?.playAttackAnimationAsync(data.attackerId, target.lane, target.depth) ?? Promise.resolve());
@@ -728,7 +762,6 @@ export class BattleUIBridge {
       } else if (!data.isSwapPassenger) {
         this.appendLog(`${side}${unit.name} 前進到 ${battleCellLabel(data.lane, data.depth)}`);
         c.unitRenderer?.animateMove(unit, data.fromLane, data.fromDepth, data.forcedMoveReason);
-        playBattleAudio(BATTLE_AUDIO_CUE.unitMove);
       }
       if (unit.faction === Faction.Player) this._showTerrainFeedback(unit.id, data);
     }
@@ -782,8 +815,10 @@ export class BattleUIBridge {
       this.appendLog(`${target} 閃躲攻擊！`);
       this._enqueueCombatVisual(`general-dodge:${data.faction}`, async () => {
         c.unitRenderer?.playGeneralDodge?.(data.faction);
+        c.unitRenderer?.playGeneralMissFloat?.(data.faction);
         UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] general-dodge start faction=${data.faction}`);
-        await c.unitRenderer?.playGeneralHitAnimationAsync(data.faction, data.attackerId || null);
+        // 閃避：只借 recoil 的等待節奏，不閃白、不抖
+        await c.unitRenderer?.playGeneralHitAnimationAsync(data.faction, data.attackerId || null, { silent: true });
         UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] hud-commit faction=${data.faction} hp=${data.hp}`);
         services().event.emit(EVENT_NAMES.GeneralDamagedVisualCommitted, {
           faction: data.faction,
@@ -805,7 +840,7 @@ export class BattleUIBridge {
       const attackPromise = data.attackerId
         ? (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] attacker-lunge-general attacker=${data.attackerId} targetFaction=${data.faction}`), c.unitRenderer?.playAttackGeneralAnimationAsync(data.attackerId, data.faction) ?? Promise.resolve())
         : Promise.resolve();
-      const hitPromise = (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] general-hit faction=${data.faction}`), c.unitRenderer?.playGeneralHitAnimationAsync(data.faction, data.attackerId || null) ?? Promise.resolve());
+      const hitPromise = (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] general-hit faction=${data.faction}`), c.unitRenderer?.playGeneralHitAnimationAsync(data.faction, data.attackerId || null, { heavy: isHeavyHit(data.damage ?? 0, maxHp, data.isCrit ?? false), lethal: data.hp <= 0 }) ?? Promise.resolve());
       const valuePromise = data.damage && data.damage > 0
         ? (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] general-damage-float faction=${data.faction} hp=${data.hp}`), c.unitRenderer?.playGeneralValueChangeAsync(data.faction, data.damage, data.isCrit ?? false) ?? Promise.resolve())
         : Promise.resolve();
@@ -856,7 +891,31 @@ export class BattleUIBridge {
         return;
       }
     }
-    this._presentGeneralSkillUsed(data);
+    this._castGeneralSkill(data);
+  }
+
+  /**
+   * PROG-2-9410：沒有漫畫分鏡的放招（戰法、沒有分鏡圖的奧義）先蓄力 0.4 秒再出招。
+   * 事件到這裡時，同一次施放的命中與傷害演出已經在戰鬥動畫佇列裡了，所以蓄力也插到佇列最前面，
+   * 命中與跳字才會等出招特效之後才播（和奧義分鏡同一個做法）。招式名橫幅在蓄力開始時出現。
+   * SSR／UR 戰法已有立繪閃現帶招式名，不再疊橫幅。
+   */
+  private _castGeneralSkill(data: { faction: Faction; skillId?: string; skillName?: string; sourceType?: SkillSourceType; generalName?: string }): void {
+    const skillId = data.skillId ?? data.skillName ?? null;
+    if (!skillId) { this._presentGeneralSkillUsed(data); return; }
+    const side = data.faction === Faction.Player ? 'player' : 'enemy';
+    const plan = planSkillCast({ ultCutin: false, tacticFlash: !!tacticFlashOf(skillId, side) });
+    const caster = data.faction === Faction.Player ? this.ctx.pg : this.ctx.eg;
+    this._enqueueCombatVisual(`skill-cast:${skillId}`, async () => {
+      if (plan.banner) {
+        this.skillBanner.push({ side, caster: data.generalName ?? caster?.name ?? '', names: [getBattleSkillPresentation(skillId).name] });
+      }
+      if (plan.chargeSec > 0) {
+        this.ctx.unitRenderer?.playGeneralCharge(data.faction, plan.chargeSec);
+        await new Promise<void>(resolve => this.scene.scheduleOnce(() => resolve(), plan.chargeSec));
+      }
+      this._presentGeneralSkillUsed(data);
+    }, true);
   }
 
   private _presentGeneralSkillUsed(data: { faction: Faction; skillId?: string; skillName?: string; sourceType?: SkillSourceType; generalName?: string }): void {
@@ -906,17 +965,19 @@ export class BattleUIBridge {
 
   private _onTileBuffConsumed(data: { unitId: string; faction: Faction; lane: number; depth: number; buffText: string; attackDelta: number; hpDelta: number }): void {
     const c = this.ctx;
-    const deltaText = [
-      data.attackDelta !== 0 ? `攻擊 ${data.attackDelta > 0 ? '+' : ''}${data.attackDelta}` : '',
-      data.hpDelta !== 0 ? `生命 ${data.hpDelta > 0 ? '+' : ''}${data.hpDelta}` : '',
-    ].filter(Boolean).join(' ');
-    const side = data.faction === Faction.Player ? '我方' : '敵方';
-    this.appendLog(`${side}吃到增益：${data.buffText} ${deltaText}`);
-    c.boardRenderer?.playBuffConsumeBurst(data.lane, data.depth);
-    playBattleAudio(BATTLE_AUDIO_CUE.buffGained);
+    const deltaText = tileBuffDeltaText(data.attackDelta, data.hpDelta);
+    const isDebuff = tileBuffPickupIsDebuff(data.attackDelta, data.hpDelta);
+    // 減益格以前也寫「吃到增益」、播增益音效；PROG-2-9411 起分開
+    this.appendLog(tileBuffPickupLogLine({ isPlayer: data.faction === Faction.Player, buffText: data.buffText, attackDelta: data.attackDelta, hpDelta: data.hpDelta }));
+    c.boardRenderer?.playBuffConsumeBurst(data.lane, data.depth, isDebuff);
+    playBattleAudio(isDebuff ? BATTLE_AUDIO_CUE.debuffGained : BATTLE_AUDIO_CUE.buffGained);
     c.unitRenderer?.playBuffConsumeValue(data.lane, data.depth, deltaText || data.buffText);
     if (data.attackDelta !== 0 || data.hpDelta !== 0) {
       c.unitRenderer?.playBuffEffect(data.unitId, data.lane, data.depth, data.attackDelta, data.hpDelta);
+      // 格子上的同款圖示飛到頭頂，抵達時頭頂圖示列彈出＋腳下光環（要在刷新收起標記之前呼叫）
+      // 事件到這裡時格子已被吃掉，由增減量反推是哪一種圖示
+      const badge = tileBuffBadgeOf(tileBuffSourceFromDelta(data.attackDelta, data.hpDelta));
+      c.unitRenderer?.playTileBuffPickup(data.unitId, data.lane, data.depth, badge);
     }
     this.refreshBattleViews();
   }
@@ -970,9 +1031,11 @@ export class BattleUIBridge {
     if (!state) return;
     if (state.battleEndAnnounced) {
       const popup = this.ctx.resultPopup;
+      // 勝敗停頓中按撤退：直接把結算窗開出來，不再等（PROG-2-9427）
+      if (this._flushResultBeat()) return;
       if (popup && !popup.node.active) {
         const last = this._lastEndedPayload ?? { result: 'enemy-win', retreated: true };
-        void popup.showResult(last.result, undefined, this.ctx.pg?.id, last.retreated === true);
+        void popup.showResult(last.result, undefined, this.ctx.pg?.id, last.retreated === true, last.cause);
       }
       return;
     }
@@ -1006,8 +1069,8 @@ export class BattleUIBridge {
     }, FIELD_AUTO_BATTLE_JOURNAL[kind], pgId ? [pgId] : []);
   }
 
-  private _onBattleEnded(data: { result: string; retreated?: boolean; timeUp?: boolean }): void {
-    this._lastEndedPayload = { result: data.result, retreated: data.retreated };
+  private _onBattleEnded(data: { result: string; retreated?: boolean; timeUp?: boolean; cause?: string; timeUpVerdict?: TimeUpVerdict }): void {
+    this._lastEndedPayload = { result: data.result, retreated: data.retreated, cause: data.cause };
     if (this.duelCapture) { this.duelCapture.ended = data; return; }
     const c = this.ctx;
     const effectKey = resolveBattleResultEffectKey(data.result);
@@ -1019,10 +1082,34 @@ export class BattleUIBridge {
     else if (data.result === 'enemy-win') playBattleAudio(BATTLE_AUDIO_CUE.battleDefeat);
     this.appendLog(battleEndLogLine(data.result));
     this.hideEnemyThinkingPanel();
-    const details = this._settleRosterBattle(data.result as BattleResult);
+    // 結算寫回與結果彈窗互相隔離（PROG-2-9404）：寫回名冊丟錯、或彈窗掛載失敗（畫面規格下載 404）都不能讓玩家看不到結果
+    let details: string[] = [];
+    try { details = this._settleRosterBattle(data.result as BattleResult); }
+    catch (error) { UCUFLogger.error(LogCategory.BATTLE, '[BattleUIBridge] 戰後結算寫回失敗，仍顯示結果彈窗', error); }
     // 回合用盡而獲勝（教學戰）：補一行說明，免得玩家不知道為什麼突然贏了
-    if (data.timeUp === true && data.result === 'player-win') details.unshift('敵軍久攻不下，鳴金退兵。');
-    c.resultPopup?.showResult(data.result as any, details.length > 0 ? details.join('\n') : undefined, c.pg?.id, data.retreated === true);
+    // 依戰果判定（PROG-2-9423）：寫出雙方戰果百分比，玩家才知道差多少
+    if (data.timeUpVerdict) details.unshift(timeUpVerdictLine(data.timeUpVerdict, services().battle.getTimeUpJudgement()));
+    else if (data.timeUp === true && data.result === 'player-win') details.unshift('敵軍久攻不下，鳴金退兵。');
+    // 年終守城不可重打（PROG-2-9426）：守方是玩家時藏起「再戰一次」
+    c.resultPopup?.setReplayAllowed?.(this.ctx.ctrl?.state.siegeDefender !== Faction.Player);
+    const popup = c.resultPopup;
+    const generalId = c.pg?.id;
+    const showPopup = () => {
+      void Promise.resolve(popup?.showResult(data.result as any, details.length > 0 ? details.join('\n') : undefined, generalId, data.retreated === true, data.cause))
+        .catch((error) => UCUFLogger.error(LogCategory.BATTLE, '[BattleUIBridge] 結果彈窗顯示失敗', error));
+    };
+    // 勝敗那一拍（PROG-2-9427）：先打全畫面勝敗橫幅停一拍再開結算窗，停頓期間預載主將頭像；玩家主動撤退照舊立即開
+    if (shouldHoldBeforeResult(data)) {
+      popup?.preloadAvatar?.(generalId);
+      const banner = battleResultBannerOf(data.result, data.retreated === true);
+      if (banner) {
+        const [r, g, b, a] = banner.rgba;
+        c.deployRuntime?.showTurnBanner?.(banner.text, new Color(r, g, b, a), BATTLE_RESULT_BEAT.bannerSec);
+      }
+      this._scheduleResultBeat(showPopup);
+    } else {
+      showPopup();
+    }
     c.boardRenderer?.clearDeployHint();
     c.hud?.clearPersistentStatus();
     c.hud?.clearSceneGambitBadge();
@@ -1030,8 +1117,32 @@ export class BattleUIBridge {
     c.combatVisualQueue.length = 0;
     c.isDrainingCombatVisual = false;
     c.isAdvancingTurn = false;
+    // 敵方回合中分出勝負時 finalizeAdvance 會因 isAdvancingTurn=false 提早返回，這裡要自己還原 1.5 倍速（PROG-2-9414）
+    setEnemyTurnPlayback(false);
     c.isDuelPanelActive = false;
     if (c.deployRuntime) c.deployRuntime.node.active = false;
+  }
+
+  /** 排定停頓後開結算窗；同一時間只留一個待開的結算窗 */
+  private _scheduleResultBeat(show: () => void): void {
+    this._cancelResultBeat();
+    this._pendingResultShow = show;
+    this._resultBeatTimer = setTimeout(() => { this._flushResultBeat(); }, BATTLE_RESULT_BEAT.popupDelayMs);
+  }
+
+  /** 有待開的結算窗就立即開出來；回傳是否真的開了 */
+  private _flushResultBeat(): boolean {
+    const show = this._pendingResultShow;
+    this._cancelResultBeat();
+    if (!show) return false;
+    show();
+    return true;
+  }
+
+  private _cancelResultBeat(): void {
+    if (this._resultBeatTimer !== null) clearTimeout(this._resultBeatTimer);
+    this._resultBeatTimer = null;
+    this._pendingResultShow = null;
   }
 
   /** 把單位受傷事件餵給特定動作偵測；攻方兵種與站位地形從戰場狀態查 */
@@ -1079,7 +1190,11 @@ export class BattleUIBridge {
     const inBattleFameGain = this.ctx.ctrl?.getInBattleFameForRecord(Faction.Player) ?? 0;
     const inBattleFame = inBattleFameGain > 0 ? { [pgId]: inBattleFameGain } : undefined;
     // encounterEnemyGeneralId：敵方君主（這一場的敵主將），被擒處置用他的數值（PROG-2-9140）
-    const battleOptions = { specialActions, sortie, performance: { [pgId]: performance }, stageId, deployedTallyIds, vitalityAfterBattle, hpRatioAfterBattle, stageSalvage: this.ctx.ctrl?.state.stageSalvage, teachingSpirit: this.ctx.teachingSpirit, duelOutcomes: this.duelOutcomes, generalCaptures: this.generalCaptures, encounterEnemyGeneralId: this.ctx.eg?.id ?? null, inBattleFame };
+    // 守城戰（PROG-2-9425）：守方是玩家時，勝利另加民心、失敗走守城戰敗；我方主將倒下視為武將全滅（大敗）
+    const defense = this.ctx.ctrl?.state.siegeDefender === Faction.Player
+      ? { moraleOnVictory: this.ctx.ctrl.defenseBattle.moraleOnVictory, playerGeneralsDown: pgUnit?.isDead() ?? false }
+      : null;
+    const battleOptions = { specialActions, sortie, performance: { [pgId]: performance }, stageId, deployedTallyIds, vitalityAfterBattle, hpRatioAfterBattle, stageSalvage: this.ctx.ctrl?.state.stageSalvage, teachingSpirit: this.ctx.teachingSpirit, duelOutcomes: this.duelOutcomes, generalCaptures: this.generalCaptures, encounterEnemyGeneralId: this.ctx.eg?.id ?? null, inBattleFame, defense };
     void services().session.recordBattle([pgId], result, battleOptions).then((settlement) => {
       // 主將被擒的君主處置結果（PROG-2-9140）：寫進戰報並加進結算細項
       const captureLines = (settlement.captureNotices ?? []).map((line) => formatTallyLine(line, this._tallyTranslate));
@@ -1093,6 +1208,9 @@ export class BattleUIBridge {
         for (const line of milestoneLines) this.appendLog(line);
         if (milestoneLines.length > 0) this.ctx.resultPopup?.appendDetails?.(milestoneLines);
       }
+      // 戰後獎懲（PROG-2-9149）：糧草／黃金／武將經驗／戰利品／兵源回扣／民心，寫日誌並加進結算細項
+      for (const line of settlement.aftermathLines ?? []) this.appendLog(line);
+      if ((settlement.aftermathLines ?? []).length > 0) this.ctx.resultPopup?.appendDetails?.(settlement.aftermathLines);
       // 因子爆發系統 §G 覺醒提示（PROG-2-1783）
       const awakeningLines = settlement.awakenings.flatMap(factorAwakeningLines);
       for (const line of awakeningLines) this.appendLog(line);
@@ -1264,7 +1382,10 @@ export class BattleUIBridge {
   private async _drainCombatVisualQueue(): Promise<void> {
     const c = this.ctx;
     UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] drain-start queue=${c.combatVisualQueue.length}`);
-    await (c.unitRenderer?.waitForMovementIdle?.(BATTLE_VISUAL_TIMING.movementIdleMaxWaitMs) ?? Promise.resolve());
+    // 佇列的每一個 await 都加真實時間上限（PROG-2-9404）：任何一個演出的 Promise 永不回來，
+    // 佇列就停在那裡，後面排隊的奧義 cut-in 永遠不播、isUltCutinActive 永遠不放，回合推進跟著卡死。
+    await awaitWithTimeout(c.unitRenderer?.waitForMovementIdle?.(BATTLE_VISUAL_TIMING.movementIdleMaxWaitMs) ?? Promise.resolve(),
+      BATTLE_VISUAL_TIMING.movementIdleMaxWaitMs + 1000, undefined, { label: 'combat-visual:movement-idle' });
 
     while (c.combatVisualQueue.length > 0) {
       const task = c.combatVisualQueue.shift();
@@ -1274,7 +1395,9 @@ export class BattleUIBridge {
 
       UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] action-start id=${task.id} label=${task.label}`);
       try {
-        await Promise.resolve(task.run());
+        // new Promise 讓 task.run 同步執行（維持原本時序），同步丟錯也會被接住
+        await awaitWithTimeout(new Promise<void>((resolve) => resolve(task.run())), BATTLE_VISUAL_TIMING.combatVisualTaskMaxMs, undefined,
+          { label: `combat-visual:${task.label}` });
       } catch (error) {
         UCUFLogger.error(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] action-failed id=${task.id} label=${task.label}`, error);
       }
@@ -1282,6 +1405,8 @@ export class BattleUIBridge {
     }
 
     c.isDrainingCombatVisual = false;
+    // 佇列已清空：不會再有排隊中的奧義 cut-in。任務逾時被略過時它的 finally 可能沒跑，旗標在這裡保底放掉。
+    c.isUltCutinActive = false;
     UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] drain-end`);
   }
 

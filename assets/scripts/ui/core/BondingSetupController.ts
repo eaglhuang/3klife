@@ -14,8 +14,11 @@
  * Unity 對照：MVP 的 Presenter。按鈕 onClick 只呼叫 SelectFather / SelectMother / Confirm，
  * 畫面層拿 GetView() 的 ViewModel 一次刷新 Text 與 Button.interactable。
  */
+import { factorLabelOf, readableFactorName } from '../../core/systems/FactorDisplayName';
+import { formatRosterCareerMarksLine } from './AcademyInheritView';
 import { kinshipLampLine, outcrossRecoveryLine } from '../../core/systems/BloodFatigue';
-import { ancestorSeatVisible, diversityVisible, factorDetailVisible, G1_FACTOR_TEXT, KIN_TEXT_WARNING, kinshipScanVisible, MILESTONE_G1_HINT, type MilestoneStage } from '../../core/systems/FamilyMilestone';
+import { evaluateMarriageVitality, marriageVitalityBadgeLine } from '../../core/systems/MarriageVitality';
+import { ancestorSeatVisible, diversityVisible, factorDetailVisible, formulaDetailVisible, G1_EP_DETAIL_MASK, g1EpEstimateText, G1_FACTOR_TEXT, KIN_TEXT_WARNING, kinshipScanVisible, MILESTONE_G1_HINT, type MilestoneStage } from '../../core/systems/FamilyMilestone';
 import { PEDIGREE_SLOTS } from '../../core/services/BloodlineGraph';
 import { DIVERSITY_HINT } from '../../core/systems/DiversityFactor';
 import { POTENTIAL_ROW_KINDS, potentialFill, potentialHeadLine, potentialValueLine, rosterAncestorsOf, type PotentialGeneral } from '../../core/systems/PotentialBar';
@@ -25,6 +28,7 @@ import { OMEN_LABEL, pickOmen, type OmenKind, type SageRemark } from '../../core
 import { buildBreedingBirthRecord, type BreedingBirthRecord } from '../../core/systems/BreedingBirthRecord';
 import type { FactorColor } from '../../core/systems/FactorInheritance';
 import { buildBreedingPreviewLines } from './BreedingPreviewPresenter';
+import { bondingModeChipText } from '../../core/utils/PlayerFacingText';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { factorMaskView } from '../../core/systems/FactorMask';
 import { factorStageText } from '../../core/systems/FactorVisibility';
@@ -59,6 +63,7 @@ import {
     PREGNANCY_LOCK_SEASONS,
     statOf,
     EP_BASE,
+    epGradeLetter,
 } from '../../core/systems/BreedingSystem';
 import { GENERAL_STATUS_DEAD, RETIREMENT_AGE } from '../../core/systems/GeneralAging';
 
@@ -214,7 +219,7 @@ export class BondingSetupController {
         if (remarks.length === 0) return { ids: [], lines: [], hint: '名士批語：需先解鎖 2 位名士' };
         return {
             ids: remarks.map((remark) => remark.sageId),
-            lines: remarks.map((remark) => `${getSage(remark.sageId)?.name ?? remark.sageId}：${FACTOR_COLOR_NAME[remark.color]}${remark.keyword ? `（${remark.keyword}）` : ''}`),
+            lines: remarks.map((remark) => `${getSage(remark.sageId)?.name ?? remark.sageId}：${FACTOR_COLOR_NAME[remark.color]}${(readableFactorName(null, remark.keyword) ? `（${readableFactorName(null, remark.keyword)}）` : '')}`),
             hint: '',
         };
     }
@@ -369,22 +374,22 @@ export class BondingSetupController {
             const built = buildBreedingBirthRecord(result, omen);
             if (built?.record) this._deps.recordBreeding?.(built.record);
             const compactFamily = compact && canPay ? compactFamilyOf(result.father, result.mother) : null;
-            if (compact && compactFamily) this._deps.announce?.(compactCeremonyLine(compact.displayName ?? compact.id ?? '', compactSynergyFull(compactFamily, this._deps.familySynergy?.())));
+            if (compact && compactFamily) this._deps.announce?.(compactCeremonyLine(factorLabelOf(compact), compactSynergyFull(compactFamily, this._deps.familySynergy?.())));
             if (compact && !canPay) {
                 this._notice += '　黃金不足，這胎未行世交合譜。';
             } else if (compact && result.compactRescued && this._deps.spendGold?.(cost)) {
-                this._notice += `　世交合譜：保住了 ${compact.displayName ?? compact.id}，耗黃金 ${cost}。`;
+                this._notice += `　世交合譜：保住了 ${factorLabelOf(compact)}，耗黃金 ${cost}。`;
             } else if (compact) {
-                this._notice += `　世交合譜：${compact.displayName ?? compact.id} 本就傳下，未耗黃金。`;
+                this._notice += `　世交合譜：${factorLabelOf(compact)} 本就傳下，未耗黃金。`;
             }
             if (heritage) {
                 this._notice += result.heritageRescued
-                    ? `　父系家傳：保住了 ${heritage.displayName ?? heritage.id}。`
-                    : `　父系家傳：${heritage.displayName ?? heritage.id} 本就傳下。`;
+                    ? `　父系家傳：保住了 ${factorLabelOf(heritage)}。`
+                    : `　父系家傳：${factorLabelOf(heritage)} 本就傳下。`;
             }
             // 字典沒收錄的因子，子嗣身上的名稱只有 id，所以取父親的
             const synergyGene = result.father.genes?.find((gene) => gene.id === result.lineageSynergyFactorId);
-            if (synergyGene) this._notice += `　${lineageSynergyLine(synergyGene.displayName ?? synergyGene.id ?? '')}`;
+            if (synergyGene) this._notice += `　${lineageSynergyLine(factorLabelOf(synergyGene))}`;
             if (result.kinPurification) this._notice += `　${kinPurificationLine(result.kinPurification)}`;
             this._slotPick = null;
         }
@@ -414,6 +419,9 @@ export class BondingSetupController {
         const father = fathers.find((g) => g.id === this._fatherId) ?? null;
         const mother = mothers.find((g) => g.id === this._motherId) ?? null;
 
+        const emptyHint = mothers.length === 0
+            ? this._t('ui.breed.no_mother_hint')
+            : this._t('ui.breed.no_father_hint', String(BREEDING_MIN_AGE));
         const texts: Record<string, string> = {
             bondTitle: '結緣配置',
             yuedanFilterLabel: this._yuedanOnly ? '顯示全部' : '只看月旦評',
@@ -421,7 +429,8 @@ export class BondingSetupController {
             compactLabel: this._slotLabel(),
             potentialLabel: this._potentialOpen ? '收起潛力' : '潛力條',
             bondNotice: this._notice,
-            bondEmptyHint: `名冊中需要至少一位滿 ${BREEDING_MIN_AGE} 歲的男性與女性武將才能結緣。可先到轉蛋招募，或推進季度讓子嗣長大。`,
+            bondEmptyHint: emptyHint,
+            btnGoBeautyGachaLabel: this._t('ui.breed.go_beauty_gacha'),
             fatherPager: pagerText(fathers, father),
             motherPager: pagerText(mothers, mother),
         };
@@ -429,6 +438,7 @@ export class BondingSetupController {
         const actives: Record<string, boolean> = {
             bondPanel: false,
             bondEmptyHint: false,
+            btnGoBeautyGacha: false,
             potentialPanel: false,
             estimateBox: !this._potentialOpen || !factorDetailVisible(stage),
             statProbeLine: !this._potentialOpen || !factorDetailVisible(stage),
@@ -446,6 +456,7 @@ export class BondingSetupController {
         }
         const enabled: Record<string, boolean> = {
             btnCloseBond: true,
+            btnGoBeautyGacha: mothers.length === 0,
             btnYuedanFilter: this._yuedanIds().length > 0,
             btnRumorRoute: this._parents().length > 0,
             btnCompact: this._slotOptions().length > 0,
@@ -466,6 +477,7 @@ export class BondingSetupController {
 
         if (!father || !mother) {
             actives.bondEmptyHint = true;
+            actives.btnGoBeautyGacha = mothers.length === 0;
             Object.assign(texts, parentTexts('father', father, level, stage, yuedan), parentTexts('mother', mother, level, stage, yuedan));
             return { fatherId: father?.id ?? null, motherId: mother?.id ?? null, mode: null, sageIds: [], texts, fills: {}, actives, enabled };
         }
@@ -480,28 +492,47 @@ export class BondingSetupController {
         Object.assign(texts, parentTexts('father', father, level, stage, yuedan), parentTexts('mother', mother, level, stage, yuedan));
 
         const mode: BondingMode = (father.age ?? 0) >= RETIREMENT_AGE || (mother.age ?? 0) >= RETIREMENT_AGE ? 'Peace_Lineage' : 'Standard';
-        texts.modeChip = mode === 'Peace_Lineage'
-            ? '模式：和平血統線（保種）· 退役年齡仍可親傳，轉為教官後即失去資格'
-            : '模式：一般結緣 · 雙方仍具親傳資格';
 
         Object.assign(texts, this._seatTexts('fatherTree', father.id), this._seatTexts('motherTree', mother.id));
+        for (let i = 0; i < ANCESTOR_SEAT_COUNT; i++) {
+            const seatVisible = ancestorSeatVisible(stage, i);
+            actives[`fatherTree${i}`] = seatVisible;
+            actives[`motherTree${i}`] = seatVisible;
+        }
         if (kinshipScanVisible(stage)) {
             this._deps.breeding.commonAncestorSeats?.(father.id, mother.id).forEach((shared, i) => { actives[`fatherTreeFrame${i}`] = shared; });
             this._deps.breeding.commonAncestorSeats?.(mother.id, father.id).forEach((shared, i) => { actives[`motherTreeFrame${i}`] = shared; });
         }
 
         const eligibility = this._deps.breeding.checkEligibility(father.id, mother.id);
+        texts.modeChip = bondingModeChipText(mode === 'Peace_Lineage', eligibility.reasons);
         const ep = this._deps.breeding.previewEp(father.id, mother.id);
-        texts.epEstimate = this._t('ui.breed.ep_display', String(ep.ep), ep.rating);
-        const preview = buildBreedingPreviewLines(ep, this._deps.tagName);
-        // 只揭露玩家已看得到的因子，同血脈走近親純化不算連攜
-        const synergyHint = isSameBloodline(father, mother) || !factorDetailVisible(stage) ? null : lineageSynergyHint(sharedBlueGenesOf(father, mother, this._deps.factorDictionary?.()).filter((gene) => (gene.discoveryLevel ?? 1) <= level));
-        texts.epDetail = ['基礎 50', preview.breakdownLine, preview.tagLine, ...(synergyHint ? [synergyHint] : [])].join(' · ');
+        if (formulaDetailVisible(stage)) {
+            texts.epEstimate = this._t('ui.breed.ep_display', String(ep.ep), ep.rating);
+            const preview = buildBreedingPreviewLines(ep, this._deps.tagName);
+            // 只揭露玩家已看得到的因子，同血脈走近親純化不算連攜
+            const synergyHint = isSameBloodline(father, mother) || !factorDetailVisible(stage) ? null : lineageSynergyHint(sharedBlueGenesOf(father, mother, this._deps.factorDictionary?.()).filter((gene) => (gene.discoveryLevel ?? 1) <= level));
+            texts.epDetail = ['基礎 50', preview.breakdownLine, preview.tagLine, ...(synergyHint ? [synergyHint] : [])].join(' · ');
+        } else {
+            texts.epEstimate = g1EpEstimateText(ep.rating, epGradeLetter(ep.ep));
+            texts.epDetail = G1_EP_DETAIL_MASK;
+        }
         texts.conceptionLabel = `受孕率 ${Math.round(conceptionRate(father, mother) * 100)}%`;
         const ledger = this._deps.familySynergy?.();
         const synergyLine = ledger && kinshipScanVisible(stage) ? synergyWindowLine(father as { familyUid?: string }, mother as { familyUid?: string }, ledger) : null;
         if (synergyLine) texts.conceptionLabel += `｜${synergyLine}`;
-        texts.conceptionLabel += `｜${epContribLine(father.ep ?? EP_BASE, mother.ep ?? EP_BASE)}`;
+        if (formulaDetailVisible(stage)) {
+            texts.conceptionLabel += `｜${epContribLine(father.ep ?? EP_BASE, mother.ep ?? EP_BASE)}`;
+        }
+        const vitalityBadge = marriageVitalityBadgeLine(evaluateMarriageVitality({
+            father,
+            mother,
+            hasCommonAncestor: (this._deps.breeding.commonAncestorSeats?.(father.id, mother.id) ?? []).some(Boolean),
+            roster: this._deps.roster.getAll(),
+        }), (key, ...args) => this._t(key, ...args));
+        if (vitalityBadge) {
+            texts.conceptionLabel += `｜${vitalityBadge}`;
+        }
         const sage = this._sageRemarks(father.id, mother.id);
         texts.sageRemarkLines = sage.hint;
         sage.lines.forEach((line, i) => { texts[`sageLine${i}`] = line; actives[`sageRow${i}`] = true; });
@@ -535,7 +566,11 @@ export class BondingSetupController {
         texts.costLabel = this._t('ui.breed.confirm', father.name, String(FATHER_VIGOR_COST), mother.name, String(MOTHER_VIGOR_COST));
         texts.eligibilityLabel = eligibility.ok
             ? `${father.name} 與 ${mother.name} 良緣天成，可以結緣`
-            : `無法結緣：${eligibility.reasons.map((r) => BLOCK_REASON_TEXT[r]).join('、')}`;
+            : `無法結緣：${eligibility.reasons.map((r) => (
+                r === 'mother-pregnant'
+                    ? this._t('ui.breed.preg_wait_hint', mother.name, String(mother.pregnancySeasonsLeft ?? 0))
+                    : BLOCK_REASON_TEXT[r]
+            )).join('、')}`;
         const inbred = isSameBloodline(father, mother);
         texts.inbreedingLabel = eligibility.commonAncestorDistance !== null
             ? `近親警告：${eligibility.commonAncestorDistance} 代內有共同祖先`
@@ -568,10 +603,10 @@ export class BondingSetupController {
         const compact = this._selectedCompact();
         if (compact) {
             const cost = this._compactCost();
-            texts.inbreedingLabel += `｜世交合譜：鎖定 ${compact.displayName ?? compact.id}，被擠掉時才耗黃金 ${cost}${(this._deps.gold?.() ?? 0) < cost ? '（不足）' : ''}`;
+            texts.inbreedingLabel += `｜世交合譜：鎖定 ${factorLabelOf(compact)}，被擠掉時才耗黃金 ${cost}${(this._deps.gold?.() ?? 0) < cost ? '（不足）' : ''}`;
         }
         const heritage = this._selectedHeritage();
-        if (heritage) texts.inbreedingLabel += `｜父系家傳：保 ${heritage.displayName ?? heritage.id} 傳給子嗣，不另收費`;
+        if (heritage) texts.inbreedingLabel += `｜父系家傳：保 ${factorLabelOf(heritage)} 傳給子嗣，不另收費`;
         // G1 血緣行開頭是空的，後面接上的句子不留分隔號
         texts.inbreedingLabel = texts.inbreedingLabel.replace(/^｜/, '');
         enabled.btnConfirmBond = eligibility.ok;
@@ -648,7 +683,7 @@ export class BondingSetupController {
     private _slotLabel(): string {
         const slot = this._selectedSlot();
         if (!slot) return '門風：不用';
-        return `${slot.kind === 'compact' ? '合譜' : '家傳'}：${slot.gene.displayName ?? slot.gene.id}`;
+        return `${slot.kind === 'compact' ? '合譜' : '家傳'}：${factorLabelOf(slot.gene)}`;
     }
 
     private _compactCost(): number {
@@ -754,12 +789,16 @@ function pagerText(list: BreedingGeneral[], selected: BreedingGeneral | null): s
 
 /** 父母因子的遮罩文字；沒有因子時顯示「無因子」 */
 function factorLine(general: BreedingGeneral, playerLevel: number, stage: MilestoneStage): string {
-    if (!factorDetailVisible(stage)) return G1_FACTOR_TEXT;
+    const markLine = formatRosterCareerMarksLine(general.careerMarks);
+    if (!factorDetailVisible(stage)) {
+        return markLine ? `${G1_FACTOR_TEXT}｜${markLine}` : G1_FACTOR_TEXT;
+    }
     const labels = (general.genes ?? []).map((gene) => {
         const view = factorMaskView(gene, playerLevel);
         return view.revealed ? `${view.label} ${gene.level ?? 1}★` : view.label;
     });
-    return labels.length > 0 ? `因子：${labels.join(' · ')}` : '因子：無';
+    const base = labels.length > 0 ? `因子：${labels.join(' · ')}` : '因子：無';
+    return markLine ? `${base}｜${markLine}` : base;
 }
 
 function parentTexts(side: 'father' | 'mother', general: BreedingGeneral | null, playerLevel: number, stage: MilestoneStage, yuedan: (general: BreedingGeneral) => string | null): Record<string, string> {

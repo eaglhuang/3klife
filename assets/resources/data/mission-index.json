@@ -1,0 +1,353 @@
+{
+  "schema": "mission-index.v1",
+  "version": 1,
+  "defs": [
+    {
+      "id": "DIP_ENVOY_ESCORT",
+      "theme": "diplomacy",
+      "difficulty": "EASY",
+      "path": "missions/diplomacy/DIP_ENVOY_ESCORT.json",
+      "origin": "authored",
+      "legacyTemplateId": "EXP_EASY_03"
+    },
+    {
+      "id": "DIP_HERMIT_PERSUADE",
+      "theme": "diplomacy",
+      "difficulty": "NORMAL",
+      "path": "missions/diplomacy/DIP_HERMIT_PERSUADE.json",
+      "origin": "authored",
+      "legacyTemplateId": "EXP_NORMAL_03"
+    },
+    {
+      "id": "EXP_NORMAL_01",
+      "theme": "diplomacy",
+      "difficulty": "NORMAL",
+      "path": "missions/diplomacy/EXP_NORMAL_01.json",
+      "origin": "converted",
+      "legacyTemplateId": "EXP_NORMAL_01"
+    },
+    {
+      "id": "DIP_ALLIANCE_NEIGHBOR",
+      "theme": "diplomacy",
+      "difficulty": "ELITE",
+      "path": "missions/diplomacy/DIP_ALLIANCE_NEIGHBOR.json",
+      "origin": "authored",
+      "legacyTemplateId": "EXP_ELITE_02"
+    },
+    {
+      "id": "EXP_ADV_01",
+      "theme": "diplomacy",
+      "difficulty": "ADVANCED",
+      "path": "missions/diplomacy/EXP_ADV_01.json",
+      "origin": "converted",
+      "legacyTemplateId": "EXP_ADV_01"
+    },
+    {
+      "id": "DOM_EASY_02",
+      "theme": "domestic",
+      "difficulty": "EASY",
+      "path": "missions/domestic/DOM_EASY_02.json",
+      "origin": "converted",
+      "legacyTemplateId": "DOM_EASY_02"
+    },
+    {
+      "id": "DOM_EASY_03",
+      "theme": "domestic",
+      "difficulty": "EASY",
+      "path": "missions/domestic/DOM_EASY_03.json",
+      "origin": "converted",
+      "legacyTemplateId": "DOM_EASY_03"
+    },
+    {
+      "id": "DOM_EASY_04",
+      "theme": "domestic",
+      "difficulty": "EASY",
+      "path": "missions/domestic/DOM_EASY_04.json",
+      "origin": "converted",
+      "legacyTemplateId": "DOM_EASY_04"
+    },
+    {
+      "id": "DOM_FAMINE_RELIEF",
+      "theme": "domestic",
+      "difficulty": "EASY",
+      "path": "missions/domestic/DOM_FAMINE_RELIEF.json",
+      "origin": "authored",
+      "legacyTemplateId": "DOM_EASY_01"
+    },
+    {
+      "id": "DOM_NORMAL_01",
+      "theme": "domestic",
+      "difficulty": "NORMAL",
+      "path": "missions/domestic/DOM_NORMAL_01.json",
+      "origin": "converted",
+      "legacyTemplateId": "DOM_NORMAL_01"
+    },
+    {
+      "id": "DOM_NORMAL_02",
+      "theme": "domestic",
+      "difficulty": "NORMAL",
+      "path": "missions/domestic/DOM_NORMAL_02.json",
+      "origin": "converted",
+      "legacyTemplateId": "DOM_NORMAL_02"
+    },
+    {
+      "id": "DOM_NORMAL_03",
+      "theme": "domestic",
+      "difficulty": "NORMAL",
+      "path": "missions/domestic/DOM_NORMAL_03.json",
+      "origin": "converted",
+      "legacyTemplateId": "DOM_NORMAL_03"
+    },
+    {
+      "id": "DOM_ELITE_01",
+      "theme": "domestic",
+      "difficulty": "ELITE",
+      "path": "missions/domestic/DOM_ELITE_01.json",
+      "origin": "converted",
+      "legacyTemplateId": "DOM_ELITE_01"
+    },
+    {
+      "id": "DOM_ELITE_02",
+      "theme": "domestic",
+      "difficulty": "ELITE",
+      "path": "missions/domestic/DOM_ELITE_02.json",
+      "origin": "converted",
+      "legacyTemplateId": "DOM_ELITE_02"
+    },
+    {
+      "id": "DOM_ADV_01",
+      "theme": "domestic",
+      "difficulty": "ADVANCED",
+      "path": "missions/domestic/DOM_ADV_01.json",
+      "origin": "converted",
+      "legacyTemplateId": "DOM_ADV_01"
+    },
+    {
+      "id": "DOM_ADV_02",
+      "theme": "domestic",
+      "difficulty": "ADVANCED",
+      "path": "missions/domestic/DOM_ADV_02.json",
+      "origin": "converted",
+      "legacyTemplateId": "DOM_ADV_02"
+    },
+    {
+      "id": "DOM_HELL_01",
+      "theme": "domestic",
+      "difficulty": "HELL",
+      "path": "missions/domestic/DOM_HELL_01.json",
+      "origin": "converted",
+      "legacyTemplateId": "DOM_HELL_01"
+    },
+    {
+      "id": "DOM_HELL_02",
+      "theme": "domestic",
+      "difficulty": "HELL",
+      "path": "missions/domestic/DOM_HELL_02.json",
+      "origin": "converted",
+      "legacyTemplateId": "DOM_HELL_02"
+    },
+    {
+      "id": "EXP_EASY_01",
+      "theme": "espionage",
+      "difficulty": "EASY",
+      "path": "missions/espionage/EXP_EASY_01.json",
+      "origin": "converted",
+      "legacyTemplateId": "EXP_EASY_01"
+    },
+    {
+      "id": "ESP_TRAITOR_HUNT",
+      "theme": "espionage",
+      "difficulty": "NORMAL",
+      "path": "missions/espionage/ESP_TRAITOR_HUNT.json",
+      "origin": "authored"
+    },
+    {
+      "id": "ESP_SPY_RING",
+      "theme": "espionage",
+      "difficulty": "ELITE",
+      "path": "missions/espionage/ESP_SPY_RING.json",
+      "origin": "authored"
+    },
+    {
+      "id": "EXP_HELL_02",
+      "theme": "espionage",
+      "difficulty": "HELL",
+      "path": "missions/espionage/EXP_HELL_02.json",
+      "origin": "converted",
+      "legacyTemplateId": "EXP_HELL_02"
+    },
+    {
+      "id": "EXP_EASY_02",
+      "theme": "expedition",
+      "difficulty": "EASY",
+      "path": "missions/expedition/EXP_EASY_02.json",
+      "origin": "converted",
+      "legacyTemplateId": "EXP_EASY_02"
+    },
+    {
+      "id": "EXP_EASY_04",
+      "theme": "expedition",
+      "difficulty": "EASY",
+      "path": "missions/expedition/EXP_EASY_04.json",
+      "origin": "converted",
+      "legacyTemplateId": "EXP_EASY_04"
+    },
+    {
+      "id": "EXP_NORMAL_02",
+      "theme": "expedition",
+      "difficulty": "NORMAL",
+      "path": "missions/expedition/EXP_NORMAL_02.json",
+      "origin": "converted",
+      "legacyTemplateId": "EXP_NORMAL_02"
+    },
+    {
+      "id": "EXP_ELITE_01",
+      "theme": "expedition",
+      "difficulty": "ELITE",
+      "path": "missions/expedition/EXP_ELITE_01.json",
+      "origin": "converted",
+      "legacyTemplateId": "EXP_ELITE_01"
+    },
+    {
+      "id": "EXP_ADV_02",
+      "theme": "expedition",
+      "difficulty": "ADVANCED",
+      "path": "missions/expedition/EXP_ADV_02.json",
+      "origin": "converted",
+      "legacyTemplateId": "EXP_ADV_02"
+    },
+    {
+      "id": "EXP_HELL_01",
+      "theme": "expedition",
+      "difficulty": "HELL",
+      "path": "missions/expedition/EXP_HELL_01.json",
+      "origin": "converted",
+      "legacyTemplateId": "EXP_HELL_01"
+    },
+    {
+      "id": "MIL_BEACON_PATROL",
+      "theme": "military",
+      "difficulty": "EASY",
+      "path": "missions/military/MIL_BEACON_PATROL.json",
+      "origin": "authored",
+      "legacyTemplateId": "MIL_EASY_02"
+    },
+    {
+      "id": "MIL_EASY_01",
+      "theme": "military",
+      "difficulty": "EASY",
+      "path": "missions/military/MIL_EASY_01.json",
+      "origin": "converted",
+      "legacyTemplateId": "MIL_EASY_01"
+    },
+    {
+      "id": "MIL_EASY_03",
+      "theme": "military",
+      "difficulty": "EASY",
+      "path": "missions/military/MIL_EASY_03.json",
+      "origin": "converted",
+      "legacyTemplateId": "MIL_EASY_03"
+    },
+    {
+      "id": "MIL_EASY_04",
+      "theme": "military",
+      "difficulty": "EASY",
+      "path": "missions/military/MIL_EASY_04.json",
+      "origin": "converted",
+      "legacyTemplateId": "MIL_EASY_04"
+    },
+    {
+      "id": "MIL_RECRUIT_SCOUT",
+      "theme": "military",
+      "difficulty": "EASY",
+      "path": "missions/military/MIL_RECRUIT_SCOUT.json",
+      "origin": "authored"
+    },
+    {
+      "id": "MIL_NORMAL_01",
+      "theme": "military",
+      "difficulty": "NORMAL",
+      "path": "missions/military/MIL_NORMAL_01.json",
+      "origin": "converted",
+      "legacyTemplateId": "MIL_NORMAL_01"
+    },
+    {
+      "id": "MIL_NORMAL_02",
+      "theme": "military",
+      "difficulty": "NORMAL",
+      "path": "missions/military/MIL_NORMAL_02.json",
+      "origin": "converted",
+      "legacyTemplateId": "MIL_NORMAL_02"
+    },
+    {
+      "id": "MIL_NORMAL_03",
+      "theme": "military",
+      "difficulty": "NORMAL",
+      "path": "missions/military/MIL_NORMAL_03.json",
+      "origin": "converted",
+      "legacyTemplateId": "MIL_NORMAL_03"
+    },
+    {
+      "id": "MIL_ELITE_01",
+      "theme": "military",
+      "difficulty": "ELITE",
+      "path": "missions/military/MIL_ELITE_01.json",
+      "origin": "converted",
+      "legacyTemplateId": "MIL_ELITE_01"
+    },
+    {
+      "id": "MIL_ELITE_02",
+      "theme": "military",
+      "difficulty": "ELITE",
+      "path": "missions/military/MIL_ELITE_02.json",
+      "origin": "converted",
+      "legacyTemplateId": "MIL_ELITE_02"
+    },
+    {
+      "id": "MIL_ADV_01",
+      "theme": "military",
+      "difficulty": "ADVANCED",
+      "path": "missions/military/MIL_ADV_01.json",
+      "origin": "converted",
+      "legacyTemplateId": "MIL_ADV_01"
+    },
+    {
+      "id": "MIL_FIRE_CAMP",
+      "theme": "military",
+      "difficulty": "ADVANCED",
+      "path": "missions/military/MIL_FIRE_CAMP.json",
+      "origin": "authored",
+      "legacyTemplateId": "MIL_ADV_02"
+    },
+    {
+      "id": "MIL_HELL_01",
+      "theme": "military",
+      "difficulty": "HELL",
+      "path": "missions/military/MIL_HELL_01.json",
+      "origin": "converted",
+      "legacyTemplateId": "MIL_HELL_01"
+    },
+    {
+      "id": "MIL_HELL_02",
+      "theme": "military",
+      "difficulty": "HELL",
+      "path": "missions/military/MIL_HELL_02.json",
+      "origin": "converted",
+      "legacyTemplateId": "MIL_HELL_02"
+    },
+    {
+      "id": "ROM_LANTERN_FESTIVAL",
+      "theme": "romance",
+      "difficulty": "EASY",
+      "path": "missions/romance/ROM_LANTERN_FESTIVAL.json",
+      "origin": "authored"
+    },
+    {
+      "id": "ROM_HERMIT_DAUGHTER",
+      "theme": "romance",
+      "difficulty": "NORMAL",
+      "path": "missions/romance/ROM_HERMIT_DAUGHTER.json",
+      "origin": "authored"
+    }
+  ]
+}

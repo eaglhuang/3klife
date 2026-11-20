@@ -50,6 +50,12 @@ export interface OfficerTaskResult {
 /** 戰功（官職系統 E-2「戰功」來源，PROG-2-1619 暫定）：每場正式戰鬥視為一般難度軍事任務 */
 export const BATTLE_MERIT_OFFICER_TASK: Readonly<Omit<OfficerTaskResult, 'success'>> = { difficulty: 'NORMAL', boardType: 'MILITARY' };
 
+/**
+ * 官職經驗倍率（PROG-2-9151）：讓新玩家一年內能升到州牧。內建 1（不加成）；
+ * 遊戲啟動時由 officer-tiers.json 的 expGainMultiplier 覆寫（見 OfficerTierTable）。
+ */
+export const OFFICER_EXP_TUNING: { gainMultiplier: number } = { gainMultiplier: 1 };
+
 const DIFFICULTY_BASE: Readonly<Record<OfficerDifficulty, number>> = {
     EASY: 10,
     NORMAL: 18,
@@ -63,7 +69,7 @@ export function calcOfficerExpGain(task: OfficerTaskResult): number {
     const difficultyBase = DIFFICULTY_BASE[task.difficulty];
     const domainBonus = task.boardType === 'MILITARY' ? 1.1 : 1.0;
     const successBonus = task.success ? 1.0 : 0.4;
-    return Math.floor(difficultyBase * domainBonus * successBonus);
+    return Math.floor(difficultyBase * domainBonus * successBonus * OFFICER_EXP_TUNING.gainMultiplier);
 }
 
 export interface OfficerState {

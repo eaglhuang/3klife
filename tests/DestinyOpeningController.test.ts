@@ -12,6 +12,7 @@ import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/manager
 import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
 import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
 import { STARTER_GENERAL_IDS } from '../assets/scripts/core/services/StarterRosterService';
+import { isYouthGeneral } from '../assets/scripts/core/services/StarterYouthService';
 import { isDestinyStar } from '../assets/scripts/core/systems/DestinyPool';
 import { DestinyOpeningController, DESTINY_INTRO } from '../assets/scripts/ui/core/DestinyOpeningController';
 
@@ -76,9 +77,26 @@ export function createDestinyOpeningControllerSuite(): TestSuite {
         assert.isTrue(controller.started);
         assert.equals(view.coreId, session.leadGeneralId);
         assert.equals(view.coreId, started[0]);
-        assert.equals([...view.rolledIds].sort().join(','), session.roster.map(g => g.id).sort().join(','));
+        assert.equals([...view.rolledIds].sort().join(','), session.roster.filter(g => !isYouthGeneral(g)).map(g => g.id).sort().join(','));
+        assert.equals(1, session.roster.filter(g => isYouthGeneral(g)).length, '新開局恰有一位少年名將');
+        assert.equals(undefined, session.roster.find(g => g.id === 'starter-royal-child'), '不再送 4 歲宗室幼苗');
         assert.isFalse(controller.reroll(), '確定後不能再重轉');
         assert.isFalse(await controller.confirm(), '不能重複開局');
+    });
+
+    suite.test('確定前先三選一挑少年名將：選誰就送誰，名單照設定', async () => {
+        const offered: string[][] = [];
+        const controller = new DestinyOpeningController({
+            config: () => heroPool, generals: () => generals, session: newSession(),
+            random: () => 0.3, seed: () => 7, onStarted: () => undefined,
+            pickYouth: async (options) => { offered.push(options.map(o => o.id)); return 'zhuge-liang'; },
+        });
+        controller.roll();
+        assert.isTrue(await controller.confirm());
+        assert.equals('zhao-yun,guan-yu,zhuge-liang', offered[0].join(','));
+        const youth = (controller as unknown as { _deps: { session: GameSession } })._deps.session.roster.filter(g => isYouthGeneral(g));
+        assert.equals('zhuge-liang', youth[0].id);
+        assert.equals(14, youth[0].age);
     });
 
     suite.test('開局失敗退回已抽狀態，可以再按確定', async () => {

@@ -36,6 +36,9 @@
  *   --viewport  視窗尺寸 WxH（預設 1920x1080；可用 1920x1475 這類高視窗）
  *   --browser   Chrome 路徑（也可用環境變數 CHROME_PATH）
  *   --stuck     單步卡住上限毫秒數（預設 120000）
+ *   --mind      選用：換季後點大廳小人讀泡泡台詞（武將心智，PROG-2-9146）
+ *   --rank-unlock  選用：官職晉升解鎖節奏（PROG-2-9151）：鎖頭按鈕、點鎖頭提示、晉升彈窗與晉升後解鎖
+ *   --jade      選用：玉的用途（商店看玉、許願祭壇用玉買加速卡，PROG-2-9149）
  *   --year      選用：原步驟後接一年循環（每季內政／任務牆／戰鬥／抽卡／培育／推進一季），輸出 year-report.json（PROG-2-9141）
  *   --battles-per-season  --year 時每季出征場數（預設 2）
  *
@@ -430,7 +433,7 @@ async function main() {
     const listButtons = () => page.evaluate(() => window.__pt.listButtons());
     /** 把殘留的面板關掉，直到大廳底欄（BtnCatShop）回來；回傳是否成功 */
     const backToLobbyBar = async () => {
-        const closers = '^(CharacterDs3Main_button_3|OpeningOfferDecline|GachaReturnToLobby|BtnBack|BtnScoutCancel|BtnNextTutorial|BtnClose\\w*)$';
+        const closers = '^(CharacterDs3Main_button_3|OpeningOfferDecline|GachaReturnToLobby|BtnBack|BtnScoutCancel|BtnNextTutorial|BtnRankUnlockOk|BtnClose\\w*)$';
         for (let i = 0; i < 12; i++) {
             const hit = await clickButton(closers);
             if (!hit) break;
@@ -512,10 +515,10 @@ async function main() {
         };
 
         // ── 2. 新玩家開場 ──
-        // 現行開場（PROG-2-9104 核對）：介紹頁 → 信 → 六名將登場 → 宿命池 → 新手教學。
+        // 現行開場（PROG-2-9104 核對）：介紹頁 → 信 → 六名將登場 → 宿命池 → 挑少年名將（PROG-2-9194，點第一位）→ 新手教學。
         // 宿命轉蛋 2026-11-12 起改為轉蛋系統的一池（PROG-2-2243），用十連結果畫面 GachaPullResult 顯示、
         // 單鍵確定（GachaPullResult_close）十位全收；舊的 BtnDestinyRoll／BtnDestinyConfirm／BtnFrame0 選將面板已不掛。
-        const openingSeq = ['BtnIntroNext', 'BtnCloseOpeningLetter', 'BtnShowcaseNext', 'GachaPullResult_close', 'BtnNextTutorial'];
+        const openingSeq = ['BtnIntroNext', 'BtnCloseOpeningLetter', 'BtnShowcaseNext', 'GachaPullResult_close', 'BtnYouthPick0', 'BtnNextTutorial'];
         await step('new-player-opening', async (rec) => {
             // 依規格順序點；BtnIntroNext 是多頁「繼續」（實測 IntroStep 1/4…），可重複點直到消失。
             // 若目前可按的是後面的步驟（實際順序與規格不同），就先點它並記在 outOfOrder，不當成失敗。
@@ -562,6 +565,7 @@ async function main() {
                 const name = candidates[0];
                 const expected = openingSeq.find((n) => !done.has(n));
                 if (!REPEATABLE.includes(name) && name !== expected) outOfOrder.push(`規格順序為 ${expected}，實際先出現 ${name}`);
+                if (name === 'BtnYouthPick0') await page.screenshot({ path: path.join(outDir, '02a-youth-pick.png') });
                 const hit = await clickButton(`^${name}$`);
                 if (hit) {
                     clicked.push(hit);
@@ -593,6 +597,14 @@ async function main() {
             rec.detail.menuMap = map;
             // 太守府：開啟後截一張（人口、民心、黃金與糧草產出列），再關回大廳；開不了只記錄不算失敗
             try {
+                // 官職晉升解鎖（PROG-2-9151）：新玩家的太守府是鎖頭按鈕，點了只會出現提示；鎖著就不開，並把最後展開的選單收起
+                const hallLocked = (map.BtnCatDomestic || []).some((b) => /太守府/.test(b.text) && /🔒/.test(b.text));
+                rec.detail.governorHallLocked = hallLocked;
+                if (hallLocked) {
+                    await clickButton('^BtnCatNurture$');
+                    await delay(800);
+                    return rec.detail;
+                }
                 const opened = await openSub('BtnCatDomestic', '太守府');
                 rec.detail.governorHallOpened = Boolean(opened);
                 if (opened) {
@@ -661,15 +673,18 @@ async function main() {
             // 輪詢等詳情窗；同時收集點擊後新出現過的文字（提示、錯誤訊息一閃而過也要留下）
             const newTexts = new Set();
             let opened = false;
-            const openDeadline = Date.now() + 8000;
+            // 詳情窗是非同步載入：機器忙或幀率低時實測會超過 8 秒才開（PROG-2-9154），上限放寬到 30 秒並記下實際等了多久
+            const openT0 = Date.now();
+            const openDeadline = openT0 + 30000;
             while (!opened && Date.now() < openDeadline) {
                 for (const t of await rm.allTexts()) if (!textsBefore.has(t)) newTexts.add(t);
                 opened = await rm.present({ name: MISSION_DIALOG });
                 if (!opened) await delay(300);
             }
+            rec.detail.detailOpenMs = Date.now() - openT0;
             if (!opened) {
                 const board = await rm.present({ name: '^HallBoardHost$' });
-                throw new Error(`點左牆第一張任務卡「${title}」（${card.meta || '無副標'}；點擊 ${Math.round(clickedCard.page.x)},${Math.round(clickedCard.page.y)} 命中 ${clickedCard.name}）後 8 秒內沒有開出任務詳情窗；任務牆面板${board ? '有' : '沒有'}開；點擊後新出現的文字：${Array.from(newTexts).slice(0, 8).join(' / ') || '無'}`);
+                throw new Error(`點左牆第一張任務卡「${title}」（${card.meta || '無副標'}；點擊 ${Math.round(clickedCard.page.x)},${Math.round(clickedCard.page.y)} 命中 ${clickedCard.name}）後 30 秒內沒有開出任務詳情窗；任務牆面板${board ? '有' : '沒有'}開；點擊後新出現的文字：${Array.from(newTexts).slice(0, 8).join(' / ') || '無'}`);
             }
             await delay(800);
             const dialogTexts = (await rm.textsUnder(MISSION_DIALOG)) || [];
@@ -739,6 +754,8 @@ async function main() {
         };
         /** 換季後可能出現的彈窗，一個 kind 對應一組點擊規格；同一 kind 重複出現時依序換下一組規格（例如三國季報第一個選項資源不足，改選第二個） */
         const SEASON_POPUPS = [
+            // 官職晉升解鎖彈窗（PROG-2-9151）：升官時蓋住整個大廳，要先按「知道了」
+            { kind: 'rank-unlock', specs: [{ name: '^BtnRankUnlockOk$' }] },
             { kind: 'season-report', specs: [{ name: '^BtnClose$', under: '^SeasonReportComposite$' }] },
             { kind: 'season-report-x', specs: [{ name: '.*', text: '^\\s*[Xx×]\\s*$', under: '^SeasonReportRoot$', button: true }] },
             { kind: 'season-event', specs: [{ name: '^SeasonEventOptionA$' }] },
@@ -752,6 +769,7 @@ async function main() {
             const attempts = {};
             let quiet = 0;
             let blockedStreak = 0;
+            const startedAt = Date.now();
             for (let i = 0; i < 30 && quiet < 2; i++) {
                 await delay(1500);
                 let handled = false;
@@ -769,7 +787,8 @@ async function main() {
                         popupLog.push({ kind: popup.kind, texts: ((await rm.textsUnder(host)) || []).slice(0, 30) });
                     }
                     if (captured && popup.kind.startsWith('season-report')) { cap = { texts: await rm.textsUnder('^SeasonReportRoot$'), top: await readTopbar() }; captured.push(cap); }
-                    await rm.click(spec, popup.kind);
+                    // 低幀率（合併後季事件與季報疊開時約 3 FPS）下，定位後彈窗可能剛好播完關閉動畫，找不到就當已關
+                    try { await rm.click(spec, popup.kind); } catch (e) { if (!/找不到可點的節點/.test(String(e && e.message))) throw e; }
                     // 季報一關，頂欄立刻讀一次：後續事件選項會花錢，不能拿最後的頂欄比
                     if (cap) { await delay(400); cap.topClosed = await readTopbar(); }
                     attempts[popup.kind] = n + 1;
@@ -784,6 +803,8 @@ async function main() {
                     continue;
                 }
                 blockedStreak = 0;
+                // 換季後季報最慢要等幾秒才出：一個彈窗都還沒處理前，15 秒內不算安靜（機器忙時避免提早收工）
+                if (popups.length === 0 && Date.now() - startedAt < 15000) continue;
                 quiet += 1;
             }
             if (quiet < 2) throw new Error(`彈窗 45 秒內沒處理完（已處理 ${popups.map((p) => p.kind).join('、') || '無'}）`);
@@ -820,13 +841,36 @@ async function main() {
                 const top = await readTopbar();
                 return top.food === top0.food - 50 ? top : null;
             }, 6000, '').catch(() => null);
-            const topNow = await readTopbar();
+            let topNow = await readTopbar();
             rec.detail.topAfterRecon = topNow;
             await delay(600);
             const dialog1 = (await rm.textsUnder(MISSION_DIALOG)) || [];
             await shot(rec, 'loop-after-recon');
             if (!afterRecon) throw new Error(`再探後頂欄糧草沒有減少 50（再探前 ${top0.food}，再探後 ${topNow.food}）`);
-            if (dialog1.some((t) => t.includes('???'))) throw new Error(`再探後詳情窗仍有遮蔽字樣 ???（文字：${dialog1.slice(0, 12).join(' / ')}）`);
+            // 再探每次只加 35／25／15（上限 90，PROG-2-9148 使用者裁決）：一次揭不完，最多再探 3 次到上限 90；
+            // 敵情與事實的「???」會逐層揭開，只剩「完美獎勵」那格維持 ???（隱藏獎勵要情報 100 才揭，再探到不了）
+            const intelOf = (texts) => { const k = texts.indexOf('%'); return k > 0 ? Number(texts[k - 1]) : NaN; };
+            let dialogNow = dialog1;
+            const intelSeries = [intelOf(dialog0), intelOf(dialog1)];
+            rec.detail.reconClicks = 1;
+            for (let extra = 0; extra < 3 && !(intelSeries[intelSeries.length - 1] >= 90); extra++) {
+                await waitToastGone();
+                const foodBefore = (await readTopbar()).food;
+                await rm.click({ name: '^BtnScout$', under: MISSION_DIALOG }, '再探');
+                await waitUntil(async () => ((await readTopbar()).food === foodBefore - 50 ? true : null), 6000, '').catch(() => null);
+                await delay(600);
+                dialogNow = (await rm.textsUnder(MISSION_DIALOG)) || [];
+                intelSeries.push(intelOf(dialogNow));
+                rec.detail.reconClicks += 1;
+            }
+            rec.detail.intelSeries = intelSeries;
+            rec.detail.dialogAfterRecon = dialogNow.slice(0, 16);
+            if (!(intelSeries[1] > intelSeries[0])) throw new Error(`再探後情報沒有增加（${intelSeries.join(' → ')}）`);
+            if (!(intelSeries[intelSeries.length - 1] >= 90)) throw new Error(`連續再探 ${rec.detail.reconClicks} 次後情報沒有到上限 90（${intelSeries.join(' → ')}）`);
+            // 完美獎勵那格永遠是 ???，旁邊附「情報 100 才會揭曉」說明（PROG-2-9152），不算遮蔽殘留
+            const fogLeft = dialogNow.filter((t) => t.includes('???') && t.trim() !== '???' && !t.includes('情報 100 才會揭曉'));
+            if (fogLeft.length) throw new Error(`情報到上限後敵情仍有遮蔽字樣 ???（${fogLeft.slice(0, 3).join(' / ')}）`);
+            topNow = await readTopbar();
             // 3. 選將執行：頂欄糧草與兵源減少、牆上少一張、牆頭出現「進行中」
             await waitToastGone();
             await rm.click({ name: '^BtnExecute$', under: MISSION_DIALOG }, '執行');
@@ -868,15 +912,15 @@ async function main() {
             if (!optionTexts.some((t) => t.includes(busyName)) || !optionTexts.some((t) => t.includes('出任務中'))) throw new Error(`下拉清單沒有把「${busyName}」標成「出任務中」（清單文字：${optionTexts.slice(0, 16).join(' / ')}）`);
             // 出任務中的列排在清單最後：用滑鼠滾輪把下拉往下捲到看得見，再真點
             let reachedBusyRow = false;
-            for (let i = 0; i < 40 && !reachedBusyRow; i++) {
+            for (let i = 0; i < 80 && !reachedBusyRow; i++) {
                 const hit = await rm.locate({ name: '^GeneralOption_', text: busyName });
-                // 命中檢查不看捲動遮罩：列在視窗內但被詳情窗底部遮住也會回 ok，所以另外要求列的畫面座標落在下拉可視範圍（約 y 570～810）
-                if (hit && hit.found && hit.ok && hit.page && hit.page.y > 570 && hit.page.y < 810) { reachedBusyRow = true; break; }
+                // 命中檢查不看捲動遮罩：列在視窗內但被詳情窗底部遮住也會回 ok，所以另外要求列的畫面座標落在下拉可視範圍（約 y 200～800）
+                if (hit && hit.found && hit.ok && hit.page && hit.page.y > 200 && hit.page.y < 800) { reachedBusyRow = true; break; }
                 await page.mouse.move(960, 600);
-                await page.mouse.wheel({ deltaY: 700 });
+                await page.mouse.wheel({ deltaY: 160 });
                 await delay(250);
             }
-            if (!reachedBusyRow) throw new Error(`滾輪捲了 40 次，「${busyName}」那列仍沒進到下拉可視範圍`);
+            if (!reachedBusyRow) throw new Error(`滾輪捲了 80 次，「${busyName}」那列仍沒進到下拉可視範圍`);
             await shot(rec, 'loop-busy-row-visible');
             await rm.click({ name: '^GeneralOption_', text: busyName }, `下拉裡出任務中的「${busyName}」`);
             await delay(600);
@@ -971,6 +1015,112 @@ async function main() {
         }, { skipIfFailed: true });
 
         // ── 5. 人物介紹：第一位武將 → 每個分頁截圖 → 「命」分頁檢查血統樹 ──
+        // ── 武將心智（PROG-2-9146，--mind）：派任務、換季之後點大廳小人讀泡泡台詞（要引用過去的決定或說出心情），並統計自告奮勇「!」標記 ──
+        // 第一次進來時補經歷（呼叫大廳的 qaInjectMindHistory，PROG-2-9150）：小人泡泡會引用那次任務，下一次換季武將來信
+        const injectMindQa = async (rec) => {
+            if (await page.evaluate(() => window.__mindQaDone)) return;
+            rec.detail.injected = await page.evaluate(() => {
+                window.__mindQaDone = true;
+                let n = -1;
+                const walk = (node) => { for (const c of node.components) if (c && c.qaInjectMindHistory) n = c.qaInjectMindHistory(); for (const ch of node.children) walk(ch); };
+                walk(window.cc.director.getScene());
+                return n;
+            });
+        };
+        const mindBubbles = async (rec, rounds) => {
+            await requireLobby();
+            await injectMindQa(rec);
+            await backToLobbyBar();
+            await closeMissionLayers();
+            const bubbleId = 'lobby-hall-screen.bubble';
+            const lines = [];
+            rec.detail.marks = [];
+            for (let round = 0; round < rounds; round++) {
+                const crowd = await page.evaluate(() => Object.keys(window.__pt.nameCounts('^crowd-')));
+                const marks = await page.evaluate(() => Object.keys(window.__pt.nameCounts('^mark-')));
+                if (marks.length) {
+                    rec.detail.marks.push(...marks.filter((m) => !rec.detail.marks.includes(m)));
+                    if (!rec.detail.markShot) { rec.detail.markShot = true; await shot(rec, 'mind-volunteer-marks'); }
+                }
+                for (const name of crowd) {
+                    const tapped = await rm.tryClick({ name: '^' + name + '$' });
+                    if (!tapped) continue;
+                    const text = await waitUntil(async () => {
+                        const now = await page.evaluate((id) => window.__pt.activeUcufNodes(id), bubbleId);
+                        return now.length ? await rm.textOfUcuf(bubbleId) : null;
+                    }, 4000, '').catch(() => null);
+                    if (text && !lines.some((l) => l.who === name && l.text === text)) {
+                        lines.push({ who: name, text });
+                        if (lines.length <= 8) await shot(rec, `mind-bubble-${lines.length}`);
+                    }
+                    await delay(500);
+                }
+                await delay(3000);
+            }
+            rec.detail.lines = lines;
+            rec.detail.citingLines = lines.filter((l) => /第\d+年|上回|上次|那次/.test(l.text));
+            if (!lines.length) throw new Error('點大廳小人沒有讀到任何泡泡文字');
+            return rec.detail;
+        };
+        // ── 玉的一年內用途（PROG-2-9149，--jade）：商店看玉餘額，許願祭壇許願後點進行中插槽，用玉買加速卡縮短時間 ──
+        if (args.jade) {
+            await step('jade-use', async (rec) => {
+                rec.detail.topBefore = await readTopbar();
+                rec.detail.gemTextsBefore = (await rm.allTexts()).filter((t) => /^[0-9,]{3,7}$/.test(t)).slice(0, 8);
+                const shopOpened = await openSub('BtnCatShop', '^商店$');
+                rec.detail.shopOpened = Boolean(shopOpened);
+                await delay(2500);
+                await shot(rec, 'jade-shop');
+                await backToLobbyBar();
+                await delay(800);
+                const altar = await rm.tryClick({ ucuf: 'lobby-hall-screen.altar' });
+                rec.detail.altarOpened = Boolean(altar);
+                await delay(2000);
+                rec.detail.altarButtons = await listButtons();
+                await shot(rec, 'jade-altar-open');
+                rec.detail.wished = await clickButton('^btnWish$');
+                await delay(1200);
+                rec.detail.slotTapped = await clickButton('^waSlot0$');
+                await delay(1200);
+                rec.detail.altarTexts = (await rm.allTexts()).filter((t) => /玉|加速|縮短|許願|剩/.test(t)).slice(0, 20);
+                await shot(rec, 'jade-altar-speedup');
+                rec.detail.gemTextsAfter = (await rm.allTexts()).filter((t) => /^[0-9,]{3,7}$/.test(t)).slice(0, 8);
+                if (!rec.detail.altarOpened) throw new Error(`找不到許願祭壇入口（可按按鈕：${(await listButtons()).join(', ')}）`);
+                return rec.detail;
+            }, { skipIfFailed: true });
+        }
+        if (args.mind) await step('lobby-mind-bubbles', (rec) => mindBubbles(rec, 4), { skipIfFailed: true });
+
+        // ── 武將信箱（PROG-2-9150，--mind）：開右上「信箱」→ 截圖請求內容 → 真滑鼠按第一封的「准／寬慰／採納」→ 截圖武將反應句 → 關閉 ──
+        const mindMailbox = async (rec, tag) => {
+            await requireLobby();
+            await injectMindQa(rec);
+            await backToLobbyBar();
+            await closeMissionLayers();
+            const opened = await rm.tryClick({ name: '^BtnMindMailbox$', button: true });
+            if (!opened) {
+                rec.detail.state = await page.evaluate(() => { let r = null; const walk = (node) => { for (const c of node.components) if (c && c.qaMindState) r = c.qaMindState(); for (const ch of node.children) walk(ch); }; walk(window.cc.director.getScene()); return r; });
+                rec.detail.locate = await rm.locate({ name: '^BtnMindMailbox$', button: true }).catch((e) => String(e));
+                await shot(rec, `mind-mailbox-${tag}-missing`);
+                rec.detail.mailbox = '大廳沒有信箱入口（本季沒有任何武將來信）';
+                return rec.detail;
+            }
+            await delay(600);
+            const texts = (await rm.allTexts()).filter((t) => /・(求封|請戰|雪恥|請罪|訴苦|進言|抗命信)/.test(t) || /第\d+年/.test(t));
+            rec.detail.requestTexts = texts.slice(0, 8);
+            await shot(rec, `mind-mailbox-${tag}`);
+            const answered = await rm.tryClick({ name: '^BtnMindReply-0-yes$', button: true }) || await rm.tryClick({ name: '^BtnMindReply-0-no$', button: true });
+            rec.detail.answered = Boolean(answered);
+            if (answered) {
+                await delay(800);
+                rec.detail.afterTexts = (await rm.allTexts()).filter((t) => /^「/.test(t.trim()) || /已准|已駁|已閱/.test(t)).slice(0, 6);
+                await shot(rec, `mind-mailbox-${tag}-reply`);
+            }
+            await rm.tryClick({ name: '^BtnMindClose$', button: true });
+            return rec.detail;
+        };
+        if (args.mind) await step('lobby-mind-mailbox', (rec) => mindMailbox(rec, 'lobby'), { skipIfFailed: true });
+
         await step('character-intro-tabs', async (rec) => {
             // 關掉轉蛋等面板回到大廳主畫面，再開武將名冊
             await backToLobbyBar();
@@ -1109,7 +1259,9 @@ async function main() {
             rec.detail.battleMs = Date.now() - battleT0;
             if (settled === 'review') {
                 rec.detail.result = (await page.evaluate(() => window.__pt.textsMatching('^(勝利|失敗|戰敗|平手)$')))[0] || null;
-                rec.detail.reviewTexts = await page.evaluate(() => window.__pt.textsMatching('.{2,}')).then((t) => t.slice(0, 40)).catch(() => []);
+                // 戰後獎懲（PROG-2-9149）在 recordBattle 存檔後才補進結算框，要等一下才看得到
+                if (opts.shotTag) await delay(3000);
+                rec.detail.reviewTexts = await page.evaluate(() => window.__pt.textsMatching('.{2,}')).then((t) => t.slice(0, 60)).catch(() => []);
                 if (opts.shotTag) await shot(rec, opts.shotTag);
                 await waitUntil(async () => {
                     if ((await scene()) === 'LobbyScene') return true;
@@ -1122,7 +1274,14 @@ async function main() {
             rec.detail.returnedToLobby = true;
             return rec.detail;
         };
-        await step('battle-to-settlement', (rec) => runBattle(rec), { skipIfFailed: true });
+        await step('battle-to-settlement', async (rec) => {
+            // 戰後獎懲（PROG-2-9149）：記戰前頂欄、結算畫面截圖，回大廳後再記頂欄，看糧／金／兵源的變化
+            rec.detail.topBefore = await readTopbar();
+            const d = await runBattle(rec, { shotTag: 'battle-settle' });
+            await delay(2500);
+            rec.detail.topAfter = await readTopbar();
+            return d;
+        }, { skipIfFailed: true });
 
         // ── 6b. 轉蛋（排最後：返回大廳後底欄是否還在，本身就是檢查項）：切每個池子一次，切一輪後右欄節點不疊加 ──
         await step('gacha-pools', async (rec) => {
@@ -1219,6 +1378,70 @@ async function main() {
             return rec.detail;
         }, { skipIfFailed: true });
 
+        // ── 官職晉升解鎖節奏（PROG-2-9151，--rank-unlock）：新玩家大廳的鎖頭按鈕、點鎖頭的提示、晉升彈窗 ──
+        if (args['rank-unlock']) {
+            await step('rank-unlock', async (rec) => {
+                await requireLobby();
+                await backToLobbyBar();
+                await closeMissionLayers();
+                await waitToastGone();
+                rec.detail.menus = {};
+                let lockedPick = null;
+                for (const cat of ['BtnCatDomestic', 'BtnCatNurture', 'BtnCatSortie']) {
+                    if (!(await clickButton('^' + cat + '$'))) throw new Error(`找不到底欄 ${cat}`);
+                    await delay(1200);
+                    rec.detail.menus[cat] = (await page.evaluate(() => window.__pt.buttonTexts('^BtnSub'))).map((b) => b.text);
+                    await shot(rec, `rank-unlock-menu-${cat}`);
+                    // 走完前面步驟後玩家可能已自然升官：挑目前還鎖著的第一個項目來點
+                    const lockedText = rec.detail.menus[cat].find((t) => /🔒/.test(t));
+                    if (lockedText && !lockedPick) lockedPick = { cat, name: lockedText.split('\n')[0].replace('🔒', '') };
+                }
+                if (!lockedPick) throw new Error('目前官職階位下沒有任何鎖著的選單項目');
+                rec.detail.lockedPick = lockedPick;
+                // 點鎖頭：提示出現、選單不收起、功能沒有被打開
+                if (!(await clickButton('^' + lockedPick.cat + '$'))) throw new Error(`找不到底欄 ${lockedPick.cat}`);
+                await delay(800);
+                const before = new Set(await rm.allTexts());
+                const clicked = await clickByText('^BtnSub', lockedPick.name);
+                if (!clicked) throw new Error(`找不到鎖著的「${lockedPick.name}」子選單按鈕`);
+                await delay(900);
+                rec.detail.lockToastTexts = (await rm.allTexts()).filter((t) => !before.has(t) && /開放/.test(t));
+                rec.detail.menuStillOpen = Boolean(await page.evaluate(() => window.__pt.buttonTexts('^BtnSub')).then((b) => b.length));
+                await shot(rec, 'rank-unlock-locked-click-toast');
+                if (!rec.detail.lockToastTexts.length) throw new Error('點鎖著的按鈕沒有出現「X 官職開放」提示');
+                await waitToastGone();
+                await backToLobbyBar();
+                // 晉升：直接給官職經驗並發出晉升事件，驗晉升彈窗內容與官職更新後解鎖
+                const promoted = await page.evaluate(async () => {
+                    const loader = await window.System.import('chunks:///_virtual/ServiceLoader.ts');
+                    const session = loader.services().session;
+                    const tiers = session.gainOfficerExp({ difficulty: 'HELL', boardType: 'MILITARY', success: true })
+                        .concat(session.gainOfficerExp({ difficulty: 'HELL', boardType: 'MILITARY', success: true }));
+                    loader.services().event.emit('game-session-officer-promoted', { tiers });
+                    return { tiers, tier: session.officerState.currentTier };
+                });
+                rec.detail.promoted = promoted;
+                if (!promoted.tiers.length) throw new Error('給官職經驗後沒有晉升');
+                const popup = await waitUntil(async () => {
+                    const texts = await rm.allTexts();
+                    return texts.some((t) => /^晉升「/.test(t)) ? texts.filter((t) => /^晉升「|新開放|：|下一官職/.test(t)) : null;
+                }, 20000, '晉升後 20 秒內沒有出現晉升彈窗').catch((e) => { throw e; });
+                rec.detail.popupTexts = popup;
+                await delay(600);
+                await shot(rec, 'rank-unlock-promotion-popup');
+                const ok = await clickByText('^BtnRankUnlockOk$', '.*') || await clickButton('^BtnRankUnlockOk$');
+                rec.detail.popupClosed = Boolean(ok);
+                await delay(800);
+                // 晉升後原本鎖著的按鈕解鎖
+                if (!(await clickButton('^BtnCatDomestic$'))) throw new Error('晉升後找不到底欄「內政」');
+                await delay(1200);
+                rec.detail.menuAfterPromotion = (await page.evaluate(() => window.__pt.buttonTexts('^BtnSub'))).map((b) => b.text);
+                await shot(rec, 'rank-unlock-menu-after-promotion');
+                await backToLobbyBar();
+                return rec.detail;
+            }, { skipIfFailed: true });
+        }
+
         // ── 9. 一年循環（--year，選用）：從目前季節起每季內政＋任務牆派將＋出征戰鬥＋抽卡／培育＋推進一季，直到第 1 年第 4 季結束（PROG-2-9141）──
         if (args.year) {
             const battlesPerSeason = Number(args['battles-per-season'] || 2);
@@ -1288,6 +1511,11 @@ async function main() {
             let stalled = 0;
             let prevButtons = new Set();
             yearReport.startSeason = (await readSeason()).text;
+            yearReport.startOfficer = await page.evaluate(async () => {
+                const loader = await window.System.import('chunks:///_virtual/ServiceLoader.ts');
+                const o = loader.services().session.officerState;
+                return { tier: o.currentTier, exp: o.officerExp };
+            }).catch(() => null);
             // 原 11 步裡已推進過的季（任務循環、推進一季）一併列入，湊成完整一年
             const stepByName = (n) => report.steps.find((x) => x.name === n);
             const loopStep = stepByName('lobby-mission-loop');
@@ -1349,6 +1577,8 @@ async function main() {
                     yq.newMenuEntries = rec.detail.newMenuEntries;
                     return rec.detail;
                 });
+                if (args.mind) await ys('mind', (rec) => mindBubbles(rec, 3));
+                if (args.mind) await ys('mind-mailbox', (rec) => mindMailbox(rec, `year-${Date.now() % 100000}`));
                 // 1. 內政：開「內政」面板，任選一個可按的內政任務
                 await ys('domestic', async (rec) => {
                     const opened = await openSub('BtnCatDomestic', '^內政$');
@@ -1427,6 +1657,8 @@ async function main() {
                     // 單抽結果畫面（GachaPullResult_stage）沒有關閉鈕，是「點畫面任一處」收掉：沒有鈕時點視窗中央
                     for (let i = 0; i < 8; i++) {
                         if (await clickButton('^BtnDupStarUp$')) { rec.detail.duplicateChoice = 'starUp'; await delay(1500); continue; }
+                        // 升星後進「命鏡升星」結果頁，要按「繼續」才收掉；沒收會用全螢幕擋住後面所有步驟（抽到重複武將的結果會依亂數出現，PROG-2-9149）
+                        if (await clickByText('.*', '^\\s*繼續\\s*$')) { rec.detail.duplicateContinue = (rec.detail.duplicateContinue || 0) + 1; await delay(1500); continue; }
                         if (await clickButton('^GachaPullResult_(close|back)$')) { await delay(1500); continue; }
                         if (!(await page.evaluate(() => window.__pt.scenePresence('^GachaPullResult_stage$')))) break;
                         await page.mouse.click(Math.round(viewport.width / 2), Math.round(viewport.height / 2));
@@ -1477,6 +1709,12 @@ async function main() {
                     if (cur.ordinal !== null && after.ordinal !== cur.ordinal + 1) throw new Error(`季別沒有前進：「${cur.text}」→「${after.text || '讀不到'}」`);
                     return rec.detail;
                 });
+                // 官職階位與經驗（PROG-2-9151）：量測每季升階節奏
+                yq.officer = await page.evaluate(async () => {
+                    const loader = await window.System.import('chunks:///_virtual/ServiceLoader.ts');
+                    const o = loader.services().session.officerState;
+                    return { tier: o.currentTier, exp: o.officerExp };
+                }).catch(() => null);
                 writeYearReport();
                 console.log(`[playtest] 年循環 ${yq.season} → ${yq.seasonAfter || '?'}：戰鬥 ${yq.battles.map((b) => b.result || (b.ok ? '?' : '失敗')).join('/') || '無'}；錯誤 ${yq.errors.length}`);
             }

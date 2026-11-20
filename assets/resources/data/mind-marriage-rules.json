@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "unwedReminder": {
+    "minAge": 24,
+    "cooldownSeasons": 4,
+    "valence": -1,
+    "weight": 2,
+    "rejectedWeight": 3
+  },
+  "bondFormed": {
+    "standardValence": 2,
+    "standardWeight": 4,
+    "auspiciousMinK": 5,
+    "auspiciousValence": 3,
+    "auspiciousWeight": 5
+  },
+  "childEarlyEnthusiasm": {
+    "earlyRoundsLimit": 4,
+    "moodBonuses": {
+      "EAGER": 0.075,
+      "HIGH": 0.05,
+      "NORMAL": 0,
+      "LOW": 0
+    },
+    "minMultiplier": 1.0,
+    "maxMultiplier": 1.15
+  }
+}

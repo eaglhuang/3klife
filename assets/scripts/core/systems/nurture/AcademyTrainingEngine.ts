@@ -12,6 +12,8 @@
  * Unity 對照：像一個純 C# 的 StateMachine.Step(state, input)，MonoBehaviour 只負責顯示。
  */
 import { AcademyRng, deriveAcademyRootSeed } from './AcademyDeterministicRng';
+import { academyGradeOf } from './AcademyGraduation';
+import { rollAncestralInheritEvent, rollGraduationCareerMark } from './AcademyInheritAndMarks';
 import {
     ACADEMY_CONTROL_EFFICIENCY_PCT,
     ACADEMY_ENERGY_MAX,
@@ -102,6 +104,21 @@ export function addAcademyStatCapped(stats: AcademyStats, key: AcademyStatKey, d
     return applied;
 }
 
+/**
+ * 雙年開獎／結業印記專用種子（PROG-2-9182）：由入學根種子單向派生，與訓練路徑無關，
+ * 所以同一入學重修（即使訓練選擇不同）也重播同一份開獎骰值，無法靠換打法刷結果。
+ */
+function deriveInheritSeedHex(rootSeedHex: string): string {
+    const rng = new AcademyRng(rootSeedHex);
+    rng.nextUint32('inherit-marks-root');
+    return rng.seedHex;
+}
+
+/** 開獎專用 RNG：有 inheritSeedHex 時以事件鍵（回合）定位固定骰流；舊快照退回路徑種子鏈 */
+function inheritRngFor(state: AcademyStateSnapshot, eventKey: number, fallback: IDeterministicRng): IDeterministicRng {
+    return state.inheritSeedHex ? new AcademyRng(state.inheritSeedHex, eventKey) : fallback;
+}
+
 export function createAcademySnapshot(admission: AcademyAdmission, gimmick?: IAcademyGimmickHandler): AcademyStateSnapshot {
     const seed = deriveAcademyRootSeed(admission.worldSeed, admission.clanUuid, admission.childId, admission.academyId, admission.admissionTurn);
     return {
@@ -114,6 +131,7 @@ export function createAcademySnapshot(admission: AcademyAdmission, gimmick?: IAc
         controlMode: admission.controlMode ?? AcademyControlMode.MANUAL,
         prngSeedHex: seed,
         stepIndex: 0,
+        inheritSeedHex: deriveInheritSeedHex(seed),
         sessionCrashCounter: 0,
         stats: clampAcademyStats(admission.initialStats),
         learnedTactics: [],
@@ -225,6 +243,7 @@ function endTurn(state: AcademyStateSnapshot, resonance: boolean, rng: IDetermin
     }
     if (state.resonanceLockTurns > 0) state.resonanceLockTurns -= 1;
     if (resonance) {
+        state.resonanceHitCount = (state.resonanceHitCount ?? 0) + 1;
         state.chronicles.push({ turn: state.currentTurn, title: '重大共鳴', description: '名師與專屬機制達成大共鳴', highlightScore: 3 });
     }
     if (state.currentTurn >= ACADEMY_TOTAL_TURNS) {
@@ -276,6 +295,49 @@ function setInterrupt(state: AcademyStateSnapshot, kind: AcademyInterruptKind, r
     }
 }
 
+function resolveDefaultPrimaryStat(academyId: AcademyId): AcademyStatKey {
+    const bias = ACADEMY_STAT_BIAS_PCT[academyId] ?? {};
+    let best: AcademyStatKey = 'str';
+    let bestVal = -Infinity;
+    for (const key of ACADEMY_STAT_KEYS) {
+        const val = bias[key] ?? 0;
+        if (val > bestVal) {
+            bestVal = val;
+            best = key;
+        }
+    }
+    return best;
+}
+
+function applyAncestralInheritAtTurn(state: AcademyStateSnapshot, turn: 12 | 24, rng: IDeterministicRng): void {
+    const legacy = state.legacySupport;
+    if (!legacy || legacy.weightedBlueStars === undefined) return;
+    const history = state.ancestralInheritHistory ?? [];
+    if (history.some((r) => r.turn === turn)) return;
+    const missedMidterm = turn === 24 && history.some((r) => r.turn === 12 && !r.triggered);
+    const targetStat = legacy.primaryStat ?? resolveDefaultPrimaryStat(state.academyId);
+    const record = rollAncestralInheritEvent({
+        turn,
+        weightedBlueStars: legacy.weightedBlueStars,
+        targetStat,
+        midtermMissedBonus: missedMidterm,
+        pinkStars: legacy.pinkStars ?? 0,
+        pinkAptitudeTarget: legacy.pinkAptitudeTarget,
+    }, inheritRngFor(state, turn, rng));
+    state.ancestralInheritHistory = [...history, record];
+    if (!record.triggered) return;
+    addAcademyStatCapped(state.stats, record.targetStat, record.statDelta);
+    if (record.aptitudeBoostTarget) {
+        state.pendingAptitudeBoosts = [...(state.pendingAptitudeBoosts ?? []), record.aptitudeBoostTarget];
+    }
+    state.chronicles.push({
+        turn,
+        title: turn === 12 ? '期中先祖遺風覺醒' : '弱冠先祖遺風覺醒',
+        description: `${record.targetStat.toUpperCase()} +${record.statDelta}${record.aptitudeBoostTarget ? `、適性提升(${record.aptitudeBoostTarget})` : ''}`,
+        highlightScore: 2,
+    });
+}
+
 function resolveInterrupt(state: AcademyStateSnapshot, optionId: string | undefined, rng: IDeterministicRng, gimmick?: IAcademyGimmickHandler): void {
     const kind = state.pendingInterrupt;
     if (!kind) throw new AcademyActionError('目前沒有待處理的打斷點');
@@ -285,14 +347,33 @@ function resolveInterrupt(state: AcademyStateSnapshot, optionId: string | undefi
     if (kind === 'MIDTERM') {
         state.midtermPolicy = optionId as AcademyMidtermPolicy;
         state.chronicles.push({ turn: state.currentTurn, title: '期中考評', description: `選定方針 ${optionId}`, highlightScore: 1 });
+        applyAncestralInheritAtTurn(state, 12, rng);
     } else if (kind === 'COMING_OF_AGE' && isLegacyTraitSeed(state, optionId)) {
         if (state.learnedTraits.length < ACADEMY_TRAIT_SLOTS && state.learnedTraits.indexOf(optionId) < 0) state.learnedTraits.push(optionId);
         state.chronicles.push({ turn: state.currentTurn, title: '弱冠加冠禮', description: `承襲先祖門風 ${optionId}`, highlightScore: 2 });
+        applyAncestralInheritAtTurn(state, 24, rng);
     } else if (kind === 'COMING_OF_AGE') {
         if (state.learnedTactics.length < ACADEMY_TACTIC_SLOTS) state.learnedTactics.push(optionId);
         state.chronicles.push({ turn: state.currentTurn, title: '弱冠加冠禮', description: `領悟 ${optionId}`, highlightScore: 2 });
+        applyAncestralInheritAtTurn(state, 24, rng);
     } else if (kind === 'GRADUATION') {
         gimmick?.onGraduate?.(state);
+        if (state.graduatedCareerMark === undefined) {
+            const grade = academyGradeOf(academyStatTotal(state.stats));
+            state.graduatedCareerMark = rollGraduationCareerMark({
+                academyId: state.academyId,
+                grade,
+                resonanceHits: state.resonanceHitCount ?? 0,
+            }, inheritRngFor(state, ACADEMY_TOTAL_TURNS, rng));
+            if (state.graduatedCareerMark) {
+                state.chronicles.push({
+                    turn: state.currentTurn,
+                    title: '生平印記凝練',
+                    description: `${state.graduatedCareerMark.id} (${state.graduatedCareerMark.stars}★)`,
+                    highlightScore: 2,
+                });
+            }
+        }
         state.graduated = true;
         state.chronicles.push({ turn: state.currentTurn, title: '大考結業', description: '修業圓滿', highlightScore: 2 });
     }

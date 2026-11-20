@@ -10,6 +10,7 @@
 import type { GeneralConfig, GeneralGeneConfig } from '../models/GeneralUnit';
 import type { BattleRecordLike } from './BattleRecordStats';
 import { statOf } from './BreedingSystem';
+import { condenseLifeWhiteFactors } from './WhiteFactorTraits';
 
 const POLU_MIN_KILLS = 100;
 const POLU_MIN_WINS = 10;
@@ -37,14 +38,57 @@ export const LIFE_IMPRINTS: readonly LifeImprintDef[] = Object.freeze([
     },
 ]);
 
-/** 回傳加上新印記的武將與新增的印記名；沒有新印記時回傳原物件 */
+/** 回傳加上新印記與生平閱歷白因子的武將與新增名稱；沒有新項目時回傳原物件 */
 export function withLifeImprints(general: GeneralConfig): { general: GeneralConfig; added: string[] } {
     const record = (general as { battleRecord?: BattleRecordLike }).battleRecord;
-    const owned = new Set((general.genes ?? []).map((gene) => gene.id));
+    const ownedGenes = [...(general.genes ?? [])];
+    const owned = new Set(ownedGenes.map((gene) => gene.id));
     const fresh = LIFE_IMPRINTS.filter((def) => !owned.has(def.id) && def.reached(general, record));
-    if (fresh.length === 0) return { general, added: [] };
-    const genes: GeneralGeneConfig[] = fresh.map((def) => ({ id: def.id, displayName: def.displayName, type: 'white', level: 1, description: def.description }));
-    return { general: { ...general, genes: [...(general.genes ?? []), ...genes] }, added: fresh.map((def) => def.displayName) };
+    const addedNames: string[] = fresh.map((def) => def.displayName);
+    const nextGenes: GeneralGeneConfig[] = [
+        ...ownedGenes,
+        ...fresh.map((def): GeneralGeneConfig => ({ id: def.id, displayName: def.displayName, type: 'white', level: 1, discoveryLevel: 0, description: def.description })),
+    ];
+
+    const condensed = condenseLifeWhiteFactors(
+        {
+            str: statOf(general, 'str'),
+            int: statOf(general, 'int'),
+            lea: statOf(general, 'lea'),
+            pol: statOf(general, 'pol'),
+            cha: statOf(general, 'cha'),
+        },
+        {
+            battles: (record?.wins ?? 0) + (record?.losses ?? 0) + (record?.draws ?? 0),
+            wins: record?.wins ?? 0,
+            duelsWon: record?.duelsWon ?? 0,
+            governanceSeasons: record?.governanceSeasons ?? 0,
+            diplomacyCount: record?.diplomacyCount ?? 0,
+        },
+    );
+
+    let changed = fresh.length > 0;
+    for (const white of condensed) {
+        const idx = nextGenes.findIndex((g) => g.id === white.id);
+        if (idx < 0) {
+            nextGenes.push({
+                id: white.id,
+                displayName: white.name,
+                type: 'white',
+                level: white.level,
+                discoveryLevel: 0,
+                description: '生平閱歷凝練之白因子，傳承後可折抵對應戰法或政令消耗。',
+            });
+            addedNames.push(white.name);
+            changed = true;
+        } else if ((nextGenes[idx].level ?? 1) < white.level) {
+            nextGenes[idx] = { ...nextGenes[idx], level: white.level };
+            changed = true;
+        }
+    }
+
+    if (!changed) return { general, added: [] };
+    return { general: { ...general, genes: nextGenes }, added: addedNames };
 }
 
 export function lifeImprintLine(name: string, imprints: readonly string[]): string {

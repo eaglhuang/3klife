@@ -13,6 +13,8 @@
  */
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { GENERAL_STATUS_DEAD } from '../../core/systems/GeneralAging';
+import { isDescendant } from '../../core/systems/ChildMagistrate';
+import { isJobChangeCandidate } from '../../core/systems/JobChangeEntry';
 import {
     buildJobChangeChoices,
     checkJobChange,
@@ -24,6 +26,11 @@ import {
 } from '../../core/systems/JobChange';
 import { primaryAbilityOf, JobWiringGeneral, resolvePrimaryClass } from '../../core/systems/JobChangeWiring';
 import { canAffordOffer, JOB_CHANGE_ORDER_OFFER } from '../../core/systems/ItemShopPricing';
+
+/** 轉職畫面標題：成人禮入口與詳情頁入口各一個 */
+export const JOB_CHANGE_TITLE_CEREMONY = '成人禮・轉職';
+export const JOB_CHANGE_TITLE_FOCUSED = '轉職';
+export const JOB_CHANGE_DONE_TEXT = '已完成轉職';
 
 export const JOB_CHANGE_REJECT_TEXT: Record<JobChangeRejectReason, string> = {
     'too-young': `未滿 ${JOB_CHANGE_MIN_AGE} 歲，尚不能轉職`,
@@ -72,19 +79,41 @@ export class JobChangeController {
     private _generalId: string | null = null;
     private _subClass: JobClass | null = null;
     private _notice: string | null = null;
+    /** 詳情頁入口聚焦的武將；非 null 時名單只剩這一位（PROG-2-9166） */
+    private _focusId: string | null = null;
 
     constructor(private readonly _deps: JobChangeDeps) {}
 
-    /** 可轉職的武將：存活、滿 20 歲、有主職、尚無副職 */
+    /**
+     * 成人禮名單：存活、滿 20 歲、尚無副職，且是本家子嗣（有 fatherId／motherId，與 isDescendant 同源）。
+     * 2026-11-19 使用者裁決：現成武將（無父母欄位）不列入成人禮；目前現成武將沒有其他轉職入口。
+     */
     public eligibleGenerals(): JobWiringGeneral[] {
+        if (this._focusId !== null) {
+            return this._deps.roster.getAll()
+                .filter((general): general is JobWiringGeneral => general.id === this._focusId
+                    && isJobChangeCandidate(general as JobWiringGeneral));
+        }
         return this._deps.roster.getAll()
             .filter((general): general is JobWiringGeneral => {
                 const wiring = general as JobWiringGeneral;
                 return wiring.status !== GENERAL_STATUS_DEAD
+                    && isDescendant(wiring as { fatherId?: string; motherId?: string })
                     && typeof wiring.age === 'number'
                     && wiring.age >= JOB_CHANGE_MIN_AGE
                     && (wiring.subClass ?? null) === null;
             });
+    }
+
+    /**
+     * 武將詳情頁入口：名單只列這一位（現成武將也可，不要求本家子嗣），其餘流程與成人禮相同。
+     * 傳 null 回到成人禮名單。
+     */
+    public focusGeneral(generalId: string | null): void {
+        this._focusId = generalId;
+        this._generalId = generalId;
+        this._subClass = null;
+        this._notice = null;
     }
 
     public selectGeneral(generalId: string): void {
@@ -131,7 +160,7 @@ export class JobChangeController {
         if (!general) {
             return {
                 generalId: null, subClass: null, choices: [], orders: this._deps.ordersOwned(),
-                blockedText: '目前沒有可轉職的武將', notice: this._notice, confirmEnabled: false,
+                blockedText: this._emptyText(), notice: this._notice, confirmEnabled: false,
             };
         }
         const choices = buildJobChangeChoices(this._candidateOf(general));
@@ -168,6 +197,15 @@ export class JobChangeController {
         return ok;
     }
 
+    /** 名單為空時中央說明；詳情頁聚焦的武將已有副職（剛轉完）顯示「已完成轉職」 */
+    private _emptyText(): string {
+        if (this._focusId !== null) {
+            const focused = this._deps.roster.getAll().find((g) => g.id === this._focusId) as JobWiringGeneral | undefined;
+            if (focused && (focused.subClass ?? null) !== null) return JOB_CHANGE_DONE_TEXT;
+        }
+        return '目前沒有可轉職的武將';
+    }
+
     public getFlowView(): JobChangeFlowView {
         const view = this.getView();
         const general = this._current();
@@ -177,6 +215,7 @@ export class JobChangeController {
             `${view.subClass === subClass ? '✓ ' : ''}${label}`;
         return {
             texts: {
+                jobTitle: this._focusId !== null ? JOB_CHANGE_TITLE_FOCUSED : JOB_CHANGE_TITLE_CEREMONY,
                 generalName: general ? general.name : '－',
                 generalInfo: general ? `${general.age} 歲　主職：${resolvePrimaryClass(general) === 'Warrior' ? '武官' : '文官'}` : '',
                 pager: `${this.eligibleGenerals().findIndex((item) => item.id === general?.id) + 1} / ${this.eligibleGenerals().length}`,

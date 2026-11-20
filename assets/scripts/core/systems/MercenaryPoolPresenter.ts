@@ -10,11 +10,14 @@ import { canBondMercenary, MercenaryState, TRIAL_DAYS } from './MercenaryBond';
 import { canDeployMercenary, canTeachMercenary, UpkeepState } from './MercenaryUpkeep';
 import { MercenarySaveBundle } from './MercenarySaveModel';
 import { isGeneralAvailableForPool, PoolCooldown } from './MercenaryDeparture';
+import { UNNAMED_MERCENARY, looksLikeInternalId } from '../utils/PlayerFacingText';
 
 export const BOND_MAX = 60;
 
 export interface MercenaryPoolRow {
     uid: string;
+    /** 玩家看得到的名字；查不到武將名時用通用佔位，不顯示 uid */
+    displayName: string;
     statusText: string;
     daysLeftText: string;
     /** 0~1，給 ProgressBar 用；倒數以已過天數計。 */
@@ -42,16 +45,24 @@ function findUpkeep(bundle: MercenarySaveBundle, uid: string): UpkeepState | und
     return bundle.upkeep.find(u => u.uid === uid);
 }
 
+/** 傭兵顯示名：優先武將名；查不到時 uid 若像內部代號就用佔位 */
+export function mercenaryDisplayName(generalId: string | undefined, uid: string, nameOf?: (generalId: string) => string | undefined): string {
+    const named = generalId ? nameOf?.(generalId) : undefined;
+    if (named && named.trim() !== '') return named;
+    return looksLikeInternalId(uid) ? UNNAMED_MERCENARY : uid;
+}
+
 /**
  * 每個傭兵一列。沒有薪水紀錄時，出戰與教官依 Active 預設判斷，這裡視為不可用，避免誤開按鈕。
  */
-export function buildMercenaryPoolRows(bundle: MercenarySaveBundle): MercenaryPoolRow[] {
+export function buildMercenaryPoolRows(bundle: MercenarySaveBundle, nameOf?: (generalId: string) => string | undefined): MercenaryPoolRow[] {
     return bundle.mercenaries.map(merc => {
         const upkeep = findUpkeep(bundle, merc.uid);
         const elapsed = TRIAL_DAYS - merc.daysLeft;
         const trialProgress = clamp01(elapsed / TRIAL_DAYS);
         return {
             uid: merc.uid,
+            displayName: mercenaryDisplayName(merc.generalId, merc.uid, nameOf),
             statusText: STATUS_TEXT[merc.status],
             daysLeftText: merc.status === 'Trial' ? `剩餘 ${merc.daysLeft} 日` : '',
             trialProgress,

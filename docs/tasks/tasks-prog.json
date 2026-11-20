@@ -9680,6 +9680,1523 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9398",
+      "title": "武將詳情頁（GeneralDetailComposite）補齊 BlockInputEvents 防止點擊穿透至幕府大廳",
+      "owner": "antigravity",
+      "priority": "P1",
+      "status": "done",
+      "type": "bugfix",
+      "phase": "M0",
+      "created": "2026-11-18",
+      "created_by_agent": "antigravity",
+      "started_at": "2026-11-18T04:03:30+08:00",
+      "started_by_agent": "antigravity",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "線上試玩發現於武將詳情頁右側頁籤區域點擊時會穿透觸發背後幕府大廳之內政／軍事任務牆導致畫面疊加卡死；於 GeneralDetailComposite.show() 確保掛載 BlockInputEvents 阻斷底層穿透。",
+      "related": [
+        "PROG-2-9396"
+      ],
+      "depends": [],
+      "acceptance": [
+        "GeneralDetailComposite 顯示時具有 BlockInputEvents",
+        "npm run gate:standard 12/12 通過"
+      ],
+      "deliverables": [
+        "GeneralDetailComposite.ts"
+      ],
+      "notes": "2026-11-18 | 狀態: done | 驗證: npm run gate:standard 12/12 通過 | 變更: GeneralDetailComposite.show() 確保掛載 BlockInputEvents",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9399",
+      "title": "戰場頭頂狀態小圖示：血條上方顯示增益／減益圖示並在獲得時閃光",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-18T06:47:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 2026-11-17 選定 buff 圖示放在頭頂血條旁小圖示（基礎戰鬥手感最優先項目之一），玩家要一眼看出哪支部隊身上有增益或減益。",
+      "related": [
+        "PROG-2-9395",
+        "PROG-2-9400",
+        "PROG-2-9401"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-18 | 狀態: in-review | 驗證: 型別檢查 0 錯；全套單元測試 8130 過；技能冒煙與 UCUF 冒煙全過；本機預覽無頭實點連跑 3 回合截圖，敵弓兵與我方大戟士名牌左上方出現紫色「攻」減益圖示 | 變更: 新增 UnitStatusIcons（狀態分類純函式）、UnitStatusIconBar（圖示列與閃光池）；UnitRenderer 名牌上方掛圖示列（36px、從名牌左緣起排 4 格），buff 格拾取時 playStatusGain 閃光；BattleUIBridge 接上 buff 消耗事件 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9400",
+      "title": "普攻依兵種分開：槍刺、盾擊、劈砍、射箭、騎兵衝撞各有動作、特效與音效",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-18T06:47:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 2026-11-17 選定普攻依兵種分開（基礎戰鬥手感最優先項目之一），原本所有兵種共用同一個攻擊動作與刀光，看不出差異。",
+      "related": [
+        "PROG-2-9367",
+        "PROG-2-9399",
+        "PROG-2-9401"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-18 | 狀態: in-review | 驗證: 型別檢查 0 錯；全套單元測試 8118 過；技能冒煙與 UCUF 冒煙全過；本機預覽無頭實點連跑 4 回合，攻擊呼叫紀錄確認騎兵播 charge＋塵土、步兵播 slash、弓兵播 bow＋命中閃光，骨架內 attack_spear/shield/slash/bow 動作都存在；截圖可見陷陣營揮刀、連弩手持弓放箭 | 變更: 新增 AttackStyle（兵種→普攻風格）、AttackShotStyle（各風格畫面層特效）；AttackVfxMapping／AttackSfxMapping／BattleAudio 依風格；UnitPresentationCore.play 可指定動作片段；SpineGeneralOverlay 缺分動作時退回通用攻擊；SlashShotView 改為通用閃光池 playShots；UnitRenderer 三處攻擊接上 | 阻塞: 缺專用音效（槍刺、盾擊悶響、馬蹄衝撞、弓弦、刀劈），暫用現有音效，清單已交總PM 轉 Codex",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9401",
+      "title": "受擊白閃加小抖動、跳字大字彈出與爆擊放大、閃避灰字",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-18T06:47:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 2026-11-17 選定受擊為白閃加小抖動、跳字為大字彈出且爆擊放大（基礎戰鬥手感最優先項目之一）。",
+      "related": [
+        "PROG-2-9399",
+        "PROG-2-9400"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-18 | 狀態: in-review | 驗證: 型別檢查 0 錯；全套單元測試 8131 過；技能冒煙與 UCUF 冒煙全過；本機預覽無頭實點連跑 3 回合，受擊呼叫紀錄確認擊殺標為重擊、一般受擊標為輕擊；截圖可見擊殺時白閃加金色大字 -114、一般受傷白色描邊 -2 彈出 | 變更: 新增 FloatTextStyle（樣式表與同目標錯開位移）；FloatTextSystem 描邊、彈出回彈、錯開；UnitRenderer 受擊白閃＋抖動，重擊加畫面小震；新增 playMissFloat／playGeneralMissFloat 並由 BattleUIBridge 接上閃避；EffectSystem 震動重疊保護；BattlePresentationTiming 受擊時長常數 | 阻塞: Spine 武將只能用 skeleton.color 相乘做淡紅脈衝，做不出純白閃，待雙色染色另議",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9402",
+      "title": "同一單位連續跳字錯開改依前字存活時間、往下錯開，修正閃避與爆擊大字疊字",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-18T06:47:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "PROG-2-9401 合併後實跑發現主將身上「閃避」與前一個爆擊大字「-148」疊在一起：錯開視窗只有 450 毫秒，爆擊字卻存在 1100 毫秒。",
+      "related": [
+        "PROG-2-9401"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-18 | 狀態: in-review | 驗證: 型別檢查 0 錯；全套單元測試 8244 過；技能冒煙 74 過、UCUF 冒煙 300 過；本機預覽無頭實跑，主將先爆擊 -148、0.6 秒後閃避，截圖兩字上下分開不重疊 | 變更: FloatStaggerTracker 改依前一字存活時間×0.7 判斷佔位，佔位期間新字往下錯開（間距依兩字有效高度，上限 160 像素、5 格循環）；FloatTextSystem.show 改用 place()；新增 3 個單元測試 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9405",
+      "title": "QA 慢動作與定格參數：網址參數放慢戰場時間，方便截到騎兵衝撞等瞬間",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-18T06:47:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "手感驗收時騎兵衝撞、命中頓格等瞬間截圖截不到；總PM 已同意排在 issue 2238 之前。",
+      "related": [
+        "PROG-2-9402"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-18 | 狀態: in-review | 驗證: 單元測試 8273 通過 0 失敗、tsc 0 錯、test:battle-skill-smoke 74 通過、test:ucuf 300 通過、編碼檢查通過；尚未實機截圖 | 變更: 新增 core/systems/QaTimeScale.ts（純函式）、battle/views/QaTimeController.ts（window.__qaTime）、BattleTimeScale 加 QA 倍率/定格/step、LoginScene 掛載、QaBattleEntry 認得 qaSlow/qaTime、tests/QaTimeScale.test.ts | 阻塞: 無（setTimeout 類計時器慢動作時補償、定格時不凍結，屬已知限制）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9403",
+      "title": "奧義面板第一次打開就要有技能；戰場主將不可顯示藍色佔位圖（issue 2238）",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-18T06:47:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "試玩 issue 2238：孫策戰第 1、2 回合打開奧義面板是空的，第 3 回合才有技能；主將只顯示藍色圓點佔位。",
+      "related": [
+        "PROG-2-9401"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-18 | 狀態: in-review | 驗證: run-cli 8272 過 0 失敗；tsc 0 錯；battle-skill-smoke 74 過；ucuf 300 過；encoding 通過；預覽實跑待主控 | 變更: (a) UltimateSelectPopup 建置完成前 show() 不再先顯示空面板（暫存技能、onReady 後才淡入），失敗時 toast；ActionCommandComposite 載入技能時預先建小窗；QA 腳本等技能文字出現才算開啟 (b) 新增 GeneralPortraitStandee，無 Spine 或 Spine 載入失敗的主將改畫立繪站牌（戰鬥圖→立繪→頭像），不再退回藍色通用棋子；UnitRenderer 接線；新測試 Issue2238UltimatePopupAndStandee | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9404",
+      "title": "結束回合不可因資源或特效載入失敗而永久卡住（issue 2319）",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "in-review",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-18T06:47:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "試玩 issue 2319：甘寧戰第 7 回合按結束回合後超過 20 秒不前進，同時有 6 個資源 JSON 404 與 vfx_core png 503（偶發）。",
+      "related": [
+        "PROG-2-9403"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-18 | 狀態: in-review | 驗證: run-cli 全綠、tsc 0 錯、battle-skill-smoke、ucuf、encoding 檢查（結果見回報）| 變更: 新增共用 core/utils/AwaitGuard.awaitWithTimeout；戰鬥動畫佇列單任務逾時＋佇列排空放奧義旗標；單挑演出逾時中止；TurnFlowManager 演出旗標上限 45s 強制放掉；回合階段/收尾/結算丟錯隔離；模型載入、結果彈窗掛載（含保底結果卡）、轉蛋結果流程逾時；UltCutin 保底恢復暫停；新增 tests/TurnAdvanceNeverStuck.test.ts | 阻塞: 404 uuid 根因為多數 json 資源 .meta 未入版控、建置時 uuid 每次重生（見 issue 回報），不改建置流程，待另開卡",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9406",
+      "title": "戰場移動手感：中等揚塵＋各兵種小聲腳步聲",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-18T06:47:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "基礎戰鬥手感最優先；使用者 11/18 裁決移動揚塵中等、各兵種都有腳步聲且音量小。目前移動只有一個通用 footstep 音效、音量 1.0，沒有揚塵。",
+      "related": [
+        "PROG-2-9405"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-18 | 狀態: in-progress | 驗證: pending | 變更: 待做 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9407",
+      "title": "移動手感二修：小兵前進改走路動畫加起伏、揚塵改土黃粒子",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-16",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-18T06:47:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者看 PROG-2-9406 成果回饋：扁圓盤揚塵太陽春，要土黃粒子一顆顆揚起；前進像用滑的，要小兵集體走路動畫有高低起伏。查出前進播的是 dash_in（突進）而非 walk。",
+      "related": [
+        "PROG-2-9406"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-19 | 狀態: done | 驗證: 單元測試全過、tsc 0、閘門與冒煙通過、主目錄實機定格逐幀截圖 | 變更: 揚塵改土黃粒子池（上限 160，落腳同拍、往身後上飄放大淡出）；小兵前進改 walk（缺則退回 dash_in，武將仍用 dash_in）；步態倍率上限 2.2 與整隊起伏 3.5px 寫進 MOVE_GAIT_TUNING，隊員依站位錯開相位；腳步聲改每次落腳由帶頭者發聲 | 阻塞: 需要真的 walk clip（步幅較大、含抬腳過渡），目前 walk 與 dash_in 關鍵影格相同，位移仍比步伐快，靠起伏與 2.2 倍步速緩解",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9408",
+      "title": "騎兵 Spine 接入：騎手＋馬合成骨架上戰場試看",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-19",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-19T01:40:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者授權：spine-trial main 每有新騎兵動畫就由戰場專家接進遊戲試看效果。spine-trial PR #7（Mount v2）與 #8（騎乘動作 v3）已合併，產出騎手與馬的合成骨架。",
+      "related": [
+        "PROG-2-9407"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-19 | 狀態: done | 驗證: 單元測試全過、tsc 0、閘門與冒煙通過、主目錄實機截待機／奔馳／攻擊 | 變更: 我方騎兵改用 spine-trial main b53c0c0 的騎手＋馬合成骨架（私有素材，三頁 512 圖集合併）；縮放 0.10 使騎手頭與步兵同大、隊形拉開；前進改 gallop（實測約 144 單位/秒，倍率約 1.15 蹄不滑；trot 會被 2.2 上限卡住滑步）；揚塵與蹄聲依 gallop 半週期同拍，馬不加整隊起伏 | 阻塞: 敵方紅色騎兵無素材暫用紅槍兵；合成骨架缺 dodge／fall／retreat 暫用 hit／gallop 代替；圖集三頁 PNG 約 1.3MB、解壓約 3MB，手機要換 ASTC",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9409",
+      "title": "部署落地手感：小隊從上方落下、落地壓縮回彈、揚塵與落地聲",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-19",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-19T03:58:10+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 排定的戰場手感順序：移動 → 部署落地 → 放招 → buff 格統一。現況部署只把 3D 節點從地下 0.45 往上縮放 0.22 秒，Spine 小隊直接從地下冒出、沒有落地感，也沒有塵與聲。",
+      "related": [
+        "PROG-2-9407",
+        "PROG-2-9408"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-19 | 狀態: done | 驗證: 單元測試 8381 通過（新增 DeployLanding 8 項）、tsc 0、compute-gate quick、battle-skill-smoke、ucuf 冒煙通過；主目錄 7456 qaSlow 定格截步兵與騎兵部署六連幀 | 變更: 新增 shared/DeployLanding.ts（落下等加速＋拉長、落地壓扁回彈、隊員每 0.07 秒依序落、落地塵團與落地聲）；SpineUnitOverlay 加 deploy() 與落地通知，素材載好才開始落；UnitRenderer 部署時呼叫 deploy，3D 節點只縮放不再從地下升起，落地時四團塵往兩側吹開、帶頭者出落地聲（騎兵兩聲） | 阻塞: 無；首版塵只在腳下一團、藍地格上看不到，改成四團往兩側吹開後才明顯；騎兵連馬一起從上方落下，若覺得不自然可改成騎兵從側邊衝入（待使用者看）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      },
+      "completed_at": "2026-11-19"
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9410",
+      "title": "放招手感：武將出招前蓄力 0.4 秒、畫面中央招式名橫幅",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-19",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-19T05:24:04+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 排定的戰場手感順序：移動 → 部署落地 → 放招 → buff 格統一。11/18 使用者裁決：放招蓄力停頓 0.4 秒；招式名改在畫面中央橫幅（不是頭頂小字），約 0.8～1 秒，連續放招排隊或合併，不擋命中特效，避開右側戰報面板。現況出招當下直接播特效，沒有蓄力也沒有中央招式名。",
+      "related": [
+        "PROG-2-9407",
+        "PROG-2-9409"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-19 | 狀態: done | 驗證: 單元測試 8389 通過（新增 SkillCastPresentation 8 項）、tsc 0、compute-gate quick、battle-skill-smoke、ucuf 全過；主目錄實跑逐格截圖確認 0 秒橫幅淡入、0.4 秒後才出招式特效、約 0.9 秒橫幅淡出，橫幅在中央偏上不碰右側戰報 | 變更: 新增 SkillCastPresentation（蓄力時間、橫幅排隊合併純邏輯）與 SkillNameBanner（單一重用節點）；BattleUIBridge 放招改走戰鬥演出佇列最前面先蓄力再出招；Spine 武將蓄力時微膨脹加抖動；有漫畫分鏡的奧義不加；SSR／UR 戰法只蓄力不疊橫幅 | 阻塞: 無；已知限制：補血跳字不走演出佇列，會在蓄力期間先跳出；非 Spine 武將沒有蓄力姿勢",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9411",
+      "title": "buff 格統一：棋盤 buff 格改用頭頂狀態圖示同一套圓底一字，加地面光板與拾取飛入",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-19",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-19T06:39:37+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 排定的戰場手感順序最後一張：移動 → 部署落地 → 放招 → buff 格統一。使用者 11/17 指示上 buff、戰場上的 buff 格的特效音效要優先補到滿意。現況棋盤 buff 格只有一行浮動文字（綠「攻擊 x 3」、紅「★ 攻擊 / 5」），格子本身沒有標記，與頭頂狀態圖示（PROG-2-9399 圓底＋一字）是兩套視覺語言；吃到減益格時戰報仍寫「吃到增益」、播增益音效。",
+      "related": [
+        "PROG-2-9399",
+        "PROG-2-9410"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-19 | 狀態: done | 驗證: tsc 0、單元測試 8397 全過（新增 TileBuffBadge 8 項）、compute-gate quick、battle-skill-smoke、ucuf 全過；主目錄 7456 實跑：五種格子標記（金邊增益／紫邊減益／稀有金圈）與拾取飛入頭頂截圖於 docs/test-reports/2026-11-19-battle/9411-buff-tiles.png，主控台 0 錯誤 | 變更: 新增 TileBuffBadge（純邏輯）、TileBuffMarkers（格子光板＋圓底一字＋倍數、待機浮動、拾取飛入物件池）；UnitRenderer 改用標記並新增 playTileBuffPickup；吃到減益格戰報改寫「吃到減益」、紫色爆光、獨立 debuffGained 音效代號；UnitStatusIconBar 匯出共用圓底畫法 | 阻塞: 無；已知限制：減益音效暫借 teleport 音檔待正式音效、飛行圖示只帶字不帶倍數、格子在單位移動開始時即被吃（既有邏輯，未改）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9412",
+      "title": "受擊手感打磨：受擊對齊攻擊命中瞬間、閃白、後退抖動、命中火花、血條殘影、重擊跳字",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-19",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-19T19:34:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 11/19 質疑受擊手感是否已打磨到最好。長板坡實跑逐格檢查發現：受擊閃色、跳字、血條在攻擊方揮刀前 320～480ms 就先出現（因果顛倒）；紅方單位閃色變整片紅剪影；後退與抖動幾乎看不出；接觸點沒有火花；血條瞬間掉完沒有殘影；重擊跳字與一般相同且壓到地格標示。",
+      "related": [
+        "PROG-2-9401",
+        "PROG-2-9411"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-19 | 狀態: done | 驗證: 單元測試 8422 過、冒煙 74+300 過、型別 0 錯、閘門過、長板坡無頭預覽 60ms 逐格（劈砍 420ms 命中同時閃白＋火花＋跳字、騎兵衝鋒、重擊橘字、殘影血條、後退頓格三版對照） | 變更: 受擊表現延到攻擊命中瞬間（依兵種）、Spine 閃白材質、Spine 疊圖後退＋頓格、近戰命中火花＋貼圖預載、血條殘影、重擊 dmg_heavy 橘字；小兵全隊同步出手（錯開 0.12 秒、跟隨者播完再回待機、衝鋒不被走路覆蓋） | 阻塞: 無；後退／頓格強度三版待總PM選（目前用中版）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9413",
+      "title": "敵方回合 1.5 倍速播放（我方出手維持原速）",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-19",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-19T23:40:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "PROG-2-9412 把受擊對齊命中瞬間後，每次普攻演出多 0.35～0.42 秒，回合變長。使用者 11/19 經總PM 選「敵方回合 1.5 倍速（建議）」：只加快敵方行動播放，我方出手維持原速。",
+      "related": [
+        "PROG-2-9412",
+        "PROG-2-1867"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: done | 驗證: 單元 8454 過、tsc 0、gate quick 3/3；主目錄實測 encounter-002 同操作 4 回合，敵方段 加速前 4.35/4.35/5.39/5.96 秒（平均 5.01）→ 加速後 2.91/2.96/4.11/4.43 秒（平均 3.60，約 -28%）；我方段前後皆 2.3～3.4 秒不變 | 變更: BattleTimeScale 新增敵方回合倍率 1.5（與 x2、QA 倍率相乘，單挑面板開著時暫停加速，暫停優先）；TurnFlowManager 敵方回合開始掛上、finalizeAdvance 還原；離開戰場一併還原 | 阻塞: 無；setTimeout 類真實時間等待不吃倍率，所以實際縮短約 28% 而非 33%",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9414",
+      "title": "六關試玩驗收（主線 2 關＋主題 4 關，每關結算截圖）",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T00:30:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 11/19 指示：9412／9413 合併後，以玩家視角把六關各打一遍，確認可正常遊玩到結算，每關附結算截圖；發現壞掉就修。",
+      "related": [
+        "PROG-2-9412",
+        "PROG-2-9413"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "artifacts/playtest-checklist/prog-2-9414/（本機結算截圖）"
+      ],
+      "notes": "2026-11-20 | 狀態: done | 驗證: 六關全打到結算＋單元測試 8459 過／tsc 0／compute-gate quick 3/3／battle-skill-smoke 74 過 | 變更: 營帳佔領補發 BattleEnded（修夜劫營、博望坡卡死）；BattleEnded 帶 cause，結算說明依主將倒下／攻破城寨／時限已到／奪下敵營分別顯示；時限到達改在敵方回合結束當下判定，不再多出一個打不了的回合；敵方回合中分出勝負時還原 1.5 倍速 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9415",
+      "title": "跳字避開棋盤 buff 格標記",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T03:10:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "PROG-2-9412 驗收列出「重擊跳字壓到地格標示」，當時延後；總PM 11/19 指示六關驗收（PROG-2-9414）完成後再做。棋盤 buff 格的圓形圖示＋倍數（攻×4、命÷3）與單位頭頂跳字疊在一起時，兩者都看不清。",
+      "related": [
+        "PROG-2-9411",
+        "PROG-2-9412",
+        "PROG-2-9414"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: done | 驗證: 單元測試 8478 過（新增 FloatAvoid 8 項）、tsc 0、compute-gate quick 3/3、battle-skill-smoke 74 過；主目錄博望坡實跑：跳字從標記格起飄，開避讓前爆擊／一般／重擊字都蓋在命÷5 圖示上，開後往旁挪開；正常打 8 回合 console 錯誤 0 | 變更: FloatTextStyle 新增 floatAvoidShift／floatHalfWidth 純函式（整條上飄路徑對標記矩形做左右最小挪動，上限 max(140, 字半寬+70)）；FloatTextSystem 新增 setAvoidProvider；TileBuffMarkers 提供圖示＋倍數矩形（物件重用）；UnitRenderer 註冊與離場清除 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9416",
+      "title": "回合開始橫幅期間提示框排隊，不與橫幅疊字",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T04:24:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "PROG-2-9414 六關實玩時看到「我方回合開始」橫幅與回合開頭的提示框（「本回合部署已用完，自動結束回合」、武將地形適性台詞）同時出現在畫面中央，字疊在一起都看不清。純版面問題，不碰戰場規則。",
+      "related": [
+        "PROG-2-1888",
+        "PROG-2-9341",
+        "PROG-2-9343",
+        "PROG-2-9414"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: in-progress | 驗證: pending | 變更: 待做 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9417",
+      "title": "戰鬥結算文字放大，手機 720 高可讀",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T05:40:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "PROG-2-9414 六關實玩時，結算窗的說明約 13 行（勝負說明、出征軍勢、兵種返還、戰績、獎勵、兵源回扣）塞在 150px 高的框內，被 SHRINK 自動縮到約 10px，手機上完全讀不到。總PM 11/20 核准放大，以手機 720 可讀為準並附截圖。",
+      "related": [
+        "PROG-2-9414",
+        "PROG-2-1879",
+        "PROG-2-9404"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: in-progress | 驗證: pending | 變更: 待做 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9418",
+      "title": "戰場提示條移到中央偏上、改透明黑底金邊，不再擋住交戰",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T07:55:03+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "基礎戰鬥手感打磨（總PM B(2)）逐格連拍長板坡 3 回合時發現：戰場提示條（800×112 不透明褐底）落在畫面中央偏下（距頂約 625px），交戰期間正好蓋住第 3～5 路的部隊與命中演出。原因是 toast-message-main 的 widget top:120 是以部署面板內 400×60 的小容器計算，不是以整個畫面計算。規格（地形適性飄字反饋與戰況台詞管線規格書 §66）寫的是「畫面中央偏上方浮現透明黑底金邊對話條」。",
+      "related": [
+        "PROG-2-9416",
+        "PROG-2-9412",
+        "PROG-2-9414"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: in-progress | 驗證: pending | 變更: 待做 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9419",
+      "title": "奧義收尾爆光改柔光加衝擊波環，不再是硬邊平塗大圓",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T08:50:50+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "基礎戰鬥手感打磨（總PM B(2)）第二項。虎牢關慢動作連拍時，敵方呂布放「天下無雙」的 cut-in 收尾，整個畫面被一個硬邊、平塗的淺藍實心大圓蓋住（直徑等於畫面寬，起始幾乎不透明），看起來像素材沒載入。沒有專屬分鏡的武將（目前除了趙雲以外全部）放奧義都會經過這一刻，是玩家最常看到的奧義畫面。",
+      "related": [
+        "PROG-2-9352",
+        "PROG-2-2250",
+        "PROG-2-9410"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: in-progress | 驗證: pending | 變更: 待做 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9420",
+      "title": "遭遇戰敵軍開場布陣：讀 encounters.json 的 enemyInitialDeployment",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T10:02:39+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 11/20 裁決 Q-C2「接上讀取」：encounters.json 每關都有 enemyInitialDeployment（初始敵軍），但程式從未讀取（docs/demo_技術架構.md §10 也列為待辦），開場敵方棋盤空無一兵，要等敵方第一回合才出兵。接上後敵方開場就有部隊，玩家第一回合就能看到敵陣做剋制部署。",
+      "related": [
+        "PROG-2-9127",
+        "PROG-2-9346"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: done | 驗證: 單元測試 8514 全過、tsc 0、compute-gate 12/13（僅既有 LoginScene 警告）、7456 六關開場實跑 | 變更: 敵軍開場依 enemyInitialDeployment 在後排布陣 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9421",
+      "title": "一年六關按季開放（2/2/1/1）：季節關卡解鎖",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T11:21:07+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "關卡設計系統 §C-3 裁決 86：一年六關分四季開放，春 2、夏 2、秋 1、冬 1，依連環破主鏈順序開放、不可跳關。使用者 11/20 同意拆成三張卡（季節解鎖、守城模式、年終流程），本卡是第一張。目前程式沒有季節閘門，六關只看連環破前置，一季內就能把一年的關卡打完。",
+      "related": [
+        "PROG-2-0215",
+        "PROG-2-9420"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: done | 驗證: 單元測試 8521 全過（新增 StageSeasonSchedule 7 項）、tsc 0、compute-gate 12/13（僅既有 LoginScene 警告）、7456 大廳實機挑關六種季節組合＋提示截圖 | 變更: 一年六關按季開放 2/2/1/1 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9422",
+      "title": "高倍率攻擊視覺提示：≥2 倍金字、≥4 倍紅字＋脈動光環（Q-C1 選 A）",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T12:05:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "Q-C1：地格「攻擊×N」buff 乘算疊加，單一單位可能一擊秒殺主將。使用者 11/20 裁決維持乘算、不改疊加規則；總PM 裁決加視覺提示選 A：攻擊倍率 ≥2 倍時頭頂攻擊數字變金，≥4 倍變紅並加慢速脈動光環，敵我都適用，門檻抽 JSON。讓玩家一眼看出哪個單位已經疊到危險倍率，可以提前應對。",
+      "related": [
+        "PROG-2-1870",
+        "PROG-2-9411",
+        "PROG-2-9420"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: done | 驗證: 單元測試 8526 通過、tsc 0、compute-gate 12/13、7456 實機截圖、六關回歸 0 錯誤 | 變更: 攻擊 ≥2 倍金字、≥4 倍紅字＋呼吸光環，門檻抽 data/attack-surge-highlight.json | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9423",
+      "title": "瓦口隘 15 回合時限：時限到依戰果判勝負",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T13:18:55+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 11/20 裁決：瓦口隘加 15 回合時限，時限到依戰果判定勝負。總PM 尚未回覆『戰果』定義，先照戰場專家建議 A 實作：比雙方城寨＋主將的失血比例，打得重的一方勝，相同判我方敗；權重與平手歸屬抽 JSON，之後改 B／C 只需調整。目前關卡只有全域 30 回合上限，回合用盡一律判玩家撤退，瓦口隘這種峽谷消耗戰沒有節奏壓力。",
+      "related": [
+        "PROG-2-9414",
+        "PROG-2-9420",
+        "PROG-2-9422"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: done | 驗證: 單元 8536 全過、tsc 0、compute-gate 12/13（既有 LoginScene 警告）、實機瓦口隘 HUD 第 N/15、開戰說明、時限結算 15%/0% 判勝截圖、六關回歸 0 錯 | 變更: 關卡 turnLimit/timeUpRule、戰果判定 JSON、結算文案、HUD 分母 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9424",
+      "title": "結算視窗分區排版：字級放大、戰況／兵力／獎勵分區、可捲動",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T15:20:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 11/20 看瓦口隘結算截圖回饋：『這字也太小，也沒有 UI 套用排版設計』。現況結算視窗把勝負說明、時限戰果、兵力、各兵種、戰績、獎勵、戰利品等十多行全塞進同一個 420 高的標籤，靠自動縮字擠進去，字只剩約 12px，也沒有分區。總PM 另要求結算頁『時限到、我方勝』文案補四語系。",
+      "related": [
+        "PROG-2-9423",
+        "PROG-2-9404",
+        "PROG-2-1877"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: done | 驗證: 單元 8542 全過、tsc 0、compute-gate 12/13（既有 LoginScene 警告）、實機時限勝利／時限撤退／攻城勝利／城寨被破四種結算截圖、六關回歸 0 錯 | 變更: 結算視窗加寬、大字勝負說明、明細分區捲動、四語系 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9425",
+      "title": "守城戰場模式：城牆加成依陣營鏡像、撐滿 12 回合即勝、失守接 applyDefenseDefeat",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T16:05:19+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 11/20 裁決年終守城十一題（全採建議 A）：撐滿 12 回合即勝、失守為敗、失守且武將全滅為大敗；沿用攻城鏡像＋城寨血條，城門留第二版；不丟城，只扣民心人口（applyDefenseDefeat）；新增 defense 類別不扣壽命；勝利給戰利品＋民心 +2；數值抽 JSON。現況攻城戰法把城牆加成寫死給敵方，戰場沒有『玩家防守』模式，applyDefenseDefeat 也沒有呼叫端。本卡只做戰場本體與結算；年終觸發、三檔敵軍依年度切換、最強鄰國主將、不可重打另開年終流程卡。",
+      "related": [
+        "PROG-2-9138",
+        "PROG-2-1589",
+        "PROG-2-9423",
+        "PROG-2-9424"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: done | 驗證: 單元 8565 全過、tsc 0、compute-gate 12/13（既有 LoginScene 警告）、7456 實機守城開場／擊敗主將勝利／撐滿 12 回合勝利（民心 +2）／城寨失守（民心 -3）／大敗（人口 -3%）截圖、六關回歸 0 錯 | 變更: defense 戰場類別、攻城鏡像依守方陣營、defense-battle.json、守城第一檔遭遇、結算接 applyDefenseDefeat | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9426",
+      "title": "年終守城流程：結束第 4 季強制開打、三檔敵軍依年度切換、最強鄰國主將來攻、不可重打",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T18:05:50+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 11/20 裁決年終守城十一題（全採建議 A）：按「結束第 4 季」強制開打（第 4 季關卡沒打也照樣守城）；敵軍固定三檔依年度切換；最強鄰國主將來攻；玩家自選武將、折損扣兵源；不可重打；輸了照樣換年。PROG-2-9425 已完成守城戰場本體與結算，本卡接年終觸發流程。",
+      "related": [
+        "PROG-2-9425",
+        "PROG-2-9421",
+        "PROG-2-9138"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: done | 驗證: 單元 8576 全過、tsc 0、compute-gate 12/13（既有 LoginScene 警告）、7456 實機大廳第 4 季結束→曹操來攻年終守城・初→撐滿 12 回合勝利結算無再戰鈕（民心 +2）→返回大廳自動換到第 2 年 1 季截圖、六關回歸 0 錯 | 變更: YearEndDefense 觸發／選檔／最強鄰國、year-end-defense.json、守城二三檔遭遇、存檔記年終守城年份、快進停在年末、結算窗守城隱藏再戰 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9196",
+      "title": "大廳背景預載動態加載優化（分幀限時、按需建構、不遮信箱、換場取消）",
+      "owner": "claude-code-sonnet-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0 錯、單元測試通過、compute-gate 通過、playtest 11/11 | 變更: 大廳背景面板動態加載、不遮信箱、換場景取消 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9427",
+      "title": "勝敗結算演出打磨：分出勝負先打勝利／敗北橫幅停一拍再開結算窗、結算窗卡片彈入、主將頭像預載不閃問號",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T21:58:36+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 11/20 指示 (c) 勝敗結算演出打磨。實機逐格截圖發現：敵將倒下後戰場沒有勝利提示，結算窗直接蓋上（只有棋盤中央 1 秒光環）；結算窗頭像先顯示問號剪影約 0.75 秒才換成主將。本卡：分出勝負時先打全畫面勝利／敗北／平手橫幅並停約 1.3 秒再開結算窗（主動撤退維持立即開窗）；結算窗卡片加縮放彈入；主將頭像在停頓期間預載，載入前不顯示剪影。",
+      "related": [
+        "PROG-2-9426",
+        "PROG-2-9424",
+        "PROG-2-1888"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: done | 驗證: 單元 8588 全過、tsc 0、compute-gate 12/13（既有 LoginScene 警告）、7456 實機逐格截圖勝利與敗北兩路：勝金／敗紅橫幅撐到結算窗淡入、敵將或我將倒地在橫幅下播完、頭像直接顯示主將不閃剪影，證據 artifacts/playtest-checklist/prog-2-9427 | 變更: 勝敗橫幅停一拍再開結算窗（主動撤退立即開）、結算窗卡片彈入、頭像預載；實測首次掛載約 0.5 秒，橫幅拉長到 2.4 秒避免空檔 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9428",
+      "title": "AI 剋制兵種派到被剋兵種那一路：剋制兵不再隨策略亂丟車道（五路對撞下才真的對上）",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T23:31:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "BAT-19 AI 反制部署檢查（doc_spec_0389）。§2 部署數量、§3 兵種剋制、§4 車道矩陣程式都照規格。但實測：AI 選出剋制兵後車道仍照 Profile 策略挑，完全不看被剋兵種在哪一路；五路對撞下小兵只打同路正面，模擬 2 萬次剋制兵落到正確車道只約 20%（等於隨機），SCOUT_WEAK 為 0%（專挑玩家少的路）。本卡：IQ 非 LOW 時，出陣兵種若剋制玩家場上某兵種，優先派到該兵種所在且可部署的車道（被剋數量最多、己方最少）；沒有這種車道才回退 §4 策略。LOW IQ 照舊盲出。教學戰 meetPlayerLane 優先順序不變。",
+      "related": [
+        "PROG-2-1468",
+        "PROG-2-9340",
+        "PROG-2-0343"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: done | 驗證: 單元 8622 全過、tsc 0、模擬 4000 場×策略：中高智力剋制兵對上同路由約 20% 升到約 84%（低智力維持盲出）、7456 實機呂布（MEDIUM／騎兵衝鋒）對我方第 5 路盾兵：改前騎兵出中央第 3 路錯開，改後出第 5 路正面相對，證據 artifacts/playtest-checklist/prog-2-9428 | 變更: 新增 pickCounterLane，EnemyAI 中高智力剋制兵優先派到被剋兵種所在空線；規格 §3.3 補規則 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

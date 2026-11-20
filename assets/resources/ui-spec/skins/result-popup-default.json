@@ -70,18 +70,19 @@
     },
     "popup.label.title": {
       "kind": "label-style",
-      "fontSize": 42,
-      "lineHeight": 52,
+      "fontSize": 56,
+      "lineHeight": 68,
       "color": "secondary",
-      "horizontalAlign": "CENTER",
+      "horizontalAlign": "LEFT",
       "overflow": "SHRINK"
     },
     "popup.label.desc": {
       "kind": "label-style",
-      "fontSize": 22,
+      "fontSize": 24,
       "lineHeight": 30,
       "color": "#4A2E14",
       "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
       "overflow": "SHRINK"
     },
     "ui-common-metal.equipment.primary": {
@@ -153,6 +154,35 @@
       "path": "sprites/ui_avatars/unknown_avatar_f",
       "expectedWidth": 256,
       "expectedHeight": 256
+    },
+    "popup.label.verdict": {
+      "kind": "label-style",
+      "fontSize": 32,
+      "lineHeight": 42,
+      "color": "#4A2E14",
+      "horizontalAlign": "LEFT",
+      "verticalAlign": "TOP",
+      "overflow": "SHRINK"
+    },
+    "popup.detail.bg": {
+      "kind": "color-rect",
+      "color": "#F6E7C1",
+      "alpha": 150,
+      "cornerRadius": 14,
+      "borderWidth": 2,
+      "borderColor": "#C9A060"
+    },
+    "popup.scrollbar.track": {
+      "kind": "color-rect",
+      "color": "#8A5A22",
+      "alpha": 50,
+      "cornerRadius": 5
+    },
+    "popup.scrollbar.thumb": {
+      "kind": "color-rect",
+      "color": "#8A5A22",
+      "alpha": 200,
+      "cornerRadius": 5
     }
   }
 }

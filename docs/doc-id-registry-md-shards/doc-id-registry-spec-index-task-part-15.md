@@ -1,0 +1,88 @@
+# Doc ID Registry Markdown Index — Spec / Index / Task
+
+> 生成日期: 2026-11-20
+> 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 15/15 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
+> 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
+
+## 任務卡類 (`doc_task`) — Part 10/10
+
+| doc_id | 路徑 | 標題 |
+|--------|------|------|
+| `doc_task_2601` | docs/agent-briefs/tasks/PROG/PROG-2-9181.md | PROG-2-9181：寒門新血 × 佳話聯姻 |
+| `doc_task_2602` | docs/agent-briefs/tasks/PROG/PROG-2-9182.md | PROG-2-9182：學府先祖遺風開獎＋生平白因子印記（純邏輯） |
+| `doc_task_2603` | docs/agent-briefs/tasks/PROG/PROG-2-9183.md | PROG-2-9183：學府先祖遺風開獎與生平印記畫面呈現 |
+| `doc_task_2604` | docs/agent-briefs/tasks/PROG/PROG-2-9184.md | PROG-2-9184：寒門新血與佳話聯姻效果接線 |
+| `doc_task_2605` | docs/agent-briefs/tasks/PROG/PROG-2-9185.md | PROG-2-9185：學府雙年適性升階與生平印記效果接線 |
+| `doc_task_2606` | docs/agent-briefs/tasks/PROG/PROG-2-9186.md | PROG-2-9186：任務詳情下拉捲動後擋住關閉鈕 |
+| `doc_task_2607` | docs/agent-briefs/tasks/PROG/PROG-2-9187.md | [PROG-2-9187] 大廳底欄「培育」開局開放 |
+| `doc_task_2608` | docs/agent-briefs/tasks/PROG/PROG-2-9188.md | PROG-2-9188：學府修業畫面與接線設計 |
+| `doc_task_2609` | docs/agent-briefs/tasks/PROG/PROG-2-9189.md | PROG-2-9189：學府修業主畫面＋入學（第一版只開潁川） |
+| `doc_task_2610` | docs/agent-briefs/tasks/PROG/PROG-2-9190.md | PROG-2-9190：學府打斷宿主與四種彈窗 |
+| `doc_task_2611` | docs/agent-briefs/tasks/PROG/PROG-2-9191.md | PROG-2-9191：學府結業與入口串接、舊培育訓練回合下線 |
+| `doc_task_2612` | docs/agent-briefs/tasks/PROG/PROG-2-9192.md | PROG-2-9192：academy playtest 步驟與 QA 快進入口 |
+| `doc_task_2613` | docs/agent-briefs/tasks/PROG/PROG-2-9194.md | PROG-2-9194：開局送一位 14 歲投靠少年名將 |
+| `doc_task_2614` | docs/agent-briefs/tasks/PROG/PROG-2-9195.md | PROG-2-9195：子嗣十歲歷練四路大富翁與職業屬性規格書 |
+| `doc_task_2615` | docs/agent-briefs/tasks/PROG/PROG-2-9198.md | PROG-2-9198：十歲歷練規格依裁決修訂 |
+| `doc_task_2616` | docs/agent-briefs/tasks/PROG/PROG-2-9199.md | PROG-2-9199：家業經營與世家系統規格書 |
+| `doc_task_2617` | docs/agent-briefs/tasks/PROG/PROG-2-9200.md | PROG-2-9200：共用 base 框架規格書 |
+| `doc_task_2618` | docs/agent-briefs/tasks/PROG/PROG-2-9364.md | [PROG-2-9364] 弓兵飛箭放大並放慢，戰場上看得清楚 |
+| `doc_task_2619` | docs/agent-briefs/tasks/PROG/PROG-2-9365.md | [PROG-2-9365] 主將技能光效改打在施放技能的主將身上 |
+| `doc_task_2620` | docs/agent-briefs/tasks/PROG/PROG-2-9367.md | [PROG-2-9367] 近戰刀光換成月牙貼圖，朝被打的一方掃過去 |
+| `doc_task_2621` | docs/agent-briefs/tasks/PROG/PROG-2-9368.md | [PROG-2-9368] 兵種動態相剋接進戰鬥結算，教學戰關閉 |
+| `doc_task_2622` | docs/agent-briefs/tasks/PROG/PROG-2-9369.md | [PROG-2-9369] 單挑殘血敗逃與勝方士氣暴擊獎勵 |
+| `doc_task_2623` | docs/agent-briefs/tasks/PROG/PROG-2-9370.md | [PROG-2-9370] 單挑規格書改成現況：拒絕懲罰整場有效、殘血敗逃 |
+| `doc_task_2624` | docs/agent-briefs/tasks/PROG/PROG-2-9371.md | [PROG-2-9371] 移除 12 個沒人呼叫、戰場播不出來的舊特效定義 |
+| `doc_task_2625` | docs/agent-briefs/tasks/PROG/PROG-2-9372.md | [PROG-2-9372] 張飛、關羽、呂布、曹操專屬奧義特效 |
+| `doc_task_2626` | docs/agent-briefs/tasks/PROG/PROG-2-9373.md | [PROG-2-9373] 單挑結果事件帶上雙方主將代號 |
+| `doc_task_2627` | docs/agent-briefs/tasks/PROG/PROG-2-9374.md | [PROG-2-9374] 戰場特效大小設定生效並換掉看不清的積木 |
+| `doc_task_2628` | docs/agent-briefs/tasks/PROG/PROG-2-9375.md | [PROG-2-9375] 戰鬥日誌不印內部代號，相剋觸發時不重複播舊剋制句 |
+| `doc_task_2629` | docs/agent-briefs/tasks/PROG/PROG-2-9376.md | [PROG-2-9376] 峽谷落石關中間三路永遠破不了石；右下「單挑」鈕改名「出陣」 |
+| `doc_task_2630` | docs/agent-briefs/tasks/PROG/PROG-2-9377.md | [PROG-2-9377] 戰報面板改版：四鈕改直排貼右緣，不擋棋盤最右兩行 |
+| `doc_task_2631` | docs/agent-briefs/tasks/PROG/PROG-2-9378.md | [PROG-2-9378] 戰場固定標題與按鈕文字改走多語系表（26 處） |
+| `doc_task_2632` | docs/agent-briefs/tasks/PROG/PROG-2-9379.md | [PROG-2-9379] 戰鬥日誌「戰鬥結束」那行改寫中文結果，不印內部代號 |
+| `doc_task_2633` | docs/agent-briefs/tasks/PROG/PROG-2-9380.md | [PROG-2-9380] 奧義選擇彈窗標題看不見、技能列疊在標題上方 |
+| `doc_task_2634` | docs/agent-briefs/tasks/PROG/PROG-2-9381.md | [PROG-2-9381] 短按虎符卡後黃色拖曳殘影留在卡上不消失 |
+| `doc_task_2635` | docs/agent-briefs/tasks/PROG/PROG-2-9382.md | [PROG-2-9382] 戰鬥日誌與軍師列的英文縮寫改中文（Buff、ATK、HP、INT） |
+| `doc_task_2636` | docs/agent-briefs/tasks/PROG/PROG-2-9383.md | [PROG-2-9383] 戰鬥日誌格子改寫第 N 路第 M 格、軍師列縮短、日誌過長時新行顯示不出來 |
+| `doc_task_2637` | docs/agent-briefs/tasks/PROG/PROG-2-9384.md | [PROG-2-9384] 單挑接受判定的兵力項改回規格：防守方場上分隊現存兵力 / 上限 |
+| `doc_task_2638` | docs/agent-briefs/tasks/PROG/PROG-2-9385.md | [PROG-2-9385] 同一場單挑贏多次，名聲只算一次 |
+| `doc_task_2639` | docs/agent-briefs/tasks/PROG/PROG-2-9386.md | [PROG-2-9386] 單挑敗逃當回合，敗逃的主將不可被攻擊 |
+| `doc_task_2640` | docs/agent-briefs/tasks/PROG/PROG-2-9387.md | [PROG-2-9387] 戰場主將模型載入中節點被銷毀時丟出 null 的 length 頁面錯誤 |
+| `doc_task_2641` | docs/agent-briefs/tasks/PROG/PROG-2-9388.md | [PROG-2-9388] 單挑敗逃保護補強：連鎖分攤也擋下、戰報加提示、整回合測試 |
+| `doc_task_2642` | docs/agent-briefs/tasks/PROG/PROG-2-9389.md | [PROG-2-9389] 戰報面板展開改到棋盤右下不擋最右兩行與敵將；剩餘 HP 改剩餘生命；敗逃提示排序 |
+| `doc_task_2643` | docs/agent-briefs/tasks/PROG/PROG-2-9390.md | [PROG-2-9390] 短按虎符卡開兵種資訊小面板，拖曳出陣不誤開 |
+| `doc_task_2644` | docs/agent-briefs/tasks/PROG/PROG-2-9391.md | [PROG-2-9391] 直進戰場入口：臨時名冊與主將開場生命參數 |
+| `doc_task_2645` | docs/agent-briefs/tasks/PROG/PROG-2-9392.md | [PROG-2-9392] 兵種資訊面板圖示空格：沒有圖示時在圓底寫兵種單字 |
+| `doc_task_2646` | docs/agent-briefs/tasks/PROG/PROG-2-9393.md | [PROG-2-9393] 主將被擒（戰場內）：單挑敗逃加脫逃判定、被打到 0 改判被擒，戰後回報 generalCaptures |
+| `doc_task_2647` | docs/agent-briefs/tasks/PROG/PROG-2-9394.md | [PROG-2-9394] 戰中升階接進戰場：單挑獲勝入帳名聲、五階激勵效果、QA 進場名聲參數 |
+| `doc_task_2648` | docs/agent-briefs/tasks/PROG/PROG-2-9395.md | [PROG-2-9395] 擊破部隊名聲一場一次、戰中名聲帶進戰後結算、被擒處置提示與敵君主代號 |
+| `doc_task_2649` | docs/agent-briefs/tasks/PROG/PROG-2-9397.md | [PROG-2-9397] 回合順序改為先部署後行動、部署用完自動結束回合、擊殺不進格、多格移動從原格滑行 |
+| `doc_task_2650` | docs/agent-briefs/tasks/PROG/PROG-2-9399.md | [PROG-2-9399] 戰場頭頂狀態小圖示：血條上方顯示增益／減益圖示並在獲得時閃光 |
+| `doc_task_2651` | docs/agent-briefs/tasks/PROG/PROG-2-9400.md | [PROG-2-9400] 普攻依兵種分開：槍刺、盾擊、劈砍、射箭、騎兵衝撞各有動作、特效與音效 |
+| `doc_task_2652` | docs/agent-briefs/tasks/PROG/PROG-2-9401.md | [PROG-2-9401] 受擊白閃加小抖動、跳字大字彈出與爆擊放大、閃避灰字 |
+| `doc_task_2653` | docs/agent-briefs/tasks/PROG/PROG-2-9402.md | [PROG-2-9402] 同一單位連續跳字錯開改依前字存活時間、往下錯開，修正閃避與爆擊大字疊字 |
+| `doc_task_2654` | docs/agent-briefs/tasks/PROG/PROG-2-9403.md | [PROG-2-9403] 奧義面板第一次打開就要有技能；戰場主將不可顯示藍色佔位圖（issue 2238） |
+| `doc_task_2655` | docs/agent-briefs/tasks/PROG/PROG-2-9404.md | [PROG-2-9404] 結束回合不可因資源或特效載入失敗而永久卡住（issue 2319） |
+| `doc_task_2656` | docs/agent-briefs/tasks/PROG/PROG-2-9405.md | [PROG-2-9405] QA 慢動作與定格參數：網址參數放慢戰場時間，方便截到騎兵衝撞等瞬間 |
+| `doc_task_2657` | docs/agent-briefs/tasks/PROG/PROG-2-9406.md | [PROG-2-9406] 戰場移動手感：中等揚塵＋各兵種小聲腳步聲 |
+| `doc_task_2658` | docs/agent-briefs/tasks/PROG/PROG-2-9407.md | [PROG-2-9407] 移動手感二修：小兵前進改走路動畫加起伏、揚塵改土黃粒子 |
+| `doc_task_2659` | docs/agent-briefs/tasks/PROG/PROG-2-9408.md | [PROG-2-9408] 騎兵 Spine 接入：騎手＋馬合成骨架上戰場試看 |
+| `doc_task_2660` | docs/agent-briefs/tasks/PROG/PROG-2-9409.md | [PROG-2-9409] 部署落地手感：小隊從上方落下、落地壓縮回彈、揚塵與落地聲 |
+| `doc_task_2661` | docs/agent-briefs/tasks/PROG/PROG-2-9410.md | [PROG-2-9410] 放招手感：武將出招前蓄力 0.4 秒、畫面中央招式名橫幅 |
+| `doc_task_2662` | docs/agent-briefs/tasks/PROG/PROG-2-9411.md | [PROG-2-9411] buff 格統一：棋盤 buff 格改用頭頂狀態圖示同一套圓底一字，加地面光板與拾取飛入 |
+| `doc_task_2663` | docs/agent-briefs/tasks/PROG/PROG-2-9412.md | [PROG-2-9412] 受擊手感打磨：受擊對齊攻擊命中瞬間、閃白、後退抖動、命中火花、血條殘影、重擊跳字 |
+| `doc_task_2664` | docs/agent-briefs/tasks/PROG/PROG-2-9413.md | [PROG-2-9413] 敵方回合 1.5 倍速播放（我方出手維持原速） |
+| `doc_task_2665` | docs/agent-briefs/tasks/PROG/PROG-2-9414.md | [PROG-2-9414] 六關試玩驗收（主線 2 關＋主題 4 關，每關結算截圖） |
+| `doc_task_2666` | docs/agent-briefs/tasks/PROG/PROG-2-9415.md | [PROG-2-9415] 跳字避開棋盤 buff 格標記 |
+| `doc_task_2667` | docs/agent-briefs/tasks/PROG/PROG-2-9416.md | [PROG-2-9416] 回合開始橫幅期間提示框排隊，不與橫幅疊字 |
+| `doc_task_2668` | docs/agent-briefs/tasks/PROG/PROG-2-9417.md | [PROG-2-9417] 戰鬥結算文字放大，手機 720 高可讀 |
+| `doc_task_2669` | docs/agent-briefs/tasks/PROG/PROG-2-9418.md | [PROG-2-9418] 戰場提示條移到中央偏上、改透明黑底金邊，不再擋住交戰 |
+| `doc_task_2670` | docs/agent-briefs/tasks/PROG/PROG-2-9419.md | [PROG-2-9419] 奧義收尾爆光改柔光加衝擊波環，不再是硬邊平塗大圓 |
+| `doc_task_2671` | docs/agent-briefs/tasks/PROG/PROG-2-9420.md | [PROG-2-9420] 遭遇戰敵軍開場布陣：讀 encounters.json 的 enemyInitialDeployment |
+| `doc_task_2672` | docs/agent-briefs/tasks/PROG/PROG-2-9421.md | [PROG-2-9421] 一年六關按季開放（2/2/1/1）：季節關卡解鎖 |
+| `doc_task_2673` | docs/agent-briefs/tasks/PROG/PROG-2-9422.md | [PROG-2-9422] 高倍率攻擊視覺提示：≥2 倍金字、≥4 倍紅字＋脈動光環（Q-C1 選 A） |
+| `doc_task_2674` | docs/agent-briefs/tasks/PROG/PROG-2-9423.md | [PROG-2-9423] 瓦口隘 15 回合時限：時限到依戰果判勝負 |
+| `doc_task_2675` | docs/agent-briefs/tasks/PROG/PROG-2-9424.md | [PROG-2-9424] 結算視窗分區排版：字級放大、戰況／兵力／獎勵分區、可捲動 |
+| `doc_task_2676` | docs/agent-briefs/tasks/PROG/PROG-2-9425.md | [PROG-2-9425] 守城戰場模式：城牆加成依陣營鏡像、撐滿 12 回合即勝、失守接 applyDefenseDefeat |
+| `doc_task_2677` | docs/agent-briefs/tasks/PROG/PROG-2-9426.md | [PROG-2-9426] 年終守城流程：結束第 4 季強制開打、三檔敵軍依年度切換、最強鄰國主將來攻、不可重打 |
+| `doc_task_2678` | docs/agent-briefs/tasks/PROG/PROG-2-9427.md | [PROG-2-9427] 勝敗結算演出打磨：勝敗橫幅停一拍、結算窗彈入、頭像預載 |

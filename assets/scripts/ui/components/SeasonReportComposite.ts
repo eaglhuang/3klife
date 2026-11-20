@@ -7,10 +7,21 @@
  *
  * Unity 對照：像一個 Popup Prefab 的 Controller，資料由 Presenter 算好，這裡只 label.text = ... 並綁按鈕。
  */
-import { _decorator, Button } from 'cc';
+import { _decorator, Button, Layout, ScrollView, UITransform } from 'cc';
 import { CompositePanel } from '../core/CompositePanel';
 import type { UITemplateBinder } from '../core/UITemplateBinder';
-import { buildSeasonReportPanelTexts, SEASON_REPORT_HALL_LABEL_PATH } from '../../core/systems/SeasonReportPanel';
+import {
+    buildSeasonReportPanelRows,
+    buildSeasonReportPanelTexts,
+    SEASON_REPORT_ACTIONS_LABEL_PATH,
+    SEASON_REPORT_EMPTY_HINT_PATH,
+    SEASON_REPORT_HALL_LABEL_PATH,
+    SEASON_REPORT_PANEL_ROWS,
+    SEASON_REPORT_POPULATION_LABEL_PATH,
+    SEASON_REPORT_VOICES_LABEL_PATH,
+    seasonReportLabelHeight,
+} from '../../core/systems/SeasonReportPanel';
+import type { SeasonReportSection } from '../../core/systems/SeasonReportSections';
 import type { QuarterlyBattleReportRow } from '../../core/systems/RetireReviewCopy';
 
 const { ccclass } = _decorator;
@@ -24,8 +35,22 @@ export interface SeasonReportOpenPayload {
     reports: readonly QuarterlyBattleReportRow[];
     /** 本季大廳任務結算的逐筆文字（payload.hallMissionReport.lines）；沒有時不顯示該區塊 */
     hallMissionLines?: readonly string[];
+    /** 下一官職會開什麼的預告一行（PROG-2-9151）；沒有時不顯示 */
+    rankPreviewLine?: string;
+    /** 本季行動／人口與民心／武將心聲區段（SeasonReportSections 組好；沒內容的區段不在陣列內） */
+    sections?: readonly SeasonReportSection[];
     onRequestClose?: () => void;
 }
+
+const SCROLL_CONTENT_PATH = 'DialogCard/ScrollView/ScrollContent';
+/** 文字區段標籤：有字就依字數撐高、沒字就隱藏（標籤是 CLAMP，不撐高會截字） */
+const TEXT_SECTION_PATHS = [
+    SEASON_REPORT_EMPTY_HINT_PATH,
+    SEASON_REPORT_ACTIONS_LABEL_PATH,
+    SEASON_REPORT_POPULATION_LABEL_PATH,
+    SEASON_REPORT_VOICES_LABEL_PATH,
+    SEASON_REPORT_HALL_LABEL_PATH,
+] as const;
 
 @ccclass('SeasonReportComposite')
 export class SeasonReportComposite extends CompositePanel {
@@ -65,9 +90,28 @@ export class SeasonReportComposite extends CompositePanel {
         const payload = this._payload;
         if (!payload) return;
         const hallLines = payload.hallMissionLines ?? [];
-        this._templateBinder?.setTextsByPath(buildSeasonReportPanelTexts(payload.seasonLabel, payload.reports, hallLines));
-        const hallNode = this._templateBinder?.getNodeByPath(SEASON_REPORT_HALL_LABEL_PATH);
-        if (hallNode) hallNode.active = hallLines.length > 0;
+        const sections = payload.sections ?? [];
+        const texts = buildSeasonReportPanelTexts(payload.seasonLabel, payload.reports, hallLines, payload.rankPreviewLine ?? '', sections);
+        const binder = this._templateBinder;
+        binder?.setTextsByPath(texts);
+        if (!binder) return;
+        for (const path of TEXT_SECTION_PATHS) {
+            const node = binder.getNodeByPath(path);
+            if (!node) continue;
+            const text = texts[path] ?? '';
+            node.active = text.length > 0;
+            const transform = node.getComponent(UITransform);
+            if (transform && text.length > 0) transform.setContentSize(transform.width, seasonReportLabelHeight(text));
+        }
+        // 精力行只列達標者：沒有的列整列隱藏，不留「—」占位
+        const visibleRows = buildSeasonReportPanelRows(payload.reports).length;
+        for (let i = 0; i < SEASON_REPORT_PANEL_ROWS; i += 1) {
+            const row = binder.getNodeByPath(`${SCROLL_CONTENT_PATH}/Row${i}`);
+            if (row) row.active = i < visibleRows;
+        }
+        // 內容變多時由 ScrollView 捲動；重排讓內容高度跟著可見子節點
+        binder.getNodeByPath(SCROLL_CONTENT_PATH)?.getComponent(Layout)?.updateLayout(true);
+        binder.getNodeByPath('DialogCard/ScrollView')?.getComponent(ScrollView)?.scrollToTop(0);
     }
 
     private _close(): void {

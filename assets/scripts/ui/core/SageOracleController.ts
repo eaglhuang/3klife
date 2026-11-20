@@ -25,6 +25,7 @@ import type { FactorColor } from '../../core/systems/FactorInheritance';
 import { GENERAL_STATUS_DEAD } from '../../core/systems/GeneralAging';
 import { ITEM_DISPLAY_NAMES, ITEM_ORACLE_TOKEN } from '../../core/systems/PlayerInventory';
 import type { FactorPoolEntry } from '../../core/systems/BreedingSystem';
+import { readableFactorName, UNREVEALED_FACTOR_NAME } from '../../core/systems/FactorDisplayName';
 import { previewLockedFactorDirections } from '../../core/systems/SageFactorPreview';
 import { ProphecyResult, SAGES, SageDefinition, SageDivinationResult, SageId } from '../../core/systems/SageDivination';
 import { oracleLockedText, sageLockedOutcomeText } from './OracleLockedText';
@@ -252,10 +253,11 @@ export class SageOracleController {
             case 'predicted': {
                 const prophecy = result.prophecy!;
                 const color = COLOR_HINT[prophecy.color];
-                const keywordPart = prophecy.keyword ? `，或有「${prophecy.keyword}」之象` : '';
+                const keyword = readableFactorName(prophecy.factorId, prophecy.keyword);
+                const keywordPart = keyword ? `，或有「${keyword}」之象` : '';
                 const comment = PROPHECY_COMMENT[sage.id].replace('{Color}', color).replace('{Keyword}', keywordPart);
                 const parts = [`${sage.name}：『${comment}』`, `色彩傾向：${color}`];
-                if (prophecy.keyword) parts.push(`關鍵詞：${prophecy.keyword}`);
+                if (keyword) parts.push(`關鍵詞：${keyword}`);
 
                 const key = `${father.id}|${mother.id}`;
                 const seen = this._prophecies.get(key) ?? new Map<SageId, FactorColor>();
@@ -278,7 +280,7 @@ export class SageOracleController {
     private _describe(sage: SageDefinition, target: GeneralConfig, result: SageDivinationResult): string {
         switch (result.outcome) {
             case 'awakened': {
-                const gene = result.event?.displayName ?? result.event?.factorId ?? '';
+                const gene = readableFactorName(result.event?.factorId, result.event?.displayName) || UNREVEALED_FACTOR_NAME;
                 const comment = AWAKENED_COMMENT[sage.id].replace('{Gene}', gene);
                 return `${sage.name}：『${comment}』【覺醒】${target.name} 的 ${gene}！`;
             }

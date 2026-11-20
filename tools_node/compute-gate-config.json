@@ -257,6 +257,17 @@
       "priority": 15,
       "failAction": "block",
       "description": "HOT-09：啟動場景不得靜態參照戰鬥等後期資源（禁止清單見 start-scene-refs-config.json）"
+    },
+    {
+      "id": "untracked-meta",
+      "label": "assets .meta 追蹤檢查",
+      "cmd": "node",
+      "args": [
+        "tools_node/check-untracked-meta.js"
+      ],
+      "priority": 16,
+      "failAction": "block",
+      "description": "PROG-2-9153：assets 底下有資源檔但 .meta 沒進版控，乾淨建置 uuid 會每次重產，玩家快取的舊 config 就 404"
     }
   ],
   "profiles": {
@@ -282,7 +293,8 @@
         "dead-code",
         "test-tsc",
         "story-layers",
-        "start-scene-refs"
+        "start-scene-refs",
+        "untracked-meta"
       ]
     },
     "atm": {
@@ -315,7 +327,8 @@
         "import-boundary",
         "approved-fixtures",
         "dead-code",
-        "test-tsc"
+        "test-tsc",
+        "untracked-meta"
       ]
     }
   },
