@@ -15,6 +15,7 @@
  * 畫面層拿 GetView() 的 ViewModel 一次刷新 Text 與 Button.interactable。
  */
 import { factorLabelOf, readableFactorName } from '../../core/systems/FactorDisplayName';
+import { formatRosterCareerMarksLine } from './AcademyInheritView';
 import { kinshipLampLine, outcrossRecoveryLine } from '../../core/systems/BloodFatigue';
 import { evaluateMarriageVitality, marriageVitalityBadgeLine } from '../../core/systems/MarriageVitality';
 import { ancestorSeatVisible, diversityVisible, factorDetailVisible, formulaDetailVisible, G1_EP_DETAIL_MASK, g1EpEstimateText, G1_FACTOR_TEXT, KIN_TEXT_WARNING, kinshipScanVisible, MILESTONE_G1_HINT, type MilestoneStage } from '../../core/systems/FamilyMilestone';
@@ -788,12 +789,16 @@ function pagerText(list: BreedingGeneral[], selected: BreedingGeneral | null): s
 
 /** 父母因子的遮罩文字；沒有因子時顯示「無因子」 */
 function factorLine(general: BreedingGeneral, playerLevel: number, stage: MilestoneStage): string {
-    if (!factorDetailVisible(stage)) return G1_FACTOR_TEXT;
+    const markLine = formatRosterCareerMarksLine(general.careerMarks);
+    if (!factorDetailVisible(stage)) {
+        return markLine ? `${G1_FACTOR_TEXT}｜${markLine}` : G1_FACTOR_TEXT;
+    }
     const labels = (general.genes ?? []).map((gene) => {
         const view = factorMaskView(gene, playerLevel);
         return view.revealed ? `${view.label} ${gene.level ?? 1}★` : view.label;
     });
-    return labels.length > 0 ? `因子：${labels.join(' · ')}` : '因子：無';
+    const base = labels.length > 0 ? `因子：${labels.join(' · ')}` : '因子：無';
+    return markLine ? `${base}｜${markLine}` : base;
 }
 
 function parentTexts(side: 'father' | 'mother', general: BreedingGeneral | null, playerLevel: number, stage: MilestoneStage, yuedan: (general: BreedingGeneral) => string | null): Record<string, string> {
