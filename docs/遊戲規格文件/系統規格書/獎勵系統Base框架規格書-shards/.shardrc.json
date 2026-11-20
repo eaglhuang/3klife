@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "source": "../獎勵系統Base框架規格書.md",
+  "indexTitle": "獎勵系統Base框架規格書（分片索引）",
+  "indexPath": "docs/遊戲規格文件/系統規格書/獎勵系統Base框架規格書.md",
+  "type": "markdown-h2",
+  "preambleShard": "shard-a",
+  "defaultShard": "shard-c",
+  "shards": [
+    {"name": "shard-a", "title": "1–3 目的、核心概念、共用資料結構", "pattern": "^[1-3][.] "},
+    {"name": "shard-b", "title": "4–10 共用 API、包裝接入、依賴、遷移、實作卡、驗收、待決", "pattern": "^([4-9]|10)[.] "},
+    {"name": "shard-c", "title": "11 伺服器 API（端點、Schema、權威欄位、錯誤碼、事件）", "pattern": "."}
+  ]
+}
