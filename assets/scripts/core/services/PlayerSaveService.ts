@@ -837,7 +837,7 @@ export class PlayerSaveService {
      * 寫入新存檔前，若目前主檔有效，先把它保留到備份槽（DS-14）。
      * 主檔已損壞時不覆蓋既有備份，避免好的備份被壞檔取代。
      */
-    public async save(snapshot: PlayerSaveSnapshot): Promise<void> {
+    public async save(snapshot: PlayerSaveSnapshot, saveRev?: number): Promise<void> {
         await this._ensureReady();
         const validated = validatePlayerSaveSnapshot(snapshot);
         this._lastSixTableErrors = mapSnapshotToSixTables(validated).errors;
@@ -846,6 +846,15 @@ export class PlayerSaveService {
             await this._adapter.set(this._backupKey, previous);
         }
         await this._adapter.set(this._key, validated);
+        // 存檔版本戳（PROG-2-9201）：另存一個旁路鍵，不進快照；舊檔沒有此鍵讀回 0，快照格式與頂層欄位白名單都不變
+        if (saveRev !== undefined) await this._adapter.set(this._revKey, saveRev);
+    }
+
+    /** 共通 API 的存檔版本戳（單調遞增整數）；沒有或壞掉視為 0 */
+    public async loadRev(): Promise<number> {
+        await this._ensureReady();
+        const raw = await this._adapter.get<unknown>(this._revKey);
+        return typeof raw === 'number' && Number.isInteger(raw) && raw >= 0 ? raw : 0;
     }
 
     /**
@@ -871,6 +880,11 @@ export class PlayerSaveService {
         await this._ensureReady();
         await this._adapter.delete(this._key);
         await this._adapter.delete(this._backupKey);
+        await this._adapter.delete(this._revKey);
+    }
+
+    private get _revKey(): string {
+        return `${this._key}.rev`;
     }
 
     private get _backupKey(): string {
