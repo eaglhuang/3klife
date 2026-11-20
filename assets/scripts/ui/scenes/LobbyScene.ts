@@ -3479,7 +3479,8 @@ export class LobbyScene extends Component {
 
     /** 開場優先掛載期間，把正在顯示的開場面板拉回最上層，後掛的面板不會蓋住旁白（PROG-2-2223）。 */
     private _keepOpeningOnTop(): void {
-        const nodes = [this._introHost?.node, this._showcaseHost?.node, ...(this._openingPanels?.activeHostNodes() ?? [])];
+        // 少年挑選（PROG-2-9194）出現時宿命池節點仍未收起，必須排在最後拉到最上層，否則被宿命池結果面板蓋住點不到（PROG-2-9214）
+        const nodes = [this._introHost?.node, this._showcaseHost?.node, ...(this._openingPanels?.activeHostNodes() ?? []), this._youthPickHost?.node];
         for (const node of nodes) {
             if (node?.active) this._bringNodeToFront(node);
         }
