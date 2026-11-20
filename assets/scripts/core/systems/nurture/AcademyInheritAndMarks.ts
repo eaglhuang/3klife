@@ -14,6 +14,7 @@
  */
 import type { AcademyGrade } from './AcademyGraduation';
 import type { AcademyId, AcademyStatKey, IDeterministicRng } from './AcademyTypes';
+import { GREEN_FACTOR_TP_MULTIPLIER } from '../FactorTacticLinkage';
 
 export interface CareerMarkRecord {
     id: string;
@@ -286,7 +287,7 @@ export function applyCareerMarkTpDiscountToCost(
     hasGreenFactor: boolean,
     config: AcademyInheritMarksConfig = _config,
 ): { finalCost: number; totalDiscount: number; matchedMarkId: string | null } {
-    const greenDiscount = hasGreenFactor ? 0.5 : 0;
+    const greenDiscount = hasGreenFactor ? 1 - GREEN_FACTOR_TP_MULTIPLIER : 0;
     const matchedMarkId = matchingCareerMarkIdForTags(tacticTags, marks);
     const totalDiscount = matchedMarkId
         ? careerMarkTpDiscount(marks, matchedMarkId, greenDiscount, config)
