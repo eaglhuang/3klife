@@ -16039,6 +16039,12 @@
   },
   {
     "id": "doc_task_2691",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9432.md",
+    "title": "[PROG-2-9432] 新版 HUD 雙方精力條＋扣減演出、規格門檻統一",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2692",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9207.md",
     "title": "[PROG-2-9207] OCC-M：人員占用精簡版（中立版，academy／mentorAssign 登記、六處唯讀轉接、occupancy.* 端點）",
     "category": "task"

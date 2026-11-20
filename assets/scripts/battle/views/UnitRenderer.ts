@@ -38,7 +38,7 @@ import {
   VerticalTextAlignment,
   resources,
 } from "cc";
-import { BattleTactic, Faction, GAME_CONFIG, TroopType } from "../../core/config/Constants";
+import { BattleTactic, EVENT_NAMES, Faction, GAME_CONFIG, TroopType } from "../../core/config/Constants";
 import { GeneralUnit } from "../../core/models/GeneralUnit";
 import { TroopUnit } from "../../core/models/TroopUnit";
 import { BattleState } from "../models/BattleState";
@@ -77,6 +77,7 @@ import { buildUnitStatusContext, computeUnitStatusIcons, gainedTones, newlyGaine
 import { services } from "../../core/managers/ServiceLoader";
 import { FLOAT_MISS_TEXT, FloatTextType } from "../../core/systems/FloatTextStyle";
 import { vitalityRingView, type VitalityRingView } from "../../core/systems/VitalityBarView";
+import { GeneralVitalityStrip } from "./GeneralVitalityStrip";
 import {
   DEFAULT_ENEMY_HERO_ASSET_ID,
   DEFAULT_PLAYER_HERO_ASSET_ID,
@@ -145,6 +146,8 @@ interface GeneralView {
   /** 名牌左側精力能量環（PROG-2-1853） */
   vitalityRing: Graphics;
   vitalityText: Label;
+  /** 名牌血量列下方精力細條（PROG-2-9432） */
+  vitalityStrip: GeneralVitalityStrip;
   faction: Faction;
   usingHeroModel: boolean;
   heroLoading: boolean;
@@ -240,6 +243,7 @@ export class UnitRenderer extends Component {
   // lateUpdate 每幀重用的 Vec3 暫存，避免動態分配（對照 Unity: 快取 Vector3 工具變數）
   private readonly labelWorldPosBuf = new Vec3();
   private readonly generalViews = new Map<Faction, GeneralView>();
+  private unsubVitality: (() => void) | null = null;
   /** 腳下光環節點池（PROG-2-9399），第一次需要時才建立 */
   private statusHalos: StatusHaloPool | null = null;
   /** 高倍率攻擊提示門檻（PROG-2-9422）；載入 data/attack-surge-highlight 前先用預設 */
@@ -283,6 +287,19 @@ export class UnitRenderer extends Component {
     this.node.layer = Layers.Enum.DEFAULT;
     this.ensureRoots();
     this.ensureSceneKeyLight();
+    // 精力一變就即時刷新名牌能量環與細條（放招、回復、地形），不等整盤重繪（PROG-2-9432）
+    this.unsubVitality = services().event.on(EVENT_NAMES.GeneralVitalityChanged, (d) => {
+      const e = d as { faction: Faction; vitality: number; maxVitality: number };
+      const view = this.generalViews.get(e.faction);
+      if (!view) return;
+      this.drawVitalityRing(view, vitalityRingView(e.vitality, e.maxVitality));
+      view.vitalityStrip.set(e.vitality, e.maxVitality);
+    });
+  }
+
+  /** QA 用：讀取某方武將名牌精力細條的繪製狀態 */
+  public debugVitalityStrip(faction: Faction) {
+    return this.generalViews.get(faction)?.vitalityStrip.debugState() ?? null;
   }
 
   public initialize(boardRenderer: BoardRenderer | null, worldCamera: Camera | null, canvasNode: Node | null): void {
@@ -1370,6 +1387,7 @@ export class UnitRenderer extends Component {
     view.typeLabel.string = "將";
     view.hpLabel.string = `${Math.max(0, general.currentHp)}`;
     this.drawVitalityRing(view, vitalityRingView(general.vitality, general.maxVitality));
+    view.vitalityStrip.set(general.vitality, general.maxVitality);
     view.labelOpacity.opacity = 255;
     const label = this.projectClampedGeneralLabel(view);
 
@@ -1456,7 +1474,7 @@ export class UnitRenderer extends Component {
     this.spineUnits.abortDuel();
   }
 
-  onDestroy(): void { this.spineUnits.clear(); this.generalStandees.clear(); this.moveDust.destroy(); services().floatText?.setAvoidProvider(null); }
+  onDestroy(): void { this.unsubVitality?.(); this.unsubVitality = null; this.spineUnits.clear(); this.generalStandees.clear(); this.moveDust.destroy(); services().floatText?.setAvoidProvider(null); }
 
   private createGeneralView(faction: Faction): GeneralView {
     this.ensureRoots();
@@ -1499,6 +1517,8 @@ export class UnitRenderer extends Component {
       ? new Color(255, 130, 130, 255)
       : new Color(160, 200, 255, 255);
     const ring = this.buildVitalityRing(labelNode, 186);
+    // 名牌上排（血量列）底緣在 y=2；細條貼在其正下方，名牌整體縮 0.7，6 單位約為畫面 4px
+    const vitalityStrip = new GeneralVitalityStrip(labelNode, { y: -3, width: 176, height: 6 });
 
     const modelRoot = new Node("ModelRoot");
     modelRoot.layer = Layers.Enum.DEFAULT;
@@ -1516,6 +1536,7 @@ export class UnitRenderer extends Component {
       labelOpacity: badge.opacity,
       vitalityRing: ring.graphics,
       vitalityText: ring.label,
+      vitalityStrip,
       faction,
       usingHeroModel: false,
       heroLoading: false,
