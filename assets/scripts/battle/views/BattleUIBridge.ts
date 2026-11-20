@@ -33,7 +33,7 @@ import { factorAwakeningLines } from '../../core/systems/FactorAwakening';
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { awaitWithTimeout } from "../../core/utils/AwaitGuard";
 import type { TeachingSpiritInput } from '../../core/systems/TeachingSpiritTalisman';
-import { Component, EventKeyboard, EventMouse, EventTouch, Input, KeyCode, Node, input } from 'cc';
+import { Color, Component, EventKeyboard, EventMouse, EventTouch, Input, KeyCode, Node, input } from 'cc';
 import { EVENT_NAMES, Faction, SP_PER_KILL, TroopType, TurnPhase } from '../../core/config/Constants';
 import { battleAptitudeProfileOf, terrainGradeOf } from '../../core/systems/BattleAptitude';
 import { TerrainFeedbackTracker } from '../../core/systems/TerrainAptitudeFeedback';
@@ -56,6 +56,7 @@ import { resolveBattleSkillProfile } from '../skills/BattleSkillProfiles';
 import { GeneralUnit } from '../../core/models/GeneralUnit';
 import { BattleController } from '../controllers/BattleController';
 import { playTurnBannerOn } from './TurnBannerPresenter';
+import { BATTLE_RESULT_BEAT, battleResultBannerOf, shouldHoldBeforeResult } from '../shared/BattleResultBeat';
 import type { BattleResult } from '../BattleTypes';
 import { BattleSpecialActionTracker, specialActionDisplayName, toUnitHitObservation, type UnitDamagedPayload } from '../../core/systems/BattleSpecialActions';
 import { strategistHudViewOf } from '../shared/StrategistHudView';
@@ -215,6 +216,9 @@ export class BattleUIBridge {
   /** 奧義漫畫分鏡 cut-in（Issue #2139）：一場戰鬥一個，「第二次施放走重播」以單場為界 */
   private readonly ultCutin = new UltCutinDirector();
   /** PROG-2-9410：放招時畫面中央的招式名橫幅（排隊／合併見 SkillBannerQueue） */
+  /** 勝敗停頓計時與待開的結算窗（PROG-2-9427） */
+  private _resultBeatTimer: ReturnType<typeof setTimeout> | null = null;
+  private _pendingResultShow: (() => void) | null = null;
   private readonly skillBanner = new SkillNameBanner(() => {
     const hud = this.ctx.hud?.node;
     return hud?.isValid ? (hud.parent?.isValid ? hud.parent : hud) : null;
@@ -387,6 +391,8 @@ export class BattleUIBridge {
   }
 
   public unsubscribeEvents(): void {
+    // 離開戰場時勝敗停頓還沒走完：不再開結算窗（PROG-2-9427）
+    this._cancelResultBeat();
     setBattlePaused(false);
     setEnemyTurnPlayback(false);
     setBattleTimeScale(1);
@@ -1025,6 +1031,8 @@ export class BattleUIBridge {
     if (!state) return;
     if (state.battleEndAnnounced) {
       const popup = this.ctx.resultPopup;
+      // 勝敗停頓中按撤退：直接把結算窗開出來，不再等（PROG-2-9427）
+      if (this._flushResultBeat()) return;
       if (popup && !popup.node.active) {
         const last = this._lastEndedPayload ?? { result: 'enemy-win', retreated: true };
         void popup.showResult(last.result, undefined, this.ctx.pg?.id, last.retreated === true, last.cause);
@@ -1084,8 +1092,24 @@ export class BattleUIBridge {
     else if (data.timeUp === true && data.result === 'player-win') details.unshift('敵軍久攻不下，鳴金退兵。');
     // 年終守城不可重打（PROG-2-9426）：守方是玩家時藏起「再戰一次」
     c.resultPopup?.setReplayAllowed?.(this.ctx.ctrl?.state.siegeDefender !== Faction.Player);
-    void Promise.resolve(c.resultPopup?.showResult(data.result as any, details.length > 0 ? details.join('\n') : undefined, c.pg?.id, data.retreated === true, data.cause))
-      .catch((error) => UCUFLogger.error(LogCategory.BATTLE, '[BattleUIBridge] 結果彈窗顯示失敗', error));
+    const popup = c.resultPopup;
+    const generalId = c.pg?.id;
+    const showPopup = () => {
+      void Promise.resolve(popup?.showResult(data.result as any, details.length > 0 ? details.join('\n') : undefined, generalId, data.retreated === true, data.cause))
+        .catch((error) => UCUFLogger.error(LogCategory.BATTLE, '[BattleUIBridge] 結果彈窗顯示失敗', error));
+    };
+    // 勝敗那一拍（PROG-2-9427）：先打全畫面勝敗橫幅停一拍再開結算窗，停頓期間預載主將頭像；玩家主動撤退照舊立即開
+    if (shouldHoldBeforeResult(data)) {
+      popup?.preloadAvatar?.(generalId);
+      const banner = battleResultBannerOf(data.result, data.retreated === true);
+      if (banner) {
+        const [r, g, b, a] = banner.rgba;
+        c.deployRuntime?.showTurnBanner?.(banner.text, new Color(r, g, b, a), BATTLE_RESULT_BEAT.bannerSec);
+      }
+      this._scheduleResultBeat(showPopup);
+    } else {
+      showPopup();
+    }
     c.boardRenderer?.clearDeployHint();
     c.hud?.clearPersistentStatus();
     c.hud?.clearSceneGambitBadge();
@@ -1097,6 +1121,28 @@ export class BattleUIBridge {
     setEnemyTurnPlayback(false);
     c.isDuelPanelActive = false;
     if (c.deployRuntime) c.deployRuntime.node.active = false;
+  }
+
+  /** 排定停頓後開結算窗；同一時間只留一個待開的結算窗 */
+  private _scheduleResultBeat(show: () => void): void {
+    this._cancelResultBeat();
+    this._pendingResultShow = show;
+    this._resultBeatTimer = setTimeout(() => { this._flushResultBeat(); }, BATTLE_RESULT_BEAT.popupDelayMs);
+  }
+
+  /** 有待開的結算窗就立即開出來；回傳是否真的開了 */
+  private _flushResultBeat(): boolean {
+    const show = this._pendingResultShow;
+    this._cancelResultBeat();
+    if (!show) return false;
+    show();
+    return true;
+  }
+
+  private _cancelResultBeat(): void {
+    if (this._resultBeatTimer !== null) clearTimeout(this._resultBeatTimer);
+    this._resultBeatTimer = null;
+    this._pendingResultShow = null;
   }
 
   /** 把單位受傷事件餵給特定動作偵測；攻方兵種與站位地形從戰場狀態查 */

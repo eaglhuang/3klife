@@ -3,7 +3,7 @@
  * ResultPopupComposite — 戰鬥結果彈窗（Composite 版）
  * Wave 2 migration from ResultPopup - shows victory/defeat/stalemate results
  */
-import { _decorator, BlockInputEvents, Button, Color, Graphics, Label, Layout, Mask, Node, ScrollView, Sprite, Tween, tween, UIOpacity, UITransform, Vec3, Widget } from 'cc';
+import { _decorator, BlockInputEvents, Button, Color, Graphics, Label, Layout, Mask, Node, ScrollView, Sprite, SpriteFrame, Tween, tween, UIOpacity, UITransform, Vec3, Widget } from 'cc';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { loadGeneralAvatar } from '../core/GeneralAvatarLoader';
@@ -93,6 +93,10 @@ export class ResultPopupComposite extends CompositePanel {
     private readonly _details = new ResultDetailsBuffer();
     /** 明細列節點池：結算窗重複使用，列節點只建一次，下一場重設文字（手機省節點） */
     private readonly _detailRows: Node[] = [];
+    /** 預載中的主將頭像（PROG-2-9427） */
+    private _avatarPreload: { id: string; frame: Promise<SpriteFrame | null> } | null = null;
+    /** 這次結算窗等著換上的主將頭像；null 表示沒有要等的 */
+    private _avatarPendingId: string | null = null;
 
     protected onDestroy(): void {
         this.unmount();
@@ -217,6 +221,9 @@ ${result.description}
         const causeKey = cause ? RESULT_CAUSE_I18N[cause]?.[resultType] : undefined;
         const causeDesc = causeZh && causeKey ? tr(causeKey, causeZh) : causeZh;
         const desc = causeDesc ?? (retreat ? RETREAT_DESCRIPTION : descMap[resultType]);
+        // 頭像跟掛載同時開始載；結算窗開出來時還沒載好就先藏著（PROG-2-9427）
+        this.preloadAvatar(generalId);
+        this._avatarPendingId = generalId ?? null;
         await this.show({
             resultType,
             title: retreat ? '撤退' : titleMap[resultType],
@@ -385,7 +392,12 @@ ${result.description}
         const card = this._binder?.getNode('Card');
         if (card) {
             for (const sprite of card.getComponentsInChildren(Sprite)) sprite.grayscale = tone.grayscale;
+            // 卡片隨遮罩淡入時微縮彈出，不是平平地浮現（PROG-2-9427）
+            Tween.stopAllByTarget(card);
+            card.setScale(0.88, 0.88, 1);
+            tween(card).to(0.28, { scale: new Vec3(1, 1, 1) }, { easing: 'backOut' }).start();
         }
+        this._hideAvatarWhilePending();
         const title = this._binder?.getLabel('TitleLabel');
         if (!title) return;
         const [r, g, b] = tone.titleColor;
@@ -398,16 +410,36 @@ ${result.description}
         }
     }
 
+    /**
+     * 先載主將頭像（PROG-2-9427）：戰場勝敗停頓那一拍就開始載，結算窗開出來時多半已載好。
+     * 同一位主將重複呼叫不重載；載入失敗當作沒有頭像（留剪影）。
+     */
+    public preloadAvatar(generalId?: string): void {
+        if (!generalId || this._avatarPreload?.id === generalId) return;
+        this._avatarPreload = { id: generalId, frame: loadGeneralAvatar(generalId).catch(() => null) };
+    }
+
+    /** 結算窗開出來時頭像還沒載好就先藏著，載好再現身，不先閃一下問號剪影 */
+    private _hideAvatarWhilePending(): void {
+        const sprite = this._binder?.getNode('Avatar')?.getComponent(Sprite);
+        if (sprite && this._avatarPendingId) sprite.enabled = false;
+    }
+
     private async _applyGeneralAvatar(generalId: string | undefined): Promise<void> {
         const holder = this._binder?.getNode('AvatarMask');
         const sprite = this._binder?.getNode('Avatar')?.getComponent(Sprite);
         if (!holder || !sprite) return;
         if (!holder.getComponent(Mask)) holder.addComponent(Mask).type = Mask.Type.GRAPHICS_ELLIPSE;
-        const frame = generalId ? await loadGeneralAvatar(generalId) : null;
-        if (frame && sprite.isValid) {
+        this.preloadAvatar(generalId);
+        const frame = generalId && this._avatarPreload?.id === generalId ? await this._avatarPreload.frame : null;
+        // 等頭像期間又開了下一場的結算窗：交給新的那次處理
+        if (this._avatarPendingId !== (generalId ?? null) || !sprite.isValid) return;
+        this._avatarPendingId = null;
+        if (frame) {
             sprite.spriteFrame = frame;
             sprite.sizeMode = Sprite.SizeMode.CUSTOM;
         }
+        sprite.enabled = true;
     }
 
     protected override _onAfterBuildReady(binder: UITemplateBinder): void {
