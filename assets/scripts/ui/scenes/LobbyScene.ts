@@ -480,6 +480,8 @@ export class LobbyScene extends Component {
     private _graduation: GraduationRecordController<UIScreenPreviewHost> | null = null;
     /** 學府結業結算彈窗（PROG-2-1956） */
     private _academyGraduation: AcademyGraduationController<UIScreenPreviewHost> | null = null;
+    /** 結業結算進行中（防重入，PROG-2-9211） */
+    private _academyGraduating = false;
     private _academyTacticNames: ReadonlyMap<string, string> | null = null;
     /** 學府入學與 36 回合修業畫面（PROG-2-9189） */
     private _academyFlow: AcademyFlowController<UIScreenPreviewHost> | null = null;
@@ -1599,10 +1601,32 @@ export class LobbyScene extends Component {
             },
             isActive: () => session.isAcademyActive,
             onChanged: () => { this._refreshCityHub(); },
+            onGraduated: (snapshot) => { void this._settleAcademyGraduation(snapshot); },
         });
         await this._academyFlow.mount();
+        // 舊存檔補結業（PROG-2-9211）：紀錄已 graduated 卻沒結算，進大廳自動補
+        this._academyFlow.settlePendingGraduation();
         if (session.isAcademyActive) {
             services().event.emit('SHOW_TOAST', { message: this._academyText('ui.academy.flow.lobby.resume_toast', '學府修業進行中，請回到學府繼續'), duration: 3 });
+        }
+    }
+
+    /**
+     * 修業結業後結算（PROG-2-9211，暫行，PROG-2-9191 取代）：寫回武將、清修業紀錄（graduateFromAcademy 內一次存檔），
+     * 開結業結算彈窗。失敗時保留紀錄（不凍結外界時間），下次進大廳會再補一次。
+     * TODO(PROG-2-9201 共通 API 層合併後)：結算改走共通 API。
+     */
+    private async _settleAcademyGraduation(snapshot: Readonly<AcademyStateSnapshot>): Promise<void> {
+        if (this._academyGraduating) return;
+        this._academyGraduating = true;
+        try {
+            const result = await this.showAcademyGraduation(snapshot.childId, snapshot);
+            const host = this._academyGraduation?.host;
+            if (result) this._academyFlow?.closeAll(); // 修業畫面收起，只留結業結算彈窗
+            if (result && host) this._bringNodeToFront(host.node);
+        } finally {
+            this._academyGraduating = false;
+            this._refreshCityHub();
         }
     }
 

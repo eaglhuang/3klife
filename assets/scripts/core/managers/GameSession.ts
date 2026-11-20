@@ -1267,12 +1267,29 @@ export class GameSession implements AcademyRecordPort {
     /**
      * 學府結業寫回名冊並自動存檔（PROG-2-1909）：五維、戰法、特質一起落地。
      * 查無武將回傳 null；快照未結業或不屬於該武將時由 applyAcademyGraduation 拋錯，名冊不變。
+     *
+     * PROG-2-9211（暫行，PROG-2-9191 取代）：
+     * - 同步蓋上 graduationRating／graduatedSeason：沒有評級的子嗣不能出戰、也會一直出現在入學名單。
+     * - 結業的就是進行中的學府紀錄時一併清掉（名冊與清檔同一次存檔），外界時間凍結解除。
+     * - 查無武將但紀錄屬於他時，只清紀錄（孤兒紀錄不留）。
+     * TODO(PROG-2-9201 共通 API 層合併後)：名冊寫回與清紀錄改走 B0 的共通寫入 API，不再直接改 _academyRecord／replaceAll。
      */
     public async graduateFromAcademy(generalId: string, snapshot: Readonly<AcademyStateSnapshot>): Promise<AcademyGraduationResult | null> {
+        const record = this._academyRecord;
+        const ownsRecord = !!record && record.committed.graduated && record.committed.childId === generalId;
         const general = this._roster.getAll().find((g) => g.id === generalId);
-        if (!general) return null;
-        const result = applyAcademyGraduation(general, snapshot);
-        this._roster.replaceAll(this._roster.getAll().map((g) => (g.id === generalId ? result.general : g)));
+        if (!general) {
+            if (ownsRecord) {
+                this._academyRecord = null;
+                if (this._autoSave && this._save) await this.save();
+            }
+            return null;
+        }
+        const applied = applyAcademyGraduation(general, snapshot);
+        const stamped = { ...applied.general, graduationRating: applied.grade, graduatedSeason: this._clock.state.totalSeasonsElapsed } as GeneralConfig;
+        const result: AcademyGraduationResult = { ...applied, general: stamped };
+        this._roster.replaceAll(this._roster.getAll().map((g) => (g.id === generalId ? stamped : g)));
+        if (ownsRecord) this._academyRecord = null;
         if (this._autoSave && this._save) {
             await this.save();
         }
