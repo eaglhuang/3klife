@@ -1,7 +1,7 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-11-17
-> 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 4/14 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
+> 生成日期: 2026-11-20
+> 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 4/15 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
 ## 遊戲規格類 (`doc_spec`) — Part 4/5

@@ -1,10 +1,10 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-11-17
-> 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 14/14 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
+> 生成日期: 2026-11-20
+> 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 14/15 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
-## 任務卡類 (`doc_task`) — Part 9/9
+## 任務卡類 (`doc_task`) — Part 9/10
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
@@ -242,3 +242,56 @@
 | `doc_task_2545` | docs/agent-briefs/tasks/PROG/PROG-2-9362.md | [PROG-2-9362] 戰場 Q 版角色匯入工具改成資料驅動：新兵種與新武將不用改程式 |
 | `doc_task_2546` | docs/agent-briefs/tasks/PROG/PROG-2-9363.md | [PROG-2-9363] 特效表 4 處寫錯的特效代號修正，並新增「代號必須在登錄表裡」的守門測試 |
 | `doc_task_2547` | docs/agent-briefs/tasks/PROG/PROG-2-9366.md | [PROG-2-9366] 單挑結束後兩位主將背對戰場：退場走回場邊後恢復原本朝向 |
+| `doc_task_2548` | docs/agent-briefs/tasks/PROG/PROG-2-9125.md | 問題 |
+| `doc_task_2549` | docs/agent-briefs/tasks/PROG/PROG-2-9126.md | 問題 |
+| `doc_task_2550` | docs/agent-briefs/tasks/PROG/PROG-2-9127.md | 問題 |
+| `doc_task_2551` | docs/agent-briefs/tasks/PROG/PROG-2-9128.md | 問題 |
+| `doc_task_2552` | docs/agent-briefs/tasks/PROG/PROG-2-9130.md | 範圍 |
+| `doc_task_2553` | docs/agent-briefs/tasks/PROG/PROG-2-9131.md | 問題 |
+| `doc_task_2554` | docs/agent-briefs/tasks/PROG/PROG-2-9132.md | 問題 |
+| `doc_task_2555` | docs/agent-briefs/tasks/PROG/PROG-2-9133.md | 問題 |
+| `doc_task_2556` | docs/agent-briefs/tasks/PROG/PROG-2-9134.md | 問題 |
+| `doc_task_2557` | docs/agent-briefs/tasks/PROG/PROG-2-9135.md | 問題 |
+| `doc_task_2558` | docs/agent-briefs/tasks/PROG/PROG-2-9136.md | [PROG-2-9136] 大廳戰報回顧開啟後，上方露出底下晨報派遣板的標題 |
+| `doc_task_2559` | docs/agent-briefs/tasks/PROG/PROG-2-9137.md | 問題 |
+| `doc_task_2560` | docs/agent-briefs/tasks/PROG/PROG-2-9138.md | 規則（使用者 2026-11-17 裁決） |
+| `doc_task_2561` | docs/agent-briefs/tasks/PROG/PROG-2-9139.md | 規則（使用者 2026-11-17 裁決） |
+| `doc_task_2562` | docs/agent-briefs/tasks/PROG/PROG-2-9140.md | 規則（使用者 2026-11-17 裁決） |
+| `doc_task_2563` | docs/agent-briefs/tasks/PROG/PROG-2-9141.md | 目標 |
+| `doc_task_2564` | docs/agent-briefs/tasks/PROG/PROG-2-9142.md | 目標 |
+| `doc_task_2565` | docs/agent-briefs/tasks/PROG/PROG-2-9143.md | 目標 |
+| `doc_task_2566` | docs/agent-briefs/tasks/PROG/PROG-2-9144.md | 目標 |
+| `doc_task_2567` | docs/agent-briefs/tasks/PROG/PROG-2-9145.md | 目標 |
+| `doc_task_2568` | docs/agent-briefs/tasks/PROG/PROG-2-9146.md | [PROG-2-9146] 武將心智 MIND-1：核心＋心情＋大廳小人會說話 |
+| `doc_task_2569` | docs/agent-briefs/tasks/PROG/PROG-2-9147.md | 目標 |
+| `doc_task_2570` | docs/agent-briefs/tasks/PROG/PROG-2-9148.md | 目標 |
+| `doc_task_2571` | docs/agent-briefs/tasks/PROG/PROG-2-9149.md | 目標 |
+| `doc_task_2572` | docs/agent-briefs/tasks/PROG/PROG-2-9150.md | [PROG-2-9150] 武將心智 MIND-2：學習規則＋主動請求＋信箱 |
+| `doc_task_2573` | docs/agent-briefs/tasks/PROG/PROG-2-9151.md | [PROG-2-9151] 官職晉升解鎖節奏 |
+| `doc_task_2574` | docs/agent-briefs/tasks/PROG/PROG-2-9152.md | 目標 |
+| `doc_task_2575` | docs/agent-briefs/tasks/PROG/PROG-2-9153.md | 目標 |
+| `doc_task_2576` | docs/agent-briefs/tasks/PROG/PROG-2-9154.md | 目標 |
+| `doc_task_2577` | docs/agent-briefs/tasks/PROG/PROG-2-9155.md | [PROG-2-9155] 季報強化 |
+| `doc_task_2578` | docs/agent-briefs/tasks/PROG/PROG-2-9156.md | 目標 |
+| `doc_task_2579` | docs/agent-briefs/tasks/PROG/PROG-2-9157.md | 目標 |
+| `doc_task_2580` | docs/agent-briefs/tasks/PROG/PROG-2-9158.md | 目標 |
+| `doc_task_2581` | docs/agent-briefs/tasks/PROG/PROG-2-9159.md | 目標 |
+| `doc_task_2582` | docs/agent-briefs/tasks/PROG/PROG-2-9160.md | 目標 |
+| `doc_task_2583` | docs/agent-briefs/tasks/PROG/PROG-2-9161.md | 目標 |
+| `doc_task_2584` | docs/agent-briefs/tasks/PROG/PROG-2-9162.md | 目標 |
+| `doc_task_2585` | docs/agent-briefs/tasks/PROG/PROG-2-9163.md | 目標 |
+| `doc_task_2586` | docs/agent-briefs/tasks/PROG/PROG-2-9164.md | [PROG-2-9164] 大廳 ESC 關最上層彈窗、成人禮只列本家子嗣、培育顯示距成年年數 |
+| `doc_task_2587` | docs/agent-briefs/tasks/PROG/PROG-2-9165.md | 目標 |
+| `doc_task_2588` | docs/agent-briefs/tasks/PROG/PROG-2-9166.md | [PROG-2-9166] 現成武將轉職入口（武將詳情頁） |
+| `doc_task_2589` | docs/agent-briefs/tasks/PROG/PROG-2-9167.md | [PROG-2-9167] 培育解鎖提示（晉升縣府佐官跳一次，去教官池抽教官） |
+| `doc_task_2590` | docs/agent-briefs/tasks/PROG/PROG-2-9168.md | 目標 |
+| `doc_task_2591` | docs/agent-briefs/tasks/PROG/PROG-2-9169.md | [PROG-2-9169] 規格書分片與 2026-11-19 裁決 86–91 回寫 |
+| `doc_task_2592` | docs/agent-briefs/tasks/PROG/PROG-2-9170.md | PROG-2-9170：培育中段血脈共鳴事件（Rounds 12 & 24） |
+| `doc_task_2593` | docs/agent-briefs/tasks/PROG/PROG-2-9171.md | [PROG-2-9171] 第一代結緣顯示爆發力字母等級 S～F |
+| `doc_task_2594` | docs/agent-briefs/tasks/PROG/PROG-2-9172.md | PROG-2-9172：G3 補觸發（家族累積 3 代以上亦升 G3） |
+| `doc_task_2595` | docs/agent-briefs/tasks/PROG/PROG-2-9173.md | [PROG-2-9173] 心智結緣事件玩家看得到：年度總結顯示「本年適婚未結緣」 |
+| `doc_task_2596` | docs/agent-briefs/tasks/PROG/PROG-2-9175.md | [PROG-2-9175] 線上試玩回報：凍結與熱區偏移卡關除錯 |
+| `doc_task_2597` | docs/agent-briefs/tasks/PROG/PROG-2-9176.md | [PROG-2-9176] 線上試玩回報顯示錯誤：舊存檔適性、因子與狀態中文名、結緣文案、召喚券數量、官職提示 |
+| `doc_task_2598` | docs/agent-briefs/tasks/PROG/PROG-2-9177.md | PROG-2-9177：結緣引導提示＋9174 回歸測試入主線 |
+| `doc_task_2599` | docs/agent-briefs/tasks/PROG/PROG-2-9179.md | PROG-2-9179：開局送一位 4 歲宗室幼苗（第 1 年可開蒙培育） |
+| `doc_task_2600` | docs/agent-briefs/tasks/PROG/PROG-2-9180.md | PROG-2-9180：待產鎖縮短為 2 季 |
