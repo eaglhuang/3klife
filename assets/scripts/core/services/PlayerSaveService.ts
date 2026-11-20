@@ -45,6 +45,7 @@ import type { DataStorageAdapter } from '../storage/DataStorageAdapter';
 import { GameClock, GameTimeState } from '../systems/GameClock';
 import type { NurtureState } from './NurtureService';
 import { normalizeItemMeta, type ItemMeta } from '../../shared/item/ItemRules';
+import { normalizeRewardMeta, type RewardMeta } from '../../shared/reward/RewardRules';
 import { normalizeDeck } from './PlayerDeckRules';
 import { RandomState, validateRandomState } from '../systems/SeededRandom';
 import { createTallyLoyaltyState, type TallyLoyaltyState } from '../systems/TigerTallyLoyalty';
@@ -190,6 +191,8 @@ export interface PlayerSaveSnapshot {
     legendaryMentoringUsedIds?: string[];
     /** 物品庫存 base 中繼資料（PROG-2-9203）：定期發放高水位與取得／消耗帳本；選填，舊檔缺值讀回為空，版號不升（自帶 v） */
     itemMeta?: ItemMeta;
+    /** 獎勵 base 中繼資料（PROG-2-9205）：伺服器私有亂數會話、保底計數、發放紀錄（冪等）；選填，舊檔缺值讀回為空，版號不升（自帶 v） */
+    rewardMeta?: RewardMeta;
     /** 官職狀態（OFC-03）：階位、經驗、解鎖歷史；舊檔沒有此欄位時讀回為階位 1；版號不升（扁平欄位） */
     officerState?: OfficerState;
     /** 世界沙盤已放置標記數（OFC-06）；扁平選填欄位，舊檔沒有時讀回 0；版號不升 */
@@ -751,6 +754,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         // 編制預設（PROG-2-0791）：#538 漏掉這一欄，存檔時會被丟掉
         ...(snapshot.sortiePresets !== undefined ? { sortiePresets: normalizeSortiePresets(snapshot.sortiePresets) } : {}),
         ...(snapshot.itemMeta !== undefined ? { itemMeta: normalizeItemMeta(snapshot.itemMeta) } : {}),
+        ...(snapshot.rewardMeta !== undefined ? { rewardMeta: normalizeRewardMeta(snapshot.rewardMeta) } : {}),
         ...(snapshot.legendaryMentoringUsedIds !== undefined ? { legendaryMentoringUsedIds: normalizeLegendaryMentoringUsedIds(snapshot.legendaryMentoringUsedIds) } : {}),
     };
 }

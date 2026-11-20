@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 183,
-    "in_progress": 5,
-    "open": 85,
-    "total": 273
+    "done": 186,
+    "in_progress": 4,
+    "open": 76,
+    "total": 275
   },
   "tasks": [
     {
@@ -11587,6 +11587,74 @@
       "acceptance": [],
       "deliverables": [],
       "notes": "2026-11-20 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9205",
+      "title": "RWD-M 獎勵 base 最小版：獎池保底帳本與 reward.roll/claim",
+      "owner": "ClaudeCode_sonnet-5-5",
+      "priority": "P0",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "ClaudeCode_sonnet-5-5",
+      "started_at": "2026-11-21T04:16:52+08:00",
+      "started_by_agent": "ClaudeCode_sonnet-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "共用框架總綱 doc_spec_1182 第 12 章 RWD-M／獎勵規格 doc_spec_1186：獎池、權重、保底、等階、固定獎與懲罰；reward.roll/claim 端點（冪等、保底持久化、伺服器權威擲骰）；發放分派 wallet／item（SKL 合併後接 skill）；演出 adapter 介面（instant／chest）；E32x 錯誤碼；遷移里程碑戰法筆記發放示範",
+      "related": [
+        "PROG-2-9200",
+        "PROG-2-9204"
+      ],
+      "depends": [
+        "PROG-2-9201",
+        "PROG-2-9202",
+        "PROG-2-9203"
+      ],
+      "acceptance": [
+        "reward.roll/claim 契約與冪等測試",
+        "保底持久化與重播測試",
+        "懲罰截斷與倍率縮放測試",
+        "發放走 item.grant 不直接 addItem",
+        "里程碑戰法筆記改走 reward.claim",
+        "tsc 0",
+        "compute-gate standard 通過",
+        "棘輪基準只減不增",
+        "網頁 playtest 11/11"
+      ],
+      "deliverables": [
+        "shared/reward/{RewardConfig",
+        "RewardRules",
+        "RewardPresentation}.ts",
+        "core/api/localserver/RewardCommands.ts",
+        "assets/resources/data/reward-config.json",
+        "tests/RewardBase.test.ts"
+      ],
+      "notes": "2026-11-21 | 狀態: done | 驗證: tsc test 0、單元 8727 全過（新增 RewardBase 20 條）、compute-gate standard 通過（僅 LoginScene 既有警告）、web-desktop 建置後 playtest 11/11 console error 0、棘輪 134→133 | 變更: shared/reward/{RewardConfig,RewardRules,RewardPresentation}.ts、core/api/localserver/RewardCommands.ts（reward.roll/claim 命令、reward.pools/pity 查詢）、LocalApiAdapter.invoke（命令層互叫，不經佇列）、resources/data/reward-config.json、GameSession.rewardAuthority()（存檔欄位 rewardMeta：伺服器私有亂數會話、保底計數、最近 200 筆發放紀錄做冪等）、E320~E328、遷移示範：戰後里程碑戰法筆記改走 reward.claim（MilestoneRewards.grantTacticNotes 移除，棘輪 -1） | 阻塞: 無 | 備註: 規格命令名 reward.draw 實作為 reward.roll、錯誤碼規格 E5xx 改 E32x（依任務指示）。入帳道具走 item.grant、貨幣走錢包 port，宿主種類用 registerRewardEffect（SKL 合併後掛 tacticLearn）。失敗整筆撤銷並回 E325，亂數與保底不前進。演出只做 adapter 介面與 instant/chest 模組（sink 抽象），尚未接場景彈窗。grantKey 冪等視窗為最近 200 筆。轉蛋建議：採規格 Q1-A，GachaDraw 引擎改讀 reward-pool（雙重保底以 pity 擴充 soft 欄位、同名轉換與 UP 佔比用 effect handler/插件），扣款走 wallet.spend，演出用 gachaReveal，GachaApi 先維持並行，待使用者裁決 Q1 再動。待決：①E32x 與規格 E5xx 對照由總 PM 裁決 ②reward.pools 機率公開方式（Q5）③soft pity 未做 ④連線版 reward.roll 的憑證核對（source 現僅做種類白名單）",
       "brief": {
         "style": "classic",
         "label": "",

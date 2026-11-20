@@ -60,6 +60,7 @@ import { familyPairKey } from "../systems/FamilySynergy";
 import { configureWhiteFactorAchievements, WHITE_FACTOR_ACHIEVEMENTS_JSON, type WhiteFactorAchievementsConfig } from "../systems/WhiteFactorTraits";
 import { configureMindMarriageRules, MIND_MARRIAGE_RULES_JSON, type MindMarriageRulesConfig } from "../mind/MindMarriage";
 import { ACADEMY_ENROLL_RULES_JSON, configureAcademyEnrollRules, type AcademyEnrollRulesConfig } from "../systems/nurture/AcademyEnrollRules";
+import { DEFAULT_REWARD_CONFIG, normalizeRewardConfig, REWARD_CONFIG_JSON, type RewardConfigV1 } from "../../shared/reward/RewardConfig";
 import { ITEM_CONFIG_JSON, normalizeItemConfig, DEFAULT_ITEM_CONFIG, type ItemConfigV1 } from "../../shared/item/ItemConfig";
 import { ACADEMY_INHERIT_MARKS_JSON, configureAcademyInheritMarks, type AcademyInheritMarksConfig } from "../systems/nurture/AcademyInheritAndMarks";
 
@@ -261,6 +262,8 @@ export class ServiceLoader {
     private localApi: LocalApiBundle | null = null;
     /** 物品庫存設定（item-config.json，PROG-2-9203）；載入前用內建預設，API 重建時沿用 */
     private itemConfig: ItemConfigV1 = DEFAULT_ITEM_CONFIG;
+    /** 獎勵設定（reward-config.json，PROG-2-9205）；載入前用空設定，API 重建時沿用 */
+    private rewardConfig: RewardConfigV1 = DEFAULT_REWARD_CONFIG;
     /** 場景綁定的權威錢包；API 重建時沿用 */
     private walletAuthority: WalletAuthority | null = null;
 
@@ -289,6 +292,10 @@ export class ServiceLoader {
         this.localApi.setItemConfig(this.itemConfig);
         this.localApi.setItemAuthority(this.session.itemAuthority());
         this.session.setItemApi(this.localApi.api);
+        // 獎勵 base（PROG-2-9205）：獎池／套件設定、亂數會話與保底存在 GameSession，戰後里程碑獎勵走 reward.claim
+        this.localApi.setRewardConfig(this.rewardConfig);
+        this.localApi.setRewardAuthority(this.session.rewardAuthority());
+        this.session.setRewardApi(this.localApi.api);
         this.session.setSaveService(new ApiSaveGateway(this.localApi.api));
         // 退役 / 死亡歸檔 / 季結排程與存檔共用同一個儲存後端（key 不同，不會互蓋）
         this.legacy = new LegacyService(storageAdapter);
@@ -396,6 +403,7 @@ export class ServiceLoader {
             loadSafe<Partial<MindMarriageRulesConfig>>(MIND_MARRIAGE_RULES_JSON, configureMindMarriageRules),
             loadSafe<Partial<AcademyInheritMarksConfig>>(ACADEMY_INHERIT_MARKS_JSON, configureAcademyInheritMarks),
             loadSafe<Partial<AcademyEnrollRulesConfig>>(ACADEMY_ENROLL_RULES_JSON, configureAcademyEnrollRules),
+            loadSafe<unknown>(REWARD_CONFIG_JSON, (raw) => { this.rewardConfig = normalizeRewardConfig(raw); this.localApi?.setRewardConfig(this.rewardConfig); }),
             loadSafe<unknown>(ITEM_CONFIG_JSON, (raw) => { this.itemConfig = normalizeItemConfig(raw); this.localApi?.setItemConfig(this.itemConfig); }),
             loadSafe<Partial<MarriageVitalityRulesConfig>>(MARRIAGE_VITALITY_RULES_JSON, configureMarriageVitalityRules),
         ]);

@@ -75,6 +75,23 @@ export class LocalApiAdapter implements IApiClient {
         this._handlers.delete(name);
     }
 
+    /**
+     * 命令層互相呼叫（獎勵發物品走 item.grant、發貨幣走錢包…）：直接執行已掛上的處理器，
+     * 不經佇列、冪等與 saveRev 檢查。只能在「已經在某個命令處理器裡」使用（外層命令已排進佇列並負責冪等）；
+     * 從外部呼叫請用 cmd／query。處理器丟出的 ApiError 原樣往上丟，讓外層命令整筆失敗或回滾。
+     */
+    public async invoke(name: ApiCommandName, args: Record<string, unknown>): Promise<HandlerOutcome> {
+        const handler = this._handlers.get(name);
+        if (!handler) throw new ApiError('COMMAND_UNKNOWN', `未知命令 ${name}`);
+        const seq = ++this._reqSeq;
+        return handler(args, {
+            request: this._buildRequest(name, args, undefined, seq),
+            nowMs: this._now(),
+            saveRev: this._rev,
+            syncRev: () => undefined,
+        });
+    }
+
     public subscribe(evt: string, handler: (e: ApiEvent) => void): Unsubscribe {
         const list = this._subscribers.get(evt) ?? [];
         list.push(handler);

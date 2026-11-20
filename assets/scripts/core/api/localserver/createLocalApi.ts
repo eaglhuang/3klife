@@ -1,12 +1,16 @@
 // @spec-source → 共用框架總綱規格書 (doc_spec_1182) §5.8 啟動時綁定 adapter；PROG-2-9201、PROG-2-9203
 /**
- * createLocalApi — 組裝單機的本機伺服器 adapter：掛上存檔命令、錢包命令與物品庫存命令。
+ * createLocalApi — 組裝單機的本機伺服器 adapter：掛上存檔命令、錢包命令、物品庫存命令與獎勵命令。
  *
  * 錢包權威由場景在 LocalGachaService 建好後以 setWallet 綁定（命令處理器每次呼叫才取，所以可後綁、可換）。
  * 物品庫存的存放位置（家庭倉庫＝GameSession 的玩家庫存表）由 setItemAuthority 綁定；設定由 setItemConfig 換入。
+ * 獎勵（PROG-2-9205）的狀態存放由 setRewardAuthority 綁定、設定由 setRewardConfig 換入；
+ * 宿主自訂效果種類（技能習得等）用 registerRewardEffect 掛 handler，條件評估與倍率由 setRewardHooks 提供。
  */
 import { DEFAULT_ITEM_CONFIG, type ItemConfigV1 } from '../../../shared/item/ItemConfig';
+import { DEFAULT_REWARD_CONFIG, type RewardConfigV1 } from '../../../shared/reward/RewardConfig';
 import { registerItemCommands, type ItemAuthority } from './ItemCommands';
+import { registerRewardCommands, type RewardAuthority, type RewardEffectHandler, type RewardPorts } from './RewardCommands';
 import { LocalApiAdapter, type LocalApiAdapterOptions } from './LocalApiAdapter';
 import { registerSkillCommands, type SkillHost } from './SkillCommands';
 import { registerSaveCommands, type LocalSaveStore } from './SaveCommands';
@@ -19,6 +23,12 @@ export interface LocalApiBundle {
     setSkillHost(host: SkillHost | null): void;
     setItemAuthority(authority: ItemAuthority | null): void;
     setItemConfig(config: ItemConfigV1): void;
+    setRewardAuthority(authority: RewardAuthority | null): void;
+    setRewardConfig(config: RewardConfigV1): void;
+    /** 掛上宿主自訂的獎勵效果種類（例如 tacticLearn）；同名以後者為準 */
+    registerRewardEffect(kind: string, handler: RewardEffectHandler): void;
+    /** 條件評估、倍率、熵來源（測試固定種子用） */
+    setRewardHooks(hooks: Pick<RewardPorts, 'evaluate' | 'modifiers' | 'entropy'>): void;
 }
 
 export function createLocalApi(store: LocalSaveStore, opts: LocalApiAdapterOptions = {}): LocalApiBundle {
@@ -27,15 +37,24 @@ export function createLocalApi(store: LocalSaveStore, opts: LocalApiAdapterOptio
     let authority: ItemAuthority | null = null;
     let config: ItemConfigV1 = DEFAULT_ITEM_CONFIG;
     let skillHost: SkillHost | null = null;
+    let rewardAuthority: RewardAuthority | null = null;
+    let rewardConfig: RewardConfigV1 = DEFAULT_REWARD_CONFIG;
+    let rewardHooks: Pick<RewardPorts, 'evaluate' | 'modifiers' | 'entropy'> = {};
+    const rewardHandlers: Record<string, RewardEffectHandler> = {};
     registerSaveCommands(api, store);
     registerWalletCommands(api, () => wallet);
     registerItemCommands(api, () => ({ authority, wallet, config }));
+    registerRewardCommands(api, () => ({ authority: rewardAuthority, wallet, config: rewardConfig, handlers: rewardHandlers, ...rewardHooks }));
     registerSkillCommands(api, () => skillHost);
     return {
         api,
         setWallet: (next) => { wallet = next; },
         setItemAuthority: (next) => { authority = next; },
         setItemConfig: (next) => { config = next; },
+        setRewardAuthority: (next) => { rewardAuthority = next; },
+        setRewardConfig: (next) => { rewardConfig = next; },
+        registerRewardEffect: (kind, handler) => { rewardHandlers[kind] = handler; },
+        setRewardHooks: (hooks) => { rewardHooks = hooks; },
         setSkillHost: (next) => { skillHost = next; },
     };
 }
