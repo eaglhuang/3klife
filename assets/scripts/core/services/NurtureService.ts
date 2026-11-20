@@ -245,6 +245,25 @@ export class NurtureService {
         return Math.max(0, (this._options.admissionsPerSeason ?? DEFAULT_ADMISSIONS_PER_SEASON) - used);
     }
 
+    /**
+     * 學府入學消耗 1 張入學令（PROG-2-9189，沿用舊入學令來源、不限季節）。
+     * 當季沒有剩餘時回傳 false、不扣；成功回傳 true。落盤失敗時呼叫 refundAdmissionToken 退回。
+     */
+    consumeAdmissionToken(): boolean {
+        if (this.admissionsLeft() <= 0) return false;
+        const season = this._season();
+        const used = this._state.admission.season === season ? this._state.admission.used : 0;
+        this._state.admission = { season, used: used + 1 };
+        return true;
+    }
+
+    /** 退回最近一張入學令（學府入學落盤失敗時用）；本季沒有已用的令時無事 */
+    refundAdmissionToken(): void {
+        const season = this._season();
+        if (this._state.admission.season !== season || this._state.admission.used <= 0) return;
+        this._state.admission = { season, used: this._state.admission.used - 1 };
+    }
+
     checkStart(childId: string, mentors: readonly TrainingMentor[] = []): NurtureEligibility {
         const reasons: NurtureBlockReason[] = [];
         const child = this._find(childId);

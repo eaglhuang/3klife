@@ -118,7 +118,7 @@ export function createPlaytestRound4FixesSuite(): TestSuite {
         uit.setContentSize(900, 116);
         const view = buildLobbyCityHubView(createBaseCityHubInput('nurture'));
         uit.setContentSize(computeSubMenuWidth(view.visibleSubCount), uit.height);
-        assert.equals(708, uit.width, '4 個子按鈕時 SubMenu 寬度應從 900 收合至 708');
+        assert.equals(880, uit.width, '5 個子按鈕時 SubMenu 寬度應從 900 收合至 880');
         assert.equals(116, uit.height, '高度應維持 116');
     });
 

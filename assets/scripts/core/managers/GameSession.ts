@@ -57,6 +57,7 @@ import { computeDiscountedTpCost, tacticTagsOf } from '../systems/WhiteFactorTra
 import { applyPassiveSave, totalTacticTpDiscount } from '../systems/MentorPassiveSavings';
 import type { GeneralConfig } from '../models/GeneralUnit';
 import { advanceDaughtersOneYear, assignDaughterRoute, daughtersAwaitingRoute, type AssignDaughterResult, type DaughterRecord, type DaughterRoute } from '../systems/DaughterComingOfAge';
+import { isAcademyRecordActive, normalizeAcademyRecord, type AcademyRecordPort, type PersistedAcademyRecord } from '../services/GameAcademySaveStore';
 import { formatSeasonLabel, GameClock, GameTimeState, SeasonAdvanceResult, SEASONS_PER_YEAR } from '../systems/GameClock';
 import { buildYearReport, normalizeYearAgingEvents, YearReport } from '../systems/YearReport';
 import { backfillTallyTroopTypes, mainTroopTypeOf } from '../systems/TigerTally';
@@ -753,7 +754,15 @@ export interface DispatchClickResult {
     generalName?: string;
 }
 
-export class GameSession {
+/** 學府修業中外界時間凍結：任何路徑呼叫 advanceSeason 都會丟這個錯（doc_spec_0524） */
+export class AcademyFrozenError extends Error {
+    constructor() {
+        super('學府修業中，外界時間靜止');
+        this.name = 'AcademyFrozenError';
+    }
+}
+
+export class GameSession implements AcademyRecordPort {
     private _clock = new GameClock();
     /** 單場戰報快照（PROG-2-0951）：只保留最近一場，記憶體內，不寫入存檔 */
     private _battleSerial = 0;
@@ -914,6 +923,8 @@ export class GameSession {
     /** 祠堂每日供奉最後領取日（UTC+8，YYYY-MM-DD）；從未領為 null（PROG-2-1915） */
     private _shrineOfferingDay: string | null = null;
     private _seasonPass: SeasonPassState = createSeasonPassState();
+    /** 進行中的學府修業紀錄（PROG-2-9189）；有值且未結業時外界時間凍結 */
+    private _academyRecord: PersistedAcademyRecord | null = null;
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
     private _prison: PrisonState<GeneralConfig> = createPrisonState<GeneralConfig>();
     /** 來投時依 uid 查回的武將配置（generals.json）；大廳載入後由 setGeneralTemplates 注入 */
@@ -2183,6 +2194,7 @@ export class GameSession {
         this._pendingSceneGambit = null;
         this._shrineOfferingDay = null;
         this._seasonPass = createSeasonPassState();
+        this._academyRecord = null;
         this._sevenDayJourney = createSevenDayJourneyState();
         this._officerState = initialOfficerState();
         this._officerTrial = null;
@@ -3180,6 +3192,30 @@ export class GameSession {
         this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
         if (this._autoSave && this._save) await this.save();
         return GameSession.SHRINE_OFFERING_PILLS;
+    }
+
+    /** 進行中的學府修業紀錄（含入學當下時鐘）；沒有時為 null。回傳複本（PROG-2-9189） */
+    public get academyRecord(): PersistedAcademyRecord | null {
+        return this._academyRecord ? JSON.parse(JSON.stringify(this._academyRecord)) as PersistedAcademyRecord : null;
+    }
+
+    /** AcademyRecordPort：GameAcademySaveStore 用，同步改記憶體；落盤由呼叫端接著 save() */
+    public getAcademyRecord(): PersistedAcademyRecord | null {
+        return this._academyRecord;
+    }
+
+    public setAcademyRecord(record: PersistedAcademyRecord | null): void {
+        this._academyRecord = record;
+    }
+
+    /** 有未結業的學府修業：外界時間凍結、大廳「下一季」被擋 */
+    public get isAcademyActive(): boolean {
+        return isAcademyRecordActive(this._academyRecord);
+    }
+
+    /** 學府種子與存檔用的家族識別：沿用玩家擁有者 id（同一存檔固定） */
+    public get clanUuid(): string {
+        return this._npcPlayerId ?? 'clan-local';
     }
 
     /** 季度通行證（ECO-13 Mock，裁決 11/09 第 12 題） */
@@ -5155,6 +5191,8 @@ export class GameSession {
 
     /** epochMs 用來判斷月卡是否有效（月卡期間精力回復 ×1.2，VIT-08）；預設現在時間 */
     public async advanceSeason(epochMs: number = Date.now()): Promise<SeasonAdvancedPayload> {
+        // 學府修業期間外界時間凍結（PROG-2-9189）：結業流程要先清掉學府紀錄才會推進 1 季
+        if (this.isAcademyActive) throw new AcademyFrozenError();
         const economyBase = this._seasonEconomyBase ?? { ...this._cityEconomy };
         const advance = this._clock.advanceSeason();
         this._tickTravel();
@@ -6452,6 +6490,7 @@ export class GameSession {
             ...(this._npcMemory ? { npcMemory: cloneNpcMemory(this._npcMemory) } : {}),
             ...(isEmptyGeneralMind(mindSave) ? {} : { generalMind: mindSave }),
             ...(this._countdown ? { countdown: { ...this._countdown } } : {}),
+            ...(this._academyRecord ? { academy: JSON.parse(JSON.stringify(this._academyRecord)) as PersistedAcademyRecord } : {}),
         };
     }
 
@@ -6655,6 +6694,9 @@ export class GameSession {
         this._loadedSavedAtMs = Number.isFinite(savedAtMs) ? savedAtMs : null;
         this._preLifespanRoster = null;
         this._clock.restore(snapshot.gameTime);
+        // 學府修業進行中：外界時鐘以入學當下的快照為準，防止修業期間被改存檔刷季（PROG-2-9189）
+        this._academyRecord = normalizeAcademyRecord(snapshot.academy, snapshot.gameTime);
+        if (this._academyRecord && !this._academyRecord.committed.graduated) this._clock.restore({ ...this._academyRecord.frozenGameTime });
         this._seeded.restore(snapshot.randomState ?? { algorithm: 'mulberry32-v1', state: LEGACY_RANDOM_SEED });
         this._roster.replaceAll(clampRosterPregnancySeasons(backfillRosterChildAptitudes(normalizeRosterCaptivity(normalizeRosterRoles(snapshot.roster)))));
         this._pendingLifespanEvents = (snapshot.pendingLifespanDeaths ?? []).map((death) => ({ type: 'died', generalId: death.generalId, age: death.age }));
