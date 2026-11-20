@@ -68,6 +68,12 @@ export const API_ERRORS = Object.freeze({
     SKILL_UNAVAILABLE: def('E611', 'SKILL_UNAVAILABLE', true),
     SKILL_HOLDER_NOT_FOUND: def('E612', 'HOLDER_NOT_FOUND'),
     SKILL_NOT_LEARNED: def('E613', 'NOT_LEARNED'),
+    // 人員占用（E33x；OCC-M 中立版，分段待總 PM 裁決是否獨立成框架）
+    OCC_CONFLICT: def('E330', 'OCC_CONFLICT'),
+    OCC_KIND_UNKNOWN: def('E331', 'OCC_KIND_UNKNOWN'),
+    OCC_REF_MISMATCH: def('E332', 'OCC_REF_MISMATCH'),
+    OCC_READONLY_KIND: def('E333', 'OCC_READONLY_KIND'),
+    OCC_UNAVAILABLE: def('E334', 'OCC_UNAVAILABLE', true),
     // 存檔（沿用 E0xx 之外的本機存檔失敗）
     SAVE_FAILED: def('E190', 'SAVE_FAILED', true),
     SAVE_NOT_FOUND: def('E191', 'SAVE_NOT_FOUND'),

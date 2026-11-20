@@ -99,3 +99,8 @@
 | `doc_task_2689` | docs/agent-briefs/tasks/PROG/PROG-2-9206.md | [PROG-2-9206] 每日免費入學令退場，入學令只走季發（ITM-M 收尾） |
 | `doc_task_2690` | docs/agent-briefs/tasks/PROG/PROG-2-9205.md | [PROG-2-9205] RWD-M 獎勵 base 最小版：獎池保底帳本與 reward.roll/claim |
 | `doc_task_2691` | docs/agent-briefs/tasks/PROG/PROG-2-9432.md | [PROG-2-9432] 新版 HUD 雙方精力條＋扣減演出、規格門檻統一 |
+| `doc_task_2692` | docs/agent-briefs/tasks/PROG/PROG-2-9207.md | [PROG-2-9207] OCC-M：人員占用精簡版（中立版，academy／mentorAssign 登記、六處唯讀轉接、occupancy.* 端點） |
+| `doc_task_2693` | docs/agent-briefs/tasks/PROG/PROG-2-9202.md | [PROG-2-9202] FND-M：共通底層工具層（確定性亂數、加權表、條件評估、時鐘） |
+| `doc_task_2694` | docs/agent-briefs/tasks/PROG/PROG-2-9204.md | [PROG-2-9204] SKL-M：技能 base 最小版（skill-def、grant/learn/upgrade、modifier、skill.* 端點、結業戰法寫回遷移） |
+| `doc_task_2695` | docs/agent-briefs/tasks/PROG/PROG-2-9211.md | PROG-2-9211：學府結業接線 |
+| `doc_task_2696` | docs/agent-briefs/tasks/PROG/PROG-2-9214.md | [PROG-2-9214] 開場少年挑選被宿命轉蛋結果面板蓋住（9196 回歸修正） |
