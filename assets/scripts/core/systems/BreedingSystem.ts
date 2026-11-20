@@ -55,11 +55,20 @@ import { applyBloodlineMutation } from './LuckBloodlineMutation';
 import { PINK_TERRAIN_FACTOR_KEYS } from './BattleAptitude';
 import { inheritChildAptitudes } from './ChildAptitudeInheritance';
 
+export interface BreedingRulesConfig {
+    /** 受孕後母方待產凍結季數（2026-11-20 裁決：2 季） */
+    pregnancyLockSeasons: number;
+}
+
+export const DEFAULT_BREEDING_RULES: Readonly<BreedingRulesConfig> = {
+    pregnancyLockSeasons: 2,
+};
+
 export const BREEDING_MIN_AGE = 20;
 export const FATHER_VIGOR_COST = 50;
 export const MOTHER_VIGOR_COST = 100;
-/** MCQ Q43：受孕後待產 4 回合（1 年） */
-export const PREGNANCY_LOCK_SEASONS = 4;
+/** 2026-11-20 裁決（PROG-2-9180）：受孕後待產 2 季（原 4 季，對應 breeding-rules.json） */
+export const PREGNANCY_LOCK_SEASONS = DEFAULT_BREEDING_RULES.pregnancyLockSeasons;
 /** §K Inbreeding.BlockGenerations */
 export const INBREEDING_BLOCK_GENERATIONS = 3;
 
@@ -971,6 +980,23 @@ export function holdPregnancyVigor(before: readonly BreedingGeneral[], after: re
     }
     if (held.size === 0) return [...after];
     return after.map((general) => (held.has(general.id) ? { ...general, vitality: held.get(general.id) } : general));
+}
+
+/**
+ * 舊存檔遷移（PROG-2-9180）：剩餘待產季數若超過新版上限（2 季），載入時夾到上限。
+ */
+export function clampRosterPregnancySeasons<T extends BreedingGeneral>(
+    roster: readonly T[],
+    maxSeasons: number = PREGNANCY_LOCK_SEASONS,
+): T[] {
+    const cap = Math.max(0, Math.floor(maxSeasons));
+    return roster.map((general) => {
+        const left = general.pregnancySeasonsLeft;
+        if (typeof left === 'number' && left > cap) {
+            return { ...general, pregnancySeasonsLeft: cap };
+        }
+        return general;
+    });
 }
 
 /** 給 BloodlineGraph.registerChild 用的輕量人物記錄 */

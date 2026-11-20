@@ -294,7 +294,7 @@ import { isRescueRefreshDue, rollDungeonRescue, type RescueOutcome, buildRescued
 import { giftToFemale, normalizeFemaleSystemState, type FemaleSystemState } from '../systems/FemaleSystemState';
 import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral, UNVEILING_AGE, GENERAL_STATUS_UNVEILED } from '../systems/Unveiling';
 import { injectCatalystFactor, markCatalystUsed, type CatalystGeneral } from '../systems/GeneCatalyst';
-import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
+import { advanceBreedingSeason, clampRosterPregnancySeasons, holdPregnancyVigor } from '../systems/BreedingSystem';
 import { DynamicRelationBook, battleComradePairs, type DynamicRelationResult } from '../systems/KinDynamicRelations';
 import { claimAllSeasonPass, createSeasonPassState, isDefaultSeasonPassState, mockSeasonPassLevelUp, normalizeSeasonPassState, type SeasonPassReward, type SeasonPassState } from '../systems/SeasonPass';
 import { normalizePendingSceneGambit, pendingSceneGambitOfTask, resolveSceneGambit, type PendingSceneGambit, type SceneGambitOutcome } from '../systems/HallSceneGambit';
@@ -6592,7 +6592,7 @@ export class GameSession {
         this._preLifespanRoster = null;
         this._clock.restore(snapshot.gameTime);
         this._seeded.restore(snapshot.randomState ?? { algorithm: 'mulberry32-v1', state: LEGACY_RANDOM_SEED });
-        this._roster.replaceAll(backfillRosterChildAptitudes(normalizeRosterCaptivity(normalizeRosterRoles(snapshot.roster))));
+        this._roster.replaceAll(clampRosterPregnancySeasons(backfillRosterChildAptitudes(normalizeRosterCaptivity(normalizeRosterRoles(snapshot.roster)))));
         this._pendingLifespanEvents = (snapshot.pendingLifespanDeaths ?? []).map((death) => ({ type: 'died', generalId: death.generalId, age: death.age }));
         // 讀檔後沒有記憶體中的季結前名冊；待季結死亡者還原為非陣亡，虎符結算才認得出「這次才死」（PROG-2-0223）
         this._preLifespanRoster = preLifespanBaseline(snapshot.roster, (snapshot.pendingLifespanDeaths ?? []).map((death) => death.generalId));
