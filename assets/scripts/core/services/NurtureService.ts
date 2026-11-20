@@ -39,6 +39,8 @@ import {
 } from '../systems/NurtureSystem';
 import { buildNurtureRecordRow, revelationLevelOf, type NurtureRecordDraft } from '../systems/NurtureRecordRow';
 import { UNVEILING_AGE, UnveilingGeneral } from '../systems/Unveiling';
+import type { GeneralConfig } from '../models/GeneralUnit';
+import { isYouthGeneral, promoteYouthToAdult, youthCanEnroll } from './StarterYouthService';
 import {
     childUltimateCandidates,
     childUltimateAwakenProbability,
@@ -118,6 +120,8 @@ export interface NurtureServiceOptions {
     awakening?: NurtureAwakeningHooks;
     /** 子嗣奧義覺醒（ULT-15）：訓練回合依父方奧義與子嗣綠色因子擲覺醒；沒提供就不擲骰 */
     childUltimate?: { definitions: () => readonly ChildUltimateDefinition[] };
+    /** 少年名將結業還原用：回傳該名將的成年版史實資料（PROG-2-9194）；沒提供就不還原 */
+    adultTemplateOf?: (generalId: string) => GeneralConfig | undefined;
     /** 畢業後通知（例如給玩家 discoveryLevel 經驗） */
     onGraduated?: (result: GraduationResult) => void;
     /** 因子字典；用來推導混種戰法領域（defaultTags），沒提供則退回因子 id */
@@ -249,9 +253,14 @@ export class NurtureService {
         }
         if ((child.status ?? '').toLowerCase() === GENERAL_STATUS_DEAD) reasons.push('child-dead');
         if ((child as { captivity?: unknown }).captivity) reasons.push('child-captive');
-        if ((child.age ?? 0) < UNVEILING_AGE) reasons.push('child-underage');
-        if (!child.fate) reasons.push('not-unveiled');
-        else if (!child.fate.choice) reasons.push('fate-pending');
+        if (isYouthGeneral(child)) {
+            // 投靠少年名將（PROG-2-9194）：不走抓周開獎與宿命，只看年滿可入學年齡
+            if (!youthCanEnroll(child)) reasons.push('child-underage');
+        } else {
+            if ((child.age ?? 0) < UNVEILING_AGE) reasons.push('child-underage');
+            if (!child.fate) reasons.push('not-unveiled');
+            else if (!child.fate.choice) reasons.push('fate-pending');
+        }
         if ((child as { graduationRating?: string }).graduationRating) reasons.push('already-graduated');
         if (this.getSession(childId)) reasons.push('already-nurturing');
 
@@ -440,6 +449,13 @@ export class NurtureService {
         return candidate;
     }
 
+    /** 少年名將定型時還原成年完整值（沒有成年版資料時維持原樣） */
+    private _promoteIfYouth<T extends GeneralConfig>(before: GeneralConfig, graduated: T): T {
+        if (!isYouthGeneral(before)) return graduated;
+        const adult = this._options.adultTemplateOf?.(before.id);
+        return adult ? promoteYouthToAdult(graduated, before, adult) as T : graduated;
+    }
+
     /** 畢業結算：實力層寫回名冊、會話移除（教官同時解鎖） */
     graduate(childId: string): GraduationResult {
         const session = this._requireSession(childId);
@@ -447,6 +463,7 @@ export class NurtureService {
         const index = roster.findIndex((g) => g.id === childId);
         if (index < 0) throw new NurtureError(`名冊中找不到 ${childId}`);
         const result = graduateSession(session, roster[index], this._season());
+        result.general = this._promoteIfYouth(roster[index], result.general);
         const next = [...roster];
         next[index] = result.general;
         this._roster.replaceAll(next);
@@ -494,6 +511,7 @@ export class NurtureService {
         const roster = this._roster.getAll() as UnveilingGeneral[];
         const rosterIndex = roster.findIndex((g) => g.id === childId);
         if (rosterIndex < 0) throw new NurtureError(`名冊中找不到 ${childId}`);
+        card.general = this._promoteIfYouth(roster[rosterIndex], card.general);
         const next = [...roster];
         next[rosterIndex] = card.general;
         this._roster.replaceAll(next);

@@ -10,6 +10,7 @@ import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/manager
 import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
 import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
 import { STARTER_GENERAL_IDS } from '../assets/scripts/core/services/StarterRosterService';
+import { isYouthGeneral } from '../assets/scripts/core/services/StarterYouthService';
 import {
     confirmDestinyGacha, createDestinyGachaState, resetDestinyGacha, selectDestinyGacha,
 } from '../assets/scripts/core/systems/DestinyGacha';
@@ -107,9 +108,9 @@ export function createDestinyPoolSuite(): TestSuite {
         const session = newSession();
         assert.equals(core, await startNewGameFromDestiny(session, 20261109, generals, state));
         assert.equals(core, session.leadGeneralId);
-        const adultIds = session.roster.filter((g) => g.id !== 'starter-royal-child').map((g) => g.id).sort().join(',');
+        const adultIds = session.roster.filter((g) => !isYouthGeneral(g)).map((g) => g.id).sort().join(',');
         assert.equals([...state.rolled].sort().join(','), adultIds);
-        assert.isTrue(session.roster.some((g) => g.id === 'starter-royal-child'));
+        assert.equals(1, session.roster.filter((g) => isYouthGeneral(g)).length);
     });
 
     suite.test('每位一般武將的資料都開得了局', async () => {

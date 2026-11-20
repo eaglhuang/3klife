@@ -45,7 +45,7 @@ import { fertilityConceptionMod } from "../systems/FertilityBoost";
 import { ITEM_FERTILITY_ARMED } from "../systems/PlayerInventory";
 import { UCUFLogger, LogCategory } from "../utils/UCUFLogger";
 import { normalizeVfxEffectTable } from "../config/VfxEffectConfig";
-import { STARTER_CHILD_CONFIG_JSON, configureStarterChild, type StarterChildConfig } from "../services/StarterChildService";
+import { STARTER_YOUTH_CONFIG_JSON, configureStarterYouth, type StarterYouthConfig } from "../services/StarterYouthService";
 import { normalizeSeasonModifiers, seasonModifiersOf, setActiveSeasonModifiers } from "../systems/SeasonModifiers";
 import { CHILD_APTITUDE_RULES_JSON, configureChildAptitudeRules, type ChildAptitudeRulesConfig } from "../systems/ChildAptitudeInheritance";
 import { configureFamilyCompatibilityRules, computeFamilyCompatibilityK, FAMILY_COMPATIBILITY_RULES_JSON, type FamilyCompatibilityRulesConfig } from "../systems/FamilyCompatibility";
@@ -96,6 +96,7 @@ export class ServiceLoader {
         seasonTrainingVigorMod: () => seasonModifiersOf(this.session.gameTime.currentSeason).trainingStaminaMultiplier,
         // 因子覺醒（PROG-2-0044）：訓練回合擲培育窺探 / 教官覺醒；畢業給 discoveryLevel 經驗
         awakening: this.session.nurtureAwakeningHooks(),
+        adultTemplateOf: (generalId) => this.session.adultTemplateOf(generalId),
         onGraduated: () => { void this.session.gainDiscoveryExp('nurture-graduate'); },
         // 子嗣奧義覺醒（ULT-15）：奧義母表在 prepareBreeding() 載入
         childUltimate: { definitions: () => this.ultimateDefinitions },
@@ -401,13 +402,13 @@ export class ServiceLoader {
      * 非同步載入 vfx-effects.json 並批量注冊至 EffectSystem。
      * 建議在 BattleScene.start() 中與 loadSkills() 一起 await。
      */
-    /** 載入開局宗室幼苗設定（PROG-2-9179）；失敗時退回內建預設 */
-    public async loadStarterChildConfig(): Promise<void> {
+    /** 載入開局少年名將設定（PROG-2-9194）；失敗時退回內建預設 */
+    public async loadStarterYouthConfig(): Promise<void> {
         try {
-            const raw = await this.resource.loadJson<Partial<StarterChildConfig>>(STARTER_CHILD_CONFIG_JSON);
-            configureStarterChild(raw);
+            const raw = await this.resource.loadJson<Partial<StarterYouthConfig>>(STARTER_YOUTH_CONFIG_JSON);
+            configureStarterYouth(raw);
         } catch (e) {
-            UCUFLogger.warn(LogCategory.DATA, '[ServiceLoader] starter-child-config.json 載入失敗，使用內建預設:', e);
+            UCUFLogger.warn(LogCategory.DATA, '[ServiceLoader] starter-youth-config.json 載入失敗，使用內建預設:', e);
         }
     }
 
