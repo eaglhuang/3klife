@@ -1,0 +1,50 @@
+{
+  "id": "youth-pick-screen.skin",
+  "version": 1,
+  "bundle": "lobby_ui",
+  "atlasPolicy": "lobby_ui",
+  "slots": {
+    "youth.backdrop.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 200
+    },
+    "youth.card.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 246
+    },
+    "youth.button.pick.bg": {
+      "kind": "color-rect",
+      "color": "primary",
+      "alpha": 200
+    },
+    "youth.label.title": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 36,
+      "lineHeight": 44,
+      "color": "secondaryLight",
+      "isBold": true,
+      "overflow": "CLAMP"
+    },
+    "youth.label.body": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 22,
+      "lineHeight": 30,
+      "color": "secondaryLight",
+      "overflow": "SHRINK",
+      "verticalAlign": "TOP"
+    },
+    "youth.label.option": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 26,
+      "lineHeight": 34,
+      "color": "secondaryLight",
+      "isBold": true,
+      "overflow": "SHRINK"
+    }
+  }
+}

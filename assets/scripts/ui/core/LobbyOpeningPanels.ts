@@ -4,13 +4,13 @@ import type { GameSession } from '../../core/managers/GameSession';
 import type { GachaConfig } from '../../core/models/GachaConfig';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import type { OpeningFlowEvent } from '../../core/config/OpeningFlowConfig';
-import { DestinyOpeningController, type DestinyPoolView } from './DestinyOpeningController';
+import { DestinyOpeningController, type DestinyPoolView, type StarterYouthOption } from './DestinyOpeningController';
 import { OnboardingFlowController } from './OnboardingFlowController';
 import { destinyLockedEvent } from '../../core/systems/DestinyOpening';
 import { DESTINY_POOL_ID } from '../../core/systems/DestinyPool';
 import { shouldShowOpeningLetter } from '../../core/systems/OpeningLetter';
 import { OPENING_BEAUTY_POOL_ID, rollOpeningBeauty } from '../../core/systems/OpeningBeauty';
-import { getStarterChildConfig } from '../../core/services/StarterChildService';
+import { isYouthGeneral } from '../../core/services/StarterYouthService';
 import { applyFlowView } from './NurtureFlowViewApplier';
 
 /** Scene supplies the existing Cocos host; tests need only these used capabilities. */
@@ -31,7 +31,8 @@ export interface LobbyOpeningPanelPorts {
     bringToFront: (node: Node) => void;
     refreshSeasonHud: () => void;
     notifyBeauty: (name: string) => void;
-    notifyStarterChild?: (name: string) => void;
+    /** 開局投靠的少年名將到了：提示他幾歲、年底滿 15 歲可入學（PROG-2-9194） */
+    notifyStarterYouth?: (name: string) => void;
     canNotifyBeauty?: () => boolean;
     advanceOpening: (event: OpeningFlowEvent) => void;
     /**
@@ -39,6 +40,11 @@ export interface LobbyOpeningPanelPorts {
      * 每次重轉、確定失敗都會再呼叫一次重畫；回傳畫面節點供維持最上層。未提供則略過宿命池。
      */
     presentDestinyPool?: (view: DestinyPoolView, actions: { reroll: () => void; confirm: () => void }) => Promise<Node | null>;
+    /**
+     * 開局前三選一挑少年名將（PROG-2-9194）：宿命池按「確定」後先出這一步，挑完才開新局。
+     * 回傳選中的成年版武將 id；未提供時用設定的預設人選。
+     */
+    pickStarterYouth?: (options: readonly StarterYouthOption[]) => Promise<string>;
     /** 確定開局後收掉宿命池畫面 */
     closeDestinyPool?: () => void;
     /** 開場信件的標題與本文（已查好 i18n 的字串） */
@@ -58,7 +64,7 @@ export class LobbyOpeningPanels {
     /** 宿命池畫面節點（轉蛋結果畫面的宿主） */
     private _destinyNode: Node | null = null;
     private _pendingBeauty: string | null = null;
-    private _pendingStarterChild: string | null = null;
+    private _pendingStarterYouth: string | null = null;
     /** 宿命池開局後已推進開場；只推進一次 */
     private _destinyAdvanced = false;
 
@@ -95,10 +101,10 @@ export class LobbyOpeningPanels {
             this._pendingBeauty = null;
             this._ports.notifyBeauty(name);
         }
-        if (this._pendingStarterChild) {
-            const childName = this._pendingStarterChild;
-            this._pendingStarterChild = null;
-            this._ports.notifyStarterChild?.(childName);
+        if (this._pendingStarterYouth) {
+            const childName = this._pendingStarterYouth;
+            this._pendingStarterYouth = null;
+            this._ports.notifyStarterYouth?.(childName);
         }
     }
 
@@ -182,6 +188,7 @@ export class LobbyOpeningPanels {
             session,
             random: session.randomSource,
             seed: () => Math.floor(session.randomSource() * 4294967296),
+            pickYouth: this._ports.pickStarterYouth ? options => this._ports.pickStarterYouth!(options) : undefined,
             onStarted: async () => {
                 if (session.hasSaveService) await session.save();
                 const beautyId = this._destiny?.beautyId;
@@ -189,9 +196,9 @@ export class LobbyOpeningPanels {
                 if (beautyName) {
                     this._pendingBeauty = beautyName;
                 }
-                const starterChild = session.roster.find(g => g.id === getStarterChildConfig().childId);
+                const starterChild = session.roster.find(g => isYouthGeneral(g));
                 if (starterChild) {
-                    this._pendingStarterChild = starterChild.name;
+                    this._pendingStarterYouth = starterChild.name;
                 }
                 this.flushPendingBeauty();
                 this._ports.refreshSeasonHud();

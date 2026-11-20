@@ -515,10 +515,10 @@ async function main() {
         };
 
         // ── 2. 新玩家開場 ──
-        // 現行開場（PROG-2-9104 核對）：介紹頁 → 信 → 六名將登場 → 宿命池 → 新手教學。
+        // 現行開場（PROG-2-9104 核對）：介紹頁 → 信 → 六名將登場 → 宿命池 → 挑少年名將（PROG-2-9194，點第一位）→ 新手教學。
         // 宿命轉蛋 2026-11-12 起改為轉蛋系統的一池（PROG-2-2243），用十連結果畫面 GachaPullResult 顯示、
         // 單鍵確定（GachaPullResult_close）十位全收；舊的 BtnDestinyRoll／BtnDestinyConfirm／BtnFrame0 選將面板已不掛。
-        const openingSeq = ['BtnIntroNext', 'BtnCloseOpeningLetter', 'BtnShowcaseNext', 'GachaPullResult_close', 'BtnNextTutorial'];
+        const openingSeq = ['BtnIntroNext', 'BtnCloseOpeningLetter', 'BtnShowcaseNext', 'GachaPullResult_close', 'BtnYouthPick0', 'BtnNextTutorial'];
         await step('new-player-opening', async (rec) => {
             // 依規格順序點；BtnIntroNext 是多頁「繼續」（實測 IntroStep 1/4…），可重複點直到消失。
             // 若目前可按的是後面的步驟（實際順序與規格不同），就先點它並記在 outOfOrder，不當成失敗。
@@ -565,6 +565,7 @@ async function main() {
                 const name = candidates[0];
                 const expected = openingSeq.find((n) => !done.has(n));
                 if (!REPEATABLE.includes(name) && name !== expected) outOfOrder.push(`規格順序為 ${expected}，實際先出現 ${name}`);
+                if (name === 'BtnYouthPick0') await page.screenshot({ path: path.join(outDir, '02a-youth-pick.png') });
                 const hit = await clickButton(`^${name}$`);
                 if (hit) {
                     clicked.push(hit);

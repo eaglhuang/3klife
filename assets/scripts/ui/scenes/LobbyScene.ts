@@ -263,7 +263,7 @@ import { coreFieldCoverage, formatCoreFieldCoverage } from '../../core/systems/G
 import { PortraitBounds, PortraitBoundsDoc, placePortraitOnBaseline } from '../core/GachaPortraitBaseline';
 import { DEFAULT_POOL_ID as GACHA_GENERAL_POOL_ID, GachaFlowCoordinator, GACHA_PULL_RESULT_SCREEN_ID, GACHA_SCREEN_ID } from '../core/GachaFlowCoordinator';
 import { buildDestinyOpeningResults } from '../core/DestinyOpeningResult';
-import type { DestinyPoolView } from '../core/DestinyOpeningController';
+import type { DestinyPoolView, StarterYouthOption } from '../core/DestinyOpeningController';
 import { bindGachaActions, GACHA_ACTION_NODES } from '../core/GachaActionBindings';
 import { formatGeneralDisplayName } from '../../core/models/GeneralTitle';
 import { buildMissionGeneralOptions } from '../../core/systems/MissionGeneralOptions';
@@ -908,7 +908,7 @@ export class LobbyScene extends Component {
                 services().loadSkills(),
                 services().loadVfxEffects(),
                 services().loadSeasonModifiers(),
-                services().loadStarterChildConfig()
+                services().loadStarterYouthConfig()
             ]);
             
             this._generals = await this._loadGenerals();
@@ -2676,7 +2676,8 @@ export class LobbyScene extends Component {
                     openingLetter: services().session.openingLetter,
                 }),
                 notifyBeauty: name => services().event.emit('SHOW_TOAST', { message: `紅顏 ${name} 前來相會，已加入名冊，可到「結緣」配對`, duration: 4 }),
-                notifyStarterChild: name => services().event.emit('SHOW_TOAST', { message: services().i18n.t('ui.opening.starter_child_hint', name), duration: 4 }),
+                notifyStarterYouth: name => services().event.emit('SHOW_TOAST', { message: services().i18n.t('ui.opening.starter_child_hint', name), duration: 6 }),
+                pickStarterYouth: options => this._pickStarterYouth(options),
                 advanceOpening: event => { this._advanceOpening(event); },
                 presentDestinyPool: (view, actions) => this._presentDestinyPool(view, actions),
                 closeDestinyPool: () => { if (this._destinyPoolHost) this._destinyPoolHost.node.active = false; },
@@ -2717,6 +2718,50 @@ export class LobbyScene extends Component {
         });
         host.node.active = true;
         return host.node;
+    }
+
+    /** 少年名將三選一畫面的宿主與目前選項（PROG-2-9194） */
+    private _youthPickHost: UIScreenPreviewHost | null = null;
+    private _youthPickOptions: readonly StarterYouthOption[] = [];
+    private _youthPickResolve: ((id: string) => void) | null = null;
+
+    /** 宿命池按確定後、開新局前：三位 14 歲少年名將挑一位（重用開場信件同款面板版型）。 */
+    private async _pickStarterYouth(options: readonly StarterYouthOption[]): Promise<string> {
+        this._youthPickOptions = options;
+        const host = this._youthPickHost ?? await this._mountPreviewScreenHost(
+            'YouthPickHost', 'youth-pick-screen',
+            [0, 1, 2, 3, 4].map(i => ({ buttonId: `btnYouthPick${i}`, handler: () => { this._resolveYouthPick(i); } })),
+            false,
+        );
+        this._youthPickHost = host;
+        const i18n = services().i18n;
+        const texts: Record<string, string> = {
+            youthPickTitle: i18n.t('ui.opening.youth_pick.title'),
+            youthPickSubtitle: i18n.t('ui.opening.youth_pick.subtitle'),
+        };
+        [0, 1, 2, 3, 4].forEach(i => {
+            const option = options[i];
+            // 名單可由 JSON 換人：有寫趣味介紹就用，沒有就顯示「姓名＋稱號」
+            const blurbKey = option ? `ui.opening.youth_pick.card.${option.id}` : '';
+            const blurb = option ? i18n.t(blurbKey) : '';
+            const intro = option && blurb !== blurbKey ? blurb : option ? `${option.name} ${option.title}` : '';
+            texts[`youthPickLabel${i}`] = option ? `【${i18n.t(`ui.opening.youth_pick.career.${option.career}`)}】${intro}\n${i18n.t('ui.opening.youth_pick.btn')}` : '';
+            const button = host.binder?.getNode(`btnYouthPick${i}`);
+            if (button) button.active = !!option;
+        });
+        host.binder?.setTexts(texts);
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        return await new Promise<string>(resolve => { this._youthPickResolve = resolve; });
+    }
+
+    private _resolveYouthPick(index: number): void {
+        const option = this._youthPickOptions[index];
+        const resolve = this._youthPickResolve;
+        if (!option || !resolve) return;
+        this._youthPickResolve = null;
+        if (this._youthPickHost) this._youthPickHost.node.active = false;
+        resolve(option.id);
     }
 
     private async _mountOnboardingTutorial(): Promise<void> {

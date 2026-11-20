@@ -1,0 +1,211 @@
+{
+  "id": "youth-pick-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "YouthPickRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "YouthBackdrop",
+        "id": "youthBackdrop",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "skinSlot": "youth.backdrop.bg"
+      },
+      {
+        "type": "panel",
+        "name": "YouthCard",
+        "id": "youthCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 1040,
+        "height": 760,
+        "skinSlot": "youth.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "YouthTitle",
+            "id": "youthPickTitle",
+            "widget": {
+              "top": 28,
+              "left": 48,
+              "right": 48
+            },
+            "height": 56,
+            "text": "",
+            "styleSlot": "youth.label.title"
+          },
+          {
+            "type": "label",
+            "name": "YouthSubtitle",
+            "id": "youthPickSubtitle",
+            "widget": {
+              "top": 100,
+              "left": 56,
+              "right": 56
+            },
+            "height": 80,
+            "text": "",
+            "styleSlot": "youth.label.body"
+          },
+          {
+            "type": "button",
+            "name": "BtnYouthPick0",
+            "id": "btnYouthPick0",
+            "widget": {
+              "top": 200,
+              "left": 64,
+              "right": 64
+            },
+            "height": 96,
+            "skinSlot": "youth.button.pick.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "YouthPickLabel0",
+                "id": "youthPickLabel0",
+                "widget": {
+                  "vCenter": true,
+                  "left": 24,
+                  "right": 24
+                },
+                "height": 80,
+                "text": "",
+                "styleSlot": "youth.label.option"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnYouthPick1",
+            "id": "btnYouthPick1",
+            "widget": {
+              "top": 304,
+              "left": 64,
+              "right": 64
+            },
+            "height": 96,
+            "skinSlot": "youth.button.pick.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "YouthPickLabel1",
+                "id": "youthPickLabel1",
+                "widget": {
+                  "vCenter": true,
+                  "left": 24,
+                  "right": 24
+                },
+                "height": 80,
+                "text": "",
+                "styleSlot": "youth.label.option"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnYouthPick2",
+            "id": "btnYouthPick2",
+            "widget": {
+              "top": 408,
+              "left": 64,
+              "right": 64
+            },
+            "height": 96,
+            "skinSlot": "youth.button.pick.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "YouthPickLabel2",
+                "id": "youthPickLabel2",
+                "widget": {
+                  "vCenter": true,
+                  "left": 24,
+                  "right": 24
+                },
+                "height": 80,
+                "text": "",
+                "styleSlot": "youth.label.option"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnYouthPick3",
+            "id": "btnYouthPick3",
+            "widget": {
+              "top": 512,
+              "left": 64,
+              "right": 64
+            },
+            "height": 96,
+            "skinSlot": "youth.button.pick.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "YouthPickLabel3",
+                "id": "youthPickLabel3",
+                "widget": {
+                  "vCenter": true,
+                  "left": 24,
+                  "right": 24
+                },
+                "height": 80,
+                "text": "",
+                "styleSlot": "youth.label.option"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnYouthPick4",
+            "id": "btnYouthPick4",
+            "widget": {
+              "top": 616,
+              "left": 64,
+              "right": 64
+            },
+            "height": 96,
+            "skinSlot": "youth.button.pick.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "YouthPickLabel4",
+                "id": "youthPickLabel4",
+                "widget": {
+                  "vCenter": true,
+                  "left": 24,
+                  "right": 24
+                },
+                "height": 80,
+                "text": "",
+                "styleSlot": "youth.label.option"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

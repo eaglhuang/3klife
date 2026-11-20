@@ -1,0 +1,21 @@
+{
+  "age": 14,
+  "enrollAge": 15,
+  "candidates": [
+    { "id": "zhao-yun", "career": "general" },
+    { "id": "guan-yu", "career": "general" },
+    { "id": "zhuge-liang", "career": "civil" }
+  ],
+  "defaultPickId": "zhao-yun",
+  "ageRatios": [
+    { "age": 10, "ratio": 0.55 },
+    { "age": 14, "ratio": 0.75 },
+    { "age": 15, "ratio": 0.8 },
+    { "age": 20, "ratio": 0.95 }
+  ],
+  "lukRatio": 0.9,
+  "hpRatio": 0.75,
+  "epRatio": 0.85,
+  "aptitudeGradeDrop": 1,
+  "_note": "暫定：ageRatios 為年齡係數（少年版 = 成年史實值 x 係數，結業恢復成年完整值）；career 為職業傾向（general 武將／leader 領袖／civil 文官／mentor 教官），換人或加人只改 candidates；日後 PROG-2-9195 歷練累積可共用此表"
+}

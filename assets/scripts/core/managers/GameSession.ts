@@ -216,7 +216,7 @@ import {
 } from '../systems/DiscoveryProgress';
 import type { NurtureAwakeningHooks } from '../services/NurtureService';
 import { buildStarterRoster, STARTER_CORE_GENERAL_ID, StarterRosterOptions } from '../services/StarterRosterService';
-import { buildStarterChild } from '../services/StarterChildService';
+import { buildStarterYouth, getStarterYouthConfig } from '../services/StarterYouthService';
 import { resolveFactorColor } from '../systems/FactorInheritance';
 import { insertSpiritCard, replaceSpiritCard, setPrimarySpiritCard, unequipSpiritCard, type SpiritSlotFlowResult } from '../systems/SpiritSlotFlow';
 import type { FactorColor, FactorDefinition, FactorDictionary } from '../systems/FactorInheritance';
@@ -918,6 +918,11 @@ export class GameSession {
     private _prison: PrisonState<GeneralConfig> = createPrisonState<GeneralConfig>();
     /** 來投時依 uid 查回的武將配置（generals.json）；大廳載入後由 setGeneralTemplates 注入 */
     private _generalTemplates: readonly GeneralConfig[] = [];
+
+    /** 武將成年版史實資料（少年名將結業還原用，PROG-2-9194） */
+    public adultTemplateOf(generalId: string): GeneralConfig | undefined {
+        return this._generalTemplates.find((general) => general.id === generalId);
+    }
     /** 名聲（暫定：存於 resources.fame） */
     private _fame = 0;
     /** 點數（溢出轉化積分，MENT-07）；存於 resources.scorePoints */
@@ -2260,16 +2265,14 @@ export class GameSession {
         this.startNewGame(seed);
         this._openingLetter = letterBeforeNewGame;
         const initialRoster = [...starters];
-        if (options.includeStarterChild !== false) {
-            const child = buildStarterChild(initialRoster, {
-                coreGeneralId: coreId,
-                beautyGeneralId: options.beautyGeneralId,
-                config: options.starterChildConfig,
-                random: this._random,
-            });
-            if (!initialRoster.some(g => g.id === child.id)) {
-                initialRoster.push(child);
-            }
+        if (options.includeStarterYouth !== false) {
+            const youthConfig = options.starterYouthConfig ?? getStarterYouthConfig();
+            const youthId = options.youthGeneralId ?? youthConfig.defaultPickId;
+            if (!youthConfig.candidates.some(c => c.id === youthId)) throw new Error(`[GameSession] ${youthId} 不在少年名將候選名單內`);
+            const adult = generals.find(general => general.id === youthId);
+            if (!adult) throw new Error(`[GameSession] 少年名將 ${youthId} 查無成年版資料`);
+            // 已在名冊（例如宿命名單）就不重複送；少年版與成年版同 id，等同同一人
+            if (!initialRoster.some(general => general.id === youthId)) initialRoster.push(buildStarterYouth(adult, youthConfig));
         }
         this._roster.replaceAll(normalizeRosterRoles(initialRoster));
         if (!await this.setLeadGeneral(coreId)) throw new Error('[GameSession] 無法設定初始核心主將');
