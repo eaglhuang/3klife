@@ -9634,13 +9634,13 @@
         "activeVersion": "0002"
       },
       "smallAvatar": {
-        "activeVersion": "0001",
-        "status": "review-pending",
+        "activeVersion": "0003",
+        "status": "integrated",
         "history": [
           {
             "version": "0001",
             "file": "small_avatars/wang_yuan_ji__王元姬__small_avatar_0001.png",
-            "status": "review-pending",
+            "status": "superseded",
             "sha256": "6ED93B061920175F1DF26FEB54A9C23F2134ABB3CFC52F2281974C642BB37F90",
             "canvas": "1254x1254 RGBA",
             "qc": "Inline review: composed knowing half-smile, natural three-quarter angle; complete head/feather ornament and chin; face near center; crop at shoulder line with no chest; transparent corner alpha."
@@ -9648,10 +9648,28 @@
           {
             "version": "0002",
             "file": "small_avatars/wang_yuan_ji__王元姬__small_avatar_0002.png",
-            "status": "review-pending",
+            "status": "superseded",
             "sha256": "7D64DC59A504454A3712F2CE080851F53ED426C972F842B20C5DCCE75DF8E3B1",
             "canvas": "1254x1254 RGBA",
             "qc": "125px review: face centered on canvas, gentle three-quarter turn and composed half-smile; full head and jade ornament visible; crop ends at upper shoulder edges with no chest."
+          },
+          {
+            "version": "0003",
+            "file": "small_avatars/wang_yuan_ji__王元姬__small_avatar_0003.png",
+            "status": "integrated",
+            "sha256": "16c3cfa0b9c4e75e6ded043c7eb3c51af038465e8018d8a8681fde1924755506",
+            "canvas": "256x256 RGBA",
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/wang_yuan_ji__王元姬__standing_0002.png",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "x": 185.63,
+              "y": -0.85,
+              "width": 170.73,
+              "height": 170.73
+            },
+            "qc": "顱頂至下巴頭高82%；臉高43.9%、臉寬34%；臉框中心與畫布中心差0.5px。完整保留盤髮、羽葉玉飾、耳側髮束、耳朵與下巴。以500px比較板與大喬、呂玲綺基準檢視，頭臉尺度相稱；肩部僅保留上緣，為最後優先警示。只從正式站姿等比裁切，未重繪。",
+            "createdAt": "2026-11-21"
           }
         ]
       },
