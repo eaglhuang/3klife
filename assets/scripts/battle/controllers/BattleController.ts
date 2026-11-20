@@ -117,6 +117,7 @@ import { advanceWisdomMeter, applyWisdomSurge } from '../shared/WisdomMeter';
 import { estimateTacticDamage } from '../shared/TacticDamageEstimate';
 import type { TacticAiSituation } from '../shared/TacticAiRules';
 import { estimateHealValue, hasChokePointLane, hasDenseArea } from '../shared/EnemyTacticBoard';
+import { resolveEnemyInitialDeployment, type EnemyInitialDeploymentEntry } from '../shared/EnemyInitialDeployment';
 
 /**
  * [P2-N3] 部署失敗原因：food = 糧草不足（原 dp）。
@@ -600,6 +601,24 @@ export class BattleController {
     if (!preference) return;
     this.enemyAi.deployPreference = preference;
     this.enemyAi.tallyTroopTypes = [];
+  }
+
+  /**
+   * 遭遇戰敵軍開場布陣（PROG-2-9420，使用者 11/20 裁決 Q-C2）：依 encounters.json 的 enemyInitialDeployment
+   * 在敵方後排生成部隊。必須在 initBattle() 與 tutorialBattle 設定之後呼叫；教學戰不布陣。
+   * 開場部隊是關卡預先擺好的，不扣敵方糧草、也不標成「本回合剛部署」。格子被占或被阻擋就跳過。
+   * 回傳實際生成的部隊。
+   */
+  public applyEnemyInitialDeployment(entries: readonly EnemyInitialDeploymentEntry[] | null | undefined): TroopUnit[] {
+    const spawns = resolveEnemyInitialDeployment(entries, { lanes: GAME_CONFIG.GRID_LANES, tutorialBattle: this._tutorialBattle });
+    const depth = GAME_CONFIG.GRID_DEPTH - 1;
+    const spawned: TroopUnit[] = [];
+    for (const spawn of spawns) {
+      if (this.state.getCell(spawn.lane, depth)?.occupantId) continue;
+      if (this.combatResolver.isCellMovementBlocked(spawn.lane, depth)) continue;
+      spawned.push(this.unitSpawner.spawnUnit(spawn.type, Faction.Enemy, spawn.lane, depth));
+    }
+    return spawned;
   }
 
   /** AI 虎符配發（PROG-2-1337）：虎符模板全表中，只留 AI 會出的兵種，依敵將適性與難度配發 */
