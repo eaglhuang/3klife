@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 179,
-    "in_progress": 4,
-    "open": 86,
-    "total": 269
+    "done": 182,
+    "in_progress": 5,
+    "open": 85,
+    "total": 272
   },
   "tasks": [
     {
@@ -11429,6 +11429,69 @@
         "AcademyRng 改為 DeterministicRngSession 子類示範替換"
       ],
       "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0、單元 8683 全過（新增 Foundation 20 條）、compute-gate standard 通過（僅 LoginScene 既有警告）、棘輪基準維持 163 | 變更: shared/foundation/{Sha256,DeterministicRng,WeightedTable,Condition,GameClock}.ts；SyncHash 雜湊本體搬到 Sha256（原路徑轉出）；AcademyRng 改為 DeterministicRngSession 子類（金標準測試證明與舊實作逐位元相同）；cross-ref-code B-2 補一列 | 阻塞: 無 | 備註: 給後續卡的接點：RWD 的 reward.roll 用 weightedPick＋伺服器側 DeterministicRngSession（rngSession 存伺服器存檔，不下發客戶端），保底計數由 RWD 自管；ITM 入學令季發用 periodsDue／nextGrantIndex 取期數、stackCap 封頂與溢出折金由 ITM 做；QST／STY／SKL／SHP 條件一律 createConditionEvaluator().register(自訂 kind)，載入時用 validate；OCC 的 since／until 用 toSeasonIndex；SKL status-effect 與凍結期用 Countdown。未做（範圍外）：Ladder、日／週重置、保底、rng 命令端點（待 RWD-M 於 ApiCommands 註冊 reward.roll）。未跑網頁 playtest：只有 AcademyRng 與 SyncHash 兩處執行路徑以等價重構改接，單元與金標準覆蓋。",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9203",
+      "title": "ITM-M 物品庫存 base 最小版：家庭倉庫與入學令",
+      "owner": "ClaudeCode_sonnet-5-5",
+      "priority": "P0",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "ClaudeCode_sonnet-5-5",
+      "started_at": "2026-11-21T03:29:56+08:00",
+      "started_by_agent": "ClaudeCode_sonnet-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "共用框架總綱 doc_spec_1182 第 12 章 ITM-M／物品庫存規格 doc_spec_1184：持有者＋容器、堆疊上限、溢出折金、綁定、帳本；item.* 命令；入學令發放與扣除改走 ITM；家庭倉庫接既有 PlayerInventory",
+      "related": [
+        "PROG-2-9200"
+      ],
+      "depends": [
+        "PROG-2-9201",
+        "PROG-2-9202"
+      ],
+      "acceptance": [
+        "item.grant/consume/settlePeriodic/count/list/ledger 契約測試",
+        "入學令發放消耗退還溢出折金測試",
+        "舊存檔缺值補預設",
+        "tsc 0",
+        "compute-gate standard 通過",
+        "棘輪基準只減不增",
+        "網頁 playtest 11/11"
+      ],
+      "deliverables": [
+        "shared/item/{ItemConfig",
+        "ItemRules}.ts",
+        "core/api/localserver/ItemCommands.ts",
+        "assets/resources/data/item-config.json",
+        "tests/ItemInventory.test.ts"
+      ],
+      "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0、單元 8706 全過（新增 ItemInventory 16 條）、compute-gate standard 通過（僅 LoginScene 既有警告）、web-desktop 建置後 playtest 11/11 console error 0、棘輪 163→134 | 變更: shared/item/{ItemConfig,ItemRules}.ts、core/api/localserver/ItemCommands.ts（item.grant/consume/settlePeriodic/count/list/ledger）、resources/data/item-config.json（入學令封頂3、溢出5000金、每季1）、GameSession.itemAuthority()（家庭倉庫＝PlayerInventory，存檔形狀不變）、itemMeta 存檔欄位（高水位＋帳本，舊檔缺值補空）、LobbyScene 入學扣令/退還改 item.consume/grant、季結經 item.settlePeriodic 發入學令、WalletAuthority.credit 供溢出折金、E310~E316 錯誤碼 | 阻塞: 無 | 備註: 棘輪降幅主要來自 GameSession 庫存賦值收斂到單一 _setInventory 入口（protected-assign 53→24）；舊每日免費入學令（PROG-2-1374）未動，仍直接 addItem 不受封頂；NurtureService.admission 保留給舊培育入口；資源命名 grain/silver vs food/gold 未動（Q2）；mentorCard、指派占用旗標、unique 列未做；規格 §11.4 的 E301~E309 與錢包已用的 E301~E303 衝突，故順延 E31x",
       "brief": {
         "style": "classic",
         "label": "",
