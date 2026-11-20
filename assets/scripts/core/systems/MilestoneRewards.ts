@@ -8,7 +8,6 @@
  * Unity 對照：像 ScriptableObject 的獎勵表；達成事件只讀取，發放由呼叫端寫入背包。
  */
 import { newlyReachedMilestones, type BattleRecordLike } from './BattleRecordStats';
-import { addItem, ITEM_BATTLE_NOTE, type PlayerInventory } from './PlayerInventory';
 
 export type MilestoneRewardItem =
     | { readonly kind: 'tacticNote'; readonly count: number }
@@ -46,12 +45,17 @@ export interface MilestoneClaim {
 }
 
 /**
- * 把里程碑獎勵中的戰法筆記寫入庫存（GEN-13 / PROG-2-0816）。
- * 只處理 tacticNote；稱號、虎符品質、因子等其他獎勵由各自系統接手，這裡原樣略過。
- * 回傳新庫存，不修改傳入的物件。
+ * 里程碑獎勵套件 id（reward-config.json 的 `BUNDLE_MILESTONE_<里程碑 id>`）。
+ * 戰法筆記不再由本模組直接寫庫存：戰後經 reward.claim 領取該套件（PROG-2-9205），入庫走物品庫存命令層。
+ * 套件裡的數量與上方獎勵表的 tacticNote.count 由 tests/RewardBase.test.ts 對照，避免兩處資料分歧。
  */
-export function grantTacticNotes(inventory: PlayerInventory, rewards: readonly MilestoneRewardItem[]): PlayerInventory {
-    return rewards.reduce((acc, reward) => (reward.kind === 'tacticNote' ? addItem(acc, ITEM_BATTLE_NOTE, reward.count) : acc), inventory);
+export function milestoneBundleId(milestoneId: string): string {
+    return `BUNDLE_MILESTONE_${milestoneId}`;
+}
+
+/** 該里程碑是否含要入庫的戰法筆記；稱號、虎符品質、因子等其他獎勵由各自系統接手 */
+export function hasTacticNoteReward(milestoneId: string): boolean {
+    return rewardsForMilestones([milestoneId]).some((reward) => reward.kind === 'tacticNote');
 }
 
 /** 判定新達成的里程碑並組出獎勵；只讀取 record，不修改它 */

@@ -45,6 +45,7 @@ import type { DataStorageAdapter } from '../storage/DataStorageAdapter';
 import { GameClock, GameTimeState } from '../systems/GameClock';
 import type { NurtureState } from './NurtureService';
 import { normalizeItemMeta, type ItemMeta } from '../../shared/item/ItemRules';
+import { normalizeRewardMeta, type RewardMeta } from '../../shared/reward/RewardRules';
 import { normalizeDeck } from './PlayerDeckRules';
 import { RandomState, validateRandomState } from '../systems/SeededRandom';
 import { createTallyLoyaltyState, type TallyLoyaltyState } from '../systems/TigerTallyLoyalty';
@@ -190,6 +191,8 @@ export interface PlayerSaveSnapshot {
     legendaryMentoringUsedIds?: string[];
     /** 物品庫存 base 中繼資料（PROG-2-9203）：定期發放高水位與取得／消耗帳本；選填，舊檔缺值讀回為空，版號不升（自帶 v） */
     itemMeta?: ItemMeta;
+    /** 獎勵 base 中繼資料（PROG-2-9205）：伺服器私有亂數會話、保底計數、發放紀錄（冪等）；選填，舊檔缺值讀回為空，版號不升（自帶 v） */
+    rewardMeta?: RewardMeta;
     /** 官職狀態（OFC-03）：階位、經驗、解鎖歷史；舊檔沒有此欄位時讀回為階位 1；版號不升（扁平欄位） */
     officerState?: OfficerState;
     /** 世界沙盤已放置標記數（OFC-06）；扁平選填欄位，舊檔沒有時讀回 0；版號不升 */
@@ -252,7 +255,7 @@ export interface PlayerSaveSnapshot {
     familySystemUnlocked?: boolean;
     /** 新玩家開場進行中的幕 id（PROG-2-1371）：讀檔後從該幕接續；開場結束或舊檔沒有時不寫入；版號不升 */
     openingPhase?: string;
-    /** 免費入學令已發放的最大登入日（YYYY-MM-DD，ITM-06 高水位）：只在有發過時寫入；回撥時鐘不重領（PROG-2-1374 修正） */
+    /** 已處理的最大登入日（YYYY-MM-DD 高水位）：舊稱免費入學令已發放日；入學令每日發放已退場（PROG-2-9206），欄位保留以相容舊存檔並供離線行為判斷 */
     enrollGrantDay?: string;
     /** 道具取得來源紀錄（ITM-05）；選填，舊檔沒有此欄位時來源視為 UNKNOWN，版號不升 */
     itemAcquisitionLog?: ItemAcquisitionRecord[];
@@ -751,6 +754,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         // 編制預設（PROG-2-0791）：#538 漏掉這一欄，存檔時會被丟掉
         ...(snapshot.sortiePresets !== undefined ? { sortiePresets: normalizeSortiePresets(snapshot.sortiePresets) } : {}),
         ...(snapshot.itemMeta !== undefined ? { itemMeta: normalizeItemMeta(snapshot.itemMeta) } : {}),
+        ...(snapshot.rewardMeta !== undefined ? { rewardMeta: normalizeRewardMeta(snapshot.rewardMeta) } : {}),
         ...(snapshot.legendaryMentoringUsedIds !== undefined ? { legendaryMentoringUsedIds: normalizeLegendaryMentoringUsedIds(snapshot.legendaryMentoringUsedIds) } : {}),
     };
 }

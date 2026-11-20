@@ -38,7 +38,7 @@ import { activeOfficerTrial, boostedOfficerExp, effectiveOfficerState, grantOffi
 import { canPlaceSandtableMarker, remainingSandtableMarkers } from '../systems/SandtableMarkers';
 import { buildStartingSpiritTalisman, normalizeStartingTalisman, type StartingSpiritTalisman, type TeachingSpiritInput } from '../systems/TeachingSpiritTalisman';
 import { normalizeOpeningPhaseId } from '../systems/OpeningProgress';
-import { dailyFreeEnrollCount, isNewEnrollGrantDay, normalizeEnrollGrantDay } from '../systems/DailyFreeEnroll';
+import { isNewEnrollGrantDay, normalizeEnrollGrantDay } from '../systems/DailyFreeEnroll';
 import { appendAcquisitions, diffAcquisitions, normalizeAcquisitionLog, queryAcquisitions, type ItemAcquisitionQuery, type ItemAcquisitionRecord, type ItemSource } from '../systems/ItemAcquisitionLog';
 import { EMPTY_AI_ADAPTIVE_STREAK, nextAiAdaptiveStreak, normalizeAiAdaptiveStreak, type AiAdaptiveStreak } from '../systems/AiAdaptiveDifficulty';
 import { effectiveSandtableStage, normalizeUnlockHistory, recordSandtableUnlock, sandtableShortCodeOf, sandtableStageIdOf, type SandtableStageId } from '../systems/SandtableProgress';
@@ -159,7 +159,14 @@ import { buildHallSpotRows, EMPTY_HALL_SPOT_STATE, HallSpotRow, HallSpotState, r
 import { buildHallStageFeed, type HallStageFeed, type HallStageProfile } from '../systems/HallStageFeed';
 import type { HallVolunteerTask } from '../systems/HallVolunteer';
 import type { SessionSaveService } from '../api/localserver/ApiSaveGateway';
+import type { SkillHost } from '../api/localserver/SkillCommands';
+import { SkillService } from '../../shared/skill/SkillService';
+import type { SkillLearnAuthority } from '../../shared/skill/SkillTypes';
+import { GeneralSkillStore } from '../systems/skill/GeneralSkillStore';
+import { defaultSkillRegistry } from '../systems/skill/SkillCatalog';
 import type { ItemAuthority, StockTable } from '../api/localserver/ItemCommands';
+import type { RewardAuthority } from '../api/localserver/RewardCommands';
+import { emptyRewardMeta, isEmptyRewardMeta, normalizeRewardMeta, type RewardMeta } from '../../shared/reward/RewardRules';
 import type { IApiClient } from '../../shared/api/IApiClient';
 import { isApiFail } from '../../shared/api/ApiProtocol';
 import { ADMISSION_SEASON_RULE_ID, DEFAULT_CONTAINER_ID, type HolderRef } from '../../shared/item/ItemConfig';
@@ -247,7 +254,7 @@ import type { FactorPoolEntry } from '../systems/BreedingSystem';
 import { readableFactorName } from '../systems/FactorDisplayName';
 import { backfillRosterChildAptitudes } from '../systems/ChildAptitudeInheritance';
 import { planBloodlineMergeForGenerals, type BloodlineMergeRejectReason } from '../systems/BloodlineMerge';
-import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_ADMISSION_TOKEN, ITEM_BAMBOO_SLIP, ITEM_FERTILITY_ARMED, ITEM_JOB_CHANGE_ORDER, ITEM_LEGENDARY_MENTORING_TICKET, ITEM_MERGE_TOKEN, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, ITEM_TREASURE, ITEM_WISH_SPEED_CARD, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
+import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_BAMBOO_SLIP, ITEM_FERTILITY_ARMED, ITEM_JOB_CHANGE_ORDER, ITEM_LEGENDARY_MENTORING_TICKET, ITEM_MERGE_TOKEN, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, ITEM_TREASURE, ITEM_WISH_SPEED_CARD, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
 import { useItem as useItemFlow, type ItemUseResult } from '../systems/ItemUseFlow';
 import { equipGear as equipGearFlow, unequipGear as unequipGearFlow, transferGearToHeir, type GearEquipResult } from '../systems/GearEquipFlow';
 import { decomposeGearRecord, setRecordLocked, type GearDecomposeResult } from '../systems/GearLockDecompose';
@@ -291,7 +298,7 @@ import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, getTact
 import { EMPTY_PERFORMANCE, type BattlePerformance, type BattleRecordLike } from '../systems/BattleRecordStats';
 import { buildBattleSnapshot, type BattleSnapshot } from '../systems/BattleSnapshot';
 import { leaderboardEntryOf, rankLeaderboard, type LeaderboardMetric, type LeaderboardEntry } from '../systems/BattleLeaderboard';
-import { grantTacticNotes, rewardsForMilestones } from '../systems/MilestoneRewards';
+import { hasTacticNoteReward, milestoneBundleId } from '../systems/MilestoneRewards';
 import { awakenHiddenFactors } from '../systems/HiddenFactorAwakening';
 import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonCapacityOf, prisonYieldOneSeason, resolvePowDecision, rollFutureReturns, rollPrisonTreasureDonors, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
 import { createFemaleSource, normalizeFemaleSource, normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
@@ -911,6 +918,10 @@ export class GameSession implements AcademyRecordPort {
     private _itemMeta: ItemMeta = emptyItemMeta();
     /** 共通 API 入口（PROG-2-9203）：季結的入學令發放走 item.settlePeriodic；沒綁（純邏輯測試）就不發 */
     private _itemApi: IApiClient | null = null;
+    /** 獎勵 base 的持久化狀態（亂數會話、保底計數、發放紀錄，PROG-2-9205）；舊檔缺值為空 */
+    private _rewardMeta: RewardMeta = emptyRewardMeta();
+    /** 共通 API 入口（PROG-2-9205）：戰後里程碑獎勵走 reward.claim；沒綁（純邏輯測試）就退回不發 */
+    private _rewardApi: IApiClient | null = null;
     /** 結緣成功的本機端紀錄（BRD-12）；隨既有玩家存檔保存（PROG-2-1146） */
     private _breedingBirthRecords: BreedingBirthRecord[] = [];
     /** 世家系統解鎖旗標（PM 暫定）：第一位子嗣誕生時寫入；舊檔以出生紀錄推導。 */
@@ -920,7 +931,7 @@ export class GameSession implements AcademyRecordPort {
     private _openingPhase: string | null = null;
     /** 開場商業序列的回應紀錄（OPEN-12）；存檔欄位 openingOffers */
     private _openingOffers: OpeningOfferState = { ...FRESH_OPENING_OFFER_STATE };
-    /** 已發放免費入學令的最大登入日（YYYY-MM-DD，高水位）；從未發過為 null（PROG-2-1374 修正，PM 裁定） */
+    /** 已處理的最大登入日（YYYY-MM-DD，高水位）；從未記過為 null。舊稱「免費入學令已發放日」，入學令每日發放已於 PROG-2-9206 退場，欄位沿用以相容舊存檔 */
     private _enrollGrantDay: string | null = null;
     // ---- 道具取得來源紀錄（ITM-05，PROG-2-1383）：與數量分開存放，隨 lifespanSaveFields 存檔 ----
     private _itemAcquisitionLog: ItemAcquisitionRecord[] = [];
@@ -947,6 +958,10 @@ export class GameSession implements AcademyRecordPort {
     private _seasonPass: SeasonPassState = createSeasonPassState();
     /** 進行中的學府修業紀錄（PROG-2-9189）；有值且未結業時外界時間凍結 */
     private _academyRecord: PersistedAcademyRecord | null = null;
+    private _skillApi: IApiClient | null = null;
+    private _skillService: SkillService | null = null;
+    private _skillHost: SkillHost | null = null;
+    private _skillAuthority: SkillLearnAuthority | null = null;
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
     private _prison: PrisonState<GeneralConfig> = createPrisonState<GeneralConfig>();
     /** 來投時依 uid 查回的武將配置（generals.json）；大廳載入後由 setGeneralTemplates 注入 */
@@ -1295,7 +1310,9 @@ export class GameSession implements AcademyRecordPort {
      * - 同步蓋上 graduationRating／graduatedSeason：沒有評級的子嗣不能出戰、也會一直出現在入學名單。
      * - 結業的就是進行中的學府紀錄時一併清掉（名冊與清檔同一次存檔），外界時間凍結解除。
      * - 查無武將但紀錄屬於他時，只清紀錄（孤兒紀錄不留）。
-     * TODO(PROG-2-9201 共通 API 層合併後)：名冊寫回與清紀錄改走 B0 的共通寫入 API，不再直接改 _academyRecord／replaceAll。
+     * PROG-2-9204（SKL-M）：新學戰法改經技能 API `skill.grant` 寫入持有（單一權威、可冪等重送）；
+     * 五維、特質、評級與清紀錄仍在本方法一次存檔，等 9191-a 的 task.settle／time API 就緒再整併。
+     * TODO(PROG-2-9191)：名冊其餘欄位與清紀錄改走 task.settle，不再直接改 _academyRecord／replaceAll。
      */
     public async graduateFromAcademy(generalId: string, snapshot: Readonly<AcademyStateSnapshot>): Promise<AcademyGraduationResult | null> {
         const record = this._academyRecord;
@@ -1308,8 +1325,19 @@ export class GameSession implements AcademyRecordPort {
             }
             return null;
         }
-        const applied = applyAcademyGraduation(general, snapshot);
-        const stamped = { ...applied.general, graduationRating: applied.grade, graduatedSeason: this._clock.state.totalSeasonsElapsed } as GeneralConfig;
+        const applied = applyAcademyGraduation(general, snapshot, { tacticsGrantedBySkillApi: true });
+        // 先授予戰法：失敗就整個結業不前進（名冊、紀錄都沒動）
+        await this._grantSkills(generalId, applied.newTactics, 'academy', `skill.grant:academy:${generalId}:${applied.newTactics.join('|')}`);
+        const granted = this._roster.getAll().find((g) => g.id === generalId) ?? general;
+        const stamped = {
+            ...applied.general,
+            learnedTactics: granted.learnedTactics,
+            skillMeta: granted.skillMeta,
+            // 結業時清掉「持續到結業」的調整值（期中方針 policy:*）
+            skillModifiers: (granted.skillModifiers ?? []).filter((m) => m.until !== 'graduation'),
+            graduationRating: applied.grade,
+            graduatedSeason: this._clock.state.totalSeasonsElapsed,
+        } as GeneralConfig;
         const result: AcademyGraduationResult = { ...applied, general: stamped };
         this._roster.replaceAll(this._roster.getAll().map((g) => (g.id === generalId ? stamped : g)));
         if (ownsRecord) this._academyRecord = null;
@@ -1317,6 +1345,49 @@ export class GameSession implements AcademyRecordPort {
             await this.save();
         }
         return result;
+    }
+
+    /** 技能宿主：持有存在武將名冊、學習權威由場景綁定；ServiceLoader 把它掛到本機 API 的 skill.* 命令 */
+    public get skillHost(): SkillHost {
+        if (!this._skillHost) {
+            // 穩定物件：換學習權威時重建服務，但已掛到 API 的 host 不會過期
+            const ensure = (): SkillService => this._ensureSkillService();
+            this._skillHost = { get service(): SkillService { return ensure(); } };
+        }
+        return this._skillHost;
+    }
+
+    private _ensureSkillService(): SkillService {
+        if (!this._skillService) {
+            const store = new GeneralSkillStore({
+                find: (id) => this._roster.getAll().find((g) => g.id === id),
+                replace: (general) => this._roster.replaceAll(this._roster.getAll().map((g) => (g.id === general.id ? general : g))),
+            });
+            this._skillService = new SkillService({ registry: defaultSkillRegistry(), store, authority: this._skillAuthority });
+        }
+        return this._skillService;
+    }
+
+    /** 綁定共通 API 入口（ServiceLoader 建好本機 API 後呼叫）；沒綁定時（純單元測試）退回直接呼叫同一個技能服務 */
+    public setSkillApi(client: IApiClient | null): void {
+        this._skillApi = client;
+    }
+
+    /** 學習權威（TP、槽位）；尚未接培育 TP 前為 null，skill.learn 回 E611（見卡 notes） */
+    public setSkillLearnAuthority(authority: SkillLearnAuthority | null): void {
+        this._skillAuthority = authority;
+        this._skillService = null;
+    }
+
+    private async _grantSkills(generalId: string, skillIds: readonly string[], source: string, idemKey: string): Promise<void> {
+        if (skillIds.length === 0) return;
+        const holder = { kind: 'general' as const, id: generalId };
+        if (!this._skillApi) {
+            this._ensureSkillService().grant(holder, skillIds, source);
+            return;
+        }
+        const res = await this._skillApi.cmd('skill.grant', { holder, skillIds: [...skillIds], source }, { idemKey });
+        if (isApiFail(res)) throw new Error(`[GameSession] skill.grant 失敗 ${res.errorCode} ${res.reason}：${res.message}`);
     }
 
     /** 對武將使用延壽丹（E-6，PROG-2-1347）：壽命上限 +3 與已服顆數寫回名冊並自動存檔；不成立時不扣道具 */
@@ -2041,6 +2112,29 @@ export class GameSession implements AcademyRecordPort {
     }
 
     /**
+     * 戰後里程碑的戰法筆記（PROG-2-9205 遷移示範）：每個「武將×里程碑」領一次獎勵套件，經 reward.claim 入帳。
+     * grantKey 讓重送冪等；API 失敗只記警告不擋戰後結算（里程碑已寫進戰績，不會再次觸發，屬可接受的極端情況，列入待決）。
+     */
+    private async _claimMilestoneNotes(entries: ReadonlyArray<{ generalId: string; newMilestones: readonly string[] }>): Promise<void> {
+        if (!this._rewardApi) return;
+        for (const entry of entries) {
+            for (const milestoneId of entry.newMilestones) {
+                if (!hasTacticNoteReward(milestoneId)) continue;
+                try {
+                    const res = await this._rewardApi.cmd('reward.claim', {
+                        bundleId: milestoneBundleId(milestoneId),
+                        grantKey: `milestone:${entry.generalId}:${milestoneId}`,
+                        source: { kind: 'milestone', ref: milestoneId },
+                    });
+                    if (isApiFail(res)) console.warn(`[GameSession] 里程碑獎勵領取失敗 ${milestoneId} ${res.errorCode} ${res.message}`);
+                } catch (error) {
+                    console.warn('[GameSession] 里程碑獎勵領取例外', error);
+                }
+            }
+        }
+    }
+
+    /**
      * 玩家庫存表的唯一寫入口（PROG-2-9203）：舊玩法路徑與物品庫存 base 的家庭倉庫 port 共用，
      * 之後要掛稽核或事件只改這一處。傳入的表要是新物件（PlayerInventory 不可變）。
      */
@@ -2096,6 +2190,19 @@ export class GameSession implements AcademyRecordPort {
     /** 綁共通 API（PROG-2-9203）：季結的定期物品發放經它走 item.settlePeriodic */
     public setItemApi(api: IApiClient | null): void {
         this._itemApi = api;
+    }
+
+    /** 綁共通 API（PROG-2-9205）：戰後里程碑獎勵經它走 reward.claim */
+    public setRewardApi(api: IApiClient | null): void {
+        this._rewardApi = api;
+    }
+
+    /** 獎勵 base 的權威狀態 port（PROG-2-9205）：亂數會話、保底、發放紀錄隨存檔 rewardMeta 保存 */
+    public rewardAuthority(): RewardAuthority {
+        return {
+            meta: () => this._rewardMeta,
+            setMeta: (meta) => { this._rewardMeta = meta; },
+        };
     }
 
     /**
@@ -2270,6 +2377,7 @@ export class GameSession implements AcademyRecordPort {
         this._legacyCount = 0;
         this._legendaryMentoringUsedIds = [];
         this._itemMeta = emptyItemMeta();
+        this._rewardMeta = emptyRewardMeta();
         this._breedingBirthRecords = [];
         this._familySystemUnlockedFlag = false;
         this._openingPhase = null;
@@ -3562,7 +3670,7 @@ export class GameSession implements AcademyRecordPort {
     /** 記錄一次登入（UTC+8 切日）；同日重複登入不增加天數。 */
     public recordLoginAt(epochMs: number, grantGold: (amount: number) => void = () => {}): void {
         this._loginStreak = recordLogin(this._loginStreak, epochMs);
-        // 掛機產出：今天的登入日超過已發放的最大日才發一次免費入學令（PROG-2-1374，張數依太守府等級；高水位防止回撥時鐘重領）
+        // 每日免費入學令已退場（PROG-2-9206）：入學令只由季結的 item.settlePeriodic 發放；登入日高水位仍保留給離線行為判斷與舊存檔相容
         const today = loginDayOf(epochMs);
         // 三國季報：換日首登才算（晨報一天只產生一次，用它的產生日判斷）；本季還沒有季報（新局、舊檔）時補合成
         this._loginStartedNewDay = this._morningReport.day !== today;
@@ -3570,12 +3678,9 @@ export class GameSession implements AcademyRecordPort {
             this._chronicleArchive = archiveSeasonChronicle(this._chronicleArchive, this._seasonChronicle, this._clock.state.totalSeasonsElapsed);
             this._seasonChronicle = this._synthesizeChronicle(this._clock.state.totalSeasonsElapsed);
         }
-        // 性格離線行為（HUM-03）：隔天第一次登入才有「昨晚」可寫；沿用入學令的切日高水位，回撥時鐘不會重發
+        // 性格離線行為（HUM-03）：隔天第一次登入才有「昨晚」可寫；沿用登入日高水位（enrollGrantDay），回撥時鐘不會重發
         const offlineBehaviorDue = this._enrollGrantDay !== null && isNewEnrollGrantDay(this._enrollGrantDay, today);
         if (isNewEnrollGrantDay(this._enrollGrantDay, today)) {
-            const beforeEnroll = this._inventory;
-            this._setInventory(addItem(this._inventory, ITEM_ADMISSION_TOKEN, dailyFreeEnrollCount(this._territoryLevel)));
-            this._recordGain(beforeEnroll, 'TASK');
             this._enrollGrantDay = today;
         }
         // 限時道具：登入切日時回收已過期的物件庫列（PROG-2-1364）
@@ -6036,16 +6141,13 @@ export class GameSession implements AcademyRecordPort {
             vitalityAfterBattle: options.vitalityAfterBattle,
         });
         // 新達成的里程碑發獎勵（千人斬等戰法筆記，GEN-13 / PROG-2-0817）；每個里程碑只在首次達成時發
-        const milestoneRewards = settlement.entries.flatMap((entry) => rewardsForMilestones(entry.newMilestones));
-        if (settlement.entries.length > 0) {
+                if (settlement.entries.length > 0) {
             const battleId = `B${++this._battleSerial}`;
             const battleDate = `${this.gameTime.currentYear}Q${this.gameTime.currentSeason}`;
             this._lastBattleSnapshots = settlement.entries.map((entry) =>
                 buildBattleSnapshot(battleId, entry.generalId, entry.performance ?? EMPTY_PERFORMANCE, entry.outcome === 'win', battleDate));
         }
-        const beforeMilestone = this._inventory;
-        this._setInventory(grantTacticNotes(this._inventory, milestoneRewards));
-        this._recordGain(beforeMilestone, 'TASK');
+        await this._claimMilestoneNotes(settlement.entries);
         if (settlement.entries.length === 0) {
             if ((clearChanged || firstClear || defenseFought || tallyChanged || comradeChanged || mercenaryChanged || officerChanged) && this._autoSave && this._save) {
                 await this.save();
@@ -6517,6 +6619,7 @@ export class GameSession implements AcademyRecordPort {
         return {
             ...this._createBaseSnapshot(now),
             ...(this._legendaryMentoringUsedIds.length > 0 ? { legendaryMentoringUsedIds: [...this._legendaryMentoringUsedIds] } : {}),
+            ...(isEmptyRewardMeta(this._rewardMeta) ? {} : { rewardMeta: normalizeRewardMeta(this._rewardMeta) }),
             ...(this._itemMeta.seq > 0 || Object.keys(this._itemMeta.periodic).length > 0 ? { itemMeta: normalizeItemMeta(this._itemMeta) } : {}),
             military: this.military,
             yearAgingEvents: this._yearAgingEvents.map((event) => ({ ...event })),
@@ -6830,6 +6933,7 @@ export class GameSession implements AcademyRecordPort {
         this._setInventory(normalizeInventory(snapshot.inventory));
         this._legendaryMentoringUsedIds = (snapshot.legendaryMentoringUsedIds ?? []).filter((id) => typeof id === 'string');
         this._itemMeta = normalizeItemMeta(snapshot.itemMeta);
+        this._rewardMeta = normalizeRewardMeta(snapshot.rewardMeta);
         this._oracleCount = snapshot.oracleCount ?? 0;
         this._clearedStageIds = normalizeClearedStageIds(snapshot.clearedStageIds);
         this._favoriteGeneralIds = normalizeFavoriteGeneralIds(snapshot.favoriteGeneralIds);

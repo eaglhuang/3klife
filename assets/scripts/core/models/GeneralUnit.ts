@@ -417,6 +417,14 @@ export interface GeneralConfig {
   pinkAncestorCounts?: Record<string, number>;
 
   learnedTactics?: string[];
+  /**
+   * 技能持有紀錄（PROG-2-9204 SKL-M）：技能 id → 等級、熟練度與來源；戰法清單仍以 learnedTactics 為準。
+   * 舊存檔沒有此欄位，讀取端補成「等級 1、來源 legacy」。
+   * TODO(第二版)：天賦、職業、家族奧義的持有結構，不用暫時欄位佔位。
+   */
+  skillMeta?: Record<string, { level: number; xp: number; from: string; at: number }>;
+  /** 技能調整值（期中方針 policy:* 等，持續到結業）；缺值視為空（PROG-2-9204） */
+  skillModifiers?: { id: string; source: string; until: 'graduation' | 'manual'; appliedAt: number }[];
   /** 學府結業等途徑習得的特質 id（PROG-2-1909） */
   learnedTraits?: string[];
   inspiredTactics?: string[];

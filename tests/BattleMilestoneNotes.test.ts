@@ -2,9 +2,13 @@
  * 戰後里程碑發獎（GEN-13 / PROG-2-0817）
  *
  * 鎖住：戰後新達成千人斬／百人斬時，戰法筆記寫入庫存；
- * 同一里程碑不重複發放；未達成時庫存不變。
+ * 同一里程碑不重複發放；未達成時庫存不變。（PROG-2-9205 起經 reward.claim 入帳）
  */
+import * as fs from 'fs';
+import * as path from 'path';
 import { assert, TestSuite } from './TestRunner';
+import { createLocalApi } from '../assets/scripts/core/api/localserver/createLocalApi';
+import { normalizeRewardConfig } from '../assets/scripts/shared/reward/RewardConfig';
 import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
 import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
 import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
@@ -20,6 +24,12 @@ async function sessionWith(roster: AgingGeneral[]): Promise<GameSession> {
     session.setRosterStore(new InMemoryRosterStore(roster as never));
     session.setSaveService(new PlayerSaveService(new MemoryStorageAdapter()));
     await session.load();
+    // 戰後里程碑獎勵走 reward.claim（PROG-2-9205）：綁本機 API，設定讀正式的 reward-config.json
+    const bundle = createLocalApi(new PlayerSaveService(new MemoryStorageAdapter()));
+    bundle.setItemAuthority(session.itemAuthority());
+    bundle.setRewardAuthority(session.rewardAuthority());
+    bundle.setRewardConfig(normalizeRewardConfig(JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'assets', 'resources', 'data', 'reward-config.json'), 'utf8'))));
+    session.setRewardApi(bundle.api);
     return session;
 }
 
