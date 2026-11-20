@@ -6744,7 +6744,7 @@
         "activeVersion": "0002"
       },
       "smallAvatar": {
-        "activeVersion": "0002",
+        "activeVersion": "0003",
         "status": "review-pending",
         "history": [
           {
@@ -6761,7 +6761,8 @@
           {
             "version": "0002",
             "file": "small_avatars/gao_gan__高幹__small_avatar_0002.png",
-            "status": "review-pending",
+            "status": "superseded",,
+            "note": "臉框中線未對準；由0003修正版取代。"
             "sha256": "e06ba43f5a047b41114227876711b8e51c4dea61ec73e34eb8c2a3c8aedea998",
             "canvas": "256x256 RGBA",
             "sourceAvatarVersion": "0002",
@@ -6769,6 +6770,19 @@
             "method": "crop-only; uniform resize; no redraw",
             "cropBox": { "x": 58.33, "y": 12.04, "width": 165.33, "height": 165.33 },
             "qc": "頭部75%、臉框中線50%、完整保留平頂帽與兩側飾件；肩部僅作最後考量。與六張指定基準及現存王元姬0002同尺寸比較，頭臉比例接近。",
+            "createdAt": "2026-11-20"
+          },
+          {
+            "version": "0003",
+            "file": "small_avatars/gao_gan__高幹__small_avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "9077d708e93cd5918e4994e764a88eea1f2d3615f887f43834f814986b6861a4",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/gao_gan__高幹__avatar_0002.png",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": { "x": 47.63, "y": 12.04, "width": 165.33, "height": 165.33 },
+            "qc": "YuNet臉框中點x=130.30；畫布臉框中線50%；頭高75%；完整保留平頂帽與兩側飾件。v2因臉框中線標記偏右而退役。",
             "createdAt": "2026-11-20"
           }
         ]
