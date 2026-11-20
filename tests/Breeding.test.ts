@@ -428,7 +428,7 @@ export function createBreedingSuite(): TestSuite {
         const service = new BreedingService(store, graph, { random: () => 0.01, dictionary, currentSeason: () => 3 });
 
         const preview = service.previewEp('guan-yu', 'diao-chan');
-        assert.equals(91, preview.ep, '真實祖譜：基礎 50 + 異脈 10 + 共鳴 15 + 契合 5(文武雙修) + 精力 5 + 親代 6 = 91');
+        assert.equals(93, preview.ep, '真實祖譜：基礎 50 + 異脈 10 + 共鳴 15 + 契合 7(文武雙修5+化干戈為玉帛2) + 精力 5 + 親代 6 = 93');
 
         const result = service.breed('guan-yu', 'diao-chan');
         assert.equals('conceived', result.outcome);
@@ -437,7 +437,7 @@ export function createBreedingSuite(): TestSuite {
         const child = roster.find((g) => g.id === 'child-guan-yu-diao-chan-1')!;
         assert.equals(0, child.age);
         // 子嗣 EP = 預覽基礎分 + 天命波動（PROG-2-0511）；波動依父母 LUK 與亂數而定
-        assert.equals(91 + result.ep!.fate, child.ep);
+        assert.equals(93 + result.ep!.fate, child.ep);
         assert.equals(14, (child.ancestor_chain ?? []).length);
 
         const pedigree = graph.getPedigree(child.id);

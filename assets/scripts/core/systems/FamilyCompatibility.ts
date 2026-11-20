@@ -121,11 +121,14 @@ export interface FamilyCompatibilityInput {
     /** 兩族近 6 名已成材子代滑動窗內通婚次數（若有 pairRecord 可自動換算） */
     qualifiedMarriagesInWindow?: number;
     pairRecord?: FamilyPairRecord;
+    /** 佳話聯姻（如「化干戈為玉帛」）帶來的額外相性加值（PROG-2-9184） */
+    epithetSynergyBonus?: number;
 }
 
 export interface FamilyCompatibilityResult {
     kStyle: number;
     kLineage: number;
+    kEpithet?: number;
     totalK: number;
     styleLabel: string | null;
 }
@@ -135,6 +138,7 @@ export function computeFamilyCompatibilityK(input: FamilyCompatibilityInput): Fa
     const { kStyle, label } = computeStyleCompatibility(input.fatherStats, input.motherStats);
     const windowCount = input.qualifiedMarriagesInWindow ?? countQualifiedInRecentWindow(input.pairRecord);
     const kLineage = computeLineageCompatibility(windowCount);
-    const totalK = Math.min(_rules.maxTotalBonus, kStyle + kLineage);
-    return { kStyle, kLineage, totalK, styleLabel: label };
+    const kEpithet = Math.max(0, input.epithetSynergyBonus ?? 0);
+    const totalK = Math.min(_rules.maxTotalBonus, kStyle + kLineage + kEpithet);
+    return { kStyle, kLineage, kEpithet, totalK, styleLabel: label };
 }

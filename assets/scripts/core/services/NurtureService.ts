@@ -51,6 +51,7 @@ import { INSPIRE_BURST_RATE_BONUS, InspireContext, rollInspireRound } from '../s
 import { isBloodlineGuaranteedRound, isBloodlineMatch } from '../systems/BloodlineGuarantee';
 import { GENERAL_STATUS_DEAD } from '../systems/GeneralAging';
 import { FactorAwakenedEvent, nurturePeekChance, rollNurtureAwakening } from '../systems/FactorAwakening';
+import { getMarriageVitalityRules } from '../systems/MarriageVitality';
 import { mentorPeekLine, previewLockedFactorDirections } from '../systems/SageFactorPreview';
 import type { FactorDictionary, InheritedFactor } from '../systems/FactorInheritance';
 import { hybridSourcesFromParents } from '../systems/HybridSkill';
@@ -561,11 +562,14 @@ export class NurtureService {
         const index = roster.findIndex((g) => g.id === childId);
         if (index < 0) return undefined;
         const mentorRank = session.mentors.reduce((max, m) => Math.max(max, m.stars ?? 0), 0);
+        const earlyAwakenTurns = getMarriageVitalityRules().epithets.twin_stars.earlyAwakenTurns;
+        const extraAwakenChance = session.round <= earlyAwakenTurns ? (session.earlyAwakenBonusPct ?? 0) : 0;
         const result = rollNurtureAwakening(roster[index], {
             discoveryLevel: hooks.discoveryLevel(),
             mentorRank,
             mentorOnSlot: log.mentorsOnSlot.length > 0,
             luk: lukOf(roster[index]),
+            extraAwakenChance,
             random: this._rng(),
         });
         if (!result?.ok) return undefined;

@@ -34,6 +34,8 @@ export interface MarriageVitalityRulesConfig {
     };
 }
 
+export const MARRIAGE_VITALITY_RULES_JSON = 'data/marriage-vitality-rules';
+
 export const DEFAULT_MARRIAGE_VITALITY_RULES: Readonly<MarriageVitalityRulesConfig> = {
     vitalityRules: {
         maxKnownAncestors: 2,
@@ -54,6 +56,28 @@ export const DEFAULT_MARRIAGE_VITALITY_RULES: Readonly<MarriageVitalityRulesConf
     },
 };
 
+let _rules: MarriageVitalityRulesConfig = DEFAULT_MARRIAGE_VITALITY_RULES;
+
+export function getMarriageVitalityRules(): MarriageVitalityRulesConfig {
+    return _rules;
+}
+
+export function configureMarriageVitalityRules(raw: Partial<MarriageVitalityRulesConfig> | null | undefined): void {
+    if (!raw) return;
+    _rules = {
+        vitalityRules: { ...DEFAULT_MARRIAGE_VITALITY_RULES.vitalityRules, ...(raw.vitalityRules ?? {}) },
+        epithets: {
+            civil_martial: { ...DEFAULT_MARRIAGE_VITALITY_RULES.epithets.civil_martial, ...(raw.epithets?.civil_martial ?? {}) },
+            foes_to_allies: { ...DEFAULT_MARRIAGE_VITALITY_RULES.epithets.foes_to_allies, ...(raw.epithets?.foes_to_allies ?? {}) },
+            twin_stars: { ...DEFAULT_MARRIAGE_VITALITY_RULES.epithets.twin_stars, ...(raw.epithets?.twin_stars ?? {}) },
+        },
+    };
+}
+
+export function resetMarriageVitalityRules(): void {
+    _rules = DEFAULT_MARRIAGE_VITALITY_RULES;
+}
+
 export interface FreshBloodOutcome {
     active: boolean;
     level: 0 | 1 | 2 | 3;
@@ -67,6 +91,8 @@ export interface EpithetOutcome {
     title: string;
     titleKey: string;
     summary: string;
+    summaryKey?: string;
+    summaryArgs?: string[];
 }
 
 export interface MarriageVitalityResult {
@@ -151,7 +177,7 @@ function highStarFactorKinds(genes: readonly GeneralGeneConfig[] | undefined, mi
 }
 
 export function evaluateMarriageVitality(input: MarriageVitalityInput): MarriageVitalityResult {
-    const rules = input.rules ?? DEFAULT_MARRIAGE_VITALITY_RULES;
+    const rules = input.rules ?? _rules;
     const vr = rules.vitalityRules;
     const { father, mother, hasCommonAncestor, roster } = input;
 
@@ -210,6 +236,8 @@ export function evaluateMarriageVitality(input: MarriageVitalityInput): Marriage
             title: EPITHET_TITLES.civil_martial,
             titleKey: cm.titleKey,
             summary: `初始 TP +${cm.bonusTp}`,
+            summaryKey: 'ui.breed.epithet.summary.civil_martial',
+            summaryArgs: [String(cm.bonusTp)],
         });
     }
 
@@ -222,6 +250,8 @@ export function evaluateMarriageVitality(input: MarriageVitalityInput): Marriage
             title: EPITHET_TITLES.foes_to_allies,
             titleKey: fa.titleKey,
             summary: `相性 +${fa.synergyBonus}`,
+            summaryKey: 'ui.breed.epithet.summary.foes_to_allies',
+            summaryArgs: [String(fa.synergyBonus)],
         });
     }
 
@@ -234,11 +264,14 @@ export function evaluateMarriageVitality(input: MarriageVitalityInput): Marriage
         || (fatherKinds.has('red') && motherKinds.has('blue'));
     if (hasCrossPair) {
         awakenRateBonus += ts.awakenRateBonus;
+        const pct = String(Math.round(ts.awakenRateBonus * 100));
         epithets.push({
             id: 'twin_stars',
             title: EPITHET_TITLES.twin_stars,
             titleKey: ts.titleKey,
-            summary: `覺醒率 +${Math.round(ts.awakenRateBonus * 100)}%`,
+            summary: `覺醒率 +${pct}%`,
+            summaryKey: 'ui.breed.epithet.summary.twin_stars',
+            summaryArgs: [pct],
         });
     }
 
@@ -260,7 +293,9 @@ export function marriageVitalityBadgeLine(
             : `寒門新血 V${result.freshBlood.level}（前6季訓練+${pct}%）`);
     }
     for (const ep of result.epithets) {
-        badges.push(`${t ? t(ep.titleKey) : ep.title}（${ep.summary}）`);
+        const title = t ? t(ep.titleKey) : ep.title;
+        const summary = t && ep.summaryKey ? t(ep.summaryKey, ...(ep.summaryArgs ?? [])) : ep.summary;
+        badges.push(`${title}（${summary}）`);
     }
     return badges.join(' · ');
 }
