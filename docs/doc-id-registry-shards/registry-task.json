@@ -16006,5 +16006,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9429.md",
     "title": "[PROG-2-9429] 守城張力：工兵投石、主將駐守、每回合補派工兵",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2686",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9430.md",
+    "title": "[PROG-2-9430] 守城戰我方城寨血條＋年終守城正式規格書",
+    "category": "task"
   }
 ]

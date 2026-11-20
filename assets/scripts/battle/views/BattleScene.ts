@@ -414,6 +414,8 @@ export class BattleScene extends Component {
       this.hud?.setPlayerName(pg.name);
       this.hud?.setEnemyName(eg.name);
       this.hud?.setStageTitle(formatBattleStageTitle(encounter?.name));
+      // 守城戰顯示我方城寨血條（PROG-2-9430）
+      this.hud?.setDefenseFortressBarVisible?.(this.ctrl.state.siegeDefender === Faction.Player);
       this.hud?.refresh(
         snap.turn,
         snap.playerFood,

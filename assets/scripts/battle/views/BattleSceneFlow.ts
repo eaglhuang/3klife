@@ -115,6 +115,8 @@ export class BattleSceneFlow {
     hud?.setEnemyGeneralId(egId);
     hud?.setPlayerName(pg.name);
     hud?.setEnemyName(eg.name);
+    // 守城戰我方城寨血條（PROG-2-9430）：再戰一次也照守方顯示
+    hud?.setDefenseFortressBarVisible?.(ctrl.state.siegeDefender === Faction.Player);
     hud?.refresh(
       snap.turn,
       snap.playerFood,

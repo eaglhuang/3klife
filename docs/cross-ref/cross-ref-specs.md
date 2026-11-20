@@ -74,6 +74,7 @@
 | doc_spec_0041 |—|doc_spec_0010、doc_spec_0038、doc_data_0001|
 | doc_spec_0038 |doc_spec_0041、doc_spec_0039（格子戰法定義）、doc_spec_0016、doc_ui_0012、doc_ui_0001、doc_spec_0040|doc_spec_0010、doc_spec_0026、doc_spec_0027、doc_spec_0016|
 | doc_spec_0019 |doc_spec_0040|doc_spec_0042|
+| doc_spec_1236（年終守城戰） |—|doc_spec_0049、doc_spec_0376、doc_spec_0525、doc_spec_1182、doc_spec_1184、doc_spec_1186|
 | doc_data_0002 |—|doc_data_0001、doc_spec_0040|
 | doc_spec_0007 |doc_spec_0002、doc_ui_0027|doc_spec_0040、doc_spec_0044、doc_spec_0012、doc_spec_0041、doc_spec_0032|
 | doc_spec_0020 |doc_spec_0002、doc_spec_0039|doc_spec_0032、doc_spec_0037、doc_spec_0014、doc_spec_0022、doc_spec_0018|
