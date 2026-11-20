@@ -1,0 +1,35 @@
+{
+  "vitalityRules": {
+    "maxKnownAncestors": 2,
+    "rareSurnameMaxShare": 0.1,
+    "minGuestEp": 65,
+    "minFactorStars": 3,
+    "highEpThreshold": 75,
+    "earlyBonusPerLevel": 0.04,
+    "earlyBonusMin": 0.04,
+    "earlyBonusMax": 0.12,
+    "extraFatigueRecovery": 1,
+    "earlyTrainingTurns": 6
+  },
+  "epithets": {
+    "civil_martial": {
+      "id": "civil_martial",
+      "titleKey": "ui.breed.epithet.civil_martial",
+      "minStat": 80,
+      "bonusTp": 20
+    },
+    "foes_to_allies": {
+      "id": "foes_to_allies",
+      "titleKey": "ui.breed.epithet.foes_to_allies",
+      "synergyBonus": 2,
+      "maxSynergy": 15
+    },
+    "twin_stars": {
+      "id": "twin_stars",
+      "titleKey": "ui.breed.epithet.twin_stars",
+      "minFactorStars": 3,
+      "awakenRateBonus": 0.05,
+      "earlyAwakenTurns": 12
+    }
+  }
+}

@@ -54,6 +54,7 @@ import { applyFateInheritance } from './LuckFateInheritance';
 import { applyBloodlineMutation } from './LuckBloodlineMutation';
 import { PINK_TERRAIN_FACTOR_KEYS } from './BattleAptitude';
 import { inheritChildAptitudes } from './ChildAptitudeInheritance';
+import { evaluateMarriageVitality, type MarriageVitalityResult } from './MarriageVitality';
 
 export const BREEDING_MIN_AGE = 20;
 export const FATHER_VIGOR_COST = 50;
@@ -106,6 +107,14 @@ export type BreedingGeneral = GeneralConfig & {
     pregnancySeasonsLeft?: number;
     /** 已轉為教官 / 支援卡，不再是親傳父母來源 */
     isMentorCard?: boolean;
+    /** 寒門新血前 6 回合訓練加成（PROG-2-9181） */
+    earlyTrainingBonus?: number;
+    /** 佳話聯姻「文武並濟」初始 TP 加成（PROG-2-9181） */
+    initialBonusTp?: number;
+    /** 佳話聯姻「雙星輝映」前 12 回合覺醒率加成（PROG-2-9181） */
+    earlyAwakenBonusPct?: number;
+    /** 佳話聯姻觸發稱號 ID 列表（PROG-2-9181） */
+    marriageEpithets?: string[];
     /** 出生時的 totalSeasonsElapsed */
     birthSeason?: number;
     /** 負面特質出現率加成（近親子嗣 +0.5，其餘 0） */
@@ -659,6 +668,8 @@ export interface BreedingRequest {
     pairRecord?: FamilyPairRecord;
     /** 用來取名冊裡武將的 genes（父母本人、或曾在名冊出生的祖先） */
     rosterLookup?: (uid: string) => GeneralConfig | undefined;
+    /** 選填：當前家族名冊（寒門新血判斷稀少姓氏用，PROG-2-9181） */
+    roster?: readonly GeneralConfig[];
 }
 
 export type BreedingOutcome = 'blocked' | 'failed' | 'conceived';
@@ -672,6 +683,8 @@ export interface BreedingResult {
     lineageSynergyFactorId?: string;
     /** 外戚血脈純化升星的結果（PROG-2-1819） */
     kinPurification?: KinPurificationOutcome;
+    /** 寒門新血 × 佳話聯姻結算結果（PROG-2-9181） */
+    marriageVitality?: MarriageVitalityResult;
     outcome: BreedingOutcome;
     /** 用了受孕道具仍失敗時，父母各返還的慰問精力（doc_spec_0315 §4，PROG-2-2109） */
     vitalityRefund?: { father: number; mother: number };
@@ -933,9 +946,25 @@ function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMo
         child.hiddenFlags = [...(child.hiddenFlags ?? []), FRAIL_BIRTH_FLAG];
     }
     const bloodFatigue: BloodFatigueOutcome = { before: Math.max(fatherFatigue, motherFatigue), after: childFatigue, inbred: fatigueInbred, frail };
+    const marriageVitality = evaluateMarriageVitality({
+        father: request.father,
+        mother: request.mother,
+        hasCommonAncestor: fatigueInbred,
+        roster: request.roster,
+    });
+    if (marriageVitality.freshBlood.active) {
+        child.bloodFatigue = Math.max(0, childFatigue - marriageVitality.freshBlood.extraFatigueRecovery);
+        child.earlyTrainingBonus = marriageVitality.freshBlood.earlyTrainingBonus;
+    }
+    if (marriageVitality.epithets.length > 0) {
+        child.marriageEpithets = marriageVitality.epithets.map((e) => e.id);
+        if (marriageVitality.bonusTp > 0) child.initialBonusTp = marriageVitality.bonusTp;
+        if (marriageVitality.awakenRateBonus > 0) child.earlyAwakenBonusPct = marriageVitality.awakenRateBonus;
+    }
 
     return {
         bloodFatigue,
+        marriageVitality,
         compactRescued: !heritageLocked && lockedFactors !== fatedFactors,
         heritageRescued: heritageLocked && lockedFactors !== fatedFactors,
         lineageSynergyFactorId: synergy.risen?.id,

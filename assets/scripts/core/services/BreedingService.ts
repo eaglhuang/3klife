@@ -285,6 +285,7 @@ export class BreedingService {
             maxFactors: this._options.maxFactors,
             isHistoricalPair: this._historicalResolver(),
             rosterLookup: this._rosterLookup(roster),
+            roster,
             pairRecord: this._pairRecordFor(father, mother),
             motherConceptionMod: femaleSourceConceptionMod(this._options.getFemaleSource?.(mother.id) ?? null),
             historicalConceptionMod: historicalPairs ? conceptionModBetween(historicalPairs, father.id, mother.id) : undefined,
