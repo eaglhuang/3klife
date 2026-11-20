@@ -192,6 +192,8 @@ import { RED_FACE_SHOW_MAX_ROWS, RedFaceGalleryController, RedFaceShowcaseContro
 import { GACHA_NODES, GACHA_POOL_INDEX, GACHA_POOLS, GachaPoolDef, RED_FACE_SECTION_ROW_BUTTON } from '../core/GachaScreenNodes';
 import { LocalGachaApi } from '../../core/gacha/LocalGachaApi';
 import { GachaWalletPort } from '../../core/api/localserver/GachaWalletPort';
+import { isApiFail } from '../../shared/api/ApiProtocol';
+import { ADMISSION_TOKEN_ID } from '../../shared/item/ItemConfig';
 import { parseGachaMainPools, type GachaApi, type GachaCurrencyId, type GachaMainPoolConfig } from '../../core/gacha/GachaApi';
 import { gachaApiView, gachaAutoSizeNodes, gachaHeroIdOf, gachaWalletLabelTexts } from '../core/GachaApiTexts';
 import { buildPoolDetailRows, checkGachaAffordable, planGachaButton, syncMainPoolCosts, type GachaButtonKind } from '../../core/gacha/GachaButtonRules';
@@ -1589,9 +1591,10 @@ export class LobbyScene extends Component {
             nurtureBlockReasons: (childId) => services().nurture.checkStart(childId).reasons,
             loadMentorCards: async () => attachSupportToCards((await services().legacy?.getMentorCards()) ?? [], await this._loadSupportCatalog()),
             lockedMentorIds: () => services().nurture.lockedMentorIds(),
-            tokensLeft: () => services().nurture.admissionsLeft(),
-            consumeToken: () => services().nurture.consumeAdmissionToken(),
-            refundToken: () => services().nurture.refundAdmissionToken(),
+            // 入學令改走物品庫存（PROG-2-9203）：家庭倉庫的 ITEM_ADMISSION_TOKEN；NurtureService.admission 只留給舊培育入口
+            tokensLeft: () => session.itemCount(ADMISSION_TOKEN_ID),
+            consumeToken: async () => !isApiFail(await services().api.cmd('item.consume', { itemId: ADMISSION_TOKEN_ID, qty: 1, sink: 'ENROLL' })),
+            refundToken: async () => { await services().api.cmd('item.grant', { itemId: ADMISSION_TOKEN_ID, qty: 1, source: 'REFUND' }); },
             clanUuid: () => session.clanUuid,
             clanPrestigeTier: () => session.clanPrestigeTier,
             admissionTurn: () => session.gameTime.totalSeasonsElapsed,

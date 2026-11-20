@@ -16012,5 +16012,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9430.md",
     "title": "[PROG-2-9430] 守城戰我方城寨血條＋年終守城正式規格書",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2687",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9203.md",
+    "title": "[PROG-2-9203] ITM-M 物品庫存 base 最小版：家庭倉庫與入學令",
+    "category": "task"
   }
 ]

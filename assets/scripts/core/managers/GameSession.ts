@@ -160,12 +160,15 @@ import { buildHallStageFeed, type HallStageFeed, type HallStageProfile } from '.
 import type { HallVolunteerTask } from '../systems/HallVolunteer';
 import type { SessionSaveService } from '../api/localserver/ApiSaveGateway';
 import type { SkillHost } from '../api/localserver/SkillCommands';
-import type { IApiClient } from '../../shared/api/IApiClient';
-import { isApiFail } from '../../shared/api/ApiProtocol';
 import { SkillService } from '../../shared/skill/SkillService';
 import type { SkillLearnAuthority } from '../../shared/skill/SkillTypes';
 import { GeneralSkillStore } from '../systems/skill/GeneralSkillStore';
 import { defaultSkillRegistry } from '../systems/skill/SkillCatalog';
+import type { ItemAuthority, StockTable } from '../api/localserver/ItemCommands';
+import type { IApiClient } from '../../shared/api/IApiClient';
+import { isApiFail } from '../../shared/api/ApiProtocol';
+import { ADMISSION_SEASON_RULE_ID, DEFAULT_CONTAINER_ID, type HolderRef } from '../../shared/item/ItemConfig';
+import { emptyItemMeta, normalizeItemMeta, type ItemMeta } from '../../shared/item/ItemRules';
 import { createPlayerSaveSnapshot, normalizeInfusionRecords, normalizeGachaMentorJournal, normalizeHallAssignLog, type GachaMentorJournalEntry, normalizeSandtableMarkerTerritories, normalizeSortiePresets, normalizeGachaWalletSave, type GachaWalletSave, normalizeDailySubsidyRecord, type DailySubsidyRecord, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeAutoNurtureTickets, normalizeFlag, normalizeYearEndDefenseYear, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveSnapshot, normalizeClanPrestige, normalizeShrineOfferingDay } from '../services/PlayerSaveService';
 import { HALL_MISSION_DIFFICULTIES } from '../systems/HallMissionData';
 import { HALL_DIFFICULTY_MIN_RANK } from '../systems/HallMissionBoard';
@@ -489,6 +492,12 @@ export interface BloodlineStageAwakenedPayload {
 }
 
 /** 季度增齡事件的廣播頻道：死亡、成長階段、過峰、退役候選四種 */
+/** 物品庫存 base 的取得來源 → 既有取得紀錄的來源分類（紀錄只有 5 種已知來源） */
+function itemSourceOf(reason: string): ItemSource {
+    if (reason === 'SHOP' || reason === 'TASK' || reason === 'DROP' || reason === 'EVENT' || reason === 'DECOMPOSE') return reason;
+    return reason === 'REWARD' || reason === 'STORY' || reason === 'SYSTEM' || reason === 'SEASON' ? 'EVENT' : 'UNKNOWN';
+}
+
 function agingEventChannel(event: AgingEvent): string {
     if (event.type === 'died') return GAME_SESSION_EVENTS.GeneralDied;
     if (event.type === 'entered-growth-stage') return GAME_SESSION_EVENTS.GeneralGrowthStage;
@@ -897,6 +906,10 @@ export class GameSession implements AcademyRecordPort {
     private _legacyCount = 0;
     /** 已傳道過的名將 id（MENT-15 一生一次） */
     private _legendaryMentoringUsedIds: string[] = [];
+    /** 物品庫存 base 的持久化中繼資料（定期發放高水位、取得與消耗帳本，PROG-2-9203）；舊檔缺值為空 */
+    private _itemMeta: ItemMeta = emptyItemMeta();
+    /** 共通 API 入口（PROG-2-9203）：季結的入學令發放走 item.settlePeriodic；沒綁（純邏輯測試）就不發 */
+    private _itemApi: IApiClient | null = null;
     /** 結緣成功的本機端紀錄（BRD-12）；隨既有玩家存檔保存（PROG-2-1146） */
     private _breedingBirthRecords: BreedingBirthRecord[] = [];
     /** 世家系統解鎖旗標（PM 暫定）：第一位子嗣誕生時寫入；舊檔以出生紀錄推導。 */
@@ -1266,7 +1279,7 @@ export class GameSession implements AcademyRecordPort {
         const current = general.vitality ?? max;
         const result = useVitalityPill(this._inventory, current, max, kind);
         if (!result.ok) return result;
-        this._inventory = result.inventory;
+        this._setInventory(result.inventory);
         this._roster.replaceAll(this._roster.getAll().map((g) => (g.id === generalId ? { ...g, vitality: result.vitality, maxVitality: max } : g)));
         this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
         if (this._autoSave && this._save) {
@@ -1369,7 +1382,7 @@ export class GameSession implements AcademyRecordPort {
         if (!general) return { ok: false, reason: 'no-general' };
         const result = useLongevityPill(this._inventory, general);
         if (!result.ok) return result;
-        this._inventory = result.inventory;
+        this._setInventory(result.inventory);
         this._roster.replaceAll(this._roster.getAll().map((g) => (g.id === generalId ? { ...g, maxLifespan: result.maxLifespan, longevityPillCount: longevityPillsUsed(general) + 1 } : g)));
         this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
         if (this._autoSave && this._save) {
@@ -1579,7 +1592,7 @@ export class GameSession implements AcademyRecordPort {
         if (!inventory) {
             return { ok: false, reason: 'no-ticket', wallet };
         }
-        this._inventory = inventory;
+        this._setInventory(inventory);
         this._mercenaries = {
             ...this._mercenaries,
             mercenaries: [...this._mercenaries.mercenaries, result.mercenary],
@@ -1648,7 +1661,7 @@ export class GameSession implements AcademyRecordPort {
         const result = decomposeGearRecord(this._inventoryRecords, this._inventory, inventoryId);
         if (!result.ok) return result;
         this._inventoryRecords = result.records;
-        this._inventory = result.inventory;
+        this._setInventory(result.inventory);
         this._recordGain(before, 'DECOMPOSE');
         this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
         return result;
@@ -1686,7 +1699,7 @@ export class GameSession implements AcademyRecordPort {
     public useItem(itemId: string, nowMs: number): ItemUseResult {
         const result = useItemFlow(this._inventory, itemId, nowMs);
         if (!result.ok) return result;
-        this._inventory = result.inventory;
+        this._setInventory(result.inventory);
         if (result.refresh) {
             this._femaleSystem = {
                 ...this._femaleSystem,
@@ -1699,7 +1712,7 @@ export class GameSession implements AcademyRecordPort {
 
     /** 結緣實際執行後清除安胎藥的 armed 標記（PROG-2-1038）；沒有標記時不動背包 */
     public clearFertilityArm(): void {
-        this._inventory = consumeItem(this._inventory, ITEM_FERTILITY_ARMED, 1) ?? this._inventory;
+        this._setInventory(consumeItem(this._inventory, ITEM_FERTILITY_ARMED, 1) ?? this._inventory);
     }
 
     /** 統一物件庫推導的虎符與英靈卡視圖（DS-08）；讀取一律走這裡，不直接讀 _tallyCards */
@@ -2070,6 +2083,28 @@ export class GameSession implements AcademyRecordPort {
         return flat + countGeneralBagSlots(stored);
     }
 
+    /**
+     * 季結的定期物品發放（PROG-2-9203）：入學令每季 +1、封頂 3、溢出折 5000 金，全在權威端判定。
+     * 以持久化高水位冪等；API 失敗只記警告不擋季結（下一季會依高水位補發）。
+     */
+    private async _settleSeasonItemGrants(seasonIndex: number): Promise<void> {
+        if (!this._itemApi) return;
+        try {
+            const res = await this._itemApi.cmd('item.settlePeriodic', { ruleId: ADMISSION_SEASON_RULE_ID, nowIndex: seasonIndex });
+            if (isApiFail(res)) console.warn(`[GameSession] 入學令季發失敗 ${res.errorCode} ${res.message}`);
+        } catch (error) {
+            console.warn('[GameSession] 入學令季發例外', error);
+        }
+    }
+
+    /**
+     * 玩家庫存表的唯一寫入口（PROG-2-9203）：舊玩法路徑與物品庫存 base 的家庭倉庫 port 共用，
+     * 之後要掛稽核或事件只改這一處。傳入的表要是新物件（PlayerInventory 不可變）。
+     */
+    private _setInventory(next: PlayerInventory): void {
+        this._inventory = next;
+    }
+
     /** 入庫後把數量增加的部分寫進取得紀錄（ITM-05）；只記增加，不記扣除。 */
     private _recordGain(before: PlayerInventory, source: ItemSource): void {
         this._itemAcquisitionLog = appendAcquisitions(this._itemAcquisitionLog, diffAcquisitions(before, this._inventory, source));
@@ -2078,7 +2113,7 @@ export class GameSession implements AcademyRecordPort {
     /** 增加道具（商城購買、活動獎勵）並自動存檔；source 為取得來源（ITM-05），不給為 UNKNOWN */
     public async addItem(itemId: string, amount: number, source: ItemSource = 'UNKNOWN'): Promise<number> {
         const before = this._inventory;
-        this._inventory = addItem(this._inventory, itemId, amount);
+        this._setInventory(addItem(this._inventory, itemId, amount));
         this._recordGain(before, source);
         if (this._autoSave && this._save) {
             await this.save();
@@ -2113,6 +2148,32 @@ export class GameSession implements AcademyRecordPort {
 
     public setSaveService(service: SessionSaveService | null): void {
         this._save = service;
+    }
+
+    /** 綁共通 API（PROG-2-9203）：季結的定期物品發放經它走 item.settlePeriodic */
+    public setItemApi(api: IApiClient | null): void {
+        this._itemApi = api;
+    }
+
+    /**
+     * 物品庫存的權威存放 port（PROG-2-9203）：家庭倉庫＝既有的玩家庫存表（存檔形狀不變），
+     * 其他持有者尚未開放（回 null）。由 ServiceLoader 綁到本機 adapter；本類別只提供存取，規則在 ItemCommands。
+     */
+    public itemAuthority(): ItemAuthority {
+        const isHome = (holder: HolderRef, container: string): boolean => holder.kind === 'household' && container === DEFAULT_CONTAINER_ID;
+        return {
+            read: (holder, container): StockTable | null => (isHome(holder, container) ? { ...this._inventory } : null),
+            write: (holder, container, next, why) => {
+                if (!isHome(holder, container)) return;
+                const before = this._inventory;
+                this._setInventory(normalizeInventory(next));
+                // 退還與消耗不算取得；其餘來源折成既有取得紀錄的 EVENT／TASK／SHOP／DROP／DECOMPOSE
+                if (why.delta > 0 && why.reason !== 'REFUND') this._recordGain(before, itemSourceOf(why.reason));
+                this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
+            },
+            meta: () => this._itemMeta,
+            setMeta: (meta) => { this._itemMeta = meta; },
+        };
     }
 
     /** 測試替身：外部 callback 的內部狀態不納入存檔。 */
@@ -2239,7 +2300,7 @@ export class GameSession implements AcademyRecordPort {
         this._countdown = null;
         this._discoveryLevel = 1;
         this._discoveryExp = 0;
-        this._inventory = { ...STARTER_INVENTORY };
+        this._setInventory({ ...STARTER_INVENTORY });
         this._oracleCount = 0;
         this._clearedStageIds = [];
         this._favoriteGeneralIds = [];
@@ -2265,6 +2326,7 @@ export class GameSession implements AcademyRecordPort {
         this._gachaRevision += 1;
         this._legacyCount = 0;
         this._legendaryMentoringUsedIds = [];
+        this._itemMeta = emptyItemMeta();
         this._breedingBirthRecords = [];
         this._familySystemUnlockedFlag = false;
         this._openingPhase = null;
@@ -2610,7 +2672,7 @@ export class GameSession implements AcademyRecordPort {
         const result = sendGiftWithLetter(this._rivals, nationId, wallet.gold, this._clock.state.totalSeasonsElapsed);
         if (!result.ok) return { ok: false, message: result.message };
         wallet.spend(result.goldSpent);
-        this._inventory = inventory;
+        this._setInventory(inventory);
         this._rivals = result.world;
         if (this._autoSave && this._save) await this.save();
         return { ok: true, message: result.message };
@@ -2808,7 +2870,7 @@ export class GameSession implements AcademyRecordPort {
         const used = Math.min(speedCardsNeeded(this._wishPool, wishId, cards, nowMs), itemCount(this._inventory, ITEM_WISH_SPEED_CARD));
         const inventory = used > 0 ? consumeItem(this._inventory, ITEM_WISH_SPEED_CARD, used) : null;
         if (!inventory) return 0;
-        this._inventory = inventory;
+        this._setInventory(inventory);
         this._wishPool = applySpeedCards(this._wishPool, wishId, used);
         this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
         return used;
@@ -2821,7 +2883,7 @@ export class GameSession implements AcademyRecordPort {
         if (result.claimed.length === 0) return [];
         this._wishPool = result.state;
         const beforeWish = this._inventory;
-        for (const wish of result.claimed) this._inventory = addItem(this._inventory, wish.itemId, wish.amount);
+        for (const wish of result.claimed) this._setInventory(addItem(this._inventory, wish.itemId, wish.amount));
         this._recordGain(beforeWish, 'EVENT');
         this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
         return result.claimed.map((w) => ({ ...w }));
@@ -3046,7 +3108,7 @@ export class GameSession implements AcademyRecordPort {
         if ((effect.costGold ?? 0) > 0 && !wallet.spendGold(effect.costGold ?? 0)) return { ok: false, reason: 'shortfall', resource: '黃金' };
         if (effect.costFood) this._military = { ...this._military, food: this._military.food - effect.costFood };
         if (effect.costWood) {
-            this._inventory = consumeItem(this._inventory, ITEM_WOOD, effect.costWood) ?? this._inventory;
+            this._setInventory(consumeItem(this._inventory, ITEM_WOOD, effect.costWood) ?? this._inventory);
             this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
         }
         if (effect.fame) this._fame = Math.min(BASE_RESOURCE_CAPS.fame, this._fame + effect.fame);
@@ -3066,7 +3128,7 @@ export class GameSession implements AcademyRecordPort {
         if (!plan.ok) return plan;
         const inventory = consumeItem(this._inventory, itemId);
         if (!inventory) return { ok: false, reason: 'no-item' };
-        this._inventory = inventory;
+        this._setInventory(inventory);
         this._governanceBoosts = plan.boosts;
         if (this._autoSave && this._save) await this.save();
         this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
@@ -3271,7 +3333,7 @@ export class GameSession implements AcademyRecordPort {
     public async claimShrineOffering(epochMs: number): Promise<number> {
         if (!this.canClaimShrineOffering(epochMs)) return 0;
         const before = this._inventory;
-        this._inventory = addItem(this._inventory, ITEM_VITALITY_PILL, GameSession.SHRINE_OFFERING_PILLS);
+        this._setInventory(addItem(this._inventory, ITEM_VITALITY_PILL, GameSession.SHRINE_OFFERING_PILLS));
         this._recordGain(before, 'DROP');
         this._shrineOfferingDay = loginDayOf(epochMs);
         this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
@@ -3326,7 +3388,7 @@ export class GameSession implements AcademyRecordPort {
         if (rewards.length === 0) return rewards;
         const before = this._inventory;
         for (const reward of rewards) {
-            if (reward.itemId) this._inventory = addItem(this._inventory, reward.itemId, reward.count);
+            if (reward.itemId) this._setInventory(addItem(this._inventory, reward.itemId, reward.count));
         }
         this._recordGain(before, 'DROP');
         this._seasonPass = state;
@@ -3546,7 +3608,7 @@ export class GameSession implements AcademyRecordPort {
         if (claim.speedCards <= 0) return 0;
         this._monthlyCard = claim.state;
         const beforeMonthlyCard = this._inventory;
-        this._inventory = addItem(this._inventory, ITEM_WISH_SPEED_CARD, claim.speedCards);
+        this._setInventory(addItem(this._inventory, ITEM_WISH_SPEED_CARD, claim.speedCards));
         this._recordGain(beforeMonthlyCard, 'SHOP');
         return claim.speedCards;
     }
@@ -3566,7 +3628,7 @@ export class GameSession implements AcademyRecordPort {
         const offlineBehaviorDue = this._enrollGrantDay !== null && isNewEnrollGrantDay(this._enrollGrantDay, today);
         if (isNewEnrollGrantDay(this._enrollGrantDay, today)) {
             const beforeEnroll = this._inventory;
-            this._inventory = addItem(this._inventory, ITEM_ADMISSION_TOKEN, dailyFreeEnrollCount(this._territoryLevel));
+            this._setInventory(addItem(this._inventory, ITEM_ADMISSION_TOKEN, dailyFreeEnrollCount(this._territoryLevel)));
             this._recordGain(beforeEnroll, 'TASK');
             this._enrollGrantDay = today;
         }
@@ -4853,7 +4915,7 @@ export class GameSession implements AcademyRecordPort {
             return g;
         });
         this._roster.replaceAll(updated);
-        this._inventory = inventory;
+        this._setInventory(inventory);
         this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
         if (this._autoSave && this._save) {
             await this.save();
@@ -5045,7 +5107,7 @@ export class GameSession implements AcademyRecordPort {
 
     /** 扣 1 張求籤令、累計占卜次數、存檔並廣播庫存變動 */
     private async _spendOracleToken(): Promise<void> {
-        this._inventory = consumeItem(this._inventory, ITEM_ORACLE_TOKEN) ?? this._inventory;
+        this._setInventory(consumeItem(this._inventory, ITEM_ORACLE_TOKEN) ?? this._inventory);
         this._oracleCount += 1;
         if (this._autoSave && this._save) {
             await this.save();
@@ -5092,7 +5154,7 @@ export class GameSession implements AcademyRecordPort {
     private async _payOracleProbe(cost: number, record: () => void): Promise<boolean> {
         const inventory = consumeItem(this._inventory, ITEM_ORACLE_TOKEN, cost);
         if (!inventory) return false;
-        this._inventory = inventory;
+        this._setInventory(inventory);
         record();
         if (this._autoSave && this._save) {
             await this.save();
@@ -5142,7 +5204,7 @@ export class GameSession implements AcademyRecordPort {
         if (!applied) return null;
         if (applied.result.ok) {
             this._roster.replaceAll(applied.roster);
-            this._inventory = consumeItem(this._inventory, ITEM_JOB_CHANGE_ORDER) ?? this._inventory;
+            this._setInventory(consumeItem(this._inventory, ITEM_JOB_CHANGE_ORDER) ?? this._inventory);
             this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
         }
         if (this._autoSave && this._save) {
@@ -5331,8 +5393,9 @@ export class GameSession implements AcademyRecordPort {
         const clanTierUp = await this._refreshClanTier();
         const beforeTokens = this._inventory;
         const tokens = grantSeasonalOracleTokens(this._inventory);
-        this._inventory = tokens.inventory;
+        this._setInventory(tokens.inventory);
         this._recordGain(beforeTokens, 'EVENT');
+        await this._settleSeasonItemGrants(advance.current.totalSeasonsElapsed);
         this._tallyFoodDiscountArmed = this._military.food < TALLY_SHORTAGE_FOOD_THRESHOLD;
         // 三國日報素材：缺糧（與虎符缺糧同一門檻，暫定）
         // 缺口 = 門檻 − 目前糧草（RET-05 復仇取回的基數，暫定）
@@ -5357,7 +5420,7 @@ export class GameSession implements AcademyRecordPort {
         const treasures = rollPrisonTreasureDonors(this._prison.prisoners, this._random);
         if (treasures.length > 0) {
             const beforeTreasure = this._inventory;
-            this._inventory = addItem(this._inventory, ITEM_TREASURE, treasures.length);
+            this._setInventory(addItem(this._inventory, ITEM_TREASURE, treasures.length));
             this._recordGain(beforeTreasure, 'DROP');
         }
         // 放走俘虜的未來來投（5%）：依 uid 查配置以初始狀態入冊；查不到配置就略過並記警告
@@ -5474,7 +5537,7 @@ export class GameSession implements AcademyRecordPort {
         if (result.usedOrder) {
             const next = consumeItem(this._inventory, ITEM_EXTREME_CHALLENGE_ORDER, 1);
             if (next === null) return { ok: false, reason: 'NO_ATTEMPTS' };
-            this._inventory = next;
+            this._setInventory(next);
             this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
         }
         this._extremeTask = result.state;
@@ -5666,7 +5729,7 @@ export class GameSession implements AcademyRecordPort {
         if (reason === 'SCHOLAR' || reason === 'DUAL_CLASS') {
             // 文職與雙職能退役發 1 份竹簡（PM 暫定）；虎符只在死亡結算發，退役不發
             const beforeSlip = this._inventory;
-            this._inventory = addItem(this._inventory, ITEM_BAMBOO_SLIP, 1);
+            this._setInventory(addItem(this._inventory, ITEM_BAMBOO_SLIP, 1));
             this._recordGain(beforeSlip, 'DROP');
         }
         // 退役不產虎符（規格 Q61=C 明文禁止，PROG-2-1020）；虎符只在陣亡結算產生
@@ -6035,7 +6098,7 @@ export class GameSession implements AcademyRecordPort {
                 buildBattleSnapshot(battleId, entry.generalId, entry.performance ?? EMPTY_PERFORMANCE, entry.outcome === 'win', battleDate));
         }
         const beforeMilestone = this._inventory;
-        this._inventory = grantTacticNotes(this._inventory, milestoneRewards);
+        this._setInventory(grantTacticNotes(this._inventory, milestoneRewards));
         this._recordGain(beforeMilestone, 'TASK');
         if (settlement.entries.length === 0) {
             if ((clearChanged || firstClear || defenseFought || tallyChanged || comradeChanged || mercenaryChanged || officerChanged) && this._autoSave && this._save) {
@@ -6057,7 +6120,7 @@ export class GameSession implements AcademyRecordPort {
             const salvage = settleStageSalvage(options.stageSalvage, result !== 'enemy-win',
                 this._military.food, this._military.foodCap, this._inventory);
             this._military = { ...this._military, food: salvage.food };
-            this._inventory = salvage.inventory;
+            this._setInventory(salvage.inventory);
             this._recordGain(beforeSalvage, 'TASK');
         }
 
@@ -6204,7 +6267,7 @@ export class GameSession implements AcademyRecordPort {
         }
         if (ledger.loot.length > 0) {
             const beforeLoot = this._inventory;
-            for (const drop of ledger.loot) this._inventory = addItem(this._inventory, drop.itemId, drop.quantity);
+            for (const drop of ledger.loot) this._setInventory(addItem(this._inventory, drop.itemId, drop.quantity));
             this._recordGain(beforeLoot, 'DROP');
         }
         return ledger;
@@ -6506,6 +6569,7 @@ export class GameSession implements AcademyRecordPort {
         return {
             ...this._createBaseSnapshot(now),
             ...(this._legendaryMentoringUsedIds.length > 0 ? { legendaryMentoringUsedIds: [...this._legendaryMentoringUsedIds] } : {}),
+            ...(this._itemMeta.seq > 0 || Object.keys(this._itemMeta.periodic).length > 0 ? { itemMeta: normalizeItemMeta(this._itemMeta) } : {}),
             military: this.military,
             yearAgingEvents: this._yearAgingEvents.map((event) => ({ ...event })),
             resources: {
@@ -6699,7 +6763,7 @@ export class GameSession implements AcademyRecordPort {
             ...state,
             sessions: state.sessions.map((s) => (s.childId === childId ? outcome.session : s)),
         });
-        this._inventory = consumeItem(this._inventory, ITEM_LEGENDARY_MENTORING_TICKET) ?? this._inventory;
+        this._setInventory(consumeItem(this._inventory, ITEM_LEGENDARY_MENTORING_TICKET) ?? this._inventory);
         this._legendaryMentoringUsedIds = outcome.usedGeneralIds;
         if (this._autoSave && this._save) {
             await this.save();
@@ -6814,8 +6878,9 @@ export class GameSession implements AcademyRecordPort {
         const progress = normalizeDiscoveryProgress(snapshot.discoveryLevel, snapshot.discoveryExp);
         this._discoveryLevel = progress.level;
         this._discoveryExp = progress.exp;
-        this._inventory = normalizeInventory(snapshot.inventory);
+        this._setInventory(normalizeInventory(snapshot.inventory));
         this._legendaryMentoringUsedIds = (snapshot.legendaryMentoringUsedIds ?? []).filter((id) => typeof id === 'string');
+        this._itemMeta = normalizeItemMeta(snapshot.itemMeta);
         this._oracleCount = snapshot.oracleCount ?? 0;
         this._clearedStageIds = normalizeClearedStageIds(snapshot.clearedStageIds);
         this._favoriteGeneralIds = normalizeFavoriteGeneralIds(snapshot.favoriteGeneralIds);

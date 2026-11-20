@@ -60,6 +60,7 @@ import { familyPairKey } from "../systems/FamilySynergy";
 import { configureWhiteFactorAchievements, WHITE_FACTOR_ACHIEVEMENTS_JSON, type WhiteFactorAchievementsConfig } from "../systems/WhiteFactorTraits";
 import { configureMindMarriageRules, MIND_MARRIAGE_RULES_JSON, type MindMarriageRulesConfig } from "../mind/MindMarriage";
 import { ACADEMY_ENROLL_RULES_JSON, configureAcademyEnrollRules, type AcademyEnrollRulesConfig } from "../systems/nurture/AcademyEnrollRules";
+import { ITEM_CONFIG_JSON, normalizeItemConfig, DEFAULT_ITEM_CONFIG, type ItemConfigV1 } from "../../shared/item/ItemConfig";
 import { ACADEMY_INHERIT_MARKS_JSON, configureAcademyInheritMarks, type AcademyInheritMarksConfig } from "../systems/nurture/AcademyInheritAndMarks";
 
 export class ServiceLoader {
@@ -258,6 +259,8 @@ export class ServiceLoader {
 
     /** 本機 API 組合（存檔命令＋錢包命令）；bindSaveStorage() 建立，暫時狀態模式切換時重建 */
     private localApi: LocalApiBundle | null = null;
+    /** 物品庫存設定（item-config.json，PROG-2-9203）；載入前用內建預設，API 重建時沿用 */
+    private itemConfig: ItemConfigV1 = DEFAULT_ITEM_CONFIG;
     /** 場景綁定的權威錢包；API 重建時沿用 */
     private walletAuthority: WalletAuthority | null = null;
 
@@ -282,6 +285,10 @@ export class ServiceLoader {
         // 技能命令（PROG-2-9204）：持有與學習權威由 GameSession 提供，結業戰法經 skill.grant 寫入
         this.localApi.setSkillHost(this.session.skillHost);
         this.session.setSkillApi(this.localApi.api);
+        // 物品庫存（PROG-2-9203）：家庭倉庫＝玩家庫存表；季結的定期發放與入學／退還都走 item.* 命令
+        this.localApi.setItemConfig(this.itemConfig);
+        this.localApi.setItemAuthority(this.session.itemAuthority());
+        this.session.setItemApi(this.localApi.api);
         this.session.setSaveService(new ApiSaveGateway(this.localApi.api));
         // 退役 / 死亡歸檔 / 季結排程與存檔共用同一個儲存後端（key 不同，不會互蓋）
         this.legacy = new LegacyService(storageAdapter);
@@ -389,6 +396,7 @@ export class ServiceLoader {
             loadSafe<Partial<MindMarriageRulesConfig>>(MIND_MARRIAGE_RULES_JSON, configureMindMarriageRules),
             loadSafe<Partial<AcademyInheritMarksConfig>>(ACADEMY_INHERIT_MARKS_JSON, configureAcademyInheritMarks),
             loadSafe<Partial<AcademyEnrollRulesConfig>>(ACADEMY_ENROLL_RULES_JSON, configureAcademyEnrollRules),
+            loadSafe<unknown>(ITEM_CONFIG_JSON, (raw) => { this.itemConfig = normalizeItemConfig(raw); this.localApi?.setItemConfig(this.itemConfig); }),
             loadSafe<Partial<MarriageVitalityRulesConfig>>(MARRIAGE_VITALITY_RULES_JSON, configureMarriageVitalityRules),
         ]);
         this.bloodlineRulesLoaded = true;

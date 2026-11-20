@@ -19,6 +19,12 @@ export interface ApiCommandMeta {
 export const API_COMMANDS = Object.freeze({
     'wallet.spend': { kind: 'cmd', revGuard: false },
     'wallet.balance': { kind: 'query', revGuard: false },
+    'item.grant': { kind: 'cmd', revGuard: false },
+    'item.consume': { kind: 'cmd', revGuard: false },
+    'item.settlePeriodic': { kind: 'cmd', revGuard: false },
+    'item.count': { kind: 'query', revGuard: false },
+    'item.list': { kind: 'query', revGuard: false },
+    'item.ledger': { kind: 'query', revGuard: false },
     'save.load': { kind: 'query', revGuard: false },
     'save.rev': { kind: 'query', revGuard: false },
     'save.commit': { kind: 'cmd', revGuard: true },
@@ -68,6 +74,70 @@ export interface WalletBalanceArgs {
 }
 
 export type WalletBalanceResult = Record<string, number>;
+
+/** 物品庫存命令的 args／result（規格 doc_spec_1184 §11）。holder 缺省＝家庭倉庫 household/home，container 缺省 main */
+export interface ItemHolderArgs {
+    holder?: { kind: string; id: string };
+    container?: string;
+}
+
+/** item.grant：發放。source 必填且不得是 REFUND 以外的自創值；數量上限與溢出由權威端依物品定義判定 */
+export interface ItemGrantArgs extends ItemHolderArgs {
+    itemId: string;
+    qty: number;
+    source: string;
+    sourceRef?: string;
+}
+
+export interface ItemGrantResult {
+    itemId: string;
+    granted: number;
+    count: number;
+    /** 超過堆疊上限折算的貨幣；沒有溢出為 null */
+    overflow: { units: number; currency: string; amount: number } | null;
+}
+
+/** item.consume：扣除。sink 為消耗去向（USE／ENROLL…）；不足回 INSUFFICIENT 且不扣 */
+export interface ItemConsumeArgs extends ItemHolderArgs {
+    itemId: string;
+    qty: number;
+    sink: string;
+}
+
+export interface ItemConsumeResult {
+    itemId: string;
+    consumed: number;
+    count: number;
+}
+
+/** item.settlePeriodic：定期發放結算。數量、對象由設定規則決定；以持久化的高水位冪等 */
+export interface ItemSettlePeriodicArgs {
+    ruleId: string;
+    /** 目前季序（GameTimeState.totalSeasonsElapsed） */
+    nowIndex: number;
+}
+
+export interface ItemSettlePeriodicResult {
+    ruleId: string;
+    periods: number;
+    granted: number;
+    count: number;
+    overflow: { units: number; currency: string; amount: number } | null;
+}
+
+export interface ItemRowView {
+    itemId: string;
+    quantity: number;
+    kind: string;
+    stackMax: number | null;
+}
+
+export interface ItemListResult {
+    holder: { kind: string; id: string };
+    container: string;
+    aliasKey: string;
+    rows: ItemRowView[];
+}
 
 /** save.load：回完整快照；快照型別沿用 PlayerSaveSnapshot，契約層不依賴它所以為 unknown */
 export interface SaveLoadResult {
