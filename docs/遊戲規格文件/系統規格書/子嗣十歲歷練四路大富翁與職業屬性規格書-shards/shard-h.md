@@ -50,6 +50,11 @@
 | 稱號徽章 | 4 條路的絕級稱號 | 4 | |
 | 成長履歷 | 4 節時間軸框 | 1 組 | 沿用既有皮膚 |
 | 命名面板 | 輸入框、建議名按鈕 | 0 | 沿用既有元件 |
+| 時光藥水與沙漏光環 | 藥水圖示、沙漏光環、4 張季節翻頁卡、3 階成長剪影 | 約 9 | 同一張小圖集 |
+| 特殊食物 | 蜜棗糕、雞湯粥、靈芝鹿茸羹、千年首烏宴 | 4 | 圖示 |
+| 哺育與催長 | 哺育選擇面板（沿用既有彈窗）、催長徽章 | 1 | 徽章一張 |
+| 自動開寶 | 四個空間的房景底圖、8 房門／車廂／書架／庫房小圖、稀有度光柱 4 色、等階門牌 4 種 | 約 40 | 可分批，先做每路 3 間房 |
+| 年報與方針 | 年報頁籤框、方針面板 | 0 | 沿用既有皮膚 |
 
 ---
 
@@ -65,7 +70,7 @@
   "trigger": { "age": 10, "mustFinishBeforeEnroll": true, "freezeWorldClock": true, "advanceSeasonsOnFinish": 0 },
   "firstChild": {
     "skipPregnancy": true, "conceptionRate": 1.0, "freeVigor": true, "epFloor": 60,
-    "growthRatePerSeason": 0.5, "onceOnly": true
+    "onceOnly": true
   },
   "board": {
     "cellsPerPath": 24, "bendsPerPath": 4, "maxTurns": 10, "dice": { "faces": 6 },
@@ -112,6 +117,17 @@
 }
 ```
 
+### 11.1b 其他設定檔（PROG-2-9198，定案值見各章）
+
+| 檔案 | 內容 | 章節 |
+| --- | --- | --- |
+| `child-growth.json` | 節點歲數常數、生日小事件、歲月補償率、派內政 | 第 3.3、16.6 節 |
+| `growth-boost.json` | 催長：母乳、乳母、時光藥水、上限、後期淡出、年齡呈現 | 第 15.8 節 |
+| `child-foods.json` | 特殊食物清單、取得方式、廚師與家族酒店接口預留 | 第 16.3 節 |
+| `delegation.json` | 年回合解鎖、委託折扣、方針、必中斷清單 | 第 14.8 節 |
+| `auto-trial.json` | 自動開寶：空間包裝、等階、房間、演出、打折 | 第 17.6 節 |
+
+
 ### 11.2 存檔欄位
 
 子嗣資料（GeneralConfig 擴充，缺值相容舊存檔）：
@@ -126,6 +142,13 @@
 | `trialFlags` | string[] | 學府事件解鎖旗標 |
 | `awakenBias` | `{ color, weight }` 或 null | 因子引加權（第一版只存） |
 | `youth` | `{ historicalFull, startStats, youthRestored }` | 少年名將折扣與還原 |
+| `birthSeasonAbs`、`birthOrder` | number | 出生時世界絕對季數（家譜出生年，不變）、長幼序 |
+| `ageActual`、`boostedAge` | number | 實齡與催長累計歲數 |
+| `boostState` | `{ sources[], potionLeft, foodId, foodLeft, nursing }` | 目前生效的催長手段與剩餘季數 |
+| `yearPoints`、`bond`、`birthdayLog[]` | number／array | 歲月成長點、親子好感、生日事件紀錄（含完整或簡版） |
+| `graspPick`、`graspBonusPending` | string／boolean | 周歲抓周結果與預約的 +10% |
+| `dispatch` | `{ post, since }` 或 null | 10 歲起派內政狀態 |
+| `autoTrial` | `{ route, tier, rooms, seedHex }` | 自動開寶結果（共用 `trialResult`） |
 
 歷練進行中存檔（比照 AcademySaveRecord）：
 

@@ -5,7 +5,7 @@
   "indexPath": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書.md",
   "type": "markdown-h2",
   "preambleShard": "shard-a",
-  "defaultShard": "shard-i",
+  "defaultShard": "shard-n",
   "shards": [
     {
       "name": "shard-a",
@@ -19,7 +19,7 @@
     },
     {
       "name": "shard-c",
-      "title": "3–4 新玩家時間線與加速、觸發與外界時間與防重讀",
+      "title": "3–4 時間流速與成長節點與時間線、觸發與外界時間與防重讀",
       "pattern": "^(3|4)[.] "
     },
     {
@@ -50,6 +50,31 @@
     {
       "name": "shard-i",
       "title": "12–13 衝突與待裁決選擇題、實作卡拆分",
+      "pattern": "^(12|13)[.] "
+    },
+    {
+      "name": "shard-j",
+      "title": "14 中期一年一回合與 AI 委託",
+      "pattern": "^14[.] "
+    },
+    {
+      "name": "shard-k",
+      "title": "15 分齡加速成長（上）：催長原則、母乳與乳母、時光藥水、節點與年齡呈現、後期淡出",
+      "pattern": "^15[.] "
+    },
+    {
+      "name": "shard-l",
+      "title": "16 分齡加速成長（下）：特殊食物、廚師接口、10 歲起派內政、歲月補償",
+      "pattern": "^16[.] "
+    },
+    {
+      "name": "shard-m",
+      "title": "17 自動開寶模式",
+      "pattern": "^17[.] "
+    },
+    {
+      "name": "shard-n",
+      "title": "18 共用 base 框架對應與建議新增共用框架候選",
       "pattern": "."
     }
   ]
