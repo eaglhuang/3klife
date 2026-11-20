@@ -1,0 +1,8 @@
+{
+  "_comment": "年終守城三檔（PROG-2-9426，使用者 11/20 裁決敵軍固定三檔依年度切換）：fromYear 是從第幾年起用這一檔；起始年度暫定第 1／3／5 年",
+  "tiers": [
+    { "encounterId": "defense-tier-1", "fromYear": 1 },
+    { "encounterId": "defense-tier-2", "fromYear": 3 },
+    { "encounterId": "defense-tier-3", "fromYear": 5 }
+  ]
+}

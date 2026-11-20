@@ -72,6 +72,7 @@ import { buildSandtableStatusLabel } from '../../core/systems/SandtableStatus';
 import type { YearReport } from '../../core/systems/YearReport';
 import { YearReportController } from '../core/YearReportController';
 import { isStageUnlocked } from '../../core/systems/StageChainProgress';
+import { DEFAULT_YEAR_END_DEFENSE, isYearEndDefenseDue, isYearEndRolloverPending, parseYearEndDefenseConfig, strongestInvader, yearEndDefenseTierFor, type YearEndDefenseConfig } from '../../core/systems/YearEndDefense';
 import { isStageSeasonOpen, parseStageSeasonSchedule, seasonLockedHint, stageOpenSeason, type StageSeasonSchedule } from '../../core/systems/StageSeasonSchedule';
 import { buildBattlefieldReconForEncounter } from '../../core/systems/BattlefieldRecon';
 import { buildEnvScoutLines } from '../core/EnvScoutPresenter';
@@ -104,7 +105,7 @@ import { jobChangeEntryState, JOB_CHANGE_ENTRY_LABEL } from '../../core/systems/
 import type { JobWiringGeneral } from '../../core/systems/JobChangeWiring';
 import { OverlayCandidate, pickTopOverlay } from '../core/OverlayStack';
 import { DomesticPanelController } from '../core/DomesticPanelController';
-import { FAST_FORWARD_REASON_TEXT, fastForwardSeasons } from '../../core/systems/SeasonFastForward';
+import { FAST_FORWARD_MAX_SEASONS, FAST_FORWARD_REASON_TEXT, fastForwardSeasons } from '../../core/systems/SeasonFastForward';
 import { BREEDING_MIN_AGE } from '../../core/systems/BreedingSystem';
 import { RECRUIT_ROWS_PER_PAGE, RecruitHallController } from '../core/RecruitHallController';
 import { loadGeneralAvatar, loadGeneralPortrait } from '../core/GeneralAvatarLoader';
@@ -438,6 +439,9 @@ export class LobbyScene extends Component {
     private _stageSeasonSchedule: StageSeasonSchedule | null = null;
     /** 天下征鋒的 BOSS 關（PROG-2-2101）；不混進連環破與大廳開戰關卡 */
     private _extremeEncounters: EncounterConfig[] = [];
+    /** 年終守城遭遇（PROG-2-9426）：不進開戰清單，第 4 季結束時依年度選一檔 */
+    private _defenseEncounters: EncounterConfig[] = [];
+    private _yearEndDefense: YearEndDefenseConfig = DEFAULT_YEAR_END_DEFENSE;
     private _extremeTaskHost: UIScreenPreviewHost | null = null;
     private _extremeTaskMessage = '';
     private _listPanel: GeneralListComposite | null = null;
@@ -921,6 +925,14 @@ export class LobbyScene extends Component {
             // 守城戰（PROG-2-9425）由年終流程開打，不進大廳開戰清單
             this._encounters = allEncounters.filter((e) => !e.extreme && e.battleKind !== 'defense');
             this._extremeEncounters = allEncounters.filter((e) => e.extreme);
+            this._defenseEncounters = allEncounters.filter((e) => e.battleKind === 'defense');
+            // 年終守城三檔（PROG-2-9426）：讀不到用預設檔位
+            try {
+                this._yearEndDefense = parseYearEndDefenseConfig(await services().resource.loadJson<unknown>('data/year-end-defense', { tags: ['LobbyScene'] }));
+            } catch (defenseError) {
+                this._yearEndDefense = DEFAULT_YEAR_END_DEFENSE;
+                UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 年終守城設定載入失敗，改用預設檔位', defenseError);
+            }
             // 季節關卡排程（PROG-2-9421）：讀不到就不設季節閘門，不擋大廳
             try {
                 this._stageSeasonSchedule = parseStageSeasonSchedule(await services().resource.loadJson<unknown>('data/stage-season-schedule', { tags: ['LobbyScene'] }));
@@ -977,6 +989,8 @@ export class LobbyScene extends Component {
         }
         if (ownsProgress()) SceneLoadProgress.complete();
         this._keepOpeningOnTop();
+        // 年終守城打完回到大廳（PROG-2-9426）：季報窗等背景面板掛好了才自動換年
+        void this._resumeYearEndRollover();
     }
 
     /** 他國逐將名冊與重算情境（E-9，PROG-2-1715）；失敗時他國照舊以兵力計軍力 */
@@ -5439,6 +5453,11 @@ ${spent}`,
      */
     private async _onClickFastForward(): Promise<void> {
         if (this._fastForwarding) return;
+        // 年終守城還沒打時不能跨年（PROG-2-9426）：一季都還沒推就被擋，直接開打守城
+        if (this._isYearEndDefenseDue()) {
+            await this._startYearEndDefense();
+            return;
+        }
         this._fastForwarding = true;
         try {
             const session = services().session;
@@ -5460,7 +5479,7 @@ ${spent}`,
                 const grew = Array.from(now).some((id) => !adults.has(id));
                 adults = now;
                 return grew;
-            });
+            }, FAST_FORWARD_MAX_SEASONS, () => this._isYearEndDefenseDue());
             const where = result.last ? seasonText(result.last.advance.current) : seasonText(session.gameTime);
             services().event.emit('SHOW_TOAST', {
                 message: `快進 ${result.seasons} 季，來到${where}：${FAST_FORWARD_REASON_TEXT[result.reason]}`,
@@ -5514,9 +5533,51 @@ ${spent}`,
         return payload;
     }
 
+    /** 今年的年終守城還沒打、而且守城遭遇資料有讀到（讀不到時不擋換季，PROG-2-9426） */
+    private _isYearEndDefenseDue(): boolean {
+        const session = services().session;
+        return this._defenseEncounters.length > 0 && isYearEndDefenseDue(session.gameTime, session.yearEndDefenseYear);
+    }
+
+    /**
+     * 年終守城開打（PROG-2-9426，使用者 11/20 裁決）：依年度選檔，最強鄰國的君主來攻；
+     * 我方主將與牌組沿用大廳出戰設定（同一般出征）。來犯主將不在武將資料裡時沿用遭遇預設的敵將。
+     */
+    private async _startYearEndDefense(): Promise<void> {
+        const session = services().session;
+        const tier = yearEndDefenseTierFor(session.gameTime.currentYear, this._yearEndDefense);
+        const encounter = this._defenseEncounters.find((e) => e.id === tier.encounterId) ?? this._defenseEncounters[0];
+        if (!encounter) return;
+        const invader = strongestInvader(session.rivals, session.rivalRulerIds);
+        const knownInvader = invader && this._generals.some((g) => g.id === invader.generalId) ? invader : null;
+        services().event.emit('SHOW_TOAST', {
+            message: `年終將至，${knownInvader ? `${knownInvader.nationName}大軍` : '敵軍'}壓境！全城備戰守城`,
+            duration: 3,
+        });
+        const params = this._buildBattleEntryParams(undefined, encounter);
+        services().scene.switchScene(SceneName.Battle, {
+            ...params,
+            ...(knownInvader ? { enemyGeneralId: knownInvader.generalId } : {}),
+            tutorial: false,
+            teachingSpirit: null,
+        });
+    }
+
+    /** 年終守城打完回到大廳時還停在第 4 季：自動換到下一年（勝敗都換，PROG-2-9426） */
+    private async _resumeYearEndRollover(): Promise<void> {
+        const session = services().session;
+        if (!this.node?.isValid || !isYearEndRolloverPending(session.gameTime, session.yearEndDefenseYear)) return;
+        await this._onClickAdvanceSeason();
+    }
+
     private async _onClickAdvanceSeason(): Promise<void> {
         // 換季結算是非同步的，連點不重入（PROG-2-9116：大廳右上角也接這個入口）
         if (this._advancingSeason) return;
+        // 第 4 季結束時今年還沒守城：先打年終守城，打完回大廳再換年（PROG-2-9426）
+        if (this._isYearEndDefenseDue()) {
+            await this._startYearEndDefense();
+            return;
+        }
         this._advancingSeason = true;
         try {
             const { advance, agingEvents, quarterlyReports, hallMissionReport, seasonReportSections } = await this._advanceSeasonWithSalaries();
