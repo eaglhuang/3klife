@@ -76,7 +76,8 @@ export function createDestinyOpeningControllerSuite(): TestSuite {
         assert.isTrue(controller.started);
         assert.equals(view.coreId, session.leadGeneralId);
         assert.equals(view.coreId, started[0]);
-        assert.equals([...view.rolledIds].sort().join(','), session.roster.map(g => g.id).sort().join(','));
+        assert.equals([...view.rolledIds].sort().join(','), session.roster.filter(g => g.id !== 'starter-royal-child').map(g => g.id).sort().join(','));
+        assert.isTrue(session.roster.some(g => g.id === 'starter-royal-child'));
         assert.isFalse(controller.reroll(), '確定後不能再重轉');
         assert.isFalse(await controller.confirm(), '不能重複開局');
     });

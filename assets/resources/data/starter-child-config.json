@@ -1,0 +1,30 @@
+{
+  "childId": "starter-royal-child",
+  "age": 4,
+  "genderStrategy": "random",
+  "nameByGender": {
+    "男": "{fatherName}之少主",
+    "女": "{fatherName}之千金"
+  },
+  "statRange": {
+    "min": 52,
+    "max": 68
+  },
+  "lukRange": {
+    "min": 40,
+    "max": 60
+  },
+  "epRange": {
+    "min": 62,
+    "max": 72
+  },
+  "epRating": "B",
+  "rarityTier": "rare",
+  "characterCategory": "general",
+  "vitality": 100,
+  "maxVitality": 100,
+  "fallbackGenes": [
+    { "id": "gene_str", "level": 1, "isLocked": true },
+    { "id": "gene_int", "level": 1, "isLocked": true }
+  ]
+}

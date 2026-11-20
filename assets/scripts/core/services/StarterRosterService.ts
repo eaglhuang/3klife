@@ -1,5 +1,6 @@
 // @spec-source → 新手開場規格書.md §6、§7.2、§8
 import type { GeneralConfig } from '../models/GeneralUnit';
+import type { StarterChildConfig } from './StarterChildService';
 
 export const STARTER_GENERAL_IDS = ['zhang-fei', 'wei-yan', 'xiahou-dun', 'zhang-he', 'sun-ce', 'gan-ning'] as const;
 export type StarterGeneralId = typeof STARTER_GENERAL_IDS[number];
@@ -11,6 +12,10 @@ export interface StarterRosterOptions {
     beautyGeneralId?: string;
     /** 宿命轉蛋抽到的整包武將；沒給時沿用六位初始名將。必須包含核心主將 */
     rosterIds?: readonly string[];
+    /** 是否附贈開局 4 歲宗室幼苗（預設 true；僅新局流程使用，舊存檔不補送） */
+    includeStarterChild?: boolean;
+    /** 覆寫開局宗室幼苗 JSON 設定（未提供時用預設設定） */
+    starterChildConfig?: StarterChildConfig;
 }
 
 function copyValue<T>(value: T): T {
