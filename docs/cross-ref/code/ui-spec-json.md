@@ -7,7 +7,9 @@
 
 | Screen | Layout | Skin | Screen 檔 | Bundle | 引用的 TS（assets/scripts 相對路徑） |
 |---|---|---|---|---|---|
+| academy-enroll-screen | academy-enroll-main.json | nurture-flow-default.json | academy-enroll-screen.json | lobby_ui | ui/scenes/LobbyScene.ts |
 | academy-graduation-result-screen | academy-graduation-result-main.json | academy-graduation-result-default.json | academy-graduation-result-screen.json | lobby_ui | ui/scenes/LobbyScene.ts |
+| academy-session-screen | academy-session-main.json | nurture-flow-default.json | academy-session-screen.json | lobby_ui | ui/scenes/LobbyScene.ts |
 | action-command-screen | action-command-main.json | action-command-default.json | action-command-screen.json | battle_ui | ui/components/ActionCommandComposite.ts |
 | battle-hud-screen | battle-hud-screen.json | battle-hud-screen.skin.json | battle-hud-screen.json | battle_ui | ui/components/BattleHUD.ts<br>ui/components/BattleHUDComposite.ts |
 | battle-log-screen | battle-log-main.json | battle-log-default.json | battle-log-screen.json | battle_ui | ui/components/BattleLogComposite.ts<br>ui/components/BattleLogPanel.ts |

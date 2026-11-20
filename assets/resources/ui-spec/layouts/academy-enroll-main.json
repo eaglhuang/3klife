@@ -1,0 +1,535 @@
+{
+  "id": "academy-enroll-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "AcademyEnrollRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "AcademyEnrollRootBackdrop",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "skinSlot": "nurture.backdrop.bg"
+      },
+      {
+        "type": "panel",
+        "name": "AcademyEnrollRootCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 1200,
+        "height": 780,
+        "skinSlot": "nurture.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "AcEnrollTitle",
+            "id": "acEnrollTitle",
+            "widget": {
+              "top": 22,
+              "left": 32
+            },
+            "height": 40,
+            "styleSlot": "nurture.label.title",
+            "width": 520
+          },
+          {
+            "type": "label",
+            "name": "AcEnrollPager",
+            "id": "acEnrollPager",
+            "widget": {
+              "top": 28,
+              "right": 300
+            },
+            "height": 28,
+            "styleSlot": "nurture.label.meta",
+            "width": 120
+          },
+          {
+            "type": "button",
+            "name": "BtnAcPrevChild",
+            "id": "btnAcPrevChild",
+            "widget": {
+              "top": 16,
+              "right": 220
+            },
+            "width": 64,
+            "height": 48,
+            "skinSlot": "nurture.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnAcPrevChildLabel",
+                "id": "acPrevChildLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 6,
+                  "right": 6
+                },
+                "height": 40,
+                "styleSlot": "nurture.label.button",
+                "text": "◀"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnAcNextChild",
+            "id": "btnAcNextChild",
+            "widget": {
+              "top": 16,
+              "right": 150
+            },
+            "width": 64,
+            "height": 48,
+            "skinSlot": "nurture.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnAcNextChildLabel",
+                "id": "acNextChildLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 6,
+                  "right": 6
+                },
+                "height": 40,
+                "styleSlot": "nurture.label.button",
+                "text": "▶"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnAcEnrollBack",
+            "id": "btnAcEnrollBack",
+            "widget": {
+              "top": 16,
+              "right": 24
+            },
+            "width": 110,
+            "height": 48,
+            "skinSlot": "nurture.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnAcEnrollBackLabel",
+                "id": "acEnrollBackLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 6,
+                  "right": 6
+                },
+                "height": 40,
+                "styleSlot": "nurture.label.button"
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "AcEnrollEmpty",
+            "id": "acEnrollEmpty",
+            "widget": {
+              "top": 300,
+              "left": 80,
+              "right": 80
+            },
+            "height": 80,
+            "styleSlot": "nurture.label.body"
+          },
+          {
+            "type": "container",
+            "name": "AcEnrollBody",
+            "id": "acEnrollBody",
+            "widget": {
+              "top": 84,
+              "left": 24,
+              "right": 24,
+              "bottom": 20
+            },
+            "children": [
+              {
+                "type": "label",
+                "name": "AcEnrollChild",
+                "id": "acEnrollChild",
+                "widget": {
+                  "top": 8,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 40,
+                "styleSlot": "nurture.label.name"
+              },
+              {
+                "type": "label",
+                "name": "AcEnrollStats",
+                "id": "acEnrollStats",
+                "widget": {
+                  "top": 56,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 32,
+                "styleSlot": "nurture.label.stats"
+              },
+              {
+                "type": "label",
+                "name": "AcEnrollHint",
+                "id": "acEnrollHint",
+                "widget": {
+                  "top": 96,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 30,
+                "styleSlot": "nurture.label.meta"
+              },
+              {
+                "type": "button",
+                "name": "AcAcademy0",
+                "id": "btnAcAcademy0",
+                "widget": {
+                  "top": 140,
+                  "left": 8
+                },
+                "width": 210,
+                "height": 96,
+                "skinSlot": "nurture.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "AcAcademy0Label",
+                    "id": "acAcademyLabel0",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 6,
+                      "right": 6
+                    },
+                    "height": 88,
+                    "styleSlot": "nurture.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "AcAcademy1",
+                "id": "btnAcAcademy1",
+                "widget": {
+                  "top": 140,
+                  "left": 234
+                },
+                "width": 210,
+                "height": 96,
+                "skinSlot": "nurture.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "AcAcademy1Label",
+                    "id": "acAcademyLabel1",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 6,
+                      "right": 6
+                    },
+                    "height": 88,
+                    "styleSlot": "nurture.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "AcAcademy2",
+                "id": "btnAcAcademy2",
+                "widget": {
+                  "top": 140,
+                  "left": 460
+                },
+                "width": 210,
+                "height": 96,
+                "skinSlot": "nurture.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "AcAcademy2Label",
+                    "id": "acAcademyLabel2",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 6,
+                      "right": 6
+                    },
+                    "height": 88,
+                    "styleSlot": "nurture.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "AcAcademy3",
+                "id": "btnAcAcademy3",
+                "widget": {
+                  "top": 140,
+                  "left": 686
+                },
+                "width": 210,
+                "height": 96,
+                "skinSlot": "nurture.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "AcAcademy3Label",
+                    "id": "acAcademyLabel3",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 6,
+                      "right": 6
+                    },
+                    "height": 88,
+                    "styleSlot": "nurture.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "AcAcademy4",
+                "id": "btnAcAcademy4",
+                "widget": {
+                  "top": 140,
+                  "left": 912
+                },
+                "width": 210,
+                "height": 96,
+                "skinSlot": "nurture.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "AcAcademy4Label",
+                    "id": "acAcademyLabel4",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 6,
+                      "right": 6
+                    },
+                    "height": 88,
+                    "styleSlot": "nurture.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "AcMentorHint",
+                "id": "acMentorHint",
+                "widget": {
+                  "top": 252,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "styleSlot": "nurture.label.meta"
+              },
+              {
+                "type": "button",
+                "name": "AcMentor0",
+                "id": "btnAcMentor0",
+                "widget": {
+                  "top": 288,
+                  "left": 8
+                },
+                "width": 270,
+                "height": 84,
+                "skinSlot": "nurture.slot.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "AcMentor0Label",
+                    "id": "acMentorLabel0",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 6,
+                      "right": 6
+                    },
+                    "height": 76,
+                    "styleSlot": "nurture.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "AcMentor1",
+                "id": "btnAcMentor1",
+                "widget": {
+                  "top": 288,
+                  "left": 290
+                },
+                "width": 270,
+                "height": 84,
+                "skinSlot": "nurture.slot.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "AcMentor1Label",
+                    "id": "acMentorLabel1",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 6,
+                      "right": 6
+                    },
+                    "height": 76,
+                    "styleSlot": "nurture.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "AcMentor2",
+                "id": "btnAcMentor2",
+                "widget": {
+                  "top": 288,
+                  "left": 572
+                },
+                "width": 270,
+                "height": 84,
+                "skinSlot": "nurture.slot.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "AcMentor2Label",
+                    "id": "acMentorLabel2",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 6,
+                      "right": 6
+                    },
+                    "height": 76,
+                    "styleSlot": "nurture.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "AcMentor3",
+                "id": "btnAcMentor3",
+                "widget": {
+                  "top": 288,
+                  "left": 854
+                },
+                "width": 270,
+                "height": 84,
+                "skinSlot": "nurture.slot.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "AcMentor3Label",
+                    "id": "acMentorLabel3",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 6,
+                      "right": 6
+                    },
+                    "height": 76,
+                    "styleSlot": "nurture.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "AcEnrollMode",
+                "id": "btnAcEnrollMode",
+                "widget": {
+                  "top": 392,
+                  "left": 8
+                },
+                "width": 420,
+                "height": 52,
+                "skinSlot": "nurture.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "AcEnrollModeLabel",
+                    "id": "acEnrollModeLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 6,
+                      "right": 6
+                    },
+                    "height": 44,
+                    "styleSlot": "nurture.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "AcEnrollTokens",
+                "id": "acEnrollTokens",
+                "widget": {
+                  "top": 400,
+                  "left": 450
+                },
+                "height": 36,
+                "styleSlot": "nurture.label.meta",
+                "width": 320
+              },
+              {
+                "type": "label",
+                "name": "AcEnrollNotice",
+                "id": "acEnrollNotice",
+                "widget": {
+                  "top": 470,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 90,
+                "styleSlot": "nurture.label.body"
+              },
+              {
+                "type": "button",
+                "name": "AcEnrollConfirm",
+                "id": "btnAcEnrollConfirm",
+                "widget": {
+                  "bottom": 20,
+                  "right": 8
+                },
+                "width": 260,
+                "height": 64,
+                "skinSlot": "nurture.button.rest.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "AcEnrollConfirmLabel",
+                    "id": "acEnrollConfirmLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 6,
+                      "right": 6
+                    },
+                    "height": 56,
+                    "styleSlot": "nurture.label.button"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

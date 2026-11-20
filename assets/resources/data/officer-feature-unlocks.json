@@ -66,6 +66,12 @@
           "lobbyAction": "nurture"
         },
         {
+          "id": "ACADEMY",
+          "name": "學府",
+          "description": "送子嗣入學府修業三十六季。",
+          "lobbyAction": "academy"
+        },
+        {
           "id": "RELATION_GRAPH",
           "name": "關係圖鑑",
           "description": "查看武將間的恩怨與情誼。",
