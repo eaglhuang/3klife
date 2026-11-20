@@ -7316,6 +7316,156 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0009",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/mao_jie__毛玠__small_avatar_0001.png",
+            "status": "superseded",
+            "sha256": "5a82f67abe3b7446ab5893aec00c5df511b6d401349d2460c99e1550811e2b6c",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/mao_jie__毛玠__avatar_0002.png",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "x": 59.67,
+              "y": 41.6,
+              "width": 146.67,
+              "height": 146.67
+            },
+            "qc": "顱頂至下巴頭高75%；臉框中心線與畫布中線差0.5px；完整保留頭髮和帽冠；125px中心線預覽核對；雙肩為最後優先警示。",
+            "createdAt": "2026-11-20"
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/mao_jie__毛玠__small_avatar_0002.png",
+            "status": "superseded",
+            "sha256": "ec26203db7ef8e9b0d75d25b8b39e0679e1bea0f45bf5531d61ed346f270ef17",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/mao_jie__毛玠__avatar_0002.png",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "x": 59.175,
+              "y": 40,
+              "width": 140,
+              "height": 140
+            },
+            "qc": "Face-frame midpoint aligned to canvas center; uniform crop only; full head items preserved; shoulders retained where available.",
+            "createdAt": "2026-11-20"
+          },
+          {
+            "version": "0003",
+            "file": "small_avatars/mao_jie__毛玠__small_avatar_0003.png",
+            "status": "superseded",
+            "sha256": "91d11a40fdc6468b58649770c4e66bf0a37b715dea93624262a098674f85d697",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/mao_jie__毛玠__avatar_0002.png",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "x": 64.88,
+              "y": 42.28,
+              "width": 135.9,
+              "height": 135.9
+            },
+            "qc": "Head height 78.0%; face height 49.9%, width 38.8%; face-box centerline offset 0.5px; complete head silhouette retained. Shoulder visibility is secondary and remains partial.",
+            "createdAt": "2026-11-20"
+          },
+          {
+            "version": "0004",
+            "file": "small_avatars/mao_jie__毛玠__small_avatar_0004.png",
+            "status": "superseded",
+            "sha256": "9efe3bb755ae45dae7927edd80c2b94a92685b8a759c724b13875c5aac3d4588",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/mao_jie__毛玠__avatar_0002.png",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "x": 74.84,
+              "y": 40.27,
+              "width": 120.92,
+              "height": 120.92
+            },
+            "qc": "頭高76%；臉高65%、臉寬43.5%；臉框中心線與畫布中線差0.5px；帽冠與頭部完整；125px候選及中心線預覽目視核對；雙肩為最後優先警示。",
+            "createdAt": "2026-11-21"
+          },
+          {
+            "version": "0005",
+            "file": "small_avatars/mao_jie__毛玠__small_avatar_0005.png",
+            "status": "superseded",
+            "sha256": "c850e9072de452c20cfeb51c3abb667d860aded4fef8cdd8c77c799119d78cc2",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/mao_jie__毛玠__avatar_0002.png",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "x": 78.18,
+              "y": 42.43,
+              "width": 114.63,
+              "height": 114.63
+            },
+            "qc": "頭高82%；臉高62.8%、臉寬61.9%；臉框中心線與畫布中線差0.5px；完整保留帽冠與頭部；250px並排確認。來源原有側轉角度保留；雙肩為最後優先警示。",
+            "createdAt": "2026-11-21"
+          },
+          {
+            "version": "0007",
+            "file": "small_avatars/mao_jie__毛玠__small_avatar_0007.png",
+            "status": "superseded",
+            "sha256": "483ef24e02a025082a80894d12eb5f38cdf666086c11922db749c0071b684e81",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/mao_jie__毛玠__avatar_0002.png",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "x": 69.22,
+              "y": 43.42,
+              "width": 115.56,
+              "height": 115.56
+            },
+            "qc": "頭高90%；臉高66.6%、臉寬62.3%；臉框中心線與畫布中線差0.5px；完整保留方帽與頭部；250px並排目視核對。保留來源原有三分之四側轉；雙肩為最後優先警示。",
+            "createdAt": "2026-11-21"
+          },
+          {
+            "version": "0008",
+            "file": "small_avatars/mao_jie__毛玠__small_avatar_0008.png",
+            "status": "superseded",
+            "sha256": "76d483857498ae1f395e413a2ad57d91b4a8ac6e39c0216000fbcfde2e613465",
+            "canvas": "256x256 RGBA",
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/mao_jie__毛玠__standing_0002.png",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "x": 182.82,
+              "y": -3.22,
+              "width": 161.11,
+              "height": 161.11
+            },
+            "qc": "頭部高度90%；臉高47.3%、臉寬34.0%；臉框中心線與畫布中線差0.5px；完整保留方帽、帽側飾與頭部；保留來源原有三分之四角度，不旋轉不修臉；雙肩為最後優先，保留可見肩線。",
+            "createdAt": "2026-11-21"
+          },
+          {
+            "version": "0009",
+            "file": "small_avatars/mao_jie__毛玠__small_avatar_0009.png",
+            "status": "integrated",
+            "sha256": "40852d734ebf95727ab2eebe7db66a0cc2e78ab1ccb9a456f85051f8568af09a",
+            "canvas": "256x256 RGBA",
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/mao_jie__毛玠__standing_0002.png",
+            "method": "crop-only; uniform resize; no rotation or redraw",
+            "cropBox": {
+              "x": 188.75,
+              "y": 1.36,
+              "width": 127.5,
+              "height": 127.5
+            },
+            "qc": "顱頂至下巴頭高80%；臉框中線與畫布中線差0.5px；保留方帽與兩側飾件完整，0.5%安全邊距；按原圖角度純裁切、不旋轉不重畫；肩線僅部分入鏡，列為最後優先警示。",
+            "createdAt": "2026-11-21"
+          }
+        ]
       }
     },
     {
