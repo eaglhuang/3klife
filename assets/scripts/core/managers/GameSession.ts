@@ -932,7 +932,7 @@ export class GameSession {
     private _openingRedFaceShown = false;
     /** 新玩家「去教官池抽教官」引導已結束（玩家第一次擁有教官後記下，PROG-2-9160）；存於 resources.mentorGuideDone */
     private _mentorGuideDone = false;
-    /** 晉升縣府佐官「培育已開放，先去抽教官」提示已跳過（PROG-2-9167）；存於 resources.mentorUnlockPromptShown，舊存檔缺欄位視為未跳過 */
+    /** 晉升縣府佐官「培育入學要帶教官，先去抽教官」提示已跳過（PROG-2-9167）；存於 resources.mentorUnlockPromptShown，舊存檔缺欄位視為未跳過 */
     private _mentorUnlockPromptShown = false;
     /** 內政本季紀錄：同季只能選一項 */
     private _domesticLog: DomesticSeasonLog = { ...EMPTY_DOMESTIC_LOG };

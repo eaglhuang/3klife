@@ -3600,7 +3600,7 @@ export class LobbyScene extends Component {
 
     private _showRankUnlockPopup(tiers: readonly number[]): void {
         if (tiers.length === 0) return;
-        // 晉升縣府佐官（培育解鎖）那一次，彈窗多一句提示與去教官池的按鈕；旗標記住只跳一次（PROG-2-9167）
+        // 晉升縣府佐官那一次，彈窗多一句教官提醒與去教官池的按鈕；旗標記住只跳一次（PROG-2-9167）
         const mentorPrompt = shouldShowMentorUnlockPrompt(tiers, services().session.mentorUnlockPromptShown);
         const view = buildRankUnlockPopupView(Math.min(...tiers) - 1, Math.max(...tiers), mentorPrompt);
         const host = this._rankUnlockHost;
