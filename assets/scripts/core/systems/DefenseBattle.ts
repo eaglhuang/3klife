@@ -10,6 +10,11 @@
  *   - 守城是獨立的 defense 類別，不扣壽命。
  * 數值放 data/defense-battle.json，調數值不用動程式。
  *
+ * 守城張力（使用者 11/21 裁決，PROG-2-9429）：
+ *   - 敵方工兵活著就遠程投石，每隊每回合扣我方城寨 engineerBombardDamage（預設 15）。
+ *   - 來攻主將留在後方本陣不前進（玩家仍可打過去擊殺提早獲勝）。
+ *   - 敵方每回合補派最多 engineerReinforcePerTurn 隊工兵（預設 1），派到我方部隊最少的路。
+ *
  * Unity 對照：一種 GameMode 的 ScriptableObject 設定＋判定規則。
  */
 
@@ -20,11 +25,17 @@ export interface DefenseBattleConfig {
     turnLimit: number;
     /** 守城勝利額外民心 */
     moraleOnVictory: number;
+    /** 敵方每隊工兵每回合投石扣我方城寨（PROG-2-9429） */
+    engineerBombardDamage: number;
+    /** 敵方每回合補派工兵隊數上限（PROG-2-9429） */
+    engineerReinforcePerTurn: number;
 }
 
 export const DEFAULT_DEFENSE_BATTLE: Readonly<DefenseBattleConfig> = Object.freeze({
     turnLimit: 12,
     moraleOnVictory: 2,
+    engineerBombardDamage: 15,
+    engineerReinforcePerTurn: 1,
 });
 
 function positiveInt(value: unknown): number | null {
@@ -41,6 +52,8 @@ export function parseDefenseBattleConfig(raw: unknown): DefenseBattleConfig {
     return {
         turnLimit: positiveInt(src.turnLimit) ?? DEFAULT_DEFENSE_BATTLE.turnLimit,
         moraleOnVictory: nonNegativeInt(src.moraleOnVictory) ?? DEFAULT_DEFENSE_BATTLE.moraleOnVictory,
+        engineerBombardDamage: nonNegativeInt(src.engineerBombardDamage) ?? DEFAULT_DEFENSE_BATTLE.engineerBombardDamage,
+        engineerReinforcePerTurn: nonNegativeInt(src.engineerReinforcePerTurn) ?? DEFAULT_DEFENSE_BATTLE.engineerReinforcePerTurn,
     };
 }
 
@@ -64,6 +77,22 @@ export function resolveDefenseTurnLimit(
 ): { turnLimit: number | undefined; timeUpRule: 'by-damage' | 'enemy-win' | 'player-win' | undefined } {
     if (!isDefenseBattleKind(encounter?.battleKind)) return { turnLimit: encounter?.turnLimit, timeUpRule: encounter?.timeUpRule };
     return { turnLimit: encounter?.turnLimit ?? config.turnLimit, timeUpRule: 'player-win' };
+}
+
+/**
+ * 守城補派工兵的路（PROG-2-9429）：從可部署的路挑我方部隊最少的；同數隨機。沒有可部署的路回傳 null。
+ * playerCountByLane：各路我方存活部隊數（含主將棋子）。
+ */
+export function pickDefenseReinforceLane(
+    openLanes: readonly number[],
+    playerCountByLane: readonly number[],
+    random: () => number,
+): number | null {
+    if (openLanes.length === 0) return null;
+    const count = (lane: number) => playerCountByLane[lane] ?? 0;
+    const fewest = Math.min(...openLanes.map(count));
+    const lanes = openLanes.filter((lane) => count(lane) === fewest);
+    return lanes[Math.min(lanes.length - 1, Math.floor(random() * lanes.length))];
 }
 
 export type DefenseOutcome = 'victory' | 'draw' | 'defeat' | 'rout';

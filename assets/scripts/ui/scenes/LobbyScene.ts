@@ -190,6 +190,7 @@ import { mercBondedLine, mercDayThreeLine, mercFarewellLine, mercTrustLine } fro
 import { RED_FACE_SHOW_MAX_ROWS, RedFaceGalleryController, RedFaceShowcaseController, RedFaceShowcaseDeps, toRedFaceTabFlowView } from '../core/RedFaceShowcaseController';
 import { GACHA_NODES, GACHA_POOL_INDEX, GACHA_POOLS, GachaPoolDef, RED_FACE_SECTION_ROW_BUTTON } from '../core/GachaScreenNodes';
 import { LocalGachaApi } from '../../core/gacha/LocalGachaApi';
+import { GachaWalletPort } from '../../core/api/localserver/GachaWalletPort';
 import { parseGachaMainPools, type GachaApi, type GachaCurrencyId, type GachaMainPoolConfig } from '../../core/gacha/GachaApi';
 import { gachaApiView, gachaAutoSizeNodes, gachaHeroIdOf, gachaWalletLabelTexts } from '../core/GachaApiTexts';
 import { buildPoolDetailRows, checkGachaAffordable, planGachaButton, syncMainPoolCosts, type GachaButtonKind } from '../../core/gacha/GachaButtonRules';
@@ -786,6 +787,8 @@ export class LobbyScene extends Component {
         installAdaptiveResolution();
         // 讀存檔前先備妥服務（存檔後端、名冊、生命週期）；否則 load() 因未設定存檔服務而失敗，每次重開都被當成新玩家
         services().initialize(this.node);
+        // 共通 API（PROG-2-9201）：本場景的錢包服務是單機權威，綁給本機 adapter 的 wallet.* 命令
+        services().bindWalletAuthority(new GachaWalletPort(this._localGachaService));
         this._offBeforeSwitch = services().scene.onBeforeSwitch((target) => { this._cancelMountScheduler(); this._retention.onBeforeSwitch(target); });
         input.on(Input.EventType.KEY_UP, this._onEscapeKeyUp, this);
         void this._loadLimitedPoolSchedule();
@@ -2358,9 +2361,10 @@ export class LobbyScene extends Component {
             ordersOwned: () => services().session.itemCount(ITEM_JOB_CHANGE_ORDER),
             changeJob: (generalId, subClass) => services().session.changeJob(generalId, subClass),
             gems: () => this._localGachaService.getCurrencyAmount('gems'),
+            // 示範遷移（PROG-2-9201）：扣靈玉改走共通 API 的 wallet.spend；餘額不足由權威端回 E301 且不扣
             buyOrder: async () => {
-                const gacha = this._localGachaService;
-                if (!gacha.spendCurrency('gems', JOB_CHANGE_ORDER_OFFER.price)) return false;
+                const paid = await services().api.cmd('wallet.spend', { currency: 'gems', amount: JOB_CHANGE_ORDER_OFFER.price, reason: 'JOB_CHANGE_ORDER' });
+                if (!paid.ok) return false;
                 await services().session.addItem(ITEM_JOB_CHANGE_ORDER, 1, 'SHOP');
                 return true;
             },

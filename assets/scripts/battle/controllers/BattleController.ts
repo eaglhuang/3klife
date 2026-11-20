@@ -1372,6 +1372,8 @@ export class BattleController {
           difficultyBonus: this.state.aiDifficultyBonus,
           tutorialBattle: this.tutorialBattle,
           leakHintedLanes: this.leakHintedLanes,
+          defenseEngineerReinforce: this.state.siegeDefender === Faction.Player ? this.defenseBattleConfig.engineerReinforcePerTurn : 0,
+          random: () => services().session.randomSource(),
           spawnEnemyUnit: (type, lane, depth, unitName) => {
             const unit = this.unitSpawner.spawnUnit(type, Faction.Enemy, lane, depth, unitName);
             this.turnManager.markUnitDeployed(unit.id);
@@ -1498,6 +1500,7 @@ export class BattleController {
           castEnemySeedTactic: (battleSkillId, tacticId) => this.castBattleSkill(Faction.Enemy, { battleSkillId, tacticId }),
           chooseEnemyTactic: () => this.chooseEnemyTactic(),
           shouldEnemyHoldTactic: () => this.shouldEnemyHoldTactic(),
+          defenseEngineerBombard: this.state.siegeDefender === Faction.Player ? this.defenseBattleConfig.engineerBombardDamage : 0,
         });
         if (phaseName === 'enemy-special-resolve' && this.state.battleTactic === BattleTactic.FloodAttack) {
           resolveBattleTacticBehavior(this.state.battleTactic).advanceTurn(this.state, {

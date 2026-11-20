@@ -25,6 +25,10 @@ import type { RosterStore, HallMissionWallet } from "./GameSession";
 import { loadMissionDataBundle } from "../mission/MissionLoader";
 import type { IMissionService } from "../mission/service/IMissionService";
 import { PlayerSaveService } from "../services/PlayerSaveService";
+import { ApiSaveGateway } from "../api/localserver/ApiSaveGateway";
+import { createLocalApi, type LocalApiBundle } from "../api/localserver/createLocalApi";
+import type { WalletAuthority } from "../api/localserver/WalletCommands";
+import type { IApiClient } from "../../shared/api/IApiClient";
 import { LegacyService } from "../services/LegacyService";
 import { PlayerRosterService } from "../services/PlayerRosterService";
 import { BloodlineGraph } from "../services/BloodlineGraph";
@@ -252,10 +256,30 @@ export class ServiceLoader {
         this.initialized = true;
     }
 
+    /** 本機 API 組合（存檔命令＋錢包命令）；bindSaveStorage() 建立，暫時狀態模式切換時重建 */
+    private localApi: LocalApiBundle | null = null;
+    /** 場景綁定的權威錢包；API 重建時沿用 */
+    private walletAuthority: WalletAuthority | null = null;
+
+    /** 共通 API 入口：玩法與 UI 只透過它改重要數值與存檔（單機＝本機伺服器 adapter，之後可換網路 adapter） */
+    public get api(): IApiClient {
+        if (!this.localApi) throw new Error('[ServiceLoader] API 尚未初始化（先 init()）');
+        return this.localApi.api;
+    }
+
+    /** 場景在建好錢包服務後綁定權威錢包；可重複呼叫（換場景時換成新的服務） */
+    public bindWalletAuthority(wallet: WalletAuthority | null): void {
+        this.walletAuthority = wallet;
+        this.localApi?.setWallet(wallet);
+    }
+
     /** 存檔與退役歸檔共用同一個儲存後端（key 不同，不會互蓋）；初始化與切換暫時狀態時呼叫 */
     private bindSaveStorage(): void {
         const storageAdapter = this.createSaveStorageAdapter();
-        this.session.setSaveService(new PlayerSaveService(storageAdapter));
+        // 共通 API（PROG-2-9201）：存檔寫入與讀取都走本機伺服器 adapter 的 save.* 命令；GameSession 不直接碰存檔後端
+        this.localApi = createLocalApi(new PlayerSaveService(storageAdapter));
+        this.localApi.setWallet(this.walletAuthority);
+        this.session.setSaveService(new ApiSaveGateway(this.localApi.api));
         // 退役 / 死亡歸檔 / 季結排程與存檔共用同一個儲存後端（key 不同，不會互蓋）
         this.legacy = new LegacyService(storageAdapter);
         this.session.setLifecycle(this.legacy);

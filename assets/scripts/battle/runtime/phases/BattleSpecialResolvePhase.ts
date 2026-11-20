@@ -24,6 +24,8 @@ export interface BattleSpecialResolvePhaseContext {
   chooseEnemyTactic?(): { tacticId: string; battleSkillId: string } | null;
   /** 敵方本回合是否不放戰法（PROG-2-1466，低 IQ 或難度表禁用）；true 時 SP 保留 */
   shouldEnemyHoldTactic?(): boolean;
+  /** 守城戰敵方每隊工兵每回合投石扣我方城寨（PROG-2-9429）；非守城或未設定為 0 */
+  defenseEngineerBombard?: number;
 }
 
 export function executeBattleSpecialResolvePhase(context: BattleSpecialResolvePhaseContext): void {
@@ -45,6 +47,7 @@ export function executeBattleSpecialResolvePhase(context: BattleSpecialResolvePh
     // 投石機（攻城戰，PROG-2-1596）：工兵不論站位，每回合轟擊城牆區
     if (unit.type === TroopType.Engineer) applySceneCatapult(unit, context.state);
   }
+  resolveDefenseBombard(context, svc);
 
   const enemyGeneral = context.state.enemyGeneral;
   if (
@@ -73,6 +76,20 @@ export function executeBattleSpecialResolvePhase(context: BattleSpecialResolvePh
       });
     }
   }
+}
+
+/** 守城投石（PROG-2-9429）：敵方工兵活著就不論站位扣我方城寨，整回合合併一次扣、一次通知 */
+function resolveDefenseBombard(context: BattleSpecialResolvePhaseContext, svc: ReturnType<typeof services>): void {
+  const perEngineer = context.defenseEngineerBombard ?? 0;
+  const state = context.state;
+  if (perEngineer <= 0 || context.actingFaction !== Faction.Enemy || state.siegeDefender !== Faction.Player) return;
+  let engineers = 0;
+  for (const [, unit] of state.units) {
+    if (unit.faction === Faction.Enemy && unit.type === TroopType.Engineer && !unit.isDead()) engineers += 1;
+  }
+  if (engineers === 0 || state.playerFortressHp <= 0) return;
+  state.playerFortressHp = Math.max(0, state.playerFortressHp - perEngineer * engineers);
+  svc.event.emit(EVENT_NAMES.FortressDamaged, { faction: Faction.Player, hp: state.playerFortressHp });
 }
 
 function resolveMedic(medic: TroopUnit, state: BattleState, svc: ReturnType<typeof services>): void {
