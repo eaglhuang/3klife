@@ -11105,6 +11105,54 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9428",
+      "title": "AI 剋制兵種派到被剋兵種那一路：剋制兵不再隨策略亂丟車道（五路對撞下才真的對上）",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T23:31:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "BAT-19 AI 反制部署檢查（doc_spec_0389）。§2 部署數量、§3 兵種剋制、§4 車道矩陣程式都照規格。但實測：AI 選出剋制兵後車道仍照 Profile 策略挑，完全不看被剋兵種在哪一路；五路對撞下小兵只打同路正面，模擬 2 萬次剋制兵落到正確車道只約 20%（等於隨機），SCOUT_WEAK 為 0%（專挑玩家少的路）。本卡：IQ 非 LOW 時，出陣兵種若剋制玩家場上某兵種，優先派到該兵種所在且可部署的車道（被剋數量最多、己方最少）；沒有這種車道才回退 §4 策略。LOW IQ 照舊盲出。教學戰 meetPlayerLane 優先順序不變。",
+      "related": [
+        "PROG-2-1468",
+        "PROG-2-9340",
+        "PROG-2-0343"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: done | 驗證: 單元 8622 全過、tsc 0、模擬 4000 場×策略：中高智力剋制兵對上同路由約 20% 升到約 84%（低智力維持盲出）、7456 實機呂布（MEDIUM／騎兵衝鋒）對我方第 5 路盾兵：改前騎兵出中央第 3 路錯開，改後出第 5 路正面相對，證據 artifacts/playtest-checklist/prog-2-9428 | 變更: 新增 pickCounterLane，EnemyAI 中高智力剋制兵優先派到被剋兵種所在空線；規格 §3.3 補規則 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

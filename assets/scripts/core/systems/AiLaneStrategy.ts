@@ -36,6 +36,24 @@ function pickLowest(lanes: readonly number[], score: (lane: number) => number, r
 }
 
 /**
+ * 剋制兵對路（PROG-2-9428，doc_spec_0389 §3.3）：五路對撞下小兵只打同路正面，剋制兵要派到被剋兵種所在的線才有用。
+ * 從空線中挑「被剋兵種最多」的線，同數挑己方最少，再同分隨機；沒有任何空線上有被剋兵種時回傳 null，呼叫端退回一般策略。
+ * preyByLane：各線上玩家「被這支兵剋」的兵種數量。
+ */
+export function pickCounterLane(
+    freeLanes: readonly number[],
+    preyByLane: readonly number[],
+    own: readonly number[],
+    random: () => number,
+): number | null {
+    const prey = (lane: number) => preyByLane[lane] ?? 0;
+    const targets = freeLanes.filter((lane) => prey(lane) > 0);
+    if (targets.length === 0) return null;
+    const most = Math.max(...targets.map(prey));
+    return pickLowest(targets.filter((lane) => prey(lane) === most), (lane) => own[lane] ?? 0, random);
+}
+
+/**
  * 教學戰對路出兵：挑「玩家部隊比己方多最多」的空線，讓雙方在同一路正面撞上（PROG-2-9340）。
  * 所有空線上玩家都沒有兵時回傳 null，呼叫端退回一般策略。
  */
