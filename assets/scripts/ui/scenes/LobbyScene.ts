@@ -803,12 +803,14 @@ export class LobbyScene extends Component {
         this._ensureWidget(detailNode);
 
         this._isNewPlayer = !(await this._loadPlayerSave());
+        if (!this.node?.isValid) return; // PROG-2-9196: scene already destroyed (switched away), stop quietly
         // 開場優先（PROG-2-2223）：新玩家或讀檔接回開場時先掛開場面板、立刻顯示旁白，其餘面板之後再掛；
         // 後掛的面板一律放在最上層，所以每掛一個就把開場面板拉回最上層。舊玩家照原順序。
         const openingFirst = shouldMountOpeningFirst(this._isNewPlayer, services().session.openingPhase);
         if (openingFirst) {
             void this._loadGenerals().catch(() => undefined);
             await this._mountOpeningPanels();
+            if (!this.node?.isValid) return;
         }
         const mounts: Array<() => Promise<void>> = [
             () => this._mountLobbyMainHub(),
@@ -890,12 +892,17 @@ export class LobbyScene extends Component {
             try {
                 await mount();
             } catch (error) {
+                // PROG-2-9196: scene destroyed mid-mount is a normal abort, not a mount failure
+                if (!this.node?.isValid) return;
                 UCUFLogger.error(LogCategory.UI, `[LobbyScene] 第 ${index} 個面板掛載失敗，已略過`, error);
             }
+            if (!this.node?.isValid) return;
             if (openingFirst) this._keepOpeningOnTop();
         }
+        if (!this.node?.isValid) return;
         this._registerUIControllers();
         await services().ui.open(UIID.LobbyMain);
+        if (!this.node?.isValid) return; // PROG-2-9196: scene already destroyed (switched away), stop quietly
         this._openingUiReady = true;
         // 開場優先掛載（PROG-2-2223）：大廳掛完才收起整備提示、顯示新手引導（引導要指向大廳按鈕）
         this._lobbyLoadingHint?.destroy();
@@ -957,9 +964,12 @@ export class LobbyScene extends Component {
                 UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 季節關卡排程載入失敗，改為不設季節閘門', scheduleError);
             }
         } catch (error) {
+            if (!this.node?.isValid) return;
             UCUFLogger.error(LogCategory.DATA, '[LobbyScene] 載入資料失敗:', error);
         }
+        if (!this.node?.isValid) return;
         await this._setupRivalOfficers();
+        if (!this.node?.isValid) return; // PROG-2-9196: scene already destroyed (switched away), stop quietly
 
         this._ready = true;
         SceneLoadProgress.complete();

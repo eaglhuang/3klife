@@ -27,5 +27,18 @@ export function createLobbyMountGuardSuite(): TestSuite {
         const sched = fs.readFileSync(path.join(__dirname, '../assets/scripts/ui/core/LobbyMountScheduler.ts'), 'utf-8');
         assert.isTrue(/try \{\s*await this\._start\(entry\);\s*\} catch/.test(sched), '排程器要逐項 try/catch');
     });
+    suite.test('大廳啟動途中場景被銷毀：每個 await 後檢查節點有效並安靜中止（PROG-2-9196）', () => {
+        const src = fs.readFileSync(path.join(__dirname, '../assets/scripts/ui/scenes/LobbyScene.ts'), 'utf-8');
+        const start = src.slice(src.indexOf('async start() {'), src.indexOf('private async _runDeferredMounts'));
+        const loop = start.slice(start.indexOf('for (let index = 0; index < mounts.length; index++) {'), start.indexOf('this._registerUIControllers();'));
+        const catchAt = loop.indexOf('} catch (error) {');
+        assert.isTrue(catchAt >= 0 && loop.indexOf('if (!this.node?.isValid) return;', catchAt) > catchAt
+            && loop.indexOf('if (!this.node?.isValid) return;', catchAt) < loop.indexOf('UCUFLogger.error', catchAt), '掛載失敗的 catch 先判斷節點已銷毀就直接返回，不記錄錯誤');
+        assert.isTrue(loop.split('if (!this.node?.isValid) return;').length - 1 >= 2, '每項掛載後也檢查節點有效');
+        const guards = start.split('if (!this.node?.isValid) return').length - 1;
+        assert.isTrue(guards >= 6, `start() 內的銷毀檢查至少 6 處，實際 ${guards}`);
+        const destroyAt = src.indexOf('protected onDestroy(): void {');
+        assert.isTrue(src.slice(destroyAt, destroyAt + 120).includes('this._cancelMountScheduler();'), 'onDestroy 取消背景排程');
+    });
     return suite;
 }

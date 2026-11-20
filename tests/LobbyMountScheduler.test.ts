@@ -113,6 +113,21 @@ export function createLobbyMountSchedulerSuite(): TestSuite {
         assert.equals('A', log.join(','), '取消後 demand 也不建');
     });
 
+    suite.test('場景在等待閒置途中被銷毀：不再掛載、不回報錯誤（PROG-2-9196）', async () => {
+        const log: string[] = [];
+        const errors: string[] = [];
+        const holder: { s?: LobbyMountScheduler } = {};
+        // 時間走到 10500 時模擬換場景
+        const env = fakeEnv({ onTick: (now) => { if (now >= 10500) holder.s?.cancel(); } });
+        env.setInput();
+        const s = new LobbyMountScheduler(entries(['F', 'X', 'Y'], log, env), cfg({ inputPauseMs: 5000, gapBetweenMountsMs: 100, maxDeferMs: 60000 }), env);
+        holder.s = s;
+        await s.runAll((id) => errors.push(id));
+        assert.equals('F', log.map((l) => l.split('@')[0]).join(','), '只掛了第一項，其餘中止');
+        assert.equals(0, errors.length);
+        assert.isTrue(s.cancelled);
+    });
+
     suite.test('單項失敗交給 onError，後面的照建；取消後的失敗不回報', async () => {
         const errors: string[] = [];
         const log: string[] = [];
