@@ -880,7 +880,7 @@
   "ui.academy.flow.int.kind.RESONANCE": "大共鳴",
   "ui.academy.flow.int.kind.GRADUATION": "卒業確認",
   "ui.academy.flow.int.continue": "デフォルトで続ける",
-  "ui.academy.flow.graduated": "修業完了！卒業の結果は今後対応します",
+  "ui.academy.flow.graduated": "修業完了！卒業の結果を武将に反映しました",
   "ui.academy.flow.lobby.resume_toast": "学府の修業が進行中です。続きに戻ってください",
   "ui.academy.flow.lobby.frozen_toast": "学府修業中：外の時間は止まっています",
   "ui.academy.flow.lobby.menu": "学府",

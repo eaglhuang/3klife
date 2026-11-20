@@ -880,7 +880,7 @@
   "ui.academy.flow.int.kind.RESONANCE": "Major resonance",
   "ui.academy.flow.int.kind.GRADUATION": "Graduation",
   "ui.academy.flow.int.continue": "Continue with default",
-  "ui.academy.flow.graduated": "Studies complete! Graduation results will follow.",
+  "ui.academy.flow.graduated": "Studies complete! Graduation results have been applied to the general.",
   "ui.academy.flow.lobby.resume_toast": "An academy term is in progress. Please continue it.",
   "ui.academy.flow.lobby.frozen_toast": "Academy in progress: the outside world is paused.",
   "ui.academy.flow.lobby.menu": "Academy",
