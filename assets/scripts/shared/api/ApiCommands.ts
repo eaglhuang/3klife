@@ -33,6 +33,14 @@ export const API_COMMANDS = Object.freeze({
     'save.rev': { kind: 'query', revGuard: false },
     'save.commit': { kind: 'cmd', revGuard: true },
     'save.full': { kind: 'cmd', revGuard: false },
+    // 技能（技能 Base 規格 §11；SKL-M 最小版）
+    'skill.list': { kind: 'query', revGuard: false },
+    'skill.canLearn': { kind: 'query', revGuard: false },
+    'skill.learn': { kind: 'cmd', revGuard: false },
+    'skill.grant': { kind: 'cmd', revGuard: false },
+    'skill.upgrade': { kind: 'cmd', revGuard: false },
+    'skill.applyModifier': { kind: 'cmd', revGuard: false },
+    'skill.removeModifier': { kind: 'cmd', revGuard: false },
 } satisfies Record<string, ApiCommandMeta>);
 
 export type ApiCommandName = keyof typeof API_COMMANDS;
@@ -225,3 +233,102 @@ export interface SaveFullResult {
 export const SAVE_CLIENT_OWNED_ROOTS: readonly string[] = Object.freeze([
     'favoriteGeneralIds', 'sortiePresets', 'leadGeneralId', 'deck',
 ]);
+
+/** 技能命令的持有者參照（MVP 只有武將） */
+export interface SkillHolderArg {
+    kind: 'general';
+    id: string;
+}
+
+export interface SkillListArgs {
+    holder: SkillHolderArg;
+    domain?: string;
+}
+
+export interface SkillRecordResult {
+    skillId: string;
+    level: number;
+    xp: number;
+    learnedFrom: string;
+    learnedAt: number;
+}
+
+export interface SkillModifierResult {
+    id: string;
+    source: string;
+    until: 'graduation' | 'manual';
+    appliedAt: number;
+}
+
+export interface SkillListResult {
+    holder: SkillHolderArg;
+    skills: SkillRecordResult[];
+    modifiers: SkillModifierResult[];
+}
+
+export interface SkillCanLearnArgs {
+    holder: SkillHolderArg;
+    skillId: string;
+}
+
+export interface SkillCanLearnResult {
+    ok: boolean;
+    /** 不可學時的 reason（對應 E6xx） */
+    blocked?: string;
+    tpThreshold?: number;
+    tpCost?: number;
+}
+
+/** skill.learn：只送意圖；level／spent／result 一律 E103（權威端自己算） */
+export interface SkillLearnArgs {
+    holder: SkillHolderArg;
+    skillId: string;
+    source: string;
+    /** 三選一類候選清單（弱冠禮）；skillId 必須在其中 */
+    choiceOf?: string[];
+}
+
+export interface SkillLearnResult {
+    learned: boolean;
+    skill: SkillRecordResult;
+    spent: { tp: number };
+}
+
+/** skill.grant：結業、獎勵等已由上游判定的授予；已持有者略過（冪等） */
+export interface SkillGrantArgs {
+    holder: SkillHolderArg;
+    skillIds: string[];
+    source: string;
+}
+
+export interface SkillGrantResult {
+    granted: string[];
+    skipped: string[];
+    unknown: string[];
+}
+
+export interface SkillUpgradeArgs {
+    holder: SkillHolderArg;
+    skillId: string;
+}
+
+export interface SkillUpgradeResult {
+    skill: SkillRecordResult;
+}
+
+export interface SkillApplyModifierArgs {
+    holder: SkillHolderArg;
+    modifierId: string;
+    source: string;
+    until: 'graduation' | 'manual';
+}
+
+export interface SkillRemoveModifierArgs {
+    holder: SkillHolderArg;
+    modifierId: string;
+}
+
+export interface SkillModifierChangeResult {
+    changed: boolean;
+    modifiers: SkillModifierResult[];
+}

@@ -12,12 +12,15 @@ import { DEFAULT_REWARD_CONFIG, type RewardConfigV1 } from '../../../shared/rewa
 import { registerItemCommands, type ItemAuthority } from './ItemCommands';
 import { registerRewardCommands, type RewardAuthority, type RewardEffectHandler, type RewardPorts } from './RewardCommands';
 import { LocalApiAdapter, type LocalApiAdapterOptions } from './LocalApiAdapter';
+import { registerSkillCommands, type SkillHost } from './SkillCommands';
 import { registerSaveCommands, type LocalSaveStore } from './SaveCommands';
 import { registerWalletCommands, type WalletAuthority } from './WalletCommands';
 
 export interface LocalApiBundle {
     api: LocalApiAdapter;
     setWallet(wallet: WalletAuthority | null): void;
+    /** 綁定技能宿主（單機＝GameSession）；命令處理器每次呼叫才取，可後綁、可換 */
+    setSkillHost(host: SkillHost | null): void;
     setItemAuthority(authority: ItemAuthority | null): void;
     setItemConfig(config: ItemConfigV1): void;
     setRewardAuthority(authority: RewardAuthority | null): void;
@@ -33,6 +36,7 @@ export function createLocalApi(store: LocalSaveStore, opts: LocalApiAdapterOptio
     let wallet: WalletAuthority | null = null;
     let authority: ItemAuthority | null = null;
     let config: ItemConfigV1 = DEFAULT_ITEM_CONFIG;
+    let skillHost: SkillHost | null = null;
     let rewardAuthority: RewardAuthority | null = null;
     let rewardConfig: RewardConfigV1 = DEFAULT_REWARD_CONFIG;
     let rewardHooks: Pick<RewardPorts, 'evaluate' | 'modifiers' | 'entropy'> = {};
@@ -41,6 +45,7 @@ export function createLocalApi(store: LocalSaveStore, opts: LocalApiAdapterOptio
     registerWalletCommands(api, () => wallet);
     registerItemCommands(api, () => ({ authority, wallet, config }));
     registerRewardCommands(api, () => ({ authority: rewardAuthority, wallet, config: rewardConfig, handlers: rewardHandlers, ...rewardHooks }));
+    registerSkillCommands(api, () => skillHost);
     return {
         api,
         setWallet: (next) => { wallet = next; },
@@ -50,5 +55,6 @@ export function createLocalApi(store: LocalSaveStore, opts: LocalApiAdapterOptio
         setRewardConfig: (next) => { rewardConfig = next; },
         registerRewardEffect: (kind, handler) => { rewardHandlers[kind] = handler; },
         setRewardHooks: (hooks) => { rewardHooks = hooks; },
+        setSkillHost: (next) => { skillHost = next; },
     };
 }
