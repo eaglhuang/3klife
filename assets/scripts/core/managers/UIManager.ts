@@ -56,6 +56,12 @@ const DEFAULT_UI_BACKDROP: Required<UIBackdropConfig> = {
 export class UIManager {
     // 統一頁面登記表
     private readonly registry = new Map<UIID, UIEntry>();
+    private _missingResolver: ((uiId: UIID) => Promise<void>) | null = null;
+
+    /** 設定「open 時尚未登錄」的補建函式（場景離開時傳 null 取消） */
+    public setMissingResolver(resolver: ((uiId: UIID) => Promise<void>) | null): void {
+        this._missingResolver = resolver;
+    }
 
     // LayerUI：目前顯示的替換式主頁面（同時只有一個）
     private currentUI: UIID | null = null;
@@ -177,7 +183,12 @@ export class UIManager {
      * @returns 若未 register 則回傳 false
      */
     public async open(uiId: UIID, payload?: unknown): Promise<boolean> {
-        const entry = this.registry.get(uiId);
+        let entry = this.registry.get(uiId);
+        // 尚未登錄但場景願意按需補建（PROG-2-9196：大廳背景面板改成閒置才建，玩家先點到就立刻補建）
+        if (!entry && this._missingResolver) {
+            try { await this._missingResolver(uiId); } catch { /* 補建失敗照舊回傳 false */ }
+            entry = this.registry.get(uiId);
+        }
         if (!entry) {
             UCUFLogger.warn(LogCategory.DATA, `[UIManager] open: "${uiId}" not registered`);
             return false;

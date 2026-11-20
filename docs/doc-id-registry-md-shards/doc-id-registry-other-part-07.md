@@ -268,3 +268,4 @@
 | `doc_other_2710` | docs/battle-chibi-troop-art-commission.md | 給 Codex 的小兵美術委託（騎兵系、連弩手；盾兵／騎兵既有規格的補充） |
 | `doc_other_2711` | docs/battle-chibi-troop-design.md | 戰場 Q 版小兵兵種設計稿 |
 | `doc_other_2712` | docs/web-playtest-online.md | 線上試玩版無頭實玩驗收（playtest-online） |
+| `doc_other_2713` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-15.md | Doc ID Registry Markdown Index — Spec / Index / Task |

@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "source": "../共用框架總綱規格書.md",
+  "indexTitle": "共用框架總綱規格書（分片索引）",
+  "indexPath": "docs/遊戲規格文件/系統規格書/共用框架總綱規格書.md",
+  "type": "markdown-h2",
+  "preambleShard": "shard-a",
+  "defaultShard": "shard-e",
+  "shards": [
+    {"name": "shard-a", "title": "1–4 原則、框架清單、新增判準、框架 × 系統對照", "pattern": "^[1-4][.] "},
+    {"name": "shard-b", "title": "5 共通網路協定層（核心原則）", "pattern": "^5[.] "},
+    {"name": "shard-c", "title": "6–8 依賴關係、文件連結、檢查清單", "pattern": "^[6-8][.] "},
+    {"name": "shard-d", "title": "9–11 實作卡總順序、待決大方向、新增框架候選", "pattern": "^(9|10|11)[.] "},
+    {"name": "shard-e", "title": "12 一年循環 MVP 切分（PROG-2-9213）", "pattern": "."}
+  ]
+}
