@@ -32,6 +32,7 @@ import { applyResonanceOutcomeToGeneral, type BloodlineResonanceLockedOutcome } 
 import { surnameOf } from './VirtualAncestorGenerator';
 import { findTriggeredSynergy, synergyTpBonus } from './MentorSynergy';
 import { trainingGainBreakdown } from './TrainingGainFormula';
+import { getMarriageVitalityRules } from './MarriageVitality';
 
 export const NURTURE_TOTAL_ROUNDS = 36;
 /** MCQ Q48：固定 6 教官槽，入學快照鎖定 */
@@ -185,6 +186,10 @@ export interface NurtureSession {
     synergyTutorBonus?: number;
     /** 雙親結緣當下心情帶動之開蒙前 4 回合幹勁倍率（PROG-2-9165） */
     earlyEnthusiasmMultiplier?: number;
+    /** 寒門新血前 6 回合訓練加成（小數，PROG-2-9184） */
+    earlyTrainingBonus?: number;
+    /** 佳話聯姻「雙星輝映」前 12 回合覺醒率加成（小數，PROG-2-9184） */
+    earlyAwakenBonusPct?: number;
     /** 混種戰法觸發的回合；尚未觸發為 undefined */
     hybridRound?: number;
     /** 累積好感次數（舊存檔可能沒有此欄位，視為 0） */
@@ -329,6 +334,9 @@ export function createNurtureSession(input: CreateNurtureSessionInput): NurtureS
     const talent = emptyStatRecord();
     for (const kind of TRAINING_KINDS) talent[kind] = statOf(input.child, kind);
     const mentors = input.mentors.map((mentor) => ({ ...mentor, statBonus: mentor.statBonus ? { ...mentor.statBonus } : undefined }));
+    const initialBonusTp = Math.max(0, Math.round((input.child as { initialBonusTp?: number }).initialBonusTp ?? 0));
+    const earlyTrainingBonus = Math.max(0, (input.child as { earlyTrainingBonus?: number }).earlyTrainingBonus ?? 0);
+    const earlyAwakenBonusPct = Math.max(0, (input.child as { earlyAwakenBonusPct?: number }).earlyAwakenBonusPct ?? 0);
     return {
         sessionId: input.sessionId,
         childId: input.child.id,
@@ -337,13 +345,15 @@ export function createNurtureSession(input: CreateNurtureSessionInput): NurtureS
         vigor: VIGOR_MAX,
         talent,
         prowess: emptyStatRecord(),
-        tp: 0,
+        tp: initialBonusTp,
         growthModifier: effectiveGrowthModifier(input.child),
         mentors,
         hybridSources: input.hybridSources ? { ...input.hybridSources } : undefined,
         clanTraditionKind: input.clanTraditionKind,
         synergyTutorBonus: input.synergyTutorBonus,
         earlyEnthusiasmMultiplier: (input.child as { earlyEnthusiasmMultiplier?: number }).earlyEnthusiasmMultiplier,
+        earlyTrainingBonus: earlyTrainingBonus > 0 ? earlyTrainingBonus : undefined,
+        earlyAwakenBonusPct: earlyAwakenBonusPct > 0 ? earlyAwakenBonusPct : undefined,
         mentorSlots: rollMentorSlots(mentors, input.random),
         negativeFactors: [],
         negativeTraitRateBonus: Math.max(0, (input.child as { negativeTraitRateBonus?: number }).negativeTraitRateBonus ?? 0),
@@ -369,7 +379,7 @@ export interface GainBreakdown {
 
 /** 純公式：給定本回合基礎值與教官站位，算屬性獲得量（不擲骰） */
 export function computeStatGain(
-    session: Pick<NurtureSession, 'mentors' | 'mentorSlots' | 'growthModifier' | 'clanTraditionKind' | 'synergyTutorBonus' | 'earlyEnthusiasmMultiplier'> & { round?: number },
+    session: Pick<NurtureSession, 'mentors' | 'mentorSlots' | 'growthModifier' | 'clanTraditionKind' | 'synergyTutorBonus' | 'earlyEnthusiasmMultiplier' | 'earlyTrainingBonus'> & { round?: number },
     kind: TrainingKind,
     base: number,
 ): GainBreakdown {
@@ -379,6 +389,9 @@ export function computeStatGain(
     const burst = onSlot.some((mentor) => mentor.specialty === kind);
     const earlyBonus = (session.round ?? 0) < earlyEnthusiasmRoundsLimit()
         ? Math.max(0, (session.earlyEnthusiasmMultiplier ?? 1) - 1)
+        : 0;
+    const freshBloodBonus = (session.round ?? 0) < getMarriageVitalityRules().vitalityRules.earlyTrainingTurns
+        ? Math.max(0, session.earlyTrainingBonus ?? 0)
         : 0;
     // 走 FORM-01 總公式（TrainingGainFormula）：教官加值進加法區、資質即 growthModifier、
     // 同格協力走陪伴乘區、傾囊相授走傾囊乘區；運勢與人數補正尚無來源，以中性值帶入。
@@ -392,6 +405,7 @@ export function computeStatGain(
             synergyBonus,
             session.clanTraditionKind === kind ? CLAN_TRADITION_TRAINING_BONUS : 0,
             session.synergyTutorBonus ?? 0,
+            freshBloodBonus,
             ...onSlot.map((mentor) => mentor.trainingRate ?? 0),
         ],
         friendshipBursts: burst ? [MENTOR_BURST_MULTIPLIER - 1] : [],

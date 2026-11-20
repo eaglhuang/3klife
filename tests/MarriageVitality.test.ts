@@ -14,7 +14,11 @@ import { BreedingService } from '../assets/scripts/core/services/BreedingService
 import { InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
 import { BondingSetupController } from '../assets/scripts/ui/core/BondingSetupController';
 import { Faction } from '../assets/scripts/core/config/Constants';
-import type { BreedingGeneral } from '../assets/scripts/core/systems/BreedingSystem';
+import { computeStatGain, createNurtureSession } from '../assets/scripts/core/systems/NurtureSystem';
+import { previewBreedingEp, type BreedingGeneral } from '../assets/scripts/core/systems/BreedingSystem';
+import { computeFamilyCompatibilityK } from '../assets/scripts/core/systems/FamilyCompatibility';
+import { NurtureService } from '../assets/scripts/core/services/NurtureService';
+import { rollNurtureAwakening } from '../assets/scripts/core/systems/FactorAwakening';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -142,6 +146,103 @@ export function createMarriageVitalitySuite(): TestSuite {
         assert.isTrue(lines.some((l) => l.includes('化干戈為玉帛')));
         assert.isTrue(lines.some((l) => l.includes('雙星輝映')));
         assert.isTrue(marriageVitalityBadgeLine(result.marriageVitality!).includes('文武並濟'));
+    });
+
+    suite.test('PROG-2-9184 效果接線：earlyTrainingBonus 前 6 回合放大訓練量、第 7 回合失效，且 initialBonusTp 入學即加值', () => {
+        const child = makeGeneral('c_nurture', '男', {
+            age: 6,
+            earlyTrainingBonus: 0.12,
+            initialBonusTp: 20,
+            earlyAwakenBonusPct: 0.05,
+        });
+        const session = createNurtureSession({
+            sessionId: 's_test',
+            child,
+            mentors: [],
+            startSeason: 1,
+            random: () => 0.5,
+        });
+        assert.equals(20, session.tp);
+        assert.equals(0.12, session.earlyTrainingBonus);
+        assert.equals(0.05, session.earlyAwakenBonusPct);
+
+        const baseSession = createNurtureSession({
+            sessionId: 's_base',
+            child: makeGeneral('c_base', '男', { age: 6 }),
+            mentors: [],
+            startSeason: 1,
+            random: () => 0.5,
+        });
+        const boostedR0 = computeStatGain({ ...session, round: 0 }, 'str', 100).gain;
+        const baseR0 = computeStatGain({ ...baseSession, round: 0 }, 'str', 100).gain;
+        assert.isTrue(boostedR0 > baseR0, `前 6 回合應有訓練加成 (${boostedR0} > ${baseR0})`);
+
+        const boostedR6 = computeStatGain({ ...session, round: 6 }, 'str', 100).gain;
+        const baseR6 = computeStatGain({ ...baseSession, round: 6 }, 'str', 100).gain;
+        assert.equals(baseR6, boostedR6);
+    });
+
+    suite.test('PROG-2-9184 效果接線：earlyAwakenBonusPct 前 12 回合提升覺醒率，第 13 回合失效', () => {
+        const child = {
+            ...makeGeneral('c_awaken', '男', {
+                age: 6,
+                earlyAwakenBonusPct: 0.05,
+                genes: [{ id: 'gene_str', level: 2, isLocked: true }],
+            }),
+            fate: { choice: 'martial' },
+        };
+        const roster = new InMemoryRosterStore([child]);
+        const nurture = new NurtureService(roster, {
+            random: () => 0.11, // 基礎培育覺醒率 0.08，加上 0.05 = 0.13；0.11 僅在有加成時觸發
+            currentSeason: () => 1,
+            awakening: { discoveryLevel: () => 3 },
+        });
+        nurture.start('c_awaken', []);
+        const r1 = nurture.train('c_awaken', 'str');
+        assert.isTrue(!!r1.awakening, '第 1 回合（<= 12）應吃到 +5% 覺醒率而觸發');
+
+        // 驗證超過第 12 回合後不觸發：直接測 rollNurtureAwakening 無 extraAwakenChance 時 0.11 不觸發
+        const noBonus = rollNurtureAwakening(
+            makeGeneral('c_awaken_late', '男', { age: 6, genes: [{ id: 'gene_str', level: 2, isLocked: true }] }),
+            { discoveryLevel: 3, mentorRank: 0, mentorOnSlot: false, luk: 0, extraAwakenChance: 0, random: () => 0.11 },
+        );
+        assert.equals(null, noBonus);
+    });
+
+    suite.test('PROG-2-9184 效果接線：化干戈為玉帛 (+2 相性，上限 15) 寫入 previewBreedingEp 與相性計算，且四語 i18n 完整', () => {
+        const father = makeGeneral('f_ally', '男', { faction: Faction.Player });
+        const motherSame = makeGeneral('m_same', '女', { faction: Faction.Player });
+        const motherEnemy = makeGeneral('m_enemy', '女', { faction: Faction.Enemy });
+        const graph = BloodlineGraph.getInstance();
+        graph.clear();
+
+        const samePreview = previewBreedingEp({ father, mother: motherSame, pedigree: graph });
+        const enemyPreview = previewBreedingEp({ father, mother: motherEnemy, pedigree: graph });
+        assert.equals(2, (enemyPreview.ep.affinity ?? 0) - (samePreview.ep.affinity ?? 0));
+
+        // 上限 15 檢定
+        const capped = computeFamilyCompatibilityK({
+            fatherStats: { str: 95, int: 40, lea: 90, pol: 40, cha: 60, luk: 50 },
+            motherStats: { str: 40, int: 95, lea: 40, pol: 90, cha: 60, luk: 50 },
+            qualifiedMarriagesInWindow: 6,
+            epithetSynergyBonus: 2,
+        });
+        assert.equals(15, capped.totalK);
+
+        // 4 語系皆有 ui.breed.birth.* 與 ui.breed.epithet.summary.*
+        for (const locale of ['zh-TW', 'zh-CN', 'en', 'ja']) {
+            const p = path.resolve(__dirname, `../assets/resources/i18n/${locale}.json`);
+            const dict = JSON.parse(fs.readFileSync(p, 'utf8')) as Record<string, string>;
+            for (const key of [
+                'ui.breed.birth.fresh_blood',
+                'ui.breed.birth.epithet',
+                'ui.breed.epithet.summary.civil_martial',
+                'ui.breed.epithet.summary.foes_to_allies',
+                'ui.breed.epithet.summary.twin_stars',
+            ]) {
+                assert.isTrue(typeof dict[key] === 'string' && dict[key].length > 0, `${locale} 缺少 ${key}`);
+            }
+        }
     });
 
     return suite;

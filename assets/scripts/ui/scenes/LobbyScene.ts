@@ -4719,7 +4719,11 @@ ${spent}`,
             const result = await this._bonding.confirm();
             if (result.outcome === 'conceived' && result.child) {
                 // 血統提示（血統理論 §G、§H，PROG-2-1775）：通知欄只有一行，改用 toast
-                for (const message of bloodlineBirthLines(result, (uid) => services().breeding.ancestorName(uid))) {
+                for (const message of bloodlineBirthLines(
+                    result,
+                    (uid) => services().breeding.ancestorName(uid),
+                    (key, ...args) => services().i18n.t(key, ...args),
+                )) {
                     services().event.emit('SHOW_TOAST', { message, duration: 3 });
                 }
                 // 結緣的動態關係（夫妻、親子）：KIN-06，有新增才自動存檔

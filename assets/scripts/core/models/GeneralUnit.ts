@@ -435,6 +435,15 @@ export interface GeneralConfig {
   weatherAptitude?: Record<string, string>;
   ancestor_chain?: string[];
 
+  /** 寒門新血前 6 回合訓練加成（小數 0.04~0.12，PROG-2-9181/9184） */
+  earlyTrainingBonus?: number;
+  /** 佳話聯姻「文武並濟」入學額外 TP（PROG-2-9181/9184） */
+  initialBonusTp?: number;
+  /** 佳話聯姻「雙星輝映」前 12 回合覺醒率加成（PROG-2-9181/9184） */
+  earlyAwakenBonusPct?: number;
+  /** 佳話聯姻觸發稱號 ID 列表（PROG-2-9181） */
+  marriageEpithets?: string[];
+
   stats?: GeneralStatsConfig;
   pol?: number;
   cha?: number;
