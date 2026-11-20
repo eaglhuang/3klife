@@ -29,12 +29,16 @@
 |  | `moraleOnVictory` | 2 | PROG-2-9425 |
 |  | `engineerBombardDamage` | 15（每隊每回合，合併一次扣） | PROG-2-9429 |
 |  | `engineerReinforcePerTurn` | 1 | PROG-2-9429 |
+|  | `engineerReinforceMax` | 5（整場補派總隊數上限） | PROG-2-9431 |
+|  | `fortressMaxHp` | 500（守城時我方城寨上限，血條同步） | PROG-2-9431 |
+|  | `defeatMoraleDelta` | −3（失守與大敗的民心） | PROG-2-9431 |
+|  | `routPopulationLossRatio` | 0.03（大敗人口損失比例） | PROG-2-9431 |
 | `assets/resources/data/year-end-defense.json` | `tiers[].encounterId` / `fromYear` | defense-tier-1／2／3 起用年度 1／3／5（暫定） | PROG-2-9426 |
 | `assets/resources/data/encounters.json` | `defense-tier-1/2/3` 的 `battleKind`、`enemyInitialDeployment`、`turnLimit`（選填，覆蓋設定檔） | 見第 2 節 | PROG-2-9425、9426、9429 |
 
 程式對應：`assets/scripts/core/systems/DefenseBattle.ts`（設定解析、守方陣營、回合上限、結果分級）、`assets/scripts/core/systems/YearEndDefense.ts`（年度選檔、欠守城判定、最強鄰國）、`assets/scripts/core/managers/GameSession.ts`（`applyDefenseDefeat`、`recordBattle`）。
 
-現況不在 JSON 的數值（見第 11 節）：敗北民心 −3（`CityEconomy.ts` `MORALE_DELTA.defenseDefeat`）、大敗人口 −3%（`DEFENSE_ROUT_POPULATION_LOSS`）、城寨 500（`FortressBarView.ts` `FORTRESS_MAX_HP`）。
+失守民心、大敗人口、城寨上限已移入 JSON（總PM 11/21 裁決，PROG-2-9431）。程式內的 `MORALE_DELTA.defenseDefeat`、`DEFENSE_ROUT_POPULATION_LOSS`、`FORTRESS_MAX_HP` 只當設定檔讀不到時的預設值。一般關卡的城寨仍用 `FORTRESS_MAX_HP`。
 
 ## 10. 測試與驗收
 
