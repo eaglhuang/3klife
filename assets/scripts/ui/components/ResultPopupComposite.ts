@@ -17,6 +17,7 @@ import { awaitWithTimeout } from '../../core/utils/AwaitGuard';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { services } from '../../core/managers/ServiceLoader';
 import { buildResultSections, RESULT_SECTION_TITLE, type ResultDetailRow } from '../../shared/ResultDetailSections';
+import { currentScreenCssScale, readableText } from '../core/ReadableText';
 
 /** 結算畫面規格掛載的等待上限（毫秒，PROG-2-9404）：畫面規格或皮膚下載 404／卡住時不能讓玩家永遠看不到結果 */
 const RESULT_MOUNT_MAX_MS = 15000;
@@ -78,6 +79,29 @@ const DETAIL_STYLE = {
     insetRight: 32,
 } as const;
 
+type DetailStyle = { -readonly [K in keyof typeof DETAIL_STYLE]: (typeof DETAIL_STYLE)[K] extends number ? number : (typeof DETAIL_STYLE)[K] };
+
+/** 勝負說明（頭像旁大字）在皮膚 popup.label.verdict 的字級 */
+const VERDICT_FONT = { fontSize: 32, lineHeight: 42 } as const;
+
+/**
+ * 手機小螢幕放大明細字（PROG-2-9433）：812×375 時 26px 只剩約 9 CSS px，放大到至少 12 CSS px；
+ * 欄名寬度跟著字級等比放大。桌機縮放夠大時原樣回傳，照網頁原稿。
+ */
+function detailStyleFor(cssScale: number): DetailStyle {
+    const header = readableText(DETAIL_STYLE.headerFontSize, DETAIL_STYLE.headerLineHeight, cssScale);
+    const row = readableText(DETAIL_STYLE.rowFontSize, DETAIL_STYLE.rowLineHeight, cssScale);
+    const grow = row.fontSize / DETAIL_STYLE.rowFontSize;
+    return {
+        ...DETAIL_STYLE,
+        headerFontSize: header.fontSize,
+        headerLineHeight: header.lineHeight,
+        rowFontSize: row.fontSize,
+        rowLineHeight: row.lineHeight,
+        keyWidth: Math.round(DETAIL_STYLE.keyWidth * grow),
+    };
+}
+
 @ccclass('ResultPopupComposite')
 export class ResultPopupComposite extends CompositePanel {
     private _binder: UITemplateBinder | null = null;
@@ -132,6 +156,7 @@ export class ResultPopupComposite extends CompositePanel {
             TitleLabel: result.title,
             DescLabel: verdict ?? '',
         });
+        this._applyReadableVerdict();
         this._renderDetails(detailLines);
         this._applyResultTone(result.resultType);
         // 地格標籤層、戰鬥紀錄等面板在場景載入後才加進 Canvas，會排在結算窗之上（PROG-2-1878）
@@ -273,11 +298,12 @@ ${result.description}
         const content = scroll?.content;
         if (!scroll || !content) return;
         const width = content.getComponent(UITransform)?.contentSize.width ?? 1000;
+        const style = detailStyleFor(currentScreenCssScale());
         let used = 0;
         for (const section of buildResultSections(lines)) {
             const title = RESULT_SECTION_TITLE[section.id];
-            this._fillHeader(this._takeRow(content, used++), tr(title.key, title.fallback), width);
-            section.rows.forEach((row, index) => this._fillRow(this._takeRow(content, used++), row, width, index % 2 === 0));
+            this._fillHeader(this._takeRow(content, used++), tr(title.key, title.fallback), width, style);
+            section.rows.forEach((row, index) => this._fillRow(this._takeRow(content, used++), row, width, index % 2 === 0, style));
         }
         for (let i = used; i < this._detailRows.length; i++) this._detailRows[i].active = false;
         content.getComponent(Layout)?.updateLayout();
@@ -331,8 +357,16 @@ ${result.description}
         return node.active ? Math.max(lineHeight, tf.contentSize.height) : 0;
     }
 
-    private _fillHeader(row: Node, text: string, width: number): void {
-        const s = DETAIL_STYLE;
+    /** 頭像旁勝負說明在手機上也放大到可讀字級（PROG-2-9433）；桌機維持皮膚字級 */
+    private _applyReadableVerdict(): void {
+        const label = this._binder?.getLabel('DescLabel');
+        if (!label) return;
+        const text = readableText(VERDICT_FONT.fontSize, VERDICT_FONT.lineHeight);
+        label.fontSize = text.fontSize;
+        label.lineHeight = text.lineHeight;
+    }
+
+    private _fillHeader(row: Node, text: string, width: number, s: DetailStyle): void {
         const key = row.getChildByName('Key');
         const height = this._styleLabel(key, text, width - s.insetLeft - s.insetRight, s.headerFontSize, s.headerLineHeight, s.headerColor, true, Label.HorizontalAlign.LEFT) + 14;
         this._styleLabel(row.getChildByName('Value'), '', 0, s.rowFontSize, s.rowLineHeight, s.valueColor, false, Label.HorizontalAlign.LEFT);
@@ -348,8 +382,7 @@ ${result.description}
         }
     }
 
-    private _fillRow(row: Node, data: ResultDetailRow, width: number, zebra: boolean): void {
-        const s = DETAIL_STYLE;
+    private _fillRow(row: Node, data: ResultDetailRow, width: number, zebra: boolean, s: DetailStyle): void {
         const valueX = data.key.length > 0 ? s.keyWidth + s.keyGap : 0;
         const inner = width - s.insetLeft - s.insetRight;
         const keyH = this._styleLabel(row.getChildByName('Key'), data.key, s.keyWidth, s.rowFontSize, s.rowLineHeight, s.keyColor, true, Label.HorizontalAlign.RIGHT);

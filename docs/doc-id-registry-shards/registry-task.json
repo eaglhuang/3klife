@@ -16075,6 +16075,18 @@
   },
   {
     "id": "doc_task_2697",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9433.md",
+    "title": "[PROG-2-9433] 手機結算彈窗字級：小螢幕最小可讀字級",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2698",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9434.md",
+    "title": "[PROG-2-9434] 戰場武將名牌優先：部隊資訊框避開名牌",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2699",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9209.md",
     "title": "[PROG-2-9209] QST-M：任務最小版（task.* 端點，taskKind=academy 契約與 adapter 介面）",
     "category": "task"

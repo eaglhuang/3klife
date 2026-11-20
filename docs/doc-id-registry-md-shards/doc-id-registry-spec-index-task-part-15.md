@@ -104,3 +104,6 @@
 | `doc_task_2694` | docs/agent-briefs/tasks/PROG/PROG-2-9204.md | [PROG-2-9204] SKL-M：技能 base 最小版（skill-def、grant/learn/upgrade、modifier、skill.* 端點、結業戰法寫回遷移） |
 | `doc_task_2695` | docs/agent-briefs/tasks/PROG/PROG-2-9211.md | PROG-2-9211：學府結業接線 |
 | `doc_task_2696` | docs/agent-briefs/tasks/PROG/PROG-2-9214.md | [PROG-2-9214] 開場少年挑選被宿命轉蛋結果面板蓋住（9196 回歸修正） |
+| `doc_task_2697` | docs/agent-briefs/tasks/PROG/PROG-2-9433.md | [PROG-2-9433] 手機結算彈窗字級：小螢幕最小可讀字級 |
+| `doc_task_2698` | docs/agent-briefs/tasks/PROG/PROG-2-9434.md | [PROG-2-9434] 戰場武將名牌優先：部隊資訊框避開名牌 |
+| `doc_task_2699` | docs/agent-briefs/tasks/PROG/PROG-2-9209.md | [PROG-2-9209] QST-M：任務最小版（task.* 端點，taskKind=academy 契約與 adapter 介面） |

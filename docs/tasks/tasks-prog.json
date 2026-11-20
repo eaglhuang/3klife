@@ -11399,6 +11399,103 @@
     },
     {
       "doc_id": "",
+      "id": "PROG-2-9433",
+      "title": "手機結算彈窗字級：小螢幕最小可讀字級（812×375 至少 12 CSS px）",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-21T09:30:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 11/21 指派：手機 812×375 時結算彈窗明細 26px 只剩約 9 CSS px。新增共用 shared/ReadableFontSize 與 ui/core/ReadableText，縮放後低於 12 CSS px 才放大；結算明細、區段標題、勝負說明套用，桌機維持網頁原稿字級。",
+      "related": [
+        "PROG-2-9424",
+        "PROG-2-1626"
+      ],
+      "depends": [
+        "PROG-2-9424"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8749 通過、tsc 0 錯、7456 手機 812×375 前後截圖（35px≈12.2 CSS px）、桌機字級不變 | 變更: 共用小螢幕最小可讀字級；結算彈窗套用 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9434",
+      "title": "戰場武將名牌優先：部隊資訊框避開名牌、名牌層級在部隊框之上",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-21T10:30:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 11/21 審核 9432 截圖發現：敵方部隊集中在上方時，呂布名牌（能量環、加成、將血量、精力條）與部隊資訊框（騎兵／盾兵／步兵）互相重疊。原則名牌優先：名牌排到最上層部隊框之上；與名牌重疊的部隊框往上或往下推開（取較短方向、平滑過渡）。",
+      "related": [
+        "PROG-2-9432"
+      ],
+      "depends": [
+        "PROG-2-9432"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8757 通過、tsc 0 錯、7456 同場景前後截圖 | 變更: battle/shared/GeneralPlateAvoidance 純邏輯＋UnitRenderer 每幀避讓與名牌層級 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
       "id": "PROG-2-9213",
       "title": "一年循環 MVP 切分（doc_spec_1182 第 12 章）與學府人源缺口方案（doc_spec_1179）",
       "owner": "ClaudeCode_sonnet-5-5",
