@@ -10674,6 +10674,54 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9419",
+      "title": "奧義收尾爆光改柔光加衝擊波環，不再是硬邊平塗大圓",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-20T08:50:50+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "基礎戰鬥手感打磨（總PM B(2)）第二項。虎牢關慢動作連拍時，敵方呂布放「天下無雙」的 cut-in 收尾，整個畫面被一個硬邊、平塗的淺藍實心大圓蓋住（直徑等於畫面寬，起始幾乎不透明），看起來像素材沒載入。沒有專屬分鏡的武將（目前除了趙雲以外全部）放奧義都會經過這一刻，是玩家最常看到的奧義畫面。",
+      "related": [
+        "PROG-2-9352",
+        "PROG-2-2250",
+        "PROG-2-9410"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-20 | 狀態: in-progress | 驗證: pending | 變更: 待做 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

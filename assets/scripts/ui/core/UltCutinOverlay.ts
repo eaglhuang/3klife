@@ -13,6 +13,7 @@
 import { BlockInputEvents, Color, Component, Graphics, Label, Node, Sprite, SpriteFrame, UIOpacity, UITransform, Vec3, _decorator, sys, view } from 'cc';
 import { createCutinPlayer, type CutinConfig, type CutinPlayer, type CutinSample, type PlaybackMode, type Rgb } from '../../shared/cutin/cutinCore';
 import { PLACEHOLDER_CUTIN_IMAGE_KEY, PLACEHOLDER_CUTIN_TEXT, computeSafeInsets, layoutCutinText } from '../../shared/cutin/cutinSupport';
+import { burstGlowLayers, lightenChannel } from '../../shared/cutin/cutinBurstGlow';
 
 const { ccclass } = _decorator;
 
@@ -108,9 +109,29 @@ function makeSolid(name: string, layer: number, width: number, height: number, a
     if (next === key) return;
     key = next;
     g.clear();
+    if (shape === 'circle') {
+      // 爆光：多層柔光＋衝擊波環（PROG-2-9419），不再是硬邊平塗實心圓
+      for (const layer of burstGlowLayers(Math.min(width, height) / 2)) {
+        const c = new Color(
+          lightenChannel(color.r, layer.lighten),
+          lightenChannel(color.g, layer.lighten),
+          lightenChannel(color.b, layer.lighten),
+          Math.round(layer.alpha * 255),
+        );
+        g.circle(0, 0, layer.radius);
+        if (layer.kind === 'ring') {
+          g.lineWidth = layer.lineWidth ?? 1;
+          g.strokeColor = c;
+          g.stroke();
+        } else {
+          g.fillColor = c;
+          g.fill();
+        }
+      }
+      return;
+    }
     g.fillColor = new Color(color.r, color.g, color.b, 255);
-    if (shape === 'circle') g.circle(0, 0, Math.min(width, height) / 2);
-    else g.rect(-width / 2, -height * anchorY, width, height);
+    g.rect(-width / 2, -height * anchorY, width, height);
     g.fill();
   };
   paint(new Color(255, 255, 255, 255));
