@@ -6744,8 +6744,8 @@
         "activeVersion": "0002"
       },
       "smallAvatar": {
-        "activeVersion": "0003",
-        "status": "review-pending",
+        "activeVersion": "0004",
+        "status": "integrated",
         "history": [
           {
             "version": "0001",
@@ -6768,21 +6768,50 @@
             "sourceAvatarVersion": "0002",
             "sourceAvatarFile": "avatars/gao_gan__高幹__avatar_0002.png",
             "method": "crop-only; uniform resize; no redraw",
-            "cropBox": { "x": 58.33, "y": 12.04, "width": 165.33, "height": 165.33 },
+            "cropBox": {
+              "x": 58.33,
+              "y": 12.04,
+              "width": 165.33,
+              "height": 165.33
+            },
             "qc": "頭部75%、臉框中線50%、完整保留平頂帽與兩側飾件；肩部僅作最後考量。與六張指定基準及現存王元姬0002同尺寸比較，頭臉比例接近。",
             "createdAt": "2026-11-20"
           },
           {
             "version": "0003",
             "file": "small_avatars/gao_gan__高幹__small_avatar_0003.png",
-            "status": "review-pending",
+            "status": "superseded",
             "sha256": "9077d708e93cd5918e4994e764a88eea1f2d3615f887f43834f814986b6861a4",
             "canvas": "256x256 RGBA",
             "sourceAvatarVersion": "0002",
             "sourceAvatarFile": "avatars/gao_gan__高幹__avatar_0002.png",
             "method": "crop-only; uniform resize; no redraw",
-            "cropBox": { "x": 47.63, "y": 12.04, "width": 165.33, "height": 165.33 },
+            "cropBox": {
+              "x": 47.63,
+              "y": 12.04,
+              "width": 165.33,
+              "height": 165.33
+            },
             "qc": "YuNet臉框中點x=130.30；畫布臉框中線50%；頭高75%；完整保留平頂帽與兩側飾件。v2因臉框中線標記偏右而退役。",
+            "createdAt": "2026-11-20",
+            "note": "舊臉框量測造成偏移；由0004依正式來源重新量測後取代。"
+          },
+          {
+            "version": "0004",
+            "file": "small_avatars/gao_gan__高幹__small_avatar_0004.png",
+            "status": "integrated",
+            "sha256": "22a80bdc35b16651fa8762e95d627bf0b22edc1e63d00a95e1dfd6a3e83e21ca",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/gao_gan__高幹__avatar_0002.png",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "x": 46.57,
+              "y": 12.04,
+              "width": 165.33,
+              "height": 165.33
+            },
+            "qc": "正式來源重新測得臉框[99.12,55.48,159.35,128.83]，臉框中心與畫布中心線差0.5px；頭高75%，完整保留平頂帽與頭部輪廓；250px目視核對通過。",
             "createdAt": "2026-11-20"
           }
         ]
