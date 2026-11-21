@@ -4118,7 +4118,7 @@
         "activeVersion": "0002"
       }
     },
-    {
+{
       "uid": "liu-zhang",
       "name": "劉璋",
       "standing": {
@@ -4142,6 +4142,30 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/liu_zhang__劉璋__small_avatar_0001.png",
+            "status": "integrated",
+            "sha256": "03e9255bd5809bfa3d56dc58f9d2bf524d9889ffdf7a373c5176f60281c63e0d",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/liu_zhang__劉璋__avatar_0002.png",
+            "method": "crop-only; uniform resize; no rotation or redraw",
+            "cropBox": {
+              "x": 26.88,
+              "y": 19.02,
+              "width": 196.25,
+              "height": 196.25
+            },
+            "qc": "顱部至下巴頭高80%；臉框中心線與畫布中線差0.5px；完整保留方帽、髮型與臉部；左右肩線錨點均可見。頭部尺寸與核可基準250px並排檢查通過；臉高40.3%達最低比例，低於50%建議目標。只裁切與等比例縮放，未旋轉、修臉或重畫。",
+            "createdAt": "2026-11-21"
+          }
+        ]
       }
     },
     {
