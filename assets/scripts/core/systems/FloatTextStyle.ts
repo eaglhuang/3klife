@@ -85,8 +85,11 @@ export const FLOAT_TEXT_STYLES: Readonly<Record<FloatTextType, FloatTextStyle>> 
     heal: { color: { r: 190, g: 255, b: 170, a: 255 }, fontSize: 48, isBold: true, durationMs: 1000, risePixels: 85,
         startScale: 0.7, peakScale: 1.2, popInSec: 0.07, settleSec: 0.10, maxConcurrent: 10, randomOffsetX: 8,
         outlineColor: { r: 10, g: 70, b: 20, a: 255 }, outlineWidth: 3 },
-    status: { color: { r: 100, g: 220, b: 255, a: 255 }, fontSize: 30, isBold: false, durationMs: 1200, risePixels: 80,
-        ...legacyPop(1.0), maxConcurrent: 10, randomOffsetX: 20, outlineColor: OUTLINE_DARK, outlineWidth: 2 },
+    // 狀態（暈眩／定身／增減益，PROG-2-9435）：以前 30px 細字、無彈出，壓在部隊框上幾乎讀不到，
+    // 改成比一般傷害小一級的粗字、小幅彈出、深色粗描邊，停留拉長，玩家看得出自己的招讓誰中了什麼狀態
+    status: { color: { r: 100, g: 220, b: 255, a: 255 }, fontSize: 42, isBold: true, durationMs: 1500, risePixels: 85,
+        startScale: 0.7, peakScale: 1.25, popInSec: 0.07, settleSec: 0.10, maxConcurrent: 10, randomOffsetX: 20,
+        outlineColor: OUTLINE_DARK, outlineWidth: 3 },
     loot: { color: { r: 255, g: 215, b: 0, a: 255 }, fontSize: 32, isBold: true, durationMs: 1400, risePixels: 100,
         ...legacyPop(1.2), maxConcurrent: 10, randomOffsetX: 12, outlineColor: OUTLINE_DARK, outlineWidth: 2 },
     hint: { color: { r: 255, g: 255, b: 200, a: 150 }, fontSize: 22, isBold: false, durationMs: 2000, risePixels: 40,

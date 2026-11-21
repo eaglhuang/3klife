@@ -11496,6 +11496,53 @@
     },
     {
       "doc_id": "",
+      "id": "PROG-2-9435",
+      "title": "基礎戰鬥手感：奧義與狀態上身演出（分鏡音效、狀態字放大、受控縮一下、震波錯開）",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-21T13:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 11/21 手感審核前三名之 1、2、3 部分：放招暫代分鏡靜音、BuffApplied 飄字被分鏡蓋住、狀態字 30px 細字約 0.7 秒消失、增減益同一聲。新增 battle/shared/StatusApplyFeedback（極性、縮一下、震波延遲、同聲節流）；狀態上身排進戰鬥動畫佇列在分鏡後播；status 飄字 42px 粗體 1.5 秒彈出；暫代分鏡第一格帶 whoosh/roar，缺檔音效對到既有 clip。",
+      "related": [
+        "PROG-2-9352",
+        "PROG-2-1869"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8803 通過、tsc 0 錯、7456 張飛當陽怒吼前後連拍 | 變更: 狀態上身演出規則；分鏡音效替代；狀態飄字樣式 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
       "id": "PROG-2-9213",
       "title": "一年循環 MVP 切分（doc_spec_1182 第 12 章）與學府人源缺口方案（doc_spec_1179）",
       "owner": "ClaudeCode_sonnet-5-5",

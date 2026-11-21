@@ -19,6 +19,7 @@ import { setBattlePaused, setBattleTimeScale, setEnemyTurnPlayback } from './Bat
 import { UltCutinDirector } from './UltCutinDirector';
 import { isUltCutinPlaying } from '../../ui/core/UltCutinOverlay';
 import { statusEffectFloatText } from '../shared/StatusEffectLabel';
+import { StatusCueThrottle, statusMakesTargetFlinch, statusPolarityOf, statusWaveDelaySec } from '../shared/StatusApplyFeedback';
 import { salvageSummaryLines } from '../../core/systems/StageSalvageSettlement';
 import { DELEGATE_OFF_LINE, DELEGATE_UNAVAILABLE_LINE, delegateOnLine, FOOD_EMPTY_LINE } from '../../core/systems/SortieDeployScripts';
 import { wisdomMeterText, WISDOM_SURGE_LOG } from '../shared/WisdomMeter';
@@ -215,6 +216,8 @@ export class BattleUIBridge {
   private onBoardPlacement: ((screenX: number, screenY: number) => void) | null = null;
   /** 奧義漫畫分鏡 cut-in（Issue #2139）：一場戰鬥一個，「第二次施放走重播」以單場為界 */
   private readonly ultCutin = new UltCutinDirector();
+  /** 一招打到多個目標時，同一聲只播一次（PROG-2-9435） */
+  private readonly statusCueThrottle = new StatusCueThrottle();
   /** PROG-2-9410：放招時畫面中央的招式名橫幅（排隊／合併見 SkillBannerQueue） */
   /** 勝敗停頓計時與待開的結算窗（PROG-2-9427） */
   private _resultBeatTimer: ReturnType<typeof setTimeout> | null = null;
@@ -1316,12 +1319,30 @@ export class BattleUIBridge {
   }
 
   /** 其他元件要求的短提示（如大招充能未滿，PROG-2-1866）：交給同一套 Toast 佇列 */
+  /**
+   * 狀態上身（PROG-2-9435）：排進戰鬥動畫佇列，不再事件一到就飄字。
+   * 奧義的 BuffApplied 比漫畫分鏡早到，以前飄字整段被分鏡蓋住；排隊後會在分鏡與出招特效之後才播。
+   * 控制／減益：目標縮一下＋減益聲；增益：增益聲。多個目標依遠近錯開，像震波掃過去。
+   */
   private _onBuffApplied(data: { unitId: string; effect: string; turns: number }): void {
-    const unit = data ? this.ctx.ctrl?.state.units.get(data.unitId) : undefined;
-    if (!unit || unit.isDead()) return;
-    playBattleAudio(BATTLE_AUDIO_CUE.buffGained);
-    const text = statusEffectFloatText(data.effect);
-    if (text) this.ctx.unitRenderer?.playBuffConsumeValue(unit.lane, unit.depth, text);
+    if (!data) return;
+    const polarity = statusPolarityOf(data.effect);
+    this._enqueueCombatVisual(`status-apply:${data.unitId}:${data.effect}`, () => {
+      const unit = this.ctx.ctrl?.state.units.get(data.unitId);
+      if (!unit || unit.isDead()) return;
+      const delay = statusWaveDelaySec(polarity, unit.faction === Faction.Player, unit.depth);
+      const show = () => {
+        const live = this.ctx.ctrl?.state.units.get(data.unitId);
+        if (!live || live.isDead()) return;
+        const cue = polarity === 'buff' ? BATTLE_AUDIO_CUE.buffGained : BATTLE_AUDIO_CUE.debuffGained;
+        if (this.statusCueThrottle.shouldPlay(cue, Date.now())) playBattleAudio(cue);
+        if (statusMakesTargetFlinch(polarity)) this.ctx.unitRenderer?.playHitAnimation(live.id, null);
+        const text = statusEffectFloatText(data.effect);
+        if (text) this.ctx.unitRenderer?.playBuffConsumeValue(live.lane, live.depth, text);
+      };
+      if (delay > 0) this.scene.scheduleOnce(show, delay);
+      else show();
+    });
   }
 
   private _onFortressDamaged(data: { faction: Faction; hp: number }): void {
