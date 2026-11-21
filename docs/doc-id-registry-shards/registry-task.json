@@ -16174,5 +16174,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9461.md",
     "title": "[PROG-2-9461] GCH-R2 完整機率表",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2714",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9481.md",
+    "title": "[PROG-2-9481] 基礎戰鬥手感：所有音效走同一個節流閘門",
+    "category": "task"
   }
 ]

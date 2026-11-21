@@ -11781,6 +11781,54 @@
     },
     {
       "doc_id": "",
+      "id": "PROG-2-9481",
+      "title": "基礎戰鬥手感：所有音效走同一個節流閘門",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-21T15:10:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 11/21 核准：特效、奧義演出、動作序列直接呼叫 audio.playSfx 不經 9439 節流。AudioSystem 新增統一節流閘門（playSfx／playSfxWithCooldown 一律先問閘門），戰場裝上共用 SfxThrottle；防回歸掃描禁止 AudioSystem 以外直接 playOneShot（基準 0）。",
+      "related": [
+        "PROG-2-9439"
+      ],
+      "depends": [
+        "PROG-2-9439"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8837 通過、tsc 0 錯、7456 底層計數 footstep 68→24、特效 3 聲 boom→1 | 變更: 統一音效節流閘門＋防回歸 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
       "id": "PROG-2-9460",
       "title": "GCH-R1 獎勵引擎補軟保底",
       "owner": "claude-code-opus-5-5",

@@ -114,12 +114,39 @@ export function playBattleAudio(cue: BattleAudioCue, volume = 1.0): void {
     return;
   }
 
-  // PROG-2-9439：同檔短時間合併＋每秒上限，避免三隊腳步同一毫秒疊播
-  ensureSfxThrottleConfig();
-  if (!battleSfxThrottle.allow(clipName, nowMs())) return;
-
+  // PROG-2-9439／9481：節流改在 AudioSystem 的統一閘門做，這裡只確保閘門已裝上，不再自己判斷（避免算兩次）
   // 音效系統未就緒或缺檔都靜音略過，不可丟例外（PROG-2-9357）
-  try { services().audio.playSfx(clipName, volume); } catch { /* 靜音 */ }
+  try {
+    installBattleSfxGate();
+    services().audio.playSfx(clipName, volume);
+  } catch { /* 靜音 */ }
+}
+
+/**
+ * 戰場統一音效閘門（PROG-2-9481）：特效、奧義演出、動作序列、戰鬥 cue 全部從 AudioSystem.playSfx 出去，
+ * 都經過這個閘門，沒有旁路。
+ */
+export function battleSfxGate(clip: string): boolean {
+  ensureSfxThrottleConfig();
+  return battleSfxThrottle.allow(clip, nowMs());
+}
+
+/** 戰場開始時裝上閘門；重複呼叫不會重裝。音效系統未就緒就略過。 */
+export function installBattleSfxGate(): void {
+  try {
+    const audio = services().audio;
+    if (typeof audio?.setSfxGate !== 'function') return;
+    if (audio.getSfxGate() !== battleSfxGate) audio.setSfxGate(battleSfxGate);
+  } catch { /* 音效系統未就緒 */ }
+}
+
+/** 離開戰場時拆掉閘門並清空計數，其他場景回到內建 50ms 防重複。 */
+export function uninstallBattleSfxGate(): void {
+  try {
+    const audio = services().audio;
+    if (typeof audio?.getSfxGate === 'function' && audio.getSfxGate() === battleSfxGate) audio.setSfxGate(null);
+  } catch { /* 音效系統未就緒 */ }
+  battleSfxThrottle.reset();
 }
 
 /** 戰鬥音效節流（PROG-2-9439）；數值在 data/battle-audio.json，讀到之前用預設值。 */
