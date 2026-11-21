@@ -16222,5 +16222,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9486.md",
     "title": "[PROG-2-9486] playtest --academy 第 15 步：任務牆比對略過大廳走動名牌",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2722",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9463.md",
+    "title": "[PROG-2-9463] GCH-R4 抽取遷移",
+    "category": "task"
   }
 ]
