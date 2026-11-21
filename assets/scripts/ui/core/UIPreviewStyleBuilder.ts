@@ -16,6 +16,7 @@
  */
 import { Node, Sprite, Label, Button, Font, Color, Vec2, UITransform, Widget, director, view } from 'cc';
 import { LabelCharAtlasBudget, isLetterSpacingVisible } from './LabelCharAtlasBudget';
+import { runWithDeferredLayout } from './LabelLayoutDeferral';
 import { RoundedRectBackground } from '../components/RoundedRectBackground';
 import { SolidBackground } from '../components/SolidBackground';
 import { GradientBackground, GradientColorStop } from '../components/GradientBackground';
@@ -555,7 +556,12 @@ function installCharAtlasGuard(): void {
             configurable: true,
             enumerable: accessor.enumerable,
             get(this: Label) { return get.call(this); },
-            set(this: Label, value: unknown) { set.call(this, value); reserveCharCache(this); },
+            set(this: Label, value: unknown) {
+                // font／cacheMode 的設定器會強制即時排版，固定外框的標籤改成留到幀末刷新一次（PROG-2-9801）
+                if (key === 'font' || key === 'cacheMode') runWithDeferredLayout(this, () => set.call(this, value));
+                else set.call(this, value);
+                reserveCharCache(this);
+            },
         });
     }
     // 估算只能近似引擎的列式擺放：畫完若字元四邊形少於應有字數，表示圖集真的滿了，改回一般模式並停止再開 CHAR
