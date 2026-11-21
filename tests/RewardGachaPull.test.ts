@@ -166,5 +166,20 @@ export function createRewardGachaPullSuite(): TestSuite {
         assert.equals(50, legacy[0].pity.max, '旗標關閉走舊的小保底間隔');
     });
 
+    suite.test('deferDuplicates：重複卡不轉 bundle、不加錢，原樣交回（給重複卡分流彈窗）；預設仍自動轉換', async () => {
+        const { wallet, port, owned, byId, bundle } = rig();
+        for (const g of byId.values()) if (g.gender === '女') owned.add(g.id);
+        const deferred = new RewardGachaPort(bundle.api, { support: 'POOL_HEROINE' } as Record<string, string>, { resolveGeneral: (id) => byId.get(id) ?? null }, () => 1_000, true);
+        const before = { ...wallet.bag };
+        const out = await deferred.pull({ poolId: 'support', count: 10, currency: 'gems', cost: 1600 });
+        assert.equals(10, out.duplicates.length, '十張都是已持有');
+        assert.equals(0, out.converted.length, '不自動轉換');
+        assert.equals(0, out.added.length);
+        assert.equals(before.gems - 1600, wallet.bag.gems, '只扣抽卡費，沒有重複卡返還');
+        assert.equals(before.bronze, wallet.bag.bronze);
+        const auto = await port.pull({ poolId: 'support-pool', count: 10, currency: 'gems', cost: 1600 });
+        assert.equals(10, auto.converted.length, '預設路徑照舊自動轉換');
+    });
+
     return suite;
 }

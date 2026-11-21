@@ -83,13 +83,13 @@
 | `doc_ui_0052` | docs/UCUF規劃書.md | Universal Composite UI Framework (UCUF) — 規劃書 |
 | `doc_ui_0090` | docs/遊戲規格文件/系統規格書/英靈虎符與特種軍隊視覺契約補遺_2026-04-04.md | 英靈虎符與特種軍隊視覺契約補遺 2026-04-04 |
 | `doc_ui_0091` | docs/UI品質檢核表.md | UI 品質檢核表（v0） |
-| `doc_ui_0092` | docs/i18n/general-detail-overflow-report-batch2.md | ui.general 武將詳情 — 寬度風險摘要（第 2 批，40 鍵） |
-| `doc_ui_0093` | docs/i18n/general-detail-overflow-report-batch3.md | ui.general 武將詳情 — 寬度風險摘要（第 3 批，40 鍵） |
-| `doc_ui_0094` | docs/i18n/general-detail-overflow-report-batch4.md | ui.general 武將詳情 — 寬度風險摘要（第 4 批，10 鍵，收尾） |
-| `doc_ui_0095` | docs/ui/UI-vibe-pipeline.md | UI Vibe Pipeline |
 | `doc_ui_0096` | docs/遊戲規格文件/系統規格書/血脈命鏡載入提示內容Schema檢核與驗證閘門規格書.md | 血脈命鏡載入提示內容Schema檢核與驗證閘門規格書 |
 | `doc_ui_0097` | docs/遊戲規格文件/系統規格書/血脈命鏡載入提示加權抽樣與無放回挑選演算法規格書.md | 血脈命鏡載入提示加權抽樣與無放回挑選演算法規格書 |
 | `doc_ui_0098` | docs/遊戲規格文件/系統規格書/血脈命鏡載入提示四池資料結構與持有狀態雙權重規格書.md | 血脈命鏡載入提示四池資料結構與持有狀態雙權重規格書 |
+| `doc_ui_0099` | docs/i18n/general-detail-overflow-report-batch2.md | ui.general 武將詳情 — 寬度風險摘要（第 2 批，40 鍵） |
+| `doc_ui_0100` | docs/i18n/general-detail-overflow-report-batch3.md | ui.general 武將詳情 — 寬度風險摘要（第 3 批，40 鍵） |
+| `doc_ui_0101` | docs/i18n/general-detail-overflow-report-batch4.md | ui.general 武將詳情 — 寬度風險摘要（第 4 批，10 鍵，收尾） |
+| `doc_ui_0102` | docs/ui/UI-vibe-pipeline.md | UI Vibe Pipeline |
 
 ## 美術非UI類 (`doc_art`)
 

@@ -49,7 +49,7 @@
 | `doc_spec_0039` | docs/遊戲規格文件/系統規格書/戰法場景規格書-shards/ac.md | 戰法場景規格書 — A–C |
 | `doc_spec_0040` | docs/遊戲規格文件/系統規格書/戰場部署系統.md | 戰場部署系統規格書 |
 | `doc_spec_0041` | docs/遊戲規格文件/系統規格書/戰場適性系統.md | 戰場適性系統規格書 |
-| `doc_spec_0042` | docs/遊戲規格文件/系統規格書/轉蛋系統.md | 轉蛋系統規格書 |
+| `doc_spec_0042` | docs/遊戲規格文件/系統規格書/轉蛋系統-shards/core.md | 轉蛋系統規格書 — A–E 系統描述、目的、商業、TA、功能清單 |
 | `doc_spec_0043` | docs/遊戲規格文件/系統規格書/轉職與宿命系統-shards/shard-a.md | 轉職與宿命系統規格（分片索引） — A–E 系統描述／目的／套路／TA／功能清單 |
 | `doc_spec_0044` | docs/遊戲規格文件/系統規格書/戰場格子系統.md | 戰場格子系統 |
 | `doc_spec_0045` | docs/遊戲規格文件/系統規格書/MVP遊戲驗證規格書.md | MVP 遊戲驗證規格書 |
@@ -250,48 +250,48 @@
 | `doc_spec_0242` | docs/遊戲規格文件/系統規格書/血統與家系-R5/索引總覽.md | 索引總覽 v4 |
 | `doc_spec_0243` | docs/遊戲規格文件/系統規格書/血統與家系-R5/historical_case_index/歷史案例對照索引.md | R4歷史案例與R5逐功能規格對照索引 |
 | `doc_spec_0244` | docs/遊戲規格文件/系統規格書/血統與家系-R5/R5_待補契約問題清單_v3.md | R5 待補契約問題清單 |
-| `doc_spec_0245` | docs/遊戲規格文件/正式規格矛盾審查-shards/s2.md | 正式規格矛盾審查 — 2. 仍待處理 |
-| `doc_spec_0246` | docs/遊戲規格文件/正式規格矛盾審查-shards/s3.md | 正式規格矛盾審查 — 3. 審查結論 |
-| `doc_spec_0247` | docs/遊戲規格文件/正式規格矛盾審查.md | 正式規格矛盾審查 |
-| `doc_spec_0248` | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/specs/01_權威與衝突帳.md | 血統與全玩法版本權威與衝突帳 |
-| `doc_spec_0249` | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/specs/02_全玩法接口矩陣.md | 全玩法接口矩陣與血統家系整合規格 |
-| `doc_spec_0250` | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/specs/03_38功能與待決補件追蹤.md | R5 38功能與待決補件追蹤 |
-| `doc_spec_0251` | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/specs/04_共同資料事件時鐘契約.md | 血統與全玩法共同資料事件時鐘契約 |
-| `doc_spec_0252` | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/specs/05_跨玩法驗收案例.md | R5 跨玩法驗收案例 |
-| `doc_spec_0253` | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/validation/內容審核記錄.md | 本輪內容審核記錄 |
-| `doc_spec_0254` | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/validation/版本漂移記錄.md | 成稿前最新分支差異 |
-| `doc_spec_0255` | docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統-shards/fj.md | 家族關係（史實相性）系統 — F–J |
-| `doc_spec_0256` | docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統.md | 家族關係（史實相性）系統 |
-| `doc_spec_0257` | docs/遊戲規格文件/系統規格書/培育系統-shards/shard-b.md | 培育系統規格（分片索引） — F 數值模型與公式（含 F-7 戰法槽位） |
-| `doc_spec_0258` | docs/遊戲規格文件/系統規格書/培育系統-shards/shard-c.md | 培育系統規格（分片索引） — G–J 劇本／字串／Data Schema／名詞 |
-| `doc_spec_0259` | docs/遊戲規格文件/系統規格書/培育系統-shards/shard-d.md | 培育系統規格（分片索引） — N 血脈補遺／MCQ 決策／雙層數值 |
-| `doc_spec_0260` | docs/遊戲規格文件/系統規格書/培育系統.md | 培育系統規格（分片索引） |
-| `doc_spec_0261` | docs/遊戲規格文件/系統規格書/教官系統（支援卡）-shards/shard-b.md | 教官系統（支援卡）規格（分片索引） — F 公式相關（支援卡 UI／TP／靈感機率／星等突破／爆發） |
-| `doc_spec_0262` | docs/遊戲規格文件/系統規格書/教官系統（支援卡）-shards/shard-c.md | 教官系統（支援卡）規格（分片索引） — G–J 劇本／字串／Data Schema／名詞 |
-| `doc_spec_0263` | docs/遊戲規格文件/系統規格書/教官系統（支援卡）-shards/shard-d.md | 教官系統（支援卡）規格（分片索引） — K–M 師友羈絆／好友借用／溢出轉化／MCQ 決策記錄 |
-| `doc_spec_0264` | docs/遊戲規格文件/系統規格書/教官系統（支援卡）.md | 教官系統（支援卡）規格（分片索引） |
-| `doc_spec_0265` | docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-b.md | 結緣系統（配種）規格（分片索引） — F–J 公式／劇本／字串／Data Schema／名詞 |
-| `doc_spec_0266` | docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-c.md | 結緣系統（配種）規格（分片索引） — K–L 近親繁殖範圍／精力值與生育限制 |
-| `doc_spec_0267` | docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-d.md | 結緣系統（配種）規格（分片索引） — M 血統模擬器／MCQ 決策記錄 |
-| `doc_spec_0268` | docs/遊戲規格文件/系統規格書/結緣系統（配種）.md | 結緣系統（配種）規格（分片索引） |
-| `doc_spec_0269` | docs/遊戲規格文件/系統規格書/戰法系統-shards/fh.md | 戰法系統 — F、H 公式與 UI 約束 |
-| `doc_spec_0270` | docs/遊戲規格文件/系統規格書/戰法系統-shards/g.md | 戰法系統 — G 戰法大清單 |
-| `doc_spec_0271` | docs/遊戲規格文件/系統規格書/戰法系統-shards/g5.md | 戰法系統 — G-5 天賦戰法初始庫 |
-| `doc_spec_0272` | docs/遊戲規格文件/系統規格書/戰法系統.md | 戰法系統 |
-| `doc_spec_0273` | docs/遊戲規格文件/系統規格書/戰法場景規格書-shards/df.md | 戰法場景規格書 — D–F |
-| `doc_spec_0274` | docs/遊戲規格文件/系統規格書/戰法場景規格書-shards/meta.md | 戰法場景規格書 — MCQ 與實作紀錄 |
-| `doc_spec_0275` | docs/遊戲規格文件/系統規格書/戰法場景規格書.md | 戰法場景規格書 |
-| `doc_spec_0276` | docs/遊戲規格文件/系統規格書/bloodline-symbol-slot-contract-v1.md | 血脈符號插槽契約 v1（bloodline-symbol-slot-contract-v1） |
-| `doc_spec_0277` | docs/遊戲規格文件/整併疑問書-shards/q01-13.md | 整併疑問書 — Q1–Q13 與已裁決紀錄 |
-| `doc_spec_0278` | docs/遊戲規格文件/整併疑問書-shards/q14-30.md | 整併疑問書 — Q14–Q30 |
-| `doc_spec_0279` | docs/遊戲規格文件/整併疑問書-shards/q14-30/q14-30-part-1.md | 整併疑問書 — Q14–Q30 |
-| `doc_spec_0280` | docs/遊戲規格文件/整併疑問書-shards/q14-30/q14-30-part-2.md | Q21. EP 評級門檻要以哪一套為正式標準？ C |
-| `doc_spec_0281` | docs/遊戲規格文件/整併疑問書-shards/q14-30/q14-30-part-3.md | Q27. 近親判定要以 `Bloodline_ID` 還是「共同祖先代數」作為正式權威？ C |
-| `doc_spec_0282` | docs/遊戲規格文件/整併疑問書-shards/q31-40.md | 整併疑問書 — Q31–Q40 |
-| `doc_spec_0283` | docs/遊戲規格文件/整併疑問書-shards/q41-52.md | 整併疑問書 — Q41–Q52 |
-| `doc_spec_0284` | docs/遊戲規格文件/整併疑問書-shards/q53-63.md | 整併疑問書 — Q53–Q63 |
-| `doc_spec_0285` | docs/遊戲規格文件/整併疑問書-shards/q64-74.md | 整併疑問書 — Q64–Q74 |
-| `doc_spec_0286` | docs/遊戲規格文件/整併疑問書-shards/q75-plus.md | 整併疑問書 — Q75 起 |
-| `doc_spec_0287` | docs/遊戲規格文件/整併疑問書.md | 整併疑問書 |
+| `doc_spec_0245` | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/specs/01_權威與衝突帳.md | 血統與全玩法版本權威與衝突帳 |
+| `doc_spec_0246` | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/specs/02_全玩法接口矩陣.md | 全玩法接口矩陣與血統家系整合規格 |
+| `doc_spec_0247` | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/specs/03_38功能與待決補件追蹤.md | R5 38功能與待決補件追蹤 |
+| `doc_spec_0248` | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/specs/04_共同資料事件時鐘契約.md | 血統與全玩法共同資料事件時鐘契約 |
+| `doc_spec_0249` | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/specs/05_跨玩法驗收案例.md | R5 跨玩法驗收案例 |
+| `doc_spec_0250` | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/validation/內容審核記錄.md | 本輪內容審核記錄 |
+| `doc_spec_0251` | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/validation/版本漂移記錄.md | 成稿前最新分支差異 |
 | `doc_spec_0288` | docs/遊戲規格文件/系統規格書/血統與家系-R5/C2_R5_遊戲性決策拍板與體驗強化增補規格書.md | C2 R5 遊戲性決策對照與體驗強化增補規格書 |
 | `doc_spec_0289` | docs/遊戲規格文件/系統規格書/血統與家系-R5/C2_R5_待補數據表與Catalog定案總表.md | C2 R5 待補數據表與 Catalog 候選分帳總表 |
+| `doc_spec_0290` | docs/遊戲規格文件/系統規格書/血統與家系-R5/C2_R5_本地AI回覆更正與證據分帳報告.md | 3KLife R5 本地 AI 回覆更正與證據分帳報告 |
+| `doc_spec_0291` | docs/遊戲規格文件/系統規格書/血統與家系-R5/all_gameplay_inventory_v1/全玩法覆蓋清單.md | 3KLife 全玩法第一階段：分母與未驗缺口 |
+| `doc_spec_0292` | docs/遊戲規格文件/系統規格書/血統與家系-R5/all_gameplay_inventory_v1/跨系統待驗邊界.md | 跨系統待驗邊界 |
+| `doc_spec_0293` | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/總覽與驗收界線.md | 全玩法研究第二批：招募、名冊、治理與精力 |
+| `doc_spec_0294` | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/recruitment-prophecy/名士與傭兵驗證報告.md | G10 名士預言 / G11 傭兵試用與永久招募 |
+| `doc_spec_0295` | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/rival-governance/他國治理外交與盛衰報告.md | G23 他國治理外交與盛衰 |
+| `doc_spec_0296` | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/roster-identity/名冊與重複流轉報告.md | 名冊與重複流轉報告 |
+| `doc_spec_0297` | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/vitality/REPORT.md | G07 精力、疲勞、恢復與加速卡：有界玩法驗證 |
+| `doc_spec_0298` | docs/遊戲規格文件/系統規格書/血統與家系-R5/nation_fall_save_v1/REPORT.md | 原生出征 → 零領地 → 滅亡 → 保存／讀回 |
+| `doc_spec_0299` | docs/遊戲規格文件/系統規格書/血統與家系-R5/nation_fall_save_v1/INDEPENDENT_REVIEW.md | Independent review |
+| `doc_spec_0300` | docs/遊戲規格文件/系統規格書/血統與家系-R5/nation_fall_save_v1/provenance/prior-birth-coverage/REPORT.md | 原出生 → 原20季增齡 → 開獎／宿命 → 育成入場 |
+| `doc_spec_0301` | docs/遊戲規格文件/系統規格書/血統與家系-R5/handoff_2983a19f_v1/REPORT.md | 3KLife 最新版血統與出生驗證 |
+| `doc_spec_0302` | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_CORE_學府培育總控與防SL確定性引擎規格書.md | 學府培育總控與防 SL 確定性引擎功能規格書 (Academy Core & Anti-SL Engine) |
+| `doc_spec_0303` | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_01_潁川書院_名士清談與策論牌組規格書.md | 潁川書院：名士清談與策論牌組功能規格書 (Yingchuan Academy: Debate & Essay Deck) |
+| `doc_spec_0304` | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_02_幽州演武_沙盤巡哨與煞氣突破規格書.md | 幽州演武：沙盤巡哨與煞氣突破功能規格書 (Youzhou Academy: Recon & Malice Surge) |
+| `doc_spec_0305` | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_03_江東督府_水文天時與陣型火攻規格書.md | 江東督府：水文天時與陣型火攻功能規格書 (Jiangdong Naval Academy: Hydrology & Tactics) |
+| `doc_spec_0306` | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_04_洛陽太學_五經注疏與九品官聲規格書.md | 洛陽太學：五經注疏與九品官聲功能規格書 (Luoyang Imperial Academy: Classics & Rank) |
+| `doc_spec_0307` | docs/遊戲規格文件/系統規格書/血統與家系-R5/academies/ACAD_05_隆中草廬_奇門生剋與機巧工造規格書.md | 隆中草廬：奇門生剋與機巧工造功能規格書 (Longzhong Academy: Eight Gates & Crafting) |
+| `doc_spec_0308` | docs/遊戲規格文件/系統規格書/MVP核心循環貫通與遊玩動線功能規格書.md | MVP 核心循環貫通與遊玩動線功能規格書 (Playable Core Loop Vertical Slice) |
+| `doc_spec_0309` | docs/遊戲規格文件/系統規格書/戰場策略相剋與即時將階晉升功能規格書.md | 戰場策略相剋與即時將階晉升功能規格書 (Battle Dynamic Counters & In-Combat Ascension) |
+| `doc_spec_0310` | docs/遊戲規格文件/系統規格書/世代功業傳承與退役教官轉化功能規格書.md | 世代功業傳承與退役教官轉化功能規格書 (Generational Legacy & Mentor Transformation) |
+| `doc_spec_0311` | docs/遊戲規格文件/系統規格書/宿敵血統交融與狼性突變功能規格書.md | 宿敵血統交融與狼性突變功能規格書 (Rival Bloodline Fusion & Lupine Mutation) |
+| `doc_spec_0312` | docs/遊戲規格文件/系統規格書/子嗣開獎天象與職能宿命分流規格書.md | 子嗣開獎天象與職能宿命分流規格書 (Child Awakening, Omens & Career Fate) |
+| `doc_spec_0313` | docs/遊戲規格文件/系統規格書/虎符套裝羈絆與戰場部署調配規格書.md | 虎符套裝羈絆與戰場部署調配規格書 (Tiger Tally Set Synergy & Deployment Presets) |
+| `doc_spec_0314` | docs/遊戲規格文件/系統規格書/戰場武將單挑對決與斬將功能規格書.md | 戰場武將單挑對決與斬將功能規格書 (Battlefield Duel & Execution System) |
+| `doc_spec_0315` | docs/遊戲規格文件/系統規格書/結緣生育輔助道具與幼年環境功能規格書.md | 結緣生育輔助道具與幼年環境功能規格書 (Breeding Auxiliary Items & Early Childhood Environment) |
+| `doc_spec_0316` | docs/遊戲規格文件/系統規格書/延壽仙丹時間加速與不老傳說功能規格書.md | 延壽仙丹時間加速與不老傳說功能規格書 (Longevity Elixir, Time Warp & Immortal Legend) |
+| `doc_spec_0317` | docs/遊戲規格文件/系統規格書/三國特殊兵種三十四營編制與專屬戰法規格書.md | 三國特殊兵種三十四營編制與專屬戰法規格書 |
+| `doc_spec_0318` | docs/遊戲規格文件/系統規格書/教官支援卡被動技能與碎片合成規格書.md | 教官支援卡被動技能與碎片合成規格書 |
+| `doc_spec_0319` | docs/遊戲規格文件/系統規格書/武將資料結構列舉驗證與掛載協議規格書.md | 武將資料結構列舉驗證與掛載協議規格書 |
+| `doc_spec_0320` | docs/遊戲規格文件/系統規格書/名將本體資料結構與多型轉型規格書.md | 名將本體資料結構與多型轉型規格書 |
+| `doc_spec_0321` | docs/遊戲規格文件/系統規格書/因子色彩職能標籤與卡片視覺契約規格書.md | 因子色彩職能標籤與卡片視覺契約規格書 |
+| `doc_spec_0322` | docs/遊戲規格文件/系統規格書/五階血脈奧義解鎖與名聲事蹟點亮規格書.md | 五階血脈奧義解鎖與名聲事蹟點亮規格書 |
+| `doc_spec_0323` | docs/遊戲規格文件/系統規格書/戰場相鄰合攻聯動與情誼共鳴規格書.md | 戰場相鄰合攻聯動與情誼共鳴規格書 |
+| `doc_spec_0324` | docs/遊戲規格文件/系統規格書/白色突變因子與極端天氣環境免疫規格書.md | 白色突變因子與極端天氣環境免疫規格書 |
+| `doc_spec_0325` | docs/遊戲規格文件/系統規格書/教官精力欄位統一與教學邊界防護規格書.md | 教官精力欄位統一與教學邊界防護規格書 |

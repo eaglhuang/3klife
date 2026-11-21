@@ -43,6 +43,8 @@ export const RESULT_CAUSE_DESCRIPTION: Readonly<Record<string, Partial<Record<Ba
     fortress: { victory: '我軍攻破敵方城寨，取得大勝！' },
     'time-up': { defeat: '時限已到仍未破敵，我軍鳴金撤兵。', victory: '時限已到，敵軍鳴金退兵，我方獲勝！' },
     camp: { victory: '我軍奪下敵營，敵軍不戰自潰！' },
+    // PROG-2-9703：極速決戰是戰力模擬，城寨與主將都還在，不能說「敵方突破防線」
+    auto: { victory: '極速決戰：敵軍潰散，我軍大獲全勝！', defeat: '極速決戰：我軍不支，只得收兵撤退。', stalemate: '極速決戰：日暮鳴金，雙方各自收兵。' },
 };
 
 /** 已有多語系的結束原因文案（PROG-2-9424）；找不到翻譯時用 RESULT_CAUSE_DESCRIPTION 的中文 */

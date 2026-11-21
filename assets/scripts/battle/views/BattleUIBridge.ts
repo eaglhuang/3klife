@@ -1065,7 +1065,8 @@ export class BattleUIBridge {
     if (outcome.result !== quick.result) this.appendLog('終局定勢：援軍及時趕到，我軍反敗為勝！');
     this._recordAutoBattleSnapshot(outcome.result, outcome.playerPower, outcome.enemyPower);
     state.battleEndAnnounced = true;
-    services().event.emit(EVENT_NAMES.BattleEnded, { result: outcome.result });
+    // cause 'auto'（PROG-2-9703）：結算說明改講極速決戰，不落到預設的「敵方突破防線」
+    services().event.emit(EVENT_NAMES.BattleEnded, { result: outcome.result, cause: 'auto' });
   }
 
   /** 設定面板確認撤退（PROG-2-1890）：判定我方戰敗，走既有 BattleEnded → 結算彈窗流程 */
