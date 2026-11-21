@@ -31,6 +31,7 @@ import { createSupportCardHandler, SUPPORT_CARD_EFFECT_KIND } from "../api/local
 import { createGeneralGrantHandler, type GeneralGrantHost } from "../gacha/RewardGachaPull";
 import type { DebugHost } from "../api/localserver/DebugCommands";
 import type { WalletAuthority } from "../api/localserver/WalletCommands";
+import { SilverRoutedWallet } from "../api/localserver/SilverWalletPort";
 import type { IApiClient } from "../../shared/api/IApiClient";
 import { LegacyService } from "../services/LegacyService";
 import { PlayerRosterService } from "../services/PlayerRosterService";
@@ -327,7 +328,12 @@ export class ServiceLoader {
     /** 場景在建好錢包服務後綁定權威錢包；可重複呼叫（換場景時換成新的服務） */
     public bindWalletAuthority(wallet: WalletAuthority | null): void {
         this.walletAuthority = wallet;
-        this.localApi?.setWallet(wallet);
+        this.localApi?.setWallet(this.routedWallet());
+    }
+
+    /** 轉蛋錢包加上家族銀兩幣別（silver 走家族帳本，其餘照舊；PROG-2-9591） */
+    private routedWallet(): WalletAuthority {
+        return new SilverRoutedWallet(this.walletAuthority, this.session.silverLedger);
     }
 
     /** 偵錯宿主（PROG-2-9192）：大廳場景只在網址帶 qa 參數時綁定；API 重建時沿用，沒綁定時 debug.fastForward 回 E107 */
@@ -343,7 +349,7 @@ export class ServiceLoader {
         const storageAdapter = this.createSaveStorageAdapter();
         // 共通 API（PROG-2-9201）：存檔寫入與讀取都走本機伺服器 adapter 的 save.* 命令；GameSession 不直接碰存檔後端
         this.localApi = createLocalApi(new PlayerSaveService(storageAdapter));
-        this.localApi.setWallet(this.walletAuthority);
+        this.localApi.setWallet(this.routedWallet());
         this.localApi.setDebugHost(this.debugHost);
         // 技能命令（PROG-2-9204）：持有與學習權威由 GameSession 提供，結業戰法經 skill.grant 寫入
         this.localApi.setSkillHost(this.session.skillHost);

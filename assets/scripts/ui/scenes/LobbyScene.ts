@@ -4808,6 +4808,7 @@ ${spent}`,
             grantGold: (amount) => { gacha.grantCurrency('gold', amount); },
             random: Math.random,
             leaderName: (id) => this._generals.find((g) => g.id === id)?.name,
+            onWarDeclared: (nationId) => { services().session.beginHomeWar(nationId); },
             recordBattle: (squad, nationId, battle) => { services().session.recordRivalCampaign(squad, nationId, battle); },
             respondProposal: (nationId, accept) => services().session.respondRivalProposal(nationId, accept, (amount) => { gacha.grantCurrency('gold', amount); }),
         });

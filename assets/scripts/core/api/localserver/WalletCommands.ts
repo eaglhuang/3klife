@@ -41,7 +41,7 @@ export function registerWalletCommands(adapter: LocalApiAdapter, getWallet: () =
         const result: WalletSpendResult = { currency, spent: amount, balance };
         return {
             result,
-            delta: [{ path: `/gachaWallet/${currency}`, op: 'replace', value: balance }],
+            delta: [{ path: currency === 'silver' ? '/family/silver' : `/gachaWallet/${currency}`, op: 'replace', value: balance }],
             events: [{ evt: 'inventory.changed', data: { currency, balance, reason: args.reason } }],
         };
     });
