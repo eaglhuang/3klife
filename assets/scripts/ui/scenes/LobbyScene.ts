@@ -81,6 +81,8 @@ import { isStageSeasonOpen, parseStageSeasonSchedule, seasonLockedHint, stageOpe
 import { buildBattlefieldReconForEncounter } from '../../core/systems/BattlefieldRecon';
 import { buildEnvScoutLines } from '../core/EnvScoutPresenter';
 import { lifespanCommandForBattleKind } from '../../core/systems/LifespanWiring';
+import { createSortieState } from '../../core/systems/SortieDeploy';
+import { resolveEnemyReserve } from '../../core/systems/QuickResolveGate';
 import type { UnveilingEvent } from '../../core/systems/Unveiling';
 import { type AgingEvent } from '../../core/systems/GeneralAging';
 import { ownedLivingGenerals } from '../core/OwnedRosterSource';
@@ -1464,6 +1466,7 @@ export class LobbyScene extends Component {
         });
         await popup.mount();
         this._quickSortiePopup = popup;
+        void services().loadQuickResolveConfig();
     }
 
     /** 出戰：新手教學戰或沒有關卡資料時照舊直接進戰場，其餘先彈出模式選擇 */
@@ -1481,6 +1484,8 @@ export class LobbyScene extends Component {
         const opened = popup.open({
             stageName: encounter.name,
             enemyName,
+            // 極速決戰可用條件（PROG-2-9709）：首次挑戰劇情關／守城／單挑／次數用完沒軍令狀 → 按鈕灰掉並顯示原因
+            gate: services().session.checkQuickResolve(encounter),
             command: () => { void this._enterBattle(); },
             quick: () => this._runQuickSortie(encounter),
         });
@@ -1499,11 +1504,20 @@ export class LobbyScene extends Component {
         if (!(await this._askScoutBeforeSortie())) return null;
         const session = services().session;
         const pgId = session.resolveLeadGeneralId(encounter.playerGeneralId);
+        // 先計次（免費次數或軍令狀）：偵查詢問按了返回的取消不計次；條件不符（換日、道具被用掉）直接不結算
+        if (!(await session.spendQuickResolveUse(encounter))) {
+            services().event.emit('SHOW_TOAST', { message: `極速決戰不可用：${session.checkQuickResolve(encounter).reason || '次數不足'}`, duration: 3 });
+            return null;
+        }
         const siege = lifespanCommandForBattleKind(encounter.battleKind);
         if (siege && pgId) await session.spendSiegeLifespan(pgId);
         const player = session.roster.find((g) => g.id === pgId) ?? this._generals.find((g) => g.id === pgId) ?? null;
         const enemy = this._generals.find((g) => g.id === encounter.enemyGeneralId) ?? null;
-        const resolution = resolveQuickSortie(player, enemy, session.firstBattleCleared, Math.random);
+        // 整支出征部隊：我方預備兵力＝出征帳本的兵源池（還沒上場全算預備）；敵方用設定的固定預備兵力（暫定）
+        const sortieInput = pgId ? session.getSortieInput(pgId) : null;
+        let playerReserve = 0;
+        try { playerReserve = sortieInput ? createSortieState(sortieInput).poolMax : 0; } catch { playerReserve = 0; }
+        const resolution = resolveQuickSortie(player, enemy, session.firstBattleCleared, Math.random, { playerTroops: playerReserve, enemyTroops: resolveEnemyReserve(encounter, 0) });
         const clock = session.gameTime;
         const kind = resolution.result === 'player-win' ? 'win' : resolution.result === 'enemy-win' ? 'lose' : 'draw';
         session.recordAutoResolveBattle({

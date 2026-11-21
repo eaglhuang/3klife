@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "source": "../第一年體驗走查.md",
+  "indexTitle": "新玩家第一年「不卡關」體驗走查與修正清單",
+  "indexPath": "docs/遊戲規格文件/企劃走查/第一年體驗走查.md",
+  "type": "markdown-h2",
+  "preambleShard": "shard-a",
+  "defaultShard": "shard-c",
+  "shards": [
+    {
+      "name": "shard-a",
+      "title": "一、走查背景與第一年四季節奏對帳（應做 vs 實做）",
+      "pattern": "^## 1[.]"
+    },
+    {
+      "name": "shard-b",
+      "title": "二、四大核心體驗痛點與卡點深度分析",
+      "pattern": "^## 2[.]"
+    },
+    {
+      "name": "shard-c",
+      "title": "三、企劃修正建議、規格對應與拆卡派工清單",
+      "pattern": "^## 3[.]"
+    }
+  ]
+}

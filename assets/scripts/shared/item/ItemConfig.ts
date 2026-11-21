@@ -121,6 +121,8 @@ export const DEFAULT_CONTAINER_ID = 'main';
 /** 入學令（沿用既有 ItemDef 的 id，存檔裡的舊數量原樣沿用） */
 export const ADMISSION_TOKEN_ID = 'ITEM_ADMISSION_TOKEN';
 export const ADMISSION_SEASON_RULE_ID = 'academy_admission_season';
+/** 軍令狀（極速決戰每日免費次數用完後每次耗 1 張，PROG-2-9709）；無持有上限，第一版只從任務／獎勵取得 */
+export const QUICK_RESOLVE_WRIT_ID = 'ITEM_QUICK_RESOLVE_WRIT';
 
 /** 設定檔未出現的物品（舊存檔裡的其他道具）視為無上限的消耗品，行為與改造前一致 */
 export function legacyItemDef(id: string): ItemDefV1 {
@@ -131,6 +133,7 @@ export const DEFAULT_ITEM_CONFIG: ItemConfigV1 = Object.freeze({
     schema: 'item-config.v1',
     items: [
         { id: ADMISSION_TOKEN_ID, kind: 'token', stack: { mode: 'stackable', max: 3 }, bind: 'none', overflow: { toCurrency: 'gold', amount: 100 } },
+        { id: QUICK_RESOLVE_WRIT_ID, kind: 'token', stack: { mode: 'stackable', max: null }, bind: 'none', overflow: null },
     ],
     holders: [
         {

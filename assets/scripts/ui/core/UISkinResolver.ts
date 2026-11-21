@@ -322,9 +322,14 @@ export class UISkinResolver {
     }
 }
 
+/** Parsed unicode-range cache (PROG-2-9800): the string has thousands of CJK ranges and was re-parsed on every style resolve. */
+const unicodeRangeCache = new Map<string, Array<[number, number]>>();
+
 /** "U+0020-007E,U+00A0" -> [[0x20,0x7e],[0xa0,0xa0]]; undefined when absent (covers everything). */
 function parseUnicodeRange(value: unknown): Array<[number, number]> | undefined {
     if (typeof value !== 'string' || !value.trim()) return undefined;
+    const cached = unicodeRangeCache.get(value);
+    if (cached) return cached;
     const ranges: Array<[number, number]> = [];
     for (const part of value.split(',')) {
         const match = part.trim().match(/^U\+([0-9a-f]+)(?:-([0-9a-f]+))?$/i);
@@ -332,5 +337,6 @@ function parseUnicodeRange(value: unknown): Array<[number, number]> | undefined 
         const start = parseInt(match[1], 16);
         ranges.push([start, match[2] ? parseInt(match[2], 16) : start]);
     }
+    unicodeRangeCache.set(value, ranges);
     return ranges;
 }
