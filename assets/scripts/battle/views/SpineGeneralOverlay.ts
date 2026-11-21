@@ -111,6 +111,8 @@ export class SpineUnitOverlay {
    */
   private readonly nodePool = new Map<string, Node[]>();
   private duel: { core: DuelPresentationCore; ids: [string, string]; resolve: (played: boolean) => void } | null = null;
+  /** 地面層容器（格子 buff 標記、揚塵）：每幀排序後固定送回最底，依序排在 index 0、1…（PROG-2-9708） */
+  private groundNodes: () => ReadonlyArray<Node | null> = () => [];
   constructor(private readonly getParent: () => Node | null, private readonly layer: () => number, private readonly onFootfall?: FootfallListener,
     private readonly onLanding?: LandingListener) { ensureHitFlashCurve(); }
 
@@ -194,7 +196,25 @@ export class SpineUnitOverlay {
       sorted.push({ node: entry.node, y: footY });
       entry.followers.forEach((node, i) => { if (node.isValid && node.active) sorted.push({ node, y: footY + (entry.config.squad?.[i]?.y ?? 0) }); });
     }
-    sorted.sort((a, b) => b.y - a.y).forEach((item, index) => item.node.setSiblingIndex(index));
+    // 只在小兵原本占的區段內重排（從目前最低的兄弟索引起排），不搶到 index 0：
+    // 壓在最底層的格子 buff 標記、落地揚塵等地面節點要留在小兵底下（PROG-2-9708）
+    let base = Number.POSITIVE_INFINITY;
+    for (const item of sorted) base = Math.min(base, item.node.getSiblingIndex());
+    if (!Number.isFinite(base)) base = 0;
+    sorted.sort((a, b) => b.y - a.y).forEach((item, index) => item.node.setSiblingIndex(base + index));
+    // 新單位建立時會插到 index 0，把地面層擠上來；這裡送回最底（已在定位就不動，平常不產生重排）
+    const parent = this.getParent();
+    let slot = 0;
+    for (const ground of this.groundNodes()) {
+      if (!ground?.isValid || ground.parent !== parent) continue;
+      if (ground.getSiblingIndex() !== slot) ground.setSiblingIndex(slot);
+      slot += 1;
+    }
+  }
+
+  /** 指定要永遠壓在單位底下的地面層容器（PROG-2-9708） */
+  public setGroundNodes(provider: () => ReadonlyArray<Node | null>): void {
+    this.groundNodes = provider;
   }
 
   /** attackStyle 只對 'attack' 有效：依兵種風格播分動作，缺動作時退回通用攻擊動作（PROG-2-9400）。 */

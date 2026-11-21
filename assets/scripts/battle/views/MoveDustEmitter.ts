@@ -115,6 +115,11 @@ export class MoveDustEmitter {
     if (this.container?.isValid && this.container.getSiblingIndex() !== 0) this.container.setSiblingIndex(0);
   }
 
+  /** 揚塵容器（地面層），給單位疊層排序時固定壓在單位底下（PROG-2-9708） */
+  public groundNode(): Node | null {
+    return this.container?.isValid ? this.container : null;
+  }
+
   /** 釋放所有節點與貼圖（場景銷毀時呼叫）。 */
   public destroy(): void {
     if (this.container?.isValid) this.container.destroy();

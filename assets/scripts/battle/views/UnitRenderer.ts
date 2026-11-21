@@ -297,6 +297,8 @@ export class UnitRenderer extends Component {
     this.ringMesh = utils.MeshUtils.createMesh(primitives.torus(0.40, 0.03, { radialSegments: 8, tubularSegments: 6 }));
     this.node.layer = Layers.Enum.DEFAULT;
     this.ensureRoots();
+    // 格子 buff 標記在最底、揚塵在其上，兩者都壓在小兵底下（PROG-2-9708）
+    this.spineUnits.setGroundNodes(() => [this.tileBuffMarkers.groundNode(), this.moveDust.groundNode()]);
     this.ensureSceneKeyLight();
     // 精力一變就即時刷新名牌能量環與細條（放招、回復、地形），不等整盤重繪（PROG-2-9432）
     this.unsubVitality = services().event.on(EVENT_NAMES.GeneralVitalityChanged, (d) => {
