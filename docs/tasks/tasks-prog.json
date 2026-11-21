@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 229,
+    "done": 234,
     "in_progress": 4,
-    "open": 85,
-    "total": 318
+    "open": 86,
+    "total": 324
   },
   "tasks": [
     {
@@ -14021,6 +14021,50 @@
       "acceptance": [],
       "deliverables": [],
       "notes": "2026-11-21 | 狀態: done | 驗證: 前後對照圖與步兵紅並排目視，臉與眼睛未變色、alpha 位元組一致、尺寸 512x512 不變 | 變更: soldier_bow_red.png 圖集金屬換銀（腳本 recolor_silver_armor.py）；Spine 武將與兵種美術在 .gitignore（assets/resources/spine/soldiers/）不進公開倉庫，故成品 PNG 不在本 PR，需複製進 spine-trial 並更新遊戲內本機副本 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2766",
+      "id": "PROG-2-9710",
+      "title": "預覽直進戰場先載語系字串（奧義鈕不再顯示鍵名）",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-22 | 狀態: done | 驗證: 7456 預覽截圖奧義鈕顯示「奧義」 | 變更: LoadingScene 預覽戰場先載語系 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
