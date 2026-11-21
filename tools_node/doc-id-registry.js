@@ -6,6 +6,14 @@
  *   node tools_node/doc-id-registry.js --verify           # 驗證 registry 完整性
  *   node tools_node/doc-id-registry.js --reshard-current  # 依現有 registry 安全重建 shards，不重掃 repo
  *   node tools_node/doc-id-registry.js --assign <path>    # 為新文件分配 doc_id
+ *   node tools_node/doc-id-registry.js --renumber <path>  # 撞號時把該文件改配下一個空號
+ *   node tools_node/doc-id-registry.js --check-collisions [--base <ref>]
+ *                                                         # 檢查本變更是否與 base（預設 origin/master）撞號
+ *
+ * 取號規則（防多代理撞號）：
+ *   下一號 = max(本地 registry, origin/master registry, 本機所有 worktree 的有效預約) + 1。
+ *   --assign / --renumber 會先嘗試 fetch origin/master，並在 git common dir 記錄預約。
+ *   規則參數見 tools_node/lib/doc-id-allocation-policy.json。
  *
  * 輸出:
  *   docs/doc-id-registry.json            — machine-readable index stub
@@ -20,6 +28,7 @@ const cp = require('child_process');
 
 const registryStore = require('./lib/doc-id-registry-loader');
 const registryQueue = require('./lib/doc-id-registry-queue');
+const allocationGuard = require('./lib/doc-id-allocation-guard');
 const { createDocumentIndexAdapter } = require('./adapters/atm-3klife/document-index-adapter');
 
 const ROOT = path.resolve(__dirname, '..');
@@ -936,6 +945,86 @@ function verifyRegistry() {
   return errors.length === 0;
 }
 
+/**
+ * Adds base-ref and reserved ids as placeholders so the adapter's
+ * "max + 1" allocation stays above ids taken on other branches/worktrees.
+ * Placeholders carry an empty path, so they never match a real document.
+ */
+function registryWithAllocationFloor(registry, extraIds = []) {
+  const floor = allocationGuard.computeAllocationFloor(ROOT);
+  const allocationRegistry = { ...registry };
+  for (const id of [...floor.ids, ...extraIds]) {
+    if (!allocationRegistry[id]) {
+      allocationRegistry[id] = { path: '', title: '', category: '' };
+    }
+  }
+  if (!floor.baseRef) {
+    console.warn('⚠️  Base ref unavailable; allocating from local registry and reservations only. Run --check-collisions before opening a PR.');
+  }
+  return { allocationRegistry, floor };
+}
+
+async function renumberFile(filePath) {
+  const absPath = path.resolve(filePath);
+  if (!fs.existsSync(absPath)) {
+    console.error(`File not found: ${filePath}`);
+    process.exit(1);
+  }
+  const relPath = path.relative(ROOT, absPath).replace(/\\/g, '/');
+  const classified = parseCategoryToken(classify(relPath));
+
+  return registryQueue.runQueuedRegistryWrite({ action: 'renumber', path: relPath }, async () => {
+    const current = registryStore.loadDocIdRegistryRaw();
+    const registry = { ...current.registry };
+    const oldId = Object.keys(registry).find((id) => registry[id] && registry[id].path === relPath);
+    if (!oldId) {
+      console.error(`Not registered: ${relPath}. Use --assign instead.`);
+      process.exit(1);
+    }
+    const oldEntry = registry[oldId];
+    delete registry[oldId];
+
+    const { allocationRegistry } = registryWithAllocationFloor(registry, [oldId]);
+    const assignment = documentIndexAdapter.assignId(relPath, classified, allocationRegistry);
+    const newId = assignment.id;
+    registry[newId] = oldEntry;
+    writeRegistry(registry, {
+      generatedDate: new Date().toISOString().split('T')[0],
+      writeMd: false,
+    });
+    writeServerDocsReference(registry);
+    const injectResult = injectDocId(absPath, newId, false);
+    allocationGuard.reserveDocId(ROOT, { id: newId, path: relPath });
+
+    console.log(`✅ Renumbered: ${oldId} → ${newId}`);
+    console.log(`   Path:     ${relPath}`);
+    console.log(`   Inject:   ${injectResult}`);
+    console.log('   Update any references to the old doc_id in documents you changed.');
+    return newId;
+  });
+}
+
+function checkCollisionsCommand(baseArg) {
+  const baseRef = baseArg || allocationGuard.resolveBaseRef(ROOT);
+  if (!baseRef) {
+    console.error('❌ Base ref unavailable. Fetch origin/master or pass --base <ref>.');
+    process.exit(1);
+  }
+  const report = allocationGuard.checkCollisions(ROOT, baseRef);
+  if (report.ok) {
+    console.log(`✅ No new doc_id collisions against ${baseRef}.`);
+    return true;
+  }
+  console.error(`❌ ${report.errors.length} doc_id collision(s) against ${baseRef}:`);
+  report.errors.forEach((message) => console.error(`   ${message}`));
+  if (report.suggestions.length) {
+    console.error(`   Next free id(s): ${report.suggestions.join(', ')}`);
+  }
+  console.error('   Fix: node tools_node/doc-id-registry.js --renumber <path-of-your-new-doc>');
+  process.exitCode = 1;
+  return false;
+}
+
 async function assignFile(filePath) {
   const absPath = path.resolve(filePath);
   if (!fs.existsSync(absPath)) {
@@ -960,7 +1049,7 @@ async function assignFile(filePath) {
     const current = registryStore.loadDocIdRegistryRaw();
     const registry = { ...current.registry };
 
-    const assignment = documentIndexAdapter.assignId(relPath, classified, registry);
+    const assignment = documentIndexAdapter.assignId(relPath, classified, registryWithAllocationFloor(registry).allocationRegistry);
     if (assignment.reason === 'already-registered') {
       console.log(`Already registered: ${relPath} → ${assignment.id}`);
       const syncResult = injectDocId(absPath, assignment.id, false);
@@ -990,6 +1079,7 @@ async function assignFile(filePath) {
     writeServerDocsReference(registry);
 
     const injectResult = injectDocId(absPath, newId, false);
+    allocationGuard.reserveDocId(ROOT, { id: newId, path: relPath });
 
     console.log(`✅ Assigned: ${newId}`);
     console.log(`   Path:     ${relPath}`);
@@ -1130,6 +1220,21 @@ async function main() {
     return;
   }
 
+  if (args[0] === '--renumber') {
+    if (!args[1]) {
+      console.error('Usage: node tools_node/doc-id-registry.js --renumber <path>');
+      process.exit(1);
+    }
+    await renumberFile(args[1]);
+    return;
+  }
+
+  if (args[0] === '--check-collisions') {
+    const baseIndex = args.indexOf('--base');
+    checkCollisionsCommand(baseIndex >= 0 ? args[baseIndex + 1] : null);
+    return;
+  }
+
   await rebuildRegistryFromScan();
 }
 
@@ -1145,6 +1250,8 @@ module.exports = {
   buildRegistry,
   injectDocId,
   assignFile,
+  renumberFile,
+  checkCollisionsCommand,
   verifyRegistry,
   reshardCurrentRegistry,
   parseDocIdMeta,
