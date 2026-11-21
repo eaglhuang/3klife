@@ -11,18 +11,19 @@
  * 純邏輯，不 import cc。
  */
 import {
-    WALLET_CURRENCIES, type RewardGrantResult, type RewardPlanLine, type RewardPoolView,
+    WALLET_CURRENCIES, type RewardGrantResult, type RewardPlanLine,
 } from '../../../shared/api/ApiCommands';
 import { ApiError } from '../../../shared/api/ApiErrors';
 import type { ApiDeltaOp } from '../../../shared/api/ApiProtocol';
 import { type Condition } from '../../../shared/foundation/Condition';
 import { DeterministicRngSession, deriveRngSeed } from '../../../shared/foundation/DeterministicRng';
 import { weightedTotal } from '../../../shared/foundation/WeightedTable';
+import { pityViewsOf, poolViewOf } from '../../../shared/reward/RewardDisclosure';
 import {
     findBundle, findPool, type RewardBundleDef, type RewardConfigV1, type RewardEffectDef, type RewardPoolDef, type RewardPresentationDef,
 } from '../../../shared/reward/RewardConfig';
 import {
-    capLoss, emptyRewardMeta, planBundle, REWARD_GRANT_LIMIT, rollPool, scaleEffect, tierProbabilities,
+    capLoss, emptyRewardMeta, planBundle, REWARD_GRANT_LIMIT, rollPool, scaleEffect,
     type RewardMeta, type RewardPlanItem,
 } from '../../../shared/reward/RewardRules';
 import type { HandlerOutcome, LocalApiAdapter } from './LocalApiAdapter';
@@ -199,8 +200,11 @@ export function registerRewardCommands(adapter: LocalApiAdapter, getPorts: () =>
         return evaluate ? evaluate(pool.condition) : false;
     };
 
-    const pityView = (pool: RewardPoolDef, pity: Readonly<Record<string, number>>): RewardGrantResult['pity'] =>
-        pool.pity ? { counterKey: pool.pity.counterKey, count: pity[pool.pity.counterKey] ?? 0, hardAt: pool.pity.hardCount } : null;
+    /** 簡版（第一條階梯），保留給舊呼叫端；完整欄位看 pities */
+    const pityView = (pool: RewardPoolDef, pity: Readonly<Record<string, number>>): RewardGrantResult['pity'] => {
+        const first = pityViewsOf(pool, pity)[0];
+        return first ? { counterKey: first.counterKey, count: first.count, hardAt: first.hardAt } : null;
+    };
 
     const requireSourceAllowed = (allowed: readonly string[], source: { kind: string }): void => {
         if (allowed.length > 0 && allowed.indexOf(source.kind) < 0) throw new ApiError('REWARD_NO_TICKET', `來源 ${source.kind} 無權領取`);
@@ -307,13 +311,13 @@ export function registerRewardCommands(adapter: LocalApiAdapter, getPorts: () =>
         const grantId = `gr_${meta.seq + 1}`;
         const result: RewardGrantResult = {
             grantId, grantKey, kind: 'pool', refId: poolId, plan: settled.lines, settled: true, overflow: settled.overflow,
-            presentation: presentationOf(pool.presentation), pity: pityView(pool, rolled.pity), replayed: false,
+            presentation: presentationOf(pool.presentation), pity: pityView(pool, rolled.pity), pities: pityViewsOf(pool, rolled.pity), replayed: false,
         };
         commit(meta, grantKey, 'pool', poolId, result, { rng: session.snapshot(), pity: rolled.pity });
         const events = [
             ...settled.events,
             { evt: 'reward.granted', data: { grantId, kind: 'pool', refId: poolId, source, presentation: result.presentation } },
-            ...(pool.pity ? [{ evt: 'reward.pity.changed', data: { poolId, ...result.pity } }] : []),
+            ...(pool.pity.length > 0 ? [{ evt: 'reward.pity.changed', data: { poolId, ...result.pity } }] : []),
         ];
         return { result, delta: settled.delta, events };
     });
@@ -347,16 +351,14 @@ export function registerRewardCommands(adapter: LocalApiAdapter, getPorts: () =>
     adapter.register('reward.pools', () => {
         const ports = getPorts();
         const pity = ports.authority ? ports.authority.meta().pity : emptyRewardMeta().pity;
-        const pools: RewardPoolView[] = ports.config.pools.map((pool) => ({
-            poolId: pool.id, open: isPoolOpen(pool), tiers: tierProbabilities(pool), pity: pityView(pool, pity),
-        }));
-        return { result: { pools } };
+        return { result: { pools: ports.config.pools.map((pool) => poolViewOf(pool, isPoolOpen(pool), pity)) } };
     });
 
     adapter.register('reward.pity', (args) => {
         const poolId = requireText(args.poolId, 'poolId');
         const pool = findPool(getPorts().config, poolId);
         if (!pool) throw new ApiError('REWARD_POOL_NOT_FOUND', `找不到獎池 ${poolId}`);
-        return { result: { poolId, pity: pityView(pool, authorityOf().meta().pity) } };
+        const counters = authorityOf().meta().pity;
+        return { result: { poolId, pity: pityView(pool, counters), pities: pityViewsOf(pool, counters) } };
     });
 }

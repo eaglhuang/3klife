@@ -56,7 +56,7 @@ import { SpineUnitOverlay } from "./SpineGeneralOverlay";
 import { GeneralPortraitStandee, STANDEE_HEIGHT_PX, needsStandeeFallback } from "./GeneralPortraitStandee";
 import { generalSpineConfig, squadMemberCount, troopSpineConfigWithFallback } from '../shared/UnitPresentationConfig';
 import { DuelExchange } from '../shared/DuelPresentationCore';
-import { BATTLE_VISUAL_TIMING, buildHitShakeSteps, planHitFeedback, planMoveSegment } from "./BattlePresentationTiming";
+import { BATTLE_VISUAL_TIMING, buildHitShakeSteps, hitScaleNeighborDepth, planHitFeedback, planMoveSegment } from "./BattlePresentationTiming";
 import { BuffGainEffectPool } from "./effects/BuffGainEffectPool";
 import { statBonusTone, statWithBonusText, type StatBonusTone } from "../shared/StatBonusText";
 import {
@@ -73,7 +73,7 @@ import { unitValueFloatType } from "../shared/DamageFloatType";
 import { UnitStatusIconBar, StatusHaloPool, STATUS_ICON_SIZE } from "./UnitStatusIconBar";
 import { TileBuffMarkers } from "./TileBuffMarkers";
 import type { TileBuffBadge } from "../shared/TileBuffBadge";
-import { easePlateOffset, plateAvoidOffsetY, type LabelRect } from "../shared/GeneralPlateAvoidance";
+import { BADGE_HIT_PRIORITY_SEC, easePlateOffset, stackBadgeOffsets, type LabelRect, type StackBadgeEntry } from "../shared/GeneralPlateAvoidance";
 import { buildUnitStatusContext, computeUnitStatusIcons, gainedTones, newlyGainedKinds, type StatusIconKind } from "../shared/UnitStatusIcons";
 import { services } from "../../core/managers/ServiceLoader";
 import { FLOAT_MISS_TEXT, FloatTextType } from "../../core/systems/FloatTextStyle";
@@ -250,6 +250,10 @@ export class UnitRenderer extends Component {
   /** 部隊資訊框避開武將名牌的目前 Y 位移（PROG-2-9434），每幀平滑逼近目標 */
   private readonly plateAvoidOffsets = new Map<string, number>();
   private readonly plateRectsBuf: LabelRect[] = [];
+  /** 部隊框錯開（PROG-2-9440）：每幀重用的輸入陣列、各單位最後受擊時間（戰場時鐘） */
+  private readonly badgeEntriesBuf: StackBadgeEntry[] = [];
+  private readonly lastHitAt = new Map<string, number>();
+  private badgeClock = 0;
   private unsubVitality: (() => void) | null = null;
   /** 腳下光環節點池（PROG-2-9399），第一次需要時才建立 */
   private statusHalos: StatusHaloPool | null = null;
@@ -673,6 +677,7 @@ export class UnitRenderer extends Component {
    */
   public playHitAnimation(defenderId: string, _attackerId: string | null, opts?: { heavy?: boolean; lethal?: boolean }): void {
     this.spineUnits.play(defenderId, 'hit');
+    this.markBadgeHit(defenderId);
     const defenderView = this.unitViews.get(defenderId);
     const defenderNode = defenderView?.worldNode ?? null;
     const defenderUnit = this.findUnitById(defenderId);
@@ -709,7 +714,7 @@ export class UnitRenderer extends Component {
   private hitShakeAmplitudePx(lane: number, depth: number): number {
     let cellPx = 100;
     const a = this.getUnitWorldPosition(lane, depth);
-    const b = this.getUnitWorldPosition(lane, depth + 1);
+    const b = this.getUnitWorldPosition(lane, hitScaleNeighborDepth(depth, GAME_CONFIG.GRID_DEPTH));
     if (a && b) {
       // overlayPoint 回傳共用緩衝，必須先把第一點取出來再算第二點
       const pa = this.overlayPoint(a);
@@ -1591,27 +1596,57 @@ export class UnitRenderer extends Component {
       const halfH = (GENERAL_PLATE_HEIGHT * 2 + 10) / 2 * s;
       plates.push({ x: label.position.x + (right - left) / 2, y: label.position.y, halfW: (left + right) / 2, halfH });
     });
+    // PROG-2-9440：部隊框彼此也錯開；剛受擊的框先擺（留原位），其他框讓開
+    this.badgeClock += dt > 0 ? dt : 0;
+    const entries = this.badgeEntriesBuf;
+    entries.length = 0;
     this.unitViews.forEach((view, unitId) => {
       const label = view.labelNode;
-      const current = this.plateAvoidOffsets.get(unitId) ?? 0;
-      if (!label.active || plates.length === 0) {
-        if (current !== 0) this.plateAvoidOffsets.delete(unitId);
-        return;
-      }
+      if (!label.active) return;
       const tf = label.getComponent(UITransform);
       const s = label.scale.x;
       const p = label.position;
-      const badge: LabelRect = tf
-        ? { x: p.x, y: p.y, halfW: (tf.contentSize.width + 10) / 2 * s, halfH: tf.contentSize.height / 2 * s + 4 }
-        : { x: p.x, y: p.y, halfW: 63, halfH: 31 };
-      const next = easePlateOffset(current, plateAvoidOffsetY(badge, plates), dt);
+      const hitAt = this.lastHitAt.get(unitId);
+      entries.push({
+        id: unitId,
+        rect: tf
+          ? { x: p.x, y: p.y, halfW: (tf.contentSize.width + 10) / 2 * s, halfH: tf.contentSize.height / 2 * s + 4 }
+          : { x: p.x, y: p.y, halfW: 63, halfH: 31 },
+        priority: hitAt !== undefined && this.badgeClock - hitAt < BADGE_HIT_PRIORITY_SEC ? 1 : 0,
+      });
+    });
+    const targets = stackBadgeOffsets(entries, plates);
+    this.unitViews.forEach((view, unitId) => {
+      const label = view.labelNode;
+      const current = this.plateAvoidOffsets.get(unitId) ?? 0;
+      if (!label.active) {
+        if (current !== 0) this.plateAvoidOffsets.delete(unitId);
+        return;
+      }
+      const next = easePlateOffset(current, targets.get(unitId) ?? 0, dt);
       if (next === 0) { this.plateAvoidOffsets.delete(unitId); return; }
       this.plateAvoidOffsets.set(unitId, next);
+      const p = label.position;
       label.setPosition(p.x, p.y + next, p.z);
     });
     for (const unitId of this.plateAvoidOffsets.keys()) {
       if (!this.unitViews.has(unitId)) this.plateAvoidOffsets.delete(unitId);
     }
+    for (const unitId of this.lastHitAt.keys()) {
+      if (!this.unitViews.has(unitId)) this.lastHitAt.delete(unitId);
+    }
+  }
+
+  /** 受擊時記下時間並把框排到部隊框最上層（不蓋過傷害跳字等特效；PROG-2-9440） */
+  private markBadgeHit(unitId: string): void {
+    this.lastHitAt.set(unitId, this.badgeClock);
+    const label = this.unitViews.get(unitId)?.labelNode;
+    if (!label?.isValid || label.parent !== this.uiRoot) return;
+    let topUnitIndex = -1;
+    this.unitViews.forEach((view) => {
+      if (view.labelNode.parent === this.uiRoot) topUnitIndex = Math.max(topUnitIndex, view.labelNode.getSiblingIndex());
+    });
+    if (label.getSiblingIndex() < topUnitIndex) label.setSiblingIndex(topUnitIndex);
   }
 
   /** QA／測試：部隊框目前的避讓位移 */

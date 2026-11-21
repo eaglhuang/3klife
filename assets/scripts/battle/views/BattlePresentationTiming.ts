@@ -172,6 +172,14 @@ export function buildHitShakeSteps(amplitude: number, totalSec: number = BATTLE_
  * 在抖動的第 elapsedSec 秒時的水平位移（純函式，不配置物件，給逐幀更新的 Spine 疊層用）。
  * 與 buildHitShakeSteps 同一組關鍵點，各步之間線性內插；超出範圍回 0。
  */
+/**
+ * 量受擊格寬用的相鄰排（PROG-2-9482）：平常量往後一排；最後一排的下一排在棋盤外，
+ * 投影出來的距離約是正常的 4 倍（實測 398px 對 101px），抖動與後退跟著放大 4 倍，所以改量往內一排。
+ */
+export function hitScaleNeighborDepth(depth: number, gridDepth: number): number {
+  return depth + 1 < gridDepth ? depth + 1 : Math.max(0, depth - 1);
+}
+
 export function sampleHitShake(elapsedSec: number, amplitude: number, totalSec: number = BATTLE_VISUAL_TIMING.hitShakeSec): number {
   if (!(amplitude > 0) || !(elapsedSec > 0) || elapsedSec >= totalSec) return 0;
   const stepSec = totalSec / HIT_SHAKE_KEYS.length;

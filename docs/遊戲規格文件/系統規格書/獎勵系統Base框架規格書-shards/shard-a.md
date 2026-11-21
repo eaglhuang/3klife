@@ -8,7 +8,7 @@
 > 上層總綱：`共用框架總綱規格書.md (doc_spec_1182)`。本書是六套共用框架之一。
 > 相關框架：物品庫存 (doc_spec_1184，產出物入庫)、買賣商店 (doc_spec_1183)、任務 (doc_spec_1185，任務只負責結算勝敗，獎懲交本系統)、技能 (doc_spec_1187，習得戰法也是一種獎勵)、劇情（演出）(doc_spec_1188，給獎演出由演出系統播放)。
 > 伺服器 API 與網路原則見總綱第 5 章（本書第 11 章只列本框架端點與 schema，不重複原則）。
-> 任務卡：PROG-2-9200（文件）。狀態：草案，待使用者裁決第 10 節選擇題。
+> 任務卡：PROG-2-9200（文件）、PROG-2-9218（使用者 2026-11-21 裁決回寫：轉蛋改走獎勵框架、硬保底加軟保底、公開完整機率表）。狀態：Q1、Q5 已由使用者 11/21 裁決（見第 10 節），其餘由 PM 定案；轉蛋遷移方案見第 12 章。
 
 ## 1. 目的與範圍
 
@@ -28,7 +28,7 @@
 - **獎勵項（RewardEntry）**：一個效果，如「道具×2」「銅錢+300」「聲望+5」「習得戰法」「傷兵 2 季」。
 - **獎池（RewardPool）**：一組帶權重的獎勵項，可附保底與等階。
 - **等階（Tier）**：獎勵品質層級（如 N／R／SR／SSR，或成功四級 critical／success／fail／disaster），決定從哪個獎池抽。
-- **保底（Pity）**：累積計數器，到門檻必出指定等階；可有小保底與大保底（沿用轉蛋雙重保底）。
+- **保底（Pity）**：累積計數器，到門檻必出指定等階。**採硬保底（使用者 11/21 裁決 #10）**：到第 `hard.count` 抽機率 100%；接近門檻時機率漸升（軟保底 soft pity，從 `soft.startAt` 起），公式見第 12.3 節。一個獎池可有多條保底階梯（例：SR 以上 10 抽、SSR 90 抽）。
 - **給獎方案（GrantPlan）**：本次要給的完整內容（已抽定結果＋所選演出），先結算再演出，避免演出中斷造成帳目不一致。
 - **演出綁定（PresentationBinding）**：獎池或呼叫端指定的演出種類與參數，如 `chest`、`treasureMap`、`dice`、`wheel`、`treasureRoad`。
 - **效果帳本（EffectLedger）**：結算後的有序效果清單，宿主逐項套用；道具類走物品庫存 `apply`。
@@ -50,9 +50,13 @@
     { "id": "e4", "weight": 10, "tier": "SSR","effect": { "kind": "item", "itemId": "ITEM_VITALITY_PILL", "qty": 1 } }
   ],
   "pity": { "counterKey": "extreme.pity", "soft": null, "hard": { "count": 50, "guaranteeTier": "SSR" } },
+  "disclosure": { "public": false },
   "presentation": { "type": "chest", "args": { "skin": "wood" } }
 }
 ```
+
+- `pity` 可為單一物件或**陣列**（多條階梯，由高階往低階判定）；`soft` 為 null 表示無漸升，只有硬保底；`soft` 非 null 的欄位見第 12.3 節。
+- `disclosure.public=true` 的獎池（所有付費抽取類，含轉蛋全部卡池）必須經 `reward.pools` 公開完整機率表（第 12.4 節）；任務、里程碑等非抽取獎池可不公開。
 
 ### 3.2 固定獎與懲罰 `reward-bundle.v1`
 

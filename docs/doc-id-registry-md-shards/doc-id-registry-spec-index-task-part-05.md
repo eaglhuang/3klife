@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-11-20
+> 生成日期: 2026-11-21
 > 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 5/15 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -78,6 +78,8 @@
 | `doc_spec_1244` | docs/遊戲規格文件/系統規格書/家族子嗣與血統總規格書-shards/shard-c.md | 家族子嗣與血統總規格書（分片索引） — 10 共用框架對應、11 建議 JSON 欄位表、12 既有規格修訂清單、13 驗收、14 待決、15 實作卡切分 |
 | `doc_spec_1245` | docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-h.md | 學府修業畫面與接線設計（分片索引） — 13 學府新版規則：人源與子嗣節奏、入學加分、修業變化、失敗與結業影響（依 11/21 裁決） |
 | `doc_spec_1246` | docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-i.md | 學府修業畫面與接線設計（分片索引） — 14 教官就是武將（教官卡退場）、共用框架對應、建議 JSON、驗收、實作卡切分 |
+| `doc_spec_1247` | docs/遊戲規格文件/系統規格書/貨幣與資源總規格書.md | 貨幣與資源總規格書 |
+| `doc_spec_1248` | docs/遊戲規格文件/系統規格書/人員占用系統Base框架規格書.md | 人員占用系統Base框架規格書（分片索引） |
 
 ## 索引類 (`doc_index`)
 

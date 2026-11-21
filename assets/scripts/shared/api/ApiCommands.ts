@@ -210,15 +210,77 @@ export interface RewardGrantResult {
     overflow: Array<{ itemId: string; units: number; currency: string; amount: number }>;
     presentation: { type: string; args: Record<string, unknown>; skippable: boolean };
     pity: { counterKey: string; count: number; hardAt: number } | null;
+    /** 全部保底階梯（由高階往低階）；pity 是其中第一條的簡版，保留給舊呼叫端 */
+    pities?: RewardPityView[];
     /** 同 grantKey 重送回的是原結果 */
     replayed: boolean;
+}
+
+/** 一條保底階梯的進度與下一抽機率（規格 doc_spec_1186 §12.4）；count／counter 同值（已連續未出幾抽） */
+export interface RewardPityView {
+    tier: string;
+    counterKey: string;
+    counter: number;
+    count: number;
+    /** 軟保底起點（第幾抽起機率漸升）；null＝只有硬保底 */
+    softStartAt: number | null;
+    curveExp: number | null;
+    hardAt: number;
+    /** 距離硬保底還要幾抽（含下一抽）；下一抽就是硬保底時為 1 */
+    remaining: number;
+    zone: 'base' | 'soft' | 'hard';
+    /** 該階以上的基礎機率 */
+    baseRate: number;
+    /** 下一抽出該階以上的機率（含軟保底漸升；硬保底區為 1） */
+    nextPullRate: number;
+}
+
+export interface RewardPoolEntryView {
+    entryId: string;
+    nameKey: string | null;
+    /** 不計保底的機率（同等階各項相加等於該等階 baseRate） */
+    rate: number;
+    /** 下一抽的機率（計入保底漸升） */
+    effectiveRate: number;
+    isUp: boolean;
+    group: string | null;
+}
+
+export interface RewardPoolTierView {
+    tier: string;
+    /** 等於 baseRate，保留給舊呼叫端 */
+    probability: number;
+    baseRate: number;
+    /** 下一抽的等階機率（計入保底漸升） */
+    effectiveRate: number;
+    /** 逐項機率；disclosure.public=false 的獎池不列 */
+    entries: RewardPoolEntryView[];
+}
+
+export interface RewardPoolSlotView {
+    count: number;
+    tier: string | null;
+    group: string | null;
+    /** 該名額單次抽取時各項的機率 */
+    entries: Array<{ entryId: string; rate: number }>;
 }
 
 export interface RewardPoolView {
     poolId: string;
     open: boolean;
-    tiers: Array<{ tier: string; probability: number }>;
+    nameKey: string | null;
+    disclosureVersion: string | null;
+    /** 是否公開完整機率表（disclosure.public，預設 true）；false 時 tiers 不含逐項機率 */
+    public: boolean;
+    currency: string[];
+    tiers: RewardPoolTierView[];
+    /** 第一條保底階梯的簡版，保留給舊呼叫端 */
     pity: { counterKey: string; count: number; hardAt: number } | null;
+    pities: RewardPityView[];
+    /** draw.slots 固定名額（宿命池）；沒有名額時為空陣列 */
+    slots: RewardPoolSlotView[];
+    /** 適用規則代碼：pity.hard、pity.soft、up.share，加上設定檔自填的 rules */
+    rules: string[];
 }
 
 export interface RewardPoolsResult {
@@ -457,21 +519,25 @@ export interface OccupancyRecordResult {
     until: number | null;
 }
 
-/** occupancy.query：personId 省略＝全部（登記表加六處唯讀轉接器） */
+/** occupancy.query：personId 省略＝全部（登記表加六處唯讀轉接器）。帶 activity（須同時帶 personId）時另回該活動能否指派（PROG-2-9442） */
 export interface OccupancyQueryArgs {
     personId?: string;
+    /** 要檢查的活動名稱（occupancy-matrix.json 的 activities，例 sortie／gov／mercenary） */
+    activity?: string;
 }
 
 export interface OccupancyQueryResult {
     records: OccupancyRecordResult[];
     /** 有任何占用的人員 id（去重） */
     occupiedIds: string[];
+    /** 只有查詢帶 activity 時才有：該人現在能不能被指派該活動；被擋時附擋下的占用 */
+    assign?: { activity: string; allowed: boolean; blockedBy?: OccupancyRecordResult };
 }
 
-/** occupancy.acquire：只送意圖；kind 只能是 academy／mentorAssign，其餘由原系統管理（E333）。同一筆重送冪等 */
+/** occupancy.acquire：只送意圖；kind 只能是 academy／mentorAssign／nursing，其餘由原系統管理（E333）。同一筆重送冪等 */
 export interface OccupancyAcquireArgs {
     personId: string;
-    kind: 'academy' | 'mentorAssign';
+    kind: 'academy' | 'mentorAssign' | 'nursing';
     refId: string;
     since?: number;
     until?: number | null;
@@ -485,7 +551,7 @@ export interface OccupancyAcquireResult {
 
 export interface OccupancyReleaseArgs {
     personId: string;
-    kind: 'academy' | 'mentorAssign';
+    kind: 'academy' | 'mentorAssign' | 'nursing';
     refId: string;
 }
 

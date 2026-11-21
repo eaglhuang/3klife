@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 197,
-    "in_progress": 5,
-    "open": 85,
-    "total": 287
+    "done": 198,
+    "in_progress": 4,
+    "open": 87,
+    "total": 289
   },
   "tasks": [
     {
@@ -11685,6 +11685,295 @@
     },
     {
       "doc_id": "",
+      "id": "PROG-2-9439",
+      "title": "基礎戰鬥手感：音效疊音節流",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-21T13:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "11/21 手感複審：一回合 52～75 次腳步聲且同毫秒三份疊播。新增 SfxThrottle（同檔 60ms 合併、單檔與全體每秒上限、豁免清單），數值放 data/battle-audio.json，playBattleAudio 套用。",
+      "related": [
+        "PROG-2-9438",
+        "PROG-2-9400"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8820 通過、tsc 0 錯、7456 footstep 75→24、52→22，同毫秒疊播 0 | 變更: 音效疊音節流 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9440",
+      "title": "基礎戰鬥手感：部隊資訊框彼此錯開",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-21T13:40:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "11/21 手感複審：敵方三隊集中時頭頂資訊框疊成一團，看不出誰被打。stackBadgeOffsets 依優先序貪婪錯位（名牌與已擺好的框都是障礙物），剛受擊 1.5 秒的框留原位並排到部隊框最上層。",
+      "related": [
+        "PROG-2-9434",
+        "PROG-2-9439"
+      ],
+      "depends": [
+        "PROG-2-9434"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8826 通過、tsc 0 錯、7456 第二回合前後對照 | 變更: 部隊資訊框彼此錯開、受擊優先 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9481",
+      "title": "基礎戰鬥手感：所有音效走同一個節流閘門",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-21T15:10:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 11/21 核准：特效、奧義演出、動作序列直接呼叫 audio.playSfx 不經 9439 節流。AudioSystem 新增統一節流閘門（playSfx／playSfxWithCooldown 一律先問閘門），戰場裝上共用 SfxThrottle；防回歸掃描禁止 AudioSystem 以外直接 playOneShot（基準 0）。",
+      "related": [
+        "PROG-2-9439"
+      ],
+      "depends": [
+        "PROG-2-9439"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8837 通過、tsc 0 錯、7456 底層計數 footstep 68→24、特效 3 聲 boom→1 | 變更: 統一音效節流閘門＋防回歸 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9482",
+      "title": "基礎戰鬥手感：最後一排受擊抖動／後退放大 4 倍修正",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-21T16:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 11/21 第 4 項受擊慢動作逐格驗收發現：最後一排（depth 7）量受擊格寬用到棋盤外的 depth 8（398px 對 101px），抖動與後退放大約 4 倍、整隊被推出格子。hitScaleNeighborDepth 最後一排改量往內一排。",
+      "related": [
+        "PROG-2-9401",
+        "PROG-2-9412"
+      ],
+      "depends": [
+        "PROG-2-9412"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8870 通過、tsc 0 錯、7456 慢動作逐格位移峰值 53px→14px、回位 245ms 不變 | 變更: 受擊格寬基準修正 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9460",
+      "title": "GCH-R1 獎勵引擎補軟保底",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "2026-11-21T15:00:00+08:00",
+      "started_by_agent": "claude-code-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "轉蛋改走 RWD（11/21 裁決）：pity 陣列與 soft、tierGroups、draw.slots、不重複抽樣；公式見 doc_spec_1186 §12.3。",
+      "related": [
+        "PROG-2-9205"
+      ],
+      "depends": [
+        "PROG-2-9205"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0 錯、單元測試全過（含 RewardPity 11 項）、compute-gate standard | 變更: RewardConfig／RewardRules 補軟保底、多階梯、tierGroups、draw.slots、poolDistribution；舊單一 hard 設定結果不變 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9461",
+      "title": "GCH-R2 完整機率表",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "2026-11-21T16:00:00+08:00",
+      "started_by_agent": "claude-code-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "reward.pools 展開名冊輸出等階與逐角色機率、保底規則、下一抽機率；reward.pity 補欄位；機率與抽樣同一份資料。",
+      "related": [
+        "PROG-2-9460"
+      ],
+      "depends": [
+        "PROG-2-9460"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0 錯、單元測試全過（含 RewardDisclosure 9 項）、compute-gate standard | 變更: reward.pools 完整機率表、reward.pity／roll 補 pities | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
       "id": "PROG-2-9213",
       "title": "一年循環 MVP 切分（doc_spec_1182 第 12 章）與學府人源缺口方案（doc_spec_1179）",
       "owner": "ClaudeCode_sonnet-5-5",
@@ -12260,11 +12549,154 @@
     },
     {
       "doc_id": "",
+      "id": "PROG-2-9441",
+      "title": "家族資料模型與存檔欄位（F1：配偶 kind=spouse、義子與開局義子特例、家臣子嗣、分家標記、family-config.json）",
+      "owner": "ClaudeCode_sonnet-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "ClaudeCode_sonnet-5-5",
+      "started_at": "2026-11-21T14:00:00+08:00",
+      "started_by_agent": "ClaudeCode_sonnet-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "doc_spec_1241 第 15 章 家族資料模型與存檔欄位",
+      "related": [
+        "PROG-2-9224",
+        "PROG-2-9207"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0 錯；run-cli 8834 passed 0 failed；check-api-bypass 132（基準 132）；compute-gate standard 通過 | 變更: 家族資料模型（配偶／親生／義子含開局義子特例 Q-F1／家臣子嗣／分家標記）、family-config.json fail-fast 載入、存檔欄位 familyState、family-write 靜態規則（TC-FAM-09）、doc_spec_1241 Q-F1 改已決 | 阻塞: 無；nursingBlocks／nursingAllows 刻意不放 family-config（由 occupancy-matrix.json 管，PROG-2-9442）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9442",
+      "title": "OCC 擴充 nursing、mentorAssign 與互斥矩陣（F2；矩陣放設定 JSON）",
+      "owner": "ClaudeCode_sonnet-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "ClaudeCode_sonnet-5-5",
+      "started_at": "2026-11-21T15:30:00+08:00",
+      "started_by_agent": "ClaudeCode_sonnet-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "doc_spec_1241 第 15 章 OCC 擴充 nursing、mentorAssign 與互斥矩陣",
+      "related": [
+        "PROG-2-9224",
+        "PROG-2-9207"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0 錯；run-cli 全過；check-api-bypass 不增；compute-gate standard 通過 | 變更: OCC 新增 nursing 登記與 JSON 互斥矩陣、checkAssign 指派當下檢查、occupancy.query activity、契約測試（TC-FAM-02／03） | 阻塞: 無；待決：待產可否當太守／內政、哺乳可否做非遠派大廳任務（目前預設擋）；F4／F5 接線要改用 checkAssign，現有 isRegistered 過濾會排除哺乳母親",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9462",
+      "title": "GCH-R3 卡池 JSON 化",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "2026-11-21T17:00:00+08:00",
+      "started_by_agent": "claude-code-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "名將池、紅顏池、宿命池改為 reward-pool.v1 資料檔（gacha-reward-pools.json），名冊查詢展開與 UP 設定，12.3 軟保底數值寫進各池 JSON；引擎補 tierRates；只做資料與載入，不改 GachaApi.pull。",
+      "related": [
+        "PROG-2-9460",
+        "PROG-2-9461"
+      ],
+      "depends": [
+        "PROG-2-9461"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0 錯、單元測試全過（含 RewardRoster 8 項）、compute-gate standard | 變更: gacha-reward-pools.json 三池、RewardRoster 名冊查詢展開、引擎 tierRates | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
       "id": "PROG-2-9226",
       "title": "學府 qaAcademy 快進與共通 API 流程相容修正（9192 × 9215 合併後 playtest --academy 回歸）",
       "owner": "ClaudeCode_sonnet-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-21",
@@ -12274,7 +12706,7 @@
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
-      "description": "9192 與 9215 合併後 playtest --academy 只剩 14/18，qaAcademy 快進卡在第 1 回合；查根因並修正，快進仍走共通 API。",
+      "description": "save.write 落盤重入 API 佇列造成死結（入學後所有 API 命令卡住），改以 adapter.invoke 直呼並補回歸測試。",
       "related": [
         "PROG-2-9192",
         "PROG-2-9215"
@@ -12282,7 +12714,7 @@
       "depends": [],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-21 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0 錯、run-cli 全過、compute-gate standard | 變更: AcademyHostCommands、GameSession、AcademyApiRig、AcademyHostCommands.test | 阻塞: 第 15 步另卡",
       "brief": {
         "style": "classic",
         "label": "",

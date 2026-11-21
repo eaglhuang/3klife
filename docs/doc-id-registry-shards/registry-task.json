@@ -16135,6 +16135,66 @@
   },
   {
     "id": "doc_task_2707",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9218.md",
+    "title": "[PROG-2-9218] 11/21 裁決回寫：共用框架第 7 框架（人員占用）、轉蛋改走獎勵框架、金銀兩經濟、家業與託管",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2708",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9439.md",
+    "title": "[PROG-2-9439] 基礎戰鬥手感：音效疊音節流",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2709",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9440.md",
+    "title": "[PROG-2-9440] 基礎戰鬥手感：部隊資訊框彼此錯開",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2710",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9460.md",
+    "title": "[PROG-2-9460] GCH-R1 獎勵引擎補軟保底",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2711",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9441.md",
+    "title": "[PROG-2-9441] 家族資料模型與存檔欄位（F1：配偶 kind=spouse、義子與開局義子特例、家臣子嗣、分家標記、family-config.json）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2712",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9442.md",
+    "title": "[PROG-2-9442] OCC 擴充 nursing、mentorAssign 與互斥矩陣（F2；矩陣放設定 JSON）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2713",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9461.md",
+    "title": "[PROG-2-9461] GCH-R2 完整機率表",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2714",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9481.md",
+    "title": "[PROG-2-9481] 基礎戰鬥手感：所有音效走同一個節流閘門",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2715",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9482.md",
+    "title": "[PROG-2-9482] 基礎戰鬥手感：最後一排受擊抖動／後退放大 4 倍",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2716",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9462.md",
+    "title": "[PROG-2-9462] GCH-R3 卡池 JSON 化",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2717",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9226.md",
     "title": "[PROG-2-9226] 學府 qaAcademy 快進與共通 API 流程相容修正（9192 × 9215 合併後 playtest --academy 回歸）",
     "category": "task"
