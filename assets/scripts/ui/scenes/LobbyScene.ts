@@ -1579,6 +1579,8 @@ export class LobbyScene extends Component {
 
     /** 學府入學與修業畫面（PROG-2-9189）：入口在培育類別的「學府」 */
     private async _mountAcademyFlow(): Promise<void> {
+        // 任務／獎勵／劇情／物品定義表只在這支載入（原本只有開結緣畫面才載）；入學走 task.accept 要有 ACADEMY_36，否則回 E350。重複呼叫不會重載
+        await services().loadBloodlineRuleTables();
         const session = services().session;
         this._academyFlow = new AcademyFlowController<UIScreenPreviewHost>({
             mountEnrollHost: (bindings) => this._mountPreviewScreenHost('AcademyEnrollHost', 'academy-enroll-screen', bindings),
