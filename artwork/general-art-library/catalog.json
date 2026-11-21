@@ -4194,7 +4194,7 @@
         "activeVersion": "0002"
       }
     },
-    {
+{
       "uid": "han-sui",
       "name": "韓遂",
       "standing": {
@@ -4218,6 +4218,31 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/han_sui__韓遂__small_avatar_0001.png",
+            "status": "integrated",
+            "sha256": "6fabf504668eaf2bd1c11f2e2fece1f269f9603c9db9e9b2daaf629fa866d686",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/han_sui__韓遂__avatar_0002.png",
+            "sourceSha256": "879a4cc6e1fae5f4923b95a11b93d23865a0dba9c6caf11e24d21bc871fb024c",
+            "method": "crop-only; uniform resize; no rotation or redraw",
+            "cropBox": {
+              "x": 51.15,
+              "y": 15.85,
+              "width": 157.69,
+              "height": 157.69
+            },
+            "qc": "頭高82.4%；臉高52%、臉寬36.8%；臉框中心線與畫布中線差0.5px；完整保留頭巾、髮型與鬍鬚；左右肩面錨點可見。125px中心線預覽及250px核可基準並排檢查通過；自然三分之四側轉保留。只裁切與等比例縮放，未旋轉、修臉或重畫。",
+            "createdAt": "2026-11-21"
+          }
+        ]
       }
     },
     {
