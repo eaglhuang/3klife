@@ -440,7 +440,8 @@ async function main() {
             if (value) return value;
             await delay(300);
         }
-        throw new Error(`逾時 ${Math.round(timeoutMs / 1000)} 秒：${label}`);
+        // label 可給函式：失敗當下才取診斷字串（直接寫樣板字串會在等待「開始前」就取值，抓不到逾時當時的畫面）
+        throw new Error(`逾時 ${Math.round(timeoutMs / 1000)} 秒：${typeof label === 'function' ? await label() : label}`);
     }
 
     const scene = () => page.evaluate(() => window.__pt.sceneName());
@@ -477,6 +478,11 @@ async function main() {
     };
     /** 大廳底欄分類 → 子選單文字（BtnSub0..4 名稱相同，只能靠文字分辨）。回傳點到的文字或 null */
     const openSub = async (cat, textRe) => {
+        if (!(await clickButton('^' + cat + '$'))) return null;
+        await delay(1200);
+        const hit = await clickByText('^BtnSub', textRe);
+        if (hit) return hit;
+        // 底欄分類鈕是開關：上一步（例如太守府尚未解鎖時按了鎖著的子選單）留下展開的子選單時，這一下會把它收起來；再按一次重新展開
         if (!(await clickButton('^' + cat + '$'))) return null;
         await delay(1200);
         return clickByText('^BtnSub', textRe);
@@ -624,7 +630,7 @@ async function main() {
                     await delay(800);
                     return rec.detail;
                 }
-                const opened = await openSub('BtnCatDomestic', '太守府');
+                const opened = await openSub('BtnCatDomestic', '^太守府'); // 鎖著的項目文字開頭是「🔒」，不會被點到（太守府郡守官階才開放）
                 rec.detail.governorHallOpened = Boolean(opened);
                 if (opened) {
                     await delay(2500);
@@ -1143,7 +1149,7 @@ async function main() {
         await step('character-intro-tabs', async (rec) => {
             // 關掉轉蛋等面板回到大廳主畫面，再開武將名冊
             await backToLobbyBar();
-            await waitUntil(() => page.evaluate(() => window.__pt.hasButton('^BtnCatGenerals$')), 30000, `回大廳後沒有底欄按鈕（場景 ${await scene()}；節點 ${(await page.evaluate(() => window.__pt.dumpBtnLike())).join(', ')}）`);
+            await waitUntil(() => page.evaluate(() => window.__pt.hasButton('^BtnCatGenerals$')), 30000, async () => `回大廳後沒有底欄按鈕（場景 ${await scene()}；節點 ${(await page.evaluate(() => window.__pt.dumpBtnLike())).join(', ')}）`);
             rec.detail.rosterEntry = '底欄「武將」→「武將名冊」';
             if (!(await openSub('BtnCatGenerals', '武將名冊'))) throw new Error(`找不到「武將 → 武將名冊」入口（可按按鈕：${(await listButtons()).join(', ')}）`);
             await delay(2500);
@@ -1254,7 +1260,7 @@ async function main() {
             }
             await requireLobby();
             await backToLobbyBar();
-            await waitUntil(() => page.evaluate(() => window.__pt.hasButton('^BtnCatSortie$')), 30000, `回大廳後沒有底欄按鈕（場景 ${await scene()}；節點 ${(await page.evaluate(() => window.__pt.dumpBtnLike())).join(', ')}）`);
+            await waitUntil(() => page.evaluate(() => window.__pt.hasButton('^BtnCatSortie$')), 30000, async () => `回大廳後沒有底欄按鈕（場景 ${await scene()}；節點 ${(await page.evaluate(() => window.__pt.dumpBtnLike())).join(', ')}）`);
             if (!(await openSub('BtnCatSortie', '戰場'))) throw new Error(`大廳找不到「出征 → 戰場」入口（可按按鈕：${(await listButtons()).join(', ')}）`);
             await delay(2500);
             rec.detail.buttonsAfterOpen = await listButtons();
@@ -1586,7 +1592,7 @@ async function main() {
                     rec.detail.newButtons = btns.filter((b) => !prevButtons.has(b));
                     prevButtons = new Set(btns);
                     try {
-                        const opened = await openSub('BtnCatDomestic', '太守府');
+                        const opened = await openSub('BtnCatDomestic', '^太守府'); // 鎖著的項目文字開頭是「🔒」，不會被點到（太守府郡守官階才開放）
                         if (opened) {
                             await delay(2000);
                             rec.detail.governorTexts = (await rm.allTexts()).filter((t) => /人口|民心|黃金|糧|等級|紅利|成長/.test(t)).slice(0, 30);
@@ -1703,12 +1709,13 @@ async function main() {
                     await delay(2500);
                     rec.detail.buttons = await listButtons();
                     rec.detail.panelTexts = (await rm.allTexts()).slice(0, 40);
-                    rec.detail.enrollScreen = rec.detail.buttons.some((n) => /^(?:[Bb]tn)?AcEnrollConfirm$/.test(n));
+                    // 入學鈕（AcEnrollConfirm）在不能入學時（少年名將未滿 15 歲）是灰的、不算可按按鈕，所以改認入學畫面一定會有的返回鈕與書院選項
+                    rec.detail.enrollScreen = rec.detail.buttons.some((n) => /^(?:[Bb]tn)?(?:AcEnrollConfirm|AcEnrollBack)$/.test(n)) && rec.detail.buttons.some((n) => /^AcAcademy\d+$/.test(n));
                     await shot(rec, 'academy-enroll-open');
                     const closed = await clickButton('^(?:[Bb]tn)?AcEnrollBack$');
                     rec.detail.closed = Boolean(closed);
                     await delay(800);
-                    if (!rec.detail.enrollScreen) throw new Error(`學府入學畫面沒有出現（沒有 btnAcEnrollConfirm；畫面按鈕：${rec.detail.buttons.join('、') || '無'}）`);
+                    if (!rec.detail.enrollScreen) throw new Error(`學府入學畫面沒有出現（沒有返回鈕／書院選項；畫面按鈕：${rec.detail.buttons.join('、') || '無'}）`);
                     return rec.detail;
                 });
                 // 6. 推進一季；處理所有換季彈窗
@@ -1719,6 +1726,21 @@ async function main() {
                     const popupLog = [];
                     await rm.click({ ucuf: 'lobby-hall-screen.back' }, '右上「推進一季」');
                     const popups = await runSeasonPopups(rec, 'adv', reports, popupLog);
+                    // 第 1 年末換季會自動進「年終守城」戰場（PROG-2-9431）：打到結算回大廳再處理戰後彈窗；機器忙時戰場與彈窗會晚到，季別沒變就多清幾輪
+                    const clearYearEnd = async (tagSuffix) => {
+                        for (let b = 0; b < 2 && (await scene()) === 'BattleScene'; b++) {
+                            rec.detail.yearEndBattles = (rec.detail.yearEndBattles || 0) + 1;
+                            await driveBattle(rec, {}, Date.now());
+                            await delay(2000);
+                            popups.push(...await runSeasonPopups(rec, `adv${tagSuffix}b${b + 1}`, reports, popupLog).catch(() => []));
+                        }
+                    };
+                    await clearYearEnd('');
+                    for (let k = 0; k < 5 && cur.ordinal !== null && (await readSeason()).ordinal === cur.ordinal; k++) {
+                        await delay(3000);
+                        popups.push(...await runSeasonPopups(rec, `adv-r${k + 1}`, reports, popupLog).catch(() => []));
+                        await clearYearEnd(`-r${k + 1}`);
+                    }
                     rec.detail.popups = popups.map((p) => p.kind);
                     rec.detail.popupTexts = popupLog;
                     yq.popups = popups.map((p) => p.kind);
