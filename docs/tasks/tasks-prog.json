@@ -11685,6 +11685,55 @@
     },
     {
       "doc_id": "",
+      "id": "PROG-2-9440",
+      "title": "基礎戰鬥手感：部隊資訊框彼此錯開",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-21T13:40:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "11/21 手感複審：敵方三隊集中時頭頂資訊框疊成一團，看不出誰被打。stackBadgeOffsets 依優先序貪婪錯位（名牌與已擺好的框都是障礙物），剛受擊 1.5 秒的框留原位並排到部隊框最上層。",
+      "related": [
+        "PROG-2-9434",
+        "PROG-2-9439"
+      ],
+      "depends": [
+        "PROG-2-9434"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8826 通過、tsc 0 錯、7456 第二回合前後對照 | 變更: 部隊資訊框彼此錯開、受擊優先 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
       "id": "PROG-2-9213",
       "title": "一年循環 MVP 切分（doc_spec_1182 第 12 章）與學府人源缺口方案（doc_spec_1179）",
       "owner": "ClaudeCode_sonnet-5-5",

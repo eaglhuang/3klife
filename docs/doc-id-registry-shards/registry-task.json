@@ -16132,5 +16132,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9224.md",
     "title": "[PROG-2-9224] 家族、子嗣、配偶、血統、教官、學府規格改寫（依 11/21 裁決第 3、4、6、12、16～27 條）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2707",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9440.md",
+    "title": "[PROG-2-9440] 基礎戰鬥手感：部隊資訊框彼此錯開",
+    "category": "task"
   }
 ]
