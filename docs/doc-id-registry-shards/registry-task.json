@@ -16402,5 +16402,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9193.md",
     "title": "PROG-2-9193：G4 郡望宗脈常駐與高門求親",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2762",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9608.md",
+    "title": "任務卡：PROG-2-9608 Base 框架分片 doc_id 修正與索引健全",
+    "category": "task"
   }
 ]
