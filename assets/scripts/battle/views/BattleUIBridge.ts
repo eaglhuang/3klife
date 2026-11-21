@@ -19,6 +19,7 @@ import { setBattlePaused, setBattleTimeScale, setEnemyTurnPlayback } from './Bat
 import { UltCutinDirector } from './UltCutinDirector';
 import { isUltCutinPlaying } from '../../ui/core/UltCutinOverlay';
 import { statusEffectFloatText } from '../shared/StatusEffectLabel';
+import { BLOCK_FLOAT_TEXT, shieldHitFeedback, type DamageBlockReason } from '../shared/BlockFeedback';
 import { StatusCueThrottle, statusMakesTargetFlinch, statusPolarityOf, statusWaveDelaySec } from '../shared/StatusApplyFeedback';
 import { salvageSummaryLines } from '../../core/systems/StageSalvageSettlement';
 import { DELEGATE_OFF_LINE, DELEGATE_UNAVAILABLE_LINE, delegateOnLine, FOOD_EMPTY_LINE } from '../../core/systems/SortieDeployScripts';
@@ -337,6 +338,7 @@ export class BattleUIBridge {
       svc.event.on(EVENT_NAMES.UnitDeployed,            this._onUnitDeployed.bind(this)),
       svc.event.on(EVENT_NAMES.UnitDamaged,             this._onUnitDamaged.bind(this)),
       svc.event.on(EVENT_NAMES.UnitAttackMissed,        this._onUnitAttackMissed.bind(this)),
+      svc.event.on(EVENT_NAMES.UnitDamageBlocked,       this._onUnitDamageBlocked.bind(this)),
       svc.event.on(EVENT_NAMES.KinComboAttack,          this._onKinComboAttack.bind(this)),
       svc.event.on(EVENT_NAMES.RelationEventTriggered,  this._onRelationEventTriggered.bind(this)),
       svc.event.on(EVENT_NAMES.LastSpurtEntered,        this._onLastSpurtEntered.bind(this)),
@@ -604,10 +606,12 @@ export class BattleUIBridge {
     unitId: string; damage: number; hp: number;
     attackerId: string | null; attackerLane: number | null; attackerDepth: number | null;
     defenderLane: number | null; defenderDepth: number | null; attackerFaction: Faction | null;
-    damageSource?: string; isCrit?: boolean;
+    damageSource?: string; isCrit?: boolean; shieldAbsorbed?: number;
   }): void {
     const c = this.ctx;
     this._observeSpecialActionHit(data);
+    // PROG-2-9437：跳字只顯示真的扣掉的生命，護盾吸收的部分改飄「格擋」並播盾擊聲
+    const shieldFb = shieldHitFeedback(data.damage, data.shieldAbsorbed);
     const unit = c.ctrl?.state.units.get(data.unitId);
     this.performance.observeUnitDamaged(data.damage, data.attackerFaction, unit?.faction ?? null);
     if (unit) {
@@ -616,7 +620,8 @@ export class BattleUIBridge {
       const sourceLabel = battleDamageSourceLabel(data.damageSource);
       const suffix = sourceLabel ? `（${sourceLabel}）` : '';
       const critLabel = data.isCrit ? '《暴擊》' : '';
-      this.appendLog(`${side}${unit.name} ${critLabel}受到 ${data.damage} 傷害${suffix}，剩餘生命 ${Math.max(0, data.hp)}`);
+      const shieldNote = shieldFb.blocked ? `（護盾吸收 ${data.damage - shieldFb.hpLoss}）` : '';
+      this.appendLog(`${side}${unit.name} ${critLabel}受到 ${data.damage} 傷害${shieldNote}${suffix}，剩餘生命 ${Math.max(0, data.hp)}`);
       this._enqueueCombatVisual(`unit-damage:${data.unitId}`, async () => {
         UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] unit-damage start unit=${data.unitId}`);
         const isRiverBoundaryDamage = typeof data.damageSource === 'string' && data.damageSource.startsWith('river-current:');
@@ -632,17 +637,23 @@ export class BattleUIBridge {
         const attackAudioPromise = data.attackerId && attackerUnit && !isRiverBoundaryDamage
           ? this._scheduleBattleAudio(resolveBattleUnitAttackSfxKey(attackerUnit.type))
           : Promise.resolve();
-        const heavy = isHeavyHit(data.damage, unit.getEffectiveMaxHp(), data.isCrit ?? false);
+        const heavy = isHeavyHit(shieldFb.hpLoss, unit.getEffectiveMaxHp(), data.isCrit ?? false);
         const impactPromise = (async () => {
           if (impactSec > 0) await new Promise<void>(resolve => this.scene.scheduleOnce(() => resolve(), impactSec));
           const hitPromise = isRiverBoundaryDamage
             ? (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] boundary-spin unit=${data.unitId}`), c.unitRenderer?.playBoundaryDamageSpinAsync(data.unitId) ?? Promise.resolve())
             : (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] defender-hit unit=${data.unitId}`), c.unitRenderer?.playHitAnimationAsync(data.unitId, data.attackerId, { heavy: heavy, lethal: data.hp <= 0 }) ?? Promise.resolve());
 
-          const valuePromise = (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] damage-float unit=${data.unitId} hp=${data.hp}`), c.unitRenderer?.playValueChangeAsync(unit, data.damage, 'damage', data.isCrit ?? false, heavy) ?? Promise.resolve());
+          const valuePromise = shieldFb.hpLoss > 0
+            ? (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] damage-float unit=${data.unitId} hp=${data.hp}`), c.unitRenderer?.playValueChangeAsync(unit, shieldFb.hpLoss, 'damage', data.isCrit ?? false, heavy) ?? Promise.resolve())
+            : Promise.resolve();
 
           const hitLane = data.defenderLane ?? unit.lane;
           const hitDepth = data.defenderDepth ?? unit.depth;
+          if (shieldFb.blocked) {
+            playBattleAudio(BATTLE_AUDIO_CUE.shieldBlock);
+            c.unitRenderer?.playBuffConsumeValue(hitLane, hitDepth, BLOCK_FLOAT_TEXT.shield);
+          }
           const hitFeedbackPromise = this._scheduleBattleUnitHitFeedback(hitLane, hitDepth, data.damageSource, impactSec > 0 ? 0 : undefined);
           // 暴擊命中額外播 boom（與既有攻擊／受擊音效疊加）
           const critAudioPromise = data.isCrit
@@ -727,6 +738,31 @@ export class BattleUIBridge {
       playBattleAudio(BATTLE_AUDIO_CUE.unitDodge);
       playBattleAudio(resolveBattleUnitAttackSfxKey(attacker.type));
       await (c.unitRenderer?.playAttackAnimationAsync(data.attackerId, target.lane, target.depth) ?? Promise.resolve());
+    });
+  }
+
+  /** 傷害被整個擋下（PROG-2-9437）：攻擊方照樣出手，命中那一刻播盾擊聲、在目標頭上飄「無敵」／「免戰」 */
+  private _onUnitDamageBlocked(data?: { unitId: string; attackerId: string | null; damage: number; reason: DamageBlockReason }): void {
+    if (!data) return;
+    const c = this.ctx;
+    const target = c.ctrl?.state.units.get(data.unitId);
+    if (!target) return;
+    const attacker = data.attackerId ? c.ctrl?.state.units.get(data.attackerId) ?? null : null;
+    const side = target.faction === Faction.Player ? '我方' : '敵方';
+    this.appendLog(`${side}${target.name} ${BLOCK_FLOAT_TEXT[data.reason]}，擋下 ${data.damage} 傷害`);
+    this._enqueueCombatVisual(`unit-blocked:${data.unitId}`, async () => {
+      const impactSec = attacker ? ATTACK_IMPACT_SEC[attackStyleFor(attacker.type)] : 0;
+      const attackPromise = attacker
+        ? (playBattleAudio(resolveBattleUnitAttackSfxKey(attacker.type)), c.unitRenderer?.playAttackAnimationAsync(attacker.id, target.lane, target.depth) ?? Promise.resolve())
+        : Promise.resolve();
+      const impactPromise = (async () => {
+        if (impactSec > 0) await new Promise<void>(resolve => this.scene.scheduleOnce(() => resolve(), impactSec));
+        const live = c.ctrl?.state.units.get(data.unitId);
+        if (!live || live.isDead()) return;
+        playBattleAudio(BATTLE_AUDIO_CUE.shieldBlock);
+        c.unitRenderer?.playBuffConsumeValue(live.lane, live.depth, BLOCK_FLOAT_TEXT[data.reason]);
+      })();
+      await Promise.all([attackPromise, impactPromise]);
     });
   }
 

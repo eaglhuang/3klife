@@ -111,3 +111,4 @@
 | `doc_task_2701` | docs/agent-briefs/tasks/PROG/PROG-2-9435.md | [PROG-2-9435] 基礎戰鬥手感：奧義與狀態上身演出 |
 | `doc_task_2702` | docs/agent-briefs/tasks/PROG/PROG-2-9215.md | [PROG-2-9215] A0：學府存檔與推進改走共通 API（回補 9189，6a） |
 | `doc_task_2703` | docs/agent-briefs/tasks/PROG/PROG-2-9436.md | [PROG-2-9436] 基礎戰鬥手感：頭頂狀態圖示放大 |
+| `doc_task_2704` | docs/agent-briefs/tasks/PROG/PROG-2-9437.md | [PROG-2-9437] 基礎戰鬥手感：格擋回饋 |

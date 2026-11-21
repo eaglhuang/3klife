@@ -741,9 +741,9 @@ export class BattleCombatResolver {
   ): void {
     const svc = services();
     // 無敵（白馬銀槍·不滅，PM 裁定）：有無敵狀態的單位本次結算傷害歸零，不扣血、不發傷害事件
-    if (svc.buff.hasBuff(unit.id, StatusEffect.Invincible)) return;
+    if (svc.buff.hasBuff(unit.id, StatusEffect.Invincible)) { this.emitDamageBlocked(unit, damage, attackerFaction, options.attackerId, 'invincible', svc); return; }
     // 單挑敗逃的主將化身當回合不可被攻擊（PROG-2-9386）；自己人的效果不擋
-    if (attackerFaction !== unit.faction && this.isGeneralFleeImmune(unit.faction) && this.isGeneralUnit(unit.id)) return;
+    if (attackerFaction !== unit.faction && this.isGeneralFleeImmune(unit.faction) && this.isGeneralUnit(unit.id)) { this.emitDamageBlocked(unit, damage, attackerFaction, options.attackerId, 'flee-immune', svc); return; }
     // 代為承傷（白耳護主將 PROG-2-1529、惡來護友軍 PROG-2-1530）：改由相鄰護衛承受，護衛陣亡照常結算
     const guard = options.skipGuard ? null : tallyDamageGuardOf(unit, this.context.state.units.values(), () => this.isGeneralUnit(unit.id));
     if (guard) {
@@ -751,7 +751,10 @@ export class BattleCombatResolver {
       if (guard.isDead()) this.onUnitKilled(guard, null, svc);
       return;
     }
+    // 護盾吸收量（PROG-2-9437）：只給畫面決定跳字與格擋演出，不改結算
+    const shieldBefore = (unit as { shield?: number }).shield ?? 0;
     unit.takeDamage(damage);
+    const shieldAbsorbed = Math.max(0, shieldBefore - ((unit as { shield?: number }).shield ?? 0));
     if (damage > 0 && attackerFaction !== null && attackerFaction !== unit.faction) this.grantSp(attackerFaction, GAME_CONFIG.spPerDamagingHit, svc);
     svc.event.emit(EVENT_NAMES.UnitDamaged, {
       unitId: unit.id,
@@ -765,6 +768,7 @@ export class BattleCombatResolver {
       attackerFaction,
       damageSource: options.damageSource,
       isCrit: options.isCrit ?? false,
+      shieldAbsorbed,
     });
 
     if (!options.allowDamageLink) {
@@ -950,6 +954,18 @@ export class BattleCombatResolver {
       if (occ && !occ.isDead() && occ.faction !== unit.faction && !this.isHiddenFromAttacker(unit, occ)) return occ;
     }
     return null;
+  }
+
+  /**
+   * 傷害被整個擋下（PROG-2-9437）：以前直接略過、不發事件，攻擊方揮空也沒聲沒字。
+   * 只通知畫面，不扣血、不給 SP、不算進統計；自己人的效果與 0 傷害不發。
+   */
+  private emitDamageBlocked(
+    unit: TroopUnit, damage: number, attackerFaction: Faction | null, attackerId: string | null,
+    reason: 'invincible' | 'flee-immune', svc: ReturnType<typeof services>,
+  ): void {
+    if (damage <= 0 || attackerFaction === unit.faction) return;
+    svc.event.emit(EVENT_NAMES.UnitDamageBlocked, { unitId: unit.id, attackerId, attackerFaction, damage, reason });
   }
 
   /** faction 的主將本回合是否因單挑敗逃而不可被攻擊（PROG-2-9386） */
