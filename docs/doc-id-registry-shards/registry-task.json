@@ -16266,12 +16266,6 @@
     "category": "task"
   },
   {
-    "id": "doc_task_2740",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9250.md",
-    "title": "[PROG-2-9250] 武將私塾補習班系統規格書（下班開班、友誼推算與稀疏儲存、OCC 讓位規則、共用框架對應）",
-    "category": "task"
-  },
-  {
     "id": "doc_task_2729",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9701.md",
     "title": "[PROG-2-9701] 戰場可讀性：部隊框避讓含血條與狀態圖示、跳字置頂、敵軍行動中橫幅移出棋盤",
@@ -16326,9 +16320,27 @@
     "category": "task"
   },
   {
+    "id": "doc_task_2740",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9250.md",
+    "title": "[PROG-2-9250] 武將私塾補習班系統規格書（下班開班、友誼推算與稀疏儲存、OCC 讓位規則、共用框架對應）",
+    "category": "task"
+  },
+  {
     "id": "doc_task_2741",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9251.md",
+    "title": "[PROG-2-9251] 第一年經濟曲線審查：入學令溢出折金 5000 過大",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2742",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9466.md",
-    "title": "[PROG-2-9466] GCH-R4b 重複卡回既有分流彈窗（不自動轉換）",
+    "title": "PROG-2-9466",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2743",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9600.md",
+    "title": "[PROG-2-9600] 史境天下風雲榜與年終頒獎典禮系統規格書",
     "category": "task"
   }
 ]

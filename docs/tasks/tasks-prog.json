@@ -13590,6 +13590,40 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "id": "PROG-2-9600",
+      "title": "史境天下風雲榜與年終頒獎典禮系統規格書",
+      "type": "documentation",
+      "priority": "P1",
+      "phase": "M0",
+      "status": "done",
+      "owner": "antigravity",
+      "created": "2026-11-21",
+      "created_by_agent": "Claude",
+      "started_at": "2026-11-21T22:46:00+08:00",
+      "started_by_agent": "antigravity",
+      "completed_at": "2026-11-21T22:50:00+08:00",
+      "doc_id": "doc_task_2743",
+      "sensor_triggered_by": "",
+      "description": "整併使用者裁決與總 PM 共識，建立世界年度五大排行榜（純年度歸零、心智與血統白因子連動、AI 全真實沙盤前置）、四層可插拔獨立架構、每年年末頒獎典禮劇本（雙主持傳承、君王 3D 全息投影、大合照 DTO 背景與歷年史冊查詢）及 W1 拆卡清單。",
+      "related": [
+        "PROG-2-9231",
+        "PROG-2-9250",
+        "PROG-2-9224"
+      ],
+      "depends": [],
+      "acceptance": [
+        "doc-id-registry verify 通過",
+        "check-doc-shard-health 通過",
+        "compute-gate standard 通過"
+      ],
+      "deliverables": [
+        "docs/遊戲規格文件/系統規格書/史境天下風雲榜與年終頒獎典禮系統規格書.md",
+        "docs/遊戲規格文件/系統規格書/史境天下風雲榜與年終頒獎典禮系統規格書-shards/"
+      ],
+      "notes": "狀態: done。變更: 新增 doc_spec_1284～1287 史境天下風雲榜與年終頒獎典禮系統規格書（索引＋3 分片）；更新 cross-ref-specs 與 tasks-prog；同步 doc_spec_1283/doc_task_2740 索引。"
     }
-  ]
+  ],
+  "updated": "2026-11-21"
 }
