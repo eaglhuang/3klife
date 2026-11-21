@@ -16144,5 +16144,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9439.md",
     "title": "[PROG-2-9439] 基礎戰鬥手感：音效疊音節流",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2709",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9460.md",
+    "title": "[PROG-2-9460] GCH-R1 獎勵引擎補軟保底",
+    "category": "task"
   }
 ]

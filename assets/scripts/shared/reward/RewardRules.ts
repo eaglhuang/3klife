@@ -8,7 +8,9 @@
  */
 import { weightedPick, weightedTotal, type WeightedEntry } from '../foundation/WeightedTable';
 import type { RandomSource, RngSessionState } from '../foundation/DeterministicRng';
-import type { RewardAmount, RewardBundleDef, RewardEffectDef, RewardEntryDef, RewardPoolDef } from './RewardConfig';
+import type {
+    RewardAmount, RewardBundleDef, RewardDrawSlotDef, RewardEffectDef, RewardEntryDef, RewardPityDef, RewardPitySoftDef, RewardPoolDef,
+} from './RewardConfig';
 
 /** 帳本保留的發放紀錄上限；超過丟最舊的（冪等只保證這個視窗內） */
 export const REWARD_GRANT_LIMIT = 200;
@@ -139,6 +141,158 @@ function tierRank(pool: Pick<RewardPoolDef, 'tiers'>, tier: string): number {
     return pool.tiers.indexOf(tier);
 }
 
+/** 機率路徑的亂數解析度：把 [0,1) 切成這麼多格，一次 nextInt 決定落點（與整數權重路徑一樣一抽一步） */
+const PROB_RESOLUTION = 1_000_000_000;
+
+/**
+ * 保底階梯第 k 抽（k = 已連續未出 + 1）的「該階以上」總機率（規格 §12.3）：
+ *   k < S 或無軟保底：p0；S <= k < H：p0 + (1 − p0) × ((k − S + 1)/(H − S + 1))^γ；k >= H：1。
+ */
+export function pityRate(p0: number, k: number, hardCount: number, soft: RewardPitySoftDef | null): number {
+    if (k >= hardCount) return 1;
+    if (!soft || k < soft.startAt) return p0;
+    return p0 + (1 - p0) * Math.pow((k - soft.startAt + 1) / (hardCount - soft.startAt + 1), soft.curveExp);
+}
+
+/** 階梯目前所處區段：base（基礎機率）、soft（漸升中）、hard（硬保底必出） */
+export type PityZone = 'base' | 'soft' | 'hard';
+
+export interface PityLadderState {
+    ladder: RewardPityDef;
+    /** 已連續未出該階以上的抽數 */
+    counter: number;
+    /** 本抽是第 k 抽（counter + 1） */
+    k: number;
+    /** 該階以上的基礎機率（由可抽項目權重算出，不手寫） */
+    baseRate: number;
+    /** 套用軟／硬保底後本抽的該階以上機率（尚未與其他階梯疊合） */
+    rate: number;
+    zone: PityZone;
+}
+
+export interface EntryProbability {
+    entry: RewardEntryDef;
+    /** 本抽命中此項目的機率（可抽項目總和為 1） */
+    probability: number;
+}
+
+export interface TierDistribution {
+    tier: string;
+    /** 不計保底的等階機率（權重比） */
+    baseRate: number;
+    /** 計入保底階梯後本抽的等階機率 */
+    effectiveRate: number;
+}
+
+export interface PoolDistribution {
+    entries: EntryProbability[];
+    tiers: TierDistribution[];
+    ladders: PityLadderState[];
+}
+
+function ladderZone(ladder: RewardPityDef, k: number): PityZone {
+    if (k >= ladder.hardCount) return 'hard';
+    return ladder.soft && k >= ladder.soft.startAt ? 'soft' : 'base';
+}
+
+/**
+ * 本抽的完整機率分布（reward.pools 公開用與 rollPool 抽樣用同一份，規格 §12.4）。
+ * 步驟：等階質量＝可抽項目權重比 → 保底階梯由高階往低階把「該階以上」抬到 p(k)（只抬不降，範圍內外各按比例縮放，總和維持 1）
+ * → 等階內：有 tierGroups 的等階先按群組佔比再按權重，沒有的直接按權重。
+ * @param exclude 不重複抽樣時已抽中的項目（機率分布在剩餘項目上重算）
+ * @param applyLadders false＝不套保底（一輪裡第一個項目以外的抽取）
+ */
+export function poolDistribution(
+    pool: RewardPoolDef, counters: Readonly<Record<string, number>>, options: { exclude?: ReadonlySet<string>; applyLadders?: boolean } = {},
+): PoolDistribution {
+    const excluded = options.exclude ?? new Set<string>();
+    const avail = pool.entries.filter((e) => !excluded.has(e.id) && e.weight > 0);
+    const total = avail.reduce((t, e) => t + e.weight, 0);
+    const tierWeight = new Map<string, number>();
+    for (const tier of pool.tiers) tierWeight.set(tier, 0);
+    for (const e of avail) tierWeight.set(e.tier, (tierWeight.get(e.tier) ?? 0) + e.weight);
+    const base = new Map<string, number>();
+    const mass = new Map<string, number>();
+    for (const tier of pool.tiers) {
+        const m = total > 0 ? (tierWeight.get(tier) ?? 0) / total : 0;
+        base.set(tier, m);
+        mass.set(tier, m);
+    }
+    const ladders: PityLadderState[] = [];
+    if (options.applyLadders !== false) {
+        for (const ladder of pool.pity) {
+            const rank = tierRank(pool, ladder.tier);
+            const above = pool.tiers.filter((t) => tierRank(pool, t) >= rank);
+            const baseRate = above.reduce((t, x) => t + (base.get(x) ?? 0), 0);
+            const counter = counters[ladder.counterKey] ?? 0;
+            const k = counter + 1;
+            const rate = baseRate > 0 ? pityRate(baseRate, k, ladder.hardCount, ladder.soft) : baseRate;
+            ladders.push({ ladder, counter, k, baseRate, rate, zone: ladderZone(ladder, k) });
+            // 疊合：目前機率已高於目標就不動（只抬不降）
+            const current = above.reduce((t, x) => t + (mass.get(x) ?? 0), 0);
+            if (rate > current && current > 0) {
+                const up = rate / current;
+                const down = current < 1 ? (1 - rate) / (1 - current) : 0;
+                for (const t of pool.tiers) mass.set(t, (mass.get(t) ?? 0) * (above.indexOf(t) >= 0 ? up : down));
+            }
+        }
+    }
+    const entries: EntryProbability[] = pool.entries.map((entry) => ({ entry, probability: 0 }));
+    const byId = new Map(entries.map((x) => [x.entry.id, x]));
+    for (const tier of pool.tiers) {
+        const tierMass = mass.get(tier) ?? 0;
+        const members = avail.filter((e) => e.tier === tier);
+        if (tierMass <= 0 || members.length === 0) continue;
+        const shares = pool.tierGroups[tier];
+        let weights = members.map((e) => e.weight);
+        if (shares) {
+            // 只算「有可抽項目」的群組，缺席群組的佔比由其餘群組按比例吃下；沒列在群組內的項目不會被抽到
+            const live = shares.filter((g) => members.some((e) => e.group === g.group));
+            const sum = live.reduce((t, g) => t + g.share, 0);
+            if (sum > 0) {
+                weights = members.map((e) => {
+                    const g = live.find((x) => x.group === e.group);
+                    if (!g) return 0;
+                    const groupWeight = members.filter((m) => m.group === g.group).reduce((t, m) => t + m.weight, 0);
+                    return (g.share / sum) * (e.weight / groupWeight);
+                });
+            }
+        }
+        const wsum = weights.reduce((t, w) => t + w, 0);
+        members.forEach((e, i) => {
+            const slot = byId.get(e.id);
+            if (slot && wsum > 0) slot.probability = tierMass * (weights[i] / wsum);
+        });
+    }
+    const tiers: TierDistribution[] = pool.tiers.map((tier) => ({ tier, baseRate: base.get(tier) ?? 0, effectiveRate: mass.get(tier) ?? 0 }));
+    return { entries, tiers, ladders };
+}
+
+/** 依機率分布落點抽一個項目；一次 nextInt，落點由累積機率決定（機率為 0 的項目永遠抽不到） */
+function pickByProbability(dist: readonly EntryProbability[], rng: RandomSource, salt: string): RewardEntryDef {
+    const live = dist.filter((x) => x.probability > 0);
+    if (live.length === 0) throw new Error('RewardRules: 沒有可抽取的項目（機率分布為空）');
+    const roll = rng.nextInt(PROB_RESOLUTION, salt);
+    let acc = 0;
+    for (const x of live) {
+        acc += x.probability * PROB_RESOLUTION;
+        if (roll < acc) return x.entry;
+    }
+    return live[live.length - 1].entry;
+}
+
+function slotMatches(slot: RewardDrawSlotDef, entry: RewardEntryDef): boolean {
+    return (slot.tier === null || entry.tier === slot.tier) && (slot.group === null || entry.group === slot.group);
+}
+
+/** 每個抽取位置對應的名額篩選（沒有 slots 時全是 null＝整池） */
+function slotFilters(pool: RewardPoolDef): Array<RewardDrawSlotDef | null> {
+    if (pool.slots.length === 0) return Array.from({ length: pool.picks }, () => null);
+    const out: Array<RewardDrawSlotDef | null> = [];
+    for (const slot of pool.slots) for (let i = 0; i < slot.count; i += 1) out.push(slot);
+    return out;
+}
+
 export interface RollOutcome {
     items: RewardPlanItem[];
     /** 更新後的保底計數（只含本池用到的 key） */
@@ -147,37 +301,65 @@ export interface RollOutcome {
 
 /**
  * 對一個獎池連抽 count 次（每次 pool.picks 個項目）。
- * 保底：第 hardCount 抽起若前面都沒出保底等階以上，本抽第一個項目從保底等階以上的項目裡抽；
- * 抽到保底等階以上就歸零。保底等階以上沒有任何可抽項目時退回普通抽（設定錯誤不卡住玩家）。
+ * 保底（規格 §12.3）：每條階梯各自計數；一輪的第一個項目才套用保底。
+ *   - 沒有階梯進入軟保底區、也沒有 tierGroups：走整數權重抽樣（硬保底到點時從保底等階以上的項目抽），與舊單一保底的結果逐筆相同；
+ *   - 有階梯在軟保底區或池有群組佔比：走機率分布抽樣（poolDistribution），與 reward.pools 公開的機率同一份。
+ * 抽到某階以上就把該階梯計數歸零（更高階同時歸零較低階梯）；保底等階以上沒有可抽項目時退回普通抽。
+ * 有 draw.slots 的池依名額逐位抽（各名額只從符合篩選的項目抽，篩選無可抽項目退回整池），不套保底。
  */
 export function rollPool(pool: RewardPoolDef, count: number, rng: RandomSource, pity: Readonly<Record<string, number>>): RollOutcome {
     const items: RewardPlanItem[] = [];
     const nextPity: Record<string, number> = { ...pity };
     const weighted: Array<RewardEntryDef & WeightedEntry> = pool.entries;
+    const filters = slotFilters(pool);
+    const hasGroups = Object.keys(pool.tierGroups).length > 0;
     for (let pull = 0; pull < count; pull += 1) {
         const picked = new Set<string>();
-        const guarantee = pool.pity ? tierRank(pool, pool.pity.guaranteeTier) : -1;
-        const counter = pool.pity ? (nextPity[pool.pity.counterKey] ?? 0) : 0;
-        let hitGuarantee = false;
+        const hit = new Set<string>();
+        const first = pool.pity.map((ladder) => ({ ladder, counter: nextPity[ladder.counterKey] ?? 0 }));
         for (let k = 0; k < pool.picks; k += 1) {
             const salt = `reward:${pool.id}:${pull}:${k}`;
             const exclude = pool.replacement ? undefined : picked;
-            let entry: RewardEntryDef;
-            const forced = k === 0 && pool.pity !== null && counter + 1 >= pool.pity.hardCount;
-            const eligible = forced ? weighted.filter((e) => tierRank(pool, e.tier) >= guarantee) : null;
             const trace: string[] = [];
-            if (eligible && weightedTotal(eligible, { exclude }) > 0) {
-                entry = weightedPick(eligible, rng, `${salt}:pity`, { exclude });
-                trace.push(`PITY ${pool.pity?.counterKey}=${counter + 1}`);
+            let entry: RewardEntryDef;
+            const slot = filters[k];
+            if (slot) {
+                const candidates = weighted.filter((e) => slotMatches(slot, e));
+                if (weightedTotal(candidates, { exclude }) > 0) {
+                    entry = weightedPick(candidates, rng, `${salt}:slot`, { exclude });
+                } else {
+                    entry = weightedPick(weighted, rng, salt, { exclude });
+                    trace.push('SLOT_FALLBACK');
+                }
             } else {
-                entry = weightedPick(weighted, rng, salt, { exclude });
+                const useLadders = k === 0 && first.length > 0;
+                const softActive = useLadders && first.some((f) => ladderZone(f.ladder, f.counter + 1) === 'soft');
+                if (hasGroups || softActive) {
+                    const dist = poolDistribution(pool, nextPity, { exclude, applyLadders: useLadders });
+                    for (const l of dist.ladders) {
+                        if (l.zone === 'soft') trace.push(`PITY_SOFT k=${l.k} p=${l.rate.toFixed(4)}`);
+                        if (l.zone === 'hard') trace.push(`PITY ${l.ladder.counterKey}=${l.k}`);
+                    }
+                    entry = pickByProbability(dist.entries, rng, salt);
+                } else {
+                    // 整數權重路徑：只有硬保底（含舊單一設定）；多條階梯取最高階已到點者
+                    const forcedLadder = useLadders ? first.find((f) => f.counter + 1 >= f.ladder.hardCount) : undefined;
+                    const guarantee = forcedLadder ? tierRank(pool, forcedLadder.ladder.guaranteeTier) : -1;
+                    const eligible = forcedLadder ? weighted.filter((e) => tierRank(pool, e.tier) >= guarantee) : null;
+                    if (forcedLadder && eligible && weightedTotal(eligible, { exclude }) > 0) {
+                        entry = weightedPick(eligible, rng, `${salt}:pity`, { exclude });
+                        trace.push(`PITY ${forcedLadder.ladder.counterKey}=${forcedLadder.counter + 1}`);
+                    } else {
+                        entry = weightedPick(weighted, rng, salt, { exclude });
+                    }
+                }
             }
             picked.add(entry.id);
-            if (pool.pity && tierRank(pool, entry.tier) >= guarantee) hitGuarantee = true;
+            for (const f of first) if (tierRank(pool, entry.tier) >= tierRank(pool, f.ladder.tier)) hit.add(f.ladder.counterKey);
             const effect = resolveEffect(entry.effect, rng, `${salt}:fx`);
             items.push({ entryId: entry.id, tier: entry.tier, effect, applied: effect, trace });
         }
-        if (pool.pity) nextPity[pool.pity.counterKey] = hitGuarantee ? 0 : counter + 1;
+        for (const f of first) nextPity[f.ladder.counterKey] = hit.has(f.ladder.counterKey) ? 0 : f.counter + 1;
     }
     return { items, pity: nextPity };
 }
