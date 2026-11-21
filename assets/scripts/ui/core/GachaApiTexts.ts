@@ -60,11 +60,15 @@ export function gachaHeroIdOf(pool: GachaPoolDef, dto: GachaPoolDto): string | n
 
 /**
  * 十連鈕下方小字：取獎池「最近的硬保底」（hardAt 最小的階）逐字寫出，數字與階級都來自獎池（reward.pools），不寫死。
- * 例：教官池 SR 第 10 抽、SSR 第 80 抽 → 「第 10 抽必出 SR 以上」。沒有獎池資料的舊池維持舊寫法。
+ * 例：教官池 SR 第 10 抽、SSR 第 80 抽 → 「第 10 抽必出 SR 以上」。沒有獎池資料的舊池取小保底進度條（SSR）的抽數：「第 50 抽必出 SSR」。
  */
-export function tenNoteOf(dto: Pick<GachaPoolDto, 'pities' | 'pity'>): string {
+export function tenNoteOf(dto: Pick<GachaPoolDto, 'pities'> & { pity: Pick<GachaPoolDto['pity'], 'max'> & { label?: string } }): string {
     const nearest = (dto.pities ?? []).slice().sort((a, b) => a.hardAt - b.hardAt)[0];
-    if (!nearest) return `每 ${dto.pity.max} 抽必得 SR 以上`;
+    if (!nearest) {
+        // 沒有獎池資料的舊池：保底進度條本身就是 SSR 小保底（pity.max 抽必出），照實寫，不再誤稱 SR 以上
+        const tier = /^SR/.test(dto.pity.label ?? '') ? 'SR 以上' : 'SSR';
+        return `第 ${dto.pity.max} 抽必出 ${tier}`;
+    }
     return `第 ${nearest.hardAt} 抽必出 ${nearest.tier === 'SSR' ? 'SSR' : `${nearest.tier} 以上`}`;
 }
 
@@ -120,7 +124,7 @@ export function gachaApiView(
         [GACHA_NODES.goldSummonLabel]: '×500',
         [pool.eventChip]: limited
             ? `★ 本期限定 · ${dto.endsAtMs ? formatRemaining(dto.endsAtMs, nowMs) : '期間限定'}`
-            : dto.series,
+            : (dto.showcaseIsUp ? dto.series.replace(/常設$/, '本期 UP') : dto.series),
         [pool.guarantee]: limited
             ? `👑 ${dto.pity.destinyMax} 抽可換限定 SSR`
             : `✦ ${dto.pity.label.replace(/進度$/, '')} ${dto.pity.max} 抽`,

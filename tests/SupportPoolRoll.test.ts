@@ -20,7 +20,8 @@ import { gachaCostOf, parseGachaMainPools, pickPullCurrency } from '../assets/sc
 import { buildRateTableRows, formatRatePercent } from '../assets/scripts/core/gacha/GachaRateTable';
 import { RewardGachaPort } from '../assets/scripts/core/gacha/RewardGachaPull';
 import { supportCardItemMembers } from '../assets/scripts/core/gacha/SupportCardGachaView';
-import { tenNoteOf } from '../assets/scripts/ui/core/GachaApiTexts';
+import { GACHA_POOLS } from '../assets/scripts/ui/core/GachaScreenNodes';
+import { gachaApiView, tenNoteOf } from '../assets/scripts/ui/core/GachaApiTexts';
 import { STARTER_GACHA_WALLET } from '../assets/scripts/core/services/GachaWalletRules';
 import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
 import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
@@ -139,10 +140,10 @@ export function createSupportPoolRollSuite(): TestSuite {
         }
     });
 
-    suite.test('保底設定：SSR 軟 50／硬 80、SR 軟 6／硬 10；不做大保底、沒有累計兌換', () => {
+    suite.test('保底設定：SSR 軟 60／硬 80（使用者 11/22 裁決：與名將池同為第 60 抽起漸升）、SR 軟 6／硬 10；不做大保底、沒有累計兌換', () => {
         const ssr = support.pity.find((p) => p.tier === 'SSR')!;
         const sr = support.pity.find((p) => p.tier === 'SR')!;
-        assert.equals(50, ssr.soft!.startAt); assert.equals(80, ssr.hardCount); assert.equals(2, ssr.soft!.curveExp);
+        assert.equals(60, ssr.soft!.startAt); assert.equals(80, ssr.hardCount); assert.equals(2, ssr.soft!.curveExp);
         assert.equals(6, sr.soft!.startAt); assert.equals(10, sr.hardCount); assert.equals(1, sr.soft!.curveExp);
         assert.equals(0, support.tallies.length);
     });
@@ -232,9 +233,9 @@ export function createSupportPoolRollSuite(): TestSuite {
         const cardRows = rows.filter((r) => / 共 /.test(r.title));
         assert.equals(25, cardRows.reduce((n, r) => n + (r.detail.match(/%/g)?.length ?? 0), 0), '25 張卡各列一次');
         assert.isTrue(rows.every((r) => r.detail.split('　').length <= 4 || /保底|公開版本/.test(r.title)), '一列最多 4 張');
-        assert.isTrue(rows.some((r) => r.title === 'SSR 保底' && r.detail.includes('第 50 抽起') && r.detail.includes('第 80 抽必出')));
+        assert.isTrue(rows.some((r) => r.title === 'SSR 保底' && r.detail.includes('第 60 抽起') && r.detail.includes('第 80 抽必出')));
         assert.isTrue(rows.some((r) => r.title === 'SR 以上 保底' && r.detail.includes('第 6 抽起') && r.detail.includes('第 10 抽必出')));
-        assert.isTrue(rows.some((r) => r.title === '公開版本'));
+        assert.isTrue(rows.some((r) => r.title === '公開版本' && r.detail.startsWith('2026-11-22')), '公開版本號隨機率調整更新');
         assert.equals(['SSR', 'SR', 'R'].join(), [...new Set(rows.filter((r) => / 共 /.test(r.title)).map((r) => r.title.split(' ')[0]))].join(), '由高到低');
     });
 
@@ -244,10 +245,18 @@ export function createSupportPoolRollSuite(): TestSuite {
         assert.isTrue(!!v);
         const pity = { label: 'SSR 保底進度', current: 0, max: 80, destinyCurrent: 0, destinyMax: 200 };
         assert.equals('第 10 抽必出 SR 以上', tenNoteOf({ pities: v!.pities, pity }));
-        assert.equals('每 80 抽必得 SR 以上', tenNoteOf({ pity }), '沒有獎池資料的舊池維持舊寫法');
+        assert.equals('第 80 抽必出 SSR', tenNoteOf({ pity }), '沒有獎池資料的舊池取 SSR 小保底');
         assert.equals('SUP_HUA_TUO', v!.upEntryIds[0], 'UP 清單第一個是 SSR 華佗（橫幅主角）');
         const hua = cards.cards.find((c) => c.cardId === 'SUP_HUA_TUO');
         assert.equals('hua-tuo', hua?.projectionOf, '華佗卡投影對象');
+        const base = { key: 'support', poolId: 'mentor-pool', theme: 'jade', name: '教官池', sub: '', badge: '', series: '★ 教官系列 · 常設', brief: 'a b', showcaseGeneralId: 'hua-tuo', featuredGeneralIds: [], endsAtMs: null, currencies: ['mentorTickets'], singleCost: 1, tenCost: 10, rates: [], pity };
+        const pool = GACHA_POOLS.find((p) => p.key === 'support')!;
+        const wallet = { gems: 0, bronze: 0, tickets: 0, gold: 0, mentorTickets: 10 } as never;
+        const nameOf = (id: string): string => id;
+        const upView = gachaApiView(pool, { ...base, showcaseIsUp: true } as never, wallet, nameOf, 0);
+        assert.equals('★ 教官系列 · 本期 UP', upView.texts[pool.eventChip], '主角是 UP 卡：標籤寫本期 UP');
+        const plainView = gachaApiView(pool, { ...base, showcaseIsUp: false } as never, wallet, nameOf, 0);
+        assert.equals('★ 教官系列 · 常設', plainView.texts[pool.eventChip], '常駐卡：標籤維持常設');
     });
 
     suite.test('SSR 卡清單與卡表一致（獎池不手寫卡）', () => {

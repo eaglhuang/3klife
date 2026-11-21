@@ -317,6 +317,7 @@ import { EMPTY_PERFORMANCE, type BattlePerformance, type BattleRecordLike } from
 import { buildBattleSnapshot, type BattleSnapshot } from '../systems/BattleSnapshot';
 import { leaderboardEntryOf, rankLeaderboard, type LeaderboardMetric, type LeaderboardEntry } from '../systems/BattleLeaderboard';
 import { hasTacticNoteReward, milestoneBundleId } from '../systems/MilestoneRewards';
+import { graduationTicketClaim, loginTicketClaim, termTicketClaims, type SupportTicketClaim } from '../systems/SupportTicketSources';
 import { awakenHiddenFactors } from '../systems/HiddenFactorAwakening';
 import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonCapacityOf, prisonYieldOneSeason, resolvePowDecision, rollFutureReturns, rollPrisonTreasureDonors, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
 import { createFemaleSource, normalizeFemaleSource, normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
@@ -1380,6 +1381,8 @@ export class GameSession implements AcademyRecordPort {
             graduatedSeason: this._clock.state.totalSeasonsElapsed,
         } as GeneralConfig;
         const result: AcademyGraduationResult = { ...applied, general: stamped };
+        // 連線券來源（SUP-11）：結業一次（冪等鍵含學員），S 評級領較多；入帳走 reward.claim
+        await this._claimSupportTickets([graduationTicketClaim(generalId, applied.grade)]);
         this._roster.replaceAll(this._roster.getAll().map((g) => (g.id === generalId ? stamped : g)));
         if (ownsRecord) this._setAcademyRecord(null);
         if (this._autoSave && this._save) {
@@ -1818,6 +1821,8 @@ export class GameSession implements AcademyRecordPort {
     private _setAcademyRecord(record: PersistedAcademyRecord | null): void {
         this._academyRecord = record;
         const childId = isAcademyRecordActive(record) ? record!.committed.childId : null;
+        // 連線券來源（SUP-11）：過了學期評核（第 12、24 回合）各領一份；冪等鍵含回合，重複寫紀錄不會重領
+        if (childId && record) void this._claimSupportTickets(termTicketClaims(childId, record.committed.currentTurn));
         for (const held of this._occupancy.recordsOfKind('academy')) {
             if (held.personId !== childId) this._occupancy.release({ personId: held.personId, kind: 'academy', refId: held.refId });
         }
@@ -2631,6 +2636,22 @@ export class GameSession implements AcademyRecordPort {
                 } catch (error) {
                     console.warn('[GameSession] 里程碑獎勵領取例外', error);
                 }
+            }
+        }
+    }
+
+    /**
+     * 連線券免費來源（SUP-11）：逐份經 reward.claim 入帳（張數在 reward-config.json 的 BUNDLE_SUPPORT_TICKET_*）。
+     * grantKey 讓重送冪等；沒綁 API（純邏輯測試）就不發；失敗只記警告、不擋結業或登入。
+     */
+    private async _claimSupportTickets(claims: readonly SupportTicketClaim[]): Promise<void> {
+        if (!this._rewardApi) return;
+        for (const claim of claims) {
+            try {
+                const res = await this._rewardApi.cmd('reward.claim', { bundleId: claim.bundleId, grantKey: claim.grantKey, source: claim.source });
+                if (isApiFail(res)) console.warn(`[GameSession] 連線券領取失敗 ${claim.grantKey} ${res.errorCode} ${res.message}`);
+            } catch (error) {
+                console.warn('[GameSession] 連線券領取例外', error);
             }
         }
     }
@@ -4208,6 +4229,9 @@ export class GameSession implements AcademyRecordPort {
     /** 記錄一次登入（UTC+8 切日）；同日重複登入不增加天數。 */
     public recordLoginAt(epochMs: number, grantGold: (amount: number) => void = () => {}): void {
         this._loginStreak = recordLogin(this._loginStreak, epochMs);
+        // 連線券來源（SUP-11）：連續登入每滿 7 天 +1；冪等鍵含日期，同日重複登入不重領
+        const loginTicket = loginTicketClaim(this._loginStreak.consecutiveDays, loginDayOf(epochMs));
+        if (loginTicket) void this._claimSupportTickets([loginTicket]);
         // 每日免費入學令已退場（PROG-2-9206）：入學令只由季結的 item.settlePeriodic 發放；登入日高水位仍保留給離線行為判斷與舊存檔相容
         const today = loginDayOf(epochMs);
         // 三國季報：換日首登才算（晨報一天只產生一次，用它的產生日判斷）；本季還沒有季報（新局、舊檔）時補合成
