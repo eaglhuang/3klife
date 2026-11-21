@@ -13,8 +13,8 @@ export function createBattleAudioSuite(): TestSuite {
         assert.equals('hurt', BATTLE_AUDIO_CLIP_MAP[BATTLE_AUDIO_CUE.unitHitCommon]);
         assert.equals('thunder', BATTLE_AUDIO_CLIP_MAP[BATTLE_AUDIO_CUE.unitHitSecondary]);
         assert.equals('weapon', BATTLE_AUDIO_CLIP_MAP[BATTLE_AUDIO_CUE.unitAttackCommon]);
-        // PROG-2-9400：騎兵攻擊改用 footstep（馬蹄的最近似，待補專屬衝撞聲）；槍兵突刺 bite、盾兵盾擊 shield
-        assert.equals('footstep', BATTLE_AUDIO_CLIP_MAP[BATTLE_AUDIO_CUE.unitAttackPrimary]);
+        // PROG-2-9484：騎兵攻擊暫代 biteskill（原 footstep 和移動同檔被節流吃掉）；槍兵突刺 bite、盾兵盾擊 shield
+        assert.equals('biteskill', BATTLE_AUDIO_CLIP_MAP[BATTLE_AUDIO_CUE.unitAttackPrimary]);
         assert.equals('bite', BATTLE_AUDIO_CLIP_MAP[BATTLE_AUDIO_CUE.unitAttackThrust]);
         assert.equals('shield', BATTLE_AUDIO_CLIP_MAP[BATTLE_AUDIO_CUE.unitAttackShield]);
     });
