@@ -20,3 +20,16 @@ export function fortressBarRatio(hp: number, max: number = FORTRESS_MAX_HP): num
     if (!Number.isFinite(hp) || !Number.isFinite(max) || max <= 0) return 0;
     return Math.min(1, Math.max(0, hp / max));
 }
+
+/**
+ * 守城戰我方城寨血條文字（PROG-2-9430，總PM 11/21 核准；使用者 11/06 裁決「城寨要血條」）。
+ * 血量夾在 0~上限並取整，例如「我方城寨 455／500」。
+ */
+export function defenseFortressBarText(hp: number, max: number = FORTRESS_MAX_HP): string {
+    const safeMax = Number.isFinite(max) && max > 0 ? Math.round(max) : FORTRESS_MAX_HP;
+    const safeHp = Number.isFinite(hp) ? Math.round(Math.min(safeMax, Math.max(0, hp))) : 0;
+    return `我方城寨 ${safeHp}／${safeMax}`;
+}
+
+/** 剩餘比例低於這個值時血條改成警示紅（約剩三成） */
+export const DEFENSE_FORTRESS_WARN_RATIO = 0.3;

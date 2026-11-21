@@ -253,8 +253,8 @@
   },
   {
     "id": "doc_spec_0043",
-    "path": "docs/遊戲規格文件/系統規格書/轉職與宿命系統.md",
-    "title": "轉職與宿命系統規格書",
+    "path": "docs/遊戲規格文件/系統規格書/轉職與宿命系統-shards/shard-a.md",
+    "title": "轉職與宿命系統規格（分片索引） — A–E 系統描述／目的／套路／TA／功能清單",
     "category": "spec"
   },
   {
@@ -289,8 +289,8 @@
   },
   {
     "id": "doc_spec_0049",
-    "path": "docs/遊戲規格文件/系統規格書/關卡設計系統.md",
-    "title": "關卡設計系統規格書",
+    "path": "docs/遊戲規格文件/系統規格書/關卡設計系統-shards/shard-a.md",
+    "title": "關卡設計系統規格（分片索引） — A–E 系統描述／目的／關卡結構／戰前偵查／戰法槽位",
     "category": "spec"
   },
   {
@@ -1069,8 +1069,8 @@
   },
   {
     "id": "doc_spec_0181",
-    "path": "docs/遊戲規格文件/系統規格書/血統與家系漸進揭露里程碑總綱規格書.md",
-    "title": "血統與家系漸進揭露里程碑總綱規格書",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系漸進揭露里程碑總綱規格書-shards/shard-a.md",
+    "title": "血統與家系漸進揭露里程碑總綱規格書（分片索引） — A–E 系統描述／目的／套路／TA／功能清單",
     "category": "spec"
   },
   {
@@ -6860,7 +6860,7 @@
   {
     "id": "doc_spec_1172",
     "path": "docs/遊戲規格文件/系統規格書/子嗣五歲抓周揭曉與及冠入學直通學府代際傳承規格書.md",
-    "title": "子嗣五歲抓周揭曉與及冠入學直通學府代際傳承規格書",
+    "title": "子嗣五歲抓周揭曉與及冠入學直通學府代際傳承規格書（依 11/20 裁決修訂：1 歲周歲抓周、5 歲開蒙揭曉）",
     "category": "spec"
   },
   {
@@ -6897,6 +6897,636 @@
     "id": "doc_spec_1178",
     "path": "docs/遊戲規格文件/系統規格書/大廳任務完整循環規格書.md",
     "title": "大廳任務完整循環規格書（產生、派遣、進行、結算、刷新）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1179",
+    "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計.md",
+    "title": "學府修業畫面與接線設計（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1180",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1181",
+    "path": "docs/遊戲規格文件/系統規格書/家業經營與世家系統規格書.md",
+    "title": "家業經營與世家系統規格書（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1182",
+    "path": "docs/遊戲規格文件/系統規格書/共用框架總綱規格書.md",
+    "title": "共用框架總綱規格書（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1183",
+    "path": "docs/遊戲規格文件/系統規格書/買賣商店系統Base框架規格書.md",
+    "title": "買賣商店系統 Base 框架規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1184",
+    "path": "docs/遊戲規格文件/系統規格書/物品庫存系統Base框架規格書.md",
+    "title": "物品庫存系統Base框架規格書（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1185",
+    "path": "docs/遊戲規格文件/系統規格書/任務系統Base框架規格書-shards/shard-a.md",
+    "title": "任務系統Base框架規格書（分片索引） — 1–3 目的、核心概念、共用資料結構",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1186",
+    "path": "docs/遊戲規格文件/系統規格書/獎勵系統Base框架規格書.md",
+    "title": "獎勵系統Base框架規格書（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1187",
+    "path": "docs/遊戲規格文件/系統規格書/技能系統Base框架規格書.md",
+    "title": "技能系統 Base 框架規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1188",
+    "path": "docs/遊戲規格文件/系統規格書/劇情演出系統Base框架規格書.md",
+    "title": "劇情演出系統Base框架規格書（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1189",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-a.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 0–1 結論、定位與三節點因果、新玩家節奏",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1190",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-b.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 2 首子誕生驚喜流程、命名與綽號、出生禮",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1191",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-c.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 3–4 時間流速與成長節點與時間線、觸發與外界時間與防重讀",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1192",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-d.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 5 選路、心願路線、職業屬性與專長",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1193",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-e.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 6 大富翁盤面",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1194",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-f.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 7 產出、稀有度、寶物與道具清單、因子印記互動",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1195",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-g.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 8–9 對抓周與學府的回寫、少年名將適用性",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1196",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-h.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 10–11 畫面演出與資產、資料結構",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1197",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-i.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 12–13 衝突與待裁決選擇題、實作卡拆分",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1198",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-j.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 14 中期一年一回合與 AI 委託",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1199",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-k.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 15 分齡加速成長（上）原則、母乳與乳母、時光藥水、節點與年齡呈現、後期淡出",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1200",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-l.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 16 分齡加速成長（下）特殊食物、廚師與家族酒店接口、10 歲起派內政、歲月補償",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1201",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-m.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 17 自動開寶模式（第二個孩子起）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1202",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-n.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 18 共用 base 框架對應與建議新增共用框架候選",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1203",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系漸進揭露里程碑總綱規格書-shards/shard-b.md",
+    "title": "血統與家系漸進揭露里程碑總綱規格書（分片索引） — F–J 公式／劇本／字串／Data Schema／名詞",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1204",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系漸進揭露里程碑總綱規格書-shards/shard-c.md",
+    "title": "血統與家系漸進揭露里程碑總綱規格書（分片索引） — K 四階段揭露與後續分冊對應索引",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1205",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系漸進揭露里程碑總綱規格書.md",
+    "title": "血統與家系漸進揭露里程碑總綱規格書（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1206",
+    "path": "docs/遊戲規格文件/系統規格書/家業經營與世家系統規格書-shards/shard-a.md",
+    "title": "家業經營與世家系統規格書（分片索引） — 0–2 結論、定位與節奏、與既有系統分界",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1207",
+    "path": "docs/遊戲規格文件/系統規格書/家業經營與世家系統規格書-shards/shard-b.md",
+    "title": "家業經營與世家系統規格書（分片索引） — 3 依賴的共用框架（六套 base 對照與候選）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1208",
+    "path": "docs/遊戲規格文件/系統規格書/家業經營與世家系統規格書-shards/shard-c.md",
+    "title": "家業經營與世家系統規格書（分片索引） — 4–5 幕府等級與解鎖、家業通則",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1209",
+    "path": "docs/遊戲規格文件/系統規格書/家業經營與世家系統規格書-shards/shard-d.md",
+    "title": "家業經營與世家系統規格書（分片索引） — 6 六大家業逐項",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1210",
+    "path": "docs/遊戲規格文件/系統規格書/家業經營與世家系統規格書-shards/shard-e.md",
+    "title": "家業經營與世家系統規格書（分片索引） — 7 廚房與菜色產出（成長膳，接 9198）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1211",
+    "path": "docs/遊戲規格文件/系統規格書/家業經營與世家系統規格書-shards/shard-f.md",
+    "title": "家業經營與世家系統規格書（分片索引） — 8–9 出海貿易、世家包裝與郡望連動",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1212",
+    "path": "docs/遊戲規格文件/系統規格書/家業經營與世家系統規格書-shards/shard-g.md",
+    "title": "家業經營與世家系統規格書（分片索引） — 10–11 人力取捨與退役、畫面與美術需求",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1213",
+    "path": "docs/遊戲規格文件/系統規格書/家業經營與世家系統規格書-shards/shard-h.md",
+    "title": "家業經營與世家系統規格書（分片索引） — 12 資料結構",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1214",
+    "path": "docs/遊戲規格文件/系統規格書/家業經營與世家系統規格書-shards/shard-i.md",
+    "title": "家業經營與世家系統規格書（分片索引） — 13–14 衝突與待裁決選擇題、實作卡拆分",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1215",
+    "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-a.md",
+    "title": "學府修業畫面與接線設計（分片索引） — 0–1 結論、新舊分工、舊存檔遷移",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1216",
+    "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-b.md",
+    "title": "學府修業畫面與接線設計（分片索引） — 2–3 引擎 API 速查、畫面總覽與記憶體限制",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1217",
+    "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-c.md",
+    "title": "學府修業畫面與接線設計（分片索引） — 4 入學、修業主畫面、打斷宿主、結業串接",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1218",
+    "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-d.md",
+    "title": "學府修業畫面與接線設計（分片索引） — 5–8 外界凍結、驗收、任務拆分、未決事項",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1219",
+    "path": "docs/遊戲規格文件/系統規格書/轉職與宿命系統-shards/shard-b.md",
+    "title": "轉職與宿命系統規格（分片索引） — F–J 公式／劇本／字串／Data Schema／名詞",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1220",
+    "path": "docs/遊戲規格文件/系統規格書/轉職與宿命系統-shards/shard-c.md",
+    "title": "轉職與宿命系統規格（分片索引） — MCQ 決策記錄（Q61–Q65）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1221",
+    "path": "docs/遊戲規格文件/系統規格書/轉職與宿命系統.md",
+    "title": "轉職與宿命系統規格（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1222",
+    "path": "docs/遊戲規格文件/系統規格書/關卡設計系統-shards/shard-b.md",
+    "title": "關卡設計系統規格（分片索引） — F–J 視覺分層／主題關卡／攝影機／互動物件／共識摘要",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1223",
+    "path": "docs/遊戲規格文件/系統規格書/關卡設計系統-shards/shard-c.md",
+    "title": "關卡設計系統規格（分片索引） — MCQ 決策記錄／Boss AI 與特殊挑戰機制",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1224",
+    "path": "docs/遊戲規格文件/系統規格書/關卡設計系統.md",
+    "title": "關卡設計系統規格（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1225",
+    "path": "docs/遊戲規格文件/系統規格書/共用框架總綱規格書-shards/shard-a.md",
+    "title": "共用框架總綱規格書（分片索引） — 1–4 原則、框架清單、新增判準、框架 × 系統對照",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1226",
+    "path": "docs/遊戲規格文件/系統規格書/共用框架總綱規格書-shards/shard-b.md",
+    "title": "共用框架總綱規格書（分片索引） — 5 共通網路協定層（核心原則）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1227",
+    "path": "docs/遊戲規格文件/系統規格書/共用框架總綱規格書-shards/shard-c.md",
+    "title": "共用框架總綱規格書（分片索引） — 6–8 依賴關係、文件連結、檢查清單",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1228",
+    "path": "docs/遊戲規格文件/系統規格書/共用框架總綱規格書-shards/shard-d.md",
+    "title": "共用框架總綱規格書（分片索引） — 9–11 實作卡總順序、待決大方向、新增框架候選",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1229",
+    "path": "docs/遊戲規格文件/系統規格書/共用框架總綱規格書-shards/shard-e.md",
+    "title": "共用框架總綱規格書（分片索引） — 12 一年循環 MVP 切分（PROG-2-9213）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1230",
+    "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-e.md",
+    "title": "學府修業畫面與接線設計（分片索引） — 9 依賴的共用框架與共通 API",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1231",
+    "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-f.md",
+    "title": "學府修業畫面與接線設計（分片索引） — 10 學府實作卡拆分建議（依共用框架）、11 待決選擇題",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1232",
+    "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-g.md",
+    "title": "學府修業畫面與接線設計（分片索引） — 12 學府人源缺口方案（待決選擇題 Q13）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1233",
+    "path": "docs/遊戲規格文件/系統規格書/首子誕生與少年名將開場流程規格書.md",
+    "title": "首子誕生與少年名將開場流程規格書（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1234",
+    "path": "docs/遊戲規格文件/系統規格書/首子誕生與少年名將開場流程規格書-shards/shard-a.md",
+    "title": "首子誕生與少年名將開場流程規格書（分片索引） — 0 結論、1 開場總順序、2 少年名將挑選、3 首子與貂蟬結緣的關係、4 首子流程時間點",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1235",
+    "path": "docs/遊戲規格文件/系統規格書/首子誕生與少年名將開場流程規格書-shards/shard-b.md",
+    "title": "首子誕生與少年名將開場流程規格書（分片索引） — 5 取名與綽號、6 出生禮（共用框架對應）、7 周歲抓周、8 存檔與 API、9 驗收、10 衝突與待決",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1236",
+    "path": "docs/遊戲規格文件/系統規格書/年終守城戰規格書.md",
+    "title": "年終守城戰規格書（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1237",
+    "path": "docs/遊戲規格文件/系統規格書/年終守城戰規格書-shards/shard-a.md",
+    "title": "年終守城戰規格書（分片索引） — 1–3 定位入口、敵軍三檔、城寨回合與勝敗",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1238",
+    "path": "docs/遊戲規格文件/系統規格書/年終守城戰規格書-shards/shard-b.md",
+    "title": "年終守城戰規格書（分片索引） — 4–6 敵方工兵、戰後結算、守城→年報→換年",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1239",
+    "path": "docs/遊戲規格文件/系統規格書/年終守城戰規格書-shards/shard-c.md",
+    "title": "年終守城戰規格書（分片索引） — 7–10 HUD 城寨血條、共用框架、數值檔、測試驗收",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1240",
+    "path": "docs/遊戲規格文件/系統規格書/年終守城戰規格書-shards/shard-d.md",
+    "title": "年終守城戰規格書（分片索引） — 11–12 待裁決矛盾、來源索引",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1241",
+    "path": "docs/遊戲規格文件/系統規格書/家族子嗣與血統總規格書.md",
+    "title": "家族子嗣與血統總規格書（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1242",
+    "path": "docs/遊戲規格文件/系統規格書/家族子嗣與血統總規格書-shards/shard-a.md",
+    "title": "家族子嗣與血統總規格書（分片索引） — 0 結論、1 既有規格地圖、2 家族成員五類、3 配偶、4 子嗣數量與時間",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1243",
+    "path": "docs/遊戲規格文件/系統規格書/家族子嗣與血統總規格書-shards/shard-b.md",
+    "title": "家族子嗣與血統總規格書（分片索引） — 5 繼承、6 主角不死、7 分家與外嫁、8 義子、9 家臣子嗣",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1244",
+    "path": "docs/遊戲規格文件/系統規格書/家族子嗣與血統總規格書-shards/shard-c.md",
+    "title": "家族子嗣與血統總規格書（分片索引） — 10 共用框架對應、11 建議 JSON 欄位表、12 既有規格修訂清單、13 驗收、14 待決、15 實作卡切分",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1245",
+    "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-h.md",
+    "title": "學府修業畫面與接線設計（分片索引） — 13 學府新版規則：人源與子嗣節奏、入學加分、修業變化、失敗與結業影響（依 11/21 裁決）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1246",
+    "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-i.md",
+    "title": "學府修業畫面與接線設計（分片索引） — 14 教官就是武將（舊教官卡退場；14.11 支援卡接線）、共用框架對應、建議 JSON、驗收、實作卡切分",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1247",
+    "path": "docs/遊戲規格文件/系統規格書/貨幣與資源總規格書.md",
+    "title": "貨幣與資源總規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1248",
+    "path": "docs/遊戲規格文件/系統規格書/人員占用系統Base框架規格書.md",
+    "title": "人員占用系統Base框架規格書（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1249",
+    "path": "docs/遊戲規格文件/系統規格書/人員占用系統Base框架規格書-shards/shard-a.md",
+    "title": "人員占用系統Base框架規格書（分片索引） — 1–3 目的、核心概念、共用資料結構（種類、互斥矩陣）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1250",
+    "path": "docs/遊戲規格文件/系統規格書/人員占用系統Base框架規格書-shards/shard-b.md",
+    "title": "人員占用系統Base框架規格書（分片索引） — 4–10 共用 API、包裝接入、依賴、存檔、盤點、驗收、裁決紀錄",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1251",
+    "path": "docs/遊戲規格文件/系統規格書/人員占用系統Base框架規格書-shards/shard-c.md",
+    "title": "人員占用系統Base框架規格書（分片索引） — 11–12 伺服器 API、實作卡切分",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1252",
+    "path": "docs/遊戲規格文件/系統規格書/任務系統Base框架規格書-shards/shard-b.md",
+    "title": "任務系統Base框架規格書（分片索引） — 4–10 共用 API、包裝接入、依賴、遷移、實作卡、驗收、待決",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1253",
+    "path": "docs/遊戲規格文件/系統規格書/任務系統Base框架規格書-shards/shard-c.md",
+    "title": "任務系統Base框架規格書（分片索引） — 11 伺服器 API（端點、Schema、權威欄位、錯誤碼、事件）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1254",
+    "path": "docs/遊戲規格文件/系統規格書/任務系統Base框架規格書.md",
+    "title": "任務系統Base框架規格書（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1255",
+    "path": "docs/遊戲規格文件/系統規格書/物品庫存系統Base框架規格書-shards/shard-a.md",
+    "title": "物品庫存系統Base框架規格書（分片索引） — 1–3 目的、核心概念、共用資料結構",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1256",
+    "path": "docs/遊戲規格文件/系統規格書/物品庫存系統Base框架規格書-shards/shard-b.md",
+    "title": "物品庫存系統Base框架規格書（分片索引） — 4–10 共用 API、包裝接入、依賴、遷移、實作卡、驗收、待決",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1257",
+    "path": "docs/遊戲規格文件/系統規格書/物品庫存系統Base框架規格書-shards/shard-c.md",
+    "title": "物品庫存系統Base框架規格書（分片索引） — 11 伺服器 API（端點、Schema、權威欄位、錯誤碼、事件）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1258",
+    "path": "docs/遊戲規格文件/系統規格書/劇情演出系統Base框架規格書-shards/shard-a.md",
+    "title": "劇情演出系統Base框架規格書（分片索引） — 1–3 目的、核心概念、共用資料結構",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1259",
+    "path": "docs/遊戲規格文件/系統規格書/劇情演出系統Base框架規格書-shards/shard-b.md",
+    "title": "劇情演出系統Base框架規格書（分片索引） — 4–10 共用 API、包裝接入、依賴、遷移、實作卡、驗收、待決",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1260",
+    "path": "docs/遊戲規格文件/系統規格書/劇情演出系統Base框架規格書-shards/shard-c.md",
+    "title": "劇情演出系統Base框架規格書（分片索引） — 11 伺服器 API（端點、Schema、權威欄位、錯誤碼、事件）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1261",
+    "path": "docs/遊戲規格文件/系統規格書/獎勵系統Base框架規格書-shards/shard-a.md",
+    "title": "獎勵系統Base框架規格書（分片索引） — 1–3 目的、核心概念、共用資料結構",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1262",
+    "path": "docs/遊戲規格文件/系統規格書/獎勵系統Base框架規格書-shards/shard-b.md",
+    "title": "獎勵系統Base框架規格書（分片索引） — 4–10 共用 API、包裝接入、依賴、遷移、實作卡、驗收、待決",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1263",
+    "path": "docs/遊戲規格文件/系統規格書/獎勵系統Base框架規格書-shards/shard-c.md",
+    "title": "獎勵系統Base框架規格書（分片索引） — 11–12 伺服器 API、轉蛋改走獎勵框架（軟保底、機率公開、遷移、卡片切分）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1264",
+    "path": "docs/遊戲規格文件/系統規格書/學府支援卡與教官池規格書.md",
+    "title": "學府支援卡與教官池規格書（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1265",
+    "path": "docs/遊戲規格文件/系統規格書/學府支援卡與教官池規格書-shards/shard-a.md",
+    "title": "學府支援卡與教官池規格書（分片索引） — 1–4 結論、世界觀、文案語氣指南、卡面與資料模型",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1266",
+    "path": "docs/遊戲規格文件/系統規格書/學府支援卡與教官池規格書-shards/shard-b.md",
+    "title": "學府支援卡與教官池規格書（分片索引） — 5–9 成長、效果欄、到場與羈絆、連續事件、點撥",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1267",
+    "path": "docs/遊戲規格文件/系統規格書/學府支援卡與教官池規格書-shards/shard-c.md",
+    "title": "學府支援卡與教官池規格書（分片索引） — 10–13 師門牌組、師承譜系組合、學府風格加權、結業稱號與學閥",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1268",
+    "path": "docs/遊戲規格文件/系統規格書/學府支援卡與教官池規格書-shards/shard-d.md",
+    "title": "學府支援卡與教官池規格書（分片索引） — 14–15 初版卡片名單總表、學府戰法點撥表",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1269",
+    "path": "docs/遊戲規格文件/系統規格書/學府支援卡與教官池規格書-shards/shard-e.md",
+    "title": "學府支援卡與教官池規格書（分片索引） — 附錄 A 歷史名師名士卡（11 張）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1270",
+    "path": "docs/遊戲規格文件/系統規格書/學府支援卡與教官池規格書-shards/shard-f.md",
+    "title": "學府支援卡與教官池規格書（分片索引） — 附錄 B 武將特別版卡（8 張）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1271",
+    "path": "docs/遊戲規格文件/系統規格書/學府支援卡與教官池規格書-shards/shard-g.md",
+    "title": "學府支援卡與教官池規格書（分片索引） — 附錄 C 紅顏教官卡（6 張）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1272",
+    "path": "docs/遊戲規格文件/系統規格書/學府支援卡與教官池規格書-shards/shard-h.md",
+    "title": "學府支援卡與教官池規格書（分片索引） — 16–25 教官池與四池轉蛋、機率保底、重複卡材料、物品化、共用框架對應、並存與舊規格處置、JSON、驗收、實作卡表、待決",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1273",
+    "path": "docs/遊戲規格文件/系統規格書/世界觀與故事總綱規格書.md",
+    "title": "世界觀與故事總綱規格書（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1274",
+    "path": "docs/遊戲規格文件/系統規格書/世界觀與故事總綱規格書-shards/shard-a.md",
+    "title": "世界觀與故事總綱規格書（分片索引） — 0–4 結論、一頁版故事大綱、世界設定、主線長期謎題、與開場信原稿的並列",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1275",
+    "path": "docs/遊戲規格文件/系統規格書/世界觀與故事總綱規格書-shards/shard-b.md",
+    "title": "世界觀與故事總綱規格書（分片索引） — 5–10 各系統說法、核心角色人設、時事梗規範、文案範例、待決與實作卡建議",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1280",
+    "path": "docs/遊戲規格文件/系統規格書/武將私塾補習班系統規格書.md",
+    "title": "武將私塾補習班系統規格書（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1281",
+    "path": "docs/遊戲規格文件/系統規格書/武將私塾補習班系統規格書-shards/shard-a.md",
+    "title": "武將私塾補習班系統規格書（分片索引） — 0–6 結論、名詞與世界觀、與學府／支援卡區隔、開班與學生資格、資料模型、報名繳費推薦卡、上課與教室、課程內容與成長",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1282",
+    "path": "docs/遊戲規格文件/系統規格書/武將私塾補習班系統規格書-shards/shard-b.md",
+    "title": "武將私塾補習班系統規格書（分片索引） — 7–9 友誼系統（等級、推算公式、稀疏儲存評估、AI 私塾確定性生成、變化規則、查詢演算法）、友誼效益與既有關係接線、同學事件",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1283",
+    "path": "docs/遊戲規格文件/系統規格書/武將私塾補習班系統規格書-shards/shard-c.md",
+    "title": "武將私塾補習班系統規格書（分片索引） — 10–17 共用框架對應與占用衝突規則、伺服器 API、存檔、JSON 草案、驗收、待決選擇題、建議實作卡",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1284",
+    "path": "docs/遊戲規格文件/系統規格書/史境天下風雲榜與年終頒獎典禮系統規格書-shards/shard-a.md",
+    "title": "史境天下風雲榜與年終頒獎典禮系統規格書（分片索引） — 0–4 結論、世界觀包裝與語氣、四層可插拔架構、五大首發榜單公式與算例、心智血統與戰場一致性",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1285",
+    "path": "docs/遊戲規格文件/系統規格書/史境天下風雲榜與年終頒獎典禮系統規格書-shards/shard-b.md",
+    "title": "史境天下風雲榜與年終頒獎典禮系統規格書（分片索引） — 5–8 年終頒獎典禮互動劇本、雙主持與君王 3D 投影、大合照快照背景與歷年風雲史冊、擴充榜範例（私塾人氣名師）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1286",
+    "path": "docs/遊戲規格文件/系統規格書/史境天下風雲榜與年終頒獎典禮系統規格書-shards/shard-c.md",
+    "title": "史境天下風雲榜與年終頒獎典禮系統規格書（分片索引） — 9–14 共用框架對應、建議 JSON 草案、AI 全真實沙盤前置、驗收測試、文案範例、W1 拆卡清單",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1287",
+    "path": "docs/遊戲規格文件/系統規格書/史境天下風雲榜與年終頒獎典禮系統規格書.md",
+    "title": "史境天下風雲榜與年終頒獎典禮系統規格書（分片索引）",
     "category": "spec"
   }
 ]

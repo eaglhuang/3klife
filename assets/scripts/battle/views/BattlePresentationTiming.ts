@@ -172,6 +172,14 @@ export function buildHitShakeSteps(amplitude: number, totalSec: number = BATTLE_
  * 在抖動的第 elapsedSec 秒時的水平位移（純函式，不配置物件，給逐幀更新的 Spine 疊層用）。
  * 與 buildHitShakeSteps 同一組關鍵點，各步之間線性內插；超出範圍回 0。
  */
+/**
+ * 量受擊格寬用的相鄰排（PROG-2-9482）：平常量往後一排；最後一排的下一排在棋盤外，
+ * 投影出來的距離約是正常的 4 倍（實測 398px 對 101px），抖動與後退跟著放大 4 倍，所以改量往內一排。
+ */
+export function hitScaleNeighborDepth(depth: number, gridDepth: number): number {
+  return depth + 1 < gridDepth ? depth + 1 : Math.max(0, depth - 1);
+}
+
 export function sampleHitShake(elapsedSec: number, amplitude: number, totalSec: number = BATTLE_VISUAL_TIMING.hitShakeSec): number {
   if (!(amplitude > 0) || !(elapsedSec > 0) || elapsedSec >= totalSec) return 0;
   const stepSec = totalSec / HIT_SHAKE_KEYS.length;
@@ -201,10 +209,44 @@ export function hitFeedbackTotalSec(): number {
   return Math.max(t.hitShakeSec, t.hitFlashSec, t.recoilPushSec + t.recoilHitStopSec + t.recoilRecoverSec);
 }
 
-/** 受擊閃白強度（1 = 最亮，線性衰減到 0）。純函式。 */
-export function hitFlashStrength(elapsedSec: number, durationSec: number = BATTLE_VISUAL_TIMING.hitFlashSec): number {
-  if (!(durationSec > 0) || elapsedSec < 0 || elapsedSec >= durationSec) return 0;
-  return 1 - elapsedSec / durationSec;
+/**
+ * 受擊閃白曲線（PROG-2-9483）：先全白停 holdFrames 格，再用 fadeSec 秒快速退掉。
+ * 退色強度 = (1 - t)^fadePower，次方越大前段掉得越快。數值在 data/battle-hit-feedback.json。
+ * 停留用「格」而不是秒：手機 30fps 時 2 格仍是 2 格，畫面上一定看得到全白。
+ */
+export interface HitFlashCurve { holdFrames: number; fadeSec: number; fadePower: number; }
+
+export const DEFAULT_HIT_FLASH_CURVE: HitFlashCurve = { holdFrames: 2, fadeSec: 0.05, fadePower: 2 };
+
+let activeHitFlashCurve: HitFlashCurve = DEFAULT_HIT_FLASH_CURVE;
+
+/** 讀設定檔的 hitFlash 區段；缺漏或格式錯誤的欄位用預設值。 */
+export function parseHitFlashCurve(raw: unknown): HitFlashCurve {
+  const src = (raw && typeof raw === 'object' ? (raw as { hitFlash?: unknown }).hitFlash : null) as Record<string, unknown> | null;
+  const num = (v: unknown, min: number, fallback: number): number => (typeof v === 'number' && Number.isFinite(v) && v >= min ? v : fallback);
+  const d = DEFAULT_HIT_FLASH_CURVE;
+  if (!src || typeof src !== 'object') return { ...d };
+  return {
+    holdFrames: Math.round(num(src.holdFrames, 0, d.holdFrames)),
+    fadeSec: num(src.fadeSec, 0, d.fadeSec),
+    fadePower: num(src.fadePower, 0.1, d.fadePower),
+  };
+}
+
+export function setHitFlashCurve(curve: HitFlashCurve): void { activeHitFlashCurve = curve; }
+export function getHitFlashCurve(): HitFlashCurve { return activeHitFlashCurve; }
+
+/**
+ * 受擊閃白強度（1 = 全白）。純函式。
+ * @param frame 受擊後第幾格（受擊當格 = 0）
+ * @param fadeElapsedSec 全白停留結束後經過的秒數
+ */
+export function hitFlashStrength(frame: number, fadeElapsedSec: number, curve: HitFlashCurve = activeHitFlashCurve): number {
+  if (frame < 0) return 0;
+  if (frame < curve.holdFrames) return 1;
+  if (!(curve.fadeSec > 0) || fadeElapsedSec >= curve.fadeSec) return 0;
+  const t = Math.max(0, fadeElapsedSec) / curve.fadeSec;
+  return Math.pow(1 - t, curve.fadePower);
 }
 
 /** 這一下是不是「重擊」：爆擊，或單次傷害達目標最大血量的 heavyHitMaxHpRatio。 */

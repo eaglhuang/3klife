@@ -1,4 +1,4 @@
-import { Color, EffectAsset, Material, Node, UITransform, Vec4, resources, sp } from 'cc';
+import { Color, EffectAsset, JsonAsset, Material, Node, UITransform, Vec4, resources, sp } from 'cc';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { UnitAction, UnitPresentationCore, UnitPresentationState, resolveClipName } from '../shared/UnitPresentationCore';
 import { dustBeatsFor, stepBobOffset } from '../shared/MoveFeedback';
@@ -7,7 +7,7 @@ import { DeployLandingSample, deployLandingTotalSec, landingCrossed, memberDeplo
 import { UnitSpineConfig } from '../shared/UnitPresentationConfig';
 import { AttackStyle, pickAttackClip } from '../shared/AttackStyle';
 import { DuelExchange, DuelPresentationCore } from '../shared/DuelPresentationCore';
-import { hitFeedbackTotalSec, hitFlashStrength, sampleHitRecoil, sampleHitShake } from './BattlePresentationTiming';
+import { getHitFlashCurve, hitFeedbackTotalSec, hitFlashStrength, parseHitFlashCurve, sampleHitRecoil, sampleHitShake, setHitFlashCurve } from './BattlePresentationTiming';
 
 interface Entry {
   config: UnitSpineConfig;
@@ -23,7 +23,8 @@ interface Entry {
   /** 目前要顯示的人數（含帶頭者），由呼叫端依兵力決定。 */
   members: number;
   /** 受擊回饋進行中的狀態（PROG-2-9401）；結束後為 null。只疊加在畫面位置與顏色上，不碰移動與動作狀態。 */
-  hit: { elapsed: number; amplitude: number; flash: boolean; push: number } | null;
+  /** frame：受擊後第幾格；holdEnd：全白停留最後一格時的 elapsed（PROG-2-9483） */
+  hit: { elapsed: number; amplitude: number; flash: boolean; push: number; frame: number; holdEnd: number } | null;
   /** 命中頓格剩餘秒數（PROG-2-9412）；大於 0 時骨架動畫與動作計時都停住。 */
   freeze: number;
   /** 目前畫在骨架上的閃白強度（0 = 正常色）；只在數值改變時才寫 color，省得每幀弄髒渲染資料。 */
@@ -55,6 +56,19 @@ const HIT_FLASH_EFFECT_PATH = 'effects/spine-hit-flash';
 let hitFlashMaterial: Material | null = null;
 let hitFlashLoading = false;
 const hitFlashWaiters: Array<() => void> = [];
+/** 受擊閃白曲線設定（PROG-2-9483）：第一次建立疊層時讀一次，讀到之前用預設值。 */
+let hitFlashCurveRequested = false;
+function ensureHitFlashCurve(): void {
+  if (hitFlashCurveRequested) return;
+  hitFlashCurveRequested = true;
+  try {
+    resources.load('data/battle-hit-feedback', JsonAsset, (err, asset) => {
+      if (err || !asset) return; // 讀不到用預設
+      setHitFlashCurve(parseHitFlashCurve(asset.json));
+    });
+  } catch { /* 資源系統未就緒：用預設 */ }
+}
+
 function ensureHitFlashMaterial(onReady: () => void): void {
   if (hitFlashMaterial) { onReady(); return; }
   hitFlashWaiters.push(onReady);
@@ -89,7 +103,7 @@ export class SpineUnitOverlay {
   private readonly pendingDeploys = new Set<string>();
   private duel: { core: DuelPresentationCore; ids: [string, string]; resolve: (played: boolean) => void } | null = null;
   constructor(private readonly getParent: () => Node | null, private readonly layer: () => number, private readonly onFootfall?: FootfallListener,
-    private readonly onLanding?: LandingListener) {}
+    private readonly onLanding?: LandingListener) { ensureHitFlashCurve(); }
 
   public sync(id: string, config: UnitSpineConfig, x: number, y: number, facing: 1 | -1, moving: boolean, dt: number, visible = true, members = 1): boolean {
     this.pendingRemovals.delete(id);
@@ -146,7 +160,12 @@ export class SpineUnitOverlay {
       }
     }
     for (const [id, entry] of this.entries) {
-      if (entry.hit) entry.hit.elapsed += dt;
+      if (entry.hit) {
+        // 受擊當格不加時間（frame 0、elapsed 0），之後每格往前；停留期間記下最後一格的時間，退色從這裡起算
+        if (entry.hit.frame >= 0) entry.hit.elapsed += dt;
+        entry.hit.frame += 1;
+        if (entry.hit.frame < getHitFlashCurve().holdFrames) entry.hit.holdEnd = entry.hit.elapsed;
+      }
       if (entry.charge) { entry.charge.t += Math.max(0, dt); if (entry.charge.t >= entry.charge.dur) entry.charge = null; }
       const landingPrev = this.advanceDeploy(entry, dt);
       const frozen = entry.freeze > 0;
@@ -193,7 +212,7 @@ export class SpineUnitOverlay {
   public hit(id: string, amplitudePx: number, flash = true, pushPx = 0): boolean {
     const entry = this.entries.get(id);
     if (!entry?.node?.isValid) return false;
-    entry.hit = { elapsed: 0, amplitude: Math.max(0, amplitudePx), flash, push: Math.max(0, pushPx) };
+    entry.hit = { elapsed: 0, amplitude: Math.max(0, amplitudePx), flash, push: Math.max(0, pushPx), frame: -1, holdEnd: 0 };
     return true;
   }
 
@@ -284,7 +303,7 @@ export class SpineUnitOverlay {
     const hit = entry.hit;
     const chargePose = entry.charge ? sampleChargePose(entry.charge.t, entry.charge.dur) : { scale: 1, shakeX: 0 };
     const shakeX = (hit ? sampleHitShake(hit.elapsed, hit.amplitude) : 0) + chargePose.shakeX;
-    const flash = hit?.flash ? hitFlashStrength(hit.elapsed) : 0;
+    const flash = hit?.flash ? hitFlashStrength(hit.frame, hit.elapsed - hit.holdEnd) : 0;
     // 受擊後退：往面向的反方向推（單位都面向敵方），隊員跟著帶頭者位置走，所以整隊一起退
     const recoilX = hit && hit.push > 0 ? -state.facing * hit.push * sampleHitRecoil(hit.elapsed) : 0;
     if (hit && hit.elapsed >= hitFeedbackTotalSec()) entry.hit = null;

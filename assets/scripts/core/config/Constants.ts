@@ -220,6 +220,8 @@ export const EVENT_NAMES = {
   GameModeChanged:   "game-mode-changed",
   UnitDeployed:      "unit-deployed",
   UnitDamaged:       "unit-damaged",
+  /** 傷害被整個擋下（PROG-2-9437）：payload { unitId, attackerId, attackerFaction, damage, reason: 'invincible'|'flee-immune' } */
+  UnitDamageBlocked: "unit-damage-blocked",
   /** 適性命中判定落空（PROG-2-0080）：payload { attackerId, targetId, hitRate } */
   UnitAttackMissed:  "unit-attack-missed",
   /** 史實合攻觸發（KIN-09 演出）：payload { attackerId, helperId, targetId }，於追加傷害前發出 */
@@ -230,6 +232,8 @@ export const EVENT_NAMES = {
   GeneralDamaged:    "general-damaged",
   GeneralDamagedVisualCommitted: "general-damaged-visual-committed",
   GeneralSpChanged:  "general-sp-changed",
+  /** 主將精力變化（PROG-2-9432）：payload { faction, vitality, maxVitality, before }，HUD 即時刷新精力條 */
+  GeneralVitalityChanged: "general-vitality-changed",
   GeneralSkillUsed:  "general-skill-used",
   LastSpurtEntered: "last-spurt-entered",
   StaminaExhausted: "stamina-exhausted",

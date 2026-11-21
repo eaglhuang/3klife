@@ -15,7 +15,7 @@
  * Unity 對照：像伺服器端的 Save 欄位白名單，客戶端只能改 Schema 允許的欄位，其他欄位就算送來也不寫入。
  */
 
-/** PlayerSaveSnapshot 的 79 個頂層欄位（與客戶端存檔定義同步）。 */
+/** PlayerSaveSnapshot 的 80 個頂層欄位（與客戶端存檔定義同步）。 */
 export const SYNC_PATCH_ROOT_KEYS: readonly string[] = [
     'schemaVersion',
     'saveVersion',
@@ -24,6 +24,7 @@ export const SYNC_PATCH_ROOT_KEYS: readonly string[] = [
     'gameTime',
     'roster',
     'nurture',
+    'academy',
     'deck',
     'leadGeneralId',
     'discoveryLevel',
@@ -42,6 +43,12 @@ export const SYNC_PATCH_ROOT_KEYS: readonly string[] = [
     'generalMind',
     'legacyCount',
     'legendaryMentoringUsedIds',
+    'itemMeta',
+    'rewardMeta',
+    'questState',
+    'storyMeta',
+    'occupancy',
+    'familyState',
     'officerState',
     'sandtableMarkersPlaced',
     'sandtableMarkerTerritories',

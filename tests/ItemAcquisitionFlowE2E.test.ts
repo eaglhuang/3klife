@@ -54,7 +54,7 @@ export function createItemAcquisitionFlowE2ESuite(): TestSuite {
         assertLedgerMatches(a, '長流程後');
 
         const enroll = a.queryItemAcquisitions({ itemId: ITEM_ADMISSION_TOKEN });
-        assert.isTrue(enroll.length >= 5 && enroll.every((r) => r.source === 'TASK'), '入學令都記為 TASK，每個登入日一筆');
+        assert.equals(0, enroll.length, '每日免費入學令已退場（PROG-2-9206），登入不再留入學令紀錄');
         const slips = a.queryItemAcquisitions({ itemId: ITEM_BAMBOO_SLIP });
         assert.isTrue(slips.length >= 1 && slips.every((r) => r.source === 'DROP'), '退役竹簡記為 DROP');
         const oracle = a.queryItemAcquisitions({ itemId: ITEM_ORACLE_TOKEN });
@@ -70,13 +70,16 @@ export function createItemAcquisitionFlowE2ESuite(): TestSuite {
         assertLedgerMatches(b, '讀檔後續登入');
     });
 
-    suite.test('登入超過 200 天：紀錄只留最後 200 筆，存讀檔後內容完全一致', async () => {
+    suite.test('入庫超過 200 筆：紀錄只留最後 200 筆，存讀檔後內容完全一致', async () => {
         services().initialize();
         sys.localStorage.removeItem('CLIENT_DEVICE_ID');
         const adapter = new MemoryStorageAdapter();
         const a = build(adapter);
         a.startNewGame(22);
-        for (let d = 0; d < ITEM_ACQUISITION_LOG_LIMIT + 30; d++) a.recordLoginAt(DAY0 + d * DAY_MS);
+        for (let d = 0; d < ITEM_ACQUISITION_LOG_LIMIT + 30; d++) {
+            a.recordLoginAt(DAY0 + d * DAY_MS);
+            await a.addItem(ITEM_ADMISSION_TOKEN, 1, 'TASK');
+        }
         const log = a.itemAcquisitionLog;
         assert.equals(ITEM_ACQUISITION_LOG_LIMIT, log.length, '只留上限筆數');
         assert.isTrue(log.every((r) => r.source === 'TASK' || r.source === 'EVENT' || r.source === 'DROP' || r.source === 'SHOP'), '保留的都有來源');

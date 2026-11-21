@@ -96,9 +96,10 @@ export function createSceneLoadProgressSuite(): TestSuite {
             assert.equals(undefined, root.attrs['data-compact']);
         } finally { SceneLoadProgress.complete(); g.document = oldDocument; }
     });
-    suite.test('小條樣式只靠 data-compact 切換，固定在右下角', () => {
+    suite.test('小條樣式只靠 data-compact 切換，移到左下角細線，不佔右下角信箱', () => {
         assert.contains(SCENE_LOAD_PROGRESS_CSS, '[data-compact="1"]');
-        assert.contains(SCENE_LOAD_PROGRESS_CSS, 'right:12px');
+        assert.contains(SCENE_LOAD_PROGRESS_CSS, "left:8px");
+        assert.notContains(SCENE_LOAD_PROGRESS_CSS, "right:12px");
     });
     return suite;
 }

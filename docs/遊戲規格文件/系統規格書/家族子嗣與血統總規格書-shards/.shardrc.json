@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "source": "../家族子嗣與血統總規格書.md",
+  "indexTitle": "家族子嗣與血統總規格書（分片索引）",
+  "indexPath": "docs/遊戲規格文件/系統規格書/家族子嗣與血統總規格書.md",
+  "type": "markdown-h2",
+  "preambleShard": "shard-a",
+  "defaultShard": "shard-c",
+  "shards": [
+    {
+      "name": "shard-a",
+      "title": "0–4 結論、既有規格地圖、家族成員五類、配偶、子嗣數量與時間",
+      "pattern": "^(0|1|2|3|4)[.] "
+    },
+    {
+      "name": "shard-b",
+      "title": "5–9 繼承、主角不死、分家與外嫁、義子、家臣子嗣",
+      "pattern": "^(5|6|7|8|9)[.] "
+    },
+    {
+      "name": "shard-c",
+      "title": "10–15 共用框架對應、建議 JSON、既有規格修訂、驗收、待決、實作卡切分",
+      "pattern": "^1[0-5][.] "
+    }
+  ]
+}

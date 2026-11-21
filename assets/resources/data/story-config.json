@@ -1,0 +1,83 @@
+{
+  "schema": "story-config.v1",
+  "stories": [
+    {
+      "id": "STORY_ACADEMY_MIDTERM",
+      "kind": "system",
+      "trigger": { "event": "academy.interrupt", "when": null },
+      "priority": 60,
+      "interrupt": true,
+      "skippable": false,
+      "repeatable": true,
+      "start": "n1",
+      "nodes": {
+        "n1": { "type": "scene", "cues": [{ "cue": "popup", "titleKey": "ui.academy.flow.int.kind.MIDTERM", "textKey": "ui.academy.flow.int.title" }], "next": "c1" },
+        "c1": { "type": "choice", "options": [
+          { "id": "STRENGTH", "next": "end" },
+          { "id": "BALANCE", "next": "end" },
+          { "id": "NOURISH", "next": "end" }
+        ] },
+        "end": { "type": "end" }
+      }
+    },
+    {
+      "id": "STORY_ACADEMY_COMING_OF_AGE",
+      "kind": "system",
+      "trigger": { "event": "academy.interrupt", "when": null },
+      "priority": 70,
+      "interrupt": true,
+      "skippable": false,
+      "repeatable": true,
+      "start": "n1",
+      "nodes": {
+        "n1": { "type": "scene", "cues": [{ "cue": "popup", "titleKey": "ui.academy.flow.int.kind.COMING_OF_AGE", "textKey": "ui.academy.flow.int.title" }], "next": "c1" },
+        "c1": { "type": "choice", "hostOptions": true, "next": "end" },
+        "end": { "type": "end" }
+      }
+    },
+    {
+      "id": "STORY_ACADEMY_RESONANCE",
+      "kind": "system",
+      "trigger": { "event": "academy.interrupt", "when": null },
+      "priority": 80,
+      "interrupt": true,
+      "skippable": false,
+      "repeatable": true,
+      "start": "n1",
+      "nodes": {
+        "n1": { "type": "scene", "cues": [{ "cue": "popup", "titleKey": "ui.academy.flow.int.kind.RESONANCE", "textKey": "ui.academy.flow.int.title" }], "next": "c1" },
+        "c1": { "type": "choice", "options": [{ "id": "WITNESS", "next": "end" }] },
+        "end": { "type": "end" }
+      }
+    },
+    {
+      "id": "STORY_ACADEMY_GRADUATION",
+      "kind": "system",
+      "trigger": { "event": "academy.interrupt", "when": null },
+      "priority": 100,
+      "interrupt": true,
+      "skippable": false,
+      "repeatable": true,
+      "start": "n1",
+      "nodes": {
+        "n1": { "type": "scene", "cues": [{ "cue": "popup", "titleKey": "ui.academy.flow.int.kind.GRADUATION", "textKey": "ui.academy.flow.int.title" }], "next": "c1" },
+        "c1": { "type": "choice", "options": [{ "id": "CONFIRM", "next": "end" }] },
+        "end": { "type": "end" }
+      }
+    },
+    {
+      "id": "STORY_ACADEMY_GRADUATED",
+      "kind": "system",
+      "trigger": { "event": "academy.graduated", "when": null },
+      "priority": 90,
+      "interrupt": false,
+      "skippable": true,
+      "repeatable": true,
+      "start": "n1",
+      "nodes": {
+        "n1": { "type": "scene", "cues": [{ "cue": "popup", "textKey": "ui.academy.flow.graduated" }], "next": "end" },
+        "end": { "type": "end" }
+      }
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "schema": "item-config.v1",
+  "items": [
+    {
+      "id": "ITEM_ADMISSION_TOKEN",
+      "kind": "token",
+      "stack": { "mode": "stackable", "max": 3 },
+      "bind": "none",
+      "overflow": { "toCurrency": "gold", "amount": 100 }
+    }
+  ],
+  "holders": [
+    {
+      "kind": "household",
+      "aliasKey": "holder.household.name",
+      "containers": [
+        { "id": "main", "accepts": ["token", "consumable", "material", "special", "currency", "treasure", "card"], "capacity": null }
+      ]
+    }
+  ],
+  "periodicGrants": [
+    {
+      "id": "academy_admission_season",
+      "holder": { "kind": "household", "id": "home" },
+      "container": "main",
+      "itemId": "ITEM_ADMISSION_TOKEN",
+      "everySeasons": 1,
+      "count": 1
+    }
+  ]
+}

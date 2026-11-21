@@ -76,9 +76,10 @@ export function advancePopulation(population: number, morale: number, cap: numbe
     return Math.max(0, next);
 }
 
-/** 守城大敗：人口 −3%（無條件捨去損失量以外的部分，結果為整數） */
-export function applyPopulationRout(population: number): number {
-    return Math.max(0, Math.floor(population * (1 - DEFENSE_ROUT_POPULATION_LOSS) + 1e-9));
+/** 守城大敗：人口 −3%（無條件捨去損失量以外的部分，結果為整數）；比例可由 data/defense-battle 覆寫（PROG-2-9431） */
+export function applyPopulationRout(population: number, lossRatio: number = DEFENSE_ROUT_POPULATION_LOSS): number {
+    const ratio = Number.isFinite(lossRatio) ? Math.min(1, Math.max(0, lossRatio)) : DEFENSE_ROUT_POPULATION_LOSS;
+    return Math.max(0, Math.floor(population * (1 - ratio) + 1e-9));
 }
 
 /** 取得本季商業內政任務的實際產出（黃金基礎值）；本季沒選商業任務回 0 */

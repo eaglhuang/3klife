@@ -95,6 +95,7 @@ export class BattleSceneFlow {
     // 關卡回合時限（PROG-2-9423）：再戰一次也要重新套用（判定設定在第一次開戰時已讀好）
     const turnLimitRule = resolveDefenseTurnLimit(encounter, ctrl.defenseBattle);
     ctrl.configureEncounterTurnLimit(turnLimitRule.turnLimit, turnLimitRule.timeUpRule);
+    ctrl.applyDefenseFortress();
     // 天氣排程（PROG-2-0401）：入口參數優先，沒有才用 encounter 設定
     const weatherSchedule = battleParams?.weatherSchedule ?? encounter?.weatherSchedule;
     if (weatherSchedule) ctrl.setWeatherSchedule(weatherSchedule);
@@ -115,6 +116,9 @@ export class BattleSceneFlow {
     hud?.setEnemyGeneralId(egId);
     hud?.setPlayerName(pg.name);
     hud?.setEnemyName(eg.name);
+    // 守城戰我方城寨血條（PROG-2-9430）：再戰一次也照守方顯示
+    hud?.setDefenseFortressBarVisible?.(ctrl.state.siegeDefender === Faction.Player, ctrl.state.playerFortressMaxHp);
+    hud?.setFortressHp(Faction.Player, ctrl.state.playerFortressHp);
     hud?.refresh(
       snap.turn,
       snap.playerFood,

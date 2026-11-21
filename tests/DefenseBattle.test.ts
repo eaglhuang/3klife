@@ -9,9 +9,11 @@ import { join } from 'path';
 import { TestSuite, assert } from './TestRunner';
 import {
     DEFAULT_DEFENSE_BATTLE,
+    defenseReinforceAllowance,
     defenseOutcomeOf,
     isDefenseBattleKind,
     parseDefenseBattleConfig,
+    pickDefenseReinforceLane,
     resolveDefenseTurnLimit,
     siegeDefenderOf,
 } from '../assets/scripts/core/systems/DefenseBattle';
@@ -31,12 +33,16 @@ import {
     sceneSiegeDamageMultiplierOf,
 } from '../assets/scripts/battle/shared/BattleTacticBehavior';
 import { BattleState } from '../assets/scripts/battle/models/BattleState';
-import { BattleTactic, Faction, TroopType } from '../assets/scripts/core/config/Constants';
+import { BattleTactic, EVENT_NAMES, Faction, TroopType } from '../assets/scripts/core/config/Constants';
 import type { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
 import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
 import { lifespanCommandForBattleKind } from '../assets/scripts/core/systems/LifespanWiring';
 import { MORALE_DELTA } from '../assets/scripts/core/systems/CityEconomy';
+import { buildYearReport, buildYearReportTexts, normalizeYearEndDefenseResult } from '../assets/scripts/core/systems/YearReport';
+import { validatePlayerSaveSnapshot } from '../assets/scripts/core/services/PlayerSaveService';
 import { GeneralUnit, type GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
+import { BattleController } from '../assets/scripts/battle/controllers/BattleController';
+import { services } from '../assets/scripts/core/managers/ServiceLoader';
 
 const readData = (name: string): unknown => JSON.parse(readFileSync(join(__dirname, '..', 'assets/resources/data', name), 'utf8'));
 
@@ -86,7 +92,7 @@ export function createDefenseBattleSuite(): TestSuite {
     });
 
     suite.test('回合上限：守城沒設時用設定檔、時限到判我方勝；遭遇有設時用遭遇；非守城不動', () => {
-        const config = { turnLimit: 12, moraleOnVictory: 2 };
+        const config = { ...DEFAULT_DEFENSE_BATTLE, turnLimit: 12, moraleOnVictory: 2 };
         const d = resolveDefenseTurnLimit({ battleKind: 'defense' }, config);
         assert.equals(12, d.turnLimit);
         assert.equals('player-win', d.timeUpRule);
@@ -192,6 +198,159 @@ export function createDefenseBattleSuite(): TestSuite {
         assert.isTrue((tier!.enemyInitialDeployment as Array<{ type: string }>).some((d) => d.type === 'engineer'));
         const lobby = readFileSync(join(__dirname, '..', 'assets/scripts/ui/scenes/LobbyScene.ts'), 'utf8');
         assert.isTrue(lobby.includes("e.battleKind !== 'defense'"));
+    });
+
+    suite.test('設定檔：工兵投石每隊 15、每回合補 1 隊；壞值用預設（PROG-2-9429）', () => {
+        const real = parseDefenseBattleConfig(readData('defense-battle.json'));
+        assert.equals(15, real.engineerBombardDamage);
+        assert.equals(1, real.engineerReinforcePerTurn);
+        const bad = parseDefenseBattleConfig({ engineerBombardDamage: -3, engineerReinforcePerTurn: 'x' });
+        assert.equals(DEFAULT_DEFENSE_BATTLE.engineerBombardDamage, bad.engineerBombardDamage);
+        assert.equals(DEFAULT_DEFENSE_BATTLE.engineerReinforcePerTurn, bad.engineerReinforcePerTurn);
+        assert.equals(0, parseDefenseBattleConfig({ engineerReinforcePerTurn: 0 }).engineerReinforcePerTurn);
+    });
+
+    suite.test('補派路線：挑我方部隊最少的空路；同數隨機；沒空路回 null（PROG-2-9429）', () => {
+        assert.equals(3, pickDefenseReinforceLane([0, 1, 3], [2, 1, 0, 0, 5], () => 0));
+        assert.equals(1, pickDefenseReinforceLane([0, 1, 4], [1, 1, 0, 0, 1], () => 0.5));
+        assert.equals(0, pickDefenseReinforceLane([0, 1, 4], [1, 1, 0, 0, 1], () => 0));
+        assert.equals(4, pickDefenseReinforceLane([0, 1, 4], [1, 1, 0, 0, 1], () => 0.99));
+        assert.equals(null, pickDefenseReinforceLane([], [0, 0, 0, 0, 0], () => 0));
+    });
+
+    const general = (id: string, faction: Faction) => new GeneralUnit({ id, name: id, faction, hp: 100000,
+        maxSp: 100, initialSp: 0, str: 60, int: 90, lea: 90, skillId: 'cao-cao-tactics',
+        battlePrimarySkillId: 'cao-cao-tactics', tacticSlots: [] });
+    function controller(defender: Faction): BattleController {
+        services().initialize();
+        const ctrl = new BattleController();
+        ctrl.configureSiegeDefender(defender);
+        ctrl.initBattle(general('p', Faction.Player), general('e', Faction.Enemy));
+        if (defender === Faction.Player) ctrl.state.battleTactic = BattleTactic.Siege;
+        return ctrl;
+    }
+    const spawn = (ctrl: BattleController, type: TroopType, faction: Faction, lane: number, depth: number): TroopUnit =>
+        (ctrl as any).unitSpawner.spawnUnit(type, faction, lane, depth);
+    const enemyEngineers = (ctrl: BattleController) => [...ctrl.state.units.values()]
+        .filter((u) => u.faction === Faction.Enemy && u.type === TroopType.Engineer && !u.isDead()).length;
+
+    suite.test('守城投石：敵軍回合每隊活著的工兵不論站位扣我方城寨 15；非守城不扣（PROG-2-9429）', () => {
+        const ctrl = controller(Faction.Player);
+        spawn(ctrl, TroopType.Engineer, Faction.Enemy, 0, 6);
+        spawn(ctrl, TroopType.Engineer, Faction.Enemy, 2, 6);
+        const hits: number[] = [];
+        const onHit = (p: { faction: Faction; hp: number }) => { if (p.faction === Faction.Player) hits.push(p.hp); };
+        services().event.on(EVENT_NAMES.FortressDamaged, onHit);
+        const before = ctrl.state.playerFortressHp;
+        const engineersBefore = enemyEngineers(ctrl);
+        ctrl.resolvePlayerTurn(); ctrl.resolveEnemyTurn();
+        services().event.off(EVENT_NAMES.FortressDamaged, onHit);
+        // 補派的工兵在出兵階段就上場，同一回合也會投石
+        const engineersAfter = enemyEngineers(ctrl);
+        assert.isTrue(engineersAfter >= engineersBefore + 1);
+        assert.equals(before - 15 * engineersAfter, ctrl.state.playerFortressHp);
+        assert.isTrue(hits.includes(ctrl.state.playerFortressHp));
+
+        const normal = controller(Faction.Enemy);
+        spawn(normal, TroopType.Engineer, Faction.Enemy, 0, 6);
+        const normalBefore = normal.state.playerFortressHp;
+        normal.resolvePlayerTurn(); normal.resolveEnemyTurn();
+        assert.equals(normalBefore, normal.state.playerFortressHp);
+    });
+
+    suite.test('守城主將留守：敵方武將棋子不前進；一般戰照常推進（PROG-2-9429）', () => {
+        const ctrl = controller(Faction.Player);
+        const boss = spawn(ctrl, TroopType.Infantry, Faction.Enemy, 2, 6);
+        ctrl.enemyGeneralUnitId = boss.id;
+        ctrl.resolvePlayerTurn(); ctrl.resolveEnemyTurn();
+        assert.equals(6, boss.depth);
+
+        const normal = controller(Faction.Enemy);
+        const mover = spawn(normal, TroopType.Infantry, Faction.Enemy, 2, 6);
+        normal.enemyGeneralUnitId = mover.id;
+        normal.resolvePlayerTurn(); normal.resolveEnemyTurn();
+        assert.isTrue(mover.depth < 6);
+    });
+
+    suite.test('守城補派：每回合多派 1 隊工兵到我方最少的路；非守城不補（PROG-2-9429）', () => {
+        const ctrl = controller(Faction.Player);
+        for (const lane of [0, 1, 3, 4]) spawn(ctrl, TroopType.Shield, Faction.Player, lane, 1);
+        const before = enemyEngineers(ctrl);
+        ctrl.resolvePlayerTurn(); ctrl.resolveEnemyTurn();
+        const fresh = [...ctrl.state.units.values()].filter((u) => u.faction === Faction.Enemy && u.type === TroopType.Engineer);
+        assert.equals(before + 1, fresh.length);
+        assert.equals(2, fresh[fresh.length - 1].lane);
+
+        const normal = controller(Faction.Enemy);
+        normal.resolvePlayerTurn(); normal.resolveEnemyTurn();
+        assert.equals(0, enemyEngineers(normal));
+    });
+
+    suite.test('設定檔：補派總上限 5、城寨 500、失守民心 −3、大敗人口 3% 都從 JSON 讀；壞值用預設（PROG-2-9431）', () => {
+        const real = parseDefenseBattleConfig(readData('defense-battle.json'));
+        assert.equals(5, real.engineerReinforceMax);
+        assert.equals(500, real.fortressMaxHp);
+        assert.equals(-3, real.defeatMoraleDelta);
+        assert.equals(0.03, real.routPopulationLossRatio);
+        const bad = parseDefenseBattleConfig({ engineerReinforceMax: -1, fortressMaxHp: 0, defeatMoraleDelta: 2, routPopulationLossRatio: 1.5 });
+        assert.equals(DEFAULT_DEFENSE_BATTLE.engineerReinforceMax, bad.engineerReinforceMax);
+        assert.equals(DEFAULT_DEFENSE_BATTLE.fortressMaxHp, bad.fortressMaxHp);
+        assert.equals(DEFAULT_DEFENSE_BATTLE.defeatMoraleDelta, bad.defeatMoraleDelta);
+        assert.equals(DEFAULT_DEFENSE_BATTLE.routPopulationLossRatio, bad.routPopulationLossRatio);
+    });
+
+    suite.test('補派額度：每回合上限與整場剩餘取小，補滿為 0（PROG-2-9431）', () => {
+        const cfg = { engineerReinforcePerTurn: 1, engineerReinforceMax: 5 };
+        assert.equals(1, defenseReinforceAllowance(cfg, 0));
+        assert.equals(1, defenseReinforceAllowance(cfg, 4));
+        assert.equals(0, defenseReinforceAllowance(cfg, 5));
+        assert.equals(0, defenseReinforceAllowance(cfg, 9));
+        assert.equals(2, defenseReinforceAllowance({ engineerReinforcePerTurn: 3, engineerReinforceMax: 2 }, 0));
+    });
+
+    suite.test('守城補派到整場上限就停；城寨上限讀設定（PROG-2-9431）', () => {
+        const ctrl = controller(Faction.Player);
+        (ctrl as any).defenseBattleConfig = parseDefenseBattleConfig({ engineerReinforceMax: 2, fortressMaxHp: 640 });
+        ctrl.applyDefenseFortress();
+        assert.equals(640, ctrl.state.playerFortressMaxHp);
+        assert.equals(640, ctrl.state.playerFortressHp);
+        for (let t = 0; t < 4; t++) { ctrl.resolvePlayerTurn(); ctrl.resolveEnemyTurn(); ctrl.finalizeEnemyTurn(); }
+        assert.equals(2, ctrl.state.defenseEngineersReinforced);
+
+        const normal = controller(Faction.Enemy);
+        (normal as any).defenseBattleConfig = parseDefenseBattleConfig({ fortressMaxHp: 640 });
+        normal.applyDefenseFortress();
+        assert.equals(500, normal.state.playerFortressHp, '非守城不改城寨');
+    });
+
+    suite.test('失守懲罰讀設定：民心與大敗人口比例由守城設定帶入（PROG-2-9431）', async () => {
+        const base = newSession();
+        const before = base.cityMorale;
+        const popBefore = base.cityPopulation;
+        const rout = newSession();
+        await rout.recordBattle(['lead-1'], 'enemy-win', { defense: { moraleOnVictory: 2, playerGeneralsDown: true, defeatMoraleDelta: -5, routPopulationLossRatio: 0.1 } });
+        assert.equals(before - 5, rout.cityMorale);
+        assert.equals(popBefore - Math.floor(popBefore * 0.1 + 1e-9), rout.cityPopulation);
+    });
+
+    suite.test('年報反映守城結果：結算記下結果、存讀檔保留、年報多一行（PROG-2-9431）', async () => {
+        const session = newSession();
+        await session.recordBattle(['lead-1'], 'enemy-win', { defense: { moraleOnVictory: 2, playerGeneralsDown: true } });
+        const snapshot = session.createSnapshot();
+        const saved = normalizeYearEndDefenseResult(snapshot.resources?.yearEndDefenseResult);
+        assert.isTrue(!!saved);
+        assert.equals('rout', saved!.outcome);
+        assert.equals(-3, saved!.moraleDelta);
+        assert.isTrue(saved!.populationLost > 0);
+        const reloaded = validatePlayerSaveSnapshot(JSON.parse(JSON.stringify(snapshot)));
+        assert.equals('rout', normalizeYearEndDefenseResult(reloaded.resources?.yearEndDefenseResult)?.outcome);
+
+        const report = buildYearReport(saved!.year, [], [], saved);
+        const texts = buildYearReportTexts(report);
+        assert.equals(`年終守城：大敗，民心 −3、人口 −${saved!.populationLost}`, texts.yearReportDefense);
+        assert.equals('年終守城：守住城寨，民心 +2', buildYearReportTexts(buildYearReport(1, [], [], { year: 1, outcome: 'victory', moraleDelta: 2, populationLost: 0 })).yearReportDefense);
+        assert.equals('', buildYearReportTexts(buildYearReport(2, [], [], { year: 1, outcome: 'victory', moraleDelta: 2, populationLost: 0 })).yearReportDefense, '不是今年的守城不列');
+        assert.equals(null, normalizeYearEndDefenseResult({ year: 1, outcome: 'win' }));
     });
 
     return suite;

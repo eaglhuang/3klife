@@ -1,0 +1,27 @@
+{
+  "schema": "quest-config.v1",
+  "defs": [
+    {
+      "id": "ACADEMY_36",
+      "taskKind": "academy",
+      "solver": "steps",
+      "steps": 36,
+      "actors": { "min": 1, "max": 1 },
+      "acceptWhen": null,
+      "gates": [
+        { "id": "TERM_1", "at": 12, "blocks": ["advance", "settle", "enroll", "mentorAssign"], "clearWhen": null },
+        { "id": "TERM_2", "at": 24, "blocks": ["advance", "settle", "enroll", "mentorAssign"], "clearWhen": null },
+        { "id": "GRADUATE", "at": 36, "blocks": ["advance", "settle", "enroll", "mentorAssign"], "clearWhen": null }
+      ],
+      "occupancy": "academy",
+      "countdownSeasons": null,
+      "releaseOnPause": false,
+      "outcome": {
+        "critical": { "reward": "BUNDLE_ACADEMY_GRAD_S" },
+        "success": { "reward": "BUNDLE_ACADEMY_GRAD_A" },
+        "fail": { "reward": "BUNDLE_ACADEMY_GRAD_B" },
+        "disaster": { "reward": "BUNDLE_ACADEMY_GRAD_C" }
+      }
+    }
+  ]
+}

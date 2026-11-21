@@ -1,7 +1,7 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-11-17
-> 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 4/14 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
+> 生成日期: 2026-11-21
+> 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 4/15 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
 ## 遊戲規格類 (`doc_spec`) — Part 4/5
@@ -290,7 +290,7 @@
 | `doc_spec_1169` | docs/遊戲規格文件/系統規格書/大廳季度推進時間發動機與武將性格事件狀態機規格書.md | 大廳季度推進時間發動機與武將性格事件狀態機規格書 |
 | `doc_spec_1170` | docs/遊戲規格文件/系統規格書/出征極速決戰推演演算法與武將個性單挑演出規格書.md | 出征極速決戰推演演算法與武將個性單挑演出規格書 |
 | `doc_spec_1171` | docs/遊戲規格文件/系統規格書/三國季報動態合成與市井奇遇微抉擇狀態機規格書.md | 三國季報動態合成與市井奇遇微抉擇狀態機規格書 |
-| `doc_spec_1172` | docs/遊戲規格文件/系統規格書/子嗣五歲抓周揭曉與及冠入學直通學府代際傳承規格書.md | 子嗣五歲抓周揭曉與及冠入學直通學府代際傳承規格書 |
+| `doc_spec_1172` | docs/遊戲規格文件/系統規格書/子嗣五歲抓周揭曉與及冠入學直通學府代際傳承規格書.md | 子嗣五歲抓周揭曉與及冠入學直通學府代際傳承規格書（依 11/20 裁決修訂：1 歲周歲抓周、5 歲開蒙揭曉） |
 | `doc_spec_1173` | docs/遊戲規格文件/系統規格書/轉蛋系統-shards/core.md | 轉蛋系統規格書 — A–E 系統描述、目的、商業、TA、功能清單 |
 | `doc_spec_1174` | docs/遊戲規格文件/系統規格書/轉蛋系統-shards/formula.md | 轉蛋系統規格書 — F–G 公式與劇本／主視覺 |
 | `doc_spec_1175` | docs/遊戲規格文件/系統規格書/轉蛋系統-shards/rulings.md | 轉蛋系統規格書 — L 與 MCQ 裁決紀錄 |

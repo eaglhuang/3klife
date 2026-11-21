@@ -38,7 +38,7 @@ import {
   VerticalTextAlignment,
   resources,
 } from "cc";
-import { BattleTactic, Faction, GAME_CONFIG, TroopType } from "../../core/config/Constants";
+import { BattleTactic, EVENT_NAMES, Faction, GAME_CONFIG, TroopType } from "../../core/config/Constants";
 import { GeneralUnit } from "../../core/models/GeneralUnit";
 import { TroopUnit } from "../../core/models/TroopUnit";
 import { BattleState } from "../models/BattleState";
@@ -56,7 +56,7 @@ import { SpineUnitOverlay } from "./SpineGeneralOverlay";
 import { GeneralPortraitStandee, STANDEE_HEIGHT_PX, needsStandeeFallback } from "./GeneralPortraitStandee";
 import { generalSpineConfig, squadMemberCount, troopSpineConfigWithFallback } from '../shared/UnitPresentationConfig';
 import { DuelExchange } from '../shared/DuelPresentationCore';
-import { BATTLE_VISUAL_TIMING, buildHitShakeSteps, planHitFeedback, planMoveSegment } from "./BattlePresentationTiming";
+import { BATTLE_VISUAL_TIMING, buildHitShakeSteps, hitScaleNeighborDepth, planHitFeedback, planMoveSegment } from "./BattlePresentationTiming";
 import { BuffGainEffectPool } from "./effects/BuffGainEffectPool";
 import { statBonusTone, statWithBonusText, type StatBonusTone } from "../shared/StatBonusText";
 import {
@@ -70,13 +70,15 @@ import {
 } from "../shared/AttackSurgeHighlight";
 import { hpChipOnChange, stepHpChip, unitHpBarState, type HpChipState, type UnitHpBarState } from "../shared/UnitHpBar";
 import { unitValueFloatType } from "../shared/DamageFloatType";
-import { UnitStatusIconBar, StatusHaloPool } from "./UnitStatusIconBar";
+import { UnitStatusIconBar, StatusHaloPool, STATUS_ICON_SIZE } from "./UnitStatusIconBar";
 import { TileBuffMarkers } from "./TileBuffMarkers";
 import type { TileBuffBadge } from "../shared/TileBuffBadge";
+import { BADGE_HIT_PRIORITY_SEC, badgeRectFromExtent, easePlateOffset, stackBadgeOffsets, unionExtent, type LabelRect, type LocalExtent, type StackBadgeEntry } from "../shared/GeneralPlateAvoidance";
 import { buildUnitStatusContext, computeUnitStatusIcons, gainedTones, newlyGainedKinds, type StatusIconKind } from "../shared/UnitStatusIcons";
 import { services } from "../../core/managers/ServiceLoader";
 import { FLOAT_MISS_TEXT, FloatTextType } from "../../core/systems/FloatTextStyle";
 import { vitalityRingView, type VitalityRingView } from "../../core/systems/VitalityBarView";
+import { GeneralVitalityStrip } from "./GeneralVitalityStrip";
 import {
   DEFAULT_ENEMY_HERO_ASSET_ID,
   DEFAULT_PLAYER_HERO_ASSET_ID,
@@ -145,6 +147,8 @@ interface GeneralView {
   /** 名牌左側精力能量環（PROG-2-1853） */
   vitalityRing: Graphics;
   vitalityText: Label;
+  /** 名牌血量列下方精力細條（PROG-2-9432） */
+  vitalityStrip: GeneralVitalityStrip;
   faction: Faction;
   usingHeroModel: boolean;
   heroLoading: boolean;
@@ -164,10 +168,10 @@ const LOOT_TEXT_STAGGER_SEC = 0.5;
 
 /** 頭頂血條尺寸（名牌座標，名牌本身縮 0.7；PROG-2-1874） */
 const HP_BAR_WIDTH = 150;
-/** 頭頂狀態小圖示列：排在血條正上方，從名牌底板（寬 180）左緣開始，4 格不超出名牌寬度、不擠到隔壁路 */
+/** 頭頂狀態小圖示列：排在血條正上方，從名牌底板（寬 180）左緣開始，3 格不超出名牌寬度、不擠到隔壁路 */
 const STATUS_ICON_START_X = -90;
-/** 圖示列中心 y：名牌半高 39 + 血條（間距 4、高 8）+ 間距 4 + 圖示半高 18 */
-const STATUS_ICON_Y = 73;
+/** 圖示列中心 y：名牌半高 39 + 血條（間距 4、高 8）+ 間距 4 + 圖示半高（PROG-2-9436：48/2） */
+const STATUS_ICON_Y = 39 + 4 + 8 + 4 + STATUS_ICON_SIZE / 2;
 const HP_BAR_HEIGHT = 8;
 /** 掉血殘影色：暖白偏金，在藍、紅血條上都看得清楚（PROG-2-9412）。 */
 const HP_BAR_CHIP_COLOR = new Color(255, 232, 190, 235);
@@ -178,6 +182,9 @@ const HP_BAR_COLOR = {
 
 /** 名牌旁精力能量環半徑（PROG-2-1853） */
 const VITALITY_RING_RADIUS = 24;
+/** 武將名牌徽章尺寸（createGeneralView 的 buildBadge 參數；避讓計算共用） */
+const GENERAL_PLATE_WIDTH = 186;
+const GENERAL_PLATE_HEIGHT = 40;
 
 /**
  * 主將名牌＋精力環在 Overlay 上的安全座標區間（以 1920x1080 中心為基準等比例換算），
@@ -240,6 +247,14 @@ export class UnitRenderer extends Component {
   // lateUpdate 每幀重用的 Vec3 暫存，避免動態分配（對照 Unity: 快取 Vector3 工具變數）
   private readonly labelWorldPosBuf = new Vec3();
   private readonly generalViews = new Map<Faction, GeneralView>();
+  /** 部隊資訊框避開武將名牌的目前 Y 位移（PROG-2-9434），每幀平滑逼近目標 */
+  private readonly plateAvoidOffsets = new Map<string, number>();
+  private readonly plateRectsBuf: LabelRect[] = [];
+  /** 部隊框錯開（PROG-2-9440）：每幀重用的輸入陣列、各單位最後受擊時間（戰場時鐘） */
+  private readonly badgeEntriesBuf: StackBadgeEntry[] = [];
+  private readonly lastHitAt = new Map<string, number>();
+  private badgeClock = 0;
+  private unsubVitality: (() => void) | null = null;
   /** 腳下光環節點池（PROG-2-9399），第一次需要時才建立 */
   private statusHalos: StatusHaloPool | null = null;
   /** 高倍率攻擊提示門檻（PROG-2-9422）；載入 data/attack-surge-highlight 前先用預設 */
@@ -283,6 +298,19 @@ export class UnitRenderer extends Component {
     this.node.layer = Layers.Enum.DEFAULT;
     this.ensureRoots();
     this.ensureSceneKeyLight();
+    // 精力一變就即時刷新名牌能量環與細條（放招、回復、地形），不等整盤重繪（PROG-2-9432）
+    this.unsubVitality = services().event.on(EVENT_NAMES.GeneralVitalityChanged, (d) => {
+      const e = d as { faction: Faction; vitality: number; maxVitality: number };
+      const view = this.generalViews.get(e.faction);
+      if (!view) return;
+      this.drawVitalityRing(view, vitalityRingView(e.vitality, e.maxVitality));
+      view.vitalityStrip.set(e.vitality, e.maxVitality);
+    });
+  }
+
+  /** QA 用：讀取某方武將名牌精力細條的繪製狀態 */
+  public debugVitalityStrip(faction: Faction) {
+    return this.generalViews.get(faction)?.vitalityStrip.debugState() ?? null;
   }
 
   public initialize(boardRenderer: BoardRenderer | null, worldCamera: Camera | null, canvasNode: Node | null): void {
@@ -649,6 +677,7 @@ export class UnitRenderer extends Component {
    */
   public playHitAnimation(defenderId: string, _attackerId: string | null, opts?: { heavy?: boolean; lethal?: boolean }): void {
     this.spineUnits.play(defenderId, 'hit');
+    this.markBadgeHit(defenderId);
     const defenderView = this.unitViews.get(defenderId);
     const defenderNode = defenderView?.worldNode ?? null;
     const defenderUnit = this.findUnitById(defenderId);
@@ -685,7 +714,7 @@ export class UnitRenderer extends Component {
   private hitShakeAmplitudePx(lane: number, depth: number): number {
     let cellPx = 100;
     const a = this.getUnitWorldPosition(lane, depth);
-    const b = this.getUnitWorldPosition(lane, depth + 1);
+    const b = this.getUnitWorldPosition(lane, hitScaleNeighborDepth(depth, GAME_CONFIG.GRID_DEPTH));
     if (a && b) {
       // overlayPoint 回傳共用緩衝，必須先把第一點取出來再算第二點
       const pa = this.overlayPoint(a);
@@ -1111,6 +1140,7 @@ export class UnitRenderer extends Component {
         else if (view.usingHeroModel) view.modelRoot.active = true;
       } else { this.spineUnits.remove(`general:${faction}`); if (view.usingHeroModel) view.modelRoot.active = true; }
     });
+    this.avoidGeneralPlates(dt);
     this.spineUnits.update(dt);
     this.stepHpChips(dt);
     this.moveDust.update(dt);
@@ -1370,6 +1400,7 @@ export class UnitRenderer extends Component {
     view.typeLabel.string = "將";
     view.hpLabel.string = `${Math.max(0, general.currentHp)}`;
     this.drawVitalityRing(view, vitalityRingView(general.vitality, general.maxVitality));
+    view.vitalityStrip.set(general.vitality, general.maxVitality);
     view.labelOpacity.opacity = 255;
     const label = this.projectClampedGeneralLabel(view);
 
@@ -1456,7 +1487,7 @@ export class UnitRenderer extends Component {
     this.spineUnits.abortDuel();
   }
 
-  onDestroy(): void { this.spineUnits.clear(); this.generalStandees.clear(); this.moveDust.destroy(); services().floatText?.setAvoidProvider(null); }
+  onDestroy(): void { this.unsubVitality?.(); this.unsubVitality = null; this.spineUnits.clear(); this.generalStandees.clear(); this.moveDust.destroy(); services().floatText?.setAvoidProvider(null); }
 
   private createGeneralView(faction: Faction): GeneralView {
     this.ensureRoots();
@@ -1493,12 +1524,14 @@ export class UnitRenderer extends Component {
     const labelNode = new Node(`GeneralLabel_${faction}`);
     labelNode.layer = this.canvasNode?.layer ?? Layers.Enum.UI_2D;
     this.uiRoot?.addChild(labelNode);
-    const badge = this.buildBadge(labelNode, 186, 40);
+    const badge = this.buildBadge(labelNode, GENERAL_PLATE_WIDTH, GENERAL_PLATE_HEIGHT);
     // 武將 HUD 標籤陣營色：玩家藍、敵軍紅
     badge.typeLabel.color = faction === Faction.Enemy
       ? new Color(255, 130, 130, 255)
       : new Color(160, 200, 255, 255);
-    const ring = this.buildVitalityRing(labelNode, 186);
+    const ring = this.buildVitalityRing(labelNode, GENERAL_PLATE_WIDTH);
+    // 名牌上排（血量列）底緣在 y=2；細條貼在其正下方，名牌整體縮 0.7，6 單位約為畫面 4px
+    const vitalityStrip = new GeneralVitalityStrip(labelNode, { y: -3, width: 176, height: 6 });
 
     const modelRoot = new Node("ModelRoot");
     modelRoot.layer = Layers.Enum.DEFAULT;
@@ -1516,6 +1549,7 @@ export class UnitRenderer extends Component {
       labelOpacity: badge.opacity,
       vitalityRing: ring.graphics,
       vitalityText: ring.label,
+      vitalityStrip,
       faction,
       usingHeroModel: false,
       heroLoading: false,
@@ -1536,6 +1570,99 @@ export class UnitRenderer extends Component {
     view.worldNode.destroy();
     view.labelNode.destroy();
     this.generalViews.delete(faction);
+  }
+
+  /**
+   * 名牌優先（PROG-2-9434）：部隊集中在武將附近時，部隊頭頂資訊框會壓到武將名牌（能量環、將血量、精力條）。
+   * 名牌排到最上層；與名牌重疊的部隊框往上或往下推開（取較短方向），位移平滑逼近，避免部隊走動時跳動。
+   * 部隊框位置每幀由投影重設，這裡在投影後加位移，不會累積。
+   */
+  private avoidGeneralPlates(dt: number): void {
+    const plates = this.plateRectsBuf;
+    plates.length = 0;
+    // 名牌只排到最上層部隊框之上；之後加進來的傷害跳字等特效仍在名牌之上
+    let topUnitIndex = -1;
+    this.unitViews.forEach((view) => {
+      if (view.labelNode.parent === this.uiRoot) topUnitIndex = Math.max(topUnitIndex, view.labelNode.getSiblingIndex());
+    });
+    this.generalViews.forEach((view) => {
+      const label = view.labelNode;
+      if (!label.active) return;
+      if (label.getSiblingIndex() < topUnitIndex) label.setSiblingIndex(topUnitIndex);
+      const s = label.scale.x;
+      // 名牌本體寬 186＋底板 10；左側另有能量環（見 buildVitalityRing 的位置）
+      const left = (GENERAL_PLATE_WIDTH / 2 + 5 + VITALITY_RING_RADIUS + 8 + VITALITY_RING_RADIUS + 6) * s;
+      const right = (GENERAL_PLATE_WIDTH + 10) / 2 * s;
+      const halfH = (GENERAL_PLATE_HEIGHT * 2 + 10) / 2 * s;
+      plates.push({ x: label.position.x + (right - left) / 2, y: label.position.y, halfW: (left + right) / 2, halfH });
+    });
+    // PROG-2-9440：部隊框彼此也錯開；剛受擊的框先擺（留原位），其他框讓開
+    this.badgeClock += dt > 0 ? dt : 0;
+    const entries = this.badgeEntriesBuf;
+    entries.length = 0;
+    this.unitViews.forEach((view, unitId) => {
+      const label = view.labelNode;
+      if (!label.active) return;
+      const tf = label.getComponent(UITransform);
+      const s = label.scale.x;
+      const p = label.position;
+      const hitAt = this.lastHitAt.get(unitId);
+      entries.push({
+        id: unitId,
+        rect: tf ? badgeRectFromExtent(p.x, p.y, s, this.badgeLocalExtent(view, tf)) : { x: p.x, y: p.y, halfW: 63, halfH: 31 },
+        priority: hitAt !== undefined && this.badgeClock - hitAt < BADGE_HIT_PRIORITY_SEC ? 1 : 0,
+      });
+    });
+    const targets = stackBadgeOffsets(entries, plates);
+    this.unitViews.forEach((view, unitId) => {
+      const label = view.labelNode;
+      const current = this.plateAvoidOffsets.get(unitId) ?? 0;
+      if (!label.active) {
+        if (current !== 0) this.plateAvoidOffsets.delete(unitId);
+        return;
+      }
+      const next = easePlateOffset(current, targets.get(unitId) ?? 0, dt);
+      if (next === 0) { this.plateAvoidOffsets.delete(unitId); return; }
+      this.plateAvoidOffsets.set(unitId, next);
+      const p = label.position;
+      label.setPosition(p.x, p.y + next, p.z);
+    });
+    for (const unitId of this.plateAvoidOffsets.keys()) {
+      if (!this.unitViews.has(unitId)) this.plateAvoidOffsets.delete(unitId);
+    }
+    for (const unitId of this.lastHitAt.keys()) {
+      if (!this.unitViews.has(unitId)) this.lastHitAt.delete(unitId);
+    }
+  }
+
+  /**
+   * 部隊框在名牌本地座標的完整外框（PROG-2-9701）：框本體＋上方血條＋狀態圖示列。
+   * 9440 只算框本體，血條與「士／命」圖示會壓到上方的框。
+   */
+  private badgeLocalExtent(view: UnitView, tf: UITransform): LocalExtent {
+    const halfW = (tf.contentSize.width + 10) / 2;
+    const halfH = tf.contentSize.height / 2;
+    let ext: LocalExtent = { left: -halfW, right: halfW, top: halfH, bottom: -halfH };
+    const bar = view.hpBar?.node;
+    if (bar?.active) ext = { ...ext, top: Math.max(ext.top, bar.position.y + HP_BAR_HEIGHT / 2) };
+    return unionExtent(ext, view.statusBar?.localExtent() ?? null);
+  }
+
+  /** 受擊時記下時間並把框排到部隊框最上層（不蓋過傷害跳字等特效；PROG-2-9440） */
+  private markBadgeHit(unitId: string): void {
+    this.lastHitAt.set(unitId, this.badgeClock);
+    const label = this.unitViews.get(unitId)?.labelNode;
+    if (!label?.isValid || label.parent !== this.uiRoot) return;
+    let topUnitIndex = -1;
+    this.unitViews.forEach((view) => {
+      if (view.labelNode.parent === this.uiRoot) topUnitIndex = Math.max(topUnitIndex, view.labelNode.getSiblingIndex());
+    });
+    if (label.getSiblingIndex() < topUnitIndex) label.setSiblingIndex(topUnitIndex);
+  }
+
+  /** QA／測試：部隊框目前的避讓位移 */
+  public debugPlateAvoidOffsets(): Record<string, number> {
+    return Object.fromEntries(this.plateAvoidOffsets);
   }
 
   private projectClampedGeneralLabel(view: GeneralView): Vec3 {
@@ -1810,7 +1937,7 @@ export class UnitRenderer extends Component {
       if (!isValid(label)) return null;
       const k = label.scale.x || 1;
       const p = label.position;
-      return this.tileBuffFlyTo.set(p.x + (STATUS_ICON_START_X + 18) * k, p.y + STATUS_ICON_Y * k, 0);
+      return this.tileBuffFlyTo.set(p.x + (STATUS_ICON_START_X + STATUS_ICON_SIZE / 2) * k, p.y + STATUS_ICON_Y * k, 0);
     };
     this.tileBuffMarkers.flyPickup(from, badge, target, () => {
       if (!isValid(view.labelNode)) return;

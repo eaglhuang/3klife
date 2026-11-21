@@ -1,0 +1,662 @@
+{
+  "schema": "support-cards.v1",
+  "cards": [
+    {
+      "schema": "support-card.v1",
+      "cardId": "SUP_SIMA_HUI",
+      "itemId": "ITEM_SUPCARD_SIMA_HUI",
+      "kind": "sage",
+      "rarity": "SSR",
+      "projectionOf": null,
+      "focus": "智",
+      "favoredCourse": "文",
+      "school": "水鏡門下",
+      "role": "D",
+      "mult": 1,
+      "hintTactics": [
+        "TACA_01",
+        "TACA_03"
+      ],
+      "events": [
+        "SUPEVT_SIMA_HUI_1",
+        "SUPEVT_SIMA_HUI_2",
+        "SUPEVT_SIMA_HUI_3"
+      ],
+      "name": "司馬徽",
+      "nameKey": "support.card.SUP_SIMA_HUI.name",
+      "introKey": "support.card.SUP_SIMA_HUI.intro",
+      "artKey": "supcard_sima_hui",
+      "usage": "academyOnly"
+    },
+    {
+      "schema": "support-card.v1",
+      "cardId": "SUP_PANG_DEGONG",
+      "itemId": "ITEM_SUPCARD_PANG_DEGONG",
+      "kind": "sage",
+      "rarity": "SR",
+      "projectionOf": null,
+      "focus": "智",
+      "favoredCourse": "文",
+      "school": "水鏡門下",
+      "role": "D",
+      "mult": 1,
+      "hintTactics": [
+        "TACA_01",
+        "TACA_02"
+      ],
+      "events": [
+        "SUPEVT_PANG_DEGONG_1",
+        "SUPEVT_PANG_DEGONG_2"
+      ],
+      "name": "龐德公",
+      "nameKey": "support.card.SUP_PANG_DEGONG.name",
+      "introKey": "support.card.SUP_PANG_DEGONG.intro",
+      "artKey": "supcard_pang_degong",
+      "usage": "academyOnly"
+    },
+    {
+      "schema": "support-card.v1",
+      "cardId": "SUP_ZHENG_XUAN",
+      "itemId": "ITEM_SUPCARD_ZHENG_XUAN",
+      "kind": "sage",
+      "rarity": "SSR",
+      "projectionOf": null,
+      "focus": "政",
+      "favoredCourse": "文",
+      "school": "鄭學",
+      "role": "A",
+      "mult": 1,
+      "hintTactics": [
+        "TACA_04",
+        "TACA_05"
+      ],
+      "events": [
+        "SUPEVT_ZHENG_XUAN_1",
+        "SUPEVT_ZHENG_XUAN_2",
+        "SUPEVT_ZHENG_XUAN_3"
+      ],
+      "name": "鄭玄",
+      "nameKey": "support.card.SUP_ZHENG_XUAN.name",
+      "introKey": "support.card.SUP_ZHENG_XUAN.intro",
+      "artKey": "supcard_zheng_xuan",
+      "usage": "academyOnly"
+    },
+    {
+      "schema": "support-card.v1",
+      "cardId": "SUP_LU_ZHI",
+      "itemId": "ITEM_SUPCARD_LU_ZHI",
+      "kind": "sage",
+      "rarity": "SR",
+      "projectionOf": null,
+      "focus": "統",
+      "favoredCourse": "兵法",
+      "school": "鄭學",
+      "role": "B",
+      "mult": 1,
+      "hintTactics": [
+        "TACA_06",
+        "TACA_10"
+      ],
+      "events": [
+        "SUPEVT_LU_ZHI_1",
+        "SUPEVT_LU_ZHI_2"
+      ],
+      "name": "盧植",
+      "nameKey": "support.card.SUP_LU_ZHI.name",
+      "introKey": "support.card.SUP_LU_ZHI.intro",
+      "artKey": "supcard_lu_zhi",
+      "usage": "academyOnly"
+    },
+    {
+      "schema": "support-card.v1",
+      "cardId": "SUP_MA_RONG",
+      "itemId": "ITEM_SUPCARD_MA_RONG",
+      "kind": "sage",
+      "rarity": "R",
+      "projectionOf": null,
+      "focus": "魅",
+      "favoredCourse": "禮樂",
+      "school": "鄭學",
+      "role": "B",
+      "mult": 1,
+      "hintTactics": [
+        "TACA_04",
+        "TACA_14"
+      ],
+      "events": [
+        "SUPEVT_MA_RONG_1",
+        "SUPEVT_MA_RONG_2"
+      ],
+      "name": "馬融",
+      "nameKey": "support.card.SUP_MA_RONG.name",
+      "introKey": "support.card.SUP_MA_RONG.intro",
+      "artKey": "supcard_ma_rong",
+      "usage": "academyOnly"
+    },
+    {
+      "schema": "support-card.v1",
+      "cardId": "SUP_HUA_TUO",
+      "itemId": "ITEM_SUPCARD_HUA_TUO",
+      "kind": "sage",
+      "rarity": "SSR",
+      "projectionOf": "hua-tuo",
+      "focus": "醫",
+      "favoredCourse": "午睡",
+      "school": "黃老",
+      "role": "C",
+      "mult": 1,
+      "hintTactics": [
+        "TACA_07",
+        "TACA_08"
+      ],
+      "events": [
+        "SUPEVT_HUA_TUO_1",
+        "SUPEVT_HUA_TUO_2",
+        "SUPEVT_HUA_TUO_3"
+      ],
+      "name": "華佗",
+      "nameKey": "support.card.SUP_HUA_TUO.name",
+      "introKey": "support.card.SUP_HUA_TUO.intro",
+      "artKey": "supcard_hua_tuo",
+      "usage": "academyOnly"
+    },
+    {
+      "schema": "support-card.v1",
+      "cardId": "SUP_ZUO_CI",
+      "itemId": "ITEM_SUPCARD_ZUO_CI",
+      "kind": "sage",
+      "rarity": "SR",
+      "projectionOf": "zuo-ci",
+      "focus": "陣",
+      "favoredCourse": "兵法",
+      "school": "黃老",
+      "role": "D",
+      "mult": 1,
+      "hintTactics": [
+        "TACA_09",
+        "TACA_13"
+      ],
+      "events": [
+        "SUPEVT_ZUO_CI_1",
+        "SUPEVT_ZUO_CI_2"
+      ],
+      "name": "左慈",
+      "nameKey": "support.card.SUP_ZUO_CI.name",
+      "introKey": "support.card.SUP_ZUO_CI.intro",
+      "artKey": "supcard_zuo_ci",
+      "usage": "academyOnly"
+    },
+    {
+      "schema": "support-card.v1",
+      "cardId": "SUP_GUAN_LU",
+      "itemId": "ITEM_SUPCARD_GUAN_LU",
+      "kind": "sage",
+      "rarity": "R",
+      "projectionOf": null,
+      "focus": "智",
+      "favoredCourse": "文",
+      "school": "黃老",
+      "role": "D",
+      "mult": 1,
+      "hintTactics": [
+        "TACA_08",
+        "TACA_07"
+      ],
+      "events": [
+        "SUPEVT_GUAN_LU_1",
+        "SUPEVT_GUAN_LU_2"
+      ],
+      "name": "管輅",
+      "nameKey": "support.card.SUP_GUAN_LU.name",
+      "introKey": "support.card.SUP_GUAN_LU.intro",
+      "artKey": "supcard_guan_lu",
+      "usage": "academyOnly"
+    },
+    {
+      "schema": "support-card.v1",
+      "cardId": "SUP_SUN_WU",
+      "itemId": "ITEM_SUPCARD_SUN_WU",
+      "kind": "sage",
+      "rarity": "SSR",
+      "projectionOf": null,
+      "focus": "統",
+      "favoredCourse": "兵法",
+      "school": "兵家",
+      "role": "A",
+      "mult": 1,
+      "hintTactics": [
+        "TACA_10",
+        "TACA_11"
+      ],
+      "events": [
+        "SUPEVT_SUN_WU_1",
+        "SUPEVT_SUN_WU_2",
+        "SUPEVT_SUN_WU_3"
+      ],
+      "name": "孫武",
+      "nameKey": "support.card.SUP_SUN_WU.name",
+      "introKey": "support.card.SUP_SUN_WU.intro",
+      "artKey": "supcard_sun_wu",
+      "usage": "academyOnly"
+    },
+    {
+      "schema": "support-card.v1",
+      "cardId": "SUP_SUN_BIN",
+      "itemId": "ITEM_SUPCARD_SUN_BIN",
+      "kind": "sage",
+      "rarity": "SR",
+      "projectionOf": null,
+      "focus": "陣",
+      "favoredCourse": "兵法",
+      "school": "兵家",
+      "role": "D",
+      "mult": 1.1,
+      "hintTactics": [
+        "TACA_12",
+        "TACA_13"
+      ],
+      "events": [
+        "SUPEVT_SUN_BIN_1",
+        "SUPEVT_SUN_BIN_2"
+      ],
+      "name": "孫臏",
+      "nameKey": "support.card.SUP_SUN_BIN.name",
+      "introKey": "support.card.SUP_SUN_BIN.intro",
+      "artKey": "supcard_sun_bin",
+      "usage": "academyOnly"
+    },
+    {
+      "schema": "support-card.v1",
+      "cardId": "SUP_WU_QI",
+      "itemId": "ITEM_SUPCARD_WU_QI",
+      "kind": "sage",
+      "rarity": "R",
+      "projectionOf": null,
+      "focus": "武",
+      "favoredCourse": "武",
+      "school": "兵家",
+      "role": "A",
+      "mult": 0.9,
+      "hintTactics": [
+        "TACA_10",
+        "TACA_11"
+      ],
+      "events": [
+        "SUPEVT_WU_QI_1",
+        "SUPEVT_WU_QI_2"
+      ],
+      "name": "吳起",
+      "nameKey": "support.card.SUP_WU_QI.name",
+      "introKey": "support.card.SUP_WU_QI.intro",
+      "artKey": "supcard_wu_qi",
+      "usage": "academyOnly"
+    },
+    {
+      "schema": "support-card.v1",
+      "cardId": "SUP_GUAN_YU",
+      "itemId": "ITEM_SUPCARD_GUAN_YU",
+      "kind": "general",
+      "rarity": "SSR",
+      "projectionOf": "guan-yu",
+      "focus": "武",
+      "favoredCourse": "武",
+      "school": "鄭學",
+      "role": "A",
+      "mult": 1,
+      "hintTactics": [
+        "TACA_06",
+        "TACA_11"
+      ],
+      "events": [
+        "SUPEVT_GUAN_YU_1",
+        "SUPEVT_GUAN_YU_2",
+        "SUPEVT_GUAN_YU_3"
+      ],
+      "name": "關羽·夜讀",
+      "nameKey": "support.card.SUP_GUAN_YU.name",
+      "introKey": "support.card.SUP_GUAN_YU.intro",
+      "artKey": "supcard_guan_yu",
+      "usage": "academyOnly"
+    },
+    {
+      "schema": "support-card.v1",
+      "cardId": "SUP_ZHUGE_LIANG",
+      "itemId": "ITEM_SUPCARD_ZHUGE_LIANG",
+      "kind": "general",
+      "rarity": "SSR",
+      "projectionOf": "zhuge-liang",
+      "focus": "智",
+      "favoredCourse": "文",
+      "school": "水鏡門下",
+      "role": "D",
+      "mult": 1,
+      "hintTactics": [
+        "TACA_02",
+        "TACA_03"
+      ],
+      "events": [
+        "SUPEVT_ZHUGE_LIANG_1",
+        "SUPEVT_ZHUGE_LIANG_2",
+        "SUPEVT_ZHUGE_LIANG_3"
+      ],
+      "name": "諸葛亮·草廬",
+      "nameKey": "support.card.SUP_ZHUGE_LIANG.name",
+      "introKey": "support.card.SUP_ZHUGE_LIANG.intro",
+      "artKey": "supcard_zhuge_liang",
+      "usage": "academyOnly"
+    },
+    {
+      "schema": "support-card.v1",
+      "cardId": "SUP_XU_SHU",
+      "itemId": "ITEM_SUPCARD_XU_SHU",
+      "kind": "general",
+      "rarity": "SR",
+      "projectionOf": "xu-shu",
+      "focus": "智",
+      "favoredCourse": "兵法",
+      "school": "水鏡門下",
+      "role": "B",
+      "mult": 1,
+      "hintTactics": [
+        "TACA_02",
+        "TACA_10"
+      ],
+      "events": [
+        "SUPEVT_XU_SHU_1",
+        "SUPEVT_XU_SHU_2"
+      ],
+      "name": "徐庶·單福",
+      "nameKey": "support.card.SUP_XU_SHU.name",
+      "introKey": "support.card.SUP_XU_SHU.intro",
+      "artKey": "supcard_xu_shu",
+      "usage": "academyOnly"
+    },
+    {
+      "schema": "support-card.v1",
+      "cardId": "SUP_ZHOU_YU",
+      "itemId": "ITEM_SUPCARD_ZHOU_YU",
+      "kind": "general",
+      "rarity": "SR",
+      "projectionOf": "zhou-yu",
+      "focus": "魅",
+      "favoredCourse": "禮樂",
+      "school": "兵家",
+      "role": "B",
+      "mult": 1,
+      "hintTactics": [
+        "TACA_14",
+        "TACA_11"
+      ],
+      "events": [
+        "SUPEVT_ZHOU_YU_1",
+        "SUPEVT_ZHOU_YU_2"
+      ],
+      "name": "周瑜·曲有誤",
+      "nameKey": "support.card.SUP_ZHOU_YU.name",
+      "introKey": "support.card.SUP_ZHOU_YU.intro",
+      "artKey": "supcard_zhou_yu",
+      "usage": "academyOnly"
+    },
+    {
+      "schema": "support-card.v1",
+      "cardId": "SUP_LV_MENG",
+      "itemId": "ITEM_SUPCARD_LV_MENG",
+      "kind": "general",
+      "rarity": "SR",
+      "projectionOf": "lu-meng",
+      "focus": "智",
+      "favoredCourse": "文",
+      "school": "兵家",
+      "role": "A",
+      "mult": 1,
+      "hintTactics": [
+        "TACA_10",
+        "TACA_12"
+      ],
+      "events": [
+        "SUPEVT_LV_MENG_1",
+        "SUPEVT_LV_MENG_2"
+      ],
+      "name": "呂蒙·三日不見",
+      "nameKey": "support.card.SUP_LV_MENG.name",
+      "introKey": "support.card.SUP_LV_MENG.intro",
+      "artKey": "supcard_lv_meng",
+      "usage": "academyOnly"
+    },
+    {
+      "schema": "support-card.v1",
+      "cardId": "SUP_SIMA_YI",
+      "itemId": "ITEM_SUPCARD_SIMA_YI",
+      "kind": "general",
+      "rarity": "SR",
+      "projectionOf": "sima-yi",
+      "focus": "政",
+      "favoredCourse": "禮樂",
+      "school": "黃老",
+      "role": "C",
+      "mult": 1,
+      "hintTactics": [
+        "TACA_09",
+        "TACA_08"
+      ],
+      "events": [
+        "SUPEVT_SIMA_YI_1",
+        "SUPEVT_SIMA_YI_2"
+      ],
+      "name": "司馬懿·病假中",
+      "nameKey": "support.card.SUP_SIMA_YI.name",
+      "introKey": "support.card.SUP_SIMA_YI.intro",
+      "artKey": "supcard_sima_yi",
+      "usage": "academyOnly"
+    },
+    {
+      "schema": "support-card.v1",
+      "cardId": "SUP_ZHANG_FEI",
+      "itemId": "ITEM_SUPCARD_ZHANG_FEI",
+      "kind": "general",
+      "rarity": "R",
+      "projectionOf": "zhang-fei",
+      "focus": "藝",
+      "favoredCourse": "禮樂",
+      "school": "散修",
+      "role": "B",
+      "mult": 1,
+      "hintTactics": [
+        "TACA_16",
+        "TACA_14"
+      ],
+      "events": [
+        "SUPEVT_ZHANG_FEI_1",
+        "SUPEVT_ZHANG_FEI_2"
+      ],
+      "name": "張飛·畫室",
+      "nameKey": "support.card.SUP_ZHANG_FEI.name",
+      "introKey": "support.card.SUP_ZHANG_FEI.intro",
+      "artKey": "supcard_zhang_fei",
+      "usage": "academyOnly"
+    },
+    {
+      "schema": "support-card.v1",
+      "cardId": "SUP_ZHAO_YUN",
+      "itemId": "ITEM_SUPCARD_ZHAO_YUN",
+      "kind": "general",
+      "rarity": "R",
+      "projectionOf": "zhao-yun",
+      "focus": "武",
+      "favoredCourse": "武",
+      "school": "兵家",
+      "role": "A",
+      "mult": 1,
+      "hintTactics": [
+        "TACA_11",
+        "TACA_12"
+      ],
+      "events": [
+        "SUPEVT_ZHAO_YUN_1",
+        "SUPEVT_ZHAO_YUN_2"
+      ],
+      "name": "趙雲·全勤獎",
+      "nameKey": "support.card.SUP_ZHAO_YUN.name",
+      "introKey": "support.card.SUP_ZHAO_YUN.intro",
+      "artKey": "supcard_zhao_yun",
+      "usage": "academyOnly"
+    },
+    {
+      "schema": "support-card.v1",
+      "cardId": "SUP_CAI_WENJI",
+      "itemId": "ITEM_SUPCARD_CAI_WENJI",
+      "kind": "beauty",
+      "rarity": "SSR",
+      "projectionOf": "cai-yan",
+      "focus": "藝",
+      "favoredCourse": "禮樂",
+      "school": "鄭學",
+      "role": "B",
+      "mult": 1,
+      "hintTactics": [
+        "TACA_14",
+        "TACA_05"
+      ],
+      "events": [
+        "SUPEVT_CAI_WENJI_1",
+        "SUPEVT_CAI_WENJI_2",
+        "SUPEVT_CAI_WENJI_3"
+      ],
+      "name": "蔡文姬",
+      "nameKey": "support.card.SUP_CAI_WENJI.name",
+      "introKey": "support.card.SUP_CAI_WENJI.intro",
+      "artKey": "supcard_cai_wenji",
+      "usage": "academyOnly"
+    },
+    {
+      "schema": "support-card.v1",
+      "cardId": "SUP_HUANG_YUEYING",
+      "itemId": "ITEM_SUPCARD_HUANG_YUEYING",
+      "kind": "beauty",
+      "rarity": "SR",
+      "projectionOf": "huang-yue-ying",
+      "focus": "陣",
+      "favoredCourse": "兵法",
+      "school": "水鏡門下",
+      "role": "D",
+      "mult": 1,
+      "hintTactics": [
+        "TACA_13",
+        "TACA_03"
+      ],
+      "events": [
+        "SUPEVT_HUANG_YUEYING_1",
+        "SUPEVT_HUANG_YUEYING_2"
+      ],
+      "name": "黃月英",
+      "nameKey": "support.card.SUP_HUANG_YUEYING.name",
+      "introKey": "support.card.SUP_HUANG_YUEYING.intro",
+      "artKey": "supcard_huang_yueying",
+      "usage": "academyOnly"
+    },
+    {
+      "schema": "support-card.v1",
+      "cardId": "SUP_DIAO_CHAN",
+      "itemId": "ITEM_SUPCARD_DIAO_CHAN",
+      "kind": "beauty",
+      "rarity": "SR",
+      "projectionOf": "diao-chan",
+      "focus": "魅",
+      "favoredCourse": "禮樂",
+      "school": "散修",
+      "role": "B",
+      "mult": 1,
+      "hintTactics": [
+        "TACA_15",
+        "TACA_14"
+      ],
+      "events": [
+        "SUPEVT_DIAO_CHAN_1",
+        "SUPEVT_DIAO_CHAN_2"
+      ],
+      "name": "貂蟬·連環計",
+      "nameKey": "support.card.SUP_DIAO_CHAN.name",
+      "introKey": "support.card.SUP_DIAO_CHAN.intro",
+      "artKey": "supcard_diao_chan",
+      "usage": "academyOnly"
+    },
+    {
+      "schema": "support-card.v1",
+      "cardId": "SUP_SUN_SHANGXIANG",
+      "itemId": "ITEM_SUPCARD_SUN_SHANGXIANG",
+      "kind": "beauty",
+      "rarity": "SR",
+      "projectionOf": "sun-shang-xiang",
+      "focus": "武",
+      "favoredCourse": "武",
+      "school": "兵家",
+      "role": "A",
+      "mult": 1,
+      "hintTactics": [
+        "TACA_12",
+        "TACA_11"
+      ],
+      "events": [
+        "SUPEVT_SUN_SHANGXIANG_1",
+        "SUPEVT_SUN_SHANGXIANG_2"
+      ],
+      "name": "孫尚香·娘家班",
+      "nameKey": "support.card.SUP_SUN_SHANGXIANG.name",
+      "introKey": "support.card.SUP_SUN_SHANGXIANG.intro",
+      "artKey": "supcard_sun_shangxiang",
+      "usage": "academyOnly"
+    },
+    {
+      "schema": "support-card.v1",
+      "cardId": "SUP_ZHEN_MI",
+      "itemId": "ITEM_SUPCARD_ZHEN_MI",
+      "kind": "beauty",
+      "rarity": "R",
+      "projectionOf": "zhen-ji",
+      "focus": "藝",
+      "favoredCourse": "禮樂",
+      "school": "散修",
+      "role": "B",
+      "mult": 1,
+      "hintTactics": [
+        "TACA_16",
+        "TACA_14"
+      ],
+      "events": [
+        "SUPEVT_ZHEN_MI_1",
+        "SUPEVT_ZHEN_MI_2"
+      ],
+      "name": "甄宓·洛神",
+      "nameKey": "support.card.SUP_ZHEN_MI.name",
+      "introKey": "support.card.SUP_ZHEN_MI.intro",
+      "artKey": "supcard_zhen_mi",
+      "usage": "academyOnly"
+    },
+    {
+      "schema": "support-card.v1",
+      "cardId": "SUP_ZHURONG",
+      "itemId": "ITEM_SUPCARD_ZHURONG",
+      "kind": "beauty",
+      "rarity": "R",
+      "projectionOf": "zhu-rong-furen",
+      "focus": "武",
+      "favoredCourse": "武",
+      "school": "散修",
+      "role": "A",
+      "mult": 1,
+      "hintTactics": [
+        "TACA_16",
+        "TACA_12"
+      ],
+      "events": [
+        "SUPEVT_ZHURONG_1",
+        "SUPEVT_ZHURONG_2"
+      ],
+      "name": "祝融夫人·烤肉攤",
+      "nameKey": "support.card.SUP_ZHURONG.name",
+      "introKey": "support.card.SUP_ZHURONG.intro",
+      "artKey": "supcard_zhurong",
+      "usage": "academyOnly"
+    }
+  ]
+}

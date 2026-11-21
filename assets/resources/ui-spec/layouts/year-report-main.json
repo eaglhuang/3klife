@@ -63,7 +63,7 @@
             "name": "YearReportStatRow",
             "id": "yearReportStatRow",
             "widget": { "top": 200, "left": 48, "right": 48 },
-            "height": 200,
+            "height": 250,
             "skinSlot": "yr.slot.bg",
             "children": [
               {
@@ -91,6 +91,15 @@
                 "widget": { "top": 150, "left": 32, "right": 32 },
                 "height": 44,
                 "text": "本年適婚未結緣：0 人",
+                "styleSlot": "yr.label.stat"
+              },
+              {
+                "type": "label",
+                "name": "YearReportDefense",
+                "id": "yearReportDefense",
+                "widget": { "top": 200, "left": 32, "right": 32 },
+                "height": 44,
+                "text": "",
                 "styleSlot": "yr.label.stat"
               }
             ]
