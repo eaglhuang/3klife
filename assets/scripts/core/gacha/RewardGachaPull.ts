@@ -8,7 +8,7 @@
  *
  * 舊路徑（LocalGachaService）仍在，由旗標決定走哪一條；兩條路徑回給畫面的結果型別相同（LocalGachaResultEntry）。
  */
-import type { RewardGrantResult, RewardPityView, RewardPoolsResult, RewardTallyView } from '../../shared/api/ApiCommands';
+import type { RewardGrantResult, RewardPityView, RewardPoolsResult, RewardPoolView, RewardTallyView } from '../../shared/api/ApiCommands';
 import { isApiFail } from '../../shared/api/ApiProtocol';
 import type { IApiClient } from '../../shared/api/IApiClient';
 import type { GeneralConfig } from '../models/GeneralUnit';
@@ -16,6 +16,8 @@ import type { RewardEffectHandler } from '../api/localserver/RewardCommands';
 import type { LocalGachaResultEntry } from '../services/LocalGachaService';
 import { formatDrawResultText, inferRarityTier } from './GachaRarity';
 import type { GachaCurrencyId, GachaRateDto } from './GachaApi';
+import type { SupportCardV1 } from '../../shared/support/SupportCardConfig';
+import { supportCardAsResult, supportOutcomeLabel } from './SupportCardGachaView';
 
 /** 發武將的宿主入口（單機＝GameSession 名冊）：同一個 id 第二次入冊要回報 duplicate */
 export interface GeneralGrantHost {
@@ -40,6 +42,8 @@ export function createGeneralGrantHandler(host: GeneralGrantHost): RewardEffectH
 
 export interface RewardGachaHost {
     resolveGeneral(id: string): GeneralConfig | null;
+    /** 教官池：以物品 id 或卡號查支援卡（效果 supportCard 的結果）；沒有教官池的宿主可省略 */
+    resolveSupportCard?(itemId: string): SupportCardV1 | null;
     /** 抽卡成功後（扣款、入冊都完成）：寫抽卡紀錄、存檔 */
     afterPull?(info: { poolId: string; currency: string; cost: number; results: LocalGachaResultEntry[]; added: GeneralConfig[]; duplicates: GeneralConfig[] }): void;
 }
@@ -60,6 +64,8 @@ export interface RewardGachaPullOutcome {
     spent: number;
     added: GeneralConfig[];
     duplicates: GeneralConfig[];
+    /** 教官池這一輪抽到的支援卡與結算（傳承 +1／學分 +N／新入學）；不是武將，不在 added／duplicates 裡 */
+    supportDraws: Array<{ cardId: string; name: string; tier: string; outcome: string | null }>;
     /** 重複卡轉換的 bundle（每張一筆） */
     converted: Array<{ generalId: string; bundleId: string }>;
     pities: RewardPityView[];
@@ -113,8 +119,21 @@ export class RewardGachaPort {
         const added: GeneralConfig[] = [];
         const duplicates: GeneralConfig[] = [];
         const converted: Array<{ generalId: string; bundleId: string }> = [];
+        const supportDraws: RewardGachaPullOutcome['supportDraws'] = [];
         for (let i = 0; i < grant.plan.length; i += 1) {
             const line = grant.plan[i];
+            if (line.applied.kind === 'supportCard') {
+                const card = this._host.resolveSupportCard?.(String(line.applied.itemId ?? ''));
+                if (!card) continue;
+                const general = supportCardAsResult(card, line.trace);
+                const rarityTier = inferRarityTier(general);
+                results.push({
+                    general, rarityTier, drawIndex: i + 1, displayText: formatDrawResultText(i, general, rarityTier),
+                    poolId: args.poolId, actionType: 'LOCAL_GACHA_PULL', currencyKey: args.currency as LocalGachaResultEntry['currencyKey'],
+                });
+                supportDraws.push({ cardId: card.cardId, name: card.name, tier: line.tier, outcome: supportOutcomeLabel(line.trace) });
+                continue;
+            }
             const id = String(line.applied.generalId ?? '');
             const general = this._host.resolveGeneral(id);
             if (!general) continue;
@@ -133,7 +152,7 @@ export class RewardGachaPort {
             if (!isApiFail(claim)) converted.push({ generalId: id, bundleId });
         }
         this._host.afterPull?.({ poolId: args.poolId, currency: args.currency, cost: args.cost, results, added, duplicates });
-        return { results, currency: args.currency, spent: args.cost, added, duplicates, converted, pities: grant.pities ?? [] };
+        return { results, currency: args.currency, spent: args.cost, added, duplicates, supportDraws, converted, pities: grant.pities ?? [] };
     }
 
     /** 天命商店進度（reward.pity 的累計計數）：每滿 creditEvery 抽得 1 次資格；沒有累計計數的池回 null */
@@ -154,6 +173,15 @@ export class RewardGachaPort {
             poolId: rewardPoolId, grantKey: `redeem:${legacyPoolId}:${requestId ?? `${this._now()}-${this._seq}`}`,
         });
         return !isApiFail(res);
+    }
+
+    /** 池的完整機率表視圖（reward.pools，含逐項機率與保底進度）；機率說明用，查不到回 null */
+    public async disclosure(legacyPoolId: string): Promise<RewardPoolView | null> {
+        const rewardPoolId = this.rewardPoolOf(legacyPoolId);
+        if (!rewardPoolId) return null;
+        const res = await this._api.query<RewardPoolsResult>('reward.pools', {});
+        if (isApiFail(res)) return null;
+        return res.result.pools.find((p) => p.poolId === rewardPoolId) ?? null;
     }
 
     /** 池詳情：等階機率與 SSR 保底進度，與抽樣同一份資料（reward.pools）；查不到回 null */

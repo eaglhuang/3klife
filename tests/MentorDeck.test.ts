@@ -2,7 +2,7 @@
  * MentorDeck.test.ts — 培育入場教官編成與支援卡池（PROG-2-1085）headless 測試
  *
  * 驗證：預設編成挑最強 5 位、點格輪換不重複、失效卡自動清空；
- * 支援卡池抽到重複教官改為升星；開局錢包有 5 張支援券，支援召喚扣支援券。
+ * 支援卡池抽到重複教官改為升星；開局錢包有 10 張連線券，支援召喚扣連線券。
  */
 import { TestSuite, assert } from './TestRunner';
 import {
@@ -84,8 +84,8 @@ export function createMentorDeckSuite(): TestSuite {
         assert.equals(0, addGachaMentorCards([], [zhao], catalog, time, 'hero-pool').length, '名將池不發教官卡');
     });
 
-    suite.test('開局送 5 張支援券；支援召喚扣支援券、不扣靈玉', async () => {
-        assert.equals(5, STARTER_GACHA_WALLET.mentorTickets);
+    suite.test('開局送 10 張連線券；支援召喚扣連線券、不扣靈玉', async () => {
+        assert.equals(10, STARTER_GACHA_WALLET.mentorTickets);
         const service = new LocalGachaService(null, () => 0.1);
         const gems = service.getCurrencyAmount('gems');
         const before = service.getCurrencyAmount('mentorTickets');

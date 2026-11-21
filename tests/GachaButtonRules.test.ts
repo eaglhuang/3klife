@@ -51,7 +51,7 @@ export function createGachaButtonRulesSuite(): TestSuite {
 
     suite.test('資源列：七種資源全部顯示並帶數量', () => {
         const text = formatGachaWalletStrip(WALLET);
-        for (const label of ['靈玉 1,280', '銅錢符 1,500', '召喚券 12', '支援券 5', '黃金 128,450', '積分 40', '求籤令 3']) assert.contains(text, label);
+        for (const label of ['靈玉 1,280', '銅錢符 1,500', '召喚券 12', '連線券 5', '黃金 128,450', '積分 40', '求籤令 3']) assert.contains(text, label);
         assert.lengthEquals(7, GACHA_WALLET_DISPLAY_ORDER);
         assert.contains(formatGachaWalletStrip({}), '靈玉 0', '缺欄位當 0，不顯示 NaN');
     });
