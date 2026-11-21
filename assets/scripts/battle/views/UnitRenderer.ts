@@ -2144,7 +2144,7 @@ export class UnitRenderer extends Component {
   }
 
   /**
-   * layers 有給（部隊徽章）時走分層合批：底框／圓章是共用底圖精靈、文字是 CHAR 快取，各自掛到共用圖層的代理節點；
+   * layers 有給（部隊徽章）時走分層合批：底框／圓章是共用底圖精靈、文字是 BITMAP 點陣快取，各自掛到共用圖層的代理節點；
    * rootNode 只保留位置、縮放、透明度與尺寸。沒給（武將名牌）時維持原本的 Graphics 版（PROG-2-9713）。
    */
   private buildBadge(rootNode: Node, width: number, height: number, troopType: TroopType | null = null,
@@ -2278,6 +2278,9 @@ export class UnitRenderer extends Component {
     );
     hpLabel.node.parent!.setPosition(offset, topRowY, 0);
     this.shrinkToFit(hpLabel);
+    // 點陣快取（PROG-2-9713）：打包進動態圖集，徽章文字共用貼圖可合批；不用 CHAR 的原因見下方名稱標籤。
+    // 必須在 SHRINK 設好之後才切：切換快取模式會立刻重排，若當下還是 NONE＋空字串，節點會被自動縮成寬 6，之後縮字就看不見
+    for (const l of [attackLabel, typeLabel, hpLabel]) l.cacheMode = Label.CacheMode.BITMAP;
 
     // 下排：完整兵種名稱（由 updateUnitView 動態更新）
     const nameLabelNode = new Node("NameLabel");
@@ -2296,8 +2299,9 @@ export class UnitRenderer extends Component {
     nameStrLabel.enableOutline = true;
     nameStrLabel.outlineColor = BADGE_TEXT_OUTLINE;
     nameStrLabel.outlineWidth = BADGE_TEXT_OUTLINE_WIDTH;
-    // 共用字元圖集：字串常變也不會整張重畫上傳，且所有徽章文字可合批（PROG-2-9713）
-    nameStrLabel.cacheMode = Label.CacheMode.CHAR;
+    // 點陣快取（PROG-2-9713）：畫好的字打包進動態圖集，所有徽章文字共用貼圖可合批。
+    // 不用 CHAR：字元圖集是全專案共用的稀缺預算（見 UIPreviewStyleBuilder 的 charAtlasGuard），預算不足會被退回且數字會畫壞。
+    nameStrLabel.cacheMode = Label.CacheMode.BITMAP;
 
     // 以擴充屬性保存引用，供 updateUnitView 快速更新
     (rootNode as any)._bottomNameLabel = nameStrLabel;
@@ -2372,8 +2376,6 @@ export class UnitRenderer extends Component {
     label.outlineWidth = BADGE_TEXT_OUTLINE_WIDTH;
     label.horizontalAlign = HorizontalTextAlignment.CENTER;
     label.verticalAlign = VerticalTextAlignment.CENTER;
-    // 共用字元圖集（PROG-2-9713）：戰力／生命數字每次變動不再整張重畫上傳，徽章文字可合批
-    label.cacheMode = Label.CacheMode.CHAR;
     return label;
   }
 

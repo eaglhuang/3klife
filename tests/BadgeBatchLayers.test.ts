@@ -1,6 +1,6 @@
 /**
  * BadgeBatchLayers.test.ts — 部隊頭頂徽章分層合批（PROG-2-9713）
- * 底框／圓章進 bg 層、文字進 text 層（CHAR 快取）、圖示進 icon 層；徽章節點銷毀時代理一併清除。
+ * 底框／圓章進 bg 層、文字進 text 層（BITMAP 點陣快取）、圖示進 icon 層；徽章節點銷毀時代理一併清除。
  */
 import * as fs from 'fs';
 import * as path from 'path';
@@ -79,12 +79,15 @@ export function createBadgeBatchLayersSuite(): TestSuite {
         assert.equals(0, layers.bg.children.length);
     }));
 
-    suite.test('UnitRenderer：部隊徽章走合批圖層、文字 CHAR 快取、位置更新後才 sync', () => {
+    suite.test('UnitRenderer：部隊徽章走合批圖層、文字 BITMAP 點陣快取、位置更新後才 sync', () => {
         const src = read('assets/scripts/battle/views/UnitRenderer.ts');
         assert.isTrue(src.includes('this.buildBadge(labelNode, 170, 34, unit.type, badgeLayers)'));
         // 武將名牌維持 Graphics 版（不傳 layers）
         assert.isTrue(src.includes('this.buildBadge(labelNode, GENERAL_PLATE_WIDTH, GENERAL_PLATE_HEIGHT)'));
-        assert.equals(2, src.split('cacheMode = Label.CacheMode.CHAR').length - 1);
+        assert.equals(2, src.split('cacheMode = Label.CacheMode.BITMAP').length - 1);
+        // 快取模式要在 SHRINK 之後才切，否則節點會先被縮成空字串的寬度
+        const shrinkHp = src.indexOf('this.shrinkToFit(hpLabel);');
+        assert.isTrue(shrinkHp > 0 && src.indexOf('for (const l of [attackLabel, typeLabel, hpLabel]) l.cacheMode = Label.CacheMode.BITMAP;') > shrinkHp);
         const late = src.slice(src.indexOf('  lateUpdate(dt = 0): void {'));
         assert.isTrue(late.indexOf('this.badgeLayers?.sync()') > late.indexOf('this.tileBuffMarkers.update(dt)'));
         assert.isTrue(late.indexOf('this.badgeLayers?.sync()') > late.indexOf('this.avoidGeneralPlates(dt)'));
