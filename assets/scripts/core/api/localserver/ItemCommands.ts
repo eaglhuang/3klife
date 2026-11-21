@@ -9,14 +9,14 @@
  * 注意：規格 §11.1 寫「客戶端沒有 item.grant」。單機的本機伺服器與玩法同進程，這裡先提供；
  * 連線版 adapter 必須把 item.grant 改成只允許伺服器內部（獎勵／商店／任務／系統）呼叫，列為待決。
  */
-import type { ItemGrantResult, ItemListResult, ItemRowView, ItemSettlePeriodicResult } from '../../../shared/api/ApiCommands';
+import type { ItemGrantResult, ItemListResult, ItemRowView, ItemSettlePeriodicResult, ItemUseResult } from '../../../shared/api/ApiCommands';
 import { ApiError, type ApiErrorKey } from '../../../shared/api/ApiErrors';
 import { nextGrantIndex, periodsDue } from '../../../shared/foundation/GameClock';
 import {
     DEFAULT_CONTAINER_ID, HOUSEHOLD_HOLDER, type HolderRef, type ItemConfigV1,
 } from '../../../shared/item/ItemConfig';
 import {
-    appendLedger, findContainerRule, findHolderRule, findItemDef, findPeriodicGrant, isDeployableItem, ITEM_GRANT_SOURCES, parseHolder, planConsume, planGrant,
+    appendLedger, applyInstanceExp, expToCapOf, findContainerRule, findHolderRule, findItemDef, findPeriodicGrant, isDeployableItem, ITEM_GRANT_SOURCES, parseHolder, planConsume, planGrant,
     withInstance, withoutInstance, type ItemMeta, type ItemRuleFailure,
 } from '../../../shared/item/ItemRules';
 import type { ApiDeltaOp } from '../../../shared/api/ApiProtocol';
@@ -150,6 +150,51 @@ export function registerItemCommands(adapter: LocalApiAdapter, getPorts: () => I
             result: { itemId, consumed: qty, count },
             delta: [{ path: pathOf(holder, container, itemId), op: 'replace', value: count }],
             events: [{ evt: 'inventory.changed', data: { holder, container, itemId, count, reason: sink } }],
+        };
+    });
+
+    adapter.register('item.use', (args) => {
+        const itemId = requireItemId(args.itemId);
+        const qty = requireQty(args.qty);
+        const targetArg = args.target as Record<string, unknown> | null | undefined;
+        const targetId = requireItemId(targetArg?.itemId);
+        const { holder, container, stock } = resolveTarget(args);
+        const config = getPorts().config;
+        const effect = findItemDef(config, itemId).useEffect;
+        if (!effect) throw new ApiError('ITEM_USE_INVALID', `${itemId} 沒有使用效果`);
+        const growth = findItemDef(config, targetId).growth;
+        const meta = authorityOf().meta();
+        const instance = meta.instances?.[targetId];
+        if (!growth || !instance || (stock[targetId] ?? 0) <= 0) throw new ApiError('ITEM_USE_INVALID', `${targetId} 不是已持有的可升級物品`);
+        const need = expToCapOf(growth, instance);
+        if (need <= 0) throw new ApiError('ITEM_AT_CAP', `${targetId} 已在等級上限，請先傳承`);
+        // 只扣升到上限需要的個數；最後一個超出的經驗不算（不退）
+        const units = Math.min(qty, Math.ceil(need / effect.exp));
+        const have = stock[itemId] ?? 0;
+        const check = planConsume(have, units);
+        if (!check.ok) throw new ApiError(FAILURE_KEY[check.reason], `${itemId} 不足：需要 ${units}，目前 ${have}`);
+        const applied = applyInstanceExp(growth, instance, units * effect.exp);
+        const next: Record<string, number> = { ...stock };
+        const count = have - units;
+        if (count > 0) next[itemId] = count;
+        else delete next[itemId];
+        const authority = authorityOf();
+        authority.write(holder, container, next, { itemId, delta: -units, reason: 'USE' });
+        authority.setMeta(withInstance(appendLedger(meta, { itemId, holder, delta: -units, reason: 'USE', overflowAmount: 0 }), targetId, applied.state));
+        const result: ItemUseResult = {
+            itemId, target: targetId, consumed: units, count, expGained: applied.absorbed, levelsGained: applied.levelsGained,
+            level: applied.state.level, exp: applied.state.exp, atCap: applied.atCap,
+        };
+        return {
+            result,
+            delta: [
+                { path: pathOf(holder, container, itemId), op: 'replace', value: count },
+                { path: `/itemInstances/${targetId}`, op: 'replace', value: { ...applied.state } },
+            ],
+            events: [
+                { evt: 'inventory.changed', data: { holder, container, itemId, count, reason: 'USE' } },
+                { evt: 'inventory.instanceChanged', data: { holder, container, itemId: targetId, ...applied.state, levelsGained: applied.levelsGained } },
+            ],
         };
     });
 

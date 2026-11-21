@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 216,
+    "done": 220,
     "in_progress": 4,
     "open": 87,
-    "total": 307
+    "total": 311
   },
   "tasks": [
     {
@@ -12806,14 +12806,39 @@
       "chain_step": "",
       "sensor_triggered_by": "",
       "description": "舊保底計數轉成 reward.pity 階梯、保留 destinyExchanges、天命商店額度改讀 reward.pity（tallies 累計計數與 reward.pity.redeem 兌換）；三種舊存檔（只有 pullCount、含 lastSsrPull、含 destinyExchanges）都有測試。",
-      "related": ["PROG-2-9460", "PROG-2-9461", "PROG-2-9462", "PROG-2-9463"],
-      "depends": ["PROG-2-9463"],
+      "related": [
+        "PROG-2-9460",
+        "PROG-2-9461",
+        "PROG-2-9462",
+        "PROG-2-9463"
+      ],
+      "depends": [
+        "PROG-2-9463"
+      ],
       "acceptance": [],
       "deliverables": [],
       "notes": "狀態: done。變更: GachaPityMigration（舊 gachaPity 轉 reward.pity 階梯＋累計計數，保留 destinyExchanges）、獎池 tallies 累計計數、reward.pity 回 tallies、新命令 reward.pity.redeem、天命商店額度改讀 reward.pity。驗證: 三種舊存檔測試、tsc 0、run-cli 全過、playtest 11/11。",
-      "brief": { "style": "classic", "label": "", "summary": "", "position": "", "prereq": "" },
-      "contracts": { "input": [], "output": [], "validation_cmd": "", "rollback_hint": "", "execution_steps": [] },
-      "harness_evidence": { "artifact_paths": [], "validation_evidence": [], "handoff_diff_status": "", "trace_artifacts": [], "metrics_summary": [] }
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     },
     {
       "doc_id": "",
@@ -12832,14 +12857,39 @@
       "chain_step": "",
       "sensor_triggered_by": "",
       "description": "開場宿命轉蛋改用宿命池 UI 並走 draw.slots（每輪恰一位六大宿命名將、十位不重複）；開場信內容不動；實跑 playtest 11/11。",
-      "related": ["PROG-2-9460", "PROG-2-9461", "PROG-2-9462", "PROG-2-9463"],
-      "depends": ["PROG-2-9463"],
+      "related": [
+        "PROG-2-9460",
+        "PROG-2-9461",
+        "PROG-2-9462",
+        "PROG-2-9463"
+      ],
+      "depends": [
+        "PROG-2-9463"
+      ],
       "acceptance": [],
       "deliverables": [],
       "notes": "狀態: done。變更: 開場宿命池抽取改走 reward.roll（POOL_DESTINY draw.slots），DestinyOpeningController.rollAsync／rerollAsync，結果不合規時退回本機抽法；開場信與畫面不動。驗證: 60 輪每輪恰一位宿命名將十位不重複、playtest 11/11（含第 2 步 new-player-opening）。",
-      "brief": { "style": "classic", "label": "", "summary": "", "position": "", "prereq": "" },
-      "contracts": { "input": [], "output": [], "validation_cmd": "", "rollback_hint": "", "execution_steps": [] },
-      "harness_evidence": { "artifact_paths": [], "validation_evidence": [], "handoff_diff_status": "", "trace_artifacts": [], "metrics_summary": [] }
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     },
     {
       "doc_id": "",
@@ -13352,6 +13402,63 @@
         "tests/SupportCardItems.test.ts"
       ],
       "notes": "2026-11-21 | 狀態: done | 驗證: 新增測試 12 項全過；tests/run-cli.ts 8929 通過；tsc -p tsconfig.test.json 0 錯；compute-gate standard 13/14 通過（1 警告為既有 LoginScene 模組邊界）；api-bypass 未增加 | 變更: 新增 academy-support-cards.json（25 張卡）與 shared/support/SupportCardConfig.ts；物品框架 ITM 擴充 stack.mode=unique、category／usage／rarity／instanceState、itemMeta.instances、item.list forDeploy 與 category／instance 欄位；ServiceLoader 載入後把卡推導成物品定義併入物品設定（單一真相）；容器接受 card | 阻塞: 規格 22.1 寫 support-cards.json 但同名舊檔仍被舊支援卡／紅顏池系統讀取，新檔暫名 academy-support-cards.json，改名待決（SUP-13 遷移時一併處理）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9241",
+      "title": "升級與材料（SUP-2：經驗材料 item.use、expToNext、等級上限、學分當材料）",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依 doc_spec_1264 §5.1、§5.2、§24 SUP-2：support-rules.json、經驗材料（小抄／講義／錄播回放／學分）、item.use 加經驗、等級由權威端推得、到上限不再吃經驗。走物品框架 ITM，不另寫庫存。",
+      "related": [
+        "PROG-2-9230",
+        "PROG-2-9240"
+      ],
+      "depends": [],
+      "acceptance": [
+        "TC-SUP-06 升級公式與累計經驗",
+        "等級上限 R20/SR25/SSR30 傳承每次 +5",
+        "新增測試全過 tsc 0 錯 compute-gate standard 通過"
+      ],
+      "deliverables": [
+        "assets/resources/data/support-rules.json",
+        "shared/support/SupportRules.ts",
+        "ItemRules 通用實例成長",
+        "item.use 命令",
+        "tests/SupportCardLeveling.test.ts"
+      ],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 新增測試 13 項全過；tests/run-cli.ts 8946 通過；tsc -p tsconfig.test.json 0 錯；compute-gate standard 13/14 通過（1 警告為既有 LoginScene 模組邊界）；api-bypass 未增加 | 變更: 新增 support-rules.json（等級上限、expToNext、階、材料）與 shared/support/SupportRules.ts；ITM 新增 growth／useEffect、item.use 命令（只扣升到上限需要的個數，到上限 E318）、E317／E318 錯誤碼；卡的 growth 與 4 種材料（小抄／講義／錄播回放／學分）由規則推導併入物品設定 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",

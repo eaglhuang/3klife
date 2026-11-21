@@ -141,14 +141,3 @@ export function supportCardItemDefs(config: SupportCardsConfigV1): ItemDefV1[] {
 export function findSupportCard(config: SupportCardsConfigV1, cardIdOrItemId: string): SupportCardV1 | null {
     return config.cards.find((c) => c.cardId === cardIdOrItemId || c.itemId === cardIdOrItemId) ?? null;
 }
-
-/**
- * 把支援卡的物品定義併入物品設定（同 id 以支援卡為準、其餘保留）。
- * 載入時呼叫一次；物品設定裡手寫的同 id 條目不應存在，有的話被覆蓋。
- */
-export function withSupportCardItems<T extends { items: ItemDefV1[] }>(itemConfig: T, cards: SupportCardsConfigV1): T {
-    const defs = supportCardItemDefs(cards);
-    if (defs.length === 0) return itemConfig;
-    const ids = new Set(defs.map((d) => d.id));
-    return { ...itemConfig, items: [...itemConfig.items.filter((d) => !ids.has(d.id)), ...defs] };
-}

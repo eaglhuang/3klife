@@ -44,6 +44,24 @@ export interface ItemInstanceState {
     limitBreak: number;
 }
 
+/**
+ * 實例成長規則（unique 物品帶 instanceState 時才有意義）：等級上限＝cap0＋capPerBreak×傳承次數（傳承最多 maxBreak 次），
+ * 升到下一級需要的經驗＝expBase＋expPerLevel×(等級−1)。資料來源：support-rules.json（支援卡），不寫死在程式。
+ */
+export interface ItemGrowthRule {
+    cap0: number;
+    capPerBreak: number;
+    maxBreak: number;
+    expBase: number;
+    expPerLevel: number;
+}
+
+/** 使用效果：supportExp＝把 exp 點經驗加到一個支援卡實例（item.use，doc_spec_1264 §5.2、§19） */
+export interface ItemUseEffect {
+    effectType: 'supportExp';
+    exp: number;
+}
+
 export interface ItemDefV1 {
     id: string;
     kind: ItemKind;
@@ -60,6 +78,10 @@ export interface ItemDefV1 {
     rarity?: number;
     /** 持有時每件各帶一份的實例狀態預設值；只對 unique 物品有意義 */
     instanceState?: ItemInstanceState;
+    /** 實例成長規則；沒有就不能升級 */
+    growth?: ItemGrowthRule;
+    /** 使用效果；沒有就不能 item.use */
+    useEffect?: ItemUseEffect;
 }
 
 export interface ContainerRuleV1 {
@@ -133,6 +155,21 @@ function isItemKind(v: unknown): v is ItemKind {
     return typeof v === 'string' && (ITEM_KINDS as readonly string[]).indexOf(v) >= 0;
 }
 
+function normalizeGrowth(raw: unknown): ItemGrowthRule | null {
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
+    const r = raw as Record<string, unknown>;
+    if (!isPosInt(r.cap0) || !isPosInt(r.capPerBreak) || !isPosInt(r.expBase)) return null;
+    const maxBreak = typeof r.maxBreak === 'number' && Number.isInteger(r.maxBreak) && r.maxBreak >= 0 ? r.maxBreak : 0;
+    const expPerLevel = typeof r.expPerLevel === 'number' && Number.isInteger(r.expPerLevel) && r.expPerLevel >= 0 ? r.expPerLevel : 0;
+    return { cap0: r.cap0, capPerBreak: r.capPerBreak, maxBreak, expBase: r.expBase, expPerLevel };
+}
+
+function normalizeUseEffect(raw: unknown): ItemUseEffect | null {
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
+    const r = raw as Record<string, unknown>;
+    return r.effectType === 'supportExp' && isPosInt(r.exp) ? { effectType: 'supportExp', exp: r.exp } : null;
+}
+
 function normalizeInstanceState(raw: unknown): ItemInstanceState | null {
     if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
     const r = raw as Record<string, unknown>;
@@ -166,6 +203,10 @@ export function normalizeItemConfig(raw: unknown): ItemConfigV1 {
         if (isPosInt(e.rarity)) def.rarity = e.rarity;
         const inst = unique ? normalizeInstanceState(e.instanceState) : null;
         if (inst) def.instanceState = inst;
+        const growth = unique ? normalizeGrowth(e.growth) : null;
+        if (growth) def.growth = growth;
+        const use = normalizeUseEffect(e.useEffect);
+        if (use) def.useEffect = use;
         items.push(def);
     }
     const holders: HolderRuleV1[] = [];

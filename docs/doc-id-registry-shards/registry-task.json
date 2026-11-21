@@ -16294,5 +16294,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9465.md",
     "title": "[PROG-2-9465] GCH-R7 宿命池遷移",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2734",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9241.md",
+    "title": "[PROG-2-9241] 升級與材料（SUP-2：經驗材料 item.use、expToNext、等級上限、學分當材料）",
+    "category": "task"
   }
 ]

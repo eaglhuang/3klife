@@ -24,6 +24,7 @@ export const API_COMMANDS = Object.freeze({
     'item.grant': { kind: 'cmd', revGuard: false },
     'item.consume': { kind: 'cmd', revGuard: false },
     'item.settlePeriodic': { kind: 'cmd', revGuard: false },
+    'item.use': { kind: 'cmd', revGuard: false },
     'item.count': { kind: 'query', revGuard: false },
     'item.list': { kind: 'query', revGuard: false },
     'item.ledger': { kind: 'query', revGuard: false },
@@ -137,6 +138,30 @@ export interface ItemConsumeArgs extends ItemHolderArgs {
     itemId: string;
     qty: number;
     sink: string;
+}
+
+/**
+ * item.use：使用材料（doc_spec_1264 §5.2）。目前只有 supportExp 效果：把 qty 個材料的經驗加到 target 這張支援卡實例。
+ * 等級由權威端依 expToNext 推得；只扣升到上限需要的個數（到上限後多的不消耗，result.consumed 為實際扣的數量）；
+ * 目標已在上限回 E318（請先傳承）、不扣材料。
+ */
+export interface ItemUseArgs extends ItemHolderArgs {
+    itemId: string;
+    qty: number;
+    target: { itemId: string };
+}
+
+export interface ItemUseResult {
+    itemId: string;
+    target: string;
+    consumed: number;
+    /** 材料剩餘數量 */
+    count: number;
+    expGained: number;
+    levelsGained: number;
+    level: number;
+    exp: number;
+    atCap: boolean;
 }
 
 export interface ItemConsumeResult {
