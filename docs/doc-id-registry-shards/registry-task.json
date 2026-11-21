@@ -16132,5 +16132,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9224.md",
     "title": "[PROG-2-9224] 家族、子嗣、配偶、血統、教官、學府規格改寫（依 11/21 裁決第 3、4、6、12、16～27 條）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2707",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9226.md",
+    "title": "[PROG-2-9226] 學府 qaAcademy 快進與共通 API 流程相容修正（9192 × 9215 合併後 playtest --academy 回歸）",
+    "category": "task"
   }
 ]
