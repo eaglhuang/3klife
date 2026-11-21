@@ -198,6 +198,9 @@ import { LocalGachaApi } from '../../core/gacha/LocalGachaApi';
 import { migrateLegacyPity } from '../../core/gacha/GachaPityMigration';
 import { gachaRewardEnabled } from '../../core/gacha/GachaRewardFlag';
 import { RewardGachaPort, type RewardGachaPullOutcome } from '../../core/gacha/RewardGachaPull';
+import { supportCardItemMembers } from '../../core/gacha/SupportCardGachaView';
+import { buildRateTableRows } from '../../core/gacha/GachaRateTable';
+import { findSupportCard } from '../../shared/support/SupportCardConfig';
 import { buildRewardPools, legacyPoolIdsOf, type RosterMember } from '../../shared/reward/RewardRoster';
 import { GachaWalletPort } from '../../core/api/localserver/GachaWalletPort';
 import { isApiFail } from '../../shared/api/ApiProtocol';
@@ -5993,7 +5996,7 @@ ${spent}`,
             if (results[0]?.poolId === MENTOR_POOL_ID) {
                 const names = results.map((entry) => entry.general.name).join('、');
                 // 升星／積分提示併進同一則，避免被「獲得教官卡」蓋掉（PROG-2-1095）
-                const message = [`獲得教官卡：${names}（培育入場可編入）`, ...mentorNotes].join('\n');
+                const message = [`獲得教學投影卡：${names}（學府修業可編入）`, ...mentorNotes].join('\n');
                 services().event.emit('SHOW_TOAST', { message, duration: 3 });
                 return;
             }
@@ -7205,7 +7208,17 @@ ${spent}`,
         const [pools, wallet] = await Promise.all([api.listPools(), api.getWallet()]);
         const dto = pools.find((entry) => entry.poolId === pool.poolId);
         if (!dto) { this._showToast('這個卡池目前未開放。'); return; }
-        showGachaInfoModal(`${dto.name} 詳情`, dto.sub, buildPoolDetailRows(dto, wallet));
+        const rows = buildPoolDetailRows(dto, wallet);
+        // 走共通 API 的池另附完整機率表（逐張機率與保底，機率說明；與抽樣同一份資料）
+        const view = await this._gachaRewardPort?.disclosure(pool.poolId) ?? null;
+        if (view) rows.push(...buildRateTableRows(view, (nameKey, entryId) => this._gachaEntryName(nameKey, entryId)));
+        showGachaInfoModal(`${dto.name} 詳情`, dto.sub, rows);
+    }
+
+    /** 機率表的項目名稱：武將項目（general.<id>）查名冊，支援卡項目（nameKey）查卡表；查不到顯示 id */
+    private _gachaEntryName(nameKey: string | null, entryId: string): string {
+        if (nameKey?.startsWith('general.')) return this._generals.find((g) => g.id === entryId)?.name ?? entryId;
+        return services().supportCardsConfig().cards.find((c) => c.nameKey === nameKey)?.name ?? entryId;
     }
 
     private _openUIOnNextTick(uiId: UIID): void {
@@ -8117,9 +8130,9 @@ ${spent}`,
             this._gachaRewardLoading = (async () => {
                 const raw = await this._loadDataJson<unknown>('data/gacha-reward-pools');
                 if (!raw || this._generals.length === 0) return;
-                const pools = buildRewardPools(raw, this._compactRoster());
-                if (pools.length === 0) return;
                 const loader = services();
+                const pools = buildRewardPools(raw, this._compactRoster(), supportCardItemMembers(loader.supportCardsConfig().cards));
+                if (pools.length === 0) return;
                 loader.setGachaRewardPools(pools);
                 loader.bindGeneralGrantHost({
                     resolve: (id) => this._cloneGeneralById(id),
@@ -8131,6 +8144,7 @@ ${spent}`,
                 if (migration.migrated.length > 0) authority.setMeta(migration.meta);
                 this._gachaRewardPort = new RewardGachaPort(loader.api, legacyPoolIdsOf(raw), {
                     resolveGeneral: (id) => this._cloneGeneralById(id),
+                    resolveSupportCard: (id) => findSupportCard(loader.supportCardsConfig(), id),
                     afterPull: (info) => {
                         this._localGachaService.recordExternalPull(info.poolId, info.currency as 'gems' | 'bronze', info.cost, info.results);
                         loader.session.queueGachaMentorDraw({ drawn: info.results.map((r) => r.general), time: { ...loader.session.gameTime }, poolId: info.poolId });

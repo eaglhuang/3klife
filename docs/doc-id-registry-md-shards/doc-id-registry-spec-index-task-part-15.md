@@ -148,5 +148,7 @@
 | `doc_task_2740` | docs/agent-briefs/tasks/PROG/PROG-2-9250.md | [PROG-2-9250] 武將私塾補習班系統規格書（下班開班、友誼推算與稀疏儲存、OCC 讓位規則、共用框架對應） |
 | `doc_task_2741` | docs/agent-briefs/tasks/PROG/PROG-2-9251.md | [PROG-2-9251] 第一年經濟曲線審查：入學令溢出折金 5000 過大 |
 | `doc_task_2742` | docs/agent-briefs/tasks/PROG/PROG-2-9703.md | [PROG-2-9703] 極速決戰結算文案：按「自動」不再顯示「敵方突破防線」 |
-| `doc_task_2743` | docs/agent-briefs/tasks/PROG/PROG-2-9705.md | [PROG-2-9705] 戰場 HUD 徽章風格第一版 |
+| `doc_task_2743` | docs/agent-briefs/tasks/PROG/PROG-2-9600.md | [PROG-2-9600] 史境天下風雲榜與年終頒獎典禮系統規格書 |
 | `doc_task_2744` | docs/agent-briefs/tasks/PROG/PROG-2-9466.md | PROG-2-9466 |
+| `doc_task_2745` | docs/agent-briefs/tasks/PROG/PROG-2-9243.md | [PROG-2-9243] 教官池 JSON 與卡池接線（SUP-10：POOL_SUPPORT、itemQuery、連線券、機率說明） |
+| `doc_task_2746` | docs/agent-briefs/tasks/PROG/PROG-2-9705.md | [PROG-2-9705] 戰場 HUD 徽章風格第一版 |

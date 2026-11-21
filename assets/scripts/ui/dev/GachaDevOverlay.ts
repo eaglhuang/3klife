@@ -190,7 +190,9 @@ function createListRow(parent: Node, name: string, width: number, title: string,
     const background = row.getComponent(SolidBackground) ?? row.addComponent(SolidBackground);
     background.color = accent;
     const label = createTextNode(row, 'Label', width - 24, height - 16, `${title}\n${detail}`, 18);
-    label.node.setPosition(-((width / 2) - 12), (height / 2) - 12, 0);
+    // 文字節點預設錨點在中心，貼左上定位時要把錨點移到左上，否則文字有一半跑出列外被遮罩切掉。
+    label.node.getComponent(UITransform)?.setAnchorPoint(0, 1);
+    label.node.setPosition(-((width / 2) - 12), (height / 2) - 8, 0);
 }
 
 function createModalRoot(name: string, width = 1180, height = 760): Node | null {

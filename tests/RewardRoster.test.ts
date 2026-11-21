@@ -73,7 +73,11 @@ export function createRewardRosterSuite(): TestSuite {
         assert.equals('POOL_GENERAL_MAIN,POOL_HEROINE,POOL_DESTINY', Object.keys(pools).join(','));
         const byId = new Map(generals().map((g) => [g.id, g]));
         const refs = poolFile().rosterRefs;
-        for (const [name, ids] of Object.entries(refs)) for (const id of ids) assert.isTrue(byId.has(id), `${name} 的 ${id} 不在名冊`);
+        // gacha.support.* 是教官池的支援卡 id（itemQuery 用，卡表是它們的名冊；SupportPoolRoll.test.ts 驗證）
+        for (const [name, ids] of Object.entries(refs)) {
+            if (name.startsWith('gacha.support.')) continue;
+            for (const id of ids) assert.isTrue(byId.has(id), `${name} 的 ${id} 不在名冊`);
+        }
         for (const id of refs['gacha.general.up.ssr']) assert.equals('SSR', rosterRarityOf(byId.get(id)!));
         for (const id of refs['gacha.general.up.sr']) assert.equals('SR', rosterRarityOf(byId.get(id)!));
         for (const id of refs['gacha.heroine.up.ssr']) assert.equals('SSR', rosterRarityOf(byId.get(id)!));

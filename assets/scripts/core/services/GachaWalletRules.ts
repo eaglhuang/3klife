@@ -6,7 +6,7 @@
  *
  * Unity 對照：像 Shop.TryPurchase()，回傳是否成功，而不是偷偷改玩家錢包。
  */
-/** gems＝靈玉（付費）、tickets＝召喚券、bronze＝銅錢符（免費，僅常設池）、oracle＝求籤令（定向道具，不是池幣）、mentorTickets＝支援券（只用於支援卡池）、scorePoints＝積分（教官卡滿星溢出轉化，PROG-2-1095） */
+/** gems＝靈玉（付費）、tickets＝召喚券、bronze＝銅錢符（免費，僅常設池）、oracle＝求籤令（定向道具，不是池幣）、mentorTickets＝連線券（教官池抽卡貨幣，第一版不販售，只由免費來源取得）、scorePoints＝積分（教官卡滿星溢出轉化，PROG-2-1095） */
 export type WalletCurrencyKey = 'gems' | 'gold' | 'tickets' | 'bronze' | 'oracle' | 'mentorTickets' | 'scorePoints';
 
 export const CURRENCY_LABELS: Record<WalletCurrencyKey, string> = {
@@ -15,7 +15,7 @@ export const CURRENCY_LABELS: Record<WalletCurrencyKey, string> = {
     tickets: '召喚券',
     bronze: '銅錢符',
     oracle: '求籤令',
-    mentorTickets: '支援券',
+    mentorTickets: '連線券',
     scorePoints: '積分',
 };
 
@@ -28,8 +28,8 @@ export const STARTER_GACHA_WALLET: Readonly<Record<WalletCurrencyKey, number>> =
     /** 開局送一次十連份的銅錢符（1500），規格十連漲到 1500 後新玩家仍抽得起（PROG-2-1094） */
     bronze: 1500,
     oracle: 0,
-    /** 開局送 5 張支援券，讓第一次培育能抽到教官（PROG-2-1085，使用者裁定 2026-10-24） */
-    mentorTickets: 5,
+    /** 開局禮包送 10 張連線券，讓第一次修業前能抽一次十連的教官池（SUP-10／PROG-2-9243；第一版連線券不販售，開局禮包是免費來源之一，doc_spec_1264 §16） */
+    mentorTickets: 10,
     scorePoints: 0,
 };
 

@@ -58,7 +58,7 @@ export function createOneYearBondingLoopSuite(): TestSuite {
         assert.equals(14, starterYouth!.age, '少年名將開局年齡應為 14 歲');
         assert.isTrue(!youthCanEnroll(starterYouth!), '開局當下未滿 15 歲不可入學');
         assert.equals(1000, STARTER_GACHA_WALLET.gold, '開局黃金應為 1000');
-        assert.equals(5, STARTER_GACHA_WALLET.mentorTickets, '開局教官支援券應為 5');
+        assert.equals(10, STARTER_GACHA_WALLET.mentorTickets, '開局連線券應為 10');
 
         const graph = BloodlineGraph.getInstance();
         graph.clear();
