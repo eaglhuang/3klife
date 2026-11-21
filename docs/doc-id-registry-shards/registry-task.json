@@ -16266,12 +16266,6 @@
     "category": "task"
   },
   {
-    "id": "doc_task_2740",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9250.md",
-    "title": "[PROG-2-9250] 武將私塾補習班系統規格書（下班開班、友誼推算與稀疏儲存、OCC 讓位規則、共用框架對應）",
-    "category": "task"
-  },
-  {
     "id": "doc_task_2729",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9701.md",
     "title": "[PROG-2-9701] 戰場可讀性：部隊框避讓含血條與狀態圖示、跳字置頂、敵軍行動中橫幅移出棋盤",
@@ -16323,6 +16317,18 @@
     "id": "doc_task_2737",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9590.md",
     "title": "PROG-2-9590：playtest-online --year QA",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2740",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9250.md",
+    "title": "[PROG-2-9250] 武將私塾補習班系統規格書（下班開班、友誼推算與稀疏儲存、OCC 讓位規則、共用框架對應）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2741",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9704.md",
+    "title": "[PROG-2-9704] 紅方弓兵盔甲改銀色",
     "category": "task"
   }
 ]
