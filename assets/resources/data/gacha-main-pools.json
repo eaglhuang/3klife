@@ -54,7 +54,7 @@
       "sub": "教學投影，學府修業的最強後盾",
       "badge": "教官池",
       "series": "★ 教官系列 · 常設",
-      "brief": "使用連線券召喚教學投影卡\n只用於學府修業，不出征、不入名冊",
+      "brief": "使用連線券召喚教學投影卡\n學府專用，不出征、不入冊",
       "showcaseGeneralId": "zhuge-liang",
       "currencies": ["mentorTickets"],
       "singleCost": 1,

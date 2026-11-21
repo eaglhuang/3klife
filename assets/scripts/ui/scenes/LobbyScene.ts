@@ -8249,6 +8249,8 @@ ${spent}`,
             pools: () => this._gachaMainPools,
             candidates: (poolId) => this._gachaCandidatesCache.get(poolId) ?? [],
             reward: () => this._gachaRewardPort,
+            // 教官池 UP 卡 → 橫幅展示該卡所投影的武將（教學投影不是武將本人，但畫面主角用投影對象）
+            showcaseOfUp: (entryId) => findSupportCard(services().supportCardsConfig(), entryId)?.projectionOf ?? null,
         });
         return this._gachaApi;
     }
