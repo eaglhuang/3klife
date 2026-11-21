@@ -179,6 +179,16 @@
                 "skinSlot": "common.button.primary",
                 "textKey": "ui.result.retry",
                 "onClick": "onClickReplay"
+              },
+              {
+                "type": "button",
+                "name": "BtnAdvice",
+                "id": "btnAdvice",
+                "width": "31%",
+                "height": 72,
+                "skinSlot": "common.button.primary",
+                "textKey": "ui.result.advice",
+                "onClick": "onClickAdvice"
               }
             ]
           }

@@ -109,6 +109,8 @@ export class ResultPopupComposite extends CompositePanel {
     private _binder: UITemplateBinder | null = null;
     /** 「再戰一次」是否可用（年終守城不可重打，PROG-2-9426） */
     private _replayAllowed = true;
+    /** 「下一步建議」按鈕文字；null＝不顯示（戰敗敗因診斷，PROG-2-9712） */
+    private _adviceLabel: string | null = null;
     /** 返回大廳鈕原本的寬度（藏起再戰鈕時拉寬，恢復時還原） */
     private _backBaseWidth = 0;
     private _isMounted = false;
@@ -266,18 +268,43 @@ ${result.description}
         this._applyReplayVisibility();
     }
 
+    /** 設定下一次結算窗的「下一步建議」按鈕文字；null 就不顯示（戰敗敗因診斷，PROG-2-9712） */
+    public setDefeatAdvice(label: string | null): void {
+        this._adviceLabel = label;
+        this._applyReplayVisibility();
+    }
+
+    /**
+     * 按鈕列排版：返回大廳、再戰一次（可重打才有）、下一步建議（戰敗有診斷才有）依可見數量平分整列。
+     * 預設兩顆並排時不碰版面（照網頁原稿的 48%）。
+     */
     private _applyReplayVisibility(): void {
-        // 一直都可重打時不碰按鈕（預設版面就是兩顆並排）
-        if (this._replayAllowed && this._backBaseWidth <= 0) return;
+        const advice = this._binder?.getButton('BtnAdvice')?.node;
+        const showAdvice = !!advice && !!this._adviceLabel;
+        if (advice) advice.active = showAdvice;
+        if (this._replayAllowed && !showAdvice && this._backBaseWidth <= 0) return;
         const replay = this._binder?.getButton('BtnReplay')?.node;
         const back = this._binder?.getButton('BtnBack')?.node.getComponent(UITransform);
-        const row = this._binder?.getNode('ButtonRow')?.getComponent(UITransform);
+        const rowNode = this._binder?.getNode('ButtonRow');
         if (!replay || !back) return;
         if (this._backBaseWidth <= 0) this._backBaseWidth = back.contentSize.width;
         replay.active = this._replayAllowed;
-        const width = this._replayAllowed ? this._backBaseWidth : (row?.contentSize.width ?? this._backBaseWidth);
-        back.setContentSize(width, back.contentSize.height);
-        this._binder?.getNode('ButtonRow')?.getComponent(Layout)?.updateLayout();
+        const visible = [back.node, ...(this._replayAllowed ? [replay] : []), ...(showAdvice ? [advice!] : [])];
+        const layout = rowNode?.getComponent(Layout);
+        const rowWidth = rowNode?.getComponent(UITransform)?.contentSize.width ?? this._backBaseWidth * 2;
+        const spacing = layout?.spacingX ?? 16;
+        const width = visible.length === 2 && !showAdvice
+            ? this._backBaseWidth
+            : (rowWidth - spacing * (visible.length - 1)) / visible.length;
+        for (const node of visible) {
+            const tf = node.getComponent(UITransform);
+            tf?.setContentSize(width, tf.contentSize.height);
+        }
+        if (showAdvice) {
+            const label = advice!.getComponentInChildren(Label);
+            if (label) label.string = this._adviceLabel!;
+        }
+        layout?.updateLayout();
     }
 
     /** 結算窗開著時在描述下方追加行（戰後覺醒等非同步結果，PROG-2-1133） */
@@ -481,6 +508,7 @@ ${result.description}
         this._binder = binder;
         binder.getButton('BtnBack')?.node.on(Button.EventType.CLICK, this._onClickBack, this);
         binder.getButton('BtnReplay')?.node.on(Button.EventType.CLICK, this._onClickReplay, this);
+        binder.getButton('BtnAdvice')?.node.on(Button.EventType.CLICK, this._onClickAdvice, this);
         this._applyReplayVisibility();
         // 點暗幕不關閉結算窗：戰鬥已結束、棋盤不能再操作，關掉後玩家沒有任何出口會卡在戰場（PROG-2-9307）。
         // 只能從「返回大廳」或「再戰一次」離開；暗幕只負責擋住底下的點擊。
@@ -496,5 +524,11 @@ ${result.description}
     private _onClickReplay(): void {
         this.hide();
         this.node.emit('replay');
+    }
+
+    /** 下一步建議（PROG-2-9712）：由戰場橋接層依敗因決定再戰或回大廳 */
+    private _onClickAdvice(): void {
+        this.hide();
+        this.node.emit('advice');
     }
 }

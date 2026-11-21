@@ -188,6 +188,7 @@
   "ui.result.reward": "報酬",
   "ui.result.back_to_lobby": "大広間へ戻る",
   "ui.result.retry": "もう一度戦う",
+  "ui.result.advice": "次の一手",
   "ui.result.section.battle": "戦況",
   "ui.result.section.troops": "兵力",
   "ui.result.section.rewards": "報酬",

@@ -247,6 +247,11 @@ export class BattleController {
     this.skillSourceTranslator,
   );
 
+  /** 我方每回合可部署幾隊（教學戰較少；戰敗敗因診斷用，PROG-2-9712） */
+  public get playerDeployLimitPerTurn(): number {
+    return this.turnManager.playerDeployLimit;
+  }
+
   /** 玩家武將化身的小兵單位 ID（null = 武將尚未出陣） */
   public get playerGeneralUnitId(): string | null {
     return this.duelFlow.playerGeneralUnitId;
