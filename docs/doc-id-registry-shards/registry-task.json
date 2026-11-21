@@ -16183,6 +16183,12 @@
   },
   {
     "id": "doc_task_2715",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9482.md",
+    "title": "[PROG-2-9482] 基礎戰鬥手感：最後一排受擊抖動／後退放大 4 倍",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2716",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9462.md",
     "title": "[PROG-2-9462] GCH-R3 卡池 JSON 化",
     "category": "task"
