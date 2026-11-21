@@ -20,6 +20,7 @@
       "draw": { "mode": "weighted", "picks": 1, "replacement": true },
       "tiers": ["R", "SR", "SSR"],
       "tierRates": { "R": 0.87, "SR": 0.10, "SSR": 0.03 },
+      "tallies": [{ "counterKey": "gacha.general.pulls", "creditEvery": 200, "spentKey": "gacha.general.exchanged" }],
       "tierGroups": {
         "SSR": [{ "group": "up", "share": 0.7 }, { "group": "normal", "share": 0.3 }],
         "SR": [{ "group": "up", "share": 0.8 }, { "group": "normal", "share": 0.2 }]
@@ -49,6 +50,7 @@
       "draw": { "mode": "weighted", "picks": 1, "replacement": true },
       "tiers": ["R", "SR", "SSR"],
       "tierRates": { "R": 0.85, "SR": 0.125, "SSR": 0.025 },
+      "tallies": [{ "counterKey": "gacha.heroine.pulls", "creditEvery": 200, "spentKey": "gacha.heroine.exchanged" }],
       "tierGroups": {
         "SSR": [{ "group": "up", "share": 0.7 }, { "group": "normal", "share": 0.3 }]
       },

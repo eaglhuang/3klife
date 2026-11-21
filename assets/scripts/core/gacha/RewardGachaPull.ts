@@ -8,7 +8,7 @@
  *
  * 舊路徑（LocalGachaService）仍在，由旗標決定走哪一條；兩條路徑回給畫面的結果型別相同（LocalGachaResultEntry）。
  */
-import type { RewardGrantResult, RewardPityView, RewardPoolsResult } from '../../shared/api/ApiCommands';
+import type { RewardGrantResult, RewardPityView, RewardPoolsResult, RewardTallyView } from '../../shared/api/ApiCommands';
 import { isApiFail } from '../../shared/api/ApiProtocol';
 import type { IApiClient } from '../../shared/api/IApiClient';
 import type { GeneralConfig } from '../models/GeneralUnit';
@@ -131,6 +131,26 @@ export class RewardGachaPort {
         }
         this._host.afterPull?.({ poolId: args.poolId, currency: args.currency, cost: args.cost, results, added, duplicates });
         return { results, currency: args.currency, spent: args.cost, added, duplicates, converted, pities: grant.pities ?? [] };
+    }
+
+    /** 天命商店進度（reward.pity 的累計計數）：每滿 creditEvery 抽得 1 次資格；沒有累計計數的池回 null */
+    public async tally(legacyPoolId: string): Promise<RewardTallyView | null> {
+        const rewardPoolId = this.rewardPoolOf(legacyPoolId);
+        if (!rewardPoolId) return null;
+        const res = await this._api.query<{ tallies?: RewardTallyView[] }>('reward.pity', { poolId: rewardPoolId });
+        if (isApiFail(res)) return null;
+        return res.result.tallies?.[0] ?? null;
+    }
+
+    /** 兌換一次天命商店資格（reward.pity.redeem）；成功回 true，資格不足回 false。武將入冊由呼叫端接著做 */
+    public async redeem(legacyPoolId: string, requestId?: string): Promise<boolean> {
+        const rewardPoolId = this.rewardPoolOf(legacyPoolId);
+        if (!rewardPoolId) return false;
+        this._seq += 1;
+        const res = await this._api.cmd('reward.pity.redeem', {
+            poolId: rewardPoolId, grantKey: `redeem:${legacyPoolId}:${requestId ?? `${this._now()}-${this._seq}`}`,
+        });
+        return !isApiFail(res);
     }
 
     /** 池詳情：等階機率與 SSR 保底進度，與抽樣同一份資料（reward.pools）；查不到回 null */
