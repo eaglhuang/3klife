@@ -11,7 +11,7 @@ function usage() {
   node tools_node/small-avatar-crop-guide.js crop --input <image.png> --out <crop.png>
        --head x,y,width,height --face x,y,width,height --extent x,y,width,height
        [--shoulders leftX,leftY,rightX,rightY] [--target 0.75] [--min-head-ratio 0.75] [--max-head-ratio 0.80]
-       [--min-face-ratio 0.38] [--target-face-ratio 0.44]
+       [--min-face-ratio 0.38] [--max-face-ratio 0.50] [--target-face-ratio 0.44]
        [--min-face-width-ratio 0.276] [--max-face-width-ratio 0.396]
        [--extent-padding-ratio 0.03]
        [--vertical-shift <source-pixels>] [--size 256] [--guide-out <guide.png>]
@@ -29,7 +29,7 @@ inward from the outermost edge. Each point should sit at least 5% of the crop si
 its corresponding face edge; do not mark the neck, hair, collar, or chest center. Missing
 or out-of-frame shoulder points are warnings only and must never shrink an otherwise
 compliant head.
-Target head height defaults to 75%; accepted head height is 75–80%. Face height defaults to a 44% target and 38% minimum, and face width defaults to a 27.6% minimum. Face size, centerline, and complete head extent are hard gates. Shoulder anchors are visibility warnings only; do not shrink an otherwise compliant head to satisfy them. If the source cannot show shoulders at the target head scale, record the warning and review the crop visually.
+Target head height defaults to 75%; accepted head height is 75–80%. Face height defaults to a 44% target within a 38–50% range, and face width defaults to a 27.6–39.6% range. Face size, centerline, and complete head extent are hard gates. Shoulder anchors are visibility warnings only; do not shrink an otherwise compliant head to satisfy them. If the source cannot show shoulders at the target head scale, record the warning and review the crop visually.
 To maximize the head within that standard, keep only 2% clearance above the head and
 3% clearance around the complete --extent head silhouette by default. If that margin alone
 prevents the 75% head target, --extent-padding-ratio may be lowered to 0.005–0.03 after
@@ -180,17 +180,21 @@ function main() {
     const maxHeadRatio = a['max-head-ratio'] == null ? 0.80 : Number(a['max-head-ratio']);
     // Face ratios use the hairline-to-chin box, independently of headwear.
     const minFaceRatio = a['min-face-ratio'] == null ? 0.38 : Number(a['min-face-ratio']);
+    const maxFaceRatio = a['max-face-ratio'] == null ? 0.50 : Number(a['max-face-ratio']);
     const minFaceWidthRatio = a['min-face-width-ratio'] == null ? 0.276 : Number(a['min-face-width-ratio']);
     const maxFaceWidthRatio = a['max-face-width-ratio'] == null ? 0.396 : Number(a['max-face-width-ratio']);
     const targetFaceRatio = a['target-face-ratio'] == null ? 0.44 : Number(a['target-face-ratio']);
-    for (const [name, value] of [['min-face-ratio', minFaceRatio], ['target-face-ratio', targetFaceRatio], ['min-face-width-ratio', minFaceWidthRatio], ['max-face-width-ratio', maxFaceWidthRatio]]) {
+    for (const [name, value] of [['min-face-ratio', minFaceRatio], ['max-face-ratio', maxFaceRatio], ['target-face-ratio', targetFaceRatio], ['min-face-width-ratio', minFaceWidthRatio], ['max-face-width-ratio', maxFaceWidthRatio]]) {
       if (value !== null && !(value > 0 && value < 1)) throw new Error(`--${name} must be between 0 and 1`);
     }
     if (minFaceWidthRatio !== null && maxFaceWidthRatio !== null && maxFaceWidthRatio < minFaceWidthRatio) {
       throw new Error('--max-face-width-ratio must be at least --min-face-width-ratio');
     }
-    if (targetFaceRatio !== null && (minFaceRatio === null || targetFaceRatio < minFaceRatio)) {
-      throw new Error('--target-face-ratio requires --min-face-ratio and must be at least as large');
+    if (maxFaceRatio !== null && minFaceRatio !== null && maxFaceRatio < minFaceRatio) {
+      throw new Error('--max-face-ratio must be at least --min-face-ratio');
+    }
+    if (targetFaceRatio !== null && (minFaceRatio === null || targetFaceRatio < minFaceRatio || (maxFaceRatio !== null && targetFaceRatio > maxFaceRatio))) {
+      throw new Error('--target-face-ratio must be within the configured face-height range');
     }
     const verticalShift = a['vertical-shift'] == null ? 0 : Number(a['vertical-shift']);
     const extentPaddingRatio = a['extent-padding-ratio'] == null ? 0.03 : Number(a['extent-padding-ratio']);
@@ -219,7 +223,9 @@ function main() {
     const crop = { x: cropLeft, y: Math.min(head.y - side * headTopMarginRatio, extent.y - side * extentPaddingRatio) + verticalShift, width: side, height: side };
     const faceCenterX = (centerX - crop.x) / side, headRatio = head.height / side;
     const faceHeightRatio = face.height / side;
-    const passesFaceSize = minFaceRatio === null ? null : faceHeightRatio + 1e-9 >= minFaceRatio;
+    const passesFaceSize = minFaceRatio === null && maxFaceRatio === null ? null
+      : (minFaceRatio === null || faceHeightRatio + 1e-9 >= minFaceRatio)
+        && (maxFaceRatio === null || faceHeightRatio <= maxFaceRatio + 1e-9);
     const headTopClearance = head.y - crop.y;
     const headContained = head.x >= crop.x && head.x + head.width <= crop.x + side && head.y >= crop.y && head.y + head.height <= crop.y + side;
     const extentPadding = Math.min(extent.x - crop.x, crop.x + side - (extent.x + extent.width), extent.y - crop.y, crop.y + side - (extent.y + extent.height));
@@ -259,22 +265,46 @@ function main() {
       putPixel(out.data, out.width, x, y, sampleBilinear(src, sx, sy));
     }
     const outputEdgeAlphaCounts = { top: 0, right: 0, bottom: 0, left: 0 };
+    const headEdgeAlphaCounts = { top: 0, right: 0, bottom: 0, left: 0 };
     const extentStartY = Math.max(0, Math.floor((extent.y - crop.y) / side * out.height));
     const extentEndY = Math.min(out.height - 1, Math.ceil((extent.y + extent.height - crop.y) / side * out.height));
+    const extentRight = extent.x + extent.width;
+    const extentBottom = extent.y + extent.height;
+    const edgePixelInsideExtent = (x, y) => {
+      const sx = crop.x + (x + 0.5) * side / out.width - 0.5;
+      const sy = crop.y + (y + 0.5) * side / out.height - 0.5;
+      return sx >= extent.x - 0.5 && sx <= extentRight - 0.5
+        && sy >= extent.y - 0.5 && sy <= extentBottom - 0.5;
+    };
     for (let i = 0; i < out.width; i++) {
-      if (out.data[i * 4 + 3] >= 8) outputEdgeAlphaCounts.top++;
-      if (out.data[((out.height - 1) * out.width + i) * 4 + 3] >= 8) outputEdgeAlphaCounts.bottom++;
+      const topIndex = i * 4 + 3;
+      const bottomIndex = ((out.height - 1) * out.width + i) * 4 + 3;
+      if (out.data[topIndex] >= 8) {
+        outputEdgeAlphaCounts.top++;
+        if (edgePixelInsideExtent(i, 0)) headEdgeAlphaCounts.top++;
+      }
+      if (out.data[bottomIndex] >= 8) {
+        outputEdgeAlphaCounts.bottom++;
+        if (edgePixelInsideExtent(i, out.height - 1)) headEdgeAlphaCounts.bottom++;
+      }
     }
     for (let y = extentStartY; y <= extentEndY; y++) {
-      if (out.data[(y * out.width + out.width - 1) * 4 + 3] >= 8) outputEdgeAlphaCounts.right++;
-      if (out.data[(y * out.width) * 4 + 3] >= 8) outputEdgeAlphaCounts.left++;
+      const rightIndex = (y * out.width + out.width - 1) * 4 + 3;
+      const leftIndex = (y * out.width) * 4 + 3;
+      if (out.data[rightIndex] >= 8) {
+        outputEdgeAlphaCounts.right++;
+        if (edgePixelInsideExtent(out.width - 1, y)) headEdgeAlphaCounts.right++;
+      }
+      if (out.data[leftIndex] >= 8) {
+        outputEdgeAlphaCounts.left++;
+        if (edgePixelInsideExtent(0, y)) headEdgeAlphaCounts.left++;
+      }
     }
-    // Check top and side borders only across the marked complete head extent;
-    // clothing or shoulders outside that vertical band must not cause a false reject.
-    // The bottom edge remains a visual warning because a shoulder-up avatar may crop clothing there.
-    const touchesHeadBoundary = outputEdgeAlphaCounts.top > 0
-      || outputEdgeAlphaCounts.left > 0
-      || outputEdgeAlphaCounts.right > 0;
+    // Head pixels touching the canvas are a hard failure. Shoulder/clothing pixels may touch the edge;
+    // keep those visible in the report for human review instead of shrinking an otherwise valid head.
+    const touchesHeadBoundary = Object.values(headEdgeAlphaCounts).some(count => count > 0);
+    const touchesNonHeadBoundary = Object.entries(outputEdgeAlphaCounts)
+      .some(([edge, count]) => count > headEdgeAlphaCounts[edge]);
     if (touchesHeadBoundary) passesPriorityChecks = false;
     const outputCanvasCenterX = (out.width - 1) / 2;
     const outputFaceCenterX = faceCenterX * out.width;
@@ -318,10 +348,12 @@ function main() {
     }
     const result = { acceptanceStatus: passesPriorityChecks ? (passesShoulders ? 'geometry-pass-needs-visual-review' : 'geometry-pass-shoulder-warning') : 'geometry-fail', visualReviewRequired: true, input: path.resolve(a.input), output: path.resolve(a.out), source: `${src.width}x${src.height}`, outputSize: `${outputSize}x${outputSize}`, cropPixels: { x: +crop.x.toFixed(2), y: +crop.y.toFixed(2), side: +side.toFixed(2) }, verticalShift: +verticalShift.toFixed(2), headTopClearance: +headTopClearance.toFixed(2), headHeightRatio: +(headRatio * 100).toFixed(1), targetHeadHeightRatio: +(target * 100).toFixed(1), acceptedHeadHeightRange: `${(minHeadRatio * 100).toFixed(1)}–${(maxHeadRatio * 100).toFixed(1)}%`, passesHeadRatio, headContained, headWithinSource, extentContained, cropWithinSource, cropOutsideSourceTransparentPadding: !cropWithinSource, extentPadding: +extentPadding.toFixed(2), extentPaddingRatio: +extentPaddingRatio.toFixed(3), extentWithinSource, faceCenterX: +((face.x + face.width / 2 - crop.x) / side * 100).toFixed(1), passesFaceCenter, faceContained, faceWithinSource, shoulders: { shoulderAnchors: shoulders, contained: shoulderContained, onVisiblePixelsWithin5px: shoulderOnArtwork, outsideFaceByAtLeast5Percent: shoulderOutsideFace, clearanceBelow: shoulderClearanceBelow.map(value => +value.toFixed(2)), passesClearanceBelow: passesShoulderClearance, passesShoulders }, passesPriorityChecks, passesAllHardChecks: passesPriorityChecks, shoulderStatus: passesShoulders ? 'pass' : 'warning', note: `頭高接受範圍75–80%，預設目標75%；頭高量顱部髮型／盔體頂至下巴，不含高聳冠飾。臉高接受範圍38–50%、臉寬接受範圍27.6–39.6%；臉框中線與完整頭部內容是硬性條件。左右肩面可見度僅列次要警示，不得為符合肩點而縮小頭像。extent 須涵蓋全部可見頭髮、耳朵、頭盔和頭飾；預設留白3%，只有標記完整且預設留白會阻止75%頭高時才可明確降低至0.5–3%，確認裁框未切掉任何頭部像素。若有標記肩點，回報其是否入框與可見度；肩點缺失或出框不會使其他頭部硬性檢查判退。頭頂保留2%空間。工具只裁切／等比縮放，不修正人物。` };
     result.outputEdgeAlphaCounts = outputEdgeAlphaCounts;
+    result.headEdgeAlphaCounts = headEdgeAlphaCounts;
     result.touchesHeadBoundary = touchesHeadBoundary;
+    result.touchesNonHeadBoundary = touchesNonHeadBoundary;
     result.bottomEdgeNeedsVisualReview = outputEdgeAlphaCounts.bottom > 0;
     if (touchesHeadBoundary) {
-      result.headBoundaryFailure = 'Opaque character pixels touch the top or side canvas edge; reframe and confirm complete hair and headwear before acceptance.';
+      result.headBoundaryFailure = 'Opaque pixels within the marked complete head extent touch the canvas edge; reframe and confirm complete hair and headwear before acceptance.';
     }
     result.headChinAlignment = {
       headBottom: +headBottom.toFixed(2),
@@ -343,6 +375,8 @@ function main() {
     result.faceCenterTolerancePixels = 1;
     result.faceCenterTolerancePercent = +(100 / outputSize).toFixed(3);
     result.minFaceHeightRatio = minFaceRatio === null ? null : minFaceRatio * 100;
+    result.maxFaceHeightRatio = maxFaceRatio === null ? null : maxFaceRatio * 100;
+    result.passesFaceHeightRange = passesFaceSize;
     result.minFaceWidthPercent = minFaceWidthRatio === null ? null : minFaceWidthRatio * 100;
     result.maxFaceWidthPercent = maxFaceWidthRatio === null ? null : maxFaceWidthRatio * 100;
     result.passesFaceWidth = passesFaceWidth;
@@ -358,6 +392,7 @@ function main() {
       const maximumSideForTarget = Math.min(face.height / targetFaceRatio, face.width / minFaceWidthRatio, head.height / minHeadRatio);
       const minimumSidePreservingMarkedFeatures = Math.max(
         maxFaceWidthRatio === null ? 0 : face.width / maxFaceWidthRatio,
+        maxFaceRatio === null ? 0 : face.height / maxFaceRatio,
         head.height / 0.80,
         extent.height / (1 - 2 * extentPaddingRatio),
         Math.max(0, (extent.y + extent.height - head.y) / (1 - headTopMarginRatio - extentPaddingRatio)),
@@ -388,7 +423,9 @@ function main() {
     if (result.passesFaceSize === false) {
       result.acceptanceStatus = 'geometry-fail';
       result.passesAllHardChecks = false;
-      result.faceSizeFailure = 'The crop produces a face smaller than the configured minimum.';
+      result.faceSizeFailure = maxFaceRatio !== null && faceHeightRatio > maxFaceRatio + 1e-9
+        ? 'The crop produces a face larger than the configured maximum; widening the crop may reduce head height below its minimum.'
+        : 'The crop produces a face smaller than the configured minimum.';
     }
     if (!passesFaceWidth) {
       result.acceptanceStatus = 'geometry-fail';
