@@ -122,3 +122,4 @@
 | `doc_task_2712` | docs/agent-briefs/tasks/PROG/PROG-2-9442.md | [PROG-2-9442] OCC 擴充 nursing、mentorAssign 與互斥矩陣（F2；矩陣放設定 JSON） |
 | `doc_task_2713` | docs/agent-briefs/tasks/PROG/PROG-2-9461.md | [PROG-2-9461] GCH-R2 完整機率表 |
 | `doc_task_2714` | docs/agent-briefs/tasks/PROG/PROG-2-9481.md | [PROG-2-9481] 基礎戰鬥手感：所有音效走同一個節流閘門 |
+| `doc_task_2715` | docs/agent-briefs/tasks/PROG/PROG-2-9482.md | [PROG-2-9482] 基礎戰鬥手感：最後一排受擊抖動／後退放大 4 倍 |
