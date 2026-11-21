@@ -16498,5 +16498,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9801.md",
     "title": "[PROG-2-9801] 網頁版卡頓優化第二輪（人物介紹頁／開場 Label 縮放）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2932",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9712.md",
+    "title": "[PROG-2-9712] 第一年連敗：分清自動代打與關卡難度、強化委任 AI、戰敗敗因診斷",
+    "category": "task"
   }
 ]

@@ -31,7 +31,7 @@ import { EnemyAI, AI_USABLE_TYPES } from "./EnemyAI";
 import { isBattleSkillImplemented, resolveBattleSkillProfile, resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
 import { BattleSkillSourceTranslator } from '../skills/adapters/BattleSkillSourceTranslator';
 import { BattleSkillDispatcher, type GeneralSkillCastOptions } from '../runtime/BattleSkillDispatcher';
-import { findAncestorSignatureSkillId, findUltBasePowerTable, findUltimateBattleSkillId, findUltimateDamageDef, findUltimateSpecialRule, findUltimateFamily, findUltimateVitalityCostPct } from '../views/BattleSceneLoader';
+import { buildUltimateSkills, findAncestorSignatureSkillId, findUltBasePowerTable, findUltimateBattleSkillId, findUltimateDamageDef, findUltimateSpecialRule, findUltimateFamily, findUltimateVitalityCostPct } from '../views/BattleSceneLoader';
 import { BattleFlowStateMachine } from './BattleFlowStateMachine';
 import { BattleRuntimeOrchestrator } from '../orchestrators/BattleRuntimeOrchestrator';
 import { executeBattleCombatPhase } from '../runtime/phases/BattleCombatPhase';
@@ -106,6 +106,7 @@ import {
   type DelegateQuality,
   type DelegateSituation,
 } from '../../core/systems/DelegateAi';
+import { pickDelegateLaneSmart, pickDelegateSkillTarget, shouldDelegateGeneralSortie } from '../../core/systems/DelegateTactics';
 import { FormulaSystem } from '../../core/systems/FormulaSystem';
 import { buildEnemyTacticCandidates } from '../shared/EnemyTacticCandidates';
 import { fillTacticNumbers, type TacticMetrics } from '../shared/EnemyTacticNumbers';
@@ -555,7 +556,62 @@ export class BattleController {
    */
   public runPlayerDelegateDeployPhase(): void {
     if (!this.delegateQuality || !this.sortie) return;
-    this.tryDelegateDeploy(this.pickDelegateLane());
+    // 第一年連敗補強（PROG-2-9712）：先放招、再用滿部署額度、最後讓主將出陣。舊版每回合只出 1 隊、從不放招也不出陣
+    this.runDelegateSkillPhase();
+    const limit = this.turnManager.playerDeployLimit;
+    for (let i = 0; i < limit && this.turnManager.canDeployPlayer(); i += 1) {
+      if (!this.tryDelegateDeployAuto()?.ok) break;
+    }
+    this.tryDelegateGeneralSortie();
+  }
+
+  /** 委任自動部署一隊（PROG-2-9712）：兵種照委任保留策略挑（糧耗低優先），路線排除被堵住的出兵口 */
+  public tryDelegateDeployAuto(situation: DelegateSituation = { bossTargetVisible: false }): DeployOutcome | null {
+    if (!this.delegateQuality || !this.sortie) return null;
+    this.syncSortieWithField();
+    const candidates = sortDelegateCandidates(this.sortie, DEPLOY_SUGGESTION_CANDIDATES);
+    const pick = delegatePickDeploy(this.sortie, candidates, this.delegateQuality, situation);
+    if (pick.troopType === null) return null;
+    const lane = this.pickDelegateLane();
+    if (lane < 0) return null;
+    return this.tryDeployTroop(pick.troopType as TroopType, lane);
+  }
+
+  /**
+   * 委任放招（PROG-2-9712）：精力滿就放第一個奧義，計謀點夠就放天賦戰法；目標是最逼近我方的敵軍。
+   * 演出走既有 GeneralSkillUsed 事件（奧義分鏡、蓄力），與玩家手動施放相同。放不出去（條件不符、需要選格）就略過。
+   */
+  public runDelegateSkillPhase(): { ultimate: boolean; tactic: boolean } {
+    const done = { ultimate: false, tactic: false };
+    const general = this.state.playerGeneral;
+    if (!this.delegateQuality || !general || general.isDead() || !this.canUsePlayerSkills()) return done;
+    const targetUnitUid = pickDelegateSkillTarget(this.livingUnitsOf(Faction.Enemy));
+    if (!targetUnitUid) return done;
+    if (general.canUseSkill()) {
+      const ultimate = buildUltimateSkills(general)[0];
+      if (ultimate) {
+        done.ultimate = this.triggerPlayerBattleSkill(ultimate.skillId, SkillSourceType.Ultimate, {
+          targetMode: resolveBattleSkillTargetMode(ultimate.skillId, BattleSkillTargetMode.EnemyAll),
+          ultimateId: ultimate.ultimateId ?? null,
+          targetUnitUid,
+        });
+      }
+    }
+    const tactic = this.getPlayerSeedTacticDescriptor();
+    if (tactic && this.getPlayerTacticPointState().enabled) {
+      done.tactic = this.triggerPlayerSeedTactic({ targetMode: tactic.targetMode, targetUnitUid });
+    }
+    return done;
+  }
+
+  /** 委任帶主將出陣（PROG-2-9712）：出兵口有空、主將血量過門檻就上場（出陣＝全軍攻擊加倍，既有規則） */
+  public tryDelegateGeneralSortie(): TroopUnit | null {
+    const general = this.state.playerGeneral;
+    if (!this.delegateQuality || !general || general.isDead()) return null;
+    if (!shouldDelegateGeneralSortie({ canSortie: this.canPlayerGeneralDuel(), hp: general.currentHp, maxHp: general.maxHp })) return null;
+    const lane = this.pickDelegateLane();
+    if (lane < 0 || this.startGeneralDuel() !== 'ok') return null;
+    return this.placeGeneralOnBoard(lane, 0);
   }
 
   /**
@@ -566,18 +622,22 @@ export class BattleController {
     if (this.flowStateMachine.canAdvanceTurn()) this.runPlayerDelegateDeployPhase();
   }
 
-  /** 我方存活部隊最少的那一路，同數取較小路號（PROG-2-0913 暫定） */
+  /**
+   * 委任選路（PROG-2-9712）：我方存活部隊最少的那一路、同數取較小路號（PROG-2-0913 原規則），
+   * 但出兵口（depth 0）被占或不能進入的路排除；全被堵住回 -1。
+   */
   public pickDelegateLane(): number {
-    const counts: number[] = Array.from({ length: GAME_CONFIG.GRID_LANES }, () => 0);
+    const lanes = GAME_CONFIG.GRID_LANES;
+    const own: number[] = new Array<number>(lanes).fill(0);
     for (const unit of this.state.units.values()) {
       if (unit.faction !== Faction.Player || unit.currentHp <= 0) continue;
-      if (unit.lane >= 0 && unit.lane < counts.length) counts[unit.lane] += 1;
+      if (unit.lane >= 0 && unit.lane < lanes) own[unit.lane] += 1;
     }
-    let best = 0;
-    for (let lane = 1; lane < counts.length; lane += 1) {
-      if (counts[lane] < counts[best]) best = lane;
+    const deployBlocked: boolean[] = [];
+    for (let lane = 0; lane < lanes; lane += 1) {
+      deployBlocked.push(!!this.state.getCell(lane, 0)?.occupantId || this.combatResolver.isCellMovementBlocked(lane, 0));
     }
-    return best;
+    return pickDelegateLaneSmart({ deployBlocked, ownByLane: own });
   }
 
   /**
@@ -1852,6 +1912,12 @@ export class BattleController {
    * 玩家武將放置到指定格子（點擊棋盤後調用）。
    * @returns 成功回傳武將化身的 TroopUnit，失敗回傳 null
    */
+  /** 取消等待選格出陣（PROG-2-9712，自動代打找不到空格時用）：流程回到可下指令 */
+  public cancelGeneralDuelPlacement(): void {
+    this.isWaitingDuelPlacement = false;
+    this.flowStateMachine.completeGeneralDuelPlacement();
+  }
+
   public placeGeneralOnBoard(lane: number, depth: number): TroopUnit | null {
     if (!this.flowStateMachine.isGeneralDuelPlacement()) {
       return null;

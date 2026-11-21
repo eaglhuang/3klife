@@ -73,7 +73,7 @@ export function createAutoPlaySuite(): TestSuite {
         assert.isTrue(bridge.includes('private async _skipToQuickResolve('));
         assert.isTrue(bridge.includes('delegateToggleStopsAutoPlay('));
         assert.isTrue(bridge.includes('this.onAutoPlayStarted?.()'));
-        assert.isTrue(bridge.includes('if (this.autoPlay.stop()) this._syncAutoButton()'));
+        assert.isTrue(bridge.includes("if (data.result !== 'ongoing' && this.autoPlay.stop()) this._syncAutoButton()"));
         const flow = read('assets/scripts/battle/views/TurnFlowManager.ts');
         assert.isTrue(flow.includes('scheduleAutoPlayEndTurn'));
         assert.isTrue(flow.includes('autoPlayEndTurnDelaySec'));
