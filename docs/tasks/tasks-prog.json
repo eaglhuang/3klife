@@ -13849,7 +13849,7 @@
       "notes": "狀態: done。變更: 新增 doc_spec_1288 結緣事件文案範例（20 則）；更新 cross-ref-specs 與 tasks-prog。"
     },
     {
-      "doc_id": "doc_task_2747",
+      "doc_id": "doc_task_2760",
       "id": "PROG-2-9705",
       "title": "戰場 HUD 徽章風格第一版",
       "owner": "claude-code-opus-5-5",
