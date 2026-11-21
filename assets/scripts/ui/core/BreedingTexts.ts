@@ -21,6 +21,8 @@ export const BREED_TEXT_FALLBACK_ZH_TW: Readonly<Record<string, string>> = {
     'ui.breed.epithet.summary.twin_stars': '覺醒率 +{0}%',
     'ui.breed.birth.fresh_blood': '寒門新血 V{0}！外家奇才注活血脈，子嗣前 {1} 季修業效率 +{2}%！',
     'ui.breed.birth.epithet': '佳話聯姻【{0}】！{1}',
+    'ui.breed.tradition_seed': '郡望宗脈顯靈！子嗣保底承襲家族特質【{0}】{1}★！',
+    'ui.breed.high_clan_proposal': '天下高門求親：保底 EP≥{0}｜≥{1}★家學｜相性+{2}｜聘禮+{3}%',
     'ui.breed.preg_status': '{0} 需調養待產 {1} 季（期間精力凍結、不能再結緣）；襁褓幼子已入宗族名冊',
     'ui.breed.child_born': '恭喜主公！{0} 與 {1} 喜獲 {2}！',
     'ui.breed.unveil_5': '天命開獎！{0} 五維資質揭曉：',

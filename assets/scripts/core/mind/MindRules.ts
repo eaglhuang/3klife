@@ -60,6 +60,9 @@ function clampWeight(n: number): MindWeight {
  * 情報度 ≤1 仍失敗不全是他的錯（降一級）；自請而敗更想雪恥（加重）；被委任而敗記原因碼。
  */
 export function ruleFor(input: Readonly<MindEventInput>): { valence: MindValence; weight: MindWeight; reason?: string } {
+    if (input.forceValence !== undefined) {
+        return { valence: input.forceValence, weight: input.forceWeight ?? 3, ...(input.reason ? { reason: input.reason } : {}) };
+    }
     const marriageOverride = marriageMoodEventOverride(input.kind, input.tags ?? []);
     if (marriageOverride) {
         return { valence: marriageOverride.valence, weight: marriageOverride.weight, ...(input.reason ? { reason: input.reason } : {}) };

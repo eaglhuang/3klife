@@ -57,7 +57,7 @@ function medicLine(outcome: BloodFatigueOutcome | undefined, father: BirthParent
 }
 
 export function bloodlineBirthLines(
-    result: { ep?: { resonance: number; ep?: number }; factors?: readonly InheritedFactor[]; child?: { name: string }; bloodFatigue?: BloodFatigueOutcome; father?: BirthParent; mother?: BirthParent; lineageSynergyFactorId?: string; marriageVitality?: MarriageVitalityResult },
+    result: { ep?: { resonance: number; ep?: number }; factors?: readonly InheritedFactor[]; child?: { name: string }; bloodFatigue?: BloodFatigueOutcome; father?: BirthParent; mother?: BirthParent; lineageSynergyFactorId?: string; marriageVitality?: MarriageVitalityResult; clanTraditionSeeded?: { factorId: string; displayName: string; stars: number } },
     nameOf: (uid: string) => string | null,
     textLookup?: BreedTextLookup,
 ): string[] {
@@ -88,6 +88,9 @@ export function bloodlineBirthLines(
         const title = t(ep.titleKey);
         const summary = ep.summaryKey ? t(ep.summaryKey, ...(ep.summaryArgs ?? [])) : ep.summary;
         lines.push(t('ui.breed.birth.epithet', title, summary));
+    }
+    if (result.clanTraditionSeeded) {
+        lines.push(t('ui.breed.tradition_seed', result.clanTraditionSeeded.displayName, String(result.clanTraditionSeeded.stars)));
     }
     return lines;
 }

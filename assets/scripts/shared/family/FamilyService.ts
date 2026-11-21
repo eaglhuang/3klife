@@ -73,7 +73,10 @@ export function normalizeFamilyState(raw: unknown): FamilyStateV1 {
         const branch = normalizeBranch(item);
         if (branch && !branches.some((b) => b.branchId === branch.branchId)) branches.push(branch);
     }
-    return { v: FAMILY_STATE_VERSION, members, branches };
+    const state: FamilyStateV1 = { v: FAMILY_STATE_VERSION, members, branches };
+    // 銀兩壞值（非有限、負數）丟棄回「尚未動用」，不拋錯（保護玩家存檔）
+    if (typeof raw.silver === 'number' && Number.isFinite(raw.silver) && raw.silver >= 0) state.silver = Math.floor(raw.silver);
+    return state;
 }
 
 export class FamilyService {
@@ -81,11 +84,33 @@ export class FamilyService {
 
     /** 存檔快照（深複製） */
     public snapshot(): FamilyStateV1 {
-        return {
+        const out: FamilyStateV1 = {
             v: FAMILY_STATE_VERSION,
             members: this._state.members.map((m) => ({ ...m, parentIds: [...m.parentIds] })),
             branches: this._state.branches.map((b) => ({ ...b })),
         };
+        if (this._state.silver !== undefined) out.silver = this._state.silver;
+        return out;
+    }
+
+    /** 家族銀兩餘額：尚未動用過就是開局銀兩（由宿主依設定傳入，本類別不讀設定） */
+    public silverBalance(startingSilver: number): number {
+        return this._state.silver ?? startingSilver;
+    }
+
+    /** 扣銀兩：不足回 false 且不扣；amount 須為正整數 */
+    public trySpendSilver(amount: number, startingSilver: number): boolean {
+        if (!Number.isInteger(amount) || amount <= 0) return false;
+        const have = this.silverBalance(startingSilver);
+        if (have < amount) return false;
+        this._state.silver = have - amount;
+        return true;
+    }
+
+    /** 入帳銀兩（家族收入、捐贈換回、退款）；amount 須為正整數 */
+    public creditSilver(amount: number, startingSilver: number): void {
+        if (!Number.isInteger(amount) || amount <= 0) return;
+        this._state.silver = this.silverBalance(startingSilver) + amount;
     }
 
     public restore(raw: unknown): void {
