@@ -24,6 +24,9 @@ export const API_COMMANDS = Object.freeze({
     'item.grant': { kind: 'cmd', revGuard: false },
     'item.consume': { kind: 'cmd', revGuard: false },
     'item.settlePeriodic': { kind: 'cmd', revGuard: false },
+    'item.use': { kind: 'cmd', revGuard: false },
+    'item.breakthrough': { kind: 'cmd', revGuard: false },
+    'item.instance': { kind: 'query', revGuard: false },
     'item.count': { kind: 'query', revGuard: false },
     'item.list': { kind: 'query', revGuard: false },
     'item.ledger': { kind: 'query', revGuard: false },
@@ -60,6 +63,8 @@ export const API_COMMANDS = Object.freeze({
     'occupancy.query': { kind: 'query', revGuard: false },
     'occupancy.acquire': { kind: 'cmd', revGuard: false },
     'occupancy.release': { kind: 'cmd', revGuard: false },
+    // 家族（配偶納入名冊；只送意圖，名冊與上限由權威端判定；PROG-2-9582）
+    'family.enrollSpouse': { kind: 'cmd', revGuard: false },
     // 偵錯（只有本機 adapter 掛處理器；網路 adapter 一律回 COMMAND_UNKNOWN，避免變成外掛入口）
     'debug.fastForward': { kind: 'cmd', revGuard: false },
     // 任務（任務 Base 規格 §11；QST-M 最小版，只有 taskKind=academy）
@@ -137,6 +142,54 @@ export interface ItemConsumeArgs extends ItemHolderArgs {
     itemId: string;
     qty: number;
     sink: string;
+}
+
+/**
+ * item.use：使用材料（doc_spec_1264 §5.2）。目前只有 supportExp 效果：把 qty 個材料的經驗加到 target 這張支援卡實例。
+ * 等級由權威端依 expToNext 推得；只扣升到上限需要的個數（到上限後多的不消耗，result.consumed 為實際扣的數量）；
+ * 目標已在上限回 E318（請先傳承）、不扣材料。
+ */
+export interface ItemUseArgs extends ItemHolderArgs {
+    itemId: string;
+    qty: number;
+    target: { itemId: string };
+}
+
+export interface ItemUseResult {
+    itemId: string;
+    target: string;
+    consumed: number;
+    /** 材料剩餘數量 */
+    count: number;
+    expGained: number;
+    levelsGained: number;
+    level: number;
+    exp: number;
+    atCap: boolean;
+}
+
+/**
+ * item.breakthrough：傳承（doc_spec_1264 §5.3）。把一張已持有的可成長物品的傳承次數 +1（等級上限隨之 +capPerBreak）；
+ * 已達 maxBreak 回 E318，未持有回 E317。rollback:true 是反向撤銷用（獎勵 settle 失敗時把 +1 減回去），不走一般玩法。
+ */
+export interface ItemBreakthroughArgs extends ItemHolderArgs {
+    itemId: string;
+    rollback?: boolean;
+}
+
+export interface ItemInstanceView {
+    itemId: string;
+    level: number;
+    exp: number;
+    limitBreak: number;
+    /** 目前等級上限（初始上限＋傳承次數×每次增加） */
+    levelCap: number;
+    maxBreak: number;
+}
+
+/** item.instance：查一個實例的成長狀態；未持有或沒有實例回 E317 */
+export interface ItemInstanceArgs extends ItemHolderArgs {
+    itemId: string;
 }
 
 export interface ItemConsumeResult {
@@ -574,6 +627,22 @@ export interface OccupancyReleaseArgs {
 export interface OccupancyReleaseResult {
     /** false＝本來就沒有（冪等重送） */
     released: boolean;
+}
+
+// ── 家族（family.*）──
+
+/** 配偶來源：first-child＝首子流程的系統配偶（固定 slot）；其餘來源由 PROG-2-9583 接上 */
+export type FamilySpouseSource = 'first-child';
+
+/** family.enrollSpouse：只送來源，不得帶武將數值（E103）；同來源重送冪等（created=false） */
+export interface FamilyEnrollSpouseArgs {
+    source: FamilySpouseSource;
+}
+
+export interface FamilyEnrollSpouseResult {
+    generalId: string;
+    /** false＝這位配偶早已在名冊（冪等重送） */
+    created: boolean;
 }
 
 // ── 偵錯（debug.fastForward；只有本機 adapter 提供）──

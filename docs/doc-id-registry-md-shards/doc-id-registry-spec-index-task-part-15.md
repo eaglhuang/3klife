@@ -129,7 +129,7 @@
 | `doc_task_2719` | docs/agent-briefs/tasks/PROG/PROG-2-9485.md | [PROG-2-9485] 待產與哺乳接線（F5：2 季待產、哺乳 OCC、乳母不占用） |
 | `doc_task_2720` | docs/agent-briefs/tasks/PROG/PROG-2-9484.md | [PROG-2-9484] 配偶上場（F4：名冊 kind=spouse、生成型配偶範本、出征與派遣、太守；指派入口改用 checkAssign） |
 | `doc_task_2721` | docs/agent-briefs/tasks/PROG/PROG-2-9486.md | [PROG-2-9486] playtest --academy 第 15 步：任務牆比對略過大廳走動名牌 |
-| `doc_task_2722` | docs/agent-briefs/tasks/PROG/PROG-2-9463.md | [PROG-2-9463] GCH-R4 抽取遷移 |
+| `doc_task_2722` | docs/agent-briefs/tasks/PROG/PROG-2-9463.md | PROG-2-9463 |
 | `doc_task_2723` | docs/agent-briefs/tasks/PROG/PROG-2-9580.md | [PROG-2-9580] 基礎戰鬥手感：騎兵攻擊暫代音檔（避開腳步同檔被節流） |
 | `doc_task_2724` | docs/agent-briefs/tasks/PROG/PROG-2-9230.md | [PROG-2-9230] 教官池與學府支援卡規格（恢復並改寫教官卡，含強化、羈絆、事件、點撥、師門、四池轉蛋） |
 | `doc_task_2725` | docs/agent-briefs/tasks/PROG/PROG-2-9581.md | [PROG-2-9581] F4／F5 收尾（待產單一來源、乳母費用、待產放行大廳任務、哺乳登記重試、幕府等級待接） |
@@ -139,3 +139,9 @@
 | `doc_task_2729` | docs/agent-briefs/tasks/PROG/PROG-2-9701.md | [PROG-2-9701] 戰場可讀性：部隊框避讓含血條與狀態圖示、跳字置頂、敵軍行動中橫幅移出棋盤 |
 | `doc_task_2730` | docs/agent-briefs/tasks/PROG/PROG-2-9240.md | [PROG-2-9240] 支援卡資料與物品化（SUP-1：25 張學府支援卡、category=supportCard、instanceState、出征編制排除） |
 | `doc_task_2731` | docs/agent-briefs/tasks/PROG/PROG-2-9702.md | [PROG-2-9702] 年終守城戰規格書：大敗、失守懲罰、平手三項回寫使用者 11/21 裁決 |
+| `doc_task_2732` | docs/agent-briefs/tasks/PROG/PROG-2-9464.md | PROG-2-9464 |
+| `doc_task_2733` | docs/agent-briefs/tasks/PROG/PROG-2-9465.md | PROG-2-9465 |
+| `doc_task_2734` | docs/agent-briefs/tasks/PROG/PROG-2-9241.md | [PROG-2-9241] 升級與材料（SUP-2：經驗材料 item.use、expToNext、等級上限、學分當材料） |
+| `doc_task_2735` | docs/agent-briefs/tasks/PROG/PROG-2-9242.md | [PROG-2-9242] 傳承與溢出轉換（SUP-3：重複卡傳承 +1、傳承滿轉學分、獎勵效果 supportCard） |
+| `doc_task_2736` | docs/agent-briefs/tasks/PROG/PROG-2-9584.md | [PROG-2-9584] 熱修：大廳 CPU 吃滿（名冊深拷貝 O(N²) 熱路徑） |
+| `doc_task_2737` | docs/agent-briefs/tasks/PROG/PROG-2-9590.md | PROG-2-9590：playtest-online --year QA |

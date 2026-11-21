@@ -27,6 +27,7 @@ import type { IMissionService } from "../mission/service/IMissionService";
 import { PlayerSaveService } from "../services/PlayerSaveService";
 import { ApiSaveGateway } from "../api/localserver/ApiSaveGateway";
 import { createLocalApi, type LocalApiBundle } from "../api/localserver/createLocalApi";
+import { createSupportCardHandler, SUPPORT_CARD_EFFECT_KIND } from "../api/localserver/SupportCardEffect";
 import { createGeneralGrantHandler, type GeneralGrantHost } from "../gacha/RewardGachaPull";
 import type { DebugHost } from "../api/localserver/DebugCommands";
 import type { WalletAuthority } from "../api/localserver/WalletCommands";
@@ -71,7 +72,8 @@ import { QUEST_CONFIG_JSON, type QuestConfigV1 } from "../../shared/quest/QuestT
 import { DEFAULT_REWARD_CONFIG, normalizeRewardConfig, REWARD_CONFIG_JSON, type RewardConfigV1, type RewardPoolDef } from "../../shared/reward/RewardConfig";
 import { DEFAULT_STORY_CONFIG, normalizeStoryConfig, STORY_CONFIG_JSON, type StoryConfigV1 } from "../../shared/story/StoryConfig";
 import { ITEM_CONFIG_JSON, normalizeItemConfig, DEFAULT_ITEM_CONFIG, type ItemConfigV1 } from "../../shared/item/ItemConfig";
-import { DEFAULT_SUPPORT_CARDS_CONFIG, normalizeSupportCards, SUPPORT_CARDS_JSON, withSupportCardItems, type SupportCardsConfigV1 } from "../../shared/support/SupportCardConfig";
+import { DEFAULT_SUPPORT_CARDS_CONFIG, normalizeSupportCards, SUPPORT_CARDS_JSON, type SupportCardsConfigV1 } from "../../shared/support/SupportCardConfig";
+import { DEFAULT_SUPPORT_RULES, normalizeSupportRules, SUPPORT_RULES_JSON, withSupportItems, type SupportRulesV1 } from "../../shared/support/SupportRules";
 import { ACADEMY_INHERIT_MARKS_JSON, configureAcademyInheritMarks, type AcademyInheritMarksConfig } from "../systems/nurture/AcademyInheritAndMarks";
 
 export class ServiceLoader {
@@ -276,6 +278,8 @@ export class ServiceLoader {
     private itemConfig: ItemConfigV1 = DEFAULT_ITEM_CONFIG;
     /** 學府支援卡資料（academy-support-cards.json，PROG-2-9240）；卡片的物品定義由此推導併入 itemConfig，不在 item-config.json 重複列 */
     private supportCards: SupportCardsConfigV1 = DEFAULT_SUPPORT_CARDS_CONFIG;
+    /** 支援卡成長規則與經驗材料（support-rules.json，PROG-2-9241）；卡的 growth 與材料物品由此推導 */
+    private supportRules: SupportRulesV1 = DEFAULT_SUPPORT_RULES;
     /** 獎勵設定（reward-config.json，PROG-2-9205）；載入前用空設定，API 重建時沿用 */
     private rewardConfig: RewardConfigV1 = DEFAULT_REWARD_CONFIG;
     private questConfig: QuestConfigV1 = DEFAULT_QUEST_CONFIG;
@@ -295,9 +299,9 @@ export class ServiceLoader {
     /** 發武將的宿主入口（kind "general" handler 用）；API 重建時沿用 */
     private generalGrantHost: GeneralGrantHost | null = null;
 
-    /** 物品設定＝item-config.json＋支援卡推導的物品定義；任一份重載後都要重新換入 */
+    /** 物品設定＝item-config.json＋支援卡與材料推導的物品定義；任一份重載後都要重新換入 */
     private applyItemConfig(): void {
-        this.localApi?.setItemConfig(withSupportCardItems(this.itemConfig, this.supportCards));
+        this.localApi?.setItemConfig(withSupportItems(this.itemConfig, this.supportCards, this.supportRules));
     }
 
     private applyRewardConfig(): void {
@@ -346,6 +350,14 @@ export class ServiceLoader {
         this.session.setSkillApi(this.localApi.api);
         // 人員占用（PROG-2-9207）：登記表（academy／mentorAssign）＋六處唯讀轉接器由 GameSession 提供，寫入走 occupancy.* 命令
         this.localApi.setOccupancyHost(this.session.occupancyHost);
+        // 家族（PROG-2-9582）：配偶納入名冊走 family.enrollSpouse，上限與去重由 GameSession 判定
+        this.localApi.setFamilyHost({
+            // 家族設定是延遲載入（loadBloodlineRuleTables）；入口命令先等它載好，避免流程在設定前到達而誤判 FAMILY_NO_CONFIG
+            enrollGeneratedSpouse: async (slot) => {
+                await this.loadBloodlineRuleTables();
+                return this.session.spouseHost.enrollGeneratedSpouse(slot);
+            },
+        });
         // 學府修業（PROG-2-9215）：紀錄讀寫（save.read／save.write domain=academy）與種子簽發（rng.issueSeed）由 GameSession 提供
         this.localApi.setAcademyHost(this.session.academyHost);
         // 物品庫存（PROG-2-9203）：家庭倉庫＝玩家庫存表；季結的定期發放與入學／退還都走 item.* 命令
@@ -354,6 +366,8 @@ export class ServiceLoader {
         this.session.setItemApi(this.localApi.api);
         // 獎勵 base（PROG-2-9205）：獎池／套件設定、亂數會話與保底存在 GameSession，戰後里程碑獎勵走 reward.claim
         this.applyRewardConfig();
+        // 支援卡發放（PROG-2-9242）：入學／傳承／傳承滿轉學分都走 item.* 命令；卡表與規則用 getter，設定重載後立即生效
+        this.localApi.registerRewardEffect(SUPPORT_CARD_EFFECT_KIND, createSupportCardHandler(() => ({ cards: this.supportCards, rules: this.supportRules })));
         if (this.generalGrantHost) this.localApi.registerRewardEffect('general', createGeneralGrantHandler(this.generalGrantHost));
         this.localApi.setRewardAuthority(this.session.rewardAuthority());
         this.session.setRewardApi(this.localApi.api);
@@ -476,6 +490,7 @@ export class ServiceLoader {
             loadSafe<unknown>(QUEST_CONFIG_JSON, (raw) => { this.questConfig = normalizeQuestConfig(raw); this.localApi?.setQuestConfig(this.questConfig); }),
             loadSafe<unknown>(ITEM_CONFIG_JSON, (raw) => { this.itemConfig = normalizeItemConfig(raw); this.applyItemConfig(); }),
             loadSafe<unknown>(SUPPORT_CARDS_JSON, (raw) => { this.supportCards = normalizeSupportCards(raw); this.applyItemConfig(); }),
+            loadSafe<unknown>(SUPPORT_RULES_JSON, (raw) => { this.supportRules = normalizeSupportRules(raw); this.applyItemConfig(); }),
             loadSafe<Partial<MarriageVitalityRulesConfig>>(MARRIAGE_VITALITY_RULES_JSON, configureMarriageVitalityRules),
         ]);
         // 家族設定（PROG-2-9441 F1）：缺檔或缺欄位 fail-fast，不退回預設（與上面 loadSafe 的容錯刻意不同）

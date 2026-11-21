@@ -157,6 +157,7 @@ import { GraduationRecordController } from '../core/GraduationRecordController';
 import { AcademyGraduationController } from '../core/AcademyGraduationController';
 import { AcademyFlowController } from '../core/AcademyFlowController';
 import { parseQaAcademyParams } from '../core/AcademyQaFastForward';
+import { fastForwardFamily, parseQaFamilyParams } from '../core/FamilyQaFastForward';
 import { AcademyApiClient } from '../core/AcademyApi';
 import { ancestralInheritToastText, newAncestralInheritViews } from '../core/AcademyInheritView';
 import { ClanShrineController } from '../core/ClanShrineController';
@@ -1006,6 +1007,8 @@ export class LobbyScene extends Component {
 
         // 核心架構合一：幕府政廳即為主大廳，登入後直接坐鎮大堂；新玩家開場走完才開（PROG-2-2222）
         if (!this._isOpeningInProgress()) this._openLobbyHall();
+        // QA 快進（PROG-2-9582）：只靠共通 API 與已載入的存檔，不等背景面板，所以在背景掛載之前就啟動
+        void this._startQaFamily();
         void this._runDeferredMounts();
         } catch (error) {
             SceneLoadProgress.fail();
@@ -1619,6 +1622,29 @@ export class LobbyScene extends Component {
             services().event.emit('SHOW_TOAST', { message: this._academyText('ui.academy.flow.lobby.resume_toast', '學府修業進行中，請回到學府繼續'), duration: 3 });
         }
         this._startQaAcademy();
+    }
+
+    /**
+     * QA 快進（PROG-2-9582）：網址帶 qaFamily=spouse|nursing 才介入；納入首子系統配偶（family.enrollSpouse），
+     * nursing 再走 occupancy.acquire 進哺乳占用。結果掛 window.__qaFamily 供 QA 腳本讀取。沒帶參數時完全不動。
+     */
+    private async _startQaFamily(): Promise<void> {
+        const scenario = parseQaFamilyParams((globalThis as { window?: { location?: { search?: string } } }).window?.location?.search);
+        if (!scenario) return;
+        const publish = (value: unknown): void => { (globalThis as { __qaFamily?: unknown }).__qaFamily = value; };
+        publish({ state: 'running', scenario });
+        try {
+            const api = services().api;
+            const result = await fastForwardFamily({
+                cmd: async (name, args) => {
+                    const res = await api.cmd(name, args);
+                    return isApiFail(res) ? { ok: false, reason: res.reason } : { ok: true, result: res.result };
+                },
+            }, scenario);
+            publish({ state: 'done', result });
+        } catch (err) {
+            publish({ state: 'error', message: (err as Error)?.message ?? String(err) });
+        }
     }
 
     /**
