@@ -114,7 +114,7 @@ export function playBattleAudio(cue: BattleAudioCue, volume = 1.0): void {
     return;
   }
 
-  // PROG-2-9439／9441：節流改在 AudioSystem 的統一閘門做，這裡只確保閘門已裝上，不再自己判斷（避免算兩次）
+  // PROG-2-9439／9481：節流改在 AudioSystem 的統一閘門做，這裡只確保閘門已裝上，不再自己判斷（避免算兩次）
   // 音效系統未就緒或缺檔都靜音略過，不可丟例外（PROG-2-9357）
   try {
     installBattleSfxGate();
@@ -123,7 +123,7 @@ export function playBattleAudio(cue: BattleAudioCue, volume = 1.0): void {
 }
 
 /**
- * 戰場統一音效閘門（PROG-2-9441）：特效、奧義演出、動作序列、戰鬥 cue 全部從 AudioSystem.playSfx 出去，
+ * 戰場統一音效閘門（PROG-2-9481）：特效、奧義演出、動作序列、戰鬥 cue 全部從 AudioSystem.playSfx 出去，
  * 都經過這個閘門，沒有旁路。
  */
 export function battleSfxGate(clip: string): boolean {

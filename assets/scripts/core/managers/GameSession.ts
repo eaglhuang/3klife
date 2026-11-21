@@ -164,6 +164,9 @@ import { SkillService } from '../../shared/skill/SkillService';
 import type { AcademyHost } from '../api/localserver/AcademyHostCommands';
 import type { OccupancyHost } from '../api/localserver/OccupancyCommands';
 import { OccupancyService } from '../../shared/occupancy/OccupancyService';
+import { parseFamilyConfig, type FamilyConfigV1 } from '../../shared/family/FamilyConfig';
+import { FamilyService } from '../../shared/family/FamilyService';
+import { isEmptyFamilyState } from '../../shared/family/FamilyTypes';
 import type { OccupancyRecord } from '../../shared/occupancy/OccupancyTypes';
 import type { SkillLearnAuthority } from '../../shared/skill/SkillTypes';
 import { GeneralSkillStore } from '../systems/skill/GeneralSkillStore';
@@ -1361,6 +1364,33 @@ export class GameSession implements AcademyRecordPort {
         return result;
     }
 
+    /** 家族成員登記表（PROG-2-9441 F1）：隨存檔欄位 familyState 保存；寫入一律走共通 API，玩法與 UI 不直接碰 */
+    private readonly _family: FamilyService = new FamilyService();
+    private _familyConfig: FamilyConfigV1 | null = null;
+
+    /** 家族登記表宿主：ServiceLoader 把它掛到本機 API（F3 起的家族命令） */
+    public get familyHost(): { service: FamilyService } {
+        return { service: this._family };
+    }
+
+    /** 套用 family-config.json；缺欄位或型別不對直接丟 FamilyConfigError（fail-fast，不套預設） */
+    public configureFamily(raw: unknown): FamilyConfigV1 {
+        this._familyConfig = parseFamilyConfig(raw);
+        return this._familyConfig;
+    }
+
+    /** 已載入的家族設定；尚未載入回 null（使用端應視為功能未就緒，不得退回猜測值） */
+    public get familyConfig(): FamilyConfigV1 | null {
+        return this._familyConfig;
+    }
+
+    /** 舊檔對帳：名冊上有少年版標記卻沒家族紀錄者，補登「開局義子特例」（9194 開局少年改為義子） */
+    private _reconcileStarterAdoptees(): void {
+        for (const general of this._roster.getAll()) {
+            if ((general as { youth?: unknown }).youth && general.id) this._family.seedStarterAdoptee(general.id, this._clock.state.totalSeasonsElapsed);
+        }
+    }
+
     /**
      * 人員占用登記（PROG-2-9207 OCC-M 中立版）：登記表只存 academy／mentorAssign；
      * 太守府、大廳任務、派遣、傭兵、歷練、待產重傷六處以唯讀轉接器查詢，狀態仍由各系統自己保管。
@@ -2478,6 +2508,7 @@ export class GameSession implements AcademyRecordPort {
         this._itemMeta = emptyItemMeta();
         this._rewardMeta = emptyRewardMeta();
         this._questState = emptyQuestState();
+        this._family.reset();
         this._storyMeta = emptyStoryMeta();
         this._breedingBirthRecords = [];
         this._familySystemUnlockedFlag = false;
@@ -2584,7 +2615,11 @@ export class GameSession implements AcademyRecordPort {
             const adult = generals.find(general => general.id === youthId);
             if (!adult) throw new Error(`[GameSession] 少年名將 ${youthId} 查無成年版資料`);
             // 已在名冊（例如宿命名單）就不重複送；少年版與成年版同 id，等同同一人
-            if (!initialRoster.some(general => general.id === youthId)) initialRoster.push(buildStarterYouth(adult, youthConfig));
+            if (!initialRoster.some(general => general.id === youthId)) {
+                initialRoster.push(buildStarterYouth(adult, youthConfig));
+                // Q-F1：開局少年是「開局義子特例」——標記義子、進家譜、可入學、不遺傳血統
+                this._family.seedStarterAdoptee(youthId, this._clock.state.totalSeasonsElapsed);
+            }
         }
         this._roster.replaceAll(normalizeRosterRoles(initialRoster));
         if (!await this.setLeadGeneral(coreId)) throw new Error('[GameSession] 無法設定初始核心主將');
@@ -6723,6 +6758,7 @@ export class GameSession implements AcademyRecordPort {
             ...(this._legendaryMentoringUsedIds.length > 0 ? { legendaryMentoringUsedIds: [...this._legendaryMentoringUsedIds] } : {}),
             ...(isEmptyRewardMeta(this._rewardMeta) ? {} : { rewardMeta: normalizeRewardMeta(this._rewardMeta) }),
             ...(isEmptyQuestState(this._questState) ? {} : { questState: normalizeQuestState(this._questState) }),
+            ...(isEmptyFamilyState(this._family.snapshot()) ? {} : { familyState: this._family.snapshot() }),
             ...(isEmptyStoryMeta(this._storyMeta) ? {} : { storyMeta: normalizeStoryMeta(this._storyMeta) }),
             ...(this._itemMeta.seq > 0 || Object.keys(this._itemMeta.periodic).length > 0 ? { itemMeta: normalizeItemMeta(this._itemMeta) } : {}),
             military: this.military,
@@ -7004,10 +7040,12 @@ export class GameSession implements AcademyRecordPort {
         this._occupancy.restore(snapshot.occupancy);
         // 先還原任務狀態：學府占用 refId 取自任務實例（PROG-2-9215），要在對帳學府紀錄之前就位
         this._questState = normalizeQuestState(snapshot.questState);
+        this._family.restore(snapshot.familyState);
         this._setAcademyRecord(normalizeAcademyRecord(snapshot.academy, snapshot.gameTime));
         if (this._academyRecord && !this._academyRecord.committed.graduated) this._clock.restore({ ...this._academyRecord.frozenGameTime });
         this._seeded.restore(snapshot.randomState ?? { algorithm: 'mulberry32-v1', state: LEGACY_RANDOM_SEED });
         this._roster.replaceAll(clampRosterPregnancySeasons(backfillRosterChildAptitudes(normalizeRosterCaptivity(normalizeRosterRoles(snapshot.roster)))));
+        this._reconcileStarterAdoptees();
         this._pendingLifespanEvents = (snapshot.pendingLifespanDeaths ?? []).map((death) => ({ type: 'died', generalId: death.generalId, age: death.age }));
         // 讀檔後沒有記憶體中的季結前名冊；待季結死亡者還原為非陣亡，虎符結算才認得出「這次才死」（PROG-2-0223）
         this._preLifespanRoster = preLifespanBaseline(snapshot.roster, (snapshot.pendingLifespanDeaths ?? []).map((death) => death.generalId));

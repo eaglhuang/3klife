@@ -200,7 +200,7 @@ export function registerRewardCommands(adapter: LocalApiAdapter, getPorts: () =>
     };
 
     const pityView = (pool: RewardPoolDef, pity: Readonly<Record<string, number>>): RewardGrantResult['pity'] =>
-        pool.pity ? { counterKey: pool.pity.counterKey, count: pity[pool.pity.counterKey] ?? 0, hardAt: pool.pity.hardCount } : null;
+        pool.pity.length > 0 ? { counterKey: pool.pity[0].counterKey, count: pity[pool.pity[0].counterKey] ?? 0, hardAt: pool.pity[0].hardCount } : null;
 
     const requireSourceAllowed = (allowed: readonly string[], source: { kind: string }): void => {
         if (allowed.length > 0 && allowed.indexOf(source.kind) < 0) throw new ApiError('REWARD_NO_TICKET', `來源 ${source.kind} 無權領取`);
@@ -313,7 +313,7 @@ export function registerRewardCommands(adapter: LocalApiAdapter, getPorts: () =>
         const events = [
             ...settled.events,
             { evt: 'reward.granted', data: { grantId, kind: 'pool', refId: poolId, source, presentation: result.presentation } },
-            ...(pool.pity ? [{ evt: 'reward.pity.changed', data: { poolId, ...result.pity } }] : []),
+            ...(pool.pity.length > 0 ? [{ evt: 'reward.pity.changed', data: { poolId, ...result.pity } }] : []),
         ];
         return { result, delta: settled.delta, events };
     });

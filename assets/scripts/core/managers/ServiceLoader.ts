@@ -64,6 +64,7 @@ import { configureAcademyStories } from "../systems/nurture/AcademyStoryTexts";
 import { ACADEMY_ENROLL_RULES_JSON, configureAcademyEnrollRules, type AcademyEnrollRulesConfig } from "../systems/nurture/AcademyEnrollRules";
 import { createAcademyQuestAdapter } from "../../shared/quest/AcademyQuest";
 import { DEFAULT_QUEST_CONFIG, normalizeQuestConfig } from "../../shared/quest/QuestConfig";
+import { FAMILY_CONFIG_JSON } from "../../shared/family/FamilyConfig";
 import { QUEST_CONFIG_JSON, type QuestConfigV1 } from "../../shared/quest/QuestTypes";
 import { DEFAULT_REWARD_CONFIG, normalizeRewardConfig, REWARD_CONFIG_JSON, type RewardConfigV1 } from "../../shared/reward/RewardConfig";
 import { DEFAULT_STORY_CONFIG, normalizeStoryConfig, STORY_CONFIG_JSON, type StoryConfigV1 } from "../../shared/story/StoryConfig";
@@ -438,6 +439,8 @@ export class ServiceLoader {
             loadSafe<unknown>(ITEM_CONFIG_JSON, (raw) => { this.itemConfig = normalizeItemConfig(raw); this.localApi?.setItemConfig(this.itemConfig); }),
             loadSafe<Partial<MarriageVitalityRulesConfig>>(MARRIAGE_VITALITY_RULES_JSON, configureMarriageVitalityRules),
         ]);
+        // 家族設定（PROG-2-9441 F1）：缺檔或缺欄位 fail-fast，不退回預設（與上面 loadSafe 的容錯刻意不同）
+        this.session.configureFamily(await this.resource.loadJson<unknown>(FAMILY_CONFIG_JSON));
         this.bloodlineRulesLoaded = true;
     }
 

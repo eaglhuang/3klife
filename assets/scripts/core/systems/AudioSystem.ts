@@ -19,7 +19,7 @@ import { AUDIO_PREFS_KEY, parseAudioPrefs, type AudioPrefs } from "./BattleSetti
  *   2. 先 registerClip(name, clip) 快取 AudioClip
  *   3. 之後 playSfx(name) 即可播放
  */
-/** 音效節流閘門：回傳 false 表示這次不播（PROG-2-9441）。 */
+/** 音效節流閘門：回傳 false 表示這次不播（PROG-2-9481）。 */
 export type SfxGate = (clip: string) => boolean;
 
 export class AudioSystem {
@@ -47,7 +47,7 @@ export class AudioSystem {
     private static readonly DEBOUNCE_MS = 50;
 
     /**
-     * 統一音效節流閘門（PROG-2-9441）。所有 SFX 都從 playSfx／playSfxWithCooldown 出去，
+     * 統一音效節流閘門（PROG-2-9481）。所有 SFX 都從 playSfx／playSfxWithCooldown 出去，
      * 由這一個閘門決定播不播；戰場裝上共用 SfxThrottle（同檔合併＋每秒上限），沒裝時用內建 50ms 防重複。
      * 閘門自帶時鐘，回傳 false 就不播。
      */

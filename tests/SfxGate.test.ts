@@ -1,5 +1,5 @@
 /**
- * SfxGate — 統一音效節流閘門（PROG-2-9441）
+ * SfxGate — 統一音效節流閘門（PROG-2-9481）
  *
  * 覆蓋：
  * 1. AudioSystem.playSfx／playSfxWithCooldown 一律先問閘門，閘門說不播就不出聲。
@@ -51,7 +51,7 @@ function findDirectPlayOneShot(root: string): string[] {
 }
 
 export function createSfxGateSuite(): TestSuite {
-    const suite = new TestSuite('SfxGate (統一音效節流閘門 PROG-2-9441)');
+    const suite = new TestSuite('SfxGate (統一音效節流閘門 PROG-2-9481)');
 
     suite.test('playSfx 先問閘門：閘門擋下就不出聲，放行才播', () => {
         const { audio, played } = makeAudio();

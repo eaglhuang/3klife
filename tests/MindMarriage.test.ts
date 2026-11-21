@@ -192,6 +192,7 @@ export function createMindMarriageSuite(): TestSuite {
                         },
                     };
                 }
+                if (p === 'data/family-config') return JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'assets/resources/data/family-config.json'), 'utf8'));
                 return null;
             },
         };
