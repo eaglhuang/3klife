@@ -112,3 +112,4 @@
 | `doc_task_2702` | docs/agent-briefs/tasks/PROG/PROG-2-9215.md | [PROG-2-9215] A0：學府存檔與推進改走共通 API（回補 9189，6a） |
 | `doc_task_2703` | docs/agent-briefs/tasks/PROG/PROG-2-9436.md | [PROG-2-9436] 基礎戰鬥手感：頭頂狀態圖示放大 |
 | `doc_task_2704` | docs/agent-briefs/tasks/PROG/PROG-2-9437.md | [PROG-2-9437] 基礎戰鬥手感：格擋回饋 |
+| `doc_task_2705` | docs/agent-briefs/tasks/PROG/PROG-2-9438.md | [PROG-2-9438] 基礎戰鬥手感：放招蓄力與出手音效 |

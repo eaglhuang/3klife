@@ -16120,5 +16120,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9437.md",
     "title": "[PROG-2-9437] 基礎戰鬥手感：格擋回饋",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2705",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9438.md",
+    "title": "[PROG-2-9438] 基礎戰鬥手感：放招蓄力與出手音效",
+    "category": "task"
   }
 ]
