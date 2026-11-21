@@ -7546,5 +7546,29 @@
     "path": "docs/遊戲規格文件/文案/結緣事件文案範例-shards/shard-b.md",
     "title": "結緣事件文案範例（20 則，分片索引） — 三、媒人說親（7 則）",
     "category": "spec"
+  },
+  {
+    "id": "doc_spec_1291",
+    "path": "docs/遊戲規格文件/企劃走查/第一年體驗走查.md",
+    "title": "新玩家第一年「不卡關」體驗走查與修正清單",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1292",
+    "path": "docs/遊戲規格文件/企劃走查/第一年體驗走查-shards/shard-a.md",
+    "title": "第一年體驗走查 — 一、走查背景與第一年四季節奏對帳（應做 vs 實做）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1293",
+    "path": "docs/遊戲規格文件/企劃走查/第一年體驗走查-shards/shard-b.md",
+    "title": "第一年體驗走查 — 二、四大核心體驗痛點與卡點深度分析",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1294",
+    "path": "docs/遊戲規格文件/企劃走查/第一年體驗走查-shards/shard-c.md",
+    "title": "第一年體驗走查 — 三、企劃修正建議、規格對應與拆卡派工清單",
+    "category": "spec"
   }
 ]

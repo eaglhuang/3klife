@@ -27,7 +27,7 @@
     "done": 229,
     "in_progress": 4,
     "open": 85,
-    "total": 318
+    "total": 320
   },
   "tasks": [
     {
@@ -13847,6 +13847,40 @@
         "docs/遊戲規格文件/文案/結緣事件文案範例.md"
       ],
       "notes": "狀態: done。變更: 新增 doc_spec_1288 結緣事件文案範例（20 則）；更新 cross-ref-specs 與 tasks-prog。"
+    },
+    {
+      "id": "PROG-2-9607",
+      "title": "新玩家第一年「不卡關」體驗走查與修正清單",
+      "type": "documentation",
+      "priority": "P0",
+      "phase": "M0",
+      "status": "in-progress",
+      "owner": "antigravity",
+      "created": "2026-11-22",
+      "created_by_agent": "Claude",
+      "started_at": "2026-11-22T00:29:21+08:00",
+      "started_by_agent": "antigravity",
+      "doc_id": "doc_task_2751",
+      "sensor_triggered_by": "",
+      "description": "依總 PM 委託，以全新存檔走查第 1 年四季至第 2 年春，盤點應做 vs 實做，分析學府前十幾年閒置、銀兩隱形、戰鬥挫折等痛點，產出走查報告與拆卡清單。",
+      "related": [
+        "PROG-2-9174",
+        "PROG-2-9600",
+        "PROG-2-9591"
+      ],
+      "depends": [],
+      "acceptance": [
+        "playtest-online --year 29/29 通過",
+        "doc-id-registry verify 通過",
+        "compute-gate standard 通過"
+      ],
+      "deliverables": [
+        "docs/遊戲規格文件/企劃走查/第一年體驗走查.md",
+        "docs/遊戲規格文件/企劃走查/第一年體驗走查-shards/shard-a.md",
+        "docs/遊戲規格文件/企劃走查/第一年體驗走查-shards/shard-b.md",
+        "docs/遊戲規格文件/企劃走查/第一年體驗走查-shards/shard-c.md"
+      ],
+      "notes": "狀態: in-progress。完成第一年實玩走查與報告撰寫。"
     }
   ],
   "updated": "2026-11-21"
