@@ -16420,5 +16420,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9707.md",
     "title": "[PROG-2-9707] 戰場「自動」鈕改為自動代打（再按跳過＝極速決戰）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2765",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9245.md",
+    "title": "[PROG-2-9245] SUP-11 連線券免費來源與教官池軟保底 60",
+    "category": "task"
   }
 ]
