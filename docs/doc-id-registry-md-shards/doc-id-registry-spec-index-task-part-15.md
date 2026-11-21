@@ -120,4 +120,5 @@
 | `doc_task_2710` | docs/agent-briefs/tasks/PROG/PROG-2-9460.md | [PROG-2-9460] GCH-R1 獎勵引擎補軟保底 |
 | `doc_task_2711` | docs/agent-briefs/tasks/PROG/PROG-2-9441.md | [PROG-2-9441] 家族資料模型與存檔欄位（F1：配偶 kind=spouse、義子與開局義子特例、家臣子嗣、分家標記、family-config.json） |
 | `doc_task_2712` | docs/agent-briefs/tasks/PROG/PROG-2-9442.md | [PROG-2-9442] OCC 擴充 nursing、mentorAssign 與互斥矩陣（F2；矩陣放設定 JSON） |
-| `doc_task_2713` | docs/agent-briefs/tasks/PROG/PROG-2-9481.md | [PROG-2-9481] 基礎戰鬥手感：所有音效走同一個節流閘門 |
+| `doc_task_2713` | docs/agent-briefs/tasks/PROG/PROG-2-9461.md | [PROG-2-9461] GCH-R2 完整機率表 |
+| `doc_task_2714` | docs/agent-briefs/tasks/PROG/PROG-2-9481.md | [PROG-2-9481] 基礎戰鬥手感：所有音效走同一個節流閘門 |
