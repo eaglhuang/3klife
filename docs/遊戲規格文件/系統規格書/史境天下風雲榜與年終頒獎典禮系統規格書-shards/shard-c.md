@@ -54,7 +54,7 @@
       "rewardBundleId": "BUNDLE_RANK_CHARM_TOP10", "mindTag": "rank_charm"
     },
     {
-      "boardId": "rookie", "ceremonyOrder": 5, "kind": "annual_board",
+      "boardId": "rookie", "ceremonyOrder": 5, "kind": "annual_board", "enabled": false,
       "evaluatorKey": "rookie", "titleKey": "ui.ranking.board.rookie",
       "enabledWhen": { "any": [{ "graduatedThisYear": true }, { "maxAge": 22, "debutThisYear": true }] },
       "weights": { "debut": { "S": 300, "A": 220, "B": 140, "C": 60 }, "charmFactor": 0.8, "prodigyBonus": 150 },
@@ -94,6 +94,6 @@
 |---|---|---|---|
 | **W1a** | `PROG-2-9601` | `AnnualGeneralLedger`（通用 metrics＋highlights 帳本、Q4 歸零、極速/代打同口徑寫入）＋ **AI 勢力季度交戰戰報模擬** | B0 API、`RivalOfficerSeason` |
 | **W1b** | `PROG-2-9602` | **AI 演藝與堂會季度排程** ＋ **AI 學府季度收徒與結業流轉**（寫入帳本 metrics） | W1a、`RivalGovernance` |
-| **W1c** | `PROG-2-9603` | **可插拔排行榜核心引擎**（`IRankingBoardProvider`、`RankingBoardRegistry`、首發 5 個 Provider、`annual-ranking-config.json`、去年快照比對、無 LLM 評語組裝） | W1a、W1b、FND-M |
+| **W1c** | `PROG-2-9603` | **可插拔排行榜核心引擎**（`IRankingBoardProvider`、`RankingBoardRegistry`、首發 4 個 Provider（kills／governance／charm／mentor；rookie 為第二階段儲備）、`annual-ranking-config.json`、去年快照比對、無 LLM 評語組裝） | W1a、W1b、FND-M |
 | **W2** | `PROG-2-9604` | **心智誇耀與白因子寫回 ＋ 歷年史冊存檔**（`MindEvent` 寫入、`annualHonorSeeds` 對接 `WhiteAchievementCriteria`、`annualCeremonyArchive` 讀寫） | W1c、RWD-M、SKL-M |
 | **W3** | `PROG-2-9605` | **年終頒獎典禮劇本與大合照 UI**（`CeremonyScriptAssembler` 對接 STY-M、`hologram`/`groupPhoto` CueHandler、雙層梯形大合照 `RenderTexture` 定格背景與史冊查詢畫面） | W1c、W2、STY-M |
