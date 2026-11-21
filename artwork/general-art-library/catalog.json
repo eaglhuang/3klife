@@ -5191,6 +5191,30 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/yan_liang__顏良__small_avatar_0001.png",
+            "status": "integrated",
+            "sha256": "58d47089895fa892a2b8edb838b6ca1cf164b82406f6269415449b29249bbf1a",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/yan_liang__顏良__avatar_0002.png",
+            "method": "crop-only; uniform resize; face-centered; source angle preserved; no redraw or rotation",
+            "cropBox": {
+              "x": 38.83,
+              "y": 14.2,
+              "width": 193.33,
+              "height": 193.33
+            },
+            "qc": "頭高75%；臉高45%、臉寬36.7%；臉框中線差0.5px；完整保留冠飾、髮型、雙耳、臉、鬍鬚與下巴；雙肩上緣錨點在可見像素並保留下緣空間。來源角度自然輕微側轉，依原圖等比例裁切，未重繪、未旋轉或扭正；與七張基準在125px、250px同尺度並排檢視通過。",
+            "createdAt": "2026-11-22"
+          }
+        ]
       }
     },
     {
