@@ -64,7 +64,7 @@ import { buildYearReport, normalizeYearAgingEvents, normalizeYearEndDefenseResul
 import { backfillTallyTroopTypes, mainTroopTypeOf } from '../systems/TigerTally';
 import { normalizeCountdownState, createCountdown, OPENING_TRAVEL_DURATION_MS, OPENING_TRAVEL_TARGET_ID, type CountdownState } from '../systems/CountdownManager';
 import { createTravelCountdown, normalizeTravelCountdown, tickTravelCountdown, type TravelCountdown } from '../systems/TravelCountdown';
-import { ageGeneralsOneSeason, AgingEvent, GENERAL_STATUS_DEAD, isGeneralDead, RandomSource, RETIREMENT_AGE } from '../systems/GeneralAging';
+import { AGE_PER_SEASON, ageGeneralsOneSeason, AgingEvent, GENERAL_STATUS_DEAD, isGeneralDead, RandomSource, RETIREMENT_AGE } from '../systems/GeneralAging';
 import { applyWarInjury } from '../systems/WarInjury';
 import { settleStageSalvage } from '../systems/StageSalvageSettlement';
 import type { SalvageTotals } from '../systems/StrategistHud';
@@ -168,7 +168,7 @@ import { OccupancyService } from '../../shared/occupancy/OccupancyService';
 import { parseOccupancyMatrix, type OccupancyMatrixV1 } from '../../shared/occupancy/OccupancyMatrix';
 import { parseFamilyConfig, type FamilyConfigV1 } from '../../shared/family/FamilyConfig';
 import { FamilyService } from '../../shared/family/FamilyService';
-import { isEmptyFamilyState } from '../../shared/family/FamilyTypes';
+import { isEmptyFamilyState, type NursingMethod } from '../../shared/family/FamilyTypes';
 import type { OccupancyKind, OccupancyRecord } from '../../shared/occupancy/OccupancyTypes';
 import type { SkillLearnAuthority } from '../../shared/skill/SkillTypes';
 import { GeneralSkillStore } from '../systems/skill/GeneralSkillStore';
@@ -1388,6 +1388,59 @@ export class GameSession implements AcademyRecordPort {
     /** 已載入的家族設定；尚未載入回 null（使用端應視為功能未就緒，不得退回猜測值） */
     public get familyConfig(): FamilyConfigV1 | null {
         return this._familyConfig;
+    }
+
+    /**
+     * 哺乳占用（PROG-2-9485，規格 3.4 節）：待產結束（出生）的母親依 nursingMethod 登記或不登記 `nursing`。
+     * 母乳（預設）到孩子滿 breastfeedEndAge 歲；其他方式產後休養 postpartumQuarters 季；乳母不登記。
+     * 母親此刻被別處占用（例如派遣中）而登記不上時略過，不擋季結；到期的占用在這裡一併釋放。
+     */
+    private _settleNursing(bornMotherIds: readonly string[], season: number): void {
+        const config = this._familyConfig;
+        if (!config) return;
+        for (const record of this._occupancy.snapshot()) {
+            if (record.kind === 'nursing' && record.until !== null && record.until <= season) {
+                this._occupancy.release({ personId: record.personId, kind: 'nursing', refId: record.refId });
+            }
+        }
+        for (const motherId of bornMotherIds) this._startNursing(motherId, season);
+    }
+
+    /** 依母親目前的哺乳方式重新登記哺乳占用（先釋放舊的）；回傳是否有占用在身 */
+    private _startNursing(motherId: string, season: number): boolean {
+        const config = this._familyConfig;
+        const roster = this._roster.getAll();
+        const mother = roster.find((g) => g.id === motherId);
+        if (!config || !mother) return false;
+        for (const record of this._occupancy.query(motherId)) {
+            if (record.kind === 'nursing') this._occupancy.release({ personId: motherId, kind: 'nursing', refId: record.refId });
+        }
+        const method = mother.nursingMethod ?? 'breast';
+        if (method === 'wetNurse') return false;
+        const children = roster.filter((g) => (g as { motherId?: string }).motherId === motherId && typeof g.age === 'number');
+        const child = children.sort((a, b) => (a.age as number) - (b.age as number))[0];
+        const until = method === 'breast'
+            ? season + Math.max(1, Math.ceil((config.breastfeedEndAge - (child?.age ?? 0)) / AGE_PER_SEASON))
+            : season + config.postpartumQuarters;
+        try {
+            this._occupancy.acquire({ personId: motherId, kind: 'nursing', refId: `nurse:${child?.id ?? motherId}`, since: season, until });
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
+    /**
+     * 玩家改哺乳方式：寫進母親紀錄；若她正在哺乳占用中，先釋放再依新方式重新登記（母乳→乳母即解除占用）。
+     * 回傳是否成功改了（找不到母親回 false）。
+     */
+    public setNursingMethod(motherId: string, method: NursingMethod): boolean {
+        const roster = this._roster.getAll();
+        if (!roster.some((g) => g.id === motherId)) return false;
+        this._roster.replaceAll(roster.map((g) => (g.id === motherId ? { ...g, nursingMethod: method } : g)));
+        const nursing = this._occupancy.query(motherId).find((r) => r.kind === 'nursing');
+        if (nursing) this._startNursing(motherId, this._clock.state.totalSeasonsElapsed);
+        return true;
     }
 
     /** 該武將是否為家眷配偶（家族名冊是權威；名冊上不另存一份標記） */
@@ -5601,7 +5654,8 @@ export class GameSession implements AcademyRecordPort {
         }
         const recovered = recoverVitalityOneSeason(unveil.roster, advance.current.totalSeasonsElapsed - 1,
             monthlyCardVitalityMultiplier(this._monthlyCard, epochMs));
-        let roster: GeneralConfig[] = advanceBreedingSeason(holdPregnancyVigor(unveil.roster, recovered)).generals;
+        const bred = advanceBreedingSeason(holdPregnancyVigor(unveil.roster, recovered));
+        let roster: GeneralConfig[] = bred.generals;
         let lifecycle: LifecycleSettlement | undefined;
         // 生平印記要在季結歸檔前寫入，歸檔快照才帶得到（G2 §E #7）
         const newlyDead = roster
@@ -5617,6 +5671,7 @@ export class GameSession implements AcademyRecordPort {
             lifecycle = settled.settlement;
         }
         this._roster.replaceAll(roster);
+        this._settleNursing(bred.pregnancyEnded, advance.current.totalSeasonsElapsed);
         this._emitLifeImprints(deathImprints.imprinted);
         this._clearLeadIfGone();
         this._releaseServedCaptives(advance.current.totalSeasonsElapsed);
