@@ -6,8 +6,8 @@
  * 不論日後併入任務框架（QST）或獨立成第七套框架，型別與命令都可原封不動搬過去。
  */
 
-/** 可寫入登記表的占用種類（學府、教官指派、哺乳；其餘種類第二版各自遷入）。nursing 為 PROG-2-9442 新增（doc_spec_1241 第 3.5 節） */
-export const WRITABLE_OCCUPANCY_KINDS = ['academy', 'mentorAssign', 'nursing'] as const;
+/** 可寫入登記表的占用種類（學府、教官指派、哺乳、母國牽掛 homeWar（Q-SP2，PROG-2-9592）；其餘種類第二版各自遷入）。nursing 為 PROG-2-9442 新增（doc_spec_1241 第 3.5 節） */
+export const WRITABLE_OCCUPANCY_KINDS = ['academy', 'mentorAssign', 'nursing', 'homeWar'] as const;
 export type WritableOccupancyKind = (typeof WRITABLE_OCCUPANCY_KINDS)[number];
 
 /** 只讀轉接器的占用種類（現況各系統自己存狀態，登記表只讀不寫） */

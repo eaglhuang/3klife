@@ -16356,7 +16356,37 @@
     "category": "task"
   },
   {
+    "id": "doc_task_2746",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9706.md",
+    "title": "[PROG-2-9706] 戰場 Spine 小兵節點物件池",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2747",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9591.md",
+    "title": "[PROG-2-9591] F3 家族銀兩錢包（銀兩幣別、媒人禮金與乳母費實扣）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2748",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9592.md",
+    "title": "[PROG-2-9592] F3 配偶 SP1／SP2 接線（他國仕官女將結緣移籍、開戰母國牽掛）",
+    "category": "task"
+  },
+  {
     "id": "doc_task_2749",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9606.md",
+    "title": "[PROG-2-9606] 結緣（紅顏）事件輕鬆文案範例 20 則",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2750",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9193.md",
+    "title": "PROG-2-9193：G4 郡望宗脈常駐與高門求親",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2751",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9707.md",
     "title": "[PROG-2-9707] 戰場「自動」鈕改為自動代打（再按跳過＝極速決戰）",
     "category": "task"

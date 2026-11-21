@@ -14,11 +14,63 @@ import { clanMemberOfGeneral } from './ClanTier';
 import type { FactorDictionary } from './FactorInheritance';
 import type { TrainingKind } from './NurtureSystem';
 
+export const CLAN_LINEAGE_RULES_JSON = 'data/clan-lineage-rules';
 export const CLAN_TRADITION_MIN_TIER = 2;
 export const CLAN_TRADITION_TRAINING_BONUS = 0.1;
 
+export interface ClanLineageRulesConfig {
+    tradition: {
+        minTier: number;
+        trainingBonus: number;
+        seedStarLevel: number;
+        maxChildFactors: number;
+    };
+    highClanProposal: {
+        minTier: number;
+        minEp: number;
+        minFactorStars: number;
+        synergyBonus: number;
+        maxSynergy: number;
+        giftMultiplier: number;
+    };
+}
+
+export const DEFAULT_CLAN_LINEAGE_RULES: Readonly<ClanLineageRulesConfig> = {
+    tradition: {
+        minTier: 2,
+        trainingBonus: 0.1,
+        seedStarLevel: 1,
+        maxChildFactors: 5,
+    },
+    highClanProposal: {
+        minTier: 3,
+        minEp: 70,
+        minFactorStars: 2,
+        synergyBonus: 2,
+        maxSynergy: 15,
+        giftMultiplier: 1.3,
+    },
+};
+
+let _rules: ClanLineageRulesConfig = DEFAULT_CLAN_LINEAGE_RULES;
+
+export function getClanLineageRules(): ClanLineageRulesConfig {
+    return _rules;
+}
+
+export function configureClanLineageRules(raw: Partial<ClanLineageRulesConfig> | null | undefined): void {
+    if (!raw) return;
+    _rules = {
+        tradition: { ...DEFAULT_CLAN_LINEAGE_RULES.tradition, ...(raw.tradition ?? {}) },
+        highClanProposal: { ...DEFAULT_CLAN_LINEAGE_RULES.highClanProposal, ...(raw.highClanProposal ?? {}) },
+    };
+}
+
+export function resetClanLineageRules(): void {
+    _rules = DEFAULT_CLAN_LINEAGE_RULES;
+}
+
 const CATEGORY_KIND: Readonly<Record<string, TrainingKind>> = {
-    attribute: 'str',
     'weapon-proficiency': 'str',
     leadership: 'lea',
     governance: 'pol',
@@ -29,6 +81,7 @@ const LEGACY_TYPE_KIND: Readonly<Record<string, TrainingKind>> = {
     統率: 'lea',
     謀略: 'int',
     內政: 'pol',
+    魅力: 'cha',
 };
 const KIND_LABEL: Readonly<Record<TrainingKind, string>> = { str: '武力', int: '智力', lea: '統率', pol: '政治', cha: '魅力' };
 
@@ -38,10 +91,50 @@ export interface ClanTradition {
     kind: TrainingKind;
 }
 
-function kindOfFactor(factorId: string, dictionary: FactorDictionary | undefined, gene: GeneralGeneConfig | undefined): TrainingKind | null {
-    const category = dictionary?.get(factorId)?.category;
+const STAT_TOKEN_PATTERNS: ReadonlyArray<{ kind: TrainingKind; tokens: readonly string[] }> = [
+    { kind: 'int', tokens: ['gene_int', '_int', 'strategy', 'wisdom', '謀略', '智謀', '才思'] },
+    { kind: 'cha', tokens: ['gene_cha', '_cha', 'charm', '魅力', '威儀'] },
+    { kind: 'pol', tokens: ['gene_pol', '_pol', 'politics', 'governance', '內政', '治世'] },
+    { kind: 'lea', tokens: ['gene_lea', '_lea', 'leadership', 'command', '統率', '統御'] },
+    { kind: 'str', tokens: ['gene_str', '_str', 'might', 'weapon', '武力', '剛勇'] },
+];
+
+export function kindOfFactor(factorId: string, dictionary: FactorDictionary | undefined, gene: GeneralGeneConfig | undefined): TrainingKind | null {
+    const entry = dictionary?.get(factorId);
+    const haystack = [
+        factorId,
+        gene?.id ?? '',
+        gene?.displayName ?? '',
+        entry?.displayName ?? '',
+        ...((entry as { defaultTags?: string[] } | undefined)?.defaultTags ?? []),
+    ].join(' ').toLowerCase();
+    for (const rule of STAT_TOKEN_PATTERNS) {
+        if (rule.tokens.some((tk) => haystack.includes(tk.toLowerCase()))) {
+            return rule.kind;
+        }
+    }
+    const category = entry?.category;
     if (category && CATEGORY_KIND[category]) return CATEGORY_KIND[category];
+    if (category === 'attribute') return 'str';
     return (gene?.type && LEGACY_TYPE_KIND[gene.type]) || null;
+}
+
+/**
+ * Tier 2 宗脈常駐（Q1-A）：當家族已確立郡望家風，且新生兒因子數未達上限並未含家風因子時，
+ * 保底附加 1 枚該家風對應的 1★ 藍因子種子（不修改輸入陣列）。
+ */
+export function applyClanTraditionSeed<T extends { id: string; level: number }>(
+    factors: readonly T[],
+    tradition: ClanTradition | null | undefined,
+    buildSeed: (factorId: string, stars: number) => T,
+    rules: ClanLineageRulesConfig = _rules,
+): { factors: T[]; seeded: boolean } {
+    const list = [...factors];
+    if (!tradition) return { factors: list, seeded: false };
+    if (list.length >= rules.tradition.maxChildFactors) return { factors: list, seeded: false };
+    if (list.some((f) => f.id === tradition.factorId)) return { factors: list, seeded: false };
+    list.push(buildSeed(tradition.factorId, rules.tradition.seedStarLevel));
+    return { factors: list, seeded: true };
 }
 
 /** 從名冊選出家風；亡者歸檔沒有星級，只看名冊上的人（與 ClanTier 的同持藍因子一致） */

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-18",
+  "updatedAt": "2026-11-22",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -3795,6 +3795,35 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/zhuge_ke__諸葛恪__small_avatar_0001.png",
+            "status": "integrated",
+            "sha256": "eefcfcd917fa11000da25600e9d5bb92d3aa517227f1e15eeb31eb197e8cc159",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/zhuge_ke__諸葛恪__avatar_0002.png",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "x": 37.36,
+              "y": 1.68,
+              "width": 177.27,
+              "height": 177.27
+            },
+            "headHeightPercent": 79,
+            "faceHeightPercent": 44,
+            "faceWidthPercent": 36.1,
+            "faceCenterXPercent": 50,
+            "centerAxisDifferencePx": 0.5,
+            "qc": "自然微側角；完整保留短冠、頭髮、耳側與下巴；頭高79%、臉高44%、臉寬36.1%；臉框中心線對齊畫布中線；上肩線可見度列為次要警示。核准基準並排檢視；純裁切與等比縮放，未重繪、未旋轉。",
+            "createdAt": "2026-11-22"
+          }
+        ]
       }
     },
     {

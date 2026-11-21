@@ -34,6 +34,8 @@ export interface RivalDiplomacyDeps {
     /** 君主 id → 中文名（找不到就顯示 id） */
     leaderName?: (generalId: string) => string | undefined;
     /** 出征結算留離線戰鬥快照（GameSession.recordRivalCampaign，PROG-2-1189）；在 setWorld 存檔前呼叫 */
+    /** 宣戰成功後通知（配偶母國牽掛：心情／忠誠下降並擋出征，Q-SP2；GameSession.beginHomeWar） */
+    onWarDeclared?: (nationId: string) => void;
     recordBattle?: (squad: readonly BattleGeneral[], nationId: string, battle: AutoBattleResult) => void;
     /** 回覆他國提議（GameSession.respondRivalProposal，PROG-2-1770） */
     respondProposal?: (nationId: string, accept: boolean) => Promise<{ readonly message: string }>;
@@ -74,7 +76,10 @@ export class RivalDiplomacyController {
 
     public async war(): Promise<void> {
         const result = declareWar(this._deps.world(), this.selectedId);
-        if (result.ok) await this._deps.setWorld(result.world);
+        if (result.ok) {
+            this._deps.onWarDeclared?.(this.selectedId);
+            await this._deps.setWorld(result.world);
+        }
         this._lines = [result.message];
     }
 

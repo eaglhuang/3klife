@@ -92,5 +92,26 @@ export function createFamilyCommandsSuite(): TestSuite {
         assert.isTrue(gov.ok, '哺乳中仍可當太守');
     });
 
+    suite.test('clan：高門求親走 family.enrollSpouse（source: clan）納配偶且可出征，無效 id 回 E364', async () => {
+        const { api, session } = await newBundle();
+        const missing = await api.cmd('family.enrollSpouse', { source: 'clan', proposalId: 'missing-prop' }, { idemKey: 'clan:1' });
+        assert.isTrue(isApiFail(missing) && missing.errorCode === 'E364');
+        const proposal = {
+            id: 'prop-clan-1',
+            targetId: session.roster[0].id,
+            targetName: session.roster[0].name,
+            family: '潁川荀氏',
+            giftGold: 650,
+            fromHighClanProposal: true,
+            suitor: { id: 'suitor-clan-1', name: '荀氏千金', gender: '女' as const, age: 18, str: 45, int: 82, lea: 60, pol: 85, cha: 88, luk: 60, ep: 72 },
+        };
+        (session as unknown as { _marriageProposal: unknown })._marriageProposal = proposal;
+        const ok = await api.cmd<{ generalId: string; created: boolean }>('family.enrollSpouse', { source: 'clan', proposalId: 'prop-clan-1' }, { idemKey: 'clan:2' });
+        assert.isTrue(!isApiFail(ok) && ok.result.created && ok.result.generalId === 'suitor-clan-1');
+        assert.isTrue(session.isSpouse('suitor-clan-1'));
+        assert.isTrue(session.getDeployableGenerals().some((g) => g.id === 'suitor-clan-1'));
+        assert.equals(null, session.marriageProposal);
+    });
+
     return suite;
 }

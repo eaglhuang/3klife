@@ -15,6 +15,8 @@ import {
 } from '../assets/scripts/core/systems/MarriageProposal';
 import { MarriageProposalPopupController } from '../assets/scripts/ui/core/MarriageProposalPopupController';
 import { isFemale, isMale } from '../assets/scripts/core/systems/BreedingSystem';
+import { BloodlineGraph } from '../assets/scripts/core/services/BloodlineGraph';
+import { BreedingService } from '../assets/scripts/core/services/BreedingService';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 
 const person = (id: string, gender: string, age: number, ep: number, extra: Record<string, unknown> = {}): GeneralConfig => ({
@@ -189,6 +191,37 @@ export function createMarriageProposalSuite(): TestSuite {
         const view = new MarriageProposalPopupController({ session, grantGold: () => undefined }).getView();
         for (const key of [...Object.keys(view.texts), ...Object.keys(view.actives), ...Object.keys(view.enabled)]) {
             assert.isTrue(ids.has(key), `layout 缺節點 ${key}`);
+        }
+    });
+
+    suite.test('PROG-2-9193 Q2-A：Tier 3 高門求親保底 EP≥70、≥1 顆 2★ 因子、聘禮 +30%（1300）、相性 +2、固定種子一致與四語 i18n', () => {
+        const roster = [person('a', '男', 20, 50)]; // 刻意不帶因子
+        const p1 = rollMarriageProposal(roster, 3, 'suitor-hc-1', () => 0.25);
+        const p2 = rollMarriageProposal(roster, 3, 'suitor-hc-1', () => 0.25);
+        assert.isTrue(p1 !== null && p2 !== null);
+        assert.equals(JSON.stringify(p1), JSON.stringify(p2), '同固定種子應產出完全一致的提親');
+        assert.equals(1300, p1!.giftGold, 'Tier 3 基礎 1000 × 1.30 = 1300');
+        assert.isTrue(p1!.suitor.ep >= 70, '高門候選保底 EP >= 70');
+        assert.isTrue((p1!.heirloom?.level ?? 0) >= 2, '高門候選保底 >= 1 顆 2★ 因子');
+        assert.equals(true, p1!.fromHighClanProposal);
+
+        const suitor = buildSuitorGeneral(p1!);
+        assert.isTrue((suitor.genes?.[0]?.level ?? 0) >= 2);
+        const normalPartner = person('norm', '女', 20, 70, { str: suitor.str, int: suitor.int, lea: suitor.lea, pol: suitor.pol, cha: suitor.cha, luk: suitor.luk });
+        const target = person('t1', '男', 20, 60);
+        const graph = BloodlineGraph.getInstance();
+        graph.clear();
+        const store = new InMemoryRosterStore([target, suitor, normalPartner]);
+        const breeding = new BreedingService(store, graph);
+        const epWithHighClan = breeding.previewEp(target.id, suitor.id);
+        const epWithNormal = breeding.previewEp(target.id, normalPartner.id);
+        assert.equals(2, epWithHighClan.affinity - epWithNormal.affinity, '高門求親對象結緣相性應 +2');
+
+        for (const locale of ['zh-TW', 'zh-CN', 'en', 'ja']) {
+            const i18nPath = path.resolve(__dirname, `../assets/resources/i18n/${locale}.json`);
+            const dict = JSON.parse(fs.readFileSync(i18nPath, 'utf8')) as Record<string, string>;
+            assert.isTrue(typeof dict['ui.breed.tradition_seed'] === 'string' && dict['ui.breed.tradition_seed'].length > 0, `${locale} 缺 ui.breed.tradition_seed`);
+            assert.isTrue(typeof dict['ui.breed.high_clan_proposal'] === 'string' && dict['ui.breed.high_clan_proposal'].length > 0, `${locale} 缺 ui.breed.high_clan_proposal`);
         }
     });
 

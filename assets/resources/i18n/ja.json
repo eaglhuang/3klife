@@ -287,6 +287,8 @@
   "ui.breed.epithet.summary.twin_stars": "覚醒率 +{0}%",
   "ui.breed.birth.fresh_blood": "寒門新血 V{0}！外家の奇才が血脈を活性化し、子の序盤 {1} 季の修業効率 +{2}%！",
   "ui.breed.birth.epithet": "佳話婚姻【{0}】！{1}",
+  "ui.breed.tradition_seed": "郡望宗脈の顕現！子に一族の特質【{0}】{1}★が保証継承！",
+  "ui.breed.high_clan_proposal": "天下高門の縁談：EP≥{0}｜≥{1}★家学｜相性+{2}｜結納+{3}%",
   "ui.opening.starter_child_hint": "少年名将「{0}」が仲間入り～ まだ14歳ですが、年末に15歳になれば学府に入れます。来年は学校に送り出してあげてくださいね！",
   "ui.opening.youth_pick.title": "身を寄せたい少年がいます",
   "ui.opening.youth_pick.subtitle": "三人ともまだ14歳。一人を手元に残し、あとの二人はガチャのご縁でまた会いましょう。",

@@ -100,7 +100,8 @@
 ### 3.2 三種來源（全開，裁決 19）
 
 > 實作狀態（PROG-2-9583）：共通 API `family.enrollSpouse` 支援 source = bond／diplomatic／matchmaker（欄位 generalId／nationId／pick），`family.matchmakerOffer` 查本年候選；錯誤碼 E364 不符資格、E365 好感不足、E366 邦交不足、E367 該國聯姻額滿、E368 媒人未開放、E369 本年說親額滿。結緣好感取送禮好感與傭兵好感較高者；聯姻配偶為固定種子生成（slot `diplomatic:<勢力>:<序>`），成婚邦交 +20（`MARRIAGE_RELATION_GAIN`），母國由 id 反推（`spouseHomeNationOf`）；媒人每年（以遊戲年度計，未用完不保留，裁決 Q-SP3）最多 `matchmakerPerYear` 位，候選為固定種子三位附家世提示，`matchmakerPrice` 暫定 100 銀兩（待使用者裁決；單機尚無銀兩錢包，目前不扣款）。
-> 尚未接上：他國仕官武將結為配偶後自動辭官移籍（Q-SP1）、與母國開戰時心情 −30／忠誠 −20 且不可出征對抗母國（Q-SP2，走 OCC）、媒人候選改走 `reward.roll` 池 `matchmaker_candidates`、聯姻成功率與保護期（企劃提案公式 2）、近親檢查、遊戲內 UI 入口（結緣好感事件、外交面板、媒人鈕；價格未定時顯示「即將開放」）。
+> 已接上（PROG-2-9591／9592）：家族銀兩 silver 幣別（wallet.spend／balance、存 familyState.silver、開局 startingSilver 600、媒人禮金與乳母費實扣，不足 E301，乳母費不足改回母乳）；他國仕官女將結緣成婚自動辭官移籍（Q-SP1，記 homeNationId）；與配偶母國開戰心情 −30（換算心智事件）／忠誠 −20 並以 OCC `homeWar` 擋該場出征（Q-SP2，宣戰與敵襲掛 GameSession.beginHomeWar，出征結算 endHomeWar）。
+> 尚未接上：媒人候選改走 `reward.roll` 池 `matchmaker_candidates`、聯姻成功率與保護期（企劃提案公式 2）、近親檢查、遊戲內 UI 入口（結緣好感事件、外交面板、媒人鈕；價格未定時顯示「即將開放」）。
 
 | 來源 | 觸發 | 流程 | 差異欄位 |
 | --- | --- | --- | --- |
