@@ -16327,14 +16327,26 @@
   },
   {
     "id": "doc_task_2741",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9466.md",
-    "title": "PROG-2-9466",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9251.md",
+    "title": "[PROG-2-9251] 第一年經濟曲線審查：入學令溢出折金 5000 過大",
     "category": "task"
   },
   {
     "id": "doc_task_2742",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9703.md",
+    "title": "[PROG-2-9703] 極速決戰結算文案：按「自動」不再顯示「敵方突破防線」",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2744",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9706.md",
     "title": "[PROG-2-9706] 戰場 Spine 小兵節點物件池",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2745",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9466.md",
+    "title": "PROG-2-9466",
     "category": "task"
   }
 ]

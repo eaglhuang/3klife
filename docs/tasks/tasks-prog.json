@@ -24,9 +24,9 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 222,
+    "done": 223,
     "in_progress": 0,
-    "open": 77,
+    "open": 76,
     "total": 312
   },
   "tasks": [
@@ -13228,7 +13228,7 @@
       "title": "F3 配偶三來源（結緣好感納配偶、聯姻外交提親、媒人說親）",
       "owner": "ClaudeCode_sonnet-5-5",
       "priority": "P1",
-      "status": "open",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-21",
@@ -13245,7 +13245,7 @@
       "depends": [],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-21 | 狀態: open | 驗證: pending | 變更: 開卡 | 阻塞: 無",
+      "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0、單元 8979 pass、compute-gate standard、api-bypass family-write 0 | 變更: family.enrollSpouse 新增 bond／diplomatic／matchmaker 來源、family.matchmakerOffer 查詢、E364~E369、SpouseSources 規則、matchmakerPrice 暫定 100 | 阻塞: Q-SP1 移籍、Q-SP2 開戰處置、reward.roll 候選池、成功率與保護期、近親檢查、UI 入口未接，另開卡",
       "brief": {
         "style": "classic",
         "label": "",
@@ -13593,6 +13593,56 @@
     },
     {
       "doc_id": "",
+      "id": "PROG-2-9703",
+      "title": "極速決戰結算文案：按「自動」不再顯示「敵方突破防線」",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "2026-11-21T23:40:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "年度試玩第 1 回合即敗：試玩腳本每秒按自動鈕（極速決戰），BattleEnded 不帶 cause，結算窗落到預設「敵方突破防線」。BattleEndCause 加 auto，自動鈕帶 cause，結算窗改極速決戰文案。戰力規則另由總PM 裁決。",
+      "related": [
+        "PROG-2-9414",
+        "PROG-2-1091",
+        "PROG-2-2202"
+      ],
+      "depends": [
+        "PROG-2-9414"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8973 通過、tsc 0 錯 | 變更: cause auto 與結算文案 | 阻塞: 戰力規則待總PM 裁決",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2744",
       "id": "PROG-2-9706",
       "title": "戰場 Spine 小兵節點物件池",
       "owner": "claude-code-opus-5-5",

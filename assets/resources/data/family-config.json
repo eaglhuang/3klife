@@ -3,7 +3,7 @@
   "bondAffinityToMarry": 70,
   "allianceMinRelation": "friendly",
   "matchmakerPerYear": 2,
-  "matchmakerPrice": null,
+  "matchmakerPrice": 100,
   "generatedSpouseEp": [50, 70],
   "postpartumQuarters": 1,
   "breastfeedEndAge": 5,
@@ -33,5 +33,5 @@
   "leaveLoyalty": 25,
   "leaveChancePerQuarter": 0.08,
   "growthItemPool": [],
-  "_note": "doc_spec_1241 第 11 章；缺欄位載入即 fail-fast（FamilyConfig.parseFamilyConfig）。matchmakerPrice／branchGrantSilver 待使用者商業化裁決（Q-F2），先填 null＝不可購買。adopteeTemplates（24 組範本）、historicalAdoptees（關平、劉封、曹真、何晏、諸葛喬）、growthItemPool 由企劃另列，F6／F10 填入。哺乳互斥規則在 occupancy-matrix.json（PROG-2-9442）。"
+  "_note": "doc_spec_1241 第 11 章；缺欄位載入即 fail-fast（FamilyConfig.parseFamilyConfig）。matchmakerPrice 暫定 100 銀兩（11/21 總PM裁示先放暫定值，待使用者商業化裁決 Q-F2；單機尚無銀兩錢包，目前只做設定、不實際扣款）；branchGrantSilver 仍待裁決，null＝不可購買。adopteeTemplates（24 組範本）、historicalAdoptees（關平、劉封、曹真、何晏、諸葛喬）、growthItemPool 由企劃另列，F6／F10 填入。哺乳互斥規則在 occupancy-matrix.json（PROG-2-9442）。"
 }
