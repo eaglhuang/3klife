@@ -14245,6 +14245,12 @@
       }
     },
     {
+      "id": "PROG-2-9609",
+      "doc_id": "doc_task_2931",
+      "title": "開局義子入學驗證與學府籌備看板",
+      "status": "completed"
+    },
+    {
       "doc_id": "doc_task_2850",
       "id": "PROG-2-9713",
       "title": "戰場效能熱點修正（tick 分段量測、Label 縮放、圖集上傳、合批、離場釋放）",
