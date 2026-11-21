@@ -16258,5 +16258,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9583.md",
     "title": "[PROG-2-9583] F3 配偶三來源（結緣好感納配偶、聯姻外交提親、媒人說親）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2728",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9231.md",
+    "title": "[PROG-2-9231] 世界觀與故事總綱規格書（AI 武將覺醒：一頁版大綱、世界設定、主線鉤子、各系統說法、角色人設、時事梗規範、文案範例）",
+    "category": "task"
   }
 ]
