@@ -514,7 +514,7 @@
           {
             "version": "0001",
             "file": "small_avatars/da_qiao__大喬__small_avatar_0001.png",
-            "status": "integrated"
+            "status": "superseded"
           },
           {
             "version": "0002",
@@ -559,9 +559,19 @@
             "crop": "shoulder-line",
             "cropBox": "x=356,y=4,w=287,h=260; transparentPaddingBottom=27",
             "qc": "直接裁切已核定站姿；保留完整頭髮與花飾，臉置中；下緣控制於肩線，不帶胸部衣襟。v0004下緣略低，改列 superseded。"
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/da_qiao__大喬__small_avatar_0002.png",
+            "status": "integrated",
+            "sha256": "d27853188184eeff695df01d1a6e0fab15b2e11e74c7fbdb1680b133ab4dcc75",
+            "canvas": "256x256 RGBA",
+            "method": "uniform resize with alpha premultiplication; no crop or redraw",
+            "qc": "保留核可版本的原構圖與透明邊界，只以等比例縮放統一至小頭像規格256x256；未裁切、旋轉或重畫。",
+            "createdAt": "2026-11-21"
           }
         ],
-        "activeVersion": "0001"
+        "activeVersion": "0002"
       }
     },
     {
@@ -625,15 +635,25 @@
         ]
       },
       "smallAvatar": {
-        "activeVersion": "0001",
-        "status": "review-pending",
+        "activeVersion": "0002",
+        "status": "integrated",
         "history": [
           {
             "version": "0001",
             "file": "small_avatars/lu_ling_qi__呂玲綺__small_avatar_0001.png",
-            "status": "review-pending",
+            "status": "superseded",
             "sha256": "356dbf199bc3a3b6e62fb275dc7e5af6e4cf59419aaf855bcc784b111ad42943",
             "canvas": "1254x1254 RGBA"
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/lu_ling_qi__呂玲綺__small_avatar_0002.png",
+            "status": "integrated",
+            "sha256": "77fab86b7e52c3c5642474125791670958797f918ba46dcbef5a513ac322d7aa",
+            "canvas": "256x256 RGBA",
+            "method": "uniform resize with alpha premultiplication; no crop or redraw",
+            "qc": "保留核可版本的原構圖與透明邊界，只以等比例縮放統一至小頭像規格256x256；未裁切、旋轉或重畫。",
+            "createdAt": "2026-11-21"
           }
         ]
       }
