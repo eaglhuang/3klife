@@ -11781,6 +11781,55 @@
     },
     {
       "doc_id": "",
+      "id": "PROG-2-9482",
+      "title": "基礎戰鬥手感：最後一排受擊抖動／後退放大 4 倍修正",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-21T16:00:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 11/21 第 4 項受擊慢動作逐格驗收發現：最後一排（depth 7）量受擊格寬用到棋盤外的 depth 8（398px 對 101px），抖動與後退放大約 4 倍、整隊被推出格子。hitScaleNeighborDepth 最後一排改量往內一排。",
+      "related": [
+        "PROG-2-9401",
+        "PROG-2-9412"
+      ],
+      "depends": [
+        "PROG-2-9412"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8870 通過、tsc 0 錯、7456 慢動作逐格位移峰值 53px→14px、回位 245ms 不變 | 變更: 受擊格寬基準修正 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
       "id": "PROG-2-9460",
       "title": "GCH-R1 獎勵引擎補軟保底",
       "owner": "claude-code-opus-5-5",

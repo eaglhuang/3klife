@@ -56,7 +56,7 @@ import { SpineUnitOverlay } from "./SpineGeneralOverlay";
 import { GeneralPortraitStandee, STANDEE_HEIGHT_PX, needsStandeeFallback } from "./GeneralPortraitStandee";
 import { generalSpineConfig, squadMemberCount, troopSpineConfigWithFallback } from '../shared/UnitPresentationConfig';
 import { DuelExchange } from '../shared/DuelPresentationCore';
-import { BATTLE_VISUAL_TIMING, buildHitShakeSteps, planHitFeedback, planMoveSegment } from "./BattlePresentationTiming";
+import { BATTLE_VISUAL_TIMING, buildHitShakeSteps, hitScaleNeighborDepth, planHitFeedback, planMoveSegment } from "./BattlePresentationTiming";
 import { BuffGainEffectPool } from "./effects/BuffGainEffectPool";
 import { statBonusTone, statWithBonusText, type StatBonusTone } from "../shared/StatBonusText";
 import {
@@ -714,7 +714,7 @@ export class UnitRenderer extends Component {
   private hitShakeAmplitudePx(lane: number, depth: number): number {
     let cellPx = 100;
     const a = this.getUnitWorldPosition(lane, depth);
-    const b = this.getUnitWorldPosition(lane, depth + 1);
+    const b = this.getUnitWorldPosition(lane, hitScaleNeighborDepth(depth, GAME_CONFIG.GRID_DEPTH));
     if (a && b) {
       // overlayPoint 回傳共用緩衝，必須先把第一點取出來再算第二點
       const pa = this.overlayPoint(a);
