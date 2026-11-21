@@ -48,6 +48,8 @@ import { normalizeItemMeta, type ItemMeta } from '../../shared/item/ItemRules';
 import { normalizeRewardMeta, type RewardMeta } from '../../shared/reward/RewardRules';
 import { normalizeQuestState } from '../../shared/quest/QuestService';
 import type { QuestStateV1 } from '../../shared/quest/QuestTypes';
+import { normalizeFamilyState } from '../../shared/family/FamilyService';
+import { isEmptyFamilyState, type FamilyStateV1 } from '../../shared/family/FamilyTypes';
 import { normalizeStoryMeta, type StoryMeta } from '../../shared/story/StoryRules';
 import { normalizeOccupancyRecords } from '../../shared/occupancy/OccupancyService';
 import type { OccupancyRecord } from '../../shared/occupancy/OccupancyTypes';
@@ -204,6 +206,8 @@ export interface PlayerSaveSnapshot {
     storyMeta?: StoryMeta;
     /** 人員占用登記表（PROG-2-9207 OCC-M；只存 academy／mentorAssign），空表不寫；舊檔缺值讀回為空，學府占用由學府紀錄對帳重建 */
     occupancy?: OccupancyRecord[];
+    /** 家族成員登記表（PROG-2-9441 F1）：配偶、親生、義子（含開局義子特例）、家臣子嗣、分家標記；空表不寫，舊檔缺值讀回為空，版號不升（自帶 v） */
+    familyState?: FamilyStateV1;
     /** 官職狀態（OFC-03）：階位、經驗、解鎖歷史；舊檔沒有此欄位時讀回為階位 1；版號不升（扁平欄位） */
     officerState?: OfficerState;
     /** 世界沙盤已放置標記數（OFC-06）；扁平選填欄位，舊檔沒有時讀回 0；版號不升 */
@@ -769,6 +773,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.questState !== undefined ? { questState: normalizeQuestState(snapshot.questState) } : {}),
         ...(snapshot.storyMeta !== undefined ? { storyMeta: normalizeStoryMeta(snapshot.storyMeta) } : {}),
         ...(normalizeOccupancyRecords(snapshot.occupancy).length > 0 ? { occupancy: normalizeOccupancyRecords(snapshot.occupancy) } : {}),
+        ...(isEmptyFamilyState(normalizeFamilyState(snapshot.familyState)) ? {} : { familyState: normalizeFamilyState(snapshot.familyState) }),
         ...(snapshot.legendaryMentoringUsedIds !== undefined ? { legendaryMentoringUsedIds: normalizeLegendaryMentoringUsedIds(snapshot.legendaryMentoringUsedIds) } : {}),
     };
 }
