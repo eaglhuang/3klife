@@ -7,6 +7,8 @@ import { genesForSave, genesFromSave, type GeneSaveEntry } from '../models/GeneO
 const STORAGE_KEY = 'ucuf.player-roster';
 
 let cachedRoster: GeneralConfig[] | null = null;
+/** 名冊版本號：任何寫入（含首次載入）都加一，讓讀取端可快取唯讀快照，不必每次深拷貝整份名冊 */
+let rosterVersion = 0;
 
 function cloneGeneral(general: GeneralConfig): GeneralConfig {
     try {
@@ -35,6 +37,7 @@ function ensureLoaded(): void {
     if (cachedRoster !== null) {
         return;
     }
+    rosterVersion++;
 
     const stored = sys.localStorage.getItem(STORAGE_KEY);
     if (!stored) {
@@ -56,6 +59,7 @@ function ensureLoaded(): void {
 }
 
 function persist(): void {
+    rosterVersion++;
     if (cachedRoster === null) {
         return;
     }
@@ -71,6 +75,12 @@ export class PlayerRosterService {
     public static getAll(): GeneralConfig[] {
         ensureLoaded();
         return (cachedRoster ?? []).map(cloneGeneral);
+    }
+
+    /** 名冊版本號（寫入就變）；GameSession 用它判斷唯讀快照是否過期 */
+    public static version(): number {
+        ensureLoaded();
+        return rosterVersion;
     }
 
     public static getCount(): number {

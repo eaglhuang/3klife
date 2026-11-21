@@ -115,13 +115,22 @@ export class HallBoardPanelController {
 
     /** 這位武將自薦、且還開著的任務（HUM-07）：回傳牆別與列號供人物頁跳轉；沒有時回傳 null。 */
     public volunteerTaskFor(generalId: string): HallVolunteerTaskRef | null {
+        return this.volunteerTaskLookup()(generalId);
+    }
+
+    /**
+     * 一次算好各牆列表，回傳查詢函式（大廳一次要查全部在場武將時用）：
+     * 逐位呼叫 volunteerTaskFor 會讓每位武將都重算一次所有任務牆，武將一多就卡住主執行緒。
+     */
+    public volunteerTaskLookup(): (generalId: string) => HallVolunteerTaskRef | null {
         const hub = this._deps.hub();
         const boards = (Object.keys(BOARD_TITLE) as HallBoardKey[]).map((board) => ({
             board,
             rows: this.rowsFor(board),
             tasks: hub.Mission_Boards[board]?.Tasks ?? [],
         }));
-        return findVolunteerTask(boards, generalId, new Set(Object.values(this._deps.assignments())));
+        const dispatched = new Set(Object.values(this._deps.assignments()));
+        return (generalId) => findVolunteerTask(boards, generalId, dispatched);
     }
 
     /** 接取第 index 列任務：指派給出戰主將。 */

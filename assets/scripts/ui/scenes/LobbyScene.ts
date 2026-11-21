@@ -4447,7 +4447,9 @@ ${spent}`,
             walkable: !!wander && spinePathFor(wander, c.id) !== null,
         }));
         // 自告奮勇：任務資料指名的自薦者，加上武將心智算出心情 EAGER、想找差事做的人（PROG-2-9146）
-        const volunteerIds = owned.filter(c => !c.assigned && (this._hallBoard?.volunteerTaskFor(c.id) || session.hallStageProfile(c.id)?.mood === 'EAGER')).map(c => c.id);
+        // 任務牆只算一次再逐位查（逐位重算整面牆會讓大廳每 5 秒卡一次）
+        const volunteerOf = this._hallBoard?.volunteerTaskLookup() ?? null;
+        const volunteerIds = owned.filter(c => !c.assigned && (volunteerOf?.(c.id) || session.hallStageProfile(c.id)?.mood === 'EAGER')).map(c => c.id);
         const plan = planHallWalkers({
             state: this._hallWalkerState,
             nowSec: Date.now() / 1000,

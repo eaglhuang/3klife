@@ -99,6 +99,8 @@ export class ServiceLoader {
     private readonly rosterStore: RosterStore = {
         getAll: () => (this.ephemeralStorage ? this.ephemeralRoster.getAll() : PlayerRosterService.getAll()),
         replaceAll: (generals) => (this.ephemeralStorage ? this.ephemeralRoster.replaceAll(generals) : PlayerRosterService.replaceAll(generals)),
+        // 暫時模式用負數，切換模式時版本號一定不同，唯讀快照會重讀
+        version: () => (this.ephemeralStorage ? -1 - this.ephemeralRoster.version() : PlayerRosterService.version()),
     };
     /** 暫時狀態模式（QA 直進戰場，PROG-2-9127）：true 時存檔與名冊都只放記憶體，不讀寫玩家真實存檔 */
     private ephemeralStorage = false;

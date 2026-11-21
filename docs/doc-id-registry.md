@@ -19,12 +19,12 @@
 | 數值類 | `doc_data` | 2 |
 | 遊戲規格類 | `doc_spec` | 1247 |
 | 索引類 | `doc_index` | 114 |
-| 任務卡類 | `doc_task` | 2712 |
+| 任務卡類 | `doc_task` | 2714 |
 | AI Agent 專用 | `doc_ai` | 43 |
 | Agent Skill 專用 | `doc_agentskill` | 106 |
 | Server 文件類 | `doc_server_<subtype>` | 3 |
 | 其它類 | `doc_other` | 1983 |
-| **合計** | — | **6290** |
+| **合計** | — | **6292** |
 
 ## Markdown 分片
 

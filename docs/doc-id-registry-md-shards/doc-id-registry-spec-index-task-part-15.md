@@ -137,3 +137,5 @@
 | `doc_task_2727` | docs/agent-briefs/tasks/PROG/PROG-2-9583.md | [PROG-2-9583] F3 配偶三來源（結緣好感納配偶、聯姻外交提親、媒人說親） |
 | `doc_task_2728` | docs/agent-briefs/tasks/PROG/PROG-2-9231.md | [PROG-2-9231] 世界觀與故事總綱規格書（AI 武將覺醒：一頁版大綱、世界設定、主線鉤子、各系統說法、角色人設、時事梗規範、文案範例） |
 | `doc_task_2729` | docs/agent-briefs/tasks/PROG/PROG-2-9701.md | [PROG-2-9701] 戰場可讀性：部隊框避讓含血條與狀態圖示、跳字置頂、敵軍行動中橫幅移出棋盤 |
+| `doc_task_2730` | docs/agent-briefs/tasks/PROG/PROG-2-9240.md | [PROG-2-9240] 支援卡資料與物品化（SUP-1：25 張學府支援卡、category=supportCard、instanceState、出征編制排除） |
+| `doc_task_2731` | docs/agent-briefs/tasks/PROG/PROG-2-9702.md | [PROG-2-9702] 年終守城戰規格書：大敗、失守懲罰、平手三項回寫使用者 11/21 裁決 |

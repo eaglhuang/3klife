@@ -16279,12 +16279,18 @@
   },
   {
     "id": "doc_task_2731",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9702.md",
+    "title": "[PROG-2-9702] 年終守城戰規格書：大敗、失守懲罰、平手三項回寫使用者 11/21 裁決",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2732",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9464.md",
     "title": "[PROG-2-9464] GCH-R5 保底存檔遷移",
     "category": "task"
   },
   {
-    "id": "doc_task_2732",
+    "id": "doc_task_2733",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9465.md",
     "title": "[PROG-2-9465] GCH-R7 宿命池遷移",
     "category": "task"
