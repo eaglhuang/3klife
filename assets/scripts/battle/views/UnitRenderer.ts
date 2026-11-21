@@ -2,6 +2,7 @@
 // @spec-source → 見 docs/cross-reference-index.md
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { perfBegin, perfEnd, perfFrame } from "./BattlePerfProbe";
+import { BadgeBatchLayers } from "./BadgeBatchLayers";
 import { awaitWithTimeout } from "../../core/utils/AwaitGuard";
 import {
   _decorator,
@@ -38,6 +39,7 @@ import {
   Vec3,
   VerticalTextAlignment,
   resources,
+  Rect,
 } from "cc";
 import { BattleTactic, EVENT_NAMES, Faction, GAME_CONFIG, TroopType } from "../../core/config/Constants";
 import { GeneralUnit } from "../../core/models/GeneralUnit";
@@ -94,6 +96,12 @@ import {
 
 const { ccclass, property } = _decorator;
 const TROOP_TYPE_ICON_PREFIX = 'sprites/battle/battle_unit_type_icon_';
+/** 部隊徽章底圖（2 倍解析度；左 80x80 九宮格底框、右 80x80 兵種圓章），由 tools_node/gen-battle-badge-atlas.py 產生（PROG-2-9713） */
+const BADGE_ATLAS_PATH = 'sprites/battle/battle_badge_atlas';
+const BADGE_ATLAS_CELL = 80;
+const BADGE_ATLAS_INSET = 30;
+/** 底圖 2 倍解析度，節點縮 0.5 還原 */
+const BADGE_ATLAS_SCALE = 0.5;
 
 interface UnitView {
   worldNode: Node;   // 世界空間根節點，負責移動 tween（Unity: Root Transform）
@@ -243,6 +251,9 @@ export class UnitRenderer extends Component {
   private canvasNode: Node | null = null;
   private worldRoot: Node | null = null;
   private uiRoot: Node | null = null;
+  /** 部隊徽章分層合批（PROG-2-9713） */
+  private badgeLayers: BadgeBatchLayers | null = null;
+  private badgeAtlasLoad: Promise<{ bg: SpriteFrame; disc: SpriteFrame } | null> | null = null;
   private cubeMesh: Mesh | null = null;
   private discMesh: Mesh | null = null;  // 圓形陰影 mesh，對照 Unity: blob shadow disc
   private ringMesh: Mesh | null = null;  // Faction Ring mesh
@@ -1178,7 +1189,10 @@ export class UnitRenderer extends Component {
     perfEnd('fxShots', t); t = perfBegin();
 
     this.tileBuffMarkers.update(dt);
-    perfEnd('tileBuff', t);
+    perfEnd('tileBuff', t); t = perfBegin();
+    // 徽章代理節點跟上本幀最終位置（投影、避讓都做完之後；PROG-2-9713）
+    this.badgeLayers?.sync();
+    perfEnd('badgeSync', t);
     perfEnd('lateUpdate', tAll);
   }
 
@@ -1690,6 +1704,7 @@ export class UnitRenderer extends Component {
       if (view.labelNode.parent === this.uiRoot) topUnitIndex = Math.max(topUnitIndex, view.labelNode.getSiblingIndex());
     });
     if (label.getSiblingIndex() < topUnitIndex) label.setSiblingIndex(topUnitIndex);
+    this.badgeLayers?.bringToFront(label);
   }
 
   /** QA／測試：部隊框目前的避讓位移 */
@@ -1807,10 +1822,12 @@ export class UnitRenderer extends Component {
       services().material.applyOutfit(`${unit.id}_accent`, "unit-base", outfitConfig);
     }
 
+    // 合批圖層要排在徽章節點之前建立：武將名牌以「最上層部隊徽章節點」為基準往上排，才會蓋在圖層之上
+    const badgeLayers = this.ensureBadgeLayers();
     const labelNode = new Node(`UnitLabel_${unit.id}`);
     labelNode.layer = this.canvasNode?.layer ?? Layers.Enum.UI_2D;
     this.uiRoot?.addChild(labelNode);
-    const badge = this.buildBadge(labelNode, 170, 34, unit.type);
+    const badge = this.buildBadge(labelNode, 170, 34, unit.type, badgeLayers);
     const hpBar = this.buildHpBar(labelNode, 34 + 5);
 
     // 敵軍單位：HUD 上方標籤顯示紅色，不需修改 badge.hpLabel（已是豉紅）
@@ -2074,7 +2091,64 @@ export class UnitRenderer extends Component {
     view.vitalityText.color = ring.band === "exhausted" ? new Color(170, 170, 170, 255) : new Color(r, gr, b, 255);
   }
 
-  private buildBadge(rootNode: Node, width: number, height: number, troopType: TroopType | null = null): BadgeView {
+  /** 部隊徽章合批圖層（PROG-2-9713）：uiRoot 換了（重建戰場）就重建 */
+  private ensureBadgeLayers(): BadgeBatchLayers | null {
+    if (!this.uiRoot) return null;
+    if (!this.badgeLayers || !this.badgeLayers.isValid || this.badgeLayers.bg.parent !== this.uiRoot) {
+      this.badgeLayers = new BadgeBatchLayers(this.uiRoot, this.canvasNode?.layer ?? Layers.Enum.UI_2D);
+    }
+    return this.badgeLayers;
+  }
+
+  /** 徽章底圖切成底框（九宮格）與兵種圓章兩個 SpriteFrame；共用同一張貼圖才能合批 */
+  private loadBadgeAtlas(): Promise<{ bg: SpriteFrame; disc: SpriteFrame } | null> {
+    if (!this.badgeAtlasLoad) {
+      this.badgeAtlasLoad = services().resource.loadSpriteFrame(BADGE_ATLAS_PATH, { tags: ["battle"] })
+        .then((base) => {
+          const cut = (x: number): SpriteFrame => {
+            const f = new SpriteFrame();
+            f.packable = false;
+            f.texture = base.texture;
+            f.rect = new Rect(x, 0, BADGE_ATLAS_CELL, BADGE_ATLAS_CELL);
+            return f;
+          };
+          const bg = cut(0);
+          bg.insetLeft = BADGE_ATLAS_INSET;
+          bg.insetRight = BADGE_ATLAS_INSET;
+          bg.insetTop = BADGE_ATLAS_INSET;
+          bg.insetBottom = BADGE_ATLAS_INSET;
+          return { bg, disc: cut(BADGE_ATLAS_CELL) };
+        })
+        .catch((err: unknown) => {
+          UCUFLogger.warn(LogCategory.LIFECYCLE, `[UnitRenderer] 徽章底圖載入失敗: ${String(err)}`);
+          return null;
+        });
+    }
+    return this.badgeAtlasLoad;
+  }
+
+  /** 在 parent 下建一個底圖精靈（2 倍解析度，縮 0.5）；底圖載好才指定 SpriteFrame */
+  private addBadgeAtlasSprite(parent: Node, name: string, part: "bg" | "disc", w: number, h: number, x = 0, y = 0): void {
+    const node = new Node(name);
+    node.layer = parent.layer;
+    parent.addChild(node);
+    node.setPosition(x, y, 0);
+    node.setScale(BADGE_ATLAS_SCALE, BADGE_ATLAS_SCALE, 1);
+    node.addComponent(UITransform).setContentSize(w / BADGE_ATLAS_SCALE, h / BADGE_ATLAS_SCALE);
+    const sprite = node.addComponent(Sprite);
+    sprite.sizeMode = Sprite.SizeMode.CUSTOM;
+    sprite.type = part === "bg" ? Sprite.Type.SLICED : Sprite.Type.SIMPLE;
+    void this.loadBadgeAtlas().then((frames) => {
+      if (frames && sprite.isValid) sprite.spriteFrame = frames[part];
+    });
+  }
+
+  /**
+   * layers 有給（部隊徽章）時走分層合批：底框／圓章是共用底圖精靈、文字是 BITMAP 點陣快取，各自掛到共用圖層的代理節點；
+   * rootNode 只保留位置、縮放、透明度與尺寸。沒給（武將名牌）時維持原本的 Graphics 版（PROG-2-9713）。
+   */
+  private buildBadge(rootNode: Node, width: number, height: number, troopType: TroopType | null = null,
+    layers: BadgeBatchLayers | null = null): BadgeView {
     const rootTf = rootNode.addComponent(UITransform);
     rootTf.setContentSize(width, height * 2 + 10);
     const opacity = rootNode.addComponent(UIOpacity);
@@ -2083,39 +2157,48 @@ export class UnitRenderer extends Component {
     // 將 HUD 縮小 (原本尺寸偏大)
     rootNode.setScale(0.7, 0.7, 1);
 
-    // 背景底板：提升頭頂資訊可讀性
-    const bgNode = new Node("Bg");
-    bgNode.layer = rootNode.layer;
-    rootNode.addChild(bgNode);
-    const bgTf = bgNode.addComponent(UITransform);
-    bgTf.setContentSize(width + 10, height * 2 + 10);
-    const bgGraphics = bgNode.addComponent(Graphics);
-    // 徽章底：深色底＋金圈外框＋內側淡金細線（PROG-2-9705）
-    const bw = bgTf.width, bh = bgTf.height;
-    bgGraphics.fillColor = BADGE_FILL;
-    bgGraphics.roundRect(-bw / 2, -bh / 2, bw, bh, 10);
-    bgGraphics.fill();
-    bgGraphics.lineWidth = 3;
-    bgGraphics.strokeColor = BADGE_RING;
-    bgGraphics.roundRect(-bw / 2, -bh / 2, bw, bh, 10);
-    bgGraphics.stroke();
-    bgGraphics.lineWidth = 1.5;
-    bgGraphics.strokeColor = BADGE_RING_INNER;
-    bgGraphics.roundRect(-bw / 2 + 4, -bh / 2 + 4, bw - 8, bh - 8, 7);
-    bgGraphics.stroke();
+    const bgParent = layers ? layers.proxyFor(rootNode, "bg") : rootNode;
+    const textParent = layers ? layers.proxyFor(rootNode, "text") : rootNode;
+    const bw = width + 10;
+    const bh = height * 2 + 10;
+    if (layers) {
+      // 底框：與 Graphics 版同色同尺寸；外框描邊外擴 1.5，所以精靈比框大 3
+      this.addBadgeAtlasSprite(bgParent, "Bg", "bg", bw + 3, bh + 3);
+    } else {
+      // 背景底板：提升頭頂資訊可讀性
+      const bgNode = new Node("Bg");
+      bgNode.layer = rootNode.layer;
+      rootNode.addChild(bgNode);
+      const bgTf = bgNode.addComponent(UITransform);
+      bgTf.setContentSize(bw, bh);
+      const bgGraphics = bgNode.addComponent(Graphics);
+      // 徽章底：深色底＋金圈外框＋內側淡金細線（PROG-2-9705）
+      bgGraphics.fillColor = BADGE_FILL;
+      bgGraphics.roundRect(-bw / 2, -bh / 2, bw, bh, 10);
+      bgGraphics.fill();
+      bgGraphics.lineWidth = 3;
+      bgGraphics.strokeColor = BADGE_RING;
+      bgGraphics.roundRect(-bw / 2, -bh / 2, bw, bh, 10);
+      bgGraphics.stroke();
+      bgGraphics.lineWidth = 1.5;
+      bgGraphics.strokeColor = BADGE_RING_INNER;
+      bgGraphics.roundRect(-bw / 2 + 4, -bh / 2 + 4, bw - 8, bh - 8, 7);
+      bgGraphics.stroke();
+    }
 
     const segmentHeight = height;
     let gap = 8;
     if (width > 180) gap = 12;
-    
+
     // 上排：戰力 + 兵種符號 + 生命
     const totalGap = gap * 2;
     const sideWidth = Math.floor((width - 44 - totalGap) * 0.5);
     const centerWidth = width - sideWidth * 2 - totalGap;
     const offset = (centerWidth + gap) * 0.5 + sideWidth * 0.5;
+    const topRowY = segmentHeight / 2 + 2;
 
     const attackLabel = this.createBadgeSegment(
-      rootNode,
+      textParent,
       "AttackBadge",
       -offset,
       sideWidth,
@@ -2125,11 +2208,11 @@ export class UnitRenderer extends Component {
       22,
     );
     // 將上排三塊徽章上移
-    attackLabel.node.parent!.setPosition(-offset, segmentHeight / 2 + 2, 0);
+    attackLabel.node.parent!.setPosition(-offset, topRowY, 0);
     this.shrinkToFit(attackLabel);
 
     const typeLabel = this.createBadgeSegment(
-      rootNode,
+      textParent,
       "TypeBadge",
       0,
       centerWidth,
@@ -2138,37 +2221,41 @@ export class UnitRenderer extends Component {
       new Color(245, 245, 245, 255),
       18,
     );
-    typeLabel.node.parent!.setPosition(0, segmentHeight / 2 + 2, 0);
+    typeLabel.node.parent!.setPosition(0, topRowY, 0);
     // 兵種圓章：跟格子 buff 圖示同款的金圈深底圓（畫在兵種字／圖示後面）
-    {
+    const discR = segmentHeight / 2 + 1;
+    if (layers) {
+      // 底圖圓章半徑 36（2 倍）＝部隊徽章 discR 18；外框描邊 2.5 外擴 1.25
+      const discSize = BADGE_ATLAS_CELL * BADGE_ATLAS_SCALE * (discR / 18);
+      this.addBadgeAtlasSprite(bgParent, "TypeDisc", "disc", discSize, discSize, 0, topRowY);
+    } else {
       const discNode = new Node("TypeDisc");
       discNode.layer = rootNode.layer;
       const typeSeg = typeLabel.node.parent!;
       typeSeg.insertChild(discNode, 0);
       discNode.addComponent(UITransform).setContentSize(segmentHeight + 8, segmentHeight + 8);
       const disc = discNode.addComponent(Graphics);
-      const r = segmentHeight / 2 + 1;
       disc.fillColor = BADGE_TYPE_DISC_FILL;
-      disc.circle(0, 0, r);
+      disc.circle(0, 0, discR);
       disc.fill();
       disc.lineWidth = 2.5;
       disc.strokeColor = BADGE_RING;
-      disc.circle(0, 0, r);
+      disc.circle(0, 0, discR);
       disc.stroke();
     }
 
     if (troopType) {
       typeLabel.string = this.toTroopShortName(troopType);
 
-      const typeSegmentNode = typeLabel.node.parent!;
+      const iconParent = layers ? layers.proxyFor(rootNode, "icon") : typeLabel.node.parent!;
       const iconNode = new Node("TypeIcon");
-      iconNode.layer = typeSegmentNode.layer;
-      typeSegmentNode.addChild(iconNode);
+      iconNode.layer = iconParent.layer;
+      iconParent.addChild(iconNode);
 
       const iconTf = iconNode.addComponent(UITransform);
       const iconSize = Math.max(18, Math.min(segmentHeight - 6, centerWidth - 8));
       iconTf.setContentSize(iconSize, iconSize);
-      iconNode.setPosition(0, 0, 0);
+      iconNode.setPosition(0, layers ? topRowY : 0, 0);
       iconNode.active = false;
 
       const icon = iconNode.addComponent(Sprite);
@@ -2180,7 +2267,7 @@ export class UnitRenderer extends Component {
     }
 
     const hpLabel = this.createBadgeSegment(
-      rootNode,
+      textParent,
       "HpBadge",
       offset,
       sideWidth,
@@ -2189,13 +2276,16 @@ export class UnitRenderer extends Component {
       new Color(255, 104, 104, 255),
       22,
     );
-    hpLabel.node.parent!.setPosition(offset, segmentHeight / 2 + 2, 0);
+    hpLabel.node.parent!.setPosition(offset, topRowY, 0);
     this.shrinkToFit(hpLabel);
+    // 點陣快取（PROG-2-9713）：打包進動態圖集，徽章文字共用貼圖可合批；不用 CHAR 的原因見下方名稱標籤。
+    // 必須在 SHRINK 設好之後才切：切換快取模式會立刻重排，若當下還是 NONE＋空字串，節點會被自動縮成寬 6，之後縮字就看不見
+    for (const l of [attackLabel, typeLabel, hpLabel]) l.cacheMode = Label.CacheMode.BITMAP;
 
     // 下排：完整兵種名稱（由 updateUnitView 動態更新）
     const nameLabelNode = new Node("NameLabel");
     nameLabelNode.layer = rootNode.layer;
-    rootNode.addChild(nameLabelNode);
+    textParent.addChild(nameLabelNode);
     nameLabelNode.setPosition(0, -segmentHeight / 2 - 2, 0);
     const nameTf = nameLabelNode.addComponent(UITransform);
     nameTf.setContentSize(width, segmentHeight);
@@ -2209,6 +2299,9 @@ export class UnitRenderer extends Component {
     nameStrLabel.enableOutline = true;
     nameStrLabel.outlineColor = BADGE_TEXT_OUTLINE;
     nameStrLabel.outlineWidth = BADGE_TEXT_OUTLINE_WIDTH;
+    // 點陣快取（PROG-2-9713）：畫好的字打包進動態圖集，所有徽章文字共用貼圖可合批。
+    // 不用 CHAR：字元圖集是全專案共用的稀缺預算（見 UIPreviewStyleBuilder 的 charAtlasGuard），預算不足會被退回且數字會畫壞。
+    nameStrLabel.cacheMode = Label.CacheMode.BITMAP;
 
     // 以擴充屬性保存引用，供 updateUnitView 快速更新
     (rootNode as any)._bottomNameLabel = nameStrLabel;
