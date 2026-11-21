@@ -12689,6 +12689,55 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9462",
+      "title": "GCH-R3 卡池 JSON 化",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "2026-11-21T17:00:00+08:00",
+      "started_by_agent": "claude-code-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "名將池、紅顏池、宿命池改為 reward-pool.v1 資料檔（gacha-reward-pools.json），名冊查詢展開與 UP 設定，12.3 軟保底數值寫進各池 JSON；引擎補 tierRates；只做資料與載入，不改 GachaApi.pull。",
+      "related": [
+        "PROG-2-9460",
+        "PROG-2-9461"
+      ],
+      "depends": [
+        "PROG-2-9461"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0 錯、單元測試全過（含 RewardRoster 8 項）、compute-gate standard | 變更: gacha-reward-pools.json 三池、RewardRoster 名冊查詢展開、引擎 tierRates | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

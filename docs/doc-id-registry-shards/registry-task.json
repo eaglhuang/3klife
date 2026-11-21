@@ -16189,6 +16189,12 @@
   },
   {
     "id": "doc_task_2716",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9462.md",
+    "title": "[PROG-2-9462] GCH-R3 卡池 JSON 化",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2717",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9483.md",
     "title": "[PROG-2-9483] 基礎戰鬥手感：受擊閃白改「全白停 2 格再快速退」",
     "category": "task"
