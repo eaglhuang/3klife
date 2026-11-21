@@ -1264,10 +1264,13 @@ export class BattleUIBridge {
     this.specialActions.reset();
     const performance = this.performance.snapshot();
     this.performance.reset();
-    const sortie = this.ctx.ctrl?.finishSortie(services().session.military.cityTroops, services().session.military.recruitRegen) ?? null;
+    const fieldSortie = this.ctx.ctrl?.finishSortie(services().session.military.cityTroops, services().session.military.recruitRegen) ?? null;
+    // QA 預覽的模擬帳本（PROG-2-9711）只顯示戰況，不寫回存檔兵源糧草、不觸發擒將
+    const previewSortie = this.ctx.ctrl?.isPreviewSortie() ?? false;
+    const sortie = previewSortie ? null : fieldSortie;
     // 主戰場UI規格書 §4.2：結算一律顯示本場擊殺數與回合數（PROG-2-1871）
     const recap = formatPerformance(performance, services().battle.getSnapshot().turn);
-    const details = sortie ? [...formatSortieSummary(sortie), recap] : [recap];
+    const details = fieldSortie ? [...formatSortieSummary(fieldSortie), recap] : [recap];
     // 戰後結算視窗的關卡回收摘要（關卡設計 §I-2，PROG-2-1857）；平手照常入帳
     details.push(...salvageSummaryLines(this.ctx.ctrl?.state.stageSalvage, result !== 'enemy-win'));
     for (const line of details) this.appendLog(line);

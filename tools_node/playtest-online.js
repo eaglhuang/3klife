@@ -41,6 +41,7 @@
  *   --jade      選用：玉的用途（商店看玉、許願祭壇用玉買加速卡，PROG-2-9149）
  *   --year      選用：原步驟後接一年循環（每季內政／任務牆／戰鬥／抽卡／培育／推進一季），輸出 year-report.json（PROG-2-9141）
  *   --battles-per-season  --year 時每季出征場數（預設 2）
+ *   --no-auto-play  戰鬥改逐回合手按結束回合（預設開場按一次「自動」走自動代打，PROG-2-9711）
  *   --academy   選用：學府實玩（PROG-2-9192）：推進到第 2 年第 1 季 → 入學潁川（核對入學令 −1）→ 36 回合 → 結業彈窗 → 回大廳；
  *               另在複製存檔的第二情境用 ?qaAcademy=11 驗快進入口。輸出 academy-report.json（回合數、打斷、評級、前後季數、節點數、
  *               apiCalls＝學府寫入呼叫共通 API 的次數，分 item／skill／reward／story／occupancy／save）與 ac-*.png 截圖。
@@ -1219,6 +1220,12 @@ async function main() {
             await page.mouse.move(ex, ey, { steps: 12 });
             await page.mouse.up();
             await delay(1000);
+            // 自動代打（PROG-2-9707／9711）：開場按一次「自動」＝委任出兵＋每回合自動結束回合；只按一次，再按會跳到極速決戰
+            // --no-auto-play 可改回逐回合手按結束回合
+            const autoPlay = !args['no-auto-play'] && opts.autoPlay !== false && Boolean(await clickButton('^BtnAuto$'));
+            rec.detail.autoPlay = autoPlay;
+            rec.detail.endTurnFallbacks = 0;
+            await delay(800);
             // 等結算：BattleReview 出現，或場景自動回大廳
             // 回合數有在前進就不算卡住；停滯超過 BATTLE_LIMIT_MS 或總時間超過 6 分鐘才判失敗
             let settled = null;
@@ -1239,8 +1246,11 @@ async function main() {
                     await clickByText('.*', '^\\s*退\\s*$');
                     await clickByText('.*', '^\\s*(確認|確定|是|撤退|結束教學)\\s*$');
                 }
-                // 不再按自動鈕（PROG-2-9707：自動＝自動代打，再按才極速決戰），改只按結束回合逐回合推進
-                await clickButton('^(BtnEndTurn|btnEndTurn|EndTurnBtn)$');
+                // 自動代打時由遊戲自己結束回合；同一回合停超過 12 秒才補按（計入 endTurnFallbacks，代表自動代打沒推進）
+                // 沒開自動代打時逐回合手按結束回合；絕不再按自動鈕（第二次按＝跳到極速決戰）
+                if (!autoPlay || Date.now() - lastProgressAt > 12000) {
+                    if ((await clickButton('^(BtnEndTurn|btnEndTurn|EndTurnBtn)$')) && autoPlay) rec.detail.endTurnFallbacks += 1;
+                }
                 if (Date.now() - lastProgressAt > BATTLE_LIMIT_MS) throw new Error(`戰鬥卡住：第 ${lastRound} 回合起超過 ${Math.round(BATTLE_LIMIT_MS / 1000)} 秒沒有推進（可按按鈕：${(await listButtons()).join(', ')}）`);
                 if (Date.now() > hardDeadline) throw new Error(`戰鬥 6 分鐘內未結算（停在第 ${lastRound} 回合；回合仍在推進，疑似戰鬥變長）`);
                 await delay(1000);

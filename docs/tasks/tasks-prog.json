@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 234,
+    "done": 235,
     "in_progress": 4,
     "open": 86,
-    "total": 324
+    "total": 325
   },
   "tasks": [
     {
@@ -14065,6 +14065,50 @@
       "acceptance": [],
       "deliverables": [],
       "notes": "2026-11-22 | 狀態: done | 驗證: 7456 預覽截圖奧義鈕顯示「奧義」 | 變更: LoadingScene 預覽戰場先載語系 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2767",
+      "id": "PROG-2-9711",
+      "title": "QA 預覽／直進戰場模擬出征帳本，試玩腳本實測自動代打",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-22 | 狀態: in-progress | 驗證: 單元測試 PreviewSortie 6 項通過、tsc 0 錯、compute-gate quick 4/4；預覽實跑待驗 | 變更: PreviewSortie.ts（preview／qa 入口沒有帳本時用主將統率＋兵源3000糧1500 建模擬帳本）、BattleSceneLoader.resolveBattleSortieInput、BattleController.isPreviewSortie、BattleUIBridge 結算不把模擬帳本傳給 recordBattle、playtest-online 開場按一次自動（--no-auto-play 可關，補按結束回合計 endTurnFallbacks） | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",

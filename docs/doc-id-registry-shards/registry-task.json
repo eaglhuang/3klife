@@ -16432,5 +16432,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9710.md",
     "title": "[PROG-2-9710] 預覽直進戰場先載語系字串（奧義鈕不再顯示鍵名）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2767",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9711.md",
+    "title": "[PROG-2-9711] QA 預覽／直進戰場模擬出征帳本，試玩腳本實測自動代打",
+    "category": "task"
   }
 ]
