@@ -16474,5 +16474,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9711.md",
     "title": "[PROG-2-9711] QA 預覽／直進戰場模擬出征帳本，試玩腳本實測自動代打",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2931",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9609.md",
+    "title": "任務卡：PROG-2-9609 開局義子入學驗證與學府籌備看板",
+    "category": "task"
   }
 ]

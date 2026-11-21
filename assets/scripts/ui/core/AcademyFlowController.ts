@@ -51,6 +51,7 @@ import {
     type AcademySessionMode,
     type AcademySettleSummary,
     type EnrollViewModel,
+    type PrepUpcomingStudent,
 } from './AcademyFlowView';
 
 import { fastForwardAcademy, type AcademyFastForwardResult } from './AcademyQaFastForward';
@@ -86,6 +87,8 @@ export interface AcademyChildLike {
     fate?: { choice?: string } | null;
     /** 投靠少年名將標記（PROG-2-9194）：不走抓周宿命，只看年滿入學年齡 */
     youth?: { enrollAge: number } | null;
+    /** 開局義子標記（PROG-2-9609，11/21 使用者裁決第 29 條）：趙雲、關羽、諸葛亮 */
+    adoptSource?: string;
     graduationRating?: string;
     captivity?: unknown;
 }
@@ -231,10 +234,30 @@ export class AcademyFlowController<H extends AcademyHostLike> {
 
     // ── 入學 ────────────────────────────────────────────
 
-    /** 可選的子嗣：活著、已選宿命、尚未結業 */
+    /** 可選的子嗣：活著、已選宿命或投靠少年或開局義子、尚未結業且未被俘（PROG-2-9609，11/21 使用者裁決第 29 條） */
     public enrollChildren(): AcademyChildLike[] {
         return this._deps.roster().filter((g) => (g.status ?? '').toLowerCase() !== 'dead'
-            && (!!g.fate?.choice || !!g.youth) && !g.graduationRating && !g.captivity);
+            && (!!g.fate?.choice || !!g.youth || g.adoptSource === 'starter') && !g.graduationRating && !g.captivity);
+    }
+
+    /** 學府籌備名單：找出尚未及冠（未滿 15 歲）且活著、未結業之門生，計算距及冠年數（升冪排序）（PROG-2-9609） */
+    public prepUpcomingStudents(): PrepUpcomingStudent[] {
+        const rules = academyEnrollRules();
+        const minAge = rules.minEnrollAge;
+        return this._deps.roster()
+            .filter((g) => (g.status ?? '').toLowerCase() !== 'dead' && !g.graduationRating && !g.captivity)
+            .filter((g) => (g.age ?? 0) < minAge)
+            .map((g) => {
+                const age = Math.floor(g.age ?? 0);
+                const yearsUntilEnroll = Math.max(1, minAge - age);
+                return {
+                    id: g.id,
+                    name: g.name,
+                    age,
+                    yearsUntilEnroll,
+                };
+            })
+            .sort((a, b) => a.yearsUntilEnroll - b.yearsUntilEnroll);
     }
 
     private _currentChild(): AcademyChildLike | null {
@@ -359,6 +382,7 @@ export class AcademyFlowController<H extends AcademyHostLike> {
             tokens,
             notice: this._notice,
             canEnroll: !!child && elig.yearsShort === 0 && !elig.blocked && tokens > 0 && chosen.length > 0 && !this._deps.isActive(),
+            prepUpcoming: list.length === 0 ? this.prepUpcomingStudents() : undefined,
         };
     }
 

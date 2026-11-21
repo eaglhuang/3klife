@@ -14243,6 +14243,12 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "id": "PROG-2-9609",
+      "doc_id": "doc_task_2931",
+      "title": "開局義子入學驗證與學府籌備看板",
+      "status": "completed"
     }
   ],
   "updated": "2026-11-22"

@@ -175,6 +175,15 @@ function buildShardGroups() {
     if (Array.isArray(cfg.shards)) {
       for (const shard of cfg.shards) {
         filesInGroup.push(path.join(rcDir, `${shard.name}${partExt}`));
+        try {
+          const dirEntries = fs.readdirSync(rcDir);
+          const prefix = `${shard.name}-part-`;
+          for (const entry of dirEntries) {
+            if (entry.startsWith(prefix) && entry.endsWith(partExt)) {
+              filesInGroup.push(path.join(rcDir, entry));
+            }
+          }
+        } catch (_) {}
       }
     }
 
