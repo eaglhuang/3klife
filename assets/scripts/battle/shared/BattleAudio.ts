@@ -34,6 +34,10 @@ export const BATTLE_AUDIO_CUE = {
   critHit: 'crit-hit',
   fortressDamaged: 'fortress-damaged',
   shieldBlock: 'shield-block',
+  /** 放招蓄力（PROG-2-9438）：0.4 秒蓄力開始時播 */
+  skillCharge: 'skill-charge',
+  /** 放招出手（PROG-2-9438）：蓄力結束、特效打出去那一刻播 */
+  skillRelease: 'skill-release',
   turnPlayerStart: 'turn-player-start',
   turnEnemyStart: 'turn-enemy-start',
   battleVictory: 'battle-victory',
@@ -68,11 +72,21 @@ export const BATTLE_AUDIO_CLIP_MAP: Record<BattleAudioCue, string> = {
   [BATTLE_AUDIO_CUE.critHit]: 'boom',
   [BATTLE_AUDIO_CUE.fortressDamaged]: 'boom',
   [BATTLE_AUDIO_CUE.shieldBlock]: 'shield',
+  // PROG-2-9438：依音量包絡挑選（未實機聽過）。skill1 由弱漸強、約 0.4 秒到頂，配 0.4 秒蓄力；
+  // skill7 一開頭就最響，當出手重音。兩個檔原本都沒被戰場用到，不合適只改這兩行。
+  [BATTLE_AUDIO_CUE.skillCharge]: 'skill1',
+  [BATTLE_AUDIO_CUE.skillRelease]: 'skill7',
   [BATTLE_AUDIO_CUE.turnPlayerStart]: 'light',
   [BATTLE_AUDIO_CUE.turnEnemyStart]: 'thunder',
   [BATTLE_AUDIO_CUE.battleVictory]: 'skill0',
   [BATTLE_AUDIO_CUE.battleDefeat]: 'die',
 };
+
+/** 放招音效音量（PROG-2-9438）：蓄力壓低一點，出手重音略大，都不蓋過命中聲。 */
+export const SKILL_CAST_SFX = {
+  charge: { cue: BATTLE_AUDIO_CUE.skillCharge, volume: 0.7 },
+  release: { cue: BATTLE_AUDIO_CUE.skillRelease, volume: 0.85 },
+} as const;
 
 export function resolveBattleUnitAttackSfxKey(unitType: TroopType): BattleAudioCue {
   return attackSfxFor(unitType);

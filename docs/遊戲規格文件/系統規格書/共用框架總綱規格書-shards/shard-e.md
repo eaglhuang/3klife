@@ -21,12 +21,12 @@
 | --- | --- | --- | --- |
 | 共通 API（B0，進行中） | `save`／`task`／`reward`／`inventory`／`skill`／`story`／`time`／`rng` 語意介面與錯誤碼；本機 adapter 骨架；冪等鍵；契約測試；`check-api-bypass` 基準棘輪（Q4 A） | 網路 adapter（只留空介面）、補丁白名單收緊、`shop` 命令實作 | 學府存檔與推季要過 API（doc_spec_1179 第 9.4 節 15 項） |
 | 底層工具層 FND（Q-A） | 確定性亂數會話（`seedHex`、`stepIndex`）、加權表、條件評估（比較、持有物、旗標、官職階位、與或非）、時鐘（季、遞減） | `Ladder` 階梯評估（Q-D）、日／週重置排程 | 開獎、保底、入學條件、凍結期遞減 |
-| 物品庫存 ITM | 持有者容器只做**家庭倉庫**；ItemDef 擴 `token`（入學令）、`mentorCard`、`consumable`；`stackCap`、`overflow`（溢出折金）；指派占用旗標；入學令數值放 JSON（0557：季發 1、封頂 3、溢出 5000 金） | 背包／庫房／公庫／倉庫其餘持有者、貨幣併入（Q2 PM 裁決併入；**金與銀兩兩種貨幣並存，使用者 11/21 裁決 #14**；MVP 不動現有金糧欄位，只加 `resource-def` 規範 id 與別名表：`grain`→`food`，大廳任務的 `silver` 讀入時對映為 `gold`，銀兩改由家族庫房另開，見 doc_spec_1241）、百寶閣與統一物件庫遷移 | 入學令與教官卡持有、鎖定 |
+| 物品庫存 ITM | 持有者容器只做**家庭倉庫**；ItemDef 擴 `token`（入學令）、`mentorCard`、`consumable`；`stackCap`、`overflow`（溢出折金）；指派占用旗標；入學令數值放 JSON（0557：季發 1、封頂 3、溢出 5000 金） | 背包／庫房／公庫／倉庫其餘持有者、貨幣併入（Q2 PM 裁決併入；**金與銀兩兩種貨幣並存，使用者 11/21 裁決 #14**；MVP 不動現有金糧欄位，只加 `resource-def` 規範 id 與別名表：`grain`→`food`，大廳任務的 `silver` 讀入時對映為 `gold`，銀兩改由家族庫房另開，見 doc_spec_1247）、百寶閣與統一物件庫遷移 | 入學令與教官卡持有、鎖定 |
 | 獎勵 RWD | 獎池、權重、保底、`settle`（演出只做 `instant`／`toast`）、效果帳本、**定期發放**（入學令季發） | 寶箱類演出、懲罰表、等階獎勵、**轉蛋池遷移（使用者 11/21 裁決 #9：轉蛋抽獎改走 `reward.roll`，機率表走 `reward.pools`，遷移方案見獎勵書 doc_spec_1186 第 12 章）** | 雙年開獎、結業評級與印記、入學令定期發放 |
 | 技能 SKL | `domain=nurture`、`grant`／`learn`（結業戰法 `learnedTactics`）、modifier（期中方針 `policy:*`） | 配置槽、家族技能、天賦、`yearPoints`、`status-effect` 以季遞減 | 結業習得戰法、期中方針三選一 |
 | 任務 QST | 實例、步驟、閘門（第 12、24、36 回合）、暫離、結算、紀錄；**只實作 `taskKind=academy`**；`solver=progress` 只留欄位 | 大廳任務遷移、`progress`（官職經驗）、`autoResolve`、派遣 | 36 回合修業就是一個任務實例 |
 | 劇情 STY | 事件定義 JSON、選項、條件、彈窗呈現、**單一優先序的打斷佇列** | CG、鏡頭、轉場、漫畫式演出、`MilestoneFlow` 儀式模板（結業先用 `toast`＋彈窗） | 打斷彈窗與結業典禮文案資料化 |
-| 人員占用 OCC（**第 7 框架，使用者 11/21 裁決 #8**，規格 doc_spec_1242） | **精簡版（OCC-M 已合併，PROG-2-9207）**登記表 `{personId, kind, refId, since, until}`，只註冊 `academy`、`mentorAssign` 兩種，其他 6 處以唯讀轉接器查詢 | 其餘 6 處各自遷入、互斥矩陣全表（資料表驅動）、`campaign` 種類、`occupancy.check`、E335～E337，見 doc_spec_1242 第 12 章 OCC-2～OCC-6 | 學員修業中不可被任務牆、派遣、傭兵占用（缺口 #8） |
+| 人員占用 OCC（**第 7 框架，使用者 11/21 裁決 #8**，規格 doc_spec_1248） | **精簡版（OCC-M 已合併，PROG-2-9207）**登記表 `{personId, kind, refId, since, until}`，只註冊 `academy`、`mentorAssign` 兩種，其他 6 處以唯讀轉接器查詢 | 其餘 6 處各自遷入、互斥矩陣全表（資料表驅動）、`campaign` 種類、`occupancy.check`、E335～E337，見 doc_spec_1248 第 12 章 OCC-2～OCC-6 | 學員修業中不可被任務牆、派遣、傭兵占用（缺口 #8） |
 | 商店 SHP | **整個延後** | 全部（A2 結業戰法商店屬第二批） | 一年循環不需要；TP 商店是第二批 |
 | 季結算管線（Q-C） | **整個延後**；MVP 只靠 B0 的 `time.advanceSeason(idempotencyKey)` 處理凍結與推季 | hook 註冊、固定順序、重播 | 凍結與推 1 季只有學府一處，不需要註冊式 |
 
@@ -51,7 +51,7 @@
 | 1 | **FND-M 底層工具層** | 確定性亂數會話、加權表、條件評估、時鐘；位於 `assets/scripts/shared/` 零依賴 | B0 介面 | 純函式單元測試；同 `(seedHex, stepIndex)` 同結果；不 import 引擎或 UI | 0.5～1 |
 | 2a | **ITM-M 物品庫存最小版** | 家庭倉庫、`token`／`mentorCard`／`consumable`、`stackCap`／`overflow`、指派占用旗標；入學令數值 JSON；只遷入學令（`NurtureService.admission` 留相容層） | B0、FND-M | 入學令發放、消耗、退還、溢出折金契約測試；舊存檔缺值補預設 | 1 |
 | 2b | **SKL-M 技能最小版**（與 2a 並行） | `domain=nurture`、`grant`／`learn`、modifier | B0、FND-M | 結業戰法經 `skill.grant`；`policy:*` modifier 可疊加與移除；單元測試 | 0.5～1 |
-| 2c | **OCC-M 人員占用精簡版**（已合併，PROG-2-9207；第 7 框架，與 2a 並行） | 登記表、`academy`／`mentorAssign` 兩種、其他六處唯讀轉接器 | B0 | 修業中武將在任務牆、派遣、傭兵候選清單被排除，互斥有契約測試。Q-B 已裁決獨立成第 7 框架（使用者 11/21 裁決 #8），不併入 QST-M；補完見 doc_spec_1242 OCC-2 | 0.5 |
+| 2c | **OCC-M 人員占用精簡版**（已合併，PROG-2-9207；第 7 框架，與 2a 並行） | 登記表、`academy`／`mentorAssign` 兩種、其他六處唯讀轉接器 | B0 | 修業中武將在任務牆、派遣、傭兵候選清單被排除，互斥有契約測試。Q-B 已裁決獨立成第 7 框架（使用者 11/21 裁決 #8），不併入 QST-M；補完見 doc_spec_1248 OCC-2 | 0.5 |
 | 3 | **RWD-M 獎勵最小版** | 獎池、權重、保底、效果帳本、`settle`（`instant`／`toast`）、定期發放 | B0、FND-M、ITM-M | 雙年開獎與結業印記改走 `reward.roll`；入學令季發走定期發放；保底可重播 | 1 |
 | 4 | **QST-M 任務最小版** | 實例、步驟、閘門、暫離、結算、紀錄；`taskKind=academy` | B0、FND-M、RWD-M、OCC-M | 一個學府任務跑完 36 步、閘門阻擋其他動作、暫離不遞減、結算走 `reward.grant`；重送不重結算 | 1 |
 | 5 | **STY-M 劇情最小版**（與 A1 並行） | 事件定義 JSON、選項、條件、彈窗、單一優先序打斷佇列 | B0、RWD-M | 打斷與結業文案讀資料、不再寫死程式；選項 id 即 `selectedOptionId` | 1 |
@@ -88,12 +88,12 @@
 | Q5 `critical` 補丁何時禁止 | A 階段 2 才禁止 | **PM 自決** | 單機期不影響，上線前再議 |
 | Q6 劇情系統名稱 | A「劇情（演出）系統」 | **PM 自決** | 命名 |
 | Q-A 共通底層工具層 | A 設立 | **PM 自決** | 純函式庫，不算框架 |
-| Q-B 人員占用登記是否成為第七套框架 | 獨立第 7 框架 | **使用者 11/21 裁決 #8** | MVP 先做中立版 OCC-M 不重工；規格 doc_spec_1242 |
+| Q-B 人員占用登記是否成為第七套框架 | 獨立第 7 框架 | **使用者 11/21 裁決 #8** | MVP 先做中立版 OCC-M 不重工；規格 doc_spec_1248 |
 | Q-C 季結算管線 | A 成立，但排在 MVP 之後 | **PM 自決** | 學府凍結只有一處，不在關鍵路徑 |
 | Q-D `Ladder` | A 合併為底層工具 | **PM 自決** | 技術歸屬 |
 | Q-E 通知與信箱 | A 先登記候選 | **PM 自決** | 暫不實作 |
 | Q-F 配方合成 | A 暫不抽 | **PM 自決** | 暫不實作 |
-| Q-G 資源命名統一 | `resource-def.v1`：`food／gold／silver／troops／fame`；`grain` 為 `food` 別名；**金與銀兩是兩種貨幣，不再互為別名**；玩家可見名稱「糧草」 | **使用者 11/21 裁決 #14（修正原 PM 建議）** | 數值與價格不改；MVP 只加規範 id 與別名表，詳見 doc_spec_1241 |
+| Q-G 資源命名統一 | `resource-def.v1`：`food／gold／silver／troops／fame`；`grain` 為 `food` 別名；**金與銀兩是兩種貨幣，不再互為別名**；玩家可見名稱「糧草」 | **使用者 11/21 裁決 #14（修正原 PM 建議）** | 數值與價格不改；MVP 只加規範 id 與別名表，詳見 doc_spec_1247 |
 | 學府 Q9 教官底層歸屬 | **教官就是武將，不設教官卡**；指派教學走 OCC `mentorAssign`，被指派者不可出征 | **使用者 11/21 裁決 #4（未採原 PM 建議）** | 不增框架；教官卡相關資料退場（學府規格由另一卡改寫） |
 | 學府 Q10 9189 存檔回補 | A 獨立 A0 卡 | **PM 自決** | 工程順序 |
 | 學府 Q11 base 未完成時是否等待 | A 先定 port，本機 adapter 先跑 | **PM 自決** | 工程順序，已寫入 12.4 退路 |
@@ -112,12 +112,12 @@
 
 | 順序 | 卡（暫名） | 範圍 | 依賴 | 驗收 | 規格出處 |
 | --- | --- | --- | --- | --- | --- |
-| A | OCC-2 框架補完 | 占用種類與互斥矩陣資料化、`campaign`、`sub`、`occupancy.check`、E335～E337 | OCC-M | 矩陣例外有契約測試；新增種類只改 JSON | doc_spec_1242 第 12 章 |
-| B | OCC-3a／3b／3c 六處遷入 | 太守府、大廳任務、派遣、傭兵、歷練、待產哺乳逐處改可寫 | OCC-2 | 各處接人走 `acquire`；舊旗標退場 | doc_spec_1242 第 12 章 |
-| C | OCC-4 出征接戰場 | 陣容選將過濾；哺乳不可出征、可守城；教官不可出征；託管挑人排除占用者 | OCC-3c；戰場專家 | 候選清單與規格一致 | doc_spec_1242 第 12 章 |
-| D | CUR-1 資源定義表與糧草改名 | `resource-def.v1`（`food／gold／silver／troops／fame`）、`normalizeResourceId()`、玩家可見「糧草」、舊存檔遷移 | ITM-M、B0 | 全專案不再出現玩家可見「糧食」；舊存檔 `grain` 欄位開檔轉 `food` | doc_spec_1241 第 9 章 |
-| E | CUR-2 銀兩錢包與家族庫房 | 新增 `silver` 貨幣、家族庫房持有者（household／clan）用銀兩、公庫用金 | CUR-1、ITM-M | 公私帳分開；家業與學府花銀兩、征兵與城建花金 | doc_spec_1241 第 9 章 |
-| F | CUR-3 公私轉移命令 | `treasury.donate`（捐公庫換名望）、`treasury.divert`（挪用公庫補家用，降民心或忠誠） | CUR-2、RWD-M | 兩條轉移的匯率、上限、冷卻與代價依 doc_spec_1241 §3 表；全走 API、可重播 | doc_spec_1241 §3、§8 |
+| A | OCC-2 框架補完 | 占用種類與互斥矩陣資料化、`campaign`、`sub`、`occupancy.check`、E335～E337 | OCC-M | 矩陣例外有契約測試；新增種類只改 JSON | doc_spec_1248 第 12 章 |
+| B | OCC-3a／3b／3c 六處遷入 | 太守府、大廳任務、派遣、傭兵、歷練、待產哺乳逐處改可寫 | OCC-2 | 各處接人走 `acquire`；舊旗標退場 | doc_spec_1248 第 12 章 |
+| C | OCC-4 出征接戰場 | 陣容選將過濾；哺乳不可出征、可守城；教官不可出征；託管挑人排除占用者 | OCC-3c；戰場專家 | 候選清單與規格一致 | doc_spec_1248 第 12 章 |
+| D | CUR-1 資源定義表與糧草改名 | `resource-def.v1`（`food／gold／silver／troops／fame`）、`normalizeResourceId()`、玩家可見「糧草」、舊存檔遷移 | ITM-M、B0 | 全專案不再出現玩家可見「糧食」；舊存檔 `grain` 欄位開檔轉 `food` | doc_spec_1247 第 9 章 |
+| E | CUR-2 銀兩錢包與家族庫房 | 新增 `silver` 貨幣、家族庫房持有者（household／clan）用銀兩、公庫用金 | CUR-1、ITM-M | 公私帳分開；家業與學府花銀兩、征兵與城建花金 | doc_spec_1247 第 9 章 |
+| F | CUR-3 公私轉移命令 | `treasury.donate`（捐公庫換名望）、`treasury.divert`（挪用公庫補家用，降民心或忠誠） | CUR-2、RWD-M | 兩條轉移的匯率、上限、冷卻與代價依 doc_spec_1247 §3 表；全走 API、可重播 | doc_spec_1247 §3、§8 |
 | G | RWD-P 軟保底與機率表 | `pity.soft`、`reward.pools` 輸出機率表、`reward.pity` 回進度 | RWD-M | 同種子同結果；機率表數字等於引擎實際用的權重 | doc_spec_1186 第 12 章 |
 | H | GCH-1～GCH-5 轉蛋遷移 | 轉蛋各池改 `reward.roll`、機率說明鈕、舊保底存檔遷移、`GachaApi` 退場 | RWD-P、ITM-M、SHP 扣款 | 抽獎、權重、保底都由 RWD 計算；每池機率說明鈕資料來自 `reward.pools` | doc_spec_1186 第 12 章 |
 | I | SHP 之後：TP 戰法商店 | 結業戰法商店、TP 價格 | SHP-BASE | 第二批；等商店框架 | doc_spec_1183（使用者 11/21 裁決 #5） |

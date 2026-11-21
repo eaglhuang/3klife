@@ -53,6 +53,8 @@ import {
     type EnrollViewModel,
 } from './AcademyFlowView';
 
+import { fastForwardAcademy, type AcademyFastForwardResult } from './AcademyQaFastForward';
+
 const K = 'ui.academy.flow.';
 /** 入學畫面「還需要檢查」的舊培育擋因：年齡、季節、入學令、教官都由學府自己判斷，不看這些 */
 const ENROLL_BLOCKING_REASONS: readonly string[] = [
@@ -82,6 +84,8 @@ export interface AcademyChildLike {
     pol?: number;
     cha?: number;
     fate?: { choice?: string } | null;
+    /** 投靠少年名將標記（PROG-2-9194）：不走抓周宿命，只看年滿入學年齡 */
+    youth?: { enrollAge: number } | null;
     graduationRating?: string;
     captivity?: unknown;
 }
@@ -230,7 +234,7 @@ export class AcademyFlowController<H extends AcademyHostLike> {
     /** 可選的子嗣：活著、已選宿命、尚未結業 */
     public enrollChildren(): AcademyChildLike[] {
         return this._deps.roster().filter((g) => (g.status ?? '').toLowerCase() !== 'dead'
-            && !!g.fate?.choice && !g.graduationRating && !g.captivity);
+            && (!!g.fate?.choice || !!g.youth) && !g.graduationRating && !g.captivity);
     }
 
     private _currentChild(): AcademyChildLike | null {
@@ -362,14 +366,17 @@ export class AcademyFlowController<H extends AcademyHostLike> {
         if (this._enrollHost) this._deps.apply(this._enrollHost, enrollView(this._enrollModel(), this._lookup));
     }
 
-    /** 入學：建快照 → 套祠堂與先祖傳承 → 指派教官 → 扣入學令 → 寫入並落盤；落盤失敗全部還原 */
-    public async enroll(): Promise<boolean> {
+    /**
+     * 入學：建快照 → 套祠堂與先祖傳承 → 指派教官 → 扣入學令 → 寫入並落盤；落盤失敗全部還原。
+     * qa 只給 debug.fastForward 的偵錯入口（PROG-2-9192）：略過年齡與入學令檢查，其餘照走；玩家按鈕一律不帶。
+     */
+    public async enroll(opts: { qa?: boolean } = {}): Promise<boolean> {
         if (this._busy) return false;
         const child = this._currentChild();
         if (!child) { this._failEnroll(this._t('enroll.err.no_child')); return false; }
         if (this._deps.isActive()) { this._failEnroll(this._t('enroll.err.active')); return false; }
         const elig = this.eligibility(child);
-        if (elig.yearsShort > 0) { this._failEnroll(this._t('enroll.err.too_young', elig.yearsShort)); return false; }
+        if (elig.yearsShort > 0 && !opts.qa) { this._failEnroll(this._t('enroll.err.too_young', elig.yearsShort)); return false; }
         if (elig.blocked) { this._failEnroll(this._t('enroll.err.failed', this._deps.nurtureBlockReasons(child.id).join(','))); return false; }
         const cards = this._chosenMentors();
         if (cards.length === 0) { this._failEnroll(this._t('enroll.err.no_mentor')); return false; }
@@ -377,8 +384,10 @@ export class AcademyFlowController<H extends AcademyHostLike> {
         this._busy = true;
         let tokenTaken = false;
         try {
-            if (!(await this._deps.consumeToken())) { this._failEnroll(this._t('enroll.err.no_token')); return false; }
-            tokenTaken = true;
+            if (!opts.qa) {
+                if (!(await this._deps.consumeToken())) { this._failEnroll(this._t('enroll.err.no_token')); return false; }
+                tokenTaken = true;
+            }
             this._worldSeed = await this._deps.api.issueSeed();
             // 先開學府任務（占用由任務框架登記，孩子忙碌時在這裡被擋下）；落盤失敗再撤回
             const qid = await this._deps.api.acceptTask(child.id, `academy:enroll:${child.id}:${this._deps.admissionTurn()}:${Date.now().toString(36)}`);
@@ -684,6 +693,25 @@ export class AcademyFlowController<H extends AcademyHostLike> {
 
     public get mode(): AcademySessionMode {
         return this._mode;
+    }
+
+    /**
+     * QA 快進（PROG-2-9192，只由本機 adapter 的 debug.fastForward 呼叫）：沒有進行中的修業就先以 QA 入學，
+     * 再連續 commit 到「已完成 turns 回合」，最後開修業畫面（停在打斷點時由畫面彈出）。
+     */
+    public async qaFastForward(turns: number): Promise<AcademyFastForwardResult> {
+        // 教官候選只在開入學畫面時載入；快進不經過該畫面，入學前要先載入（否則會因沒有教官被擋）
+        if (!this._deps.isActive()) await this._loadMentors();
+        if (!this._deps.isActive() && !(await this.enroll({ qa: true }))) return { completedTurns: 0, steps: 0, stoppedBy: 'no-record' };
+        if (!this._sessionHost?.node.active) await this.openSession();
+        const result = await fastForwardAcademy({
+            snapshot: () => this._snapshot(),
+            mode: () => this._mode,
+            act: (action) => this.act(action),
+            confirm: () => this.confirm(),
+        }, turns, YINGCHUAN_GIMMICK);
+        await this.openSession();
+        return result;
     }
 
     public get trainStatKeys(): readonly AcademyStatKey[] {

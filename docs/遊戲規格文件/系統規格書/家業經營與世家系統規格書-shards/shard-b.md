@@ -29,7 +29,7 @@
 | 酒店採買食材 | 商店 | `shopId=market:grocery`、`stock=∞`（I1）、I2 每季限量 20 |
 | 活動商店、百寶閣（既有） | 商店 | 貨幣 gem／destinyPoint；**本規格不改**，只確認與家族商店 listing 池分開 |
 | 家業庫房：食材、菜餚、商貨、戲本、貨艙 | 物品庫存 | `holderKind=home`、`containerTag=estate:<id>`；食材＝材料＋tag `ingredient`；菜餚＝消耗品＋tag `dish`；新增 `freshSeasons`、`boundChildId`、`premiumPurchasable`、`tradable` |
-| 家族庫房（**銀兩**、建材、聘禮） | 物品庫存 | `holderKind=clan`（庫房貨幣＝銀兩）；**家業收益進此處**（PM 11/21 依裁決 #28 改：銀兩＝家族、金＝國家；原「收益進幕府公庫」作廢）。幕府公庫只收家族捐獻（有代價，見貨幣與資源總規格書 doc_spec_1241 §3） |
+| 家族庫房（**銀兩**、建材、聘禮） | 物品庫存 | `holderKind=clan`（庫房貨幣＝銀兩）；**家業收益進此處**（PM 11/21 依裁決 #28 改：銀兩＝家族、金＝國家；原「收益進幕府公庫」作廢）。幕府公庫只收家族捐獻（有代價，見貨幣與資源總規格書 doc_spec_1247 §3） |
 | 傳家寶、家族倉庫 | 物品庫存 | `holderKind=clan`、`rarity>=4` |
 | 武將背包（乾糧、補給） | 物品庫存 | `holderKind=general` |
 | 家業差事、季結算工作 | 任務 | `kind=estateErrand`、`settleRule=estateSeason`、`durationSeasons=1` |
