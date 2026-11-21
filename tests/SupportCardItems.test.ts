@@ -19,9 +19,10 @@ import type { ItemGrantResult, ItemListResult } from '../assets/scripts/shared/a
 import { DEFAULT_ITEM_CONFIG, normalizeItemConfig, type HolderRef, type ItemConfigV1 } from '../assets/scripts/shared/item/ItemConfig';
 import { emptyItemMeta, isDeployableItem, normalizeItemMeta, type ItemMeta } from '../assets/scripts/shared/item/ItemRules';
 import {
-    normalizeSupportCards, supportCardItemDefs, supportItemIdOf, withSupportCardItems, SUPPORT_CARD_CATEGORY,
+    normalizeSupportCards, supportCardItemDefs, supportItemIdOf, SUPPORT_CARD_CATEGORY,
     type SupportCardsConfigV1,
 } from '../assets/scripts/shared/support/SupportCardConfig';
+import { DEFAULT_SUPPORT_RULES, withSupportItems } from '../assets/scripts/shared/support/SupportRules';
 
 const ROOT = path.join(__dirname, '..');
 const HOME: HolderRef = { kind: 'household', id: 'home' };
@@ -32,7 +33,7 @@ function loadCards(): SupportCardsConfigV1 {
 }
 
 function mergedConfig(): ItemConfigV1 {
-    return withSupportCardItems(DEFAULT_ITEM_CONFIG, loadCards());
+    return withSupportItems(DEFAULT_ITEM_CONFIG, loadCards(), DEFAULT_SUPPORT_RULES);
 }
 
 class MemoryAuthority implements ItemAuthority {
@@ -145,7 +146,7 @@ export function createSupportCardItemsSuite(): TestSuite {
         // 單一真相：item-config.json 不重複列卡
         const itemJson = JSON.parse(fs.readFileSync(path.join(ROOT, 'assets/resources/data/item-config.json'), 'utf8')) as { items: Array<{ id: string }> };
         assert.equals(0, itemJson.items.filter((i) => i.id.startsWith('ITEM_SUPCARD_')).length);
-        assert.equals(DEFAULT_ITEM_CONFIG.items.length + 25, mergedConfig().items.length);
+        assert.equals(DEFAULT_ITEM_CONFIG.items.length + 25 + 4, mergedConfig().items.length, '25 張卡＋4 種經驗材料');
     });
 
     suite.test('設定來回：unique 與 instanceState 經 normalizeItemConfig 後不變；沒有 unique 時 instanceState 被忽略', () => {

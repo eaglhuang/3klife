@@ -71,7 +71,8 @@ import { QUEST_CONFIG_JSON, type QuestConfigV1 } from "../../shared/quest/QuestT
 import { DEFAULT_REWARD_CONFIG, normalizeRewardConfig, REWARD_CONFIG_JSON, type RewardConfigV1, type RewardPoolDef } from "../../shared/reward/RewardConfig";
 import { DEFAULT_STORY_CONFIG, normalizeStoryConfig, STORY_CONFIG_JSON, type StoryConfigV1 } from "../../shared/story/StoryConfig";
 import { ITEM_CONFIG_JSON, normalizeItemConfig, DEFAULT_ITEM_CONFIG, type ItemConfigV1 } from "../../shared/item/ItemConfig";
-import { DEFAULT_SUPPORT_CARDS_CONFIG, normalizeSupportCards, SUPPORT_CARDS_JSON, withSupportCardItems, type SupportCardsConfigV1 } from "../../shared/support/SupportCardConfig";
+import { DEFAULT_SUPPORT_CARDS_CONFIG, normalizeSupportCards, SUPPORT_CARDS_JSON, type SupportCardsConfigV1 } from "../../shared/support/SupportCardConfig";
+import { DEFAULT_SUPPORT_RULES, normalizeSupportRules, SUPPORT_RULES_JSON, withSupportItems, type SupportRulesV1 } from "../../shared/support/SupportRules";
 import { ACADEMY_INHERIT_MARKS_JSON, configureAcademyInheritMarks, type AcademyInheritMarksConfig } from "../systems/nurture/AcademyInheritAndMarks";
 
 export class ServiceLoader {
@@ -276,6 +277,8 @@ export class ServiceLoader {
     private itemConfig: ItemConfigV1 = DEFAULT_ITEM_CONFIG;
     /** 學府支援卡資料（academy-support-cards.json，PROG-2-9240）；卡片的物品定義由此推導併入 itemConfig，不在 item-config.json 重複列 */
     private supportCards: SupportCardsConfigV1 = DEFAULT_SUPPORT_CARDS_CONFIG;
+    /** 支援卡成長規則與經驗材料（support-rules.json，PROG-2-9241）；卡的 growth 與材料物品由此推導 */
+    private supportRules: SupportRulesV1 = DEFAULT_SUPPORT_RULES;
     /** 獎勵設定（reward-config.json，PROG-2-9205）；載入前用空設定，API 重建時沿用 */
     private rewardConfig: RewardConfigV1 = DEFAULT_REWARD_CONFIG;
     private questConfig: QuestConfigV1 = DEFAULT_QUEST_CONFIG;
@@ -295,9 +298,9 @@ export class ServiceLoader {
     /** 發武將的宿主入口（kind "general" handler 用）；API 重建時沿用 */
     private generalGrantHost: GeneralGrantHost | null = null;
 
-    /** 物品設定＝item-config.json＋支援卡推導的物品定義；任一份重載後都要重新換入 */
+    /** 物品設定＝item-config.json＋支援卡與材料推導的物品定義；任一份重載後都要重新換入 */
     private applyItemConfig(): void {
-        this.localApi?.setItemConfig(withSupportCardItems(this.itemConfig, this.supportCards));
+        this.localApi?.setItemConfig(withSupportItems(this.itemConfig, this.supportCards, this.supportRules));
     }
 
     private applyRewardConfig(): void {
@@ -476,6 +479,7 @@ export class ServiceLoader {
             loadSafe<unknown>(QUEST_CONFIG_JSON, (raw) => { this.questConfig = normalizeQuestConfig(raw); this.localApi?.setQuestConfig(this.questConfig); }),
             loadSafe<unknown>(ITEM_CONFIG_JSON, (raw) => { this.itemConfig = normalizeItemConfig(raw); this.applyItemConfig(); }),
             loadSafe<unknown>(SUPPORT_CARDS_JSON, (raw) => { this.supportCards = normalizeSupportCards(raw); this.applyItemConfig(); }),
+            loadSafe<unknown>(SUPPORT_RULES_JSON, (raw) => { this.supportRules = normalizeSupportRules(raw); this.applyItemConfig(); }),
             loadSafe<Partial<MarriageVitalityRulesConfig>>(MARRIAGE_VITALITY_RULES_JSON, configureMarriageVitalityRules),
         ]);
         // 家族設定（PROG-2-9441 F1）：缺檔或缺欄位 fail-fast，不退回預設（與上面 loadSafe 的容錯刻意不同）

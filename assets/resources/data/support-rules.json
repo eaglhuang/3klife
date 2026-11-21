@@ -1,0 +1,21 @@
+{
+  "schema": "support-rules.v1",
+  "cap0": { "R": 20, "SR": 25, "SSR": 30 },
+  "capPerBreak": 5,
+  "maxBreak": 4,
+  "expToNext": { "base": 100, "perLevel": 40 },
+  "creditExp": 20,
+  "materialStackMax": 9999,
+  "tiers": [
+    { "minLevel": 1, "key": "初窺" },
+    { "minLevel": 10, "key": "入門" },
+    { "minLevel": 20, "key": "登堂" },
+    { "minLevel": 30, "key": "入室" },
+    { "minLevel": 40, "key": "出師" }
+  ],
+  "materials": [
+    { "itemId": "ITEM_SUP_EXP_S", "name": "小抄", "nameKey": "item.ITEM_SUP_EXP_S.name", "kind": "consumable", "exp": 100 },
+    { "itemId": "ITEM_SUP_EXP_M", "name": "講義", "nameKey": "item.ITEM_SUP_EXP_M.name", "kind": "consumable", "exp": 500 },
+    { "itemId": "ITEM_SUP_EXP_L", "name": "錄播回放", "nameKey": "item.ITEM_SUP_EXP_L.name", "kind": "consumable", "exp": 2000 }
+  ]
+}
