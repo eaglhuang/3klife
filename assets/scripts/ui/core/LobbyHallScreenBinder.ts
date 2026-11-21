@@ -354,6 +354,11 @@ export class LobbyHallScreenBinder {
         this._stage.close();
     }
 
+    /** 手動立即刷新舞臺人群標記與站位（PROG-2-9610） */
+    refreshStage(nowSec: number): void {
+        this._stage?.tick(nowSec);
+    }
+
     /** 依遊戲季節（1~4）與當地小時套主題；設定檔沒載到時不動畫面。 */
     refresh(seasonIndex: number, hour: number, festivalId: string | null = null): void {
         const config = this._deps.themeConfig;

@@ -173,3 +173,4 @@
 | `doc_task_2928` | docs/agent-briefs/tasks/PROG/PROG-2-9810.md | [PROG-2-9810] 十連結果卡稀有度配色錯誤與卡牌 UI 樣式重做 |
 | `doc_task_2929` | docs/agent-briefs/tasks/PROG/PROG-2-9711.md | [PROG-2-9711] QA 預覽／直進戰場模擬出征帳本，試玩腳本實測自動代打 |
 | `doc_task_2931` | docs/agent-briefs/tasks/PROG/PROG-2-9609.md | 任務卡：PROG-2-9609 開局義子入學驗證與學府籌備看板 |
+| `doc_task_2933` | docs/agent-briefs/tasks/PROG/PROG-2-9610.md | 任務卡：PROG-2-9610 官職晉升敕封彈窗與大廳解鎖導流 |
