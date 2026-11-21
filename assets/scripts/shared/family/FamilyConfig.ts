@@ -22,6 +22,8 @@ export interface FamilyConfigV1 {
     generatedSpouseEp: [number, number];
     pregnancyQuarters: number;
     postpartumQuarters: number;
+    /** 母乳方式哺乳到孩子幾歲止（doc_spec_1180 第 15.2 節；規格 3.4 節暫 5 歲） */
+    breastfeedEndAge: number;
     crowdThreshold: number;
     childrenTypicalRange: [number, number];
     geniusChance: number;
@@ -145,6 +147,7 @@ export function parseFamilyConfig(raw: unknown): FamilyConfigV1 {
         generatedSpouseEp: pair('generatedSpouseEp'),
         pregnancyQuarters: int('pregnancyQuarters', 1),
         postpartumQuarters: int('postpartumQuarters'),
+        breastfeedEndAge: int('breastfeedEndAge', 1),
         crowdThreshold: int('crowdThreshold', 1),
         childrenTypicalRange: pair('childrenTypicalRange'),
         geniusChance: num('geniusChance', 0, 1),
