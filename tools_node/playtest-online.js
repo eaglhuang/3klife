@@ -430,6 +430,7 @@ async function main() {
         }
         rec.durationMs = Date.now() - t0;
         if (perfProbe) rec.perf = await perfProbe.end().catch(() => null);
+        if (args.inject && page) rec.inject = await page.evaluate(() => (window.__injectReport ? window.__injectReport() : 'no-report')).catch((e) => 'ERR ' + e.message);
         const slice = collector.entries.slice(from);
         rec.pageErrors = slice.filter((e) => e.kind === 'pageerror').map((e) => e.detail);
         rec.console = slice.filter((e) => e.kind === 'console-error' || e.kind === 'request-failed' || e.kind === 'http-error').map((e) => `${e.kind}: ${e.detail}`);
@@ -517,6 +518,8 @@ async function main() {
         page = await context.newPage();
         await page.setViewport(viewport);
         attachCollectors(page);
+        // --inject <js>：每個文件載入前先執行的量測腳本（例如包 measureText 計數）
+        if (typeof args.inject === 'string') await page.evaluateOnNewDocument(fs.readFileSync(path.resolve(projectRoot, args.inject), 'utf8'));
         if (args.perf) perfProbe = await require('./perf-probe').create(page);
 
         // ── 1. 開機 → LoginScene → 開始遊戲 → LobbyScene，等載入遮罩消失 ──
@@ -1614,7 +1617,7 @@ async function main() {
                 if (!promoted.tiers.length) throw new Error('給官職經驗後沒有晉升');
                 const popup = await waitUntil(async () => {
                     const texts = await rm.allTexts();
-                    return texts.some((t) => /^晉升「/.test(t)) ? texts.filter((t) => /^晉升「|新開放|：|下一官職/.test(t)) : null;
+                    return texts.some((t) => /^(晉升「|朝廷敕封：晉升【)/.test(t)) ? texts.filter((t) => /^晉升「|^朝廷敕封|史小境|新開放|：|下一官職/.test(t)) : null;
                 }, 20000, '晉升後 20 秒內沒有出現晉升彈窗').catch((e) => { throw e; });
                 rec.detail.popupTexts = popup;
                 await delay(600);
@@ -1622,6 +1625,19 @@ async function main() {
                 const ok = await clickByText('^BtnRankUnlockOk$', '.*') || await clickButton('^BtnRankUnlockOk$');
                 rec.detail.popupClosed = Boolean(ok);
                 await delay(800);
+                // 晉升大廳導流（PROG-2-9610）：首位走動武將頭頂金色「！」→ 點擊 → 導流泡泡（含「立即前往」）
+                rec.detail.hallGuide = {};
+                const guideMarks = await waitUntil(async () => {
+                    const marks = await page.evaluate(() => Object.keys(window.__pt.nameCounts('^mark-')));
+                    return marks.length ? marks : null;
+                }, 8000, '晉升後大廳武將頭頂沒有出現「！」標記').catch((e) => { rec.detail.hallGuide.markError = e.message; return []; });
+                rec.detail.hallGuide.marks = guideMarks;
+                await shot(rec, 'rank-unlock-hall-mark');
+                const guideTapped = await rm.tryClick({ name: '^mark-.*' }) || await rm.tryClick({ name: '^crowd-.*' });
+                rec.detail.hallGuide.tapped = Boolean(guideTapped);
+                await delay(900);
+                rec.detail.hallGuide.bubbleTexts = (await rm.allTexts()).filter((t) => /新解鎖|立即前往|大喜/.test(t));
+                await shot(rec, 'rank-unlock-hall-bubble');
                 // 晉升後原本鎖著的按鈕解鎖
                 if (!(await clickButton('^BtnCatDomestic$'))) throw new Error('晉升後找不到底欄「內政」');
                 await delay(1200);

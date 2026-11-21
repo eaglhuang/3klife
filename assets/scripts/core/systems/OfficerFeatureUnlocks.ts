@@ -182,15 +182,101 @@ export const RANK_UNLOCK_POPUP_ROWS = 8;
 export interface RankUnlockPopupView {
     readonly texts: Record<string, string>;
     readonly actives: Record<string, boolean>;
+    /** 首要新解鎖功能（大廳導流用） */
+    readonly primaryFeature?: OfficerFeature;
+}
+
+export interface BuildRankUnlockPopupOpts {
+    readonly mentorPrompt?: boolean;
+    readonly imperialDecree?: boolean;
+    readonly lookup?: (key: string, ...args: (string | number)[]) => string;
+}
+
+export interface PromotionHallGuide {
+    readonly nextRank: number;
+    readonly rankTitle: string;
+    readonly primaryFeature: OfficerFeature;
+    readonly bubbleText: string;
+    /** 導流台詞別名（等同 bubbleText） */
+    readonly guideSpeech: string;
+    /** 泡泡「前往」「稍後」按鈕字樣 */
+    readonly acceptLabel: string;
+    readonly declineLabel: string;
+}
+
+/** 構建大廳武將頭頂金色「！」點擊後的導流資料（PROG-2-9610） */
+export function buildPromotionHallGuide(
+    prevRank: number,
+    nextRank: number,
+    lookup?: (key: string, ...args: (string | number)[]) => string,
+): PromotionHallGuide | null;
+export function buildPromotionHallGuide(
+    tiers: readonly number[],
+    lookup?: (key: string, ...args: (string | number)[]) => string,
+): PromotionHallGuide | null;
+export function buildPromotionHallGuide(
+    prevOrTiers: number | readonly number[],
+    nextOrLookup?: number | ((key: string, ...args: (string | number)[]) => string),
+    lookupFn?: (key: string, ...args: (string | number)[]) => string,
+): PromotionHallGuide | null {
+    let prevRank: number;
+    let nextRank: number;
+    let lookup: ((key: string, ...args: (string | number)[]) => string) | undefined;
+
+    if (typeof prevOrTiers === 'number') {
+        prevRank = prevOrTiers;
+        nextRank = typeof nextOrLookup === 'number' ? nextOrLookup : prevOrTiers;
+        lookup = lookupFn;
+    } else {
+        if (prevOrTiers.length === 0) return null;
+        prevRank = Math.min(...prevOrTiers) - 1;
+        nextRank = Math.max(...prevOrTiers);
+        lookup = typeof nextOrLookup === 'function' ? nextOrLookup : lookupFn;
+    }
+
+    const features = newlyUnlocked(prevRank, nextRank);
+    const primary = features.find((f) => f.lobbyAction) ?? features[0];
+    if (!primary) return null;
+    const title = rankTitleOf(nextRank);
+    const bubbleText = lookup
+        ? lookup('ui.officer.promotion.hall_bubble', title, primary.name)
+        : `主公晉升【${title}】大喜！剛剛新解鎖了【${primary.name}】，是否立即前往體驗？`;
+    return {
+        nextRank,
+        rankTitle: title,
+        primaryFeature: primary,
+        bubbleText,
+        guideSpeech: bubbleText,
+        acceptLabel: lookup ? lookup('ui.officer.promotion.hall_go') : '立即前往',
+        declineLabel: lookup ? lookup('ui.officer.promotion.hall_later') : '稍後',
+    };
 }
 
 /** 晉升彈窗內容；key 等於 rank-unlock-popup-main.json 的節點 id。沒有新解鎖功能回 null（不彈窗） */
-export function buildRankUnlockPopupView(prevRank: number, nextRank: number, mentorPrompt = false): RankUnlockPopupView | null {
+export function buildRankUnlockPopupView(
+    prevRank: number,
+    nextRank: number,
+    optionsOrMentorPrompt: boolean | BuildRankUnlockPopupOpts = false,
+): RankUnlockPopupView | null {
+    const opts: BuildRankUnlockPopupOpts = typeof optionsOrMentorPrompt === 'boolean'
+        ? { mentorPrompt: optionsOrMentorPrompt, imperialDecree: false }
+        : optionsOrMentorPrompt;
     const features = newlyUnlocked(prevRank, nextRank);
     if (features.length === 0) return null;
+    const mentorPrompt = !!opts.mentorPrompt;
+    const title = rankTitleOf(nextRank);
+    const lookup = opts.lookup;
+
+    let popupTitle = `晉升「${title}」`;
+    let popupSub = `新開放 ${features.length} 項功能`;
+    if (opts.imperialDecree || lookup) {
+        popupTitle = lookup ? lookup('ui.officer.promotion.decree_title', title) : `朝廷敕封：晉升【${title}】`;
+        popupSub = lookup ? lookup('ui.officer.promotion.decree_speech', title, features.length) : `史小境：號外號外！朝廷聖旨到～恭喜主公晉升【${title}】！新開放了 ${features.length} 項功能，快來瞧瞧！`;
+    }
+
     const texts: Record<string, string> = {
-        rankUnlockTitle: `晉升「${rankTitleOf(nextRank)}」`,
-        rankUnlockSub: `新開放 ${features.length} 項功能`,
+        rankUnlockTitle: popupTitle,
+        rankUnlockSub: popupSub,
         rankUnlockMore: features.length > RANK_UNLOCK_POPUP_ROWS ? `…另有 ${features.length - RANK_UNLOCK_POPUP_ROWS} 項，可在選單中查看` : '',
         rankUnlockNext: nextRankPreviewLine(nextRank),
         rankUnlockOkLabel: '知道了',
@@ -204,5 +290,6 @@ export function buildRankUnlockPopupView(prevRank: number, nextRank: number, men
         texts[`rankUnlockLine${i}`] = f ? `${f.name}：${f.description}` : '';
         actives[`rankUnlockLine${i}`] = !!f;
     }
-    return { texts, actives };
+    const primaryFeature = features.find((f) => f.lobbyAction) ?? features[0];
+    return { texts, actives, primaryFeature };
 }
