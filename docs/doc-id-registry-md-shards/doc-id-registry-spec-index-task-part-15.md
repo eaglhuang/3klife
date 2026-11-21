@@ -145,3 +145,6 @@
 | `doc_task_2735` | docs/agent-briefs/tasks/PROG/PROG-2-9242.md | [PROG-2-9242] 傳承與溢出轉換（SUP-3：重複卡傳承 +1、傳承滿轉學分、獎勵效果 supportCard） |
 | `doc_task_2736` | docs/agent-briefs/tasks/PROG/PROG-2-9584.md | [PROG-2-9584] 熱修：大廳 CPU 吃滿（名冊深拷貝 O(N²) 熱路徑） |
 | `doc_task_2737` | docs/agent-briefs/tasks/PROG/PROG-2-9590.md | PROG-2-9590：playtest-online --year QA |
+| `doc_task_2740` | docs/agent-briefs/tasks/PROG/PROG-2-9250.md | [PROG-2-9250] 武將私塾補習班系統規格書（下班開班、友誼推算與稀疏儲存、OCC 讓位規則、共用框架對應） |
+| `doc_task_2741` | docs/agent-briefs/tasks/PROG/PROG-2-9466.md | PROG-2-9466 |
+| `doc_task_2742` | docs/agent-briefs/tasks/PROG/PROG-2-9703.md | [PROG-2-9703] 極速決戰結算文案：按「自動」不再顯示「敵方突破防線」 |
