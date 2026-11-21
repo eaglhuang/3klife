@@ -1,0 +1,86 @@
+{
+  "$note": "轉蛋三池的獎池設定（reward-pool.v1，GCH-R3／PROG-2-9462）。抽樣、等階機率、UP、保底全在這裡；項目用 rosterQuery 依武將名冊展開（RewardRoster.ts），不手寫角色。保底數值照獎勵規格書 doc_spec_1186 §12.3（PM 設計值），要調只改這個檔。UP 名單為暫定，企劃可直接改 rosterRefs。",
+  "schema": "reward-pool-file.v1",
+  "rosterRefs": {
+    "gacha.general.up.ssr": ["lu-bu", "zhao-yun", "zhuge-liang"],
+    "gacha.general.up.sr": ["zhang-liao", "pang-tong", "xu-zhu", "dian-wei"],
+    "gacha.heroine.up.ssr": ["diao-chan"],
+    "gacha.heroine.exclude": [],
+    "gacha.destiny.stars": ["zhang-fei", "wei-yan", "xiahou-dun", "zhang-he", "sun-ce", "gan-ning"]
+  },
+  "pools": [
+    {
+      "schema": "reward-pool.v1",
+      "id": "POOL_GENERAL_MAIN",
+      "nameKey": "gacha.pool.general",
+      "disclosure": { "public": true, "version": "2026-11-21" },
+      "currency": ["bronze", "gems"],
+      "maxCount": 10,
+      "draw": { "mode": "weighted", "picks": 1, "replacement": true },
+      "tiers": ["R", "SR", "SSR"],
+      "tierRates": { "R": 0.87, "SR": 0.10, "SSR": 0.03 },
+      "tierGroups": {
+        "SSR": [{ "group": "up", "share": 0.7 }, { "group": "normal", "share": 0.3 }],
+        "SR": [{ "group": "up", "share": 0.8 }, { "group": "normal", "share": 0.2 }]
+      },
+      "entries": [
+        { "tier": "SSR", "group": "up", "effect": { "kind": "general" }, "rosterQuery": { "ref": "gacha.general.up.ssr", "gender": "male" } },
+        { "tier": "SSR", "group": "normal", "effect": { "kind": "general" }, "rosterQuery": { "rarity": "SSR", "gender": "male", "excludeRefs": ["gacha.general.up.ssr"] } },
+        { "tier": "SR", "group": "up", "effect": { "kind": "general" }, "rosterQuery": { "ref": "gacha.general.up.sr", "gender": "male" } },
+        { "tier": "SR", "group": "normal", "effect": { "kind": "general" }, "rosterQuery": { "rarity": "SR", "gender": "male", "excludeRefs": ["gacha.general.up.sr"] } },
+        { "tier": "R", "effect": { "kind": "general" }, "rosterQuery": { "rarity": "R", "gender": "male" } }
+      ],
+      "pity": [
+        { "counterKey": "gacha.general.sr", "tier": "SR", "soft": { "startAt": 6, "curveExp": 1 }, "hard": { "count": 10, "guaranteeTier": "SR" } },
+        { "counterKey": "gacha.general.ssr", "tier": "SSR", "soft": { "startAt": 50, "curveExp": 2 }, "hard": { "count": 90, "guaranteeTier": "SSR" } }
+      ],
+      "rules": ["duplicate.convert", "destiny.exchange"],
+      "sources": ["shop"],
+      "presentation": { "type": "gachaReveal", "args": { "pool": "general" }, "skippable": true }
+    },
+    {
+      "schema": "reward-pool.v1",
+      "id": "POOL_HEROINE",
+      "nameKey": "gacha.pool.heroine",
+      "disclosure": { "public": true, "version": "2026-11-21" },
+      "currency": ["gems"],
+      "maxCount": 10,
+      "draw": { "mode": "weighted", "picks": 1, "replacement": true },
+      "tiers": ["R", "SR", "SSR"],
+      "tierRates": { "R": 0.85, "SR": 0.125, "SSR": 0.025 },
+      "tierGroups": {
+        "SSR": [{ "group": "up", "share": 0.7 }, { "group": "normal", "share": 0.3 }]
+      },
+      "entries": [
+        { "tier": "SSR", "group": "up", "effect": { "kind": "general" }, "rosterQuery": { "ref": "gacha.heroine.up.ssr", "gender": "female" } },
+        { "tier": "SSR", "group": "normal", "effect": { "kind": "general" }, "rosterQuery": { "rarity": "SSR", "gender": "female", "excludeRefs": ["gacha.heroine.up.ssr", "gacha.heroine.exclude"] } },
+        { "tier": "SR", "effect": { "kind": "general" }, "rosterQuery": { "rarity": "SR", "gender": "female", "excludeRefs": ["gacha.heroine.exclude"] } },
+        { "tier": "R", "effect": { "kind": "general" }, "rosterQuery": { "rarity": "R", "gender": "female", "excludeRefs": ["gacha.heroine.exclude"] } }
+      ],
+      "pity": [
+        { "counterKey": "gacha.heroine.sr", "tier": "SR", "soft": { "startAt": 3, "curveExp": 1 }, "hard": { "count": 5, "guaranteeTier": "SR" } },
+        { "counterKey": "gacha.heroine.ssr", "tier": "SSR", "soft": { "startAt": 30, "curveExp": 2 }, "hard": { "count": 50, "guaranteeTier": "SSR" } }
+      ],
+      "rules": ["duplicate.convert", "heroine.initialAffection60"],
+      "sources": ["shop"],
+      "presentation": { "type": "gachaReveal", "args": { "pool": "heroine" }, "skippable": true }
+    },
+    {
+      "schema": "reward-pool.v1",
+      "id": "POOL_DESTINY",
+      "nameKey": "gacha.pool.destiny",
+      "disclosure": { "public": true, "version": "2026-11-21" },
+      "currency": [],
+      "maxCount": 1,
+      "draw": { "mode": "weighted", "replacement": false, "slots": [{ "count": 1, "tier": "star" }, { "count": 9, "tier": "filler" }] },
+      "tiers": ["filler", "star"],
+      "entries": [
+        { "tier": "star", "effect": { "kind": "general" }, "rosterQuery": { "ref": "gacha.destiny.stars" } },
+        { "tier": "filler", "effect": { "kind": "general" }, "rosterQuery": { "rarityTier": ["common", "rare"], "excludeGender": "female", "excludeRefs": ["gacha.destiny.stars"] } }
+      ],
+      "rules": ["destiny.free", "destiny.noPity"],
+      "sources": ["opening"],
+      "presentation": { "type": "gachaReveal", "args": { "pool": "destiny" }, "skippable": false }
+    }
+  ]
+}

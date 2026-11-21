@@ -16172,19 +16172,43 @@
   {
     "id": "doc_task_2713",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9461.md",
-    "title": "[PROG-2-9461] GCH-R2 完整機率表",
+    "title": "PROG-2-9461",
     "category": "task"
   },
   {
     "id": "doc_task_2714",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9482.md",
-    "title": "[PROG-2-9482] 配偶上場（F4：名冊 kind=spouse、生成型配偶範本、出征與派遣、太守；指派入口改用 checkAssign）",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9481.md",
+    "title": "[PROG-2-9481] 基礎戰鬥手感：所有音效走同一個節流閘門",
     "category": "task"
   },
   {
     "id": "doc_task_2715",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9482.md",
+    "title": "[PROG-2-9482] 基礎戰鬥手感：最後一排受擊抖動／後退放大 4 倍",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2716",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9462.md",
+    "title": "PROG-2-9462",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2717",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9483.md",
-    "title": "[PROG-2-9483] 待產與哺乳接線（F5：2 季待產、哺乳 OCC、乳母不占用）",
+    "title": "[PROG-2-9483] 基礎戰鬥手感：受擊閃白改「全白停 2 格再快速退」",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2718",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9484.md",
+    "title": "[PROG-2-9484] 配偶上場（F4：名冊 kind=spouse、生成型配偶範本、出征與派遣、太守；指派入口改用 checkAssign）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2719",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9485.md",
+    "title": "[PROG-2-9485] 待產與哺乳接線（F5：2 季待產、哺乳 OCC、乳母不占用）",
     "category": "task"
   }
 ]

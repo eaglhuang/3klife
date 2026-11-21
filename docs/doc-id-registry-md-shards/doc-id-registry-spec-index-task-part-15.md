@@ -117,3 +117,13 @@
 | `doc_task_2707` | docs/agent-briefs/tasks/PROG/PROG-2-9218.md | [PROG-2-9218] 11/21 裁決回寫：共用框架第 7 框架（人員占用）、轉蛋改走獎勵框架、金銀兩經濟、家業與託管 |
 | `doc_task_2708` | docs/agent-briefs/tasks/PROG/PROG-2-9439.md | [PROG-2-9439] 基礎戰鬥手感：音效疊音節流 |
 | `doc_task_2709` | docs/agent-briefs/tasks/PROG/PROG-2-9440.md | [PROG-2-9440] 基礎戰鬥手感：部隊資訊框彼此錯開 |
+| `doc_task_2710` | docs/agent-briefs/tasks/PROG/PROG-2-9460.md | [PROG-2-9460] GCH-R1 獎勵引擎補軟保底 |
+| `doc_task_2711` | docs/agent-briefs/tasks/PROG/PROG-2-9441.md | [PROG-2-9441] 家族資料模型與存檔欄位（F1：配偶 kind=spouse、義子與開局義子特例、家臣子嗣、分家標記、family-config.json） |
+| `doc_task_2712` | docs/agent-briefs/tasks/PROG/PROG-2-9442.md | [PROG-2-9442] OCC 擴充 nursing、mentorAssign 與互斥矩陣（F2；矩陣放設定 JSON） |
+| `doc_task_2713` | docs/agent-briefs/tasks/PROG/PROG-2-9461.md | PROG-2-9461 |
+| `doc_task_2714` | docs/agent-briefs/tasks/PROG/PROG-2-9481.md | [PROG-2-9481] 基礎戰鬥手感：所有音效走同一個節流閘門 |
+| `doc_task_2715` | docs/agent-briefs/tasks/PROG/PROG-2-9482.md | [PROG-2-9482] 基礎戰鬥手感：最後一排受擊抖動／後退放大 4 倍 |
+| `doc_task_2716` | docs/agent-briefs/tasks/PROG/PROG-2-9462.md | PROG-2-9462 |
+| `doc_task_2717` | docs/agent-briefs/tasks/PROG/PROG-2-9483.md | [PROG-2-9483] 基礎戰鬥手感：受擊閃白改「全白停 2 格再快速退」 |
+| `doc_task_2718` | docs/agent-briefs/tasks/PROG/PROG-2-9484.md | [PROG-2-9484] 配偶上場（F4：名冊 kind=spouse、生成型配偶範本、出征與派遣、太守；指派入口改用 checkAssign） |
+| `doc_task_2719` | docs/agent-briefs/tasks/PROG/PROG-2-9485.md | [PROG-2-9485] 待產與哺乳接線（F5：2 季待產、哺乳 OCC、乳母不占用） |
