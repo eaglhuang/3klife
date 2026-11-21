@@ -16384,5 +16384,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9244.md",
     "title": "[PROG-2-9244] 教官池畫面驗收修正（十連小字、預設 UP 主視覺、說明框版面與 SSR 對比）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2751",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9260.md",
+    "title": "[PROG-2-9260] 重複卡三選一彈窗「宿命牽引・名將重逢」照設計稿轉進遊戲（DUP-UI）",
+    "category": "task"
   }
 ]
