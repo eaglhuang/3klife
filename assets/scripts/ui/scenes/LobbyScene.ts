@@ -154,6 +154,7 @@ import { MentorBorrowController } from '../core/MentorBorrowController';
 import { GraduationRecordController } from '../core/GraduationRecordController';
 import { AcademyGraduationController } from '../core/AcademyGraduationController';
 import { AcademyFlowController } from '../core/AcademyFlowController';
+import { parseQaAcademyParams } from '../core/AcademyQaFastForward';
 import { GameAcademySaveStore } from '../../core/services/GameAcademySaveStore';
 import { ancestralInheritToastText, newAncestralInheritViews } from '../core/AcademyInheritView';
 import { ClanShrineController } from '../core/ClanShrineController';
@@ -1613,6 +1614,39 @@ export class LobbyScene extends Component {
         if (session.isAcademyActive) {
             services().event.emit('SHOW_TOAST', { message: this._academyText('ui.academy.flow.lobby.resume_toast', '學府修業進行中，請回到學府繼續'), duration: 3 });
         }
+        this._startQaAcademy();
+    }
+
+    /**
+     * QA 快進（PROG-2-9192）：網址帶 qaAcademy=<回合> 才介入。綁定偵錯宿主後呼叫共通 API 的 debug.fastForward，
+     * 由修業控制器入學並連續 commit 到指定回合；沒帶參數時完全不動，不影響一般玩家流程。
+     */
+    private _startQaAcademy(): void {
+        const flow = this._academyFlow;
+        const qa = parseQaAcademyParams((globalThis as { window?: { location?: { search?: string } } }).window?.location?.search);
+        if (!flow || !qa) return;
+        // 結果掛在 window.__qaAcademy，供 QA 腳本與人工在主控台查看（done 帶快進結果，error 帶原因）
+        const publish = (value: unknown): void => { (globalThis as { __qaAcademy?: unknown }).__qaAcademy = value; };
+        services().bindDebugHost({
+            fastForwardAcademy: async (turns) => {
+                publish({ state: 'running', turns });
+                try {
+                    const result = await flow.qaFastForward(turns);
+                    publish({ state: 'done', result });
+                    return result;
+                } catch (err) {
+                    publish({ state: 'error', message: (err as Error)?.message ?? String(err) });
+                    throw err;
+                }
+            },
+        });
+        // 命令只回「已啟動」（串行佇列不能等快進跑完），失敗時記警告
+        void services().api.cmd('debug.fastForward', { target: 'academy', turns: qa.turns }).then((res) => {
+            if (isApiFail(res)) {
+                UCUFLogger.warn(LogCategory.UI, `[LobbyScene] qaAcademy 快進失敗：${res.reason}`);
+                publish({ state: 'failed', reason: res.reason });
+            }
+        });
     }
 
     /**

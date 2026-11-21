@@ -27,6 +27,7 @@ import type { IMissionService } from "../mission/service/IMissionService";
 import { PlayerSaveService } from "../services/PlayerSaveService";
 import { ApiSaveGateway } from "../api/localserver/ApiSaveGateway";
 import { createLocalApi, type LocalApiBundle } from "../api/localserver/createLocalApi";
+import type { DebugHost } from "../api/localserver/DebugCommands";
 import type { WalletAuthority } from "../api/localserver/WalletCommands";
 import type { IApiClient } from "../../shared/api/IApiClient";
 import { LegacyService } from "../services/LegacyService";
@@ -283,12 +284,21 @@ export class ServiceLoader {
         this.localApi?.setWallet(wallet);
     }
 
+    /** 偵錯宿主（PROG-2-9192）：大廳場景只在網址帶 qa 參數時綁定；API 重建時沿用，沒綁定時 debug.fastForward 回 E107 */
+    private debugHost: DebugHost | null = null;
+
+    public bindDebugHost(host: DebugHost | null): void {
+        this.debugHost = host;
+        this.localApi?.setDebugHost(host);
+    }
+
     /** 存檔與退役歸檔共用同一個儲存後端（key 不同，不會互蓋）；初始化與切換暫時狀態時呼叫 */
     private bindSaveStorage(): void {
         const storageAdapter = this.createSaveStorageAdapter();
         // 共通 API（PROG-2-9201）：存檔寫入與讀取都走本機伺服器 adapter 的 save.* 命令；GameSession 不直接碰存檔後端
         this.localApi = createLocalApi(new PlayerSaveService(storageAdapter));
         this.localApi.setWallet(this.walletAuthority);
+        this.localApi.setDebugHost(this.debugHost);
         // 技能命令（PROG-2-9204）：持有與學習權威由 GameSession 提供，結業戰法經 skill.grant 寫入
         this.localApi.setSkillHost(this.session.skillHost);
         this.session.setSkillApi(this.localApi.api);

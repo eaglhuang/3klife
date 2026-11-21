@@ -11,6 +11,7 @@
 import { DEFAULT_ITEM_CONFIG, type ItemConfigV1 } from '../../../shared/item/ItemConfig';
 import { DEFAULT_REWARD_CONFIG, type RewardConfigV1 } from '../../../shared/reward/RewardConfig';
 import { DEFAULT_STORY_CONFIG, type StoryConfigV1 } from '../../../shared/story/StoryConfig';
+import { registerDebugCommands, type DebugHost } from './DebugCommands';
 import { registerItemCommands, type ItemAuthority } from './ItemCommands';
 import { registerStoryCommands, type StoryAuthority, type StoryEffectHandler, type StoryPorts } from './StoryCommands';
 import { registerRewardCommands, type RewardAuthority, type RewardEffectHandler, type RewardPorts } from './RewardCommands';
@@ -27,6 +28,8 @@ export interface LocalApiBundle {
     setSkillHost(host: SkillHost | null): void;
     /** 綁定人員占用宿主（單機＝GameSession）；命令處理器每次呼叫才取 */
     setOccupancyHost(host: OccupancyHost | null): void;
+    /** 綁定偵錯宿主（大廳場景在網址帶 qa 參數時才綁）；沒綁定時 debug.fastForward 回 E107 */
+    setDebugHost(host: DebugHost | null): void;
     setItemAuthority(authority: ItemAuthority | null): void;
     setItemConfig(config: ItemConfigV1): void;
     setRewardAuthority(authority: RewardAuthority | null): void;
@@ -50,6 +53,7 @@ export function createLocalApi(store: LocalSaveStore, opts: LocalApiAdapterOptio
     let config: ItemConfigV1 = DEFAULT_ITEM_CONFIG;
     let skillHost: SkillHost | null = null;
     let occupancyHost: OccupancyHost | null = null;
+    let debugHost: DebugHost | null = null;
     let rewardAuthority: RewardAuthority | null = null;
     let rewardConfig: RewardConfigV1 = DEFAULT_REWARD_CONFIG;
     let rewardHooks: Pick<RewardPorts, 'evaluate' | 'modifiers' | 'entropy'> = {};
@@ -65,9 +69,11 @@ export function createLocalApi(store: LocalSaveStore, opts: LocalApiAdapterOptio
     registerSkillCommands(api, () => skillHost);
     registerStoryCommands(api, () => ({ authority: storyAuthority, config: storyConfig, handlers: storyHandlers, ...storyHooks }));
     registerOccupancyCommands(api, () => occupancyHost);
+    registerDebugCommands(api, () => debugHost);
     return {
         api,
         setWallet: (next) => { wallet = next; },
+        setDebugHost: (next) => { debugHost = next; },
         setItemAuthority: (next) => { authority = next; },
         setItemConfig: (next) => { config = next; },
         setRewardAuthority: (next) => { rewardAuthority = next; },
