@@ -161,6 +161,7 @@ import type { HallVolunteerTask } from '../systems/HallVolunteer';
 import type { SessionSaveService } from '../api/localserver/ApiSaveGateway';
 import type { SkillHost } from '../api/localserver/SkillCommands';
 import { SkillService } from '../../shared/skill/SkillService';
+import type { AcademyHost } from '../api/localserver/AcademyHostCommands';
 import type { OccupancyHost } from '../api/localserver/OccupancyCommands';
 import { OccupancyService } from '../../shared/occupancy/OccupancyService';
 import type { OccupancyRecord } from '../../shared/occupancy/OccupancyTypes';
@@ -1404,10 +1405,29 @@ export class GameSession implements AcademyRecordPort {
         }
         if (!childId) return;
         try {
-            this._occupancy.acquire({ personId: childId, kind: 'academy', refId: `academy:${childId}`, since: this._clock.state.totalSeasonsElapsed });
+            this._occupancy.acquire({ personId: childId, kind: 'academy', refId: this._academyOccupancyRef(childId), since: this._clock.state.totalSeasonsElapsed });
         } catch (error) {
             console.warn('[GameSession] 學府占用登記略過', error instanceof Error ? error.message : error);
         }
+    }
+
+    /**
+     * 學府占用的 refId（PROG-2-9215）：與任務框架共用同一個值（學府任務實例的 occupancyRef），OCC 與 QST 不會各登記一筆。
+     * 沒有對應的進行中任務（舊存檔尚未遷移）時沿用舊值 academy:<childId>。
+     */
+    private _academyOccupancyRef(childId: string): string {
+        const task = this._questState.instances.find((i) => i.taskKind === 'academy'
+            && (i.state === 'ACTIVE' || i.state === 'PAUSED') && i.actors.indexOf(childId) >= 0 && !!i.occupancyRef);
+        return task?.occupancyRef ?? `academy:${childId}`;
+    }
+
+    /** 學府宿主：ServiceLoader 把它掛到本機 API 的 save.read／save.write（domain=academy）與 rng.issueSeed */
+    public get academyHost(): AcademyHost {
+        return {
+            port: this,
+            persist: async () => { if (this.hasSaveService) await this.save(); },
+            clanUuid: () => this.clanUuid,
+        };
     }
 
     /** 技能宿主：持有存在武將名冊、學習權威由場景綁定；ServiceLoader 把它掛到本機 API 的 skill.* 命令 */
@@ -6982,6 +7002,8 @@ export class GameSession implements AcademyRecordPort {
         this._clock.restore(snapshot.gameTime);
         // 學府修業進行中：外界時鐘以入學當下的快照為準，防止修業期間被改存檔刷季（PROG-2-9189）
         this._occupancy.restore(snapshot.occupancy);
+        // 先還原任務狀態：學府占用 refId 取自任務實例（PROG-2-9215），要在對帳學府紀錄之前就位
+        this._questState = normalizeQuestState(snapshot.questState);
         this._setAcademyRecord(normalizeAcademyRecord(snapshot.academy, snapshot.gameTime));
         if (this._academyRecord && !this._academyRecord.committed.graduated) this._clock.restore({ ...this._academyRecord.frozenGameTime });
         this._seeded.restore(snapshot.randomState ?? { algorithm: 'mulberry32-v1', state: LEGACY_RANDOM_SEED });
@@ -7020,7 +7042,6 @@ export class GameSession implements AcademyRecordPort {
         this._legendaryMentoringUsedIds = (snapshot.legendaryMentoringUsedIds ?? []).filter((id) => typeof id === 'string');
         this._itemMeta = normalizeItemMeta(snapshot.itemMeta);
         this._rewardMeta = normalizeRewardMeta(snapshot.rewardMeta);
-        this._questState = normalizeQuestState(snapshot.questState);
         this._storyMeta = normalizeStoryMeta(snapshot.storyMeta);
         this._oracleCount = snapshot.oracleCount ?? 0;
         this._clearedStageIds = normalizeClearedStageIds(snapshot.clearedStageIds);

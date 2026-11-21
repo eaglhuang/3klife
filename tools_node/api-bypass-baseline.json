@@ -6,8 +6,8 @@
     "local-storage": 39,
     "protected-assign": 24,
     "save-write": 4,
-    "currency-write": 31,
-    "skill-write": 1
+    "skill-write": 1,
+    "currency-write": 31
   },
   "exemptions": [
     {

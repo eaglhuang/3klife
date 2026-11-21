@@ -154,7 +154,7 @@ import { MentorBorrowController } from '../core/MentorBorrowController';
 import { GraduationRecordController } from '../core/GraduationRecordController';
 import { AcademyGraduationController } from '../core/AcademyGraduationController';
 import { AcademyFlowController } from '../core/AcademyFlowController';
-import { GameAcademySaveStore } from '../../core/services/GameAcademySaveStore';
+import { AcademyApiClient } from '../core/AcademyApi';
 import { ancestralInheritToastText, newAncestralInheritViews } from '../core/AcademyInheritView';
 import { ClanShrineController } from '../core/ClanShrineController';
 import { OpeningOfferPopupController } from '../core/OpeningOfferPopupController';
@@ -1579,7 +1579,6 @@ export class LobbyScene extends Component {
     /** 學府入學與修業畫面（PROG-2-9189）：入口在培育類別的「學府」 */
     private async _mountAcademyFlow(): Promise<void> {
         const session = services().session;
-        const store = new GameAcademySaveStore(session);
         this._academyFlow = new AcademyFlowController<UIScreenPreviewHost>({
             mountEnrollHost: (bindings) => this._mountPreviewScreenHost('AcademyEnrollHost', 'academy-enroll-screen', bindings),
             mountSessionHost: (bindings) => this._mountPreviewScreenHost('AcademySessionHost', 'academy-session-screen', bindings),
@@ -1598,11 +1597,8 @@ export class LobbyScene extends Component {
             clanUuid: () => session.clanUuid,
             clanPrestigeTier: () => session.clanPrestigeTier,
             admissionTurn: () => session.gameTime.totalSeasonsElapsed,
-            worldSeed: () => `3klife-world|${session.clanUuid}`,
-            store,
-            persist: async () => {
-                if (session.hasSaveService) await session.save();
-            },
+            // 存檔（save.write）、36 回合任務推進（task.advance）、世界種子（rng.issueSeed）一律走共通 API（PROG-2-9215）
+            api: new AcademyApiClient(services().api),
             isActive: () => session.isAcademyActive,
             onChanged: () => { this._refreshCityHub(); },
             onGraduated: (snapshot) => { void this._settleAcademyGraduation(snapshot); },

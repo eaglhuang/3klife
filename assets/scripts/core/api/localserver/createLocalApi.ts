@@ -23,6 +23,7 @@ import type { QuestKindAdapter } from '../../../shared/quest/QuestService';
 import type { QuestConfigV1 } from '../../../shared/quest/QuestTypes';
 import { registerQuestCommands, type QuestAuthority, type QuestPorts } from './QuestCommands';
 import { registerSkillCommands, type SkillHost } from './SkillCommands';
+import { registerAcademyHostCommands, type AcademyHost } from './AcademyHostCommands';
 import { registerSaveCommands, type LocalSaveStore } from './SaveCommands';
 import { registerWalletCommands, type WalletAuthority } from './WalletCommands';
 
@@ -33,6 +34,8 @@ export interface LocalApiBundle {
     setSkillHost(host: SkillHost | null): void;
     /** 綁定人員占用宿主（單機＝GameSession）；命令處理器每次呼叫才取 */
     setOccupancyHost(host: OccupancyHost | null): void;
+    /** 綁定學府宿主（單機＝GameSession）：save.read／save.write（domain=academy）與 rng.issueSeed */
+    setAcademyHost(host: AcademyHost | null): void;
     setItemAuthority(authority: ItemAuthority | null): void;
     setItemConfig(config: ItemConfigV1): void;
     setRewardAuthority(authority: RewardAuthority | null): void;
@@ -63,6 +66,7 @@ export function createLocalApi(store: LocalSaveStore, opts: LocalApiAdapterOptio
     let config: ItemConfigV1 = DEFAULT_ITEM_CONFIG;
     let skillHost: SkillHost | null = null;
     let occupancyHost: OccupancyHost | null = null;
+    let academyHost: AcademyHost | null = null;
     let rewardAuthority: RewardAuthority | null = null;
     let rewardConfig: RewardConfigV1 = DEFAULT_REWARD_CONFIG;
     let rewardHooks: Pick<RewardPorts, 'evaluate' | 'modifiers' | 'entropy'> = {};
@@ -82,6 +86,7 @@ export function createLocalApi(store: LocalSaveStore, opts: LocalApiAdapterOptio
     registerSkillCommands(api, () => skillHost);
     registerStoryCommands(api, () => ({ authority: storyAuthority, config: storyConfig, handlers: storyHandlers, ...storyHooks }));
     registerOccupancyCommands(api, () => occupancyHost);
+    registerAcademyHostCommands(api, () => academyHost);
     registerQuestCommands(api, () => ({ authority: questAuthority, config: questConfig, kinds: questKinds, ...questHooks }));
     return {
         api,
@@ -98,6 +103,7 @@ export function createLocalApi(store: LocalSaveStore, opts: LocalApiAdapterOptio
         setStoryHooks: (hooks) => { storyHooks = hooks; },
         setSkillHost: (next) => { skillHost = next; },
         setOccupancyHost: (next) => { occupancyHost = next; },
+        setAcademyHost: (next) => { academyHost = next; },
         setQuestAuthority: (next) => { questAuthority = next; },
         setQuestConfig: (next) => { questConfig = next; },
         registerQuestKind: (adapterDef) => { questKinds[adapterDef.taskKind] = adapterDef; },

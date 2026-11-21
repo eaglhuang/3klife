@@ -38,6 +38,7 @@ const RULES = [
   { id: 'save-write', desc: '直接使用存檔後端（PlayerSaveService、PlayerRosterService 寫入）', re: /\bnew\s+PlayerSaveService\b|\bPlayerRosterService\s*\.\s*(?:replaceAll|save|add|remove)\w*\s*\(/g },
   { id: 'local-storage', desc: '直接使用 localStorage（clientOwned 以外都應走 save.commit）', re: /\blocalStorage\b/g },
   { id: 'protected-assign', desc: '對受保護欄位賦值（_inventory／_gachaWallet／_fame 等）', re: /\b_(?:inventory|gachaWallet|gachaPity|fame|scorePoints|oracleCount)\s*(?:[+\-*]?=(?!=)|\+\+|--)/g },
+  { id: 'academy-write', desc: '學府修業直連 GameSession 寫入（new GameAcademySaveStore／session.setAcademyRecord；應走 save.write／task.advance／rng.issueSeed，PROG-2-9215）', re: /\bnew\s+GameAcademySaveStore\b|\bsession\s*\.\s*setAcademyRecord\s*\(/g },
   { id: 'skill-write', desc: '直接改技能持有（learnedTactics／skillMeta／skillModifiers 賦值或 push；應走 skill.grant／learn／applyModifier；學府修業中的 state 快照不算）', re: /(?<!\bstate)\.\s*(?:learnedTactics|skillMeta|skillModifiers)\s*(?:=(?!=)|\.\s*(?:push|unshift|splice|pop|shift)\s*\()/g },
 ];
 

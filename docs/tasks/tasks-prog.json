@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 186,
+    "done": 192,
     "in_progress": 4,
-    "open": 76,
-    "total": 275
+    "open": 86,
+    "total": 282
   },
   "tasks": [
     {
@@ -12097,6 +12097,50 @@
         "tests/QuestBase.test.ts"
       ],
       "notes": "2026-11-20 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9215",
+      "title": "A0：學府存檔與推進改走共通 API（回補 9189，6a）",
+      "owner": "ClaudeCode_sonnet-5-5",
+      "priority": "P0",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "ClaudeCode_sonnet-5-5",
+      "started_at": "2026-11-21T10:00:00+08:00",
+      "started_by_agent": "ClaudeCode_sonnet-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0 錯；run-cli 8797 通過 0 失敗；compute-gate standard 通過；web-desktop 建置＋playtest-online 11/11 console error 0；棘輪 132→132（新規則 academy-write 為 0） | 變更: save.read／save.write／rng.issueSeed（AcademyHostCommands）、AcademyApi 客戶端、AcademyFlowController 改注入 api、LobbyScene 接線；占用 refId 統一為任務實例 occupancyRef；ACADEMY_36 獎勵 BUNDLE_ACADEMY_GRAD_S/A/B/C（金 20000/12000/6000/2000）；錯誤碼 E4xx 改 E35x 並補分段表；任務系統 Base 規格書分片 | 待決: TERM 關卡落在第 12／24 回合完成後，真實期中考打斷屬 9190；GRADUATE 關卡與 task.settle 留給 9191（獎勵已備未發）；AcademyAntiSLManager 仍在客戶端跑於快取上，終態應移入 adapter | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",

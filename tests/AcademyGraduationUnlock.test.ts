@@ -11,7 +11,11 @@ import { assert, TestSuite } from './TestRunner';
 import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
 import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
 import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
-import { GameAcademySaveStore } from '../assets/scripts/core/services/GameAcademySaveStore';
+import { createLocalApi } from '../assets/scripts/core/api/localserver/createLocalApi';
+import { sessionAcademyRig, type AcademyApiRig } from './AcademyApiRig';
+import { completedTurnsOf } from '../assets/scripts/ui/core/AcademyApi';
+import type { OccupancyQueryResult, TaskQueryResult } from '../assets/scripts/shared/api/ApiCommands';
+import type { ApiResult } from '../assets/scripts/shared/api/ApiProtocol';
 import { AcademyFlowController, type AcademyFlowDeps } from '../assets/scripts/ui/core/AcademyFlowController';
 import { checkDeployable } from '../assets/scripts/core/systems/BattleRoster';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
@@ -29,12 +33,13 @@ function makeSession(adapter: MemoryStorageAdapter): GameSession {
     return session;
 }
 
-interface Rig { ctrl: AcademyFlowController<FakeHost>; session: GameSession; graduated: AcademyStateSnapshot[] }
+interface Rig { ctrl: AcademyFlowController<FakeHost>; session: GameSession; graduated: AcademyStateSnapshot[]; academy: AcademyApiRig }
 
 /** autoGraduate=false 重現舊版：沒人接 onGraduated */
 async function rig(session: GameSession, autoGraduate = true): Promise<Rig> {
     const graduated: AcademyStateSnapshot[] = [];
     let tokens = 1;
+    const academy = sessionAcademyRig(session, createLocalApi(new PlayerSaveService(new MemoryStorageAdapter()), { now: () => 1_000 }));
     const deps: AcademyFlowDeps<FakeHost> = {
         mountEnrollHost: async () => ({ node: { active: true } }),
         mountSessionHost: async () => ({ node: { active: true } }),
@@ -52,9 +57,7 @@ async function rig(session: GameSession, autoGraduate = true): Promise<Rig> {
         clanUuid: () => session.clanUuid,
         clanPrestigeTier: () => 0,
         admissionTurn: () => session.gameTime.totalSeasonsElapsed,
-        worldSeed: () => 'world-test',
-        store: new GameAcademySaveStore(session),
-        persist: async () => { await session.save(); },
+        api: academy.api,
         isActive: () => session.isAcademyActive,
         ...(autoGraduate ? {
             // 與 LobbyScene 相同的接法：結業交給 session.graduateFromAcademy（寫回武將並清紀錄）
@@ -66,11 +69,11 @@ async function rig(session: GameSession, autoGraduate = true): Promise<Rig> {
     };
     const ctrl = new AcademyFlowController<FakeHost>(deps);
     await ctrl.mount();
-    return { ctrl, session, graduated };
+    return { ctrl, session, graduated, academy };
 }
 
 /** 一路修業到結業（含清談事件、打斷點） */
-async function playToGraduation(r: Rig): Promise<void> {
+async function playToGraduation(r: Rig, afterTurn?: () => Promise<void>): Promise<void> {
     for (let guard = 0; guard < 400 && r.ctrl.mode !== 'graduated'; guard++) {
         if (r.ctrl.mode === 'interrupt') { await r.ctrl.resolveInterrupt(); continue; }
         const g = r.session.academyRecord!.committed.gimmickStatePayload as { debatePending?: boolean; eventPending?: string | null; handCards?: unknown[] };
@@ -82,7 +85,13 @@ async function playToGraduation(r: Rig): Promise<void> {
         }
         await r.ctrl.act({ actionType: 'TRAIN', targetStat: 'int' });
         await r.ctrl.confirm();
+        if (afterTurn) await afterTurn();
     }
+}
+
+async function academyTasks(r: Rig): Promise<TaskQueryResult['tasks']> {
+    const res = await r.academy.bundle.api.query<TaskQueryResult>('task.query', { taskKind: 'academy' });
+    return (res as Extract<ApiResult<TaskQueryResult>, { ok: true }>).result.tasks;
 }
 
 const settle = (): Promise<void> => new Promise((resolve) => setTimeout(resolve, 0));
@@ -182,6 +191,50 @@ export function createAcademyGraduationUnlockSuite(): TestSuite {
         await r.ctrl.enroll();
         assert.isFalse(r.ctrl.settlePendingGraduation(), '修業進行中不補結業');
         assert.isTrue(session.isAcademyActive);
+    });
+
+    suite.test('A0 改走共通 API：任務步數＝已完成回合、占用 refId 與任務共用、結業後占用釋放（PROG-2-9215）', async () => {
+        const session = makeSession(new MemoryStorageAdapter());
+        const r = await rig(session);
+        await r.ctrl.openEnroll();
+        assert.isTrue(await r.ctrl.enroll());
+        const [task] = await academyTasks(r);
+        assert.equals('ACTIVE', task.state);
+        assert.equals(0, task.step);
+        const held = (await r.academy.bundle.api.query<OccupancyQueryResult>('occupancy.query', { personId: 'kid' }) as { result: OccupancyQueryResult }).result.records;
+        assert.equals(1, held.length, '同一個孩子只有一筆學府占用（OCC 與 QST 不各登記一筆）');
+        assert.equals(`quest:${task.qid}`, held[0].refId);
+        let turns = 0;
+        await playToGraduation(r, async () => {
+            turns += 1;
+            const [now] = await academyTasks(r);
+            const record = session.academyRecord;
+            if (record) assert.equals(completedTurnsOf(record.committed), now.step, `第 ${turns} 回合後任務步數對齊`);
+        });
+        await settle();
+        const [done] = await academyTasks(r);
+        assert.equals(36, done.step);
+        assert.equals('GRADUATE', done.pendingGate, '結業閘門留給 9191 清除與 settle');
+        assert.equals(0, (await r.academy.bundle.api.query<OccupancyQueryResult>('occupancy.query', { personId: 'kid' }) as { result: OccupancyQueryResult }).result.records.length, '結業清紀錄後占用釋放');
+    });
+
+    suite.test('舊存檔（沒有任務、占用是 academy:<id>）進修業畫面時補開任務並對齊步數（PROG-2-9215）', async () => {
+        const adapter = new MemoryStorageAdapter();
+        const first = makeSession(adapter);
+        const r1 = await rig(first);
+        await r1.ctrl.openEnroll();
+        await r1.ctrl.enroll();
+        for (let i = 0; i < 3; i++) { await r1.ctrl.act({ actionType: 'TRAIN', targetStat: 'int' }); await r1.ctrl.confirm(); }
+        // 模擬 9189 時期存檔：抹掉任務狀態，占用改回舊 refId
+        const saved = JSON.parse(JSON.stringify(first.academyRecord)) as NonNullable<typeof first.academyRecord>;
+        const second = makeSession(new MemoryStorageAdapter());
+        second.setAcademyRecord(saved);
+        const r2 = await rig(second);
+        await r2.ctrl.openFromMenu();
+        const tasks = await academyTasks(r2);
+        assert.equals(1, tasks.length);
+        assert.equals(completedTurnsOf(saved.committed), tasks[0].step);
+        assert.equals('ACTIVE', tasks[0].state);
     });
 
     return suite;
