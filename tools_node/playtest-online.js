@@ -46,7 +46,11 @@
  *               apiCalls＝學府寫入呼叫共通 API 的次數，分 item／skill／reward／story／occupancy／save）與 ac-*.png 截圖。
  *               結業串接推季（PROG-2-9191）、打斷彈窗讀劇情資料（PROG-2-9190）未完成的部分記在報告 todo
  *
+ *   --family-only 搭配 --family：只跑開場與家族步驟，其餘略過
+ *   --family    配偶上場實玩（PROG-2-9582；需 --dir）：複製存檔到全新情境，網址 ?qaFamily=spouse／nursing 經共通 API 納入首子系統配偶，
+ *               截出征選單與內政畫面（fam-*.png）並輸出 family-report.json；驗收：配偶在出征選單、哺乳中的母親不在但可當太守
  * 網址參數（QA 快進，不帶就完全不介入；只在本機 adapter 的 debug.fastForward 生效）：
+ *   ?qaFamily=spouse|nursing   進大廳後經 family.enrollSpouse 納入首子系統配偶；nursing 再經 occupancy.acquire 進哺乳占用
  *   ?qaAcademy=<回合數 1~36>   進大廳後自動入學並連續訓練到已完成指定回合，停在下一回合的打斷點（11 → 第 12 回合期中打斷）
  *
  * puppeteer-core 從本 repo 的 node_modules 找；在 git worktree 內會自動改找主目錄的 node_modules，
@@ -387,7 +391,16 @@ async function main() {
      */
     async function step(name, fn, { skipIfFailed = false } = {}) {
         stepIndex += 1;
+        // --family-only：只跑開場與家族步驟，其餘略過（配偶實玩單獨驗收用，省下整輪 10 分鐘）
+        const skippedByFamilyOnly = Boolean(args['family-only']) && !/^(boot-login-lobby|new-player-opening|family-)/.test(name);
         const rec = { index: stepIndex, name, ok: false, durationMs: 0, screenshot: null, reason: null, detail: {}, console: [], pageErrors: [] };
+        if (skippedByFamilyOnly) {
+            rec.reason = '--family-only，略過';
+            rec.skipped = true;
+            report.steps.push(rec);
+            emitStep(rec);
+            return false;
+        }
         if (skipIfFailed && !reachedLobby) {
             rec.reason = '前置步驟失敗，略過';
             rec.skipped = true;
@@ -1769,6 +1782,157 @@ async function main() {
             yearReport.finishedAt = new Date().toISOString();
             yearReport.endSeason = (await readSeason().catch(() => ({ text: null }))).text;
             writeYearReport();
+        }
+
+        // ── 9b. 配偶上場實玩（--family，選用；PROG-2-9582 F11）：把目前存檔複製到全新情境，網址帶 qaFamily=spouse／nursing，
+        //        QA 快進經共通 API（family.enrollSpouse、occupancy.acquire）納入首子系統配偶，再截出征選主將畫面與內政指派太守畫面。
+        //        驗收 1：配偶出現在出征選單；驗收 2：哺乳中的母親不在出征選單，但仍可當太守。輸出 family-report.json 與 fam-*.png ──
+        if (args.family) {
+            const fr = { tool: 'tools_node/playtest-online.js --family', startedAt: new Date().toISOString(), scenarios: {}, screenshots: [] };
+            const writeFamilyReport = () => fs.writeFileSync(path.join(outDir, 'family-report.json'), JSON.stringify(fr, null, 2), 'utf8');
+            await step('family-qa-spouse-sortie', async (rec) => {
+                if (!args.dir) { rec.detail.skipped = 'qa 第二情境需要本機建置目錄（--dir）才有同源空白頁，--url 模式略過'; return rec.detail; }
+                const dump = await page.evaluate(() => new Promise((resolve, reject) => {
+                    const open = indexedDB.open('3KLifeData');
+                    open.onerror = () => reject(open.error);
+                    open.onsuccess = () => {
+                        const db = open.result;
+                        if (!db.objectStoreNames.contains('kv')) { resolve({ version: db.version, rows: [] }); return; }
+                        const req = db.transaction('kv', 'readonly').objectStore('kv').getAll();
+                        req.onerror = () => reject(req.error);
+                        req.onsuccess = () => resolve({ version: db.version, rows: req.result.map((r) => ({ key: r.key, json: JSON.stringify(r) })) });
+                    };
+                }));
+                const origContext = context;
+                const origPage = page;
+                const runScenario = async (scenario) => {
+                    const sc = { texts: {}, buttons: {}, screenshots: [] };
+                    fr.scenarios[scenario] = sc;
+                    const qaContext = await browser.createBrowserContext();
+                    const qaPage = await qaContext.newPage();
+                    await qaPage.setViewport(viewport);
+                    attachCollectors(qaPage);
+                    try {
+                        await qaPage.goto(`${target}__pt-blank.html`, { waitUntil: 'load' });
+                        await qaPage.evaluate((d) => new Promise((resolve, reject) => {
+                            const open = indexedDB.open('3KLifeData', d.version);
+                            open.onupgradeneeded = () => { if (!open.result.objectStoreNames.contains('kv')) open.result.createObjectStore('kv', { keyPath: 'key' }); };
+                            open.onerror = () => reject(open.error);
+                            open.onsuccess = () => {
+                                const db = open.result;
+                                const tx = db.transaction('kv', 'readwrite');
+                                for (const r of d.rows) tx.objectStore('kv').put(JSON.parse(r.json));
+                                tx.oncomplete = () => { db.close(); resolve(true); };
+                                tx.onerror = () => reject(tx.error);
+                            };
+                        }), dump);
+                        context = qaContext;
+                        page = qaPage;
+                        await qaPage.goto(`${target}?qaFamily=${scenario}`, { waitUntil: 'load', timeout: stuckMs });
+                        await waitUntil(() => page.evaluate(() => Boolean(window.cc && window.cc.director && window.cc.director.getScene())), stuckMs, 'qa 情境引擎未就緒');
+                        await installHelpers();
+                        await waitUntil(async () => (await scene()) === 'LoginScene', stuckMs, 'qa 情境未進入 LoginScene');
+                        await delay(Number(args['login-settle'] || 12000));
+                        await clickLoginStart();
+                        await waitUntil(async () => (await scene()) === 'LobbyScene', stuckMs, 'qa 情境未進入 LobbyScene');
+                        let qa = null;
+                        await waitUntil(async () => { qa = await page.evaluate(() => window.__qaFamily || null); return qa && qa.state !== 'running'; }, 60000, `qaFamily=${scenario} 60 秒內沒有完成`);
+                        if (qa.state !== 'done') throw new Error(`qaFamily=${scenario} 失敗：${JSON.stringify(qa)}`);
+                        sc.qa = qa.result;
+                        const gid = qa.result.generalId;
+                        // 名冊與出征名單（純讀取）：配偶在名冊；出征名單有沒有她就是兩個驗收的差別
+                        sc.state = await page.evaluate(async (id) => {
+                            const loader = await window.System.import('chunks:///_virtual/ServiceLoader.ts');
+                            const s = loader.services().session;
+                            const g = (s.roster || []).find((x) => x.id === id);
+                            return {
+                                name: g ? g.name : null, inRoster: !!g, isSpouse: s.isSpouse(id),
+                                deployable: s.getDeployableGenerals().some((x) => x.id === id),
+                                occupancy: s.occupancyHost.service.query(id).map((r) => r.kind),
+                            };
+                        }, gid);
+                        const shotTo = async (tag) => {
+                            const file = path.join(outDir, `fam-${scenario}-${tag}.png`);
+                            await page.screenshot({ path: file });
+                            const rel = path.relative(projectRoot, file).replace(/\\/g, '/');
+                            sc.screenshots.push(rel);
+                            fr.screenshots.push(rel);
+                        };
+                        // 出征編制畫面（出征選單：主將之外可選的參謀官／後勤官候選就是可出征名單）：由遊戲內同一個入口開啟，
+                        // 再用真滑鼠一位一位切換參謀官，記下每位候選名字；配偶在可出征名單才會被切到，哺乳中的母親不會出現
+                        await requireLobby();
+                        await backToLobbyBar();
+                        sc.sortieOpened = await page.evaluate(() => {
+                            const walk = (n, out) => { out.push(n); for (const c of (n.children || [])) walk(c, out); return out; };
+                            for (const n of walk(window.cc.director.getScene(), [])) {
+                                for (const comp of (n.components || [])) {
+                                    if (comp && typeof comp._openSortieSetup === 'function') { comp._openSortieSetup(); return true; }
+                                }
+                            }
+                            return false;
+                        });
+                        await delay(2500);
+                        sc.buttons.sortie = await listButtons();
+                        const seen = [];
+                        const readStrategist = async () => {
+                            const t = await rm.allTexts();
+                            const i = t.findIndex((x) => /^參謀官$/.test(x));
+                            return i >= 0 ? t[i + 1] : null;
+                        };
+                        // 新納入的配偶排在名冊最後：從「不派」往前切（上一位）幾下就會繞到名冊尾端；最多切 6 下，沒遇到她就是不在候選
+                        let spouseShot = false;
+                        seen.push(await readStrategist());
+                        for (let i = 0; i < 6 && !spouseShot; i++) {
+                            if (!(await clickButton('^btnPrevStrategist$'))) break;
+                            await delay(700);
+                            const nm = await readStrategist();
+                            seen.push(nm);
+                            if (nm && sc.state.name && nm === sc.state.name) { await shotTo('sortie-strategist'); spouseShot = true; }
+                        }
+                        sc.sortieStrategistCandidates = seen;
+                        sc.spouseInSortieCandidates = Boolean(sc.state.name && seen.includes(sc.state.name));
+                        sc.texts.sortie = (await rm.allTexts()).slice(0, 80);
+                        await shotTo('sortie');
+                        for (let i = 0; i < 4; i++) { if (!(await clickButton('^(btnCloseSortie|BtnCloseSortie)$'))) break; await delay(800); }
+                        // 指派太守（遊戲內同一條 assignGovernor 規則，與內政畫面「換將」呼叫的是同一個）：哺乳中的母親也要能當太守，
+                        // 指派完再開內政畫面，農耕格的「主事」就會顯示她的名字
+                        sc.governorCandidate = await page.evaluate(async (id) => {
+                            const loader = await window.System.import('chunks:///_virtual/ServiceLoader.ts');
+                            const s = loader.services().session;
+                            return { assignable: s.assignGovernor('farming', id).ok };
+                        }, gid);
+                        // 內政指派太守：開內政畫面，截太守候選
+                        await backToLobbyBar();
+                        sc.buttons.domesticMenu = (await clickButton('^BtnCatDomestic$')) ? await page.evaluate(() => window.__pt.buttonTexts('^BtnSub')) : null;
+                        await delay(1500);
+                        const domOpened = await clickByText('^BtnSub', '^內政$');
+                        sc.domesticOpened = Boolean(domOpened);
+                        await delay(2500);
+                        sc.texts.domestic = (await rm.allTexts()).slice(0, 80);
+                        sc.spouseShownAsGovernor = Boolean(sc.state.name && sc.texts.domestic.some((t) => String(t).includes(sc.state.name)));
+                        sc.buttons.domestic = await listButtons();
+                        await shotTo('domestic');
+                    } finally {
+                        page = origPage;
+                        context = origContext;
+                        await qaPage.close().catch(() => undefined);
+                        await qaContext.close().catch(() => undefined);
+                    }
+                };
+                try {
+                    await runScenario('spouse');
+                    await runScenario('nursing');
+                } finally {
+                    fr.finishedAt = new Date().toISOString();
+                    writeFamilyReport();
+                }
+                rec.detail.report = path.relative(projectRoot, path.join(outDir, 'family-report.json')).replace(/\\/g, '/');
+                const sp = fr.scenarios.spouse.state, nu = fr.scenarios.nursing.state;
+                if (!sp || !sp.deployable || !fr.scenarios.spouse.spouseInSortieCandidates) throw new Error(`驗收 1 失敗：配偶沒有出現在出征名單（${JSON.stringify(sp)}）`);
+                if (!nu || nu.deployable || fr.scenarios.nursing.spouseInSortieCandidates || !nu.occupancy.includes('nursing')) throw new Error(`驗收 2 失敗：哺乳中的母親仍在出征名單或沒有哺乳占用（${JSON.stringify(nu)}）`);
+                if (!fr.scenarios.nursing.governorCandidate || !fr.scenarios.nursing.governorCandidate.assignable) throw new Error('驗收 2 失敗：哺乳中的母親不能當太守');
+                return rec.detail;
+            }, { skipIfFailed: false });
         }
 
         // ── 10. 學府實玩（--academy，選用；PROG-2-9192）：開局少年名將 → 推進到第 2 年第 1 季 → 入學潁川（扣入學令）→ 36 回合 → 結業 → 回大廳；

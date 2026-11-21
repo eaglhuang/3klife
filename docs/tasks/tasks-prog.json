@@ -24,9 +24,9 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 221,
-    "in_progress": 4,
-    "open": 87,
+    "done": 222,
+    "in_progress": 0,
+    "open": 77,
     "total": 312
   },
   "tasks": [
@@ -13153,7 +13153,7 @@
       "depends": [],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0 錯、run-cli 全過、compute-gate standard 通過 | 變更: 待產季數單一來源 breeding-rules、family-config 移除 pregnancyQuarters、乳母費 wetNurseSilverPerQuarter=20（銀兩錢包未落地只存設定）、待產放行不離城大廳任務、哺乳登記被擋記 nursingPending 下季重試並季結提示 nursingLines、規格待接清單（hallLevel） | 阻塞: 無",
+      "notes": "PR #2446 合併：待產單一來源、乳母費設定、哺乳重試",
       "brief": {
         "style": "classic",
         "label": "",
@@ -13182,7 +13182,7 @@
       "title": "F11 首子流程同步：系統配偶 first-child 入名冊（含 7456 乾淨建置 playtest 截圖）",
       "owner": "ClaudeCode_sonnet-5-5",
       "priority": "P1",
-      "status": "open",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-21",
@@ -13199,7 +13199,7 @@
       "depends": [],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-21 | 狀態: open | 驗證: pending | 變更: 開卡 | 阻塞: 無",
+      "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0 錯、run-cli 全過、compute-gate standard、7456 乾淨建置 playtest（--family）截圖驗收 | 變更: 共通 API family.enrollSpouse（E360~E363，FamilyCommands.ts）、GameSession.spouseHost、ServiceLoader 掛宿主（先等家族設定載入）、QA 快進 ?qaFamily=spouse|nursing、playtest --family／--family-only、規格 3.1 與待接清單 | 阻塞: 無（首子流程引擎尚未實作，入口已備好）",
       "brief": {
         "style": "classic",
         "label": "",

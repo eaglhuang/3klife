@@ -95,6 +95,8 @@
 
 首子系統配偶因此不再只是家譜裝飾：首子流程完成後她進名冊，戰力偏低（生成型），主要價值是內政與當太守。
 
+**納入名冊的入口（PROG-2-9582）**：配偶一律經共通 API `family.enrollSpouse` 入冊，客戶端只送來源（目前只有 `first-child`），不得帶武將數值（E103）。配偶本人由固定種子產生（同 slot 永遠同一人，首子系統配偶 slot＝`first-child`），幕府等級上限與重複由權威端判定；同來源重送冪等（`created=false`）。錯誤碼：E360 家族服務未就緒、E361 設定未載入、E362 配偶人數達上限、E363 未知來源。QA 快進：網址 `?qaFamily=spouse|nursing` 只呼叫共通 API（`family.enrollSpouse`、`occupancy.acquire`），實玩腳本 `playtest-online.js --family` 截圖驗收。
+
 ### 3.2 三種來源（全開，裁決 19）
 
 | 來源 | 觸發 | 流程 | 差異欄位 |

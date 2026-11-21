@@ -16226,7 +16226,7 @@
   {
     "id": "doc_task_2722",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9463.md",
-    "title": "[PROG-2-9463] GCH-R4 抽取遷移",
+    "title": "PROG-2-9463",
     "category": "task"
   },
   {
@@ -16292,13 +16292,13 @@
   {
     "id": "doc_task_2732",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9464.md",
-    "title": "[PROG-2-9464] GCH-R5 保底存檔遷移",
+    "title": "PROG-2-9464",
     "category": "task"
   },
   {
     "id": "doc_task_2733",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9465.md",
-    "title": "[PROG-2-9465] GCH-R7 宿命池遷移",
+    "title": "PROG-2-9465",
     "category": "task"
   },
   {
@@ -16311,6 +16311,18 @@
     "id": "doc_task_2735",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9242.md",
     "title": "[PROG-2-9242] 傳承與溢出轉換（SUP-3：重複卡傳承 +1、傳承滿轉學分、獎勵效果 supportCard）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2736",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9584.md",
+    "title": "[PROG-2-9584] 熱修：大廳 CPU 吃滿（名冊深拷貝 O(N²) 熱路徑）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2737",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9590.md",
+    "title": "PROG-2-9590：playtest-online --year QA",
     "category": "task"
   }
 ]
