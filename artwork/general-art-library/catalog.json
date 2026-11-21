@@ -4233,7 +4233,32 @@
         ],
         "activeVersion": "0002"
       }
-    },
+    ,
+      "smallAvatar": {
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/cao_xiu__曹休__small_avatar_0001.png",
+            "status": "integrated",
+            "sha256": "44691fde2e3166f1810c3e8bb5789d005f1f2c3f05aa0db95a96902aa73b20c9",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/cao_xiu__曹休__avatar_0002.png",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "x": 29.42,
+              "y": 11.27,
+              "width": 173.33,
+              "height": 173.33
+            },
+            "qc": "頭高75%（髮髻至下巴）；臉框中線與畫布中線差0.5px；完整保留頭髮、髮髻與頭飾；左右肩甲面可辨認且下緣留白21.6來源像素。125px及250px檢視、與來源及核可標準同尺度比較通過。只裁切與等比縮放，不旋轉、不修臉、不重畫。",
+            "createdAt": "2026-11-21"
+          }
+        ],
+        "activeVersion": "0001"
+      }
+},
     {
       "uid": "sima-zhao",
       "name": "司馬昭",
