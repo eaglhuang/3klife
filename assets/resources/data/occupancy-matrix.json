@@ -26,8 +26,8 @@
       "allows": ["estate"]
     },
     "nursing": {
-      "blocks": ["sortie", "mercenary", "trade", "hallDispatch"],
-      "allows": ["gov", "hallMission", "estateLowRisk", "mentorAssign", "defend"]
+      "blocks": ["sortie", "mercenary", "trade", "hallDispatch", "hallMission"],
+      "allows": ["gov", "estateLowRisk", "mentorAssign", "defend"]
     },
     "homeWar": {
       "blocks": ["sortie"],

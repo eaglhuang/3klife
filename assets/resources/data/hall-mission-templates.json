@@ -383,6 +383,36 @@
       "Task_Detail": "邊境上有座荒廢多年的哨站，近日被一夥賊人佔住，往來商隊都繞路而行。派一支小隊前去驅離，並順便把哨站重新插上我軍旗幟。",
       "Key_Stat": "str",
       "Enemy_Hint": "賊人約三十餘名，裝備簡陋，據哨站高處放箭，但缺乏補給。"
+    },
+    {
+      "Template_ID": "DOM_COMMERCE_01",
+      "Wall": "DOMESTIC",
+      "Difficulty": "EASY",
+      "Task_Title": "市集巡察",
+      "Task_Brief": "城中市集商賈雲集，需派員巡察治安並平整商稅。",
+      "Task_Detail": "城中市集交易繁茂，各方商賈雲集。請得力將領巡查市集維持買賣秩序，打擊偷盜行騙，並收取合理商稅，挹注家族銀兩儲備。",
+      "Key_Stat": "cha",
+      "Enemy_Hint": "市集偶有地痞小偷滋擾，見官差巡邏多半望風而逃。"
+    },
+    {
+      "Template_ID": "DOM_COMMERCE_02",
+      "Wall": "DOMESTIC",
+      "Difficulty": "EASY",
+      "Task_Title": "特產運銷",
+      "Task_Brief": "押運城中特產至鄰境商會交易，換取銀兩回府。",
+      "Task_Detail": "本地絲綢與茶葉產量豐盛，鄰縣商會願以高價收購。請指派通曉商道的將領組織車隊運銷，確保貨物安全送達並帶回豐厚銀兩。",
+      "Key_Stat": "pol",
+      "Enemy_Hint": "商路偶有劫匪覬覦，但若有得力將領護衛，宵小不敢輕舉妄動。"
+    },
+    {
+      "Template_ID": "DOM_COMMERCE_03",
+      "Wall": "DOMESTIC",
+      "Difficulty": "EASY",
+      "Task_Title": "平抑物價",
+      "Task_Brief": "糧商囤積居奇物價騰貴，需協調商鋪平抑市價。",
+      "Task_Detail": "城中商鋪近來囤積居奇導致米價飛漲。請智謀出眾的官員會同大商賈協商，調度官庫儲備平抑物價，安定民心並回籠銀兩。",
+      "Key_Stat": "int",
+      "Enemy_Hint": "商賈多圖私利，需以法度與利害曉之，無需動武。"
     }
   ]
 }

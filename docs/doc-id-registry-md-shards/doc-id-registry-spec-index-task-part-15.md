@@ -176,3 +176,4 @@
 | `doc_task_2932` | docs/agent-briefs/tasks/PROG/PROG-2-9712.md | [PROG-2-9712] 第一年連敗：分清自動代打與關卡難度、強化委任 AI、戰敗敗因診斷 |
 | `doc_task_2933` | docs/agent-briefs/tasks/PROG/PROG-2-9610.md | 任務卡：PROG-2-9610 官職晉升敕封彈窗與大廳解鎖導流 |
 | `doc_task_2934` | docs/agent-briefs/tasks/PROG/PROG-2-9801.md | [PROG-2-9801] 網頁版卡頓優化第二輪（人物介紹頁／開場 Label 縮放） |
+| `doc_task_2937` | docs/agent-briefs/tasks/PROG/PROG-2-9611.md | 任務卡：PROG-2-9611 任務大廳金／銀兩口徑一致化與第一年商業任務銀兩產出 |

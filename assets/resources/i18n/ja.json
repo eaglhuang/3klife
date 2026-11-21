@@ -898,5 +898,14 @@
   "ui.academy.flow.lobby.resume_toast": "学府の修業が進行中です。続きに戻ってください",
   "ui.academy.flow.lobby.frozen_toast": "学府修業中：外の時間は止まっています",
   "ui.academy.flow.lobby.menu": "学府",
-  "ui.academy.flow.lobby.menu_resume": "学府（修業中）"
+  "ui.academy.flow.lobby.menu_resume": "学府（修業中）",
+  "ui.resource.grain": "兵糧",
+  "ui.resource.troops": "兵力",
+  "ui.resource.silver": "銀両",
+  "ui.resource.gold": "金",
+  "ui.mission.reward.silver": "銀両 +{0}",
+  "ui.mission.reward.gold": "金 +{0}",
+  "ui.mission.cost.silver": "銀両 -{0}",
+  "ui.mission.cost.gold": "金 -{0}",
+  "ui.mission.shortage.silver": "銀両不足（必要 {0}、所持 {1}）"
 }

@@ -18,8 +18,8 @@ import type {
     MissionInstance, MissionIntelBand, MissionNode, MissionTier, Revealable,
 } from './MissionTypes';
 
-const RES_TEXT: Record<string, string> = {
-    grain: '糧草', silver: '白銀', troops: '兵力', generalExp: '武將經驗', fame: '名聲', officerExp: '官職經驗',
+export const RES_TEXT: Record<string, string> = {
+    grain: '糧草', silver: '銀兩', troops: '兵力', generalExp: '武將經驗', fame: '名聲', officerExp: '官職經驗',
 };
 
 // ───────────────────────── 結果樹分析（真相，僅供投影內部使用） ─────────────────────────

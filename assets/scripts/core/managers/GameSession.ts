@@ -1477,11 +1477,10 @@ export class GameSession implements AcademyRecordPort {
     public get silverLedger(): SilverLedger {
         const start = (): number => {
             const config = this._familyConfig;
-            if (!config) throw new ApiError('FAMILY_NO_CONFIG', '家族設定尚未載入');
-            return config.startingSilver;
+            return config ? config.startingSilver : 600;
         };
         return {
-            silverBalance: () => this._family.silverBalance(this._familyConfig?.startingSilver ?? 0),
+            silverBalance: () => this._family.silverBalance(start()),
             spendSilver: (amount) => this._savedSilver(this._family.trySpendSilver(amount, start())),
             creditSilver: (amount) => { this._family.creditSilver(amount, start()); this._savedSilver(true); },
         };
@@ -4961,9 +4960,9 @@ export class GameSession implements AcademyRecordPort {
         return hashText(`mission|${this._seeded.snapshot().state}|${this._clock.state.totalSeasonsElapsed}`) >>> 0;
     }
 
-    /** 任務可動用的資源庫存：糧草、城市兵源（軍備帳）與黃金（錢包） */
+    /** 任務可動用的資源庫存：糧草、城市兵源（軍備帳）與銀兩（家族錢包） */
     public hallMissionStock(): { grain: number; silver: number; troops: number } {
-        return { grain: this._military.food, silver: this._missionWallet?.gold() ?? 0, troops: this._military.cityTroops };
+        return { grain: this._military.food, silver: this.silverLedger.silverBalance(), troops: this._military.cityTroops };
     }
 
     /** 武將記憶累計（任務心智累計器）的快取：心智有寫入時清掉，同一次畫面查詢不重複複製整份心智 */
@@ -4994,6 +4993,7 @@ export class GameSession implements AcademyRecordPort {
             if (reasons.includes('not-graduated')) block.push('not-graduated');
             if (reasons.includes('in-nurture')) block.push('nurturing');
             if (this._assignBlocked(g.id, 'hallMission')) block.push('occupied');
+            if (this._sortieSupport.strategistUid === g.id || this._sortieSupport.deputyUid === g.id) block.push('on-sortie');
             if (this._travel?.targetId === g.id) block.push('traveling');
             const raw = g as unknown as Record<string, unknown>;
             const stat = (key: MissionStatKey): number | undefined => {
@@ -5035,7 +5035,7 @@ export class GameSession implements AcademyRecordPort {
             spend: (cost) => {
                 const have = this.hallMissionStock();
                 if (have.grain < cost.grain || have.troops < cost.troops || have.silver < cost.silver) return false;
-                if (cost.silver > 0 && !this._missionWallet?.spend(cost.silver)) return false;
+                if (cost.silver > 0 && !this.silverLedger.spendSilver(cost.silver)) return false;
                 this._military = { ...this._military, food: this._military.food - cost.grain, cityTroops: this._military.cityTroops - cost.troops };
                 return true;
             },
@@ -5072,8 +5072,8 @@ export class GameSession implements AcademyRecordPort {
                         mine.grain += next - this._military.food;
                         this._military = { ...this._military, food: next };
                     } else if (e.res === 'silver') {
-                        if (e.amount > 0) { this._missionWallet?.grant(e.amount); mine.silver += e.amount; }
-                        else if (e.amount < 0) { const lost = Math.min(-e.amount, this._missionWallet?.gold() ?? 0); if (lost > 0 && this._missionWallet?.spend(lost)) mine.silver -= lost; }
+                        if (e.amount > 0) { this.silverLedger.creditSilver(e.amount); mine.silver += e.amount; }
+                        else if (e.amount < 0) { const lost = Math.min(-e.amount, this.silverLedger.silverBalance()); if (lost > 0 && this.silverLedger.spendSilver(lost)) mine.silver -= lost; }
                     } else {
                         const next = Math.max(0, Math.min(caps.troops, this._military.cityTroops + e.amount));
                         this._military = { ...this._military, cityTroops: next };
@@ -5176,7 +5176,7 @@ export class GameSession implements AcademyRecordPort {
             const mine = this._missionSettleByMission.get(s.missionId);
             const gained = mine ? [
                 mine.grain !== 0 ? `糧草 ${mine.grain > 0 ? '+' : ''}${mine.grain}` : '',
-                mine.silver !== 0 ? `黃金 ${mine.silver > 0 ? '+' : ''}${mine.silver}` : '',
+                mine.silver !== 0 ? `銀兩 ${mine.silver > 0 ? '+' : ''}${mine.silver}` : '',
                 mine.generalExp > 0 ? `武將經驗 +${mine.generalExp}` : '',
             ].filter((t) => t.length > 0).join('、') : '';
             const tail = s.narratives.length > 0 ? `　${s.narratives[s.narratives.length - 1]}` : '';

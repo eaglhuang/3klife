@@ -511,4 +511,4 @@ export class OfflineMissionService implements IMissionService {
     public clampForTest(v: number, lo: number, hi: number): number { return clampNumber(v, lo, hi); }
 }
 
-const RES_NAME: Record<MissionShortage['resource'], string> = { grain: '糧草', troops: '兵源', silver: '黃金', energy: '精力' };
+export const RES_NAME: Record<MissionShortage['resource'], string> = { grain: '糧草', troops: '兵源', silver: '銀兩', energy: '精力' };

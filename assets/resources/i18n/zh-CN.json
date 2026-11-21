@@ -898,5 +898,14 @@
   "ui.academy.flow.lobby.resume_toast": "学府修业进行中，请回到学府继续",
   "ui.academy.flow.lobby.frozen_toast": "学府修业中，外界时间静止",
   "ui.academy.flow.lobby.menu": "学府",
-  "ui.academy.flow.lobby.menu_resume": "学府修业中"
+  "ui.academy.flow.lobby.menu_resume": "学府修业中",
+  "ui.resource.grain": "粮草",
+  "ui.resource.troops": "兵源",
+  "ui.resource.silver": "银两",
+  "ui.resource.gold": "金",
+  "ui.mission.reward.silver": "银两 +{0}",
+  "ui.mission.reward.gold": "金 +{0}",
+  "ui.mission.cost.silver": "银两 -{0}",
+  "ui.mission.cost.gold": "金 -{0}",
+  "ui.mission.shortage.silver": "银两不足（需 {0}，现有 {1}）"
 }

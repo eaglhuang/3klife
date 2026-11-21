@@ -4180,7 +4180,7 @@ export class LobbyScene extends Component {
         const spent = [
             v.cost.grain > 0 ? `糧草 -${v.cost.grain}` : '',
             v.cost.troops > 0 ? `兵源 -${v.cost.troops}` : '',
-            v.cost.silver > 0 ? `黃金 -${v.cost.silver}` : '',
+            v.cost.silver > 0 ? `銀兩 -${v.cost.silver}` : '',
         ].filter((text) => text.length > 0).join('、');
         const duration = Math.max(1, v.returnSeason - this._hallSeason());
         services().event.emit('SHOW_TOAST', {
@@ -5903,7 +5903,7 @@ ${spent}`,
             // 快轉沒有季度結算窗：大廳任務的成敗與入帳總額用提示補上（PROG-2-9130）
             if (hall.settled > 0) {
                 const gained = [
-                    hall.grain > 0 ? `糧草 +${hall.grain}` : '', hall.silver > 0 ? `黃金 +${hall.silver}` : '',
+                    hall.grain > 0 ? `糧草 +${hall.grain}` : '', hall.silver > 0 ? `銀兩 +${hall.silver}` : '',
                     hall.generalExp > 0 ? `武將經驗 +${hall.generalExp}` : '',
                 ].filter((text) => text.length > 0).join('、');
                 services().event.emit('SHOW_TOAST', {

@@ -165,7 +165,7 @@ export function buildMissionDialogState(service: IMissionService, missionId: str
     const shortages: string[] = [];
     if (d.cost.grain > ctx.stock.grain) shortages.push(`糧草不足（需 ${d.cost.grain}，現有 ${Math.max(0, Math.floor(ctx.stock.grain))}）`);
     if (d.cost.troops > ctx.stock.troops) shortages.push(`兵源不足（需 ${d.cost.troops}，現有 ${Math.max(0, Math.floor(ctx.stock.troops))}）`);
-    if (d.cost.silver > ctx.stock.silver) shortages.push(`黃金不足（需 ${d.cost.silver}，現有 ${Math.max(0, Math.floor(ctx.stock.silver))}）`);
+    if (d.cost.silver > ctx.stock.silver) shortages.push(`銀兩不足（需 ${d.cost.silver}，現有 ${Math.max(0, Math.floor(ctx.stock.silver))}）`);
 
     const blocked: Partial<Record<DetailActionKey, string>> = {};
     const offered: DetailActionKey[] = [];

@@ -1,0 +1,511 @@
+{
+  "schema": "mission-def.v1",
+  "id": "DOM_COMMERCE_02",
+  "version": 1,
+  "legacyTemplateId": "DOM_COMMERCE_02",
+  "theme": "domestic",
+  "difficulty": "EASY",
+  "tags": [
+    "domestic",
+    "legacy"
+  ],
+  "meta": {
+    "origin": "converted",
+    "note": "由 tools_node/convert-hall-templates.js 從舊大廳模板機械轉出，可日後手寫補強。"
+  },
+  "text": {
+    "title": "特產運銷",
+    "brief": "押運城中特產至鄰境商會交易，換取銀兩回府。",
+    "detail": "本地絲綢與茶葉產量豐盛，鄰縣商會願以高價收購。請指派通曉商道的將領組織車隊運銷，確保貨物安全送達並帶回豐厚銀兩。"
+  },
+  "facts": [
+    {
+      "key": "detail",
+      "label": "內情",
+      "levels": [
+        {
+          "minIntel": 30,
+          "text": "本地絲綢與茶葉產量豐盛，鄰縣商會願以高價收購。"
+        },
+        {
+          "minIntel": 60,
+          "text": "本地絲綢與茶葉產量豐盛，鄰縣商會願以高價收購。請指派通曉商道的將領組織車隊運銷，確保貨物安全送達並帶回豐厚銀兩。"
+        }
+      ],
+      "decoy": "地方官員回報一切妥當，無須多慮。"
+    },
+    {
+      "key": "enemy",
+      "label": "地方情狀",
+      "levels": [
+        {
+          "minIntel": 40,
+          "text": "商路偶有劫匪覬覦。"
+        },
+        {
+          "minIntel": 70,
+          "text": "商路偶有劫匪覬覦，但若有得力將領護衛，宵小不敢輕舉妄動。"
+        }
+      ],
+      "decoy": "地方官員回報一切妥當，無須多慮。"
+    }
+  ],
+  "requirement": {
+    "slots": 1,
+    "keyStats": {
+      "pol": 1,
+      "cha": 0.3
+    },
+    "preferTags": [],
+    "avoidTags": []
+  },
+  "timing": {
+    "durationSeasons": 1,
+    "expireSeasons": 2
+  },
+  "variants": [
+    {
+      "id": "ONE",
+      "weight": 1
+    }
+  ],
+  "intel": {
+    "initial": 45,
+    "jitter": 10,
+    "sources": {}
+  },
+  "branches": [
+    {
+      "id": "B_BLIND",
+      "when": {
+        "minIntel": 0,
+        "maxIntel": 29
+      },
+      "objective": {
+        "id": "handle_blind",
+        "text": "照官府文書辦理「特產運銷」"
+      },
+      "presented": {
+        "hints": [
+          "只憑官府文書，不知實情"
+        ]
+      },
+      "modifiers": {
+        "successDelta": -0.12,
+        "rewardMul": 0.85,
+        "riskMul": 1.5
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.05,
+        "disasterRatio": 0.35,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "「特產運銷」辦得漂亮，百姓夾道稱頌，連鄰郡都來打聽章程。",
+                "effects": [
+                  {
+                    "kind": "resource",
+                    "res": "grain",
+                    "amount": {
+                      "base": 90,
+                      "mulKey": "reward"
+                    }
+                  },
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": {
+                      "base": 120,
+                      "mulKey": "reward"
+                    }
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": {
+                      "base": 5,
+                      "mulKey": "reward"
+                    }
+                  }
+                ]
+              },
+              {
+                "kind": "chance",
+                "p": 0.25,
+                "hit": {
+                  "kind": "effects",
+                  "narrative": "此役打通了門路，同類任務的消息也跟著靈通起來。",
+                  "effects": [
+                    {
+                      "kind": "intel",
+                      "target": {
+                        "tag": "domestic"
+                      },
+                      "delta": 15
+                    }
+                  ]
+                },
+                "miss": {
+                  "kind": "effects",
+                  "effects": []
+                }
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "「特產運銷」順利辦妥，府庫與民心皆有所得。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "grain",
+                "amount": {
+                  "base": 60,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": {
+                  "base": 80,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "fame",
+                "amount": {
+                  "base": 3,
+                  "mulKey": "reward"
+                }
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "「特產運銷」雷聲大雨點小，錢糧花了，成效有限。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": {
+                  "base": 5,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "fame",
+                "amount": -1
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "「特產運銷」只照文書行事，反而激起民怨，銀兩虧損，名聲受累。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": {
+                  "base": -40,
+                  "mulKey": "risk"
+                }
+              },
+              {
+                "kind": "fame",
+                "amount": -3
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_INFORMED",
+      "when": {
+        "minIntel": 30,
+        "maxIntel": 69
+      },
+      "objective": {
+        "id": "handle_informed",
+        "text": "「特產運銷」：對照實情逐項辦理"
+      },
+      "presented": {
+        "hints": [
+          "已知幾處關節，可對症下藥"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0,
+        "rewardMul": 1,
+        "riskMul": 1
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.15,
+        "disasterRatio": 0.2,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "「特產運銷」辦得漂亮，百姓夾道稱頌，連鄰郡都來打聽章程。",
+                "effects": [
+                  {
+                    "kind": "resource",
+                    "res": "grain",
+                    "amount": {
+                      "base": 90,
+                      "mulKey": "reward"
+                    }
+                  },
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": {
+                      "base": 120,
+                      "mulKey": "reward"
+                    }
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": {
+                      "base": 5,
+                      "mulKey": "reward"
+                    }
+                  }
+                ]
+              },
+              {
+                "kind": "chance",
+                "p": 0.25,
+                "hit": {
+                  "kind": "effects",
+                  "narrative": "此役打通了門路，同類任務的消息也跟著靈通起來。",
+                  "effects": [
+                    {
+                      "kind": "intel",
+                      "target": {
+                        "tag": "domestic"
+                      },
+                      "delta": 15
+                    }
+                  ]
+                },
+                "miss": {
+                  "kind": "effects",
+                  "effects": []
+                }
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "「特產運銷」順利辦妥，府庫與民心皆有所得。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "grain",
+                "amount": {
+                  "base": 60,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": {
+                  "base": 80,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "fame",
+                "amount": {
+                  "base": 3,
+                  "mulKey": "reward"
+                }
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "「特產運銷」雷聲大雨點小，錢糧花了，成效有限。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": {
+                  "base": 5,
+                  "mulKey": "reward"
+                }
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "「特產運銷」辦到一半出了岔子，白白折了些銀兩。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": {
+                  "base": -24,
+                  "mulKey": "risk"
+                }
+              },
+              {
+                "kind": "fame",
+                "amount": -2
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "B_INSIGHT",
+      "when": {
+        "minIntel": 70
+      },
+      "objective": {
+        "id": "handle_insight",
+        "text": "「特產運銷」：直指癥結，一次辦妥"
+      },
+      "presented": {
+        "hints": [
+          "癥結所在已了然，可以一次辦妥"
+        ]
+      },
+      "modifiers": {
+        "successDelta": 0.1,
+        "rewardMul": 1.25,
+        "riskMul": 0.6
+      },
+      "outcome": {
+        "kind": "roll",
+        "critRatio": 0.3,
+        "disasterRatio": 0.08,
+        "tiers": {
+          "critical": {
+            "kind": "seq",
+            "nodes": [
+              {
+                "kind": "effects",
+                "narrative": "「特產運銷」辦得漂亮，百姓夾道稱頌，連鄰郡都來打聽章程。",
+                "effects": [
+                  {
+                    "kind": "resource",
+                    "res": "grain",
+                    "amount": {
+                      "base": 90,
+                      "mulKey": "reward"
+                    }
+                  },
+                  {
+                    "kind": "resource",
+                    "res": "silver",
+                    "amount": {
+                      "base": 120,
+                      "mulKey": "reward"
+                    }
+                  },
+                  {
+                    "kind": "fame",
+                    "amount": {
+                      "base": 5,
+                      "mulKey": "reward"
+                    }
+                  }
+                ]
+              },
+              {
+                "kind": "chance",
+                "p": 0.45,
+                "hit": {
+                  "kind": "effects",
+                  "narrative": "此役打通了門路，同類任務的消息也跟著靈通起來。",
+                  "effects": [
+                    {
+                      "kind": "intel",
+                      "target": {
+                        "tag": "domestic"
+                      },
+                      "delta": 25
+                    }
+                  ]
+                },
+                "miss": {
+                  "kind": "effects",
+                  "effects": []
+                }
+              }
+            ]
+          },
+          "success": {
+            "kind": "effects",
+            "narrative": "「特產運銷」順利辦妥，府庫與民心皆有所得。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "grain",
+                "amount": {
+                  "base": 60,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": {
+                  "base": 80,
+                  "mulKey": "reward"
+                }
+              },
+              {
+                "kind": "fame",
+                "amount": {
+                  "base": 3,
+                  "mulKey": "reward"
+                }
+              }
+            ]
+          },
+          "fail": {
+            "kind": "effects",
+            "narrative": "「特產運銷」雷聲大雨點小，錢糧花了，成效有限。",
+            "effects": [
+              {
+                "kind": "generalExp",
+                "amount": {
+                  "base": 5,
+                  "mulKey": "reward"
+                }
+              }
+            ]
+          },
+          "disaster": {
+            "kind": "effects",
+            "narrative": "「特產運銷」仍有小小波折，所幸早有預備，損失不大。",
+            "effects": [
+              {
+                "kind": "resource",
+                "res": "silver",
+                "amount": {
+                  "base": -12,
+                  "mulKey": "risk"
+                }
+              },
+              {
+                "kind": "fame",
+                "amount": -1
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
