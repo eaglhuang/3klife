@@ -9,12 +9,12 @@
 
 | 玩法元件 | 繼承共用框架 | 只寫差異與接線 |
 |---|---|---|
-| 頒獎典禮互動劇本 | **劇情 `STY-M`**（`doc_spec_1188`） | 使用 `ceremony` 演出模組；新增通用 `hologram` 與 `groupPhoto` CueHandler；先結算後播放 |
-| 上榜名聲、稱號與獎賞 | **獎勵 `RWD-M`**（`doc_spec_1186`） | 依各榜 `rewardBundleId` 走 `reward.claim` 冪等發放，不直接改玩家黃金或名聲欄位 |
-| 年度榮譽白因子種子 | **技能 `SKL-M`**（`doc_spec_1187`） | 寫入 `annualHonorSeeds` 臨時獎池，對接 `WhiteFactorTraits.ts`（`WhiteAchievementCriteria`） |
+| 頒獎典禮互動劇本 | **劇情 `STY-M`**（`doc_spec_1188`） | 使用 `ceremony` 演出模組；新增通用全息立繪濾鏡 `hologram` 與梯形站位 `groupPhoto` CueHandler；先結算後播放 |
+| 上榜榮譽稱號與徽章 | **獎勵 `RWD-M`**（`doc_spec_1186`） | 依各榜 `rewardBundleId` 走 `reward.claim` 發放純榮譽稱號、徽章與個人名冊背景，**不發放任何戰鬥實體數值** |
+| 觀禮諸侯彈幕互動 | **友誼／關係（第 8 框架）** | 依現場各君王勢力對玩家家族／當選武將之關係（同盟、敵對、仇視、崇拜），動態觸發吐槽或喝彩氣泡 |
 | 特別獎開啟條件 | **基礎工具 `FND-M`**（`Condition.ts`） | `enabledWhen` 與參賽資格條件直接複用 `Condition` DSL 與 `DeterministicRng`（同分平手破局用） |
 | 參賽與賽道互斥波動 | **人員占用 `OCC-M`**（`doc_spec_1241`） | 讀取既有 `nursing`／`mentorAssign`／`academy` 狀態自然限制當季出征，創造年度排名流動 |
-| 存檔寫入 | **共通 API `B0`** | `annualCeremonyArchive`、`prevTop100Ranks` 與年度帳本走 `save.write` 讀寫（`check-api-bypass` 納管） |
+| 存檔寫入 | **伺服器 API / 共通 API `B0`** | `annualCeremonyArchive`（純資料 DTO、禁存 Base64/PNG）走 `save.write` 讀寫（`check-api-bypass` 納管） |
 
 ## 10. 建議 JSON 欄位草案（`assets/resources/data/annual-ranking-config.json`）
 
@@ -78,7 +78,7 @@
 - **TC-RNK-03**：可插拔零改動：於測試中向 `RankingBoardRegistry` 註冊第 6 個自訂榜單並在設定開啟，主引擎、`CeremonyScriptAssembler` 與存檔皆不修改即自動結算並納入典禮與存檔。
 - **TC-RNK-04**：雙主持傳承：第 1 屆主持人為 `year1FallbackHosts`；第 2 屆主持人自動切換為第 1 屆 `charm` 榜首與 `rookie` 榜首。
 - **TC-RNK-05**：歷年史冊查詢與輕量快照：第 5 年時可查回第 1 年完整得獎名單、異動、評語與大合照構圖 DTO，存檔不含任何 PNG 二進位圖檔。
-- **TC-RNK-06**：心智與白因子連動：進入前 10 名之玩家武將正確寫入 `MindEvent(PRAISED)` 並累積 `annualHonorSeeds`。
+- **TC-RNK-06**：心智誇耀與純榮譽結算（對齊 11/22 總 PM 裁決）：進入前 10 名之武將正確寫入 `MindEvent(PRAISED)`，獲頒榮譽稱號與徽章，且驗證未增加任何戰鬥/戰場實體數值，數值天花板嚴格維持不變。
 
 ## 13. 文案範例（對齊 `doc_spec_1273` 現代口語、輕鬆詼諧）
 

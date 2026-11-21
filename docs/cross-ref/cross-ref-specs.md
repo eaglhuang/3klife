@@ -1,10 +1,10 @@
 <!-- doc_id: doc_index_0002 -->
 # Cross-Reference: 規格書索引（文件 → 相關文件）
 
-> 這是 doc_index_0007 的 A 節分片。完整索引見 `docs/cross-reference-index.md (doc_index_0007)` (doc_index_0007)。
+> 這是 doc_index_1126 的 A 節分片。完整索引見 `docs/cross-reference-index.md (doc_index_1126)` (doc_index_1126)。
 > 最後更新請參考母檔 Header。
 >
-> **doc_id 查詢**：用 `node tools_node/resolve-doc-id.js <搜尋詞>` 查文件代號，或瀏覽 `docs/doc-id-registry.md (doc_other_0006)` (doc_other_0006)。
+> **doc_id 查詢**：用 `node tools_node/resolve-doc-id.js <搜尋詞>` 查文件代號，或瀏覽 `docs/doc-id-registry.md (doc_other_4198)` (doc_other_4198)。
 > ⚠️ **壓縮版（doc_id 索引）**：中文名稱已移除，查詢名稱請用 resolve-doc-id.js。人類可讀進度 → `docs/cross-ref/cross-ref-進度.md (doc_index_0017)` (doc_index_0017)
 
 ## A. 規格書索引（文件 → 相關文件）
@@ -102,7 +102,7 @@
 | doc_spec_0025 |—|doc_spec_0029、doc_spec_0027|
 | doc_spec_0015 |doc_tech_0014、doc_ui_0027、doc_spec_0176、doc_spec_0177|doc_spec_0002、doc_spec_0025、doc_spec_0040|
 | doc_spec_0176 |doc_spec_0177、doc_tech_0014|doc_spec_0015、doc_spec_0016、doc_spec_0026、doc_tech_0014、doc_spec_0177|
-| doc_spec_0177 |doc_spec_0176、doc_tech_0014、doc_ui_0012、doc_tech_0080|doc_spec_0176、doc_spec_0015、doc_tech_0012、doc_tech_0014、doc_spec_0170、doc_spec_0171、doc_spec_0172、doc_tech_0080、doc_other_0085|
+| doc_spec_0177 |doc_spec_0176、doc_tech_0014、doc_ui_0012、doc_tech_0080|doc_spec_0176、doc_spec_0015、doc_tech_0012、doc_tech_0014、doc_spec_0170、doc_spec_0171、doc_spec_0172、doc_tech_0080、doc_other_4228|
 | doc_spec_0006 |doc_spec_0028|doc_spec_0009|
 | doc_spec_0003 |—|doc_spec_0028、doc_spec_0029、doc_spec_0021、doc_spec_0026|
 | doc_spec_0021 |doc_spec_0003|doc_spec_0032、doc_spec_0016|
@@ -128,8 +128,8 @@
 | doc_spec_0161 |doc_tech_0007、doc_ui_0001|doc_spec_0040、doc_spec_0012、doc_data_0001|
 | doc_tech_0015 |—|doc_data_0001、doc_spec_0038、doc_spec_0033、doc_spec_0039|
 | doc_tech_0007 |—|doc_spec_0161|
-| doc_spec_0159 |doc_index_0011|doc_index_0007|
-| doc_spec_0001 |doc_index_0011|doc_spec_0159、doc_index_0007|
+| doc_spec_0159 |doc_index_0011|doc_index_1126|
+| doc_spec_0001 |doc_index_0011|doc_spec_0159、doc_index_1126|
 | doc_tech_0008 |—|doc_spec_0031、doc_spec_0011、doc_spec_0042|
 | doc_tech_0009 |doc_tech_0015、doc_tech_0014、doc_spec_0008、doc_spec_0010、doc_spec_0011| — |
 | doc_ui_0027 |doc_spec_0004、doc_ui_0049、doc_ui_0012、doc_ui_0009|doc_spec_0031、doc_tech_0008、doc_spec_0011、doc_spec_0012、doc_spec_0015、doc_spec_0007、doc_spec_0032|
@@ -137,18 +137,18 @@
 | doc_ui_0011 |doc_ui_0012、doc_ui_0049|—|
 | doc_ui_0001 |doc_ui_0049|doc_spec_0161、doc_spec_0040、doc_spec_0012、doc_spec_0038、doc_spec_0030、doc_spec_0039（§ 6 場景視覺主題）、doc_art_0002|
 | doc_art_0003 |doc_ui_0049、doc_tech_0015|doc_index_0011|
-| doc_ui_0051 |doc_ui_0049、doc_ui_0027、doc_art_0003、doc_ui_0035、doc_art_0002、doc_agentskill_0011|doc_index_0011 § 4.1|
+| doc_ui_0051 |doc_ui_0049、doc_ui_0027、doc_art_0003、doc_ui_0035、doc_art_0002、doc_agentskill_0004|doc_index_0011 § 4.1|
 | doc_art_0002 |doc_ui_0049、doc_ui_0027、doc_art_0003、doc_ui_0012、doc_ui_0001|doc_ui_0051、doc_ui_0050|
 | doc_ui_0032 |doc_ui_0036、doc_ui_0045|doc_index_0012、doc_ui_0049、doc_ui_0050、doc_art_0002|
-| doc_ui_0045 |doc_ui_0032、doc_agentskill_0023、doc_agentskill_0031|doc_index_0012、doc_ui_0049、doc_ui_0050、doc_art_0003|
+| doc_ui_0045 |doc_ui_0032、doc_agentskill_0023、doc_agentskill_0030|doc_index_0012、doc_ui_0049、doc_ui_0050、doc_art_0003|
 | doc_ui_0037 |doc_ui_0045、doc_ui_0032|doc_index_0012、doc_ui_0049、doc_ui_0050、doc_art_0003、doc_ui_0036|
 | doc_ui_0033 |doc_ui_0032|doc_index_0012、doc_ui_0049、doc_ui_0050、doc_art_0002、doc_ui_0034|
 | doc_ui_0034 |doc_ui_0032、doc_ui_0033|doc_index_0012、doc_ui_0033、doc_ui_0050|
 | doc_ui_0036 |doc_ui_0032|doc_index_0012、doc_ui_0049、doc_ui_0050、doc_art_0002、doc_ui_0001|
 | doc_ui_0035 |—|doc_ui_0051 § 8、doc_index_0011、doc_art_0003|
-| doc_ui_0049 |doc_agentskill_0022、doc_agentskill_0029、doc_agentskill_0027、doc_agentskill_0011|doc_index_0011、doc_ui_0027、doc_ui_0001、doc_art_0003、doc_ui_0012、doc_ui_0011|
+| doc_ui_0049 |doc_agentskill_0022、doc_agentskill_0029、doc_agentskill_0027、doc_agentskill_0004|doc_index_0011、doc_ui_0027、doc_ui_0001、doc_art_0003、doc_ui_0012、doc_ui_0011|
 | doc_tech_0012 |doc_spec_0177|doc_tech_0014|
-| doc_tech_0080 |doc_spec_0177|doc_other_0085、doc_other_0086、doc_other_0087、doc_other_0088|
+| doc_tech_0080 |doc_spec_0177|doc_other_4228、doc_other_4229、doc_other_4230、doc_other_4231|
 | doc_other_0011 |—|doc_spec_0002、doc_tech_0014、doc_ui_0012|
 
 ---
