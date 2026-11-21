@@ -41,6 +41,20 @@ const SNAPSHOT = `(() => {
     out.ccNodes = n;
   } catch (_) { out.ccNodes = null; }
   try {
+    // 只算 activeInHierarchy 的節點／元件：引擎每幀遍歷與送繪的是這些，停放（active=false）的畫面不計
+    const scene = cc.director.getScene();
+    let active = 0;
+    const walkA = (node) => { if (!node.activeInHierarchy) return; active++; for (const c of node.children) walkA(c); };
+    walkA(scene);
+    out.activeNodes = active;
+    const cnt = (type) => { try { return scene.getComponentsInChildren(type).filter((c) => c.node && c.node.activeInHierarchy && c.enabledInHierarchy).length; } catch (_) { return null; } };
+    out.labels = cnt(cc.Label);
+    out.sprites = cnt(cc.Sprite);
+    out.graphics = cnt(cc.Graphics);
+    out.masks = cnt(cc.Mask);
+    out.richTexts = cnt(cc.RichText);
+  } catch (_) {}
+  try {
     const dev = cc.director.root.device;
     out.drawCalls = dev.numDrawCalls != null ? dev.numDrawCalls : null;
     out.tris = dev.numTris != null ? dev.numTris : null;
@@ -154,6 +168,12 @@ async function create(page, { topN = 8 } = {}) {
                 heapMB: snap.heapMB,
                 domNodes: snap.domNodes,
                 ccNodes: snap.ccNodes,
+                activeNodes: snap.activeNodes,
+                labels: snap.labels,
+                sprites: snap.sprites,
+                graphics: snap.graphics,
+                masks: snap.masks,
+                richTexts: snap.richTexts,
                 drawCalls: snap.drawCalls,
                 tris: snap.tris,
                 scene: snap.scene,
