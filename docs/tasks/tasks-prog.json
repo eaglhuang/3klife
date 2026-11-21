@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 223,
-    "in_progress": 0,
-    "open": 76,
-    "total": 312
+    "done": 224,
+    "in_progress": 6,
+    "open": 85,
+    "total": 315
   },
   "tasks": [
     {
@@ -13569,6 +13569,102 @@
       "acceptance": [],
       "deliverables": [],
       "notes": "狀態: done。變更: RewardGachaPort 新增 deferDuplicates；LobbyScene 新路徑重複卡交回 _routeGachaOwnedDuplicates（復生重練／升星／血脈灌注三選一），不自動轉 bundle；playtest-online.js 新增 --dup 步驟。驗證: tsc 0、run-cli 8947 pass、playtest 12/12（含 --dup），彈窗截圖在 scratchpad dup3/11-dup-popup.png。",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9592",
+      "title": "F3 配偶 SP1／SP2 接線（他國仕官女將結緣移籍、開戰母國牽掛）",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "2026-11-21T22:52:43+08:00",
+      "started_by_agent": "claude-code-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "doc_spec_1241 第 3.2 節；11/21 裁決 Q-SP1 他國仕官女將結為配偶後自動辭官移籍可出征、Q-SP2 與配偶母國開戰時心情 -30、忠誠 -20 且該場不可出征對抗母國。",
+      "related": [
+        "PROG-2-9583",
+        "PROG-2-9441",
+        "PROG-2-9442"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9591",
+      "title": "F3 家族銀兩錢包（銀兩幣別、媒人禮金與乳母費實扣）",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "2026-11-21T22:53:08+08:00",
+      "started_by_agent": "claude-code-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "doc_spec_1241 第 3.2、3.4 節；11/21 裁決保留金（國家）與銀兩（家族）兩種貨幣。銀兩進 wallet API、存檔隨 familyState，媒人禮金與乳母費實際扣款，轉蛋貨幣與銀兩分開。",
+      "related": [
+        "PROG-2-9583",
+        "PROG-2-9441",
+        "PROG-2-9442"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
