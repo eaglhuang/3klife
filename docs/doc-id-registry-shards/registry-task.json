@@ -16156,5 +16156,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9460.md",
     "title": "[PROG-2-9460] GCH-R1 獎勵引擎補軟保底",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2711",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9461.md",
+    "title": "[PROG-2-9461] GCH-R2 完整機率表",
+    "category": "task"
   }
 ]
