@@ -16488,6 +16488,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_2932",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9712.md",
+    "title": "[PROG-2-9712] 第一年連敗：分清自動代打與關卡難度、強化委任 AI、戰敗敗因診斷",
+    "category": "task"
+  },
+  {
     "id": "doc_task_2933",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9610.md",
     "title": "任務卡：PROG-2-9610 官職晉升敕封彈窗與大廳解鎖導流",
@@ -16500,9 +16506,9 @@
     "category": "task"
   },
   {
-    "id": "doc_task_2932",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9712.md",
-    "title": "[PROG-2-9712] 第一年連敗：分清自動代打與關卡難度、強化委任 AI、戰敗敗因診斷",
+    "id": "doc_task_2939",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9820.md",
+    "title": "[PROG-2-9820] 晉升導流「！」加大加亮，且泡泡必須出在掛「！」的武將身上",
     "category": "task"
   }
 ]

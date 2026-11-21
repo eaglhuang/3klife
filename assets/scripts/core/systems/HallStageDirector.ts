@@ -12,6 +12,8 @@ import { HallStageGeneral, HallStageLayout, HallStagePlacement, planHallStage } 
 export interface HallStageCast {
     generals: readonly HallStageGeneral[];
     taskMarkIds: ReadonlySet<string>;
+    /** 指定武將頭上標記的樣式名（沒列的走預設）；例：晉升導流用大金色「!」 */
+    markStyleById?: ReadonlyMap<string, string>;
 }
 
 export class HallStageDirector {
@@ -24,7 +26,7 @@ export class HallStageDirector {
         const signature = castSignature(cast);
         if (signature === this._signature) return null;
         this._signature = signature;
-        return planHallStage(cast.generals, this._layout, cast.taskMarkIds);
+        return planHallStage(cast.generals, this._layout, cast.taskMarkIds, cast.markStyleById);
     }
 
     /** 畫面重新開啟時呼叫，下一次 update 必定回傳站位。 */
@@ -34,5 +36,5 @@ export class HallStageDirector {
 }
 
 function castSignature(cast: Readonly<HallStageCast>): string {
-    return JSON.stringify(cast.generals.map(g => [g.id, g.name, g.title ?? '', cast.taskMarkIds.has(g.id)]));
+    return JSON.stringify(cast.generals.map(g => [g.id, g.name, g.title ?? '', cast.taskMarkIds.has(g.id), cast.markStyleById?.get(g.id) ?? '']));
 }

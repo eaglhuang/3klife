@@ -7,11 +7,25 @@
  * Unity 對照：像在 Spawn 時依 sprite.bounds 算 localScale，再把名牌 / 驚嘆號掛到固定偏移。
  */
 
+/** 頭上「!」標記的樣式：字級、顏色、描邊、呼吸縮放與額外抬高（px） */
+export interface HallMarkStyle {
+    fontSize: number;
+    color: string;
+    outlineColor: string;
+    outlineWidth: number;
+    /** 呼吸縮放：在 1 與 scale 之間來回，不動位置（走動時位置由走動模擬每幀決定） */
+    pulse: { scale: number; periodSec: number };
+    /** 放大後蓋住頭頂，往上多抬的距離 */
+    extraRisePx: number;
+}
+
 export interface HallStageDecor {
     tagBelowFootPx: number;
     markAboveHeadPx: number;
     idle: { periodSec: number; risePx: number; stretchY: number };
     markBob: { periodSec: number; risePx: number };
+    /** 具名標記樣式（沿用預設小「!」之外的，例如晉升導流） */
+    markStyles?: Record<string, HallMarkStyle>;
     /** 相鄰武將 idle 起始相位錯開的秒數，避免全員同步上下。 */
     phaseStepSec: number;
 }
