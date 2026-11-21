@@ -140,7 +140,7 @@ export function createRewardBaseSuite(): TestSuite {
         });
         assert.equals(1, cfg.pools.length);
         assert.equals(1, cfg.pools[0].entries.length, '只留下合法的 c');
-        assert.equals(null, cfg.pools[0].pity, '保底等階不在 tiers 內就丟掉保底');
+        assert.equals(0, cfg.pools[0].pity.length, '保底等階不在 tiers 內就丟掉保底');
         assert.equals(1, cfg.bundles.length);
         assert.equals('B2', cfg.bundles[0].id);
     });
