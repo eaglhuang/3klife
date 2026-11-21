@@ -29,7 +29,7 @@
 | 酒店採買食材 | 商店 | `shopId=market:grocery`、`stock=∞`（I1）、I2 每季限量 20 |
 | 活動商店、百寶閣（既有） | 商店 | 貨幣 gem／destinyPoint；**本規格不改**，只確認與家族商店 listing 池分開 |
 | 家業庫房：食材、菜餚、商貨、戲本、貨艙 | 物品庫存 | `holderKind=home`、`containerTag=estate:<id>`；食材＝材料＋tag `ingredient`；菜餚＝消耗品＋tag `dish`；新增 `freshSeasons`、`boundChildId`、`premiumPurchasable`、`tradable` |
-| 幕府公庫（金、建材、聘禮） | 物品庫存 | `holderKind=shogunate`；家業收益進此處 |
+| 家族庫房（**銀兩**、建材、聘禮） | 物品庫存 | `holderKind=clan`（庫房貨幣＝銀兩）；**家業收益進此處**（PM 11/21 依裁決 #28 改：銀兩＝家族、金＝國家；原「收益進幕府公庫」作廢）。幕府公庫只收家族捐獻（有代價，見貨幣與資源總規格書 doc_spec_1247 §3） |
 | 傳家寶、家族倉庫 | 物品庫存 | `holderKind=clan`、`rarity>=4` |
 | 武將背包（乾糧、補給） | 物品庫存 | `holderKind=general` |
 | 家業差事、季結算工作 | 任務 | `kind=estateErrand`、`settleRule=estateSeason`、`durationSeasons=1` |
@@ -56,10 +56,10 @@
 
 ### 3.3 商店分界與商業化
 
-- 家族商店＝商店框架的 `sell` 實例，只用金幣；商城＝商店框架的 `buy` 實例，用付費貨幣。兩者 listing 池完全分開。
+- 家族商店＝商店框架的 `sell` 實例，只用**銀兩**；商城＝商店框架的 `buy` 實例，用付費貨幣。兩者 listing 池完全分開。
 - 家族商店**不售**：加速卡、入學令、轉職令、傳道令、歸宗令、抽卡券、任何 `premium`／`token`／`speedup` tag 物品。
 - 商城**不售**：家業貨物、菜餚、食材、配方卷。成長膳相關物品（菜餚、配方卷、主味食材）`premiumPurchasable=false`，避免「付費買加速成長」。
-- 金幣不能換付費貨幣。商業化接口只留空欄位 `monetizationHook`（Q3）。
+- 銀兩與金都不能換付費貨幣。商業化接口只留空欄位 `monetizationHook`（Q3）。
 
 ### 3.4 建議新增共用框架（候選，**待 PM 裁決，本規格不定案**）
 
