@@ -16216,5 +16216,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9484.md",
     "title": "[PROG-2-9484] 配偶上場（F4：名冊 kind=spouse、生成型配偶範本、出征與派遣、太守；指派入口改用 checkAssign）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2721",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9486.md",
+    "title": "[PROG-2-9486] playtest --academy 第 15 步：任務牆比對略過大廳走動名牌",
+    "category": "task"
   }
 ]
