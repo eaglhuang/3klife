@@ -249,29 +249,29 @@
               "height": 180.637
             },
             "faceBox": [
-              97.0,
-              73.0,
-              164.0,
-              145.0
+              97,
+              73,
+              164,
+              145
             ],
             "headwearExtent": [
-              53.0,
-              10.0,
-              184.0,
-              145.0
+              53,
+              10,
+              184,
+              145
             ],
             "shoulderAnchors": [
-              60.0,
-              178.0,
-              175.0,
-              178.0
+              60,
+              178,
+              175,
+              178
             ],
             "method": "crop-only; uniform resize; no redraw",
             "headHeightPercent": 74.7,
             "faceHeightPercent": 39.9,
             "faceWidthPercent": 37.1,
-            "faceCenterXPercent": 50.0,
-            "centerAxisDifferencePx": 0.0,
+            "faceCenterXPercent": 50,
+            "centerAxisDifferencePx": 0,
             "qc": "與七張核可小頭像及原核定大頭來源並排檢查；主頭冠及兩側飾件完整，雙肩可辨；臉框中線與畫布中線重合。只裁切與等比縮放。",
             "note": "正式站姿的高冠在參考臉部尺度下無法同時保留頭冠與肩部，改用已整合大頭來源裁切。",
             "createdAt": "2026-11-20"
@@ -3069,8 +3069,8 @@
             "headHeightPercent": 70.4,
             "faceHeightPercent": 42.7,
             "faceWidthPercent": 34.6,
-            "faceCenterXPercent": 50.0,
-            "centerAxisDifferencePx": 0.0,
+            "faceCenterXPercent": 50,
+            "centerAxisDifferencePx": 0,
             "qc": "與七張核准小頭像並排比較：頭髮與額帶完整，臉部置中且大小接近參考，兩側肩部／衣料可辨；裁切並等比縮放，未重繪。",
             "createdAt": "2026-11-20"
           }
@@ -3553,6 +3553,41 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "status": "integrated",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/ding_feng__丁奉__small_avatar_0001.png",
+            "status": "integrated",
+            "sha256": "34a7be0297e0d1c91ec08a68e1e9e5eebd53e0f4fb5c2735130a81267f7c5af6",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/ding_feng__丁奉__avatar_0002.png",
+            "method": "crop-only; uniform resize; no redraw or rotation",
+            "cropBox": {
+              "x": 12.45,
+              "y": 3.98,
+              "width": 200.73,
+              "height": 200.73
+            },
+            "headHeightPercent": 82.7,
+            "faceHeightPercent": 44,
+            "faceWidthPercent": 40.6,
+            "faceCenterXPercent": 50,
+            "centerAxisDifferencePx": 0.5,
+            "headwearExtent": [
+              45,
+              10,
+              125,
+              180
+            ],
+            "qc": "頭高82.7%；臉高44%、臉寬40.6%；臉框中線與畫布中線差0.5px；完整保留冠飾、頭髮、雙耳、臉部與鬍鬚；與核准大喬基準及中心線標記並排檢查通過；雙肩僅作最後優先考量。由正式大頭像等比例裁切，未重繪、未旋轉、未變形。",
+            "createdAt": "2026-11-21"
+          }
+        ]
       }
     },
     {
@@ -6434,6 +6469,41 @@
             "note": "使用者要求刪除，只保留 v0002。"
           }
         ]
+      },
+      "smallAvatar": {
+        "status": "integrated",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/zhu_rong__祝融__small_avatar_0001.png",
+            "status": "integrated",
+            "sha256": "731d862c893dceee48e3f9b3b368e238f8f830601b9de6aa7795c8573435596c",
+            "canvas": "256x256 RGBA",
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/zhu_rong__祝融__standing_0002.png",
+            "method": "crop-only; uniform resize; no redraw or rotation",
+            "cropBox": {
+              "x": 371.85,
+              "y": 5.8,
+              "width": 240,
+              "height": 240
+            },
+            "headHeightPercent": 75,
+            "faceHeightPercent": 49.8,
+            "faceWidthPercent": 37.8,
+            "faceCenterXPercent": 50,
+            "centerAxisDifferencePx": 0.5,
+            "headwearExtent": [
+              382,
+              19,
+              164,
+              221
+            ],
+            "qc": "頭高75%、臉高49.8%、臉寬37.8%；臉框中線與畫布中線差0.5px；完整保留火焰冠飾、髮型、耳部、臉部與下巴；與核准大喬基準及中心線標記並排檢查通過。由正式站姿等比例裁切，未重繪、未旋轉、未變形；雙肩僅作最後優先考量。",
+            "createdAt": "2026-11-21"
+          }
+        ]
       }
     },
     {
@@ -6686,7 +6756,7 @@
             "faceHeightPercent": 41.1,
             "faceWidthPercent": 33.5,
             "faceCenterXPercent": 50,
-            "centerAxisDifferencePx": 0.0,
+            "centerAxisDifferencePx": 0,
             "qc": "與七張核准基準並排目視檢查通過；臉框中心線與畫布中線重合，頭部高度71.3%、臉高41.1%、臉寬33.5%，髮髻完整且雙肩可見；僅裁切與等比縮放。",
             "createdAt": "2026-11-20"
           }
@@ -10078,7 +10148,7 @@
             "faceHeightPercent": 45,
             "faceWidthPercent": 38.8,
             "faceCenterXPercent": 50,
-            "centerAxisDifferencePx": 0.0,
+            "centerAxisDifferencePx": 0,
             "qc": "並排七張核准基準目視檢查通過；臉框中心線與畫布中線重合，頭部高度70%、臉高45%，頭髮完整且雙肩可見；僅裁切與等比縮放。",
             "createdAt": "2026-11-20"
           }
@@ -10611,7 +10681,7 @@
             "headHeightPercent": 71.9,
             "faceHeightPercent": 39.9,
             "faceWidthPercent": 31.9,
-            "faceCenterXPercent": 50.0,
+            "faceCenterXPercent": 50,
             "qc": "與七張核准參考比較；臉框中線對齊畫布中線；頭部與臉部比例通過；頭飾保留，肩部可辨。只裁切與等比縮放。",
             "note": "重裁版本；未重繪人物。",
             "createdAt": "2026-11-20"
