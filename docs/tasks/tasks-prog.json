@@ -13214,6 +13214,57 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9702",
+      "title": "年終守城戰規格書：大敗、失守懲罰、平手三項回寫使用者 11/21 裁決",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P2",
+      "status": "done",
+      "type": "documentation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-21T22:20:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 轉達使用者 11/21 裁決：大敗＝失守且主將倒下；失守懲罰只有失守民心 −3、大敗再扣人口 3%；平手＝雙方罷兵（民心人口不變、照常換年、年報寫雙方罷兵）。現行程式已符合，只回寫 shard-d §11 第 2／5／8 項與 shard-a 大敗列。",
+      "related": [
+        "PROG-2-9425",
+        "PROG-2-9426",
+        "PROG-2-9431"
+      ],
+      "depends": [
+        "PROG-2-9425",
+        "PROG-2-9431"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 核對 DefenseBattle／CityEconomy／YearReport 與裁決一致，僅改文件 | 變更: shard-d §11 三項、shard-a 大敗列 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

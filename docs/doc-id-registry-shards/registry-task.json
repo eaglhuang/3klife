@@ -16270,5 +16270,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9701.md",
     "title": "[PROG-2-9701] 戰場可讀性：部隊框避讓含血條與狀態圖示、跳字置頂、敵軍行動中橫幅移出棋盤",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2730",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9702.md",
+    "title": "[PROG-2-9702] 年終守城戰規格書：大敗、失守懲罰、平手三項回寫使用者 11/21 裁決",
+    "category": "task"
   }
 ]
