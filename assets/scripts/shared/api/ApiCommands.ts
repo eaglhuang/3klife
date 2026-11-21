@@ -65,6 +65,7 @@ export const API_COMMANDS = Object.freeze({
     'occupancy.release': { kind: 'cmd', revGuard: false },
     // 家族（配偶納入名冊；只送意圖，名冊與上限由權威端判定；PROG-2-9582）
     'family.enrollSpouse': { kind: 'cmd', revGuard: false },
+    'family.matchmakerOffer': { kind: 'query', revGuard: false },
     // 偵錯（只有本機 adapter 掛處理器；網路 adapter 一律回 COMMAND_UNKNOWN，避免變成外掛入口）
     'debug.fastForward': { kind: 'cmd', revGuard: false },
     // 任務（任務 Base 規格 §11；QST-M 最小版，只有 taskKind=academy）
@@ -631,12 +632,26 @@ export interface OccupancyReleaseResult {
 
 // ── 家族（family.*）──
 
-/** 配偶來源：first-child＝首子流程的系統配偶（固定 slot）；其餘來源由 PROG-2-9583 接上 */
-export type FamilySpouseSource = 'first-child';
+/** 配偶來源：first-child＝首子系統配偶；bond＝結緣好感；diplomatic＝聯姻外交；matchmaker＝媒人說親（PROG-2-9583） */
+export type FamilySpouseSource = 'first-child' | 'bond' | 'diplomatic' | 'matchmaker';
 
 /** family.enrollSpouse：只送來源，不得帶武將數值（E103）；同來源重送冪等（created=false） */
 export interface FamilyEnrollSpouseArgs {
     source: FamilySpouseSource;
+    /** bond：要納的女性武將 id */
+    generalId?: string;
+    /** diplomatic：聯姻的勢力 id */
+    nationId?: string;
+    /** matchmaker：候選位序 0~2 */
+    pick?: number;
+}
+
+/** family.matchmakerOffer：價格未定時 open=false、notice＝「即將開放」 */
+export interface FamilyMatchmakerOfferResult {
+    open: boolean;
+    notice: string;
+    remaining: number;
+    candidates: ReadonlyArray<{ index: number; generalId: string; name: string; ep: number; hint: string }>;
 }
 
 export interface FamilyEnrollSpouseResult {

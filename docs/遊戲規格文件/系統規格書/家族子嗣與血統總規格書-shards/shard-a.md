@@ -99,6 +99,9 @@
 
 ### 3.2 三種來源（全開，裁決 19）
 
+> 實作狀態（PROG-2-9583）：共通 API `family.enrollSpouse` 支援 source = bond／diplomatic／matchmaker（欄位 generalId／nationId／pick），`family.matchmakerOffer` 查本年候選；錯誤碼 E364 不符資格、E365 好感不足、E366 邦交不足、E367 該國聯姻額滿、E368 媒人未開放、E369 本年說親額滿。結緣好感取送禮好感與傭兵好感較高者；聯姻配偶為固定種子生成（slot `diplomatic:<勢力>:<序>`），成婚邦交 +20（`MARRIAGE_RELATION_GAIN`），母國由 id 反推（`spouseHomeNationOf`）；媒人每年（以遊戲年度計，未用完不保留，裁決 Q-SP3）最多 `matchmakerPerYear` 位，候選為固定種子三位附家世提示，`matchmakerPrice` 暫定 100 銀兩（待使用者裁決；單機尚無銀兩錢包，目前不扣款）。
+> 尚未接上：他國仕官武將結為配偶後自動辭官移籍（Q-SP1）、與母國開戰時心情 −30／忠誠 −20 且不可出征對抗母國（Q-SP2，走 OCC）、媒人候選改走 `reward.roll` 池 `matchmaker_candidates`、聯姻成功率與保護期（企劃提案公式 2）、近親檢查、遊戲內 UI 入口（結緣好感事件、外交面板、媒人鈕；價格未定時顯示「即將開放」）。
+
 | 來源 | 觸發 | 流程 | 差異欄位 |
 | --- | --- | --- | --- |
 | 結緣好感度 | 玩家與可結緣女性的好感度 ≥ `bondAffinityToMarry`（暫 70，沿用結緣系統好感欄） | 好感達標彈出「納為配偶」事件；玩家確定後入名冊；之後才走一般結緣（受孕）規則 | 好感度由結緣系統產生；一位女性只能被納一次 |
