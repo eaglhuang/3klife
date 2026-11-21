@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 209,
+    "done": 210,
     "in_progress": 4,
-    "open": 85,
-    "total": 298
+    "open": 86,
+    "total": 300
   },
   "tasks": [
     {
@@ -12789,7 +12789,103 @@
     {
       "doc_id": "",
       "id": "PROG-2-9484",
-      "title": "playtest --academy 第 15 步：任務牆出現修業中武將（OCC 委任候選／大廳名牌）",
+      "title": "配偶上場（F4：名冊 kind=spouse、生成型配偶範本、出征與派遣、太守；指派入口改用 checkAssign）",
+      "owner": "ClaudeCode_sonnet-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "ClaudeCode_sonnet-5-5",
+      "started_at": "2026-11-21T17:00:00+08:00",
+      "started_by_agent": "ClaudeCode_sonnet-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "doc_spec_1241 第 15 章 配偶上場",
+      "related": [
+        "PROG-2-9441",
+        "PROG-2-9442",
+        "PROG-2-9224"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0 錯、run-cli 全過（含 SpouseDeploy 6 項）、compute-gate standard 通過、api-bypass 未增 | 變更: 指派入口 isRegistered 改 checkAssign（出征、派遣、大廳任務、太守；只套登記表與待產）、matrix 依 PM 裁決（待產放行太守、哺乳放行大廳任務）、GeneratedSpouse 範本、GameSession.enrollSpouse／enrollGeneratedSpouse／isSpouse、FamilyService.addSpouse | 阻塞: 7456 實跑截圖待主目錄同步（主目錄與 origin/master 分岔）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9485",
+      "title": "待產與哺乳接線（F5：2 季待產、哺乳 OCC、乳母不占用）",
+      "owner": "ClaudeCode_sonnet-5-5",
+      "priority": "P1",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "ClaudeCode_sonnet-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "doc_spec_1241 第 15 章 待產與哺乳接線",
+      "related": [
+        "PROG-2-9441",
+        "PROG-2-9442",
+        "PROG-2-9224"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9486",
+      "title": "playtest --academy 第 15 步：任務牆比對略過大廳走動名牌",
       "owner": "codex-gpt-5.4-mini",
       "priority": "P1",
       "status": "done",
@@ -12797,12 +12893,12 @@
       "phase": "M0",
       "created": "2026-11-21",
       "created_by_agent": "codex-gpt-5.4-mini",
-      "started_at": "2026-11-21T17:14:46+08:00",
-      "started_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "",
+      "started_by_agent": "",
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
-      "description": "修業中的趙雲仍出現在任務牆相關畫面文字。分清來源：委任候選清單未濾占用（遊戲錯誤，OCC 規則修業中不可委任）或大廳走動名牌（測試比對範圍）。",
+      "description": "走動武將名牌輪替隨機，輪到修業中的武將上場就誤判；任務牆與委任候選本就帶占用原因，遊戲無錯。",
       "related": [
         "PROG-2-9226",
         "PROG-2-9192"
