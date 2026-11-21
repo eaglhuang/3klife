@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 234,
+    "done": 235,
     "in_progress": 4,
     "open": 86,
-    "total": 324
+    "total": 325
   },
   "tasks": [
     {
@@ -14028,6 +14028,98 @@
         "position": "",
         "prereq": ""
       },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2766",
+      "id": "PROG-2-9710",
+      "title": "預覽直進戰場先載語系字串（奧義鈕不再顯示鍵名）",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-22 | 狀態: done | 驗證: 7456 預覽截圖奧義鈕顯示「奧義」 | 變更: LoadingScene 預覽戰場先載語系 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2925",
+      "id": "PROG-2-9800",
+      "title": "網頁版卡頓優化：量測探針、漸層底圖快取、名冊深拷貝、字型範圍解析",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "2026-11-22T01:30:00+08:00",
+      "started_by_agent": "claude-code-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者回報線上版仍很卡。量測：GradientBackground 逐像素 JS 算圖（無快取、每次重畫、貼圖不釋放）造成 2~4 秒卡死；PlayerRosterService.getAll 每次深拷貝整份名冊；UISkinResolver 每次解析字型 unicode-range。新增 perf-probe 量測探針接進 playtest-online --perf。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "playtest-online 11/11、console error 0",
+        "主要卡頓熱點前後數據對照"
+      ],
+      "deliverables": [
+        "tools_node/perf-probe.js",
+        "tools_node/playtest-online.js",
+        "assets/scripts/ui/components/GradientBackground.ts",
+        "assets/scripts/core/services/PlayerRosterService.ts",
+        "assets/scripts/ui/core/UISkinResolver.ts",
+        "docs/agent-briefs/tasks/PROG/PROG-2-9800.md"
+      ],
+      "notes": "2026-11-22 | 狀態: done | 驗證: 本機建置（起始 LoginScene）前後各 2 輪 playtest-online --perf --gpu 皆 11/11、console error 0；全步驟 long task 總時長 50.8s→24.3s、開場最長幀 2701→807ms、轉蛋 9.1s→2.5s；單元測試／tsc 0 錯 | 變更: GradientBackground 共用貼圖快取＋免重畫＋無配置算圖＋深內部快速通道（與舊版 40 組逐像素相同）；GameSession 唯讀查詢改用 _rosterRead 快取（消除占用檢查每武將深拷貝整份名冊）；字型 unicode-range 解析快取＋二分搜尋；perf-probe.js 與 playtest-online --perf | 阻塞: 無；戰場／Label 縮放量測（measureText）熱點記錄於回報",
+      "brief": "docs/agent-briefs/tasks/PROG/PROG-2-9800.md",
       "contracts": {
         "input": [],
         "output": [],

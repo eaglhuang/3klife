@@ -317,6 +317,7 @@ import { EMPTY_PERFORMANCE, type BattlePerformance, type BattleRecordLike } from
 import { buildBattleSnapshot, type BattleSnapshot } from '../systems/BattleSnapshot';
 import { leaderboardEntryOf, rankLeaderboard, type LeaderboardMetric, type LeaderboardEntry } from '../systems/BattleLeaderboard';
 import { hasTacticNoteReward, milestoneBundleId } from '../systems/MilestoneRewards';
+import { graduationTicketClaim, loginTicketClaim, termTicketClaims, type SupportTicketClaim } from '../systems/SupportTicketSources';
 import { awakenHiddenFactors } from '../systems/HiddenFactorAwakening';
 import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonCapacityOf, prisonYieldOneSeason, resolvePowDecision, rollFutureReturns, rollPrisonTreasureDonors, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
 import { createFemaleSource, normalizeFemaleSource, normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
@@ -1250,7 +1251,7 @@ export class GameSession implements AcademyRecordPort {
     /** 告別信用的武將名：名冊查得到用名字，否則用傭兵 uid。 */
     private generalNameOf(generalId: string | undefined, fallback: string): string {
         if (!generalId) return fallback;
-        return this._roster.getAll().find(g => g.id === generalId)?.name ?? fallback;
+        return this._rosterRead().find(g => g.id === generalId)?.name ?? fallback;
     }
 
     /** 傭兵池可出現的武將：過濾掉 30 天冷卻中的武將 id，保留原順序。 */
@@ -1279,7 +1280,7 @@ export class GameSession implements AcademyRecordPort {
 
     /** 傭兵列表的顯示列（倒數、結義進度、按鈕可否）；由目前存檔包推導，不改狀態。 */
     public mercenaryPoolRows(nameOf?: (generalId: string) => string | undefined): MercenaryPoolRow[] {
-        return buildMercenaryPoolRows(this._mercenaries, (generalId) => this._roster.getAll().find((g) => g.id === generalId)?.name ?? nameOf?.(generalId));
+        return buildMercenaryPoolRows(this._mercenaries, (generalId) => this._rosterRead().find((g) => g.id === generalId)?.name ?? nameOf?.(generalId));
     }
 
     /** 以校正後的副本取代傭兵存檔包；不寫存檔，由呼叫端決定何時 save。 */
@@ -1315,7 +1316,7 @@ export class GameSession implements AcademyRecordPort {
             day: this.mercenaryDay,
         };
         this._bondPoints -= result.pointsSpent;
-        if (template.gender === '女' && !this._roster.getAll().some((g) => g.id === template.id)) {
+        if (template.gender === '女' && !this._rosterRead().some((g) => g.id === template.id)) {
             // §F 傭兵結義的女將品質為 SR~N，稀有度更高的模板也不超過 SR
             const quality = rarityOfTemplate(template) === 'R' ? 'R' : 'SR';
             this._femaleSources = { ...this._femaleSources, [template.id]: createFemaleSource('MERCENARY', quality, this._clock.state.totalSeasonsElapsed) };
@@ -1383,6 +1384,8 @@ export class GameSession implements AcademyRecordPort {
             graduatedSeason: this._clock.state.totalSeasonsElapsed,
         } as GeneralConfig;
         const result: AcademyGraduationResult = { ...applied, general: stamped };
+        // 連線券來源（SUP-11）：結業一次（冪等鍵含學員），S 評級領較多；入帳走 reward.claim
+        await this._claimSupportTickets([graduationTicketClaim(generalId, applied.grade)]);
         this._roster.replaceAll(this._roster.getAll().map((g) => (g.id === generalId ? stamped : g)));
         if (ownsRecord) this._setAcademyRecord(null);
         if (this._autoSave && this._save) {
@@ -1430,7 +1433,7 @@ export class GameSession implements AcademyRecordPort {
         const retry = this._roster.getAll().filter((g) => g.nursingPending && !bornMotherIds.includes(g.id)).map((g) => g.id);
         for (const motherId of [...bornMotherIds, ...retry]) {
             if (this._startNursing(motherId, season) !== 'blocked') continue;
-            const name = this._roster.getAll().find((g) => g.id === motherId)?.name ?? motherId;
+            const name = this._rosterRead().find((g) => g.id === motherId)?.name ?? motherId;
             lines.push(`${name}想餵奶，但人還在外頭忙，先記帳，下季再補登記。`);
         }
         return lines;
@@ -1549,7 +1552,7 @@ export class GameSession implements AcademyRecordPort {
     public enrollSpouse(general: GeneralConfig, options: { hallLevel?: number } = {}): { ok: boolean; reason?: 'no-config' | 'duplicate' | 'cap-reached' } {
         const config = this._familyConfig;
         if (!config) return { ok: false, reason: 'no-config' };
-        if (this._family.get(general.id) || this._roster.getAll().some((g) => g.id === general.id)) return { ok: false, reason: 'duplicate' };
+        if (this._family.get(general.id) || this._rosterRead().some((g) => g.id === general.id)) return { ok: false, reason: 'duplicate' };
         if (!this._family.canAddSpouse(config, options.hallLevel ?? 1)) return { ok: false, reason: 'cap-reached' };
         this.enrollGenerals([general]);
         this._family.addSpouse(general.id, this._clock.state.totalSeasonsElapsed, config, options.hallLevel ?? 1);
@@ -1620,7 +1623,7 @@ export class GameSession implements AcademyRecordPort {
      */
     public adjustMood(generalId: string, delta: number, reason: string, eventId: string): boolean {
         const level = Math.max(-3, Math.min(3, Math.round(delta / 10)));
-        if (level === 0 || !this._roster.getAll().some((g) => g.id === generalId)) return false;
+        if (level === 0 || !this._rosterRead().some((g) => g.id === generalId)) return false;
         const out = this.mind.record({
             generalId, season: this._clock.state.totalSeasonsElapsed, kind: level < 0 ? 'SCOLDED' : 'PRAISED',
             forceValence: level as MindValence, forceWeight: 4, reason, tags: ['homeWar'], label: '母國開戰', id: eventId,
@@ -1690,7 +1693,7 @@ export class GameSession implements AcademyRecordPort {
         if (!nation) return { ok: false, reason: 'not-eligible' };
         if (!relationAllowsAlliance(nation.relation)) return { ok: false, reason: 'relation-low' };
         const prefix = `spouse_gen_diplomatic_${nationId.replace(/[^A-Za-z0-9_-]/g, '_')}_`;
-        const married = this._roster.getAll().filter((g) => g.id.startsWith(prefix)).length;
+        const married = this._rosterRead().filter((g) => g.id.startsWith(prefix)).length;
         if (married >= config.marriagePerNation) return { ok: false, reason: 'nation-limit' };
         const out = this.enrollGeneratedSpouse(diplomaticSlot(nationId, married), options);
         if (!out.ok) return out;
@@ -1703,7 +1706,7 @@ export class GameSession implements AcademyRecordPort {
         const config = this._familyConfig;
         if (!config || config.matchmakerPrice === null) return { open: false, notice: MATCHMAKER_CLOSED_LABEL, remaining: 0, candidates: [] };
         const year = this._clock.state.currentYear;
-        const used = this._roster.getAll().filter((g) => matchmakerYearOf(g.id) === year).length;
+        const used = this._rosterRead().filter((g) => matchmakerYearOf(g.id) === year).length;
         return { open: true, notice: '', remaining: Math.max(0, config.matchmakerPerYear - used), candidates: matchmakerCandidates(year, config) };
     }
 
@@ -1714,7 +1717,7 @@ export class GameSession implements AcademyRecordPort {
         if (!offer.open) return { ok: false, reason: 'not-open' };
         const chosen = offer.candidates[pick];
         if (!chosen) return { ok: false, reason: 'not-eligible' };
-        if (this._roster.getAll().some((g) => g.id === chosen.generalId)) return { ok: false, reason: 'duplicate', generalId: chosen.generalId };
+        if (this._rosterRead().some((g) => g.id === chosen.generalId)) return { ok: false, reason: 'duplicate', generalId: chosen.generalId };
         if (offer.remaining <= 0) return { ok: false, reason: 'year-limit' };
         // 媒人禮金實扣（PROG-2-9591）：先扣，納入失敗（上限等）就退回，失敗不改狀態
         const config = this._familyConfig;
@@ -1746,7 +1749,7 @@ export class GameSession implements AcademyRecordPort {
             // TODO(第二版)：歷練（doc_spec_1180）尚未實作，轉接器先回空
             expedition: () => [],
             // 待產（pregnancySeasonsLeft）；TODO(第二版)：重傷旗標待傷勢系統落地後併入
-            medical: () => this._roster.getAll().filter((g) => ((g as { pregnancySeasonsLeft?: number }).pregnancySeasonsLeft ?? 0) > 0).map((g) => this._adaptedOccupancy(g.id, 'pregnancy')),
+            medical: () => this._rosterRead().filter((g) => ((g as { pregnancySeasonsLeft?: number }).pregnancySeasonsLeft ?? 0) > 0).map((g) => this._adaptedOccupancy(g.id, 'pregnancy')),
         },
     });
 
@@ -1821,6 +1824,8 @@ export class GameSession implements AcademyRecordPort {
     private _setAcademyRecord(record: PersistedAcademyRecord | null): void {
         this._academyRecord = record;
         const childId = isAcademyRecordActive(record) ? record!.committed.childId : null;
+        // 連線券來源（SUP-11）：過了學期評核（第 12、24 回合）各領一份；冪等鍵含回合，重複寫紀錄不會重領
+        if (childId && record) void this._claimSupportTickets(termTicketClaims(childId, record.committed.currentTurn));
         for (const held of this._occupancy.recordsOfKind('academy')) {
             if (held.personId !== childId) this._occupancy.release({ personId: held.personId, kind: 'academy', refId: held.refId });
         }
@@ -2287,7 +2292,7 @@ export class GameSession implements AcademyRecordPort {
     }
 
     private _tallyNameOf(card: TigerTallyCard): string {
-        return resolveTallyName(card, (id) => this._roster.getAll().find((g) => g.id === id || g.templateId === id)?.name);
+        return resolveTallyName(card, (id) => this._rosterRead().find((g) => g.id === id || g.templateId === id)?.name);
     }
 
     /**
@@ -2334,7 +2339,7 @@ export class GameSession implements AcademyRecordPort {
 
     /** 把君主持有的虎符裝到武將身上；武將不在名冊、虎符不存在、已被持有或武將已有虎符時回傳失敗 */
     public async equipTally(cardUid: string, generalId: string): Promise<TallyHoldingsResult | null> {
-        if (!this._roster.getAll().some((g) => g.id === generalId)) return null;
+        if (!this._rosterRead().some((g) => g.id === generalId)) return null;
         const card = this._tallyCards[cardUid];
         const result = equipTally(this._tallyHoldings, cardUid, generalId);
         const committed = await this._commitTallyResult(result);
@@ -2378,7 +2383,7 @@ export class GameSession implements AcademyRecordPort {
      * 武將未持有虎符時回傳 null；武將不在名冊時也回傳 null。
      */
     public async confiscateTally(generalId: string, isGachaHero = false): Promise<{ cardUid: string; loyalty: number } | null> {
-        if (!this._roster.getAll().some((g) => g.id === generalId)) return null;
+        if (!this._rosterRead().some((g) => g.id === generalId)) return null;
         const cardUid = tallyOfGeneral(this._tallyHoldings, generalId);
         if (cardUid === null) return null;
         const quality = this._tallyCards[cardUid]?.quality ?? 'R';
@@ -2504,7 +2509,7 @@ export class GameSession implements AcademyRecordPort {
         quality: TigerTallyQuality,
         isGachaHero = false,
     ): Promise<TallyLoyaltyResult | null> {
-        if (!this._roster.getAll().some((g) => g.id === generalId)) return null;
+        if (!this._rosterRead().some((g) => g.id === generalId)) return null;
         const current = this._tallyLoyalty[generalId] ?? createTallyLoyaltyState(TALLY_LOYALTY_INITIAL, isGachaHero);
         const result = applyTallyLoyaltyChange(current, action, quality, this._clock.state.totalSeasonsElapsed);
         if (result.ok) {
@@ -2634,6 +2639,22 @@ export class GameSession implements AcademyRecordPort {
                 } catch (error) {
                     console.warn('[GameSession] 里程碑獎勵領取例外', error);
                 }
+            }
+        }
+    }
+
+    /**
+     * 連線券免費來源（SUP-11）：逐份經 reward.claim 入帳（張數在 reward-config.json 的 BUNDLE_SUPPORT_TICKET_*）。
+     * grantKey 讓重送冪等；沒綁 API（純邏輯測試）就不發；失敗只記警告、不擋結業或登入。
+     */
+    private async _claimSupportTickets(claims: readonly SupportTicketClaim[]): Promise<void> {
+        if (!this._rewardApi) return;
+        for (const claim of claims) {
+            try {
+                const res = await this._rewardApi.cmd('reward.claim', { bundleId: claim.bundleId, grantKey: claim.grantKey, source: claim.source });
+                if (isApiFail(res)) console.warn(`[GameSession] 連線券領取失敗 ${claim.grantKey} ${res.errorCode} ${res.message}`);
+            } catch (error) {
+                console.warn('[GameSession] 連線券領取例外', error);
             }
         }
     }
@@ -4258,6 +4279,9 @@ export class GameSession implements AcademyRecordPort {
     /** 記錄一次登入（UTC+8 切日）；同日重複登入不增加天數。 */
     public recordLoginAt(epochMs: number, grantGold: (amount: number) => void = () => {}): void {
         this._loginStreak = recordLogin(this._loginStreak, epochMs);
+        // 連線券來源（SUP-11）：連續登入每滿 7 天 +1；冪等鍵含日期，同日重複登入不重領
+        const loginTicket = loginTicketClaim(this._loginStreak.consecutiveDays, loginDayOf(epochMs));
+        if (loginTicket) void this._claimSupportTickets([loginTicket]);
         // 每日免費入學令已退場（PROG-2-9206）：入學令只由季結的 item.settlePeriodic 發放；登入日高水位仍保留給離線行為判斷與舊存檔相容
         const today = loginDayOf(epochMs);
         // 三國季報：換日首登才算（晨報一天只產生一次，用它的產生日判斷）；本季還沒有季報（新局、舊檔）時補合成
@@ -4383,7 +4407,7 @@ export class GameSession implements AcademyRecordPort {
         if (!job) return { ok: false, reason: 'unknown-job' };
         const running = this._dispatch.active.find((a) => a.jobId === jobId);
         if (running) {
-            const name = this._roster.getAll().find((g) => g.id === running.generalId)?.name ?? running.generalId;
+            const name = this._rosterRead().find((g) => g.id === running.generalId)?.name ?? running.generalId;
             return { ok: false, reason: 'job-active', jobName: job.name, generalName: name };
         }
         if (generalId) {
@@ -5159,7 +5183,7 @@ export class GameSession implements AcademyRecordPort {
      * 回傳的 favorite 為切換後的狀態。
      */
     public async toggleFavorite(generalId: string): Promise<{ ok: boolean; favorite: boolean }> {
-        if (!this._roster.getAll().some((g) => g.id === generalId)) {
+        if (!this._rosterRead().some((g) => g.id === generalId)) {
             return { ok: false, favorite: this._favoriteGeneralIds.includes(generalId) };
         }
         const favorite = !this._favoriteGeneralIds.includes(generalId);
@@ -5177,7 +5201,7 @@ export class GameSession implements AcademyRecordPort {
      * 武將不在名冊或任務 id 為空時回傳 false，不變更。
      */
     public async assignHallTask(taskId: string, generalId: string): Promise<boolean> {
-        if (taskId.length === 0 || !this._roster.getAll().some((g) => g.id === generalId && !isCaptive(g))) return false;
+        if (taskId.length === 0 || !this._rosterRead().some((g) => g.id === generalId && !isCaptive(g))) return false;
         this._hallAssignments = { ...this._hallAssignments, [taskId]: generalId };
         if (this._autoSave && this._save) {
             await this.save();
@@ -6875,7 +6899,7 @@ export class GameSession implements AcademyRecordPort {
             this._emit(GAME_SESSION_EVENTS.FactorAwakened, event);
         }
         rankPromotions.forEach((payload) => {
-            this._seasonActivity.rankUps.push({ name: this._roster.getAll().find((g) => g.id === payload.generalId)?.name ?? payload.generalId, title: payload.title });
+            this._seasonActivity.rankUps.push({ name: this._rosterRead().find((g) => g.id === payload.generalId)?.name ?? payload.generalId, title: payload.title });
             this._emit(GAME_SESSION_EVENTS.GeneralRankPromoted, payload);
         });
         return record;

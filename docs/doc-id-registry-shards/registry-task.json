@@ -16423,6 +16423,30 @@
   },
   {
     "id": "doc_task_2765",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9245.md",
+    "title": "[PROG-2-9245] SUP-11 連線券免費來源與教官池軟保底 60",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2766",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9710.md",
+    "title": "[PROG-2-9710] 預覽直進戰場先載語系字串（奧義鈕不再顯示鍵名）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2767",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9260.md",
+    "title": "[PROG-2-9260] 重複卡三選一彈窗「宿命牽引・名將重逢」照設計稿轉進遊戲（DUP-UI）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2925",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9800.md",
+    "title": "[PROG-2-9800] 網頁版卡頓優化",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2926",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9709.md",
     "title": "[PROG-2-9709] 極速決戰修正：整軍戰力、資料驅動可用條件、每日次數與軍令狀",
     "category": "task"

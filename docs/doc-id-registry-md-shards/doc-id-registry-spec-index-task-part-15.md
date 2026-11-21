@@ -162,3 +162,8 @@
 | `doc_task_2762` | docs/agent-briefs/tasks/PROG/PROG-2-9593.md | [PROG-2-9593] F3 銀兩收入（每季家族俸祿）＋大廳頂欄銀兩格＋CUR-1 糧草改名＋SP2 議和解除母國占用 |
 | `doc_task_2763` | docs/agent-briefs/tasks/PROG/PROG-2-9704.md | [PROG-2-9704] 紅方弓兵盔甲改銀色 |
 | `doc_task_2764` | docs/agent-briefs/tasks/PROG/PROG-2-9707.md | [PROG-2-9707] 戰場「自動」鈕改為自動代打（再按跳過＝極速決戰） |
+| `doc_task_2765` | docs/agent-briefs/tasks/PROG/PROG-2-9245.md | [PROG-2-9245] SUP-11 連線券免費來源與教官池軟保底 60 |
+| `doc_task_2766` | docs/agent-briefs/tasks/PROG/PROG-2-9710.md | [PROG-2-9710] 預覽直進戰場先載語系字串（奧義鈕不再顯示鍵名） |
+| `doc_task_2767` | docs/agent-briefs/tasks/PROG/PROG-2-9260.md | [PROG-2-9260] 重複卡三選一彈窗「宿命牽引・名將重逢」照設計稿轉進遊戲（DUP-UI） |
+| `doc_task_2925` | docs/agent-briefs/tasks/PROG/PROG-2-9800.md | [PROG-2-9800] 網頁版卡頓優化 |
+| `doc_task_2926` | docs/agent-briefs/tasks/PROG/PROG-2-9709.md | [PROG-2-9709] 極速決戰修正：整軍戰力、資料驅動可用條件、每日次數與軍令狀 |
