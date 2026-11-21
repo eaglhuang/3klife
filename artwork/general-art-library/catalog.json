@@ -4653,6 +4653,30 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "status": "integrated",
+        "activeVersion": "0006",
+        "history": [
+          {
+            "version": "0006",
+            "file": "small_avatars/cheng_yu__程昱__small_avatar_0006.png",
+            "status": "integrated",
+            "sha256": "1976c2480ced973955d116ae10c050bd2807d98043af429932e6fef178eeeb29",
+            "canvas": "256x256 RGBA",
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/cheng_yu__程昱__standing_0002.png",
+            "method": "crop-only; uniform resize; face-centered; no redraw",
+            "cropBox": {
+              "x": 156.07,
+              "y": -6.56,
+              "width": 218.67,
+              "height": 218.67
+            },
+            "qc": "顱部至下巴頭高75%；臉高52.6%、臉寬28.4%；臉框中心線與畫布中線差0.5px；完整保留方帽、頭髮、臉與鬍鬚；左右肩面可見。保留原圖自然輕微三分之四側角，不正面化、不旋轉、不重繪。125px候選及250px核准基準同尺度比較確認。",
+            "createdAt": "2026-11-22"
+          }
+        ]
       }
     },
     {
