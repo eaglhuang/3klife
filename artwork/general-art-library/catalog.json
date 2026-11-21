@@ -2489,8 +2489,8 @@
         "activeVersion": "0002"
       },
       "smallAvatar": {
-        "activeVersion": "0002",
-        "status": "review-pending",
+        "activeVersion": "0003",
+        "status": "integrated",
         "history": [
           {
             "version": "0001",
@@ -2506,10 +2506,28 @@
           {
             "version": "0002",
             "file": "small_avatars/jia_xu__賈詡__small_avatar_0002.png",
-            "status": "review-pending",
+            "status": "superseded",
             "sha256": "8956384df0f68eb7230086aacb44f7abbad34eef6c7d28f1c31999413d23242f",
             "canvas": "1254x1254 RGBA",
-            "note": "User-approved image stored pixel-identically; no redesign or crop changes."
+            "note": "Replaced with 0003: 77% head height, larger face, preserved natural three-quarter angle."
+          },
+          {
+            "version": "0003",
+            "file": "small_avatars/jia_xu__賈詡__small_avatar_0003.png",
+            "status": "integrated",
+            "sha256": "a7af1d7bcf4f46bf2ac986f32400f13e7b9cb3a5af2cdd195807d01efb6d13c8",
+            "canvas": "256x256 RGBA",
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/jia_xu__賈詡__standing_0002.png",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "x": 401.77,
+              "y": 6.34,
+              "width": 332.47,
+              "height": 332.47
+            },
+            "qc": "頭高77%、臉高55.3%、臉寬31.9%；臉框中線與畫布中線差0.5px；完整保留髮型、冠飾、臉與鬍鬚；上肩部分入鏡。125px確認保留自然三分之四側角；只等比例裁切，未旋轉、未重繪。",
+            "createdAt": "2026-11-22"
           }
         ]
       },
