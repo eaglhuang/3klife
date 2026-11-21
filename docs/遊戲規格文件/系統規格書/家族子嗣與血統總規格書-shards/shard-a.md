@@ -115,8 +115,9 @@
 
 | 階段 | 季數 | 規則 |
 | --- | --- | --- |
-| 待產 | 2 季（`pregnancyQuarters=2`，doc_spec_0580） | 沿用 1181 第 10.1 節：可任商店、酒店、學院、歌劇廳；不可任傭兵團、貿易、出征 |
-| 哺乳 | 母乳方式：到孩子 5 歲或玩家改方式止（doc_spec_1180 第 15.2 節）；其他方式：產後休養 1 季（`postpartumQuarters=1`） | 哺乳期母親**不可出征**；仍可當太守、做內政；守城維持預設可（1180 Q10 預設） |
+| 待產 | 2 季（`pregnancyQuarters=2`，doc_spec_0580） | 沿用 1181 第 10.1 節：可任商店、酒店、學院、歌劇廳；**可任太守與內政**（PM 11/21 裁決）；不可任傭兵團、貿易、出征 |
+| 哺乳 | 母乳方式：到孩子 5 歲或玩家改方式止（doc_spec_1180 第 15.2 節）；其他方式：產後休養 1 季（`postpartumQuarters=1`） | 哺乳期母親**不可出征**；仍可當太守、做內政；**可接不需離城的大廳任務**，只擋需離城的派遣（`hallDispatch`，PM 11/21 裁決）；守城維持預設可（1180 Q10 預設） |
+| 接線（PROG-2-9485） | 待產結束（出生）當季，依母親 `nursingMethod`（缺值＝母乳）登記 `nursing`：母乳 `until`＝孩子滿 `breastfeedEndAge` 歲；其他方式 `until`＝出生季＋`postpartumQuarters`；乳母不登記。玩家改方式＝釋放再依新方式登記；到期由季結釋放 | OPEN：改方式的 UI 與乳母費用待企劃 |
 | 乳母 | 雇乳母（1180 第 15.3 節）後母親無哺乳占用 | 費用改記銀兩，價格沿用既有數值待經濟統一 |
 
 ### 3.5 人員占用（OCC）新增兩種狀態
@@ -125,7 +126,7 @@
 
 | 狀態 | 說明 | 互斥與例外 |
 | --- | --- | --- |
-| `nursing` | 哺乳（母乳方式或產後休養） | 擋：`sortie`（出征）、`hallMission` 的遠派、傭兵團、貿易。放行：`gov`（太守）、`estate` 低風險崗位、`mentorAssign` |
+| `nursing` | 哺乳（母乳方式或產後休養） | 擋：`sortie`（出征）、`hallDispatch`（需離城的派遣）、傭兵團、貿易。放行：`gov`（太守）、`hallMission`（不離城的大廳任務）、`estate` 低風險崗位、`mentorAssign`。規則唯一來源是 `occupancy-matrix.json` |
 | `mentorAssign` | 教官指派（doc_spec_1179 第 14 章） | 擋：`sortie`、`gov`、`hallMission`、`adventure`；`estate` 的榮養位放行 |
 
 規則：OCC 在**指派當下**檢查，不在出征畫面事後報錯；`nursing` 的 `until` 由哺育方式決定，換方式時重寫登記。

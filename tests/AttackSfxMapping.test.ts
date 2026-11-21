@@ -20,7 +20,7 @@ for (const k of Object.keys(ATTACK_SFX_KEY) as (keyof typeof ATTACK_SFX_KEY)[]) 
   assert.ok(BATTLE_AUDIO_CLIP_MAP[ATTACK_SFX_KEY[k] as keyof typeof BATTLE_AUDIO_CLIP_MAP], `${k} 缺 clip`);
 }
 assert.equal(new Set(Object.values(ATTACK_SFX_KEY).map(k => BATTLE_AUDIO_CLIP_MAP[k])).size, 5);
-// PROG-2-9484：所有攻擊聲都不能和移動腳步共用同一個檔，否則統一音效閘門按檔名節流時會被腳步聲吃掉
+// PROG-2-9580：所有攻擊聲都不能和移動腳步共用同一個檔，否則統一音效閘門按檔名節流時會被腳步聲吃掉
 for (const k of Object.values(ATTACK_SFX_KEY)) {
   assert.notEqual(BATTLE_AUDIO_CLIP_MAP[k], BATTLE_AUDIO_CLIP_MAP[BATTLE_AUDIO_CUE.unitMove], `${k} 和移動腳步同檔`);
 }

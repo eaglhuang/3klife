@@ -48,6 +48,7 @@ import { battleFameGain, gainGeneralFame, generalRankTitle, hallMissionFameGain,
 import { resolveHallDispatch, type HallDispatchResult } from '../systems/HallMissionDispatch';
 import type { HallBoardKey, HallGateTask, HallPlayerState } from '../systems/HallMissionBoard';
 import { battleIntelligenceOf, outcomeOf } from '../systems/BattleRoster';
+import { buildGeneratedSpouse } from '../systems/GeneratedSpouse';
 import { pvpSeasonIdOf } from '../systems/BattleSeasonStats';
 import { hasMatchingGreenFactor, learnTacticInto, type TacticLearnCheck } from '../systems/TacticLearning';
 import { canStartAutoNurture, consumeAutoNurtureTicket, isAutoNurtureUnlocked, resolveAutoSchedule, runAutoNurtureSeason, type AutoNurtureBlockReason } from '../systems/AutoNurture';
@@ -63,7 +64,7 @@ import { buildYearReport, normalizeYearAgingEvents, normalizeYearEndDefenseResul
 import { backfillTallyTroopTypes, mainTroopTypeOf } from '../systems/TigerTally';
 import { normalizeCountdownState, createCountdown, OPENING_TRAVEL_DURATION_MS, OPENING_TRAVEL_TARGET_ID, type CountdownState } from '../systems/CountdownManager';
 import { createTravelCountdown, normalizeTravelCountdown, tickTravelCountdown, type TravelCountdown } from '../systems/TravelCountdown';
-import { ageGeneralsOneSeason, AgingEvent, GENERAL_STATUS_DEAD, isGeneralDead, RandomSource, RETIREMENT_AGE } from '../systems/GeneralAging';
+import { AGE_PER_SEASON, ageGeneralsOneSeason, AgingEvent, GENERAL_STATUS_DEAD, isGeneralDead, RandomSource, RETIREMENT_AGE } from '../systems/GeneralAging';
 import { applyWarInjury } from '../systems/WarInjury';
 import { settleStageSalvage } from '../systems/StageSalvageSettlement';
 import type { SalvageTotals } from '../systems/StrategistHud';
@@ -167,8 +168,8 @@ import { OccupancyService } from '../../shared/occupancy/OccupancyService';
 import { parseOccupancyMatrix, type OccupancyMatrixV1 } from '../../shared/occupancy/OccupancyMatrix';
 import { parseFamilyConfig, type FamilyConfigV1 } from '../../shared/family/FamilyConfig';
 import { FamilyService } from '../../shared/family/FamilyService';
-import { isEmptyFamilyState } from '../../shared/family/FamilyTypes';
-import type { OccupancyRecord } from '../../shared/occupancy/OccupancyTypes';
+import { isEmptyFamilyState, type NursingMethod } from '../../shared/family/FamilyTypes';
+import type { OccupancyKind, OccupancyRecord } from '../../shared/occupancy/OccupancyTypes';
 import type { SkillLearnAuthority } from '../../shared/skill/SkillTypes';
 import { GeneralSkillStore } from '../systems/skill/GeneralSkillStore';
 import { defaultSkillRegistry } from '../systems/skill/SkillCatalog';
@@ -394,6 +395,7 @@ import {
     buildBattleConfig,
     checkDeployable,
     DeployCheck,
+    type DeployOptions,
     listDeployable,
     recoverVitalityOneSeason,
     settleBattle,
@@ -614,6 +616,9 @@ export interface BattleRecordResult extends BattleSettlement {
 }
 
 /** 心智台詞引用任務牆用的短名（PROG-2-9146） */
+/** 占用矩陣在指派入口實際套用的占用種類：登記表三種＋待產；其餘舊系統各自管忙碌（PROG-2-9482） */
+const MATRIX_GATED_KINDS: readonly OccupancyKind[] = ['academy', 'mentorAssign', 'nursing', 'medical'];
+
 const MIND_BOARD_LABEL: Readonly<Record<HallBoardKey, string>> = Object.freeze({ Military: '軍務', Domestic: '內政', Expedition: '遠征' });
 
 /** 守城失守懲罰的數值（讀 data/defense-battle，PROG-2-9431）；沒帶的欄位用 CityEconomy 預設 */
@@ -1385,6 +1390,88 @@ export class GameSession implements AcademyRecordPort {
         return this._familyConfig;
     }
 
+    /**
+     * 哺乳占用（PROG-2-9485，規格 3.4 節）：待產結束（出生）的母親依 nursingMethod 登記或不登記 `nursing`。
+     * 母乳（預設）到孩子滿 breastfeedEndAge 歲；其他方式產後休養 postpartumQuarters 季；乳母不登記。
+     * 母親此刻被別處占用（例如派遣中）而登記不上時略過，不擋季結；到期的占用在這裡一併釋放。
+     */
+    private _settleNursing(bornMotherIds: readonly string[], season: number): void {
+        const config = this._familyConfig;
+        if (!config) return;
+        for (const record of this._occupancy.snapshot()) {
+            if (record.kind === 'nursing' && record.until !== null && record.until <= season) {
+                this._occupancy.release({ personId: record.personId, kind: 'nursing', refId: record.refId });
+            }
+        }
+        for (const motherId of bornMotherIds) this._startNursing(motherId, season);
+    }
+
+    /** 依母親目前的哺乳方式重新登記哺乳占用（先釋放舊的）；回傳是否有占用在身 */
+    private _startNursing(motherId: string, season: number): boolean {
+        const config = this._familyConfig;
+        const roster = this._roster.getAll();
+        const mother = roster.find((g) => g.id === motherId);
+        if (!config || !mother) return false;
+        for (const record of this._occupancy.query(motherId)) {
+            if (record.kind === 'nursing') this._occupancy.release({ personId: motherId, kind: 'nursing', refId: record.refId });
+        }
+        const method = mother.nursingMethod ?? 'breast';
+        if (method === 'wetNurse') return false;
+        const children = roster.filter((g) => (g as { motherId?: string }).motherId === motherId && typeof g.age === 'number');
+        const child = children.sort((a, b) => (a.age as number) - (b.age as number))[0];
+        const until = method === 'breast'
+            ? season + Math.max(1, Math.ceil((config.breastfeedEndAge - (child?.age ?? 0)) / AGE_PER_SEASON))
+            : season + config.postpartumQuarters;
+        try {
+            this._occupancy.acquire({ personId: motherId, kind: 'nursing', refId: `nurse:${child?.id ?? motherId}`, since: season, until });
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
+    /**
+     * 玩家改哺乳方式：寫進母親紀錄；若她正在哺乳占用中，先釋放再依新方式重新登記（母乳→乳母即解除占用）。
+     * 回傳是否成功改了（找不到母親回 false）。
+     */
+    public setNursingMethod(motherId: string, method: NursingMethod): boolean {
+        const roster = this._roster.getAll();
+        if (!roster.some((g) => g.id === motherId)) return false;
+        this._roster.replaceAll(roster.map((g) => (g.id === motherId ? { ...g, nursingMethod: method } : g)));
+        const nursing = this._occupancy.query(motherId).find((r) => r.kind === 'nursing');
+        if (nursing) this._startNursing(motherId, this._clock.state.totalSeasonsElapsed);
+        return true;
+    }
+
+    /** 該武將是否為家眷配偶（家族名冊是權威；名冊上不另存一份標記） */
+    public isSpouse(generalId: string): boolean {
+        return this._family.get(generalId)?.kind === 'spouse';
+    }
+
+    /**
+     * 納配偶入名冊（配偶是家眷武將：可出征、派遣、當太守；規格 3.1）。
+     * 先檢查幕府等級的配偶上限與重複，過了才入名冊並寫家族紀錄；失敗不改狀態。
+     * hallLevel：幕府等級（目前遊戲內尚無此欄位，呼叫端傳入；預設 1）。
+     */
+    public enrollSpouse(general: GeneralConfig, options: { hallLevel?: number } = {}): { ok: boolean; reason?: 'no-config' | 'duplicate' | 'cap-reached' } {
+        const config = this._familyConfig;
+        if (!config) return { ok: false, reason: 'no-config' };
+        if (this._family.get(general.id) || this._roster.getAll().some((g) => g.id === general.id)) return { ok: false, reason: 'duplicate' };
+        if (!this._family.canAddSpouse(config, options.hallLevel ?? 1)) return { ok: false, reason: 'cap-reached' };
+        this.enrollGenerals([general]);
+        this._family.addSpouse(general.id, this._clock.state.totalSeasonsElapsed, config, options.hallLevel ?? 1);
+        return { ok: true };
+    }
+
+    /** 生成型配偶（首子系統配偶、媒人說親）：固定種子產生後納入；同 slot 永遠是同一人 */
+    public enrollGeneratedSpouse(slot: string, options: { hallLevel?: number } = {}): { ok: boolean; reason?: 'no-config' | 'duplicate' | 'cap-reached'; generalId?: string } {
+        const config = this._familyConfig;
+        if (!config) return { ok: false, reason: 'no-config' };
+        const spouse = buildGeneratedSpouse({ slot, epRange: config.generatedSpouseEp });
+        const out = this.enrollSpouse(spouse, options);
+        return out.ok ? { ok: true, generalId: spouse.id } : out;
+    }
+
     /** 舊檔對帳：名冊上有少年版標記卻沒家族紀錄者，補登「開局義子特例」（9194 開局少年改為義子） */
     private _reconcileStarterAdoptees(): void {
         for (const general of this._roster.getAll()) {
@@ -1408,6 +1495,14 @@ export class GameSession implements AcademyRecordPort {
             medical: () => this._roster.getAll().filter((g) => ((g as { pregnancySeasonsLeft?: number }).pregnancySeasonsLeft ?? 0) > 0).map((g) => this._adaptedOccupancy(g.id, 'pregnancy')),
         },
     });
+
+    /**
+     * 依占用矩陣判斷某人此刻不能做某活動（sortie／gov／hallMission／hallDispatch…）。
+     * 只套登記表（學府、教官指派、哺乳）與待產；太守、大廳任務、派遣、傭兵各自管自己的忙碌，不在這裡重複擋。
+     */
+    private _assignBlocked(personId: string, activity: string): boolean {
+        return !this._occupancy.checkAssign(personId, activity, MATRIX_GATED_KINDS).allowed;
+    }
 
     private _adaptedOccupancy(personId: string, refId: string, since = 0, until: number | null = null): OccupancyRecord {
         return { personId, kind: 'governance', refId, since, until };
@@ -3919,7 +4014,7 @@ export class GameSession implements AcademyRecordPort {
 
     /** 已陣亡或退役（導師卡）的武將不可派遣（PROG-2-0686） */
     private _isDispatchable(general: { id?: string; status?: string }): boolean {
-        return general.status !== 'dead' && !(general.id && this._occupancy.isRegistered(general.id)) && !(general as { isMentorCard?: boolean }).isMentorCard && !(general as { captivity?: unknown }).captivity;
+        return general.status !== 'dead' && !(general.id && this._assignBlocked(general.id, 'hallDispatch')) && !(general as { isMentorCard?: boolean }).isMentorCard && !(general as { captivity?: unknown }).captivity;
     }
 
     /** 目前可派遣（不忙碌也不在冷卻）的武將，名冊順序（PROG-2-1186 選將列用） */
@@ -4086,6 +4181,8 @@ export class GameSession implements AcademyRecordPort {
     public assignGovernor(task: string, generalUid: string, maxSlots: number = this.maxTaskSlots): GovernanceResult {
         const general = this._roster.getAll().find((g) => g.id === generalUid);
         if (!general || isCaptive(general)) return { ok: false, reason: 'invalid-general', assignments: this.governanceAssignments };
+        // 占用矩陣：學府修業、教官指派擋太守；哺乳、待產放行（PROG-2-9482）
+        if (this._assignBlocked(generalUid, 'gov')) return { ok: false, reason: 'occupied', assignments: this.governanceAssignments };
         // SPI-13 Q51：未滿 15 歲只能做低效內政
         if (!domesticAssignmentFor(general.age, task).ok) return { ok: false, reason: 'child-only-low-efficiency', assignments: this.governanceAssignments };
         const result = assignGovernanceGeneral(this._governance, task, generalUid, maxSlots);
@@ -4160,7 +4257,7 @@ export class GameSession implements AcademyRecordPort {
     private _fillAutoGovernance(): number {
         const candidates = this._roster.getAll()
             // 自動治理不派幼兒（Q51 只許低效內政，留給玩家手動指派）
-            .filter((general) => general.status !== 'dead' && !isCaptive(general) && !(typeof general.age === 'number' && general.age < CHILD_ASSIGNMENT_AGE))
+            .filter((general) => general.status !== 'dead' && !isCaptive(general) && !this._assignBlocked(general.id, 'gov') && !(typeof general.age === 'number' && general.age < CHILD_ASSIGNMENT_AGE))
             .map((general) => ({ id: general.id, stats: this.domesticStatsOf(general) }));
         const picks = planAutoGovernance(candidates, (task) => this._governance.find((a) => a.task === task)?.generalUid ?? null);
         let filled = 0;
@@ -4506,7 +4603,7 @@ export class GameSession implements AcademyRecordPort {
             if (reasons.includes('retired-mentor')) block.push('retired');
             if (reasons.includes('not-graduated')) block.push('not-graduated');
             if (reasons.includes('in-nurture')) block.push('nurturing');
-            if (this._occupancy.isRegistered(g.id)) block.push('occupied');
+            if (this._assignBlocked(g.id, 'hallMission')) block.push('occupied');
             if (this._travel?.targetId === g.id) block.push('traveling');
             const raw = g as unknown as Record<string, unknown>;
             const stat = (key: MissionStatKey): number | undefined => {
@@ -5557,7 +5654,8 @@ export class GameSession implements AcademyRecordPort {
         }
         const recovered = recoverVitalityOneSeason(unveil.roster, advance.current.totalSeasonsElapsed - 1,
             monthlyCardVitalityMultiplier(this._monthlyCard, epochMs));
-        let roster: GeneralConfig[] = advanceBreedingSeason(holdPregnancyVigor(unveil.roster, recovered)).generals;
+        const bred = advanceBreedingSeason(holdPregnancyVigor(unveil.roster, recovered));
+        let roster: GeneralConfig[] = bred.generals;
         let lifecycle: LifecycleSettlement | undefined;
         // 生平印記要在季結歸檔前寫入，歸檔快照才帶得到（G2 §E #7）
         const newlyDead = roster
@@ -5573,6 +5671,7 @@ export class GameSession implements AcademyRecordPort {
             lifecycle = settled.settlement;
         }
         this._roster.replaceAll(roster);
+        this._settleNursing(bred.pregnancyEnded, advance.current.totalSeasonsElapsed);
         this._emitLifeImprints(deathImprints.imprinted);
         this._clearLeadIfGone();
         this._releaseServedCaptives(advance.current.totalSeasonsElapsed);
@@ -6207,7 +6306,7 @@ export class GameSession implements AcademyRecordPort {
 
     /** 目前名冊中可以出戰的武將（排除死亡、退役教官、未畢業子嗣、精力不足、培育中） */
     public getDeployableGenerals(): GeneralConfig[] {
-        return listDeployable(this._roster.getAll(), { nurturingIds: this._nurturingIds(), busyIds: this.hallBusyGeneralIds() });
+        return listDeployable(this._roster.getAll(), this._deployOptions());
     }
 
     public checkDeployable(generalId: string): DeployCheck {
@@ -6215,7 +6314,13 @@ export class GameSession implements AcademyRecordPort {
         if (!general) {
             return { eligible: false, reasons: [] };
         }
-        return checkDeployable(general, { nurturingIds: this._nurturingIds(), busyIds: this.hallBusyGeneralIds() });
+        return checkDeployable(general, this._deployOptions());
+    }
+
+    /** 出征資格的宿主端條件：培育中、大廳任務忙碌、占用矩陣擋出征（PROG-2-9482） */
+    private _deployOptions(): DeployOptions {
+        const occupiedIds = this._roster.getAll().filter((g) => this._assignBlocked(g.id, 'sortie')).map((g) => g.id);
+        return { nurturingIds: this._nurturingIds(), busyIds: this.hallBusyGeneralIds(), occupiedIds };
     }
 
     /** 試用傭兵出戰：deployedIds 內的試用傭兵寫入場數與勝場；結義或到期的傭兵不動，ongoing 不計。 */

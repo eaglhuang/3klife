@@ -44,6 +44,8 @@ export interface RosterQuery {
 export interface RewardPoolFile {
     schema: 'reward-pool-file.v1';
     rosterRefs?: Record<string, string[]>;
+    /** 舊轉蛋池 id → 獎池 id（GCH-R4：轉蛋畫面沿用的池 id 對到 reward-pool） */
+    legacyPoolIds?: Record<string, string>;
     pools: unknown[];
 }
 
@@ -142,4 +144,12 @@ export function expandRewardPoolFile(raw: unknown, roster: readonly RosterMember
 /** 載入卡池名單檔：展開名冊查詢後正規化，回傳各池定義（壞的池照 normalizeRewardConfig 規則略過） */
 export function buildRewardPools(raw: unknown, roster: readonly RosterMember[]): RewardPoolDef[] {
     return normalizeRewardConfig(expandRewardPoolFile(raw, roster)).pools;
+}
+
+/** 名單檔的舊池 id 對照（舊 id → 獎池 id）；格式不對的項目略過 */
+export function legacyPoolIdsOf(raw: unknown): Record<string, string> {
+    const out: Record<string, string> = {};
+    const map = isRecord(raw) && isRecord(raw.legacyPoolIds) ? raw.legacyPoolIds : {};
+    for (const [k, v] of Object.entries(map)) if (typeof v === 'string' && v.length > 0) out[k] = v;
+    return out;
 }

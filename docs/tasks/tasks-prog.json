@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 198,
+    "done": 210,
     "in_progress": 4,
-    "open": 87,
-    "total": 289
+    "open": 86,
+    "total": 300
   },
   "tasks": [
     {
@@ -11927,55 +11927,6 @@
     },
     {
       "doc_id": "",
-      "id": "PROG-2-9484",
-      "title": "基礎戰鬥手感：騎兵攻擊暫代音檔（避開腳步同檔被節流）",
-      "owner": "claude-code-fable-5-2",
-      "priority": "P2",
-      "status": "done",
-      "type": "implementation",
-      "phase": "M0",
-      "created": "2026-11-21",
-      "created_by_agent": "claude-code-fable-5-2",
-      "started_at": "2026-11-21T18:10:00+08:00",
-      "started_by_agent": "claude-code-fable-5-2",
-      "chain_id": "",
-      "chain_step": "",
-      "sensor_triggered_by": "",
-      "description": "總PM 11/21 核准：騎兵攻擊原借 footstep，與移動腳步同檔，被統一音效閘門按檔名節流吃掉。改用戰場未用過的現有音檔 biteskill（暫代），不下載新素材；正式馬蹄衝撞聲到位只改對照表一行。補測試：攻擊聲不得與移動腳步同檔。",
-      "related": [
-        "PROG-2-9400",
-        "PROG-2-9481"
-      ],
-      "depends": [
-        "PROG-2-9481"
-      ],
-      "acceptance": [],
-      "deliverables": [],
-      "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8896 通過、tsc 0 錯、7456 觸發 unit-attack-primary 實播 biteskill | 變更: 騎兵攻擊暫代音檔＋防同檔測試 | 阻塞: 無",
-      "brief": {
-        "style": "classic",
-        "label": "",
-        "summary": "",
-        "position": "",
-        "prereq": ""
-      },
-      "contracts": {
-        "input": [],
-        "output": [],
-        "validation_cmd": "",
-        "rollback_hint": "",
-        "execution_steps": []
-      },
-      "harness_evidence": {
-        "artifact_paths": [],
-        "validation_evidence": [],
-        "handoff_diff_status": "",
-        "trace_artifacts": [],
-        "metrics_summary": []
-      }
-    },
-    {
-      "doc_id": "",
       "id": "PROG-2-9460",
       "title": "GCH-R1 獎勵引擎補軟保底",
       "owner": "claude-code-opus-5-5",
@@ -12790,6 +12741,56 @@
     },
     {
       "doc_id": "",
+      "id": "PROG-2-9463",
+      "title": "GCH-R4 抽取遷移",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "2026-11-21T18:00:00+08:00",
+      "started_by_agent": "claude-code-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "GachaApi.pull 與轉蛋畫面抽取改走 reward.roll（旗標 gachaReward，預設開，?gachaReward=0 退回舊路徑）；扣款走 wallet.spend、重複卡轉 bundle、kind general 發放 handler、開啟轉蛋畫面才展開名冊載入獎池並於離開時釋放。紅顏池採全部女將按等階（使用者裁決 11/21）。",
+      "related": [
+        "PROG-2-9460",
+        "PROG-2-9461",
+        "PROG-2-9462"
+      ],
+      "depends": [
+        "PROG-2-9462"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "狀態: done。變更: RewardGachaPull（port、general handler）、GachaRewardFlag、GachaRarity 抽出、LocalGachaApi/GachaFlowCoordinator/LobbyScene 走新路徑並延遲載入精簡名冊、離開釋放。驗證: tsc 0、run-cli 全過、playtest 11/11、api-bypass 132/132。",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
       "id": "PROG-2-9226",
       "title": "學府 qaAcademy 快進與共通 API 流程相容修正（9192 × 9215 合併後 playtest --academy 回歸）",
       "owner": "ClaudeCode_sonnet-5-5",
@@ -12813,6 +12814,198 @@
       "acceptance": [],
       "deliverables": [],
       "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0 錯、run-cli 全過、compute-gate standard | 變更: AcademyHostCommands、GameSession、AcademyApiRig、AcademyHostCommands.test | 阻塞: 第 15 步另卡",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9484",
+      "title": "配偶上場（F4：名冊 kind=spouse、生成型配偶範本、出征與派遣、太守；指派入口改用 checkAssign）",
+      "owner": "ClaudeCode_sonnet-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "ClaudeCode_sonnet-5-5",
+      "started_at": "2026-11-21T17:00:00+08:00",
+      "started_by_agent": "ClaudeCode_sonnet-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "doc_spec_1241 第 15 章 配偶上場",
+      "related": [
+        "PROG-2-9441",
+        "PROG-2-9442",
+        "PROG-2-9224"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0 錯、run-cli 全過（含 SpouseDeploy 6 項）、compute-gate standard 通過、api-bypass 未增 | 變更: 指派入口 isRegistered 改 checkAssign（出征、派遣、大廳任務、太守；只套登記表與待產）、matrix 依 PM 裁決（待產放行太守、哺乳放行大廳任務）、GeneratedSpouse 範本、GameSession.enrollSpouse／enrollGeneratedSpouse／isSpouse、FamilyService.addSpouse | 阻塞: 7456 實跑截圖待主目錄同步（主目錄與 origin/master 分岔）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9485",
+      "title": "待產與哺乳接線（F5：2 季待產、哺乳 OCC、乳母不占用）",
+      "owner": "ClaudeCode_sonnet-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "ClaudeCode_sonnet-5-5",
+      "started_at": "2026-11-21T19:00:00+08:00",
+      "started_by_agent": "ClaudeCode_sonnet-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "doc_spec_1241 第 15 章 待產與哺乳接線",
+      "related": [
+        "PROG-2-9441",
+        "PROG-2-9442",
+        "PROG-2-9224"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0 錯、run-cli 8910 全過（含 NursingWiring 7 項）、compute-gate standard 通過、api-bypass 未增 | 變更: 待產結束依母親 nursingMethod 登記 nursing（母乳到孩子 breastfeedEndAge=5 歲、其他方式產後 postpartumQuarters 季、乳母不登記）、季結釋放到期占用、GameSession.setNursingMethod、family-config 加 breastfeedEndAge | 阻塞: 7456 實跑截圖待主目錄同步（主目錄與 origin/master 分岔 230 個本地提交）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9486",
+      "title": "playtest --academy 第 15 步：任務牆比對略過大廳走動名牌",
+      "owner": "codex-gpt-5.4-mini",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "走動武將名牌輪替隨機，輪到修業中的武將上場就誤判；任務牆與委任候選本就帶占用原因，遊戲無錯。",
+      "related": [
+        "PROG-2-9226",
+        "PROG-2-9192"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: playtest --academy 18/18 | 變更: playtest 任務牆比對略過大廳走動名牌 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9580",
+      "title": "基礎戰鬥手感：騎兵攻擊暫代音檔（避開腳步同檔被節流）",
+      "owner": "codex-gpt-5.4-mini",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "2026-11-21T18:10:00+08:00",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 11/21 核准：騎兵攻擊原借 footstep，與移動腳步同檔，被統一音效閘門按檔名節流吃掉。改用戰場未用過的現有音檔 biteskill（暫代），不下載新素材；正式馬蹄衝撞聲到位只改對照表一行。補測試：攻擊聲不得與移動腳步同檔。",
+      "related": [
+        "PROG-2-9400",
+        "PROG-2-9481"
+      ],
+      "depends": [
+        "PROG-2-9481"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8896 通過、tsc 0 錯、7456 觸發 unit-attack-primary 實播 biteskill | 變更: 騎兵攻擊暫代音檔＋防同檔測試 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",

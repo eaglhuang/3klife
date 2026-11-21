@@ -6932,19 +6932,19 @@
   {
     "id": "doc_spec_1184",
     "path": "docs/遊戲規格文件/系統規格書/物品庫存系統Base框架規格書.md",
-    "title": "物品庫存系統 Base 框架規格書",
+    "title": "物品庫存系統Base框架規格書（分片索引）",
     "category": "spec"
   },
   {
     "id": "doc_spec_1185",
-    "path": "docs/遊戲規格文件/系統規格書/任務系統Base框架規格書.md",
-    "title": "任務系統 Base 框架規格書",
+    "path": "docs/遊戲規格文件/系統規格書/任務系統Base框架規格書-shards/shard-a.md",
+    "title": "任務系統Base框架規格書（分片索引） — 1–3 目的、核心概念、共用資料結構",
     "category": "spec"
   },
   {
     "id": "doc_spec_1186",
     "path": "docs/遊戲規格文件/系統規格書/獎勵系統Base框架規格書.md",
-    "title": "獎勵系統 Base 框架規格書",
+    "title": "獎勵系統Base框架規格書（分片索引）",
     "category": "spec"
   },
   {
@@ -6956,7 +6956,7 @@
   {
     "id": "doc_spec_1188",
     "path": "docs/遊戲規格文件/系統規格書/劇情演出系統Base框架規格書.md",
-    "title": "劇情（演出）系統 Base 框架規格書",
+    "title": "劇情演出系統Base框架規格書（分片索引）",
     "category": "spec"
   },
   {
@@ -7317,6 +7317,96 @@
     "id": "doc_spec_1248",
     "path": "docs/遊戲規格文件/系統規格書/人員占用系統Base框架規格書.md",
     "title": "人員占用系統Base框架規格書（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1249",
+    "path": "docs/遊戲規格文件/系統規格書/人員占用系統Base框架規格書-shards/shard-a.md",
+    "title": "人員占用系統Base框架規格書（分片索引） — 1–3 目的、核心概念、共用資料結構（種類、互斥矩陣）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1250",
+    "path": "docs/遊戲規格文件/系統規格書/人員占用系統Base框架規格書-shards/shard-b.md",
+    "title": "人員占用系統Base框架規格書（分片索引） — 4–10 共用 API、包裝接入、依賴、存檔、盤點、驗收、裁決紀錄",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1251",
+    "path": "docs/遊戲規格文件/系統規格書/人員占用系統Base框架規格書-shards/shard-c.md",
+    "title": "人員占用系統Base框架規格書（分片索引） — 11–12 伺服器 API、實作卡切分",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1252",
+    "path": "docs/遊戲規格文件/系統規格書/任務系統Base框架規格書-shards/shard-b.md",
+    "title": "任務系統Base框架規格書（分片索引） — 4–10 共用 API、包裝接入、依賴、遷移、實作卡、驗收、待決",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1253",
+    "path": "docs/遊戲規格文件/系統規格書/任務系統Base框架規格書-shards/shard-c.md",
+    "title": "任務系統Base框架規格書（分片索引） — 11 伺服器 API（端點、Schema、權威欄位、錯誤碼、事件）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1254",
+    "path": "docs/遊戲規格文件/系統規格書/任務系統Base框架規格書.md",
+    "title": "任務系統Base框架規格書（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1255",
+    "path": "docs/遊戲規格文件/系統規格書/物品庫存系統Base框架規格書-shards/shard-a.md",
+    "title": "物品庫存系統Base框架規格書（分片索引） — 1–3 目的、核心概念、共用資料結構",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1256",
+    "path": "docs/遊戲規格文件/系統規格書/物品庫存系統Base框架規格書-shards/shard-b.md",
+    "title": "物品庫存系統Base框架規格書（分片索引） — 4–10 共用 API、包裝接入、依賴、遷移、實作卡、驗收、待決",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1257",
+    "path": "docs/遊戲規格文件/系統規格書/物品庫存系統Base框架規格書-shards/shard-c.md",
+    "title": "物品庫存系統Base框架規格書（分片索引） — 11 伺服器 API（端點、Schema、權威欄位、錯誤碼、事件）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1258",
+    "path": "docs/遊戲規格文件/系統規格書/劇情演出系統Base框架規格書-shards/shard-a.md",
+    "title": "劇情演出系統Base框架規格書（分片索引） — 1–3 目的、核心概念、共用資料結構",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1259",
+    "path": "docs/遊戲規格文件/系統規格書/劇情演出系統Base框架規格書-shards/shard-b.md",
+    "title": "劇情演出系統Base框架規格書（分片索引） — 4–10 共用 API、包裝接入、依賴、遷移、實作卡、驗收、待決",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1260",
+    "path": "docs/遊戲規格文件/系統規格書/劇情演出系統Base框架規格書-shards/shard-c.md",
+    "title": "劇情演出系統Base框架規格書（分片索引） — 11 伺服器 API（端點、Schema、權威欄位、錯誤碼、事件）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1261",
+    "path": "docs/遊戲規格文件/系統規格書/獎勵系統Base框架規格書-shards/shard-a.md",
+    "title": "獎勵系統Base框架規格書（分片索引） — 1–3 目的、核心概念、共用資料結構",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1262",
+    "path": "docs/遊戲規格文件/系統規格書/獎勵系統Base框架規格書-shards/shard-b.md",
+    "title": "獎勵系統Base框架規格書（分片索引） — 4–10 共用 API、包裝接入、依賴、遷移、實作卡、驗收、待決",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1263",
+    "path": "docs/遊戲規格文件/系統規格書/獎勵系統Base框架規格書-shards/shard-c.md",
+    "title": "獎勵系統Base框架規格書（分片索引） — 11–12 伺服器 API、轉蛋改走獎勵框架（軟保底、機率公開、遷移、卡片切分）",
     "category": "spec"
   }
 ]

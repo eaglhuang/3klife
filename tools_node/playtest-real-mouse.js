@@ -283,13 +283,24 @@ function installRealMouse() {
     /** 符合 spec 的節點數（作用中） */
     const present = (spec) => matchNodes(spec).length;
 
-    /** 名稱符合 re 的第一個作用中節點底下的所有 Label 文字（找不到回傳 null） */
-    const textsUnder = (re) => {
+    /**
+     * 名稱符合 re 的第一個作用中節點底下的所有 Label 文字（找不到回傳 null）。
+     * exceptRe（選用）：名稱符合的節點整棵子樹略過，例如大廳走動武將的名牌（HallStageCrowd）不是任務牆內容。
+     */
+    const textsUnder = (re, exceptRe) => {
         let hit = null;
         walkActive(scene(), (n) => { if (!hit && new RegExp(re, 'i').test(n.name)) hit = n; });
         if (!hit) return null;
+        const except = exceptRe ? new RegExp(exceptRe, 'i') : null;
         const out = [];
-        walkActive(hit, (n) => { const l = n.getComponent('cc.Label'); if (l && l.string && String(l.string).trim()) out.push(String(l.string).trim()); });
+        const stack = [hit];
+        while (stack.length) {
+            const n = stack.pop();
+            if (!n.active || (except && except.test(n.name))) continue;
+            const l = n.getComponent('cc.Label');
+            if (l && l.string && String(l.string).trim()) out.push(String(l.string).trim());
+            for (let i = n.children.length - 1; i >= 0; i--) stack.push(n.children[i]);
+        }
         return out;
     };
 
@@ -391,7 +402,7 @@ function createRealMouse(pageOrGetter, { settleMs = 120 } = {}) {
         textOfNodeName: (name) => pg().evaluate((n) => window.__rm.textOfNodeName(n), name),
         textOfUcuf: (ucuf) => pg().evaluate((id) => window.__rm.textOfUcuf(id), ucuf),
         present: (spec) => pg().evaluate((x) => window.__rm.present(x), spec),
-        textsUnder: (re) => pg().evaluate((r) => window.__rm.textsUnder(r), re),
+        textsUnder: (re, exceptRe) => pg().evaluate((r, x) => window.__rm.textsUnder(r, x), re, exceptRe),
         toastVisible: () => pg().evaluate(() => window.__rm.toastVisible()),
         texts: (re) => pg().evaluate((r) => window.__rm.texts(r), re),
         allTexts: () => pg().evaluate(() => window.__rm.allTexts()),
