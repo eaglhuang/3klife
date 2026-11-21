@@ -11781,6 +11781,54 @@
     },
     {
       "doc_id": "",
+      "id": "PROG-2-9460",
+      "title": "GCH-R1 獎勵引擎補軟保底",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "2026-11-21T15:00:00+08:00",
+      "started_by_agent": "claude-code-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "轉蛋改走 RWD（11/21 裁決）：pity 陣列與 soft、tierGroups、draw.slots、不重複抽樣；公式見 doc_spec_1186 §12.3。",
+      "related": [
+        "PROG-2-9205"
+      ],
+      "depends": [
+        "PROG-2-9205"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0 錯、單元測試全過（含 RewardPity 11 項）、compute-gate standard | 變更: RewardConfig／RewardRules 補軟保底、多階梯、tierGroups、draw.slots、poolDistribution；舊單一 hard 設定結果不變 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
       "id": "PROG-2-9213",
       "title": "一年循環 MVP 切分（doc_spec_1182 第 12 章）與學府人源缺口方案（doc_spec_1179）",
       "owner": "ClaudeCode_sonnet-5-5",

@@ -33,14 +33,41 @@ export interface RewardEntryDef {
     weight: number;
     tier: string;
     effect: RewardEffectDef;
+    /** 等階內群組（例：up／normal）；配合池的 tierGroups 決定群組佔比，沒填＝不屬於任何群組 */
+    group: string | null;
+    /** 機率表顯示用名稱鍵（i18n）；沒填由 UI 退回 id */
+    nameKey: string | null;
 }
 
+/** 軟保底（規格 §12.3）：第 startAt 抽起機率漸升，曲線指數 curveExp；到硬保底前一抽為止 */
+export interface RewardPitySoftDef {
+    startAt: number;
+    curveExp: number;
+}
+
+/** 一條保底階梯：針對 tier（含以上）計數；soft 為 null 表示只有硬保底（舊單一設定） */
 export interface RewardPityDef {
     /** 計數器 key；不同獎池填同一個 key 就共用計數（規格 Q3 預設各池自己的 key） */
     counterKey: string;
+    /** 階梯針對的等階（含以上）；與 guaranteeTier 同值 */
+    tier: string;
     /** 連續這麼多抽沒出保底等階以上，下一抽必出（含第 count 抽本身） */
     hardCount: number;
     guaranteeTier: string;
+    soft: RewardPitySoftDef | null;
+}
+
+/** 等階內的群組佔比：該階中獎後，落在 group 的機率為 share（載入時正規化到總和 1） */
+export interface RewardTierGroupShare {
+    group: string;
+    share: number;
+}
+
+/** 固定名額（draw.slots）：一輪抽 count 個，只從符合 tier／group 篩選的項目裡抽；篩選沒有可抽項目時退回整池 */
+export interface RewardDrawSlotDef {
+    count: number;
+    tier: string | null;
+    group: string | null;
 }
 
 export interface RewardPoolDef {
@@ -55,7 +82,17 @@ export interface RewardPoolDef {
     /** 等階由低到高 */
     tiers: string[];
     entries: RewardEntryDef[];
-    pity: RewardPityDef | null;
+    /** 保底階梯，由高階往低階排序；空陣列＝無保底 */
+    pity: RewardPityDef[];
+    /** 等階 → 群組佔比；沒列的等階依項目權重直接抽 */
+    tierGroups: Record<string, RewardTierGroupShare[]>;
+    /** 固定名額；空陣列＝一般抽（picks 個）。有名額時 picks 為名額總和，且不套用保底 */
+    slots: RewardDrawSlotDef[];
+    /** 機率公開（reward.pools）用的中繼資料 */
+    nameKey: string | null;
+    disclosureVersion: string | null;
+    currency: string[];
+    rules: string[];
     /** 允許的來源種類；空陣列＝不限（憑證核對由來源種類白名單做，規格 §11.2） */
     sources: string[];
     presentation: RewardPresentationDef;
@@ -125,15 +162,69 @@ function normalizePresentation(raw: unknown): RewardPresentationDef {
     return { type, args: isRecord(raw.args) ? { ...raw.args } : {}, skippable: raw.skippable !== false };
 }
 
-function normalizePity(raw: unknown, tiers: readonly string[]): RewardPityDef | null {
+function normalizeSoft(raw: unknown, hardCount: number): RewardPitySoftDef | null {
+    if (!isRecord(raw)) return null;
+    const { startAt, curveExp } = raw;
+    if (typeof startAt !== 'number' || !Number.isInteger(startAt) || startAt < 1 || startAt >= hardCount) return null;
+    if (typeof curveExp !== 'number' || !Number.isFinite(curveExp) || curveExp <= 0) return null;
+    return { startAt, curveExp };
+}
+
+function normalizeOnePity(raw: unknown, tiers: readonly string[]): RewardPityDef | null {
     if (!isRecord(raw)) return null;
     const hard = isRecord(raw.hard) ? raw.hard : null;
     const counterKey = str(raw.counterKey);
     const guaranteeTier = hard ? str(hard.guaranteeTier) : null;
     if (!counterKey || !hard || !guaranteeTier || tiers.indexOf(guaranteeTier) < 0) return null;
+    // tier 可省略（舊設定）；填了就必須與 guaranteeTier 相同
+    const tier = str(raw.tier) ?? guaranteeTier;
+    if (tier !== guaranteeTier) return null;
     const count = hard.count;
     if (typeof count !== 'number' || !Number.isInteger(count) || count < 1) return null;
-    return { counterKey, hardCount: count, guaranteeTier };
+    return { counterKey, tier, hardCount: count, guaranteeTier, soft: normalizeSoft(raw.soft, count) };
+}
+
+/** 單一物件（舊設定）或陣列都收；壞的階梯略過、counterKey 重複略過，結果由高階往低階排 */
+function normalizePity(raw: unknown, tiers: readonly string[]): RewardPityDef[] {
+    const list = Array.isArray(raw) ? raw : [raw];
+    const out: RewardPityDef[] = [];
+    for (const item of list) {
+        const pity = normalizeOnePity(item, tiers);
+        if (pity && !out.some((p) => p.counterKey === pity.counterKey)) out.push(pity);
+    }
+    return out.sort((a, b) => tiers.indexOf(b.tier) - tiers.indexOf(a.tier));
+}
+
+function normalizeTierGroups(raw: unknown, tiers: readonly string[]): Record<string, RewardTierGroupShare[]> {
+    const out: Record<string, RewardTierGroupShare[]> = {};
+    if (!isRecord(raw)) return out;
+    for (const [tier, list] of Object.entries(raw)) {
+        if (tiers.indexOf(tier) < 0 || !Array.isArray(list)) continue;
+        const shares: RewardTierGroupShare[] = [];
+        for (const g of list) {
+            if (!isRecord(g)) continue;
+            const group = str(g.group);
+            if (!group || shares.some((x) => x.group === group)) continue;
+            if (typeof g.share !== 'number' || !Number.isFinite(g.share) || g.share <= 0) continue;
+            shares.push({ group, share: g.share });
+        }
+        const sum = shares.reduce((t, x) => t + x.share, 0);
+        if (sum > 0) out[tier] = shares.map((x) => ({ group: x.group, share: x.share / sum }));
+    }
+    return out;
+}
+
+function normalizeSlots(raw: unknown, tiers: readonly string[]): RewardDrawSlotDef[] {
+    const out: RewardDrawSlotDef[] = [];
+    for (const s of Array.isArray(raw) ? raw : []) {
+        if (!isRecord(s)) continue;
+        const count = s.count === undefined ? 1 : s.count;
+        if (typeof count !== 'number' || !Number.isInteger(count) || count < 1) continue;
+        const tier = str(s.tier);
+        if (tier && tiers.indexOf(tier) < 0) continue;
+        out.push({ count, tier, group: str(s.group) });
+    }
+    return out;
 }
 
 function normalizePool(raw: unknown): RewardPoolDef | null {
@@ -153,10 +244,14 @@ function normalizePool(raw: unknown): RewardPoolDef | null {
         const tier = str(e.tier) ?? tiers[0] ?? 'N';
         if (tiers.length > 0 && tiers.indexOf(tier) < 0) continue;
         seen.add(entryId);
-        entries.push({ id: entryId, weight, tier, effect });
+        entries.push({ id: entryId, weight, tier, effect, group: str(e.group), nameKey: str(e.nameKey) });
     }
     if (entries.length === 0) return null;
-    const picks = typeof draw.picks === 'number' && Number.isInteger(draw.picks) && draw.picks >= 1 ? draw.picks : 1;
+    const poolTiers = tiers.length > 0 ? tiers : Array.from(new Set(entries.map((e) => e.tier)));
+    const slots = normalizeSlots(draw.slots, poolTiers);
+    const slotTotal = slots.reduce((t, x) => t + x.count, 0);
+    const picks = slotTotal > 0 ? slotTotal : (typeof draw.picks === 'number' && Number.isInteger(draw.picks) && draw.picks >= 1 ? draw.picks : 1);
+    const disclosure = isRecord(raw.disclosure) ? raw.disclosure : {};
     const maxCount = typeof raw.maxCount === 'number' && Number.isInteger(raw.maxCount) && raw.maxCount >= 1 ? raw.maxCount : 10;
     return {
         id,
@@ -165,9 +260,15 @@ function normalizePool(raw: unknown): RewardPoolDef | null {
         maxCount,
         picks,
         replacement: draw.replacement !== false,
-        tiers: tiers.length > 0 ? tiers : Array.from(new Set(entries.map((e) => e.tier))),
+        tiers: poolTiers,
         entries,
-        pity: normalizePity(raw.pity, tiers.length > 0 ? tiers : Array.from(new Set(entries.map((e) => e.tier)))),
+        pity: slotTotal > 0 ? [] : normalizePity(raw.pity, poolTiers),
+        tierGroups: normalizeTierGroups(raw.tierGroups, poolTiers),
+        slots,
+        nameKey: str(raw.nameKey),
+        disclosureVersion: str(disclosure.version) ?? str(raw.disclosureVersion),
+        currency: strList(raw.currency),
+        rules: strList(raw.rules),
         sources: strList(raw.sources),
         presentation: normalizePresentation(raw.presentation),
     };
