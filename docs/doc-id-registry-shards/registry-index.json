@@ -30,12 +30,6 @@
     "category": "index"
   },
   {
-    "id": "doc_index_0007",
-    "path": "docs/cross-reference-index.md",
-    "title": "交叉索引表 (Cross-Reference Index)",
-    "category": "index"
-  },
-  {
     "id": "doc_index_0008",
     "path": "docs/keep-shards/keep-ui-arch.md",
     "title": "Keep Consensus — UI Architecture（§7–§12 · §19–§23）",
@@ -62,12 +56,6 @@
   {
     "id": "doc_index_0012",
     "path": "docs/keep.summary.md",
-    "title": "P0 ATM Bug / Optimization Backlog",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_0013",
-    "path": "docs/keep.md",
     "title": "P0 ATM Bug / Optimization Backlog",
     "category": "index"
   },
@@ -132,12 +120,6 @@
     "category": "index"
   },
   {
-    "id": "doc_index_0024",
-    "path": "docs/ai_atomic_framework/atomic-police-family/specs/README.md",
-    "title": "原子警察家族 Specs",
-    "category": "index"
-  },
-  {
     "id": "doc_index_0025",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/README.md",
     "title": "ATM 通用語言框架 Task Cards",
@@ -162,159 +144,15 @@
     "category": "index"
   },
   {
-    "id": "doc_index_1003",
-    "path": "docs/ai_atomic_framework/atm-self-refactor/tasks/README.md",
-    "title": "ATM 自我治理拆分 Task Cards",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1004",
-    "path": "docs/ai_atomic_framework/atm-agent-first-operability/README.md",
-    "title": "ATM Agent-First 可操作性優化（AAO）",
-    "category": "index"
-  },
-  {
     "id": "doc_index_1005",
     "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md",
     "title": "AAO Task Index",
     "category": "index"
   },
   {
-    "id": "doc_index_1006",
-    "path": "docs/ai_atomic_framework/team-agents/tasks/README.md",
-    "title": "Team Agents Task Index",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1007",
-    "path": "docs/ai_atomic_framework/team-agents/templates/README.md",
-    "title": "Team Agents Templates",
-    "category": "index"
-  },
-  {
     "id": "doc_index_1008",
     "path": "docs/ai_atomic_framework/governance-optimization/tasks/README.md",
     "title": "ATM 治理流程與 Team Agents 加速優化 Task Cards",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1009",
-    "path": "docs/ai_atomic_framework/adapter-guided-atomization-sdk/README.md",
-    "title": "Adapter-Guided Atomization SDK Initiative",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1010",
-    "path": "docs/ai_atomic_framework/arxiv-paper-v1/en/README.md",
-    "title": "EN Workspace",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1011",
-    "path": "docs/ai_atomic_framework/arxiv-paper-v1/README.md",
-    "title": "arXiv Paper v1 — Adapter-Guided Atomization",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1012",
-    "path": "docs/ai_atomic_framework/atm-memory-governance/README.md",
-    "title": "ATM 跨專案記憶治理（MEM）",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1013",
-    "path": "docs/ai_atomic_framework/broker-collision-evidence/runs/B-12-field-2026-06-20/README.md",
-    "title": "B-12 Controlled Field Collision Archive",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1014",
-    "path": "docs/ai_atomic_framework/broker-collision-evidence/runs/BLOCK-same-owner-overlap-2026-06-22/README.md",
-    "title": "BLOCK Same-Owner Overlap Bounded Evidence",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1015",
-    "path": "docs/ai_atomic_framework/broker-collision-evidence/runs/close-orch-live-apply-success-2026-06-21-rerun/README.md",
-    "title": "close-orch-live-apply-success-2026-06-21-rerun",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1016",
-    "path": "docs/ai_atomic_framework/broker-collision-evidence/runs/close-orch-live-lane-escalation-2026-06-21/README.md",
-    "title": "close-orch-live-lane-escalation-2026-06-21",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1017",
-    "path": "docs/ai_atomic_framework/broker-collision-evidence/runs/close-orch-positive-layered-2026-06-21/README.md",
-    "title": "close-orch-positive-layered-2026-06-21",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1018",
-    "path": "docs/ai_atomic_framework/broker-collision-evidence/runs/POS2-same-owner-bounded-2026-06-22/README.md",
-    "title": "POS2 Same-Owner Bounded Evidence",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1019",
-    "path": "docs/ai_atomic_framework/cid-hardening/README.md",
-    "title": "CID Hardening Lane",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1020",
-    "path": "docs/ai_atomic_framework/cid-hardening/tasks/README.md",
-    "title": "CID Hardening Task Index",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1021",
-    "path": "docs/ai_atomic_framework/git-boundary-admission/README.md",
-    "title": "GIT Boundary Admission",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1022",
-    "path": "docs/ai_atomic_framework/git-boundary-admission/tasks/README.md",
-    "title": "GIT Boundary Admission Task Index",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1023",
-    "path": "docs/ai_atomic_framework/multi-agent-orchestration/README.md",
-    "title": "MAO Multi-Agent Orchestration",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1024",
-    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/README.md",
-    "title": "MAO Task Index",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1025",
-    "path": "docs/ai_atomic_framework/rft-hardening/tasks/README.md",
-    "title": "RFT (Refactor Tracking) Task Index",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1026",
-    "path": "docs/ai_atomic_framework/skl-tool-first-upgrade/README.md",
-    "title": "SKL Tool-First 升級計畫",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1027",
-    "path": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/README.md",
-    "title": "SKL Tool-First Task Index",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1028",
-    "path": "docs/keep-memory/README.md",
-    "title": "keep-memory/ 記憶筆記層契約",
     "category": "index"
   },
   {
@@ -390,72 +228,6 @@
     "category": "index"
   },
   {
-    "id": "doc_index_1041",
-    "path": "docs/cross-ref/code/ui.md",
-    "title": "代碼索引分片：UI",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1042",
-    "path": "docs/cross-ref/progress/d1a-rejudge.md",
-    "title": "進度索引分片：D-1a 邏輯欄重判紀錄",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1043",
-    "path": "docs/cross-ref/progress/d2-d3-pending-ui.md",
-    "title": "進度索引分片：D-2 待建 UI Spec／D-3 待定 Contract",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1044",
-    "path": "docs/cross-ref/progress/spec-audit-lifespan.md",
-    "title": "規格逐條比對：武將壽命系統.md (doc_spec_0018)",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1045",
-    "path": "docs/cross-ref/progress/spec-audit-officer.md",
-    "title": "規格逐條比對：官職系統.md (doc_spec_0014)",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1046",
-    "path": "docs/cross-ref/code/battle.md",
-    "title": "代碼索引分片：Battle",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1047",
-    "path": "docs/cross-ref/code/core-shared.md",
-    "title": "代碼索引分片：Core 其他目錄與 Shared",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1048",
-    "path": "docs/cross-ref/code/core-systems-1.md",
-    "title": "代碼索引分片：Core Systems（上半，依檔名排序）",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1049",
-    "path": "docs/cross-ref/code/core-systems-2.md",
-    "title": "代碼索引分片：Core Systems（下半）",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1050",
-    "path": "docs/cross-ref/code/tools.md",
-    "title": "代碼索引分片：工具、建置與 Agent Skills",
-    "category": "index"
-  },
-  {
-    "id": "doc_index_1051",
-    "path": "docs/cross-ref/code/ui-spec-json.md",
-    "title": "代碼索引分片：UI Spec JSON 畫面表",
-    "category": "index"
-  },
-  {
     "id": "doc_index_1052",
     "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/handoff_2983a19f_v1/README.md",
     "title": "3KLife 最新版血統與出生驗證交接包 (v1, Fixed `2983a19f`)",
@@ -469,218 +241,452 @@
   },
   {
     "id": "doc_index_1054",
-    "path": "docs/cross-ref/wbs-progress-inventory-matrix.md",
-    "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9)",
+    "path": "docs/ai_atomic_framework/adapter-guided-atomization-sdk/README.md",
+    "title": "Adapter-Guided Atomization SDK Initiative",
     "category": "index"
   },
   {
     "id": "doc_index_1055",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/en/README.md",
+    "title": "EN Workspace",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1056",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/README.md",
+    "title": "arXiv Paper v1 — Adapter-Guided Atomization",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1057",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/README.md",
+    "title": "ATM Agent-First 可操作性優化（AAO）",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1058",
+    "path": "docs/ai_atomic_framework/atm-memory-governance/README.md",
+    "title": "ATM 跨專案記憶治理（MEM）",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1059",
+    "path": "docs/ai_atomic_framework/atm-self-refactor/tasks/README.md",
+    "title": "ATM 自我治理拆分 Task Cards",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1060",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/README.md",
+    "title": "原子警察家族 Specs",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1061",
+    "path": "docs/ai_atomic_framework/broker-collision-evidence/runs/B-12-field-2026-06-20/README.md",
+    "title": "B-12 Controlled Field Collision Archive",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1062",
+    "path": "docs/ai_atomic_framework/broker-collision-evidence/runs/BLOCK-same-owner-overlap-2026-06-22/README.md",
+    "title": "BLOCK Same-Owner Overlap Bounded Evidence",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1063",
+    "path": "docs/ai_atomic_framework/broker-collision-evidence/runs/close-orch-live-apply-success-2026-06-21-rerun/README.md",
+    "title": "close-orch-live-apply-success-2026-06-21-rerun",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1064",
+    "path": "docs/ai_atomic_framework/broker-collision-evidence/runs/close-orch-live-lane-escalation-2026-06-21/README.md",
+    "title": "close-orch-live-lane-escalation-2026-06-21",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1065",
+    "path": "docs/ai_atomic_framework/broker-collision-evidence/runs/close-orch-positive-layered-2026-06-21/README.md",
+    "title": "close-orch-positive-layered-2026-06-21",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1066",
+    "path": "docs/ai_atomic_framework/broker-collision-evidence/runs/POS2-same-owner-bounded-2026-06-22/README.md",
+    "title": "POS2 Same-Owner Bounded Evidence",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1067",
+    "path": "docs/ai_atomic_framework/cid-hardening/README.md",
+    "title": "CID Hardening Lane",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1068",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/README.md",
+    "title": "CID Hardening Task Index",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1069",
+    "path": "docs/ai_atomic_framework/git-boundary-admission/README.md",
+    "title": "GIT Boundary Admission",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1070",
+    "path": "docs/ai_atomic_framework/git-boundary-admission/tasks/README.md",
+    "title": "GIT Boundary Admission Task Index",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1071",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/README.md",
+    "title": "MAO Multi-Agent Orchestration",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1072",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/README.md",
+    "title": "MAO Task Index",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1073",
+    "path": "docs/ai_atomic_framework/release_version_flow/README.md",
+    "title": "ATM Release Version Flow",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1074",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/README.md",
+    "title": "RFT (Refactor Tracking) Task Index",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1075",
+    "path": "docs/ai_atomic_framework/skl-tool-first-upgrade/README.md",
+    "title": "SKL Tool-First 升級計畫",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1076",
+    "path": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/README.md",
+    "title": "SKL Tool-First Task Index",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1077",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/README.md",
+    "title": "Team Agents Task Index",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1078",
+    "path": "docs/ai_atomic_framework/team-agents/templates/README.md",
+    "title": "Team Agents Templates",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1079",
+    "path": "docs/cross-ref/code/battle.md",
+    "title": "代碼索引分片：Battle",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1080",
+    "path": "docs/cross-ref/code/core-shared.md",
+    "title": "代碼索引分片：Core 其他目錄與 Shared",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1081",
+    "path": "docs/cross-ref/code/core-systems-1.md",
+    "title": "代碼索引分片：Core Systems（上半，依檔名排序）",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1082",
+    "path": "docs/cross-ref/code/core-systems-2.md",
+    "title": "代碼索引分片：Core Systems（下半）",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1083",
+    "path": "docs/cross-ref/code/tools.md",
+    "title": "代碼索引分片：工具、建置與 Agent Skills",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1084",
+    "path": "docs/cross-ref/code/ui-spec-json.md",
+    "title": "代碼索引分片：UI Spec JSON 畫面表",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1085",
+    "path": "docs/cross-ref/code/ui.md",
+    "title": "代碼索引分片：UI",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1086",
+    "path": "docs/cross-ref/progress/d1a-rejudge.md",
+    "title": "進度索引分片：D-1a 邏輯欄重判紀錄",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1087",
+    "path": "docs/cross-ref/progress/d2-d3-pending-ui.md",
+    "title": "進度索引分片：D-2 待建 UI Spec／D-3 待定 Contract",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1088",
+    "path": "docs/cross-ref/progress/spec-audit-lifespan.md",
+    "title": "規格逐條比對：武將壽命系統.md (doc_spec_0018)",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1089",
+    "path": "docs/cross-ref/progress/spec-audit-officer.md",
+    "title": "規格逐條比對：官職系統.md (doc_spec_0014)",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1090",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-00-overview.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 總覽（儀表板、優先缺口）",
     "category": "index"
   },
   {
-    "id": "doc_index_1056",
+    "id": "doc_index_1091",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-31-battle-core-p1.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.1 戰鬥核心（1/7）",
     "category": "index"
   },
   {
-    "id": "doc_index_1057",
+    "id": "doc_index_1092",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-31-battle-core-p2.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.1 戰鬥核心（2/7）",
     "category": "index"
   },
   {
-    "id": "doc_index_1058",
+    "id": "doc_index_1093",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-31-battle-core-p3.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.1 戰鬥核心（3/7）",
     "category": "index"
   },
   {
-    "id": "doc_index_1059",
+    "id": "doc_index_1094",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-31-battle-core-p4.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.1 戰鬥核心（4/7）",
     "category": "index"
   },
   {
-    "id": "doc_index_1060",
+    "id": "doc_index_1095",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-31-battle-core-p5.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.1 戰鬥核心（5/7）",
     "category": "index"
   },
   {
-    "id": "doc_index_1061",
+    "id": "doc_index_1096",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-31-battle-core-p6.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.1 戰鬥核心（6/7）",
     "category": "index"
   },
   {
-    "id": "doc_index_1062",
+    "id": "doc_index_1097",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-31-battle-core-p7.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.1 戰鬥核心（7/7）",
     "category": "index"
   },
   {
-    "id": "doc_index_1063",
+    "id": "doc_index_1098",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-32-economy-gear-quests-p1.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.2 經濟裝備任務（1/3）",
     "category": "index"
   },
   {
-    "id": "doc_index_1064",
+    "id": "doc_index_1099",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-32-economy-gear-quests-p2.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.2 經濟裝備任務（2/3）",
     "category": "index"
   },
   {
-    "id": "doc_index_1065",
+    "id": "doc_index_1100",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-32-economy-gear-quests-p3.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.2 經濟裝備任務（3/3）",
     "category": "index"
   },
   {
-    "id": "doc_index_1066",
+    "id": "doc_index_1101",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-33-lobby-onboarding-journey-p1.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.3 大廳開場生涯（1/4）",
     "category": "index"
   },
   {
-    "id": "doc_index_1067",
+    "id": "doc_index_1102",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-33-lobby-onboarding-journey-p2.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.3 大廳開場生涯（2/4）",
     "category": "index"
   },
   {
-    "id": "doc_index_1068",
+    "id": "doc_index_1103",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-33-lobby-onboarding-journey-p3.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.3 大廳開場生涯（3/4）",
     "category": "index"
   },
   {
-    "id": "doc_index_1069",
+    "id": "doc_index_1104",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-33-lobby-onboarding-journey-p4.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.3 大廳開場生涯（4/4）",
     "category": "index"
   },
   {
-    "id": "doc_index_1070",
+    "id": "doc_index_1105",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-34-nation-officer-politics-p1.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.4 國家官職天下（1/4）",
     "category": "index"
   },
   {
-    "id": "doc_index_1071",
+    "id": "doc_index_1106",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-34-nation-officer-politics-p2.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.4 國家官職天下（2/4）",
     "category": "index"
   },
   {
-    "id": "doc_index_1072",
+    "id": "doc_index_1107",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-34-nation-officer-politics-p3.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.4 國家官職天下（3/4）",
     "category": "index"
   },
   {
-    "id": "doc_index_1073",
+    "id": "doc_index_1108",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-34-nation-officer-politics-p4.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.4 國家官職天下（4/4）",
     "category": "index"
   },
   {
-    "id": "doc_index_1074",
+    "id": "doc_index_1109",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-35-bloodline-family-nurture-p1.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.5 血統家族培育（1/9）",
     "category": "index"
   },
   {
-    "id": "doc_index_1075",
+    "id": "doc_index_1110",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-35-bloodline-family-nurture-p2.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.5 血統家族培育（2/9）",
     "category": "index"
   },
   {
-    "id": "doc_index_1076",
+    "id": "doc_index_1111",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-35-bloodline-family-nurture-p3.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.5 血統家族培育（3/9）",
     "category": "index"
   },
   {
-    "id": "doc_index_1077",
+    "id": "doc_index_1112",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-35-bloodline-family-nurture-p4.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.5 血統家族培育（4/9）",
     "category": "index"
   },
   {
-    "id": "doc_index_1078",
+    "id": "doc_index_1113",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-35-bloodline-family-nurture-p5.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.5 血統家族培育（5/9）",
     "category": "index"
   },
   {
-    "id": "doc_index_1079",
+    "id": "doc_index_1114",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-35-bloodline-family-nurture-p6.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.5 血統家族培育（6/9）",
     "category": "index"
   },
   {
-    "id": "doc_index_1080",
+    "id": "doc_index_1115",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-35-bloodline-family-nurture-p7.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.5 血統家族培育（7/9）",
     "category": "index"
   },
   {
-    "id": "doc_index_1081",
+    "id": "doc_index_1116",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-35-bloodline-family-nurture-p8.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.5 血統家族培育（8/9）",
     "category": "index"
   },
   {
-    "id": "doc_index_1082",
+    "id": "doc_index_1117",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-35-bloodline-family-nurture-p9.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.5 血統家族培育（9/9）",
     "category": "index"
   },
   {
-    "id": "doc_index_1083",
+    "id": "doc_index_1118",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-36-formula-architecture-backend-p1.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.6 數值架構底層（1/4）",
     "category": "index"
   },
   {
-    "id": "doc_index_1084",
+    "id": "doc_index_1119",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-36-formula-architecture-backend-p2.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.6 數值架構底層（2/4）",
     "category": "index"
   },
   {
-    "id": "doc_index_1085",
+    "id": "doc_index_1120",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-36-formula-architecture-backend-p3.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.6 數值架構底層（3/4）",
     "category": "index"
   },
   {
-    "id": "doc_index_1086",
+    "id": "doc_index_1121",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-36-formula-architecture-backend-p4.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.6 數值架構底層（4/4）",
     "category": "index"
   },
   {
-    "id": "doc_index_1087",
+    "id": "doc_index_1122",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-37-ui-art-pipeline-p1.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.7 UI 介面視覺（1/3）",
     "category": "index"
   },
   {
-    "id": "doc_index_1088",
+    "id": "doc_index_1123",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-37-ui-art-pipeline-p2.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.7 UI 介面視覺（2/3）",
     "category": "index"
   },
   {
-    "id": "doc_index_1089",
+    "id": "doc_index_1124",
     "path": "docs/cross-ref/wbs-matrix-shards/wbs-37-ui-art-pipeline-p3.md",
     "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9) — 3.7 UI 介面視覺（3/3）",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1125",
+    "path": "docs/cross-ref/wbs-progress-inventory-matrix.md",
+    "title": "3KLife WBS 全量功能進度盤點矩陣 (v16.9)",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1126",
+    "path": "docs/cross-reference-index.md",
+    "title": "交叉索引表 (Cross-Reference Index)",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1127",
+    "path": "docs/keep-memory/README.md",
+    "title": "keep-memory/ 記憶筆記層契約",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1128",
+    "path": "docs/keep.md",
+    "title": "P0 ATM Bug / Optimization Backlog",
     "category": "index"
   }
 ]

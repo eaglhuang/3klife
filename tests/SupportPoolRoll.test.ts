@@ -20,6 +20,7 @@ import { gachaCostOf, parseGachaMainPools, pickPullCurrency } from '../assets/sc
 import { buildRateTableRows, formatRatePercent } from '../assets/scripts/core/gacha/GachaRateTable';
 import { RewardGachaPort } from '../assets/scripts/core/gacha/RewardGachaPull';
 import { supportCardItemMembers } from '../assets/scripts/core/gacha/SupportCardGachaView';
+import { tenNoteOf } from '../assets/scripts/ui/core/GachaApiTexts';
 import { STARTER_GACHA_WALLET } from '../assets/scripts/core/services/GachaWalletRules';
 import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
 import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
@@ -235,6 +236,18 @@ export function createSupportPoolRollSuite(): TestSuite {
         assert.isTrue(rows.some((r) => r.title === 'SR 以上 保底' && r.detail.includes('第 6 抽起') && r.detail.includes('第 10 抽必出')));
         assert.isTrue(rows.some((r) => r.title === '公開版本'));
         assert.equals(['SSR', 'SR', 'R'].join(), [...new Set(rows.filter((r) => / 共 /.test(r.title)).map((r) => r.title.split(' ')[0]))].join(), '由高到低');
+    });
+
+    suite.test('十連小字與橫幅主角由獎池資料產生：第 10 抽必出 SR 以上；UP 卡是華佗', async () => {
+        const { port } = rig(10);
+        const v = await port.view(LEGACY);
+        assert.isTrue(!!v);
+        const pity = { label: 'SSR 保底進度', current: 0, max: 80, destinyCurrent: 0, destinyMax: 200 };
+        assert.equals('第 10 抽必出 SR 以上', tenNoteOf({ pities: v!.pities, pity }));
+        assert.equals('每 80 抽必得 SR 以上', tenNoteOf({ pity }), '沒有獎池資料的舊池維持舊寫法');
+        assert.equals('SUP_HUA_TUO', v!.upEntryIds[0], 'UP 清單第一個是 SSR 華佗（橫幅主角）');
+        const hua = cards.cards.find((c) => c.cardId === 'SUP_HUA_TUO');
+        assert.equals('hua-tuo', hua?.projectionOf, '華佗卡投影對象');
     });
 
     suite.test('SSR 卡清單與卡表一致（獎池不手寫卡）', () => {

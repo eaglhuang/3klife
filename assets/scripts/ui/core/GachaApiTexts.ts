@@ -58,6 +58,16 @@ export function gachaHeroIdOf(pool: GachaPoolDef, dto: GachaPoolDto): string | n
     return (pool.key === 'limited' ? dto.featuredGeneralIds[0] : dto.showcaseGeneralId) ?? null;
 }
 
+/**
+ * 十連鈕下方小字：取獎池「最近的硬保底」（hardAt 最小的階）逐字寫出，數字與階級都來自獎池（reward.pools），不寫死。
+ * 例：教官池 SR 第 10 抽、SSR 第 80 抽 → 「第 10 抽必出 SR 以上」。沒有獎池資料的舊池維持舊寫法。
+ */
+export function tenNoteOf(dto: Pick<GachaPoolDto, 'pities' | 'pity'>): string {
+    const nearest = (dto.pities ?? []).slice().sort((a, b) => a.hardAt - b.hardAt)[0];
+    if (!nearest) return `每 ${dto.pity.max} 抽必得 SR 以上`;
+    return `第 ${nearest.hardAt} 抽必出 ${nearest.tier === 'SSR' ? 'SSR' : `${nearest.tier} 以上`}`;
+}
+
 /** 十連鈕下方的保底小字節點（原稿 GachaDs3_div_37） */
 export const GACHA_TEN_NOTE_NODE = 'GachaDs3_div_37';
 
@@ -106,7 +116,7 @@ export function gachaApiView(
         [GACHA_NODES.pullTenOriginalCost]: String(dto.singleCost * 10),
         ...gachaWalletLabelTexts(wallet, mainCurrency),
         // 十連鈕下方小字：只寫程式真的有的保底（累計每 N 抽必出 SR 以上；十連本身沒有額外保底，原稿「必得 SR 以上 1 名」程式沒做）
-        [GACHA_TEN_NOTE_NODE]: `每 ${dto.pity.max} 抽必得 SR 以上`,
+        [GACHA_TEN_NOTE_NODE]: tenNoteOf(dto),
         [GACHA_NODES.goldSummonLabel]: '×500',
         [pool.eventChip]: limited
             ? `★ 本期限定 · ${dto.endsAtMs ? formatRemaining(dto.endsAtMs, nowMs) : '期間限定'}`

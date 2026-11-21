@@ -77,6 +77,20 @@ function failText(res: { message: string; errorCode: string }): string {
     return res.message || res.errorCode;
 }
 
+/** 等階由高到低的排序值（SSR 最前；不認得的排最後） */
+function tierRank(tier: string): number {
+    const i = ['SSR', 'SR', 'R'].indexOf(tier);
+    return i < 0 ? 3 : i;
+}
+
+/** 轉蛋畫面用的獎池簡版視圖（取自 reward.pools） */
+export interface RewardGachaPoolView {
+    rates: GachaRateDto[];
+    pity: { current: number; max: number } | null;
+    pities: Array<{ tier: string; hardAt: number }>;
+    upEntryIds: string[];
+}
+
 export class RewardGachaPort {
     private _seq = 0;
 
@@ -185,7 +199,7 @@ export class RewardGachaPort {
     }
 
     /** 池詳情：等階機率與 SSR 保底進度，與抽樣同一份資料（reward.pools）；查不到回 null */
-    public async view(legacyPoolId: string): Promise<{ rates: GachaRateDto[]; pity: { current: number; max: number } | null } | null> {
+    public async view(legacyPoolId: string): Promise<RewardGachaPoolView | null> {
         const rewardPoolId = this.rewardPoolOf(legacyPoolId);
         if (!rewardPoolId) return null;
         const res = await this._api.query<RewardPoolsResult>('reward.pools', {});
@@ -196,6 +210,14 @@ export class RewardGachaPort {
             .filter((t) => t.tier === 'SSR' || t.tier === 'SR' || t.tier === 'R')
             .map((t) => ({ rarity: t.tier as 'SSR' | 'SR' | 'R', percent: Math.round(t.baseRate * 10000) / 100 }));
         const ssr = pool.pities.find((p) => p.tier === 'SSR');
-        return { rates, pity: ssr ? { current: ssr.counter, max: ssr.hardAt } : null };
+        return {
+            rates,
+            pity: ssr ? { current: ssr.counter, max: ssr.hardAt } : null,
+            // 十連鈕小字、橫幅主角都要跟獎池同一份資料：各階保底的硬保底抽數與 UP 項目（不寫死）
+            pities: pool.pities.map((p) => ({ tier: p.tier, hardAt: p.hardAt })),
+            // 稀有度高的 UP 排前面（橫幅主角取第一個：SSR UP 優先於 SR UP）
+            upEntryIds: pool.tiers.slice().sort((x, y) => tierRank(x.tier) - tierRank(y.tier))
+                .flatMap((t) => t.entries.filter((e) => e.isUp).map((e) => e.entryId)),
+        };
     }
 }

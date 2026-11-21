@@ -27,6 +27,12 @@ export interface FamilyConfigV1 {
     wetNurseSilverPerQuarter: number;
     /** 新局家族銀兩（PROG-2-9591；PM 11/21 授權企劃暫定）：夠付一次媒人加幾季乳母，銀兩收入來源另案 */
     startingSilver: number;
+    /**
+     * 每季家族俸祿（銀兩收入，PROG-2-9593；PM 授權企劃暫定）：家業系統（doc_spec_1181）尚未實作前的暫代來源，
+     * 每季入帳 clanStipendBase ＋ 配偶數 × clanStipendPerSpouse。家業落地後由家業收益取代，這兩欄改 0 即可停發。
+     */
+    clanStipendBase: number;
+    clanStipendPerSpouse: number;
     crowdThreshold: number;
     childrenTypicalRange: [number, number];
     geniusChance: number;
@@ -155,6 +161,8 @@ export function parseFamilyConfig(raw: unknown): FamilyConfigV1 {
         breastfeedEndAge: int('breastfeedEndAge', 1),
         wetNurseSilverPerQuarter: int('wetNurseSilverPerQuarter'),
         startingSilver: int('startingSilver'),
+        clanStipendBase: int('clanStipendBase'),
+        clanStipendPerSpouse: int('clanStipendPerSpouse'),
         crowdThreshold: int('crowdThreshold', 1),
         childrenTypicalRange: pair('childrenTypicalRange'),
         geniusChance: num('geniusChance', 0, 1),

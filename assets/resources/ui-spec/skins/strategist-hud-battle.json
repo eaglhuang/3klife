@@ -4,10 +4,49 @@
   "bundle": "battle_ui",
   "atlasPolicy": "battle_ui",
   "slots": {
-    "strategist.band.bg": { "kind": "color", "color": "surfaceInkBlue", "alpha": 190 },
-    "strategist.wisdom.track": { "kind": "color", "color": "backgroundNavyAlt", "alpha": 200 },
-    "strategist.wisdom.fill": { "kind": "color", "color": "accentGoldCta", "alpha": 255 },
-    "strategist.label.summary": { "kind": "label-style", "font": "fonts/notosans_tc/notosans_tc", "fontSize": 24, "lineHeight": 32, "color": "textPrimary", "overflow": "RESIZE_HEIGHT", "horizontalAlign": "CENTER", "verticalAlign": "CENTER" },
-    "strategist.label.wisdom": { "kind": "label-style", "font": "fonts/notosans_tc/notosans_tc", "fontSize": 24, "lineHeight": 32, "color": "textAccent", "isBold": true, "overflow": "SHRINK", "horizontalAlign": "CENTER", "verticalAlign": "CENTER" }
+    "strategist.band.bg": {
+      "kind": "color",
+      "color": "#160F09",
+      "alpha": 220,
+      "cornerRadius": 10,
+      "borderColor": "#FFD65A",
+      "borderWidth": 2,
+      "_doc": "PROG-2-9705：對齊格子 buff 徽章，深色底＋金圈"
+    },
+    "strategist.wisdom.track": {
+      "kind": "color",
+      "color": "backgroundNavyAlt",
+      "alpha": 200
+    },
+    "strategist.wisdom.fill": {
+      "kind": "color",
+      "color": "accentGoldCta",
+      "alpha": 255
+    },
+    "strategist.label.summary": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 24,
+      "lineHeight": 32,
+      "color": "#FFFFFF",
+      "overflow": "RESIZE_HEIGHT",
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
+      "outlineColor": "#1E1208",
+      "outlineWidth": 3
+    },
+    "strategist.label.wisdom": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 24,
+      "lineHeight": 32,
+      "color": "textAccent",
+      "isBold": true,
+      "overflow": "SHRINK",
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
+      "outlineColor": "#1E1208",
+      "outlineWidth": 3
+    }
   }
 }

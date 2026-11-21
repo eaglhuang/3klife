@@ -81,6 +81,8 @@ export class TileBuffMarkers {
   /** 給跳字避讓用的矩形；物件重用，不每次配置（PROG-2-9415） */
   private readonly avoidRects: FloatAvoidRect[] = [];
   private readonly avoidPool: FloatAvoidRect[] = [];
+  /** 所有格子標記的地面層容器：固定在根節點最底，單位疊層排序後會送回最底（PROG-2-9708） */
+  private groundLayer: Node | null = null;
 
   /**
    * @param getRoot 標記掛載的 UI 根節點（單位名牌同一層）
@@ -247,12 +249,27 @@ export class TileBuffMarkers {
     view.amount.color = badge.isDebuff ? AMOUNT_DEBUFF : AMOUNT_BUFF;
   }
 
+  /** 地面層容器；給單位疊層排序時固定壓在單位底下（PROG-2-9708） */
+  public groundNode(): Node | null {
+    return this.groundLayer && isValid(this.groundLayer) ? this.groundLayer : null;
+  }
+
+  private ensureGround(root: Node): Node {
+    if (this.groundLayer && isValid(this.groundLayer) && this.groundLayer.parent === root) return this.groundLayer;
+    const ground = new Node('TileBuffGround');
+    ground.layer = root.layer;
+    ground.addComponent(UITransform);
+    root.addChild(ground);
+    ground.setSiblingIndex(0); // 壓在單位、名牌與跳字之下；座標系與根節點相同（原點、無縮放）
+    this.groundLayer = ground;
+    return ground;
+  }
+
   private createMarker(root: Node): MarkerView {
     const node = new Node('TileBuffMarker');
     node.layer = root.layer;
     node.addComponent(UITransform).setContentSize(PLATE_RX * 2 + 20, ICON_Y * 2 + 40);
-    root.addChild(node);
-    node.setSiblingIndex(0); // 壓在單位名牌與跳字之下
+    this.ensureGround(root).addChild(node);
 
     const plateNode = new Node('Plate');
     plateNode.layer = root.layer;
