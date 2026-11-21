@@ -155,7 +155,6 @@ import { GraduationRecordController } from '../core/GraduationRecordController';
 import { AcademyGraduationController } from '../core/AcademyGraduationController';
 import { AcademyFlowController } from '../core/AcademyFlowController';
 import { parseQaAcademyParams } from '../core/AcademyQaFastForward';
-import { GameAcademySaveStore } from '../../core/services/GameAcademySaveStore';
 import { AcademyApiClient } from '../core/AcademyApi';
 import { ancestralInheritToastText, newAncestralInheritViews } from '../core/AcademyInheritView';
 import { ClanShrineController } from '../core/ClanShrineController';
