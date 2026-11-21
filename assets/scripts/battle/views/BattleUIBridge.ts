@@ -41,7 +41,8 @@ import { EVENT_NAMES, Faction, SP_PER_KILL, TroopType, TurnPhase } from '../../c
 import { battleAptitudeProfileOf, terrainGradeOf } from '../../core/systems/BattleAptitude';
 import { TerrainFeedbackTracker } from '../../core/systems/TerrainAptitudeFeedback';
 import { TERRAIN_LABEL } from '../../ui/core/EnvScoutPresenter';
-import { applyOpeningWinGuarantee, quickResolveOutcome } from '../runtime/BattleAutoResolve';
+import { finalizeQuickResolve, quickResolveOutcome } from '../runtime/BattleAutoResolve';
+import { quickResolveConfig, type QuickResolveStage } from '../../core/systems/QuickResolveGate';
 import { FIELD_AUTO_BATTLE_JOURNAL } from '../../core/systems/OfflineBattleSnapshot';
 import { services } from '../../core/managers/ServiceLoader';
 import { BattlePerformanceTracker, formatPerformance } from '../../core/systems/BattleRecordStats';
@@ -131,6 +132,8 @@ export interface BattleSceneContext {
   eg:                GeneralUnit | null;
   /** 本場的關卡 id（連環破，勝利時記入通關紀錄） */
   encounterId:       string | null;
+  /** 本場關卡的極速決戰條件資料（battleKind、allowQuickResolve；PROG-2-9709）；關卡資料讀不到時為 null */
+  encounterStage?:   QuickResolveStage | null;
   /** 教學戰的傳說英靈（OPEN-13）；沒有時為 null */
   teachingSpirit:    TeachingSpiritInput | null;
   isAdvancingTurn:   boolean;
@@ -1070,11 +1073,20 @@ export class BattleUIBridge {
     const c = this.ctx;
     const state = c.ctrl?.state;
     if (!c.ctrl || !state || state.battleEndAnnounced) return;
-    if (this.autoPlay.press() === 'skip') {
+    // 自動代打中再按＝跳過演出：先過極速決戰可用條件（PROG-2-9709），不可用就提示原因、維持自動代打
+    if (this.autoPlay.active) {
+      const gate = this._quickResolveGate();
+      if (!gate.allowed) {
+        this.appendLog(`極速決戰不可用：${gate.reason}`);
+        c.deployRuntime?.showToast(`極速決戰不可用：${gate.reason}`);
+        return;
+      }
+      this.autoPlay.press();
       this._syncAutoButton();
-      this._skipToQuickResolve();
+      void this._skipToQuickResolve(gate.usesWrit);
       return;
     }
+    this.autoPlay.press();
     // 有出征軍勢就靠委任機制讓 AI 部署；沒有（demo 戰鬥）仍可自動結束回合，只是不部署
     const canDelegate = c.ctrl.canDelegate();
     if (canDelegate) {
@@ -1101,21 +1113,50 @@ export class BattleUIBridge {
     this.ctx.battleLogPanel?.setAutoActive?.(this.autoPlay.active);
   }
 
-  /** 跳過演出：依雙方數值直接算勝負，走既有 BattleEnded → 結算彈窗流程（cause 'auto'） */
-  private _skipToQuickResolve(): void {
+  /** 極速決戰可用條件（關卡條件＋每日次數＋軍令狀＋守城／單挑，PROG-2-9709）；守城以主將守方判定，不只看關卡資料 */
+  private _quickResolveGate() {
+    const c = this.ctx;
+    const stage: QuickResolveStage = {
+      id: c.encounterId,
+      battleKind: c.ctrl?.state.siegeDefender === Faction.Player ? 'defense' : c.encounterStage?.battleKind,
+      allowQuickResolve: c.encounterStage?.allowQuickResolve,
+    };
+    const duelActive = c.isDuelPanelActive || this.duelCapture !== null || c.ctrl?.isWaitingDuelPlacement === true;
+    return { stage, duelActive, ...services().session.checkQuickResolve(stage, Date.now(), duelActive) };
+  }
+
+  /**
+   * 跳過演出：依整支出征部隊（含尚未部署的預備兵力）直接算勝負，走既有 BattleEnded → 結算彈窗流程（cause 'auto'）。
+   * 先計一次極速決戰（免費次數或軍令狀）；計次失敗不結算。
+   */
+  private async _skipToQuickResolve(usesWrit: boolean): Promise<void> {
     const state = this.ctx.ctrl?.state;
     if (!state || state.battleEndAnnounced) return;
-    this.appendLog(AUTO_PLAY_SKIP_LINE);
-    this.ctx.deployRuntime?.showToast(AUTO_PLAY_SKIP_LINE);
-    const side = (faction: Faction, fortressHp: number) => ({
+    const gate = this._quickResolveGate();
+    if (!(await services().session.spendQuickResolveUse(gate.stage, Date.now(), gate.duelActive))) {
+      this.ctx.deployRuntime?.showToast(`極速決戰不可用：${gate.reason || '次數不足'}`);
+      return;
+    }
+    // 計次期間戰鬥可能已結束（回合推進出勝負）；已計的次數不退，避免用重複點擊試探
+    if (state.battleEndAnnounced) return;
+    const skipLine = usesWrit ? `${AUTO_PLAY_SKIP_LINE}（耗軍令狀 ×${quickResolveConfig().writCostPerUse}）` : AUTO_PLAY_SKIP_LINE;
+    this.appendLog(skipLine);
+    this.ctx.deployRuntime?.showToast(skipLine);
+    const side = (faction: Faction, fortressHp: number, reserveTroops: number) => ({
       general: state.getGeneral(faction),
       troops: Array.from(state.units.values()).filter((u) => u.faction === faction && !u.isDead()),
       fortressHp,
+      reserveTroops,
     });
-    const quick = quickResolveOutcome(side(Faction.Player, state.playerFortressHp), side(Faction.Enemy, state.enemyFortressHp), Math.random);
-    const outcome = applyOpeningWinGuarantee(quick, services().session.firstBattleCleared);
-    for (const line of quick.reportLines) this.appendLog(line);
-    if (outcome.result !== quick.result) this.appendLog('終局定勢：援軍及時趕到，我軍反敗為勝！');
+    // 我方預備兵力＝出征帳本裡還沒派上場的兵；敵方沒有帳本，用設定的固定預備兵力（暫定）
+    const playerReserve = this.ctx.ctrl?.getSortieState()?.poolCurrent ?? 0;
+    const quick = quickResolveOutcome(
+      side(Faction.Player, state.playerFortressHp, playerReserve),
+      side(Faction.Enemy, state.enemyFortressHp, quickResolveConfig().enemyReserveTroops),
+      Math.random,
+    );
+    const outcome = finalizeQuickResolve(quick, services().session.firstBattleCleared);
+    for (const line of outcome.reportLines) this.appendLog(line);
     this._recordAutoBattleSnapshot(outcome.result, outcome.playerPower, outcome.enemyPower);
     state.battleEndAnnounced = true;
     // cause 'auto'（PROG-2-9703）：結算說明改講極速決戰，不落到預設的「敵方突破防線」

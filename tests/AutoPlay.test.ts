@@ -70,7 +70,7 @@ export function createAutoPlaySuite(): TestSuite {
         assert.isTrue(bridge.includes('this.autoPlay.press()'));
         assert.isTrue(bridge.includes('c.ctrl.setDelegateEnabled(true)'));
         assert.isTrue(bridge.includes("cause: 'auto'"));
-        assert.isTrue(bridge.includes('private _skipToQuickResolve('));
+        assert.isTrue(bridge.includes('private async _skipToQuickResolve('));
         assert.isTrue(bridge.includes('delegateToggleStopsAutoPlay('));
         assert.isTrue(bridge.includes('this.onAutoPlayStarted?.()'));
         assert.isTrue(bridge.includes('if (this.autoPlay.stop()) this._syncAutoButton()'));

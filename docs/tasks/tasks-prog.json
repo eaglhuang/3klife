@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 229,
+    "done": 234,
     "in_progress": 4,
-    "open": 85,
-    "total": 318
+    "open": 86,
+    "total": 324
   },
   "tasks": [
     {
@@ -14021,6 +14021,59 @@
       "acceptance": [],
       "deliverables": [],
       "notes": "2026-11-21 | 狀態: done | 驗證: 前後對照圖與步兵紅並排目視，臉與眼睛未變色、alpha 位元組一致、尺寸 512x512 不變 | 變更: soldier_bow_red.png 圖集金屬換銀（腳本 recolor_silver_armor.py）；Spine 武將與兵種美術在 .gitignore（assets/resources/spine/soldiers/）不進公開倉庫，故成品 PNG 不在本 PR，需複製進 spine-trial 並更新遊戲內本機副本 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2765",
+      "id": "PROG-2-9709",
+      "title": "極速決戰修正：整軍戰力、資料驅動可用條件、每日次數與軍令狀",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "2026-11-22T10:00:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "極速決戰修正：整軍戰力（含預備兵力）、資料驅動可用條件（allowQuickResolve＋勝利紀錄、守城單挑永遠不可用）、每日免費 3 次與軍令狀。",
+      "related": [
+        "PROG-2-9707",
+        "PROG-2-9703",
+        "PROG-2-1091",
+        "PROG-2-2202",
+        "PROG-2-2205"
+      ],
+      "depends": [
+        "PROG-2-9707",
+        "PROG-2-9703"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-22 | 狀態: done | 驗證: 單元測試 9039 通過、tsc 0 錯、compute-gate quick 4/4 通過；新增 tests/QuickResolveGate.test.ts；Cocos 實機未跑 | 變更: sidePower 計入預備兵力、finalizeQuickResolve 修首戰改判文案、QuickResolveGate 可用條件與每日次數與軍令狀、allowQuickResolve 進 encounters.json、軍令狀道具、存檔 quickResolve、大廳與戰場呼叫端、規格 doc_spec_1170 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
