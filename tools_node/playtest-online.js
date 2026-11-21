@@ -1418,6 +1418,42 @@ async function main() {
             return rec.detail;
         }, { skipIfFailed: true });
 
+        // ── 6d. 教官池（--support，PROG-2-9243）：切到教官池截圖、開「詳情」看完整機率表、用開局連線券十連、截結果 ──
+        if (args.support) await step('gacha-support-pool', async (rec) => {
+            await requireLobby();
+            await backToLobbyBar();
+            await waitUntil(() => page.evaluate(() => window.__pt.hasButton('^BtnCatShop$')), 30000, '底欄「商城」鈕未出現');
+            if (!(await openSub('BtnCatShop', '轉蛋'))) throw new Error('大廳找不到「商店 → 轉蛋」入口');
+            await delay(2500);
+            for (let i = 0; i < 6; i++) {
+                if ((await rm.allTexts()).some((t) => /教學投影卡/.test(t))) break;
+                await clickButton('^BtnPoolNext$'); await delay(1500);
+            }
+            if (!(await rm.allTexts()).some((t) => /教學投影卡/.test(t))) throw new Error('切不到「教官池」');
+            rec.detail.poolTexts = (await rm.allTexts()).filter((t) => /教官池|連線券|教學投影/.test(t)).slice(0, 8);
+            await shot(rec, 'support-pool');
+            if (!(await clickButton('^BtnPoolDetail$'))) throw new Error('找不到詳情鈕 BtnPoolDetail');
+            await delay(1500);
+            rec.detail.rateTexts = (await rm.allTexts()).filter((t) => /共 \d|UP（|保底|%/.test(t)).slice(0, 30);
+            await shot(rec, 'support-rates');
+            if (!rec.detail.rateTexts.length) throw new Error('機率說明沒有列出任何機率列');
+            await rm.tryClick({ name: '^CloseButton$', button: true });
+            await delay(800);
+            if (!(await clickButton('^BtnPullTen$'))) throw new Error('找不到十連鈕 BtnPullTen');
+            await delay(3500);
+            await shot(rec, 'support-result');
+            rec.detail.resultTexts = (await rm.allTexts()).filter((t) => /教學投影|SSR|傳承|學分|剩餘/.test(t)).slice(0, 20);
+            for (let k = 0; k < 6; k++) {
+                if (await clickButton('^GachaPullResult_(close|back)$')) { await delay(1200); break; }
+                if (!(await page.evaluate(() => window.__pt.scenePresence('^GachaPullResult_stage$')))) break;
+                await page.mouse.click(Math.round(viewport.width / 2), Math.round(viewport.height / 2));
+                await delay(1500);
+            }
+            await clickButton('^GachaReturnToLobby$');
+            await delay(1500);
+            return rec.detail;
+        }, { skipIfFailed: true });
+
         // ── 8. 老玩家重開 ──
         // 同一瀏覽器情境重新整理：存檔還在，等同玩家第二次開遊戲。
         // 要直接回到大廳、底欄在、不可再跑一次新手開場（PROG-2-9114）。
