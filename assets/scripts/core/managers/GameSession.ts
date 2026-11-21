@@ -1248,7 +1248,7 @@ export class GameSession implements AcademyRecordPort {
     /** 告別信用的武將名：名冊查得到用名字，否則用傭兵 uid。 */
     private generalNameOf(generalId: string | undefined, fallback: string): string {
         if (!generalId) return fallback;
-        return this._roster.getAll().find(g => g.id === generalId)?.name ?? fallback;
+        return this._rosterRead().find(g => g.id === generalId)?.name ?? fallback;
     }
 
     /** 傭兵池可出現的武將：過濾掉 30 天冷卻中的武將 id，保留原順序。 */
@@ -1277,7 +1277,7 @@ export class GameSession implements AcademyRecordPort {
 
     /** 傭兵列表的顯示列（倒數、結義進度、按鈕可否）；由目前存檔包推導，不改狀態。 */
     public mercenaryPoolRows(nameOf?: (generalId: string) => string | undefined): MercenaryPoolRow[] {
-        return buildMercenaryPoolRows(this._mercenaries, (generalId) => this._roster.getAll().find((g) => g.id === generalId)?.name ?? nameOf?.(generalId));
+        return buildMercenaryPoolRows(this._mercenaries, (generalId) => this._rosterRead().find((g) => g.id === generalId)?.name ?? nameOf?.(generalId));
     }
 
     /** 以校正後的副本取代傭兵存檔包；不寫存檔，由呼叫端決定何時 save。 */
@@ -1313,7 +1313,7 @@ export class GameSession implements AcademyRecordPort {
             day: this.mercenaryDay,
         };
         this._bondPoints -= result.pointsSpent;
-        if (template.gender === '女' && !this._roster.getAll().some((g) => g.id === template.id)) {
+        if (template.gender === '女' && !this._rosterRead().some((g) => g.id === template.id)) {
             // §F 傭兵結義的女將品質為 SR~N，稀有度更高的模板也不超過 SR
             const quality = rarityOfTemplate(template) === 'R' ? 'R' : 'SR';
             this._femaleSources = { ...this._femaleSources, [template.id]: createFemaleSource('MERCENARY', quality, this._clock.state.totalSeasonsElapsed) };
@@ -1430,7 +1430,7 @@ export class GameSession implements AcademyRecordPort {
         const retry = this._roster.getAll().filter((g) => g.nursingPending && !bornMotherIds.includes(g.id)).map((g) => g.id);
         for (const motherId of [...bornMotherIds, ...retry]) {
             if (this._startNursing(motherId, season) !== 'blocked') continue;
-            const name = this._roster.getAll().find((g) => g.id === motherId)?.name ?? motherId;
+            const name = this._rosterRead().find((g) => g.id === motherId)?.name ?? motherId;
             lines.push(`${name}想餵奶，但人還在外頭忙，先記帳，下季再補登記。`);
         }
         return lines;
@@ -1549,7 +1549,7 @@ export class GameSession implements AcademyRecordPort {
     public enrollSpouse(general: GeneralConfig, options: { hallLevel?: number } = {}): { ok: boolean; reason?: 'no-config' | 'duplicate' | 'cap-reached' } {
         const config = this._familyConfig;
         if (!config) return { ok: false, reason: 'no-config' };
-        if (this._family.get(general.id) || this._roster.getAll().some((g) => g.id === general.id)) return { ok: false, reason: 'duplicate' };
+        if (this._family.get(general.id) || this._rosterRead().some((g) => g.id === general.id)) return { ok: false, reason: 'duplicate' };
         if (!this._family.canAddSpouse(config, options.hallLevel ?? 1)) return { ok: false, reason: 'cap-reached' };
         this.enrollGenerals([general]);
         this._family.addSpouse(general.id, this._clock.state.totalSeasonsElapsed, config, options.hallLevel ?? 1);
@@ -1620,7 +1620,7 @@ export class GameSession implements AcademyRecordPort {
      */
     public adjustMood(generalId: string, delta: number, reason: string, eventId: string): boolean {
         const level = Math.max(-3, Math.min(3, Math.round(delta / 10)));
-        if (level === 0 || !this._roster.getAll().some((g) => g.id === generalId)) return false;
+        if (level === 0 || !this._rosterRead().some((g) => g.id === generalId)) return false;
         const out = this.mind.record({
             generalId, season: this._clock.state.totalSeasonsElapsed, kind: level < 0 ? 'SCOLDED' : 'PRAISED',
             forceValence: level as MindValence, forceWeight: 4, reason, tags: ['homeWar'], label: '母國開戰', id: eventId,
@@ -1690,7 +1690,7 @@ export class GameSession implements AcademyRecordPort {
         if (!nation) return { ok: false, reason: 'not-eligible' };
         if (!relationAllowsAlliance(nation.relation)) return { ok: false, reason: 'relation-low' };
         const prefix = `spouse_gen_diplomatic_${nationId.replace(/[^A-Za-z0-9_-]/g, '_')}_`;
-        const married = this._roster.getAll().filter((g) => g.id.startsWith(prefix)).length;
+        const married = this._rosterRead().filter((g) => g.id.startsWith(prefix)).length;
         if (married >= config.marriagePerNation) return { ok: false, reason: 'nation-limit' };
         const out = this.enrollGeneratedSpouse(diplomaticSlot(nationId, married), options);
         if (!out.ok) return out;
@@ -1703,7 +1703,7 @@ export class GameSession implements AcademyRecordPort {
         const config = this._familyConfig;
         if (!config || config.matchmakerPrice === null) return { open: false, notice: MATCHMAKER_CLOSED_LABEL, remaining: 0, candidates: [] };
         const year = this._clock.state.currentYear;
-        const used = this._roster.getAll().filter((g) => matchmakerYearOf(g.id) === year).length;
+        const used = this._rosterRead().filter((g) => matchmakerYearOf(g.id) === year).length;
         return { open: true, notice: '', remaining: Math.max(0, config.matchmakerPerYear - used), candidates: matchmakerCandidates(year, config) };
     }
 
@@ -1714,7 +1714,7 @@ export class GameSession implements AcademyRecordPort {
         if (!offer.open) return { ok: false, reason: 'not-open' };
         const chosen = offer.candidates[pick];
         if (!chosen) return { ok: false, reason: 'not-eligible' };
-        if (this._roster.getAll().some((g) => g.id === chosen.generalId)) return { ok: false, reason: 'duplicate', generalId: chosen.generalId };
+        if (this._rosterRead().some((g) => g.id === chosen.generalId)) return { ok: false, reason: 'duplicate', generalId: chosen.generalId };
         if (offer.remaining <= 0) return { ok: false, reason: 'year-limit' };
         // 媒人禮金實扣（PROG-2-9591）：先扣，納入失敗（上限等）就退回，失敗不改狀態
         const config = this._familyConfig;
@@ -1746,7 +1746,7 @@ export class GameSession implements AcademyRecordPort {
             // TODO(第二版)：歷練（doc_spec_1180）尚未實作，轉接器先回空
             expedition: () => [],
             // 待產（pregnancySeasonsLeft）；TODO(第二版)：重傷旗標待傷勢系統落地後併入
-            medical: () => this._roster.getAll().filter((g) => ((g as { pregnancySeasonsLeft?: number }).pregnancySeasonsLeft ?? 0) > 0).map((g) => this._adaptedOccupancy(g.id, 'pregnancy')),
+            medical: () => this._rosterRead().filter((g) => ((g as { pregnancySeasonsLeft?: number }).pregnancySeasonsLeft ?? 0) > 0).map((g) => this._adaptedOccupancy(g.id, 'pregnancy')),
         },
     });
 
@@ -2289,7 +2289,7 @@ export class GameSession implements AcademyRecordPort {
     }
 
     private _tallyNameOf(card: TigerTallyCard): string {
-        return resolveTallyName(card, (id) => this._roster.getAll().find((g) => g.id === id || g.templateId === id)?.name);
+        return resolveTallyName(card, (id) => this._rosterRead().find((g) => g.id === id || g.templateId === id)?.name);
     }
 
     /**
@@ -2336,7 +2336,7 @@ export class GameSession implements AcademyRecordPort {
 
     /** 把君主持有的虎符裝到武將身上；武將不在名冊、虎符不存在、已被持有或武將已有虎符時回傳失敗 */
     public async equipTally(cardUid: string, generalId: string): Promise<TallyHoldingsResult | null> {
-        if (!this._roster.getAll().some((g) => g.id === generalId)) return null;
+        if (!this._rosterRead().some((g) => g.id === generalId)) return null;
         const card = this._tallyCards[cardUid];
         const result = equipTally(this._tallyHoldings, cardUid, generalId);
         const committed = await this._commitTallyResult(result);
@@ -2380,7 +2380,7 @@ export class GameSession implements AcademyRecordPort {
      * 武將未持有虎符時回傳 null；武將不在名冊時也回傳 null。
      */
     public async confiscateTally(generalId: string, isGachaHero = false): Promise<{ cardUid: string; loyalty: number } | null> {
-        if (!this._roster.getAll().some((g) => g.id === generalId)) return null;
+        if (!this._rosterRead().some((g) => g.id === generalId)) return null;
         const cardUid = tallyOfGeneral(this._tallyHoldings, generalId);
         if (cardUid === null) return null;
         const quality = this._tallyCards[cardUid]?.quality ?? 'R';
@@ -2506,7 +2506,7 @@ export class GameSession implements AcademyRecordPort {
         quality: TigerTallyQuality,
         isGachaHero = false,
     ): Promise<TallyLoyaltyResult | null> {
-        if (!this._roster.getAll().some((g) => g.id === generalId)) return null;
+        if (!this._rosterRead().some((g) => g.id === generalId)) return null;
         const current = this._tallyLoyalty[generalId] ?? createTallyLoyaltyState(TALLY_LOYALTY_INITIAL, isGachaHero);
         const result = applyTallyLoyaltyChange(current, action, quality, this._clock.state.totalSeasonsElapsed);
         if (result.ok) {
@@ -4357,7 +4357,7 @@ export class GameSession implements AcademyRecordPort {
         if (!job) return { ok: false, reason: 'unknown-job' };
         const running = this._dispatch.active.find((a) => a.jobId === jobId);
         if (running) {
-            const name = this._roster.getAll().find((g) => g.id === running.generalId)?.name ?? running.generalId;
+            const name = this._rosterRead().find((g) => g.id === running.generalId)?.name ?? running.generalId;
             return { ok: false, reason: 'job-active', jobName: job.name, generalName: name };
         }
         if (generalId) {
@@ -5133,7 +5133,7 @@ export class GameSession implements AcademyRecordPort {
      * 回傳的 favorite 為切換後的狀態。
      */
     public async toggleFavorite(generalId: string): Promise<{ ok: boolean; favorite: boolean }> {
-        if (!this._roster.getAll().some((g) => g.id === generalId)) {
+        if (!this._rosterRead().some((g) => g.id === generalId)) {
             return { ok: false, favorite: this._favoriteGeneralIds.includes(generalId) };
         }
         const favorite = !this._favoriteGeneralIds.includes(generalId);
@@ -5151,7 +5151,7 @@ export class GameSession implements AcademyRecordPort {
      * 武將不在名冊或任務 id 為空時回傳 false，不變更。
      */
     public async assignHallTask(taskId: string, generalId: string): Promise<boolean> {
-        if (taskId.length === 0 || !this._roster.getAll().some((g) => g.id === generalId && !isCaptive(g))) return false;
+        if (taskId.length === 0 || !this._rosterRead().some((g) => g.id === generalId && !isCaptive(g))) return false;
         this._hallAssignments = { ...this._hallAssignments, [taskId]: generalId };
         if (this._autoSave && this._save) {
             await this.save();
@@ -6845,7 +6845,7 @@ export class GameSession implements AcademyRecordPort {
             this._emit(GAME_SESSION_EVENTS.FactorAwakened, event);
         }
         rankPromotions.forEach((payload) => {
-            this._seasonActivity.rankUps.push({ name: this._roster.getAll().find((g) => g.id === payload.generalId)?.name ?? payload.generalId, title: payload.title });
+            this._seasonActivity.rankUps.push({ name: this._rosterRead().find((g) => g.id === payload.generalId)?.name ?? payload.generalId, title: payload.title });
             this._emit(GAME_SESSION_EVENTS.GeneralRankPromoted, payload);
         });
         return record;

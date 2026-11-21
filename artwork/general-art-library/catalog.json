@@ -864,16 +864,24 @@
         ]
       },
       "smallAvatar": {
-        "activeVersion": "0001",
-        "status": "review-pending",
+        "activeVersion": "0002",
+        "status": "integrated",
         "history": [
           {
             "version": "0001",
             "file": "small_avatars/huang_yue_ying__黃月英__small_avatar_0001.png",
-            "status": "review-pending",
+            "status": "superseded",
             "sha256": "7545f5289977eb550965209a78390405877ec2b5da41a4c637fa6e97ab8493b5",
             "canvas": "1254x1254 RGBA",
             "qc": "125px/250px preview: actual face centered within ±3%; complete hairstyle and face; crop ends at shoulder/collar line, no bust or chest front."
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/huang_yue_ying__黃月英__small_avatar_0002.png",
+            "status": "integrated",
+            "sha256": "a9c1717bbac8319a47ccaeda324cf41fceb7a79ee891585b86a6e1691bc11e3a",
+            "canvas": "256x256 RGBA",
+            "qc": "125px/250px source-and-crop review: head height 75%; face height 46.6%; face centerline offset 0.5px; both shoulders visible to shoulder line; full bun, hair ornament, jade tassel and braid retained; crop-only from avatar_0002."
           }
         ]
       }

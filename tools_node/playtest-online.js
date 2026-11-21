@@ -304,6 +304,7 @@ function createCollector() {
 }
 
 async function main() {
+    let perfProbe = null; // --perf：每步量 FPS／long task／heap／draw call／CPU 熱點（tools_node/perf-probe.js）
     const args = parseArgs(process.argv.slice(2));
     const viewport = parseViewport(args.viewport);
     const stuckMs = Number(args.stuck || DEFAULT_STUCK_MS);
@@ -410,6 +411,7 @@ async function main() {
         }
         const from = collector.entries.length;
         const t0 = Date.now();
+        if (perfProbe) await perfProbe.begin().catch(() => {});
         rm.takeBlocked(); // 清掉前一步殘留的「被擋住」紀錄
         try {
             const detail = await fn(rec);
@@ -426,6 +428,7 @@ async function main() {
             }
         }
         rec.durationMs = Date.now() - t0;
+        if (perfProbe) rec.perf = await perfProbe.end().catch(() => null);
         const slice = collector.entries.slice(from);
         rec.pageErrors = slice.filter((e) => e.kind === 'pageerror').map((e) => e.detail);
         rec.console = slice.filter((e) => e.kind === 'console-error' || e.kind === 'request-failed' || e.kind === 'http-error').map((e) => `${e.kind}: ${e.detail}`);
@@ -506,13 +509,14 @@ async function main() {
             executablePath: browserPath,
             headless: true,
             defaultViewport: viewport,
-            args: ['--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage', '--disable-http-cache', '--allow-file-access-from-files'],
+            args: [...(args.gpu ? [] : ['--disable-gpu']), '--no-sandbox', '--disable-dev-shm-usage', '--disable-http-cache', '--allow-file-access-from-files'],
         });
         // 每次執行都是全新情境：沒有舊的 localStorage／IndexedDB／快取，等同新玩家
         context = await browser.createBrowserContext();
         page = await context.newPage();
         await page.setViewport(viewport);
         attachCollectors(page);
+        if (args.perf) perfProbe = await require('./perf-probe').create(page);
 
         // ── 1. 開機 → LoginScene → 開始遊戲 → LobbyScene，等載入遮罩消失 ──
         const bootOk = await step('boot-login-lobby', async (rec) => {
