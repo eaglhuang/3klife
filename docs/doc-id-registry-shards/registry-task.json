@@ -16426,5 +16426,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9245.md",
     "title": "[PROG-2-9245] SUP-11 連線券免費來源與教官池軟保底 60",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2766",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9607.md",
+    "title": "任務卡：PROG-2-9607 新玩家第一年「不卡關」體驗走查與修正清單",
+    "category": "task"
   }
 ]
