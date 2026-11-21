@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 197,
+    "done": 198,
     "in_progress": 4,
     "open": 87,
-    "total": 288
+    "total": 289
   },
   "tasks": [
     {
@@ -12717,6 +12717,53 @@
       "acceptance": [],
       "deliverables": [],
       "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0 錯、單元測試全過（含 RewardRoster 8 項）、compute-gate standard | 變更: gacha-reward-pools.json 三池、RewardRoster 名冊查詢展開、引擎 tierRates | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9226",
+      "title": "學府 qaAcademy 快進與共通 API 流程相容修正（9192 × 9215 合併後 playtest --academy 回歸）",
+      "owner": "ClaudeCode_sonnet-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "ClaudeCode_sonnet-5-5",
+      "started_at": "2026-11-21T14:05:56+08:00",
+      "started_by_agent": "claude-code-sonnet-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "save.write 落盤重入 API 佇列造成死結（入學後所有 API 命令卡住），改以 adapter.invoke 直呼並補回歸測試。",
+      "related": [
+        "PROG-2-9192",
+        "PROG-2-9215"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0 錯、run-cli 全過、compute-gate standard | 變更: AcademyHostCommands、GameSession、AcademyApiRig、AcademyHostCommands.test | 阻塞: 第 15 步另卡",
       "brief": {
         "style": "classic",
         "label": "",
