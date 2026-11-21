@@ -16240,5 +16240,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9230.md",
     "title": "[PROG-2-9230] 教官池與學府支援卡規格（恢復並改寫教官卡，含強化、羈絆、事件、點撥、師門、四池轉蛋）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2725",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9231.md",
+    "title": "[PROG-2-9231] 世界觀與故事總綱規格書（AI 武將覺醒：一頁版大綱、世界設定、主線鉤子、各系統說法、角色人設、時事梗規範、文案範例）",
+    "category": "task"
   }
 ]
