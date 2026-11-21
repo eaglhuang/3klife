@@ -78,11 +78,11 @@ export function createOccupancyMatrixSuite(): TestSuite {
         try { parseOccupancyMatrix(null); assert.isTrue(false, 'null 應丟錯'); } catch (e) { assert.isTrue(e instanceof OccupancyMatrixError); }
     });
 
-    suite.test('契約：nursing 擋出征、傭兵、貿易、派遣；放行太守、低風險家業、教官指派、守城（規格 3.5 節）', () => {
+    suite.test('契約：nursing 擋出征、傭兵、貿易、派遣；放行太守、不離城的大廳任務、低風險家業、教官指派、守城（規格 3.5 節；PM 11/21）', () => {
         const svc = new OccupancyService({ matrix: matrix() });
         svc.acquire({ personId: 'mom', kind: 'nursing', refId: 'nurse:baby1', since: 4, until: 8 });
         for (const blockedActivity of ['sortie', 'mercenary', 'trade', 'hallDispatch']) assert.isFalse(allowed(svc, 'mom', blockedActivity), `nursing 應擋 ${blockedActivity}`);
-        for (const okActivity of ['gov', 'estateLowRisk', 'mentorAssign', 'defend']) assert.isTrue(allowed(svc, 'mom', okActivity), `nursing 應放行 ${okActivity}`);
+        for (const okActivity of ['gov', 'hallMission', 'estateLowRisk', 'mentorAssign', 'defend']) assert.isTrue(allowed(svc, 'mom', okActivity), `nursing 應放行 ${okActivity}`);
         const out = svc.checkAssign('mom', 'sortie');
         assert.equals('nursing', out.blockedBy!.kind);
         expectCode(() => svc.assertAssignable('mom', 'sortie'), 'CONFLICT');
@@ -103,6 +103,7 @@ export function createOccupancyMatrixSuite(): TestSuite {
         assert.isTrue(allowed(svc, 'mom', 'estate'));
         assert.isFalse(allowed(svc, 'mom', 'mercenary'));
         assert.isFalse(allowed(svc, 'mom', 'sortie'));
+        assert.isTrue(allowed(svc, 'mom', 'gov'), '待產可任太守／內政（PM 11/21）');
         // 出生後母乳方式：登記 nursing（待產轉接器已清掉）
         const born = new OccupancyService({ matrix: matrix() });
         born.acquire({ personId: 'mom', kind: 'nursing', refId: 'nurse:baby1', since: 2 });

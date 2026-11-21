@@ -86,11 +86,13 @@ export class OccupancyService {
     /**
      * 活動指派檢查：某人現在能不能被指派做 activity（sortie 出征、gov 太守、mercenary 傭兵…）。
      * 有矩陣時依規則（任一占用沒明列放行就擋）；沒矩陣時任何占用都擋。activity 不在矩陣活動表丟 INVALID。
+     * onlyKinds：只看這幾種占用（宿主用來只套登記表＋待產，太守／派遣／傭兵等舊系統仍各自管自己的忙碌）。
      */
-    public checkAssign(personId: string, activity: string): { allowed: boolean; blockedBy?: OccupancyRecord } {
+    public checkAssign(personId: string, activity: string, onlyKinds?: readonly OccupancyKind[]): { allowed: boolean; blockedBy?: OccupancyRecord } {
         if (typeof personId !== 'string' || personId === '') throw new OccupancyError('INVALID', 'personId 必須是非空字串');
         if (typeof activity !== 'string' || activity === '') throw new OccupancyError('INVALID', 'activity 必須是非空字串');
-        const records = this.query(personId);
+        const all = this.query(personId);
+        const records = onlyKinds ? all.filter((r) => onlyKinds.indexOf(r.kind) >= 0) : all;
         if (!this._matrix) return records.length === 0 ? { allowed: true } : { allowed: false, blockedBy: records[0] };
         if (!isKnownActivity(this._matrix, activity)) throw new OccupancyError('INVALID', `未知的活動 ${activity}`);
         const blocker = activityBlockedBy(this._matrix, records, activity);

@@ -12550,7 +12550,7 @@
       "title": "配偶上場（F4：名冊 kind=spouse、生成型配偶範本、出征與派遣、太守；指派入口改用 checkAssign）",
       "owner": "ClaudeCode_sonnet-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-21",
@@ -12569,7 +12569,7 @@
       "depends": [],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-21 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0 錯、run-cli 全過（含 SpouseDeploy 6 項）、compute-gate standard 通過、api-bypass 未增 | 變更: 指派入口 isRegistered 改 checkAssign（出征、派遣、大廳任務、太守；只套登記表與待產）、matrix 依 PM 裁決（待產放行太守、哺乳放行大廳任務）、GeneratedSpouse 範本、GameSession.enrollSpouse／enrollGeneratedSpouse／isSpouse、FamilyService.addSpouse | 阻塞: 7456 實跑截圖待主目錄同步（主目錄與 origin/master 分岔）",
       "brief": {
         "style": "classic",
         "label": "",

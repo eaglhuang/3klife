@@ -37,8 +37,7 @@
 | `generatedSpouseEp` | `[50,70]` | 生成型配偶 EP 範圍（保底 FB：首子配偶固定 60） |
 | `pregnancyQuarters` | 2 | 待產 |
 | `postpartumQuarters` | 1 | 非母乳的產後休養 |
-| `nursingBlocks` | `["sortie","mercenary","trade","hallDispatch"]` | `nursing` 擋的占用 |
-| `nursingAllows` | `["gov","estateLowRisk","mentorAssign","defend"]` | 放行 |
+| 哺乳／待產互斥規則 | 見 `occupancy-matrix.json` | 唯一來源（PM 11/21 裁決）；本表不再列 `nursingBlocks`／`nursingAllows`。待產擋出征、傭兵，放行家業與太守；哺乳放行太守與不離城的大廳任務 |
 | `crowdThreshold` | 8 | 在養未成年子嗣觸發分家提示 |
 | `childrenTypicalRange` | `[6,12]` | 設計目標，供平衡統計，不是硬上限 |
 | `geniusChance` | 0.03 | 家門奇才基礎機率 |
