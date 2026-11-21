@@ -935,15 +935,34 @@
         ]
       },
       "smallAvatar": {
-        "activeVersion": "0001",
-        "status": "review-pending",
+        "activeVersion": "0002",
+        "status": "integrated",
         "history": [
           {
             "version": "0001",
             "file": "small_avatars/bao_san_niang__鮑三娘__small_avatar_0001.png",
-            "status": "review-pending",
+            "status": "superseded",
             "sha256": "70304094e493dd92a035605711d4e6876622ce8b2ed81939e292898e48c68e75",
-            "canvas": "1254x1254 RGBA"
+            "canvas": "1254x1254 RGBA",
+            "note": "Superseded by 0002: full hair ornaments retained, centered face and improved crop scale."
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/bao_san_niang__鮑三娘__small_avatar_0002.png",
+            "status": "integrated",
+            "sha256": "8d8e87a1656f631a15db01f982e4e6896622ce8b2ed81939e292898e48c68e75",
+            "canvas": "256x256 RGBA",
+            "sourceStandingVersion": "0001",
+            "sourceStandingFile": "standing/bao_san_niang__鮑三娘__standing_0001.png",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "x": 289.27,
+              "y": 63.04,
+              "width": 348,
+              "height": 348
+            },
+            "qc": "頭高75%；臉高39.4%、臉寬32.2%；臉框中心線與畫布中線差0.5px；完整保留髮髻、花飾與垂飾；並排檢視確認臉部保留自然三分之四側角。只等比例裁切與平移，未旋轉、修臉或重畫。",
+            "createdAt": "2026-11-22"
           }
         ]
       }
@@ -8317,38 +8336,19 @@
         "activeVersion": "0002"
       },
       "smallAvatar": {
-        "activeVersion": "0002",
-        "status": "integrated",
+        "activeVersion": "0001",
+        "status": "review-pending",
         "history": [
           {
             "version": "0001",
             "file": "small_avatars/bian_fu_ren__卞夫人__small_avatar_0001.png",
-            "status": "superseded",
+            "status": "review-pending",
             "sha256": "4612f16483f908e3abb23e4830fc5b3053f7b745cb76f1b025a5a8e701a61ce8",
             "canvas": "256x256 RGBA",
             "source": "standing/bian_fu_ren__卞夫人__standing_0002.png (crop-only)",
             "crop": "shoulder-line",
             "cropBox": "x=186,y=0,w=140,h=140; canvas=152x152; transparent-pad=6px on each side",
-            "qc": "No redraw or design changes; full hair ornament, face and chin retained; face centered; shoulder tops at lower edge, no chest.",
-            "note": "Superseded by 0002: head scaled to 79.6%, natural three-quarter angle preserved, both shoulder tops visible."
-          },
-          {
-            "version": "0002",
-            "file": "small_avatars/bian_fu_ren__卞夫人__small_avatar_0002.png",
-            "status": "integrated",
-            "sha256": "c49f57a037e82cc8422c957822835047b5691a915baeacf5f412845638df5c9a",
-            "canvas": "256x256 RGBA",
-            "sourceStandingVersion": "0002",
-            "sourceStandingFile": "standing/bian_fu_ren__卞夫人__standing_0002.png",
-            "method": "crop-only; uniform resize; no redraw",
-            "cropBox": {
-              "x": 159.8,
-              "y": -3.34,
-              "width": 167.03,
-              "height": 167.03
-            },
-            "qc": "頭高79.6%；臉高44.6%、臉寬32.9%；臉框中心線與畫布中線差0.5px；金色帽飾、兩側髮飾與髮髻完整；雙肩上緣可見。並排檢視確認保留自然三分之四側角；只等比例裁切，未重繪、未旋轉或變形。",
-            "createdAt": "2026-11-22"
+            "qc": "No redraw or design changes; full hair ornament, face and chin retained; face centered; shoulder tops at lower edge, no chest."
           }
         ]
       },
