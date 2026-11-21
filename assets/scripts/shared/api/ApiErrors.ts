@@ -32,6 +32,8 @@ export const API_ERRORS = Object.freeze({
     MAINTENANCE: def('E104', 'MAINTENANCE', true),
     COMMAND_UNKNOWN: def('E105', 'COMMAND_UNKNOWN'),
     BATCH_PARTIAL_REJECT: def('E106', 'BATCH_PARTIAL_REJECT'),
+    // 偵錯入口（本機 adapter 專用；宿主沒綁定時）
+    DEBUG_UNAVAILABLE: def('E107', 'DEBUG_UNAVAILABLE'),
     // 物品庫存／錢包（E3xx）；貨幣併入錢包命令（庫存規格 Q2）
     INSUFFICIENT_BALANCE: def('E301', 'INSUFFICIENT_BALANCE'),
     CURRENCY_UNKNOWN: def('E302', 'CURRENCY_UNKNOWN'),

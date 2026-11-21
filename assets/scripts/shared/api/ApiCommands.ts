@@ -59,6 +59,8 @@ export const API_COMMANDS = Object.freeze({
     'occupancy.query': { kind: 'query', revGuard: false },
     'occupancy.acquire': { kind: 'cmd', revGuard: false },
     'occupancy.release': { kind: 'cmd', revGuard: false },
+    // 偵錯（只有本機 adapter 掛處理器；網路 adapter 一律回 COMMAND_UNKNOWN，避免變成外掛入口）
+    'debug.fastForward': { kind: 'cmd', revGuard: false },
     // 任務（任務 Base 規格 §11；QST-M 最小版，只有 taskKind=academy）
     'task.query': { kind: 'query', revGuard: false },
     'task.accept': { kind: 'cmd', revGuard: false },
@@ -490,6 +492,21 @@ export interface OccupancyReleaseArgs {
 export interface OccupancyReleaseResult {
     /** false＝本來就沒有（冪等重送） */
     released: boolean;
+}
+
+// ── 偵錯（debug.fastForward；只有本機 adapter 提供）──
+
+/** debug.fastForward 的回應：只表示已啟動（命令佇列串行，不能等快進跑完；結果由宿主公布） */
+export interface DebugFastForwardAck {
+    accepted: true;
+    turns: number;
+}
+
+/** 學府快進停下時的狀態（宿主公布用） */
+export interface DebugFastForwardResult {
+    completedTurns: number;
+    steps: number;
+    stoppedBy: string;
 }
 
 /**
