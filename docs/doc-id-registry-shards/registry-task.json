@@ -16480,5 +16480,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9609.md",
     "title": "任務卡：PROG-2-9609 開局義子入學驗證與學府籌備看板",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2932",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9712.md",
+    "title": "[PROG-2-9712] 第一年連敗：分清自動代打與關卡難度、強化委任 AI、戰敗敗因診斷",
+    "category": "task"
   }
 ]

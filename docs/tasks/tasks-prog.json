@@ -14249,6 +14249,60 @@
       "doc_id": "doc_task_2931",
       "title": "開局義子入學驗證與學府籌備看板",
       "status": "completed"
+    },
+    {
+      "doc_id": "doc_task_2932",
+      "id": "PROG-2-9712",
+      "title": "第一年連敗：分清自動代打與關卡難度、強化委任 AI、戰敗敗因診斷",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T05:00:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "第一年四場年度戰鬥預設編成＋自動代打全敗；分清委任 AI 與關卡難度、強化 AI 或提數值、戰敗敗因診斷與下一步建議、開場自動代打自動結束回合",
+      "related": [
+        "PROG-2-9711",
+        "PROG-2-9709"
+      ],
+      "depends": [],
+      "acceptance": [
+        "自動代打第一年四場至少贏 2 場",
+        "合理手動打法全勝",
+        "戰敗結算敗因 1～2 條與下一步建議按鈕"
+      ],
+      "deliverables": [
+        "委任 AI／難度調整",
+        "戰敗敗因診斷"
+      ],
+      "notes": "2026-11-22 | 狀態: in-progress | 驗證: pending | 變更: 開卡，第一年四場年度戰鬥全敗（線上 65c73bfaa 一年份試玩） | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "updated": "2026-11-22"
