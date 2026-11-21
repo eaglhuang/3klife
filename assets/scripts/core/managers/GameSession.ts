@@ -164,6 +164,7 @@ import type { SkillHost } from '../api/localserver/SkillCommands';
 import { SkillService } from '../../shared/skill/SkillService';
 import type { AcademyHost } from '../api/localserver/AcademyHostCommands';
 import type { OccupancyHost } from '../api/localserver/OccupancyCommands';
+import type { FamilyHost } from '../api/localserver/FamilyCommands';
 import { OccupancyService } from '../../shared/occupancy/OccupancyService';
 import { parseOccupancyMatrix, type OccupancyMatrixV1 } from '../../shared/occupancy/OccupancyMatrix';
 import { parseFamilyConfig, type FamilyConfigV1 } from '../../shared/family/FamilyConfig';
@@ -1490,7 +1491,7 @@ export class GameSession implements AcademyRecordPort {
         if (!config) return { ok: false, reason: 'no-config' };
         const spouse = buildGeneratedSpouse({ slot, epRange: config.generatedSpouseEp });
         const out = this.enrollSpouse(spouse, options);
-        return out.ok ? { ok: true, generalId: spouse.id } : out;
+        return out.ok || out.reason === 'duplicate' ? { ...out, generalId: spouse.id } : out;
     }
 
     /** 舊檔對帳：名冊上有少年版標記卻沒家族紀錄者，補登「開局義子特例」（9194 開局少年改為義子） */
@@ -1534,6 +1535,18 @@ export class GameSession implements AcademyRecordPort {
         const matrix = parseOccupancyMatrix(raw);
         this._occupancy.setMatrix(matrix);
         return matrix;
+    }
+
+    /** 家族宿主：ServiceLoader 把它掛到本機 API 的 family.* 命令（配偶納入名冊，PROG-2-9582） */
+    public get spouseHost(): FamilyHost {
+        return {
+            enrollGeneratedSpouse: (slot) => {
+                const out = this.enrollGeneratedSpouse(slot);
+                // 名冊與家族紀錄是重要狀態，納入成功就落盤（與轉蛋入帳同樣的自動存檔規則）
+                if (out.ok && this._autoSave && this._save) void this.save();
+                return out;
+            },
+        };
     }
 
     /** 人員占用宿主：ServiceLoader 把它掛到本機 API 的 occupancy.* 命令 */
