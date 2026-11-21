@@ -16,7 +16,7 @@ import type { CutinConfig } from '../../shared/cutin/cutinCore';
 import {
   CUTIN_HARD_TIMEOUT_MS, CUTIN_INDEX_PATH, CUTIN_LOAD_TIMEOUT_MS, CutinReplayTracker, PLACEHOLDER_CUTIN_ENABLED,
   PLACEHOLDER_CUTIN_IMAGE_KEY, buildPlaceholderCutinConfig, cutinConfigPath, cutinImagePath, cutinIndexHas,
-  placeholderCutinRegistry,
+  placeholderCutinRegistry, resolveCutinSfxClip,
   type CutinIndex,
 } from '../../shared/cutin/cutinSupport';
 import { abortAllUltCutins, playUltCutin, type CutinCuePlayer, type UltCutinOutcome, type UltCutinPlayArgs } from '../../ui/core/UltCutinOverlay';
@@ -243,9 +243,9 @@ export class UltCutinDirector {
 }
 
 /** 預設音效播放：音效與語音各自一個 key，缺檔由 AudioSystem 記一行 log，畫面照播 */
-const defaultCuePlayer: CutinCuePlayer = (_kind, key) => {
+const defaultCuePlayer: CutinCuePlayer = (kind, key) => {
   try {
-    services().audio.playSfx(key);
+    services().audio.playSfx(kind === 'sfx' ? resolveCutinSfxClip(key) : key);
   } catch {
     // 音效系統還沒就緒（例如預覽模式）：靜音略過
   }
