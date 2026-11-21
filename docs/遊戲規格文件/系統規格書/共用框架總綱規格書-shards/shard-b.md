@@ -75,22 +75,24 @@
 - 命令路由：`POST /api/v1/cmd`（單一命令或陣列批次，批次內可宣告 `atomic:true`）；查詢：`GET /api/v1/q/<name>`；事件：長連線推送或 `GET /api/v1/events?since=<rev>` 輪詢。單機時這些都只是函式呼叫，路徑與命令名稱不變。
 - 錯誤碼分段（沿用 E001～E099 為傳輸與同步層，見 doc_spec_0655；新增分段，需同步登記到該文件）：
 
-| 範圍 | 層級 |
-|---|---|
-| E001～E099 | 傳輸、驗證、同步（既有，原樣沿用） |
-| E100～E199 | 共通命令層：重複請求、saveRev 衝突、權限、維護中 |
-| E200～E299 | 買賣商店 |
-| E301～E303 | 錢包（`INSUFFICIENT_BALANCE`／`CURRENCY_UNKNOWN`／`WALLET_UNAVAILABLE`，B0 已實作，沿用） |
-| E310～E319 | 物品庫存（E31x） |
-| E320～E329 | 獎勵（E32x） |
-| E330～E339 | 人員占用（E33x） |
-| E340～E349 | 劇情（演出）（E34x） |
-| E350～E359 | 任務（E35x） |
-| E600～E699 | 技能 |
+| 範圍 | 層級 | 已定義碼（`assets/scripts/shared/api/ApiErrors.ts`） | 各框架書章節 |
+|---|---|---|---|
+| E001～E099 | 傳輸、驗證、同步（既有，原樣沿用） | E001、E002、E005、E007、E008、E011 | doc_spec_0655 |
+| E100～E199 | 共通命令層：重複請求、saveRev 衝突、權限、維護中、存檔 | E101～E106；存檔 E190 `SAVE_FAILED`、E191 `SAVE_NOT_FOUND` | 本書 5.3 |
+| E200～E299 | 買賣商店 | 商店 base 尚未實作；沿用商店書第 11.4 節的 E2xx 表（例 E203 `SOLD_OUT`） | doc_spec_1183 |
+| E301～E303 | 錢包 | E301 `INSUFFICIENT_BALANCE`、E302 `CURRENCY_UNKNOWN`、E303 `WALLET_UNAVAILABLE`（B0 已實作，沿用） | doc_spec_1184、doc_spec_1241 |
+| E310～E319 | 物品庫存（E31x） | E310 `HOLDER_UNKNOWN`、E311 `NOT_ACCEPTED`、E312 `BOUND`、E313 `FULL`、E314 `INSUFFICIENT`、E315 `SOURCE_INVALID`、E316 `RULE_UNKNOWN`；E317～E319 保留 | doc_spec_1184 第 11.4 節 |
+| E320～E329 | 獎勵（E32x） | E320 `POOL_NOT_FOUND`、E321 `BUNDLE_NOT_FOUND`、E322 `POOL_CLOSED`、E323 `NO_TICKET`、E324 `INVALID_COUNT`、E325 `SETTLE_ROLLBACK`、E326 `EFFECT_UNSUPPORTED`、E327 `GRANT_KEY_CONFLICT`、E328 `REWARD_UNAVAILABLE`；E329 `ALREADY_CLAIMED` 預留 | doc_spec_1186 第 11.4 節 |
+| E330～E339 | 人員占用（E33x） | E330 `OCC_CONFLICT`、E331 `OCC_KIND_UNKNOWN`、E332 `OCC_REF_MISMATCH`、E333 `OCC_READONLY_KIND`、E334 `OCC_UNAVAILABLE`；E335 `OCC_NOT_ELIGIBLE`、E336 `OCC_WINDOW_INVALID`、E337 `OCC_PERSON_UNKNOWN` 預留 | doc_spec_1242 第 11.4 節 |
+| E340～E349 | 劇情（演出）（E34x） | E340 `STORY_NOT_FOUND`、E341 `NOT_TRIGGERABLE`、E342 `NOT_STARTED`、E343 `INVALID_OPTION`、E344 `CHOICE_ALREADY_MADE`、E345 `QUEUE_CONFLICT`、E346 `EFFECT_UNSUPPORTED`、E347 `EFFECT_FAILED`、E348 `STORY_UNAVAILABLE`；E349 保留 | doc_spec_1188 第 11.4 節 |
+| E350～E359 | 任務（E35x） | E350 `DEF_NOT_FOUND`、E351 `NOT_FOUND`、E352 `BAD_STATE`、E353 `GATE_PENDING`、E354 `NOT_READY`、E355 `STEP_MISMATCH`、E356 `ACTOR_INVALID`、E357 `CONDITION_UNMET`、E358 `QUEST_UNAVAILABLE`、E359 `KEY_CONFLICT` | doc_spec_1185 第 11.4 節 |
+| E600～E699 | 技能 | E601～E613（`INVALID_SKILL`、`ALREADY_LEARNED`、`TP_SHORT`、`NO_SLOT`、`APTITUDE_UNMET`、`NOT_INSPIRED`、`LOADOUT_FULL`、`USES_EXHAUSTED`、`CAST_BLOCKED`、`MAX_LEVEL`、`SKILL_UNAVAILABLE`、`HOLDER_NOT_FOUND`、`NOT_LEARNED`） | doc_spec_1187 第 11.4 節 |
+
+> 讀表規則：任何新框架或新碼先在本表登記範圍，再寫進各框架書第 11.4 節；同一個 E 碼只能有一個 `reason`，`ApiErrors.ts` 是程式側唯一來源（`def('E3xx', ...)`）。第 7 框架人員占用使用 E33x，與錢包的 E301～E303、物品庫存的 E31x 不重疊。
 
 > **分段裁決（總 PM，PROG-2-9208 回寫）：** 原草案「E300～E399 物品庫存、E500～E599 獎勵、E700～E799 劇情」作廢，改為 **E31x 物品、E32x 獎勵、E33x 占用、E34x 劇情**；錢包已先佔用 E301～E303，所以物品庫存從 E310 起。任務段由 E4xx 改為 **E35x**（PROG-2-9215 回寫）；商店（E2xx）、技能（E6xx）維持原分段。
 >
-> **錯誤碼段落表：** E31x 物品、E32x 獎勵、E33x 占用、E34x 劇情、E35x 任務。學府占用的 refId 與任務共用同一個任務實例 id（`quest:<qid>`），OCC 與 QST 指向同一筆紀錄。各書第 11.4 節的碼表以本表分段為準，實作見 `assets/scripts/shared/api/ApiErrors.ts`。
+> **錯誤碼段落表：** E301～E303 錢包、E31x 物品、E32x 獎勵、E33x 占用（第 7 框架，使用者 11/21 裁決 #8）、E34x 劇情、E35x 任務；完整碼清單見上表。學府占用的 refId 與任務共用同一個任務實例 id（`quest:<qid>`），OCC 與 QST 指向同一筆紀錄。各書第 11.4 節的碼表以本表分段為準，實作見 `assets/scripts/shared/api/ApiErrors.ts`。
 
 既有字串碼（`GachaApiErrorCode`、`MissionErrorCode` 等）保留為 `reason`，`errorCode` 由對照表映射，畫面可繼續依 `reason` 顯示。
 

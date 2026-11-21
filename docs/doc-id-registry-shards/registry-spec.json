@@ -7270,5 +7270,17 @@
     "path": "docs/遊戲規格文件/系統規格書/年終守城戰規格書-shards/shard-d.md",
     "title": "年終守城戰規格書（分片索引） — 11–12 待裁決矛盾、來源索引",
     "category": "spec"
+  },
+  {
+    "id": "doc_spec_1241",
+    "path": "docs/遊戲規格文件/系統規格書/貨幣與資源總規格書.md",
+    "title": "貨幣與資源總規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1242",
+    "path": "docs/遊戲規格文件/系統規格書/人員占用系統Base框架規格書.md",
+    "title": "人員占用系統Base框架規格書（分片索引）",
+    "category": "spec"
   }
 ]

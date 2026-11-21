@@ -8,7 +8,7 @@
 > 上層總綱：`共用框架總綱規格書.md (doc_spec_1182)`。本書是六套共用框架之一，所有「持有物品」的玩法一律走本框架，只做包裝與差異設定。
 > 相關框架：買賣商店 (doc_spec_1183)、任務 (doc_spec_1185)、獎勵 (doc_spec_1186)、技能 (doc_spec_1187)、劇情 (doc_spec_1188)。
 > 伺服器 API 與網路原則見總綱第 5 章（本書第 11 章只列本框架端點與 schema，不重複原則）。
-> 任務卡：PROG-2-9200（文件）。狀態：草案，待使用者裁決第 10 節選擇題。
+> 任務卡：PROG-2-9200（文件）、PROG-2-9218（使用者 2026-11-21 裁決回寫：金與銀兩兩種貨幣、公庫用金、家族庫房用銀兩、糧草命名）。狀態：Q2 已裁決（見第 10 節），其餘由 PM 定案。
 
 ## 1. 目的與範圍
 
@@ -21,6 +21,17 @@
 | 幕府 | 公庫 | 幕府公有道具、軍需（對應幕府家業 PROG-2-9199） |
 | 家族 | 倉庫 | 家族共享裝備、世代傳承物 |
 | 玩家帳號 | 物品欄 | 求籤令、入學令等帳號級道具 |
+
+**持有者與貨幣（使用者 2026-11-21 裁決 #14、#28）**：遊戲保留金與銀兩兩種貨幣，各有用途，持有者依性質只持有其中一種：
+
+| 持有者 | 可持有的貨幣 | 用途 |
+|---|---|---|
+| 幕府（公庫） | **金**（`gold`）；另有糧草、兵源、聲望等公共資源 | 國家軍政資金：征兵、城建、外交、俸祿 |
+| 家（庫房）、家族（倉庫） | **銀兩**（`silver`） | 家族私房：家業起蓋與營運、婚嫁聘禮、養子嗣、學府費用 |
+| 玩家帳號 | 付費貨幣、帳號級代幣（精元、結義點數、求籤令、免費銅錢符等轉蛋貨幣） | 不受公私帳影響；付費貨幣定價另題 |
+| 武將個人（背包） | 不持有貨幣，只持有道具 | — |
+
+公私帳互不混用：用金的支出只能從公庫扣，用銀兩的支出只能從家族庫房扣。兩者可以轉移但有代價（捐公庫換名望、挪用公庫補家用），規則與數值見貨幣與資源總規格書 (doc_spec_1241)。
 
 範圍內：物品定義、持有者與容器、堆疊、容量上限、綁定、鎖定、期限、移轉、取得與消耗紀錄、庫存查詢與投影視圖。
 範圍外：貨幣定價與買賣（歸商店）、掉落權重與抽取（歸獎勵）、物品使用後的效果本體（歸各玩法註冊 handler）。
@@ -80,6 +91,7 @@
 ```
 
 - `overflow`：`reject`（拒收）／`toMail`（轉信箱）／`autoSell`（自動換價）／`toHolder:<id>`（轉其他持有者，如退役武將裝備回庫）。
+- `wallet.currencies`（選填）宣告該持有者可持有的貨幣：公庫 `["gold"]`、家與家族 `["silver"]`；錢包命令對不屬於該持有者的貨幣回 `E302 CURRENCY_UNKNOWN`。
 - `capacity.max` 為 null 表示無上限。`grantCap` 為「免費發放持有上限」（例：求籤令 5）。
 
 ### 3.3 庫存列 `stock-row.v1`（沿用並泛化現有 `InventoryRecord`）
@@ -106,22 +118,26 @@
 }
 ```
 
-### 3.5 資源與貨幣命名統一（9199 發現的不一致）
+### 3.5 資源與貨幣命名統一（2026-11-21 使用者裁決 #14 修正）
 
-現況：任務核心 `MissionResourceKey`＝`grain／troops／silver`（`core/mission/MissionTypes.ts`，`cost`、`rewards` 也用 `grain／silver`）；領地治理與派遣 `DomesticResource`＝`food／gold／fame／cityTroops`（`DomesticTasks.ts`）。同一種東西兩個名字，轉換散在各處。
+現況：任務核心 `MissionResourceKey`＝`grain／troops／silver`（`core/mission/MissionTypes.ts`，`cost`、`rewards` 也用 `grain／silver`，其中 `silver` 實際對映到錢包的 `gold`）；領地治理與派遣 `DomesticResource`＝`food／gold／fame／cityTroops`（`DomesticTasks.ts`）；基礎資源規格 doc_spec_0404 用 `food／gold／troops／fame`。同一種東西兩個名字，轉換散在各處。
 
-統一做法：新增資源定義表 `resource-def.v1`（資源與貨幣型物品的唯一名稱登記）：
+**使用者 11/21 裁決（修正原 PM 建議）**：原案「`silver` 為 `gold` 別名、兩者同一種」**作廢**。金（國家／公庫）與銀兩（家族私房）是兩種貨幣，各有用途；只統一糧食命名為「糧草」（PM 定名，規範 id 沿用 `food`）。完整規則見貨幣與資源總規格書 (doc_spec_1241)。
+
+資源定義表 `resource-def.v1`（資源與貨幣型物品的唯一名稱登記）：
 
 ```json
 { "schema": "resource-def.v1",
   "resources": [
-    { "id": "food",   "nameKey": "res.food",   "kind": "currency", "aliases": ["grain"],  "cap": "holder" },
-    { "id": "gold",   "nameKey": "res.gold",   "kind": "currency", "aliases": ["silver"], "cap": "holder" },
-    { "id": "troops", "nameKey": "res.troops", "kind": "currency", "aliases": ["cityTroops"], "cap": "holder" },
-    { "id": "fame",   "nameKey": "res.fame",   "kind": "currency", "aliases": [], "cap": null }
+    { "id": "food",   "nameKey": "res.food",   "kind": "resource", "aliases": ["grain"],      "holders": ["shogunate"], "cap": "holder" },
+    { "id": "gold",   "nameKey": "res.gold",   "kind": "currency", "aliases": [],             "holders": ["shogunate"], "cap": "holder" },
+    { "id": "silver", "nameKey": "res.silver", "kind": "currency", "aliases": [],             "holders": ["household", "clan"], "cap": "holder" },
+    { "id": "troops", "nameKey": "res.troops", "kind": "resource", "aliases": ["cityTroops"], "holders": ["shogunate"], "cap": "holder" },
+    { "id": "fame",   "nameKey": "res.fame",   "kind": "resource", "aliases": [],             "holders": ["shogunate"], "cap": null }
   ] }
 ```
 
-- 規範 id 採 `food／gold／troops／fame`（Q-G 推薦；若裁決改 `grain／silver` 只換表）。別名只在**讀取邊界**轉換一次：任務資料載入（`MissionLoader`）、舊存檔載入、舊帳本，轉成規範 id 後，內部一律只見規範 id。
-- 遷移方式：(1) 先上 `resource-def` 與 `normalizeResourceId()`（純函式）；(2) 任務資料 JSON 暫不改，載入時轉換；(3) 存檔格式版本加一，舊檔讀入時以別名轉換、寫出時用規範 id；(4) 全部資料與程式遷完後，移除別名（保留載入端別名一個版本以相容舊檔）；(5) `check-api-bypass`（總綱 5.10）加一條：新程式碼不得出現別名字串。
+- 規範 id：`food／gold／silver／troops／fame`；玩家可見名稱：**糧草**、金、銀兩、兵源、名聲（「糧食」一律改名為「糧草」）。別名只在**讀取邊界**轉換一次：任務資料載入（`MissionLoader`／`HallMissionData`）、舊存檔載入、舊帳本，轉成規範 id 後，內部一律只見規範 id。
+- 大廳任務與任務牆的舊 `silver` 欄位（實際扣入錢包 `gold`）讀入時對映為 `gold`（公務屬國家）；**銀兩只來自家業、家族事務與公私轉移**，不由任務牆直接產出。
+- 遷移方式：(1) 先上 `resource-def` 與 `normalizeResourceId()`（純函式），別名表只有 `grain→food`、`silver(舊任務欄位)→gold`、`cityTroops→troops`；(2) 任務資料 JSON 暫不改，載入時轉換；(3) 存檔格式版本加一，舊檔讀入時以別名轉換、寫出時用規範 id；(4) 新增 `silver` 錢包與家族庫房持有者（CUR-2 卡）；(5) 全部資料與程式遷完後移除別名（保留載入端別名一個版本以相容舊檔）；(6) `check-api-bypass`（總綱 5.10）加一條：新程式碼不得出現別名字串與玩家可見「糧食」。
 - 單位與上限：持有者的 `container-rule` 可為資源宣告上限（如城市糧倉），與道具容量同一機制。

@@ -205,13 +205,15 @@
 
 | 規格書 | 被依賴（下游） | 依賴（上游） |
 |---|---|---|
-| doc_spec_1182（共用框架總綱） | doc_spec_1183、doc_spec_1184、doc_spec_1185、doc_spec_1186、doc_spec_1187、doc_spec_1188 | doc_spec_1181、doc_spec_1180、doc_spec_1179、doc_spec_0655、doc_tech_0010、doc_tech_0013、doc_spec_0334、doc_spec_0469、doc_spec_0656、doc_spec_0683、doc_spec_0662 |
+| doc_spec_1182（共用框架總綱） | doc_spec_1183、doc_spec_1184、doc_spec_1185、doc_spec_1186、doc_spec_1187、doc_spec_1188、doc_spec_1241、doc_spec_1242 | doc_spec_1181、doc_spec_1180、doc_spec_1179、doc_spec_0655、doc_tech_0010、doc_tech_0013、doc_spec_0334、doc_spec_0469、doc_spec_0656、doc_spec_0683、doc_spec_0662 |
 | doc_spec_1183（買賣商店） | doc_spec_1186 | doc_spec_1182、doc_spec_1184、doc_spec_1186 |
 | doc_spec_1184（物品庫存） | doc_spec_1183、doc_spec_1185、doc_spec_1186、doc_spec_1187、doc_spec_1188 | doc_spec_1182 |
 | doc_spec_1185（任務） | doc_spec_1186、doc_spec_1188 | doc_spec_1182、doc_spec_1184、doc_spec_1186、doc_spec_1188 |
 | doc_spec_1186（獎勵） | doc_spec_1183、doc_spec_1185、doc_spec_1187、doc_spec_1188 | doc_spec_1182、doc_spec_1184、doc_spec_1188 |
 | doc_spec_1187（技能） | doc_spec_1186、doc_spec_1188 | doc_spec_1182、doc_spec_1184、doc_spec_1186 |
 | doc_spec_1188（劇情演出） | doc_spec_1185、doc_spec_1186、doc_spec_1187 | doc_spec_1182、doc_spec_1185、doc_spec_1186 |
+| doc_spec_1242（人員占用，第 7 個共用框架） | doc_spec_1181、doc_spec_1180、doc_spec_1179、doc_spec_1182 | doc_spec_1182 |
+| doc_spec_1241（貨幣與資源總規格） | doc_spec_1181、doc_spec_1184、doc_spec_1183、doc_spec_1186、doc_spec_0404、doc_spec_0033 | doc_spec_1182、doc_spec_1184 |
 
 #### 各框架 ↔ 依賴它的既有規格（框架 → 既有規格）
 
