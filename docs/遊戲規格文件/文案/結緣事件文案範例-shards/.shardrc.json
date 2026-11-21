@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "source": "../結緣事件文案範例.md",
+  "indexTitle": "結緣事件文案範例（20 則，分片索引）",
+  "indexPath": "docs/遊戲規格文件/文案/結緣事件文案範例.md",
+  "type": "markdown-h2",
+  "preambleShard": "shard-a",
+  "defaultShard": "shard-b",
+  "shards": [
+    {
+      "name": "shard-a",
+      "title": "一、結緣好感納配偶（7 則）與 二、外交聯姻求親（6 則）",
+      "pattern": "^(一|二)、"
+    },
+    {
+      "name": "shard-b",
+      "title": "三、媒人說親（7 則）",
+      "pattern": "^三、"
+    }
+  ]
+}
