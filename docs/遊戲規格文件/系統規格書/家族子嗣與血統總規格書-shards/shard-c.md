@@ -35,7 +35,7 @@
 | `matchmakerPerYear` | 2 | 媒人說親年度次數 |
 | `matchmakerPrice` | 待使用者 | 銀兩價格 |
 | `generatedSpouseEp` | `[50,70]` | 生成型配偶 EP 範圍（保底 FB：首子配偶固定 60） |
-| `pregnancyQuarters` | 2 | 待產 |
+| 待產季數 | 見 `breeding-rules.json` `pregnancyLockSeasons`（2） | 唯一來源，本表不再存（PM 11/21 裁決） |
 | `postpartumQuarters` | 1 | 非母乳的產後休養 |
 | `breastfeedEndAge` | 5 | 母乳方式哺乳到孩子幾歲止（PROG-2-9485）；母親 `nursingMethod`：`breast`（預設）／`formula`／`wetNurse` |
 | 哺乳／待產互斥規則 | 見 `occupancy-matrix.json` | 唯一來源（PM 11/21 裁決）；本表不再列 `nursingBlocks`／`nursingAllows`。待產擋出征、傭兵，放行家業與太守；哺乳放行太守與不離城的大廳任務 |
@@ -111,3 +111,10 @@
 | F10 | 加速食物與道具接線（物品、獎池、商店、使用命令、單一孩子規則） | 物品 base、獎勵 base、商店 base（付費部分延後） | TC-FAM-10 |
 | F11 | doc_spec_1233 首子流程同步：系統配偶入名冊 | F4 | 首子流程完成後配偶可出征、可當太守 |
 | F12 | 家譜與家臣家畫面（家譜顯示成員類別、分家、外嫁節點、忠誠與離開預警） | F1、F9 | 手機記憶體：不建動態節點，重用列 |
+
+### 待接清單（PM 11/21）
+
+| 項目 | 目前做法 | 何時接 |
+| --- | --- | --- |
+| 幕府等級 | 遊戲內尚無幕府等級；配偶上限暫用 `hallLevel=1`（2 位） | 幕府升級系統做出來後接 |
+| 銀兩錢包 | 乳母費、說親費、分家補貼只存設定 | 經濟統一卡 |

@@ -66,7 +66,7 @@ export function createFamilyModelSuite(): TestSuite {
         assert.equals(3, spouseCapFor(config, 3));
         assert.equals(4, spouseCapFor(config, 5));
         assert.equals(4, spouseCapFor(config, 9));
-        assert.equals(2, config.pregnancyQuarters);
+        assert.equals(20, config.wetNurseSilverPerQuarter);
         assert.equals(null, config.matchmakerPrice);
         assert.equals(null, config.branchGrantSilver);
     });
@@ -90,7 +90,7 @@ export function createFamilyModelSuite(): TestSuite {
 
     suite.test('設定型別或範圍不對、整份不是物件都 fail-fast，且一次列出全部問題', () => {
         const base = familyJson();
-        const bad = { ...base, geniusChance: 3, generatedSpouseEp: [70, 50], pregnancyQuarters: 1.5, allianceMinRelation: '' };
+        const bad = { ...base, geniusChance: 3, generatedSpouseEp: [70, 50], wetNurseSilverPerQuarter: 1.5, allianceMinRelation: '' };
         try {
             parseFamilyConfig(bad);
             assert.isTrue(false, '應丟錯');

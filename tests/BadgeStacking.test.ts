@@ -19,7 +19,7 @@ function placed(entries: StackBadgeEntry[], obstacles: LabelRect[] = []): LabelR
 export function createBadgeStackingSuite(): TestSuite {
     const suite = new TestSuite('BadgeStacking (部隊資訊框彼此錯開 PROG-2-9440)');
 
-    // PROG-2-9581：避讓矩形要包含框上方的血條與狀態圖示列
+    // PROG-2-9701：避讓矩形要包含框上方的血條與狀態圖示列
     suite.test('只有框本體時，矩形與 9440 舊算法相同', () => {
         const r = badgeRectFromExtent(100, 50, 0.7, { left: -90, right: 90, top: 39, bottom: -39 });
         assert.equals(100, r.x); assert.equals(50, r.y);

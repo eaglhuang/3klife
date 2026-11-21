@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 210,
+    "done": 211,
     "in_progress": 4,
-    "open": 86,
-    "total": 300
+    "open": 88,
+    "total": 303
   },
   "tasks": [
     {
@@ -13031,6 +13031,144 @@
     {
       "doc_id": "",
       "id": "PROG-2-9581",
+      "title": "F4／F5 收尾（待產單一來源、乳母費用、待產放行大廳任務、哺乳登記重試、幕府等級待接）",
+      "owner": "ClaudeCode_sonnet-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "ClaudeCode_sonnet-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "doc_spec_1241 第 15 章 待產與哺乳接線",
+      "related": [
+        "PROG-2-9441",
+        "PROG-2-9442",
+        "PROG-2-9224"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0 錯、run-cli 全過、compute-gate standard 通過 | 變更: 待產季數單一來源 breeding-rules、family-config 移除 pregnancyQuarters、乳母費 wetNurseSilverPerQuarter=20（銀兩錢包未落地只存設定）、待產放行不離城大廳任務、哺乳登記被擋記 nursingPending 下季重試並季結提示 nursingLines、規格待接清單（hallLevel） | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9582",
+      "title": "F11 首子流程同步：系統配偶 first-child 入名冊（含 7456 乾淨建置 playtest 截圖）",
+      "owner": "ClaudeCode_sonnet-5-5",
+      "priority": "P1",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "ClaudeCode_sonnet-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "doc_spec_1241 第 15 章 待產與哺乳接線",
+      "related": [
+        "PROG-2-9441",
+        "PROG-2-9442",
+        "PROG-2-9224"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: open | 驗證: pending | 變更: 開卡 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9583",
+      "title": "F3 配偶三來源（結緣好感納配偶、聯姻外交提親、媒人說親）",
+      "owner": "ClaudeCode_sonnet-5-5",
+      "priority": "P1",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "ClaudeCode_sonnet-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "doc_spec_1241 第 15 章 待產與哺乳接線",
+      "related": [
+        "PROG-2-9441",
+        "PROG-2-9442",
+        "PROG-2-9224"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: open | 驗證: pending | 變更: 開卡 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9701",
       "title": "戰場可讀性：部隊框避讓含血條與狀態圖示、跳字置頂、敵軍行動中橫幅移出棋盤",
       "owner": "claude-code-fable-5-2",
       "priority": "P1",
@@ -13044,7 +13182,7 @@
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
-      "description": "總PM 11/21 指示：current master 重拍確認。9440 避讓矩形只含框本體，血條頂（本地 51）與狀態圖示列（本地頂 103、起點 x=-90）未納入，仍壓到上方部隊框。改為以框本體∪血條∪狀態圖示列的本地範圍算避讓矩形；跳字掛到 uiRoot 時置頂（池化節點保留舊索引會被後建框蓋住）；敵軍行動中橫幅由棋盤遠排（top 252）移到頂部 HUD 帶標題右側（top 24、hCenter 330）。",
+      "description": "總PM 11/21 指示：current master 重拍確認。9440 避讓矩形只含框本體，血條頂（本地 51）與狀態圖示列（本地頂 103、起點 x=-90）未納入，仍壓到上方部隊框。改為以框本體∪血條∪狀態圖示列的本地範圍算避讓矩形；跳字掛到 uiRoot 時置頂（池化節點保留舊索引會被後建框蓋住）；敵軍行動中橫幅由棋盤遠排（top 252）移到頂部 HUD 帶標題右側（top 24、hCenter 330）。原開為 9581，與 Sonnet 同號後改 9701。",
       "related": [
         "PROG-2-9440",
         "PROG-2-9483"
@@ -13054,7 +13192,7 @@
       ],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8920 通過、tsc 0 錯、7456 實測 18 框含圖示範圍重疊 0 組；跳字節點索引 35–40 高於框最大 32，截圖 -21 壓在框上；敵方回合橫幅位於頂部 HUD 帶 | 變更: GeneralPlateAvoidance 範圍聯集、UnitStatusIconBar.localExtent、UnitRenderer 避讓用範圍、FloatTextSystem 置頂、enemy-thinking-main 位置 | 阻塞: 無",
+      "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8920 通過、tsc 0 錯、7456 實測 18 框含圖示範圍重疊 0 組；跳字節點索引 35–40 高於框最大 32，截圖 -21 壓在框上；敵方回合橫幅位於頂部 HUD 帶 | 變更: 避讓範圍聯集、跳字置頂、橫幅移位 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",

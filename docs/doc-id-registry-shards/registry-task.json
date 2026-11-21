@@ -16244,7 +16244,25 @@
   {
     "id": "doc_task_2725",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9581.md",
-    "title": "[PROG-2-9581] 戰場可讀性：部隊框避讓含血條與狀態圖示、跳字置頂、敵軍行動中橫幅移出棋盤",
+    "title": "[PROG-2-9581] F4／F5 收尾（待產單一來源、乳母費用、待產放行大廳任務、哺乳登記重試、幕府等級待接）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2726",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9582.md",
+    "title": "[PROG-2-9582] F11 首子流程同步：系統配偶 first-child 入名冊（含 7456 乾淨建置 playtest 截圖）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2727",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9583.md",
+    "title": "[PROG-2-9583] F3 配偶三來源（結緣好感納配偶、聯姻外交提親、媒人說親）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2728",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9701.md",
+    "title": "[PROG-2-9701] 戰場可讀性：部隊框避讓含血條與狀態圖示、跳字置頂、敵軍行動中橫幅移出棋盤",
     "category": "task"
   }
 ]

@@ -1636,7 +1636,7 @@ export class UnitRenderer extends Component {
   }
 
   /**
-   * 部隊框在名牌本地座標的完整外框（PROG-2-9581）：框本體＋上方血條＋狀態圖示列。
+   * 部隊框在名牌本地座標的完整外框（PROG-2-9701）：框本體＋上方血條＋狀態圖示列。
    * 9440 只算框本體，血條與「士／命」圖示會壓到上方的框。
    */
   private badgeLocalExtent(view: UnitView, tf: UITransform): LocalExtent {

@@ -131,7 +131,7 @@ export class FloatTextSystem {
 
         // ── 加入場景，設定初始位置與縮放 ──
         entry.node.parent = this.uiRoot;
-        // PROG-2-9581：物件池重用（含超過上限回收最舊的）時節點留在舊的層級，會被之後才建立的部隊框蓋住；每次跳字都移到最上層
+        // PROG-2-9701：物件池重用（含超過上限回收最舊的）時節點留在舊的層級，會被之後才建立的部隊框蓋住；每次跳字都移到最上層
         entry.node.setSiblingIndex(this.uiRoot.children.length - 1);
         entry.node.layer = this.canvasNode.layer;
 

@@ -64,7 +64,7 @@ export function easePlateOffset(current: number, target: number, dt: number, per
 }
 
 /**
- * 部隊框在名牌節點本地座標的外框（PROG-2-9581）：框本體之外，上方還有血條與狀態圖示列，
+ * 部隊框在名牌節點本地座標的外框（PROG-2-9701）：框本體之外，上方還有血條與狀態圖示列，
  * 只用框本體估算時，血條與「士／命」圖示會壓到上方的框。
  */
 export interface LocalExtent {
@@ -81,7 +81,7 @@ export function unionExtent(a: LocalExtent, b: LocalExtent | null): LocalExtent 
 }
 
 /**
- * 本地外框 → 圖層座標的避讓矩形（PROG-2-9581）。(x, y) 是名牌節點在圖層上的位置，scale 是名牌縮放；
+ * 本地外框 → 圖層座標的避讓矩形（PROG-2-9701）。(x, y) 是名牌節點在圖層上的位置，scale 是名牌縮放；
  * padX／padY 為縮放後再加的邊距（沿用 9440：水平 0、垂直 4）。
  */
 export function badgeRectFromExtent(x: number, y: number, scale: number, ext: LocalExtent, padX = 0, padY = 4): LabelRect {
