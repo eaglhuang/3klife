@@ -9,6 +9,7 @@
 import { ACADEMY_STAT_BIAS_PCT, ACADEMY_STAT_KEYS, ACADEMY_TOTAL_TURNS, academyPhaseOf, AcademyControlMode, AcademyId, type AcademyInterruptKind, type AcademyStateSnapshot, type AcademyStatKey } from '../../core/systems/nurture/AcademyTypes';
 import { ACADEMY_ENERGY_MAX } from '../../core/systems/nurture/AcademyTypes';
 import { YINGCHUAN_EVENTS, YINGCHUAN_HAND_LIMIT, yingchuanStateOf, type EssayCard } from '../../core/systems/nurture/YingchuanAcademy';
+import { academyGraduatedTextKey, academyInterruptTextKeys } from '../../core/systems/nurture/AcademyStoryTexts';
 
 export const ACADEMY_FLOW_FALLBACK_ZH_TW: Readonly<Record<string, string>> = {
     "ui.academy.flow.title_enroll": "學府入學",
@@ -279,8 +280,16 @@ export interface SessionViewModel {
     pickedCards: readonly number[];
 }
 
+/** 打斷種類的名稱：文字 key 讀劇情資料（story-config.json 的 popup 標題），資料缺漏回空字串 */
 export function interruptKindText(lookup: AcademyFlowTextLookup, kind: AcademyInterruptKind): string {
-    return academyTextOf(lookup, `${K}int.kind.${kind}`);
+    const keys = academyInterruptTextKeys(kind);
+    return keys && keys.titleKey ? academyTextOf(lookup, keys.titleKey) : '';
+}
+
+/** 打斷點占位彈窗的整句文字：內文 key 讀劇情資料，{0} 代入打斷種類名稱 */
+function interruptPopupText(lookup: AcademyFlowTextLookup, kind: AcademyInterruptKind): string {
+    const keys = academyInterruptTextKeys(kind);
+    return keys && keys.textKey ? academyTextOf(lookup, keys.textKey, interruptKindText(lookup, kind)) : '';
 }
 
 /** 清談大會要選幾張：手牌不足 3 張時全選 */
@@ -324,7 +333,7 @@ export function sessionView(vm: Readonly<SessionViewModel>, lookup: AcademyFlowT
         acSessNotice: vm.notice,
         acConfirmLabel: t('settle.confirm'),
         acInterruptLabel: t('int.continue'),
-        acInterruptText: s.pendingInterrupt ? t('int.title', interruptKindText(lookup, s.pendingInterrupt)) : '',
+        acInterruptText: s.pendingInterrupt ? interruptPopupText(lookup, s.pendingInterrupt) : '',
         acDebateLabel: t('yc.btn_debate'),
         acSkipLabel: t('yc.btn_skip'),
         acDeclineLabel: t('yc.btn_decline'),
@@ -333,7 +342,10 @@ export function sessionView(vm: Readonly<SessionViewModel>, lookup: AcademyFlowT
         ? t('sess.mentors_none')
         : t('sess.mentors', g.mentors.map((m) => t('sess.mentor_entry', m.name, m.bond, 100)).join('、'));
     if (vm.mode === 'settling' && vm.settle) texts.acSessLog = settleText(lookup, vm.settle);
-    else if (vm.mode === 'graduated') texts.acSessLog = t('graduated');
+    else if (vm.mode === 'graduated') {
+        const graduatedKey = academyGraduatedTextKey();
+        texts.acSessLog = graduatedKey ? academyTextOf(lookup, graduatedKey) : '';
+    }
     else if (blockedByGimmick) texts.acSessLog = t('sess.blocked');
     else texts.acSessLog = s.chronicles.length > 0
         ? s.chronicles.slice(-2).map((c) => t('settle.chronicle', c.title, c.turn)).join('\n')

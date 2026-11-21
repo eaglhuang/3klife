@@ -80,11 +80,15 @@
 | E001～E099 | 傳輸、驗證、同步（既有，原樣沿用） |
 | E100～E199 | 共通命令層：重複請求、saveRev 衝突、權限、維護中 |
 | E200～E299 | 買賣商店 |
-| E300～E399 | 物品庫存 |
+| E301～E303 | 錢包（`INSUFFICIENT_BALANCE`／`CURRENCY_UNKNOWN`／`WALLET_UNAVAILABLE`，B0 已實作，沿用） |
+| E310～E319 | 物品庫存（E31x） |
+| E320～E329 | 獎勵（E32x） |
+| E330～E339 | 人員占用（E33x） |
+| E340～E349 | 劇情（演出）（E34x） |
 | E400～E499 | 任務 |
-| E500～E599 | 獎勵 |
 | E600～E699 | 技能 |
-| E700～E799 | 劇情（演出） |
+
+> **分段裁決（總 PM，PROG-2-9208 回寫）：** 原草案「E300～E399 物品庫存、E500～E599 獎勵、E700～E799 劇情」作廢，改為 **E31x 物品、E32x 獎勵、E33x 占用、E34x 劇情**；錢包已先佔用 E301～E303，所以物品庫存從 E310 起。商店（E2xx）、任務（E4xx）、技能（E6xx）維持原分段。各書第 11.4 節的碼表以本表分段為準，實作見 `assets/scripts/shared/api/ApiErrors.ts`。
 
 既有字串碼（`GachaApiErrorCode`、`MissionErrorCode` 等）保留為 `reason`，`errorCode` 由對照表映射，畫面可繼續依 `reason` 顯示。
 

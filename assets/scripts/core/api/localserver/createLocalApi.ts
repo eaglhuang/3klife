@@ -4,6 +4,7 @@
  *
  * 錢包權威由場景在 LocalGachaService 建好後以 setWallet 綁定（命令處理器每次呼叫才取，所以可後綁、可換）。
  * 物品庫存的存放位置（家庭倉庫＝GameSession 的玩家庫存表）由 setItemAuthority 綁定；設定由 setItemConfig 換入。
+ * 劇情（PROG-2-9208）的狀態存放由 setStoryAuthority 綁定、劇本設定由 setStoryConfig 換入。
  * 獎勵（PROG-2-9205）的狀態存放由 setRewardAuthority 綁定、設定由 setRewardConfig 換入；
  * 宿主自訂效果種類（技能習得等）用 registerRewardEffect 掛 handler，條件評估與倍率由 setRewardHooks 提供。
  * 任務（PROG-2-9209）的狀態存放由 setQuestAuthority 綁定、定義由 setQuestConfig 換入；
@@ -11,7 +12,9 @@
  */
 import { DEFAULT_ITEM_CONFIG, type ItemConfigV1 } from '../../../shared/item/ItemConfig';
 import { DEFAULT_REWARD_CONFIG, type RewardConfigV1 } from '../../../shared/reward/RewardConfig';
+import { DEFAULT_STORY_CONFIG, type StoryConfigV1 } from '../../../shared/story/StoryConfig';
 import { registerItemCommands, type ItemAuthority } from './ItemCommands';
+import { registerStoryCommands, type StoryAuthority, type StoryEffectHandler, type StoryPorts } from './StoryCommands';
 import { registerRewardCommands, type RewardAuthority, type RewardEffectHandler, type RewardPorts } from './RewardCommands';
 import { LocalApiAdapter, type LocalApiAdapterOptions } from './LocalApiAdapter';
 import { registerOccupancyCommands, type OccupancyHost } from './OccupancyCommands';
@@ -45,6 +48,12 @@ export interface LocalApiBundle {
     registerRewardEffect(kind: string, handler: RewardEffectHandler): void;
     /** 條件評估、倍率、熵來源（測試固定種子用） */
     setRewardHooks(hooks: Pick<RewardPorts, 'evaluate' | 'modifiers' | 'entropy'>): void;
+    setStoryAuthority(authority: StoryAuthority | null): void;
+    setStoryConfig(config: StoryConfigV1): void;
+    /** 掛上宿主自訂的劇情效果種類（例如任務生成）；同名以後者為準 */
+    registerStoryEffect(kind: string, handler: StoryEffectHandler): void;
+    /** 條件事實（數值、持有物、官職階位） */
+    setStoryHooks(hooks: Pick<StoryPorts, 'facts'>): void;
 }
 
 export function createLocalApi(store: LocalSaveStore, opts: LocalApiAdapterOptions = {}): LocalApiBundle {
@@ -62,11 +71,16 @@ export function createLocalApi(store: LocalSaveStore, opts: LocalApiAdapterOptio
     let questConfig: QuestConfigV1 = DEFAULT_QUEST_CONFIG;
     let questHooks: Pick<QuestPorts, 'evaluate' | 'nowIndex'> = {};
     const questKinds: Record<string, QuestKindAdapter> = {};
+    let storyAuthority: StoryAuthority | null = null;
+    let storyConfig: StoryConfigV1 = DEFAULT_STORY_CONFIG;
+    let storyHooks: Pick<StoryPorts, 'facts'> = {};
+    const storyHandlers: Record<string, StoryEffectHandler> = {};
     registerSaveCommands(api, store);
     registerWalletCommands(api, () => wallet);
     registerItemCommands(api, () => ({ authority, wallet, config }));
     registerRewardCommands(api, () => ({ authority: rewardAuthority, wallet, config: rewardConfig, handlers: rewardHandlers, ...rewardHooks }));
     registerSkillCommands(api, () => skillHost);
+    registerStoryCommands(api, () => ({ authority: storyAuthority, config: storyConfig, handlers: storyHandlers, ...storyHooks }));
     registerOccupancyCommands(api, () => occupancyHost);
     registerQuestCommands(api, () => ({ authority: questAuthority, config: questConfig, kinds: questKinds, ...questHooks }));
     return {
@@ -78,6 +92,10 @@ export function createLocalApi(store: LocalSaveStore, opts: LocalApiAdapterOptio
         setRewardConfig: (next) => { rewardConfig = next; },
         registerRewardEffect: (kind, handler) => { rewardHandlers[kind] = handler; },
         setRewardHooks: (hooks) => { rewardHooks = hooks; },
+        setStoryAuthority: (next) => { storyAuthority = next; },
+        setStoryConfig: (next) => { storyConfig = next; },
+        registerStoryEffect: (kind, handler) => { storyHandlers[kind] = handler; },
+        setStoryHooks: (hooks) => { storyHooks = hooks; },
         setSkillHost: (next) => { skillHost = next; },
         setOccupancyHost: (next) => { occupancyHost = next; },
         setQuestAuthority: (next) => { questAuthority = next; },

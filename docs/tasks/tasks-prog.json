@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 188,
+    "done": 186,
     "in_progress": 4,
-    "open": 86,
-    "total": 278
+    "open": 76,
+    "total": 275
   },
   "tasks": [
     {
@@ -11866,6 +11866,75 @@
         "tools_node/check-api-bypass.js skill-write 規則"
       ],
       "notes": "2026-11-21 | 狀態: done | 驗證: tsc test 0、單元 8749 全過（新增 OccupancyBase 8 條）、compute-gate standard 通過、web-desktop 建置後 playtest 11/11 console error 0、棘輪 132→132（新增 skill-write 規則計 1 處＝AcademyGraduation 結業備援 learnedTactics 賦值，同時 PlayerInventory.grantSeasonalOracleTokens 內部不再呼叫 addItem 而改直接組表，inventory-write 34→33，淨持平） | 變更: shared/occupancy/{OccupancyTypes,OccupancyService}.ts（登記表、互斥、冪等 acquire/release、轉接器、filterFree、存檔正規化）、core/api/localserver/OccupancyCommands.ts（occupancy.query/acquire/release）、ApiCommands／ApiErrors E330~E334、createLocalApi.setOccupancyHost、GameSession（occupancyHost、學府紀錄唯一寫入口 _setAcademyRecord 對帳 academy 占用、六處轉接器、存檔欄位 occupancy、任務牆 MissionBlock occupied／派遣／傭兵候選排除）、PlayerSaveService 與 sync06 白名單加 occupancy、check-api-bypass 新增 skill-write 規則（學府修業中的 state 快照不算） | 阻塞: 無 | 備註: 六處唯讀轉接點＝governance（太守府指派）、hallMission（大廳任務 busyGeneralIds）、dispatch（派遣進行中）、mercenary（傭兵名冊武將）、expedition（歷練，尚未實作回空）、medical（待產；重傷旗標待傷勢系統）。互斥矩陣預設全互斥，家業第 10 章矩陣定案後只改 OccupancyCompatibility 資料。mentorAssign 登記表與命令已備好，尚無呼叫端（教官指派占用待 6b 接入）。學府入學入口尚未用 occupancy.acquire 擋已忙碌者（待 9191 入口改接）。中立版：介面可原封不動併入 QST-M 或獨立成框架。待決：①Q-B 是否升格第七框架 ②E33x 段落是否沿用（規格原未編號）③skill-write 新規則是否要把 AcademyGraduation 備援寫法也遷到 skill.grant（目前計 1）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9208",
+      "title": "STY-M 劇情（演出）base 最小版：事件定義、選項、條件、打斷佇列與 story.trigger/choose/seen",
+      "owner": "ClaudeCode_sonnet-5-5",
+      "priority": "P0",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "ClaudeCode_sonnet-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "共用框架總綱 doc_spec_1182 第 12 章 STY-M／劇情演出規格 doc_spec_1188：事件定義 JSON、選項、條件(FND-M Condition)、已看紀錄與旗標、單一優先序打斷佇列、story.* 端點、選項後果走 reward.claim、最簡 popup/instant 演出 adapter；E34x 錯誤碼；學府打斷與結業文案改讀資料；另回寫 E31x/E32x/E33x/E34x 錯誤碼分段到 1182/1184/1186/1188 規格",
+      "related": [
+        "PROG-2-9200",
+        "PROG-2-9205"
+      ],
+      "depends": [
+        "PROG-2-9201",
+        "PROG-2-9202",
+        "PROG-2-9205"
+      ],
+      "acceptance": [
+        "story.trigger/choose/seen 契約與冪等測試",
+        "單一優先序打斷佇列測試",
+        "選項後果走 reward.claim",
+        "學府打斷與結業文案改讀 story-config.json",
+        "選項 id 即 selectedOptionId",
+        "tsc 0",
+        "compute-gate standard 通過",
+        "棘輪基準只減不增",
+        "網頁 playtest 11/11",
+        "錯誤碼分段回寫規格"
+      ],
+      "deliverables": [
+        "shared/story/{StoryConfig",
+        "StoryRules",
+        "StoryPresentation}.ts",
+        "core/api/localserver/StoryCommands.ts",
+        "assets/resources/data/story-config.json",
+        "tests/StoryBase.test.ts"
+      ],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 單元 8771 全綠、tsc test 0、playtest 11/11 console error 0、棘輪 132 不增 | 變更: story.trigger/choose/seen+available/pending/flags、E340~E348、story-config 資料、學府打斷與結業文案資料化、E31x~E34x 寫回 1182/1184/1186/1188（三份分片）| 阻塞: 無；學府畫面截圖待 9192 qaAcademy",
       "brief": {
         "style": "classic",
         "label": "",
