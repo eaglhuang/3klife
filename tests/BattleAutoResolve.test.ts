@@ -45,7 +45,7 @@ export function createBattleAutoResolveSuite(): TestSuite {
         const src = fs.readFileSync(path.join(__dirname, '..', 'assets/scripts/battle/views/BattleUIBridge.ts'), 'utf8');
         assert.equals(true, src.includes('EVENT_NAMES.AutoBattleToggled'));
         assert.equals(true, src.includes('quickResolveOutcome('));
-        assert.equals(true, src.includes('quick.reportLines'));
+        assert.equals(true, src.includes('outcome.reportLines'));
     });
 
     suite.test('首戰保證勝：未首勝時敗、和改判勝；已首勝照原結果', () => {

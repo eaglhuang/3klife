@@ -30,6 +30,70 @@ type GradientBackgroundType = 'linear' | 'radial';
 
 const EDGE_TEXTURE_MAX_SIDE = 1024;
 
+/**
+ * 漸層貼圖共用快取（PROG-2-9800）：同參數同尺寸的底板只算一次、多個節點共用同一張 SpriteFrame。
+ * 量測：每次 _redraw 都在 JS 逐像素算圖（1:1 圓角貼圖最大 1024 邊），開一個畫面連畫十幾次，主執行緒卡 2~4 秒，
+ * 且每次新建的 Texture2D 從不釋放。現在：參數沒變不重畫、相同參數共用貼圖、無人使用的貼圖超過預算才依最久未用淘汰。
+ */
+interface GradientCacheEntry {
+    frame: SpriteFrame;
+    bytes: number;
+    users: number;
+    lastUsed: number;
+}
+const GRADIENT_CACHE_IDLE_BYTES = 48 * 1024 * 1024;
+const gradientCache = new Map<string, GradientCacheEntry>();
+let gradientCacheClock = 0;
+
+function releaseGradientEntry(key: string | null): void {
+    if (!key) return;
+    const entry = gradientCache.get(key);
+    if (!entry) return;
+    entry.users = Math.max(0, entry.users - 1);
+    entry.lastUsed = ++gradientCacheClock;
+    trimGradientCache();
+}
+
+/** 只淘汰「沒有任何節點使用」的貼圖，使用中的永遠保留；超過閒置預算才動手 */
+function trimGradientCache(): void {
+    let idleBytes = 0;
+    for (const entry of gradientCache.values()) {
+        if (entry.users === 0) idleBytes += entry.bytes;
+    }
+    if (idleBytes <= GRADIENT_CACHE_IDLE_BYTES) return;
+    const idle = Array.from(gradientCache.entries())
+        .filter(([, entry]) => entry.users === 0)
+        .sort((a, b) => a[1].lastUsed - b[1].lastUsed);
+    for (const [key, entry] of idle) {
+        if (idleBytes <= GRADIENT_CACHE_IDLE_BYTES) break;
+        gradientCache.delete(key);
+        idleBytes -= entry.bytes;
+        const texture = entry.frame.texture as { destroy?: () => unknown } | null;
+        try { entry.frame.destroy?.(); texture?.destroy?.(); } catch { /* 引擎已清掉就算了 */ }
+    }
+}
+
+/** 本次算圖用的暫存：避免逐像素配置 Color／陣列 */
+interface PixelRaster {
+    width: number;
+    height: number;
+    halfWidth: number;
+    halfHeight: number;
+    outerRadii: number[];
+    hasBorder: boolean;
+    innerRadii: number[];
+    innerCenterX: number;
+    innerCenterY: number;
+    innerHalfWidth: number;
+    innerHalfHeight: number;
+    /** 深內部快速通道：|x|、|y| 都在此範圍內的像素距離外緣至少 1 像素、離邊框內緣也至少 1 像素，覆蓋率必為 1，可跳過距離計算 */
+    deepX: number;
+    deepY: number;
+    /** 邊框內緣的深內部範圍（無邊框時不使用） */
+    innerDeepX: number;
+    innerDeepY: number;
+}
+
 @ccclass('GradientBackground')
 @requireComponent(UITransform)
 @executeInEditMode
@@ -54,6 +118,9 @@ export class GradientBackground extends Component {
     private _borderSides: { top: number; right: number; bottom: number; left: number } | null = null;
     private _tintColor = new Color(255, 255, 255, 255);
     private _sprite: Sprite | null = null;
+    /** 目前掛在 sprite 上的快取鍵；參數與尺寸沒變就不重畫 */
+    private _cacheKey: string | null = null;
+    private readonly _px: number[] = [0, 0, 0, 0];
 
     onLoad(): void {
         this._sprite = this.getComponent(Sprite) || this.addComponent(Sprite);
@@ -67,6 +134,8 @@ export class GradientBackground extends Component {
 
     onDestroy(): void {
         this.node.off(Node.EventType.SIZE_CHANGED, this._redraw, this);
+        releaseGradientEntry(this._cacheKey);
+        this._cacheKey = null;
     }
 
     public setLinearGradient(angle: number, stops: GradientColorStop[], shape?: GradientBackgroundShapeOptions): void {
@@ -174,6 +243,20 @@ export class GradientBackground extends Component {
         });
     }
 
+    private _buildCacheKey(width: number, height: number): string {
+        const stops = this._stops.map(stop => `${stop.color.r},${stop.color.g},${stop.color.b},${stop.color.a}@${stop.offset}`).join(';');
+        const border = this._borderColor;
+        const sides = this._borderSides;
+        return [
+            this._gradientType, width, height, this._angle, this._repeating ? 1 : 0, this._repeatSpanPx, this._repeatSpanRatio,
+            this._radialCenterX, this._radialCenterY, this._radialRadiusX, this._radialRadiusY,
+            stops, this._cornerRadius, this._borderWidth, `${border.r},${border.g},${border.b},${border.a}`,
+            this._cornerRadii ? this._cornerRadii.join(',') : '-',
+            sides ? `${sides.top},${sides.right},${sides.bottom},${sides.left}` : '-',
+            this._tintColor.a,
+        ].join('|');
+    }
+
     private _redraw(): void {
         const sprite = this._sprite || this.getComponent(Sprite) || this.addComponent(Sprite);
         this._sprite = sprite;
@@ -181,6 +264,34 @@ export class GradientBackground extends Component {
         const transform = this.getComponent(UITransform);
         const width = Math.max(1, transform?.width || 1);
         const height = Math.max(1, transform?.height || 1);
+        const key = this._buildCacheKey(width, height);
+        // 參數與尺寸都沒變，且 sprite 還掛著上次的圖：不必重算（onLoad／onEnable／SIZE_CHANGED／setter 常連續觸發）
+        if (key === this._cacheKey && sprite.spriteFrame && gradientCache.get(key)?.frame === sprite.spriteFrame) {
+            sprite.enabled = true;
+            sprite.color = new Color(this._tintColor.r, this._tintColor.g, this._tintColor.b, 255);
+            return;
+        }
+
+        let entry = gradientCache.get(key);
+        if (!entry) {
+            const frame = this._rasterize(width, height);
+            entry = { frame, bytes: (frame.rect?.width ?? 0) * (frame.rect?.height ?? 0) * 4, users: 0, lastUsed: 0 };
+            gradientCache.set(key, entry);
+        }
+        // 先佔新的、再放掉舊的：新舊同鍵時使用數不會短暫歸零被淘汰
+        entry.users += 1;
+        entry.lastUsed = ++gradientCacheClock;
+        releaseGradientEntry(this._cacheKey);
+        this._cacheKey = key;
+
+        sprite.enabled = true;
+        sprite.sizeMode = Sprite.SizeMode.CUSTOM;
+        sprite.type = Sprite.Type.SIMPLE;
+        sprite.spriteFrame = entry.frame;
+        sprite.color = new Color(this._tintColor.r, this._tintColor.g, this._tintColor.b, 255);
+    }
+
+    private _rasterize(width: number, height: number): SpriteFrame {
         // 有圓角或邊框時邊緣需逐像素反鋸齒，貼圖改 1:1；純漸層可低解析度放大。
         const hasEdge = this._cornerRadius > 0 || this._borderWidth > 0 || !!this._cornerRadii || !!this._borderSides;
         const maxTextureSide = hasEdge
@@ -209,22 +320,25 @@ export class GradientBackground extends Component {
             maxProjection = Math.max(maxProjection, projection);
         }
 
+        const raster = this._buildRaster(width, height);
+        const px = this._px;
+        const radial = this._gradientType === 'radial';
         for (let pixelY = 0; pixelY < textureHeight; pixelY++) {
+            const normalizedY = (pixelY + 0.5) / textureHeight;
+            const uiY = normalizedY * height - height * 0.5;
             for (let pixelX = 0; pixelX < textureWidth; pixelX++) {
                 const normalizedX = (pixelX + 0.5) / textureWidth;
-                const normalizedY = (pixelY + 0.5) / textureHeight;
                 const uiX = normalizedX * width - width * 0.5;
-                const uiY = normalizedY * height - height * 0.5;
-                const t = this._gradientType === 'radial'
+                const t = radial
                     ? this._sampleRadialT(normalizedX, normalizedY)
                     : this._sampleLinearT(uiX * dirX + uiY * dirY, minProjection, maxProjection);
-                const color = this._samplePixelColor(t, uiX, uiY, width, height);
+                this._shadePixel(t, uiX, uiY, raster, px);
                 const index = (pixelY * textureWidth + pixelX) * 4;
-                data[index] = color.r;
-                data[index + 1] = color.g;
-                data[index + 2] = color.b;
+                data[index] = px[0];
+                data[index + 1] = px[1];
+                data[index + 2] = px[2];
                 // 透明度烘進像素：寫進 sprite.color 的話 Cocos 會乘給子節點，文字一起變暗
-                data[index + 3] = Math.round(color.a * tintAlpha);
+                data[index + 3] = Math.round(px[3] * tintAlpha);
             }
         }
 
@@ -244,12 +358,7 @@ export class GradientBackground extends Component {
         frame.packable = false;
         frame.rect = new Rect(0, 0, textureWidth, textureHeight);
         frame.texture = texture;
-
-        sprite.enabled = true;
-        sprite.sizeMode = Sprite.SizeMode.CUSTOM;
-        sprite.type = Sprite.Type.SIMPLE;
-        sprite.spriteFrame = frame;
-        sprite.color = new Color(this._tintColor.r, this._tintColor.g, this._tintColor.b, 255);
+        return frame;
     }
 
     private _sampleRadialT(normalizedX: number, normalizedY: number): number {
@@ -292,41 +401,75 @@ export class GradientBackground extends Component {
         return remainder < 0 ? remainder + divisor : remainder;
     }
 
-    private _samplePixelColor(t: number, uiX: number, uiY: number, width: number, height: number): Color {
+    /** 每次算圖只算一次的圓角／邊框幾何，逐像素不再配置陣列 */
+    private _buildRaster(width: number, height: number): PixelRaster {
         const halfWidth = width * 0.5;
         const halfHeight = height * 0.5;
         // 角序：左上、右上、右下、左下（uiY 負值為上方）
-        const radii = (this._cornerRadii || [this._cornerRadius, this._cornerRadius, this._cornerRadius, this._cornerRadius])
+        const outerRadii = (this._cornerRadii || [this._cornerRadius, this._cornerRadius, this._cornerRadius, this._cornerRadius])
             .map(value => Math.min(value, halfWidth, halfHeight));
-        // 以有號距離算邊緣覆蓋率（約 1 像素過渡），取代二值內外判斷避免鋸齒。
-        const outerCoverage = this._edgeCoverage(this._roundedRectDistance(uiX, uiY, 0, 0, halfWidth, halfHeight, radii));
-        if (outerCoverage <= 0) {
-            return new Color(0, 0, 0, 0);
-        }
-
-        let color = this._sampleColor(t);
         const fallback = Math.min(this._borderWidth, halfWidth, halfHeight);
         const sides = this._borderSides || { top: fallback, right: fallback, bottom: fallback, left: fallback };
-        if ((sides.top || sides.right || sides.bottom || sides.left) && this._borderColor.a > 0) {
-            const innerRadii = [
-                Math.max(0, radii[0] - Math.max(sides.top, sides.left)),
-                Math.max(0, radii[1] - Math.max(sides.top, sides.right)),
-                Math.max(0, radii[2] - Math.max(sides.bottom, sides.right)),
-                Math.max(0, radii[3] - Math.max(sides.bottom, sides.left)),
-            ];
-            const innerDistance = this._roundedRectDistance(
-                uiX, uiY,
-                (sides.left - sides.right) * 0.5,
-                (sides.top - sides.bottom) * 0.5,
-                Math.max(0, halfWidth - (sides.left + sides.right) * 0.5),
-                Math.max(0, halfHeight - (sides.top + sides.bottom) * 0.5),
-                innerRadii,
-            );
-            color = this._mixColor(this._borderColor, color, this._edgeCoverage(innerDistance));
+        const hasBorder = !!(sides.top || sides.right || sides.bottom || sides.left) && this._borderColor.a > 0;
+        const innerRadii = [
+            Math.max(0, outerRadii[0] - Math.max(sides.top, sides.left)),
+            Math.max(0, outerRadii[1] - Math.max(sides.top, sides.right)),
+            Math.max(0, outerRadii[2] - Math.max(sides.bottom, sides.right)),
+            Math.max(0, outerRadii[3] - Math.max(sides.bottom, sides.left)),
+        ];
+        const innerHalfWidth = Math.max(0, halfWidth - (sides.left + sides.right) * 0.5);
+        const innerHalfHeight = Math.max(0, halfHeight - (sides.top + sides.bottom) * 0.5);
+        const maxOuterRadius = Math.max(...outerRadii);
+        const maxInnerRadius = Math.max(...innerRadii);
+        return {
+            width, height, halfWidth, halfHeight, outerRadii, hasBorder,
+            innerRadii,
+            innerCenterX: (sides.left - sides.right) * 0.5,
+            innerCenterY: (sides.top - sides.bottom) * 0.5,
+            innerHalfWidth,
+            innerHalfHeight,
+            deepX: halfWidth - maxOuterRadius - 1,
+            deepY: halfHeight - maxOuterRadius - 1,
+            innerDeepX: innerHalfWidth - maxInnerRadius - 1,
+            innerDeepY: innerHalfHeight - maxInnerRadius - 1,
+        };
+    }
+
+    /** 算單一像素顏色寫進 out[r,g,b,a]（不配置物件） */
+    private _shadePixel(t: number, uiX: number, uiY: number, raster: PixelRaster, out: number[]): void {
+        // 深內部：離外緣與邊框內緣都至少 1 像素的像素覆蓋率必為 1，只需取漸層色（結果與完整計算逐位元相同）
+        const absX = uiX < 0 ? -uiX : uiX;
+        const absY = uiY < 0 ? -uiY : uiY;
+        if (absX <= raster.deepX && absY <= raster.deepY) {
+            if (!raster.hasBorder) {
+                this._sampleColorInto(t, out);
+                return;
+            }
+            // 邊框內緣中心可能偏移（四邊寬度不同）；內緣半寬為 0 時距離為無限大，不走快速通道
+            const inX = uiX - raster.innerCenterX;
+            const inY = uiY - raster.innerCenterY;
+            if (raster.innerHalfWidth > 0 && raster.innerHalfHeight > 0
+                && (inX < 0 ? -inX : inX) <= raster.innerDeepX && (inY < 0 ? -inY : inY) <= raster.innerDeepY) {
+                this._sampleColorInto(t, out);
+                return;
+            }
         }
-        return outerCoverage >= 1
-            ? color
-            : new Color(color.r, color.g, color.b, Math.round(color.a * outerCoverage));
+        // 以有號距離算邊緣覆蓋率（約 1 像素過渡），取代二值內外判斷避免鋸齒。
+        const outerCoverage = this._edgeCoverage(this._roundedRectDistance(uiX, uiY, 0, 0, raster.halfWidth, raster.halfHeight, raster.outerRadii));
+        if (outerCoverage <= 0) {
+            out[0] = 0; out[1] = 0; out[2] = 0; out[3] = 0;
+            return;
+        }
+
+        this._sampleColorInto(t, out);
+        if (raster.hasBorder) {
+            const innerDistance = this._roundedRectDistance(
+                uiX, uiY, raster.innerCenterX, raster.innerCenterY,
+                raster.innerHalfWidth, raster.innerHalfHeight, raster.innerRadii,
+            );
+            this._mixBorderInto(this._borderColor, out, this._edgeCoverage(innerDistance));
+        }
+        if (outerCoverage < 1) out[3] = Math.round(out[3] * outerCoverage);
     }
 
     private _roundedRectDistance(
@@ -350,23 +493,28 @@ export class GradientBackground extends Component {
         return Math.max(0, Math.min(1, 0.5 - distance));
     }
 
-    private _mixColor(outer: Color, inner: Color, innerWeight: number): Color {
-        if (innerWeight >= 1) return inner;
-        if (innerWeight <= 0) return outer;
+    /** 邊框色（外）與填色 out（內）依內側權重混合，結果寫回 out */
+    private _mixBorderInto(outer: Color, out: number[], innerWeight: number): void {
+        if (innerWeight >= 1) return;
+        if (innerWeight <= 0) {
+            out[0] = outer.r; out[1] = outer.g; out[2] = outer.b; out[3] = outer.a;
+            return;
+        }
         // 依透明度加權混色：近乎透明的填色不能把邊框的 RGB 拉向自己
         const wo = outer.a * (1 - innerWeight);
-        const wi = inner.a * innerWeight;
+        const wi = out[3] * innerWeight;
         const a = wo + wi;
-        if (a <= 0) return new Color(0, 0, 0, 0);
-        return new Color(
-            Math.round((outer.r * wo + inner.r * wi) / a),
-            Math.round((outer.g * wo + inner.g * wi) / a),
-            Math.round((outer.b * wo + inner.b * wi) / a),
-            Math.round(a),
-        );
+        if (a <= 0) {
+            out[0] = 0; out[1] = 0; out[2] = 0; out[3] = 0;
+            return;
+        }
+        out[0] = Math.round((outer.r * wo + out[0] * wi) / a);
+        out[1] = Math.round((outer.g * wo + out[1] * wi) / a);
+        out[2] = Math.round((outer.b * wo + out[2] * wi) / a);
+        out[3] = Math.round(a);
     }
 
-    private _sampleColor(t: number): Color {
+    private _sampleColorInto(t: number, out: number[]): void {
         const stops = this._stops;
         for (let i = 0; i < stops.length - 1; i++) {
             const left = stops[i];
@@ -377,18 +525,22 @@ export class GradientBackground extends Component {
             const span = Math.max(0.0001, right.offset - left.offset);
             const mix = Math.max(0, Math.min(1, (t - left.offset) / span));
             // 照 CSS 規範在預乘透明度空間內插：直接內插 RGB 會讓近透明的淺色端把高透明度區染亮
-            const la = left.color.a;
-            const ra = right.color.a;
+            const lc = left.color;
+            const rc = right.color;
+            const la = lc.a;
+            const ra = rc.a;
             const a = la + (ra - la) * mix;
-            if (a <= 0) return new Color(left.color.r, left.color.g, left.color.b, 0);
-            const channel = (l: number, r: number) => Math.round((l * la + (r * ra - l * la) * mix) / a);
-            return new Color(
-                channel(left.color.r, right.color.r),
-                channel(left.color.g, right.color.g),
-                channel(left.color.b, right.color.b),
-                Math.round(a),
-            );
+            if (a <= 0) {
+                out[0] = lc.r; out[1] = lc.g; out[2] = lc.b; out[3] = 0;
+                return;
+            }
+            out[0] = Math.round((lc.r * la + (rc.r * ra - lc.r * la) * mix) / a);
+            out[1] = Math.round((lc.g * la + (rc.g * ra - lc.g * la) * mix) / a);
+            out[2] = Math.round((lc.b * la + (rc.b * ra - lc.b * la) * mix) / a);
+            out[3] = Math.round(a);
+            return;
         }
-        return stops[stops.length - 1].color;
+        const last = stops[stops.length - 1].color;
+        out[0] = last.r; out[1] = last.g; out[2] = last.b; out[3] = last.a;
     }
 }

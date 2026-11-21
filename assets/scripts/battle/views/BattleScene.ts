@@ -216,6 +216,9 @@ export class BattleScene extends Component {
 
       // 3. 從 encounters.json 讀取遭遇戰設定
       const encounter = await loadEncounter(this.currentEncounterId);
+      // 極速決戰可用條件（PROG-2-9709）：關卡資料與設定檔先備好，戰場內再按自動才判得出能不能跳過
+      this.sceneContext.encounterStage = encounter ? { id: encounter.id, battleKind: encounter.battleKind, allowQuickResolve: encounter.allowQuickResolve, enemyReserve: encounter.enemyReserve } : null;
+      void services().loadQuickResolveConfig();
       const pgId = battleParams.playerGeneralId;
       const egId = battleParams.enemyGeneralId;
       const terrain: TerrainGrid | undefined = encounter?.terrain;

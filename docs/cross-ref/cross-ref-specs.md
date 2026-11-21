@@ -208,7 +208,7 @@
 | doc_spec_1182（共用框架總綱） | doc_spec_1183、doc_spec_1184、doc_spec_1185、doc_spec_1186、doc_spec_1187、doc_spec_1188、doc_spec_1247、doc_spec_1248 | doc_spec_1181、doc_spec_1180、doc_spec_1179、doc_spec_0655、doc_tech_0010、doc_tech_0013、doc_spec_0334、doc_spec_0469、doc_spec_0656、doc_spec_0683、doc_spec_0662 |
 | doc_spec_1183（買賣商店） | doc_spec_1186 | doc_spec_1182、doc_spec_1184、doc_spec_1186 |
 | doc_spec_1184（物品庫存） | doc_spec_1183、doc_spec_1185、doc_spec_1186、doc_spec_1187、doc_spec_1188 | doc_spec_1182 |
-| doc_spec_1185（任務） | doc_spec_1186、doc_spec_1188 | doc_spec_1182、doc_spec_1184、doc_spec_1186、doc_spec_1188 |
+| doc_spec_1185（任務） / doc_spec_1254（分片索引） | doc_spec_1186、doc_spec_1188 | doc_spec_1182、doc_spec_1184、doc_spec_1186、doc_spec_1188 |
 | doc_spec_1186（獎勵） | doc_spec_1183、doc_spec_1185、doc_spec_1187、doc_spec_1188 | doc_spec_1182、doc_spec_1184、doc_spec_1188 |
 | doc_spec_1187（技能） | doc_spec_1186、doc_spec_1188 | doc_spec_1182、doc_spec_1184、doc_spec_1186 |
 | doc_spec_1188（劇情演出） | doc_spec_1185、doc_spec_1186、doc_spec_1187 | doc_spec_1182、doc_spec_1185、doc_spec_1186 |
@@ -266,6 +266,7 @@
 | doc_spec_1280 | 武將私塾補習班系統規格書.md | 在世武將下班開私塾（補習班）：開班與學生資格、學費 escrow 與推薦卡、一期 6 堂與教室、專長／戰法／家傳奧義課與幼幼班；友誼分數（−100～100、7 級）＝即時推算 prior＋稀疏偏移量（只存與我方接觸者，AI–AI 不存）；OCC 新增 tutorTeach／tutorLearn 與 yield 讓位規則；與學府、支援卡區隔；JSON 草案、TC、待決 Q-T1～10、實作卡 PS-1～10；shard-a～c（doc_spec_1281～1283） |
 | doc_spec_1287 | 史境天下風雲榜與年終頒獎典禮系統規格書.md | 世界級年度五大排行榜（殺敵、治理、紅顏魅力、教官樹人、最佳新人）＋四層可插拔獨立擴充架構（含私塾人氣名師擴充範例）＋純年度歸零重算＋心智與血統白因子連動＋AI 全真實沙盤前置＋每年年末頒獎典禮（雙主持動態傳承、君王 3D 全息投影、大合照快照 DTO 變背景、歷年風雲史冊永久查詢）＋W1a～W3 拆卡；shard-a～c（doc_spec_1284～1286） |
 | doc_spec_1288 | 結緣事件文案範例.md | 配合 F3 配偶三來源（結緣好感 7 則、外交聯姻 6 則、媒人說親 7 則）撰寫 20 則輕鬆詼諧口語文案範例（對齊 doc_spec_1273）；供遊戲內 UI 入口使用 |
+| doc_spec_1291 | 第一年體驗走查.md | 新玩家第一年「不卡關」體驗走查與修正清單：四季節奏對帳、四大核心痛點（學府前十幾年閒置、銀兩隱形零收入、戰鬥挫折診斷、功能解鎖指引）深度剖析與派工拆卡建議；shard-a～c（doc_spec_1292～1294） |
 | doc_spec_1179（14.11） | 學府修業畫面與接線設計.md | 支援卡接線點 |
 | doc_spec_1186（12.8） | 獎勵系統Base框架規格書.md | 第四池教官池 |
 

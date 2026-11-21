@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "source": "../世界觀與故事總綱規格書.md",
+  "indexTitle": "世界觀與故事總綱規格書（分片索引）",
+  "indexPath": "docs/遊戲規格文件/系統規格書/世界觀與故事總綱規格書.md",
+  "type": "markdown-h2",
+  "preambleShard": "shard-a",
+  "defaultShard": "shard-b",
+  "shards": [
+    {
+      "name": "shard-a",
+      "title": "0–4 結論、一頁版故事大綱、世界設定（史境公司、現代梗成因、不死不老、時間流速、一年循環節點）、主線長期謎題、與開場信原稿的並列",
+      "pattern": "^(0|1|2|3|4)[.]"
+    },
+    {
+      "name": "shard-b",
+      "title": "5–11 各系統說法、核心武將人設表、時事梗規範、文案範例、待決、實作卡、驗收",
+      "pattern": "^([5-9]|1[0-1])[.]"
+    }
+  ]
+}

@@ -14088,12 +14088,125 @@
       }
     },
     {
-      "doc_id": "doc_task_2767",
+      "id": "PROG-2-9608",
+      "doc_id": "doc_task_2801",
+      "title": "Base 框架分片 doc_id 修正與索引健全",
+      "status": "in-progress"
+    },
+    {
+      "id": "PROG-2-9607",
+      "doc_id": "doc_task_2800",
+      "title": "新玩家第一年不卡關體驗走查與修正清單",
+      "status": "in-progress"
+    },
+    {
+      "doc_id": "doc_task_2925",
+      "id": "PROG-2-9800",
+      "title": "網頁版卡頓優化：量測探針、漸層底圖快取、名冊深拷貝、字型範圍解析",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "2026-11-22T01:30:00+08:00",
+      "started_by_agent": "claude-code-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者回報線上版仍很卡。量測：GradientBackground 逐像素 JS 算圖（無快取、每次重畫、貼圖不釋放）造成 2~4 秒卡死；PlayerRosterService.getAll 每次深拷貝整份名冊；UISkinResolver 每次解析字型 unicode-range。新增 perf-probe 量測探針接進 playtest-online --perf。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "playtest-online 11/11、console error 0",
+        "主要卡頓熱點前後數據對照"
+      ],
+      "deliverables": [
+        "tools_node/perf-probe.js",
+        "tools_node/playtest-online.js",
+        "assets/scripts/ui/components/GradientBackground.ts",
+        "assets/scripts/core/services/PlayerRosterService.ts",
+        "assets/scripts/ui/core/UISkinResolver.ts",
+        "docs/agent-briefs/tasks/PROG/PROG-2-9800.md"
+      ],
+      "notes": "2026-11-22 | 狀態: done | 驗證: 本機建置（起始 LoginScene）前後各 2 輪 playtest-online --perf --gpu 皆 11/11、console error 0；全步驟 long task 總時長 50.8s→24.3s、開場最長幀 2701→807ms、轉蛋 9.1s→2.5s；單元測試／tsc 0 錯 | 變更: GradientBackground 共用貼圖快取＋免重畫＋無配置算圖＋深內部快速通道（與舊版 40 組逐像素相同）；GameSession 唯讀查詢改用 _rosterRead 快取（消除占用檢查每武將深拷貝整份名冊）；字型 unicode-range 解析快取＋二分搜尋；perf-probe.js 與 playtest-online --perf | 阻塞: 無；戰場／Label 縮放量測（measureText）熱點記錄於回報",
+      "brief": "docs/agent-briefs/tasks/PROG/PROG-2-9800.md",
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2927",
+      "id": "PROG-2-9709",
+      "title": "極速決戰修正：整軍戰力、資料驅動可用條件、每日次數與軍令狀",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "2026-11-22T10:00:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "極速決戰修正：整軍戰力（含預備兵力）、資料驅動可用條件（allowQuickResolve＋勝利紀錄、守城單挑永遠不可用）、每日免費 3 次與軍令狀。",
+      "related": [
+        "PROG-2-9707",
+        "PROG-2-9703",
+        "PROG-2-1091",
+        "PROG-2-2202",
+        "PROG-2-2205"
+      ],
+      "depends": [
+        "PROG-2-9707",
+        "PROG-2-9703"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-22 | 狀態: done | 驗證: 單元測試 9039 通過、tsc 0 錯、compute-gate quick 4/4 通過；新增 tests/QuickResolveGate.test.ts；Cocos 實機未跑 | 變更: sidePower 計入預備兵力、finalizeQuickResolve 修首戰改判文案、QuickResolveGate 可用條件與每日次數與軍令狀、allowQuickResolve 進 encounters.json、軍令狀道具、存檔 quickResolve、大廳與戰場呼叫端、規格 doc_spec_1170 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2929",
       "id": "PROG-2-9711",
       "title": "QA 預覽／直進戰場模擬出征帳本，試玩腳本實測自動代打",
       "owner": "ClaudeCode_opus-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-22",
@@ -14108,7 +14221,7 @@
       "depends": [],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-22 | 狀態: in-progress | 驗證: 單元測試 PreviewSortie 6 項通過、tsc 0 錯、compute-gate quick 4/4；預覽實跑待驗 | 變更: PreviewSortie.ts（preview／qa 入口沒有帳本時用主將統率＋兵源3000糧1500 建模擬帳本）、BattleSceneLoader.resolveBattleSortieInput、BattleController.isPreviewSortie、BattleUIBridge 結算不把模擬帳本傳給 recordBattle、playtest-online 開場按一次自動（--no-auto-play 可關，補按結束回合計 endTurnFallbacks） | 阻塞: 無",
+      "notes": "2026-11-22 | 狀態: done | 驗證: 單元測試 6 項、tsc 0 錯、閘門 4/4；7456 實跑 AI 自動出兵推進到第 15 回合結算 | 變更: 預覽／QA 模擬出征帳本、結算不寫入名冊、試玩腳本按自動代打 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",

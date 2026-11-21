@@ -333,6 +333,8 @@ import { advanceBreedingSeason, clampRosterPregnancySeasons, holdPregnancyVigor 
 import { DynamicRelationBook, battleComradePairs, type DynamicRelationResult } from '../systems/KinDynamicRelations';
 import { claimAllSeasonPass, createSeasonPassState, isDefaultSeasonPassState, mockSeasonPassLevelUp, normalizeSeasonPassState, type SeasonPassReward, type SeasonPassState } from '../systems/SeasonPass';
 import { normalizePendingSceneGambit, pendingSceneGambitOfTask, resolveSceneGambit, type PendingSceneGambit, type SceneGambitOutcome } from '../systems/HallSceneGambit';
+import { quickResolveWritClaimsFor } from '../systems/QuickResolveWritSources';
+import { checkQuickResolve, emptyQuickResolveState, isDefaultQuickResolveState, normalizeQuickResolveSave, quickResolveConfig, quickResolveSaveOf, rollQuickResolveDaily, spendQuickResolve, type QuickResolveCheck, type QuickResolveStage, type QuickResolveState } from '../systems/QuickResolveGate';
 import { ITEM_EXTREME_CHALLENGE_ORDER, createExtremeTaskState, extremeFreeAttemptsLeft, extremeStageOfWeek, extremeWeekIndexOf, isExtremeStage, normalizeExtremeTaskState, startExtremeTask, type ExtremeTaskState } from '../systems/ExtremeTaskBoard';
 import { rollExtremeTaskDrop, type ExtremeTaskDrop } from '../systems/ExtremeTaskDrop';
 import { SALARY_ARREARS_PENALTY, createSalaryLedger, normalizeSalaryLedger, settleSalaries, type SalaryLedger, type SalarySettlement } from '../systems/GeneralSalary';
@@ -996,6 +998,8 @@ export class GameSession implements AcademyRecordPort {
     private _pendingSceneGambit: PendingSceneGambit | null = null;
     /** 祠堂每日供奉最後領取日（UTC+8，YYYY-MM-DD）；從未領為 null（PROG-2-1915） */
     private _shrineOfferingDay: string | null = null;
+    /** 極速決戰每日次數與天下征鋒 Boss 關勝利紀錄（PROG-2-9709） */
+    private _quickResolve: QuickResolveState = emptyQuickResolveState();
     private _seasonPass: SeasonPassState = createSeasonPassState();
     /** 進行中的學府修業紀錄（PROG-2-9189）；有值且未結業時外界時間凍結 */
     private _academyRecord: PersistedAcademyRecord | null = null;
@@ -1248,7 +1252,7 @@ export class GameSession implements AcademyRecordPort {
     /** 告別信用的武將名：名冊查得到用名字，否則用傭兵 uid。 */
     private generalNameOf(generalId: string | undefined, fallback: string): string {
         if (!generalId) return fallback;
-        return this._roster.getAll().find(g => g.id === generalId)?.name ?? fallback;
+        return this._rosterRead().find(g => g.id === generalId)?.name ?? fallback;
     }
 
     /** 傭兵池可出現的武將：過濾掉 30 天冷卻中的武將 id，保留原順序。 */
@@ -1277,7 +1281,7 @@ export class GameSession implements AcademyRecordPort {
 
     /** 傭兵列表的顯示列（倒數、結義進度、按鈕可否）；由目前存檔包推導，不改狀態。 */
     public mercenaryPoolRows(nameOf?: (generalId: string) => string | undefined): MercenaryPoolRow[] {
-        return buildMercenaryPoolRows(this._mercenaries, (generalId) => this._roster.getAll().find((g) => g.id === generalId)?.name ?? nameOf?.(generalId));
+        return buildMercenaryPoolRows(this._mercenaries, (generalId) => this._rosterRead().find((g) => g.id === generalId)?.name ?? nameOf?.(generalId));
     }
 
     /** 以校正後的副本取代傭兵存檔包；不寫存檔，由呼叫端決定何時 save。 */
@@ -1313,7 +1317,7 @@ export class GameSession implements AcademyRecordPort {
             day: this.mercenaryDay,
         };
         this._bondPoints -= result.pointsSpent;
-        if (template.gender === '女' && !this._roster.getAll().some((g) => g.id === template.id)) {
+        if (template.gender === '女' && !this._rosterRead().some((g) => g.id === template.id)) {
             // §F 傭兵結義的女將品質為 SR~N，稀有度更高的模板也不超過 SR
             const quality = rarityOfTemplate(template) === 'R' ? 'R' : 'SR';
             this._femaleSources = { ...this._femaleSources, [template.id]: createFemaleSource('MERCENARY', quality, this._clock.state.totalSeasonsElapsed) };
@@ -1430,7 +1434,7 @@ export class GameSession implements AcademyRecordPort {
         const retry = this._roster.getAll().filter((g) => g.nursingPending && !bornMotherIds.includes(g.id)).map((g) => g.id);
         for (const motherId of [...bornMotherIds, ...retry]) {
             if (this._startNursing(motherId, season) !== 'blocked') continue;
-            const name = this._roster.getAll().find((g) => g.id === motherId)?.name ?? motherId;
+            const name = this._rosterRead().find((g) => g.id === motherId)?.name ?? motherId;
             lines.push(`${name}想餵奶，但人還在外頭忙，先記帳，下季再補登記。`);
         }
         return lines;
@@ -1549,7 +1553,7 @@ export class GameSession implements AcademyRecordPort {
     public enrollSpouse(general: GeneralConfig, options: { hallLevel?: number } = {}): { ok: boolean; reason?: 'no-config' | 'duplicate' | 'cap-reached' } {
         const config = this._familyConfig;
         if (!config) return { ok: false, reason: 'no-config' };
-        if (this._family.get(general.id) || this._roster.getAll().some((g) => g.id === general.id)) return { ok: false, reason: 'duplicate' };
+        if (this._family.get(general.id) || this._rosterRead().some((g) => g.id === general.id)) return { ok: false, reason: 'duplicate' };
         if (!this._family.canAddSpouse(config, options.hallLevel ?? 1)) return { ok: false, reason: 'cap-reached' };
         this.enrollGenerals([general]);
         this._family.addSpouse(general.id, this._clock.state.totalSeasonsElapsed, config, options.hallLevel ?? 1);
@@ -1620,7 +1624,7 @@ export class GameSession implements AcademyRecordPort {
      */
     public adjustMood(generalId: string, delta: number, reason: string, eventId: string): boolean {
         const level = Math.max(-3, Math.min(3, Math.round(delta / 10)));
-        if (level === 0 || !this._roster.getAll().some((g) => g.id === generalId)) return false;
+        if (level === 0 || !this._rosterRead().some((g) => g.id === generalId)) return false;
         const out = this.mind.record({
             generalId, season: this._clock.state.totalSeasonsElapsed, kind: level < 0 ? 'SCOLDED' : 'PRAISED',
             forceValence: level as MindValence, forceWeight: 4, reason, tags: ['homeWar'], label: '母國開戰', id: eventId,
@@ -1690,7 +1694,7 @@ export class GameSession implements AcademyRecordPort {
         if (!nation) return { ok: false, reason: 'not-eligible' };
         if (!relationAllowsAlliance(nation.relation)) return { ok: false, reason: 'relation-low' };
         const prefix = `spouse_gen_diplomatic_${nationId.replace(/[^A-Za-z0-9_-]/g, '_')}_`;
-        const married = this._roster.getAll().filter((g) => g.id.startsWith(prefix)).length;
+        const married = this._rosterRead().filter((g) => g.id.startsWith(prefix)).length;
         if (married >= config.marriagePerNation) return { ok: false, reason: 'nation-limit' };
         const out = this.enrollGeneratedSpouse(diplomaticSlot(nationId, married), options);
         if (!out.ok) return out;
@@ -1703,7 +1707,7 @@ export class GameSession implements AcademyRecordPort {
         const config = this._familyConfig;
         if (!config || config.matchmakerPrice === null) return { open: false, notice: MATCHMAKER_CLOSED_LABEL, remaining: 0, candidates: [] };
         const year = this._clock.state.currentYear;
-        const used = this._roster.getAll().filter((g) => matchmakerYearOf(g.id) === year).length;
+        const used = this._rosterRead().filter((g) => matchmakerYearOf(g.id) === year).length;
         return { open: true, notice: '', remaining: Math.max(0, config.matchmakerPerYear - used), candidates: matchmakerCandidates(year, config) };
     }
 
@@ -1714,7 +1718,7 @@ export class GameSession implements AcademyRecordPort {
         if (!offer.open) return { ok: false, reason: 'not-open' };
         const chosen = offer.candidates[pick];
         if (!chosen) return { ok: false, reason: 'not-eligible' };
-        if (this._roster.getAll().some((g) => g.id === chosen.generalId)) return { ok: false, reason: 'duplicate', generalId: chosen.generalId };
+        if (this._rosterRead().some((g) => g.id === chosen.generalId)) return { ok: false, reason: 'duplicate', generalId: chosen.generalId };
         if (offer.remaining <= 0) return { ok: false, reason: 'year-limit' };
         // 媒人禮金實扣（PROG-2-9591）：先扣，納入失敗（上限等）就退回，失敗不改狀態
         const config = this._familyConfig;
@@ -1746,7 +1750,7 @@ export class GameSession implements AcademyRecordPort {
             // TODO(第二版)：歷練（doc_spec_1180）尚未實作，轉接器先回空
             expedition: () => [],
             // 待產（pregnancySeasonsLeft）；TODO(第二版)：重傷旗標待傷勢系統落地後併入
-            medical: () => this._roster.getAll().filter((g) => ((g as { pregnancySeasonsLeft?: number }).pregnancySeasonsLeft ?? 0) > 0).map((g) => this._adaptedOccupancy(g.id, 'pregnancy')),
+            medical: () => this._rosterRead().filter((g) => ((g as { pregnancySeasonsLeft?: number }).pregnancySeasonsLeft ?? 0) > 0).map((g) => this._adaptedOccupancy(g.id, 'pregnancy')),
         },
     });
 
@@ -2289,7 +2293,7 @@ export class GameSession implements AcademyRecordPort {
     }
 
     private _tallyNameOf(card: TigerTallyCard): string {
-        return resolveTallyName(card, (id) => this._roster.getAll().find((g) => g.id === id || g.templateId === id)?.name);
+        return resolveTallyName(card, (id) => this._rosterRead().find((g) => g.id === id || g.templateId === id)?.name);
     }
 
     /**
@@ -2336,7 +2340,7 @@ export class GameSession implements AcademyRecordPort {
 
     /** 把君主持有的虎符裝到武將身上；武將不在名冊、虎符不存在、已被持有或武將已有虎符時回傳失敗 */
     public async equipTally(cardUid: string, generalId: string): Promise<TallyHoldingsResult | null> {
-        if (!this._roster.getAll().some((g) => g.id === generalId)) return null;
+        if (!this._rosterRead().some((g) => g.id === generalId)) return null;
         const card = this._tallyCards[cardUid];
         const result = equipTally(this._tallyHoldings, cardUid, generalId);
         const committed = await this._commitTallyResult(result);
@@ -2380,7 +2384,7 @@ export class GameSession implements AcademyRecordPort {
      * 武將未持有虎符時回傳 null；武將不在名冊時也回傳 null。
      */
     public async confiscateTally(generalId: string, isGachaHero = false): Promise<{ cardUid: string; loyalty: number } | null> {
-        if (!this._roster.getAll().some((g) => g.id === generalId)) return null;
+        if (!this._rosterRead().some((g) => g.id === generalId)) return null;
         const cardUid = tallyOfGeneral(this._tallyHoldings, generalId);
         if (cardUid === null) return null;
         const quality = this._tallyCards[cardUid]?.quality ?? 'R';
@@ -2506,7 +2510,7 @@ export class GameSession implements AcademyRecordPort {
         quality: TigerTallyQuality,
         isGachaHero = false,
     ): Promise<TallyLoyaltyResult | null> {
-        if (!this._roster.getAll().some((g) => g.id === generalId)) return null;
+        if (!this._rosterRead().some((g) => g.id === generalId)) return null;
         const current = this._tallyLoyalty[generalId] ?? createTallyLoyaltyState(TALLY_LOYALTY_INITIAL, isGachaHero);
         const result = applyTallyLoyaltyChange(current, action, quality, this._clock.state.totalSeasonsElapsed);
         if (result.ok) {
@@ -2638,6 +2642,22 @@ export class GameSession implements AcademyRecordPort {
                 }
             }
         }
+    }
+
+    /**
+     * 軍令狀免費來源（PROG-2-9709）：Boss 關首勝 ×1、年終守城勝 ×2、每季第一場戰鬥勝利 ×1，經 reward.claim 入帳。
+     * grantKey 冪等（同關／同年／同季重送不重領），所以每場勝利都呼叫；沒綁 API 就不發，失敗只記警告、不擋戰後結算。
+     */
+    private async _claimQuickResolveWrits(result: BattleResult, options: RecordBattleOptions): Promise<void> {
+        const clock = this._clock.state;
+        await this._claimSupportTickets(quickResolveWritClaimsFor({
+            result,
+            stageId: options.stageId,
+            isBossStage: isExtremeStage(options.stageId),
+            isDefense: Boolean(options.defense),
+            year: clock.currentYear,
+            season: clock.currentSeason,
+        }));
     }
 
     /**
@@ -2939,6 +2959,7 @@ export class GameSession implements AcademyRecordPort {
         this._extremeTask = createExtremeTaskState();
         this._pendingSceneGambit = null;
         this._shrineOfferingDay = null;
+        this._quickResolve = emptyQuickResolveState();
         this._seasonPass = createSeasonPassState();
         this._setAcademyRecord(null);
         this._sevenDayJourney = createSevenDayJourneyState();
@@ -3939,6 +3960,52 @@ export class GameSession implements AcademyRecordPort {
         return clanPrestigeBenefitOf(this.clanPrestigeTier).dailyShrinePill && this._shrineOfferingDay !== loginDayOf(epochMs);
     }
 
+    /** 已打贏過的關卡 id：一般關卡的通關紀錄＋天下征鋒 Boss 關的勝利紀錄（極速決戰「首次挑戰須親自指揮」判定用） */
+    public get wonStageIds(): readonly string[] {
+        return [...this._clearedStageIds, ...this._quickResolve.bossCleared];
+    }
+
+    /** 極速決戰可用與否（PROG-2-9709）：關卡條件、每日免費次數、軍令狀；不改任何狀態 */
+    public checkQuickResolve(stage: QuickResolveStage | null | undefined, epochMs: number = Date.now(), duelActive = false): QuickResolveCheck {
+        return checkQuickResolve({
+            stage,
+            clearedStageIds: this.wonStageIds,
+            daily: this._quickResolve.daily,
+            today: loginDayOf(epochMs),
+            writCount: this.itemCount(quickResolveConfig().writItemId),
+            duelActive,
+        });
+    }
+
+    /**
+     * 計一次極速決戰：先用免費次數，用完才扣軍令狀；條件不符回傳 false 且不改任何狀態。
+     * 要在實際結算前呼叫；成功後自動存檔。
+     */
+    public async spendQuickResolveUse(stage: QuickResolveStage | null | undefined, epochMs: number = Date.now(), duelActive = false): Promise<boolean> {
+        if (!this.checkQuickResolve(stage, epochMs, duelActive).allowed) return false;
+        const config = quickResolveConfig();
+        const spend = spendQuickResolve(this._quickResolve.daily, loginDayOf(epochMs), config);
+        if (spend.writSpent > 0) {
+            // 軍令狀走共通物品 API 扣除（防繞過棘輪：不直接寫庫存）；沒綁 API 或扣除失敗一律不結算、不計次
+            if (!this._itemApi) return false;
+            try {
+                const res = await this._itemApi.cmd('item.consume', { itemId: config.writItemId, qty: spend.writSpent, sink: 'QUICK_RESOLVE' });
+                if (isApiFail(res)) return false;
+            } catch (error) {
+                console.warn('[GameSession] 軍令狀扣除例外', error);
+                return false;
+            }
+        }
+        this._quickResolve = { ...this._quickResolve, daily: spend.daily };
+        if (this._autoSave && this._save) await this.save();
+        return true;
+    }
+
+    /** 今日極速決戰已用次數（換日歸零；除錯與介面顯示用） */
+    public quickResolveUsedToday(epochMs: number = Date.now()): number {
+        return rollQuickResolveDaily(this._quickResolve.daily, loginDayOf(epochMs)).used;
+    }
+
     /**
      * 領祠堂每日供奉（doc_spec_0310 §3 Lv.5，PROG-2-1915）：UTC+8 切日、同日一次，發補元散入背包並自動存檔。
      * 不符資格或今天已領回傳 0。
@@ -4357,7 +4424,7 @@ export class GameSession implements AcademyRecordPort {
         if (!job) return { ok: false, reason: 'unknown-job' };
         const running = this._dispatch.active.find((a) => a.jobId === jobId);
         if (running) {
-            const name = this._roster.getAll().find((g) => g.id === running.generalId)?.name ?? running.generalId;
+            const name = this._rosterRead().find((g) => g.id === running.generalId)?.name ?? running.generalId;
             return { ok: false, reason: 'job-active', jobName: job.name, generalName: name };
         }
         if (generalId) {
@@ -5133,7 +5200,7 @@ export class GameSession implements AcademyRecordPort {
      * 回傳的 favorite 為切換後的狀態。
      */
     public async toggleFavorite(generalId: string): Promise<{ ok: boolean; favorite: boolean }> {
-        if (!this._roster.getAll().some((g) => g.id === generalId)) {
+        if (!this._rosterRead().some((g) => g.id === generalId)) {
             return { ok: false, favorite: this._favoriteGeneralIds.includes(generalId) };
         }
         const favorite = !this._favoriteGeneralIds.includes(generalId);
@@ -5151,7 +5218,7 @@ export class GameSession implements AcademyRecordPort {
      * 武將不在名冊或任務 id 為空時回傳 false，不變更。
      */
     public async assignHallTask(taskId: string, generalId: string): Promise<boolean> {
-        if (taskId.length === 0 || !this._roster.getAll().some((g) => g.id === generalId && !isCaptive(g))) return false;
+        if (taskId.length === 0 || !this._rosterRead().some((g) => g.id === generalId && !isCaptive(g))) return false;
         this._hallAssignments = { ...this._hallAssignments, [taskId]: generalId };
         if (this._autoSave && this._save) {
             await this.save();
@@ -6698,6 +6765,10 @@ export class GameSession implements AcademyRecordPort {
         if (result === 'player-win' && options.stageId && !isExtremeStage(options.stageId)) {
             this._clearedStageIds = normalizeClearedStageIds([...this._clearedStageIds, options.stageId]);
         }
+        // 天下征鋒 Boss 關不進 clearedStageIds，另記勝利紀錄給極速決戰的「打贏過才可用」判定（PROG-2-9709）
+        if (result === 'player-win' && options.stageId && isExtremeStage(options.stageId) && !this._quickResolve.bossCleared.includes(options.stageId)) {
+            this._quickResolve = { ...this._quickResolve, bossCleared: [...this._quickResolve.bossCleared, options.stageId] };
+        }
         const clearChanged = this._clearedStageIds.length !== clearedBefore;
         if (result === 'player-win' && options.teachingSpirit) this.completeTeachingBattle(options.teachingSpirit);
         const firstClear = result === 'player-win' && !this._firstBattleCleared;
@@ -6737,6 +6808,7 @@ export class GameSession implements AcademyRecordPort {
                 buildBattleSnapshot(battleId, entry.generalId, entry.performance ?? EMPTY_PERFORMANCE, entry.outcome === 'win', battleDate));
         }
         await this._claimMilestoneNotes(settlement.entries);
+        await this._claimQuickResolveWrits(result, options);
         if (settlement.entries.length === 0) {
             if ((clearChanged || firstClear || defenseFought || tallyChanged || comradeChanged || mercenaryChanged || officerChanged) && this._autoSave && this._save) {
                 await this.save();
@@ -6845,7 +6917,7 @@ export class GameSession implements AcademyRecordPort {
             this._emit(GAME_SESSION_EVENTS.FactorAwakened, event);
         }
         rankPromotions.forEach((payload) => {
-            this._seasonActivity.rankUps.push({ name: this._roster.getAll().find((g) => g.id === payload.generalId)?.name ?? payload.generalId, title: payload.title });
+            this._seasonActivity.rankUps.push({ name: this._rosterRead().find((g) => g.id === payload.generalId)?.name ?? payload.generalId, title: payload.title });
             this._emit(GAME_SESSION_EVENTS.GeneralRankPromoted, payload);
         });
         return record;
@@ -7289,8 +7361,8 @@ export class GameSession implements AcademyRecordPort {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'cityEconomy' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'officerTrial' | 'paidFeatureQuota' | 'openingOffers' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay' | 'seasonPass'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'cityEconomy' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'officerTrial' | 'paidFeatureQuota' | 'openingOffers' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay' | 'seasonPass'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'cityEconomy' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'officerTrial' | 'paidFeatureQuota' | 'openingOffers' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay' | 'quickResolve' | 'seasonPass'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'cityEconomy' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'officerTrial' | 'paidFeatureQuota' | 'openingOffers' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay' | 'quickResolve' | 'seasonPass'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         fields.cityEconomy = { ...this._cityEconomy };
@@ -7336,6 +7408,7 @@ export class GameSession implements AcademyRecordPort {
         if (this._extremeTask.weekIndex >= 0 || this._extremeTask.rewards.length > 0) fields.extremeTask = { ...this._extremeTask, rewards: this._extremeTask.rewards.map((drop) => ({ ...drop })) };
         if (this._salaryLedger.lastSettledSeason !== null) fields.salaryLedger = { arrears: { ...this._salaryLedger.arrears }, lastSettledSeason: this._salaryLedger.lastSettledSeason };
         if (this._shrineOfferingDay) fields.shrineOfferingDay = this._shrineOfferingDay;
+        if (!isDefaultQuickResolveState(this._quickResolve)) fields.quickResolve = quickResolveSaveOf(this._quickResolve);
         if (!isDefaultSeasonPassState(this._seasonPass)) fields.seasonPass = this.seasonPass;
         return fields;
     }
@@ -7380,6 +7453,7 @@ export class GameSession implements AcademyRecordPort {
         this._extremeTask = normalizeExtremeTaskState(snapshot.extremeTask);
         this._pendingSceneGambit = normalizePendingSceneGambit(snapshot.pendingSceneGambit);
         this._shrineOfferingDay = normalizeShrineOfferingDay(snapshot.shrineOfferingDay);
+        this._quickResolve = normalizeQuickResolveSave(snapshot.quickResolve);
         this._seasonPass = normalizeSeasonPassState(snapshot.seasonPass);
     }
 
