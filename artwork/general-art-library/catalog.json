@@ -7739,7 +7739,7 @@
         ]
       }
     },
-    {
+{
       "uid": "mao-jie",
       "name": "毛玠",
       "standing": {
@@ -7765,7 +7765,7 @@
         "activeVersion": "0002"
       },
       "smallAvatar": {
-        "activeVersion": "0014",
+        "activeVersion": "0015",
         "status": "integrated",
         "history": [
           {
@@ -7951,7 +7951,7 @@
           {
             "version": "0014",
             "file": "small_avatars/mao_jie__毛玠__small_avatar_0014.png",
-            "status": "integrated",
+            "status": "superseded",
             "sha256": "a6d765f647e3606383096187015a893f3308291826cbff32cc4743235284dce2",
             "canvas": "256x256 RGBA",
             "sourceAvatarVersion": "0002",
@@ -7964,6 +7964,24 @@
               "height": 152
             },
             "qc": "頭高75%；臉框中心線與畫布中線差0.5px；保留完整帽冠、髮型、鬍鬚；雙肩上緣均在框內且可見。相較舊版0004放寬裁框，縮小頭部取景以納入肩線。250px同尺度並排檢查通過。只裁切與等比例縮放，未旋轉、修臉或重畫。",
+            "createdAt": "2026-11-21"
+          },
+          {
+            "version": "0015",
+            "file": "small_avatars/mao_jie__毛玠__small_avatar_0015.png",
+            "status": "integrated",
+            "sha256": "f540f53fb8411b86de659641fbc5ce96d342752432af4a5d16c65b5390732ee0",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/mao_jie__毛玠__avatar_0002.png",
+            "method": "crop-only; uniform resize; no rotation or redraw",
+            "cropBox": {
+              "x": 57.13,
+              "y": 41.26,
+              "width": 148.75,
+              "height": 148.75
+            },
+            "qc": "顱部至下巴頭高80%；臉框中心線與畫布中線差0.5px；完整保留方帽、帽側飾、髮鬚；左右肩線錨點均可見並保留少量肩面；125px中心線重疊檢查及250px基準並排檢視通過。只裁切與等比例縮放，未旋轉、修臉或重畫。",
             "createdAt": "2026-11-21"
           }
         ]
