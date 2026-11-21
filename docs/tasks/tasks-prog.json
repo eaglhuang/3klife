@@ -24,9 +24,9 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 229,
+    "done": 234,
     "in_progress": 4,
-    "open": 85,
+    "open": 86,
     "total": 324
   },
   "tasks": [
@@ -14044,40 +14044,54 @@
       }
     },
     {
-      "id": "PROG-2-9608",
-      "title": "Base 框架分片 doc_id 錯位修復與索引健全",
-      "type": "documentation",
-      "priority": "P1",
+      "doc_id": "doc_task_2766",
+      "id": "PROG-2-9710",
+      "title": "預覽直進戰場先載語系字串（奧義鈕不再顯示鍵名）",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
       "phase": "M0",
-      "status": "in-progress",
-      "owner": "antigravity",
       "created": "2026-11-22",
-      "created_by_agent": "Claude",
-      "started_at": "2026-11-22T01:09:18+08:00",
-      "started_by_agent": "antigravity",
-      "doc_id": "doc_task_2767",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
       "sensor_triggered_by": "",
-      "description": "修復五個 Base 框架規格分片 doc_id 錯位（1249～1263），補齊 3 個缺失之 .shardrc.json，補登 doc_spec_1254，同步 doc_spec_1241 待接清單移除銀兩錢包阻塞，並依總 PM 裁決更新世界觀與私塾待決章節。",
-      "related": [
-        "PROG-2-9200",
-        "PROG-2-9224",
-        "PROG-2-9591"
-      ],
+      "description": "",
+      "related": [],
       "depends": [],
-      "acceptance": [
-        "doc-id-registry verify 通過",
-        "check-doc-shard-health 通過",
-        "compute-gate standard 通過"
-      ],
-      "deliverables": [
-        "docs/遊戲規格文件/系統規格書/人員占用系統Base框架規格書-shards/shard-a.md",
-        "docs/遊戲規格文件/系統規格書/任務系統Base框架規格書.md",
-        "docs/遊戲規格文件/系統規格書/學府支援卡與教官池規格書-shards/.shardrc.json",
-        "docs/遊戲規格文件/系統規格書/世界觀與故事總綱規格書-shards/.shardrc.json",
-        "docs/遊戲規格文件/系統規格書/武將私塾補習班系統規格書-shards/.shardrc.json",
-        "docs/遊戲規格文件/系統規格書/家族子嗣與血統總規格書-shards/shard-c.md"
-      ],
-      "notes": "狀態: in-progress。完成 15 筆 Base 框架分片 doc_id 修補與 3 個 .shardrc.json 健全化。"
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-22 | 狀態: done | 驗證: 7456 預覽截圖奧義鈕顯示「奧義」 | 變更: LoadingScene 預覽戰場先載語系 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "id": "PROG-2-9608",
+      "doc_id": "doc_task_2801",
+      "title": "Base 框架分片 doc_id 修正與索引健全",
+      "status": "in-progress"
     }
   ],
   "updated": "2026-11-22"

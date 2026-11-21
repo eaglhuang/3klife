@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<title>3KLife · 宿命牽引・名將重逢（重複卡三選一）v1</title>
+<link rel="stylesheet" href="../../colors_and_type.css">
+<style>
+/* 重複卡分流彈窗 v1 草稿：1920×1080，疊在轉蛋結果畫面上。
+   節點命名對照 DuplicatePullPopupController.getView() 的 key（dupTitle、btnDupRebirth…），方便之後走 HTML→UCUF。 */
+/* 內嵌色票備援：有些檢視器讀不到 ../../colors_and_type.css，變數失效時文字會退成黑色、在深紫／深色底上看不見。
+   值與 colors_and_type.css 相同；外部 CSS 載入時以同值覆蓋，不影響正式色。 */
+:root {
+  --accent-gold: #D4AF37; --bg-deep: #0A0A0A; --outline: #4D4635; --primary: #B22222; --rarity-ssr: #9C27B0;
+  --text-accent: #FFE088; --text-on-parchment: #2D2926; --text-primary: #E5E2E1;
+  --font-body: "NotoSansTC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  --font-headline: "Newsreader", "NotoSansTC", "Songti TC", "STSong", serif;
+  --font-label: "Manrope", "NotoSansTC", system-ui, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--bg-deep); }
+body { font-family: var(--font-body); color: var(--text-primary); position: relative; }
+
+/* 背景：模糊的轉蛋結果 + 暗幕 */
+.scene-bg { position: absolute; inset: 0; background:
+  radial-gradient(ellipse at 50% 40%, rgba(212,175,55,.18), transparent 60%),
+  linear-gradient(180deg, #1b1712 0%, #0a0a0a 100%); }
+.scene-bg::after { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,.62); }
+
+/* 彈窗本體 */
+#dupPanel { position: absolute; left: 160px; top: 90px; width: 1600px; height: 900px;
+  background: linear-gradient(180deg, #221d16 0%, #15120e 100%);
+  border: 2px solid var(--accent-gold); border-radius: 18px;
+  box-shadow: 0 0 0 6px rgba(212,175,55,.12), 0 30px 80px rgba(0,0,0,.7); overflow: hidden; }
+#dupPanel::before { content: ""; position: absolute; inset: 10px; border: 1px solid rgba(212,175,55,.28); border-radius: 12px; pointer-events: none; }
+
+/* 標題列 */
+.head { position: absolute; left: 0; right: 0; top: 0; height: 120px; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(90deg, transparent, rgba(178,34,34,.35) 30%, rgba(178,34,34,.35) 70%, transparent); }
+#dupTitle { font-family: var(--font-headline); font-size: 56px; font-weight: 900; letter-spacing: .18em; color: var(--text-accent);
+  text-shadow: 0 0 18px rgba(255,224,136,.55), 0 3px 0 #5a3d0a; }
+.head .knot { width: 120px; height: 2px; background: linear-gradient(90deg, transparent, var(--accent-gold)); margin: 0 28px; }
+.head .knot.r { transform: scaleX(-1); }
+#dupPager { position: absolute; right: 48px; top: 38px; font-family: var(--font-label); font-size: 30px; letter-spacing: .1em;
+  color: var(--text-primary); background: rgba(0,0,0,.45); border: 1px solid var(--outline); border-radius: 22px; padding: 4px 22px; }
+#btnDupClose { display: none; }
+
+/* 左側：重逢的名將 */
+.hero { position: absolute; left: 40px; top: 140px; width: 440px; height: 720px; border-radius: 14px; overflow: hidden;
+  background: radial-gradient(ellipse at 50% 35%, rgba(156,39,176,.55), rgba(20,10,30,.95) 70%); border: 2px solid var(--rarity-ssr); }
+.hero img { position: absolute; left: 50%; bottom: 110px; height: 600px; transform: translateX(-50%); filter: drop-shadow(0 0 24px rgba(255,224,136,.45)); }
+.hero .rarity { position: absolute; left: 18px; top: 16px; font-family: var(--font-headline); font-size: 40px; font-weight: 900; color: #fff;
+  background: linear-gradient(135deg, #b14fd0, #6a1b9a); padding: 0 16px; border-radius: 8px; letter-spacing: .06em; }
+.hero .stamp { position: absolute; right: 16px; top: 18px; width: 118px; height: 118px; border: 4px solid var(--primary); border-radius: 50%;
+  color: var(--primary); font-family: var(--font-headline); font-size: 30px; font-weight: 900; display: flex; align-items: center; justify-content: center;
+  text-align: center; line-height: 1.05; transform: rotate(-14deg); background: rgba(240,235,221,.92); }
+.hero .nameplate { position: absolute; left: 0; right: 0; bottom: 0; height: 110px; background: linear-gradient(0deg, rgba(0,0,0,.9), rgba(0,0,0,.4));
+  display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.hero .nameplate .n { font-family: var(--font-headline); font-size: 52px; font-weight: 900; letter-spacing: .2em; color: var(--text-accent); }
+.hero .nameplate .s { font-family: var(--font-label); font-size: 22px; color: #D0C5AF; letter-spacing: .08em; }
+
+/* 副標＋史小境吐槽 */
+#dupSubtitle { position: absolute; left: 520px; top: 146px; width: 1040px; font-size: 30px; color: var(--text-primary); letter-spacing: .04em; }
+#dupSubtitle b { color: var(--text-accent); }
+.quip { position: absolute; left: 520px; top: 196px; width: 1040px; display: flex; align-items: center; gap: 14px; }
+.quip .avatar { width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, #3F6A62, #22403a); border: 2px solid var(--accent-gold);
+  font-family: var(--font-headline); font-size: 22px; font-weight: 900; color: var(--text-accent); display: flex; align-items: center; justify-content: center; }
+.quip .bubble { background: rgba(240,235,221,.95); color: var(--text-on-parchment); font-size: 24px; padding: 8px 20px; border-radius: 16px; position: relative; }
+.quip .bubble::before { content: ""; position: absolute; left: -10px; top: 50%; margin-top: -8px; border: 8px solid transparent; border-right-color: rgba(240,235,221,.95); border-left: 0; }
+
+/* 三張選項卡 */
+.routes { position: absolute; left: 520px; top: 270px; width: 1040px; height: 500px; display: flex; gap: 24px; }
+.route { flex: 1; position: relative; border-radius: 14px; padding: 22px 24px 0; display: flex; flex-direction: column;
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)); border: 2px solid var(--c); }
+.route .crest { width: 84px; height: 84px; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-headline); font-size: 44px; font-weight: 900; color: #fff; background: radial-gradient(circle at 35% 30%, var(--c2), var(--c)); box-shadow: 0 0 20px var(--glow); }
+.route .t { text-align: center; font-family: var(--font-headline); font-size: 40px; font-weight: 900; letter-spacing: .14em; color: var(--c2); }
+.route .tag { text-align: center; font-family: var(--font-label); font-size: 20px; letter-spacing: .1em; color: #bdb3a0; margin: 2px 0 14px; }
+.route .delta { background: rgba(0,0,0,.4); border: 1px solid rgba(255,255,255,.1); border-radius: 10px; padding: 10px 14px; margin-bottom: 12px; text-align: center; }
+.route .delta .k { font-size: 18px; color: #a89f8c; }
+.route .delta .v { font-family: var(--font-headline); font-size: 34px; font-weight: 900; color: #fff; }
+.route .delta .v em { font-style: normal; color: var(--c2); }
+.bar { height: 12px; border-radius: 6px; background: rgba(255,255,255,.12); overflow: hidden; margin-top: 6px; }
+.bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--c), var(--c2)); }
+.route ul { list-style: none; font-size: 21px; line-height: 1.6; color: #d8d2c4; flex: 1; }
+.route li::before { content: "◆ "; color: var(--c2); font-size: 14px; vertical-align: 2px; }
+.route .btn { margin: 0 -24px; height: 76px; border-radius: 0 0 12px 12px; display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-headline); font-size: 30px; font-weight: 900; letter-spacing: .16em; color: #1a1408; background: linear-gradient(180deg, var(--c2), var(--c)); }
+.route.recommend::after { content: "推薦"; position: absolute; top: -16px; right: 18px; font-family: var(--font-label); font-size: 20px; font-weight: 800;
+  color: #fff; background: var(--primary); padding: 2px 14px; border-radius: 12px; letter-spacing: .1em; }
+.route.disabled { filter: grayscale(.9) brightness(.6); }
+.route.disabled .btn { color: #ddd; background: #3a3a3a; font-size: 24px; letter-spacing: .06em; }
+
+.rebirth { --c: #2E8B57; --c2: #7FE0A8; --glow: rgba(46,139,87,.6); }
+.starup  { --c: #B8860B; --c2: #FFE088; --glow: rgba(212,175,55,.6); }
+.infusion{ --c: #B22222; --c2: #FF9A7A; --glow: rgba(178,34,34,.6); }
+
+/* 底列：批次沿用 */
+.foot { position: absolute; left: 520px; top: 800px; width: 1040px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+#btnDupBatchDefault { display: flex; align-items: center; gap: 14px; font-size: 26px; color: var(--text-primary); }
+#btnDupBatchDefault .box { width: 34px; height: 34px; border: 2px solid var(--accent-gold); border-radius: 6px; display: flex; align-items: center; justify-content: center;
+  color: var(--text-accent); font-size: 26px; font-weight: 900; background: rgba(212,175,55,.15); }
+.foot .remain { font-family: var(--font-label); font-size: 22px; color: #a89f8c; letter-spacing: .06em; }
+.foot .remain b { color: var(--text-accent); }
+
+/* 版本標籤（草稿用，正式版移除） */
+.draft { position: absolute; left: 24px; bottom: 16px; font-family: var(--font-label); font-size: 18px; color: #666; letter-spacing: .1em; }
+</style>
+</head>
+<body>
+<div class="scene-bg"></div>
+
+<div id="dupPanel">
+  <div class="head"><span class="knot"></span><h1 id="dupTitle">宿命牽引・名將重逢</h1><span class="knot r"></span></div>
+  <div id="dupPager">2 / 5</div>
+
+  <div class="hero">
+    <div class="rarity">SSR</div>
+    <div class="stamp">已持有<br>本體</div>
+    <img src="../../../assets/resources/sprites/generals/zhao_yun_portrait.png" alt="趙雲">
+    <div class="nameplate"><div class="n">趙雲</div><div class="s">常山子龍　★3　轉生 1 次</div></div>
+  </div>
+
+  <p id="dupSubtitle">已持有「<b>趙雲</b>」本體，請選擇其精魄轉化路徑：</p>
+  <div class="quip"><div class="avatar">境</div><div class="bubble">史小境：又是子龍？你們這緣分，月老看了都要排隊加號。</div></div>
+
+  <div class="routes">
+    <div class="route rebirth" id="btnDupRebirth">
+      <div class="crest">龍</div>
+      <div class="t" id="dupRebirthTitle">復生重練</div>
+      <div class="tag" id="dupRebirthTagline">青龍靈光／突破極限</div>
+      <div class="delta"><div class="k">轉生次數</div><div class="v">1 → <em>2</em> <span style="font-size:20px;color:#a89f8c">/ 5</span></div></div>
+      <ul id="dupRebirthBody"><li>重塑 20 歲巔峰之軀</li><li>單項五維上限 +100</li><li>英靈傳承卡完整嵌回</li></ul>
+      <div class="btn" id="dupRebirthLabel">選擇復生重練</div>
+    </div>
+
+    <div class="route starup recommend" id="btnDupStarUp">
+      <div class="crest">星</div>
+      <div class="t" id="dupStarUpTitle">升星</div>
+      <div class="tag" id="dupStarUpTagline">同名精魄／累積星級</div>
+      <div class="delta"><div class="k">★3 → ★4　同名卡</div><div class="v">2 → <em>3</em> <span style="font-size:20px;color:#a89f8c">/ 3</span></div><div class="bar"><i style="width:100%"></i></div></div>
+      <ul id="dupStarUpBody"><li>這張卡計入同名卡</li><li>集滿立即升 1 星</li><li>★4 開放血脈奧義第 4 階</li></ul>
+      <div class="btn" id="dupStarUpLabel">選擇升星</div>
+    </div>
+
+    <div class="route infusion disabled" id="btnDupInfusion">
+      <div class="crest">鳳</div>
+      <div class="t" id="dupInfusionTitle">血脈灌注</div>
+      <div class="tag" id="dupInfusionTagline">金鳳神芒／即時增強</div>
+      <div class="delta"><div class="k">英靈卡傳承經驗</div><div class="v"><em>+500</em></div></div>
+      <ul id="dupInfusionBody"><li>專屬虎符戰鬥屬性提升</li><li>宗族聲望 +50</li><li>現役武將狀態完全保留</li></ul>
+      <div class="btn" id="dupInfusionLabel">未裝配英靈卡，無法灌注</div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div id="btnDupBatchDefault"><span class="box">✓</span><span id="dupBatchLabel">本次抽卡批次預設沿用此選擇</span></div>
+    <div class="remain">本次十連還有 <b>3</b> 位重複名將待處理</div>
+  </div>
+</div>
+
+<div class="draft">DRAFT v1 · duplicate-pull-popup · 2026-11-21</div>
+</body>
+</html>

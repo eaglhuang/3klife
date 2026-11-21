@@ -233,7 +233,7 @@ import { ITEM_LONGEVITY_PILL, ITEM_ORACLE_TOKEN, ITEM_WOOD } from '../../core/sy
 import { ITEM_SHOP_OFFERS, JOB_CHANGE_ORDER_OFFER } from '../../core/systems/ItemShopPricing';
 import { ShopMainController } from '../core/ShopMainController';
 import { PrisonerPopupController } from '../core/PrisonerPopupController';
-import { DuplicatePullPopupController, DUPLICATE_INFUSION_VALUE, infusionTargetsOf, rebirthTargetsOf, splitOwnedDuplicates, starUpTargetsOf, type DuplicatePullChoice, type DuplicatePullEntry, type DuplicatePullRoute } from '../core/DuplicatePullPopupController';
+import { DuplicatePullPopupController, DUPLICATE_INFUSION_VALUE, infusionTargetsOf, rebirthTargetsOf, splitOwnedDuplicates, starUpTargetsOf, type DuplicatePullChoice, type DuplicatePullEntry, type DuplicatePullQuips, type DuplicatePullRoute } from '../core/DuplicatePullPopupController';
 import { buildLobbyScout, ScoutPanelController } from '../core/ScoutPanelController';
 import type { TacticCounterTagTable } from '../../core/systems/LoadoutCheck';
 import { spiritSlotViewOf } from '../../core/systems/SpiritSlotState';
@@ -454,6 +454,9 @@ function alignSubMenuToHall(
     widget.horizontalCenter = 0;
     widget.bottom = 156;
 }
+
+/** 重複卡彈窗左側立繪框（436×610） */
+const DUPLICATE_HERO_PORTRAIT_SPEC: PortraitFrameSpec = { ...PORTRAIT_FRAME_SPEC, frameWidth: 436, frameHeight: 610, faceHeight: 54, eyeFromTop: 110 };
 
 @ccclass('LobbyScene')
 export class LobbyScene extends Component {
@@ -727,6 +730,9 @@ export class LobbyScene extends Component {
             name: general.name,
             infusionAvailable: cards.get(general.id) !== null,
             starUp: services().session.starUpProgress(general.id),
+            ...(general.title ? { title: general.title } : {}),
+            rarity: general.rarityTier === 'legendary' || general.rarityTier === 'mythic' ? 'SSR' : general.rarityTier === 'epic' ? 'SR' : 'R',
+            rebirthCount: services().session.roster.find((owned) => owned.id === general.id)?.rebirthCount ?? 1,
         })));
         const rebirth = await services().session.addGenerals(rebirthTargetsOf(owned, choices), { rebirthOnDuplicate: true, fromGacha: true });
         const base = this._gachaEnrollResult ?? { added: [], duplicates: [], rebirths: [], bondPointsGained: 0 };
@@ -5260,6 +5266,8 @@ ${spent}`,
             if (this._duplicatePull.choose(route)) this._closeDuplicatePullPopup();
             else this._refreshDuplicatePullPopup();
         };
+        void services().resource.loadJson<DuplicatePullQuips>('data/duplicate-pull-quips', { tags: ['LobbyScene'] })
+            .then((quips) => this._duplicatePull.setQuips(quips)).catch(() => undefined);
         this._duplicatePullHost = await this._mountPreviewScreenHost('DuplicatePullPopupHost', 'duplicate-pull-popup-screen', [
             { buttonId: 'btnDupRebirth', handler: () => { choose('rebirth'); } },
             { buttonId: 'btnDupInfusion', handler: () => { choose('infusion'); } },
@@ -5328,7 +5336,11 @@ ${spent}`,
 
     private _refreshDuplicatePullPopup(): void {
         const binder = this._duplicatePullHost?.binder;
-        if (binder) applyFlowView(binder, this._duplicatePull.getView());
+        if (!binder) return;
+        const view = this._duplicatePull.getView();
+        applyFlowView(binder, view);
+        // 左側重逢名將立繪：沿用六框的頭頂對齊；沒立繪時 _applyFramePortraits 會退成剪影頭像
+        if (view.portraitKey) this._applyFramePortraits(binder, 'dupHero', [view.portraitKey], () => ['dupHeroMask', 'dupHeroPortrait'], DUPLICATE_HERO_PORTRAIT_SPEC);
     }
 
     private _closeDuplicatePullPopup(): void {

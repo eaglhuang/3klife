@@ -1401,6 +1401,7 @@ async function main() {
             }
             if (!seen) throw new Error(`連抽 ${rec.detail.pulls} 次都沒出現重複卡彈窗（BtnDupStarUp）`);
             rec.detail.popupTexts = (await rm.allTexts()).filter((t) => /名將重逢|復生|灌注|升星/.test(t)).slice(0, 8);
+            await delay(2500); // 左側立繪是非同步載入，等它畫出來再截圖
             await shot(rec, 'dup-popup');
             await clickButton('^BtnDupStarUp$');
             await delay(1500);
