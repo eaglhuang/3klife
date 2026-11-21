@@ -6894,7 +6894,7 @@ export class GameSession implements AcademyRecordPort {
             ...(isEmptyQuestState(this._questState) ? {} : { questState: normalizeQuestState(this._questState) }),
             ...(isEmptyFamilyState(this._family.snapshot()) ? {} : { familyState: this._family.snapshot() }),
             ...(isEmptyStoryMeta(this._storyMeta) ? {} : { storyMeta: normalizeStoryMeta(this._storyMeta) }),
-            ...(this._itemMeta.seq > 0 || Object.keys(this._itemMeta.periodic).length > 0 ? { itemMeta: normalizeItemMeta(this._itemMeta) } : {}),
+            ...(this._itemMeta.seq > 0 || Object.keys(this._itemMeta.periodic).length > 0 || this._itemMeta.instances !== undefined ? { itemMeta: normalizeItemMeta(this._itemMeta) } : {}),
             military: this.military,
             yearAgingEvents: this._yearAgingEvents.map((event) => ({ ...event })),
             resources: {

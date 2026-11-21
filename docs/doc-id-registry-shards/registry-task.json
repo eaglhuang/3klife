@@ -16273,8 +16273,13 @@
   },
   {
     "id": "doc_task_2730",
+<<<<<<< HEAD
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9702.md",
     "title": "[PROG-2-9702] 年終守城戰規格書：大敗、失守懲罰、平手三項回寫使用者 11/21 裁決",
+=======
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9240.md",
+    "title": "[PROG-2-9240] 支援卡資料與物品化（SUP-1：25 張學府支援卡、category=supportCard、instanceState、出征編制排除）",
+>>>>>>> origin/master
     "category": "task"
   }
 ]
