@@ -16168,5 +16168,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9442.md",
     "title": "[PROG-2-9442] OCC 擴充 nursing、mentorAssign 與互斥矩陣（F2；矩陣放設定 JSON）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2713",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9461.md",
+    "title": "[PROG-2-9461] GCH-R2 完整機率表",
+    "category": "task"
   }
 ]

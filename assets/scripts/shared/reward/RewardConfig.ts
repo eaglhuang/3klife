@@ -91,6 +91,8 @@ export interface RewardPoolDef {
     /** 機率公開（reward.pools）用的中繼資料 */
     nameKey: string | null;
     disclosureVersion: string | null;
+    /** 是否公開完整機率表（disclosure.public，預設 true；任務、里程碑等非抽取獎池填 false） */
+    disclosurePublic: boolean;
     currency: string[];
     rules: string[];
     /** 允許的來源種類；空陣列＝不限（憑證核對由來源種類白名單做，規格 §11.2） */
@@ -267,6 +269,7 @@ function normalizePool(raw: unknown): RewardPoolDef | null {
         slots,
         nameKey: str(raw.nameKey),
         disclosureVersion: str(disclosure.version) ?? str(raw.disclosureVersion),
+        disclosurePublic: disclosure.public !== false,
         currency: strList(raw.currency),
         rules: strList(raw.rules),
         sources: strList(raw.sources),
