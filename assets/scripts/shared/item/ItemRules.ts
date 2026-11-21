@@ -7,7 +7,7 @@
  */
 import {
     HOLDER_KINDS, legacyItemDef,
-    type ContainerRuleV1, type HolderRef, type HolderRuleV1, type ItemConfigV1, type ItemDefV1, type PeriodicGrantV1,
+    type ContainerRuleV1, type HolderRef, type HolderRuleV1, type ItemConfigV1, type ItemDefV1, type ItemInstanceState, type PeriodicGrantV1,
 } from './ItemConfig';
 
 /** 取得來源；SEASON＝定期發放、REFUND＝退還（不受堆疊上限限制，因為只是把剛扣掉的還回去） */
@@ -52,6 +52,11 @@ export function findContainerRule(config: ItemConfigV1, holder: HolderRef, conta
 
 export function findPeriodicGrant(config: ItemConfigV1, ruleId: string): PeriodicGrantV1 | null {
     return config.periodicGrants.find((g) => g.id === ruleId) ?? null;
+}
+
+/** 出征、守城、派遣編制能不能讀到這個物品：academyOnly（支援卡）一律排除（doc_spec_1264 §19、TC-SUP-02） */
+export function isDeployableItem(config: ItemConfigV1, itemId: string): boolean {
+    return findItemDef(config, itemId).usage !== 'academyOnly';
 }
 
 /** 綁定檢查：general 只能放武將、household 只能放家；其餘不限 */
@@ -113,6 +118,8 @@ export interface ItemMeta {
     periodic: Record<string, number>;
     ledger: ItemLedgerRecord[];
     seq: number;
+    /** unique 物品的實例狀態：itemId → 等級／經驗／傳承；沒有任何實例時整個欄位省略 */
+    instances?: Record<string, ItemInstanceState>;
 }
 
 export function emptyItemMeta(): ItemMeta {
@@ -140,7 +147,36 @@ export function normalizeItemMeta(raw: unknown): ItemMeta {
         });
     }
     const seq = typeof src.seq === 'number' && Number.isInteger(src.seq) && src.seq >= 0 ? src.seq : ledger.length;
-    return { v: 1, periodic, ledger: ledger.slice(-ITEM_LEDGER_LIMIT), seq };
+    const instances = normalizeInstances(src.instances);
+    return { v: 1, periodic, ledger: ledger.slice(-ITEM_LEDGER_LIMIT), seq, ...(instances ? { instances } : {}) };
+}
+
+function normalizeInstances(raw: unknown): Record<string, ItemInstanceState> | null {
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
+    const out: Record<string, ItemInstanceState> = {};
+    for (const [id, value] of Object.entries(raw as Record<string, unknown>)) {
+        const r = value as Record<string, unknown> | null;
+        if (!r || typeof r !== 'object') continue;
+        const level = typeof r.level === 'number' && Number.isInteger(r.level) && r.level >= 1 ? r.level : 1;
+        const exp = typeof r.exp === 'number' && Number.isInteger(r.exp) && r.exp >= 0 ? r.exp : 0;
+        const limitBreak = typeof r.limitBreak === 'number' && Number.isInteger(r.limitBreak) && r.limitBreak >= 0 ? r.limitBreak : 0;
+        out[id] = { level, exp, limitBreak };
+    }
+    return Object.keys(out).length > 0 ? out : null;
+}
+
+/** 設一件物品的實例狀態（新實例或覆寫）；回傳新中繼資料 */
+export function withInstance(meta: ItemMeta, itemId: string, state: ItemInstanceState): ItemMeta {
+    return { ...meta, instances: { ...(meta.instances ?? {}), [itemId]: { ...state } } };
+}
+
+/** 移除一件物品的實例狀態（物品數量歸零時）；沒有實例時回傳原物件 */
+export function withoutInstance(meta: ItemMeta, itemId: string): ItemMeta {
+    if (!meta.instances || !(itemId in meta.instances)) return meta;
+    const rest = { ...meta.instances };
+    delete rest[itemId];
+    const { instances: _drop, ...others } = meta;
+    return Object.keys(rest).length > 0 ? { ...others, instances: rest } : others;
 }
 
 /** 附加一筆帳本，超過上限丟最舊的；回傳新中繼資料，不改原物件 */
