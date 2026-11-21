@@ -16488,13 +16488,25 @@
     "category": "task"
   },
   {
+    "id": "doc_task_2932",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9712.md",
+    "title": "[PROG-2-9712] 第一年連敗：分清自動代打與關卡難度、強化委任 AI、戰敗敗因診斷",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2933",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9610.md",
+    "title": "任務卡：PROG-2-9610 官職晉升敕封彈窗與大廳解鎖導流",
+    "category": "task"
+  },
+  {
     "id": "doc_task_2934",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9801.md",
     "title": "[PROG-2-9801] 網頁版卡頓優化第二輪（人物介紹頁／開場 Label 縮放）",
     "category": "task"
   },
   {
-    "id": "doc_task_2936",
+    "id": "doc_task_2940",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9802.md",
     "title": "[PROG-2-9802] 網頁版卡頓第三輪（漸層底板原生 canvas、全螢幕畫面遮蔽底層）",
     "category": "task"

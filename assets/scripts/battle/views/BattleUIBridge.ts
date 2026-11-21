@@ -1215,7 +1215,8 @@ export class BattleUIBridge {
   private _onBattleEnded(data: { result: string; retreated?: boolean; timeUp?: boolean; cause?: string; timeUpVerdict?: TimeUpVerdict }): void {
     this._lastEndedPayload = { result: data.result, retreated: data.retreated, cause: data.cause };
     // 戰鬥結束：自動代打一併收掉並讓按鈕恢復（不提示，結算彈窗會接手）
-    if (this.autoPlay.stop()) this._syncAutoButton();
+    // 只有真的分出勝負才收（PROG-2-9712）：非終局的通知不該把自動代打靜默關掉
+    if (data.result !== 'ongoing' && this.autoPlay.stop()) this._syncAutoButton();
     if (this.duelCapture) { this.duelCapture.ended = data; return; }
     const c = this.ctx;
     const effectKey = resolveBattleResultEffectKey(data.result);

@@ -22,6 +22,8 @@ export const BATTLE_TURN_FLOW_TIMING = {
   autoEndTurnAfterDeployLimitSec: 0.8,
   /** 自動代打（PROG-2-9707）：玩家回合開始後，自動按結束回合前的等待秒數（讓玩家看到上一回合的結果與委任部署）。 */
   autoPlayEndTurnDelaySec: 1.0,
+  /** 自動代打遇到敵將發起單挑時，代為接受或拒絕前的停頓秒數（讓玩家看到決定，PROG-2-9712）。 */
+  autoDuelDecisionDelaySec: 1.5,
   /** 敵方子回合開始前，保留給「敵軍思考中」提示的前置秒數。 */
   enemyThinkingLeadInSec: 2.0,
   /** 子回合邏輯跑完後，最少等待多久再開始檢查戰鬥視覺佇列。 */

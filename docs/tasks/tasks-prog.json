@@ -14256,7 +14256,7 @@
       "title": "戰場效能熱點修正（tick 分段量測、Label 縮放、圖集上傳、合批、離場釋放）",
       "owner": "ClaudeCode_opus-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-22",
@@ -14273,7 +14273,70 @@
       ],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-22 | 狀態: in-progress | 驗證: 7456 自動代打實測 draw call 平均 297→240、最高 358→296、FPS 54.8→58.7，棋盤截圖不變；每幀邏輯 lateUpdate 平均 0.5～0.8ms；單元測試、tsc 0 錯、閘門全過 | 變更: 每幀分段計時（?battlePerf=1）、棋盤底色格 GPU instancing | 阻塞: 頭頂徽章合批（每塊 7～8 個 draw call）與離場記憶體待總PM 選方案",
+      "notes": "2026-11-22 | 狀態: done | 驗證: PR 2488 已合併（CI 全過），draw call 平均 252→200、最高 311→236 | 變更: 結案 | 阻塞: 無；虎符卡面板約 46 個 draw call 另案評估",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "id": "PROG-2-9610",
+      "doc_id": "doc_task_2933",
+      "title": "官職晉升敕封彈窗與大廳解鎖導流",
+      "status": "completed",
+      "started_at": "2026-11-22T05:08:00+08:00",
+      "completed_at": "2026-11-22T05:52:00+08:00",
+      "started_by_agent": "antigravity"
+    },
+    {
+      "doc_id": "doc_task_2932",
+      "id": "PROG-2-9712",
+      "title": "第一年連敗：分清自動代打與關卡難度、強化委任 AI、戰敗敗因診斷",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T05:00:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "第一年四場年度戰鬥預設編成＋自動代打全敗；分清委任 AI 與關卡難度、強化 AI 或提數值、戰敗敗因診斷與下一步建議、開場自動代打自動結束回合",
+      "related": [
+        "PROG-2-9711",
+        "PROG-2-9709"
+      ],
+      "depends": [],
+      "acceptance": [
+        "自動代打第一年四場至少贏 2 場",
+        "合理手動打法全勝",
+        "戰敗結算敗因 1～2 條與下一步建議按鈕"
+      ],
+      "deliverables": [
+        "委任 AI／難度調整",
+        "戰敗敗因診斷"
+      ],
+      "notes": "2026-11-22 | 狀態: in-progress | 驗證: 單元測試 9089 過、tsc 0 錯、compute-gate quick 全過 | 變更: 第一階段：診斷為委任 AI 太弱（不是難度）。同存檔無頭模擬 5 關×20 種亂數，舊版勝場 虎牢關1/瓦口隘17/水淹七軍13/濡須夜劫6/博望坡11 → 新版全 20/20（normal、hard 難度也維持 19～20）。舊版缺點：每回合只出 1 隊、出兵口被堵仍硬選、不放奧義戰法、主將從不出陣。新增 DelegateTactics（避堵選路、放招目標、主將出陣門檻 0.5 暫定）；自動代打補三道防護：結束回合早退會重排、代放主將、代為決定單挑；非終局通知不再關自動代打 | 阻塞: 戰敗敗因診斷與戰損保護提案留第二階段",
       "brief": {
         "style": "classic",
         "label": "",

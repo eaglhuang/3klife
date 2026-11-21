@@ -1170,8 +1170,8 @@
         ]
       },
       "smallAvatar": {
-        "activeVersion": "0003",
-        "status": "review-pending",
+        "activeVersion": "0005",
+        "status": "integrated",
         "history": [
           {
             "version": "0001",
@@ -1193,10 +1193,28 @@
           {
             "version": "0003",
             "file": "small_avatars/zhu_rong_furen__祝融夫人__small_avatar_0003.png",
-            "status": "review-pending",
+            "status": "superseded",
             "sha256": "f60bbd781587828c24da2e64b3ac33bfe6e828f6b3c186512a2efa360af6d946",
             "canvas": "1254x1254 RGBA",
             "note": "Centered face by proportional reframe; shoulder-line crop, no chest front."
+          },
+          {
+            "version": "0005",
+            "file": "small_avatars/zhu_rong_furen__祝融夫人__small_avatar_0005.png",
+            "status": "integrated",
+            "sha256": "7adcd29df01bb43ac73f4ceaf0e2236d25dc9f40a4218a7f119181feca2ea310",
+            "canvas": "256x256 RGBA",
+            "sourceSmallAvatarVersion": "0003",
+            "sourceSmallAvatarFile": "small_avatars/zhu_rong_furen__祝融夫人__small_avatar_0003.png",
+            "method": "crop-only; uniform resize; no rotation or redraw",
+            "cropBox": {
+              "x": 10.84,
+              "y": 59.88,
+              "width": 1137.36,
+              "height": 1137.36
+            },
+            "qc": "保留來源可辨識三分之四側轉；頭高77.4%、臉高44.0%、臉寬33.8%；臉框中心線與畫布中線差0.5px；完整保留頭髮、紅色髮飾、耳飾及辮尾。與七張核可基準250/500px同尺度比較通過。雙肩部分可見，列為次要警示。純裁切與等比例縮放，未旋轉、修臉或重畫。",
+            "createdAt": "2026-11-22"
           }
         ]
       }
@@ -4166,6 +4184,30 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/zhuge_jin__諸葛瑾__small_avatar_0001.png",
+            "status": "integrated",
+            "sha256": "fe1b06dfdaa3d4a0c6a73c26d87ef996496dec37d5783a2cb5c92f35f94389ce",
+            "canvas": "256x256 RGBA",
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/zhuge_jin__諸葛瑾__standing_0002.png",
+            "method": "crop-only; uniform resize; no rotation or redraw",
+            "cropBox": {
+              "x": 357.33,
+              "y": 0.6,
+              "width": 313.33,
+              "height": 313.33
+            },
+            "qc": "顱部髮型至下巴頭高75%；臉高47.2%、臉寬33.2%；臉框中心線與畫布中線差0.5px；完整保留方帽、髮型、耳部與鬍鬚；保留來源自然輕微三分之四側轉，不正面化、不旋轉、不修臉、不重畫。雙肩僅部分可見，列次要警示，不為肩線縮小頭部。工具硬性幾何通過，與七張核可基準同尺度目視比較通過。",
+            "createdAt": "2026-11-22"
+          }
+        ],
+        "activeVersion": "0001"
       }
     },
     {
