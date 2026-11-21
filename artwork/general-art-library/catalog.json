@@ -6364,6 +6364,30 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "status": "integrated",
+        "activeVersion": "0014",
+        "history": [
+          {
+            "version": "0014",
+            "file": "small_avatars/mao_jie__毛玠__small_avatar_0014.png",
+            "status": "integrated",
+            "sha256": "a6d765f647e3606383096187015a893f3308291826cbff32cc4743235284dce2",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/mao_jie__毛玠__avatar_0002.png",
+            "method": "crop-only; uniform resize; no rotation or redraw",
+            "cropBox": {
+              "x": 52,
+              "y": 40.96,
+              "width": 152,
+              "height": 152
+            },
+            "qc": "顱部至下巴頭高75%；臉框中心線與畫布中線差0.5px；完整保留方帽、髮型與鬍鬚；雙肩上緣均可見。保留來源自然輕微三分之四角度，不正面化、不旋轉、不修臉、不重畫。125px縮圖與250px同尺度比較確認。",
+            "createdAt": "2026-11-22"
+          }
+        ]
       }
     },
     {
