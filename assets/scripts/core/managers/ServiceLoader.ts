@@ -313,6 +313,11 @@ export class ServiceLoader {
         this.localApi?.setRewardConfig(config);
     }
 
+    /** 目前載入的支援卡表（教官池展開 itemQuery 與結果顯示用；唯讀） */
+    public supportCardsConfig(): SupportCardsConfigV1 {
+        return this.supportCards;
+    }
+
     /** 換入（或釋放，傳 null）轉蛋獎池；不改基礎設定檔 */
     public setGachaRewardPools(pools: RewardPoolDef[] | null): void {
         this.gachaRewardPools = pools;

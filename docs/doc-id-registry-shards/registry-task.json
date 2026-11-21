@@ -16327,20 +16327,44 @@
   },
   {
     "id": "doc_task_2741",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9466.md",
-    "title": "[PROG-2-9466] GCH-R4b 重複卡回既有分流彈窗（不自動轉換）",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9251.md",
+    "title": "[PROG-2-9251] 第一年經濟曲線審查：入學令溢出折金 5000 過大",
     "category": "task"
   },
   {
     "id": "doc_task_2742",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9592.md",
-    "title": "[PROG-2-9592] F3 配偶 SP1／SP2 接線（他國仕官女將結緣移籍、開戰母國牽掛）",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9703.md",
+    "title": "[PROG-2-9703] 極速決戰結算文案：按「自動」不再顯示「敵方突破防線」",
     "category": "task"
   },
   {
     "id": "doc_task_2743",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9600.md",
+    "title": "[PROG-2-9600] 史境天下風雲榜與年終頒獎典禮系統規格書",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2744",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9466.md",
+    "title": "PROG-2-9466",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2745",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9243.md",
+    "title": "[PROG-2-9243] 教官池 JSON 與卡池接線（SUP-10：POOL_SUPPORT、itemQuery、連線券、機率說明）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2746",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9591.md",
     "title": "[PROG-2-9591] F3 家族銀兩錢包（銀兩幣別、媒人禮金與乳母費實扣）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2747",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9592.md",
+    "title": "[PROG-2-9592] F3 配偶 SP1／SP2 接線（他國仕官女將結緣移籍、開戰母國牽掛）",
     "category": "task"
   }
 ]

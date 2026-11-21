@@ -15,6 +15,10 @@
  *   excludeRefs／excludeIds 排除的名單別名／id
  *   weight       展開後每位角色的權重（預設 1）
  * 展開後的項目：id＝角色 id、nameKey＝`general.<id>`、effect＝範本效果加上 generalId；同一池內重複 id 以先出現者為準。
+ *
+ * 物品版 itemQuery（教官池 POOL_SUPPORT，doc_spec_1264 §22.4）：同樣的欄位邏輯，但查的是「物品目錄」（ItemMember）而不是武將名冊：
+ *   ref／ids／excludeRefs／excludeIds 照舊；rarity 直接比物品自帶的 'SSR'｜'SR'｜'R'；category 比物品類別（例：supportCard）。
+ * 展開後的項目：id＝物品目錄 id、nameKey＝目錄自帶的 nameKey、effect＝範本效果加上 itemId。
  */
 import { normalizeRewardConfig, type RewardPoolDef } from './RewardConfig';
 
@@ -26,6 +30,17 @@ export interface RosterMember {
     characterCategory?: string;
 }
 
+/** 物品目錄成員的最小欄位（支援卡等）：itemQuery 展開用 */
+export interface ItemMember {
+    /** 名單別名與 excludeIds 用的 id（支援卡＝cardId） */
+    id: string;
+    /** 發放效果用的物品 id；省略時用 id */
+    itemId?: string;
+    category: string;
+    rarity: RosterRarity;
+    nameKey: string;
+}
+
 export type RosterRarity = 'SSR' | 'SR' | 'R';
 
 export interface RosterQuery {
@@ -35,6 +50,17 @@ export interface RosterQuery {
     rarityTier?: string | string[];
     gender?: string;
     excludeGender?: string;
+    excludeRefs?: string[];
+    excludeIds?: string[];
+    weight?: number;
+}
+
+/** 物品查詢：欄位與 RosterQuery 同義，多一個 category */
+export interface ItemQuery {
+    ref?: string;
+    ids?: string[];
+    category?: string;
+    rarity?: RosterRarity | RosterRarity[];
     excludeRefs?: string[];
     excludeIds?: string[];
     weight?: number;
@@ -110,12 +136,49 @@ export function queryRoster(roster: readonly RosterMember[], query: RosterQuery,
     });
 }
 
+/** 依查詢從物品目錄挑項（保持目錄順序）；沒有任何條件的查詢回傳空 */
+export function queryItems(items: readonly ItemMember[], query: ItemQuery, refs: Readonly<Record<string, string[]>>): ItemMember[] {
+    if (query.ref === undefined && query.ids === undefined && query.category === undefined && query.rarity === undefined) return [];
+    const allowIds = new Set<string>();
+    let restrictIds = false;
+    if (query.ref !== undefined) { restrictIds = true; for (const id of refs[query.ref] ?? []) allowIds.add(id); }
+    if (query.ids !== undefined) {
+        const ids = new Set(textList(query.ids));
+        if (restrictIds) { for (const id of [...allowIds]) if (!ids.has(id)) allowIds.delete(id); } else { for (const id of ids) allowIds.add(id); }
+        restrictIds = true;
+    }
+    const banned = new Set<string>(textList(query.excludeIds));
+    for (const r of textList(query.excludeRefs)) for (const id of refs[r] ?? []) banned.add(id);
+    const rarities = textList(query.rarity);
+    return items.filter((m) => {
+        if (banned.has(m.id)) return false;
+        if (restrictIds && !allowIds.has(m.id)) return false;
+        if (query.category !== undefined && m.category !== query.category) return false;
+        if (rarities.length > 0 && rarities.indexOf(m.rarity) < 0) return false;
+        return true;
+    });
+}
+
 /** 把一個池的 rosterQuery 項目展開成逐角色項目；沒有 rosterQuery 的項目原樣保留 */
-function expandPool(rawPool: unknown, roster: readonly RosterMember[], refs: Readonly<Record<string, string[]>>): unknown {
+function expandPool(rawPool: unknown, roster: readonly RosterMember[], refs: Readonly<Record<string, string[]>>, items: readonly ItemMember[]): unknown {
     if (!isRecord(rawPool) || !Array.isArray(rawPool.entries)) return rawPool;
     const seen = new Set<string>();
     const out: unknown[] = [];
     for (const e of rawPool.entries) {
+        if (isRecord(e) && isRecord(e.itemQuery)) {
+            const iq = e.itemQuery as ItemQuery;
+            const itemWeight = typeof iq.weight === 'number' ? iq.weight : 1;
+            const itemTemplate = isRecord(e.effect) ? e.effect : { kind: 'item' };
+            for (const m of queryItems(items, iq, refs)) {
+                if (seen.has(m.id)) continue;
+                seen.add(m.id);
+                out.push({
+                    id: m.id, weight: itemWeight, tier: e.tier, ...(e.group !== undefined ? { group: e.group } : {}),
+                    nameKey: m.nameKey, effect: { ...itemTemplate, itemId: m.itemId ?? m.id },
+                });
+            }
+            continue;
+        }
         if (!isRecord(e) || !isRecord(e.rosterQuery)) { out.push(e); continue; }
         const query = e.rosterQuery as RosterQuery;
         const weight = typeof query.weight === 'number' ? query.weight : 1;
@@ -133,17 +196,17 @@ function expandPool(rawPool: unknown, roster: readonly RosterMember[], refs: Rea
 }
 
 /** 展開名單檔裡所有池的 rosterQuery，回傳可直接餵 normalizeRewardConfig 的原始設定 */
-export function expandRewardPoolFile(raw: unknown, roster: readonly RosterMember[]): { schema: 'reward-config.v1'; pools: unknown[]; bundles: unknown[] } {
+export function expandRewardPoolFile(raw: unknown, roster: readonly RosterMember[], items: readonly ItemMember[] = []): { schema: 'reward-config.v1'; pools: unknown[]; bundles: unknown[] } {
     const file = isRecord(raw) ? raw : {};
     const refs: Record<string, string[]> = {};
     if (isRecord(file.rosterRefs)) for (const [k, v] of Object.entries(file.rosterRefs)) refs[k] = textList(v);
-    const pools = Array.isArray(file.pools) ? file.pools.map((p) => expandPool(p, roster, refs)) : [];
+    const pools = Array.isArray(file.pools) ? file.pools.map((p) => expandPool(p, roster, refs, items)) : [];
     return { schema: 'reward-config.v1', pools, bundles: [] };
 }
 
-/** 載入卡池名單檔：展開名冊查詢後正規化，回傳各池定義（壞的池照 normalizeRewardConfig 規則略過） */
-export function buildRewardPools(raw: unknown, roster: readonly RosterMember[]): RewardPoolDef[] {
-    return normalizeRewardConfig(expandRewardPoolFile(raw, roster)).pools;
+/** 載入卡池名單檔：展開名冊查詢與物品查詢後正規化，回傳各池定義（壞的池照 normalizeRewardConfig 規則略過） */
+export function buildRewardPools(raw: unknown, roster: readonly RosterMember[], items: readonly ItemMember[] = []): RewardPoolDef[] {
+    return normalizeRewardConfig(expandRewardPoolFile(raw, roster, items)).pools;
 }
 
 /** 名單檔的舊池 id 對照（舊 id → 獎池 id）；格式不對的項目略過 */

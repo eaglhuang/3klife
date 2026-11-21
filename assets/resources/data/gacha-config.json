@@ -118,7 +118,7 @@
   },
   {
     "poolId": "mentor-pool",
-    "poolName": "支援卡池",
+    "poolName": "教官池",
     "poolType": "mentor",
     "resetEnabled": false,
     "guaranteeRarity": "rare",
@@ -146,8 +146,8 @@
     "currencyType": "mentorTicket",
     "singlePullCost": 1,
     "presentation": {
-      "title": "支援券",
-      "tenTitle": "支援券十連",
+      "title": "教官池",
+      "tenTitle": "教官池十連",
       "currency": "mentorTickets",
       "repull": "paid",
       "heroReveal": "side",

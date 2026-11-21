@@ -949,7 +949,7 @@ function buildDeckTexts(deck: MentorDeck, candidates: readonly MentorCard[], t: 
     }
     texts.deckHint = candidates.length > 0
         ? `教官編成 ${filled} / ${MENTOR_DECK_SIZE}：點格子輪換（可用教官 ${candidates.length} 位）`
-        : '沒有可用教官：到轉蛋「教官池」用支援券抽教官，或讓武將 65 歲退役轉教官';
+        : '沒有可用教官：到轉蛋「教官池」用連線券抽教官，或讓武將 65 歲退役轉教官';
     return texts;
 }
 

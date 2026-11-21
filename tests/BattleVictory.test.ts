@@ -14,6 +14,10 @@ import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
 import { BattleFlowState } from '../assets/scripts/battle/controllers/BattleFlowStateMachine';
 import { EVENT_NAMES, Faction, GAME_CONFIG, Weather } from '../assets/scripts/core/config/Constants';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const fs = require('fs') as typeof import('fs');
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const path = require('path') as typeof import('path');
 // eslint-disable-next-line @typescript-eslint/no-var-requires -- 用 require 避開元件型別對 cc 測試替身的型別檢查（同 Issue2159 測試）
 const { ResultPopupComposite } = require('../assets/scripts/ui/components/ResultPopupComposite');
 
@@ -129,6 +133,25 @@ export function createBattleVictorySuite(): TestSuite {
         assert.equals('主動撤退，本場判定戰敗。', shown[2].description, '玩家主動撤退');
         assert.equals('我軍奪下敵營，敵軍不戰自潰！', shown[3].description);
         assert.equals('敵方突破防線，再接再厲！', shown[4].description);
+    });
+
+    suite.test('按自動（極速決戰）的結算說明講極速決戰，不說突破防線（PROG-2-9703）', async () => {
+        const shown: Array<{ title: string; description: string }> = [];
+        const popup = new ResultPopupComposite() as unknown as {
+            show: (r: { title: string; description: string }) => Promise<void>;
+            _applyGeneralAvatar: () => Promise<void>;
+            showResult: (result: string, details?: string, generalId?: string, retreated?: boolean, cause?: string) => Promise<void>;
+        };
+        popup.show = async (r) => { shown.push(r); };
+        popup._applyGeneralAvatar = async () => undefined;
+        await popup.showResult('enemy-win', undefined, undefined, false, 'auto');
+        await popup.showResult('player-win', undefined, undefined, false, 'auto');
+        await popup.showResult('draw', undefined, undefined, false, 'auto');
+        assert.equals('極速決戰：我軍不支，只得收兵撤退。', shown[0].description);
+        assert.equals('極速決戰：敵軍潰散，我軍大獲全勝！', shown[1].description);
+        assert.equals('極速決戰：日暮鳴金，雙方各自收兵。', shown[2].description);
+        const src = fs.readFileSync(path.join(__dirname, '..', 'assets/scripts/battle/views/BattleUIBridge.ts'), 'utf8');
+        assert.equals(true, src.includes("cause: 'auto'"), '自動鈕發 BattleEnded 要帶 cause auto');
     });
 
     suite.test('主將陣亡的落敗不標為撤退', () => {
