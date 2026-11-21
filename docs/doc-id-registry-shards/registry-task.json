@@ -16174,5 +16174,17 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9461.md",
     "title": "[PROG-2-9461] GCH-R2 完整機率表",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2714",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9482.md",
+    "title": "[PROG-2-9482] 配偶上場（F4：名冊 kind=spouse、生成型配偶範本、出征與派遣、太守；指派入口改用 checkAssign）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2715",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9483.md",
+    "title": "[PROG-2-9483] 待產與哺乳接線（F5：2 季待產、哺乳 OCC、乳母不占用）",
+    "category": "task"
   }
 ]
