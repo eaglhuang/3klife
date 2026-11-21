@@ -16324,5 +16324,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9590.md",
     "title": "PROG-2-9590：playtest-online --year QA",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2741",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9466.md",
+    "title": "[PROG-2-9466] GCH-R4b 重複卡回既有分流彈窗（不自動轉換）",
+    "category": "task"
   }
 ]

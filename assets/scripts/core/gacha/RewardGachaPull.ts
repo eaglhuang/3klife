@@ -79,6 +79,8 @@ export class RewardGachaPort {
         private readonly _poolMap: Readonly<Record<string, string>>,
         private readonly _host: RewardGachaHost,
         private readonly _now: () => number = Date.now,
+        /** true：重複卡不自動轉 bundle，原樣交回呼叫端走重複卡分流彈窗（復生重練／血脈灌注／升星，doc_spec_0331）；預設 false 維持自動轉換 */
+        private readonly _deferDuplicates: boolean = false,
     ) {}
 
     public handles(legacyPoolId: string): boolean {
@@ -123,6 +125,7 @@ export class RewardGachaPort {
             });
             if (line.trace.indexOf('DUPLICATE') < 0) { added.push(general); continue; }
             duplicates.push(general);
+            if (this._deferDuplicates) continue;
             const bundleId = TIER_BUNDLE(line.tier);
             const claim = await this._api.cmd<RewardGrantResult>('reward.claim', {
                 bundleId, grantKey: `${grantKey}:dup:${i}`, source: { kind: 'gacha', ref: args.poolId },
