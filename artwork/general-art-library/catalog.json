@@ -2876,6 +2876,57 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "status": "integrated",
+        "activeVersion": "0003",
+        "history": [
+          {
+            "version": "0003",
+            "file": "small_avatars/cao_ang__曹昂__small_avatar_0003.png",
+            "status": "integrated",
+            "sha256": "7c7604f704f9eb695a1d22c9f514dcf49f2f419b1c14497206d233df7cdaac1a",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/cao_ang__曹昂__avatar_0002.png",
+            "sourceSha256": "ccd6d89c1830c8d9ee702848a45c3d51aa8c3b7b56cf4ead8d32e3490434c068",
+            "method": "crop-only; uniform resize; no rotation or redraw",
+            "cropBox": {
+              "x": 49.75,
+              "y": 13.64,
+              "width": 178.67,
+              "height": 178.67
+            },
+            "headBox": {
+              "x": 80,
+              "y": 21,
+              "width": 106,
+              "height": 134
+            },
+            "faceBox": {
+              "x": 108.21,
+              "y": 76.57,
+              "width": 61.75,
+              "height": 78.81
+            },
+            "extentBox": {
+              "x": 77,
+              "y": 19,
+              "width": 111,
+              "height": 143
+            },
+            "extentPaddingRatio": 0.03,
+            "measurements": {
+              "headHeightPercent": 75.0,
+              "faceHeightPercent": 44.1,
+              "faceWidthPercent": 34.6,
+              "faceCenterXPercent": 50.0,
+              "centerAxisDifferencePx": 0.5
+            },
+            "qc": "臉框中心線與畫布中心線重合；頭高75%、臉高44.1%、臉寬34.6%。完整保留頭髮、髮冠、耳部與下巴。保留來源自然微側角度，未旋轉、扭正五官或重畫。肩部可見度列為次要檢查。已按500px並排核對七張核可基準。",
+            "createdAt": "2026-11-22"
+          }
+        ]
       }
     },
     {

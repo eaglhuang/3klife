@@ -430,6 +430,7 @@ async function main() {
         }
         rec.durationMs = Date.now() - t0;
         if (perfProbe) rec.perf = await perfProbe.end().catch(() => null);
+        if (args.inject && page) rec.inject = await page.evaluate(() => (window.__injectReport ? window.__injectReport() : 'no-report')).catch((e) => 'ERR ' + e.message);
         const slice = collector.entries.slice(from);
         rec.pageErrors = slice.filter((e) => e.kind === 'pageerror').map((e) => e.detail);
         rec.console = slice.filter((e) => e.kind === 'console-error' || e.kind === 'request-failed' || e.kind === 'http-error').map((e) => `${e.kind}: ${e.detail}`);
@@ -517,6 +518,8 @@ async function main() {
         page = await context.newPage();
         await page.setViewport(viewport);
         attachCollectors(page);
+        // --inject <js>：每個文件載入前先執行的量測腳本（例如包 measureText 計數）
+        if (typeof args.inject === 'string') await page.evaluateOnNewDocument(fs.readFileSync(path.resolve(projectRoot, args.inject), 'utf8'));
         if (args.perf) perfProbe = await require('./perf-probe').create(page);
 
         // ── 1. 開機 → LoginScene → 開始遊戲 → LobbyScene，等載入遮罩消失 ──
