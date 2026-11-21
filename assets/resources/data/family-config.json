@@ -8,6 +8,9 @@
   "postpartumQuarters": 1,
   "breastfeedEndAge": 5,
   "wetNurseSilverPerQuarter": 20,
+  "startingSilver": 600,
+  "clanStipendBase": 40,
+  "clanStipendPerSpouse": 10,
   "crowdThreshold": 8,
   "childrenTypicalRange": [6, 12],
   "geniusChance": 0.03,
@@ -19,6 +22,8 @@
   "branchStartLoyalty": 80,
   "marriageRelation": 25,
   "marriagePerNation": 2,
+  "homeWarMoodDelta": -30,
+  "homeWarLoyaltyDelta": -20,
   "adoptStoryMax": 3,
   "recruitAdoptPerYear": 1,
   "adopteeAgeRange": [8, 14],
@@ -33,5 +38,5 @@
   "leaveLoyalty": 25,
   "leaveChancePerQuarter": 0.08,
   "growthItemPool": [],
-  "_note": "doc_spec_1241 第 11 章；缺欄位載入即 fail-fast（FamilyConfig.parseFamilyConfig）。matchmakerPrice 暫定 100 銀兩（11/21 總PM裁示先放暫定值，待使用者商業化裁決 Q-F2；單機尚無銀兩錢包，目前只做設定、不實際扣款）；branchGrantSilver 仍待裁決，null＝不可購買。adopteeTemplates（24 組範本）、historicalAdoptees（關平、劉封、曹真、何晏、諸葛喬）、growthItemPool 由企劃另列，F6／F10 填入。哺乳互斥規則在 occupancy-matrix.json（PROG-2-9442）。"
+  "_note": "doc_spec_1241 第 11 章；clanStipendBase 40＋每位配偶 10 銀兩／季＝家業系統（doc_spec_1181）未落地前的暫代銀兩收入（PROG-2-9593，PM 授權暫定；家業上線後改 0 停發）；缺欄位載入即 fail-fast（FamilyConfig.parseFamilyConfig）。matchmakerPrice 暫定 100 銀兩（11/21 總PM裁示先放暫定值，待使用者商業化裁決 Q-F2；銀兩錢包已落地（PROG-2-9591），媒人禮金實扣；startingSilver 600 暫定：一次媒人 100 加六季乳母 120，仍有餘裕）；branchGrantSilver 仍待裁決，null＝不可購買。adopteeTemplates（24 組範本）、historicalAdoptees（關平、劉封、曹真、何晏、諸葛喬）、growthItemPool 由企劃另列，F6／F10 填入。哺乳互斥規則在 occupancy-matrix.json（PROG-2-9442）。"
 }

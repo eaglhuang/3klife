@@ -455,6 +455,8 @@ export interface GeneralConfig {
   earlyAwakenBonusPct?: number;
   /** 佳話聯姻觸發稱號 ID 列表（PROG-2-9181） */
   marriageEpithets?: string[];
+  /** 天下高門求親對象標記：結緣時相性 +2（PROG-2-9193） */
+  fromHighClanProposal?: boolean;
 
   stats?: GeneralStatsConfig;
   pol?: number;

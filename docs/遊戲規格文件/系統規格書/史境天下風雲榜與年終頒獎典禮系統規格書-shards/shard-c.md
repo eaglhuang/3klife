@@ -88,12 +88,12 @@
 4. **紅顏魅力榜粉絲熱評**：「在歌劇廳連演《鳳儀亭》兼赴江東堂會，【周瑜】領銜的儒將粉絲團狂刷 148 票直接送進第一名！」
 5. **最佳新人王交棒台詞**：「恭喜新科新人王！來，這支司儀麥克風先給你保管，明年年底記得準時穿帥一點回來主持啊！」
 
-## 14. W1 實作卡切分（卡號先空著，由總 PM 核發）
+## 14. W1 實作卡切分（總 PM 預留卡號 `PROG-2-9601～9605`，排程於年終守城與典禮底座之後由子代理接手）
 
-| 代號 | 實作任務內容 | 依賴 |
-|---|---|---|
-| **W1a** | `AnnualGeneralLedger`（通用 metrics＋highlights 帳本、Q4 歸零、極速/代打同口徑寫入）＋ **AI 勢力季度交戰戰報模擬** | B0 API、`RivalOfficerSeason` |
-| **W1b** | **AI 演藝與堂會季度排程** ＋ **AI 學府季度收徒與結業流轉**（寫入帳本 metrics） | W1a、`RivalGovernance` |
-| **W1c** | **可插拔排行榜核心引擎**（`IRankingBoardProvider`、`RankingBoardRegistry`、首發 5 個 Provider、`annual-ranking-config.json`、去年快照比對、無 LLM 評語組裝） | W1a、W1b、FND-M |
-| **W2** | **心智誇耀與白因子寫回 ＋ 歷年史冊存檔**（`MindEvent` 寫入、`annualHonorSeeds` 對接 `WhiteAchievementCriteria`、`annualCeremonyArchive` 讀寫） | W1c、RWD-M、SKL-M |
-| **W3** | **年終頒獎典禮劇本與大合照 UI**（`CeremonyScriptAssembler` 對接 STY-M、`hologram`/`groupPhoto` CueHandler、雙層梯形大合照 `RenderTexture` 定格背景與史冊查詢畫面） | W1c、W2、STY-M |
+| 代號 | 預留卡號 | 實作任務內容 | 依賴 |
+|---|---|---|---|
+| **W1a** | `PROG-2-9601` | `AnnualGeneralLedger`（通用 metrics＋highlights 帳本、Q4 歸零、極速/代打同口徑寫入）＋ **AI 勢力季度交戰戰報模擬** | B0 API、`RivalOfficerSeason` |
+| **W1b** | `PROG-2-9602` | **AI 演藝與堂會季度排程** ＋ **AI 學府季度收徒與結業流轉**（寫入帳本 metrics） | W1a、`RivalGovernance` |
+| **W1c** | `PROG-2-9603` | **可插拔排行榜核心引擎**（`IRankingBoardProvider`、`RankingBoardRegistry`、首發 5 個 Provider、`annual-ranking-config.json`、去年快照比對、無 LLM 評語組裝） | W1a、W1b、FND-M |
+| **W2** | `PROG-2-9604` | **心智誇耀與白因子寫回 ＋ 歷年史冊存檔**（`MindEvent` 寫入、`annualHonorSeeds` 對接 `WhiteAchievementCriteria`、`annualCeremonyArchive` 讀寫） | W1c、RWD-M、SKL-M |
+| **W3** | `PROG-2-9605` | **年終頒獎典禮劇本與大合照 UI**（`CeremonyScriptAssembler` 對接 STY-M、`hologram`/`groupPhoto` CueHandler、雙層梯形大合照 `RenderTexture` 定格背景與史冊查詢畫面） | W1c、W2、STY-M |

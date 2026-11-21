@@ -7528,5 +7528,23 @@
     "path": "docs/遊戲規格文件/系統規格書/史境天下風雲榜與年終頒獎典禮系統規格書.md",
     "title": "史境天下風雲榜與年終頒獎典禮系統規格書（分片索引）",
     "category": "spec"
+  },
+  {
+    "id": "doc_spec_1288",
+    "path": "docs/遊戲規格文件/文案/結緣事件文案範例.md",
+    "title": "結緣事件文案範例（20 則，分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1289",
+    "path": "docs/遊戲規格文件/文案/結緣事件文案範例-shards/shard-a.md",
+    "title": "結緣事件文案範例（20 則，分片索引） — 一、結緣好感納配偶（7 則）與 二、外交聯姻求親（6 則）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1290",
+    "path": "docs/遊戲規格文件/文案/結緣事件文案範例-shards/shard-b.md",
+    "title": "結緣事件文案範例（20 則，分片索引） — 三、媒人說親（7 則）",
+    "category": "spec"
   }
 ]

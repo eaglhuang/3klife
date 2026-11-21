@@ -1,0 +1,16 @@
+{
+  "tradition": {
+    "minTier": 2,
+    "trainingBonus": 0.1,
+    "seedStarLevel": 1,
+    "maxChildFactors": 5
+  },
+  "highClanProposal": {
+    "minTier": 3,
+    "minEp": 70,
+    "minFactorStars": 2,
+    "synergyBonus": 2,
+    "maxSynergy": 15,
+    "giftMultiplier": 1.3
+  }
+}

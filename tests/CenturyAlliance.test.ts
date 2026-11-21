@@ -68,7 +68,7 @@ export function createCenturyAllianceSuite(): TestSuite {
         const plain = rollMarriageProposal(roster(), 3, 'suitor-1', random())!;
         const allied = rollMarriageProposal(roster(), 3, 'suitor-1', random(), ledgerOf(10))!;
         assert.equals(JSON.stringify(plain.suitor), JSON.stringify(allied.suitor));
-        assert.equals(1500, allied.giftGold);
+        assert.equals(1950, allied.giftGold); // Tier 3 基礎 1000×1.3=1300，百年世交加禮 +50% (+650) = 1950
         assert.isTrue(marriageProposalLine(allied).startsWith('百年世交太原王氏'));
     });
 

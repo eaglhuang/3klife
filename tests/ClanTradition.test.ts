@@ -3,9 +3,14 @@ import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/manager
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
 import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
-import { clanTitleText, clanTraditionLine, clanTraditionOf, normalizeClanTradition } from '../assets/scripts/core/systems/ClanTradition';
+import { clanTitleText, clanTraditionLine, clanTraditionOf, DEFAULT_CLAN_LINEAGE_RULES, normalizeClanTradition, type ClanLineageRulesConfig } from '../assets/scripts/core/systems/ClanTradition';
 import { buildFactorDictionary } from '../assets/scripts/core/systems/FactorInheritance';
 import { computeStatGain } from '../assets/scripts/core/systems/NurtureSystem';
+import { BloodlineGraph } from '../assets/scripts/core/services/BloodlineGraph';
+import { BreedingService } from '../assets/scripts/core/services/BreedingService';
+import { bloodlineBirthLines } from '../assets/scripts/core/systems/BloodlineBirthLines';
+import * as fs from 'fs';
+import * as path from 'path';
 
 const person = (id: string, genes: unknown[]) => ({ id, name: id, genes } as unknown as GeneralConfig);
 const gene = (id: string, level = 3, type?: string) => ({ id, level, type: type ?? '統率', displayName: id });
@@ -77,6 +82,41 @@ export function createClanTraditionSuite(): TestSuite {
         assert.equals('郡望家風確立：【統御】，族人統率修業 +10%！', clanTraditionLine(tradition));
         assert.equals('郡望世家｜家風：統御', clanTitleText('郡望世家', tradition));
         assert.equals('布衣寒門', clanTitleText('布衣寒門', null));
+    });
+
+    suite.test('PROG-2-9193 Q1-A：clan-lineage-rules.json 同步且五維藍因子精確對應不誤判為 str', () => {
+        const rulesPath = path.resolve(__dirname, '../assets/resources/data/clan-lineage-rules.json');
+        const rules = JSON.parse(fs.readFileSync(rulesPath, 'utf8')) as ClanLineageRulesConfig;
+        assert.equals(JSON.stringify(DEFAULT_CLAN_LINEAGE_RULES), JSON.stringify(rules));
+
+        const dict = buildFactorDictionary([
+            { id: 'gene_int', displayName: '才思', color: 'blue', category: 'attribute' },
+            { id: 'gene_cha', displayName: '威儀', color: 'blue', category: 'attribute' },
+        ]);
+        const intTrad = clanTraditionOf([person('a', [{ id: 'gene_int', level: 3 }])], dict);
+        const chaTrad = clanTraditionOf([person('b', [{ id: 'gene_cha', level: 3 }])], dict);
+        assert.equals('int', intTrad?.kind);
+        assert.equals('cha', chaTrad?.kind);
+    });
+
+    suite.test('PROG-2-9193 Q1-A：Tier 2 宗脈常駐使新生兒保底帶 1 顆 1★ 家族特質因子並顯示提示', () => {
+        const father = { id: 'f_trad', name: '荀攸', faction: 'player', gender: '男', age: 25, vitality: 100, maxVitality: 100, genes: [] } as unknown as GeneralConfig;
+        const mother = { id: 'm_trad', name: '蔡琰', faction: 'player', gender: '女', age: 22, vitality: 100, maxVitality: 100, genes: [] } as unknown as GeneralConfig;
+        const store = new InMemoryRosterStore([father, mother]);
+        const graph = BloodlineGraph.getInstance();
+        graph.clear();
+        const tradition = { factorId: 'gene_int', displayName: '才思', kind: 'int' as const };
+        const breeding = new BreedingService(store, graph, {
+            random: () => 0.05,
+            getClanTradition: () => tradition,
+        });
+        const res = breeding.breed('f_trad', 'm_trad');
+        assert.equals('conceived', res.outcome);
+        const seeded = res.child?.genes?.find((g) => g.id === 'gene_int');
+        assert.isTrue(!!seeded, '子嗣應保底獲得家風種子 gene_int');
+        assert.equals(1, seeded?.level);
+        const lines = bloodlineBirthLines(res, (uid) => breeding.ancestorName(uid));
+        assert.isTrue(lines.some((l) => l.includes('郡望宗脈顯靈') && l.includes('才思')));
     });
 
     return suite;

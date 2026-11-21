@@ -11,6 +11,7 @@
 import type { GeneralConfig, GeneralGeneConfig } from '../models/GeneralUnit';
 import { BREEDING_MIN_AGE, epRatingLabel, isFemale, type BreedingGeneral } from './BreedingSystem';
 import type { ClanTier } from './ClanTier';
+import { getClanLineageRules } from './ClanTradition';
 import { allianceGiftBonus, isCenturyAlliance, lifetimeQualifiedOf, type FamilySynergyLedger } from './FamilySynergy';
 import { matchRumorLine, sameSurnameNote } from './MatchRumor';
 import { isYuedanCandidate } from './YuedanReview';
@@ -72,13 +73,31 @@ export interface MarriageProposal {
     allianceBonusGold?: number;
     /** 擲出時已是百年世交 */
     centuryAlliance?: boolean;
+    /** 天下高門（Tier 3）求親標記：結婚時相性 +2（PROG-2-9193） */
+    fromHighClanProposal?: boolean;
 }
+
+const HIGH_CLAN_FALLBACK_FACTORS: readonly string[] = Object.freeze([
+    'gene_str', 'gene_int', 'gene_lea', 'gene_pol', 'gene_cha',
+]);
 
 /** 提親子弟的最高星因子；金因子是自家宗脈，不算。星數最多 2★ */
 function heirloomOf(target: GeneralConfig): GeneralGeneConfig | undefined {
     const genes = (target.genes ?? []).filter((gene) => gene.type !== 'gold');
     genes.sort((a, b) => (b.level ?? 0) - (a.level ?? 0) || (a.id ?? '').localeCompare(b.id ?? ''));
     return genes[0] ? { ...genes[0], level: Math.min(HEIRLOOM_MAX_LEVEL, genes[0].level ?? 1) } : undefined;
+}
+
+function resolveHighClanHeirloom(
+    baseHeirloom: GeneralGeneConfig | undefined,
+    minStars: number,
+    pick: <T>(list: readonly T[]) => T,
+): GeneralGeneConfig {
+    if (baseHeirloom) {
+        return { ...baseHeirloom, level: Math.max(minStars, baseHeirloom.level ?? 1) };
+    }
+    const id = pick(HIGH_CLAN_FALLBACK_FACTORS);
+    return { id, level: minStars, type: 'blue' };
 }
 
 /** 提親對象：族中適齡未婚的子嗣，EP 高者優先 */
@@ -99,25 +118,35 @@ export function rollMarriageProposal(roster: readonly GeneralConfig[], tier: Cla
     const stat = (): number => roll(profile.min, profile.max);
     const [commandery, surname] = pick(PROPOSAL_FAMILIES);
     const gender: '男' | '女' = isFemale(target) ? '男' : '女';
-    const heirloom = heirloomOf(target);
+    const highRules = getClanLineageRules().highClanProposal;
+    const isHighClan = tier >= highRules.minTier;
+    const baseHeirloom = heirloomOf(target);
+    const heirloom = isHighClan
+        ? resolveHighClanHeirloom(baseHeirloom, highRules.minFactorStars, pick)
+        : baseHeirloom;
+    const baseGiftGold = isHighClan
+        ? Math.round(profile.giftGold * highRules.giftMultiplier)
+        : profile.giftGold;
+    const suitorEp = isHighClan ? Math.max(highRules.minEp, profile.ep) : profile.ep;
     const family = `${commandery}${surname}`;
     const lifetime = lifetimeQualifiedOf(family, ledger);
-    const allianceBonusGold = allianceGiftBonus(profile.giftGold, lifetime);
+    const allianceBonusGold = allianceGiftBonus(baseGiftGold, lifetime);
     return {
         ...(heirloom ? { heirloom } : {}),
         ...(allianceBonusGold > 0 ? { allianceBonusGold } : {}),
         ...(isCenturyAlliance(lifetime) ? { centuryAlliance: true } : {}),
+        ...(isHighClan ? { fromHighClanProposal: true } : {}),
         id,
         targetId: target.id,
         targetName: target.name,
         family,
-        giftGold: profile.giftGold + allianceBonusGold,
+        giftGold: baseGiftGold + allianceBonusGold,
         suitor: {
             name: `${surname}${pick(GIVEN_NAMES[gender])}`,
             gender,
             age: roll(BREEDING_MIN_AGE, BREEDING_MIN_AGE + SUITOR_MAX_EXTRA_AGE),
             str: stat(), int: stat(), lea: stat(), pol: stat(), cha: stat(), luk: stat(),
-            ep: profile.ep,
+            ep: suitorEp,
         },
     };
 }
@@ -145,6 +174,7 @@ export function buildSuitorGeneral(proposal: MarriageProposal): GeneralConfig {
         rarityTier: 'rare',
         genes: proposal.heirloom ? [proposal.heirloom] : [],
         hiddenFlags: [],
+        ...(proposal.fromHighClanProposal ? { fromHighClanProposal: true } : {}),
     } as unknown as GeneralConfig;
 }
 
@@ -188,6 +218,7 @@ export function normalizeMarriageProposal(raw: unknown): MarriageProposal | null
     const alliance = {
         ...(isStat(value.allianceBonusGold) ? { allianceBonusGold: value.allianceBonusGold } : {}),
         ...(value.centuryAlliance === true ? { centuryAlliance: true } : {}),
+        ...(value.fromHighClanProposal === true ? { fromHighClanProposal: true } : {}),
     };
     return { ...heirloom, ...alliance, id: value.id, targetId: value.targetId, targetName: value.targetName, family: value.family, giftGold: value.giftGold, suitor: { ...suitor } };
 }

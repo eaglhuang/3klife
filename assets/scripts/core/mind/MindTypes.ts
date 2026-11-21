@@ -64,6 +64,9 @@ export interface MindEventInput {
     isLead?: boolean;
     injured?: boolean;
     reason?: string;
+    /** 系統事件直接指定價值與重要度（例：母國開戰的心情衝擊，PROG-2-9592）；給了就不查規則表 */
+    forceValence?: MindValence;
+    forceWeight?: MindWeight;
     /** 冪等鍵；不給時由服務產生 `${generalId}#${seq}` */
     id?: string;
 }

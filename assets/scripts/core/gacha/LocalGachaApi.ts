@@ -36,6 +36,8 @@ export interface LocalGachaApiDeps {
      * 每次呼叫才取，所以旗標、獎池載入與釋放（離開轉蛋畫面）都不用重建本物件。
      */
     reward?: () => RewardGachaPort | null;
+    /** 獎池 UP 項目（例如支援卡 id）→ 橫幅展示的武將 id；沒有對應回 null */
+    showcaseOfUp?: (entryId: string) => string | null;
 }
 
 /** 武將稀有度階 → 轉蛋稀有度（mythic/legendary=SSR、epic=SR、其餘=R） */
@@ -54,16 +56,19 @@ export class LocalGachaApi implements GachaApi {
             const pity = this._deps.service.getPoolPityState(pool.poolId);
             const rates = pool.poolId === 'mentor-pool' || pool.key === 'support' ? GACHA_MENTOR_RARITY_RATES : GACHA_RARITY_RATES;
             const rewardView = await this._rewardPort(pool.poolId)?.view(pool.poolId) ?? null;
+            const upShowcase = rewardView?.upEntryIds.map((id) => this._deps.showcaseOfUp?.(id) ?? null).find((id) => !!id) ?? null;
             const legacyPity = gachaPityOf(pool.pityLabel, pity.pullCount, pity.lastSsrPull, GACHA_SMALL_PITY, GACHA_DESTINY_MAX);
             result.push({
                 key: pool.key, poolId: pool.poolId, theme: pool.theme, name: pool.name, sub: pool.sub, badge: pool.badge,
                 series: pool.series, brief: pool.brief,
-                showcaseGeneralId: featured[0] ?? pool.showcaseGeneralId ?? null,
+                // 展示主角：限定池焦點 > 獎池 UP 項目（預設進池先看 UP 卡）> 池設定的展示武將
+                showcaseGeneralId: featured[0] ?? upShowcase ?? pool.showcaseGeneralId ?? null,
                 featuredGeneralIds: featured,
                 endsAtMs: window ? window.endMs : null,
                 currencies: [...pool.currencies], singleCost: pool.singleCost, tenCost: pool.tenCost,
                 // 走共通 API 的池：機率與保底進度取自獎池（與抽樣同一份資料）；天命值仍由舊服務提供
                 rates: rewardView ? rewardView.rates : gachaRatesOf(rates as Record<GachaRarityId, number>, GACHA_UP_SHARE_SSR, featured.length > 0),
+                pities: rewardView?.pities,
                 pity: rewardView?.pity ? { ...legacyPity, current: rewardView.pity.current, max: rewardView.pity.max } : legacyPity,
             });
         }

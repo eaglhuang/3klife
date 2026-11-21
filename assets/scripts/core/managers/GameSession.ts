@@ -142,7 +142,7 @@ import { OfflineGeneralMindService } from '../mind/OfflineGeneralMindService';
 import { listUnwedEligible, processUnwedMarriageReminders, recordBondFormedMindEvents, recordMarriageRejectedMindEvent } from '../mind/MindMarriage';
 import type { IGeneralMindService } from '../mind/IGeneralMindService';
 import { isEmptyGeneralMind } from '../mind/MindSave';
-import { intelLevelOfPercent, type MindContext, type MindLine, type MindOpinion, type MindOutcome, type MindRequest, type MindResolveResult, type MindTaskProfile } from '../mind/MindTypes';
+import { intelLevelOfPercent, type MindContext, type MindValence, type MindLine, type MindOpinion, type MindOutcome, type MindRequest, type MindResolveResult, type MindTaskProfile } from '../mind/MindTypes';
 import { personalityTypeOf } from '../mind/MindRules';
 import { citeOf } from '../mind/MindLineTemplates';
 import { FOOD_LOW_LINE } from '../systems/ResourceCap';
@@ -165,7 +165,9 @@ import { SkillService } from '../../shared/skill/SkillService';
 import type { AcademyHost } from '../api/localserver/AcademyHostCommands';
 import type { OccupancyHost } from '../api/localserver/OccupancyCommands';
 import type { EnrollOutcome as SpouseSourceOutcome, FamilyHost } from '../api/localserver/FamilyCommands';
-import { MARRIAGE_RELATION_GAIN, MATCHMAKER_CLOSED_LABEL, bondAffinityMet, diplomaticSlot, matchmakerCandidates, matchmakerSlot, matchmakerYearOf, relationAllowsAlliance, type MatchmakerCandidate } from '../systems/SpouseSources';
+import { ApiError } from '../../shared/api/ApiErrors';
+import type { SilverLedger } from '../api/localserver/SilverWalletPort';
+import { MARRIAGE_RELATION_GAIN, MATCHMAKER_CLOSED_LABEL, bondAffinityMet, diplomaticSlot, matchmakerCandidates, matchmakerSlot, matchmakerYearOf, relationAllowsAlliance, spouseHomeNationOf, type MatchmakerCandidate } from '../systems/SpouseSources';
 import { OccupancyService } from '../../shared/occupancy/OccupancyService';
 import { parseOccupancyMatrix, type OccupancyMatrixV1 } from '../../shared/occupancy/OccupancyMatrix';
 import { parseFamilyConfig, type FamilyConfigV1 } from '../../shared/family/FamilyConfig';
@@ -573,6 +575,8 @@ export interface SeasonAdvancedPayload {
     yuedanLines?: string[];
     /** 哺乳登記被占用擋下、延到下季重試的提示句（PROG-2-9581）；沒有時省略 */
     nursingLines?: string[];
+    /** 本季家族俸祿入帳句（PROG-2-9593）；俸祿為 0 或家族設定未載入時省略 */
+    clanStipendLine?: string;
     /** 立春子嗣天象（doc_spec_0312 §2，PROG-2-2106）；只有跨年進入春季且有符合門檻的子嗣才有 */
     omenLines?: string[];
     agingEvents: AgingEvent[];
@@ -623,7 +627,7 @@ export interface BattleRecordResult extends BattleSettlement {
 
 /** 心智台詞引用任務牆用的短名（PROG-2-9146） */
 /** 占用矩陣在指派入口實際套用的占用種類：登記表三種＋待產；其餘舊系統各自管忙碌（PROG-2-9482） */
-const MATRIX_GATED_KINDS: readonly OccupancyKind[] = ['academy', 'mentorAssign', 'nursing', 'medical'];
+const MATRIX_GATED_KINDS: readonly OccupancyKind[] = ['academy', 'mentorAssign', 'nursing', 'medical', 'homeWar'];
 
 const MIND_BOARD_LABEL: Readonly<Record<HallBoardKey, string>> = Object.freeze({ Military: '軍務', Domestic: '內政', Expedition: '遠征' });
 
@@ -1418,6 +1422,7 @@ export class GameSession implements AcademyRecordPort {
                 this._occupancy.release({ personId: record.personId, kind: 'nursing', refId: record.refId });
             }
         }
+        lines.push(...this._chargeWetNurses(config, season));
         // 本季剛生產的母親，加上上季登記不上而記了 nursingPending 的母親（下一季季結重試）
         const retry = this._roster.getAll().filter((g) => g.nursingPending && !bornMotherIds.includes(g.id)).map((g) => g.id);
         for (const motherId of [...bornMotherIds, ...retry]) {
@@ -1426,6 +1431,58 @@ export class GameSession implements AcademyRecordPort {
             lines.push(`${name}想餵奶，但人還在外頭忙，先記帳，下季再補登記。`);
         }
         return lines;
+    }
+
+    /**
+     * 每季家族俸祿（PROG-2-9593）：銀兩原本只出不進，家業系統未落地前的暫代收入。
+     * 入帳 clanStipendBase ＋ 配偶數 × clanStipendPerSpouse；設定未載入或兩欄為 0 不入帳。回傳一行季報文字（沒入帳回 null）。
+     */
+    private _grantClanStipend(): string | null {
+        const config = this._familyConfig;
+        if (!config) return null;
+        const spouses = this._family.members('spouse').length;
+        const amount = config.clanStipendBase + spouses * config.clanStipendPerSpouse;
+        if (amount <= 0) return null;
+        this._family.creditSilver(amount, config.startingSilver);
+        return `家族俸祿入帳：銀兩 +${amount}（目前 ${this._family.silverBalance(config.startingSilver)}）`;
+    }
+
+    /**
+     * 乳母費實扣（PROG-2-9591）：選乳母且帶著未滿 breastfeedEndAge 歲孩子的母親，每季收 wetNurseSilverPerQuarter 銀兩（每位母親一份）。
+     * 銀兩不足就乳母請辭，母親改回母乳並重新登記哺乳占用，不讓餘額變負、也不卡季結。
+     */
+    private _chargeWetNurses(config: FamilyConfigV1, season: number): string[] {
+        const lines: string[] = [];
+        if (config.wetNurseSilverPerQuarter <= 0) return lines;
+        const roster = this._roster.getAll();
+        for (const mother of roster.filter((g) => g.nursingMethod === 'wetNurse')) {
+            const hasInfant = roster.some((g) => (g as { motherId?: string }).motherId === mother.id && typeof g.age === 'number' && g.age < config.breastfeedEndAge);
+            if (!hasInfant) continue;
+            if (this._family.trySpendSilver(config.wetNurseSilverPerQuarter, config.startingSilver)) continue;
+            this.setNursingMethod(mother.id, 'breast');
+            this._startNursing(mother.id, season);
+            lines.push(`${mother.name}家的乳母嫌銀兩沒到位，收拾包袱走人，只好${mother.name}親自餵。`);
+        }
+        return lines;
+    }
+
+    /** 家族銀兩帳本：掛進 wallet.* 的 silver 幣別（ServiceLoader 組合）；設定未載入且從未動用時不可扣發（fail-fast） */
+    public get silverLedger(): SilverLedger {
+        const start = (): number => {
+            const config = this._familyConfig;
+            if (!config) throw new ApiError('FAMILY_NO_CONFIG', '家族設定尚未載入');
+            return config.startingSilver;
+        };
+        return {
+            silverBalance: () => this._family.silverBalance(this._familyConfig?.startingSilver ?? 0),
+            spendSilver: (amount) => this._savedSilver(this._family.trySpendSilver(amount, start())),
+            creditSilver: (amount) => { this._family.creditSilver(amount, start()); this._savedSilver(true); },
+        };
+    }
+
+    private _savedSilver(changed: boolean): boolean {
+        if (changed && this._autoSave && this._save) void this.save();
+        return changed;
     }
 
     /** 依母親目前的哺乳方式重新登記哺乳占用（先釋放舊的）；回傳是否有占用在身 */
@@ -1512,18 +1569,114 @@ export class GameSession implements AcademyRecordPort {
         return Math.max(gift, merc);
     }
 
-    /** 結緣好感納配偶：名冊上的女性好感達標、尚未是家族成員、配偶未滿上限才成立；失敗不改狀態 */
+    /** 他國仕官武將的原屬國（不含君主；君主不能被娶走）；不是他國仕官回 null（Q-SP1，PROG-2-9592） */
+    private _rivalOfficerOrigin(generalId: string): string | null {
+        for (const nation of this._rivals.nations) {
+            if (this._rivalRulerIds[nation.id] === generalId) continue;
+            if (nation.officerRoster?.officers.some((o) => o.generalId === generalId)) return nation.id;
+        }
+        return null;
+    }
+
+    /**
+     * 結緣好感納配偶：女性好感達標、尚未是家族成員、配偶未滿上限才成立；失敗不改狀態。
+     * 對象可以是名冊上的女性，也可以是他國仕官的女性武將（Q-SP1）：成婚時自動辭官——從原屬國名冊移除、
+     * 以原型入我方名冊（記 homeNationId＝母國，供開戰牽掛判定），入冊後可出征。
+     */
     public enrollBondSpouse(generalId: string, options: { hallLevel?: number } = {}): SpouseSourceOutcome {
         const config = this._familyConfig;
         if (!config) return { ok: false, reason: 'no-config' };
-        const general = this._roster.getAll().find((g) => g.id === generalId);
+        let general: GeneralConfig | undefined = this._roster.getAll().find((g) => g.id === generalId);
+        let rivalOrigin: string | null = null;
+        if (!general) {
+            rivalOrigin = this._rivalOfficerOrigin(generalId);
+            general = rivalOrigin ? this._generalTemplates.find((g) => g.id === generalId) : undefined;
+        }
         if (!general || general.gender !== '女') return { ok: false, reason: 'not-eligible' };
         if (this._family.get(generalId)) return { ok: false, reason: 'duplicate', generalId };
         if (!bondAffinityMet(this._bondAffinityOf(generalId), config)) return { ok: false, reason: 'affinity-low' };
         const hallLevel = options.hallLevel ?? 1;
         if (!this._family.canAddSpouse(config, hallLevel)) return { ok: false, reason: 'cap-reached' };
+        if (rivalOrigin) {
+            this.enrollGenerals([{ ...general, homeNationId: rivalOrigin } as GeneralConfig]);
+            this._rivals = dropOwnedRivalOfficers(this._rivals, new Set([generalId]));
+        }
         this._family.addSpouse(generalId, this._clock.state.totalSeasonsElapsed, config, hallLevel);
         return { ok: true, generalId };
+    }
+
+    /** 配偶的母國勢力：他國仕官移籍者看 homeNationId，聯姻配偶由 id 反推；其他回 null（Q-SP2） */
+    public spouseHomeNation(generalId: string): string | null {
+        const general = this._roster.getAll().find((g) => g.id === generalId) as { homeNationId?: string } | undefined;
+        return general?.homeNationId ?? spouseHomeNationOf(generalId);
+    }
+
+    /**
+     * 心情調整入口（PROG-2-9592）：心情是心智事件算出來的，沒有可直接寫的欄位，所以把調整量（−100～+100 尺度）
+     * 換成一筆系統事件：每 10 點＝一級價值（上限 ±3），重要度 4（會慢慢淡去，不是永久）。eventId 冪等，同一件事不重複扣。
+     */
+    public adjustMood(generalId: string, delta: number, reason: string, eventId: string): boolean {
+        const level = Math.max(-3, Math.min(3, Math.round(delta / 10)));
+        if (level === 0 || !this._roster.getAll().some((g) => g.id === generalId)) return false;
+        const out = this.mind.record({
+            generalId, season: this._clock.state.totalSeasonsElapsed, kind: level < 0 ? 'SCOLDED' : 'PRAISED',
+            forceValence: level as MindValence, forceWeight: 4, reason, tags: ['homeWar'], label: '母國開戰', id: eventId,
+        });
+        return out.recorded;
+    }
+
+    /**
+     * 與配偶母國開戰（裁決 Q-SP2）：該國籍的配偶心情 homeWarMoodDelta、忠誠 homeWarLoyaltyDelta，
+     * 並以 OCC 占用 homeWar 擋出征（該場戰役結束 endHomeWar 解除）。同一場戰役重複呼叫冪等：不重複扣、不重複占。
+     * 忠誠只調有忠誠狀態且未鎖定者（鎖定＝不受影響）。回傳受影響的配偶 id。
+     */
+    public beginHomeWar(nationId: string): string[] {
+        const config = this._familyConfig;
+        if (!config) return [];
+        const season = this._clock.state.totalSeasonsElapsed;
+        const refId = `war:${nationId}`;
+        const affected: string[] = [];
+        for (const member of this._family.members('spouse')) {
+            if (this.spouseHomeNation(member.personId) !== nationId) continue;
+            if (this._occupancy.query(member.personId).some((r) => r.kind === 'homeWar' && r.refId === refId)) continue;
+            try {
+                this._occupancy.acquire({ personId: member.personId, kind: 'homeWar', refId, since: season, until: null });
+            } catch {
+                continue; // 已被其他母國戰事占著：先前那場已處置過
+            }
+            this.adjustMood(member.personId, config.homeWarMoodDelta, 'HOME_WAR', `homewar:${nationId}:${member.personId}:${season}`);
+            this._roster.replaceAll(this._roster.getAll().map((g) => {
+                const loyalty = g.id === member.personId ? g.loyaltyState : undefined;
+                if (!loyalty || loyalty.isLocked) return g;
+                return { ...g, loyaltyState: { ...loyalty, value: Math.max(0, Math.min(100, loyalty.value + config.homeWarLoyaltyDelta)) } };
+            }));
+            affected.push(member.personId);
+        }
+        return affected;
+    }
+
+    /** 母國戰事結束：解除該國配偶的出征占用（心情與忠誠的下降不回復） */
+    public endHomeWar(nationId: string): void {
+        for (const record of this._occupancy.snapshot()) {
+            if (record.kind === 'homeWar' && record.refId === `war:${nationId}`) {
+                this._occupancy.release({ personId: record.personId, kind: 'homeWar', refId: record.refId });
+            }
+        }
+    }
+
+    /**
+     * 解除已無戰事的母國占用（PROG-2-9593，SP2 漏洞）：宣戰後沒出征、之後議和（結盟）或該國覆滅時，
+     * 勢力已不在交戰狀態，卻沒有人呼叫 endHomeWar，配偶會一直被擋出征。外交狀態改寫後掃一次，戰事不在了就解除。
+     */
+    private _releaseStaleHomeWars(): void {
+        const warring = new Set(this._rivals.nations.filter((n) => n.atWar && !n.fallen).map((n) => n.id));
+        const stale = new Set<string>();
+        for (const record of this._occupancy.snapshot()) {
+            if (record.kind !== 'homeWar' || !record.refId.startsWith('war:')) continue;
+            const nationId = record.refId.slice(4);
+            if (!warring.has(nationId)) stale.add(nationId);
+        }
+        for (const nationId of stale) this.endHomeWar(nationId);
     }
 
     /** 聯姻納配偶：邦交友好以上、每國不超過 marriagePerNation 位；成婚後邦交 +20（規格 3.2） */
@@ -1560,7 +1713,14 @@ export class GameSession implements AcademyRecordPort {
         if (!chosen) return { ok: false, reason: 'not-eligible' };
         if (this._roster.getAll().some((g) => g.id === chosen.generalId)) return { ok: false, reason: 'duplicate', generalId: chosen.generalId };
         if (offer.remaining <= 0) return { ok: false, reason: 'year-limit' };
-        return this.enrollGeneratedSpouse(matchmakerSlot(this._clock.state.currentYear, pick), options);
+        // 媒人禮金實扣（PROG-2-9591）：先扣，納入失敗（上限等）就退回，失敗不改狀態
+        const config = this._familyConfig;
+        if (!config) return { ok: false, reason: 'no-config' };
+        const price = config.matchmakerPrice ?? 0;
+        if (price > 0 && !this._family.trySpendSilver(price, config.startingSilver)) return { ok: false, reason: 'silver-low' };
+        const out = this.enrollGeneratedSpouse(matchmakerSlot(this._clock.state.currentYear, pick), options);
+        if (!out.ok && price > 0) { this._family.creditSilver(price, config.startingSilver); return out; }
+        return price > 0 ? { ...out, silver: { spent: price, balance: this._family.silverBalance(config.startingSilver) } } : out;
     }
 
     /** 舊檔對帳：名冊上有少年版標記卻沒家族紀錄者，補登「開局義子特例」（9194 開局少年改為義子） */
@@ -1619,7 +1779,20 @@ export class GameSession implements AcademyRecordPort {
             enrollDiplomatic: (nationId) => this._savedSpouse(this.enrollDiplomaticSpouse(nationId)),
             matchmakerOffer: () => this.matchmakerOffer(),
             enrollMatchmaker: (pick) => this._savedSpouse(this.enrollMatchmakerSpouse(pick)),
+            enrollClanProposal: (proposalId) => this._savedSpouse(this.enrollClanProposalSpouse(proposalId)),
         };
+    }
+
+    /** 高門求親成婚（PROG-2-9193）：整合進 family.enrollSpouse（source: 'clan'）；聘禮依設定先讀不扣款，待銀兩錢包合併後再接 */
+    public enrollClanProposalSpouse(proposalId: string, options: { hallLevel?: number } = {}): SpouseSourceOutcome {
+        if (!this._familyConfig) return { ok: false, reason: 'no-config' };
+        const proposal = this._marriageProposal;
+        if (!proposal || proposal.id !== proposalId) return { ok: false, reason: 'not-eligible' };
+        const spouse = buildSuitorGeneral(proposal);
+        const out = this.enrollSpouse(spouse, options);
+        if (!out.ok) return out;
+        this._marriageProposal = null;
+        return { ok: true, generalId: spouse.id };
     }
 
     private _savedSpouse(out: SpouseSourceOutcome): SpouseSourceOutcome {
@@ -2617,11 +2790,18 @@ export class GameSession implements AcademyRecordPort {
     public async respondMarriageProposal(accept: boolean, grantGold: (amount: number) => void): Promise<{ ok: boolean; general?: GeneralConfig }> {
         const proposal = this._marriageProposal;
         if (!proposal) return { ok: false };
-        this._marriageProposal = null;
         const general = accept ? buildSuitorGeneral(proposal) : undefined;
         if (general) {
-            this.enrollGenerals([general]);
+            if (this._familyConfig) {
+                const out = this.enrollSpouse(general);
+                if (!out.ok) return { ok: false };
+            } else {
+                this.enrollGenerals([general]);
+            }
+            this._marriageProposal = null;
             grantGold(proposal.giftGold);
+        } else {
+            this._marriageProposal = null;
         }
         if (this._autoSave && this._save) await this.save();
         return { ok: true, general };
@@ -3045,6 +3225,7 @@ export class GameSession implements AcademyRecordPort {
     /** 外交指令或出征結算後寫回勢力狀態並存檔 */
     public async setRivals(world: RivalWorld): Promise<void> {
         this._rivals = normalizeRivalWorld(world);
+        this._releaseStaleHomeWars();
         if (this._save) {
             await this.save();
         }
@@ -3109,6 +3290,7 @@ export class GameSession implements AcademyRecordPort {
         const result = respondToRivalProposal(this._rivals, nationId, accept, this._military.food, this._clock.state.totalSeasonsElapsed);
         if (!result.ok) return result;
         this._rivals = result.world;
+        this._releaseStaleHomeWars();
         this._military = { ...this._military, food: this._military.food - result.foodSpent };
         if (result.goldGained > 0) grantGold(result.goldGained);
         if (this._autoSave && this._save) await this.save();
@@ -3118,7 +3300,7 @@ export class GameSession implements AcademyRecordPort {
     /** 名冊中戰力最高的 3 位在世武將：出征與迎戰的預設陣容 */
     public rivalBattleSquad(): BattleGeneral[] {
         return this._roster.getAll()
-            .filter((g) => g.status !== 'dead')
+            .filter((g) => g.status !== 'dead' && !this._assignBlocked(g.id, 'sortie'))
             .map((g) => ({ name: g.name, str: g.str ?? 0, int: g.int ?? 0, lea: g.lea ?? 0 }))
             .sort((a, b) => generalPower(b) - generalPower(a))
             .slice(0, 3);
@@ -3156,8 +3338,11 @@ export class GameSession implements AcademyRecordPort {
         let world = tick.world;
         const battles: AutoBattleResult[] = [];
         for (const event of tick.events) {
+            // 母國牽掛（Q-SP2）：來犯的是配偶母國時，先處置配偶（不出戰、心情與忠誠下降），迎戰後即解除
+            this.beginHomeWar(event.nationId);
             const squad = this.rivalBattleSquad();
             const battle = autoResolveBattle(world, event.nationId, squad, this._random);
+            this.endHomeWar(event.nationId);
             world = battle.world;
             battles.push(battle);
             this._recordOfflineBattle(squad, event.nationId, battle, battles.length);
@@ -3172,6 +3357,7 @@ export class GameSession implements AcademyRecordPort {
         this._rivals = applyEraShift(world, this._clock.state.totalSeasonsElapsed, this._territories.length);
         const events = resolveRivalPlayerEvents(this._rivals, this._clock.state.totalSeasonsElapsed, { troops: this._military.cityTroops, food: this._military.food }, this._random);
         this._rivals = events.world;
+        this._releaseStaleHomeWars();
         this._military = { ...this._military, food: this._military.food - events.foodLost, cityTroops: this._military.cityTroops - events.troopsLost };
         this._rivalNotices.push(...events.notices);
         const risen = newAiHegemonOf(beforeHolders, holdersOf(this._rivals), 'player');
@@ -3315,6 +3501,7 @@ export class GameSession implements AcademyRecordPort {
     /** 外交出征結算：留 AUTO_RESOLVE 快照並寫 BATTLE 日誌（§F-4，PROG-2-1189）；不自動存檔，由出征後的 setRivals 帶走 */
     public recordRivalCampaign(squad: readonly unknown[], nationId: string, battle: AutoBattleResult): OfflineBattleSnapshot {
         const clock = this._clock.state;
+        this.endHomeWar(nationId);
         const rule = battle.win ? CAMPAIGN_BATTLE_JOURNAL.win : CAMPAIGN_BATTLE_JOURNAL.lose;
         return this.recordAutoResolveBattle({
             battleType: 'AUTO_RESOLVE',
@@ -5799,6 +5986,7 @@ export class GameSession implements AcademyRecordPort {
         }
         this._roster.replaceAll(roster);
         const nursingLines = this._settleNursing(bred.pregnancyEnded, advance.current.totalSeasonsElapsed);
+        const clanStipendLine = this._grantClanStipend();
         this._emitLifeImprints(deathImprints.imprinted);
         this._clearLeadIfGone();
         this._releaseServedCaptives(advance.current.totalSeasonsElapsed);
@@ -5905,7 +6093,7 @@ export class GameSession implements AcademyRecordPort {
         const seasonReportSections = this._buildSeasonReportSections(governanceSeason, economyBase, hallMissionReport);
         this._seasonActivity = emptySeasonActivity();
         this._seasonEconomyBase = { ...this._cityEconomy };
-        const payload: SeasonAdvancedPayload = { seasonReportSections, ...(nursingLines.length > 0 ? { nursingLines } : {}), ...(forcedRetirements.length > 0 ? { forcedRetirements, forcedRetirementNames: forcedRetirements.map((id) => rosterBeforeLifecycle.find((general) => general.id === id)?.name ?? id) } : {}), ...(yuedanLines.length > 0 ? { yuedanLines } : {}), ...(omenLines.length > 0 ? { omenLines } : {}), ...(this._tallyFoodDiscountArmed ? { foodLowLine: FOOD_LOW_LINE } : {}), ...(treasures.length > 0 ? { prisonTreasureLines: treasures.map((entry) => prisonTreasureLine(entry.targetName, ITEM_DISPLAY_NAMES[ITEM_TREASURE])) } : {}), ...(governanceReport ? { governanceReport } : {}), ...(eventNotice ? { governanceEventLine: eventNotice } : {}), advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(hallMissionReport ? { hallMissionReport } : {}), ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids } : {}), ...(mercenaryDay.dayThreeUids.length > 0 ? { mercenaryDayThree: mercenaryDay.dayThreeUids } : {}), ...(mercenaryDay.trustUids.length > 0 ? { mercenaryTrust: mercenaryDay.trustUids } : {}) };
+        const payload: SeasonAdvancedPayload = { seasonReportSections, ...(nursingLines.length > 0 ? { nursingLines } : {}), ...(clanStipendLine ? { clanStipendLine } : {}), ...(forcedRetirements.length > 0 ? { forcedRetirements, forcedRetirementNames: forcedRetirements.map((id) => rosterBeforeLifecycle.find((general) => general.id === id)?.name ?? id) } : {}), ...(yuedanLines.length > 0 ? { yuedanLines } : {}), ...(omenLines.length > 0 ? { omenLines } : {}), ...(this._tallyFoodDiscountArmed ? { foodLowLine: FOOD_LOW_LINE } : {}), ...(treasures.length > 0 ? { prisonTreasureLines: treasures.map((entry) => prisonTreasureLine(entry.targetName, ITEM_DISPLAY_NAMES[ITEM_TREASURE])) } : {}), ...(governanceReport ? { governanceReport } : {}), ...(eventNotice ? { governanceEventLine: eventNotice } : {}), advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(hallMissionReport ? { hallMissionReport } : {}), ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids } : {}), ...(mercenaryDay.dayThreeUids.length > 0 ? { mercenaryDayThree: mercenaryDay.dayThreeUids } : {}), ...(mercenaryDay.trustUids.length > 0 ? { mercenaryTrust: mercenaryDay.trustUids } : {}) };
         if (this._autoSave && this._save) {
             await this.save();
         }

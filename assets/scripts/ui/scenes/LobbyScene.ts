@@ -1958,6 +1958,7 @@ export class LobbyScene extends Component {
             officerRank: officerDisplayOf(session.officerState).rankName,
             gold: wallet.gold,
             gems: wallet.gems,
+            silver: session.silverLedger.silverBalance(),
             food: session.military.food,
             cityTroops: session.military.cityTroops,
             cityTroopsCap: session.military.cityTroopsCap,
@@ -4811,6 +4812,7 @@ ${spent}`,
             grantGold: (amount) => { gacha.grantCurrency('gold', amount); },
             random: Math.random,
             leaderName: (id) => this._generals.find((g) => g.id === id)?.name,
+            onWarDeclared: (nationId) => { services().session.beginHomeWar(nationId); },
             recordBattle: (squad, nationId, battle) => { services().session.recordRivalCampaign(squad, nationId, battle); },
             respondProposal: (nationId, accept) => services().session.respondRivalProposal(nationId, accept, (amount) => { gacha.grantCurrency('gold', amount); }),
         });
@@ -4852,6 +4854,7 @@ ${spent}`,
                 // 年度月旦評放榜（血統傳承 G4 §G，PROG-2-1803）
                 for (const message of payload?.yuedanLines ?? []) services().event.emit('SHOW_TOAST', { message, duration: 4 });
                 for (const message of payload?.nursingLines ?? []) services().event.emit('SHOW_TOAST', { message, duration: 4 });
+                if (payload?.clanStipendLine) services().event.emit('SHOW_TOAST', { message: payload.clanStipendLine, duration: 4 });
                 // 立春子嗣天象（doc_spec_0312 §2，PROG-2-2106）
                 for (const message of payload?.omenLines ?? []) services().event.emit('SHOW_TOAST', { message, duration: 4 });
                 // 糧草告急（經濟 §G）、囚犯交出傳家寶（道具 §G，PROG-2-1774）
@@ -8246,6 +8249,8 @@ ${spent}`,
             pools: () => this._gachaMainPools,
             candidates: (poolId) => this._gachaCandidatesCache.get(poolId) ?? [],
             reward: () => this._gachaRewardPort,
+            // 教官池 UP 卡 → 橫幅展示該卡所投影的武將（教學投影不是武將本人，但畫面主角用投影對象）
+            showcaseOfUp: (entryId) => findSupportCard(services().supportCardsConfig(), entryId)?.projectionOf ?? null,
         });
         return this._gachaApi;
     }

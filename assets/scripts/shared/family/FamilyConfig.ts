@@ -23,8 +23,16 @@ export interface FamilyConfigV1 {
     postpartumQuarters: number;
     /** 母乳方式哺乳到孩子幾歲止（doc_spec_1180 第 15.2 節；規格 3.4 節暫 5 歲） */
     breastfeedEndAge: number;
-    /** 乳母每季費用（銀兩，家族貨幣；PM 11/21 授權企劃暫定，銀兩錢包落地前只存設定不扣款） */
+    /** 乳母每季費用（銀兩，家族貨幣；PM 11/21 授權企劃暫定，已由 wallet 銀兩幣別實扣（PROG-2-9591）） */
     wetNurseSilverPerQuarter: number;
+    /** 新局家族銀兩（PROG-2-9591；PM 11/21 授權企劃暫定）：夠付一次媒人加幾季乳母，銀兩收入來源另案 */
+    startingSilver: number;
+    /**
+     * 每季家族俸祿（銀兩收入，PROG-2-9593；PM 授權企劃暫定）：家業系統（doc_spec_1181）尚未實作前的暫代來源，
+     * 每季入帳 clanStipendBase ＋ 配偶數 × clanStipendPerSpouse。家業落地後由家業收益取代，這兩欄改 0 即可停發。
+     */
+    clanStipendBase: number;
+    clanStipendPerSpouse: number;
     crowdThreshold: number;
     childrenTypicalRange: [number, number];
     geniusChance: number;
@@ -37,6 +45,9 @@ export interface FamilyConfigV1 {
     branchStartLoyalty: number;
     marriageRelation: number;
     marriagePerNation: number;
+    /** 與配偶母國開戰：配偶心情／忠誠調整量（裁決 Q-SP2：−30／−20；心情換算成心智事件價值，見 GameSession.adjustMood） */
+    homeWarMoodDelta: number;
+    homeWarLoyaltyDelta: number;
     adoptStoryMax: number;
     recruitAdoptPerYear: number;
     adopteeAgeRange: [number, number];
@@ -149,6 +160,9 @@ export function parseFamilyConfig(raw: unknown): FamilyConfigV1 {
         postpartumQuarters: int('postpartumQuarters'),
         breastfeedEndAge: int('breastfeedEndAge', 1),
         wetNurseSilverPerQuarter: int('wetNurseSilverPerQuarter'),
+        startingSilver: int('startingSilver'),
+        clanStipendBase: int('clanStipendBase'),
+        clanStipendPerSpouse: int('clanStipendPerSpouse'),
         crowdThreshold: int('crowdThreshold', 1),
         childrenTypicalRange: pair('childrenTypicalRange'),
         geniusChance: num('geniusChance', 0, 1),
@@ -160,6 +174,8 @@ export function parseFamilyConfig(raw: unknown): FamilyConfigV1 {
         branchStartLoyalty: num('branchStartLoyalty', 0, 100),
         marriageRelation: num('marriageRelation'),
         marriagePerNation: int('marriagePerNation'),
+        homeWarMoodDelta: num('homeWarMoodDelta', -100, 0),
+        homeWarLoyaltyDelta: num('homeWarLoyaltyDelta', -100, 0),
         adoptStoryMax: int('adoptStoryMax'),
         recruitAdoptPerYear: int('recruitAdoptPerYear'),
         adopteeAgeRange: pair('adopteeAgeRange'),
