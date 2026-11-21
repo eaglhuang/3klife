@@ -156,4 +156,4 @@
 | `doc_task_2748` | docs/agent-briefs/tasks/PROG/PROG-2-9592.md | [PROG-2-9592] F3 配偶 SP1／SP2 接線（他國仕官女將結緣移籍、開戰母國牽掛） |
 | `doc_task_2749` | docs/agent-briefs/tasks/PROG/PROG-2-9606.md | [PROG-2-9606] 結緣（紅顏）事件輕鬆文案範例 20 則 |
 | `doc_task_2750` | docs/agent-briefs/tasks/PROG/PROG-2-9193.md | PROG-2-9193：G4 郡望宗脈常駐與高門求親 |
-| `doc_task_2751` | docs/agent-briefs/tasks/PROG/PROG-2-9707.md | [PROG-2-9707] 戰場「自動」鈕改為自動代打（再按跳過＝極速決戰） |
+| `doc_task_2761` | docs/agent-briefs/tasks/PROG/PROG-2-9707.md | [PROG-2-9707] 戰場「自動」鈕改為自動代打（再按跳過＝極速決戰） |
