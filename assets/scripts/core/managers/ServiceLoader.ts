@@ -27,6 +27,7 @@ import type { IMissionService } from "../mission/service/IMissionService";
 import { PlayerSaveService } from "../services/PlayerSaveService";
 import { ApiSaveGateway } from "../api/localserver/ApiSaveGateway";
 import { createLocalApi, type LocalApiBundle } from "../api/localserver/createLocalApi";
+import { createSupportCardHandler, SUPPORT_CARD_EFFECT_KIND } from "../api/localserver/SupportCardEffect";
 import { createGeneralGrantHandler, type GeneralGrantHost } from "../gacha/RewardGachaPull";
 import type { DebugHost } from "../api/localserver/DebugCommands";
 import type { WalletAuthority } from "../api/localserver/WalletCommands";
@@ -357,6 +358,8 @@ export class ServiceLoader {
         this.session.setItemApi(this.localApi.api);
         // 獎勵 base（PROG-2-9205）：獎池／套件設定、亂數會話與保底存在 GameSession，戰後里程碑獎勵走 reward.claim
         this.applyRewardConfig();
+        // 支援卡發放（PROG-2-9242）：入學／傳承／傳承滿轉學分都走 item.* 命令；卡表與規則用 getter，設定重載後立即生效
+        this.localApi.registerRewardEffect(SUPPORT_CARD_EFFECT_KIND, createSupportCardHandler(() => ({ cards: this.supportCards, rules: this.supportRules })));
         if (this.generalGrantHost) this.localApi.registerRewardEffect('general', createGeneralGrantHandler(this.generalGrantHost));
         this.localApi.setRewardAuthority(this.session.rewardAuthority());
         this.session.setRewardApi(this.localApi.api);

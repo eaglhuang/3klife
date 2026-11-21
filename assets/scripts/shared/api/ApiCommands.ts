@@ -25,6 +25,8 @@ export const API_COMMANDS = Object.freeze({
     'item.consume': { kind: 'cmd', revGuard: false },
     'item.settlePeriodic': { kind: 'cmd', revGuard: false },
     'item.use': { kind: 'cmd', revGuard: false },
+    'item.breakthrough': { kind: 'cmd', revGuard: false },
+    'item.instance': { kind: 'query', revGuard: false },
     'item.count': { kind: 'query', revGuard: false },
     'item.list': { kind: 'query', revGuard: false },
     'item.ledger': { kind: 'query', revGuard: false },
@@ -162,6 +164,30 @@ export interface ItemUseResult {
     level: number;
     exp: number;
     atCap: boolean;
+}
+
+/**
+ * item.breakthrough：傳承（doc_spec_1264 §5.3）。把一張已持有的可成長物品的傳承次數 +1（等級上限隨之 +capPerBreak）；
+ * 已達 maxBreak 回 E318，未持有回 E317。rollback:true 是反向撤銷用（獎勵 settle 失敗時把 +1 減回去），不走一般玩法。
+ */
+export interface ItemBreakthroughArgs extends ItemHolderArgs {
+    itemId: string;
+    rollback?: boolean;
+}
+
+export interface ItemInstanceView {
+    itemId: string;
+    level: number;
+    exp: number;
+    limitBreak: number;
+    /** 目前等級上限（初始上限＋傳承次數×每次增加） */
+    levelCap: number;
+    maxBreak: number;
+}
+
+/** item.instance：查一個實例的成長狀態；未持有或沒有實例回 E317 */
+export interface ItemInstanceArgs extends ItemHolderArgs {
+    itemId: string;
 }
 
 export interface ItemConsumeResult {
