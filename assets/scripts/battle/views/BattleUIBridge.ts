@@ -90,6 +90,7 @@ import {
 import {
   BATTLE_AUDIO_CUE,
   playBattleAudio,
+  SKILL_CAST_SFX,
   resolveBattleGeneralAttackSfxKey,
   resolveBattleGeneralHitSfxKey,
   resolveBattleUnitAttackSfxKey,
@@ -950,8 +951,11 @@ export class BattleUIBridge {
         this.skillBanner.push({ side, caster: data.generalName ?? caster?.name ?? '', names: [getBattleSkillPresentation(skillId).name] });
       }
       if (plan.chargeSec > 0) {
+        // PROG-2-9438：蓄力有聲（漸強），出手有重音；奧義走立繪分鏡另有音效，不經過這裡
+        playBattleAudio(SKILL_CAST_SFX.charge.cue, SKILL_CAST_SFX.charge.volume);
         this.ctx.unitRenderer?.playGeneralCharge(data.faction, plan.chargeSec);
         await new Promise<void>(resolve => this.scene.scheduleOnce(() => resolve(), plan.chargeSec));
+        playBattleAudio(SKILL_CAST_SFX.release.cue, SKILL_CAST_SFX.release.volume);
       }
       this._presentGeneralSkillUsed(data);
     }, true);
