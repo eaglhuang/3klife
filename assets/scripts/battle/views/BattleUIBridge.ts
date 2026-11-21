@@ -1135,6 +1135,8 @@ export class BattleUIBridge {
     const gate = this._quickResolveGate();
     if (!(await services().session.spendQuickResolveUse(gate.stage, Date.now(), gate.duelActive))) {
       this.ctx.deployRuntime?.showToast(`極速決戰不可用：${gate.reason || '次數不足'}`);
+      // 計次失敗：第二次按已把自動代打關掉，戰鬥還在進行就恢復自動代打，不讓玩家卡在無人指揮
+      if (!state.battleEndAnnounced && !this.autoPlay.active) { this.autoPlay.press(); this._syncAutoButton(); }
       return;
     }
     // 計次期間戰鬥可能已結束（回合推進出勝負）；已計的次數不退，避免用重複點擊試探
