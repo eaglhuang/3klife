@@ -13217,7 +13217,6 @@
     },
     {
       "doc_id": "",
-<<<<<<< HEAD
       "id": "PROG-2-9702",
       "title": "年終守城戰規格書：大敗、失守懲罰、平手三項回寫使用者 11/21 裁決",
       "owner": "claude-code-fable-5-2",
@@ -13245,7 +13244,30 @@
       "acceptance": [],
       "deliverables": [],
       "notes": "2026-11-21 | 狀態: done | 驗證: 核對 DefenseBattle／CityEconomy／YearReport 與裁決一致，僅改文件 | 變更: shard-d §11 三項、shard-a 大敗列 | 阻塞: 無",
-=======
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
       "id": "PROG-2-9240",
       "title": "支援卡資料與物品化（SUP-1：25 張學府支援卡、category=supportCard、instanceState、出征編制排除）",
       "owner": "claude-code-opus-5-5",
@@ -13278,7 +13300,6 @@
         "tests/SupportCardItems.test.ts"
       ],
       "notes": "2026-11-21 | 狀態: done | 驗證: 新增測試 12 項全過；tests/run-cli.ts 8929 通過；tsc -p tsconfig.test.json 0 錯；compute-gate standard 13/14 通過（1 警告為既有 LoginScene 模組邊界）；api-bypass 未增加 | 變更: 新增 academy-support-cards.json（25 張卡）與 shared/support/SupportCardConfig.ts；物品框架 ITM 擴充 stack.mode=unique、category／usage／rarity／instanceState、itemMeta.instances、item.list forDeploy 與 category／instance 欄位；ServiceLoader 載入後把卡推導成物品定義併入物品設定（單一真相）；容器接受 card | 阻塞: 規格 22.1 寫 support-cards.json 但同名舊檔仍被舊支援卡／紅顏池系統讀取，新檔暫名 academy-support-cards.json，改名待決（SUP-13 遷移時一併處理）",
->>>>>>> origin/master
       "brief": {
         "style": "classic",
         "label": "",
