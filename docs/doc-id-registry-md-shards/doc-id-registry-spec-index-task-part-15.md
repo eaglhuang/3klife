@@ -113,3 +113,4 @@
 | `doc_task_2703` | docs/agent-briefs/tasks/PROG/PROG-2-9436.md | [PROG-2-9436] 基礎戰鬥手感：頭頂狀態圖示放大 |
 | `doc_task_2704` | docs/agent-briefs/tasks/PROG/PROG-2-9437.md | [PROG-2-9437] 基礎戰鬥手感：格擋回饋 |
 | `doc_task_2705` | docs/agent-briefs/tasks/PROG/PROG-2-9438.md | [PROG-2-9438] 基礎戰鬥手感：放招蓄力與出手音效 |
+| `doc_task_2706` | docs/agent-briefs/tasks/PROG/PROG-2-9224.md | [PROG-2-9224] 家族、子嗣、配偶、血統、教官、學府規格改寫（依 11/21 裁決第 3、4、6、12、16～27 條） |

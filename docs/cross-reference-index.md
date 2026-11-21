@@ -7,7 +7,7 @@
 
 | 分片 | 路徑 | 大小 |
 |------|------|------|
-| 規格書索引（Sec A） | `docs/cross-ref/cross-ref-specs.md` | 250 行 / ~21 KB |
+| 規格書索引（Sec A） | `docs/cross-ref/cross-ref-specs.md` | 260 行 / ~22 KB |
 | 代碼索引（Sec B） | `docs/cross-ref/cross-ref-code.md` | 43 行 / ~6 KB |
 | UI 規格索引（Sec C） | `docs/cross-ref/cross-ref-ui-spec.md` | 59 行 / ~6 KB |
 | 實作進度（Sec D） | `docs/cross-ref/cross-ref-進度.md` | 173 行 / ~21 KB |

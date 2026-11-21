@@ -10,7 +10,7 @@
 | 2 | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-02.md | 298 |
 | 3 | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-03.md | 298 |
 | 4 | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-04.md | 298 |
-| 5 | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-05.md | 194 |
+| 5 | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-05.md | 200 |
 | 6 | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-06.md | 298 |
 | 7 | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-07.md | 298 |
 | 8 | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-08.md | 298 |
@@ -20,4 +20,4 @@
 | 12 | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-12.md | 298 |
 | 13 | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-13.md | 298 |
 | 14 | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-14.md | 298 |
-| 15 | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-15.md | 116 |
+| 15 | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-15.md | 117 |
