@@ -16294,5 +16294,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9465.md",
     "title": "[PROG-2-9465] GCH-R7 宿命池遷移",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2734",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9466.md",
+    "title": "[PROG-2-9466] GCH-R4b 重複卡回既有分流彈窗（不自動轉換）",
+    "category": "task"
   }
 ]

@@ -8110,7 +8110,7 @@ ${spent}`,
                         loader.session.queueGachaMentorDraw({ drawn: info.results.map((r) => r.general), time: { ...loader.session.gameTime }, poolId: info.poolId });
                         this._saveGachaState();
                     },
-                });
+                }, Date.now, true);
             })().catch((error) => {
                 UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 轉蛋獎池載入失敗，改走舊路徑', error);
             }).finally(() => { this._gachaRewardLoading = null; });
@@ -8187,10 +8187,13 @@ ${spent}`,
         throw new Error(miss.error === 'CURRENCY_NOT_ALLOWED' ? '這個卡池不收這種貨幣' : `餘額不足，還差 ${miss.shortfall}`);
     }
 
-    /** 走共通 API 的抽卡結果：記下入冊結果給提示用（舊路徑由 enroll 回呼寫入）；重複卡已轉成獎勵，沒有重複分流彈窗 */
+    /**
+     * 走共通 API 的抽卡結果：記下入冊結果給提示用（舊路徑由 enroll 回呼寫入）。
+     * 重複卡不自動轉 bundle：交回既有重複卡彈窗流程（_routeGachaOwnedDuplicates：復生重練／血脈灌注／升星），與舊路徑一致。
+     */
     private _onGachaRewardPulled(outcome: RewardGachaPullOutcome): void {
-        this._gachaOwnedDuplicates = [];
-        this._gachaEnrollResult = { added: outcome.added, duplicates: outcome.duplicates, rebirths: [], bondPointsGained: 0 };
+        this._gachaOwnedDuplicates = outcome.duplicates;
+        this._gachaEnrollResult = { added: outcome.added, duplicates: [], rebirths: [], bondPointsGained: 0 };
     }
 
     /** 轉蛋標準 API（本機實作；日後換伺服器實作，畫面不改，PROG-2-9024） */

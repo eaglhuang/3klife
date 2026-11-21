@@ -1358,6 +1358,53 @@ async function main() {
             return rec.detail;
         }, { skipIfFailed: true });
 
+        // ── 6c. 重複卡彈窗（--dup）：紅顏池連抽到已持有者，必須跳「宿命牽引・名將重逢」選擇窗（不得自動轉換），截圖後選「升星」 ──
+        if (args.dup) await step('gacha-duplicate-popup', async (rec) => {
+            await requireLobby();
+            await backToLobbyBar();
+            await waitUntil(() => page.evaluate(() => window.__pt.hasButton('^BtnCatShop$')), 30000, '底欄「商城」鈕未出現');
+            if (!(await openSub('BtnCatShop', '轉蛋'))) throw new Error('大廳找不到「商店 → 轉蛋」入口');
+            await delay(2500);
+            // 開發自動補款（測試用）：紅顏池十連 1600 靈玉，新局只有 1280
+            await page.evaluate(() => window.localStorage.setItem('ucuf.gacha.dev-auto-topup', 'true'));
+            for (let i = 0; i < 6; i++) {
+                if ((await rm.allTexts()).some((t) => /紅顏召喚/.test(t))) break;
+                await clickButton('^BtnPoolNext$'); await delay(1200);
+            }
+            if (!(await rm.allTexts()).some((t) => /紅顏召喚/.test(t))) throw new Error('切不到「紅顏召喚」池');
+            rec.detail.pulls = 0;
+            let seen = false;
+            for (let n = 0; n < 14 && !seen; n++) {
+                if (!(await clickButton('^BtnPullTen$'))) throw new Error('找不到十連鈕 BtnPullTen');
+                rec.detail.pulls += 1;
+                if (n === 0) { await delay(2500); await shot(rec, 'dup-first-pull'); }
+                for (let k = 0; k < 10; k++) {
+                    await delay(1500);
+                    if (await page.evaluate(() => window.__pt.hasButton('^BtnDupStarUp$'))) { seen = true; break; }
+                    if (await clickButton('^GachaPullResult_(close|back)$')) continue;
+                    if (!(await page.evaluate(() => window.__pt.scenePresence('^GachaPullResult_stage$')))) break;
+                    await page.mouse.click(Math.round(viewport.width / 2), Math.round(viewport.height / 2));
+                }
+            }
+            if (!seen) throw new Error(`連抽 ${rec.detail.pulls} 次都沒出現重複卡彈窗（BtnDupStarUp）`);
+            rec.detail.popupTexts = (await rm.allTexts()).filter((t) => /名將重逢|復生|灌注|升星/.test(t)).slice(0, 8);
+            await shot(rec, 'dup-popup');
+            await clickButton('^BtnDupStarUp$');
+            await delay(1500);
+            for (let i = 0; i < 8; i++) {
+                if (await clickButton('^BtnDupStarUp$')) { await delay(1200); continue; }
+                if (await clickByText('.*', '^\s*繼續\s*$')) { await delay(1200); continue; }
+                if (await clickButton('^GachaPullResult_(close|back)$')) { await delay(1200); continue; }
+                if (!(await page.evaluate(() => window.__pt.scenePresence('^GachaPullResult_stage$')))) break;
+                await page.mouse.click(Math.round(viewport.width / 2), Math.round(viewport.height / 2));
+                await delay(1200);
+            }
+            await shot(rec, 'dup-after');
+            await clickButton('^GachaReturnToLobby$');
+            await delay(1500);
+            return rec.detail;
+        }, { skipIfFailed: true });
+
         // ── 8. 老玩家重開 ──
         // 同一瀏覽器情境重新整理：存檔還在，等同玩家第二次開遊戲。
         // 要直接回到大廳、底欄在、不可再跑一次新手開場（PROG-2-9114）。

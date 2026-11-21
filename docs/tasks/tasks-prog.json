@@ -12806,14 +12806,39 @@
       "chain_step": "",
       "sensor_triggered_by": "",
       "description": "舊保底計數轉成 reward.pity 階梯、保留 destinyExchanges、天命商店額度改讀 reward.pity（tallies 累計計數與 reward.pity.redeem 兌換）；三種舊存檔（只有 pullCount、含 lastSsrPull、含 destinyExchanges）都有測試。",
-      "related": ["PROG-2-9460", "PROG-2-9461", "PROG-2-9462", "PROG-2-9463"],
-      "depends": ["PROG-2-9463"],
+      "related": [
+        "PROG-2-9460",
+        "PROG-2-9461",
+        "PROG-2-9462",
+        "PROG-2-9463"
+      ],
+      "depends": [
+        "PROG-2-9463"
+      ],
       "acceptance": [],
       "deliverables": [],
       "notes": "狀態: done。變更: GachaPityMigration（舊 gachaPity 轉 reward.pity 階梯＋累計計數，保留 destinyExchanges）、獎池 tallies 累計計數、reward.pity 回 tallies、新命令 reward.pity.redeem、天命商店額度改讀 reward.pity。驗證: 三種舊存檔測試、tsc 0、run-cli 全過、playtest 11/11。",
-      "brief": { "style": "classic", "label": "", "summary": "", "position": "", "prereq": "" },
-      "contracts": { "input": [], "output": [], "validation_cmd": "", "rollback_hint": "", "execution_steps": [] },
-      "harness_evidence": { "artifact_paths": [], "validation_evidence": [], "handoff_diff_status": "", "trace_artifacts": [], "metrics_summary": [] }
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     },
     {
       "doc_id": "",
@@ -12832,14 +12857,39 @@
       "chain_step": "",
       "sensor_triggered_by": "",
       "description": "開場宿命轉蛋改用宿命池 UI 並走 draw.slots（每輪恰一位六大宿命名將、十位不重複）；開場信內容不動；實跑 playtest 11/11。",
-      "related": ["PROG-2-9460", "PROG-2-9461", "PROG-2-9462", "PROG-2-9463"],
-      "depends": ["PROG-2-9463"],
+      "related": [
+        "PROG-2-9460",
+        "PROG-2-9461",
+        "PROG-2-9462",
+        "PROG-2-9463"
+      ],
+      "depends": [
+        "PROG-2-9463"
+      ],
       "acceptance": [],
       "deliverables": [],
       "notes": "狀態: done。變更: 開場宿命池抽取改走 reward.roll（POOL_DESTINY draw.slots），DestinyOpeningController.rollAsync／rerollAsync，結果不合規時退回本機抽法；開場信與畫面不動。驗證: 60 輪每輪恰一位宿命名將十位不重複、playtest 11/11（含第 2 步 new-player-opening）。",
-      "brief": { "style": "classic", "label": "", "summary": "", "position": "", "prereq": "" },
-      "contracts": { "input": [], "output": [], "validation_cmd": "", "rollback_hint": "", "execution_steps": [] },
-      "harness_evidence": { "artifact_paths": [], "validation_evidence": [], "handoff_diff_status": "", "trace_artifacts": [], "metrics_summary": [] }
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     },
     {
       "doc_id": "",
@@ -13352,6 +13402,54 @@
         "tests/SupportCardItems.test.ts"
       ],
       "notes": "2026-11-21 | 狀態: done | 驗證: 新增測試 12 項全過；tests/run-cli.ts 8929 通過；tsc -p tsconfig.test.json 0 錯；compute-gate standard 13/14 通過（1 警告為既有 LoginScene 模組邊界）；api-bypass 未增加 | 變更: 新增 academy-support-cards.json（25 張卡）與 shared/support/SupportCardConfig.ts；物品框架 ITM 擴充 stack.mode=unique、category／usage／rarity／instanceState、itemMeta.instances、item.list forDeploy 與 category／instance 欄位；ServiceLoader 載入後把卡推導成物品定義併入物品設定（單一真相）；容器接受 card | 阻塞: 規格 22.1 寫 support-cards.json 但同名舊檔仍被舊支援卡／紅顏池系統讀取，新檔暫名 academy-support-cards.json，改名待決（SUP-13 遷移時一併處理）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9466",
+      "title": "GCH-R4b 重複卡回既有分流彈窗（不自動轉換）",
+      "owner": "claude-code-sonnet-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-sonnet-5-5",
+      "started_at": "2026-11-21T21:30:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-code-sonnet-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "轉蛋新路徑（reward.roll）抽到重複卡時，交回既有重複卡彈窗流程（復生重練／血脈灌注／升星），不再自動走 bundle 轉換。依 11/09 #8、doc_spec_0331、11/21 重複卡先突破。",
+      "related": [
+        "PROG-2-9461",
+        "PROG-2-9462",
+        "PROG-2-9464"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "狀態: done。變更: RewardGachaPort 新增 deferDuplicates；LobbyScene 新路徑重複卡交回 _routeGachaOwnedDuplicates（復生重練／升星／血脈灌注三選一），不自動轉 bundle；playtest-online.js 新增 --dup 步驟。驗證: tsc 0、run-cli 8947 pass、playtest 12/12（含 --dup），彈窗截圖在 scratchpad dup3/11-dup-popup.png。",
       "brief": {
         "style": "classic",
         "label": "",
