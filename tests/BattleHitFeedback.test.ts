@@ -11,7 +11,7 @@
  */
 import { TestSuite, assert } from './TestRunner';
 import {
-    BATTLE_VISUAL_TIMING, buildHitShakeSteps, hitFlashStrength, isHeavyHit, planHitFeedback, sampleHitShake,
+    BATTLE_VISUAL_TIMING, DEFAULT_HIT_FLASH_CURVE, buildHitShakeSteps, hitFlashStrength, isHeavyHit, parseHitFlashCurve, planHitFeedback, sampleHitShake,
 } from '../assets/scripts/battle/views/BattlePresentationTiming';
 import {
     FLOAT_MISS_TEXT, FLOAT_STAGGER_WINDOW_MS, FLOAT_TEXT_STYLES, FloatStaggerTracker, floatEffectiveHeight, floatStaggerOffset,
@@ -64,12 +64,31 @@ export function createBattleHitFeedbackSuite(): TestSuite {
         assert.isTrue(near(BATTLE_VISUAL_TIMING.hitScreenShakeSec, 0.12));
     });
 
-    suite.test('閃白強度：開頭 1、線性衰減、結束後 0', () => {
-        assert.equals(1, hitFlashStrength(0));
-        assert.isTrue(near(hitFlashStrength(BATTLE_VISUAL_TIMING.hitFlashSec / 2), 0.5));
-        assert.equals(0, hitFlashStrength(BATTLE_VISUAL_TIMING.hitFlashSec));
-        assert.equals(0, hitFlashStrength(1));
-        assert.equals(0, hitFlashStrength(-0.01));
+    suite.test('閃白（PROG-2-9483）：全白停 2 格，再 0.05 秒快速退（2 次方）', () => {
+        const c = DEFAULT_HIT_FLASH_CURVE;
+        assert.equals(2, c.holdFrames);
+        assert.equals(0, hitFlashStrength(-1, 0, c), '受擊前不閃');
+        assert.equals(1, hitFlashStrength(0, 0, c), '第 0 格全白');
+        assert.equals(1, hitFlashStrength(1, 0, c), '第 1 格仍全白');
+        assert.equals(1, hitFlashStrength(2, 0, c), '停留剛結束還是 1');
+        assert.isTrue(near(hitFlashStrength(2, 0.025, c), 0.25), '退到一半剩 0.25（2 次方，比線性快）');
+        assert.isTrue(hitFlashStrength(3, 0.0167, c) < 1 - 0.0167 / 0.05, '前段比線性掉得快');
+        assert.equals(0, hitFlashStrength(4, 0.05, c));
+        assert.equals(0, hitFlashStrength(10, 1, c));
+    });
+
+    suite.test('閃白設定檔：正常值照用，缺漏或錯誤用預設；正式設定檔可解析', () => {
+        const ok = parseHitFlashCurve({ hitFlash: { holdFrames: 3, fadeSec: 0.08, fadePower: 3 } });
+        assert.equals(3, ok.holdFrames); assert.isTrue(near(ok.fadeSec, 0.08)); assert.equals(3, ok.fadePower);
+        const bad = parseHitFlashCurve({ hitFlash: { holdFrames: -1, fadeSec: 'x', fadePower: 0 } });
+        assert.equals(DEFAULT_HIT_FLASH_CURVE.holdFrames, bad.holdFrames);
+        assert.isTrue(near(bad.fadeSec, DEFAULT_HIT_FLASH_CURVE.fadeSec));
+        assert.equals(DEFAULT_HIT_FLASH_CURVE.fadePower, bad.fadePower);
+        assert.equals(DEFAULT_HIT_FLASH_CURVE.holdFrames, parseHitFlashCurve(null).holdFrames);
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const file = parseHitFlashCurve(require('../assets/resources/data/battle-hit-feedback.json'));
+        assert.equals(2, file.holdFrames);
+        assert.isTrue(file.fadeSec > 0 && file.fadeSec <= 0.1, '退色要快（0.1 秒內）');
     });
 
     suite.test('重擊判斷：爆擊一律算；否則看單次傷害占最大血量比例', () => {

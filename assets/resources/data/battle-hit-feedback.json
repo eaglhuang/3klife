@@ -1,0 +1,8 @@
+{
+  "_comment": "戰場受擊回饋手感參數（PROG-2-9483）。hitFlash：受擊閃白先全白停 holdFrames 格，再用 fadeSec 秒退掉；退色強度 = (1 - t)^fadePower，次方越大前段掉得越快。讀不到或欄位錯誤時用程式預設值（2 格、0.05 秒、2 次方）。",
+  "hitFlash": {
+    "holdFrames": 2,
+    "fadeSec": 0.05,
+    "fadePower": 2
+  }
+}
