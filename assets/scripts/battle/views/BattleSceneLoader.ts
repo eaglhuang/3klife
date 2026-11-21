@@ -11,6 +11,7 @@ import { GeneralUnit, GeneralConfig } from "../../core/models/GeneralUnit";
 import { Faction, GAME_CONFIG } from "../../core/config/Constants";
 import type { UltimateEffectFamily, UltimateSpecialRuleDef } from "../../shared/SkillRuntimeContract";
 import type { CreateSortieInput } from '../../core/systems/SortieDeploy';
+import { buildPreviewSortieInput, wantsPreviewSortie, type BattleEntrySourceLike } from '../../core/systems/PreviewSortie';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 
 import { VFX_BLOCK_REGISTRY } from '../../core/config/vfx-block-registry';
@@ -459,6 +460,17 @@ export function buildRosterSortieInput(general: GeneralUnit): CreateSortieInput 
   if (!input) return null;
   // 戰場開局才消耗季末糧不足折扣（TRP-12）；預覽不走這裡
   return { ...input, tallyFoodDiscount: services().session.consumeTallyFoodDiscount() };
+}
+
+/**
+ * 出征帳本與是否為模擬帳本（PROG-2-9711）：名冊武將有正式帳本就用正式的；
+ * QA 預覽／直進戰場沒有帳本時補一份模擬帳本，讓委任（自動代打）能出兵，戰後不寫回存檔。
+ */
+export function resolveBattleSortieInput(general: GeneralUnit, entrySource: BattleEntrySourceLike): { input: CreateSortieInput; preview: boolean } | null {
+  const roster = buildRosterSortieInput(general);
+  if (roster) return { input: roster, preview: false };
+  if (general.faction !== Faction.Player || !wantsPreviewSortie(entrySource)) return null;
+  return { input: buildPreviewSortieInput(general), preview: true };
 }
 
 /** 主將的虎符忠誠（TRP-09）；沒有紀錄或不是我方時回傳 null（不拒令） */

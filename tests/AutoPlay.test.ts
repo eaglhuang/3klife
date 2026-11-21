@@ -70,7 +70,7 @@ export function createAutoPlaySuite(): TestSuite {
         assert.isTrue(bridge.includes('this.autoPlay.press()'));
         assert.isTrue(bridge.includes('c.ctrl.setDelegateEnabled(true)'));
         assert.isTrue(bridge.includes("cause: 'auto'"));
-        assert.isTrue(bridge.includes('private _skipToQuickResolve('));
+        assert.isTrue(bridge.includes('private async _skipToQuickResolve('));
         assert.isTrue(bridge.includes('delegateToggleStopsAutoPlay('));
         assert.isTrue(bridge.includes('this.onAutoPlayStarted?.()'));
         assert.isTrue(bridge.includes('if (this.autoPlay.stop()) this._syncAutoButton()'));
@@ -87,8 +87,11 @@ export function createAutoPlaySuite(): TestSuite {
         }
     });
 
-    suite.test('試玩腳本不再按 BtnAuto', () => {
-        assert.isFalse(read('tools_node/playtest-online.js').includes("clickButton('^BtnAuto$')"));
+    // PROG-2-9711：試玩腳本每場只按一次 BtnAuto 開自動代打（再按一次會變極速決戰，不可以）；--no-auto-play 可關掉
+    suite.test('試玩腳本每場只按一次 BtnAuto（不會誤觸極速決戰）', () => {
+        const src = read('tools_node/playtest-online.js');
+        assert.equals(1, src.split("clickButton('^BtnAuto$')").length - 1);
+        assert.isTrue(src.includes("args['no-auto-play']"));
     });
 
     return suite;

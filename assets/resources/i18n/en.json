@@ -814,7 +814,7 @@
   "ui.academy.flow.enroll.child": "{0} (age {1})",
   "ui.academy.flow.enroll.stats": "STR {0}  LEA {1}  INT {2}  POL {3}  CHA {4}",
   "ui.academy.flow.enroll.empty": "No child can enroll yet (must have chosen a fate, not graduated, and be 15 or older).",
-  "ui.academy.flow.enroll.prep_board": "【Academy Preparation Board】\nNo student has reached coming-of-age for immediate enrollment.\n\n【Upcoming Students】\n{0}\n\n【Recommended Preparation】\n1. Visit Private School: Build base stats and classmate bonds\n2. Mentor Recruitment: Summon SSR mentors from the pool\n3. Clan Visits: Meet renowned scholars and broaden connections",
+  "ui.academy.flow.enroll.prep_board": "【Academy Preparation Board】\nNo student has reached coming-of-age for immediate enrollment.\n\n【Upcoming Students】\n{0}\n\n【Recommended Preparation】\n1. Mentor Pool (Gacha): Summon SSR mentors\n2. Bonding: Bond with a spouse to raise new heirs\n3. Admission Token: Enrollment consumes one token",
   "ui.academy.flow.enroll.prep_item": "• {0} (Age {1}, {2} yr until enrollment)",
   "ui.academy.flow.enroll.prep_none": "(No upcoming students yet, please nurture heirs in clan)",
   "ui.academy.flow.enroll.hint_young": "Enrollment opens at age 15 (coming of age); {0} more year(s) to go.",

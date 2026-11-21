@@ -4,7 +4,7 @@ import { playTurnBannerOn } from './TurnBannerPresenter';
 import { Faction } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
 import type { BattleController } from '../controllers/BattleController';
-import { buildOrderLoyalty, buildRosterSortieInput, createGeneral, loadEncounter, loadEnemyScale, playerPowerOfGeneral } from './BattleSceneLoader';
+import { buildOrderLoyalty, resolveBattleSortieInput, createGeneral, loadEncounter, loadEnemyScale, playerPowerOfGeneral } from './BattleSceneLoader';
 import { buildSceneGambitSummary } from './BattleSceneGambitSummary';
 import { BATTLE_TURN_FLOW_TIMING } from './BattlePresentationTiming';
 import type { IBattleEntryParams } from '../../shared/BattleEntryParams';
@@ -100,8 +100,8 @@ export class BattleSceneFlow {
     const weatherSchedule = battleParams?.weatherSchedule ?? encounter?.weatherSchedule;
     if (weatherSchedule) ctrl.setWeatherSchedule(weatherSchedule);
     // 名冊武將出戰：部署改扣出征軍勢與糧草（PROG-2-0070）
-    const sortieInput = buildRosterSortieInput(pg);
-    if (sortieInput) ctrl.configureSortie({ ...sortieInput, scenePresetId: scenePresetIdOf(encounter?.battleKind) });
+    const sortie = resolveBattleSortieInput(pg, battleParams?.entrySource);
+    if (sortie) ctrl.configureSortie({ ...sortie.input, scenePresetId: scenePresetIdOf(encounter?.battleKind) }, { preview: sortie.preview });
     ctrl.configureOrderLoyalty(buildOrderLoyalty(pg));
 
     const deployRuntime = this.ctx.getDeployRuntime();

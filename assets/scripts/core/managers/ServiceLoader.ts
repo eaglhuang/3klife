@@ -65,6 +65,7 @@ import { configureWhiteFactorAchievements, WHITE_FACTOR_ACHIEVEMENTS_JSON, type 
 import { configureMindMarriageRules, MIND_MARRIAGE_RULES_JSON, type MindMarriageRulesConfig } from "../mind/MindMarriage";
 import { CLAN_LINEAGE_RULES_JSON, configureClanLineageRules, type ClanLineageRulesConfig } from "../systems/ClanTradition";
 import { configureAcademyStories } from "../systems/nurture/AcademyStoryTexts";
+import { QUICK_RESOLVE_CONFIG_JSON, configureQuickResolve } from "../systems/QuickResolveGate";
 import { ACADEMY_ENROLL_RULES_JSON, configureAcademyEnrollRules, type AcademyEnrollRulesConfig } from "../systems/nurture/AcademyEnrollRules";
 import { createAcademyQuestAdapter } from "../../shared/quest/AcademyQuest";
 import { DEFAULT_QUEST_CONFIG, normalizeQuestConfig } from "../../shared/quest/QuestConfig";
@@ -442,6 +443,15 @@ export class ServiceLoader {
     /** 已載入的史實配對表；未載入或失敗時為 null（戰場合攻讀它） */
     public historicalPairTable(): HistoricalPairTable | null {
         return this.historicalPairs ?? null;
+    }
+
+    /** 極速決戰設定（每日免費次數、軍令狀耗量、預備兵力係數，PROG-2-9709）：大廳與戰場開場各呼叫一次；讀不到沿用內建預設 */
+    public async loadQuickResolveConfig(): Promise<void> {
+        try {
+            configureQuickResolve(await this.resource.loadJson<unknown>(QUICK_RESOLVE_CONFIG_JSON));
+        } catch (e) {
+            UCUFLogger.warn(LogCategory.DATA, '[ServiceLoader] quick-resolve-config.json 載入失敗，退回內建預設:', e);
+        }
     }
 
     /** NPC 好友教官清單（MENT-14 MVP）：資料表載入失敗時清單為空，借用入口不可用 */

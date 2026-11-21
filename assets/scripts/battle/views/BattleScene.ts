@@ -25,7 +25,7 @@ import { BoardRenderer } from "./BoardRenderer";
 import { UnitRenderer } from "./UnitRenderer";
 import { SceneBackground } from "./SceneBackground";
 import { Camera, view } from "cc";
-import { loadDamageFonts, prewarmVfxPools, prewarmBattleAudioClips, loadEncounter, loadEnemyScale, createGeneral, loadGeneralConfig, buildTallyCards, buildUltimateSkills, buildTacticSummary, loadBattleSkillMetadata, buildRosterSortieInput, buildOrderLoyalty, playerPowerOfGeneral } from './BattleSceneLoader';
+import { loadDamageFonts, prewarmVfxPools, prewarmBattleAudioClips, loadEncounter, loadEnemyScale, createGeneral, loadGeneralConfig, buildTallyCards, buildUltimateSkills, buildTacticSummary, loadBattleSkillMetadata, resolveBattleSortieInput, buildOrderLoyalty, playerPowerOfGeneral } from './BattleSceneLoader';
 import { BattleSkillTargetingFlow } from './BattleSkillTargetingFlow';
 import { BattleSceneFlow } from './BattleSceneFlow';
 import { validateBattleStateReadModel, validateSortieLoadoutReadModel } from '../../core/systems/ReadModelValidators';
@@ -216,6 +216,9 @@ export class BattleScene extends Component {
 
       // 3. 從 encounters.json 讀取遭遇戰設定
       const encounter = await loadEncounter(this.currentEncounterId);
+      // 極速決戰可用條件（PROG-2-9709）：關卡資料與設定檔先備好，戰場內再按自動才判得出能不能跳過
+      this.sceneContext.encounterStage = encounter ? { id: encounter.id, battleKind: encounter.battleKind, allowQuickResolve: encounter.allowQuickResolve, enemyReserve: encounter.enemyReserve } : null;
+      void services().loadQuickResolveConfig();
       const pgId = battleParams.playerGeneralId;
       const egId = battleParams.enemyGeneralId;
       const terrain: TerrainGrid | undefined = encounter?.terrain;
@@ -283,9 +286,10 @@ export class BattleScene extends Component {
       const weatherSchedule = battleParams.weatherSchedule ?? encounter?.weatherSchedule;
       if (weatherSchedule) this.ctrl.setWeatherSchedule(weatherSchedule);
       // 名冊武將出戰：部署改扣出征軍勢與糧草（PROG-2-0070）
-      const sortieInput = buildRosterSortieInput(pg);
+      // QA 預覽／直進戰場沒有帳本時補模擬帳本，委任才出得了兵（PROG-2-9711）
+      const sortie = resolveBattleSortieInput(pg, battleParams.entrySource);
       const scenePresetId = scenePresetIdOf(encounter?.battleKind);
-      if (sortieInput) this.ctrl.configureSortie({ ...sortieInput, scenePresetId });
+      if (sortie) this.ctrl.configureSortie({ ...sortie.input, scenePresetId }, { preview: sortie.preview });
       // 戰前檢查出征編制 read model（DS-06）：只記錄，不擋戰鬥；實際生效的參謀／後勤已由 session 過濾
       const support = services().session.getSortieSupportSummary(pg.id);
       const sortieCheck = validateSortieLoadoutReadModel({ Commander_UID: pg.id, Strategist_UID: support.strategist?.id ?? null, Deputy_UID: support.deputy?.id ?? null });

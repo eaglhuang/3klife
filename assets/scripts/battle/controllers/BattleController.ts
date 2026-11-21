@@ -197,6 +197,7 @@ export class BattleController {
   private readonly _deployedTallyIds = new Set<string>();
   /** 出征軍勢 / 糧草帳本；null = 舊版 demo 戰鬥（不扣軍勢） */
   private sortie: SortieState | null = null;
+  private previewSortie = false;
   /** 委任 AI 品質（PROG-2-0908）；null 為未開委任 */
   private delegateQuality: DelegateQuality | null = null;
 
@@ -323,6 +324,7 @@ export class BattleController {
     this.pendingAdvanceTurnResult = null;
     this.pendingEnemyTurnResult = null;
     this.sortie = null;
+    this.previewSortie = false;
     services().buff.clearAll(); // 清除上一場的狀態效果
     services().battle.beginBattle();
     this.applyTutorialRules();
@@ -686,7 +688,13 @@ export class BattleController {
     this.enemyAi.tallyTroopTypes = tallies.map(tally => tally.troopType as TroopType);
   }
 
-  public configureSortie(input: CreateSortieInput): SortieState {
+  /** 本場帳本是 QA 預覽補的模擬帳本（PROG-2-9711）：可部署、可委任，戰後不寫回存檔 */
+  public isPreviewSortie(): boolean {
+    return this.sortie !== null && this.previewSortie;
+  }
+
+  public configureSortie(input: CreateSortieInput, options: { preview?: boolean } = {}): SortieState {
+    this.previewSortie = options.preview === true;
     // 主將自帶的戰法一定要付得起：上限不夠就墊高到該戰法的成本
     const sortieInput = this._tutorialBattle ? { ...input, tutorialPoolMin: GAME_CONFIG.tutorialSortiePoolMin } : input;
     this.sortie = ensureTacticCapCovers(createSortieState(sortieInput), getTacticTpCost(this.resolveSeedTacticId({})));

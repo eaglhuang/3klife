@@ -19,3 +19,19 @@ export function fitContain(boxWidth: number, boxHeight: number, naturalWidth: nu
     const scale = Math.min(Math.max(1, boxWidth) / w, Math.max(1, boxHeight) / h);
     return { width: w * scale, height: h * scale };
 }
+
+/**
+ * 把來源圖裁成指定寬高比（object-fit: cover）：多出來的邊切掉，水平置中、垂直靠上（頭像臉在上半）。
+ * 回傳裁切矩形（相對來源圖左上角，單位像素）；結果卡頭像不拉伸、不留空。
+ */
+export function coverCropRect(srcWidth: number, srcHeight: number, aspect: number): { x: number; y: number; width: number; height: number } {
+    const w = Math.max(1, srcWidth);
+    const h = Math.max(1, srcHeight);
+    const target = aspect > 0 ? aspect : w / h;
+    if (w / h > target) {
+        const cropW = h * target;
+        return { x: (w - cropW) / 2, y: 0, width: cropW, height: h };
+    }
+    const cropH = w / target;
+    return { x: 0, y: 0, width: w, height: cropH };
+}

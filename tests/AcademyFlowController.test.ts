@@ -378,7 +378,7 @@ export function createAcademyFlowControllerSuite(): TestSuite {
         assert.equals('ACAD_YINGCHUAN', h.port.record!.committed.academyId);
     });
 
-    suite.test('PROG-2-9609 學府籌備看板：名冊無可入學子嗣時展示倒數名單與三大推薦導流（私塾、教官、世家）', async () => {
+    suite.test('PROG-2-9609 學府籌備看板：名冊無可入學子嗣時展示倒數名單與三項推薦導流（教官池、結緣、入學令）', async () => {
         resetAcademyEnrollRules();
         // 名冊只有 14 歲趙雲與 13 歲小兒，但均無 fate.choice/youth，且未標記 starter（模擬無適齡可入學子嗣）
         const roster: AcademyChildLike[] = [
@@ -399,9 +399,9 @@ export function createAcademyFlowControllerSuite(): TestSuite {
         const emptyText = h.enroll.last!.texts.acEnrollEmpty;
         assert.isTrue(emptyText.indexOf('【學府籌備看板】') >= 0, '應包含學府籌備看板標題');
         assert.isTrue(emptyText.indexOf('趙雲（14 歲，距入學還差 1 年）') >= 0, '應包含即將及冠倒數名單');
-        assert.isTrue(emptyText.indexOf('前往私塾補習') >= 0, '應包含私塾推薦導流');
-        assert.isTrue(emptyText.indexOf('前往教官池抽卡') >= 0, '應包含教官池抽卡推薦導流');
-        assert.isTrue(emptyText.indexOf('前往世家尋訪') >= 0, '應包含世家尋訪推薦導流');
+        assert.isTrue(emptyText.indexOf('前往轉蛋教官池') >= 0, '應包含教官池導流');
+        assert.isTrue(emptyText.indexOf('前往結緣') >= 0, '應包含結緣導流');
+        assert.isTrue(emptyText.indexOf('備妥入學令') >= 0, '應包含入學令提示');
     });
 
     return suite;

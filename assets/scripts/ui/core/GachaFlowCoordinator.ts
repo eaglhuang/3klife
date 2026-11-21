@@ -1,5 +1,5 @@
 // @spec-source → 轉蛋系統.md (doc_spec_0042)；PROG-2-1429 依建檔紀錄補標出處
-import { Button, Color, Label, Node, Sprite, UIOpacity, UITransform, Widget, tween } from 'cc';
+import { Button, Color, Label, Node, Rect, Sprite, SpriteFrame, UIOpacity, UITransform, Widget, tween } from 'cc';
 import { fullScreenPanelScale } from './GachaFullScreenPanel';
 import { disableCharCache } from './LabelCjkCache';
 import { formatGachaLine, loadGachaLines, type GachaLineTable } from './GachaLines';
@@ -17,7 +17,8 @@ import { gachaPoolHeader, gachaPoolTitle } from '../../core/systems/GachaPoolPre
 import { DESTINY_POOL_ID } from '../../core/systems/DestinyPool';
 import type { GachaCurrencyId } from '../../core/gacha/GachaApi';
 import type { RewardGachaPort, RewardGachaPullOutcome } from '../../core/gacha/RewardGachaPull';
-import { fitContain, pickTopGachaResult } from './GachaResultRanking';
+import { coverCropRect, fitContain, pickTopGachaResult } from './GachaResultRanking';
+import { buildHeroSlotAliases, buildResultSlotAliases, gachaCardStars, toGachaCardTier } from './GachaResultCardTheme';
 import { formatResultBalance } from '../../core/gacha/GachaButtonRules';
 import { loadGeneralAvatar, loadGeneralPortrait } from './GeneralAvatarLoader';
 
@@ -32,8 +33,17 @@ const REPULL_ENABLED_COLOR = new Color(245, 210, 122, 255);
 const CARD_PORTRAIT_NODE = 'CardPortrait';
 
 /** 十連結果卡節點（原稿 Design System 3/ui_kits/gacha-pull-result，data-name 指定） */
+/** 取同一張貼圖裁成指定寬高比的 SpriteFrame（共用貼圖，只是另一個矩形；不複製像素） */
+function cropFrameToAspect(frame: SpriteFrame, aspect: number): SpriteFrame {
+    const rect = frame.rect;
+    const crop = coverCropRect(rect.width, rect.height, aspect);
+    const cropped = frame.clone();
+    cropped.rect = new Rect(rect.x + crop.x, rect.y + crop.y, crop.width, crop.height);
+    return cropped;
+}
+
 const GACHA_PULL_RESULT_CARDS = Array.from({ length: 10 }, (_, i) => `GachaPullResult_card_${i}`);
-const GACHA_PULL_RESULT_CARD_NODE_MAP = GACHA_PULL_RESULT_CARDS.map((card) => ({ rarityId: `${card}_tag`, nameId: `${card}_name` }));
+const GACHA_PULL_RESULT_CARD_NODE_MAP = GACHA_PULL_RESULT_CARDS.map((card) => ({ rarityId: `${card}_tag`, nameId: `${card}_name`, starsId: `${card}_stars` }));
 
 export interface GachaFlowCoordinatorOptions {
     gachaService: LocalGachaService;
@@ -77,6 +87,9 @@ const GACHA_LOAD_MAX_MS = 10000;
 export class GachaFlowCoordinator {
     private _heroPortraitSeq = 0;
     private _cardPortraitSeq = 0;
+    /** 目前結果畫面的 host 與「每張卡的換色對應」；點卡切換展示武將時要連同卡片對應一起重套（換色是整組覆寫） */
+    private _resultHost: UIScreenPreviewHost | null = null;
+    private _resultCardAliases: Record<string, string> = {};
     private readonly _options: GachaFlowCoordinatorOptions;
     private _resultBackAction: (() => void | Promise<void>) | null = null;
     private _resultRepullAction: (() => void | Promise<void>) | null = null;
@@ -253,6 +266,7 @@ export class GachaFlowCoordinator {
             const entry = results[index];
             cardTexts[nodeMap.rarityId] = entry ? this._toPullResultRarityLabel(entry.rarityTier) : '-';
             cardTexts[nodeMap.nameId] = entry ? entry.general.name : '未召喚';
+            cardTexts[nodeMap.starsId] = entry ? gachaCardStars(toGachaCardTier(entry.rarityTier)) : '';
         }
 
         // 抽完還剩多少：玩家要決定「再抽」前看得到（PROG-2-9117）
@@ -297,7 +311,7 @@ export class GachaFlowCoordinator {
             ...(labels ? { GachaPullResult_hero_desc: labels.heroDesc || heroLine || labels.heroDescFallback || '' } : {}),
         });
 
-        await awaitWithTimeout(this._restyleCardsByRarity(host, cards, results), GACHA_LOAD_MAX_MS, undefined, { label: 'gacha:restyle-cards' });
+        await awaitWithTimeout(this._restyleCardsByRarity(host, cards, results, topResult), GACHA_LOAD_MAX_MS, undefined, { label: 'gacha:restyle-cards' });
         // 逐字快取（CHAR）配英文 TTF 時中文畫不出來，換字後也會疊字；結果畫面整片改不快取
         disableCharCache(host.node);
         this._updateCardPortraits(binder, cards, results);
@@ -355,6 +369,8 @@ export class GachaFlowCoordinator {
                 GachaPullResult_hero_desc: showcaseDesc(entry.general, this._showcaseLines),
             });
             this._updateHeroPortrait(binder, entry.general.id);
+            // 展示區的稀有度標籤與底框跟著這位武將的稀有度換色
+            void this._resultHost?.restyleWithSlots({ ...this._resultCardAliases, ...buildHeroSlotAliases(toGachaCardTier(entry.rarityTier)) });
         }
         // 台詞淡入：重用同一個 UIOpacity，不每次新建節點
         const descNode: Node | null = binder.getNode ? binder.getNode('GachaPullResult_hero_desc') : null;
@@ -408,24 +424,15 @@ export class GachaFlowCoordinator {
     }
 
     /**
-     * 結果卡配色照實際稀有度：原稿十張示意卡各有寫死的稀有度與配色，
-     * 依抽到的稀有度找原稿同稀有度那張當樣板換樣式（UR／LR 用 SSR、N 用 R；原稿沒有的稀有度維持原樣）。
+     * 結果卡配色照實際稀有度（PROG-2-9810）：每張卡的外框、角標、底圖、名牌、星列，以及右側展示區的標籤與底框，
+     * 全部由該卡自己的 rarityTier 查 skin 的 `gacha.card.<稀有度>.<部位>` 色票，同稀有度必同色。
+     * 舊作法是「找原稿同稀有度那張示意卡當樣板」，示意卡順序一變、或樣板沒套上，就會顯示原稿的固定配色（SR 變綠、R 變藍）。
      */
-    private async _restyleCardsByRarity(host: UIScreenPreviewHost, cards: readonly string[], results: LocalGachaResultEntry[]): Promise<void> {
-        const templateOf = new Map<string, string>();
-        GACHA_PULL_RESULT_CARD_NODE_MAP.forEach((nodeMap, index) => {
-            const rarity = String(host.findLayoutSpec(nodeMap.rarityId)?.text ?? '').trim().toUpperCase();
-            if (rarity && !templateOf.has(rarity)) templateOf.set(rarity, cards[index]);
-        });
-        const family = (rarity: string): string => (rarity === 'UR' || rarity === 'LR' ? 'SSR' : rarity === 'N' ? 'R' : rarity);
-        const pairs: Array<{ target: string; template: string }> = [];
-        results.slice(0, cards.length).forEach((entry, index) => {
-            const rarity = this._toPullResultRarityLabel(entry.rarityTier);
-            const template = templateOf.get(rarity) ?? templateOf.get(family(rarity));
-            const target = cards[index];
-            if (template && template !== target) pairs.push({ target, template });
-        });
-        await host.restyleLike(pairs);
+    private async _restyleCardsByRarity(host: UIScreenPreviewHost, cards: readonly string[], results: LocalGachaResultEntry[], hero: LocalGachaResultEntry | undefined): Promise<void> {
+        const rarityTiers = results.map((entry) => entry.rarityTier);
+        this._resultHost = host;
+        this._resultCardAliases = buildResultSlotAliases(cards, rarityTiers, undefined);
+        await host.restyleWithSlots({ ...this._resultCardAliases, ...(hero ? buildHeroSlotAliases(toGachaCardTier(hero.rarityTier)) : {}) });
     }
 
     private _toPullResultRarityLabel(rarityTier: string | null | undefined): string {
@@ -557,15 +564,16 @@ export class GachaFlowCoordinator {
             sprite.enabled = false;
             const entry = results[index];
             if (!entry) return;
-            // 頭像填滿名牌以上的卡面（名牌約占卡高 20%）
-            const size = Math.round(Math.min(cardBox.width * 0.94, cardBox.height * 0.78));
-            portraitNode.getComponent(UITransform)!.setContentSize(size, size);
-            portraitNode.setPosition(0, cardBox.height * 0.5 - size * 0.5 - cardBox.height * 0.03, 0);
+            // 頭像填滿名牌以上的卡面（名牌 64px）：寬度扣掉外框，高度到名牌上緣；圖是方的，載入後置中裁成同比例，不拉伸
+            const width = cardBox.width - 12;
+            const height = cardBox.height - 64 - 6;
+            portraitNode.getComponent(UITransform)!.setContentSize(width, height);
+            portraitNode.setPosition(0, cardBox.height * 0.5 - height * 0.5 - 6, 0);
             void loadGeneralAvatar(entry.general.id).then((frame) => {
                 if (seq !== this._cardPortraitSeq || !sprite.isValid || !frame) return;
                 sprite.sizeMode = Sprite.SizeMode.CUSTOM;
                 sprite.trim = false;
-                sprite.spriteFrame = frame;
+                sprite.spriteFrame = cropFrameToAspect(frame, width / height);
                 sprite.enabled = true;
             }).catch((error) => {
                 UCUFLogger.warn(LogCategory.LIFECYCLE, '[GachaFlowCoordinator] card portrait load failed', error);
