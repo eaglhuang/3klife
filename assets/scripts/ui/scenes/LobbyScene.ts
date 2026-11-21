@@ -4557,6 +4557,8 @@ ${spent}`,
                 name: profile.name,
                 text,
                 volunteer: {
+                    acceptLabel: guide.acceptLabel,
+                    declineLabel: guide.declineLabel,
                     onAccept: () => {
                         this._pendingPromotionGuide = null;
                         this._lobbyHall?.refreshStage(Date.now() / 1000);

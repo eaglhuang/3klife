@@ -199,6 +199,9 @@ export interface PromotionHallGuide {
     readonly bubbleText: string;
     /** 導流台詞別名（等同 bubbleText） */
     readonly guideSpeech: string;
+    /** 泡泡「前往」「稍後」按鈕字樣 */
+    readonly acceptLabel: string;
+    readonly declineLabel: string;
 }
 
 /** 構建大廳武將頭頂金色「！」點擊後的導流資料（PROG-2-9610） */
@@ -244,6 +247,8 @@ export function buildPromotionHallGuide(
         primaryFeature: primary,
         bubbleText,
         guideSpeech: bubbleText,
+        acceptLabel: lookup ? lookup('ui.officer.promotion.hall_go') : '立即前往',
+        declineLabel: lookup ? lookup('ui.officer.promotion.hall_later') : '稍後',
     };
 }
 
