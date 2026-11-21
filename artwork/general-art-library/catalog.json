@@ -329,13 +329,13 @@
         ]
       },
       "smallAvatar": {
-        "activeVersion": "0001",
-        "status": "integrated",
+        "activeVersion": "0004",
+        "status": "review-pending",
         "history": [
           {
             "version": "0001",
             "file": "small_avatars/bu_lian_shi__步練師__small_avatar_0001.png",
-            "status": "integrated",
+            "status": "rejected",
             "sha256": "5d84f404114e07c92e37d939875fcf5227f02098d9ee91e9386480de0cd6c3ac",
             "canvas": "1254x1254 RGBA",
             "qc": "125px and 250px preview: natural three-quarter angle, face centered, full head and ornaments visible; crop ends at shoulder line with no chest skin.",
@@ -351,12 +351,12 @@
             "crop": "shoulder-line",
             "cropBox": "x=352,y=0,w=320,h=270; output x=-8,y=0,w=256,h=216 on 256x256 canvas",
             "qc": "Crop-only derived from approved standing art; 256x256 canvas and transparent padding verified. Final visual inspection of this revision remains pending.",
-            "note": "使用者移除不合格裁切，已由新的等比例裁切候選取代。"
+            "note": "使用者已移除不合格小頭像，已由新裁切候選取代。"
           },
           {
             "version": "0003",
             "file": "small_avatars/bu_lian_shi__步練師__small_avatar_0003.png",
-            "status": "review-pending",
+            "status": "superseded",
             "sha256": "345a9a41af0666aaae498e6cea562add724f6445236456d75b38d6e31caa65cf",
             "canvas": "1254x1254 RGBA",
             "cropBox": {
@@ -369,9 +369,28 @@
             "sourceStandingFile": "standing/bu_lian_shi__步練師__standing_0002.png",
             "sourceSha256": "00b7d30fd3d655859fcc908246db32c6dd116381ef657a8d7ca439ad654e6283",
             "method": "crop-only; uniform resize; transparent padding; no redraw",
-            "qc": "核定站姿原圖直接裁切；輸出尺寸與透明邊界已確認，縮圖已檢視；候選維持 review-pending。",
+            "qc": "裁切自核定站姿原圖；輸出尺寸與 alpha 已確認；比例與肩線候選已縮圖檢視，保留 review-pending。",
             "note": "依使用者要求重做小頭像，未重畫人物。",
             "createdAt": "2026-11-18"
+          },
+          {
+            "version": "0004",
+            "file": "small_avatars/bu_lian_shi__步練師__small_avatar_0004.png",
+            "status": "review-pending",
+            "sha256": "7da15da325341c05308fa1270550407b6e3bc5118b50913b8acafea748b5129c",
+            "canvas": "256x256 RGBA",
+            "method": "crop-only; uniform resize with alpha premultiplication; no redraw",
+            "qc": "按既有肩線裁切候選等比例縮至256x256；構圖未改，肩線與裁切邊界仍需目視複核，保持review-pending。",
+            "createdAt": "2026-11-21",
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/bu_lian_shi__步練師__standing_0002.png",
+            "sourceStandingSha256": "00b7d30fd3d655859fcc908246db32c6dd116381ef657a8d7ca439ad654e6283",
+            "cropBox": {
+              "x": 352,
+              "y": 0,
+              "width": 320,
+              "height": 270
+            }
           }
         ]
       }
