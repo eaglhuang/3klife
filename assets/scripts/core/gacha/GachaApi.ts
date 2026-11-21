@@ -66,6 +66,8 @@ export interface GachaPoolDto {
     tenCost: number;
     rates: GachaRateDto[];
     pity: GachaPityDto;
+    /** 走共通 API 的池：各階保底（硬保底抽數）；十連鈕小字由此產生 */
+    pities?: Array<{ tier: string; hardAt: number }>;
 }
 
 export type GachaWalletDto = Record<GachaCurrencyId, number>;

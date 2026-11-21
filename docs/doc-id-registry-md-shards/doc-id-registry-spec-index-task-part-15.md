@@ -155,5 +155,7 @@
 | `doc_task_2747` | docs/agent-briefs/tasks/PROG/PROG-2-9591.md | [PROG-2-9591] F3 家族銀兩錢包（銀兩幣別、媒人禮金與乳母費實扣） |
 | `doc_task_2748` | docs/agent-briefs/tasks/PROG/PROG-2-9592.md | [PROG-2-9592] F3 配偶 SP1／SP2 接線（他國仕官女將結緣移籍、開戰母國牽掛） |
 | `doc_task_2749` | docs/agent-briefs/tasks/PROG/PROG-2-9606.md | [PROG-2-9606] 結緣（紅顏）事件輕鬆文案範例 20 則 |
+| `doc_task_2750` | docs/agent-briefs/tasks/PROG/PROG-2-9244.md | [PROG-2-9244] 教官池畫面驗收修正（十連小字、預設 UP 主視覺、說明框版面與 SSR 對比） |
 | `doc_task_2751` | docs/agent-briefs/tasks/PROG/PROG-2-9708.md | [PROG-2-9708] 格子 buff 標記畫到小兵身上（渲染層次倒置） |
-| `doc_task_2752` | docs/agent-briefs/tasks/PROG/PROG-2-9193.md | PROG-2-9193：G4 郡望宗脈常駐與高門求親 |
+| `doc_task_2760` | docs/agent-briefs/tasks/PROG/PROG-2-9705.md | [PROG-2-9705] 戰場 HUD 徽章風格第一版 |
+| `doc_task_2761` | docs/agent-briefs/tasks/PROG/PROG-2-9193.md | PROG-2-9193：G4 郡望宗脈常駐與高門求親 |

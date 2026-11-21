@@ -4149,7 +4149,7 @@
         "left": 6
       },
       "borderWidth": 6,
-      "borderColor": "#2a4a44"
+      "borderColor": "#FFC107"
     },
     "auto.gacha-ds3-tab-support.raterarity0": {
       "kind": "label-style",
@@ -4157,7 +4157,7 @@
       "fontSize": 30,
       "lineHeight": 42,
       "letterSpacing": 1.8,
-      "color": "stdButtonPrimary",
+      "color": "rarityGold",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
@@ -4176,7 +4176,7 @@
       "fontSize": 34,
       "lineHeight": 48,
       "letterSpacing": 0,
-      "color": "stdButtonPrimary",
+      "color": "rarityGold",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",

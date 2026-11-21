@@ -13849,6 +13849,53 @@
       "notes": "狀態: done。變更: 新增 doc_spec_1288 結緣事件文案範例（20 則）；更新 cross-ref-specs 與 tasks-prog。"
     },
     {
+      "doc_id": "doc_task_2760",
+      "id": "PROG-2-9705",
+      "title": "戰場 HUD 徽章風格第一版",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "2026-11-21T22:30:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "頭頂框、虎符卡、軍師框、標題列統一成格子 buff 徽章風格（深底金圈黑描邊字）第一版",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "7456 截圖四處呈現新徽章風格",
+        "單元測試全過、tsc 0 錯、compute-gate quick 通過"
+      ],
+      "deliverables": [
+        "assets/scripts/battle/views/UnitRenderer.ts",
+        "assets/resources/ui-spec/skins/tiger-tally-default.json",
+        "assets/resources/ui-spec/skins/strategist-hud-battle.json",
+        "assets/resources/ui-spec/skins/battle-hud-screen.skin.json",
+        "docs/agent-briefs/tasks/PROG/PROG-2-9705.md"
+      ],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 7456 截圖＋單元測試＋tsc＋閘門 | 變更: UnitRenderer 與三個 skin JSON | 阻塞: 無",
+      "brief": "docs/agent-briefs/tasks/PROG/PROG-2-9705.md",
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
       "doc_id": "doc_task_2751",
       "id": "PROG-2-9708",
       "title": "格子 buff 標記畫到小兵身上（渲染層次倒置）",
