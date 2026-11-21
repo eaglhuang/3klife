@@ -16386,6 +16386,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_2751",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9708.md",
+    "title": "[PROG-2-9708] 格子 buff 標記畫到小兵身上（渲染層次倒置）",
+    "category": "task"
+  },
+  {
     "id": "doc_task_2760",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9705.md",
     "title": "[PROG-2-9705] 戰場 HUD 徽章風格第一版",
