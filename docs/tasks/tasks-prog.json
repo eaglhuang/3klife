@@ -14199,6 +14199,50 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_2929",
+      "id": "PROG-2-9711",
+      "title": "QA 預覽／直進戰場模擬出征帳本，試玩腳本實測自動代打",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-22 | 狀態: done | 驗證: 單元測試 6 項、tsc 0 錯、閘門 4/4；7456 實跑 AI 自動出兵推進到第 15 回合結算 | 變更: 預覽／QA 模擬出征帳本、結算不寫入名冊、試玩腳本按自動代打 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "updated": "2026-11-22"
