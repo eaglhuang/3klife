@@ -1,0 +1,18 @@
+{
+  "_note": "Policy for doc_id allocation across parallel agents. Allocation floor = max(local registry, base ref registry, active local reservations) + 1. CI rejects doc_ids newly colliding with the base ref.",
+  "baseRef": "origin/master",
+  "fetchRemote": "origin",
+  "fetchBranch": "master",
+  "fetchTimeoutMs": 20000,
+  "reservationTtlHours": 168,
+  "reservationLedgerFile": "doc-id-reservations.json",
+  "shardDir": "docs/doc-id-registry-shards",
+  "mirrorRoots": [
+    ".agents/skills",
+    ".claude/skills",
+    ".codex/skills",
+    ".github/skills",
+    ".cursor/rules/skills",
+    ".gemini/skills"
+  ]
+}
