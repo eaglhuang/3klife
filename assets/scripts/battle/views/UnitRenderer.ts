@@ -180,6 +180,17 @@ const HP_BAR_COLOR = {
   enemy: new Color(230, 70, 60, 255),
 } as const;
 
+/**
+ * 頭頂名牌徽章風格（PROG-2-9705，對齊格子 buff 徽章）：深色底＋金圈、兵種放金圈圓章、字一律黑描邊。
+ * 顏色取自 TileBuffMarkers 的金圈與描邊色，兩邊看起來是同一套 UI。
+ */
+const BADGE_FILL = new Color(22, 15, 9, 215);
+const BADGE_RING = new Color(255, 214, 90, 255);
+const BADGE_RING_INNER = new Color(255, 225, 110, 90);
+const BADGE_TEXT_OUTLINE = new Color(30, 18, 8, 255);
+const BADGE_TEXT_OUTLINE_WIDTH = 3;
+const BADGE_TYPE_DISC_FILL = new Color(42, 28, 16, 255);
+
 /** 名牌旁精力能量環半徑（PROG-2-1853） */
 const VITALITY_RING_RADIUS = 24;
 /** 武將名牌徽章尺寸（createGeneralView 的 buildBadge 參數；避讓計算共用） */
@@ -1973,9 +1984,14 @@ export class UnitRenderer extends Component {
     const x = -HP_BAR_WIDTH / 2;
     const y = -HP_BAR_HEIGHT / 2;
     g.clear();
-    g.fillColor = new Color(0, 0, 0, 180);
+    g.fillColor = new Color(22, 15, 9, 220);
     g.roundRect(x - 2, y - 2, HP_BAR_WIDTH + 4, HP_BAR_HEIGHT + 4, 3);
     g.fill();
+    // 金色細框（PROG-2-9705），與名牌金圈同色
+    g.lineWidth = 1.5;
+    g.strokeColor = BADGE_RING;
+    g.roundRect(x - 2, y - 2, HP_BAR_WIDTH + 4, HP_BAR_HEIGHT + 4, 3);
+    g.stroke();
     if (chipRatio !== undefined && chipRatio > state.ratio) {
       g.fillColor = HP_BAR_CHIP_COLOR;
       g.rect(x, y, HP_BAR_WIDTH * Math.min(1, chipRatio), HP_BAR_HEIGHT);
@@ -2006,6 +2022,9 @@ export class UnitRenderer extends Component {
     label.horizontalAlign = Label.HorizontalAlign.CENTER;
     label.verticalAlign = Label.VerticalAlign.CENTER;
     label.overflow = Label.Overflow.SHRINK;
+    label.enableOutline = true;
+    label.outlineColor = BADGE_TEXT_OUTLINE;
+    label.outlineWidth = 2;
     return { graphics, label };
   }
 
@@ -2013,9 +2032,13 @@ export class UnitRenderer extends Component {
     const g = view.vitalityRing;
     const [r, gr, b] = ring.color;
     g.clear();
-    g.fillColor = new Color(0, 0, 0, 150);
+    g.fillColor = BADGE_FILL;
     g.circle(0, 0, VITALITY_RING_RADIUS + 5);
     g.fill();
+    g.lineWidth = 2.5;
+    g.strokeColor = BADGE_RING;
+    g.circle(0, 0, VITALITY_RING_RADIUS + 6);
+    g.stroke();
     g.lineWidth = 6;
     g.strokeColor = new Color(70, 70, 70, 220);
     g.circle(0, 0, VITALITY_RING_RADIUS);
@@ -2046,9 +2069,19 @@ export class UnitRenderer extends Component {
     const bgTf = bgNode.addComponent(UITransform);
     bgTf.setContentSize(width + 10, height * 2 + 10);
     const bgGraphics = bgNode.addComponent(Graphics);
-    bgGraphics.fillColor = new Color(0, 0, 0, 150);
-    bgGraphics.roundRect(-bgTf.width/2, -bgTf.height/2, bgTf.width, bgTf.height, 5);
+    // 徽章底：深色底＋金圈外框＋內側淡金細線（PROG-2-9705）
+    const bw = bgTf.width, bh = bgTf.height;
+    bgGraphics.fillColor = BADGE_FILL;
+    bgGraphics.roundRect(-bw / 2, -bh / 2, bw, bh, 10);
     bgGraphics.fill();
+    bgGraphics.lineWidth = 3;
+    bgGraphics.strokeColor = BADGE_RING;
+    bgGraphics.roundRect(-bw / 2, -bh / 2, bw, bh, 10);
+    bgGraphics.stroke();
+    bgGraphics.lineWidth = 1.5;
+    bgGraphics.strokeColor = BADGE_RING_INNER;
+    bgGraphics.roundRect(-bw / 2 + 4, -bh / 2 + 4, bw - 8, bh - 8, 7);
+    bgGraphics.stroke();
 
     const segmentHeight = height;
     let gap = 8;
@@ -2085,6 +2118,23 @@ export class UnitRenderer extends Component {
       18,
     );
     typeLabel.node.parent!.setPosition(0, segmentHeight / 2 + 2, 0);
+    // 兵種圓章：跟格子 buff 圖示同款的金圈深底圓（畫在兵種字／圖示後面）
+    {
+      const discNode = new Node("TypeDisc");
+      discNode.layer = rootNode.layer;
+      const typeSeg = typeLabel.node.parent!;
+      typeSeg.insertChild(discNode, 0);
+      discNode.addComponent(UITransform).setContentSize(segmentHeight + 8, segmentHeight + 8);
+      const disc = discNode.addComponent(Graphics);
+      const r = segmentHeight / 2 + 1;
+      disc.fillColor = BADGE_TYPE_DISC_FILL;
+      disc.circle(0, 0, r);
+      disc.fill();
+      disc.lineWidth = 2.5;
+      disc.strokeColor = BADGE_RING;
+      disc.circle(0, 0, r);
+      disc.stroke();
+    }
 
     if (troopType) {
       typeLabel.string = this.toTroopShortName(troopType);
@@ -2135,6 +2185,9 @@ export class UnitRenderer extends Component {
     nameStrLabel.horizontalAlign = HorizontalTextAlignment.CENTER;
     nameStrLabel.verticalAlign = VerticalTextAlignment.CENTER;
     nameStrLabel.color = new Color(255, 255, 255, 255);
+    nameStrLabel.enableOutline = true;
+    nameStrLabel.outlineColor = BADGE_TEXT_OUTLINE;
+    nameStrLabel.outlineWidth = BADGE_TEXT_OUTLINE_WIDTH;
 
     // 以擴充屬性保存引用，供 updateUnitView 快速更新
     (rootNode as any)._bottomNameLabel = nameStrLabel;
@@ -2204,6 +2257,9 @@ export class UnitRenderer extends Component {
     label.lineHeight = fontSize + 2;
     label.color = textColor;
     label.isBold = true;
+    label.enableOutline = true;
+    label.outlineColor = BADGE_TEXT_OUTLINE;
+    label.outlineWidth = BADGE_TEXT_OUTLINE_WIDTH;
     label.horizontalAlign = HorizontalTextAlignment.CENTER;
     label.verticalAlign = VerticalTextAlignment.CENTER;
     return label;
