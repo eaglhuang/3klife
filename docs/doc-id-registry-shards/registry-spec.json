@@ -7306,5 +7306,17 @@
     "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-i.md",
     "title": "學府修業畫面與接線設計（分片索引） — 14 教官就是武將（教官卡退場）、共用框架對應、建議 JSON、驗收、實作卡切分",
     "category": "spec"
+  },
+  {
+    "id": "doc_spec_1247",
+    "path": "docs/遊戲規格文件/系統規格書/貨幣與資源總規格書.md",
+    "title": "貨幣與資源總規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1248",
+    "path": "docs/遊戲規格文件/系統規格書/人員占用系統Base框架規格書.md",
+    "title": "人員占用系統Base框架規格書（分片索引）",
+    "category": "spec"
   }
 ]

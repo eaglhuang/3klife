@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "source": "../人員占用系統Base框架規格書.md",
+  "indexTitle": "人員占用系統Base框架規格書（分片索引）",
+  "indexPath": "docs/遊戲規格文件/系統規格書/人員占用系統Base框架規格書.md",
+  "type": "markdown-h2",
+  "preambleShard": "shard-a",
+  "defaultShard": "shard-c",
+  "shards": [
+    {"name": "shard-a", "title": "1–3 目的、核心概念、共用資料結構（種類、互斥矩陣）", "pattern": "^[1-3][.] "},
+    {"name": "shard-b", "title": "4–10 共用 API、包裝接入、依賴、存檔、盤點、驗收、裁決紀錄", "pattern": "^([4-9]|10)[.] "},
+    {"name": "shard-c", "title": "11–12 伺服器 API、實作卡切分", "pattern": "."}
+  ]
+}
