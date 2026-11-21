@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { assert, TestSuite } from './TestRunner';
 import {
+    buildPromotionHallGuide,
     buildRankUnlockPopupView,
     installOfficerFeatureUnlocks,
     isFeatureUnlocked,
@@ -191,6 +192,74 @@ export function createOfficerFeatureUnlocksSuite(): TestSuite {
         assert.equals('下一官職「郡守」將開放：天下沙盤', withLine['DialogCard/ScrollView/ScrollContent/EmptyHintLabel']);
         const emptyBoth = buildSeasonReportPanelTexts('第 1 年 春季', [], [], '預告');
         assert.equals('本季風平浪靜，無事可報。\n預告', emptyBoth['DialogCard/ScrollView/ScrollContent/EmptyHintLabel']);
+    });
+
+    suite.test('PROG-2-9610：敕封詔書口吻、四語系一致性與首要功能標記', () => {
+        load();
+        const locales = ['zh-TW', 'zh-CN', 'en', 'ja'];
+        const keys = [
+            'ui.officer.promotion.decree_title',
+            'ui.officer.promotion.decree_speech',
+            'ui.officer.promotion.hall_bubble',
+        ];
+        for (const loc of locales) {
+            const locPath = path.resolve(__dirname, `../assets/resources/i18n/${loc}.json`);
+            assert.isTrue(fs.existsSync(locPath), `缺少語系檔 ${loc}`);
+            const data = readJson<Record<string, string>>(locPath);
+            for (const key of keys) {
+                assert.isTrue(typeof data[key] === 'string' && data[key].length > 0, `語系 ${loc} 缺少 key: ${key}`);
+            }
+        }
+
+        const zhTW = readJson<Record<string, string>>(path.resolve(__dirname, '../assets/resources/i18n/zh-TW.json'));
+        const fakeLookup = (k: string, ...args: (string | number)[]): string => {
+            let str = zhTW[k] ?? k;
+            args.forEach((arg, idx) => {
+                str = str.replace(new RegExp(`\\{${idx}\\}`, 'g'), String(arg));
+            });
+            return str;
+        };
+
+        const view = buildRankUnlockPopupView(2, 3, {
+            imperialDecree: true,
+            lookup: fakeLookup,
+        });
+        assert.isTrue(view !== null);
+        if (!view) return;
+        assert.equals('朝廷敕封：晉升【郡守】', view.texts.rankUnlockTitle);
+        assert.isTrue(view.texts.rankUnlockSub.includes('史小境'));
+        assert.isTrue(view.texts.rankUnlockSub.includes('郡守'));
+        assert.isTrue(view.primaryFeature !== undefined);
+        assert.equals('SANDTABLE', view.primaryFeature?.id);
+    });
+
+    suite.test('PROG-2-9610：buildPromotionHallGuide 大廳導流台詞與首要機能引導', () => {
+        load();
+        const zhTW = readJson<Record<string, string>>(path.resolve(__dirname, '../assets/resources/i18n/zh-TW.json'));
+        const fakeLookup = (k: string, ...args: (string | number)[]): string => {
+            let str = zhTW[k] ?? k;
+            args.forEach((arg, idx) => {
+                str = str.replace(new RegExp(`\\{${idx}\\}`, 'g'), String(arg));
+            });
+            return str;
+        };
+
+        // 升至階位 3（郡守），首要解鎖功能為天下沙盤 (SANDTABLE, lobbyAction: 'sandtable')
+        const guide = buildPromotionHallGuide([3], fakeLookup);
+        assert.isTrue(guide !== null);
+        if (!guide) return;
+        assert.equals('SANDTABLE', guide.primaryFeature.id);
+        assert.equals('sandtable', guide.primaryFeature.lobbyAction);
+        assert.isTrue(guide.guideSpeech.includes('主公晉升【郡守】'));
+        assert.isTrue(guide.guideSpeech.includes('天下沙盤'));
+
+        // 空階位或無新解鎖時回傳 null
+        assert.equals(null, buildPromotionHallGuide([] as number[], fakeLookup));
+        assert.equals(null, buildPromotionHallGuide([1], fakeLookup));
+        // 亦支援 (prevRank, nextRank) 雙參數模式
+        const guide2 = buildPromotionHallGuide(2, 3, fakeLookup);
+        assert.isTrue(guide2 !== null);
+        assert.equals('SANDTABLE', guide2?.primaryFeature.id);
     });
 
     return suite;

@@ -65,7 +65,7 @@ export interface HallActorTapView {
     name: string;
     text: string;
     /** 有值＝這位武將正在自薦任務：泡泡顯示「交給你／再議」，按「交給你」才呼叫 onAccept；沒有就是單純聊天（不顯示選項、自動收起） */
-    volunteer?: { onAccept: () => void };
+    volunteer?: { onAccept: () => void; /** 覆寫「交給你」字樣（晉升導流用） */ acceptLabel?: string; /** 覆寫「再議」字樣 */ declineLabel?: string };
 }
 
 /** 聊天泡泡停留秒數取自設定檔 bubbleSeconds；自薦任務要讓玩家有時間決定，停久一點 */
@@ -158,6 +158,8 @@ export class LobbyHallScreenBinder {
     private _bubbleTimer: ReturnType<typeof setTimeout> | null = null;
     /** 泡泡同一時間只有一個：誰開著、計時代號（連點不疊、舊計時不誤關） */
     private readonly _bubble = new HallBubbleState();
+    /** 設計稿原本的選項字樣（「交給你／再議」），被晉升導流覆寫後用來還原 */
+    private _choiceDefaults: { accept: string; decline: string } | null = null;
     /** 「交給你」要做什麼；泡泡收起時清空 */
     private _bubbleAccept: (() => void) | null = null;
     private _map: HallMapTurnPlayer | null = null;
@@ -354,6 +356,11 @@ export class LobbyHallScreenBinder {
         this._stage.close();
     }
 
+    /** 手動立即刷新舞臺人群標記與站位（PROG-2-9610） */
+    refreshStage(nowSec: number): void {
+        this._stage?.tick(nowSec);
+    }
+
     /** 依遊戲季節（1~4）與當地小時套主題；設定檔沒載到時不動畫面。 */
     refresh(seasonIndex: number, hour: number, festivalId: string | null = null): void {
         const config = this._deps.themeConfig;
@@ -396,6 +403,7 @@ export class LobbyHallScreenBinder {
         bubble.on(Node.EventType.TOUCH_END, () => this._closeBubble());
         if (!choiceRow) return;
         const [accept, decline] = choiceRow.children;
+        this._choiceDefaults = { accept: (accept.getComponent(Label) ?? accept.children[0]?.getComponent(Label))?.string ?? '', decline: (decline.getComponent(Label) ?? decline.children[0]?.getComponent(Label))?.string ?? '' };
         accept.off(Node.EventType.TOUCH_END);
         accept.on(Node.EventType.TOUCH_END, () => {
             const onAccept = this._bubbleAccept;
@@ -450,7 +458,15 @@ export class LobbyHallScreenBinder {
         const choiceRow = bubble.children.filter(child => child.children.length >= 2).pop();
         setText(nameLabel, `${content.name}：`);
         setText(textLabel, content.text);
-        if (choiceRow) choiceRow.active = !!content.volunteer;
+        if (choiceRow) {
+            choiceRow.active = !!content.volunteer;
+            // 選項字樣：有覆寫就用覆寫，否則還原設計稿預設（節點重用，避免殘留上次的字）
+            const defaults = this._choiceDefaults;
+            if (content.volunteer && defaults) {
+                setText(choiceRow.children[0], content.volunteer.acceptLabel ?? defaults.accept);
+                setText(choiceRow.children[1], content.volunteer.declineLabel ?? defaults.decline);
+            }
+        }
         // 換人：先放行被擠掉的上一位（同一人連點不放行，只刷新計時）
         const opened = this._bubble.open(generalId);
         if (opened.previous && opened.previous !== generalId) this._crowd?.releaseActor(opened.previous);
