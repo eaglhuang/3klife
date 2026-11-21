@@ -6,7 +6,7 @@
       "kind": "token",
       "stack": { "mode": "stackable", "max": 3 },
       "bind": "none",
-      "overflow": { "toCurrency": "gold", "amount": 5000 }
+      "overflow": { "toCurrency": "gold", "amount": 100 }
     }
   ],
   "holders": [

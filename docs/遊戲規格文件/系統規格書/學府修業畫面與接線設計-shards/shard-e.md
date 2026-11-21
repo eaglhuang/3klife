@@ -17,7 +17,7 @@
 | 亂數種子 | `AcademyFlowDeps.worldSeed()`、快照 `prngSeedHex`／`inheritSeedHex`；`deriveAcademyRootSeed` | 種子由客戶端組出；網路版必須由伺服器發 |
 | 開獎與印記 | `rollAncestralInheritEvent`、`rollGraduationCareerMark`（`AcademyInheritAndMarks`），設定 `data/academy-inherit-marks` | 純函式，確定性；結果寫在快照 `ancestralInheritHistory`／`graduatedCareerMark`／`pendingAptitudeBoosts` |
 | 結業寫回 | `GameSession.graduateFromAcademy` → `applyAcademyGraduation`（五維、`learnedTactics`、`learnedTraits`、`careerMarks`、適性升階） | 直接改名冊武將；評級 `academyGradeOf`（總和 900／700／500，暫定） |
-| 入學令 | `NurtureService.admission`（`{season, used}`、`admissionsPerSeason`、`consumeAdmissionToken`／`refundAdmissionToken`） | 只是「當季已用幾次」的計數器，不是庫存物品；與 doc_spec_0557 第 3 章（每季發 1 枚、庫存封頂 3、溢出折 5000 黃金）不一致 |
+| 入學令 | `NurtureService.admission`（`{season, used}`、`admissionsPerSeason`、`consumeAdmissionToken`／`refundAdmissionToken`） | 只是「當季已用幾次」的計數器，不是庫存物品；與 doc_spec_0557 第 3 章（每季發 1 枚、庫存封頂 3、溢出折 100 黃金）不一致 |
 | 教官 | `MentorCard`（`loadMentorCards`）、`lockedMentorIds()`、`assignYingchuanMentors`、`YINGCHUAN_MENTOR_CATALOG`（`bond`）、`MentorBorrowController`、`MentorHoldingsController` | 教官持有、鎖定、好感、借將各自一套；潁川 3 槽（祠堂 +1） |
 | 戰法與 TP | 結業寫回只收 `learnedTactics`；`careerMarkTpDiscount`／`applyCareerMarkTpDiscountToCost`（TP 折扣，上限 60%）；doc_spec_1127 第 4 章 `tp`／`totalTp` | **引擎快照沒有 `tp`／`totalTp` 欄位**；TP 折扣函式存在但學府內沒有消耗端；沒有「結業戰法商店」 |
 | 外界時鐘 | `AcademyFrozenError`（`GameSession` 約 5195 行）、`frozenGameTime`、`_advanceSeasonWithSalaries()` | 凍結與推季在 `GameSession` 內，無冪等鍵 |
@@ -37,7 +37,7 @@
 | 結業獎勵：評級、白因子印記、戰法與特質寫回、適性升階 | **獎勵**（結算發放）＋ **技能**（寫回武將） | 獎勵：`rewardRef=academy.graduation`、`grade` 門檻表（S／A／B／C）、`careerMark`（`rollGraduationCareerMark`）、`aptitudeBoosts`；技能：`grant` 五維、戰法（上限 3）、特質（上限 2） |
 | 潁川清談大會手牌、抽牌、事件抉擇 | **獎勵**（抽牌）＋ **任務**（互動步驟）＋ **劇情**（事件 A／B） | 抽牌：`poolId=yingchuan.essay`、`handLimit=5`、`drawStats=[int,pol,lea]`；任務：`stepAction=GIMMICK_INTERACT`、`blockingInteraction=DEBATE｜EVENT`；劇情：`YINGCHUAN_EVENTS` 對應 `storyId` |
 | 受傷、失敗、保底懲罰（精力 <30、異常中斷 3 次） | **獎勵**（懲罰） | `kind=penalty`、`injury={LIGHT,SEVERE}`、`vigorPenaltyRate`、`forceRestRounds`、`abuseFloorGain=5`、`abuseEnergyPenalty=20`、`resonanceLockTurns=2`（doc_spec_0557 第 2.2 節、0302） |
-| 入學令（每季發 1 枚、封頂 3、溢出折 5000 黃金） | **物品庫存**（道具）＋ **獎勵**（定期發放） | ItemDef：`itemId=academy_admission_token`、`category=consumable`、`stackCap=3`、`overflow={toCurrency:gold,amount:5000}`、`holder=family:storehouse`（暫定，Q9）；發放：`grant={everySeason,count:1}` |
+| 入學令（每季發 1 枚、封頂 3、溢出折 100 黃金） | **物品庫存**（道具）＋ **獎勵**（定期發放） | ItemDef：`itemId=academy_admission_token`、`category=consumable`、`stackCap=3`、`overflow={toCurrency:gold,amount:100}`、`holder=family:storehouse`（暫定，Q9）；發放：`grant={everySeason,count:1}` |
 | 補元散、補腦湯（重修）、自動培育券、家學 | **物品庫存**（消耗品）＋ **技能**（buff） | ItemDef `consumable`；`effectKind=energyRefill｜retake｜autoTrain`；第一版隱藏（Q4），但 ItemDef 預留，不另造結構 |
 | 教官（見 9.3） | **物品庫存**＋ **技能** | 見下節 |
 | 學戰法、TP（技巧點）累積與花費 | **技能** | `skillPoint.tp`（`baseGain=10`、`mentorTpBonusPct`、`bondEventGain=15`）、`totalTp`（只增不減，供評級）、`learn.cost`、`learn.discount`（綠因子 0.5＋印記每星 5%、合計上限 60%，即 `applyCareerMarkTpDiscountToCost`）、`slots={tactic:3,trait:2}` |
@@ -75,7 +75,7 @@
 | 5 | 雙年開獎、結業印記、共鳴次數 | 客戶端擲、存快照 | `reward.roll(poolId, seedScope)`；結果與 `history` 由 adapter 回傳並存 |
 | 6 | 結業寫回名冊（五維、戰法、特質、`careerMarks`、適性升階）與評級 | `GameSession.graduateFromAcademy` 直接改武將 | `task.settle(instanceId)` → `reward.grant` → `skill.grant`；一筆交易，失敗回滾 |
 | 7 | 入學令餘額、季發放、溢出折黃金 | `NurtureService.admission` 計數 | `inventory.consume／grant`、`reward.grantPeriodic`；餘額就是庫存數量 |
-| 8 | 黃金等貨幣入帳（入學令溢出 5000） | 無 | `inventory.currency.credit`（走貨幣操作，不另開管道） |
+| 8 | 黃金等貨幣入帳（入學令溢出 100） | 無 | `inventory.currency.credit`（走貨幣操作，不另開管道） |
 | 9 | 外界時鐘：凍結、`frozenGameTime`、結業推季 1 次、年齡 +0.25 | `GameSession` 內 `AcademyFrozenError`、`_advanceSeasonWithSalaries` | `time.freeze`、`time.advanceSeason(idempotencyKey=instanceId)`；結業重送不會推第 2 次 |
 | 10 | TP、`totalTp`、已學戰法／特質槽、TP 折扣結算 | 引擎無欄位；折扣函式孤立 | `skill.spendPoint`、`skill.learn`、`skill.slots`；商店購買走 `shop.purchase` |
 | 11 | 教官持有、碎片、指派鎖定、好感 `bond`、借將 | `MentorCard`／`lockedMentorIds`／`MentorBorrowController` 各一套 | `inventory.hold／assign／release`；`skill.bondAdjust`；借將 `inventory.borrow`（網路版天生需伺服器） |
