@@ -1425,7 +1425,7 @@ export class GameSession implements AcademyRecordPort {
     public get academyHost(): AcademyHost {
         return {
             port: this,
-            persist: async () => { if (this.hasSaveService) await this.save(); },
+            persist: async (via) => { if (this.hasSaveService) await this.save(via); },
             clanUuid: () => this.clanUuid,
         };
     }
@@ -6982,8 +6982,9 @@ export class GameSession implements AcademyRecordPort {
         } satisfies ClanPrestigeChangedPayload);
     }
 
-    public async save(): Promise<PlayerSaveSnapshot> {
-        const service = this._requireSave();
+    /** via＝改用指定的存檔出口（命令處理器內存檔時用，避免經佇列排隊死結；見 AcademyHost.persist） */
+    public async save(via?: Pick<SessionSaveService, 'save'>): Promise<PlayerSaveSnapshot> {
+        const service = via ?? this._requireSave();
         const snapshot = this.createSnapshot();
         await service.save(snapshot);
         this._emit(GAME_SESSION_EVENTS.Saved, snapshot);
