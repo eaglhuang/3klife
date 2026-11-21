@@ -124,11 +124,11 @@ async function sessionRig(persistFails = false) {
 export function createItemInventorySuite(): TestSuite {
     const suite = new TestSuite('ItemInventory (物品庫存 base MVP：家庭倉庫與入學令 PROG-2-9203)');
 
-    suite.test('設定檔 item-config.json 與內建預設完全一致（入學令封頂 3、溢出 5000 金、每季發 1）', () => {
+    suite.test('設定檔 item-config.json 與內建預設完全一致（入學令封頂 3、溢出 100 金、每季發 1）', () => {
         const json = JSON.parse(fs.readFileSync(path.join(ROOT, 'assets/resources/data/item-config.json'), 'utf8')) as unknown;
         assert.equals(JSON.stringify(DEFAULT_ITEM_CONFIG), JSON.stringify(normalizeItemConfig(json)));
         assert.equals(3, DEFAULT_ITEM_CONFIG.items[0].stack.max);
-        assert.equals(5000, DEFAULT_ITEM_CONFIG.items[0].overflow?.amount);
+        assert.equals(100, DEFAULT_ITEM_CONFIG.items[0].overflow?.amount);
     });
 
     suite.test('壞設定不丟例外：非物件回預設，壞條目被丟掉', () => {
@@ -143,7 +143,7 @@ export function createItemInventorySuite(): TestSuite {
         const a = planGrant(cfg, HOME, 'main', ADMISSION_TOKEN_ID, 2, 1, 1);
         assert.isTrue(a.ok && a.added === 2 && a.overflow === null);
         const b = planGrant(cfg, HOME, 'main', ADMISSION_TOKEN_ID, 3, 2, 1);
-        assert.isTrue(b.ok && b.added === 1 && b.overflow?.units === 2 && b.overflow.amount === 10000);
+        assert.isTrue(b.ok && b.added === 1 && b.overflow?.units === 2 && b.overflow.amount === 200);
         const noOverflow = normalizeItemConfig({ ...cfg, items: [{ ...cfg.items[0], overflow: null }] });
         const c = planGrant(noOverflow, HOME, 'main', ADMISSION_TOKEN_ID, 1, 3, 1);
         assert.isTrue(!c.ok && c.reason === 'ITEM_FULL');
@@ -152,7 +152,7 @@ export function createItemInventorySuite(): TestSuite {
         assert.isTrue(planConsume(1, 2).ok === false && planConsume(2, 2).ok === true);
     });
 
-    suite.test('item.grant 發放到封頂；再發溢出折 5000 金入錢包；回應帶 delta 與 inventory.overflow 事件', async () => {
+    suite.test('item.grant 發放到封頂；再發溢出折 100 金入錢包；回應帶 delta 與 inventory.overflow 事件', async () => {
         const { api, authority, wallet } = memoryRig();
         const events: string[] = [];
         api.subscribe('inventory.overflow', () => events.push('overflow'));
@@ -163,8 +163,8 @@ export function createItemInventorySuite(): TestSuite {
         if (isApiFail(r2)) throw new Error(r2.message);
         assert.equals(1, r2.result.granted);
         assert.equals(3, r2.result.count);
-        assert.equals(5000, r2.result.overflow?.amount ?? 0);
-        assert.equals(5100, wallet.gold);
+        assert.equals(100, r2.result.overflow?.amount ?? 0);
+        assert.equals(200, wallet.gold);
         assert.equals(1, events.length);
         assert.isTrue((r2.delta ?? []).some((d) => d.path === `/inventory/${ADMISSION_TOKEN_ID}`));
         assert.isTrue((r2.delta ?? []).some((d) => d.path === '/gachaWallet/gold'));
@@ -272,8 +272,8 @@ export function createItemInventorySuite(): TestSuite {
         assert.equals(5, jump.result.periods);
         assert.equals(3, jump.result.count);
         assert.equals(2, jump.result.granted);
-        assert.equals(3 * 5000, jump.result.overflow?.amount ?? 0);
-        assert.equals(100 + 15000, wallet.gold);
+        assert.equals(3 * 100, jump.result.overflow?.amount ?? 0);
+        assert.equals(100 + 300, wallet.gold);
         assert.equals(15, authority.meta().periodic[ADMISSION_SEASON_RULE_ID]);
         const unknown = await api.cmd('item.settlePeriodic', { ruleId: 'nope', nowIndex: 1 });
         assert.isTrue(isApiFail(unknown) && unknown.errorCode === 'E316');
@@ -345,7 +345,7 @@ export function createItemInventorySuite(): TestSuite {
         assert.equals(5, session.itemCount(ITEM_ADMISSION_TOKEN));
         await session.advanceSeason();
         assert.equals(5, session.itemCount(ITEM_ADMISSION_TOKEN), '已超過封頂：不再入庫');
-        assert.equals(100 + 5000, wallet.gold, '溢出 1 張折 5000 金');
+        assert.equals(100 + 100, wallet.gold, '溢出 1 張折 100 金');
     });
 
     suite.test('入學走 item.consume：扣 1 張令、落盤失敗退還，令不夠時入學被擋', async () => {

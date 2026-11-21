@@ -130,7 +130,7 @@ export function legacyItemDef(id: string): ItemDefV1 {
 export const DEFAULT_ITEM_CONFIG: ItemConfigV1 = Object.freeze({
     schema: 'item-config.v1',
     items: [
-        { id: ADMISSION_TOKEN_ID, kind: 'token', stack: { mode: 'stackable', max: 3 }, bind: 'none', overflow: { toCurrency: 'gold', amount: 5000 } },
+        { id: ADMISSION_TOKEN_ID, kind: 'token', stack: { mode: 'stackable', max: 3 }, bind: 'none', overflow: { toCurrency: 'gold', amount: 100 } },
     ],
     holders: [
         {
