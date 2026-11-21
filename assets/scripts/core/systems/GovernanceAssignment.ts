@@ -25,7 +25,9 @@ export type GovernanceRejectReason =
     | 'task-occupied'
     | 'general-already-assigned'
     | 'no-free-slot'
-    | 'child-only-low-efficiency';
+    | 'child-only-low-efficiency'
+    /** 被人員占用登記擋下（學府修業、教官指派等，PROG-2-9482） */
+    | 'occupied';
 
 export interface GovernanceResult {
     ok: boolean;

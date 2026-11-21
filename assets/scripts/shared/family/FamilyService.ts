@@ -132,6 +132,16 @@ export class FamilyService {
         return { ...stored, parentIds: [...stored.parentIds] };
     }
 
+    /**
+     * 納配偶：先檢查幕府等級的配偶上限（超過丟 CAP_REACHED），再登記 kind=spouse（重複丟 DUPLICATE）。
+     * 玩法端（GameSession）只呼叫這個，不直接 addFamilyMember（TC-FAM-09）。
+     */
+    public addSpouse(personId: string, joinedAt: number, config: FamilyConfigV1, hallLevel: number): FamilyMemberRecord {
+        if (this._state.members.some((m) => m.personId === personId)) throw new FamilyError('DUPLICATE', `${personId} 已在家族名冊`);
+        if (!this.canAddSpouse(config, hallLevel)) throw new FamilyError('CAP_REACHED', `配偶已達幕府 Lv${hallLevel} 的上限`);
+        return this.addFamilyMember({ personId, kind: 'spouse', parentIds: [], branchId: null, joinedAt });
+    }
+
     /** 移除成員（例如外嫁、遺孤改託）；沒有該成員回 false */
     public removeFamilyMember(personId: string): boolean {
         const index = this._state.members.findIndex((m) => m.personId === personId);
