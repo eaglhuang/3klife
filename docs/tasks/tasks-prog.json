@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 229,
+    "done": 234,
     "in_progress": 4,
-    "open": 85,
-    "total": 318
+    "open": 86,
+    "total": 324
   },
   "tasks": [
     {
@@ -13642,6 +13642,57 @@
       }
     },
     {
+      "doc_id": "doc_task_2761",
+      "id": "PROG-2-9707",
+      "title": "戰場「自動」鈕改為自動代打（再按跳過＝極速決戰）",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "2026-11-22T00:10:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 2026-11-21 裁決：自動鈕改自動代打（AI 委任部署、每回合自動結束回合，玩家看得到過程），自動代打中再按跳過＝極速決戰 cause auto，關委任停止自動代打；試玩腳本不再按 BtnAuto。",
+      "related": [
+        "PROG-2-9703",
+        "PROG-2-1091",
+        "PROG-2-2202",
+        "PROG-2-0913"
+      ],
+      "depends": [
+        "PROG-2-9703"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-22 | 狀態: done | 驗證: 單元測試 9002 通過、tsc 0 錯；Cocos 實機未跑 | 變更: 自動代打、跳過極速決戰、關委任停自動、按鈕同步、試玩腳本、規格 doc_spec_1170 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
       "id": "PROG-2-9600",
       "title": "史境天下風雲榜與年終頒獎典禮系統規格書",
       "type": "documentation",
@@ -13847,7 +13898,195 @@
         "docs/遊戲規格文件/文案/結緣事件文案範例.md"
       ],
       "notes": "狀態: done。變更: 新增 doc_spec_1288 結緣事件文案範例（20 則）；更新 cross-ref-specs 與 tasks-prog。"
+    },
+    {
+      "doc_id": "doc_task_2760",
+      "id": "PROG-2-9705",
+      "title": "戰場 HUD 徽章風格第一版",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "2026-11-21T22:30:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "頭頂框、虎符卡、軍師框、標題列統一成格子 buff 徽章風格（深底金圈黑描邊字）第一版",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "7456 截圖四處呈現新徽章風格",
+        "單元測試全過、tsc 0 錯、compute-gate quick 通過"
+      ],
+      "deliverables": [
+        "assets/scripts/battle/views/UnitRenderer.ts",
+        "assets/resources/ui-spec/skins/tiger-tally-default.json",
+        "assets/resources/ui-spec/skins/strategist-hud-battle.json",
+        "assets/resources/ui-spec/skins/battle-hud-screen.skin.json",
+        "docs/agent-briefs/tasks/PROG/PROG-2-9705.md"
+      ],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 7456 截圖＋單元測試＋tsc＋閘門 | 變更: UnitRenderer 與三個 skin JSON | 阻塞: 無",
+      "brief": "docs/agent-briefs/tasks/PROG/PROG-2-9705.md",
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2751",
+      "id": "PROG-2-9708",
+      "title": "格子 buff 標記畫到小兵身上（渲染層次倒置）",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "bugfix",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "2026-11-22T00:30:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "格子 buff 標記改放地面層容器，Spine 小兵每幀排序後把地面層送回最底，小兵蓋在標記上",
+      "related": [],
+      "depends": [
+        "PROG-2-9411",
+        "PROG-2-9706"
+      ],
+      "acceptance": [
+        "小兵與頭頂框蓋在格子標記上方",
+        "單元測試與 tsc 通過"
+      ],
+      "deliverables": [
+        "assets/scripts/battle/views/TileBuffMarkers.ts",
+        "assets/scripts/battle/views/SpineGeneralOverlay.ts",
+        "assets/scripts/battle/views/MoveDustEmitter.ts",
+        "assets/scripts/battle/views/UnitRenderer.ts",
+        "tests/SpineUnitPool.test.ts",
+        "docs/agent-briefs/tasks/PROG/PROG-2-9708.md"
+      ],
+      "notes": "2026-11-22 | 狀態: done | 驗證: 實跑截圖＋單元測試＋tsc | 變更: 地面層容器 | 阻塞: 無",
+      "brief": "docs/agent-briefs/tasks/PROG/PROG-2-9708.md",
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2763",
+      "id": "PROG-2-9704",
+      "title": "紅方弓兵盔甲改銀色（圖集金屬部分銅色換銀鋼色）",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "2026-11-21T22:30:00+08:00",
+      "started_by_agent": "claude-code-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "戰場敵方弓兵 soldier_bow_red 圖集為紅布＋紅銅盔甲＋紅頭盔，縮到 180px 整隻像被染紅。使用者裁決：銀色，但總體仍是紅色系列。以色相/飽和/明度遮罩只把金屬部分（胸甲、肩甲、護腕、護脛、頭盔金屬邊、鞋頭）換為銀鋼色，紅布、紅纓、頭盔布面、臉、皮革、弓不動；alpha 與尺寸不變、meta 不動。",
+      "related": [
+        "PROG-2-9701"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 前後對照圖與步兵紅並排目視，臉與眼睛未變色、alpha 位元組一致、尺寸 512x512 不變 | 變更: soldier_bow_red.png 圖集金屬換銀（腳本 recolor_silver_armor.py）；Spine 武將與兵種美術在 .gitignore（assets/resources/spine/soldiers/）不進公開倉庫，故成品 PNG 不在本 PR，需複製進 spine-trial 並更新遊戲內本機副本 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2766",
+      "id": "PROG-2-9710",
+      "title": "預覽直進戰場先載語系字串（奧義鈕不再顯示鍵名）",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-22 | 狀態: done | 驗證: 7456 預覽截圖奧義鈕顯示「奧義」 | 變更: LoadingScene 預覽戰場先載語系 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
-  "updated": "2026-11-21"
+  "updated": "2026-11-22"
 }

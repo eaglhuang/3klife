@@ -18,13 +18,13 @@
 | 美術非UI類 | `doc_art` | 3 |
 | 數值類 | `doc_data` | 2 |
 | 遊戲規格類 | `doc_spec` | 1258 |
-| 索引類 | `doc_index` | 114 |
-| 任務卡類 | `doc_task` | 2730 |
+| 索引類 | `doc_index` | 115 |
+| 任務卡類 | `doc_task` | 2739 |
 | AI Agent 專用 | `doc_ai` | 43 |
 | Agent Skill 專用 | `doc_agentskill` | 106 |
 | Server 文件類 | `doc_server_<subtype>` | 3 |
-| 其它類 | `doc_other` | 1983 |
-| **合計** | — | **6319** |
+| 其它類 | `doc_other` | 1982 |
+| **合計** | — | **6328** |
 
 ## Markdown 分片
 

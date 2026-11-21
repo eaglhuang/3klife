@@ -68,6 +68,8 @@ export function createFamilyModelSuite(): TestSuite {
         assert.equals(4, spouseCapFor(config, 9));
         assert.equals(20, config.wetNurseSilverPerQuarter);
         assert.equals(600, config.startingSilver, "startingSilver 暫定 600（PROG-2-9591）");
+        assert.equals(40, config.clanStipendBase, "每季家族俸祿基本 40（PROG-2-9593）");
+        assert.equals(10, config.clanStipendPerSpouse);
         assert.equals(100, config.matchmakerPrice, "matchmakerPrice 暫定 100 銀兩（待使用者裁決）");
         assert.equals(null, config.branchGrantSilver);
     });

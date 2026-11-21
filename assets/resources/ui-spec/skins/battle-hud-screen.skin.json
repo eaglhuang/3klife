@@ -43,6 +43,14 @@
             "opacity": 0.6
           }
         ]
+      },
+      "borderColor": "#FFD65A",
+      "borderWidth": 2,
+      "borderSides": {
+        "top": 0,
+        "right": 0,
+        "bottom": 2,
+        "left": 0
       }
     },
     "auto.battle-hud-screen.battlehudscreen_div_1_cssshadow": {
@@ -71,9 +79,9 @@
       "fontSize": 28,
       "lineHeight": 36,
       "letterSpacing": 2.72,
-      "color": "secondaryLight",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "color": "#FFEC96",
+      "outlineColor": "#1E1208",
+      "outlineWidth": 3,
       "horizontalAlign": "START",
       "isBold": true,
       "shadow": {
@@ -100,9 +108,9 @@
       "fontSize": 28,
       "lineHeight": 36,
       "letterSpacing": 7.8,
-      "color": "stdLabelButton",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "color": "#FFFFFF",
+      "outlineColor": "#1E1208",
+      "outlineWidth": 3,
       "horizontalAlign": "START",
       "isBold": true,
       "shadow": {

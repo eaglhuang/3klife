@@ -493,6 +493,7 @@ export class BattleScene extends Component {
         onBoardPlacement: (x, y) => this.turnFlowManager?.doDeployRaycast(x, y),
         onReplay: () => this.onReplay(),
         onBack: () => this._onBackToLobby(),
+        onAutoPlayStarted: () => this.turnFlowManager?.scheduleAutoPlayEndTurn(),
       });
       this.refreshBattleViews();
       if (battleParams.tutorial) {

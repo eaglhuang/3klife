@@ -274,7 +274,7 @@ export const EVENT_NAMES = {
   TallyDeployed:        "tally-deployed",        // payload: string (虎符模板 id)
   BattleSkillNotice:    "battle-skill-notice",   // payload: string (戰法與奧義要進戰報的句子，PROG-2-1780、PROG-2-1781)
   TroopCounterLine:     "troop-counter-line",    // payload: string (剋制戰鬥句，PROG-2-1772)
-  AutoBattleToggled:    "auto-battle-toggled",   // payload: boolean (isEnabled)
+  AutoBattleToggled:    "auto-battle-toggled",   // payload: true＝自動鈕被按下（PROG-2-9707：由戰場橋接層決定開啟自動代打或跳過演出）
   DelegateToggled:      "delegate-toggled",      // payload: boolean (要求開或關)
   BattleSpeedToggled:   "battle-speed-toggled",  // payload: number  (1 | 2)
   ShowSettingsRequested:"show-settings-requested",

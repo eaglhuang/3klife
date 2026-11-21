@@ -69,6 +69,7 @@ export class LocalGachaApi implements GachaApi {
                 // 走共通 API 的池：機率與保底進度取自獎池（與抽樣同一份資料）；天命值仍由舊服務提供
                 rates: rewardView ? rewardView.rates : gachaRatesOf(rates as Record<GachaRarityId, number>, GACHA_UP_SHARE_SSR, featured.length > 0),
                 pities: rewardView?.pities,
+                showcaseIsUp: !featured[0] && !!upShowcase,
                 pity: rewardView?.pity ? { ...legacyPity, current: rewardView.pity.current, max: rewardView.pity.max } : legacyPity,
             });
         }

@@ -15,7 +15,12 @@
       "kind": "sprite-frame",
       "path": "ui/tiger-tally/frame-parts/ssr/006/spriteFrame",
       "spriteType": "sliced",
-      "border": [60, 60, 60, 60],
+      "border": [
+        60,
+        60,
+        60,
+        60
+      ],
       "bleed": 2,
       "allowAutoAtlas": true,
       "_fallback": "#1A1208",
@@ -32,7 +37,12 @@
       "kind": "sprite-frame",
       "path": "ui/tiger-tally/frame-parts/ssr/006/spriteFrame",
       "spriteType": "sliced",
-      "border": [60, 60, 60, 60],
+      "border": [
+        60,
+        60,
+        60,
+        60
+      ],
       "allowAutoAtlas": true,
       "_doc": "006 母框的 stretch-safe 外框核心。第三輪以更厚的 9-slice 包覆 title 與 star band。"
     },
@@ -104,7 +114,12 @@
       "kind": "sprite-frame",
       "path": "sprites/battle/tally_rarity_normal/spriteFrame",
       "spriteType": "sliced",
-      "border": [4, 4, 4, 4],
+      "border": [
+        4,
+        4,
+        4,
+        4
+      ],
       "allowAutoAtlas": true,
       "_fallback": "#6E7A8A"
     },
@@ -112,7 +127,12 @@
       "kind": "sprite-frame",
       "path": "sprites/battle/tally_rarity_rare/spriteFrame",
       "spriteType": "sliced",
-      "border": [4, 4, 4, 4],
+      "border": [
+        4,
+        4,
+        4,
+        4
+      ],
       "allowAutoAtlas": true,
       "_fallback": "#D4AF37"
     },
@@ -120,7 +140,12 @@
       "kind": "sprite-frame",
       "path": "sprites/battle/tally_rarity_epic/spriteFrame",
       "spriteType": "sliced",
-      "border": [4, 4, 4, 4],
+      "border": [
+        4,
+        4,
+        4,
+        4
+      ],
       "allowAutoAtlas": true,
       "_fallback": "#A855F7"
     },
@@ -128,7 +153,12 @@
       "kind": "sprite-frame",
       "path": "sprites/battle/tally_card_disabled/spriteFrame",
       "spriteType": "sliced",
-      "border": [0, 0, 0, 0],
+      "border": [
+        0,
+        0,
+        0,
+        0
+      ],
       "allowAutoAtlas": true,
       "_fallback": "#000000",
       "_fallbackOpacity": 160,
@@ -150,18 +180,22 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER",
       "isBold": true,
-      "_doc": "稀有度標籤，顯示於左上角六角形牌匾（SSR/SR/R/N）。TS 在 _populateCards 中將 rarity enum 映射為顯示文字。"
+      "_doc": "稀有度標籤，顯示於左上角六角形牌匾（SSR/SR/R/N）。TS 在 _populateCards 中將 rarity enum 映射為顯示文字。",
+      "outlineColor": "#1E1208",
+      "outlineWidth": 3
     },
     "tally.label.stars": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 24,
       "lineHeight": 28,
-      "color": "#FFD36A",
+      "color": "#FFD65A",
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER",
       "isBold": false,
-      "_doc": "星數顯示，放在底部 band 中心（★★★）。bind tally[i].stars，TS 需填入對應 rarity 的星字串。"
+      "_doc": "星數顯示，放在底部 band 中心（★★★）。bind tally[i].stars，TS 需填入對應 rarity 的星字串。",
+      "outlineColor": "#1E1208",
+      "outlineWidth": 3
     },
     "widget.resource.icon": {
       "kind": "label-style",
@@ -179,33 +213,39 @@
       "font": "fonts/manrope/manrope",
       "fontSize": 24,
       "lineHeight": 28,
-      "color": "#7EC4FF",
+      "color": "#FFFFFF",
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER",
       "isBold": true,
-      "_doc": "底部左側主數值，改成偏戰術藍，接近參考圖的側欄資訊節奏。"
+      "_doc": "底部左側主數值，改成偏戰術藍，接近參考圖的側欄資訊節奏。",
+      "outlineColor": "#1E1208",
+      "outlineWidth": 3
     },
     "tally.label.hp": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 24,
       "lineHeight": 28,
-      "color": "#C4F7C3",
+      "color": "#FFFFFF",
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER",
       "isBold": true,
-      "_doc": "底部右側主數值，使用高亮薄荷綠提高生存資訊辨識。"
+      "_doc": "底部右側主數值，使用高亮薄荷綠提高生存資訊辨識。",
+      "outlineColor": "#1E1208",
+      "outlineWidth": 3
     },
     "tally.label.name": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 24,
       "lineHeight": 28,
-      "color": "#F7FAFF",
+      "color": "#FFFFFF",
       "horizontalAlign": "CENTER",
       "isBold": true,
       "overflow": "SHRINK",
-      "_doc": "名稱退成頂部輔助資訊，讓頭像與底部數值成為第一視線。"
+      "_doc": "名稱退成頂部輔助資訊，讓頭像與底部數值成為第一視線。",
+      "outlineColor": "#1E1208",
+      "outlineWidth": 3
     },
     "tally.label.sub": {
       "kind": "label-style",
@@ -215,7 +255,9 @@
       "color": "#A6B8CA",
       "horizontalAlign": "LEFT",
       "overflow": "truncate",
-      "_doc": "特殊部隊副標，補足這是戰術單位卡而非武將卡的辨識。"
+      "_doc": "特殊部隊副標，補足這是戰術單位卡而非武將卡的辨識。",
+      "outlineColor": "#1E1208",
+      "outlineWidth": 3
     },
     "tally.label.stats": {
       "kind": "label-style",
@@ -223,18 +265,22 @@
       "fontSize": 24,
       "lineHeight": 28,
       "color": "textCoolGray",
-      "horizontalAlign": "LEFT"
+      "horizontalAlign": "LEFT",
+      "outlineColor": "#1E1208",
+      "outlineWidth": 3
     },
     "tally.label.cost": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 24,
       "lineHeight": 28,
-      "color": "#F6D37A",
+      "color": "#FFEC96",
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER",
       "isBold": true,
-      "_doc": "糧草費用縮小成右上角標，避免跟卡片主體搶權重。"
+      "_doc": "糧草費用縮小成右上角標，避免跟卡片主體搶權重。",
+      "outlineColor": "#1E1208",
+      "outlineWidth": 3
     },
     "tally.label.badge": {
       "kind": "label-style",
@@ -245,7 +291,9 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER",
       "isBold": true,
-      "_doc": "兵種徽章縮寫文字（CV/IN/AR/SH...），白色置中，由 Layout JSON 定義，TigerTallyPanel 只負責填入文字。lineHeight 必須 >= fontSize 避免 Cocos 裁切。"
+      "_doc": "兵種徽章縮寫文字（CV/IN/AR/SH...），白色置中，由 Layout JSON 定義，TigerTallyPanel 只負責填入文字。lineHeight 必須 >= fontSize 避免 Cocos 裁切。",
+      "outlineColor": "#1E1208",
+      "outlineWidth": 3
     }
   }
 }

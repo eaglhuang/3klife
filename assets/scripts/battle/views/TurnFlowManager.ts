@@ -30,6 +30,7 @@ import { setEnemyTurnPlayback } from './BattleTimeScale';
 import { services } from '../../core/managers/ServiceLoader';
 import { duelLogType } from '../../core/systems/DailyNewsEngine';
 import type { BattleResult } from '../BattleTypes';
+import { shouldAutoEndTurn } from '../../core/systems/AutoPlay';
 
 export class TurnFlowManager {
   private _advanceTurnGeneration = 0;
@@ -42,6 +43,8 @@ export class TurnFlowManager {
   private _duelFallback: DuelChallengeFallback | null = null;
   /** 單挑彈窗正等玩家決定接不接：這段是等人，不算演出卡死（PROG-2-9404） */
   private _duelDecisionPending = false;
+  /** 自動代打的「自動結束回合」已排程（避免重複排程，PROG-2-9707） */
+  private _autoEndTurnScheduled = false;
 
   constructor(
     private readonly ctx: BattleSceneContext,
@@ -145,6 +148,32 @@ export class TurnFlowManager {
     this.bridge.playTurnBanner(Faction.Player);
     c.boardRenderer?.setDeployHintFaction(Faction.Player);
     this.bridge.refreshBattleViews();
+    this.scheduleAutoPlayEndTurn();
+  }
+
+  /**
+   * 自動代打（PROG-2-9707）：玩家回合開始後約 1 秒自動按結束回合，一路打到戰鬥結束。
+   * 部署由委任機制在 resolvePlayerTurn 前完成；沒有出征軍勢時只自動結束回合。
+   * 單挑面板或等待出陣時不硬推，延後再試；自動代打關閉或戰鬥結束就停止。
+   */
+  public scheduleAutoPlayEndTurn(): void {
+    if (this._autoEndTurnScheduled || !this.bridge.isAutoPlayActive) return;
+    this._autoEndTurnScheduled = true;
+    this.scene.scheduleOnce(() => {
+      this._autoEndTurnScheduled = false;
+      const c = this.ctx;
+      const active = this.bridge.isAutoPlayActive;
+      if (!active || !c.ctrl || c.ctrl.state.battleEndAnnounced) return;
+      if (c.isAdvancingTurn) return; // finalizeAdvance 會再排一次
+      if (!shouldAutoEndTurn({
+        active,
+        battleEnded: c.ctrl.state.battleEndAnnounced,
+        isAdvancingTurn: c.isAdvancingTurn,
+        waitingDuelPlacement: c.ctrl.isWaitingDuelPlacement,
+        duelPanelActive: c.isDuelPanelActive,
+      })) { this.scheduleAutoPlayEndTurn(); return; }
+      this.onEndTurn();
+    }, BATTLE_TURN_FLOW_TIMING.autoPlayEndTurnDelaySec);
   }
 
   /**
@@ -187,7 +216,7 @@ export class TurnFlowManager {
    * 玩家部署一支後呼叫。還有部署額度時不自動結束回合：玩家可連續部署，或自己按「結束回合」。
    * 部署額度用完（行動力歸 0）就自動結束回合，不用再按（使用者 2026-11-17，PROG-2-9397）。
    * 「委任」開啟時維持每次部署後自動推進，否則委任 AI 的出兵流程會卡在等玩家按結束回合。
-   * 「自動戰鬥」是直接算出勝負（AutoBattleToggled → BattleEnded），不經過這裡。
+   * 「自動代打」（PROG-2-9707）靠委任部署＋scheduleAutoPlayEndTurn 推進；再按自動才是直接算勝負（跳過演出）。
    */
   public onPlayerDeployed(): void {
     const c = this.ctx;
