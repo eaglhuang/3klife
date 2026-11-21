@@ -179,7 +179,7 @@ import { OfficerPanelsController } from '../core/OfficerPanelsController';
 import { BLOODLINE_VIGNETTE_CELL_COUNT, bloodlineVignetteOpenLabel, bloodlineVignetteViewOf } from '../core/BloodlineVignetteText';
 import { installOfficerTierTable, type OfficerTierRow } from '../../core/systems/OfficerTierTable';
 import { shouldShowMentorUnlockPrompt } from '../../core/systems/MentorGuidance';
-import { buildRankUnlockPopupView, installOfficerFeatureUnlocks, lobbyActionLock, lockedActionToast, nextRankPreviewLine } from '../../core/systems/OfficerFeatureUnlocks';
+import { buildPromotionHallGuide, buildRankUnlockPopupView, installOfficerFeatureUnlocks, lobbyActionLock, lockedActionToast, nextRankPreviewLine, PromotionHallGuide } from '../../core/systems/OfficerFeatureUnlocks';
 import { installSageProgressTable } from '../../core/systems/SageFavor';
 import { installSandtableTerritories } from '../../core/systems/SandtableTerritories';
 import { OFFICER_PROMOTION_FREEZE_TIMING, officerPromotionFreezeTitles, officerPromotionNoticeOf, officerPromotionRewardTotal } from '../../core/systems/HallMissionSettlement';
@@ -574,6 +574,8 @@ export class LobbyScene extends Component {
     private _hallBoard: HallBoardPanelController | null = null;
     /** 大廳輪替走動的當班名單狀態（60 秒換一批）與聊天台詞庫（Issue #2135） */
     private _hallWalkerState: WalkerPlanState = INITIAL_WALKER_STATE;
+    /** 晉升解鎖大廳導流（PROG-2-9610）：晉升完成後若有新機能解鎖，由大廳武將頂金色驚嘆號引導並提供捷徑 */
+    private _pendingPromotionGuide: PromotionHallGuide | null = null;
     /** 大廳台詞：內建底稿＋本機快取（store），對外只經由 LobbyDialogueProvider 取台詞 */
     private _hallChatStore: HallChatStore | null = null;
     private _hallDialogue: LobbyDialogueProvider | null = null;
@@ -1226,6 +1228,13 @@ export class LobbyScene extends Component {
                     services().event.emit('SHOW_TOAST', { message, duration: 2 });
                 }
                 const toastsEndAt = Date.now() + promotionToasts.length * 2200;
+                // 晉升大廳導流（PROG-2-9610）：若有新解鎖功能，設置武將頭頂金色「！」與導流泡泡
+                // 只有新解鎖功能帶有大廳入口時才導流，避免「立即前往」找不到目的地；僅存記憶體，重進大廳即清除
+                const hallGuide = buildPromotionHallGuide(payload.tiers, (k, ...args) => services().i18n.t(k, ...args));
+                this._pendingPromotionGuide = hallGuide?.primaryFeature.lobbyAction ? hallGuide : null;
+                if (this._pendingPromotionGuide) {
+                    this._lobbyHall?.refreshStage(Date.now() / 1000);
+                }
                 // 升官動畫（官職系統 E-6，PROG-2-1859）：每升一階播一次大字定格
                 // 晉升解鎖彈窗（PROG-2-9151）：定格動畫播完再列出這次新開放的功能
                 // 提示（朝議已定…）會蓋住彈窗標題，等提示播完才跳彈窗
@@ -1922,6 +1931,10 @@ export class LobbyScene extends Component {
     }
 
     private _runCityHubAction(action: LobbyActionId): void {
+        if (this._pendingPromotionGuide && this._pendingPromotionGuide.primaryFeature.lobbyAction === action) {
+            this._pendingPromotionGuide = null;
+            this._lobbyHall?.refreshStage(Date.now() / 1000);
+        }
         this._closeSecondaryOverlayHosts();
         const run: Record<LobbyActionId, () => void> = {
             battle: () => this.onClickEnterBattle(),
@@ -3944,7 +3957,11 @@ export class LobbyScene extends Component {
         if (tiers.length === 0) return;
         // 晉升縣府佐官那一次，彈窗多一句教官提醒與去教官池的按鈕；旗標記住只跳一次（PROG-2-9167）
         const mentorPrompt = shouldShowMentorUnlockPrompt(tiers, services().session.mentorUnlockPromptShown);
-        const view = buildRankUnlockPopupView(Math.min(...tiers) - 1, Math.max(...tiers), mentorPrompt);
+        const view = buildRankUnlockPopupView(Math.min(...tiers) - 1, Math.max(...tiers), {
+            mentorPrompt,
+            imperialDecree: true,
+            lookup: (key: string, ...args: (string | number)[]) => services().i18n.t(key, ...args),
+        });
         const host = this._rankUnlockHost;
         if (!view || !host?.binder) return;
         if (mentorPrompt) void services().session.markMentorUnlockPromptShown();
@@ -4515,7 +4532,12 @@ ${spent}`,
             const title = displayTitleOf(profile.title, profile.name);
             return [title ? { id, name: profile.name, title } : { id, name: profile.name }];
         });
-        return { generals, taskMarkIds: new Set(plan.volunteerIds) };
+        const taskMarks = new Set(plan.volunteerIds);
+        // PROG-2-9610：若有晉升導流待引導，將在場首位走動武將賦予金色「！」標記
+        if (this._pendingPromotionGuide && generals.length > 0) {
+            taskMarks.add(generals[0].id);
+        }
+        return { generals, taskMarkIds: taskMarks };
     }
 
     /**
@@ -4526,6 +4548,25 @@ ${spent}`,
         const session = services().session;
         const profile = session.hallStageProfile(generalId);
         if (!profile) return null;
+        // 晉升解鎖導流（PROG-2-9610）：若有新解鎖功能，武將優先以口語泡泡提示並提供直達按鈕
+        if (this._pendingPromotionGuide) {
+            const guide = this._pendingPromotionGuide;
+            const text = guide.guideSpeech;
+            const actionId = guide.primaryFeature.lobbyAction as LobbyActionId;
+            return {
+                name: profile.name,
+                text,
+                volunteer: {
+                    acceptLabel: guide.acceptLabel,
+                    declineLabel: guide.declineLabel,
+                    onAccept: () => {
+                        this._pendingPromotionGuide = null;
+                        this._lobbyHall?.refreshStage(Date.now() / 1000);
+                        this._runCityHubAction(actionId);
+                    },
+                },
+            };
+        }
         const volunteer = this._hallBoard?.volunteerTaskFor(generalId) ?? null;
         if (volunteer) {
             const text = this._speakLobby(generalId, 'volunteer', { task: volunteer.taskTitle });
