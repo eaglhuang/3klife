@@ -457,21 +457,25 @@ export interface OccupancyRecordResult {
     until: number | null;
 }
 
-/** occupancy.query：personId 省略＝全部（登記表加六處唯讀轉接器） */
+/** occupancy.query：personId 省略＝全部（登記表加六處唯讀轉接器）。帶 activity（須同時帶 personId）時另回該活動能否指派（PROG-2-9442） */
 export interface OccupancyQueryArgs {
     personId?: string;
+    /** 要檢查的活動名稱（occupancy-matrix.json 的 activities，例 sortie／gov／mercenary） */
+    activity?: string;
 }
 
 export interface OccupancyQueryResult {
     records: OccupancyRecordResult[];
     /** 有任何占用的人員 id（去重） */
     occupiedIds: string[];
+    /** 只有查詢帶 activity 時才有：該人現在能不能被指派該活動；被擋時附擋下的占用 */
+    assign?: { activity: string; allowed: boolean; blockedBy?: OccupancyRecordResult };
 }
 
-/** occupancy.acquire：只送意圖；kind 只能是 academy／mentorAssign，其餘由原系統管理（E333）。同一筆重送冪等 */
+/** occupancy.acquire：只送意圖；kind 只能是 academy／mentorAssign／nursing，其餘由原系統管理（E333）。同一筆重送冪等 */
 export interface OccupancyAcquireArgs {
     personId: string;
-    kind: 'academy' | 'mentorAssign';
+    kind: 'academy' | 'mentorAssign' | 'nursing';
     refId: string;
     since?: number;
     until?: number | null;
@@ -485,7 +489,7 @@ export interface OccupancyAcquireResult {
 
 export interface OccupancyReleaseArgs {
     personId: string;
-    kind: 'academy' | 'mentorAssign';
+    kind: 'academy' | 'mentorAssign' | 'nursing';
     refId: string;
 }
 
