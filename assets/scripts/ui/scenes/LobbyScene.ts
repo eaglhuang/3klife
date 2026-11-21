@@ -1229,7 +1229,9 @@ export class LobbyScene extends Component {
                 }
                 const toastsEndAt = Date.now() + promotionToasts.length * 2200;
                 // 晉升大廳導流（PROG-2-9610）：若有新解鎖功能，設置武將頭頂金色「！」與導流泡泡
-                this._pendingPromotionGuide = buildPromotionHallGuide(payload.tiers, (k, ...args) => services().i18n.t(k, ...args));
+                // 只有新解鎖功能帶有大廳入口時才導流，避免「立即前往」找不到目的地；僅存記憶體，重進大廳即清除
+                const hallGuide = buildPromotionHallGuide(payload.tiers, (k, ...args) => services().i18n.t(k, ...args));
+                this._pendingPromotionGuide = hallGuide?.primaryFeature.lobbyAction ? hallGuide : null;
                 if (this._pendingPromotionGuide) {
                     this._lobbyHall?.refreshStage(Date.now() / 1000);
                 }
