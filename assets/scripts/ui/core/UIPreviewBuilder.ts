@@ -31,6 +31,7 @@ import { resolveLabelText, type LabelTextSpec } from './UILabelText';
 import type { ICompositeRenderer, RadarSourceSvgGeometry } from './interfaces/ICompositeRenderer';
 import { radarConfigFromSourceSvg } from './RadarSvgConfig';
 import { isSvgLineArtMeta, layoutSvgLineArt } from './SvgLineArt';
+import { enableUnderlayOcclusion } from './UnderlayOcclusion';
 import { coverSize, resolveScreenBackdrop, SCREEN_BACKDROP_TABLE_PATH,
          type ScreenBackdropTable } from './ScreenBackdrop';
 import { RoundedRectBackground } from '../components/RoundedRectBackground';
@@ -911,6 +912,8 @@ export class UIPreviewBuilder extends Component {
         const table = await services().resource.loadJson<ScreenBackdropTable>(SCREEN_BACKDROP_TABLE_PATH).catch(() => null);
         const backdrop = resolveScreenBackdrop(table, screenId);
         if (!backdrop) return;
+        // 全螢幕背景圖的畫面啟用時，底下的畫面不必再渲染（PROG-2-9802）
+        if (backdrop.occludeUnderlay) enableUnderlayOcclusion(host);
         const frame = await services().resource.loadSpriteFrame(backdrop.sprite, { preferTextureFallback: true }).catch(() => null);
         if (!frame) {
             UCUFLogger.warn(LogCategory.UI, `[UIPreviewBuilder] backdrop sprite missing: ${backdrop.sprite}`);

@@ -16492,5 +16492,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9801.md",
     "title": "[PROG-2-9801] 網頁版卡頓優化第二輪（人物介紹頁／開場 Label 縮放）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2936",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9802.md",
+    "title": "[PROG-2-9802] 網頁版卡頓第三輪（漸層底板原生 canvas、全螢幕畫面遮蔽底層）",
+    "category": "task"
   }
 ]
