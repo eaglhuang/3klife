@@ -22,6 +22,7 @@ import { statusEffectFloatText } from '../shared/StatusEffectLabel';
 import { BLOCK_FLOAT_TEXT, shieldHitFeedback, type DamageBlockReason } from '../shared/BlockFeedback';
 import { StatusCueThrottle, statusMakesTargetFlinch, statusPolarityOf, statusWaveDelaySec } from '../shared/StatusApplyFeedback';
 import { salvageSummaryLines } from '../../core/systems/StageSalvageSettlement';
+import { AUTO_PLAY_NO_SORTIE_LINE, AUTO_PLAY_OFF_LINE, AUTO_PLAY_ON_LINE, AUTO_PLAY_SKIP_LINE, AutoPlayState, delegateToggleStopsAutoPlay } from '../../core/systems/AutoPlay';
 import { DELEGATE_OFF_LINE, DELEGATE_UNAVAILABLE_LINE, delegateOnLine, FOOD_EMPTY_LINE } from '../../core/systems/SortieDeployScripts';
 import { wisdomMeterText, WISDOM_SURGE_LOG } from '../shared/WisdomMeter';
 import { strategistHudInputOf } from '../shared/StrategistHudSource';
@@ -216,6 +217,10 @@ export class BattleUIBridge {
   private generalCaptures: GeneralCaptureRecord[] = [];
   private readonly terrainFeedback = new TerrainFeedbackTracker();
   private onBoardPlacement: ((screenX: number, screenY: number) => void) | null = null;
+  /** 自動代打剛開啟時通知回合流程排程第一次結束回合（PROG-2-9707） */
+  private onAutoPlayStarted: (() => void) | null = null;
+  /** 自動鈕的自動代打狀態（PROG-2-9707） */
+  private readonly autoPlay = new AutoPlayState();
   /** 奧義漫畫分鏡 cut-in（Issue #2139）：一場戰鬥一個，「第二次施放走重播」以單場為界 */
   private readonly ultCutin = new UltCutinDirector();
   /** 一招打到多個目標時，同一聲只播一次（PROG-2-9435） */
@@ -306,6 +311,8 @@ export class BattleUIBridge {
     onBoardPlacement?: (screenX: number, screenY: number) => void;
     onReplay:       () => void;
     onBack?:        () => void;
+    /** 自動代打剛開啟：由回合流程排程第一次自動結束回合（PROG-2-9707） */
+    onAutoPlayStarted?: () => void;
   }): void {
     this.ctx.boardRenderer?.setZocGeneralResolver((unitId: string) => {
       const ctrl = this.ctx.ctrl;
@@ -313,6 +320,8 @@ export class BattleUIBridge {
     });
     this.unsubscribeEvents();
     this.onBoardPlacement = externalHandlers.onBoardPlacement ?? null;
+    this.onAutoPlayStarted = externalHandlers.onAutoPlayStarted ?? null;
+    this.autoPlay.stop();
     this.specialActions.reset();
     this.performance.reset();
     this.duelOutcomes = [];
@@ -1029,6 +1038,8 @@ export class BattleUIBridge {
   private _onDelegateToggled(on: boolean): void {
     const c = this.ctx;
     if (!c.ctrl) return;
+    // 想拿回控制權：按委任＝同時停掉自動代打（PROG-2-9707）；委任鈕自己的提示已說明，不再重複跳 Toast
+    if (delegateToggleStopsAutoPlay(this.autoPlay.active, on, c.ctrl.canDelegate())) this._stopAutoPlay(false);
     if (on && !c.ctrl.canDelegate()) {
       c.deployRuntime?.showToast(DELEGATE_UNAVAILABLE_LINE);
       this._syncDelegateButton();
@@ -1047,13 +1058,55 @@ export class BattleUIBridge {
     c.battleLogPanel?.setDelegateActive?.(c.ctrl?.isDelegateEnabled() ?? false);
   }
 
+  /** 自動代打中（TurnFlowManager 據此在每回合開始後自動結束回合，PROG-2-9707） */
+  public get isAutoPlayActive(): boolean { return this.autoPlay.active; }
+
   /**
-   * 自動鈕（PROG-2-1091）：開啟即依雙方數值模擬勝負，走既有 BattleEnded → 結算彈窗流程。
-   * 極速決戰（PROG-2-2202）：加兵種互克與主將個性特寫，三幕戰報寫進戰場日誌。
+   * 自動鈕（PROG-2-9707，使用者 2026-11-21 裁決）：
+   * 第一次按＝開啟自動代打（AI 部署、逐回合交戰，玩家看得到過程）；自動代打中再按＝跳過演出，極速決戰結算。
+   * 沿用 PROG-2-1091／2202 的極速決戰演算法，只是從「一按就算結果」降為「跳過演出」。
    */
-  private _onAutoBattleToggled(enabled: boolean): void {
+  private _onAutoBattleToggled(_pressed: boolean): void {
+    const c = this.ctx;
+    const state = c.ctrl?.state;
+    if (!c.ctrl || !state || state.battleEndAnnounced) return;
+    if (this.autoPlay.press() === 'skip') {
+      this._syncAutoButton();
+      this._skipToQuickResolve();
+      return;
+    }
+    // 有出征軍勢就靠委任機制讓 AI 部署；沒有（demo 戰鬥）仍可自動結束回合，只是不部署
+    const canDelegate = c.ctrl.canDelegate();
+    if (canDelegate) {
+      c.ctrl.setDelegateEnabled(true);
+      this._syncDelegateButton();
+    } else {
+      this.appendLog(AUTO_PLAY_NO_SORTIE_LINE);
+    }
+    this.appendLog(AUTO_PLAY_ON_LINE);
+    c.deployRuntime?.showToast(canDelegate ? AUTO_PLAY_ON_LINE : AUTO_PLAY_NO_SORTIE_LINE);
+    this._syncAutoButton();
+    this.onAutoPlayStarted?.();
+  }
+
+  /** 停止自動代打（委任關閉等）；原本沒開就什麼都不做 */
+  private _stopAutoPlay(notify: boolean): void {
+    if (!this.autoPlay.stop()) return;
+    this._syncAutoButton();
+    this.appendLog(AUTO_PLAY_OFF_LINE);
+    if (notify) this.ctx.deployRuntime?.showToast(AUTO_PLAY_OFF_LINE);
+  }
+
+  private _syncAutoButton(): void {
+    this.ctx.battleLogPanel?.setAutoActive?.(this.autoPlay.active);
+  }
+
+  /** 跳過演出：依雙方數值直接算勝負，走既有 BattleEnded → 結算彈窗流程（cause 'auto'） */
+  private _skipToQuickResolve(): void {
     const state = this.ctx.ctrl?.state;
-    if (!enabled || !state || state.battleEndAnnounced) return;
+    if (!state || state.battleEndAnnounced) return;
+    this.appendLog(AUTO_PLAY_SKIP_LINE);
+    this.ctx.deployRuntime?.showToast(AUTO_PLAY_SKIP_LINE);
     const side = (faction: Faction, fortressHp: number) => ({
       general: state.getGeneral(faction),
       troops: Array.from(state.units.values()).filter((u) => u.faction === faction && !u.isDead()),
@@ -1115,6 +1168,8 @@ export class BattleUIBridge {
 
   private _onBattleEnded(data: { result: string; retreated?: boolean; timeUp?: boolean; cause?: string; timeUpVerdict?: TimeUpVerdict }): void {
     this._lastEndedPayload = { result: data.result, retreated: data.retreated, cause: data.cause };
+    // 戰鬥結束：自動代打一併收掉並讓按鈕恢復（不提示，結算彈窗會接手）
+    if (this.autoPlay.stop()) this._syncAutoButton();
     if (this.duelCapture) { this.duelCapture.ended = data; return; }
     const c = this.ctx;
     const effectKey = resolveBattleResultEffectKey(data.result);

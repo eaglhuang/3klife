@@ -16405,8 +16405,26 @@
   },
   {
     "id": "doc_task_2762",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9608.md",
-    "title": "任務卡：PROG-2-9608 Base 框架分片 doc_id 修正與索引健全",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9593.md",
+    "title": "[PROG-2-9593] F3 銀兩收入（每季家族俸祿）＋大廳頂欄銀兩格＋CUR-1 糧草改名＋SP2 議和解除母國占用",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2763",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9704.md",
+    "title": "[PROG-2-9704] 紅方弓兵盔甲改銀色",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2764",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9707.md",
+    "title": "[PROG-2-9707] 戰場「自動」鈕改為自動代打（再按跳過＝極速決戰）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2765",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9245.md",
+    "title": "[PROG-2-9245] SUP-11 連線券免費來源與教官池軟保底 60",
     "category": "task"
   }
 ]

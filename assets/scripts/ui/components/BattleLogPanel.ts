@@ -46,7 +46,6 @@ export class BattleLogPanel extends UIPreviewBuilder {
     private _buildCompleted = false;
     private readonly _readyWaiters: Array<(ready: boolean) => void> = [];
     // 控制列狀態
-    private _isAuto   = false;  // 自動戰鬥開關
     private _speed    = 1;      // 遊戲速度（1 | 2）
     // 控制列節點引用（供視覺反饋使用）
     private _btnAuto:    Node | null = null;
@@ -179,14 +178,19 @@ export class BattleLogPanel extends UIPreviewBuilder {
 
     // ── 私有：按鈕事件處理 ───────────────────────────────────────────────────
 
-    /** 自動戰鬥開關（Auto） */
+    /**
+     * 自動鈕（PROG-2-9707）：每次按下都只通知「被按了」，開啟自動代打或跳過演出由戰場橋接層決定，
+     * 外觀由橋接層呼叫 setAutoActive 同步，避免按鈕自己翻狀態與實際不一致。
+     */
     private _onAutoClick(): void {
-        this._isAuto = !this._isAuto;
-        // 視覺反饋：開啟時降低透明度（模擬按下狀態）
+        services().event.emit(EVENT_NAMES.AutoBattleToggled, true);
+        UCUFLogger.info(LogCategory.UI, '[BattleLogPanel] AutoBattle pressed');
+    }
+
+    /** 自動代打鈕亮暗跟戰場實際狀態走（PROG-2-9707）；由戰場橋接層呼叫 */
+    public setAutoActive(active: boolean): void {
         const op = this._btnAuto?.getComponent('cc.UIOpacity') as any;
-        if (op) op.opacity = this._isAuto ? 180 : 255;
-        services().event.emit(EVENT_NAMES.AutoBattleToggled, this._isAuto);
-        UCUFLogger.info(LogCategory.UI, `[BattleLogPanel] AutoBattle → ${this._isAuto}`);
+        if (op) op.opacity = active ? 180 : 255;
     }
 
     /** 戰鬥速度切換（x1 ↔ x2） */

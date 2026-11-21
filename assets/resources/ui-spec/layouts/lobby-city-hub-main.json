@@ -86,7 +86,7 @@
           "top": 22,
           "right": 24
         },
-        "width": 630,
+        "width": 790,
         "height": 56,
         "children": [
           {
@@ -118,10 +118,37 @@
           },
           {
             "type": "panel",
-            "name": "ResGemChip",
+            "name": "ResSilverChip",
             "widget": {
               "top": 0,
               "left": 160
+            },
+            "width": 150,
+            "height": 56,
+            "skinSlot": "hub.chip.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "ResSilver",
+                "id": "resSilver",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 56,
+                "text": "銀 0",
+                "styleSlot": "hub.label.res"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "ResGemChip",
+            "widget": {
+              "top": 0,
+              "left": 320
             },
             "width": 150,
             "height": 56,
@@ -148,7 +175,7 @@
             "name": "ResFoodChip",
             "widget": {
               "top": 0,
-              "left": 320
+              "left": 480
             },
             "width": 150,
             "height": 56,
@@ -165,7 +192,7 @@
                   "right": 8
                 },
                 "height": 56,
-                "text": "糧 0",
+                "text": "糧草 0",
                 "styleSlot": "hub.label.res"
               }
             ]
@@ -175,7 +202,7 @@
             "name": "ResTroopsChip",
             "widget": {
               "top": 0,
-              "left": 480
+              "left": 640
             },
             "width": 150,
             "height": 56,
