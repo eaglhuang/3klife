@@ -8,70 +8,6 @@
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
-| `doc_other_0676` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0035-evolution-police-named-scanner.task.md | TASK-APF-0035 — Evolution Police named scanner |
-| `doc_other_0677` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0036-suppression-recurrence-stale-base-safeguards.task.md | TASK-APF-0036 — Suppression, recurrence, and stale-base safeguards |
-| `doc_other_0678` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0037-orchestrator-profile-cli-wiring-decomposition-evolution.task.md | TASK-APF-0037 — Orchestrator, profile, and CLI wiring for Decomposition/Evolution Police |
-| `doc_other_0679` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0038-fixtures-validators-new-police-families.task.md | TASK-APF-0038 — Fixtures and validators for new police families |
-| `doc_other_0680` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0039-roadmap-backwrite-m10-m11-closure.task.md | TASK-APF-0039 — Roadmap backwrite and M10/M11 closure |
-| `doc_other_0681` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0030-police-family-taxonomy-extension-decomposition-evolution.md | APF-0030 — Police family taxonomy extension for Decomposition and Evolution Police |
-| `doc_other_0682` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0031-source-inventory-large-surface-scanner-contract.md | APF-0031 — Source inventory and large-surface scanner contract |
-| `doc_other_0683` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0032-decomposition-police-named-scanner.md | APF-0032 — Decomposition Police named scanner |
-| `doc_other_0684` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0033-decomposition-plan-atomic-map-recommendation-bridge.md | APF-0033 — Decomposition plan to atomic-map recommendation bridge |
-| `doc_other_0685` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0034-evidence-evolution-signal-policy.md | APF-0034 — Evidence evolution signal policy |
-| `doc_other_0686` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0035-evolution-police-named-scanner.md | APF-0035 — Evolution Police named scanner |
-| `doc_other_0687` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0036-suppression-recurrence-stale-base-safeguards.md | APF-0036 — Suppression, recurrence, and stale-base safeguards |
-| `doc_other_0688` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0037-orchestrator-profile-cli-wiring-decomposition-evolution.md | APF-0037 — Orchestrator, profile, and CLI wiring for Decomposition/Evolution Police |
-| `doc_other_0689` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0038-fixtures-validators-new-police-families.md | APF-0038 — Fixtures and validators for new police families |
-| `doc_other_0690` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0039-roadmap-backwrite-m10-m11-closure.md | APF-0039 — Roadmap backwrite and M10/M11 closure |
-| `doc_other_0691` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0040-police-taxonomy-extension-polymorph-rollback.task.md | TASK-APF-0040 — Police taxonomy extension for Polymorph and Rollback Police |
-| `doc_other_0692` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0041-polymorph-police-contract-read-model.task.md | TASK-APF-0041 — Polymorph Police contract and read model |
-| `doc_other_0693` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0042-polymorph-police-named-scanner.task.md | TASK-APF-0042 — Polymorph Police named scanner |
-| `doc_other_0694` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0043-rollback-police-contract-reversibility-model.task.md | TASK-APF-0043 — Rollback Police contract and reversibility model |
-| `doc_other_0695` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0044-rollback-police-named-scanner.task.md | TASK-APF-0044 — Rollback Police named scanner |
-| `doc_other_0696` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0045-evidence-integrity-gate-shared-contract.task.md | TASK-APF-0045 — Evidence Integrity Gate shared contract |
-| `doc_other_0697` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0046-reversibility-gate-shared-contract.task.md | TASK-APF-0046 — Reversibility Gate shared contract |
-| `doc_other_0698` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0047-noise-control-gate-shared-contract.task.md | TASK-APF-0047 — Noise Control Gate shared contract |
-| `doc_other_0699` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0048-contract-drift-check-registry-consistency.task.md | TASK-APF-0048 — Contract Drift Check inside Registry Consistency Police |
-| `doc_other_0700` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0049-orchestrator-profile-cli-wiring-polymorph-rollback-shared-gates.task.md | TASK-APF-0049 — Orchestrator/profile/CLI wiring for Polymorph/Rollback/shared gates |
-| `doc_other_0701` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0050-fixtures-validators-m12-m13-closure.task.md | TASK-APF-0050 — Fixtures, validators, and M12/M13 closure |
-| `doc_other_0702` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0040-police-taxonomy-extension-polymorph-rollback.md | APF-0040 — Police taxonomy extension for Polymorph and Rollback Police |
-| `doc_other_0703` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0041-polymorph-police-contract-read-model.md | APF-0041 — Polymorph Police contract and read model |
-| `doc_other_0704` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0042-polymorph-police-named-scanner.md | APF-0042 — Polymorph Police named scanner |
-| `doc_other_0705` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0043-rollback-police-contract-reversibility-model.md | APF-0043 — Rollback Police contract and reversibility model |
-| `doc_other_0706` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0044-rollback-police-named-scanner.md | APF-0044 — Rollback Police named scanner |
-| `doc_other_0707` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0045-evidence-integrity-gate-shared-contract.md | APF-0045 — Evidence Integrity Gate shared contract |
-| `doc_other_0708` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0046-reversibility-gate-shared-contract.md | APF-0046 — Reversibility Gate shared contract |
-| `doc_other_0709` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0047-noise-control-gate-shared-contract.md | APF-0047 — Noise Control Gate shared contract |
-| `doc_other_0710` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0048-contract-drift-check-registry-consistency.md | APF-0048 — Contract Drift Check inside Registry Consistency Police |
-| `doc_other_0711` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0049-orchestrator-profile-cli-wiring-polymorph-rollback-shared-gates.md | APF-0049 — Orchestrator/profile/CLI wiring for Polymorph/Rollback/shared gates |
-| `doc_other_0712` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0050-fixtures-validators-m12-m13-closure.md | APF-0050 — Fixtures, validators, and M12/M13 closure |
-| `doc_other_0713` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0051-apf-roadmap-task-metadata-consistency-repair.task.md | TASK-APF-0051 — APF roadmap/task metadata consistency repair |
-| `doc_other_0714` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0052-adopter-neutrality-scanner-negative-fixtures.task.md | TASK-APF-0052 — Adopter-neutrality scanner and negative fixtures |
-| `doc_other_0715` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0053-validator-profile-naming-advisory-only-hardening.task.md | TASK-APF-0053 — Validator profile naming and advisory-only hardening |
-| `doc_other_0716` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0051-apf-roadmap-task-metadata-consistency-repair.md | APF-0051 APF roadmap/task metadata consistency repair |
-| `doc_other_0717` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0052-adopter-neutrality-scanner-negative-fixtures.md | APF-0052 Adopter-neutrality scanner and negative fixtures |
-| `doc_other_0718` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0053-validator-profile-naming-advisory-only-hardening.md | APF-0053 Validator profile naming and advisory-only hardening |
-| `doc_other_0719` | docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0029-atm-task-plan-import-flow.task.md | TASK-APO-0029 ATM Task Plan Import and Work Item Opening Flow |
-| `doc_other_0720` | docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0030-python-language-adapter-plugin.task.md | TASK-APO-0030 Python Language Adapter / Plugin |
-| `doc_other_0721` | docs/ai_atomic_framework/release_version_flow/README.md | ATM Release Version Flow |
-| `doc_other_0722` | docs/ai_atomic_framework/release_version_flow/ATM版本升級策略規劃書.md | ATM 版本升級策略規劃書 |
-| `doc_other_0723` | docs/ai_atomic_framework/release_version_flow/OPEN_SOURCE_VERSIONING_POLICY.md | ATM Open Source Versioning Policy |
-| `doc_other_0724` | docs/ai_atomic_framework/release_version_flow/CONTRIBUTOR_RELEASE_IMPACT.md | Contributor Release Impact Guide |
-| `doc_other_0725` | docs/ai_atomic_framework/release_version_flow/CORE_CHANGE_POLICY.md | ATM Core Change Policy |
-| `doc_other_0726` | docs/ai_atomic_framework/release_version_flow/PACKAGE_GROUPS.md | ATM Package Groups |
-| `doc_other_0727` | docs/ai_atomic_framework/release_version_flow/CODEOWNERS_POLICY.md | ATM CODEOWNERS Policy |
-| `doc_other_0728` | docs/ai_atomic_framework/release_version_flow/CHANGESET_POLICY.md | ATM Changeset and Release Intent Policy |
-| `doc_other_0729` | docs/ai_atomic_framework/release_version_flow/ATM版本升級規則書.md | ATM 版本升級規則書 |
-| `doc_other_0730` | docs/ai_atomic_framework/release_version_flow/RELEASE_CHECKLIST.md | ATM Release Checklist |
-| `doc_other_0731` | docs/ai_atomic_framework/release_version_flow/UPGRADE_PROPOSAL_PUBLIC_RULES.md | ATM Upgrade Proposal Public Rules |
-| `doc_other_0732` | docs/ai_atomic_framework/release_version_flow/release_runs/atm-v0.1.0-alpha-release-draft.md | AI-Atomic-Framework v0.1.0-alpha (Draft) |
-| `doc_other_0733` | docs/ai_atomic_framework/release_version_flow/release_runs/atm-v0.1.0-alpha-npm-dry-run-plan.md | ATM v0.1.0-alpha npm Dry-Run Plan |
-| `doc_other_0734` | docs/ai_atomic_framework/release_version_flow/release-note-template.md | ATM Release Note Template |
-| `doc_other_0735` | docs/ai_atomic_framework/release_version_flow/release-run-record-template.md | ATM Release Run Record Template |
-| `doc_other_0736` | docs/ai_atomic_framework/release_version_flow/release-freeze-notice-template.md | ATM Release Freeze Notice Template |
-| `doc_other_0801` | docs/ai_atomic_framework/governance-optimization/ATM-GOV-Governance-Program-Plan.md | ATM GOV Governance Program Plan |
-| `doc_other_0802` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0101-actor-identity-registry.task.md | ATM-GOV-0101 Actor Identity Registry and Git Identity Contract |
-| `doc_other_0803` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0102-atomic-task-claim-lease.task.md | ATM-GOV-0102 Atomic Task Claim, Lease, Renew, Release, Handoff, Takeover |
 | `doc_other_0804` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0103-task-reservation-lifecycle.task.md | ATM-GOV-0103 Task Opening and Reservation Lifecycle |
 | `doc_other_0805` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0104-evidence-bound-gates.task.md | ATM-GOV-0104 Evidence-Bound Close and Commit/PR Gate |
 | `doc_other_0806` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0105-git-governance-contract.task.md | ATM-GOV-0105 Git Governance and Commit Trailer Validation |
@@ -211,87 +147,151 @@
 | `doc_other_1212` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0802.task.md | ATM-LANG-CSHARP-0802 C# runtime lock-governance policy tags |
 | `doc_other_1213` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0803.task.md | ATM-LANG-CSHARP-0803 C# readiness gate lock-file checks |
 | `doc_other_1214` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0804.task.md | ATM-LANG-CSHARP-0804 C# promotion gate lock-governance uplift |
-| `doc_other_1215` | .github/prompts/atm-create.prompt.md | ATM Create |
-| `doc_other_1216` | .github/prompts/atm-evidence.prompt.md | ATM Evidence |
-| `doc_other_1217` | .github/prompts/atm-governance-router.prompt.md | ATM Governance Router |
-| `doc_other_1218` | .github/prompts/atm-handoff.prompt.md | ATM Handoff |
-| `doc_other_1219` | .github/prompts/atm-internal-build-sync.prompt.md | ATM Internal Build Sync |
-| `doc_other_1220` | .github/prompts/atm-lock.prompt.md | ATM Lock |
-| `doc_other_1221` | .github/prompts/atm-next.prompt.md | ATM Next |
-| `doc_other_1222` | .github/prompts/atm-orient.prompt.md | ATM Orient |
-| `doc_other_1223` | .github/prompts/atm-upgrade-scan.prompt.md | ATM Upgrade Scan |
-| `doc_other_1224` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0003-natural-language-onboarding-smoke-2026-05-19.md | TASK-ATS-0003 natural-language onboarding smoke evidence |
-| `doc_other_1225` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0003B-first-use-notice-refresh-2026-05-19.md | TASK-ATS-0003B first-use notice refresh evidence |
-| `doc_other_1226` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0004-cross-editor-blackbox-closeout-2026-05-19.md | TASK-ATS-0004 Evidence: Cross-Editor Black-Box Closeout |
-| `doc_other_1227` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0004-explicit-atm-prompt-and-blackbox-retest-2026-05-19.md | TASK-ATS-0004 Evidence: Explicit ATM Prompt / Natural Black-Box Reassessment |
-| `doc_other_1228` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0005-first-legacy-python-dry-run-2026-05-19.md | TASK-ATS-0005 Evidence: First Legacy Python Dry-Run Pilot |
-| `doc_other_1229` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0005-governed-leaf-pilot-smoke-2026-05-19.md | TASK-ATS-0005 Evidence: Governed Leaf Pilot Smoke |
-| `doc_other_1230` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0006-canonical-map-closeout-2026-05-19.md | TASK-ATS-0006 Evidence: Canonical Map Closeout |
-| `doc_other_1231` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0007-evolution-polymorphize-followup-2026-05-20.md | TASK-ATS-0007 Evidence: Evolution and Polymorphize Follow-up |
-| `doc_other_1232` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0007-replacement-lane-active-gate-2026-05-19.md | TASK-ATS-0007 Evidence: Replacement-Lane Active Gate and Pinned Runner Closeout |
-| `doc_other_1233` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0008-adopter-sentinel-evidence-routing-2026-05-20.md | TASK-ATS-0008 Evidence: Adopter Sentinel Evidence Routing |
-| `doc_other_1234` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0009-upstream-blocker-repair-batch-2026-05-20.md | TASK-ATS-0009 Evidence: Upstream Blocker Repair Batch |
-| `doc_other_1235` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0010-graduation-release-gate-2026-05-20.md | TASK-ATS-0010 Evidence: Graduation and Release Gate |
-| `doc_other_1236` | docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0028-first-use-user-notice.task.md | TASK-APO-0028 First-Use User Notice and Suggested Actions |
-| `doc_other_1238` | docs/ai_atomic_framework/atm-self-refactor/ATM自我治理拆分計畫書.md | ATM 自我治理拆分計畫書（ATM Self-Refactor） |
-| `doc_other_1239` | docs/ai_atomic_framework/atm-self-refactor/evidence/LAYER-1-summary.md | Evidence — Layer 1（Pure helpers）完成總結 |
-| `doc_other_1240` | docs/ai_atomic_framework/atm-self-refactor/evidence/LAYER-2-summary.md | Evidence — Layer 2（Module-level splits）完成總結 |
-| `doc_other_1241` | docs/ai_atomic_framework/atm-self-refactor/evidence/LAYER-3-summary.md | Evidence — Layer 3（High-risk splits, minimal slices）完成總結 |
-| `doc_other_1242` | docs/ai_atomic_framework/atm-self-refactor/evidence/TASK-ASR-0010-evidence.md | Evidence — TASK-ASR-0010 — wrappers generator + parity validator 接 SSoT |
-| `doc_other_1243` | docs/ai_atomic_framework/atm-self-refactor/evidence/TASK-ASR-0011-evidence.md | Evidence — TASK-ASR-0011 — command-specs 39 spec per-file split |
-| `doc_other_1244` | docs/ai_atomic_framework/atm-self-refactor/evidence/TASK-ASR-0012-evidence.md | Evidence — TASK-ASR-0012 — propose.ts 完整拆分（normalize-input + gates） |
-| `doc_other_1245` | docs/ai_atomic_framework/atm-self-refactor/evidence/TASK-ASR-0013-evidence.md | Evidence — TASK-ASR-0013 — integrations-core 完整 compiler/manifest/verify split |
-| `doc_other_1246` | docs/ai_atomic_framework/atm-self-refactor/evidence/TASK-ASR-0014-evidence.md | Evidence — TASK-ASR-0014 — upgrade.ts 完整拆分（experimental / safe-upgrade / scan / proposal） |
-| `doc_other_1247` | docs/ai_atomic_framework/atm-self-refactor/evidence/TASK-ASR-0015-evidence.md | Evidence — TASK-ASR-0015 — plugin-governance-local 完整拆分（bootstrap / prompt / budget） |
-| `doc_other_1248` | docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0001-upgrade-path-helpers.task.md | TASK-ASR-0001 — upgrade.ts 抽出 path-helpers |
-| `doc_other_1249` | docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0002-upgrade-next-action-hint.task.md | TASK-ASR-0002 — upgrade.ts 抽出 next-action-hint |
-| `doc_other_1250` | docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0003-upgrade-canary.task.md | TASK-ASR-0003 — upgrade.ts 抽出 canary helpers |
-| `doc_other_1251` | docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0004-command-specs-common.task.md | TASK-ASR-0004 — command-specs.ts 抽出 _common shared options |
-| `doc_other_1252` | docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0005-map-generator-normalize-fields.task.md | TASK-ASR-0005 — map-generator.ts 抽出 normalize-fields + errors |
-| `doc_other_1253` | docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0006-map-generator-normalize-lineage.task.md | TASK-ASR-0006 — map-generator.ts 抽出 normalize-lineage |
-| `doc_other_1254` | docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0007-propose-failure-reason.task.md | TASK-ASR-0007 — propose.ts 抽出 failure-reason renderers |
-| `doc_other_1255` | docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0008-integrations-core-charter-block.task.md | TASK-ASR-0008 — integrations-core 抽出 charter-block renderer |
-| `doc_other_1256` | docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0009-root-drop-wrappers-manifest.task.md | TASK-ASR-0009 — root-drop wrappers.json SSoT manifest |
-| `doc_other_1257` | docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0010-root-drop-wrappers-generator.task.md | TASK-ASR-0010 — root-drop wrappers generator + parity validator 接 SSoT |
-| `doc_other_1258` | docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0011-command-specs-per-file-split.task.md | TASK-ASR-0011 — command-specs 38 spec per-file split |
-| `doc_other_1259` | docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0012-propose-full-split.task.md | TASK-ASR-0012 — propose.ts 完整拆分（normalize-input + gates） |
-| `doc_other_1260` | docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0013-integrations-core-full-split.task.md | TASK-ASR-0013 — integrations-core 完整 compiler/manifest/verify split |
-| `doc_other_1261` | docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0014-upgrade-full-split.task.md | TASK-ASR-0014 — upgrade.ts 完整拆分（experimental / safe-upgrade / scan / proposal） |
-| `doc_other_1262` | docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0015-plugin-governance-local-split.task.md | TASK-ASR-0015 — plugin-governance-local 完整拆分（bootstrap / prompt / budget） |
-| `doc_other_1263` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0002-next-json-semantics-evidence.md | TASK-ATD-0002 — next --json Semantics Execution Evidence |
-| `doc_other_1264` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0003-self-governance-decision-evidence.md | TASK-ATD-0003 — Self-Governance Example Decision Evidence |
-| `doc_other_1265` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0004-module-boundary-evidence.md | TASK-ATD-0004 — Module Boundary Hardening Evidence |
-| `doc_other_1266` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0005-module-boundary-deny-rule-evidence.md | Summary |
-| `doc_other_1267` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0006-eslint-baseline-evidence.md | Summary |
-| `doc_other_1268` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0007-cli-shared-result-types-evidence.md | Summary |
-| `doc_other_1269` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0008-framework-version-source-evidence.md | Summary |
-| `doc_other_1270` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0009-env-registry-docs-evidence.md | Summary |
-| `doc_other_1271` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0010-host-recipe-evidence.md | Summary |
-| `doc_other_1272` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0011-validator-harness-evidence.md | Summary |
-| `doc_other_1273` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0012-ajv-factory-evidence.md | Summary |
-| `doc_other_1274` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0013-cli-error-policy-evidence.md | Summary |
-| `doc_other_1275` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0014-test-layering-evidence.md | Summary |
-| `doc_other_1276` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0015-first-unit-tests-evidence.md | Summary |
-| `doc_other_1277` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0016-upgrade-split-evidence.md | Summary |
-| `doc_other_1278` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0017-governance-local-inventory-evidence.md | Summary |
-| `doc_other_1279` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0018-propose-split-evidence.md | Summary |
-| `doc_other_1280` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0019-atm-chart-split-evidence.md | Summary |
-| `doc_other_1281` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0020-command-specs-split-evidence.md | Summary |
-| `doc_other_1282` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0021-integrations-core-split-evidence.md | Summary |
-| `doc_other_1283` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0022-map-generator-split-evidence.md | Summary |
-| `doc_other_1284` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0023-any-debt-budget-evidence.md | Summary |
-| `doc_other_1285` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0024-opensource-docs-evidence.md | Summary |
-| `doc_other_1286` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0025-release-parity-gate-evidence.md | Summary |
-| `doc_other_1287` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0026-release-trust-ops-evidence.md | Summary |
-| `doc_other_1288` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0027-wrapper-dedup-evidence.md | Summary |
-| `doc_other_1289` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0028-synthetic-adopter-fixture-evidence.md | Summary |
-| `doc_other_1290` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0029-external-profile-evidence.md | Summary |
-| `doc_other_1291` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0030-multi-agent-results-evidence.md | Summary |
-| `doc_other_1292` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0031-devcontainer-evidence.md | Summary |
-| `doc_other_1293` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0032-e2e-plan-evidence.md | Summary |
-| `doc_other_1294` | docs/ai_atomic_framework/framework-drafts/adopter-sentinel-external-profile.md | Adopter Sentinel — External Profile as Downstream Evidence |
-| `doc_other_1295` | docs/ai_atomic_framework/framework-drafts/release-parity-gate.md | Release Parity Gate |
-| `doc_other_1296` | docs/ai_atomic_framework/framework-drafts/release-trust-ops.md | Release Trust Continuous Verification |
-| `doc_other_1297` | docs/ai_atomic_framework/governance-overview/governance-overview.md | ATM 框架治理機制全景 (zh-TW) |
-| `doc_other_1298` | docs/ai_atomic_framework/governance-overview/PLAN.md | Plan: ATM 框架治理機制完整解釋文件 (zh-TW) |
-| `doc_other_1299` | docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書v2.md | 拆解大型功能優化原子 Map 計畫書 v2-r2 |
+| `doc_other_1318` | docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md | ATM Agent-First 可操作性優化計畫書 |
+| `doc_other_1319` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0001-report-overlap-matrix-routing.task.md | TASK-AAO-0001 — Overlap matrix 與路由裁決 |
+| `doc_other_1320` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0002-cli-spec-runner-ssot-drift-guard.task.md | TASK-AAO-0002 — CLI command spec / runner SSOT drift guard |
+| `doc_other_1321` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0003-next-decisiontrail-json-contract.task.md | TASK-AAO-0003 — next decisionTrail JSON contract |
+| `doc_other_1322` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0004-validator-failure-envelope-normalization.task.md | TASK-AAO-0004 — Validator failure envelope 標準化 |
+| `doc_other_1323` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0005-cli-context-slimming-wave1.task.md | TASK-AAO-0005 — CLI context slimming wave 1 |
+| `doc_other_1324` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0006-docs-schema-command-drift-guard.task.md | TASK-AAO-0006 — Docs / schema / command drift guard |
+| `doc_other_1325` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0007-onefile-size-startup-budget.task.md | TASK-AAO-0007 — Onefile size / startup budget |
+| `doc_other_1326` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0008-roadmap-backwrite-bridge-closure.task.md | TASK-AAO-0008 — AAO roadmap backwrite 與 ASA bridge closure |
+| `doc_other_1327` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0000-doc-finalize-bridge-index.task.md | TASK-AAO-0000 — AAO 文件區初始化與 ASA bridge index |
+| `doc_other_1328` | docs/agent-briefs/reports/PROG-2-0017-top50-readiness-r1.md | PROG-2-0017 Top50 Readiness Audit R1 |
+| `doc_other_1429` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0096-legacy-route-plan-tasks-ts.task.md | TASK-AAO-0096 LegacyRoutePlan for tasks.ts — 工具實戰 + 校驗 |
+| `doc_other_1452` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0097-tasks-wave3b-file-io-helpers-split.task.md | TASK-AAO-0097 tasks.ts wave 3-B file-I/O helpers split |
+| `doc_other_1453` | docs/ai_atomic_framework/governance-optimization/ATM治理流程與Team-Agents加速優化計畫書.md | ATM 治理流程與 Team Agents 加速優化計畫書 |
+| `doc_other_1791` | docs/ai_atomic_framework/error-governance/error-governance-plan.md | ATM Error Governance System Plan |
+| `doc_other_2147` | docs/ai_atomic_framework/temporary-governance/temporary-governance-plan.md | ATM Temporary Governance Quarantine Plan |
+| `doc_other_2168` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0193-gate-telemetry-v1.task.md | ATM-GOV-0193 治理閘門遙測基座（Gate Telemetry v1） |
+| `doc_other_2169` | docs/ai_atomic_framework/atm-product-proof/independent-review-pilot-plan.md | ATM 獨立審核與減負小卡試行計畫 |
+| `doc_other_2703` | docs/美術-武將大招分鏡規範-01-交付與連貫.md | 武將大招漫畫分鏡繪圖規範（1/3）交付與連貫 |
+| `doc_other_2704` | docs/美術-武將大招分鏡規範-02-拍點畫風與接入.md | 武將大招漫畫分鏡繪圖規範（2/3）拍點、畫風、武將表與遊戲內接入 |
+| `doc_other_2705` | docs/美術-武將大招分鏡規範-03-提示詞與驗收.md | 武將大招漫畫分鏡繪圖規範（3/3）提示詞與驗收 |
+| `doc_other_2706` | .github/ISSUE_TEMPLATE/bug_report.md | 問題描述 |
+| `doc_other_2707` | .github/ISSUE_TEMPLATE/feature_request.md | 功能描述 |
+| `doc_other_2708` | .github/ISSUE_TEMPLATE/rfc.md | RFC 摘要 |
+| `doc_other_2709` | .github/prompts/atm-atom-map-refactor.prompt.md | ATM Atom Map Refactor |
+| `doc_other_2710` | .github/prompts/atm-create.prompt.md | ATM Create |
+| `doc_other_2711` | .github/prompts/atm-evidence.prompt.md | ATM Evidence |
+| `doc_other_2712` | .github/prompts/atm-governance-router.prompt.md | ATM Governance Router |
+| `doc_other_2713` | .github/prompts/atm-handoff.prompt.md | ATM Handoff |
+| `doc_other_2714` | .github/prompts/atm-internal-build-sync.prompt.md | ATM Internal Build Sync |
+| `doc_other_2715` | .github/prompts/atm-lock.prompt.md | ATM Lock |
+| `doc_other_2716` | .github/prompts/atm-next.prompt.md | ATM Next |
+| `doc_other_2717` | .github/prompts/atm-orient.prompt.md | ATM Orient |
+| `doc_other_2718` | .github/prompts/atm-task-intent-resolver.prompt.md | ATM Task Intent Resolver |
+| `doc_other_2719` | .github/prompts/atm-upgrade-scan.prompt.md | ATM Upgrade Scan |
+| `doc_other_2720` | .github/pull_request_template.md | Pull Request |
+| `doc_other_2721` | docs/學習文件/Harness Engineering for Language Agents.md | Harness Engineering for Language Agents |
+| `doc_other_2722` | docs/agent-briefs/reports/PROG-2-0018-front6-readiness-audit.md | PROG-2-0018 Front6 Mainline Injection Readiness Audit |
+| `doc_other_2723` | docs/agent-briefs/reports/PROG-2-0018-needs-fill-readiness-audit.md | PROG-2-0018 Needs-Fill Mainline Injection Readiness Audit |
+| `doc_other_2724` | docs/agent-briefs/reports/PROG-2-0019-front6-readiness-audit.md | PROG-2-0019 Front6 Ready Event Promotion Audit |
+| `doc_other_2725` | docs/agent-briefs/reports/PROG-2-0019-needs-fill-readiness-audit.md | PROG-2-0019 Needs-Fill Ready Event Promotion Audit |
+| `doc_other_2726` | docs/agent-briefs/reports/PROG-2-0019-ready-event-promotion.md | PROG-2-0019 Ready Event Promotion |
+| `doc_other_2727` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0003-natural-language-onboarding-smoke-2026-05-19.md | TASK-ATS-0003 natural-language onboarding smoke evidence |
+| `doc_other_2728` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0003B-first-use-notice-refresh-2026-05-19.md | TASK-ATS-0003B first-use notice refresh evidence |
+| `doc_other_2729` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0004-cross-editor-blackbox-closeout-2026-05-19.md | TASK-ATS-0004 Evidence: Cross-Editor Black-Box Closeout |
+| `doc_other_2730` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0004-explicit-atm-prompt-and-blackbox-retest-2026-05-19.md | TASK-ATS-0004 Evidence: Explicit ATM Prompt / Natural Black-Box Reassessment |
+| `doc_other_2731` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0005-first-legacy-python-dry-run-2026-05-19.md | TASK-ATS-0005 Evidence: First Legacy Python Dry-Run Pilot |
+| `doc_other_2732` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0005-governed-leaf-pilot-smoke-2026-05-19.md | TASK-ATS-0005 Evidence: Governed Leaf Pilot Smoke |
+| `doc_other_2733` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0006-canonical-map-closeout-2026-05-19.md | TASK-ATS-0006 Evidence: Canonical Map Closeout |
+| `doc_other_2734` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0007-evolution-polymorphize-followup-2026-05-20.md | TASK-ATS-0007 Evidence: Evolution and Polymorphize Follow-up |
+| `doc_other_2735` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0007-replacement-lane-active-gate-2026-05-19.md | TASK-ATS-0007 Evidence: Replacement-Lane Active Gate and Pinned Runner Closeout |
+| `doc_other_2736` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0008-adopter-sentinel-evidence-routing-2026-05-20.md | TASK-ATS-0008 Evidence: Adopter Sentinel Evidence Routing |
+| `doc_other_2737` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0009-upstream-blocker-repair-batch-2026-05-20.md | TASK-ATS-0009 Evidence: Upstream Blocker Repair Batch |
+| `doc_other_2738` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0010-graduation-release-gate-2026-05-20.md | TASK-ATS-0010 Evidence: Graduation and Release Gate |
+| `doc_other_2739` | docs/ai_atomic_framework/ACADEMIC_MINING_REPORT.md | ATM 框架學術創新挖掘報告 |
+| `doc_other_2740` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/baseline-agent-cost-report.md | AI Agent 原子化成本基線報告 |
+| `doc_other_2741` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/coordination.md | ASP Initiative 協調紀錄 |
+| `doc_other_2742` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/corpus-index.md | 3KLife Corpus 索引（adapter candidate-discovery 驗證用） |
+| `doc_other_2743` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/derived-atoms-plan.md | Derived Atoms: two-phase symbol-level occupancy |
+| `doc_other_2744` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0001-atomization-planning-sdk-contract.task.md | TASK-ASP-0001 AtomizationPlanningAdapter SDK Contract |
+| `doc_other_2745` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0002-js-adapter-candidate-discovery.task.md | TASK-ASP-0002 JS Adapter Candidate Discovery |
+| `doc_other_2746` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0003-python-adapter-sdk-promotion.task.md | TASK-ASP-0003 Python Adapter SDK Promotion |
+| `doc_other_2747` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0004-broker-candidate-bridge.task.md | TASK-ASP-0004 Broker Candidate-to-WriteIntent Bridge |
+| `doc_other_2748` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0005-3klife-coordination-baseline.task.md | TASK-ASP-0005 3KLife Coordination & Baseline Measurement |
+| `doc_other_2749` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0006-cid-v2-line-independent-derived-atom-identity.task.md | TASK-ASP-0006 CID v2: line-independent derived atom identity |
+| `doc_other_2750` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0007-claim-time-derived-atom-reservation-with-atoms.task.md | TASK-ASP-0007 Claim-time derived atom reservation with --atoms |
+| `doc_other_2751` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0008-commit-time-derived-atom-confirmation-from-the-staged-diff.task.md | TASK-ASP-0008 Commit-time derived atom confirmation from the staged diff |
+| `doc_other_2752` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0009-import-preamble-rule-modify-operation-and-compose-revalidation.task.md | TASK-ASP-0009 Import preamble rule, modify operation, and compose revalidation |
+| `doc_other_2753` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0010-formal-atom-drift-stale-downgrade-and-doctor-reporting.task.md | TASK-ASP-0010 Formal atom drift: stale downgrade and doctor reporting |
+| `doc_other_2754` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0011-dogfood-same-file-two-symbol-parallel-claims-and-metrics.task.md | TASK-ASP-0011 Dogfood: same-file two-symbol parallel claims and metrics |
+| `doc_other_2755` | docs/ai_atomic_framework/agent-mailbox/agent-mailbox-plan.md | Agent Mailbox 最小治理通訊計畫書 |
+| `doc_other_2756` | docs/ai_atomic_framework/agent-mailbox/tasks/TASK-MBX-0001-editor-neutral-markdown.task.md | TASK-MBX-0001 實作 editor-neutral 信箱地址與 Markdown 訊息生命週期 |
+| `doc_other_2757` | docs/ai_atomic_framework/agent-mailbox/tasks/TASK-MBX-0002-claude-code-codex.task.md | TASK-MBX-0002 將信箱註冊與收件檢查投影至 Claude Code 與 Codex |
+| `doc_other_2758` | docs/ai_atomic_framework/agent-mailbox/tasks/TASK-MBX-0003-cursor-mailbox-projection.task.md | TASK-MBX-0003 投影信箱收發指令至 Cursor 對話群 |
+| `doc_other_2759` | docs/ai_atomic_framework/agent-mailbox/tasks/TASK-MBX-0004-antigravity-mailbox-projection.task.md | TASK-MBX-0004 投影信箱收發指令至 Antigravity |
+| `doc_other_2760` | docs/ai_atomic_framework/agent-mailbox/tasks/TASK-MBX-0005-portable-interoperability-validation.task.md | TASK-MBX-0005 驗證多 Editor 信箱互通與不授權邊界 |
+| `doc_other_2761` | docs/ai_atomic_framework/agent-mailbox/tasks/TASK-MBX-0006-identity-and-mail-lifecycle.task.md | TASK-MBX-0006 新增可追蹤信箱身分與信件生命週期 |
+| `doc_other_2762` | docs/ai_atomic_framework/arxiv-paper-v1/bench-design.md | Multi-Vendor Broker Bench — 設計規範（v1 vision paper 補強用） |
+| `doc_other_2763` | docs/ai_atomic_framework/arxiv-paper-v1/close-orchestration-collision-runbook.md | close-orchestration Controlled Collision Runbook |
+| `doc_other_2764` | docs/ai_atomic_framework/arxiv-paper-v1/COMMIT-ARTIFACT-MAP-2026-06-28.md | Commit and Artifact Map (2026-06-28) |
+| `doc_other_2765` | docs/ai_atomic_framework/arxiv-paper-v1/CROSS-AGENT-REVIEW-SIGNATURE-PROPOSAL-2026-06-28.md | Cross-Agent Review Signature Proposal |
+| `doc_other_2766` | docs/ai_atomic_framework/arxiv-paper-v1/en/HANDOFF-2026-06-26-paper-en-start.md | HANDOFF-2026-06-26 paper-en start |
+| `doc_other_2767` | docs/ai_atomic_framework/arxiv-paper-v1/en/PAPER-EN-CITATION-MAP.md | Paper EN Citation Map |
+| `doc_other_2768` | docs/ai_atomic_framework/arxiv-paper-v1/en/PAPER-EN-CLAIM-RISK-SCAN.md | PAPER-EN Claim Risk Scan |
+| `doc_other_2769` | docs/ai_atomic_framework/arxiv-paper-v1/en/PAPER-EN-GLOSSARY.md | Paper EN Glossary |
+| `doc_other_2770` | docs/ai_atomic_framework/arxiv-paper-v1/en/PAPER-EN-LAYOUT-PLAN.md | PAPER-EN Layout Plan |
+| `doc_other_2771` | docs/ai_atomic_framework/arxiv-paper-v1/en/PAPER-EN-READINESS-CHECKLIST.md | Paper EN Readiness Checklist |
+| `doc_other_2772` | docs/ai_atomic_framework/arxiv-paper-v1/en/PAPER-EN-STYLE-SPEC.md | Paper EN Style Spec |
+| `doc_other_2773` | docs/ai_atomic_framework/arxiv-paper-v1/en/PAPER-EN-TABLE-GUARDS.md | Paper EN Table Guards |
+| `doc_other_2774` | docs/ai_atomic_framework/arxiv-paper-v1/FAST-PATH-CLAIM-TABLE-2026-06-28.md | Fast-Path Claim Table (2026-06-28) |
+| `doc_other_2775` | docs/ai_atomic_framework/arxiv-paper-v1/HANDOFF-2026-06-18.md | 論文工作交接文件 — 2026-06-18（twelfth pass 校正版，2026-06-21） |
+| `doc_other_2776` | docs/ai_atomic_framework/arxiv-paper-v1/HANDOFF-2026-06-24-v3.1-expanded-paper.md | ATM Paper Handoff — v3.1 Expanded arXiv Track |
+| `doc_other_2777` | docs/ai_atomic_framework/arxiv-paper-v1/HANDOFF-2026-06-25-paper-v3.1-v02-polish.md | Handoff — paper.v3.1 v0.2 敘事整併與投稿語氣潤稿 |
+| `doc_other_2778` | docs/ai_atomic_framework/arxiv-paper-v1/HANDOFF-2026-06-26-md-to-pdf-sync.md | Handoff — paper.v3.1.md -> paper-zh.tex -> paper-zh.pdf 同步流程 |
+| `doc_other_2779` | docs/ai_atomic_framework/arxiv-paper-v1/HANDOFF-2026-06-27-new-captain.md | HANDOFF-2026-06-27 New Captain |
+| `doc_other_2780` | docs/ai_atomic_framework/arxiv-paper-v1/HANDOFF-2026-06-28-next-captain.md | HANDOFF-2026-06-28 Next Captain |
+| `doc_other_2781` | docs/ai_atomic_framework/arxiv-paper-v1/HANDOFF-2026-06-28-paper-evidence-fast-path.md | HANDOFF-2026-06-28 Paper Evidence Fast-Path |
+| `doc_other_2782` | docs/ai_atomic_framework/arxiv-paper-v1/HANDOFF-2026-06-30-next-captain.md | HANDOFF-2026-06-30 Next Captain |
+| `doc_other_2783` | docs/ai_atomic_framework/arxiv-paper-v1/LATEX-ZH-README.md | 中文 LaTeX / PDF 工作流 |
+| `doc_other_2784` | docs/ai_atomic_framework/arxiv-paper-v1/LOGIC-ISSUE-MAP-2026-06-26.md | ATM Manuscript v3.1 全文邏輯問題地圖 |
+| `doc_other_2785` | docs/ai_atomic_framework/arxiv-paper-v1/paper-hotfile-block-claude-ops.md | Paper Hotfile BLOCK - Claude Ops |
+| `doc_other_2786` | docs/ai_atomic_framework/arxiv-paper-v1/paper-hotfile-block-codex-ops.md | Paper Hotfile BLOCK - Codex Ops |
+| `doc_other_2787` | docs/ai_atomic_framework/arxiv-paper-v1/paper-hotfile-block-runbook.md | Paper Hotfile BLOCK Runbook |
+| `doc_other_2788` | docs/ai_atomic_framework/arxiv-paper-v1/paper-hotfile-collision-tasks.md | TASK-PAPER-HOTFILE-POS-A |
+| `doc_other_2789` | docs/ai_atomic_framework/arxiv-paper-v1/paper.md | 採用器導向原子化：多代理 LLM 程式碼合成的並發治理框架 |
+| `doc_other_2790` | docs/ai_atomic_framework/arxiv-paper-v1/paper.v2.md | 採用器導向原子化：多代理 LLM 程式碼合成的並發治理框架 |
+| `doc_other_2791` | docs/ai_atomic_framework/arxiv-paper-v1/paper.v3.1.en.md | ATM: Adapter-Guided Atomization and CID-Brokered Admission for Single-Domain Multi-Vendor LLM Code Co-Synthesis |
+| `doc_other_2792` | docs/ai_atomic_framework/arxiv-paper-v1/paper.v3.1.md | ATM：同域多供應商 LLM 程式碼共同合成的採用器導向原子化與 CID Broker |
+| `doc_other_2793` | docs/ai_atomic_framework/arxiv-paper-v1/paper.v3.md | 採用器導向原子化：多代理 LLM 程式碼合成的寫入前准入治理框架 |
+| `doc_other_2794` | docs/ai_atomic_framework/arxiv-paper-v1/same-owner-block-unique-package-zh.md | Same-Owner BLOCK 論文唯一完整包 |
+| `doc_other_2795` | docs/ai_atomic_framework/arxiv-paper-v1/search-threat-keywords.md | ATM CID 論文威脅掃描清單 |
+| `doc_other_2796` | docs/ai_atomic_framework/arxiv-paper-v1/TASK-COLLIDE-CLOSE-ORCH-A.task.md | TASK-COLLIDE-CLOSE-ORCH-A |
+| `doc_other_2797` | docs/ai_atomic_framework/arxiv-paper-v1/TASK-COLLIDE-CLOSE-ORCH-B.task.md | TASK-COLLIDE-CLOSE-ORCH-B |
+| `doc_other_2798` | docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-BLOCK-A.task.md | TASK-PAPER-HOTFILE-BLOCK-A |
+| `doc_other_2799` | docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-BLOCK-B.task.md | TASK-PAPER-HOTFILE-BLOCK-B |
+| `doc_other_2800` | docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-PARK-A.task.md | TASK-PAPER-HOTFILE-PARK-A |
+| `doc_other_2801` | docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-PARK-B.task.md | TASK-PAPER-HOTFILE-PARK-B |
+| `doc_other_2802` | docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-POS-A.task.md | TASK-PAPER-HOTFILE-POS-A |
+| `doc_other_2803` | docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-POS-B.task.md | TASK-PAPER-HOTFILE-POS-B |
+| `doc_other_2804` | docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-POS2-A.task.md | TASK-PAPER-HOTFILE-POS2-A |
+| `doc_other_2805` | docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-POS2-B.task.md | TASK-PAPER-HOTFILE-POS2-B |
+| `doc_other_2806` | docs/ai_atomic_framework/arxiv-paper-v1/vision-paper-semantic-admission.md | Vision Paper: Atomization-First CID Broker |
+| `doc_other_2807` | docs/ai_atomic_framework/ATM 測試缺口矩陣與未來優化計畫書.md | ATM 測試缺口矩陣與未來優化計畫書 |
+| `doc_other_2808` | docs/ai_atomic_framework/ATM_BUG_OPTIMIZATION_BACKLOG.md | ATM Bug and Optimization Backlog |
+| `doc_other_2809` | docs/ai_atomic_framework/ATM_CAPTAIN_ACTIVE_SEQUENCE.md | ATM Captain Active Sequence |
+| `doc_other_2810` | docs/ai_atomic_framework/ATM_TASK_STATUS_SYNC_AUDIT_2026-06-14.md | ATM Task Status Sync Audit - 2026-06-14 |
+| `doc_other_2811` | docs/ai_atomic_framework/atm-agent-first-operability/ATM任務實戰反饋_opus47.md | 2. 「checkpoint 前 commit」vs「checkpoint 後 commit」流程矛盾 |
+| `doc_other_2812` | docs/ai_atomic_framework/atm-agent-first-operability/d2/adapter-spec.md | D2 Adapter Spec — atm-markdown-task-source Plugin 接入評估報告 |
+| `doc_other_2813` | docs/ai_atomic_framework/atm-agent-first-operability/HANDOFF-2026-06-18-ATM-EXECUTION-OPERATOR-GUIDE.md | ATM 執行操作手冊與交接 — TASK-AAO-0144 收工後 |
+| `doc_other_2814` | docs/ai_atomic_framework/atm-agent-first-operability/reports/TASK-AAO-0060-branch-worktree-archive-inventory.md | TASK-AAO-0060 Branch & Worktree Archive Inventory |
+| `doc_other_2815` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0009-opus47-feedback-bridge.task.md | TASK-AAO-0009 — 匯入 Opus 4.7 feedback 與任務橋接 |
+| `doc_other_2816` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0010-scope-amendment-cli.task.md | TASK-AAO-0010 — 正式 tasks scope --add scope amendment CLI |
+| `doc_other_2817` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0011-untracked-file-scope-warnings.task.md | TASK-AAO-0011 — Claim/checkpoint 忽略 unrelated untracked |
+| `doc_other_2818` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0012-direction-lock-allowedfiles-ssot.task.md | TASK-AAO-0012 — Direction lock allowedFiles 單一真相來源 |
+| `doc_other_2819` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0013-batch-checkpoint-partial-ok.task.md | TASK-AAO-0013 — Checkpoint partial-ok 訊息分層 |
+| `doc_other_2820` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0014-state-aware-batch-playbook.task.md | TASK-AAO-0014 — State-aware batch playbook |
+| `doc_other_2821` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0015-evidence-validator-catalog.task.md | TASK-AAO-0015 — evidence validators --list |
+| `doc_other_2822` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0016-evidence-run-recent-run.task.md | TASK-AAO-0016 — evidence run / --recent-run 快速入口 |
+| `doc_other_2823` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0017-closure-validator-remediation.task.md | TASK-AAO-0017 — Closure packet 缺 validator 的可操作修正 |
+| `doc_other_2824` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0018-neutrality-staged-only.task.md | TASK-AAO-0018 — Neutrality scanner staged-only mode |
+| `doc_other_2825` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0019-completion-attestation-schema.task.md | TASK-AAO-0019 — Completion attestation schema |
+| `doc_other_2826` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0020-public-command-coverage-score.task.md | TASK-AAO-0020 — Public command coverage scorer 修正 |
+| `doc_other_2827` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0021-readable-ref-score-integration.task.md | TASK-AAO-0021 — Readable ref scorer 整合 |
+| `doc_other_2828` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0022-rollback-proof-evidence.task.md | TASK-AAO-0022 — Rollback-proof evidence |
+| `doc_other_2829` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0023-map-spec-schema-validator.task.md | TASK-AAO-0023 — Map spec schema validator |
+| `doc_other_2830` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0024-batch-status-progress.task.md | TASK-AAO-0024 — batch status 增強 |
+| `doc_other_2831` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0025-tasks-show-planning-doc.task.md | TASK-AAO-0025 — tasks show --planning-doc |
+| `doc_other_2832` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0026-atm-status-overview.task.md | TASK-AAO-0026 — atm status 綜覽 |
