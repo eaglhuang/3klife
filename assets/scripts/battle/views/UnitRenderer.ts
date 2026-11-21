@@ -1,6 +1,7 @@
 
 // @spec-source → 見 docs/cross-reference-index.md
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
+import { perfBegin, perfEnd, perfFrame } from "./BattlePerfProbe";
 import { awaitWithTimeout } from "../../core/utils/AwaitGuard";
 import {
   _decorator,
@@ -1116,6 +1117,9 @@ export class UnitRenderer extends Component {
 
   lateUpdate(dt = 0): void {
     if (!this.uiRoot || !this.worldCamera) return;
+    perfFrame();
+    const tAll = perfBegin();
+    let t = tAll;
 
     this.unitViews.forEach((view, unitId) => {
       const unit = this.latestState?.units.get(unitId);
@@ -1146,6 +1150,7 @@ export class UnitRenderer extends Component {
         } else { this.spineUnits.remove(unitId); view.visualNode.active = true; }
       }
     });
+    perfEnd('unitViews', t); t = perfBegin();
 
     this.generalViews.forEach((view, faction) => {
       this.projectClampedGeneralLabel(view);
@@ -1160,14 +1165,21 @@ export class UnitRenderer extends Component {
         else if (view.usingHeroModel) view.modelRoot.active = true;
       } else { this.spineUnits.remove(`general:${faction}`); if (view.usingHeroModel) view.modelRoot.active = true; }
     });
+    perfEnd('generalViews', t); t = perfBegin();
     this.avoidGeneralPlates(dt);
+    perfEnd('avoidPlates', t); t = perfBegin();
     this.spineUnits.update(dt);
+    perfEnd('spineUnits', t); t = perfBegin();
     this.stepHpChips(dt);
+    perfEnd('hpChips', t); t = perfBegin();
     this.moveDust.update(dt);
     this.arrowShots.update(dt);
     this.slashShots.update(dt);
+    perfEnd('fxShots', t); t = perfBegin();
 
     this.tileBuffMarkers.update(dt);
+    perfEnd('tileBuff', t);
+    perfEnd('lateUpdate', tAll);
   }
 
   /** 數值帶增減量時字串變長，單行縮字塞進徽章（PROG-2-1870） */

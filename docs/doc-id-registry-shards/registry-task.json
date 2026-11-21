@@ -16452,6 +16452,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_2850",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9713.md",
+    "title": "[PROG-2-9713] 戰場效能熱點修正（tick 分段量測、Label 縮放、圖集上傳、合批、離場釋放）",
+    "category": "task"
+  },
+  {
     "id": "doc_task_2925",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9800.md",
     "title": "[PROG-2-9800] 網頁版卡頓優化",

@@ -14249,6 +14249,52 @@
       "doc_id": "doc_task_2931",
       "title": "開局義子入學驗證與學府籌備看板",
       "status": "completed"
+    },
+    {
+      "doc_id": "doc_task_2850",
+      "id": "PROG-2-9713",
+      "title": "戰場效能熱點修正（tick 分段量測、Label 縮放、圖集上傳、合批、離場釋放）",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T09:00:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [
+        "PROG-2-9800"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-22 | 狀態: in-progress | 驗證: 7456 自動代打實測 draw call 平均 297→240、最高 358→296、FPS 54.8→58.7，棋盤截圖不變；每幀邏輯 lateUpdate 平均 0.5～0.8ms；單元測試、tsc 0 錯、閘門全過 | 變更: 每幀分段計時（?battlePerf=1）、棋盤底色格 GPU instancing | 阻塞: 頭頂徽章合批（每塊 7～8 個 draw call）與離場記憶體待總PM 選方案",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "updated": "2026-11-22"

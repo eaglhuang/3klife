@@ -26,16 +26,16 @@ CCProgram board-jelly-vs %{
   precision highp float;
 
   #include <builtin/uniforms/cc-global>
-  #include <builtin/uniforms/cc-local>
-
-  in vec3 a_position;
-  in vec2 a_texCoord;
+  // PROG-2-9713: decode-base + local-batch so fill cells can use GPU instancing (USE_INSTANCING)
+  #include <legacy/decode-base>
+  #include <legacy/local-batch>
 
   out vec2 uv0;
 
   vec4 vert () {
-    vec4 pos = vec4(a_position, 1.0);
-    pos = cc_matWorld * pos;
+    mat4 matWorld;
+    CCGetWorldMatrix(matWorld);
+    vec4 pos = matWorld * vec4(a_position, 1.0);
     uv0 = a_texCoord;
     return cc_matViewProj * pos;
   }

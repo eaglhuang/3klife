@@ -712,7 +712,8 @@ export class BoardRenderer extends Component {
             new Color(62, 74, 86, 28),
             new Color(112, 130, 144, 92),
             new Color(188, 214, 226, 54),
-            new Vec4(0.08, 0.14, 0.18, 0.56)
+            new Vec4(0.08, 0.14, 0.18, 0.56),
+            true
         );
         this.defaultBorderMaterial = this.defaultFillMaterial;
         this.defaultBorderMidMaterial = this.defaultFillMaterial;
@@ -722,7 +723,8 @@ export class BoardRenderer extends Component {
             new Color(70, 108, 148, 8),
             new Color(132, 190, 238, 12),
             new Color(216, 242, 255, 8),
-            new Vec4(0.09, 0.14, 0.2, 0.08)
+            new Vec4(0.09, 0.14, 0.2, 0.08),
+            true
         );
 
         this.playerOccupiedFillMaterial = this.createCellMaterial(
@@ -836,12 +838,17 @@ export class BoardRenderer extends Component {
         );
     }
 
-    private createCellMaterial(fillColor: Color, edgeColor: Color, highlightColor: Color, jellyParams: Vec4): Material {
+    /**
+     * instanced：底色材質（40 格共用同一顆 quad＋同一材質）開 GPU instancing，整片棋盤 1 個 draw call（PROG-2-9713）。
+     * 疊加層（高亮、ZOC、場景效果）不開：它們走透明佇列，畫在 instanced 底色之後，疊加順序不變。
+     */
+    private createCellMaterial(fillColor: Color, edgeColor: Color, highlightColor: Color, jellyParams: Vec4, instanced = false): Material {
         const material = new Material();
 
         if (this.boardEffectAsset) {
             material.initialize({
                 effectAsset: this.boardEffectAsset,
+                defines: instanced ? { USE_INSTANCING: true } : undefined,
                 states: {
                     depthStencilState: { depthTest: true, depthWrite: false },
                     rasterizerState: { cullMode: gfx.CullMode.NONE }
