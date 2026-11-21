@@ -13642,6 +13642,57 @@
       }
     },
     {
+      "doc_id": "doc_task_2761",
+      "id": "PROG-2-9707",
+      "title": "戰場「自動」鈕改為自動代打（再按跳過＝極速決戰）",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "2026-11-22T00:10:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 2026-11-21 裁決：自動鈕改自動代打（AI 委任部署、每回合自動結束回合，玩家看得到過程），自動代打中再按跳過＝極速決戰 cause auto，關委任停止自動代打；試玩腳本不再按 BtnAuto。",
+      "related": [
+        "PROG-2-9703",
+        "PROG-2-1091",
+        "PROG-2-2202",
+        "PROG-2-0913"
+      ],
+      "depends": [
+        "PROG-2-9703"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-22 | 狀態: done | 驗證: 單元測試 9002 通過、tsc 0 錯；Cocos 實機未跑 | 變更: 自動代打、跳過極速決戰、關委任停自動、按鈕同步、試玩腳本、規格 doc_spec_1170 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
       "id": "PROG-2-9600",
       "title": "史境天下風雲榜與年終頒獎典禮系統規格書",
       "type": "documentation",
@@ -13993,5 +14044,5 @@
       }
     }
   ],
-  "updated": "2026-11-21"
+  "updated": "2026-11-22"
 }

@@ -16414,5 +16414,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9704.md",
     "title": "[PROG-2-9704] 紅方弓兵盔甲改銀色",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2764",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9707.md",
+    "title": "[PROG-2-9707] 戰場「自動」鈕改為自動代打（再按跳過＝極速決戰）",
+    "category": "task"
   }
 ]

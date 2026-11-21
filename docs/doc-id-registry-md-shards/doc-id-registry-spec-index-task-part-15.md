@@ -161,3 +161,4 @@
 | `doc_task_2761` | docs/agent-briefs/tasks/PROG/PROG-2-9193.md | PROG-2-9193：G4 郡望宗脈常駐與高門求親 |
 | `doc_task_2762` | docs/agent-briefs/tasks/PROG/PROG-2-9593.md | [PROG-2-9593] F3 銀兩收入（每季家族俸祿）＋大廳頂欄銀兩格＋CUR-1 糧草改名＋SP2 議和解除母國占用 |
 | `doc_task_2763` | docs/agent-briefs/tasks/PROG/PROG-2-9704.md | [PROG-2-9704] 紅方弓兵盔甲改銀色 |
+| `doc_task_2764` | docs/agent-briefs/tasks/PROG/PROG-2-9707.md | [PROG-2-9707] 戰場「自動」鈕改為自動代打（再按跳過＝極速決戰） |
