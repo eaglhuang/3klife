@@ -213,8 +213,13 @@ export function poolDistribution(
     for (const e of avail) tierWeight.set(e.tier, (tierWeight.get(e.tier) ?? 0) + e.weight);
     const base = new Map<string, number>();
     const mass = new Map<string, number>();
+    // tierRates 只在「有可抽項目」的等階間分配（某階抽光或沒人時，其機率由其餘等階按比例吃下）
+    const rateSum = pool.tierRates ? pool.tiers.reduce((t, tier) => t + ((tierWeight.get(tier) ?? 0) > 0 ? (pool.tierRates?.[tier] ?? 0) : 0), 0) : 0;
     for (const tier of pool.tiers) {
-        const m = total > 0 ? (tierWeight.get(tier) ?? 0) / total : 0;
+        const w = tierWeight.get(tier) ?? 0;
+        const m = pool.tierRates && rateSum > 0
+            ? (w > 0 ? (pool.tierRates[tier] ?? 0) / rateSum : 0)
+            : (total > 0 ? w / total : 0);
         base.set(tier, m);
         mass.set(tier, m);
     }
@@ -312,7 +317,7 @@ export function rollPool(pool: RewardPoolDef, count: number, rng: RandomSource, 
     const nextPity: Record<string, number> = { ...pity };
     const weighted: Array<RewardEntryDef & WeightedEntry> = pool.entries;
     const filters = slotFilters(pool);
-    const hasGroups = Object.keys(pool.tierGroups).length > 0;
+    const hasGroups = Object.keys(pool.tierGroups).length > 0 || pool.tierRates !== null;
     for (let pull = 0; pull < count; pull += 1) {
         const picked = new Set<string>();
         const hit = new Set<string>();
@@ -374,11 +379,7 @@ export function planBundle(bundle: RewardBundleDef): RewardPlanItem[] {
     });
 }
 
-/** 機率公開用：各等階命中機率（不用亂數，客戶端可呼叫） */
+/** 機率公開用：各等階命中機率（不計保底；不用亂數，客戶端可呼叫） */
 export function tierProbabilities(pool: RewardPoolDef): Array<{ tier: string; probability: number }> {
-    const total = weightedTotal(pool.entries);
-    return pool.tiers.map((tier) => ({
-        tier,
-        probability: total > 0 ? pool.entries.filter((e) => e.tier === tier).reduce((sum, e) => sum + e.weight, 0) / total : 0,
-    }));
+    return poolDistribution(pool, {}, { applyLadders: false }).tiers.map((t) => ({ tier: t.tier, probability: t.baseRate }));
 }
