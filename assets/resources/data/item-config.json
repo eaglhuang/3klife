@@ -7,6 +7,13 @@
       "stack": { "mode": "stackable", "max": 3 },
       "bind": "none",
       "overflow": { "toCurrency": "gold", "amount": 100 }
+    },
+    {
+      "id": "ITEM_QUICK_RESOLVE_WRIT",
+      "kind": "token",
+      "stack": { "mode": "stackable", "max": null },
+      "bind": "none",
+      "overflow": null
     }
   ],
   "holders": [

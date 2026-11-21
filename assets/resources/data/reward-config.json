@@ -92,6 +92,27 @@
       "effects": [{ "kind": "currency", "id": "mentorTickets", "amount": 1 }],
       "sources": ["login"],
       "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_QUICK_RESOLVE_WRIT_BOSS",
+      "kind": "reward",
+      "effects": [{ "kind": "item", "itemId": "ITEM_QUICK_RESOLVE_WRIT", "qty": 1, "itemSource": "TASK" }],
+      "sources": ["battle"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_QUICK_RESOLVE_WRIT_DEFENSE",
+      "kind": "reward",
+      "effects": [{ "kind": "item", "itemId": "ITEM_QUICK_RESOLVE_WRIT", "qty": 2, "itemSource": "TASK" }],
+      "sources": ["battle"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_QUICK_RESOLVE_WRIT_SEASON",
+      "kind": "reward",
+      "effects": [{ "kind": "item", "itemId": "ITEM_QUICK_RESOLVE_WRIT", "qty": 1, "itemSource": "TASK" }],
+      "sources": ["battle"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
     }
   ]
 }

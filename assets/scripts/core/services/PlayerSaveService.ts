@@ -127,6 +127,7 @@ import { normalizeEnrollGrantDay } from '../systems/DailyFreeEnroll';
 import { normalizeAcquisitionLog, type ItemAcquisitionRecord } from '../systems/ItemAcquisitionLog';
 import { normalizeAiAdaptiveStreak, type AiAdaptiveStreak } from '../systems/AiAdaptiveDifficulty';
 import { normalizeExtremeTaskState, type ExtremeTaskState } from '../systems/ExtremeTaskBoard';
+import { isDefaultQuickResolveState, normalizeQuickResolveSave, quickResolveSaveOf, type QuickResolveSave } from '../systems/QuickResolveGate';
 import { normalizePendingSceneGambit, type PendingSceneGambit } from '../systems/HallSceneGambit';
 import { isDefaultSeasonPassState, normalizeSeasonPassState, type SeasonPassState } from '../systems/SeasonPass';
 import { normalizeAcademyRecord, type PersistedAcademyRecord } from './GameAcademySaveStore';
@@ -288,6 +289,8 @@ export interface PlayerSaveSnapshot {
     pendingSceneGambit?: PendingSceneGambit;
     /** 祠堂每日供奉最後領取日（PROG-2-1915）；選填，舊檔缺值視為未領 */
     shrineOfferingDay?: string;
+    /** 極速決戰每日次數與天下征鋒 Boss 關勝利紀錄（PROG-2-9709）；選填，舊檔缺值視為今日未用、Boss 關未勝過，版號不升 */
+    quickResolve?: QuickResolveSave;
     /** 季度通行證 Mock（ECO-13）；全新狀態不寫入 */
     seasonPass?: SeasonPassState;
     /** 進行中的學府修業紀錄（PROG-2-9189）：含入學當下的外界時鐘；缺值代表沒有進行中的修業（舊存檔相容），版號不升 */
@@ -757,6 +760,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.extremeTask !== undefined ? { extremeTask: normalizeExtremeTaskState(snapshot.extremeTask) } : {}),
         ...(normalizeClanPrestige(snapshot.clanPrestige) > 0 ? { clanPrestige: normalizeClanPrestige(snapshot.clanPrestige) } : {}),
         ...(normalizeShrineOfferingDay(snapshot.shrineOfferingDay) !== null ? { shrineOfferingDay: normalizeShrineOfferingDay(snapshot.shrineOfferingDay)! } : {}),
+        ...(!isDefaultQuickResolveState(normalizeQuickResolveSave(snapshot.quickResolve)) ? { quickResolve: quickResolveSaveOf(normalizeQuickResolveSave(snapshot.quickResolve)) } : {}),
         ...(!isDefaultSeasonPassState(normalizeSeasonPassState(snapshot.seasonPass)) ? { seasonPass: normalizeSeasonPassState(snapshot.seasonPass) } : {}),
         ...(normalizeAcademyRecord(snapshot.academy, snapshot.gameTime) ? { academy: normalizeAcademyRecord(snapshot.academy, snapshot.gameTime)! } : {}),
         ...(snapshot.gachaMentorJournal !== undefined ? { gachaMentorJournal: normalizeGachaMentorJournal(snapshot.gachaMentorJournal) } : {}),

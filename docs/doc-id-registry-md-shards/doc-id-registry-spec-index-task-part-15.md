@@ -168,3 +168,4 @@
 | `doc_task_2800` | docs/agent-briefs/tasks/PROG/PROG-2-9607.md | 任務卡：PROG-2-9607 新玩家第一年「不卡關」體驗走查與修正清單 |
 | `doc_task_2801` | docs/agent-briefs/tasks/PROG/PROG-2-9608.md | 任務卡：PROG-2-9608 Base 框架分片 doc_id 修正與索引健全 |
 | `doc_task_2925` | docs/agent-briefs/tasks/PROG/PROG-2-9800.md | [PROG-2-9800] 網頁版卡頓優化 |
+| `doc_task_2927` | docs/agent-briefs/tasks/PROG/PROG-2-9709.md | [PROG-2-9709] 極速決戰修正：整軍戰力、資料驅動可用條件、每日次數與軍令狀 |

@@ -15,6 +15,8 @@
  * 暫定（可逆，自動結算沒有戰損與地形資料）：「勝率 +25%／+20%」以戰力倍率表示；敵戰損 +30%、我方戰損 −50%、
  * 地形適性、義旗高揚的戰俘與民心 +10 都不結算，只寫在戰報。主將魅力缺值時用武·統·智平均。
  */
+import { quickResolveConfig } from './QuickResolveGate';
+
 /** 結算結果（與 battle/BattleTypes 的 BattleResult 相同；core 不引用 battle，PROG-2-2205 由 battle/runtime 搬來） */
 type BattleResult = 'player-win' | 'enemy-win' | 'draw' | 'ongoing';
 
@@ -38,6 +40,11 @@ export interface AutoResolveSide {
     readonly general: AutoResolveGeneral | null;
     readonly troops: readonly AutoResolveTroop[];
     readonly fortressHp: number;
+    /**
+     * 尚未部署的預備兵力（PROG-2-9709）：出征軍勢帳本裡還沒派上場的兵（含虎符要用的兵力）。
+     * 極速決戰以整支出征部隊計戰力，不能只看已上場的部隊；每 1 兵折多少戰力在 quick-resolve-config.json。
+     */
+    readonly reserveTroops?: number;
 }
 
 export interface AutoResolveOutcome {
@@ -54,7 +61,8 @@ export function sidePower(side: AutoResolveSide): number {
         ? (g.str * 0.35 + g.lea * 0.35 + g.int * 0.2 + (g.cha ?? (g.str + g.lea + g.int) / 3) * 0.1) * 10 * Math.max(0, g.currentHp) / g.maxHp
         : 0;
     const troopPart = side.troops.reduce((sum, t) => sum + Math.max(0, t.currentHp) / 10 + t.attack / 2, 0);
-    return Math.round(generalPart + troopPart + Math.max(0, side.fortressHp) / 5);
+    const reservePart = Math.max(0, side.reserveTroops ?? 0) * quickResolveConfig().reservePowerPerTroop;
+    return Math.round(generalPart + troopPart + reservePart + Math.max(0, side.fortressHp) / 5);
 }
 
 export function autoResolveOutcome(player: AutoResolveSide, enemy: AutoResolveSide, random: () => number): AutoResolveOutcome {
@@ -75,6 +83,25 @@ export function resolveByPower(playerBase: number, enemyBase: number, random: ()
 /** 新手首戰保證勝（使用者裁定 2026-10-26，PROG-2-1127）：尚未首勝時敗、和都改判玩家勝，戰力數字照實顯示 */
 export function applyOpeningWinGuarantee(outcome: AutoResolveOutcome, firstBattleCleared: boolean): AutoResolveOutcome {
     return firstBattleCleared ? outcome : { ...outcome, result: 'player-win' };
+}
+
+/** 首戰保證勝的援軍終局戰報（改判時取代原本的終局定勢，免得先寫「我軍不支」又寫「反敗為勝」） */
+export const OPENING_RESCUE_FINAL_LINE = '終局定勢：援軍及時趕到，我軍反敗為勝！';
+
+export interface FinalizedQuickResolve extends QuickResolveOutcome {
+    /** 新手首戰保證勝改判時為 true */
+    readonly rescued: boolean;
+}
+
+/**
+ * 極速決戰收尾（大廳與戰場共用）：套首戰保證勝；改判時把戰報的終局那行換成援軍，結果與文案一致。
+ * 戰力數字照實保留。
+ */
+export function finalizeQuickResolve(quick: QuickResolveOutcome, firstBattleCleared: boolean): FinalizedQuickResolve {
+    const outcome = applyOpeningWinGuarantee(quick, firstBattleCleared);
+    const rescued = outcome.result !== quick.result;
+    const reportLines = rescued ? [...quick.reportLines.slice(0, -1), OPENING_RESCUE_FINAL_LINE] : quick.reportLines;
+    return { ...quick, result: outcome.result, playerPower: outcome.playerPower, enemyPower: outcome.enemyPower, reportLines, rescued };
 }
 
 export const QUICK_RESOLVE_TUNING = Object.freeze({

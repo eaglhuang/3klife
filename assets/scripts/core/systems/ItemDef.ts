@@ -72,6 +72,8 @@ export const ITEM_INTEL = 'ITEM_INTEL';
 export const ITEM_WEAPON_MATERIAL = 'ITEM_WEAPON_MATERIAL';
 export const ITEM_INSTRUCTOR_EXP = 'ITEM_INSTRUCTOR_EXP';
 /** 治理效率道具（領地治理 §C，GOV-14；PROG-2-2134，暫定 id）。取得來源待商城接線 */
+/** 軍令狀（極速決戰每日免費次數用完後每次耗 1 張；PROG-2-9709）。第一版不販售，只從任務／獎勵取得，取得管道不在本卡。 */
+export const ITEM_QUICK_RESOLVE_WRIT = 'ITEM_QUICK_RESOLVE_WRIT';
 export const ITEM_GOV_BOOST_FARMING = 'ITEM_GOV_BOOST_FARMING';
 export const ITEM_GOV_BOOST_COMMERCE = 'ITEM_GOV_BOOST_COMMERCE';
 export const ITEM_GOV_BOOST_DIPLOMACY = 'ITEM_GOV_BOOST_DIPLOMACY';
@@ -110,6 +112,7 @@ export const ITEM_DEFS: readonly ItemDef[] = [
     { id: ITEM_GOV_BOOST_ARMS, name: '軍備令', category: '消耗品', rarity: 1 },
     { id: ITEM_GOV_BOOST_SCOUTING, name: '斥候令', category: '消耗品', rarity: 1 },
     { id: ITEM_DIPLOMACY_LETTER, name: '外交拜帖錦囊', category: '消耗品', rarity: 1 },
+    { id: ITEM_QUICK_RESOLVE_WRIT, name: '軍令狀', category: '消耗品', rarity: 1 },
 ];
 
 /** 依道具 ID 查定義；沒有定義時回傳 null（例如舊存檔的未知 key） */
