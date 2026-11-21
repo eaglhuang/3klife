@@ -63,6 +63,7 @@ import { configureFamilyMilestoneRules, FAMILY_MILESTONE_RULES_JSON, type Family
 import { familyPairKey } from "../systems/FamilySynergy";
 import { configureWhiteFactorAchievements, WHITE_FACTOR_ACHIEVEMENTS_JSON, type WhiteFactorAchievementsConfig } from "../systems/WhiteFactorTraits";
 import { configureMindMarriageRules, MIND_MARRIAGE_RULES_JSON, type MindMarriageRulesConfig } from "../mind/MindMarriage";
+import { CLAN_LINEAGE_RULES_JSON, configureClanLineageRules, type ClanLineageRulesConfig } from "../systems/ClanTradition";
 import { configureAcademyStories } from "../systems/nurture/AcademyStoryTexts";
 import { ACADEMY_ENROLL_RULES_JSON, configureAcademyEnrollRules, type AcademyEnrollRulesConfig } from "../systems/nurture/AcademyEnrollRules";
 import { createAcademyQuestAdapter } from "../../shared/quest/AcademyQuest";
@@ -168,6 +169,7 @@ export class ServiceLoader {
         getFamilySynergy: () => this.session.familySynergy,
         getParentMood: (id) => this.session.mind.moodOf(id),
         onMarriageConceived: (ctx) => this.session.onMarriageConceived(ctx),
+        getClanTradition: () => this.session.clanTradition,
     });
     private bloodlineRulesLoaded = false;
     /** 退役教官卡 / 英靈卡來源；init() 之後才有（共用存檔後端）。培育畫面用它挑教官 */
@@ -372,6 +374,7 @@ export class ServiceLoader {
             enrollDiplomatic: async (nationId) => { await this.loadBloodlineRuleTables(); return this.session.spouseHost.enrollDiplomatic(nationId); },
             matchmakerOffer: async () => { await this.loadBloodlineRuleTables(); return this.session.spouseHost.matchmakerOffer(); },
             enrollMatchmaker: async (pick) => { await this.loadBloodlineRuleTables(); return this.session.spouseHost.enrollMatchmaker(pick); },
+            enrollClanProposal: async (proposalId) => { await this.loadBloodlineRuleTables(); return this.session.spouseHost.enrollClanProposal(proposalId); },
         });
         // 學府修業（PROG-2-9215）：紀錄讀寫（save.read／save.write domain=academy）與種子簽發（rng.issueSeed）由 GameSession 提供
         this.localApi.setAcademyHost(this.session.academyHost);
@@ -507,6 +510,7 @@ export class ServiceLoader {
             loadSafe<unknown>(SUPPORT_CARDS_JSON, (raw) => { this.supportCards = normalizeSupportCards(raw); this.applyItemConfig(); }),
             loadSafe<unknown>(SUPPORT_RULES_JSON, (raw) => { this.supportRules = normalizeSupportRules(raw); this.applyItemConfig(); }),
             loadSafe<Partial<MarriageVitalityRulesConfig>>(MARRIAGE_VITALITY_RULES_JSON, configureMarriageVitalityRules),
+            loadSafe<Partial<ClanLineageRulesConfig>>(CLAN_LINEAGE_RULES_JSON, configureClanLineageRules),
         ]);
         // 家族設定（PROG-2-9441 F1）：缺檔或缺欄位 fail-fast，不退回預設（與上面 loadSafe 的容錯刻意不同）
         this.session.configureFamily(await this.resource.loadJson<unknown>(FAMILY_CONFIG_JSON));

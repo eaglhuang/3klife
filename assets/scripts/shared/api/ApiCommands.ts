@@ -632,8 +632,8 @@ export interface OccupancyReleaseResult {
 
 // ── 家族（family.*）──
 
-/** 配偶來源：first-child＝首子系統配偶；bond＝結緣好感；diplomatic＝聯姻外交；matchmaker＝媒人說親（PROG-2-9583） */
-export type FamilySpouseSource = 'first-child' | 'bond' | 'diplomatic' | 'matchmaker';
+/** 配偶來源：first-child＝首子系統配偶；bond＝結緣好感；diplomatic＝聯姻外交；matchmaker＝媒人說親（PROG-2-9583）；clan＝高門求親（PROG-2-9193） */
+export type FamilySpouseSource = 'first-child' | 'bond' | 'diplomatic' | 'matchmaker' | 'clan';
 
 /** family.enrollSpouse：只送來源，不得帶武將數值（E103）；同來源重送冪等（created=false） */
 export interface FamilyEnrollSpouseArgs {
@@ -644,6 +644,8 @@ export interface FamilyEnrollSpouseArgs {
     nationId?: string;
     /** matchmaker：候選位序 0~2 */
     pick?: number;
+    /** clan：高門求親提案 id */
+    proposalId?: string;
 }
 
 /** family.matchmakerOffer：價格未定時 open=false、notice＝「即將開放」 */

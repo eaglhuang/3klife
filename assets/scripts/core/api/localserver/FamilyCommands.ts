@@ -21,15 +21,16 @@ export interface MatchmakerOfferView { open: boolean; notice: string; remaining:
 export interface FamilyHost {
     /** 可回 Promise：單機的家族設定是延遲載入的，宿主要先等設定載好再納入 */
     enrollGeneratedSpouse(slot: string): EnrollOutcome | Promise<EnrollOutcome>;
-    /** 結緣好感、聯姻、媒人三來源（PROG-2-9583）：判定都在宿主，命令層只轉意圖與翻錯誤碼 */
+    /** 結緣好感、聯姻、媒人三來源（PROG-2-9583）與高門求親（PROG-2-9193）：判定都在宿主，命令層只轉意圖與翻錯誤碼 */
     enrollBond(generalId: string): EnrollOutcome | Promise<EnrollOutcome>;
     enrollDiplomatic(nationId: string): EnrollOutcome | Promise<EnrollOutcome>;
     matchmakerOffer(): MatchmakerOfferView | Promise<MatchmakerOfferView>;
     enrollMatchmaker(pick: number): EnrollOutcome | Promise<EnrollOutcome>;
+    enrollClanProposal(proposalId: string): EnrollOutcome | Promise<EnrollOutcome>;
 }
 
 const ENROLL_FIELDS: Record<FamilySpouseSource, string | null> = {
-    'first-child': null, bond: 'generalId', diplomatic: 'nationId', matchmaker: 'pick',
+    'first-child': null, bond: 'generalId', diplomatic: 'nationId', matchmaker: 'pick', clan: 'proposalId',
 };
 
 const REASON_ERROR: Record<string, [ApiErrorKey, string]> = {
@@ -64,6 +65,9 @@ export function registerFamilyCommands(adapter: LocalApiAdapter, getHost: () => 
         } else if (source === 'diplomatic') {
             if (typeof args.nationId !== 'string' || !args.nationId) throw new ApiError('FAMILY_SOURCE_UNKNOWN', 'diplomatic 需要 nationId');
             out = await host.enrollDiplomatic(args.nationId);
+        } else if (source === 'clan') {
+            if (typeof args.proposalId !== 'string' || !args.proposalId) throw new ApiError('FAMILY_SOURCE_UNKNOWN', 'clan 需要 proposalId');
+            out = await host.enrollClanProposal(args.proposalId);
         } else {
             if (typeof args.pick !== 'number' || !Number.isInteger(args.pick)) throw new ApiError('FAMILY_SOURCE_UNKNOWN', 'matchmaker 需要整數 pick');
             out = await host.enrollMatchmaker(args.pick);

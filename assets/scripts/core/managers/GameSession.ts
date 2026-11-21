@@ -1748,7 +1748,20 @@ export class GameSession implements AcademyRecordPort {
             enrollDiplomatic: (nationId) => this._savedSpouse(this.enrollDiplomaticSpouse(nationId)),
             matchmakerOffer: () => this.matchmakerOffer(),
             enrollMatchmaker: (pick) => this._savedSpouse(this.enrollMatchmakerSpouse(pick)),
+            enrollClanProposal: (proposalId) => this._savedSpouse(this.enrollClanProposalSpouse(proposalId)),
         };
+    }
+
+    /** 高門求親成婚（PROG-2-9193）：整合進 family.enrollSpouse（source: 'clan'）；聘禮依設定先讀不扣款，待銀兩錢包合併後再接 */
+    public enrollClanProposalSpouse(proposalId: string, options: { hallLevel?: number } = {}): SpouseSourceOutcome {
+        if (!this._familyConfig) return { ok: false, reason: 'no-config' };
+        const proposal = this._marriageProposal;
+        if (!proposal || proposal.id !== proposalId) return { ok: false, reason: 'not-eligible' };
+        const spouse = buildSuitorGeneral(proposal);
+        const out = this.enrollSpouse(spouse, options);
+        if (!out.ok) return out;
+        this._marriageProposal = null;
+        return { ok: true, generalId: spouse.id };
     }
 
     private _savedSpouse(out: SpouseSourceOutcome): SpouseSourceOutcome {
@@ -2746,11 +2759,18 @@ export class GameSession implements AcademyRecordPort {
     public async respondMarriageProposal(accept: boolean, grantGold: (amount: number) => void): Promise<{ ok: boolean; general?: GeneralConfig }> {
         const proposal = this._marriageProposal;
         if (!proposal) return { ok: false };
-        this._marriageProposal = null;
         const general = accept ? buildSuitorGeneral(proposal) : undefined;
         if (general) {
-            this.enrollGenerals([general]);
+            if (this._familyConfig) {
+                const out = this.enrollSpouse(general);
+                if (!out.ok) return { ok: false };
+            } else {
+                this.enrollGenerals([general]);
+            }
+            this._marriageProposal = null;
             grantGold(proposal.giftGold);
+        } else {
+            this._marriageProposal = null;
         }
         if (this._autoSave && this._save) await this.save();
         return { ok: true, general };
