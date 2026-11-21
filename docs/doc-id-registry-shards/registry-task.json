@@ -16228,5 +16228,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9463.md",
     "title": "[PROG-2-9463] GCH-R4 抽取遷移",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2723",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9580.md",
+    "title": "[PROG-2-9580] 基礎戰鬥手感：騎兵攻擊暫代音檔（避開腳步同檔被節流）",
+    "category": "task"
   }
 ]
