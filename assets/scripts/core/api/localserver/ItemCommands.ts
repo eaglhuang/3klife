@@ -9,15 +9,15 @@
  * 注意：規格 §11.1 寫「客戶端沒有 item.grant」。單機的本機伺服器與玩法同進程，這裡先提供；
  * 連線版 adapter 必須把 item.grant 改成只允許伺服器內部（獎勵／商店／任務／系統）呼叫，列為待決。
  */
-import type { ItemGrantResult, ItemListResult, ItemSettlePeriodicResult } from '../../../shared/api/ApiCommands';
+import type { ItemGrantResult, ItemListResult, ItemRowView, ItemSettlePeriodicResult } from '../../../shared/api/ApiCommands';
 import { ApiError, type ApiErrorKey } from '../../../shared/api/ApiErrors';
 import { nextGrantIndex, periodsDue } from '../../../shared/foundation/GameClock';
 import {
     DEFAULT_CONTAINER_ID, HOUSEHOLD_HOLDER, type HolderRef, type ItemConfigV1,
 } from '../../../shared/item/ItemConfig';
 import {
-    appendLedger, findContainerRule, findHolderRule, findItemDef, findPeriodicGrant, ITEM_GRANT_SOURCES, parseHolder, planConsume, planGrant,
-    type ItemMeta, type ItemRuleFailure,
+    appendLedger, findContainerRule, findHolderRule, findItemDef, findPeriodicGrant, isDeployableItem, ITEM_GRANT_SOURCES, parseHolder, planConsume, planGrant,
+    withInstance, withoutInstance, type ItemMeta, type ItemRuleFailure,
 } from '../../../shared/item/ItemRules';
 import type { ApiDeltaOp } from '../../../shared/api/ApiProtocol';
 import type { LocalApiAdapter } from './LocalApiAdapter';
@@ -114,7 +114,11 @@ export function registerItemCommands(adapter: LocalApiAdapter, getPorts: () => I
         if (plan.added > 0) {
             authority.write(holder, container, { ...stock, [itemId]: count }, { itemId, delta: plan.added, reason: source });
         }
-        authority.setMeta(appendLedger(authority.meta(), { itemId, holder, delta: plan.added > 0 ? plan.added : qty, reason: source, overflowAmount: plan.overflow?.amount ?? 0 }));
+        let nextMeta = appendLedger(authority.meta(), { itemId, holder, delta: plan.added > 0 ? plan.added : qty, reason: source, overflowAmount: plan.overflow?.amount ?? 0 });
+        // unique 物品第一次入庫：建立實例狀態（支援卡 Lv1、經驗 0、傳承 0）
+        const instanceDefault = findItemDef(getPorts().config, itemId).instanceState;
+        if (plan.added > 0 && instanceDefault && !nextMeta.instances?.[itemId]) nextMeta = withInstance(nextMeta, itemId, instanceDefault);
+        authority.setMeta(nextMeta);
         const delta: ApiDeltaOp[] = [{ path: pathOf(holder, container, itemId), op: 'replace', value: count }];
         const events: Array<{ evt: string; data?: unknown }> = [{ evt: 'inventory.changed', data: { holder, container, itemId, count, reason: source } }];
         if (plan.overflow && wallet) {
@@ -140,7 +144,8 @@ export function registerItemCommands(adapter: LocalApiAdapter, getPorts: () => I
         else delete next[itemId];
         const authority = authorityOf();
         authority.write(holder, container, next, { itemId, delta: -qty, reason: sink });
-        authority.setMeta(appendLedger(authority.meta(), { itemId, holder, delta: -qty, reason: sink, overflowAmount: 0 }));
+        const ledgered = appendLedger(authority.meta(), { itemId, holder, delta: -qty, reason: sink, overflowAmount: 0 });
+        authority.setMeta(count > 0 ? ledgered : withoutInstance(ledgered, itemId));
         return {
             result: { itemId, consumed: qty, count },
             delta: [{ path: pathOf(holder, container, itemId), op: 'replace', value: count }],
@@ -200,9 +205,15 @@ export function registerItemCommands(adapter: LocalApiAdapter, getPorts: () => I
     adapter.register('item.list', (args) => {
         const { holder, container, stock } = resolveTarget(args);
         const config = getPorts().config;
-        const rows = Object.keys(stock).filter((id) => stock[id] > 0).sort().map((id) => {
+        // forDeploy=true：出征、守城、派遣編制讀物品時用，academyOnly（支援卡）一律排除
+        const forDeploy = args.forDeploy === true;
+        const instances = authorityOf().meta().instances ?? {};
+        const rows = Object.keys(stock).filter((id) => stock[id] > 0 && (!forDeploy || isDeployableItem(config, id))).sort().map((id) => {
             const def = findItemDef(config, id);
-            return { itemId: id, quantity: stock[id], kind: def.kind, stackMax: def.stack.max };
+            const row: ItemRowView = { itemId: id, quantity: stock[id], kind: def.kind, stackMax: def.stack.max };
+            if (def.category) row.category = def.category;
+            if (instances[id]) row.instance = { ...instances[id] };
+            return row;
         });
         const result: ItemListResult = { holder, container, aliasKey: findHolderRule(config, holder)?.aliasKey ?? '', rows };
         return { result };

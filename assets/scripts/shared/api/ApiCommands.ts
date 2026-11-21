@@ -164,6 +164,10 @@ export interface ItemRowView {
     quantity: number;
     kind: string;
     stackMax: number | null;
+    /** 物品類別（例：supportCard）；沒有類別不帶 */
+    category?: string;
+    /** unique 物品的實例狀態（支援卡的等級、經驗、傳承次數）；沒有不帶 */
+    instance?: { level: number; exp: number; limitBreak: number };
 }
 
 export interface ItemListResult {
