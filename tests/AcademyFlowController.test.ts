@@ -11,7 +11,8 @@ import * as path from 'path';
 import { assert, TestSuite } from './TestRunner';
 import { AcademyFlowController, type AcademyChildLike, type AcademyFlowDeps } from '../assets/scripts/ui/core/AcademyFlowController';
 import { ACADEMY_FLOW_FALLBACK_ZH_TW, ACADEMY_ORDER, enrollView, sessionView, type AcademyFlowViewState } from '../assets/scripts/ui/core/AcademyFlowView';
-import { GameAcademySaveStore, type AcademyRecordPort, type PersistedAcademyRecord } from '../assets/scripts/core/services/GameAcademySaveStore';
+import { standaloneAcademyRig, type AcademyApiRig } from './AcademyApiRig';
+import { type AcademyRecordPort, type PersistedAcademyRecord } from '../assets/scripts/core/services/GameAcademySaveStore';
 import { academyEnrollRules, checkEnrollAge, configureAcademyEnrollRules, resetAcademyEnrollRules, shouldRecommendAncestor } from '../assets/scripts/core/systems/nurture/AcademyEnrollRules';
 import { isAcademyRecordActive } from '../assets/scripts/core/services/GameAcademySaveStore';
 import { GameClock } from '../assets/scripts/core/systems/GameClock';
@@ -39,6 +40,7 @@ interface Harness {
     session: FakeHost;
     toasts: string[];
     saves: { count: number; fail: boolean };
+    rig: AcademyApiRig;
     tokens: { left: number };
     roster: AcademyChildLike[];
     calls: string[];
@@ -47,11 +49,16 @@ interface Harness {
 
 async function harness(opts: { roster?: AcademyChildLike[]; tokens?: number; openInterrupt?: boolean } = {}): Promise<Harness> {
     const port = new FakePort();
-    const store = new GameAcademySaveStore(port);
+    const rig = standaloneAcademyRig(port);
     const enroll: FakeHost = { node: { active: true }, last: null };
     const session: FakeHost = { node: { active: true }, last: null };
     const toasts: string[] = [];
-    const saves = { count: 0, fail: false };
+    // 落盤次數與失敗注入走 save.write 的 persist（rig.saves／rig.fail），保留原本的 h.saves.count／h.saves.fail 寫法
+    const saves = {
+        get count(): number { return rig.saves.count; },
+        get fail(): boolean { return rig.fail.on; },
+        set fail(value: boolean) { rig.fail.on = value; },
+    };
     const tokens = { left: opts.tokens ?? 1 };
     const roster = opts.roster ?? [child()];
     const calls: string[] = [];
@@ -73,16 +80,14 @@ async function harness(opts: { roster?: AcademyChildLike[]; tokens?: number; ope
         clanUuid: () => 'clan-test',
         clanPrestigeTier: () => 0,
         admissionTurn: () => 0,
-        worldSeed: () => 'world-test',
-        store,
-        persist: async () => { saves.count += 1; if (saves.fail) throw new Error('disk full'); },
+        api: rig.api,
         isActive: () => isAcademyRecordActive(port.record),
         ...(opts.openInterrupt ? { openInterrupt: (s: Readonly<AcademyStateSnapshot>) => { calls.push(`interrupt:${s.pendingInterrupt}`); return true; } } : {}),
         onGraduated: (s) => { calls.push(`graduated:${s.childId}`); },
     };
     const ctrl = new AcademyFlowController<FakeHost>(deps);
     await ctrl.mount();
-    return { ctrl, port, enroll, session, toasts, saves, tokens, roster, calls, clickers };
+    return { ctrl, port, enroll, session, toasts, saves, rig, tokens, roster, calls, clickers };
 }
 
 /** 一路按「訓練 str → 確認」推進 n 回合 */

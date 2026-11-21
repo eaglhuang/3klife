@@ -161,6 +161,7 @@ import type { HallVolunteerTask } from '../systems/HallVolunteer';
 import type { SessionSaveService } from '../api/localserver/ApiSaveGateway';
 import type { SkillHost } from '../api/localserver/SkillCommands';
 import { SkillService } from '../../shared/skill/SkillService';
+import type { AcademyHost } from '../api/localserver/AcademyHostCommands';
 import type { OccupancyHost } from '../api/localserver/OccupancyCommands';
 import { OccupancyService } from '../../shared/occupancy/OccupancyService';
 import type { OccupancyRecord } from '../../shared/occupancy/OccupancyTypes';
@@ -169,6 +170,9 @@ import { GeneralSkillStore } from '../systems/skill/GeneralSkillStore';
 import { defaultSkillRegistry } from '../systems/skill/SkillCatalog';
 import type { ItemAuthority, StockTable } from '../api/localserver/ItemCommands';
 import type { RewardAuthority } from '../api/localserver/RewardCommands';
+import type { QuestAuthority } from '../api/localserver/QuestCommands';
+import { emptyQuestState, isEmptyQuestState, normalizeQuestState } from '../../shared/quest/QuestService';
+import type { QuestStateV1 } from '../../shared/quest/QuestTypes';
 import { emptyRewardMeta, isEmptyRewardMeta, normalizeRewardMeta, type RewardMeta } from '../../shared/reward/RewardRules';
 import type { StoryAuthority } from '../api/localserver/StoryCommands';
 import { emptyStoryMeta, isEmptyStoryMeta, normalizeStoryMeta, type StoryMeta } from '../../shared/story/StoryRules';
@@ -925,6 +929,8 @@ export class GameSession implements AcademyRecordPort {
     private _itemApi: IApiClient | null = null;
     /** 獎勵 base 的持久化狀態（亂數會話、保底計數、發放紀錄，PROG-2-9205）；舊檔缺值為空 */
     private _rewardMeta: RewardMeta = emptyRewardMeta();
+    /** 任務 base 狀態（PROG-2-9209）：實例、步驟、閘門、暫離、結算紀錄隨存檔 questState 保存 */
+    private _questState: QuestStateV1 = emptyQuestState();
     /** 劇情 base 中繼資料（PROG-2-9208） */
     private _storyMeta: StoryMeta = emptyStoryMeta();
     /** 共通 API 入口（PROG-2-9205）：戰後里程碑獎勵走 reward.claim；沒綁（純邏輯測試）就退回不發 */
@@ -1399,10 +1405,29 @@ export class GameSession implements AcademyRecordPort {
         }
         if (!childId) return;
         try {
-            this._occupancy.acquire({ personId: childId, kind: 'academy', refId: `academy:${childId}`, since: this._clock.state.totalSeasonsElapsed });
+            this._occupancy.acquire({ personId: childId, kind: 'academy', refId: this._academyOccupancyRef(childId), since: this._clock.state.totalSeasonsElapsed });
         } catch (error) {
             console.warn('[GameSession] 學府占用登記略過', error instanceof Error ? error.message : error);
         }
+    }
+
+    /**
+     * 學府占用的 refId（PROG-2-9215）：與任務框架共用同一個值（學府任務實例的 occupancyRef），OCC 與 QST 不會各登記一筆。
+     * 沒有對應的進行中任務（舊存檔尚未遷移）時沿用舊值 academy:<childId>。
+     */
+    private _academyOccupancyRef(childId: string): string {
+        const task = this._questState.instances.find((i) => i.taskKind === 'academy'
+            && (i.state === 'ACTIVE' || i.state === 'PAUSED') && i.actors.indexOf(childId) >= 0 && !!i.occupancyRef);
+        return task?.occupancyRef ?? `academy:${childId}`;
+    }
+
+    /** 學府宿主：ServiceLoader 把它掛到本機 API 的 save.read／save.write（domain=academy）與 rng.issueSeed */
+    public get academyHost(): AcademyHost {
+        return {
+            port: this,
+            persist: async () => { if (this.hasSaveService) await this.save(); },
+            clanUuid: () => this.clanUuid,
+        };
     }
 
     /** 技能宿主：持有存在武將名冊、學習權威由場景綁定；ServiceLoader 把它掛到本機 API 的 skill.* 命令 */
@@ -2255,6 +2280,14 @@ export class GameSession implements AcademyRecordPort {
         this._rewardApi = api;
     }
 
+    /** 任務 base 的權威狀態 port（PROG-2-9209） */
+    public questAuthority(): QuestAuthority {
+        return {
+            state: () => this._questState,
+            setState: (state) => { this._questState = state; },
+        };
+    }
+
     /** 獎勵 base 的權威狀態 port（PROG-2-9205）：亂數會話、保底、發放紀錄隨存檔 rewardMeta 保存 */
     public rewardAuthority(): RewardAuthority {
         return {
@@ -2444,6 +2477,7 @@ export class GameSession implements AcademyRecordPort {
         this._legendaryMentoringUsedIds = [];
         this._itemMeta = emptyItemMeta();
         this._rewardMeta = emptyRewardMeta();
+        this._questState = emptyQuestState();
         this._storyMeta = emptyStoryMeta();
         this._breedingBirthRecords = [];
         this._familySystemUnlockedFlag = false;
@@ -6688,6 +6722,7 @@ export class GameSession implements AcademyRecordPort {
             ...this._createBaseSnapshot(now),
             ...(this._legendaryMentoringUsedIds.length > 0 ? { legendaryMentoringUsedIds: [...this._legendaryMentoringUsedIds] } : {}),
             ...(isEmptyRewardMeta(this._rewardMeta) ? {} : { rewardMeta: normalizeRewardMeta(this._rewardMeta) }),
+            ...(isEmptyQuestState(this._questState) ? {} : { questState: normalizeQuestState(this._questState) }),
             ...(isEmptyStoryMeta(this._storyMeta) ? {} : { storyMeta: normalizeStoryMeta(this._storyMeta) }),
             ...(this._itemMeta.seq > 0 || Object.keys(this._itemMeta.periodic).length > 0 ? { itemMeta: normalizeItemMeta(this._itemMeta) } : {}),
             military: this.military,
@@ -6967,6 +7002,8 @@ export class GameSession implements AcademyRecordPort {
         this._clock.restore(snapshot.gameTime);
         // 學府修業進行中：外界時鐘以入學當下的快照為準，防止修業期間被改存檔刷季（PROG-2-9189）
         this._occupancy.restore(snapshot.occupancy);
+        // 先還原任務狀態：學府占用 refId 取自任務實例（PROG-2-9215），要在對帳學府紀錄之前就位
+        this._questState = normalizeQuestState(snapshot.questState);
         this._setAcademyRecord(normalizeAcademyRecord(snapshot.academy, snapshot.gameTime));
         if (this._academyRecord && !this._academyRecord.committed.graduated) this._clock.restore({ ...this._academyRecord.frozenGameTime });
         this._seeded.restore(snapshot.randomState ?? { algorithm: 'mulberry32-v1', state: LEGACY_RANDOM_SEED });

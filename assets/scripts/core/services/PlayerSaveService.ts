@@ -46,6 +46,8 @@ import { GameClock, GameTimeState } from '../systems/GameClock';
 import type { NurtureState } from './NurtureService';
 import { normalizeItemMeta, type ItemMeta } from '../../shared/item/ItemRules';
 import { normalizeRewardMeta, type RewardMeta } from '../../shared/reward/RewardRules';
+import { normalizeQuestState } from '../../shared/quest/QuestService';
+import type { QuestStateV1 } from '../../shared/quest/QuestTypes';
 import { normalizeStoryMeta, type StoryMeta } from '../../shared/story/StoryRules';
 import { normalizeOccupancyRecords } from '../../shared/occupancy/OccupancyService';
 import type { OccupancyRecord } from '../../shared/occupancy/OccupancyTypes';
@@ -196,6 +198,8 @@ export interface PlayerSaveSnapshot {
     itemMeta?: ItemMeta;
     /** 獎勵 base 中繼資料（PROG-2-9205）：伺服器私有亂數會話、保底計數、發放紀錄（冪等）；選填，舊檔缺值讀回為空，版號不升（自帶 v） */
     rewardMeta?: RewardMeta;
+    /** 任務 base 狀態（PROG-2-9209 QST-M）：實例、步驟、閘門、暫離、結算紀錄；空狀態不寫，舊檔缺值讀回為空，版號不升（自帶 v） */
+    questState?: QuestStateV1;
     /** 劇情 base 中繼資料（PROG-2-9208）：旗標、已看紀錄、等待選擇的打斷佇列、已完成實例（冪等）；選填，舊檔缺值讀回為空，版號不升（自帶 v） */
     storyMeta?: StoryMeta;
     /** 人員占用登記表（PROG-2-9207 OCC-M；只存 academy／mentorAssign），空表不寫；舊檔缺值讀回為空，學府占用由學府紀錄對帳重建 */
@@ -762,6 +766,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.sortiePresets !== undefined ? { sortiePresets: normalizeSortiePresets(snapshot.sortiePresets) } : {}),
         ...(snapshot.itemMeta !== undefined ? { itemMeta: normalizeItemMeta(snapshot.itemMeta) } : {}),
         ...(snapshot.rewardMeta !== undefined ? { rewardMeta: normalizeRewardMeta(snapshot.rewardMeta) } : {}),
+        ...(snapshot.questState !== undefined ? { questState: normalizeQuestState(snapshot.questState) } : {}),
         ...(snapshot.storyMeta !== undefined ? { storyMeta: normalizeStoryMeta(snapshot.storyMeta) } : {}),
         ...(normalizeOccupancyRecords(snapshot.occupancy).length > 0 ? { occupancy: normalizeOccupancyRecords(snapshot.occupancy) } : {}),
         ...(snapshot.legendaryMentoringUsedIds !== undefined ? { legendaryMentoringUsedIds: normalizeLegendaryMentoringUsedIds(snapshot.legendaryMentoringUsedIds) } : {}),

@@ -70,7 +70,7 @@ import {
 } from "../shared/AttackSurgeHighlight";
 import { hpChipOnChange, stepHpChip, unitHpBarState, type HpChipState, type UnitHpBarState } from "../shared/UnitHpBar";
 import { unitValueFloatType } from "../shared/DamageFloatType";
-import { UnitStatusIconBar, StatusHaloPool } from "./UnitStatusIconBar";
+import { UnitStatusIconBar, StatusHaloPool, STATUS_ICON_SIZE } from "./UnitStatusIconBar";
 import { TileBuffMarkers } from "./TileBuffMarkers";
 import type { TileBuffBadge } from "../shared/TileBuffBadge";
 import { easePlateOffset, plateAvoidOffsetY, type LabelRect } from "../shared/GeneralPlateAvoidance";
@@ -168,10 +168,10 @@ const LOOT_TEXT_STAGGER_SEC = 0.5;
 
 /** 頭頂血條尺寸（名牌座標，名牌本身縮 0.7；PROG-2-1874） */
 const HP_BAR_WIDTH = 150;
-/** 頭頂狀態小圖示列：排在血條正上方，從名牌底板（寬 180）左緣開始，4 格不超出名牌寬度、不擠到隔壁路 */
+/** 頭頂狀態小圖示列：排在血條正上方，從名牌底板（寬 180）左緣開始，3 格不超出名牌寬度、不擠到隔壁路 */
 const STATUS_ICON_START_X = -90;
-/** 圖示列中心 y：名牌半高 39 + 血條（間距 4、高 8）+ 間距 4 + 圖示半高 18 */
-const STATUS_ICON_Y = 73;
+/** 圖示列中心 y：名牌半高 39 + 血條（間距 4、高 8）+ 間距 4 + 圖示半高（PROG-2-9436：48/2） */
+const STATUS_ICON_Y = 39 + 4 + 8 + 4 + STATUS_ICON_SIZE / 2;
 const HP_BAR_HEIGHT = 8;
 /** 掉血殘影色：暖白偏金，在藍、紅血條上都看得清楚（PROG-2-9412）。 */
 const HP_BAR_CHIP_COLOR = new Color(255, 232, 190, 235);
@@ -1891,7 +1891,7 @@ export class UnitRenderer extends Component {
       if (!isValid(label)) return null;
       const k = label.scale.x || 1;
       const p = label.position;
-      return this.tileBuffFlyTo.set(p.x + (STATUS_ICON_START_X + 18) * k, p.y + STATUS_ICON_Y * k, 0);
+      return this.tileBuffFlyTo.set(p.x + (STATUS_ICON_START_X + STATUS_ICON_SIZE / 2) * k, p.y + STATUS_ICON_Y * k, 0);
     };
     this.tileBuffMarkers.flyPickup(from, badge, target, () => {
       if (!isValid(view.labelNode)) return;

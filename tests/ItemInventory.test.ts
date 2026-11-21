@@ -13,7 +13,7 @@ import { createLocalApi } from '../assets/scripts/core/api/localserver/createLoc
 import type { ItemAuthority, StockTable } from '../assets/scripts/core/api/localserver/ItemCommands';
 import type { WalletAuthority } from '../assets/scripts/core/api/localserver/WalletCommands';
 import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
-import { GameAcademySaveStore } from '../assets/scripts/core/services/GameAcademySaveStore';
+import { sessionAcademyRig } from './AcademyApiRig';
 import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
 import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
 import { ITEM_ADMISSION_TOKEN } from '../assets/scripts/core/systems/PlayerInventory';
@@ -94,6 +94,8 @@ async function sessionRig(persistFails = false) {
     bundle.setWallet(wallet);
     bundle.setItemAuthority(session.itemAuthority());
     session.setItemApi(bundle.api);
+    const academy = sessionAcademyRig(session, bundle);
+    academy.fail.on = persistFails;
     const deps: AcademyFlowDeps<FakeHost> = {
         mountEnrollHost: async () => ({ node: { active: true } }),
         mountSessionHost: async () => ({ node: { active: true } }),
@@ -111,9 +113,7 @@ async function sessionRig(persistFails = false) {
         clanUuid: () => session.clanUuid,
         clanPrestigeTier: () => 0,
         admissionTurn: () => session.gameTime.totalSeasonsElapsed,
-        worldSeed: () => 'world-test',
-        store: new GameAcademySaveStore(session),
-        persist: async () => { if (persistFails) throw new Error('disk'); await session.save(); },
+        api: academy.api,
         isActive: () => session.isAcademyActive,
     };
     const ctrl = new AcademyFlowController<FakeHost>(deps);

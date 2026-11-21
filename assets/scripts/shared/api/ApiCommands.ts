@@ -6,6 +6,8 @@
  * 各框架卡在此處追加自己的命令；命令名稱＝網路路徑名稱（POST /api/v1/cmd、GET /api/v1/q/<name>）。
  */
 
+import type { QuestInstanceView } from '../quest/QuestTypes';
+
 /** 命令種類 */
 export type ApiCommandKind = 'cmd' | 'query';
 
@@ -40,6 +42,11 @@ export const API_COMMANDS = Object.freeze({
     'save.rev': { kind: 'query', revGuard: false },
     'save.commit': { kind: 'cmd', revGuard: true },
     'save.full': { kind: 'cmd', revGuard: false },
+    // 分域存檔（學府修業 domain=academy；A0 PROG-2-9215）：寫入由權威端驗證結構、補入學時鐘後落盤
+    'save.read': { kind: 'query', revGuard: false },
+    'save.write': { kind: 'cmd', revGuard: false },
+    // 亂數種子簽發（客戶端不得自行生成；A0 PROG-2-9215）
+    'rng.issueSeed': { kind: 'query', revGuard: false },
     // 技能（技能 Base 規格 §11；SKL-M 最小版）
     'skill.list': { kind: 'query', revGuard: false },
     'skill.canLearn': { kind: 'query', revGuard: false },
@@ -54,6 +61,16 @@ export const API_COMMANDS = Object.freeze({
     'occupancy.release': { kind: 'cmd', revGuard: false },
     // 偵錯（只有本機 adapter 掛處理器；網路 adapter 一律回 COMMAND_UNKNOWN，避免變成外掛入口）
     'debug.fastForward': { kind: 'cmd', revGuard: false },
+    // 任務（任務 Base 規格 §11；QST-M 最小版，只有 taskKind=academy）
+    'task.query': { kind: 'query', revGuard: false },
+    'task.accept': { kind: 'cmd', revGuard: false },
+    'task.advance': { kind: 'cmd', revGuard: false },
+    'task.clearGate': { kind: 'cmd', revGuard: false },
+    'task.pause': { kind: 'cmd', revGuard: false },
+    'task.resume': { kind: 'cmd', revGuard: false },
+    'task.settle': { kind: 'cmd', revGuard: false },
+    'task.abandon': { kind: 'cmd', revGuard: false },
+    'task.tick': { kind: 'cmd', revGuard: false },
 } satisfies Record<string, ApiCommandMeta>);
 
 export type ApiCommandName = keyof typeof API_COMMANDS;
@@ -490,4 +507,121 @@ export interface DebugFastForwardResult {
     completedTurns: number;
     steps: number;
     stoppedBy: string;
+}
+
+/**
+ * 任務命令（任務 Base 規格 doc_spec_1185 §11；QST-M 最小版）。
+ * 任務實例、進度、成敗等級、獎勵內容一律由權威端決定；客戶端只送意圖（接哪個定義、推進到哪一步、清哪個閘門），
+ * 不得帶 tier／progress／result（E103 或多餘欄位）。結算時獎勵走 reward.claim，執行者忙碌走 occupancy.*。
+ */
+export type TaskInstanceView = QuestInstanceView;
+
+export interface TaskQueryArgs {
+    qid?: string;
+    actor?: string;
+    state?: string;
+    taskKind?: string;
+}
+
+export interface TaskQueryResult {
+    tasks: TaskInstanceView[];
+}
+
+/** task.accept：acceptKey 是呼叫端去重鍵，同鍵重送回同一張（created=false） */
+export interface TaskAcceptArgs {
+    defId: string;
+    actors: string[];
+    acceptKey: string;
+}
+
+export interface TaskAcceptResult {
+    created: boolean;
+    task: TaskInstanceView;
+}
+
+/** task.advance：fromStep＝呼叫端以為的目前步數；已超過的重送回 advanced=false（冪等） */
+export interface TaskAdvanceArgs {
+    qid: string;
+    fromStep: number;
+    steps?: number;
+}
+
+export interface TaskAdvanceResult {
+    advanced: boolean;
+    stepsDone: number;
+    gateReached: string | null;
+    task: TaskInstanceView;
+}
+
+export interface TaskClearGateArgs {
+    qid: string;
+    gateId: string;
+}
+
+export interface TaskPauseArgs {
+    qid: string;
+    reason?: string;
+}
+
+export interface TaskQidArgs {
+    qid: string;
+}
+
+/** clearGate／pause／resume／abandon 共用：changed=false＝早已是目標狀態（冪等重送） */
+export interface TaskChangeResult {
+    changed: boolean;
+    task: TaskInstanceView;
+}
+
+/** task.settle：重送回原結果（replayed=true），不重複呼叫獎勵 */
+export interface TaskSettleResult {
+    tier: string;
+    bundleId: string | null;
+    grantId: string | null;
+    replayed: boolean;
+    task: TaskInstanceView;
+}
+
+export interface TaskTickArgs {
+    /** 目前季序（GameTimeState.totalSeasonsElapsed）；高水位冪等 */
+    nowIndex: number;
+}
+
+export interface TaskTickResult {
+    delta: number;
+    expired: string[];
+}
+
+/** save.read／save.write 的分域；目前只有學府修業紀錄 */
+export type SaveDomain = 'academy';
+
+export interface SaveReadArgs {
+    domain: SaveDomain;
+}
+
+/** save.read：回該分域目前的紀錄；null＝沒有進行中的紀錄。紀錄型別由學府模組定義，契約層不依賴所以為 unknown */
+export interface SaveReadResult {
+    domain: SaveDomain;
+    record: unknown | null;
+}
+
+export interface SaveWriteArgs {
+    domain: SaveDomain;
+    /** 要寫入的紀錄；null＝清除。寫入失敗必回錯誤（不得靜默），權威端維持寫入前的狀態 */
+    record: unknown | null;
+}
+
+export interface SaveWriteResult {
+    domain: SaveDomain;
+    saved: boolean;
+}
+
+/** rng.issueSeed：依範圍簽發種子字串（同一存檔同範圍固定，供確定性重播） */
+export interface RngIssueSeedArgs {
+    scope: string;
+}
+
+export interface RngIssueSeedResult {
+    scope: string;
+    seed: string;
 }
