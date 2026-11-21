@@ -157,7 +157,10 @@ export function createQuestBaseSuite(): TestSuite {
         assert.equals(ACADEMY_TOTAL_TURNS, def!.steps);
         assert.equals(ACADEMY_GATE_TURNS.join(','), def!.gates.map((g) => g.at).join(','));
         assert.equals('academy', def!.occupancy);
-        assert.equals(0, checkQuestRewards(shipped, () => false).length, '正式定義暫無獎勵引用（A0 補），不會指向不存在的套件');
+        // A0（PROG-2-9215）：四個等級各引用一個結業獎勵套件，必須都在 reward-config.json 裡
+        const rewards = normalizeRewardConfig(JSON.parse(fs.readFileSync(path.join(ROOT, 'assets/resources/data/reward-config.json'), 'utf8')));
+        assert.equals(0, checkQuestRewards(shipped, (id) => rewards.bundles.some((b) => b.id === id)).length, '正式定義的獎勵引用都指向存在的套件');
+        assert.equals(4, checkQuestRewards(shipped, () => false).length, '四個等級都有獎勵引用');
         assert.isTrue(checkQuestRewards(testQuestConfig(), () => false).length > 0, '套件不存在時交叉檢查會報錯');
         assert.equals(0, checkQuestRewards(testQuestConfig(), () => true).length, '套件存在就合格');
     });

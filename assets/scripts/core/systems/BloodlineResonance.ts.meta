@@ -1,10 +1,11 @@
 {
-  "ver": "1.0.2",
+  "ver": "4.0.24",
   "importer": "typescript",
+  "imported": true,
   "uuid": "8b92d4e5-af36-4c42-9d53-2e7f0a182170",
-  "isPlugin": false,
-  "loadPluginInEditor": false,
-  "loadPluginInWeb": false,
-  "loadPluginInNative": false,
-  "loadPluginInMiniGame": false
+  "files": [],
+  "subMetas": {},
+  "userData": {
+    "simulateGlobals": []
+  }
 }
