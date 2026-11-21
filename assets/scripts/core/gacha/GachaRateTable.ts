@@ -22,20 +22,30 @@ function entryText(e: RewardPoolEntryView, nameOf: (nameKey: string | null, entr
     return `${nameOf(e.nameKey, e.entryId)} ${formatRatePercent(e.rate)}`;
 }
 
-/** 完整機率表：每個稀有度一列（含 UP 與一般的逐張機率），再加保底與版本列 */
+/** 每列最多放幾張卡（列高固定，太長會被裁；超過就續到下一列） */
+export const RATE_ROW_CARDS = 4;
+
+/** 完整機率表：每個稀有度的 UP 與一般各自成列（一列最多 RATE_ROW_CARDS 張，逐張機率），再加保底與版本列 */
 export function buildRateTableRows(view: RewardPoolView, nameOf: (nameKey: string | null, entryId: string) => string): GachaRateRow[] {
     const rows: GachaRateRow[] = [];
     const rank = (t: string): number => { const i = TIER_ORDER.indexOf(t); return i < 0 ? TIER_ORDER.length : i; };
     const ordered = [...view.tiers].sort((a, b) => rank(a.tier) - rank(b.tier));
     for (const tier of ordered) {
-        const title = `${tier.tier} 共 ${formatRatePercent(tier.baseRate)}`;
-        if (!view.public) { rows.push({ title, detail: '本池未公開逐張機率' }); continue; }
-        const up = tier.entries.filter((e) => e.isUp);
-        const normal = tier.entries.filter((e) => !e.isUp);
-        const parts: string[] = [];
-        if (up.length > 0) parts.push(`UP（${up.length} 張）：${up.map((e) => entryText(e, nameOf)).join('、')}`);
-        if (normal.length > 0) parts.push(`${up.length > 0 ? '一般' : '全部'}（${normal.length} 張）：${normal.map((e) => entryText(e, nameOf)).join('、')}`);
-        rows.push({ title, detail: parts.join('\n') });
+        const head = `${tier.tier} 共 ${formatRatePercent(tier.baseRate)}`;
+        if (!view.public) { rows.push({ title: head, detail: '本池未公開逐張機率' }); continue; }
+        const groups: Array<{ label: string; list: RewardPoolEntryView[] }> = [
+            { label: 'UP', list: tier.entries.filter((e) => e.isUp) },
+            { label: tier.entries.some((e) => e.isUp) ? '一般' : '全部', list: tier.entries.filter((e) => !e.isUp) },
+        ];
+        for (const g of groups) {
+            for (let i = 0; i < g.list.length; i += RATE_ROW_CARDS) {
+                const chunk = g.list.slice(i, i + RATE_ROW_CARDS);
+                rows.push({
+                    title: `${head}　${g.label}（${g.list.length} 張）${i > 0 ? ' 續' : ''}`,
+                    detail: chunk.map((e) => entryText(e, nameOf)).join('　'),
+                });
+            }
+        }
     }
     for (const p of view.pities) {
         const soft = p.softStartAt !== null ? `第 ${p.softStartAt} 抽起機率漸升，` : '';

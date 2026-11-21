@@ -222,17 +222,19 @@ export function createSupportPoolRollSuite(): TestSuite {
         assert.isTrue(!!view && view.public);
         const nameOf = (nameKey: string | null, id: string): string => cards.cards.find((c) => c.nameKey === nameKey)?.name ?? id;
         const rows = buildRateTableRows(view!, nameOf);
-        const ssrRow = rows.find((r) => r.title.startsWith('SSR 共'))!;
-        assert.equals('SSR 共 3%', ssrRow.title);
-        assert.isTrue(ssrRow.detail.includes('UP（1 張）：華佗 1.5%'));
-        assert.isTrue(ssrRow.detail.includes('司馬徽 0.25%'));
-        const srRow = rows.find((r) => r.title.startsWith('SR 共'))!;
-        assert.isTrue(srRow.detail.includes('龐德公 5.1%') && srRow.detail.includes('黃月英 5.1%') && srRow.detail.includes('盧植 0.756%'));
-        assert.isTrue(rows.find((r) => r.title.startsWith('R 共'))!.detail.includes('馬融 11.429%'));
+        const detailOf = (prefix: string): string => rows.filter((r) => r.title.startsWith(prefix)).map((r) => r.detail).join('　');
+        assert.isTrue(rows.some((r) => r.title === 'SSR 共 3%　UP（1 張）'));
+        assert.isTrue(detailOf('SSR 共').includes('華佗 1.5%') && detailOf('SSR 共').includes('司馬徽 0.25%'));
+        const sr = detailOf('SR 共');
+        assert.isTrue(sr.includes('龐德公 5.1%') && sr.includes('黃月英 5.1%') && sr.includes('盧植 0.756%'));
+        assert.isTrue(detailOf('R 共').includes('馬融 11.429%'));
+        const cardRows = rows.filter((r) => / 共 /.test(r.title));
+        assert.equals(25, cardRows.reduce((n, r) => n + (r.detail.match(/%/g)?.length ?? 0), 0), '25 張卡各列一次');
+        assert.isTrue(rows.every((r) => r.detail.split('　').length <= 4 || /保底|公開版本/.test(r.title)), '一列最多 4 張');
         assert.isTrue(rows.some((r) => r.title === 'SSR 保底' && r.detail.includes('第 50 抽起') && r.detail.includes('第 80 抽必出')));
         assert.isTrue(rows.some((r) => r.title === 'SR 以上 保底' && r.detail.includes('第 6 抽起') && r.detail.includes('第 10 抽必出')));
         assert.isTrue(rows.some((r) => r.title === '公開版本'));
-        assert.equals(['SSR', 'SR', 'R'].join(), rows.slice(0, 3).map((r) => r.title.split(' ')[0]).join());
+        assert.equals(['SSR', 'SR', 'R'].join(), [...new Set(rows.filter((r) => / 共 /.test(r.title)).map((r) => r.title.split(' ')[0]))].join(), '由高到低');
     });
 
     suite.test('SSR 卡清單與卡表一致（獎池不手寫卡）', () => {
