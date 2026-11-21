@@ -25,8 +25,8 @@
   "generated": "2026-04-06",
   "summary": {
     "done": 199,
-    "in_progress": 4,
-    "open": 88,
+    "in_progress": 5,
+    "open": 87,
     "total": 291
   },
   "tasks": [
@@ -12840,13 +12840,13 @@
       "title": "待產與哺乳接線（F5：2 季待產、哺乳 OCC、乳母不占用）",
       "owner": "ClaudeCode_sonnet-5-5",
       "priority": "P1",
-      "status": "open",
+      "status": "in-progress",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-21",
       "created_by_agent": "ClaudeCode_sonnet-5-5",
-      "started_at": "",
-      "started_by_agent": "",
+      "started_at": "2026-11-21T19:00:00+08:00",
+      "started_by_agent": "ClaudeCode_sonnet-5-5",
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
