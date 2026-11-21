@@ -174,7 +174,7 @@
               "faceHeightPercent": 38.4,
               "faceWidthPercent": 38.4,
               "faceCenterXPercent": 50,
-              "centerAxisDifferencePx": 0.0
+              "centerAxisDifferencePx": 0
             },
             "qc": "完整頭部與髮飾、辮髮保留；臉框中線對準畫布中線；頭高79.1%，臉高38.4%、臉寬38.4%；雙肩可辨識且胸前軀幹未入鏡。保留來源自然三分之四側角。125px及250px同尺度複核。只做等比裁切，不旋轉、不修臉、不重畫。",
             "createdAt": "2026-11-22"
@@ -2303,6 +2303,60 @@
             "weaponClass": "shield-jian",
             "poseLabel": "盾格後直劍反擊",
             "note": "以核定站姿延續藍鋼鎧甲與曹仁形象；盾牌格擋後以直劍反擊。候選待審。"
+          }
+        ]
+      },
+      "smallAvatar": {
+        "status": "integrated",
+        "activeVersion": "0005",
+        "history": [
+          {
+            "version": "0004",
+            "file": "small_avatars/cao_ren__曹仁__small_avatar_0004.png",
+            "status": "superseded",
+            "sha256": "71d726fa0adaf0c2ccf4f7f40c6f792c52dfa16f4bcec50b8758e4d16b756bfc",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/cao_ren__曹仁__avatar_0002.png",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "x": 39.17,
+              "y": -3.32,
+              "width": 210.67,
+              "height": 210.67
+            },
+            "headHeightPercent": 75,
+            "faceHeightPercent": 38.9,
+            "faceWidthPercent": 28,
+            "faceCenterXPercent": 50,
+            "qc": "頭部與頭盔完整；頭高75%；臉框中心線差0.5px；雙肩列最後考量。",
+            "createdAt": "2026-11-20"
+          },
+          {
+            "version": "0005",
+            "file": "small_avatars/cao_ren__曹仁__small_avatar_0005.png",
+            "status": "integrated",
+            "sha256": "dc2a7ebdc8c5c6cef98d1098734e1ef30d4b4ba645165eb3aae9a5e93006ca35",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/cao_ren__曹仁__avatar_0002.png",
+            "sourceSha256": "018c629460d7886664dbe4ccabed6c9090701c5f294c93ac1eafa960186ce372",
+            "method": "crop-only; uniform resize; transparent padding; no rotation or redraw",
+            "cropBox": {
+              "x": 39.17,
+              "y": -2.8,
+              "width": 226.67,
+              "height": 226.67
+            },
+            "measurements": {
+              "headHeightPercent": 75,
+              "faceHeightPercent": 40.1,
+              "faceWidthPercent": 33.1,
+              "faceCenterXPercent": 50,
+              "centerAxisDifferencePx": 0.5
+            },
+            "qc": "完整保留頭盔、髮型、耳部與下巴；頭高75%；臉高40.1%、臉寬33.1%；臉框中心線差0.5px。兩側肩甲可見，部分觸及側緣作警示，不縮小頭部遷就肩線。125px縮圖及與0004同尺度比較通過；保留來源自然輕微三分之四側角。僅等比裁切與透明留白，未旋轉、修臉或重畫。",
+            "createdAt": "2026-11-22"
           }
         ]
       }
@@ -8780,63 +8834,63 @@
         "activeVersion": "0002"
       },
       "smallAvatar": {
-          "activeVersion": "0004",
-          "status": "integrated",
-          "history": [
-            {
-              "version": "0001",
-              "file": "small_avatars/wang_yuan_ji__王元姬__small_avatar_0001.png",
-              "status": "superseded",
-              "sha256": "6ED93B061920175F1DF26FEB54A9C23F2134ABB3CFC52F2281974C642BB37F90",
-              "canvas": "1254x1254 RGBA",
-              "qc": "Inline review: composed knowing half-smile, natural three-quarter angle; complete head/feather ornament and chin; face near center; crop at shoulder line with no chest; transparent corner alpha."
+        "activeVersion": "0004",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/wang_yuan_ji__王元姬__small_avatar_0001.png",
+            "status": "superseded",
+            "sha256": "6ED93B061920175F1DF26FEB54A9C23F2134ABB3CFC52F2281974C642BB37F90",
+            "canvas": "1254x1254 RGBA",
+            "qc": "Inline review: composed knowing half-smile, natural three-quarter angle; complete head/feather ornament and chin; face near center; crop at shoulder line with no chest; transparent corner alpha."
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/wang_yuan_ji__王元姬__small_avatar_0002.png",
+            "status": "superseded",
+            "sha256": "7D64DC59A504454A3712F2CE080851F53ED426C972F842B20C5DCCE75DF8E3B1",
+            "canvas": "1254x1254 RGBA",
+            "qc": "125px review: face centered on canvas, gentle three-quarter turn and composed half-smile; full head and jade ornament visible; crop ends at upper shoulder edges with no chest."
+          },
+          {
+            "version": "0003",
+            "file": "small_avatars/wang_yuan_ji__王元姬__small_avatar_0003.png",
+            "status": "superseded",
+            "sha256": "16c3cfa0b9c4e75e6ded043c7eb3c51af038465e8018d8a8681fde1924755506",
+            "canvas": "256x256 RGBA",
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/wang_yuan_ji__王元姬__standing_0002.png",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "x": 185.63,
+              "y": -0.85,
+              "width": 170.73,
+              "height": 170.73
             },
-            {
-              "version": "0002",
-              "file": "small_avatars/wang_yuan_ji__王元姬__small_avatar_0002.png",
-              "status": "superseded",
-              "sha256": "7D64DC59A504454A3712F2CE080851F53ED426C972F842B20C5DCCE75DF8E3B1",
-              "canvas": "1254x1254 RGBA",
-              "qc": "125px review: face centered on canvas, gentle three-quarter turn and composed half-smile; full head and jade ornament visible; crop ends at upper shoulder edges with no chest."
+            "qc": "顱頂至下巴頭高82%；臉高43.9%、臉寬34%；臉框中心與畫布中心差0.5px。完整保留盤髮、羽葉玉飾、耳側髮束、耳朵與下巴。以 500px 比較板與大喬、呂玲綺基準檢視，頭臉尺度相稱；肩部僅保留上緣，為最後優先警示。只從正式站姿等比裁切，未重繪。",
+            "createdAt": "2026-11-21"
+          },
+          {
+            "version": "0004",
+            "file": "small_avatars/wang_yuan_ji__王元姬__small_avatar_0004.png",
+            "status": "integrated",
+            "sha256": "8e0b6788063b19f940219c651a3f437184683bc427fd2303eb6e3874525c32d4",
+            "canvas": "256x256 RGBA",
+            "sourceKind": "avatar",
+            "sourceFile": "avatars/wang_yuan_ji__王元姬__avatar_0002.png",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "x": 31.52,
+              "y": -4.04,
+              "width": 208,
+              "height": 208
             },
-            {
-              "version": "0003",
-              "file": "small_avatars/wang_yuan_ji__王元姬__small_avatar_0003.png",
-              "status": "superseded",
-              "sha256": "16c3cfa0b9c4e75e6ded043c7eb3c51af038465e8018d8a8681fde1924755506",
-              "canvas": "256x256 RGBA",
-              "sourceStandingVersion": "0002",
-              "sourceStandingFile": "standing/wang_yuan_ji__王元姬__standing_0002.png",
-              "method": "crop-only; uniform resize; no redraw",
-              "cropBox": {
-                "x": 185.63,
-                "y": -0.85,
-                "width": 170.73,
-                "height": 170.73
-              },
-              "qc": "顱頂至下巴頭高82%；臉高43.9%、臉寬34%；臉框中心與畫布中心差0.5px。完整保留盤髮、羽葉玉飾、耳側髮束、耳朵與下巴。以 500px 比較板與大喬、呂玲綺基準檢視，頭臉尺度相稱；肩部僅保留上緣，為最後優先警示。只從正式站姿等比裁切，未重繪。",
-              "createdAt": "2026-11-21"
-            },
-            {
-              "version": "0004",
-              "file": "small_avatars/wang_yuan_ji__王元姬__small_avatar_0004.png",
-              "status": "integrated",
-              "sha256": "8e0b6788063b19f940219c651a3f437184683bc427fd2303eb6e3874525c32d4",
-              "canvas": "256x256 RGBA",
-              "sourceKind": "avatar",
-              "sourceFile": "avatars/wang_yuan_ji__王元姬__avatar_0002.png",
-              "method": "crop-only; uniform resize; no redraw",
-              "cropBox": {
-                "x": 31.52,
-                "y": -4.04,
-                "width": 208,
-                "height": 208
-              },
-              "qc": "顱頂至下巴頭高75%；臉高46.8%、臉寬34.3%；人工臉框中心線與畫布中心線差0.5px。125px同尺度對照v0003，臉部更飽滿且置中；三分之四角度保留，完整保留羽葉玉飾、盤髮、耳側髮束與下巴，頭部輪廓未碰裁框上／側緣。雙肩僅見上緣，記為次要警示；未為補肩縮小頭部。來源為正式頭像，僅等比裁切與縮放，未重繪。",
-              "createdAt": "2026-11-22"
-            }
-          ]
-        },
+            "qc": "顱頂至下巴頭高75%；臉高46.8%、臉寬34.3%；人工臉框中心線與畫布中心線差0.5px。125px同尺度對照v0003，臉部更飽滿且置中；三分之四角度保留，完整保留羽葉玉飾、盤髮、耳側髮束與下巴，頭部輪廓未碰裁框上／側緣。雙肩僅見上緣，記為次要警示；未為補肩縮小頭部。來源為正式頭像，僅等比裁切與縮放，未重繪。",
+            "createdAt": "2026-11-22"
+          }
+        ]
+      },
       "battle": {
         "activeVersion": "0001",
         "status": "review-pending",
