@@ -118,6 +118,7 @@ export class Node {
 
     constructor(public name: string = "") {}
     declare position: Vec3;
+    declare scale: Vec3;
     declare activeInHierarchy: boolean;
     getChildByPath(path: string): Node | null {
         let cur: Node | null = this;
