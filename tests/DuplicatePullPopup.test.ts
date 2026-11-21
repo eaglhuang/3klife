@@ -40,8 +40,8 @@ export function createDuplicatePullPopupSuite(): TestSuite {
             const n = parseInt(hex.slice(1), 16);
             return 0.2126 * (n >> 16) + 0.7152 * ((n >> 8) & 255) + 0.0722 * (n & 255);
         };
-        // 淺底（羊皮紙泡泡、印章、亮色按鈕）才可深字；其餘文字一律要夠亮
-        const darkOk = new Set(['dup.label.quip', 'dup.label.stamp', 'dup.label.button.choice']);
+        // 淺底（羊皮紙泡泡、印章、亮色按鈕、N／UR 淺色稀有度徽章）才可深字；其餘文字一律要夠亮
+        const darkOk = new Set(['dup.label.quip', 'dup.label.stamp', 'dup.label.button.choice', 'dup.label.rarity.N', 'dup.label.rarity.UR']);
         for (const [name, slot] of Object.entries(slots)) {
             if (slot.kind !== 'label-style' || darkOk.has(name)) continue;
             assert.isTrue(luminance(slot.color ?? '#000000') > 150, `${name} 文字太暗`);

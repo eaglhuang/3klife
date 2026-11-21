@@ -89,3 +89,13 @@ export function buildResultSlotAliases(
     if (heroRarityTier !== undefined) Object.assign(aliases, buildHeroSlotAliases(toGachaCardTier(heroRarityTier)));
     return aliases;
 }
+
+/** 重複卡彈窗左側立繪框與稀有度徽章的換色對應（色票在 duplicate-pull-popup-screen.skin.json，數值同結果卡色票） */
+export function buildDupPopupAliases(rarityTier: string | null | undefined): Record<string, string> {
+    const tier = toGachaCardTier(rarityTier);
+    return {
+        'dup.hero.bg': `dup.hero.bg.${tier}`,
+        'dup.rarity.bg': `dup.rarity.bg.${tier}`,
+        'dup.label.rarity': `dup.label.rarity.${tier}`,
+    };
+}

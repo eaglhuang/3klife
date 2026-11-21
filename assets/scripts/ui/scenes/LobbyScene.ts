@@ -211,7 +211,8 @@ import { buildPoolDetailRows, checkGachaAffordable, planGachaButton, syncMainPoo
 import { bindGachaPoolDetail, setGachaTexts, textLabelOf, updateGachaWalletStrip, raiseGachaWalletStrip } from '../core/GachaScreenExtras';
 import { GachaPoolSwitcher } from '../core/GachaPoolSwitcher';
 import { PORTRAIT_GALLERY_PAGE_SIZE } from '../core/PortraitGallery';
-import { FaceMarks, PORTRAIT_FRAME_SPEC, PortraitFrameSpec, SHOWCASE_PORTRAIT_SPEC, buildPortraitHeadReference, fitPortraitByHead, fitPortraitInFrame } from '../core/PortraitFrameFit';
+import { FaceMarks, PORTRAIT_FRAME_SPEC, PortraitFrameSpec, SHOWCASE_PORTRAIT_SPEC, buildPortraitHeadReference, fitPortraitByHead, fitPortraitInFrame, fitSilhouetteToFrame } from '../core/PortraitFrameFit';
+import { buildDupPopupAliases } from '../core/GachaResultCardTheme';
 import { LobbyOpeningPanels } from '../core/LobbyOpeningPanels';
 import { INTRO_TICK_SEC, OpeningIntroController } from '../core/OpeningIntroController';
 import { InitialShowcaseController } from '../core/InitialShowcaseController';
@@ -4744,6 +4745,7 @@ ${spent}`,
         keys: readonly string[],
         nodeIds: (i: number) => readonly [mask: string, portrait: string] = (i) => [`frame${i}Mask`, `frame${i}Portrait`],
         spec: PortraitFrameSpec = PORTRAIT_FRAME_SPEC,
+        fillSilhouette = false,
     ): void {
         const seq = (this._avatarSeq.get(prefix) ?? 0) + 1;
         this._avatarSeq.set(prefix, seq);
@@ -4776,7 +4778,9 @@ ${spent}`,
                 const headFit = headRef && bounds[id] ? fitPortraitByHead(bounds[id], headRef, spec) : null;
                 const place = portrait
                     ? headFit ?? fitPortraitInFrame(size.width, size.height, marks[id], spec)
-                    : { width: 200, height: 200, x: 0, y: spec.frameHeight / 2 - 40 - 100 };
+                    : fillSilhouette
+                        ? fitSilhouetteToFrame(size.width, size.height, spec.frameWidth, spec.frameHeight)
+                        : { width: 200, height: 200, x: 0, y: spec.frameHeight / 2 - 40 - 100 };
                 sprite.node.getComponent(UITransform)?.setContentSize(place.width, place.height);
                 sprite.node.setPosition(place.x, place.y);
                 sprite.enabled = true;
@@ -5335,12 +5339,15 @@ ${spent}`,
     }
 
     private _refreshDuplicatePullPopup(): void {
-        const binder = this._duplicatePullHost?.binder;
-        if (!binder) return;
+        const host = this._duplicatePullHost;
+        const binder = host?.binder;
+        if (!host || !binder) return;
         const view = this._duplicatePull.getView();
         applyFlowView(binder, view);
+        // 左側稀有度徽章、立繪外框、徽章字色照稀有度色票（與十連結果卡同一套，PROG-2-9810）
+        void host.restyleWithSlots(buildDupPopupAliases(view.texts.dupRarity));
         // 左側重逢名將立繪：沿用六框的頭頂對齊；沒立繪時 _applyFramePortraits 會退成剪影頭像
-        if (view.portraitKey) this._applyFramePortraits(binder, 'dupHero', [view.portraitKey], () => ['dupHeroMask', 'dupHeroPortrait'], DUPLICATE_HERO_PORTRAIT_SPEC);
+        if (view.portraitKey) this._applyFramePortraits(binder, 'dupHero', [view.portraitKey], () => ['dupHeroMask', 'dupHeroPortrait'], DUPLICATE_HERO_PORTRAIT_SPEC, true);
     }
 
     private _closeDuplicatePullPopup(): void {

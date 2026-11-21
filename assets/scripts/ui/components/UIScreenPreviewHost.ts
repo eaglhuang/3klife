@@ -68,6 +68,9 @@ export function shouldReloadScreenSpecOnMount(editor: boolean, preview: boolean)
  * Unity 對照：相當於一個專門 Instantiate UI Prefab Variant 的 PreviewBootstrap，
  * 讓 QA 驗的是 JSON 契約建出的最終畫面，而不是 legacy 手刻版本。
  */
+/** restyleWithSlots 用的變體鍵；它的換色記錄與「各池整頁配色」分開，兩邊互不還原 */
+const RESTYLE_SLOTS_KEY = 'restyle-slots';
+
 @ccclass('UIScreenPreviewHost')
 export class UIScreenPreviewHost extends UIPreviewBuilder {
     /** Emitted on the host node with the step (-1 / +1) when a pool.prev / pool.next action fires. */
@@ -357,6 +360,9 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
     public async applySkinVariant(variantKey: string | null, slots: Record<string, SkinSlot> | null): Promise<void> {
         if (!this._layoutRoot || !this._binder) return;
         const overrides = variantKey && slots ? slots : {};
+        // 換過色的節點記在各自的變體底下：同一個 host 先後掛不同畫面（轉蛋池主題、十連結果）時，
+        // 池主題重套不能把結果畫面剛換好的稀有度配色又還原成預設
+        const touchedSet = this._touchedOf(variantKey === RESTYLE_SLOTS_KEY ? RESTYLE_SLOTS_KEY : 'skin-variant');
         const registered: Record<string, SkinSlot> = {};
         for (const [slotId, slot] of Object.entries(overrides)) registered[`${slotId}@${variantKey}`] = slot;
         this.skinResolver.registerSlots(registered);
@@ -366,16 +372,16 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
         while (stack.length > 0) {
             const spec = stack.pop()!;
             stack.push(...(spec.children ?? []));
-            await this._restyleSkinLayers(spec, overrides, pick);
+            await this._restyleSkinLayers(spec, overrides, pick, touchedSet);
             const touched = (spec.skinSlot && overrides[spec.skinSlot]) || (spec.styleSlot && overrides[spec.styleSlot]);
             // 換過色的節點即使這次沒有覆寫也要重套一次，才能回到原配色
-            if (!spec.name || (!touched && !this._variantTouched.has(spec.name))) continue;
+            if (!spec.name || (!touched && !touchedSet.has(spec.name))) continue;
             const node = this._binder.getNode(spec.name);
             if (!node) continue;
             const source: UILayoutNodeSpec = { ...spec, children: [], skinSlot: pick(spec.skinSlot), styleSlot: pick(spec.styleSlot) };
             await this._restyleFromSpec(node, { ...spec, children: [] }, source);
-            if (touched) this._variantTouched.add(spec.name);
-            else this._variantTouched.delete(spec.name);
+            if (touched) touchedSet.add(spec.name);
+            else touchedSet.delete(spec.name);
         }
     }
 
@@ -390,25 +396,31 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
             const slot = this.skinResolver.getSlot(themeSlot);
             if (slot) slots[targetSlot] = slot;
         }
-        await this.applySkinVariant('restyle-slots', slots);
+        await this.applySkinVariant(RESTYLE_SLOTS_KEY, slots);
     }
 
-    private readonly _variantTouched = new Set<string>();
+    private readonly _variantTouched = new Map<string, Set<string>>();
+
+    private _touchedOf(variantKey: string): Set<string> {
+        let set = this._variantTouched.get(variantKey);
+        if (!set) { set = new Set<string>(); this._variantTouched.set(variantKey, set); }
+        return set;
+    }
 
     /** 最佳化併進 skinLayers 的整面背景（例如 body 底色）也要跟著換色；圖層節點名為 skinLayer_<layerId> */
     private async _restyleSkinLayers(spec: UILayoutNodeSpec, overrides: Record<string, SkinSlot>,
-        pick: (slotId: string | undefined) => string | undefined): Promise<void> {
+        pick: (slotId: string | undefined) => string | undefined, touchedSet: Set<string>): Promise<void> {
         if (!spec.name || !spec.skinLayers?.length) return;
         const host = this._binder!.getNode(spec.name);
         if (!host) return;
         for (const layer of spec.skinLayers) {
             const key = `${spec.name}/${layer.layerId}`;
             const touched = !!overrides[layer.slotId];
-            if (!touched && !this._variantTouched.has(key)) continue;
+            if (!touched && !touchedSet.has(key)) continue;
             const child = host.getChildByName(`skinLayer_${layer.layerId}`);
             if (child) await this.styleBuilder.applyBackgroundSkin(child, pick(layer.slotId)!);
-            if (touched) this._variantTouched.add(key);
-            else this._variantTouched.delete(key);
+            if (touched) touchedSet.add(key);
+            else touchedSet.delete(key);
         }
     }
 

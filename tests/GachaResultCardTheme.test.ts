@@ -10,10 +10,11 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { assert, TestSuite } from './TestRunner';
 import {
-    GACHA_CARD_PARTS, buildCardSlotAliases, buildHeroSlotAliases, buildResultSlotAliases,
+    GACHA_CARD_PARTS, buildDupPopupAliases, buildCardSlotAliases, buildHeroSlotAliases, buildResultSlotAliases,
     gachaCardStars, gachaLayoutNodeSlotId, gachaLayoutSlotId, gachaThemeSlotId, toGachaCardTier, type GachaCardTier,
 } from '../assets/scripts/ui/core/GachaResultCardTheme';
 import { coverCropRect } from '../assets/scripts/ui/core/GachaResultRanking';
+import { fitSilhouetteToFrame } from '../assets/scripts/ui/core/PortraitFrameFit';
 
 const SKIN = path.join(__dirname, '../assets/resources/ui-spec/skins/gacha-pull-result.skin.json');
 const LAYOUT = path.join(__dirname, '../assets/resources/ui-spec/layouts/gacha-pull-result.json');
@@ -138,6 +139,31 @@ export function createGachaResultCardThemeSuite(): TestSuite {
         const tall = coverCropRect(200, 800, 1);
         assert.equals(200, tall.width);
         assert.equals(200, tall.height);
+    });
+
+    suite.test('重複卡彈窗：徽章／外框色票照稀有度，色值與結果卡同一套', () => {
+        const dup = JSON.parse(fs.readFileSync(path.join(__dirname, '../assets/resources/ui-spec/skins/duplicate-pull-popup-screen.skin.json'), 'utf8')).slots;
+        for (const tier of TIERS) {
+            const a = buildDupPopupAliases(tier);
+            assert.equals(`dup.rarity.bg.${tier}`, a['dup.rarity.bg']);
+            for (const id of Object.values(a)) assert.isTrue(!!dup[id], `彈窗 skin 缺 slot ${id}`);
+            assert.equals(SPEC_COLOR[tier], dup[`dup.rarity.bg.${tier}`].color, `${tier} 徽章底色`);
+            assert.equals(SPEC_COLOR[tier], dup[`dup.hero.bg.${tier}`].borderColor, `${tier} 外框色`);
+        }
+        assert.equals('dup.rarity.bg.SR', buildDupPopupAliases('SR')['dup.rarity.bg'], 'SR 不能是紫色 SSR 的 slot');
+        assert.equals('dup.rarity.bg.SR', buildDupPopupAliases('epic')['dup.rarity.bg']);
+    });
+
+    suite.test('重複卡彈窗：剪影等比蓋滿立繪框並貼底', () => {
+        const r = fitSilhouetteToFrame(200, 200, 436, 610);
+        assert.isTrue(Math.abs(r.width / r.height - 1) < 1e-6, '等比');
+        assert.isTrue(r.width >= 436 && r.height >= 610, '蓋滿框');
+        assert.isTrue(Math.abs(r.y - (-610 / 2 + r.height / 2)) < 1e-6, '底邊貼框底');
+    });
+
+    suite.test('重複卡吐槽句不用他／她代名詞', () => {
+        const q = JSON.parse(fs.readFileSync(path.join(__dirname, '../assets/resources/data/duplicate-pull-quips.json'), 'utf8'));
+        for (const line of [...q.general, ...q.starUpReady]) assert.isTrue(!/[他她]/.test(line), `吐槽句含代名詞：${line}`);
     });
 
     return suite;

@@ -1430,20 +1430,32 @@ async function main() {
                 await delay(2500);
             }
             await page.evaluate(() => window.localStorage.setItem('ucuf.gacha.dev-auto-topup', 'true'));
-            for (let round = 0; round < 3; round++) {
+            for (let round = 0; round < 1; round++) {
                 if (!(await clickButton('^BtnPullTen$'))) throw new Error('找不到十連鈕 BtnPullTen');
-                // 重複卡彈窗會蓋住結果畫面：一路選升星（可能連跳多張）直到彈窗消失，且結果畫面在場
-                let quiet = 0;
-                for (let k = 0; k < 40 && quiet < 3; k++) {
+                // 結果畫面出現後先不點任何東西（點「升星」「繼續」會連結果畫面一起收掉）：等翻牌演完，
+                // 再把蓋在上面的重複卡彈窗暫時隱藏，只為了讓截圖看得到十張卡本身
+                let seen = 0;
+                for (let k = 0; k < 40 && seen < 2; k++) {
                     await delay(1500);
-                    if (await page.evaluate(() => window.__pt.hasButton('^BtnDupStarUp$'))) { await clickButton('^BtnDupStarUp$'); quiet = 0; continue; }
-                    // 升星動畫結束頁（命鏡升星）要按「繼續」才會回到結果畫面；只在看到「升星完成」時才點，免得點掉結果畫面
-                    if ((await rm.allTexts()).some((t) => /升星完成/.test(String(t))) && await clickByText('.*', '^\s*繼續\s*$')) { quiet = 0; continue; }
-                    quiet = (await page.evaluate(() => window.__pt.scenePresence('^GachaPullResult_stage$'))) ? quiet + 1 : 0;
+                    seen = (await page.evaluate(() => window.__pt.scenePresence('^GachaPullResult_stage$'))) ? seen + 1 : 0;
                 }
-                if (quiet < 3) { await shot(rec, 'gacha-result-cards-stuck'); rec.detail.buttonsStuck = await listButtons(); }
-                if (quiet < 3) throw new Error('十連後沒有出現（或一直被彈窗蓋住）結果畫面 GachaPullResult_stage');
-                await delay(6000);
+                if (seen < 2) { await shot(rec, 'gacha-result-cards-stuck'); throw new Error('十連後沒有出現結果畫面 GachaPullResult_stage'); }
+                // 等翻牌與展示區收邊演完：十張卡的稀有度字樣都出現（至多等 60 秒）
+                for (let k = 0; k < 40; k++) {
+                    await delay(1500);
+                    const tags = (await rm.allTexts()).filter((t) => /^(N|R|SR|SSR|UR)$/.test(String(t).trim()));
+                    if (tags.length >= 10) break;
+                }
+                rec.detail.hiddenOverlays = await page.evaluate(() => {
+                    const hidden = [];
+                    const walk = (n) => { if (/^(DuplicatePullPopupHost|RedFaceShowcaseHost)$/.test(n.name) && n.active) { n.active = false; hidden.push(n.name); } n.children.forEach(walk); };
+                    walk(window.cc.director.getScene());
+                    return hidden;
+                });
+                // 先拍「武將展示」畫面（英雄徽章顏色），再點舞台任一處讓十張卡面板出現
+                await shot(rec, 'gacha-result-hero');
+                await page.mouse.click(Math.round(viewport.width / 2), Math.round(viewport.height / 2));
+                await delay(1500);
                 (rec.detail.rounds = rec.detail.rounds || []).push({ texts: (await rm.allTexts()).filter((t) => /^(N|R|SR|SSR|UR)$/.test(String(t).trim())) });
                 await shot(rec, `gacha-result-cards-${round + 1}`);
                 for (let i = 0; i < 6; i++) {
