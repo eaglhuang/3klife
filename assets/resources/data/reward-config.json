@@ -15,6 +15,34 @@
       "effects": [{ "kind": "item", "itemId": "ITEM_BATTLE_NOTE", "qty": 3, "itemSource": "TASK" }],
       "sources": ["milestone"],
       "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_ACADEMY_GRAD_S",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "gold", "amount": 20000 }],
+      "sources": ["quest"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_ACADEMY_GRAD_A",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "gold", "amount": 12000 }],
+      "sources": ["quest"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_ACADEMY_GRAD_B",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "gold", "amount": 6000 }],
+      "sources": ["quest"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_ACADEMY_GRAD_C",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "gold", "amount": 2000 }],
+      "sources": ["quest"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
     }
   ]
 }

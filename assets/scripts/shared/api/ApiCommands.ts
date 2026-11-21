@@ -42,6 +42,11 @@ export const API_COMMANDS = Object.freeze({
     'save.rev': { kind: 'query', revGuard: false },
     'save.commit': { kind: 'cmd', revGuard: true },
     'save.full': { kind: 'cmd', revGuard: false },
+    // 分域存檔（學府修業 domain=academy；A0 PROG-2-9215）：寫入由權威端驗證結構、補入學時鐘後落盤
+    'save.read': { kind: 'query', revGuard: false },
+    'save.write': { kind: 'cmd', revGuard: false },
+    // 亂數種子簽發（客戶端不得自行生成；A0 PROG-2-9215）
+    'rng.issueSeed': { kind: 'query', revGuard: false },
     // 技能（技能 Base 規格 §11；SKL-M 最小版）
     'skill.list': { kind: 'query', revGuard: false },
     'skill.canLearn': { kind: 'query', revGuard: false },
@@ -568,4 +573,38 @@ export interface TaskTickArgs {
 export interface TaskTickResult {
     delta: number;
     expired: string[];
+}
+
+/** save.read／save.write 的分域；目前只有學府修業紀錄 */
+export type SaveDomain = 'academy';
+
+export interface SaveReadArgs {
+    domain: SaveDomain;
+}
+
+/** save.read：回該分域目前的紀錄；null＝沒有進行中的紀錄。紀錄型別由學府模組定義，契約層不依賴所以為 unknown */
+export interface SaveReadResult {
+    domain: SaveDomain;
+    record: unknown | null;
+}
+
+export interface SaveWriteArgs {
+    domain: SaveDomain;
+    /** 要寫入的紀錄；null＝清除。寫入失敗必回錯誤（不得靜默），權威端維持寫入前的狀態 */
+    record: unknown | null;
+}
+
+export interface SaveWriteResult {
+    domain: SaveDomain;
+    saved: boolean;
+}
+
+/** rng.issueSeed：依範圍簽發種子字串（同一存檔同範圍固定，供確定性重播） */
+export interface RngIssueSeedArgs {
+    scope: string;
+}
+
+export interface RngIssueSeedResult {
+    scope: string;
+    seed: string;
 }

@@ -17,10 +17,10 @@
       "countdownSeasons": null,
       "releaseOnPause": false,
       "outcome": {
-        "critical": { "reward": null },
-        "success": { "reward": null },
-        "fail": { "reward": null },
-        "disaster": { "reward": null }
+        "critical": { "reward": "BUNDLE_ACADEMY_GRAD_S" },
+        "success": { "reward": "BUNDLE_ACADEMY_GRAD_A" },
+        "fail": { "reward": "BUNDLE_ACADEMY_GRAD_B" },
+        "disaster": { "reward": "BUNDLE_ACADEMY_GRAD_C" }
       }
     }
   ]

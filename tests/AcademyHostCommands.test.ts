@@ -1,0 +1,77 @@
+/**
+ * AcademyHostCommands — save.read／save.write（domain=academy）與 rng.issueSeed（PROG-2-9215）
+ *
+ * 鎖住：寫入驗結構與補入學時鐘、落盤失敗還原並回 E190、種子與改接前字串一致、多帶欄位與不支援的範圍被擋。
+ */
+import { assert, TestSuite } from './TestRunner';
+import { standaloneAcademyRig } from './AcademyApiRig';
+import type { AcademyRecordPort, PersistedAcademyRecord } from '../assets/scripts/core/services/GameAcademySaveStore';
+import { GameClock } from '../assets/scripts/core/systems/GameClock';
+import { createAcademySnapshot } from '../assets/scripts/core/systems/nurture/AcademyTrainingEngine';
+import { AcademyId } from '../assets/scripts/core/systems/nurture/AcademyTypes';
+import { YINGCHUAN_GIMMICK } from '../assets/scripts/core/systems/nurture/YingchuanAcademy';
+import type { AcademySaveRecord } from '../assets/scripts/core/systems/nurture/AcademyAntiSLManager';
+import { isApiFail, type ApiResult } from '../assets/scripts/shared/api/ApiProtocol';
+
+class FakePort implements AcademyRecordPort {
+    record: PersistedAcademyRecord | null = null;
+    readonly gameTime = new GameClock().state;
+    getAcademyRecord(): PersistedAcademyRecord | null { return this.record; }
+    setAcademyRecord(record: PersistedAcademyRecord | null): void { this.record = record; }
+}
+
+function fresh(): AcademySaveRecord {
+    const committed = createAcademySnapshot({
+        worldSeed: 'w', clanUuid: 'clan', childId: 'kid', academyId: AcademyId.YINGCHUAN, admissionTurn: 0,
+        initialStats: { str: 30, lea: 30, int: 30, pol: 30, cha: 30 },
+    }, YINGCHUAN_GIMMICK);
+    return { committed, before: null, action: null, acknowledged: true };
+}
+
+const codeOf = (res: ApiResult<unknown>): string => (isApiFail(res) ? res.errorCode : 'OK');
+
+export function createAcademyHostCommandsSuite(): TestSuite {
+    const suite = new TestSuite('AcademyHostCommands (學府 save／rng 命令 PROG-2-9215)');
+
+    suite.test('save.write 寫入後 save.read 讀得回，入學當下時鐘由權威端補上', async () => {
+        const port = new FakePort();
+        const rig = standaloneAcademyRig(port);
+        assert.equals(null, await rig.api.loadRecord());
+        await rig.api.saveRecord(fresh());
+        const back = (await rig.api.loadRecord()) as PersistedAcademyRecord;
+        assert.equals('kid', back.committed.childId);
+        assert.isTrue(!!back.frozenGameTime, '時鐘凍結點由權威端補');
+        assert.equals(1, rig.saves.count);
+        await rig.api.saveRecord(null);
+        assert.equals(null, port.record, 'null 代表清除');
+    });
+
+    suite.test('結構不合格或落盤失敗：回 E190，權威端維持寫入前的紀錄', async () => {
+        const port = new FakePort();
+        const rig = standaloneAcademyRig(port);
+        await rig.api.saveRecord(fresh());
+        const before = JSON.stringify(port.record);
+        let threw = false;
+        try { await rig.api.saveRecord({ committed: { schemaVersion: 9 } } as unknown as AcademySaveRecord); } catch { threw = true; }
+        assert.isTrue(threw, '壞結構必拋');
+        assert.equals(before, JSON.stringify(port.record));
+        rig.fail.on = true;
+        const next = fresh();
+        next.committed.currentTurn = 2;
+        threw = false;
+        try { await rig.api.saveRecord(next); } catch { threw = true; }
+        assert.isTrue(threw, '落盤失敗必拋');
+        assert.equals(before, JSON.stringify(port.record), '落盤失敗後紀錄還原');
+        assert.equals('E190', codeOf(await rig.bundle.api.cmd('save.write', { domain: 'academy', record: next }, { idemKey: 'k1' })));
+    });
+
+    suite.test('rng.issueSeed：回與改接前相同的世界種子字串；不支援的範圍與多帶欄位被擋', async () => {
+        const rig = standaloneAcademyRig(new FakePort(), 'clan-x');
+        assert.equals('3klife-world|clan-x', await rig.api.issueSeed());
+        assert.equals('E001', codeOf(await rig.bundle.api.query('rng.issueSeed', { scope: 'other' })));
+        assert.equals('E103', codeOf(await rig.bundle.api.query('rng.issueSeed', { scope: 'academy.world', extra: 1 })));
+        assert.equals('E001', codeOf(await rig.bundle.api.query('save.read', { domain: 'nurture' })));
+    });
+
+    return suite;
+}
