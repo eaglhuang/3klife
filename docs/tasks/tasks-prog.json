@@ -14055,7 +14055,7 @@
       "created_by_agent": "Claude",
       "started_at": "2026-11-22T01:09:18+08:00",
       "started_by_agent": "antigravity",
-      "doc_id": "pending",
+      "doc_id": "doc_task_2767",
       "sensor_triggered_by": "",
       "description": "修復五個 Base 框架規格分片 doc_id 錯位（1249～1263），補齊 3 個缺失之 .shardrc.json，補登 doc_spec_1254，同步 doc_spec_1241 待接清單移除銀兩錢包阻塞，並依總 PM 裁決更新世界觀與私塾待決章節。",
       "related": [
