@@ -202,20 +202,32 @@
                           "bottom": 3
                         },
                         "width": 194,
-                        "height": 62,
+                        "height": 64,
                         "skinSlot": "auto.gacha-pull-result.gachapullresult_card_0_plate",
                         "children": [
                           {
                             "type": "label",
                             "name": "GachaPullResult_card_0_name",
                             "widget": {
-                              "top": 14,
+                              "top": 6,
                               "left": 0
                             },
                             "width": 194,
-                            "height": 32,
+                            "height": 34,
                             "text": "趙雲",
                             "styleSlot": "auto.gacha-pull-result.gachapullresult_card_0_name"
+                          },
+                          {
+                            "type": "label",
+                            "name": "GachaPullResult_card_0_stars",
+                            "widget": {
+                              "top": 40,
+                              "left": 0
+                            },
+                            "width": 194,
+                            "height": 20,
+                            "text": "★★",
+                            "styleSlot": "auto.gacha-pull-result.gachapullresult_card_0_stars"
                           }
                         ]
                       }
@@ -234,9 +246,33 @@
                         }
                       },
                       {
+                        "layerId": "GachaPullResult_card_0_gloss",
+                        "slotId": "auto.gacha-pull-result.gachapullresult_card_0_gloss",
+                        "zOrder": 1,
+                        "expand": false,
+                        "width": 200,
+                        "height": 146,
+                        "widget": {
+                          "top": 0,
+                          "left": 0
+                        }
+                      },
+                      {
+                        "layerId": "GachaPullResult_card_0_sheen",
+                        "slotId": "auto.gacha-pull-result.gachapullresult_card_0_sheen",
+                        "zOrder": 2,
+                        "expand": false,
+                        "width": 200,
+                        "height": 318,
+                        "widget": {
+                          "top": 0,
+                          "left": 0
+                        }
+                      },
+                      {
                         "layerId": "GachaPullResult_card_0_frame",
                         "slotId": "auto.gacha-pull-result.gachapullresult_card_0_frame",
-                        "zOrder": 1,
+                        "zOrder": 3,
                         "expand": false,
                         "width": 200,
                         "height": 318,
@@ -286,20 +322,32 @@
                           "bottom": 3
                         },
                         "width": 194,
-                        "height": 62,
+                        "height": 64,
                         "skinSlot": "auto.gacha-pull-result.gachapullresult_card_1_plate",
                         "children": [
                           {
                             "type": "label",
                             "name": "GachaPullResult_card_1_name",
                             "widget": {
-                              "top": 14,
+                              "top": 6,
                               "left": 0
                             },
                             "width": 194,
-                            "height": 32,
+                            "height": 34,
                             "text": "張飛",
                             "styleSlot": "auto.gacha-pull-result.gachapullresult_card_1_name"
+                          },
+                          {
+                            "type": "label",
+                            "name": "GachaPullResult_card_1_stars",
+                            "widget": {
+                              "top": 40,
+                              "left": 0
+                            },
+                            "width": 194,
+                            "height": 20,
+                            "text": "★★",
+                            "styleSlot": "auto.gacha-pull-result.gachapullresult_card_1_stars"
                           }
                         ]
                       }
@@ -318,9 +366,33 @@
                         }
                       },
                       {
+                        "layerId": "GachaPullResult_card_1_gloss",
+                        "slotId": "auto.gacha-pull-result.gachapullresult_card_1_gloss",
+                        "zOrder": 1,
+                        "expand": false,
+                        "width": 200,
+                        "height": 146,
+                        "widget": {
+                          "top": 0,
+                          "left": 0
+                        }
+                      },
+                      {
+                        "layerId": "GachaPullResult_card_1_sheen",
+                        "slotId": "auto.gacha-pull-result.gachapullresult_card_1_sheen",
+                        "zOrder": 2,
+                        "expand": false,
+                        "width": 200,
+                        "height": 318,
+                        "widget": {
+                          "top": 0,
+                          "left": 0
+                        }
+                      },
+                      {
                         "layerId": "GachaPullResult_card_1_frame",
                         "slotId": "auto.gacha-pull-result.gachapullresult_card_1_frame",
-                        "zOrder": 1,
+                        "zOrder": 3,
                         "expand": false,
                         "width": 200,
                         "height": 318,
@@ -370,20 +442,32 @@
                           "bottom": 3
                         },
                         "width": 194,
-                        "height": 62,
+                        "height": 64,
                         "skinSlot": "auto.gacha-pull-result.gachapullresult_card_2_plate",
                         "children": [
                           {
                             "type": "label",
                             "name": "GachaPullResult_card_2_name",
                             "widget": {
-                              "top": 14,
+                              "top": 6,
                               "left": 0
                             },
                             "width": 194,
-                            "height": 32,
+                            "height": 34,
                             "text": "關羽",
                             "styleSlot": "auto.gacha-pull-result.gachapullresult_card_2_name"
+                          },
+                          {
+                            "type": "label",
+                            "name": "GachaPullResult_card_2_stars",
+                            "widget": {
+                              "top": 40,
+                              "left": 0
+                            },
+                            "width": 194,
+                            "height": 20,
+                            "text": "★★",
+                            "styleSlot": "auto.gacha-pull-result.gachapullresult_card_2_stars"
                           }
                         ]
                       }
@@ -402,9 +486,33 @@
                         }
                       },
                       {
+                        "layerId": "GachaPullResult_card_2_gloss",
+                        "slotId": "auto.gacha-pull-result.gachapullresult_card_2_gloss",
+                        "zOrder": 1,
+                        "expand": false,
+                        "width": 200,
+                        "height": 146,
+                        "widget": {
+                          "top": 0,
+                          "left": 0
+                        }
+                      },
+                      {
+                        "layerId": "GachaPullResult_card_2_sheen",
+                        "slotId": "auto.gacha-pull-result.gachapullresult_card_2_sheen",
+                        "zOrder": 2,
+                        "expand": false,
+                        "width": 200,
+                        "height": 318,
+                        "widget": {
+                          "top": 0,
+                          "left": 0
+                        }
+                      },
+                      {
                         "layerId": "GachaPullResult_card_2_frame",
                         "slotId": "auto.gacha-pull-result.gachapullresult_card_2_frame",
-                        "zOrder": 1,
+                        "zOrder": 3,
                         "expand": false,
                         "width": 200,
                         "height": 318,
@@ -454,21 +562,33 @@
                           "bottom": 3
                         },
                         "width": 194,
-                        "height": 62,
+                        "height": 64,
                         "skinSlot": "auto.gacha-pull-result.gachapullresult_card_3_plate",
                         "children": [
                           {
                             "type": "label",
                             "name": "GachaPullResult_card_3_name",
                             "widget": {
-                              "top": 14,
+                              "top": 6,
                               "left": 0
                             },
                             "width": 194,
-                            "height": 32,
+                            "height": 34,
                             "text": "諸葛亮",
                             "styleSlot": "auto.gacha-pull-result.gachapullresult_card_3_name",
                             "textKey": "auto.gacha-pull-result.gacha-pull-result-card-3-name"
+                          },
+                          {
+                            "type": "label",
+                            "name": "GachaPullResult_card_3_stars",
+                            "widget": {
+                              "top": 40,
+                              "left": 0
+                            },
+                            "width": 194,
+                            "height": 20,
+                            "text": "★★",
+                            "styleSlot": "auto.gacha-pull-result.gachapullresult_card_3_stars"
                           }
                         ]
                       }
@@ -487,9 +607,33 @@
                         }
                       },
                       {
+                        "layerId": "GachaPullResult_card_3_gloss",
+                        "slotId": "auto.gacha-pull-result.gachapullresult_card_3_gloss",
+                        "zOrder": 1,
+                        "expand": false,
+                        "width": 200,
+                        "height": 146,
+                        "widget": {
+                          "top": 0,
+                          "left": 0
+                        }
+                      },
+                      {
+                        "layerId": "GachaPullResult_card_3_sheen",
+                        "slotId": "auto.gacha-pull-result.gachapullresult_card_3_sheen",
+                        "zOrder": 2,
+                        "expand": false,
+                        "width": 200,
+                        "height": 318,
+                        "widget": {
+                          "top": 0,
+                          "left": 0
+                        }
+                      },
+                      {
                         "layerId": "GachaPullResult_card_3_frame",
                         "slotId": "auto.gacha-pull-result.gachapullresult_card_3_frame",
-                        "zOrder": 1,
+                        "zOrder": 3,
                         "expand": false,
                         "width": 200,
                         "height": 318,
@@ -539,20 +683,32 @@
                           "bottom": 3
                         },
                         "width": 194,
-                        "height": 62,
+                        "height": 64,
                         "skinSlot": "auto.gacha-pull-result.gachapullresult_card_4_plate",
                         "children": [
                           {
                             "type": "label",
                             "name": "GachaPullResult_card_4_name",
                             "widget": {
-                              "top": 14,
+                              "top": 6,
                               "left": 0
                             },
                             "width": 194,
-                            "height": 32,
+                            "height": 34,
                             "text": "呂布",
                             "styleSlot": "auto.gacha-pull-result.gachapullresult_card_4_name"
+                          },
+                          {
+                            "type": "label",
+                            "name": "GachaPullResult_card_4_stars",
+                            "widget": {
+                              "top": 40,
+                              "left": 0
+                            },
+                            "width": 194,
+                            "height": 20,
+                            "text": "★★",
+                            "styleSlot": "auto.gacha-pull-result.gachapullresult_card_4_stars"
                           }
                         ]
                       }
@@ -571,9 +727,33 @@
                         }
                       },
                       {
+                        "layerId": "GachaPullResult_card_4_gloss",
+                        "slotId": "auto.gacha-pull-result.gachapullresult_card_4_gloss",
+                        "zOrder": 1,
+                        "expand": false,
+                        "width": 200,
+                        "height": 146,
+                        "widget": {
+                          "top": 0,
+                          "left": 0
+                        }
+                      },
+                      {
+                        "layerId": "GachaPullResult_card_4_sheen",
+                        "slotId": "auto.gacha-pull-result.gachapullresult_card_4_sheen",
+                        "zOrder": 2,
+                        "expand": false,
+                        "width": 200,
+                        "height": 318,
+                        "widget": {
+                          "top": 0,
+                          "left": 0
+                        }
+                      },
+                      {
                         "layerId": "GachaPullResult_card_4_frame",
                         "slotId": "auto.gacha-pull-result.gachapullresult_card_4_frame",
-                        "zOrder": 1,
+                        "zOrder": 3,
                         "expand": false,
                         "width": 200,
                         "height": 318,
@@ -623,20 +803,32 @@
                           "bottom": 3
                         },
                         "width": 194,
-                        "height": 62,
+                        "height": 64,
                         "skinSlot": "auto.gacha-pull-result.gachapullresult_card_5_plate",
                         "children": [
                           {
                             "type": "label",
                             "name": "GachaPullResult_card_5_name",
                             "widget": {
-                              "top": 14,
+                              "top": 6,
                               "left": 0
                             },
                             "width": 194,
-                            "height": 32,
+                            "height": 34,
                             "text": "孫策",
                             "styleSlot": "auto.gacha-pull-result.gachapullresult_card_5_name"
+                          },
+                          {
+                            "type": "label",
+                            "name": "GachaPullResult_card_5_stars",
+                            "widget": {
+                              "top": 40,
+                              "left": 0
+                            },
+                            "width": 194,
+                            "height": 20,
+                            "text": "★★",
+                            "styleSlot": "auto.gacha-pull-result.gachapullresult_card_5_stars"
                           }
                         ]
                       }
@@ -655,9 +847,33 @@
                         }
                       },
                       {
+                        "layerId": "GachaPullResult_card_5_gloss",
+                        "slotId": "auto.gacha-pull-result.gachapullresult_card_5_gloss",
+                        "zOrder": 1,
+                        "expand": false,
+                        "width": 200,
+                        "height": 146,
+                        "widget": {
+                          "top": 0,
+                          "left": 0
+                        }
+                      },
+                      {
+                        "layerId": "GachaPullResult_card_5_sheen",
+                        "slotId": "auto.gacha-pull-result.gachapullresult_card_5_sheen",
+                        "zOrder": 2,
+                        "expand": false,
+                        "width": 200,
+                        "height": 318,
+                        "widget": {
+                          "top": 0,
+                          "left": 0
+                        }
+                      },
+                      {
                         "layerId": "GachaPullResult_card_5_frame",
                         "slotId": "auto.gacha-pull-result.gachapullresult_card_5_frame",
-                        "zOrder": 1,
+                        "zOrder": 3,
                         "expand": false,
                         "width": 200,
                         "height": 318,
@@ -707,20 +923,32 @@
                           "bottom": 3
                         },
                         "width": 194,
-                        "height": 62,
+                        "height": 64,
                         "skinSlot": "auto.gacha-pull-result.gachapullresult_card_6_plate",
                         "children": [
                           {
                             "type": "label",
                             "name": "GachaPullResult_card_6_name",
                             "widget": {
-                              "top": 14,
+                              "top": 6,
                               "left": 0
                             },
                             "width": 194,
-                            "height": 32,
+                            "height": 34,
                             "text": "周瑜",
                             "styleSlot": "auto.gacha-pull-result.gachapullresult_card_6_name"
+                          },
+                          {
+                            "type": "label",
+                            "name": "GachaPullResult_card_6_stars",
+                            "widget": {
+                              "top": 40,
+                              "left": 0
+                            },
+                            "width": 194,
+                            "height": 20,
+                            "text": "★★",
+                            "styleSlot": "auto.gacha-pull-result.gachapullresult_card_6_stars"
                           }
                         ]
                       }
@@ -739,9 +967,33 @@
                         }
                       },
                       {
+                        "layerId": "GachaPullResult_card_6_gloss",
+                        "slotId": "auto.gacha-pull-result.gachapullresult_card_6_gloss",
+                        "zOrder": 1,
+                        "expand": false,
+                        "width": 200,
+                        "height": 146,
+                        "widget": {
+                          "top": 0,
+                          "left": 0
+                        }
+                      },
+                      {
+                        "layerId": "GachaPullResult_card_6_sheen",
+                        "slotId": "auto.gacha-pull-result.gachapullresult_card_6_sheen",
+                        "zOrder": 2,
+                        "expand": false,
+                        "width": 200,
+                        "height": 318,
+                        "widget": {
+                          "top": 0,
+                          "left": 0
+                        }
+                      },
+                      {
                         "layerId": "GachaPullResult_card_6_frame",
                         "slotId": "auto.gacha-pull-result.gachapullresult_card_6_frame",
-                        "zOrder": 1,
+                        "zOrder": 3,
                         "expand": false,
                         "width": 200,
                         "height": 318,
@@ -791,20 +1043,32 @@
                           "bottom": 3
                         },
                         "width": 194,
-                        "height": 62,
+                        "height": 64,
                         "skinSlot": "auto.gacha-pull-result.gachapullresult_card_7_plate",
                         "children": [
                           {
                             "type": "label",
                             "name": "GachaPullResult_card_7_name",
                             "widget": {
-                              "top": 14,
+                              "top": 6,
                               "left": 0
                             },
                             "width": 194,
-                            "height": 32,
+                            "height": 34,
                             "text": "曹操",
                             "styleSlot": "auto.gacha-pull-result.gachapullresult_card_7_name"
+                          },
+                          {
+                            "type": "label",
+                            "name": "GachaPullResult_card_7_stars",
+                            "widget": {
+                              "top": 40,
+                              "left": 0
+                            },
+                            "width": 194,
+                            "height": 20,
+                            "text": "★★",
+                            "styleSlot": "auto.gacha-pull-result.gachapullresult_card_7_stars"
                           }
                         ]
                       }
@@ -823,9 +1087,33 @@
                         }
                       },
                       {
+                        "layerId": "GachaPullResult_card_7_gloss",
+                        "slotId": "auto.gacha-pull-result.gachapullresult_card_7_gloss",
+                        "zOrder": 1,
+                        "expand": false,
+                        "width": 200,
+                        "height": 146,
+                        "widget": {
+                          "top": 0,
+                          "left": 0
+                        }
+                      },
+                      {
+                        "layerId": "GachaPullResult_card_7_sheen",
+                        "slotId": "auto.gacha-pull-result.gachapullresult_card_7_sheen",
+                        "zOrder": 2,
+                        "expand": false,
+                        "width": 200,
+                        "height": 318,
+                        "widget": {
+                          "top": 0,
+                          "left": 0
+                        }
+                      },
+                      {
                         "layerId": "GachaPullResult_card_7_frame",
                         "slotId": "auto.gacha-pull-result.gachapullresult_card_7_frame",
-                        "zOrder": 1,
+                        "zOrder": 3,
                         "expand": false,
                         "width": 200,
                         "height": 318,
@@ -875,21 +1163,33 @@
                           "bottom": 3
                         },
                         "width": 194,
-                        "height": 62,
+                        "height": 64,
                         "skinSlot": "auto.gacha-pull-result.gachapullresult_card_8_plate",
                         "children": [
                           {
                             "type": "label",
                             "name": "GachaPullResult_card_8_name",
                             "widget": {
-                              "top": 14,
+                              "top": 6,
                               "left": 0
                             },
                             "width": 194,
-                            "height": 32,
+                            "height": 34,
                             "text": "司馬懿",
                             "styleSlot": "auto.gacha-pull-result.gachapullresult_card_8_name",
                             "textKey": "auto.gacha-pull-result.gacha-pull-result-card-8-name"
+                          },
+                          {
+                            "type": "label",
+                            "name": "GachaPullResult_card_8_stars",
+                            "widget": {
+                              "top": 40,
+                              "left": 0
+                            },
+                            "width": 194,
+                            "height": 20,
+                            "text": "★★",
+                            "styleSlot": "auto.gacha-pull-result.gachapullresult_card_8_stars"
                           }
                         ]
                       }
@@ -908,9 +1208,33 @@
                         }
                       },
                       {
+                        "layerId": "GachaPullResult_card_8_gloss",
+                        "slotId": "auto.gacha-pull-result.gachapullresult_card_8_gloss",
+                        "zOrder": 1,
+                        "expand": false,
+                        "width": 200,
+                        "height": 146,
+                        "widget": {
+                          "top": 0,
+                          "left": 0
+                        }
+                      },
+                      {
+                        "layerId": "GachaPullResult_card_8_sheen",
+                        "slotId": "auto.gacha-pull-result.gachapullresult_card_8_sheen",
+                        "zOrder": 2,
+                        "expand": false,
+                        "width": 200,
+                        "height": 318,
+                        "widget": {
+                          "top": 0,
+                          "left": 0
+                        }
+                      },
+                      {
                         "layerId": "GachaPullResult_card_8_frame",
                         "slotId": "auto.gacha-pull-result.gachapullresult_card_8_frame",
-                        "zOrder": 1,
+                        "zOrder": 3,
                         "expand": false,
                         "width": 200,
                         "height": 318,
@@ -960,20 +1284,32 @@
                           "bottom": 3
                         },
                         "width": 194,
-                        "height": 62,
+                        "height": 64,
                         "skinSlot": "auto.gacha-pull-result.gachapullresult_card_9_plate",
                         "children": [
                           {
                             "type": "label",
                             "name": "GachaPullResult_card_9_name",
                             "widget": {
-                              "top": 14,
+                              "top": 6,
                               "left": 0
                             },
                             "width": 194,
-                            "height": 32,
+                            "height": 34,
                             "text": "龐統",
                             "styleSlot": "auto.gacha-pull-result.gachapullresult_card_9_name"
+                          },
+                          {
+                            "type": "label",
+                            "name": "GachaPullResult_card_9_stars",
+                            "widget": {
+                              "top": 40,
+                              "left": 0
+                            },
+                            "width": 194,
+                            "height": 20,
+                            "text": "★★",
+                            "styleSlot": "auto.gacha-pull-result.gachapullresult_card_9_stars"
                           }
                         ]
                       }
@@ -992,9 +1328,33 @@
                         }
                       },
                       {
+                        "layerId": "GachaPullResult_card_9_gloss",
+                        "slotId": "auto.gacha-pull-result.gachapullresult_card_9_gloss",
+                        "zOrder": 1,
+                        "expand": false,
+                        "width": 200,
+                        "height": 146,
+                        "widget": {
+                          "top": 0,
+                          "left": 0
+                        }
+                      },
+                      {
+                        "layerId": "GachaPullResult_card_9_sheen",
+                        "slotId": "auto.gacha-pull-result.gachapullresult_card_9_sheen",
+                        "zOrder": 2,
+                        "expand": false,
+                        "width": 200,
+                        "height": 318,
+                        "widget": {
+                          "top": 0,
+                          "left": 0
+                        }
+                      },
+                      {
                         "layerId": "GachaPullResult_card_9_frame",
                         "slotId": "auto.gacha-pull-result.gachapullresult_card_9_frame",
-                        "zOrder": 1,
+                        "zOrder": 3,
                         "expand": false,
                         "width": 200,
                         "height": 318,
