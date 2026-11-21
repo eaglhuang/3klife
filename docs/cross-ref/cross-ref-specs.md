@@ -205,13 +205,15 @@
 
 | 規格書 | 被依賴（下游） | 依賴（上游） |
 |---|---|---|
-| doc_spec_1182（共用框架總綱） | doc_spec_1183、doc_spec_1184、doc_spec_1185、doc_spec_1186、doc_spec_1187、doc_spec_1188 | doc_spec_1181、doc_spec_1180、doc_spec_1179、doc_spec_0655、doc_tech_0010、doc_tech_0013、doc_spec_0334、doc_spec_0469、doc_spec_0656、doc_spec_0683、doc_spec_0662 |
+| doc_spec_1182（共用框架總綱） | doc_spec_1183、doc_spec_1184、doc_spec_1185、doc_spec_1186、doc_spec_1187、doc_spec_1188、doc_spec_1247、doc_spec_1248 | doc_spec_1181、doc_spec_1180、doc_spec_1179、doc_spec_0655、doc_tech_0010、doc_tech_0013、doc_spec_0334、doc_spec_0469、doc_spec_0656、doc_spec_0683、doc_spec_0662 |
 | doc_spec_1183（買賣商店） | doc_spec_1186 | doc_spec_1182、doc_spec_1184、doc_spec_1186 |
 | doc_spec_1184（物品庫存） | doc_spec_1183、doc_spec_1185、doc_spec_1186、doc_spec_1187、doc_spec_1188 | doc_spec_1182 |
 | doc_spec_1185（任務） | doc_spec_1186、doc_spec_1188 | doc_spec_1182、doc_spec_1184、doc_spec_1186、doc_spec_1188 |
 | doc_spec_1186（獎勵） | doc_spec_1183、doc_spec_1185、doc_spec_1187、doc_spec_1188 | doc_spec_1182、doc_spec_1184、doc_spec_1188 |
 | doc_spec_1187（技能） | doc_spec_1186、doc_spec_1188 | doc_spec_1182、doc_spec_1184、doc_spec_1186 |
 | doc_spec_1188（劇情演出） | doc_spec_1185、doc_spec_1186、doc_spec_1187 | doc_spec_1182、doc_spec_1185、doc_spec_1186 |
+| doc_spec_1248（人員占用，第 7 個共用框架） | doc_spec_1181、doc_spec_1180、doc_spec_1179、doc_spec_1182 | doc_spec_1182 |
+| doc_spec_1247（貨幣與資源總規格） | doc_spec_1181、doc_spec_1184、doc_spec_1183、doc_spec_1186、doc_spec_0404、doc_spec_0033 | doc_spec_1182、doc_spec_1184 |
 
 #### 各框架 ↔ 依賴它的既有規格（框架 → 既有規格）
 
@@ -247,3 +249,12 @@
 | doc_spec_1233 | 首子誕生與少年名將開場流程規格書.md | 開場總順序、少年名將三選一、首子與貂蟬結緣關係、取名、出生禮、周歲抓周、存檔與 API（上游：doc_spec_1180、1172、0470、0031、0618、1182；已回寫註記：0031、0470、0618、0003、1180 shard-b） |
 
 > 「依 11/20 裁決修訂」清掃（PROG-2-9212）：doc_spec_1168、0308、1130、1172、0182、0580、0033、0260、1181（shard-e／i）。
+
+### 家族、子嗣、配偶、教官與學府（PROG-2-9224，依 11/21 裁決）
+
+| doc_id | 規格書 | 說明 |
+|---|---|---|
+| doc_spec_1241 | 家族子嗣與血統總規格書.md | 總綱：配偶三來源與上場、待產哺乳 OCC、子嗣、繼承與家門奇才、主角不死、分家外嫁、義子、家臣子嗣、共用框架對應、JSON、實作卡切分（上游：doc_spec_1233、1180、1179、1181、1182；分規格：0268、0530、0531、0580、0011、0181~0185、0446、0532） |
+| doc_spec_1179（第 13、14 章） | 學府修業畫面與接線設計.md | 學府新版規則（人源只收自家子嗣、入學加分、修業變化、失敗與結業影響）、教官就是武將（教官卡退場）；shard-h、shard-i |
+
+> 「依 11/21 裁決修訂」註記（PROG-2-9224）：doc_spec_1179（shard-d／e／f／g）、1233（shard-a／b）、1181（shard-g）、1180（shard-k／n）、0310、0482、0318、0562、0563、0569 及教官卡相關規格（教官系統（支援卡）、教官支援卡四大原型／詞條 Schema、教官訓練格爆發、教官精力欄位、教官靈感戰法六招、名將身後傳承）。
