@@ -13590,6 +13590,56 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9703",
+      "title": "極速決戰結算文案：按「自動」不再顯示「敵方突破防線」",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "2026-11-21T23:40:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "年度試玩第 1 回合即敗：試玩腳本每秒按自動鈕（極速決戰），BattleEnded 不帶 cause，結算窗落到預設「敵方突破防線」。BattleEndCause 加 auto，自動鈕帶 cause，結算窗改極速決戰文案。戰力規則另由總PM 裁決。",
+      "related": [
+        "PROG-2-9414",
+        "PROG-2-1091",
+        "PROG-2-2202"
+      ],
+      "depends": [
+        "PROG-2-9414"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8973 通過、tsc 0 錯 | 變更: cause auto 與結算文案 | 阻塞: 戰力規則待總PM 裁決",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
