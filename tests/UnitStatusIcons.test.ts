@@ -51,7 +51,8 @@ export function createUnitStatusIconsSuite(): TestSuite {
                 { effect: StatusEffect.Fortified, remainingTurns: 2 },
             ],
         };
-        const r = computeUnitStatusIcons(plain(), ctx);
+        // 只驗分類，不受頭頂格數上限影響
+        const r = computeUnitStatusIcons(plain(), ctx, 8);
         const byKind = new Map(r.icons.map((i) => [i.kind, i]));
         assert.equals(true, byKind.get('stun')?.isDebuff);
         assert.equals(true, byKind.get('rooted')?.isDebuff);
@@ -104,11 +105,11 @@ export function createUnitStatusIconsSuite(): TestSuite {
                 { effect: StatusEffect.Weak, remainingTurns: 1 },
             ],
         };
-        const r = computeUnitStatusIcons({ ...plain(), attackBonus: 4 }, ctx);
+        const r = computeUnitStatusIcons({ ...plain(), attackBonus: 4 }, ctx, 8);
         assert.equals('stun,weak,attack-up,haste', r.icons.map((i) => i.kind).join(','));
     });
 
-    suite.test('最多顯示 4 個，超過以「+N」表示，且保留完整種類清單', () => {
+    suite.test('最多顯示 STATUS_ICON_MAX_VISIBLE 個，超過以「+N」表示，且保留完整種類清單', () => {
         const ctx = {
             ...emptyStatusContext(),
             effects: [
@@ -122,8 +123,8 @@ export function createUnitStatusIconsSuite(): TestSuite {
         };
         const r = computeUnitStatusIcons({ ...plain(), shield: 3 }, ctx);
         assert.equals(STATUS_ICON_MAX_VISIBLE, r.icons.length);
-        assert.equals(3, r.overflow);
-        assert.equals('+3', r.overflowText);
+        assert.equals(7 - STATUS_ICON_MAX_VISIBLE, r.overflow);
+        assert.equals(`+${7 - STATUS_ICON_MAX_VISIBLE}`, r.overflowText);
         assert.equals(7, r.allKinds.length);
     });
 
