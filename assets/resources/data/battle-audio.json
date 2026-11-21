@@ -1,0 +1,9 @@
+{
+  "_comment": "PROG-2-9439：戰鬥音效節流。sameClipWindowMs 同一個 clip 在這段毫秒內只播一次；perClipMaxPerSecond 單一 clip 每秒上限；maxPerSecond 全部音效每秒上限；exemptClips 不受每秒上限限制的重要提示（同檔合併仍適用）。clip 名稱見 BattleAudio.ts 的 BATTLE_AUDIO_CLIP_MAP。",
+  "sfxThrottle": {
+    "sameClipWindowMs": 60,
+    "maxPerSecond": 16,
+    "perClipMaxPerSecond": { "footstep": 6 },
+    "exemptClips": ["light", "thunder", "skill0", "skill1", "skill7", "die"]
+  }
+}
