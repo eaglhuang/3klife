@@ -2745,6 +2745,111 @@
             "qc": "Full figure and both spear ends visible; straight shaft and separated natural hand grips; clean transparent preview; review candidate only."
           }
         ]
+      },
+      "smallAvatar": {
+        "status": "integrated",
+        "activeVersion": "0003",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/yu_jin__于禁__small_avatar_0001.png",
+            "status": "rejected",
+            "sha256": "2708960e99b0b947f83ac3b01dafc59b8c5dc5a2d826a2eb6cf0dd8f9122a60a",
+            "canvas": "256x256 RGBA",
+            "source": "standing/yu_jin__于禁__standing_0002.png",
+            "cropRect": [
+              379,
+              72,
+              771,
+              385
+            ],
+            "note": "使用者移除的舊候選；依要求不回復該檔案。",
+            "removedFromLibrary": true
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/yu_jin__于禁__small_avatar_0002.png",
+            "status": "superseded",
+            "sha256": "d36ce1d31fa6fd21dac89b7d53b7cede06d1c394d22421271fc9784f1ecc2fcd",
+            "canvas": "256x256 RGBA",
+            "sourceStanding": "standing/yu_jin__于禁__standing_0002.png",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "x": 422.33,
+              "y": 78.67,
+              "width": 265.33,
+              "height": 265.33
+            },
+            "headBox": {
+              "x": 483,
+              "y": 139,
+              "width": 139,
+              "height": 199
+            },
+            "faceBox": {
+              "x": 508,
+              "y": 180,
+              "width": 94,
+              "height": 156
+            },
+            "extentBox": {
+              "x": 483,
+              "y": 80,
+              "width": 138,
+              "height": 260
+            },
+            "extentPaddingRatio": 0.005,
+            "verticalShift": 0,
+            "qc": "顱部頭盔至下巴頭高75%；臉框中心線與畫布中線差0.5px。完整保留盔頂、盔體、耳側護件與下巴；250px預覽目視確認頂飾未裁切，肩線保留於下緣。因盔頂較高，extent留白採0.5%。",
+            "createdAt": "2026-11-20",
+            "note": "0003 目視覆核發現臉框中線偏右，保留歷史但不再作為正式版本。"
+          },
+          {
+            "version": "0003",
+            "file": "small_avatars/yu_jin__于禁__small_avatar_0003.png",
+            "status": "integrated",
+            "sha256": "06e6dfb8372f3296b644fd4f7226a8002bf7d43eefee944790ff6a7df6434a71",
+            "canvas": "256x256 RGBA",
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/yu_jin__于禁__standing_0002.png",
+            "sourceSha256": "0af807b16600a357b2d183c64a4ff2c688a425c342f770c4ec8c6eafce9b7326",
+            "method": "crop-only; uniform resize; no rotation or redraw",
+            "cropBox": {
+              "x": 433.33,
+              "y": 78.67,
+              "width": 265.33,
+              "height": 265.33
+            },
+            "headBox": {
+              "x": 483,
+              "y": 139,
+              "width": 139,
+              "height": 199
+            },
+            "faceBox": {
+              "x": 524,
+              "y": 210,
+              "width": 84,
+              "height": 128
+            },
+            "extentBox": {
+              "x": 483,
+              "y": 80,
+              "width": 138,
+              "height": 260
+            },
+            "extentPaddingRatio": 0.005,
+            "measurements": {
+              "headHeightPercent": 75,
+              "faceHeightPercent": 48.2,
+              "faceWidthPercent": 31.7,
+              "faceCenterXPercent": 50,
+              "centerAxisDifferencePx": 0.5
+            },
+            "qc": "中心線預覽中畫布中線與人工臉框中線重合；YuNet 僅提示約1px偏差，已按 500px 核可基準對照人工確認。臉部保留自然三分之四側角，完整保留方帽、盔體、耳側護件與下巴；頭高75%、臉高48.2%、臉寬31.7%。肩部上緣可見，依規定列次要警示。只做等比裁切與縮放，未旋轉、修臉或重畫。",
+            "createdAt": "2026-11-22"
+          }
+        ]
       }
     },
     {
