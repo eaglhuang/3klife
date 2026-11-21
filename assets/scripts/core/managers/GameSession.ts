@@ -164,7 +164,8 @@ import type { SkillHost } from '../api/localserver/SkillCommands';
 import { SkillService } from '../../shared/skill/SkillService';
 import type { AcademyHost } from '../api/localserver/AcademyHostCommands';
 import type { OccupancyHost } from '../api/localserver/OccupancyCommands';
-import type { FamilyHost } from '../api/localserver/FamilyCommands';
+import type { EnrollOutcome as SpouseSourceOutcome, FamilyHost } from '../api/localserver/FamilyCommands';
+import { MARRIAGE_RELATION_GAIN, MATCHMAKER_CLOSED_LABEL, bondAffinityMet, diplomaticSlot, matchmakerCandidates, matchmakerSlot, matchmakerYearOf, relationAllowsAlliance, type MatchmakerCandidate } from '../systems/SpouseSources';
 import { OccupancyService } from '../../shared/occupancy/OccupancyService';
 import { parseOccupancyMatrix, type OccupancyMatrixV1 } from '../../shared/occupancy/OccupancyMatrix';
 import { parseFamilyConfig, type FamilyConfigV1 } from '../../shared/family/FamilyConfig';
@@ -1504,6 +1505,64 @@ export class GameSession implements AcademyRecordPort {
         return out.ok || out.reason === 'duplicate' ? { ...out, generalId: spouse.id } : out;
     }
 
+    /** 結緣好感（0~100）：送禮好感欄與傭兵好感取高者（規格：沿用結緣系統好感欄；PROG-2-9583） */
+    private _bondAffinityOf(generalId: string): number {
+        const gift = this._femaleSystem.giftAffection[generalId] ?? 0;
+        const merc = this._mercenaries.mercenaries.find((m) => m.generalId === generalId)?.affection ?? 0;
+        return Math.max(gift, merc);
+    }
+
+    /** 結緣好感納配偶：名冊上的女性好感達標、尚未是家族成員、配偶未滿上限才成立；失敗不改狀態 */
+    public enrollBondSpouse(generalId: string, options: { hallLevel?: number } = {}): SpouseSourceOutcome {
+        const config = this._familyConfig;
+        if (!config) return { ok: false, reason: 'no-config' };
+        const general = this._roster.getAll().find((g) => g.id === generalId);
+        if (!general || general.gender !== '女') return { ok: false, reason: 'not-eligible' };
+        if (this._family.get(generalId)) return { ok: false, reason: 'duplicate', generalId };
+        if (!bondAffinityMet(this._bondAffinityOf(generalId), config)) return { ok: false, reason: 'affinity-low' };
+        const hallLevel = options.hallLevel ?? 1;
+        if (!this._family.canAddSpouse(config, hallLevel)) return { ok: false, reason: 'cap-reached' };
+        this._family.addSpouse(generalId, this._clock.state.totalSeasonsElapsed, config, hallLevel);
+        return { ok: true, generalId };
+    }
+
+    /** 聯姻納配偶：邦交友好以上、每國不超過 marriagePerNation 位；成婚後邦交 +20（規格 3.2） */
+    public enrollDiplomaticSpouse(nationId: string, options: { hallLevel?: number } = {}): SpouseSourceOutcome {
+        const config = this._familyConfig;
+        if (!config) return { ok: false, reason: 'no-config' };
+        const nation = this._rivals.nations.find((n) => n.id === nationId);
+        if (!nation) return { ok: false, reason: 'not-eligible' };
+        if (!relationAllowsAlliance(nation.relation)) return { ok: false, reason: 'relation-low' };
+        const prefix = `spouse_gen_diplomatic_${nationId.replace(/[^A-Za-z0-9_-]/g, '_')}_`;
+        const married = this._roster.getAll().filter((g) => g.id.startsWith(prefix)).length;
+        if (married >= config.marriagePerNation) return { ok: false, reason: 'nation-limit' };
+        const out = this.enrollGeneratedSpouse(diplomaticSlot(nationId, married), options);
+        if (!out.ok) return out;
+        this._rivals = { nations: this._rivals.nations.map((n) => (n.id === nationId ? { ...n, relation: Math.min(100, n.relation + MARRIAGE_RELATION_GAIN) } : n)) };
+        return out;
+    }
+
+    /** 媒人說親本年狀態：價格未定＝尚未開放；開放後每年最多 matchmakerPerYear 位，三位候選為固定種子 */
+    public matchmakerOffer(): { open: boolean; notice: string; remaining: number; candidates: MatchmakerCandidate[] } {
+        const config = this._familyConfig;
+        if (!config || config.matchmakerPrice === null) return { open: false, notice: MATCHMAKER_CLOSED_LABEL, remaining: 0, candidates: [] };
+        const year = this._clock.state.currentYear;
+        const used = this._roster.getAll().filter((g) => matchmakerYearOf(g.id) === year).length;
+        return { open: true, notice: '', remaining: Math.max(0, config.matchmakerPerYear - used), candidates: matchmakerCandidates(year, config) };
+    }
+
+    /** 媒人說親選一位（0~2）：未開放、本年額滿、選位無效都不改狀態 */
+    public enrollMatchmakerSpouse(pick: number, options: { hallLevel?: number } = {}): SpouseSourceOutcome {
+        const offer = this.matchmakerOffer();
+        if (!this._familyConfig) return { ok: false, reason: 'no-config' };
+        if (!offer.open) return { ok: false, reason: 'not-open' };
+        const chosen = offer.candidates[pick];
+        if (!chosen) return { ok: false, reason: 'not-eligible' };
+        if (this._roster.getAll().some((g) => g.id === chosen.generalId)) return { ok: false, reason: 'duplicate', generalId: chosen.generalId };
+        if (offer.remaining <= 0) return { ok: false, reason: 'year-limit' };
+        return this.enrollGeneratedSpouse(matchmakerSlot(this._clock.state.currentYear, pick), options);
+    }
+
     /** 舊檔對帳：名冊上有少年版標記卻沒家族紀錄者，補登「開局義子特例」（9194 開局少年改為義子） */
     private _reconcileStarterAdoptees(): void {
         for (const general of this._roster.getAll()) {
@@ -1556,7 +1615,16 @@ export class GameSession implements AcademyRecordPort {
                 if (out.ok && this._autoSave && this._save) void this.save();
                 return out;
             },
+            enrollBond: (generalId) => this._savedSpouse(this.enrollBondSpouse(generalId)),
+            enrollDiplomatic: (nationId) => this._savedSpouse(this.enrollDiplomaticSpouse(nationId)),
+            matchmakerOffer: () => this.matchmakerOffer(),
+            enrollMatchmaker: (pick) => this._savedSpouse(this.enrollMatchmakerSpouse(pick)),
         };
+    }
+
+    private _savedSpouse(out: SpouseSourceOutcome): SpouseSourceOutcome {
+        if (out.ok && this._autoSave && this._save) void this.save();
+        return out;
     }
 
     /** 人員占用宿主：ServiceLoader 把它掛到本機 API 的 occupancy.* 命令 */

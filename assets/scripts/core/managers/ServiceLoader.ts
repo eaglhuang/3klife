@@ -357,6 +357,10 @@ export class ServiceLoader {
                 await this.loadBloodlineRuleTables();
                 return this.session.spouseHost.enrollGeneratedSpouse(slot);
             },
+            enrollBond: async (generalId) => { await this.loadBloodlineRuleTables(); return this.session.spouseHost.enrollBond(generalId); },
+            enrollDiplomatic: async (nationId) => { await this.loadBloodlineRuleTables(); return this.session.spouseHost.enrollDiplomatic(nationId); },
+            matchmakerOffer: async () => { await this.loadBloodlineRuleTables(); return this.session.spouseHost.matchmakerOffer(); },
+            enrollMatchmaker: async (pick) => { await this.loadBloodlineRuleTables(); return this.session.spouseHost.enrollMatchmaker(pick); },
         });
         // 學府修業（PROG-2-9215）：紀錄讀寫（save.read／save.write domain=academy）與種子簽發（rng.issueSeed）由 GameSession 提供
         this.localApi.setAcademyHost(this.session.academyHost);
