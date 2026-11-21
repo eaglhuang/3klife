@@ -24,8 +24,8 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 199,
-    "in_progress": 5,
+    "done": 200,
+    "in_progress": 4,
     "open": 87,
     "total": 291
   },
@@ -12840,7 +12840,7 @@
       "title": "待產與哺乳接線（F5：2 季待產、哺乳 OCC、乳母不占用）",
       "owner": "ClaudeCode_sonnet-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-21",
@@ -12859,7 +12859,7 @@
       "depends": [],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-21 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0 錯、run-cli 8910 全過（含 NursingWiring 7 項）、compute-gate standard 通過、api-bypass 未增 | 變更: 待產結束依母親 nursingMethod 登記 nursing（母乳到孩子 breastfeedEndAge=5 歲、其他方式產後 postpartumQuarters 季、乳母不登記）、季結釋放到期占用、GameSession.setNursingMethod、family-config 加 breastfeedEndAge | 阻塞: 7456 實跑截圖待主目錄同步（主目錄與 origin/master 分岔 230 個本地提交）",
       "brief": {
         "style": "classic",
         "label": "",
