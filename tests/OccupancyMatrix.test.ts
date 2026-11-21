@@ -104,6 +104,8 @@ export function createOccupancyMatrixSuite(): TestSuite {
         assert.isFalse(allowed(svc, 'mom', 'mercenary'));
         assert.isFalse(allowed(svc, 'mom', 'sortie'));
         assert.isTrue(allowed(svc, 'mom', 'gov'), '待產可任太守／內政（PM 11/21）');
+        assert.isTrue(allowed(svc, 'mom', 'hallMission'), '待產可接不離城的大廳任務（PM 11/21）');
+        assert.isFalse(allowed(svc, 'mom', 'hallDispatch'));
         // 出生後母乳方式：登記 nursing（待產轉接器已清掉）
         const born = new OccupancyService({ matrix: matrix() });
         born.acquire({ personId: 'mom', kind: 'nursing', refId: 'nurse:baby1', since: 2 });
