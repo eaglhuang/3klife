@@ -14256,7 +14256,7 @@
       "title": "戰場效能熱點修正（tick 分段量測、Label 縮放、圖集上傳、合批、離場釋放）",
       "owner": "ClaudeCode_opus-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-22",
@@ -14273,7 +14273,7 @@
       ],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-22 | 狀態: in-progress | 驗證: 7456 自動代打 60 秒實測 draw call 平均 252→200、最高 311→236，節點 1472→1485，heap（強制 GC 後）99→98MB，離場 30 秒後 85→85MB（場景確實釋放；先前量到的 171～222MB 是尚未回收的垃圾，GC 後約 98MB）；徽章前後截圖外觀一致；單元測試 9089 全過、tsc 0 錯 | 變更: 部隊徽章分層合批：底框與兵種圓章改用同一張底圖精靈（battle_badge_atlas，2 倍解析度）、徽章文字改 BITMAP 點陣快取（不用 CHAR，避免佔用全專案字元圖集預算）、拆到底圖／圖示／文字三個共用圖層，每幀抄位置縮放透明度；武將名牌維持 Graphics | 阻塞: 無；剩餘大宗是虎符卡面板約 46 個 draw call，另案評估",
+      "notes": "2026-11-22 | 狀態: done | 驗證: PR 2488 已合併（CI 全過），draw call 平均 252→200、最高 311→236 | 變更: 結案 | 阻塞: 無；虎符卡面板約 46 個 draw call 另案評估",
       "brief": {
         "style": "classic",
         "label": "",
