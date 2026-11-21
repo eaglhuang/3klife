@@ -11685,8 +11685,8 @@
     },
     {
       "doc_id": "",
-      "id": "PROG-2-9440",
-      "title": "基礎戰鬥手感：部隊資訊框彼此錯開",
+      "id": "PROG-2-9439",
+      "title": "基礎戰鬥手感：音效疊音節流",
       "owner": "claude-code-fable-5-2",
       "priority": "P2",
       "status": "done",
@@ -11694,22 +11694,20 @@
       "phase": "M0",
       "created": "2026-11-21",
       "created_by_agent": "claude-code-fable-5-2",
-      "started_at": "2026-11-21T13:40:00+08:00",
+      "started_at": "2026-11-21T13:00:00+08:00",
       "started_by_agent": "claude-code-fable-5-2",
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
-      "description": "11/21 手感複審：敵方三隊集中時頭頂資訊框疊成一團，看不出誰被打。stackBadgeOffsets 依優先序貪婪錯位（名牌與已擺好的框都是障礙物），剛受擊 1.5 秒的框留原位並排到部隊框最上層。",
+      "description": "11/21 手感複審：一回合 52～75 次腳步聲且同毫秒三份疊播。新增 SfxThrottle（同檔 60ms 合併、單檔與全體每秒上限、豁免清單），數值放 data/battle-audio.json，playBattleAudio 套用。",
       "related": [
-        "PROG-2-9434",
-        "PROG-2-9439"
+        "PROG-2-9438",
+        "PROG-2-9400"
       ],
-      "depends": [
-        "PROG-2-9434"
-      ],
+      "depends": [],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8826 通過、tsc 0 錯、7456 第二回合前後對照 | 變更: 部隊資訊框彼此錯開、受擊優先 | 阻塞: 無",
+      "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8820 通過、tsc 0 錯、7456 footstep 75→24、52→22，同毫秒疊播 0 | 變更: 音效疊音節流 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
