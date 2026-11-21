@@ -48,6 +48,8 @@ export interface SupportRulesV1 {
     creditExp: number;
     /** 材料堆疊上限 */
     materialStackMax: number;
+    /** 傳承滿後再抽到同一張卡，轉成的學分數量（依稀有度） */
+    creditOverflow: Record<SupportRarity, number>;
     tiers: SupportTierDef[];
     /** 經驗材料（小抄、講義、錄播回放）；學分由 creditExp 推導，不在這裡列 */
     materials: SupportMaterialDef[];
@@ -61,6 +63,7 @@ export const DEFAULT_SUPPORT_RULES: SupportRulesV1 = Object.freeze({
     expToNext: { base: 100, perLevel: 40 },
     creditExp: 20,
     materialStackMax: 9999,
+    creditOverflow: { R: 5, SR: 20, SSR: 60 },
     tiers: [
         { minLevel: 1, key: '初窺' }, { minLevel: 10, key: '入門' }, { minLevel: 20, key: '登堂' },
         { minLevel: 30, key: '入室' }, { minLevel: 40, key: '出師' },
@@ -89,6 +92,7 @@ export function normalizeSupportRules(raw: unknown): SupportRulesV1 {
     const d = DEFAULT_SUPPORT_RULES;
     const cap = (src.cap0 ?? {}) as Record<string, unknown>;
     const exp = (src.expToNext ?? {}) as Record<string, unknown>;
+    const overflow = (src.creditOverflow ?? {}) as Record<string, unknown>;
     const tiers: SupportTierDef[] = [];
     for (const t of Array.isArray(src.tiers) ? src.tiers : []) {
         const e = t as Record<string, unknown> | null;
@@ -115,9 +119,29 @@ export function normalizeSupportRules(raw: unknown): SupportRulesV1 {
         expToNext: { base: isPosInt(exp.base) ? exp.base : d.expToNext.base, perLevel: isNonNegInt(exp.perLevel) ? exp.perLevel : d.expToNext.perLevel },
         creditExp: isPosInt(src.creditExp) ? src.creditExp : d.creditExp,
         materialStackMax: isPosInt(src.materialStackMax) ? src.materialStackMax : d.materialStackMax,
+        creditOverflow: {
+            R: isPosInt(overflow.R) ? overflow.R : d.creditOverflow.R, SR: isPosInt(overflow.SR) ? overflow.SR : d.creditOverflow.SR,
+            SSR: isPosInt(overflow.SSR) ? overflow.SSR : d.creditOverflow.SSR,
+        },
         tiers: tiers.length > 0 ? tiers : d.tiers.map((t) => ({ ...t })),
         materials: materials.length > 0 ? materials : d.materials.map((m) => ({ ...m })),
     };
+}
+
+/** 抽到（或領到）一張支援卡時的處置：入學／傳承＋1／傳承已滿轉學分 */
+export type SupportDuplicatePlan =
+    | { action: 'enroll' }
+    | { action: 'limitBreak'; limitBreak: number }
+    | { action: 'credit'; qty: number };
+
+/**
+ * 重複卡的處置（doc_spec_1264 §5.3、§5.4；純函式）：沒持有→入學；持有且傳承未滿→傳承 +1；傳承已滿→依稀有度轉成學分。
+ * held＝是否已持有；limitBreak＝現有傳承次數（未持有時忽略）。
+ */
+export function planSupportDuplicate(rules: SupportRulesV1, rarity: SupportRarity, held: boolean, limitBreak: number): SupportDuplicatePlan {
+    if (!held) return { action: 'enroll' };
+    if (limitBreak < rules.maxBreak) return { action: 'limitBreak', limitBreak: limitBreak + 1 };
+    return { action: 'credit', qty: rules.creditOverflow[rarity] };
 }
 
 /** 一張該稀有度的卡適用的成長規則 */

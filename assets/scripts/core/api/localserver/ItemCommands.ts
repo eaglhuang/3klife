@@ -16,7 +16,7 @@ import {
     DEFAULT_CONTAINER_ID, HOUSEHOLD_HOLDER, type HolderRef, type ItemConfigV1,
 } from '../../../shared/item/ItemConfig';
 import {
-    appendLedger, applyInstanceExp, expToCapOf, findContainerRule, findHolderRule, findItemDef, findPeriodicGrant, isDeployableItem, ITEM_GRANT_SOURCES, parseHolder, planConsume, planGrant,
+    appendLedger, applyInstanceExp, expToCapOf, levelCapOf, findContainerRule, findHolderRule, findItemDef, findPeriodicGrant, isDeployableItem, ITEM_GRANT_SOURCES, parseHolder, planConsume, planGrant,
     withInstance, withoutInstance, type ItemMeta, type ItemRuleFailure,
 } from '../../../shared/item/ItemRules';
 import type { ApiDeltaOp } from '../../../shared/api/ApiProtocol';
@@ -196,6 +196,35 @@ export function registerItemCommands(adapter: LocalApiAdapter, getPorts: () => I
                 { evt: 'inventory.instanceChanged', data: { holder, container, itemId: targetId, ...applied.state, levelsGained: applied.levelsGained } },
             ],
         };
+    });
+
+    adapter.register('item.breakthrough', (args) => {
+        const itemId = requireItemId(args.itemId);
+        const { holder, container, stock } = resolveTarget(args);
+        const growth = findItemDef(getPorts().config, itemId).growth;
+        const meta = authorityOf().meta();
+        const instance = meta.instances?.[itemId];
+        if (!growth || !instance || (stock[itemId] ?? 0) <= 0) throw new ApiError('ITEM_USE_INVALID', `${itemId} 不是已持有的可傳承物品`);
+        const rollback = args.rollback === true;
+        if (rollback ? instance.limitBreak <= 0 : instance.limitBreak >= growth.maxBreak) {
+            throw new ApiError(rollback ? 'ITEM_USE_INVALID' : 'ITEM_AT_CAP', rollback ? `${itemId} 沒有可撤銷的傳承` : `${itemId} 傳承已滿（${growth.maxBreak} 次）`);
+        }
+        const state = { ...instance, limitBreak: instance.limitBreak + (rollback ? -1 : 1) };
+        authorityOf().setMeta(withInstance(meta, itemId, state));
+        return {
+            result: { itemId, ...state, levelCap: levelCapOf(growth, state.limitBreak), maxBreak: growth.maxBreak },
+            delta: [{ path: `/itemInstances/${itemId}`, op: 'replace', value: { ...state } }],
+            events: [{ evt: 'inventory.instanceChanged', data: { holder, container, itemId, ...state, breakthrough: rollback ? -1 : 1 } }],
+        };
+    });
+
+    adapter.register('item.instance', (args) => {
+        const itemId = requireItemId(args.itemId);
+        const { stock } = resolveTarget(args);
+        const growth = findItemDef(getPorts().config, itemId).growth;
+        const instance = authorityOf().meta().instances?.[itemId];
+        if (!growth || !instance || (stock[itemId] ?? 0) <= 0) throw new ApiError('ITEM_USE_INVALID', `${itemId} 不是已持有的可成長物品`);
+        return { result: { itemId, ...instance, levelCap: levelCapOf(growth, instance.limitBreak), maxBreak: growth.maxBreak } };
     });
 
     adapter.register('item.settlePeriodic', (args) => {

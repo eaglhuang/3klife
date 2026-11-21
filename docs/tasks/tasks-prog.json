@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 220,
+    "done": 221,
     "in_progress": 4,
     "open": 87,
-    "total": 311
+    "total": 312
   },
   "tasks": [
     {
@@ -13459,6 +13459,68 @@
         "tests/SupportCardLeveling.test.ts"
       ],
       "notes": "2026-11-21 | 狀態: done | 驗證: 新增測試 13 項全過；tests/run-cli.ts 8946 通過；tsc -p tsconfig.test.json 0 錯；compute-gate standard 13/14 通過（1 警告為既有 LoginScene 模組邊界）；api-bypass 未增加 | 變更: 新增 support-rules.json（等級上限、expToNext、階、材料）與 shared/support/SupportRules.ts；ITM 新增 growth／useEffect、item.use 命令（只扣升到上限需要的個數，到上限 E318）、E317／E318 錯誤碼；卡的 growth 與 4 種材料（小抄／講義／錄播回放／學分）由規則推導併入物品設定 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9242",
+      "title": "傳承與溢出轉換（SUP-3：重複卡傳承 +1、傳承滿轉學分、獎勵效果 supportCard）",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依 doc_spec_1264 §5.3、§5.4、§24 SUP-3：重複卡傳承（0～4 次，每次上限 +5）、傳承滿依稀有度轉學分（R5／SR20／SSR60）。走 ITM 與 RWD：新增 item.breakthrough／item.instance 命令與獎勵效果 supportCard，不另寫庫存。",
+      "related": [
+        "PROG-2-9230",
+        "PROG-2-9240",
+        "PROG-2-9241"
+      ],
+      "depends": [],
+      "acceptance": [
+        "TC-SUP-07 傳承每次 +5 上限最多 4 次",
+        "TC-SUP-08 傳承滿轉學分 R5/SR20/SSR60",
+        "失敗整筆回滾",
+        "同 grantKey 不重複",
+        "tsc 0 錯",
+        "run-cli 全過",
+        "gate standard"
+      ],
+      "deliverables": [
+        "assets/resources/data/support-rules.json",
+        "assets/scripts/shared/support/SupportRules.ts",
+        "assets/scripts/core/api/localserver/SupportCardEffect.ts",
+        "assets/scripts/core/api/localserver/ItemCommands.ts",
+        "tests/SupportCardLegacy.test.ts"
+      ],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 新增測試 9 項全過；tests/run-cli.ts 8968 通過；tsc -p tsconfig.test.json 0 錯；compute-gate standard 13/14（1 警告為既有 LoginScene 模組邊界） | 變更: support-rules.json 新增 creditOverflow（R5/SR20/SSR60）；planSupportDuplicate 純函式；ITM 新增 item.breakthrough（傳承 +1，滿回 E318，rollback 供撤銷）與 item.instance 查詢；新增獎勵效果 supportCard（入學／傳承／溢出轉學分，失敗整筆回滾）並於 ServiceLoader 註冊 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",

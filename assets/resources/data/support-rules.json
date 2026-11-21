@@ -6,6 +6,7 @@
   "expToNext": { "base": 100, "perLevel": 40 },
   "creditExp": 20,
   "materialStackMax": 9999,
+  "creditOverflow": { "R": 5, "SR": 20, "SSR": 60 },
   "tiers": [
     { "minLevel": 1, "key": "初窺" },
     { "minLevel": 10, "key": "入門" },
