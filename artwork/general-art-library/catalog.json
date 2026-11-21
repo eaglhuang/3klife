@@ -5094,6 +5094,41 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/hua_xin__華歆__small_avatar_0001.png",
+            "status": "integrated",
+            "sha256": "54FCC2B09E589837E0F132C7C3DED3EB7B60CCBD75FE63DBCE494DC13C32D813",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/hua_xin__華歆__avatar_0002.png",
+            "method": "crop-only; uniform resize; no redraw or rotation",
+            "cropBox": {
+              "x": 75.26,
+              "y": 39.44,
+              "width": 128,
+              "height": 128
+            },
+            "headHeightPercent": 75,
+            "faceHeightPercent": 48.6,
+            "faceWidthPercent": 38,
+            "faceCenterXPercent": 50,
+            "centerAxisDifferencePx": 0.5,
+            "sourceHeadExtent": {
+              "x": 91,
+              "y": 42,
+              "width": 78,
+              "height": 108
+            },
+            "qc": "完整保留冠帽、頭髮、臉部與鬍鬚；頭高75%，臉高48.6%、臉寬38%；臉框中線與畫布中線差0.5px。250px並排目視核對通過；肩部少量可見，列最後優先檢查。只等比例裁切，未重畫、未旋轉或變形。",
+            "createdAt": "2026-11-21"
+          }
+        ]
       }
     },
     {
