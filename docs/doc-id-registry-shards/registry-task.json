@@ -16464,6 +16464,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_2928",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9810.md",
+    "title": "[PROG-2-9810] 十連結果卡稀有度配色錯誤與卡牌 UI 樣式重做",
+    "category": "task"
+  },
+  {
     "id": "doc_task_2929",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9711.md",
     "title": "[PROG-2-9711] QA 預覽／直進戰場模擬出征帳本，試玩腳本實測自動代打",

@@ -169,4 +169,5 @@
 | `doc_task_2801` | docs/agent-briefs/tasks/PROG/PROG-2-9608.md | 任務卡：PROG-2-9608 Base 框架分片 doc_id 修正與索引健全 |
 | `doc_task_2925` | docs/agent-briefs/tasks/PROG/PROG-2-9800.md | [PROG-2-9800] 網頁版卡頓優化 |
 | `doc_task_2927` | docs/agent-briefs/tasks/PROG/PROG-2-9709.md | [PROG-2-9709] 極速決戰修正：整軍戰力、資料驅動可用條件、每日次數與軍令狀 |
+| `doc_task_2928` | docs/agent-briefs/tasks/PROG/PROG-2-9810.md | [PROG-2-9810] 十連結果卡稀有度配色錯誤與卡牌 UI 樣式重做 |
 | `doc_task_2929` | docs/agent-briefs/tasks/PROG/PROG-2-9711.md | [PROG-2-9711] QA 預覽／直進戰場模擬出征帳本，試玩腳本實測自動代打 |

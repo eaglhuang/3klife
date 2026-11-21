@@ -476,6 +476,131 @@
       "path": "sprites/ui_avatars/unknown_avatar_f",
       "expectedWidth": 256,
       "expectedHeight": 256
+    },
+    "dup.hero.bg.N": {
+      "kind": "color-rect",
+      "color": "#2A2A2A",
+      "alpha": 255,
+      "cornerRadius": 14,
+      "borderWidth": 2,
+      "borderColor": "#E0E0E0"
+    },
+    "dup.rarity.bg.N": {
+      "kind": "color-rect",
+      "color": "#E0E0E0",
+      "alpha": 255,
+      "cornerRadius": 8
+    },
+    "dup.label.rarity.N": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 36,
+      "lineHeight": 47,
+      "color": "#1A1A1A",
+      "overflow": "SHRINK",
+      "isBold": true,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "dup.hero.bg.R": {
+      "kind": "color-rect",
+      "color": "#14281A",
+      "alpha": 255,
+      "cornerRadius": 14,
+      "borderWidth": 3,
+      "borderColor": "#4CAF50"
+    },
+    "dup.rarity.bg.R": {
+      "kind": "color-rect",
+      "color": "#4CAF50",
+      "alpha": 255,
+      "cornerRadius": 8
+    },
+    "dup.label.rarity.R": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 36,
+      "lineHeight": 47,
+      "color": "#FFFFFF",
+      "overflow": "SHRINK",
+      "isBold": true,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "dup.hero.bg.SR": {
+      "kind": "color-rect",
+      "color": "#0E1F33",
+      "alpha": 255,
+      "cornerRadius": 14,
+      "borderWidth": 4,
+      "borderColor": "#2196F3"
+    },
+    "dup.rarity.bg.SR": {
+      "kind": "color-rect",
+      "color": "#2196F3",
+      "alpha": 255,
+      "cornerRadius": 8
+    },
+    "dup.label.rarity.SR": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 36,
+      "lineHeight": 47,
+      "color": "#FFFFFF",
+      "overflow": "SHRINK",
+      "isBold": true,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "dup.hero.bg.SSR": {
+      "kind": "color-rect",
+      "color": "#2A1238",
+      "alpha": 255,
+      "cornerRadius": 14,
+      "borderWidth": 5,
+      "borderColor": "#9C27B0"
+    },
+    "dup.rarity.bg.SSR": {
+      "kind": "color-rect",
+      "color": "#9C27B0",
+      "alpha": 255,
+      "cornerRadius": 8
+    },
+    "dup.label.rarity.SSR": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 36,
+      "lineHeight": 47,
+      "color": "#FFFFFF",
+      "overflow": "SHRINK",
+      "isBold": true,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "dup.hero.bg.UR": {
+      "kind": "color-rect",
+      "color": "#33270A",
+      "alpha": 255,
+      "cornerRadius": 14,
+      "borderWidth": 5,
+      "borderColor": "#FFC107"
+    },
+    "dup.rarity.bg.UR": {
+      "kind": "color-rect",
+      "color": "#FFC107",
+      "alpha": 255,
+      "cornerRadius": 8
+    },
+    "dup.label.rarity.UR": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 36,
+      "lineHeight": 47,
+      "color": "#3A2400",
+      "overflow": "SHRINK",
+      "isBold": true,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
     }
   }
 }

@@ -143,3 +143,15 @@ export function fitPortraitByHead(
         y: spec.frameHeight / 2 - ref.headTopFromFrameTop + (headTop - b.h / 2) * scale,
     };
 }
+
+/**
+ * 沒有立繪時的剪影頭像：等比放大到蓋滿立繪框（cover），底邊對齊框底（＝名牌上緣），左右置中裁切。
+ * 座標以框中心為原點、Y 向上（與 fitPortraitInFrame 相同）。
+ */
+export function fitSilhouetteToFrame(srcWidth: number, srcHeight: number, frameWidth: number, frameHeight: number): { width: number; height: number; x: number; y: number } {
+    if (srcWidth <= 0 || srcHeight <= 0) return { width: frameWidth, height: frameHeight, x: 0, y: 0 };
+    const scale = Math.max(frameWidth / srcWidth, frameHeight / srcHeight);
+    const width = srcWidth * scale;
+    const height = srcHeight * scale;
+    return { width, height, x: 0, y: -frameHeight / 2 + height / 2 };
+}
