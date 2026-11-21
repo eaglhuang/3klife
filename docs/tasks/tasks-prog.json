@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 199,
+    "done": 210,
     "in_progress": 4,
-    "open": 88,
-    "total": 291
+    "open": 86,
+    "total": 300
   },
   "tasks": [
     {
@@ -12860,6 +12860,53 @@
       "acceptance": [],
       "deliverables": [],
       "notes": "2026-11-21 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9486",
+      "title": "playtest --academy 第 15 步：任務牆比對略過大廳走動名牌",
+      "owner": "codex-gpt-5.4-mini",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "走動武將名牌輪替隨機，輪到修業中的武將上場就誤判；任務牆與委任候選本就帶占用原因，遊戲無錯。",
+      "related": [
+        "PROG-2-9226",
+        "PROG-2-9192"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: playtest --academy 18/18 | 變更: playtest 任務牆比對略過大廳走動名牌 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
