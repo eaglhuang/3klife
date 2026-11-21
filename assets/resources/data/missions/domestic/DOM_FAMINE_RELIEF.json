@@ -175,7 +175,7 @@
                 "eq": "HONEST",
                 "then": {
                   "kind": "effects",
-                  "narrative": "倉裡糧食如數，貧戶皆有所得。",
+                  "narrative": "倉裡糧草如數，貧戶皆有所得。",
                   "effects": [
                     {
                       "kind": "resource",
@@ -193,7 +193,7 @@
                 "eq": "SHORTFALL",
                 "then": {
                   "kind": "effects",
-                  "narrative": "糧食只夠一半人，後面排隊的人鬧了起來。",
+                  "narrative": "糧草只夠一半人，後面排隊的人鬧了起來。",
                   "effects": [
                     {
                       "kind": "fame",
@@ -254,7 +254,7 @@
                 "eq": "SHORTFALL",
                 "then": {
                   "kind": "effects",
-                  "narrative": "倉門一開，只見空倉，眾人以為你私吞了糧食，激起民變。",
+                  "narrative": "倉門一開，只見空倉，眾人以為你私吞了糧草，激起民變。",
                   "effects": [
                     {
                       "kind": "resource",
@@ -644,7 +644,7 @@
       "presented": {
         "objectiveText": "放賑之餘，借機登記流離戶口",
         "hints": [
-          "倉裡糧食足夠，趁此機會能把流民戶口一併理清"
+          "倉裡糧草足夠，趁此機會能把流民戶口一併理清"
         ]
       },
       "modifiers": {
@@ -898,7 +898,7 @@
         }
       },
       "presented": {
-        "objectiveText": "以官威加民意，迫豪族開出囤積的糧食",
+        "objectiveText": "以官威加民意，迫豪族開出囤積的糧草",
         "hints": [
           "豪族囤的糧就藏在城外莊園的地窖裡"
         ]

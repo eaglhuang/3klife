@@ -17,11 +17,17 @@ class FakeNode {
   private readonly components = new Map<unknown, unknown>();
   constructor(public name: string) {}
   addChild(node: FakeNode): void { node.parent = this; this.children.push(node); }
+  getSiblingIndex(): number { return this.parent ? this.parent.children.indexOf(this) : 0; }
   addComponent(Type: new () => unknown): unknown { const c = new Type(); this.components.set(Type, c); return c; }
   getComponent(Type: unknown): Any { return this.components.get(Type) ?? null; }
   setPosition(x: number, y: number): void { this.position = { x, y }; }
   setScale(x: number, y: number): void { this.scale = { x, y }; }
-  setSiblingIndex(i: number): void { this.index = i; }
+  /** 與 Cocos 相同：在父節點 children 內真的移動位置 */
+  setSiblingIndex(i: number): void {
+    this.index = i;
+    const list = this.parent?.children; if (!list) return;
+    list.splice(list.indexOf(this), 1); list.splice(Math.max(0, Math.min(i, list.length)), 0, this);
+  }
   destroy(): void { this.isValid = false; }
 }
 class FakeColor {
@@ -160,6 +166,30 @@ export function createSpineUnitPoolSuite(): TestSuite {
     const fresh = root.children.find(n => n.name === 'SpineUnit_d') as FakeNode;
     assert.isTrue(fresh !== stale && fresh.isValid, '失效節點被丟棄，改新建');
     overlay2.clear();
+  }));
+
+  suite.test('前後排序不把小兵塞到格子 buff 標記底下（PROG-2-9708）', () => withStub(() => {
+    const root = new FakeNode('root');
+    const overlay = new SpineUnitOverlay(() => root as Any, () => 1);
+    overlay.sync('far', cfg, 0, 100, 1, false, 0, true, 1);
+    overlay.sync('near', cfg, 0, -100, 1, false, 0, true, 1);
+    overlay.update(0);
+    const idx = (name: string) => root.children.findIndex(n => n.name === name);
+    // 格子 buff 標記與揚塵建立時壓到 index 0
+    const marker = new FakeNode('TileBuffMarker'); root.addChild(marker); marker.setSiblingIndex(0);
+    const dust = new FakeNode('DeployDust'); root.addChild(dust); dust.setSiblingIndex(0);
+    overlay.setGroundNodes(() => [marker as Any, dust as Any]);
+    // 之後才部署的新小兵建立時會插到 index 0（實機行為），不能把地面層壓在下面
+    overlay.sync('late', cfg, 0, 0, 1, false, 0, true, 1);
+    root.children.find(n => n.name === 'SpineUnit_late')?.setSiblingIndex(0);
+    for (let i = 0; i < 3; i += 1) overlay.update(1 / 60);
+    assert.isTrue(idx('TileBuffMarker') < idx('SpineUnit_late'), '後部署的小兵也要在標記上面');
+    assert.equals(0, idx('TileBuffMarker'), '標記在最底');
+    assert.equals(1, idx('DeployDust'), '揚塵在標記之上');
+    assert.isTrue(idx('TileBuffMarker') < idx('SpineUnit_far') && idx('TileBuffMarker') < idx('SpineUnit_near'), '標記要在小兵底下，實際順序 ' + root.children.map(n => n.name).join(','));
+    assert.isTrue(idx('DeployDust') < idx('SpineUnit_far'), '揚塵要在小兵底下');
+    assert.isTrue(idx('SpineUnit_far') < idx('SpineUnit_near'), '畫面下方（靠近鏡頭）的小兵蓋在上面');
+    overlay.clear();
   }));
 
   return suite;

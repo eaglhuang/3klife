@@ -64,6 +64,34 @@
       "effects": [{ "kind": "currency", "id": "gems", "amount": 40 }],
       "sources": ["gacha"],
       "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_SUPPORT_TICKET_GRAD",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "mentorTickets", "amount": 10 }],
+      "sources": ["academy"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_SUPPORT_TICKET_GRAD_S",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "mentorTickets", "amount": 15 }],
+      "sources": ["academy"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_SUPPORT_TICKET_TERM",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "mentorTickets", "amount": 5 }],
+      "sources": ["academy"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_SUPPORT_TICKET_LOGIN7",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "mentorTickets", "amount": 1 }],
+      "sources": ["login"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
     }
   ]
 }
