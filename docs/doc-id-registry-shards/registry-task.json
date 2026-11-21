@@ -16356,6 +16356,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_2746",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9706.md",
+    "title": "[PROG-2-9706] 戰場 Spine 小兵節點物件池",
+    "category": "task"
+  },
+  {
     "id": "doc_task_2747",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9705.md",
     "title": "[PROG-2-9705] 戰場 HUD 徽章風格第一版",

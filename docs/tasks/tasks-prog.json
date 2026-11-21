@@ -13675,6 +13675,54 @@
       "notes": "狀態: done。變更: 新增 doc_spec_1284～1287 史境天下風雲榜與年終頒獎典禮系統規格書（索引＋3 分片）；更新 cross-ref-specs 與 tasks-prog；同步 doc_spec_1283/doc_task_2740 索引。"
     },
     {
+      "doc_id": "doc_task_2746",
+      "id": "PROG-2-9706",
+      "title": "戰場 Spine 小兵節點物件池",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "2026-11-21T23:00:00+08:00",
+      "started_by_agent": "claude-code-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "SpineUnitOverlay 每次部署 new Node + addComponent(sp.Skeleton)、移除 destroy，造成卡頓與 GC。改以骨架路徑為 key 的節點池（每路徑上限 24），remove 回收、clear 整池銷毀；回收與取出強制還原 u_flash、顏色、timeScale、動作、造型、變換，防止閃白殘留。",
+      "related": [
+        "PROG-2-9412"
+      ],
+      "depends": [
+        "PROG-2-9412"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8977 通過（新增 SpineUnitPool 4 項）、tsc -p tsconfig.test.json 0 錯 | 變更: SpineUnitOverlay 加骨架節點池，回收強制還原閃白／顏色／動作／造型 | 阻塞: 無，手機實機卡頓未量測",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
       "doc_id": "doc_task_2747",
       "id": "PROG-2-9705",
       "title": "戰場 HUD 徽章風格第一版",
