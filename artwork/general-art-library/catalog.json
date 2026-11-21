@@ -4813,6 +4813,31 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/ma_dai__馬岱__small_avatar_0001.png",
+            "status": "integrated",
+            "sha256": "9181cbe3c92b59b32393739ab766613f6918a856347dc907448d1b4e8d9b6f8c",
+            "canvas": "256x256 RGBA",
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/ma_dai__馬岱__standing_0002.png",
+            "sourceSha256": "6beeb7616fe4fd2a7f6b5b7b7ee269b1296c69f55b718380b33f72e5f46fbfc8",
+            "method": "crop-only; uniform resize; no rotation or redraw",
+            "cropBox": {
+              "x": 443.64,
+              "y": 20.57,
+              "width": 247.73,
+              "height": 247.73
+            },
+            "qc": "頭高78.3%；臉高44%、臉寬44%；臉框中線與畫布中線差0.5px；完整保留髮髻、髮飾、兩側髮絲及下巴；以125px縮圖檢查、與7張核可基準500px並排檢查通過；只等比例裁切，保留原角度，未修臉或重畫；雙肩少量入鏡，列最後優先提醒。",
+            "createdAt": "2026-11-21"
+          }
+        ]
       }
     },
     {
