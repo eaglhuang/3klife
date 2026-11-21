@@ -1,0 +1,37 @@
+{
+  "schema": "occupancy-matrix.v1",
+  "activities": [
+    "sortie", "gov", "hallMission", "hallDispatch", "adventure", "mercenary", "trade",
+    "estate", "estateLowRisk", "defend", "academy", "mentorAssign", "nursing", "pregnancy"
+  ],
+  "kindActivity": {
+    "academy": "academy",
+    "mentorAssign": "mentorAssign",
+    "nursing": "nursing",
+    "governance": "gov",
+    "hallMission": "hallMission",
+    "dispatch": "hallDispatch",
+    "mercenary": "mercenary",
+    "expedition": "adventure",
+    "medical": "pregnancy"
+  },
+  "rules": {
+    "academy": {
+      "blocks": ["sortie", "gov", "hallMission", "hallDispatch", "adventure", "mercenary", "trade", "estate", "estateLowRisk", "defend", "mentorAssign", "nursing", "pregnancy"],
+      "allows": []
+    },
+    "mentorAssign": {
+      "blocks": ["sortie", "gov", "hallMission", "adventure"],
+      "allows": ["estate"]
+    },
+    "nursing": {
+      "blocks": ["sortie", "mercenary", "trade", "hallDispatch"],
+      "allows": ["gov", "estateLowRisk", "mentorAssign", "defend"]
+    },
+    "medical": {
+      "blocks": ["sortie", "mercenary"],
+      "allows": ["estate", "estateLowRisk"]
+    }
+  },
+  "_note": "doc_spec_1241 第 3.5 節與 TC-FAM-02／03；規則放這裡不寫死在程式。每種占用 blocks＝擋哪些活動、allows＝放行哪些活動，沒列到的活動一律視為擋（與 MVP 全互斥一致）。kindActivity＝該占用種類代表哪個活動。academy 規則＝學府修業全擋（維持 PROG-2-9207 原行為）。medical（待產轉接器，pregnancy）只依 TC-FAM-02『待產可任商店、不可任傭兵團』與 3.1『待產不可出征』暫列，待產可否當太守／內政待企劃確認。nursing 的 hallMission（非遠派的大廳任務）未明列，預設擋。哺乳互斥規則只在此檔，family-config.json 不重複放。"
+}
