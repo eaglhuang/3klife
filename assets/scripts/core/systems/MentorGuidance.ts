@@ -2,7 +2,7 @@
 /**
  * MentorGuidance — 新玩家「沒有教官」引導的判斷與文案（純函式，不依賴 cc）
  *
- * 開局錢包已送支援券（見 GachaWalletRules.STARTER_GACHA_WALLET.mentorTickets），
+ * 開局錢包已送連線券（見 GachaWalletRules.STARTER_GACHA_WALLET.mentorTickets），
  * 但入學至少要帶 1 位教官，新玩家不知道要去教官池抽。培育入學畫面在這種情況顯示一顆按鈕，
  * 直接開轉蛋並切到教官池；玩家第一次擁有教官後記旗標，之後不再出現。
  *
@@ -35,11 +35,11 @@ export function evaluateMentorGuidance(input: MentorGuidanceInput): MentorGuidan
     return { show: !input.hasBorrowed, markDone: false };
 }
 
-/** 入學畫面的引導提示；支援券用實際持有數（開局贈送的會被抽掉，不寫死數量） */
+/** 入學畫面的引導提示；連線券用實際持有數（開局贈送的會被抽掉，不寫死數量） */
 export function mentorGuidanceHint(mentorTickets: number): string {
     return mentorTickets > 0
-        ? `入學要帶至少 1 位教官：開局贈送的支援券可抽教官，你現有 ${mentorTickets} 張，點下方按鈕到「教官池」抽`
-        : '入學要帶至少 1 位教官：支援券已用完，可到「教官池」補券，或讓武將 65 歲退役轉教官';
+        ? `入學要帶至少 1 位教官：開局贈送的連線券可抽教官，你現有 ${mentorTickets} 張，點下方按鈕到「教官池」抽`
+        : '入學要帶至少 1 位教官：連線券已用完，可到「教官池」補券，或讓武將 65 歲退役轉教官';
 }
 
 /** 晉升到此階（縣府佐官）時補一次「去抽教官」提醒；培育本身自 PROG-2-9187 起開局就開放，不再受官階限制 */

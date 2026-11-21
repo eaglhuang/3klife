@@ -9,7 +9,7 @@ import { pickPullCurrency, type GachaCurrencyId, type GachaPoolDto, type GachaWa
 import { GACHA_NODES, GACHA_RATE_NODES, GACHA_RATE_ROWS, type GachaPoolDef } from './GachaScreenNodes';
 
 export const GACHA_CURRENCY_LABEL: Readonly<Record<GachaCurrencyId, string>> = {
-    gems: '靈玉', gold: '黃金', tickets: '召喚券', bronze: '銅錢符', oracle: '求籤令', mentorTickets: '支援券', scorePoints: '積分',
+    gems: '靈玉', gold: '黃金', tickets: '召喚券', bronze: '銅錢符', oracle: '求籤令', mentorTickets: '連線券', scorePoints: '積分',
 };
 
 const HOUR_MS = 60 * 60 * 1000;
