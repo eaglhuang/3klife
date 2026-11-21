@@ -175,6 +175,8 @@ export function buildPlaceholderCutinConfig(generalId: string, generalName: stri
         flashPeak: 0.9,
         shakeAmp: 8,
         shakeFrames: 8,
+        // 暫代圖以前完全靜音（PROG-2-9435）：補切入風聲與命中吼聲，走下方的替代音表
+        sfx: [{ key: 'whoosh', offset: -0.04 }, { key: 'roar', offset: 0.03 }],
       },
     ],
     textOverlays: [{ panelIndex: 0, delay: 0.1, fadeIn: 0.133, generalName, skillName }],
@@ -218,3 +220,21 @@ export class PlaceholderCutinRegistry {
 
 /** 全域唯一的暫代圖使用紀錄 */
 export const placeholderCutinRegistry = new PlaceholderCutinRegistry();
+
+/**
+ * 分鏡音效替代表（PROG-2-9435）：分鏡設定寫的 whoosh／hit／hit_heavy／roar 在音效庫都還沒有檔案，
+ * 以前缺檔只記一行 log、整段奧義幾乎靜音。先對到音效庫既有、語意最接近的 clip；
+ * 等正式音檔放進 audio bundle（檔名與 key 相同）後，把該列刪掉即可，不用改程式。
+ * clip 依檔名推測、未實機試聽，聽起來不對只改這張表。語音（voice）不替代：沒有配音寧可不出聲。
+ */
+export const CUTIN_SFX_FALLBACK: Readonly<Record<string, string>> = {
+  whoosh: 'wave',
+  hit: 'hurt',
+  hit_heavy: 'boom',
+  roar: 'thunder',
+};
+
+/** 分鏡音效 key → 實際要播的 clip 名；不在替代表就原樣播 */
+export function resolveCutinSfxClip(key: string): string {
+  return CUTIN_SFX_FALLBACK[key] ?? key;
+}
