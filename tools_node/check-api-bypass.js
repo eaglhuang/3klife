@@ -12,7 +12,7 @@
  *   node tools_node/check-api-bypass.js --update   # 把基準調低到目前數字（有任何增加時拒絕）
  *   node tools_node/check-api-bypass.js --json
  *
- * 例外：adapter 目錄（assets/scripts/shared/api、assets/scripts/core/api）整個不掃；
+ * 例外：adapter 目錄（assets/scripts/shared/api、assets/scripts/core/api）與家族登記表本體（shared/family，權威端實作）整個不掃；
  * 設定檔 exemptions 列出的「檔案×規則」豁免（clientOwned：音效、設定、收藏等），清單固定在基準檔，
  * 不得就地新增，需總 PM 審核。檔案頂端寫 `// api-bypass-allowed: <原因>` 的檔案同樣豁免該檔所有規則（同需審核）。
  */
@@ -26,7 +26,7 @@ const SCRIPTS_DIR = path.join(PROJECT_ROOT, 'assets', 'scripts');
 const BASELINE_PATH = path.join(__dirname, 'api-bypass-baseline.json');
 
 /** 不掃的 adapter 目錄（相對 assets/scripts，正斜線） */
-const ADAPTER_DIRS = ['shared/api/', 'core/api/'];
+const ADAPTER_DIRS = ['shared/api/', 'core/api/', 'shared/family/'];
 
 /**
  * 偵測規則。每條對「去除註解後的單行」比對；排除函式／方法定義行（那是權威實作本身，不是呼叫端）。
@@ -40,9 +40,10 @@ const RULES = [
   { id: 'protected-assign', desc: '對受保護欄位賦值（_inventory／_gachaWallet／_fame 等）', re: /\b_(?:inventory|gachaWallet|gachaPity|fame|scorePoints|oracleCount)\s*(?:[+\-*]?=(?!=)|\+\+|--)/g },
   { id: 'academy-write', desc: '學府修業直連 GameSession 寫入（new GameAcademySaveStore／session.setAcademyRecord；應走 save.write／task.advance／rng.issueSeed，PROG-2-9215）', re: /\bnew\s+GameAcademySaveStore\b|\bsession\s*\.\s*setAcademyRecord\s*\(/g },
   { id: 'skill-write', desc: '直接改技能持有（learnedTactics／skillMeta／skillModifiers 賦值或 push；應走 skill.grant／learn／applyModifier；學府修業中的 state 快照不算）', re: /(?<!\bstate)\.\s*(?:learnedTactics|skillMeta|skillModifiers)\s*(?:=(?!=)|\.\s*(?:push|unshift|splice|pop|shift)\s*\()/g },
+  { id: 'family-write', desc: '直接寫家族登記表（addFamilyMember／removeFamilyMember／markFamilyBranch；應走家族命令，TC-FAM-09，doc_spec_1241）', re: /\b(?:addFamilyMember|removeFamilyMember|markFamilyBranch)\s*\(/g },
 ];
 
-const WRITE_NAMES = 'addItem|consumeItem|addItems|spendCurrency|grantCurrency|setGachaWalletSave|setGachaPityBook';
+const WRITE_NAMES = 'addItem|consumeItem|addItems|spendCurrency|grantCurrency|setGachaWalletSave|setGachaPityBook|addFamilyMember|removeFamilyMember|markFamilyBranch';
 
 /** 是否為定義行（宣告函式／方法／介面簽名本身）而非呼叫 */
 function isDefinitionLine(line) {

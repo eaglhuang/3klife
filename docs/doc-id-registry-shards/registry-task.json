@@ -16159,6 +16159,18 @@
   },
   {
     "id": "doc_task_2711",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9441.md",
+    "title": "[PROG-2-9441] 家族資料模型與存檔欄位（F1：配偶 kind=spouse、義子與開局義子特例、家臣子嗣、分家標記、family-config.json）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2712",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9442.md",
+    "title": "[PROG-2-9442] OCC 擴充 nursing、mentorAssign 與互斥矩陣（F2；矩陣放設定 JSON）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2713",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9461.md",
     "title": "[PROG-2-9461] GCH-R2 完整機率表",
     "category": "task"
