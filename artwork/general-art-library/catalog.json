@@ -2141,19 +2141,37 @@
         "activeVersion": "0002"
       },
       "smallAvatar": {
-        "activeVersion": "0001",
-        "status": "review-pending",
+        "activeVersion": "0002",
+        "status": "integrated",
         "history": [
           {
             "version": "0001",
             "file": "small_avatars/lu_xun__陸遜__small_avatar_0001.png",
-            "status": "review-pending",
+            "status": "superseded",
             "sha256": "2aa8bca8f2551fdcdce6028b42d94ae5b7659d6ce125b051a3e1633817ac9fe3",
             "canvas": "256x256 RGBA",
             "source": "standing/lu_xun__陸遜__standing_0002.png (crop-only)",
             "crop": "shoulder-line",
             "cropBox": "x=347,y=0,w=330,h=320; canvas=330x330; transparent-pad y=5px",
             "qc": "No redraw or design changes; full headdress, face and chin retained; face centered; shoulder tops at lower edge, no chest."
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/lu_xun__陸遜__small_avatar_0002.png",
+            "status": "integrated",
+            "sha256": "3b88d1a0a51a3378230f2316d1f0d8a2c2330d31f379580acc724adc0d1eeba6",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/lu_xun__陸遜__avatar_0002.png",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "x": 26.17,
+              "y": 0.47,
+              "width": 226.67,
+              "height": 226.67
+            },
+            "qc": "頭高75%；臉高38.4%、臉寬38.4%；臉框中心線與畫布中線相差0.5px；完整保留頭部外框與冠飾；左右肩面錨點均可見，裁框下緣留32.13px。只從核可的大頭像等比例裁切，無重畫／旋轉／變形。工具幾何檢查通過；250px目視通過。臉部44%目標在保留完整頭部條件下不可達，已達38%最低門檻。",
+            "createdAt": "2026-11-21"
           }
         ]
       },
