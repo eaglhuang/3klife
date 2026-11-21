@@ -3,6 +3,7 @@ import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { TroopType } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
 import { attackSfxFor } from './AttackSfxMapping';
+import { SfxThrottle, parseSfxThrottleConfig } from './SfxThrottle';
 
 
 /**
@@ -113,6 +114,28 @@ export function playBattleAudio(cue: BattleAudioCue, volume = 1.0): void {
     return;
   }
 
+  // PROG-2-9439：同檔短時間合併＋每秒上限，避免三隊腳步同一毫秒疊播
+  ensureSfxThrottleConfig();
+  if (!battleSfxThrottle.allow(clipName, nowMs())) return;
+
   // 音效系統未就緒或缺檔都靜音略過，不可丟例外（PROG-2-9357）
   try { services().audio.playSfx(clipName, volume); } catch { /* 靜音 */ }
+}
+
+/** 戰鬥音效節流（PROG-2-9439）；數值在 data/battle-audio.json，讀到之前用預設值。 */
+export const battleSfxThrottle = new SfxThrottle();
+let sfxThrottleConfigRequested = false;
+
+function nowMs(): number {
+  return typeof performance !== 'undefined' && typeof performance.now === 'function' ? performance.now() : Date.now();
+}
+
+function ensureSfxThrottleConfig(): void {
+  if (sfxThrottleConfigRequested) return;
+  sfxThrottleConfigRequested = true;
+  try {
+    services().resource.loadJson<unknown>('data/battle-audio', { tags: ['battle'] })
+      .then(raw => battleSfxThrottle.setConfig(parseSfxThrottleConfig(raw)))
+      .catch(() => { /* 讀不到用預設 */ });
+  } catch { /* 資源系統未就緒：用預設 */ }
 }
