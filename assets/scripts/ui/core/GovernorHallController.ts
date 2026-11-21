@@ -69,7 +69,7 @@ export class GovernorHallController {
         const upgradeLabel = info.goldShortage
             ? shortageText('insufficient-gold')
             : plan.ok
-                ? `升級至 Lv${plan.targetLevel}（金 ${plan.cost.gold}・糧 ${plan.cost.food}）`
+                ? `升級至 Lv${plan.targetLevel}（金 ${plan.cost.gold}・糧草 ${plan.cost.food}）`
                 : shortageText(plan.reason ?? 'insufficient-food');
         return {
             texts: {

@@ -125,5 +125,23 @@ export function createSilverWalletSuite(): TestSuite {
         assert.equals(0, charge(12).length, '已改母乳，不再收費');
     });
 
+    suite.test('家族俸祿（PROG-2-9593）：每季入帳 base＋配偶數×單價，季報有一行；兩欄為 0 不入帳', async () => {
+        const { session } = await newBundle({ clanStipendBase: 40, clanStipendPerSpouse: 10 });
+        const grant = (): string | null => (session as unknown as { _grantClanStipend(): string | null })._grantClanStipend();
+        const start = session.silverLedger.silverBalance();
+        const line = grant();
+        assert.equals(start + 40, session.silverLedger.silverBalance(), '無配偶只拿基本俸祿');
+        assert.isTrue(!!line && line.includes('+40'), '季報一行');
+        const wife = generals.find((g) => g.gender === '女') as GeneralConfig;
+        session.enrollSpouse(wife);
+        const mid = session.silverLedger.silverBalance();
+        grant();
+        assert.equals(mid + 50, session.silverLedger.silverBalance(), '一位配偶 +10');
+        const off = await newBundle({ clanStipendBase: 0, clanStipendPerSpouse: 0 });
+        const offBalance = off.session.silverLedger.silverBalance();
+        assert.equals(null, (off.session as unknown as { _grantClanStipend(): string | null })._grantClanStipend());
+        assert.equals(offBalance, off.session.silverLedger.silverBalance(), '停發');
+    });
+
     return suite;
 }
