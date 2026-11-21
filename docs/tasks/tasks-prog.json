@@ -13545,6 +13545,54 @@
     },
     {
       "doc_id": "",
+      "id": "PROG-2-9466",
+      "title": "GCH-R4b 重複卡回既有分流彈窗（不自動轉換）",
+      "owner": "claude-code-sonnet-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-sonnet-5-5",
+      "started_at": "2026-11-21T21:30:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-code-sonnet-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "轉蛋新路徑（reward.roll）抽到重複卡時，交回既有重複卡彈窗流程（復生重練／血脈灌注／升星），不再自動走 bundle 轉換。依 11/09 #8、doc_spec_0331、11/21 重複卡先突破。",
+      "related": [
+        "PROG-2-9461",
+        "PROG-2-9462",
+        "PROG-2-9464"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "狀態: done。變更: RewardGachaPort 新增 deferDuplicates；LobbyScene 新路徑重複卡交回 _routeGachaOwnedDuplicates（復生重練／升星／血脈灌注三選一），不自動轉 bundle；playtest-online.js 新增 --dup 步驟。驗證: tsc 0、run-cli 8947 pass、playtest 12/12（含 --dup），彈窗截圖在 scratchpad dup3/11-dup-popup.png。",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
       "id": "PROG-2-9703",
       "title": "極速決戰結算文案：按「自動」不再顯示「敵方突破防線」",
       "owner": "claude-code-opus-5-5",

@@ -16327,6 +16327,12 @@
   },
   {
     "id": "doc_task_2741",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9466.md",
+    "title": "PROG-2-9466",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2742",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9703.md",
     "title": "[PROG-2-9703] 極速決戰結算文案：按「自動」不再顯示「敵方突破防線」",
     "category": "task"
