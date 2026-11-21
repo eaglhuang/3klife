@@ -104,6 +104,9 @@ export function createSpouseDeploySuite(): TestSuite {
         store.replaceAll(session.roster.map((x) => (x.id === g.id ? ({ ...x, pregnancySeasonsLeft: 2 } as unknown as GeneralConfig) : x)));
         assert.isFalse(session.getDeployableGenerals().some((x) => x.id === g.id));
         assert.isTrue(session.assignGovernor('farming', g.id).ok);
+        const fact = session.missionGeneralFacts().find((f) => f.id === g.id);
+        assert.isFalse((fact?.block ?? []).includes('occupied'), '待產可接不離城的大廳任務（PM 11/21）');
+        assert.isFalse(session.dispatchIdleGenerals(0).some((x) => x.id === g.id), '待產不可派遣（需離城）');
     });
 
     return suite;
