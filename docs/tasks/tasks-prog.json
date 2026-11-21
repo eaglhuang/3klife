@@ -11878,6 +11878,55 @@
     },
     {
       "doc_id": "",
+      "id": "PROG-2-9483",
+      "title": "基礎戰鬥手感：受擊閃白改全白停 2 格再快速退",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-21T16:40:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 11/21 核准：受擊閃白由線性 80ms 改成全白停 holdFrames 格、再 fadeSec 秒以 (1-t)^fadePower 快速退；參數放 data/battle-hit-feedback.json（預設 2 格、0.05 秒、2 次方），停留以格計，30fps 也看得到全白。",
+      "related": [
+        "PROG-2-9412",
+        "PROG-2-9482"
+      ],
+      "depends": [
+        "PROG-2-9482"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8888 通過、tsc 0 錯、7456 逐格步進 舊 1/.79/.58/.38/.17 → 新 1/1/.44/.11/0 | 變更: 閃白曲線＋設定檔 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
       "id": "PROG-2-9460",
       "title": "GCH-R1 獎勵引擎補軟保底",
       "owner": "claude-code-opus-5-5",
