@@ -2884,10 +2884,21 @@
           {
             "version": "0002",
             "file": "avatars/jiang_wei__姜維__avatar_0002.png",
-            "status": "integrated"
+            "status": "superseded"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/jiang_wei__姜維__avatar_0003.png",
+            "status": "integrated",
+            "sha256": "9dd81daca0021b4dbe47580f26029f03f04ed605174558c46cf3981615f7271d",
+            "canvas": "1254x1254 RGBA",
+            "referenceAvatarVersion": "0002",
+            "referenceAvatarFile": "avatars/jiang_wei__姜維__avatar_0002.png",
+            "method": "new shoulder-up source; identity and costume guided by avatar_0002",
+            "qc": "新來源保留姜維成熟男性臉型、深色髮髻、綠色髮帶與綠銀甲。清楚三分之四側角；髮髻、髮帶、耳朵、下巴及雙肩完整入框，無背景。"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "battle": {
         "activeVersion": "0001",
@@ -2900,6 +2911,61 @@
             "sha256": "7aea50a1cca1b7333854cd9377250e0dce0b3c0d733f33d7bdb087a22d102a47",
             "canvas": "1024x1536 PNG",
             "note": "轉身抬槍近直立格擋；雙手持直槍、抬膝轉步、視線看鏡頭。來源：standing 0002；等比例縮放並置中至中央安全區。待使用者審閱，未接入遊戲。"
+          }
+        ]
+      },
+      "smallAvatar": {
+        "activeVersion": "0003",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/jiang_wei__姜維__small_avatar_0001.png",
+            "status": "superseded",
+            "sha256": "3e42fe57efd66f8204b9b3daa659e584370b362855e61a805f4af82e77a0a81d",
+            "canvas": "1254x1254 RGBA",
+            "source": "standing/jiang_wei__姜維__standing_0002.png",
+            "sourceSha256": "9f668bf9cbe865b83de41cc33e1c0c07e1b56f8c34df60f5e09d68e793851e8f",
+            "crop": "shoulder-line",
+            "cropBox": "x=375,y=42,w=275,h=275",
+            "qc": "125px preview: face centered within 3%; full head approx. 70% of frame; both shoulder outlines visible; original three-quarter angle preserved; crop ends at shoulder line.",
+            "removedFromLibrary": true
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/jiang_wei__姜維__small_avatar_0002.png",
+            "status": "superseded",
+            "sha256": "65885b8f041ae27f8c0198403c780be77f7eaebcf38b47f258e616770b65c775",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/jiang_wei__姜維__avatar_0002.png",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "x": 45.77,
+              "y": 28.89,
+              "width": 170.45,
+              "height": 170.45
+            },
+            "qc": "完整保留髮髻、髮帶與兩側頭髮；頭高83.3%、臉高44%，臉框中線差0.5px；肩部上緣為最後考量。",
+            "createdAt": "2026-11-20"
+          },
+          {
+            "version": "0003",
+            "file": "small_avatars/jiang_wei__姜維__small_avatar_0003.png",
+            "status": "integrated",
+            "sha256": "25a07f07f3dd88d5c17736490cb5586102f30d84b3c77dfe3b5116e21782b7e7",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0003",
+            "sourceAvatarFile": "avatars/jiang_wei__姜維__avatar_0003.png",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "x": 217.02,
+              "y": 21.01,
+              "width": 966.25,
+              "height": 966.25
+            },
+            "qc": "頭高80%、臉高43.8%、臉寬34.1%；人工臉框中心線與畫布中心線差0.5px。125px同尺度比較七張核可基準，臉部比例相稱、三分之四側角清楚；髮髻、綠色髮帶、雙耳與下巴完整，裁切邊緣未碰頭部；雙肩錨點可見。臉高比44%目標低0.2個百分點，但超過38%硬性下限；完整頭部與80%頭高限制下無法同時達到44%。",
+            "createdAt": "2026-11-22"
           }
         ]
       }
@@ -4945,6 +5011,31 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/sun_huan__孫桓__small_avatar_0001.png",
+            "status": "integrated",
+            "sha256": "26bf86ef868a516e1dd960f16617710b16c8082a680bea310d2992d8941195de",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/sun_huan__孫桓__avatar_0002.png",
+            "sourceAvatarSha256": "98ae1ecd9f2793df2b63ffbf8a0430ac458f173418d5af5c4fdcdcb2addb6d4e",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "x": 73.31,
+              "y": 35.56,
+              "width": 148,
+              "height": 148
+            },
+            "qc": "頭高75%、臉高45.1%、臉寬38.6%；人工臉框中線偏差0.5px。125px同尺度與七張核可基準並排檢查，臉部比例相稱、自然三分之四側轉；頭盔、雙耳及下巴完整。雙肩上緣可辨但接近裁框下緣，依頭部比例優先原則保留。",
+            "createdAt": "2026-11-22"
+          }
+        ]
       }
     },
     {
