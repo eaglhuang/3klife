@@ -55,7 +55,9 @@ export const BATTLE_AUDIO_CLIP_MAP: Record<BattleAudioCue, string> = {
   [BATTLE_AUDIO_CUE.unitHitCommon]: 'hurt',
   // PROG-2-9357：騎兵／弓兵改用不同 clip；以下 clip 皆依檔名推測，未實機聽過，不合適只改這張表
   // PROG-2-9400：騎兵改用腳步類（馬蹄的最近似，待補專屬馬蹄衝撞聲）、槍兵突刺用 bite、盾兵盾擊用 shield（原本沒被使用）
-  [BATTLE_AUDIO_CUE.unitAttackPrimary]: 'footstep',
+  // PROG-2-9580（暫代）：騎兵攻擊原本借 footstep，和移動腳步同檔，被統一音效閘門（按檔名節流）當重複吃掉，幾乎聽不到。
+  // 改用戰場沒用過的 biteskill（約 1 秒、多段低沉起伏，最接近衝撞），等正式馬蹄衝撞聲（CC0）到位只改這一行。
+  [BATTLE_AUDIO_CUE.unitAttackPrimary]: 'biteskill',
   [BATTLE_AUDIO_CUE.unitAttackThrust]: 'bite',
   [BATTLE_AUDIO_CUE.unitAttackShield]: 'shield',
   [BATTLE_AUDIO_CUE.unitAttackSecondary]: 'weapon',

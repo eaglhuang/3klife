@@ -128,3 +128,6 @@
 | `doc_task_2718` | docs/agent-briefs/tasks/PROG/PROG-2-9226.md | [PROG-2-9226] 學府 qaAcademy 快進與共通 API 流程相容修正（9192 × 9215 合併後 playtest --academy 回歸） |
 | `doc_task_2719` | docs/agent-briefs/tasks/PROG/PROG-2-9485.md | [PROG-2-9485] 待產與哺乳接線（F5：2 季待產、哺乳 OCC、乳母不占用） |
 | `doc_task_2720` | docs/agent-briefs/tasks/PROG/PROG-2-9484.md | [PROG-2-9484] 配偶上場（F4：名冊 kind=spouse、生成型配偶範本、出征與派遣、太守；指派入口改用 checkAssign） |
+| `doc_task_2721` | docs/agent-briefs/tasks/PROG/PROG-2-9486.md | [PROG-2-9486] playtest --academy 第 15 步：任務牆比對略過大廳走動名牌 |
+| `doc_task_2722` | docs/agent-briefs/tasks/PROG/PROG-2-9463.md | [PROG-2-9463] GCH-R4 抽取遷移 |
+| `doc_task_2723` | docs/agent-briefs/tasks/PROG/PROG-2-9580.md | [PROG-2-9580] 基礎戰鬥手感：騎兵攻擊暫代音檔（避開腳步同檔被節流） |

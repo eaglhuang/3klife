@@ -12978,6 +12978,55 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9580",
+      "title": "基礎戰鬥手感：騎兵攻擊暫代音檔（避開腳步同檔被節流）",
+      "owner": "codex-gpt-5.4-mini",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "2026-11-21T18:10:00+08:00",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 11/21 核准：騎兵攻擊原借 footstep，與移動腳步同檔，被統一音效閘門按檔名節流吃掉。改用戰場未用過的現有音檔 biteskill（暫代），不下載新素材；正式馬蹄衝撞聲到位只改對照表一行。補測試：攻擊聲不得與移動腳步同檔。",
+      "related": [
+        "PROG-2-9400",
+        "PROG-2-9481"
+      ],
+      "depends": [
+        "PROG-2-9481"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8896 通過、tsc 0 錯、7456 觸發 unit-attack-primary 實播 biteskill | 變更: 騎兵攻擊暫代音檔＋防同檔測試 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
