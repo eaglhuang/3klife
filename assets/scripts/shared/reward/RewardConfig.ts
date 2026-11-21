@@ -84,6 +84,11 @@ export interface RewardPoolDef {
     entries: RewardEntryDef[];
     /** 保底階梯，由高階往低階排序；空陣列＝無保底 */
     pity: RewardPityDef[];
+    /**
+     * 等階機率（和為 1，載入時正規化）；填了就以它決定各等階的基礎機率，不看項目權重加總
+     * （名冊展開後每個角色權重 1，等階機率不會隨名冊人數漂移）。只在「有可抽項目」的等階間分配；沒填＝依權重比。
+     */
+    tierRates: Record<string, number> | null;
     /** 等階 → 群組佔比；沒列的等階依項目權重直接抽 */
     tierGroups: Record<string, RewardTierGroupShare[]>;
     /** 固定名額；空陣列＝一般抽（picks 個）。有名額時 picks 為名額總和，且不套用保底 */
@@ -216,6 +221,20 @@ function normalizeTierGroups(raw: unknown, tiers: readonly string[]): Record<str
     return out;
 }
 
+function normalizeTierRates(raw: unknown, tiers: readonly string[]): Record<string, number> | null {
+    if (!isRecord(raw)) return null;
+    const out: Record<string, number> = {};
+    let sum = 0;
+    for (const [tier, v] of Object.entries(raw)) {
+        if (tiers.indexOf(tier) < 0 || typeof v !== 'number' || !Number.isFinite(v) || v < 0) continue;
+        out[tier] = v;
+        sum += v;
+    }
+    if (sum <= 0) return null;
+    for (const tier of Object.keys(out)) out[tier] /= sum;
+    return out;
+}
+
 function normalizeSlots(raw: unknown, tiers: readonly string[]): RewardDrawSlotDef[] {
     const out: RewardDrawSlotDef[] = [];
     for (const s of Array.isArray(raw) ? raw : []) {
@@ -265,6 +284,7 @@ function normalizePool(raw: unknown): RewardPoolDef | null {
         tiers: poolTiers,
         entries,
         pity: slotTotal > 0 ? [] : normalizePity(raw.pity, poolTiers),
+        tierRates: normalizeTierRates(raw.tierRates, poolTiers),
         tierGroups: normalizeTierGroups(raw.tierGroups, poolTiers),
         slots,
         nameKey: str(raw.nameKey),
