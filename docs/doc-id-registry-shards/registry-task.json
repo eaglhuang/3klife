@@ -16486,5 +16486,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9609.md",
     "title": "任務卡：PROG-2-9609 開局義子入學驗證與學府籌備看板",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2934",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9801.md",
+    "title": "[PROG-2-9801] 網頁版卡頓優化第二輪（人物介紹頁／開場 Label 縮放）",
+    "category": "task"
   }
 ]
