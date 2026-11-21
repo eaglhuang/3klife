@@ -160,7 +160,7 @@ node tools_node/generate-general-avatars.js new-general
 
 ### 臉寬與頭冠複核
 
-- `small-avatar-crop-guide.js crop` 會統計輸出圖四邊的非透明人物像素；上緣全幅、左右緣沿完整頭部 `extent` 的垂直範圍檢查。該範圍碰到任一邊即幾何退件，代表頭髮或頭飾可能被切；下緣接觸仍須人工確認沒有切斷辮尾、流蘇或其他頭部元素。手動標記的 `extent` 框不得小於實際可見頭髮／頭飾輪廓；幾何通過仍須看 125px 預覽，標記或邊緣檢查失真時重選來源。
+- `small-avatar-crop-guide.js crop` 會分開回報畫布四邊的非透明像素與落在完整頭部 `extent` 內的邊緣像素。只有頭髮、臉、耳朵或頭飾等頭部像素實際觸及畫布任一邊，才是幾何硬性退件；肩甲、衣物等非頭部像素碰到左右或下緣只記為警示，不能因此縮小頭部。手動標記的 `extent` 必須涵蓋全部可見頭髮／頭飾輪廓；幾何通過仍須看 125px 預覽確認沒有漏標或切斷辮尾、流蘇等頭部元素。
 
 - 臉高與臉寬分開檢查。臉寬核可範圍預設為裁框寬度的 `27.6–39.6%`；可用 `--min-face-width-ratio`、`--max-face-width-ratio` 或批次來源的 `minFaceWidthRatio` / `maxFaceWidthRatio` 覆寫。批次全域欄位為 `smallFaceCalibration.minimumWidth` / `maximumWidth`。超過上限時必須判不合格；不得因為加大裁框導致頭部低於75%，也不得裁掉頭飾來遷就臉寬。
 - `faceScaleAdvice.minimumUniformZoom` 回報兩項門檻所需的最小等比放大倍率。若必要裁框容不下完整頭冠與兩肩，改用其他正式來源。
