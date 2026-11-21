@@ -57,18 +57,19 @@ export function createDelegateMultiTurnE2ESuite(): TestSuite {
         assert.isTrue(playerUnits(ctrl) > 1, '場上有部隊（含主將）');
     });
 
-    suite.test('兩個回合入口（advanceTurn／resolvePlayerTurn）都在結算前委任部署，每回合最多一隊', () => {
+    suite.test('兩個回合入口（advanceTurn／resolvePlayerTurn）都在結算前委任部署，每回合用滿部署額度（PROG-2-9712）', () => {
         const viaAdvance = battle(90, 2000);
         viaAdvance.setDelegateEnabled(true);
         const before = playerUnits(viaAdvance);
+        const limit = viaAdvance.getPlayerDeployProgress().limit;
         viaAdvance.advanceTurn();
         viaAdvance.finalizeAdvanceTurn();
-        assert.equals(before + 1, playerUnits(viaAdvance), 'advanceTurn 入口部署一隊');
+        assert.equals(before + limit, playerUnits(viaAdvance), 'advanceTurn 入口部署到額度上限');
 
         const viaResolve = battle(90, 2000);
         viaResolve.setDelegateEnabled(true);
         viaResolve.resolvePlayerTurn();
-        assert.equals(before + 1, playerUnits(viaResolve), 'resolvePlayerTurn 入口部署一隊');
+        assert.equals(before + limit, playerUnits(viaResolve), 'resolvePlayerTurn 入口部署到額度上限');
     });
 
     suite.test('糧草耗盡後：委任停止部署，不報錯也不透支', () => {
