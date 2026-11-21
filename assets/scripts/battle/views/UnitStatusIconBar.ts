@@ -16,8 +16,16 @@ import {
   type UnitStatusIconList,
 } from '../shared/UnitStatusIcons';
 
-const ICON_SIZE = 36;
-const ICON_GAP = 4;
+/**
+ * 圖示邊長（名牌座標）。名牌本身縮 0.7、再乘戰場透視，36 實際只剩約 22px、手機約 9px 看不清，
+ * PROG-2-9436 放大到 48（實際約 30px）；名牌寬 180 只容得下 3 格，超過顯示「+N」。
+ */
+export const STATUS_ICON_SIZE = 48;
+const ICON_SIZE = STATUS_ICON_SIZE;
+const ICON_GAP = 3;
+/** 圖示字：粗體加深色描邊，在草地、石板、雪地上都看得清楚 */
+const GLYPH_FONT_SIZE = 32;
+const GLYPH_OUTLINE = new Color(20, 10, 20, 255);
 /** 彈出動畫：放大到 1.35 再回彈到 1，共約 0.2 秒 */
 const POP_UP_SEC = 0.09;
 const POP_BACK_SEC = 0.11;
@@ -40,7 +48,8 @@ export function drawStatusIconDisc(g: Graphics, radius: number, isDebuff: boolea
   g.fillColor = isDebuff ? DEBUFF_FILL : BUFF_FILL;
   g.circle(0, 0, radius - 1);
   g.fill();
-  g.lineWidth = 2;
+  // 邊框隨尺寸變粗：頭頂 48px 圖示約 3px，棋盤 44px 圖示約 2.75px
+  g.lineWidth = Math.max(2, radius / 8);
   g.strokeColor = isDebuff ? DEBUFF_EDGE : BUFF_EDGE;
   g.circle(0, 0, radius - 1);
   g.stroke();
@@ -156,9 +165,12 @@ export class UnitStatusIconBar {
     node.addChild(textNode);
     textNode.addComponent(UITransform).setContentSize(ICON_SIZE, ICON_SIZE);
     const label = textNode.addComponent(Label);
-    label.fontSize = 24;
-    label.lineHeight = 17;
+    label.fontSize = GLYPH_FONT_SIZE;
+    label.lineHeight = ICON_SIZE;
     label.isBold = true;
+    label.enableOutline = true;
+    label.outlineColor = GLYPH_OUTLINE;
+    label.outlineWidth = 2;
     label.horizontalAlign = Label.HorizontalAlign.CENTER;
     label.verticalAlign = Label.VerticalAlign.CENTER;
     label.overflow = Label.Overflow.NONE;
@@ -174,11 +186,14 @@ export class UnitStatusIconBar {
     const node = new Node('StatusOverflow');
     node.layer = this.parent.layer;
     root.addChild(node);
-    node.addComponent(UITransform).setContentSize(30, ICON_SIZE);
+    node.addComponent(UITransform).setContentSize(40, ICON_SIZE);
     const label = node.addComponent(Label);
-    label.fontSize = 24;
-    label.lineHeight = 17;
+    label.fontSize = 28;
+    label.lineHeight = ICON_SIZE;
     label.isBold = true;
+    label.enableOutline = true;
+    label.outlineColor = GLYPH_OUTLINE;
+    label.outlineWidth = 2;
     label.color = new Color(255, 255, 255, 255);
     label.horizontalAlign = Label.HorizontalAlign.LEFT;
     label.verticalAlign = Label.VerticalAlign.CENTER;

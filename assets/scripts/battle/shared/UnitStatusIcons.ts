@@ -53,7 +53,7 @@ export const STATUS_ICON_DEFS: Readonly<Record<StatusIconKind, StatusIconDef>> =
 };
 
 /** 頭頂最多同時顯示的圖示數；超過顯示「+N」 */
-export const STATUS_ICON_MAX_VISIBLE = 4;
+export const STATUS_ICON_MAX_VISIBLE = 3; // PROG-2-9436：圖示放大到 48 後名牌寬只容得下 3 格
 
 export interface StatusIconEntry {
   kind: StatusIconKind;

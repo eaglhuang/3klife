@@ -11543,6 +11543,53 @@
     },
     {
       "doc_id": "",
+      "id": "PROG-2-9436",
+      "title": "基礎戰鬥手感：頭頂狀態圖示放大（36→48、描邊、3 格＋N）",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-21T10:10:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 11/21 手感審核 buff 項：頭頂狀態圖示 36px 經名牌 0.7 縮放與透視後實際約 22px、手機約 9px 看不清。UnitStatusIconBar 圖示改 48px、字 32 粗體加深色描邊、邊框隨尺寸變粗；名牌寬 180 只容 3 格，STATUS_ICON_MAX_VISIBLE 4→3，其餘以 +N 表示；UnitRenderer 圖示列 y 依新尺寸計算。",
+      "related": [
+        "PROG-2-9399",
+        "PROG-2-9435"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8792 通過、tsc 0 錯、7456 張飛當陽怒吼後同場景前後截圖（約 22px→30px） | 變更: 頭頂狀態圖示放大與描邊 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
       "id": "PROG-2-9213",
       "title": "一年循環 MVP 切分（doc_spec_1182 第 12 章）與學府人源缺口方案（doc_spec_1179）",
       "owner": "ClaudeCode_sonnet-5-5",
