@@ -12264,7 +12264,7 @@
       "title": "家族資料模型與存檔欄位（F1：配偶 kind=spouse、義子與開局義子特例、家臣子嗣、分家標記、family-config.json）",
       "owner": "ClaudeCode_sonnet-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-21",
@@ -12282,7 +12282,7 @@
       "depends": [],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-21 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0 錯；run-cli 8834 passed 0 failed；check-api-bypass 132（基準 132）；compute-gate standard 通過 | 變更: 家族資料模型（配偶／親生／義子含開局義子特例 Q-F1／家臣子嗣／分家標記）、family-config.json fail-fast 載入、存檔欄位 familyState、family-write 靜態規則（TC-FAM-09）、doc_spec_1241 Q-F1 改已決 | 阻塞: 無；nursingBlocks／nursingAllows 刻意不放 family-config（由 occupancy-matrix.json 管，PROG-2-9442）",
       "brief": {
         "style": "classic",
         "label": "",
