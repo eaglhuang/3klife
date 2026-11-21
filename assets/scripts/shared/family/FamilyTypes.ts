@@ -17,6 +17,13 @@ export type FamilyMemberKind = (typeof FAMILY_MEMBER_KINDS)[number];
 export const ADOPT_SOURCES = ['story', 'recruit', 'historical', 'starter'] as const;
 export type AdoptSource = (typeof ADOPT_SOURCES)[number];
 
+/**
+ * 哺乳方式（規格 3.4 節）：breast 母乳＝哺乳占用到孩子 breastfeedEndAge 歲或改方式止；
+ * formula 其他方式＝產後休養 postpartumQuarters 季；wetNurse 乳母＝母親不占用。
+ */
+export const NURSING_METHODS = ['breast', 'formula', 'wetNurse'] as const;
+export type NursingMethod = (typeof NURSING_METHODS)[number];
+
 export const FAMILY_STATE_VERSION = 1 as const;
 
 /** 一位家族成員（存檔欄位 familyState.members 的元素） */

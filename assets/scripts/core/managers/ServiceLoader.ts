@@ -27,6 +27,7 @@ import type { IMissionService } from "../mission/service/IMissionService";
 import { PlayerSaveService } from "../services/PlayerSaveService";
 import { ApiSaveGateway } from "../api/localserver/ApiSaveGateway";
 import { createLocalApi, type LocalApiBundle } from "../api/localserver/createLocalApi";
+import { createGeneralGrantHandler, type GeneralGrantHost } from "../gacha/RewardGachaPull";
 import type { DebugHost } from "../api/localserver/DebugCommands";
 import type { WalletAuthority } from "../api/localserver/WalletCommands";
 import type { IApiClient } from "../../shared/api/IApiClient";
@@ -67,7 +68,7 @@ import { DEFAULT_QUEST_CONFIG, normalizeQuestConfig } from "../../shared/quest/Q
 import { FAMILY_CONFIG_JSON } from "../../shared/family/FamilyConfig";
 import { OCCUPANCY_MATRIX_JSON } from "../../shared/occupancy/OccupancyMatrix";
 import { QUEST_CONFIG_JSON, type QuestConfigV1 } from "../../shared/quest/QuestTypes";
-import { DEFAULT_REWARD_CONFIG, normalizeRewardConfig, REWARD_CONFIG_JSON, type RewardConfigV1 } from "../../shared/reward/RewardConfig";
+import { DEFAULT_REWARD_CONFIG, normalizeRewardConfig, REWARD_CONFIG_JSON, type RewardConfigV1, type RewardPoolDef } from "../../shared/reward/RewardConfig";
 import { DEFAULT_STORY_CONFIG, normalizeStoryConfig, STORY_CONFIG_JSON, type StoryConfigV1 } from "../../shared/story/StoryConfig";
 import { ITEM_CONFIG_JSON, normalizeItemConfig, DEFAULT_ITEM_CONFIG, type ItemConfigV1 } from "../../shared/item/ItemConfig";
 import { ACADEMY_INHERIT_MARKS_JSON, configureAcademyInheritMarks, type AcademyInheritMarksConfig } from "../systems/nurture/AcademyInheritAndMarks";
@@ -284,6 +285,31 @@ export class ServiceLoader {
         return this.localApi.api;
     }
 
+    /** 轉蛋獎池（GCH-R4）：開啟轉蛋畫面時才展開名冊載入，離開即釋放；非 null 時疊在基礎設定上 */
+    private gachaRewardPools: RewardPoolDef[] | null = null;
+    /** 發武將的宿主入口（kind "general" handler 用）；API 重建時沿用 */
+    private generalGrantHost: GeneralGrantHost | null = null;
+
+    private applyRewardConfig(): void {
+        const extra = this.gachaRewardPools;
+        const config = extra && extra.length > 0
+            ? { ...this.rewardConfig, pools: [...this.rewardConfig.pools.filter((p) => !extra.some((e) => e.id === p.id)), ...extra] }
+            : this.rewardConfig;
+        this.localApi?.setRewardConfig(config);
+    }
+
+    /** 換入（或釋放，傳 null）轉蛋獎池；不改基礎設定檔 */
+    public setGachaRewardPools(pools: RewardPoolDef[] | null): void {
+        this.gachaRewardPools = pools;
+        this.applyRewardConfig();
+    }
+
+    /** 綁定發武將入口（kind "general"）；傳 null 解除。經宿主的名冊入口入冊，不直接寫存檔 */
+    public bindGeneralGrantHost(host: GeneralGrantHost | null): void {
+        this.generalGrantHost = host;
+        if (host) this.localApi?.registerRewardEffect('general', createGeneralGrantHandler(host));
+    }
+
     /** 場景在建好錢包服務後綁定權威錢包；可重複呼叫（換場景時換成新的服務） */
     public bindWalletAuthority(wallet: WalletAuthority | null): void {
         this.walletAuthority = wallet;
@@ -317,7 +343,8 @@ export class ServiceLoader {
         this.localApi.setItemAuthority(this.session.itemAuthority());
         this.session.setItemApi(this.localApi.api);
         // 獎勵 base（PROG-2-9205）：獎池／套件設定、亂數會話與保底存在 GameSession，戰後里程碑獎勵走 reward.claim
-        this.localApi.setRewardConfig(this.rewardConfig);
+        this.applyRewardConfig();
+        if (this.generalGrantHost) this.localApi.registerRewardEffect('general', createGeneralGrantHandler(this.generalGrantHost));
         this.localApi.setRewardAuthority(this.session.rewardAuthority());
         this.session.setRewardApi(this.localApi.api);
         // 任務 base（PROG-2-9209 QST-M）：定義與實例狀態；academy 種類 adapter 先掛預設（A0 接學府結業評級時再換），結算走 reward.claim、占用走 occupancy.*
@@ -435,7 +462,7 @@ export class ServiceLoader {
             loadSafe<Partial<AcademyInheritMarksConfig>>(ACADEMY_INHERIT_MARKS_JSON, configureAcademyInheritMarks),
             loadSafe<Partial<AcademyEnrollRulesConfig>>(ACADEMY_ENROLL_RULES_JSON, configureAcademyEnrollRules),
             loadSafe<unknown>(STORY_CONFIG_JSON, (raw) => { this.storyConfig = normalizeStoryConfig(raw); this.localApi?.setStoryConfig(this.storyConfig); configureAcademyStories(this.storyConfig); }),
-            loadSafe<unknown>(REWARD_CONFIG_JSON, (raw) => { this.rewardConfig = normalizeRewardConfig(raw); this.localApi?.setRewardConfig(this.rewardConfig); }),
+            loadSafe<unknown>(REWARD_CONFIG_JSON, (raw) => { this.rewardConfig = normalizeRewardConfig(raw); this.applyRewardConfig(); }),
             loadSafe<unknown>(QUEST_CONFIG_JSON, (raw) => { this.questConfig = normalizeQuestConfig(raw); this.localApi?.setQuestConfig(this.questConfig); }),
             loadSafe<unknown>(ITEM_CONFIG_JSON, (raw) => { this.itemConfig = normalizeItemConfig(raw); this.localApi?.setItemConfig(this.itemConfig); }),
             loadSafe<Partial<MarriageVitalityRulesConfig>>(MARRIAGE_VITALITY_RULES_JSON, configureMarriageVitalityRules),

@@ -369,6 +369,8 @@ export interface GeneralConfig {
   vitality?: number;
   maxVitality?: number;
   role?: string;
+  /** 哺乳方式（PROG-2-9485）；缺值＝母乳。母親產後與玩家改方式時使用 */
+  nursingMethod?: import('../../shared/family/FamilyTypes').NursingMethod;
   status?: string;
   /** 被敵國關押的紀錄（PROG-2-9140）：被哪一國關、從第幾季（totalSeasonsElapsed）開始；沒有欄位 = 沒被囚（舊檔相容） */
   captivity?: { nationId: string; sinceSeason: number };

@@ -7,6 +7,7 @@
   "generatedSpouseEp": [50, 70],
   "pregnancyQuarters": 2,
   "postpartumQuarters": 1,
+  "breastfeedEndAge": 5,
   "crowdThreshold": 8,
   "childrenTypicalRange": [6, 12],
   "geniusChance": 0.03,

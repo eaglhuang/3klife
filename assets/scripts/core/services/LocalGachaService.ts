@@ -10,6 +10,7 @@ import type { GachaCurrencyType } from '../systems/GachaCurrency';
 import { checkWalletBalance, formatInsufficientMessage, QA_STARTER_GACHA_WALLET, STARTER_GACHA_WALLET } from './GachaWalletRules';
 import { GACHA_MENTOR_RARITY_RATES, GACHA_RARITY_RATES, drawGeneralOnce, normalizeGachaPity, resolveGachaPityBook, type GachaPityBook, type GachaPool } from '../systems/GachaDraw';
 import { destinyShopCredits, exchangeDestinyShop, pullsToNextDestinyCredit, type DestinyShopBlockReason } from '../systems/DestinyShop';
+import { formatDrawResultText, inferRarityTier } from '../gacha/GachaRarity';
 import { ActionLogStore, type GachaActionType, type GachaCurrencyKey, type GachaHistoryRecord } from './ActionLogStore';
 
 export interface LocalGachaRollOptions {
@@ -114,27 +115,6 @@ function normalizeWalletSnapshot(value: Partial<LocalGachaWalletSnapshot>): Loca
     };
 }
 
-function inferRarityTier(general: GeneralConfig): GeneralDetailRarityTier {
-    const explicit = general.rarityTier;
-    if (explicit) {
-        return explicit;
-    }
-
-    switch (general.characterCategory) {
-        case 'mythical':
-            return 'mythic';
-        case 'titled':
-            return 'legendary';
-        case 'famed':
-            return 'epic';
-        case 'general':
-            return 'rare';
-        case 'civilian':
-        default:
-            return 'common';
-    }
-}
-
 function isSsrTier(tier: GeneralDetailRarityTier): boolean {
     return tier === 'legendary' || tier === 'mythic';
 }
@@ -157,9 +137,6 @@ function buildGachaPool(candidates: GeneralConfig[], upGeneralIds: readonly stri
     return { ssrUp, ssrOther, srUp, srOther, rOther };
 }
 
-function formatDrawResultText(index: number, general: GeneralConfig, rarityTier: GeneralDetailRarityTier): string {
-    return `#${index + 1} [${rarityTier}] ${general.name}`;
-}
 
 
 /**
@@ -219,6 +196,12 @@ export class LocalGachaService {
     /** 開發開關：餘額不足時自動補款。正式流程預設關閉。 */
     public isDevAutoTopUpEnabled(): boolean {
         return sys.localStorage.getItem(DEV_AUTO_TOPUP_KEY) === 'true';
+    }
+
+    /** 開發用自動補款開著時，餘額不夠 cost 就補到夠並回 true（共通 API 路徑的抽卡報價用，與舊路徑同一套補款規則） */
+    public devTopUp(currencyKey: GachaCurrencyKey, cost: number): boolean {
+        if (!this.isDevAutoTopUpEnabled()) return false;
+        try { this._assertSufficientCurrency(currencyKey, cost); return true; } catch { return false; }
     }
 
     public setDevAutoTopUpEnabled(enabled: boolean): void {
@@ -440,6 +423,30 @@ export class LocalGachaService {
             commit();
         }
         return { entry, reason: null };
+    }
+
+    /**
+     * 抽卡改走共通 API（reward.roll）後，只補抽卡紀錄（不扣款、不入冊、不動舊保底表）：
+     * 扣款在錢包命令、入冊在發武將 handler，這裡讓「抽卡紀錄」畫面看得到這一批。
+     */
+    public recordExternalPull(poolId: string, currencyKey: GachaCurrencyKey, cost: number, results: readonly LocalGachaResultEntry[]): boolean {
+        return services().sync.pushAction(
+            'LOCAL_GACHA_PULL',
+            {
+                poolId,
+                drawCount: results.length,
+                cost,
+                currencyKey,
+                localOnly: true,
+                results: results.map((entry) => ({
+                    id: entry.general.id,
+                    name: entry.general.name,
+                    rarityTier: entry.rarityTier,
+                    displayText: entry.displayText,
+                })),
+            },
+            SyncActionType.DEFERRABLE,
+        );
     }
 
     private async _performGacha(request: PerformGachaRequest): Promise<LocalGachaResultEntry[]> {

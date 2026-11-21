@@ -15,6 +15,8 @@ import { GachaSystem, type GachaPullOutcome } from '../../core/systems/GachaSyst
 import { GOLD_SUMMON_POOL_ID, TICKET_SUMMON_POOL_ID, registerLocalGachaRules } from '../../core/systems/GachaLocalRules';
 import { gachaPoolHeader, gachaPoolTitle } from '../../core/systems/GachaPoolPresentation';
 import { DESTINY_POOL_ID } from '../../core/systems/DestinyPool';
+import type { GachaCurrencyId } from '../../core/gacha/GachaApi';
+import type { RewardGachaPort, RewardGachaPullOutcome } from '../../core/gacha/RewardGachaPull';
 import { fitContain, pickTopGachaResult } from './GachaResultRanking';
 import { formatResultBalance } from '../../core/gacha/GachaButtonRules';
 import { loadGeneralAvatar, loadGeneralPortrait } from './GeneralAvatarLoader';
@@ -47,6 +49,14 @@ export interface GachaFlowCoordinatorOptions {
     gemsCostPerPull?: number;
     tenPullHeaderText?: string;
     formatError?: (error: unknown, fallbackMessage: string) => string;
+    /**
+     * 抽取改走共通 API（GCH-R4）：旗標開啟且獎池已載入時回傳轉接，該池就走 reward.roll；回 null 走舊規則。
+     * rewardQuote 依餘額與價格表決定這次付哪種貨幣、付多少；餘額不足時丟錯（訊息直接顯示給玩家）。
+     */
+    rewardPull?: () => RewardGachaPort | null;
+    rewardQuote?: (poolId: string, drawCount: number) => Promise<{ currency: GachaCurrencyId; cost: number }>;
+    /** 走共通 API 抽完（入冊、扣款都完成）後、顯示結果前通知，讓大廳記下入冊結果給提示用 */
+    onRewardPulled?: (outcome: RewardGachaPullOutcome) => void;
     /** 讀池設定（data/gacha-config）；沒給時各池用 poolType 預設呈現 */
     loadPools?: () => Promise<GachaConfig[] | null>;
     /** 某位武將被展示時要跳的提示橫幅（只該武將的）；由外層依入冊結果提供（PROG-2-9143） */
@@ -111,12 +121,23 @@ export class GachaFlowCoordinator {
     private async _runPool(poolId: string, drawCount: number, generals: GeneralConfig[], poolTypeHint: string, retry: () => Promise<void>, failMessage: string): Promise<void> {
         try {
             await this._ensurePools();
-            const outcome = await this._system.pull({ poolId, drawCount, generals, poolTypeHint });
+            const outcome = await this._pull(poolId, drawCount, generals, poolTypeHint);
             this._notifyPullSuccess(outcome.results);
             await this._presentOutcome(outcome, retry);
         } catch (error) {
             this._emitError(error, failMessage);
         }
+    }
+
+    /** 抽取：該池走共通 API 就 reward.roll，否則走轉蛋系統的舊規則；兩條回給畫面的結果型別相同 */
+    private async _pull(poolId: string, drawCount: number, generals: GeneralConfig[], poolTypeHint: string): Promise<GachaPullOutcome> {
+        const port = this._options.rewardPull?.() ?? null;
+        const quote = this._options.rewardQuote;
+        if (!port || !quote || !port.handles(poolId)) return this._system.pull({ poolId, drawCount, generals, poolTypeHint });
+        const price = await quote(poolId, drawCount);
+        const out = await port.pull({ poolId, count: drawCount, currency: price.currency, cost: price.cost });
+        this._options.onRewardPulled?.(out);
+        return { poolId, drawCount, results: out.results, presentation: this._system.presentation(poolId) };
     }
 
     private async _presentOutcome(outcome: GachaPullOutcome, retry: () => Promise<void>): Promise<void> {

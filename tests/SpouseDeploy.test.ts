@@ -1,5 +1,5 @@
 /**
- * SpouseDeploy.test.ts — 配偶上場與指派入口改走占用矩陣（PROG-2-9482 F4；doc_spec_1241 第 3.1、3.3、3.5 節）
+ * SpouseDeploy.test.ts — 配偶上場與指派入口改走占用矩陣（PROG-2-9484 F4；doc_spec_1241 第 3.1、3.3、3.5 節）
  *
  * 涵蓋：生成型配偶固定種子、納配偶入名冊（上限／重複）、配偶可出征／派遣／當太守、
  * 指派入口由 isRegistered 改 checkAssign（學府擋、哺乳與待產放行太守但擋出征）。
@@ -39,7 +39,7 @@ function adultOf(session: GameSession): GeneralConfig {
 }
 
 export function createSpouseDeploySuite(): TestSuite {
-    const suite = new TestSuite('SpouseDeploy (配偶上場與指派入口改 checkAssign PROG-2-9482)');
+    const suite = new TestSuite('SpouseDeploy (配偶上場與指派入口改 checkAssign PROG-2-9484)');
 
     suite.test('生成型配偶：同 slot 永遠同一人、EP 在範圍內、女性成年', () => {
         const a = buildGeneratedSpouse({ slot: 'first-child', epRange: [50, 70] });
