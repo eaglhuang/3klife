@@ -16444,5 +16444,17 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9607.md",
     "title": "任務卡：PROG-2-9607 新玩家第一年「不卡關」體驗走查與修正清單",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2801",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9608.md",
+    "title": "任務卡：PROG-2-9608 Base 框架分片 doc_id 修正與索引健全",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2925",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9800.md",
+    "title": "[PROG-2-9800] 網頁版卡頓優化",
+    "category": "task"
   }
 ]

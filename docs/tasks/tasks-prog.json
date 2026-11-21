@@ -14088,6 +14088,12 @@
       }
     },
     {
+      "id": "PROG-2-9608",
+      "doc_id": "doc_task_2801",
+      "title": "Base 框架分片 doc_id 修正與索引健全",
+      "status": "in-progress"
+    },
+    {
       "id": "PROG-2-9607",
       "doc_id": "doc_task_2800",
       "title": "新玩家第一年不卡關體驗走查與修正清單",
