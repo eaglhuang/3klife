@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 223,
-    "in_progress": 0,
-    "open": 76,
-    "total": 312
+    "done": 229,
+    "in_progress": 4,
+    "open": 85,
+    "total": 318
   },
   "tasks": [
     {
@@ -13700,6 +13700,102 @@
       "acceptance": [],
       "deliverables": [],
       "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8977 通過（新增 SpineUnitPool 4 項）、tsc -p tsconfig.test.json 0 錯 | 變更: SpineUnitOverlay 加骨架節點池，回收強制還原閃白／顏色／動作／造型 | 阻塞: 無，手機實機卡頓未量測",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9591",
+      "title": "F3 家族銀兩錢包（銀兩幣別、媒人禮金與乳母費實扣）",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [
+        "PROG-2-9583",
+        "PROG-2-9441",
+        "PROG-2-9442"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0、單元 8989 pass、compute-gate standard | 變更: wallet 加 silver 幣別（SilverRoutedWallet 路由，銀兩存 familyState.silver、與轉蛋貨幣分開）、startingSilver 600、媒人禮金實扣（不足 E301、納入失敗退款）、乳母費每季實扣（不足改母乳）、family.enrollSpouse 回 silverSpent | 阻塞: 無；未做：大廳頂欄銀兩格（只做 API）、銀兩收入來源、銀兩售價（待使用者）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9592",
+      "title": "F3 配偶 SP1／SP2 接線（他國仕官女將結緣移籍、開戰母國牽掛）",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [
+        "PROG-2-9583",
+        "PROG-2-9441",
+        "PROG-2-9442"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0、單元 8989 pass、compute-gate standard | 變更: SP1 他國仕官女將 bond 結緣成婚自動辭官移籍（記 homeNationId）；SP2 beginHomeWar/endHomeWar（心情 -30 換算心智事件、忠誠 -20、OCC homeWar 擋出征）、adjustMood 入口、宣戰與敵襲掛線、數值進 family-config | 阻塞: 無；未做：UI 入口、議和時結束、無忠誠狀態的配偶忠誠不扣",
       "brief": {
         "style": "classic",
         "label": "",

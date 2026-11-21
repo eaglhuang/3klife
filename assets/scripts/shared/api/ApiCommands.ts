@@ -91,9 +91,9 @@ export const FORBIDDEN_AUTHORITY_FIELDS: readonly string[] = Object.freeze([
     'discount', 'roll', 'seed', 'pity', 'saveRev',
 ]);
 
-/** 錢包幣別：沿用 GachaWalletRules 的 WalletCurrencyKey */
+/** 錢包幣別：轉蛋錢包的 WalletCurrencyKey，加上家族銀兩 silver（存家族登記表，不進轉蛋錢包；PROG-2-9591） */
 export const WALLET_CURRENCIES: readonly string[] = Object.freeze([
-    'gems', 'gold', 'tickets', 'bronze', 'oracle', 'mentorTickets', 'scorePoints',
+    'gems', 'gold', 'tickets', 'bronze', 'oracle', 'mentorTickets', 'scorePoints', 'silver',
 ]);
 
 /** wallet.spend：扣款意圖。amount 為正整數；餘額不足回 E301 且不扣 */
@@ -607,7 +607,7 @@ export interface OccupancyQueryResult {
 /** occupancy.acquire：只送意圖；kind 只能是 academy／mentorAssign／nursing，其餘由原系統管理（E333）。同一筆重送冪等 */
 export interface OccupancyAcquireArgs {
     personId: string;
-    kind: 'academy' | 'mentorAssign' | 'nursing';
+    kind: 'academy' | 'mentorAssign' | 'nursing' | 'homeWar';
     refId: string;
     since?: number;
     until?: number | null;
@@ -621,7 +621,7 @@ export interface OccupancyAcquireResult {
 
 export interface OccupancyReleaseArgs {
     personId: string;
-    kind: 'academy' | 'mentorAssign' | 'nursing';
+    kind: 'academy' | 'mentorAssign' | 'nursing' | 'homeWar';
     refId: string;
 }
 
@@ -658,6 +658,8 @@ export interface FamilyEnrollSpouseResult {
     generalId: string;
     /** false＝這位配偶早已在名冊（冪等重送） */
     created: boolean;
+    /** 本次實扣的家族銀兩（媒人禮金；其他來源不扣則缺） */
+    silverSpent?: number;
 }
 
 // ── 偵錯（debug.fastForward；只有本機 adapter 提供）──

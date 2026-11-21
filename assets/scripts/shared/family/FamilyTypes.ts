@@ -55,6 +55,8 @@ export interface FamilyStateV1 {
     v: typeof FAMILY_STATE_VERSION;
     members: FamilyMemberRecord[];
     branches: FamilyBranchRecord[];
+    /** 家族銀兩餘額（PROG-2-9591）；缺值＝尚未動用，餘額視為設定的開局銀兩（startingSilver） */
+    silver?: number;
 }
 
 /** 由紀錄推出的家族屬性（總規格書第 3.1 節表格） */
@@ -84,7 +86,7 @@ export function emptyFamilyState(): FamilyStateV1 {
 }
 
 export function isEmptyFamilyState(state: FamilyStateV1 | null | undefined): boolean {
-    return !state || (state.members.length === 0 && state.branches.length === 0);
+    return !state || (state.members.length === 0 && state.branches.length === 0 && state.silver === undefined);
 }
 
 export function familyTraits(member: Pick<FamilyMemberRecord, 'kind' | 'branchId'>): FamilyTraits {
