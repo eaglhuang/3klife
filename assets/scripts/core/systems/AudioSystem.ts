@@ -19,6 +19,9 @@ import { AUDIO_PREFS_KEY, parseAudioPrefs, type AudioPrefs } from "./BattleSetti
  *   2. 先 registerClip(name, clip) 快取 AudioClip
  *   3. 之後 playSfx(name) 即可播放
  */
+/** 音效節流閘門：回傳 false 表示這次不播（PROG-2-9441）。 */
+export type SfxGate = (clip: string) => boolean;
+
 export class AudioSystem {
     private bgmSource: AudioSource | null = null;
     /** 第二 BGM 軌，專用於 crossfade 漸進 */
@@ -42,6 +45,13 @@ export class AudioSystem {
 
     /** 防重複播放的最小間隔（ms） */
     private static readonly DEBOUNCE_MS = 50;
+
+    /**
+     * 統一音效節流閘門（PROG-2-9441）。所有 SFX 都從 playSfx／playSfxWithCooldown 出去，
+     * 由這一個閘門決定播不播；戰場裝上共用 SfxThrottle（同檔合併＋每秒上限），沒裝時用內建 50ms 防重複。
+     * 閘門自帶時鐘，回傳 false 就不播。
+     */
+    private sfxGate: SfxGate | null = null;
 
     // ─────────────────────────────────────────
     //  初始化
@@ -240,12 +250,7 @@ to.clip = clip;
      */
     public playSfx(name: string, volume = 1.0): void {
         if (!this.sfxSource || this.prefs.sfxMuted) return;
-
-        // 防重複播放（會在連擊時造成音爆）
-        const now = Date.now();
-        const last = this.lastPlayTime.get(name) ?? 0;
-        if (now - last < AudioSystem.DEBOUNCE_MS) return;
-        this.lastPlayTime.set(name, now);
+        if (!this._passSfxGate(name)) return;
 
         const clip = this.clipCache.get(name);
         if (!clip) {
@@ -259,6 +264,21 @@ to.clip = clip;
         this.sfxSource.playOneShot(clip, volume);
     }
 
+    /** 裝上（或傳 null 拆掉）統一節流閘門；同一時間只會有一個閘門。 */
+    public setSfxGate(gate: SfxGate | null): void { this.sfxGate = gate; }
+
+    public getSfxGate(): SfxGate | null { return this.sfxGate; }
+
+    /** 閘門判斷：有裝閘門就交給它，否則同名音效 50ms 內不重複（連擊音爆保護）。 */
+    private _passSfxGate(name: string): boolean {
+        if (this.sfxGate) return this.sfxGate(name);
+        const now = Date.now();
+        const last = this.lastPlayTime.get(name) ?? 0;
+        if (now - last < AudioSystem.DEBOUNCE_MS) return false;
+        this.lastPlayTime.set(name, now);
+        return true;
+    }
+
     /**
      * 播放單次音效（較長防重複間隔版本，適合技能音效）
      * @param cooldownMs 防重複的冷卻時間（ms），預設 300ms
@@ -268,6 +288,7 @@ to.clip = clip;
         const now = Date.now();
         const last = this.lastPlayTime.get(name) ?? 0;
         if (now - last < cooldownMs) return;
+        if (this.sfxGate && !this.sfxGate(name)) return;
         this.lastPlayTime.set(name, now);
 
         const clip = this.clipCache.get(name);

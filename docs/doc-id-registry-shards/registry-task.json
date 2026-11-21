@@ -16150,5 +16150,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9440.md",
     "title": "[PROG-2-9440] 基礎戰鬥手感：部隊資訊框彼此錯開",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2710",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9441.md",
+    "title": "[PROG-2-9441] 基礎戰鬥手感：所有音效走同一個節流閘門",
+    "category": "task"
   }
 ]

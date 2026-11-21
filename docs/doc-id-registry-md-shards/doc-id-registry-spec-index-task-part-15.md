@@ -117,3 +117,4 @@
 | `doc_task_2707` | docs/agent-briefs/tasks/PROG/PROG-2-9218.md | [PROG-2-9218] 11/21 裁決回寫：共用框架第 7 框架（人員占用）、轉蛋改走獎勵框架、金銀兩經濟、家業與託管 |
 | `doc_task_2708` | docs/agent-briefs/tasks/PROG/PROG-2-9439.md | [PROG-2-9439] 基礎戰鬥手感：音效疊音節流 |
 | `doc_task_2709` | docs/agent-briefs/tasks/PROG/PROG-2-9440.md | [PROG-2-9440] 基礎戰鬥手感：部隊資訊框彼此錯開 |
+| `doc_task_2710` | docs/agent-briefs/tasks/PROG/PROG-2-9441.md | [PROG-2-9441] 基礎戰鬥手感：所有音效走同一個節流閘門 |
