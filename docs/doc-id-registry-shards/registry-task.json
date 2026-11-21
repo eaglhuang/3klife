@@ -16429,6 +16429,18 @@
   },
   {
     "id": "doc_task_2766",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9710.md",
+    "title": "[PROG-2-9710] 預覽直進戰場先載語系字串（奧義鈕不再顯示鍵名）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2767",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9260.md",
+    "title": "[PROG-2-9260] 重複卡三選一彈窗「宿命牽引・名將重逢」照設計稿轉進遊戲（DUP-UI）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2800",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9607.md",
     "title": "任務卡：PROG-2-9607 新玩家第一年「不卡關」體驗走查與修正清單",
     "category": "task"

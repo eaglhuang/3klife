@@ -24,9 +24,9 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 229,
+    "done": 234,
     "in_progress": 4,
-    "open": 85,
+    "open": 86,
     "total": 324
   },
   "tasks": [
@@ -14044,38 +14044,54 @@
       }
     },
     {
-      "id": "PROG-2-9607",
-      "title": "新玩家第一年「不卡關」體驗走查與修正清單",
-      "type": "documentation",
-      "priority": "P0",
-      "phase": "M0",
-      "status": "in-progress",
-      "owner": "antigravity",
-      "created": "2026-11-22",
-      "created_by_agent": "Claude",
-      "started_at": "2026-11-22T00:29:21+08:00",
-      "started_by_agent": "antigravity",
       "doc_id": "doc_task_2766",
+      "id": "PROG-2-9710",
+      "title": "預覽直進戰場先載語系字串（奧義鈕不再顯示鍵名）",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
       "sensor_triggered_by": "",
-      "description": "依總 PM 委託，以全新存檔走查第 1 年四季至第 2 年春，盤點應做 vs 實做，分析學府前十幾年閒置、銀兩隱形、戰鬥挫折等痛點，產出走查報告與拆卡清單。",
-      "related": [
-        "PROG-2-9174",
-        "PROG-2-9600",
-        "PROG-2-9591"
-      ],
+      "description": "",
+      "related": [],
       "depends": [],
-      "acceptance": [
-        "playtest-online --year 29/29 通過",
-        "doc-id-registry verify 通過",
-        "compute-gate standard 通過"
-      ],
-      "deliverables": [
-        "docs/遊戲規格文件/企劃走查/第一年體驗走查.md",
-        "docs/遊戲規格文件/企劃走查/第一年體驗走查-shards/shard-a.md",
-        "docs/遊戲規格文件/企劃走查/第一年體驗走查-shards/shard-b.md",
-        "docs/遊戲規格文件/企劃走查/第一年體驗走查-shards/shard-c.md"
-      ],
-      "notes": "狀態: in-progress。完成第一年實玩走查與報告撰寫。"
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-22 | 狀態: done | 驗證: 7456 預覽截圖奧義鈕顯示「奧義」 | 變更: LoadingScene 預覽戰場先載語系 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "id": "PROG-2-9607",
+      "doc_id": "doc_task_2800",
+      "title": "新玩家第一年不卡關體驗走查與修正清單",
+      "status": "in-progress"
     }
   ],
   "updated": "2026-11-22"
