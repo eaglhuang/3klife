@@ -567,6 +567,8 @@ export interface SeasonAdvancedPayload {
     prisonTreasureLines?: string[];
     /** 年度月旦評放榜句（血統傳承 G4 §G，PROG-2-1803）；只有跨年進春季、榜上有人時才有 */
     yuedanLines?: string[];
+    /** 哺乳登記被占用擋下、延到下季重試的提示句（PROG-2-9581）；沒有時省略 */
+    nursingLines?: string[];
     /** 立春子嗣天象（doc_spec_0312 §2，PROG-2-2106）；只有跨年進入春季且有符合門檻的子嗣才有 */
     omenLines?: string[];
     agingEvents: AgingEvent[];
@@ -1395,28 +1397,45 @@ export class GameSession implements AcademyRecordPort {
      * 母乳（預設）到孩子滿 breastfeedEndAge 歲；其他方式產後休養 postpartumQuarters 季；乳母不登記。
      * 母親此刻被別處占用（例如派遣中）而登記不上時略過，不擋季結；到期的占用在這裡一併釋放。
      */
-    private _settleNursing(bornMotherIds: readonly string[], season: number): void {
+    private _settleNursing(bornMotherIds: readonly string[], season: number): string[] {
+        const lines: string[] = [];
         const config = this._familyConfig;
-        if (!config) return;
+        if (!config) return lines;
         for (const record of this._occupancy.snapshot()) {
             if (record.kind === 'nursing' && record.until !== null && record.until <= season) {
                 this._occupancy.release({ personId: record.personId, kind: 'nursing', refId: record.refId });
             }
         }
-        for (const motherId of bornMotherIds) this._startNursing(motherId, season);
+        // 本季剛生產的母親，加上上季登記不上而記了 nursingPending 的母親（下一季季結重試）
+        const retry = this._roster.getAll().filter((g) => g.nursingPending && !bornMotherIds.includes(g.id)).map((g) => g.id);
+        for (const motherId of [...bornMotherIds, ...retry]) {
+            if (this._startNursing(motherId, season) !== 'blocked') continue;
+            const name = this._roster.getAll().find((g) => g.id === motherId)?.name ?? motherId;
+            lines.push(`${name}想餵奶，但人還在外頭忙，先記帳，下季再補登記。`);
+        }
+        return lines;
     }
 
     /** 依母親目前的哺乳方式重新登記哺乳占用（先釋放舊的）；回傳是否有占用在身 */
-    private _startNursing(motherId: string, season: number): boolean {
+    private _startNursing(motherId: string, season: number): 'ok' | 'none' | 'blocked' {
         const config = this._familyConfig;
         const roster = this._roster.getAll();
         const mother = roster.find((g) => g.id === motherId);
-        if (!config || !mother) return false;
+        if (!config || !mother) return 'none';
+        const markPending = (pending: boolean): void => {
+            if (!!mother.nursingPending === pending) return;
+            this._roster.replaceAll(this._roster.getAll().map((g) => {
+                if (g.id !== motherId) return g;
+                const next = { ...g, nursingPending: true };
+                if (!pending) delete (next as { nursingPending?: boolean }).nursingPending;
+                return next;
+            }));
+        };
         for (const record of this._occupancy.query(motherId)) {
             if (record.kind === 'nursing') this._occupancy.release({ personId: motherId, kind: 'nursing', refId: record.refId });
         }
         const method = mother.nursingMethod ?? 'breast';
-        if (method === 'wetNurse') return false;
+        if (method === 'wetNurse') { markPending(false); return 'none'; }
         const children = roster.filter((g) => (g as { motherId?: string }).motherId === motherId && typeof g.age === 'number');
         const child = children.sort((a, b) => (a.age as number) - (b.age as number))[0];
         const until = method === 'breast'
@@ -1424,9 +1443,11 @@ export class GameSession implements AcademyRecordPort {
             : season + config.postpartumQuarters;
         try {
             this._occupancy.acquire({ personId: motherId, kind: 'nursing', refId: `nurse:${child?.id ?? motherId}`, since: season, until });
-            return true;
+            markPending(false);
+            return 'ok';
         } catch {
-            return false;
+            markPending(true);
+            return 'blocked';
         }
     }
 
@@ -5671,7 +5692,7 @@ export class GameSession implements AcademyRecordPort {
             lifecycle = settled.settlement;
         }
         this._roster.replaceAll(roster);
-        this._settleNursing(bred.pregnancyEnded, advance.current.totalSeasonsElapsed);
+        const nursingLines = this._settleNursing(bred.pregnancyEnded, advance.current.totalSeasonsElapsed);
         this._emitLifeImprints(deathImprints.imprinted);
         this._clearLeadIfGone();
         this._releaseServedCaptives(advance.current.totalSeasonsElapsed);
@@ -5778,7 +5799,7 @@ export class GameSession implements AcademyRecordPort {
         const seasonReportSections = this._buildSeasonReportSections(governanceSeason, economyBase, hallMissionReport);
         this._seasonActivity = emptySeasonActivity();
         this._seasonEconomyBase = { ...this._cityEconomy };
-        const payload: SeasonAdvancedPayload = { seasonReportSections, ...(forcedRetirements.length > 0 ? { forcedRetirements, forcedRetirementNames: forcedRetirements.map((id) => rosterBeforeLifecycle.find((general) => general.id === id)?.name ?? id) } : {}), ...(yuedanLines.length > 0 ? { yuedanLines } : {}), ...(omenLines.length > 0 ? { omenLines } : {}), ...(this._tallyFoodDiscountArmed ? { foodLowLine: FOOD_LOW_LINE } : {}), ...(treasures.length > 0 ? { prisonTreasureLines: treasures.map((entry) => prisonTreasureLine(entry.targetName, ITEM_DISPLAY_NAMES[ITEM_TREASURE])) } : {}), ...(governanceReport ? { governanceReport } : {}), ...(eventNotice ? { governanceEventLine: eventNotice } : {}), advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(hallMissionReport ? { hallMissionReport } : {}), ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids } : {}), ...(mercenaryDay.dayThreeUids.length > 0 ? { mercenaryDayThree: mercenaryDay.dayThreeUids } : {}), ...(mercenaryDay.trustUids.length > 0 ? { mercenaryTrust: mercenaryDay.trustUids } : {}) };
+        const payload: SeasonAdvancedPayload = { seasonReportSections, ...(nursingLines.length > 0 ? { nursingLines } : {}), ...(forcedRetirements.length > 0 ? { forcedRetirements, forcedRetirementNames: forcedRetirements.map((id) => rosterBeforeLifecycle.find((general) => general.id === id)?.name ?? id) } : {}), ...(yuedanLines.length > 0 ? { yuedanLines } : {}), ...(omenLines.length > 0 ? { omenLines } : {}), ...(this._tallyFoodDiscountArmed ? { foodLowLine: FOOD_LOW_LINE } : {}), ...(treasures.length > 0 ? { prisonTreasureLines: treasures.map((entry) => prisonTreasureLine(entry.targetName, ITEM_DISPLAY_NAMES[ITEM_TREASURE])) } : {}), ...(governanceReport ? { governanceReport } : {}), ...(eventNotice ? { governanceEventLine: eventNotice } : {}), advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(hallMissionReport ? { hallMissionReport } : {}), ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids } : {}), ...(mercenaryDay.dayThreeUids.length > 0 ? { mercenaryDayThree: mercenaryDay.dayThreeUids } : {}), ...(mercenaryDay.trustUids.length > 0 ? { mercenaryTrust: mercenaryDay.trustUids } : {}) };
         if (this._autoSave && this._save) {
             await this.save();
         }
