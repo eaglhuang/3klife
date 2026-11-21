@@ -16222,5 +16222,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9486.md",
     "title": "[PROG-2-9486] playtest --academy 第 15 步：任務牆比對略過大廳走動名牌",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2722",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9230.md",
+    "title": "[PROG-2-9230] 教官池與學府支援卡規格（恢復並改寫教官卡，含強化、羈絆、事件、點撥、師門、四池轉蛋）",
+    "category": "task"
   }
 ]

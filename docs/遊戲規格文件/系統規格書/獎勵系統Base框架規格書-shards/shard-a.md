@@ -76,7 +76,7 @@
 
 ### 3.3 效果種類（沿用任務核心的帳本種類並擴充）
 
-`item`、`currency`、`resource`、`generalExp`、`fame`、`officerExp`、`relation`、`generalState`、`trait`、`flag`、`spawn`（觸發新任務）、`unlock`、`tacticLearn`（習得技能，交技能系統）、`story`（觸發劇情，交演出系統）、`morale`、`memoryNote`。新增種類只需註冊宿主 handler，不改框架。
+`item`、`currency`、`resource`、`generalExp`、`fame`、`officerExp`、`relation`、`generalState`、`trait`、`flag`、`spawn`（觸發新任務）、`unlock`、`tacticLearn`（習得技能，交技能系統）、`supportCard`（學府支援卡入庫或傳承，交物品庫存；PROG-2-9230，doc_spec_1264）、`story`（觸發劇情，交演出系統）、`morale`、`memoryNote`。新增種類只需註冊宿主 handler，不改框架。
 
 ### 3.4 演出綁定 `grant-presentation.v1`
 

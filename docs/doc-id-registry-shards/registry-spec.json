@@ -7408,5 +7408,59 @@
     "path": "docs/遊戲規格文件/系統規格書/獎勵系統Base框架規格書-shards/shard-c.md",
     "title": "獎勵系統Base框架規格書（分片索引） — 11–12 伺服器 API、轉蛋改走獎勵框架（軟保底、機率公開、遷移、卡片切分）",
     "category": "spec"
+  },
+  {
+    "id": "doc_spec_1264",
+    "path": "docs/遊戲規格文件/系統規格書/學府支援卡與教官池規格書.md",
+    "title": "學府支援卡與教官池規格書（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1265",
+    "path": "docs/遊戲規格文件/系統規格書/學府支援卡與教官池規格書-shards/shard-a.md",
+    "title": "學府支援卡與教官池規格書（分片索引） — 1–4 結論、世界觀、文案語氣指南、卡面與資料模型",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1266",
+    "path": "docs/遊戲規格文件/系統規格書/學府支援卡與教官池規格書-shards/shard-b.md",
+    "title": "學府支援卡與教官池規格書（分片索引） — 5–9 成長、效果欄、到場與羈絆、連續事件、點撥",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1267",
+    "path": "docs/遊戲規格文件/系統規格書/學府支援卡與教官池規格書-shards/shard-c.md",
+    "title": "學府支援卡與教官池規格書（分片索引） — 10–13 師門牌組、師承譜系組合、學府風格加權、結業稱號與學閥",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1268",
+    "path": "docs/遊戲規格文件/系統規格書/學府支援卡與教官池規格書-shards/shard-d.md",
+    "title": "學府支援卡與教官池規格書（分片索引） — 14–15 初版卡片名單總表、學府戰法點撥表",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1269",
+    "path": "docs/遊戲規格文件/系統規格書/學府支援卡與教官池規格書-shards/shard-e.md",
+    "title": "學府支援卡與教官池規格書（分片索引） — 附錄 A 歷史名師名士卡（11 張）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1270",
+    "path": "docs/遊戲規格文件/系統規格書/學府支援卡與教官池規格書-shards/shard-f.md",
+    "title": "學府支援卡與教官池規格書（分片索引） — 附錄 B 武將特別版卡（8 張）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1271",
+    "path": "docs/遊戲規格文件/系統規格書/學府支援卡與教官池規格書-shards/shard-g.md",
+    "title": "學府支援卡與教官池規格書（分片索引） — 附錄 C 紅顏教官卡（6 張）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1272",
+    "path": "docs/遊戲規格文件/系統規格書/學府支援卡與教官池規格書-shards/shard-h.md",
+    "title": "學府支援卡與教官池規格書（分片索引） — 16–25 教官池與四池轉蛋、機率保底、重複卡材料、物品化、共用框架對應、並存與舊規格處置、JSON、驗收、實作卡表、待決",
+    "category": "spec"
   }
 ]

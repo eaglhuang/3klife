@@ -101,7 +101,7 @@
 
 ## §16. 家族、子嗣、配偶、教官與學府（PROG-2-9224，依 11/21 裁決）
 - 總綱：`docs/遊戲規格文件/系統規格書/家族子嗣與血統總規格書.md (doc_spec_1241)`。配偶多位、可上場（進名冊）；待產 2 季、哺乳期不可出征但可當太守；子嗣約 6～12；繼承＝屬性潛力、血統天賦、家門奇才；主角不死；分家、外嫁；義子三來源（劇情來投、招賢館、歷史名將義子，不放轉蛋）；家臣子嗣不入家譜、忠誠低會離開。
-- 學府：人源只收自家子嗣（親生、義子、家臣子嗣），入學是加分選項、時間流速人人相同；教官就是武將、不設教官卡，指派走 OCC `mentorAssign`；修業有選課、隨機事件、同窗、三學府風格，壓力高會生病逃學但一定能結業。入口 `docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計.md (doc_spec_1179)` 第 13、14 章。教官卡相關舊規格已加「依 11/21 裁決修訂」註記。
+- 學府：人源只收自家子嗣（親生、義子、家臣子嗣），入學是加分選項、時間流速人人相同；教官就是武將（舊式教官卡不設；11/21 下午另設支援卡，見本節末追加），指派走 OCC `mentorAssign`；修業有選課、隨機事件、同窗、三學府風格，壓力高會生病逃學但一定能結業。入口 `docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計.md (doc_spec_1179)` 第 13、14 章。教官卡相關舊規格已加「依 11/21 裁決修訂」註記。
 
 ## §M. keep-memory 記憶索引
 > 事實粒度記憶筆記層（沉澱層）。契約見 `docs/keep-memory/README.md (doc_index_keep_memory)`；本段由 memory-manager rebuild-index 維護，預算 30 行。
@@ -116,3 +116,4 @@
 - [gotcha-atm-plan41-acc3-product-proof-window](docs/keep-memory/gotcha_atm-plan41-acc3-product-proof-window.md) — Plan 4.1 ACC-3 只算單一封印 product-proof window 的 commandRun 區間聯集，禁止跨歷史 burst 累加分母或把命令間空白當工作
 - [gotcha-planning-root-authority-resolution](docs/keep-memory/gotcha_planning-root-authority-resolution.md) — Planning root 解析應以 series-registry 存在且包含 active series 為準，多候選 fail-closed
 <!-- keep-memory-index:end -->
+- 11/21 下午追加（PROG-2-9230）：**恢復教官池與支援卡**（連線卡，學府修業專用、不出征、三類：歷史名師名士／武將特別版／紅顏教官，是「教學投影」可與本人並存），教官武將照舊且不給屬性加成；等級＋傳承（重複卡突破 0～4 次，滿了轉學分）、效果欄、到場與促膝論道、57 段連續事件、點撥、師門 6 席與師承組合；轉蛋改四池（名將、紅顏、宿命、教官，教官池貨幣連線券與靈玉、不收銀兩，價格待使用者）。入口 `docs/遊戲規格文件/系統規格書/學府支援卡與教官池規格書.md (doc_spec_1264)`；全遊戲文案語氣指南在其第 3 章（現代口語講古代典故、頭盔連線世界觀）。上述「教官卡退場」只指舊式教官卡。
