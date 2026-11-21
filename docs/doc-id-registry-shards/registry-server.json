@@ -14,7 +14,7 @@
     "subtype": "ops"
   },
   {
-    "id": "doc_server_other_0010",
+    "id": "doc_server_other_0001",
     "path": "server/README.dev.md",
     "title": "Server Dev Workflow",
     "category": "server",

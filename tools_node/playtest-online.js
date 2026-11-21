@@ -1204,7 +1204,7 @@ async function main() {
          */
         /** 已在戰場（BattleScene）後：加速、佈陣、打到結算、回大廳。runBattle 與年終守城（換季後自動進戰場）共用 */
         const driveBattle = async (rec, opts, battleT0) => {
-            // 加速（若有）；自動戰鬥若預設已開就不重複點
+            // 加速（若有）
             await delay(1500);
             await clickButton('^BtnFastForward$');
             // 首戰教學框：收起；再把第一張兵卡拖到我方底線第 3 路（座標以 1920x1080 截圖比例換算）
@@ -1239,7 +1239,7 @@ async function main() {
                     await clickByText('.*', '^\\s*退\\s*$');
                     await clickByText('.*', '^\\s*(確認|確定|是|撤退|結束教學)\\s*$');
                 }
-                await clickButton('^BtnAuto$');
+                // 不再按自動鈕（PROG-2-9707：自動＝自動代打，再按才極速決戰），改只按結束回合逐回合推進
                 await clickButton('^(BtnEndTurn|btnEndTurn|EndTurnBtn)$');
                 if (Date.now() - lastProgressAt > BATTLE_LIMIT_MS) throw new Error(`戰鬥卡住：第 ${lastRound} 回合起超過 ${Math.round(BATTLE_LIMIT_MS / 1000)} 秒沒有推進（可按按鈕：${(await listButtons()).join(', ')}）`);
                 if (Date.now() > hardDeadline) throw new Error(`戰鬥 6 分鐘內未結算（停在第 ${lastRound} 回合；回合仍在推進，疑似戰鬥變長）`);
@@ -1401,6 +1401,7 @@ async function main() {
             }
             if (!seen) throw new Error(`連抽 ${rec.detail.pulls} 次都沒出現重複卡彈窗（BtnDupStarUp）`);
             rec.detail.popupTexts = (await rm.allTexts()).filter((t) => /名將重逢|復生|灌注|升星/.test(t)).slice(0, 8);
+            await delay(2500); // 左側立繪是非同步載入，等它畫出來再截圖
             await shot(rec, 'dup-popup');
             await clickButton('^BtnDupStarUp$');
             await delay(1500);

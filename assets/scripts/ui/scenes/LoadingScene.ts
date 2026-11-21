@@ -41,6 +41,7 @@ import { applyUIScreenRuntimeState } from '../core/UIScreenRuntimeStateRegistry'
 import { LocalGachaService } from '../../core/services/LocalGachaService';
 import { PlayerRosterService } from '../../core/services/PlayerRosterService';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
+import { prepareBattleGlobals } from './QaBattleEntryRunner';
 import { GachaFlowCoordinator, GACHA_SCREEN_ID, GACHA_PULL_RESULT_SCREEN_ID } from '../core/GachaFlowCoordinator';
 import { showGachaError, refreshCurrencyDisplay, attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearButton, ensureGlobalDevOverlay } from '../dev/GachaDevOverlay';
 
@@ -996,6 +997,8 @@ export class LoadingScene extends Component {
 
     private async _previewBattleScene(): Promise<void> {
         UCUFLogger.info(LogCategory.LIFECYCLE, '[LoadingScene] Preview target -> BattleScene.scene');
+        // PROG-2-9710: preview skips lobby, load i18n first (else labels show keys)
+        await prepareBattleGlobals();
         services().scene.setNextScene('BattleScene', this._resolvePreviewBattleParams());
         await new Promise<void>((resolve, reject) => {
             director.loadScene('BattleScene', (error) => {

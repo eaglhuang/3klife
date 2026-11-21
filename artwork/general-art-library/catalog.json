@@ -93,13 +93,13 @@
         ]
       },
       "smallAvatar": {
-        "status": "review-pending",
+        "status": "integrated",
         "history": [
           {
             "version": "0001",
             "file": "small_avatars/sun_shang_xiang__孫尚香__small_avatar_0001.png",
-            "status": "review-pending",
-            "note": "Existing candidate; visual review not recorded."
+            "status": "superseded",
+            "note": "未單獨判退；由已通過同尺度複核的 0007 取代。"
           },
           {
             "version": "0002",
@@ -120,13 +120,67 @@
           {
             "version": "0004",
             "file": "small_avatars/sun_shang_xiang__孫尚香__small_avatar_0004.png",
-            "status": "review-pending",
+            "status": "rejected",
             "sha256": "070ec597b2488fb9c27e2d1db3521e9240e5970a579fff4440163a05d1467258",
             "canvas": "1254x1254 RGBA",
-            "note": "Shoulder-line crop; face centered; no chest/front torso."
+            "note": "視覺複核：臉幾乎正面，且取景延伸到胸甲；不符合自然側角與肩線取景標準。"
+          },
+          {
+            "version": "0005",
+            "file": "small_avatars/sun_shang_xiang__孫尚香__small_avatar_0005.png",
+            "status": "rejected",
+            "sha256": "efc7d322a07e82792c20867d104afbf3e688468b7cb8ad8942b717dd4dd776ba",
+            "canvas": "256x256 RGBA",
+            "measurements": {
+              "headHeightPercent": 84
+            },
+            "note": "250px複核發現長辮被裁切且肩線不足；檔案未在遠端正式庫，未採用。",
+            "removedFromLibrary": true
+          },
+          {
+            "version": "0006",
+            "file": "small_avatars/sun_shang_xiang__孫尚香__small_avatar_0006.png",
+            "status": "rejected",
+            "sha256": "f90f0892144e65a7f94656f18dea632a3695a4ff6d6d4083129abfa77001d02e",
+            "canvas": "256x256 RGBA",
+            "sourceStandingVersion": "0005",
+            "method": "redrawn source; not crop-only",
+            "measurements": {
+              "headHeightPercent": 81.3,
+              "faceHeightPercent": 40,
+              "faceWidthPercent": 30.6,
+              "faceCenterOffsetPx": 0.5
+            },
+            "note": "來源經重畫，不符合只允許裁切既有正式立繪的規定；未採用且未推送。",
+            "removedFromLibrary": true
+          },
+          {
+            "version": "0007",
+            "file": "small_avatars/sun_shang_xiang__孫尚香__small_avatar_0007.png",
+            "status": "integrated",
+            "sha256": "b00e3daf50b5c5b4ab5a4226d510143549d90a5a7ac85a8c44af9aaaa81cf581",
+            "canvas": "256x256 RGBA",
+            "sourceStandingVersion": "0005",
+            "sourceStandingFile": "standing/sun_shang_xiang__孫尚香__standing_0005.png",
+            "method": "crop-only; uniform resize; no rotation or redraw",
+            "cropBox": {
+              "x": 372.36,
+              "y": 136.65,
+              "width": 278.28,
+              "height": 278.28
+            },
+            "measurements": {
+              "headHeightPercent": 79.1,
+              "faceHeightPercent": 38.4,
+              "faceWidthPercent": 38.4,
+              "faceCenterXPercent": 50,
+              "centerAxisDifferencePx": 0.0
+            },
+            "qc": "完整頭部與髮飾、辮髮保留；臉框中線對準畫布中線；頭高79.1%，臉高38.4%、臉寬38.4%；雙肩可辨識且胸前軀幹未入鏡。保留來源自然三分之四側角。125px及250px同尺度複核。只做等比裁切，不旋轉、不修臉、不重畫。",
+            "createdAt": "2026-11-22"
           }
         ],
-        "activeVersion": "0004"
+        "activeVersion": "0007"
       }
     },
     {
@@ -935,15 +989,33 @@
         ]
       },
       "smallAvatar": {
-        "activeVersion": "0001",
-        "status": "review-pending",
+        "status": "integrated",
+        "activeVersion": "0002",
         "history": [
           {
             "version": "0001",
             "file": "small_avatars/bao_san_niang__鮑三娘__small_avatar_0001.png",
-            "status": "review-pending",
+            "status": "superseded",
             "sha256": "70304094e493dd92a035605711d4e6876622ce8b2ed81939e292898e48c68e75",
             "canvas": "1254x1254 RGBA"
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/bao_san_niang__鮑三娘__small_avatar_0002.png",
+            "status": "integrated",
+            "sha256": "8d8e87a1656f631a15db01f982e4e5597995011170ce4461ee43a4b287912c7b",
+            "canvas": "256x256 RGBA",
+            "sourceStandingVersion": "0001",
+            "sourceStandingFile": "standing/bao_san_niang__鮑三娘__standing_0001.png",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "x": 289.27,
+              "y": 63.04,
+              "width": 348,
+              "height": 348
+            },
+            "qc": "頭高75%；臉高39.4%、臉寬32.2%；臉框中心線與畫布中線差0.5px；完整保留髮髻、花飾與垂飾；並排檢視確認臉部保留自然三分之四側角。只等比例裁切與平移，未旋轉、修臉或重畫。",
+            "createdAt": "2026-11-22"
           }
         ]
       }
@@ -2470,8 +2542,8 @@
         "activeVersion": "0002"
       },
       "smallAvatar": {
-        "activeVersion": "0002",
-        "status": "review-pending",
+        "status": "integrated",
+        "activeVersion": "0003",
         "history": [
           {
             "version": "0001",
@@ -2487,10 +2559,28 @@
           {
             "version": "0002",
             "file": "small_avatars/jia_xu__賈詡__small_avatar_0002.png",
-            "status": "review-pending",
+            "status": "superseded",
             "sha256": "8956384df0f68eb7230086aacb44f7abbad34eef6c7d28f1c31999413d23242f",
             "canvas": "1254x1254 RGBA",
             "note": "User-approved image stored pixel-identically; no redesign or crop changes."
+          },
+          {
+            "version": "0003",
+            "file": "small_avatars/jia_xu__賈詡__small_avatar_0003.png",
+            "status": "integrated",
+            "sha256": "a7af1d7bcf4f46bf2ac986f32400f13e7b9cb3a5af2cdd195807d01efb6d13c8",
+            "canvas": "256x256 RGBA",
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/jia_xu__賈詡__standing_0002.png",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "x": 401.77,
+              "y": 6.34,
+              "width": 332.47,
+              "height": 332.47
+            },
+            "qc": "頭高77%、臉高55.3%、臉寬31.9%；臉框中線與畫布中線差0.5px；完整保留髮型、冠飾、臉與鬍鬚；上肩部分入鏡。125px確認保留自然三分之四側角；只等比例裁切，未旋轉、未重繪。",
+            "createdAt": "2026-11-22"
           }
         ]
       },
@@ -4653,6 +4743,30 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "status": "integrated",
+        "activeVersion": "0006",
+        "history": [
+          {
+            "version": "0006",
+            "file": "small_avatars/cheng_yu__程昱__small_avatar_0006.png",
+            "status": "integrated",
+            "sha256": "1976c2480ced973955d116ae10c050bd2807d98043af429932e6fef178eeeb29",
+            "canvas": "256x256 RGBA",
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/cheng_yu__程昱__standing_0002.png",
+            "method": "crop-only; uniform resize; face-centered; no redraw",
+            "cropBox": {
+              "x": 156.07,
+              "y": -6.56,
+              "width": 218.67,
+              "height": 218.67
+            },
+            "qc": "顱部至下巴頭高75%；臉高52.6%、臉寬28.4%；臉框中心線與畫布中線差0.5px；完整保留方帽、頭髮、臉與鬍鬚；左右肩面可見。保留原圖自然輕微三分之四側角，不正面化、不旋轉、不重繪。125px候選及250px核准基準同尺度比較確認。",
+            "createdAt": "2026-11-22"
+          }
+        ]
       }
     },
     {
@@ -5154,6 +5268,30 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "status": "integrated",
+        "activeVersion": "0001",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/yan_liang__顏良__small_avatar_0001.png",
+            "status": "integrated",
+            "sha256": "58d47089895fa892a2b8edb838b6ca1cf164b82406f6269415449b29249bbf1a",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/yan_liang__顏良__avatar_0002.png",
+            "method": "crop-only; uniform resize; face-centered; source angle preserved; no redraw or rotation",
+            "cropBox": {
+              "x": 38.83,
+              "y": 14.2,
+              "width": 193.33,
+              "height": 193.33
+            },
+            "qc": "頭高75%；臉高45%、臉寬36.7%；臉框中線差0.5px；完整保留冠飾、髮型、雙耳、臉、鬍鬚與下巴；雙肩上緣錨點在可見像素並保留下緣空間。來源角度自然輕微側轉，依原圖等比例裁切，未重繪、未旋轉或扭正；與七張基準在125px、250px同尺度並排檢視通過。",
+            "createdAt": "2026-11-22"
+          }
+        ]
       }
     },
     {
@@ -6364,6 +6502,30 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "status": "integrated",
+        "activeVersion": "0014",
+        "history": [
+          {
+            "version": "0014",
+            "file": "small_avatars/mao_jie__毛玠__small_avatar_0014.png",
+            "status": "integrated",
+            "sha256": "a6d765f647e3606383096187015a893f3308291826cbff32cc4743235284dce2",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/mao_jie__毛玠__avatar_0002.png",
+            "method": "crop-only; uniform resize; no rotation or redraw",
+            "cropBox": {
+              "x": 52,
+              "y": 40.96,
+              "width": 152,
+              "height": 152
+            },
+            "qc": "顱部至下巴頭高75%；臉框中心線與畫布中線差0.5px；完整保留方帽、髮型與鬍鬚；雙肩上緣均可見。保留來源自然輕微三分之四角度，不正面化、不旋轉、不修臉、不重畫。125px縮圖與250px同尺度比較確認。",
+            "createdAt": "2026-11-22"
+          }
+        ]
       }
     },
     {
@@ -6629,6 +6791,30 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "status": "integrated",
+        "activeVersion": "0005",
+        "history": [
+          {
+            "version": "0005",
+            "file": "small_avatars/liu_chen__劉諶__small_avatar_0005.png",
+            "status": "integrated",
+            "sha256": "83c4cc535170ef8418af8394c5d6e85e3e721fcfc74de8f440d52ebc645f085c",
+            "canvas": "256x256 RGBA",
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/liu_chen__劉諶__standing_0002.png",
+            "method": "crop-only; uniform resize; face-centered; no rotation or redraw",
+            "cropBox": {
+              "x": 190,
+              "y": 0.32,
+              "width": 156,
+              "height": 156
+            },
+            "qc": "顱部至下巴頭高75%；臉高48.7%、臉寬34.6%；臉框中線與畫布中線差0.5px；頭飾、髮型、下巴完整；雙肩上緣可見，左側肩點出框列警示。保留站姿原有三分之四側角，不正面化、不旋轉、不修臉、不重畫。工具硬性幾何通過，125px目視確認。",
+            "createdAt": "2026-11-22"
+          }
+        ]
       }
     },
     {
@@ -8293,19 +8479,37 @@
         "activeVersion": "0002"
       },
       "smallAvatar": {
-        "activeVersion": "0001",
-        "status": "review-pending",
+        "status": "integrated",
+        "activeVersion": "0002",
         "history": [
           {
             "version": "0001",
             "file": "small_avatars/bian_fu_ren__卞夫人__small_avatar_0001.png",
-            "status": "review-pending",
+            "status": "superseded",
             "sha256": "4612f16483f908e3abb23e4830fc5b3053f7b745cb76f1b025a5a8e701a61ce8",
             "canvas": "256x256 RGBA",
             "source": "standing/bian_fu_ren__卞夫人__standing_0002.png (crop-only)",
             "crop": "shoulder-line",
             "cropBox": "x=186,y=0,w=140,h=140; canvas=152x152; transparent-pad=6px on each side",
             "qc": "No redraw or design changes; full hair ornament, face and chin retained; face centered; shoulder tops at lower edge, no chest."
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/bian_fu_ren__卞夫人__small_avatar_0002.png",
+            "status": "integrated",
+            "sha256": "c49f57a037e82cc8422c957822835047b5691a915baeacf5f412845638df5c9a",
+            "canvas": "256x256 RGBA",
+            "sourceStandingVersion": "0002",
+            "sourceStandingFile": "standing/bian_fu_ren__卞夫人__standing_0002.png",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "x": 159.8,
+              "y": -3.34,
+              "width": 167.03,
+              "height": 167.03
+            },
+            "qc": "頭高79.6%；臉高44.6%、臉寬32.9%；臉框中心線與畫布中線差0.5px；金色帽飾、兩側髮飾與髮髻完整；雙肩上緣可見。並排檢視確認保留自然三分之四側角；只等比例裁切，未重繪、未旋轉或變形。",
+            "createdAt": "2026-11-22"
           }
         ]
       },

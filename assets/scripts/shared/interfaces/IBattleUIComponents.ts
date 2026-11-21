@@ -45,6 +45,8 @@ export interface IBattleLogLike {
     waitUntilReady(timeoutMs?: number): Promise<boolean>;
     /** 委任鈕亮暗（PROG-2-1766）；測試替身可不實作 */
     setDelegateActive?(active: boolean): void;
+    /** 自動代打鈕亮暗（PROG-2-9707）；由戰場橋接層呼叫，測試替身可不實作 */
+    setAutoActive?(active: boolean): void;
 }
 
 export interface IDuelChallengeLike {

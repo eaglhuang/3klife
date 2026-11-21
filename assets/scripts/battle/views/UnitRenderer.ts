@@ -500,7 +500,7 @@ export class UnitRenderer extends Component {
     if (!isLeader) return;
     const { footstep } = beat;
     for (let i = 0; i < footstep.beats; i++) {
-      const play = (): void => { if (tryAcquireMoveSfx(this.moveSfxThrottle, Date.now())) playBattleAudio(footstep.cue, footstep.volume); };
+      const play = (): void => { if (this.canPlayDeferredMoveSfx() && tryAcquireMoveSfx(this.moveSfxThrottle, Date.now())) playBattleAudio(footstep.cue, footstep.volume); };
       if (i === 0) play(); else setTimeout(play, i * footstep.intervalMs);
     }
   }
@@ -517,9 +517,16 @@ export class UnitRenderer extends Component {
     if (!isLeader) return;
     const thud = deployLandingThud(beat.footstep, unit.type);
     for (let i = 0; i < thud.beats; i++) {
-      const play = (): void => { if (tryAcquireMoveSfx(this.moveSfxThrottle, Date.now())) playBattleAudio(thud.cue, thud.volume); };
+      const play = (): void => { if (this.canPlayDeferredMoveSfx() && tryAcquireMoveSfx(this.moveSfxThrottle, Date.now())) playBattleAudio(thud.cue, thud.volume); };
       if (i === 0) play(); else setTimeout(play, i * thud.intervalMs);
     }
+  }
+
+  /**
+   * 腳步／落地聲的後續拍用 setTimeout 延後播放；離開戰場後元件已銷毀、欄位被引擎清成 null，延後的拍要直接略過（避免 windowStartMs of null）。
+   */
+  private canPlayDeferredMoveSfx(): boolean {
+    return this.isValid && Boolean(this.moveSfxThrottle);
   }
 
   public playSwapAdvanceAnimation(
