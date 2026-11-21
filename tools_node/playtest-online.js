@@ -41,6 +41,7 @@
  *   --jade      選用：玉的用途（商店看玉、許願祭壇用玉買加速卡，PROG-2-9149）
  *   --year      選用：原步驟後接一年循環（每季內政／任務牆／戰鬥／抽卡／培育／推進一季），輸出 year-report.json（PROG-2-9141）
  *   --battles-per-season  --year 時每季出征場數（預設 2）
+ *   --no-auto-play  戰鬥改逐回合手按結束回合（預設開場按一次「自動」走自動代打，PROG-2-9711）
  *   --academy   選用：學府實玩（PROG-2-9192）：推進到第 2 年第 1 季 → 入學潁川（核對入學令 −1）→ 36 回合 → 結業彈窗 → 回大廳；
  *               另在複製存檔的第二情境用 ?qaAcademy=11 驗快進入口。輸出 academy-report.json（回合數、打斷、評級、前後季數、節點數、
  *               apiCalls＝學府寫入呼叫共通 API 的次數，分 item／skill／reward／story／occupancy／save）與 ac-*.png 截圖。
@@ -1223,6 +1224,12 @@ async function main() {
             await page.mouse.move(ex, ey, { steps: 12 });
             await page.mouse.up();
             await delay(1000);
+            // 自動代打（PROG-2-9707／9711）：開場按一次「自動」＝委任出兵＋每回合自動結束回合；只按一次，再按會跳到極速決戰
+            // --no-auto-play 可改回逐回合手按結束回合
+            const autoPlay = !args['no-auto-play'] && opts.autoPlay !== false && Boolean(await clickButton('^BtnAuto$'));
+            rec.detail.autoPlay = autoPlay;
+            rec.detail.endTurnFallbacks = 0;
+            await delay(800);
             // 等結算：BattleReview 出現，或場景自動回大廳
             // 回合數有在前進就不算卡住；停滯超過 BATTLE_LIMIT_MS 或總時間超過 6 分鐘才判失敗
             let settled = null;
@@ -1243,8 +1250,11 @@ async function main() {
                     await clickByText('.*', '^\\s*退\\s*$');
                     await clickByText('.*', '^\\s*(確認|確定|是|撤退|結束教學)\\s*$');
                 }
-                // 不再按自動鈕（PROG-2-9707：自動＝自動代打，再按才極速決戰），改只按結束回合逐回合推進
-                await clickButton('^(BtnEndTurn|btnEndTurn|EndTurnBtn)$');
+                // 自動代打時由遊戲自己結束回合；同一回合停超過 12 秒才補按（計入 endTurnFallbacks，代表自動代打沒推進）
+                // 沒開自動代打時逐回合手按結束回合；絕不再按自動鈕（第二次按＝跳到極速決戰）
+                if (!autoPlay || Date.now() - lastProgressAt > 12000) {
+                    if ((await clickButton('^(BtnEndTurn|btnEndTurn|EndTurnBtn)$')) && autoPlay) rec.detail.endTurnFallbacks += 1;
+                }
                 if (Date.now() - lastProgressAt > BATTLE_LIMIT_MS) throw new Error(`戰鬥卡住：第 ${lastRound} 回合起超過 ${Math.round(BATTLE_LIMIT_MS / 1000)} 秒沒有推進（可按按鈕：${(await listButtons()).join(', ')}）`);
                 if (Date.now() > hardDeadline) throw new Error(`戰鬥 6 分鐘內未結算（停在第 ${lastRound} 回合；回合仍在推進，疑似戰鬥變長）`);
                 await delay(1000);
@@ -1418,6 +1428,55 @@ async function main() {
                 await delay(1200);
             }
             await shot(rec, 'dup-after');
+            await clickButton('^GachaReturnToLobby$');
+            await delay(1500);
+            return rec.detail;
+        }, { skipIfFailed: true });
+
+        // ── 6c-2. 結果卡配色（--gacha-card，PROG-2-9810）：名將池十連，結果畫面逐卡截圖（外框／角標／星列要照稀有度），並回報每張卡的稀有度文字 ──
+        if (args['gacha-card']) await step('gacha-result-cards', async (rec) => {
+            // 上一步（gacha-pools）通常還停在轉蛋畫面：已有十連鈕就直接用，免得關面板時又撞到主將選擇層
+            if (!(await page.evaluate(() => window.__pt.hasButton('^BtnPullTen$')))) {
+                await requireLobby();
+                await backToLobbyBar();
+                await waitUntil(() => page.evaluate(() => window.__pt.hasButton('^BtnCatShop$')), 30000, '底欄「商城」鈕未出現');
+                if (!(await openSub('BtnCatShop', '轉蛋'))) throw new Error('大廳找不到「商店 → 轉蛋」入口');
+                await delay(2500);
+            }
+            await page.evaluate(() => window.localStorage.setItem('ucuf.gacha.dev-auto-topup', 'true'));
+            for (let round = 0; round < 1; round++) {
+                if (!(await clickButton('^BtnPullTen$'))) throw new Error('找不到十連鈕 BtnPullTen');
+                // 結果畫面出現後先不點任何東西（點「升星」「繼續」會連結果畫面一起收掉）：等翻牌演完，
+                // 再把蓋在上面的重複卡彈窗暫時隱藏，只為了讓截圖看得到十張卡本身
+                let seen = 0;
+                for (let k = 0; k < 40 && seen < 2; k++) {
+                    await delay(1500);
+                    seen = (await page.evaluate(() => window.__pt.scenePresence('^GachaPullResult_stage$'))) ? seen + 1 : 0;
+                }
+                if (seen < 2) { await shot(rec, 'gacha-result-cards-stuck'); throw new Error('十連後沒有出現結果畫面 GachaPullResult_stage'); }
+                // 等翻牌與展示區收邊演完：十張卡的稀有度字樣都出現（至多等 60 秒）
+                for (let k = 0; k < 40; k++) {
+                    await delay(1500);
+                    const tags = (await rm.allTexts()).filter((t) => /^(N|R|SR|SSR|UR)$/.test(String(t).trim()));
+                    if (tags.length >= 10) break;
+                }
+                rec.detail.hiddenOverlays = await page.evaluate(() => {
+                    const hidden = [];
+                    const walk = (n) => { if (/^(DuplicatePullPopupHost|RedFaceShowcaseHost)$/.test(n.name) && n.active) { n.active = false; hidden.push(n.name); } n.children.forEach(walk); };
+                    walk(window.cc.director.getScene());
+                    return hidden;
+                });
+                // 先拍「武將展示」畫面（英雄徽章顏色），再點舞台任一處讓十張卡面板出現
+                await shot(rec, 'gacha-result-hero');
+                await page.mouse.click(Math.round(viewport.width / 2), Math.round(viewport.height / 2));
+                await delay(1500);
+                (rec.detail.rounds = rec.detail.rounds || []).push({ texts: (await rm.allTexts()).filter((t) => /^(N|R|SR|SSR|UR)$/.test(String(t).trim())) });
+                await shot(rec, `gacha-result-cards-${round + 1}`);
+                for (let i = 0; i < 6; i++) {
+                    if (await clickButton('^GachaPullResult_(close|back)$')) { await delay(1200); }
+                    if (!(await page.evaluate(() => window.__pt.scenePresence('^GachaPullResult_stage$')))) break;
+                }
+            }
             await clickButton('^GachaReturnToLobby$');
             await delay(1500);
             return rec.detail;
