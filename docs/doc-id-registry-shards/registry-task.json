@@ -16108,5 +16108,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9215.md",
     "title": "[PROG-2-9215] A0：學府存檔與推進改走共通 API（回補 9189，6a）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2703",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9437.md",
+    "title": "[PROG-2-9437] 基礎戰鬥手感：格擋回饋",
+    "category": "task"
   }
 ]
