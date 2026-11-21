@@ -15,13 +15,18 @@ import type {
 import { ApiError } from '../../../shared/api/ApiErrors';
 import { GameAcademySaveStore, type AcademyRecordPort, type PersistedAcademyRecord } from '../../services/GameAcademySaveStore';
 import type { AcademySaveRecord } from '../../systems/nurture/AcademyAntiSLManager';
+import type { SessionSaveService } from './ApiSaveGateway';
 import type { LocalApiAdapter } from './LocalApiAdapter';
 
 /** 學府宿主：單機由 GameSession 提供，連線時由伺服器取代 */
 export interface AcademyHost {
     port: AcademyRecordPort;
-    /** 整份存檔落盤；沒有存檔服務時可為空操作；失敗要丟錯 */
-    persist(): Promise<void>;
+    /**
+     * 整份存檔落盤；沒有存檔服務時可為空操作；失敗要丟錯。
+     * via＝這個命令處理器專用的存檔出口（走 save.full 的處理器直呼，不排佇列）。處理器裡不能再用 api.cmd 排隊存檔：
+     * 佇列是串行的，save.write 還在執行時排進去的 save.full 要等 save.write 結束，而 save.write 又在等它，整條佇列就死結。
+     */
+    persist(via: Pick<SessionSaveService, 'save'>): Promise<void>;
     clanUuid(): string;
 }
 
@@ -64,7 +69,7 @@ export function registerAcademyHostCommands(adapter: LocalApiAdapter, getHost: (
         try {
             if (args.record === null) store.clear();
             else store.write(args.record as AcademySaveRecord);
-            await host.persist();
+            await host.persist({ save: async (snapshot) => { await adapter.invoke('save.full', { snapshot }); } });
         } catch (error) {
             store.restore(previous as PersistedAcademyRecord | null);
             throw new ApiError('SAVE_FAILED', error instanceof Error ? error.message : String(error));

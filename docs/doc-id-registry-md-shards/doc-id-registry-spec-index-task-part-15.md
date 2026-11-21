@@ -125,5 +125,6 @@
 | `doc_task_2715` | docs/agent-briefs/tasks/PROG/PROG-2-9482.md | [PROG-2-9482] 基礎戰鬥手感：最後一排受擊抖動／後退放大 4 倍 |
 | `doc_task_2716` | docs/agent-briefs/tasks/PROG/PROG-2-9462.md | PROG-2-9462 |
 | `doc_task_2717` | docs/agent-briefs/tasks/PROG/PROG-2-9483.md | [PROG-2-9483] 基礎戰鬥手感：受擊閃白改「全白停 2 格再快速退」 |
-| `doc_task_2718` | docs/agent-briefs/tasks/PROG/PROG-2-9484.md | [PROG-2-9484] 配偶上場（F4：名冊 kind=spouse、生成型配偶範本、出征與派遣、太守；指派入口改用 checkAssign） |
+| `doc_task_2718` | docs/agent-briefs/tasks/PROG/PROG-2-9226.md | [PROG-2-9226] 學府 qaAcademy 快進與共通 API 流程相容修正（9192 × 9215 合併後 playtest --academy 回歸） |
 | `doc_task_2719` | docs/agent-briefs/tasks/PROG/PROG-2-9485.md | [PROG-2-9485] 待產與哺乳接線（F5：2 季待產、哺乳 OCC、乳母不占用） |
+| `doc_task_2720` | docs/agent-briefs/tasks/PROG/PROG-2-9484.md | [PROG-2-9484] 配偶上場（F4：名冊 kind=spouse、生成型配偶範本、出征與派遣、太守；指派入口改用 checkAssign） |

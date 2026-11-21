@@ -73,7 +73,7 @@ export function sessionAcademyRig(session: GameSession, bundle: LocalApiBundle):
     const host = session.academyHost;
     wire(bundle, {
         ...host,
-        persist: async () => { saves.count += 1; if (fail.on) throw new Error('disk'); await host.persist(); },
+        persist: async (via) => { saves.count += 1; if (fail.on) throw new Error('disk'); await host.persist(via); },
     }, session.occupancyHost.service, session.questAuthority());
     return { api: new AcademyApiClient(bundle.api), bundle, fail, saves, occupancy: session.occupancyHost.service };
 }
