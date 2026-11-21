@@ -16186,5 +16186,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9482.md",
     "title": "[PROG-2-9482] 基礎戰鬥手感：最後一排受擊抖動／後退放大 4 倍",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2716",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9483.md",
+    "title": "[PROG-2-9483] 基礎戰鬥手感：受擊閃白改「全白停 2 格再快速退」",
+    "category": "task"
   }
 ]
