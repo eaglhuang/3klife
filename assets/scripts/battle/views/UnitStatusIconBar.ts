@@ -15,6 +15,7 @@ import {
   type StatusIconEntry,
   type UnitStatusIconList,
 } from '../shared/UnitStatusIcons';
+import type { LocalExtent } from '../shared/GeneralPlateAvoidance';
 
 /**
  * 圖示邊長（名牌座標）。名牌本身縮 0.7、再乘戰場透視，36 實際只剩約 22px、手機約 9px 看不清，
@@ -23,6 +24,8 @@ import {
 export const STATUS_ICON_SIZE = 48;
 const ICON_SIZE = STATUS_ICON_SIZE;
 const ICON_GAP = 3;
+/** 「+N」溢位字的估計寬度（名牌座標），只用於部隊框避讓（PROG-2-9701） */
+const OVERFLOW_TEXT_EST_WIDTH = 40;
 /** 圖示字：粗體加深色描邊，在草地、石板、雪地上都看得清楚 */
 const GLYPH_FONT_SIZE = 32;
 const GLYPH_OUTLINE = new Color(20, 10, 20, 255);
@@ -121,6 +124,21 @@ export class UnitStatusIconBar {
       label.node.active = false;
     }
     return { changed: true };
+  }
+
+  /**
+   * 圖示列在名牌本地座標的外框（PROG-2-9701），供部隊框避讓把圖示列算進去；沒有圖示時回傳 null。
+   * 「+N」溢位字以約 40 寬估算。
+   */
+  public localExtent(): LocalExtent | null {
+    if (!this.root || !isValid(this.root) || !this.root.active) return null;
+    let count = 0;
+    for (const kind of this.shownKinds) if (kind) count += 1;
+    if (count === 0) return null;
+    let right = this.startX + count * (ICON_SIZE + ICON_GAP) - ICON_GAP;
+    const overflow = this.overflowLabel;
+    if (overflow && isValid(overflow.node) && overflow.node.active) right += 8 + OVERFLOW_TEXT_EST_WIDTH;
+    return { left: this.startX, right, top: this.y + ICON_SIZE / 2, bottom: this.y - ICON_SIZE / 2 };
   }
 
   /** 讓指定種類（或全部）的圖示做「放大再回彈」；種類不在畫面上時略過 */

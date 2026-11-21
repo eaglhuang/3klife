@@ -73,7 +73,7 @@ import { unitValueFloatType } from "../shared/DamageFloatType";
 import { UnitStatusIconBar, StatusHaloPool, STATUS_ICON_SIZE } from "./UnitStatusIconBar";
 import { TileBuffMarkers } from "./TileBuffMarkers";
 import type { TileBuffBadge } from "../shared/TileBuffBadge";
-import { BADGE_HIT_PRIORITY_SEC, easePlateOffset, stackBadgeOffsets, type LabelRect, type StackBadgeEntry } from "../shared/GeneralPlateAvoidance";
+import { BADGE_HIT_PRIORITY_SEC, badgeRectFromExtent, easePlateOffset, stackBadgeOffsets, unionExtent, type LabelRect, type LocalExtent, type StackBadgeEntry } from "../shared/GeneralPlateAvoidance";
 import { buildUnitStatusContext, computeUnitStatusIcons, gainedTones, newlyGainedKinds, type StatusIconKind } from "../shared/UnitStatusIcons";
 import { services } from "../../core/managers/ServiceLoader";
 import { FLOAT_MISS_TEXT, FloatTextType } from "../../core/systems/FloatTextStyle";
@@ -1609,9 +1609,7 @@ export class UnitRenderer extends Component {
       const hitAt = this.lastHitAt.get(unitId);
       entries.push({
         id: unitId,
-        rect: tf
-          ? { x: p.x, y: p.y, halfW: (tf.contentSize.width + 10) / 2 * s, halfH: tf.contentSize.height / 2 * s + 4 }
-          : { x: p.x, y: p.y, halfW: 63, halfH: 31 },
+        rect: tf ? badgeRectFromExtent(p.x, p.y, s, this.badgeLocalExtent(view, tf)) : { x: p.x, y: p.y, halfW: 63, halfH: 31 },
         priority: hitAt !== undefined && this.badgeClock - hitAt < BADGE_HIT_PRIORITY_SEC ? 1 : 0,
       });
     });
@@ -1635,6 +1633,19 @@ export class UnitRenderer extends Component {
     for (const unitId of this.lastHitAt.keys()) {
       if (!this.unitViews.has(unitId)) this.lastHitAt.delete(unitId);
     }
+  }
+
+  /**
+   * 部隊框在名牌本地座標的完整外框（PROG-2-9701）：框本體＋上方血條＋狀態圖示列。
+   * 9440 只算框本體，血條與「士／命」圖示會壓到上方的框。
+   */
+  private badgeLocalExtent(view: UnitView, tf: UITransform): LocalExtent {
+    const halfW = (tf.contentSize.width + 10) / 2;
+    const halfH = tf.contentSize.height / 2;
+    let ext: LocalExtent = { left: -halfW, right: halfW, top: halfH, bottom: -halfH };
+    const bar = view.hpBar?.node;
+    if (bar?.active) ext = { ...ext, top: Math.max(ext.top, bar.position.y + HP_BAR_HEIGHT / 2) };
+    return unionExtent(ext, view.statusBar?.localExtent() ?? null);
   }
 
   /** 受擊時記下時間並把框排到部隊框最上層（不蓋過傷害跳字等特效；PROG-2-9440） */
