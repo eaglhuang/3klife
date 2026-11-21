@@ -4,5 +4,5 @@
   "writItemId": "ITEM_QUICK_RESOLVE_WRIT",
   "writCostPerUse": 1,
   "reservePowerPerTroop": 0.06,
-  "enemyReserveTroops": 3000
+  "defaultEnemyReserve": 3000
 }

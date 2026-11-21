@@ -42,7 +42,7 @@ import { battleAptitudeProfileOf, terrainGradeOf } from '../../core/systems/Batt
 import { TerrainFeedbackTracker } from '../../core/systems/TerrainAptitudeFeedback';
 import { TERRAIN_LABEL } from '../../ui/core/EnvScoutPresenter';
 import { finalizeQuickResolve, quickResolveOutcome } from '../runtime/BattleAutoResolve';
-import { quickResolveConfig, type QuickResolveStage } from '../../core/systems/QuickResolveGate';
+import { deployedTroopsOf, quickResolveConfig, resolveEnemyReserve, type QuickResolveStage } from '../../core/systems/QuickResolveGate';
 import { FIELD_AUTO_BATTLE_JOURNAL } from '../../core/systems/OfflineBattleSnapshot';
 import { services } from '../../core/managers/ServiceLoader';
 import { BattlePerformanceTracker, formatPerformance } from '../../core/systems/BattleRecordStats';
@@ -1120,6 +1120,7 @@ export class BattleUIBridge {
       id: c.encounterId,
       battleKind: c.ctrl?.state.siegeDefender === Faction.Player ? 'defense' : c.encounterStage?.battleKind,
       allowQuickResolve: c.encounterStage?.allowQuickResolve,
+      enemyReserve: c.encounterStage?.enemyReserve,
     };
     const duelActive = c.isDuelPanelActive || this.duelCapture !== null || c.ctrl?.isWaitingDuelPlacement === true;
     return { stage, duelActive, ...services().session.checkQuickResolve(stage, Date.now(), duelActive) };
@@ -1150,11 +1151,13 @@ export class BattleUIBridge {
       fortressHp,
       reserveTroops,
     });
-    // 我方預備兵力＝出征帳本裡還沒派上場的兵；敵方沒有帳本，用設定的固定預備兵力（暫定）
+    // 我方預備兵力＝出征帳本裡還沒派上場的兵；敵方沒有帳本：關卡 enemyReserve（缺省用設定預設）扣掉場上已有的兵
+    const enemyDeployed = deployedTroopsOf(Array.from(state.units.values()).filter((u) => u.faction === Faction.Enemy && !u.isDead()).map((u) => u.type));
+    const enemyReserve = resolveEnemyReserve(gate.stage, enemyDeployed);
     const playerReserve = this.ctx.ctrl?.getSortieState()?.poolCurrent ?? 0;
     const quick = quickResolveOutcome(
       side(Faction.Player, state.playerFortressHp, playerReserve),
-      side(Faction.Enemy, state.enemyFortressHp, quickResolveConfig().enemyReserveTroops),
+      side(Faction.Enemy, state.enemyFortressHp, enemyReserve),
       Math.random,
     );
     const outcome = finalizeQuickResolve(quick, services().session.firstBattleCleared);

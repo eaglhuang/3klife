@@ -25,10 +25,12 @@ export interface EncounterConfig {
   /** 戰場類型（可選，預設野戰）；攻城戰開戰時主將扣攻城壽命（PROG-2-0237）；defense＝守城戰，玩家守城、不扣壽命（PROG-2-9425） */
   battleKind?: 'field' | 'siege' | 'defense' | 'duel';
   /**
-   * 極速決戰可用條件（PROG-2-9709）：'always'（預設）／'after-clear'（沒打贏過不可用：劇情關、Boss 關）／'never'；
+   * 極速決戰可用條件（PROG-2-9709）：'after-clear'（預設，沒標就是它：沒打贏過不可用）／'always'／'never'；
    * 守城戰（defense）與單挑（duel）不看此欄位，一律不可用。判定在 core/systems/QuickResolveGate。
    */
   allowQuickResolve?: 'always' | 'after-clear' | 'never';
+  /** 極速決戰的敵方預備兵數（兵，PROG-2-9709）；沒填用 quick-resolve-config.json 的 defaultEnemyReserve，實際值再扣敵方已上場兵數 */
+  enemyReserve?: number;
   /** 天氣條件（可選，預設 Clear） */
   weather?: Weather | string;
   /** 天氣排程（可選）；有值時每回合依排程切換天氣（PROG-2-0401） */

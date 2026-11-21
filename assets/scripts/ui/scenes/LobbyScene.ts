@@ -82,7 +82,7 @@ import { buildBattlefieldReconForEncounter } from '../../core/systems/Battlefiel
 import { buildEnvScoutLines } from '../core/EnvScoutPresenter';
 import { lifespanCommandForBattleKind } from '../../core/systems/LifespanWiring';
 import { createSortieState } from '../../core/systems/SortieDeploy';
-import { quickResolveConfig } from '../../core/systems/QuickResolveGate';
+import { resolveEnemyReserve } from '../../core/systems/QuickResolveGate';
 import type { UnveilingEvent } from '../../core/systems/Unveiling';
 import { type AgingEvent } from '../../core/systems/GeneralAging';
 import { ownedLivingGenerals } from '../core/OwnedRosterSource';
@@ -1516,7 +1516,7 @@ export class LobbyScene extends Component {
         const sortieInput = pgId ? session.getSortieInput(pgId) : null;
         let playerReserve = 0;
         try { playerReserve = sortieInput ? createSortieState(sortieInput).poolMax : 0; } catch { playerReserve = 0; }
-        const resolution = resolveQuickSortie(player, enemy, session.firstBattleCleared, Math.random, { playerTroops: playerReserve, enemyTroops: quickResolveConfig().enemyReserveTroops });
+        const resolution = resolveQuickSortie(player, enemy, session.firstBattleCleared, Math.random, { playerTroops: playerReserve, enemyTroops: resolveEnemyReserve(encounter, 0) });
         const clock = session.gameTime;
         const kind = resolution.result === 'player-win' ? 'win' : resolution.result === 'enemy-win' ? 'lose' : 'draw';
         session.recordAutoResolveBattle({

@@ -3,7 +3,7 @@
  * QuickResolveGate — 極速決戰（瞬間結算、不載入棋盤）的可用條件與每日次數（純邏輯，不依賴 cc）。
  *
  * 規則（數值全在 data/quick-resolve-config.json，關卡條件在 encounters.json 的 allowQuickResolve）：
- * - 關卡 allowQuickResolve：'always'（預設）／'after-clear'（沒打贏過不可用：劇情關、Boss 關）／'never'。
+ * - 關卡 allowQuickResolve：'after-clear'（預設，沒標就是它：沒打贏過不可用）／'always'（true 也算）／'never'。
  *   守城戰（battleKind defense）與單挑（battleKind duel，或戰場內單挑進行中）永遠不可用，不看關卡資料。
  * - 每日免費 dailyFreeUses 次；用完後每次耗 writCostPerUse 張軍令狀；兩者皆不足不可用。
  * - 換日沿用登入日高水位（同 DailyFreeEnroll）：今天嚴格晚於紀錄日才歸零，時鐘回撥不會重置次數。
@@ -12,6 +12,7 @@
  */
 
 import { ITEM_QUICK_RESOLVE_WRIT } from './ItemDef';
+import { UNIT_TROOP_COST } from './SortieDeploy';
 
 export const QUICK_RESOLVE_CONFIG_JSON = 'data/quick-resolve-config';
 /** 軍令狀道具 id（極速決戰免費次數用完後每次耗 1 張；第一版不販售，只從任務／獎勵取得）；定義在 ItemDef */
@@ -26,8 +27,11 @@ export interface QuickResolveConfig {
     writCostPerUse: number;
     /** 未部署（預備）兵力折成戰力的係數：每 1 兵 → 戰力（約等於一隊 500 兵步兵的部隊戰力 ÷ 500，暫定） */
     reservePowerPerTroop: number;
-    /** 敵方預備兵力（暫定：敵方沒有可查的出征帳本，給固定值避免我方整軍對上零預備） */
-    enemyReserveTroops: number;
+    /**
+     * 敵方預設預備兵力（敵方沒有可查的出征帳本）：關卡沒填 enemyReserve 時用它。
+     * JSON 欄位名 defaultEnemyReserve；舊欄位 enemyReserveTroops 向下相容（兩者都填以 defaultEnemyReserve 為準）。
+     */
+    defaultEnemyReserve: number;
 }
 
 export const DEFAULT_QUICK_RESOLVE_CONFIG: Readonly<QuickResolveConfig> = Object.freeze({
@@ -35,7 +39,7 @@ export const DEFAULT_QUICK_RESOLVE_CONFIG: Readonly<QuickResolveConfig> = Object
     writItemId: ITEM_QUICK_RESOLVE_WRIT,
     writCostPerUse: 1,
     reservePowerPerTroop: 0.06,
-    enemyReserveTroops: 3000,
+    defaultEnemyReserve: 3000,
 });
 
 let _config: Readonly<QuickResolveConfig> = DEFAULT_QUICK_RESOLVE_CONFIG;
@@ -56,7 +60,7 @@ export function configureQuickResolve(raw: unknown): void {
         writItemId: typeof src.writItemId === 'string' && src.writItemId.length > 0 ? src.writItemId : DEFAULT_QUICK_RESOLVE_CONFIG.writItemId,
         writCostPerUse: nonNegInt(src.writCostPerUse, DEFAULT_QUICK_RESOLVE_CONFIG.writCostPerUse),
         reservePowerPerTroop: nonNegNumber(src.reservePowerPerTroop, DEFAULT_QUICK_RESOLVE_CONFIG.reservePowerPerTroop),
-        enemyReserveTroops: nonNegInt(src.enemyReserveTroops, DEFAULT_QUICK_RESOLVE_CONFIG.enemyReserveTroops),
+        defaultEnemyReserve: nonNegInt(src.defaultEnemyReserve, nonNegInt(src.enemyReserveTroops, DEFAULT_QUICK_RESOLVE_CONFIG.defaultEnemyReserve)),
     });
 }
 
@@ -90,16 +94,44 @@ export const QUICK_RESOLVE_BLOCK_TEXT: Readonly<Record<QuickResolveBlock, string
 export interface QuickResolveStage {
     readonly id?: string | null;
     readonly battleKind?: string | null;
-    /** encounters.json 的 allowQuickResolve：'always'／'after-clear'／'never'；true＝always、false＝never；缺省 always */
+    /** encounters.json 的 allowQuickResolve：'always'／'after-clear'／'never'；true＝always、false＝never；缺省 after-clear */
     readonly allowQuickResolve?: unknown;
+    /** encounters.json 的 enemyReserve：敵方預備兵數（兵），缺省用設定的 defaultEnemyReserve */
+    readonly enemyReserve?: unknown;
 }
 
 /** 關卡資料的極速決戰模式（守城與單挑的強制不可用由 checkQuickResolve 處理） */
 export function quickResolveStageMode(stage: QuickResolveStage | null | undefined): QuickResolveStageMode {
     const raw = stage?.allowQuickResolve;
     if (raw === false || raw === 'never') return 'never';
-    if (raw === 'after-clear') return 'after-clear';
-    return 'always';
+    if (raw === true || raw === 'always') return 'always';
+    return 'after-clear';
+}
+
+/**
+ * 敵方預備兵力（兵）：關卡 enemyReserve（沒填或壞值用 config.defaultEnemyReserve）扣掉敵方已上場兵數，下限 0。
+ * 上場的兵已算在場上單位戰力裡，預備只算還沒上場的部分，避免重複計算。
+ */
+export function resolveEnemyReserve(
+    stage: QuickResolveStage | null | undefined,
+    deployedEnemyTroops: number,
+    config: Readonly<QuickResolveConfig> = _config,
+): number {
+    const raw = stage?.enemyReserve;
+    const total = typeof raw === 'number' && Number.isFinite(raw) && raw >= 0 ? Math.floor(raw) : config.defaultEnemyReserve;
+    const deployed = Number.isFinite(deployedEnemyTroops) ? Math.max(0, deployedEnemyTroops) : 0;
+    return Math.max(0, total - deployed);
+}
+
+/** 場上單位兵種 → 一隊的兵數（對照出征帳本 UNIT_TROOP_COST；對不到的兵種用步兵 500） */
+const TROOP_TYPE_TO_COST_CODE: Readonly<Record<string, string>> = Object.freeze({
+    cavalry: 'CAVALRY', infantry: 'INFANTRY', shield: 'SHIELD', archer: 'ARCHER',
+    pikeman: 'PIKE', engineer: 'SIEGE', medic: 'MEDIC', navy: 'NAVY',
+});
+
+/** 場上存活單位折成兵數的總和（給 resolveEnemyReserve 的 deployedEnemyTroops） */
+export function deployedTroopsOf(unitTypes: readonly (string | null | undefined)[]): number {
+    return unitTypes.reduce<number>((sum, type) => sum + (UNIT_TROOP_COST[TROOP_TYPE_TO_COST_CODE[type ?? ''] ?? 'INFANTRY'] ?? 500), 0);
 }
 
 // ── 每日次數 ───────────────────────────────────────────────────────────────

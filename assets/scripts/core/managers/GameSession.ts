@@ -333,6 +333,7 @@ import { advanceBreedingSeason, clampRosterPregnancySeasons, holdPregnancyVigor 
 import { DynamicRelationBook, battleComradePairs, type DynamicRelationResult } from '../systems/KinDynamicRelations';
 import { claimAllSeasonPass, createSeasonPassState, isDefaultSeasonPassState, mockSeasonPassLevelUp, normalizeSeasonPassState, type SeasonPassReward, type SeasonPassState } from '../systems/SeasonPass';
 import { normalizePendingSceneGambit, pendingSceneGambitOfTask, resolveSceneGambit, type PendingSceneGambit, type SceneGambitOutcome } from '../systems/HallSceneGambit';
+import { quickResolveWritClaimsFor } from '../systems/QuickResolveWritSources';
 import { checkQuickResolve, emptyQuickResolveState, isDefaultQuickResolveState, normalizeQuickResolveSave, quickResolveConfig, quickResolveSaveOf, rollQuickResolveDaily, spendQuickResolve, type QuickResolveCheck, type QuickResolveStage, type QuickResolveState } from '../systems/QuickResolveGate';
 import { ITEM_EXTREME_CHALLENGE_ORDER, createExtremeTaskState, extremeFreeAttemptsLeft, extremeStageOfWeek, extremeWeekIndexOf, isExtremeStage, normalizeExtremeTaskState, startExtremeTask, type ExtremeTaskState } from '../systems/ExtremeTaskBoard';
 import { rollExtremeTaskDrop, type ExtremeTaskDrop } from '../systems/ExtremeTaskDrop';
@@ -2641,6 +2642,22 @@ export class GameSession implements AcademyRecordPort {
                 }
             }
         }
+    }
+
+    /**
+     * 軍令狀免費來源（PROG-2-9709）：Boss 關首勝 ×1、年終守城勝 ×2、每季第一場戰鬥勝利 ×1，經 reward.claim 入帳。
+     * grantKey 冪等（同關／同年／同季重送不重領），所以每場勝利都呼叫；沒綁 API 就不發，失敗只記警告、不擋戰後結算。
+     */
+    private async _claimQuickResolveWrits(result: BattleResult, options: RecordBattleOptions): Promise<void> {
+        const clock = this._clock.state;
+        await this._claimSupportTickets(quickResolveWritClaimsFor({
+            result,
+            stageId: options.stageId,
+            isBossStage: isExtremeStage(options.stageId),
+            isDefense: Boolean(options.defense),
+            year: clock.currentYear,
+            season: clock.currentSeason,
+        }));
     }
 
     /**
@@ -6791,6 +6808,7 @@ export class GameSession implements AcademyRecordPort {
                 buildBattleSnapshot(battleId, entry.generalId, entry.performance ?? EMPTY_PERFORMANCE, entry.outcome === 'win', battleDate));
         }
         await this._claimMilestoneNotes(settlement.entries);
+        await this._claimQuickResolveWrits(result, options);
         if (settlement.entries.length === 0) {
             if ((clearChanged || firstClear || defenseFought || tallyChanged || comradeChanged || mercenaryChanged || officerChanged) && this._autoSave && this._save) {
                 await this.save();

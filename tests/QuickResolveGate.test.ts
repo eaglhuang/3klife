@@ -17,7 +17,7 @@ import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 import { finalizeQuickResolve, OPENING_RESCUE_FINAL_LINE, quickResolveOutcome, sidePower, type AutoResolveSide } from '../assets/scripts/core/systems/AutoResolve';
 import {
     checkQuickResolve, configureQuickResolve, DEFAULT_QUICK_RESOLVE_CONFIG, EMPTY_QUICK_RESOLVE_DAILY, ITEM_QUICK_RESOLVE_WRIT,
-    normalizeQuickResolveSave, quickResolveFreeLeft, quickResolveSaveOf, resetQuickResolveConfig, rollQuickResolveDaily, spendQuickResolve,
+    normalizeQuickResolveSave, quickResolveFreeLeft, quickResolveSaveOf, quickResolveStageMode, resolveEnemyReserve, deployedTroopsOf, resetQuickResolveConfig, rollQuickResolveDaily, spendQuickResolve,
     type QuickResolveCheckInput, type QuickResolveDaily,
 } from '../assets/scripts/core/systems/QuickResolveGate';
 import { quickSortieChooseView, quickSortieSide, resolveQuickSortie } from '../assets/scripts/ui/core/QuickSortieController';
@@ -35,7 +35,7 @@ const general = (power: number) => ({ str: power, int: power, lea: power, curren
 const side = (reserveTroops?: number): AutoResolveSide => ({ general: general(80), troops: [], fortressHp: 0, ...(reserveTroops !== undefined ? { reserveTroops } : {}) });
 
 function input(patch: Partial<QuickResolveCheckInput> = {}): QuickResolveCheckInput {
-    return { stage: { id: 'stage-a', battleKind: 'field' }, clearedStageIds: [], daily: EMPTY_QUICK_RESOLVE_DAILY, today: D1, writCount: 0, ...patch };
+    return { stage: { id: 'stage-a', battleKind: 'field', allowQuickResolve: 'always' }, clearedStageIds: [], daily: EMPTY_QUICK_RESOLVE_DAILY, today: D1, writCount: 0, ...patch };
 }
 
 function hero(): GeneralConfig {
@@ -108,10 +108,14 @@ export function createQuickResolveGateSuite(): TestSuite {
         assert.equals('player-win', withReserve.result);
     });
 
-    suite.test('可用條件：一般關（always）可用，缺省視為 always', () => {
+    suite.test('可用條件：標 always（或 true）的關卡可用；沒標視為 after-clear', () => {
         assert.isTrue(checkQuickResolve(input()).allowed);
         assert.isTrue(checkQuickResolve(input({ stage: { id: 'x', battleKind: 'siege', allowQuickResolve: 'always' } })).allowed);
-        assert.isTrue(checkQuickResolve(input({ stage: null })).allowed);
+        assert.isTrue(checkQuickResolve(input({ stage: { id: 'x', allowQuickResolve: true } })).allowed);
+        assert.equals('after-clear', quickResolveStageMode({ id: 'x' }));
+        assert.equals('after-clear', quickResolveStageMode(null));
+        assert.equals('first-clear', checkQuickResolve(input({ stage: { id: 'x', battleKind: 'field' } })).block, '沒標＝打贏過才可用');
+        assert.isTrue(checkQuickResolve(input({ stage: { id: 'x', battleKind: 'field' }, clearedStageIds: ['x'] })).allowed);
     });
 
     suite.test('可用條件：首次挑戰的劇情／Boss 關（after-clear）不可用，打贏過才可用', () => {
@@ -196,7 +200,7 @@ export function createQuickResolveGateSuite(): TestSuite {
         assert.equals(DEFAULT_QUICK_RESOLVE_CONFIG.writItemId, cfg.writItemId);
         assert.equals(DEFAULT_QUICK_RESOLVE_CONFIG.writCostPerUse, cfg.writCostPerUse);
         assert.equals(DEFAULT_QUICK_RESOLVE_CONFIG.reservePowerPerTroop, cfg.reservePowerPerTroop);
-        assert.equals(DEFAULT_QUICK_RESOLVE_CONFIG.enemyReserveTroops, cfg.enemyReserveTroops);
+        assert.equals(DEFAULT_QUICK_RESOLVE_CONFIG.defaultEnemyReserve, cfg.defaultEnemyReserve);
         const itemCfg = normalizeItemConfig(JSON.parse(fs.readFileSync(path.join(ROOT, 'assets', 'resources', 'data', 'item-config.json'), 'utf8')));
         const writ = itemCfg.items.find((i) => i.id === ITEM_QUICK_RESOLVE_WRIT);
         assert.isTrue(!!writ, 'item-config.json 有軍令狀');
@@ -208,6 +212,26 @@ export function createQuickResolveGateSuite(): TestSuite {
             else if (e.chainId || e.id.startsWith('extreme-')) assert.equals('after-clear', e.allowQuickResolve, `${e.id} 劇情／Boss`);
             assert.isTrue(e.allowQuickResolve === undefined || ['always', 'after-clear', 'never'].includes(e.allowQuickResolve), `${e.id} 值合法`);
         }
+    });
+
+    suite.test('敵方預備兵力：關卡 enemyReserve 優先、缺省用預設，扣掉場上已有的兵、下限 0', () => {
+        resetQuickResolveConfig();
+        assert.equals(3000, resolveEnemyReserve({ id: 'a' }, 0), '沒填用預設 3000');
+        assert.equals(3000, resolveEnemyReserve(null, 0));
+        assert.equals(2000, resolveEnemyReserve({ id: 'a' }, 1000));
+        assert.equals(5000, resolveEnemyReserve({ id: 'a', enemyReserve: 5000 }, 0));
+        assert.equals(3500, resolveEnemyReserve({ id: 'a', enemyReserve: 5000 }, 1500));
+        assert.equals(0, resolveEnemyReserve({ id: 'a', enemyReserve: 800 }, 1500), '場上兵比預備多＝0，不為負');
+        assert.equals(0, resolveEnemyReserve({ id: 'a', enemyReserve: 0 }, 0), '明確填 0＝沒有預備');
+        assert.equals(3000, resolveEnemyReserve({ id: 'a', enemyReserve: -5 }, 0), '壞值退回預設');
+        assert.equals(3000, resolveEnemyReserve({ id: 'a', enemyReserve: 'x' }, 0));
+        configureQuickResolve({ defaultEnemyReserve: 1200 });
+        assert.equals(1200, resolveEnemyReserve({ id: 'a' }, 0));
+        configureQuickResolve({ enemyReserveTroops: 900 });
+        assert.equals(900, resolveEnemyReserve({ id: 'a' }, 0), '舊欄位 enemyReserveTroops 向下相容');
+        resetQuickResolveConfig();
+        assert.equals(500 + 1200 + 500, deployedTroopsOf(['infantry', 'cavalry', 'unknown']), '兵種折兵數，未知兵種當步兵');
+        assert.equals(0, deployedTroopsOf([]));
     });
 
     suite.test('存檔正規化：壞值視為沒有紀錄，來回不變', () => {
@@ -224,7 +248,7 @@ export function createQuickResolveGateSuite(): TestSuite {
         resetQuickResolveConfig();
         const adapter = new MemoryStorageAdapter();
         const session = makeSession(adapter);
-        const stage = { id: 'stage-a', battleKind: 'field' };
+        const stage = { id: 'stage-a', battleKind: 'field', allowQuickResolve: 'always' };
         await session.addItem(ITEM_QUICK_RESOLVE_WRIT, 1);
         for (let i = 0; i < 3; i++) assert.isTrue(await session.spendQuickResolveUse(stage, DAY1));
         assert.equals(1, session.itemCount(ITEM_QUICK_RESOLVE_WRIT), '免費次數不扣軍令狀');
