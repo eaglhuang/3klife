@@ -365,6 +365,7 @@ export function rollPool(pool: RewardPoolDef, count: number, rng: RandomSource, 
             items.push({ entryId: entry.id, tier: entry.tier, effect, applied: effect, trace });
         }
         for (const f of first) nextPity[f.ladder.counterKey] = hit.has(f.ladder.counterKey) ? 0 : f.counter + 1;
+        for (const t of pool.tallies) nextPity[t.counterKey] = (nextPity[t.counterKey] ?? 0) + 1;
     }
     return { items, pity: nextPity };
 }

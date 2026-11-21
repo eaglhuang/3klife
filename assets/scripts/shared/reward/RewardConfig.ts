@@ -70,6 +70,16 @@ export interface RewardDrawSlotDef {
     group: string | null;
 }
 
+/**
+ * 累計計數（不歸零）：每抽一次加 1；每滿 creditEvery 得 1 次資格，已用資格記在 spentKey（天命商店：每 200 抽 1 次兌換）。
+ * 與保底階梯不同：階梯出貨就歸零，累計計數只增不減，供「抽滿 N 次換獎」類商店讀取。
+ */
+export interface RewardTallyDef {
+    counterKey: string;
+    creditEvery: number;
+    spentKey: string;
+}
+
 export interface RewardPoolDef {
     id: string;
     enabled: boolean;
@@ -91,6 +101,8 @@ export interface RewardPoolDef {
     tierRates: Record<string, number> | null;
     /** 等階 → 群組佔比；沒列的等階依項目權重直接抽 */
     tierGroups: Record<string, RewardTierGroupShare[]>;
+    /** 累計計數（天命商店額度來源）；空陣列＝無 */
+    tallies: RewardTallyDef[];
     /** 固定名額；空陣列＝一般抽（picks 個）。有名額時 picks 為名額總和，且不套用保底 */
     slots: RewardDrawSlotDef[];
     /** 機率公開（reward.pools）用的中繼資料 */
@@ -167,6 +179,21 @@ function normalizePresentation(raw: unknown): RewardPresentationDef {
     const type = str(raw.type);
     if (!type) return INSTANT_PRESENTATION;
     return { type, args: isRecord(raw.args) ? { ...raw.args } : {}, skippable: raw.skippable !== false };
+}
+
+function normalizeTallies(raw: unknown): RewardTallyDef[] {
+    if (!Array.isArray(raw)) return [];
+    const out: RewardTallyDef[] = [];
+    for (const item of raw) {
+        if (!isRecord(item)) continue;
+        const counterKey = str(item.counterKey);
+        const spentKey = str(item.spentKey);
+        const every = item.creditEvery;
+        if (!counterKey || !spentKey || counterKey === spentKey || typeof every !== 'number' || !Number.isInteger(every) || every < 1) continue;
+        if (out.some((t) => t.counterKey === counterKey)) continue;
+        out.push({ counterKey, creditEvery: every, spentKey });
+    }
+    return out;
 }
 
 function normalizeSoft(raw: unknown, hardCount: number): RewardPitySoftDef | null {
@@ -284,6 +311,7 @@ function normalizePool(raw: unknown): RewardPoolDef | null {
         tiers: poolTiers,
         entries,
         pity: slotTotal > 0 ? [] : normalizePity(raw.pity, poolTiers),
+        tallies: normalizeTallies(raw.tallies),
         tierRates: normalizeTierRates(raw.tierRates, poolTiers),
         tierGroups: normalizeTierGroups(raw.tierGroups, poolTiers),
         slots,

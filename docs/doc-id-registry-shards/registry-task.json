@@ -16276,5 +16276,17 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9240.md",
     "title": "[PROG-2-9240] 支援卡資料與物品化（SUP-1：25 張學府支援卡、category=supportCard、instanceState、出征編制排除）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2731",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9464.md",
+    "title": "[PROG-2-9464] GCH-R5 保底存檔遷移",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2732",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9465.md",
+    "title": "[PROG-2-9465] GCH-R7 宿命池遷移",
+    "category": "task"
   }
 ]

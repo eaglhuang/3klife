@@ -31,6 +31,7 @@ export const API_COMMANDS = Object.freeze({
     'reward.claim': { kind: 'cmd', revGuard: false },
     'reward.pools': { kind: 'query', revGuard: false },
     'reward.pity': { kind: 'query', revGuard: false },
+    'reward.pity.redeem': { kind: 'cmd', revGuard: false },
     // 劇情（劇情演出 Base 規格 §11；STY-M 最小版）
     'story.trigger': { kind: 'cmd', revGuard: false },
     'story.choose': { kind: 'cmd', revGuard: false },
@@ -202,6 +203,17 @@ export interface RewardPlanLine {
     /** 實際入帳的效果（懲罰截斷、倍率縮放後）；與 effect 相同代表沒有調整 */
     applied: Record<string, unknown>;
     trace: string[];
+}
+
+/** 累計計數進度（天命商店）：count 已抽幾次、spent 已兌換幾次、credits 目前可兌換、toNext 距離下一次資格還差幾抽 */
+export interface RewardTallyView {
+    counterKey: string;
+    spentKey: string;
+    count: number;
+    creditEvery: number;
+    spent: number;
+    credits: number;
+    toNext: number;
 }
 
 export interface RewardGrantResult {
