@@ -1958,6 +1958,7 @@ export class LobbyScene extends Component {
             officerRank: officerDisplayOf(session.officerState).rankName,
             gold: wallet.gold,
             gems: wallet.gems,
+            silver: session.silverLedger.silverBalance(),
             food: session.military.food,
             cityTroops: session.military.cityTroops,
             cityTroopsCap: session.military.cityTroopsCap,
@@ -4853,6 +4854,7 @@ ${spent}`,
                 // 年度月旦評放榜（血統傳承 G4 §G，PROG-2-1803）
                 for (const message of payload?.yuedanLines ?? []) services().event.emit('SHOW_TOAST', { message, duration: 4 });
                 for (const message of payload?.nursingLines ?? []) services().event.emit('SHOW_TOAST', { message, duration: 4 });
+                if (payload?.clanStipendLine) services().event.emit('SHOW_TOAST', { message: payload.clanStipendLine, duration: 4 });
                 // 立春子嗣天象（doc_spec_0312 §2，PROG-2-2106）
                 for (const message of payload?.omenLines ?? []) services().event.emit('SHOW_TOAST', { message, duration: 4 });
                 // 糧草告急（經濟 §G）、囚犯交出傳家寶（道具 §G，PROG-2-1774）

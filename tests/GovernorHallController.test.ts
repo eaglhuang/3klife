@@ -62,7 +62,7 @@ export function createGovernorHallControllerSuite(): TestSuite {
             snapshot: () => snapshot(),
             territory: () => ({ level: 1, maxSlots: 2, pendingLevel: null, plan: planTerritoryUpgrade(1, null, 5000) }),
         }).getFlowView();
-        assert.equals('升級至 Lv2（金 4000・糧 1000）', flow.texts.btnUpgradeLabel);
+        assert.equals('升級至 Lv2（金 4000・糧草 1000）', flow.texts.btnUpgradeLabel);
         assert.isTrue(flow.enabled.btnUpgrade);
     });
 

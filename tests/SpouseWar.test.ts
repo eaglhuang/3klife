@@ -111,5 +111,25 @@ export function createSpouseWarSuite(): TestSuite {
         assert.isFalse(session.getDeployableGenerals().some((g) => g.id === id));
     });
 
+    suite.test('SP2 漏洞：宣戰後沒出征就議和（atWar 解除）或該國覆滅，配偶的 homeWar 占用自動解除', async () => {
+        const { session, cmd, holder, setRelation } = await newBundle();
+        setRelation('shu', 50);
+        const ok = await cmd<{ generalId: string; created: boolean }>({ source: 'diplomatic', nationId: 'shu' });
+        const id = (ok as { result: { generalId: string } }).result.generalId;
+        const setWar = async (atWar: boolean, fallen = false): Promise<void> => {
+            await session.setRivals({ nations: holder._rivals.nations.map((n) => (n.id === 'shu' ? { ...n, atWar, ...(fallen ? { fallen: true } : {}) } : n)) } as never);
+        };
+        const deployable = (): boolean => session.getDeployableGenerals().some((g) => g.id === id);
+        session.beginHomeWar('shu');
+        await setWar(true);
+        assert.isFalse(deployable(), '交戰中仍被母國占用擋住');
+        await setWar(false);
+        assert.isTrue(deployable(), '議和後占用解除，可再出征');
+        session.beginHomeWar('shu');
+        assert.isFalse(deployable(), '重新開戰可再占（冪等鍵已釋放）');
+        await setWar(false, true);
+        assert.isTrue(deployable(), '該國覆滅也解除');
+    });
+
     return suite;
 }

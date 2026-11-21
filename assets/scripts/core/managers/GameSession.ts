@@ -575,6 +575,8 @@ export interface SeasonAdvancedPayload {
     yuedanLines?: string[];
     /** 哺乳登記被占用擋下、延到下季重試的提示句（PROG-2-9581）；沒有時省略 */
     nursingLines?: string[];
+    /** 本季家族俸祿入帳句（PROG-2-9593）；俸祿為 0 或家族設定未載入時省略 */
+    clanStipendLine?: string;
     /** 立春子嗣天象（doc_spec_0312 §2，PROG-2-2106）；只有跨年進入春季且有符合門檻的子嗣才有 */
     omenLines?: string[];
     agingEvents: AgingEvent[];
@@ -1432,6 +1434,20 @@ export class GameSession implements AcademyRecordPort {
     }
 
     /**
+     * 每季家族俸祿（PROG-2-9593）：銀兩原本只出不進，家業系統未落地前的暫代收入。
+     * 入帳 clanStipendBase ＋ 配偶數 × clanStipendPerSpouse；設定未載入或兩欄為 0 不入帳。回傳一行季報文字（沒入帳回 null）。
+     */
+    private _grantClanStipend(): string | null {
+        const config = this._familyConfig;
+        if (!config) return null;
+        const spouses = this._family.members('spouse').length;
+        const amount = config.clanStipendBase + spouses * config.clanStipendPerSpouse;
+        if (amount <= 0) return null;
+        this._family.creditSilver(amount, config.startingSilver);
+        return `家族俸祿入帳：銀兩 +${amount}（目前 ${this._family.silverBalance(config.startingSilver)}）`;
+    }
+
+    /**
      * 乳母費實扣（PROG-2-9591）：選乳母且帶著未滿 breastfeedEndAge 歲孩子的母親，每季收 wetNurseSilverPerQuarter 銀兩（每位母親一份）。
      * 銀兩不足就乳母請辭，母親改回母乳並重新登記哺乳占用，不讓餘額變負、也不卡季結。
      */
@@ -1646,6 +1662,21 @@ export class GameSession implements AcademyRecordPort {
                 this._occupancy.release({ personId: record.personId, kind: 'homeWar', refId: record.refId });
             }
         }
+    }
+
+    /**
+     * 解除已無戰事的母國占用（PROG-2-9593，SP2 漏洞）：宣戰後沒出征、之後議和（結盟）或該國覆滅時，
+     * 勢力已不在交戰狀態，卻沒有人呼叫 endHomeWar，配偶會一直被擋出征。外交狀態改寫後掃一次，戰事不在了就解除。
+     */
+    private _releaseStaleHomeWars(): void {
+        const warring = new Set(this._rivals.nations.filter((n) => n.atWar && !n.fallen).map((n) => n.id));
+        const stale = new Set<string>();
+        for (const record of this._occupancy.snapshot()) {
+            if (record.kind !== 'homeWar' || !record.refId.startsWith('war:')) continue;
+            const nationId = record.refId.slice(4);
+            if (!warring.has(nationId)) stale.add(nationId);
+        }
+        for (const nationId of stale) this.endHomeWar(nationId);
     }
 
     /** 聯姻納配偶：邦交友好以上、每國不超過 marriagePerNation 位；成婚後邦交 +20（規格 3.2） */
@@ -3194,6 +3225,7 @@ export class GameSession implements AcademyRecordPort {
     /** 外交指令或出征結算後寫回勢力狀態並存檔 */
     public async setRivals(world: RivalWorld): Promise<void> {
         this._rivals = normalizeRivalWorld(world);
+        this._releaseStaleHomeWars();
         if (this._save) {
             await this.save();
         }
@@ -3258,6 +3290,7 @@ export class GameSession implements AcademyRecordPort {
         const result = respondToRivalProposal(this._rivals, nationId, accept, this._military.food, this._clock.state.totalSeasonsElapsed);
         if (!result.ok) return result;
         this._rivals = result.world;
+        this._releaseStaleHomeWars();
         this._military = { ...this._military, food: this._military.food - result.foodSpent };
         if (result.goldGained > 0) grantGold(result.goldGained);
         if (this._autoSave && this._save) await this.save();
@@ -3324,6 +3357,7 @@ export class GameSession implements AcademyRecordPort {
         this._rivals = applyEraShift(world, this._clock.state.totalSeasonsElapsed, this._territories.length);
         const events = resolveRivalPlayerEvents(this._rivals, this._clock.state.totalSeasonsElapsed, { troops: this._military.cityTroops, food: this._military.food }, this._random);
         this._rivals = events.world;
+        this._releaseStaleHomeWars();
         this._military = { ...this._military, food: this._military.food - events.foodLost, cityTroops: this._military.cityTroops - events.troopsLost };
         this._rivalNotices.push(...events.notices);
         const risen = newAiHegemonOf(beforeHolders, holdersOf(this._rivals), 'player');
@@ -5952,6 +5986,7 @@ export class GameSession implements AcademyRecordPort {
         }
         this._roster.replaceAll(roster);
         const nursingLines = this._settleNursing(bred.pregnancyEnded, advance.current.totalSeasonsElapsed);
+        const clanStipendLine = this._grantClanStipend();
         this._emitLifeImprints(deathImprints.imprinted);
         this._clearLeadIfGone();
         this._releaseServedCaptives(advance.current.totalSeasonsElapsed);
@@ -6058,7 +6093,7 @@ export class GameSession implements AcademyRecordPort {
         const seasonReportSections = this._buildSeasonReportSections(governanceSeason, economyBase, hallMissionReport);
         this._seasonActivity = emptySeasonActivity();
         this._seasonEconomyBase = { ...this._cityEconomy };
-        const payload: SeasonAdvancedPayload = { seasonReportSections, ...(nursingLines.length > 0 ? { nursingLines } : {}), ...(forcedRetirements.length > 0 ? { forcedRetirements, forcedRetirementNames: forcedRetirements.map((id) => rosterBeforeLifecycle.find((general) => general.id === id)?.name ?? id) } : {}), ...(yuedanLines.length > 0 ? { yuedanLines } : {}), ...(omenLines.length > 0 ? { omenLines } : {}), ...(this._tallyFoodDiscountArmed ? { foodLowLine: FOOD_LOW_LINE } : {}), ...(treasures.length > 0 ? { prisonTreasureLines: treasures.map((entry) => prisonTreasureLine(entry.targetName, ITEM_DISPLAY_NAMES[ITEM_TREASURE])) } : {}), ...(governanceReport ? { governanceReport } : {}), ...(eventNotice ? { governanceEventLine: eventNotice } : {}), advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(hallMissionReport ? { hallMissionReport } : {}), ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids } : {}), ...(mercenaryDay.dayThreeUids.length > 0 ? { mercenaryDayThree: mercenaryDay.dayThreeUids } : {}), ...(mercenaryDay.trustUids.length > 0 ? { mercenaryTrust: mercenaryDay.trustUids } : {}) };
+        const payload: SeasonAdvancedPayload = { seasonReportSections, ...(nursingLines.length > 0 ? { nursingLines } : {}), ...(clanStipendLine ? { clanStipendLine } : {}), ...(forcedRetirements.length > 0 ? { forcedRetirements, forcedRetirementNames: forcedRetirements.map((id) => rosterBeforeLifecycle.find((general) => general.id === id)?.name ?? id) } : {}), ...(yuedanLines.length > 0 ? { yuedanLines } : {}), ...(omenLines.length > 0 ? { omenLines } : {}), ...(this._tallyFoodDiscountArmed ? { foodLowLine: FOOD_LOW_LINE } : {}), ...(treasures.length > 0 ? { prisonTreasureLines: treasures.map((entry) => prisonTreasureLine(entry.targetName, ITEM_DISPLAY_NAMES[ITEM_TREASURE])) } : {}), ...(governanceReport ? { governanceReport } : {}), ...(eventNotice ? { governanceEventLine: eventNotice } : {}), advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(hallMissionReport ? { hallMissionReport } : {}), ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids } : {}), ...(mercenaryDay.dayThreeUids.length > 0 ? { mercenaryDayThree: mercenaryDay.dayThreeUids } : {}), ...(mercenaryDay.trustUids.length > 0 ? { mercenaryTrust: mercenaryDay.trustUids } : {}) };
         if (this._autoSave && this._save) {
             await this.save();
         }
