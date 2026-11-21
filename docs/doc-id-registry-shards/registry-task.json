@@ -16177,6 +16177,12 @@
   },
   {
     "id": "doc_task_2714",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9481.md",
+    "title": "[PROG-2-9481] 基礎戰鬥手感：所有音效走同一個節流閘門",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2715",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9482.md",
     "title": "[PROG-2-9482] 基礎戰鬥手感：最後一排受擊抖動／後退放大 4 倍",
     "category": "task"

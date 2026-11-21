@@ -6,8 +6,8 @@
  * 不論日後併入任務框架（QST）或獨立成第七套框架，型別與命令都可原封不動搬過去。
  */
 
-/** 可寫入登記表的占用種類（MVP 只有這兩種；其餘種類第二版各自遷入） */
-export const WRITABLE_OCCUPANCY_KINDS = ['academy', 'mentorAssign'] as const;
+/** 可寫入登記表的占用種類（學府、教官指派、哺乳；其餘種類第二版各自遷入）。nursing 為 PROG-2-9442 新增（doc_spec_1241 第 3.5 節） */
+export const WRITABLE_OCCUPANCY_KINDS = ['academy', 'mentorAssign', 'nursing'] as const;
 export type WritableOccupancyKind = (typeof WRITABLE_OCCUPANCY_KINDS)[number];
 
 /** 只讀轉接器的占用種類（現況各系統自己存狀態，登記表只讀不寫） */
@@ -47,7 +47,7 @@ export type OccupancyReader = () => readonly OccupancyRecord[];
 
 /**
  * 互斥矩陣：兩種占用能否同時掛在同一個人身上。
- * MVP 預設全部互斥（修業、教官指派、任務、派遣、傭兵、待產都是「這個人忙」）；
- * 家業規格第 10 章的矩陣定案後，只改這個函式的資料表，不改呼叫端。
+ * 沒有載入矩陣時預設全部互斥（修業、教官指派、任務、派遣、傭兵、待產都是「這個人忙」）；
+ * 載入 occupancy-matrix.json（OccupancyMatrix.ts）後由設定決定，只改 JSON，不改呼叫端。
  */
 export type OccupancyCompatibility = (a: OccupancyKind, b: OccupancyKind) => boolean;

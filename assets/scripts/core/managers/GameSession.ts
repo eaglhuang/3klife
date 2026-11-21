@@ -164,6 +164,7 @@ import { SkillService } from '../../shared/skill/SkillService';
 import type { AcademyHost } from '../api/localserver/AcademyHostCommands';
 import type { OccupancyHost } from '../api/localserver/OccupancyCommands';
 import { OccupancyService } from '../../shared/occupancy/OccupancyService';
+import { parseOccupancyMatrix, type OccupancyMatrixV1 } from '../../shared/occupancy/OccupancyMatrix';
 import { parseFamilyConfig, type FamilyConfigV1 } from '../../shared/family/FamilyConfig';
 import { FamilyService } from '../../shared/family/FamilyService';
 import { isEmptyFamilyState } from '../../shared/family/FamilyTypes';
@@ -1392,7 +1393,7 @@ export class GameSession implements AcademyRecordPort {
     }
 
     /**
-     * 人員占用登記（PROG-2-9207 OCC-M 中立版）：登記表只存 academy／mentorAssign；
+     * 人員占用登記（PROG-2-9207 OCC-M 中立版）：登記表只存 academy／mentorAssign／nursing；
      * 太守府、大廳任務、派遣、傭兵、歷練、待產重傷六處以唯讀轉接器查詢，狀態仍由各系統自己保管。
      */
     private readonly _occupancy: OccupancyService = new OccupancyService({
@@ -1410,6 +1411,13 @@ export class GameSession implements AcademyRecordPort {
 
     private _adaptedOccupancy(personId: string, refId: string, since = 0, until: number | null = null): OccupancyRecord {
         return { personId, kind: 'governance', refId, since, until };
+    }
+
+    /** 套用 occupancy-matrix.json（PROG-2-9442）；缺欄位或規則不一致直接丟 OccupancyMatrixError（fail-fast） */
+    public configureOccupancyMatrix(raw: unknown): OccupancyMatrixV1 {
+        const matrix = parseOccupancyMatrix(raw);
+        this._occupancy.setMatrix(matrix);
+        return matrix;
     }
 
     /** 人員占用宿主：ServiceLoader 把它掛到本機 API 的 occupancy.* 命令 */

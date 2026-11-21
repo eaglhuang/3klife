@@ -11,6 +11,7 @@ import {
 } from "../../core/config/Constants";
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { services } from "../../core/managers/ServiceLoader";
+import { installBattleSfxGate, uninstallBattleSfxGate } from "../shared/BattleAudio";
 import { bindHeldTallyInstances } from '../../core/config/TallyCardCatalog';
 import { tallyBattleInfoOf } from "../../core/systems/TigerTallyStar";
 import { IBattleEntryParams, DEFAULT_BATTLE_ENTRY_PARAMS, formatBattleEntryLog, formatBattleStageTitle } from '../../shared/BattleEntryParams';
@@ -165,6 +166,7 @@ export class BattleScene extends Component {
       // 1. 初始化服務容器（必須在所有 services() 呼叫之前）
       // 傳入 this.node 作為 hostNode，讓 AudioSystem 得以掛載 AudioSource
       services().initialize(this.node);
+      installBattleSfxGate(); // PROG-2-9481：所有音效走同一個節流閘門
       // ensureGlobalDevOverlay(); // 解耦移除
       UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] ServiceLoader 初始化完成");
 
@@ -541,6 +543,7 @@ export class BattleScene extends Component {
   }
 
   onDestroy(): void {
+    uninstallBattleSfxGate();
     this.sceneContext.combatVisualQueue.length = 0;
     this.sceneContext.isDrainingCombatVisual = false;
     this.sceneContext.isAdvancingTurn = false;

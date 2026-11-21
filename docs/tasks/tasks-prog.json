@@ -11781,6 +11781,54 @@
     },
     {
       "doc_id": "",
+      "id": "PROG-2-9481",
+      "title": "基礎戰鬥手感：所有音效走同一個節流閘門",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-21T15:10:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 11/21 核准：特效、奧義演出、動作序列直接呼叫 audio.playSfx 不經 9439 節流。AudioSystem 新增統一節流閘門（playSfx／playSfxWithCooldown 一律先問閘門），戰場裝上共用 SfxThrottle；防回歸掃描禁止 AudioSystem 以外直接 playOneShot（基準 0）。",
+      "related": [
+        "PROG-2-9439"
+      ],
+      "depends": [
+        "PROG-2-9439"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8837 通過、tsc 0 錯、7456 底層計數 footstep 68→24、特效 3 聲 boom→1 | 變更: 統一音效節流閘門＋防回歸 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
       "id": "PROG-2-9482",
       "title": "基礎戰鬥手感：最後一排受擊抖動／後退放大 4 倍修正",
       "owner": "claude-code-fable-5-2",
@@ -12552,13 +12600,13 @@
       "title": "OCC 擴充 nursing、mentorAssign 與互斥矩陣（F2；矩陣放設定 JSON）",
       "owner": "ClaudeCode_sonnet-5-5",
       "priority": "P1",
-      "status": "open",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-21",
       "created_by_agent": "ClaudeCode_sonnet-5-5",
-      "started_at": "",
-      "started_by_agent": "",
+      "started_at": "2026-11-21T15:30:00+08:00",
+      "started_by_agent": "ClaudeCode_sonnet-5-5",
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
@@ -12570,7 +12618,7 @@
       "depends": [],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-21 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0 錯；run-cli 全過；check-api-bypass 不增；compute-gate standard 通過 | 變更: OCC 新增 nursing 登記與 JSON 互斥矩陣、checkAssign 指派當下檢查、occupancy.query activity、契約測試（TC-FAM-02／03） | 阻塞: 無；待決：待產可否當太守／內政、哺乳可否做非遠派大廳任務（目前預設擋）；F4／F5 接線要改用 checkAssign，現有 isRegistered 過濾會排除哺乳母親",
       "brief": {
         "style": "classic",
         "label": "",

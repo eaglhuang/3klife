@@ -2,7 +2,7 @@
 /**
  * OccupancyCommands — 人員占用命令（occupancy.query／acquire／release）在本機 adapter 的處理器。
  *
- * 占用狀態屬於重要狀態，寫入只走這裡：命令層以 idemKey 擋重送，登記表本身也冪等
+ * 占用狀態屬於重要狀態，寫入只走這裡（互斥規則在 occupancy-matrix.json，不在這裡）：命令層以 idemKey 擋重送，登記表本身也冪等
  * （同一筆 acquire 重送回 acquired=false、release 已不存在回 released=false），沒有 idemKey 的重試也不會重複寫。
  * 登記表與六處轉接器都經 OccupancyHost（單機＝GameSession），這裡不碰存檔後端。
  */
@@ -68,6 +68,13 @@ export function registerOccupancyCommands(adapter: LocalApiAdapter, getHost: () 
             records: records.map(toResult),
             occupiedIds: Array.from(new Set(records.map((r) => r.personId))),
         };
+        if (args.activity !== undefined) {
+            // 活動指派檢查（PROG-2-9442）：在指派當下問，被擋的占用附在 blockedBy
+            if (personId === undefined) throw new ApiError('INVALID_SCHEMA', 'activity 必須同時帶 personId');
+            const activity = parseString(args, 'activity');
+            const check = guard(() => service().checkAssign(personId, activity));
+            result.assign = { activity, allowed: check.allowed, ...(check.blockedBy ? { blockedBy: toResult(check.blockedBy) } : {}) };
+        }
         return { result };
     });
 
