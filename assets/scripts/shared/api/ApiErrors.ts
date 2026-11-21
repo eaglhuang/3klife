@@ -46,6 +46,9 @@ export const API_ERRORS = Object.freeze({
     ITEM_INSUFFICIENT: def('E314', 'INSUFFICIENT'),
     ITEM_SOURCE_INVALID: def('E315', 'SOURCE_INVALID'),
     ITEM_RULE_UNKNOWN: def('E316', 'RULE_UNKNOWN'),
+    // item.use：材料沒有使用效果、目標不是可升級的實例、目標未持有（E317）；目標已在等級上限，請先傳承（E318）
+    ITEM_USE_INVALID: def('E317', 'USE_INVALID'),
+    ITEM_AT_CAP: def('E318', 'AT_CAP'),
     // 獎勵（E32x；規格 doc_spec_1186 §11.4 寫 E5xx，改用 E32x 以免與其他框架分段衝突，待總 PM 裁決）
     REWARD_POOL_NOT_FOUND: def('E320', 'POOL_NOT_FOUND'),
     REWARD_BUNDLE_NOT_FOUND: def('E321', 'BUNDLE_NOT_FOUND'),

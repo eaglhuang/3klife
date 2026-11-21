@@ -6,7 +6,7 @@
  * Unity 對照：EditMode 測試 UI 標籤 overlap resolver 的貪婪擺放。
  */
 import { assert, TestSuite } from './TestRunner';
-import { stackBadgeOffsets, type LabelRect, type StackBadgeEntry } from '../assets/scripts/battle/shared/GeneralPlateAvoidance';
+import { badgeRectFromExtent, stackBadgeOffsets, unionExtent, type LabelRect, type StackBadgeEntry } from '../assets/scripts/battle/shared/GeneralPlateAvoidance';
 
 const box = (x: number, y: number): LabelRect => ({ x, y, halfW: 63, halfH: 31 });
 const e = (id: string, x: number, y: number, priority = 0): StackBadgeEntry => ({ id, rect: box(x, y), priority });
@@ -18,6 +18,37 @@ function placed(entries: StackBadgeEntry[], obstacles: LabelRect[] = []): LabelR
 
 export function createBadgeStackingSuite(): TestSuite {
     const suite = new TestSuite('BadgeStacking (部隊資訊框彼此錯開 PROG-2-9440)');
+
+    // PROG-2-9701：避讓矩形要包含框上方的血條與狀態圖示列
+    suite.test('只有框本體時，矩形與 9440 舊算法相同', () => {
+        const r = badgeRectFromExtent(100, 50, 0.7, { left: -90, right: 90, top: 39, bottom: -39 });
+        assert.equals(100, r.x); assert.equals(50, r.y);
+        assert.isTrue(Math.abs(r.halfW - 63) < 1e-6, 'halfW=(170+10)/2*0.7');
+        assert.isTrue(Math.abs(r.halfH - (39 * 0.7 + 4)) < 1e-6, 'halfH=39*0.7+4');
+    });
+
+    suite.test('血條與圖示列併入後，矩形往上長、中心上移', () => {
+        const body = { left: -90, right: 90, top: 39, bottom: -39 };
+        const withBar = unionExtent(body, { left: -75, right: 75, top: 51, bottom: 43 });
+        const withIcons = unionExtent(withBar, { left: -90, right: 15, top: 103, bottom: 55 });
+        assert.equals(103, withIcons.top); assert.equals(-39, withIcons.bottom); assert.equals(-90, withIcons.left); assert.equals(90, withIcons.right);
+        const r = badgeRectFromExtent(0, 0, 0.7, withIcons);
+        assert.isTrue(Math.abs(r.y - 32 * 0.7) < 1e-6, '中心 = (103-39)/2 縮放');
+        assert.isTrue(r.y + r.halfH >= 103 * 0.7, '上緣蓋到圖示列頂端');
+        assert.isTrue(r.y - r.halfH <= -39 * 0.7, '下緣仍蓋到框底');
+        assert.equals(body, unionExtent(body, null));
+    });
+
+    suite.test('下方框的圖示列壓到上方框時會被錯開', () => {
+        // 上框本體在 y=0；下框本體在 y=-70，本體互不重疊，但下框圖示列頂端（-70+103*0.7≈2）伸進上框
+        const upper: StackBadgeEntry = { id: 'a', rect: badgeRectFromExtent(0, 0, 0.7, { left: -90, right: 90, top: 39, bottom: -39 }), priority: 0 };
+        const lowerBodyOnly = badgeRectFromExtent(0, -70, 0.7, { left: -90, right: 90, top: 39, bottom: -39 });
+        assert.isTrue(!overlap(upper.rect, lowerBodyOnly), '只算本體時看不出重疊（9440 的盲點）');
+        const lower: StackBadgeEntry = { id: 'b', rect: badgeRectFromExtent(0, -70, 0.7, { left: -90, right: 90, top: 103, bottom: -39 }), priority: 0 };
+        const off = stackBadgeOffsets([upper, lower], []);
+        assert.isTrue(off.has('b'), '含圖示列後會讓開');
+        assert.isTrue(!overlap(upper.rect, { ...lower.rect, y: lower.rect.y + (off.get('b') ?? 0) }), '讓開後不重疊');
+    });
 
     suite.test('互不重疊的框不動', () => {
         assert.equals(0, stackBadgeOffsets([e('a', 0, 0), e('b', 300, 0)], []).size);

@@ -14,7 +14,7 @@
       "kind": "household",
       "aliasKey": "holder.household.name",
       "containers": [
-        { "id": "main", "accepts": ["token", "consumable", "material", "special", "currency", "treasure"], "capacity": null }
+        { "id": "main", "accepts": ["token", "consumable", "material", "special", "currency", "treasure", "card"], "capacity": null }
       ]
     }
   ],

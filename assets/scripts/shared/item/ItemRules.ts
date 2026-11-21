@@ -7,7 +7,7 @@
  */
 import {
     HOLDER_KINDS, legacyItemDef,
-    type ContainerRuleV1, type HolderRef, type HolderRuleV1, type ItemConfigV1, type ItemDefV1, type PeriodicGrantV1,
+    type ContainerRuleV1, type HolderRef, type HolderRuleV1, type ItemConfigV1, type ItemDefV1, type ItemGrowthRule, type ItemInstanceState, type PeriodicGrantV1,
 } from './ItemConfig';
 
 /** 取得來源；SEASON＝定期發放、REFUND＝退還（不受堆疊上限限制，因為只是把剛扣掉的還回去） */
@@ -52,6 +52,64 @@ export function findContainerRule(config: ItemConfigV1, holder: HolderRef, conta
 
 export function findPeriodicGrant(config: ItemConfigV1, ruleId: string): PeriodicGrantV1 | null {
     return config.periodicGrants.find((g) => g.id === ruleId) ?? null;
+}
+
+/** 出征、守城、派遣編制能不能讀到這個物品：academyOnly（支援卡）一律排除（doc_spec_1264 §19、TC-SUP-02） */
+export function isDeployableItem(config: ItemConfigV1, itemId: string): boolean {
+    return findItemDef(config, itemId).usage !== 'academyOnly';
+}
+
+/** 目前傳承次數下的等級上限 */
+export function levelCapOf(growth: ItemGrowthRule, limitBreak: number): number {
+    return growth.cap0 + growth.capPerBreak * Math.max(0, Math.min(limitBreak, growth.maxBreak));
+}
+
+/** 從 level 升到 level+1 需要的經驗：expBase＋expPerLevel×(level−1) */
+export function expToNextOf(growth: ItemGrowthRule, level: number): number {
+    return growth.expBase + growth.expPerLevel * (Math.max(1, level) - 1);
+}
+
+/** 升到目前上限還差多少經驗（已在上限回 0）；含目前等級已累積的經驗 */
+export function expToCapOf(growth: ItemGrowthRule, state: ItemInstanceState): number {
+    const cap = levelCapOf(growth, state.limitBreak);
+    let need = 0;
+    for (let level = state.level; level < cap; level += 1) need += expToNextOf(growth, level);
+    return Math.max(0, need - (state.level < cap ? state.exp : 0));
+}
+
+export interface InstanceExpResult {
+    state: ItemInstanceState;
+    /** 實際吃進去的經驗（到上限後多的不算） */
+    absorbed: number;
+    levelsGained: number;
+    atCap: boolean;
+}
+
+/**
+ * 加經驗並依 expToNext 推得等級（等級由權威端推，客戶端不送）。
+ * 到達上限後 exp 歸 0、不再增加；exp 只記「目前這一級已累積的經驗」。
+ */
+export function applyInstanceExp(growth: ItemGrowthRule, state: ItemInstanceState, exp: number): InstanceExpResult {
+    const cap = levelCapOf(growth, state.limitBreak);
+    let level = state.level;
+    let have = state.level >= cap ? 0 : state.exp;
+    let left = Math.max(0, Math.floor(exp));
+    let absorbed = 0;
+    while (left > 0 && level < cap) {
+        const step = expToNextOf(growth, level) - have;
+        if (left >= step) {
+            left -= step;
+            absorbed += step;
+            level += 1;
+            have = 0;
+        } else {
+            have += left;
+            absorbed += left;
+            left = 0;
+        }
+    }
+    if (level >= cap) have = 0;
+    return { state: { level, exp: have, limitBreak: state.limitBreak }, absorbed, levelsGained: level - state.level, atCap: level >= cap };
 }
 
 /** 綁定檢查：general 只能放武將、household 只能放家；其餘不限 */
@@ -113,6 +171,8 @@ export interface ItemMeta {
     periodic: Record<string, number>;
     ledger: ItemLedgerRecord[];
     seq: number;
+    /** unique 物品的實例狀態：itemId → 等級／經驗／傳承；沒有任何實例時整個欄位省略 */
+    instances?: Record<string, ItemInstanceState>;
 }
 
 export function emptyItemMeta(): ItemMeta {
@@ -140,7 +200,36 @@ export function normalizeItemMeta(raw: unknown): ItemMeta {
         });
     }
     const seq = typeof src.seq === 'number' && Number.isInteger(src.seq) && src.seq >= 0 ? src.seq : ledger.length;
-    return { v: 1, periodic, ledger: ledger.slice(-ITEM_LEDGER_LIMIT), seq };
+    const instances = normalizeInstances(src.instances);
+    return { v: 1, periodic, ledger: ledger.slice(-ITEM_LEDGER_LIMIT), seq, ...(instances ? { instances } : {}) };
+}
+
+function normalizeInstances(raw: unknown): Record<string, ItemInstanceState> | null {
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
+    const out: Record<string, ItemInstanceState> = {};
+    for (const [id, value] of Object.entries(raw as Record<string, unknown>)) {
+        const r = value as Record<string, unknown> | null;
+        if (!r || typeof r !== 'object') continue;
+        const level = typeof r.level === 'number' && Number.isInteger(r.level) && r.level >= 1 ? r.level : 1;
+        const exp = typeof r.exp === 'number' && Number.isInteger(r.exp) && r.exp >= 0 ? r.exp : 0;
+        const limitBreak = typeof r.limitBreak === 'number' && Number.isInteger(r.limitBreak) && r.limitBreak >= 0 ? r.limitBreak : 0;
+        out[id] = { level, exp, limitBreak };
+    }
+    return Object.keys(out).length > 0 ? out : null;
+}
+
+/** 設一件物品的實例狀態（新實例或覆寫）；回傳新中繼資料 */
+export function withInstance(meta: ItemMeta, itemId: string, state: ItemInstanceState): ItemMeta {
+    return { ...meta, instances: { ...(meta.instances ?? {}), [itemId]: { ...state } } };
+}
+
+/** 移除一件物品的實例狀態（物品數量歸零時）；沒有實例時回傳原物件 */
+export function withoutInstance(meta: ItemMeta, itemId: string): ItemMeta {
+    if (!meta.instances || !(itemId in meta.instances)) return meta;
+    const rest = { ...meta.instances };
+    delete rest[itemId];
+    const { instances: _drop, ...others } = meta;
+    return Object.keys(rest).length > 0 ? { ...others, instances: rest } : others;
 }
 
 /** 附加一筆帳本，超過上限丟最舊的；回傳新中繼資料，不改原物件 */

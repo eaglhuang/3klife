@@ -527,6 +527,8 @@ function agingEventChannel(event: AgingEvent): string {
 export interface RosterStore {
     getAll(): GeneralConfig[];
     replaceAll(generals: GeneralConfig[]): void;
+    /** 選用：名冊版本號，寫入就變。有提供時 GameSession 會快取唯讀快照，避免熱路徑反覆深拷貝 */
+    version?(): number;
 }
 
 /** 只需要 emit 的最小事件介面，正式環境傳入 EventSystem */
@@ -706,6 +708,7 @@ function seasonJournalTimestamp(current: GameTimeState): string {
 
 export class InMemoryRosterStore implements RosterStore {
     private _generals: GeneralConfig[];
+    private _version = 0;
 
     constructor(initial: GeneralConfig[] = []) {
         this._generals = initial.map((general) => ({ ...general }));
@@ -717,6 +720,11 @@ export class InMemoryRosterStore implements RosterStore {
 
     replaceAll(generals: GeneralConfig[]): void {
         this._generals = generals.map((general) => ({ ...general }));
+        this._version++;
+    }
+
+    version(): number {
+        return this._version;
     }
 }
 
@@ -834,6 +842,8 @@ export class GameSession implements AcademyRecordPort {
         return this._npcMemory;
     }
     private _roster: RosterStore = new InMemoryRosterStore();
+    /** 名冊唯讀快照（依名冊版本號失效）：大廳每 5 秒重算出場與自薦時會查上萬次心情，不能每次深拷貝整份名冊 */
+    private _rosterReadCache: { store: RosterStore; version: number; list: readonly GeneralConfig[] } | null = null;
     private _save: SessionSaveService | null = null;
     private _events: SessionEventEmitter | null = null;
     private _lifecycle: SeasonLifecycle | null = null;
@@ -4629,7 +4639,7 @@ export class GameSession implements AcademyRecordPort {
     /** 所有名冊武將在任務判定當下的事實：全員，不可派者附全部原因（任務中、培育中、未畢業、被囚、受傷…） */
     public missionGeneralFacts(): MissionGeneralFacts[] {
         const nurturing = this._nurturingIds();
-        return this._roster.getAll().map((g) => {
+        return this._rosterRead().map((g) => {
             const reasons = checkDeployable(g, { nurturingIds: nurturing }).reasons;
             const block: MissionBlock[] = [];
             if (reasons.includes('dead')) block.push('dead');
@@ -4668,7 +4678,7 @@ export class GameSession implements AcademyRecordPort {
             generals: () => this.missionGeneralFacts(),
             volunteerIdsFor: (def) => {
                 const out = new Set<string>();
-                for (const g of this._roster.getAll()) {
+                for (const g of this._rosterRead()) {
                     const profile = this.hallStageProfile(g.id);
                     if (!profile) continue;
                     if (shouldShowVolunteerEvent({ id: def.id, tags: def.tags, flags: [] }, { id: g.id, roleTags: profile.roleTags, mood: profile.mood })) out.add(g.id);
@@ -4915,7 +4925,7 @@ export class GameSession implements AcademyRecordPort {
      * 情緒由武將心智依近期經歷算出（EAGER 才會有自告奮勇標記）；名冊自帶 mood 欄位時以名冊為準。
      */
     public hallStageProfile(generalId: string): HallStageProfile | null {
-        const general = this._roster.getAll().find((g) => g.id === generalId);
+        const general = this._rosterRead().find((g) => g.id === generalId);
         if (!general) return null;
         const raw = general as unknown as Record<string, unknown>;
         const roleTags = [raw.careerClass, raw.role].filter((t): t is string => typeof t === 'string' && t.length > 0);
@@ -4924,9 +4934,24 @@ export class GameSession implements AcademyRecordPort {
         return { name: general.name, title: general.title ?? null, roleTags, mood };
     }
 
+    /**
+     * 唯讀名冊：只給查詢用（心情、自薦、任務候選），呼叫端不可修改回傳的武將物件。
+     * 名冊來源有版本號時快取到下次寫入；沒有版本號的來源（測試替身）照舊每次讀。
+     */
+    private _rosterRead(): readonly GeneralConfig[] {
+        const store = this._roster;
+        if (typeof store.version !== 'function') return store.getAll();
+        const version = store.version();
+        const cache = this._rosterReadCache;
+        if (cache && cache.store === store && cache.version === version) return cache.list;
+        const list = store.getAll();
+        this._rosterReadCache = { store, version, list };
+        return list;
+    }
+
     /** 心智讀取用的名冊現況：目前季數、忠誠、性格視圖、搭檔姓名查詢（PROG-2-9146） */
     private _mindContext(generalId: string): MindContext {
-        const roster = this._roster.getAll();
+        const roster = this._rosterRead();
         const general = roster.find((g) => g.id === generalId);
         const loyalty = general?.loyaltyState;
         const rank = general?.generalRank ?? 0;
@@ -6907,7 +6932,7 @@ export class GameSession implements AcademyRecordPort {
             ...(isEmptyQuestState(this._questState) ? {} : { questState: normalizeQuestState(this._questState) }),
             ...(isEmptyFamilyState(this._family.snapshot()) ? {} : { familyState: this._family.snapshot() }),
             ...(isEmptyStoryMeta(this._storyMeta) ? {} : { storyMeta: normalizeStoryMeta(this._storyMeta) }),
-            ...(this._itemMeta.seq > 0 || Object.keys(this._itemMeta.periodic).length > 0 ? { itemMeta: normalizeItemMeta(this._itemMeta) } : {}),
+            ...(this._itemMeta.seq > 0 || Object.keys(this._itemMeta.periodic).length > 0 || this._itemMeta.instances !== undefined ? { itemMeta: normalizeItemMeta(this._itemMeta) } : {}),
             military: this.military,
             yearAgingEvents: this._yearAgingEvents.map((event) => ({ ...event })),
             resources: {

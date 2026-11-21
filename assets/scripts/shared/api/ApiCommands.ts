@@ -24,6 +24,9 @@ export const API_COMMANDS = Object.freeze({
     'item.grant': { kind: 'cmd', revGuard: false },
     'item.consume': { kind: 'cmd', revGuard: false },
     'item.settlePeriodic': { kind: 'cmd', revGuard: false },
+    'item.use': { kind: 'cmd', revGuard: false },
+    'item.breakthrough': { kind: 'cmd', revGuard: false },
+    'item.instance': { kind: 'query', revGuard: false },
     'item.count': { kind: 'query', revGuard: false },
     'item.list': { kind: 'query', revGuard: false },
     'item.ledger': { kind: 'query', revGuard: false },
@@ -31,6 +34,7 @@ export const API_COMMANDS = Object.freeze({
     'reward.claim': { kind: 'cmd', revGuard: false },
     'reward.pools': { kind: 'query', revGuard: false },
     'reward.pity': { kind: 'query', revGuard: false },
+    'reward.pity.redeem': { kind: 'cmd', revGuard: false },
     // 劇情（劇情演出 Base 規格 §11；STY-M 最小版）
     'story.trigger': { kind: 'cmd', revGuard: false },
     'story.choose': { kind: 'cmd', revGuard: false },
@@ -140,6 +144,54 @@ export interface ItemConsumeArgs extends ItemHolderArgs {
     sink: string;
 }
 
+/**
+ * item.use：使用材料（doc_spec_1264 §5.2）。目前只有 supportExp 效果：把 qty 個材料的經驗加到 target 這張支援卡實例。
+ * 等級由權威端依 expToNext 推得；只扣升到上限需要的個數（到上限後多的不消耗，result.consumed 為實際扣的數量）；
+ * 目標已在上限回 E318（請先傳承）、不扣材料。
+ */
+export interface ItemUseArgs extends ItemHolderArgs {
+    itemId: string;
+    qty: number;
+    target: { itemId: string };
+}
+
+export interface ItemUseResult {
+    itemId: string;
+    target: string;
+    consumed: number;
+    /** 材料剩餘數量 */
+    count: number;
+    expGained: number;
+    levelsGained: number;
+    level: number;
+    exp: number;
+    atCap: boolean;
+}
+
+/**
+ * item.breakthrough：傳承（doc_spec_1264 §5.3）。把一張已持有的可成長物品的傳承次數 +1（等級上限隨之 +capPerBreak）；
+ * 已達 maxBreak 回 E318，未持有回 E317。rollback:true 是反向撤銷用（獎勵 settle 失敗時把 +1 減回去），不走一般玩法。
+ */
+export interface ItemBreakthroughArgs extends ItemHolderArgs {
+    itemId: string;
+    rollback?: boolean;
+}
+
+export interface ItemInstanceView {
+    itemId: string;
+    level: number;
+    exp: number;
+    limitBreak: number;
+    /** 目前等級上限（初始上限＋傳承次數×每次增加） */
+    levelCap: number;
+    maxBreak: number;
+}
+
+/** item.instance：查一個實例的成長狀態；未持有或沒有實例回 E317 */
+export interface ItemInstanceArgs extends ItemHolderArgs {
+    itemId: string;
+}
+
 export interface ItemConsumeResult {
     itemId: string;
     consumed: number;
@@ -166,6 +218,10 @@ export interface ItemRowView {
     quantity: number;
     kind: string;
     stackMax: number | null;
+    /** 物品類別（例：supportCard）；沒有類別不帶 */
+    category?: string;
+    /** unique 物品的實例狀態（支援卡的等級、經驗、傳承次數）；沒有不帶 */
+    instance?: { level: number; exp: number; limitBreak: number };
 }
 
 export interface ItemListResult {
@@ -200,6 +256,17 @@ export interface RewardPlanLine {
     /** 實際入帳的效果（懲罰截斷、倍率縮放後）；與 effect 相同代表沒有調整 */
     applied: Record<string, unknown>;
     trace: string[];
+}
+
+/** 累計計數進度（天命商店）：count 已抽幾次、spent 已兌換幾次、credits 目前可兌換、toNext 距離下一次資格還差幾抽 */
+export interface RewardTallyView {
+    counterKey: string;
+    spentKey: string;
+    count: number;
+    creditEvery: number;
+    spent: number;
+    credits: number;
+    toNext: number;
 }
 
 export interface RewardGrantResult {

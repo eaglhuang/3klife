@@ -5,7 +5,7 @@
  * 機率表與抽樣用同一份資料：數字全部來自 RewardRules.poolDistribution（rollPool 抽樣時用的同一個函式），
  * 這裡只負責整理成 API 回應的形狀。畫面與文案不得自己寫機率常數，只讀 reward.pools。
  */
-import type { RewardPityView, RewardPoolSlotView, RewardPoolTierView, RewardPoolView } from '../api/ApiCommands';
+import type { RewardPityView, RewardTallyView, RewardPoolSlotView, RewardPoolTierView, RewardPoolView } from '../api/ApiCommands';
 import type { RewardPoolDef } from './RewardConfig';
 import { poolDistribution, type PityLadderState } from './RewardRules';
 
@@ -26,6 +26,19 @@ export function pityViewsOf(pool: RewardPoolDef, counters: Readonly<Record<strin
         baseRate: l.baseRate,
         nextPullRate: l.rate,
     }));
+}
+
+/** 累計計數視圖：資格 = floor(累計 / creditEvery) − 已兌換（不會是負數） */
+export function tallyViewsOf(pool: RewardPoolDef, counters: Readonly<Record<string, number>>): RewardTallyView[] {
+    return pool.tallies.map((t) => {
+        const count = counters[t.counterKey] ?? 0;
+        const spent = counters[t.spentKey] ?? 0;
+        return {
+            counterKey: t.counterKey, spentKey: t.spentKey, count, creditEvery: t.creditEvery, spent,
+            credits: Math.max(0, Math.floor(count / t.creditEvery) - spent),
+            toNext: t.creditEvery - (count % t.creditEvery),
+        };
+    });
 }
 
 function slotViewsOf(pool: RewardPoolDef): RewardPoolSlotView[] {

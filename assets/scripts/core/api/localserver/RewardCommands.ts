@@ -18,7 +18,7 @@ import type { ApiDeltaOp } from '../../../shared/api/ApiProtocol';
 import { type Condition } from '../../../shared/foundation/Condition';
 import { DeterministicRngSession, deriveRngSeed } from '../../../shared/foundation/DeterministicRng';
 import { weightedTotal } from '../../../shared/foundation/WeightedTable';
-import { pityViewsOf, poolViewOf } from '../../../shared/reward/RewardDisclosure';
+import { pityViewsOf, poolViewOf, tallyViewsOf } from '../../../shared/reward/RewardDisclosure';
 import {
     findBundle, findPool, type RewardBundleDef, type RewardConfigV1, type RewardEffectDef, type RewardPoolDef, type RewardPresentationDef,
 } from '../../../shared/reward/RewardConfig';
@@ -72,6 +72,7 @@ export interface RewardPorts {
 
 const ROLL_ARGS = ['poolId', 'count', 'grantKey', 'source'];
 const CLAIM_ARGS = ['bundleId', 'grantKey', 'source'];
+const REDEEM_ARGS = ['poolId', 'counterKey', 'grantKey'];
 
 function requireText(value: unknown, field: string): string {
     if (typeof value !== 'string' || value.length === 0) throw new ApiError('INVALID_SCHEMA', `${field} 不可為空`);
@@ -359,6 +360,34 @@ export function registerRewardCommands(adapter: LocalApiAdapter, getPorts: () =>
         const pool = findPool(getPorts().config, poolId);
         if (!pool) throw new ApiError('REWARD_POOL_NOT_FOUND', `找不到獎池 ${poolId}`);
         const counters = authorityOf().meta().pity;
-        return { result: { poolId, pity: pityView(pool, counters), pities: pityViewsOf(pool, counters) } };
+        return { result: { poolId, pity: pityView(pool, counters), pities: pityViewsOf(pool, counters), tallies: tallyViewsOf(pool, counters) } };
+    });
+
+    /**
+     * 兌換一次累計資格（天命商店）：資格 = floor(累計 / creditEvery) − 已兌換；足夠才把 spentKey 加 1。
+     * 只動兌換次數，不動累計與保底階梯；同 grantKey 重送回原結果、不重複扣資格。發放什麼由呼叫端（商店）另走 reward.claim／宿主入冊。
+     */
+    adapter.register('reward.pity.redeem', (args) => {
+        rejectExtra(args, REDEEM_ARGS);
+        const poolId = requireText(args.poolId, 'poolId');
+        const grantKey = requireText(args.grantKey, 'grantKey');
+        const pool = findPool(getPorts().config, poolId);
+        if (!pool) throw new ApiError('REWARD_POOL_NOT_FOUND', `找不到獎池 ${poolId}`);
+        const meta = authorityOf().meta();
+        const replay = replayOf(meta, grantKey, 'bundle', `redeem:${poolId}`);
+        if (replay) return replay;
+        const wanted = args.counterKey === undefined ? null : requireText(args.counterKey, 'counterKey');
+        const tally = pool.tallies.find((t) => wanted === null || t.counterKey === wanted);
+        if (!tally) throw new ApiError('REWARD_POOL_NOT_FOUND', `獎池 ${poolId} 沒有累計計數`);
+        const before = tallyViewsOf(pool, meta.pity).find((t) => t.counterKey === tally.counterKey)!;
+        if (before.credits < 1) throw new ApiError('REWARD_NO_TICKET', `兌換資格不足，還差 ${before.toNext} 抽`);
+        const pity = { ...meta.pity, [tally.spentKey]: before.spent + 1 };
+        const after = tallyViewsOf(pool, pity).find((t) => t.counterKey === tally.counterKey)!;
+        const result: RewardGrantResult = {
+            grantId: `gr_${meta.seq + 1}`, grantKey, kind: 'bundle', refId: `redeem:${poolId}`, plan: [], settled: true, overflow: [],
+            presentation: { type: 'instant', args: {}, skippable: true }, pity: null, replayed: false,
+        };
+        commit(meta, grantKey, 'bundle', `redeem:${poolId}`, result, { pity });
+        return { result: { ...result, tally: after }, events: [{ evt: 'reward.pity.changed', data: { poolId, counterKey: tally.counterKey, credits: after.credits } }] };
     });
 }

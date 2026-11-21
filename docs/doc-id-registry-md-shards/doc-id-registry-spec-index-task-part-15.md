@@ -135,3 +135,13 @@
 | `doc_task_2725` | docs/agent-briefs/tasks/PROG/PROG-2-9581.md | [PROG-2-9581] F4／F5 收尾（待產單一來源、乳母費用、待產放行大廳任務、哺乳登記重試、幕府等級待接） |
 | `doc_task_2726` | docs/agent-briefs/tasks/PROG/PROG-2-9582.md | [PROG-2-9582] F11 首子流程同步：系統配偶 first-child 入名冊（含 7456 乾淨建置 playtest 截圖） |
 | `doc_task_2727` | docs/agent-briefs/tasks/PROG/PROG-2-9583.md | [PROG-2-9583] F3 配偶三來源（結緣好感納配偶、聯姻外交提親、媒人說親） |
+| `doc_task_2728` | docs/agent-briefs/tasks/PROG/PROG-2-9231.md | [PROG-2-9231] 世界觀與故事總綱規格書（AI 武將覺醒：一頁版大綱、世界設定、主線鉤子、各系統說法、角色人設、時事梗規範、文案範例） |
+| `doc_task_2729` | docs/agent-briefs/tasks/PROG/PROG-2-9701.md | [PROG-2-9701] 戰場可讀性：部隊框避讓含血條與狀態圖示、跳字置頂、敵軍行動中橫幅移出棋盤 |
+| `doc_task_2730` | docs/agent-briefs/tasks/PROG/PROG-2-9240.md | [PROG-2-9240] 支援卡資料與物品化（SUP-1：25 張學府支援卡、category=supportCard、instanceState、出征編制排除） |
+| `doc_task_2731` | docs/agent-briefs/tasks/PROG/PROG-2-9702.md | [PROG-2-9702] 年終守城戰規格書：大敗、失守懲罰、平手三項回寫使用者 11/21 裁決 |
+| `doc_task_2732` | docs/agent-briefs/tasks/PROG/PROG-2-9464.md | PROG-2-9464 |
+| `doc_task_2733` | docs/agent-briefs/tasks/PROG/PROG-2-9465.md | PROG-2-9465 |
+| `doc_task_2734` | docs/agent-briefs/tasks/PROG/PROG-2-9241.md | [PROG-2-9241] 升級與材料（SUP-2：經驗材料 item.use、expToNext、等級上限、學分當材料） |
+| `doc_task_2735` | docs/agent-briefs/tasks/PROG/PROG-2-9242.md | [PROG-2-9242] 傳承與溢出轉換（SUP-3：重複卡傳承 +1、傳承滿轉學分、獎勵效果 supportCard） |
+| `doc_task_2736` | docs/agent-briefs/tasks/PROG/PROG-2-9584.md | [PROG-2-9584] 熱修：大廳 CPU 吃滿（名冊深拷貝 O(N²) 熱路徑） |
+| `doc_task_2737` | docs/agent-briefs/tasks/PROG/PROG-2-9590.md | PROG-2-9590：playtest-online --year QA |

@@ -63,6 +63,8 @@ import { LobbyLeaderboardComposite, type LobbyLeaderboardOpenPayload } from '../
 import { SeasonReportComposite, type SeasonReportOpenPayload } from '../components/SeasonReportComposite';
 import { SandtableTerritoryComposite, type SandtableTerritoryOpenPayload } from '../components/SandtableTerritoryComposite';
 import { LocalGachaService, type LocalGachaResultEntry } from '../../core/services/LocalGachaService';
+import type { DestinyShopBlockReason } from '../../core/systems/DestinyShop';
+import type { RewardGrantResult, RewardTallyView } from '../../shared/api/ApiCommands';
 import { PlayerRosterService } from '../../core/services/PlayerRosterService';
 import type { BloodlineStageAwakenedPayload, BloodlineStageCapRaisedPayload } from '../../core/managers/GameSession';
 import { GAME_SESSION_EVENTS, GameSession, type AddGeneralsResult, type ClanPrestigeChangedPayload, type ClanTierUpPayload, type MilestoneUpPayload, type CustomGoldFactorBornPayload, type LifeImprintedPayload, type RivalSeasonEventsPayload } from '../../core/managers/GameSession';
@@ -193,6 +195,7 @@ import { mercBondedLine, mercDayThreeLine, mercFarewellLine, mercTrustLine } fro
 import { RED_FACE_SHOW_MAX_ROWS, RedFaceGalleryController, RedFaceShowcaseController, RedFaceShowcaseDeps, toRedFaceTabFlowView } from '../core/RedFaceShowcaseController';
 import { GACHA_NODES, GACHA_POOL_INDEX, GACHA_POOLS, GachaPoolDef, RED_FACE_SECTION_ROW_BUTTON } from '../core/GachaScreenNodes';
 import { LocalGachaApi } from '../../core/gacha/LocalGachaApi';
+import { migrateLegacyPity } from '../../core/gacha/GachaPityMigration';
 import { gachaRewardEnabled } from '../../core/gacha/GachaRewardFlag';
 import { RewardGachaPort, type RewardGachaPullOutcome } from '../../core/gacha/RewardGachaPull';
 import { buildRewardPools, legacyPoolIdsOf, type RosterMember } from '../../shared/reward/RewardRoster';
@@ -2932,6 +2935,7 @@ export class LobbyScene extends Component {
                 notifyStarterYouth: name => services().event.emit('SHOW_TOAST', { message: services().i18n.t('ui.opening.starter_child_hint', name), duration: 6 }),
                 pickStarterYouth: options => this._pickStarterYouth(options),
                 advanceOpening: event => { this._advanceOpening(event); },
+                rollDestinyRound: () => this._rollDestinyRound(),
                 presentDestinyPool: (view, actions) => this._presentDestinyPool(view, actions),
                 closeDestinyPool: () => { if (this._destinyPoolHost) this._destinyPoolHost.node.active = false; },
                 onOverlayChanged: () => { this._seasonChroniclePopup?.refreshAvailability(); },
@@ -4469,7 +4473,9 @@ ${spent}`,
             walkable: !!wander && spinePathFor(wander, c.id) !== null,
         }));
         // 自告奮勇：任務資料指名的自薦者，加上武將心智算出心情 EAGER、想找差事做的人（PROG-2-9146）
-        const volunteerIds = owned.filter(c => !c.assigned && (this._hallBoard?.volunteerTaskFor(c.id) || session.hallStageProfile(c.id)?.mood === 'EAGER')).map(c => c.id);
+        // 任務牆只算一次再逐位查（逐位重算整面牆會讓大廳每 5 秒卡一次）
+        const volunteerOf = this._hallBoard?.volunteerTaskLookup() ?? null;
+        const volunteerIds = owned.filter(c => !c.assigned && (volunteerOf?.(c.id) || session.hallStageProfile(c.id)?.mood === 'EAGER')).map(c => c.id);
         const plan = planHallWalkers({
             state: this._hallWalkerState,
             nowSec: Date.now() / 1000,
@@ -5349,15 +5355,31 @@ ${spent}`,
     private async _mountDestinyShop(): Promise<void> {
         const gacha = this._localGachaService;
         const shop = new DestinyShopController({
-            credits: (poolId) => gacha.getDestinyShopCredits(poolId),
-            pullsToNext: (poolId) => gacha.getPullsToNextDestinyCredit(poolId),
+            // 已走共通 API 的池（名將池）：額度讀 reward.pity 累計計數（開店與兌換後刷新快取）；其餘池仍讀舊保底表
+            credits: (poolId) => this._destinyTallies.get(poolId)?.credits ?? gacha.getDestinyShopCredits(poolId),
+            pullsToNext: (poolId) => this._destinyTallies.get(poolId)?.toNext ?? gacha.getPullsToNextDestinyCredit(poolId),
             exchange: (poolId, targetId) => {
-                const { entry, reason } = gacha.exchangeDestinyShop(poolId, this._destinyPoolGenerals.get(poolId) ?? [], targetId);
-                if (entry) {
-                    void this._onGachaPullSuccess([entry]);
-                    this._refreshWalletPreviewState();
+                const generals = this._destinyPoolGenerals.get(poolId) ?? [];
+                const finish = (entry: LocalGachaResultEntry | null, reason: DestinyShopBlockReason | null): { reason: DestinyShopBlockReason | null } => {
+                    if (entry) {
+                        void this._onGachaPullSuccess([entry]);
+                        this._refreshWalletPreviewState();
+                    }
+                    return { reason };
+                };
+                const port = this._gachaRewardPort;
+                if (!port || !port.handles(poolId)) {
+                    const { entry, reason } = gacha.exchangeDestinyShop(poolId, generals, targetId);
+                    return finish(entry, reason);
                 }
-                return { reason };
+                return (async () => {
+                    const blocked = gacha.checkDestinyTarget(generals, targetId);
+                    if (blocked) return finish(null, blocked);
+                    if (!(await port.redeem(poolId))) return finish(null, 'no-credit');
+                    const { entry, reason } = gacha.exchangeDestinyShop(poolId, generals, targetId, true);
+                    await this._refreshDestinyTally(poolId);
+                    return finish(entry, reason);
+                })();
             },
         });
         this._destinyShop = shop;
@@ -5365,8 +5387,19 @@ ${spent}`,
             { buttonId: 'btnCloseDestiny', handler: () => { if (this._destinyShopHost) this._destinyShopHost.node.active = false; } },
             { buttonId: 'btnPrevDestiny', handler: () => { shop.cycle(-1); this._refreshDestinyShop(); } },
             { buttonId: 'btnNextDestiny', handler: () => { shop.cycle(1); this._refreshDestinyShop(); } },
-            { buttonId: 'btnExchangeDestiny', handler: () => { shop.exchange(); this._refreshDestinyShop(); } },
+            { buttonId: 'btnExchangeDestiny', handler: () => { void Promise.resolve(shop.exchange()).then(() => this._refreshDestinyShop()); } },
         ]);
+    }
+
+    /** 天命商店額度快取（reward.pity 的累計計數，池 id → 進度）；同步的畫面讀它，開店與兌換後刷新 */
+    private readonly _destinyTallies = new Map<string, RewardTallyView>();
+
+    private async _refreshDestinyTally(poolId: string): Promise<void> {
+        const port = this._gachaRewardPort;
+        const tally = port && port.handles(poolId) ? await port.tally(poolId) : null;
+        if (tally) this._destinyTallies.set(poolId, tally);
+        else this._destinyTallies.delete(poolId);
+        this._refreshDestinyShop();
     }
 
     /** 各池兌換用的候選名單（與抽卡同一份），開店時填入 */
@@ -5392,6 +5425,7 @@ ${spent}`,
         this._destinyPoolGenerals.set(pool.poolId, generals);
         const candidates = this._localGachaService.getDestinyShopCandidates(generals).map((g) => ({ id: g.id, name: g.name }));
         this._destinyShop.open(pool.poolId, pool.title, candidates);
+        await this._refreshDestinyTally(pool.poolId);
         host.node.active = true;
         this._bringNodeToFront(host.node);
         this._refreshDestinyShop();
@@ -8083,10 +8117,7 @@ ${spent}`,
             this._gachaRewardLoading = (async () => {
                 const raw = await this._loadDataJson<unknown>('data/gacha-reward-pools');
                 if (!raw || this._generals.length === 0) return;
-                const roster: RosterMember[] = this._generals.map((g) => ({
-                    id: g.id, gender: g.gender, rarityTier: g.rarityTier, characterCategory: g.characterCategory,
-                }));
-                const pools = buildRewardPools(raw, roster);
+                const pools = buildRewardPools(raw, this._compactRoster());
                 if (pools.length === 0) return;
                 const loader = services();
                 loader.setGachaRewardPools(pools);
@@ -8094,6 +8125,10 @@ ${spent}`,
                     resolve: (id) => this._cloneGeneralById(id),
                     enroll: (general) => ({ duplicate: loader.session.enrollGenerals([general], { fromGacha: true }).duplicates.length > 0 }),
                 });
+                // 舊保底存檔一次性轉成 reward.pity 階梯與累計計數（GCH-R5）；已轉過的池不重複
+                const authority = loader.session.rewardAuthority();
+                const migration = migrateLegacyPity(this._localGachaService.readPityBook(), authority.meta(), pools, legacyPoolIdsOf(raw));
+                if (migration.migrated.length > 0) authority.setMeta(migration.meta);
                 this._gachaRewardPort = new RewardGachaPort(loader.api, legacyPoolIdsOf(raw), {
                     resolveGeneral: (id) => this._cloneGeneralById(id),
                     afterPull: (info) => {
@@ -8109,10 +8144,51 @@ ${spent}`,
         await this._gachaRewardLoading;
     }
 
+    /** 精簡名冊：只留 id、稀有度、性別、名單別名要的欄位，不把整份武將資料交給獎池展開 */
+    private _compactRoster(): RosterMember[] {
+        return this._generals.map((g) => ({ id: g.id, gender: g.gender, rarityTier: g.rarityTier, characterCategory: g.characterCategory }));
+    }
+
+    private _destinyRoundSeq = 0;
+
+    /**
+     * 開場宿命池抽一輪（GCH-R7）：走共通 API 的 reward.roll（POOL_DESTINY，draw.slots：1 位宿命名將＋9 位一般武將，不重複）。
+     * 只取得 id，不入冊（按「確定」才由開新局一次入冊）；獎池與發武將入口只在這一抽期間存在，抽完釋放。
+     * 旗標關閉、資料沒載入或 API 失敗回 null，由呼叫端退回本機抽法。
+     */
+    private async _rollDestinyRound(): Promise<readonly string[] | null> {
+        if (!this._gachaRewardOn() || this._generals.length === 0) return null;
+        const raw = await this._loadDataJson<unknown>('data/gacha-reward-pools');
+        if (!raw) return null;
+        const pools = buildRewardPools(raw, this._compactRoster());
+        if (!pools.some((p) => p.id === 'POOL_DESTINY')) return null;
+        const loader = services();
+        const keepPools = this._gachaRewardPort !== null;
+        loader.setGachaRewardPools(pools);
+        loader.bindGeneralGrantHost({ resolve: (id) => this._cloneGeneralById(id), enroll: () => ({ duplicate: false }) });
+        try {
+            this._destinyRoundSeq += 1;
+            const res = await loader.api.cmd<RewardGrantResult>('reward.roll', {
+                poolId: 'POOL_DESTINY', count: 1, grantKey: `opening:destiny:${Date.now()}-${this._destinyRoundSeq}`, source: { kind: 'opening', ref: 'destiny' },
+            });
+            if (isApiFail(res)) return null;
+            return res.result.plan.map((line) => String(line.applied.generalId ?? ''));
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 宿命池走共通 API 失敗，改用本機抽法', error);
+            return null;
+        } finally {
+            if (!keepPools) {
+                loader.setGachaRewardPools(null);
+                loader.bindGeneralGrantHost(null);
+            }
+        }
+    }
+
     /** 離開轉蛋畫面：釋放展開後的獎池與發武將入口（下次開畫面再載） */
     private _releaseGachaRewardPools(): void {
         if (!this._gachaRewardPort) return;
         this._gachaRewardPort = null;
+        this._destinyTallies.clear();
         services().setGachaRewardPools(null);
         services().bindGeneralGrantHost(null);
     }

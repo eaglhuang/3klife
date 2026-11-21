@@ -34,14 +34,54 @@ export interface ItemOverflow {
     amount: number;
 }
 
+/** 物品用途限制：academyOnly＝只在學府修業使用，出征、守城、派遣編制一律排除（doc_spec_1264 §19） */
+export type ItemUsage = 'academyOnly';
+
+/** 實例狀態預設值（unique 物品持有時各自帶一份，例如支援卡的等級、經驗、傳承次數） */
+export interface ItemInstanceState {
+    level: number;
+    exp: number;
+    limitBreak: number;
+}
+
+/**
+ * 實例成長規則（unique 物品帶 instanceState 時才有意義）：等級上限＝cap0＋capPerBreak×傳承次數（傳承最多 maxBreak 次），
+ * 升到下一級需要的經驗＝expBase＋expPerLevel×(等級−1)。資料來源：support-rules.json（支援卡），不寫死在程式。
+ */
+export interface ItemGrowthRule {
+    cap0: number;
+    capPerBreak: number;
+    maxBreak: number;
+    expBase: number;
+    expPerLevel: number;
+}
+
+/** 使用效果：supportExp＝把 exp 點經驗加到一個支援卡實例（item.use，doc_spec_1264 §5.2、§19） */
+export interface ItemUseEffect {
+    effectType: 'supportExp';
+    exp: number;
+}
+
 export interface ItemDefV1 {
     id: string;
     kind: ItemKind;
-    /** MVP 只支援可疊加；max=null 無上限 */
-    stack: { mode: 'stackable'; max: number | null };
+    /** stackable＝可疊加（max=null 無上限）；unique＝同 id 只能持有 1 件（max 固定 1，重複發放走 ITEM_FULL，由獎勵規則決定怎麼處置） */
+    stack: { mode: 'stackable' | 'unique'; max: number | null };
     bind: ItemBind;
     /** null＝超過上限整筆拒收（ITEM_FULL） */
     overflow: ItemOverflow | null;
+    /** 物品類別（例：supportCard）；沒有類別的舊物品不填 */
+    category?: string;
+    /** 用途限制；沒有限制的物品不填 */
+    usage?: ItemUsage;
+    /** 稀有度（數字越大越稀有）；沒有的不填 */
+    rarity?: number;
+    /** 持有時每件各帶一份的實例狀態預設值；只對 unique 物品有意義 */
+    instanceState?: ItemInstanceState;
+    /** 實例成長規則；沒有就不能升級 */
+    growth?: ItemGrowthRule;
+    /** 使用效果；沒有就不能 item.use */
+    useEffect?: ItemUseEffect;
 }
 
 export interface ContainerRuleV1 {
@@ -95,7 +135,7 @@ export const DEFAULT_ITEM_CONFIG: ItemConfigV1 = Object.freeze({
     holders: [
         {
             kind: 'household', aliasKey: 'holder.household.name',
-            containers: [{ id: DEFAULT_CONTAINER_ID, accepts: ['token', 'consumable', 'material', 'special', 'currency', 'treasure'], capacity: null }],
+            containers: [{ id: DEFAULT_CONTAINER_ID, accepts: ['token', 'consumable', 'material', 'special', 'currency', 'treasure', 'card'], capacity: null }],
         },
     ],
     periodicGrants: [
@@ -115,6 +155,30 @@ function isItemKind(v: unknown): v is ItemKind {
     return typeof v === 'string' && (ITEM_KINDS as readonly string[]).indexOf(v) >= 0;
 }
 
+function normalizeGrowth(raw: unknown): ItemGrowthRule | null {
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
+    const r = raw as Record<string, unknown>;
+    if (!isPosInt(r.cap0) || !isPosInt(r.capPerBreak) || !isPosInt(r.expBase)) return null;
+    const maxBreak = typeof r.maxBreak === 'number' && Number.isInteger(r.maxBreak) && r.maxBreak >= 0 ? r.maxBreak : 0;
+    const expPerLevel = typeof r.expPerLevel === 'number' && Number.isInteger(r.expPerLevel) && r.expPerLevel >= 0 ? r.expPerLevel : 0;
+    return { cap0: r.cap0, capPerBreak: r.capPerBreak, maxBreak, expBase: r.expBase, expPerLevel };
+}
+
+function normalizeUseEffect(raw: unknown): ItemUseEffect | null {
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
+    const r = raw as Record<string, unknown>;
+    return r.effectType === 'supportExp' && isPosInt(r.exp) ? { effectType: 'supportExp', exp: r.exp } : null;
+}
+
+function normalizeInstanceState(raw: unknown): ItemInstanceState | null {
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
+    const r = raw as Record<string, unknown>;
+    const level = isPosInt(r.level) ? r.level : 1;
+    const exp = typeof r.exp === 'number' && Number.isInteger(r.exp) && r.exp >= 0 ? r.exp : 0;
+    const limitBreak = typeof r.limitBreak === 'number' && Number.isInteger(r.limitBreak) && r.limitBreak >= 0 ? r.limitBreak : 0;
+    return { level, exp, limitBreak };
+}
+
 /**
  * 讀進來的 JSON 逐欄檢查；壞掉的條目丟掉，整份不是物件時回預設。
  * 不丟例外：設定壞了不能讓遊戲開不起來（比照其他 configure* 的做法）。
@@ -127,12 +191,23 @@ export function normalizeItemConfig(raw: unknown): ItemConfigV1 {
         const e = entry as Record<string, unknown> | null;
         if (!e || typeof e.id !== 'string' || e.id.length === 0 || !isItemKind(e.kind)) continue;
         const stack = (e.stack ?? {}) as Record<string, unknown>;
-        const max = stack.max === null || stack.max === undefined ? null : (isPosInt(stack.max) ? stack.max : null);
+        const unique = stack.mode === 'unique';
+        const max = unique ? 1 : (stack.max === null || stack.max === undefined ? null : (isPosInt(stack.max) ? stack.max : null));
         const bind = typeof e.bind === 'string' && (ITEM_BINDS as readonly string[]).indexOf(e.bind) >= 0 ? (e.bind as ItemBind) : 'none';
         const ov = e.overflow as Record<string, unknown> | null | undefined;
         const overflow = ov && typeof ov.toCurrency === 'string' && ov.toCurrency.length > 0 && isPosInt(ov.amount)
             ? { toCurrency: ov.toCurrency, amount: ov.amount } : null;
-        items.push({ id: e.id, kind: e.kind, stack: { mode: 'stackable', max }, bind, overflow });
+        const def: ItemDefV1 = { id: e.id, kind: e.kind, stack: { mode: unique ? 'unique' : 'stackable', max }, bind, overflow };
+        if (typeof e.category === 'string' && e.category.length > 0) def.category = e.category;
+        if (e.usage === 'academyOnly') def.usage = e.usage;
+        if (isPosInt(e.rarity)) def.rarity = e.rarity;
+        const inst = unique ? normalizeInstanceState(e.instanceState) : null;
+        if (inst) def.instanceState = inst;
+        const growth = unique ? normalizeGrowth(e.growth) : null;
+        if (growth) def.growth = growth;
+        const use = normalizeUseEffect(e.useEffect);
+        if (use) def.useEffect = use;
+        items.push(def);
     }
     const holders: HolderRuleV1[] = [];
     for (const entry of Array.isArray(src.holders) ? src.holders : []) {

@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 212,
-    "in_progress": 4,
-    "open": 87,
-    "total": 303
+    "done": 222,
+    "in_progress": 0,
+    "open": 77,
+    "total": 312
   },
   "tasks": [
     {
@@ -12791,6 +12791,108 @@
     },
     {
       "doc_id": "",
+      "id": "PROG-2-9464",
+      "title": "GCH-R5 保底存檔遷移",
+      "owner": "claude-code-sonnet-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-sonnet-5-5",
+      "started_at": "2026-11-21T20:00:00+08:00",
+      "started_by_agent": "claude-code-sonnet-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "舊保底計數轉成 reward.pity 階梯、保留 destinyExchanges、天命商店額度改讀 reward.pity（tallies 累計計數與 reward.pity.redeem 兌換）；三種舊存檔（只有 pullCount、含 lastSsrPull、含 destinyExchanges）都有測試。",
+      "related": [
+        "PROG-2-9460",
+        "PROG-2-9461",
+        "PROG-2-9462",
+        "PROG-2-9463"
+      ],
+      "depends": [
+        "PROG-2-9463"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "狀態: done。變更: GachaPityMigration（舊 gachaPity 轉 reward.pity 階梯＋累計計數，保留 destinyExchanges）、獎池 tallies 累計計數、reward.pity 回 tallies、新命令 reward.pity.redeem、天命商店額度改讀 reward.pity。驗證: 三種舊存檔測試、tsc 0、run-cli 全過、playtest 11/11。",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9465",
+      "title": "GCH-R7 宿命池遷移",
+      "owner": "claude-code-sonnet-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-sonnet-5-5",
+      "started_at": "2026-11-21T20:00:00+08:00",
+      "started_by_agent": "claude-code-sonnet-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "開場宿命轉蛋改用宿命池 UI 並走 draw.slots（每輪恰一位六大宿命名將、十位不重複）；開場信內容不動；實跑 playtest 11/11。",
+      "related": [
+        "PROG-2-9460",
+        "PROG-2-9461",
+        "PROG-2-9462",
+        "PROG-2-9463"
+      ],
+      "depends": [
+        "PROG-2-9463"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "狀態: done。變更: 開場宿命池抽取改走 reward.roll（POOL_DESTINY draw.slots），DestinyOpeningController.rollAsync／rerollAsync，結果不合規時退回本機抽法；開場信與畫面不動。驗證: 60 輪每輪恰一位宿命名將十位不重複、playtest 11/11（含第 2 步 new-player-opening）。",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
       "id": "PROG-2-9226",
       "title": "學府 qaAcademy 快進與共通 API 流程相容修正（9192 × 9215 合併後 playtest --academy 回歸）",
       "owner": "ClaudeCode_sonnet-5-5",
@@ -13144,6 +13246,281 @@
       "acceptance": [],
       "deliverables": [],
       "notes": "2026-11-21 | 狀態: open | 驗證: pending | 變更: 開卡 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9701",
+      "title": "戰場可讀性：部隊框避讓含血條與狀態圖示、跳字置頂、敵軍行動中橫幅移出棋盤",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-21T21:30:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 11/21 指示：current master 重拍確認。9440 避讓矩形只含框本體，血條頂（本地 51）與狀態圖示列（本地頂 103、起點 x=-90）未納入，仍壓到上方部隊框。改為以框本體∪血條∪狀態圖示列的本地範圍算避讓矩形；跳字掛到 uiRoot 時置頂（池化節點保留舊索引會被後建框蓋住）；敵軍行動中橫幅由棋盤遠排（top 252）移到頂部 HUD 帶標題右側（top 24、hCenter 330）。原開為 9581，與 Sonnet 同號後改 9701。",
+      "related": [
+        "PROG-2-9440",
+        "PROG-2-9483"
+      ],
+      "depends": [
+        "PROG-2-9440"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 單元測試 8920 通過、tsc 0 錯、7456 實測 18 框含圖示範圍重疊 0 組；跳字節點索引 35–40 高於框最大 32，截圖 -21 壓在框上；敵方回合橫幅位於頂部 HUD 帶 | 變更: 避讓範圍聯集、跳字置頂、橫幅移位 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9702",
+      "title": "年終守城戰規格書：大敗、失守懲罰、平手三項回寫使用者 11/21 裁決",
+      "owner": "claude-code-fable-5-2",
+      "priority": "P2",
+      "status": "done",
+      "type": "documentation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-fable-5-2",
+      "started_at": "2026-11-21T22:20:00+08:00",
+      "started_by_agent": "claude-code-fable-5-2",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "總PM 轉達使用者 11/21 裁決：大敗＝失守且主將倒下；失守懲罰只有失守民心 −3、大敗再扣人口 3%；平手＝雙方罷兵（民心人口不變、照常換年、年報寫雙方罷兵）。現行程式已符合，只回寫 shard-d §11 第 2／5／8 項與 shard-a 大敗列。",
+      "related": [
+        "PROG-2-9425",
+        "PROG-2-9426",
+        "PROG-2-9431"
+      ],
+      "depends": [
+        "PROG-2-9425",
+        "PROG-2-9431"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 核對 DefenseBattle／CityEconomy／YearReport 與裁決一致，僅改文件 | 變更: shard-d §11 三項、shard-a 大敗列 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9240",
+      "title": "支援卡資料與物品化（SUP-1：25 張學府支援卡、category=supportCard、instanceState、出征編制排除）",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依 doc_spec_1264 §4、§14、§19、§24 SUP-1：25 張卡資料、支援卡物品化（unique、綁家庭倉庫、academyOnly、實例狀態）、item.list forDeploy 排除支援卡。走物品框架 ITM，不另寫庫存。",
+      "related": [
+        "PROG-2-9230",
+        "PROG-2-9203"
+      ],
+      "depends": [],
+      "acceptance": [
+        "TC-SUP-02：支援卡出現在任何出征、守城、派遣編制的候選為 0",
+        "25 張卡資料與規格第 14 章分布一致",
+        "新增測試全過、tsc 0 錯、compute-gate standard 通過"
+      ],
+      "deliverables": [
+        "assets/resources/data/academy-support-cards.json",
+        "assets/scripts/shared/support/SupportCardConfig.ts",
+        "ItemConfig／ItemRules／ItemCommands 擴充 unique 與 instanceState",
+        "tests/SupportCardItems.test.ts"
+      ],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 新增測試 12 項全過；tests/run-cli.ts 8929 通過；tsc -p tsconfig.test.json 0 錯；compute-gate standard 13/14 通過（1 警告為既有 LoginScene 模組邊界）；api-bypass 未增加 | 變更: 新增 academy-support-cards.json（25 張卡）與 shared/support/SupportCardConfig.ts；物品框架 ITM 擴充 stack.mode=unique、category／usage／rarity／instanceState、itemMeta.instances、item.list forDeploy 與 category／instance 欄位；ServiceLoader 載入後把卡推導成物品定義併入物品設定（單一真相）；容器接受 card | 阻塞: 規格 22.1 寫 support-cards.json 但同名舊檔仍被舊支援卡／紅顏池系統讀取，新檔暫名 academy-support-cards.json，改名待決（SUP-13 遷移時一併處理）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9241",
+      "title": "升級與材料（SUP-2：經驗材料 item.use、expToNext、等級上限、學分當材料）",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依 doc_spec_1264 §5.1、§5.2、§24 SUP-2：support-rules.json、經驗材料（小抄／講義／錄播回放／學分）、item.use 加經驗、等級由權威端推得、到上限不再吃經驗。走物品框架 ITM，不另寫庫存。",
+      "related": [
+        "PROG-2-9230",
+        "PROG-2-9240"
+      ],
+      "depends": [],
+      "acceptance": [
+        "TC-SUP-06 升級公式與累計經驗",
+        "等級上限 R20/SR25/SSR30 傳承每次 +5",
+        "新增測試全過 tsc 0 錯 compute-gate standard 通過"
+      ],
+      "deliverables": [
+        "assets/resources/data/support-rules.json",
+        "shared/support/SupportRules.ts",
+        "ItemRules 通用實例成長",
+        "item.use 命令",
+        "tests/SupportCardLeveling.test.ts"
+      ],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 新增測試 13 項全過；tests/run-cli.ts 8946 通過；tsc -p tsconfig.test.json 0 錯；compute-gate standard 13/14 通過（1 警告為既有 LoginScene 模組邊界）；api-bypass 未增加 | 變更: 新增 support-rules.json（等級上限、expToNext、階、材料）與 shared/support/SupportRules.ts；ITM 新增 growth／useEffect、item.use 命令（只扣升到上限需要的個數，到上限 E318）、E317／E318 錯誤碼；卡的 growth 與 4 種材料（小抄／講義／錄播回放／學分）由規則推導併入物品設定 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9242",
+      "title": "傳承與溢出轉換（SUP-3：重複卡傳承 +1、傳承滿轉學分、獎勵效果 supportCard）",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依 doc_spec_1264 §5.3、§5.4、§24 SUP-3：重複卡傳承（0～4 次，每次上限 +5）、傳承滿依稀有度轉學分（R5／SR20／SSR60）。走 ITM 與 RWD：新增 item.breakthrough／item.instance 命令與獎勵效果 supportCard，不另寫庫存。",
+      "related": [
+        "PROG-2-9230",
+        "PROG-2-9240",
+        "PROG-2-9241"
+      ],
+      "depends": [],
+      "acceptance": [
+        "TC-SUP-07 傳承每次 +5 上限最多 4 次",
+        "TC-SUP-08 傳承滿轉學分 R5/SR20/SSR60",
+        "失敗整筆回滾",
+        "同 grantKey 不重複",
+        "tsc 0 錯",
+        "run-cli 全過",
+        "gate standard"
+      ],
+      "deliverables": [
+        "assets/resources/data/support-rules.json",
+        "assets/scripts/shared/support/SupportRules.ts",
+        "assets/scripts/core/api/localserver/SupportCardEffect.ts",
+        "assets/scripts/core/api/localserver/ItemCommands.ts",
+        "tests/SupportCardLegacy.test.ts"
+      ],
+      "notes": "2026-11-21 | 狀態: done | 驗證: 新增測試 9 項全過；tests/run-cli.ts 8968 通過；tsc -p tsconfig.test.json 0 錯；compute-gate standard 13/14（1 警告為既有 LoginScene 模組邊界） | 變更: support-rules.json 新增 creditOverflow（R5/SR20/SSR60）；planSupportDuplicate 純函式；ITM 新增 item.breakthrough（傳承 +1，滿回 E318，rollback 供撤銷）與 item.instance 查詢；新增獎勵效果 supportCard（入學／傳承／溢出轉學分，失敗整筆回滾）並於 ServiceLoader 註冊 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
