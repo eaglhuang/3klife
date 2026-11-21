@@ -63,6 +63,36 @@ export function easePlateOffset(current: number, target: number, dt: number, per
     return Math.abs(next - target) < 0.5 ? target : next;
 }
 
+/**
+ * 部隊框在名牌節點本地座標的外框（PROG-2-9581）：框本體之外，上方還有血條與狀態圖示列，
+ * 只用框本體估算時，血條與「士／命」圖示會壓到上方的框。
+ */
+export interface LocalExtent {
+    left: number;
+    right: number;
+    top: number;
+    bottom: number;
+}
+
+/** 合併兩個本地外框；b 為 null 時回傳 a */
+export function unionExtent(a: LocalExtent, b: LocalExtent | null): LocalExtent {
+    if (!b) return a;
+    return { left: Math.min(a.left, b.left), right: Math.max(a.right, b.right), top: Math.max(a.top, b.top), bottom: Math.min(a.bottom, b.bottom) };
+}
+
+/**
+ * 本地外框 → 圖層座標的避讓矩形（PROG-2-9581）。(x, y) 是名牌節點在圖層上的位置，scale 是名牌縮放；
+ * padX／padY 為縮放後再加的邊距（沿用 9440：水平 0、垂直 4）。
+ */
+export function badgeRectFromExtent(x: number, y: number, scale: number, ext: LocalExtent, padX = 0, padY = 4): LabelRect {
+    return {
+        x: x + (ext.left + ext.right) / 2 * scale,
+        y: y + (ext.top + ext.bottom) / 2 * scale,
+        halfW: (ext.right - ext.left) / 2 * scale + padX,
+        halfH: (ext.top - ext.bottom) / 2 * scale + padY,
+    };
+}
+
 /** 部隊框彼此錯開時保留的間距（PROG-2-9440） */
 export const BADGE_STACK_GAP = 2;
 /** 剛受擊的部隊框優先顯示的秒數（PROG-2-9440） */
