@@ -62,3 +62,33 @@ export function easePlateOffset(current: number, target: number, dt: number, per
     const next = current + (target - current) * Math.min(1, dt * perSec);
     return Math.abs(next - target) < 0.5 ? target : next;
 }
+
+/** 部隊框彼此錯開時保留的間距（PROG-2-9440） */
+export const BADGE_STACK_GAP = 2;
+/** 剛受擊的部隊框優先顯示的秒數（PROG-2-9440） */
+export const BADGE_HIT_PRIORITY_SEC = 1.5;
+
+export interface StackBadgeEntry {
+    id: string;
+    rect: LabelRect;
+    /** 越大越先擺（先擺的留在原位）；剛受擊的框給 1 */
+    priority: number;
+}
+
+/**
+ * 部隊框彼此錯開（PROG-2-9440）：同一區的框疊在一起時，玩家看不出誰被打。
+ * 依優先序逐一擺放：先擺的留原位（只避開名牌），後擺的把「名牌＋已擺好的框」都當障礙物，
+ * 用 plateAvoidOffsetY 找最小垂直位移。同優先序依 id 排，讓每幀結果穩定、不來回跳。
+ * 回傳每個框要加的 Y 位移（未列出代表 0）。
+ */
+export function stackBadgeOffsets(entries: readonly StackBadgeEntry[], obstacles: readonly LabelRect[], gap: number = BADGE_STACK_GAP): Map<string, number> {
+    const order = [...entries].sort((a, b) => (b.priority - a.priority) || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+    const placed: LabelRect[] = [...obstacles];
+    const out = new Map<string, number>();
+    for (const e of order) {
+        const dy = plateAvoidOffsetY(e.rect, placed, gap);
+        placed.push({ ...e.rect, y: e.rect.y + dy });
+        if (dy !== 0) out.set(e.id, dy);
+    }
+    return out;
+}
