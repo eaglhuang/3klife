@@ -16456,5 +16456,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9800.md",
     "title": "[PROG-2-9800] 網頁版卡頓優化",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2926",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9609.md",
+    "title": "任務卡：PROG-2-9609 開局義子入學驗證與學府籌備看板",
+    "category": "task"
   }
 ]

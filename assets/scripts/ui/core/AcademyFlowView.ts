@@ -32,6 +32,9 @@ export const ACADEMY_FLOW_FALLBACK_ZH_TW: Readonly<Record<string, string>> = {
     "ui.academy.flow.enroll.child": "{0}（{1} 歲）",
     "ui.academy.flow.enroll.stats": "武力 {0}　統率 {1}　智力 {2}　政治 {3}　魅力 {4}",
     "ui.academy.flow.enroll.empty": "目前沒有可入學的子嗣（需已抓周、未結業，且年滿 15 歲及冠）",
+    "ui.academy.flow.enroll.prep_board": "【學府籌備看板】\n目前尚無及冠門生可直接入學。\n\n【即將及冠預告】\n{0}\n\n【推薦籌備行動】\n1. 前往私塾補習：打底五維數值與同窗羈絆\n2. 前往教官池抽卡：連線抽取 SSR 先賢教官\n3. 前往世家尋訪：拜會名門名士奠定人脈",
+    "ui.academy.flow.enroll.prep_item": "• {0}（{1} 歲，距入學還差 {2} 年）",
+    "ui.academy.flow.enroll.prep_none": "（暫無即將及冠門生，請先至家族培育子嗣）",
     "ui.academy.flow.enroll.hint_young": "15 歲及冠方可入學（還差 {0} 年）",
     "ui.academy.flow.enroll.err.too_young": "15 歲及冠方可入學（還差 {0} 年）",
     "ui.academy.flow.enroll.hint_adult": "已及冠：建議請先祖教官指導（已置頂）",
@@ -179,6 +182,13 @@ export interface EnrollMentorSlotInfo {
     isAncestor: boolean;
 }
 
+export interface PrepUpcomingStudent {
+    id: string;
+    name: string;
+    age: number;
+    yearsUntilEnroll: number;
+}
+
 export interface EnrollViewModel {
     childCount: number;
     /** 目前子嗣（沒有時為 null，顯示空白提示） */
@@ -196,6 +206,8 @@ export interface EnrollViewModel {
     notice: string;
     /** 控制器判定的最終可否入學（年齡、令牌、教官與既有修業都已算入） */
     canEnroll: boolean;
+    /** 學府籌備看板：即將入學的少年倒數名單（當無可立即入學的子嗣時提供） */
+    prepUpcoming?: readonly PrepUpcomingStudent[];
 }
 
 const CONTROL_MODES: readonly AcademyControlMode[] = [AcademyControlMode.MANUAL, AcademyControlMode.SEMI_AUTO, AcademyControlMode.AUTO];
@@ -213,11 +225,18 @@ export const ENROLL_MENTOR_BUTTONS = 4;
 export function enrollView(vm: Readonly<EnrollViewModel>, lookup: AcademyFlowTextLookup = IDENTITY_LOOKUP): AcademyFlowViewState {
     const t = (key: string, ...args: (string | number)[]): string => academyTextOf(lookup, K + key, ...args);
     const has = vm.child !== null;
+    let emptyText = t('enroll.empty');
+    if (!has && vm.prepUpcoming !== undefined) {
+        const items = vm.prepUpcoming.length > 0
+            ? vm.prepUpcoming.slice(0, 5).map((s) => t('enroll.prep_item', s.name, s.age, s.yearsUntilEnroll)).join('\n')
+            : t('enroll.prep_none');
+        emptyText = t('enroll.prep_board', items);
+    }
     const texts: Record<string, string> = {
         acEnrollTitle: t('title_enroll'),
         acEnrollPager: has ? t('enroll.pager', vm.childIndex + 1, vm.childCount) : '',
         acEnrollBackLabel: t('back'),
-        acEnrollEmpty: t('enroll.empty'),
+        acEnrollEmpty: emptyText,
         acEnrollChild: vm.child ? t('enroll.child', vm.child.name, vm.child.age) : '',
         acEnrollStats: vm.child
             ? t('enroll.stats', vm.child.stats.str, vm.child.stats.lea, vm.child.stats.int, vm.child.stats.pol, vm.child.stats.cha)

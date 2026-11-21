@@ -346,5 +346,63 @@ export function createAcademyFlowControllerSuite(): TestSuite {
         assert.isTrue(view.texts.acEventALabel.indexOf('兵爭') >= 0);
     });
 
+    suite.test('PROG-2-9609 開局義子（adoptSource=starter）：14 歲納入名冊且差 1 年被擋，滿 15 歲解鎖入學', async () => {
+        resetAcademyEnrollRules();
+        const starterZhaoyun: AcademyChildLike = {
+            id: 'zhaoyun',
+            name: '趙雲',
+            age: 14,
+            adoptSource: 'starter',
+            str: 85,
+            lea: 80,
+            int: 75,
+            pol: 70,
+            cha: 88,
+        };
+        const h = await harness({ roster: [starterZhaoyun] });
+        const list = h.ctrl.enrollChildren();
+        assert.equals(1, list.length);
+        assert.equals('趙雲', list[0].name);
+
+        await h.ctrl.openEnroll();
+        assert.isFalse(h.enroll.last!.enabled.btnAcEnrollConfirm, '14 歲不可按入學');
+        assert.equals('15 歲及冠方可入學（還差 1 年）', h.enroll.last!.texts.acEnrollHint);
+        assert.isFalse(await h.ctrl.enroll(), '14 歲強行入學失敗');
+
+        // 第二年滿 15 歲
+        starterZhaoyun.age = 15;
+        await h.ctrl.openEnroll();
+        assert.isTrue(h.enroll.last!.enabled.btnAcEnrollConfirm, '滿 15 歲解鎖入學按鈕');
+        assert.isTrue(await h.ctrl.enroll(), '滿 15 歲可正常入學');
+        assert.equals(0, h.tokens.left);
+        assert.equals('ACAD_YINGCHUAN', h.port.record!.committed.academyId);
+    });
+
+    suite.test('PROG-2-9609 學府籌備看板：名冊無可入學子嗣時展示倒數名單與三大推薦導流（私塾、教官、世家）', async () => {
+        resetAcademyEnrollRules();
+        // 名冊只有 14 歲趙雲與 13 歲小兒，但均無 fate.choice/youth，且未標記 starter（模擬無適齡可入學子嗣）
+        const roster: AcademyChildLike[] = [
+            { id: 'zy', name: '趙雲', age: 14, str: 80, lea: 80, int: 70, pol: 70, cha: 80 },
+            { id: 'kid', name: '小寶', age: 13, str: 20, lea: 20, int: 20, pol: 20, cha: 20 },
+        ];
+        const h = await harness({ roster });
+        assert.equals(0, h.ctrl.enrollChildren().length);
+
+        const upcoming = h.ctrl.prepUpcomingStudents();
+        assert.equals(2, upcoming.length);
+        assert.equals('趙雲', upcoming[0].name);
+        assert.equals(1, upcoming[0].yearsUntilEnroll);
+        assert.equals('小寶', upcoming[1].name);
+        assert.equals(2, upcoming[1].yearsUntilEnroll);
+
+        await h.ctrl.openEnroll();
+        const emptyText = h.enroll.last!.texts.acEnrollEmpty;
+        assert.isTrue(emptyText.indexOf('【學府籌備看板】') >= 0, '應包含學府籌備看板標題');
+        assert.isTrue(emptyText.indexOf('趙雲（14 歲，距入學還差 1 年）') >= 0, '應包含即將及冠倒數名單');
+        assert.isTrue(emptyText.indexOf('前往私塾補習') >= 0, '應包含私塾推薦導流');
+        assert.isTrue(emptyText.indexOf('前往教官池抽卡') >= 0, '應包含教官池抽卡推薦導流');
+        assert.isTrue(emptyText.indexOf('前往世家尋訪') >= 0, '應包含世家尋訪推薦導流');
+    });
+
     return suite;
 }
