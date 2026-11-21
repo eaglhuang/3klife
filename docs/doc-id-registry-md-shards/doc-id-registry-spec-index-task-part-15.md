@@ -151,4 +151,4 @@
 | `doc_task_2743` | docs/agent-briefs/tasks/PROG/PROG-2-9600.md | [PROG-2-9600] 史境天下風雲榜與年終頒獎典禮系統規格書 |
 | `doc_task_2744` | docs/agent-briefs/tasks/PROG/PROG-2-9466.md | PROG-2-9466 |
 | `doc_task_2745` | docs/agent-briefs/tasks/PROG/PROG-2-9243.md | [PROG-2-9243] 教官池 JSON 與卡池接線（SUP-10：POOL_SUPPORT、itemQuery、連線券、機率說明） |
-| `doc_task_2746` | docs/agent-briefs/tasks/PROG/PROG-2-9705.md | [PROG-2-9705] 戰場 HUD 徽章風格第一版 |
+| `doc_task_2747` | docs/agent-briefs/tasks/PROG/PROG-2-9705.md | [PROG-2-9705] 戰場 HUD 徽章風格第一版 |

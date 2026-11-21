@@ -13675,7 +13675,7 @@
       "notes": "狀態: done。變更: 新增 doc_spec_1284～1287 史境天下風雲榜與年終頒獎典禮系統規格書（索引＋3 分片）；更新 cross-ref-specs 與 tasks-prog；同步 doc_spec_1283/doc_task_2740 索引。"
     },
     {
-      "doc_id": "doc_task_2743",
+      "doc_id": "doc_task_2747",
       "id": "PROG-2-9705",
       "title": "戰場 HUD 徽章風格第一版",
       "owner": "claude-code-opus-5-5",
