@@ -84,6 +84,17 @@ export const API_ERRORS = Object.freeze({
     OCC_REF_MISMATCH: def('E332', 'OCC_REF_MISMATCH'),
     OCC_READONLY_KIND: def('E333', 'OCC_READONLY_KIND'),
     OCC_UNAVAILABLE: def('E334', 'OCC_UNAVAILABLE', true),
+    // 任務（E35x；規格 doc_spec_1185 §11.4 寫 E4xx，改用 E35x 以免與其他框架分段衝突；PROG-2-9209）
+    QST_DEF_NOT_FOUND: def('E350', 'DEF_NOT_FOUND'),
+    QST_NOT_FOUND: def('E351', 'NOT_FOUND'),
+    QST_BAD_STATE: def('E352', 'BAD_STATE'),
+    QST_GATE_PENDING: def('E353', 'GATE_PENDING'),
+    QST_NOT_READY: def('E354', 'NOT_READY'),
+    QST_STEP_MISMATCH: def('E355', 'STEP_MISMATCH'),
+    QST_ACTOR_INVALID: def('E356', 'ACTOR_INVALID'),
+    QST_CONDITION_UNMET: def('E357', 'CONDITION_UNMET'),
+    QST_UNAVAILABLE: def('E358', 'QUEST_UNAVAILABLE', true),
+    QST_KEY_CONFLICT: def('E359', 'KEY_CONFLICT'),
     // 存檔（沿用 E0xx 之外的本機存檔失敗）
     SAVE_FAILED: def('E190', 'SAVE_FAILED', true),
     SAVE_NOT_FOUND: def('E191', 'SAVE_NOT_FOUND'),

@@ -169,6 +169,9 @@ import { GeneralSkillStore } from '../systems/skill/GeneralSkillStore';
 import { defaultSkillRegistry } from '../systems/skill/SkillCatalog';
 import type { ItemAuthority, StockTable } from '../api/localserver/ItemCommands';
 import type { RewardAuthority } from '../api/localserver/RewardCommands';
+import type { QuestAuthority } from '../api/localserver/QuestCommands';
+import { emptyQuestState, isEmptyQuestState, normalizeQuestState } from '../../shared/quest/QuestService';
+import type { QuestStateV1 } from '../../shared/quest/QuestTypes';
 import { emptyRewardMeta, isEmptyRewardMeta, normalizeRewardMeta, type RewardMeta } from '../../shared/reward/RewardRules';
 import type { StoryAuthority } from '../api/localserver/StoryCommands';
 import { emptyStoryMeta, isEmptyStoryMeta, normalizeStoryMeta, type StoryMeta } from '../../shared/story/StoryRules';
@@ -925,6 +928,8 @@ export class GameSession implements AcademyRecordPort {
     private _itemApi: IApiClient | null = null;
     /** 獎勵 base 的持久化狀態（亂數會話、保底計數、發放紀錄，PROG-2-9205）；舊檔缺值為空 */
     private _rewardMeta: RewardMeta = emptyRewardMeta();
+    /** 任務 base 狀態（PROG-2-9209）：實例、步驟、閘門、暫離、結算紀錄隨存檔 questState 保存 */
+    private _questState: QuestStateV1 = emptyQuestState();
     /** 劇情 base 中繼資料（PROG-2-9208） */
     private _storyMeta: StoryMeta = emptyStoryMeta();
     /** 共通 API 入口（PROG-2-9205）：戰後里程碑獎勵走 reward.claim；沒綁（純邏輯測試）就退回不發 */
@@ -2255,6 +2260,14 @@ export class GameSession implements AcademyRecordPort {
         this._rewardApi = api;
     }
 
+    /** 任務 base 的權威狀態 port（PROG-2-9209） */
+    public questAuthority(): QuestAuthority {
+        return {
+            state: () => this._questState,
+            setState: (state) => { this._questState = state; },
+        };
+    }
+
     /** 獎勵 base 的權威狀態 port（PROG-2-9205）：亂數會話、保底、發放紀錄隨存檔 rewardMeta 保存 */
     public rewardAuthority(): RewardAuthority {
         return {
@@ -2444,6 +2457,7 @@ export class GameSession implements AcademyRecordPort {
         this._legendaryMentoringUsedIds = [];
         this._itemMeta = emptyItemMeta();
         this._rewardMeta = emptyRewardMeta();
+        this._questState = emptyQuestState();
         this._storyMeta = emptyStoryMeta();
         this._breedingBirthRecords = [];
         this._familySystemUnlockedFlag = false;
@@ -6688,6 +6702,7 @@ export class GameSession implements AcademyRecordPort {
             ...this._createBaseSnapshot(now),
             ...(this._legendaryMentoringUsedIds.length > 0 ? { legendaryMentoringUsedIds: [...this._legendaryMentoringUsedIds] } : {}),
             ...(isEmptyRewardMeta(this._rewardMeta) ? {} : { rewardMeta: normalizeRewardMeta(this._rewardMeta) }),
+            ...(isEmptyQuestState(this._questState) ? {} : { questState: normalizeQuestState(this._questState) }),
             ...(isEmptyStoryMeta(this._storyMeta) ? {} : { storyMeta: normalizeStoryMeta(this._storyMeta) }),
             ...(this._itemMeta.seq > 0 || Object.keys(this._itemMeta.periodic).length > 0 ? { itemMeta: normalizeItemMeta(this._itemMeta) } : {}),
             military: this.military,
@@ -7005,6 +7020,7 @@ export class GameSession implements AcademyRecordPort {
         this._legendaryMentoringUsedIds = (snapshot.legendaryMentoringUsedIds ?? []).filter((id) => typeof id === 'string');
         this._itemMeta = normalizeItemMeta(snapshot.itemMeta);
         this._rewardMeta = normalizeRewardMeta(snapshot.rewardMeta);
+        this._questState = normalizeQuestState(snapshot.questState);
         this._storyMeta = normalizeStoryMeta(snapshot.storyMeta);
         this._oracleCount = snapshot.oracleCount ?? 0;
         this._clearedStageIds = normalizeClearedStageIds(snapshot.clearedStageIds);

@@ -7,6 +7,8 @@
  * 劇情（PROG-2-9208）的狀態存放由 setStoryAuthority 綁定、劇本設定由 setStoryConfig 換入。
  * 獎勵（PROG-2-9205）的狀態存放由 setRewardAuthority 綁定、設定由 setRewardConfig 換入；
  * 宿主自訂效果種類（技能習得等）用 registerRewardEffect 掛 handler，條件評估與倍率由 setRewardHooks 提供。
+ * 任務（PROG-2-9209）的狀態存放由 setQuestAuthority 綁定、定義由 setQuestConfig 換入；
+ * 任務種類 adapter（academy…）用 registerQuestKind 掛，條件評估與時鐘由 setQuestHooks 提供。
  */
 import { DEFAULT_ITEM_CONFIG, type ItemConfigV1 } from '../../../shared/item/ItemConfig';
 import { DEFAULT_REWARD_CONFIG, type RewardConfigV1 } from '../../../shared/reward/RewardConfig';
@@ -16,6 +18,10 @@ import { registerStoryCommands, type StoryAuthority, type StoryEffectHandler, ty
 import { registerRewardCommands, type RewardAuthority, type RewardEffectHandler, type RewardPorts } from './RewardCommands';
 import { LocalApiAdapter, type LocalApiAdapterOptions } from './LocalApiAdapter';
 import { registerOccupancyCommands, type OccupancyHost } from './OccupancyCommands';
+import { DEFAULT_QUEST_CONFIG } from '../../../shared/quest/QuestConfig';
+import type { QuestKindAdapter } from '../../../shared/quest/QuestService';
+import type { QuestConfigV1 } from '../../../shared/quest/QuestTypes';
+import { registerQuestCommands, type QuestAuthority, type QuestPorts } from './QuestCommands';
 import { registerSkillCommands, type SkillHost } from './SkillCommands';
 import { registerSaveCommands, type LocalSaveStore } from './SaveCommands';
 import { registerWalletCommands, type WalletAuthority } from './WalletCommands';
@@ -31,6 +37,13 @@ export interface LocalApiBundle {
     setItemConfig(config: ItemConfigV1): void;
     setRewardAuthority(authority: RewardAuthority | null): void;
     setRewardConfig(config: RewardConfigV1): void;
+    /** 任務（QST-M）：狀態存放綁定與定義換入 */
+    setQuestAuthority(authority: QuestAuthority | null): void;
+    setQuestConfig(config: QuestConfigV1): void;
+    /** 掛上任務種類 adapter（決定成敗等級）；同種類以後者為準 */
+    registerQuestKind(adapter: QuestKindAdapter): void;
+    /** 任務條件評估與季序時鐘（宿主以權威存檔提供） */
+    setQuestHooks(hooks: Pick<QuestPorts, 'evaluate' | 'nowIndex'>): void;
     /** 掛上宿主自訂的獎勵效果種類（例如 tacticLearn）；同名以後者為準 */
     registerRewardEffect(kind: string, handler: RewardEffectHandler): void;
     /** 條件評估、倍率、熵來源（測試固定種子用） */
@@ -54,6 +67,10 @@ export function createLocalApi(store: LocalSaveStore, opts: LocalApiAdapterOptio
     let rewardConfig: RewardConfigV1 = DEFAULT_REWARD_CONFIG;
     let rewardHooks: Pick<RewardPorts, 'evaluate' | 'modifiers' | 'entropy'> = {};
     const rewardHandlers: Record<string, RewardEffectHandler> = {};
+    let questAuthority: QuestAuthority | null = null;
+    let questConfig: QuestConfigV1 = DEFAULT_QUEST_CONFIG;
+    let questHooks: Pick<QuestPorts, 'evaluate' | 'nowIndex'> = {};
+    const questKinds: Record<string, QuestKindAdapter> = {};
     let storyAuthority: StoryAuthority | null = null;
     let storyConfig: StoryConfigV1 = DEFAULT_STORY_CONFIG;
     let storyHooks: Pick<StoryPorts, 'facts'> = {};
@@ -65,6 +82,7 @@ export function createLocalApi(store: LocalSaveStore, opts: LocalApiAdapterOptio
     registerSkillCommands(api, () => skillHost);
     registerStoryCommands(api, () => ({ authority: storyAuthority, config: storyConfig, handlers: storyHandlers, ...storyHooks }));
     registerOccupancyCommands(api, () => occupancyHost);
+    registerQuestCommands(api, () => ({ authority: questAuthority, config: questConfig, kinds: questKinds, ...questHooks }));
     return {
         api,
         setWallet: (next) => { wallet = next; },
@@ -80,5 +98,9 @@ export function createLocalApi(store: LocalSaveStore, opts: LocalApiAdapterOptio
         setStoryHooks: (hooks) => { storyHooks = hooks; },
         setSkillHost: (next) => { skillHost = next; },
         setOccupancyHost: (next) => { occupancyHost = next; },
+        setQuestAuthority: (next) => { questAuthority = next; },
+        setQuestConfig: (next) => { questConfig = next; },
+        registerQuestKind: (adapterDef) => { questKinds[adapterDef.taskKind] = adapterDef; },
+        setQuestHooks: (hooks) => { questHooks = hooks; },
     };
 }

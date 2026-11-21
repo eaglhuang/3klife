@@ -11956,6 +11956,74 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9209",
+      "title": "QST-M：任務最小版（task.* 端點，taskKind=academy 契約與 adapter 介面）",
+      "owner": "ClaudeCode_sonnet-5-5",
+      "priority": "P0",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-20",
+      "created_by_agent": "ClaudeCode_sonnet-5-5",
+      "started_at": "2026-11-21T08:00:00+08:00",
+      "started_by_agent": "ClaudeCode_sonnet-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "共用框架總綱 doc_spec_1182 第 12 章第 4 列：實例、步驟、閘門、暫離、結算、紀錄；任務框架只管接受、步驟、條件進度、結算，獎懲交 reward.claim，執行者占用走 occupancy.*；錯誤碼 E35x",
+      "related": [
+        "PROG-2-9200",
+        "PROG-2-9205",
+        "PROG-2-9207",
+        "PROG-2-9213"
+      ],
+      "depends": [
+        "PROG-2-9201",
+        "PROG-2-9202",
+        "PROG-2-9205",
+        "PROG-2-9207"
+      ],
+      "acceptance": [
+        "一個 academy 任務跑完 36 步",
+        "閘門（12/24/36）阻擋 advance 與 settle",
+        "暫離期間倒數不遞減",
+        "結算走 reward.claim 且重送不重複結算",
+        "棘輪基準 132 持平"
+      ],
+      "deliverables": [
+        "shared/quest/{QuestTypes",
+        "QuestConfig",
+        "QuestService",
+        "AcademyQuest}.ts",
+        "core/api/localserver/QuestCommands.ts",
+        "data/quest-config.json",
+        "tests/QuestBase.test.ts"
+      ],
+      "notes": "2026-11-20 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

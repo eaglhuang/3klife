@@ -61,6 +61,9 @@ import { configureWhiteFactorAchievements, WHITE_FACTOR_ACHIEVEMENTS_JSON, type 
 import { configureMindMarriageRules, MIND_MARRIAGE_RULES_JSON, type MindMarriageRulesConfig } from "../mind/MindMarriage";
 import { configureAcademyStories } from "../systems/nurture/AcademyStoryTexts";
 import { ACADEMY_ENROLL_RULES_JSON, configureAcademyEnrollRules, type AcademyEnrollRulesConfig } from "../systems/nurture/AcademyEnrollRules";
+import { createAcademyQuestAdapter } from "../../shared/quest/AcademyQuest";
+import { DEFAULT_QUEST_CONFIG, normalizeQuestConfig } from "../../shared/quest/QuestConfig";
+import { QUEST_CONFIG_JSON, type QuestConfigV1 } from "../../shared/quest/QuestTypes";
 import { DEFAULT_REWARD_CONFIG, normalizeRewardConfig, REWARD_CONFIG_JSON, type RewardConfigV1 } from "../../shared/reward/RewardConfig";
 import { DEFAULT_STORY_CONFIG, normalizeStoryConfig, STORY_CONFIG_JSON, type StoryConfigV1 } from "../../shared/story/StoryConfig";
 import { ITEM_CONFIG_JSON, normalizeItemConfig, DEFAULT_ITEM_CONFIG, type ItemConfigV1 } from "../../shared/item/ItemConfig";
@@ -266,6 +269,7 @@ export class ServiceLoader {
     private itemConfig: ItemConfigV1 = DEFAULT_ITEM_CONFIG;
     /** 獎勵設定（reward-config.json，PROG-2-9205）；載入前用空設定，API 重建時沿用 */
     private rewardConfig: RewardConfigV1 = DEFAULT_REWARD_CONFIG;
+    private questConfig: QuestConfigV1 = DEFAULT_QUEST_CONFIG;
     /** 劇情設定（story-config.json，PROG-2-9208）；載入前用空設定，API 重建時沿用 */
     private storyConfig: StoryConfigV1 = DEFAULT_STORY_CONFIG;
     /** 場景綁定的權威錢包；API 重建時沿用 */
@@ -302,6 +306,10 @@ export class ServiceLoader {
         this.localApi.setRewardConfig(this.rewardConfig);
         this.localApi.setRewardAuthority(this.session.rewardAuthority());
         this.session.setRewardApi(this.localApi.api);
+        // 任務 base（PROG-2-9209 QST-M）：定義與實例狀態；academy 種類 adapter 先掛預設（A0 接學府結業評級時再換），結算走 reward.claim、占用走 occupancy.*
+        this.localApi.setQuestConfig(this.questConfig);
+        this.localApi.setQuestAuthority(this.session.questAuthority());
+        this.localApi.registerQuestKind(createAcademyQuestAdapter());
         // 劇情 base（PROG-2-9208）：劇本設定與旗標、已看、打斷佇列存在 GameSession
         this.localApi.setStoryConfig(this.storyConfig);
         this.localApi.setStoryAuthority(this.session.storyAuthority());
@@ -414,6 +422,7 @@ export class ServiceLoader {
             loadSafe<Partial<AcademyEnrollRulesConfig>>(ACADEMY_ENROLL_RULES_JSON, configureAcademyEnrollRules),
             loadSafe<unknown>(STORY_CONFIG_JSON, (raw) => { this.storyConfig = normalizeStoryConfig(raw); this.localApi?.setStoryConfig(this.storyConfig); configureAcademyStories(this.storyConfig); }),
             loadSafe<unknown>(REWARD_CONFIG_JSON, (raw) => { this.rewardConfig = normalizeRewardConfig(raw); this.localApi?.setRewardConfig(this.rewardConfig); }),
+            loadSafe<unknown>(QUEST_CONFIG_JSON, (raw) => { this.questConfig = normalizeQuestConfig(raw); this.localApi?.setQuestConfig(this.questConfig); }),
             loadSafe<unknown>(ITEM_CONFIG_JSON, (raw) => { this.itemConfig = normalizeItemConfig(raw); this.localApi?.setItemConfig(this.itemConfig); }),
             loadSafe<Partial<MarriageVitalityRulesConfig>>(MARRIAGE_VITALITY_RULES_JSON, configureMarriageVitalityRules),
         ]);
