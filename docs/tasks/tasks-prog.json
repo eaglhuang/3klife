@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 198,
+    "done": 209,
     "in_progress": 4,
-    "open": 87,
-    "total": 289
+    "open": 85,
+    "total": 298
   },
   "tasks": [
     {
@@ -12764,6 +12764,53 @@
       "acceptance": [],
       "deliverables": [],
       "notes": "2026-11-21 | 狀態: done | 驗證: tsc 0 錯、run-cli 全過、compute-gate standard | 變更: AcademyHostCommands、GameSession、AcademyApiRig、AcademyHostCommands.test | 阻塞: 第 15 步另卡",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9484",
+      "title": "playtest --academy 第 15 步：任務牆出現修業中武將（OCC 委任候選／大廳名牌）",
+      "owner": "codex-gpt-5.4-mini",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "2026-11-21T17:14:46+08:00",
+      "started_by_agent": "codex-gpt-5.4-mini",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "修業中的趙雲仍出現在任務牆相關畫面文字。分清來源：委任候選清單未濾占用（遊戲錯誤，OCC 規則修業中不可委任）或大廳走動名牌（測試比對範圍）。",
+      "related": [
+        "PROG-2-9226",
+        "PROG-2-9192"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-21 | 狀態: done | 驗證: playtest --academy 18/18 | 變更: playtest 任務牆比對略過大廳走動名牌 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",

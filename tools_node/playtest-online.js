@@ -1985,7 +1985,8 @@ async function main() {
                 await delay(1500);
                 await backToLobbyBar();
                 await closeMissionLayers();
-                const wallTexts = (await rm.textsUnder('^lobby-hall-screen$')) || [];
+                // 走動武將的名牌（HallStageCrowd，輪替隨機）不是任務牆內容，略過；否則輪到修業中的武將上場就誤判
+                const wallTexts = (await rm.textsUnder('^lobby-hall-screen$', '^HallStageCrowd$')) || [];
                 let dialogTexts = [];
                 let wallError = null;
                 try {
@@ -2001,7 +2002,7 @@ async function main() {
                 await closeMissionLayers();
                 const all = [...wallTexts, ...dialogTexts];
                 const listed = all.filter((t) => youthName && t.includes(youthName));
-                ar.taskWall = { youthName, listed: listed.length > 0, listedTexts: listed.slice(0, 6), wallError, dialogTextSample: dialogTexts.slice(0, 20) };
+                ar.taskWall = { youthName, listed: listed.length > 0, listedInWall: wallTexts.filter((t) => youthName && t.includes(youthName)).length, listedInDialog: dialogTexts.filter((t) => youthName && t.includes(youthName)).length, listedTexts: listed.slice(0, 6), wallError, dialogTextSample: dialogTexts.slice(0, 20) };
                 rec.detail.taskWall = ar.taskWall;
                 const inRegistry = Array.isArray(ar.occupancy.occupiedIds) && ar.occupancy.occupiedIds.includes(youthId);
                 if (!inRegistry) throw new Error(`占用登記表沒有修業中的武將 ${youthId}（occupancy.query occupiedIds：${JSON.stringify(ar.occupancy.occupiedIds)}）`);
