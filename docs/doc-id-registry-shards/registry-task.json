@@ -16192,5 +16192,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9462.md",
     "title": "[PROG-2-9462] GCH-R3 卡池 JSON 化",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2717",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9463.md",
+    "title": "[PROG-2-9463] GCH-R4 抽取遷移",
+    "category": "task"
   }
 ]

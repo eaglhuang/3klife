@@ -43,6 +43,27 @@
       "effects": [{ "kind": "currency", "id": "gold", "amount": 2000 }],
       "sources": ["quest"],
       "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_GACHA_DUP_R",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "bronze", "amount": 100 }],
+      "sources": ["gacha"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_GACHA_DUP_SR",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "bronze", "amount": 400 }],
+      "sources": ["gacha"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_GACHA_DUP_SSR",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "gems", "amount": 40 }],
+      "sources": ["gacha"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
     }
   ]
 }

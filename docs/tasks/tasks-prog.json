@@ -12689,6 +12689,56 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9463",
+      "title": "GCH-R4 抽取遷移",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-21",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "2026-11-21T18:00:00+08:00",
+      "started_by_agent": "claude-code-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "GachaApi.pull 與轉蛋畫面抽取改走 reward.roll（旗標 gachaReward，預設開，?gachaReward=0 退回舊路徑）；扣款走 wallet.spend、重複卡轉 bundle、kind general 發放 handler、開啟轉蛋畫面才展開名冊載入獎池並於離開時釋放。紅顏池採全部女將按等階（使用者裁決 11/21）。",
+      "related": [
+        "PROG-2-9460",
+        "PROG-2-9461",
+        "PROG-2-9462"
+      ],
+      "depends": [
+        "PROG-2-9462"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "狀態: done。變更: RewardGachaPull（port、general handler）、GachaRewardFlag、GachaRarity 抽出、LocalGachaApi/GachaFlowCoordinator/LobbyScene 走新路徑並延遲載入精簡名冊、離開釋放。驗證: tsc 0、run-cli 全過、playtest 11/11、api-bypass 132/132。",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

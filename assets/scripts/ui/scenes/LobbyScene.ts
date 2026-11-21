@@ -192,10 +192,13 @@ import { mercBondedLine, mercDayThreeLine, mercFarewellLine, mercTrustLine } fro
 import { RED_FACE_SHOW_MAX_ROWS, RedFaceGalleryController, RedFaceShowcaseController, RedFaceShowcaseDeps, toRedFaceTabFlowView } from '../core/RedFaceShowcaseController';
 import { GACHA_NODES, GACHA_POOL_INDEX, GACHA_POOLS, GachaPoolDef, RED_FACE_SECTION_ROW_BUTTON } from '../core/GachaScreenNodes';
 import { LocalGachaApi } from '../../core/gacha/LocalGachaApi';
+import { gachaRewardEnabled } from '../../core/gacha/GachaRewardFlag';
+import { RewardGachaPort, type RewardGachaPullOutcome } from '../../core/gacha/RewardGachaPull';
+import { buildRewardPools, legacyPoolIdsOf, type RosterMember } from '../../shared/reward/RewardRoster';
 import { GachaWalletPort } from '../../core/api/localserver/GachaWalletPort';
 import { isApiFail } from '../../shared/api/ApiProtocol';
 import { ADMISSION_TOKEN_ID } from '../../shared/item/ItemConfig';
-import { parseGachaMainPools, type GachaApi, type GachaCurrencyId, type GachaMainPoolConfig } from '../../core/gacha/GachaApi';
+import { gachaCostOf, parseGachaMainPools, pickPullCurrency, type GachaApi, type GachaCurrencyId, type GachaMainPoolConfig } from '../../core/gacha/GachaApi';
 import { gachaApiView, gachaAutoSizeNodes, gachaHeroIdOf, gachaWalletLabelTexts } from '../core/GachaApiTexts';
 import { buildPoolDetailRows, checkGachaAffordable, planGachaButton, syncMainPoolCosts, type GachaButtonKind } from '../../core/gacha/GachaButtonRules';
 import { bindGachaPoolDetail, setGachaTexts, textLabelOf, updateGachaWalletStrip, raiseGachaWalletStrip } from '../core/GachaScreenExtras';
@@ -7156,6 +7159,7 @@ ${spent}`,
      */
     public returnToLobbyHall(): void {
         if (this._gachaHost) this._gachaHost.node.active = false;
+        this._releaseGachaRewardPools();
         if (this._shopMainHost) this._shopMainHost.node.active = false;
         this._closeSecondaryOverlayHosts();
         this._openLobbyHall();
@@ -8034,6 +8038,84 @@ ${spent}`,
         return ids.length > 0 ? this._generals.filter((general) => ids.includes(general.id)) : this._generals;
     }
 
+    /** 轉蛋抽取走共通 API（reward.roll）的轉接；null＝旗標關閉或獎池尚未載入／已釋放，走舊路徑（GCH-R4） */
+    private _gachaRewardPort: RewardGachaPort | null = null;
+    private _gachaRewardLoading: Promise<void> | null = null;
+
+    private _gachaRewardOn(): boolean {
+        return gachaRewardEnabled((globalThis as { location?: { search?: string } }).location?.search);
+    }
+
+    /**
+     * 開啟轉蛋畫面時才載入獎池：精簡名冊（只取 id、稀有度、性別）依名單檔展開成逐角色項目，換入共通 API 的獎池設定。
+     * 精簡名冊只是展開時的暫存，展開完就丟；離開轉蛋畫面時整批獎池釋放（_releaseGachaRewardPools）。
+     */
+    private async _ensureGachaRewardPools(): Promise<void> {
+        if (this._gachaRewardPort || !this._gachaRewardOn()) return;
+        if (!this._gachaRewardLoading) {
+            this._gachaRewardLoading = (async () => {
+                const raw = await this._loadDataJson<unknown>('data/gacha-reward-pools');
+                if (!raw || this._generals.length === 0) return;
+                const roster: RosterMember[] = this._generals.map((g) => ({
+                    id: g.id, gender: g.gender, rarityTier: g.rarityTier, characterCategory: g.characterCategory,
+                }));
+                const pools = buildRewardPools(raw, roster);
+                if (pools.length === 0) return;
+                const loader = services();
+                loader.setGachaRewardPools(pools);
+                loader.bindGeneralGrantHost({
+                    resolve: (id) => this._cloneGeneralById(id),
+                    enroll: (general) => ({ duplicate: loader.session.enrollGenerals([general], { fromGacha: true }).duplicates.length > 0 }),
+                });
+                this._gachaRewardPort = new RewardGachaPort(loader.api, legacyPoolIdsOf(raw), {
+                    resolveGeneral: (id) => this._cloneGeneralById(id),
+                    afterPull: (info) => {
+                        this._localGachaService.recordExternalPull(info.poolId, info.currency as 'gems' | 'bronze', info.cost, info.results);
+                        loader.session.queueGachaMentorDraw({ drawn: info.results.map((r) => r.general), time: { ...loader.session.gameTime }, poolId: info.poolId });
+                        this._saveGachaState();
+                    },
+                });
+            })().catch((error) => {
+                UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 轉蛋獎池載入失敗，改走舊路徑', error);
+            }).finally(() => { this._gachaRewardLoading = null; });
+        }
+        await this._gachaRewardLoading;
+    }
+
+    /** 離開轉蛋畫面：釋放展開後的獎池與發武將入口（下次開畫面再載） */
+    private _releaseGachaRewardPools(): void {
+        if (!this._gachaRewardPort) return;
+        this._gachaRewardPort = null;
+        services().setGachaRewardPools(null);
+        services().bindGeneralGrantHost(null);
+    }
+
+    private _cloneGeneralById(id: string): GeneralConfig | null {
+        const found = this._generals.find((g) => g.id === id);
+        return found ? (JSON.parse(JSON.stringify(found)) as GeneralConfig) : null;
+    }
+
+    /** 走共通 API 抽卡前的報價：依價格表與餘額挑貨幣；不足時丟錯（開發自動補款開著則補到夠） */
+    private async _quoteGachaReward(poolId: string, drawCount: number): Promise<{ currency: GachaCurrencyId; cost: number }> {
+        await this._loadGachaMainPools();
+        const config = this._gachaMainPools.find((entry) => entry.poolId === poolId);
+        if (!config) throw new Error('找不到這個卡池的價格設定');
+        const wallet = await this._getGachaApi().getWallet();
+        const pick = pickPullCurrency(config, drawCount, wallet);
+        if (pick.ok) return { currency: pick.currency, cost: pick.cost };
+        const miss = pick as { error: string; shortfall: number };
+        if (miss.error === 'INSUFFICIENT_CURRENCY' && this._localGachaService.devTopUp(config.currencies[0], gachaCostOf(config, drawCount))) {
+            return { currency: config.currencies[0], cost: gachaCostOf(config, drawCount) };
+        }
+        throw new Error(miss.error === 'CURRENCY_NOT_ALLOWED' ? '這個卡池不收這種貨幣' : `餘額不足，還差 ${miss.shortfall}`);
+    }
+
+    /** 走共通 API 的抽卡結果：記下入冊結果給提示用（舊路徑由 enroll 回呼寫入）；重複卡已轉成獎勵，沒有重複分流彈窗 */
+    private _onGachaRewardPulled(outcome: RewardGachaPullOutcome): void {
+        this._gachaOwnedDuplicates = [];
+        this._gachaEnrollResult = { added: outcome.added, duplicates: outcome.duplicates, rebirths: [], bondPointsGained: 0 };
+    }
+
     /** 轉蛋標準 API（本機實作；日後換伺服器實作，畫面不改，PROG-2-9024） */
     private _getGachaApi(): GachaApi {
         if (this._gachaApi) return this._gachaApi;
@@ -8043,11 +8125,13 @@ ${spent}`,
             service: this._localGachaService,
             pools: () => this._gachaMainPools,
             candidates: (poolId) => this._gachaCandidatesCache.get(poolId) ?? [],
+            reward: () => this._gachaRewardPort,
         });
         return this._gachaApi;
     }
 
     private async _loadGachaMainPools(): Promise<void> {
+        await this._ensureGachaRewardPools();
         if (this._gachaMainPools.length > 0) return;
         // 價格以抽卡規則實際扣的為準（紅顏池靈玉計價，PROG-2-9117）
         this._gachaMainPools = syncMainPoolCosts(
@@ -8208,6 +8292,9 @@ ${spent}`,
             // 各池呈現（標題、貨幣、再抽方式）讀池設定，所有抽卡走轉蛋系統（PROG-2-9020）
             loadPools: () => this._loadDataJson<GachaConfig[]>('data/gacha-config'),
             onAfterPullSuccess: (results) => { this._gachaPullSettled = this._onGachaPullSuccess(results); },
+            rewardPull: () => this._gachaRewardPort,
+            rewardQuote: (poolId, drawCount) => this._quoteGachaReward(poolId, drawCount),
+            onRewardPulled: (outcome) => this._onGachaRewardPulled(outcome),
             // 展示到哪位武將才跳哪位的提示（PROG-2-9143）；等入冊與重複分流都做完才算得出轉生結果
             bannerLinesOf: async (generalId) => {
                 await this._gachaPullSettled;

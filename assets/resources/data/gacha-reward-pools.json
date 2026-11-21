@@ -1,6 +1,7 @@
 {
   "$note": "轉蛋三池的獎池設定（reward-pool.v1，GCH-R3／PROG-2-9462）。抽樣、等階機率、UP、保底全在這裡；項目用 rosterQuery 依武將名冊展開（RewardRoster.ts），不手寫角色。保底數值照獎勵規格書 doc_spec_1186 §12.3（PM 設計值），要調只改這個檔。UP 名單為暫定，企劃可直接改 rosterRefs。",
   "schema": "reward-pool-file.v1",
+  "legacyPoolIds": { "GENERAL_STANDARD_01": "POOL_GENERAL_MAIN", "support-pool": "POOL_HEROINE" },
   "rosterRefs": {
     "gacha.general.up.ssr": ["lu-bu", "zhao-yun", "zhuge-liang"],
     "gacha.general.up.sr": ["zhang-liao", "pang-tong", "xu-zhu", "dian-wei"],
