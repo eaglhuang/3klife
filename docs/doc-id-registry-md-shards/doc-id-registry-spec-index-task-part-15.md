@@ -203,3 +203,4 @@
 | `doc_task_2966` | docs/agent-briefs/tasks/PROG/PROG-2-9732.md | [PROG-2-9732] 戰鬥音效補件：金屬擊打／肉體悶擊／單拍馬蹄換成 CC0 外部素材（可切回變調版） |
 | `doc_task_2967` | docs/agent-briefs/tasks/PROG/PROG-2-9731.md | [PROG-2-9731] 戰場 UI 演出 B2：名牌戰鬥淡出、狀態圖示層數回合、奧義暫代大字與音效、毒上身回饋、治療時序 |
 | `doc_task_2971` | docs/agent-briefs/tasks/PROG/PROG-2-9733.md | [PROG-2-9733] 規格回寫：使用者 2026-11-22 八項裁決（天氣、金銀轉移、官職分批解鎖、格子 buff、兵種符號、年終典禮、重複卡彈窗、燃燒） |
+| `doc_task_2972` | docs/agent-briefs/tasks/PROG/PROG-2-9831.md | [PROG-2-9831] LLM 批次文案工具與大廳武將聊天台詞第一批（API 贈送額度） |
