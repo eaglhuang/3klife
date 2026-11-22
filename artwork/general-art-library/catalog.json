@@ -9935,9 +9935,17 @@
             "version": "0002",
             "file": "avatars/cao_hua__曹華__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/cao_hua__曹華__avatar_0003.png",
+            "status": "integrated",
+            "sha256": "1d2415198382cd2daea249da346b6a6e32f918751b8d13fa49f23d57b2a603c1",
+            "canvas": "1254x1254 RGBA",
+            "note": "依角色既有色系製作的半身來源圖；自然輕三分之四臉，完整髮型與雙肩，供小頭像裁切。"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "battle": {
         "status": "review-pending",
@@ -9953,6 +9961,26 @@
             "poseLabel": "回身舉令盤指向前方",
             "sourceStanding": "standing/cao_hua__曹華__standing_0002.png",
             "note": "以曹華核定站姿為唯一角色造型參考；依宮廷身份以儀令圓盤與手勢傳達軍令，呈現回身調度動作。透明全身候選，待使用者檢視。"
+          }
+        ]
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/cao_hua__曹華__small_avatar_0001.png",
+            "status": "integrated",
+            "sha256": "5b3627561babd22e279f5e3c9ebde3b76371e931f02b18ae83119d67cbfa3094",
+            "canvas": "256x256 RGBA",
+            "source": "avatars/cao_hua__曹華__avatar_0003.png",
+            "cropBox": "padded-source x=154.67,y=6.75,side=1162.67; 10px transparent top and 70px transparent right padding only",
+            "headHeightRatio": 0.75,
+            "faceHeightRatio": 0.466,
+            "faceWidthRatio": 0.354,
+            "centerlineErrorPx": 0.5,
+            "note": "完整髮型與髮飾；自然輕三分之四角度；頭高75%、臉高46.6%、臉寬35.4%、中線偏差0.5px；雙肩可見。只等比例裁切及透明補邊，未旋轉或扭曲人物。"
           }
         ]
       }
