@@ -7,6 +7,8 @@
  *    並有總量上限（視窗＋每秒），多隊同走不會更吵。
  * 3. 倒地（die）與暴擊（boom）錯開 staggerMs，致命一擊不再疊 boom。
  * 4. 出手音到命中音的間隔上限（只改音效排程時間，不碰動畫）。
+ * 5. clipSource 開關（PROG-2-9732）：'cc0' 用 CC0 外部素材取代金屬擊打／肉體悶擊／單拍馬蹄三個變調代用檔，
+ *    'pitched' 維持 9729 的變調代用版；兩版檔案都在，方便對照聽。
  * 所有數值在 data/battle-audio-layers.json；讀不到用這裡的預設。
  */
 import { TroopType } from '../../shared/CommonEnums';
@@ -16,7 +18,13 @@ export type Range = readonly [number, number];
 
 export interface HitTierSpec { clips: string[]; volume: Range }
 
+/** 音檔來源：cc0＝CC0 外部素材（預設）；pitched＝變調代用版。 */
+export type AudioClipSource = 'cc0' | 'pitched';
+
 export interface BattleAudioLayersConfig {
+  clipSource: AudioClipSource;
+  /** 變調代用版 clip 名 → CC0 clip 名；clipSource 為 cc0 時才套用 */
+  cc0Clips: Record<string, string>;
   hit: {
     heavyMaxHpRatio: number;
     critIsHeavy: boolean;
@@ -37,6 +45,8 @@ export interface BattleAudioLayersConfig {
 }
 
 export const DEFAULT_BATTLE_AUDIO_LAYERS: BattleAudioLayersConfig = {
+  clipSource: 'cc0',
+  cc0Clips: { hit_block: 'cc0_hit_metal', hit_heavy: 'cc0_hit_flesh', footstep_hoof: 'cc0_hoof_single' },
   hit: {
     heavyMaxHpRatio: 0.2,
     critIsHeavy: true,
@@ -99,7 +109,13 @@ export function parseBattleAudioLayersConfig(raw: unknown): BattleAudioLayersCon
   }
   const db = (root.dieBoom ?? {}) as Record<string, unknown>;
   const as = (root.attackSfx ?? {}) as Record<string, unknown>;
+  const cc0Clips: Record<string, string> = { ...d.cc0Clips };
+  if (root.cc0Clips && typeof root.cc0Clips === 'object') {
+    for (const [k, v] of Object.entries(root.cc0Clips as Record<string, unknown>)) if (typeof v === 'string' && v) cc0Clips[k] = v;
+  }
   return {
+    clipSource: root.clipSource === 'pitched' || root.clipSource === 'cc0' ? root.clipSource : d.clipSource,
+    cc0Clips,
     hit: {
       heavyMaxHpRatio: num(hit.heavyMaxHpRatio, d.hit.heavyMaxHpRatio, 0, 1),
       critIsHeavy: typeof hit.critIsHeavy === 'boolean' ? hit.critIsHeavy : d.hit.critIsHeavy,
@@ -154,18 +170,24 @@ export function resolveHitTier(input: HitTierInput, cfg: BattleAudioLayersConfig
   return 'light';
 }
 
+/** 依 clipSource 把邏輯 clip 名換成實際播放的檔名：cc0 版查替換表，pitched 版原樣。 */
+export function resolveClipName(clip: string, cfg: BattleAudioLayersConfig = DEFAULT_BATTLE_AUDIO_LAYERS): string {
+  return cfg.clipSource === 'cc0' ? (cfg.cc0Clips[clip] ?? clip) : clip;
+}
+
 export interface PickedSfx { clip: string; volume: number }
 
 /** 依層挑 clip（多個 clip 時隨機挑一個）與隨機音量。 */
 export function pickHitSfx(tier: HitTier, cfg: BattleAudioLayersConfig = DEFAULT_BATTLE_AUDIO_LAYERS, rand: () => number = Math.random): PickedSfx {
   const spec = cfg.hit.tiers[tier];
   const clip = spec.clips[Math.min(spec.clips.length - 1, Math.floor(rand() * spec.clips.length))];
-  return { clip, volume: pickInRange(spec.volume, rand) };
+  return { clip: resolveClipName(clip, cfg), volume: pickInRange(spec.volume, rand) };
 }
 
 /** 兵種腳步 clip；沒設定回傳 null（呼叫端退回舊 cue，例如水軍划水聲）。 */
 export function footstepClipFor(troopType: TroopType | string | null | undefined, cfg: BattleAudioLayersConfig = DEFAULT_BATTLE_AUDIO_LAYERS): string | null {
-  return cfg.footstep.clips[troopType as string] ?? null;
+  const clip = cfg.footstep.clips[troopType as string];
+  return clip ? resolveClipName(clip, cfg) : null;
 }
 
 /** 腳步音量＝兵種基準音量 × 隨機倍率。 */

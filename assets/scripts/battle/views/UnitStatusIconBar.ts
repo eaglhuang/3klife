@@ -16,6 +16,7 @@ import {
   type UnitStatusIconList,
 } from '../shared/UnitStatusIcons';
 import type { LocalExtent } from '../shared/GeneralPlateAvoidance';
+import { getBattleUiFeedback, statusBadgeTexts, type Rgba } from '../shared/BattleUiFeedback';
 
 /**
  * 圖示邊長（名牌座標）。名牌本身縮 0.7、再乘戰場透視，36 實際只剩約 22px、手機約 9px 看不清，
@@ -71,9 +72,14 @@ interface IconSlot {
   node: Node;
   graphics: Graphics;
   label: Label;
+  /** 右下角剩餘回合數、右上角層數「×N」（PROG-2-9731）；字級顏色讀 data/battle-ui-feedback.json */
+  turnsLabel: Label;
+  stackLabel: Label;
   /** 目前畫的是哪一種；用來避免重複重畫 */
   drawnKey: string;
 }
+
+const toColor = (c: Rgba): Color => new Color(c[0], c[1], c[2], c[3]);
 
 export interface StatusBarApplyResult {
   /** 是否有內容變動（簽名不同） */
@@ -193,9 +199,46 @@ export class UnitStatusIconBar {
     label.verticalAlign = Label.VerticalAlign.CENTER;
     label.overflow = Label.Overflow.NONE;
 
-    const slot: IconSlot = { node, graphics, label, drawnKey: '' };
+    const turnsLabel = this.makeBadgeLabel(node, 'Turns', Label.HorizontalAlign.RIGHT, 4, -ICON_SIZE * 0.3);
+    const stackLabel = this.makeBadgeLabel(node, 'Stacks', Label.HorizontalAlign.RIGHT, 4, ICON_SIZE * 0.34);
+    const slot: IconSlot = { node, graphics, label, turnsLabel, stackLabel, drawnKey: '' };
     this.slots[index] = slot;
     return slot;
+  }
+
+  /** 圖示角落的小字（回合數或層數）：寬 40 右對齊，貼在圖示右緣；沒有內容時節點關掉 */
+  private makeBadgeLabel(parent: Node, name: string, align: number, x: number, y: number): Label {
+    const node = new Node(name);
+    node.layer = this.parent.layer;
+    parent.addChild(node);
+    node.addComponent(UITransform).setContentSize(40, 26);
+    node.setPosition(x, y, 0);
+    const label = node.addComponent(Label);
+    label.lineHeight = 26;
+    label.isBold = true;
+    label.enableOutline = true;
+    label.horizontalAlign = align;
+    label.verticalAlign = Label.VerticalAlign.CENTER;
+    label.overflow = Label.Overflow.NONE;
+    node.active = false;
+    return label;
+  }
+
+  /** 角標：層數 ≥2 顯示「×N」、剩餘回合數顯示數字；字級顏色每次簽名改變時套用（設定檔載入後才生效） */
+  private applyBadges(slot: IconSlot, entry: StatusIconEntry): void {
+    const cfg = getBattleUiFeedback().statusBadge;
+    const texts = statusBadgeTexts(entry.stacks, entry.turns, cfg.stackPrefix);
+    const set = (label: Label, text: string, size: number, color: Rgba): void => {
+      label.node.active = text.length > 0;
+      if (!text) return;
+      label.string = text;
+      label.fontSize = size;
+      label.color = toColor(color);
+      label.outlineColor = toColor(cfg.outlineColor);
+      label.outlineWidth = cfg.outlineWidth;
+    };
+    set(slot.turnsLabel, texts.turns, cfg.turnsFontSize, cfg.turnsColor);
+    set(slot.stackLabel, texts.stack, cfg.stackFontSize, cfg.stackColor);
   }
 
   private ensureOverflowLabel(): Label {
@@ -222,6 +265,7 @@ export class UnitStatusIconBar {
   }
 
   private drawSlot(slot: IconSlot, entry: StatusIconEntry): void {
+    this.applyBadges(slot, entry);
     const key = `${entry.kind}`;
     if (slot.drawnKey === key) return;
     slot.drawnKey = key;
