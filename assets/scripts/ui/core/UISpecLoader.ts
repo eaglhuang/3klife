@@ -12,7 +12,9 @@ import { ResourceManager } from '../../core/systems/ResourceManager';
 import type { UILayoutSpec, UISkinManifest, UIScreenSpec, UISkinFragment, UILayoutNodeSpec, UITemplateSpec, UIWidgetFragmentSpec, FrameRecipe, SkinSlot } from './UISpecTypes';
 import { CURRENT_SPEC_VERSION } from './UISpecTypes';
 import { UCUFLogger, LogCategory } from './UCUFLogger';
-import { restyleHallSkinSlots, type HallStyleTokens } from './HallStyleTokens';
+import { restyleSkinSlots } from './ThemeSkinRestyle';
+import { ThemeService } from './ThemeService';
+import type { ThemeRegistry } from './UIThemeResolver';
 
 const { ccclass } = _decorator;
 
@@ -40,8 +42,9 @@ export class UISpecLoader {
     private _recipeCache = new Map<string, FrameRecipe>();
     private _designTokens: any = null;
     private _screenDesignTokensCache = new Map<string, any>();
-    /** 幕府大廳風格 token（undefined＝尚未載入；null＝載入失敗，沿用原 skin） */
-    private _hallStyleTokens: HallStyleTokens | null | undefined = undefined;
+    /** 主題服務（全 skin 共用）；登錄表載入失敗時維持未就緒，skin 沿用原樣 */
+    private _themeService: ThemeService | null = null;
+    private _themeRegistryLoaded = false;
 
     // ── 載入方法 ────────────────────────────────────────────────
 
@@ -204,28 +207,34 @@ export class UISpecLoader {
             manifest.slots = mergedSlots;
         }
 
-        // 幕府大廳套用大廳・內政同一套風格：只換樣式欄位，節點 id 與尺寸不動（見 HallStyleTokens.ts）
-        const hallStyle = await this._loadHallStyleTokens();
-        if (hallStyle && hallStyle.appliesToSkins.includes(skinId)) {
-            manifest.slots = restyleHallSkinSlots(manifest.slots, hallStyle);
-        }
-
-        this._skinCache.set(skinId, manifest);
-        return manifest;
+        // 主題樣式（UI 共用框架）：只換樣式欄位，節點 id 與尺寸不動；回傳副本，不污染 JSON 快取
+        const themed = await this._applyTheme(skinId, manifest);
+        this._skinCache.set(skinId, themed);
+        return themed;
     }
 
-    /** 載入幕府大廳風格 token（只載一次）；缺檔時回 null，畫面沿用原 skin。 */
-    private async _loadHallStyleTokens(): Promise<HallStyleTokens | null> {
-        if (this._hallStyleTokens !== undefined) return this._hallStyleTokens;
+    /** 取得（必要時載入）主題服務；缺登錄表時回 null，畫面沿用原 skin。 */
+    async getThemeService(): Promise<ThemeService | null> {
+        if (this._themeRegistryLoaded) return this._themeService;
+        this._themeRegistryLoaded = true;
         try {
-            this._hallStyleTokens = await this._rm.loadJson<HallStyleTokens>(
-                'ui-spec/hall-style/hall-style-tokens', { tags: ['UISpec'] }
-            );
+            const registry = await this._rm.loadJson<ThemeRegistry>('ui-spec/themes/theme-registry', { tags: ['UISpec'] });
+            const service = new ThemeService(asset => this._rm.releaseAsset(asset.path));
+            service.setRegistry(registry);
+            // 主題切換後，已快取的 skin 全部作廢；畫面訂閱 onThemeChanged 後重新 loadSkin 重套
+            service.onThemeChanged(() => this._skinCache.clear());
+            this._themeService = service;
         } catch (e) {
-            console.warn('[UISpecLoader] 幕府大廳風格 token 載入失敗，沿用原 skin', e);
-            this._hallStyleTokens = null;
+            console.warn('[UISpecLoader] 主題登錄表載入失敗，沿用原 skin', e);
         }
-        return this._hallStyleTokens;
+        return this._themeService;
+    }
+
+    private async _applyTheme(skinId: string, manifest: UISkinManifest): Promise<UISkinManifest> {
+        const theme = await this.getThemeService();
+        const style = theme?.skinStyle();
+        if (!theme || !style || !theme.appliesToSkin(skinId)) return manifest;
+        return { ...manifest, slots: restyleSkinSlots(manifest.slots, style) };
     }
 
     /**

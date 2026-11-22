@@ -15465,10 +15465,20 @@
         "tsc 0 錯；run-cli 全過"
       ],
       "deliverables": [
-        "assets/resources/ui-spec/hall-style/hall-style-tokens.json",
-        "assets/scripts/ui/core/HallStyleTokens.ts",
+        "assets/resources/ui-spec/themes/theme-registry.json",
+        "assets/scripts/ui/core/UIThemeResolver.ts",
+        "assets/scripts/ui/core/ThemeService.ts",
+        "assets/scripts/ui/core/ThemeSkinRestyle.ts",
         "assets/scripts/ui/core/UISpecLoader.ts",
-        "tests/HallStyleTokens.test.ts",
+        "tests/ThemeSystem.test.ts",
+        "assets/resources/i18n/zh-TW.json",
+        "assets/resources/i18n/zh-CN.json",
+        "assets/resources/i18n/en.json",
+        "assets/resources/i18n/ja.json",
+        "assets/resources/ui-spec/layouts/lobby-hall-screen.json",
+        "assets/resources/ui-spec/layouts/lobby-hall-screen.layout.json",
+        "docs/遊戲規格文件/系統規格書/共用框架總綱規格書-shards/shard-f.md",
+        "docs/遊戲規格文件/系統規格書/共用框架總綱規格書.md",
         "docs/agent-briefs/tasks/PROG/PROG-2-9832.md"
       ],
       "notes": "2026-11-22 | 狀態: done（第一階段） | 驗證: tsc 0 錯；run-cli 9255 passed 3 skipped（含 HallStyleTokens 9 項） | 變更: hall-style-tokens.json、HallStyleTokens.ts、UISpecLoader 掛勾、HallStyleTokens.test.ts | 阻塞: 未做實機截圖比對；分節標題小字距與細金線留第二階段",

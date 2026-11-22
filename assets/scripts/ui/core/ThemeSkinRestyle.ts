@@ -1,8 +1,9 @@
 /**
- * HallStyleTokens — 幕府大廳套用「大廳・內政」同一套視覺風格（純 TS，不依賴 cc）。
+ * ThemeSkinRestyle — 把目前主題的樣式角色套到 skin slots（純 TS，不依賴 cc）。
  *
- * 來源：ui-spec/hall-style/hall-style-tokens.json（數值取自 domestic-screen.skin.json）。
- * UISpecLoader.loadSkin 在 skin 合併後呼叫 restyleHallSkinSlots，只改樣式欄位
+ * 角色表由 UIThemeResolver.buildSkinStyle 從主題語意 token 組出（ui-spec/themes/theme-registry.json）；
+ * default 主題的數值取自 domestic-screen.skin.json，幕府大廳因此與大廳・內政同風格。
+ * UISpecLoader.loadSkin 在 skin 合併後呼叫 restyleSkinSlots，只改樣式欄位
  * （顏色、描邊、字型、透明度）；節點 id、尺寸、貼圖、文字與功能都不動。
  *
  * 分類規則（依 slot 本身的 kind 與欄位判斷，不靠節點名稱）：
@@ -16,7 +17,7 @@
  */
 
 /** 單一風格角色的樣式欄位（與 skin slot 欄位同名） */
-export interface HallStyleRole {
+export interface SkinStyleRole {
     kind?: string;
     color?: string;
     alpha?: number;
@@ -26,14 +27,14 @@ export interface HallStyleRole {
     letterSpacing?: number;
 }
 
-export interface HallStyleTokens {
+export interface SkinStyleTokens {
     id: string;
     version: number;
     appliesToSkins: string[];
     font: string;
     titleMinFontSize: number;
     fillRoles: Record<string, string>;
-    roles: Record<string, HallStyleRole>;
+    roles: Record<string, SkinStyleRole>;
 }
 
 /** 按鈕文字的原始色票：這些色在深色按鈕上是字，套按鈕字色 */
@@ -45,9 +46,9 @@ const GRADIENT_KEYS = ['backgroundLayers', 'gradient', 'opacity'];
 type SlotLike = { kind?: string; [key: string]: unknown };
 
 /** 依 token 把整批 skin slot 換成大廳・內政風格；回傳新物件，不改動傳入的 slots。 */
-export function restyleHallSkinSlots<T extends object>(
+export function restyleSkinSlots<T extends object>(
     slots: Record<string, T>,
-    tokens: HallStyleTokens,
+    tokens: SkinStyleTokens,
 ): Record<string, T> {
     const out: Record<string, T> = {};
     for (const key of Object.keys(slots)) {
@@ -57,7 +58,7 @@ export function restyleHallSkinSlots<T extends object>(
 }
 
 /** 單一 slot 的套用；無法辨識或不需要換的 slot 原樣回傳。 */
-export function restyleSlot<T extends object>(slot: T, tokens: HallStyleTokens): T {
+export function restyleSlot<T extends object>(slot: T, tokens: SkinStyleTokens): T {
     if (!slot || typeof slot !== 'object') return slot;
     const s = slot as unknown as SlotLike;
     if (s.kind === 'label-style') return restyleLabel(s, tokens) as unknown as T;
@@ -65,7 +66,7 @@ export function restyleSlot<T extends object>(slot: T, tokens: HallStyleTokens):
     return slot;
 }
 
-function restyleLabel(slot: SlotLike, tokens: HallStyleTokens): SlotLike {
+function restyleLabel(slot: SlotLike, tokens: SkinStyleTokens): SlotLike {
     const fontSize = typeof slot.fontSize === 'number' ? slot.fontSize : 0;
     const originalColor = typeof slot.color === 'string' ? slot.color : '';
     let roleName = 'labelBody';
@@ -75,7 +76,7 @@ function restyleLabel(slot: SlotLike, tokens: HallStyleTokens): SlotLike {
     return { ...slot, font: tokens.font, color: role.color ?? slot.color };
 }
 
-function restylePanel(slot: SlotLike, tokens: HallStyleTokens): SlotLike {
+function restylePanel(slot: SlotLike, tokens: SkinStyleTokens): SlotLike {
     const fill = typeof slot.color === 'string' ? slot.color : '';
     const hasBorder = typeof slot.borderColor === 'string' && slot.borderColor.length > 0;
     const roleName = tokens.fillRoles[fill] ?? (hasBorder ? 'glassPanel' : null);

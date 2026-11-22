@@ -924,5 +924,21 @@
   "MATCHMAKER_ACTION_DECLINE": "稍後再議",
   "MATCHMAKER_SILVER_LOW_WARNING": "家族銀兩不足，媒婆說她不賒帳",
   "MATCHMAKER_GOTO_COMMERCE": "前往籌措銀兩",
-  "MATCHMAKER_ENROLL_BUTTON": "納為配偶（需禮金 %{cost} 銀兩）"
+  "MATCHMAKER_ENROLL_BUTTON": "納為配偶（需禮金 %{cost} 銀兩）",
+  "ui.hall.btn.expedition": "出征",
+  "ui.hall.btn.generals": "武將",
+  "ui.hall.btn.domestic": "內政",
+  "ui.hall.btn.domestic_network": "內政 / 人脈",
+  "ui.hall.map.title": "天下勢力圖",
+  "ui.hall.clan.overview": "世家總覽",
+  "ui.hall.slot.empty": "空位",
+  "ui.hall.status.claimable": "可收取",
+  "ui.hall.btn.accept_task": "交給你",
+  "ui.hall.btn.defer": "再議",
+  "ui.theme.name.default": "預設",
+  "ui.theme.name.spring": "春季",
+  "ui.theme.name.summer": "夏季",
+  "ui.theme.name.autumn": "秋季",
+  "ui.theme.name.winter": "冬季",
+  "ui.theme.name.lunar-new-year": "農曆新年"
 }
