@@ -1,4 +1,4 @@
-// @spec-source → 戰場適性系統.md §O 戰前天氣顯示；PROG-2-9733
+// @spec-source → 戰場適性系統.md §O 戰前天氣顯示；PROG-2-9735
 /**
  * WeatherEffectText — 戰前顯示用的天氣效果描述（純邏輯，不依賴 cc）
  *

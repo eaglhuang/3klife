@@ -97,7 +97,7 @@ export interface MissionDialogContext {
     /** 完美獎勵揭曉的情報度（資料表值）；沒給時視為 100 */
     hiddenRevealIntel?: number;
     selectedGeneralId: string | null;
-    /** 本場戰場天氣一行（PROG-2-9733）；有值時環境偵察的天氣欄改顯示它，沒給（一般任務）維持「風險・期限」 */
+    /** 本場戰場天氣一行（PROG-2-9735）；有值時環境偵察的天氣欄改顯示它，沒給（一般任務）維持「風險・期限」 */
     weatherLine?: string;
 }
 

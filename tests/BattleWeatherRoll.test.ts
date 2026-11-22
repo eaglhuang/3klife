@@ -1,5 +1,5 @@
 /**
- * BattleWeatherRoll.test.ts — 季節抽天氣純邏輯測試（PROG-2-9733）
+ * BattleWeatherRoll.test.ts — 季節抽天氣純邏輯測試（PROG-2-9735）
  *
  * 涵蓋：權重分布、NIGHT 永遠不會被抽到、劇情固定優先、沒有季節資料回晴天、
  * 真實 JSON 的驗證、戰前文字由現有效果數值產生。
@@ -32,7 +32,7 @@ function tally(season: number, n: number, seed: number): Record<string, number> 
 }
 
 export function createBattleWeatherRollSuite(): TestSuite {
-    const suite = new TestSuite('BattleWeatherRoll (季節抽天氣 PROG-2-9733)');
+    const suite = new TestSuite('BattleWeatherRoll (季節抽天氣 PROG-2-9735)');
 
     suite.test('四季 1000 次抽樣：只出現該季權重內的天氣，比例貼近權重', () => {
         for (const season of [1, 2, 3, 4]) {

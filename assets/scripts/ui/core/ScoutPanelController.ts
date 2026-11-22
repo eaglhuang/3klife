@@ -28,7 +28,7 @@ export interface LobbyScout {
     intel: ScoutPanelIntel;
     /** 關卡有填必備或高建議對策；沒填時推薦檢核顯示「未指定」 */
     hasRecommendation: boolean;
-    /** 本場天氣一行（PROG-2-9733，例「天氣：大霧（遠程命中 -30%、火計禁用）」）；與戰場讀到的是同一個結果 */
+    /** 本場天氣一行（PROG-2-9735，例「天氣：大霧（遠程命中 -30%、火計禁用）」）；與戰場讀到的是同一個結果 */
     weatherLine?: string;
 }
 

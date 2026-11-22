@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "doc": "戰場適性系統.md (doc_spec_0041) 季節天氣機率表；PROG-2-9733。總 PM 2026-11-22 裁決：晴天每季至少 50%，冬天沒有雪、以霧代替；權重為相對值（目前每季加總 100），由 core/systems/BattleWeatherRoll.ts 讀取。",
+  "doc": "戰場適性系統.md (doc_spec_0041) 季節天氣機率表；PROG-2-9735。總 PM 2026-11-22 裁決：晴天每季至少 50%，冬天沒有雪、以霧代替；權重為相對值（目前每季加總 100），由 core/systems/BattleWeatherRoll.ts 讀取。",
   "defaultWeather": "SUNNY",
   "randomExcluded": ["NIGHT"],
   "drawRule": {

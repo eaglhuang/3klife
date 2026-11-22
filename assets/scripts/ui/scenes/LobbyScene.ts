@@ -649,7 +649,7 @@ export class LobbyScene extends Component {
     private _scoutPanelHost: UIScreenPreviewHost | null = null;
     private readonly _scoutPanel = new ScoutPanelController();
     private _tacticCounterTags: TacticCounterTagTable | null = null;
-    /** 季節天氣機率表（PROG-2-9733，data/battle-weather-season）；載入前或載入失敗時抽天氣一律退回晴天 */
+    /** 季節天氣機率表（PROG-2-9735，data/battle-weather-season）；載入前或載入失敗時抽天氣一律退回晴天 */
     private _weatherSeasonTable: BattleWeatherSeasonTable | null = null;
     private _destinyShopHost: UIScreenPreviewHost | null = null;
     private _destinyShop: DestinyShopController | null = null;
@@ -8178,7 +8178,7 @@ ${spent}`,
         // 環境偵察面板（PROG-2-0405）：用大廳目前關卡的真實地形與天氣
         const encounter = this._currentEncounter();
         await this._ensureWeatherSeasonTable();
-        // 天氣用與開戰相同的抽取結果（PROG-2-9733），預報與天氣行都以它為準
+        // 天氣用與開戰相同的抽取結果（PROG-2-9735），預報與天氣行都以它為準
         const weather = encounter ? this._resolveEncounterWeather(encounter) : null;
         const scout = encounter && weather ? buildEnvScoutLines(buildBattlefieldReconForEncounter({ ...encounter, weather })) : null;
 

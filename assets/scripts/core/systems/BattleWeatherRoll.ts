@@ -1,4 +1,4 @@
-// @spec-source → 戰場適性系統.md §L 季節天氣機率、§M 劇情關固定天氣；PROG-2-9733
+// @spec-source → 戰場適性系統.md §L 季節天氣機率、§M 劇情關固定天氣；PROG-2-9735
 /**
  * BattleWeatherRoll — 戰場天氣抽取（純邏輯，不依賴 cc）
  *
