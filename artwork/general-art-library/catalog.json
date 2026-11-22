@@ -2404,29 +2404,53 @@
       "uid": "huang-zhong",
       "name": "黃忠",
       "standing": {
-        "status": "integrated",
+        "status": "asset-imported",
         "history": [
           {
             "version": "0002",
             "file": "standing/huang_zhong__黃忠__standing_0002.png",
-            "status": "integrated"
+            "status": "superseded"
+          },
+          {
+            "version": "0003",
+            "file": "standing/huang_zhong__黃忠__standing_0003.png",
+            "status": "asset-imported",
+            "sha256": "844bd4d56ba37c1fa16c993111edc783c9ded6b494374caa303f88b05542b899",
+            "canvas": "1024x1536 RGBA",
+            "note": "依重建男性品質基準；成熟老將面容，橄欖綠、赭金與象牙色弓手甲冑。"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "avatar": {
-        "status": "integrated",
+        "status": "asset-imported",
         "history": [
           {
             "version": "0002",
             "file": "avatars/huang_zhong__黃忠__avatar_0002.png",
-            "status": "integrated"
+            "status": "superseded"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/huang_zhong__黃忠__avatar_0003.png",
+            "status": "asset-imported",
+            "sha256": "571eca4aa06fb02c062dde69fac1aa79d8cf686c52c10f15b92563f7983af391",
+            "canvas": "720x720 RGBA",
+            "sourceBustFile": "busts/huang_zhong__黃忠__bust_0001.png",
+            "method": "crop-only; uniform crop and resize; no redraw, rotation or retouch",
+            "cropBox": {
+              "x": 196,
+              "y": 0,
+              "width": 400,
+              "height": 400
+            },
+            "createdAt": "2026-11-23"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "battle": {
-        "activeVersion": "0003",
+        "activeVersion": "0004",
         "status": "asset-imported",
         "history": [
           {
@@ -2441,14 +2465,26 @@
           {
             "version": "0003",
             "file": "battle/huang_zhong__黃忠__battle_0003.png",
-            "status": "asset-imported",
+            "status": "superseded",
             "sha256": "4418c2efaa361353088890ffa5d4d091de7866df7d42f1f3978c544d772a2062",
             "canvas": "1024x1536 RGBA",
             "weaponClass": "bow",
             "note": "使用者核准收入戰鬥圖庫；由候選原圖直接複製，未修改。",
             "createdAt": "2026-11-18"
+          },
+          {
+            "version": "0004",
+            "file": "battle/huang_zhong__黃忠__battle_0004.png",
+            "status": "asset-imported",
+            "sha256": "a92ca173aec5e5a3b006d5b604385e4f87d2edb4e34a0f80b3499dad0a61269c",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "recurve-bow",
+            "sourceStanding": "standing/huang_zhong__黃忠__standing_0003.png",
+            "poseLabel": "三分之四側身引弓瞄準",
+            "note": "同套服裝的弓手戰鬥姿勢；弓弦與箭矢保留可讀，遊戲顯示未驗證。"
           }
-        ]
+        ],
+        "displayStatus": "not-yet-verified"
       },
       "smallAvatar": {
         "activeVersion": "0002",
@@ -2483,6 +2519,27 @@
             "createdAt": "2026-11-18"
           }
         ]
+      },
+      "bust": {
+        "history": [
+          {
+            "version": "0001",
+            "file": "busts/huang_zhong__黃忠__bust_0001.png",
+            "status": "asset-imported",
+            "sha256": "450b2405543654a1ea10df830bac21ba4ebbc5f39c5c398437a37166ce79d91a",
+            "canvas": "900x1000 RGBA",
+            "sourceStandingFile": "standing/huang_zhong__黃忠__standing_0003.png",
+            "method": "crop-only; no redraw, rotation or retouch",
+            "cropBox": {
+              "x": 62,
+              "y": 0,
+              "width": 900,
+              "height": 1000
+            }
+          }
+        ],
+        "activeVersion": "0001",
+        "status": "asset-imported"
       }
     },
     {
