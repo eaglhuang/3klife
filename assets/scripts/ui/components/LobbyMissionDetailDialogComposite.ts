@@ -68,7 +68,8 @@ const CONTRACT: ContentContractRef = {
         'generalSelectHintLabel',
         'costFoodValueLabel',
         'costTroopValueLabel',
-        'costSilverValueLabel',
+        'costFundNameLabel',
+        'costFundValueLabel',
         'costTimeValueLabel',
         'rewardBaseLabel',
         'rewardPerfectLabel',
@@ -108,8 +109,9 @@ export interface LobbyMissionDetailDialogContentState {
     costFoodRatio: number;
     costTroopValueLabel: string;
     costTroopRatio: number;
-    costSilverValueLabel: string;
-    costSilverRatio: number;
+    costFundNameLabel: string;
+    costFundValueLabel: string;
+    costFundRatio: number;
     costTimeValueLabel: string;
     costTimeRatio: number;
     rewardBaseLabel: string;
@@ -618,7 +620,8 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
             generalSelectHintLabel: snapshot.generalSelectHintLabel,
             costFoodValueLabel: snapshot.costFoodValueLabel,
             costTroopValueLabel: snapshot.costTroopValueLabel,
-            costSilverValueLabel: snapshot.costSilverValueLabel,
+            costFundNameLabel: snapshot.costFundNameLabel,
+            costFundValueLabel: snapshot.costFundValueLabel,
             costTimeValueLabel: snapshot.costTimeValueLabel,
             rewardBaseLabel: snapshot.rewardBaseLabel,
             rewardPerfectLabel: snapshot.rewardPerfectLabel,
@@ -629,7 +632,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
     private _applyRatios(snapshot: LobbyMissionDetailDialogSnapshot): void {
         this._setRatioBar('costFoodRatio', snapshot.costFoodRatio);
         this._setRatioBar('costTroopRatio', snapshot.costTroopRatio);
-        this._setRatioBar('costSilverRatio', snapshot.costSilverRatio);
+        this._setRatioBar('costFundRatio', snapshot.costFundRatio);
         this._setRatioBar('costTimeRatio', snapshot.costTimeRatio);
     }
 

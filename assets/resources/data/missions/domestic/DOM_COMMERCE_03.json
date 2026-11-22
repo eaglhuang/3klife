@@ -7,11 +7,11 @@
   "difficulty": "EASY",
   "tags": [
     "domestic",
-    "legacy"
+    "commerce"
   ],
   "meta": {
-    "origin": "converted",
-    "note": "由 tools_node/convert-hall-templates.js 從舊大廳模板機械轉出，可日後手寫補強。"
+    "origin": "authored",
+    "note": "商業任務（銀兩入家族）：手寫，轉換腳本不會覆寫；數值只改這個檔。"
   },
   "text": {
     "title": "平抑物價",
@@ -62,6 +62,10 @@
   "timing": {
     "durationSeasons": 1,
     "expireSeasons": 2
+  },
+  "cost": {
+    "gold": 0,
+    "silver": 0
   },
   "variants": [
     {
@@ -119,7 +123,7 @@
                     "kind": "resource",
                     "res": "silver",
                     "amount": {
-                      "base": 120,
+                      "base": 50,
                       "mulKey": "reward"
                     }
                   },
@@ -171,7 +175,7 @@
                 "kind": "resource",
                 "res": "silver",
                 "amount": {
-                  "base": 80,
+                  "base": 40,
                   "mulKey": "reward"
                 }
               },
@@ -209,7 +213,7 @@
                 "kind": "resource",
                 "res": "silver",
                 "amount": {
-                  "base": -40,
+                  "base": -20,
                   "mulKey": "risk"
                 }
               },
@@ -266,7 +270,7 @@
                     "kind": "resource",
                     "res": "silver",
                     "amount": {
-                      "base": 120,
+                      "base": 50,
                       "mulKey": "reward"
                     }
                   },
@@ -318,7 +322,7 @@
                 "kind": "resource",
                 "res": "silver",
                 "amount": {
-                  "base": 80,
+                  "base": 40,
                   "mulKey": "reward"
                 }
               },
@@ -352,7 +356,7 @@
                 "kind": "resource",
                 "res": "silver",
                 "amount": {
-                  "base": -24,
+                  "base": -12,
                   "mulKey": "risk"
                 }
               },
@@ -408,7 +412,7 @@
                     "kind": "resource",
                     "res": "silver",
                     "amount": {
-                      "base": 120,
+                      "base": 50,
                       "mulKey": "reward"
                     }
                   },
@@ -460,7 +464,7 @@
                 "kind": "resource",
                 "res": "silver",
                 "amount": {
-                  "base": 80,
+                  "base": 40,
                   "mulKey": "reward"
                 }
               },
@@ -494,7 +498,7 @@
                 "kind": "resource",
                 "res": "silver",
                 "amount": {
-                  "base": -12,
+                  "base": -6,
                   "mulKey": "risk"
                 }
               },

@@ -141,7 +141,8 @@ export function createMissionServiceSuite(): TestSuite {
         if (!r.ok) return;
         assert.equals(stock0.grain - d.value.cost.grain, host.stockNow.grain);
         assert.equals(stock0.troops - d.value.cost.troops, host.stockNow.troops);
-        assert.equals(stock0.silver - d.value.cost.silver, host.stockNow.silver);
+        assert.equals(stock0.gold - d.value.cost.gold, host.stockNow.gold, '金耗費從國家公庫扣');
+        assert.equals(stock0.silver - d.value.cost.silver, host.stockNow.silver, '銀兩耗費從家族帳扣');
         assert.equals(d.value.cost.energy, host.energySpent.G1);
         const after = svc.getBoard();
         if (!after.ok) throw new Error('board');
@@ -170,12 +171,12 @@ export function createMissionServiceSuite(): TestSuite {
         if (!a.ok) { assert.equals('BLOCKED', a.code); assert.contains(a.text, '培育中'); }
         const b = await svc.dispatch({ requestId: rid(), missionId: card.id, generalIds: ['ghost'] });
         assert.isFalse(b.ok);
-        host.stockNow = { grain: 0, silver: 0, troops: 0 };
+        host.stockNow = { grain: 0, gold: 0, silver: 0, troops: 0 };
         const c = await svc.dispatch({ requestId: rid(), missionId: card.id, generalIds: ['G1'] });
         assert.isFalse(c.ok);
         if (!c.ok) assert.equals('SHORT_RESOURCE', c.code);
         assert.equals(0, host.energySpent.G1 ?? 0, '被擋不扣精力');
-        assert.equals(JSON.stringify({ grain: 0, silver: 0, troops: 0 }), JSON.stringify(host.stockNow));
+        assert.equals(JSON.stringify({ grain: 0, gold: 0, silver: 0, troops: 0 }), JSON.stringify(host.stockNow));
         assert.isTrue(before.length > 0);
     });
 

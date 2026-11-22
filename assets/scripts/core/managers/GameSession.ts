@@ -555,7 +555,7 @@ export interface HallMissionSeasonReport {
     settled: number;
     succeeded: number;
     /** 這次結算實際入帳的總量（已截斷）；快轉合併提示與頂欄對帳用 */
-    gains: { grain: number; silver: number; generalExp: number };
+    gains: { grain: number; gold: number; silver: number; generalExp: number };
 }
 
 export interface SeasonAdvancedPayload {
@@ -1477,10 +1477,11 @@ export class GameSession implements AcademyRecordPort {
     public get silverLedger(): SilverLedger {
         const start = (): number => {
             const config = this._familyConfig;
-            return config ? config.startingSilver : 600;
+            if (!config) throw new ApiError('FAMILY_NO_CONFIG', '家族設定尚未載入');
+            return config.startingSilver;
         };
         return {
-            silverBalance: () => this._family.silverBalance(start()),
+            silverBalance: () => this._family.silverBalance(this._familyConfig?.startingSilver ?? 0),
             spendSilver: (amount) => this._savedSilver(this._family.trySpendSilver(amount, start())),
             creditSilver: (amount) => { this._family.creditSilver(amount, start()); this._savedSilver(true); },
         };
@@ -4890,8 +4891,8 @@ export class GameSession implements AcademyRecordPort {
     /** 讀檔進來、等資料綁定後才能還原或遷移的存檔：v2 直接用；舊檔（hallMissions／hallIntel／hallWaitSeasons）綁定時遷移，進行中任務不遺失 */
     private _missionPending: { save: unknown; legacy: { hallMissions: unknown; hallIntel: unknown; hallWaitSeasons: unknown } | null } | null = null;
     /** 換季結算期間累積的實際入帳量（已截斷）與每筆任務的入帳；結算結束清空 */
-    private _missionSettleGains = { grain: 0, silver: 0, generalExp: 0 };
-    private _missionSettleByMission = new Map<string, { grain: number; silver: number; generalExp: number; fame: number }>();
+    private _missionSettleGains = { grain: 0, gold: 0, silver: 0, generalExp: 0 };
+    private _missionSettleByMission = new Map<string, { grain: number; gold: number; silver: number; generalExp: number; fame: number }>();
     private _missionLedgerSeen = { fame: false, morale: false, sceneGambit: false };
     private _missionMindCache: GeneralMindSave['ledger'] | null = null;
     private _missionRequestSeq = 0;
@@ -4960,9 +4961,9 @@ export class GameSession implements AcademyRecordPort {
         return hashText(`mission|${this._seeded.snapshot().state}|${this._clock.state.totalSeasonsElapsed}`) >>> 0;
     }
 
-    /** 任務可動用的資源庫存：糧草、城市兵源（軍備帳）與銀兩（家族錢包） */
-    public hallMissionStock(): { grain: number; silver: number; troops: number } {
-        return { grain: this._military.food, silver: this.silverLedger.silverBalance(), troops: this._military.cityTroops };
+    /** 任務可動用的資源庫存：糧草、城市兵源（軍備帳）、金（國家公庫，轉蛋錢包）與銀兩（家族帳本）；金與銀兩各自獨立 */
+    public hallMissionStock(): { grain: number; gold: number; silver: number; troops: number } {
+        return { grain: this._military.food, gold: this._missionWallet?.gold() ?? 0, silver: this.silverLedger.silverBalance(), troops: this._military.cityTroops };
     }
 
     /** 武將記憶累計（任務心智累計器）的快取：心智有寫入時清掉，同一次畫面查詢不重複複製整份心智 */
@@ -4992,7 +4993,9 @@ export class GameSession implements AcademyRecordPort {
             if (reasons.includes('retired-mentor')) block.push('retired');
             if (reasons.includes('not-graduated')) block.push('not-graduated');
             if (reasons.includes('in-nurture')) block.push('nurturing');
-            if (this._assignBlocked(g.id, 'hallMission')) block.push('occupied');
+            const occupied = this._occupancy.checkAssign(g.id, 'hallMission', MATRIX_GATED_KINDS);
+            // 占用矩陣擋下時依占用種類給具體原因（哺乳期、教官），其餘（學府修業等）維持通用原因
+            if (!occupied.allowed) block.push(occupied.blockedBy?.kind === 'nursing' ? 'nursing' : occupied.blockedBy?.kind === 'mentorAssign' ? 'mentor' : 'occupied');
             if (this._sortieSupport.strategistUid === g.id || this._sortieSupport.deputyUid === g.id) block.push('on-sortie');
             if (this._travel?.targetId === g.id) block.push('traveling');
             const raw = g as unknown as Record<string, unknown>;
@@ -5034,8 +5037,12 @@ export class GameSession implements AcademyRecordPort {
             stock: () => this.hallMissionStock(),
             spend: (cost) => {
                 const have = this.hallMissionStock();
-                if (have.grain < cost.grain || have.troops < cost.troops || have.silver < cost.silver) return false;
-                if (cost.silver > 0 && !this.silverLedger.spendSilver(cost.silver)) return false;
+                if (have.grain < cost.grain || have.troops < cost.troops || have.gold < cost.gold || have.silver < cost.silver) return false;
+                if (cost.gold > 0 && !this._missionWallet?.spend(cost.gold)) return false;
+                if (cost.silver > 0 && !this.silverLedger.spendSilver(cost.silver)) {
+                    if (cost.gold > 0) this._missionWallet?.grant(cost.gold); // 銀兩扣不動就把剛扣的金退回，不留半套
+                    return false;
+                }
                 this._military = { ...this._military, food: this._military.food - cost.grain, cityTroops: this._military.cityTroops - cost.troops };
                 return true;
             },
@@ -5061,8 +5068,8 @@ export class GameSession implements AcademyRecordPort {
 
     /** 帳本入帳：資源截斷在這裡（糧草以軍備帳上限為準）；旗標、連鎖、情報、解鎖、受傷、被俘由服務自己處理 */
     private _applyMissionLedger(entries: readonly MissionLedgerEntry[], info: MissionSettlementInfo): void {
-        const caps = this._missionData?.balance.resourceCaps ?? { grain: 10000, silver: 5000, troops: 3000 };
-        const mine = { grain: 0, silver: 0, generalExp: 0, fame: 0 };
+        const caps = this._missionData?.balance.resourceCaps ?? { grain: 10000, gold: 5000, silver: 5000, troops: 3000 };
+        const mine = { grain: 0, gold: 0, silver: 0, generalExp: 0, fame: 0 };
         this._missionLedgerSeen = { fame: false, morale: false, sceneGambit: false };
         for (const e of entries) {
             switch (e.kind) {
@@ -5071,6 +5078,10 @@ export class GameSession implements AcademyRecordPort {
                         const next = Math.max(0, Math.min(Math.min(caps.grain, this._military.foodCap), this._military.food + e.amount));
                         mine.grain += next - this._military.food;
                         this._military = { ...this._military, food: next };
+                    } else if (e.res === 'gold') {
+                        // 金入國家公庫（轉蛋錢包），不碰家族銀兩
+                        if (e.amount > 0) { this._missionWallet?.grant(e.amount); mine.gold += e.amount; }
+                        else if (e.amount < 0) { const lost = Math.min(-e.amount, this._missionWallet?.gold() ?? 0); if (lost > 0 && this._missionWallet?.spend(lost)) mine.gold -= lost; }
                     } else if (e.res === 'silver') {
                         if (e.amount > 0) { this.silverLedger.creditSilver(e.amount); mine.silver += e.amount; }
                         else if (e.amount < 0) { const lost = Math.min(-e.amount, this.silverLedger.silverBalance()); if (lost > 0 && this.silverLedger.spendSilver(lost)) mine.silver -= lost; }
@@ -5119,6 +5130,7 @@ export class GameSession implements AcademyRecordPort {
         this._missionSettleByMission.set(info.missionId, mine);
         this._missionSettleGains = {
             grain: this._missionSettleGains.grain + mine.grain,
+            gold: this._missionSettleGains.gold + mine.gold,
             silver: this._missionSettleGains.silver + mine.silver,
             generalExp: this._missionSettleGains.generalExp + mine.generalExp,
         };
@@ -5163,7 +5175,7 @@ export class GameSession implements AcademyRecordPort {
     private async _runMissionSeason(): Promise<HallMissionSeasonReport | undefined> {
         const service = this._missionService;
         if (!service) return undefined;
-        this._missionSettleGains = { grain: 0, silver: 0, generalExp: 0 };
+        this._missionSettleGains = { grain: 0, gold: 0, silver: 0, generalExp: 0 };
         this._missionSettleByMission.clear();
         const result = await service.advanceSeason({ requestId: this.nextMissionRequestId('season') });
         if (result.ok === false) {
@@ -5176,6 +5188,7 @@ export class GameSession implements AcademyRecordPort {
             const mine = this._missionSettleByMission.get(s.missionId);
             const gained = mine ? [
                 mine.grain !== 0 ? `糧草 ${mine.grain > 0 ? '+' : ''}${mine.grain}` : '',
+                mine.gold !== 0 ? `金 ${mine.gold > 0 ? '+' : ''}${mine.gold}` : '',
                 mine.silver !== 0 ? `銀兩 ${mine.silver > 0 ? '+' : ''}${mine.silver}` : '',
                 mine.generalExp > 0 ? `武將經驗 +${mine.generalExp}` : '',
             ].filter((t) => t.length > 0).join('、') : '';

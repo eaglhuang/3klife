@@ -70,7 +70,7 @@
   },
   "cost": {
     "grain": 60,
-    "silver": 80
+    "gold": 80
   },
   "energy": 10,
   "variants": [
@@ -160,7 +160,7 @@
               },
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": -30
               }
             ]
@@ -237,7 +237,7 @@
                       "effects": [
                         {
                           "kind": "resource",
-                          "res": "silver",
+                          "res": "gold",
                           "amount": 150
                         },
                         {
@@ -436,7 +436,7 @@
                 "effects": [
                   {
                     "kind": "resource",
-                    "res": "silver",
+                    "res": "gold",
                     "amount": 250
                   },
                   {
@@ -477,7 +477,7 @@
               },
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": 120
               },
               {

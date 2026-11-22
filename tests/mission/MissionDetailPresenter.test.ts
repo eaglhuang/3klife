@@ -15,7 +15,7 @@ function detail(over: Partial<MissionDetailView> = {}): MissionDetailView {
         id: 'M1', defId: 'beacon-patrol', title: '巡查烽燧', brief: '簡介', theme: 'patrol', difficulty: 'NORMAL', intel: 35, intelBand: 'vague',
         facts: [{ key: 'a', label: '敵情', text: '約數十人', state: 'hint' }, { key: 'b', label: '地形', text: '???', state: 'hidden' }],
         objective: hint('巡查烽燧'), hints: ['傳聞有異'], rate: hint('成功率：高'), risk: hint('風險：低'), riskTags: [], reward: hint('量級：★★'),
-        hiddenRewards: [], cost: { grain: 100, troops: 50, silver: 20, energy: 10 }, durationSeasons: 1, expireSeason: 3, status: 'OPEN',
+        hiddenRewards: [], cost: { grain: 100, troops: 50, gold: 20, silver: 0, energy: 10 }, durationSeasons: 1, expireSeason: 3, status: 'OPEN',
         canRecon: true, canWait: true, ...over,
     };
 }
@@ -43,7 +43,7 @@ function fake(d: MissionDetailView, cands: CandidateView[], c: MissionCardView =
 }
 
 const ctx = (over: Record<string, unknown> = {}) => ({
-    season: 1, stock: { grain: 500, silver: 500, troops: 500 }, reconGrainCost: 50, reconCap: 90, hiddenRevealIntel: 100, selectedGeneralId: null as string | null, ...over,
+    season: 1, stock: { grain: 500, gold: 500, silver: 500, troops: 500 }, reconGrainCost: 50, reconCap: 90, hiddenRevealIntel: 100, selectedGeneralId: null as string | null, ...over,
 });
 const wall = (): 'Military' => 'Military';
 
@@ -145,7 +145,7 @@ export function createMissionDetailPresenterSuite(): TestSuite {
         assert.isTrue((none.actionBlockedText.execute ?? '').includes('下方各武將原因'));
         const empty = buildMissionDialogState(fake(detail(), []), 'M1', wall, ctx())!;
         assert.equals('名冊裡目前沒有武將', empty.generalSelectHintLabel);
-        const poor = buildMissionDialogState(fake(detail({ canWait: false }), [cand('A')]), 'M1', wall, ctx({ stock: { grain: 10, silver: 500, troops: 500 } }))!;
+        const poor = buildMissionDialogState(fake(detail({ canWait: false }), [cand('A')]), 'M1', wall, ctx({ stock: { grain: 10, gold: 500, silver: 500, troops: 500 } }))!;
         assert.isTrue((poor.actionBlockedText['re-scout'] ?? '').includes('糧草不足'));
         assert.equals('此任務已等待過', poor.actionBlockedText.wait);
         assert.isTrue(poor.costFoodValueLabel.includes('不足，現有 10'));

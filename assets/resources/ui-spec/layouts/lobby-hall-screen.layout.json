@@ -168,7 +168,7 @@
               {
                 "type": "container",
                 "name": "LobbyHallScreen_div_11",
-                "width": 736,
+                "width": 896,
                 "height": 52,
                 "layout": {
                   "type": "horizontal",
@@ -205,6 +205,37 @@
                         "text": "128,450",
                         "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_1",
                         "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-1"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "panel",
+                    "name": "LobbyHallScreen_silver_chip",
+                    "width": 150,
+                    "height": 52,
+                    "layout": {
+                      "type": "horizontal",
+                      "alignItems": "center",
+                      "justifyContent": "center",
+                      "spacingX": 8
+                    },
+                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_12",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "LobbyHallScreen_silver_name",
+                        "width": 40,
+                        "height": 29,
+                        "text": "銀兩",
+                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_b_1"
+                      },
+                      {
+                        "type": "label",
+                        "name": "LobbyHallScreen_silver_value",
+                        "width": 55,
+                        "height": 23,
+                        "text": "600",
+                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_1"
                       }
                     ]
                   },

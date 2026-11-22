@@ -47,7 +47,7 @@
       "theme": "domestic",
       "difficulty": "EASY",
       "path": "missions/domestic/DOM_COMMERCE_01.json",
-      "origin": "converted",
+      "origin": "authored",
       "legacyTemplateId": "DOM_COMMERCE_01"
     },
     {
@@ -55,7 +55,7 @@
       "theme": "domestic",
       "difficulty": "EASY",
       "path": "missions/domestic/DOM_COMMERCE_02.json",
-      "origin": "converted",
+      "origin": "authored",
       "legacyTemplateId": "DOM_COMMERCE_02"
     },
     {
@@ -63,7 +63,7 @@
       "theme": "domestic",
       "difficulty": "EASY",
       "path": "missions/domestic/DOM_COMMERCE_03.json",
-      "origin": "converted",
+      "origin": "authored",
       "legacyTemplateId": "DOM_COMMERCE_03"
     },
     {

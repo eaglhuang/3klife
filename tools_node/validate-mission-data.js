@@ -282,8 +282,8 @@ function validateAll(options) {
             });
         }
 
-        // 手寫任務品質門檻
-        if (origin === 'authored') {
+        // 手寫任務品質門檻（商業／民生小任務 tag=commerce 為單純的銀兩收益任務，免連鎖與變體門檻）
+        if (origin === 'authored' && !def.tags.includes('commerce')) {
             const mins = new Set(def.branches.map((b) => b.when.minIntel));
             if (!mins.has(0)) err(where, '手寫任務需有 minIntel:0 的分支');
             if (mins.size < 3) err(where, `手寫任務需至少三層情報分支（不同 minIntel），目前 ${mins.size} 層`);

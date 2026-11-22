@@ -27,6 +27,7 @@ import type { HallMapEventCatalog } from '../../core/systems/HallMapEventMapper'
 import type { HallMapLayout, HallMapTurnStep } from '../../core/systems/HallMapFocusPlanner';
 import { buildLobbyHallWallView, type LobbyHallWallView } from '../../core/systems/LobbyHallWallView';
 import { boardToHub, findCard, missionRowStatusText, type WallOfTheme } from '../mission/MissionBoardPresenter';
+import { MISSION_BLOCK_TEXT, type MissionBlock } from '../../core/mission/MissionTypes';
 import { buildMissionDialogState, candidateOptions, intelGainFloatText, type MissionDialogState } from '../mission/MissionDetailPresenter';
 import { buildLobbyHallAltarView } from '../core/LobbyHallAltarView';
 import { buildHallMapTurnSteps, hasHallMapFocus, type HallMapProvinceSource } from '../../core/systems/HallMapSeasonTurn';
@@ -1612,6 +1613,9 @@ export class LobbyScene extends Component {
     }
 
     /** 學府修業的語系文字；語系缺鍵時用傳入的 zh-TW 預設 */
+    /** 武將不可接任務的原因（哺乳期、教官、出征中…）：走 i18n，缺字才退回程式內預設 */
+    private readonly _missionBlockLabel = (block: MissionBlock): string => this._academyText(`ui.mission.block.${block}`, MISSION_BLOCK_TEXT[block]);
+
     private _academyText(key: string, fallback: string): string {
         const text = services().i18n.t(key);
         return text === key ? fallback : text;
@@ -4186,6 +4190,7 @@ export class LobbyScene extends Component {
         const spent = [
             v.cost.grain > 0 ? `糧草 -${v.cost.grain}` : '',
             v.cost.troops > 0 ? `兵源 -${v.cost.troops}` : '',
+            v.cost.gold > 0 ? `金 -${v.cost.gold}` : '',
             v.cost.silver > 0 ? `銀兩 -${v.cost.silver}` : '',
         ].filter((text) => text.length > 0).join('、');
         const duration = Math.max(1, v.returnSeason - this._hallSeason());
@@ -4234,7 +4239,7 @@ ${spent}`,
         const card = board.ok ? findCard(board.value, missionId) : undefined;
         const patch: Parameters<LobbyMissionDetailDialogComposite['applyStatePatch']>[0] = {
             ...next,
-            ...(cands.ok ? { availableGenerals: candidateOptions(cands.value) } : {}),
+            ...(cands.ok ? { availableGenerals: candidateOptions(cands.value, this._missionBlockLabel) } : {}),
         };
         if (next.locked && card?.executorName) patch.selectedGeneralLabel = card.executorName;
         panel.applyStatePatch(patch);
@@ -4272,7 +4277,7 @@ ${spent}`,
         const lockedExecutor = state.locked ? openCard?.executorName : undefined;
         void services().ui.open(UIID.LobbyMissionDetailDialog, {
             state,
-            availableGenerals: candidateOptions(candidates),
+            availableGenerals: candidateOptions(candidates, this._missionBlockLabel),
             selectedGeneralId: lockedExecutor ? undefined : selected?.generalId,
             ...(lockedExecutor ? { selectedGeneralLabel: lockedExecutor } : {}),
             onGeneralSelected: (option) => { this._refreshHallDialog(missionId, option.id); },
@@ -4699,6 +4704,7 @@ ${spent}`,
         const clanCard = lobbyClanCardTexts(buildSpiritFamilyOverviewRows(Object.values(session.inventoryViews.spiritCards), (templateId) => this._generals.find((g) => g.id === templateId)?.name));
         this._lobbyHall.setTopbar({
             gold: wallet.gold,
+            silver: session.silverLedger.silverBalance(),
             gems: wallet.gems,
             food: session.military.food,
             troops: session.military.cityTroops,
@@ -5893,13 +5899,13 @@ ${spent}`,
                 .filter((g) => g.status !== 'dead' && (g.age ?? 0) >= BREEDING_MIN_AGE)
                 .map((g) => g.id));
             let adults = adultIds();
-            const hall = { settled: 0, succeeded: 0, grain: 0, silver: 0, generalExp: 0 };
+            const hall = { settled: 0, succeeded: 0, grain: 0, gold: 0, silver: 0, generalExp: 0 };
             const result = await fastForwardSeasons(async () => {
                 const payload = await this._advanceSeasonWithSalaries();
                 const report = payload.hallMissionReport;
                 if (report) {
                     hall.settled += report.settled; hall.succeeded += report.succeeded;
-                    hall.grain += report.gains.grain; hall.silver += report.gains.silver; hall.generalExp += report.gains.generalExp;
+                    hall.grain += report.gains.grain; hall.gold += report.gains.gold; hall.silver += report.gains.silver; hall.generalExp += report.gains.generalExp;
                 }
                 return payload;
             }, () => {
@@ -5916,7 +5922,7 @@ ${spent}`,
             // 快轉沒有季度結算窗：大廳任務的成敗與入帳總額用提示補上（PROG-2-9130）
             if (hall.settled > 0) {
                 const gained = [
-                    hall.grain > 0 ? `糧草 +${hall.grain}` : '', hall.silver > 0 ? `銀兩 +${hall.silver}` : '',
+                    hall.grain > 0 ? `糧草 +${hall.grain}` : '', hall.gold > 0 ? `金 +${hall.gold}` : '', hall.silver > 0 ? `銀兩 +${hall.silver}` : '',
                     hall.generalExp > 0 ? `武將經驗 +${hall.generalExp}` : '',
                 ].filter((text) => text.length > 0).join('、');
                 services().event.emit('SHOW_TOAST', {

@@ -102,7 +102,10 @@ export interface LobbyHallScreenDeps {
 }
 
 export interface LobbyHallTopbarView {
+    /** 金＝國家公庫（軍務／政務／外交） */
     gold?: number | string;
+    /** 銀兩＝家族（商業／民生任務、婚嫁、學府） */
+    silver?: number | string;
     gems?: number | string;
     food?: number | string;
     troops?: number | string;
@@ -224,6 +227,7 @@ export class LobbyHallScreenBinder {
             setText(node, text);
         };
         applyField('LobbyHallScreen_span_1', formatVal(view.gold));
+        applyField('LobbyHallScreen_silver_value', formatVal(view.silver));
         applyField('LobbyHallScreen_span_2', formatVal(view.gems));
         applyField('LobbyHallScreen_span_3', formatVal(view.food));
         applyField('LobbyHallScreen_span_4', formatVal(view.troops));

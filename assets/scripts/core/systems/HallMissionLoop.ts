@@ -212,10 +212,10 @@ export function hallSettleLine(entry: Readonly<HallSettleEntry>): string {
     if (!entry.success) return `${head}，無獎勵`;
     const parts: string[] = [];
     if (entry.gains.grain > 0) parts.push(`糧草 +${entry.gains.grain}`);
-    if (entry.gains.silver > 0) parts.push(`黃金 +${entry.gains.silver}`);
+    if (entry.gains.silver > 0) parts.push(`金 +${entry.gains.silver}`);
     if (entry.gains.generalExp > 0) parts.push(`武將經驗 +${entry.gains.generalExp}`);
     const cut: string[] = [];
     if (entry.truncated.grain > 0) cut.push(`糧草 ${entry.truncated.grain}`);
-    if (entry.truncated.silver > 0) cut.push(`黃金 ${entry.truncated.silver}`);
+    if (entry.truncated.silver > 0) cut.push(`金 ${entry.truncated.silver}`);
     return `${head}，${parts.join('、')}${entry.perfectApplied ? '（含完美加成）' : ''}${cut.length > 0 ? `（超過上限，截掉 ${cut.join('、')}）` : ''}`;
 }

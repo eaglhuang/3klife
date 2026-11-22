@@ -33,7 +33,8 @@ const DIFFICULTY_LABEL: Readonly<Record<string, string>> = Object.freeze({
 
 const REWARD_LABEL: Readonly<Record<string, string>> = Object.freeze({
     GRAIN: '糧草',
-    SILVER: '黃金',
+    GOLD: '金',
+    SILVER: '銀兩',
     GENERAL_EXP: '武將經驗',
     OFFICER_EXP: '官職經驗',
 });

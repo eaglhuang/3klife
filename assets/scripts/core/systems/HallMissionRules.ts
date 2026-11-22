@@ -115,7 +115,8 @@ export function pickDelegateGeneral(mission: Readonly<HallMission>, generals: re
 
 export interface HallShortage { resource: 'grain' | 'silver' | 'troops'; need: number; have: number }
 
-export const HALL_RESOURCE_NAME: Readonly<Record<HallShortage['resource'], string>> = Object.freeze({ grain: '糧草', silver: '銀兩', troops: '城市兵源' });
+/** 舊制（hallMissions 遷移用）的 silver 欄位實際是入國家公庫的金，所以顯示「金」；新制任務走 mission/ 的 gold／silver 分流 */
+export const HALL_RESOURCE_NAME: Readonly<Record<HallShortage['resource'], string>> = Object.freeze({ grain: '糧草', silver: '金', troops: '城市兵源' });
 
 /** 耗費檢查：回傳所有不足的資源（§5、§6：付不起時要標出缺什麼） */
 export function hallShortagesOf(costs: Readonly<HallMissionAmounts>, stock: Readonly<HallMissionAmounts>): HallShortage[] {

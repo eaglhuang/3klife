@@ -1022,6 +1022,63 @@ async function main() {
             return rec.detail;
         }, { skipIfFailed: true });
 
+        // ── 3b-3. 商業任務與銀兩（PROG-2-9611）：頂欄銀兩、內政牆商業任務報酬標示、派出、結算飄字與頂欄銀兩增加 ──
+        await step('lobby-commerce-silver', async (rec) => {
+            await requireLobby();
+            await backToLobbyBar();
+            await closeMissionLayers();
+            await waitToastGone();
+            const readSilver = async () => readNum(await rm.textOfNodeName('LobbyHallScreen_silver_value'));
+            const silver0 = await readSilver();
+            rec.detail.silverBefore = silver0;
+            if (!(silver0 > 0)) throw new Error(`頂欄銀兩讀不到或為 0（${silver0}）`);
+            await shot(rec, 'commerce-topbar-silver');
+            const COMMERCE = /市集巡察|特產運銷|平抑物價/;
+            let found = null;
+            for (const wall of [WALL_LEFT, WALL_RIGHT]) {
+                const cards = (await rm.wallCards(wall)) || [];
+                const hit = cards.find((c) => COMMERCE.test(String(c.title || '')));
+                if (hit) { found = { wall, card: hit }; break; }
+            }
+            if (!found) throw new Error('第一年內政牆找不到商業任務（市集巡察／特產運銷／平抑物價），保底失效');
+            const title = String(found.card.title).trim();
+            rec.detail.commerceTitle = title;
+            await rm.click({ ucuf: found.wall, childIndex: found.card.childIndex }, `商業任務「${title}」`);
+            await waitUntil(async () => (await rm.present({ name: MISSION_DIALOG })) || null, 30000, '商業任務詳情窗沒有開出');
+            await delay(1000);
+            const dialogTexts = (await rm.textsUnder(MISSION_DIALOG)) || [];
+            rec.detail.commerceDialog = dialogTexts.slice(0, 24);
+            await shot(rec, 'commerce-detail-reward');
+            if (!dialogTexts.some((t) => t.includes('銀兩'))) throw new Error(`商業任務詳情窗沒有「銀兩」報酬標示（文字：${dialogTexts.slice(0, 20).join(' / ')}）`);
+            await waitToastGone();
+            await rm.click({ name: '^BtnExecute$', under: MISSION_DIALOG }, '執行商業任務');
+            const statusTexts = await waitUntil(async () => { const t = await rm.texts('進行中，還有 \\d+ 季'); return t.length ? t : null; }, 8000, '').catch(() => []);
+            rec.detail.activeStatusTexts = statusTexts;
+            await shot(rec, 'commerce-after-dispatch');
+            if (!statusTexts.length) throw new Error('派出商業任務後任務板看不到「進行中，還有 N 季」');
+            await closeMissionLayers();
+            await waitToastGone();
+            const remain = Math.min(3, Math.max(1, ...statusTexts.map((t) => Number((/還有\s*(\d+)\s*季/.exec(t) || [])[1]) || 1)));
+            const reports = [];
+            for (let i = 0; i < remain; i++) {
+                await requireLobby();
+                await backToLobbyBar();
+                await closeMissionLayers();
+                await rm.click({ ucuf: 'lobby-hall-screen.back' }, '右上「推進一季」');
+                await runSeasonPopups(rec, `commerce-advance${i + 1}`, reports);
+            }
+            const hallReport = reports.find((r) => (r.texts || []).some((t) => t.includes('大廳任務')));
+            if (!hallReport) throw new Error('推進後季度結算沒有「大廳任務」區塊');
+            const block = (hallReport.texts || []).join('\n');
+            rec.detail.settleBlock = block.slice(0, 400);
+            if (!/銀兩\s*\+\s*\d+/.test(block)) throw new Error(`結算飄字／區塊沒有「銀兩 +N」：${block.slice(0, 300)}`);
+            const silver1 = await readSilver();
+            rec.detail.silverAfter = silver1;
+            if (!(silver1 > silver0)) throw new Error(`結算後頂欄銀兩沒有增加（${silver0} → ${silver1}）`);
+            await shot(rec, 'commerce-topbar-silver-after');
+            return rec.detail;
+        }, { skipIfFailed: true });
+
         await step('lobby-advance-season', async (rec) => {
             await requireLobby();
             await backToLobbyBar();

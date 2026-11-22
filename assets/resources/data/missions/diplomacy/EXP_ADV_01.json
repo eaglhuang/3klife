@@ -109,7 +109,7 @@
                 "effects": [
                   {
                     "kind": "resource",
-                    "res": "silver",
+                    "res": "gold",
                     "amount": {
                       "base": 630,
                       "mulKey": "reward"
@@ -160,7 +160,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": {
                   "base": 420,
                   "mulKey": "reward"
@@ -286,7 +286,7 @@
                 "effects": [
                   {
                     "kind": "resource",
-                    "res": "silver",
+                    "res": "gold",
                     "amount": {
                       "base": 630,
                       "mulKey": "reward"
@@ -337,7 +337,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": {
                   "base": 420,
                   "mulKey": "reward"
@@ -453,7 +453,7 @@
                 "effects": [
                   {
                     "kind": "resource",
-                    "res": "silver",
+                    "res": "gold",
                     "amount": {
                       "base": 630,
                       "mulKey": "reward"
@@ -504,7 +504,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": {
                   "base": 420,
                   "mulKey": "reward"

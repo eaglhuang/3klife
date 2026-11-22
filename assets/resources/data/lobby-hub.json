@@ -65,7 +65,7 @@
                   "Amount": 1200
                 },
                 {
-                  "Type": "SILVER",
+                  "Type": "GOLD",
                   "Amount": 200
                 }
               ],
@@ -131,7 +131,7 @@
             "Rewards": {
               "Base": [
                 {
-                  "Type": "SILVER",
+                  "Type": "GOLD",
                   "Amount": 300
                 }
               ],
@@ -196,7 +196,7 @@
             "Rewards": {
               "Base": [
                 {
-                  "Type": "SILVER",
+                  "Type": "GOLD",
                   "Amount": 600
                 }
               ],
@@ -225,7 +225,7 @@
             "Rewards": {
               "Base": [
                 {
-                  "Type": "SILVER",
+                  "Type": "GOLD",
                   "Amount": 1200
                 }
               ],

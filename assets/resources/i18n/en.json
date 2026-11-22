@@ -907,5 +907,10 @@
   "ui.mission.reward.gold": "Gold +{0}",
   "ui.mission.cost.silver": "Silver -{0}",
   "ui.mission.cost.gold": "Gold -{0}",
-  "ui.mission.shortage.silver": "Insufficient Silver (Need {0}, Have {1})"
+  "ui.mission.shortage.silver": "Insufficient Silver (Need {0}, Have {1})",
+  "ui.mission.shortage.gold": "Insufficient Gold (Need {0}, Have {1})",
+  "ui.mission.block.nursing": "Nursing",
+  "ui.mission.block.mentor": "Serving as instructor",
+  "ui.mission.block.on-sortie": "On campaign",
+  "ui.mission.block.occupied": "Studying or assigned elsewhere"
 }

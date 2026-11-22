@@ -58,13 +58,29 @@ export function planHallWait(taskId: string, season: number, waited: Readonly<Re
 /** 耗費條各欄的滿格參考值（只影響長條比例，不是規則數值）。 */
 export const HALL_COST_BAR_SCALE = Object.freeze({ GRAIN: 2000, TROOPS: 500, SILVER: 2000, TIME_MINUTES: 240 });
 
+/** 耗費幣別名：金＝國家公庫（軍務／政務／外交），銀兩＝家族（商業／民生）；兩邊不互相折算 */
+export const HALL_FUND_NAME = Object.freeze({ gold: '金', silver: '銀兩' });
+
+/** 金／銀兩耗費合併成一列：只耗一種就顯示那一種，兩種都耗以「／」並列，都不耗顯示金 0 */
+export function hallFundNameOf(gold: number, silver: number): string {
+    if (gold > 0 && silver > 0) return `${HALL_FUND_NAME.gold}／${HALL_FUND_NAME.silver}`;
+    return silver > 0 ? HALL_FUND_NAME.silver : HALL_FUND_NAME.gold;
+}
+
+export function hallFundValueOf(gold: number, silver: number): string {
+    const fmt = (v: number): string => v.toLocaleString('en-US');
+    if (gold > 0 && silver > 0) return `${fmt(gold)}／${fmt(silver)}`;
+    return fmt(silver > 0 ? silver : gold);
+}
+
 export interface HallCostBarState {
+    costFundNameLabel: string;
     costFoodValueLabel: string;
     costFoodRatio: number;
     costTroopValueLabel: string;
     costTroopRatio: number;
-    costSilverValueLabel: string;
-    costSilverRatio: number;
+    costFundValueLabel: string;
+    costFundRatio: number;
     costTimeValueLabel: string;
     costTimeRatio: number;
 }
@@ -88,8 +104,9 @@ export function hallCostBarStateOf(costs: Readonly<HallTask['Costs']>): HallCost
         costFoodRatio: ratioOf(costs.GRAIN, HALL_COST_BAR_SCALE.GRAIN),
         costTroopValueLabel: costs.TROOPS.toLocaleString('en-US'),
         costTroopRatio: ratioOf(costs.TROOPS, HALL_COST_BAR_SCALE.TROOPS),
-        costSilverValueLabel: costs.SILVER.toLocaleString('en-US'),
-        costSilverRatio: ratioOf(costs.SILVER, HALL_COST_BAR_SCALE.SILVER),
+        costFundNameLabel: hallFundNameOf(costs.GOLD ?? 0, costs.SILVER),
+        costFundValueLabel: hallFundValueOf(costs.GOLD ?? 0, costs.SILVER),
+        costFundRatio: ratioOf(Math.max(costs.GOLD ?? 0, costs.SILVER), HALL_COST_BAR_SCALE.SILVER),
         costTimeValueLabel: timeLabelOf(costs.TIME_MINUTES),
         costTimeRatio: ratioOf(costs.TIME_MINUTES, HALL_COST_BAR_SCALE.TIME_MINUTES),
     };

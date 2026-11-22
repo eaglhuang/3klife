@@ -68,6 +68,7 @@
   },
   "resourceCaps": {
     "grain": 10000,
+    "gold": 5000,
     "silver": 5000,
     "troops": 3000
   },
@@ -80,17 +81,17 @@
   "wallRewards": {
     "Military": {
       "grain": 1,
-      "silver": 0,
+      "gold": 0,
       "generalExp": 1
     },
     "Domestic": {
       "grain": 0.5,
-      "silver": 1,
+      "gold": 1,
       "generalExp": 0
     },
     "Expedition": {
       "grain": 0,
-      "silver": 1,
+      "gold": 1,
       "generalExp": 1
     }
   },
@@ -98,17 +99,17 @@
     "Military": {
       "grain": 1,
       "troops": 1,
-      "silver": 0
+      "gold": 0
     },
     "Domestic": {
       "grain": 1,
       "troops": 0,
-      "silver": 1
+      "gold": 1
     },
     "Expedition": {
       "grain": 1,
       "troops": 1,
-      "silver": 0
+      "gold": 0
     }
   },
   "difficulties": {
@@ -117,13 +118,14 @@
       "powerRequired": 100,
       "reward": {
         "grain": 120,
-        "silver": 80,
+        "gold": 80,
         "generalExp": 40
       },
       "cost": {
         "grain": 40,
         "troops": 50,
-        "silver": 30
+        "gold": 30,
+        "silver": 0
       },
       "fame": 3,
       "initialIntel": 45,
@@ -136,13 +138,14 @@
       "powerRequired": 180,
       "reward": {
         "grain": 200,
-        "silver": 140,
+        "gold": 140,
         "generalExp": 70
       },
       "cost": {
         "grain": 60,
         "troops": 80,
-        "silver": 50
+        "gold": 50,
+        "silver": 0
       },
       "fame": 5,
       "initialIntel": 40,
@@ -155,13 +158,14 @@
       "powerRequired": 260,
       "reward": {
         "grain": 350,
-        "silver": 250,
+        "gold": 250,
         "generalExp": 120
       },
       "cost": {
         "grain": 100,
         "troops": 150,
-        "silver": 80
+        "gold": 80,
+        "silver": 0
       },
       "fame": 8,
       "initialIntel": 35,
@@ -174,13 +178,14 @@
       "powerRequired": 330,
       "reward": {
         "grain": 600,
-        "silver": 420,
+        "gold": 420,
         "generalExp": 200
       },
       "cost": {
         "grain": 180,
         "troops": 250,
-        "silver": 140
+        "gold": 140,
+        "silver": 0
       },
       "fame": 12,
       "initialIntel": 30,
@@ -193,13 +198,14 @@
       "powerRequired": 400,
       "reward": {
         "grain": 1000,
-        "silver": 700,
+        "gold": 700,
         "generalExp": 320
       },
       "cost": {
         "grain": 300,
         "troops": 400,
-        "silver": 220
+        "gold": 220,
+        "silver": 0
       },
       "fame": 20,
       "initialIntel": 25,
@@ -283,6 +289,7 @@
     "rewardRangeStep": 5,
     "rewardWeights": {
       "grain": 1,
+      "gold": 1.5,
       "silver": 1.5,
       "troops": 1,
       "generalExp": 1.5,
