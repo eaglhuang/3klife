@@ -3,6 +3,7 @@ const test = require('node:test');
 const assert = require('node:assert');
 const lb = require('./llm-batch');
 const ar = require('./agent-run');
+const hc = require('./hall-chat');
 
 const schema = {
   type: 'object',
@@ -74,4 +75,12 @@ test('agent-run：環境只注入金鑰且移除訂閱憑證，log 遮蔽金鑰'
   assert.throws(() => ar.buildChildEnv({}), /未設定/);
   assert.strictEqual(ar.makeRedactor('sk-test-123')('a sk-test-123 b'), 'a [REDACTED] b');
   assert.strictEqual(ar.parseArgs(['--prompt-file', 'a.md', '--cwd', '.']).maxUsd, 3);
+});
+
+test('hall-chat pendingIds：只挑還沒有台詞的武將（空陣列也算沒有）', () => {
+  const gens = [{ id: 'a' }, { id: 'b' }, { id: 'c' }, { id: 'd' }];
+  const book = { generals: { a: [{ id: 'l1', text: 'x' }], c: [] } };
+  assert.deepStrictEqual(hc.pendingIds(gens, book), ['b', 'c', 'd']);
+  assert.deepStrictEqual(hc.pendingIds(gens, { generals: {} }), ['a', 'b', 'c', 'd']);
+  assert.deepStrictEqual(hc.pendingIds(gens, null), ['a', 'b', 'c', 'd']);
 });
