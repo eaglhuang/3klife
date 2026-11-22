@@ -16638,6 +16638,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_2966",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9732.md",
+    "title": "[PROG-2-9732] 戰鬥音效補件：金屬擊打／肉體悶擊／單拍馬蹄換成 CC0 外部素材（可切回變調版）",
+    "category": "task"
+  },
+  {
     "id": "doc_task_2964",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9730.md",
     "title": "[PROG-2-9730] 無頭試玩第 07 步 lobby-commerce-silver 仍偶發失敗（點擊瞬間被官職晉升彈窗蓋住）",

@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 258,
+    "done": 259,
     "in_progress": 7,
     "open": 85,
-    "total": 350
+    "total": 351
   },
   "tasks": [
     {
@@ -15191,6 +15191,63 @@
       "acceptance": [],
       "deliverables": [],
       "notes": "2026-11-22 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9732",
+      "title": "戰鬥音效補件：金屬擊打／肉體悶擊／單拍馬蹄換成 CC0 外部素材（可切回變調版）",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T19:02:36+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "把 9729 變調代用的金屬擊打、肉體悶擊、單拍馬蹄換成 CC0 素材（Kenney Impact Sounds、BigSoundBank），設定檔加開關可切回變調代用版，預設 CC0 版。",
+      "related": [
+        "PROG-2-9729"
+      ],
+      "depends": [],
+      "acceptance": [
+        "三檔 CC0 素材入庫含 .meta 與 LICENSES-cc0.md、_MANIFEST 登記",
+        "battle-audio-layers.json 有 clipSource 開關預設 cc0",
+        "BattleAudioLayers.ts 與單元測試補齊",
+        "變調代用版檔案保留",
+        "實跑時間軸證明三檔有播且切回變調版也正常"
+      ],
+      "deliverables": [
+        "assets/bundles/audio/clips/*",
+        "assets/scripts/battle/shared/BattleAudioLayers.ts",
+        "assets/resources/data/battle-audio-layers.json",
+        "tests/BattleAudioLayers.test.ts"
+      ],
+      "notes": "2026-11-22 | 狀態: done | 驗證: 單元測試全過、tsc 0 錯、compute-gate quick 通過、建置實跑 6 回合 cc0 版 cc0_hit_metal 5／cc0_hit_flesh 1／cc0_hoof_single 46 次，pitched 版 hit_block 5／footstep_hoof 44 次 | 變更: Kenney Impact Sounds 取 impactMetal_medium_000／impactPunch_medium_000（OGG 原檔）、BigSoundBank 馬蹄裁一拍存 WAV；clipSource 開關與 cc0Clips 替換表；LICENSES-cc0.md、_MANIFEST | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
