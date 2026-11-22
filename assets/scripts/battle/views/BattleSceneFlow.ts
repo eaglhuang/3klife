@@ -18,6 +18,7 @@ import type { BoardRenderer } from './BoardRenderer';
 import { resolveAiDifficulty } from '../../core/systems/AiSpCharge';
 import { openingAiLogLinesOf } from '../../core/systems/AiEntranceLines';
 import { resolveDefenseTurnLimit, siegeDefenderOf } from '../../core/systems/DefenseBattle';
+import { consumeBattleTip } from '../../core/systems/DefeatDiagnosis';
 
 export interface BattleSceneFlowContext {
   getCtrl(): BattleController | null;
@@ -133,6 +134,12 @@ export class BattleSceneFlow {
     battleLogPanel?.clear();
     battleLogPanel?.append(`重新開始：第 ${snap.turn} 回合，糧草 ${snap.playerFood}`);
     for (const line of openingAiLogLinesOf(egId, eg.name, difficulty)) battleLogPanel?.append(line);
+    // 照軍師建議再戰（PROG-2-9712）：開場把提醒寫進戰報並跳提示
+    const tip = consumeBattleTip();
+    if (tip) {
+      battleLogPanel?.append(tip);
+      deployRuntime?.showToast(tip);
+    }
     this.presentSceneGambitFeedback();
     this.ctx.getBoardRenderer()?.setDeployHintFaction(Faction.Player);
 

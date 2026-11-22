@@ -80,6 +80,7 @@ import { tileBuffBadgeOf, tileBuffDeltaText, tileBuffPickupIsDebuff, tileBuffPic
 import { SkillNameBanner } from './SkillNameBanner';
 import { selectDuelExchanges } from '../shared/DuelPresentationCore';
 import { timeUpVerdictLine, type TimeUpVerdict } from "../../core/systems/TimeUpJudgement";
+import { defeatAdviceLabel, defeatDiagnosisLines, diagnoseDefeat, queueBattleTip, type DefeatReason } from "../../core/systems/DefeatDiagnosis";
 import {
   BATTLE_FLOW_FX,
   playBattleFlowEffectAtBoardCenter,
@@ -207,6 +208,10 @@ export class BattleUIBridge {
   private _loadoutCheckedFor: string | null = null;
   private _loadoutGaps: string[] = [];
   private _lastEndedPayload: { result: string; retreated?: boolean; cause?: string } | null = null;
+  /** 戰敗敗因診斷用的整場統計（PROG-2-9712）；每場結算後歸零，重打從頭算 */
+  private _defeatStats = BattleUIBridge._emptyDefeatStats();
+  /** 這次結算窗「下一步建議」對應的敗因 */
+  private _defeatAdvice: DefeatReason | null = null;
   /** 本場是否已提示過「剛部署的部隊下回合才行動」（PROG-2-9302，只提示一次避免洗版） */
   private _deployNextTurnHintShown = false;
   private readonly unsubs: (() => void)[] = [];
@@ -398,6 +403,14 @@ export class BattleUIBridge {
     bindNodeEvent(actionCommandNode, 'endTurn', externalHandlers.onEndTurn);
     bindNodeEvent(actionCommandNode, 'tactics', externalHandlers.onTactics);
     bindNodeEvent(c.resultPopup?.node, 'replay', externalHandlers.onReplay);
+    // 下一步建議（PROG-2-9712）：打法問題就帶著軍師提醒再戰；實力差距就回大廳整備
+    bindNodeEvent(c.resultPopup?.node, 'advice', () => {
+      const advice = this._defeatAdvice;
+      this._defeatAdvice = null;
+      if (advice?.advice === 'prepare' && externalHandlers.onBack) { externalHandlers.onBack(); return; }
+      if (advice) queueBattleTip(advice.tip);
+      externalHandlers.onReplay();
+    });
     if (externalHandlers.onBack) bindNodeEvent(c.resultPopup?.node, 'back', externalHandlers.onBack);
     bindNodeEvent(c.deployRuntime?.node, 'generalDuel', externalHandlers.onGeneralDuelRequest);
     input.on(Input.EventType.TOUCH_END, this._onGlobalBoardTouchEnd, this);
@@ -550,6 +563,9 @@ export class BattleUIBridge {
     const state = c.ctrl?.state;
     const wisdom = state ? `，${wisdomMeterText(state.wisdomMeter)}` : '';
     this.appendLog(`回合更新：第 ${snap.turn} 回合，糧草 ${snap.playerFood}${wisdom}`);
+    // 敗因診斷：記下奧義怒氣已滿卻沒放的回合
+    const pg = state?.getGeneral(Faction.Player);
+    if (pg && pg.maxSp > 0 && pg.currentSp >= pg.maxSp) this._defeatStats.spFullTurns.add(snap.turn);
     this._syncDelegateButton();
     if (snap.playerFood <= 0 && !this._foodEmptyLogged) this.appendLog(FOOD_EMPTY_LINE);
     this._foodEmptyLogged = snap.playerFood <= 0;
@@ -593,6 +609,7 @@ export class BattleUIBridge {
     const side = data.faction === Faction.Player ? '我方' : '敵方';
     const unitName = data.unitName?.trim() || this.toTroopName(data.type);
     this.appendLog(`${side}部署 ${unitName}（路線 ${data.lane + 1}）`);
+    this._noteDefeatStatsDeploy(data.faction, data.unitId);
     if (data.faction === Faction.Player) {
       if (!this._deployNextTurnHintShown) {
         this._deployNextTurnHintShown = true;
@@ -921,6 +938,7 @@ export class BattleUIBridge {
   }
 
   private _onGeneralSkillUsed(data: { faction: Faction; skillId?: string; skillName?: string; sourceType?: SkillSourceType; generalName?: string }): void {
+    if (data.faction === Faction.Player && data.sourceType === SkillSourceType.Ultimate) this._defeatStats.ultimates += 1;
     // 奧義：先播武將的漫畫分鏡 cut-in（戰場暫停；沒有專屬分鏡圖的武將播「暫代圖 待替換」），播完（或玩家點擊跳過）才接奧義特效。
     // 走戰鬥動畫佇列並插隊到最前：回合推進會等佇列清空，敵方奧義也走同一條（PROG-2-9352）
     if (data.sourceType === SkillSourceType.Ultimate) {
@@ -1168,6 +1186,48 @@ export class BattleUIBridge {
     services().event.emit(EVENT_NAMES.BattleEnded, { result: outcome.result, cause: 'auto' });
   }
 
+  private static _emptyDefeatStats(): { deploys: number; enemyDeploys: number; ultimates: number; sortied: boolean; spFullTurns: Set<number> } {
+    return { deploys: 0, enemyDeploys: 0, ultimates: 0, sortied: false, spFullTurns: new Set<number>() };
+  }
+
+  private _noteDefeatStatsDeploy(faction: Faction, unitId: string): void {
+    const stats = this._defeatStats;
+    const generalUnitId = this.ctx.ctrl?.playerGeneralUnitId ?? null;
+    if (faction === Faction.Enemy) { stats.enemyDeploys += 1; return; }
+    if (faction !== Faction.Player) return;
+    if (generalUnitId && generalUnitId === unitId) stats.sortied = true;
+    else stats.deploys += 1;
+  }
+
+  /**
+   * 戰敗才診斷（PROG-2-9712）：主動撤退是玩家自己的決定、極速決戰沒有打法可評，這兩種不給敗因；
+   * 回合用盡也帶 retreated，但那是時限到，照常診斷。
+   */
+  private _diagnoseDefeat(data: { result: string; retreated?: boolean; cause?: string }): DefeatReason[] {
+    if (data.result !== 'enemy-win' || data.cause === 'auto') return [];
+    if (data.retreated === true && data.cause !== 'time-up') return [];
+    const ctrl = this.ctx.ctrl;
+    const state = ctrl?.state;
+    if (!ctrl || !state) return [];
+    const stats = this._defeatStats;
+    const statSum = (faction: Faction): number => {
+      const g = state.getGeneral(faction);
+      return g ? g.str + g.int + g.lea : 0;
+    };
+    return diagnoseDefeat({
+      playerTurns: services().battle.getSnapshot().turn,
+      playerDeploys: stats.deploys,
+      deployLimitPerTurn: ctrl.playerDeployLimitPerTurn,
+      generalSortied: stats.sortied || ctrl.playerGeneralUnitId !== null,
+      cause: data.cause,
+      ultimatesUsed: stats.ultimates,
+      spFullIdleTurns: stats.spFullTurns.size,
+      enemyDeploys: stats.enemyDeploys,
+      playerGeneralStats: statSum(Faction.Player),
+      enemyGeneralStats: statSum(Faction.Enemy),
+    });
+  }
+
   /** 設定面板確認撤退（PROG-2-1890）：判定我方戰敗，走既有 BattleEnded → 結算彈窗流程 */
   private _onRetreatRequested(): void {
     const state = this.ctx.ctrl?.state;
@@ -1236,6 +1296,12 @@ export class BattleUIBridge {
     // 依戰果判定（PROG-2-9423）：寫出雙方戰果百分比，玩家才知道差多少
     if (data.timeUpVerdict) details.unshift(timeUpVerdictLine(data.timeUpVerdict, services().battle.getTimeUpJudgement()));
     else if (data.timeUp === true && data.result === 'player-win') details.unshift('敵軍久攻不下，鳴金退兵。');
+    // 軍師敗因診斷（PROG-2-9712）：放在明細最前面，並給結算窗「下一步建議」按鈕
+    const diagnosis = this._diagnoseDefeat(data);
+    this._defeatAdvice = diagnosis[0] ?? null;
+    details.unshift(...defeatDiagnosisLines(diagnosis));
+    c.resultPopup?.setDefeatAdvice?.(this._defeatAdvice ? defeatAdviceLabel(this._defeatAdvice.advice) : null);
+    this._defeatStats = BattleUIBridge._emptyDefeatStats();
     // 年終守城不可重打（PROG-2-9426）：守方是玩家時藏起「再戰一次」
     c.resultPopup?.setReplayAllowed?.(this.ctx.ctrl?.state.siegeDefender !== Faction.Player);
     const popup = c.resultPopup;
