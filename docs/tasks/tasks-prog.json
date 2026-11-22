@@ -24,9 +24,9 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 249,
+    "done": 248,
     "in_progress": 6,
-    "open": 86,
+    "open": 76,
     "total": 341
   },
   "tasks": [
@@ -14731,6 +14731,62 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_2954",
+      "id": "PROG-2-9721",
+      "title": "傷兵營改全年度適用",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T05:33:08Z",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "傷兵營改全年度適用：敗戰（任何年份）、勝利、平手的損兵一律 60% 進傷兵營、每季康復 30%（規格 doc_spec_0357 §4 全年度規則）；只有「損兵上限＝戰前兵源 30%」限第 1 年敗戰（PROG-2-9717 新手保護）。數值沿用 assets/resources/data/troop-loss-rules.json。結算文字：有傷兵一律顯示傷兵送營行；新手保護減免行只在第 1 年敗戰且真的減免時顯示。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "勝利與平手損兵 60% 進傷兵營，每季康復 30%",
+        "第 2 年起敗戰損兵 60% 進傷兵營，不套 30% 上限",
+        "第 1 年敗戰維持原行為（上限 30%、60/40 分配、新手保護文字）",
+        "結算文字規則照上述，單元測試 tests/TroopLossProtection.test.ts 覆蓋三種情況"
+      ],
+      "deliverables": [
+        "assets/scripts/core/managers/GameSession.ts",
+        "assets/scripts/core/systems/CommandSortieLoss.ts",
+        "assets/scripts/core/systems/BattleAftermath.ts",
+        "tests/TroopLossProtection.test.ts"
+      ],
+      "notes": "2026-11-22 | 狀態: done | 驗證: 單元測試 9162 通過；tsc tsconfig.test 0 錯；compute-gate standard 13/14（餘 LoginScene ui→battle 既有警告）| 變更: GameSession._applySortieCost 傷兵送營改全年度（勝利、平手、第 2 年起 60%），損兵 30% 上限仍只限第 1 年敗戰；ledger 減免行只在真有減免時出現；測試補三情況與 BattleRecordStats 季康復 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      },
+      "completed_at": "",
+      "completed_by_agent": "ClaudeCode_opus-5-5"
     },
     {
       "doc_id": "doc_task_2956",
