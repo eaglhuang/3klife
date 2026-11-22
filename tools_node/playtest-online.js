@@ -845,7 +845,14 @@ async function main() {
                 if (handled) { quiet = 0; blockedStreak = 0; continue; }
                 if (blockedSpec) {
                     // 連續 3 次（約 4.5 秒）都被擋住才算：彈窗動畫中偶爾短暫被擋不算
-                    if (++blockedStreak >= (popupLog ? 8 : 3)) await rm.click(blockedSpec.spec, blockedSpec.popup.kind);
+                    if (++blockedStreak >= (popupLog ? 8 : 3)) {
+                        // 季報被官職晉升彈窗（RankUnlockPopupHost）蓋住時，真正該按的是它的「知道了」：先試它，再回頭點被擋的那個
+                        const rankSpecs = [{ name: '^BtnRankUnlockOk$' }, { name: '.*', text: '^\\s*知道了\\s*$', under: '^RankUnlockPopupHost$', button: true }];
+                        let cleared = null;
+                        for (const rs of rankSpecs) { cleared = await rm.tryClick(rs); if (cleared) break; }
+                        if (cleared) { popups.push({ kind: 'rank-unlock', click: cleared, attempt: 0 }); blockedStreak = 0; continue; }
+                        await rm.click(blockedSpec.spec, blockedSpec.popup.kind);
+                    }
                     continue;
                 }
                 blockedStreak = 0;
@@ -1045,11 +1052,32 @@ async function main() {
             rec.detail.commerceTitle = title;
             await rm.click({ ucuf: found.wall, childIndex: found.card.childIndex }, `商業任務「${title}」`);
             await waitUntil(async () => (await rm.present({ name: MISSION_DIALOG })) || null, 30000, '商業任務詳情窗沒有開出');
-            await delay(1000);
-            const dialogTexts = (await rm.textsUnder(MISSION_DIALOG)) || [];
+            // 報酬列會依情報分層遮蔽：商業任務初始情報 45±10 落在 vague 分層，只顯示「量級：★」，情報 ≥ 60 才顯示
+            // 「銀兩 N～M」，所以偶發失敗不是時機問題。流程：輪詢等報酬列渲染（出現「銀兩」或「量級：」），再用「再探」
+            // （糧草 -50、情報 +35／+25／+15）把情報推到上限 90，一來報酬列現出「銀兩 數字」，二來成功率升到最高，
+            // 降低派出後骰到失敗（失敗不發銀兩）而讓結算驗證偶發落空的機率。驗證強度不變。
+            const SILVER_REWARD = /銀兩\s*\d+/;
+            const readDialog = async () => (await rm.textsUnder(MISSION_DIALOG)) || [];
+            const intelOf = (t) => { const k = t.indexOf('%'); return k > 0 ? Number(t[k - 1]) : NaN; };
+            await waitUntil(async () => {
+                const t = await readDialog();
+                return t.some((x) => x.includes('銀兩') || x.includes('量級：')) ? t : null;
+            }, 15000, async () => `商業任務詳情窗 15 秒內沒有渲染出報酬列（文字：${(await readDialog()).slice(0, 20).join(' / ')}）`);
+            let dialogTexts = await readDialog();
+            rec.detail.reconClicks = 0;
+            while (rec.detail.reconClicks < 3 && !(intelOf(dialogTexts) >= 90)) {
+                await waitToastGone();
+                const before = intelOf(dialogTexts);
+                await rm.click({ name: '^BtnScout$', under: MISSION_DIALOG }, '再探');
+                rec.detail.reconClicks += 1;
+                dialogTexts = await waitUntil(async () => {
+                    const t = await readDialog();
+                    return intelOf(t) > before ? t : null;
+                }, 6000, '').catch(async () => readDialog());
+            }
             rec.detail.commerceDialog = dialogTexts.slice(0, 24);
             await shot(rec, 'commerce-detail-reward');
-            if (!dialogTexts.some((t) => t.includes('銀兩'))) throw new Error(`商業任務詳情窗沒有「銀兩」報酬標示（文字：${dialogTexts.slice(0, 20).join(' / ')}）`);
+            if (!dialogTexts.some((t) => SILVER_REWARD.test(t))) throw new Error(`商業任務詳情窗沒有「銀兩」報酬標示（再探 ${rec.detail.reconClicks} 次後；文字：${dialogTexts.slice(0, 20).join(' / ')}）`);
             await waitToastGone();
             await rm.click({ name: '^BtnExecute$', under: MISSION_DIALOG }, '執行商業任務');
             const statusTexts = await waitUntil(async () => { const t = await rm.texts('進行中，還有 \\d+ 季'); return t.length ? t : null; }, 8000, '').catch(() => []);

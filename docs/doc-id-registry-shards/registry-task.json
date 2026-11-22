@@ -16564,5 +16564,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9719.md",
     "title": "[PROG-2-9719] 主將出陣規則依使用者 11/22 裁決：同路相鄰才單挑、小兵優先打武將、只從出兵口出陣、主將倒下加倍消失、正式規格章節",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2949",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9612.md",
+    "title": "[PROG-2-9612] 無頭試玩 lobby-commerce-silver 偶發失敗修正（報酬列受情報分層遮蔽）",
+    "category": "task"
   }
 ]
