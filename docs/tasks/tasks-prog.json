@@ -15031,7 +15031,7 @@
       "title": "名詞定義文件機械分片＋補 SP／精力名詞",
       "owner": "ClaudeCode_opus-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-22",
@@ -15055,7 +15055,7 @@
         "名詞定義文件.md thin index",
         "名詞定義文件 補 SP／計謀點／精力定義"
       ],
-      "notes": "2026-11-22 | 狀態: in-progress | 驗證: pending | 變更: 開卡＋上鎖；第一 commit 機械分片名詞定義文件，第二 commit 補 SP／計謀點／精力定義（總PM 11/22 核可） | 阻塞: 無",
+      "notes": "2026-11-22 | 狀態: done | 驗證: compute-gate standard 通過（文件分片健康檢查 ✅，LoginScene import 警告為既有）；run-cli 9186 passed | 變更: 名詞定義文件機械分片為 名詞定義文件-shards（3 shard＋auto-parts 各 <4KB，內容無增刪、已核對）；補 SP（奧義能量）、計謀點、精力修正（總PM 11/22 核可） | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
@@ -15077,7 +15077,9 @@
         "trace_artifacts": [],
         "metrics_summary": []
       },
-      "validation_cmd": "node tools_node/compute-gate.js --profile standard --agent-feedback"
+      "validation_cmd": "node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "completed_at": "2026-11-22T16:40:00+08:00",
+      "completion": 100
     }
   ],
   "updated": "2026-11-22"
