@@ -251,6 +251,8 @@ export class SpineUnitOverlay {
     if (entry && sec > 0) entry.freeze = Math.max(entry.freeze, sec);
   }
   public exists(id: string): boolean { return this.entries.has(id); }
+  /** 這個單位的 Spine 節點是否已載好、畫得出來（PROG-2-9715：主將出陣衝刺要等載好才起跑） */
+  public isShown(id: string): boolean { return !!this.entries.get(id)?.node?.isValid; }
   public revive(id: string): void {
     const entry = this.entries.get(id);
     if (entry && !this.duel?.ids.includes(id) && entry.core.snapshot().action === 'fall') entry.core.play('idle');

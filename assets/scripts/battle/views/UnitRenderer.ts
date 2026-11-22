@@ -174,6 +174,10 @@ interface BadgeView {
 
 /** 掠奪飄字每行間隔（秒） */
 const LOOT_TEXT_STAGGER_SEC = 0.5;
+/** PROG-2-9715：主將出陣從待命點衝到出陣格的秒數（約一格半距離，比小兵前進稍快，表現「衝出去」） */
+const GENERAL_DASH_SEC = 0.55;
+/** 主將素材載入最多等幾秒才起跑；超過就直接站格，不讓主將卡在待命點 */
+const GENERAL_DASH_WAIT_SEC = 3;
 
 /** 頭頂血條尺寸（名牌座標，名牌本身縮 0.7；PROG-2-1874） */
 const HP_BAR_WIDTH = 150;
@@ -264,6 +268,11 @@ export class UnitRenderer extends Component {
   private hpLossPool:  BuffGainEffectPool | null = null;
   private readonly unitViews = new Map<string, UnitView>();
   private readonly movingUnits = new Set<string>();
+  /**
+   * PROG-2-9715：主將出陣衝刺。上場那一刻 Spine 從己方底線外的待命點跑到出陣格，之後跟小兵一樣站格、逐格走。
+   * key＝格上主將單位 id；from＝待命點腳點，t＝已跑秒數。Unity 對照：一次性的 DOTween 位移，跑完即刪。
+   */
+  private readonly generalDashes = new Map<string, { from: { x: number; y: number }; t: number; wait: number }>();
   private readonly dyingUnits = new Set<string>();
   private readonly uiProjectionBuffer = new Vec3();
   private readonly screenProjectionBuffer = new Vec3();
@@ -381,6 +390,7 @@ export class UnitRenderer extends Component {
         this.spineUnits.remove(unitId);
         this.generalStandees.remove(unitId);
         this.unitViews.delete(unitId);
+        this.generalDashes.delete(unitId);
       }
     });
 
@@ -450,7 +460,8 @@ export class UnitRenderer extends Component {
 
     // PROG-2-9409：Spine 小隊由疊層演從上方落下（spineUnits.deploy）。3D 節點只縮放登場、不再從地下升起，
     // 否則名牌與 Spine 腳點會跟著往上滑，和下落方向相反；沒有 Spine 的單位照舊靠 3D 縮放登場。
-    this.spineUnits.deploy(unit.id);
+    // PROG-2-9715：主將不從天上落下，改由 lateUpdate 從待命點衝到出陣格
+    if (!this.isGeneralAvatarUnit(unit)) this.spineUnits.deploy(unit.id);
     const targetScale = view.worldNode.scale.clone();
     view.worldNode.setScale(new Vec3(targetScale.x * 0.01, targetScale.y * 0.01, targetScale.z * 0.01));
     this.updateFloodRaft(view, unit);
@@ -636,6 +647,7 @@ export class UnitRenderer extends Component {
         view.worldNode.destroy();
         view.labelNode.destroy();
         this.unitViews.delete(unitId);
+        this.generalDashes.delete(unitId);
         this.dyingUnits.delete(unitId);
       })
       .start();
@@ -1146,16 +1158,18 @@ export class UnitRenderer extends Component {
         // 主將沒有 Spine（或素材載不起來）：改畫立繪站牌，站位與 Spine 主將相同；站牌也載不到才留 3D 棋子（issue #2238）
         if (isGeneral && general && needsStandeeFallback(config?.path, path => this.spineUnits.hasFailed(path))) {
           this.spineUnits.remove(unitId);
-          const side = this.generalSidelineFoot(unit.faction);
+          const side = this.boardGeneralFoot(unitId, unit.faction, view, dt);
           const shownStandee = this.generalStandees.sync(unitId, general.id, side?.x ?? view.labelNode.position.x,
             side?.y ?? view.labelNode.position.y - STANDEE_HEIGHT_PX, view.labelNode.active);
           view.visualNode.active = !shownStandee;
         } else if (config) {
           this.generalStandees.remove(unitId);
           const p = view.labelNode.position;
-          const foot = isGeneral ? this.generalSidelineFoot(unit.faction) : this.unitGroundFoot(view);
+          // PROG-2-9715：格上主將跟小兵一樣站在自己的格子上（以前釘在場邊待命點，玩家看不到主將出陣走格）
+          const foot = isGeneral ? this.boardGeneralFoot(unitId, unit.faction, view, dt) : this.unitGroundFoot(view);
+          const moving = this.movingUnits.has(unitId) || (isGeneral && this.generalDashes.has(unitId));
           const shown = this.spineUnits.sync(unitId, config, foot?.x ?? p.x, foot?.y ?? p.y - config.labelToFoot,
-            unit.faction === Faction.Enemy ? -1 : 1, !isGeneral && this.movingUnits.has(unitId), dt, view.labelNode.active,
+            unit.faction === Faction.Enemy ? -1 : 1, moving, dt, view.labelNode.active,
             isGeneral ? 1 : squadMemberCount(unit.currentHp, unit.getEffectiveMaxHp()));
           view.visualNode.active = !shown;
         } else { this.spineUnits.remove(unitId); view.visualNode.active = true; }
@@ -2473,6 +2487,33 @@ export class UnitRenderer extends Component {
     if (!world) return null;
     const p = this.overlayPoint(world);
     return p ? { x: p.x, y: p.y } : null;
+  }
+
+  /**
+   * PROG-2-9715：格上主將的腳點。第一次出現時從待命點衝到格子（GENERAL_DASH_SEC 秒、先快後慢），之後就是格子腳點。
+   * 衝刺期間 moving=true，疊層會播跑步、揚塵與腳步聲，跟小兵前進同一套。
+   */
+  private boardGeneralFoot(unitId: string, faction: Faction, view: UnitView, dt: number): { x: number; y: number } | null {
+    const ground = this.unitGroundFoot(view);
+    if (!ground) return null;
+    let dash = this.generalDashes.get(unitId);
+    if (!dash && !this.spineUnits.exists(unitId) && !this.generalStandees.has(unitId)) {
+      const from = this.generalSidelineFoot(faction);
+      if (from) { dash = { from, t: 0, wait: 0 }; this.generalDashes.set(unitId, dash); }
+    }
+    if (!dash) return ground;
+    // 素材還在載入：先停在待命點，載好才起跑，玩家才看得到衝出去；載太久（GENERAL_DASH_WAIT_SEC）就放棄衝刺直接站格
+    if (!this.spineUnits.isShown(unitId) && !this.generalStandees.has(unitId)) {
+      dash.wait += Math.max(0, dt);
+      if (dash.wait < GENERAL_DASH_WAIT_SEC) return dash.from;
+      this.generalDashes.delete(unitId);
+      return ground;
+    }
+    dash.t += Math.max(0, dt);
+    const k = Math.min(1, dash.t / GENERAL_DASH_SEC);
+    if (k >= 1) { this.generalDashes.delete(unitId); return ground; }
+    const e = 1 - (1 - k) * (1 - k);
+    return { x: dash.from.x + (ground.x - dash.from.x) * e, y: dash.from.y + (ground.y - dash.from.y) * e };
   }
 
   private unitGroundFoot(view: UnitView): { x: number; y: number } | null {
