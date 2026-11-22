@@ -269,6 +269,8 @@ export interface PlayerSaveSnapshot {
     startingTalisman?: StartingSpiritTalisman;
     /** 世家系統解鎖旗標（PM 暫定）：第一位子嗣誕生後寫入；只寫 true；舊檔沒有時為未解鎖 */
     familySystemUnlocked?: boolean;
+    /** 結緣媒人首次紅娘叩門完成旗標（PROG-2-9612）：開場教學後首次換季完成後寫入，讀檔不重複 */
+    matchmakerFirstVisitDone?: boolean;
     /** 新玩家開場進行中的幕 id（PROG-2-1371）：讀檔後從該幕接續；開場結束或舊檔沒有時不寫入；版號不升 */
     openingPhase?: string;
     /** 已處理的最大登入日（YYYY-MM-DD 高水位）：舊稱免費入學令已發放日；入學令每日發放已退場（PROG-2-9206），欄位保留以相容舊存檔並供離線行為判斷 */
@@ -750,6 +752,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.sandtableUnlockHistory !== undefined ? { sandtableUnlockHistory: normalizeUnlockHistory(snapshot.sandtableUnlockHistory) } : {}),
         ...(normalizeStartingTalisman(snapshot.startingTalisman) !== null ? { startingTalisman: normalizeStartingTalisman(snapshot.startingTalisman)! } : {}),
         ...(snapshot.familySystemUnlocked === true ? { familySystemUnlocked: true } : {}),
+        ...(snapshot.matchmakerFirstVisitDone === true ? { matchmakerFirstVisitDone: true } : {}),
         ...(normalizeOpeningPhaseId(snapshot.openingPhase) !== null ? { openingPhase: normalizeOpeningPhaseId(snapshot.openingPhase)! } : {}),
         ...(snapshot.itemAcquisitionLog !== undefined ? { itemAcquisitionLog: normalizeAcquisitionLog(snapshot.itemAcquisitionLog) } : {}),
         ...(normalizeEnrollGrantDay(snapshot.enrollGrantDay) !== null ? { enrollGrantDay: normalizeEnrollGrantDay(snapshot.enrollGrantDay)! } : {}),

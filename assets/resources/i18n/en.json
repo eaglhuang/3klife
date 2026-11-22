@@ -913,5 +913,14 @@
   "ui.mission.block.nursing": "Nursing",
   "ui.mission.block.mentor": "Serving as instructor",
   "ui.mission.block.on-sortie": "On campaign",
-  "ui.mission.block.occupied": "Studying or assigned elsewhere"
+  "ui.mission.block.occupied": "Studying or assigned elsewhere",
+  "MATCHMAKER_FIRST_VISIT_TITLE": "Matchmaker Knocks: Auspicious Union",
+  "MATCHMAKER_SPRING_VISIT_TITLE": "Spring Matchmaking: Tie the Knot",
+  "MATCHMAKER_FIRST_VISIT_SPEECH": "The matchmaker arrives with congratulations and brings fine maidens. Would my Lord take a look?",
+  "MATCHMAKER_SPRING_VISIT_SPEECH": "Spring has arrived! The matchmaker presents eligible candidates. Shall my Lord choose?",
+  "MATCHMAKER_ACTION_ACCEPT": "Meet Now",
+  "MATCHMAKER_ACTION_DECLINE": "Later",
+  "MATCHMAKER_SILVER_LOW_WARNING": "Insufficient clan silver; the matchmaker offers no credit.",
+  "MATCHMAKER_GOTO_COMMERCE": "Earn Silver",
+  "MATCHMAKER_ENROLL_BUTTON": "Take as Spouse (Gift: %{cost} Silver)"
 }
