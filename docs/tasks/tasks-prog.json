@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 242,
+    "done": 243,
     "in_progress": 7,
     "open": 85,
-    "total": 334
+    "total": 335
   },
   "tasks": [
     {
@@ -14391,6 +14391,63 @@
         "量測前後數據"
       ],
       "notes": "2026-11-22 | 狀態: in-progress | 驗證: pending | 變更: 開卡；基準 面板 48 次、每卡 12 次 | 阻塞: 無 || 2026-11-22 | 狀態: done | 驗證: 單元測試 9126 過、tsc 0 錯、quick 閘門；實機無頭量測 虎符面板繪製 48→20（每卡 12→5）、整場 164→144；卡面截圖前後一致 | 變更: TigerTallyComposite 填值後把卡上 NONE 文字改 BITMAP 進動態圖集，與底板同批；新增 TallyCardBatching 接線測試 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9715",
+      "title": "主將出陣改為 Q 版小人衝出出兵口、站格逐格前進（單挑只在規格條件觸發）",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T09:56:24+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者回饋：主將出陣直接變單挑，沒看到主將 Q 版小人衝出去站上格子、跟小兵一樣走。改為主將 Q 版 Spine 從出兵口衝出、站上格子逐格前進，走路動畫、揚塵、腳步聲比照小兵；單挑只在規格條件觸發。",
+      "related": [
+        "PROG-2-9712"
+      ],
+      "depends": [],
+      "acceptance": [
+        "主將 Q 版小人從出兵口衝出並站上格子",
+        "逐格前進有走路動畫、揚塵、腳步聲",
+        "遇敵行為符合規格，單挑只在規格條件觸發",
+        "工作樹建置逐格截圖、playtest 11/11、console error 0",
+        "tsc 0 錯、單元測試、compute-gate standard、CI 全過"
+      ],
+      "deliverables": [
+        "BattleController／TurnFlow 主將出陣流程",
+        "主將單位視圖",
+        "單元測試",
+        "逐格截圖"
+      ],
+      "notes": "2026-11-22 | 狀態: in-progress | 驗證: pending | 變更: 開卡（ClaudeCode_opus-5-5 接手） | 阻塞: 無 || 2026-11-22 | 狀態: done | 驗證: 單元測試 9142 過、tsc 0、quick 4/4；工作樹建置無頭逐格：主將從待命點(-579,-310)衝到出兵口格(-385,-226)約 0.65 秒全程跑步動作，之後第1回合 0→3、第2回合 3→4 逐格走、受擊掉血，第3回合觸發單挑；console error 0；playtest 11/12（唯一失敗 lobby-commerce-silver 為大廳商業任務，與本卡無關） | 變更: UnitRenderer 格上主將腳點改用格子（原本釘在場邊待命點），移動播走路；上場從待命點衝刺到出陣格、等素材載好才起跑、不播從天落下；SpineUnitOverlay.isShown、GeneralPortraitStandee.has；新增 GeneralSortieOnBoard 接線測試 | 阻塞: 單挑觸發、敵兵是否優先打主將、出陣格限制、主將倒下後加倍等規則已交總PM 裁決（Q2～Q6），本卡未改規則",
       "brief": {
         "style": "classic",
         "label": "",

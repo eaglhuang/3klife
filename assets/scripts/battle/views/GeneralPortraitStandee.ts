@@ -50,6 +50,8 @@ export class GeneralPortraitStandee {
     return true;
   }
 
+  public has(id: string): boolean { return this.entries.has(id); }
+
   public remove(id: string): void {
     const entry = this.entries.get(id);
     if (!entry) return;

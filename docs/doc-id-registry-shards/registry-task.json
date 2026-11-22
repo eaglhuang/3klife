@@ -16534,5 +16534,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9714.md",
     "title": "[PROG-2-9714] 虎符卡面板繪製次數優化（文字改 BITMAP 進動態圖集合批）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2947",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9715.md",
+    "title": "[PROG-2-9715] 主將出陣改為 Q 版小人衝出出兵口、站格逐格前進（單挑只在規格條件觸發）",
+    "category": "task"
   }
 ]
