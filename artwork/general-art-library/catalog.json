@@ -3102,9 +3102,44 @@
             "version": "0002",
             "file": "avatars/xiahou_yuan__夏侯淵__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/xiahou_yuan__夏侯淵__avatar_0003.png",
+            "status": "integrated",
+            "sha256": "2a22ba5fa90b932000d91bc6782dfa7735e296405de506f0351b7e901d0f0363",
+            "canvas": "1254x1254 RGBA",
+            "note": "補作頭肩來源圖，保留夏侯淵深色盤髮與藍色髮帶、藍銅盔甲及鬍鬚特徵；自然三分之四側角，完整髮型與雙肩上緣。"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/xiahou_yuan__夏侯淵__small_avatar_0001.png",
+            "status": "integrated",
+            "sha256": "8f8e273e63ebdce4df1d8ec8b9704aab9c726ca1ee6ce2751102b5003d08b3a7",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0003",
+            "sourceAvatarFile": "avatars/xiahou_yuan__夏侯淵__avatar_0003.png",
+            "method": "crop-only; uniform resize; face-centered; no rotation",
+            "cropBox": {
+              "x": 286.17,
+              "y": 68.15,
+              "width": 842.67,
+              "height": 842.67
+            },
+            "headHeightRatio": 0.75,
+            "faceHeightRatio": 0.399,
+            "faceWidthRatio": 0.369,
+            "centerlineErrorPx": 0.5,
+            "note": "頭高75%、臉高39.9%、臉寬36.9%；臉框中線誤差0.5px；完整保留頭髮、盤髮、髮帶、臉與下巴；自然三分之四角。250px核可基準對照通過，雙肩上緣可見。臉高達38%下限；為保留完整髮型未再放大。僅等比例裁切縮放，未旋轉或修臉。"
+          }
+        ]
       }
     },
     {
