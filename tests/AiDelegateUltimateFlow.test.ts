@@ -6,6 +6,7 @@
  * - 不符合（HIGH 未落後、擊殺不足）：SP 滿也不放，SP 留著。
  * - MEDIUM（委任智力 50~69）：精力 50% 以下不放、超過才放（與敵方同比例）。
  * - 沒有難度表（ultimateRules 未設定）：不放。
+ * - 委任 LOW（PROG-2-9728，總PM 11/22 裁決）：ultimateRules.delegateMinIq＝MEDIUM，LOW 以 MEDIUM 判斷（精力 > 50% 即放）；敵方 LOW 維持不放。
  *
  * Unity 對照：像玩家角色的自動戰鬥 AI 跟敵人的 AI 用同一組 Ability 條件，只是 IQ 來源不同。
  */
@@ -106,6 +107,26 @@ export function createAiDelegateUltimateFlowSuite(): TestSuite {
         const high = delegateBattle({ int: 60, playerTroops: 2, enemyTroops: 4, difficulty: 'normal' });
         high.player.vitality = 51;
         assert.equals(1, runDelegateCountingUltimates(high.ctrl));
+    });
+
+    suite.test('委任 LOW（智力 40）精力 51/100：以 MEDIUM 判斷，SP 滿就放（PROG-2-9728）', () => {
+        const { ctrl, player } = delegateBattle({ int: 40, playerTroops: 2, enemyTroops: 4, difficulty: 'normal' });
+        player.vitality = 51;
+        assert.equals(1, runDelegateCountingUltimates(ctrl));
+    });
+
+    suite.test('委任 LOW（智力 40）精力 49/100：未過 50%，不放（PROG-2-9728）', () => {
+        const { ctrl, player } = delegateBattle({ int: 40, playerTroops: 2, enemyTroops: 4, difficulty: 'normal' });
+        player.vitality = 49;
+        assert.equals(0, runDelegateCountingUltimates(ctrl));
+    });
+
+    suite.test('敵方 LOW 行為不變：精力滿、敵方 > 3 也不放（PROG-2-9728）', () => {
+        const { ctrl } = delegateBattle({ int: 40, playerTroops: 2, enemyTroops: 4, difficulty: 'normal' });
+        ctrl.state.aiIq = 'LOW';
+        const enemy = ctrl.state.getGeneral(Faction.Enemy)!;
+        enemy.vitality = enemy.maxVitality;
+        assert.equals(null, ctrl.chooseEnemyUltimate());
     });
 
     suite.test('沒有難度表（ultimateRules 未設定）：即使條件成立也不放', () => {

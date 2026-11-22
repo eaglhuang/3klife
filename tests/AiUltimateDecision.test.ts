@@ -14,7 +14,7 @@ import { assert, TestSuite } from './TestRunner';
 import { aiShouldUseUltimate, parseAiUltimateRules, type AiUltimateRules } from '../assets/scripts/core/systems/AiUltimateDecision';
 
 const DIFFICULTY_PATH = path.join(__dirname, '..', 'assets', 'resources', 'data', 'ai-difficulty.json');
-const RULES: AiUltimateRules = parseAiUltimateRules(JSON.parse(fs.readFileSync(DIFFICULTY_PATH, 'utf8'))) ?? { mediumVitalityRatio: 0.5, highLosingVitalityRatio: 0.3 };
+const RULES: AiUltimateRules = parseAiUltimateRules(JSON.parse(fs.readFileSync(DIFFICULTY_PATH, 'utf8'))) ?? { mediumVitalityRatio: 0.5, highLosingVitalityRatio: 0.3, delegateMinIq: 'MEDIUM' };
 
 /** 預設女將（上限 100）、敵方 5 支、無擊殺、未落後 */
 const base = { vitality: 100, maxVitality: 100, enemyCount: 5, estimatedKills: 0, isLosing: false, rules: RULES };
@@ -60,7 +60,7 @@ export function createAiUltimateDecisionSuite(): TestSuite {
     });
 
     suite.test('比例值來自 rules（改 JSON 就改門檻，不寫死）', () => {
-        const strict: AiUltimateRules = { mediumVitalityRatio: 0.8, highLosingVitalityRatio: 0.1 };
+        const strict: AiUltimateRules = { mediumVitalityRatio: 0.8, highLosingVitalityRatio: 0.1, delegateMinIq: 'MEDIUM' };
         assert.isFalse(aiShouldUseUltimate({ ...base, iq: 'MEDIUM', vitality: 60, enemyCount: 4, rules: strict }));
         assert.isTrue(aiShouldUseUltimate({ ...base, iq: 'HIGH', isLosing: true, vitality: 11, rules: strict }));
     });
@@ -69,7 +69,9 @@ export function createAiUltimateDecisionSuite(): TestSuite {
         assert.equals(null, parseAiUltimateRules({}));
         assert.equals(null, parseAiUltimateRules({ ultimateRules: { mediumVitalityRatio: 0.5 } }));
         assert.equals(null, parseAiUltimateRules({ ultimateRules: { mediumVitalityRatio: 1.5, highLosingVitalityRatio: 0.3 } }));
-        assert.equals(0.5, parseAiUltimateRules({ ultimateRules: { mediumVitalityRatio: 0.5, highLosingVitalityRatio: 0.3 } })?.mediumVitalityRatio ?? -1);
+        assert.equals(null, parseAiUltimateRules({ ultimateRules: { mediumVitalityRatio: 0.5, highLosingVitalityRatio: 0.3 } }));
+        assert.equals(null, parseAiUltimateRules({ ultimateRules: { mediumVitalityRatio: 0.5, highLosingVitalityRatio: 0.3, delegateMinIq: 'BAD' } }));
+        assert.equals('MEDIUM', parseAiUltimateRules({ ultimateRules: { mediumVitalityRatio: 0.5, highLosingVitalityRatio: 0.3, delegateMinIq: 'MEDIUM' } })?.delegateMinIq ?? 'none');
     });
 
     return suite;

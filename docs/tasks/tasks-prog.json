@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 252,
+    "done": 254,
     "in_progress": 6,
-    "open": 76,
-    "total": 345
+    "open": 86,
+    "total": 346
   },
   "tasks": [
     {
@@ -14959,6 +14959,50 @@
       "acceptance": [],
       "deliverables": [],
       "notes": "2026-11-22 | 狀態: done | 驗證: tsc 0 錯；run-cli 9180 passed；compute-gate standard 通過（僅既有 LoginScene 警告）；Cocos web 建置成功；playtest 12/12 PASS、0 pageErrors/consoleErrors；戰場中段頭頂徽章截圖未取得（playtest 只留結算截圖），圖檔未交件前應顯示單字 | 變更: 新增 ui/shared/TroopTypeBadge（attach／mount）；戰場頭頂與 7 個面板呼叫點改走共用函式；單元測試 TroopTypeBadge.test.ts | 阻塞: 剪影圖交件後需補中段截圖驗收",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2959",
+      "id": "PROG-2-9728",
+      "title": "委任代打奧義門檻下限：至少中 IQ",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T12:00:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-22 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
