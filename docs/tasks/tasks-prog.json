@@ -14787,6 +14787,50 @@
       },
       "completed_at": "",
       "completed_by_agent": "ClaudeCode_opus-5-5"
+    },
+    {
+      "doc_id": "doc_task_2956",
+      "id": "PROG-2-9722",
+      "title": "守城勝率退步調查與修正",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T14:30:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-22 | 狀態: done | 驗證: 守城無頭模擬 100 場、單元測試、tsc、compute-gate | 變更: engineerBombardDamage 15 改 12（JSON＋預設＋測試＋規格）| 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "updated": "2026-11-22"

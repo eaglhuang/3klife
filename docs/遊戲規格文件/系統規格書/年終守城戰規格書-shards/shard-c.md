@@ -27,7 +27,7 @@
 |---|---|---|---|
 | `assets/resources/data/defense-battle.json` | `turnLimit` | 12 | PROG-2-9425 |
 |  | `moraleOnVictory` | 2 | PROG-2-9425 |
-|  | `engineerBombardDamage` | 15（每隊每回合，合併一次扣） | PROG-2-9429 |
+|  | `engineerBombardDamage` | 12（每隊每回合，合併一次扣；PROG-2-9722 由 15 調降） | PROG-2-9429／9722 |
 |  | `engineerReinforcePerTurn` | 1 | PROG-2-9429 |
 |  | `engineerReinforceMax` | 5（整場補派總隊數上限） | PROG-2-9431 |
 |  | `fortressMaxHp` | 500（守城時我方城寨上限，血條同步） | PROG-2-9431 |
