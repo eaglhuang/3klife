@@ -3,6 +3,8 @@
  * 遵循 doc_spec_1284 與四層可插拔獨立架構
  */
 
+import type { LedgerSerializedData } from './AnnualGeneralLedger';
+
 export interface BoardConfig {
   boardId: string;
   evaluatorKey: string;
@@ -116,11 +118,7 @@ export interface RankingContext {
 }
 
 export interface AnnualRankingSaveData {
-  ledger?: {
-    year: number;
-    metrics: Record<string, Record<string, number>>;
-    highlights?: Record<string, MetricHighlight[]>;
-  };
+  ledger?: LedgerSerializedData;
   previousYearRanks?: Record<string, Record<string, number>>;
   congratulatedByYear?: Record<number, string[]>;
   ceremonyArchives?: Record<number, any>;

@@ -10,22 +10,20 @@
 import { AnnualGeneralLedger, LedgerSerializedData } from './AnnualGeneralLedger';
 import {
   AnnualRankingConfig,
+  AnnualRankingSaveData,
   BoardConfig,
   BoardRankResult,
   LobbyBoardPreview,
   RankingContext
 } from './AnnualRankingTypes';
+export type { AnnualRankingSaveData } from './AnnualRankingTypes';
 import { RankingBoardRegistry } from './RankingBoardRegistry';
 import { KillsRankingProvider } from './providers/KillsRankingProvider';
 import { GovernanceRankingProvider } from './providers/GovernanceRankingProvider';
 import { CharmRankingProvider } from './providers/CharmRankingProvider';
 import { RookieRankingProvider } from './providers/RookieRankingProvider';
 
-/** 風雲榜存檔形狀（PlayerSaveService.annualRanking 用） */
-export interface AnnualRankingSaveData {
-  ledger: LedgerSerializedData;
-  previousYearRanks: Record<string, Record<string, number>>;
-}
+
 
 export class AnnualRankingManager {
   private static _instance: AnnualRankingManager | null = null;

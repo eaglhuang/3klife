@@ -39,7 +39,6 @@ import type { FactorDefinition } from '../systems/FactorInheritance';
 import { normalizeOnboardingState, OnboardingState } from '../systems/OnboardingTutorial';
 import { normalizeOpeningLetterState, OpeningLetterState } from '../systems/OpeningLetter';
 import { normalizeMilitaryReserve, MilitaryReserve } from '../systems/MilitaryReserve';
-import type { AnnualRankingSaveData } from '../systems/annual_ranking/AnnualRankingTypes';
 import { normalizePrisonState, type PrisonState } from '../systems/PrisonerOfWar';
 import { normalizeMercenaryBundle, type MercenarySaveBundle } from '../systems/MercenarySaveModel';
 import type { GeneralConfig } from '../models/GeneralUnit';
