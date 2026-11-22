@@ -14624,6 +14624,67 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_2950",
+      "id": "PROG-2-9719",
+      "title": "主將出陣規則依使用者 11/22 裁決：同路相鄰才單挑、小兵優先打武將、只從出兵口出陣、主將倒下加倍消失、正式規格章節",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T11:15:15+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依使用者 11/22 裁決 Q1～Q6：單挑演出移到場邊對站後回格；單挑只在兩將同路相鄰觸發；敵方小兵攻擊範圍內優先打武將（只限小兵對武將目標選擇，擦身不打不變）；出陣只能放出兵口 depth 0；主將倒下全軍攻擊加倍消失、不做撤回；寫成正式規格章節並把 demo_playbook 標為歷史資料。順手把 AudioSystem 50ms 改規格 60ms。",
+      "related": [
+        "PROG-2-9715"
+      ],
+      "depends": [],
+      "acceptance": [
+        "單挑只在同路相鄰觸發",
+        "單挑演出移到場邊對站、結束回格",
+        "敵小兵範圍內優先打武將，小兵擦身不打不變",
+        "出陣只能放 depth 0",
+        "主將倒下全軍加倍消失",
+        "正式規格章節寫明 Q2～Q5 與使用者 11/22 裁決",
+        "逐格截圖：衝出出兵口、逐格走、相鄰觸發單挑、單挑結束回格、小兵打主將",
+        "tsc、單元測試、compute-gate standard、CI 全過"
+      ],
+      "deliverables": [
+        "BattleGeneralDuelFlow／TurnFlowManager／BattleCombatResolver",
+        "UnitRenderer 單挑演出站位",
+        "規格章節",
+        "單元測試",
+        "逐格截圖"
+      ],
+      "notes": "2026-11-22 | 狀態: done | 驗證: run-cli 9148 pass、tsc 0、compute-gate quick 4/4、playtest 11/12（07 lobby-commerce-silver 既有不穩）、逐格截圖 battle-general-rules-9719.jpg | 變更: Q1B 場邊單挑、Q2 維持底線任一路觸發（使用者選 C）、Q3 鎖測試、Q4 出兵口限制、Q5 倒下取消加倍、Q6 正式規格 doc_spec_0314 §6、AudioSystem 60ms | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "updated": "2026-11-22"

@@ -18,6 +18,7 @@ import { lastSpurtAdjustedDamage } from '../../core/systems/LastSpurt';
 import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
 import { getTerrainTroopEffect, terrainAttackRangeCapOf, terrainEvasionBonusOf } from '../../core/systems/TerrainTroopRules';
 import { zoneDefenseMultiplier } from '../shared/FormationZone';
+import { clearGeneralSortieBoost } from '../shared/GeneralSortieBoost';
 import { massDebuffAccuracyDelta, massDebuffAttackMultiplier, massDebuffCritDelta, massDebuffDamageTakenMultiplier } from '../shared/EnemyMassDebuff';
 import { TEAM_AURA_DEBUFF_EFFECTS, applyTeamAuraToDamage, teamAuraAccuracyDelta, teamAuraAttackMultiplier, teamAuraCounterRate, teamAuraDefenseMultiplier, teamAuraVsDebuffedMultiplier } from '../shared/TeamAura';
 import { consumeSelfBurstExtraAction, selfBurstAttackMultiplier, selfBurstBlocksEffect, selfBurstCritBonus } from '../shared/SelfBurstWindow';
@@ -828,6 +829,8 @@ export class BattleCombatResolver {
     } else {
       this.context.setEnemyGeneralUnitId(null);
     }
+    // Q5=A（使用者 11/22 裁決）：主將倒下時全軍加倍消失，不做撤回
+    clearGeneralSortieBoost(this.context.state.units.values(), faction);
   }
 
   public onUnitKilled(
