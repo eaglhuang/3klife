@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 260,
-    "in_progress": 7,
-    "open": 86,
-    "total": 353
+    "done": 261,
+    "in_progress": 8,
+    "open": 85,
+    "total": 354
   },
   "tasks": [
     {
@@ -15357,6 +15357,60 @@
         "tests/BattleWeatherRoll.test.ts"
       ],
       "notes": "2026-11-22 | 狀態: done | 驗證: 單元測試 9239 通過、tsc 0 錯、standard 閘門過、playtest 12/12、戰前截圖與戰場 BattleState.weather 一致（FOG） | 變更: 季節抽天氣＋劇情固定＋戰前偵查面板顯示天氣；RAIN→RAINY；戰場適性系統新增 shard-d（K–Q）；原卡號 9733 與 #2524 撞號改 9735 | 阻塞: 無；待辦：赤壁關、雷暴機械損毀與士氣效果、天氣適性數值表",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9842",
+      "title": "十連結果卡片壓扁＋統計列漏算 N",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-22T22:29:55+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "十連抽結果卡：立繪依世界縮放補正裁切比例，修正卡片被壓扁；統計列改為動態列出各類別並包含 N（原本漏算）。尚未實機截圖驗證。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "十連結果卡立繪比例不再被壓扁",
+        "統計列動態列出含 N",
+        "tests/DestinyOpeningResult.test.ts 通過",
+        "tsc 0",
+        "尚未實機截圖驗證（待補）"
+      ],
+      "deliverables": [
+        "assets/scripts/ui/core/GachaFlowCoordinator.ts",
+        "assets/scripts/ui/core/GachaResultRanking.ts",
+        "tests/DestinyOpeningResult.test.ts"
+      ],
+      "notes": "2026-11-22 | 狀態: in-progress | 驗證: compute-gate standard 13/14 通過（1 警告）、尚未實機截圖 | 變更: 補開卡與 lock，分支 claude/gacha-ten-card-aspect 既有 commit 7bb9870f5（十連結果卡立繪依世界縮放補正裁切比例、統計列動態列出含 N） | 阻塞: 無；既有警告 LoginScene.ts:10 ui→battle/views/QaTimeController 非本卡改動，留待另卡",
       "brief": {
         "style": "classic",
         "label": "",
