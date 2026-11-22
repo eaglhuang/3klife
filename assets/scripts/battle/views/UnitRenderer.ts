@@ -4,6 +4,8 @@ import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { perfBegin, perfEnd, perfFrame } from "./BattlePerfProbe";
 import { BadgeBatchLayers } from "./BadgeBatchLayers";
 import { setCacheModeDeferred } from "../../ui/core/LabelLayoutDeferral";
+import { BADGE_ATLAS_SCALE, TroopTypeBadge, loadBadgeAtlasFrames } from "../../ui/shared/TroopTypeBadge";
+import { troopTypeGlyph } from "../../shared/TallyCardContract";
 import { awaitWithTimeout } from "../../core/utils/AwaitGuard";
 import {
   _decorator,
@@ -96,14 +98,6 @@ import {
 } from "../../core/config/UnitAssetCatalog";
 
 const { ccclass, property } = _decorator;
-const TROOP_TYPE_ICON_PREFIX = 'sprites/battle/battle_unit_type_icon_';
-/** 部隊徽章底圖（2 倍解析度；左 80x80 九宮格底框、右 80x80 兵種圓章），由 tools_node/gen-battle-badge-atlas.py 產生（PROG-2-9713） */
-const BADGE_ATLAS_PATH = 'sprites/battle/battle_badge_atlas';
-const BADGE_ATLAS_CELL = 80;
-const BADGE_ATLAS_INSET = 30;
-/** 底圖 2 倍解析度，節點縮 0.5 還原 */
-const BADGE_ATLAS_SCALE = 0.5;
-
 interface UnitView {
   worldNode: Node;   // 世界空間根節點，負責移動 tween（Unity: Root Transform）
   visualNode: Node;  // 本地空間效果層，負責 bump / recoil / charge（Unity: Visual Child Transform）
@@ -260,7 +254,6 @@ export class UnitRenderer extends Component {
   private uiRoot: Node | null = null;
   /** 部隊徽章分層合批（PROG-2-9713） */
   private badgeLayers: BadgeBatchLayers | null = null;
-  private badgeAtlasLoad: Promise<{ bg: SpriteFrame; disc: SpriteFrame } | null> | null = null;
   private cubeMesh: Mesh | null = null;
   private discMesh: Mesh | null = null;  // 圓形陰影 mesh，對照 Unity: blob shadow disc
   private ringMesh: Mesh | null = null;  // Faction Ring mesh
@@ -318,7 +311,6 @@ export class UnitRenderer extends Component {
   private readonly tileBuffFlyTo = new Vec3();
   private readonly troopPrefabLoads = new Map<string, Promise<Prefab | null>>();
   private readonly heroPrefabLoads = new Map<string, Promise<Prefab | null>>();
-  private readonly troopTypeIconLoads = new Map<string, Promise<SpriteFrame | null>>();
   // MatCap 貼圖快取（所有英雄共用同一張，載入一次後復用）
   private heroMatcapTex: Texture2D | null = null;
   private matcapLoadPromise: Promise<Texture2D | null> | null = null;
@@ -1937,7 +1929,7 @@ export class UnitRenderer extends Component {
     // 主戰場UI規格書 §3.1：Buff 帶來的數值變化顯示成「35 (+10)」（PROG-2-1870）
     const isGeneral = this.isGeneralAvatarUnit(unit);
     view.attackLabel.string = statWithBonusText(unit.getEffectiveAttack(), attackBonus, isGeneral ? "攻 " : "");
-    view.typeLabel.string = isGeneral ? "將" : this.toTroopShortName(unit.type);
+    view.typeLabel.string = isGeneral ? "將" : troopTypeGlyph(unit.type);
     view.hpLabel.string = statWithBonusText(Math.max(0, unit.currentHp), hpBonus, isGeneral ? "命 " : "");
     // PROG-2-9422（Q-C1 選 A）：攻擊疊到 2 倍以上變金、4 倍以上變紅加脈動光環，敵我都適用
     const surgeTier = attackSurgeTier(unit.getEffectiveAttack(), unit.attack, this.attackSurgeConfig);
@@ -2138,46 +2130,18 @@ export class UnitRenderer extends Component {
     return this.badgeLayers;
   }
 
-  /** 徽章底圖切成底框（九宮格）與兵種圓章兩個 SpriteFrame；共用同一張貼圖才能合批 */
-  private loadBadgeAtlas(): Promise<{ bg: SpriteFrame; disc: SpriteFrame } | null> {
-    if (!this.badgeAtlasLoad) {
-      this.badgeAtlasLoad = services().resource.loadSpriteFrame(BADGE_ATLAS_PATH, { tags: ["battle"] })
-        .then((base) => {
-          const cut = (x: number): SpriteFrame => {
-            const f = new SpriteFrame();
-            f.packable = false;
-            f.texture = base.texture;
-            f.rect = new Rect(x, 0, BADGE_ATLAS_CELL, BADGE_ATLAS_CELL);
-            return f;
-          };
-          const bg = cut(0);
-          bg.insetLeft = BADGE_ATLAS_INSET;
-          bg.insetRight = BADGE_ATLAS_INSET;
-          bg.insetTop = BADGE_ATLAS_INSET;
-          bg.insetBottom = BADGE_ATLAS_INSET;
-          return { bg, disc: cut(BADGE_ATLAS_CELL) };
-        })
-        .catch((err: unknown) => {
-          UCUFLogger.warn(LogCategory.LIFECYCLE, `[UnitRenderer] 徽章底圖載入失敗: ${String(err)}`);
-          return null;
-        });
-    }
-    return this.badgeAtlasLoad;
-  }
-
-  /** 在 parent 下建一個底圖精靈（2 倍解析度，縮 0.5）；底圖載好才指定 SpriteFrame */
-  private addBadgeAtlasSprite(parent: Node, name: string, part: "bg" | "disc", w: number, h: number, x = 0, y = 0): void {
-    const node = new Node(name);
+  /** 底框精靈（九宮格，2 倍解析度縮 0.5）；底圖載好才指定 SpriteFrame；圓章改由 TroopTypeBadge 繪製（PROG-2-9724） */
+  private addBadgeBgSprite(parent: Node, w: number, h: number): void {
+    const node = new Node("Bg");
     node.layer = parent.layer;
     parent.addChild(node);
-    node.setPosition(x, y, 0);
     node.setScale(BADGE_ATLAS_SCALE, BADGE_ATLAS_SCALE, 1);
     node.addComponent(UITransform).setContentSize(w / BADGE_ATLAS_SCALE, h / BADGE_ATLAS_SCALE);
     const sprite = node.addComponent(Sprite);
     sprite.sizeMode = Sprite.SizeMode.CUSTOM;
-    sprite.type = part === "bg" ? Sprite.Type.SLICED : Sprite.Type.SIMPLE;
-    void this.loadBadgeAtlas().then((frames) => {
-      if (frames && sprite.isValid) sprite.spriteFrame = frames[part];
+    sprite.type = Sprite.Type.SLICED;
+    void loadBadgeAtlasFrames().then((frames) => {
+      if (frames && sprite.isValid) sprite.spriteFrame = frames.bg;
     });
   }
 
@@ -2201,7 +2165,7 @@ export class UnitRenderer extends Component {
     const bh = height * 2 + 10;
     if (layers) {
       // 底框：與 Graphics 版同色同尺寸；外框描邊外擴 1.5，所以精靈比框大 3
-      this.addBadgeAtlasSprite(bgParent, "Bg", "bg", bw + 3, bh + 3);
+      this.addBadgeBgSprite(bgParent, bw + 3, bh + 3);
     } else {
       // 背景底板：提升頭頂資訊可讀性
       const bgNode = new Node("Bg");
@@ -2260,12 +2224,29 @@ export class UnitRenderer extends Component {
       18,
     );
     typeLabel.node.parent!.setPosition(0, topRowY, 0);
-    // 兵種圓章：跟格子 buff 圖示同款的金圈深底圓（畫在兵種字／圖示後面）
+    // 兵種圓章：金圈深底圓（畫在兵種剪影／單字後面），由 TroopTypeBadge 統一繪製（PROG-2-9724）
     const discR = segmentHeight / 2 + 1;
-    if (layers) {
-      // 底圖圓章半徑 36（2 倍）＝部隊徽章 discR 18；外框描邊 2.5 外擴 1.25
-      const discSize = BADGE_ATLAS_CELL * BADGE_ATLAS_SCALE * (discR / 18);
-      this.addBadgeAtlasSprite(bgParent, "TypeDisc", "disc", discSize, discSize, 0, topRowY);
+    if (troopType) {
+      // 底圖圓章直徑 40 ＝部隊徽章 discR 18 的 2 倍解析度換算
+      const discSize = (discR / 18) * 40;
+      const iconParent = layers ? layers.proxyFor(rootNode, "icon") : typeLabel.node.parent!;
+      const iconNode = new Node("TypeIcon");
+      iconNode.layer = iconParent.layer;
+      iconParent.addChild(iconNode);
+
+      const iconTf = iconNode.addComponent(UITransform);
+      const iconSize = Math.max(18, Math.min(segmentHeight - 6, centerWidth - 8));
+      iconTf.setContentSize(iconSize, iconSize);
+      iconNode.setPosition(0, layers ? topRowY : 0, 0);
+
+      const icon = iconNode.addComponent(Sprite);
+      icon.type = Sprite.Type.SIMPLE;
+      icon.sizeMode = Sprite.SizeMode.CUSTOM;
+      icon.color = new Color(255, 255, 255, 255);
+
+      // 剪影載入前先顯示單字；剪影到了才換圖（同一顆圓章）
+      const badge = TroopTypeBadge.attach(icon, { size: discSize, discParent: layers ? bgParent : undefined, glyph: typeLabel });
+      badge.setType(troopType);
     } else {
       const discNode = new Node("TypeDisc");
       discNode.layer = rootNode.layer;
@@ -2280,28 +2261,6 @@ export class UnitRenderer extends Component {
       disc.strokeColor = BADGE_RING;
       disc.circle(0, 0, discR);
       disc.stroke();
-    }
-
-    if (troopType) {
-      typeLabel.string = this.toTroopShortName(troopType);
-
-      const iconParent = layers ? layers.proxyFor(rootNode, "icon") : typeLabel.node.parent!;
-      const iconNode = new Node("TypeIcon");
-      iconNode.layer = iconParent.layer;
-      iconParent.addChild(iconNode);
-
-      const iconTf = iconNode.addComponent(UITransform);
-      const iconSize = Math.max(18, Math.min(segmentHeight - 6, centerWidth - 8));
-      iconTf.setContentSize(iconSize, iconSize);
-      iconNode.setPosition(0, layers ? topRowY : 0, 0);
-      iconNode.active = false;
-
-      const icon = iconNode.addComponent(Sprite);
-      icon.type = Sprite.Type.SIMPLE;
-      icon.sizeMode = Sprite.SizeMode.CUSTOM;
-      icon.color = new Color(255, 255, 255, 255);
-
-      void this.applyTroopTypeIcon(icon, typeLabel, troopType);
     }
 
     const hpLabel = this.createBadgeSegment(
@@ -2420,38 +2379,6 @@ export class UnitRenderer extends Component {
     label.horizontalAlign = HorizontalTextAlignment.CENTER;
     label.verticalAlign = VerticalTextAlignment.CENTER;
     return label;
-  }
-
-  private async applyTroopTypeIcon(icon: Sprite, fallbackLabel: Label, troopType: TroopType): Promise<void> {
-    const spriteFrame = await this.loadTroopTypeIconFrame(troopType);
-    if (!spriteFrame || !icon.node.isValid || !fallbackLabel.node.isValid) {
-      return;
-    }
-
-    icon.spriteFrame = spriteFrame;
-    icon.node.active = true;
-    fallbackLabel.node.active = false;
-  }
-
-  private async loadTroopTypeIconFrame(troopType: TroopType): Promise<SpriteFrame | null> {
-    const resourceKey = this.normalizeTroopTypeKey(troopType);
-    const cacheKey = resourceKey.length > 0 ? resourceKey : troopType;
-    const cached = this.troopTypeIconLoads.get(cacheKey);
-    if (cached) {
-      return cached;
-    }
-
-    const pending = services().resource.loadSpriteFrame(`${TROOP_TYPE_ICON_PREFIX}${resourceKey}`).catch(() => null);
-    this.troopTypeIconLoads.set(cacheKey, pending);
-    return pending;
-  }
-
-  private normalizeTroopTypeKey(type: TroopType): string {
-    return `${type}`
-      .trim()
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '_')
-      .replace(/^_+|_+$/g, '');
   }
 
   private resolveCombatNode(id: string | null): Node | null {
@@ -3327,17 +3254,6 @@ export class UnitRenderer extends Component {
     if (type === TroopType.Engineer) return "工兵";
     if (type === TroopType.Medic) return "醫護兵";
     return "水軍";
-  }
-
-  private toTroopShortName(type: TroopType): string {
-    if (type === TroopType.Cavalry) return "騎";
-    if (type === TroopType.Infantry) return "步";
-    if (type === TroopType.Shield) return "盾";
-    if (type === TroopType.Archer) return "弓";
-    if (type === TroopType.Pikeman) return "槍";
-    if (type === TroopType.Engineer) return "工";
-    if (type === TroopType.Medic) return "醫";
-    return "水";
   }
 
   private playCavalryChargeAnimation(node: Node, targetWorldPos: Vec3): void {

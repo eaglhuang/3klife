@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 250,
+    "done": 251,
     "in_progress": 6,
     "open": 76,
-    "total": 343
+    "total": 344
   },
   "tasks": [
     {
@@ -14892,6 +14892,50 @@
         "metrics_summary": []
       },
       "completed_at": "2026-11-22T06:30:00+08:00"
+    },
+    {
+      "doc_id": "doc_task_2957",
+      "id": "PROG-2-9724",
+      "title": "兵種徽章共用繪製函式",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T06:19:25+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "全遊戲兵種徽章共用繪製（騎馬頭／步直劍／盾／弓／槍長槍／工錘／醫葫蘆／水帆船，象牙白剪影＋金圈圓章，缺圖退單字）",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-22 | 狀態: done | 驗證: tsc 0 錯；run-cli 9180 passed；compute-gate standard 通過（僅既有 LoginScene 警告）；Cocos web 建置成功；playtest 12/12 PASS、0 pageErrors/consoleErrors；戰場中段頭頂徽章截圖未取得（playtest 只留結算截圖），圖檔未交件前應顯示單字 | 變更: 新增 ui/shared/TroopTypeBadge（attach／mount）；戰場頭頂與 7 個面板呼叫點改走共用函式；單元測試 TroopTypeBadge.test.ts | 阻塞: 剪影圖交件後需補中段截圖驗收",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "updated": "2026-11-22"
