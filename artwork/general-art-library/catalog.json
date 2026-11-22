@@ -758,7 +758,8 @@
             "note": "同一套重建服裝的雙扇戰鬥舞姿；透明通道已確認，尚未驗證遊戲內顯示。"
           }
         ]
-      },      "bust": {
+      },
+      "bust": {
         "activeVersion": "0001",
         "status": "asset-imported",
         "history": [
@@ -770,7 +771,12 @@
             "canvas": "900x1000 RGBA",
             "sourceStandingFile": "standing/xiao_qiao__小喬__standing_0003.png",
             "method": "crop-only; no redraw, rotation or retouch",
-            "cropBox": { "x": 62, "y": 0, "width": 900, "height": 1000 }
+            "cropBox": {
+              "x": 62,
+              "y": 0,
+              "width": 900,
+              "height": 1000
+            }
           }
         ]
       },
@@ -807,7 +813,12 @@
             "canvas": "720x720 RGBA",
             "sourceBustFile": "busts/xiao_qiao__小喬__bust_0001.png",
             "method": "crop-only; uniform crop; no redraw, rotation or retouch",
-            "cropBox": { "x": 90, "y": 0, "width": 720, "height": 720 },
+            "cropBox": {
+              "x": 90,
+              "y": 0,
+              "width": 720,
+              "height": 720
+            },
             "createdAt": "2026-11-22"
           }
         ]
@@ -1804,26 +1815,50 @@
       "uid": "zhao-yun",
       "name": "趙雲",
       "standing": {
-        "status": "integrated",
+        "status": "asset-imported",
         "history": [
           {
             "version": "0002",
             "file": "standing/zhao_yun__趙雲__standing_0002.png",
-            "status": "integrated"
+            "status": "superseded"
+          },
+          {
+            "version": "0003",
+            "file": "standing/zhao_yun__趙雲__standing_0003.png",
+            "status": "asset-imported",
+            "sha256": "40156f94f483af6a483e929dd4f79c6b69e3b11df22119fb15d6d928bf3c74c5",
+            "canvas": "1024x1536 RGBA",
+            "note": "依重建後男性品質基準；保留趙雲藍白銀龍甲、長槍與角色辨識。"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "avatar": {
-        "status": "integrated",
+        "status": "asset-imported",
         "history": [
           {
             "version": "0002",
             "file": "avatars/zhao_yun__趙雲__avatar_0002.png",
-            "status": "integrated"
+            "status": "superseded"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/zhao_yun__趙雲__avatar_0003.png",
+            "status": "asset-imported",
+            "sha256": "6d65a11fc9d06c90ed54d5fc1147daaddc45103b4902dbdf0d9e4599d37e8bf9",
+            "canvas": "768x768 RGBA",
+            "sourceBustFile": "busts/zhao_yun__趙雲__bust_0001.png",
+            "method": "crop-only; uniform crop; no redraw, rotation or retouch",
+            "cropBox": {
+              "x": 0,
+              "y": 0,
+              "width": 768,
+              "height": 768
+            },
+            "createdAt": "2026-11-22"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "smallAvatar": {
         "activeVersion": "0002",
@@ -1851,8 +1886,8 @@
         ]
       },
       "battle": {
-        "status": "review-pending",
-        "activeVersion": "0003",
+        "status": "asset-imported",
+        "activeVersion": "0004",
         "history": [
           {
             "version": "0003",
@@ -1865,6 +1900,39 @@
             "gaze": "toward-camera",
             "sourceStanding": "standing/zhao_yun__趙雲__standing_0002.png",
             "note": "沿用使用者已選姿勢的既有候選，未另畫重複姿勢；藍白銀甲、全身與長槍完整入框，槍桿筆直。待美術整合。"
+          },
+          {
+            "version": "0004",
+            "file": "battle/zhao_yun__趙雲__battle_0004.png",
+            "status": "asset-imported",
+            "sha256": "823902304be874ff9b28693671cccddf5dc9856e029a2c8cec1b159dab5246ac",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "spear",
+            "sourceStanding": "standing/zhao_yun__趙雲__standing_0003.png",
+            "displayStatus": "not-yet-verified",
+            "note": "沿用新男性品質基準重建的藍白銀甲趙雲戰鬥姿勢；未驗證遊戲內顯示。"
+          }
+        ],
+        "displayStatus": "not-yet-verified"
+      },
+      "bust": {
+        "activeVersion": "0001",
+        "status": "asset-imported",
+        "history": [
+          {
+            "version": "0001",
+            "file": "busts/zhao_yun__趙雲__bust_0001.png",
+            "status": "asset-imported",
+            "sha256": "dab5d492ed1d4c0fee4680c1059be77af3a4c50fe0d862d8af59f3b936f620ef",
+            "canvas": "768x1024 RGBA",
+            "sourceStandingFile": "standing/zhao_yun__趙雲__standing_0003.png",
+            "method": "crop-only; no redraw, rotation or retouch",
+            "cropBox": {
+              "x": 128,
+              "y": 0,
+              "width": 768,
+              "height": 1024
+            }
           }
         ]
       }
@@ -4382,7 +4450,7 @@
         "activeVersion": "0002"
       }
     },
-{
+    {
       "uid": "liu-zhang",
       "name": "劉璋",
       "standing": {
@@ -4458,7 +4526,7 @@
         "activeVersion": "0002"
       }
     },
-{
+    {
       "uid": "han-sui",
       "name": "韓遂",
       "standing": {
@@ -8052,7 +8120,7 @@
         ]
       }
     },
-{
+    {
       "uid": "mao-jie",
       "name": "毛玠",
       "standing": {
