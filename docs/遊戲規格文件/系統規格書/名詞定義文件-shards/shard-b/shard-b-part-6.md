@@ -1,3 +1,16 @@
+### 資源循環系統
+| 名詞 | 代碼/Key | 定義 |
+|---|---|---|
+| 補元散 | Vitality_Pill | 精力回復道具 |
+| 精力上限 | Vitality_Max | 精力最高值 |
+| 自然回復 | Recovery_Per_Season | 每季回復量 |
+
+### 運氣系統
+| 名詞 | 代碼/Key | 定義 |
+|---|---|---|
+| 運氣 | LUK | 第六屬性 |
+| 天命波動 | Fate_Wave | LUK 對 EP 隨機修正 |
+| 紫色因子 | Purple_Gene | 天命因子 |
 | 天命重置 | Fate_Reset | 重 roll 天命波動 |
 | 種母 | Breeding_Mother | 高 LUK 女性配種母體 |
 
@@ -73,10 +86,3 @@
 | 歷史層 | L4 / History | 查看戰績時載入，每季 ~50KB |
 | 血統層 | L5 / Bloodline | 查看血統樹時載入，每位 1-3KB |
 | 儲存適配器 | DataStorageAdapter | 抽象層統一 IndexedDB (Web) / SQLite (Native) API |
-| 索引目錄 | DataCatalog | L0 快速查表服務 |
-| 分頁載入器 | DataPageLoader | L1-L5 按需分頁載入服務 |
-
-#### 血統正規化
-| 名詞 | 代碼/Key | 定義 |
-|---|---|---|
-| 人物登記冊 | PersonRegistry | 去重的中央人物主檔，每人只有一筆記錄 |

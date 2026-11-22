@@ -11,58 +11,58 @@
   "shards": [
     {
       "name": "shard-b-part-1",
-      "title": "Part 1 (lines 1-52)",
+      "title": "Part 1 (lines 1-46)",
       "range": [
         0,
-        51
+        45
       ]
     },
     {
       "name": "shard-b-part-2",
-      "title": "Part 2 (lines 53-105)",
+      "title": "Part 2 (lines 47-101)",
       "range": [
-        52,
-        104
+        46,
+        100
       ]
     },
     {
       "name": "shard-b-part-3",
-      "title": "Part 3 (lines 106-175)",
+      "title": "Part 3 (lines 102-173)",
       "range": [
-        105,
-        174
+        101,
+        172
       ]
     },
     {
       "name": "shard-b-part-4",
-      "title": "Part 4 (lines 176-267)",
+      "title": "Part 4 (lines 174-262)",
       "range": [
-        175,
-        266
+        173,
+        261
       ]
     },
     {
       "name": "shard-b-part-5",
-      "title": "Part 5 (lines 268-340)",
+      "title": "Part 5 (lines 263-329)",
       "range": [
-        267,
-        339
+        262,
+        328
       ]
     },
     {
       "name": "shard-b-part-6",
-      "title": "Part 6 (lines 341-422)",
+      "title": "Part 6 (lines 330-417)",
       "range": [
-        340,
-        421
+        329,
+        416
       ]
     },
     {
       "name": "shard-b-part-7",
-      "title": "Part 7 (lines 423-454)",
+      "title": "Part 7 (lines 418-456)",
       "range": [
-        422,
-        453
+        417,
+        455
       ]
     }
   ]

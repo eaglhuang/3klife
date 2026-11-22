@@ -12,7 +12,9 @@
 | Template_ID | Template_ID | 武將版本模板 |
 | Bloodline_ID | Bloodline_ID | 血源識別碼（同名武將共用） |
 | 五維 | Stats (STR/INT/POL/CHR/LUK) | 武力/智力/政治/魅力/運氣 |
-| 精力 | Vitality | 武將的統一行動力資源 |
+| 精力 | Vitality | 武將的長期體力值（general.vitality），跨場次消耗；男將上限 120。門檻一律寫成「最大精力的 X%」。（總PM 11/22 核可） |
+| SP | SP（奧義能量） | 戰場內放奧義的能量條（GeneralUnit.currentSp / maxSp），滿才可放奧義；只存在於單場戰鬥內，不跨場次。戰場內一律稱「SP」，不再使用「怒氣」「計略 SP」。（總PM 11/22 核可） |
+| 計謀點 | HUD 顯示：計謀點 Current/Max | 軍師計謀的消耗資源，與 SP 不同，不稱 SP。（總PM 11/22 核可） |
 | 職能雙軌 | Dual_Track | 武官+文官的並行職能 |
 | 個人奧義 | General Ultimate | 武將個人絕招，消耗 SP。由武將模板固定，培育不可變更。 |
 | 格子戰法 | Grid Tactic | 部隊級技能，消耗 TP。改變地圖格狀態或造成傷害。來源含：虎符、培育習得、血統遺傳。 |
@@ -42,11 +44,3 @@
 | 教學職能分離 | Teaching_Line_Only | 教官只負責培育事件、TP 與友情訓練，不介入血統親傳 |
 | 虎符 | Tiger_Tally | 名將死亡時同步留下的戰場卡，裝備後可指揮對應特殊兵種；不屬於轉蛋池，退役也不直接產出。 |
 | 竹簡 | Bamboo_Scroll | 退役產物（若退役角色主職為「文官」），代表智識教官類型；品質由 `scholarship_score` 類別指標決定，與武官的 `retire_score` 分流。 |
-| 英靈歸位 | Spirit_Return | 名將死亡後英靈回歸世家 / 英靈系統的結算流程 |
-
-### 英靈世家系統
-| 名詞 | 代碼/Key | 定義 |
-|---|---|---|
-| 英靈陳列室 | Spirit_Collection_Room | 家族層的英靈集合瀏覽頁，承接多卡管理與展示 |
-| 英靈展示列 | Spirit_Display_Row | 家族英靈列表中的單列展示語意，直接顯示快照與切換狀態 |
-| 展示權重 | Display_Weight | 英靈陳列室的預設排序權重，用來決定展示列的先後順序 |

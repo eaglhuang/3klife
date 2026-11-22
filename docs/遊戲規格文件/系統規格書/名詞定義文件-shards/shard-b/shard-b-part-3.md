@@ -1,3 +1,9 @@
+| 名將契合 | Affinity_Bonus | 史實/宿敵配對加成 |
+| 血脈歸宗 | Bloodline_Merge | 合併同名不同版本武將 |
+| 血統活性 | Bloodline_Vitality | 初代名將的異脈優勢 |
+| 純化 | Purification | 近親繁殖時因子★等提升小機率 |
+| 始祖溯源 | Progenitor_Trace | 虛擬祖先自動生成流程 |
+| 命紋靈獸 | Bloodline_Beast | 與名將獨特基因綁定的祖靈圖騰 |
 | 靈獸原型 | Beast_Archetype | 命紋靈獸的大類型，如龍 / 虎 / 鶴 / 玄龜 / 狼 / 麒麟；決定人格傾向與奧義偏向 |
 | 覺醒傾向 | Awakening_Tendency | 血脈更容易因哪些戰績 / 事件累積覺醒進度的標記 |
 | 血脈性格註記 | Bloodline_Persona_Tags | 用於命頁深層人格區的 2~3 個短標籤，不直接等於六維屬性 |
@@ -64,7 +70,3 @@
 ### 關卡設計系統
 | 名詞 | 代碼/Key | 定義 |
 |---|---|---|
-| 連環破 | Stage_Chain | 由多個子關卡串接而成的正式挑戰鏈 |
-| 戰前偵查 | Preview_Intel | 進關前揭露敵將、主機制、風險標籤與 loadout 缺口的資訊層 |
-| 軍師 HUD | Strategist_HUD | 戰中顯示主題危害、互動物件狀態與戰術缺口的摘要資訊層 |
-| 互動物件 | Interactive_Object | 落石機關、水門、營帳、陷阱等可被觸發或回收的場景單位 |

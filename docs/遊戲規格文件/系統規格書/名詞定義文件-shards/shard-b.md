@@ -12,7 +12,9 @@
 | Template_ID | Template_ID | 武將版本模板 |
 | Bloodline_ID | Bloodline_ID | 血源識別碼（同名武將共用） |
 | 五維 | Stats (STR/INT/POL/CHR/LUK) | 武力/智力/政治/魅力/運氣 |
-| 精力 | Vitality | 武將的統一行動力資源 |
+| 精力 | Vitality | 武將的長期體力值（general.vitality），跨場次消耗；男將上限 120。門檻一律寫成「最大精力的 X%」。（總PM 11/22 核可） |
+| SP | SP（奧義能量） | 戰場內放奧義的能量條（GeneralUnit.currentSp / maxSp），滿才可放奧義；只存在於單場戰鬥內，不跨場次。戰場內一律稱「SP」，不再使用「怒氣」「計略 SP」。（總PM 11/22 核可） |
+| 計謀點 | HUD 顯示：計謀點 Current/Max | 軍師計謀的消耗資源，與 SP 不同，不稱 SP。（總PM 11/22 核可） |
 | 職能雙軌 | Dual_Track | 武官+文官的並行職能 |
 | 個人奧義 | General Ultimate | 武將個人絕招，消耗 SP。由武將模板固定，培育不可變更。 |
 | 格子戰法 | Grid Tactic | 部隊級技能，消耗 TP。改變地圖格狀態或造成傷害。來源含：虎符、培育習得、血統遺傳。 |

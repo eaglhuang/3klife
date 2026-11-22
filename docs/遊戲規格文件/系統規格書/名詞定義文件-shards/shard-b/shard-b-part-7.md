@@ -1,3 +1,10 @@
+| 索引目錄 | DataCatalog | L0 快速查表服務 |
+| 分頁載入器 | DataPageLoader | L1-L5 按需分頁載入服務 |
+
+#### 血統正規化
+| 名詞 | 代碼/Key | 定義 |
+|---|---|---|
+| 人物登記冊 | PersonRegistry | 去重的中央人物主檔，每人只有一筆記錄 |
 | 人物記錄 | PersonRecord | PersonRegistry 中的單筆紀錄（uid、template_id、name、gene_refs、ep_base、faction、is_virtual） |
 | 血統連結 | BloodlineLink | 親子關係邊（child_uid, parent_uid, relation: F/M, generation） |
 | 血統關係圖 | BloodlineGraph | 以 PersonRegistry + BloodlineLink 組成的圖結構服務 |

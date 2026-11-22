@@ -1,3 +1,10 @@
+| 官職 | Officer_System | 管理大廳、治理、世界沙盤與外交權限的帳號級進度系統 |
+| 官職階位 | Officer_Tier | 官職的正式層級與權限檔位 |
+| 官職經驗 | Officer_Exp | 用於晉升官職的累積值 |
+| 官印 | Officer_Seal | 官職身份與晉升的視覺 / 劇情載體 |
+| 官職保留 | Persist_Across_Era_Shift | 天下大亂後不回退官職進度的規則 |
+
+### 大廳系統
 | 名詞 | 代碼/Key | 定義 |
 |---|---|---|
 | 大廳 | Hall_Hub | 玩家登入後的長線中樞場景 |
@@ -57,17 +64,3 @@
 | 報名鏡像快照 | Tournament_Team_Snapshot | 報名當下凍結的隊伍 JSON，為非同步對戰唯一權威 |
 | 賽季 rollover | Season_Rollover | 每季結束後依段位進行 soft reset 的重置規則 |
 | 月度場景賽 | Monthly_Scenario_Cup | 每月一次的特殊地形 / 天氣限定賽，不計入主賽積分 |
-
-### 資源循環系統
-| 名詞 | 代碼/Key | 定義 |
-|---|---|---|
-| 補元散 | Vitality_Pill | 精力回復道具 |
-| 精力上限 | Vitality_Max | 精力最高值 |
-| 自然回復 | Recovery_Per_Season | 每季回復量 |
-
-### 運氣系統
-| 名詞 | 代碼/Key | 定義 |
-|---|---|---|
-| 運氣 | LUK | 第六屬性 |
-| 天命波動 | Fate_Wave | LUK 對 EP 隨機修正 |
-| 紫色因子 | Purple_Gene | 天命因子 |

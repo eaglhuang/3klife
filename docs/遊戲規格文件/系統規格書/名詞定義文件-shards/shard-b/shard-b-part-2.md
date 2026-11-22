@@ -1,3 +1,11 @@
+| 英靈歸位 | Spirit_Return | 名將死亡後英靈回歸世家 / 英靈系統的結算流程 |
+
+### 英靈世家系統
+| 名詞 | 代碼/Key | 定義 |
+|---|---|---|
+| 英靈陳列室 | Spirit_Collection_Room | 家族層的英靈集合瀏覽頁，承接多卡管理與展示 |
+| 英靈展示列 | Spirit_Display_Row | 家族英靈列表中的單列展示語意，直接顯示快照與切換狀態 |
+| 展示權重 | Display_Weight | 英靈陳列室的預設排序權重，用來決定展示列的先後順序 |
 | 家族展示焦點 | Featured_Archive_Spirit_UIDs | 家族層釘選的英靈快照清單，用來決定本期陳列室首頁預設焦點 |
 | 英靈快照 | Spirit_Archive_Snapshot | 名將死亡後保留的完整歷史紀錄，包含英勇事蹟、最終屬性、最終技能與戰報摘要 |
 | 英勇事蹟 | Heroic_Deeds | 英靈快照中的戰功 / 事蹟摘要文字 |
@@ -45,9 +53,3 @@
 | 虛擬祖先 | Virtual_Ancestor | 系統自動補齊的祖輩 |
 | 血脈共鳴 | Resonance | ≥3 同標籤觸發 +EP |
 | 異脈加成 | Outcross_Bonus | 14 人無重複 ID 的加成 |
-| 名將契合 | Affinity_Bonus | 史實/宿敵配對加成 |
-| 血脈歸宗 | Bloodline_Merge | 合併同名不同版本武將 |
-| 血統活性 | Bloodline_Vitality | 初代名將的異脈優勢 |
-| 純化 | Purification | 近親繁殖時因子★等提升小機率 |
-| 始祖溯源 | Progenitor_Trace | 虛擬祖先自動生成流程 |
-| 命紋靈獸 | Bloodline_Beast | 與名將獨特基因綁定的祖靈圖騰 |
