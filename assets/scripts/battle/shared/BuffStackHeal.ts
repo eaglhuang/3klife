@@ -4,7 +4,7 @@
  *
  * - §1 同名狀態最多 3 層；再次施加時回合數取 max(舊, 新)，不相加。
  * - §2 治療 = floor(BaseHeal + 已損 HP × 0.25)，截斷到不超過 MaxHp。
- * - §3 燃燒：回合開始扣當前 HP 8%（機械 16%）；中毒：回合結束扣最大 HP 5%、移動力 −1。
+ * - §3 燃燒已改為最大 HP 4%×層數（使用者 11/22 裁決，見 BurnStatus.ts）；此處 burnTickDamage 為舊版 8% 公式、已無戰場呼叫。中毒：回合結束扣最大 HP 5%、移動力 −1。
  */
 
 export const STATUS_STACK_CAP = 3;

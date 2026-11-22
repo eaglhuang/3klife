@@ -15,6 +15,7 @@ const EXACT_LABELS: Readonly<Record<string, string>> = {
   'kin-combo-attack': '血親合擊',
   'mass-debuff-dot': '持續傷害',
   'poison': '中毒',
+  'burn': '燃燒',
   'hazard-fire': '火焰',
   'hazard-rock': '落石',
   'river-current': '水流',

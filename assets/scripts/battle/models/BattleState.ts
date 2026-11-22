@@ -14,6 +14,8 @@ import type { GeneralCaptureRecord } from '../../shared/GeneralCaptureContract';
 import type { TeamAura } from "../shared/TeamAura";
 import type { EnemyMassDebuff } from "../shared/EnemyMassDebuff";
 import type { UnitDot } from "../shared/UnitDot";
+import type { UnitBurn } from "../shared/BurnStatus";
+import { isFixedTileState } from "../shared/TileStateRules";
 import type { WeatherScheduleEntry } from "../../core/systems/WeatherSchedule";
 import type { SalvageTotals } from "../../core/systems/StrategistHud";
 import { FORTRESS_MAX_HP } from "../../core/systems/FortressBarView";
@@ -50,6 +52,8 @@ export interface TileEffect {
   forcedMoveSteps?: number;
   moveRangeDelta?: number;
   notes?: string;
+  /** 剩餘回合（PROG-2-9726 火格）：每輪（玩家戰術階段）-1，歸零移除；未設定＝永久（地圖原生格） */
+  remainingTurns?: number;
 }
 
 export interface SceneBattleFlags {
@@ -90,6 +94,8 @@ export class BattleState {
   public readonly tileEffects = new Map<string, TileEffect>();
   /** 單位持續傷害（毒箭）：以 unitId 為鍵（PROG-2-0766） */
   public readonly unitDots = new Map<string, UnitDot>();
+  /** 單位燃燒（PROG-2-9726）：以 unitId 為鍵，層數與回合沿用 BuffStackHeal */
+  public readonly unitBurns = new Map<string, UnitBurn>();
   /** 持續防禦區獨立成表：可與同格的火場等格子狀態共存（PROG-2-0761） */
   public readonly formationZones = new Map<string, FormationZone>();
   /** 奧義自身爆發窗口（SYS-SKILL-ULT-0001）：以施放者陣營為鍵，整支軍隊共用（PM 暫定） */
@@ -211,6 +217,7 @@ export class BattleState {
     this.tileBuffs.clear();
     this.tileEffects.clear();
     this.unitDots.clear();
+    this.unitBurns.clear();
     this.formationZones.clear();
     this.selfBursts.clear();
     this.duelVictoryBuffs.clear();
@@ -440,6 +447,19 @@ export class BattleState {
 
   public setTileEffect(effect: TileEffect): void {
     this.tileEffects.set(`${effect.lane},${effect.depth}`, effect);
+  }
+
+  /**
+   * 放置火格（PROG-2-9726）。durationTurns 為 null＝永久（地圖原生火格，關卡資料可指定）；
+   * 固定地形格（掩體、營帳）不覆蓋，回傳是否放置成功。
+   */
+  public placeFireTile(lane: number, depth: number, damagePerTurn: number, durationTurns: number | null, id: string, notes: string): boolean {
+    const existing = this.getTileEffect(lane, depth);
+    if (existing && isFixedTileState(existing.state)) return false;
+    const effect: TileEffect = { id, lane, depth, state: 'hazard-fire', damagePerTurn, notes };
+    if (durationTurns !== null) effect.remainingTurns = durationTurns;
+    this.setTileEffect(effect);
+    return true;
   }
 
   public getTileEffect(lane: number, depth: number): TileEffect | null {

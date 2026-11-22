@@ -50,6 +50,8 @@ function buildContext(units: StubUnit[], playerGeneral: StubGeneral, enemyGenera
     const state = {
         units: unitMap,
         unitDots: new Map(),
+        unitBurns: new Map(),
+        tileEffects: new Map(),
         formationZones: new Map(),
         getTileEffect: () => null,
         getGeneral: (faction: Faction) => (faction === Faction.Player ? playerGeneral : enemyGeneral),
