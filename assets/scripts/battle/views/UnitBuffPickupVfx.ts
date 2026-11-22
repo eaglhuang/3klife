@@ -1,4 +1,4 @@
-// @spec-source → docs/agent-briefs/tasks/PROG/PROG-2-9733.md（buff 格靜態光圈＋部隊吃到 buff 腳下特效）
+// @spec-source → docs/agent-briefs/tasks/PROG/PROG-2-9734.md（buff 格靜態光圈＋部隊吃到 buff 腳下特效）
 /**
  * UnitBuffPickupVfx — 部隊吃到 buff 格的當下，在部隊腳下播一個大特效，循環 2.5 秒後淡出（View 層）。
  *

@@ -1,4 +1,4 @@
-// PROG-2-9733：buff 格靜態光圈分級、部隊腳下特效時間軸與插槽表的純邏輯測試
+// PROG-2-9734：buff 格靜態光圈分級、部隊腳下特效時間軸與插槽表的純邏輯測試
 import { PickupSlotTable, pickupEnvelope, tileBuffFactorFromText, tileBuffTierIndex } from '../assets/scripts/battle/shared/TileBuffVfxMath';
 import { TestSuite, assert } from './TestRunner';
 import * as fs from 'fs';

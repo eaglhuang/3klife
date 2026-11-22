@@ -117,7 +117,7 @@
 | C | OCC-4 出征接戰場 | 陣容選將過濾；哺乳不可出征、可守城；教官不可出征；託管挑人排除占用者 | OCC-3c；戰場專家 | 候選清單與規格一致 | doc_spec_1248 第 12 章 |
 | D | CUR-1 資源定義表與糧草改名 | `resource-def.v1`（`food／gold／silver／troops／fame`）、`normalizeResourceId()`、玩家可見「糧草」、舊存檔遷移 | ITM-M、B0 | 全專案不再出現玩家可見「糧食」；舊存檔 `grain` 欄位開檔轉 `food` | doc_spec_1247 第 9 章 |
 | E | CUR-2 銀兩錢包與家族庫房 | 新增 `silver` 貨幣、家族庫房持有者（household／clan）用銀兩、公庫用金 | CUR-1、ITM-M | 公私帳分開；家業與學府花銀兩、征兵與城建花金 | doc_spec_1247 第 9 章 |
-| F | CUR-3 公私轉移命令 | `treasury.donate`（捐公庫換名望）、`treasury.divert`（挪用公庫補家用，降民心或忠誠） | CUR-2、RWD-M | 兩條轉移的匯率、上限、冷卻與代價依 doc_spec_1247 §3 表；全走 API、可重播 | doc_spec_1247 §3、§8 |
+| F | CUR-3 公私轉移命令 | `treasury.donate`（家族捐銀兩給國家換功勳）、`treasury.stipend`（國家發俸祿給家族；使用者 2026-11-22 裁決取消 `treasury.divert`） | CUR-2、RWD-M | 兩條轉移的匯率、上限、冷卻與代價依 doc_spec_1247 §3 表；全走 API、可重播 | doc_spec_1247 §3、§8 |
 | G | RWD-P 軟保底與機率表 | `pity.soft`、`reward.pools` 輸出機率表、`reward.pity` 回進度 | RWD-M | 同種子同結果；機率表數字等於引擎實際用的權重 | doc_spec_1186 第 12 章 |
 | H | GCH-1～GCH-5 轉蛋遷移 | 轉蛋各池改 `reward.roll`、機率說明鈕、舊保底存檔遷移、`GachaApi` 退場 | RWD-P、ITM-M、SHP 扣款 | 抽獎、權重、保底都由 RWD 計算；每池機率說明鈕資料來自 `reward.pools` | doc_spec_1186 第 12 章 |
 | I | SHP 之後：TP 戰法商店 | 結業戰法商店、TP 價格 | SHP-BASE | 第二批；等商店框架 | doc_spec_1183（使用者 11/21 裁決 #5） |

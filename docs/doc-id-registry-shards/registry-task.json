@@ -16662,6 +16662,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_2971",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9733.md",
+    "title": "[PROG-2-9733] 規格回寫：使用者 2026-11-22 八項裁決（天氣、金銀轉移、官職分批解鎖、格子 buff、兵種符號、年終典禮、重複卡彈窗、燃燒）",
+    "category": "task"
+  },
+  {
     "id": "doc_task_2972",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9831.md",
     "title": "[PROG-2-9831] LLM 批次文案工具與大廳武將聊天台詞第一批（API 贈送額度）",
@@ -16669,8 +16675,8 @@
   },
   {
     "id": "doc_task_2970",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9733.md",
-    "title": "[PROG-2-9733] 戰場 buff 格靜態淡光圈＋部隊吃到 buff 腳下 2.5 秒特效（正式版，刪舊格子特效）",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9734.md",
+    "title": "[PROG-2-9734] 戰場 buff 格靜態淡光圈＋部隊吃到 buff 腳下 2.5 秒特效（正式版，刪舊格子特效）",
     "category": "task"
   }
 ]
