@@ -16522,5 +16522,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9830.md",
     "title": "[PROG-2-9830] 教官池 SSR 保底改為軟 50／硬 90（與名將池完全一致）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2945",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9714.md",
+    "title": "[PROG-2-9714] 虎符卡面板繪製次數優化（文字改 BITMAP 進動態圖集合批）",
+    "category": "task"
   }
 ]
