@@ -3174,9 +3174,17 @@
             "version": "0002",
             "file": "avatars/wei_yan__魏延__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/wei_yan__魏延__avatar_0003.png",
+            "status": "integrated",
+            "sha256": "f8dd853b6340c37f2f418781bfcd1db5dbbf4937e16982f7842506877cedb2d3",
+            "canvas": "1254x1254 RGBA",
+            "note": "補作魏延頭肩來源圖，保留黑髮、額飾、深綠領口及暗銅盔甲，角色化束髮，頭飾完整，帶有勇猛表情的自然三分之四角。"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "battle": {
         "activeVersion": "0001",
@@ -3194,6 +3202,33 @@
             "sourceStanding": "standing/wei_yan__魏延__standing_0003.png",
             "poseLabel": "低身前踏，上撩斜切",
             "note": "沿用松綠、炭黑、古銅甲色及原立姿單刃長柄彎刀；等比例縮放置入中央安全區。"
+          }
+        ]
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/wei_yan__魏延__small_avatar_0001.png",
+            "status": "integrated",
+            "sha256": "743182b3388ddc73364f93c420a5dd017ef687a37fc0d4998cae72c75140cf4c",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0003",
+            "sourceAvatarFile": "avatars/wei_yan__魏延__avatar_0003.png",
+            "method": "crop-only; uniform resize; face-centered; no rotation",
+            "cropBox": {
+              "x": 177,
+              "y": 3.88,
+              "width": 1056,
+              "height": 1056
+            },
+            "headHeightRatio": 0.75,
+            "faceHeightRatio": 0.399,
+            "faceWidthRatio": 0.309,
+            "centerlineErrorPx": 0.5,
+            "note": "頭高75%、臉高39.9%、臉寬30.9%；臉框中線誤差0.5px；頭冠、髮型、耳部與下巴完整；自然三分之四角。250px核可基準比較通過。雙肩外緣僅部分入鏡，工具肩點列警示；人工預覽確認雙側肩甲均有少量露出。僅等比例裁切縮放，未旋轉或修臉。"
           }
         ]
       }
