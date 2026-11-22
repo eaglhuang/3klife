@@ -173,12 +173,14 @@ export function createBattleRecordStatsSuite(): TestSuite {
         restored.setSaveService(new PlayerSaveService(adapter));
         assert.isTrue(await restored.load());
         assert.equals(STARTER_MILITARY.cityTroops - 1200, restored.military.cityTroops);
+        assert.equals(720, restored.military.woundedCamp, '1200 × 60% 進傷兵營（全年度），讀檔保留');
         const record = (restored.roster[0] as BattleRosterGeneral).battleRecord!;
         assert.equals(4, record.kills!);
         assert.equals(90, record.guardianPower!);
 
         await restored.advanceSeason();
-        assert.equals(STARTER_MILITARY.cityTroops - 1200 + STARTER_MILITARY.recruitRegen, restored.military.cityTroops);
+        assert.equals(STARTER_MILITARY.cityTroops - 1200 + 216 + STARTER_MILITARY.recruitRegen, restored.military.cityTroops, '傷兵營每季康復 30%（720 → 216）回兵源，再補兵');
+        assert.equals(504, restored.military.woundedCamp);
 
         const noSortie = await restored.recordBattle(['g'], 'enemy-win');
         assert.equals(undefined, noSortie.military, '沒有出征帳本時不動兵源');
