@@ -13,6 +13,12 @@
     "trendEqual": "—",
     "trendNew": "NEW"
   },
+  "congratulation": {
+    "praiseFriendshipDelta": 5,
+    "friendshipCap": 100,
+    "hallThreshold": 30,
+    "oncePerYear": true
+  },
   "boards": [
     {
       "boardId": "kills",

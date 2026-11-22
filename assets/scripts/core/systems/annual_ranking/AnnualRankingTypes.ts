@@ -114,3 +114,15 @@ export interface RankingContext {
   playerFactionId?: string;
   previousYearRanks?: Record<string, Record<string, number>>; // boardId -> generalId -> rank
 }
+
+export interface AnnualRankingSaveData {
+  ledger?: {
+    year: number;
+    metrics: Record<string, Record<string, number>>;
+    highlights?: Record<string, MetricHighlight[]>;
+  };
+  previousYearRanks?: Record<string, Record<string, number>>;
+  congratulatedByYear?: Record<number, string[]>;
+  ceremonyArchives?: Record<number, any>;
+}
+

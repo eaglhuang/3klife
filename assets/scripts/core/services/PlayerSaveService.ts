@@ -39,6 +39,7 @@ import type { FactorDefinition } from '../systems/FactorInheritance';
 import { normalizeOnboardingState, OnboardingState } from '../systems/OnboardingTutorial';
 import { normalizeOpeningLetterState, OpeningLetterState } from '../systems/OpeningLetter';
 import { normalizeMilitaryReserve, MilitaryReserve } from '../systems/MilitaryReserve';
+import type { AnnualRankingSaveData } from '../systems/annual_ranking/AnnualRankingTypes';
 import { normalizePrisonState, type PrisonState } from '../systems/PrisonerOfWar';
 import { normalizeMercenaryBundle, type MercenarySaveBundle } from '../systems/MercenarySaveModel';
 import type { GeneralConfig } from '../models/GeneralUnit';
@@ -392,6 +393,8 @@ export interface PlayerSaveSnapshot {
     breedingBirthRecords?: BreedingBirthRecord[];
     /** 史境天下風雲榜年度指標與歷年排名（PROG-2-9601 PR2） */
     annualRanking?: AnnualRankingSaveData;
+    /** 武將友誼值（PROG-2-9601 PR3 第8框架種子，稀疏儲存）：武將 ID → 友誼點數 (0~100) */
+    friendships?: Record<string, number>;
 }
 
 /** 讀回編制預設：只保留格式正確的條目；缺欄位、非物件一律丟棄（舊存檔視為空） */
@@ -786,6 +789,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(isEmptyFamilyState(normalizeFamilyState(snapshot.familyState)) ? {} : { familyState: normalizeFamilyState(snapshot.familyState) }),
         ...(snapshot.legendaryMentoringUsedIds !== undefined ? { legendaryMentoringUsedIds: normalizeLegendaryMentoringUsedIds(snapshot.legendaryMentoringUsedIds) } : {}),
         ...(snapshot.annualRanking !== undefined ? { annualRanking: snapshot.annualRanking } : {}),
+        ...(snapshot.friendships !== undefined ? { friendships: snapshot.friendships } : {}),
     };
 }
 
