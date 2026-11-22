@@ -11,26 +11,26 @@
   "shards": [
     {
       "name": "shard-a-part-1",
-      "title": "Part 1 (lines 1-62)",
+      "title": "Part 1 (lines 1-61)",
       "range": [
         0,
-        61
+        60
       ]
     },
     {
       "name": "shard-a-part-2",
-      "title": "Part 2 (lines 63-108)",
+      "title": "Part 2 (lines 62-107)",
       "range": [
-        62,
-        107
+        61,
+        106
       ]
     },
     {
       "name": "shard-a-part-3",
-      "title": "Part 3 (lines 109-112)",
+      "title": "Part 3 (lines 108-111)",
       "range": [
-        108,
-        111
+        107,
+        110
       ]
     }
   ]
