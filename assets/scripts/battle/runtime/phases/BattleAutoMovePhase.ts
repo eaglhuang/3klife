@@ -11,6 +11,7 @@ import { forcedMoveBlockedDamageRatio, resolveForcedMove } from '../../shared/Fo
 import { resolveGhostPath, type GhostPathCell } from '../../shared/GhostMovePath';
 import { hasGhostMove, tallyTerrainMoveBonusOf, tallyTileMoveDeltaOf, canTrampleOver } from '../../shared/TallyPassive';
 import { battleZocField, type ZocField } from '../../shared/ZoneOfControl';
+import { POISON_MOVE_PENALTY } from '../../shared/BuffStackHeal';
 
 const FORWARD_DIR: Record<Faction, number> = {
   [Faction.Player]: 1,
@@ -91,7 +92,9 @@ function stepMoveUnit(
   }
 
   const dir = FORWARD_DIR[unit.faction];
-  const slowPenalty = svc.buff.hasBuff(unit.id, StatusEffect.Slow) ? 1 : 0;
+  // 中毒移動 -1（doc_spec_0359 §3，PROG-2-9720）
+  const poisonPenalty = context.state.unitDots.has(unit.id) ? POISON_MOVE_PENALTY : 0;
+  const slowPenalty = (svc.buff.hasBuff(unit.id, StatusEffect.Slow) ? 1 : 0) + poisonPenalty;
   // 疾行（PROG-2-1600 暫定）：移動 +1，以負懲罰計
   const hasteBonus = svc.buff.hasBuff(unit.id, StatusEffect.Haste) ? 1 : 0;
   const tacticMoveRange = resolveBattleTacticBehavior(context.state.battleTactic).getEffectiveMoveRange(unit, context.state);

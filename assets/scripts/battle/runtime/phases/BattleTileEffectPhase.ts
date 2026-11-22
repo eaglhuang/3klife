@@ -9,7 +9,7 @@ import { tickSelfBurst } from '../../shared/SelfBurstWindow';
 import { tickTeamAura } from '../../shared/TeamAura';
 import { massDebuffDotDamage, tickEnemyMassDebuff } from '../../shared/EnemyMassDebuff';
 import { advanceMoraleOf } from '../../shared/Morale';
-import { advanceUnitDot, dotTickAmount } from '../../shared/UnitDot';
+import { advanceUnitDot, poisonDotTick } from '../../shared/UnitDot';
 import { tileStateRuleOf } from '../../shared/TileStateRules';
 import { AMBUSH_TRAP_ROOT_TURNS, AMBUSH_TRAP_TILE_NOTE, ROCK_DEBRIS_TILE_NOTE, sceneFireDamageTakenOf } from '../../shared/BattleTacticBehavior';
 import { applyTallyDefection, applyTallyTeamMoraleAura } from '../../shared/TallyPassive';
@@ -161,7 +161,7 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
       context.state.unitDots.delete(unitId);
       continue;
     }
-    context.applyUnitDamage(unit, dotTickAmount(unit.maxHp, dot.ratio), null, {
+    context.applyUnitDamage(unit, poisonDotTick(unit.maxHp), null, {
       attackerId: null,
       attackerLane: null,
       attackerDepth: null,

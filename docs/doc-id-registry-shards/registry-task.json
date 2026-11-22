@@ -16572,6 +16572,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_2953",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9720.md",
+    "title": "[PROG-2-9720] BuffStackHeal 接線：狀態堆疊、治療、中毒結算實際走 doc_spec_0359",
+    "category": "task"
+  },
+  {
     "id": "doc_task_2954",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9721.md",
     "title": "[PROG-2-9721] 傷兵營改全年度適用",

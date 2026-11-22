@@ -54,7 +54,7 @@ function castPoison(ctrl: BattleController, targetUid: string): boolean {
 export function createPoisonArrowE2ESuite(): TestSuite {
     const suite = new TestSuite('PoisonArrowE2E (毒箭 dot 戰術階段扣血)');
 
-    suite.test('施放當下不扣血；之後每回合扣最大 HP 10%，共 2 回合，第三回合不再扣', () => {
+    suite.test('施放當下不扣血；之後每回合扣最大 HP 5%（doc_spec_0359），共 2 回合，第三回合不再扣', () => {
         const ctrl = quietBattle();
         const target = enemyUnit('poisoned', 1000);
         ctrl.state.addUnit(target);
@@ -64,12 +64,12 @@ export function createPoisonArrowE2ESuite(): TestSuite {
         assert.isTrue(ctrl.state.unitDots.has('poisoned'));
 
         playTurn(ctrl);
-        assert.equals(900, target.currentHp, '第 1 回合 -10%');
+        assert.equals(950, target.currentHp, '第 1 回合 -5%');
         playTurn(ctrl);
-        assert.equals(800, target.currentHp, '第 2 回合 -10%');
+        assert.equals(900, target.currentHp, '第 2 回合 -5%');
         assert.isFalse(ctrl.state.unitDots.has('poisoned'), '2 回合後毒效移除');
         playTurn(ctrl);
-        assert.equals(800, target.currentHp, '毒效結束後不再扣血');
+        assert.equals(900, target.currentHp, '毒效結束後不再扣血');
     });
 
     suite.test('每回合至少扣 1 點：低最大 HP 的目標也會掉血', () => {

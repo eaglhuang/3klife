@@ -26,8 +26,8 @@
   "summary": {
     "done": 248,
     "in_progress": 6,
-    "open": 86,
-    "total": 340
+    "open": 76,
+    "total": 341
   },
   "tasks": [
     {
@@ -14664,6 +14664,52 @@
         "逐格截圖"
       ],
       "notes": "2026-11-22 | 狀態: done | 驗證: run-cli 9148 pass、tsc 0、compute-gate quick 4/4、playtest 11/12（07 lobby-commerce-silver 既有不穩）、逐格截圖 battle-general-rules-9719.jpg | 變更: Q1B 場邊單挑、Q2 維持底線任一路觸發（使用者選 C）、Q3 鎖測試、Q4 出兵口限制、Q5 倒下取消加倍、Q6 正式規格 doc_spec_0314 §6、AudioSystem 60ms | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2953",
+      "id": "PROG-2-9720",
+      "title": "BuffStackHeal 接線：狀態堆疊、治療、中毒結算實際走 doc_spec_0359",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T13:31:16+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "把 BuffStackHeal.ts（PROG-2-2045）接進戰場：BuffSystem 同名狀態堆疊、治療戰法固定量加已損25%並截斷、中毒 5% 最大 HP 與移動 -1。燃燒狀態戰場尚不存在，記為待裁決。",
+      "related": [
+        "PROG-2-2045"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-22 | 狀態: done | 驗證: run-cli 全過、tsc 0 錯、compute-gate standard 通過(僅既有 LoginScene 警告) | 變更: BuffSystem 走 applyBuffStack(層數上限3、回合取max)、治療戰法走 computeHealAmount(固定量+已損25%並截到已損血量)、毒箭走 poisonTickDamage(5%最大HP)＋自動移動 -1；測試 BuffStackHeal/PoisonArrowE2E/DotSkillResolver/MedicalAidHeal | 阻塞: 燃燒狀態戰場不存在，burnTickDamage 未接線，待裁決",
       "brief": {
         "style": "classic",
         "label": "",
