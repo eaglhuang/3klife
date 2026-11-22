@@ -1633,11 +1633,24 @@ async function main() {
                 }, 8000, '晉升後大廳武將頭頂沒有出現「！」標記').catch((e) => { rec.detail.hallGuide.markError = e.message; return []; });
                 rec.detail.hallGuide.marks = guideMarks;
                 await shot(rec, 'rank-unlock-hall-mark');
-                const guideTapped = await rm.tryClick({ name: '^mark-.*' }) || await rm.tryClick({ name: '^crowd-.*' });
+                // 點頭頂掛「！」的那位（mark-<id> 對應 crowd-<id>）；泡泡必須出在同一人身上（PROG-2-9820）
+                const markedId = (guideMarks[0] || '').replace(/^mark-/, '');
+                rec.detail.hallGuide.markedId = markedId;
+                const guideTapped = markedId ? await rm.tryClick({ name: `^crowd-${markedId}$` }) : false;
                 rec.detail.hallGuide.tapped = Boolean(guideTapped);
                 await delay(900);
                 rec.detail.hallGuide.bubbleTexts = (await rm.allTexts()).filter((t) => /新解鎖|立即前往|大喜/.test(t));
                 await shot(rec, 'rank-unlock-hall-bubble');
+                if (!rec.detail.hallGuide.tapped) throw new Error('點不到頭頂掛「！」的武將');
+                if (!rec.detail.hallGuide.bubbleTexts.some((t) => /立即前往/.test(t))) throw new Error('點「！」武將後沒有出現導流泡泡');
+                // 消費導流（點「立即前往」）後標記應消失
+                const goTapped = await rm.tryClick({ text: '立即前往', button: true }) || await rm.tryClick({ text: '立即前往' });
+                rec.detail.hallGuide.goTapped = Boolean(goTapped);
+                await delay(1500);
+                rec.detail.hallGuide.marksAfter = await page.evaluate(() => Object.keys(window.__pt.nameCounts('^mark-')));
+                await backToLobbyBar();
+                await delay(600);
+                await shot(rec, 'rank-unlock-hall-mark-consumed');
                 // 晉升後原本鎖著的按鈕解鎖
                 if (!(await clickButton('^BtnCatDomestic$'))) throw new Error('晉升後找不到底欄「內政」');
                 await delay(1200);
