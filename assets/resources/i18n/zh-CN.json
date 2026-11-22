@@ -967,5 +967,12 @@
   "tactic.desc.tactic-insp-red-cliff": "東風一起，江面上的戰船連成一串，火苗順著風勢一路點名。單點猛燒一個敵人，趁對手手忙腳亂時打出一波大傷害，拿來收拾最礙眼的那個目標最順手。",
   "tactic.desc.tactic-insp-chain-link": "龐統笑著說船綁在一起比較不暈浪，整支艦隊就這樣被串成一串粽子。專挑一名敵人下套，讓他處處受制、動彈不得，適合先手牽制對方的關鍵人物。",
   "tactic.desc.tactic-insp-night-raid": "熄了火把、裹了馬蹄，一隊人影趁著月黑風高摸進敵營，專挑睡到一半的那位下手。適合在對方毫無防備時盯住單一目標，打得他醒來還在懷疑人生。",
-  "_todo.tactic.desc": "待翻：tactic.desc.* 目前為 zh-TW 複本，待 ui-i18n-localize 補譯"
+  "_todo.tactic.desc": "待翻：tactic.desc.* 目前為 zh-TW 複本，待 ui-i18n-localize 補譯",
+  "ui.annual_ranking.lobby.preview_title": "史境风云榜・实时风向",
+  "ui.annual_ranking.lobby.top3_rank": "第 {0} 位・{1}",
+  "ui.annual_ranking.lobby.my_rank": "我的席位：第 {0} 名（{1} 分）",
+  "ui.annual_ranking.lobby.btn_ceremony": "年终颁奖典礼",
+  "ui.annual_ranking.lobby.ceremony_ready": "【岁末盛典】诸侯齐聚，大宴揭幕！",
+  "ui.annual_ranking.lobby.btn_history": "历年风云史册",
+  "ui.hall.btn.annual_ranking": "天下风云榜"
 }

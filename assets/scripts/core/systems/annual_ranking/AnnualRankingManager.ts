@@ -220,4 +220,32 @@ export class AnnualRankingManager {
       this._previousYearRanks = data.previousYearRanks;
     }
   }
+
+  /**
+   * 計算武將上榜對世家聲望的貢獻點數（依 clanPrestige 配置）
+   * @param ranks 該武將在各個榜單取得的名次陣列
+   */
+  public calculateClanPrestigeContribution(ranks: number[]): number {
+    const cfg = this._config?.clanPrestige;
+    if (!cfg || !cfg.enabled) return 0;
+
+    let total = 0;
+    const base = cfg.baseContribution || 50;
+    const max = cfg.maxPerGeneral || 500;
+
+    for (const rank of ranks) {
+      if (rank <= 0 || rank > 100) continue;
+      let mul = cfg.multipliers.rankTop100 || 1.0;
+      if (rank === 1) {
+        mul = cfg.multipliers.rank1 || 5.0;
+      } else if (rank <= 3) {
+        mul = cfg.multipliers.rankTop3 || 3.0;
+      } else if (rank <= 10) {
+        mul = cfg.multipliers.rankTop10 || 2.0;
+      }
+      total += Math.round(base * mul);
+    }
+
+    return Math.min(max, total);
+  }
 }

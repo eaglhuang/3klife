@@ -112,7 +112,18 @@ export function createAnnualRankingCoreSuite(): TestSuite {
           charmVotes: 0.8
         }
       }
-    ]
+    ],
+    clanPrestige: {
+      enabled: true,
+      baseContribution: 50,
+      maxPerGeneral: 500,
+      multipliers: {
+        rank1: 5.0,
+        rankTop3: 3.0,
+        rankTop10: 2.0,
+        rankTop100: 1.0
+      }
+    }
   };
 
   suite.test('TC-RNK-01: 年度結算、帳本歸零與歷年快照封存', () => {
@@ -365,6 +376,30 @@ export function createAnnualRankingCoreSuite(): TestSuite {
 
     const score = provider.evaluate('young_hero', ledger, context, config);
     assert.isTrue(score >= 150 + 150, '新人王得分應包含奇才加成 150');
+  });
+
+  suite.test('世家聲望貢獻計算（提案 3 組算例與上限箝制驗算）', () => {
+    const manager = new AnnualRankingManager(testConfig);
+
+    // 算例 1（雙榜奪冠/前三）：第 1 名 (50*5.0=250) + 第 3 名 (50*3.0=150) = 400 點
+    const p1 = manager.calculateClanPrestigeContribution([1, 3]);
+    assert.equals(400, p1, '雙榜 (1, 3) 聲望應為 400');
+
+    // 算例 2（十強席位）：第 6 名 (50*2.0=100)
+    const p2 = manager.calculateClanPrestigeContribution([6]);
+    assert.equals(100, p2, '第 6 名聲望應為 100');
+
+    // 算例 3（百強邊緣）：第 68 名 (50*1.0=50)
+    const p3 = manager.calculateClanPrestigeContribution([68]);
+    assert.equals(50, p3, '第 68 名聲望應為 50');
+
+    // 算例 4（單人上限箝制）：三冠王 (50*5.0*3 = 750) 應受 maxPerGeneral 500 限制
+    const p4 = manager.calculateClanPrestigeContribution([1, 1, 1]);
+    assert.equals(500, p4, '超過上限 500 應箝制為 500');
+
+    // 算例 5（百強以外無效）：第 101 名與負數名次
+    const p5 = manager.calculateClanPrestigeContribution([101, -1, 0]);
+    assert.equals(0, p5, '無效名次應為 0');
   });
 
   return suite;
