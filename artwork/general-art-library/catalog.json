@@ -2268,9 +2268,17 @@
             "version": "0002",
             "file": "avatars/xu_huang__徐晃__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/xu_huang__徐晃__avatar_0003.png",
+            "status": "integrated",
+            "sha256": "34a570ca6aed7a4045c3dec4571a86de265d7efe91137d5d6178760d774ed4c0",
+            "canvas": "1254x1254 RGBA",
+            "note": "以既有徐晃立繪維持藍銅配色與角色特徵，補作三分之四頭肩來源，完整保留藍色髮飾、頭盔及肩甲。"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "battle": {
         "status": "review-pending",
@@ -2287,6 +2295,33 @@
             "gaze": "direct-to-camera",
             "sourceStanding": "standing/xu_huang__徐晃__standing_0002.png",
             "note": "使用者授權持續補繪；完整人物與大斧均在畫布內，斧柄保持筆直；候選待審，未接入遊戲。"
+          }
+        ]
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/xu_huang__徐晃__small_avatar_0001.png",
+            "status": "integrated",
+            "sha256": "d30845424c2cebbde77d1600ddc299f44b9946c5d7edf8002437b764815387ab",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0003",
+            "sourceAvatarFile": "avatars/xu_huang__徐晃__avatar_0003.png",
+            "method": "crop-only; uniform resize; face-centered; no rotation",
+            "cropBox": {
+              "x": 305,
+              "y": 56.2,
+              "width": 760,
+              "height": 760
+            },
+            "headHeightRatio": 0.75,
+            "faceHeightRatio": 0.48,
+            "faceWidthRatio": 0.329,
+            "centerlineErrorPx": 0.5,
+            "note": "頭高75%、臉高48%、臉寬32.9%；臉框中線與畫布中線差0.5px；完整保留頭盔、髮飾、臉與鬍鬚。自然三分之四角度。250px基準對照通過；雙肩上緣僅部分可見，肩線為末位條件。小頭像僅等比例裁切縮放，未旋轉或修臉。"
           }
         ]
       }
