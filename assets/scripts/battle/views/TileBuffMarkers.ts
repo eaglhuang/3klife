@@ -22,6 +22,14 @@ import {
 } from '../shared/TileBuffBadge';
 import { drawStatusIconDisc, statusIconTextColor } from './UnitStatusIconBar';
 import type { FloatAvoidRect } from '../../core/systems/FloatTextStyle';
+import {
+  drawTileBuffVfx,
+  getTileBuffVfxConfig,
+  isTileBuffVfxEnabled,
+  tileBuffVfxGlyphColor,
+  tileBuffVfxStats,
+  type TileBuffVfxKind,
+} from './TileBuffVfx';
 
 /** 圖示比頭頂的（36）大一點：棋盤上是要讓玩家「找得到」的目標 */
 const ICON_RADIUS = 22;
@@ -55,6 +63,10 @@ interface MarkerView {
   lane: number;
   depth: number;
   rare: boolean;
+  /** 新特效用：攻／命、減益、倍數（每幀重畫要用） */
+  vfxKind: TileBuffVfxKind;
+  vfxDebuff: boolean;
+  vfxFactor: number;
   /** 目前畫的內容；相同就不重畫 */
   drawnKey: string;
   /** 每格錯開相位，避免整片同步浮動 */
@@ -181,12 +193,29 @@ export class TileBuffMarkers {
   public update(dt: number): void {
     const step = Number.isFinite(dt) && dt > 0 ? dt : 0;
     this.time += step;
+    const vfxCfg = getTileBuffVfxConfig();
+    const vfxOn = isTileBuffVfxEnabled(vfxCfg);
+    tileBuffVfxStats.primitives = 0;
+    tileBuffVfxStats.particles = 0;
     this.markers.forEach(view => {
       this.place(view, view.root);
+      if (vfxOn && vfxCfg) {
+        // 新特效：地面、粒子、圓章底一次畫在 plate 上；字與倍數的 Label 跟著圓章高度走
+        view.plateOpacity.opacity = 255;
+        const cy = drawTileBuffVfx(view.plate, vfxCfg, view.vfxKind, view.vfxDebuff, view.rare, view.vfxFactor, this.time + view.phase * 1.4);
+        view.icon.setPosition(0, cy, 0);
+        view.icon.setScale(1, 1, 1);
+        view.amount.node.setPosition(vfxCfg.icon.radius + 8, 0, 0);
+        view.glyph.color = tileBuffVfxGlyphColor(vfxCfg, view.vfxKind, view.vfxDebuff);
+        view.drawnKey = '';
+        view.iconGraphics.clear();
+        return;
+      }
       const idle = sampleTileBuffIdle(this.time + view.phase * 1.4, view.rare);
       view.icon.setPosition(0, ICON_Y + idle.dy, 0);
       view.icon.setScale(idle.scale, idle.scale, 1);
       view.plateOpacity.opacity = idle.plateAlpha;
+      view.amount.node.setPosition(RARE_RING_RADIUS + AMOUNT_GAP, 0, 0);
     });
     for (const fly of this.flies) {
       if (!fly.busy) continue;
@@ -218,10 +247,21 @@ export class TileBuffMarkers {
   }
 
   private draw(view: MarkerView, badge: TileBuffBadge): void {
+    view.vfxKind = badge.kind.startsWith('attack') ? 'attack' : 'hp';
+    view.vfxDebuff = badge.isDebuff;
+    view.vfxFactor = parseFloat(badge.amountText.slice(1)) || 1;
+    view.rare = badge.rare;
+    const vfxCfg = getTileBuffVfxConfig();
+    if (isTileBuffVfxEnabled(vfxCfg)) {
+      // 新特效每幀在 update 重畫；這裡只更新文字
+      view.glyph.string = badge.glyph;
+      view.amount.string = badge.amountText;
+      view.amount.color = badge.isDebuff ? AMOUNT_DEBUFF : AMOUNT_BUFF;
+      return;
+    }
     const key = `${badge.kind}|${badge.amountText}|${badge.rare ? 1 : 0}`;
     if (view.drawnKey === key) return;
     view.drawnKey = key;
-    view.rare = badge.rare;
 
     const tone = badge.isDebuff ? PLATE_DEBUFF : PLATE_BUFF;
     const plate = view.plate;
@@ -303,7 +343,7 @@ export class TileBuffMarkers {
     amount.outlineColor = AMOUNT_OUTLINE;
     amount.outlineWidth = 3;
 
-    return { root: node, plate, plateOpacity, icon, iconGraphics, glyph, amount, lane: 0, depth: 0, rare: false, drawnKey: '', phase: 0 };
+    return { root: node, plate, plateOpacity, icon, iconGraphics, glyph, amount, lane: 0, depth: 0, rare: false, vfxKind: 'attack', vfxDebuff: false, vfxFactor: 1, drawnKey: '', phase: 0 };
   }
 
   private acquireFly(root: Node): FlyView | null {

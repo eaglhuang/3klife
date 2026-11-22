@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "enabled": true,
+  "_note": "棋盤 buff 格特效（試作）。enabled=false 或網址 ?buffVfx=old 回舊樣式；?buffVfx=new 強制新樣式。",
+  "ground": { "rx": 52, "ry": 19, "tickSpeed": 0.55, "baseAlpha": 120 },
+  "icon": { "radius": 18, "y": 40, "bobPx": 3, "bobPeriodSec": 1.6 },
+  "stackTiers": [
+    { "minFactor": 0, "rings": 1, "particles": 4, "ticks": 8,  "glow": 0.72 },
+    { "minFactor": 3, "rings": 2, "particles": 6, "ticks": 12, "glow": 0.88 },
+    { "minFactor": 5, "rings": 3, "particles": 8, "ticks": 16, "glow": 1.0 }
+  ],
+  "attack": {
+    "rim": "#ffcf6a", "inner": "#ff7a2e", "base": "#6b2410", "hot": "#fff8d0", "mid": "#ff8a2a", "tail": "#d1301c",
+    "disc": "#7a1d12", "glyph": "#ffe9a8",
+    "sparkLifeSec": 1.1, "sparkRisePx": 92, "sparkLenPx": 29, "sparkWidthPx": 6.5, "bladeCount": 4
+  },
+  "hp": {
+    "rim": "#b6f5cf", "inner": "#4fd9a0", "base": "#0b3a2c", "hot": "#f2fff8", "mid": "#7fe8b4", "tail": "#2aa376",
+    "disc": "#0f5a45", "glyph": "#eafff3",
+    "ringPeriodSec": 2.4, "breathPeriodSec": 1.8, "moteLifeSec": 1.9, "moteRisePx": 66, "moteSwayPx": 8, "moteSizePx": 5.4
+  },
+  "debuff": {
+    "rim": "#c9a0ff", "inner": "#8a4fe0", "base": "#25103f", "hot": "#f1e0ff", "mid": "#a66bff", "tail": "#5a2aa8",
+    "disc": "#3a1a63", "glyph": "#f1e0ff"
+  },
+  "metal": { "gold": "#e8b84a", "goldDark": "#8a5a14", "highlight": "#fff6d0" }
+}
