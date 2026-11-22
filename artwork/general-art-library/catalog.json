@@ -1886,37 +1886,73 @@
       "uid": "zhang-fei",
       "name": "張飛",
       "standing": {
-        "status": "integrated",
+        "status": "asset-imported",
         "history": [
           {
             "version": "0002",
             "file": "standing/zhang_fei__張飛__standing_0002.png",
-            "status": "integrated"
+            "status": "superseded"
+          },
+          {
+            "version": "0003",
+            "file": "standing/zhang_fei__張飛__standing_0003.png",
+            "status": "asset-imported",
+            "sha256": "6bd906ffa239a89c9b3ad5bdd191b18d215fe8f4bdd1af1c3b0d44497c31b3d4",
+            "canvas": "1024x1536 RGBA",
+            "note": "依重建男性品質基準；粗獷勇猛神情、赤黑古銅甲冑與丈八蛇矛。"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "battle": {
-        "status": "review-pending",
+        "status": "asset-imported",
         "history": [
           {
             "version": "0002",
             "file": "battle/zhang_fei__張飛__battle_0002.png",
             "status": "review-pending"
+          },
+          {
+            "version": "0003",
+            "file": "battle/zhang_fei__張飛__battle_0003.png",
+            "status": "asset-imported",
+            "sha256": "47f4cbbf9f30ff5129a20c3e6f9d303950bdc1f32a8f7992725155e00bf60973",
+            "canvas": "1198x1313 RGBA",
+            "weaponClass": "zhangba-snake-spear",
+            "sourceStanding": "standing/zhang_fei__張飛__standing_0003.png",
+            "poseLabel": "低勢前弓突刺",
+            "note": "同造型戰鬥姿勢，保留剛性直槍桿與完整蛇矛刃；畫布依動勢保留原生比例，未驗證遊戲顯示。"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003",
+        "displayStatus": "not-yet-verified"
       },
       "avatar": {
-        "status": "integrated",
+        "status": "asset-imported",
         "history": [
           {
             "version": "0002",
             "file": "avatars/zhang_fei__張飛__avatar_0002.png",
-            "status": "integrated"
+            "status": "superseded"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/zhang_fei__張飛__avatar_0003.png",
+            "status": "asset-imported",
+            "sha256": "0bb446f3433004b6ef65841a1c518db0eff53c1fa31909b25308153a75967ef8",
+            "canvas": "720x720 RGBA",
+            "sourceBustFile": "busts/zhang_fei__張飛__bust_0001.png",
+            "method": "crop-only; uniform crop and resize; no redraw, rotation or retouch",
+            "cropBox": {
+              "x": 210,
+              "y": 60,
+              "width": 450,
+              "height": 450
+            },
+            "createdAt": "2026-11-23"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "smallAvatar": {
         "activeVersion": "0001",
@@ -1939,6 +1975,27 @@
             "note": "Cropped and resized from official avatar_0002; head height 76.0%, face center 53.0%, bilateral shoulder points visible with at least 10% crop clearance; visually compared with seven user-approved small-avatar references."
           }
         ]
+      },
+      "bust": {
+        "history": [
+          {
+            "version": "0001",
+            "file": "busts/zhang_fei__張飛__bust_0001.png",
+            "status": "asset-imported",
+            "sha256": "f74a78f7d1545a62a2eeb5e007d654191870163eece4ac39c2d53ec9220ca174",
+            "canvas": "900x1000 RGBA",
+            "sourceStandingFile": "standing/zhang_fei__張飛__standing_0003.png",
+            "method": "crop-only; no redraw, rotation or retouch",
+            "cropBox": {
+              "x": 62,
+              "y": 0,
+              "width": 900,
+              "height": 1000
+            }
+          }
+        ],
+        "activeVersion": "0001",
+        "status": "asset-imported"
       }
     },
     {
