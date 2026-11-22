@@ -1,0 +1,139 @@
+// PROG-2-9729：戰鬥音效分層（受擊輕重、分兵種腳步、隨機範圍、die／boom 錯開）的純邏輯測試
+import * as fs from 'fs';
+import * as path from 'path';
+import { TroopType } from '../assets/scripts/shared/CommonEnums';
+import {
+    DEFAULT_BATTLE_AUDIO_LAYERS as CFG,
+    DieBoomStagger,
+    attackSfxDelaySec,
+    createFootstepCapState,
+    footstepClipFor,
+    footstepDelayMs,
+    jitterFootstepVolume,
+    parseBattleAudioLayersConfig,
+    pickHitSfx,
+    resolveHitTier,
+    shouldPlayCritBoom,
+    tryAcquireFootstep,
+} from '../assets/scripts/battle/shared/BattleAudioLayers';
+import { BATTLE_VISUAL_TIMING } from '../assets/scripts/battle/views/BattlePresentationTiming';
+import { ATTACK_IMPACT_SEC } from '../assets/scripts/battle/shared/AttackShotStyle';
+import { TestSuite, assert } from './TestRunner';
+
+const base = { damage: 5, maxHp: 100, isCrit: false, lethal: false, blocked: false, defenderType: TroopType.Infantry };
+
+export function createBattleAudioLayersSuite(): TestSuite {
+    const suite = new TestSuite('BattleAudioLayers');
+
+    suite.test('受擊分層：致命＞擋下＞重擊＞盾兵擋＞輕擊', () => {
+        assert.equals('light', resolveHitTier(base));
+        assert.equals('heavy', resolveHitTier({ ...base, damage: 20 }));
+        assert.equals('heavy', resolveHitTier({ ...base, isCrit: true }));
+        assert.equals('block', resolveHitTier({ ...base, blocked: true }));
+        assert.equals('block', resolveHitTier({ ...base, defenderType: TroopType.Shield }));
+        assert.equals('heavy', resolveHitTier({ ...base, defenderType: TroopType.Shield, isCrit: true }));
+        assert.equals('lethal', resolveHitTier({ ...base, lethal: true, isCrit: true, blocked: true }));
+    });
+
+    suite.test('四層選出的 clip 互不相同（至少 3 種以上不同的音）', () => {
+        const clips = (['light', 'heavy', 'block', 'lethal'] as const).map(t => pickHitSfx(t, CFG, () => 0).clip);
+        assert.isTrue(new Set(clips).size === 4, clips.join(','));
+        // 輕擊有兩個 clip 可隨機
+        assert.isTrue(pickHitSfx('light', CFG, () => 0).clip !== pickHitSfx('light', CFG, () => 0.99).clip);
+    });
+
+    suite.test('受擊音量落在各層範圍內，且隨機值不同', () => {
+        for (const t of ['light', 'heavy', 'block', 'lethal'] as const) {
+            const [lo, hi] = CFG.hit.tiers[t].volume;
+            for (const r of [0, 0.3, 0.7, 1]) {
+                const v = pickHitSfx(t, CFG, () => r).volume;
+                assert.isTrue(v >= lo - 1e-9 && v <= hi + 1e-9, `${t} ${v}`);
+            }
+            assert.isTrue(pickHitSfx(t, CFG, () => 0).volume < pickHitSfx(t, CFG, () => 1).volume);
+        }
+    });
+
+    suite.test('JSON 與預設值一致，重擊門檻與視覺重擊同一個數字，clip 檔都存在', () => {
+        const root = path.resolve(__dirname, '..');
+        const raw = JSON.parse(fs.readFileSync(path.join(root, 'assets/resources/data/battle-audio-layers.json'), 'utf8'));
+        const parsed = parseBattleAudioLayersConfig(raw);
+        assert.equals(JSON.stringify(CFG), JSON.stringify(parsed));
+        assert.equals(BATTLE_VISUAL_TIMING.heavyHitMaxHpRatio, parsed.hit.heavyMaxHpRatio);
+        const names = new Set<string>();
+        Object.values(parsed.hit.tiers).forEach(s => s.clips.forEach(c => names.add(c)));
+        Object.values(parsed.footstep.clips).forEach(c => names.add(c));
+        const dir = path.join(root, 'assets/bundles/audio/clips');
+        for (const n of names) {
+            const ok = ['.mp3', '.wav'].some(ext => fs.existsSync(path.join(dir, n + ext)));
+            assert.isTrue(ok, `缺音檔 ${n}`);
+        }
+    });
+
+    suite.test('壞設定退回預設，不丟例外', () => {
+        assert.equals(JSON.stringify(CFG), JSON.stringify(parseBattleAudioLayersConfig(null)));
+        const bad = parseBattleAudioLayersConfig({ hit: { tiers: { light: { clips: [], volume: [1, 0.2] } } }, footstep: { intervalJitter: 9 } });
+        assert.equals(JSON.stringify(CFG.hit.tiers.light), JSON.stringify(bad.hit.tiers.light));
+        assert.equals(CFG.footstep.intervalJitter, bad.footstep.intervalJitter);
+    });
+
+    suite.test('腳步分兵種：騎兵馬蹄、盾兵重步、弓兵輕步、步兵原音、水軍無對應', () => {
+        assert.equals('footstep_hoof', footstepClipFor(TroopType.Cavalry));
+        assert.equals('footstep_heavy', footstepClipFor(TroopType.Shield));
+        assert.equals('footstep_light', footstepClipFor(TroopType.Archer));
+        assert.equals('footstep', footstepClipFor(TroopType.Infantry));
+        assert.equals(null, footstepClipFor(TroopType.Navy));
+        assert.isTrue(new Set([TroopType.Cavalry, TroopType.Shield, TroopType.Archer, TroopType.Infantry].map(t => footstepClipFor(t))).size === 4);
+    });
+
+    suite.test('腳步音量隨機 0.8～1.0 倍、延遲在 ±20% 間隔內且不等距', () => {
+        assert.isTrue(Math.abs(jitterFootstepVolume(0.5, CFG, () => 0) - 0.4) < 1e-9);
+        assert.isTrue(Math.abs(jitterFootstepVolume(0.5, CFG, () => 1) - 0.5) < 1e-9);
+        const maxDelay = 2 * CFG.footstep.intervalJitter * CFG.footstep.nominalIntervalMs;
+        const delays = [0, 0.25, 0.5, 0.75, 1].map(r => footstepDelayMs(CFG, () => r));
+        for (const d of delays) assert.isTrue(d >= 0 && d <= maxDelay + 1e-9, `${d}`);
+        assert.isTrue(new Set(delays).size === 5);
+        // 實際步距＝名目間隔＋相鄰兩次延遲差，不應等距
+        const rnd = [0.1, 0.9, 0.4, 0.6, 0.2];
+        const gaps: number[] = [];
+        for (let i = 1; i < rnd.length; i++) gaps.push(CFG.footstep.nominalIntervalMs + footstepDelayMs(CFG, () => rnd[i]) - footstepDelayMs(CFG, () => rnd[i - 1]));
+        assert.isTrue(new Set(gaps.map(g => Math.round(g))).size > 1, '步距不應等距');
+    });
+
+    suite.test('腳步總量上限：視窗內最多 maxPerWindow、每秒最多 maxPerSecond，不分兵種', () => {
+        const st = createFootstepCapState();
+        assert.isTrue(tryAcquireFootstep(st, 1000));
+        assert.isTrue(tryAcquireFootstep(st, 1001));
+        assert.isFalse(tryAcquireFootstep(st, 1002));
+        assert.isFalse(tryAcquireFootstep(st, 1119));
+        const st2 = createFootstepCapState();
+        let played = 0;
+        for (let t = 0; t < 1000; t += 10) if (tryAcquireFootstep(st2, 5000 + t)) played++;
+        assert.isTrue(played <= CFG.footstep.maxPerSecond, `played=${played}`);
+        assert.isTrue(played > 0);
+        assert.isTrue(tryAcquireFootstep(st2, 6500));
+    });
+
+    suite.test('die 與 boom 不同幀：先到先播、後到延後 staggerMs；致命暴擊不疊 boom', () => {
+        const s = new DieBoomStagger(80);
+        assert.equals(0, s.delayFor('boom', 1000));
+        assert.equals(78, s.delayFor('die', 1002));
+        const s2 = new DieBoomStagger(80);
+        assert.equals(0, s2.delayFor('die', 500));
+        assert.equals(80, s2.delayFor('boom', 500));
+        assert.equals(0, s2.delayFor('die', 2000));
+        assert.isFalse(shouldPlayCritBoom(true));
+        assert.isTrue(shouldPlayCritBoom(false));
+    });
+
+    suite.test('出手音到命中音的間隔：近戰縮到 0.18 秒內，弓箭與騎兵維持出手當下', () => {
+        for (const style of ['thrust', 'shield', 'slash', 'generic'] as const) {
+            const gap = ATTACK_IMPACT_SEC[style] - attackSfxDelaySec(ATTACK_IMPACT_SEC[style], style);
+            assert.isTrue(gap <= 0.18 + 1e-9, `${style} gap=${gap}`);
+            assert.isTrue(attackSfxDelaySec(ATTACK_IMPACT_SEC[style], style) >= 0);
+        }
+        assert.equals(0, attackSfxDelaySec(ATTACK_IMPACT_SEC.bow, 'bow'));
+        assert.equals(0, attackSfxDelaySec(ATTACK_IMPACT_SEC.charge, 'charge'));
+    });
+
+    return suite;
+}

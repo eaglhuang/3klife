@@ -3,7 +3,7 @@
   "sfxThrottle": {
     "sameClipWindowMs": 60,
     "maxPerSecond": 16,
-    "perClipMaxPerSecond": { "footstep": 6 },
+    "perClipMaxPerSecond": { "footstep": 6, "footstep_light": 6, "footstep_heavy": 6, "footstep_hoof": 6 },
     "exemptClips": ["light", "thunder", "skill0", "skill1", "skill7", "die"]
   }
 }
