@@ -1,5 +1,6 @@
 import { SkillSourceType } from '../../shared/SkillRuntimeContract';
 import { battleCellLabel } from '../shared/BattleDamageSourceLabel';
+import { isGeneralSortieDepth } from '../shared/GeneralSortieBoost';
 
 /**
  * TurnFlowManager.ts — 回合推進與交互流程管理器
@@ -337,6 +338,8 @@ export class TurnFlowManager {
 
     if (c.ctrl?.isWaitingDuelPlacement) {
       if (cell.depth < 0 || cell.depth >= GAME_CONFIG.GRID_DEPTH) return;
+      // Q4=A（使用者 11/22 裁決）：主將只能從出兵口（depth 0）衝出，不可直接空降到前排
+      if (!isGeneralSortieDepth(cell.depth)) { c.deployRuntime?.showToast('主將只能從出兵口出陣', 1.2); return; }
       const stateCell = c.ctrl.state.getCell(cell.lane, cell.depth);
       if (stateCell?.occupantId) { c.deployRuntime?.showToast('無法在後方部署', 1.2); return; }
       const unit = c.ctrl.placeGeneralOnBoard(cell.lane, cell.depth);

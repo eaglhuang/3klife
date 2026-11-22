@@ -16558,5 +16558,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9717.md",
     "title": "[PROG-2-9717] 第一年敗戰新手保護：損兵上限 30%＋傷兵營 60/40、每季康復 30%",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2950",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9719.md",
+    "title": "[PROG-2-9719] 主將出陣規則依使用者 11/22 裁決：同路相鄰才單挑、小兵優先打武將、只從出兵口出陣、主將倒下加倍消失、正式規格章節",
+    "category": "task"
   }
 ]

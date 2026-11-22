@@ -8,6 +8,7 @@ import { TroopUnit, TroopStats } from '../../core/models/TroopUnit';
 import { BattleState } from '../models/BattleState';
 import { services } from '../../core/managers/ServiceLoader';
 import { getMilitiaCombatStats } from '../../core/systems/SortieDeploy';
+import { applyGeneralSortieBoost } from '../shared/GeneralSortieBoost';
 
 /** troops.json 的 key 是 TroopType 字串，value 是 TroopStats */
 export type TroopDataTable = Partial<Record<TroopType, TroopStats>>;
@@ -69,7 +70,7 @@ export class BattleUnitSpawner {
 
     // 武將出陣期間，新部署的我方小兵也享受攻擊加倍
     if (faction === Faction.Player && this.context.getPlayerGeneralUnitId()) {
-      unit.attackBonus += unit.attack;
+      applyGeneralSortieBoost(unit);
     }
 
     this.context.state.addUnit(unit);
