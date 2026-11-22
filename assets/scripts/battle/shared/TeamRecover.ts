@@ -12,7 +12,7 @@
 import { StatusEffect } from '../../shared/CommonEnums';
 
 export interface TeamRecoverParams {
-    /** 補血量 = 最大 HP × healPct */
+    /** 補血固定量 = 最大 HP × healPct（已損 HP 比例另由 JSON teamHealMissingRatio 提供） */
     healPct: number;
     /** 每個單位最多淨化幾個負面狀態 */
     cleanseCount: number;
@@ -94,13 +94,23 @@ export function cleansePick(effects: readonly StatusEffect[], count: number): St
     return TEAM_RECOVER_CLEANSE_ORDER.filter((e) => effects.includes(e)).slice(0, count);
 }
 
-/** 對一批存活目標結算回復；回傳順序即瀕死優先順序 */
-export function resolveTeamRecover(ultimateId: string, targets: readonly RecoverTarget[]): RecoverOutcome[] {
+/**
+ * 補血 = 固定量（最大 HP × healPct）+ 已損 HP × healMissingRatio（PM 11/22，與治療戰法 computeHealAmount 同式），截到已損 HP 為止。
+ * 醫護兵的常態治療不經過這裡（見 BattleSpecialResolvePhase.resolveMedic）。
+ * 回傳順序即瀕死優先順序。
+ */
+export function calcTeamRecoverHeal(maxHp: number, currentHp: number, healPct: number, healMissingRatio: number): number {
+    const missing = Math.max(0, maxHp - currentHp);
+    const raw = Math.round(maxHp * healPct) + Math.floor(missing * Math.max(0, healMissingRatio));
+    return Math.max(0, Math.min(missing, raw));
+}
+
+export function resolveTeamRecover(ultimateId: string, targets: readonly RecoverTarget[], healMissingRatio = 0): RecoverOutcome[] {
     const p = teamRecoverParamsOf(ultimateId);
     if (!p) return [];
     return recoverOrder(targets.filter((t) => t.currentHp > 0)).map((t) => ({
         id: t.id,
-        healed: Math.max(0, Math.min(t.maxHp - t.currentHp, Math.round(t.maxHp * p.healPct))),
+        healed: calcTeamRecoverHeal(t.maxHp, t.currentHp, p.healPct, healMissingRatio),
         moraleGained: Math.max(0, Math.min(MORALE_CAP - t.morale, p.moraleRestore)),
         shield: Math.round(t.maxHp * p.shieldPct),
         cleansed: cleansePick(t.effects, p.cleanseCount),

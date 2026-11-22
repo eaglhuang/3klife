@@ -76,6 +76,8 @@ export interface BattleSkillDispatcherContext {
   getAncestorSignatureSkillId?(ancestorTemplateId: string | null): string | null;
   /** 奧義的 USPECIAL 特殊規則（ULT-10，PROG-2-1978）；查不到或沒填回 undefined，不走特殊規則 */
   getUltimateSpecialRule?(ultimateId: string): UltimateSpecialRuleDef | null | undefined;
+  /** 團隊回復的已損 HP 比例（PM 11/22）；未提供視為 0 */
+  getUltimateTeamHealMissingRatio?(ultimateId: string): number | undefined;
 }
 
 /** 負責技能分發與執行上下文建立（seed tactic、direct skill、skill request 執行、context builder） */
@@ -224,7 +226,7 @@ export class BattleSkillDispatcher {
       maxHp: u.getEffectiveMaxHp(),
       morale: u.morale,
       effects: buff.getBuffs(u.id).map((b) => b.effect),
-    })));
+    })), this.context.getUltimateTeamHealMissingRatio?.(ultimateId) ?? 0);
     for (const o of outcomes) {
       const unit = byId.get(o.id)!;
       if (o.healed > 0) unit.heal(o.healed);
