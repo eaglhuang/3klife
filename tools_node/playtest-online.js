@@ -834,7 +834,15 @@ async function main() {
                     }
                     if (captured && popup.kind.startsWith('season-report')) { cap = { texts: await rm.textsUnder('^SeasonReportRoot$'), top: await readTopbar() }; captured.push(cap); }
                     // 低幀率（合併後季事件與季報疊開時約 3 FPS）下，定位後彈窗可能剛好播完關閉動畫，找不到就當已關
-                    try { await rm.click(spec, popup.kind); } catch (e) { if (!/找不到可點的節點/.test(String(e && e.message))) throw e; }
+                    // 定位後、點擊前官職晉升彈窗才蓋上來（結算升官時季報與晉升彈窗幾乎同時出現）也當作被擋住：不丟錯、不算處理過，
+                    // 下一輪由 rank-unlock 規格去按「知道了」（PROG-2-9729）
+                    let raced = false;
+                    try { await rm.click(spec, popup.kind); } catch (e) {
+                        const msg = String(e && e.message);
+                        if (/真滑鼠點不到/.test(msg)) raced = true;
+                        else if (!/找不到可點的節點/.test(msg)) throw e;
+                    }
+                    if (raced) { blockedSpec = blockedSpec || { popup, spec }; break; }
                     // 季報一關，頂欄立刻讀一次：後續事件選項會花錢，不能拿最後的頂欄比
                     if (cap) { await delay(400); cap.topClosed = await readTopbar(); }
                     attempts[popup.kind] = n + 1;
