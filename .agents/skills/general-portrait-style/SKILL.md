@@ -14,7 +14,7 @@ description: 為 3KLife 生成、重繪及校準三國武將全身立繪與頭�
 
 ## 重建後的男女立繪品質基準
 
-本節以使用者指定的兩張全身立繪作為男女品質下限，優先於舊立繪的慣例與勢力色模板；可攜式原圖固定收在 `artwork/general-art-library/style-references/female-quality-baseline-v1.png` 與 `artwork/general-art-library/style-references/male-quality-baseline-v1.png`。女性參考展現柔亮膚質、成熟曲線、立體胸衣與腰胯剪裁、多層薄紗、珍珠金飾，以及從髮飾、手臂、腿部到鞋面的完整工藝；男性參考展現成年武將的肩胸體量、層疊銀白甲片、冷藍布料、精細金屬雕紋、分節護具、飄袍動勢和武器斜線構圖。兩張定義的是完成度、材質、光影、身體塑造與構圖層次，不是可複製的角色、臉、髮型、服裝、持物或配色。早期立繪即使已入庫，也須按此新基準逐張重新評估；品質明顯低於基準者列為重繪，不因檔案存在或曾使用而自動合格。
+本節以使用者指定的女性與男性全身立繪作為品質下限，優先於舊立繪慣例與勢力色模板。逐項對照與退回門檻見 [`artwork/general-art-library/style-references/portrait-quality-baseline-v2.md`](../../../artwork/general-art-library/style-references/portrait-quality-baseline-v2.md)；原圖分別收於 `artwork/general-art-library/style-references/female-quality-baseline-v1.png`、`artwork/general-art-library/style-references/male-quality-baseline-v1.png`。兩張只定義完成度、材質、光影、身體塑造、服裝工藝與構圖層次，不得照抄角色、臉、髮型、服裝、持物或配色。所有舊圖均須按 v2 門檻逐張重新評估；低於任一關鍵品質項就列為重繪，不因已入庫或曾使用而豁免。
 
 ### 男女共通的渲染與構圖底線
 
