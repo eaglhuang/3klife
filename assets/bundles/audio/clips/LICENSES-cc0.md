@@ -5,8 +5,8 @@
 
 | 檔名 | 用途 | 來源（素材頁） | 作者 | 授權 | 下載日期 | 規格與加工 |
 |------|------|----------------|------|------|----------|------------|
-| cc0_hit_metal.ogg | 金屬擊打（刀劍打到盾或甲，取代 hit_block） | https://kenney.nl/assets/impact-sounds （Impact Sounds 1.0，原檔 impactMetal_medium_000.ogg） | Kenney（www.kenney.nl） | CC0 1.0（https://creativecommons.org/publicdomain/zero/1.0/） | 2026-11-22 | 原檔未改；OGG 立體聲 44100Hz、0.272 秒、7117 bytes |
-| cc0_hit_flesh.ogg | 肉體悶擊（取代 hit_heavy） | https://kenney.nl/assets/impact-sounds （Impact Sounds 1.0，原檔 impactPunch_medium_000.ogg） | Kenney（www.kenney.nl） | CC0 1.0 | 2026-11-22 | 原檔未改；OGG 立體聲 44100Hz、0.431 秒、8800 bytes |
-| cc0_hoof_single.wav | 單拍馬蹄（取代 footstep_hoof） | https://bigsoundbank.com/detail-0496-horse-steps-on-concrete.html （Horse steps on concrete，原檔 0496.wav） | Joseph Sardin（BigSoundBank） | CC0（https://bigsoundbank.com/licenses.html） | 2026-11-22 | 取 1.957～2.377 秒一拍蹄聲，重取樣 22050Hz、單聲道 16-bit、頭 4ms 淡入、尾 40ms 淡出、正規化；WAV 0.420 秒、18566 bytes（來源網站只提供長錄音，本機無 ffmpeg 無法編碼 OGG，故裁切後存 WAV） |
+| cc0_hit_metal.ogg | 金屬擊打（刀劍打到盾或甲，取代 hit_block） | https://kenney.nl/assets/impact-sounds （Impact Sounds 1.0，原檔 impactMetal_medium_000.ogg） | Kenney（www.kenney.nl） | CC0 1.0（https://creativecommons.org/publicdomain/zero/1.0/） | 2026-11-22 | 立體聲轉單聲道（左右平均）後重新編碼；OGG 單聲道 44100Hz、0.272 秒、5395 bytes |
+| cc0_hit_flesh.ogg | 肉體悶擊（取代 hit_heavy） | https://kenney.nl/assets/impact-sounds （Impact Sounds 1.0，原檔 impactPunch_medium_000.ogg） | Kenney（www.kenney.nl） | CC0 1.0 | 2026-11-22 | 立體聲轉單聲道（左右平均）後重新編碼；OGG 單聲道 44100Hz、0.431 秒、6731 bytes |
+| cc0_hoof_single.ogg | 單拍馬蹄（取代 footstep_hoof） | https://bigsoundbank.com/detail-0496-horse-steps-on-concrete.html （Horse steps on concrete，原檔 0496.wav） | Joseph Sardin（BigSoundBank） | CC0（https://bigsoundbank.com/licenses.html） | 2026-11-22 | 取 1.957～2.377 秒一拍蹄聲，重取樣 22050Hz、單聲道 16-bit、頭 4ms 淡入、尾 40ms 淡出、正規化；已重新編碼為 OGG 單聲道 22050Hz、0.420 秒、5692 bytes（2026-11-22 追加轉檔，使用者同意下載 soundfile 工具） |
 
 Kenney 原始 License.txt：Creative Commons Zero, CC0；個人、教育、商業專案皆可免費使用，署名非強制。
