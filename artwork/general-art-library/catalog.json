@@ -142,8 +142,8 @@
       "uid": "zhuge-liang",
       "name": "諸葛亮",
       "standing": {
-        "activeVersion": "0004",
-        "status": "integrated",
+        "activeVersion": "0005",
+        "status": "asset-imported",
         "history": [
           {
             "version": "0001",
@@ -163,17 +163,25 @@
           {
             "version": "0004",
             "file": "standing/zhuge_liang__諸葛亮__standing_0004.png",
-            "status": "integrated",
+            "status": "superseded",
             "style": "anime-influenced face; semi-realistic materials",
             "palette": "black-white",
             "weapon": "feather fan",
             "sha256": "05a749f59a0da03a7d6be632c59e65a5c512c3fa3483491ba049d76d9f1d0a7d",
             "canvas": "1024x1536 RGBA"
+          },
+          {
+            "version": "0005",
+            "file": "standing/zhuge_liang__諸葛亮__standing_0005.png",
+            "status": "asset-imported",
+            "sha256": "05f71f78a4f5c95932a05ab49a88f579fbe16580e382a1ac9cb34ee45092a041",
+            "canvas": "1024x1536 RGBA",
+            "note": "依重建男性品質基準；黑、象牙白、靛藍與銀玉色，保留羽扇、卷軸及高冠策士識別。"
           }
         ]
       },
       "battle": {
-        "activeVersion": "0002",
+        "activeVersion": "0003",
         "status": "asset-imported",
         "displayStatus": "not-yet-verified",
         "history": [
@@ -186,16 +194,27 @@
           {
             "version": "0002",
             "file": "battle/zhuge_liang__諸葛亮__battle_0002.png",
-            "status": "asset-imported",
+            "status": "superseded",
             "sha256": "45fd8335d2656a582349dcf3d9e80305aa29eefa3061febccca4e0cb9d258050",
             "canvas": "1024x1536 RGBA",
             "weaponClass": "feather-fan"
+          },
+          {
+            "version": "0003",
+            "file": "battle/zhuge_liang__諸葛亮__battle_0003.png",
+            "status": "asset-imported",
+            "sha256": "8e5dc65152e751dc31c6263bb82bf2f9b581bee14da9bb82b464d189b604f26d",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "feather-fan",
+            "sourceStanding": "standing/zhuge_liang__諸葛亮__standing_0005.png",
+            "poseLabel": "踏步旋身展扇指揮",
+            "note": "同造型戰術指揮戰鬥姿勢；少量扇風弧線，遊戲內顯示未驗證。"
           }
         ]
       },
       "avatar": {
-        "activeVersion": "0003",
-        "status": "integrated",
+        "activeVersion": "0004",
+        "status": "asset-imported",
         "history": [
           {
             "version": "0001",
@@ -210,7 +229,23 @@
           {
             "version": "0003",
             "file": "avatars/zhuge_liang__諸葛亮__avatar_0003.png",
-            "status": "integrated"
+            "status": "superseded"
+          },
+          {
+            "version": "0004",
+            "file": "avatars/zhuge_liang__諸葛亮__avatar_0004.png",
+            "status": "asset-imported",
+            "sha256": "b993dc11485741371a4954355aea1e6f7120e2f6d1c46f592a316124019d2815",
+            "canvas": "720x720 RGBA",
+            "sourceBustFile": "busts/zhuge_liang__諸葛亮__bust_0001.png",
+            "method": "crop-only; uniform crop and resize; no redraw, rotation or retouch",
+            "cropBox": {
+              "x": 342,
+              "y": 0,
+              "width": 400,
+              "height": 400
+            },
+            "createdAt": "2026-11-23"
           }
         ]
       },
@@ -278,6 +313,27 @@
             "createdAt": "2026-11-20"
           }
         ]
+      },
+      "bust": {
+        "history": [
+          {
+            "version": "0001",
+            "file": "busts/zhuge_liang__諸葛亮__bust_0001.png",
+            "status": "asset-imported",
+            "sha256": "0b55765226c7d34172ea1f3dcf62a522cd2ef8dd40c42f3549b4029a59623b54",
+            "canvas": "900x1000 RGBA",
+            "sourceStandingFile": "standing/zhuge_liang__諸葛亮__standing_0005.png",
+            "method": "crop-only; no redraw, rotation or retouch",
+            "cropBox": {
+              "x": 62,
+              "y": 0,
+              "width": 900,
+              "height": 1000
+            }
+          }
+        ],
+        "activeVersion": "0001",
+        "status": "asset-imported"
       }
     },
     {
