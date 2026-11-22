@@ -10006,9 +10006,17 @@
             "version": "0002",
             "file": "avatars/cao_xian__曹憲__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/cao_xian__曹憲__avatar_0003.png",
+            "status": "integrated",
+            "sha256": "5360923ce4120e4ae12c317b6cd908e1792b86c43474097bb6122d4bae3d8c8b",
+            "canvas": "1254x1254 RGBA",
+            "note": "為小頭像補作的正式半身來源圖；保留曹憲既有深色髮型與金色花飾，採自然三分之四角度，供裁切使用。"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "battle": {
         "status": "review-pending",
@@ -10024,6 +10032,27 @@
             "poseLabel": "側身傳令展卷",
             "sourceStanding": "standing/cao_xian__曹憲__standing_0002.png",
             "note": "以核定站姿為身份與服裝參考；全身傳令動作，手持密封軍令卷並作引導手勢，已等比例縮放置中留出畫布安全邊距。透明 PNG，候選待審。"
+          }
+        ]
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/cao_xian__曹憲__small_avatar_0001.png",
+            "status": "integrated",
+            "sha256": "24b6c5c6405689ac2c2dbfb83054e65c0a662b3ef2d4c81ab5fbf0d634312db9",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0003",
+            "sourceAvatarFile": "avatars/cao_xian__曹憲__avatar_0003.png",
+            "method": "crop-only; uniform resize; face-centered; no rotation or redraw",
+            "headHeightRatio": 0.75,
+            "faceHeightRatio": 0.43,
+            "faceWidthRatio": 0.367,
+            "centerlineErrorPx": 0,
+            "note": "完整保留頭髮、髮飾、臉與下巴；頭高75%、臉高43%、臉寬36.7%；臉框中心線與畫布中線重合；左右肩可辨。以250px同尺度基準比較確認。"
           }
         ]
       }
