@@ -676,8 +676,8 @@
       "uid": "da-qiao",
       "name": "大喬",
       "standing": {
-        "activeVersion": "0002",
-        "status": "integrated",
+        "activeVersion": "0003",
+        "status": "review-pending",
         "history": [
           {
             "version": "0001",
@@ -688,12 +688,22 @@
             "version": "0002",
             "file": "standing/da_qiao__大喬__standing_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "standing/da_qiao__大喬__standing_0003.png",
+            "status": "review-pending",
+            "sha256": "2d1cf5e94f2f6fc7800e85ac4d019859f26aac9579c441263bae6afc35d0b9ef",
+            "canvas": "1024x1536 RGBA",
+            "palette": "blush rose, warm ivory, pale jade, antique gold",
+            "weapon": "flowered feather fan",
+            "note": "v2 女性品質基準重建候選；待逐項目視驗收。"
           }
         ]
       },
       "battle": {
-        "activeVersion": "0001",
-        "status": "asset-imported",
+        "activeVersion": "0002",
+        "status": "review-pending",
         "displayStatus": "not-yet-verified",
         "history": [
           {
@@ -703,12 +713,23 @@
             "sha256": "1d812b959bcd58a9afe8660b947f5af1f3df59cdb318d33e8bf09790ce825b56",
             "canvas": "1024x1536 RGBA",
             "weaponClass": "fan"
+          },
+          {
+            "version": "0002",
+            "file": "battle/da_qiao__大喬__battle_0002.png",
+            "status": "review-pending",
+            "sha256": "931e7cfb790e65ff86ba1dcc27bee23d099b94d555019e0e03a25c0da90b89a3",
+            "canvas": "1024x1536 RGBA",
+            "sourceStandingFile": "standing/da_qiao__大喬__standing_0003.png",
+            "poseSelection": "前踏迴身的扇舞斜擊",
+            "weaponClass": "flowered feather fan",
+            "note": "沿用靜態造型的舞蹈戰鬥候選；待逐項目視驗收。"
           }
         ]
       },
       "avatar": {
-        "activeVersion": "0002",
-        "status": "integrated",
+        "activeVersion": "0003",
+        "status": "review-pending",
         "history": [
           {
             "version": "0001",
@@ -719,6 +740,22 @@
             "version": "0002",
             "file": "avatars/da_qiao__大喬__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/da_qiao__大喬__avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "1c76ab396f260f96d99df3d432404b872c483a93475359701786789bc4623754",
+            "canvas": "720x720 RGBA",
+            "sourceBustFile": "busts/da_qiao__大喬__bust_0001.png",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "width": 800,
+              "x": 58,
+              "y": 0,
+              "height": 800
+            },
+            "note": "由半身像等比裁出；臉部置中與肩胸構圖待目視確認。"
           }
         ]
       },
@@ -786,6 +823,27 @@
           }
         ],
         "activeVersion": "0006"
+      },
+      "bust": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "busts/da_qiao__大喬__bust_0001.png",
+            "status": "review-pending",
+            "sha256": "e8e63a49a364b037387316e2bf8e324712ab7d4969f7f83e304dd445c14aa7ba",
+            "canvas": "900x1000 RGBA",
+            "sourceStandingFile": "standing/da_qiao__大喬__standing_0003.png",
+            "method": "crop-only; no redraw, rotation or retouch",
+            "cropBox": {
+              "width": 900,
+              "x": 62,
+              "y": 0,
+              "height": 1000
+            }
+          }
+        ]
       }
     },
     {
