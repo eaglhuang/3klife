@@ -3,6 +3,7 @@
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { perfBegin, perfEnd, perfFrame } from "./BattlePerfProbe";
 import { BadgeBatchLayers } from "./BadgeBatchLayers";
+import { setCacheModeDeferred } from "../../ui/core/LabelLayoutDeferral";
 import { awaitWithTimeout } from "../../core/utils/AwaitGuard";
 import {
   _decorator,
@@ -2317,7 +2318,10 @@ export class UnitRenderer extends Component {
     this.shrinkToFit(hpLabel);
     // 點陣快取（PROG-2-9713）：打包進動態圖集，徽章文字共用貼圖可合批；不用 CHAR 的原因見下方名稱標籤。
     // 必須在 SHRINK 設好之後才切：切換快取模式會立刻重排，若當下還是 NONE＋空字串，節點會被自動縮成寬 6，之後縮字就看不見
-    for (const l of [attackLabel, typeLabel, hpLabel]) l.cacheMode = Label.CacheMode.BITMAP;
+    // 兵種字只有一兩個字、徽章分段尺寸固定：也設成 SHRINK 固定外框，下面三個才能一起延後重排（PROG-2-9718）
+    this.shrinkToFit(typeLabel);
+    // 三個都是 SHRINK 固定外框：切快取模式的強制重排改標髒、幀末一次刷新（PROG-2-9718）
+    for (const l of [attackLabel, typeLabel, hpLabel]) setCacheModeDeferred(l, Label.CacheMode.BITMAP);
 
     // 下排：完整兵種名稱（由 updateUnitView 動態更新）
     const nameLabelNode = new Node("NameLabel");
@@ -2338,7 +2342,9 @@ export class UnitRenderer extends Component {
     nameStrLabel.outlineWidth = BADGE_TEXT_OUTLINE_WIDTH;
     // 點陣快取（PROG-2-9713）：畫好的字打包進動態圖集，所有徽章文字共用貼圖可合批。
     // 不用 CHAR：字元圖集是全專案共用的稀缺預算（見 UIPreviewStyleBuilder 的 charAtlasGuard），預算不足會被退回且數字會畫壞。
-    nameStrLabel.cacheMode = Label.CacheMode.BITMAP;
+    // 外框固定（寬 width、高 segmentHeight）：過長的名稱縮字塞進徽章；SHRINK 先設好，切快取的重排才能延後（PROG-2-9718）
+    this.shrinkToFit(nameStrLabel);
+    setCacheModeDeferred(nameStrLabel, Label.CacheMode.BITMAP);
 
     // 以擴充屬性保存引用，供 updateUnitView 快速更新
     (rootNode as any)._bottomNameLabel = nameStrLabel;

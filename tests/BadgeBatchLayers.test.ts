@@ -84,10 +84,11 @@ export function createBadgeBatchLayersSuite(): TestSuite {
         assert.isTrue(src.includes('this.buildBadge(labelNode, 170, 34, unit.type, badgeLayers)'));
         // 武將名牌維持 Graphics 版（不傳 layers）
         assert.isTrue(src.includes('this.buildBadge(labelNode, GENERAL_PLATE_WIDTH, GENERAL_PLATE_HEIGHT)'));
-        assert.equals(2, src.split('cacheMode = Label.CacheMode.BITMAP').length - 1);
+        // PROG-2-9718：改走 setCacheModeDeferred（固定外框的強制重排延後），仍是 BITMAP
+        assert.equals(2, src.split(', Label.CacheMode.BITMAP)').length - 1);
         // 快取模式要在 SHRINK 之後才切，否則節點會先被縮成空字串的寬度
         const shrinkHp = src.indexOf('this.shrinkToFit(hpLabel);');
-        assert.isTrue(shrinkHp > 0 && src.indexOf('for (const l of [attackLabel, typeLabel, hpLabel]) l.cacheMode = Label.CacheMode.BITMAP;') > shrinkHp);
+        assert.isTrue(shrinkHp > 0 && src.indexOf('for (const l of [attackLabel, typeLabel, hpLabel]) setCacheModeDeferred(l, Label.CacheMode.BITMAP);') > shrinkHp);
         const late = src.slice(src.indexOf('  lateUpdate(dt = 0): void {'));
         assert.isTrue(late.indexOf('this.badgeLayers?.sync()') > late.indexOf('this.tileBuffMarkers.update(dt)'));
         assert.isTrue(late.indexOf('this.badgeLayers?.sync()') > late.indexOf('this.avoidGeneralPlates(dt)'));
