@@ -74,7 +74,7 @@
       "schema": "reward-pool.v1",
       "id": "POOL_SUPPORT",
       "nameKey": "gacha.pool.support",
-      "$note": "教官池（SUP-10／PROG-2-9243，doc_spec_1264 §16-17）：抽的是 25 張學府「教學投影」支援卡，不是武將本人，只用於學府修業、不出征。抽卡貨幣是連線券（錢包鍵 mentorTickets），第一版不販售、不收銀兩與靈玉，券只從開局禮包等免費來源取得（使用者裁決）。機率由企劃自決，數值全在這裡：R 80%、SR 17%、SSR 3%；SSR UP 華佗佔 SSR 的 50%、SR UP 龐德公與黃月英合佔 SR 的 60%；SSR 軟 60 硬 80（使用者 11/22 裁決，與名將池同為第 60 抽起漸升）、SR 以上 軟 6 硬 10；不做大保底。重複卡走 supportCard 效果：傳承 +1、傳承滿轉學分。",
+      "$note": "教官池（SUP-10／PROG-2-9243，doc_spec_1264 §16-17）：抽的是 25 張學府「教學投影」支援卡，不是武將本人，只用於學府修業、不出征。抽卡貨幣是連線券（錢包鍵 mentorTickets），第一版不販售、不收銀兩與靈玉，券只從開局禮包等免費來源取得（使用者裁決）。機率由企劃自決，數值全在這裡：R 80%、SR 17%、SSR 3%；SSR UP 華佗佔 SSR 的 50%、SR UP 龐德公與黃月英合佔 SR 的 60%；SSR 軟 50 硬 90（使用者 11/22 裁決：與名將池完全一致）、SR 以上 軟 6 硬 10；不做大保底。重複卡走 supportCard 效果：傳承 +1、傳承滿轉學分。",
       "disclosure": { "public": true, "version": "2026-11-22" },
       "currency": ["mentorTickets"],
       "maxCount": 10,
@@ -94,7 +94,7 @@
       ],
       "pity": [
         { "counterKey": "gacha.support.sr", "tier": "SR", "soft": { "startAt": 6, "curveExp": 1 }, "hard": { "count": 10, "guaranteeTier": "SR" } },
-        { "counterKey": "gacha.support.ssr", "tier": "SSR", "soft": { "startAt": 60, "curveExp": 2 }, "hard": { "count": 80, "guaranteeTier": "SSR" } }
+        { "counterKey": "gacha.support.ssr", "tier": "SSR", "soft": { "startAt": 50, "curveExp": 2 }, "hard": { "count": 90, "guaranteeTier": "SSR" } }
       ],
       "rules": ["support.duplicate.limitBreak", "support.creditOverflow"],
       "sources": ["shop", "bundle"],

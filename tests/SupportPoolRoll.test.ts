@@ -128,10 +128,10 @@ export function createSupportPoolRollSuite(): TestSuite {
         assert.isTrue(Math.abs(hits.R / N - 0.8) < 0.005, `R ${hits.R / N}`);
     });
 
-    suite.test('硬保底：SSR 第 80 抽必出 SSR；SR 以上第 10 抽必出 SR 或 SSR', () => {
+    suite.test('硬保底：SSR 第 90 抽必出 SSR；SR 以上第 10 抽必出 SR 或 SSR', () => {
         for (let i = 0; i < 40; i += 1) {
             const rng = new DeterministicRngSession(`${i}`.padStart(64, 'a'));
-            const ssr = rollPool(support, 1, rng, { 'gacha.support.ssr': 79, 'gacha.support.sr': 3 });
+            const ssr = rollPool(support, 1, rng, { 'gacha.support.ssr': 89, 'gacha.support.sr': 3 });
             assert.equals('SSR', support.entries.find((e) => e.id === ssr.items[0].entryId)!.tier);
             assert.equals(0, ssr.pity['gacha.support.ssr']);
             const sr = rollPool(support, 1, rng, { 'gacha.support.ssr': 3, 'gacha.support.sr': 9 });
@@ -140,10 +140,10 @@ export function createSupportPoolRollSuite(): TestSuite {
         }
     });
 
-    suite.test('保底設定：SSR 軟 60／硬 80（使用者 11/22 裁決：與名將池同為第 60 抽起漸升）、SR 軟 6／硬 10；不做大保底、沒有累計兌換', () => {
+    suite.test('保底設定：SSR 軟 50／硬 90（使用者 11/22 裁決：與名將池完全一致）、SR 軟 6／硬 10；不做大保底、沒有累計兌換', () => {
         const ssr = support.pity.find((p) => p.tier === 'SSR')!;
         const sr = support.pity.find((p) => p.tier === 'SR')!;
-        assert.equals(60, ssr.soft!.startAt); assert.equals(80, ssr.hardCount); assert.equals(2, ssr.soft!.curveExp);
+        assert.equals(50, ssr.soft!.startAt); assert.equals(90, ssr.hardCount); assert.equals(2, ssr.soft!.curveExp);
         assert.equals(6, sr.soft!.startAt); assert.equals(10, sr.hardCount); assert.equals(1, sr.soft!.curveExp);
         assert.equals(0, support.tallies.length);
     });
@@ -233,7 +233,7 @@ export function createSupportPoolRollSuite(): TestSuite {
         const cardRows = rows.filter((r) => / 共 /.test(r.title));
         assert.equals(25, cardRows.reduce((n, r) => n + (r.detail.match(/%/g)?.length ?? 0), 0), '25 張卡各列一次');
         assert.isTrue(rows.every((r) => r.detail.split('　').length <= 4 || /保底|公開版本/.test(r.title)), '一列最多 4 張');
-        assert.isTrue(rows.some((r) => r.title === 'SSR 保底' && r.detail.includes('第 60 抽起') && r.detail.includes('第 80 抽必出')));
+        assert.isTrue(rows.some((r) => r.title === 'SSR 保底' && r.detail.includes('第 50 抽起') && r.detail.includes('第 90 抽必出')));
         assert.isTrue(rows.some((r) => r.title === 'SR 以上 保底' && r.detail.includes('第 6 抽起') && r.detail.includes('第 10 抽必出')));
         assert.isTrue(rows.some((r) => r.title === '公開版本' && r.detail.startsWith('2026-11-22')), '公開版本號隨機率調整更新');
         assert.equals(['SSR', 'SR', 'R'].join(), [...new Set(rows.filter((r) => / 共 /.test(r.title)).map((r) => r.title.split(' ')[0]))].join(), '由高到低');
@@ -243,9 +243,9 @@ export function createSupportPoolRollSuite(): TestSuite {
         const { port } = rig(10);
         const v = await port.view(LEGACY);
         assert.isTrue(!!v);
-        const pity = { label: 'SSR 保底進度', current: 0, max: 80, destinyCurrent: 0, destinyMax: 200 };
+        const pity = { label: 'SSR 保底進度', current: 0, max: 90, destinyCurrent: 0, destinyMax: 200 };
         assert.equals('第 10 抽必出 SR 以上', tenNoteOf({ pities: v!.pities, pity }));
-        assert.equals('第 80 抽必出 SSR', tenNoteOf({ pity }), '沒有獎池資料的舊池取 SSR 小保底');
+        assert.equals('第 90 抽必出 SSR', tenNoteOf({ pity }), '沒有獎池資料的舊池取 SSR 小保底');
         assert.equals('SUP_HUA_TUO', v!.upEntryIds[0], 'UP 清單第一個是 SSR 華佗（橫幅主角）');
         const hua = cards.cards.find((c) => c.cardId === 'SUP_HUA_TUO');
         assert.equals('hua-tuo', hua?.projectionOf, '華佗卡投影對象');
