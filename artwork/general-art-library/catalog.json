@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-22",
+  "updatedAt": "2026-11-23",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -859,8 +859,8 @@
       "uid": "cai-wenji",
       "name": "蔡文姬",
       "standing": {
-        "activeVersion": "0003",
-        "status": "integrated",
+        "activeVersion": "0004",
+        "status": "asset-imported",
         "history": [
           {
             "version": "0001",
@@ -875,12 +875,20 @@
           {
             "version": "0003",
             "file": "standing/cai_wenji__蔡文姬__standing_0003.png",
-            "status": "integrated"
+            "status": "superseded"
+          },
+          {
+            "version": "0004",
+            "file": "standing/cai_wenji__蔡文姬__standing_0004.png",
+            "status": "asset-imported",
+            "sha256": "5a84d385bd6649e316d8f9c1fc72b39c75df03bea1cc9ec425a4e654ee25a4e8",
+            "canvas": "1024x1536 RGBA",
+            "note": "依重建後女性品質基準：成熟半旋身姿態、紫白玉色琵琶服飾，透明全身。"
           }
         ]
       },
       "battle": {
-        "activeVersion": "0004",
+        "activeVersion": "0005",
         "status": "asset-imported",
         "history": [
           {
@@ -918,20 +926,31 @@
           {
             "version": "0004",
             "file": "battle/cai_wenji__蔡文姬__battle_0004.png",
-            "status": "asset-imported",
+            "status": "superseded",
             "sha256": "b98840dc6f7a659c756010c0517041771a6f54056927f32210875ca0f9ee4f18",
             "canvas": "1024x1536 RGBA",
             "weaponClass": "pipa",
             "poseSelection": "斜角鏡頭下的琵琶舞姿，前後步展開，衣袖裙擺隨旋身揚起",
             "gaze": "側身回望鏡頭",
             "qc": "使用者核可收入戰鬥目錄；已確認透明角落與直式全身構圖，尚未驗證遊戲內顯示。"
+          },
+          {
+            "version": "0005",
+            "file": "battle/cai_wenji__蔡文姬__battle_0005.png",
+            "status": "asset-imported",
+            "sha256": "50c3c084efa771823b2a188c5d001e8abf2efb46188e17a7f36de375d87caff7",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "pipa",
+            "sourceStanding": "standing/cai_wenji__蔡文姬__standing_0004.png",
+            "poseLabel": "低勢旋身，以琵琶架勢迎擊",
+            "note": "同一服裝、髮型與琵琶的戰鬥表演姿勢；遊戲內顯示尚未驗證。"
           }
         ],
         "displayStatus": "not-yet-verified"
       },
       "avatar": {
-        "activeVersion": "0004",
-        "status": "integrated",
+        "activeVersion": "0005",
+        "status": "asset-imported",
         "history": [
           {
             "version": "0001",
@@ -951,13 +970,29 @@
           {
             "version": "0004",
             "file": "avatars/cai_wenji__蔡文姬__avatar_0004.png",
-            "status": "integrated",
+            "status": "superseded",
             "sha256": "5b37208f7fa9c70292a638b59bb0228f4d655432717ddfb2662d8582ded6142a",
             "canvas": "1254x1254 RGBA",
             "method": "new shoulder portrait source guided by official avatar reference; subtle three-quarter angle",
             "sourceAvatarVersion": "0003",
             "sourceAvatarFile": "avatars/cai_wenji__蔡文姬__avatar_0003.png",
             "createdAt": "2026-11-21"
+          },
+          {
+            "version": "0005",
+            "file": "avatars/cai_wenji__蔡文姬__avatar_0005.png",
+            "status": "asset-imported",
+            "sha256": "6f7652b59cc9db31a26f5f0a92cab86db5fd23d656dbebcda6f99abaf0f62025",
+            "canvas": "720x720 RGBA",
+            "sourceBustFile": "busts/cai_wenji__蔡文姬__bust_0001.png",
+            "method": "crop-only; uniform crop and resize; no redraw, rotation or retouch",
+            "cropBox": {
+              "x": 270,
+              "y": 0,
+              "width": 400,
+              "height": 400
+            },
+            "createdAt": "2026-11-23"
           }
         ]
       },
@@ -990,6 +1025,27 @@
             },
             "qc": "頭高75%；臉高45.3%、臉寬28.1%；臉框中線偏差0.5px；保留完整髮髻、雙側髮飾、流蘇與辮尾；雙肩可見。250px 候選及 500px 七張核可基準並排檢視通過。",
             "createdAt": "2026-11-21"
+          }
+        ]
+      },
+      "bust": {
+        "activeVersion": "0001",
+        "status": "asset-imported",
+        "history": [
+          {
+            "version": "0001",
+            "file": "busts/cai_wenji__蔡文姬__bust_0001.png",
+            "status": "asset-imported",
+            "sha256": "50aab648b2d626d21377075b4eb75f642fc7482f853a83fb1e94290ae469a4d7",
+            "canvas": "900x1000 RGBA",
+            "sourceStandingFile": "standing/cai_wenji__蔡文姬__standing_0004.png",
+            "method": "crop-only; no redraw, rotation or retouch",
+            "cropBox": {
+              "x": 62,
+              "y": 0,
+              "width": 900,
+              "height": 1000
+            }
           }
         ]
       }
