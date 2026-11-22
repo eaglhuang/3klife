@@ -50,6 +50,7 @@ import type { HallStageCast } from '../../core/systems/HallStageDirector';
 import { UIID, LayerType } from '../../core/config/UIConfig';
 import type { GeneralConfig, GeneralDetailDefaultTab } from '../../core/models/GeneralUnit';
 import { services } from '../../core/managers/ServiceLoader';
+import { FriendshipService } from '../../core/services/FriendshipService';
 import type { IUIManagedController } from '../../shared/interfaces/IUIInterfaces';
 import { SceneName } from '../../core/config/Constants';
 import { IBattleEntryParams, DEFAULT_BATTLE_ENTRY_PARAMS, EncounterConfig, isTutorialBattle } from '../../shared/BattleEntryParams';
@@ -4687,9 +4688,9 @@ ${spent}`,
         return line.text.replace(/\{(\w+)\}/g, (whole, name: string) => vars[name] ?? whole);
     }
 
-    /** 武將友誼值：友誼系統尚未建立，暫一律 0（只會說一開始就解鎖的台詞）；日後改接真正的友誼資料 */
-    private _hallFriendshipOf(_generalId: string): number {
-        return 0;
+    /** 武將友誼值（PROG-2-9601 PR3 接通真實第8框架友誼服務） */
+    private _hallFriendshipOf(generalId: string): number {
+        return FriendshipService.getInstance().get(generalId);
     }
 
     /**
