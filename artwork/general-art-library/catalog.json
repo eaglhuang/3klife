@@ -1,11 +1,12 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-21",
+  "updatedAt": "2026-11-22",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
       "standing",
       "battle",
+      "bust",
       "avatar",
       "small_avatar"
     ],
@@ -696,8 +697,8 @@
       "uid": "xiao-qiao",
       "name": "小喬",
       "standing": {
-        "activeVersion": "0002",
-        "status": "integrated",
+        "activeVersion": "0003",
+        "status": "asset-imported",
         "history": [
           {
             "version": "0001",
@@ -707,13 +708,21 @@
           {
             "version": "0002",
             "file": "standing/xiao_qiao__小喬__standing_0002.png",
-            "status": "integrated"
+            "status": "superseded"
+          },
+          {
+            "version": "0003",
+            "file": "standing/xiao_qiao__小喬__standing_0003.png",
+            "status": "asset-imported",
+            "sha256": "859b0051c20ce32a2bf56fb58d1d20bcc4519516b1ac68199d27dc5cab939cf8",
+            "canvas": "1024x1536 RGBA",
+            "note": "重建女性品質基準；藍色水系、雙扇與原角色識別保留。"
           }
         ]
       },
       "battle": {
-        "activeVersion": "0002",
-        "status": "review-pending",
+        "activeVersion": "0003",
+        "status": "asset-imported",
         "displayStatus": "not-yet-verified",
         "history": [
           {
@@ -729,7 +738,7 @@
           {
             "version": "0002",
             "file": "battle/xiao_qiao__小喬__battle_0002.png",
-            "status": "review-pending",
+            "status": "superseded",
             "sha256": "1a545d996c07bb05106cfb0ce2daab9b816683d7418af49b2e9d27533d5c312a",
             "canvas": "1024x1536 RGBA",
             "poseSelection": "B; turning dual-fan sweep with raised guard",
@@ -737,12 +746,37 @@
             "weaponClass": "paired hand fans",
             "sourceStanding": "standing/xiao_qiao__小喬__standing_0002.png",
             "note": "New candidate. Transparent alpha confirmed; 125px and 250px previews reviewed. Awaiting owner review; not integrated into runtime."
+          },
+          {
+            "version": "0003",
+            "file": "battle/xiao_qiao__小喬__battle_0003.png",
+            "status": "asset-imported",
+            "sha256": "bcec415a7bb7f8abb29a3594ade4e6629ab5f3d6c3385f089ac7109647241396",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "paired hand fans",
+            "sourceStanding": "standing/xiao_qiao__小喬__standing_0003.png",
+            "note": "同一套重建服裝的雙扇戰鬥舞姿；透明通道已確認，尚未驗證遊戲內顯示。"
+          }
+        ]
+      },      "bust": {
+        "activeVersion": "0001",
+        "status": "asset-imported",
+        "history": [
+          {
+            "version": "0001",
+            "file": "busts/xiao_qiao__小喬__bust_0001.png",
+            "status": "asset-imported",
+            "sha256": "d94a66f778a4dbdeb79a65734748dbfd4b48d1e35993438a3077fb829f286219",
+            "canvas": "900x1000 RGBA",
+            "sourceStandingFile": "standing/xiao_qiao__小喬__standing_0003.png",
+            "method": "crop-only; no redraw, rotation or retouch",
+            "cropBox": { "x": 62, "y": 0, "width": 900, "height": 1000 }
           }
         ]
       },
       "avatar": {
-        "activeVersion": "0003",
-        "status": "integrated",
+        "activeVersion": "0004",
+        "status": "asset-imported",
         "history": [
           {
             "version": "0001",
@@ -757,13 +791,24 @@
           {
             "version": "0003",
             "file": "avatars/xiao_qiao__小喬__avatar_0003.png",
-            "status": "integrated",
+            "status": "superseded",
             "sha256": "325e3c6c3f968c9f8406da8bb3dbdadebccd2567fe3eaded2e07d42f6f3abb46",
             "canvas": "1254x1254 RGBA",
             "method": "new shoulder portrait source guided by official standing and avatar references",
             "sourceStandingFile": "standing/xiao_qiao__小喬__standing_0002.png",
             "sourceAvatarFile": "avatars/xiao_qiao__小喬__avatar_0002.png",
             "createdAt": "2026-11-21"
+          },
+          {
+            "version": "0004",
+            "file": "avatars/xiao_qiao__小喬__avatar_0004.png",
+            "status": "asset-imported",
+            "sha256": "5b540f1740985e214e4c6a14210be1901848f2584f2869918b8ed88218d8b5cd",
+            "canvas": "720x720 RGBA",
+            "sourceBustFile": "busts/xiao_qiao__小喬__bust_0001.png",
+            "method": "crop-only; uniform crop; no redraw, rotation or retouch",
+            "cropBox": { "x": 90, "y": 0, "width": 720, "height": 720 },
+            "createdAt": "2026-11-22"
           }
         ]
       },
