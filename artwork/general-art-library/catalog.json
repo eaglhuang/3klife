@@ -1915,16 +1915,27 @@
           {
             "version": "0003",
             "file": "battle/zhang_fei__張飛__battle_0003.png",
+            "status": "review-pending",
+            "sha256": "18ef5b13912eb17b684ecb846557a4a117c7fd6d7dd8edf90f007b50eb2f6152",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "zhangba-snake-spear",
+            "sourceStanding": "standing/zhang_fei__張飛__standing_0003.png",
+            "poseLabel": "低勢前弓突刺",
+            "note": "先前遠端存在但目錄未記錄的候選；恢復原始二進位，不覆寫，待依新基準審查。"
+          },
+          {
+            "version": "0004",
+            "file": "battle/zhang_fei__張飛__battle_0004.png",
             "status": "asset-imported",
             "sha256": "47f4cbbf9f30ff5129a20c3e6f9d303950bdc1f32a8f7992725155e00bf60973",
             "canvas": "1198x1313 RGBA",
             "weaponClass": "zhangba-snake-spear",
             "sourceStanding": "standing/zhang_fei__張飛__standing_0003.png",
             "poseLabel": "低勢前弓突刺",
-            "note": "同造型戰鬥姿勢，保留剛性直槍桿與完整蛇矛刃；畫布依動勢保留原生比例，未驗證遊戲顯示。"
+            "note": "同造型戰鬥姿勢，保留剛性直槍桿與完整蛇矛刃；遊戲內顯示未驗證。"
           }
         ],
-        "activeVersion": "0003",
+        "activeVersion": "0004",
         "displayStatus": "not-yet-verified"
       },
       "avatar": {
