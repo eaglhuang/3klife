@@ -25,9 +25,9 @@
   "generated": "2026-04-06",
   "summary": {
     "done": 263,
-    "in_progress": 7,
+    "in_progress": 8,
     "open": 85,
-    "total": 355
+    "total": 356
   },
   "tasks": [
     {
@@ -15416,6 +15416,60 @@
         "tile-buff-vfx.json"
       ],
       "notes": "2026-11-22 | 狀態: done | 驗證: tsc 0、單元 9236 通過 | 變更: 程式由 agent-run Haiku 產出（0.05 美元），戰場專家驗收 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9842",
+      "title": "十連結果卡片壓扁＋統計列漏算 N",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-22T22:29:55+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "十連抽結果卡：立繪依世界縮放補正裁切比例，修正卡片被壓扁；統計列改為動態列出各類別並包含 N（原本漏算）。尚未實機截圖驗證。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "十連結果卡立繪比例不再被壓扁",
+        "統計列動態列出含 N",
+        "tests/DestinyOpeningResult.test.ts 通過",
+        "tsc 0",
+        "尚未實機截圖驗證（待補）"
+      ],
+      "deliverables": [
+        "assets/scripts/ui/core/GachaFlowCoordinator.ts",
+        "assets/scripts/ui/core/GachaResultRanking.ts",
+        "tests/DestinyOpeningResult.test.ts"
+      ],
+      "notes": "2026-11-22 | 狀態: in-progress | 驗證: compute-gate standard 13/14 通過（1 警告）、尚未實機截圖 | 變更: 補開卡與 lock，分支 claude/gacha-ten-card-aspect 既有 commit 7bb9870f5（十連結果卡立繪依世界縮放補正裁切比例、統計列動態列出含 N） | 阻塞: 無；既有警告 LoginScene.ts:10 ui→battle/views/QaTimeController 非本卡改動，留待另卡",
       "brief": {
         "style": "classic",
         "label": "",
