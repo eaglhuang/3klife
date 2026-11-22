@@ -2,19 +2,18 @@
 /**
  * TileBuffMarkers — 棋盤 buff 格的標記與拾取飛入（PROG-2-9411，View 層）。
  *
- * 每個 buff 格：地面一塊淡色光板（增益金、減益紫）＋上方一個與頭頂狀態圖示同款的圓底一字（攻／命），
- * 旁邊寫倍數（×3、÷5）；稀有格圖示外再加一圈金環。圖示慢慢上下浮、光板跟著呼吸。
- * 吃到時圖示從格子飛到單位頭頂，抵達時由呼叫端讓頭頂圖示列彈出。
+ * 每個 buff 格：地面一圈靜態淡光圈（增益金／翠、減益紫，層數越高圈越多越亮；PROG-2-9731）加一個小圓章（攻／命），
+ * 旁邊寫倍數（×3、÷5）；稀有格圓章外再加一圈金環。畫面只在種類或倍數改變時重畫，平常完全不動、不逐幀重畫。
+ * 吃到時圖示從格子飛到單位頭頂，抵達時由呼叫端讓頭頂圖示列彈出；部隊腳下的 2.5 秒大特效由 UnitBuffPickupVfx 負責。
  *
  * 記憶體：格子標記與飛行圖示都放進池子重用，buff 格消失只是隱藏，不每回合 new／destroy。
  * 動畫進度由 update(dt) 推進，跟著戰場時間（x2 加速、QA 慢動作、暫停）一起走。
  *
  * Unity 對照：一個掛在 UI Overlay 上的 Marker Pool，外加一個「飛向 HUD」的小型 Tween 系統。
  */
-import { Color, Graphics, Label, Node, UIOpacity, UITransform, Vec3, isValid } from 'cc';
+import { Color, Graphics, Label, Node, UITransform, Vec3, isValid } from 'cc';
 import {
   TILE_BUFF_PICKUP,
-  sampleTileBuffIdle,
   sampleTileBuffPickup,
   tileBuffBadgeOf,
   type TileBuffBadge,
@@ -22,29 +21,19 @@ import {
 } from '../shared/TileBuffBadge';
 import { drawStatusIconDisc, statusIconTextColor } from './UnitStatusIconBar';
 import type { FloatAvoidRect } from '../../core/systems/FloatTextStyle';
-import {
-  drawTileBuffVfx,
-  getTileBuffVfxConfig,
-  isTileBuffVfxEnabled,
-  tileBuffVfxGlyphColor,
-  tileBuffVfxStats,
-  type TileBuffVfxKind,
-} from './TileBuffVfx';
+import { tileBuffFactorFromText } from '../shared/TileBuffVfxMath';
+import { drawTileStatic, getTileBuffVfxConfig, tileBuffVfxGlyphColor } from './TileBuffVfx';
 
 /** 圖示比頭頂的（36）大一點：棋盤上是要讓玩家「找得到」的目標 */
 const ICON_RADIUS = 22;
-const ICON_Y = 38;
 const RARE_RING_RADIUS = 28;
 const PLATE_RX = 60;
 const PLATE_RY = 22;
 const AMOUNT_GAP = 6;
 const FLY_POOL_MAX = 4;
-/** 倍數字（×3、÷5）每個字約佔的寬度（字級 26 粗體），給跳字避讓估算用 */
-const AMOUNT_EST_WIDTH_PER_CHAR = 17;
+/** 倍數字（×3、÷5）每個字約佔的寬度（字級 30 粗體），給跳字避讓估算用 */
+const AMOUNT_EST_WIDTH_PER_CHAR = 19;
 
-const PLATE_BUFF = new Color(255, 214, 90, 255);
-const PLATE_DEBUFF = new Color(176, 80, 230, 255);
-const RARE_RING = new Color(255, 225, 110, 255);
 const AMOUNT_BUFF = new Color(255, 236, 150, 255);
 const AMOUNT_DEBUFF = new Color(255, 160, 200, 255);
 const AMOUNT_OUTLINE = new Color(30, 18, 8, 255);
@@ -54,23 +43,17 @@ export interface TileBuffCell { lane: number; depth: number }
 
 interface MarkerView {
   root: Node;
+  /** 地面光圈＋圓章底（一個 Graphics 畫完） */
   plate: Graphics;
-  plateOpacity: UIOpacity;
   icon: Node;
-  iconGraphics: Graphics;
   glyph: Label;
   amount: Label;
   lane: number;
   depth: number;
-  rare: boolean;
-  /** 新特效用：攻／命、減益、倍數（每幀重畫要用） */
-  vfxKind: TileBuffVfxKind;
-  vfxDebuff: boolean;
-  vfxFactor: number;
+  /** 要顯示的內容；設定檔還沒載入時先留著，載入後在 update 補畫 */
+  badge: TileBuffBadge | null;
   /** 目前畫的內容；相同就不重畫 */
   drawnKey: string;
-  /** 每格錯開相位，避免整片同步浮動 */
-  phase: number;
 }
 
 interface FlyView {
@@ -88,7 +71,6 @@ export class TileBuffMarkers {
   private readonly markers = new Map<string, MarkerView>();
   private readonly spare: MarkerView[] = [];
   private readonly flies: FlyView[] = [];
-  private time = 0;
   private readonly flyPos = new Vec3();
   /** 給跳字避讓用的矩形；物件重用，不每次配置（PROG-2-9415） */
   private readonly avoidRects: FloatAvoidRect[] = [];
@@ -118,8 +100,8 @@ export class TileBuffMarkers {
         view = this.spare.pop() ?? this.createMarker(root);
         view.lane = buff.lane;
         view.depth = buff.depth;
-        view.phase = ((buff.lane * 7 + buff.depth * 3) % 10) / 10;
         view.drawnKey = '';
+        view.badge = null;
         view.root.active = true;
         this.markers.set(key, view);
         this.place(view, view.root);
@@ -153,15 +135,14 @@ export class TileBuffMarkers {
       if (!view.root.active) return;
       const p = view.root.position;
       const iconY = p.y + view.icon.position.y;
-      const scale = Math.max(1, view.icon.scale.x);
       const amountW = view.amount.string ? AMOUNT_EST_WIDTH_PER_CHAR * view.amount.string.length : 0;
-      const left = p.x - RARE_RING_RADIUS * scale;
-      const right = p.x + (RARE_RING_RADIUS + (amountW > 0 ? AMOUNT_GAP + amountW : 0)) * scale;
+      const left = p.x - RARE_RING_RADIUS;
+      const right = p.x + (RARE_RING_RADIUS + (amountW > 0 ? AMOUNT_GAP + amountW : 0));
       const rect = this.avoidPool[out.length] ?? (this.avoidPool[out.length] = { x: 0, y: 0, halfW: 0, halfH: 0 });
       rect.x = (left + right) / 2;
       rect.y = iconY;
       rect.halfW = (right - left) / 2;
-      rect.halfH = RARE_RING_RADIUS * scale;
+      rect.halfH = RARE_RING_RADIUS;
       out.push(rect);
     });
     return out;
@@ -189,33 +170,12 @@ export class TileBuffMarkers {
     fly.node.setSiblingIndex(fly.node.parent ? fly.node.parent.children.length - 1 : 0);
   }
 
-  /** 每幀：跟著格子重新投影、播放待機浮動、推進飛行圖示 */
+  /** 每幀：跟著格子重新投影、補畫還沒畫出來的標記、推進飛行圖示（標記本身不逐幀重畫） */
   public update(dt: number): void {
     const step = Number.isFinite(dt) && dt > 0 ? dt : 0;
-    this.time += step;
-    const vfxCfg = getTileBuffVfxConfig();
-    const vfxOn = isTileBuffVfxEnabled(vfxCfg);
-    tileBuffVfxStats.primitives = 0;
-    tileBuffVfxStats.particles = 0;
     this.markers.forEach(view => {
       this.place(view, view.root);
-      if (vfxOn && vfxCfg) {
-        // 新特效：地面、粒子、圓章底一次畫在 plate 上；字與倍數的 Label 跟著圓章高度走
-        view.plateOpacity.opacity = 255;
-        const cy = drawTileBuffVfx(view.plate, vfxCfg, view.vfxKind, view.vfxDebuff, view.rare, view.vfxFactor, this.time + view.phase * 1.4);
-        view.icon.setPosition(0, cy, 0);
-        view.icon.setScale(1, 1, 1);
-        view.amount.node.setPosition(vfxCfg.icon.radius + 8, 0, 0);
-        view.glyph.color = tileBuffVfxGlyphColor(vfxCfg, view.vfxKind, view.vfxDebuff);
-        view.drawnKey = '';
-        view.iconGraphics.clear();
-        return;
-      }
-      const idle = sampleTileBuffIdle(this.time + view.phase * 1.4, view.rare);
-      view.icon.setPosition(0, ICON_Y + idle.dy, 0);
-      view.icon.setScale(idle.scale, idle.scale, 1);
-      view.plateOpacity.opacity = idle.plateAlpha;
-      view.amount.node.setPosition(RARE_RING_RADIUS + AMOUNT_GAP, 0, 0);
+      if (view.drawnKey === '' && view.badge) this.render(view, view.badge);
     });
     for (const fly of this.flies) {
       if (!fly.busy) continue;
@@ -247,44 +207,23 @@ export class TileBuffMarkers {
   }
 
   private draw(view: MarkerView, badge: TileBuffBadge): void {
-    view.vfxKind = badge.kind.startsWith('attack') ? 'attack' : 'hp';
-    view.vfxDebuff = badge.isDebuff;
-    view.vfxFactor = parseFloat(badge.amountText.slice(1)) || 1;
-    view.rare = badge.rare;
-    const vfxCfg = getTileBuffVfxConfig();
-    if (isTileBuffVfxEnabled(vfxCfg)) {
-      // 新特效每幀在 update 重畫；這裡只更新文字
-      view.glyph.string = badge.glyph;
-      view.amount.string = badge.amountText;
-      view.amount.color = badge.isDebuff ? AMOUNT_DEBUFF : AMOUNT_BUFF;
-      return;
-    }
+    view.badge = badge;
+    this.render(view, badge);
+  }
+
+  /** 內容（種類、倍數、稀有）沒變就不重畫；設定檔還沒載入就等下一幀 */
+  private render(view: MarkerView, badge: TileBuffBadge): void {
+    const cfg = getTileBuffVfxConfig();
+    if (!cfg) return;
     const key = `${badge.kind}|${badge.amountText}|${badge.rare ? 1 : 0}`;
     if (view.drawnKey === key) return;
     view.drawnKey = key;
-
-    const tone = badge.isDebuff ? PLATE_DEBUFF : PLATE_BUFF;
-    const plate = view.plate;
-    plate.clear();
-    plate.fillColor = new Color(tone.r, tone.g, tone.b, 110);
-    plate.ellipse(0, 0, PLATE_RX, PLATE_RY);
-    plate.fill();
-    plate.lineWidth = 3;
-    plate.strokeColor = tone;
-    plate.ellipse(0, 0, PLATE_RX, PLATE_RY);
-    plate.stroke();
-
-    const g = view.iconGraphics;
-    g.clear();
-    if (badge.rare) {
-      g.lineWidth = 3;
-      g.strokeColor = RARE_RING;
-      g.circle(0, 0, RARE_RING_RADIUS);
-      g.stroke();
-    }
-    drawStatusIconDisc(g, ICON_RADIUS, badge.isDebuff);
+    const kind = badge.kind.startsWith('attack') ? 'attack' : 'hp';
+    const cy = drawTileStatic(view.plate, cfg, kind, badge.isDebuff, badge.rare, tileBuffFactorFromText(badge.amountText));
+    view.icon.setPosition(0, cy, 0);
     view.glyph.string = badge.glyph;
-    view.glyph.color = statusIconTextColor(badge.isDebuff);
+    view.glyph.color = tileBuffVfxGlyphColor(cfg, kind, badge.isDebuff);
+    view.amount.node.setPosition(cfg.icon.radius + AMOUNT_GAP + (badge.rare ? 5 : 0), 0, 0);
     view.amount.string = badge.amountText;
     view.amount.color = badge.isDebuff ? AMOUNT_DEBUFF : AMOUNT_BUFF;
   }
@@ -308,34 +247,30 @@ export class TileBuffMarkers {
   private createMarker(root: Node): MarkerView {
     const node = new Node('TileBuffMarker');
     node.layer = root.layer;
-    node.addComponent(UITransform).setContentSize(PLATE_RX * 2 + 20, ICON_Y * 2 + 40);
+    node.addComponent(UITransform).setContentSize(PLATE_RX * 2 + 20, PLATE_RY * 2 + 80);
     this.ensureGround(root).addChild(node);
 
     const plateNode = new Node('Plate');
     plateNode.layer = root.layer;
     plateNode.addComponent(UITransform).setContentSize(PLATE_RX * 2, PLATE_RY * 2);
     const plate = plateNode.addComponent(Graphics);
-    const plateOpacity = plateNode.addComponent(UIOpacity);
     node.addChild(plateNode);
 
     const icon = new Node('Icon');
     icon.layer = root.layer;
     icon.addComponent(UITransform).setContentSize(RARE_RING_RADIUS * 2, RARE_RING_RADIUS * 2);
-    const iconGraphics = icon.addComponent(Graphics);
-    icon.setPosition(0, ICON_Y, 0);
     node.addChild(icon);
-    const glyph = this.makeLabel(icon, 'Glyph', ICON_RADIUS * 2, 28, Label.HorizontalAlign.CENTER);
+    const glyph = this.makeLabel(icon, 'Glyph', 36, 20, Label.HorizontalAlign.CENTER);
 
     const amountNode = new Node('Amount');
     amountNode.layer = root.layer;
     const amountTf = amountNode.addComponent(UITransform);
     amountTf.setContentSize(70, 34);
     amountTf.setAnchorPoint(0, 0.5);
-    amountNode.setPosition(RARE_RING_RADIUS + AMOUNT_GAP, 0, 0);
     icon.addChild(amountNode);
     const amount = amountNode.addComponent(Label);
-    amount.fontSize = 26;
-    amount.lineHeight = 30;
+    amount.fontSize = 30;
+    amount.lineHeight = 34;
     amount.isBold = true;
     amount.horizontalAlign = Label.HorizontalAlign.LEFT;
     amount.verticalAlign = Label.VerticalAlign.CENTER;
@@ -343,7 +278,7 @@ export class TileBuffMarkers {
     amount.outlineColor = AMOUNT_OUTLINE;
     amount.outlineWidth = 3;
 
-    return { root: node, plate, plateOpacity, icon, iconGraphics, glyph, amount, lane: 0, depth: 0, rare: false, vfxKind: 'attack', vfxDebuff: false, vfxFactor: 1, drawnKey: '', phase: 0 };
+    return { root: node, plate, icon, glyph, amount, lane: 0, depth: 0, badge: null, drawnKey: '' };
   }
 
   private acquireFly(root: Node): FlyView | null {

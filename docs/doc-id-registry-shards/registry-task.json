@@ -16642,5 +16642,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9730.md",
     "title": "[PROG-2-9730] 無頭試玩第 07 步 lobby-commerce-silver 仍偶發失敗（點擊瞬間被官職晉升彈窗蓋住）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2968",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9731.md",
+    "title": "[PROG-2-9731] 戰場 buff 格靜態淡光圈＋部隊吃到 buff 腳下 2.5 秒特效（正式版，刪舊格子特效）",
+    "category": "task"
   }
 ]
