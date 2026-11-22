@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 242,
+    "done": 243,
     "in_progress": 7,
     "open": 85,
-    "total": 334
+    "total": 335
   },
   "tasks": [
     {
@@ -14391,6 +14391,56 @@
         "量測前後數據"
       ],
       "notes": "2026-11-22 | 狀態: in-progress | 驗證: pending | 變更: 開卡；基準 面板 48 次、每卡 12 次 | 阻塞: 無 || 2026-11-22 | 狀態: done | 驗證: 單元測試 9126 過、tsc 0 錯、quick 閘門；實機無頭量測 虎符面板繪製 48→20（每卡 12→5）、整場 164→144；卡面截圖前後一致 | 變更: TigerTallyComposite 填值後把卡上 NONE 文字改 BITMAP 進動態圖集，與底板同批；新增 TallyCardBatching 接線測試 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2948",
+      "id": "PROG-2-9716",
+      "title": "騎兵攻擊音效改馬蹄聲（hoof_gallop，CC-BY 3.0）",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T10:12:32+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "騎兵攻擊音效由 biteskill 改為專屬馬蹄聲 hoof_gallop（OpenGameArt，Alan McKinney，CC-BY 3.0）。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "BattleAudio unitAttackPrimary 使用 hoof_gallop；授權登錄於 _MANIFEST.md；單元測試與 tsc 通過"
+      ],
+      "deliverables": [
+        "assets/bundles/audio/clips/hoof_gallop.wav",
+        "assets/scripts/battle/BattleAudio.ts",
+        "_MANIFEST.md"
+      ],
+      "notes": "2026-11-22 | 狀態: done | 驗證: 單元測試、tsc 0、quick 閘門 | 變更: 騎兵攻擊音效 biteskill→hoof_gallop（OpenGameArt CC-BY 3.0，取一個蹄聲循環 0.58 秒 22050Hz 單聲道）| 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
