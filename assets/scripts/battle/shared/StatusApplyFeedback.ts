@@ -12,6 +12,7 @@
  * Unity 對照：像把 StatusEffect 的 ScriptableObject 加上 polarity 欄位，再由 Presenter 依 polarity 選演出。
  */
 import { StatusEffect } from '../../shared/CommonEnums';
+import { BURN_STATUS_ID } from './BurnStatus';
 
 export type StatusPolarity = 'control' | 'debuff' | 'buff';
 
@@ -28,6 +29,7 @@ const STATUS_POLARITY: Readonly<Record<StatusEffect, StatusPolarity>> = {
 
 /** 狀態極性；未知狀態當增益（不讓目標縮、不播減益聲），寧可少演也不演錯 */
 export function statusPolarityOf(effect: StatusEffect | string): StatusPolarity {
+  if (effect === BURN_STATUS_ID) return 'debuff'; // PROG-2-9726
   return STATUS_POLARITY[effect as StatusEffect] ?? 'buff';
 }
 

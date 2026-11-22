@@ -18,6 +18,8 @@ function buildContext(units: ReturnType<typeof unit>[], rocks: Array<[number, nu
     const state = {
         units: new Map(units.map((u) => [u.id, u])),
         unitDots: new Map(),
+        unitBurns: new Map(),
+        tileEffects: new Map(),
         formationZones: new Map(),
         stageSalvage: emptyStageSalvage(),
         plunderedTiles: new Set<string>(),

@@ -6,6 +6,7 @@
  * Unity 對照：StatusEffect enum 對應的 ScriptableObject displayName 表。
  */
 import { StatusEffect } from '../../shared/CommonEnums';
+import { BURN_STATUS_ID } from './BurnStatus';
 
 export const STATUS_EFFECT_LABEL: Readonly<Record<StatusEffect, string>> = {
   [StatusEffect.Stun]: '暈眩',
@@ -20,5 +21,6 @@ export const STATUS_EFFECT_LABEL: Readonly<Record<StatusEffect, string>> = {
 
 /** 單位頭頂飄字；未知狀態回空字串（不飄） */
 export function statusEffectFloatText(effect: StatusEffect | string): string {
+  if (effect === BURN_STATUS_ID) return '燃燒'; // PROG-2-9726：燃燒不走 BuffSystem，狀態代號由 BurnStatus 定義
   return STATUS_EFFECT_LABEL[effect as StatusEffect] ?? '';
 }

@@ -1,4 +1,6 @@
 // @spec-source → 戰法系統.md (doc_spec_0038)、戰場部署系統.md (doc_spec_0040)；PROG-2-1429 依建檔紀錄補標出處
+import { BURN_CONFIG } from '../shared/BurnStatus';
+import { igniteUnit } from './BurnIgnite';
 import {
   EVENT_NAMES,
   Faction,
@@ -618,17 +620,10 @@ export class BattleSkillDispatcher {
       },
       setTileHazard: (cell: { lane: number; depth: number }, damagePerTurn: number) => {
         // 固定地形格（掩體、營帳）不被火場覆蓋；暫時性格子狀態則以新的覆蓋舊的
-        const existing = state.getTileEffect(cell.lane, cell.depth);
-        if (existing && isFixedTileState(existing.state)) return;
-        state.setTileEffect({
-          id: `skill-fire-${cell.lane}-${cell.depth}`,
-          lane: cell.lane,
-          depth: cell.depth,
-          state: 'hazard-fire',
-          damagePerTurn,
-          notes: 'skill:hazard-cross',
-        });
+        // 戰法留下的火格有存在回合（PROG-2-9726，battle-burn.json fireTile.durationTurns）
+        state.placeFireTile(cell.lane, cell.depth, damagePerTurn, BURN_CONFIG.fireTile.durationTurns, `skill-fire-${cell.lane}-${cell.depth}`, 'skill:hazard-cross');
       },
+      addUnitBurn: (unit: TroopUnit) => igniteUnit(state, unit),
       applyDamage: (unit: TroopUnit, damage: number, casterFaction: Faction) => {
         const svc = services();
         combatResolver.applyUnitDamage(unit, damage, casterFaction, {
