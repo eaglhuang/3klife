@@ -178,6 +178,8 @@ const LOOT_TEXT_STAGGER_SEC = 0.5;
 const GENERAL_DASH_SEC = 0.55;
 /** 主將素材載入最多等幾秒才起跑；超過就直接站格，不讓主將卡在待命點 */
 const GENERAL_DASH_WAIT_SEC = 3;
+/** 單挑場邊位置離最外側那路的距離（以路寬計，PROG-2-9719）。 */
+const DUEL_SIDELINE_LANES = 1.1;
 
 /** 頭頂血條尺寸（名牌座標，名牌本身縮 0.7；PROG-2-1874） */
 const HP_BAR_WIDTH = 150;
@@ -1539,7 +1541,28 @@ export class UnitRenderer extends Component {
   }
 
   public playDuelPresentation(winner: 0 | 1 | null, fallen: boolean, exchanges: readonly DuelExchange[]): Promise<boolean> {
-    return this.spineUnits.playDuel(this.ensureGeneralSpineId(Faction.Player), this.ensureGeneralSpineId(Faction.Enemy), winner, fallen, exchanges);
+    return this.spineUnits.playDuel(this.ensureGeneralSpineId(Faction.Player), this.ensureGeneralSpineId(Faction.Enemy), winner, fallen, exchanges, this.duelSidelineArena());
+  }
+
+  /**
+   * PROG-2-9719（使用者 11/22 裁決 Q1=B）：單挑移到場邊演出，不在格子上打。
+   * 取棋盤中段（兩軍中線）往棋盤外側延伸 DUEL_SIDELINE_LANES 路的點；兩側取畫面上方（遠側）那邊，避開下方手牌與按鈕。
+   */
+  private duelSidelineArena(): { x: number; y: number } | null {
+    const lanes = GAME_CONFIG.GRID_LANES, depth = GAME_CONFIG.GRID_DEPTH;
+    const dA = Math.floor((depth - 1) / 2), dB = Math.ceil((depth - 1) / 2);
+    const mid = (lane: number): Vec3 | null => {
+      const a = this.getUnitWorldPosition(lane, dA, 0), b = this.getUnitWorldPosition(lane, dB, 0);
+      return a && b ? a.clone().add(b).multiplyScalar(0.5) : null;
+    };
+    const first = mid(0), second = mid(1), last = mid(lanes - 1), beforeLast = mid(lanes - 2);
+    if (!first || !second || !last || !beforeLast) return null;
+    const outFirst = first.clone().subtract(second.clone().subtract(first).multiplyScalar(DUEL_SIDELINE_LANES));
+    const outLast = last.clone().add(last.clone().subtract(beforeLast).multiplyScalar(DUEL_SIDELINE_LANES));
+    const pFirst = this.overlayPoint(outFirst), pLast = this.overlayPoint(outLast);
+    if (!pFirst || !pLast) return pFirst ?? pLast ?? null;
+    const top = pFirst.y >= pLast.y ? pFirst : pLast;
+    return { x: top.x, y: top.y };
   }
 
   /** 單挑演出逾時保底（PROG-2-9404）：強制收掉進行中的交鋒動畫，讓雙方回到正常跟隨 */
