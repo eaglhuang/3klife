@@ -90,5 +90,16 @@ export function createSkillDetailViewSuite(): TestSuite {
         assert.equals('尚未實作，目前不可施放', view.rows.find((r) => r.label === '效果狀態')?.value ?? '');
     });
 
+    suite.test('有招式描述時放在內文最前面，與數值列隔一行；缺或空白就不顯示', () => {
+        const withFlavor = buildSkillDetailView({ kind: 'tactic', name: 'N', flavor: '  鐵蹄一響。  ', tpCost: 30 }, { state: 'learned' });
+        assert.equals('鐵蹄一響。', withFlavor.flavor);
+        assert.equals('鐵蹄一響。\n\n狀態：已習得\nTP 消耗：30', formatSkillDetailText(withFlavor));
+        for (const flavor of [undefined, null, '', '   ']) {
+            const view = buildSkillDetailView({ kind: 'tactic', name: 'N', flavor }, { state: 'learned' });
+            assert.equals('', view.flavor);
+            assert.equals('狀態：已習得', formatSkillDetailText(view));
+        }
+    });
+
     return suite;
 }

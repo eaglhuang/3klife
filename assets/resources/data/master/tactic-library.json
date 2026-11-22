@@ -41,7 +41,8 @@
       "targetMode": "line",
       "timing": "active-cast",
       "manualTargeting": false,
-      "autoAimMode": "densest-line"
+      "autoAimMode": "densest-line",
+      "descKey": "tactic.desc.tactic-cavalry-shock"
     },
     {
       "id": "tactic-spear-phalanx",
@@ -81,7 +82,8 @@
       "targetMode": "adjacent-tiles",
       "timing": "active-cast",
       "manualTargeting": false,
-      "autoAimMode": "adjacent-ring"
+      "autoAimMode": "adjacent-ring",
+      "descKey": "tactic.desc.tactic-spear-phalanx"
     },
     {
       "id": "tactic-archer-volley",
@@ -120,7 +122,8 @@
       "targetMode": "line",
       "timing": "active-cast",
       "manualTargeting": false,
-      "autoAimMode": "densest-line"
+      "autoAimMode": "densest-line",
+      "descKey": "tactic.desc.tactic-archer-volley"
     },
     {
       "id": "tactic-fire-scheme",
@@ -164,7 +167,8 @@
       "targetMode": "tile",
       "timing": "active-cast",
       "manualTargeting": false,
-      "autoAimMode": "occupied-tile"
+      "autoAimMode": "occupied-tile",
+      "descKey": "tactic.desc.tactic-fire-scheme"
     },
     {
       "id": "tactic-morale-rally",
@@ -205,7 +209,8 @@
       "targetMode": "ally-all",
       "timing": "active-cast",
       "manualTargeting": false,
-      "autoAimMode": "all-allies"
+      "autoAimMode": "all-allies",
+      "descKey": "tactic.desc.tactic-morale-rally"
     },
     {
       "id": "tactic-river-ambush",
@@ -236,7 +241,8 @@
       "targetMode": "adjacent-tiles",
       "timing": "active-cast",
       "manualTargeting": false,
-      "autoAimMode": "adjacent-ring"
+      "autoAimMode": "adjacent-ring",
+      "descKey": "tactic.desc.tactic-river-ambush"
     },
     {
       "id": "tactic-battle-roar",
@@ -275,7 +281,8 @@
       "targetMode": "enemy-all",
       "timing": "active-cast",
       "manualTargeting": false,
-      "autoAimMode": "all-enemies"
+      "autoAimMode": "all-enemies",
+      "descKey": "tactic.desc.tactic-battle-roar"
     },
     {
       "id": "tactic-dragon-pierce",
@@ -313,7 +320,8 @@
       "targetMode": "line",
       "timing": "active-cast",
       "manualTargeting": false,
-      "autoAimMode": "densest-line"
+      "autoAimMode": "densest-line",
+      "descKey": "tactic.desc.tactic-dragon-pierce"
     },
     {
       "id": "tactic-insp-lance-thrust",
@@ -331,7 +339,8 @@
       "targetMode": "line",
       "timing": "active-cast",
       "manualTargeting": false,
-      "autoAimMode": "densest-line"
+      "autoAimMode": "densest-line",
+      "descKey": "tactic.desc.tactic-insp-lance-thrust"
     },
     {
       "id": "tactic-insp-cavalry-charge",
@@ -349,7 +358,8 @@
       "targetMode": "line",
       "timing": "active-cast",
       "manualTargeting": false,
-      "autoAimMode": "densest-line"
+      "autoAimMode": "densest-line",
+      "descKey": "tactic.desc.tactic-insp-cavalry-charge"
     },
     {
       "id": "tactic-insp-dragon-gall",
@@ -367,7 +377,8 @@
       "targetMode": "enemy-single",
       "timing": "active-cast",
       "manualTargeting": false,
-      "autoAimMode": "frontmost-enemy"
+      "autoAimMode": "frontmost-enemy",
+      "descKey": "tactic.desc.tactic-insp-dragon-gall"
     },
     {
       "id": "tactic-insp-zhao-spear",
@@ -385,7 +396,8 @@
       "targetMode": "line",
       "timing": "active-cast",
       "manualTargeting": false,
-      "autoAimMode": "densest-line"
+      "autoAimMode": "densest-line",
+      "descKey": "tactic.desc.tactic-insp-zhao-spear"
     },
     {
       "id": "tactic-insp-lone-rider",
@@ -402,7 +414,8 @@
       "sourceType": "inspired-tactic",
       "targetMode": "around-self",
       "timing": "active-cast",
-      "manualTargeting": false
+      "manualTargeting": false,
+      "descKey": "tactic.desc.tactic-insp-lone-rider"
     },
     {
       "id": "tactic-insp-combo-attack",
@@ -420,7 +433,8 @@
       "targetMode": "enemy-single",
       "timing": "active-cast",
       "manualTargeting": false,
-      "autoAimMode": "frontmost-enemy"
+      "autoAimMode": "frontmost-enemy",
+      "descKey": "tactic.desc.tactic-insp-combo-attack"
     },
     {
       "id": "tactic-insp-haste",
@@ -438,7 +452,8 @@
       "targetMode": "ally-all",
       "timing": "active-cast",
       "manualTargeting": false,
-      "autoAimMode": "all-allies"
+      "autoAimMode": "all-allies",
+      "descKey": "tactic.desc.tactic-insp-haste"
     },
     {
       "id": "tactic-insp-shield",
@@ -456,7 +471,8 @@
       "targetMode": "ally-all",
       "timing": "active-cast",
       "manualTargeting": false,
-      "autoAimMode": "all-allies"
+      "autoAimMode": "all-allies",
+      "descKey": "tactic.desc.tactic-insp-shield"
     },
     {
       "id": "tactic-insp-eight-array",
@@ -473,7 +489,8 @@
       "sourceType": "inspired-tactic",
       "targetMode": "self",
       "timing": "active-cast",
-      "manualTargeting": false
+      "manualTargeting": false,
+      "descKey": "tactic.desc.tactic-insp-eight-array"
     },
     {
       "id": "tactic-insp-heal",
@@ -490,7 +507,8 @@
       "sourceType": "inspired-tactic",
       "targetMode": "ally-single",
       "timing": "active-cast",
-      "manualTargeting": false
+      "manualTargeting": false,
+      "descKey": "tactic.desc.tactic-insp-heal"
     },
     {
       "id": "tactic-insp-inspire",
@@ -508,7 +526,8 @@
       "targetMode": "ally-all",
       "timing": "active-cast",
       "manualTargeting": false,
-      "autoAimMode": "all-allies"
+      "autoAimMode": "all-allies",
+      "descKey": "tactic.desc.tactic-insp-inspire"
     },
     {
       "id": "tactic-insp-slow",
@@ -526,7 +545,8 @@
       "targetMode": "enemy-single",
       "timing": "active-cast",
       "manualTargeting": false,
-      "autoAimMode": "frontmost-enemy"
+      "autoAimMode": "frontmost-enemy",
+      "descKey": "tactic.desc.tactic-insp-slow"
     },
     {
       "id": "tactic-insp-taunt",
@@ -544,7 +564,8 @@
       "targetMode": "enemy-single",
       "timing": "active-cast",
       "manualTargeting": false,
-      "autoAimMode": "frontmost-enemy"
+      "autoAimMode": "frontmost-enemy",
+      "descKey": "tactic.desc.tactic-insp-taunt"
     },
     {
       "id": "tactic-insp-sworn-fury",
@@ -562,7 +583,8 @@
       "targetMode": "fan",
       "timing": "active-cast",
       "manualTargeting": false,
-      "autoAimMode": "densest-fan"
+      "autoAimMode": "densest-fan",
+      "descKey": "tactic.desc.tactic-insp-sworn-fury"
     },
     {
       "id": "tactic-insp-wei-might",
@@ -580,7 +602,8 @@
       "targetMode": "enemy-single",
       "timing": "active-cast",
       "manualTargeting": false,
-      "autoAimMode": "frontmost-enemy"
+      "autoAimMode": "frontmost-enemy",
+      "descKey": "tactic.desc.tactic-insp-wei-might"
     },
     {
       "id": "tactic-insp-empty-fort",
@@ -597,7 +620,8 @@
       "sourceType": "inspired-tactic",
       "targetMode": "self",
       "timing": "active-cast",
-      "manualTargeting": false
+      "manualTargeting": false,
+      "descKey": "tactic.desc.tactic-insp-empty-fort"
     },
     {
       "id": "tactic-insp-fire-attack",
@@ -615,7 +639,8 @@
       "targetMode": "tile",
       "timing": "active-cast",
       "manualTargeting": false,
-      "autoAimMode": "occupied-tile"
+      "autoAimMode": "occupied-tile",
+      "descKey": "tactic.desc.tactic-insp-fire-attack"
     },
     {
       "id": "tactic-insp-red-cliff",
@@ -633,7 +658,8 @@
       "targetMode": "enemy-single",
       "timing": "active-cast",
       "manualTargeting": false,
-      "autoAimMode": "frontmost-enemy"
+      "autoAimMode": "frontmost-enemy",
+      "descKey": "tactic.desc.tactic-insp-red-cliff"
     },
     {
       "id": "tactic-insp-chain-link",
@@ -651,7 +677,8 @@
       "targetMode": "enemy-single",
       "timing": "active-cast",
       "manualTargeting": false,
-      "autoAimMode": "frontmost-enemy"
+      "autoAimMode": "frontmost-enemy",
+      "descKey": "tactic.desc.tactic-insp-chain-link"
     },
     {
       "id": "tactic-insp-night-raid",
@@ -669,7 +696,8 @@
       "targetMode": "enemy-single",
       "timing": "active-cast",
       "manualTargeting": false,
-      "autoAimMode": "frontmost-enemy"
+      "autoAimMode": "frontmost-enemy",
+      "descKey": "tactic.desc.tactic-insp-night-raid"
     }
   ]
 }

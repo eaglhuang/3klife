@@ -17,6 +17,8 @@ export type SkillDetailState = 'main' | 'learned' | 'inspired' | 'locked';
 export interface SkillDetailSource {
     kind: SkillDetailKind;
     name: string;
+    /** 名稱下方的招式演出文字（已走 i18n 解析；缺就不顯示） */
+    flavor?: string | null;
     /** 奧義的效果說明（資料有才填；戰法目前資料沒有此欄） */
     description?: string | null;
     /** 已格式化的類型文字（例如「衝鋒」），由呼叫端決定格式 */
@@ -51,6 +53,8 @@ export interface SkillDetailRow {
 export interface SkillDetailView {
     title: string;
     kindLabel: string;
+    /** 招式演出文字；缺就是空字串 */
+    flavor: string;
     rows: SkillDetailRow[];
 }
 
@@ -166,11 +170,13 @@ export function buildSkillDetailView(source: SkillDetailSource, status: SkillDet
     return {
         title: source.name,
         kindLabel: kindLabelOf(source, status.state),
+        flavor: hasText(source.flavor) ? source.flavor.trim() : '',
         rows,
     };
 }
 
 /** 把詳情列轉成子視窗內文，每列一行「名稱：值」。 */
 export function formatSkillDetailText(view: SkillDetailView): string {
-    return view.rows.map((row) => `${row.label}：${row.value}`).join('\n');
+    const rows = view.rows.map((row) => `${row.label}：${row.value}`).join('\n');
+    return view.flavor ? `${view.flavor}\n\n${rows}` : rows;
 }

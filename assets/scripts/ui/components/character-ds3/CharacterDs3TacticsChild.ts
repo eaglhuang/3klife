@@ -116,10 +116,15 @@ function canvasNodeOf(start: Node): Node | null {
 type BattleProfile = ReturnType<typeof resolveBattleSkillProfile>;
 
 /** 戰法定義 + 戰場效果檔 → 詳情子視窗來源（數值只從資料來，不寫死）。 */
-export function tacticDetailSource(tactic: CanonicalTacticDefinition, profile: BattleProfile): SkillDetailSource {
+export function tacticDetailSource(
+    tactic: CanonicalTacticDefinition,
+    profile: BattleProfile,
+    flavorOf?: (descKey: string) => string | undefined,
+): SkillDetailSource {
     return {
         kind: 'tactic',
         name: tactic.displayName,
+        flavor: tactic.descKey ? flavorOf?.(tactic.descKey) ?? null : null,
         category: tactic.category ? formatTacticCategory(tactic.category) : null,
         tpCost: getTacticTpCost(tactic.id),
         effectKind: profile?.effectKind ?? null,
@@ -289,7 +294,10 @@ export class CharacterDs3TacticsChild extends ChildPanelBase {
     /** 依名稱（或 id）從戰法庫／奧義庫取資料；效果數值走同一份 BattleSkillProfile。查無定義時只有名稱。 */
     private _sourceOf(name: string): SkillDetailSource {
         const tactic = this._tacticsById.get(name) ?? this._tacticsByName.get(name);
-        if (tactic) return tacticDetailSource(tactic, resolveBattleSkillProfile(tactic.battleSkillId ?? ''));
+        if (tactic) return tacticDetailSource(tactic, resolveBattleSkillProfile(tactic.battleSkillId ?? ''), (key) => {
+            const text = this.t(key);
+            return text === key ? undefined : text;
+        });
         const ultimate = this._ultimatesById.get(name) ?? this._ultimatesByName.get(name);
         if (ultimate) return ultimateDetailSource(ultimate, resolveBattleSkillProfile(ultimate.battleSkillId ?? ''));
         return { kind: 'tactic', name };
