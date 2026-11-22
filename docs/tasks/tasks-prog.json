@@ -15068,6 +15068,62 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9727",
+      "title": "名詞定義文件機械分片＋補 SP／精力名詞",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T16:05:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "名詞定義文件（doc_spec_0008，37.7KB、未分片）機械分片為 shard group；再依總PM 11/22 核可補入 SP、計謀點、精力修正三條名詞。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "compute-gate standard 通過（文件分片健康檢查）",
+        "check-doc-shard-health 通過",
+        "run-cli 全過",
+        "doc_spec_0008 引用不斷"
+      ],
+      "deliverables": [
+        "名詞定義文件-shards 分片目錄與 .shardrc.json",
+        "名詞定義文件.md thin index",
+        "名詞定義文件 補 SP／計謀點／精力定義"
+      ],
+      "notes": "2026-11-22 | 狀態: done | 驗證: compute-gate standard 通過（文件分片健康檢查 ✅，LoginScene import 警告為既有）；run-cli 9186 passed | 變更: 名詞定義文件機械分片為 名詞定義文件-shards（3 shard＋auto-parts 各 <4KB，內容無增刪、已核對）；補 SP（奧義能量）、計謀點、精力修正（總PM 11/22 核可） | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      },
+      "validation_cmd": "node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "completed_at": "2026-11-22T16:40:00+08:00",
+      "completion": 100
     }
   ],
   "updated": "2026-11-22"
