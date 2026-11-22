@@ -332,6 +332,8 @@ const GALLERY_ENTRY_NODE_NAME = 'GeneralVersionGalleryEntry';
 const CHARACTER_DS3_SIDE_ACTION_INDEX = { journal: 0, soulInject: 1, gallery: 2, totalTp: 3, expertView: 4, volunteer: 5, jobChange: 6 };
 const JOB_CHANGE_ENTRY_NODE_NAME = 'btnGeneralJobChange';
 const VOLUNTEER_TASK_NODE_NAME = 'btnVolunteerTask';
+/** 晉升導流頭頂「！」的樣式名（hall-stage-decor.json 的 markStyles） */
+const PROMOTION_MARK_STYLE = 'promotion';
 const JOURNAL_PEEK_NODE_NAME = 'JournalPeekBubble';
 const EXPERT_VIEW_NODE_NAME = 'btnExpertView';
 const EXPERT_VIEW_ON_LINE = '專家視圖已開啟：直接顯示完整族譜與數值，功能解鎖不變。';
@@ -576,6 +578,8 @@ export class LobbyScene extends Component {
     private _hallWalkerState: WalkerPlanState = INITIAL_WALKER_STATE;
     /** 晉升解鎖大廳導流（PROG-2-9610）：晉升完成後若有新機能解鎖，由大廳武將頂金色驚嘆號引導並提供捷徑 */
     private _pendingPromotionGuide: PromotionHallGuide | null = null;
+    /** 晉升導流「！」掛在哪位武將頭上；只有點這位才出導流泡泡，標記與泡泡必須同一人 */
+    private _promotionGuideGeneralId: string | null = null;
     /** 大廳台詞：內建底稿＋本機快取（store），對外只經由 LobbyDialogueProvider 取台詞 */
     private _hallChatStore: HallChatStore | null = null;
     private _hallDialogue: LobbyDialogueProvider | null = null;
@@ -1232,6 +1236,7 @@ export class LobbyScene extends Component {
                 // 只有新解鎖功能帶有大廳入口時才導流，避免「立即前往」找不到目的地；僅存記憶體，重進大廳即清除
                 const hallGuide = buildPromotionHallGuide(payload.tiers, (k, ...args) => services().i18n.t(k, ...args));
                 this._pendingPromotionGuide = hallGuide?.primaryFeature.lobbyAction ? hallGuide : null;
+                this._promotionGuideGeneralId = null;
                 if (this._pendingPromotionGuide) {
                     this._lobbyHall?.refreshStage(Date.now() / 1000);
                 }
@@ -1933,6 +1938,7 @@ export class LobbyScene extends Component {
     private _runCityHubAction(action: LobbyActionId): void {
         if (this._pendingPromotionGuide && this._pendingPromotionGuide.primaryFeature.lobbyAction === action) {
             this._pendingPromotionGuide = null;
+            this._promotionGuideGeneralId = null;
             this._lobbyHall?.refreshStage(Date.now() / 1000);
         }
         this._closeSecondaryOverlayHosts();
@@ -4533,11 +4539,16 @@ ${spent}`,
             return [title ? { id, name: profile.name, title } : { id, name: profile.name }];
         });
         const taskMarks = new Set(plan.volunteerIds);
-        // PROG-2-9610：若有晉升導流待引導，將在場首位走動武將賦予金色「！」標記
+        const markStyleById = new Map<string, string>();
+        // PROG-2-9610：晉升導流待引導時，挑一位在場走動的武將頭頂掛大金色「！」；
+        // 已選的人還在場就沿用（輪替不換人，玩家看到的標記與點到的泡泡才是同一位）
         if (this._pendingPromotionGuide && generals.length > 0) {
-            taskMarks.add(generals[0].id);
+            const kept = generals.find(g => g.id === this._promotionGuideGeneralId);
+            this._promotionGuideGeneralId = (kept ?? generals[0]).id;
+            taskMarks.add(this._promotionGuideGeneralId);
+            markStyleById.set(this._promotionGuideGeneralId, PROMOTION_MARK_STYLE);
         }
-        return { generals, taskMarkIds: taskMarks };
+        return { generals, taskMarkIds: taskMarks, markStyleById };
     }
 
     /**
@@ -4549,7 +4560,8 @@ ${spent}`,
         const profile = session.hallStageProfile(generalId);
         if (!profile) return null;
         // 晉升解鎖導流（PROG-2-9610）：若有新解鎖功能，武將優先以口語泡泡提示並提供直達按鈕
-        if (this._pendingPromotionGuide) {
+        // 只有頭頂掛著「！」的那位才出導流泡泡；其他人照常聊天（泡泡與標記不同人會讓玩家搞不清誰在說話）
+        if (this._pendingPromotionGuide && generalId === this._promotionGuideGeneralId) {
             const guide = this._pendingPromotionGuide;
             const text = guide.guideSpeech;
             const actionId = guide.primaryFeature.lobbyAction as LobbyActionId;
@@ -4561,6 +4573,7 @@ ${spent}`,
                     declineLabel: guide.declineLabel,
                     onAccept: () => {
                         this._pendingPromotionGuide = null;
+                        this._promotionGuideGeneralId = null;
                         this._lobbyHall?.refreshStage(Date.now() / 1000);
                         this._runCityHubAction(actionId);
                     },
