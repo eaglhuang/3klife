@@ -26,8 +26,8 @@
   "summary": {
     "done": 259,
     "in_progress": 7,
-    "open": 85,
-    "total": 351
+    "open": 86,
+    "total": 352
   },
   "tasks": [
     {
@@ -15248,6 +15248,59 @@
         "tests/BattleAudioLayers.test.ts"
       ],
       "notes": "2026-11-22 | 狀態: done | 驗證: 單元測試全過、tsc 0 錯、compute-gate quick 通過、建置實跑 6 回合 cc0 版 cc0_hit_metal 5／cc0_hit_flesh 1／cc0_hoof_single 46 次，pitched 版 hit_block 5／footstep_hoof 44 次 | 變更: Kenney Impact Sounds 取 impactMetal_medium_000／impactPunch_medium_000（OGG 原檔）、BigSoundBank 馬蹄裁一拍存 WAV；clipSource 開關與 cc0Clips 替換表；LICENSES-cc0.md、_MANIFEST | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9831",
+      "title": "LLM 批次文案工具與大廳武將聊天台詞第一批（API 贈送額度）",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "2026-11-22T20:00:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "tools_node/llm-batch：Batch API 工具、Agent SDK 以 API 金鑰執行器；大廳聊天台詞第一批 20 位武將寫入 hall-chat-lines.json",
+      "related": [
+        "PROG-2-2251"
+      ],
+      "depends": [],
+      "acceptance": [
+        "批次工具含 schema 驗證、費用統計、單批上限",
+        "單元測試通過",
+        "20 位武將台詞通過品質檢查並寫入正式資料"
+      ],
+      "deliverables": [
+        "tools_node/llm-batch/*",
+        "assets/resources/data/hall-map/hall-chat-lines.json"
+      ],
+      "notes": "2026-11-22 | 狀態: done | 驗證: 單元測試 6 項過、compute-gate quick 4/4、24 位台詞載入達底線 | 變更: tools_node/llm-batch、hall-chat-lines 補 20 位 | 阻塞: 未跑 web 建置實玩",
       "brief": {
         "style": "classic",
         "label": "",
